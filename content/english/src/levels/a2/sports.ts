@@ -1,7 +1,7 @@
 // A2, unit 5: Sports and Games. Sports, competition, movement, games and how we do things; adverbs of manner and
 // could; a past event judged by a model.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { interleave, vocabularyTopic, word } from "../words.ts";
@@ -531,6 +531,52 @@ const mannerTypedBank: readonly TypedItem[] = mannerRows.map(
   }),
 );
 
+/** mannerOf finds the row of manners for an adjective. */
+const mannerOf = (adjective: string) => manners.find(([a]) => a === adjective);
+
+/** adverbRule says how an adjective becomes its adverb. */
+const adverbRule = (adjective: string, adverb: string): Text =>
+  adjective === "good"
+    ? t("*good* has an adverb of its own, *well*", "*good* 有自己的副词 *well*")
+    : t(`*${adjective}* just adds *-ly* to make *${adverb}*`, `*${adjective}* 直接加 *-ly* 变成 *${adverb}*`);
+
+/** mannerWhy explains an adjective before a noun or an adverb after a verb. */
+const mannerWhy = (right: string, shown: string): Text => {
+  const adjective = /\((\w+)\)$/u.exec(shown)?.[1] ?? "";
+  const [, adverb = "", person = "", verb = ""] = mannerOf(adjective) ?? [];
+  if (/ is a ___/u.test(shown))
+    return t(
+      `The gap comes before the noun *${person}* and says what the person is like, so it needs the adjective: ${fill(shown, right)}`,
+      `空白在名词 *${person}* 前面，说明这个人是什么样的，所以用形容词：${fill(shown, right)}`,
+    );
+  const rule = adverbRule(adjective, adverb);
+  return t(
+    `The gap comes after the verb *${verb}* and says how, so it needs the adverb; ${rule.en}: ${fill(shown, right)}`,
+    `空白在动词 *${verb}* 后面，说明动作怎样做，所以用副词；${rule["zh-CN"]}：${fill(shown, right)}`,
+  );
+};
+
+/** whyNotManner explains an adjective after a verb, an adverb before a noun, or a misspelt adverb. */
+const whyNotManner = (wrong: string, right: string, shown: string): Text => {
+  const adjective = /\((\w+)\)$/u.exec(shown)?.[1] ?? "";
+  const [, adverb = ""] = mannerOf(adjective) ?? [];
+  const rule = adverbRule(adjective, adverb);
+  if (wrong === adjective)
+    return t(
+      `*${wrong}* is an adjective. After a verb, saying how, English uses the adverb: ${rule.en}.`,
+      `*${wrong}* 是形容词。在动词后面说明怎样做，英语要用副词：${rule["zh-CN"]}。`,
+    );
+  if (wrong === adverb)
+    return t(
+      `*${wrong}* is an adverb and goes with a verb. Before a noun, use the adjective *${right}*.`,
+      `*${wrong}* 是副词，修饰动词。名词前面要用形容词 *${right}*。`,
+    );
+  return t(
+    `*${wrong}* is not a word: ${rule.en}${/ is a ___/u.test(shown) ? `, and before a noun you need the adjective *${right}* anyway` : ""}.`,
+    `*${wrong}* 不是正确的词：${rule["zh-CN"]}${/ is a ___/u.test(shown) ? `；而且名词前本来就要用形容词 *${right}*` : ""}。`,
+  );
+};
+
 const adverbsOfManner: TopicDef = {
   id: "adverbs-of-manner",
   title: t("Quickly and Carefully", "quickly 和 carefully"),
@@ -553,9 +599,7 @@ const adverbsOfManner: TopicDef = {
         "An adjective says what a person or thing is like, and goes before a noun: *a quick runner*. An adverb says how someone does something, and goes after the verb: *She runs quickly.*\n\n- Most adverbs add *-ly*: *quick → quickly*, *careful → carefully*, *loud → loudly*.\n- *-y* becomes *-ily*: *easy → easily*.\n- *good* becomes *well*: *a good swimmer → She swims well.*\n- *fast* and *hard* do not change: *He runs fast. She works hard.*",
         "形容词说明人或事物是什么样的，放在名词前：*a quick runner*。副词说明动作怎样做，放在动词后：*She runs quickly.*\n\n- 大多数副词加 *-ly*：*quick → quickly*、*careful → carefully*、*loud → loudly*。\n- 以 *-y* 结尾的变成 *-ily*：*easy → easily*。\n- *good* 变成 *well*：*a good swimmer → She swims well.*\n- *fast* 和 *hard* 不变：*He runs fast. She works hard.*\n\n中文常说“跑得快”“唱得好”，英语不用 *runs quick*、*sings good*，要用副词。",
       ),
-      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), mannerChoiceBank, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（${/ is a ___/u.test(shown) ? "名词前用形容词" : "动词后用副词"}）`),
-      ),
+      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), mannerChoiceBank, mannerWhy, whyNotManner),
     ),
     point(
       "write",
@@ -568,7 +612,15 @@ const adverbsOfManner: TopicDef = {
         "sentence",
         t("Write the sentence again, starting with the person and the verb shown.", "用所给的动词改写句子，以人开头。"),
         mannerTypedBank,
-        (right, shown) => t(`${shown} → ${right}`, `${shown} → ${right}（副词放在动词后面）`),
+        (right, shown) => {
+          const adjective = manners.find(([a, , person]) => shown.includes(` ${a} ${person}`))?.[0] ?? "";
+          const [, adverb = ""] = mannerOf(adjective) ?? [];
+          const rule = adverbRule(adjective, adverb);
+          return t(
+            `With the verb, the word that says how is an adverb, and it goes after the verb; ${rule.en}: ${right}`,
+            `用动词表达时，说明怎样做的词是副词，放在动词后面；${rule["zh-CN"]}：${right}`,
+          );
+        },
       ),
     ),
   ],
@@ -640,6 +692,30 @@ const couldTypedBank: readonly TypedItem[] = couldRows.slice(32, 70).map(([[subj
   };
 });
 
+/** couldWhy explains could or couldn't for an ability in the past. */
+const couldWhy = (sentence: string): Text =>
+  /couldn't|could not/u.test(sentence)
+    ? t(
+        `This happened in the past, so *can't* becomes *couldn't*, with the plain verb after it: ${sentence}`,
+        `这是过去的事，所以 *can't* 变成 *couldn't*，后面接动词原形：${sentence}`,
+      )
+    : t(
+        `This is about the past, so *can* becomes *could*, with the plain verb after it: ${sentence}`,
+        `这是过去的事，所以 *can* 变成 *could*，后面接动词原形：${sentence}`,
+      );
+
+/** whyNotCould explains can for the past, to after could, or did with could. */
+const whyNotCould = (wrong: string, right: string): Text => {
+  if (wrong === "can" || wrong === "can't")
+    return t(
+      `*${wrong}* is for now. This is about the past, so it takes *${right}*.`,
+      `*${wrong}* 用于现在。这是过去的事，要用 *${right}*。`,
+    );
+  if (wrong === "could to")
+    return t("*could* takes the plain verb straight after it, with no *to*.", "*could* 后面直接接动词原形，不加 *to*。");
+  return t("*could* makes its own negative, *couldn't*, and never takes *did*.", "*could* 自己构成否定 *couldn't*，从不和 *did* 连用。");
+};
+
 const couldForPastAbility: TopicDef = {
   id: "could-for-past-ability",
   title: t("Could and Couldn't", "could 和 couldn't"),
@@ -659,8 +735,11 @@ const couldForPastAbility: TopicDef = {
         "*Could* is the past of *can*: *I can swim now. I could swim when I was five.* The negative is *couldn't* (*could not*): *We couldn't see the ball.*\n\nThe verb after *could* stays in its first form, with no *to*: *She could ride a bike*, not *could to ride* or *could rode*. Do not use *did* with it: *didn't could* is wrong.",
         "*could* 是 *can* 的过去式：*I can swim now. I could swim when I was five.* 否定是 *couldn't*（*could not*）：*We couldn't see the ball.*\n\n*could* 后面的动词用原形，不加 *to*：*She could ride a bike*，不说 *could to ride* 或 *could rode*。也不要和 *did* 一起用：*didn't could* 是错的。",
       ),
-      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), couldChoiceBank, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（过去的能力用 ${right}）`),
+      choiceGenerator(
+        t("Choose the words for the gap.", "选出填入空白处的词。"),
+        couldChoiceBank,
+        (right, shown) => couldWhy(fill(shown, right)),
+        whyNotCould,
       ),
     ),
     point(
@@ -670,9 +749,7 @@ const couldForPastAbility: TopicDef = {
         "Write a sentence from the note with *could* or *couldn't*, and the verb in its first form. *not* in the note means *couldn't*.",
         "根据笔记用 *could* 或 *couldn't* 写句子，动词用原形。笔记里有 *not* 就用 *couldn't*。",
       ),
-      typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), couldTypedBank, (right) =>
-        t(right, `${right}（could / couldn't 后面用动词原形）`),
-      ),
+      typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), couldTypedBank, couldWhy),
     ),
   ],
 };

@@ -2,7 +2,7 @@
 // media, logic, tone and attitude, film and television, public opinion, and linking words; the patterns of reporting
 // verbs. Its other topics, participial phrases, the body paragraph with evidence and varied openings, already exist.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { fill } from "../a2/kit.ts";
@@ -1662,15 +1662,6 @@ const reports: readonly (readonly [
   ],
 ];
 
-const patternNote: Readonly<Record<Pattern, { readonly en: string; readonly zh: string }>> = {
-  ing: { en: "-ing", zh: "后面接 -ing 形式" },
-  "prep-ing": { en: "a preposition + -ing", zh: "后面接介词加 -ing 形式" },
-  to: { en: "to + verb", zh: "后面接 to 加动词原形" },
-  "object-to": { en: "an object + to + verb", zh: "后面接宾语加 to 加动词原形" },
-};
-
-const noteOf = (base: string, pattern: Pattern) => `${base} ${patternNote[pattern].zh}`;
-
 const patternChoice: readonly ChoiceItem[] = reports.map(
   ([quote, , past, subject, object, right, , wrong, , rest]): ChoiceItem => [
     `${quote} → ${joinWords(subject, past, object, "___", rest)}.`,
@@ -1697,10 +1688,98 @@ const reportTyped: readonly TypedItem[] = reports.map(([quote, base, past, subje
   };
 });
 
-const noteByPast = new Map(reports.map(([, base, past, , , , pattern]) => [past, noteOf(base, pattern)]));
-const noteByForm = (shown: string) => {
-  const found = reports.find(([quote]) => shown.startsWith(quote));
-  return found ? noteOf(found[1], found[6]) : "";
+/** reportOf finds the report whose quotation starts shown. */
+const reportOf = (shown: string) => reports.find(([quote]) => shown.startsWith(quote));
+
+/** patternText names a pattern in words, with the preposition of a pattern with one. */
+function patternText(pattern: Pattern, form: string): Text {
+  if (pattern === "ing") return t("the *-ing* form", "*-ing* 形式");
+  if (pattern === "to") return t("*to* and the base form", "*to* 加动词原形");
+  if (pattern === "object-to") return t("an object, then *to* and the base form", "宾语再加 *to* 和动词原形");
+  const prep = form.split(" ")[0] ?? "";
+  return t(`*${prep}* and the *-ing* form`, `*${prep}* 加 *-ing* 形式`);
+}
+
+/** reportRule names the pattern of the reporting verb of shown. */
+function reportRule(shown: string): Text {
+  const item = reportOf(shown);
+  if (!item) return t("Each reporting verb takes its own pattern", "每个转述动词都有自己的句型");
+  const [, base, , , , form, pattern] = item;
+  const what = patternText(pattern, form);
+  return t(`*${base}* takes ${what.en}`, `*${base}* 后面接${what["zh-CN"].startsWith("*") ? " " : ""}${what["zh-CN"]}`);
+}
+
+/** reportWhy puts the pattern of the reporting verb before a sentence. */
+const reportWhy = (sentence: string, shown: string): Text => {
+  const rule = reportRule(shown);
+  return t(`${rule.en}: ${sentence}`, `${rule["zh-CN"]}：${sentence}`);
+};
+
+/** whyNotPattern explains a pattern that the reporting verb does not take. */
+const whyNotPattern = (wrong: string, right: string, shown: string): Text => {
+  const rule = reportRule(shown);
+  const item = reportOf(shown);
+  const base = item?.[1] ?? "";
+  const pattern = item?.[6] ?? "ing";
+  const [w0 = "", w1 = ""] = wrong.split(" ");
+  let first: Text;
+  if (w0 === "to") first = t(`*${base}* does not take *to* and a verb.`, `*${base}* 后面不接 *to* 加动词。`);
+  else if (w1 === "to") first = t(`*${base}* never takes an object and *to*.`, `*${base}* 后面不能接宾语加 *to*。`);
+  else if (wrong.split(" ").length === 1 && wrong.endsWith("ing"))
+    first = t(`*${base}* does not take the *-ing* form.`, `*${base}* 后面不接 *-ing* 形式。`);
+  else if (wrong.split(" ").length === 1)
+    first = t(`*${wrong}* is the base form alone, which no reporting verb takes.`, `*${wrong}* 只是动词原形，转述动词后面不能直接接原形。`);
+  else if (pattern === "prep-ing" && w1.endsWith("ing") && w0 !== right.split(" ")[0])
+    first = t(`*${base}* takes *${right.split(" ")[0]}*, not *${w0}*.`, `*${base}* 搭配 *${right.split(" ")[0]}*，不搭配 *${w0}*。`);
+  else
+    first = t(`After the preposition *${w0}*, the verb takes *-ing*, not the base form.`, `介词 *${w0}* 后面的动词要用 *-ing*，不用原形。`);
+  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+};
+
+/** takes names what the wrong reporting verbs are followed by. */
+const takes: Readonly<Record<string, Text>> = {
+  suggested: t("the *-ing* form, never an object and *to*", "*-ing* 形式，不能接宾语加 *to*"),
+  said: t("a *that*-clause or the words said, never an object and *to*", "*that* 从句或原话，不能接宾语加 *to*"),
+  explained: t("a *that*-clause, never a person straight after it", "*that* 从句，后面不能直接接人"),
+  told: t("an object and *to* with a verb", "宾语加 *to* 和动词"),
+  promised: t("*to* and a verb", "*to* 加动词"),
+  agreed: t("*to* and a verb", "*to* 加动词"),
+  offered: t("*to* and a verb", "*to* 加动词"),
+  demanded: t("*to* and a verb, with no object", "*to* 加动词，不接宾语"),
+  denied: t("the *-ing* form", "*-ing* 形式"),
+  admitted: t("the *-ing* form", "*-ing* 形式"),
+  regretted: t("the *-ing* form", "*-ing* 形式"),
+  apologized: t("*for* and the *-ing* form", "*for* 加 *-ing* 形式"),
+  blamed: t("someone *for* and the *-ing* form", "某人加 *for* 和 *-ing* 形式"),
+  criticized: t("someone *for* and the *-ing* form", "某人加 *for* 和 *-ing* 形式"),
+  thanked: t("someone *for* and the *-ing* form", "某人加 *for* 和 *-ing* 形式"),
+  praised: t("someone *for* and the *-ing* form", "某人加 *for* 和 *-ing* 形式"),
+  accused: t("someone *of* and the *-ing* form", "某人加 *of* 和 *-ing* 形式"),
+};
+
+/** verbRule names why the right reporting verb fits what was said and the words after the gap. */
+function verbRule(right: string, shown: string): Text {
+  const item = reportOf(shown);
+  if (!item) return reportRule(shown);
+  const [, base, , subject, , form, pattern] = item;
+  const what = patternText(pattern, form);
+  return t(
+    `*${right}* sums up what ${subject.replace(/^The /u, "the ")} said, and *${base}* takes ${what.en}, as after the gap`,
+    `*${right}* 概括了说话人的话，而且 *${base}* 后面接${what["zh-CN"].startsWith("*") ? " " : ""}${what["zh-CN"]}，和空白后面一致`,
+  );
+}
+
+/** whyNotVerb explains a reporting verb that cannot take the words after the gap. */
+const whyNotVerb = (wrong: string, right: string, shown: string): Text => {
+  const rule = verbRule(right, shown);
+  const what = takes[wrong];
+  const first = what
+    ? t(
+        `*${wrong}* takes ${what.en}, which does not fit the words after the gap.`,
+        `*${wrong}* 后面接${what["zh-CN"].startsWith("*") ? " " : ""}${what["zh-CN"]}，和空白后面的词不相配。`,
+      )
+    : t(`*${wrong}* cannot take the words after the gap.`, `*${wrong}* 不能和空白后面的词搭配。`);
+  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
 };
 
 const reportingVerbs: TopicDef = {
@@ -1728,7 +1807,8 @@ const reportingVerbs: TopicDef = {
       choiceGenerator(
         t("Report what was said. Choose the words for the gap.", "转述别人说的话。选出填入空白处的词。"),
         patternChoice,
-        (right, shown) => t(fill(shown, right), `${fill(shown, right)}（${noteByForm(shown)}）`),
+        (right, shown) => reportWhy(fill(shown, right), shown),
+        whyNotPattern,
       ),
     ),
     point(
@@ -1741,7 +1821,11 @@ const reportingVerbs: TopicDef = {
       choiceGenerator(
         t("Report what was said. Choose the verb for the gap.", "转述别人说的话。选出填入空白处的动词。"),
         verbChoice,
-        (right, shown) => t(fill(shown, right), `${fill(shown, right)}（${noteByPast.get(right) ?? ""}）`),
+        (right, shown) => {
+          const rule = verbRule(right, shown);
+          return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+        },
+        whyNotVerb,
       ),
     ),
     point(
@@ -1755,7 +1839,7 @@ const reportingVerbs: TopicDef = {
         "sentence-pattern",
         t("Report the quotation with the verb in brackets.", "用括号里的动词转述引语。"),
         reportTyped,
-        (right) => t(right, `${right}（用这个转述动词自己的句型）`),
+        (right, shown) => reportWhy(right, shown),
       ),
     ),
   ],

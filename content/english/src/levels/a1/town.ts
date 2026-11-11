@@ -1,7 +1,7 @@
 // A1, unit 12: In Town. Places in town, directions and trips, wh- questions, can for requests, and directions to your
 // home judged by a model.
 
-import { type CriterionSpec, type TopicDef, t } from "@ga/content";
+import { type CriterionSpec, type Text, type TopicDef, t } from "@ga/content";
 import {
   type ChoiceItem,
   choiceGenerator,
@@ -383,6 +383,67 @@ const whAskBank: readonly TypedItem[] = whItems.map(
   }),
 );
 
+/** whKind says what a question word asks about, from the gap and what follows it. */
+const whKind = (wh: string, after: string): Text => {
+  if (wh === "What" && after.startsWith("time")) return t("a time", "时间");
+  if (wh === "How" && after.startsWith("old")) return t("an age", "年龄");
+  if (wh === "How" && after.startsWith("many")) return t("a number", "数量");
+  if (wh === "How" && after.startsWith("much")) return t("a price", "价钱");
+  const kinds: Record<string, Text> = {
+    Where: t("a place", "地点"),
+    When: t("a time", "时间"),
+    What: t("a thing", "事物"),
+    Who: t("a person", "人"),
+    How: t("the way something is done or how someone is", "方式或状况"),
+    Why: t("a reason", "原因"),
+  };
+  return kinds[wh] ?? t("something", "某事");
+};
+
+/** whParts splits a gapped question into the words after the gap and the answer. */
+const whParts = (shown: string): readonly [after: string, answer: string] => {
+  const [question = "", answer = ""] = shown.split(" — ");
+  return [question.replace(/^___ /u, ""), answer];
+};
+
+/** whWhy explains the question word that an answer calls for. */
+const whWhy = (right: string, shown: string): Text => {
+  const [after, answer] = whParts(shown);
+  const kind = whKind(right, after);
+  const full = shown.replace("___", right);
+  return t(
+    `The answer *${answer}* gives ${kind.en}, and *${right}${after.startsWith("time") || /^(old|many|much)\b/u.test(after) ? ` ${after.split(" ")[0]}` : ""}* asks about ${kind.en}: ${full}`,
+    `回答 *${answer}* 说的是${kind["zh-CN"]}，而 *${right}${after.startsWith("time") || /^(old|many|much)\b/u.test(after) ? ` ${after.split(" ")[0]}` : ""}* 问的正是${kind["zh-CN"]}：${full}`,
+  );
+};
+
+/** whyNotWh explains a question word that asks about the wrong kind of thing. */
+const whyNotWh = (wrong: string, right: string, shown: string): Text => {
+  const [after, answer] = whParts(shown);
+  const kind = whKind(right, after);
+  const wrongKind = whKind(wrong, "");
+  return t(
+    `*${wrong}* asks about ${wrongKind.en}, but the answer *${answer}* gives ${kind.en}.`,
+    `*${wrong}* 问的是${wrongKind["zh-CN"]}，但回答 *${answer}* 说的是${kind["zh-CN"]}。`,
+  );
+};
+
+/** whAskWhy explains the order of a wh- question. */
+const whAskWhy = (right: string, shown: string): Text => {
+  const item = whItems.find((it) => it.question === right);
+  const ask = item?.ask ?? firstWord(right);
+  const next = right.slice(ask.length + 1).split(" ")[0] ?? "";
+  return /^(do|does|is|are)$/u.test(next)
+    ? t(
+        `*${shown}* gives the answer, so put *${ask}* first, then *${next}* before the subject, as in a yes/no question: ${right}`,
+        `*${shown}* 里有答案，所以把 *${ask}* 放在句首，再像一般疑问句那样把 *${next}* 放在主语前：${right}`,
+      )
+    : t(
+        `Here *${ask}* asks about the subject itself, so the verb comes straight after it with no *do*: ${right}`,
+        `这里 *${ask}* 问的就是主语，所以动词直接跟在后面，不用 *do*：${right}`,
+      );
+};
+
 const whQuestions: TopicDef = {
   id: "wh-questions",
   title: t("Wh- Questions", "特殊疑问句"),
@@ -405,9 +466,7 @@ const whQuestions: TopicDef = {
         "Each question word asks about one thing:\n\n- *where*: a place (*In Beijing.*)\n- *when*, *what time*: a time (*At nine. On Sunday.*)\n- *what*: a thing (*A taxi.*)\n- *who*: a person (*Ms. Wang.*)\n- *how*: the way (*By bus.*); *how old*, *how many*, *how much*\n- *why*: the reason (*Because …*)\n\nLook at the answer to choose the word.",
         "每个疑问词问一类东西：\n\n- *where*：地点（*In Beijing.*）\n- *when*、*what time*：时间（*At nine. On Sunday.*）\n- *what*：事物（*A taxi.*）\n- *who*：人（*Ms. Wang.*）\n- *how*：方式（*By bus.*）；还有 *how old*、*how many*、*how much*\n- *why*：原因（*Because …*）\n\n看回答来选疑问词。",
       ),
-      choiceGenerator(t("Choose the question word for the answer.", "根据回答选择疑问词。"), whChoiceBank, (right, shown) =>
-        t(shown.replace("___", right), `${shown.replace("___", right)}（根据回答判断要问的是什么）`),
-      ),
+      choiceGenerator(t("Choose the question word for the answer.", "根据回答选择疑问词。"), whChoiceBank, whWhy, whyNotWh),
     ),
     point(
       "ask",
@@ -416,9 +475,7 @@ const whQuestions: TopicDef = {
         "Put the question word first, then the question as you know it: *Does Tom live near the station?* → *Where does Tom live?* *Is the bank next to the hotel?* → *Where is the bank?*\n\nWhen *who* or *how many people* is the subject, there is no *do*: *Who drives the bus?*",
         "先写疑问词，再接一般疑问句的语序：*Does Tom live near the station?* → *Where does Tom live?* *Is the bank next to the hotel?* → *Where is the bank?*\n\n中文的疑问词留在原位（“汤姆住在哪里？”），英语要把它放到句首。如果 *who* 或 *how many people* 本身就是主语，就不用 *do*：*Who drives the bus?*",
       ),
-      typedGenerator("sentence-pattern", t("Write the question.", "写出问句。"), whAskBank, (right) =>
-        t(right, `${right}（疑问词放在句首，后面用疑问句语序）`),
-      ),
+      typedGenerator("sentence-pattern", t("Write the question.", "写出问句。"), whAskBank, whAskWhy),
     ),
   ],
 };
@@ -519,9 +576,35 @@ const requestTypedBank: readonly TypedItem[] = interleave([
   ),
 ]);
 
+/** requestWhy explains how a request with can is built. */
+const requestWhy = (right: string): Text =>
+  right.startsWith("Can I")
+    ? t(
+        `To ask if you may do something, put *Can* first, then *I* and the plain verb, with no *to*: ${right}`,
+        `请求允许自己做事时，*Can* 放在句首，再接 *I* 和动词原形，不加 *to*：${right}`,
+      )
+    : t(
+        `To ask someone to do something, put *Can* first, then *you* and the plain verb, with no *to*: ${right}`,
+        `请别人做事时，*Can* 放在句首，再接 *you* 和动词原形，不加 *to*：${right}`,
+      );
+
+/** whyNotRequest explains a wrong request with can. */
+const whyNotRequest = (wrong: string, right: string, _shown: string, position: number): Text => {
+  const who = right.startsWith("Can I") ? "I" : "you";
+  return position === 0
+    ? t(
+        `*${wrong}* puts *to* after *can*, but *can* is followed straight away by the plain verb.`,
+        `*${wrong}* 在 *can* 后面加了 *to*，但 *can* 后面直接跟动词原形。`,
+      )
+    : t(
+        `*${wrong}* keeps the order of a statement. A question puts *Can* before *${who}*.`,
+        `*${wrong}* 保留了陈述句的语序。问句要把 *Can* 放在 *${who}* 前面。`,
+      );
+};
+
 const canForRequests: TopicDef = {
   id: "can-for-requests",
-  title: t("Can You Help Me?", "Can you help me?"),
+  title: t("Can You Help Me?", "Can you help me? 用 can 提出请求"),
   summary: t(
     "Can you open the door? Can I sit here? Asking people to do things, and asking to do them yourself.",
     "Can you open the door? Can I sit here? 请别人做事，以及请求允许自己做事。",
@@ -541,9 +624,7 @@ const canForRequests: TopicDef = {
         "To ask someone to do something, say *Can you …?*: *Can you open the door?* To ask if you may do something, say *Can I …?*: *Can I sit here?*\n\n*Can* comes first, and the verb after it has no *to* and no *-s*.",
         "请别人做事，说 *Can you …?*：*Can you open the door?* 请求允许自己做事，说 *Can I …?*：*Can I sit here?*\n\n*Can* 放在句首，后面的动词不加 *to*，也不加 *-s*。",
       ),
-      choiceGenerator(t("Which request is right?", "哪个请求是对的？"), requestChoiceBank, (right) =>
-        t(right, `${right}（can 放在句首，后面直接跟动词原形）`),
-      ),
+      choiceGenerator(t("Which request is right?", "哪个请求是对的？"), requestChoiceBank, requestWhy, whyNotRequest),
     ),
     point(
       "ask",
@@ -552,9 +633,10 @@ const canForRequests: TopicDef = {
         "An order like *Open the door.* can sound rude. Make it a question with *Can you …?* and add *please*: *Can you open the door, please?* For yourself, *I want to sit here.* becomes *Can I sit here, please?*",
         "*Open the door.* 这样的祈使句听起来可能不礼貌。把它改成 *Can you …?* 的问句，再加上 *please*：*Can you open the door, please?* 为自己请求时，*I want to sit here.* 变成 *Can I sit here, please?*",
       ),
-      typedGenerator("sentence-pattern", t("Make it a polite request.", "改成礼貌的请求。"), requestTypedBank, (right) =>
-        t(right, `${right}（用 Can you 或 Can I 提问，可以加上 please）`),
-      ),
+      typedGenerator("sentence-pattern", t("Make it a polite request.", "改成礼貌的请求。"), requestTypedBank, (right) => {
+        const why = requestWhy(right);
+        return t(`Add *please* to sound polite. ${why.en}`, `加上 *please* 更礼貌。${why["zh-CN"]}`);
+      }),
     ),
   ],
 };

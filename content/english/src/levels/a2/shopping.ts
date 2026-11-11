@@ -1,7 +1,7 @@
 // A2, unit 9: Shopping and Money. Money, shops, things we buy and what they are made of; too and enough, one and ones;
 // a message to a shop judged by a model.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { interleave, pairUp, vocabularyTopic, word } from "../words.ts";
@@ -504,6 +504,80 @@ const amountItems: readonly ChoiceItem[] = [
   ["He gets ___ messages. He can't answer them all.", "too many", ["too much", "very much"]],
 ];
 
+/** sizeWhy explains too before an adjective or enough after it. */
+const sizeWhy = (right: string, shown: string): Text =>
+  right.startsWith("too ")
+    ? t(
+        `The sentence shows a problem, more than you want, so *too* goes before the adjective: ${fill(shown, right)}`,
+        `句子说的是一个问题，超过了需要，所以 *too* 放在形容词前面：${fill(shown, right)}`,
+      )
+    : t(
+        `The sentence is about having as much as you need, or not, so *enough* goes after the adjective: ${fill(shown, right)}`,
+        `句子说的是够不够，所以 *enough* 放在形容词后面：${fill(shown, right)}`,
+      );
+
+/** whyNotSize explains enough before an adjective, or too and enough mixed up. */
+const whyNotSize = (wrong: string, right: string): Text => {
+  if (wrong.startsWith("enough "))
+    return t(
+      `*enough* goes after an adjective, never before it: *${right.startsWith("too") ? wrong.replace(/^enough (\w+)/u, "$1 enough") : right}*.`,
+      `*enough* 放在形容词后面，不放在前面：*${right.startsWith("too") ? wrong.replace(/^enough (\w+)/u, "$1 enough") : right}*。`,
+    );
+  return wrong.startsWith("too ")
+    ? t(
+        `*${wrong}* means more than you want, a problem. This sentence is about having as much as you need, so it takes *${right}*.`,
+        `*${wrong}* 表示“太……”，是个问题。这句说的是够不够，所以用 *${right}*。`,
+      )
+    : t(
+        `*${wrong}* means as much as you need. This sentence shows a problem, more than you want, so it takes *${right}*.`,
+        `*${wrong}* 表示“足够”。这句说的是一个问题，超过了需要，所以用 *${right}*。`,
+      );
+};
+
+/** amountNoun is the noun of a sentence with too much, too many or enough. */
+const amountNoun = (right: string, shown: string): string =>
+  right.startsWith("enough ") ? (right.split(" ")[1] ?? "") : (/___ (\w+)/u.exec(shown)?.[1] ?? "");
+
+/** amountWhy explains too many, too much or enough before a noun. */
+const amountWhy = (right: string, shown: string): Text => {
+  const noun = amountNoun(right, shown);
+  const done = fill(shown, right);
+  if (right === "too many")
+    return t(
+      `You can count *${noun}*, and there are more than you want, so it takes *too many*: ${done}`,
+      `*${noun}* 可以数，而且超过了需要，所以用 *too many*：${done}`,
+    );
+  if (right === "too much")
+    return t(
+      `You cannot count *${noun}*, and there is more than you want, so it takes *too much*: ${done}`,
+      `*${noun}* 不能数，而且超过了需要，所以用 *too much*：${done}`,
+    );
+  return t(
+    `The sentence is about having as much as you need, and *enough* goes before a noun: ${done}`,
+    `句子说的是够不够，而 *enough* 放在名词前面：${done}`,
+  );
+};
+
+/** whyNotAmount explains a wrong word for an amount before a noun. */
+const whyNotAmount = (wrong: string, right: string, shown: string): Text => {
+  const noun = amountNoun(right, shown);
+  if (wrong.startsWith("very "))
+    return t(
+      `*very* only makes a word stronger. It does not say there is more than you want, which is what *too* says here.`,
+      `*very* 只是加强语气，不表示“超过了需要”；这里要用 *too* 表达这个意思。`,
+    );
+  if (wrong.endsWith(" enough"))
+    return t(`*enough* goes before a noun, not after it: *${right}*.`, `*enough* 放在名词前面，不放在后面：*${right}*。`);
+  if (right.startsWith("enough "))
+    return t(
+      `*${wrong}* says there is more than you want, but this sentence is about having as much as you need: *${right}*.`,
+      `*${wrong}* 表示“太多”，但这句说的是够不够：*${right}*。`,
+    );
+  return wrong === "too much"
+    ? t(`*too much* is for things you cannot count, but you can count *${noun}*.`, `*too much* 用于不可数名词，但 *${noun}* 可以数。`)
+    : t(`*too many* is for things you can count, but you cannot count *${noun}*.`, `*too many* 用于可数名词，但 *${noun}* 不能数。`);
+};
+
 const tooAndEnough: TopicDef = {
   id: "too-and-enough",
   title: t("Too and Enough", "too 和 enough"),
@@ -526,12 +600,7 @@ const tooAndEnough: TopicDef = {
         "*too* means *more than you want*: it is a problem. It goes **before** the adjective: *These shoes are too small. I can't wear them.*\n\n*enough* means *as much as you need*. It goes **after** the adjective: *The room is big enough for all of us. I'm not tall enough.*\n\nNot *enough big*.",
         "*too* 的意思是“太……”，超过了需要，是个问题。它放在形容词**前面**：*These shoes are too small. I can't wear them.*\n\n*enough* 的意思是“足够”，正好满足需要。它放在形容词**后面**：*The room is big enough for all of us. I'm not tall enough.*\n\n中文说“足够大”，英语却说 *big enough*，不说 *enough big*。另外，*too* 不是“很”：*It's very hot* 只是很热，*It's too hot* 是热得受不了。",
       ),
-      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), sizeChoiceBank, (right, shown) =>
-        t(
-          fill(shown, right),
-          `${fill(shown, right)}（${right.startsWith("too") ? "太……，有问题：too + 形容词" : "足够：形容词 + enough"}）`,
-        ),
-      ),
+      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), sizeChoiceBank, sizeWhy, whyNotSize),
     ),
     point(
       "write",
@@ -541,7 +610,15 @@ const tooAndEnough: TopicDef = {
         "根据笔记写句子。*too* 放在形容词前面：*The jacket is too small.* *not ... enough* 把 *not* 放在 *is / are* 后面，*enough* 放在形容词后面：*The bag isn't big enough.*",
       ),
       typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), tooTypedBank, (right) =>
-        t(right, `${right}（too + 形容词；形容词 + enough）`),
+        / too /u.test(right)
+          ? t(
+              `The note says *too*, so it goes after *is* or *are* and before the adjective: ${right}`,
+              `笔记里是 *too*，所以放在 *is / are* 后面、形容词前面：${right}`,
+            )
+          : t(
+              `The note says *not enough*, so *not* goes with *is* or *are* and *enough* goes after the adjective: ${right}`,
+              `笔记里是 *not enough*，所以 *not* 跟在 *is / are* 后面，*enough* 放在形容词后面：${right}`,
+            ),
       ),
     ),
     point(
@@ -551,12 +628,7 @@ const tooAndEnough: TopicDef = {
         "With nouns, use *too many* for things you can count and *too much* for things you cannot count:\n\n- *There are too many cars.*\n- *There is too much traffic.*\n\n*enough* goes **before** a noun: *We don't have enough money*, not *money enough*.",
         "和名词连用时，可数名词用 *too many*，不可数名词用 *too much*：\n\n- *There are too many cars.*\n- *There is too much traffic.*\n\n*enough* 放在名词**前面**：说 *We don't have enough money*，不说 *money enough*。注意：*enough* 在形容词后面，却在名词前面。",
       ),
-      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), amountItems, (right, shown) =>
-        t(
-          fill(shown, right),
-          `${fill(shown, right)}（${right === "too many" ? "可数名词用 too many" : right === "too much" ? "不可数名词用 too much" : "enough 放在名词前面"}）`,
-        ),
-      ),
+      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), amountItems, amountWhy, whyNotAmount),
     ),
   ],
 };
@@ -620,6 +692,39 @@ const oneTypedBank: readonly TypedItem[] = interleave([
   ),
 ]);
 
+/** oneNoun is the noun that one or ones stands for in a sentence, and whether it is plural. */
+const oneNoun = (sentence: string): readonly [noun: string, plural: boolean] => {
+  const plural = oneNouns.find(([, nouns]) => new RegExp(`\\b${nouns}\\b`, "u").test(sentence));
+  if (plural) return [plural[1], true];
+  const single = oneNouns.find(([noun]) => new RegExp(`\\b${noun}\\b`, "u").test(sentence));
+  return [single?.[0] ?? "", false];
+};
+
+/** oneWhy explains one or ones for a noun already said. */
+const oneWhy = (word: string, noun: string, done: string): Text =>
+  word === "ones"
+    ? t(
+        `*${noun}* has already been said and means more than one, so *ones* stands for it: ${done}`,
+        `*${noun}* 前面已经说过，而且是复数，所以用 *ones* 代替：${done}`,
+      )
+    : t(
+        `*${noun}* has already been said and means one thing, so *one* stands for it: ${done}`,
+        `*${noun}* 前面已经说过，而且是单数，所以用 *one* 代替：${done}`,
+      );
+
+/** whyNotOne explains the wrong number, or it or them after an adjective. */
+const whyNotOne = (wrong: string, right: string, shown: string): Text => {
+  const [noun] = oneNoun(shown);
+  if (wrong === "it" || wrong === "them")
+    return t(
+      `*${wrong}* cannot follow an adjective. After an adjective, use *${right}* to stand for *${noun}*.`,
+      `*${wrong}* 不能放在形容词后面。形容词后面要用 *${right}* 代替 *${noun}*。`,
+    );
+  return wrong === "ones"
+    ? t(`*ones* is for more than one, but *${noun}* means one thing.`, `*ones* 代替复数名词，但 *${noun}* 是单数。`)
+    : t(`*one* is for one thing, but *${noun}* means more than one.`, `*one* 代替单数名词，但 *${noun}* 是复数。`);
+};
+
 const oneAndOnes: TopicDef = {
   id: "one-and-ones",
   title: t("This One and the Red Ones", "this one 和 the red ones"),
@@ -642,8 +747,11 @@ const oneAndOnes: TopicDef = {
         "When you have already said a noun, you can use *one* instead of saying it again: *I don't like the black bag. I like the brown one.* (*one* = *bag*)\n\nFor more than one, use *ones*: *I don't like the black shoes. I like the brown ones.*\n\nAfter an adjective, use *one* or *ones*, not *it* or *them*: not *the brown it*.",
         "前面已经说过的名词，可以用 *one* 代替，不再重复：*I don't like the black bag. I like the brown one.*（*one* = *bag*）\n\n复数用 *ones*：*I don't like the black shoes. I like the brown ones.*\n\n形容词后面要用 *one / ones*，不能用 *it / them*：不说 *the brown it*。中文说“我喜欢棕色的”，英语不能只说 *the brown*，要加 *one*。",
       ),
-      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), oneChoiceBank, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（${right === "one" ? "代替单数名词用 one" : "代替复数名词用 ones"}）`),
+      choiceGenerator(
+        t("Choose the word for the gap.", "选出填入空白处的词。"),
+        oneChoiceBank,
+        (right, shown) => oneWhy(right, oneNoun(shown)[0], fill(shown, right)),
+        whyNotOne,
       ),
     ),
     point(
@@ -657,7 +765,10 @@ const oneAndOnes: TopicDef = {
         "sentence",
         t("Write the second sentence again with one or ones.", "用 one 或 ones 重写第二句。"),
         oneTypedBank,
-        (right) => t(right, `${right}（用 one / ones 代替前面说过的名词）`),
+        (right, shown) => {
+          const [noun, plural] = oneNoun(shown);
+          return oneWhy(plural ? "ones" : "one", noun, right);
+        },
       ),
     ),
   ],

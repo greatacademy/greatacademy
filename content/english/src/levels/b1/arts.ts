@@ -1,7 +1,7 @@
 // B1, unit 12: Arts and Entertainment. The arts, film and theater, music, books and stories, entertainment, describing
 // art and going out; phrasal verbs; writing a review.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
@@ -908,6 +908,28 @@ const pronounTyped: readonly TypedItem[] = separable.map(
   }),
 );
 
+/** phrasalOf finds the phrasal verb of a gapped sentence. */
+const phrasalOf = (shown: string) => phrasals.find(([s]) => s === shown || shown.startsWith(s.replace(/___.*$/u, "")));
+
+/** verbWithMeaning is the first phrasal verb that has a meaning. */
+const verbWithMeaning = (meaning: string): string | undefined => phrasals.find(([, , , , m]) => m === meaning)?.[3];
+
+/** whyNotParticle explains a small word that makes another phrasal verb or none that fits. */
+const whyNotParticle = (wrong: string, right: string, shown: string): Text => {
+  const [, , , verb = "", meaning = ""] = phrasalOf(shown) ?? [];
+  const base = verb.split(" ")[0] ?? "";
+  const other = phrasals.find(([, , , v]) => v === `${base} ${wrong}` || v.startsWith(`${base} ${wrong} `));
+  return other
+    ? t(
+        `*${other[3]}* means *${other[4]}*, which does not fit here. The sentence needs *${verb}*, which means *${meaning}*.`,
+        `*${other[3]}* 的意思是 *${other[4]}*，放在这里不合适。这句需要 *${verb}*，意思是 *${meaning}*。`,
+      )
+    : t(
+        `*${base} ${wrong}* does not mean *${meaning}*. That meaning takes *${right}*: *${verb}*.`,
+        `*${base} ${wrong}* 没有 *${meaning}* 的意思。这个意思要用 *${right}*：*${verb}*。`,
+      );
+};
+
 const phrasalVerbs: TopicDef = {
   id: "phrasal-verbs",
   title: t("Phrasal Verbs", "短语动词"),
@@ -930,7 +952,14 @@ const phrasalVerbs: TopicDef = {
       choiceGenerator(
         t("Choose the small word that completes the phrasal verb.", "选出构成短语动词的小词。"),
         particleChoice,
-        (right, shown) => t(fill(shown, right), `${fill(shown, right)}（小词决定短语动词的意思）`),
+        (right, shown) => {
+          const [, , , verb = "", meaning = ""] = phrasalOf(shown) ?? [];
+          return t(
+            `The sentence needs the meaning *${meaning}*, and that is *${verb}*, so the small word is *${right}*: ${fill(shown, right)}`,
+            `这句需要表达 *${meaning}* 的意思，也就是 *${verb}*，所以小词是 *${right}*：${fill(shown, right)}`,
+          );
+        },
+        whyNotParticle,
       ),
     ),
     point(
@@ -943,7 +972,20 @@ const phrasalVerbs: TopicDef = {
       choiceGenerator(
         t("What does the phrasal verb mean in this sentence?", "这个短语动词在句中是什么意思？"),
         meaningChoice,
-        (right, shown) => t(`${shown}: ${right}`, `${shown}：${right}（看上下文判断短语动词的意思）`),
+        (right, shown) => {
+          const [sentence = "", verb = ""] = shown.split(" → ");
+          return t(
+            `In this sentence *${verb}* means *${right}*, which the rest of the sentence makes clear: ${sentence}`,
+            `在这句话里，*${verb}* 的意思是 *${right}*，句子的其他部分说明了这一点：${sentence}`,
+          );
+        },
+        (wrong, _right, shown) => {
+          const verb = shown.split(" → ")[1] ?? "";
+          const owner = verbWithMeaning(wrong);
+          return owner
+            ? t(`*${wrong}* is what *${owner}* means, not *${verb}*.`, `*${wrong}* 是 *${owner}* 的意思，不是 *${verb}* 的意思。`)
+            : t(`*${verb}* does not mean *${wrong}* in this sentence.`, `在这句话里，*${verb}* 不是 *${wrong}* 的意思。`);
+        },
       ),
     ),
     point(

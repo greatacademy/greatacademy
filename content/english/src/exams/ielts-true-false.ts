@@ -33,6 +33,40 @@ function solution(kind: Kind, evidence: string, views: boolean): Text {
   );
 }
 
+/** whyNotLabel explains a wrong label: label 0 says the text agrees, 1 that it contradicts, 2 that it is silent. */
+function whyNotLabel(kind: Kind, label: number, evidence: string, views: boolean): Text {
+  const [yes, no] = views ? ["Yes", "No"] : ["True", "False"];
+  if (kind === "agrees")
+    return label === 1
+      ? t(
+          `${no} needs the text to say the opposite, but it says the same in other words: "${evidence}"`,
+          `${no} 要求原文说出相反的意思，但原文换了说法表达的是同样的意思："${evidence}"`,
+        )
+      : t(
+          `The text does say this, in other words, so it is not Not given: "${evidence}"`,
+          `原文确实说了这一点，只是换了说法，所以不是 Not given："${evidence}"`,
+        );
+  if (kind === "contradicts")
+    return label === 0
+      ? t(
+          `${yes} needs the text to say the same, but it says the opposite: "${evidence}"`,
+          `${yes} 要求原文表达同样的意思，但原文说的正相反："${evidence}"`,
+        )
+      : t(
+          `The text does speak to this, and it says the opposite, so it is not Not given: "${evidence}"`,
+          `原文确实谈到了这一点，而且说的正相反，所以不是 Not given："${evidence}"`,
+        );
+  return label === 0
+    ? t(
+        `${yes} needs the text to confirm the statement, but it only says: "${evidence}" That is close, not the same.`,
+        `${yes} 要求原文证实题目的说法，但原文只说："${evidence}" 意思相近，并不相同。`,
+      )
+    : t(
+        `${no} needs the text to say the opposite, but it only says: "${evidence}" That leaves the statement open.`,
+        `${no} 要求原文说出相反的意思，但原文只说："${evidence}" 题目的说法仍无从判断。`,
+      );
+}
+
 function items(texts: readonly Judged[], views: boolean): readonly LabelledItem[] {
   const byText = texts.map((judged) =>
     judged.statements.map(
@@ -40,6 +74,7 @@ function items(texts: readonly Judged[], views: boolean): readonly LabelledItem[
         shown: `${judged.text}\n\n**Statement:** ${statement}`,
         right: position[kind],
         solution: solution(kind, evidence, views),
+        whyNot: (label: number) => whyNotLabel(kind, label, evidence, views),
       }),
     ),
   );

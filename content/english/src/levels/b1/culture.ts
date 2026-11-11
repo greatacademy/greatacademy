@@ -1,7 +1,7 @@
 // B1, unit 7: Travel and Culture. Culture, planning a trip, adventure, food and culture, nations and languages, travel
 // problems and describing places; the article with things in general and with places; writing a story.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
@@ -590,7 +590,7 @@ const problems = vocabularyTopic({
 
 const places = vocabularyTopic({
   id: "b1-words-describing-places-2",
-  title: t("Describing Places", "描述地方"),
+  title: t("Adjectives for Places", "描述地方的形容词"),
   summary: t(
     "Ancient and medieval; magnificent, spectacular and picturesque; lively and charming; industrial and isolated; coastal, tropical and vast.",
     "古代的和中世纪的；宏伟的、壮观的和风景如画的；热闹的和迷人的；工业的和偏僻的；沿海的、热带的和广阔的。",
@@ -790,14 +790,97 @@ const articleTyped: readonly TypedItem[] = interleave([generalChoice, placeChoic
   return { shown: `${mistake}${note}`, accepted: [bare.replace("___", right)], wrong: [mistake] };
 });
 
-/** articleNote explains in Chinese why the right option has the or no article. */
-function articleNote(right: string, shown: string): string {
-  if (shown.endsWith("(in general)")) return "泛指一类事物时，不可数名词和复数名词前不加 the";
-  if (/^(the|The) /u.test(right) && placeItems.some(([s]) => s === shown))
-    return "河流、海洋、山脉、沙漠以及含 United 或复数形式的国名前用 the";
-  if (/^(the|The) /u.test(right)) return "特指某些事物，前面用 the";
-  return "大多数国家、城市、大洲、街道和单座山峰的名字前不加冠词";
+/** placeKinds name what kind of place each name is, in English and Chinese. */
+const placeKinds: Readonly<Record<string, readonly [string, string]>> = {
+  Yangtze: ["a river", "河流"],
+  Nile: ["a river", "河流"],
+  Thames: ["a river", "河流"],
+  Amazon: ["a river", "河流"],
+  Mediterranean: ["a sea", "海"],
+  Atlantic: ["an ocean", "大洋"],
+  Pacific: ["an ocean", "大洋"],
+  Alps: ["a mountain range", "山脉"],
+  Himalayas: ["a mountain range", "山脉"],
+  Andes: ["a mountain range", "山脉"],
+  Sahara: ["a desert", "沙漠"],
+  "United States": ["a country with *United* in its name", "名字里有 United 的国家"],
+  "United Kingdom": ["a country with *United* in its name", "名字里有 United 的国家"],
+  Netherlands: ["a country with a plural name", "名字是复数形式的国家"],
+  Philippines: ["a country with a plural name", "名字是复数形式的国家"],
+  "Great Wall": ["a famous place that takes *the*", "带 the 的著名地方"],
+  Paris: ["a city", "城市"],
+  Shanghai: ["a city", "城市"],
+  Rome: ["a city", "城市"],
+  Milan: ["a city", "城市"],
+  Asia: ["a continent", "大洲"],
+  Africa: ["a continent", "大洲"],
+  "Mount Fuji": ["a single mountain", "单座山峰"],
+  "Oxford Street": ["a street", "街道"],
+};
+
+/** placeName finds the name of a place in an option, without its article. */
+const placeName = (option: string) => option.replace(/^(the|The|an?|An?) /u, "");
+
+/** nounIn is the noun of an option: a name of a place as it is, any other noun in small letters. */
+const nounIn = (option: string, shown: string) =>
+  placeItems.some(([s]) => s === shown) ? placeName(option) : placeName(option).toLowerCase();
+
+/** articleRule names the rule of the article for the right option in the gap of shown. */
+function articleRule(right: string, shown: string): Text {
+  const noun = nounIn(right, shown);
+  if (shown.endsWith("(in general)"))
+    return t(`The sentence is about ${noun} in general, so the noun takes no article`, `句子泛指 ${noun} 这一类事物，所以名词前不加冠词`);
+  if (placeItems.some(([s]) => s === shown)) {
+    const [en, zh] = placeKinds[noun] ?? ["a country", "国家"];
+    return /^the /iu.test(right)
+      ? t(`*${noun}* is ${en}, so it takes *the*`, `*${noun}* 是${zh}，所以要加 *the*`)
+      : t(`*${noun}* is ${en}, so it takes no article`, `*${noun}* 是${zh}，所以不加冠词`);
+  }
+  return t(`The sentence tells you which ${noun} it means, so it takes *the*`, `句子说明了是哪些 ${noun}，是特指，所以要加 *the*`);
 }
+
+/** articleWhy explains the article in the gap of shown. */
+const articleWhy = (right: string, shown: string): Text => {
+  const rule = articleRule(right, shown);
+  const sentence = fill(shown.replace(/ \(in general\)$/u, ""), right);
+  return t(`${rule.en}: ${sentence}`, `${rule["zh-CN"]}：${sentence}`);
+};
+
+/** whyNotArticle explains a wrong option with the, a or no article. */
+const whyNotArticle = (wrong: string, right: string, shown: string): Text => {
+  const rule = articleRule(right, shown);
+  const noun = nounIn(right, shown);
+  let first: Text;
+  if (/^an? /iu.test(wrong))
+    first = placeItems.some(([s]) => s === shown)
+      ? t("*a* and *an* never go before the name of a place.", "地名前不能用 *a* 或 *an*。")
+      : t(
+          `*a* and *an* mean just one of something, not ${shown.endsWith("(in general)") ? `${noun} in general` : `the particular ${noun} the sentence tells you about`}.`,
+          `*a* 和 *an* 只表示“某一个”，不是${shown.endsWith("(in general)") ? "泛指这一类事物" : "句子说明的那些特定事物"}。`,
+        );
+  else if (/^the /iu.test(wrong))
+    first = shown.endsWith("(in general)")
+      ? t(`*${wrong}* would mean particular ${noun}, not ${noun} in general.`, `*${wrong}* 表示特指某些 ${noun}，不是泛指。`)
+      : t(`*${noun}* does not take *the*.`, `*${noun}* 前面不加 *the*。`);
+  else
+    first = placeItems.some(([s]) => s === shown)
+      ? t(`*${noun}* cannot go without *the*.`, `*${noun}* 前面不能不加 *the*。`)
+      : t(`With no article, *${wrong}* would mean ${noun} in general.`, `不加冠词，*${wrong}* 就成了泛指。`);
+  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+};
+
+/** articleFixWhy explains the corrected article in a sentence to write again. */
+const articleFixWhy = (right: string, shown: string): Text => {
+  const bare = shown.replace(/ \(in general\)$/u, "");
+  const item = interleave([generalChoice, placeChoice]).find(
+    ([s, r, w]) =>
+      bare === s.replace(/ \(in general\)$/u, "").replace("___", w[0] ?? "") &&
+      right === s.replace(/ \(in general\)$/u, "").replace("___", r),
+  );
+  if (!item) return t(right, right);
+  const rule = articleRule(item[1], item[0]);
+  return t(`${rule.en}: ${right}`, `${rule["zh-CN"]}：${right}`);
+};
 
 const articles: TopicDef = {
   id: "articles-in-general-and-specific",
@@ -821,9 +904,7 @@ const articles: TopicDef = {
         "When you talk about a kind of thing **in general**, use a plural noun or an uncountable noun with **no article**:\n\n- *Cats sleep a lot.* (all cats)\n- *Tea is popular in China.* (tea in general)\n\nWhen you mean **particular** things, the ones you can point to or that the sentence tells you about, use *the*:\n\n- *The cats next door are noisy.* (those cats)\n- *The tea in this cup is cold.* (this tea)\n\nWords such as *in this cup*, *next door* or *we bought* often show that you mean particular things. Do not use *a* with an uncountable noun or a plural noun.",
         "泛指**一类事物**时，用复数名词或不可数名词，**不加冠词**：\n\n- *Cats sleep a lot.*（所有的猫）\n- *Tea is popular in China.*（泛指茶）\n\n指**特定的**事物，也就是能指出来的、或者句子里说明了是哪些的事物，用 *the*：\n\n- *The cats next door are noisy.*（隔壁那几只猫）\n- *The tea in this cup is cold.*（这杯茶）\n\n*in this cup*、*next door*、*we bought* 这样的词常常表明是特指。中文没有冠词，“茶很受欢迎”和“这杯茶凉了”都只说“茶”；英语泛指时不能加 the，说成 *The tea is popular in China* 就变成了某一种茶。*a* 不能用在不可数名词或复数名词前。",
       ),
-      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), generalChoice, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（${articleNote(right, shown)}）`),
-      ),
+      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), generalChoice, articleWhy, whyNotArticle),
     ),
     point(
       "places",
@@ -832,9 +913,7 @@ const articles: TopicDef = {
         "Most names of places take **no article**: countries (*China, Japan*), cities (*Paris*), continents (*Asia*), streets (*Oxford Street*) and single mountains (*Mount Fuji*).\n\nThese take ***the***:\n\n- rivers, seas and oceans: *the Yangtze, the Mediterranean, the Pacific*\n- mountain ranges and deserts: *the Alps, the Himalayas, the Sahara*\n- countries with *United* or a plural name: *the United States, the United Kingdom, the Netherlands, the Philippines*\n- some famous places: *the Great Wall, the Amazon*",
         "大多数地名前**不加冠词**：国家（*China, Japan*）、城市（*Paris*）、大洲（*Asia*）、街道（*Oxford Street*）和单座山峰（*Mount Fuji*）。\n\n下面这些要加 ***the***：\n\n- 河流、海和大洋：*the Yangtze, the Mediterranean, the Pacific*\n- 山脉和沙漠：*the Alps, the Himalayas, the Sahara*\n- 名字里有 *United* 或是复数形式的国家：*the United States, the United Kingdom, the Netherlands, the Philippines*\n- 一些著名的地方：*the Great Wall, the Amazon*\n\n中文说“长江”“美国”都不需要冠词，英语却要分清哪些地名带 the。",
       ),
-      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), placeChoice, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（${articleNote(right, shown)}）`),
-      ),
+      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), placeChoice, articleWhy, whyNotArticle),
     ),
     point(
       "correct",
@@ -847,7 +926,7 @@ const articles: TopicDef = {
         "sentence",
         t("Correct the mistake with the article and write the sentence.", "改正冠词的错误，写出句子。"),
         articleTyped,
-        (right) => t(right, `${right}（泛指和大多数地名不用 the，特指和河流、海洋、山脉等用 the）`),
+        articleFixWhy,
       ),
     ),
   ],

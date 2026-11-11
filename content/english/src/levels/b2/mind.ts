@@ -2,7 +2,7 @@
 // body language, wellbeing, personality types, and weighing ideas; inversion after negative adverbs. Its other
 // topics, parallel structure and revising a draft, already exist.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { fill } from "../a2/kit.ts";
@@ -1248,7 +1248,54 @@ const inversionTyped: readonly TypedItem[] = inversions.map(
   }),
 );
 
-const inversionNote = "否定词放在句首时，助动词放在主语前面，和疑问句的语序一样";
+/** inversionOf finds the inversion of a sentence with a gap, or of a written sentence. */
+const inversionOf = (text: string) =>
+  inversions.find(
+    ([neg, aux, subject, rest]) =>
+      text === `${neg} ___ ${rest}.` || text === `${neg} ___ ${subject} ${rest}.` || text === `${neg} ${aux} ${subject} ${rest}.`,
+  );
+
+/** orderRule names the question order after the negative opening of text. */
+function orderRule(text: string): Text {
+  const [neg = "", aux = "", subject = ""] = inversionOf(text) ?? [];
+  return t(
+    `After *${neg}* at the start, the auxiliary comes before the subject, as in a question (*${aux} ${subject}*)`,
+    `*${neg}* 放在句首时，助动词要放在主语前面，和疑问句一样（*${aux} ${subject}*）`,
+  );
+}
+
+/** auxiliaryRule names where the auxiliary of an inversion comes from: the normal sentence, or do, does or did. */
+function auxiliaryRule(text: string): Text {
+  const [, aux = "", , , normal = ""] = inversionOf(text) ?? [];
+  return new RegExp(`\\b${aux}\\b`, "iu").test(normal)
+    ? t(
+        `The normal sentence already has *${aux}* (*${normal}*), so *${aux}* moves before the subject`,
+        `原来的句子里已经有 *${aux}*（*${normal}*），所以把 *${aux}* 移到主语前面`,
+      )
+    : t(
+        `The normal sentence has no auxiliary (*${normal}*), so add *${aux}*, as in a question, and the main verb goes back to its base form`,
+        `原来的句子里没有助动词（*${normal}*），所以像疑问句一样加 *${aux}*，主要动词变回原形`,
+      );
+}
+
+/** whyNotOrder explains the normal order, or a missing auxiliary, after a negative opening. */
+const whyNotOrder = (wrong: string, _right: string, shown: string, position: number): Text => {
+  const rule = orderRule(shown);
+  const first =
+    position === 0
+      ? t(`*${wrong}* keeps the normal order of a statement.`, `*${wrong}* 还是陈述句的正常语序。`)
+      : t(`*${wrong}* alone leaves out the auxiliary.`, `只有 *${wrong}*，漏掉了助动词。`);
+  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+};
+
+/** whyNotAuxiliary explains an auxiliary that does not match the normal sentence. */
+const whyNotAuxiliary = (wrong: string, _right: string, shown: string): Text => {
+  const rule = auxiliaryRule(shown);
+  return t(
+    `*${wrong}* does not match the verb of the normal sentence. ${rule.en}.`,
+    `*${wrong}* 和原来句子的动词不相配。${rule["zh-CN"]}。`,
+  );
+};
 
 const inversion: TopicDef = {
   id: "inversion-after-negative-adverbs",
@@ -1269,8 +1316,14 @@ const inversion: TopicDef = {
         "In formal and written English, a sentence can begin with a negative or limiting word for emphasis: *never*, *rarely*, *seldom*, *little*, *not once*, *under no circumstances*, *no sooner*, *only then*. The subject and the auxiliary then change places, as in a question:\n\n- *I have never felt so tired.* → *Never **have I** felt so tired.*\n- *We had no sooner arrived than it started to rain.* → *No sooner **had we** arrived than it started to rain.*\n\n*Never I have felt* and *Never I felt* are wrong.",
         "在正式的书面英语中，为了强调，句子可以用否定词或表示限制的词开头：*never*、*rarely*、*seldom*、*little*、*not once*、*under no circumstances*、*no sooner*、*only then*。这时主语和助动词要交换位置，和疑问句一样：\n\n- *I have never felt so tired.* → *Never **have I** felt so tired.*\n- *We had no sooner arrived than it started to rain.* → *No sooner **had we** arrived than it started to rain.*\n\n*Never I have felt* 和 *Never I felt* 都是错的。中文“我从来没有这么累过”语序不变，所以中国学生常常忘记倒装。",
       ),
-      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), orderChoice, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（${inversionNote}）`),
+      choiceGenerator(
+        t("Choose the words for the gap.", "选出填入空白处的词。"),
+        orderChoice,
+        (right, shown) => {
+          const rule = orderRule(shown);
+          return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+        },
+        whyNotOrder,
       ),
     ),
     point(
@@ -1280,8 +1333,14 @@ const inversion: TopicDef = {
         "Use the auxiliary that the question would use. If the sentence already has *have*, *had*, *will*, *should* or *be*, that word moves before the subject. If it has none, add *do*, *does* or *did*, and the main verb goes back to its base form:\n\n- *People rarely admit it.* → *Rarely **do** people admit it.*\n- *She seldom eats meat.* → *Seldom **does** she **eat** meat.*\n- *He didn't say thank you once.* → *Not once **did** he **say** thank you.*\n- *The museum is seldom so quiet.* → *Seldom **is** the museum so quiet.*",
         "用疑问句会用的助动词。如果句子里已经有 *have*、*had*、*will*、*should* 或 *be*，就把它移到主语前面；如果没有，就加 *do*、*does* 或 *did*，主要动词变回原形：\n\n- *People rarely admit it.* → *Rarely **do** people admit it.*\n- *She seldom eats meat.* → *Seldom **does** she **eat** meat.*\n- *He didn't say thank you once.* → *Not once **did** he **say** thank you.*\n- *The museum is seldom so quiet.* → *Seldom **is** the museum so quiet.*\n\n这和构成一般疑问句的方法完全相同：*Does she eat meat?*",
       ),
-      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), auxiliaryChoice, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（${inversionNote}）`),
+      choiceGenerator(
+        t("Choose the word for the gap.", "选出填入空白处的词。"),
+        auxiliaryChoice,
+        (right, shown) => {
+          const rule = auxiliaryRule(shown);
+          return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+        },
+        whyNotAuxiliary,
       ),
     ),
     point(
@@ -1295,7 +1354,11 @@ const inversion: TopicDef = {
         "sentence-pattern",
         t("Rewrite the sentence so that it begins with the words given.", "用给出的词开头改写句子。"),
         inversionTyped,
-        (right) => t(right, `${right}（${inversionNote}）`),
+        (right) => {
+          const order = orderRule(right);
+          const aux = auxiliaryRule(right);
+          return t(`${order.en}. ${aux.en}: ${right}`, `${order["zh-CN"]}。${aux["zh-CN"]}：${right}`);
+        },
       ),
     ),
   ],

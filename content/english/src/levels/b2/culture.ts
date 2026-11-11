@@ -1,10 +1,10 @@
 // B2, unit 7: Culture, Identity and Globalization. Identity, globalization, language, traditions, heritage, belief,
 // stereotypes, tourism, food and taste, describing people, and countries together; cleft sentences; the proposal.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
-import { fill, judgedTopic } from "../a2/kit.ts";
+import { judgedTopic } from "../a2/kit.ts";
 import { interleave, vocabularyTopic, word } from "../words.ts";
 
 const identity = vocabularyTopic({
@@ -954,7 +954,7 @@ const food = vocabularyTopic({
 
 const people = vocabularyTopic({
   id: "b2-words-personality-3",
-  title: t("Describing People", "描述人物"),
+  title: t("Character and Temperament", "性格与气质"),
   summary: t(
     "Charismatic and eccentric people; introverted and extroverted ones; assertive and cautious, impulsive and witty; naive and pragmatic, idealistic and temperamental.",
     "有魅力的和古怪的人；内向的和外向的人；果断自信的和谨慎的人，冲动的和机智风趣的人；天真的和务实的人，理想主义的和喜怒无常的人。",
@@ -1335,6 +1335,59 @@ const cleftTyped: readonly TypedItem[] = interleave([
   ),
 ]);
 
+/** focusOf finds the words in focus in a choice or in a note to write from. */
+const focusOf = (shown: string) => /Focus on \*([^*]+)\*/u.exec(shown)?.[1] ?? /focus: ([^;]+);/u.exec(shown)?.[1] ?? "";
+
+/** cleftRule names how a cleft sentence puts its focus first, after It is or It was, or last, after a what-clause. */
+function cleftRule(right: string, shown: string): Text {
+  const focus = focusOf(shown);
+  const be = / was /u.test(` ${right} `) ? "was" : "is";
+  return right.startsWith("What ")
+    ? t(
+        `To focus on *${focus}*, begin with a *what*-clause as the subject and put *${focus}* after *${be}*`,
+        `要强调 *${focus}*，就用 *what* 从句作主语开头，把 *${focus}* 放在 *${be}* 后面`,
+      )
+    : t(
+        `To focus on *${focus}*, put it after *It ${be}* and the rest after *that*, without repeating it`,
+        `要强调 *${focus}*，就把它放在 *It ${be}* 后面，其余部分放在 *that* 后面，不再重复它`,
+      );
+}
+
+/** cleftWhy puts the rule of the cleft before a sentence. */
+const cleftWhy = (right: string, shown: string): Text => {
+  const rule = cleftRule(right, shown);
+  return t(`${rule.en}: ${right}`, `${rule["zh-CN"]}：${right}`);
+};
+
+/** whyNotItCleft explains what in an it-cleft, or a pronoun that repeats the focus. */
+const whyNotItCleft = (_wrong: string, right: string, shown: string, position: number): Text => {
+  const rule = cleftRule(right, shown);
+  const first =
+    position === 0
+      ? t("*what* never joins the focus of an *It* cleft to the rest.", "*It* 分裂句里不能用 *what* 连接被强调部分和其余部分。")
+      : t(
+          `The part after *that* repeats *${focusOf(shown)}* with a pronoun, but the focus already fills that place.`,
+          `*that* 后面又用代词重复了 *${focusOf(shown)}*，但被强调的部分已经占了这个位置。`,
+        );
+  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+};
+
+/** whyNotWhatCleft explains That instead of What, or it before the verb of a what-cleft. */
+const whyNotWhatCleft = (_wrong: string, right: string, shown: string, position: number): Text => {
+  const rule = cleftRule(right, shown);
+  const first =
+    position === 0
+      ? t(
+          "A clause that begins with *That* does not name the thing in focus; the cleft begins with *What*.",
+          "以 *That* 开头的从句不能表示被强调的事物，分裂句要以 *What* 开头。",
+        )
+      : t(
+          "The *what*-clause is already the subject of the verb, so there is no *it* before it.",
+          "*what* 从句已经是动词的主语，所以动词前不再加 *it*。",
+        );
+  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+};
+
 const cleftSentences: TopicDef = {
   id: "cleft-sentences",
   title: t("It Was the Food That Surprised Me", "It is... that... 和 What... is...（分裂句）"),
@@ -1354,8 +1407,11 @@ const cleftSentences: TopicDef = {
         "To put one part of a sentence in focus, put it after *It is* or *It was* and the rest after *that*:\n\n- *The food surprised me most.* → *It was **the food** that surprised me most.*\n- *I miss the language most.* → *It is **the language** that I miss most.*\n\nThe part after *that* is not complete without the focus, so it must not repeat it with a pronoun: not *It was the food that it surprised me*, not *It is the language that I miss it*. The joining word is *that* (or *who* for a person, *which* for a thing), never *what*.",
         "要突出句子的某一部分，就把它放在 *It is* 或 *It was* 后面，其余部分放在 *that* 后面：\n\n- *The food surprised me most.* → *It was **the food** that surprised me most.*\n- *I miss the language most.* → *It is **the language** that I miss most.*\n\n*that* 后面的部分缺了被强调的成分，不能再用代词重复它：不能说 *It was the food that it surprised me*，也不能说 *It is the language that I miss it*。连接词用 *that*（指人也可用 *who*，指物也可用 *which*），不能用 *what*。中文用“正是……”“就是……才……”来强调（“正是这里的食物让我最吃惊”），英语则要用 *It was ... that ...* 这个固定框架。",
       ),
-      choiceGenerator(t("Choose the sentence that puts the words in focus.", "选出突出所给部分的句子。"), itChoice, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（被强调的部分放在 It is/was 后面，其余放在 that 后面，不再重复）`),
+      choiceGenerator(
+        t("Choose the sentence that puts the words in focus.", "选出突出所给部分的句子。"),
+        itChoice,
+        cleftWhy,
+        whyNotItCleft,
       ),
     ),
     point(
@@ -1365,8 +1421,11 @@ const cleftSentences: TopicDef = {
         "Another way to focus on something is to begin with a *what*-clause and put the focus after *is* or *was*:\n\n- *I need a long holiday.* → *What I need **is** a long holiday.*\n- *The ending annoyed me.* → *What annoyed me **was** the ending.*\n\nThe sentence begins with *What*, not *That*, and the *what*-clause is the subject of *is*, so there is no *it* before the verb: not *What I need it is a holiday*.",
         "另一种强调方式是用 *what* 从句开头，把被强调的部分放在 *is* 或 *was* 后面：\n\n- *I need a long holiday.* → *What I need **is** a long holiday.*\n- *The ending annoyed me.* → *What annoyed me **was** the ending.*\n\n句子以 *What* 开头，不是 *That*；*what* 从句本身就是 *is* 的主语，所以动词前不再加 *it*：不能说 *What I need it is a holiday*。这和中文“我需要的是一个长假”结构很像：“我需要的”对应 *What I need*，“是”对应 *is*。",
       ),
-      choiceGenerator(t("Choose the sentence that puts the words in focus.", "选出突出所给部分的句子。"), whatChoice, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（what 从句作主语，被强调的部分放在 is/was 后面）`),
+      choiceGenerator(
+        t("Choose the sentence that puts the words in focus.", "选出突出所给部分的句子。"),
+        whatChoice,
+        cleftWhy,
+        whyNotWhatCleft,
       ),
     ),
     point(
@@ -1380,7 +1439,7 @@ const cleftSentences: TopicDef = {
         "sentence-pattern",
         t("Rewrite the sentence to put the words in focus.", "改写句子，突出所给的部分。"),
         cleftTyped,
-        (right) => t(right, `${right}（分裂句突出所给的部分）`),
+        cleftWhy,
       ),
     ),
   ],

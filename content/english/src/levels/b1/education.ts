@@ -1,7 +1,7 @@
 // B1, unit 1: Education and Learning. School life, how we learn, people at school, more subjects, thinking, qualities,
 // study skills and linking words; the present perfect or the past simple; an informal email judged by a model.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
@@ -925,12 +925,71 @@ const ppTypedBank: readonly TypedItem[] = interleave([
   ],
 ]);
 
-/** ppNote explains in Chinese which tense a sentence needs, from its time words. */
-function ppNote(sentence: string): string {
-  if (sentence.includes("since")) return "since 加过去的起点，说的是从那时一直到现在，用现在完成时，不用一般现在时";
-  if (sentence.startsWith("This is the first time")) return "This is the first time 后面用现在完成时";
-  return "句中有过去的具体时间（yesterday、last week、in 2015、two years ago、when I was little 等），用一般过去时，不用现在完成时";
+/** PpKind is what in a sentence picks its tense: since, this is the first time, or a finished time. */
+type PpKind = "since" | "first" | "finished";
+
+/** ppKind finds what picks the tense of a sentence, and the words that show it. */
+function ppKind(sentence: string): readonly [PpKind, string] {
+  const since = /\bsince .+?(?=\.|$)/u.exec(sentence);
+  if (since) return ["since", since[0]];
+  if (sentence.startsWith("This is the first time")) return ["first", "This is the first time"];
+  if (sentence.includes("last week")) return ["finished", "last week"];
+  const ago = stateVerbs.map((v) => v[7]).find((time) => sentence.includes(` ${time}`));
+  return ["finished", ago ?? ""];
 }
+
+/** ppRule names the rule of the tense for a sentence. */
+function ppRule(sentence: string): Text {
+  const [kind, words] = ppKind(sentence);
+  if (kind === "since")
+    return t(
+      `*${words}* gives the point where it began, and it is still true now, so use the present perfect`,
+      `*${words}* 说明从什么时候开始，到现在仍然如此，所以用现在完成时`,
+    );
+  if (kind === "first") return t("*This is the first time* takes the present perfect", "*This is the first time* 后面用现在完成时");
+  return t(`*${words}* is a finished time in the past, so use the past simple`, `*${words}* 是过去已经结束的时间，所以用一般过去时`);
+}
+
+/** ppWhy puts the rule of the tense before a sentence. */
+const ppWhy = (sentence: string, shown: string): Text => {
+  const rule = ppRule(shown);
+  return t(`${rule.en}: ${sentence}`, `${rule["zh-CN"]}：${sentence}`);
+};
+
+/** whyNotPp explains a wrong tense, from the position of the wrong form in its item. */
+const whyNotPp = (wrong: string, right: string, shown: string, position: number): Text => {
+  const [kind, words] = ppKind(shown);
+  const rule = ppRule(shown);
+  let first: Text;
+  if (kind === "since")
+    first =
+      position === 0
+        ? t(`*${wrong}* is the present simple, which never goes with *since*.`, `*${wrong}* 是一般现在时，不能和 *since* 连用。`)
+        : t(
+            `*${wrong}* is the past simple, which says it is over, but it is still true now.`,
+            `*${wrong}* 是一般过去时，表示已经结束，但这件事现在仍然如此。`,
+          );
+  else if (kind === "first")
+    first =
+      position === 0
+        ? t(
+            `*${wrong}* is the past simple, which does not go after *This is the first time*.`,
+            `*${wrong}* 是一般过去时，不能用在 *This is the first time* 后面。`,
+          )
+        : t(
+            `*${wrong}* is the base form, which does not show the tense. Use *${right}*.`,
+            `*${wrong}* 是动词原形，没有体现时态。要用 *${right}*。`,
+          );
+  else if (/^ha(s|ve) /u.test(wrong))
+    first = t(
+      `*${wrong}* is the present perfect, which never goes with a finished time such as *${words}*.`,
+      `*${wrong}* 是现在完成时，不能和 *${words}* 这样的过去具体时间连用。`,
+    );
+  else if (position === 1 && !shown.includes("last week") && wrong !== right)
+    first = t(`*${wrong}* is the present simple, but *${words}* is in the past.`, `*${wrong}* 是一般现在时，但 *${words}* 是过去的时间。`);
+  else first = t(`*${wrong}* is the base form, which does not show the past.`, `*${wrong}* 是动词原形，没有体现过去。`);
+  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+};
 
 const presentPerfectOrPastSimple: TopicDef = {
   id: "present-perfect-or-past-simple",
@@ -954,8 +1013,11 @@ const presentPerfectOrPastSimple: TopicDef = {
         "Look at the time words.\n\n- A finished time in the past takes the **past simple**: *yesterday, last week, in 2015, two years ago, when I was little*. *I lived in Paris in 2015.* Never *I have lived in Paris in 2015.*\n- A time that runs up to now takes the **present perfect**. *since* gives the point where it began: *I have lived here since 2019* (and I still live here). Do not use the present simple: not *I live here since 2019*.\n- *This is the first time* takes the present perfect: *This is the first time I have eaten sushi.* But with a finished time: *I ate sushi for the first time last week.*",
         "看句子里的时间词。\n\n- 过去某个已经结束的时间，用**一般过去时**：*yesterday, last week, in 2015, two years ago, when I was little*。*I lived in Paris in 2015.* 不能说 *I have lived in Paris in 2015.*\n- 一直延续到现在的时间，用**现在完成时**。*since* 说明从什么时候开始：*I have lived here since 2019*（现在还住在这里）。不要用一般现在时，不能说 *I live here since 2019*。\n- *This is the first time* 后面用现在完成时：*This is the first time I have eaten sushi.* 但有过去的具体时间时：*I ate sushi for the first time last week.*\n\n中文“我从 2019 年起就住在这里”里动词没有变化，英语却要用 *have lived*，这是中国学生最常出错的地方。",
       ),
-      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), ppChoiceBank, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（${ppNote(shown)}）`),
+      choiceGenerator(
+        t("Choose the words for the gap.", "选出填入空白处的词。"),
+        ppChoiceBank,
+        (right, shown) => ppWhy(fill(shown, right), shown),
+        whyNotPp,
       ),
     ),
     point(
@@ -966,7 +1028,7 @@ const presentPerfectOrPastSimple: TopicDef = {
         "根据笔记写句子。有 *since* 或在 *This is the first time* 后面，用 *have / has* 加过去分词：*Tom has worked at the hospital since March.* 有过去的具体时间，用一般过去时：*Tom worked at the hospital two years ago.*",
       ),
       typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), ppTypedBank, (right) =>
-        t(right, `${right}（${ppNote(right)}）`),
+        ppWhy(right, right),
       ),
     ),
   ],

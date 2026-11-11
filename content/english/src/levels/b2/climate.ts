@@ -2,7 +2,7 @@
 // and action, natural disasters, water, cause and effect, the future of the earth, and materials; the future continuous
 // and the future perfect; writing an opinion essay.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
@@ -820,7 +820,7 @@ const water = vocabularyTopic({
 
 const causes = vocabularyTopic({
   id: "b2-words-cause-and-effect",
-  title: t("Cause and Effect", "因果"),
+  title: t("Words of Cause and Effect", "表示因果的词"),
   summary: t(
     "Contributing to something and contributions; triggering and deriving; consequences and implications; influencing; accelerating, intensifying and worsening; diminishing and alleviating.",
     "促成和贡献；引发和来源；后果和影响；影响；加速、加剧和恶化；减少和缓解。",
@@ -1025,7 +1025,7 @@ const future = vocabularyTopic({
 
 const materials = vocabularyTopic({
   id: "b2-words-materials-2",
-  title: t("Materials", "材料"),
+  title: t("Raw Materials and Fabrics", "原料和织物"),
   summary: t(
     "Timber; fabrics and textiles; synthetic materials and polyester; ceramics; minerals and ores; iron, copper and alloys; crude oil.",
     "木材；织物和纺织品；合成材料和聚酯纤维；陶瓷；矿物和矿石；铁、铜和合金；原油。",
@@ -1233,10 +1233,51 @@ const futureTyped: readonly TypedItem[] = interleave([
   };
 });
 
-/** futureNote explains in Chinese which future form a sentence needs. */
-function futureNote(right: string): string {
-  return right.includes("have") ? "将来完成时 will have 加过去分词：到那时已经完成" : "将来进行时 will be 加 -ing：到那时正在进行";
+/** futureRule names the future form of right, with the time at the start of the sentence. */
+function futureRule(right: string, sentence: string): Text {
+  const time = sentence.split(",")[0] ?? "";
+  return right.includes(" have ")
+    ? t(
+        `The action will be finished by then (*${time}*), so use the future perfect, *will have* and the past participle`,
+        `到那时（*${time}*）动作已经完成，所以用将来完成时，即 *will have* 加过去分词`,
+      )
+    : t(
+        `The action will be in progress then (*${time}*), so use the future continuous, *will be* and the *-ing* form`,
+        `那时（*${time}*）动作正在进行，所以用将来进行时，即 *will be* 加 *-ing*`,
+      );
 }
+
+/** futureWhy puts the rule of the future form before a sentence. */
+const futureWhy = (right: string, shown: string, sentence: string): Text => {
+  const rule = futureRule(right, shown);
+  return t(`${rule.en}: ${sentence}`, `${rule["zh-CN"]}：${sentence}`);
+};
+
+/** whyNotFuture explains the other future form, or a form of will that is not made right. */
+const whyNotFuture = (wrong: string, right: string, shown: string): Text => {
+  const rule = futureRule(right, shown);
+  const [w0, w1 = "", w2 = ""] = wrong.split(" ");
+  const perfect = right.includes(" have ");
+  let first: Text;
+  if (w0 !== "will") first = t(`*${wrong}* has no *will*, but the time is in the future.`, `*${wrong}* 没有 *will*，但说的是将来的时间。`);
+  else if (w1 === "had")
+    first = t("After *will* the verb is in its base form: *have*, not *had*.", "*will* 后面的动词用原形：用 *have*，不用 *had*。");
+  else if (w1.endsWith("ing")) first = t("*will* needs *be* before the *-ing* form.", "*will* 和 *-ing* 之间要有 *be*。");
+  else if (w1 === "be" && !w2.endsWith("ing"))
+    first = t(`*be* is followed by the *-ing* form, not *${w2}*.`, `*be* 后面接 *-ing* 形式，不接 *${w2}*。`);
+  else if (w1 === "be" && perfect)
+    first = t(
+      `*${wrong}* is the future continuous, for an action still in progress then.`,
+      `*${wrong}* 是将来进行时，表示那时动作还在进行。`,
+    );
+  else if (w1 === "have" && !perfect)
+    first = t(
+      `*${wrong}* is the future perfect, for an action already finished by then.`,
+      `*${wrong}* 是将来完成时，表示那时动作已经完成。`,
+    );
+  else first = t(`*${w2}* is not the past participle.`, `*${w2}* 不是过去分词。`);
+  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+};
 
 const futureForms: TopicDef = {
   id: "future-continuous-and-future-perfect",
@@ -1266,7 +1307,8 @@ const futureForms: TopicDef = {
           "括号里的话说明那时动作的状态。选出填入空白处的词。",
         ),
         aspectChoice,
-        (right, shown) => t(fill(shown, right), `${fill(shown, right)}（${futureNote(right)}）`),
+        (right, shown) => futureWhy(right, shown, fill(shown, right)),
+        whyNotFuture,
       ),
     ),
     point(
@@ -1276,8 +1318,11 @@ const futureForms: TopicDef = {
         "After *will* the verb is always in its base form, so the forms are fixed:\n\n- **will have** + past participle: *will have **gone***, *will have **written***, not *will had gone* or *will have went*.\n- **will be** + -ing: *will be **working***, not *will be work* or *will working*.\n\nThe same forms are used with every subject: *she will have finished*, not *she will has finished*.",
         "*will* 后面的动词永远用原形，所以形式是固定的：\n\n- **will have** + 过去分词：*will have **gone***、*will have **written***，不是 *will had gone*，也不是 *will have went*。\n- **will be** + -ing：*will be **working***，不是 *will be work*，也不是 *will working*。\n\n所有主语都用同样的形式：*she will have finished*，不是 *she will has finished*。",
       ),
-      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), formChoice, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（${futureNote(right)}）`),
+      choiceGenerator(
+        t("Choose the words for the gap.", "选出填入空白处的词。"),
+        formChoice,
+        (right, shown) => futureWhy(right, shown, fill(shown, right)),
+        whyNotFuture,
       ),
     ),
     point(
@@ -1291,7 +1336,7 @@ const futureForms: TopicDef = {
         "sentence-pattern",
         t("Write the sentence with will have or will be.", "用 will have 或 will be 写出句子。"),
         futureTyped,
-        (right) => t(right, `${right}（${futureNote(right)}）`),
+        (right) => futureWhy(right, right, right),
       ),
     ),
   ],

@@ -1,7 +1,7 @@
 // A1, unit 5: Clothes and Shopping. Clothes, shopping and choosing, the present continuous, how much and how many,
 // and sentences about what people are wearing.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { interleave, pairUp, vocabularyTopic, word } from "../words.ts";
@@ -342,6 +342,23 @@ const pcWriteBank: readonly TypedItem[] = pcItems(40, 84).map(({ subject, be, sh
   };
 });
 
+/** ingRule says how a verb makes its -ing form, in every locale. */
+const ingRule = (verb: string, ing: string): Text =>
+  ing === `${verb}ing`
+    ? t(`*${verb}* just adds *-ing*`, `*${verb}* 直接加 *-ing*`)
+    : ing === `${verb.slice(0, -1)}ing`
+      ? t(`*${verb}* ends in *e*, so it drops the *e* before *-ing*`, `*${verb}* 以 *e* 结尾，去掉 *e* 再加 *-ing*`)
+      : t(
+          `*${verb}* is short and ends in one vowel and one consonant, so it doubles the last letter`,
+          `*${verb}* 是以一个元音加一个辅音结尾的短动词，所以双写最后一个字母`,
+        );
+
+/** beOf finds the subject and the form of be at the start of a sentence. */
+const beOf = (sentence: string) => {
+  const [subject = "", be = ""] = sentence.split(/ (am|is|are) /u);
+  return { subject, be };
+};
+
 const presentContinuous: TopicDef = {
   id: "present-continuous",
   title: t("The Present Continuous", "现在进行时"),
@@ -364,10 +381,29 @@ const presentContinuous: TopicDef = {
         "For what is happening now, use *am*, *is* or *are* and the verb with *-ing*: *I am reading. She is wearing a red coat. They are playing football.*\n\nYou need both parts: not *She wearing*, not *She is wear*.",
         "表示现在正在发生的事，用 *am*、*is* 或 *are* 加动词的 *-ing* 形式：*I am reading. She is wearing a red coat. They are playing football.*\n\n中文说“她正在穿”，只加“正在”，动词不变；英语两部分缺一不可：不能说 *She wearing*，也不能说 *She is wear*。",
       ),
-      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), pcChoiceBank, (right, shown) => {
-        const sentence = shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`);
-        return t(sentence, `${sentence}（am/is/are + 动词 -ing）`);
-      }),
+      choiceGenerator(
+        t("Choose the words for the gap.", "选出填入空白处的词。"),
+        pcChoiceBank,
+        (right, shown) => {
+          const sentence = shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`);
+          const subject = shown.split(" ___")[0];
+          const be = right.split(" ")[0];
+          return t(
+            `*now* says it is happening at this moment, so use *${be}*, the form for *${subject}*, and the verb with *-ing*: ${sentence}`,
+            `*now* 表示此刻正在发生，所以用跟 *${subject}* 搭配的 *${be}*，再加动词的 *-ing* 形式：${sentence}`,
+          );
+        },
+        (wrong, _right, _shown, position) =>
+          position === 0
+            ? t(
+                `*${wrong}* has no *am*, *is* or *are*, but the *-ing* form cannot be the verb without one.`,
+                `*${wrong}* 前面没有 *am*、*is* 或 *are*，可 *-ing* 形式不能单独作动词。`,
+              )
+            : t(
+                `*${wrong}* has the form of *be* but a plain verb; for what is happening now, the verb takes *-ing*.`,
+                `*${wrong}* 有 *be*，动词却用了原形；表示正在发生的事，动词要加 *-ing*。`,
+              ),
+      ),
     ),
     point(
       "spell",
@@ -378,7 +414,8 @@ const presentContinuous: TopicDef = {
       ),
       typedGenerator("word-form", t("Type the verb with -ing.", "输入动词的 -ing 形式。"), pcSpellBank, (right, shown) => {
         const sentence = shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`);
-        return t(sentence, `${sentence}（动词的 -ing 形式是 ${right}）`);
+        const rule = ingRule(shown.match(/\((.*)\)$/u)?.[1] ?? "", right);
+        return t(`${rule.en}: ${sentence}`, `${rule["zh-CN"]}：${sentence}`);
       }),
     ),
     point(
@@ -388,9 +425,16 @@ const presentContinuous: TopicDef = {
         "Write a sentence from the note with *am*, *is* or *are* and the *-ing* form. Short forms like *She's* are fine.",
         "根据笔记用 *am*、*is* 或 *are* 加 *-ing* 形式写一个句子。也可以用 *She's* 这样的缩写。",
       ),
-      typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), pcWriteBank, (right) =>
-        t(right, `${right}（am/is/are + 动词 -ing）`),
-      ),
+      typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), pcWriteBank, (right, shown) => {
+        const { subject, be } = beOf(right);
+        const verb = shown.split(" / ")[1]?.split(" ")[0] ?? "";
+        const ing = right.split(` ${be} `)[1]?.split(" ")[0] ?? "";
+        const rule = ingRule(verb, ing);
+        return t(
+          `The note says *now*, so use *${be}*, the form for *${subject}*, and the *-ing* form; ${rule.en}: ${right}`,
+          `笔记写着 *now*，所以用跟 *${subject}* 搭配的 *${be}* 加 *-ing* 形式；${rule["zh-CN"]}：${right}`,
+        );
+      }),
     ),
   ],
 };
@@ -465,6 +509,18 @@ const howTypedBank: readonly TypedItem[] = interleave([
   ),
 ]);
 
+/** howNoun finds the noun after the gap of a how question; a question about a price has none. */
+const howNoun = (shown: string) => (/___ (is|are) /u.test(shown) ? "" : (shown.split("___ ")[1]?.split(" ")[0] ?? ""));
+
+/** howReason says why a how question takes much or many. */
+const howReason = (shown: string): Text => {
+  const noun = howNoun(shown);
+  if (noun === "") return t("This asks a price, and a price always takes *how much*", "这里问的是价钱，问价钱总用 *how much*");
+  return manyNouns.includes(noun)
+    ? t(`*${noun}* are things you count, in the plural, so ask *how many*`, `*${noun}* 是可数名词的复数，所以用 *how many*`)
+    : t(`*${noun}* is a thing you do not count, so ask *how much*`, `*${noun}* 是不可数名词，所以用 *how much*`);
+};
+
 const howMuchAndHowMany: TopicDef = {
   id: "how-much-and-how-many",
   title: t("How Much and How Many", "how much 和 how many"),
@@ -487,11 +543,32 @@ const howMuchAndHowMany: TopicDef = {
         "*How many* with things you count, in the plural: *How many apples do you want?*\n\n*How much* with things you don't count: *How much milk is there?* And for a price: *How much is this hat?*",
         "可数名词用 *how many*，后接复数：*How many apples do you want?*\n\n不可数名词用 *how much*：*How much milk is there?* 问价钱也用 *how much*：*How much is this hat?*\n\n中文都说“多少”，英语却要分 *many* 和 *much*。",
       ),
-      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), howChoiceBank, (right, shown) =>
-        t(
-          shown.replace("___", `*${right}*`),
-          `${shown.replace("___", `*${right}*`)}（${right === "many" ? "可数名词用 many" : "不可数名词和价钱用 much"}）`,
-        ),
+      choiceGenerator(
+        t("Choose the word for the gap.", "选出填入空白处的词。"),
+        howChoiceBank,
+        (right, shown) => {
+          const reason = howReason(shown);
+          return t(`${reason.en}: ${shown.replace("___", `*${right}*`)}`, `${reason["zh-CN"]}：${shown.replace("___", `*${right}*`)}`);
+        },
+        (wrong, _right, shown) => {
+          const noun = howNoun(shown);
+          if (wrong === "lot")
+            return t(
+              "*lot* only goes in *a lot of*; it cannot follow *how* in a question.",
+              "*lot* 只用在 *a lot of* 里，不能跟在问句的 *how* 后面。",
+            );
+          if (wrong === "many")
+            return noun === ""
+              ? t("*many* asks for a number of things, but this question asks a price.", "*many* 问的是东西的数量，可这个问句问的是价钱。")
+              : t(
+                  `*many* is for things you count, but *${noun}* is not counted one by one.`,
+                  `*many* 用于可数名词，可 *${noun}* 不能一个一个地数。`,
+                );
+          return t(
+            `*much* is for things you do not count, but *${noun}* are counted one by one.`,
+            `*much* 用于不可数名词，可 *${noun}* 可以一个一个地数。`,
+          );
+        },
       ),
     ),
     point(
@@ -501,9 +578,11 @@ const howMuchAndHowMany: TopicDef = {
         "Write the question that the answer replies to. *There are three apples.* → *How many apples are there?* *It's five dollars.* → *How much is it?*",
         "写出与回答对应的问句。*There are three apples.* → *How many apples are there?* *It's five dollars.* → *How much is it?*",
       ),
-      typedGenerator("sentence", t("Write the question.", "写出问句。"), howTypedBank, (right) =>
-        t(right, `${right}（可数名词用 many，不可数名词和价钱用 much）`),
-      ),
+      typedGenerator("sentence", t("Write the question.", "写出问句。"), howTypedBank, (right) => {
+        const reason = howReason(right.replace(/^How (much|many)/u, "How ___"));
+        const be = right.match(/ (is|are) /u)?.[1] ?? "";
+        return t(`${reason.en}, and *${be}* agrees with what follows: ${right}`, `${reason["zh-CN"]}，*${be}* 要与后面的词一致：${right}`);
+      }),
     ),
   ],
 };
@@ -582,17 +661,42 @@ const whatPeopleAreWearing: TopicDef = {
         "A note gives a person and the clothes. The sentence adds *is wearing* (or *am* or *are wearing*), a capital letter and a period.\n\n*Mia / a blue dress* → *Mia is wearing a blue dress.* *Tom and Ben / black shoes* → *Tom and Ben are wearing black shoes.*",
         "笔记给出一个人和他穿的衣服。写成句子时加上 *is wearing*（或 *am*、*are wearing*），句首大写，句末加句号。\n\n*Mia / a blue dress* → *Mia is wearing a blue dress.* *Tom and Ben / black shoes* → *Tom and Ben are wearing black shoes.*\n\n注意：中文“穿”和“戴”分开说，英语帽子、鞋、衣服都用 *wear*。",
       ),
-      choiceGenerator(t("Choose the sentence that matches the note.", "选出与笔记相符的句子。"), wearChoiceBank, (right) =>
-        t(right, `${right}（谁 + am/is/are wearing + 衣服）`),
+      choiceGenerator(
+        t("Choose the sentence that matches the note.", "选出与笔记相符的句子。"),
+        wearChoiceBank,
+        (right) => {
+          const { subject, be } = beOf(right);
+          return t(
+            `The note gives the person and the clothes; add *${be}*, the form for *${subject}*, and *wearing*: ${right}`,
+            `笔记给出人和衣服；加上跟 *${subject}* 搭配的 *${be}* 和 *wearing*：${right}`,
+          );
+        },
+        (_wrong, _right, _shown, position) =>
+          position === 0
+            ? t(
+                "This leaves out *am*, *is* or *are*, but *wearing* cannot be the verb without one.",
+                "这句漏了 *am*、*is* 或 *are*，可 *wearing* 不能单独作动词。",
+              )
+            : t(
+                "This uses the plain verb *wear*, but for what someone has on now the verb takes *-ing*.",
+                "这句用了动词原形 *wear*，可说某人现在穿着什么，动词要加 *-ing*。",
+              ),
       ),
     ),
     point(
       "write",
       t("Writing the sentence", "写出句子"),
-      t("Write a whole sentence for the note, with a capital letter and a period.", "根据笔记写一个完整的句子，句首大写，句末加句号。"),
-      typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), wearTypedBank, (right) =>
-        t(right, `${right}（谁 + am/is/are wearing + 衣服）`),
+      t(
+        "Write a whole sentence for the note: the person, then *am*, *is* or *are* to match, then *wearing* and the clothes. Start with a capital letter and end with a period.",
+        "根据笔记写一个完整的句子：先写人，再写与之搭配的 *am*、*is* 或 *are*，然后是 *wearing* 和衣服。句首大写，句末加句号。",
       ),
+      typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), wearTypedBank, (right) => {
+        const { subject, be } = beOf(right);
+        return t(
+          `Write the person, *${be}* to match *${subject}*, then *wearing* and the clothes, with a capital and a period: ${right}`,
+          `先写人，再写与 *${subject}* 搭配的 *${be}*，然后是 *wearing* 和衣服，句首大写，句末加句号：${right}`,
+        );
+      }),
     ),
   ],
 };

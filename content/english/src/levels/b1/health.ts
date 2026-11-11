@@ -1,7 +1,7 @@
 // B1, unit 3: Health and Fitness. Illness, healthcare, fitness, nutrition, body and mind, causes and effects, symptoms
 // and healthy habits; the first conditional. Its writing reuses the paragraph topics of the native courses.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { fill } from "../a2/kit.ts";
@@ -903,11 +903,59 @@ const conditionalTyped: readonly TypedItem[] = interleave([
   ),
 ]);
 
-/** condNote explains in Chinese which verb form each part of a first conditional takes. */
-function condNote(right: string): string {
-  if (right.startsWith("will ")) return "结果部分说将来会怎样，用 will 加动词原形";
-  return "if 从句虽然说的是将来，却用一般现在时，不用 will";
-}
+/** ifPartWhy explains the present simple in the if-part of a first conditional. */
+const ifPartWhy = (right: string, shown: string): Text => {
+  const s = conditions.some(([, present, base]) => present === right && present !== base && right !== "is" && right !== "has");
+  const rule = t(
+    `The *if*-part is about the future but takes the present simple${s ? ", with *-s* after a subject like *he*, *she* or *it*" : ""}`,
+    `*if* 部分虽然说的是将来，却用一般现在时${s ? "，主语是 he、she、it 一类时动词加 -s" : ""}`,
+  );
+
+  return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+};
+
+/** whyNotIfPart explains will or the past simple in the if-part. */
+const whyNotIfPart = (wrong: string, right: string, _shown: string, position: number): Text =>
+  position === 0
+    ? t(
+        `*will* never goes in the *if*-part, even about the future. Use the present simple, *${right}*.`,
+        `*if* 部分即使说将来，也不能用 *will*。要用一般现在时 *${right}*。`,
+      )
+    : t(
+        `*${wrong}* is the past simple, but this is about the future. Use the present simple, *${right}*.`,
+        `*${wrong}* 是一般过去时，但这里说的是将来。要用一般现在时 *${right}*。`,
+      );
+
+/** resultWhy explains will and the base form in the result of a first conditional. */
+const resultWhy = (right: string, shown: string): Text =>
+  t(
+    `The result of a real possibility in the future takes *will* and the base form: ${fill(shown, right)}`,
+    `将来真实可能情况的结果用 *will* 加动词原形：${fill(shown, right)}`,
+  );
+
+/** whyNotResult explains would or to in the result of a first conditional. */
+const whyNotResult = (wrong: string, right: string, _shown: string, position: number): Text =>
+  position === 0
+    ? t(
+        `*would* is for a situation you only imagine, but this is a real possibility, so use *${right}*.`,
+        `*would* 用于想象的情况，但这里是真实可能发生的事，所以用 *${right}*。`,
+      )
+    : t(
+        `*${wrong}* has no *will*, and there is never *to* after *will*. The result takes *${right}*.`,
+        `*${wrong}* 没有 *will*，而且 *will* 后面也不加 *to*。结果部分要用 *${right}*。`,
+      );
+
+/** condWriteWhy explains how a first conditional is put together, with the comma when the if-part comes first. */
+const condWriteWhy = (right: string): Text =>
+  right.startsWith("If ")
+    ? t(
+        `The *if*-part takes the present simple, then a comma, and the result takes *will* and the base form: ${right}`,
+        `*if* 部分用一般现在时，后面加逗号，结果部分用 *will* 加动词原形：${right}`,
+      )
+    : t(
+        `The result takes *will* and the base form, and the *if*-part after it takes the present simple, with no comma: ${right}`,
+        `结果部分用 *will* 加动词原形，后面的 *if* 部分用一般现在时，不加逗号：${right}`,
+      );
 
 const firstConditional: TopicDef = {
   id: "first-conditional",
@@ -931,9 +979,7 @@ const firstConditional: TopicDef = {
         "To talk about a real possibility in the future, use *if* + the **present simple**, and *will* in the result:\n\n- *If it **rains** tomorrow, we will stay at home.*\n- *We will stay at home if it **rains** tomorrow.*\n\nThe *if*-part is about the future, but it never takes *will*: not *If it will rain tomorrow*. Remember the *-s* after *he*, *she* and *it*: *If she **studies** hard…*",
         "说将来可能发生的事情时，用 *if* 加**一般现在时**，结果部分用 *will*：\n\n- *If it **rains** tomorrow, we will stay at home.*\n- *We will stay at home if it **rains** tomorrow.*\n\n*if* 部分虽然说的是将来，却不能用 *will*：不能说 *If it will rain tomorrow*。中文“如果明天会下雨”里可以有“会”，英语的 *if* 从句里却不行。主语是 *he*、*she*、*it* 时别忘了加 *-s*：*If she **studies** hard…*",
       ),
-      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), ifVerbChoice, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（${condNote(right)}）`),
-      ),
+      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), ifVerbChoice, ifPartWhy, whyNotIfPart),
     ),
     point(
       "result",
@@ -942,9 +988,7 @@ const firstConditional: TopicDef = {
         "The result of a real possibility takes *will* + the base form: *If you exercise, you **will feel** better.* Do not use *would* here, which is for situations you only imagine, and do not add *to*: not *you will to feel*.\n\nWhen the *if*-part comes first, put a comma after it. When the result comes first, there is no comma.",
         "真实可能情况的结果用 *will* 加动词原形：*If you exercise, you **will feel** better.* 这里不要用 *would*（*would* 用于想象的情况），也不要加 *to*：不能说 *you will to feel*。\n\n*if* 部分在前时，后面加逗号；结果在前时，不加逗号。",
       ),
-      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), resultChoice, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（${condNote(right)}）`),
-      ),
+      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), resultChoice, resultWhy, whyNotResult),
     ),
     point(
       "write",
@@ -957,7 +1001,7 @@ const firstConditional: TopicDef = {
         "sentence-pattern",
         t("Write a first conditional sentence from the note.", "根据笔记写一个第一条件句。"),
         conditionalTyped,
-        (right) => t(right, `${right}（if 部分用一般现在时，结果部分用 will）`),
+        condWriteWhy,
       ),
     ),
   ],

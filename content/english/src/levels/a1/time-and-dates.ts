@@ -1,7 +1,7 @@
 // A1, unit 3: Time and Dates. Telling the time, days, months and dates, at, on and in for time, and capital letters
 // for names.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { interleave, pairUp, sentenceCase, vocabularyTopic, word } from "../words.ts";
@@ -428,8 +428,45 @@ const noPrepBank: readonly TypedItem[] = pairUp(35, noPrepFrames, noPrepPhrases)
   }),
 );
 
-const reasonFor = (prep: string): string =>
-  prep === "at" ? "at 用于钟点和 night" : prep === "on" ? "on 用于星期几、日期和某一天" : "in 用于月份、季节和 the morning 等时段";
+/** phraseIn is the time phrase after the gap of sentence. */
+const phraseIn = (sentence: string): string => sentence.replace(/^.*___ /u, "").replace(/\.$/u, "");
+
+/** prepKind says what kind of time phrase takes prep. */
+const prepKind = (prep: string, phrase: string): Text =>
+  prep === "at"
+    ? phrase === "night"
+      ? t("*night* is the one part of the day that takes *at*", "*night* 是唯一用 *at* 的时段")
+      : t(`*${phrase}* is a time on the clock, and clock times take *at*`, `*${phrase}* 是钟点，钟点用 *at*`)
+    : prep === "on"
+      ? /\d/u.test(phrase)
+        ? t(`*${phrase}* is a date, and dates take *on*`, `*${phrase}* 是日期，日期用 *on*`)
+        : t(`*${phrase}* is one day, and days take *on*`, `*${phrase}* 是某一天，某一天用 *on*`)
+      : /morning|afternoon|evening/u.test(phrase)
+        ? t(`*${phrase}* is a part of the day, and parts of the day take *in*`, `*${phrase}* 是一天中的时段，时段用 *in*`)
+        : /summer|spring|autumn|winter/u.test(phrase)
+          ? t(`*${phrase}* is a season, and seasons take *in*`, `*${phrase}* 是季节，季节用 *in*`)
+          : t(`*${phrase}* is a month, and months take *in*`, `*${phrase}* 是月份，月份用 *in*`);
+
+/** prepWhy explains the word for the gap of shown. */
+const prepWhy = (right: string, shown: string): Text => {
+  const kind = prepKind(right, phraseIn(shown));
+  const sentence = shown.replace("___", `*${right}*`);
+  return t(`${kind.en}: ${sentence}`, `${kind["zh-CN"]}：${sentence}`);
+};
+
+/** prepUse says what each of at, on and in is for. */
+const prepUse: Readonly<Record<string, Text>> = {
+  at: t("*at* is for clock times and *night*", "*at* 用于钟点和 *night*"),
+  on: t("*on* is for days and dates", "*on* 用于某一天和日期"),
+  in: t("*in* is for months, seasons and parts of the day", "*in* 用于月份、季节和一天中的时段"),
+};
+
+/** whyNotPrep explains a wrong word for the gap of shown. */
+const whyNotPrep = (wrong: string, right: string, shown: string): Text => {
+  const use = prepUse[wrong] ?? t(`*${wrong}*`, `*${wrong}*`);
+  const kind = prepKind(right, phraseIn(shown));
+  return t(`${use.en}. ${kind.en}.`, `${use["zh-CN"]}。${kind["zh-CN"]}。`);
+};
 
 const prepositionsOfTime: TopicDef = {
   id: "prepositions-of-time",
@@ -450,9 +487,7 @@ const prepositionsOfTime: TopicDef = {
         "*at* a time on the clock: *at seven o'clock*, *at half past four*, and *at night*.\n\n*on* a day: *on Monday*, *on May 5th*, *on my birthday*, *on Saturday morning*.\n\n*in* a longer time: *in May*, *in summer*, *in the morning*.",
         "*at* 用于钟点：*at seven o'clock*、*at half past four*，还有 *at night*。\n\n*on* 用于某一天：*on Monday*、*on May 5th*、*on my birthday*、*on Saturday morning*。\n\n*in* 用于较长的时间：*in May*、*in summer*、*in the morning*。\n\n中文说“七点”“星期一”“五月”时前面不加词，英语却必须加，而且三个词不能混用。",
       ),
-      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), prepChoiceBank, (right, shown) =>
-        t(shown.replace("___", `*${right}*`), `${shown.replace("___", `*${right}*`)}（${reasonFor(right)}）`),
-      ),
+      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), prepChoiceBank, prepWhy, whyNotPrep),
     ),
     point(
       "type",
@@ -461,9 +496,7 @@ const prepositionsOfTime: TopicDef = {
         "Type the word: *at* for the clock, *on* for a day, *in* for a month, a season or a part of the day.",
         "输入这个词：钟点用 *at*，某一天用 *on*，月份、季节和一天中的时段用 *in*。",
       ),
-      typedGenerator("word-form", t("Type the word for the gap.", "输入填入空白处的词。"), prepTypedBank, (right, shown) =>
-        t(shown.replace("___", `*${right}*`), `${shown.replace("___", `*${right}*`)}（${reasonFor(right)}）`),
-      ),
+      typedGenerator("word-form", t("Type the word for the gap.", "输入填入空白处的词。"), prepTypedBank, prepWhy),
     ),
     point(
       "no-word",
@@ -472,9 +505,14 @@ const prepositionsOfTime: TopicDef = {
         "Before *next*, *last*, *this* and *every*, there is no *at*, *on* or *in*: *We have a test next Monday.* *I visit my grandma every Sunday.*",
         "在 *next*、*last*、*this*、*every* 前面不用 *at*、*on*、*in*：*We have a test next Monday.* *I visit my grandma every Sunday.* 不要说 *on next Monday*。",
       ),
-      typedGenerator("sentence", t("Fix the sentence.", "改正这个句子。"), noPrepBank, (right) =>
-        t(right, `${right}（next、this、every 前不加 at、on、in）`),
-      ),
+      typedGenerator("sentence", t("Fix the sentence.", "改正这个句子。"), noPrepBank, (right) => {
+        const phrase = /(next|this|every) \w+/u.exec(right)?.[0] ?? "next week";
+        const first = phrase.split(" ")[0] ?? "next";
+        return t(
+          `*${phrase}* starts with *${first}*, and a time that starts with *next*, *last*, *this* or *every* takes no *at*, *on* or *in*: ${right}`,
+          `*${phrase}* 以 *${first}* 开头；以 *next*、*last*、*this*、*every* 开头的时间前不加 *at*、*on*、*in*：${right}`,
+        );
+      }),
     ),
   ],
 };
@@ -528,6 +566,37 @@ const namesTypedBank: readonly TypedItem[] = nameSentences.map(
 
 const namesChoiceBank: readonly ChoiceItem[] = nameSentences.map((s): ChoiceItem => ["", s, [careless(s), tooMany(s)]]);
 
+/** namesIn are the names in sentence s. */
+const namesIn = (s: string): readonly string[] =>
+  [...people, ...languages, ...cities, ...countries, ...dayNames, ...monthNames].filter((name) => s.includes(name));
+
+/** namesWhy explains which words of a sentence take a capital letter. */
+const namesWhy = (right: string): Text => {
+  const names = namesIn(right)
+    .map((name) => `*${name}*`)
+    .join(", ");
+  return t(
+    `Names of people, places, languages, days and months begin with a capital letter, here ${names}, and other words do not: ${right}`,
+    `人名、地名、语言、星期和月份以大写字母开头，这里是 ${names}，其他词不大写：${right}`,
+  );
+};
+
+/** whyNotNames explains a sentence with too few or too many capitals. */
+const whyNotNames = (wrong: string, right: string, _shown: string, position: number): Text => {
+  if (position === 0) {
+    const name = namesIn(right).find((n) => !wrong.startsWith(n)) ?? namesIn(right)[0] ?? "";
+    return t(
+      `This writes names with a small letter, like *${name.toLowerCase()}*. A name always begins with a capital: *${name}*.`,
+      `这句把名字写成了小写，如 *${name.toLowerCase()}*。名字总是以大写字母开头：*${name}*。`,
+    );
+  }
+  const plain = /\b[a-z]{3,}\b/u.exec(right)?.[0] ?? "and";
+  return t(
+    `This gives every word a capital letter. Only names and the first word take one, so *${plain}* stays small.`,
+    `这句给每个词都加了大写。只有名字和句首的词大写，所以 *${plain}* 仍然小写。`,
+  );
+};
+
 const capitalLettersForNames: TopicDef = {
   id: "writing-capital-letters-for-names",
   title: t("Capital Letters for Names", "专有名词的大写"),
@@ -550,19 +619,20 @@ const capitalLettersForNames: TopicDef = {
         "A name begins with a capital letter: people (*Anna*), cities (*London*), countries (*China*), languages (*English*), days (*Monday*) and months (*May*). Other words do not: *birthday*, *party*, *friend*.",
         "名字以大写字母开头：人名（*Anna*）、城市（*London*）、国家（*China*）、语言（*English*）、星期（*Monday*）和月份（*May*）。其他词不大写：*birthday*、*party*、*friend*。\n\n中文没有大小写，所以要特别留意：星期和月份在英语里也算名字，必须大写。",
       ),
-      choiceGenerator(t("Which sentence is written right?", "哪个句子写对了？"), namesChoiceBank, (right) =>
-        t(right, `${right}（人名、地名、语言、星期、月份大写，其他词不大写）`),
-      ),
+      choiceGenerator(t("Which sentence is written right?", "哪个句子写对了？"), namesChoiceBank, namesWhy, whyNotNames),
     ),
     point(
       "write",
       t("Writing names with capitals", "名字大写"),
-      t("Copy the sentence and give every name a capital letter, and no other word.", "抄写句子，给每个名字加上大写字母，其他词不要大写。"),
+      t(
+        "Copy the sentence and give every name a capital letter: people, cities, countries, languages, days and months. Keep the first word capital, and write every other word with a small letter.",
+        "抄写句子，给每个名字加上大写字母：人名、城市、国家、语言、星期和月份。句首的词保持大写，其他词都用小写。",
+      ),
       typedGenerator(
         "sentence",
         t("Write the sentence again with the right capital letters.", "用正确的大写字母重写句子。"),
         namesTypedBank,
-        (right) => t(right, `${right}（人名、地名、语言、星期、月份大写）`),
+        namesWhy,
       ),
     ),
   ],

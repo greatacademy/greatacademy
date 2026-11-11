@@ -1,7 +1,7 @@
 // A1, unit 8: School. School subjects, schoolwork and little words, don't and doesn't, do and does questions, and
 // writing questions.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { interleave, pairUp, sentenceCase, vocabularyTopic, word } from "../words.ts";
@@ -367,7 +367,39 @@ const negMakeBank: readonly TypedItem[] = deedItems(84, 39).map(
   }),
 );
 
-const negWhy = (right: string) => t(right, `${right}（I/you/we/they 用 don't，he/she/it 用 doesn't，后面的动词不加 -s）`);
+/** negReason names the rule that picks don't or doesn't in sentence. */
+const negReason = (sentence: string): Text =>
+  sentence.includes("doesn't")
+    ? t(
+        "One person or thing, like *he*, *she* or *it*, takes *doesn't*, and the verb after it loses its *-s*",
+        "单个的人或物（如 *he*、*she*、*it*）用 *doesn't*，后面的动词去掉 *-s*",
+      )
+    : t(
+        "*I*, *you*, *we*, *they* and more than one person take *don't*, and the verb after it stays plain",
+        "*I*、*you*、*we*、*they* 和多个人用 *don't*，后面用动词原形",
+      );
+
+const negWhy = (sentence: string): Text => {
+  const reason = negReason(sentence);
+  return t(`${reason.en}: ${sentence}`, `${reason["zh-CN"]}：${sentence}`);
+};
+
+/** whyNotNeg explains a wrong word in a gap that needs don't or doesn't. */
+const whyNotNeg = (wrong: string, right: string): Text =>
+  wrong === "isn't" || wrong === "aren't"
+    ? t(
+        `*${wrong}* is a form of *be*. A verb like this one needs *${right}* to say no.`,
+        `*${wrong}* 是 *be* 动词的形式。否定这样的实义动词要用 *${right}*。`,
+      )
+    : wrong === "don't"
+      ? t(
+          `*don't* is for *I*, *you*, *we*, *they* and more than one person. This subject is one person or thing, so it takes *doesn't*.`,
+          "*don't* 用于 *I*、*you*、*we*、*they* 和多个人。这个主语是单个的人或物，要用 *doesn't*。",
+        )
+      : t(
+          `*doesn't* is for one person or thing, like *he* or *she*. This subject is *I*, *you*, *we*, *they* or more than one, so it takes *don't*.`,
+          "*doesn't* 用于单个的人或物，如 *he*、*she*。这个主语是 *I*、*you*、*we*、*they* 或多个人，要用 *don't*。",
+        );
 
 const presentSimpleNegatives: TopicDef = {
   id: "present-simple-negatives",
@@ -388,8 +420,11 @@ const presentSimpleNegatives: TopicDef = {
         "To say *no* about a verb like *like* or *play*, put *don't* (*do not*) or *doesn't* (*does not*) before it.\n\n*I, you, we, they* → *don't*: *I don't like math.*\n*he, she, it* and one person → *doesn't*: *She doesn't like art.*\n\nNot *isn't*: *isn't* is only for *be*.",
         "否定 *like*、*play* 这类动词时，在动词前加 *don't*（*do not*）或 *doesn't*（*does not*）。\n\n*I、you、we、they* → *don't*：*I don't like math.*\n*he、she、it* 和单个的人 → *doesn't*：*She doesn't like art.*\n\n中文只要加“不”就行，英语却要借助 *do*。也不能用 *isn't*：*isn't* 只用于 *be* 动词。",
       ),
-      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), negChoiceBank, (right, shown) =>
-        negWhy(shown.replace("___", right)),
+      choiceGenerator(
+        t("Choose the word for the gap.", "选出填入空白处的词。"),
+        negChoiceBank,
+        (right, shown) => negWhy(shown.replace("___", right)),
+        whyNotNeg,
       ),
     ),
     point(
@@ -405,8 +440,8 @@ const presentSimpleNegatives: TopicDef = {
       "make",
       t("Making a sentence negative", "把句子改成否定句"),
       t(
-        "*Tom plays football.* → *Tom doesn't play football.* *We eat meat.* → *We don't eat meat.*",
-        "*Tom plays football.* → *Tom doesn't play football.* *We eat meat.* → *We don't eat meat.* 注意：*plays* 变回 *play*。",
+        "To make a sentence negative, put *don't* or *doesn't* before the verb and take the *-s* off the verb: *Tom plays football.* → *Tom doesn't play football.* *We eat meat.* → *We don't eat meat.*",
+        "把句子改成否定句时，在动词前加 *don't* 或 *doesn't*，并去掉动词的 *-s*：*Tom plays football.* → *Tom doesn't play football.* *We eat meat.* → *We don't eat meat.* 注意：*plays* 变回 *play*。",
       ),
       typedGenerator("sentence-pattern", t("Change the sentence.", "改写这个句子。"), negMakeBank, negWhy),
     ),
@@ -485,10 +520,37 @@ const presentSimpleQuestions: TopicDef = {
         "A question about a verb like *like* or *play* starts with *Do* or *Does*.\n\n*Do* with *I, you, we, they*: *Do you like science?*\n*Does* with *he, she, it* and one person: *Does Tom speak English?*\n\nNot *Is* or *Are*: they are only for *be*.",
         "关于 *like*、*play* 这类动词的疑问句以 *Do* 或 *Does* 开头。\n\n*I、you、we、they* 用 *Do*：*Do you like science?*\n*he、she、it* 和单个的人用 *Does*：*Does Tom speak English?*\n\n中文保持陈述句语序，只在句末加“吗”；英语要把 *do/does* 放到句首。不能用 *Is* 或 *Are*：它们只用于 *be* 动词。",
       ),
-      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), questionChoiceBank, (right, shown) => {
-        const sentence = shown.replace("___", right);
-        return t(sentence, `${sentence}（${right === "Does" ? "he/she/it 用 Does" : "I/you/we/they 用 Do"}）`);
-      }),
+      choiceGenerator(
+        t("Choose the word for the gap.", "选出填入空白处的词。"),
+        questionChoiceBank,
+        (right, shown) => {
+          const sentence = shown.replace("___", right);
+          return right === "Does"
+            ? t(
+                `The subject is one person or thing, like *he* or *she*, so the question starts with *Does*: ${sentence}`,
+                `主语是单个的人或物（如 *he*、*she*），所以疑问句以 *Does* 开头：${sentence}`,
+              )
+            : t(
+                `The subject is *I*, *you*, *we*, *they* or more than one person, so the question starts with *Do*: ${sentence}`,
+                `主语是 *I*、*you*、*we*、*they* 或多个人，所以疑问句以 *Do* 开头：${sentence}`,
+              );
+        },
+        (wrong, right) =>
+          wrong === "Is" || wrong === "Are"
+            ? t(
+                `*${wrong}* starts a question with *be*. A verb like this one needs *${right}* in front.`,
+                `*${wrong}* 用于 *be* 动词的疑问句。这样的实义动词提问要在句首用 *${right}*。`,
+              )
+            : wrong === "Do"
+              ? t(
+                  "*Do* is for *I*, *you*, *we*, *they* and more than one person. This subject is one person or thing, so it takes *Does*.",
+                  "*Do* 用于 *I*、*you*、*we*、*they* 和多个人。这个主语是单个的人或物，要用 *Does*。",
+                )
+              : t(
+                  "*Does* is for one person or thing. This subject is *I*, *you*, *we*, *they* or more than one, so it takes *Do*.",
+                  "*Does* 用于单个的人或物。这个主语是 *I*、*you*、*we*、*they* 或多个人，要用 *Do*。",
+                ),
+      ),
     ),
     point(
       "write",
@@ -497,9 +559,13 @@ const presentSimpleQuestions: TopicDef = {
         "Put *Do* or *Does* first, then the subject, then the verb with no *-s*: *Tom plays football.* → *Does Tom play football?*",
         "先写 *Do* 或 *Does*，再写主语，然后写不加 *-s* 的动词：*Tom plays football.* → *Does Tom play football?* *plays* 要变回 *play*。",
       ),
-      typedGenerator("sentence", t("Write the question.", "写出疑问句。"), questionWriteBank, (right) =>
-        t(right, `${right}（Do/Does + 主语 + 动词原形）`),
-      ),
+      typedGenerator("sentence", t("Write the question.", "写出疑问句。"), questionWriteBank, (right) => {
+        const aux = right.split(" ")[0] ?? "Do";
+        return t(
+          `Put *${aux}* first, then the subject, then the verb with no *-s*, and end with a question mark: ${right}`,
+          `先写 *${aux}*，再写主语，然后写不加 *-s* 的动词原形，句末用问号：${right}`,
+        );
+      }),
     ),
     point(
       "answer",
@@ -508,11 +574,27 @@ const presentSimpleQuestions: TopicDef = {
         "Answer with *do*, *does*, *don't* or *doesn't*, not the verb again: *Does she like art?* → *Yes, she does.* / *No, she doesn't.* *Do you like art?* → *Yes, I do.*",
         "简短回答用 *do*、*does*、*don't* 或 *doesn't*，不重复动词：*Does she like art?* → *Yes, she does.* / *No, she doesn't.* *Do you like art?* → *Yes, I do.* 中文常用“喜欢”“不喜欢”来回答，英语却不说 *Yes, she likes.*",
       ),
-      choiceGenerator(t("Choose the short answer.", "选出简短回答。"), shortAnswerBank, (right, shown) =>
-        t(
-          `${shown.replace(/ \(.*\)$/u, "")} — ${right}`,
-          `${shown.replace(/ \(.*\)$/u, "")} — ${right}（简短回答用 do/does/don't/doesn't）`,
-        ),
+      choiceGenerator(
+        t("Choose the short answer.", "选出简短回答。"),
+        shortAnswerBank,
+        (right, shown) => {
+          const question = shown.replace(/ \(.*\)$/u, "");
+          const aux = right.includes("does") ? "does" : "do";
+          return t(
+            `A short answer uses the pronoun for the person asked about and the *${aux}* that pronoun takes, not the verb again: ${question} — ${right}`,
+            `简短回答用代表被问对象的代词，再加这个代词要用的 *${aux}*，不重复动词：${question} — ${right}`,
+          );
+        },
+        (wrong, right, _shown, position) =>
+          position === 1
+            ? t(
+                `*${wrong}* answers with *be*, but the question asks with *do* or *does*, so the answer uses it too: *${right}*`,
+                `*${wrong}* 用的是 *be* 动词，但问句用 *do* 或 *does* 提问，回答也要用它：*${right}*`,
+              )
+            : t(
+                `The pronoun in this answer takes ${right.includes("does") ? "*does*, because it is one person" : "*do*, because it is *I*, *we* or *they*"}, so the answer is *${right.replace(/\.$/u, "")}*, not *${wrong.replace(/\.$/u, "")}*.`,
+                `这个回答里的代词要用 ${right.includes("does") ? "*does*，因为它是单个的人" : "*do*，因为它是 *I*、*we* 或 *they*"}，所以说 *${right.replace(/\.$/u, "")}*，不说 *${wrong.replace(/\.$/u, "")}*。`,
+              ),
       ),
     ),
   ],
@@ -565,6 +647,38 @@ const writeQuestionTypedBank: readonly TypedItem[] = writtenQuestions.map(
   }),
 );
 
+/** askedWhy explains which question a short answer and its sentence reply to. */
+const askedWhy = (question: string): Text => {
+  const first = question.split(" ")[0] ?? "Do";
+  const be = first === "Is" || first === "Are";
+  return be
+    ? t(
+        `The short answer uses *${first.toLowerCase()}*, a form of *be*, so the question puts *${first}* before the subject: ${question}`,
+        `简短回答用的是 *be* 动词 *${first.toLowerCase()}*，所以问句把 *${first}* 放在主语前面：${question}`,
+      )
+    : t(
+        `The short answer uses *${first.toLowerCase()}*, so the question starts with *${first}*, then the subject and the plain verb: ${question}`,
+        `简短回答用的是 *${first.toLowerCase()}*，所以问句以 *${first}* 开头，接着是主语和动词原形：${question}`,
+      );
+};
+
+/** whyNotAsked explains a wrong question for a short answer. */
+const whyNotAsked = (wrong: string, right: string, _shown: string, position: number): Text =>
+  position === 0
+    ? t(
+        `*${wrong}* keeps the order of a statement and only adds a question mark. An English question moves *${right.split(" ")[0] ?? ""}* to the front.`,
+        `*${wrong}* 保留了陈述句的语序，只加了问号。英语问句要把 *${right.split(" ")[0] ?? ""}* 放到句首。`,
+      )
+    : /^(Is|Are) /u.test(right)
+      ? t(
+          `*${wrong}* puts *do* or *does* before *be*. A question with *be* needs no *do*: *${right}*`,
+          `*${wrong}* 在 *be* 动词前又加了 *do* 或 *does*。*be* 动词的问句不需要 *do*：*${right}*`,
+        )
+      : t(
+          `*${wrong}* keeps an *-s* on the verb. After *do* or *does* the verb is plain: *${right}*`,
+          `*${wrong}* 的动词还带着 *-s*。在 *do* 或 *does* 后面，动词用原形：*${right}*`,
+        );
+
 const writingQuestions: TopicDef = {
   id: "writing-questions",
   title: t("Writing Questions", "写问句"),
@@ -587,19 +701,25 @@ const writingQuestions: TopicDef = {
         "Look at the short answer. *Yes, she does* answers a question with *Does*; *Yes, he is* answers a question with *Is*. Then build the question from the second sentence: *She likes art.* → *Does she like art?* *He is tired.* → *Is he tired?*",
         "先看简短回答。*Yes, she does* 回答的是以 *Does* 开头的问句；*Yes, he is* 回答的是以 *Is* 开头的问句。再根据第二句话写出问句：*She likes art.* → *Does she like art?* *He is tired.* → *Is he tired?*\n\n英语问句不能像中文那样只改标点：*She likes art?* 不是正确的问句。",
       ),
-      choiceGenerator(t("Which question does this answer reply to?", "这个回答对应哪个问句？"), writeQuestionChoiceBank, (right) =>
-        t(right, `${right}（看简短回答选 do/does 或 is/are）`),
+      choiceGenerator(
+        t("Which question does this answer reply to?", "这个回答对应哪个问句？"),
+        writeQuestionChoiceBank,
+        askedWhy,
+        whyNotAsked,
       ),
     ),
     point(
       "write",
       t("Writing the question", "写出问句"),
-      t("Write the question with a capital letter and a question mark.", "写出问句，句首大写，句末加问号。"),
+      t(
+        "Take *do*, *does*, *is* or *are* from the short answer and put it first, then the subject and the rest of the second sentence, with a plain verb after *do* or *does*. Start with a capital letter and end with a question mark.",
+        "从简短回答里取出 *do*、*does*、*is* 或 *are* 放在句首，再接主语和第二句的其余部分；*do* 或 *does* 后面的动词用原形。句首大写，句末加问号。",
+      ),
       typedGenerator(
         "sentence",
         t("Write the question that this answer replies to.", "写出这个回答对应的问句。"),
         writeQuestionTypedBank,
-        (right) => t(right, `${right}（do/does 或 is/are 放在句首）`),
+        askedWhy,
       ),
     ),
   ],

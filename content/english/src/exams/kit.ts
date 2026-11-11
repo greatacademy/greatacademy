@@ -106,6 +106,8 @@ export interface LabelledItem {
   readonly shown: string;
   readonly right: number;
   readonly solution: Text;
+  /** whyNot is the feedback for choosing a wrong label, given its index. */
+  readonly whyNot?: (label: number) => Text;
 }
 
 /**
@@ -115,12 +117,19 @@ export interface LabelledItem {
 export function labelGenerator(question: Text, labels: readonly string[], bank: readonly LabelledItem[]): Generator {
   return (rng: Rng): Problem => {
     const item = rng.cycle(bank);
+    const whyNot = item.whyNot;
     return {
       prompt: joinText([question, same(quote(item.shown))]),
       answer: { checker: "choice", expected: item.right, input: { kind: "choice", options: labels.map(same) } },
       solution: item.solution,
       canonical: String(item.right),
       wrong: labels.map((_, i) => String(i)).filter((i) => i !== String(item.right)),
+      ...(whyNot && {
+        mistakes: labels
+          .map((_, i) => i)
+          .filter((i) => i !== item.right)
+          .map((i) => ({ response: String(i), feedback: whyNot(i) })),
+      }),
     };
   };
 }
@@ -139,6 +148,8 @@ export interface SolvedChoice {
   readonly right: string;
   readonly wrong: readonly string[];
   readonly solution: Text;
+  /** whyNot is the feedback for each wrong option, in the order of wrong. */
+  readonly whyNot?: readonly Text[];
 }
 
 /** solvedChoiceGenerator picks an item of a bank by seed and shuffles its options; each item brings its own solution. */
@@ -153,11 +164,18 @@ export function solvedChoiceGenerator(question: Text, bank: readonly SolvedChoic
       solution: item.solution,
       canonical: String(answer),
       wrong: options.map((_, i) => String(i)).filter((i) => i !== String(answer)),
+      ...(item.whyNot && {
+        mistakes: item.wrong.flatMap((w, position) => {
+          const feedback = item.whyNot?.[position];
+          return feedback === undefined ? [] : [{ response: String(options.indexOf(w)), feedback }];
+        }),
+      }),
     };
   };
 }
 
-/** ReplyItem is one bank item of Build a Sentence: what another speaker said, and the reply in chunks in a right order. */
+/** ReplyItem
+ is one bank item of Build a Sentence: what another speaker said, and the reply in chunks in a right order. */
 export interface ReplyItem {
   readonly said: string;
   /** chunks are the words and phrases of the reply in a right order, without the final mark. */

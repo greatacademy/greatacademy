@@ -359,8 +359,24 @@ const canForAbility: TopicDef = {
         "After *can* and *can't*, the verb stays plain: no *-s* and no *to*.\n\n*A bird can fly.* Not *A bird can flies.* or *A bird can to fly.*",
         "*can* 和 *can't* 后面的动词用原形：不加 *-s*，也不加 *to*。\n\n说 *A bird can fly.*，不说 *A bird can flies.* 或 *A bird can to fly.*",
       ),
-      choiceGenerator(t("Which sentence is right?", "哪个句子是对的？"), canChoiceBank, (right) =>
-        t(`${right} After *can*, the verb has no *-s* and no *to*.`, `${right} *can* 后面的动词用原形。`),
+      choiceGenerator(
+        t("Which sentence is right?", "哪个句子是对的？"),
+        canChoiceBank,
+        (right) =>
+          t(
+            `${right} After *can* and *can't*, the verb stays plain, with no *-s* and no *to*.`,
+            `${right} *can* 和 *can't* 后面的动词用原形，不加 *-s*，也不加 *to*。`,
+          ),
+        (_wrong, _right, _shown, position) =>
+          position === 0
+            ? t(
+                "This adds *-s* to the verb after *can*, but the verb after *can* always stays plain.",
+                "这句给 *can* 后面的动词加了 *-s*，可 *can* 后面的动词总是用原形。",
+              )
+            : t(
+                "This puts *to* after *can*, but *can* is followed by the verb straight away.",
+                "这句在 *can* 后面加了 *to*，可 *can* 后面直接跟动词。",
+              ),
       ),
     ),
     point(
@@ -370,8 +386,20 @@ const canForAbility: TopicDef = {
         "Write *can* for yes and *can't* for no. *Can't* is the short form of *cannot*. Never say *don't can*.\n\n*fish / swim (yes)* → *A fish can swim.*\n*fish / walk (no)* → *A fish can't walk.*",
         "“是”用 *can*，“不是”用 *can't*。*can't* 是 *cannot* 的缩写。中文说“不会”，但英语不能说 *don't can*。\n\n*fish / swim (yes)* → *A fish can swim.*\n*fish / walk (no)* → *A fish can't walk.*",
       ),
-      typedGenerator("sentence-pattern", t("Write a sentence with can or can't.", "用 can 或 can't 写一个句子。"), canTypedBank, (right) =>
-        t(right, `${right}（can 和 can't 后面用动词原形）`),
+      typedGenerator(
+        "sentence-pattern",
+        t("Write a sentence with can or can't.", "用 can 或 can't 写一个句子。"),
+        canTypedBank,
+        (right, shown) =>
+          shown.endsWith("(yes)")
+            ? t(
+                `The note says yes, so write *can*, and the verb after it stays plain: ${right}`,
+                `提示是 yes，所以用 *can*，后面的动词用原形：${right}`,
+              )
+            : t(
+                `The note says no, so write *can't*, never *don't can*, and the verb after it stays plain: ${right}`,
+                `提示是 no，所以用 *can't*，不能说 *don't can*，后面的动词用原形：${right}`,
+              ),
       ),
     ),
   ],
@@ -481,8 +509,24 @@ const questionsWithBe: TopicDef = {
         "To ask a yes-or-no question, move *am*, *is* or *are* to the front and end with a question mark.\n\n*It is a cat.* → *Is it a cat?*\n*They are ducks.* → *Are they ducks?*",
         "中文把陈述句变成问句，只要在句末加“吗”：“它是猫吗？”英语却要把 *am*、*is* 或 *are* 移到句首，句末用问号。\n\n*It is a cat.* → *Is it a cat?*\n*They are ducks.* → *Are they ducks?*",
       ),
-      choiceGenerator(t("Which one is a right question?", "哪一个是正确的问句？"), questionChoiceBank, (right) =>
-        t(`${right} The verb comes first.`, `${right} 动词放在句首。`),
+      choiceGenerator(
+        t("Which one is a right question?", "哪一个是正确的问句？"),
+        questionChoiceBank,
+        (right) =>
+          t(
+            `${right} A yes-or-no question puts *${right.split(" ")[0]?.toLowerCase()}* before the subject and ends with a question mark.`,
+            `${right} 一般疑问句把 *${right.split(" ")[0]?.toLowerCase()}* 放在主语前面，句末用问号。`,
+          ),
+        (_wrong, _right, _shown, position) =>
+          position === 0
+            ? t(
+                "This keeps the order of a statement and only adds a question mark, the way Chinese adds 吗; English moves the verb to the front.",
+                "这句保留了陈述句的语序，只加了问号，就像中文只加“吗”；英语要把动词移到句首。",
+              )
+            : t(
+                "This has the order of a question but ends with a period; a question ends with a question mark.",
+                "这句语序对了，句末却用了句号；问句要以问号结尾。",
+              ),
       ),
     ),
     point(
@@ -492,8 +536,31 @@ const questionsWithBe: TopicDef = {
         "Answer with *Yes* or *No*, the word for who or what, and the verb: *Is it a cat? Yes, it is.* / *No, it isn't.* A question with *you* gets an answer with *I*: *Are you sad? No, I am not.*\n\nIn a short yes answer, do not use a short form: say *Yes, it is.*, not *Yes, it's.*",
         "用 *Yes* 或 *No*、代词和动词来回答：*Is it a cat? Yes, it is.* / *No, it isn't.* 问句中是 *you*，回答用 *I*：*Are you sad? No, I am not.*\n\n肯定的简略回答不能用缩写：说 *Yes, it is.*，不说 *Yes, it's.*",
       ),
-      choiceGenerator(t("Choose the short answer.", "选出简略回答。"), shortAnswerBank, (right, shown) =>
-        t(`${shown.replace(/ \((yes|no)\)$/u, "")} ${right}`, `${shown.replace(/ \((yes|no)\)$/u, "")} ${right}（简略回答）`),
+      choiceGenerator(
+        t("Choose the short answer.", "选出简略回答。"),
+        shortAnswerBank,
+        (right, shown) =>
+          t(
+            `A short answer is *${right.split(",")[0]}*, the word for who or what, and the verb of the question${right.startsWith("No") ? " with *not*" : ""}: ${shown.replace(/ \((yes|no)\)$/u, "")} ${right}`,
+            `简略回答由 *${right.split(",")[0]}*、代词和问句里的动词${right.startsWith("No") ? "加 *not*" : ""}组成：${shown.replace(/ \((yes|no)\)$/u, "")} ${right}`,
+          ),
+        (_wrong, right, _shown, position) =>
+          right.startsWith("Yes")
+            ? position === 0
+              ? t(
+                  "A short yes answer ends with the full verb, never a short form like *it's*.",
+                  "肯定的简略回答以完整的动词结尾，不能用 *it's* 这样的缩写。",
+                )
+              : t(
+                  "This starts with *Yes* but then says *not*, so it says yes and no at once.",
+                  "这句以 *Yes* 开头，后面却有否定，等于同时说“是”和“不是”。",
+                )
+            : position === 0
+              ? t(
+                  "This starts with *No* but then says the verb without *not*, so it says no and yes at once.",
+                  "这句以 *No* 开头，后面的动词却没有 *not*，等于同时说“不是”和“是”。",
+                )
+              : t("This leaves out the verb; a short answer needs it before *not*.", "这句漏了动词；简略回答在 *not* 前面要有动词。"),
       ),
     ),
     point(
@@ -504,7 +571,10 @@ const questionsWithBe: TopicDef = {
         "把陈述句改成问句：动词放在最前面，句末用问号。",
       ),
       typedGenerator("sentence", t("Write the sentence as a question.", "把这个句子改成问句。"), questionTypedBank, (right, shown) =>
-        t(`${shown} → ${right}`, `${shown} → ${right}（动词移到句首）`),
+        t(
+          `Move *${right.split(" ")[0]?.toLowerCase()}* to the front, before the subject, and end with a question mark: ${shown} → ${right}`,
+          `把 *${right.split(" ")[0]?.toLowerCase()}* 移到句首、主语前面，句末用问号：${shown} → ${right}`,
+        ),
       ),
     ),
   ],

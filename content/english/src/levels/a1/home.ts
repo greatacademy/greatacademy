@@ -1,7 +1,7 @@
 // A1, unit 6: Home. Rooms, things at home and housework, there is and there are, prepositions of place, and
 // sentences about a room.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { interleave, pairUp, sentenceCase, vocabularyTopic, word } from "../words.ts";
@@ -339,6 +339,18 @@ const thereQuestionBank: readonly TypedItem[] = thereItems(5, 17).map(({ thing, 
   };
 });
 
+/** thereReason says why a thing takes there is or there are, in every locale. */
+const thereReason = (thing: string, be: string): Text =>
+  be === "is"
+    ? t(`*${thing}* is one thing, so it takes *There is*`, `*${thing}* 是一样东西，所以用 *There is*`)
+    : t(`*${thing}* is more than one thing, so it takes *There are*`, `*${thing}* 是多样东西，所以用 *There are*`);
+
+/** haveNotThere says why have cannot say what is in a place, in every locale. */
+const haveNotThere = t(
+  "*have* says what a person owns; to say what is in a place, English starts with *There is* or *There are*, not with *have* as Chinese uses 有.",
+  "*have* 说的是某人拥有什么；说某处有什么，英语要用 *There is* 或 *There are* 开头，不能像中文“有”那样用 *have*。",
+);
+
 const thereIsAndThereAre: TopicDef = {
   id: "there-is-and-there-are",
   title: t("There Is and There Are", "there is 和 there are"),
@@ -361,11 +373,20 @@ const thereIsAndThereAre: TopicDef = {
         "To say what is in a place, start with *there*: *There is a lamp in my room.* Use *is* for one thing and *are* for more: *There are two beds.*\n\nThe short form of *there is* is *there's*.",
         "说某处有什么，句子以 *there* 开头：*There is a lamp in my room.* 一样东西用 *is*，多样东西用 *are*：*There are two beds.*\n\n*there is* 的缩写是 *there's*。",
       ),
-      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), thereChoiceBank, (right, shown) =>
-        t(
-          shown.replace("___", `*${right}*`),
-          `${shown.replace("___", `*${right}*`)}（${right === "is" ? "一样东西用 is" : "多样东西用 are"}）`,
-        ),
+      choiceGenerator(
+        t("Choose the word for the gap.", "选出填入空白处的词。"),
+        thereChoiceBank,
+        (right, shown) => {
+          const reason = thereReason(shown.split("___ ")[1]?.split(" in ")[0] ?? "", right);
+          return t(`${reason.en}: ${shown.replace("___", `*${right}*`)}`, `${reason["zh-CN"]}：${shown.replace("___", `*${right}*`)}`);
+        },
+        (wrong, _right, shown) => {
+          const thing = shown.split("___ ")[1]?.split(" in ")[0] ?? "";
+          if (wrong === "have") return haveNotThere;
+          return wrong === "are"
+            ? t(`*are* is for more than one thing, but *${thing}* is one.`, `*are* 用于多样东西，可 *${thing}* 只是一样。`)
+            : t(`*is* is for one thing, but *${thing}* is more than one.`, `*is* 用于一样东西，可 *${thing}* 不止一样。`);
+        },
       ),
     ),
     point(
@@ -375,8 +396,18 @@ const thereIsAndThereAre: TopicDef = {
         "Chinese says *yǒu* (有) for both *have* and *there is*, so learners write *Have a lamp in my room.* In English, a place does not *have* here: say *There is a lamp in my room.*",
         "中文“有”既表示 *have*，也表示 *there is*，所以学习者常写 *Have a lamp in my room.* 或 *There have two beds.* 说某处有某物时，英语要用 *There is* 或 *There are*：*There is a lamp in my room.*",
       ),
-      typedGenerator("sentence-pattern", t("Fix the sentence. Start with There.", "改正这个句子，以 There 开头。"), thereFixBank, (right) =>
-        t(right, `${right}（说某处有某物用 there is / there are，不用 have）`),
+      typedGenerator(
+        "sentence-pattern",
+        t("Fix the sentence. Start with There.", "改正这个句子，以 There 开头。"),
+        thereFixBank,
+        (right) => {
+          const be = right.startsWith("There is") ? "is" : "are";
+          const reason = thereReason(right.replace(/^There (is|are) /u, "").split(" in ")[0] ?? "", be);
+          return t(
+            `A place does not *have* things in English; to say what is in it, start with *There*. ${reason.en}: ${right}`,
+            `英语里地点不能 *have* 东西；说某处有什么，要以 *There* 开头。${reason["zh-CN"]}：${right}`,
+          );
+        },
       ),
     ),
     point(
@@ -386,9 +417,14 @@ const thereIsAndThereAre: TopicDef = {
         "For a question, put *is* or *are* first: *Is there a lamp in your room? Are there any toys?* In a question, *some* and a number become *any*.",
         "疑问句把 *is* 或 *are* 放到句首：*Is there a lamp in your room? Are there any toys?* 疑问句中，*some* 和数字要换成 *any*。",
       ),
-      typedGenerator("sentence", t("Make the sentence a question.", "把句子改成疑问句。"), thereQuestionBank, (right) =>
-        t(right, `${right}（is/are 放到句首）`),
-      ),
+      typedGenerator("sentence", t("Make the sentence a question.", "把句子改成疑问句。"), thereQuestionBank, (right, shown) => {
+        const be = right.split(" ")[0] ?? "";
+        const changed = / any /u.test(right) && !/ any /u.test(shown);
+        return t(
+          `For a question, put *${be}* before *there*${changed ? ", and *some* or a number becomes *any*" : " and end with a question mark"}: ${right}`,
+          `疑问句把 *${be}* 放到 *there* 前面${changed ? "，*some* 或数字要换成 *any*" : "，句末用问号"}：${right}`,
+        );
+      }),
     ),
   ],
 };
@@ -457,20 +493,32 @@ const placeTypedBank: readonly TypedItem[] = scenes(42, 35).map(
   ({ text, right, wrong }): TypedItem => ({ shown: text, accepted: [right], wrong }),
 );
 
+/** placeMeaning says what each place word means, in every locale. */
+const placeMeaning: Record<string, Text> = {
+  behind: t("at the back of something, hidden by it", "在……后面，被它挡住"),
+  "in front of": t("at the front of something, the other way round from *behind*", "在……前面，和 *behind* 相反"),
+  "next to": t("side by side with something", "紧挨着"),
+  between: t("in the middle of two things", "在两者之间"),
+  under: t("below something", "在……下面"),
+  on: t("on top of something", "在……上面"),
+  near: t("not far from something", "在……附近，不远"),
+};
+
 const placeWhy = (right: string, shown: string) => {
   const stop = shown.lastIndexOf(". ", shown.indexOf("___"));
   const sentence = shown.slice(stop < 0 ? 0 : stop + 2).replace("___", `*${right}*`);
-  const zh: Record<string, string> = {
-    behind: "behind 在……后面",
-    "in front of": "in front of 在……前面",
-    "next to": "next to 紧挨着",
-    between: "between 在两者之间",
-    under: "under 在……下面",
-    on: "on 在……上面",
-    near: "near 在……附近",
-  };
-  return t(sentence, `${sentence}（${zh[right] ?? right}）`);
+  return t(
+    `*${right}* means ${placeMeaning[right]?.en}, which is just what the words before it describe: ${sentence}`,
+    `*${right}* 的意思是${placeMeaning[right]?.["zh-CN"]}，正是前面描述的位置：${sentence}`,
+  );
 };
+
+/** whyNotPlace says what a wrong place word means, which the scene does not describe. */
+const whyNotPlace = (wrong: string): Text =>
+  t(
+    `*${wrong}* means ${placeMeaning[wrong]?.en}, but that is not where the words before the gap put it.`,
+    `*${wrong}* 的意思是${placeMeaning[wrong]?.["zh-CN"]}，可前面描述的位置不是这样。`,
+  );
 
 const prepositionsOfPlace: TopicDef = {
   id: "prepositions-of-place",
@@ -491,7 +539,7 @@ const prepositionsOfPlace: TopicDef = {
         "*next to*: side by side. *behind*: at the back. *in front of*: at the front, the other way round from *behind*. *between*: in the middle of two things. *near*: not far. And *in*, *on* and *under*.\n\nThe word comes before the place: *The cat is behind the sofa.*",
         "*next to*：紧挨着。*behind*：在后面。*in front of*：在前面，和 *behind* 相反。*between*：在两者之间。*near*：在附近。还有 *in*、*on*、*under*。\n\n中文说“在沙发后面”，方位词放在后面；英语正好相反，方位词放在前面：*The cat is behind the sofa.*",
       ),
-      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), placeChoiceBank, placeWhy),
+      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), placeChoiceBank, placeWhy, whyNotPlace),
     ),
     point(
       "type",
@@ -545,6 +593,16 @@ const roomTypedBank: readonly TypedItem[] = roomItems.map(
   }),
 );
 
+/** roomWhy explains a sentence about a room from its note: there is or there are, then the thing, then the place. */
+const roomWhy = (right: string, shown: string): Text => {
+  const [thing = "", place = ""] = shown.split(" / ");
+  const reason = thereReason(thing, right.startsWith("There is") ? "is" : "are");
+  return t(
+    `${reason.en}; then comes the thing, and the place *${place}* goes at the end: ${right}`,
+    `${reason["zh-CN"]}；后面先写东西，位置 *${place}* 放在句末：${right}`,
+  );
+};
+
 const writingAboutARoom: TopicDef = {
   id: "writing-about-a-room",
   title: t("Writing About a Room", "描写一个房间"),
@@ -567,17 +625,26 @@ const writingAboutARoom: TopicDef = {
         "A note gives a thing and a place. The sentence starts with *There is* for one thing or *There are* for more, then the thing, then the place.\n\n*a desk / next to the window* → *There is a desk next to the window.*",
         "笔记给出一样东西和一个位置。写成句子时，一样东西用 *There is* 开头，多样东西用 *There are*，后面先写东西，再写位置。\n\n*a desk / next to the window* → *There is a desk next to the window.*\n\n中文常把位置放在前面（“窗户旁边有一张书桌”），英语一般把位置放在句末。",
       ),
-      choiceGenerator(t("Choose the sentence that matches the note.", "选出与笔记相符的句子。"), roomChoiceBank, (right) =>
-        t(right, `${right}（There is/are + 东西 + 位置）`),
+      choiceGenerator(
+        t("Choose the sentence that matches the note.", "选出与笔记相符的句子。"),
+        roomChoiceBank,
+        (right, shown) => roomWhy(right, shown),
+        (wrong, _right, _shown, position) =>
+          position === 0
+            ? wrong.startsWith("There are")
+              ? t("This uses *are*, but the note gives just one thing.", "这句用了 *are*，可笔记里只有一样东西。")
+              : t("This uses *is*, but the note gives more than one thing.", "这句用了 *is*，可笔记里不止一样东西。")
+            : haveNotThere,
       ),
     ),
     point(
       "write",
       t("Writing the sentence", "写出句子"),
-      t("Write a whole sentence for the note, with a capital letter and a period.", "根据笔记写一个完整的句子，句首大写，句末加句号。"),
-      typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), roomTypedBank, (right) =>
-        t(right, `${right}（There is/are + 东西 + 位置）`),
+      t(
+        "Write a whole sentence for the note: *There is* for one thing or *There are* for more, then the thing, then the place. Start with a capital letter and end with a period.",
+        "根据笔记写一个完整的句子：一样东西用 *There is*，多样东西用 *There are*，后面先写东西，再写位置。句首大写，句末加句号。",
       ),
+      typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), roomTypedBank, roomWhy),
     ),
   ],
 };

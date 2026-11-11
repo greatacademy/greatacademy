@@ -1,7 +1,7 @@
 // B1, unit 10: Science and Discovery. Science, research, exploring space, inventions, numbers and amounts, forces and
 // matter, and describing change; the past perfect; writing a summary. Its tense consistency reuses the native topic.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
@@ -914,6 +914,67 @@ const perfectTyped: readonly TypedItem[] = interleave([
   }),
 );
 
+/** verbOf is the verb in brackets at the end of shown, without not or never. */
+const verbOf = (shown: string) => (/\(([^)]+)\)$/u.exec(shown)?.[1] ?? "").replace(/^(not|never) /u, "");
+
+/** participleRule names the past perfect of a verb: had or hadn't, and its participle, regular or not. */
+function participleRule(right: string, shown: string): Text {
+  const base = verbOf(shown);
+  const participle = right.split(" ").pop() ?? "";
+  const had = right.startsWith("hadn't") ? "hadn't" : "had";
+  const stem = base.replace(/[ey]$/u, "");
+  const regular = participle.endsWith("ed") && participle.startsWith(stem);
+  return regular
+    ? t(
+        `The past perfect is *${had}* and the past participle for every person, and *${base}* is regular, so it is *${participle}*`,
+        `过去完成时是 *${had}* 加过去分词，所有人称都一样；*${base}* 是规则动词，过去分词是 *${participle}*`,
+      )
+    : t(
+        `The past perfect is *${had}* and the past participle for every person, and the participle of *${base}* is *${participle}*`,
+        `过去完成时是 *${had}* 加过去分词，所有人称都一样；*${base}* 的过去分词是 *${participle}*`,
+      );
+}
+
+/** whyNotPerfect explains has or have in a story about the past, or a form that is not the participle. */
+const whyNotPerfect = (wrong: string, right: string, shown: string, position: number): Text => {
+  const rule = participleRule(right, shown);
+  const base = verbOf(shown);
+  const form = wrong.split(" ").pop() ?? "";
+  let first: Text;
+  if (position === 0)
+    first = t(
+      `*${wrong.split(" ")[0]}* makes the present perfect, but this is a story about the past.`,
+      `*${wrong.split(" ")[0]}* 构成的是现在完成时，但这里讲的是过去的事。`,
+    );
+  else if (form === base) first = t(`*${form}* is the base form, not the past participle.`, `*${form}* 是动词原形，不是过去分词。`);
+  else if (form.endsWith("ed"))
+    first = t(`*${form}* is not a word: *${base}* is irregular.`, `没有 *${form}* 这个词：*${base}* 是不规则动词。`);
+  else first = t(`*${form}* is the past simple, not the past participle.`, `*${form}* 是一般过去式，不是过去分词。`);
+  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+};
+
+/** perfectIn finds the verb with had in a sentence. */
+const perfectIn = (sentence: string) => /\bhad(n't)? \w+/u.exec(sentence)?.[0] ?? "had";
+
+/** firstWhy explains which event the past perfect puts first. */
+const firstWhy = (right: string, shown: string): Text =>
+  t(
+    `*${perfectIn(shown)}* is the past perfect, so it is the earlier event: ${shown} → ${right}`,
+    `*${perfectIn(shown)}* 是过去完成时，表示先发生的事：${shown} → ${right}`,
+  );
+
+/** whyNotFirst explains the later event, or the two events at the same time. */
+const whyNotFirst = (wrong: string, _right: string, shown: string): Text =>
+  wrong === bothAtOnce
+    ? t(
+        `*${perfectIn(shown)}* shows that one event came before the other, not at the same time.`,
+        `*${perfectIn(shown)}* 表示一件事比另一件事先发生，不是同时发生。`,
+      )
+    : t(
+        `*${wrong}* is the event in the past simple, so it came later. *${perfectIn(shown)}* is the earlier one.`,
+        `*${wrong}* 是一般过去时的那件事，是后发生的。*${perfectIn(shown)}* 才是先发生的。`,
+      );
+
 const pastPerfect: TopicDef = {
   id: "past-perfect",
   title: t("The Past Perfect", "过去完成时"),
@@ -939,7 +1000,11 @@ const pastPerfect: TopicDef = {
       choiceGenerator(
         t("Choose the past perfect of the verb in brackets.", "选出括号中动词的过去完成时。"),
         perfectChoice,
-        (right, shown) => t(fill(shown, right), `${fill(shown, right)}（过去完成时：had / hadn't + 过去分词）`),
+        (right, shown) => {
+          const rule = participleRule(right, shown);
+          return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+        },
+        whyNotPerfect,
       ),
     ),
     point(
@@ -949,9 +1014,7 @@ const pastPerfect: TopicDef = {
         "When you tell about two things that happened in the past, the past perfect shows which one happened **first**:\n\n- *When we arrived, the film **had started**.* (The film started first; then we arrived.)\n- *When we arrived, the film **started**.* (We arrived, and then it started.)\n\nThe verb in the past simple (*arrived*) is the later event; the verb with *had* is the earlier one, even if it comes second in the sentence.",
         "讲过去发生的两件事时，过去完成时表示哪一件**先**发生：\n\n- *When we arrived, the film **had started**.*（电影先开始，我们后到。）\n- *When we arrived, the film **started**.*（我们到了，电影接着开始。）\n\n用一般过去时的动词（*arrived*）是后发生的事；带 *had* 的动词是先发生的事，即使它在句子里排在后面。中文常用“已经”“早就”表示先后，英语靠动词的形式表示。",
       ),
-      choiceGenerator(t("Which happened first?", "哪件事先发生？"), firstChoice, (right, shown) =>
-        t(`${shown} → ${right}`, `${shown} → ${right}（带 had 的动词是先发生的事）`),
-      ),
+      choiceGenerator(t("Which happened first?", "哪件事先发生？"), firstChoice, firstWhy, whyNotFirst),
     ),
     point(
       "write",
@@ -964,7 +1027,10 @@ const pastPerfect: TopicDef = {
         "word-form",
         t("Type the past perfect of the verb in brackets.", "输入括号中动词的过去完成时。"),
         perfectTyped,
-        (right, shown) => t(fill(shown, right), `${fill(shown, right)}（had / hadn't + 过去分词）`),
+        (right, shown) => {
+          const rule = participleRule(right, shown);
+          return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+        },
       ),
     ),
   ],
@@ -1064,7 +1130,7 @@ const summaryBank: readonly WritingItem[] = [
 
 const summarizingAText = judgedTopic({
   id: "summarizing-a-text",
-  title: t("Writing a Summary", "写摘要"),
+  title: t("Summarizing a Text", "概括文章"),
   summary: t(
     "Summarize a short text in 50 to 80 words, in your own words, with its main point and key details only.",
     "用自己的话把一篇短文概括成 50 到 80 词，只写主要观点和关键细节。",

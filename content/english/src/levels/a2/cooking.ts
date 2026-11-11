@@ -1,7 +1,7 @@
 // A2, unit 4: Cooking. Cooking, ingredients, taste and quantities; a few and a little; steps in order judged by rules
 // and a recipe judged by a model.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { interleave, pairUp, vocabularyTopic, word } from "../words.ts";
@@ -445,6 +445,50 @@ const manyMuchBank: readonly ChoiceItem[] = interleave([
   ),
 ]);
 
+/** quantNoun is the noun after the gap, or after the quantifier, of a sentence. */
+const quantNoun = (sentence: string): string => /(?:___|a few|a little|many|much) (\w+)/u.exec(sentence)?.[1] ?? "";
+
+/** countReason says whether noun is counted and so which words it takes. */
+const countReason = (noun: string): Text =>
+  counted.includes(noun)
+    ? t(
+        `You can count *${noun}* (*two ${noun}*), so it takes *a few* and *many*`,
+        `*${noun}* 可以数（*two ${noun}*），所以用 *a few* 和 *many*`,
+      )
+    : t(
+        `You cannot count *${noun}* (not *two ${noun}s*), so it takes *a little* and *much*`,
+        `*${noun}* 不能数（不说 *two ${noun}s*），所以用 *a little* 和 *much*`,
+      );
+
+/** quantWhy explains the quantifier in the gap of shown. */
+const quantWhy = (right: string, shown: string): Text => {
+  const reason = countReason(quantNoun(shown));
+  return t(`${reason.en}: ${fill(shown, right)}`, `${reason["zh-CN"]}：${fill(shown, right)}`);
+};
+
+/** whyNotQuant explains a quantifier that does not fit the noun after the gap. */
+const whyNotQuant = (wrong: string, _right: string, shown: string): Text => {
+  const noun = quantNoun(shown);
+  const reason = countReason(noun);
+  if (wrong === "a bit")
+    return t(
+      `*a bit* cannot stand straight before a noun; it needs *of*, as in *a bit of salt*. ${reason.en}.`,
+      `*a bit* 不能直接放在名词前，要说 *a bit of*，如 *a bit of salt*。${reason["zh-CN"]}。`,
+    );
+  const use: Record<string, Text> = {
+    "a few": t("*a few* is for nouns you count", "*a few* 用于可数名词"),
+    many: t("*many* is for nouns you count", "*many* 用于可数名词"),
+    "a little": t("*a little* is for nouns you do not count", "*a little* 用于不可数名词"),
+    much: t("*much* is for nouns you do not count", "*much* 用于不可数名词"),
+  };
+  const of = use[wrong] ?? t(`*${wrong}*`, `*${wrong}*`);
+  const after = /^(a few|a little)$/u.test(wrong) && /How ___|n't ___/u.test(shown);
+  return t(
+    `${of.en}${after ? ", and after *How* or *not* English uses *many* or *much*" : ""}. ${reason.en}.`,
+    `${of["zh-CN"]}${after ? "，而且在 *How* 或 *not* 后面要用 *many* 或 *much*" : ""}。${reason["zh-CN"]}。`,
+  );
+};
+
 const quantifiers: TopicDef = {
   id: "quantifiers-a-few-and-a-little",
   title: t("A Few and A Little", "a few 和 a little"),
@@ -467,9 +511,7 @@ const quantifiers: TopicDef = {
         "Both mean *some, but not many* or *not much*.\n\n- *a few* goes with nouns you count, in the plural: *a few onions*, *a few eggs*.\n- *a little* goes with nouns you do not count: *a little oil*, *a little salt*, *a little milk*.\n\nAsk: can I say *two* before it? *Two eggs*: yes, so *a few eggs*. *Two milks*: no, so *a little milk*.",
         "两者都表示“一些、不多”。\n\n- *a few* 用于可数名词复数：*a few onions*、*a few eggs*。\n- *a little* 用于不可数名词：*a little oil*、*a little salt*、*a little milk*。\n\n中文“一点”“几个”都可以说“一些”，英语要先判断名词能不能数：能说 *two eggs*，所以用 *a few eggs*；不能说 *two milks*，所以用 *a little milk*。",
       ),
-      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), quantChoiceBank, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（${right === "a few" ? "可数名词用 a few" : "不可数名词用 a little"}）`),
-      ),
+      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), quantChoiceBank, quantWhy, whyNotQuant),
     ),
     point(
       "many-much",
@@ -478,9 +520,7 @@ const quantifiers: TopicDef = {
         "The same rule holds for *many* and *much*: *many* with nouns you count (*How many eggs?*), *much* with nouns you do not (*How much milk?*).",
         "*many* 和 *much* 也一样：可数名词用 *many*（*How many eggs?*），不可数名词用 *much*（*How much milk?*）。",
       ),
-      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), manyMuchBank, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（${right === "many" ? "可数名词用 many" : "不可数名词用 much"}）`),
-      ),
+      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), manyMuchBank, quantWhy, whyNotQuant),
     ),
     point(
       "fix",
@@ -489,9 +529,10 @@ const quantifiers: TopicDef = {
         "Each sentence uses *a few* with a noun you do not count, or *a little* with one you count. Write it again.",
         "每个句子都把 *a few* 用在了不可数名词前，或把 *a little* 用在了可数名词前。改正句子。",
       ),
-      typedGenerator("sentence", t("Fix the sentence.", "改正这个句子。"), quantFixBank, (right, shown) =>
-        t(`${shown} → ${right}`, `${shown} → ${right}（可数用 a few，不可数用 a little）`),
-      ),
+      typedGenerator("sentence", t("Fix the sentence.", "改正这个句子。"), quantFixBank, (right) => {
+        const reason = countReason(quantNoun(right));
+        return t(`${reason.en}: ${right}`, `${reason["zh-CN"]}：${right}`);
+      }),
     ),
   ],
 };
@@ -552,6 +593,34 @@ const stepTypedBank: readonly TypedItem[] = interleave(
   ),
 );
 
+/** stepPlace says which step a word marks and why it fits there. */
+const stepPlace: Readonly<Record<string, Text>> = {
+  First: t("This is the first step, so it starts with *First* and a comma", "这是第一步，所以用 *First* 加逗号开头"),
+  Then: t("This step comes in the middle, right after the first, so it takes *Then*", "这一步在中间，紧接第一步，所以用 *Then*"),
+  Next: t(
+    "This step comes in the middle, after another step, so it takes *Next* and a comma",
+    "这一步在中间，跟在另一步后面，所以用 *Next* 加逗号",
+  ),
+  Finally: t("This is the last step, so it starts with *Finally* and a comma", "这是最后一步，所以用 *Finally* 加逗号开头"),
+};
+
+/** stepUse says what each order word is for. */
+const stepUse: Readonly<Record<string, Text>> = {
+  First: t(
+    "*First* is only for the first step, and a step already comes before this one",
+    "*First* 只用于第一步，而这一步前面已经有步骤了",
+  ),
+  Finally: t("*Finally* means *last*, so it is only for the last step", "*Finally* 意思是“最后”，只用于最后一步"),
+  Next: t("*Next* follows another step, but nothing comes before the first one", "*Next* 要跟在另一步后面，但第一步前面没有步骤"),
+  Second: t("*Second* gives a step its number, but the last step takes *Finally*", "*Second* 表示第二步，而最后一步要用 *Finally*"),
+};
+
+/** stepWhy explains the order word of a step. */
+const stepWhy = (word: string, step: string): Text => {
+  const place = stepPlace[word] ?? t(`*${word}*`, `*${word}*`);
+  return t(`${place.en}: ${step}`, `${place["zh-CN"]}：${step}`);
+};
+
 const writingStepsInOrder: TopicDef = {
   id: "writing-steps-in-order",
   title: t("Writing Steps in Order", "按顺序写步骤"),
@@ -571,8 +640,14 @@ const writingStepsInOrder: TopicDef = {
         "Steps are instructions: they start with the verb, like *Boil the water.* Words before them show the order:\n\n- *First,* for the first step\n- *Then* or *Next,* for the steps in the middle\n- *Finally,* for the last step\n\n*First, boil some water. Then add the noodles. Next, cook them for five minutes. Finally, put them in a bowl.*",
         "步骤是指令，以动词开头，比如 *Boil the water.* 步骤前面的词表示顺序：\n\n- *First,* 用于第一步\n- *Then* 或 *Next,* 用于中间的步骤\n- *Finally,* 用于最后一步\n\n*First, boil some water. Then add the noodles. Next, cook them for five minutes. Finally, put them in a bowl.*\n\n*Finally* 意思是“最后”，不要把它用在中间的步骤上。",
       ),
-      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), stepChoiceBank, (right, shown) =>
-        t(shown.replace("___", `*${right}*`), `${shown.replace("___", `*${right}*`)}（表示第几步的词）`),
+      choiceGenerator(
+        t("Choose the word for the gap.", "选出填入空白处的词。"),
+        stepChoiceBank,
+        (right, shown) => stepWhy(right, shown.replace("___", `*${right}*`)),
+        (wrong) => {
+          const use = stepUse[wrong] ?? t(`*${wrong}* does not fit this step`, `*${wrong}* 不适合这一步`);
+          return t(`${use.en}.`, `${use["zh-CN"]}。`);
+        },
       ),
     ),
     point(
@@ -582,9 +657,14 @@ const writingStepsInOrder: TopicDef = {
         "Write the step as an instruction with the word for its place: *First,* for step 1, *Then* or *Next,* in the middle, *Finally,* for the last one. Start with a capital letter and end with a period.",
         "把这一步写成指令，并加上表示顺序的词：第一步用 *First,*，中间的步骤用 *Then* 或 *Next,*，最后一步用 *Finally,*。句首大写，句末加句号。",
       ),
-      typedGenerator("sentence-pattern", t("Write the step.", "写出这个步骤。"), stepTypedBank, (right) =>
-        t(right, `${right}（顺序词 + 动词开头的指令）`),
-      ),
+      typedGenerator("sentence-pattern", t("Write the step.", "写出这个步骤。"), stepTypedBank, (right) => {
+        const word = right.split(/[ ,]/u)[0] ?? "";
+        const place = stepPlace[word] ?? t(`*${word}*`, `*${word}*`);
+        return t(
+          `${place.en}, and the step itself is an instruction that starts with the verb: ${right}`,
+          `${place["zh-CN"]}，步骤本身是以动词开头的指令：${right}`,
+        );
+      }),
     ),
   ],
 };

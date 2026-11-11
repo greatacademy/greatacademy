@@ -1,7 +1,7 @@
 // Pre-A1, unit 2: Numbers and Colors. The numbers to twelve, colors, questions with what and how, a and an, plurals,
 // and the first rule of writing: a capital letter and a period.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { interleave, pairUp, vocabularyTopic, word } from "../words.ts";
@@ -311,6 +311,15 @@ const missingArticleBank: readonly TypedItem[] = pairUp(
   };
 });
 
+/** nextWord finds the word right after the gap of a sentence, the one that decides between a and an. */
+const nextWord = (shown: string) => (shown.split("___ ")[1] ?? "").split(/[ .]/u)[0] ?? "";
+
+/** soundOf says how the word after the article starts and which article that sound takes. */
+const soundOf = (article: string, next: string): Text =>
+  article === "an"
+    ? t(`*${next}* starts with a vowel sound, so it takes *an*`, `*${next}* 以元音开头，所以用 *an*`)
+    : t(`*${next}* starts with a consonant sound, so it takes *a*`, `*${next}* 以辅音开头，所以用 *a*`);
+
 const aAndAn: TopicDef = {
   id: "a-and-an",
   title: t("A and An", "a 和 an"),
@@ -327,12 +336,13 @@ const aAndAn: TopicDef = {
         "Use *an* when the next word starts with the sound of *a*, *e*, *i*, *o* or *u*: *an egg*, *an apple*, *an old book*. Use *a* before other sounds: *a pen*, *a big egg*.\n\nLook at the word right after it, not at the noun: *a big egg*, but *an egg*.",
         "下一个词以 *a*、*e*、*i*、*o*、*u* 的音开头时用 *an*：*an egg*、*an apple*、*an old book*。其他音前面用 *a*：*a pen*、*a big egg*。\n\n要看紧跟在后面的那个词，而不是名词：*a big egg*，但 *an egg*。",
       ),
-      choiceGenerator(t("Choose a or an.", "选择 a 或 an。"), articleChoiceBank, (right, shown) =>
-        t(
-          `${shown.replace("___", `*${right}*`)}`,
-          `${shown.replace("___", `*${right}*`)} 后面的词${right === "an" ? "以元音开头，用 *an*" : "以辅音开头，用 *a*"}。`,
-        ),
-      ),
+      choiceGenerator(t("Choose a or an.", "选择 a 或 an。"), articleChoiceBank, (right, shown) => {
+        const sound = soundOf(right, nextWord(shown));
+        return t(
+          `The word after the gap decides: ${sound.en}. ${shown.replace("___", `*${right}*`)}`,
+          `看空白后面的那个词：${sound["zh-CN"]}。${shown.replace("___", `*${right}*`)}`,
+        );
+      }),
     ),
     point(
       "do-not-leave-out",
@@ -345,7 +355,15 @@ const aAndAn: TopicDef = {
         "sentence",
         t("A word is missing. Write the sentence with a or an.", "句子缺了一个词。用 a 或 an 把句子写完整。"),
         missingArticleBank,
-        (right) => t(`${right} One thing takes *a* or *an*.`, `${right} 单个的东西前面要用 *a* 或 *an*。`),
+        (right, shown) => {
+          const article = / an /u.test(right) ? "an" : "a";
+          const next = right.split(` ${article} `)[1]?.split(/[ .]/u)[0] ?? "";
+          const sound = soundOf(article, next);
+          return t(
+            `*${shown}* talks about one thing, so it needs *a* or *an*, and ${sound.en}: ${right}`,
+            `*${shown}* 说的是单个的东西，所以要有 *a* 或 *an*；${sound["zh-CN"]}：${right}`,
+          );
+        },
       ),
     ),
   ],
@@ -382,6 +400,17 @@ const pluralTypedBank: readonly TypedItem[] = pairUp(
   }),
 );
 
+/** pluralRule says which ending a plural takes and why. */
+const pluralRule = (plural: string): Text => {
+  const noun = esNouns.find((n) => plural === `${n}es`);
+  return noun
+    ? t(
+        `*${noun}* ends in *${noun.match(/(ch|sh|s|x)$/u)?.[0]}*, so it adds *-es*`,
+        `*${noun}* 以 *${noun.match(/(ch|sh|s|x)$/u)?.[0]}* 结尾，所以加 *-es*`,
+      )
+    : t(`*${plural.slice(0, -1)}* just adds *-s*`, `*${plural.slice(0, -1)}* 直接加 *-s*`);
+};
+
 const pluralNouns: TopicDef = {
   id: "plural-nouns-with-s",
   title: t("One Cat, Two Cats", "一只猫，两只猫"),
@@ -398,11 +427,31 @@ const pluralNouns: TopicDef = {
         "For more than one, add *-s* to the noun: *one cat, two cats*. Add *-es* after *s*, *x*, *ch* and *sh*: *one box, three boxes*; *one watch, two watches*.",
         "中文用量词表示数量（三只猫、两本书），名词本身不变。英语没有量词，但名词要变：多于一个时加 *-s*：*one cat, two cats*。以 *s*、*x*、*ch*、*sh* 结尾的词加 *-es*：*one box, three boxes*；*one watch, two watches*。",
       ),
-      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), pluralChoiceBank, (right, shown) =>
-        t(
-          `${shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`)}`,
-          `${shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`)} 多于一个，名词用复数。`,
-        ),
+      choiceGenerator(
+        t("Choose the word for the gap.", "选出填入空白处的词。"),
+        pluralChoiceBank,
+        (right, shown) => {
+          const rule = pluralRule(right);
+          return t(
+            `The number says more than one, so the noun is plural, and ${rule.en}: ${shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`)}`,
+            `数字表示多于一个，所以名词用复数；${rule["zh-CN"]}：${shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`)}`,
+          );
+        },
+        (wrong, _right, _shown, position) =>
+          position === 0
+            ? t(
+                `*${wrong}* is the form for one, but the number before the gap says more than one.`,
+                `*${wrong}* 是单数形式，可空白前的数字表示多于一个。`,
+              )
+            : wrong.endsWith("es")
+              ? t(
+                  `*${wrong}* adds *-es*, but *-es* is only for nouns that end in *s*, *x*, *ch* or *sh*.`,
+                  `*${wrong}* 加了 *-es*，可只有以 *s*、*x*、*ch*、*sh* 结尾的名词才加 *-es*。`,
+                )
+              : t(
+                  `*${wrong}* adds only *-s*, which is hard to say after *s*, *x*, *ch* or *sh*; those nouns add *-es*.`,
+                  `*${wrong}* 只加了 *-s*，可以 *s*、*x*、*ch*、*sh* 结尾的名词要加 *-es*，否则读不出来。`,
+                ),
       ),
     ),
     point(
@@ -412,9 +461,13 @@ const pluralNouns: TopicDef = {
         "Write the noun for more than one. Most nouns add *-s*; nouns that end in *s*, *x*, *ch* or *sh* add *-es*.",
         "写出名词的复数。大多数名词加 *-s*；以 *s*、*x*、*ch*、*sh* 结尾的名词加 *-es*。",
       ),
-      typedGenerator("word-form", t("Type the missing word.", "输入缺少的词。"), pluralTypedBank, (right, shown) =>
-        t(`${shown.replace("___", `*${right}*`)}`, `${shown.replace("___", `*${right}*`)}（复数形式）`),
-      ),
+      typedGenerator("word-form", t("Type the missing word.", "输入缺少的词。"), pluralTypedBank, (right, shown) => {
+        const rule = pluralRule(right);
+        return t(
+          `More than one needs the plural, and ${rule.en}: ${shown.replace("___", `*${right}*`)}`,
+          `多于一个要用复数；${rule["zh-CN"]}：${shown.replace("___", `*${right}*`)}`,
+        );
+      }),
     ),
   ],
 };
@@ -474,6 +527,12 @@ const capitalsChoiceBank: readonly ChoiceItem[] = capitalSentences.map((s): Choi
   return ["", s, [noCapital, /\sI\b/u.test(s) ? s.replace(/(\s)I\b/u, "$1i") : wrongEnd]];
 });
 
+/** endMark names the mark a sentence ends with and why. */
+const endMark = (sentence: string): Text =>
+  sentence.endsWith("?")
+    ? t("a question mark, because it asks something", "问号，因为它在提问")
+    : t("a period, because it tells something", "句号，因为它在陈述");
+
 const capitalsAndPeriods: TopicDef = {
   id: "writing-capitals-and-periods",
   title: t("Capital Letters and Periods", "大写字母和句号"),
@@ -493,8 +552,31 @@ const capitalsAndPeriods: TopicDef = {
         "A sentence starts with a capital letter: *My*, not *my*. It ends with a period (.), or with a question mark (?) when it asks something. The word *I* and names like *Ben* always start with a capital.",
         "英语句子以大写字母开头：写 *My*，不写 *my*。陈述句以句号（.）结尾——注意英语句号是一个小圆点，不是中文的“。”；问句以问号（?）结尾。*I* 和 *Ben* 这样的名字永远大写。",
       ),
-      choiceGenerator(t("Which sentence is written right?", "哪个句子写对了？"), capitalsChoiceBank, (right) =>
-        t(`${right} It starts with a capital letter and ends with the right mark.`, `${right} 句首大写，句末标点正确。`),
+      choiceGenerator(
+        t("Which sentence is written right?", "哪个句子写对了？"),
+        capitalsChoiceBank,
+        (right) => {
+          const end = endMark(right);
+          return t(
+            `${right} It starts with a capital letter, writes *I* and names with capitals, and ends with ${end.en}.`,
+            `${right} 句首大写，*I* 和名字大写，句末用${end["zh-CN"]}。`,
+          );
+        },
+        (wrong, right) =>
+          wrong.charAt(0) !== right.charAt(0)
+            ? t(
+                "This sentence starts with a small letter, but a sentence always starts with a capital.",
+                "这个句子以小写字母开头，可句子总要以大写字母开头。",
+              )
+            : wrong.slice(-1) !== right.slice(-1)
+              ? t(
+                  "This sentence ends with the wrong mark: a question ends with ?, and a sentence that tells something ends with a period.",
+                  "这个句子的句末标点不对：问句以 ? 结尾，陈述句以句号结尾。",
+                )
+              : t(
+                  "This sentence writes *I* as a small *i*, but the word *I* is always a capital.",
+                  "这个句子把 *I* 写成了小写 *i*，可 *I* 永远大写。",
+                ),
       ),
     ),
     point(
@@ -508,7 +590,13 @@ const capitalsAndPeriods: TopicDef = {
         "sentence",
         t("Write the sentence again with capital letters and a period or question mark.", "重写句子，加上大写字母和句号或问号。"),
         capitalsTypedBank,
-        (right) => t(`${right}`, `${right} 句首大写，句末加标点。`),
+        (right) => {
+          const end = endMark(right);
+          return t(
+            `Start with a capital letter, write *I* and names with capitals, and end with ${end.en}: ${right}`,
+            `句首大写，*I* 和名字大写，句末用${end["zh-CN"]}：${right}`,
+          );
+        },
       ),
     ),
   ],

@@ -1,7 +1,7 @@
 // A2, unit 6: Animals and Pets. Pets, wildlife, how animals live, farm animals and care; the past continuous. The
 // conjunctions and the writing of the unit are existing topics.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { vocabularyTopic, word } from "../words.ts";
@@ -455,6 +455,41 @@ const pcTypedBank: readonly TypedItem[] = pcRows
     };
   });
 
+/** beRule says which subjects take the form of be in words. */
+const beRule = (words: string): Text =>
+  words.startsWith("was")
+    ? t("*I* and one person or thing take *was*", "*I* 和单个的人或物用 *was*")
+    : t("*we*, *you*, *they* and more than one take *were*", "*we*、*you*、*they* 和多个人或物用 *were*");
+
+/** whyNotForm explains a wrong past continuous in a gap. */
+const whyNotForm = (wrong: string, right: string, _shown: string, position: number): Text => {
+  if (position === 0) {
+    const rule = beRule(right);
+    return t(
+      `*${wrong}* has the wrong form of *be* for this subject: ${rule.en}, so it is *${right}*.`,
+      `*${wrong}* 用错了 *be* 的形式：${rule["zh-CN"]}，所以是 *${right}*。`,
+    );
+  }
+  return t(
+    `*${wrong}* has no *-ing*. An action that was going on needs *was* or *were* with the *-ing* form: *${right}*.`,
+    `*${wrong}* 少了 *-ing*。当时正在进行的动作要用 *was* 或 *were* 加 *-ing* 形式：*${right}*。`,
+  );
+};
+
+/** whyNotWhich explains a wrong pair of verbs for the long and the short action. */
+const whyNotWhich = (wrong: string, right: string, _shown: string, position: number): Text => {
+  const [long, short] = right.split(" … ");
+  return position === 0
+    ? t(
+        `*${wrong}* swaps the tenses. The action already going on takes the past continuous (*${long}*), and the short one after *when* takes the past simple (*${short}*).`,
+        `*${wrong}* 把两个时态弄反了。已经在进行的动作用过去进行时（*${long}*），*when* 后面的短动作用一般过去时（*${short}*）。`,
+      )
+    : t(
+        `*${wrong}* puts both actions in the past continuous. The short one after *when* happened at one moment, so it takes the past simple: *${short}*.`,
+        `*${wrong}* 把两个动作都用了过去进行时。*when* 后面的短动作发生在一瞬间，要用一般过去时：*${short}*。`,
+      );
+};
+
 const pastContinuous: TopicDef = {
   id: "past-continuous",
   title: t("The Past Continuous", "过去进行时"),
@@ -477,8 +512,17 @@ const pastContinuous: TopicDef = {
         "The past continuous is *was* or *were* with the *-ing* form of a verb:\n\n- *I*, *he*, *she*, *it* and one person: *was* — *I was reading. Tom was cooking.*\n- *we*, *you*, *they* and more than one: *were* — *We were walking. My parents were watching TV.*\n\nIt is for something that was going on at a time in the past: *When the phone rang, I was having dinner.*",
         "过去进行时由 *was* 或 *were* 加动词的 *-ing* 形式构成：\n\n- *I*、*he*、*she*、*it* 和单个人用 *was*：*I was reading. Tom was cooking.*\n- *we*、*you*、*they* 和多个人用 *were*：*We were walking. My parents were watching TV.*\n\n它表示过去某个时候正在进行的事：*When the phone rang, I was having dinner.*\n\n中文用“正在……的时候”表达，英语要用 *was / were* 加 *-ing*，不能只写 *was walk*。",
       ),
-      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), pcFormBank, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（正在进行的动作用 was / were + -ing）`),
+      choiceGenerator(
+        t("Choose the words for the gap.", "选出填入空白处的词。"),
+        pcFormBank,
+        (right, shown) => {
+          const rule = beRule(right);
+          return t(
+            `The action was going on when something else happened, so it takes *was* or *were* with *-ing*, and ${rule.en}: ${fill(shown, right)}`,
+            `这个动作在另一件事发生时正在进行，所以用 *was* 或 *were* 加 *-ing*；${rule["zh-CN"]}：${fill(shown, right)}`,
+          );
+        },
+        whyNotForm,
       ),
     ),
     point(
@@ -488,11 +532,19 @@ const pastContinuous: TopicDef = {
         "When two things happen in the past, the longer one that was already going on takes the past continuous, and the short one that happened in the middle of it takes the past simple:\n\n*I was walking home* (long) *when I saw the fox* (short).\n\nThe short one usually comes after *when*.",
         "过去的两件事同时出现时，已经在进行的、较长的动作用过去进行时，中途突然发生的、较短的动作用一般过去时：\n\n*I was walking home*（长）*when I saw the fox*（短）。\n\n短动作通常放在 *when* 后面。",
       ),
-      choiceGenerator(t("Choose the verbs for the two gaps.", "选出填入两个空白处的动词。"), pcWhichBank, (right, shown) => {
-        const [first, second] = right.split(" … ");
-        const done = shown.replace(/___ \([^)]*\)/u, `*${first}*`).replace(/___ \([^)]*\)/u, `*${second}*`);
-        return t(done, `${done}（长动作用过去进行时，短动作用一般过去时）`);
-      }),
+      choiceGenerator(
+        t("Choose the verbs for the two gaps.", "选出填入两个空白处的动词。"),
+        pcWhichBank,
+        (right, shown) => {
+          const [first, second] = right.split(" … ");
+          const done = shown.replace(/___ \([^)]*\)/u, `*${first}*`).replace(/___ \([^)]*\)/u, `*${second}*`);
+          return t(
+            `The longer action was already going on, so it takes the past continuous (*${first}*); the short one after *when* happened in the middle of it, so it takes the past simple (*${second}*): ${done}`,
+            `较长的动作当时已在进行，用过去进行时（*${first}*）；*when* 后面的短动作在中途发生，用一般过去时（*${second}*）：${done}`,
+          );
+        },
+        whyNotWhich,
+      ),
     ),
     point(
       "write",
@@ -501,9 +553,13 @@ const pastContinuous: TopicDef = {
         "Write one sentence from the note. The first action was going on, so it takes *was* or *were* with *-ing*; the action after *when* takes the past simple. You may also start with *When*: *When the phone rang, I was reading a book.*",
         "根据笔记写一个句子。第一个动作当时正在进行，用 *was / were* 加 *-ing*；*when* 后面的动作用一般过去时。也可以用 *When* 开头：*When the phone rang, I was reading a book.*",
       ),
-      typedGenerator("sentence", t("Write a sentence from the note.", "根据笔记写一个句子。"), pcTypedBank, (right) =>
-        t(right, `${right}（正在进行的动作 + when + 一般过去时）`),
-      ),
+      typedGenerator("sentence", t("Write a sentence from the note.", "根据笔记写一个句子。"), pcTypedBank, (right) => {
+        const rule = beRule(right.replace(/^\S+ (\S+ )?(?=was|were)/u, ""));
+        return t(
+          `The first action was going on, so it takes *was* or *were* with *-ing* (${rule.en}); the short action after *when* takes the past simple: ${right}`,
+          `第一个动作当时正在进行，用 *was* 或 *were* 加 *-ing*（${rule["zh-CN"]}）；*when* 后面的短动作用一般过去时：${right}`,
+        );
+      }),
     ),
   ],
 };

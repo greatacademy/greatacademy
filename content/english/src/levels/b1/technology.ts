@@ -1,7 +1,7 @@
 // B1, unit 6: Technology in Our Lives. Digital life, online safety, research and design, gadgets, what machines do
 // and tech problems; the second conditional. Its relative clauses and combining with them reuse the native topics.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { fill } from "../a2/kit.ts";
@@ -684,11 +684,60 @@ const imaginedTyped: readonly TypedItem[] = interleave([
   ),
 ]);
 
-/** imaginedNote explains in Chinese which verb form each part of a second conditional takes. */
-function imaginedNote(right: string): string {
-  if (right.startsWith("would ")) return "想象的结果用 would 加动词原形";
-  return "想象的情况，if 从句用一般过去时，不用 would";
-}
+/** ifPastWhy explains the past simple in the if-part of a second conditional. */
+const ifPastWhy = (right: string, shown: string): Text => {
+  const rule =
+    right === "were"
+      ? t(
+          "The situation is only imagined, so the *if*-part takes the past simple, and *be* takes *were* for every person",
+          "这是想象的情况，所以 *if* 部分用一般过去时，*be* 对所有人称都用 *were*",
+        )
+      : t(
+          "The situation is only imagined, so the *if*-part takes the past simple, which here does not mean past time",
+          "这是想象的情况，所以 *if* 部分用一般过去时，这里的过去时不表示过去的时间",
+        );
+  return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+};
+
+/** whyNotIfPast explains would or the present in the if-part of a second conditional. */
+const whyNotIfPast = (wrong: string, right: string, _shown: string, position: number): Text =>
+  position === 0
+    ? t(
+        `*would* never goes in the *if*-part. An imagined situation takes the past simple, *${right}*.`,
+        `*if* 部分不能用 *would*。想象的情况要用一般过去时 *${right}*。`,
+      )
+    : t(
+        `*${wrong}* is the present, which is for a real possibility. The result has *would*, so the situation is only imagined, and the *if*-part takes *${right}*.`,
+        `*${wrong}* 是一般现在时，用于真实的可能。结果部分用了 *would*，说明是想象的情况，*if* 部分要用 *${right}*。`,
+      );
+
+/** wouldWhy explains would and the base form in the result of a second conditional. */
+const wouldWhy = (right: string, shown: string): Text =>
+  t(
+    `The *if*-part is in the past, so the situation is only imagined, and the result takes *would* and the base form: ${fill(shown, right)}`,
+    `*if* 部分用了过去时，说明是想象的情况，结果部分用 *would* 加动词原形：${fill(shown, right)}`,
+  );
+
+/** whyNotWould explains will or would to in the result of a second conditional. */
+const whyNotWould = (_wrong: string, right: string, _shown: string, position: number): Text =>
+  position === 0
+    ? t(
+        `*will* is for a real possibility, so it does not go with an *if*-part in the past. Use *${right}*.`,
+        `*will* 用于真实的可能，不能和过去时的 *if* 部分搭配。要用 *${right}*。`,
+      )
+    : t(`*would* is never followed by *to*. Use *${right}*.`, `*would* 后面从不加 *to*。要用 *${right}*。`);
+
+/** imaginedWriteWhy explains how a second conditional is put together, with the comma when the if-part comes first. */
+const imaginedWriteWhy = (right: string): Text =>
+  right.startsWith("If ")
+    ? t(
+        `For an imagined situation, the *if*-part takes the past simple, then a comma, and the result takes *would* and the base form: ${right}`,
+        `想象的情况，*if* 部分用一般过去时，后面加逗号，结果部分用 *would* 加动词原形：${right}`,
+      )
+    : t(
+        `For an imagined situation, the result takes *would* and the base form, and the *if*-part after it takes the past simple, with no comma: ${right}`,
+        `想象的情况，结果部分用 *would* 加动词原形，后面的 *if* 部分用一般过去时，不加逗号：${right}`,
+      );
 
 const secondConditional: TopicDef = {
   id: "second-conditional",
@@ -712,9 +761,7 @@ const secondConditional: TopicDef = {
         "To talk about a situation you only imagine, now or in the future, use *if* + the **past simple**, and *would* in the result:\n\n- *If I **had** a robot, I would never cook.* (I don't have one.)\n- *If she **lived** near the sea, she would swim every day.* (She doesn't.)\n\nThe past here does not mean past time; it shows that the situation is not real. Do not use *would* after *if*: not *If I would have*. With *be*, use *were* for every person: *If I **were** you, I would take the job.* (In speech, *If I was* is also heard.)\n\nCompare the first conditional, for things that may really happen: *If it rains, we will stay at home.*",
         "说只是想象的情况（现在或将来）时，用 *if* 加**一般过去时**，结果部分用 *would*：\n\n- *If I **had** a robot, I would never cook.*（我其实没有。）\n- *If she **lived** near the sea, she would swim every day.*（她其实不住在海边。）\n\n这里的过去时不表示过去的时间，而表示情况不是真的。中文用“要是……就……”加语气表达想象，英语却靠动词往过去退一步。*if* 后面不用 *would*：不能说 *If I would have*。*be* 动词对所有人称都用 *were*：*If I **were** you, I would take the job.*（口语里也有人说 *If I was*。）\n\n比较第一条件句，说真的可能发生的事：*If it rains, we will stay at home.*",
       ),
-      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), ifPastChoice, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（${imaginedNote(right)}）`),
-      ),
+      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), ifPastChoice, ifPastWhy, whyNotIfPast),
     ),
     point(
       "result",
@@ -723,9 +770,7 @@ const secondConditional: TopicDef = {
         "The result of an imagined situation takes *would* + the base form: *If I were rich, I **would buy** a big house.* *Will* is for real possibilities, so it does not go with a past *if*-part, and *would* is never followed by *to*. You may write *I'd* for *I would*.",
         "想象情况的结果用 *would* 加动词原形：*If I were rich, I **would buy** a big house.* *will* 用于真实的可能，不能和过去时的 *if* 部分搭配；*would* 后面也从不加 *to*。*I would* 可以写成 *I'd*。",
       ),
-      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), wouldChoice, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（${imaginedNote(right)}）`),
-      ),
+      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), wouldChoice, wouldWhy, whyNotWould),
     ),
     point(
       "write",
@@ -738,7 +783,7 @@ const secondConditional: TopicDef = {
         "sentence-pattern",
         t("Write a second conditional sentence from the note.", "根据笔记写一个第二条件句。"),
         imaginedTyped,
-        (right) => t(right, `${right}（if 部分用一般过去时，结果部分用 would）`),
+        imaginedWriteWhy,
       ),
     ),
   ],

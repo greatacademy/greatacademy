@@ -2,7 +2,7 @@
 // technology in society, prediction, from idea to product, networks, technology and ethics, and transitions; wish and
 // if only; the problem-solution essay. Its other topic, cutting wordiness, already exists.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
@@ -1279,13 +1279,75 @@ const wishTyped: readonly TypedItem[] = interleave([
   ),
 ]);
 
-const regrets = new Set(wishPasts.map(([, opener, s, right, , , rest]) => `${joinWords(opener, s, right, rest)}.`));
+/** wishPresentOf maps the shown sentence of a wish about now to the present form it steps back from. */
+const wishPresentOf = new Map(wishNowChoice.map(([shown, , wrong]) => [shown, wrong[0] ?? ""]));
 
-/** wishNote explains in Chinese which verb form a wish takes. */
-function wishNote(sentence: string): string {
-  if (regrets.has(sentence)) return "对过去的遗憾，用过去完成时 had 加过去分词";
-  return "对现在的愿望，用一般过去时，be 用 were，能力用 could";
-}
+/** wereNote is the remark that were serves every subject in a wish. */
+const wereNote = (right: string): Text =>
+  right.startsWith("were") ? t(", and *were* serves every subject", "，而且任何主语都可以用 *were*") : t("", "");
+
+/** wishNowWhy explains the step back into the past in a wish about the present. */
+const wishNowWhy = (right: string, shown: string): Text => {
+  const present = wishPresentOf.get(shown) ?? "";
+  const were = wereNote(right);
+  return t(
+    `A wish about now steps the verb one tense back into the past, so *${present}* becomes *${right}*${were.en}: ${fill(shown, right)}`,
+    `对现在的愿望要把动词往后退一个时态，用过去式，所以 *${present}* 变成 *${right}*${were["zh-CN"]}：${fill(shown, right)}`,
+  );
+};
+
+/** whyNotWishNow explains the present or the past perfect in a wish about the present. */
+const whyNotWishNow = (wrong: string, right: string, _shown: string, position: number): Text =>
+  position === 0
+    ? t(
+        `*${wrong}* is the present tense, which states the fact itself. A wish about now steps back to *${right}*.`,
+        `*${wrong}* 是现在时，说的就是事实本身。对现在的愿望要往后退一步，用 *${right}*。`,
+      )
+    : t(
+        `*${wrong}* uses *have*, which looks back at the past, as a regret does. This fact is about now, so the wish takes *${right}*.`,
+        `*${wrong}* 用了 *have*，是回看过去，像后悔一样。这个事实是关于现在的，所以愿望用 *${right}*。`,
+      );
+
+/** wishPastWhy explains the past perfect in a regret about the past. */
+const wishPastWhy = (right: string, shown: string): Text =>
+  t(
+    `A regret about the past steps the verb back past the past simple, into the past perfect, *had* and the past participle: ${fill(shown, right)}`,
+    `后悔过去时，动词要比一般过去时再往后退一步，用过去完成时，即 *had* 加过去分词：${fill(shown, right)}`,
+  );
+
+/** whyNotWishPast explains the past simple or the present perfect in a regret about the past. */
+const whyNotWishPast = (wrong: string, right: string, _shown: string, position: number): Text =>
+  position === 0
+    ? t(
+        `*${wrong}* is the past simple, which a wish uses for the present. A regret about the past steps back further, to *${right}*.`,
+        `*${wrong}* 是一般过去时，*wish* 用它表达对现在的愿望。后悔过去要再往后退一步，用 *${right}*。`,
+      )
+    : t(
+        `*${wrong}* is the present perfect. After *wish* the verb steps back, so *have* becomes *had*: *${right}*.`,
+        `*${wrong}* 是现在完成时。*wish* 后面的动词要往后退一步，所以 *have* 变成 *had*：*${right}*。`,
+      );
+
+/** wishFactOf maps the canonical answer of a written wish to its fact, its verb form and whether it is about the past. */
+const wishFactOf = new Map<string, { readonly fact: string; readonly right: string; readonly past: boolean }>([
+  ...wishNows.map(([fact, opener, s, right, , , rest]) => [`${joinWords(opener, s, right, rest)}.`, { fact, right, past: false }] as const),
+  ...wishPasts.map(([fact, opener, s, right, , , rest]) => [`${joinWords(opener, s, right, rest)}.`, { fact, right, past: true }] as const),
+]);
+
+/** wishWriteWhy explains which tense a written wish takes from its fact, and that it reverses the fact. */
+const wishWriteWhy = (canonical: string): Text => {
+  const item = wishFactOf.get(canonical);
+  if (item === undefined) return t(canonical, canonical);
+  const fact = item.fact.replace(/[.!]$/u, "");
+  return item.past
+    ? t(
+        `The fact is about the past (*${fact}*), so the regret takes the past perfect, *${item.right}*, and says the opposite of the fact: ${canonical}`,
+        `这个事实是关于过去的（*${fact}*），所以遗憾用过去完成时 *${item.right}*，并说出与事实相反的情况：${canonical}`,
+      )
+    : t(
+        `The fact is about now (*${fact}*), so the wish steps the verb back into the past, *${item.right}*, and says the opposite of the fact: ${canonical}`,
+        `这个事实是关于现在的（*${fact}*），所以愿望把动词往后退一步，用过去式 *${item.right}*，并说出与事实相反的情况：${canonical}`,
+      );
+};
 
 const wishAndIfOnly: TopicDef = {
   id: "wish-and-if-only",
@@ -1309,9 +1371,7 @@ const wishAndIfOnly: TopicDef = {
         "To wish that something **now** were different, put the verb after *wish* or *if only* one step back into the **past**, as in a second conditional:\n\n- *I don't know the answer.* → *I **wish** I **knew** the answer.*\n- *I can't swim.* → *If only I **could** swim.*\n- *It's raining.* → *I wish it **weren't** raining.* (*wasn't* is also common after *I*, *he*, *she* and *it*.)\n\nThe past form does not mean past time here: it shows that the wish is not true. *If only* is stronger than *I wish*. Do not confuse *wish* with *hope*: we *hope* for things that may happen (*I hope it stops raining*), but we *wish* for things that are not true.",
         "希望**现在**的情况不同时，把 *wish* 或 *if only* 后面的动词往后退一步，用**过去式**，和第二条件句一样：\n\n- *I don't know the answer.* → *I **wish** I **knew** the answer.*\n- *I can't swim.* → *If only I **could** swim.*\n- *It's raining.* → *I wish it **weren't** raining.*（在 *I*、*he*、*she*、*it* 后面也常用 *wasn't*。）\n\n这里的过去式不表示过去的时间，而是表示愿望与事实相反。*If only* 的语气比 *I wish* 更强。中文说“我希望我知道答案”“要是我会游泳就好了”，动词不变形，所以中国学生常写成 *I wish I know*。还要分清 *wish* 和 *hope*：可能发生的事用 *hope*（*I hope it stops raining*），与事实相反的事才用 *wish*。",
       ),
-      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), wishNowChoice, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（对现在的愿望，用一般过去时，be 用 were，能力用 could）`),
-      ),
+      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), wishNowChoice, wishNowWhy, whyNotWishNow),
     ),
     point(
       "past",
@@ -1320,9 +1380,7 @@ const wishAndIfOnly: TopicDef = {
         "To regret something that **happened** (or didn't happen) in the past, use *wish* or *if only* with the **past perfect**, *had* + past participle, as in a third conditional:\n\n- *I didn't back up my files.* → *If only I **had backed up** my files!*\n- *I said something rude.* → *I wish I **hadn't said** that.*\n\nThe past simple is wrong here: *I wish I studied* is a wish about the present (that you were a person who studies), not a regret about last week. The present perfect (*I wish I have studied*) is never right after *wish*.",
         "后悔过去**发生**（或没有发生）的事时，*wish* 或 *if only* 后面用**过去完成时**，即 *had* 加过去分词，和第三条件句一样：\n\n- *I didn't back up my files.* → *If only I **had backed up** my files!*\n- *I said something rude.* → *I wish I **hadn't said** that.*\n\n这里不能用一般过去时：*I wish I studied* 是对现在的愿望（希望自己是个爱学习的人），不是后悔上周没复习。*wish* 后面也从不用现在完成时（*I wish I have studied* 是错的）。中文“我真后悔没复习”“要是当时没说那句话就好了”靠“当时”“后悔”表达时间，英语则要靠 *had* 加过去分词。",
       ),
-      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), wishPastChoice, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（对过去的遗憾，用过去完成时 had 加过去分词）`),
-      ),
+      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), wishPastChoice, wishPastWhy, whyNotWishPast),
     ),
     point(
       "write",
@@ -1335,7 +1393,7 @@ const wishAndIfOnly: TopicDef = {
         "sentence-pattern",
         t("Turn the fact into a wish with the words given.", "用给出的开头把事实改写成愿望。"),
         wishTyped,
-        (right) => t(right, `${right}（${wishNote(right)}）`),
+        wishWriteWhy,
       ),
     ),
   ],

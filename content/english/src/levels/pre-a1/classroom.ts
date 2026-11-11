@@ -1,7 +1,7 @@
 // Pre-A1, unit 4: My Classroom. Things in the classroom, this and that, in, on and under, classroom commands, and
 // putting words in the order of an English sentence.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { interleave, pairUp, sentenceCase, vocabularyTopic, word } from "../words.ts";
@@ -311,6 +311,36 @@ const pointerTypedBank2: readonly TypedItem[] = pairUp(11, pointedNouns, ["These
   },
 );
 
+/** pointerSense says where a pointer word points and how many, in every locale. */
+const pointerSense = (near: boolean, many: boolean): Text =>
+  t(
+    `${near ? "near (here)" : "far (over there)"} and ${many ? "more than one" : "one"}`,
+    `${near ? "近处（here）" : "远处（over there）"}、${many ? "多个" : "一个"}`,
+  );
+
+/** whyNotPointer says which half of the table a wrong pointer word misreads. */
+const whyNotPointer = (wrong: string, _right: string, shown: string): Text => {
+  const near = !shown.includes("over there");
+  const wrongNear = wrong === "This" || wrong === "These";
+  const wrongMany = wrong === "These" || wrong === "Those";
+  return wrongNear !== near
+    ? t(
+        `*${wrong}* points to something ${wrongNear ? "near" : "far"}, but the sentence says *${near ? "here" : "over there"}*.`,
+        `*${wrong}* 指${wrongNear ? "近处" : "远处"}的东西，可句子里说的是 *${near ? "here" : "over there"}*。`,
+      )
+    : t(
+        `*${wrong}* is for ${wrongMany ? "more than one" : "one"}, but the verb *${wrongMany ? "is" : "are"}* says ${wrongMany ? "one" : "more than one"}.`,
+        `*${wrong}* 用于${wrongMany ? "多个" : "一个"}，可动词 *${wrongMany ? "is" : "are"}* 表示${wrongMany ? "一个" : "多个"}。`,
+      );
+};
+
+/** changedWords lists the three words that change between a sentence about one and one about more than one. */
+const changedWords = (from: string, to: string) => {
+  const a = from.replace(/\.$/u, "").split(" ");
+  const b = to.replace(/\.$/u, "").split(" ");
+  return `*${a[0]}* → *${b[0]}*, *${a[1]}* → *${b[1]}*, *${a.at(-1)}* → *${b.at(-1)}*`;
+};
+
 const thisThatTheseThose: TopicDef = {
   id: "this-that-these-those",
   title: t("This, That, These and Those", "this、that、these 和 those"),
@@ -333,8 +363,17 @@ const thisThatTheseThose: TopicDef = {
         "| | one | more than one |\n|---|---|---|\n| near (here) | *this* | *these* |\n| far (over there) | *that* | *those* |\n\n*This is my pen. These are my pens. That is my bag. Those are my bags.*",
         "| | 一个 | 多个 |\n|---|---|---|\n| 近处（here） | *this* | *these* |\n| 远处（over there） | *that* | *those* |\n\n中文“这些”“那些”后面的名词不变，英语却要全部变成复数：*these pens*，后面的动词也用 *are*。\n\n*This is my pen. These are my pens. That is my bag. Those are my bags.*",
       ),
-      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), pointerChoiceBank, (right, shown) =>
-        t(shown.replace("___", `*${right}*`), `${shown.replace("___", `*${right}*`)} 这里用 *${right}*。`),
+      choiceGenerator(
+        t("Choose the word for the gap.", "选出填入空白处的词。"),
+        pointerChoiceBank,
+        (right, shown) => {
+          const sense = pointerSense(!shown.includes("over there"), shown.includes(" are "));
+          return t(
+            `The thing is ${sense.en}, so the word is *${right}*: ${shown.replace("___", `*${right}*`)}`,
+            `东西在${sense["zh-CN"]}，所以用 *${right}*：${shown.replace("___", `*${right}*`)}`,
+          );
+        },
+        whyNotPointer,
       ),
     ),
     point(
@@ -348,7 +387,11 @@ const thisThatTheseThose: TopicDef = {
         "sentence",
         t("Write the sentence about more than one, or about one.", "把句子改成说多个的，或改成说一个的。"),
         [...pointerTypedBank, ...pointerTypedBank2],
-        (right, shown) => t(`${shown} → ${right}`, `${shown} → ${right}（三处都要变）`),
+        (right, shown) =>
+          t(
+            `Between one and more than one, three words change together, ${changedWords(shown, right)}: ${shown} → ${right}`,
+            `一个和多个之间转换时，三处要一起变，${changedWords(shown, right)}：${shown} → ${right}`,
+          ),
       ),
     ),
   ],
@@ -360,6 +403,8 @@ const things: readonly string[] = ["pen", "ball", "cat", "book", "dog", "ruler",
 const placesFor: readonly string[] = ["box", "desk", "bed", "chair", "bag", "table"];
 type Place = "in" | "on" | "under";
 const cue: Record<Place, string> = { in: "inside", on: "on top", under: "below" };
+
+const cueZh: Record<Place, string> = { in: "在里面", on: "在上面", under: "在下面" };
 
 const placeChoiceBank: readonly ChoiceItem[] = pairUp(42, things, placesFor).map(([thing, place], k): ChoiceItem => {
   const prep = (["in", "on", "under"] as const)[k % 3]!;
@@ -391,11 +436,19 @@ const inOnAndUnder: TopicDef = {
         "*in* = inside: *The pen is in the bag.*\n*on* = on top: *The book is on the desk.*\n*under* = below: *The cat is under the chair.*",
         "*in* = 在里面：*The pen is in the bag.*\n*on* = 在上面：*The book is on the desk.*\n*under* = 在下面：*The cat is under the chair.*",
       ),
-      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), placeChoiceBank, (right, shown) =>
-        t(
-          shown.replace("___", `*${right}*`),
-          `${shown.replace("___", `*${right}*`)}（${right === "in" ? "在里面" : right === "on" ? "在上面" : "在下面"}）`,
-        ),
+      choiceGenerator(
+        t("Choose the word for the gap.", "选出填入空白处的词。"),
+        placeChoiceBank,
+        (right, shown) =>
+          t(
+            `The note says *${cue[right as Place]}*, and *${right}* means ${cue[right as Place]}: ${shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`)}`,
+            `提示是 *${cue[right as Place]}*（${cueZh[right as Place]}），所以用 *${right}*：${shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`)}`,
+          ),
+        (wrong, right) =>
+          t(
+            `*${wrong}* means ${cue[wrong as Place]}, but the note says *${cue[right as Place]}*.`,
+            `*${wrong}* 的意思是${cueZh[wrong as Place]}，可提示说的是 *${cue[right as Place]}*（${cueZh[right as Place]}）。`,
+          ),
       ),
     ),
     point(
@@ -405,9 +458,13 @@ const inOnAndUnder: TopicDef = {
         "English says the place word first and then the thing: *in the bag*, *on the desk*, *under the chair*. Do not forget *is*.\n\n*The pen is in the bag.*",
         "中文说“在包里”“在桌子上”，表示位置的“里”“上”放在后面；英语正好相反，*in*、*on*、*under* 放在前面：*in the bag*、*on the desk*、*under the chair*。别忘了 *is*。\n\n*The pen is in the bag.*",
       ),
-      typedGenerator("sentence", t("Write a sentence with these words.", "用这些词写一个句子。"), placeTypedBank, (right) =>
-        t(right, `${right}（位置词放在东西前面）`),
-      ),
+      typedGenerator("sentence", t("Write a sentence with these words.", "用这些词写一个句子。"), placeTypedBank, (right) => {
+        const place = right.split(" is ")[1]?.replace(/\.$/u, "") ?? "";
+        return t(
+          `English says the thing, then *is*, then the place word before the place, not after it: *${place}*. ${right}`,
+          `英语先说东西，再说 *is*，位置词放在地点前面而不是后面：*${place}*。${right}`,
+        );
+      }),
     ),
   ],
 };
@@ -504,8 +561,21 @@ const imperatives: TopicDef = {
         "A command tells someone what to do. It starts with the verb, with no *you* and no *-s*: *Open your book. Sit down, please.*",
         "祈使句告诉别人做什么。它以动词原形开头，不用 *you*，动词也不加 *-s*：*Open your book. Sit down, please.*",
       ),
-      choiceGenerator(t("Which one is a classroom command?", "哪一句是课堂指令？"), commandChoiceBank, (right) =>
-        t(`${right} It starts with the verb.`, `${right} 祈使句以动词开头。`),
+      choiceGenerator(
+        t("Which one is a classroom command?", "哪一句是课堂指令？"),
+        commandChoiceBank,
+        (right) =>
+          t(
+            `${right} A command starts with the plain verb, *${right.split(" ")[0]}*, with no *you* before it and no *-s* on it.`,
+            `${right} 祈使句以动词原形 *${right.split(" ")[0]}* 开头，前面没有 *you*，动词也不加 *-s*。`,
+          ),
+        (_wrong, _right, _shown, position) =>
+          position === 0
+            ? t(
+                "This starts with *you*, so it says what someone does; a command leaves out *you* and starts with the verb.",
+                "这句以 *you* 开头，是在陈述某人做什么；祈使句不用 *you*，直接以动词开头。",
+              )
+            : t("This verb has *-s*, but a command always uses the plain verb.", "这里的动词加了 *-s*，可祈使句总用动词原形。"),
       ),
     ),
     point(
@@ -516,7 +586,15 @@ const imperatives: TopicDef = {
         "叫别人不要做某事，在动词前加 *Don't*：*Don't run. Don't stand up.* 不能像中文“不要”那样直接用 *No* 或 *Not*。",
       ),
       typedGenerator("sentence-pattern", t("Write a command with these words.", "用这些词写一句祈使句。"), dontTypedBank, (right) =>
-        t(right, `${right}（以动词或 Don't 开头）`),
+        right.startsWith("Don't")
+          ? t(
+              `To tell someone not to do something, put *Don't* before the plain verb, not *No* or *Not*: ${right}`,
+              `叫别人不要做某事，在动词原形前加 *Don't*，不用 *No* 或 *Not*：${right}`,
+            )
+          : t(
+              `A command starts with the plain verb, with no *you* before it and no *-s* on it: ${right}`,
+              `祈使句以动词原形开头，前面没有 *you*，动词也不加 *-s*：${right}`,
+            ),
       ),
     ),
   ],
@@ -603,6 +681,33 @@ const orderTypedBank: readonly TypedItem[] = orderedSentences.map(
   }),
 );
 
+const verbs = new Set(["is", "am", "are", "has", "have"]);
+
+/** partsOf splits a sentence into who or what, the verb and the rest. */
+const partsOf = (s: string) => {
+  const words = wordsOf(s);
+  const at = words.findIndex((w) => verbs.has(w));
+  return { who: words.slice(0, at).join(" "), verb: words[at] ?? "", rest: words.slice(at + 1).join(" ") };
+};
+
+/** orderWhy shows the three parts of a sentence in their English order. */
+const orderWhy = (right: string): Text => {
+  const { who, verb, rest } = partsOf(right);
+  return t(
+    `An English sentence starts with who or what (*${who}*), then the verb (*${verb}*), then the rest (*${rest}*): ${right}`,
+    `英语句子先说谁或什么（*${who}*），再说动词（*${verb}*），最后是其余部分（*${rest}*）：${right}`,
+  );
+};
+
+/** whyNotOrder explains a wrong order by where the verb must stand. */
+const whyNotOrder = (_wrong: string, right: string): Text => {
+  const { who, verb } = partsOf(right);
+  return t(
+    `This order breaks the pattern. In English the verb *${verb}* comes right after *${who}*, and the rest follows.`,
+    `这个语序不对。英语里动词 *${verb}* 要紧跟在 *${who}* 后面，其余部分放在最后。`,
+  );
+};
+
 const wordsInOrder: TopicDef = {
   id: "writing-words-in-order",
   title: t("Words in Order", "把词排成句子"),
@@ -622,8 +727,11 @@ const wordsInOrder: TopicDef = {
         "An English sentence goes: who or what, then the verb, then the rest.\n\n*My sister* (who) *has* (verb) *a cat* (the rest).\n*The book* (what) *is* (verb) *on the desk* (the rest).",
         "英语句子的顺序是：先说谁或什么，再说动词，最后是其余部分。\n\n*My sister*（谁）*has*（动词）*a cat*（其余）。\n*The book*（什么）*is*（动词）*on the desk*（其余）。\n\n不要把动词放在最后，也不要漏掉 *is*。",
       ),
-      choiceGenerator(t("Which sentence puts these words in the right order?", "哪个句子把这些词排对了？"), orderChoiceBank, (right) =>
-        t(`${right} Who or what, then the verb, then the rest.`, `${right} 先说谁或什么，再说动词，最后是其余部分。`),
+      choiceGenerator(
+        t("Which sentence puts these words in the right order?", "哪个句子把这些词排对了？"),
+        orderChoiceBank,
+        orderWhy,
+        whyNotOrder,
       ),
     ),
     point(
@@ -633,9 +741,7 @@ const wordsInOrder: TopicDef = {
         "Put the words in order and write the sentence. Start with a capital letter and end with a period.",
         "把词排好顺序，写出句子。句首大写，句末加句号。",
       ),
-      typedGenerator("sentence", t("Put the words in order and write the sentence.", "把词排好顺序，写出句子。"), orderTypedBank, (right) =>
-        t(right, `${right}（谁 + 动词 + 其余部分）`),
-      ),
+      typedGenerator("sentence", t("Put the words in order and write the sentence.", "把词排好顺序，写出句子。"), orderTypedBank, orderWhy),
     ),
   ],
 };

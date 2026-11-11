@@ -2,7 +2,7 @@
 // science, mental health, health systems, describing evidence, animals and people, and risk; modals of deduction about
 // the present and the past, and should have. Its writing topic, introductions and conclusions, already exists.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { fill } from "../a2/kit.ts";
@@ -1147,13 +1147,59 @@ const guesses: readonly (readonly [string, string, string, string, Deduction])[]
   ["He's wearing a uniform I don't know.", "He", "is", "a pilot", "might"],
 ];
 
-/** guessNote explains in Chinese what a modal of deduction says. */
-function guessNote(right: string): string {
-  if (right.startsWith("must")) return "must 表示根据证据确信是这样";
-  if (right.startsWith("can't")) return "can't 表示确信不可能，不用 mustn't";
-  if (right.startsWith("should")) return "should have 加过去分词表示本该做却没做";
-  return "might 表示有可能，但不确定";
+/** noAfter adds nothing after the modal; haveAfter adds have and the past participle. */
+const noAfter = t("", "");
+const haveAfter = t("*have* with the past participle", "*have* 加过去分词");
+
+/** kindOf finds the modal of deduction among the words of a sentence or an option. */
+const kindOf = (text: string): Deduction | "should" =>
+  (text.split(" ").find((w) => ["must", "can't", "might", "should"].includes(w)) as Deduction | "should" | undefined) ?? "might";
+
+/** guessRule names the modal for how sure the speaker is, with what follows it. */
+function guessRule(kind: Deduction | "should", after: Text): Text {
+  const then = after.en === "" ? t("", "") : t(` and ${after.en}`, `，后面接 ${after["zh-CN"]}`);
+  if (kind === "must")
+    return t(`The speaker is sure it is true, so use *must*${then.en}`, `说话人确信是真的，所以用 *must*${then["zh-CN"]}`);
+  if (kind === "can't")
+    return t(
+      `The speaker is sure it is not true, so use *can't*, not *mustn't*${then.en}`,
+      `说话人确信不是真的，所以用 *can't*，不用 *mustn't*${then["zh-CN"]}`,
+    );
+  if (kind === "should")
+    return t(
+      `It was the right thing to do, but it did not happen, so use *should*${then.en}`,
+      `那本是该做的事，却没有做，所以用 *should*${then["zh-CN"]}`,
+    );
+  return t(
+    `It is only possible, so use *might*, *may* or *could*${then.en}`,
+    `只是有可能，所以用 *might*、*may* 或 *could*${then["zh-CN"]}`,
+  );
 }
+
+/** modalMeans says what a wrong modal of deduction would mean. */
+function modalMeans(kind: Deduction | "should"): Text {
+  if (kind === "must") return t("*must* says you are sure it is true.", "*must* 表示确信是真的。");
+  if (kind === "can't") return t("*can't* says you are sure it is not true.", "*can't* 表示确信不是真的。");
+  if (kind === "should") return t("*should* says it was the right thing to do.", "*should* 表示那是该做的事。");
+  return t("*might* says it is only possible.", "*might* 表示只是有可能。");
+}
+
+/** whyNotGuess explains a modal that does not match how sure the speaker is. */
+const whyNotGuess =
+  (after: Text) =>
+  (wrong: string, right: string): Text => {
+    const first = modalMeans(kindOf(wrong));
+    const rule = guessRule(kindOf(right), after);
+    return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+  };
+
+/** guessWhy explains the modal in the gap of shown, with what follows it. */
+const guessWhy =
+  (after: Text) =>
+  (right: string, shown: string): Text => {
+    const rule = guessRule(kindOf(right), after);
+    return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+  };
 
 const guessChoice: readonly ChoiceItem[] = guesses.map(
   ([context, s, , x, kind]): ChoiceItem => [`${context} ${cueOf[kind]} ${s} ___ be ${x}.`, kind, othersOf[kind]],
@@ -1247,7 +1293,8 @@ const deduction: TopicDef = {
           "括号里的话说明说话人的把握程度。选出填入空白处的词。",
         ),
         guessChoice,
-        (right, shown) => t(fill(shown, right), `${fill(shown, right)}（${guessNote(right)}）`),
+        guessWhy(noAfter),
+        whyNotGuess(noAfter),
       ),
     ),
     point(
@@ -1257,8 +1304,24 @@ const deduction: TopicDef = {
         "To guess about what is happening **at this moment**, use the modal with **be** and the **-ing** form:\n\n- *She isn't answering. She **must be sleeping**.*\n- *He looks calm. He **can't be worrying** about the exam.*\n\nNot *must sleeping* (the *be* is missing) and not *must be sleep*.",
         "推测**此刻正在发生**的事，用情态动词加 **be** 再加 **-ing** 形式：\n\n- *She isn't answering. She **must be sleeping**.*\n- *He looks calm. He **can't be worrying** about the exam.*\n\n不能说 *must sleeping*（缺了 *be*），也不能说 *must be sleep*。",
       ),
-      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), doingChoice, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（推测正在发生的事：情态动词加 be 加 -ing）`),
+      choiceGenerator(
+        t("Choose the words for the gap.", "选出填入空白处的词。"),
+        doingChoice,
+        (right, shown) =>
+          t(
+            `The guess is about what is happening at this moment, so the modal takes *be* and the *-ing* form: ${fill(shown, right)}`,
+            `推测的是此刻正在发生的事，所以情态动词后面接 *be* 加 *-ing*：${fill(shown, right)}`,
+          ),
+        (wrong) =>
+          wrong.startsWith("be ")
+            ? t(
+                `*${wrong}* has the base form after *be*. A guess about this moment takes *be* and the *-ing* form.`,
+                `*${wrong}* 在 *be* 后面用了原形。推测此刻正在发生的事，要用 *be* 加 *-ing*。`,
+              )
+            : t(
+                `*${wrong}* leaves out *be*. A guess about this moment takes *be* and the *-ing* form after the modal.`,
+                `*${wrong}* 漏掉了 *be*。推测此刻正在发生的事，情态动词后面要接 *be* 加 *-ing*。`,
+              ),
       ),
     ),
     point(
@@ -1272,7 +1335,10 @@ const deduction: TopicDef = {
         "sentence-pattern",
         t("Rewrite the sentence with must, can't or might.", "用 must、can't 或 might 改写句子。"),
         guessTyped,
-        (right) => t(right, `${right}（${guessNote(right.split(" ").find((w) => ["must", "can't", "might"].includes(w)) ?? "")}）`),
+        (right) => {
+          const rule = guessRule(kindOf(right), t("*be*", "*be*"));
+          return t(`${rule.en}: ${right}`, `${rule["zh-CN"]}：${right}`);
+        },
       ),
     ),
   ],
@@ -1378,7 +1444,8 @@ const pastModals: TopicDef = {
           "括号里的话说明说话人的意思。选出填入空白处的词。",
         ),
         pastChoice,
-        (right, shown) => t(fill(shown, right), `${fill(shown, right)}（${guessNote(right)}）`),
+        guessWhy(haveAfter),
+        whyNotGuess(haveAfter),
       ),
     ),
     point(
@@ -1388,8 +1455,34 @@ const pastModals: TopicDef = {
         "After a modal, always use **have**, never *had* or *has*, and then the **past participle**: *must have **gone***, not *must had gone* or *must have went*. In speech, *have* sounds like *of* (*must've*), but it is never written *must of*.",
         "情态动词后面一律用 **have**，不用 *had* 或 *has*，然后接**过去分词**：*must have **gone***，不是 *must had gone*，也不是 *must have went*。口语中 *have* 弱读，听起来像 *of*（*must've*），但绝不能写成 *must of*。",
       ),
-      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), pastFormChoice, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（情态动词加 have 加过去分词）`),
+      choiceGenerator(
+        t("Choose the words for the gap.", "选出填入空白处的词。"),
+        pastFormChoice,
+        (right, shown) => {
+          const pp = right.split(" ").at(-1) ?? "";
+          return t(
+            `After a modal, the past takes *have*, never *had*, and then the past participle, *${pp}*: ${fill(shown, right)}`,
+            `情态动词后面表示过去，用 *have*，不用 *had*，再接过去分词 *${pp}*：${fill(shown, right)}`,
+          );
+        },
+        (wrong, right) => {
+          const pp = right.split(" ").at(-1) ?? "";
+          const [, w1 = "", w2 = ""] = wrong.split(" ");
+          if (w1 === "had")
+            return t(
+              `After a modal, the verb is in its base form: *have*, not *had*. Then comes the past participle, *${pp}*.`,
+              `情态动词后面的动词用原形：用 *have*，不用 *had*，再接过去分词 *${pp}*。`,
+            );
+          if (w1 === "have")
+            return t(
+              `*${w2}* is the past simple, not the past participle. After *have* comes *${pp}*.`,
+              `*${w2}* 是一般过去式，不是过去分词。*have* 后面要用 *${pp}*。`,
+            );
+          return t(
+            `*${wrong}* leaves out *have*, so it does not talk about the past. Use *${right}*.`,
+            `*${wrong}* 漏掉了 *have*，没有表示过去。要用 *${right}*。`,
+          );
+        },
       ),
     ),
     point(
@@ -1406,8 +1499,10 @@ const pastModals: TopicDef = {
           "用 must have、can't have、might have 或 should have 改写句子。",
         ),
         pastTyped,
-        (right) =>
-          t(right, `${right}（${guessNote(right.split(" ").find((w) => ["must", "can't", "might", "should"].includes(w)) ?? "")}）`),
+        (right) => {
+          const rule = guessRule(kindOf(right), haveAfter);
+          return t(`${rule.en}: ${right}`, `${rule["zh-CN"]}：${right}`);
+        },
       ),
     ),
   ],

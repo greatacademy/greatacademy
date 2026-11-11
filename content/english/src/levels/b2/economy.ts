@@ -2,7 +2,7 @@
 // production and trade, skills, success and failure, words of time and sequence, and quantity; the passive with modals
 // and perfect forms, and have something done; writing a report.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
@@ -1206,11 +1206,61 @@ const passiveTyped: readonly TypedItem[] = interleave([
   ),
 ]);
 
-/** passiveNote explains in Chinese the form of a passive with a perfect or a modal. */
-function passiveNote(right: string): string {
-  if (right.includes(" been ")) return "完成时的被动语态：has/have been 加过去分词";
-  return "情态动词的被动语态：情态动词加 be 加过去分词";
+/** passiveRule names the passive of right: has or have been, or a modal and be, with the past participle. */
+function passiveRule(right: string, subject: string): Text {
+  const words = right.split(" ");
+  const participle = words.at(-1) ?? "";
+  if (right.includes(" been ")) {
+    const aux = words[0] ?? "";
+    return t(
+      `The action is done to *${subject}*, and the tense is the present perfect, so the passive is *${aux} been* and the past participle *${participle}*`,
+      `*${subject}* 是承受动作的一方，时态是现在完成时，所以被动语态是 *${aux} been* 加过去分词 *${participle}*`,
+    );
+  }
+  const modal = words.slice(0, words.indexOf("be")).join(" ");
+  return t(
+    `The action is done to *${subject}*, so after *${modal}* the passive is *be* and the past participle *${participle}*`,
+    `*${subject}* 是承受动作的一方，所以 *${modal}* 后面的被动语态是 *be* 加过去分词 *${participle}*`,
+  );
 }
+
+/** subjectBefore is the subject of a sentence with a gap, in small letters. */
+const subjectBefore = (shown: string) => lower((shown.split(" ___")[0] ?? "").trim());
+
+/** whyNotPassive explains an active form, or the base form after be or been. */
+const whyNotPassive = (wrong: string, right: string, shown: string, position: number): Text => {
+  const subject = subjectBefore(shown);
+  const rule = passiveRule(right, subject);
+  const be = right.includes(" been ") ? "been" : "be";
+  const first =
+    position === 0
+      ? t(
+          `*${wrong}* is active: it says that *${subject}* did the action, and it has no *${be}*.`,
+          `*${wrong}* 是主动形式，意思成了 *${subject}* 做了这件事，而且缺少 *${be}*。`,
+        )
+      : t(
+          `*${wrong.split(" ").at(-1) ?? ""}* is the base form, which never follows *${be}* in the passive.`,
+          `*${wrong.split(" ").at(-1) ?? ""}* 是动词原形，被动语态里 *${be}* 后面不能用原形。`,
+        );
+  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+};
+
+/** passiveWhy explains the passive in the gap of shown. */
+const passiveWhy = (right: string, shown: string): Text => {
+  const rule = passiveRule(right, subjectBefore(shown));
+  return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+};
+
+/** passiveRewriteWhy explains a passive written from an active sentence with they. */
+const passiveRewriteWhy = (right: string): Text => {
+  const match = /^(.+?) ((?:has|have) been \S+|\S+(?: not)? be \S+)/u.exec(right);
+  const subject = lower(match?.[1] ?? "");
+  const rule = passiveRule(match?.[2] ?? right, subject);
+  return t(
+    `*They* means people in general, so leave it out and begin with *${subject}*. ${rule.en}: ${right}`,
+    `*They* 泛指人们，被动句中省略，以 *${subject}* 开头。${rule["zh-CN"]}：${right}`,
+  );
+};
 
 const passiveForms: TopicDef = {
   id: "passive-with-modals-and-perfect-forms",
@@ -1234,9 +1284,7 @@ const passiveForms: TopicDef = {
         "The passive puts the thing that something happens to first. With a **perfect** or a **modal**, keep the passive *be* and change only the word before it:\n\n- present perfect: *has / have **been** + past participle*: *The hospital **has been built**.*\n- modal: *can, could, may, might, must, should, will + **be** + past participle*: *Jobs **could be lost**.*\n\nTwo mistakes are common: leaving out *been* or *be* (*The report has published* means the report did the publishing), and using the base form after *be* (*must be sign*).",
         "被动语态把承受动作的事物放在前面。和**完成时**或**情态动词**连用时，被动的 *be* 保留，只改变它前面的词：\n\n- 现在完成时：*has / have **been** + 过去分词*：*The hospital **has been built**.*\n- 情态动词：*can、could、may、might、must、should、will + **be** + 过去分词*：*Jobs **could be lost**.*\n\n常见错误有两个：漏掉 *been* 或 *be*（*The report has published* 意思成了“报告发表了别的东西”），以及在 *be* 后面用动词原形（*must be sign*）。中文常不用“被”字（“报告已经发表了”），英语却必须用被动形式。",
       ),
-      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), passiveChoice, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（${passiveNote(right)}）`),
-      ),
+      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), passiveChoice, passiveWhy, whyNotPassive),
     ),
     point(
       "rewrite",
@@ -1245,8 +1293,11 @@ const passiveForms: TopicDef = {
         "Rewrite the sentence in the passive, beginning with the thing that the action happens to. *They* means people in general, so leave it out:\n\n- *They have sold the house.* → *The house has been sold.*\n- *They should plant more trees.* → *More trees should be planted.*\n\nKeep the tense or the modal of the active sentence, and keep the rest of the sentence in the same order.",
         "把句子改成被动语态，以承受动作的事物开头。*They* 泛指人们，被动句中省略：\n\n- *They have sold the house.* → *The house has been sold.*\n- *They should plant more trees.* → *More trees should be planted.*\n\n保持原句的时态或情态动词，句子其余部分的顺序不变。",
       ),
-      typedGenerator("sentence-pattern", t("Rewrite the sentence in the passive.", "把句子改写成被动语态。"), passiveTyped, (right) =>
-        t(right, `${right}（${passiveNote(right.includes(" been ") ? " been " : "")}）`),
+      typedGenerator(
+        "sentence-pattern",
+        t("Rewrite the sentence in the passive.", "把句子改写成被动语态。"),
+        passiveTyped,
+        passiveRewriteWhy,
       ),
     ),
   ],
@@ -1317,6 +1368,54 @@ const causativeTyped: readonly TypedItem[] = causatives.map(
   }),
 );
 
+/** causativeOf finds the causative of a sentence with a gap, or of a written sentence. */
+const causativeOf = (text: string) =>
+  causatives.find(([s, , , , , , rest]) => text === `${joinWords(s, "___", rest)}.`) ??
+  causatives.find(([s, , get, object, , , rest]) => text === `${joinWords(s, get, object, "___", rest)}.`) ??
+  causatives.find(([s, have, , object, , pp, rest]) => text === `${joinWords(s, have, object, pp, rest)}.`);
+
+/** causativeRule names the order of have or get, the thing and the past participle. */
+function causativeRule(text: string): Text {
+  const item = causativeOf(text);
+  if (!item)
+    return t(
+      "Someone else does the job, so use *have*, the thing and the past participle",
+      "这件事是别人做的，所以用 *have* 加事物再加过去分词",
+    );
+  const [, , , object, base, pp] = item;
+  return t(
+    `Someone else does the job to *${object}*, so *${object}* comes first and then the past participle of *${base}*, *${pp}*`,
+
+    `这件事是别人做的，*${object}* 也不是动作的执行者，所以 *${object}* 放在 *${base}* 的过去分词 *${pp}* 前面`,
+  );
+}
+
+/** causativeWhy explains have or get, the thing and the participle in the gap of shown. */
+const causativeWhy = (right: string, shown: string): Text => {
+  const rule = causativeRule(shown);
+  return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+};
+
+/** whyNotCausative explains the participle before the thing, or a form that is not the participle. */
+const whyNotCausative = (wrong: string, _right: string, shown: string, position: number): Text => {
+  const rule = causativeRule(shown);
+  const item = causativeOf(shown);
+  const pp = item?.[5] ?? "";
+  const last = wrong.split(" ").at(-1) ?? "";
+  let first: Text;
+  if (position === 0 && wrong.split(" ").length > 1 && wrong.includes(` ${pp} `))
+    first = t(
+      `*${wrong}* puts the participle before the thing, which says the subject did the job.`,
+      `*${wrong}* 把过去分词放在事物前面，意思成了主语自己做的。`,
+    );
+  else if (wrong.startsWith("to ") || wrong.includes(" to "))
+    first = t(`*to ${last}* would mean the thing is meant to do the action itself.`, `*to ${last}* 意思成了事物自己去做这个动作。`);
+  else if (wrong.endsWith("ing"))
+    first = t(`*${last}* would mean the thing is doing the action itself.`, `*${last}* 意思成了事物自己正在做这个动作。`);
+  else first = t(`*${last}* is the base form, not the past participle.`, `*${last}* 是动词原形，不是过去分词。`);
+  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+};
+
 const causative: TopicDef = {
   id: "causative-have-and-get",
   title: t("Have Something Done", "让别人做某事（have something done）"),
@@ -1339,7 +1438,8 @@ const causative: TopicDef = {
       choiceGenerator(
         t("Someone else did the job for the subject. Choose the words for the gap.", "这件事是别人为主语做的。选出填入空白处的词。"),
         causativeChoice,
-        (right, shown) => t(fill(shown, right), `${fill(shown, right)}（have 加事物再加过去分词：别人为主语做这件事）`),
+        causativeWhy,
+        whyNotCausative,
       ),
     ),
     point(
@@ -1349,9 +1449,7 @@ const causative: TopicDef = {
         "In everyday English, *get* works in the same way as *have*: *We **got** the office **painted**.* *You should **get** your teeth **checked**.*\n\nAfter the thing comes the **past participle**, because the thing does not do the action: the teeth are checked. Not *get your teeth check* or *get your teeth to check*.",
         "在日常英语中，*get* 的用法和 *have* 一样：*We **got** the office **painted**.* *You should **get** your teeth **checked**.*\n\n事物后面用**过去分词**，因为事物是被处理的一方：牙齿是被检查的。不能说 *get your teeth check*，也不能说 *get your teeth to check*。",
       ),
-      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), participleChoice, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（get 加事物后用过去分词）`),
-      ),
+      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), participleChoice, causativeWhy, whyNotCausative),
     ),
     point(
       "write",
@@ -1364,7 +1462,10 @@ const causative: TopicDef = {
         "sentence-pattern",
         t("Write the sentence: someone else does the job for the subject.", "写出句子：别人为主语做这件事。"),
         causativeTyped,
-        (right) => t(right, `${right}（have 加事物再加过去分词）`),
+        (right) => {
+          const rule = causativeRule(right);
+          return t(`${rule.en}: ${right}`, `${rule["zh-CN"]}：${right}`);
+        },
       ),
     ),
   ],

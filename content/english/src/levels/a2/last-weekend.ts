@@ -1,7 +1,7 @@
 // A2, unit 1: Last Weekend. Words for the past, relatives, events and the weekend; the past simple of regular and
 // irregular verbs with did and didn't; sentences in the past judged by rules, and a weekend judged by a model.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { vocabularyTopic, word } from "../words.ts";
@@ -542,6 +542,53 @@ const regularFixBank: readonly TypedItem[] = regularRows.slice(80, 119).map(([su
   };
 });
 
+/** bracketVerb is the verb in brackets at the end of a gapped sentence. */
+const bracketVerb = (shown: string): string => /\((\w+)\)$/u.exec(shown)?.[1] ?? "";
+
+/** timeOf is the time phrase that starts a sentence in the past. */
+const timeOf = (shown: string): string => shown.split(",")[0] ?? "";
+
+/** regularRule names the spelling rule that makes the past of a regular verb. */
+const regularRule = (verb: string, past: string): Text => {
+  if (verb.endsWith("e")) return t(`*${verb}* ends in *e*, so it adds only *-d*`, `*${verb}* 以 *e* 结尾，所以只加 *-d*`);
+  if (past.endsWith("ied"))
+    return t(
+      `*${verb}* ends in a consonant and *y*, so the *y* becomes *i* before *-ed*`,
+      `*${verb}* 以辅音字母加 *y* 结尾，所以把 *y* 变成 *i* 再加 *-ed*`,
+    );
+  if (past.length === verb.length + 3)
+    return t(
+      `*${verb}* ends in one short vowel and one consonant, so the consonant doubles before *-ed*`,
+      `*${verb}* 以一个短元音加一个辅音字母结尾，所以双写辅音字母再加 *-ed*`,
+    );
+  if (verb.endsWith("y"))
+    return t(
+      `*${verb}* ends in a vowel and *y*, so it keeps the *y* and adds *-ed*`,
+      `*${verb}* 以元音字母加 *y* 结尾，保留 *y* 直接加 *-ed*`,
+    );
+  return t(`*${verb}* is a regular verb that just adds *-ed*`, `*${verb}* 是直接加 *-ed* 的规则动词`);
+};
+
+/** regularWhy explains the past form in the gap of shown. */
+const regularWhy = (right: string, shown: string): Text => {
+  const rule = regularRule(bracketVerb(shown), right);
+  return t(
+    `*${timeOf(shown)}* is in the past, and ${rule.en}: ${fill(shown, right)}`,
+    `*${timeOf(shown)}* 表示过去，${rule["zh-CN"]}：${fill(shown, right)}`,
+  );
+};
+
+/** whyNotRegular explains the present form or a misspelt past of a regular verb. */
+const whyNotRegular = (wrong: string, right: string, shown: string, position: number): Text => {
+  if (position === 0)
+    return t(
+      `*${wrong}* is the present form. *${timeOf(shown)}* is in the past, so the verb needs its past form, *${right}*.`,
+      `*${wrong}* 是现在时的形式。*${timeOf(shown)}* 表示过去，动词要用过去式 *${right}*。`,
+    );
+  const rule = regularRule(bracketVerb(shown), right);
+  return t(`*${wrong}* is spelt wrong: ${rule.en}, so it is *${right}*.`, `*${wrong}* 拼错了：${rule["zh-CN"]}，所以是 *${right}*。`);
+};
+
 const pastSimpleRegular: TopicDef = {
   id: "past-simple-regular",
   title: t("The Past Simple: Regular Verbs", "一般过去时：规则动词"),
@@ -561,20 +608,16 @@ const pastSimpleRegular: TopicDef = {
         "For something finished in the past, a regular verb adds *-ed*: *play* → *played*, *visit* → *visited*. It is the same for *I*, *she*, *they* and everyone.\n\nSpelling:\n\n- a verb ending in *e* adds only *-d*: *dance* → *danced*\n- a consonant and *y* becomes *-ied*: *study* → *studied*; but *play* → *played*\n- one short vowel and one consonant: double it: *stop* → *stopped*, *plan* → *planned*",
         "表示过去已经完成的事，规则动词加 *-ed*：*play* → *played*，*visit* → *visited*。无论主语是 *I*、*she* 还是 *they*，形式都一样。\n\n中文用“了”或“昨天”这样的时间词表示过去，动词本身不变；英语的动词本身必须变成过去式，句子里有 *yesterday* 也一样。\n\n拼写：\n\n- 以 *e* 结尾的只加 *-d*：*dance* → *danced*\n- 辅音字母加 *y* 结尾的，变 *y* 为 *i* 再加 *-ed*：*study* → *studied*；但 *play* → *played*\n- 重读闭音节、末尾只有一个辅音字母的，双写再加 *-ed*：*stop* → *stopped*，*plan* → *planned*",
       ),
-      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), regularChoiceBank, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（过去的事，规则动词加 -ed）`),
-      ),
+      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), regularChoiceBank, regularWhy, whyNotRegular),
     ),
     point(
       "spell",
       t("Spelling the past form", "拼写过去式"),
       t(
-        "Type the past form. Watch the spelling: *danced*, *studied*, *stopped*, *played*.",
-        "写出过去式，注意拼写：*danced*、*studied*、*stopped*、*played*。",
+        "Type the past form of the verb in brackets. Watch the spelling: an *e* at the end adds only *-d* (*danced*), a consonant and *y* becomes *-ied* (*studied*), one short vowel and one consonant doubles (*stopped*), and a vowel and *y* just adds *-ed* (*played*).",
+        "写出括号里动词的过去式，注意拼写：以 *e* 结尾只加 *-d*（*danced*），辅音字母加 *y* 变成 *-ied*（*studied*），一个短元音加一个辅音字母要双写（*stopped*），元音字母加 *y* 直接加 *-ed*（*played*）。",
       ),
-      typedGenerator("word-form", t("Type the verb in the past.", "输入动词的过去式。"), regularTypedBank, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（${right} 是过去式）`),
-      ),
+      typedGenerator("word-form", t("Type the verb in the past.", "输入动词的过去式。"), regularTypedBank, regularWhy),
     ),
     point(
       "fix",
@@ -583,9 +626,14 @@ const pastSimpleRegular: TopicDef = {
         "Each sentence starts with a time in the past, but its verb is in the present. Write it again with the past form.",
         "每个句子开头都是过去的时间，但动词用了现在时。用过去式重写句子。",
       ),
-      typedGenerator("sentence", t("Fix the sentence.", "改正这个句子。"), regularFixBank, (right, shown) =>
-        t(`${shown} → ${right}`, `${shown} → ${right}（有表示过去的时间，动词用过去式）`),
-      ),
+      typedGenerator("sentence", t("Fix the sentence.", "改正这个句子。"), regularFixBank, (right) => {
+        const [verb = "", past = ""] = regulars.find(([, p]) => new RegExp(`\\b${p}\\b`, "u").test(right)) ?? [];
+        const rule = regularRule(verb, past);
+        return t(
+          `*${timeOf(right)}* is in the past, so the verb is in the past too, whoever the subject is, and ${rule.en}: ${right}`,
+          `*${timeOf(right)}* 表示过去，所以无论主语是谁，动词都用过去式；${rule["zh-CN"]}：${right}`,
+        );
+      }),
     ),
   ],
 };
@@ -638,6 +686,29 @@ const irregularTypedBank: readonly TypedItem[] = irregularRows.slice(46, 92).map
 /** irregularTable lists the verbs as a table for the explanation. */
 const irregularTable = irregulars.map(([verb, past]) => `*${verb}* → *${past}*`).join(", ");
 
+/** irregularWhy explains the irregular past form in the gap of shown. */
+const irregularWhy = (right: string, shown: string): Text => {
+  const verb = bracketVerb(shown);
+  return t(
+    `*${timeOf(shown)}* is in the past, and *${verb}* is irregular: its past form is *${right}*, not one made with *-ed*: ${fill(shown, right)}`,
+    `*${timeOf(shown)}* 表示过去，而 *${verb}* 是不规则动词，过去式是 *${right}*，不是加 *-ed*：${fill(shown, right)}`,
+  );
+};
+
+/** whyNotIrregular explains a past made with -ed or the present form of an irregular verb. */
+const whyNotIrregular = (wrong: string, right: string, shown: string, position: number): Text => {
+  const verb = bracketVerb(shown);
+  return position === 0
+    ? t(
+        `*${wrong}* adds *-ed*, but *${verb}* is irregular and has a past form of its own: *${right}*.`,
+        `*${wrong}* 加了 *-ed*，但 *${verb}* 是不规则动词，有自己的过去式：*${right}*。`,
+      )
+    : t(
+        `*${wrong}* is the present form. *${timeOf(shown)}* is in the past, so the verb needs its past form, *${right}*.`,
+        `*${wrong}* 是现在时的形式。*${timeOf(shown)}* 表示过去，动词要用过去式 *${right}*。`,
+      );
+};
+
 const pastSimpleIrregular: TopicDef = {
   id: "past-simple-irregular",
   title: t("The Past Simple: Irregular Verbs", "一般过去时：不规则动词"),
@@ -657,17 +728,16 @@ const pastSimpleIrregular: TopicDef = {
         `Many common verbs do not add *-ed*. Their past forms must be learned one by one: ${irregularTable}.\n\nNot *goed* or *buyed*.`,
         `许多常用动词不加 *-ed*，它们的过去式要一个一个地记：${irregularTable}。\n\n不要写成 *goed* 或 *buyed*。`,
       ),
-      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), irregularChoiceBank, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（${right} 是不规则过去式）`),
-      ),
+      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), irregularChoiceBank, irregularWhy, whyNotIrregular),
     ),
     point(
       "spell",
       t("Writing the past form", "写出过去式"),
-      t("Type the past form of the verb in brackets. Each one is irregular.", "写出括号里动词的过去式。它们都是不规则动词。"),
-      typedGenerator("word-form", t("Type the verb in the past.", "输入动词的过去式。"), irregularTypedBank, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（${right} 是不规则过去式）`),
+      t(
+        "Type the past form of the verb in brackets. Each one is irregular, so do not add *-ed*: write the past form you learned for it, like *go* → *went* or *buy* → *bought*.",
+        "写出括号里动词的过去式。它们都是不规则动词，不要加 *-ed*，要写出记住的过去式，比如 *go* → *went*、*buy* → *bought*。",
       ),
+      typedGenerator("word-form", t("Type the verb in the past.", "输入动词的过去式。"), irregularTypedBank, irregularWhy),
     ),
   ],
 };
@@ -720,6 +790,59 @@ const questionChoiceBank: readonly ChoiceItem[] = didRows.slice(138, 184).map(([
   return ["", `Did ${asked} ${verb} ${rest} ${when}?`, [`Did ${asked} ${past} ${rest} ${when}?`, `Do ${asked} ${past} ${rest} ${when}?`]];
 });
 
+/** didVerb is the irregular verb after did or didn't in a sentence, as its plain form and its past. */
+const didVerb = (sentence: string): readonly [verb: string, past: string] => {
+  const plain = /(?:didn't|did not|^Did (?:you|Tom|your parents|Lily|they|she|he)) (\w+)/u.exec(sentence)?.[1] ?? "";
+  const found = irregulars.find(([verb]) => verb === plain);
+  return [plain, found?.[1] ?? ""];
+};
+
+/** negativeWhy explains a negative in the past with didn't. */
+const negativeWhy = (right: string): Text => {
+  const [verb, past] = didVerb(right);
+  return t(
+    `To say no about the past, put *didn't* before the verb. *Didn't* already shows the past, so *${past}* goes back to *${verb}*: ${right}`,
+    `否定过去的事，在动词前加 *didn't*。*didn't* 已经表示过去，所以 *${past}* 变回原形 *${verb}*：${right}`,
+  );
+};
+
+/** whyNotNegative explains a past form after didn't, or not without did. */
+const whyNotNegative = (wrong: string, right: string, _shown: string, position: number): Text => {
+  const [verb, past] = didVerb(right);
+  return position === 0
+    ? t(
+        `*${wrong}* keeps *${past}* after *didn't*. The past is shown once, by *didn't*, so the verb is plain: *${verb}*.`,
+        `*${wrong}* 在 *didn't* 后面还用 *${past}*。过去只用 *didn't* 表示一次，所以动词用原形 *${verb}*。`,
+      )
+    : t(
+        `*${wrong}* uses *not* alone. English needs *didn't* before the verb, and then the plain verb *${verb}*.`,
+        `*${wrong}* 只用了 *not*。英语要在动词前用 *didn't*，后面接动词原形 *${verb}*。`,
+      );
+};
+
+/** questionWhy explains a question in the past with did. */
+const questionWhy = (right: string): Text => {
+  const [verb, past] = didVerb(right);
+  return t(
+    `A question about the past starts with *Did*, then the subject and the plain verb; *Did* shows the past, so *${past}* goes back to *${verb}*: ${right}`,
+    `询问过去的事，用 *Did* 开头，再接主语和动词原形；*Did* 已经表示过去，所以 *${past}* 变回 *${verb}*：${right}`,
+  );
+};
+
+/** whyNotQuestion explains a past form after did, or a question with do. */
+const whyNotQuestion = (wrong: string, right: string, _shown: string, position: number): Text => {
+  const [verb, past] = didVerb(right);
+  return position === 0
+    ? t(
+        `*${wrong}* keeps *${past}* after *Did*. The past is shown once, by *Did*, so the verb is plain: *${verb}*.`,
+        `*${wrong}* 在 *Did* 后面还用 *${past}*。过去只用 *Did* 表示一次，所以动词用原形 *${verb}*。`,
+      )
+    : t(
+        `*${wrong}* starts with *Do*, which asks about the present. A question about the past starts with *Did*, and the verb is plain.`,
+        `*${wrong}* 用 *Do* 开头，问的是现在。询问过去要用 *Did* 开头，动词用原形。`,
+      );
+};
+
 const pastQuestionsAndNegatives: TopicDef = {
   id: "past-simple-questions-and-negatives",
   title: t("Did and Didn't", "did 和 didn't"),
@@ -742,17 +865,16 @@ const pastQuestionsAndNegatives: TopicDef = {
         "To say no about the past, put *didn't* (*did not*) before the verb. *Didn't* already shows the past, so the verb goes back to its plain form:\n\n*I went.* → *I didn't go.* Not *I didn't went* or *I not went*.",
         "否定过去的事，在动词前加 *didn't*（*did not*）。*didn't* 已经表示过去，所以后面的动词要用原形：\n\n*I went.* → *I didn't go.* 不能说 *I didn't went*，也不能像中文“我没去”那样直接说 *I not went*。",
       ),
-      choiceGenerator(t("Which sentence matches the notes?", "哪个句子符合笔记？"), negativeChoiceBank, (right) =>
-        t(right, `${right}（didn't 后面用动词原形）`),
-      ),
+      choiceGenerator(t("Which sentence matches the notes?", "哪个句子符合笔记？"), negativeChoiceBank, negativeWhy, whyNotNegative),
     ),
     point(
       "write-negative",
       t("Writing the negative", "写出否定句"),
-      t("Write the sentence again with *didn't*. Change the verb back to its plain form.", "用 *didn't* 把句子改成否定句，动词变回原形。"),
-      typedGenerator("sentence-pattern", t("Make the sentence negative.", "把句子改成否定句。"), negativeTypedBank, (right) =>
-        t(right, `${right}（didn't + 动词原形）`),
+      t(
+        "Write the sentence again with *didn't* before the verb, and change the verb back to its plain form: *I went to the zoo.* → *I didn't go to the zoo.* Keep the rest of the sentence as it is.",
+        "在动词前加 *didn't* 把句子改成否定句，并把动词变回原形：*I went to the zoo.* → *I didn't go to the zoo.* 句子的其他部分不变。",
       ),
+      typedGenerator("sentence-pattern", t("Make the sentence negative.", "把句子改成否定句。"), negativeTypedBank, negativeWhy),
     ),
     point(
       "question",
@@ -761,9 +883,7 @@ const pastQuestionsAndNegatives: TopicDef = {
         "To ask about the past, start with *Did*, then the subject and the plain verb: *Did you see the fox? Did Tom win?*\n\nNot *Did you saw?*: *did* shows the past once, and that is enough.",
         "询问过去的事，用 *Did* 开头，后面接主语和动词原形：*Did you see the fox? Did Tom win?*\n\n不能说 *Did you saw?*：过去只需要用 *did* 表示一次。",
       ),
-      choiceGenerator(t("Which question is right?", "哪个问句是对的？"), questionChoiceBank, (right) =>
-        t(right, `${right}（Did + 主语 + 动词原形）`),
-      ),
+      choiceGenerator(t("Which question is right?", "哪个问句是对的？"), questionChoiceBank, questionWhy, whyNotQuestion),
     ),
     point(
       "write-question",
@@ -772,9 +892,7 @@ const pastQuestionsAndNegatives: TopicDef = {
         "Turn the sentence into a question with *Did*. Ask about the same person: *I* and *we* become *you*.",
         "用 *Did* 把句子改成问句。问的是同一个人：*I* 和 *we* 变成 *you*。",
       ),
-      typedGenerator("sentence", t("Make a question.", "把句子改成疑问句。"), questionTypedBank, (right) =>
-        t(right, `${right}（Did + 主语 + 动词原形）`),
-      ),
+      typedGenerator("sentence", t("Make a question.", "把句子改成疑问句。"), questionTypedBank, questionWhy),
     ),
   ],
 };
@@ -820,6 +938,29 @@ const noteTypedBank: readonly TypedItem[] = noteRows.slice(38, 77).map(
   }),
 );
 
+/** noteWhy explains the sentence in the past for a note. */
+const noteWhy = (right: string): Text => {
+  const [plain = "", past = ""] = noteActions.find(([, p]) => right.includes(p)) ?? [];
+  const verb = plain.split(" ")[0] ?? "";
+  const done = past.split(" ")[0] ?? "";
+  return t(
+    `The note is about the past, so its verb goes into the past (*${verb}* → *${done}*), and the day goes at the end with *on*: ${right}`,
+    `笔记说的是过去的事，所以动词改成过去式（*${verb}* → *${done}*），星期放在句末，前面加 *on*：${right}`,
+  );
+};
+
+/** whyNotNote explains a sentence for a note with the plain verb or with the day in the middle. */
+const whyNotNote = (wrong: string, _right: string, _shown: string, position: number): Text =>
+  position === 0
+    ? t(
+        `*${wrong}* keeps the plain verb of the note. The note is about the past, so the verb must be in the past form.`,
+        `*${wrong}* 保留了笔记里的动词原形。笔记说的是过去的事，动词必须用过去式。`,
+      )
+    : t(
+        `*${wrong}* puts the day between the subject and the verb, as Chinese does. In English the day goes at the end with *on*, or at the start.`,
+        `*${wrong}* 像中文一样把时间放在主语和动词之间。英语里星期放在句末并加 *on*，或者放在句首。`,
+      );
+
 const writingSentencesInThePast: TopicDef = {
   id: "writing-sentences-in-the-past",
   title: t("Writing Sentences in the Past", "用过去时写句子"),
@@ -842,9 +983,7 @@ const writingSentencesInThePast: TopicDef = {
         "A note gives who, what and when. In the sentence, the verb goes into the past, and the day comes at the end with *on*:\n\n*Sam / go to the zoo / Saturday* → *Sam went to the zoo on Saturday.*",
         "笔记给出“谁、做什么、什么时候”。写成句子时，动词改成过去式，星期放在句末，前面加 *on*：\n\n*Sam / go to the zoo / Saturday* → *Sam went to the zoo on Saturday.*\n\n不要像中文“萨姆星期六去了动物园”那样把时间放在动词前。",
       ),
-      choiceGenerator(t("Choose the sentence that matches the note.", "选出与笔记相符的句子。"), noteChoiceBank, (right) =>
-        t(right, `${right}（谁 + 过去式 + on + 星期）`),
-      ),
+      choiceGenerator(t("Choose the sentence that matches the note.", "选出与笔记相符的句子。"), noteChoiceBank, noteWhy, whyNotNote),
     ),
     point(
       "write",
@@ -853,9 +992,7 @@ const writingSentencesInThePast: TopicDef = {
         "Write a whole sentence for the note, in the past. The day can also come first: *On Saturday, Sam went to the zoo.*",
         "根据笔记用过去时写一个完整的句子。时间也可以放在句首：*On Saturday, Sam went to the zoo.*",
       ),
-      typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), noteTypedBank, (right) =>
-        t(right, `${right}（谁 + 过去式 + on + 星期）`),
-      ),
+      typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), noteTypedBank, noteWhy),
     ),
   ],
 };

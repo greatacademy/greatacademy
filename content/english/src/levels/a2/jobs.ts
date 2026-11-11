@@ -1,7 +1,7 @@
 // A2, unit 12: Jobs and Dreams. More jobs, work life and ambitions; questions about the subject and about the object;
 // a dream job judged by a model.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { interleave, vocabularyTopic, word } from "../words.ts";
@@ -373,6 +373,41 @@ const askTypedBank: readonly TypedItem[] = interleave([
   }),
 ]);
 
+/** askWhy explains a question about the words in bold of shown. */
+const askWhy = (right: string, shown: string): Text => {
+  const bold = /\*\*(.+?)\*\*/u.exec(shown)?.[1] ?? "";
+  const word = right.split(" ")[0] ?? "Who";
+  const kind = word === "Who" ? t("a person", "人") : t("a thing", "物");
+  return shown.startsWith("**")
+    ? t(
+        `*${bold}* did the action, so *${word}* (for ${kind.en}) takes its place and the verb stays in the past, with no *did*: ${right}`,
+        `*${bold}* 是动作的发出者，所以用 *${word}*（问${kind["zh-CN"]}）直接代替它，动词保持过去式，不用 *did*：${right}`,
+      )
+    : t(
+        `The action was done to *${bold}*, so ask with *${word}* (for ${kind.en}), then *did*, the subject and the first form of the verb: ${right}`,
+        `*${bold}* 是动作的对象，所以用 *${word}*（问${kind["zh-CN"]}）提问，再接 *did*、主语和动词原形：${right}`,
+      );
+};
+
+/** whyNotAsk explains a question that asks about the other one or builds the question wrong. */
+const whyNotAsk = (wrong: string, _right: string, shown: string, position: number): Text => {
+  const bold = /\*\*(.+?)\*\*/u.exec(shown)?.[1] ?? "";
+  if (position === 0)
+    return t(
+      `*${wrong}* asks about the other one in the sentence, not about *${bold}*.`,
+      `*${wrong}* 问的是句子里的另一方，不是 *${bold}*。`,
+    );
+  return shown.startsWith("**")
+    ? t(
+        `*${wrong}* adds *did* and keeps the past form. A question about the one who did it has no *did*.`,
+        `*${wrong}* 加了 *did* 又保留了过去式。问动作发出者的问句不用 *did*。`,
+      )
+    : t(
+        `*${wrong}* keeps the past form after *did*. After *did* the verb goes back to its first form.`,
+        `*${wrong}* 在 *did* 后面还用过去式。*did* 后面的动词要用原形。`,
+      );
+};
+
 const subjectAndObjectQuestions: TopicDef = {
   id: "subject-and-object-questions",
   title: t("Who Called You? Who Did You Call?", "Who called you? 和 Who did you call?"),
@@ -398,11 +433,8 @@ const subjectAndObjectQuestions: TopicDef = {
       choiceGenerator(
         t("Choose the question that asks about the words in bold.", "选出就加粗部分提问的问句。"),
         askChoiceBank,
-        (right, shown) =>
-          t(
-            `${right}\n\n${shown}`,
-            `${right}\n\n${shown}\n\n${right.includes(" did ") ? "问动作的对象：did + 主语 + 动词原形" : "问动作的发出者：疑问词直接作主语，不用 did"}`,
-          ),
+        askWhy,
+        whyNotAsk,
       ),
     ),
     point(
@@ -412,12 +444,7 @@ const subjectAndObjectQuestions: TopicDef = {
         "Write a question about the words in bold. If they did the action, put *who* or *what* in their place: *Who called Sam?* If the action was done to them, use *did*: *Who did Lily call?*",
         "就加粗部分写一个问句。如果加粗部分是动作的发出者，用 *who* 或 *what* 代替它：*Who called Sam?* 如果加粗部分是动作的对象，用 *did*：*Who did Lily call?*",
       ),
-      typedGenerator("sentence", t("Write a question about the words in bold.", "就加粗部分写一个问句。"), askTypedBank, (right, shown) =>
-        t(
-          `${right}\n\n${shown}`,
-          `${right}\n\n${shown}\n\n${right.includes(" did ") ? "问动作的对象：did + 主语 + 动词原形" : "问动作的发出者：疑问词直接作主语，不用 did"}`,
-        ),
-      ),
+      typedGenerator("sentence", t("Write a question about the words in bold.", "就加粗部分写一个问句。"), askTypedBank, askWhy),
     ),
   ],
 };

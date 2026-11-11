@@ -2,7 +2,7 @@
 // protest, formal verbs, and certainty and doubt; although, despite and however; the letter to an editor. Its other
 // topic, misplaced modifiers, already exists.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
@@ -1240,14 +1240,80 @@ const contrastTyped: readonly TypedItem[] = contrasts.map(([a, b, n], i): TypedI
   };
 });
 
-/** contrastNote explains in Chinese what follows the linking word of a sentence. */
-function contrastNote(sentence: string): string {
-  if (/^(Although|Even though|Though) /.test(sentence) || / (although|even though|though) /.test(sentence))
-    return "although 后面接完整的从句，主句前不再用 but";
-  if (/^(Despite|In spite of) /.test(sentence) || / (despite|in spite of) /.test(sentence))
-    return "despite 后面接名词短语或 -ing 形式，不接从句";
-  return "however 是副词，连接两个独立的句子，前面用分号或句号，后面用逗号";
-}
+/** Linker is one of the three linking words of contrast. */
+type Linker = "although" | "despite" | "however";
+
+/** linkerOf finds which linking word of contrast a sentence or an option uses. */
+const linkerOf = (s: string): Linker => {
+  const lower = s.toLowerCase();
+  if (/^(although|even though|though)\b/u.test(lower)) return "although";
+  if (/^(despite|in spite of)\b/u.test(lower)) return "despite";
+  return "however";
+};
+
+/** linkerRule says what follows each linking word of contrast. */
+const linkerRule: Record<Linker, Text> = {
+  although: t("*although* is followed by a clause with a subject and a verb", "*although* 后面接带主语和谓语的从句"),
+  despite: t(
+    "*despite* is followed by a noun phrase or an *-ing* form, never a clause",
+    "*despite* 后面接名词短语或 *-ing* 形式，不接从句",
+  ),
+  however: t(
+    "*however* joins two whole sentences, with a semicolon or a full stop before it and a comma after it",
+    "*however* 连接两个完整的句子，前面用分号或句号，后面用逗号",
+  ),
+};
+
+/** sentenceCase capitalizes the first letter of a rule, past any opening asterisk. */
+const sentenceCase = (s: string) => s.replace(/^(\*?)(\p{L})/u, (_, mark: string, letter: string) => `${mark}${letter.toUpperCase()}`);
+
+/** gapNeeds says
+ what the words around a gap ask for, by the linking word that fits it. */
+const gapNeeds: Record<Linker, Text> = {
+  although: t("a clause with a verb follows the gap", "空格后面是带动词的从句"),
+  despite: t("only a noun phrase or an *-ing* form follows the gap", "空格后面只有名词短语或 *-ing* 形式"),
+  however: t("the gap stands between two whole sentences", "空格位于两个完整的句子之间"),
+};
+
+/** contrastWhy names the rule of the linking word and applies it to the sentence. */
+const contrastWhy = (right: string, shown: string): Text => {
+  const rule = linkerRule[linkerOf(right)];
+  return t(`${sentenceCase(rule.en)}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+};
+
+/** whyNotContrast explains a linking word whose structure does not match the words around the gap. */
+const whyNotContrast = (wrong: string, right: string): Text => {
+  const rule = linkerRule[linkerOf(wrong)];
+  const needs = gapNeeds[linkerOf(right)];
+  return t(
+    `${sentenceCase(rule.en)}, but here ${needs.en}. So the gap takes *${right}*.`,
+    `${rule["zh-CN"]}，而这里${needs["zh-CN"]}，所以要用 *${right}*。`,
+  );
+};
+
+/** joinedWhy names the rule of the linking word a joined sentence uses. */
+const joinedWhy = (right: string): Text => {
+  const rule = linkerRule[linkerOf(right)];
+  return t(`${sentenceCase(rule.en)}: ${right}`, `${rule["zh-CN"]}：${right}`);
+};
+
+/** whyNotJoined explains although with but, despite with a clause, or however after a comma. */
+const whyNotJoined = (wrong: string, _right: string, _shown: string, position: number): Text => {
+  if (position === 0)
+    return t(
+      "English uses one linking word for one contrast, so *although* and *but* never go together.",
+      "英语一个对比只用一个连接词，所以 *although* 和 *but* 不能同时用。",
+    );
+  if (linkerOf(wrong) === "despite")
+    return t(
+      "*despite* cannot take a clause with a verb; it needs a noun phrase or an *-ing* form.",
+      "*despite* 后面不能接带动词的从句，要接名词短语或 *-ing* 形式。",
+    );
+  return t(
+    "*however* cannot join two sentences with a comma; it needs a semicolon or a full stop before it and a comma after it.",
+    "*however* 不能只用逗号连接两个句子，前面要用分号或句号，后面要用逗号。",
+  );
+};
 
 const linkingWordsOfContrast: TopicDef = {
   id: "linking-words-of-contrast",
@@ -1268,9 +1334,7 @@ const linkingWordsOfContrast: TopicDef = {
         "Three words show contrast, and each is followed by a different structure:\n\n- *Although* (or *even though*, *though*) + a **clause** with a subject and a verb: *Although it was raining, we went for a walk.*\n- *Despite* (or *in spite of*) + a **noun phrase** or an **-ing form**: *Despite the rain, we went for a walk. Despite being tired, he finished the report.*\n- *However* joins two **separate sentences**. It comes after a full stop or a semicolon and is followed by a comma: *It was raining; however, we went for a walk.*\n\n*Despite it was raining* and *despite of the rain* are both wrong.",
         "三个词都表示对比，但后面接的结构不同：\n\n- *Although*（或 *even though*、*though*）后面接有主语和谓语的**从句**：*Although it was raining, we went for a walk.*\n- *Despite*（或 *in spite of*）后面接**名词短语**或 **-ing 形式**：*Despite the rain, we went for a walk. Despite being tired, he finished the report.*\n- *However* 连接两个**独立的句子**，前面用句号或分号，后面用逗号：*It was raining; however, we went for a walk.*\n\n*Despite it was raining* 和 *despite of the rain* 都是错的。",
       ),
-      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), contrastChoice, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（${contrastNote(fill(shown, right))}）`),
-      ),
+      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), contrastChoice, contrastWhy, whyNotContrast),
     ),
     point(
       "no-but",
@@ -1279,9 +1343,7 @@ const linkingWordsOfContrast: TopicDef = {
         "Chinese pairs *suīrán* with *dànshì* (虽然……但是……), but English uses only **one** linking word for one contrast. Choose *although* **or** *but*, never both:\n\n- *Although it was legal, it was unfair.* ✓\n- *It was legal, but it was unfair.* ✓\n- *Although it was legal, but it was unfair.* ✗\n\nAlso check the structure: *despite* never takes a clause, and *however* cannot join two clauses with only a comma.",
         "中文说“虽然……但是……”，英语一个对比只用**一个**连接词：*although* 和 *but* 只能选一个，不能同时用：\n\n- *Although it was legal, it was unfair.* ✓\n- *It was legal, but it was unfair.* ✓\n- *Although it was legal, but it was unfair.* ✗\n\n还要检查结构：*despite* 后面不接从句，*however* 也不能只用逗号连接两个分句。这是中国学生最常见的错误之一。",
       ),
-      choiceGenerator(t("Choose the correct sentence.", "选出正确的句子。"), sentenceChoice, (right) =>
-        t(right, `${right}（${contrastNote(right)}）`),
-      ),
+      choiceGenerator(t("Choose the correct sentence.", "选出正确的句子。"), sentenceChoice, joinedWhy, whyNotJoined),
     ),
     point(
       "write",
@@ -1294,7 +1356,7 @@ const linkingWordsOfContrast: TopicDef = {
         "sentence-pattern",
         t("Join the two sentences with the word in brackets.", "用括号里的词把两个句子连起来。"),
         contrastTyped,
-        (right) => t(right, `${right}（${contrastNote(right)}）`),
+        joinedWhy,
       ),
     ),
   ],

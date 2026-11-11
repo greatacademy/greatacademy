@@ -1,7 +1,7 @@
 // A1, unit 4: Food and Drink. Food, drinks, meals and favorite foods, countable and uncountable nouns, some and any,
 // and joining sentences with and, but and or.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { interleave, pairUp, sentenceCase, vocabularyTopic, word } from "../words.ts";
@@ -459,6 +459,42 @@ const countFixBank: readonly TypedItem[] = interleave([
   ),
 ]);
 
+/** countReason says why a noun takes a plural or stays as it is. */
+const countReason = (noun: string, right: string): Text =>
+  right === noun
+    ? t(`*${noun}* is a noun you do not count, so it takes no *-s* and no *a*`, `*${noun}* 是不可数名词，不加 *-s*，也不用 *a*`)
+    : t(
+        `*${noun}* is a noun you count, and here it means more than one, so it takes the plural *${right}*`,
+        `*${noun}* 是可数名词，这里指不止一个，所以用复数 *${right}*`,
+      );
+
+/** whyNotCount says what a wrong form of a food noun shows the learner misread. */
+const whyNotCount = (wrong: string, right: string, shown: string): Text => {
+  const noun = shown.match(/\((.*)\)$/u)?.[1] ?? "";
+  const uncountable = right === noun;
+  if (/^an? /u.test(wrong))
+    return uncountable
+      ? t(
+          `*${wrong}* puts *a* before a noun you do not count, but *a* is only for one thing you can count.`,
+          `*${wrong}* 在不可数名词前用了 *a*，可 *a* 只用于一个可数的东西。`,
+        )
+      : t(
+          `*${wrong}* is just one, but *some* and *Do you like...?* talk about more than one.`,
+          `*${wrong}* 只表示一个，可 *some* 和 *Do you like...?* 说的是不止一个。`,
+        );
+  if (uncountable)
+    return t(
+      `*${wrong}* adds *-s*, but *${noun}* is a noun you do not count, so it has no plural.`,
+      `*${wrong}* 加了 *-s*，可 *${noun}* 是不可数名词，没有复数。`,
+    );
+  if (wrong.endsWith("s"))
+    return t(
+      `*${wrong}* is not how this plural is spelled: after a consonant, *y* becomes *ies*.`,
+      `*${wrong}* 拼错了：辅音后面的 *y* 要变成 *ies*。`,
+    );
+  return t(`*${wrong}* is the form for one, but here the noun means more than one.`, `*${wrong}* 是单数形式，可这里的名词指不止一个。`);
+};
+
 const countableAndUncountable: TopicDef = {
   id: "countable-and-uncountable-nouns",
   title: t("Countable and Uncountable Nouns", "可数名词与不可数名词"),
@@ -481,10 +517,16 @@ const countableAndUncountable: TopicDef = {
         "Some nouns you can count: *an apple, two apples, some eggs*. Others you cannot: *rice, bread, meat, milk, water, juice, sugar, salt, soup*. They have no *-s* and no *a*: *some rice*, not *some rices* or *a rice*.\n\nAfter *some* and in *Do you like...?*, a noun you can count takes *-s*: *some apples*, *Do you like eggs?*",
         "有些名词可以数：*an apple、two apples、some eggs*。有些不能数：*rice、bread、meat、milk、water、juice、sugar、salt、soup*。它们不加 *-s*，也不用 *a*：说 *some rice*，不说 *some rices* 或 *a rice*。\n\n中文名词不分单复数，所以要记住：在 *some* 后面和 *Do you like...?* 里，可数名词要用复数：*some apples*、*Do you like eggs?*",
       ),
-      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), countChoiceBank, (right, shown) => {
-        const sentence = shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`);
-        return t(sentence, `${sentence}（${right.endsWith("s") ? "可数名词用复数" : "不可数名词不加 -s，也不用 a"}）`);
-      }),
+      choiceGenerator(
+        t("Choose the words for the gap.", "选出填入空白处的词。"),
+        countChoiceBank,
+        (right, shown) => {
+          const sentence = shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`);
+          const reason = countReason(shown.match(/\((.*)\)$/u)?.[1] ?? "", right);
+          return t(`${reason.en}: ${sentence}`, `${reason["zh-CN"]}：${sentence}`);
+        },
+        whyNotCount,
+      ),
     ),
     point(
       "fix",
@@ -493,9 +535,13 @@ const countableAndUncountable: TopicDef = {
         "Find the noun that is wrong: *rices*, *a bread* and *two apple* are all mistakes. Write the sentence right.",
         "找出用错的名词：*rices*、*a bread* 和 *two apple* 都是错的。把句子改正。",
       ),
-      typedGenerator("sentence-pattern", t("Fix the sentence.", "改正这个句子。"), countFixBank, (right) =>
-        t(right, `${right}（不可数名词不加 -s 和 a；数字后的可数名词用复数）`),
-      ),
+      typedGenerator("sentence-pattern", t("Fix the sentence.", "改正这个句子。"), countFixBank, (right) => {
+        const words = right.replace(/[.,?]/gu, "").split(" ");
+        const uncountable = uncountables.find((u) => words.includes(u));
+        const counted = countables.find(([, many]) => words.includes(many));
+        const reason = uncountable ? countReason(uncountable, uncountable) : countReason(counted?.[0] ?? "", counted?.[1] ?? "");
+        return t(`${reason.en}: ${right}`, `${reason["zh-CN"]}：${right}`);
+      }),
     ),
   ],
 };
@@ -569,6 +615,27 @@ const changeBank: readonly TypedItem[] = Array.from({ length: 39 }, (_, k): Type
   };
 });
 
+/** someReason says what kind of sentence a gap is in and which word that kind takes. */
+const someReason = (shown: string): Text =>
+  shown.endsWith("?")
+    ? t("This is a question, and a question takes *any*", "这是疑问句，疑问句用 *any*")
+    : shown.includes("n't")
+      ? t("*n't* makes this sentence negative, and a negative takes *any*", "*n't* 使这个句子成为否定句，否定句用 *any*")
+      : t("This is a statement that says something is there, so it takes *some*", "这是说明某物存在的肯定句，所以用 *some*");
+
+/** whyNotSome says what a wrong word for a some-or-any gap shows the learner misread. */
+const whyNotSome = (wrong: string, _right: string, shown: string): Text => {
+  const noun = shown.split("___ ")[1]?.split(" ")[0] ?? "";
+  if (wrong === "a")
+    return t(
+      `*a* goes only with one thing you can count, but *${noun}* is not one thing.`,
+      `*a* 只用于一个可数的东西，可 *${noun}* 不是单个的东西。`,
+    );
+  return wrong === "some"
+    ? t("*some* is for statements, but this sentence is a question or a negative.", "*some* 用于肯定句，可这个句子是疑问句或否定句。")
+    : t("*any* is for questions and negatives, but this sentence is a statement.", "*any* 用于疑问句和否定句，可这个句子是肯定句。");
+};
+
 const someAndAny: TopicDef = {
   id: "some-and-any",
   title: t("Some and Any", "some 和 any"),
@@ -591,21 +658,28 @@ const someAndAny: TopicDef = {
         "*some* in a statement: *There is some milk.* *There are some eggs.*\n\n*any* in a question or after *not*: *Is there any juice?* *There aren't any eggs.*\n\nBoth go with plurals (*eggs*) and with nouns you don't count (*milk*), never with *a*.",
         "肯定句用 *some*：*There is some milk.* *There are some eggs.*\n\n疑问句和否定句用 *any*：*Is there any juice?* *There aren't any eggs.*\n\n两者都可以接复数名词（*eggs*）和不可数名词（*milk*）。中文“一些”“什么”不随句型变化，英语却要根据句子是肯定、疑问还是否定来选择。",
       ),
-      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), someChoiceBank, (right, shown) =>
-        t(
-          shown.replace("___", `*${right}*`),
-          `${shown.replace("___", `*${right}*`)}（${right === "some" ? "肯定句用 some" : "疑问句和否定句用 any"}）`,
-        ),
+      choiceGenerator(
+        t("Choose the word for the gap.", "选出填入空白处的词。"),
+        someChoiceBank,
+        (right, shown) =>
+          t(
+            `${someReason(shown).en}: ${shown.replace("___", `*${right}*`)}`,
+            `${someReason(shown)["zh-CN"]}：${shown.replace("___", `*${right}*`)}`,
+          ),
+        whyNotSome,
       ),
     ),
     point(
       "type",
       t("Writing some or any", "写出 some 或 any"),
-      t("Type *some* for a statement, *any* for a question or a negative.", "肯定句写 *some*，疑问句或否定句写 *any*。"),
+      t(
+        "First see what kind of sentence it is. Type *some* when it is a statement, and *any* when it is a question or has *not* or *n't* in it.",
+        "先看句子是哪一种。肯定句写 *some*；疑问句，或者句子里有 *not*、*n't* 时，写 *any*。",
+      ),
       typedGenerator("word-form", t("Type the word for the gap.", "输入填入空白处的词。"), someTypedBank, (right, shown) =>
         t(
-          shown.replace("___", `*${right}*`),
-          `${shown.replace("___", `*${right}*`)}（${right === "some" ? "肯定句用 some" : "疑问句和否定句用 any"}）`,
+          `${someReason(shown).en}: ${shown.replace("___", `*${right}*`)}`,
+          `${someReason(shown)["zh-CN"]}：${shown.replace("___", `*${right}*`)}`,
         ),
       ),
     ),
@@ -617,7 +691,15 @@ const someAndAny: TopicDef = {
         "肯定句变成疑问句或否定句时，*some* 要变成 *any*：*There is some milk.* → *Is there any milk?* → *There isn't any milk.*",
       ),
       typedGenerator("sentence-pattern", t("Change the sentence.", "改写这个句子。"), changeBank, (right) =>
-        t(right, `${right}（疑问句和否定句中 some 变成 any）`),
+        right.endsWith("?")
+          ? t(
+              `A question puts *${right.split(" ")[0]}* before *there*, and in a question *some* becomes *any*: ${right}`,
+              `疑问句把 *${right.split(" ")[0]}* 放在 *there* 前面，疑问句里的 *some* 要变成 *any*：${right}`,
+            )
+          : t(
+              `A negative adds *n't* to *is* or *are*, and after *not* the word *some* becomes *any*: ${right}`,
+              `否定句在 *is* 或 *are* 后加 *n't*，在否定句里 *some* 要变成 *any*：${right}`,
+            ),
       ),
     ),
   ],
@@ -705,8 +787,28 @@ const joinTypedBank: readonly TypedItem[] = interleave([
   ),
 ]);
 
-const why = (right: string): string =>
-  right === "and" ? "and 表示补充" : right === "but" ? "but 表示两件事不一样或相反" : "or 表示二选一";
+/** joinReason says why a sentence takes and, but or or, in every locale. */
+const joinReason = (right: string): Text =>
+  right === "and"
+    ? t("The second part just adds one more fact, so join with *and*", "后半句只是再补充一件事，所以用 *and* 连接")
+    : right === "but"
+      ? t(
+          "The two parts are different, often one yes and one no, so join with *but*",
+          "前后两部分不一样，常常一个肯定一个否定，所以用 *but* 连接",
+        )
+      : t("The question offers a choice between two things, so join them with *or*", "这个问句是在两样东西中选一个，所以用 *or* 连接");
+
+/** whyNotJoin says what a wrong joining word shows the learner misread. */
+const whyNotJoin = (wrong: string, right: string): Text => {
+  if (wrong === "or") return t("*or* offers a choice, but this sentence states two facts.", "*or* 表示选择，可这个句子说的是两件事实。");
+  if (wrong === "and")
+    return right === "or"
+      ? t("*and* would ask for both together, but the question offers a choice of one.", "*and* 表示两样都要，可这个问句是要选其中一个。")
+      : t("*and* just adds a fact, but the two parts here are different.", "*and* 只是补充一件事，可这里前后两部分不一样。");
+  return right === "or"
+    ? t("*but* shows a difference, but this question offers a choice.", "*but* 表示转折，可这个问句是在提供选择。")
+    : t("*but* shows a difference, but the second part just adds a fact.", "*but* 表示转折，可后半句只是补充一件事。");
+};
 
 const joiningWithAndButOr: TopicDef = {
   id: "joining-with-and-but-or",
@@ -727,8 +829,15 @@ const joiningWithAndButOr: TopicDef = {
         "*and* adds one more thing: *Tom plays football, and Anna plays the piano.*\n\n*but* joins two things that are different, often one yes and one no: *I like tea, but I don't like coffee.*\n\n*or* gives a choice: *Do you want tea or coffee?*",
         "*and* 表示再加一件事：*Tom plays football, and Anna plays the piano.*\n\n*but* 连接两件不同的事，常常一个肯定一个否定：*I like tea, but I don't like coffee.*\n\n*or* 表示选择：*Do you want tea or coffee?*\n\n中文的“和”只连接名词，连接两个句子时英语要用 *and*；中文常说“虽然……但是……”，英语只用一个 *but*。",
       ),
-      choiceGenerator(t("Choose the word that joins the sentence.", "选出连接句子的词。"), joinChoiceBank, (right, shown) =>
-        t(shown.replace("___", `*${right}*`), `${shown.replace("___", `*${right}*`)}（${why(right)}）`),
+      choiceGenerator(
+        t("Choose the word that joins the sentence.", "选出连接句子的词。"),
+        joinChoiceBank,
+        (right, shown) =>
+          t(
+            `${joinReason(right).en}: ${shown.replace("___", `*${right}*`)}`,
+            `${joinReason(right)["zh-CN"]}：${shown.replace("___", `*${right}*`)}`,
+          ),
+        whyNotJoin,
       ),
     ),
     point(
@@ -738,9 +847,18 @@ const joiningWithAndButOr: TopicDef = {
         "Take away the period of the first sentence, put a comma and the joining word, and start the second part with a small letter, unless it begins with *I* or a name.\n\nTwo questions about a choice become one: *Do you want tea or coffee?*",
         "去掉第一个句子的句号，加上逗号和连接词，第二部分以小写字母开头，除非它以 *I* 或名字开头。\n\n两个关于选择的问句合成一个：*Do you want tea or coffee?*",
       ),
-      typedGenerator("sentence-pattern", t("Join the sentences.", "把句子连起来。"), joinTypedBank, (right) =>
-        t(right, `${right}（去掉第一句的句号，加逗号和连接词）`),
-      ),
+      typedGenerator("sentence-pattern", t("Join the sentences.", "把句子连起来。"), joinTypedBank, (right, shown) => {
+        const joiner = shown.match(/\((\w+)\)$/u)?.[1] ?? "";
+        return joiner === "or"
+          ? t(
+              `Two questions about a choice become one: keep the first question and add *or* and the other choice: ${right}`,
+              `两个关于选择的问句合成一个：保留第一个问句，再加 *or* 和另一个选项：${right}`,
+            )
+          : t(
+              `Drop the period of the first sentence, add a comma and *${joiner}*, and go on with a small letter unless it is *I* or a name: ${right}`,
+              `去掉第一句的句号，加逗号和 *${joiner}*，后半句以小写字母开头，除非是 *I* 或名字：${right}`,
+            );
+      }),
     ),
   ],
 };

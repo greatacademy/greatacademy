@@ -506,6 +506,20 @@ const sevenWhy: Record<GapKind, Text> = {
   ),
 };
 
+/** sevenMisses says what a sentence from elsewhere in the text fails to do in a gap of each kind. */
+const sevenMisses: Record<GapKind, Text> = {
+  opening: t("it does not name what this paragraph is about", "它没有点明本段讲的内容"),
+  closing: t("it does not sum up or follow from what comes before the gap", "它不能总结或承接空格前的内容"),
+  middle: t("it does not link the sentence before the gap to the one after it", "它不能把空格前后的两句连起来"),
+};
+
+/** whyNotSeven explains why a sentence from another paragraph does not fit a gap. */
+const whyNotSeven = (kind: GapKind, clue: string, otherClue: string): Text =>
+  t(
+    `This sentence belongs elsewhere in the text, beside *${otherClue}*. Here ${sevenMisses[kind].en}; the clue in this paragraph is *${clue}*.`,
+    `这个句子属于文中别处，与 *${otherClue}* 相关。放在这里，${sevenMisses[kind]["zh-CN"]}；本段的线索是 *${clue}*。`,
+  );
+
 /** sevenItems turns every paragraph of the texts into an item whose wrong options are three other sentences of its text. */
 function sevenItems(kinds: readonly GapKind[]): readonly SolvedChoice[] {
   const items: SolvedChoice[] = [];
@@ -513,10 +527,13 @@ function sevenItems(kinds: readonly GapKind[]): readonly SolvedChoice[] {
     paragraphs.forEach(([paragraph, right, kind, clue], i) => {
       if (!kinds.includes(kind)) return;
       const other = (k: number) => (paragraphs[(i + k) % paragraphs.length] as Gapped)[1];
+      const otherClue = (k: number) => (paragraphs[(i + k) % paragraphs.length] as Gapped)[3];
       items.push({
         shown: `**${title}**\n\n${shownGap(paragraph)}`,
         right,
         wrong: [other(1), other(3), other(5)],
+        whyNot: [1, 3, 5].map((k) => whyNotSeven(kind, clue, otherClue(k))),
+
         solution: joinText([
           sevenWhy[kind],
           t(`Here the clue is *${clue}*.`, `这里的线索是 *${clue}*。`),
@@ -823,6 +840,13 @@ const solvedCloze = ([shown, right, wrong, clue]: ClozeItem): SolvedChoice => ({
   shown: shownGap(shown),
   right,
   wrong,
+  whyNot: wrong.map((w) =>
+    t(
+      `*${w}* is good English, but read it with *${clue}*: the meaning no longer fits, so the gap takes **${right}**.`,
+      `*${w}* 本身没有错，但和 *${clue}* 一起读，意思就说不通了，所以空格填 **${right}**。`,
+    ),
+  ),
+
   solution: joinText([
     t(
       `The words *${clue}* decide the gap: only **${right}** fits them. The other words are possible English, but they do not make sense here.`,

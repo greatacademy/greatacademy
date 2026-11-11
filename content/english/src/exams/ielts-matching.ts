@@ -26,6 +26,23 @@ function headingItems(text: Lettered): readonly SolvedChoice[] {
       shown: `${shownText(text)}\n\n**Paragraph ${letter}**`,
       right,
       wrong: [...text.headings.filter((_, j) => j !== i), ...text.extra],
+      whyNot: [
+        ...text.headings
+          .map((_, j) => j)
+          .filter((j) => j !== i)
+          .map((j) =>
+            t(
+              `That heading sums up paragraph ${letters[j]}, not paragraph ${letter}, which is about "${right}".`,
+              `这个标题概括的是段落 ${letters[j]}，而不是段落 ${letter}；段落 ${letter} 讲的是“${right}”。`,
+            ),
+          ),
+        ...text.extra.map(() =>
+          t(
+            `No paragraph is about this. It sounds close to the subject of the text, but paragraph ${letter} is about "${right}".`,
+            `没有哪个段落讲这个内容。它听起来和文章主题相近，但段落 ${letter} 讲的是“${right}”。`,
+          ),
+        ),
+      ],
       solution: t(
         `"${right}" sums up the whole of paragraph ${letter}. A heading that matches only one detail, or a word you can see in the paragraph, is a trap: the heading must cover what every sentence is there to say.`,
         `“${right}”概括了段落 ${letter} 的全部内容。只对应某个细节或只是含有段落中某个词的标题是陷阱：标题必须涵盖段落中每个句子共同要表达的意思。`,
@@ -38,6 +55,11 @@ function detailItems(text: Lettered): readonly LabelledItem[] {
   return text.details.map(([detail, evidence], i) => ({
     shown: `${shownText(text)}\n\n**Information:** ${detail}`,
     right: i,
+    whyNot: (label: number) =>
+      t(
+        `Paragraph ${letters[label]} is about "${text.headings[label]}" and does not give this detail. It is in paragraph ${letters[i]}.`,
+        `段落 ${letters[label]} 讲的是“${text.headings[label]}”，没有提到这个细节。它在段落 ${letters[i]}。`,
+      ),
     solution: t(
       `Paragraph ${letters[i]}: "${evidence}" The information is a detail in other words, not the main idea of the paragraph.`,
       `段落 ${letters[i]}："${evidence}" 这条信息是换了说法的细节，而不是该段的主旨。`,

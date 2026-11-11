@@ -442,11 +442,24 @@ const presentSimple: TopicDef = {
         "To say what is true or what happens often, use the present simple. With *I*, *you*, *we*, *they* and more than one person, the verb is plain: *I live in Beijing. We speak Chinese. My friends play football.*",
         "说明真实情况或经常发生的事，用一般现在时。主语是 *I*、*you*、*we*、*they* 或多个人时，动词用原形：*I live in Beijing. We speak Chinese. My friends play football.*",
       ),
-      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), presentChoiceBank, (right, shown) =>
-        t(
-          shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`),
-          `${shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`)}（一般现在时，动词用原形）`,
-        ),
+      choiceGenerator(
+        t("Choose the words for the gap.", "选出填入空白处的词。"),
+        presentChoiceBank,
+        (right, shown) =>
+          t(
+            `With *${shown.split(" ___")[0]}*, the present simple uses the plain verb, with no ending and no *am* or *are*: ${shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`)}`,
+            `主语是 *${shown.split(" ___")[0]}* 时，一般现在时用动词原形，不加词尾，也不加 *am* 或 *are*：${shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`)}`,
+          ),
+        (wrong, _right, _shown, position) =>
+          position === 0
+            ? t(
+                `*${wrong}* puts a form of *be* before the verb, but a sentence that already has a verb needs no *am* or *are*.`,
+                `*${wrong}* 在动词前加了 *be*，可句子已经有动词，就不需要 *am* 或 *are*。`,
+              )
+            : t(
+                `*${wrong}* is the *-ing* form, which cannot be the verb of a sentence alone; what is true or usual takes the plain verb.`,
+                `*${wrong}* 是 *-ing* 形式，不能单独作句子的动词；说明真实或经常的情况要用动词原形。`,
+              ),
       ),
     ),
     point(
@@ -456,9 +469,14 @@ const presentSimple: TopicDef = {
         "A sentence with a verb like *live*, *speak* or *like* needs no *am*, *is* or *are*. Not *I am live in Beijing.* but *I live in Beijing.*",
         "句子里已经有 *live*、*speak*、*like* 这样的动词时，就不再需要 *am*、*is*、*are*。说中文的人学了 *I am* 以后，常写出 *I am live in Beijing.*，正确的是 *I live in Beijing.*",
       ),
-      typedGenerator("sentence", t("Fix the sentence.", "改正这个句子。"), presentTypedBank, (right, shown) =>
-        t(`${shown} → ${right}`, `${shown} → ${right}（已有动词，去掉 am 或 are）`),
-      ),
+      typedGenerator("sentence", t("Fix the sentence.", "改正这个句子。"), presentTypedBank, (right, shown) => {
+        const be = shown.includes(" am ") ? "am" : "are";
+        const verb = shown.split(` ${be} `)[1]?.split(" ")[0] ?? "";
+        return t(
+          `The sentence already has the verb *${verb}*, so *${be}* must go: ${shown} → ${right}`,
+          `句子里已经有动词 *${verb}*，所以要去掉 *${be}*：${shown} → ${right}`,
+        );
+      }),
     ),
   ],
 };

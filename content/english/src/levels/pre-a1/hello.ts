@@ -1,6 +1,7 @@
 // Pre-A1, unit 1: Hello! Greetings, the people words I, you, he and she, and the verb be.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
+
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { interleave, pairUp, vocabularyTopic, word } from "../words.ts";
@@ -246,6 +247,19 @@ const shortFormBank: readonly ChoiceItem[] = pairUp(35, subjects, ["happy", "her
   },
 );
 
+/** beRule says which subjects take a form of be, in every locale. */
+const beRule: Record<string, Text> = {
+  am: t("*am* goes only with *I*", "*am* 只跟 *I* 连用"),
+  is: t(
+    "*is* goes with one person or thing, like *he*, *she*, *it* or *Tom*",
+    "*is* 跟单个的人或东西连用，比如 *he*、*she*、*it* 或 *Tom*",
+  ),
+  are: t("*are* goes with *you*, *we*, *they* and more than one", "*are* 跟 *you*、*we*、*they* 和多个的人或东西连用"),
+};
+
+/** beSubject finds the subject of a gapped sentence, the words before the gap. */
+const beSubject = (shown: string) => shown.split(" ___")[0] ?? shown;
+
 const theVerbBe: TopicDef = {
   id: "the-verb-be",
   title: t("Am, Is and Are", "am、is 和 are"),
@@ -262,8 +276,19 @@ const theVerbBe: TopicDef = {
         "*I am*. *He is*, *she is*, *it is*, and one person or thing *is*. *You are*, *we are*, *they are*, and more than one *are*.\n\n*I am happy. Tom is at home. The dogs are here.*",
         "*I* 后面用 *am*。*he*、*she*、*it* 和单个的人或东西后面用 *is*。*you*、*we*、*they* 和多个的人或东西后面用 *are*。\n\n*I am happy. Tom is at home. The dogs are here.*",
       ),
-      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), beChoiceBank, (right, shown) =>
-        t(`${shown.replace("___", `*${right}*`)}`, `${shown.replace("___", `*${right}*`)} 这里用 *${right}*。`),
+      choiceGenerator(
+        t("Choose the word for the gap.", "选出填入空白处的词。"),
+        beChoiceBank,
+        (right, shown) =>
+          t(
+            `The subject is *${beSubject(shown)}*, and ${beRule[right]?.en}: ${shown.replace("___", `*${right}*`)}`,
+            `主语是 *${beSubject(shown)}*，${beRule[right]?.["zh-CN"]}：${shown.replace("___", `*${right}*`)}`,
+          ),
+        (wrong, _right, shown) =>
+          t(
+            `${beRule[wrong]?.en}, but the subject here is *${beSubject(shown)}*.`,
+            `${beRule[wrong]?.["zh-CN"]}，可这里的主语是 *${beSubject(shown)}*。`,
+          ),
       ),
     ),
     point(
@@ -277,7 +302,11 @@ const theVerbBe: TopicDef = {
         "sentence-pattern",
         t("A word is missing. Write the sentence with am, is or are.", "句子缺了一个词。用 am、is 或 are 把句子写完整。"),
         missingBeBank,
-        (right) => t(`${right} The sentence needs a form of *be*.`, `${right} 这个句子需要 *be* 的某种形式。`),
+        (right, shown) =>
+          t(
+            `*${shown}* has no verb, and an English sentence needs one. To say how or where someone is, add *am*, *is* or *are*: ${right}`,
+            `*${shown}* 没有动词，而英语句子必须有动词。说明人怎么样或在哪里，要加上 *am*、*is* 或 *are*：${right}`,
+          ),
       ),
     ),
     point(
@@ -287,8 +316,24 @@ const theVerbBe: TopicDef = {
         "In speaking and in friendly writing, *am*, *is* and *are* get short: *I'm*, *he's*, *she's*, *it's*, *you're*, *we're*, *they're*. The mark ' stands for the missing letter.",
         "口语和非正式书面语中，*am*、*is*、*are* 常常缩写：*I'm*、*he's*、*she's*、*it's*、*you're*、*we're*、*they're*。撇号 ' 代替省掉的字母。",
       ),
-      choiceGenerator(t("Choose the short form of the sentence.", "选出这个句子的缩写形式。"), shortFormBank, (right, shown) =>
-        t(`${shown} → ${right}`, `${shown} → ${right}（缩写形式）`),
+      choiceGenerator(
+        t("Choose the short form of the sentence.", "选出这个句子的缩写形式。"),
+        shortFormBank,
+        (right, shown) =>
+          t(
+            `The short form joins the subject and the verb, and the mark ' stands for the letters left out: ${shown} → ${right}`,
+            `缩写形式把主语和动词连在一起，撇号 ' 代替省掉的字母：${shown} → ${right}`,
+          ),
+        (_wrong, _right, _shown, position) =>
+          position === 0
+            ? t(
+                "This leaves out the mark ': a short form always shows the missing letter with '.",
+                "这里漏了撇号 '：缩写形式总要用 ' 表示省掉的字母。",
+              )
+            : t(
+                "This short form stands for a different verb: *'s* is *is* and *'re* is *are*, so it does not match the sentence.",
+                "这个缩写代表的是另一个动词：*'s* 是 *is*，*'re* 是 *are*，和原句的动词不一致。",
+              ),
       ),
     ),
   ],

@@ -1,7 +1,7 @@
 // B1, unit 11: Money and Consumers. Personal finance, consumers, value, giving and sharing, and shopping online;
 // gerunds and infinitives; writing a letter of complaint.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
@@ -617,6 +617,59 @@ const prepositionChoice: readonly ChoiceItem[] = [
   ["She dreams of ___ a famous singer. (become)", "becoming", ["to become", "become"]],
 ];
 
+const prepositions = new Set(["at", "of", "in", "about", "for", "by", "without", "before", "after", "on", "with", "to"]);
+
+/** formTrigger finds the word before the gap that decides the form, and whether it is a preposition. */
+function formTrigger(shown: string): readonly [string, boolean] {
+  const words = (shown.split("___")[0] ?? "").trim().split(" ");
+  const last = (words.at(-1) ?? "").toLowerCase();
+  const before = (words.at(-2) ?? "").toLowerCase();
+  if (last === "up") return [`${before} up`, false];
+  if (last === "to") return [before === "forward" ? "look forward to" : before === "used" ? "be used to" : `${before} to`, true];
+
+  if (last === "of" && before === "instead") return ["instead of", true];
+  return [last, prepositions.has(last)];
+}
+
+/** formRule names the rule that picks -ing or to after the word before the gap. */
+function formRule(right: string, shown: string): Text {
+  const [word, preposition] = formTrigger(shown);
+  if (preposition)
+    return word.endsWith(" to")
+      ? t(
+          `In *${word}*, *to* is a preposition, and a verb after a preposition takes *-ing*`,
+          `*${word}* 里的 *to* 是介词，介词后的动词用 *-ing*`,
+        )
+      : t(`*${word}* is a preposition, and a verb after a preposition takes *-ing*`, `*${word}* 是介词，介词后的动词用 *-ing*`);
+  return right.startsWith("to ")
+    ? t(`*${word}* is a verb that takes *to* and the base form`, `*${word}* 后面接 *to* 加动词原形`)
+    : t(`*${word}* is a verb that takes the *-ing* form`, `*${word}* 后面接动词的 *-ing* 形式`);
+}
+
+/** gerundWhy explains -ing or to in the gap of shown. */
+const gerundWhy = (right: string, shown: string): Text => {
+  const rule = formRule(right, shown);
+  return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+};
+
+/** whyNotGerund explains a wrong form: to where -ing belongs, -ing where to belongs, or the base form. */
+const whyNotGerund = (wrong: string, right: string, shown: string): Text => {
+  const rule = formRule(right, shown);
+  const [word, preposition] = formTrigger(shown);
+  let first: Text;
+  if (wrong.startsWith("to "))
+    first = preposition
+      ? t(`*to* and the base form never follow a preposition.`, "介词后面不能接 *to* 加动词原形。")
+      : t(`*${word}* does not take *to*.`, `*${word}* 后面不接 *to*。`);
+  else if (wrong.endsWith("ing")) first = t(`*${word}* does not take the *-ing* form.`, `*${word}* 后面不接 *-ing* 形式。`);
+  else
+    first = t(
+      `*${wrong}* is the base form alone, which cannot follow *${word}*.`,
+      `*${wrong}* 只是动词原形，不能直接跟在 *${word}* 后面。`,
+    );
+  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+};
+
 const gerundsAndInfinitives: TopicDef = {
   id: "gerunds-and-infinitives",
   title: t("Gerunds and Infinitives", "动名词和不定式"),
@@ -639,8 +692,11 @@ const gerundsAndInfinitives: TopicDef = {
         "When one verb follows another, the first verb decides the form of the second:\n\n- **-ing** after *enjoy, avoid, finish, mind, suggest, keep, practice, imagine, consider, miss, give up*: *I enjoy **shopping**. Do you mind **closing** the window?*\n- **to** + base form after *afford, decide, hope, plan, agree, refuse, promise, manage, offer, learn, expect, pretend, want, need, would like*: *I can't afford **to buy** it. We decided **to stay**.*\n\nThere is no rule that tells you which: learn each verb with its form. A useful hint: many *to* verbs look forward to a future action (*hope, plan, decide, promise*).",
         "一个动词后面接另一个动词时，由第一个动词决定第二个的形式：\n\n- *enjoy, avoid, finish, mind, suggest, keep, practice, imagine, consider, miss, give up* 后接 **-ing**：*I enjoy **shopping**. Do you mind **closing** the window?*\n- *afford, decide, hope, plan, agree, refuse, promise, manage, offer, learn, expect, pretend, want, need, would like* 后接 **to** + 原形：*I can't afford **to buy** it. We decided **to stay**.*\n\n没有规则能告诉你用哪一种，要把每个动词和它的形式一起记。一个有用的提示：许多接 *to* 的动词指向将来的动作（*hope, plan, decide, promise*）。中文“喜欢买东西”“决定留下”里动词不变形，英语的第二个动词要变成 -ing 或 to + 原形。",
       ),
-      choiceGenerator(t("Choose the right form of the verb in brackets.", "选出括号中动词的正确形式。"), gerundChoice, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（${right.startsWith("to ") ? "这个动词后接 to + 原形" : "这个动词后接 -ing"}）`),
+      choiceGenerator(
+        t("Choose the right form of the verb in brackets.", "选出括号中动词的正确形式。"),
+        gerundChoice,
+        gerundWhy,
+        whyNotGerund,
       ),
     ),
     point(
@@ -653,7 +709,8 @@ const gerundsAndInfinitives: TopicDef = {
       choiceGenerator(
         t("Choose the right form of the verb in brackets.", "选出括号中动词的正确形式。"),
         prepositionChoice,
-        (right, shown) => t(fill(shown, right), `${fill(shown, right)}（介词后用 -ing）`),
+        gerundWhy,
+        whyNotGerund,
       ),
     ),
     point(
@@ -663,12 +720,7 @@ const gerundsAndInfinitives: TopicDef = {
         "Type the right form of the verb in brackets: the **-ing** form (*shopping, making, splitting*) or ***to*** + the base form (*to buy, to stay*).\n\nRemember the spelling of -ing: drop a final *-e* (*make → making*), and double a final consonant after one short vowel (*split → splitting, get → getting*).",
         "输入括号中动词的正确形式：**-ing** 形式（*shopping, making, splitting*）或 ***to*** + 原形（*to buy, to stay*）。\n\n注意 -ing 的拼写：去掉词尾的 *-e*（*make → making*），单个短元音后的词尾辅音要双写（*split → splitting, get → getting*）。",
       ),
-      typedGenerator(
-        "word-form",
-        t("Type the right form of the verb in brackets.", "输入括号中动词的正确形式。"),
-        gerundTyped,
-        (right, shown) => t(fill(shown, right), `${fill(shown, right)}（${right.startsWith("to ") ? "这里用 to + 原形" : "这里用 -ing"}）`),
-      ),
+      typedGenerator("word-form", t("Type the right form of the verb in brackets.", "输入括号中动词的正确形式。"), gerundTyped, gerundWhy),
     ),
   ],
 };

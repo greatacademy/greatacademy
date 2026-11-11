@@ -1,7 +1,7 @@
 // B1, unit 2: Work and Careers. Applying for a job, the workplace, business, getting things done, professions, qualities
 // at work, the office and linking words; used to and the present perfect continuous; a formal email judged by a model.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
@@ -843,15 +843,52 @@ const usedToTyped: readonly TypedItem[] = interleave([
   ),
 ]);
 
-/** usedNote explains in Chinese why a sentence takes used to or use to. */
-function usedNote(sentence: string): string {
-  if (sentence.includes("didn't") || sentence.startsWith("Did ")) return "否定句和疑问句里已经有 did，后面用原形 use to，不用 used to";
-  return "肯定句用 used to 加动词原形，表示过去的习惯或状态，现在已经不这样了";
+/** usedRule names why a sentence takes used to or use to. */
+function usedRule(sentence: string): Text {
+  if (sentence.includes("didn't") || sentence.includes("did not"))
+    return t(
+      "In a negative, *didn't* already carries the past, so it is *use to*, with no *d*",
+      "否定句里 *didn't* 已经表示过去，所以用 *use to*，不加 *d*",
+    );
+  if (sentence.startsWith("Did "))
+    return t(
+      "In a question, *did* already carries the past, so it is *use to*, with no *d*",
+      "疑问句里 *did* 已经表示过去，所以用 *use to*，不加 *d*",
+    );
+  return t(
+    "A past habit or state that has ended takes *used to* and the base form",
+    "过去的习惯或状态、现在已经不这样了，用 *used to* 加动词原形",
+  );
 }
+
+/** usedWhy puts the rule of used to before a sentence. */
+const usedWhy = (sentence: string, shown: string): Text => {
+  const rule = usedRule(shown);
+  return t(`${rule.en}: ${sentence}`, `${rule["zh-CN"]}：${sentence}`);
+};
+
+/** whyNotUsed explains a wrong form of used to. */
+const whyNotUsed = (wrong: string, _right: string, shown: string): Text => {
+  const rule = usedRule(shown);
+  let first: Text;
+  if (wrong === "was used to")
+    first = t(
+      "*was used to* means being accustomed to something, and it is followed by *-ing*, not the base form.",
+      "*was used to* 表示“习惯于”，后面接 *-ing*，不接动词原形。",
+    );
+  else if (wrong === "use to") first = t("*use to* without *did* has no past.", "没有 *did* 时，*use to* 没有表示过去。");
+  else if (wrong === "used to")
+    first = t(
+      "*used to* would show the past twice, once in *did* and once in *-d*.",
+      "*used to* 会把过去表示两次：*did* 一次，*-d* 一次。",
+    );
+  else first = t(`*${wrong}* is not a form of *used to* that goes after *did*.`, `*${wrong}* 不能放在 *did* 后面。`);
+  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+};
 
 const usedTo: TopicDef = {
   id: "used-to",
-  title: t("Used To", "used to"),
+  title: t("Used To", "used to：过去常常"),
   summary: t(
     "I used to live in a village, but now I live in a city. Used to tells of a past habit or state that has ended; after did, it is use to.",
     "I used to live in a village, but now I live in a city。used to 表示过去的习惯或状态，现在已经不这样了；did 后面用 use to。",
@@ -871,8 +908,11 @@ const usedTo: TopicDef = {
         "*Used to* + the base form of a verb tells of something that was true or happened often in the past, but is not true now.\n\n- *I **used to** live in a village.* (Now I live in a city.)\n- *There **used to** be a cinema here.*\n\nIn negatives and questions, *did* carries the past, so the verb is *use to*, with no *d*:\n\n- *I **didn't use to** like coffee.*\n- ***Did** you **use to** play the piano?*\n\nDo not add *was*: not *I was used to live*.",
         "*used to* 加动词原形，表示过去常常发生或过去是这样、但现在已经不这样的事情，相当于中文的“以前常常……”“过去曾经……”。\n\n- *I **used to** live in a village.*（现在住在城市。）\n- *There **used to** be a cinema here.*\n\n否定句和疑问句中，过去时已经由 *did* 表示，所以动词用 *use to*，不加 *d*：\n\n- *I **didn't use to** like coffee.*\n- ***Did** you **use to** play the piano?*\n\n不要加 *was*：不能说 *I was used to live*。（*be used to doing* 是“习惯于做……”，是另一个意思。）",
       ),
-      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), usedToChoice, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（${usedNote(shown)}）`),
+      choiceGenerator(
+        t("Choose the words for the gap.", "选出填入空白处的词。"),
+        usedToChoice,
+        (right, shown) => usedWhy(fill(shown, right), shown),
+        whyNotUsed,
       ),
     ),
     point(
@@ -886,7 +926,7 @@ const usedTo: TopicDef = {
         "sentence-pattern",
         t("Write a sentence with used to from the note.", "根据笔记用 used to 写一个句子。"),
         usedToTyped,
-        (right) => t(right, `${right}（${usedNote(right)}）`),
+        (right) => usedWhy(right, right),
       ),
     ),
   ],
@@ -963,12 +1003,60 @@ const ppcTyped: readonly TypedItem[] = interleave(
   ),
 );
 
-/** ppcNote explains in Chinese the form of the present perfect continuous or the choice of for and since. */
-function ppcNote(right: string): string {
-  if (right === "since") return "since 后面是开始的时间点（一个日子、一年、一个时刻）";
-  if (right === "for") return "for 后面是一段时间（多少分钟、天、年）";
-  return "从过去开始、一直持续到现在的动作，用 have/has been 加动词 -ing，不用现在进行时";
+/** ppcRule names the form of the present perfect continuous with since or for. */
+function ppcRule(sentence: string): Text {
+  const time = /.*\b((?:since|for) .+?)\.?$/u.exec(sentence)?.[1] ?? "";
+  return t(
+    `The action began in the past and is still going on (*${time}*), so use *have* or *has*, *been* and the *-ing* form`,
+    `动作从过去开始、现在还在进行（*${time}*），所以用 *have / has*、*been* 加 *-ing*`,
+  );
 }
+
+/** ppcWhy puts the rule of the present perfect continuous before a sentence. */
+const ppcWhy = (sentence: string, shown: string): Text => {
+  const rule = ppcRule(shown);
+  return t(`${rule.en}: ${sentence}`, `${rule["zh-CN"]}：${sentence}`);
+};
+
+/** whyNotPpc explains the present continuous, a missing have, or a missing been. */
+const whyNotPpc = (wrong: string, right: string, shown: string): Text => {
+  const rule = ppcRule(shown);
+  const [first0 = ""] = wrong.split(" ");
+  let first: Text;
+  if (/^(am|is|are)$/u.test(first0) && wrong.includes(" been "))
+    first = t(
+      `*${first0}* cannot go with *been*; the present perfect takes *${right.split(" ")[0]}*.`,
+      `*${first0}* 不能和 *been* 连用，完成时要用 *${right.split(" ")[0]}*。`,
+    );
+  else if (/^(am|is|are)$/u.test(first0))
+    first = t(
+      `*${wrong}* is the present continuous, which does not go with *since* or *for*.`,
+      `*${wrong}* 是现在进行时，不能和 *since* 或 *for* 连用。`,
+    );
+  else first = t(`*${wrong}* leaves out *been*.`, `*${wrong}* 漏掉了 *been*。`);
+  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+};
+
+/** forSinceRule names why a time takes since or for. */
+const forSinceRule = (right: string, shown: string): Text => {
+  const time = (shown.split("___ ")[1] ?? "").replace(/\.$/u, "");
+  return right === "since"
+    ? t(`*${time}* is the point when it began, so it takes *since*`, `*${time}* 是开始的时间点，所以用 *since*`)
+    : t(`*${time}* is a length of time, so it takes *for*`, `*${time}* 是一段时间，所以用 *for*`);
+};
+
+/** whyNotForSince explains for, since, from or during in the wrong place. */
+const whyNotForSince = (wrong: string, right: string, shown: string): Text => {
+  const rule = forSinceRule(right, shown);
+  const use: Record<string, Text> = {
+    for: t("*for* goes before a length of time.", "*for* 用在一段时间前。"),
+    since: t("*since* goes before the point when something began.", "*since* 用在开始的时间点前。"),
+    from: t("*from* needs *to* after it and does not go with this tense.", "*from* 需要和 *to* 搭配，不能和这个时态连用。"),
+    during: t("*during* says when something happened, not how long it has lasted.", "*during* 表示在某段时间里，不表示持续了多久。"),
+  };
+  const first = use[wrong] ?? t(`*${wrong}* is wrong here.`, `这里不能用 *${wrong}*。`);
+  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+};
 
 const presentPerfectContinuous: TopicDef = {
   id: "present-perfect-continuous",
@@ -992,8 +1080,11 @@ const presentPerfectContinuous: TopicDef = {
         "For an action that began in the past and is still going on now, use *have* or *has* + *been* + the *-ing* form.\n\n- *She **has been working** here since May.* (She started in May and still works here.)\n- *I **have been waiting** for twenty minutes.*\n\nDo not use the present continuous with *since* or *for*: not *She is working here since May*. And do not leave out *have*: not *She been working*.",
         "从过去开始、一直持续到现在（可能还会继续）的动作，用 *have / has* + *been* + 动词 *-ing*。\n\n- *She **has been working** here since May.*（她从五月开始在这里工作，现在还在。）\n- *I **have been waiting** for twenty minutes.*\n\n中文说“她从五月起就一直在这里工作”“我已经等了二十分钟了”，动词没有变化，靠“一直”“已经……了”表达；英语却必须用 *has been working*。有 *since* 或 *for* 时不要用现在进行时：不能说 *She is working here since May*。也不要漏掉 *have*：不能说 *She been working*。",
       ),
-      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), ppcChoice, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（${ppcNote(right)}）`),
+      choiceGenerator(
+        t("Choose the words for the gap.", "选出填入空白处的词。"),
+        ppcChoice,
+        (right, shown) => ppcWhy(fill(shown, right), shown),
+        whyNotPpc,
       ),
     ),
     point(
@@ -1003,8 +1094,14 @@ const presentPerfectContinuous: TopicDef = {
         "*Since* gives the point when something began: *since May, since 2020, since eight o'clock, since she was six*.\n\n*For* gives how long it has lasted: *for six months, for five years, for twenty minutes*.\n\nDo not use *from* or *during* here: not *I have been waiting from eight o'clock*.",
         "*since* 后面是开始的时间点：*since May, since 2020, since eight o'clock, since she was six*。\n\n*for* 后面是持续了多长时间：*for six months, for five years, for twenty minutes*。\n\n这里不要用 *from* 或 *during*：不能说 *I have been waiting from eight o'clock*。中文“从八点起”容易让人写成 *from*。",
       ),
-      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), forSinceChoice, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（${ppcNote(right)}）`),
+      choiceGenerator(
+        t("Choose the word for the gap.", "选出填入空白处的词。"),
+        forSinceChoice,
+        (right, shown) => {
+          const rule = forSinceRule(right, shown);
+          return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+        },
+        whyNotForSince,
       ),
     ),
     point(
@@ -1018,7 +1115,7 @@ const presentPerfectContinuous: TopicDef = {
         "sentence-pattern",
         t("Write the sentence in the present perfect continuous.", "用现在完成进行时写出这个句子。"),
         ppcTyped,
-        (right) => t(right, `${right}（${ppcNote("")}）`),
+        (right) => ppcWhy(right, right),
       ),
     ),
   ],

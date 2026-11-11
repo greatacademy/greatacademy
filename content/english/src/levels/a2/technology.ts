@@ -1,7 +1,7 @@
 // A2, unit 10: Technology. Devices, using them, staying in touch and machines; just, already and yet; an email to a
 // friend judged by a model.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { interleave, pairUp, vocabularyTopic, word } from "../words.ts";
@@ -466,6 +466,50 @@ const jayTypedBank: readonly TypedItem[] = pairUp(52, jaySubjects, doneThings).m
   },
 );
 
+/** jayReason says why a sentence takes just, already or yet, and where the word goes. */
+const jayReason = (word: string, sentence: string): Text => {
+  if (word === "yet")
+    return sentence.endsWith("?")
+      ? t("It is a question about up to now, so *yet* goes at the end", "这是询问到现在为止的情况的问句，所以 *yet* 放在句末")
+      : t(
+          "The sentence has *not*: it is not done up to now, so *yet* goes at the end",
+          "句子里有 *not*，到现在还没做，所以 *yet* 放在句末",
+        );
+  if (word === "already")
+    return t(
+      "It was done before now, sooner than you might think, so *already* goes between *have* and the past participle",
+      "这件事在此之前就已经做了，比想象的早，所以 *already* 放在 *have* 和过去分词之间",
+    );
+  return t(
+    "It was done a very short time ago, so *just* goes between *have* and the past participle",
+    "这件事刚刚做完，所以 *just* 放在 *have* 和过去分词之间",
+  );
+};
+
+/** whyNotJay explains a wrong word among just, already, yet, ever and never. */
+const whyNotJay = (wrong: string, right: string, shown: string): Text => {
+  if (wrong === "yet")
+    return t(
+      "*yet* goes in questions and in sentences with *not*, but this sentence says the thing is done.",
+      "*yet* 用在疑问句和否定句里，但这句说的是事情已经做了。",
+    );
+  if (wrong === "ever")
+    return t(
+      "*ever* asks about any time in your life, in questions. This sentence says when the thing was done.",
+      "*ever* 用在疑问句里，问一生中任何时候。这句说的是事情什么时候做的。",
+    );
+  if (wrong === "never")
+    return t(
+      "*never* goes before the past participle and makes a statement. A question about up to now ends with *yet*.",
+      "*never* 放在过去分词前面，用于陈述句。询问到现在为止的情况，句末用 *yet*。",
+    );
+  const reason = jayReason(right, shown);
+  return t(
+    `*${wrong}* goes between *have* and the past participle, not at the end. ${reason.en}.`,
+    `*${wrong}* 放在 *have* 和过去分词之间，不放在句末。${reason["zh-CN"]}。`,
+  );
+};
+
 const presentPerfectJustAlreadyYet: TopicDef = {
   id: "present-perfect-with-just-already-and-yet",
   title: t("Just, Already and Yet", "just、already 和 yet"),
@@ -488,11 +532,14 @@ const presentPerfectJustAlreadyYet: TopicDef = {
         "These three words go with the present perfect:\n\n- *just* means *a very short time ago*. It goes between *have* and the verb: *I've just sent it.*\n- *already* means *before now*, often sooner than you expected. It goes between *have* and the verb: *Don't worry. I've already paid.*\n- *yet* means *up to now*. It goes in questions and in sentences with *not*, at the end: *Have you finished yet? I haven't finished yet.*",
         "这三个词常和现在完成时一起用：\n\n- *just* 意思是“刚刚”，放在 *have* 和动词之间：*I've just sent it.*\n- *already* 意思是“已经”，常常比预想的早，放在 *have* 和动词之间：*Don't worry. I've already paid.*\n- *yet* 意思是“到现在为止”，用在疑问句和否定句的末尾：*Have you finished yet? I haven't finished yet.*\n\n中文“还没……”对应 *haven't ... yet*，“已经……了”对应 *have already ...*。",
       ),
-      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), justBank, (right, shown) =>
-        t(
-          fill(shown, right),
-          `${fill(shown, right)}（${right === "yet" ? "疑问句和否定句末尾用 yet" : right === "already" ? "already 表示“已经”，放在 have 和动词之间" : "just 表示“刚刚”，放在 have 和动词之间"}）`,
-        ),
+      choiceGenerator(
+        t("Choose the word for the gap.", "选出填入空白处的词。"),
+        justBank,
+        (right, shown) => {
+          const reason = jayReason(right, shown);
+          return t(`${reason.en}: ${fill(shown, right)}`, `${reason["zh-CN"]}：${fill(shown, right)}`);
+        },
+        whyNotJay,
       ),
     ),
     point(
@@ -502,9 +549,14 @@ const presentPerfectJustAlreadyYet: TopicDef = {
         "Write the sentence from the note with *have* or *has* and the past participle. *just* and *already* go before the participle: *She has just sent the email.* *yet* goes at the end of a question or a sentence with *not*: *Have you paid the bill yet? Tom hasn't read the instructions yet.* Do not use *did* with the past participle.",
         "根据笔记写句子，用 *have / has* 加过去分词。*just* 和 *already* 放在过去分词前面：*She has just sent the email.* *yet* 放在疑问句或否定句的末尾：*Have you paid the bill yet? Tom hasn't read the instructions yet.* 不要用 *did* 加过去分词。",
       ),
-      typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), jayTypedBank, (right) =>
-        t(right, `${right}（have / has + just / already + 过去分词；……yet 放在句末）`),
-      ),
+      typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), jayTypedBank, (right) => {
+        const word = right.includes(" just ") ? "just" : right.includes(" already ") ? "already" : "yet";
+        const reason = jayReason(word, right);
+        return t(
+          `${reason.en}, and the verb is *have* or *has* with the past participle: ${right}`,
+          `${reason["zh-CN"]}，动词用 *have / has* 加过去分词：${right}`,
+        );
+      }),
     ),
   ],
 };

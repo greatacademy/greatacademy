@@ -1,7 +1,7 @@
 // A2, unit 3: Neighbors and Community. The neighborhood, helping out, people around us, describing places, and mine
 // and myself; possessive pronouns; comparisons judged by rules and a place described for a model.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { interleave, pairUp, vocabularyTopic, word } from "../words.ts";
@@ -526,6 +526,41 @@ const possessiveFixBank: readonly TypedItem[] = interleave([
     }),
 ]);
 
+/** ownerOf finds the row of owners for a word that stands alone or goes before a noun. */
+const ownerOf = (word: string) => owners.find(([, alone, before]) => alone === word || before === word);
+
+/** possessiveWhy explains the word that stands alone in the gap of shown. */
+const possessiveWhy = (right: string, shown: string): Text => {
+  const who = /\((\w+)\)$/u.exec(shown)?.[1] ?? "";
+  return t(
+    `No noun follows the gap, so it needs the word that stands alone; for *${who}* that is *${right}*: ${fill(shown, right)}`,
+    `空白后面没有名词，所以要用单独使用的词；*${who}* 对应的是 *${right}*：${fill(shown, right)}`,
+  );
+};
+
+/** whyNotPossessive explains a word before a noun, or a word that does not show an owner. */
+const whyNotPossessive = (wrong: string, right: string): Text => {
+  if (/^(me|us|them|him)$/u.test(wrong))
+    return t(
+      `*${wrong}* is the word for someone an action is done to, not a word that shows who owns something. Here it is *${right}*.`,
+      `*${wrong}* 是宾格，表示动作的对象，不表示东西属于谁。这里要用 *${right}*。`,
+    );
+  if (wrong.endsWith("self"))
+    return t(
+      `*${wrong}* is for doing something to yourself, as in *She hurt herself*. To show who owns something, use *${right}*.`,
+      `*${wrong}* 是反身代词，如 *She hurt herself*。表示东西属于谁要用 *${right}*。`,
+    );
+  if (wrong === "he")
+    return t(
+      `*he* is the word for the one who does something. To show that something belongs to him, use *${right}*.`,
+      `*he* 是主格，表示动作的发出者。表示东西属于他要用 *${right}*。`,
+    );
+  return t(
+    `*${wrong}* must come before a noun, as in *${wrong} bag*. No noun follows here, so use *${right}*.`,
+    `*${wrong}* 必须放在名词前，如 *${wrong} bag*。这里后面没有名词，要用 *${right}*。`,
+  );
+};
+
 const possessivePronouns: TopicDef = {
   id: "possessive-pronouns",
   title: t("Mine, Yours and Theirs", "mine、yours 和 theirs"),
@@ -548,9 +583,7 @@ const possessivePronouns: TopicDef = {
         "*My*, *your*, *her*, *our* and *their* come before a noun: *my bag*. *Mine*, *yours*, *hers*, *ours* and *theirs* stand alone, with no noun after them: *This bag is mine.*\n\n| before a noun | alone |\n| :--- | :--- |\n| my | mine |\n| your | yours |\n| his | his |\n| her | hers |\n| our | ours |\n| their | theirs |",
         "*my*、*your*、*her*、*our*、*their* 放在名词前：*my bag*。*mine*、*yours*、*hers*、*ours*、*theirs* 单独使用，后面不接名词：*This bag is mine.*\n\n中文“我的”既能说“我的包”，也能说“这包是我的”；英语要分成两个词：*my bag*，*This bag is mine.*\n\n| 名词前 | 单独使用 |\n| :--- | :--- |\n| my | mine |\n| your | yours |\n| his | his |\n| her | hers |\n| our | ours |\n| their | theirs |",
       ),
-      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), possessiveChoiceBank, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（后面没有名词，用 ${right}）`),
-      ),
+      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), possessiveChoiceBank, possessiveWhy, whyNotPossessive),
     ),
     point(
       "fix",
@@ -559,9 +592,21 @@ const possessivePronouns: TopicDef = {
         "Each sentence uses the wrong word: *my* where nothing follows, or *mine* before a noun. Write it again.",
         "每个句子都用错了词：后面没有名词却用了 *my*，或在名词前用了 *mine*。改正句子。",
       ),
-      typedGenerator("sentence", t("Fix the sentence.", "改正这个句子。"), possessiveFixBank, (right, shown) =>
-        t(`${shown} → ${right}`, `${shown} → ${right}（名词前用 my、your……，单独用 mine、yours……）`),
-      ),
+      typedGenerator("sentence", t("Fix the sentence.", "改正这个句子。"), possessiveFixBank, (right) => {
+        if (right.startsWith("Is this")) {
+          const word = right.split(" ")[2] ?? "";
+          const alone = ownerOf(word)?.[1] ?? word;
+          return t(
+            `A noun follows, so it needs the word that goes before a noun: *${word}*, not *${alone}*: ${right}`,
+            `后面有名词，所以要用放在名词前的词：*${word}*，不用 *${alone}*：${right}`,
+          );
+        }
+        const word = /(\w+)\.$/u.exec(right)?.[1] ?? "";
+        return t(
+          `No noun follows, so it needs the word that stands alone: *${word}*: ${right}`,
+          `后面没有名词，所以要用单独使用的词 *${word}*：${right}`,
+        );
+      }),
     ),
   ],
 };
@@ -645,6 +690,64 @@ const superlativeTypedBank: readonly TypedItem[] = pairUp(70, adjectives, where)
     };
   });
 
+/** compareRule names the rule that makes the comparative or the superlative of an adjective. */
+const compareRule = (adjective: string, form: string, most: boolean): Text => {
+  const end = most ? "-est" : "-er";
+  const long = most ? "most" : "more";
+  if (form.startsWith(`${long} `))
+    return t(`*${adjective}* is a long word, so it takes *${long}* before it`, `*${adjective}* 是长词，前面加 *${long}*`);
+  if (adjective === "good" || adjective === "bad")
+    return t(`*${adjective}* has a form of its own: *${form}*`, `*${adjective}* 有自己的形式：*${form}*`);
+  if (adjective.endsWith("y"))
+    return t(
+      `*${adjective}* ends in a consonant and *y*, so the *y* becomes *i* before *${end}*`,
+      `*${adjective}* 以辅音字母加 *y* 结尾，把 *y* 变成 *i* 再加 *${end}*`,
+    );
+  if (adjective.endsWith("e")) {
+    const add = most ? "-st" : "-r";
+    return t(`*${adjective}* ends in *e*, so it adds only *${add}*`, `*${adjective}* 以 *e* 结尾，只加 *${add}*`);
+  }
+
+  if (form.length === adjective.length + end.length - 1)
+    return t(`*${adjective}* is a short word, so it adds *${end}*`, `*${adjective}* 是短词，直接加 *${end}*`);
+  return t(
+    `*${adjective}* ends in one vowel and one consonant, so the consonant doubles before *${end}*`,
+    `*${adjective}* 以一个元音字母加一个辅音字母结尾，双写辅音字母再加 *${end}*`,
+  );
+};
+
+/** comparisonWhy explains a comparison written from notes. */
+const comparisonWhy = (right: string, shown: string): Text => {
+  const adjective = shown.split(" / ")[2] ?? "";
+  const form = adjectives.find(([a]) => a === adjective)?.[1] ?? "";
+  const rule = compareRule(adjective, form, false);
+  return t(
+    `The first place comes first, then *is*, the comparative and *than*; ${rule.en}: ${right}`,
+    `先写第一个地方，再写 *is*、比较级和 *than*；${rule["zh-CN"]}：${right}`,
+  );
+};
+
+/** whyNotComparison explains a misspelt comparative or one that uses more and -er together, or neither. */
+const whyNotComparison = (wrong: string, _right: string, shown: string, position: number): Text => {
+  const adjective = shown.split(" / ")[2] ?? "";
+  const form = adjectives.find(([a]) => a === adjective)?.[1] ?? "";
+  const rule = compareRule(adjective, form, false);
+  if (position === 0)
+    return t(
+      `*${wrong}* gets the comparative wrong: ${rule.en}, so it is *${form}*.`,
+      `*${wrong}* 的比较级错了：${rule["zh-CN"]}，所以是 *${form}*。`,
+    );
+  return form.startsWith("more ")
+    ? t(
+        `*${wrong}* leaves the adjective as it is. ${rule.en}, so it is *${form}*.`,
+        `*${wrong}* 没有把形容词变成比较级。${rule["zh-CN"]}，所以是 *${form}*。`,
+      )
+    : t(
+        `*${wrong}* uses both *more* and *-er*. A comparative takes one or the other, never both: *${form}*.`,
+        `*${wrong}* 同时用了 *more* 和 *-er*。比较级只能用其中一种：*${form}*。`,
+      );
+};
+
 const writingComparisons: TopicDef = {
   id: "writing-comparisons",
   title: t("Writing Comparisons", "写比较句"),
@@ -667,17 +770,21 @@ const writingComparisons: TopicDef = {
         "The notes give two places and an adjective. The sentence puts the first place first, then *is*, the comparative and *than*:\n\n*the park / the square / noisy* → *The park is noisier than the square.*\n\nShort words add *-er* (*bigger*, *busier*); long words take *more* (*more crowded*); *good* and *bad* become *better* and *worse*. Never both: not *more bigger*.",
         "笔记给出两个地方和一个形容词。句子先写第一个地方，再写 *is*、比较级和 *than*：\n\n*the park / the square / noisy* → *The park is noisier than the square.*\n\n短词加 *-er*（*bigger*、*busier*）；长词前加 *more*（*more crowded*）；*good* 和 *bad* 变成 *better* 和 *worse*。不能两样都用：不说 *more bigger*。中文说“公园比广场吵”，形容词不变；英语的形容词要变成比较级。",
       ),
-      choiceGenerator(t("Choose the sentence that matches the notes.", "选出与笔记相符的句子。"), comparisonChoiceBank, (right) =>
-        t(right, `${right}（A + is + 比较级 + than + B）`),
+      choiceGenerator(
+        t("Choose the sentence that matches the notes.", "选出与笔记相符的句子。"),
+        comparisonChoiceBank,
+        comparisonWhy,
+        whyNotComparison,
       ),
     ),
     point(
       "write",
       t("Writing the comparison", "写出比较句"),
-      t("Write the sentence for the notes, with a capital letter and a period.", "根据笔记写出比较句，句首大写，句末加句号。"),
-      typedGenerator("sentence", t("Write a sentence from the notes.", "根据笔记写一个句子。"), comparisonTypedBank, (right) =>
-        t(right, `${right}（A + is + 比较级 + than + B）`),
+      t(
+        "Write the sentence for the notes: the first place, *is*, the comparative of the adjective and *than*, then the second place. Start with a capital letter and end with a period.",
+        "根据笔记写出比较句：第一个地方、*is*、形容词的比较级和 *than*，再写第二个地方。句首大写，句末加句号。",
       ),
+      typedGenerator("sentence", t("Write a sentence from the notes.", "根据笔记写一个句子。"), comparisonTypedBank, comparisonWhy),
     ),
     point(
       "most",
@@ -686,8 +793,19 @@ const writingComparisons: TopicDef = {
         "To say a place is more than all the others, use *the* and the superlative, then where: *The market is the busiest in our town.* Short words add *-est*; long words take *most*; *good* and *bad* become *best* and *worst*.",
         "说一个地方在所有地方中“最……”，用 *the* 加最高级，再说范围：*The market is the busiest in our town.* 短词加 *-est*；长词前加 *most*；*good* 和 *bad* 变成 *best* 和 *worst*。别忘了 *the*。",
       ),
-      typedGenerator("sentence-pattern", t("Write a sentence from the notes.", "根据笔记写一个句子。"), superlativeTypedBank, (right) =>
-        t(right, `${right}（A + is + the + 最高级 + 范围）`),
+      typedGenerator(
+        "sentence-pattern",
+        t("Write a sentence from the notes.", "根据笔记写一个句子。"),
+        superlativeTypedBank,
+        (right, shown) => {
+          const adjective = shown.split(" / ")[1] ?? "";
+          const form = adjectives.find(([a]) => a === adjective)?.[2] ?? "";
+          const rule = compareRule(adjective, form, true);
+          return t(
+            `The place goes beyond all the others in its area, so it takes *the* and the superlative, then where; ${rule.en}: ${right}`,
+            `这个地方在所有地方中“最……”，所以用 *the* 加最高级，再说范围；${rule["zh-CN"]}：${right}`,
+          );
+        },
       ),
     ),
   ],

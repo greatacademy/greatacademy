@@ -1,6 +1,6 @@
 // Pre-A1, unit 6: My Body. The body, describing words before nouns, and sentences about yourself.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { pairUp, vocabularyTopic, word } from "../words.ts";
@@ -165,8 +165,24 @@ const adjectivesBeforeNouns: TopicDef = {
         "A describing word like *big*, *long* or *blue* comes before the noun: *long hair*, *two big eyes*. It never takes *-s*, even before more than one: *two big eyes*, not *two bigs eyes*.",
         "*big*、*long*、*blue* 这样的形容词放在名词前：*long hair*、*two big eyes*。名词是复数时，形容词也不加 *-s*：说 *two big eyes*，不说 *two bigs eyes*。",
       ),
-      choiceGenerator(t("Which sentence is right?", "哪个句子是对的？"), adjectiveChoiceBank, (right) =>
-        t(`${right} The describing word comes before the noun.`, `${right} 形容词放在名词前，不加 -s。`),
+      choiceGenerator(
+        t("Which sentence is right?", "哪个句子是对的？"),
+        adjectiveChoiceBank,
+        (right) =>
+          t(
+            `${right} The describing word comes right before the noun, after any number, and never takes *-s*.`,
+            `${right} 形容词放在名词正前方、数字后面，而且从不加 *-s*。`,
+          ),
+        (_wrong, _right, _shown, position) =>
+          position === 0
+            ? t(
+                "This puts the describing word after the noun, but in English it comes before it.",
+                "这句把形容词放在了名词后面，可英语里形容词放在名词前面。",
+              )
+            : t(
+                "This adds *-s* to the describing word; only the noun shows more than one.",
+                "这句给形容词加了 *-s*；只有名词才表示多个，形容词不变。",
+              ),
       ),
     ),
     point(
@@ -176,9 +192,13 @@ const adjectivesBeforeNouns: TopicDef = {
         "Put the describing word right before the noun, after any number: *two eyes* → *two blue eyes*.",
         "把形容词放在名词正前方，数字后面：*two eyes* → *two blue eyes*。",
       ),
-      typedGenerator("sentence", t("Write the sentence again.", "重写这个句子。"), adjectiveTypedBank, (right) =>
-        t(right, `${right}（形容词放在名词前）`),
-      ),
+      typedGenerator("sentence", t("Write the sentence again.", "重写这个句子。"), adjectiveTypedBank, (right, shown) => {
+        const adjective = shown.match(/\((.*)\)$/u)?.[1] ?? "";
+        return t(
+          `*${adjective}* goes right before the noun, after any number, and takes no *-s*: ${right}`,
+          `*${adjective}* 放在名词正前方、数字后面，不加 *-s*：${right}`,
+        );
+      }),
     ),
   ],
 };
@@ -236,6 +256,51 @@ const aboutYouTypedBank: readonly TypedItem[] = notes.map(
 
 const aboutYouChoiceBank: readonly ChoiceItem[] = notes.map(([note, sentence, wrong]): ChoiceItem => [note, sentence, [...wrong]]);
 
+/** noteRule says how a sentence for each kind of note is made, in every locale. */
+const noteRule: Record<string, Text> = {
+  name: t("To give your name, say *My name is* and then the name", "说自己的名字，用 *My name is* 加名字"),
+  age: t("English says your age with *am*: you *are* an age, you do not *have* it", "英语用 *am* 说年龄：年龄是“是”，不是“有”"),
+  have: t("To say what you have, use *I have*, with no *-s* after *I*", "说自己有什么，用 *I have*，*I* 后面的动词不加 *-s*"),
+  look: t("Say *I have*, with the describing word before *hair* or *eyes*", "用 *I have*，形容词放在 *hair* 或 *eyes* 前面"),
+  like: t("To say what you like, use *I like*, with no *-s* and no *am*", "说自己喜欢什么，用 *I like*，不加 *-s*，也不加 *am*"),
+};
+
+/** noteKind finds the kind of a note from its label. */
+const noteKind = (note: string) => {
+  const label = note.split(":")[0] ?? "";
+  return label === "hair" || label === "eyes" ? "look" : label;
+};
+
+/** noteMistakes say what each wrong sentence of a kind of note gets wrong, in the order the notes list them. */
+const noteMistakes: Record<string, readonly [Text, Text]> = {
+  name: [
+    t("This leaves out *is*, but an English sentence needs a verb.", "这句漏了 *is*，可英语句子必须有动词。"),
+    t("*I* cannot stand before a noun; to say whose name it is, use *My*.", "*I* 不能放在名词前；要说“谁的名字”，用 *My*。"),
+  ],
+  age: [
+    t("This says age with *have*, as Chinese does; English says it with *am*.", "这句像中文那样用 *have* 说年龄；英语说年龄用 *am*。"),
+    t("This leaves out the verb, but an English sentence needs one.", "这句漏了动词，可英语句子必须有动词。"),
+  ],
+  have: [
+    t("*has* is for *he*, *she* and *it*; after *I* the verb has no *-s*.", "*has* 用于 *he*、*she*、*it*；*I* 后面的动词不加 *-s*。"),
+    t("This leaves out *I*; a sentence about yourself needs *I* before the verb.", "这句漏了 *I*；说自己的句子，动词前要有 *I*。"),
+  ],
+  look: [
+    t(
+      "This puts the describing word after the noun, but in English it comes before it.",
+      "这句把形容词放在了名词后面，可英语里形容词放在名词前面。",
+    ),
+    t("This leaves out the verb, but an English sentence needs one.", "这句漏了动词，可英语句子必须有动词。"),
+  ],
+  like: [
+    t("*likes* has *-s*, which is only for *he*, *she* and *it*.", "*likes* 加了 *-s*，可 *-s* 只用于 *he*、*she*、*it*。"),
+    t(
+      "This adds *am*, but *like* is already the verb, so the sentence needs no *am*.",
+      "这句加了 *am*，可 *like* 已经是动词，不需要 *am*。",
+    ),
+  ],
+};
+
 const writingAboutYourself: TopicDef = {
   id: "writing-about-yourself",
   title: t("Writing About Yourself", "写写你自己"),
@@ -258,8 +323,14 @@ const writingAboutYourself: TopicDef = {
         "*My name is Ben.* *I am eight years old.* (not *I have eight years.*) *I have a dog.* *I have black hair.* *I like cats.*",
         "*My name is Ben.* *I am eight years old.*（说年龄用 *am*，不用 *have*，也不能漏掉 *am*）*I have a dog.* *I have black hair.*（颜色放在 *hair* 前面）*I like cats.*",
       ),
-      choiceGenerator(t("Choose the sentence that matches the note.", "选出与提示相符的句子。"), aboutYouChoiceBank, (right) =>
-        t(right, `${right}（句子要有动词，词序是：谁 + 动词 + 其余部分）`),
+      choiceGenerator(
+        t("Choose the sentence that matches the note.", "选出与提示相符的句子。"),
+        aboutYouChoiceBank,
+        (right, shown) => {
+          const rule = noteRule[noteKind(shown)];
+          return t(`${rule?.en}: ${right}`, `${rule?.["zh-CN"]}：${right}`);
+        },
+        (_wrong, _right, shown, position) => noteMistakes[noteKind(shown)]?.[position === 0 ? 0 : 1] ?? t("", ""),
       ),
     ),
     point(
@@ -273,7 +344,13 @@ const writingAboutYourself: TopicDef = {
         "sentence-pattern",
         t("Write a sentence about yourself from the note.", "根据提示写一个关于自己的句子。"),
         aboutYouTypedBank,
-        (right) => t(right, `${right}（完整的句子：大写开头，有动词，句号结尾）`),
+        (right, shown) => {
+          const rule = noteRule[noteKind(shown)];
+          return t(
+            `${rule?.en}, in a whole sentence with a capital letter and a period: ${right}`,
+            `${rule?.["zh-CN"]}，写成完整的句子，大写开头，句号结尾：${right}`,
+          );
+        },
       ),
     ),
   ],

@@ -1,7 +1,7 @@
 // A2, unit 11: Festivals and Celebrations. Festivals, wishes, feelings and people together; verbs followed by to; an
 // invitation and a reply judged by a model. Subordinating conjunctions, the unit's other grammar, already exist.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { pairUp, vocabularyTopic, word } from "../words.ts";
@@ -461,9 +461,35 @@ const toTypedBank: readonly TypedItem[] = combos(40, toSubjects, toVerbForms, to
   },
 );
 
+/** toVerbIn is the verb that takes to at the start of a sentence, as its learner would look it up. */
+const toVerbIn = (sentence: string): string => {
+  const start = toVerbs.find((v) => sentence.startsWith(v)) ?? "";
+  return start.endsWith("'d like") ? "would like" : (start.split(" ").pop() ?? "");
+};
+
+/** whyNotTo explains a verb after want, hope or decide without to, or with -ing. */
+const whyNotTo = (wrong: string, right: string, shown: string, position: number): Text => {
+  const verb = toVerbIn(shown);
+  return position === 0
+    ? t(
+        `*${wrong}* leaves out *to*. After *${verb}*, English puts *to* before the next verb: *${right}*.`,
+        `*${wrong}* 漏了 *to*。在 *${verb}* 后面，下一个动词前要加 *to*：*${right}*。`,
+      )
+    : t(
+        `*${wrong}* is the *-ing* form. *${verb}* takes *to* and the first form, not *-ing*: *${right}*.`,
+        `*${wrong}* 是 *-ing* 形式。*${verb}* 后面接 *to* 加原形，不接 *-ing*：*${right}*。`,
+      );
+};
+
+/** firstToVerb is the first verb of a written sentence, in the form it takes there. */
+const firstToVerb = (sentence: string): string => {
+  const forms = toVerbForms.flatMap(([verb, third, past]) => [third, past, verb]);
+  return forms.find((form) => new RegExp(`\\b${form}\\b`, "u").test(sentence)) ?? "";
+};
+
 const verbsFollowedByTo: TopicDef = {
   id: "verbs-followed-by-to",
-  title: t("Want To, Decide To", "want to、decide to"),
+  title: t("Want To, Decide To", "want to、decide to：动词后接 to"),
   summary: t(
     "I want to go. She decided to stay. We hope to see you. Some verbs take to and the first form of another verb after them.",
     "I want to go. She decided to stay. We hope to see you. 有些动词后面接 to 加另一个动词的原形。",
@@ -483,8 +509,17 @@ const verbsFollowedByTo: TopicDef = {
         "After *want*, *would like*, *hope*, *decide*, *plan*, *need*, *promise*, *agree* and *refuse*, use *to* and the first form of the next verb:\n\n- *I want to buy a new phone.*\n- *We decided to stay at home.*\n- *He refused to clean the kitchen.*\n\nDo not leave out *to*: not *I want buy*. Do not add *-ing*: not *We decided staying*.",
         "在 *want*、*would like*、*hope*、*decide*、*plan*、*need*、*promise*、*agree* 和 *refuse* 后面，用 *to* 加下一个动词的原形：\n\n- *I want to buy a new phone.*\n- *We decided to stay at home.*\n- *He refused to clean the kitchen.*\n\n中文说“我想买”，两个动词直接连在一起，英语中间要加 *to*：不说 *I want buy*，也不说 *We decided staying*。",
       ),
-      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), toChoiceBank, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（这些动词后面用 to + 动词原形）`),
+      choiceGenerator(
+        t("Choose the words for the gap.", "选出填入空白处的词。"),
+        toChoiceBank,
+        (right, shown) => {
+          const verb = toVerbIn(shown);
+          return t(
+            `*${verb}* is one of the verbs that take *to* and the first form of the next verb: ${fill(shown, right)}`,
+            `*${verb}* 属于后面接 *to* 加下一个动词原形的动词：${fill(shown, right)}`,
+          );
+        },
+        whyNotTo,
       ),
     ),
     point(
@@ -494,9 +529,18 @@ const verbsFollowedByTo: TopicDef = {
         "Write the sentence from the note. The first verb changes: *-s* after *he*, *she* and one person (*She wants*), *-ed* for the past (*We decided*). The second verb never changes: *to* and its first form.\n\n*She wants to visit the castle. They decided to stay at home yesterday.*",
         "根据笔记写句子。第一个动词要变：*he*、*she* 和单个人后面加 *-s*（*She wants*），过去的事加 *-ed*（*We decided*）。第二个动词永远不变：*to* 加原形。\n\n*She wants to visit the castle. They decided to stay at home yesterday.*",
       ),
-      typedGenerator("sentence", t("Write a sentence from the note.", "根据笔记写一个句子。"), toTypedBank, (right) =>
-        t(right, `${right}（第一个动词按人称和时间变化，第二个动词用 to + 原形）`),
-      ),
+      typedGenerator("sentence", t("Write a sentence from the note.", "根据笔记写一个句子。"), toTypedBank, (right) => {
+        const first = firstToVerb(right);
+        const how = right.includes("yesterday")
+          ? t("takes *-ed* for the past", "因为是过去的事，加 *-ed*")
+          : first.endsWith("s")
+            ? t("takes *-s* after one person", "单个人作主语时加 *-s*")
+            : t("stays plain after this subject", "在这个主语后面用原形");
+        return t(
+          `The first verb ${how.en} (*${first}*), and the second is always *to* with its first form: ${right}`,
+          `第一个动词${how["zh-CN"]}（*${first}*），第二个动词总是 *to* 加原形：${right}`,
+        );
+      }),
     ),
   ],
 };

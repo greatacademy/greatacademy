@@ -213,6 +213,12 @@ function trendItems(): readonly SolvedChoice[] {
         shown: `${table(s)}\n\n**Period:** ${y1} to ${y2}`,
         right: sentence(trend),
         wrong: misreadings[trend].map(sentence),
+        whyNot: misreadings[trend].map((tr) =>
+          t(
+            `*${phrases[tr][variant]}* describes ${meaning[tr].en}, but ${s.unit(a)} to ${s.unit(b)} is a change of about ${change}%, which is ${meaning[trend].en}.`,
+            `*${phrases[tr][variant]}* 表示${meaning[tr]["zh-CN"]}，但从 ${s.unit(a)} 到 ${s.unit(b)} 变化约为 ${change}%，属于${meaning[trend]["zh-CN"]}。`,
+          ),
+        ),
         solution: t(
           `From ${s.unit(a)} to ${s.unit(b)} is a change of about ${change}%: ${meaning[trend].en}. ${capital(phrases[trend][0])} fits it; a change of only a few per cent is stable, and a rise or fall of a third or more is sharp.`,
           `从 ${s.unit(a)} 到 ${s.unit(b)}，变化约为 ${change}%，属于${meaning[trend]["zh-CN"]}，所以用 *${phrases[trend][0]}*。变化只有百分之几算 stable，升降三分之一以上才算 sharp。`,
@@ -418,6 +424,8 @@ function tableItems(table: Shares): readonly SolvedChoice[] {
         shown: `**${table.title}**\n\n${table.shares.map(([label, v]) => `${capital(label)}: ${v}%`).join(" · ")}`,
         right: claim.sentence,
         wrong: wrongs.map((w) => w.sentence),
+        whyNot: wrongs.map((w) => t(`That sentence misreads the table. ${w.reason.en}`, `这句话读错了表格。${w.reason["zh-CN"]}`)),
+
         solution: t(
           `${claim.sentence} ${claim.reason.en} Each of the other sentences misreads a figure: check every number, every comparison and every fraction against the table.`,
           `${claim.sentence} ${claim.reason["zh-CN"]} 其他句子都读错了某个数字：要把每个数字、每个比较和每个分数都与表格核对。`,

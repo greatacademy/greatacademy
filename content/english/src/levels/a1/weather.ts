@@ -1,7 +1,7 @@
 // A1, unit 10: Weather and Nature. Weather, seasons, nature and wild animals, it for the weather and the time, and
 // postcards judged by a model.
 
-import { type CriterionSpec, type TopicDef, t } from "@ga/content";
+import { type CriterionSpec, type Text, type TopicDef, t } from "@ga/content";
 import {
   type ChoiceItem,
   choiceGenerator,
@@ -435,9 +435,34 @@ const itFixBank: readonly TypedItem[] = itRests(1).map((rest, k): TypedItem => {
   return { shown, accepted: [`[It is|It's] ${rest}.`, ...day], canonical: `It's ${rest}.`, wrong: [shown, `It ${rest}.`] };
 });
 
+/** itTalksAbout says whether a sentence with it is about the weather or the time and day. */
+const itTalksAbout = (sentence: string): Text =>
+  clockStates.some((state) => sentence.includes(state)) ? t("the time or the day", "时间或日期") : t("the weather", "天气");
+
+/** itWhy explains why a sentence about the weather or the time needs it. */
+const itWhy = (right: string): Text => {
+  const about = itTalksAbout(right);
+  return t(
+    `This sentence is about ${about.en}. An English sentence needs a subject, and for ${about.en} the subject is *it*, with *is* or *'s* after it: ${right}`,
+    `这句说的是${about["zh-CN"]}。英语句子必须有主语，谈${about["zh-CN"]}时主语用 *it*，后面接 *is* 或 *'s*：${right}`,
+  );
+};
+
+/** whyNotIt explains a sentence that leaves out it or is. */
+const whyNotIt = (wrong: string, right: string, _shown: string, position: number): Text =>
+  position === 0
+    ? t(
+        `*${wrong}* has a verb but no subject. English cannot leave out *it*: *${right}*`,
+        `*${wrong}* 有动词却没有主语。英语不能省略 *it*：*${right}*`,
+      )
+    : t(
+        `*${wrong}* has a subject but no verb. *It* needs *is* or *'s* after it: *${right}*`,
+        `*${wrong}* 有主语却没有动词。*It* 后面要有 *is* 或 *'s*：*${right}*`,
+      );
+
 const itForWeather: TopicDef = {
   id: "it-for-weather",
-  title: t("It Is Raining", "It is raining"),
+  title: t("It Is Raining", "It is raining：用 it 谈天气和时间"),
   summary: t(
     "It is cold. It's raining. English needs it for the weather and the time.",
     "It is cold. It's raining. 英语谈天气和时间时需要 it。",
@@ -457,17 +482,16 @@ const itForWeather: TopicDef = {
         "An English sentence needs a subject. For the weather, the time and the day, the subject is *it*: *It's sunny. It's raining. It's seven o'clock. It's Monday today.*\n\n*It* means nothing here, but you can't leave it out: not *Is cold* or *Raining now*.",
         "英语句子必须有主语。谈天气、时间和日期时，主语用 *it*：*It's sunny. It's raining. It's seven o'clock. It's Monday today.*\n\n这里的 *it* 没有实际意思，但不能省略。中文说“下雨了”“很冷”“七点了”，都不需要主语，所以学习者常写 *Is cold* 或 *Raining now*。",
       ),
-      choiceGenerator(t("Which sentence is right?", "哪个句子是对的？"), itChoiceBank, (right) =>
-        t(right, `${right}（天气、时间和日期用 it 作主语）`),
-      ),
+      choiceGenerator(t("Which sentence is right?", "哪个句子是对的？"), itChoiceBank, itWhy, whyNotIt),
     ),
     point(
       "fix",
       t("Putting in it", "补上 it"),
-      t("Each sentence has no subject. Write it again with *It is* or *It's*.", "每个句子都缺少主语。用 *It is* 或 *It's* 重写句子。"),
-      typedGenerator("sentence-pattern", t("Fix the sentence.", "改正这个句子。"), itFixBank, (right) =>
-        t(right, `${right}（天气、时间和日期用 it 作主语）`),
+      t(
+        "Each sentence leaves out the subject, as Chinese can. Write it again with *It is* or *It's* at the start: *Is cold today.* → *It's cold today.* *Raining now.* → *It's raining now.*",
+        "每个句子都像中文一样省略了主语。在句首加上 *It is* 或 *It's* 重写句子：*Is cold today.* → *It's cold today.* *Raining now.* → *It's raining now.*",
       ),
+      typedGenerator("sentence-pattern", t("Fix the sentence.", "改正这个句子。"), itFixBank, itWhy),
     ),
   ],
 };

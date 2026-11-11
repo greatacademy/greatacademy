@@ -1,7 +1,7 @@
 // B1, unit 5: Media and News. The news, media, truth and lies, crime and elections, describing events, communicating
 // and opinions; reported speech; writing an article. Its opinion paragraph reuses the native writing topic.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
@@ -756,6 +756,84 @@ const reportTyped: readonly TypedItem[] = said.map(
   }),
 );
 
+/** saidOf finds the reported statement that a gapped report or a written report comes from. */
+const saidOf = (text: string) =>
+  said.find(([name, words]) => text.includes(quoteOf(name, words))) ??
+  said.find(([name, , report]) => text === `${name} said that ${report}.`);
+
+/** spokenVerb is the verb of the words as they were said, before it moved back. */
+function spokenVerb(words: string, verb: string, wrong: string): string {
+  if (verb === "were") return "are";
+  if (verb.startsWith("was")) {
+    const be = /\bis\b/u.test(words) ? "is" : /I'm/u.test(words) ? "'m" : "am";
+    return verb === "was" ? be : verb.replace("was", be);
+  }
+  if (verb === "didn't") return /doesn't/u.test(words) ? "doesn't" : "don't";
+  return wrong;
+}
+
+/** backRule names how the verb moved back, for the statement in text. */
+function backRule(text: string): Text {
+  const item = saidOf(text);
+  if (!item) return t("After *said*, the verb moves back in time", "*said* 后面的动词往过去退一步");
+  const [, words, , verb, [first]] = item;
+  const spoken = spokenVerb(words, verb, first);
+  return t(
+    `After *said*, the verb moves back in time, so *${spoken}* becomes *${verb}*`,
+    `*said* 后面的动词往过去退一步，所以 *${spoken}* 变成 *${verb}*`,
+  );
+}
+
+/** whyNotBack explains a verb that did not move back, or a form that is not a past. */
+const whyNotBack = (wrong: string, right: string, shown: string, position: number): Text => {
+  const rule = backRule(shown);
+  let first: Text;
+  const item = saidOf(shown);
+  const spoken = item ? spokenVerb(item[1], item[3], item[4][0]) : wrong;
+  if (right === "were" && wrong === "was")
+    first = t("*was* is for one person or thing, but the subject is plural.", "*was* 用于单数主语，但这里的主语是复数。");
+  else if (position === 0 && wrong === "am" && spoken !== "am" && spoken !== "'m")
+    first = t("*am* goes only with *I*, and it is not a past form.", "*am* 只和 *I* 连用，而且不是过去式。");
+  else if (position === 0) first = t(`*${wrong}* is the verb as it was said, in the present.`, `*${wrong}* 是原话里的现在时动词。`);
+  else if (wrong === "not") first = t("*not* alone has no verb to make the negative.", "只有 *not*，没有构成否定的助动词。");
+  else first = t(`*${wrong}* is not a past form.`, `*${wrong}* 不是过去式。`);
+  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+};
+
+/** pronounRule names how the speaker's I or my changes, from the right pronoun and the speaker. */
+function pronounRule(right: string, shown: string): Text {
+  const name = saidOf(shown)?.[0] ?? "";
+  const man = right === "he" || right === "his";
+  const from = right === "he" || right === "she" ? "I" : "my";
+  return t(
+    `${name} is ${man ? "a man" : "a woman"}, so the speaker's *${from}* becomes *${right}*`,
+    `${name} 是${man ? "男性" : "女性"}，所以说话人的 *${from}* 变成 *${right}*`,
+  );
+}
+
+/** whyNotPronoun explains a pronoun kept from the speaker's words, or one for the other sex. */
+const whyNotPronoun = (wrong: string, right: string, shown: string, position: number): Text => {
+  const rule = pronounRule(right, shown);
+  const first =
+    position === 0
+      ? t(`*${wrong}* is the speaker's own word, which changes when you report it.`, `*${wrong}* 是说话人自己的用词，转述时要改变。`)
+      : t(
+          `*${wrong}* would be about ${/^(he|his)$/u.test(wrong) ? "a man" : "a woman"}.`,
+          `*${wrong}* 指的是${/^(he|his)$/u.test(wrong) ? "男性" : "女性"}。`,
+        );
+  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+};
+
+/** reportWhy explains a written report: the pronoun changes and the verb moves back. */
+const reportWhy = (right: string): Text => {
+  const item = saidOf(right);
+  const back = backRule(right);
+  if (!item) return t(`${back.en}: ${right}`, `${back["zh-CN"]}：${right}`);
+  const [name, words, report] = item;
+  const pronoun = pronounRule(report.split(" ")[0] ?? "", quoteOf(name, words));
+  return t(`${pronoun.en}, and ${back.en.replace(/^After/u, "after")}: ${right}`, `${pronoun["zh-CN"]}；${back["zh-CN"]}：${right}`);
+};
+
 const reportedSpeech: TopicDef = {
   id: "reported-speech",
   title: t("She Said She Was Tired", "她说她累了（间接引语）"),
@@ -775,8 +853,14 @@ const reportedSpeech: TopicDef = {
         "When you report what someone said with *said*, the verb usually moves back in time:\n\n- *am / is* → *was*, *are* → *were*\n- *like* → *liked*, *go* → *went*, *have* → *had*\n- *don't / doesn't* → *didn't*\n- *am reading* → *was reading*\n\n*\"I am tired,\" Anna said.* → *Anna said that she **was** tired.*\n\nYou can leave out *that*: *Anna said she was tired.*",
         "用 *said* 转述别人的话时，动词通常往过去退一步：\n\n- *am / is* → *was*，*are* → *were*\n- *like* → *liked*，*go* → *went*，*have* → *had*\n- *don't / doesn't* → *didn't*\n- *am reading* → *was reading*\n\n*\"I am tired,\" Anna said.* → *Anna said that she **was** tired.*\n\n*that* 可以省略：*Anna said she was tired.* 中文转述时动词不变（“她说她累了”），英语却要把动词变成过去式。",
       ),
-      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), backChoice, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（转述时动词往过去退一步）`),
+      choiceGenerator(
+        t("Choose the words for the gap.", "选出填入空白处的词。"),
+        backChoice,
+        (right, shown) => {
+          const rule = backRule(shown);
+          return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+        },
+        whyNotBack,
       ),
     ),
     point(
@@ -786,8 +870,14 @@ const reportedSpeech: TopicDef = {
         "The speaker's *I* and *my* change to fit the person you are talking about: *\"I love my job,\" Amy said.* → *Amy said that **she** loved **her** job.* A man's *I* becomes *he* and his *my* becomes *his*; a woman's become *she* and *her*.",
         '说话人的 *I* 和 *my* 要按所指的人改变：*"I love my job," Amy said.* → *Amy said that **she** loved **her** job.* 男性说的 *I* 变成 *he*，*my* 变成 *his*；女性说的变成 *she* 和 *her*。',
       ),
-      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), pronounChoice, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（转述时 I 和 my 要按说话人改变）`),
+      choiceGenerator(
+        t("Choose the word for the gap.", "选出填入空白处的词。"),
+        pronounChoice,
+        (right, shown) => {
+          const rule = pronounRule(right, shown);
+          return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+        },
+        whyNotPronoun,
       ),
     ),
     point(
@@ -801,7 +891,7 @@ const reportedSpeech: TopicDef = {
         "sentence-pattern",
         t("Report what the person said. Begin with the person's name and said.", "转述这个人说的话，以人名和 said 开头。"),
         reportTyped,
-        (right) => t(right, `${right}（动词往过去退一步，I 和 my 随说话人改变）`),
+        reportWhy,
       ),
     ),
   ],

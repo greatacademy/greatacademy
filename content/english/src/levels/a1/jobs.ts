@@ -1,7 +1,7 @@
 // A1, unit 11: Jobs and People. Jobs, describing people and the actions of work, was and were, and descriptions of a
 // person judged by a model.
 
-import { type CriterionSpec, type TopicDef, t } from "@ga/content";
+import { type CriterionSpec, type Text, type TopicDef, t } from "@ga/content";
 import {
   type ChoiceItem,
   choiceGenerator,
@@ -350,6 +350,12 @@ const pastAskBank: readonly TypedItem[] = pastPairs
     };
   });
 
+/** wasReason says why a subject takes was or were, in every locale. */
+const wasReason = (who: string, be: string): Text =>
+  be === "was"
+    ? t(`*${who}* is *I* or one person or thing, so the past of *be* is *was*`, `*${who}* 是 *I* 或单数主语，所以 be 的过去式用 *was*`)
+    : t(`*${who}* is *you* or more than one, so the past of *be* is *were*`, `*${who}* 是 *you* 或复数主语，所以 be 的过去式用 *were*`);
+
 const wasAndWere: TopicDef = {
   id: "was-and-were",
   title: t("Was and Were", "was 和 were"),
@@ -372,8 +378,23 @@ const wasAndWere: TopicDef = {
         "For the past, *am* and *is* become *was*, and *are* becomes *were*:\n\n- *I was*, *he was*, *she was*, *it was*, *my dad was*\n- *you were*, *we were*, *they were*, *the nurses were*\n\nWords like *yesterday*, *last week* and *an hour ago* tell you it's the past.",
         "谈过去时，*am* 和 *is* 变成 *was*，*are* 变成 *were*：\n\n- *I was*、*he was*、*she was*、*it was*、*my dad was*\n- *you were*、*we were*、*they were*、*the nurses were*\n\n中文说“昨天在医院”，动词不变；英语要看 *yesterday*、*last week*、*an hour ago* 这样的词，把 be 换成过去式。",
       ),
-      choiceGenerator(t("Fill in the blank.", "填空。"), pastChoiceBank, (right, shown) =>
-        t(shown.replace("___", right), `${shown.replace("___", right)}（I 和单数主语用 was，you 和复数主语用 were）`),
+      choiceGenerator(
+        t("Fill in the blank.", "填空。"),
+        pastChoiceBank,
+        (right, shown) => {
+          const reason = wasReason(shown.split(" ___")[0] ?? "", right);
+          return t(`${reason.en}: ${shown.replace("___", `*${right}*`)}`, `${reason["zh-CN"]}：${shown.replace("___", `*${right}*`)}`);
+        },
+        (wrong, _right, shown, position) =>
+          position === 0
+            ? t(
+                `*${wrong}* is the past of *be* for ${wrong === "was" ? "*I* and one person or thing" : "*you* and more than one"}, but the subject is *${shown.split(" ___")[0]}*.`,
+                `*${wrong}* 是${wrong === "was" ? " *I* 和单数主语" : " *you* 和复数主语"}用的过去式，可这里的主语是 *${shown.split(" ___")[0]}*。`,
+              )
+            : t(
+                `*${wrong}* is the present, but the time words at the end of the sentence put it in the past.`,
+                `*${wrong}* 是现在时，可句末的时间词说明这是过去的事。`,
+              ),
       ),
     ),
     point(
@@ -383,9 +404,11 @@ const wasAndWere: TopicDef = {
         "Each sentence has the wrong form of *be*: *were* for *was*, *was* for *were*, or a present form where the time is past. Write it again.",
         "每个句子里 *be* 的形式都错了：该用 *was* 的用了 *were*，该用 *were* 的用了 *was*，或者时间是过去却用了现在时。重写句子。",
       ),
-      typedGenerator("sentence", t("Fix the sentence.", "改正这个句子。"), pastFixBank, (right) =>
-        t(right, `${right}（I 和单数主语用 was，you 和复数主语用 were）`),
-      ),
+      typedGenerator("sentence", t("Fix the sentence.", "改正这个句子。"), pastFixBank, (right) => {
+        const [who = "", be = ""] = right.split(/ (was|were) /u);
+        const reason = wasReason(who, be);
+        return t(`The time is past, and ${reason.en}: ${right}`, `时间是过去，${reason["zh-CN"]}：${right}`);
+      }),
     ),
     point(
       "ask",
@@ -394,9 +417,13 @@ const wasAndWere: TopicDef = {
         "To ask a question, put *was* or *were* before the subject, as with *is* and *are*: *He was at home.* → *Was he at home?* *They were busy.* → *Were they busy?*",
         "提问时，把 *was* 或 *were* 放到主语前面，和 *is*、*are* 一样：*He was at home.* → *Was he at home?* *They were busy.* → *Were they busy?*",
       ),
-      typedGenerator("sentence", t("Make a question.", "把句子改成疑问句。"), pastAskBank, (right) =>
-        t(right, `${right}（把 was 或 were 放到主语前面）`),
-      ),
+      typedGenerator("sentence", t("Make a question.", "把句子改成疑问句。"), pastAskBank, (right) => {
+        const be = right.split(" ")[0] ?? "";
+        return t(
+          `As with *is* and *are*, a question puts *${be}* before the subject and ends with a question mark: ${right}`,
+          `和 *is*、*are* 一样，疑问句把 *${be}* 放到主语前面，句末用问号：${right}`,
+        );
+      }),
     ),
   ],
 };

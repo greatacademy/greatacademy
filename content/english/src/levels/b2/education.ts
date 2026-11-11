@@ -2,7 +2,7 @@
 // up, abstract nouns, verbs of thinking, digital learning, vocations and character; mixed conditionals; the
 // for-and-against essay. Its other topics, appositives and the counterclaim paragraph, already exist.
 
-import { type TopicDef, t } from "@ga/content";
+import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
@@ -1289,11 +1289,45 @@ const mixedTyped: readonly TypedItem[] = interleave([
   ),
 ]);
 
-/** mixedNote explains in Chinese which verb form the result of a mixed conditional takes. */
-function mixedNote(right: string): string {
-  if (right.includes("would have ")) return "结果在过去，用 would have 加过去分词";
-  return "结果在现在，用 would 加动词原形";
+/** mixedRule names how a mixed conditional mixes, from whether its result is in the past. */
+function mixedRule(right: string): Text {
+  return right.includes("would have ")
+    ? t(
+        "The *if*-part imagines a different present, in the past simple, but the result is in the past, so it takes *would have* and the past participle",
+        "*if* 部分想象的是不同的现在，用一般过去时；结果却在过去，所以用 *would have* 加过去分词",
+      )
+    : t(
+        "The *if*-part imagines a different past, with *had* and the past participle, but the result is about now, so it takes *would* and the base form",
+        "*if* 部分想象的是不同的过去，用 *had* 加过去分词；结果却在现在，所以用 *would* 加动词原形",
+      );
 }
+
+/** mixedWhy puts the rule of the mixed conditional before a sentence. */
+const mixedWhy = (right: string, sentence: string): Text => {
+  const rule = mixedRule(right);
+  return t(`${rule.en}: ${sentence}`, `${rule["zh-CN"]}：${sentence}`);
+};
+
+/** whyNotMixed explains a result in the wrong time, will for an imagined past, or had alone. */
+const whyNotMixed = (wrong: string, right: string): Text => {
+  const rule = mixedRule(right);
+  let first: Text;
+  if (wrong.startsWith("would have "))
+    first = t(`*${wrong}* puts the result in the past, but it is about now.`, `*${wrong}* 把结果放在了过去，但结果说的是现在。`);
+  else if (wrong.startsWith("would "))
+    first = t(`*${wrong}* puts the result in the present, but it is in the past.`, `*${wrong}* 把结果放在了现在，但结果发生在过去。`);
+  else if (wrong.startsWith("will "))
+    first = t(
+      `*${wrong}* is for a real possibility, but the *if*-part imagines a past that did not happen.`,
+      `*${wrong}* 用于真实的可能，但 *if* 部分想象的是没有发生的过去。`,
+    );
+  else
+    first = t(
+      `*${wrong}* says what really happened before something else, not an imagined result.`,
+      `*${wrong}* 说的是在另一件事之前真实发生的事，不是想象的结果。`,
+    );
+  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+};
 
 const mixedConditionals: TopicDef = {
   id: "mixed-conditionals",
@@ -1314,8 +1348,11 @@ const mixedConditionals: TopicDef = {
         "When an imagined past would change the **present**, the *if*-part is a third conditional and the result is a second conditional:\n\n- *If I **had studied** medicine, I **would be** a doctor now.* (I didn't study it, so I'm not a doctor.)\n- *If we **had bought** that house ten years ago, we **would be** rich now.*\n\nWords such as *now*, *today* and *by now* show that the result is in the present, so it takes *would* + the base form, not *would have* + past participle.",
         "想象的过去会改变**现在**时，*if* 部分用第三条件句，结果部分用第二条件句：\n\n- *If I **had studied** medicine, I **would be** a doctor now.*（我没学医，所以现在不是医生。）\n- *If we **had bought** that house ten years ago, we **would be** rich now.*\n\n*now*、*today*、*by now* 等词表明结果在现在，所以用 *would* 加动词原形，不用 *would have* 加过去分词。中文“要是当年学了医，现在就是医生了”靠“当年”“现在”区分时间，英语则要靠两部分不同的动词形式。",
       ),
-      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), pastNowChoice, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（${mixedNote(right)}）`),
+      choiceGenerator(
+        t("Choose the words for the gap.", "选出填入空白处的词。"),
+        pastNowChoice,
+        (right, shown) => mixedWhy(right, fill(shown, right)),
+        whyNotMixed,
       ),
     ),
     point(
@@ -1325,8 +1362,11 @@ const mixedConditionals: TopicDef = {
         "When an imagined **present** (something that is always or still true) would have changed the past, the *if*-part is a second conditional and the result is a third conditional:\n\n- *If I **spoke** French, I **would have understood** the film last night.* (I don't speak French, so I didn't understand it.)\n- *If he **were** braver, he **would have asked** her to dance.*\n\nWords such as *yesterday* and *last year* show that the result is in the past, so it takes *would have* + past participle. The result never takes *had* alone: *had understood* says what really happened before something else.",
         "想象的**现在**（一直或至今仍然如此的情况）本会改变过去时，*if* 部分用第二条件句，结果部分用第三条件句：\n\n- *If I **spoke** French, I **would have understood** the film last night.*（我不会说法语，所以昨晚没看懂。）\n- *If he **were** braver, he **would have asked** her to dance.*\n\n*yesterday*、*last year* 等词表明结果在过去，所以用 *would have* 加过去分词。结果部分不能只用 *had*：*had understood* 说的是过去真实发生在另一件事之前的事。",
       ),
-      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), nowPastChoice, (right, shown) =>
-        t(fill(shown, right), `${fill(shown, right)}（${mixedNote(right)}）`),
+      choiceGenerator(
+        t("Choose the words for the gap.", "选出填入空白处的词。"),
+        nowPastChoice,
+        (right, shown) => mixedWhy(right, fill(shown, right)),
+        whyNotMixed,
       ),
     ),
     point(
@@ -1340,7 +1380,7 @@ const mixedConditionals: TopicDef = {
         "sentence-pattern",
         t("Write a mixed conditional sentence from the note.", "根据笔记写一个混合条件句。"),
         mixedTyped,
-        (right) => t(right, `${right}（${mixedNote(right.split(", ")[1] ?? "")}）`),
+        (right) => mixedWhy(right.split(", ")[1] ?? "", right),
       ),
     ),
   ],

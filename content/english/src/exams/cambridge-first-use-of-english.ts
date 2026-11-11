@@ -169,10 +169,82 @@ const patterns: readonly Pattern[] = [
   ],
 ];
 
+/** whyNotCollocation explains a word that does not belong to the fixed phrase of a gap. */
+const whyNotCollocation = (w: string, right: string, phrase: string): Text =>
+  t(
+    `*${w}* may mean something similar, but English does not use it in *${phrase}*. The fixed phrase takes **${right}**.`,
+    `*${w}* 的意思也许相近，但英语的 *${phrase}* 这个固定搭配不用它，要用 **${right}**。`,
+  );
+
+/** linkerNotes explain the wrong options of the linking-word gaps, keyed by the right word and the wrong one. */
+const linkerNotes: Readonly<Record<string, Text>> = {
+  "Despite|Although": t(
+    "*Although* needs a clause with a verb, and *the rain* is only a noun.",
+    "*Although* 后面要接带动词的从句，而 *the rain* 只是名词。",
+  ),
+  "Despite|However": t("*However* joins two sentences; it cannot stand before a noun.", "*However* 连接两个句子，不能放在名词前。"),
+  "Despite|Even": t(
+    "*Even* alone does not link; it needs *though* or *if* and a clause.",
+    "*Even* 单独不能连接，要和 *though* 或 *if* 一起接从句。",
+  ),
+  "however|although": t(
+    "*Although* starts a clause; it cannot stand between two sentences with a comma after it.",
+    "*although* 引导从句，不能放在两个句子之间、后面加逗号。",
+  ),
+  "however|despite": t("*Despite* needs a noun after it, not a whole sentence.", "*despite* 后面要接名词，不能接整个句子。"),
+  "however|unless": t(
+    "*Unless* means *if not*, which makes no sense between these two facts.",
+    "*unless* 的意思是“如果不”，放在这两个事实之间说不通。",
+  ),
+  "long|much": t("*As much as* is about amount; a condition is *as long as*.", "*as much as* 说的是数量；表示条件要用 *as long as*。"),
+  "long|far": t("*As far as* is about distance or extent, not a condition.", "*as far as* 说的是距离或程度，不表示条件。"),
+  "long|well": t("*As well as* means *and also*, not *on condition that*.", "*as well as* 的意思是“也”，不是“只要”。"),
+  "case|order": t("*In order* needs *to* or *that* and gives a purpose.", "*in order* 要接 *to* 或 *that*，表示目的。"),
+  "case|spite": t("*In spite* needs *of* and a noun, and it means *despite*.", "*in spite* 要接 *of* 和名词，意思是“尽管”。"),
+  "case|fact": t("*In fact* means *really*; it does not join a clause.", "*in fact* 的意思是“事实上”，不能引导从句。"),
+  "that|as": t("*So as* is followed by *to* and a verb, not by a clause.", "*so as* 后面接 *to* 和动词，不接从句。"),
+  "that|for": t("*So for* is not a linking phrase.", "*so for* 不是连接词。"),
+  "that|to": t("*So to* is not a linking phrase; a purpose clause takes *so that*.", "*so to* 不是连接词；表示目的的从句用 *so that*。"),
+  "Because|Due": t("*Due* takes *to*, not *of*: *due to the fog*.", "*Due* 后面接 *to*，不接 *of*：*due to the fog*。"),
+  "Because|Since": t("*Since* starts a clause; it does not take *of*.", "*Since* 引导从句，不接 *of*。"),
+  "Because|Although": t("*Although* gives a contrast and does not take *of*.", "*Although* 表示让步，也不接 *of*。"),
+  "due|because": t("*Because* takes *of*, not *to*.", "*because* 后面接 *of*，不接 *to*。"),
+  "due|result": t("The phrase is *as a result of*, not *result to*.", "应该说 *as a result of*，没有 *result to*。"),
+  "due|cause": t("*Cause* is a noun or a verb here, and *cause to* does not link.", "*cause* 是名词或动词，*cause to* 不能起连接作用。"),
+  "Unless|If": t("*If* gives the opposite meaning: hurrying would make you miss the train.", "用 *If* 意思就反了：赶快反而会错过火车。"),
+  "Unless|Otherwise": t(
+    "*Otherwise* comes after the condition, at the start of the second sentence.",
+    "*Otherwise* 放在条件之后，第二个句子的开头。",
+  ),
+  "Unless|Although": t("*Although* gives a contrast, but this sentence states a condition.", "*Although* 表示让步，而这个句子说的是条件。"),
+  "apart|except": t("*Except* takes no *from* after it.", "*except* 后面不接 *from*。"),
+  "apart|besides": t("*Besides* takes no *from*, and it means *as well as*.", "*besides* 后面不接 *from*，而且意思是“除……之外还有”。"),
+  "apart|instead": t("*Instead* takes *of*, and it means *in place of*.", "*instead* 接 *of*，意思是“代替”。"),
+  "Nevertheless|Despite": t("*Despite* needs a noun after it, not a comma and a sentence.", "*Despite* 后面要接名词，不能接逗号和句子。"),
+  "Nevertheless|Although": t(
+    "*Although* starts a clause joined to another one, not a sentence on its own after a full stop.",
+    "*Although* 引导从句，要和另一个分句连在一起，不能在句号后单独成句。",
+  ),
+  "Nevertheless|Because": t(
+    "*Because* gives a reason, but good food is a contrast to the high price.",
+    "*Because* 表示原因，而美食和高价格是对比关系。",
+  ),
+};
+
+/** whyNotPattern explains a wrong word of a phrasal verb, a linking phrase or a word with its preposition. */
+const whyNotPattern = (w: string, right: string, phrase: string, en: string, zh: string): Text => {
+  const note = linkerNotes[`${right}|${w}`];
+  const rest = t(`The phrase is *${phrase}*, meaning "${en}".`, `应该是 *${phrase}*，意思是“${zh}”。`);
+  return note === undefined
+    ? t(`*${w}* does not make the pattern here. ${rest.en}`, `*${w}* 构不成这里的搭配。${rest["zh-CN"]}`)
+    : t(`${note.en} ${rest.en}`, `${note["zh-CN"]}${rest["zh-CN"]}`);
+};
+
 const solvedCollocation = ([shown, right, wrong, phrase]: Collocation): SolvedChoice => ({
   shown: shownGap(shown),
   right,
   wrong,
+  whyNot: wrong.map((w) => whyNotCollocation(w, right, phrase)),
   solution: joinText([
     t(
       `We say *${phrase}*, so the answer is **${right}**. The other words do not go with it in this meaning.`,
@@ -186,6 +258,8 @@ const solvedPattern = ([shown, right, wrong, phrase, en, zh]: Pattern): SolvedCh
   shown: shownGap(shown),
   right,
   wrong,
+  whyNot: wrong.map((w) => whyNotPattern(w, right, phrase, en, zh)),
+
   solution: joinText([
     t(`*${phrase}* means "${en}", so the answer is **${right}**.`, `*${phrase}* 的意思是“${zh}”，所以答案是 **${right}**。`),
     same(quote(filled(shown, right))),

@@ -1,7 +1,7 @@
 // A1, unit 9: The Library. Library words and books, me, him, her and them, a and the, and short notes judged by a
 // model.
 
-import { type CriterionSpec, type TopicDef, t } from "@ga/content";
+import { type CriterionSpec, type Text, type TopicDef, t } from "@ga/content";
 import {
   type ChoiceItem,
   choiceGenerator,
@@ -256,7 +256,31 @@ const replaceBank: readonly TypedItem[] = pairUp(40, namedPeople, replaceFrames)
 
 const objectWhy = (right: string, shown: string) => {
   const sentence = shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`);
-  return t(sentence, `${sentence}（动词或 to、with、for 后面用宾格：me、him、her、us、them）`);
+  const subject = shown.match(/\((.*)\)$/u)?.[1] ?? "";
+  return t(
+    `The gap comes after a verb or a word like *to* or *with*, so *${subject}* becomes *${right}*: ${sentence}`,
+    `空白在动词或 *to*、*with* 这样的词后面，所以 *${subject}* 要变成宾格 *${right}*：${sentence}`,
+  );
+};
+
+/** whyNotObject says what a wrong pronoun shows the learner misread, by the order the forms list it. */
+const whyNotObject = (wrong: string, _right: string, _shown: string, position: number): Text =>
+  position === 0
+    ? t(
+        `*${wrong}* is the form that comes before a verb; after a verb or a word like *to*, it changes.`,
+        `*${wrong}* 是放在动词前的主格；在动词或 *to* 这样的词后面要变形。`,
+      )
+    : t(
+        `*${wrong}* says whose something is, but the gap here is the person, not an owner.`,
+        `*${wrong}* 表示“……的”，可这里的空白指的是人本身，而不是谁的东西。`,
+      );
+
+/** objectFor says whom each object pronoun stands for, in every locale. */
+const objectFor: Record<string, Text> = {
+  him: t("one man or boy", "一个男性"),
+  her: t("one woman or girl", "一个女性"),
+  them: t("more than one person or thing", "多个人或物"),
+  us: t("you and others", "包括自己在内的几个人"),
 };
 
 const objectPronouns: TopicDef = {
@@ -281,7 +305,7 @@ const objectPronouns: TopicDef = {
         "Before a verb: *I, he, she, we, they*. After a verb or after *to, with, for, at, next to*: *me, him, her, us, them*.\n\n*I* like *her*. *She* likes *me*. *Give the book to him.*",
         "动词前用主格：*I、he、she、we、they*。动词后或 *to、with、for、at、next to* 后用宾格：*me、him、her、us、them*。\n\n*I* like *her*. *She* likes *me*. *Give the book to him.*\n\n中文“我”“他”放在哪里都不变，英语却要变形；也不要和 *my、his、our* 这些表示“……的”的词混淆。",
       ),
-      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), objectChoiceBank, objectWhy),
+      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), objectChoiceBank, objectWhy, whyNotObject),
     ),
     point(
       "replace",
@@ -290,7 +314,14 @@ const objectPronouns: TopicDef = {
         "Once we know who it is, we use a pronoun: *I see Tom every day.* → *I see him every day.* One man or boy: *him*. One woman or girl: *her*. More than one person or thing: *them*. You and others: *us*.",
         "知道说的是谁以后，就用代词：*I see Tom every day.* → *I see him every day.* 一个男性：*him*。一个女性：*her*。多个人或物：*them*。包括自己在内的几个人：*us*。",
       ),
-      typedGenerator("sentence", t("Use a pronoun.", "使用代词。"), replaceBank, (right) => t(right, `${right}（动词或介词后面用宾格）`)),
+      typedGenerator("sentence", t("Use a pronoun.", "使用代词。"), replaceBank, (right, shown) => {
+        const noun = shown.match(/\((.*)\)$/u)?.[1] ?? "";
+        const object = namedPeople.find(([n]) => n === noun)?.[1] ?? "";
+        return t(
+          `*${noun}* is ${objectFor[object]?.en}, and after a verb or a word like *to* that is *${object}*: ${right}`,
+          `*${noun}* 指${objectFor[object]?.["zh-CN"]}，在动词或 *to* 这样的词后面用 *${object}*：${right}`,
+        );
+      }),
     ),
   ],
 };
@@ -373,12 +404,51 @@ const articleTypedBank: readonly TypedItem[] = interleave([firstItems(14, 12), s
   ({ shown, right, wrong }): TypedItem => ({ shown, accepted: [right], wrong }),
 );
 
+/** articleNoun finds the noun after the gap of a sentence. */
+const articleNoun = (shown: string) => (shown.split("___ ")[1] ?? "").split(/[ .?!]/u)[0] ?? "";
+
 const articleWhy = (right: string, shown: string) => {
   const sentence = shown.replace("___", `*${right}*`);
-  return t(
-    sentence,
-    `${sentence}（${right.toLowerCase() === "the" ? "the 指双方都知道的那一个" : "a/an 指许多中的任意一个，第一次提到"}）`,
-  );
+  const noun = articleNoun(shown);
+  const reason =
+    right.toLowerCase() !== "the"
+      ? t(
+          `This is the first time the ${noun} comes up, one of many, so it takes *a* or *an*, and *${noun}* starts with a ${right === "an" ? "vowel" : "consonant"} sound`,
+          `这是第一次提到 ${noun}，是许多中的一个，所以用 *a* 或 *an*；*${noun}* 以${right === "an" ? "元音" : "辅音"}开头`,
+        )
+      : shown.startsWith("There is")
+        ? t(
+            `The sentence before already named the ${noun}, so now we both know which one and it takes *the*`,
+            `前一句已经提到了 ${noun}，双方都知道是哪一个，所以用 *the*`,
+          )
+        : t(
+            "There is only one, or the words around it say which one, so it takes *the*",
+            "这样东西独一无二，或者前后的词说明了是哪一个，所以用 *the*",
+          );
+  return t(`${reason.en}: ${sentence}`, `${reason["zh-CN"]}：${sentence}`);
+};
+
+/** whyNotArticle says what a wrong article shows the learner misread. */
+const whyNotArticle = (wrong: string, right: string, shown: string): Text => {
+  if (wrong.toLowerCase() === "the")
+    return t(
+      "*the* is for the one we both know, but this is the first time it comes up.",
+      "*the* 用于双方都知道的那一个，可这是第一次提到它。",
+    );
+  if (right.toLowerCase() !== "the")
+    return t(
+      `*${wrong}* is the wrong one of the pair: *${articleNoun(shown)}* starts with a ${right === "an" ? "vowel" : "consonant"} sound.`,
+      `*${wrong}* 用错了：*${articleNoun(shown)}* 以${right === "an" ? "元音" : "辅音"}开头。`,
+    );
+  return shown.startsWith("There is")
+    ? t(
+        `*${wrong}* would mean some other one, but the sentence before already named it.`,
+        `*${wrong}* 表示另外的某一个，可前一句已经提到了它。`,
+      )
+    : t(
+        `*${wrong}* is for one of many, but here there is only one, or the words say which one.`,
+        `*${wrong}* 用于许多中的一个，可这里只有一个，或者前后的词已经说明了是哪一个。`,
+      );
 };
 
 const theArticleThe: TopicDef = {
@@ -403,7 +473,7 @@ const theArticleThe: TopicDef = {
         "*a* or *an*: one of many, the first time you say it. *I have a book.*\n\n*the*: the one we both know. It is the second time you say it (*The book is about cats*), there is only one (*the sun*), or the words around it say which one (*the first day*, *the title of this book*, *the book you wanted*). Also *in the morning*, *play the piano*.",
         "*a* 或 *an*：许多中的一个，第一次提到时用。*I have a book.*\n\n*the*：说话双方都知道的那一个。第二次提到时用（*The book is about cats*）；独一无二的东西用（*the sun*）；前后的词说明了是哪一个时用（*the first day*、*the title of this book*、*the book you wanted*）。还有 *in the morning*、*play the piano*。\n\n中文没有冠词，“书”可以指任何书，也可以指那本书；英语必须用 *a* 或 *the* 表明是哪一种。",
       ),
-      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), articleChoiceBank, articleWhy),
+      choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), articleChoiceBank, articleWhy, whyNotArticle),
     ),
     point(
       "type",
