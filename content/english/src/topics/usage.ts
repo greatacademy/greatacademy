@@ -847,10 +847,15 @@ export const usageTopics: readonly TopicDef[] = [
           t("Which words complete the sentence?", "哪个选项能补全句子？"),
           [...moreMostBank, ...moreMostMore],
           (right, shown) =>
-            t(
-              `${shown.replace("___", `**${right}**`)}`,
-              `${shown.replace("___", `**${right}**`)} 长形容词用 more 或 most，不加 -er 或 -est。`,
-            ),
+            right.startsWith("more ")
+              ? t(
+                  `${shown.replace("___", `**${right}**`)} A long adjective takes *more*, not *-er*, and *more* is right because only two things are compared.`,
+                  `${shown.replace("___", `**${right}**`)} 长形容词用 *more*，不加 *-er*；这里只比较两个事物，所以用 *more*。`,
+                )
+              : t(
+                  `${shown.replace("___", `**${right}**`)} A long adjective takes *most*, not *-est*, and *most* is right because one stands out from a group of three or more.`,
+                  `${shown.replace("___", `**${right}**`)} 长形容词用 *most*，不加 *-est*；这里是从三个或更多之中突出一个，所以用 *most*。`,
+                ),
           moreMostFeedback,
         ),
       ),

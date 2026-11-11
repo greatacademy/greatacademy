@@ -15,6 +15,15 @@ import {
   sourceMore,
   synthesisMore,
 } from "./rhetoric-more.ts";
+import {
+  allusionChoiceStep,
+  appealStep,
+  contradictionStep,
+  deviceStep,
+  repairStep,
+  sourceWeaknessStep,
+  traitStep,
+} from "./rhetoric-steps.ts";
 
 type Say = (wrong: string, right: string, shown: string, position: number) => readonly [string, string];
 
@@ -323,17 +332,32 @@ const fallacyNot = meaning({
 
 // Characterization.
 
-const characterizationBank: readonly ChoiceItem[] = [
-  ["Mr. Hale was the meanest man in the village.", "direct", ["indirect"]],
-  ["Mr. Hale kicked the stray cat out of his way and slammed the door on the carol singers.", "indirect", ["direct"]],
-  ["Rosa was patient and kind with every child she taught.", "direct", ["indirect"]],
-  ["Rosa knelt beside the crying boy and waited, saying nothing, until he was ready to talk.", "indirect", ["direct"]],
-  ["The captain was a brave and stubborn woman.", "direct", ["indirect"]],
-  ['"Turn back?" the captain laughed, gripping the wheel as the waves rose. "Not while I\'m standing."', "indirect", ["direct"]],
-  ["Jin counted his coins three times before handing over a single one, then asked for a receipt.", "indirect", ["direct"]],
-  ["Everyone agreed that Jin was the most careful spender in town.", "direct", ["indirect"]],
-  ...characterizationMore,
-];
+const characterizationBank: readonly ChoiceItem[] = (
+  [
+    ["Mr. Hale was the meanest man in the village.", "direct", ["indirect"]],
+    ["Mr. Hale kicked the stray cat out of his way and slammed the door on the carol singers.", "indirect", ["direct"]],
+    ["Rosa was patient and kind with every child she taught.", "direct", ["indirect"]],
+    ["Rosa knelt beside the crying boy and waited, saying nothing, until he was ready to talk.", "indirect", ["direct"]],
+    ["The captain was a brave and stubborn woman.", "direct", ["indirect"]],
+    ['"Turn back?" the captain laughed, gripping the wheel as the waves rose. "Not while I\'m standing."', "indirect", ["direct"]],
+    ["Jin counted his coins three times before handing over a single one, then asked for a receipt.", "indirect", ["direct"]],
+    ["Everyone agreed that Jin was the most careful spender in town.", "direct", ["indirect"]],
+    ...characterizationMore,
+  ] as ChoiceItem[]
+)
+  .map(([shown, right, wrong]): ChoiceItem => [shown, right, [...wrong, "neither"]])
+  .concat(
+    [
+      "The village sat at the foot of the mountain, its roofs covered in snow.",
+      "The train left the station at seven and reached the coast by noon.",
+      "Rain had fallen all night, and the streets were full of puddles.",
+      "The kitchen was painted yellow and had a window over the sink.",
+      "The museum opens at nine and closes at five, except on Mondays.",
+      "Three roads met at the old stone bridge outside town.",
+      "The orchard held apple trees, pear trees and a single tall walnut.",
+      "Winter came early that year, and the lake froze in November.",
+    ].map((shown, i): ChoiceItem => [shown, "neither", i % 2 === 0 ? ["direct", "indirect"] : ["indirect", "direct"]]),
+  );
 
 // Allusion.
 
@@ -383,23 +407,42 @@ const allusionBank: readonly ChoiceItem[] = [
 
 // Paradox and oxymoron.
 
-const paradoxBank: readonly ChoiceItem[] = [
-  ["The silence was deafening.", "oxymoron", ["paradox"]],
-  ["The more you learn, the more you realize how little you know.", "paradox", ["oxymoron"]],
-  ["She gave me a small, bittersweet smile.", "oxymoron", ["paradox"]],
-  ["To save time, we must spend it planning.", "paradox", ["oxymoron"]],
-  ["The plan was a clever foolishness.", "oxymoron", ["paradox"]],
-  ["Less is more.", "paradox", ["oxymoron"]],
-  ["They were living a lonely crowd of a life, surrounded by strangers.", "oxymoron", ["paradox"]],
-  ["You must be cruel to be kind.", "paradox", ["oxymoron"]],
-  ...paradoxMore,
-];
+const paradoxBank: readonly ChoiceItem[] = (
+  [
+    ["The silence was deafening.", "oxymoron", ["paradox"]],
+    ["The more you learn, the more you realize how little you know.", "paradox", ["oxymoron"]],
+    ["She gave me a small, bittersweet smile.", "oxymoron", ["paradox"]],
+    ["To save time, we must spend it planning.", "paradox", ["oxymoron"]],
+    ["The plan was a clever foolishness.", "oxymoron", ["paradox"]],
+    ["Less is more.", "paradox", ["oxymoron"]],
+    ["They were living a lonely crowd of a life, surrounded by strangers.", "oxymoron", ["paradox"]],
+    ["You must be cruel to be kind.", "paradox", ["oxymoron"]],
+    ...paradoxMore,
+  ] as ChoiceItem[]
+)
+  .map(([shown, right, wrong]): ChoiceItem => [shown, right, [...wrong, "neither"]])
+  .concat(
+    [
+      "The day was hot, but the night was cold.",
+      "She likes tea, while her brother prefers coffee.",
+      "The old house was dark inside and bright outside.",
+      "He was tall and his sister was short.",
+      "Some students walk to school; others take the bus.",
+      "The river is calm in summer and wild in spring.",
+      "The first test was easy, and the second was hard.",
+      "The city is loud by day and quiet by night.",
+    ].map((shown, i): ChoiceItem => [shown, "neither", i % 2 === 0 ? ["oxymoron", "paradox"] : ["paradox", "oxymoron"]]),
+  );
 
 const paradoxWhy: Readonly<Record<string, readonly [string, string]>> = {
   oxymoron: ["Two words that seem to contradict each other are joined in one phrase.", "两个看似矛盾的词组合在一个短语里。"],
   paradox: [
     "A whole statement seems to contradict itself, yet holds a truth when you think about it.",
     "整个陈述看似自相矛盾，仔细想来却包含着道理。",
+  ],
+  neither: [
+    "The sentence sets two different things side by side, but nothing in it contradicts itself, so it is a plain contrast.",
+    "句子把两个不同的事物并列，但其中没有任何自相矛盾之处，所以只是普通的对比。",
   ],
 };
 
@@ -411,6 +454,10 @@ const paradoxNot = meaning({
   paradox: [
     "A paradox is a whole statement that seems impossible. Here the clash is between two words placed together.",
     "悖论是看似不可能的整个陈述。这里的冲突来自放在一起的两个词。",
+  ],
+  neither: [
+    "There is a real contradiction here: two ideas that seem unable to be true together, which a plain contrast does not have.",
+    "这里有真正的矛盾：两个看似不能同时成立的意思，而普通的对比没有这种矛盾。",
   ],
 });
 
@@ -647,7 +694,7 @@ export const rhetoricTopics: readonly TopicDef[] = [
       { topic: "reasoning", weight: 0.2 },
       { topic: "rhetorical-situation", weight: 0.2 },
     ],
-    xp: 12,
+    xp: 16,
     knowledgePoints: [
       point(
         "naming-the-appeal",
@@ -658,6 +705,7 @@ export const rhetoricTopics: readonly TopicDef[] = [
         ),
         named(["Which appeal does this sentence mainly use?", "这个句子主要运用了哪种诉求？"], appealBank, appealWhy, appealNot),
       ),
+      appealStep,
     ],
   },
   {
@@ -669,7 +717,7 @@ export const rhetoricTopics: readonly TopicDef[] = [
     ),
     prerequisites: ["rhetorical-appeals", "parallel-structure"],
     encompasses: [{ topic: "parallel-structure", weight: 0.2 }],
-    xp: 12,
+    xp: 16,
     knowledgePoints: [
       point(
         "naming-the-device",
@@ -680,6 +728,7 @@ export const rhetoricTopics: readonly TopicDef[] = [
         ),
         named(["Which rhetorical device is used here?", "这里运用了哪种修辞手法？"], deviceBank, deviceWhy, deviceNot),
       ),
+      deviceStep,
     ],
   },
   {
@@ -691,7 +740,7 @@ export const rhetoricTopics: readonly TopicDef[] = [
     ),
     prerequisites: ["rhetorical-appeals"],
     encompasses: [{ topic: "reasoning", weight: 0.2 }],
-    xp: 14,
+    xp: 18,
     knowledgePoints: [
       point(
         "naming-the-fallacy",
@@ -702,6 +751,7 @@ export const rhetoricTopics: readonly TopicDef[] = [
         ),
         named(["Which fallacy does this argument commit?", "这个论证犯了哪种谬误？"], fallacyBank, fallacyWhy, fallacyNot),
       ),
+      repairStep,
     ],
   },
   {
@@ -713,7 +763,7 @@ export const rhetoricTopics: readonly TopicDef[] = [
     ),
     prerequisites: ["evidence"],
     encompasses: [{ topic: "evidence", weight: 0.2 }],
-    xp: 12,
+    xp: 16,
     knowledgePoints: [
       point(
         "the-credible-source",
@@ -734,6 +784,7 @@ export const rhetoricTopics: readonly TopicDef[] = [
           ],
         ),
       ),
+      sourceWeaknessStep,
     ],
   },
   {
@@ -745,38 +796,48 @@ export const rhetoricTopics: readonly TopicDef[] = [
     ),
     prerequisites: ["narrative-point-of-view", "characters"],
     encompasses: [{ topic: "characters", weight: 0.2 }],
-    xp: 10,
+    xp: 14,
     knowledgePoints: [
       point(
         "telling-or-showing",
         t("Telling or Showing", "直接说出还是间接展示"),
         t(
-          "Writers reveal characters in two ways. **Direct characterization** tells the reader outright: *Mr. Hale was the meanest man in the village.* **Indirect characterization** shows the trait and lets the reader infer it, through what a character says, does, thinks or looks like, and how others react: *Mr. Hale kicked the stray cat out of his way.*\n\nIf the sentence names the trait with an adjective such as *mean*, *kind* or *brave*, it is direct.",
-          "作者用两种方式展现人物。**直接塑造**（direct characterization）直接告诉读者：*Mr. Hale was the meanest man in the village.* **间接塑造**（indirect characterization）展示人物特点，让读者自己推断：通过人物的言语、行动、想法或外貌，以及别人的反应：*Mr. Hale kicked the stray cat out of his way.*\n\n如果句子用 *mean*、*kind*、*brave* 这样的形容词直接说出特点，就是直接塑造。",
+          "Writers reveal characters in two ways. **Direct characterization** tells the reader outright: *Mr. Hale was the meanest man in the village.* **Indirect characterization** shows the trait and lets the reader infer it, through what a character says, does, thinks or looks like, and how others react: *Mr. Hale kicked the stray cat out of his way.*\n\nIf the sentence names the trait with an adjective such as *mean*, *kind* or *brave*, it is direct. A sentence that only describes a place or events, and reveals no character, is neither.",
+          "作者用两种方式展现人物。**直接塑造**（direct characterization）直接告诉读者：*Mr. Hale was the meanest man in the village.* **间接塑造**（indirect characterization）展示人物特点，让读者自己推断：通过人物的言语、行动、想法或外貌，以及别人的反应：*Mr. Hale kicked the stray cat out of his way.*\n\n如果句子用 *mean*、*kind*、*brave* 这样的形容词直接说出特点，就是直接塑造。只描写地点或事件、没有展现人物的句子，两者都不是。",
         ),
         pick(
-          ["Is this direct or indirect characterization?", "这是直接塑造还是间接塑造？"],
+          ["Is this direct or indirect characterization, or neither?", "这是直接塑造、间接塑造，还是两者都不是？"],
           characterizationBank,
           (right) =>
             right === "direct"
               ? "It is **direct**: the sentence names the character's trait outright."
-              : "It is **indirect**: the sentence shows the trait through words or actions, and the reader infers it.",
+              : right === "indirect"
+                ? "It is **indirect**: the sentence shows the trait through words or actions, and the reader infers it."
+                : "It is **neither**: the sentence describes a place, a time or events, and reveals no trait of any character.",
           (right) =>
             right === "direct"
               ? "这是**直接塑造**：句子直接说出了人物的特点。"
-              : "这是**间接塑造**：句子通过言语或行动展示特点，由读者推断。",
+              : right === "indirect"
+                ? "这是**间接塑造**：句子通过言语或行动展示特点，由读者推断。"
+                : "**两者都不是**：句子描写的是地点、时间或事件，没有展现任何人物的特点。",
           (wrong) =>
             wrong === "direct"
               ? [
                   "No word here names the trait; the reader has to infer it from what the character says or does.",
                   "这里没有词直接说出特点；读者要从人物的言行中推断。",
                 ]
-              : [
-                  "The sentence names the trait with a describing word, so nothing is left to infer.",
-                  "句子用描述词直接说出了特点，所以没有什么需要推断。",
-                ],
+              : wrong === "indirect"
+                ? [
+                    "The sentence names the trait with a describing word, so nothing is left to infer.",
+                    "句子用描述词直接说出了特点，所以没有什么需要推断。",
+                  ]
+                : [
+                    "A character is revealed here, either by a word naming a trait or by speech or actions that show one.",
+                    "这里展现了人物：要么用词直接说出了特点，要么通过言行展示了特点。",
+                  ],
         ),
       ),
+      traitStep,
     ],
   },
   {
@@ -788,7 +849,7 @@ export const rhetoricTopics: readonly TopicDef[] = [
     ),
     prerequisites: ["symbolism"],
     encompasses: [],
-    xp: 10,
+    xp: 14,
     knowledgePoints: [
       point(
         "what-the-allusion-adds",
@@ -808,6 +869,7 @@ export const rhetoricTopics: readonly TopicDef[] = [
           ],
         ),
       ),
+      allusionChoiceStep,
     ],
   },
   {
@@ -819,17 +881,18 @@ export const rhetoricTopics: readonly TopicDef[] = [
     ),
     prerequisites: ["personification-and-hyperbole"],
     encompasses: [],
-    xp: 10,
+    xp: 14,
     knowledgePoints: [
       point(
         "contradictions-that-mean",
         t("Contradictions That Mean Something", "有意义的矛盾"),
         t(
-          "An **oxymoron** joins two words that seem to clash: *deafening silence*, *bittersweet*, *clever foolishness*. A **paradox** is a whole statement that seems to contradict itself but holds a truth: *The more you learn, the more you realize how little you know.*\n\nBoth make the reader stop and think. To tell them apart, look at the size of the contradiction: two words side by side, or an entire idea.",
-          "**矛盾修饰**（oxymoron）把两个看似冲突的词放在一起：*deafening silence*、*bittersweet*、*clever foolishness*。**悖论**（paradox）是看似自相矛盾、却包含道理的整个陈述：*The more you learn, the more you realize how little you know.*\n\n两者都让读者停下来思考。要区分它们，就看矛盾的范围：是并列的两个词，还是整个意思。",
+          "An **oxymoron** joins two words that seem to clash: *deafening silence*, *bittersweet*, *clever foolishness*. A **paradox** is a whole statement that seems to contradict itself but holds a truth: *The more you learn, the more you realize how little you know.*\n\nBoth make the reader stop and think. To tell them apart, look at the size of the contradiction: two words side by side, or an entire idea. A plain contrast, such as *hot by day and cold by night*, is neither: the two halves never contradict each other.",
+          "**矛盾修饰**（oxymoron）把两个看似冲突的词放在一起：*deafening silence*、*bittersweet*、*clever foolishness*。**悖论**（paradox）是看似自相矛盾、却包含道理的整个陈述：*The more you learn, the more you realize how little you know.*\n\n两者都让读者停下来思考。要区分它们，就看矛盾的范围：是并列的两个词，还是整个意思。普通的对比，比如 *hot by day and cold by night*，两者都不是：两半之间并不矛盾。",
         ),
-        named(["Is this a paradox or an oxymoron?", "这是悖论还是矛盾修饰？"], paradoxBank, paradoxWhy, paradoxNot),
+        named(["Is this a paradox, an oxymoron, or neither?", "这是悖论、矛盾修饰，还是两者都不是？"], paradoxBank, paradoxWhy, paradoxNot),
       ),
+      contradictionStep,
     ],
   },
   {

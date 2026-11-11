@@ -20,8 +20,108 @@ import {
   titleBank,
 } from "./grammar-banks.ts";
 
-const pluralWhy = (right: string, shown: string) =>
-  t(`${shown.replace("___", `**${right}**`)}`, `正确的句子是：${shown.replace("___", `**${right}**`)}`);
+/** pluralRule names the spelling rule that turns a singular noun into its plural. */
+const pluralRule = (one: string, many: string): readonly [string, string] => {
+  if (many.endsWith("ves"))
+    return [
+      `*${one}* ends in *f* or *fe*, which changes to *v* before *-es* is added`,
+      `*${one}* 以 *f* 或 *fe* 结尾，要先变成 *v* 再加 *-es*`,
+    ];
+  if (many.endsWith("ies") && one.endsWith("y"))
+    return [
+      `*${one}* has a consonant before its final *y*, so the *y* turns into *i* before *-es*`,
+      `*${one}* 词尾 *y* 前面是辅音，所以要把 *y* 变成 *i* 再加 *-es*`,
+    ];
+  if (one.endsWith("y"))
+    return [
+      `*${one}* has a vowel before its final *y*, so it keeps the *y* and just adds *-s*`,
+      `*${one}* 词尾 *y* 前面是元音，所以保留 *y*，直接加 *-s*`,
+    ];
+  if (many === `${one}es`)
+    return [
+      `*${one}* ends in *s*, *x*, *ch*, *sh* or *z*, so it adds *-es*, the extra sound you hear`,
+      `*${one}* 以 *s、x、ch、sh* 或 *z* 结尾，所以加 *-es*，读起来多了一个音`,
+    ];
+  return [`*${one}* follows the usual rule, so it simply adds *-s*`, `*${one}* 遵循一般规则，所以直接加 *-s*`];
+};
+
+const spellingWhy = (right: string, shown: string) => {
+  const one = shown.match(/^one (.+), two ___$/u)?.[1] ?? "";
+  const [en, zh] = pluralRule(one, right);
+  return t(`One ${one}, two **${right}**: ${en}.`, `one ${one}，two **${right}**：${zh}。`);
+};
+
+/** irregularRule says how each irregular plural is formed from its singular. */
+const irregularRule: Readonly<Record<string, readonly [string, string]>> = {
+  mice: ["*mouse* changes its vowels to make *mice*, with no *-s* added", "*mouse* 改变元音变成 *mice*，不加 *-s*"],
+  feet: ["*foot* changes *oo* to *ee* to make *feet*, with no *-s* added", "*foot* 把 *oo* 变成 *ee* 得到 *feet*，不加 *-s*"],
+  geese: ["*goose* changes *oo* to *ee* to make *geese*, with no *-s* added", "*goose* 把 *oo* 变成 *ee* 得到 *geese*，不加 *-s*"],
+  men: ["*man* changes its vowel to make *men*, with no *-s* added", "*man* 改变元音变成 *men*，不加 *-s*"],
+  women: ["*woman* changes its vowel to make *women*, with no *-s* added", "*woman* 改变元音变成 *women*，不加 *-s*"],
+  children: [
+    "*child* adds the old ending *-ren* to make *children*, never *-s*",
+    "*child* 加上古老的词尾 *-ren* 变成 *children*，从不加 *-s*",
+  ],
+  oxen: ["*ox* adds the old ending *-en* to make *oxen*, never *-es*", "*ox* 加上古老的词尾 *-en* 变成 *oxen*，从不加 *-es*"],
+  sheep: ["*sheep* stays the same for one or many, so it takes no ending", "*sheep* 单复数相同，所以不加任何词尾"],
+  deer: ["*deer* stays the same for one or many, so it takes no ending", "*deer* 单复数相同，所以不加任何词尾"],
+  fish: ["*fish* usually stays the same for one or many, so it takes no ending", "*fish* 通常单复数相同，所以不加任何词尾"],
+  moose: ["*moose* stays the same for one or many, so it takes no ending", "*moose* 单复数相同，所以不加任何词尾"],
+};
+
+const irregularWhy = (right: string, shown: string) => {
+  const [en, zh] = irregularRule[right] ?? ["this noun has an irregular plural", "这个名词的复数不规则"];
+  const sentence = shown.replace("___", `**${right}**`);
+  return t(`${sentence} The noun is irregular: ${en}.`, `${sentence} 这是不规则名词：${zh}。`);
+};
+
+const progressiveWhy = (right: string, shown: string) => {
+  const subject = shown.match(/^[^,]+, (.+?) ___/u)?.[1] ?? "";
+  const sentence = shown.replace("___", `**${right}**`);
+  if (right.startsWith("will be"))
+    return t(
+      `${sentence} *This time tomorrow* points to the future, so the verb is *will be* plus the *-ing* form, for every subject.`,
+      `${sentence} *This time tomorrow* 指向将来，所以动词用 *will be* 加 *-ing* 形式，任何主语都一样。`,
+    );
+  const be = right.split(" ")[0] ?? "";
+  const past = be === "was" || be === "were";
+  return t(
+    `${sentence} *${past ? "At noon yesterday" : "Right now"}* points to the ${past ? "past" : "present"}, so the verb is *${be}* plus the *-ing* form, because *${be}* is the form that agrees with *${subject}*.`,
+    `${sentence} *${past ? "At noon yesterday" : "Right now"}* 指向${past ? "过去" : "现在"}，所以动词用 *${be}* 加 *-ing* 形式，因为 *${be}* 是与 *${subject}* 一致的形式。`,
+  );
+};
+
+/** modalMeaning says what each modal verb adds to the verb after it. */
+const modalMeaning: Readonly<Record<string, readonly [string, string]>> = {
+  must: ["*must* shows a rule or something necessary", "*must* 表示规定或必须做的事"],
+  can: ["*can* shows that someone is able to do something", "*can* 表示某人能够做某事"],
+  might: ["*might* shows that something is possible but not certain", "*might* 表示某事可能发生但不确定"],
+  should: ["*should* gives advice about the right thing to do", "*should* 就该做的事提出建议"],
+  may: ["*may* asks or gives permission politely", "*may* 礼貌地请求或给予允许"],
+};
+
+const modalWhy = (right: string, shown: string) => {
+  const sentence = shown.split("*")[1]?.replace("___", right) ?? "";
+  const [en, zh] = modalMeaning[right.toLowerCase()] ?? ["", ""];
+  return t(
+    `**${right}**: ${en}, which is the meaning the question asks for. *${sentence}*`,
+    `**${right}**：${zh}，这正是题目要求的意思。*${sentence}*`,
+  );
+};
+
+/** pairRule names the partner each correlative conjunction needs. */
+const pairRule: Readonly<Record<string, readonly [string, string]>> = {
+  either: ["*either* pairs with *or* to offer one of two choices", "*either* 与 *or* 搭配，表示二者选一"],
+  neither: ["*neither* pairs with *nor* to say not one and not the other", "*neither* 与 *nor* 搭配，表示两者都不"],
+  and: ["*both* pairs with *and* to include the two things together", "*both* 与 *and* 搭配，表示两者都包括"],
+  "but also": ["*not only* pairs with *but also* to add a second thing", "*not only* 与 *but also* 搭配，补充第二样东西"],
+};
+
+const pairWhy = (right: string, shown: string) => {
+  const [en, zh] = pairRule[right] ?? ["", ""];
+  const sentence = shown.replace("___", `**${right}**`);
+  return t(`${sentence} The word fits because ${en}.`, `${sentence} 这个词正合适，因为${zh}。`);
+};
 
 /** because builds the solution of a choice of sentences: the right one, and why it is right. */
 const because =
@@ -94,7 +194,7 @@ export const grammarTopics35: readonly TopicDef[] = [
           "Most nouns add *-s*: *cat, cats*. Nouns ending in *s, x, ch, sh* or *z* add *-es*, because you hear an extra sound: *box, boxes*; *bench, benches*.\n\nA consonant before a final *y* turns the *y* into *i* and adds *-es*: *city, cities*. A vowel before the *y* keeps it: *monkey, monkeys*.\n\nMany nouns ending in *f* or *fe* change it to *v* and add *-es*: *leaf, leaves*; *wolf, wolves*.",
           "大多数名词加 *-s*：*cat, cats*。以 *s、x、ch、sh* 或 *z* 结尾的名词加 *-es*，因为读起来多了一个音：*box, boxes*；*bench, benches*。\n\n词尾 *y* 前是辅音时，把 *y* 变成 *i* 再加 *-es*：*city, cities*。*y* 前是元音时保留 *y*：*monkey, monkeys*。\n\n许多以 *f* 或 *fe* 结尾的名词把它变成 *v* 再加 *-es*：*leaf, leaves*；*wolf, wolves*。",
         ),
-        typedGenerator("word-form", t("Type the plural of the noun.", "输入这个名词的复数形式。"), regularPluralBank, pluralWhy),
+        typedGenerator("word-form", t("Type the plural of the noun.", "输入这个名词的复数形式。"), regularPluralBank, spellingWhy),
       ),
       point(
         "irregular-plurals",
@@ -103,7 +203,7 @@ export const grammarTopics35: readonly TopicDef[] = [
           "Some nouns change their spelling instead of adding an ending: *mouse, mice*; *tooth, teeth*; *foot, feet*; *goose, geese*; *child, children*; *man, men*; *woman, women*; *ox, oxen*.\n\nA few stay the same: one *sheep*, two *sheep*; one *deer*, a herd of *deer*; one *fish*, a school of *fish*. An irregular plural never takes an extra *-s*: *childrens* and *mices* are not words.",
           "有些名词不加词尾，而是改变拼写：*mouse, mice*；*tooth, teeth*；*foot, feet*；*goose, geese*；*child, children*；*man, men*；*woman, women*；*ox, oxen*。\n\n有几个单复数相同：one *sheep*，two *sheep*；one *deer*，a herd of *deer*；one *fish*，a school of *fish*。不规则复数后面不再加 *-s*：*childrens* 和 *mices* 都不是词。",
         ),
-        choiceGenerator(t("Which word completes the sentence?", "哪个词能补全句子？"), irregularPluralBank, pluralWhy, (wrong) =>
+        choiceGenerator(t("Which word completes the sentence?", "哪个词能补全句子？"), irregularPluralBank, irregularWhy, (wrong) =>
           t(
             `“${wrong}” treats an irregular noun as a regular one, or adds an ending to a plural that already has its own form.`,
             `“${wrong}” 把不规则名词当成了规则名词，或者给已经有自己复数形式的词又加了词尾。`,
@@ -182,7 +282,7 @@ export const grammarTopics35: readonly TopicDef[] = [
           "A progressive verb has two parts: a form of *be* and a verb ending in *-ing*.\n\n- Present: *I am reading. She is reading. They are reading.*\n- Past: *He was reading. We were reading.*\n- Future: *I will be reading.*\n\nThe form of *be* must agree with the subject, and the *-ing* verb never stands alone as the verb of a sentence: *The baby sleeping* is not a sentence.",
           "进行时的动词有两部分：*be* 的某种形式加上以 *-ing* 结尾的动词。\n\n- 现在进行时：*I am reading. She is reading. They are reading.*\n- 过去进行时：*He was reading. We were reading.*\n- 将来进行时：*I will be reading.*\n\n*be* 的形式要和主语一致，而 *-ing* 形式的动词不能单独作句子的谓语：*The baby sleeping* 不是句子。",
         ),
-        choiceGenerator(t("Which words complete the sentence?", "哪些词能补全句子？"), progressiveFormBank, pluralWhy, (wrong) =>
+        choiceGenerator(t("Which words complete the sentence?", "哪些词能补全句子？"), progressiveFormBank, progressiveWhy, (wrong) =>
           t(
             `“${wrong}” is missing the right form of *be*, or uses one that does not agree with the subject or the time of the sentence.`,
             `“${wrong}” 缺少正确的 *be* 形式，或者所用的形式与主语或句子的时间不一致。`,
@@ -228,19 +328,11 @@ export const grammarTopics35: readonly TopicDef[] = [
           "A **modal verb** comes before another verb and changes its meaning:\n\n- *can*: able to: *Owls can see in the dark.*\n- *may*: allowed to, or asking politely: *May I come in?*\n- *might*: possible but not certain: *It might rain.*\n- *must*: a rule or a strong need: *You must stop at a red light.*\n- *should*: advice, the right thing to do: *You should wear a helmet.*",
           "**情态动词**放在另一个动词前面，改变它的意思：\n\n- *can*：能够：*Owls can see in the dark.*\n- *may*：允许，或礼貌地请求：*May I come in?*\n- *might*：可能但不确定：*It might rain.*\n- *must*：规定或强烈的需要：*You must stop at a red light.*\n- *should*：建议，应当做的事：*You should wear a helmet.*",
         ),
-        choiceGenerator(
-          t("Choose the modal verb.", "选择情态动词。"),
-          modalMeaningBank,
-          (right, shown) =>
-            t(
-              `**${right}**. ${shown.split("*")[1]?.replace("___", right) ?? ""}`,
-              `正确的词是 **${right}**：${shown.split("*")[1]?.replace("___", right) ?? ""}`,
-            ),
-          (wrong) =>
-            t(
-              `“${wrong}” fits the grammar of the sentence but not the meaning the question asks for.`,
-              `“${wrong}” 在语法上能放进句子，但不符合题目要求的意思。`,
-            ),
+        choiceGenerator(t("Choose the modal verb.", "选择情态动词。"), modalMeaningBank, modalWhy, (wrong) =>
+          t(
+            `“${wrong}” fits the grammar of the sentence but not the meaning the question asks for.`,
+            `“${wrong}” 在语法上能放进句子，但不符合题目要求的意思。`,
+          ),
         ),
       ),
       point(
@@ -286,8 +378,13 @@ export const grammarTopics35: readonly TopicDef[] = [
           t("Type the past participle of the verb that completes the sentence.", "输入能补全句子的动词过去分词。"),
           participleBank,
           (right, shown) => {
+            const plain = shown.slice(0, shown.indexOf(":"));
             const sentence = shown.slice(shown.indexOf(":") + 2).replace("___", `**${right}**`);
-            return t(sentence, `正确的句子是：${sentence}`);
+            const past = participleBank.find((item) => item.canonical === right)?.wrong[0] ?? "";
+            return t(
+              `${sentence} After *has*, *have* or *had* comes the past participle. *${plain}* is irregular: its past is *${past}*, but its participle is *${right}*.`,
+              `${sentence} *has、have* 或 *had* 后面接过去分词。*${plain}* 是不规则动词：它的过去式是 *${past}*，过去分词却是 *${right}*。`,
+            );
           },
         ),
       ),
@@ -333,7 +430,7 @@ export const grammarTopics35: readonly TopicDef[] = [
           "Some conjunctions come in pairs, one word before each of the two things they join:\n\n- *either ... or*: one of two choices: *either juice or milk*\n- *neither ... nor*: not this one and not that one: *Neither my sister nor I like spinach.*\n- *both ... and*: the two together: *Both the cat and the dog sleep here.*\n- *not only ... but also*: this, and that too: *She is not only kind but also funny.*\n\nThe halves always match: *neither* goes with *nor*, never with *or*.",
           "有些连词成对出现，所连接的两部分前面各有一个词：\n\n- *either ... or*：二选一：*either juice or milk*\n- *neither ... nor*：两者都不：*Neither my sister nor I like spinach.*\n- *both ... and*：两者都：*Both the cat and the dog sleep here.*\n- *not only ... but also*：不仅……而且：*She is not only kind but also funny.*\n\n两半总是配套的：*neither* 和 *nor* 搭配，从不和 *or* 搭配。",
         ),
-        choiceGenerator(t("Which word or words complete the sentence?", "哪个词或哪些词能补全句子？"), pairBank, pluralWhy, (wrong) =>
+        choiceGenerator(t("Which word or words complete the sentence?", "哪个词或哪些词能补全句子？"), pairBank, pairWhy, (wrong) =>
           t(
             `“${wrong}” does not match the other half of the pair, or gives the opposite meaning.`,
             `“${wrong}” 和另一半不配套，或者意思正好相反。`,

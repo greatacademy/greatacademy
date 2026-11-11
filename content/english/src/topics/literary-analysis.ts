@@ -3,6 +3,7 @@
 import { type CriterionSpec, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, criterionById, point, type WritingItem, writingGenerator } from "@ga/subject-english";
 import { citeMore, ironyMore, narratorEffectMore, narratorMore, orderMore, symbolMore } from "./literary-analysis-more.ts";
+import { explainStep, foreshadowStep, ironyMakingStep, symbolThemeStep } from "./literary-analysis-steps.ts";
 
 type Say = (wrong: string, right: string, shown: string, position: number) => readonly [string, string];
 
@@ -435,6 +436,41 @@ const analysisBank: readonly WritingItem[] = [
     model:
       'The writer builds suspense by delaying the moment Priya opens the letter. The envelope sits there "all afternoon," and she "walked past it four times," so the reader waits along with her. Each time she reaches for it, she "pulled her hand back," which stretches the tension further. By never revealing the answer, the writer keeps the reader as anxious as Priya.',
   },
+  {
+    task: "Write a paragraph that makes a claim about what the passage shows about Marcus, and support it with a quotation.",
+    source:
+      "Marcus had saved for the bicycle all year. On the morning he finally went to buy it, he passed his little sister's school and saw her sitting alone on the steps, her broken shoes tied together with string. That afternoon he came home on foot, carrying a shoebox under his arm.",
+    model:
+      'The passage shows that Marcus puts his sister\'s needs before his own wishes. He had "saved for the bicycle all year," yet after seeing her shoes "tied together with string," he comes home "on foot, carrying a shoebox." The writer never says what he bought, but the shoebox and the missing bicycle tell the reader that he spent his savings on her. His quiet choice shows a generosity that does not need to be praised.',
+  },
+  {
+    task: "Write a paragraph that makes a claim about how the writer shows that the narrator is nervous, and support it with a quotation.",
+    source:
+      "I checked my bag for the third time: pencils, eraser, water bottle, the lucky coin from Grandpa. The clock in the hallway ticked louder than any clock should. When the door opened and someone called my name, my legs stood up before I told them to.",
+    model:
+      'The writer shows the narrator\'s nerves through small, repeated actions and strange feelings in the body. Checking the bag "for the third time" suggests the narrator cannot trust their own memory under pressure. The clock that "ticked louder than any clock should" shows how fear sharpens every sound. Even the narrator\'s legs stand "before I told them to," as if the body is moving on its own because the mind is too anxious to lead.',
+  },
+  {
+    task: "Write a paragraph that makes a claim about what the lighthouse stands for in the passage, and support it with a quotation.",
+    source:
+      "After her mother left, Nell climbed the hill each evening to watch the old lighthouse. Its beam swept across the dark water, steady and patient, never missing a turn. On the worst nights, when the wind howled through the town, she told herself that as long as the light kept turning, she could keep going too.",
+    model:
+      'In the passage, the lighthouse stands for the steady hope that keeps Nell going after her loss. Its beam is "steady and patient, never missing a turn," which is the opposite of the sudden change her mother\'s leaving brought. On the worst nights she tells herself that "as long as the light kept turning, she could keep going too." The light becomes a promise she makes to herself: the world can still be reliable, even when people are not.',
+  },
+  {
+    task: "Write a paragraph that makes a claim about the mood the writer creates in the passage, and support it with a quotation.",
+    source:
+      "The fair was over. Paper cups rolled across the empty field, and a single balloon, tied to a fence post, bobbed in the wind. The music had stopped hours ago. Only the Ferris wheel remained, dark and still against the gray sky.",
+    model:
+      'The writer creates a lonely, faded mood by showing a happy place after the happiness has gone. Paper cups "rolled across the empty field," and a "single balloon" bobs by itself, reminders of a crowd that has left. The Ferris wheel, "dark and still against the gray sky," turns the symbol of fun into something silent and cold. The details make the reader feel how quickly joy can disappear.',
+  },
+  {
+    task: "Write a paragraph that makes a claim about how Aunt June's words reveal her character, and support it with a quotation.",
+    source:
+      'When I dropped the cake on the kitchen floor, everyone froze. Aunt June looked at the mess, then at me, and grabbed a spoon. "Well," she said, sitting down on the tiles, "it tastes the same from down here." Within a minute, the whole family was on the floor, laughing with chocolate on their faces.',
+    model:
+      'Aunt June\'s words reveal that she is warm and quick to turn a disaster into a happy memory. Instead of scolding, she sits on the floor and says, "it tastes the same from down here." Her joke tells the narrator that the mistake does not matter and that the cake is still worth enjoying. Because the "whole family was on the floor, laughing" within a minute, the reader sees that her kindness changes the mood of everyone around her.',
+  },
 ];
 
 /** literaryAnalysisTopics are the topics of literary analysis for grades 6 to 8. */
@@ -490,7 +526,7 @@ export const literaryAnalysisTopics: readonly TopicDef[] = [
     summary: t("An object, place or event that stands for an idea larger than itself.", "代表比自身更大的意义的物品、地点或事件。"),
     prerequisites: ["theme"],
     encompasses: [{ topic: "theme", weight: 0.2 }],
-    xp: 12,
+    xp: 16,
     knowledgePoints: [
       point(
         "reading-a-symbol",
@@ -510,6 +546,7 @@ export const literaryAnalysisTopics: readonly TopicDef[] = [
           ],
         ),
       ),
+      symbolThemeStep,
     ],
   },
   {
@@ -521,7 +558,7 @@ export const literaryAnalysisTopics: readonly TopicDef[] = [
     ),
     prerequisites: ["plot-and-conflict"],
     encompasses: [],
-    xp: 12,
+    xp: 16,
     knowledgePoints: [
       point(
         "three-kinds-of-irony",
@@ -532,6 +569,7 @@ export const literaryAnalysisTopics: readonly TopicDef[] = [
         ),
         named(["What kind of irony is this?", "这是哪种反讽？"], [...ironyBank, ...ironyMore], ironyWhy, ironyNot),
       ),
+      ironyMakingStep,
     ],
   },
   {
@@ -540,7 +578,7 @@ export const literaryAnalysisTopics: readonly TopicDef[] = [
     summary: t("Hints of what is to come, and scenes that move back in time.", "对将来之事的暗示，以及回到过去的场景。"),
     prerequisites: ["plot-and-conflict"],
     encompasses: [{ topic: "plot-and-conflict", weight: 0.2 }],
-    xp: 10,
+    xp: 14,
     knowledgePoints: [
       point(
         "hints-and-memories",
@@ -556,6 +594,7 @@ export const literaryAnalysisTopics: readonly TopicDef[] = [
           orderNot,
         ),
       ),
+      foreshadowStep,
     ],
   },
   {
@@ -564,7 +603,7 @@ export const literaryAnalysisTopics: readonly TopicDef[] = [
     summary: t("Choose the quotation from a story that proves a claim about it.", "选出能证明关于故事的某个论点的引文。"),
     prerequisites: ["theme"],
     encompasses: [{ topic: "theme", weight: 0.2 }],
-    xp: 10,
+    xp: 14,
     knowledgePoints: [
       point(
         "the-quotation-that-proves",
@@ -581,6 +620,7 @@ export const literaryAnalysisTopics: readonly TopicDef[] = [
           citeNot,
         ),
       ),
+      explainStep,
     ],
   },
   {

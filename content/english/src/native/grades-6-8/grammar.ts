@@ -21,6 +21,62 @@ import {
 const filled = (right: string, shown: string): Text =>
   t(shown.replace("___", `**${right}**`), `正确的句子是：${shown.replace("___", `**${right}**`)}`);
 
+const subjunctiveWhy = (right: string, shown: string): Text => {
+  const sentence = shown.replace("___", `**${right}**`);
+  return right === "were"
+    ? t(
+        `${sentence} A wish or a situation contrary to fact takes the subjunctive *were*, with every subject, even *I*, *he* and *she*.`,
+        `${sentence} 愿望或与事实相反的情况用虚拟语气 *were*，所有主语都一样，包括 *I、he、she*。`,
+      )
+    : t(
+        `${sentence} After a demand or recommendation such as *insist*, *suggest* or *require*, the subjunctive takes the plain verb *${right}*, with no *-s*.`,
+        `${sentence} 在 *insist、suggest、require* 这类表示要求或建议的词之后，虚拟语气用动词原形 *${right}*，不加 *-s*。`,
+      );
+};
+
+const bolded = (shown: string) => shown.match(/\*\*([^*]+)\*\*/u)?.[1] ?? "";
+
+const verbalRule: Readonly<Record<string, readonly [string, string]>> = {
+  "a gerund phrase": [
+    "it is an *-ing* phrase doing a noun's job, so *it* or *something* could replace it",
+    "它是承担名词作用的 *-ing* 短语，可以用 *it* 或 *something* 替换",
+  ],
+  "a participial phrase": [
+    "it is an *-ing* or *-ed* phrase that describes a noun, usually set beside that noun with a comma",
+    "它是修饰名词的 *-ing* 或 *-ed* 短语，通常用逗号隔开，紧挨着那个名词",
+  ],
+  "an infinitive phrase": ["it begins with *to* followed by the plain form of a verb", "它以 *to* 加动词原形开头"],
+  "the subject of the sentence": [
+    "it comes before the main verb and names what the sentence is about",
+    "它在主要动词之前，说明句子讲的是什么",
+  ],
+  "the object of the verb": ["it follows the main verb and names what the verb acts on", "它跟在主要动词之后，说明动词作用的对象"],
+  "a description of a noun": [
+    "it is set off by a comma and describes the noun beside it, not the action",
+    "它用逗号隔开，描述旁边的名词，而不是动作",
+  ],
+};
+
+const verbalWhy = (right: string, shown: string): Text => {
+  const [en, zh] = verbalRule[right] ?? ["", ""];
+  return t(`*${bolded(shown)}* is **${right}**: ${en}.`, `*${bolded(shown)}* 是**${verbalZh[right] ?? right}**：${zh}。`);
+};
+
+const kindRule: Readonly<Record<string, readonly [string, string]>> = {
+  simple: [
+    "it has only one independent clause, one subject with its verb, and no other clause joined to it",
+    "它只有一个独立分句，即一个主语和它的谓语，没有连接其他分句",
+  ],
+  compound: [
+    "it joins two independent clauses as equals, with a comma and *and*, *but*, *or*, *so* or *yet*",
+    "它用逗号加 *and、but、or、so、yet* 把两个独立分句平等地连接起来",
+  ],
+  complex: [
+    "one of its clauses depends on the other, joined by a word such as *because*, *although*, *when* or *if*",
+    "它的一个分句从属于另一个，由 *because、although、when、if* 这类词连接",
+  ],
+};
+
 /** because builds the solution of a choice: the right option, and why it is right. */
 const because =
   (en: string, zh: string) =>
@@ -212,7 +268,7 @@ export const grammarTopics68: readonly TopicDef[] = [
           "The subjunctive has two forms.\n\nFor a wish or something contrary to fact, use **were** with every subject, even *I*, *he* and *she*: *If I **were** taller…*, *I wish she **were** here.* Everyday speech often says *was*, but careful writing uses *were*.\n\nAfter words of demand or recommendation, such as *insist, require, suggest, recommend, ask that* and *it is important that*, use the **plain verb**, with no *-s* and no past tense: *The doctor recommends that she **rest**. It is vital that he **be** careful.*",
           "虚拟语气有两种形式。\n\n表示愿望或与事实相反的情况时，所有主语都用 **were**，包括 *I、he、she*：*If I **were** taller…*，*I wish she **were** here.* 日常口语常说 *was*，但严谨的书面语用 *were*。\n\n在表示要求或建议的词之后，例如 *insist, require, suggest, recommend, ask that, it is important that*，用**动词原形**，不加 *-s*，也不用过去式：*The doctor recommends that she **rest**. It is vital that he **be** careful.*",
         ),
-        choiceGenerator(t("Which verb completes the sentence?", "哪个动词能补全句子？"), subjunctiveBank, filled, (wrong) =>
+        choiceGenerator(t("Which verb completes the sentence?", "哪个动词能补全句子？"), subjunctiveBank, subjunctiveWhy, (wrong) =>
           t(
             `“${wrong}” is the indicative form. A wish or an unreal condition takes *were*, and a demand or recommendation takes the plain verb.`,
             `“${wrong}” 是陈述语气的形式。愿望或非真实条件用 *were*，要求或建议用动词原形。`,
@@ -240,15 +296,11 @@ export const grammarTopics68: readonly TopicDef[] = [
           "A **verbal** is a verb form that does another job in the sentence.\n\n- A **gerund phrase** is an *-ing* phrase used as a noun: ***Climbing the tree** was fun. Mia loved **climbing the tree**.*\n- A **participial phrase** is an *-ing* (or *-ed*) phrase used as an adjective, describing a noun: ***Climbing the tree**, Mia saw her kite.* It describes Mia.\n- An **infinitive phrase** begins with *to* and a plain verb: *Mia wanted **to climb the tree**.*\n\nTo tell a gerund from a participle, replace the phrase with *it*. *It was fun* works, so the phrase is a gerund. *It, Mia saw her kite* does not, so it is a participle.",
           "**非谓语动词**是在句中承担其他作用的动词形式。\n\n- **动名词短语**是用作名词的 *-ing* 短语：***Climbing the tree** was fun. Mia loved **climbing the tree**.*\n- **分词短语**是用作形容词、修饰名词的 *-ing*（或 *-ed*）短语：***Climbing the tree**, Mia saw her kite.* 它修饰 Mia。\n- **不定式短语**以 *to* 加动词原形开头：*Mia wanted **to climb the tree**.*\n\n区分动名词和分词时，用 *it* 替换这个短语。*It was fun* 说得通，所以是动名词。*It, Mia saw her kite* 说不通，所以是分词。",
         ),
-        choiceGenerator(
-          t("What kind of phrase is in bold?", "加粗的是哪种短语？"),
-          verbalKindBank,
-          (right) => t(`It is **${right}**.`, `它是**${verbalZh[right]}**（${right}）。`),
-          (wrong) =>
-            t(
-              `It is not ${wrong}. Check whether it begins with *to*, and if it is an *-ing* phrase, try replacing it with *it*.`,
-              `它不是${verbalZh[wrong]}。看看它是否以 *to* 开头；如果是 *-ing* 短语，试着用 *it* 替换它。`,
-            ),
+        choiceGenerator(t("What kind of phrase is in bold?", "加粗的是哪种短语？"), verbalKindBank, verbalWhy, (wrong) =>
+          t(
+            `It is not ${wrong}. Check whether it begins with *to*, and if it is an *-ing* phrase, try replacing it with *it*.`,
+            `它不是${verbalZh[wrong]}。看看它是否以 *to* 开头；如果是 *-ing* 短语，试着用 *it* 替换它。`,
+          ),
         ),
       ),
       point(
@@ -258,15 +310,11 @@ export const grammarTopics68: readonly TopicDef[] = [
           "A gerund phrase does the jobs of a noun. Before the verb, it is the **subject**: ***Baking bread** fills the house with a smell.* After a verb such as *enjoy, love, start, suggest* or *mind*, it is the **object**: *Grandpa loves **baking bread**.*\n\nA participial phrase does the job of an adjective: it **describes a noun**, usually the subject right after the comma: ***Baking bread**, Grandpa hummed.* The phrase tells us about Grandpa.",
           "动名词短语承担名词的作用。在动词之前，它是**主语**：***Baking bread** fills the house with a smell.* 在 *enjoy, love, start, suggest, mind* 这类动词之后，它是**宾语**：*Grandpa loves **baking bread**.*\n\n分词短语承担形容词的作用：它**描述一个名词**，通常是逗号后面的主语：***Baking bread**, Grandpa hummed.* 这个短语告诉我们关于 Grandpa 的情况。",
         ),
-        choiceGenerator(
-          t("What job does the phrase in bold do?", "加粗的短语在句中起什么作用？"),
-          verbalJobBank,
-          (right) => t(`The phrase is **${right}**.`, `这个短语是**${verbalZh[right]}**。`),
-          (wrong) =>
-            t(
-              `It is not ${wrong}. Find the main verb: what comes before it is the subject, what it acts on is the object, and a phrase set off by a comma usually describes the noun next to it.`,
-              `它不是${verbalZh[wrong]}。找出主要动词：它前面的是主语，它作用的对象是宾语，用逗号隔开的短语通常描述旁边的名词。`,
-            ),
+        choiceGenerator(t("What job does the phrase in bold do?", "加粗的短语在句中起什么作用？"), verbalJobBank, verbalWhy, (wrong) =>
+          t(
+            `It is not ${wrong}. Find the main verb: what comes before it is the subject, what it acts on is the object, and a phrase set off by a comma usually describes the noun next to it.`,
+            `它不是${verbalZh[wrong]}。找出主要动词：它前面的是主语，它作用的对象是宾语，用逗号隔开的短语通常描述旁边的名词。`,
+          ),
         ),
       ),
     ],
@@ -296,7 +344,11 @@ export const grammarTopics68: readonly TopicDef[] = [
         choiceGenerator(
           t("What kind of sentence is this?", "这是哪种句子？"),
           sentenceKindBank,
-          (right) => t(`It is **${right}**.`, `它是**${kindZh[right]}**（${right}）。`),
+          (right) =>
+            t(
+              `It is **${right}**: ${kindRule[right]?.[0] ?? ""}.`,
+              `它是**${kindZh[right]}**（${right}）：${kindRule[right]?.[1] ?? ""}。`,
+            ),
           (wrong) =>
             t(
               `It is not ${wrong}. Count the clauses, then look at the word that joins them: *and, but, so* join equals; *because, although, when* make one clause depend on the other.`,

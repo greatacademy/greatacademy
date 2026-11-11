@@ -262,6 +262,31 @@ const pairBank: readonly WritingItem[] = [
     source: "The museum has a whale skeleton. The skeleton hangs from the ceiling.",
     model: "The museum has a whale skeleton that hangs from the ceiling.",
   },
+  {
+    task: "Combine these sentences into one sentence. Use any way you have learned, and keep their meaning.",
+    source: "The library was quiet. Ben could hear the clock ticking.",
+    model: "The library was so quiet that Ben could hear the clock ticking.",
+  },
+  {
+    task: "Combine these sentences into one sentence. Use any way you have learned, and keep their meaning.",
+    source: "Dr. Lin is our dentist. She plays the violin in a band.",
+    model: "Dr. Lin, our dentist, plays the violin in a band.",
+  },
+  {
+    task: "Combine these sentences into one sentence. Use any way you have learned, and keep their meaning.",
+    source: "The path was icy. We walked to school carefully.",
+    model: "Because the path was icy, we walked to school carefully.",
+  },
+  {
+    task: "Combine these sentences into one sentence. Use any way you have learned, and keep their meaning.",
+    source: "My uncle fixed the old bike. The bike had a flat tire.",
+    model: "My uncle fixed the old bike, which had a flat tire.",
+  },
+  {
+    task: "Combine these sentences into one sentence. Use any way you have learned, and keep their meaning.",
+    source: "The test was hard. Most of the class passed it.",
+    model: "Although the test was hard, most of the class passed it.",
+  },
 ];
 
 /** setBank asks for three or more short sentences folded into one. */
@@ -305,6 +330,31 @@ const setBank: readonly WritingItem[] = [
     task: "Combine these sentences into one sentence that keeps all of their meaning.",
     source: "The game was cancelled. The field was flooded. The players went home.",
     model: "The game was cancelled because the field was flooded, so the players went home.",
+  },
+  {
+    task: "Combine these sentences into one sentence that keeps all of their meaning.",
+    source: "The girl ran across the field. She was tall. She ran to catch the ball.",
+    model: "The tall girl ran across the field to catch the ball.",
+  },
+  {
+    task: "Combine these sentences into one sentence that keeps all of their meaning.",
+    source: "Mr. Okafor is a baker. He gave us a loaf. The loaf was warm.",
+    model: "Mr. Okafor, a baker, gave us a warm loaf.",
+  },
+  {
+    task: "Combine these sentences into one sentence that keeps all of their meaning.",
+    source: "The light went out. There was a storm. We lit candles.",
+    model: "When the light went out during the storm, we lit candles.",
+  },
+  {
+    task: "Combine these sentences into one sentence that keeps all of their meaning.",
+    source: "Lucy wrote a letter. She wrote it to her pen pal. Her pen pal lives in Peru.",
+    model: "Lucy wrote a letter to her pen pal, who lives in Peru.",
+  },
+  {
+    task: "Combine these sentences into one sentence that keeps all of their meaning.",
+    source: "The turtle crawled onto the rock. The turtle was old. It warmed itself in the sun.",
+    model: "The old turtle crawled onto the rock and warmed itself in the sun.",
   },
 ];
 

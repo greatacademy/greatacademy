@@ -14,6 +14,16 @@ import {
   shapeBank,
   varietyBank,
 } from "./grammar-banks.ts";
+import {
+  absoluteCombineStep,
+  clauseKindStep,
+  conditionStep,
+  leadInFixStep,
+  punctuationFixStep,
+  rhythmStep,
+  shapeBuildStep,
+  stressStep,
+} from "./grammar-steps.ts";
 
 const filled = (right: string, shown: string): Text =>
   t(shown.replace("___", `**${right}**`), `正确的句子是：${shown.replace("___", `**${right}**`)}`);
@@ -102,7 +112,7 @@ export const grammarTopics912: readonly TopicDef[] = [
     ),
     prerequisites: ["run-ons-and-comma-splices", "appositives"],
     encompasses: [{ topic: "run-ons-and-comma-splices", weight: 0.3 }],
-    xp: 12,
+    xp: 16,
     strand: "writing",
     knowledgePoints: [
       point(
@@ -140,6 +150,7 @@ export const grammarTopics912: readonly TopicDef[] = [
           },
         ),
       ),
+      punctuationFixStep,
     ],
   },
   {
@@ -154,7 +165,7 @@ export const grammarTopics912: readonly TopicDef[] = [
       { topic: "participial-phrases", weight: 0.2 },
       { topic: "parallel-structure", weight: 0.2 },
     ],
-    xp: 12,
+    xp: 16,
     strand: "grammar",
     knowledgePoints: [
       point(
@@ -176,6 +187,7 @@ export const grammarTopics912: readonly TopicDef[] = [
             ),
         ),
       ),
+      shapeBuildStep,
     ],
   },
   {
@@ -187,7 +199,7 @@ export const grammarTopics912: readonly TopicDef[] = [
     ),
     prerequisites: ["verb-moods"],
     encompasses: [{ topic: "verb-moods", weight: 0.3 }],
-    xp: 12,
+    xp: 16,
     strand: "grammar",
     knowledgePoints: [
       point(
@@ -204,6 +216,7 @@ export const grammarTopics912: readonly TopicDef[] = [
           ),
         ),
       ),
+      conditionStep,
     ],
   },
   {
@@ -215,7 +228,7 @@ export const grammarTopics912: readonly TopicDef[] = [
     ),
     prerequisites: ["participial-phrases"],
     encompasses: [{ topic: "participial-phrases", weight: 0.3 }],
-    xp: 12,
+    xp: 16,
     strand: "grammar",
     knowledgePoints: [
       point(
@@ -244,6 +257,7 @@ export const grammarTopics912: readonly TopicDef[] = [
             ),
         ),
       ),
+      absoluteCombineStep,
     ],
   },
   {
@@ -255,7 +269,7 @@ export const grammarTopics912: readonly TopicDef[] = [
     ),
     prerequisites: ["relative-clauses"],
     encompasses: [{ topic: "relative-clauses", weight: 0.2 }],
-    xp: 12,
+    xp: 16,
     strand: "grammar",
     knowledgePoints: [
       point(
@@ -276,6 +290,7 @@ export const grammarTopics912: readonly TopicDef[] = [
             ),
         ),
       ),
+      clauseKindStep,
     ],
   },
   {
@@ -290,7 +305,7 @@ export const grammarTopics912: readonly TopicDef[] = [
       { topic: "citing-textual-evidence", weight: 0.3 },
       { topic: "punctuating-dialogue", weight: 0.2 },
     ],
-    xp: 12,
+    xp: 16,
     strand: "writing",
     knowledgePoints: [
       point(
@@ -331,6 +346,7 @@ export const grammarTopics912: readonly TopicDef[] = [
             ),
         ),
       ),
+      leadInFixStep,
     ],
   },
   {
@@ -342,7 +358,7 @@ export const grammarTopics912: readonly TopicDef[] = [
     ),
     prerequisites: ["simple-compound-and-complex-sentences"],
     encompasses: [{ topic: "simple-compound-and-complex-sentences", weight: 0.1 }],
-    xp: 12,
+    xp: 16,
     strand: "grammar",
     knowledgePoints: [
       point(
@@ -375,6 +391,7 @@ export const grammarTopics912: readonly TopicDef[] = [
             ),
         ),
       ),
+      stressStep,
     ],
   },
   {
@@ -389,7 +406,7 @@ export const grammarTopics912: readonly TopicDef[] = [
       { topic: "periodic-and-cumulative-sentences", weight: 0.3 },
       { topic: "varying-sentence-openings", weight: 0.3 },
     ],
-    xp: 14,
+    xp: 18,
     strand: "writing",
     knowledgePoints: [
       point(
@@ -417,6 +434,7 @@ export const grammarTopics912: readonly TopicDef[] = [
             ),
         ),
       ),
+      rhythmStep,
     ],
   },
 ];

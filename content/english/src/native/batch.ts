@@ -82,7 +82,13 @@ export function batchTopic(spec: BatchSpec): TopicDef {
         choiceGenerator(
           t("What does the word in bold mean in this sentence?", "加粗的词在这个句子里是什么意思？"),
           meaningBank,
-          (right) => t(`It means **${right}**.`, `它的意思是 **${right}**（${zhMeaning(right)}）。`),
+          (right, shown) => {
+            const word = spec.words.find((w) => w.meaning[0] === right)?.word ?? "";
+            return t(
+              `In this sentence *${word}* means **${right}**. Put that meaning in place of the word and the sentence still says the same thing: ${shown}`,
+              `在这个句子里，*${word}* 的意思是 **${right}**（${zhMeaning(right)}）。用这个意思替换这个词，句子的意思不变：${shown}`,
+            );
+          },
           (wrong) =>
             t(
               `“${wrong}” is what a different word of this batch means. Put it in place of the word in bold and the sentence stops making sense.`,
@@ -127,7 +133,13 @@ export function batchTopic(spec: BatchSpec): TopicDef {
           "word-form",
           t("Type the word of this batch that completes the sentence.", "输入这组词中能补全句子的词。"),
           spellBank,
-          (right, shown) => t(shown.replace("___", `**${right}**`), `正确的词是 **${right}**：${shown.replace("___", `**${right}**`)}`),
+          (right, shown) => {
+            const w = find(right);
+            return t(
+              `${shown.replace("___", `**${right}**`)} The gap needs a word meaning ${w.meaning[0]}, and that word is spelled *${right}*.`,
+              `正确的词是 **${right}**：${shown.replace("___", `**${right}**`)} 空格需要一个意思是“${w.meaning[1]}”的词，它拼作 *${right}*。`,
+            );
+          },
         ),
       ),
     ],

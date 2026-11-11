@@ -48,6 +48,31 @@ const thesisBank: readonly WritingItem[] = [
     task: "Should schools serve only healthy food? Write a thesis statement for an essay that answers this question.",
     model: "Schools should serve only healthy food, because a good lunch helps students focus and builds habits that last a lifetime.",
   },
+  {
+    task: "Should schools have a four-day week? Write a thesis statement for an essay that answers this question.",
+    model:
+      "Schools should keep a five-day week, because a shorter week would crowd lessons into longer days and leave many parents without care for their children.",
+  },
+  {
+    task: "Should students wear school uniforms? Write a thesis statement for an essay that answers this question.",
+    model:
+      "Students should wear school uniforms, because uniforms save families money and stop students from being judged by their clothes.",
+  },
+  {
+    task: "Should towns turn empty lots into community gardens? Write a thesis statement for an essay that answers this question.",
+    model:
+      "Towns should turn empty lots into community gardens, since gardens bring neighbors together and give families fresh, cheap vegetables.",
+  },
+  {
+    task: "Should every class take a field trip each year? Write a thesis statement for an essay that answers this question.",
+    model:
+      "Every class should take at least one field trip a year, because seeing a museum, farm or river in person makes lessons memorable and sparks new interests.",
+  },
+  {
+    task: "Should libraries stop charging late fees? Write a thesis statement for an essay that answers this question.",
+    model:
+      "Libraries should stop charging late fees, because the fees keep poorer families from borrowing books and bring in very little money.",
+  },
 ];
 
 /** outlineBank asks for the plan of an argument: a thesis, reasons and the evidence for each. */
@@ -91,6 +116,31 @@ const outlineBank: readonly WritingItem[] = [
     task: "Write an outline for an essay on whether students should learn to code. Give a thesis, two or three reasons, and evidence or an example for each.",
     model:
       "Thesis: Every student should learn some coding.\n1. Coding teaches clear thinking. Example: a program only works when each step is in the right order.\n2. Many future jobs will use computers. Evidence: doctors, farmers and artists already use software every day.\n3. Coding lets students build things. Example: a student can make a simple game to share with friends.",
+  },
+  {
+    task: "Write an outline for an essay on whether students should wear school uniforms. Give a thesis, two or three reasons, and evidence or an example for each.",
+    model:
+      "Thesis: Students should wear school uniforms.\n1. Uniforms save families money. Example: a few uniform shirts cost less than a closet of fashionable clothes.\n2. Uniforms reduce teasing about clothes. Evidence: students cannot be judged by brand names when everyone dresses alike.\n3. Uniforms make mornings easier. Example: no one has to decide what to wear before school.",
+  },
+  {
+    task: "Write an outline for an essay on whether towns should build more public parks. Give a thesis, two or three reasons, and evidence or an example for each.",
+    model:
+      "Thesis: Towns should build more public parks.\n1. Parks give children a safe place to play. Example: a playground keeps children away from busy streets.\n2. Parks help people stay healthy. Evidence: people who live near a park walk and exercise more often.\n3. Parks bring neighbors together. Example: summer concerts and picnics let people meet each other.",
+  },
+  {
+    task: "Write an outline for an essay on whether schools should offer more art classes. Give a thesis, two or three reasons, and evidence or an example for each.",
+    model:
+      "Thesis: Schools should offer more art classes.\n1. Art lets students express ideas in new ways. Example: a student who struggles to write may tell a story in a painting.\n2. Art teaches patience and problem solving. Evidence: finishing a sculpture means fixing mistakes and trying again.\n3. Many jobs use art skills. Example: designers, architects and game makers all draw and plan visually.",
+  },
+  {
+    task: "Write an outline for an essay on whether families should limit screen time on weekends. Give a thesis, two or three reasons, and evidence or an example for each.",
+    model:
+      "Thesis: Families should limit screen time on weekends.\n1. Less screen time leaves room for being outdoors. Example: a family can go for a bike ride instead of watching shows all morning.\n2. Families talk more without screens. Evidence: meals without phones are full of conversation.\n3. Rested eyes and minds start the week better. Example: children who play outside on Sunday sleep better before school.",
+  },
+  {
+    task: "Write an outline for an essay on whether students should help choose the books they read in class. Give a thesis, two or three reasons, and evidence or an example for each.",
+    model:
+      "Thesis: Students should help choose some of the books they read in class.\n1. Choice makes students want to read. Example: a student who loves sports may finally finish a novel about a team.\n2. Students learn to judge books. Evidence: comparing several books before voting means reading descriptions and samples carefully.\n3. Teachers still guide the choice. Example: the class can vote from a list the teacher has approved.",
   },
 ];
 
@@ -152,6 +202,41 @@ const evidenceBank: readonly WritingItem[] = [
     model:
       'Putting screens away before bed helps people sleep. In one study, teenagers who put their phones away an hour before bed "fell asleep about twenty minutes sooner" than those who kept using them. Twenty minutes each night adds up to more than two hours of sleep a week. Since that group also felt more awake in the morning, a simple habit could improve the whole next day.',
   },
+  {
+    task: "Using the passage, write a body paragraph for an essay arguing that schools should start a reading buddy program. Make a point, use evidence from the passage, and explain how it supports your point.",
+    source:
+      "At one school, older students spent twenty minutes a week reading with first graders. By spring, most of the first graders could read more words than the year before, and their teachers said they were more eager to pick up books. The older students said they felt proud and grown up.",
+    model:
+      'A reading buddy program helps young students learn to read. At one school, first graders who read with older students each week were "more eager to pick up books," and most could read more words by spring. Young children copy the people they look up to, so seeing an older student enjoy a book makes reading seem worth doing. The program teaches skills and builds a love of reading at the same time.',
+  },
+  {
+    task: "Using the passage, write a body paragraph for an essay arguing that towns should add more crosswalks near schools. Make a point, use evidence from the passage, and explain how it supports your point.",
+    source:
+      "After a town painted new crosswalks and added signs near its three schools, police counted the cars that stopped for walkers. Before the change, about four drivers in ten stopped. A year later, nearly nine in ten did. No child was hit by a car near the schools that year.",
+    model:
+      'Crosswalks near schools make drivers more careful. After one town added crosswalks and signs, the share of drivers who stopped for walkers rose from "about four drivers in ten" to "nearly nine in ten." A clear crosswalk tells drivers exactly where to expect children, so they slow down before it is too late. Since no child was hit near the schools that year, the paint and signs may have saved lives.',
+  },
+  {
+    task: "Using the passage, write a body paragraph for an essay arguing that students should take short movement breaks during class. Make a point, use evidence from the passage, and explain how it supports your point.",
+    source:
+      "A teacher began asking her class to stand and stretch for two minutes every half hour. She kept a record of how many students were off task. Before the breaks, about a third of the class drifted off by the end of each lesson. After a month of breaks, only a few did.",
+    model:
+      'Short movement breaks keep students on task. One teacher found that before she added two-minute stretches, "about a third of the class drifted off" by the end of each lesson, but afterward only a few did. Sitting still for a long time makes the body restless and the mind wander. Two minutes of stretching costs almost nothing and gives back attention for the rest of the lesson.',
+  },
+  {
+    task: "Using the passage, write a body paragraph for an essay arguing that cities should put water fountains in parks. Make a point, use evidence from the passage, and explain how it supports your point.",
+    source:
+      "A city put new water fountains in five of its busiest parks. Park workers found that the bins near the fountains filled with far fewer plastic bottles over the summer. Families also said they stayed longer at the park because they no longer had to leave to buy drinks.",
+    model:
+      'Water fountains in parks cut down on plastic waste. When a city added fountains to five busy parks, the bins nearby filled with "far fewer plastic bottles" over the summer. Each person who drinks from a fountain is one less person buying a bottle that might end up as litter. Fountains also keep families in the park longer, so they help people enjoy the outdoors and protect it at once.',
+  },
+  {
+    task: "Using the passage, write a body paragraph for an essay arguing that schools should teach students how to swim. Make a point, use evidence from the passage, and explain how it supports your point.",
+    source:
+      "A coastal town began giving every eight-year-old ten free swimming lessons. Before the program, many children in the town could not swim, even though the beach was close by. Five years later, lifeguards reported that they had to rescue far fewer children from the water.",
+    model:
+      'Swimming lessons keep children safe near water. After a coastal town gave every eight-year-old ten free lessons, lifeguards reported that they had to rescue "far fewer children" from the water. A child who can swim can reach the shore or stay afloat until help arrives. In a town so close to the sea, a few lessons can be the difference between a scare and a tragedy.',
+  },
 ];
 
 /** counterclaimBank asks for a paragraph that states an opposing view fairly and answers it. */
@@ -195,6 +280,31 @@ const counterclaimBank: readonly WritingItem[] = [
     task: "Your essay argues that video games should not count as a sport. Write a paragraph that states a counterclaim fairly and then rebuts it.",
     model:
       "Supporters of video games point out that top players train for hours, compete in teams and win prizes, just like athletes. They are right that gaming takes skill and practice. Yet chess also takes skill and practice, and few people call it a sport. What makes a sport is physical effort, and sitting in a chair moving a controller does not demand the strength or fitness that running or swimming does.",
+  },
+  {
+    task: "Your essay argues that students should wear school uniforms. Write a paragraph that states a counterclaim fairly and then rebuts it.",
+    model:
+      "Some students argue that uniforms take away their chance to show who they are. Clothes can be a way to express personality, and that matters at this age. However, students can still show who they are through their ideas, their friendships and the clubs they join. Uniforms only remove the pressure to buy expensive clothes, not the chance to be an individual.",
+  },
+  {
+    task: "Your essay argues that libraries should stop charging late fees. Write a paragraph that states a counterclaim fairly and then rebuts it.",
+    model:
+      "Some people say that without late fees, borrowers will keep books for months and others will never get a turn. It is true that fees remind people to bring books back. Yet libraries that dropped their fees have found that many lost books came back, along with readers who had stayed away because they owed money. A friendly reminder can do the job of a fine without driving families away.",
+  },
+  {
+    task: "Your essay argues that every class should take a field trip each year. Write a paragraph that states a counterclaim fairly and then rebuts it.",
+    model:
+      "Critics point out that field trips cost money and take a whole day away from lessons. Buses and tickets are not free, and teachers must plan carefully. Even so, a single trip to a museum or a farm can teach more about a subject than a week of reading about it. Many places also offer free visits for schools, so the cost need not be high.",
+  },
+  {
+    task: "Your essay argues that towns should turn empty lots into community gardens. Write a paragraph that states a counterclaim fairly and then rebuts it.",
+    model:
+      "Some people believe empty lots should be sold to builders so the town can earn money. A town does need money for roads and schools. However, a garden gives back in other ways: it feeds families, brings neighbors together and makes the area more pleasant to live in. A town is richer when its people are healthier and closer.",
+  },
+  {
+    task: "Your essay argues that students should help choose the books they read in class. Write a paragraph that states a counterclaim fairly and then rebuts it.",
+    model:
+      "Some teachers worry that students would pick only easy or silly books. That could happen if students had no guidance at all. But students can choose from a list of strong books the teacher has already approved. This way, students feel ownership of their reading, and teachers still make sure every book is worth the class's time.",
   },
 ];
 
@@ -240,6 +350,31 @@ const introBank: readonly WritingItem[] = [
     model:
       "A plastic bag is used for about twenty minutes, but it can last in the ocean for hundreds of years. Every week, a single town throws away thousands of them. Towns should ban plastic shopping bags, because they pollute rivers and seas while cloth bags do the same job without the harm.",
   },
+  {
+    task: "Write the introduction of an essay arguing that students should wear school uniforms.",
+    model:
+      "Every morning, some students spend more time choosing their clothes than eating breakfast, and some are teased for what they wear by lunchtime. Clothes should not decide how a student is treated. Students should wear school uniforms, because uniforms save families money, reduce teasing and make mornings simpler.",
+  },
+  {
+    task: "Write the introduction of an essay arguing that towns should build more public parks.",
+    model:
+      "On a sunny Saturday, the only open space in many neighborhoods is a parking lot. Children play on the sidewalk, and adults have nowhere to walk. Towns should build more public parks, because parks give children a safe place to play, help people stay healthy and bring neighbors together.",
+  },
+  {
+    task: "Write the introduction of an essay arguing that libraries should stop charging late fees.",
+    model:
+      "A ten-year-old returns a book two weeks late and owes more than her allowance, so she stops going to the library. Small fines can keep readers away for good. Libraries should stop charging late fees, because the fees shut out the families who need libraries most and earn very little money.",
+  },
+  {
+    task: "Write the introduction of an essay arguing that schools should offer more art classes.",
+    model:
+      "Ask students to name their favorite part of the school week, and many will name the one hour they spend painting or building. Yet art is often the first class to be cut. Schools should offer more art classes, because art helps students express ideas, teaches patience and prepares them for many jobs.",
+  },
+  {
+    task: "Write the introduction of an essay arguing that every class should take a field trip each year.",
+    model:
+      "Reading about a river is one thing; standing in it and catching a tiny fish in a net is another. Some lessons only come alive outside the classroom. Every class should take at least one field trip a year, because seeing things in person makes learning memorable and sparks new interests.",
+  },
 ];
 
 /** conclusionBank asks for a conclusion that restates a thesis in new words and leaves a final thought. */
@@ -283,6 +418,31 @@ const conclusionBank: readonly WritingItem[] = [
     task: "Write the conclusion of an essay whose thesis is: Towns should plant more trees, because trees cool streets, clean the air and make neighborhoods better places to live.",
     model:
       "A tree planted today will shade a sidewalk for a hundred years. Along the way, it will cool hot streets, clean the air and give every neighborhood a little more life. Towns that plant trees now are giving a gift to people who have not even been born yet.",
+  },
+  {
+    task: "Write the conclusion of an essay whose thesis is: Students should wear school uniforms, because uniforms save money, reduce teasing and make mornings simpler.",
+    model:
+      "Uniforms take one worry off every student's mind. Families spend less, no one is judged by a label, and mornings start calmly. When clothes stop being a contest, students can turn their attention to what school is really for: learning.",
+  },
+  {
+    task: "Write the conclusion of an essay whose thesis is: Libraries should stop charging late fees, because the fees shut out families who need libraries most.",
+    model:
+      "A library is supposed to be open to everyone, and a fine of a few coins should not change that. Without late fees, more books come home and more children come back. The best way to protect a library's books is to make sure they are being read.",
+  },
+  {
+    task: "Write the conclusion of an essay whose thesis is: Towns should build more public parks, because parks give children safe places to play, keep people healthy and bring neighbors together.",
+    model:
+      "A park is one of the few places where anyone can go, for free, to play, rest or meet a neighbor. More parks would mean safer children, healthier adults and friendlier streets. A town that plants grass and swings today is building a better place to grow up.",
+  },
+  {
+    task: "Write the conclusion of an essay whose thesis is: Schools should offer more art classes, because art helps students express ideas, teaches patience and prepares them for many jobs.",
+    model:
+      "Art is not a break from learning; it is another way of learning. Students who paint and build learn to share ideas, fix mistakes and see problems from new angles. Giving art more time in the school week would give every student another way to shine.",
+  },
+  {
+    task: "Write the conclusion of an essay whose thesis is: Every class should take a field trip each year, because seeing things in person makes learning memorable.",
+    model:
+      "Years after they leave school, many adults still remember the day they visited a farm or a science museum. A single trip can turn a page in a textbook into something real. One day out of the classroom each year is a small price for a lesson that lasts a lifetime.",
   },
 ];
 
@@ -343,6 +503,39 @@ const revisionBank: readonly WritingItem[] = [
       "I think our school should have a music club. A music club would be great. Lots of schools have clubs. We should definitely have one.",
     model:
       "Our school should start a music club. Many students play instruments at home but have no one to play with, and a club would let them form bands and learn from each other. Concerts by the club could also raise money for new instruments for the school. A music club would give students a place to share a talent that now stays hidden.",
+  },
+  {
+    task: "This body paragraph gives no evidence for its point. Revise it so that it supports the point with a specific example or fact.",
+    source: "Exercise is good for students. It helps them in many ways. Students who exercise feel better. Everyone should exercise more.",
+    model:
+      "Exercise is good for students. A short run or a game of soccer gets the heart pumping, which sends more blood and oxygen to the brain. Many students find that after recess they can sit still and focus on a hard problem for longer. Even twenty minutes of activity a day can make a student feel calmer and more alert.",
+  },
+  {
+    task: "This body paragraph wanders off its point. Revise it so that every sentence supports the topic sentence.",
+    source:
+      "Our school needs a bigger cafeteria. At lunch, many students have to stand because there are not enough seats. The gym was painted blue last summer. The line for food is so long that some students only have ten minutes to eat. I like the pizza on Fridays.",
+    model:
+      "Our school needs a bigger cafeteria. At lunch, many students have to stand because there are not enough seats. The line for food is so long that some students have only ten minutes left to eat. A larger room with more tables and a second serving line would give everyone a seat and enough time for a real meal.",
+  },
+  {
+    task: "This body paragraph repeats its evidence without explaining it. Revise it so that it explains how the evidence supports the point.",
+    source:
+      "Students should read more books. Students who read more books know more words. Reading more books means knowing more words. That is why students should read.",
+    model:
+      "Students should read more books. Students who read often know more words, because every book shows words in sentences that make their meanings clear. A larger vocabulary helps in every subject, from understanding a science question to writing a strong essay. Reading for fun, then, is also a way of getting better at school.",
+  },
+  {
+    task: "This body paragraph has no clear topic sentence. Revise it so that it opens with a sentence stating its main point.",
+    source:
+      "The town pool closes at five o'clock. Most parents finish work after five. Many children cannot get to the pool on weekdays. In summer, it stays light until nine.",
+    model:
+      "The town pool should stay open later in the summer. Right now it closes at five o'clock, but most parents finish work after that, so many children cannot get there on weekdays. Since it stays light until nine, keeping the pool open a few more hours would let families swim together in the evening.",
+  },
+  {
+    task: "This body paragraph uses only vague words. Revise it so that it uses specific, precise words and details.",
+    source: "The storm was really bad. Lots of things happened. Some stuff got broken. It was very scary.",
+    model:
+      "The storm that hit our town last spring was the worst in twenty years. Wind tore shingles off roofs and snapped a huge oak tree in front of the library. Rain flooded the basement of the bakery, and the power was out for two days. We spent the first night huddled in the hallway, listening to branches crash against the windows.",
   },
 ];
 

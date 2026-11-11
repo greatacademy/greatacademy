@@ -2,8 +2,18 @@
 // from others, tracing a claim to its source, the parts of a research paper, prose style, numbers in arguments,
 // workplace documents and requests for proposals.
 
-import { type Text, type TopicDef, t } from "@ga/content";
+import { type KnowledgePointDef, type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point } from "@ga/subject-english";
+import {
+  abstractMoveStep,
+  actionStep,
+  dataConclusionStep,
+  faithfulReportStep,
+  planCheckStep,
+  sectionStep,
+  sourceForNeedStep,
+  styleChoiceStep,
+} from "./reading-steps.ts";
 
 /** pick takes an element of a list by an index that may run past its end. */
 const pick = <T>(list: readonly T[], i: number): T => list[i % list.length] as T;
@@ -42,13 +52,15 @@ const labelTopic = (spec: {
   bank: readonly ChoiceItem[];
   why: Readonly<Record<string, readonly [string, string]>>;
   zh: Readonly<Record<string, string>>;
+  /** next is the knowledge point that follows, from recognizing a part to using it. */
+  next: KnowledgePointDef;
 }): TopicDef => ({
   id: spec.id,
   title: spec.title,
   summary: spec.summary,
   prerequisites: spec.prerequisites,
   encompasses: spec.encompasses,
-  xp: 12,
+  xp: 16,
   strand: "reading",
   knowledgePoints: [
     point(
@@ -67,6 +79,7 @@ const labelTopic = (spec: {
           ),
       ),
     ),
+    spec.next,
   ],
 });
 
@@ -604,6 +617,7 @@ export const readingSkillTopicsCollege: readonly TopicDef[] = [
       ],
     },
     zh: { [question]: "问题", [earlier]: "已有研究", [claim]: "主张", [evidence]: "证据", [limitation]: "局限" },
+    next: abstractMoveStep,
   }),
   labelTopic({
     id: "finding-scholarly-sources",
@@ -637,6 +651,7 @@ export const readingSkillTopicsCollege: readonly TopicDef[] = [
       ],
     },
     zh: { [scholarly]: "学术资料", [popular]: "大众资料", [unreliable]: "不可靠的资料" },
+    next: sourceForNeedStep,
   }),
   labelTopic({
     id: "tracing-claims-to-sources",
@@ -671,6 +686,7 @@ export const readingSkillTopicsCollege: readonly TopicDef[] = [
       ],
     },
     zh: { [faithful]: "忠实于原文", [exaggerated]: "夸大", [broadened]: "扩大范围", [caused]: "把关联说成因果" },
+    next: faithfulReportStep(claimCores),
   }),
   labelTopic({
     id: "reading-a-research-paper",
@@ -706,6 +722,7 @@ export const readingSkillTopicsCollege: readonly TopicDef[] = [
       ],
     },
     zh: { [abstract]: "摘要", [introduction]: "引言", [methods]: "方法", [results]: "结果", [discussion]: "讨论" },
+    next: sectionStep,
   }),
   labelTopic({
     id: "analyzing-prose-style",
@@ -747,6 +764,7 @@ export const readingSkillTopicsCollege: readonly TopicDef[] = [
       [informal]: "朴素、随意的措辞",
       [repetition]: "用重复营造节奏",
     },
+    next: styleChoiceStep,
   }),
   labelTopic({
     id: "reading-charts-and-statistics",
@@ -784,6 +802,7 @@ export const readingSkillTopicsCollege: readonly TopicDef[] = [
       ],
     },
     zh: { [supported]: "有依据的结论", [correlation]: "把相关当成因果", [small]: "样本太小", [misleading]: "误导性的比较" },
+    next: dataConclusionStep,
   }),
   labelTopic({
     id: "reading-workplace-documents",
@@ -814,6 +833,7 @@ export const readingSkillTopicsCollege: readonly TopicDef[] = [
       [information]: ["It reports a fact or a decision and asks the reader to do nothing.", "它报告一个事实或决定，不要求读者做任何事。"],
     },
     zh: { [required]: "必须执行的行动", [optional]: "可选的行动", [information]: "仅供告知" },
+    next: actionStep,
   }),
   labelTopic({
     id: "reading-requests-for-proposals",
@@ -839,5 +859,6 @@ export const readingSkillTopicsCollege: readonly TopicDef[] = [
       [covers]: ["It says how much money is offered or what it may be spent on.", "它说明提供多少资金或资金可以用于什么。"],
     },
     zh: { [eligible]: "谁可以申请", [judged]: "提案怎样评审", [submit]: "需要提交什么、何时提交", [covers]: "资金可以用于什么" },
+    next: planCheckStep,
   }),
 ];

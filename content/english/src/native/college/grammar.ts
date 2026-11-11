@@ -21,6 +21,16 @@ import {
   referenceBank,
   toneBank,
 } from "./grammar-banks.ts";
+import {
+  actorStep,
+  claimFixStep,
+  cohesionBreakStep,
+  listBreakStep,
+  numberRuleStep,
+  paraphraseStep,
+  stanceStep,
+  toneProblemStep,
+} from "./grammar-steps.ts";
 
 const verbMeaning: Readonly<Record<string, readonly [string, string]>> = {
   argues: ["makes a claim and supports it with reasons", "提出主张并用理由支持"],
@@ -95,7 +105,7 @@ export const grammarTopicsCollege: readonly TopicDef[] = [
     ),
     prerequisites: ["modal-verbs", "noun-clauses"],
     encompasses: [{ topic: "modal-verbs", weight: 0.2 }],
-    xp: 12,
+    xp: 16,
     strand: "grammar",
     knowledgePoints: [
       point(
@@ -124,6 +134,7 @@ export const grammarTopicsCollege: readonly TopicDef[] = [
             ),
         ),
       ),
+      claimFixStep,
     ],
   },
   {
@@ -135,7 +146,7 @@ export const grammarTopicsCollege: readonly TopicDef[] = [
     ),
     prerequisites: ["integrating-quotations"],
     encompasses: [{ topic: "integrating-quotations", weight: 0.2 }],
-    xp: 12,
+    xp: 16,
     strand: "grammar",
     knowledgePoints: [
       point(
@@ -162,6 +173,7 @@ export const grammarTopicsCollege: readonly TopicDef[] = [
           },
         ),
       ),
+      stanceStep,
     ],
   },
   {
@@ -170,7 +182,7 @@ export const grammarTopicsCollege: readonly TopicDef[] = [
     summary: t("When to quote and when to paraphrase, and what counts as plagiarism.", "什么时候引用、什么时候转述，以及什么算抄袭。"),
     prerequisites: ["integrating-quotations"],
     encompasses: [{ topic: "integrating-quotations", weight: 0.3 }],
-    xp: 12,
+    xp: 16,
     strand: "writing",
     knowledgePoints: [
       point(
@@ -206,6 +218,7 @@ export const grammarTopicsCollege: readonly TopicDef[] = [
             ),
         ),
       ),
+      paraphraseStep,
     ],
   },
   {
@@ -278,7 +291,7 @@ export const grammarTopicsCollege: readonly TopicDef[] = [
       { topic: "word-order-for-emphasis", weight: 0.2 },
       { topic: "choosing-transitions", weight: 0.1 },
     ],
-    xp: 12,
+    xp: 16,
     strand: "grammar",
     knowledgePoints: [
       point(
@@ -306,6 +319,7 @@ export const grammarTopicsCollege: readonly TopicDef[] = [
             ),
         ),
       ),
+      cohesionBreakStep,
     ],
   },
   {
@@ -320,7 +334,7 @@ export const grammarTopicsCollege: readonly TopicDef[] = [
       { topic: "cutting-wordiness", weight: 0.3 },
       { topic: "active-and-passive-voice", weight: 0.2 },
     ],
-    xp: 12,
+    xp: 16,
     strand: "grammar",
     knowledgePoints: [
       point(
@@ -350,6 +364,7 @@ export const grammarTopicsCollege: readonly TopicDef[] = [
           },
         ),
       ),
+      actorStep,
     ],
   },
   {
@@ -361,7 +376,7 @@ export const grammarTopicsCollege: readonly TopicDef[] = [
     ),
     prerequisites: ["capitalizing-names-and-titles"],
     encompasses: [],
-    xp: 12,
+    xp: 16,
     strand: "writing",
     knowledgePoints: [
       point(
@@ -386,6 +401,7 @@ export const grammarTopicsCollege: readonly TopicDef[] = [
           },
         ),
       ),
+      numberRuleStep,
     ],
   },
   {
@@ -400,7 +416,7 @@ export const grammarTopicsCollege: readonly TopicDef[] = [
       { topic: "connotation-and-precise-words", weight: 0.2 },
       { topic: "verb-moods", weight: 0.1 },
     ],
-    xp: 12,
+    xp: 16,
     strand: "grammar",
     knowledgePoints: [
       point(
@@ -429,6 +445,7 @@ export const grammarTopicsCollege: readonly TopicDef[] = [
             ),
         ),
       ),
+      toneProblemStep,
     ],
   },
   {
@@ -440,7 +457,7 @@ export const grammarTopicsCollege: readonly TopicDef[] = [
     ),
     prerequisites: ["parallel-structure"],
     encompasses: [{ topic: "parallel-structure", weight: 0.3 }],
-    xp: 12,
+    xp: 16,
     strand: "grammar",
     knowledgePoints: [
       point(
@@ -469,6 +486,7 @@ export const grammarTopicsCollege: readonly TopicDef[] = [
           },
         ),
       ),
+      listBreakStep,
     ],
   },
 ];

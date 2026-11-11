@@ -3,6 +3,7 @@
 
 import { type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point } from "@ga/subject-english";
+import { plotStageStep, reflectionStep, trustStep } from "./reading-steps.ts";
 
 /** pick takes an element of a list by an index that may run past its end. */
 const pick = <T>(list: readonly T[], i: number): T => list[i % list.length] as T;
@@ -328,7 +329,7 @@ export const readingSkillTopics912: readonly TopicDef[] = [
       { topic: "irony", weight: 0.2 },
       { topic: "plot-and-conflict", weight: 0.1 },
     ],
-    xp: 12,
+    xp: 16,
     strand: "reading",
     knowledgePoints: [
       point(
@@ -358,6 +359,7 @@ export const readingSkillTopics912: readonly TopicDef[] = [
             ),
         ),
       ),
+      plotStageStep,
     ],
   },
   {
@@ -372,7 +374,7 @@ export const readingSkillTopics912: readonly TopicDef[] = [
       { topic: "primary-and-secondary-sources", weight: 0.3 },
       { topic: "rhetorical-situation", weight: 0.2 },
     ],
-    xp: 12,
+    xp: 16,
     strand: "reading",
     knowledgePoints: [
       point(
@@ -397,6 +399,7 @@ export const readingSkillTopics912: readonly TopicDef[] = [
             ),
         ),
       ),
+      trustStep,
     ],
   },
   {
@@ -466,7 +469,7 @@ export const readingSkillTopics912: readonly TopicDef[] = [
       { topic: "narrative-point-of-view", weight: 0.2 },
       { topic: "authors-purpose", weight: 0.1 },
     ],
-    xp: 12,
+    xp: 16,
     strand: "reading",
     knowledgePoints: [
       point(
@@ -496,6 +499,7 @@ export const readingSkillTopics912: readonly TopicDef[] = [
             ),
         ),
       ),
+      reflectionStep,
     ],
   },
 ];
