@@ -134,9 +134,10 @@ const units: readonly UnitDef[] = [
   ),
 ];
 
-/** course35 is the native course of grades 3 to 5. */
+/** course35 is the native course of grades 3 to 5, retired now that the courses of grades 3, 4 and 5 hold all its topics. */
 export const course35: CourseDef = {
   id: "english-grades-3-5",
+  retired: true,
   title: t("English, Grades 3 to 5", "英语：三至五年级"),
   description: t(
     "English for readers and writers of grades 3 to 5, in nine themed units from fables to the solar system. Each unit teaches the words of its theme, grammar and punctuation, a reading skill and a kind of writing together, and gives a set of passages to read on the theme. The paragraphs written in the course are judged by a model.",

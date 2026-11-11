@@ -10,9 +10,9 @@ The level courses of [docs/english-curriculum.md §6](../../docs/english-curricu
 | :--- | :--- | :--- |
 | `levels-topics` | `src/levels/*/topics.ts` and topic files beside it, `libs/subject-english/src/criteria-levels.ts`, `docs/english-courses/english-{pre-a1,a1,a2,b1,b2}*.md` | The outlines of all five levels first, then the topics of Pre-A1, A1, A2, B1 and B2 in turn |
 | `levels-courses` | `src/levels/*/reading.ts`, `src/levels/*/conversations.ts`, `src/levels/*/course.ts` and files beside them, `src/exams/` | For each level once its topics are in: its reading units, conversations and course; then the exam courses |
-| `native` | `src/native/`, `src/topics/`, `src/reading/`, `libs/subject-english/src/criteria-native.ts`, `docs/english-courses/english-grades-*.md`, `docs/english-courses/english-college-*.md` | The outlines of the native courses, then grades 3 to 5, 6 to 8, 9 to 12 and college writing in turn |
+| `native` | `src/native/`, `src/topics/`, `src/reading/`, `libs/subject-english/src/criteria-native.ts`, `docs/english-courses/english-grade*.md`, `docs/english-courses/english-college-*.md` | The outlines of the native courses, then grades 3 to 5, 6 to 8, 9 to 12 and college writing in turn |
 
-Course ids: `english-pre-a1`, `english-a1`, `english-a2`, `english-b1`, `english-b2`; `english-grades-3-5`, `english-grades-6-8`, `english-grades-9-12`, `english-college-writing`; `english-ielts`, `english-toefl`, `english-cambridge-first`, `english-gaokao`.
+Course ids: `english-pre-a1`, `english-a1`, `english-a2`, `english-b1`, `english-b2`; `english-grade-3`, `english-grade-4`, `english-grade-5`, `english-grades-6-8`, `english-grades-9-12`, `english-college-writing`; `english-ielts`, `english-toefl`, `english-cambridge-first`, `english-gaokao`.
 
 **Depth before breadth.** Rule-checked grammar, usage and sentence-writing knowledge points have at least 30 distinct items, each vocabulary word appears in at least three sentences (25 items or more per knowledge point), judged writing has at least 12 tasks per knowledge point, and reading units have 6 to 8 passages (native units 8 to 10). Fewer topics are written rather than thin ones.
 
@@ -38,7 +38,9 @@ Content that needs audio or recording (listening of S1, speaking of S2 to S4, ph
 | Exam courses: IELTS (5 new topics, 1 reading unit) and TOEFL (4 new topics, 1 reading unit), Cambridge First (6 new topics, 6 passages) and the Gaokao (5 new topics, 8 passages), all practice-only | Done |
 | Outlines of the native courses | Done |
 | Floor of depth (E8.1): every rule-checked topic in two steps or more, no knowledge point below its depth, solutions that teach, wrong options explained; `pnpm nx run audit:stats -- english` | Done |
-| Grades 3 to 5: 78 topics in 9 themed units, `our-solar-system`, 9 conversations | Done |
+| Grades 3 to 5: 78 topics in 9 themed units, `our-solar-system`, 9 conversations; retired once the grade courses hold its topics | Done |
+| One course per grade (E8.2), grades 3 to 5: `english-grade-3` (116 topics, 1,572 XP), `english-grade-4` (114, 1,643) and `english-grade-5` (114, 1,674), 266 new topics, 21 new reading units, 21 new conversations, 61 new criteria; `english-grades-3-5` retired | Done |
+| One course per grade (E8.2), grades 6 to 8 and 9 to 12 | Next |
 
 ## Reasons for Encompassing Weights
 
