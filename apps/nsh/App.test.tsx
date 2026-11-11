@@ -35,7 +35,7 @@ const network = {
 test("opens a course from the list", async () => {
   const app = await open("./App.tsx", { network });
   await app.press("text:Browse the courses");
-  await app.waitFor("text:2 topics");
+  await app.waitFor("text:2 topics · 0 XP");
   await app.press("text:Solve equations");
   await app.waitFor("text:· Linear equations");
   expect(app.texts()).toContain("Unit one");
@@ -64,7 +64,7 @@ test("shows a course opened again from what it read before, without asking the s
 test("follows a Chinese device", async () => {
   const app = await open("./App.tsx", { network, locale: "zh-Hans-CN" });
   await app.press("text:先看看课程");
-  await app.waitFor("text:2 个知识点");
+  await app.waitFor("text:2 个知识点 · 0 XP");
   expect(app.texts()).toContain("代数");
 });
 
@@ -97,7 +97,7 @@ test("says when there is no connection, and loads once it is back", async () => 
   await app.waitFor("text:Offline. Trying again when the connection is back.");
   down = false;
   await app.press("text:Retry");
-  await app.waitFor("text:2 topics");
+  await app.waitFor("text:2 topics · 0 XP");
   expect(app.texts()).not.toContain("Offline. Trying again when the connection is back.");
 });
 
@@ -690,7 +690,7 @@ test("shows the progress map and the history of a course from Progress", async (
   expect(app.texts()).toContain("3 of 3 correct");
 });
 
-test("lists the learner's courses of the subject first, then the others by shelf", async () => {
+test("lists the courses by shelf as the web does, the learner's with how far they are, and searches them", async () => {
   const course = (id: string, title: string, group?: string) => ({
     id,
     subjectId: "math",
@@ -712,11 +712,17 @@ test("lists the learner's courses of the subject first, then the others by shelf
   });
   await app.press("label:Mathematics, switch subject");
   await app.press("text:Course catalog");
-  await app.waitFor("text:My courses");
+  await app.waitFor("text:Learned 1 / 2");
   const shown = app.texts();
-  expect(shown.indexOf("My courses")).toBeLessThan(shown.indexOf("School"));
-  expect(shown.indexOf("Geometry")).toBeLessThan(shown.indexOf("Other courses"));
+  expect(shown).not.toContain("My courses");
+  expect(shown.indexOf("School")).toBeLessThan(shown.indexOf("Algebra"));
+  expect(shown.indexOf("Algebra")).toBeLessThan(shown.indexOf("Geometry"));
+  expect(shown.indexOf("Geometry")).toBeLessThan(shown.lastIndexOf("Other courses"));
   expect(shown.filter((t) => t === "Algebra")).toHaveLength(1);
+  await app.type("label:Search courses", "geo");
+  await app.waitUntil(() => !app.texts().includes("Algebra"));
+  expect(app.texts()).toContain("Geometry");
+  expect(app.texts()).not.toContain("Logic");
 });
 
 test("switches subject, keeps the choice, and asks before changing course", async () => {
@@ -759,7 +765,7 @@ test("switches subject, keeps the choice, and asks before changing course", asyn
     asked.push(dialog.title ?? "");
     return "Cancel";
   });
-  await app.press("role:button[Start this course]");
+  await app.press("role:button[Switch to this course]");
   expect(asked).toEqual(["Switch to Geometry?"]);
   expect(app.requests().some((r) => r.url.endsWith("/ChooseCourse"))).toBe(false);
 });

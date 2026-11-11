@@ -562,13 +562,17 @@ export function MonthField(props: {
 /** Segmented picks one of a few values, all in view. */
 export function Segmented<T extends string>(props: {
   label: string;
+  /** labelHidden keeps the label for assistive technology only, where the choices name themselves. */
+  labelHidden?: boolean;
   items: { value: T; title: string }[];
   value: T;
   onChange: (value: T) => void;
 }) {
   return (
     <View style={{ gap: 6 }}>
-      <Text style={{ color: colors().ink, fontSize: 14, fontWeight: "500" }}>{props.label}</Text>
+      <If when={!props.labelHidden}>
+        <Text style={{ color: colors().ink, fontSize: 14, fontWeight: "500" }}>{props.label}</Text>
+      </If>
       <View
         role="radiogroup"
         accessibilityLabel={props.label}
