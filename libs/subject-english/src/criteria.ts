@@ -3,6 +3,9 @@ import { EXAM_CRITERIA } from "./criteria-exams.ts";
 import { GRADE_3_CRITERIA } from "./criteria-grade-3.ts";
 import { GRADE_4_CRITERIA } from "./criteria-grade-4.ts";
 import { GRADE_5_CRITERIA } from "./criteria-grade-5.ts";
+import { GRADE_6_CRITERIA } from "./criteria-grade-6.ts";
+import { GRADE_7_CRITERIA } from "./criteria-grade-7.ts";
+import { GRADE_8_CRITERIA } from "./criteria-grade-8.ts";
 import { LEVEL_CRITERIA } from "./criteria-levels.ts";
 import { NATIVE_CRITERIA } from "./criteria-native.ts";
 
@@ -221,6 +224,9 @@ export const WRITING_CRITERIA: readonly CriterionSpec[] = [
   ...GRADE_3_CRITERIA,
   ...GRADE_4_CRITERIA,
   ...GRADE_5_CRITERIA,
+  ...GRADE_6_CRITERIA,
+  ...GRADE_7_CRITERIA,
+  ...GRADE_8_CRITERIA,
   ...EXAM_CRITERIA,
 ];
 
