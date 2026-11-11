@@ -28,6 +28,8 @@ export interface BatchSpec {
   readonly prerequisites: readonly string[];
   readonly encompasses: TopicDef["encompasses"];
   readonly words: readonly BatchWord[];
+  /** xp is what the topic earns, 12 unless given; a grade course gives about 1.5 a word, at least 10. */
+  readonly xp?: number;
 }
 
 /** batchTopic builds a vocabulary topic of three knowledge points: what each word means in a sentence, choosing it for a sentence, and spelling it; each has an item for every sentence of every word. */
@@ -69,7 +71,7 @@ export function batchTopic(spec: BatchSpec): TopicDef {
     summary: spec.summary,
     prerequisites: [...spec.prerequisites],
     encompasses: [...spec.encompasses],
-    xp: 12,
+    xp: spec.xp ?? 12,
     strand: "vocabulary",
     knowledgePoints: [
       point(
