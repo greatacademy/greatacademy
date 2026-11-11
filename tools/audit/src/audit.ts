@@ -31,9 +31,9 @@ export const minSolutionWords = 10;
 export const longestShare = 0.6;
 
 const cjk = /[一-鿿]/;
-/** visualTitle matches titles that name a picture; the *graph* of a paragraph and the plot of a story are not one. */
+/** visualTitle matches titles that name a picture; the *graph* of a paragraph and the plot of a story ("the plot") are not one. */
 const visualTitle =
-  /(?<!crypto|para)graph(?!ing calculator)|plot(?! and conflict)|diagram|number line|(?<!significant |similar )figure|picture|chart|histogram|box plot|dot plot|scatter|shaded|\bnet|polygon|triangle|circle/i;
+  /(?<!crypto|para)graph(?!ing calculator)|(?<!the )plot(?! and conflict)|diagram|number line|(?<!significant |similar )figure|picture|chart|histogram|box plot|dot plot|scatter|shaded|\bnet|polygon|triangle|circle/i;
 
 const visualExplanation =
   /\b(rotat|reflect|translat|dilat|triangle|quadrilateral|parallelogram|trapezoid|rectangle|polygon|circle|chord|tangent to|arc\b|sector|angle|perpendicular|(?<!\*)parallel(?! structure)|prism|cylinder|cone\b|sphere|pyramid|net\b|number line|bar model|area model|tape diagram|fraction of a shape|(?<!\*)graph|parabola|asymptote|vertex|coordinate plane|histogram|box plot|dot plot|scatter)/i;
@@ -118,7 +118,8 @@ export function audit(subject: CompiledSubject, outlines: ReadonlyMap<string, Ou
       if (proseWords(kp.explanation.en) < minProseWords) add(`explanation under ${minProseWords} words of prose`, path);
       if (!cjk.test(kp.explanation["zh-CN"])) add("zh explanation without Chinese", path);
       if (kp.figure || kp.figures?.length) hasFigure = true;
-      else if (visualExplanation.test(`${kp.title.en} ${kp.explanation.en}`))
+      // A vocabulary topic lists its words, such as pyramid or prism, without explaining a shape.
+      else if (topic.strand !== "vocabulary" && visualExplanation.test(`${kp.title.en} ${kp.explanation.en}`))
         add("explanation of something visual without a drawing", path);
 
       let choices = 0;
