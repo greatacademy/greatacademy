@@ -26,7 +26,7 @@ Content that needs audio or recording (listening of S1, speaking of S2 to S4, ph
 | Outlines of Pre-A1 to B2 | Done |
 | Topics of Pre-A1 (30) and A1 (73), 272 knowledge points | Done |
 | Courses of Pre-A1 and A1: 18 units, 120 passages, 17 conversations | Done |
-| Grades 6 to 8: 55 topics in 8 themed units, 6 new reading units of 8 passages, 8 conversations | Done; its 5 older judged topics keep 8 tasks |
+| Grades 6 to 8: 55 topics in 8 themed units, 6 new reading units of 8 passages, 8 conversations | Done |
 | College writing: 38 topics in 8 units, 8 reading units of 8 passages, 8 conversations | Done |
 | Grades 9 to 12: 37 topics in 8 themed units, 6 new reading units of 8 passages, 8 conversations | Done |
 | Topics of A2: 83 topics in 12 units | Done |
@@ -37,7 +37,8 @@ Content that needs audio or recording (listening of S1, speaking of S2 to S4, ph
 | Topics of B2: 128 topics in 10 units, 371 knowledge points, 3,547 headwords by its end | Done |
 | Exam courses: IELTS (5 new topics, 1 reading unit) and TOEFL (4 new topics, 1 reading unit), Cambridge First (6 new topics, 6 passages) and the Gaokao (5 new topics, 8 passages), all practice-only | Done |
 | Outlines of the native courses | Done |
-| Grades 3 to 5: 78 topics in 9 themed units, `our-solar-system`, 9 conversations | Done; the 56 regrouped topics keep about 10 items per knowledge point |
+| Floor of depth (E8.1): every rule-checked topic in two steps or more, no knowledge point below its depth, solutions that teach, wrong options explained; `pnpm nx run audit:stats -- english` | Done |
+| Grades 3 to 5: 78 topics in 9 themed units, `our-solar-system`, 9 conversations | Done |
 
 ## Reasons for Encompassing Weights
 
