@@ -55,7 +55,7 @@ Nx 把这些目标的结果缓存在 `.nx/`（被 git 忽略）中；只有输�
 | `english-workers` | `apps/english-workers` | 英语的网关和分片 Worker，构建方式相同 |
 | `nsh` | `apps/nsh` | Native Shell 应用：欢迎页、登录、注册和年龄问题；学习、进度、课程、我的四个标签页；账号设置（个人资料、每周目标、联赛、密码、监护人）；课程大纲、进度地图、历史记录和任务播放器；隐私、同意和监护人页面；连接 Web 应用的 API（§6） |
 | `simulate` | `tools/simulate` | 用于调校引擎的模拟学生：`pnpm nx run simulate:simulate`（[学习引擎 §8](learning-engine.zh-CN.md#8-参数)） |
-| `audit` | `tools/audit` | 内容审计：课程相对大纲缺少的知识点，以及启发式检查（讲解过短、解答过简、缺少 `wrong`、缺少图形等）。`pnpm nx run audit:audit -- <绝对路径>` 生成 Markdown 报告；结果是待复核的线索，不一定是错误 |
+| `audit` | `tools/audit` | 内容审计：课程相对大纲缺少的知识点，以及启发式检查（讲解过短、解答过简、缺少 `wrong`、缺少图形等）。`pnpm nx run audit:audit -- <绝对路径>` 生成 Markdown 报告；结果是待复核的线索，不一定是错误。`pnpm nx run audit:stats -- <学科> [路径] [种子数]` 统计一个学科的课程、topic、知识点、文章和对话，按种子采样每个知识点的不同题目数，并列出低于 content/english/PROGRESS.md 所要求深度的知识点和只有一个知识点的 topic |
 | `voice` | `apps/voice` | 英语实时对话的语音服务，用 Python 基于 Pipecat 编写；用模拟的语音服务和模拟的 Web Worker 测试（§7） |
 | `pilot` | `tools/pilot` | 根据数据库生成某门课程的试点报告：`DATABASE_URL=… pnpm nx run pilot:report -- --course algebra-i`（[路线图 §3](roadmap.zh-CN.md#3-试点)） |
 | `calibrate` | `tools/calibrate` | 在一项标准上校准一条路由：`DATABASE_URL=… AI_KEYS_SECRET=… pnpm nx run calibrate:calibrate -- --criterion w4-topic-sentence@1 --provider <id> --model <model> --prompt writing-1 --set scored.jsonl`。评分集每行是 `{id, task: {prompt, modelAnswer, source?}, text, scores: {"<id@version>": [第一人, 第二人]}}`，即两人的是或否。它记录校准结果，无论是否通过，并输出只用 id 指称文本的报告（[英语开发计划 §4](english-development-plan.zh-CN.md#4-阶段-2阅读与写作)） |

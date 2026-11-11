@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "audit": "mise exec -- node src/main.ts",
+    "stats": "mise exec -- node src/stats-main.ts",
     "typecheck": "tsc -p tsconfig.json",
     "test": "vitest run",
     "lint": "biome check ."
