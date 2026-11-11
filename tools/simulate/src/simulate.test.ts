@@ -47,7 +47,12 @@ describe("simulated students with passages to read", () => {
     ...english,
     lexicon: ["the", "dog", "ran", "to", "park", "and", "cat", "sat", "on", "wall"].map((word) => ({ word })),
     reading: [{ id: "stories", title: t("Stories", "故事"), passages: Array.from({ length: 200 }, (_, i) => passage(i)) }],
-    courses: english.courses.map((c) => ({ ...c, reading: c.id === courseId ? ["stories"] : [] })),
+    courses: english.courses.map((c) => ({
+      ...c,
+      reading: c.id === courseId ? ["stories"] : [],
+      // The units' own reading units are replaced by the stories too.
+      units: c.units.map(({ reading: _, ...unit }) => unit),
+    })),
   });
   const run = (seed: number) => simulate(reading, courseId, { ability: 0.85, xpPerDay: 30 }, seed);
 
