@@ -307,6 +307,46 @@ const units: readonly UnitDef[] = [
     },
     undefined,
   ),
+  unit(
+    t("Attack and Deceit", "攻击与欺骗"),
+    {
+      words: ["words-of-attack-and-defense", "words-of-fakes-and-lies", "words-of-arrest-and-mercy"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Scorn and Decline", "嘲讽与衰退"),
+    {
+      words: ["words-of-mockery-and-rebuke", "words-of-decline-and-prevailing", "words-of-smell-taste-and-touch"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Truth and Temper", "真相与秉性"),
+    {
+      words: ["words-of-truth-and-denial", "words-of-drive-and-inertia", "words-of-money-and-greed"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Honor and Hard Tasks", "荣辱与艰巨任务"),
+    {
+      words: ["words-of-acclaim-and-abuse", "words-of-awkward-fixes", "words-of-hard-and-costly-tasks"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
 ];
 
 /** courseGrade11 is the native course of grade 11. */
