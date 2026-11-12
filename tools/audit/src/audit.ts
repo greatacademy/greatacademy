@@ -36,7 +36,7 @@ const visualTitle =
   /(?<!crypto|para)graph(?!ing calculator)|(?<!the )plot(?! and conflict)|diagram|number line|(?<!significant |similar )figure|picture|chart|histogram|box plot|dot plot|scatter|shaded|\bnet|polygon|triangle|circle/i;
 
 const visualExplanation =
-  /\b(rotat|reflect|translat|dilat|triangle|quadrilateral|parallelogram|trapezoid|rectangle|polygon|circle|chord|tangent to|arc\b|sector|angle|perpendicular|(?<!\*)parallel(?! structure)|prism|cylinder|cone\b|sphere|pyramid|net\b|number line|bar model|area model|tape diagram|fraction of a shape|(?<!\*)graph|parabola|asymptote|vertex|coordinate plane|histogram|box plot|dot plot|scatter)/i;
+  /\b(rotat|reflect(?:s|ed|ing|ion)? (?:across|over|in the (?:x|y|line|origin))|translat(?:e|es|ed|ing|ion|ions) (?:of (?:the |a |an )?(?:figure|shape|graph|point|triangle|polygon|function|y|f)|by|it|the (?:figure|shape|graph|point|triangle)|\d|\(|left|right|up|down)|dilat|triangle|quadrilateral|parallelogram|trapezoid|rectangle|polygon|circle|chord|tangent to|arc\b|sector|angle|perpendicular|(?<!\*)parallel(?! structure)|prism|cylinder|cone\b|sphere|pyramid|net\b|number line|bar model|area model|tape diagram|fraction of a shape|(?<!\*)graph|parabola|asymptote|vertex|coordinate plane|histogram|box plot|dot plot|scatter)/i;
 
 /** normalizeTitle reduces a title to lowercase words so that outline and code titles compare equal. */
 export function normalizeTitle(title: string): string {
