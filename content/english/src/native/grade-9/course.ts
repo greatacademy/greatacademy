@@ -202,6 +202,16 @@ const units: readonly UnitDef[] = [
     },
     undefined,
   ),
+  unit(
+    t("Housework and Phrasal Verbs of Work", "家务与工作的短语动词"),
+    {
+      words: ["words-of-housework", "phrasal-verbs-of-work-and-choices"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
 ];
 
 /** courseGrade9 is the native course of grade 9. */
