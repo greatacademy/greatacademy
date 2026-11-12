@@ -2,7 +2,373 @@
 // objects, elliptical clauses and possessives before gerunds.
 
 import type { TopicDef } from "@ga/content";
+import { everyPair } from "../../levels/words.ts";
 import { choose, type Label, label, topic } from "../grade-6/kit.ts";
+
+const join = (lines: readonly string[]) => lines.join("\n");
+const upper = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+/** heroes are a name, an appositive, a verb with a prepositional phrase, a participial phrase, a gerund phrase with what it did, and an infinitive phrase. */
+const heroes = [
+  [
+    "Odysseus",
+    "the king of Ithaca",
+    "sailed",
+    "across the wine-dark sea",
+    "tied to the mast",
+    "escaping the Cyclops",
+    "took great cunning",
+    "to see his home again",
+  ],
+  [
+    "Penelope",
+    "his patient wife",
+    "waited",
+    "in the great hall",
+    "weaving by day",
+    "unpicking the cloth",
+    "fooled the suitors",
+    "to keep the suitors away",
+  ],
+  [
+    "Achilles",
+    "the greatest Greek warrior",
+    "sulked",
+    "inside his tent",
+    "angered by the king",
+    "fighting the Trojans",
+    "made him famous",
+    "to win eternal glory",
+  ],
+  [
+    "Hector",
+    "the prince of Troy",
+    "stood",
+    "before the city gates",
+    "dressed in shining bronze",
+    "defending the city",
+    "was his whole duty",
+    "to protect his family",
+  ],
+  [
+    "Perseus",
+    "the son of Zeus",
+    "flew",
+    "over the dark ocean",
+    "holding a polished shield",
+    "cutting off Medusa's head",
+    "saved his mother",
+    "to rescue his mother",
+  ],
+  [
+    "Theseus",
+    "the prince of Athens",
+    "crept",
+    "through the twisting maze",
+    "carrying a ball of thread",
+    "finding the way out",
+    "seemed impossible",
+    "to defeat the Minotaur",
+  ],
+  [
+    "Jason",
+    "the leader of the Argonauts",
+    "rowed",
+    "toward the edge of the world",
+    "guided by Medea",
+    "winning the golden fleece",
+    "became his goal",
+    "to claim his father's throne",
+  ],
+  [
+    "Orpheus",
+    "the famous musician",
+    "walked",
+    "into the underworld",
+    "playing his lyre",
+    "looking back at Eurydice",
+    "cost him everything",
+    "to bring his wife back",
+  ],
+  [
+    "Atalanta",
+    "the swift huntress",
+    "raced",
+    "across the open field",
+    "chasing the golden apples",
+    "losing the race",
+    "surprised everyone",
+    "to keep her freedom",
+  ],
+  [
+    "Hercules",
+    "the strongest man alive",
+    "traveled",
+    "to the ends of the earth",
+    "wearing a lion's skin",
+    "cleaning the stables",
+    "took only one day",
+    "to finish his twelve labors",
+  ],
+  [
+    "Icarus",
+    "the son of Daedalus",
+    "soared",
+    "toward the blazing sun",
+    "laughing with joy",
+    "flying too high",
+    "melted the wax",
+    "to touch the sky",
+  ],
+  [
+    "Arachne",
+    "the proud weaver",
+    "worked",
+    "at her wooden loom",
+    "boasting of her skill",
+    "challenging the goddess",
+    "was a terrible mistake",
+    "to prove her skill",
+  ],
+] as const;
+const phraseNameLines = join(
+  heroes.flatMap(([name, app, verb, prep, part, ger, gerPred, inf]) => [
+    `${name} ${verb} **${prep}**.|prepositional`,
+    `**${upper(prep)}**, ${name} ${verb} alone.|prepositional`,
+    `${name}, **${app}**, ${verb} ${prep}.|appositive`,
+    `We read about ${name}, **${app}**.|appositive`,
+    `**${upper(part)}**, ${name} ${verb} ${prep}.|participial`,
+    `${name}, **${part}**, ${verb} ${prep}.|participial`,
+    `**${upper(ger)}** ${gerPred}.|gerund`,
+    `${name} never forgot **${ger}**.|gerund`,
+    `${name} longed **${inf}**.|infinitive`,
+    `**${upper(inf)}** was ${name}'s only wish.|infinitive`,
+  ]),
+);
+const phraseJobLines = join(
+  heroes.flatMap(([name, , verb, prep, part, ger, gerPred, inf]) => [
+    `**${upper(ger)}** ${gerPred}.|noun`,
+    `${name} never forgot **${ger}**.|noun`,
+    `**${upper(inf)}** was ${name}'s only wish.|noun`,
+    `**${upper(part)}**, ${name} ${verb} ${prep}.|adjective`,
+    `${name}, **${part}**, ${verb} ${prep}.|adjective`,
+    `${name} ${verb} **${prep}**.|adverb`,
+    `${name} ${verb} ${prep} **${inf}**.|adverb`,
+  ]),
+);
+
+// Crossed items: frames, people and phrases multiply the lines below into a hundred items or more for each bank.
+
+/** wonders are noun clauses that can do any job a noun does. */
+const wonders = [
+  "what she found",
+  "why the bridge fell",
+  "where the treasure was hidden",
+  "whether the plan would work",
+  "how the fire started",
+  "who wrote the letter",
+  "when the ship would return",
+  "which road led home",
+] as const;
+const nounJobs = [
+  ["subject", ["*{C}* surprised everyone.", "*{C}* remains a mystery.", "*{C}* was the main question."]],
+  ["direct object", ["We wondered *{c}*.", "Nobody knew *{c}*.", "The detective asked *{c}*."]],
+  ["object of a preposition", ["We argued about *{c}*.", "They talked about *{c}*.", "Everyone was curious about *{c}*."]],
+  ["subject complement", ["The real question is *{c}*.", "The puzzle was *{c}*.", "The mystery is *{c}*."]],
+] as const;
+const nounJobLines = join(
+  nounJobs.flatMap(([job, frames]) =>
+    everyPair(wonders, frames).map(
+      ([clause, frame]) => `${frame.replace("{C}", upper(clause)).replace("{c}", clause).replaceAll("*", "**")}|${job}`,
+    ),
+  ),
+);
+const clauseWho = ["The girl", "The sailor", "The farmer", "The poet", "The stranger", "The doctor"] as const;
+const clauseWhoDid = [
+  "who found the map",
+  "who lived by the sea",
+  "whom we met in Rome",
+  "who saved the child",
+  "whose dog ran away",
+] as const;
+const clauseWhoEnd = ["became famous", "left at dawn", "told us a story", "never came back", "waved goodbye"] as const;
+const adverbial = [
+  "Although the sea was rough",
+  "When the storm passed",
+  "Because the road was closed",
+  "If the river rises",
+  "After the guests left",
+  "Before the sun rose",
+] as const;
+const adverbMain = [
+  ["they set sail", "they will set sail"],
+  ["the town was quiet", "the town will be quiet"],
+  ["we waited at the inn", "we will wait at the inn"],
+  ["the farmers worked", "the farmers will work"],
+  ["the dogs barked", "the dogs will bark"],
+] as const;
+const knowFrames = ["I know", "She asked", "They remembered", "We learned", "He forgot", "Nobody guessed"] as const;
+const dependentLines = join([
+  ...everyPair(knowFrames, wonders).map(([frame, clause]) => `${frame} **${clause}**.|noun clause`),
+  ...everyPair(clauseWho, clauseWhoDid).map(([who, did], k) => `${who} **${did}** ${clauseWhoEnd[k % 5]}.|adjective clause`),
+  ...everyPair(adverbial, adverbMain).map(([opener, [past, future]]) => {
+    const main = opener.startsWith("If") ? future : past;
+    return `**${opener}**, ${main}.|adverb clause`;
+  }),
+]);
+
+/** honored are people who can be named in each sentence pattern; roles are what they become or are called. */
+const honored = ["knight", "sailor", "farmer", "teacher", "poet", "captain"] as const;
+const doVerbs = ["praised", "thanked", "crowned"] as const;
+const ioThings = ["a sword", "a medal", "a letter"] as const;
+const scVerbs = ["became", "remained", "was"] as const;
+const ocVerbs = ["called", "named", "elected"] as const;
+const roleNames = ["a hero", "the leader", "a legend"] as const;
+const complementLines = join([
+  ...everyPair(honored, doVerbs).map(([who, verb]) => `The queen ${verb} **the ${who}**.|direct object`),
+  ...everyPair(honored, ioThings).map(([who, thing]) => `She gave **the ${who}** ${thing}.|indirect object`),
+  ...everyPair(honored, scVerbs).map(([who, verb], k) => `The ${who} ${verb} **${roleNames[k % 3]}**.|subject complement`),
+  ...everyPair(honored, ocVerbs).map(([who, verb], k) => `The people ${verb} the ${who} **${roleNames[(k + 1) % 3]}**.|object complement`),
+]);
+/** verbUses are a verb used transitively, intransitively and as a linking verb, each with a person as subject. */
+const verbUses = [
+  ["{S} **grew** tomatoes on the balcony.", "{S} **grew** two inches that summer.", "{S} **grew** tired of waiting."],
+  ["{S} **turned** the key slowly.", "{S} **turned** and walked away.", "{S} **turned** pale at the news."],
+  ["{S} **felt** the cold wind on her face.", "{S} **felt** around in the dark for the switch.", "{S} **felt** nervous before the test."],
+  ["{S} **got** a letter from home.", "{S} **got** up early.", "{S} **got** angry at the referee."],
+] as const;
+const verbPeople = ["Maya", "Leo", "My aunt", "The old farmer", "Grandma", "The coach"] as const;
+const verbKindLines = join(
+  everyPair(verbUses, verbPeople).flatMap(([[t, i, l], who]) => [
+    `${t.replace("{S}", who)}|transitive`,
+    `${i.replace("{S}", who)}|intransitive`,
+    `${l.replace("{S}", who)}|linking`,
+  ]),
+);
+
+/** compared are pronoun sets for comparisons; comparisons are sentences that end in a comparison. */
+const compared = [
+  ["I", "me", "myself"],
+  ["he", "him", "himself"],
+  ["she", "her", "herself"],
+  ["we", "us", "ourselves"],
+  ["they", "them", "themselves"],
+] as const;
+const comparisons = [
+  "My cousin is older than ___.",
+  "Nobody sings as loudly as ___.",
+  "The twins are taller than ___.",
+  "Our neighbors have lived here longer than ___.",
+  "No one in the class reads faster than ___.",
+  "The new player is as quick as ___.",
+  "Few people work harder than ___.",
+  "My sister swims better than ___.",
+  "The coach arrived earlier than ___.",
+  "Nobody laughed as hard as ___.",
+  "The other team trained longer than ___.",
+  "Ana writes more neatly than ___.",
+  "His brother is not as patient as ___.",
+  "The guests stayed later than ___.",
+  "Leo is just as curious as ___.",
+  "The dog was more frightened than ___.",
+] as const;
+const comparisonLines = join(
+  everyPair(comparisons, compared).map(([frame, [subject, object, self]]) => `${frame}|${subject}|${object}|${self}`),
+);
+/** ellipticals are an -ing phrase, the noun in it, and what the person did meanwhile. */
+const ellipticals = [
+  ["waiting for the bus", "the bus", "read a novel"],
+  ["walking through the park", "the park", "heard a woodpecker"],
+  ["cooking dinner", "dinner", "listened to the radio"],
+  ["cleaning the garage", "the garage", "found an old bike"],
+  ["crossing the bridge", "the bridge", "saw a heron"],
+  ["painting the fence", "the fence", "hummed a song"],
+  ["riding the train", "the train", "wrote a letter"],
+  ["reading the map", "the map", "noticed a mistake"],
+  ["climbing the hill", "the hill", "stopped to rest"],
+  ["washing the dishes", "the dishes", "planned the trip"],
+  ["fixing the radio", "the radio", "lost a screw"],
+  ["watching the game", "the game", "ate a sandwich"],
+] as const;
+const ellipsisWho = [
+  ["she", "was"],
+  ["he", "was"],
+  ["they", "were"],
+] as const;
+const leftOutLines = join(
+  everyPair(ellipticals, ellipsisWho).flatMap(([[ing, noun, did], [who, be]], k) => [
+    `${k % 2 === 0 ? "While" : "When"} [ ] ${ing}, ${who} ${did}.|${who} ${be}|${noun} was|${who} had`,
+    `${upper(who)} ${did} while [ ] ${ing}.|${who} ${be}|${noun} was|${who} had`,
+  ]),
+);
+
+/** owners are possessive, object and subject forms of a person before a gerund. */
+const owners = [
+  ["his", "him", "he"],
+  ["their", "them", "they"],
+  ["my", "me", "I"],
+  ["our", "us", "we"],
+  ["your", "you", "yours"],
+  ["Ana's", "Ana", "Anas"],
+  ["the dog's", "the dog", "the dogs"],
+] as const;
+const gerundFrames = [
+  "We were surprised by ___ leaving so early.",
+  "Nobody minded ___ singing in the hall.",
+  "The coach praised ___ running in the rain.",
+  "I was proud of ___ winning the prize.",
+  "Mom worried about ___ swimming alone.",
+  "The teacher noticed ___ arriving late again.",
+  "They laughed at ___ dancing on the table.",
+  "Everyone talked about ___ moving to Lima.",
+  "The neighbors complained about ___ barking at night.",
+  "Grandpa loved ___ visiting on Sundays.",
+  "The class cheered ___ finishing the race.",
+  "I appreciate ___ helping with the dishes.",
+] as const;
+const possessiveLines = join(
+  everyPair(gerundFrames, owners)
+    .filter(([frame, [own]]) => !(frame.includes("barking") !== own.includes("dog")))
+    .map(([frame, [own, object, subject]]) => `${frame}|${own}|${object}|${subject}`),
+);
+const possessiveMore = join(
+  everyPair(
+    gerundFrames.filter((f) => !f.includes("barking")),
+    owners.filter(([own]) => !own.includes("dog")),
+  )
+    .filter((_, k) => k % 3 === 0)
+    .map(([frame, [own, object, subject]]) => `${frame.replace("___", "___ constant")}|${own}|${object}|${subject}`),
+);
+const watchers = [
+  ["his", "him", "he"],
+  ["their", "them", "they"],
+  ["our", "us", "we"],
+  ["my", "me", "I"],
+  ["your", "you", "yours"],
+] as const;
+const gerundUses = [
+  "I dislike ___ shouting.",
+  "We enjoyed ___ singing at the concert.",
+  "Nobody approved of ___ cheating.",
+  "She was annoyed by ___ whistling.",
+  "The judges admired ___ dancing.",
+  "Dad tolerated ___ drumming.",
+  "The class welcomed ___ joining the team.",
+  "I was amazed at ___ painting.",
+] as const;
+const participleUses = [
+  "I saw ___ shouting at the referee.",
+  "We heard ___ singing in the next room.",
+  "She caught ___ cheating on the quiz.",
+  "They watched ___ dancing on the stage.",
+  "I noticed ___ whistling down the street.",
+  "We found ___ sleeping under a tree.",
+  "The guard spotted ___ climbing the wall.",
+  "She heard ___ laughing in the hall.",
+] as const;
+const gerundOrParticiple = join([
+  ...everyPair(gerundUses, watchers).map(([frame, [own, object, subject]]) => `${frame}|${own}|${object}|${subject}`),
+  ...everyPair(participleUses, watchers).map(([frame, [own, object, subject]]) => `${frame}|${object}|${own}|${subject}`),
+]);
 
 /** L builds a label from its Chinese name, why it is right and why it is not. */
 const L = (zh: string, whyEn: string, whyZh: string, notEn: string, notZh: string): Label => ({
@@ -91,6 +457,7 @@ const phrases = topic("grammar", {
       ],
       ["What kind of phrase is in bold?", "粗体部分是哪种短语？"],
       `
+${phraseNameLines}
         The ship sailed **across the wine-dark sea**.|prepositional
         Odysseus, **the king of Ithaca**, longed for home.|appositive
         **Tied to the mast**, he listened to the Sirens.|participial
@@ -135,6 +502,7 @@ const phrases = topic("grammar", {
       ],
       ["What job does the phrase in bold do in the sentence?", "粗体短语在句中起什么作用？"],
       `
+${phraseJobLines}
         **To win the race** was her only goal.|noun
         She trained every morning **to win the race**.|adverb
         She had no time **to win the race**.|adjective
@@ -246,6 +614,7 @@ const clauses = topic("grammar", {
       ],
       ["What kind of clause is in bold?", "粗体部分是哪种从句？"],
       `
+${dependentLines}
         I know **that she lied**.|noun clause
         The girl **who found the map** became famous.|adjective clause
         **Although the sea was rough**, they set sail.|adverb clause
@@ -290,6 +659,7 @@ const clauses = topic("grammar", {
       ],
       ["What job does the noun clause in bold do?", "粗体的名词从句在句中充当什么成分？"],
       `
+${nounJobLines}
         **What she found** changed history.|subject
         They knew **that the dam would break**.|direct object
         We talked about **where we would live**.|object of a preposition
@@ -401,6 +771,7 @@ const complements = topic("grammar", {
       ],
       ["What is the word in bold?", "粗体的词是什么成分？"],
       `
+${complementLines}
         The queen crowned **the knight**.|direct object
         She gave **the knight** a sword.|indirect object
         The knight became **a hero**.|subject complement
@@ -445,6 +816,7 @@ const complements = topic("grammar", {
       ],
       ["How is the verb in bold used in this sentence?", "粗体动词在本句中是什么用法？"],
       `
+${verbKindLines}
         She **grew** tomatoes on the balcony.|transitive
         The tomatoes **grew** quickly.|intransitive
         She **grew** tired of waiting.|linking
@@ -501,6 +873,7 @@ const elliptical = topic("grammar", {
       ],
       ["Which pronoun is correct in formal writing?", "在正式写作中哪个代词是正确的？"],
       `
+${comparisonLines}
         My brother is taller than ___.|I|me|myself
         She runs faster than ___.|he|him|himself
         Nobody worked as hard as ___.|they|them|themselves
@@ -556,6 +929,7 @@ const elliptical = topic("grammar", {
       ],
       ["Which words has the writer left out at the mark [ ]?", "作者在 [ ] 处省略了哪些词？"],
       `
+${leftOutLines}
         While [ ] waiting for the bus, she read a novel.|she was|the bus was|she had
         When [ ] ripe, the apples fall from the tree.|they are|the tree is|it was
         Though [ ] tired, the runners kept going.|they were|it was|the race was
@@ -623,6 +997,7 @@ const possessives = topic("grammar", {
       ],
       ["Which word is correct in formal writing?", "在正式写作中哪个词是正确的？"],
       `
+${possessiveLines}\n${possessiveMore}
         We were surprised by ___ leaving so early.|his|him|he
         I don't mind ___ singing in the shower.|your|you|yours
         The teacher was pleased with ___ answering every question.|Ana's|Ana|Anas
@@ -678,6 +1053,7 @@ const possessives = topic("grammar", {
       ],
       ["Which word is correct in formal writing?", "在正式写作中哪个词是正确的？"],
       `
+${gerundOrParticiple}
         I dislike ___ shouting.|his|him|he
         I saw ___ shouting at the referee.|him|his|he
         We heard ___ singing in the next room.|them|their|they

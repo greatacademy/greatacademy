@@ -2,7 +2,618 @@
 // of usage, a fifth set of commonly confused words and words that are often misspelled.
 
 import type { TopicDef } from "@ga/content";
+import { everyPair } from "../../levels/words.ts";
 import { choose, type Label, label, topic } from "../grade-6/kit.ts";
+
+// Crossed items: frames, people and phrases multiply the lines below into a hundred items or more for each bank.
+
+const join = (lines: readonly string[]) => lines.join("\n");
+const upper = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+/** quotedPeople are characters with the pronoun that stands for them; quotedDeeds are what a pronoun did in a source. */
+const quotedPeople = [
+  ["Penelope", "She"],
+  ["Juliet", "She"],
+  ["Antigone", "She"],
+  ["Ophelia", "She"],
+  ["Odysseus", "He"],
+  ["Hamlet", "He"],
+  ["Macbeth", "He"],
+  ["Romeo", "He"],
+] as const;
+const quotedDeeds = [
+  "waited by the window every night",
+  "refused to speak to the king",
+  "hid the letter in a book",
+  "walked alone by the river",
+  "trusted the wrong friend",
+  "kept the secret for years",
+  "argued with the old servant",
+  "left the castle before dawn",
+  "wrote a long letter home",
+  "laughed at the warning",
+] as const;
+const sources = ["The narrator says that", "The critic notes that", "The summary states that", "One reader argues that"] as const;
+const bracketLines = join(
+  everyPair(quotedPeople, quotedDeeds).map(([[name, pronoun], deed], k) => {
+    const source = sources[k % 4];
+    return `Original: "${pronoun} ${deed}." Write about ${name}.|${source} "[${name}] ${deed}."|${source} "(${name}) ${deed}."|${source} "${name} ${deed}."`;
+  }),
+);
+const groups = ["The sailors", "The rebels", "The students", "The villagers", "The soldiers"] as const;
+const groupStates = ["ready to leave", "tired of waiting", "afraid of the storm", "proud of the work"] as const;
+const signs = [
+  ["Visitors must [not] feed", "the bears"],
+  ["Guests should [not] touch", "the paintings"],
+  ["Swimmers must [not] dive into", "the shallow end"],
+  ["Hikers should [not] leave", "the marked trail"],
+] as const;
+const signPlaces = ["at the zoo", "in the park", "at the museum", "by the lake"] as const;
+const sicErrors = [
+  "the war ended in 1815 [sic]",
+  "the capital of Australia is Sydney [sic]",
+  "the moon is a planet [sic]",
+  "the company was founded in 1990 [sic]",
+  "Shakespeare wrote Don Quixote [sic]",
+  "the river flows north to the Atlantic [sic]",
+  "the bridge opened in 1937 [sic]",
+  "whales are a kind of fish [sic]",
+] as const;
+const whyBracketLines = join([
+  ...everyPair(quotedPeople, quotedDeeds)
+    .filter((_, k) => k % 2 === 0)
+    .map(([[name], deed]) => `"[${name}] ${deed}."|replaces a pronoun`),
+  ...everyPair(groups, groupStates).map(([group, state]) => `${group} wrote that they "[were] ${state}."|fits the grammar`),
+  ...everyPair(signs, signPlaces).map(([[rule, thing], place]) => `The sign ${place} said, "${rule} ${thing}."|adds a missing word`),
+  ...sicErrors.flatMap((error) => [
+    `The letter claims that "${error}."|marks an error in the original`,
+    `The old report says "${error}."|marks an error in the original`,
+  ]),
+]);
+
+/** plotEvents are a character, present, past, past perfect and base forms, and the rest of the event. */
+const plotEvents = [
+  ["Romeo", "meets", "met", "had met", "meet", "Juliet at a feast"],
+  ["Pip", "visits", "visited", "had visited", "visit", "Miss Havisham"],
+  ["Elizabeth", "refuses", "refused", "had refused", "refuse", "Mr. Darcy's first proposal"],
+  ["Victor", "creates", "created", "had created", "create", "the creature"],
+  ["Huck", "floats", "floated", "had floated", "float", "down the Mississippi"],
+  ["Jane", "leaves", "left", "had left", "leave", "Thornfield Hall"],
+  ["the animals", "drive", "drove", "had driven", "drive", "out Mr. Jones"],
+  ["George", "dreams", "dreamed", "had dreamed", "dream", "of owning a farm"],
+  ["Scout", "meets", "met", "had met", "meet", "Boo Radley"],
+  ["Ishmael", "joins", "joined", "had joined", "join", "the crew of the Pequod"],
+  ["Jim", "finds", "found", "had found", "find", "the treasure map"],
+  ["Okonkwo", "fears", "feared", "had feared", "fear", "being thought weak"],
+] as const;
+const plotFrames = ["In the story,", "In one scene,", "As the plot unfolds,", "At one point,"] as const;
+/** writing are an author, the work and the year it appeared. */
+const writing = [
+  ["Shakespeare", "the play", "around 1595"],
+  ["Dickens", "Great Expectations", "in 1861"],
+  ["Jane Austen", "Pride and Prejudice", "in 1813"],
+  ["Mary Shelley", "Frankenstein", "in 1818"],
+  ["Mark Twain", "the novel", "in 1884"],
+  ["Charlotte Brontë", "Jane Eyre", "in 1847"],
+  ["Orwell", "Animal Farm", "in 1945"],
+  ["Steinbeck", "the novella", "in 1937"],
+  ["Harper Lee", "her only early novel", "in 1960"],
+  ["Melville", "Moby-Dick", "in 1851"],
+  ["Stevenson", "Treasure Island", "in 1883"],
+  ["Achebe", "Things Fall Apart", "in 1958"],
+] as const;
+const tenseLines = join([
+  ...everyPair(plotEvents, plotFrames).map(
+    ([[who, present, past, perfect, , rest], frame]) => `${frame} ${who} ___ ${rest}.|${present}|${past}|${perfect}`,
+  ),
+  ...writing.flatMap(([author, work, when]) => [
+    `${author} ___ ${work} ${when}.|wrote|writes|is writing`,
+    `${author} ___ ${work} ${when}, and it sold well.|published|publishes|is publishing`,
+  ]),
+]);
+const textOrHistory = join([
+  ...everyPair(plotEvents, plotFrames).map(
+    ([[who, , , , base, rest], frame]) => `${frame} ${who} ___ ${rest}. (${base})|the text: present tense`,
+  ),
+  ...writing.flatMap(([author, work, when]) => [
+    `${author} ___ ${work} ${when}. (write)|history: past tense`,
+    `${author} ___ ${work} ${when}. (finish)|history: past tense`,
+  ]),
+]);
+
+/** usageClaims are a claim, what it is, and examples that it is about. */
+const usageClaims = [
+  [
+    "A verb must agree with its subject in number",
+    "real rule",
+    [
+      "The dogs bark",
+      "She runs every day",
+      "The list of names is long",
+      "Each of the girls has a ticket",
+      "My friends were late",
+      "The box of books is heavy",
+    ],
+  ],
+  [
+    "Never split an infinitive",
+    "myth",
+    ["to boldly go", "to quickly finish", "to really understand", "to carefully read", "to fully recover", "to gently remind"],
+  ],
+  [
+    "Never end a sentence with a preposition",
+    "myth",
+    [
+      "Who did you talk to?",
+      "What is it made of?",
+      "This is the town I grew up in.",
+      "Which box should I put it in?",
+      "Where are you from?",
+      "That is the song we danced to.",
+    ],
+  ],
+  [
+    "Never begin a sentence with a conjunction",
+    "myth",
+    [
+      "But the plan failed.",
+      "And then it rained.",
+      "So we went home.",
+      "Yet nobody complained.",
+      "Or we could wait.",
+      "But the king said no.",
+    ],
+  ],
+  [
+    "Capitalize the names of particular people and places",
+    "real rule",
+    ["Paris", "Lake Victoria", "Maria", "Mount Fuji", "the Nile", "Tokyo"],
+  ],
+  ["Use an before a vowel sound", "real rule", ["an hour", "an apple", "an honest man", "an umbrella", "an egg", "an idea"]],
+  ["Avoid contractions in a formal report", "choice of style", ["don't", "can't", "won't", "it's", "isn't", "they're"]],
+  [
+    "Put a comma before the last and in a list",
+    "choice of style",
+    [
+      "red, white, and blue",
+      "bread, milk, and eggs",
+      "pens, paper, and glue",
+      "cats, dogs, and birds",
+      "Lima, Quito, and Bogotá",
+      "north, south, and west",
+    ],
+  ],
+  [
+    "Do not join two sentences with only a comma",
+    "real rule",
+    [
+      "The rain stopped, we went out",
+      "I was tired, I went to bed",
+      "The bus was late, we walked",
+      "She won, everyone cheered",
+      "It was cold, we lit a fire",
+      "He called, no one answered",
+    ],
+  ],
+  [
+    "Never use the passive voice",
+    "myth",
+    [
+      "The bridge was built in 1900",
+      "Mistakes were made",
+      "The data were collected in May",
+      "The letter was signed by the mayor",
+      "The water was heated to 80 degrees",
+      "The winner will be announced tomorrow",
+    ],
+  ],
+  [
+    "Spell out numbers under ten in a magazine article",
+    "choice of style",
+    ["three dogs", "seven days", "five friends", "two hours", "nine books", "six miles"],
+  ],
+  [
+    "Use fewer with things you can count in formal writing",
+    "real rule",
+    ["fewer cars", "fewer students", "fewer mistakes", "fewer days", "fewer books", "fewer apples"],
+  ],
+] as const;
+const ruleLines = join(
+  usageClaims.flatMap(([claim, kind, examples]) => examples.map((example) => `${claim}, as in "${example}".|${kind}`)),
+);
+const groupNouns = ["boys", "girls", "players", "students", "guests", "workers"] as const;
+const theirThings = ["a ticket", "a locker", "a badge", "a seat"] as const;
+const slang = ["kind of awesome", "super weird", "totally lame", "a big deal, honestly", "pretty sketchy", "a huge letdown"] as const;
+const slangSubjects = ["The results", "The ending", "The data", "The experiment", "The plan"] as const;
+const fineLines = [
+  "She decided to quickly leave the room.",
+  "They hoped to finally reach the summit.",
+  "What are you afraid of?",
+  "This is the house I was born in.",
+  "But the king would not listen.",
+  "And so the war began.",
+  "Who did you give the key to?",
+  "We wanted to really help.",
+  "That is the problem we must deal with.",
+  "So the town built a new bridge.",
+  "The judge asked us to carefully read the rules.",
+  "Which team are you on?",
+  "Yet the storm passed without harm.",
+  "Somebody left their coat in the hall.",
+  "The council voted to slowly raise the fee.",
+  "Where did the letter come from?",
+  "Or we could take the early train.",
+  "Everyone brought their own lunch.",
+  "That was the bridge we walked across.",
+  "Because the road was closed, we waited.",
+  "The class tried to fully understand the poem.",
+  "This is the book I told you about.",
+  "But nobody answered the door.",
+  "And then the lights came on.",
+] as const;
+const acceptableLines = join([
+  ...fineLines.map((line) => `${line}|acceptable`),
+  ...everyPair(groupNouns, theirThings).map(([who, thing]) => `Each of the ${who} have ${thing}.|an error`),
+  ...groupNouns.map((who) => `Neither of the ${who} were ready.|an error`),
+  ...everyPair(slangSubjects, slang).map(
+    ([subject, word]) => `${subject} ${subject === "The data" || subject === "The results" ? "were" : "was"} ${word}.|too informal`,
+  ),
+]);
+
+/** confusedSentences are sentences for each word of the ten pairs, with the word it is confused with and a third word. */
+const confusedSentences = [
+  [
+    "allude",
+    "elude",
+    "illude",
+    [
+      "The speaker seemed to ___ to an old scandal.",
+      "Writers often ___ to the Bible.",
+      "Did the letter ___ to the missing money?",
+      "The song's title may ___ to a famous poem.",
+    ],
+  ],
+  [
+    "elude",
+    "allude",
+    "delude",
+    [
+      "The fox managed to ___ the hounds.",
+      "Sleep continued to ___ her all night.",
+      "The answer seemed to ___ every student.",
+      "The spy tried to ___ the guards at the border.",
+    ],
+  ],
+  [
+    "appraise",
+    "apprise",
+    "praise",
+    [
+      "The jeweler will ___ the ring tomorrow.",
+      "Please ___ the damage before we pay.",
+      "The expert came to ___ the old coins.",
+      "Coaches ___ each player's skill at the tryout.",
+    ],
+  ],
+  [
+    "apprise",
+    "appraise",
+    "apprize",
+    [
+      "Please ___ me of any changes to the plan.",
+      "The doctor will ___ the family of the results.",
+      "Did anyone ___ the captain of the storm?",
+      "We will ___ you of our decision by Friday.",
+    ],
+  ],
+  [
+    "cite",
+    "site",
+    "sight",
+    [
+      "Remember to ___ every source in your essay.",
+      "Can you ___ an example from the text?",
+      "Lawyers often ___ earlier cases.",
+      "Please ___ the page number of the quotation.",
+    ],
+  ],
+  [
+    "site",
+    "cite",
+    "sight",
+    [
+      "The ___ of the new library is next to the park.",
+      "Workers cleared the building ___.",
+      "Archaeologists found coins at the ___.",
+      "The campers chose a ___ near the river.",
+    ],
+  ],
+  [
+    "credible",
+    "credulous",
+    "creditable",
+    [
+      "The witness gave a ___ account of the crash.",
+      "Is this website a ___ source?",
+      "Her excuse was not very ___.",
+      "The scientist offered a ___ explanation.",
+    ],
+  ],
+  [
+    "credulous",
+    "credible",
+    "incredible",
+    [
+      "Only a ___ person would believe that rumor.",
+      "The ___ villagers paid for fake medicine.",
+      "Don't be so ___; check the facts first.",
+      "The swindler looked for ___ buyers.",
+    ],
+  ],
+  [
+    "disinterested",
+    "uninterested",
+    "interesting",
+    [
+      "A judge must be ___ in the case.",
+      "We need a ___ referee for the final.",
+      "The dispute was settled by a ___ expert.",
+      "Only a ___ observer can be truly fair.",
+    ],
+  ],
+  [
+    "uninterested",
+    "disinterested",
+    "interested",
+    [
+      "The bored students seemed ___ in the lecture.",
+      "My cat is completely ___ in its new toy.",
+      "He looked ___ and kept checking his phone.",
+      "The audience grew ___ as the speech went on.",
+    ],
+  ],
+] as const;
+const pick3 = (k: number) => confusedSentences[k % confusedSentences.length] ?? confusedSentences[0];
+const fitWordLines = join(
+  confusedSentences.flatMap(([word, partner, third, sentences]) => sentences.map((sentence) => `${sentence}|${word}|${partner}|${third}`)),
+);
+const fitWordMore = join(
+  confusedSentences.flatMap(([word, partner, , sentences], k) =>
+    sentences.map(
+      (sentence, j) =>
+        `${["In the essay,", "As expected,", "Once again,", "This time,"][j % 4]} ${sentence.charAt(0).toLowerCase()}${sentence.slice(1)}|${word}|${partner}|${pick3(k + 2 + j * 2)[0]}`,
+    ),
+  ),
+);
+/** meanings are definitions in several words for each confused word. */
+const meanings = [
+  [
+    "allude",
+    "elude",
+    "illude",
+    [
+      "to hint at something without naming it",
+      "to make an indirect reference",
+      "to refer to something in passing",
+      "to suggest something without saying it outright",
+    ],
+  ],
+  [
+    "elude",
+    "allude",
+    "delude",
+    ["to escape by cleverness or speed", "to avoid being caught", "to slip away from a pursuer", "to remain out of reach of someone"],
+  ],
+  [
+    "appraise",
+    "apprise",
+    "praise",
+    [
+      "to estimate what something is worth",
+      "to judge the quality of something",
+      "to set a price on something after study",
+      "to size up carefully",
+    ],
+  ],
+  [
+    "apprise",
+    "appraise",
+    "apprize",
+    ["to give someone news", "to keep someone informed", "to let someone know the facts", "to tell someone about a situation"],
+  ],
+  ["cite", "site", "sight", ["to quote a source", "to name as an example", "to refer to as proof", "to mention a law or case as support"]],
+  [
+    "site",
+    "cite",
+    "sight",
+    [
+      "the place where something is built",
+      "a location for an event",
+      "the spot where something happened",
+      "a piece of land chosen for a purpose",
+    ],
+  ],
+  ["sight", "site", "cite", ["the ability to see", "something that is seen", "a view worth seeing", "the act of seeing"]],
+  ["credible", "credulous", "creditable", ["believable", "worthy of trust", "convincing enough to accept", "likely to be true"]],
+  [
+    "credulous",
+    "credible",
+    "incredible",
+    ["too ready to believe things", "easily fooled", "trusting without proof", "quick to accept any story"],
+  ],
+  [
+    "disinterested",
+    "uninterested",
+    "interesting",
+    ["fair because you have nothing to gain", "free of personal interest", "impartial", "not taking sides"],
+  ],
+  [
+    "uninterested",
+    "disinterested",
+    "interested",
+    ["bored", "not curious", "not paying attention because of boredom", "without any wish to know more"],
+  ],
+  [
+    "historic",
+    "historical",
+    "history",
+    [
+      "famous and important in history",
+      "likely to be remembered for a long time",
+      "marking a turning point",
+      "of great importance in the story of a nation",
+    ],
+  ],
+  [
+    "historical",
+    "historic",
+    "hysterical",
+    [
+      "having to do with history",
+      "based on people or events of the past",
+      "set in an earlier period",
+      "belonging to the study of the past",
+    ],
+  ],
+  [
+    "ingenious",
+    "ingenuous",
+    "ingenuity",
+    ["very clever and inventive", "showing original skill", "cleverly made", "full of smart new ideas"],
+  ],
+  ["ingenuous", "ingenious", "ingenue", ["innocent and trusting", "open and honest like a child", "lacking guile", "simple and sincere"]],
+  [
+    "perspective",
+    "prospective",
+    "persuasive",
+    ["a point of view", "a way of seeing a problem", "the angle from which a story is told", "a sense of what really matters"],
+  ],
+  ["loathe", "loath", "load", ["to hate deeply", "to feel disgust for", "to detest", "to find hateful"]],
+  ["loath", "loathe", "loth", ["unwilling", "reluctant to do something", "not ready to agree", "slow to give permission"]],
+] as const;
+const meaningLines = join(meanings.flatMap(([word, partner, third, defs]) => defs.map((def) => `${def}|${word}|${partner}|${third}`)));
+
+/** hardWords are a commonly misspelled word, two misspellings, and two sentences that use it with two other words from each. */
+const hardWords = [
+  [
+    "accommodate",
+    "accomodate",
+    "acommodate",
+    ["The new hall can ___ two hundred people.|hall|people", "We will ___ every guest in the old inn.|guest|inn"],
+  ],
+  [
+    "argument",
+    "arguement",
+    "argumint",
+    ["Her ___ convinced the whole jury.|convinced|jury", "The ___ ended when Dad came home.|ended|home"],
+  ],
+  ["beginning", "begining", "beggining", ["The ___ of the film was slow.|film|slow", "At the ___ of term, we got new books.|term|books"]],
+  ["believe", "beleive", "belive", ["I ___ the story is true.|story|true", "Few people ___ in ghosts now.|people|ghosts"]],
+  ["calendar", "calender", "calandar", ["Mark the date on the ___.|date|Mark", "The kitchen ___ shows every holiday.|kitchen|holiday"]],
+  [
+    "cemetery",
+    "cemetary",
+    "cematery",
+    ["The old ___ lies behind the church.|church|behind", "We walked past the ___ at dusk.|walked|dusk"],
+  ],
+  ["committee", "commitee", "comittee", ["The ___ will vote on Monday.|vote|Monday", "A ___ of parents planned the fair.|parents|fair"]],
+  [
+    "conscious",
+    "concious",
+    "consious",
+    ["The patient was ___ after the surgery.|patient|surgery", "She made a ___ effort to listen.|effort|listen"],
+  ],
+  ["environment", "enviroment", "envirnment", ["We must protect the ___.|protect|must", "The school has a friendly ___.|school|friendly"]],
+  [
+    "exaggerate",
+    "exagerate",
+    "exaggarate",
+    ["Fishermen often ___ the size of their catch.|Fishermen|catch", "Please do not ___ the danger.|danger|Please"],
+  ],
+  [
+    "existence",
+    "existance",
+    "existense",
+    ["Scientists doubt the ___ of the monster.|Scientists|monster", "The town's ___ depends on the river.|town's|river"],
+  ],
+  [
+    "foreign",
+    "foriegn",
+    "foreing",
+    ["She speaks three ___ languages.|speaks|languages", "The ___ visitors loved the market.|visitors|market"],
+  ],
+  ["government", "goverment", "govermint", ["The ___ raised the tax on fuel.|tax|fuel", "Our ___ meets in the capital.|meets|capital"]],
+  ["guarantee", "garantee", "guarentee", ["The shop gives a ___ on every bike.|shop|bike", "I cannot ___ that it will work.|cannot|work"]],
+  ["harass", "harrass", "harras", ["The geese ___ anyone near the pond.|geese|pond", "Please do not ___ the animals.|animals|Please"]],
+  ["immediately", "immediatly", "imediately", ["Call the doctor ___.|Call|doctor", "The crowd left ___ after the game.|crowd|game"]],
+  [
+    "independent",
+    "independant",
+    "indipendent",
+    ["The country became ___ in 1960.|country|became", "She is a very ___ thinker.|thinker|very"],
+  ],
+  ["library", "libary", "liberry", ["The ___ opens at nine.|opens|nine", "I borrowed this book from the ___.|borrowed|book"]],
+  ["maintenance", "maintainance", "maintenence", ["The road needs regular ___.|road|regular", "The ___ crew fixed the lift.|crew|lift"]],
+  [
+    "millennium",
+    "millenium",
+    "milennium",
+    ["The city was founded a ___ ago.|city|founded", "Fireworks marked the new ___.|Fireworks|marked"],
+  ],
+  ["mischievous", "mischievious", "mischevous", ["The ___ puppy chewed my shoe.|puppy|shoe", "He gave a ___ grin.|gave|grin"]],
+  ["neighbor", "nieghbor", "neigbor", ["Our ___ grows giant pumpkins.|grows|pumpkins", "A kind ___ fed our cat.|kind|cat"]],
+  [
+    "noticeable",
+    "noticable",
+    "noticeble",
+    ["There was a ___ change in the weather.|change|weather", "The scratch is barely ___.|scratch|barely"],
+  ],
+  ["occasion", "ocassion", "occassion", ["The wedding was a happy ___.|wedding|happy", "Wear your best suit for the ___.|Wear|suit"]],
+  ["parallel", "paralel", "parralel", ["The two roads run ___ to the river.|roads|river", "Draw a ___ line below the first.|Draw|line"]],
+  [
+    "persistent",
+    "persistant",
+    "persistint",
+    ["The ___ rain flooded the fields.|rain|fields", "A ___ reporter finally got the story.|reporter|story"],
+  ],
+  [
+    "possession",
+    "posession",
+    "possesion",
+    ["The ring is her most precious ___.|ring|precious", "The team kept ___ of the ball.|team|ball"],
+  ],
+  ["recommend", "reccomend", "recomend", ["I ___ the soup.|soup|I", "Doctors ___ eight hours of sleep.|Doctors|sleep"]],
+  ["restaurant", "restaraunt", "resturant", ["The ___ serves fresh fish.|serves|fish", "We met at a small ___ downtown.|met|downtown"]],
+  ["schedule", "schedual", "skedule", ["The train ___ changed in May.|train|changed", "Check the ___ before you leave.|Check|leave"]],
+  ["supersede", "supercede", "superseed", ["The new rules ___ the old ones.|rules|old", "This law will ___ the last one.|law|last"]],
+  [
+    "threshold",
+    "threshhold",
+    "treshold",
+    ["She paused at the ___ of the room.|paused|room", "The noise passed the ___ of pain.|noise|pain"],
+  ],
+  ["tomorrow", "tommorow", "tomorow", ["The test is ___ morning.|test|morning", "We leave for the coast ___.|leave|coast"]],
+  ["vacuum", "vaccum", "vacuumm", ["Please ___ the living room.|living|room", "Sound cannot travel through a ___.|Sound|travel"]],
+  ["weird", "wierd", "weerd", ["We heard a ___ noise in the attic.|noise|attic", "The play had a ___ ending.|play|ending"]],
+] as const;
+const spellingLines = join(
+  hardWords.flatMap(([word, wrong1, wrong2, sentences]) =>
+    sentences.map((line) => {
+      const [sentence = ""] = line.split("|");
+      return `${sentence}|${word}|${wrong1}|${wrong2}`;
+    }),
+  ),
+);
+const misspelledLines = join(
+  hardWords.flatMap(([word, wrong1, wrong2, sentences]) =>
+    sentences.map((line, j) => {
+      const [sentence = "", a = "", b = ""] = line.split("|");
+      const bad = j === 0 ? wrong1 : wrong2;
+      const shown = sentence.startsWith("___") ? sentence.replace("___", upper(bad)) : sentence.replace("___", bad);
+      return `${shown}|${sentence.startsWith("___") ? upper(bad) : bad}|${a}|${b}`;
+    }),
+  ),
+);
 
 /** L builds a label from its Chinese name, why it is right and why it is not. */
 const L = (zh: string, whyEn: string, whyZh: string, notEn: string, notZh: string): Label => ({
@@ -29,6 +640,7 @@ const brackets = topic("grammar", {
       ],
       ["Which quotation uses brackets correctly?", "哪个引文正确使用了方括号？"],
       `
+${bracketLines}
         Original: "She waited by the window every night." Write about Penelope.|The narrator says that "[Penelope] waited by the window every night."|The narrator says that "(Penelope) waited by the window every night."|The narrator says that "Penelope waited by the window every night."
         Original: "I will not go back," he said. Write about the hero in the third person.|The hero insists that "[he] will not go back."|The hero insists that "(he) will not go back."|The hero insists that "he will not go back."
         Original: "It was the worst storm in living memory." Name the storm.|The report calls "[the storm of 1703] the worst storm in living memory."|The report calls "(the storm of 1703) the worst storm in living memory."|The report calls "the storm of 1703 the worst storm in living memory."
@@ -84,6 +696,7 @@ const brackets = topic("grammar", {
       ],
       ["What job do the brackets do in this quotation?", "这个引文中的方括号起什么作用？"],
       `
+${whyBracketLines}
         "[Juliet] drinks the potion without a word."|replaces a pronoun
         She wrote that they "[were] ready to leave."|fits the grammar
         The sign said, "Visitors must [not] feed the bears."|adds a missing word
@@ -167,6 +780,7 @@ const literaryPresent = topic("grammar", {
       ],
       ["Which verb fits the sentence of a literary essay?", "哪个动词适合文学评论中的这个句子？"],
       `
+${tenseLines}
         In the first scene, Romeo ___ Juliet at a feast.|meets|met|had met
         Shakespeare ___ the play around 1595.|wrote|writes|is writing
         At the end of the novel, Pip ___ that Estella has changed.|realizes|realized|had realized
@@ -225,6 +839,7 @@ const literaryPresent = topic("grammar", {
         "这个句子说的是文本还是历史？因此需要哪种时态？",
       ],
       `
+${textOrHistory}
         Okonkwo ___ being thought weak like his father. (fear)|the text: present tense
         Achebe ___ the novel in 1958. (write)|history: past tense
         The novel ___ millions of copies in its first decade. (sell)|history: past tense
@@ -301,6 +916,7 @@ const myths = topic("grammar", {
       ],
       ["Is this piece of advice a real rule, a myth or a choice of style?", "这条建议是真正的规则、误区还是风格选择？"],
       `
+${ruleLines}
         A verb must agree with its subject in number.|real rule
         Never split an infinitive, as in "to boldly go."|myth
         Avoid using "I" in a formal research essay.|choice of style
@@ -368,6 +984,7 @@ const myths = topic("grammar", {
         "在正式论文中，这个句子可以接受、有错误，还是太随意？",
       ],
       `
+${acceptableLines}
         She decided to quickly leave the room.|acceptable
         Each of the boys have a ticket.|an error
         The results were kind of awesome.|too informal
@@ -444,6 +1061,7 @@ const confused5 = topic("grammar", {
       ],
       ["Which word fits the sentence?", "哪个词适合这个句子？"],
       `
+${fitWordLines}\n${fitWordMore}
         The poem seems to ___ to an old myth without naming it.|allude|elude|elicit
         The thief managed to ___ the police for weeks.|elude|allude|illude
         In his speech, he ___ to his rival's failures but never named her.|alluded|eluded|deluded
@@ -496,6 +1114,7 @@ const confused5 = topic("grammar", {
       ],
       ["Which word has this meaning?", "哪个词有这个意思？"],
       `
+${meaningLines}
         to mention something indirectly|allude|elude|illude
         to escape or avoid, often by cleverness|elude|allude|delude
         to judge the value or quality of something|appraise|apprise|praise
@@ -560,6 +1179,7 @@ const spelling = topic("grammar", {
       ],
       ["Which spelling is correct?", "哪个拼写是正确的？"],
       `
+${spellingLines}
         The hotel can ___ forty guests.|accommodate|accomodate|acommodate
         I will ___ be there on time.|definitely|definately|definitly
         Keep the eggs ___ from the flour.|separate|seperate|separete
@@ -615,6 +1235,7 @@ const spelling = topic("grammar", {
       ],
       ["Which word in the sentence is misspelled?", "句子中哪个词拼错了？"],
       `
+${misspelledLines}
         The goverment announced a new tax on Wednesday.|goverment|announced|Wednesday
         We arrived in Febuary, just before the festival.|Febuary|arrived|festival
         The independant candidate won the election.|independant|candidate|election
