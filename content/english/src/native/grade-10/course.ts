@@ -192,6 +192,26 @@ const units: readonly UnitDef[] = [
     },
     undefined,
   ),
+  unit(
+    t("School, College, Crime and Travel", "学校、大学、犯罪与旅行"),
+    {
+      words: ["words-of-courses-and-campus", "words-of-college-life", "words-of-crime", "words-of-travel"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("City, Office, Media and Amounts", "城市、职场、媒体与数量"),
+    {
+      words: ["words-of-the-city", "words-of-the-office", "words-of-media", "academic-words-of-amounts-and-cases"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
 ];
 
 /** courseGrade10 is the native course of grade 10. */
