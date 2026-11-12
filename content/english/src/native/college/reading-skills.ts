@@ -4,6 +4,7 @@
 
 import { type KnowledgePointDef, type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point } from "@ga/subject-english";
+import { drawn, risingTogether } from "../../figures.ts";
 import {
   abstractMoveStep,
   actionStep,
@@ -766,44 +767,47 @@ export const readingSkillTopicsCollege: readonly TopicDef[] = [
     },
     next: styleChoiceStep,
   }),
-  labelTopic({
-    id: "reading-charts-and-statistics",
-    title: t("Reading Charts and Statistics", "解读图表与统计数据"),
-    summary: t(
-      "What data show and hide: correlation and cause, small samples, and misleading comparisons and scales.",
-      "数据揭示和掩盖了什么：相关与因果、小样本，以及误导性的比较和刻度。",
-    ),
-    prerequisites: ["evaluating-sources", "logical-fallacies"],
-    encompasses: [{ topic: "logical-fallacies", weight: 0.2 }],
-    point: "judging-a-conclusion-from-data",
-    pointTitle: t("Judging a Conclusion From Data", "判断由数据得出的结论"),
-    explanation: t(
-      "Numbers make an argument look solid, so check what they can actually support. Three faults are common.\n\n- **Correlation taken as cause**: two things rise and fall together, and the writer concludes that one causes the other. A third factor may drive both (hot weather sells ice cream and causes sunburn), or the cause may run the other way. Only a controlled experiment shows a cause.\n- **Too small a sample**: a few cases, or cases from one place, are used to describe a whole population.\n- **A misleading comparison**: raw totals compared where rates per person are needed, a chart whose axis does not start at zero, months or groups that are not alike, or only the years that suit the argument.\n\nA **supported conclusion** stays within the data: it describes what was measured, among whom, and with the certainty the method allows.",
-      "数字让论证看起来很扎实，所以要检查它们究竟能支持什么。常见的错误有三种。\n\n- **把相关当成因果**：两件事一起升降，作者就断定其中一件导致了另一件。可能是第三个因素同时推动了两者（炎热的天气既卖出冰淇淋又造成晒伤），也可能因果方向正好相反。只有对照实验才能证明因果。\n- **样本太小**：用少数几个案例，或者一个地方的案例，来描述整个群体。\n- **误导性的比较**：在需要比较人均比率时比较总数，图表的纵轴不从零开始，比较的月份或群体并不相似，或者只挑选对论点有利的年份。\n\n**有依据的结论**不超出数据的范围：它描述测量了什么、在哪些人中测量，并且只达到研究方法所允许的确定程度。",
-    ),
-    question: t("Is the conclusion supported, or what is wrong with it?", "这个结论有依据吗？如果没有，问题出在哪里？"),
-    bank: statsBank,
-    why: {
-      [supported]: [
-        "The conclusion stays within what the data measured and claims no more certainty than the method allows.",
-        "结论没有超出数据所测量的范围，也没有声称超出研究方法所允许的确定性。",
-      ],
-      [correlation]: [
-        "The data show only that two things go together; another factor, or a cause running the other way, could explain the link.",
-        "数据只表明两件事同时出现；另一个因素，或者方向相反的因果关系，也可以解释这种关联。",
-      ],
-      [small]: [
-        "A handful of cases, or cases from one place, cannot describe a whole population.",
-        "少数几个案例，或者一个地方的案例，不能代表整个群体。",
-      ],
-      [misleading]: [
-        "The comparison is unfair: totals instead of rates, a stretched scale, unlike groups or times, or data chosen to suit the claim.",
-        "这个比较不公平：用总数代替比率、拉伸刻度、比较不相似的群体或时间，或者挑选对说法有利的数据。",
-      ],
-    },
-    zh: { [supported]: "有依据的结论", [correlation]: "把相关当成因果", [small]: "样本太小", [misleading]: "误导性的比较" },
-    next: dataConclusionStep,
-  }),
+  drawn(
+    labelTopic({
+      id: "reading-charts-and-statistics",
+      title: t("Reading Charts and Statistics", "解读图表与统计数据"),
+      summary: t(
+        "What data show and hide: correlation and cause, small samples, and misleading comparisons and scales.",
+        "数据揭示和掩盖了什么：相关与因果、小样本，以及误导性的比较和刻度。",
+      ),
+      prerequisites: ["evaluating-sources", "logical-fallacies"],
+      encompasses: [{ topic: "logical-fallacies", weight: 0.2 }],
+      point: "judging-a-conclusion-from-data",
+      pointTitle: t("Judging a Conclusion From Data", "判断由数据得出的结论"),
+      explanation: t(
+        "Numbers make an argument look solid, so check what they can actually support. Three faults are common.\n\n- **Correlation taken as cause**: two things rise and fall together, and the writer concludes that one causes the other. A third factor may drive both (hot weather sells ice cream and causes sunburn), or the cause may run the other way. Only a controlled experiment shows a cause.\n- **Too small a sample**: a few cases, or cases from one place, are used to describe a whole population.\n- **A misleading comparison**: raw totals compared where rates per person are needed, a chart whose axis does not start at zero, months or groups that are not alike, or only the years that suit the argument.\n\nA **supported conclusion** stays within the data: it describes what was measured, among whom, and with the certainty the method allows.",
+        "数字让论证看起来很扎实，所以要检查它们究竟能支持什么。常见的错误有三种。\n\n- **把相关当成因果**：两件事一起升降，作者就断定其中一件导致了另一件。可能是第三个因素同时推动了两者（炎热的天气既卖出冰淇淋又造成晒伤），也可能因果方向正好相反。只有对照实验才能证明因果。\n- **样本太小**：用少数几个案例，或者一个地方的案例，来描述整个群体。\n- **误导性的比较**：在需要比较人均比率时比较总数，图表的纵轴不从零开始，比较的月份或群体并不相似，或者只挑选对论点有利的年份。\n\n**有依据的结论**不超出数据的范围：它描述测量了什么、在哪些人中测量，并且只达到研究方法所允许的确定程度。",
+      ),
+      question: t("Is the conclusion supported, or what is wrong with it?", "这个结论有依据吗？如果没有，问题出在哪里？"),
+      bank: statsBank,
+      why: {
+        [supported]: [
+          "The conclusion stays within what the data measured and claims no more certainty than the method allows.",
+          "结论没有超出数据所测量的范围，也没有声称超出研究方法所允许的确定性。",
+        ],
+        [correlation]: [
+          "The data show only that two things go together; another factor, or a cause running the other way, could explain the link.",
+          "数据只表明两件事同时出现；另一个因素，或者方向相反的因果关系，也可以解释这种关联。",
+        ],
+        [small]: [
+          "A handful of cases, or cases from one place, cannot describe a whole population.",
+          "少数几个案例，或者一个地方的案例，不能代表整个群体。",
+        ],
+        [misleading]: [
+          "The comparison is unfair: totals instead of rates, a stretched scale, unlike groups or times, or data chosen to suit the claim.",
+          "这个比较不公平：用总数代替比率、拉伸刻度、比较不相似的群体或时间，或者挑选对说法有利的数据。",
+        ],
+      },
+      zh: { [supported]: "有依据的结论", [correlation]: "把相关当成因果", [small]: "样本太小", [misleading]: "误导性的比较" },
+      next: dataConclusionStep,
+    }),
+    { "judging-a-conclusion-from-data": risingTogether },
+  ),
   labelTopic({
     id: "reading-workplace-documents",
     title: t("Reading Workplace Documents", "阅读职场文件"),

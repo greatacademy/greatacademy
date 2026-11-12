@@ -4,6 +4,7 @@
 
 import { type Text, type TopicDef, t } from "@ga/content";
 import { point } from "@ga/subject-english";
+import { drawn, sizesOfChange } from "../figures.ts";
 import { examTopic, interleave, type SolvedChoice, solvedChoiceGenerator } from "./kit.ts";
 
 /** Series is a quantity measured over several years: what it is, how its figures are written, and the figures. */
@@ -448,38 +449,41 @@ const trendQuestion = t(
 const shareQuestion = t("Which sentence about the table is accurate?", "关于这个表格，哪个句子是准确的？");
 
 /** describingData is the IELTS topic of reporting the figures of a table accurately. */
-export const describingData: TopicDef = examTopic({
-  id: "ielts-describing-data",
-  title: t("Describing Data", "描述数据"),
-  summary: t(
-    "IELTS Task 1 language: choose the sentence that reports a table accurately, for trends over time and for proportions and comparisons.",
-    "雅思 Task 1 的语言：选出准确报告表格的句子，包括随时间的趋势，以及比例和比较。",
-  ),
-  strand: "writing",
-  prerequisites: ["b2-words-trends", "comparatives-and-superlatives"],
-  encompasses: [
-    { topic: "b2-words-trends", weight: 0.2 },
-    { topic: "comparatives-and-superlatives", weight: 0.2 },
-  ],
-  xp: 10,
-  points: [
-    point(
-      "describing-trends",
-      t("Trends over Time", "随时间变化的趋势"),
-      t(
-        "Work out how big a change is before you choose its words. Divide the change by the starting figure:\n\n- a change of only a few per cent: *remained stable, stayed roughly the same*;\n- a change of about a tenth: *rose slightly, fell slightly, increased a little*;\n- a change of a third or more: *rose sharply, fell sharply, increased dramatically*.\n\nAn examiner checks that your words match the figures. A rise from 40 to 42 is not *sharp*, however exciting it looks on a graph.",
-        "先算出变化有多大，再选词。用变化量除以起始数字：\n\n- 只变化百分之几：*remained stable, stayed roughly the same*；\n- 变化约十分之一：*rose slightly, fell slightly, increased a little*；\n- 变化三分之一或更多：*rose sharply, fell sharply, increased dramatically*。\n\n考官会检查你的用词是否与数字相符。从 40 到 42 的上升不是 *sharp*，不管它在图上看起来多显眼。",
-      ),
-      solvedChoiceGenerator(trendQuestion, trendBank),
+export const describingData: TopicDef = drawn(
+  examTopic({
+    id: "ielts-describing-data",
+    title: t("Describing Data", "描述数据"),
+    summary: t(
+      "IELTS Task 1 language: choose the sentence that reports a table accurately, for trends over time and for proportions and comparisons.",
+      "雅思 Task 1 的语言：选出准确报告表格的句子，包括随时间的趋势，以及比例和比较。",
     ),
-    point(
-      "describing-proportions",
-      t("Proportions and Comparisons", "比例与比较"),
-      t(
-        "For a table of percentages, report proportions and comparisons rather than every number.\n\n- Fractions: *about half* (50%), *a third* (33%), *a quarter* (25%), *a fifth* (20%), *a tenth* (10%). Use them only when the figure is close.\n- Comparisons: *roughly twice / three times / half that for ...*: divide one figure by the other.\n- The largest category: *the highest, at 38%*.\n\nCheck every sentence against the table: a wrong fraction or a reversed comparison is an error of accuracy, however good the English.",
-        "对于百分比表格，要报告比例和比较，而不是罗列每个数字。\n\n- 分数：*about half*（50%）、*a third*（33%）、*a quarter*（25%）、*a fifth*（20%）、*a tenth*（10%）。只有数字接近时才用。\n- 比较：*roughly twice / three times / half that for ...*：用一个数字除以另一个。\n- 最大的类别：*the highest, at 38%*。\n\n每句话都要与表格核对：分数用错或比较说反都是准确性错误，英语再好也没用。",
+    strand: "writing",
+    prerequisites: ["b2-words-trends", "comparatives-and-superlatives"],
+    encompasses: [
+      { topic: "b2-words-trends", weight: 0.2 },
+      { topic: "comparatives-and-superlatives", weight: 0.2 },
+    ],
+    xp: 10,
+    points: [
+      point(
+        "describing-trends",
+        t("Trends over Time", "随时间变化的趋势"),
+        t(
+          "Work out how big a change is before you choose its words. Divide the change by the starting figure:\n\n- a change of only a few per cent: *remained stable, stayed roughly the same*;\n- a change of about a tenth: *rose slightly, fell slightly, increased a little*;\n- a change of a third or more: *rose sharply, fell sharply, increased dramatically*.\n\nAn examiner checks that your words match the figures. A rise from 40 to 42 is not *sharp*, however exciting it looks on a graph.",
+          "先算出变化有多大，再选词。用变化量除以起始数字：\n\n- 只变化百分之几：*remained stable, stayed roughly the same*；\n- 变化约十分之一：*rose slightly, fell slightly, increased a little*；\n- 变化三分之一或更多：*rose sharply, fell sharply, increased dramatically*。\n\n考官会检查你的用词是否与数字相符。从 40 到 42 的上升不是 *sharp*，不管它在图上看起来多显眼。",
+        ),
+        solvedChoiceGenerator(trendQuestion, trendBank),
       ),
-      solvedChoiceGenerator(shareQuestion, shareBank),
-    ),
-  ],
-});
+      point(
+        "describing-proportions",
+        t("Proportions and Comparisons", "比例与比较"),
+        t(
+          "For a table of percentages, report proportions and comparisons rather than every number.\n\n- Fractions: *about half* (50%), *a third* (33%), *a quarter* (25%), *a fifth* (20%), *a tenth* (10%). Use them only when the figure is close.\n- Comparisons: *roughly twice / three times / half that for ...*: divide one figure by the other.\n- The largest category: *the highest, at 38%*.\n\nCheck every sentence against the table: a wrong fraction or a reversed comparison is an error of accuracy, however good the English.",
+          "对于百分比表格，要报告比例和比较，而不是罗列每个数字。\n\n- 分数：*about half*（50%）、*a third*（33%）、*a quarter*（25%）、*a fifth*（20%）、*a tenth*（10%）。只有数字接近时才用。\n- 比较：*roughly twice / three times / half that for ...*：用一个数字除以另一个。\n- 最大的类别：*the highest, at 38%*。\n\n每句话都要与表格核对：分数用错或比较说反都是准确性错误，英语再好也没用。",
+        ),
+        solvedChoiceGenerator(shareQuestion, shareBank),
+      ),
+    ],
+  }),
+  { "describing-trends": sizesOfChange },
+);

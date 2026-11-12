@@ -2,6 +2,7 @@
 // history, how story elements interact, people and events, historical maps, graphs, claims and diagrams.
 
 import type { TopicDef } from "@ga/content";
+import { drawn, fourTrends, kindsOfGraph } from "../../figures.ts";
 import { type Label, label, topic } from "../grade-6/kit.ts";
 
 /** L builds a label from its Chinese name, why it is right and why it is not. */
@@ -1188,6 +1189,6 @@ export const readingTopics7a: readonly TopicDef[] = [
   storyElements,
   individuals,
   maps,
-  graphs,
+  drawn(graphs, { "which-graph-fits": kindsOfGraph, "reading-a-trend": fourTrends }),
   checkingClaims,
 ];

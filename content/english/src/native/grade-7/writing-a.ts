@@ -2,6 +2,7 @@
 // category, reporting numbers from a graph and cutting redundant words.
 
 import type { TopicDef } from "@ga/content";
+import { drawn, risingSales } from "../../figures.ts";
 import { choose, type Label, label, topic } from "../grade-6/kit.ts";
 
 /** L builds a label from its Chinese name, why it is right and why it is not. */
@@ -605,4 +606,10 @@ const redundancy = topic("writing", {
 });
 
 /** writingTopics7a are the first rule-checked writing topics of grade 7. */
-export const writingTopics7a: readonly TopicDef[] = [objective, period, category, numbers, redundancy];
+export const writingTopics7a: readonly TopicDef[] = [
+  objective,
+  period,
+  category,
+  drawn(numbers, { "describing-the-trend": risingSales }),
+  redundancy,
+];

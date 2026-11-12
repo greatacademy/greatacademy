@@ -2,6 +2,7 @@
 // loaded language, a scientific idea over time, observation and inference, and the techniques of advertising.
 
 import type { TopicDef } from "@ga/content";
+import { drawn, fourVisuals } from "../../figures.ts";
 import { choose, type Label, label, topic } from "../grade-6/kit.ts";
 
 /** L builds a label from its Chinese name, why it is right and why it is not. */
@@ -1286,7 +1287,7 @@ const ads = topic("reading", {
 
 /** readingTopics7b are the reading topics of the later units of grade 7. */
 export const readingTopics7b: readonly TopicDef[] = [
-  diagrams,
+  drawn(diagrams, { "which-visual-helps": fourVisuals }),
   correlation,
   pointsOfView,
   dialogue,

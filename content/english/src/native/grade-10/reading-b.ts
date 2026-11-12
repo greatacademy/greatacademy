@@ -1,6 +1,7 @@
 // Grade 10: reading of nonfiction and satire: bias in the news, numbers that mislead, and how satire works.
 
 import type { TopicDef } from "@ga/content";
+import { cutOffAxis, drawn } from "../../figures.ts";
 import { choose, type Label, label, topic } from "../grade-6/kit.ts";
 
 /** L builds a label from its Chinese name, why it is right and why it is not. */
@@ -425,4 +426,4 @@ const satire = topic("reading", {
 });
 
 /** readingTopics10b are the reading topics of grade 10 on nonfiction and satire. */
-export const readingTopics10b: readonly TopicDef[] = [bias, numbers, satire];
+export const readingTopics10b: readonly TopicDef[] = [bias, drawn(numbers, { "the-trick-in-the-number": cutOffAxis }), satire];
