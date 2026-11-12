@@ -4,6 +4,7 @@
 
 import { type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, typed } from "@ga/subject-english";
+import { everyPair } from "../../levels/words.ts";
 import { choose, field, type Label, label, type Pair, rows, topic, type } from "./kit.ts";
 
 const items = (lines: string, shown?: string): ChoiceItem[] =>
@@ -38,7 +39,54 @@ const shiftLabels: Record<string, Label> = {
     not: ["The tense of the verbs does change in this sentence.", "这个句子里动词的时态确实变了。"],
   },
 };
+/** shiftPeople are plural subjects; shiftActs are two actions, each in the past and the present. */
+const shiftPeople = [
+  "The children",
+  "My cousins",
+  "The hikers",
+  "The students",
+  "The twins",
+  "The farmers",
+  "Our neighbors",
+  "The scouts",
+  "The girls",
+  "My friends",
+] as const;
+const shiftActs = [
+  ["packed", "pack", "their bags", "left", "leave", "for the station"],
+  ["opened", "open", "the gate", "walked", "walk", "into the field"],
+  ["found", "find", "an old map", "followed", "follow", "it to the river"],
+  ["cooked", "cook", "the rice", "served", "serve", "it to the guests"],
+  ["built", "build", "a raft", "sailed", "sail", "across the pond"],
+  ["picked", "pick", "the apples", "carried", "carry", "them home"],
+  ["washed", "wash", "the dishes", "dried", "dry", "them with a towel"],
+  ["climbed", "climb", "the hill", "watched", "watch", "the sunset"],
+  ["painted", "paint", "the fence", "cleaned", "clean", "the brushes"],
+  ["caught", "catch", "a fish", "threw", "throw", "it back"],
+] as const;
+/** shiftStill are past actions followed by something that is still true. */
+const shiftStill = [
+  "visited a castle that still stands on the hill",
+  "learned that the earth goes around the sun",
+  "read a book that is now in our library",
+  "planted a tree that gives us shade today",
+  "found out that whales are mammals",
+  "saw the bridge that still crosses the river",
+  "heard that the museum opens at nine every day",
+  "wrote a song that we still sing at school",
+  "discovered that the river flows into the sea",
+  "built a bench that still stands in the park",
+] as const;
+const shiftCross = everyPair(shiftPeople, shiftActs).map(([who, [p1, n1, o1, p2, n2, o2]]) => ({
+  right: `${who} ${p1} ${o1} and ${p2} ${o2}.`,
+  late: `${who} ${p1} ${o1} and ${n2} ${o2}.`,
+  early: `${who} ${n1} ${o1} and ${p2} ${o2}.`,
+}));
 const shiftLines = `
+${shiftCross.map((c, k) => `${c.right}|no shift\n${k % 2 === 0 ? c.late : c.early}|a wrong shift`).join("\n")}
+${everyPair(shiftPeople, shiftStill)
+  .map(([who, still]) => `${who} ${still}.|a needed shift`)
+  .join("\n")}
   The Inca built roads that still cross the Andes.|a needed shift
   The Maya studied the stars, and their calendars are still accurate today.|a needed shift
   The farmers planted maize where the forest had stood.|a needed shift
@@ -71,7 +119,7 @@ const shiftLines = `
   The king called his people and told them to build a wall.|no shift
 `;
 const fixShift = items(
-  `
+  `${shiftCross.map((c) => `${c.right}|${c.late}|${c.early}`).join("\n")}
   The Inca ran messages along the road and passed them to the next runner.|The Inca ran messages along the road and pass them to the next runner.|The Inca run messages along the road and passed them to the next runner.
   The Maya climbed the temple and looked at the stars.|The Maya climbed the temple and look at the stars.|The Maya climb the temple and looked at the stars.
   The Aztec built floating gardens and grew corn on them.|The Aztec built floating gardens and grow corn on them.|The Aztec build floating gardens and grew corn on them.
@@ -179,6 +227,26 @@ const antLines = rows(`
   permanent|permanence|permanant|The stone walls were meant to be ___.
   convenient|convenience|convenant|The market was in a ___ place.
   magnificent|magnificence|magnificant|The palace was ___.
+  arrogant|arrogance|arrogent|The ___ knight would not listen to anyone.
+  vigilant|vigilance|vigilent|The guard stayed ___ all night.
+  significant|significance|significent|The discovery was a ___ step for science.
+  defiant|defiance|defient|The ___ child refused to go to bed.
+  resistant|resistance|resistent|This jacket is ___ to water.
+  extravagant|extravagance|extravagent|The king threw an ___ party.
+  compliant|compliance|complient|The ___ puppy sat when it was told.
+  constant|constancy|constent|The ___ noise kept us awake.
+  dormant|dormancy|dorment|The volcano has been ___ for years.
+  urgent|urgency|urgant|The doctor got an ___ call.
+  fluent|fluency|fluant|She is ___ in three languages.
+  efficient|efficiency|efficiant|The new heater is very ___.
+  frequent|frequency|frequant|We make ___ trips to the library.
+  competent|competence|competant|She is a ___ swimmer.
+  persistent|persistence|persistant|The ___ rain flooded the street.
+  diligent|diligence|diligant|The ___ student checked every answer.
+  prominent|prominence|prominant|A ___ tower stood in the middle of the city.
+  transparent|transparency|transparant|The glass jar is ___.
+  present|presence|presant|Everyone was ___ at the meeting.
+  consistent|consistency|consistant|Practice must be ___ to help.
 `);
 const isAnt = (w: string) => w.endsWith("ant");
 const antWhy = (right: string, related: string): Pair =>
@@ -210,7 +278,10 @@ const antAndEnt = topic("grammar", {
         "词尾 **-ant** 和 **-ent** 读音相同，所以要借助相关的词。名词以 **-ance**、**-ancy** 或 **-ation** 结尾，形容词就以 **-ant** 结尾：*importance, important*；*hesitation, hesitant*。名词以 **-ence** 结尾，形容词就以 **-ent** 结尾：*difference, different*。两个词中的元音保持一致。",
       ],
       ["Which word fits the sentence?", "哪个词适合这个句子？"],
-      antLines.map((r): ChoiceItem => [`${field(r, 3)} (Related word: *${field(r, 1)}*.)`, field(r, 0), [field(r, 2), field(r, 1)]]),
+      antLines.flatMap((r): ChoiceItem[] => [
+        [`${field(r, 3)} (Related word: *${field(r, 1)}*.)`, field(r, 0), [field(r, 2), field(r, 1)]],
+        [`Which adjective goes with the noun *${field(r, 1)}*?`, field(r, 0), [field(r, 2), field(r, 0).replace(/[ae]nt$/, "int")]],
+      ]),
       (right) => antWhy(right, relatedOf(right)),
       [
         [
@@ -228,7 +299,7 @@ const antAndEnt = topic("grammar", {
         "写以 *-ant* 或 *-ent* 结尾的词之前，先想想它的名词。*silence* 有 *e*，所以写 *silent*；*distance* 有 *a*，所以写 *distant*。如果想不出相关的词，就查词典，因为光靠读音无法判断。",
       ],
       ["Type the missing word, which ends in -ant or -ent.", "输入缺少的词，它以 -ant 或 -ent 结尾。"],
-      antLines.map((r) =>
+      antLines.flatMap((r) => [
         typed(
           field(r, 3),
           field(r, 0),
@@ -236,14 +307,56 @@ const antAndEnt = topic("grammar", {
           undefined,
           t(`A related word is *${field(r, 1)}*.`, `相关的词是 *${field(r, 1)}*。`),
         ),
-      ),
+        typed(
+          `The noun is *${field(r, 1)}*. The adjective is ___.`,
+          field(r, 0),
+          [field(r, 2)],
+          undefined,
+          t(`Its noun is *${field(r, 1)}*.`, `它的名词是 *${field(r, 1)}*。`),
+        ),
+      ]),
       (right) => antWhy(right, relatedOf(right)),
     ),
   ],
 });
 
 // Hyphens: phrase before a noun, the same words after a verb.
-const hyphenLines = rows(`
+/** hyphenUnits are a unit, its plural, a noun, the words before the noun, and a sentence with the words after the verb. */
+const hyphenUnits = [
+  ["hour", "hours", "trip", "We took a", "The trip lasted {n} {u}."],
+  ["mile", "miles", "walk", "We went on a", "The walk was {n} {u} long."],
+  ["page", "pages", "report", "She wrote a", "The report was {n} {u} long."],
+  ["minute", "minutes", "break", "We had a", "The break lasted {n} {u}."],
+  ["day", "days", "festival", "The town held a", "The festival lasted {n} {u}."],
+  ["room", "rooms", "house", "They bought a", "The house has {n} {u}."],
+  ["foot", "feet", "fence", "They built a", "The fence is {n} {u} tall."],
+  ["story", "stories", "building", "We saw a", "The building is {n} {u} tall."],
+] as const;
+const hyphenNumbers = ["two", "three", "five", "six", "ten", "twelve"] as const;
+const hyphenCross = everyPair(hyphenNumbers, hyphenUnits)
+  .map(([n, [unit, units, noun, before, after]]) => {
+    const later = after.replace("{n}", n).replace("{u}", units);
+    const [first, ...rest] = later.split(" ");
+    return [
+      `${before} ${n}-${unit} ${noun}.`,
+      `${before} ${n} ${unit} ${noun}.`,
+      `${before} ${n}-${unit}-${noun}.`,
+      later,
+      later.replace(`${n} ${units}`, `${n}-${units}`),
+      `${first} ${rest[0]}-${rest.slice(1).join(" ")}`,
+    ].join("|");
+  })
+  .join("\n");
+/** tensWords and onesWords make compound numbers. */
+const tensWords = ["twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"] as const;
+const numberThings = ["marbles", "stickers", "shells", "pages", "seats", "steps"] as const;
+const numberCross = everyPair(tensWords, ["one", "four", "seven"])
+  .map(([tens, ones], k) => {
+    const things = numberThings[k % numberThings.length];
+    return `There are ${tens}-${ones} ${things} in the box.|There are ${tens} ${ones} ${things} in the box.|There are ${tens}-${ones}-${things} in the box.`;
+  })
+  .join("\n");
+const hyphenLines = rows(`${hyphenCross}\n
   They crossed a well-built bridge.|They crossed a well built bridge.|They crossed a well-built-bridge.|The bridge was well built.|The bridge was well-built.|The bridge-was well built.
   The city has a ten-story tower.|The city has a ten story tower.|The city has a ten-story-tower.|The tower is ten stories tall.|The tower is ten-stories tall.|The tower-is ten stories tall.
   It is a hundred-year-old bridge.|It is a hundred year old bridge.|It is a hundred-year old-bridge.|The bridge is a hundred years old.|The bridge is a hundred-years-old.|The bridge-is a hundred years old.
@@ -260,7 +373,7 @@ const hyphenLines = rows(`
   The tower has a high-speed elevator.|The tower has a high speed elevator.|The tower has a high-speed-elevator.|The elevator moves at high speed.|The elevator moves at high-speed.|The elevator-moves at high speed.
   They chose a low-cost design.|They chose a low cost design.|They chose a low-cost-design.|The design was low in cost.|The design was low-in cost.|The design-was low in cost.
 `);
-const numberLines = rows(`
+const numberLines = rows(`${numberCross}\n
   The tower has twenty-one floors.|The tower has twenty one floors.|The tower has twenty-one-floors.
   The bridge took thirty-six months to build.|The bridge took thirty six months to build.|The bridge took thirty-six-months to build.
   There are forty-four cables on each side.|There are forty four cables on each side.|There are forty-four-cables on each side.
@@ -341,7 +454,43 @@ const hyphens = topic("grammar", {
 });
 
 // Commas with yes, no, tags and names: right|misplaced|other misplaced, then a line to fix.
-const tagLines = rows(`
+/** tagNames are people spoken to; tagClauses are a clause and its tag question. */
+const tagNames = ["Maya", "Officer Brown", "Grandpa", "Ms. Lin", "Coach", "Leo"] as const;
+const tagClauses = [
+  ["the door was open", "wasn't it"],
+  ["you saw the fox", "didn't you"],
+  ["the bus is late", "isn't it"],
+  ["she can swim", "can't she"],
+  ["they finished the cake", "didn't they"],
+  ["we have met before", "haven't we"],
+  ["the lamp was broken", "wasn't it"],
+  ["he likes soup", "doesn't he"],
+  ["the gate is locked", "isn't it"],
+  ["you fed the cat", "didn't you"],
+] as const;
+const tagCross = everyPair(tagNames, tagClauses).map(([name, [clause, tag]]) => {
+  const [w0, w1, ...rest] = clause.split(" ");
+  const tail = rest.join(" ");
+  return {
+    tagRight: `${name}, ${clause}, ${tag}?`,
+    tagExtra: `${name}, ${w0} ${w1}, ${tail}, ${tag}?`,
+    tagMoved: `${name} ${w0}, ${w1} ${tail}, ${tag}?`,
+    yesRight: `Yes, ${name}, ${clause}.`,
+    yesExtra: `Yes, ${name}, ${w0} ${w1}, ${tail}.`,
+    yesMoved: `Yes ${name}, ${w0}, ${w1} ${tail}.`,
+    tagBare: `"${name} ${clause} ${tag}?"`,
+    tagFixed: `"${name}, ${clause}, ${tag}?"`,
+    tagHalfA: `"${name}, ${w0} ${w1}, ${tail} ${tag}?"`,
+    tagHalfB: `"${name} ${w0}, ${w1} ${tail}, ${tag}?"`,
+    yesBare: `"Yes ${name} ${clause}."`,
+    yesFixed: `"Yes, ${name}, ${clause}."`,
+    yesHalfA: `"Yes ${name}, ${w0} ${w1}, ${tail}."`,
+    yesHalfB: `"Yes, ${name} ${w0}, ${w1} ${tail}."`,
+  };
+});
+const tagLines = rows(`${tagCross
+  .flatMap((c) => [`${c.tagRight}|${c.tagExtra}|${c.tagMoved}`, `${c.yesRight}|${c.yesExtra}|${c.yesMoved}`])
+  .join("\n")}\n
   Yes, I saw him by the window.|Yes I saw, him by the window.|Yes I saw him, by the window.
   No, the door was not locked.|No the door, was not locked.|No the door was, not locked.
   You were there, weren't you?|You were, there weren't you?|You, were there weren't you?
@@ -373,7 +522,9 @@ const tagLines = rows(`
   Professor, is this your umbrella?|Professor is this, your umbrella?|Professor is, this your umbrella?
   You found the clue, didn't you?|You found, the clue didn't you?|You, found the clue didn't you?
 `);
-const fixTagLines = rows(`
+const fixTagLines = rows(`${tagCross
+  .flatMap((c) => [`${c.tagBare}|${c.tagFixed}|${c.tagHalfA}|${c.tagHalfB}`, `${c.yesBare}|${c.yesFixed}|${c.yesHalfA}|${c.yesHalfB}`])
+  .join("\n")}\n
   "Yes I heard it," said the cook.|"Yes, I heard it," said the cook.|"Yes I, heard it," said the cook.|"Yes I heard it" said, the cook.
   "You saw the thief didn't you?" asked Lin.|"You saw the thief, didn't you?" asked Lin.|"You saw, the thief didn't you?" asked Lin.|"You saw the thief didn't, you?" asked Lin.
   "Look Inspector the glass is broken."|"Look, Inspector, the glass is broken."|"Look Inspector, the glass, is broken."|"Look, Inspector the, glass is broken."
@@ -466,7 +617,7 @@ interface Talk {
   readonly people: readonly [string, string, string];
   readonly paragraphs: readonly { readonly who: 0 | 1; readonly text: string }[];
 }
-const talks: readonly Talk[] = [
+const baseTalks: readonly Talk[] = [
   [
     "Mia|Leo|Mr. Ross",
     `
@@ -575,6 +726,30 @@ const talks: readonly Talk[] = [
   };
 });
 
+/** girlNames and boyNames retell each talk with other speakers. */
+const girlNames = ["Zoe", "Hana", "Amara", "Lucia"] as const;
+const boyNames = ["Felix", "Tariq", "Diego", "Arjun"] as const;
+/** isGirl tells from the narration after each line whether a speaker is a girl. */
+const isGirl = (talk: Talk, who: 0 | 1) => {
+  const narration = talk.paragraphs
+    .filter((p) => p.who === who)
+    .map((p) => p.text.split("^ ")[1] ?? "")
+    .join(" ");
+  return (narration.match(/\b(She|she|Her|her)\b/g) ?? []).length > (narration.match(/\b(He|he|His|his|Him|him)\b/g) ?? []).length;
+};
+const renamed = (talk: Talk, v: number): Talk => {
+  const girls = isGirl(talk, 0) === isGirl(talk, 1);
+  const pick = (who: 0 | 1) => (isGirl(talk, who) ? girlNames : boyNames)[(v + (girls && who === 1 ? 2 : 0)) % 4] ?? "";
+  const names = [pick(0), pick(1)] as const;
+  const swap = (text: string) =>
+    text.replace(new RegExp(`\\b${talk.people[0]}\\b`, "g"), names[0]).replace(new RegExp(`\\b${talk.people[1]}\\b`, "g"), names[1]);
+  return {
+    people: [names[0], names[1], talk.people[2]],
+    paragraphs: talk.paragraphs.map((p) => ({ who: p.who, text: swap(p.text) })),
+  };
+};
+const talks: readonly Talk[] = [...baseTalks, ...[0, 1, 3].flatMap((v) => baseTalks.map((talk) => renamed(talk, v)))];
+
 const plain = (s: string) => s.replace("^ ", " ");
 const layoutItems: ChoiceItem[] = talks.flatMap((talk) =>
   [0, 1, 2].map((start): ChoiceItem => {
@@ -656,7 +831,59 @@ const paragraphsForSpeakers = topic("grammar", {
 });
 
 // Interjections.
-const interjectionLines = items(`
+/** feelingLines are an interjection that can be strong or mild, the rest of the line and two other words in it. */
+const feelingLines = [
+  ["Oh", "the bus is already here", "bus", "already"],
+  ["Oh", "my shoelace came untied", "shoelace", "untied"],
+  ["Oh", "the milk spilled on the floor", "milk", "floor"],
+  ["Oh", "we missed the last train", "missed", "train"],
+  ["Hey", "someone left the gate open", "gate", "open"],
+  ["Hey", "that is my bike", "bike", "that"],
+  ["Hey", "the puppy ate my sandwich", "puppy", "sandwich"],
+  ["Hey", "the lights just went out", "lights", "out"],
+  ["Wow", "this cake is huge", "cake", "huge"],
+  ["Wow", "the whole sky turned pink", "sky", "pink"],
+  ["Wow", "you finished the puzzle already", "puzzle", "finished"],
+  ["Wow", "that kite flies so high", "kite", "high"],
+  ["Ah", "the sun is finally out", "sun", "finally"],
+  ["Ah", "this blanket is so warm", "blanket", "warm"],
+  ["Ah", "there is the missing key", "missing", "key"],
+  ["Ugh", "the bus is late again", "late", "again"],
+  ["Ugh", "my socks are soaking wet", "socks", "wet"],
+  ["Ugh", "this soup is far too salty", "soup", "salty"],
+  ["Oops", "I spilled the paint", "spilled", "paint"],
+  ["Oops", "the vase slipped off the shelf", "vase", "shelf"],
+  ["Oops", "I forgot my homework", "forgot", "homework"],
+  ["Phew", "the test is over", "test", "over"],
+  ["Phew", "we caught the bus just in time", "caught", "time"],
+  ["Phew", "the dog came home safe", "dog", "safe"],
+  ["Gosh", "this hill is steep", "hill", "steep"],
+  ["Gosh", "you grew so tall", "grew", "tall"],
+  ["Oh no", "the cake is burning", "cake", "burning"],
+  ["Oh no", "I left my bag on the train", "bag", "left"],
+  ["Oh no", "the rain has started", "rain", "started"],
+  ["Yes", "our team won the final", "team", "final"],
+  ["Yes", "the library has the book I wanted", "library", "book"],
+  ["Oh", "the snow has melted", "snow", "melted"],
+  ["Wow", "the river has frozen solid", "river", "frozen"],
+  ["Ah", "the kettle is boiling", "kettle", "boiling"],
+  ["Hey", "watch out for that puddle", "puddle", "watch"],
+  ["Oops", "the cat knocked over the plant", "cat", "plant"],
+] as const;
+const loudly = ["shouted", "yelled", "cried out loudly", "screamed"] as const;
+const softly = ["said quietly", "said calmly", "said softly", "said in a mild voice"] as const;
+const feelingCross = feelingLines.map(([word, rest, w1, w2], k) => ({
+  word,
+  w1,
+  w2,
+  strong: `${word}! ${rest.charAt(0).toUpperCase()}${rest.slice(1)}.`,
+  mild: `${word}, ${rest}.`,
+  bare: `${word} ${rest}.`,
+  loud: loudly[k % loudly.length] ?? "shouted",
+  soft: softly[k % softly.length] ?? "said quietly",
+}));
+const interjectionLines =
+  items(`${feelingCross.flatMap((f) => [`${f.strong}|${f.word}|${f.w1}|${f.w2}`, `${f.mild}|${f.word}|${f.w2}|${f.w1}`]).join("\n")}\n
   Oh, the fire has gone out.|Oh|fire|gone
   Wow! Look at that waterfall.|Wow|look|waterfall
   Ouch! The rope burned my hand.|Ouch|rope|burned
@@ -688,7 +915,9 @@ const interjectionLines = items(`
   Phew! The bridge held our weight.|Phew|bridge|weight
   Ugh! My boots are full of mud.|Ugh|boots|mud
 `);
-const interjectionPunct = rows(`
+const interjectionPunct = rows(`${feelingCross
+  .flatMap((f) => [`${f.loud}|${f.strong}|${f.mild}|${f.bare}`, `${f.soft}|${f.mild}|${f.strong}|${f.bare}`])
+  .join("\n")}\n
   shouted in terror|Help! The canoe is sinking.|Help, the canoe is sinking.|Help the canoe is sinking.
   said quietly|Oh, the fire has gone out.|Oh! The fire has gone out.|Oh the fire has gone out.
   shouted with joy|Hooray! The rescue boat is here.|Hooray, the rescue boat is here.|Hooray the rescue boat is here.
@@ -815,12 +1044,6 @@ const splices: readonly [string, string, string][] = [
   ["The ice looked solid", "however", "it cracked under the first step"],
   ["The map was wet", "therefore", "we followed the river instead"],
 ];
-const howeverLines = splices
-  .flatMap(([a, w, b]) => {
-    const cap = w.charAt(0).toUpperCase() + w.slice(1);
-    return [`${a}; ${w}, ${b}.|correct`, `${a}, ${w}, ${b}.|a comma splice`, `${a}. ${cap} ${b}.|a comma missing after it`];
-  })
-  .join("\n");
 const fixSplices = [
   ...splices,
   ["The wind died down", "however", "the waves were still high"],
@@ -843,11 +1066,38 @@ const fixSplices = [
   ["The sky cleared", "therefore", "we could see the stars to steer by"],
   ["The canoe tipped over", "however", "we all had life jackets"],
   ["Our food was gone", "therefore", "we fished in the stream"],
+  ["The museum was closed", "however", "the gift shop was open"],
+  ["The puppy chewed my shoe", "therefore", "I bought a new pair"],
+  ["The cake was in the oven", "meanwhile", "we decorated the room"],
+  ["The test was hard", "however", "most of us passed"],
+  ["The bus broke down", "therefore", "we walked the rest of the way"],
+  ["Dad cooked dinner", "meanwhile", "Mom set the table"],
+  ["The game was canceled", "however", "we practiced anyway"],
+  ["The library was noisy", "therefore", "I studied at home"],
+  ["The snow melted", "meanwhile", "the river began to rise"],
+  ["The movie was long", "however", "nobody fell asleep"],
+  ["My bike had a flat tire", "therefore", "I rode the bus"],
+  ["The band played", "meanwhile", "the crowd danced"],
+  ["The shop sold out of bread", "however", "it still had rolls"],
+  ["The kitten was hungry", "therefore", "we gave it some milk"],
+  ["The teacher graded papers", "meanwhile", "the class read quietly"],
+  ["The beach was crowded", "however", "we found a quiet spot"],
+  ["The road was icy", "therefore", "school started late"],
+  ["The players warmed up", "meanwhile", "the fans found their seats"],
+  ["The paint was still wet", "however", "the cat walked across it"],
+  ["The water was cold", "therefore", "we swam only a little"],
 ] as const;
-const fixItems: ChoiceItem[] = fixSplices.map(([a, w, b], i): ChoiceItem => {
+const howeverLines = fixSplices
+  .flatMap(([a, w, b]) => {
+    const cap = w.charAt(0).toUpperCase() + w.slice(1);
+    return [`${a}; ${w}, ${b}.|correct`, `${a}, ${w}, ${b}.|a comma splice`, `${a}. ${cap} ${b}.|a comma missing after it`];
+  })
+  .join("\n");
+const fixItems: ChoiceItem[] = fixSplices.flatMap(([a, w, b]): ChoiceItem[] => {
   const cap = w.charAt(0).toUpperCase() + w.slice(1);
-  const right = i % 2 === 0 ? `${a}; ${w}, ${b}.` : `${a}. ${cap}, ${b}.`;
-  return [`${a}, ${w}, ${b}.`, right, [`${a}, ${w}, ${b}.`, `${a}, ${w}; ${b}.`]];
+  return [`${a}; ${w}, ${b}.`, `${a}. ${cap}, ${b}.`].map(
+    (right): ChoiceItem => [`${a}, ${w}, ${b}.`, right, [`${a}, ${w}, ${b}.`, `${a}, ${w}; ${b}.`]],
+  );
 });
 
 const howeverAndTherefore = topic("grammar", {
@@ -924,7 +1174,31 @@ const posLabels: Record<string, Label> = {
     ],
   },
 };
+/** posPeople move in the sentences made from posWords. */
+const posPeople = ["The boy", "My sister", "The old dog", "Our guide", "The kitten", "The twins"] as const;
+/** posWords are a word, a verb, a noun and an adjective for its object, and what follows the word as an adverb. */
+const posWords = [
+  ["across", "ran", "road", "busy", "to say hello"],
+  ["down", "climbed", "ladder", "tall", "carefully"],
+  ["inside", "hurried", "house", "warm", "to get warm"],
+  ["past", "walked", "bakery", "busy", "without stopping"],
+  ["up", "climbed", "hill", "steep", "slowly"],
+  ["outside", "waited", "shop", "small", "in the rain"],
+  ["along", "walked", "beach", "sandy", "with us"],
+  ["under", "crawled", "table", "wooden", "to hide"],
+  ["behind", "stayed", "fence", "old", "to rest"],
+  ["off", "jumped", "wall", "low", "with a shout"],
+  ["around", "ran", "pond", "frozen", "in circles"],
+  ["over", "jumped", "puddle", "deep", "with ease"],
+] as const;
+const posCross = everyPair(posPeople, posWords);
 const posLines = `
+${posCross
+  .flatMap(([who, [word, verb, noun, adj, tail]]) => [
+    `${who} ${verb} **${word}** the ${adj} ${noun}.|a preposition`,
+    `${who} ${verb} **${word}** ${tail}.|an adverb`,
+  ])
+  .join("\n")}
   She swam **across** the river.|a preposition
   She swam **across** and waved.|an adverb
   The climbers looked **down** the cliff.|a preposition
@@ -956,7 +1230,9 @@ const posLines = `
   The fox ran **around** the tent.|a preposition
   The lost boy turned **around**.|an adverb
 `;
-const objectLines = items(`
+const objectLines = items(`${posCross
+  .map(([who, [word, verb, noun, adj]]) => `${who} ${verb} **${word}** the ${adj} ${noun}.|${noun}|${verb}|${adj}`)
+  .join("\n")}\n
   She swam **across** the wide river.|river|swam|wide
   The climbers looked **down** the steep cliff.|cliff|climbers|steep
   We crawled **inside** the dark cave.|cave|crawled|dark
@@ -1068,7 +1344,25 @@ const wholeMore = rows(`
   a newspaper|The Morning Post|whole
   a poem|Grandmother's Quilt|part
 `);
-const allTitles = [...titleRows, ...wholeMore];
+/** madeTitles are invented titles for more whole works and parts. */
+const wholeKinds = ["a book", "a film", "a magazine", "a newspaper", "an album of songs", "a play", "a television series"] as const;
+const partKinds = [
+  "a poem",
+  "a chapter of a book",
+  "an article in a magazine",
+  "a song on an album",
+  "an episode of a series",
+  "a short story",
+] as const;
+const madeWholes = everyPair(
+  ["Silver", "Hidden", "Last", "Winter", "Golden", "Secret", "Lost"],
+  ["Harbor", "Mountain", "Garden", "Kingdom", "River"],
+).map(([a, b], k) => [wholeKinds[k % wholeKinds.length] ?? "a book", `The ${a} ${b}`, "whole"]);
+const madeParts = everyPair(
+  ["Little", "Quiet", "Broken", "Early", "Lonely", "Bright", "Paper"],
+  ["Bell", "Lantern", "Bridge", "Window", "Feather"],
+).map(([a, b], k) => [partKinds[k % partKinds.length] ?? "a poem", `The ${a} ${b}`, "part"]);
+const allTitles = [...titleRows, ...wholeMore, ...madeWholes, ...madeParts];
 const wholes = allTitles.filter((r) => r[2] === "whole");
 const parts = allTitles.filter((r) => r[2] === "part");
 const describe = (r: readonly string[]) => `${field(r, 0)} called ${field(r, 1)}`;
@@ -1153,7 +1447,37 @@ const titlesInItalics = topic("grammar", {
 });
 
 // Shifts in pronoun person.
-const shiftPerson = items(`
+/** personSubjects are a subject, the pronoun that keeps its person, another pronoun, and a word of it. */
+const personSubjects = [
+  ["we", "we", "they", "we"],
+  ["I", "I", "we", "I"],
+  ["the scouts", "they", "we", "scouts"],
+  ["my cousins", "they", "we", "cousins"],
+  ["the hikers", "they", "we", "hikers"],
+  ["my sister and I", "we", "they", "sister"],
+  ["the twins", "they", "we", "twins"],
+] as const;
+/** personFrames have {S} for the subject, {P} for a later pronoun, and a noun of the sentence. */
+const personFrames = [
+  ["When {S} reached the lake, {P} could see the mountains.", "lake"],
+  ["{S} packed the tent, and {P} carried it to the car.", "tent"],
+  ["Because {S} felt tired, {P} rested under a tree.", "tree"],
+  ["{S} planted the seeds, and {P} watered them every day.", "seeds"],
+  ["When {S} opened the box, {P} found an old map.", "map"],
+  ["{S} climbed the tower so that {P} could watch the parade.", "tower"],
+  ["After {S} finished dinner, {P} played a board game.", "dinner"],
+  ["{S} visited the farm, where {P} fed the goats.", "goats"],
+  ["If {S} missed the bus, {P} had to walk to school.", "bus"],
+  ["{S} built a snowman, and {P} gave it a carrot nose.", "snowman"],
+] as const;
+const personCross = everyPair(personSubjects, personFrames).map(([[subject, keep, other, word], [frame, noun]]) => {
+  const fill = (p: string) => {
+    const text = frame.replace("{S}", subject).replace("{P}", p);
+    return text.charAt(0).toUpperCase() + text.slice(1);
+  };
+  return { shifted: fill("you"), gap: fill("___"), keep, other, word: word === "I" ? "I" : word, noun };
+});
+const shiftPerson = items(`${personCross.map((c) => `${c.shifted}|you|${c.word}|${c.noun}`).join("\n")}\n
   When we reached the top, **you** could see the whole valley.|you|we|whole
   We wrote letters every week, and you always waited for an answer.|you|we|letters
   I opened the old trunk, and you could smell the cedar.|you|I|trunk
@@ -1185,7 +1509,7 @@ const shiftPerson = items(`
   I learned to sew, and your stitches had to be tiny.|your|I|stitches
   When the flood came, we climbed to the roof, and you could see nothing but water.|you|we|roof
 `).map(([shown, right, wrong]): ChoiceItem => [shown.replace("**you**", "you"), right, wrong]);
-const keepPerson = items(`
+const keepPerson = items(`${personCross.map((c) => `${c.gap}|${c.keep}|you|${c.other}`).join("\n")}\n
   When we reached the top, ___ could see the whole valley.|we|you|one
   We wrote every week, and ___ always waited for an answer.|we|you|they
   I opened the trunk, and ___ could smell the cedar.|I|you|one
@@ -1273,7 +1597,33 @@ const pronounPerson = topic("grammar", {
 });
 
 // More commonly confused words.
-const confusedLines = items(`
+/** confusedThings fill the frames of the confused pairs. */
+const confusedThings = [
+  "umbrella",
+  "jacket",
+  "backpack",
+  "notebook",
+  "scarf",
+  "camera",
+  "flashlight",
+  "water bottle",
+  "helmet",
+  "sweater",
+] as const;
+/** confusedFrames are a frame with ___, the right word, two wrong words, the frame with the wrong word, and two other words in it. */
+const confusedFrames = [
+  ["___ {t} is this?", "Whose", "Who's", "Who", "Who's {t} is this?", "this", "is"],
+  ["___ bringing the {t} tomorrow?", "Who's", "Whose", "Whom", "Whose bringing the {t} tomorrow?", "bringing", "tomorrow"],
+  ["Don't ___ your {t} on the trip.", "lose", "loose", "lost", "Don't loose your {t} on the trip.", "your", "trip"],
+  ["Something on my {t} came ___.", "loose", "lose", "loss", "Something on my {t} came lose.", "Something", "came"],
+  ["Please ___ this {t} as a gift.", "accept", "except", "expect", "Please except this {t} as a gift.", "Please", "gift"],
+  ["I packed everything ___ my {t}.", "except", "accept", "expect", "I packed everything accept my {t}.", "packed", "everything"],
+  ["My {t} is ___ new.", "quite", "quiet", "quit", "My {t} is quiet new.", "My", "new"],
+] as const;
+const confusedCross = everyPair(confusedThings, confusedFrames);
+const confusedLines = items(`${confusedCross
+  .map(([thing, [frame, right, w1, w2]]) => `${frame.replace("{t}", thing)}|${right}|${w1}|${w2}`)
+  .join("\n")}\n
   ___ letter is this on the table?|Whose|Who's|Who
   ___ coming to the museum with us?|Who's|Whose|Whom
   I asked the peddler ___ cart it was.|whose|who's|whom
@@ -1305,7 +1655,9 @@ const confusedLines = items(`
   Everyone was ___ in the reading room.|quiet|quite|quit
   I will ___ your apology.|accept|except|expect
 `);
-const findWrong = items(`
+const findWrong = items(`${confusedCross
+  .map(([thing, [, , right, , bad, a, b]]) => `${bad.replace("{t}", thing)}|${right}|${a}|${b}`)
+  .join("\n")}\n
   Whose going to post the letter?|Whose|post|letter
   I hope we don't loose the old photographs.|loose|hope|photographs
   Everyone accept my brother wrote a letter.|accept|Everyone|wrote

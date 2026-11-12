@@ -3,18 +3,44 @@
 
 import { type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, typed } from "@ga/subject-english";
+import { everyPair } from "../../levels/words.ts";
 import { choose, field, type Label, label, type Pair, rows, topic, type } from "./kit.ts";
 
 // Fewer or less.
-const countNouns = "droplets puddles glaciers bottles cups coins students rivers clouds waves buckets pipes trees apples books".split(" ");
-const massNouns = "water rain sand rice money homework furniture information air milk salt ice mud traffic luggage".split(" ");
+/** moreCount and moreMass are further count and mass nouns for the frames below. */
+const moreCount =
+  "pencils chairs windows horses birds doors candles shells stones ladders spoons bridges boats tents cars bikes lamps cookies tickets keys shoes plates buttons marbles stamps feathers rocks blankets pillows towels baskets jars hats coats boxes".split(
+    " ",
+  );
+const moreMass =
+  "flour sugar butter cheese bread soup juice honey oil gold silver wool cotton advice knowledge music news weather equipment jewelry clothing garbage dust smoke steam snow fog electricity sunshine laughter courage patience glue paint soap".split(
+    " ",
+  );
+const countNouns = [
+  ..."droplets puddles glaciers bottles cups coins students rivers clouds waves buckets pipes trees apples books".split(" "),
+  ...moreCount,
+];
+const massNouns = [
+  ..."water rain sand rice money homework furniture information air milk salt ice mud traffic luggage".split(" "),
+  ...moreMass,
+];
 const nounItems: ChoiceItem[] = countNouns.flatMap((c, i): ChoiceItem[] => [
-  ["Choose the noun you can count one by one.", c, [massNouns[i] ?? "", massNouns[(i + 4) % 15] ?? ""]],
-  ["Choose the noun you cannot count one by one.", massNouns[i] ?? "", [c, countNouns[(i + 7) % 15] ?? ""]],
+  ["Choose the noun you can count one by one.", c, [massNouns[i] ?? "", massNouns[(i + 4) % massNouns.length] ?? ""]],
+  ["Choose the noun you cannot count one by one.", massNouns[i] ?? "", [c, countNouns[(i + 7) % countNouns.length] ?? ""]],
 ]);
 const isCount = (noun: string) => countNouns.includes(noun);
 
-const fewerLines = rows(`
+/** fewerFrames are frames for count nouns, then the same frames for mass nouns. */
+const fewerFrames = [
+  ["We have ___ {n} than last week.", "fewer|less|much", "less|fewer|many"],
+  ["How ___ {n} do we need?", "many|much|less", "much|many|fewer"],
+  ["The ___ of {n} grew each year.", "number|amount|much", "amount|number|many"],
+] as const;
+const fewerCross = [
+  ...moreCount.slice(0, 20).flatMap((n) => fewerFrames.map(([frame, count]) => `${frame.replace("{n}", n)}|${count}|${n}`)),
+  ...moreMass.slice(0, 20).flatMap((n) => fewerFrames.map(([frame, , mass]) => `${frame.replace("{n}", n)}|${mass}|${n}`)),
+].join("\n");
+const fewerLines = rows(`${fewerCross}\n
   This tap uses ___ water than the old one.|less|fewer|many|water
   There are ___ puddles on the road today.|fewer|less|much|puddles
   We saw ___ clouds than yesterday.|fewer|less|much|clouds
@@ -155,6 +181,27 @@ const ableLines = rows(`
   able to be recycled|recyclable|recycleable|recyclible|drop|Put ___ bottles in the blue bin.
   able to be cured|curable|cureable|curible|drop|The disease is ___ if it is found early.
   wise to do|advisable|adviseable|advisible|drop|It is ___ to carry water on a long hike.
+  right for the purpose|suitable|suitible|suiteable|whole|Boots are ___ for a muddy hike.
+  fair and sensible|reasonable|reasonible|reasonabel|whole|Five dollars is a ___ price for the book.
+  able to be avoided|avoidable|avoidible|avoideble|whole|The accident was ___ if we had been careful.
+  able to be accepted|acceptable|acceptible|accepteble|whole|Messy work is not ___ in this class.
+  able to be counted|countable|countible|counteble|whole|Apples are ___, but water is not.
+  pleasant and willing to agree|agreeable|agreeible|agreable|whole|The new neighbor is friendly and ___.
+  open to doubt|questionable|questionible|questioneble|whole|His story about the alien was ___.
+  likely to be true|plausible|plausable|plausibel|part|Her excuse sounded ___ to the teacher.
+  able to be done|feasible|feasable|feasibel|part|Is it ___ to finish the model by Friday?
+  able to be touched|tangible|tangable|tangibel|part|The prize was a ___ reward, a real medal.
+  allowed to take part|eligible|eligable|eligibel|part|Only fifth graders are ___ for the contest.
+  easy to trick|gullible|gullable|gullibel|part|The ___ boy believed the moon was made of cheese.
+  too strong to be beaten|invincible|invincable|invincibel|part|The hero in the comic seemed ___.
+  able to work together|compatible|compatable|compatibel|part|This charger is ___ with my tablet.
+  able to be forgiven|forgivable|forgiveable|forgivible|drop|Forgetting a pencil is a ___ mistake.
+  able to be imagined|imaginable|imagineable|imaginible|drop|The shop sold every flavor ___.
+  open to argument|debatable|debateable|debatible|drop|Whether cats are smarter than dogs is ___.
+  able to be compared|comparable|compareable|comparible|drop|The two bikes are ___ in price.
+  able to be excused|excusable|excuseable|excusible|drop|Being late once is ___.
+  able to be measured|measurable|measureable|measurible|drop|The plant made ___ growth in a week.
+  giving pleasure|pleasurable|pleasureable|pleasurible|drop|The boat ride was ___.
 `);
 const ableKind = (word: string) => ableLines.find((r) => r[1] === word)?.[4] ?? "whole";
 const ableWhy = (right: string): Pair => {
@@ -192,7 +239,10 @@ const ableOrIble = topic("grammar", {
         "词尾 **-able** 和 **-ible** 读音相近，所以要看前面的部分。如果是完整的单词，通常用 *-able*：*break, breakable*；*wash, washable*。如果本身不成词，通常用 *-ible*：*vis-ible*、*flex-ible*。词末不发音的 *e* 要去掉：*value, valuable*。",
       ],
       ["Which word is spelled correctly for this meaning?", "表示这个意思的哪个词拼写正确？"],
-      ableLines.map((r): ChoiceItem => [field(r, 0), field(r, 1), [field(r, 2), field(r, 3)]]),
+      ableLines.flatMap((r): ChoiceItem[] => [
+        [field(r, 0), field(r, 1), [field(r, 2), field(r, 3)]],
+        [field(r, 5), field(r, 1), [field(r, 2), field(r, 3)]],
+      ]),
       (right) => ableWhy(right),
       [
         ["*{wrong}* uses the other ending; **{right}** is the spelling.", "*{wrong}* 用错了词尾；正确拼写是 **{right}**。"],
@@ -210,48 +260,73 @@ const ableOrIble = topic("grammar", {
         "拼写带这类词尾的词时，检查词尾前的部分。完整的单词保持原有字母并加 *-able*，但词末不发音的 *e* 要去掉（*recycle, recyclable*）。本身不能单独成词的部分加 *-ible*，如 *legible* 和 *audible*。先读出这个词，再这样检查。",
       ],
       ["Type the missing word, which ends in -able or -ible.", "输入缺少的词，它以 -able 或 -ible 结尾。"],
-      ableLines.map((r) =>
+      ableLines.flatMap((r) => [
         typed(field(r, 5), field(r, 1), [field(r, 2), field(r, 3)], undefined, t(`It means: ${field(r, 0)}.`, `意思是：${field(r, 0)}。`)),
-      ),
+        typed(
+          field(r, 0),
+          field(r, 1),
+          [field(r, 2), field(r, 3)],
+          undefined,
+          t("Type the word with this meaning.", "输入表示这个意思的词。"),
+        ),
+      ]),
       (right) => ableWhy(right),
     ),
   ],
 });
 
-// Greek spellings: meaning|right|wrong|wrong|sound
+// Greek spellings: meaning|right|wrong|wrong|sound|sentence
 const greekLines = rows(`
-  a picture made with a camera|photograph|fotograph|photograf|f
-  a device you call people on|telephone|telefone|telepone|f
-  the letters of a language in order|alphabet|alfabet|alphebet|f
-  a large gray animal with a trunk|elephant|elefant|elephent|f
-  a clever sea animal that breathes air|dolphin|dolfin|dolphine|f
-  a cup given as a prize|trophy|trofy|trophey|f
-  a shop that sells medicine|pharmacy|farmacy|pharmasy|f
-  a device that makes a voice louder|microphone|microfone|mikrophone|f
-  a group of sentences about one idea|paragraph|paragraf|parigraph|f
-  the study of the earth's lands and peoples|geography|geografy|jeography|f
-  a child whose parents have died|orphan|orfan|orphen|f
-  a group of singers|chorus|korus|choros|k
-  a scientist who studies substances|chemist|kemist|chemest|k
-  a person in a story|character|caracter|charakter|k
-  the organ where food is broken down|stomach|stomack|stomak|k
-  a sound that comes back|echo|eko|ecko|k
-  complete confusion|chaos|kaos|chaose|k
-  a large group of musicians|orchestra|orkestra|orchestre|k
-  a heavy hook that holds a ship|anchor|anker|ancor|k
-  a person who fixes machines|mechanic|mekanic|mechanick|k
-  a person who designs buildings|architect|arkitect|architekt|k
-  a record of events in time order|chronicle|kronicle|cronicle|k
-  a sign that stands for something|symbol|simbol|symbel|i
-  a set of parts that work together|system|sistem|systim|i
-  something no one can explain|mystery|mistery|mystary|i
-  a room for sports and exercise|gym|jim|gim|i
-  an old story about gods or heroes|myth|mith|mythe|i
-  a regular beat in music|rhythm|rhithm|rythm|i
-  a clear, hard mineral|crystal|cristal|crystel|i
-  usual or normal|typical|tipical|typicle|i
-  a long piece of music for an orchestra|symphony|simphony|symfony|i
-  the gas in the air that we need to breathe|oxygen|oxigen|oxygin|i
+  a picture made with a camera|photograph|fotograph|photograf|f|Grandma keeps an old ___ of her parents.
+  a device you call people on|telephone|telefone|telepone|f|The ___ rang during dinner.
+  the letters of a language in order|alphabet|alfabet|alphebet|f|The English ___ has twenty-six letters.
+  a large gray animal with a trunk|elephant|elefant|elephent|f|The ___ sprayed water with its trunk.
+  a clever sea animal that breathes air|dolphin|dolfin|dolphine|f|A ___ jumped beside our boat.
+  a cup given as a prize|trophy|trofy|trophey|f|Our team won a shiny ___.
+  a shop that sells medicine|pharmacy|farmacy|pharmasy|f|Dad picked up my medicine at the ___.
+  a device that makes a voice louder|microphone|microfone|mikrophone|f|The singer held the ___ close.
+  a group of sentences about one idea|paragraph|paragraf|parigraph|f|Start each ___ on a new line.
+  the study of the earth's lands and peoples|geography|geografy|jeography|f|In ___ we learned about mountains and rivers.
+  a child whose parents have died|orphan|orfan|orphen|f|The ___ in the story found a new family.
+  a group of singers|chorus|korus|choros|k|Everyone joined in the ___ of the song.
+  a scientist who studies substances|chemist|kemist|chemest|k|The ___ mixed two liquids in a glass.
+  a person in a story|character|caracter|charakter|k|My favorite ___ in the book is the brave mouse.
+  the organ where food is broken down|stomach|stomack|stomak|k|My ___ hurt after the big lunch.
+  a sound that comes back|echo|eko|ecko|k|We heard an ___ in the empty cave.
+  complete confusion|chaos|kaos|chaose|k|The room was in ___ after the party.
+  a large group of musicians|orchestra|orkestra|orchestre|k|The ___ played a slow song.
+  a heavy hook that holds a ship|anchor|anker|ancor|k|The sailors dropped the ___ in the bay.
+  a person who fixes machines|mechanic|mekanic|mechanick|k|The ___ fixed the brakes of our car.
+  a person who designs buildings|architect|arkitect|architekt|k|An ___ drew the plans for the new library.
+  a record of events in time order|chronicle|kronicle|cronicle|k|The old book is a ___ of the town's history.
+  a sign that stands for something|symbol|simbol|symbel|i|A heart is a ___ of love.
+  a set of parts that work together|system|sistem|systim|i|The solar ___ has eight planets.
+  something no one can explain|mystery|mistery|mystary|i|Who took the cake is still a ___.
+  a room for sports and exercise|gym|jim|gim|i|We play basketball in the ___.
+  an old story about gods or heroes|myth|mith|mythe|i|The ___ tells how a god brought fire to people.
+  a regular beat in music|rhythm|rhithm|rythm|i|Clap your hands to the ___.
+  a clear, hard mineral|crystal|cristal|crystel|i|A ___ of salt sparkled under the lens.
+  usual or normal|typical|tipical|typicle|i|Rain is ___ in April.
+  a long piece of music for an orchestra|symphony|simphony|symfony|i|The orchestra played a long ___.
+  the gas in the air that we need to breathe|oxygen|oxigen|oxygin|i|Fish take ___ from the water.
+  a round shape like a ball|sphere|sfere|sphear|f|The earth is almost a perfect ___.
+  having to do with the body|physical|fisical|physicle|f|Running is good ___ exercise.
+  a drawing that shows numbers as lines or bars|graph|graf|grath|f|Our class made a bar ___ of favorite fruits.
+  the sounds that letters stand for, taught in reading|phonics|fonics|phonix|f|Little children learn ___ to sound out words.
+  one of the shapes the moon shows in a month|phase|faze|phays|f|The full moon is one ___ of the moon.
+  a bird with long tail feathers that lives in fields|pheasant|fesant|pheasent|f|A ___ ran across the farm road.
+  a group of notes played together|chord|cord|chorde|k|She played a ___ on the guitar.
+  the science of what things are made of|chemistry|kemistry|chemestry|k|In ___ class we mixed baking soda and vinegar.
+  a plan, often a tricky one|scheme|skeme|sheme|k|The fox had a ___ to steal the eggs.
+  a place where children learn|school|skool|scool|k|Our ___ has a new library.
+  a group of singers in a church|choir|kwire|choyer|k|She sings in the church ___.
+  a person who does flips and balances in sport|gymnast|jimnast|gymnest|i|The ___ landed a perfect flip.
+  a brass plate that crashes in a band|cymbal|simbal|cymbel|i|He hit the ___ at the end of the song.
+  an old tomb with four sloping sides|pyramid|piramid|pyramed|i|The ___ in Egypt is thousands of years old.
+  a song of praise|hymn|him|hymm|i|The choir sang a ___.
+  a shape like a can|cylinder|silinder|cylindar|i|A soup can is a ___.
+  a sign of an illness|symptom|simptom|symptem|i|A cough is a ___ of a cold.
+  a feeling of sharing someone's sadness|sympathy|simpathy|sympathey|i|We sent a card to show our ___.
 `);
 const greekSound = (word: string) => greekLines.find((r) => r[1] === word)?.[4] ?? "f";
 const greekWhy = (right: string): Pair => {
@@ -294,7 +369,10 @@ const greekSpellings = topic("grammar", {
         "英语中许多科学、音乐和学术词汇来自希腊语，某些音保留了希腊式拼写。/f/ 音拼作 **ph**（*photo, alphabet*），/k/ 音常拼作 **ch**（*chorus, chemist*），短音 /i/ 常拼作 **y**（*symbol, mystery*）。",
       ],
       ["Which spelling is right for this word?", "这个词的哪种拼写是正确的？"],
-      greekLines.map((r): ChoiceItem => [field(r, 0), field(r, 1), [field(r, 2), field(r, 3)]]),
+      greekLines.flatMap((r): ChoiceItem[] => [
+        [field(r, 0), field(r, 1), [field(r, 2), field(r, 3)]],
+        [field(r, 5), field(r, 1), [field(r, 2), field(r, 3)]],
+      ]),
       (right) => greekWhy(right),
       [
         [
@@ -315,9 +393,12 @@ const greekSpellings = topic("grammar", {
         "拼写希腊来源的词时，注意希腊语有特殊拼法的音。在科学或学术词汇中听到 /f/，试试 *ph*；在 *chorus*、*chemist* 这样的词里听到 /k/，试试 *ch*；在词中间听到短音 /i/，试试 *y*。然后检查词的其余部分是否正确。",
       ],
       ["Type the word that has this meaning.", "输入表示这个意思的词。"],
-      greekLines.map((r) => {
+      greekLines.flatMap((r) => {
         const sound = soundName[field(r, 4)] ?? ["", ""];
-        return typed(field(r, 0), field(r, 1), [field(r, 2), field(r, 3)], undefined, t(...sound));
+        return [
+          typed(field(r, 0), field(r, 1), [field(r, 2), field(r, 3)], undefined, t(...sound)),
+          typed(field(r, 5), field(r, 1), [field(r, 2), field(r, 3)], undefined, t(...sound)),
+        ];
       }),
       (right) => greekWhy(right),
     ),
@@ -325,6 +406,30 @@ const greekSpellings = topic("grammar", {
 });
 
 // Because or because of: what follows, then the word that fits.
+/** causeRows are a noun, two adjectives that can be the cause, a result, and something that happened anyway. */
+const causeRows = [
+  ["road", "icy", "flooded", "We drove slowly", "we drove to the lake"],
+  ["soup", "salty", "burnt", "Nobody finished lunch", "everyone asked for more"],
+  ["room", "dark", "crowded", "We could not find our seats", "we found our seats"],
+  ["river", "deep", "fast", "The children did not swim", "the ducks swam happily"],
+  ["sky", "cloudy", "hazy", "We could not see the stars", "we had our picnic outside"],
+  ["path", "steep", "slippery", "The hikers walked carefully", "the hikers reached the top"],
+  ["floor", "wet", "muddy", "Mom told us to wear shoes", "the dancers kept dancing"],
+  ["party", "noisy", "loud", "The baby could not sleep", "the baby fell asleep"],
+  ["bus", "late", "slow", "We missed the start of the play", "we got there on time"],
+  ["test", "hard", "long", "Many students felt tired", "most students passed"],
+  ["map", "old", "torn", "The explorers got lost", "the explorers found the cave"],
+  ["bridge", "weak", "broken", "The truck took another road", "the cyclists crossed the river"],
+  ["water", "cold", "dirty", "We did not swim", "the dog jumped in"],
+  ["tent", "small", "leaky", "We slept badly", "we stayed dry"],
+  ["ice", "thin", "cracked", "Nobody skated on the pond", "the boys skated anyway"],
+  ["hill", "steep", "icy", "The riders got off their bikes", "the riders reached the top"],
+  ["kitten", "sick", "weak", "The kitten cried all night", "the kitten played with the ball"],
+  ["film", "long", "scary", "My little brother left early", "my little brother watched to the end"],
+] as const;
+const causePairs = causeRows.flatMap(([noun, a, b, result, anyway]) =>
+  [a, b].map((adj) => ({ clause: `the ${noun} was ${adj}`, phrase: `the ${adj} ${noun}`, result, anyway })),
+);
 const clauses = [
   "the milk was warm",
   "the bread rose",
@@ -341,6 +446,7 @@ const clauses = [
   "the mold grew quickly",
   "the dough was cold",
   "the light was too dim",
+  ...causePairs.map((p) => p.clause),
 ];
 const phrases = [
   "the warm milk",
@@ -358,14 +464,27 @@ const phrases = [
   "the fast-growing mold",
   "the cold dough",
   "the dim light",
+  ...causePairs.map((p) => p.phrase),
 ];
 const followItems: ChoiceItem[] = clauses.flatMap((c, i): ChoiceItem[] => [
-  ["Which words could follow **because**?", c, [phrases[i] ?? "", phrases[(i + 6) % 15] ?? ""]],
-  ["Which words could follow **because of**?", phrases[(i + 3) % 15] ?? "", [clauses[(i + 3) % 15] ?? "", clauses[(i + 9) % 15] ?? ""]],
+  ["Which words could follow **because**?", c, [phrases[i] ?? "", phrases[(i + 6) % phrases.length] ?? ""]],
+  [
+    "Which words could follow **because of**?",
+    phrases[(i + 3) % phrases.length] ?? "",
+    [clauses[(i + 3) % clauses.length] ?? "", clauses[(i + 9) % clauses.length] ?? ""],
+  ],
 ]);
 const isClause = (s: string) => clauses.includes(s);
 
-const becauseLines = rows(`
+const becauseCross = causePairs
+  .flatMap(({ clause, phrase, result, anyway }) => [
+    `${result} ___ ${phrase}.|because of|because|although`,
+    `${result} ___ ${clause}.|because|because of|despite`,
+    `___ ${phrase}, ${anyway}.|Despite|Although|Because`,
+    `___ ${clause}, ${anyway}.|Although|Despite|Because of`,
+  ])
+  .join("\n");
+const becauseLines = rows(`${becauseCross}\n
   The bread rose ___ the yeast.|because of|because|although
   The bread rose ___ the yeast was alive.|because|because of|despite
   We wore gloves ___ the germs.|because of|because|although
@@ -484,7 +603,47 @@ const becauseOrBecauseOf = topic("grammar", {
 });
 
 // The future perfect.
-const futureLines = rows(`
+/** futureSubjects are a subject and whether it takes have. */
+const futureSubjects = [
+  ["my sister", false],
+  ["the twins", true],
+  ["our class", false],
+  ["we", true],
+  ["Grandpa", false],
+  ["the workers", true],
+] as const;
+/** futureVerbs are a verb, its past participle and what it acts on. */
+const futureVerbs = [
+  ["finish", "finished", "the science project"],
+  ["paint", "painted", "the fence"],
+  ["read", "read", "all seven books"],
+  ["build", "built", "a tree house"],
+  ["plant", "planted", "the tomato seeds"],
+  ["write", "written", "three letters"],
+  ["learn", "learned", "the new song"],
+  ["clean", "cleaned", "the garage"],
+  ["save", "saved", "enough money"],
+  ["visit", "visited", "every museum in town"],
+  ["eat", "eaten", "all the cookies"],
+  ["draw", "drawn", "the map"],
+  ["sell", "sold", "all the lemonade"],
+  ["fix", "fixed", "the old bike"],
+  ["choose", "chosen", "a name for the puppy"],
+] as const;
+const futureTimes = [
+  "By next Friday",
+  "By the end of the month",
+  "By the time the bell rings",
+  "By 2035",
+  "Before the summer ends",
+] as const;
+const futureCross = everyPair(futureSubjects, futureVerbs).map(([[who, many], [base, done, what]], k) => ({
+  shown: `${futureTimes[k % futureTimes.length]}, ${who} ___ ${what}.`,
+  base,
+  right: `will have ${done}`,
+  now: `${many ? "have" : "has"} ${done}`,
+}));
+const futureLines = rows(`${futureCross.map((f) => `${f.shown}|${f.right}|${f.now}|would have ${f.right.slice(10)}`).join("\n")}\n
   By the time you wake up, the rocket ___.|will have launched|has launched|would have launched
   By 2030, the probe ___ Jupiter.|will have reached|has reached|would have reached
   By next June, the astronauts ___ six months in space.|will have spent|have spent|would have spent
@@ -516,7 +675,7 @@ const futureLines = rows(`
   By the next eclipse, scientists ___ a new camera.|will have made|have made|would have made
   By the end of the countdown, the engines ___.|will have started|have started|would have started
 `);
-const futureForm = rows(`
+const futureForm = rows(`${futureCross.map((f) => `${f.shown}|${f.base}|${f.right}|${f.now},will ${f.base}`).join("\n")}\n
   By 2030, the probe ___ Jupiter.|reach|will have reached|has reached,will reach
   By the time you wake up, the rocket ___.|launch|will have launched|has launched,will launch
   By next June, the crew ___ six months in space.|spend|will have spent|will have spended,have spent
@@ -630,7 +789,45 @@ const comparisonLabels: Record<string, Label> = {
     not: ["Something in it is wrong, so it is not complete.", "其中有错误，所以不完整。"],
   },
 };
+/** compareOwners are pairs of people; compareThings are a thing and a comparative, then things and a comparative. */
+const compareOwners = [
+  ["Maria", "Leo"],
+  ["Grandpa", "Dad"],
+  ["Kim", "Omar"],
+  ["Aunt Rosa", "Uncle Ben"],
+  ["Nora", "Sam"],
+  ["Mrs. Diaz", "Mr. Park"],
+] as const;
+const compareThings = [
+  ["bike", "faster"],
+  ["garden", "bigger"],
+  ["voice", "louder"],
+  ["kitchen", "cleaner"],
+  ["handwriting", "neater"],
+  ["dog", "friendlier"],
+] as const;
+const compareMany = [
+  ["shoes", "newer"],
+  ["cookies", "sweeter"],
+  ["drawings", "more colorful"],
+  ["answers", "longer"],
+  ["plants", "taller"],
+  ["photos", "sharper"],
+] as const;
+const compareOne = everyPair(compareOwners, compareThings).map(([[a, b], [thing, more]]) => ({
+  complete: `${a}'s ${thing} is ${more} than ${b}'s.`,
+  unlike: `${a}'s ${thing} is ${more} than ${b}.`,
+  missing: `${a}'s ${thing} is ${more}.`,
+  thenForThan: `${a}'s ${thing} is ${more} then ${b}'s.`,
+}));
+const compareTwo = everyPair(compareOwners, compareMany).map(([[a, b], [things, more]]) => ({
+  complete: `The ${things} of ${a} are ${more} than those of ${b}.`,
+  unlike: `The ${things} of ${a} are ${more} than ${b}.`,
+  missing: `The ${things} of ${a} are ${more}.`,
+  thenForThan: `The ${things} of ${a} are ${more} then those of ${b}.`,
+}));
 const comparisonLines = `
+${compareOne.map((c) => `${c.complete}|complete\n${c.unlike}|unlike things\n${c.missing}|one side missing\n${c.thenForThan}|then for than`).join("\n")}
   Jupiter's moons outnumber Earth.|unlike things
   The rings of Saturn are wider than Jupiter.|unlike things
   Mars's day is a little longer than Earth.|unlike things
@@ -662,7 +859,12 @@ const comparisonLines = `
   The red star looks brighter than the blue one.|complete
   Her report has more facts than mine.|complete
 `;
-const completeLines = rows(`
+const completeLines = rows(`${[...compareOne, ...compareTwo]
+  .map((c, k) => {
+    const [x, y] = k % 3 === 0 ? [c.unlike, c.thenForThan] : k % 3 === 1 ? [c.unlike, c.missing] : [c.missing, c.thenForThan];
+    return `${c.complete}|${x}|${y}`;
+  })
+  .join("\n")}\n
   Jupiter has more moons than Earth has.|Jupiter has more moons then Earth.|Jupiter has more moons.
   The rings of Saturn are wider than those of Jupiter.|The rings of Saturn are wider than Jupiter.|The rings of Saturn are wider then Jupiter's.
   A day on Mars is longer than a day on Earth.|A day on Mars is longer than Earth.|A day on Mars is longer.
@@ -748,7 +950,40 @@ const completeComparisons = topic("grammar", {
 });
 
 // Capitals for events, eras and groups: the right sentence, a version with too few capitals, one with too many.
-const capitalLines = rows(`
+/** historyNames are a name, the name with no capitals, the name missing one capital, and the word that needs it. */
+const historyNames = [
+  ["the Stone Age", "the stone age", "the stone Age", "stone"],
+  ["the Olympic Games", "the olympic games", "the olympic Games", "olympic"],
+  ["the Middle Ages", "the middle ages", "the middle Ages", "middle"],
+  ["the Ice Age", "the ice age", "the ice Age", "ice"],
+  ["the Bronze Age", "the bronze age", "the bronze Age", "bronze"],
+  ["the Iron Age", "the iron age", "the iron Age", "iron"],
+  ["the Renaissance", "the renaissance", "the renaissance", "renaissance"],
+  ["the Romans", "the romans", "the romans", "romans"],
+  ["the Vikings", "the vikings", "the vikings", "vikings"],
+  ["the Aztecs", "the aztecs", "the aztecs", "aztecs"],
+  ["the Battle of Hastings", "the battle of Hastings", "the battle of Hastings", "battle"],
+  ["the Gold Rush", "the gold rush", "the gold Rush", "gold"],
+  ["the Boston Tea Party", "the boston tea party", "the Boston tea Party", "tea"],
+  ["the Industrial Revolution", "the industrial revolution", "the industrial Revolution", "industrial"],
+  ["the Great Depression", "the great depression", "the Great depression", "depression"],
+  ["the Mayans", "the mayans", "the mayans", "mayans"],
+  ["the Incas", "the incas", "the incas", "incas"],
+  ["the Space Age", "the space age", "the space Age", "space"],
+  ["the Cold War", "the cold war", "the cold War", "cold"],
+  ["the Pilgrims", "the pilgrims", "the pilgrims", "pilgrims"],
+] as const;
+/** historyFrames are a sentence, the same with a common word capitalized, and two common words in it. */
+const historyFrames = [
+  ["Our class read a book about {X}.", "Our Class read a book about {X}.", "class", "book"],
+  ["My uncle told us a story about {X}.", "My uncle told us a Story about {X}.", "uncle", "story"],
+  ["The museum has a whole room about {X}.", "The museum has a whole Room about {X}.", "museum", "room"],
+  ["We made a poster about {X} for history class.", "We made a Poster about {X} for history class.", "poster", "history"],
+] as const;
+const historyCross = everyPair(historyNames, historyFrames);
+const capitalLines = rows(`${historyCross
+  .map(([[name, none], [frame, many]]) => `${frame.replace("{X}", name)}|${frame.replace("{X}", none)}|${many.replace("{X}", name)}`)
+  .join("\n")}\n
   The first Olympic Games were held in Greece.|The first olympic games were held in Greece.|The First Olympic Games were held in Greece.
   The Greeks built temples of stone.|The greeks built temples of stone.|The Greeks built Temples of stone.
   The Parthenon stands above Athens.|The parthenon stands above Athens.|The Parthenon stands above Athens' City.
@@ -780,7 +1015,9 @@ const capitalLines = rows(`
   The Ice Age ended thousands of years ago.|The ice age ended thousands of years ago.|The Ice Age ended Thousands of Years ago.
   The Minoans lived on Crete before the Greeks.|The minoans lived on Crete before the greeks.|The Minoans lived on Crete before the Greeks Arrived.
 `);
-const fixLines = rows(`
+const fixLines = rows(`${historyCross
+  .map(([[, , one, word], [frame, , c1, c2]]) => `${frame.replace("{X}", one)}|${word}|${c1}|${c2}`)
+  .join("\n")}\n
   The first olympic games were held at Olympia.|olympic|first|held
   The greeks built their temples on hills.|greeks|temples|hills
   We visited the parthenon on our trip.|parthenon|trip|visited
@@ -894,7 +1131,37 @@ const pronounLabels: Record<string, Label> = {
     not: ["It is always one number, not decided by the noun after it.", "它的单复数是固定的，不由后面的名词决定。"],
   },
 };
+/** indefiniteNouns are plural nouns with an adjective, and mass nouns with an adjective. */
+const indefinitePlural = [
+  ["players", "ready"],
+  ["cookies", "burnt"],
+  ["windows", "open"],
+  ["students", "here"],
+  ["kittens", "asleep"],
+  ["trees", "tall"],
+] as const;
+const indefiniteMass = [
+  ["milk", "sour"],
+  ["sand", "wet"],
+  ["homework", "finished"],
+  ["bread", "stale"],
+] as const;
+const indefiniteCross = [
+  ...everyPair(["each", "either", "neither", "one"], indefinitePlural).map(
+    ([p, [n, adj]]) => [`${p} of the ${n}`, `${p} of the ${n} ___ ${adj}.`, "is", "are", "be", "singular"] as const,
+  ),
+  ...everyPair(["both", "few", "many", "several"], indefinitePlural).map(
+    ([p, [n, adj]]) => [`${p} of the ${n}`, `${p} of the ${n} ___ ${adj}.`, "are", "is", "be", "plural"] as const,
+  ),
+  ...everyPair(["some", "all", "most", "none"], indefinitePlural).map(
+    ([p, [n, adj]]) => [`${p} of the ${n}`, `${p} of the ${n} ___ ${adj}.`, "are", "is", "be", "either one"] as const,
+  ),
+  ...everyPair(["some", "all", "most", "none"], indefiniteMass).map(
+    ([p, [n, adj]]) => [`${p} of the ${n}`, `${p} of the ${n} ___ ${adj}.`, "is", "are", "be", "either one"] as const,
+  ),
+];
 const pronounLines = `
+${indefiniteCross.map(([phrase, , , , , kind]) => `${phrase}|${kind}`).join("\n")}
   everyone|singular
   each of the citizens|singular
   nobody|singular
@@ -926,7 +1193,9 @@ const pronounLines = `
   none of the votes|either one
   any of the food|either one
 `;
-const agreeLines = rows(`
+const agreeLines = rows(`${indefiniteCross
+  .map(([, shown, right, w1, w2, kind]) => `${shown.charAt(0).toUpperCase()}${shown.slice(1)}|${right}|${w1}|${w2}|${kind}`)
+  .join("\n")}\n
   Each of the citizens ___ a vote.|has|have|having|singular
   Everyone in the assembly ___ to speak.|wants|want|wanting|singular
   Nobody ___ the answer to the riddle.|knows|know|knowing|singular
