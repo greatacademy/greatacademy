@@ -3,6 +3,7 @@
 
 import { type TopicDef, t } from "@ga/content";
 import { point } from "@ga/subject-english";
+import { everyPair } from "../../levels/words.ts";
 import { fields, fill, type Item, itemGenerator, nameKind } from "./kit.ts";
 import { after } from "./prior.ts";
 
@@ -58,7 +59,38 @@ const reflexiveLines = `
   My sister made ___ a cup of tea.|herself|myself|her
 `;
 
-const reflexiveRows = fields(reflexiveLines)
+/** reflexivePeople are a subject, its reflexive pronoun, a pronoun for another person and a form to avoid. */
+const reflexivePeople = [
+  ["I", "myself", "yourself", "meself"],
+  ["My brother", "himself", "herself", "hisself"],
+  ["Uncle Sam", "himself", "themselves", "hisself"],
+  ["My sister", "herself", "himself", "her"],
+  ["Grandma", "herself", "myself", "her"],
+  ["We", "ourselves", "themselves", "ourself"],
+  ["The twins", "themselves", "ourselves", "theirselves"],
+  ["My friends", "themselves", "himself", "themself"],
+  ["You and Sam", "yourselves", "ourselves", "yourselfs"],
+] as const;
+/** reflexiveActs are predicates with a gap for the reflexive pronoun. */
+const reflexiveActs = [
+  "made ___ a cheese sandwich",
+  "taught ___ to whistle",
+  "bought ___ a new notebook",
+  "reminded ___ to bring an umbrella",
+  "drew a funny picture of ___",
+  "poured ___ a glass of milk",
+  "looked at ___ in the mirror",
+  "cheered ___ up with a song",
+  "wrote ___ a note about the test",
+  "found ___ a seat near the front",
+  "gave ___ a short break",
+  "asked ___ a hard question",
+] as const;
+const reflexiveCross = everyPair(reflexivePeople, reflexiveActs)
+  .map(([[who, right, person, bad], act]) => `${who} ${act}.|${right}|${person}|${bad}`)
+  .join("\n");
+
+const reflexiveRows = fields(`${reflexiveLines}\n${reflexiveCross}`)
   .map(([shown, right, person, bad]) => {
     if (!shown || !right || !person || !bad) throw new Error(`a reflexive line needs four fields: ${shown}`);
     return { shown, right, person, bad };
@@ -150,7 +182,46 @@ const negativeLines = `
   There isn't no way to outrun her.|isn't|no|There|outrun|There isn't any way to outrun her.|There isn't no way not to outrun her.
 `;
 
-const negativeRows = fields(negativeLines).map(([bad, n1, n2, x1, x2, good, wrong]) => {
+/** negativePeople take turns as the subject of the double negatives made from frames. */
+const negativePeople = ["Sam", "The baker", "My cousin", "The old sailor", "Our coach", "Aunt Rosa"] as const;
+/** negativeFrames are a helping verb with *n't*, a second negative, the word that replaces it and the rest of the clause. */
+const negativeFrames = [
+  ["didn't", "bring", "no", "any", "sandwiches to the picnic"],
+  ["doesn't", "have", "no", "any", "money in the jar"],
+  ["can't", "find", "no", "any", "pencils in the drawer"],
+  ["won't", "eat", "no", "any", "carrots at dinner"],
+  ["didn't", "see", "no", "any", "birds by the lake"],
+  ["couldn't", "get", "no", "any", "tickets for the show"],
+  ["didn't", "say", "nothing", "anything", "about the trip"],
+  ["couldn't", "see", "nothing", "anything", "in the fog"],
+  ["won't", "buy", "nothing", "anything", "at the fair"],
+  ["doesn't", "know", "nothing", "anything", "about whales"],
+  ["didn't", "hear", "nothing", "anything", "during the storm"],
+  ["can't", "find", "nothing", "anything", "for lunch"],
+  ["won't", "go", "never", "ever", "back to that cave"],
+  ["didn't", "ride", "never", "ever", "the big roller coaster"],
+  ["can't", "win", "never", "ever", "at that game"],
+  ["won't", "forget", "never", "ever", "the day of the flood"],
+  ["doesn't", "play", "never", "ever", "the drums at night"],
+  ["couldn't", "trust", "never", "ever", "the sneaky fox again"],
+] as const;
+const negativeCross = everyPair(negativePeople, negativeFrames)
+  .map(([who, [aux, verb, no, any, rest]]) => {
+    const head = no === "never" ? `${who} ${aux} ${no} ${verb}` : `${who} ${aux} ${verb} ${no}`;
+    const words = rest.split(" ");
+    const object = no === "no" ? words[0] : no === "nothing" ? words.at(-1) : words.at(-1)!.replace(/[^a-z]/g, "");
+    const fixed = no === "never" ? `${who} ${aux} ${any} ${verb}` : `${who} ${aux} ${verb} ${any}`;
+    const wrong =
+      no === "never"
+        ? `${who} ${aux} never ever ${verb} ${rest}.`
+        : no === "no"
+          ? `${who} ${aux} ${verb} no ${words[0]} at all ${words.slice(1).join(" ")}.`
+          : `${who} ${aux} ${verb} nothing at all ${rest}.`;
+    return `${head} ${rest}.|${aux}|${no}|${who.split(" ").at(-1)}|${object}|${fixed} ${rest}.|${wrong}`;
+  })
+  .join("\n");
+
+const negativeRows = fields(`${negativeLines}\n${negativeCross}`).map(([bad, n1, n2, x1, x2, good, wrong]) => {
   if (!bad || !n1 || !n2 || !x1 || !x2 || !good || !wrong) throw new Error(`a double negative line needs seven fields: ${bad}`);
   return { bad, n1, n2, x1, x2, good, wrong };
 });
@@ -275,7 +346,46 @@ const betweenWhy = (right: string) =>
     : ["*among* is for more than two, or for a group", "*among* 用于两个以上，或用于一个群体"];
 
 /** betweenBank asks for between or among. */
-const betweenBank: readonly Item[] = fields(betweenLines).map(([shown, right, other, third]) => {
+/** betweenFrames have a gap for between or among, a wrong preposition, and whether the frame takes people or things. */
+const betweenFrames = [
+  ["The prize money was split ___", "across", true],
+  ["The secret was kept ___", "along", true],
+  ["A quarrel started ___", "onto", true],
+  ["The teacher shared the crayons ___", "through", true],
+  ["The lost ball lay somewhere ___", "onto", false],
+  ["A tiny mouse lived ___", "onto", false],
+  ["We found the missing glove ___", "toward", false],
+  ["A spider spun its web ___", "upon", false],
+] as const;
+/** betweenGroups are pairs of two and groups of more, of people and of things. */
+const betweenGroups = [
+  ["the twins", "between", true],
+  ["Mom and Dad", "between", true],
+  ["the two sisters", "between", true],
+  ["Sam and Leo", "between", true],
+  ["the two captains", "between", true],
+  ["all the students", "among", true],
+  ["the five friends", "among", true],
+  ["the members of the band", "among", true],
+  ["the players on the team", "among", true],
+  ["the ten cousins", "among", true],
+  ["the two oak trees", "between", false],
+  ["the bank and the bakery", "between", false],
+  ["the two hills", "between", false],
+  ["the fence and the shed", "between", false],
+  ["the two big rocks", "between", false],
+  ["the tall trees of the forest", "among", false],
+  ["the flowers in the garden", "among", false],
+  ["the boxes in the attic", "among", false],
+  ["the rocks on the beach", "among", false],
+  ["the many tents of the camp", "among", false],
+] as const;
+const betweenCross = everyPair(betweenFrames, betweenGroups)
+  .filter(([[, , people], [, , who]]) => people === who)
+  .map(([[frame, third], [group, right]]) => `${frame} ${group}.|${right}|${right === "between" ? "among" : "between"}|${third}`)
+  .join("\n");
+
+const betweenBank: readonly Item[] = fields(`${betweenLines}\n${betweenCross}`).map(([shown, right, other, third]) => {
   if (!shown || !right || !other || !third) throw new Error(`a between line needs four fields: ${shown}`);
   return {
     question: t("Which word completes the sentence?", "哪个词能补全句子？"),
@@ -297,7 +407,30 @@ const betweenBank: readonly Item[] = fields(betweenLines).map(([shown, right, ot
 });
 
 /** inBank asks for in or into. */
-const inBank: readonly Item[] = fields(inLines).map(([shown, right, other, split]) => {
+/** inPeople take turns as the subject of the in and into frames. */
+const inPeople = ["My little brother", "The new student", "Grandpa", "Aunt Rosa", "The tired runner", "Our neighbor"] as const;
+/** inPlaces are a verb of moving and a verb of staying for one place. */
+const inPlaces = [
+  ["jumped", "swam all afternoon", "the pool"],
+  ["climbed", "slept", "the tent"],
+  ["walked", "waited", "the kitchen"],
+  ["hurried", "read quietly", "the classroom"],
+  ["crawled", "rested", "the cave"],
+  ["ran", "played", "the garden"],
+  ["stepped", "stood", "the elevator"],
+  ["dove", "floated", "the lake"],
+  ["rushed", "studied", "the library"],
+  ["climbed", "sat", "the car"],
+] as const;
+const inCross = everyPair(inPeople, inPlaces)
+  .flatMap(([who, [move, stay, place]]) => {
+    const [stayVerb, ...stayRest] = stay.split(" ");
+    const tail = stayRest.length > 0 ? ` ${stayRest.join(" ")}` : "";
+    return [`${who} ${move} ___ ${place}.|into|in|in to`, `${who} ${stayVerb} ___ ${place}${tail}.|in|into|in to`];
+  })
+  .join("\n");
+
+const inBank: readonly Item[] = fields(`${inLines}\n${inCross}`).map(([shown, right, other, split]) => {
   if (!shown || !right || !other || !split) throw new Error(`an in line needs four fields: ${shown}`);
   const moving = right === "into";
   return {
@@ -350,7 +483,7 @@ const markKinds = {
 
 const markOf = { "strong feeling": "!", "doubt or a question": "?", "an unfinished thought": "...", "a sudden break": "—" } as const;
 
-const markLines = `
+const markHand = `
   ROSA: The curtain is on fire!|strong feeling
   MAX: We won the prize!|strong feeling
   QUEEN: Bring me my umbrella at once!|strong feeling
@@ -384,6 +517,32 @@ const markLines = `
   KING: Bring the jester — no, bring the cook.|a sudden break
   TOM: I found my ticket — in the dog's mouth.|a sudden break
 `;
+
+/** markSpeakers say the lines made from the mark frames. */
+const markSpeakers = ["ROSA", "MAX", "BEN", "LILY", "GRANDPA", "MOM", "COACH", "TOM"] as const;
+/** markFrames are lines whose last mark gives one effect. */
+const markFrames = [
+  ["We did it!", "strong feeling"],
+  ["That is the biggest cake I have ever seen!", "strong feeling"],
+  ["Get away from the edge!", "strong feeling"],
+  ["Watch out for the falling rocks!", "strong feeling"],
+  ["Did anyone see where my hat went?", "doubt or a question"],
+  ["Are you sure this map is right?", "doubt or a question"],
+  ["Is that really a dragon?", "doubt or a question"],
+  ["Who left the gate open?", "doubt or a question"],
+  ["I thought the key was in my pocket, but...", "an unfinished thought"],
+  ["If only we had brought a flashlight...", "an unfinished thought"],
+  ["Maybe the noise was just the wind, or maybe...", "an unfinished thought"],
+  ["I wanted to tell you something, but...", "an unfinished thought"],
+  ["The answer is—wait, I forgot it.", "a sudden break"],
+  ["Put the box over—no, over there.", "a sudden break"],
+  ["I left my bag on the—oh, here it is.", "a sudden break"],
+  ["The best part of the trip was—never mind.", "a sudden break"],
+] as const;
+/** markLines are the hand lines and the lines made from the frames. */
+const markLines = `${markHand}\n${everyPair(markSpeakers, markFrames)
+  .map(([who, [line, kind]]) => `${who}: ${line}|${kind}`)
+  .join("\n")}`;
 
 const markRows = fields(markLines).map(([text, kind]) => {
   if (!text || !kind || !(kind in markOf)) throw new Error(`a mark line needs a text and a kind: ${text}`);
@@ -453,7 +612,37 @@ const formalLines = `
   Please let me know if you have any questions.|Holler if you've got questions.|Questions? Just ask me whenever, OK, no big deal at all.
 `;
 
-const formalRows = fields(formalLines).map(([formal, informal, slang]) => {
+/** formalThings fill the formal, informal and slang frames. */
+const formalThings = [
+  "microscope",
+  "projector",
+  "laptop",
+  "camera",
+  "ladder",
+  "globe",
+  "stapler",
+  "telescope",
+  "keyboard",
+  "calculator",
+  "tablet",
+  "map",
+  "dictionary",
+  "flashlight",
+  "basketball",
+] as const;
+/** formalFrames say one thing formally, informally and in slang. */
+const formalFrames: readonly ((thing: string) => string)[] = [
+  (x) => `I would like to borrow the ${x}, please.|Can I borrow the ${x}?|Gimme the ${x} real quick, OK?`,
+  (x) => `Could you please return the ${x} by Friday?|Can you bring back the ${x} by Friday?|Yo, bring the ${x} back Friday, will ya?`,
+  (x) => `Thank you for lending me the ${x}.|Thanks for the ${x}!|Thx for the ${x}, you're the best, dude.`,
+  (x) => `I am afraid that the ${x} is broken.|Uh-oh, the ${x}'s broken.|The ${x} is totally busted, like, for real.`,
+  (x) => `Please let me know where the ${x} is.|Where's the ${x}?|Where'd the ${x} go, huh, any idea?`,
+];
+const formalCross = everyPair(formalThings, formalFrames)
+  .map(([thing, frame]) => frame(thing))
+  .join("\n");
+
+const formalRows = fields(`${formalLines}\n${formalCross}`).map(([formal, informal, slang]) => {
   if (!formal || !informal || !slang) throw new Error(`a formal line needs three fields: ${formal}`);
   return { formal, informal, slang };
 });
@@ -566,7 +755,40 @@ const quoteLines = `
   The swimmer told the reporter|I trained every morning for six years.|The swimmer told the reporter that she had trained every morning for six years.
 `;
 
-const quoteRows = fields(quoteLines).map(([signal, words, paraphrase]) => {
+/** quoteSignals introduce the words made from the quotation frames. */
+const quoteSignals = [
+  "The driver said",
+  "The principal announced",
+  "The guide explained",
+  "Our neighbor said",
+  "The coach told the team",
+  "The librarian said",
+] as const;
+/** quoteWords are exact words and the same news in reported form. */
+const quoteWords = [
+  ["The bus leaves at noon.", "the bus left at noon"],
+  ["The library is closed today.", "the library was closed that day"],
+  ["Lunch will be late.", "lunch would be late"],
+  ["The game starts in ten minutes.", "the game would start in ten minutes"],
+  ["The river is too deep to cross.", "the river was too deep to cross"],
+  ["Everyone must wear a helmet.", "everyone had to wear a helmet"],
+  ["The paint on the bench is still wet.", "the paint on the bench was still wet"],
+  ["The storm will reach us tonight.", "the storm would reach them that night"],
+  ["The tickets are sold out.", "the tickets were sold out"],
+  ["The cafeteria has run out of milk.", "the cafeteria had run out of milk"],
+  ["The trail is closed after dark.", "the trail was closed after dark"],
+  ["The new pool opens in June.", "the new pool would open in June"],
+  ["The red team won the relay.", "the red team had won the relay"],
+  ["The museum is free on Sundays.", "the museum was free on Sundays"],
+  ["The old bridge needs repairs.", "the old bridge needed repairs"],
+  ["The parade starts at the park.", "the parade would start at the park"],
+  ["The well water is safe to drink.", "the well water was safe to drink"],
+] as const;
+const quoteCross = everyPair(quoteSignals, quoteWords)
+  .map(([signal, [words, reported]]) => `${signal}|${words}|${signal} that ${reported}.`)
+  .join("\n");
+
+const quoteRows = fields(`${quoteLines}\n${quoteCross}`).map(([signal, words, paraphrase]) => {
   if (!signal || !words || !paraphrase) throw new Error(`a quotation line needs three fields: ${signal}`);
   const bare = words.replace(/\.$/, "");
   const lower = words.charAt(0).toLowerCase() + words.slice(1);
@@ -710,13 +932,59 @@ const abbreviationRows = fields(abbreviationLines).map(([word, abbreviation, a1,
     abbreviation,
     wrong: [a1, a2] as const,
     words: [w1, w2] as const,
+    kind: kind as keyof typeof abbreviationKinds,
     rule: abbreviationKinds[kind as keyof typeof abbreviationKinds],
   };
 });
 
+/** abbreviationPlaces are where each kind of abbreviation is written: none, then three places in English and Chinese. */
+const abbreviationPlaces: Readonly<Record<keyof typeof abbreviationKinds, readonly (readonly [en: string, zh: string])[]>> = {
+  title: [
+    ["on an envelope", "在信封上"],
+    ["on a name tag", "在名牌上"],
+    ["in a list of guests", "在客人名单里"],
+  ],
+  day: [
+    ["on a calendar", "在日历上"],
+    ["on a class timetable", "在课程表上"],
+    ["on a sign with opening hours", "在写着营业时间的牌子上"],
+  ],
+  month: [
+    ["on a calendar", "在日历上"],
+    ["at the top of a diary page", "在日记页的顶端"],
+    ["on a ticket", "在票上"],
+  ],
+  place: [
+    ["in an address", "在地址里"],
+    ["on a map", "在地图上"],
+    ["on a sign", "在路牌上"],
+  ],
+  measure: [
+    ["in a science chart", "在科学图表里"],
+    ["in a table of results", "在结果表里"],
+    ["in a short note", "在简短的笔记里"],
+  ],
+  group: [
+    ["in a newspaper headline", "在报纸标题里"],
+    ["in a short note", "在简短的笔记里"],
+    ["in a report", "在报告里"],
+  ],
+};
+/** abbreviationUses are every row with no place and with each place where its kind is written. */
+const abbreviationUses = abbreviationRows.flatMap((row) =>
+  [["", ""] as const, ...abbreviationPlaces[row.kind]].map(([en, zh]) => ({
+    ...row,
+    where: en === "" ? "" : ` ${en}`,
+    whereZh: zh,
+  })),
+);
+
 /** abbreviationBank asks for the abbreviation of a word. */
-const abbreviationBank: readonly Item[] = abbreviationRows.map((row) => ({
-  question: t(`Which is the correct abbreviation of *${row.word}*?`, `*${row.word}* 的正确缩写是哪个？`),
+const abbreviationBank: readonly Item[] = abbreviationUses.map((row) => ({
+  question: t(
+    `Which is the correct abbreviation of *${row.word}*${row.where}?`,
+    `${row.whereZh}，*${row.word}* 的正确缩写是哪个？`.replace(/^，/, ""),
+  ),
   shown: "",
   right: row.abbreviation,
   wrong: row.wrong,
@@ -733,8 +1001,11 @@ const abbreviationBank: readonly Item[] = abbreviationRows.map((row) => ({
 }));
 
 /** expansionBank asks for the word an abbreviation stands for. */
-const expansionBank: readonly Item[] = abbreviationRows.map((row) => ({
-  question: t(`What does *${row.abbreviation}* stand for?`, `*${row.abbreviation}* 代表什么？`),
+const expansionBank: readonly Item[] = abbreviationUses.map((row) => ({
+  question: t(
+    `What does *${row.abbreviation}* stand for${row.where}?`,
+    `${row.whereZh}，*${row.abbreviation}* 代表什么？`.replace(/^，/, ""),
+  ),
   shown: "",
   right: row.word,
   wrong: row.words,

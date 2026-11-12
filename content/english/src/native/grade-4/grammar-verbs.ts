@@ -4,6 +4,7 @@
 
 import { type TopicDef, t } from "@ga/content";
 import { point, type TypedItem, typedGenerator } from "@ga/subject-english";
+import { everyPair } from "../../levels/words.ts";
 import { capital, fields, fill, type Item, itemGenerator, nameKind } from "./kit.ts";
 import { after } from "./prior.ts";
 
@@ -22,6 +23,14 @@ const helperSubjects: readonly Subject[] = [
   { words: "my sister", zh: "我姐姐", plural: false },
   { words: "the two hikers", zh: "两个徒步者", plural: true },
   { words: "our teacher", zh: "我们的老师", plural: false },
+  { words: "the pilot", zh: "飞行员", plural: false },
+  { words: "the villagers", zh: "村民们", plural: true },
+  { words: "my uncle", zh: "我叔叔", plural: false },
+  { words: "the young students", zh: "年轻的学生们", plural: true },
+  { words: "the reporter", zh: "记者", plural: false },
+  { words: "our neighbors", zh: "我们的邻居们", plural: true },
+  { words: "the photographer", zh: "摄影师", plural: false },
+  { words: "the twins", zh: "双胞胎", plural: true },
 ];
 
 /** HelperFrame is a sentence with a helping verb: its forms for one and for many, wrong forms, and why. */
@@ -213,6 +222,16 @@ const desertNouns: readonly Noun[] = [
   { words: "some date palms", plural: true },
   { words: "a herd of goats", plural: false },
   { words: "dozens of footprints", plural: true },
+  { words: "a lonely fox", plural: false },
+  { words: "four tired travelers", plural: true },
+  { words: "a sandy path", plural: false },
+  { words: "several big rocks", plural: true },
+  { words: "a small market", plural: false },
+  { words: "two water jars", plural: true },
+  { words: "a boy with a kite", plural: false },
+  { words: "lots of dry bushes", plural: true },
+  { words: "a cart full of melons", plural: false },
+  { words: "five striped tents", plural: true },
 ];
 
 /** ThereFrame is a sentence beginning with there or here, with its place and its time. */
@@ -229,17 +248,17 @@ const thereFrames: readonly ThereFrame[] = [
   { text: "Long ago there ___ {N} beside the old desert road.", past: true, place: "the old desert road", opener: "there" },
   { text: "Here ___ {N} in the photograph of the dunes.", past: false, place: "the photograph of the dunes", opener: "Here" },
   { text: "Yesterday there ___ {N} at the edge of the tent camp.", past: true, place: "the edge of the tent camp", opener: "there" },
+  { text: "Today there ___ {N} next to the market tent.", past: false, place: "the market tent", opener: "there" },
+  { text: "Here ___ {N} in the drawing of the desert.", past: false, place: "the drawing of the desert", opener: "Here" },
 ];
 
-const thereRows = thereFrames.flatMap((frame, f) =>
-  desertNouns
-    .filter((_, n) => (n + f) % 4 !== 3)
-    .map((noun) => {
-      const right = frame.past ? (noun.plural ? "were" : "was") : noun.plural ? "are" : "is";
-      const number = frame.past ? (noun.plural ? "was" : "were") : noun.plural ? "is" : "are";
-      const time = frame.past ? (noun.plural ? "are" : "is") : noun.plural ? "were" : "was";
-      return { frame, noun, right, number, time, shown: frame.text.replace("{N}", noun.words) };
-    }),
+const thereRows = thereFrames.flatMap((frame) =>
+  desertNouns.map((noun) => {
+    const right = frame.past ? (noun.plural ? "were" : "was") : noun.plural ? "are" : "is";
+    const number = frame.past ? (noun.plural ? "was" : "were") : noun.plural ? "is" : "are";
+    const time = frame.past ? (noun.plural ? "are" : "is") : noun.plural ? "were" : "was";
+    return { frame, noun, right, number, time, shown: frame.text.replace("{N}", noun.words) };
+  }),
 );
 
 /** thereSubjectBank asks for the real subject of a sentence that begins with there or here. */
@@ -312,7 +331,7 @@ const compoundKinds = {
   },
 } as const;
 
-const compoundLines = `
+const compoundHand = `
   The heart and the blood vessels carry blood around the body.|a compound subject
   The stomach mixes food and breaks it down.|a compound predicate
   The brain sends messages, and the nerves carry them.|two complete sentences joined
@@ -346,6 +365,49 @@ const compoundLines = `
   My grandmother and my uncle walk every morning.|a compound subject
   The swimmer took a deep breath and dove under the water.|a compound predicate
 `;
+
+/** compoundPeople take turns as the subjects of the compound frames. */
+const compoundPeople = [
+  "My aunt",
+  "The farmer",
+  "Our teacher",
+  "The pilot",
+  "My cousin",
+  "The mayor",
+  "Grandpa",
+  "The coach",
+  "The baker",
+  "Our neighbor",
+] as const;
+/** compoundActs are a predicate for one, for more than one, and with *-ing*. */
+const compoundActs = [
+  ["waters the garden", "water the garden", "watering the garden"],
+  ["reads the news", "read the news", "reading the news"],
+  ["bakes bread on Sundays", "bake bread on Sundays", "baking bread on Sundays"],
+  ["walks the dog", "walk the dog", "walking the dog"],
+  ["sings in the choir", "sing in the choir", "singing in the choir"],
+  ["fixes old bikes", "fix old bikes", "fixing old bikes"],
+] as const;
+/** lowerStart lowers the first letter of a subject that begins with *The*, *Our* or *My*. */
+const lowerStart = (words: string) => (/^(The|Our|My) /.test(words) ? words.charAt(0).toLowerCase() + words.slice(1) : words);
+const compoundPairs = everyPair(compoundPeople, compoundActs).map(([who, act], k) => {
+  const other = lowerStart(compoundPeople[(compoundPeople.indexOf(who) + 3) % compoundPeople.length]!);
+  const next = compoundActs[(compoundActs.indexOf(act) + 1) % compoundActs.length]!;
+  return { who, act, other, next, k };
+});
+const joiners = ["and", "but", "and"] as const;
+/** compoundLines are the hand lines and two lines from each pair of a person and a predicate. */
+const compoundLines = `${compoundHand}\n${compoundPairs
+  .flatMap(({ who, act, other, next, k }) =>
+    [k, k + 1].map((j) =>
+      j % 3 === 0
+        ? `${who} and ${other} ${act[1]}.|a compound subject`
+        : j % 3 === 1
+          ? `${who} ${act[0]} and ${next[0]}.|a compound predicate`
+          : `${who} ${act[0]}, ${joiners[k % 3]} ${other} ${next[0]}.|two complete sentences joined`,
+    ),
+  )
+  .join("\n")}`;
 
 /** CombineCore is two sentences that share a predicate or a subject, combined into one. */
 const combineLines = `
@@ -381,7 +443,14 @@ const combineLines = `
   Our hearts beat faster. Our faces turned red.|Our hearts beat faster, and our faces turned red.|Our hearts beat faster and our faces turning red.|Our hearts and faces beat faster and turned red.|j
 `;
 
-const combineBank = fields(combineLines).map(([shown, right, agree, garble, kind]): Item => {
+const combineCross = compoundPairs
+  .flatMap(({ who, act, other, next }) => [
+    `${who} ${act[0]}. ${capital(other)} ${act[0]}.|${who} and ${other} ${act[1]}.|${who} and ${other} ${act[0]}.|${who} ${act[0]} and ${other}.|s`,
+    `${who} ${act[0]}. ${who} ${next[0]}.|${who} ${act[0]} and ${next[0]}.|${who} ${act[0]} and ${next[2]}.|${who} ${act[0]} and ${lowerStart(who)}.|p`,
+  ])
+  .join("\n");
+
+const combineBank = fields(`${combineLines}\n${combineCross}`).map(([shown, right, agree, garble, kind]): Item => {
   if (!shown || !right || !agree || !garble || !kind) throw new Error(`a combine line needs five fields: ${shown}`);
   const subject = kind === "s";
   const joined = kind === "j";
@@ -484,11 +553,58 @@ const allFrames = [
   "Of everyone in the class, Leo saved energy ___.",
 ];
 
-const adverbRows = adverbs.flatMap((a, i) => {
-  const two = { a, frame: twoFrames[i % 3] as string, many: false };
-  const all = { a, frame: allFrames[(i + 1) % 3] as string, many: true };
-  return [two, all];
-});
+/** adverbVerbs are four actions that each adverb can describe. */
+const adverbVerbs: Readonly<Record<string, readonly string[]>> = {
+  fast: ["ran", "swam", "typed", "pedaled"],
+  hard: ["worked", "practiced", "studied", "pushed"],
+  high: ["jumped", "climbed", "threw the ball", "kicked the ball"],
+  early: ["woke up", "arrived", "left home", "finished lunch"],
+  late: ["stayed up", "arrived", "finished the race", "went to bed"],
+  quietly: ["spoke", "walked", "read", "closed the door"],
+  brightly: ["smiled", "painted the fence", "dressed", "decorated the room"],
+  carefully: ["wrote", "checked the answers", "carried the eggs", "cut the paper"],
+  slowly: ["walked", "ate", "read the story", "climbed the stairs"],
+  loudly: ["sang", "laughed", "cheered", "clapped"],
+  clearly: ["spoke", "explained the rules", "wrote the answers", "sang the words"],
+  well: ["played", "sang", "drew", "danced"],
+  badly: ["played", "sang", "slept", "behaved"],
+  smoothly: ["skated", "danced", "rode the bike", "read aloud"],
+  soon: ["arrived", "answered", "finished the puzzle", "replied"],
+  gently: ["patted the puppy", "held the baby bird", "closed the door", "spoke"],
+};
+/** adverbPairs compare two people; adverbGroups compare one person with a group. */
+const adverbPairs = [
+  ["Mia", "her brother"],
+  ["Leo", "his friends"],
+  ["Our team", "the other team"],
+  ["Grandpa", "my aunt"],
+] as const;
+const adverbGroups = [
+  ["Ana", "children"],
+  ["Sam", "players"],
+  ["Kofi", "students"],
+  ["Lena", "cousins"],
+] as const;
+/** adverbCross puts each adverb into sentences about people that compare two and that compare more. */
+const adverbCross = adverbs.flatMap((a) =>
+  (adverbVerbs[a.plain] ?? []).flatMap((verb, j) => {
+    const [one, two] = adverbPairs[j % adverbPairs.length]!;
+    const [name, group] = adverbGroups[(j + 1) % adverbGroups.length]!;
+    return [
+      { a, frame: `${one} ${verb} ___ than ${two}.`, many: false },
+      { a, frame: `Of all the ${group}, ${name} ${verb} ___.`, many: true },
+    ];
+  }),
+);
+
+const adverbRows = [
+  ...adverbs.flatMap((a, i) => {
+    const two = { a, frame: twoFrames[i % 3] as string, many: false };
+    const all = { a, frame: allFrames[(i + 1) % 3] as string, many: true };
+    return [two, all];
+  }),
+  ...adverbCross,
+];
 
 /** adverbChoiceBank asks for the form of an adverb that compares two or more. */
 const adverbChoiceBank: readonly Item[] = adverbRows.map(({ a, frame, many }) => {
@@ -518,34 +634,43 @@ const adverbChoiceBank: readonly Item[] = adverbRows.map(({ a, frame, many }) =>
 });
 
 /** adverbTypedBank asks to type the form of an adverb in other sentences. */
-const adverbTypedBank: readonly TypedItem[] = adverbs.flatMap((a, i) => {
-  const twoShown = [
-    "Grandpa drives ___ than my aunt does.",
-    "The second singer sang ___ than the first.",
-    "The new washing machine works ___ than the old one.",
-  ][i % 3] as string;
-  const allShown = [
-    "Of all the runners, Ana finished ___.",
-    "Of the three bells, the big one rang ___.",
-    "Of everyone on the team, Sam worked ___.",
-  ][(i + 2) % 3] as string;
-  return [
-    {
-      shown: twoShown,
-      accepted: [a.more],
-      canonical: a.more,
-      wrong: [a.most, a.wrongMore],
-      instruction: t(`Use the adverb *${a.plain}*.`, `使用副词 *${a.plain}*。`),
-    },
-    {
-      shown: allShown,
-      accepted: [a.most],
-      canonical: a.most,
-      wrong: [a.more, a.wrongMost],
-      instruction: t(`Use the adverb *${a.plain}*.`, `使用副词 *${a.plain}*。`),
-    },
-  ];
-});
+const adverbTypedBank: readonly TypedItem[] = [
+  ...adverbCross.map(({ a, frame, many }) => ({
+    shown: frame,
+    accepted: [many ? a.most : a.more],
+    canonical: many ? a.most : a.more,
+    wrong: many ? [a.more, a.wrongMost] : [a.most, a.wrongMore],
+    instruction: t(`Use the adverb *${a.plain}*.`, `使用副词 *${a.plain}*。`),
+  })),
+  ...adverbs.flatMap((a, i) => {
+    const twoShown = [
+      "Grandpa drives ___ than my aunt does.",
+      "The second singer sang ___ than the first.",
+      "The new washing machine works ___ than the old one.",
+    ][i % 3] as string;
+    const allShown = [
+      "Of all the runners, Ana finished ___.",
+      "Of the three bells, the big one rang ___.",
+      "Of everyone on the team, Sam worked ___.",
+    ][(i + 2) % 3] as string;
+    return [
+      {
+        shown: twoShown,
+        accepted: [a.more],
+        canonical: a.more,
+        wrong: [a.most, a.wrongMore],
+        instruction: t(`Use the adverb *${a.plain}*.`, `使用副词 *${a.plain}*。`),
+      },
+      {
+        shown: allShown,
+        accepted: [a.most],
+        canonical: a.most,
+        wrong: [a.more, a.wrongMost],
+        instruction: t(`Use the adverb *${a.plain}*.`, `使用副词 *${a.plain}*。`),
+      },
+    ];
+  }),
+];
 
 const adverbOf = (form: string): Adverb | undefined => adverbs.find((a) => a.more === form || a.most === form);
 
@@ -620,6 +745,54 @@ const pastLines = `
   The old dog ___ on the porch all day.|lay|laid|layed|lie: rest, past lay
   The scientist ___ the fossils in a row.|laid|lay|layed|lay: put, past laid
 `;
+
+/** pairThings are things to put; pairResters are people and animals that rest; pairPeople do the past actions. */
+const pairThings = ["the plates", "the map", "the blanket", "the tools", "the cards", "the towels"] as const;
+const pairResters = ["the puppy", "the baby", "Grandpa", "the tired hikers", "my cat", "the twins"] as const;
+const pairPeople = ["Grandpa", "the twins", "my cousin", "the teacher", "Aunt Rosa", "the tired hikers"] as const;
+/** pairNowLines are made from frames that need the plain verb. */
+const pairNowLines = [
+  ...everyPair(pairThings, [
+    "Please ___ {o} on the table.",
+    "Will you ___ {o} by the door?",
+    "Remember to ___ {o} on the bench.",
+    "Don't ___ {o} on the wet floor.",
+  ]).flatMap(([o, frame]) => [
+    `${frame.replace("{o}", o)}|lay|lie|laid|lay: put, it has an object`,
+    `${frame.replace("{o}", o).replace("on the table", "beside the bowls").replace("by the door", "near the sink").replace("on the bench", "on the shelf").replace("on the wet floor", "on the stove")}|set|sit|setting|set: put, it has an object`,
+  ]),
+  ...everyPair(pairResters, [
+    "{s} wants to ___ in the shade.",
+    "Let {s} ___ down for a rest.",
+    "{s} will ___ on the soft rug.",
+    "It is time for {s} to ___ down.",
+  ]).map(([who, frame]) => `${capital(frame.replace("{s}", who))}|lie|lay|lying|lie: rest, no object`),
+  ...everyPair(pairResters, [
+    "{s} wants to ___ on the step.",
+    "Let {s} ___ by the window.",
+    "{s} will ___ in the front row.",
+    "It is time for {s} to ___ still.",
+  ]).map(([who, frame]) => `${capital(frame.replace("{s}", who))}|sit|set|sitting|sit: rest in a seat, no object`),
+].join("\n");
+/** pairPastLines are made from frames about the past. */
+const pairPastLines = [
+  ...everyPair(pairPeople, [
+    "Yesterday {s} ___ in the shade for an hour.",
+    "After lunch {s} ___ on the soft rug.",
+    "Last night {s} ___ awake for a long time.",
+  ]).map(([who, frame]) => `${frame.replace("{s}", who)}|lay|laid|lied|lie: rest, past lay`),
+  ...everyPair(pairPeople, [
+    "Yesterday {s} ___ on the bench by the pond.",
+    "At the show {s} ___ in the front row.",
+    "After the game {s} ___ on the grass.",
+  ]).map(([who, frame]) => `${frame.replace("{s}", who)}|sat|set|sitted|sit: rest in a seat, past sat`),
+  ...everyPair(pairPeople, pairThings).map(
+    ([who, o], k) => `${k % 2 === 0 ? "Yesterday" : "Last night"} ${who} ___ ${o} on the shelf.|laid|lay|layed|lay: put, past laid`,
+  ),
+  ...everyPair(pairPeople, pairThings).map(
+    ([who, o], k) => `${k % 2 === 0 ? "This morning" : "Before dinner"} ${who} ___ ${o} by the door.|set|sat|setted|set: put, past set`,
+  ),
+].join("\n");
 
 /** pairBank reads lines of a verb pair: the sentence, the right verb, the partner, another form and the rule. */
 const pairBank = (lines: string, past: boolean): Item[] =>
@@ -821,7 +994,7 @@ export const verbTopics4: readonly TopicDef[] = [
           "Each pair has a verb for something the subject does by itself and a verb for doing it to something else.\n\n- *lie* means to rest flat: *The dog likes to lie in the sun.* *lay* means to put something down: *Lay the books on the table.*\n- *sit* means to rest in a seat: *Sit next to me.* *set* means to put something somewhere: *Set the plates on the table.*\n- *rise* means to go up by itself: *The sun will rise.* *raise* means to lift something: *Raise your hand.*\n\nIf you can ask *what?* after the verb, use *lay, set* or *raise*.",
           "每对动词中，一个表示主语自己的动作，另一个表示对别的东西做这个动作。\n\n- *lie* 意思是躺：*The dog likes to lie in the sun.* *lay* 意思是放下某物：*Lay the books on the table.*\n- *sit* 意思是坐：*Sit next to me.* *set* 意思是把某物放在某处：*Set the plates on the table.*\n- *rise* 意思是自己升起：*The sun will rise.* *raise* 意思是举起某物：*Raise your hand.*\n\n如果动词后面能问“什么？”，就用 *lay、set* 或 *raise*。",
         ),
-        itemGenerator(pairBank(pairLines, false)),
+        itemGenerator(pairBank(`${pairLines}\n${pairNowLines}`, false)),
       ),
       point(
         "choosing-the-past-form",
@@ -830,7 +1003,7 @@ export const verbTopics4: readonly TopicDef[] = [
           "The past forms are the hardest part, because one of them looks like the other verb: the past of *lie* (rest) is *lay*, and the past of *lay* (put) is *laid*.\n\n- *lie, lay*: *Yesterday I lay down.* — *lay, laid*: *She laid the books on the shelf.*\n- *sit, sat*: *We sat in the front row.* — *set, set*: *She set the table.*\n- *rise, rose*: *The sun rose at six.* — *raise, raised*: *They raised the flag.*",
           "过去式最难，因为其中一个看起来像另一个动词：*lie*（躺）的过去式是 *lay*，*lay*（放）的过去式是 *laid*。\n\n- *lie, lay*：*Yesterday I lay down.* —— *lay, laid*：*She laid the books on the shelf.*\n- *sit, sat*：*We sat in the front row.* —— *set, set*：*She set the table.*\n- *rise, rose*：*The sun rose at six.* —— *raise, raised*：*They raised the flag.*",
         ),
-        itemGenerator(pairBank(pastLines, true)),
+        itemGenerator(pairBank(`${pastLines}\n${pairPastLines}`, true)),
       ),
     ],
   },
