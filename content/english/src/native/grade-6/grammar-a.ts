@@ -2,7 +2,485 @@
 // vague pronouns, agreement across a phrase, numbers, and shifts in pronoun number.
 
 import type { TopicDef } from "@ga/content";
+import { everyPair } from "../../levels/words.ts";
 import { choose, type Label, label, topic } from "./kit.ts";
+
+// Crossed items: people, things and actions multiply the lines below into a hundred items or more for each bank.
+
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+const join = (lines: readonly string[]) => lines.join("\n");
+
+/** askActs are what someone did; askTimes end a question about it. */
+const askActs = [
+  "cleaned the kitchen",
+  "took my pencil",
+  "fed the goldfish",
+  "locked the back door",
+  "drew this map",
+  "moved my chair",
+  "ate the last apple",
+  "turned off the lights",
+  "found the missing key",
+  "wrote on the board",
+  "watered the plants",
+  "opened the window",
+] as const;
+const askTimes = ["yesterday", "this morning", "after school"] as const;
+/** askPeople do the action in a question with whom; askDeeds take whom as their object. */
+const askPeople = ["you", "Sam", "the coach", "your sister", "the class", "Grandma"] as const;
+const askDeeds = [
+  "invite to the picnic",
+  "see at the park",
+  "call last night",
+  "help with the project",
+  "thank for the gift",
+  "meet at the station",
+  "choose for the team",
+  "visit in the hospital",
+  "follow into the shop",
+  "warn about the storm",
+] as const;
+const askOwned = ["umbrella", "lunch box", "scarf", "phone", "bicycle", "notebook", "cap", "wallet", "drawing", "glove"] as const;
+const askPlaces = ["is on the bench", "is left in the hall", "is under the table"] as const;
+const whoQuestions = join([
+  ...everyPair(askActs, askTimes).map(([act, time]) => `___ ${act} ${time}?|who`),
+  ...everyPair(askPeople, askDeeds).map(([who, deed]) => `___ did ${who} ${deed}?|whom`),
+  ...everyPair(askOwned, askPlaces).map(([thing, place]) => `___ ${thing} ${place}?|whose`),
+]);
+
+/** clausePeople are described by clauses with who, whom and whose. */
+const clausePeople = ["girl", "man", "teacher", "nurse", "boy", "woman", "pilot", "coach", "baker", "farmer"] as const;
+const clauseDoes = ["fixed our sink", "won the prize", "drove the bus", "found my wallet", "painted the mural"] as const;
+const clauseDone = ["we met", "you invited", "the class thanked", "I called", "everyone admired"] as const;
+const clauseOwns = ["dog barked all night", "car blocked the road", "son is in my class"] as const;
+const clauseEnds = ["lives on our street", "smiled at us", "is my aunt's friend", "moved here last year", "waved goodbye"] as const;
+const clauseEnd = (k: number) => clauseEnds[k % clauseEnds.length] ?? "smiled at us";
+const whoClauses = join([
+  ...everyPair(clausePeople, clauseDoes).map(([who, act], k) => `The ${who} ___ ${act} ${clauseEnd(k)}.|who`),
+  ...everyPair(clausePeople, clauseDone).map(([who, act], k) => `The ${who} ___ ${act} ${clauseEnd(k + 2)}.|whom`),
+  ...everyPair(clausePeople, clauseOwns).map(([who, act], k) => `The ${who} ___ ${act} ${clauseEnd(k + 1)}.|whose`),
+]);
+
+/** relativeNames and relativeThings take clauses of extra information; relativeKept take clauses that tell which one. */
+const relativeNames = ["My aunt", "Mr. Ito", "Our coach", "Dr. Patel", "My grandmother", "Ms. Rivera", "Uncle Ravi", "The mayor"] as const;
+const relativeAbout = ["lives in Lima", "grew up on a farm", "speaks three languages", "loves jazz", "was born in Kenya"] as const;
+const relativeThings = [
+  "The old bridge",
+  "Our school",
+  "The river",
+  "My bike",
+  "The museum",
+  "The town hall",
+  "The lake",
+  "The park",
+] as const;
+const relativeFacts = [
+  "was built in 1900",
+  "is very old",
+  "is near my house",
+  "was repaired last year",
+  "is popular with tourists",
+] as const;
+const relativeKept = ["book", "map", "song", "cake", "game", "film", "coat", "photo"] as const;
+const relativeChosen = ["you lent me", "we found", "I wanted", "she made", "they chose"] as const;
+const relativeEnds = ["is on the table", "was perfect", "is my favorite", "got lost", "was a surprise"] as const;
+const personEnds = ["visited us last week", "gave a short speech", "baked us a pie", "told a funny story"] as const;
+const thingEnds = ["looks lovely in spring", "was in the news", "is closed today", "needs a new sign"] as const;
+const relativeLines = join([
+  ...everyPair(relativeNames, relativeAbout).map(
+    ([who, about], k) => `${who}, ___ ${about}, ${personEnds[k % personEnds.length]}.|who|which|that`,
+  ),
+  ...everyPair(relativeThings, relativeFacts).map(
+    ([what, fact], k) => `${what}, ___ ${fact}, ${thingEnds[k % thingEnds.length]}.|which|who|that`,
+  ),
+  ...everyPair(relativeKept, relativeChosen).map(
+    ([what, chosen], k) => `The ${what} ___ ${chosen} ${relativeEnds[k % relativeEnds.length]}.|that|who|whose`,
+  ),
+]);
+
+/** whoseThings and whoseGoings make questions with whose and who's. */
+const whoseThings = [
+  "jacket",
+  "backpack",
+  "pencil case",
+  "kite",
+  "water bottle",
+  "basketball",
+  "hat",
+  "sweater",
+  "lunch",
+  "ruler",
+] as const;
+const whoseWhere = ["on the floor", "in the car", "by the door"] as const;
+const goings = [
+  "going to the park",
+  "bringing snacks",
+  "coming to the concert",
+  "reading the poem aloud",
+  "taking the bus home",
+  "making the posters",
+  "playing goalie",
+  "joining the club",
+  "leading the hike",
+  "cooking dinner",
+] as const;
+const goingTimes = ["today", "after lunch", "this weekend"] as const;
+const whoseOwned = ["dog barks at night", "sister sings in the choir", "garden is full of roses"] as const;
+const whoDid = ["helped us", "fixed the swing"] as const;
+const whoseLines = join([
+  ...everyPair(whoseThings, whoseWhere).map(([thing, where]) => `___ ${thing} is ${where}?|whose|who's|who`),
+  ...everyPair(goings, goingTimes).map(([going, time]) => `___ ${going} ${time}?|who's|whose|who`),
+  ...everyPair(clausePeople, whoseOwned).map(([who, owned], k) => `The ${who} ___ ${owned} ${clauseEnd(k)}.|whose|who's|who`),
+  ...everyPair(clausePeople, whoDid).map(([who, did], k) => `The ${who} ___ ${did} ${clauseEnd(k + 3)}.|who|who's|whose`),
+]);
+
+/** apposed are a name and words that rename it; apposedActs end their sentences. */
+const apposed = [
+  ["Mr. Ruiz", "our neighbor"],
+  ["Ms. Chen", "the librarian"],
+  ["Dr. Oduya", "a dentist"],
+  ["Coach Hall", "a former runner"],
+  ["Grandma Rose", "a retired teacher"],
+  ["Mr. Brooks", "the janitor"],
+  ["Aunt Lila", "a pilot"],
+  ["Ms. Novak", "our principal"],
+] as const;
+const apposedActs = ["waved to us", "fixed the clock", "told a funny story", "planted roses", "laughed loudly", "found my keys"] as const;
+const keptThings = ["cake", "kite", "bike", "song", "jacket", "photo", "map", "book"] as const;
+const keptClauses = ["we bought", "I made", "she found", "you chose"] as const;
+const keptEnds = ["was perfect", "is on the shelf", "got wet in the rain"] as const;
+const endPlaces = ["Lisbon", "Oslo", "Cairo", "Lima", "Hanoi", "Dublin"] as const;
+const endFacts = ["is a capital city", "was busy in summer", "has narrow old streets", "sits beside the water"] as const;
+const apposedCross = everyPair(apposed, apposedActs);
+const keptCross = everyPair(keptThings, keptClauses).map(
+  ([thing, clause], k) => [thing, clause, keptEnds[k % keptEnds.length] ?? ""] as const,
+);
+const endCross = everyPair(endPlaces, endFacts);
+const commaPlaces = join([
+  ...apposedCross.map(
+    ([[name, words], act]) => `extra facts about ${name}|${name}, ${words}, ${act}.|${name} ${words}, ${act}.|${name}, ${words} ${act}.`,
+  ),
+  ...keptCross.map(
+    ([thing, clause, end]) =>
+      `a clause that tells which ${thing}|The ${thing} that ${clause} ${end}.|The ${thing}, that ${clause}, ${end}.|The ${thing} that ${clause}, ${end}.`,
+  ),
+  ...endCross.map(
+    ([place, fact]) =>
+      `extra facts at the end|We visited ${place}, which ${fact}.|We visited ${place} which ${fact}.|We visited, ${place} which ${fact}.`,
+  ),
+]);
+const commaKinds = join([
+  ...apposedCross.map(([[name, words], act]) => `${name} *${words}* ${act}.|a pair of commas`),
+  ...keptCross.map(([thing, clause, end]) => `The ${thing} *that ${clause}* ${end}.|no commas`),
+  ...endCross.map(([place, fact]) => `We visited ${place} *which ${fact}*.|one comma before it`),
+]);
+
+/** selfPeople are a subject and its -self pronoun, with a nonstandard form and a form that does not match. */
+const selfPeople = [
+  ["The chef", "himself", "hisself", "themselves"],
+  ["The queen", "herself", "herselves", "himself"],
+  ["The players", "themselves", "theirselves", "himself"],
+  ["We", "ourselves", "ourself", "myself"],
+  ["I", "myself", "meself", "yourself"],
+  ["The mayor", "herself", "herselves", "itself"],
+  ["Our teacher", "himself", "hisself", "ourselves"],
+  ["The twins", "themselves", "themself", "herself"],
+  ["You and Ana", "yourselves", "yourselfs", "themselves"],
+] as const;
+const selfActs = [
+  "painted the sign",
+  "baked the bread",
+  "carried the boxes",
+  "wrote the letter",
+  "built the shed",
+  "cleaned the room",
+] as const;
+const selfTurns = [
+  ["hurt", "on the ladder"],
+  ["taught", "to knit"],
+  ["dried", "with a towel"],
+  ["introduced", "to the class"],
+  ["saw", "in the mirror"],
+  ["reminded", "to stay calm"],
+] as const;
+const selfFriends = ["Leo", "Ana", "My cousin", "Mr. Diaz", "The coach", "Priya"] as const;
+const selfWrong = [
+  "and *myself* went to the fair",
+  "and *myself* won the race",
+  "and *myself* cooked lunch",
+  "and *myself* missed the bus",
+] as const;
+const selfKinds = join([
+  ...everyPair(selfPeople.slice(0, 8), selfActs).map(([[who, self], act]) => `${who} *${self}* ${act}.|intensive`),
+  ...everyPair(selfPeople.slice(0, 8), selfTurns).map(([[who, self], [verb, tail]]) => `${who} ${verb} *${self}* ${tail}.|reflexive`),
+  ...everyPair(selfFriends, selfWrong).map(([who, wrong]) => `${who} ${wrong}.|a mistake`),
+]);
+const selfJobs = [
+  "fixed the roof",
+  "painted the room",
+  "made the costumes",
+  "carried the boxes",
+  "planned the trip",
+  "cleaned the garage",
+  "solved the puzzle",
+  "built the fence",
+  "wrote the play",
+  "baked the pie",
+] as const;
+const selfForms = join(
+  everyPair(selfPeople, selfJobs).map(([[who, right, bad, other], job]) => `${who} ${job} ___.|${right}|${bad}|${other}`),
+);
+
+/** vagueGirls and vagueBoys are pairs of the same kind, so he or she could mean either; mixedPairs have one of each. */
+const samePairs = [
+  ["Ana", "Mia", "she", "her"],
+  ["Zoe", "Lily", "she", "her"],
+  ["Hana", "Rosa", "she", "her"],
+  ["Leo", "Sam", "he", "him"],
+  ["Omar", "Ben", "he", "him"],
+  ["Tariq", "Max", "he", "him"],
+] as const;
+const mixedPairs = [
+  ["Ana", "Leo", "she"],
+  ["Ben", "Zoe", "he"],
+  ["Hana", "Omar", "she"],
+  ["Max", "Rosa", "he"],
+  ["Lily", "Tariq", "she"],
+  ["Sam", "Mia", "he"],
+] as const;
+/** vagueNews are what one friend told another, with the same words in the first person. */
+const vagueNews = [
+  ["had won the prize", "have won the prize"],
+  ["needed a new bike", "need a new bike"],
+  ["was late for practice", "am late for practice"],
+  ["should apologize to the teacher", "should apologize to the teacher"],
+  ["would lead the team", "will lead the team"],
+] as const;
+/** vaguePlaces are a place where nobody named speaks, and who really speaks there. */
+const vaguePlaces = [
+  ["station", "the guard"],
+  ["airport", "the agents"],
+  ["bank", "the teller"],
+  ["museum", "the guide"],
+  ["clinic", "the nurse"],
+  ["library", "the librarian"],
+  ["mall", "the manager"],
+  ["stadium", "the announcer"],
+] as const;
+const vagueSaid = [
+  "said the doors would close early",
+  "told us to wait in line",
+  "gave out free maps",
+  "asked everyone to be quiet",
+] as const;
+const vagueAnimals = [
+  ["dog", "cat"],
+  ["fox", "hen"],
+  ["cat", "mouse"],
+  ["horse", "goat"],
+  ["puppy", "squirrel"],
+  ["goose", "duck"],
+] as const;
+const vagueFalls = ["knocked over a vase", "fell into the pond", "hid under the porch"] as const;
+const vagueSpot = join([
+  ...everyPair(samePairs, vagueNews).map(([[a, b, p], [news]]) => `${a} told ${b} that *${p}* ${news}.|two possible nouns`),
+  ...everyPair(mixedPairs, vagueNews).map(([[a, b, p], [news]]) => `${a} told ${b} that *${p}* ${news}.|clear`),
+  ...everyPair(vaguePlaces, vagueSaid).map(([[place], said]) => `At the ${place}, *they* ${said}.|no noun at all`),
+]);
+const vagueFix = join([
+  ...everyPair(samePairs, vagueNews).map(
+    ([[a, b, p, obj], [news, mine]]) =>
+      `${a} told ${b} that ${p} ${news}.|${a} told ${b}, "I ${mine}."|${a} told ${obj} that ${p} ${news}.|That ${p} ${news}, ${a} told ${b}.`,
+  ),
+  ...everyPair(vaguePlaces, vagueSaid).map(
+    ([[place, who], said]) =>
+      `At the ${place}, they ${said}.|At the ${place}, ${who} ${said}.|At the ${place}, it ${said}.|They ${said} at the ${place}.`,
+  ),
+  ...everyPair(vagueAnimals, vagueFalls).map(
+    ([[a, b], fell]) =>
+      `When the ${a} chased the ${b}, it ${fell}.|When the ${a} chased the ${b}, the ${b} ${fell}.|When the ${a} chased the ${b}, they ${fell}.|When it chased the ${b}, it ${fell}.`,
+  ),
+]);
+
+/** heldHeads are one container holding many things; heldVerbs are a singular verb, its plural and a third form, and the rest. */
+const heldHeads = ["The box", "A bag", "The basket", "The jar", "A crate", "The bowl"] as const;
+const heldThings = ["crayons", "apples", "marbles", "cookies", "shells"] as const;
+const heldVerbs = [
+  ["sits", "sit", "sitting", "by the door"],
+  ["costs", "cost", "costing", "five dollars"],
+  ["needs", "need", "needing", "a new label"],
+] as const;
+/** manyHeads are many things in one place; manyVerbs are a plural verb, its singular and a third form, and the rest. */
+const manyHeads = [
+  ["The keys to the car", "keys", "car"],
+  ["The pages of the book", "pages", "book"],
+  ["The cups in the cupboard", "cups", "cupboard"],
+  ["The lights in the hall", "lights", "hall"],
+  ["The windows of the house", "windows", "house"],
+  ["The shelves in the shop", "shelves", "shop"],
+] as const;
+const manyVerbs = [
+  ["need", "needs", "needing", "cleaning"],
+  ["look", "looks", "looking", "old"],
+  ["are", "is", "was being", "dusty"],
+] as const;
+const alongHeads = [
+  ["My aunt, along with my cousins,", "aunt", "cousins"],
+  ["The coach, together with the players,", "coach", "players"],
+  ["The teacher, as well as the students,", "teacher", "students"],
+  ["Grandpa, along with the twins,", "Grandpa", "twins"],
+  ["The captain, together with her crew,", "captain", "crew"],
+  ["The mayor, as well as her helpers,", "mayor", "helpers"],
+] as const;
+const alongVerbs = [
+  ["is", "are", "being", "coming to the game"],
+  ["plans", "plan", "planning", "to visit us"],
+] as const;
+const heldCross = everyPair(heldHeads, heldThings).flatMap(([head, things], k) =>
+  [0, 1].map((j) => [head, things, heldVerbs[(k + j) % heldVerbs.length] ?? heldVerbs[0]] as const),
+);
+const manyCross = everyPair(manyHeads, manyVerbs);
+const alongCross = everyPair(alongHeads, alongVerbs);
+const agreeVerbs = join([
+  ...heldCross.map(([head, things, [one, many, other, rest]]) => `${head} of ${things} ___ ${rest}.|${one}|${many}|${other}`),
+  ...manyCross.map(([[head], [many, one, other, rest]]) => `${head} ___ ${rest}.|${many}|${one}|${other}`),
+  ...alongCross.map(([[head], [one, many, other, rest]]) => `${head} ___ ${rest}.|${one}|${many}|${other}`),
+]);
+const agreeSubjects = join([
+  ...heldCross.map(
+    ([head, things, [one, , , rest]]) => `${head} of ${things} ${one} ${rest}.|${head.split(" ")[1]}|${things}|${rest.split(" ").at(-1)}`,
+  ),
+  ...manyCross.map(([[head, subject, other], [many, , , rest]]) => `${head} ${many} ${rest}.|${subject}|${other}|${rest}`),
+  ...alongCross.map(([[head, subject, other], [one, , , rest]]) => `${head} ${one} ${rest}.|${subject}|${other}|${rest.split(" ").at(-1)}`),
+]);
+
+/** tensWords and onesWords make compound numbers; numberPlaces count them. */
+const tensWords = ["twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"] as const;
+const onesWords = [
+  ["one", 1],
+  ["three", 3],
+  ["five", 5],
+  ["eight", 8],
+] as const;
+const numberPlaces = [
+  ["Our class collected", "cans"],
+  ["The bus has", "seats"],
+  ["The garden has", "rose bushes"],
+  ["The farm keeps", "sheep"],
+  ["The album holds", "photos"],
+  ["The shelf holds", "jars"],
+] as const;
+const teens = [
+  ["Twelve", 12],
+  ["Fifteen", 15],
+  ["Eighteen", 18],
+  ["Eleven", 11],
+  ["Thirteen", 13],
+  ["Nineteen", 19],
+  ["Seventeen", 17],
+  ["Fourteen", 14],
+] as const;
+const teenScenes = ["people came to the meeting", "birds sat on the wire", "cars waited in the lot", "boats left the harbor"] as const;
+const bigNumbers = [
+  ["2,350", "two thousand three hundred fifty"],
+  ["7,125", "seven thousand one hundred twenty-five"],
+  ["1,840", "one thousand eight hundred forty"],
+  ["3,600", "three thousand six hundred"],
+  ["9,275", "nine thousand two hundred seventy-five"],
+  ["5,430", "five thousand four hundred thirty"],
+  ["6,710", "six thousand seven hundred ten"],
+  ["8,960", "eight thousand nine hundred sixty"],
+] as const;
+const bigScenes = [
+  ["The library owns", "books"],
+  ["The stadium seats", "fans"],
+  ["The town has", "people"],
+  ["The museum shows", "objects"],
+] as const;
+const tensValue = (tens: string) => (tensWords.indexOf(tens as (typeof tensWords)[number]) + 2) * 10;
+const numberSpell = join([
+  ...everyPair(tensWords, onesWords).map(([tens, [ones, n]], k) => {
+    const [opening, things] = numberPlaces[k % numberPlaces.length] ?? numberPlaces[0];
+    return `${opening} ___ ${things}.|${tens}-${ones}|${tensValue(tens) + n}|${tens} ${ones}`;
+  }),
+  ...everyPair(teens, teenScenes).map(([[word, n], scene]) => `___ ${scene}.|${word}|${n}|${word.toLowerCase()}`),
+  ...everyPair(bigNumbers, bigScenes).map(
+    ([[figure, words], [opening, things]]) => `${opening} ___ ${things}.|${figure}|${words}|${words.replaceAll(" ", "-")}`,
+  ),
+]);
+const timeEvents = ["concert", "game", "show", "meeting", "class", "movie"] as const;
+const timeWords = ["seven thirty p.m.", "eight fifteen a.m.", "six forty-five p.m.", "ten twenty a.m."] as const;
+const measures = [
+  ["The trail is", "kilometers", "long"],
+  ["The box is", "centimeters", "wide"],
+  ["The pool is", "meters", "deep"],
+  ["The rope is", "meters", "long"],
+  ["The tower is", "meters", "tall"],
+] as const;
+const smallWords = ["four", "six", "nine", "twelve"] as const;
+const prices = ["The ticket costs", "The book costs", "Lunch costs", "The toy costs", "The map costs"] as const;
+const countThings = ["tickets", "apples", "pencils", "kites", "maps", "plates"] as const;
+const numberForm = join([
+  ...everyPair(timeEvents, timeWords).map(([event, time]) => `The ${event} starts at *${time}*.|in figures`),
+  ...everyPair(measures, smallWords).map(([[opening, unit, how], n]) => `${opening} *${n} ${unit}* ${how}.|in figures`),
+  ...everyPair(prices, smallWords).map(([opening, n]) => `${opening} *${n} dollars*.|in figures`),
+  ...everyPair(["three", "five", "seven", "nine"], countThings).map(([n, things]) => `We bought *${n}* ${things}.|spelled out`),
+  ...everyPair(tensWords, ["two", "six"]).map(
+    ([tens, ones], k) => `The class collected *${tens} ${ones}* ${countThings[k % countThings.length]}.|with a hyphen`,
+  ),
+]);
+
+/** groupsOne are singular groups and groupsMany plural people; groupDeeds and peopleDeeds have ___ for the pronoun. */
+const groupsOne = ["The company", "The team", "The club", "The school", "The band", "The town"] as const;
+const groupDeeds = [
+  "changed ___ name",
+  "celebrated ___ anniversary",
+  "opened ___ doors to visitors",
+  "posted ___ schedule online",
+  "painted ___ building",
+  "chose ___ leader",
+  "held ___ meeting",
+  "won ___ award",
+] as const;
+const groupsMany = ["The players", "The students", "The neighbors", "The teachers", "The scouts", "The workers"] as const;
+const peopleDeeds = [
+  "packed ___ bags",
+  "raised ___ hands",
+  "shared ___ lunch",
+  "finished ___ work",
+  "cleaned ___ desks",
+  "wore ___ coats",
+  "called ___ families",
+  "signed ___ names",
+] as const;
+const itStates = [
+  "too cold to swim today",
+  "time to go home",
+  "getting dark outside",
+  "raining again",
+  "almost noon",
+  "a long walk to the lake",
+] as const;
+const saying = ["", "I think ", "Mom says "] as const;
+const groupCross = everyPair(groupsOne, groupDeeds);
+const peopleCross = everyPair(groupsMany, peopleDeeds);
+const itsLines = join([
+  ...groupCross.map(([who, deed]) => `${who} ${deed}.|its`),
+  ...peopleCross.map(([who, deed]) => `${who} ${deed}.|their`),
+  ...everyPair(itStates, saying).map(([state, say]) => `${cap(`${say}___`)} ${state}.|it's`),
+]);
+const steadyLines = join([
+  ...groupCross.map(([who, deed]) => {
+    const thing = deed.split("___ ")[1]?.split(" ")[0] ?? "";
+    const many = `${who}s`.replace("companys", "companies");
+    return `${who.toLowerCase()} and its ${thing}|${who} ${deed.replace("___", "its")}.|${who} ${deed.replace("___", "their")}.|${many} ${deed.replace("___", "its")}.`;
+  }),
+  ...peopleCross.map(([who, deed]) => {
+    const thing = deed.split("___ ")[1]?.split(" ")[0] ?? "";
+    const one = who.replace(/s$/, "");
+    return `${who.toLowerCase()} and their ${thing}|${who} ${deed.replace("___", "their")}.|${who} ${deed.replace("___", "its")}.|${one} ${deed.replace("___", "their")}.`;
+  }),
+]);
 
 const whoLabels: Readonly<Record<string, Label>> = {
   who: {
@@ -43,6 +521,7 @@ const whoAndWhom = topic("grammar", {
       ],
       ["Which word completes the question?", "哪个词能补全这个问题？"],
       `
+${whoQuestions}
         ___ left the gate open?|who
         ___ did the coach choose as captain?|whom
         ___ bike is chained to the fence?|whose
@@ -85,6 +564,7 @@ const whoAndWhom = topic("grammar", {
       ],
       ["Which word completes the clause?", "哪个词能补全这个从句？"],
       `
+${whoClauses}
         The girl ___ won the spelling bee is in my class.|who
         The teacher ___ we visited lives on a farm.|whom
         The boy ___ dog ran away put up posters.|whose
@@ -176,6 +656,7 @@ const whoWhichThat = topic("grammar", {
       ],
       ["Which word begins the clause?", "哪个词引导这个从句？"],
       `
+${relativeLines}
         My grandfather, ___ grew up in Cairo, speaks four languages.|who|which|that
         The Nile, ___ flows north, is the longest river in Africa.|which|who|that
         The book ___ you lent me was exciting.|that|who|whose
@@ -218,6 +699,7 @@ const whoWhichThat = topic("grammar", {
       ],
       ["Which word completes the sentence?", "哪个词能补全句子？"],
       `
+${whoseLines}
         ___ jacket is this on the bench?|whose|who's|who
         ___ going to the game on Saturday?|who's|whose|who
         The boy ___ painting won first prize is shy.|whose|who's|who
@@ -308,6 +790,7 @@ const nonessentialCommas = topic("grammar", {
       ],
       ["Which sentence is punctuated correctly?", "哪个句子的标点正确？"],
       `
+${commaPlaces}
         extra facts about Mrs. Diaz|Mrs. Diaz, our coach, blew the whistle.|Mrs. Diaz our coach, blew the whistle.|Mrs. Diaz, our coach blew the whistle.
         extra facts about Paris|Paris, which is the capital of France, has many bridges.|Paris which is the capital of France, has many bridges.|Paris, which is the capital, of France has many bridges.
         a clause that tells which dog|The dog that bit me belongs to Sam.|The dog, that bit me, belongs to Sam.|The dog that bit me, belongs to Sam.
@@ -363,6 +846,7 @@ const nonessentialCommas = topic("grammar", {
       ],
       ["How should the words in italics be punctuated?", "斜体部分应该怎样加标点？"],
       `
+${commaKinds}
         My mother *a doctor* works at night.|a pair of commas
         The girl *who lives next door* has a parrot.|no commas
         We drove to Boston *which is three hours away*.|one comma before it
@@ -453,6 +937,7 @@ const intensivePronouns = topic("grammar", {
       ],
       ["How is the word in italics used?", "斜体词的用法是什么？"],
       `
+${selfKinds}
         The chef *himself* carried out the cake.|intensive
         Mia taught *herself* to juggle.|reflexive
         Please send the report to Mr. Lee or *myself*.|a mistake
@@ -495,6 +980,7 @@ const intensivePronouns = topic("grammar", {
       ],
       ["Which pronoun completes the sentence?", "哪个代词能补全句子？"],
       `
+${selfForms}
         The boys built the treehouse ___.|themselves|theirselves|himself
         Grandpa fixed the roof ___.|himself|hisself|themselves
         We ___ cooked the whole meal.|ourselves|ourself|myself
@@ -580,6 +1066,7 @@ const vaguePronouns = topic("grammar", {
       ],
       ["Is the pronoun in italics clear or vague?", "斜体代词指代清楚还是不清？"],
       `
+${vagueSpot}
         Leo called Sam after *he* got home.|two possible nouns
         In the newspaper *it* says the park will close.|no noun at all
         Maria lost her scarf, but *she* found it later.|clear
@@ -622,6 +1109,7 @@ const vaguePronouns = topic("grammar", {
       ],
       ["Which sentence fixes the vague pronoun?", "哪个句子改正了指代不清的代词？"],
       `
+${vagueFix}
         In the newspaper it says the park will close.|The newspaper says the park will close.|In the newspaper they say the park will close.|In it the newspaper says the park will close.
         Kim told her mother that she needed new shoes.|Kim told her mother, "I need new shoes."|Kim told her mother that she needed them.|Kim told her that she needed new shoes.
         At the zoo they let you feed the goats.|The zookeepers let visitors feed the goats.|At the zoo it lets you feed the goats.|They let you feed the goats at the zoo.
@@ -686,6 +1174,7 @@ const agreementBetween = topic("grammar", {
       ],
       ["Which verb completes the sentence?", "哪个动词能补全句子？"],
       `
+${agreeVerbs}
         The box of crayons ___ on the shelf.|is|are|were being
         The students in the back row ___ talking.|are|is|was being
         A bag of oranges ___ two dollars.|costs|cost|costing
@@ -738,6 +1227,7 @@ const agreementBetween = topic("grammar", {
       ],
       ["Which word is the subject of the verb?", "哪个词是动词的主语？"],
       `
+${agreeSubjects}
         The keys to the old car are missing.|keys|car|old
         A flock of geese flies over the lake.|flock|geese|lake
         The pictures on the wall need dusting.|pictures|wall|dusting
@@ -805,6 +1295,7 @@ const numbers = topic("grammar", {
       ],
       ["Which way of writing the number is correct?", "哪种写法正确？"],
       `
+${numberSpell}
         Our class has ___ students.|twenty-six|26|twenty six
         ___ people came to the meeting.|Fifteen|15|fifteen
         The library owns ___ books.|4,580|four thousand five hundred eighty|four-thousand-five-hundred-eighty
@@ -860,6 +1351,7 @@ const numbers = topic("grammar", {
       ],
       ["How should the number in italics be written?", "斜体的数应该怎么写？"],
       `
+${numberForm}
         The concert starts at *seven thirty p.m.*|in figures
         We bought *three* tickets.|spelled out
         My cousin was born on *July nine*.|in figures
@@ -945,6 +1437,7 @@ const pronounNumber = topic("grammar", {
       ],
       ["Which word completes the sentence?", "哪个词能补全句子？"],
       `
+${itsLines}
         The company moved ___ office to the city.|its
         The birds built ___ nests in the barn.|their
         ___ too cold to swim today.|it's
@@ -1009,6 +1502,7 @@ const pronounNumber = topic("grammar", {
       ],
       ["Which sentence keeps the pronoun number steady?", "哪个句子的代词保持了数的一致？"],
       `
+${steadyLines}
         a volcano and its pressure|A volcano erupts when its pressure builds.|A volcano erupts when their pressure builds.|A volcano erupts when they build pressure.
         bees and their stings|Bees use their stings to defend the hive.|Bees use its sting to defend the hive.|A bee uses their stings to defend the hive.
         the team and its coach|The team listened to its coach.|The team listened to their coach and it nodded.|The team listened to them coach.

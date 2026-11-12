@@ -2,7 +2,618 @@
 // capitals in titles.
 
 import type { TopicDef } from "@ga/content";
+import { everyPair } from "../../levels/words.ts";
 import { choose, type Label, label, topic } from "./kit.ts";
+
+// Crossed items: verbs, nouns, words and frames multiply the lines below into a hundred items or more for each bank.
+
+const join = (lines: readonly string[]) => lines.join("\n");
+const regular = (base: string) => (base.endsWith("e") ? `${base}d` : `${base}ed`);
+
+/** strongVerbs are a base, its simple past, its participle, words after the participle, and words after the past. */
+const strongVerbs = [
+  ["go", "went", "gone", "to the market", "to the beach"],
+  ["write", "wrote", "written", "a long letter", "a poem about the sea"],
+  ["swim", "swam", "swum", "across the pool", "in the river"],
+  ["ring", "rang", "rung", "the bell twice", "the doorbell"],
+  ["eat", "ate", "eaten", "all the grapes", "a huge breakfast"],
+  ["ride", "rode", "ridden", "the new bike", "a camel"],
+  ["freeze", "froze", "frozen", "the leftover soup", "the berries"],
+  ["choose", "chose", "chosen", "a name for the puppy", "a book from the shelf"],
+  ["fall", "fell", "fallen", "off the ladder", "on the ice"],
+  ["see", "saw", "seen", "that film twice", "a rainbow"],
+  ["break", "broke", "broken", "the school record", "a plate"],
+  ["blow", "blew", "blown", "out the candles", "up the balloons"],
+  ["drink", "drank", "drunk", "all the juice", "a glass of milk"],
+  ["fly", "flew", "flown", "a kite on the hill", "to Chicago"],
+  ["take", "took", "taken", "the dog for a walk", "a photo of the lake"],
+  ["sing", "sang", "sung", "that song before", "in the choir"],
+  ["throw", "threw", "thrown", "the ball over the fence", "a stone into the pond"],
+  ["speak", "spoke", "spoken", "to the principal", "at the assembly"],
+  ["draw", "drew", "drawn", "a map of the town", "a horse"],
+  ["forget", "forgot", "forgotten", "the password", "my umbrella"],
+  ["grow", "grew", "grown", "three inches", "tomatoes in the yard"],
+  ["hide", "hid", "hidden", "the presents", "behind the curtain"],
+  ["wear", "wore", "worn", "that coat all winter", "a red scarf"],
+  ["give", "gave", "given", "the speech", "the dog a bath"],
+  ["begin", "began", "begun", "the test", "a new book"],
+  ["shake", "shook", "shaken", "the rug outside", "hands with the mayor"],
+  ["bite", "bit", "bitten", "into the apple", "into a sour lemon"],
+  ["tear", "tore", "torn", "the paper", "my sleeve"],
+  ["steal", "stole", "stolen", "second base", "the ball from the striker"],
+  ["know", "knew", "known", "her since first grade", "the answer"],
+] as const;
+const perfectSubjects = ["She has", "We have", "They had", "I have"] as const;
+const pastSubjects = ["Yesterday we", "Last week my sister", "Last summer the boys"] as const;
+const participleLines = join(
+  everyPair(strongVerbs, perfectSubjects).map(
+    ([[base, past, part, after], who]) => `${who} ___ ${after}. (${base})|${part}|${past}|${regular(base)}`,
+  ),
+);
+const pastLines = join(
+  everyPair(strongVerbs, pastSubjects).map(
+    ([[base, past, part, , after], who]) => `${who} ___ ${after}. (${base})|${past}|${part}|${regular(base)}`,
+  ),
+);
+
+/** pluralOwners are plurals ending in s; oddOwners are plurals that do not, with their singulars. */
+const pluralOwners = [
+  ["students", "student"],
+  ["dogs", "dog"],
+  ["girls", "girl"],
+  ["teachers", "teacher"],
+  ["players", "player"],
+  ["birds", "bird"],
+  ["cats", "cat"],
+  ["horses", "horse"],
+  ["farmers", "farmer"],
+  ["nurses", "nurse"],
+] as const;
+const oddOwners = [
+  ["children", "child"],
+  ["women", "woman"],
+  ["men", "man"],
+  ["people", "person"],
+  ["mice", "mouse"],
+  ["geese", "goose"],
+] as const;
+const ownedFrames = [
+  "All the ___ coats were wet.",
+  "The ___ voices filled the room.",
+  "We followed the ___ footprints.",
+  "The ___ names were on the list.",
+  "The ___ food was in the shed.",
+] as const;
+const pluralOwnLines = join([
+  ...everyPair(pluralOwners, ownedFrames).map(([[many, one], frame]) => `${frame} (${many})|${many}'|${one}'s|${many}'s`),
+  ...everyPair(oddOwners, ownedFrames).map(([[many, one], frame]) => `${frame} (${many})|${many}'s|${many}'|${one}s'`),
+]);
+
+/** inLaws are compound owners; pairsOwning are two owners, owning one thing together or one each. */
+const inLaws = [
+  ["brother-in-law", "brother's-in-law", "brothers-in-law"],
+  ["sister-in-law", "sister's-in-law", "sisters-in-law"],
+  ["mother-in-law", "mother's-in-law", "mothers-in-law"],
+  ["father-in-law", "father's-in-law", "fathers-in-law"],
+] as const;
+const inLawThings = ["car", "garden", "house", "dog", "phone", "recipe"] as const;
+const pairsOwning = [
+  ["Mia", "Leo"],
+  ["Kim", "Raj"],
+  ["Ana", "Tom"],
+  ["Sara", "Ben"],
+  ["my aunt", "uncle"],
+  ["Mom", "Dad"],
+  ["Grandma", "Grandpa"],
+] as const;
+const sharedThings = ["shop", "boat", "garden", "cabin"] as const;
+const ownThings = ["bikes", "phones", "coats", "bags"] as const;
+const jointLines = join([
+  ...everyPair(inLaws, inLawThings).map(
+    ([[whole, split, many], thing]) =>
+      `the ${thing} that belongs to my ${whole}|my ${whole}'s ${thing}|my ${split} ${thing}|my ${many} ${thing}`,
+  ),
+  ...everyPair(pairsOwning, sharedThings).map(
+    ([[a, b], thing]) =>
+      `one ${thing} owned by ${a} and ${b} together|${a} and ${b}'s ${thing}|${a}'s and ${b}'s ${thing}|${a} and ${b}s' ${thing}`,
+  ),
+  ...everyPair(pairsOwning, ownThings).map(
+    ([[a, b], things]) =>
+      `two separate ${things}, one of ${a} and one of ${b}|${a}'s and ${b}'s ${things}|${a} and ${b}'s ${things}|${a}s' and ${b}s' ${things}`,
+  ),
+]);
+
+/** doubled spells a word with its suffix, doubling the last letter or not, and the two usual mistakes. */
+const doubled = (base: string, suffix: string, doubles: boolean) => {
+  const twice = `${base}${base.at(-1)}`;
+  const kept = doubles ? twice : base;
+  const other = doubles ? base : twice;
+  const bad = suffix === "ed" ? `${kept}d` : suffix === "ing" ? `${kept}in` : suffix === "er" ? `${kept}ar` : `${kept}ist`;
+  return `${base} + ${suffix}|${kept}${suffix}|${other}${suffix}|${bad}`;
+};
+const shortDouble = [
+  "hop",
+  "skip",
+  "nap",
+  "trim",
+  "chat",
+  "spin",
+  "drum",
+  "plug",
+  "step",
+  "trip",
+  "slip",
+  "wrap",
+  "beg",
+  "pat",
+  "tap",
+  "rub",
+  "nod",
+  "jog",
+  "grin",
+  "drag",
+  "hum",
+  "swap",
+  "tug",
+  "chop",
+] as const;
+const shortSingle = [
+  "wait",
+  "heat",
+  "cool",
+  "rest",
+  "fold",
+  "melt",
+  "look",
+  "boil",
+  "need",
+  "kick",
+  "pack",
+  "lift",
+  "hunt",
+  "paint",
+  "row",
+  "box",
+] as const;
+const shortDoubleLines = join([
+  ...shortDouble.flatMap((w) => [doubled(w, w === "spin" ? "er" : "ed", true), doubled(w, "ing", true)]),
+  ...shortSingle.flatMap((w) => [doubled(w, "ed", false), doubled(w, "ing", false)]),
+  ...["red", "fat", "flat", "dim", "slim"].flatMap((w) => [doubled(w, "er", true), doubled(w, "est", true)]),
+  ...["dark", "soft", "cold", "fast", "neat"].flatMap((w) => [doubled(w, "er", false), doubled(w, "est", false)]),
+]);
+const longDouble = [
+  "transfer",
+  "confer",
+  "deter",
+  "incur",
+  "recur",
+  "expel",
+  "propel",
+  "patrol",
+  "excel",
+  "outwit",
+  "repel",
+  "dispel",
+  "acquit",
+  "emit",
+  "remit",
+  "embed",
+  "unplug",
+  "unwrap",
+  "allot",
+  "befit",
+] as const;
+const longSingle = [
+  "edit",
+  "credit",
+  "orbit",
+  "inherit",
+  "exhibit",
+  "deposit",
+  "suffer",
+  "differ",
+  "gather",
+  "whisper",
+  "answer",
+  "order",
+  "wander",
+  "market",
+  "fasten",
+  "deepen",
+  "sharpen",
+  "lighten",
+  "frighten",
+  "threaten",
+] as const;
+const longDoubleLines = join([
+  ...longDouble.flatMap((w) => [doubled(w, "ed", true), doubled(w, "ing", true)]),
+  ...longSingle.flatMap((w) => [doubled(w, "ed", false), doubled(w, "ing", false)]),
+]);
+
+/** listKinds are a verb phrase, a count, a plural noun and six members of the kind. */
+const listKinds = [
+  ["The market sells", "three", "fruits", ["apples", "pears", "plums", "figs", "grapes", "limes"]],
+  ["Our club plays", "three", "games", ["chess", "checkers", "dominoes", "cards", "bingo", "charades"]],
+  ["We need", "three", "tools", ["a hammer", "a saw", "nails", "a drill", "glue", "a ruler"]],
+  ["The zoo has", "three", "big cats", ["lions", "tigers", "leopards", "jaguars", "cheetahs", "pumas"]],
+  ["Our school teaches", "three", "languages", ["Spanish", "French", "Chinese", "German", "Arabic", "Italian"]],
+  ["The garden grows", "three", "herbs", ["mint", "basil", "thyme", "sage", "parsley", "dill"]],
+  ["We visited", "three", "cities", ["Lima", "Cusco", "Quito", "Bogota", "Santiago", "La Paz"]],
+  ["The band uses", "three", "instruments", ["drums", "a guitar", "a piano", "a flute", "a violin", "a trumpet"]],
+] as const;
+const listCross = listKinds.flatMap(([verb, count, kind, members]) =>
+  [0, 2, 4].map((k) => {
+    const three = [members[k % 6], members[(k + 1) % 6], members[(k + 2) % 6]];
+    return { verb, count, kind, list: `${three[0]}, ${three[1]} and ${three[2]}` };
+  }),
+);
+/** reasons are someone's action and the reason for it. */
+const reasonActs = [
+  ["stayed inside", "it was pouring rain"],
+  ["left early", "the last bus was at six"],
+  ["skipped dessert", "the cake had nuts in it"],
+  ["took the stairs", "the elevator was broken"],
+  ["wore a coat", "the wind was icy"],
+  ["whispered", "the baby was asleep"],
+  ["ran home", "a storm was coming"],
+  ["called the vet", "the cat would not eat"],
+] as const;
+const reasonPeople = ["We", "My brother", "The girls", "Our teacher"] as const;
+const reasonCross = everyPair(reasonPeople, reasonActs);
+const colonJobs = join([
+  ...listCross.map(({ verb, count, kind, list }) => `${verb} ${count} ${kind}: ${list}.|a list`),
+  ...listKinds.flatMap(([, , kind, members]) =>
+    [1, 3, 5].map((k) => `My favorite ${kind} are: ${members[k % 6]}, ${members[(k + 1) % 6]} and ${members[(k + 2) % 6]}.|no colon`),
+  ),
+  ...reasonCross.map(([who, [act, reason]]) => `${who} ${act} for one reason: ${reason}.|an explanation`),
+]);
+const listMore = listKinds.flatMap(([verb, count, kind, members]) =>
+  [1, 3, 5].map((k) => ({ verb, count, kind, list: `${members[k % 6]}, ${members[(k + 1) % 6]} and ${members[(k + 2) % 6]}` })),
+);
+const colonPlaces = join([
+  ...[...listCross, ...listMore].map(
+    ({ verb, count, kind, list }) =>
+      `a list of ${kind}|${verb} ${count} ${kind}: ${list}.|${verb}: ${list}.|${verb} ${count}: ${kind} ${list}.`,
+  ),
+  ...reasonCross.map(
+    ([who, [act, reason]]) =>
+      `an explanation of a reason|${who} ${act} for one reason: ${reason}.|${who} ${act} for: one reason, ${reason}.|${who} ${act}: for one reason ${reason}.`,
+  ),
+]);
+
+/** nearPairs are two subjects, each with whether it is plural. */
+const nearPairs = [
+  ["the coach", false, "the players", true],
+  ["my sister", false, "my brothers", true],
+  ["the cat", false, "the dogs", true],
+  ["the teacher", false, "the students", true],
+  ["the twins", true, "their cousin", false],
+  ["the boys", true, "their father", false],
+  ["my parents", true, "my aunt", false],
+  ["the puppies", true, "the kitten", false],
+] as const;
+/** nearVerbs are a plural verb, its singular, a form that cannot be the main verb, and the words after it. */
+const nearVerbs = [
+  ["are", "is", "being", "ready"],
+  ["want", "wants", "wanting", "to go"],
+  ["know", "knows", "knowing", "the answer"],
+  ["have", "has", "having", "the tickets"],
+] as const;
+const nearLine = (first: string, second: string, plural: boolean, [many, one, other, rest]: (typeof nearVerbs)[number], k: number) => {
+  const [a, b] = k % 2 === 0 ? ["Either", "or"] : ["Neither", "nor"];
+  return `${a} ${first} ${b} ${second} ___ ${rest}.|${plural ? many : one}|${plural ? one : many}|${other}`;
+};
+const nearVerbLines = join([
+  ...everyPair(nearPairs, nearVerbs).flatMap(([[a, , b, bPlural], verb], k) => [
+    nearLine(a, b, bPlural, verb, k),
+    nearLine(a, b, bPlural, verb, k + 1),
+  ]),
+  ...everyPair(nearPairs, nearVerbs).map(([[a, aPlural, b], verb], k) => nearLine(b, a, aPlural, verb, k)),
+]);
+
+/** nearPeople are nouns with their pronoun of belonging; farPeople come first, with a different pronoun. */
+const nearPeople = [
+  ["Sam", "his", "the girls"],
+  ["Leo", "his", "Ana"],
+  ["Ana", "her", "the boys"],
+  ["Rosa", "her", "Omar"],
+  ["Mia", "her", "my cousins"],
+  ["Omar", "his", "Mia"],
+  ["the players", "their", "the coach"],
+  ["the students", "their", "Ms. Lee"],
+  ["my brothers", "their", "my sister"],
+  ["the twins", "their", "Leo"],
+] as const;
+const farPronouns: Readonly<Record<string, string>> = {
+  "the girls": "their",
+  Ana: "her",
+  "the boys": "their",
+  Omar: "his",
+  "my cousins": "their",
+  Mia: "her",
+  "the coach": "his",
+  "Ms. Lee": "her",
+  "my sister": "her",
+  Leo: "his",
+};
+const farPronoun = (far: string) => farPronouns[far] ?? "their";
+const peopleDeeds = ["remembered ___ ticket", "packed ___ lunch", "lost ___ jacket", "finished ___ homework"] as const;
+const nearAnimals = [
+  ["the cat", "its", "the puppies"],
+  ["the dog", "its", "the kittens"],
+  ["the kittens", "their", "the dog"],
+  ["the puppies", "their", "the cat"],
+] as const;
+const animalDeeds = ["finished ___ food", "left ___ toy in the yard", "knocked over ___ bowl"] as const;
+const nearPronounLines = join([
+  ...everyPair(nearPeople, peopleDeeds).flatMap(([[near, pronoun, far], deed]) =>
+    [
+      ["Either", "or"],
+      ["Neither", "nor"],
+    ].map(([a, b]) => `${a} ${far} ${b} ${near} ${deed}.|${pronoun}|${farPronoun(far)}|its`),
+  ),
+  ...everyPair(nearAnimals, animalDeeds).flatMap(([[near, pronoun, far], deed]) =>
+    [
+      ["Either", "or"],
+      ["Neither", "nor"],
+    ].map(([a, b]) => `${a} ${far} ${b} ${near} ${deed}.|${pronoun}|${pronoun === "its" ? "their" : "its"}|her`),
+  ),
+]);
+
+/** doers do things well or badly; goodNouns and goodFoods take good, bad and their comparisons. */
+const doers = ["Maya", "My brother", "Our coach", "The new girl", "Grandpa", "Leo"] as const;
+const wellVerbs = ["sings", "swims", "draws", "cooks", "writes", "dances"] as const;
+const badVerbs = ["sang", "played", "slept", "behaved", "skated", "spelled"] as const;
+const goodNouns = ["book about space", "idea", "friend", "movie", "plan", "song"] as const;
+const goodFoods = ["soup", "bread", "pie", "salad"] as const;
+const senses = ["tastes", "smells", "looks"] as const;
+const compared = ["cakes", "songs", "drawings", "poems", "kites"] as const;
+const goodLines = join([
+  ...everyPair(doers, wellVerbs).map(([who, verb]) => `${who} ${verb} very ___.|well|good|gooder`),
+  ...everyPair(goodNouns, ["This is a", "That was a"]).map(([noun, opening]) => `${opening} ___ ${noun}.|good|well|gooder`),
+  ...everyPair(goodFoods, senses).map(([food, sense]) => `The ${food} ${sense} ___.|good|well|gooder`),
+  ...everyPair(compared, ["three", "four"]).map(([things, n]) => `Of the ${n} ${things}, this one is the ___.|best|good|better`),
+  ...compared.flatMap((things) => ["this", "that"].map((near) => `Of the two ${things}, ${near} one is ___.|better|good|best`)),
+]);
+const sorry = ["losing your book", "the broken vase", "missing the party", "being late", "the mess", "forgetting your birthday"] as const;
+const badThings = ["idea", "mistake", "cold", "dream", "day", "joke"] as const;
+const badSubjects = ["The movie", "The weather", "The traffic", "The smell", "The noise", "The food"] as const;
+const storms = ["storm", "traffic jam", "flood", "heat wave", "winter"] as const;
+const badLines = join([
+  ...everyPair(doers, badVerbs).map(([who, verb]) => `${who} ${verb} ___ yesterday.|badly|bad|badder`),
+  ...everyPair(goodFoods, senses).map(([food, sense]) => `The ${food} ${sense} ___.|bad|badly|badder`),
+  ...sorry.map((what) => `I feel ___ about ${what}.|bad|badly|badder`),
+  ...badThings.map((what) => `That was a ___ ${what}.|bad|badly|badder`),
+  ...badSubjects.map((what) => `${what} was really ___.|bad|badly|badder`),
+  ...storms.map((what) => `This is the ___ ${what} in years.|worst|bad|worse`),
+  ...storms.map((what) => `Today's ${what} is ___ than yesterday's.|worse|bad|worst`),
+]);
+
+/** titleShapes are titles with {a} and {b} for nouns; small words are written in lowercase. */
+const titleShapes = [
+  "The {a} of the {b}",
+  "A {a} in the {b}",
+  "{a} and the {b}",
+  "When the {a} Is Brave",
+  "How the {a} Lost Its {b}",
+  "The {a} Who Came to the {b}",
+] as const;
+const titleNouns = ["Fox", "Lantern", "Giant", "River", "Dragon", "Painter", "Robot", "Garden"] as const;
+const titlePlaces = ["Moon", "Mountain", "Forest", "Sea", "City", "Storm"] as const;
+const titleKinds = ["a book", "a story", "a film", "a poem", "a song"] as const;
+const everyCap = (title: string) => title.replace(/\b[a-z]/g, (c) => c.toUpperCase());
+const lowFirst = (title: string) => {
+  const words = title.split(" ");
+  return words.map((w, i) => (i === 0 || i === words.length - 1 ? w.toLowerCase() : w)).join(" ");
+};
+const titleCapLines = join(
+  everyPair(titleNouns, titleShapes).flatMap(([noun, shape], k) =>
+    [0, 3].map((j) => {
+      const place = titlePlaces[(k + j) % titlePlaces.length] ?? "Moon";
+      const title = shape.replace("{a}", noun).replace("{b}", place);
+      const kind = titleKinds[(k + j) % titleKinds.length] ?? "a book";
+      return `${kind} about a ${noun.toLowerCase()}|${title}|${everyCap(title)}|${lowFirst(title)}`;
+    }),
+  ),
+);
+const pluralCreatures = ["DRAGONS", "GHOSTS", "FOXES", "GIANTS", "ROBOTS", "PIRATES"] as const;
+const titleAdjectives = ["BRAVE", "LOST", "QUIET", "WILD", "FREE"] as const;
+const titleCities = ["ROME", "PARIS", "CAIRO", "LIMA", "TOKYO"] as const;
+const lower = (word: string) => word.toLowerCase();
+const smallWordLines = join([
+  ...everyPair(
+    [
+      ["FOX", "SLEEPS"],
+      ["RIVER", "BENDS"],
+      ["WIND", "BLOWS"],
+      ["WOLF", "HOWLS"],
+      ["OWL", "HUNTS"],
+      ["SNOW", "FALLS"],
+    ] as const,
+    ["WHERE", "WHEN", "WHILE"] as const,
+  ).map(([[noun, verb], first]) => `${first} THE ${noun} ${verb}|the|${lower(verb)}|${lower(first)}`),
+  ...everyPair(pluralCreatures, titleAdjectives).map(([noun, adj]) => `${noun} ARE ${adj} AT NIGHT|at|are|${lower(noun)}`),
+  ...everyPair(["SHE RAN", "HE FLEW", "THEY SAILED", "WE WALKED", "I DROVE"], titleCities).map(([start, city]) => {
+    const verb = start.split(" ")[1] ?? "";
+    return `${start} TO ${city}|to|${lower(verb)}|${city.charAt(0)}${lower(city.slice(1))}`;
+  }),
+  ...everyPair(titleAdjectives, titleAdjectives)
+    .filter(([a, b]) => a !== b)
+    .map(([a, b]) => `WE ARE ${a} AND ${b}|and|are|${lower(a)}`),
+  ...["HIDES", "SLEEPS", "LIVES", "WAITS", "GROWS"].map((verb) => `WHERE IT ${verb}|nobody: every word is capitalized|it|where`),
+  ...["SAW", "KNEW", "FOUND", "WANTED"].map((verb) => `WHAT SHE ${verb}|nobody: every word is capitalized|she|what`),
+]);
+
+/** seamWords are a prefix and a base that begins with the prefix's last letter. */
+const seamWords = [
+  "mis spent",
+  "mis state",
+  "mis speak",
+  "mis spelled",
+  "mis spelling",
+  "mis stated",
+  "mis statement",
+  "mis stepped",
+  "mis spoken",
+  "un nerve",
+  "un nerved",
+  "un nerving",
+  "un neighborly",
+  "un noticeable",
+  "un necessarily",
+  "un naturally",
+  "dis satisfaction",
+  "dis similarity",
+  "dis solved",
+  "dis solving",
+  "dis satisfy",
+  "im material",
+  "im moderate",
+  "im modest",
+  "im modesty",
+  "im mortal",
+  "im mortality",
+  "im movable",
+  "im memorial",
+  "im maturity",
+  "im mobility",
+  "im moderately",
+  "im maturely",
+  "im measurably",
+  "il legible",
+  "il legibly",
+  "il legitimate",
+  "il liberal",
+  "il logically",
+  "il legally",
+  "il literacy",
+  "ir reversible",
+  "ir reversibly",
+  "ir resistible",
+  "ir resistibly",
+  "ir refutable",
+  "ir reparable",
+  "ir reparably",
+  "ir religious",
+  "ir resolute",
+  "ir redeemable",
+  "ir regularly",
+  "ir relevance",
+  "ir responsibly",
+  "ir rationally",
+  "over reach",
+  "over react",
+  "over reacted",
+  "over rule",
+  "over ruled",
+  "over ripe",
+  "over rated",
+  "over running",
+  "over ridden",
+  "under rate",
+  "under rating",
+  "with hold",
+  "with holding",
+  "mis spells",
+  "dis solves",
+  "il legibility",
+  "ir reverent",
+  "ir retrievable",
+  "un numbered",
+  "dis service",
+  "mis shapen",
+  "un named",
+  "im mature",
+  "il logical",
+  "ir regular",
+] as const;
+const seamLines = join(
+  seamWords.slice(0, -7).map((pair) => {
+    const [prefix = "", base = ""] = pair.split(" ");
+    return `${prefix} + ${base}|${prefix}${base}|${prefix}${base.slice(1)}|${prefix}${base.charAt(0)}${base}`;
+  }),
+);
+/** baseWords are a prefix, a base with no shared letter at the seam, and the base misspelled. */
+const baseWords = [
+  "dis able abel",
+  "dis arm arme",
+  "dis allow alow",
+  "dis agreeable agreable",
+  "dis appearing apearing",
+  "dis appointed apointed",
+  "dis obedient obediant",
+  "dis own owne",
+  "dis embark embarck",
+  "dis infected infectted",
+  "dis interested intrested",
+  "dis organized organised",
+  "dis approval aproval",
+  "dis advantaged advantged",
+  "dis allowed alowed",
+  "mis adventure adventur",
+  "mis apply aply",
+  "mis interpret interpet",
+  "mis handle handel",
+  "mis judge juge",
+  "mis manage manege",
+  "mis print prinnt",
+  "mis read reed",
+  "mis trust trusst",
+  "mis guided gided",
+  "mis calculate calculat",
+  "mis count cownt",
+  "mis fire fyre",
+  "mis label lable",
+  "mis pronounce pronunce",
+  "mis quote qoute",
+  "mis treat treet",
+  "un opened opend",
+  "un equal equel",
+  "un easy eazy",
+  "un edited editted",
+  "un invited invitted",
+  "un ending endding",
+  "un answered answerd",
+  "un eaten eatten",
+  "un official oficial",
+  "un usually usualy",
+  "un available availible",
+  "un attended atended",
+  "un expected expectted",
+  "un important importent",
+  "un imaginable imaginible",
+  "un occupied ocupied",
+  "in ability abillity",
+  "in edible edable",
+  "in exact exsact",
+  "in attentive atentive",
+  "in adequate adequit",
+  "in audible audable",
+  "in effective efective",
+  "in accuracy acuracy",
+  "in experienced experianced",
+  "in action actoin",
+  "in appropriate apropriate",
+  "over act akt",
+  "over estimate estamate",
+  "over use uze",
+  "over eating eatting",
+  "over excited exited",
+  "over anxious anxous",
+  "under estimate estimat",
+  "under age agge",
+  "under achieve acheive",
+  "under exposed exsposed",
+  "under arm arme",
+] as const;
+const baseLines = join(
+  baseWords.map((entry) => {
+    const [prefix = "", base = "", bad = ""] = entry.split(" ");
+    const extra =
+      prefix.endsWith("r") || prefix.endsWith("n") || prefix.endsWith("s") ? `${prefix}${prefix.at(-1)}${base}` : `${prefix}${base}`;
+    return `${prefix} + ${base}|${prefix}${base}|${extra}|${prefix}${bad}`;
+  }),
+);
 
 const participles = topic("grammar", {
   id: "irregular-past-participles",
@@ -22,6 +633,7 @@ const participles = topic("grammar", {
       ],
       ["Which form completes the sentence?", "哪种形式能补全句子？"],
       `
+${participleLines}
         She has ___ to the library. (go)|gone|went|goed
         I have ___ three letters this week. (write)|written|wrote|writed
         We had ___ across the lake before lunch. (swim)|swum|swam|swimmed
@@ -74,6 +686,7 @@ const participles = topic("grammar", {
       ],
       ["Which form completes the sentence?", "哪种形式能补全句子？"],
       `
+${pastLines}
         Yesterday we ___ in the lake. (swim)|swam|swum|swimmed
         The window was ___ by a ball. (break)|broken|broke|breaked
         Last week I ___ a letter to my aunt. (write)|wrote|written|writed
@@ -138,6 +751,7 @@ const possessives = topic("grammar", {
       ],
       ["Which possessive completes the sentence?", "哪个所有格能补全句子？"],
       `
+${pluralOwnLines}
         All the ___ lockers are painted blue. (students)|students'|student's|students's
         The ___ playground has new swings. (children)|children's|childrens'|childs'
         The two ___ tails were wagging. (dogs)|dogs'|dog's|dogs's
@@ -193,6 +807,7 @@ const possessives = topic("grammar", {
       ],
       ["Which possessive is correct?", "哪个所有格正确？"],
       `
+${jointLines}
         the car that belongs to my brother-in-law|my brother-in-law's car|my brother's-in-law car|my brothers-in-law car
         one shop owned by Mia and Leo together|Mia and Leo's shop|Mia's and Leo's shop|Mia and Leos' shop
         two separate bikes, one of Kim and one of Raj|Kim's and Raj's bikes|Kim and Raj's bikes|Kims' and Rajs' bikes
@@ -257,6 +872,7 @@ const doubling = topic("grammar", {
       ],
       ["Which spelling is correct?", "哪个拼写正确？"],
       `
+${shortDoubleLines}
         stop + ed|stopped|stoped|stopt
         run + ing|running|runing|runnning
         big + er|bigger|biger|biggar
@@ -309,6 +925,7 @@ const doubling = topic("grammar", {
       ],
       ["Which spelling is correct?", "哪个拼写正确？"],
       `
+${longDoubleLines}
         begin + ing|beginning|begining|beginnig
         open + ed|opened|openned|opend
         prefer + ed|preferred|prefered|preferd
@@ -394,6 +1011,7 @@ const colons = topic("grammar", {
       ],
       ["What does the colon do in this sentence?", "这个句子中的冒号起什么作用？"],
       `
+${colonJobs}
         You will need three tools: a hammer, nails and a saw.|a list
         I knew why the dog was barking: someone was at the door.|an explanation
         My favorite foods are: pizza, tacos and soup.|no colon
@@ -436,6 +1054,7 @@ const colons = topic("grammar", {
       ],
       ["Which sentence uses the colon correctly?", "哪个句子的冒号用得正确？"],
       `
+${colonPlaces}
         a list of supplies|Bring the following: paper, glue and scissors.|Bring: paper, glue and scissors.|Bring the following, paper: glue and scissors.
         an explanation of the delay|The bus was late for one reason: it had a flat tire.|The bus was late for: one reason, it had a flat tire.|The bus was: late for one reason it had a flat tire.
         a list of sports|Our school offers three sports: soccer, tennis and track.|Our school offers: soccer, tennis and track.|Our school offers three: sports soccer, tennis and track.
@@ -500,6 +1119,7 @@ const eitherNeither = topic("grammar", {
       ],
       ["Which verb completes the sentence?", "哪个动词能补全句子？"],
       `
+${nearVerbLines}
         Neither the coach nor the players ___ ready.|are|is|being
         Either my sisters or my brother ___ the dishes.|washes|wash|washing
         Neither the cat nor the dogs ___ hungry.|are|is|being
@@ -552,6 +1172,7 @@ const eitherNeither = topic("grammar", {
       ],
       ["Which pronoun completes the sentence?", "哪个代词能补全句子？"],
       `
+${nearPronounLines}
         Either Sam or Leo will bring ___ guitar.|his|their|its
         Neither the coach nor the players forgot ___ water bottles.|their|his|its
         Either Ana or Rosa left ___ scarf on the bus.|her|their|its
@@ -616,6 +1237,7 @@ const goodWell = topic("grammar", {
       ],
       ["Which word completes the sentence?", "哪个词能补全句子？"],
       `
+${goodLines}
         Maya plays the violin very ___.|well|good|gooder
         This is a ___ book about space.|good|well|gooder
         Of the three cakes, this one tastes ___.|best|good|well
@@ -671,6 +1293,7 @@ const goodWell = topic("grammar", {
       ],
       ["Which word completes the sentence?", "哪个词能补全句子？"],
       `
+${badLines}
         The milk smells ___.|bad|badly|badder
         Our team played ___ in the rain.|badly|bad|badder
         This is the ___ storm in fifty years.|worst|worse|bad
@@ -738,6 +1361,7 @@ const titleCapitals = topic("grammar", {
       ],
       ["Which title is capitalized correctly?", "哪个标题的大写正确？"],
       `
+${titleCapLines}
         a book about a lost dog|The Dog Who Came Home|The Dog who Came Home|The dog Who came Home
         a film about the sea|A Voyage to the Bottom of the Sea|A Voyage To The Bottom Of The Sea|a Voyage to the Bottom of the Sea
         a poem about winter|The Snow Is Falling|The Snow is Falling|the Snow Is Falling
@@ -790,6 +1414,7 @@ const titleCapitals = topic("grammar", {
       ],
       ["In this title, which word should stay lowercase?", "这个标题中哪个词应该保持小写？"],
       `
+${smallWordLines}
         THE BOY WHO LIVED IN A TREE|in|who|tree
         WHEN THE RIVER IS HIGH|the|is|when
         A STORY OF HOPE AND COURAGE|of|story|hope
@@ -858,6 +1483,7 @@ const prefixSpelling = topic("grammar", {
       ],
       ["Which spelling is correct?", "哪个拼写正确？"],
       `
+${seamLines}
         mis + spell|misspell|mispell|missspell
         un + necessary|unnecessary|unecessary|unneccessary
         dis + satisfied|dissatisfied|disatisfied|disssatisfied
@@ -907,6 +1533,7 @@ const prefixSpelling = topic("grammar", {
       ],
       ["Which spelling is correct?", "哪个拼写正确？"],
       `
+${baseLines}
         dis + appear|disappear|dissappear|disapear
         dis + agree|disagree|dissagree|disagre
         mis + behave|misbehave|missbehave|misbehav
