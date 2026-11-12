@@ -2,7 +2,350 @@
 // eighth set of commonly confused words.
 
 import type { TopicDef } from "@ga/content";
+import { everyPair } from "../../levels/words.ts";
 import { choose, type Label, label, topic } from "../grade-6/kit.ts";
+
+// Crossed items: frames, people and phrases multiply the lines below into a hundred items or more for each bank.
+
+const join = (lines: readonly string[]) => lines.join("\n");
+
+const hadConds = [
+  "Had I known about the delay",
+  "Had we left earlier",
+  "Had the team trained harder",
+  "Had she taken the job",
+  "Had the rain stopped",
+  "Had he studied the map",
+  "Had they saved more money",
+  "Had the doctor arrived sooner",
+] as const;
+const hadResults = [
+  "things would have gone better",
+  "we would have been spared a lot of trouble",
+  "the outcome might have been different",
+  "no one would have been surprised",
+] as const;
+const wereConds = [
+  "Were I the mayor",
+  "Were she here now",
+  "Were the tickets cheaper",
+  "Were he more patient",
+  "Were the roads safer",
+  "Were we richer",
+  "Were the school bigger",
+  "Were I in charge",
+] as const;
+const wereResults = [
+  "things would be better",
+  "more people would be happy",
+  "life would be easier for everyone",
+  "the town would look different",
+] as const;
+const shouldConds = [
+  "Should you need help",
+  "Should the power fail",
+  "Should it snow tonight",
+  "Should the guests arrive early",
+  "Should the price rise",
+  "Should the train be late",
+  "Should anyone call",
+  "Should the plan change",
+] as const;
+const shouldResults = ["let me know at once", "call the office", "we will handle it", "please tell the manager"] as const;
+const conditionLines = join([
+  ...everyPair(hadConds, hadResults).map(([c, r]) => `${c}, ${r}.|an unreal past condition`),
+  ...everyPair(wereConds, wereResults).map(([c, r]) => `${c}, ${r}.|an unreal present condition`),
+  ...everyPair(shouldConds, shouldResults).map(([c, r]) => `${c}, ${r}.|an unlikely future condition`),
+]);
+
+/** pastVerbs are a participle, the simple past that is wrong after had, and the rest of the clause. */
+const pastVerbs = [
+  ["known", "knew", "the answer"],
+  ["taken", "took", "the train"],
+  ["seen", "saw", "the warning"],
+  ["written", "wrote", "the letter"],
+  ["given", "gave", "the order"],
+  ["gone", "went", "home early"],
+  ["eaten", "ate", "breakfast"],
+  ["chosen", "chose", "the red door"],
+  ["spoken", "spoke", "to the judge"],
+  ["driven", "drove", "more slowly"],
+  ["flown", "flew", "over the storm"],
+  ["broken", "broke", "the rule"],
+] as const;
+const ifSubjects = ["I", "she", "we", "the team", "they"] as const;
+const wereSubjects = ["I", "she", "he", "the king", "my father"] as const;
+const werePreds = ["the captain", "richer", "in charge", "here today"] as const;
+const shouldSubjects = ["you", "the guests", "anyone", "the bank"] as const;
+const shouldActs = [
+  ["need", "needed", "a ride"],
+  ["call", "called", "tonight"],
+  ["change", "changed", "the plan"],
+  ["want", "wanted", "more time"],
+] as const;
+const inversionLines = join([
+  ...everyPair(pastVerbs, ifSubjects).map(
+    ([[pp, past, rest], s]) => `If ${s} had ${pp} ${rest}|Had ${s} ${pp} ${rest}|Had ${s} ${past} ${rest}|If had ${s} ${pp} ${rest}`,
+  ),
+  ...everyPair(wereSubjects, werePreds).map(([s, p]) => `If ${s} were ${p}|Were ${s} ${p}|Was ${s} ${p}|If were ${s} ${p}`),
+  ...everyPair(shouldSubjects, shouldActs).map(
+    ([s, [v, ved, rest]]) => `If ${s} should ${v} ${rest}|Should ${s} ${v} ${rest}|Should ${s} ${ved} ${rest}|If should ${s} ${v} ${rest}`,
+  ),
+]);
+
+const women = ["Maria", "Ana", "Lin", "Sara"] as const;
+const men = ["Tom", "Sam", "Ravi", "Omar"] as const;
+const samePairs = [
+  ...women.flatMap((a) => women.filter((b) => b !== a).map((b) => [a, b, "she"] as const)),
+  ...men.flatMap((a) => men.filter((b) => b !== a).map((b) => [a, b, "he"] as const)),
+];
+const rumors = [
+  "the river will flood this year",
+  "prices will rise again",
+  "the school will close",
+  "the old mill is haunted",
+  "the mayor will resign",
+  "a storm is coming",
+  "the bridge is unsafe",
+  "the factory is hiring",
+  "the park will be sold",
+  "the test will be easy",
+] as const;
+const referenceLines = join([
+  ...samePairs.map(([a, b, p], k) =>
+    k % 2 === 0
+      ? `When ${a} met ${b}, ${p} was nervous.|ambiguous: two nouns could be meant`
+      : `${a} called ${b} after ${p} got home.|ambiguous: two nouns could be meant`,
+  ),
+  ...everyPair(women, men).map(([w, m]) => `When ${w} met ${m}, she was nervous.|clear`),
+  ...samePairs.filter((_, k) => k % 2 === 0).map(([a, b, p]) => `After ${a} got home, ${p} called ${b}.|clear`),
+  ...rumors.flatMap((r) => [
+    `They say ${r}.|vague: no noun is meant`,
+    `It says online that ${r}.|vague: no noun is meant`,
+    `Everyone knows it: ${r}, and this worries people.|vague: no noun is meant`,
+  ]),
+]);
+const roles = [
+  ["coach", "player"],
+  ["teacher", "student"],
+  ["captain", "sailor"],
+  ["manager", "clerk"],
+  ["doctor", "nurse"],
+  ["judge", "lawyer"],
+] as const;
+const revisionLines = join([
+  ...samePairs.map(
+    ([a, b, p]) =>
+      `When ${a} met ${b}, ${p} was nervous.|When ${a} met ${b}, ${a} was nervous.|When ${a} met ${b}, ${p} was very nervous.|When ${a} met ${b}, they were both calm.`,
+  ),
+  ...samePairs.map(
+    ([a, b, p]) =>
+      `${a} called ${b} after ${p} got home.|After ${a} got home, ${p} called ${b}.|${a} called ${b} right after ${p} got home.|${b} called ${a} after ${p} got home.`,
+  ),
+  ...rumors.map((r) => `They say ${r}.|Local officials say ${r}.|They all say ${r}.|They say that maybe ${r}.`),
+  ...roles.flatMap(([x, y], k) => {
+    const p = k % 2 === 0 ? "he" : "she";
+    return [
+      `The ${x} told the ${y} that ${p} had made a mistake.|The ${x} told the ${y}, "I made a mistake."|The ${x} told the ${y} that ${p} had made an error.|The ${y} told the ${x} that ${p} had made a mistake.`,
+      `The ${x} told the ${y} that ${p} needed a rest.|The ${x} told the ${y}, "I need a rest."|The ${x} told the ${y} that ${p} needed a long rest.|The ${y} told the ${x} that ${p} needed a rest.`,
+      `The ${x} told the ${y} that ${p} would be late.|The ${x} told the ${y}, "I will be late."|The ${x} told the ${y} that ${p} would be very late.|The ${y} told the ${x} that ${p} would be late.`,
+    ];
+  }),
+]);
+
+const jargonVerbs = ["leverage", "optimize", "synergize", "operationalize", "incentivize", "socialize"] as const;
+const jargonNouns = ["core competencies", "key deliverables", "bandwidth", "stakeholder buy-in", "value proposition"] as const;
+/** inflatedVerbs are a puffed-up verb, its plain form and a jargon form. */
+const inflatedVerbs = [
+  ["utilize", "use", "leverage"],
+  ["ascertain the location of", "find", "action the locating of"],
+  ["effectuate the repair of", "fix", "operationalize a fix for"],
+  ["endeavor to inspect", "check", "drive a review of"],
+] as const;
+const officeThings = ["the stairs", "the side door", "the printer", "the parking lot", "the main entrance"] as const;
+/** tails are an inflated time phrase, its plain form, a jargon form and a plain phrase with the opposite meaning. */
+const tails = [
+  ["at this point in time", "now", "at this juncture", "later"],
+  ["prior to departure", "before you leave", "pre-departure", "after you leave"],
+  ["subsequent to the meeting", "after the meeting", "post-meeting", "before the meeting"],
+  ["on a daily basis", "every day", "on a go-forward basis", "once a year"],
+] as const;
+const plainCases = everyPair(inflatedVerbs, officeThings).flatMap(([verb, thing]) => tails.map((tail) => [verb, thing, tail] as const));
+const getsInLines = join([
+  ...everyPair(jargonVerbs, jargonNouns).map(([v, n]) => `We need to ${v} our ${n} going forward.|jargon`),
+  ...plainCases
+    .filter((_, k) => k % 2 === 0)
+    .map(([[inflated], thing, [tail]]) => `Please ${inflated} ${thing} ${tail}.|inflated language`),
+  ...plainCases.filter((_, k) => k % 2 === 1).map(([[, plain], thing, [, tail]]) => `Please ${plain} ${thing} ${tail}.|plain and clear`),
+]);
+const plainLines = join(
+  plainCases.map(
+    ([[inflated, plain, jargonVerb], thing, [tail, plainTail, jargonTail, opposite]]) =>
+      `Please ${inflated} ${thing} ${tail}.|Please ${plain} ${thing} ${plainTail}.|Please ${jargonVerb} ${thing} ${jargonTail}.|Please ${plain} ${thing} ${opposite}.`,
+  ),
+);
+
+const fitLines8 = `The ___ of the mountain took three days.|ascent|assent|accent
+The balloon made a slow ___ into the clouds.|ascent|assent|accent
+Her rapid ___ to power surprised everyone.|ascent|assent|accent
+The steep ___ left the hikers breathless.|ascent|assent|accent
+The council gave its ___ to the plan.|assent|ascent|absent
+She nodded in ___.|assent|ascent|absent
+The bill became law with royal ___.|assent|ascent|absent
+Silence is not the same as ___.|assent|ascent|absent
+The artist stretched a new ___ over the frame.|canvas|canvass|canvasser
+We slept in a ___ tent.|canvas|canvass|canvasser
+His shoes were made of white ___.|canvas|canvass|canvasser
+The painting on ___ sold for millions.|canvas|canvass|canvasser
+The candidate will ___ the neighborhood on Saturday.|canvass|canvas|cancel
+Reporters ___ed shoppers for their opinions.|canvass|canvas|cancel
+We need to ___ the members before we vote.|canvass|canvas|cancel
+Volunteers ___ every house in the district.|canvass|canvas|cancel
+The film's ___ scene takes place on a bridge.|climactic|climatic|clinical
+The ___ moment of the match came in the last minute.|climactic|climatic|clinical
+The novel builds to a ___ battle.|climactic|climatic|clinical
+The opera's ___ duet moved the audience to tears.|climactic|climatic|clinical
+Scientists study ___ changes over centuries.|climatic|climactic|clinical
+The region's ___ conditions suit grapes.|climatic|climactic|clinical
+Ice cores hold a record of ___ shifts.|climatic|climactic|clinical
+The ___ zones of Africa range from desert to rainforest.|climatic|climactic|clinical
+The soldiers worked to ___ the bomb.|defuse|diffuse|refuse
+A joke helped ___ the tension in the room.|defuse|diffuse|refuse
+The manager tried to ___ the angry argument.|defuse|diffuse|refuse
+Experts were called to ___ the device.|defuse|diffuse|refuse
+The lamp's shade helps ___ the light.|diffuse|defuse|confuse
+Perfume will ___ through the air.|diffuse|defuse|confuse
+The ink began to ___ through the water.|diffuse|defuse|confuse
+New ideas ___ slowly across a culture.|diffuse|defuse|confuse
+She ___d her own talent with a modest shrug.|deprecate|depreciate|deplete
+The critic ___d the habit of shouting in debates.|deprecate|depreciate|deplete
+Do not ___ the work of beginners.|deprecate|depreciate|deplete
+The old rule is now ___d and will soon be removed.|deprecate|depreciate|deplete
+A new car will ___ quickly in value.|depreciate|deprecate|deplete
+Houses in the area began to ___.|depreciate|deprecate|deplete
+The currency ___d against the dollar.|depreciated|deprecated|depleted
+Computers ___ faster than furniture.|depreciate|deprecate|deplete
+You should ___ for thirty minutes a day.|exercise|exorcise|exorbitant
+Citizens ___ their right to vote.|exercise|exorcise|exorbitant
+Please ___ caution on the icy road.|exercise|exorcise|exorbitant
+The judge will ___ her power fairly.|exercise|exorcise|exorbitant
+The priest was asked to ___ the ghost.|exorcise|exercise|excise
+She tried to ___ the memory of the accident.|exorcise|exercise|excise
+The villagers wanted to ___ the evil spirit.|exorcise|exercise|excise
+Writing helped him ___ his old fears.|exorcise|exercise|excise
+Please ___ from making jokes during the service.|forbear|forebear|forbid
+She chose to ___ from comment.|forbear|forebear|forbid
+We must ___ from anger.|forbear|forebear|forbid
+I could not ___ from smiling.|forbear|forebear|forbid
+My ___s came from a small village in Ireland.|forebear|forbear|forego
+The farm belonged to her ___s for centuries.|forebear|forbear|forego
+He honored his ___s with a stone monument.|forebear|forbear|forego
+Our ___s crossed the sea in wooden ships.|forebear|forbear|forego
+A city ___ bans parking on the grass.|ordinance|ordnance|ordinary
+The town passed an ___ against loud music.|ordinance|ordnance|ordinary
+Under the new ___, dogs must be leashed.|ordinance|ordnance|ordinary
+The ___ limits the height of buildings.|ordinance|ordnance|ordinary
+The army stored its ___ in a bunker.|ordnance|ordinance|ordinary
+Unexploded ___ was found in the field.|ordnance|ordinance|ordinary
+The ship carried heavy ___.|ordnance|ordinance|ordinary
+Experts cleared the old ___ from the beach.|ordnance|ordinance|ordinary
+The ___ judge accepted a bribe.|venal|venial|venous
+A ___ official sold the permits.|venal|venial|venous
+The ___ press printed whatever it was paid to print.|venal|venial|venous
+The reformers fought the ___ police chief.|venal|venial|venous
+Being late once is a ___ fault.|venial|venal|venous
+The priest called it a ___ sin.|venial|venal|venous
+His ___ mistakes were soon forgiven.|venial|venal|venous
+A small white lie is a ___ offense.|venial|venal|venous
+The ___ pays rent on the first of the month.|tenant|tenet|tenor
+The new ___ moved in last week.|tenant|tenet|tenor
+The landlord fixed the ___'s heater.|tenant|tenet|tenor
+Every ___ must sign the lease.|tenant|tenet|tenor
+Kindness is a central ___ of her faith.|tenet|tenant|tenor
+The first ___ of science is to test ideas.|tenet|tenant|tenor
+Freedom of speech is a basic ___ of democracy.|tenet|tenant|tenor
+The group lived by one simple ___.|tenet|tenant|tenor`;
+
+const meaningLines8 = `the act of rising|ascent|assent|accent
+an upward slope|ascent|assent|accent
+a rise in rank or power|ascent|assent|accent
+the way up a hill|ascent|assent|accent
+formal approval|assent|ascent|absent
+consent|assent|ascent|absent
+a yes to a proposal|assent|ascent|absent
+to agree|assent|ascent|absent
+heavy cloth for sails and tents|canvas|canvass|canvasser
+a surface for oil painting|canvas|canvass|canvasser
+coarse fabric of cotton or hemp|canvas|canvass|canvasser
+a painting itself|canvas|canvass|canvasser
+to ask people's opinions one by one|canvass|canvas|cancel
+to seek votes from door to door|canvass|canvas|cancel
+to survey a group|canvass|canvas|cancel
+to examine carefully and discuss|canvass|canvas|cancel
+forming the high point of a story|climactic|climatic|clinical
+at the peak of the action|climactic|climatic|clinical
+most intense and exciting|climactic|climatic|clinical
+relating to a climax|climactic|climatic|clinical
+relating to long-term weather|climatic|climactic|clinical
+having to do with climate|climatic|climactic|clinical
+about the typical weather of a region|climatic|climactic|clinical
+caused by climate|climatic|climactic|clinical
+to remove the fuse from a bomb|defuse|diffuse|refuse
+to calm a tense situation|defuse|diffuse|refuse
+to make less dangerous|defuse|diffuse|refuse
+to reduce hostility|defuse|diffuse|refuse
+to spread widely|diffuse|defuse|confuse
+to scatter in all directions|diffuse|defuse|confuse
+spread out and not concentrated|diffuse|defuse|confuse
+to mix slowly into a gas or liquid|diffuse|defuse|confuse
+to express disapproval of|deprecate|depreciate|deplete
+to belittle|deprecate|depreciate|deplete
+to play down modestly|deprecate|depreciate|deplete
+to mark as outdated and to be avoided|deprecate|depreciate|deplete
+to lose value over time|depreciate|deprecate|deplete
+to fall in price|depreciate|deprecate|deplete
+to become worth less|depreciate|deprecate|deplete
+to reduce the recorded value of an asset|depreciate|deprecate|deplete
+physical training|exercise|exorcise|exorbitant
+to put a right or power into use|exercise|exorcise|exorbitant
+a task for practice|exercise|exorcise|exorbitant
+to use with care|exercise|exorcise|exorbitant
+to drive out an evil spirit|exorcise|exercise|excise
+to free from a haunting presence|exorcise|exercise|excise
+to get rid of a troubling feeling|exorcise|exercise|excise
+to expel a demon by prayer|exorcise|exercise|excise
+to refrain|forbear|forebear|forbid
+to hold yourself back|forbear|forebear|forbid
+to be patient and not act|forbear|forebear|forbid
+to keep from doing something|forbear|forebear|forbid
+an ancestor|forebear|forbear|forego
+a person from whom you are descended|forebear|forbear|forego
+a forerunner in a family line|forebear|forbear|forego
+one who lived in your family long ago|forebear|forbear|forego
+a law made by a city|ordinance|ordnance|ordinary
+a local regulation|ordinance|ordnance|ordinary
+an official order of a council|ordinance|ordnance|ordinary
+a town rule with the force of law|ordinance|ordnance|ordinary
+military weapons and ammunition|ordnance|ordinance|ordinary
+artillery|ordnance|ordinance|ordinary
+bombs and shells|ordnance|ordinance|ordinary
+supplies of war equipment|ordnance|ordinance|ordinary
+willing to take bribes|venal|venial|venous
+corrupt|venal|venial|venous
+able to be bought|venal|venial|venous
+motivated by money rather than duty|venal|venial|venous
+easily excused|venial|venal|venous
+minor and pardonable|venial|venal|venous
+slight, as a fault|venial|venal|venous
+able to be forgiven|venial|venal|venous
+one who rents a room or house|tenant|tenet|tenor
+an occupant who pays rent|tenant|tenet|tenor
+a person living on someone else's land|tenant|tenet|tenor
+a renter|tenant|tenet|tenor
+a principle held as true|tenet|tenant|tenor
+a basic belief of a group|tenet|tenant|tenor
+a doctrine|tenet|tenant|tenor
+a central idea of a faith|tenet|tenant|tenor`;
 
 /** L builds a label from its Chinese name, why it is right and why it is not. */
 const L = (zh: string, whyEn: string, whyZh: string, notEn: string, notZh: string): Label => ({
@@ -29,6 +372,7 @@ const inverted = topic("grammar", {
       ],
       ["What kind of condition does this sentence state?", "这个句子表达的是哪种条件？"],
       `
+${conditionLines}
         Had I known about the storm, I would have stayed home.|an unreal past condition
         Had the bridge been finished, the army could have crossed.|an unreal past condition
         Had she listened to her doctor, she would have recovered sooner.|an unreal past condition
@@ -94,6 +438,7 @@ const inverted = topic("grammar", {
       ],
       ["Which inverted condition says the same as the if-clause?", "哪个倒装条件与 if 从句意思相同？"],
       `
+${inversionLines}
         If I had known the answer|Had I known the answer|Had I knew the answer|If had I known the answer
         If she were the captain|Were she the captain|Was she the captain|If were she the captain
         If you should need a ride|Should you need a ride|Should you needed a ride|If should you need a ride
@@ -162,6 +507,7 @@ const ambiguous = topic("grammar", {
       ],
       ["Is the pronoun's reference in this sentence clear?", "这个句子中代词的指代清楚吗？"],
       `
+${referenceLines}
         When Maria met her sister, she was nervous.|ambiguous: two nouns could be meant
         The coach told the player that he had made a mistake.|ambiguous: two nouns could be meant
         Tom called Sam after he got home.|ambiguous: two nouns could be meant
@@ -228,6 +574,7 @@ const ambiguous = topic("grammar", {
       ],
       ["Which revision makes the reference clear?", "哪个修改使指代变清楚了？"],
       `
+${revisionLines}
         When Maria met her sister, she was nervous.|When Maria met her sister, Maria was nervous.|When Maria met her sister, she was very nervous.|When Maria met her sister, they were both calm.
         Tom called Sam after he got home.|After Tom got home, he called Sam.|Tom called Sam right after he got home.|Sam called Tom after he got home.
         The coach told the player that he had made a mistake.|The coach told the player, "I made a mistake."|The coach told the player that he had made an error.|The player told the coach that he had made a mistake.
@@ -296,6 +643,7 @@ const jargon = topic("grammar", {
       ],
       ["What, if anything, gets in the way of this sentence for a general reader?", "对一般读者来说，如果有的话，是什么妨碍了这个句子？"],
       `
+${getsInLines}
         We need to leverage our core competencies going forward.|jargon
         The patient presented with acute myocardial infarction.|jargon
         Let's circle back offline and touch base on the deliverables.|jargon
@@ -361,6 +709,7 @@ const jargon = topic("grammar", {
       ],
       ["Which version says the same thing in plain language?", "哪个说法用平实的语言表达了同样的意思？"],
       `
+${plainLines}
         Please utilize the stairs in the event of a fire.|Please use the stairs if there is a fire.|Please leverage the stairwell during fire events.|Please use the lift if there is a fire.
         The meeting will commence at this point in time.|The meeting will begin now.|The meeting will be actioned at this juncture.|The meeting will end now.
         The patient presented with acute myocardial infarction.|The patient had a sudden heart attack.|The patient exhibited an acute cardiac event.|The patient had a mild cold.
@@ -426,6 +775,7 @@ const confused8 = topic("grammar", {
       ],
       ["Which word fits the sentence?", "哪个词适合这个句子？"],
       `
+${fitLines8}
         The climbers began their ___ before dawn.|ascent|assent|accent
         The king gave his ___ to the new law.|assent|ascent|absent
         The ship's sails were made of ___.|canvas|canvass|canvasser
@@ -479,6 +829,7 @@ const confused8 = topic("grammar", {
       ],
       ["Which word has this meaning?", "哪个词有这个意思？"],
       `
+${meaningLines8}
         a climb upward|ascent|assent|accent
         agreement or approval|assent|ascent|absent
         a strong, heavy cloth used for tents and paintings|canvas|canvass|canvasser

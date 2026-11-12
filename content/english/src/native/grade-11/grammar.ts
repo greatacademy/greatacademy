@@ -2,7 +2,335 @@
 // and nonrestrictive elements, and the seventh set of commonly confused words.
 
 import type { TopicDef } from "@ga/content";
+import { everyPair } from "../../levels/words.ts";
 import { choose, type Label, label, topic } from "../grade-6/kit.ts";
+
+// Crossed items: frames, people and phrases multiply the lines below into a hundred items or more for each bank.
+
+const join = (lines: readonly string[]) => lines.join("\n");
+const upper = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+/** buried are a light verb, the noun that hides the real verb, and the real verb in the past. */
+const buried = [
+  ["conducted", "an investigation of", "investigated"],
+  ["gave", "consideration to", "considered"],
+  ["carried out", "an examination of", "examined"],
+  ["conducted", "a review of", "reviewed"],
+  ["performed", "an analysis of", "analyzed"],
+  ["held", "a discussion of", "discussed"],
+  ["made", "a revision of", "revised"],
+  ["gave", "approval to", "approved"],
+  ["made", "an evaluation of", "evaluated"],
+  ["carried out", "a study of", "studied"],
+] as const;
+const deskObjects = [
+  "the plan",
+  "the budget",
+  "the proposal",
+  "the report",
+  "the new rule",
+  "the safety record",
+  "the contract",
+  "the survey",
+] as const;
+const actors = ["The board", "The council", "The committee", "The manager", "The panel", "The team"] as const;
+const whens = ["last week", "on Monday", "in March", "yesterday"] as const;
+const buriedCases = everyPair(buried, deskObjects).map(([b, obj], k) => ({ b, obj, k, actor: actors[k % actors.length] ?? "The board" }));
+const weakLines = join(
+  buriedCases.map(({ b: [light, noun, past], obj, k, actor }) => {
+    if (k % 3 === 0) return `${actor} ${light} ${noun} ${obj}.|a buried verb`;
+    if (k % 3 === 1) return `${actor} ${past} ${obj}.|direct and clear`;
+    return `${upper(obj)} was ${past} ${whens[k % whens.length]}.|a passive with no actor`;
+  }),
+);
+const freedLines = join(
+  buriedCases.map(
+    ({ b: [light, noun, past], obj, actor }) =>
+      `${actor} ${light} ${noun} ${obj}.|${actor} ${past} ${obj}.|${upper(noun)} ${obj} was ${light} by ${actor.toLowerCase()}.|${actor} ${light} ${noun} ${obj} and then ${past} it.`,
+  ),
+);
+
+const efforts = [
+  "practicing daily",
+  "saving every week",
+  "reading each night",
+  "training before dawn",
+  "asking for help",
+  "planting more trees",
+  "sharing the work",
+  "checking every answer",
+] as const;
+const payoffs = [
+  "made a big difference",
+  "helped the whole family",
+  "changed everything",
+  "paid off in the end",
+  "surprised the coach",
+] as const;
+const lateEvents = [
+  "I was late",
+  "we left early",
+  "she quit the band",
+  "the game stopped",
+  "he moved away",
+  "they cancelled the trip",
+] as const;
+const lateCauses = [
+  "the bus broke down",
+  "it started to rain",
+  "the power went out",
+  "nobody told us the plan",
+  "the road was closed",
+  "my phone died",
+] as const;
+const lateCases = lateEvents.flatMap((ev, i) => [0, 1, 2].map((j) => [ev, lateCauses[(i + j) % lateCauses.length] ?? ""] as const));
+/** terms are a term, a fit noun for it, and what it is. */
+const terms = [
+  ["Inflation", "a period", "prices rise quickly"],
+  ["Alliteration", "a device", "several words begin with the same sound"],
+  ["A drought", "a time", "no rain falls for months"],
+  ["Erosion", "a process", "water slowly wears away the land"],
+  ["A monopoly", "a market", "one company controls all the sales"],
+  ["Photosynthesis", "a process", "plants make food from light"],
+  ["An eclipse", "an event", "the moon blocks the sun"],
+  ["A simile", "a comparison", "two things are linked with like or as"],
+  ["A strike", "a protest", "workers refuse to work"],
+  ["A flashback", "a scene", "the story jumps back in time"],
+] as const;
+const purposes = [
+  ["the fence", "keeping deer out", "keep deer out"],
+  ["the meeting", "choosing a leader", "choose a leader"],
+  ["the tax", "paying for roads", "pay for roads"],
+  ["the drill", "preparing for a fire", "prepare for a fire"],
+  ["the dam", "storing water", "store water"],
+  ["the test", "finding weak spots", "find weak spots"],
+] as const;
+const blames = [
+  ["the fire", "a faulty wire"],
+  ["the delay", "a strike at the port"],
+  ["the flood", "a blocked drain"],
+  ["the crash", "black ice"],
+  ["the outbreak", "dirty water"],
+  ["the blackout", "a fallen tree"],
+] as const;
+const wrongLines = join([
+  ...everyPair(efforts, payoffs).flatMap(([effort, payoff], k) =>
+    k % 5 < 3
+      ? [`By ${effort} ${payoff}.|a mixed construction`]
+      : [`${upper(effort)} ${payoff}.|correct`, `By ${effort}, she ${payoff}.|correct`],
+  ),
+  ...lateCases.map(([ev, cause]) => `The reason ${ev} is because ${cause}.|faulty predication`),
+  ...terms.map(([term, , def]) => `${term} is when ${def}.|faulty predication`),
+  ...purposes.map(([thing, ing]) => `The purpose of ${thing} is for ${ing}.|faulty predication`),
+  ...blames.map(([what, why]) => `The cause of ${what} was due to ${why}.|faulty predication`),
+]);
+const mendLines = join([
+  ...everyPair(efforts, payoffs).map(
+    ([effort, payoff]) => `By ${effort} ${payoff}.|${upper(effort)} ${payoff}.|By ${effort}, ${payoff}.|By ${effort} was what ${payoff}.`,
+  ),
+  ...lateCases.map(
+    ([ev, cause]) =>
+      `The reason ${ev} is because ${cause}.|The reason ${ev} is that ${cause}.|The reason ${ev} is due to because ${cause}.|The reason why ${ev} is because of ${cause}.`,
+  ),
+  ...terms.map(
+    ([term, kind, def]) =>
+      `${term} is when ${def}.|${term} is ${kind} in which ${def}.|${term} is where ${def}.|${term} is because ${def}.`,
+  ),
+  ...purposes.map(
+    ([thing, ing, base]) =>
+      `The purpose of ${thing} is for ${ing}.|The purpose of ${thing} is to ${base}.|The purpose of ${thing} is for to ${base}.|The purpose of ${thing} is because ${ing}.`,
+  ),
+  ...blames.map(
+    ([what, why]) =>
+      `The cause of ${what} was due to ${why}.|The cause of ${what} was ${why}.|The cause of ${what} was because of due to ${why}.|The cause of ${what} is why ${why}.`,
+  ),
+]);
+
+const crowds = [
+  ["students", "went on the trip"],
+  ["passengers", "boarded the train"],
+  ["players", "joined the parade"],
+  ["workers", "got a bonus"],
+  ["guests", "stayed for dinner"],
+  ["runners", "received medals"],
+] as const;
+const crowdFacts = ["had tickets", "finished early", "wore helmets", "arrived on time", "signed the form", "passed the test"] as const;
+const crowdCases = everyPair(crowds, crowdFacts);
+const commaLines = join(
+  crowdCases.flatMap(([[n, pred], fact]) => [
+    `Only some of the ${n} ${fact}, and only they ${pred}.|The ${n} who ${fact} ${pred}.|The ${n}, who ${fact}, ${pred}.|The ${n} who ${fact}, ${pred}.`,
+    `All of the ${n} ${fact}, and all of them ${pred}.|The ${n}, who all ${fact}, ${pred}.|The ${n} who all ${fact} ${pred}.|The ${n}, who all ${fact} ${pred}.`,
+  ]),
+);
+const commaSayLines = join(
+  crowdCases.flatMap(([[n, pred], fact]) => [
+    `The ${n} who ${fact} ${pred}.|only some, picked out`,
+    `The ${n}, who ${fact}, ${pred}.|all, with an extra fact`,
+    `The ${n} who ${fact}, ${pred}.|punctuated wrongly`,
+  ]),
+);
+
+const fitLines7 = `A ___ assistant never gossips about the boss.|discreet|discrete|decent
+She made a ___ inquiry about the job.|discreet|discrete|decent
+The hotel staff were polite and ___.|discreet|discrete|decent
+He kept a ___ distance from the arguing couple.|discreet|discrete|decent
+The data falls into four ___ groups.|discrete|discreet|distinct
+Light comes in ___ packets called photons.|discrete|discreet|distinct
+The project has three ___ stages.|discrete|discreet|distinct
+Each ___ step must be finished before the next.|discrete|discreet|distinct
+She likes to ___ her expensive jewelry.|flaunt|flout|float
+The winners ___ their medals all week.|flaunted|flouted|floated
+Rich tourists ___ their wealth in the market.|flaunt|flout|float
+He ___ his new watch at every meeting.|flaunted|flouted|floated
+Drivers who ___ the speed limit will be fined.|flout|flaunt|float
+The company ___ safety rules for years.|flouted|flaunted|floated
+Some fans ___ the ban on fireworks.|flouted|flaunted|floated
+The rebels openly ___ the curfew.|flouted|flaunted|floated
+Are you trying to ___ that I lied?|imply|infer|employ
+Her silence seemed to ___ agreement.|imply|infer|employ
+The report ___ that the mayor knew.|implied|inferred|employed
+His smile ___ that he had won.|implied|inferred|employed
+From her tone, I ___ that she was angry.|inferred|implied|referred
+What can we ___ from the evidence?|infer|imply|refer
+Readers ___ the hero's fear from his actions.|infer|imply|refer
+The detective ___ that the thief was tall.|inferred|implied|referred
+The red scarf ___ her green coat.|complements|compliments|implements
+A good wine ___ the meal.|complements|compliments|implements
+The two players ___ each other well.|complement|compliment|implement
+The ship has a full ___ of sailors.|complement|compliment|implement
+He paid her a ___ on her speech.|compliment|complement|complaint
+The chef took the praise as a ___.|compliment|complement|complaint
+Guests ___ the hosts on the dinner.|complimented|complemented|complained
+Thank you for the kind ___.|compliment|complement|complaint
+The question was meant to ___ an honest answer.|elicit|illicit|solicit
+The joke failed to ___ a laugh.|elicit|illicit|solicit
+Teachers ask questions to ___ ideas from students.|elicit|illicit|solicit
+The new law ___ angry protests.|elicited|illicit|solicited
+Police seized ___ drugs at the border.|illicit|elicit|explicit
+They ran an ___ gambling den.|illicit|elicit|explicit
+The ___ trade in ivory must end.|illicit|elicit|explicit
+He made an ___ profit from stolen goods.|illicit|elicit|explicit
+An ___ surgeon gave the lecture.|eminent|imminent|prominent
+She is an ___ scholar of ancient Greek.|eminent|imminent|prominent
+The prize went to an ___ physicist.|eminent|imminent|prominent
+Many ___ writers attended the festival.|eminent|imminent|prominent
+Dark clouds warned of an ___ storm.|imminent|eminent|immense
+The bridge is in ___ danger of collapse.|imminent|eminent|immense
+An attack seemed ___.|imminent|eminent|immense
+The doctors said the birth was ___.|imminent|eminent|immense
+The ___ reason for the delay was money.|principal|principle|princely
+The ___ called my parents.|principal|principle|princely
+Rice is the ___ crop of the region.|principal|principle|princely
+The bank lends a ___ of ten thousand dollars.|principal|principle|princely
+She refused on ___ to tell a lie.|principle|principal|prince
+Gravity works on a simple ___.|principle|principal|prince
+Fairness is a ___ of good government.|principle|principal|prince
+He is a man of strong ___s.|principle|principal|prince
+The truck stayed ___ in the traffic jam.|stationary|stationery|station
+A ___ bike is good exercise in winter.|stationary|stationery|station
+The satellite seems ___ above the equator.|stationary|stationery|station
+Keep the camera ___ while you shoot.|stationary|stationery|station
+I bought pens and envelopes at the ___ shop.|stationery|stationary|stationed
+The hotel provides ___ in every room.|stationery|stationary|stationed
+She wrote on fancy ___ with her name on top.|stationery|stationary|stationed
+Our office ordered new ___ for the year.|stationery|stationary|stationed
+The ___ mountain road made us dizzy.|tortuous|torturous|torrential
+The ___ path wound through the forest.|tortuous|torturous|torrential
+After ___ negotiations, a deal was reached.|tortuous|torturous|torrential
+The river takes a ___ course to the sea.|tortuous|torturous|torrential
+The ___ heat made the march unbearable.|torturous|tortuous|torrential
+Waiting for the results was ___.|torturous|tortuous|torrential
+He suffered a ___ night of pain.|torturous|tortuous|torrential
+The ___ exam lasted six hours.|torturous|tortuous|torrential
+Animals ___ to cold climates by growing thick fur.|adapt|adopt|adept
+The novel was ___ for the stage.|adapted|adopted|adept
+New students soon ___ to the routine.|adapt|adopt|adept
+She ___ the recipe for a smaller oven.|adapted|adopted|adept
+The couple decided to ___ a child.|adopt|adapt|adept
+The town ___ a new flag last year.|adopted|adapted|adept
+We should ___ a calmer tone.|adopt|adapt|adept
+The council ___ the plan without changes.|adopted|adapted|adept`;
+
+const meaningLines7 = `able to keep a secret|discreet|discrete|decent
+quiet and tactful|discreet|discrete|decent
+not drawing attention|discreet|discrete|decent
+showing good judgment in speech|discreet|discrete|decent
+made of separate parts|discrete|discreet|distinct
+individually distinct|discrete|discreet|decent
+existing as a separate unit|discrete|discreet|decent
+not joined to anything else|discrete|discreet|decent
+to display proudly|flaunt|flout|float
+to parade something for others to envy|flaunt|flout|float
+to show off wealth|flaunt|flout|float
+to wave something about to impress|flaunt|flout|float
+to defy a law|flout|flaunt|float
+to treat a rule with contempt|flout|flaunt|float
+to ignore an order on purpose|flout|flaunt|float
+to scorn a custom openly|flout|flaunt|float
+to hint without saying directly|imply|infer|employ
+to express indirectly|imply|infer|employ
+to carry a meaning beneath the words|imply|infer|employ
+to suggest a conclusion to a listener|imply|infer|employ
+to work out from evidence|infer|imply|refer
+to reach a conclusion by reasoning|infer|imply|refer
+to read a meaning into something|infer|imply|refer
+to deduce|infer|imply|refer
+something that completes or goes well with another|complement|compliment|implement
+to make whole|complement|compliment|implement
+the full number needed|complement|compliment|implement
+to add to in a fitting way|complement|compliment|implement
+a remark of praise|compliment|complement|complaint
+to say something admiring|compliment|complement|complaint
+an expression of respect or approval|compliment|complement|complaint
+to congratulate|compliment|complement|complaint
+to draw out a reply or reaction|elicit|illicit|solicit
+to bring out information|elicit|illicit|solicit
+to provoke a response|elicit|illicit|solicit
+to call forth|elicit|illicit|solicit
+against the law|illicit|elicit|explicit
+forbidden by rules|illicit|elicit|explicit
+secret and unlawful|illicit|elicit|explicit
+not permitted|illicit|elicit|explicit
+famous and respected|eminent|imminent|prominent
+outstanding in a profession|eminent|imminent|prominent
+of high rank|eminent|imminent|prominent
+distinguished|eminent|imminent|prominent
+about to happen|imminent|eminent|immense
+coming very soon|imminent|eminent|immense
+threatening to occur at once|imminent|eminent|immense
+near at hand|imminent|eminent|immense
+first in importance|principal|principle|princely
+the head of a school|principal|principle|princely
+a sum of money lent|principal|principle|princely
+chief|principal|principle|princely
+a basic truth|principle|principal|prince
+a rule of conduct|principle|principal|prince
+a moral belief|principle|principal|prince
+a law of nature|principle|principal|prince
+not moving|stationary|stationery|station
+standing still|stationary|stationery|station
+fixed in one place|stationary|stationery|station
+unchanging in position|stationary|stationery|station
+writing paper and envelopes|stationery|stationary|stationed
+office supplies such as pens|stationery|stationary|stationed
+materials for writing letters|stationery|stationary|stationed
+paper goods sold for writing|stationery|stationary|stationed
+full of twists and turns|tortuous|torturous|torrential
+winding|tortuous|torturous|torrential
+long and complicated|tortuous|torturous|torrential
+not direct or straightforward|tortuous|torturous|torrential
+causing great pain|torturous|tortuous|torrential
+agonizing|torturous|tortuous|torrential
+extremely unpleasant to endure|torturous|tortuous|torrential
+like torture|torturous|tortuous|torrential
+to change to suit new conditions|adapt|adopt|adept
+to adjust|adapt|adopt|adept
+to rewrite for a new form|adapt|adopt|adept
+to become used to something|adapt|adopt|adept
+to take as one's own|adopt|adapt|adept
+to take a child legally into a family|adopt|adapt|adept
+to accept a plan formally|adopt|adapt|adept
+to begin to use a method|adopt|adapt|adept`;
 
 /** L builds a label from its Chinese name, why it is right and why it is not. */
 const L = (zh: string, whyEn: string, whyZh: string, notEn: string, notZh: string): Label => ({
@@ -29,6 +357,7 @@ const nominalizations = topic("grammar", {
       ],
       ["What, if anything, weakens this sentence?", "如果有的话，是什么削弱了这个句子？"],
       `
+${weakLines}
         The board made a decision to postpone the vote.|a buried verb
         The council conducted an investigation of the complaints.|a buried verb
         The students gave consideration to the proposal.|a buried verb
@@ -95,6 +424,7 @@ const nominalizations = topic("grammar", {
       ],
       ["Which revision frees the verb and keeps the meaning?", "哪个修改让动词解放出来并保持了原意？"],
       `
+${freedLines}
         The committee made a decision to close the pool.|The committee decided to close the pool.|The committee made the decision of closing the pool.|The committee closed the pool before deciding.
         The teacher gave an explanation of the rule.|The teacher explained the rule.|The teacher gave the rule an explanation.|The teacher ruled on the explanation.
         The company made an announcement of layoffs.|The company announced layoffs.|An announcement of layoffs was made by the company.|The company laid off the announcer.
@@ -159,6 +489,7 @@ const mixed = topic("grammar", {
       ],
       ["What, if anything, is wrong with this sentence?", "如果有的话，这个句子有什么问题？"],
       `
+${wrongLines}
         By studying every night improved her grades.|a mixed construction
         Because he was late caused the team to lose.|a mixed construction
         In the novel shows how greed destroys a family.|a mixed construction
@@ -229,6 +560,7 @@ const mixed = topic("grammar", {
       ],
       ["Which revision mends the sentence?", "哪个修改修补了这个句子？"],
       `
+${mendLines}
         By studying every night improved her grades.|Studying every night improved her grades.|By studying every night, improved her grades.|By studying every night her grades improving.
         The reason I left is because I was tired.|The reason I left is that I was tired.|The reason I left is due to because I was tired.|The reason why I left is because of tired.
         Democracy is when people vote for leaders.|Democracy is a system in which people vote for leaders.|Democracy is when people are voting for leaders.|Democracy is where people vote for leaders.
@@ -290,6 +622,7 @@ const restrictive = topic("grammar", {
       ],
       ["Which sentence is punctuated correctly for the meaning given?", "对于所给的意思，哪个句子的标点是正确的？"],
       `
+${commaLines}
         Only some of the students passed, and only they went on the trip.|The students who passed the test went on the trip.|The students, who passed the test, went on the trip.|The students who passed the test, went on the trip.
         All the students passed, and all went on the trip.|The students, who all passed the test, went on the trip.|The students who all passed the test went on the trip.|The students, who all passed the test went on the trip.
         I have one sister, and she lives in Paris.|My sister, who lives in Paris, is a painter.|My sister who lives in Paris is a painter.|My sister, who lives in Paris is a painter.
@@ -345,6 +678,7 @@ const restrictive = topic("grammar", {
       ],
       ["What does the punctuation of this sentence tell you?", "这个句子的标点告诉了你什么？"],
       `
+${commaSayLines}
         The passengers who had tickets boarded the train.|only some, picked out
         The passengers, who had tickets, boarded the train.|all, with an extra fact
         The passengers who had tickets, boarded the train.|punctuated wrongly
@@ -424,6 +758,7 @@ const confused7 = topic("grammar", {
       ],
       ["Which word fits the sentence?", "哪个词适合这个句子？"],
       `
+${fitLines7}
         Please be ___ and don't tell anyone about the party.|discreet|discrete|decent
         The course is divided into six ___ units.|discrete|discreet|distinct
         The doctor was ___ about the patient's illness.|discreet|discrete|discredit
@@ -478,6 +813,7 @@ const confused7 = topic("grammar", {
       ],
       ["Which word has this meaning?", "哪个词有这个意思？"],
       `
+${meaningLines7}
         careful not to reveal private things|discreet|discrete|discredit
         separate and distinct from each other|discrete|discreet|discredit
         to show something off proudly|flaunt|flout|float

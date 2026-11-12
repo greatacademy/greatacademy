@@ -2,7 +2,204 @@
 // relative clauses with quantities and whose.
 
 import type { TopicDef } from "@ga/content";
+import { everyPair } from "../../levels/words.ts";
 import { choose, type Label, label, topic } from "../grade-6/kit.ts";
+
+// Crossed items: frames, people and phrases multiply the lines below into a hundred items or more for each bank.
+
+const join = (lines: readonly string[]) => lines.join("\n");
+const upper = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+/** opposites are a verb, its opposite, the first as a gerund and the second as a noun. */
+const opposites = [
+  ["build", "destroy", "building", "destruction"],
+  ["heal", "wound", "healing", "injury"],
+  ["teach", "punish", "teaching", "punishment"],
+  ["unite", "divide", "uniting", "division"],
+  ["free", "enslave", "freeing", "slavery"],
+  ["give", "take", "giving", "taking"],
+  ["create", "copy", "creating", "copying"],
+  ["lead", "follow", "leading", "following"],
+  ["protect", "conquer", "protecting", "conquest"],
+  ["listen", "judge", "listening", "judgment"],
+] as const;
+const strivers = [
+  "We came",
+  "They lived",
+  "She worked",
+  "He spoke",
+  "The army marched",
+  "The poets wrote",
+  "Our parents struggled",
+  "The founders labored",
+  "I rose",
+  "You trained",
+] as const;
+const balancedLines = join(
+  everyPair(strivers, opposites).map(
+    ([who, [a, b, aIng, bNoun]]) =>
+      `Begin with "${who}" and contrast ${aIng} with ${bNoun}.|${who} to ${a}, not to ${b}.|${who} to ${a}, not for ${bNoun}.|${who} for ${aIng} and not to ${b}.`,
+  ),
+);
+const traits = [
+  ["tired", "hungry", "cold"],
+  ["brave", "honest", "kind"],
+  ["quick", "clever", "curious"],
+  ["calm", "patient", "fair"],
+  ["proud", "stubborn", "lonely"],
+  ["young", "poor", "hopeful"],
+  ["strong", "steady", "loyal"],
+  ["quiet", "careful", "wise"],
+] as const;
+const describedPeople = ["She was", "The captain seemed", "My grandfather was", "The new teacher appeared"] as const;
+const jobs = ["The job", "The role", "The position", "The course", "The project", "The team"] as const;
+const faultyNeeds = [
+  ["patience", "careful planning", "to be good with people"],
+  ["energy", "a clear voice", "to be able to work late"],
+  ["skill", "good judgment", "being someone who listens"],
+  ["honesty", "hard work", "to show up on time"],
+  ["focus", "creativity", "that you work well alone"],
+  ["courage", "attention to detail", "to stay calm under pressure"],
+] as const;
+const balanceLines = join([
+  ...everyPair(describedPeople, traits).map(([who, [a, b, c]]) => `${who} ${a}, ${b} and ${c}.|a parallel series`),
+  ...opposites.flatMap(([a, b]) => [
+    `It is better to ${a} than to ${b}.|an antithesis`,
+    `They chose to ${a} rather than to ${b}.|an antithesis`,
+    `To ${a} is noble; to ${b} is easy.|an antithesis`,
+  ]),
+  ...everyPair(jobs, faultyNeeds).map(([job, [x, y, z]]) => `${job} requires ${x}, ${y} and ${z}.|faulty parallelism`),
+]);
+
+const waits = ["We searched", "They waited", "She trained", "He practised", "The town mourned", "I wondered"] as const;
+const spans = ["hours", "days", "weeks", "months", "years"] as const;
+const misses = [
+  "I missed the start of the play",
+  "We lost the final",
+  "She was late for school",
+  "He failed the driving test",
+  "The picnic was ruined",
+  "Our flight was cancelled",
+] as const;
+const reasons = [
+  "the traffic was terrible",
+  "the bus broke down",
+  "it rained all morning",
+  "nobody remembered the tickets",
+  "the storm grew worse",
+] as const;
+const fragmentLines = join([
+  ...everyPair(waits, spans).map(([who, span]) => `${who} for ${span}. **${upper(span)}.**|a deliberate fragment`),
+  ...everyPair(misses, reasons).map(([miss, reason]) => `${miss}. **Because ${reason}.**|an accidental fragment`),
+  ...everyPair(misses, reasons).map(([miss, reason]) => `${miss}. **${upper(reason)}.**|a complete sentence`),
+]);
+
+const goods = [
+  "clean air",
+  "a safe home",
+  "a fair trial",
+  "good health",
+  "true friends",
+  "a peaceful town",
+  "a good education",
+  "honest leaders",
+  "a little kindness",
+  "freedom to speak",
+  "enough food",
+  "a second chance",
+] as const;
+const causes = [
+  ["the collapse", "Three years of drought and a war"],
+  ["the fire", "A cigarette dropped in dry grass"],
+  ["the flood", "A week of rain and a broken dam"],
+  ["the strike", "Low pay and long hours"],
+  ["the famine", "Failed crops and closed roads"],
+  ["the crash", "Ice on the road and a tired driver"],
+  ["the blackout", "A storm that brought down the lines"],
+  ["the war", "Old quarrels and a single shot"],
+  ["the fall of the empire", "Debt, plague and endless borders"],
+  ["the panic", "A rumor that spread faster than the truth"],
+  ["the shortage", "A hot summer and too many buyers"],
+  ["the victory", "Training, patience and a little luck"],
+] as const;
+const places = [
+  "station",
+  "post office",
+  "library",
+  "bank",
+  "museum",
+  "pharmacy",
+  "bus stop",
+  "town hall",
+  "hospital",
+  "market",
+  "nearest café",
+  "swimming pool",
+] as const;
+const questionLines = join([
+  ...goods.flatMap((good) => [
+    `Who among us does not want ${good}?|a rhetorical question`,
+    `Is there anyone who would refuse ${good}?|a rhetorical question`,
+  ]),
+  ...causes.flatMap(([event, cause]) => [`What caused ${event}? ${cause}.|hypophora`, `Why did ${event} happen? ${cause}.|hypophora`]),
+  ...places.flatMap((place) => [
+    `Could you tell me where the ${place} is?|a genuine question`,
+    `What time does the ${place} open?|a genuine question`,
+    `Do you know how far the ${place} is?|a genuine question`,
+  ]),
+]);
+
+const peopleSets = [
+  "Sixty people applied for the job",
+  "The club has forty members",
+  "Thirty students took the test",
+  "The village has two hundred residents",
+  "The coach chose twelve players",
+  "The ship carried ninety passengers",
+  "Our choir has fifty singers",
+  "The hospital hired twenty nurses",
+] as const;
+const peopleFacts = ["live nearby", "speak French", "had never voted before", "came from abroad", "were under twenty", "wore red"] as const;
+const thingSets = [
+  "The museum owns ten thousand paintings",
+  "The library has a million books",
+  "The shop sells hundreds of hats",
+  "The garden contains fifty kinds of roses",
+  "The city has forty bridges",
+  "The collector bought nine old maps",
+  "The ship carried three hundred crates",
+  "The archive holds six thousand letters",
+] as const;
+const thingFacts = ["are on display", "were damaged in the flood", "came from Asia", "are very rare", "need repair", "were gifts"] as const;
+const amounts = ["many", "most", "some", "few", "half", "several", "two", "all"] as const;
+const quantityLines = join([
+  ...everyPair(peopleSets, peopleFacts).map(([set, fact], k) => {
+    const q = amounts[k % amounts.length] ?? "many";
+    return `${set}, ___ ${fact}.|${q} of whom|${q} of who|${q} of them`;
+  }),
+  ...everyPair(thingSets, thingFacts).map(([set, fact], k) => {
+    const q = amounts[(k + 3) % amounts.length] ?? "many";
+    return `${set}, ___ ${fact}.|${q} of which|${q} of that|${q} of them`;
+  }),
+]);
+
+const persons = ["writer", "singer", "farmer", "teacher", "doctor", "pilot", "chef", "painter"] as const;
+const theirs = [
+  "work is famous",
+  "name I always forget",
+  "home burned down",
+  "son plays chess",
+  "car broke down",
+  "ideas changed the town",
+] as const;
+const placesWith = ["city", "house", "tree", "book", "river", "company"] as const;
+const itsTraits = ["name means 'new'", "history is long", "future is uncertain"] as const;
+const comings = ["coming to dinner", "in charge today", "leaving tomorrow"] as const;
+const whoseLines = join([
+  ...everyPair(persons, theirs).map(([person, rest]) => `We met a ${person} ___ ${rest}.|whose|who's|that's`),
+  ...everyPair(placesWith, itsTraits).map(([place, rest]) => `It is a ${place} ___ ${rest}.|whose|who's|which's`),
+  ...everyPair(persons, comings).map(([person, rest]) => `Ask the ${person} ___ ${rest}.|who's|whose|that's`),
+]);
 
 /** L builds a label from its Chinese name, why it is right and why it is not. */
 const L = (zh: string, whyEn: string, whyZh: string, notEn: string, notZh: string): Label => ({
@@ -29,6 +226,7 @@ const antithesis = topic("grammar", {
       ],
       ["Which version keeps the contrast balanced?", "哪一个版本让对照保持平衡？"],
       `
+${balancedLines}
         Contrast speech and silence.|Speech is silver; silence is golden.|Speech is silver, but being silent is something golden.|Speech is silver; to be silent, golden in value.
         Contrast erring and forgiving.|To err is human; to forgive, divine.|To err is human; forgiving is a thing that is divine.|Erring is human, and to forgive is divine.
         Contrast building and destroying.|We came to build, not to destroy.|We came to build, not for the destruction of things.|We came for building and not to destroy.
@@ -84,6 +282,7 @@ const antithesis = topic("grammar", {
       ],
       ["What kind of balance does this sentence have?", "这个句子属于哪种平衡？"],
       `
+${balanceLines}
         We shall fight on the beaches, we shall fight in the fields, we shall fight in the streets.|a parallel series
         It is better to be feared than to be loved.|an antithesis
         The job requires patience, careful planning and to be good with people.|faulty parallelism
@@ -160,6 +359,7 @@ const forEffect = topic("grammar", {
       ],
       ["What is the part in bold?", "加粗的部分是什么？"],
       `
+${fragmentLines}
         We waited all night for news. **Nothing.**|a deliberate fragment
         I missed the start of the play. **Because the traffic was terrible.**|an accidental fragment
         The storm passed. **The town began to rebuild.**|a complete sentence
@@ -224,6 +424,7 @@ const forEffect = topic("grammar", {
       ],
       ["What kind of question is this?", "这是哪种问句？"],
       `
+${questionLines}
         Who among us has never made a mistake?|a rhetorical question
         What caused the collapse? Three years of drought and a war.|hypophora
         Could you tell me where the station is?|a genuine question
@@ -300,6 +501,7 @@ const quantified = topic("grammar", {
       ],
       ["Which words complete the sentence correctly?", "哪一组词能正确地完成句子？"],
       `
+${quantityLines}
         Sixty people applied for the job, ___ had never worked before.|many of whom|many of who|many of them
         The museum owns ten thousand paintings, ___ are on display.|few of which|few of that|few of them
         She wrote four novels, ___ won a prize.|two of which|two of that|two of them
@@ -355,6 +557,7 @@ const quantified = topic("grammar", {
       ],
       ["Which words complete the sentence correctly?", "哪一组词能正确地完成句子？"],
       `
+${whoseLines}
         We met a scientist ___ research saved thousands of lives.|whose|who's|that's
         It is a city ___ history goes back three thousand years.|whose|who's|which's
         The girl ___ bicycle was stolen called the police.|whose|who's|that's

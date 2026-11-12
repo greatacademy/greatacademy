@@ -605,7 +605,7 @@ const spellingLines = join(
   ),
 );
 const misspelledLines = join(
-  hardWords.flatMap(([word, wrong1, wrong2, sentences]) =>
+  hardWords.flatMap(([, wrong1, wrong2, sentences]) =>
     sentences.map((line, j) => {
       const [sentence = "", a = "", b = ""] = line.split("|");
       const bad = j === 0 ? wrong1 : wrong2;

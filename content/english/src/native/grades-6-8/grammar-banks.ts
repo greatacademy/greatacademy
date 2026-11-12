@@ -465,7 +465,7 @@ const verbalMore: readonly Verbals[] = verbalActs.flatMap(([ing, base, asSubject
   [0, 1, 2].map((n): Verbals => {
     const who = pick(verbalPeople, i + n * 2);
     return [
-      `**${capital(ing)}** ${asSubject}${n === 0 ? "" : n === 1 ? " for " + who : " last year"}.`,
+      `**${capital(ing)}** ${asSubject}${n === 0 ? "" : n === 1 ? ` for ${who}` : " last year"}.`,
       `${who} ${pick(likeVerbs, i + n)} **${ing}**.`,
       `**${capital(ing)}**, ${who} ${meanwhile}.`,
       `${who} ${pick(wantVerbs, i + n)} **to ${base}**.`,

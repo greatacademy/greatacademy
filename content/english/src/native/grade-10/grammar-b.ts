@@ -2,7 +2,340 @@
 // in the main clause, and the sixth set of commonly confused words.
 
 import type { TopicDef } from "@ga/content";
+import { everyPair } from "../../levels/words.ts";
 import { choose, type Label, label, topic } from "../grade-6/kit.ts";
+
+// Crossed items: frames, people and phrases multiply the lines below into a hundred items or more for each bank.
+
+const join = (lines: readonly string[]) => lines.join("\n");
+const upper = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+const stolenThings = ["car", "bicycle", "mailbox", "garden gate", "shop window", "boat"] as const;
+const nightDeeds = ["damaged", "moved", "painted", "taken"] as const;
+const hiddenFaults = ["Mistakes were made in", "Errors were made in", "Rules were broken in", "Corners were cut in"] as const;
+const hiddenAreas = [
+  "the counting of the votes",
+  "the handling of the budget",
+  "the report to the board",
+  "the hiring process",
+  "the safety checks",
+  "the company's accounts",
+] as const;
+const doerFacts = [
+  "Marie Curie discovered radium in 1898.",
+  "Nelson Mandela led South Africa after apartheid.",
+  "Gandhi led the Salt March in 1930.",
+  "Neil Armstrong walked on the moon in 1969.",
+  "Amelia Earhart flew alone across the Atlantic.",
+  "Galileo observed the moons of Jupiter.",
+  "Ada Lovelace wrote the first published program.",
+  "Louis Pasteur developed a rabies vaccine.",
+  "Frida Kahlo painted dozens of self-portraits.",
+  "Jesse Owens won four gold medals in Berlin.",
+  "Tu Youyou discovered artemisinin.",
+  "Wangari Maathai founded the Green Belt Movement.",
+  "Alexander Fleming discovered penicillin in 1928.",
+  "Harriet Tubman led many people to freedom.",
+] as const;
+const receiverFacts = [
+  "The Great Wall was built over many centuries.",
+  "The Taj Mahal was completed around 1653.",
+  "Machu Picchu was abandoned in the sixteenth century.",
+  "The Mona Lisa was painted in the early 1500s.",
+  "The Terracotta Army was discovered in 1974.",
+  "The Statue of Liberty was dedicated in 1886.",
+  "The Parthenon was finished in 438 BC.",
+  "The Dead Sea Scrolls were found in caves near Qumran.",
+  "Stonehenge was raised about 4,500 years ago.",
+  "The Colosseum was opened in AD 80.",
+  "The Panama Canal was opened in 1914.",
+  "The Magna Carta was sealed in 1215.",
+  "The Titanic was launched in 1911.",
+  "The Forbidden City was completed in 1420.",
+] as const;
+const voiceLines = join([
+  ...everyPair(stolenThings, nightDeeds).map(
+    ([thing, deed]) => `Our ${thing} was ${deed} during the night, and no one saw who did it.|the doer is unknown`,
+  ),
+  ...everyPair(hiddenFaults, hiddenAreas).map(([fault, area]) => `${fault} ${area}.|to hide the doer`),
+  ...doerFacts.map((fact) => `${fact}|to stress the doer`),
+  ...receiverFacts.map((fact) => `${fact}|to stress the receiver`),
+]);
+
+/** deeds are a doer, its pronoun and object form, whether it is plural, the verb in past and participle forms, the thing and the rest. */
+const deeds = [
+  ["Marie Curie", "She", "her", false, "discovered", "discovered", "radium", "in 1898"],
+  ["Howard Carter", "He", "him", false, "found", "found", "Tutankhamun's tomb", "in 1922"],
+  ["French soldiers", "They", "them", true, "found", "found", "the Rosetta Stone", "in 1799"],
+  ["Eiffel's engineers", "They", "them", true, "built", "built", "the Eiffel Tower", "for the fair of 1889"],
+  ["Leonardo da Vinci", "He", "him", false, "painted", "painted", "the Mona Lisa", "in the early 1500s"],
+  ["Farmers digging a well", "They", "them", true, "found", "found", "the Terracotta Army", "in 1974"],
+  ["Alexander Fleming", "He", "him", false, "discovered", "discovered", "penicillin", "in 1928"],
+  ["Shah Jahan", "He", "him", false, "built", "built", "the Taj Mahal", "for his wife"],
+  ["Bedouin shepherds", "They", "them", true, "found", "found", "the first of the Dead Sea Scrolls", "in 1947"],
+  ["Tim Berners-Lee", "He", "him", false, "invented", "invented", "the World Wide Web", "in 1989"],
+  ["Frida Kahlo", "She", "her", false, "painted", "painted", "The Two Fridas", "in 1939"],
+  ["The Wright brothers", "They", "them", true, "flew", "flown", "the first powered airplane", "in 1903"],
+  ["Johannes Gutenberg", "He", "him", false, "built", "built", "a printing press with movable type", "around 1440"],
+  ["Hiram Bingham", "He", "him", false, "made known", "made known", "Machu Picchu", "to the wider world in 1911"],
+] as const;
+const lower = (s: string) => (s.startsWith("The ") && !s.startsWith("The Two") ? `the ${s.slice(4)}` : s);
+const focusLines = join(
+  deeds.flatMap(([doer, pron, obj, plural, past, pp, thing, rest]) => {
+    const one = plural ? "were the ones" : "was the one";
+    const aboutThing = (frame: string) =>
+      `${frame} ___|It was ${pp} by ${lower(doer)} ${rest}.|${doer} ${past} it ${rest}.|${upper(rest)}, ${lower(doer)} ${one} who ${past} it.`;
+    const aboutDoer = (frame: string) =>
+      `${frame} ___|${pron} ${past} ${thing} ${rest}.|${upper(thing)} was ${pp} by ${obj} ${rest}.|${upper(rest)}, ${thing} was ${pp} by ${lower(doer)}.`;
+    return [
+      aboutThing(`Consider ${thing}.`),
+      aboutThing(`${upper(thing)} is famous today.`),
+      aboutThing(`Our story turns to ${thing}.`),
+      aboutDoer(`Consider ${lower(doer)}.`),
+      aboutDoer(`${doer} ${plural ? "deserve" : "deserves"} the credit.`),
+      aboutDoer(`Our story turns to ${lower(doer)}.`),
+    ];
+  }),
+);
+
+const strugglers = [
+  ["Ana", "she"],
+  ["Ravi", "he"],
+  ["Mei", "she"],
+  ["Tom", "he"],
+  ["Lena", "she"],
+  ["Omar", "he"],
+] as const;
+const obstacles = ["was tired", "had little time", "felt nervous", "had a cold"] as const;
+const triumphs = ["won the race", "finished the essay", "passed the exam", "gave a fine speech"] as const;
+const mainLines = join(
+  everyPair(strugglers, obstacles).flatMap(([[who, pron], obstacle]) =>
+    triumphs.map(
+      (triumph) =>
+        `[Stress that ${who} ${triumph}, not that ${pron} ${obstacle}.]|Although ${who} ${obstacle}, ${pron} ${triumph}.|Although ${who} ${triumph}, ${pron} ${obstacle}.|${who} ${obstacle}, and ${pron} ${triumph}.`,
+    ),
+  ),
+);
+
+const sounds = [
+  "the wind howled",
+  "the rain fell",
+  "the thunder rolled",
+  "the dogs barked",
+  "the shutters banged",
+  "the lights flickered",
+  "the river rose",
+] as const;
+const siblings = [
+  ["Mia", "violin", "her brother", "cello"],
+  ["Sam", "drums", "his sister", "flute"],
+  ["Lucia", "piano", "her cousin", "trumpet"],
+  ["Ken", "guitar", "his father", "banjo"],
+] as const;
+const blockers = [
+  "the road was icy",
+  "the storm knocked out the power",
+  "the bridge was closed",
+  "snow blocked the pass",
+  "the river flooded",
+  "the wind was too strong",
+] as const;
+const results = [
+  "the buses did not run",
+  "school was cancelled",
+  "we stayed home",
+  "the trip was postponed",
+  "the market closed early",
+] as const;
+const morning = [
+  "the alarm rang",
+  "it was raining",
+  "I was late",
+  "I missed the bus",
+  "I walked",
+  "my shoes got wet",
+  "the gate was locked",
+  "I climbed over",
+] as const;
+const coordLines = join([
+  ...sounds.flatMap((a, i) => sounds.slice(i + 1).map((b) => `${upper(a)}, and ${b}.|coordination of equal ideas`)),
+  ...siblings.flatMap(([a, x, b, y]) => [
+    `${a} plays the ${x}; ${b} plays the ${y}.|coordination of equal ideas`,
+    `${a} plays the ${x}, and ${b} plays the ${y}.|coordination of equal ideas`,
+    `${a} sings, and ${b} plays the ${y}.|coordination of equal ideas`,
+  ]),
+  ...everyPair(blockers, results).map(([why, what]) => `Because ${why}, ${what}.|subordination of background`),
+  ...morning.flatMap((_, k) => {
+    const pick = (n: number) => morning[(k + n) % morning.length] ?? "";
+    return [
+      `I woke up and ${pick(0)} and ${pick(1)} and ${pick(2)} and ${pick(3)}.|excessive coordination`,
+      `We got up and ${pick(0)} and ${pick(2)} and ${pick(4)} and ${pick(5)}.|excessive coordination`,
+      `And then ${pick(1)} and ${pick(3)} and ${pick(5)} and then ${pick(6)}.|excessive coordination`,
+    ];
+  }),
+]);
+
+const fitLines6 = `The neighbor's dog kept up a ___ barking all afternoon, stopping only to drink.|continual|continuous|contentious
+Her ___ complaints about the noise wore everyone out.|continual|continuous|contentious
+There were ___ interruptions during the meeting.|continual|continuous|contiguous
+The ___ ringing of the phone made it hard to work.|continual|continuous|contentious
+The desert has a ___ stretch of sand for two hundred miles.|continuous|continual|contiguous
+A ___ line of cars stretched to the horizon.|continuous|continual|contentious
+The patient needs ___ care around the clock.|continuous|continual|contiguous
+The machine hummed in one ___ tone.|continuous|continual|contentious
+The vet ___ a cream for the dog's ear.|prescribed|proscribed|described
+Doctors often ___ rest for a sprained ankle.|prescribe|proscribe|describe
+The law ___ the steps a judge must follow.|prescribes|proscribes|describes
+My doctor ___ glasses for reading.|prescribed|proscribed|described
+The church ___ the book as dangerous.|proscribed|prescribed|subscribed
+The treaty ___ the use of poison gas.|proscribes|prescribes|subscribes
+Gambling was ___ in the old city.|proscribed|prescribed|subscribed
+The rules ___ any talking during the exam.|proscribe|prescribe|subscribe
+The poem ___ the beauty of the mountains.|exalts|exults|exempts
+The people ___ their hero as a saint.|exalted|exulted|exempted
+The king ___ his loyal general to a duke.|exalted|exulted|exempted
+Old songs ___ the bravery of the sailors.|exalt|exult|exempt
+The crowd ___ in the team's victory.|exulted|exalted|insulted
+She ___ at the news of her sister's recovery.|exulted|exalted|insulted
+We ___ when the long war finally ended.|exulted|exalted|insulted
+The farmers ___ as the rain finally came.|exulted|exalted|insulted
+The ship ___ in the storm and sank.|foundered|floundered|plundered
+The company ___ after its biggest client left.|foundered|floundered|plundered
+The peace talks ___ on the question of borders.|foundered|floundered|plundered
+The old boat ___ off the rocky coast.|foundered|floundered|plundered
+The nervous speaker ___ through his notes.|floundered|foundered|plundered
+The calf ___ in the deep mud.|floundered|foundered|plundered
+When asked about the money, the mayor ___.|floundered|foundered|plundered
+New students often ___ in their first week.|flounder|founder|plunder
+The squirrel buried its ___ of nuts under the oak.|hoard|horde|herd
+The dragon slept on a ___ of gold.|hoard|horde|herd
+Thieves found a secret ___ of coins under the floor.|hoard|horde|herd
+Some people ___ food before a storm.|hoard|horde|herd
+A ___ of fans rushed the stage.|horde|hoard|herd
+A ___ of tourists filled the square.|horde|hoard|herd
+The castle fell to a ___ of invaders.|horde|hoard|herd
+A ___ of shoppers waited for the doors to open.|horde|hoard|herd
+His bad temper ___ against his promotion.|militated|mitigated|imitated
+Poor weather ___ against a quick rescue.|militated|mitigated|imitated
+The lack of money ___ against the plan.|militated|mitigated|imitated
+Several facts ___ against the theory.|militate|mitigate|imitate
+Trees help ___ the heat of the city.|mitigate|militate|litigate
+The judge ___ the sentence because the boy was young.|mitigated|militated|litigated
+A sea wall can ___ the damage of a flood.|mitigate|militate|litigate
+Her apology did little to ___ the harm.|mitigate|militate|litigate
+The gang ___ a series of bank robberies.|perpetrated|perpetuated|penetrated
+Police caught the man who ___ the fraud.|perpetrated|perpetuated|penetrated
+Who ___ this terrible crime?|perpetrated|perpetuated|penetrated
+The hackers ___ an attack on the city's computers.|perpetrated|perpetuated|penetrated
+Old films often ___ unfair stereotypes.|perpetuate|perpetrate|punctuate
+The statue will ___ the memory of the heroes.|perpetuate|perpetrate|punctuate
+The custom has been ___ for centuries.|perpetuated|perpetrated|punctuated
+Silence only ___ the injustice.|perpetuates|perpetrates|punctuates
+She felt ___ about the harsh words she had said.|regretful|regrettable|resentful
+The ___ old man wished he had travelled more.|regretful|regrettable|resentful
+He gave a ___ smile and said goodbye.|regretful|regrettable|resentful
+The losing coach sounded ___ after the match.|regretful|regrettable|resentful
+The loss of the old library is deeply ___.|regrettable|regretful|respectable
+It is ___ that the trains were late again.|regrettable|regretful|respectable
+The mix-up was a ___ mistake.|regrettable|regretful|respectable
+The ___ decision cost the town its park.|regrettable|regretful|respectable
+The hurricane ___ havoc on the islands.|wreaked|wrecked|reeked
+The angry ruler ___ revenge on his enemies.|wreaked|wrecked|reeked
+Floods ___ destruction along the coast.|wreaked|wrecked|reeked
+The virus can ___ damage on old computers.|wreak|wreck|reek
+The storm ___ three fishing boats.|wrecked|wreaked|wrenched
+A falling tree ___ our car.|wrecked|wreaked|wrenched
+The scandal ___ his career.|wrecked|wreaked|wrenched
+Careless spending could ___ the budget.|wreck|wreak|wrench
+The club holds a ___ meeting, in March and September.|biannual|biennial|annual
+We get a ___ newsletter, once each spring and once each fall.|biannual|biennial|annual
+The dentist sends a ___ reminder, every six months.|biannual|biennial|annual
+Our ___ checkup comes in January and July.|biannual|biennial|annual
+The art fair is ___, held every other year.|biennial|biannual|centennial
+The ___ festival returns in two years' time.|biennial|biannual|centennial
+The ___ conference meets in odd-numbered years.|biennial|biannual|centennial
+Some plants are ___ and flower only in their second year.|biennial|biannual|centennial`;
+
+const meaningLines6 = `repeated often over a long time|continual|continuous|contentious
+coming back again and again with pauses|continual|continuous|contiguous
+frequent and annoying|continual|continuous|contentious
+recurring at short intervals|continual|continuous|contiguous
+unbroken from start to end|continuous|continual|contiguous
+without any gap in space or time|continuous|continual|contentious
+running on without stopping|continuous|continual|contiguous
+in one uninterrupted line|continuous|continual|contentious
+to set down as a rule to be followed|prescribe|proscribe|describe
+to tell a patient to take a medicine|prescribe|proscribe|describe
+to lay down what must be done|prescribe|proscribe|subscribe
+to recommend as a cure|prescribe|proscribe|describe
+to ban officially|proscribe|prescribe|subscribe
+to condemn as harmful and forbid|proscribe|prescribe|describe
+to outlaw|proscribe|prescribe|subscribe
+to prohibit by a rule|proscribe|prescribe|describe
+to praise very highly|exalt|exult|exempt
+to raise to a higher rank|exalt|exult|exempt
+to glorify|exalt|exult|exempt
+to lift up in honor|exalt|exult|exempt
+to feel great triumph|exult|exalt|insult
+to celebrate with great joy|exult|exalt|insult
+to be openly delighted|exult|exalt|insult
+to rejoice greatly|exult|exalt|insult
+to fill with water and sink|founder|flounder|plunder
+to collapse or fail completely|founder|flounder|plunder
+to break down and come to nothing|founder|flounder|plunder
+to go to the bottom, as a ship does|founder|flounder|plunder
+to move clumsily and with difficulty|flounder|founder|plunder
+to be confused and make mistakes|flounder|founder|plunder
+to struggle without making progress|flounder|founder|plunder
+to thrash about helplessly|flounder|founder|plunder
+a supply kept hidden for later|hoard|horde|herd
+a secret store of money or treasure|hoard|horde|herd
+to collect and keep things greedily|hoard|horde|herd
+a stockpile hidden away|hoard|horde|herd
+a large, disorderly crowd|horde|hoard|herd
+a swarm of people|horde|hoard|herd
+a wandering tribe or army|horde|hoard|herd
+a great mass of moving people|horde|hoard|herd
+to have a strong effect against something|militate|mitigate|imitate
+to be a powerful reason against|militate|mitigate|imitate
+to weigh heavily against a result|militate|mitigate|imitate
+to work to prevent something|militate|mitigate|imitate
+to make less harsh|mitigate|militate|litigate
+to reduce the seriousness of|mitigate|militate|litigate
+to soften the effect of|mitigate|militate|litigate
+to ease pain or harm|mitigate|militate|litigate
+to carry out something wicked|perpetrate|perpetuate|penetrate
+to be guilty of a crime|perpetrate|perpetuate|penetrate
+to commit a harmful act|perpetrate|perpetuate|penetrate
+to do something evil or illegal|perpetrate|perpetuate|penetrate
+to keep something going|perpetuate|perpetrate|punctuate
+to make something continue indefinitely|perpetuate|perpetrate|punctuate
+to preserve from being forgotten|perpetuate|perpetrate|punctuate
+to cause a belief to last|perpetuate|perpetrate|punctuate
+feeling sorry for something you did|regretful|regrettable|resentful
+full of sorrow over a loss|regretful|regrettable|resentful
+showing that you wish things were different|regretful|regrettable|resentful
+sad about a missed chance|regretful|regrettable|resentful
+unfortunate and to be lamented|regrettable|regretful|respectable
+deserving to be regretted|regrettable|regretful|respectable
+bad enough that people are sorry it happened|regrettable|regretful|respectable
+unwelcome and unfortunate|regrettable|regretful|respectable
+to bring about harm|wreak|wreck|reek
+to inflict punishment or revenge|wreak|wreck|reek
+to unleash damage|wreak|wreck|reek
+to let out anger on someone|wreak|wreck|reek
+to ruin completely|wreck|wreak|wrench
+to smash a ship or vehicle|wreck|wreak|wrench
+to spoil a plan or hope|wreck|wreak|wrench
+to break beyond repair|wreck|wreak|wrench
+occurring two times a year|biannual|biennial|annual
+happening every six months|biannual|biennial|annual
+twice yearly|biannual|biennial|annual
+in two parts of each year|biannual|biennial|annual
+occurring once in two years|biennial|biannual|centennial
+every other year|biennial|biannual|centennial
+lasting for two years|biennial|biannual|centennial
+taking two years to complete its life|biennial|biannual|centennial`;
 
 /** L builds a label from its Chinese name, why it is right and why it is not. */
 const L = (zh: string, whyEn: string, whyZh: string, notEn: string, notZh: string): Label => ({
@@ -29,6 +362,7 @@ const voice = topic("grammar", {
       ],
       ["Why did the writer choose this voice?", "作者为什么选择这个语态？"],
       `
+${voiceLines}
         Rosa Parks refused to give up her seat.|to stress the doer
         The pyramids were built more than four thousand years ago.|to stress the receiver
         Our car was broken into during the night.|the doer is unknown
@@ -100,6 +434,7 @@ const voice = topic("grammar", {
       ],
       ["Which second sentence keeps the focus of the first?", "哪个第二句保持了第一句的焦点？"],
       `
+${focusLines}
         The Eiffel Tower is the symbol of Paris. ___|It was built for the World's Fair of 1889.|Engineers built it for the World's Fair of 1889.|The World's Fair of 1889 was the reason someone built it.
         Gustave Eiffel was a bold engineer. ___|He built the tower for the World's Fair of 1889.|The tower was built by him for the World's Fair of 1889.|For the World's Fair of 1889, the tower was built by Eiffel.
         The Rosetta Stone is a key to Egyptian writing. ___|It was found by French soldiers in 1799.|French soldiers found it in 1799.|In 1799, French soldiers were the ones who found it.
@@ -167,6 +502,7 @@ const subordination = topic("grammar", {
       ],
       ["Which sentence stresses the idea given in brackets?", "哪个句子强调了括号中给出的意思？"],
       `
+${mainLines}
         [Stress that the bridge collapsed.]|While the cars were crossing, the bridge collapsed.|While the bridge collapsed, the cars were crossing.|The cars were crossing, and the bridge collapsed too.
         [Stress that she won the scholarship.]|Although she had little money, she won the scholarship.|Although she won the scholarship, she had little money.|She had little money, and she won the scholarship.
         [Stress that the rain ruined the harvest.]|Just as the farmers began to pick the grapes, the rain ruined the harvest.|Just as the rain ruined the harvest, the farmers began to pick the grapes.|The farmers began picking the grapes, and the rain ruined the harvest.
@@ -222,6 +558,7 @@ const subordination = topic("grammar", {
       ],
       ["How does this sentence join its ideas?", "这个句子如何连接其中的意思？"],
       `
+${coordLines}
         The wind howled, and the shutters banged.|coordination of equal ideas
         Because the road was icy, the buses did not run.|subordination of background
         I woke up and it was raining and I was late and I missed the bus and I walked.|excessive coordination
@@ -298,6 +635,7 @@ const confused6 = topic("grammar", {
       ],
       ["Which word fits the sentence?", "哪个词适合这个句子？"],
       `
+${fitLines6}
         The baby's ___ crying kept us awake every few minutes.|continual|continuous|contentious
         The river makes a ___ roar that never stops.|continuous|continual|continued
         The factory has a ___ supply of power, day and night.|continuous|continual|contiguous
@@ -351,6 +689,7 @@ const confused6 = topic("grammar", {
       ],
       ["Which word has this meaning?", "哪个词有这个意思？"],
       `
+${meaningLines6}
         happening again and again, with breaks between|continual|continuous|contentious
         going on without any break at all|continuous|continual|contiguous
         to order or recommend, as a doctor does|prescribe|proscribe|describe
