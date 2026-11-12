@@ -10,7 +10,7 @@
 
 ## 目标
 
-到六年级结束时，学习者能独立阅读本年级的神话、诗歌、回忆录、历史和科学文章。在故事中能把握情节和冲突，说出主旨和故事所依托的原型，说明叙述者知道什么、背景怎样影响事件；在诗歌中能区分比喻义和字面义，听出声音和语气，并比较同一主旨的一首诗和一个故事。在说明文中能追踪一个观点怎样被引入和展开，说出一个句子在全文中的作用，弄懂专业术语，利用科学文章的版面特征，理清历史中的因果，区分有依据和无依据的说法，并看出作者的立场。能使用 who 和 whom，who、which 和 that，强调代词，指代清楚、单复数一致的代词，跨越短语以及在 either…or、neither…nor 之后保持一致的动词，不规则过去分词，good 和 well；会给非限定成分和冒号加标点，写对所有格、数字和标题，拼对双写辅音和带前缀的词。能转述资料，用过渡语连接观点，下定义，写出准确、风格一致的文字，通过行动表现人物，用引子开头，给记叙文收尾；能写出历史说明、过程说明、比较对照文章、回忆录场景、致负责人的信、体育专栏和一个词的来历。掌握十个题材的词汇：英雄和命运，光、声音和动作，罗马的法律和建筑，最早的城市，躁动的地球，活细胞，记忆和友谊，食物和农业，体育和公平竞争，以及词的来源。
+到六年级结束时，学习者能独立阅读本年级的神话、诗歌、回忆录、历史和科学文章。在故事中能把握情节和冲突，说出主旨和故事所依托的原型，说明叙述者知道什么、人物是否发生变化；在诗歌中能区分比喻义和字面义，听出声音和语气，并比较同一主旨的一首诗和一个故事。在说明文中能追踪一个观点怎样被引入和展开，说出一个句子在全文中的作用，弄懂专业术语，利用科学文章的版面特征，理清历史中的因果，区分有依据和无依据的说法，并看出作者的立场。能使用 who 和 whom，who、which 和 that，强调代词，指代清楚、单复数一致的代词，跨越短语以及在 either…or、neither…nor 之后保持一致的动词，不规则过去分词，good 和 well；会给非限定成分和冒号加标点，写对所有格、数字和标题，拼对双写辅音和带前缀的词。能转述资料，用过渡语连接观点，下定义，写出准确、风格一致的文字，通过行动表现人物，用引子开头，给记叙文收尾；能写出历史说明、过程说明、比较对照文章、回忆录场景、致负责人的信、体育专栏和一个词的来历。掌握十个题材的词汇：英雄和命运，光、声音和动作，罗马的法律和建筑，最早的城市，躁动的地球，活细胞，记忆和友谊，食物和农业，体育和公平竞争，以及词的来源。
 
 ## 如何阅读本大纲
 
@@ -76,7 +76,7 @@
 
 ### 4. 最早的城市
 
-**词汇：** `words-of-the-first-cities` 最早城市的词（先修 `context-clues`）：ziggurat, nomad, surplus, citadel, specialization, priest, code, domesticate, floodplain, steward；`words-of-writing-and-records` 文字与记录的词（先修 `context-clues`）：tablet, alphabet, decipher, ledger, inscription, stylus, pictograph, census, chronicle, literate；`words-of-trade` 贸易的词（先修 `context-clues`）：export, goods, commerce, trader, port, tariff, wares, haggle, merchandise, economy。`latin-roots-3` 拉丁词根 3（先修 `latin-roots-2`）：*scrib/script*（写）、*port*（携带）、*struct*（建造）、*rupt*（破裂）、*tract*（拉）、*spect*（看）、*dict*（说）、*ject*（投掷）、*ven/vent*（来）、*cred*（相信）。步骤：从共用一个词根的几个词选出词根的意思；再选出由某个词根构成、适合句子的词。
+**词汇：** `words-of-the-first-cities` 最早城市的词（先修 `context-clues`）：ziggurat, nomad, surplus, citadel, specialization, priest, code, domesticate, floodplain, steward；`words-of-writing-and-records` 文字与记录的词（先修 `context-clues`）：tablet, alphabet, decipher, ledger, inscription, stylus, pictograph, census, chronicle, literate；`words-of-trade` 贸易的词（先修 `context-clues`）：export, goods, commerce, trader, port, tariff, wares, haggle, merchandise, economy。`latin-roots-3` 拉丁词根 3（先修 `latin-roots-2`）：*capt*（拿）、*fac*（做）、*mot*（移动）、*junct*（连接）、*sect*（切）、*pend*（悬挂）、*cur*（跑）、*fid*（信任）、*loc*（地方）、*vert*（转）。步骤：从由词根构成的几个词选出词根的意思；再选出各部分符合某个意思的词。
 
 **语法：** `intensive-pronouns` 强调代词（先修 `reflexive-pronouns`）：以 *-self* 或 *-selves* 结尾的代词，如果只起强调作用、去掉后句子仍成立（*The king himself read the law*），就是强调代词；作动词宾语时是反身代词；正确形式是 *himself* 和 *themselves*，不是 *hisself* 或 *theirselves*。步骤：区分强调代词和反身代词；再选出正确的形式。`vague-pronouns` 指代不清的代词（先修 `pronoun-antecedent-agreement`）：代词必须指向读者能找到的一个名词；当可能指两个名词或根本没有名词时，*it*、*this*、*they* 和 *he* 就会指代不清。步骤：找出先行词不清楚的代词；再选出使其清楚的改写。
 
@@ -92,7 +92,7 @@
 
 ### 5. 躁动的地球
 
-**词汇：** `words-of-plate-tectonics` 板块构造的词（先修 `context-clues`）：plate, crust, mantle, core, collide, boundary, trench, rift, subduction, uplift；`words-of-volcanoes` 火山的词（先修 `context-clues`）：eruption, ash, cone, geyser, pumice, basalt, fissure, evacuate, volcanic, deposit；`words-of-measuring` 测量的词（先修 `context-clues`）：estimate, scale, magnitude, data, metric, instrument, calculate, error, reliable, approximate。`greek-roots-2` 希腊词根 2（先修 `greek-roots-1`）：*geo*（地）、*seism*（震动）、*therm*（热）、*hydr*（水）、*chron*（时间）、*-logy*（……学）、*-meter*（测量）、*tele*（远）、*phon*（声音）、*auto*（自己）。步骤：从共用一个词根的几个词选出词根的意思；再选出由词根构成、符合定义的词。
+**词汇：** `words-of-plate-tectonics` 板块构造的词（先修 `context-clues`）：plate, crust, mantle, core, collide, boundary, trench, rift, subduction, uplift；`words-of-volcanoes` 火山的词（先修 `context-clues`）：eruption, ash, cone, geyser, pumice, basalt, fissure, evacuate, volcanic, deposit；`words-of-measuring` 测量的词（先修 `context-clues`）：estimate, scale, magnitude, data, metric, instrument, calculate, error, reliable, approximate。`greek-roots-2` 希腊词根 2（先修 `greek-roots-1`）：*seism*（震动）、*chrom*（颜色）、*gen*（出生、种类）、*path*（感情、疾病）、*crat*（统治）、*dem*（人民）、*poli*（城市）、*lith*（石头）、*morph*（形状）、*kine*（运动）。步骤：从由词根构成的几个词选出词根的意思；再选出各部分符合某个意思的词。
 
 **语法：** `subject-verb-agreement-with-phrases-between` 跨越短语的主谓一致（先修 `subject-verb-agreement`、`prepositional-phrases`）：主语和动词之间的短语不改变主语：*The layers of rock **are** old*，*The map of the plates **shows**…*。步骤：找出真正的主语；再选出与它一致的动词。`numbers-in-words-or-figures` 数字用文字还是阿拉伯数字（先修 `hyphens`）：一两个词能写出的数字用文字，更长的数字和计量用阿拉伯数字；句首的数字用文字；二十一到九十九的复合数字加连字符。步骤：为一个数字选择文字或阿拉伯数字；再选出数字写法正确的句子。
 
@@ -108,11 +108,11 @@
 
 ### 6. 活细胞
 
-**词汇：** `words-of-the-cell` 细胞的词（先修 `context-clues`）：cytoplasm, chloroplast, mitochondrion, vacuole, organelle, unicellular, multicellular, structure, cellular, specialized；`words-of-life-processes` 生命活动的词（先修 `context-clues`）：respiration, photosynthesis, circulate, metabolism, glucose, excrete, secrete, enzyme, hormone, vessel；`words-of-heredity` 遗传的词（先修 `context-clues`）：trait, inherit, gene, offspring, species, variation, characteristic, heredity, dominant, mutation。`prefixes-of-number-and-amount` 表示数目和数量的前缀（先修 `common-prefixes`）：*uni-* 和 *mono-*（一）、*bi-*（二）、*tri-*（三）、*quad-*（四）、*cent-*（百）、*multi-* 和 *poly-*（多）、*semi-* 和 *hemi-*（半）。步骤：选出前缀表示的数目；再选出符合描述的词。
+**词汇：** `words-of-the-cell` 细胞的词（先修 `context-clues`）：cytoplasm, chloroplast, mitochondrion, vacuole, organelle, unicellular, multicellular, structure, cellular, specialized；`words-of-life-processes` 生命活动的词（先修 `context-clues`）：respiration, photosynthesis, circulate, metabolism, glucose, excrete, secrete, enzyme, hormone, vessel；`words-of-heredity` 遗传的词（先修 `context-clues`）：trait, inherit, gene, offspring, species, variation, characteristic, heredity, dominant, mutation。`prefixes-of-number-and-amount` 表示数目和数量的前缀（先修 `prefixes-of-number-and-position`）：*mono-*（一）、*quad-*（四）、*pent-*（五）、*oct-*（八）、*deca-*（十）、*cent-*（百）、*kilo-*（千）、*milli-*（千分之一）、*poly-*（多）、*hemi-*（半）。步骤：选出前缀表示的数目；再选出各部分符合某个意思的词。
 
 **语法：** `shifts-in-pronoun-number` 代词单复数的转换（先修 `shifts-in-pronoun-person`、`indefinite-pronouns-and-agreement`）：代词在一段文字中要保持先行词的单复数：*A cell needs energy, and **it** gets it…*，而不是 *they*；正式写作中 *each* 和 *every* 用单数代词。步骤：找出单复数发生转换的代词；再选出保持一致的修改。`irregular-past-participles` 不规则过去分词（先修 `perfect-verb-tenses`）：在 *have*、*has*、*had* 之后和被动语态中，不规则动词用过去分词，不用过去式：*has grown*、*had seen*、*was written*，而不是 *has grew* 或 *had saw*。步骤：选出助动词后的过去分词；再在句子中区分过去式和过去分词。
 
-**阅读：** `supported-and-unsupported-claims` 有依据和无依据的说法（先修 `fact-and-opinion`、`matching-points-and-evidence`）：文章为一个说法提供了证据，如数据、专家、实验或例子，这个说法就有依据；只是断言的则没有依据。步骤：区分有依据和无依据的说法；再说出一个说法得到的是哪种支持。
+**阅读：** `supported-and-unsupported-claims` 有依据和无依据的说法（先修 `fact-and-opinion`、`matching-points-and-evidence`）：作者用事实、数字、例子或专家意见支持的说法有依据；没有任何支持、或只靠感觉支持的说法没有依据。步骤：区分有事实支持、有专家支持和没有依据的说法；再选出对一个说法最好的支持。
 
 **写作：** `keeping-a-consistent-style` 保持风格一致（先修 `formal-style`）：用正式风格写的文章要始终正式：没有俚语，不突然冒出 *you guys* 或 *totally*，不从第三人称转成聊天口吻。步骤：找出破坏段落风格的句子；再选出保持风格的修改。`writing-a-compare-and-contrast-essay` 写比较对照文章（由模型评判；先修 `writing-a-compare-and-contrast-paragraph`、`transitions-between-ideas`）：根据笔记写三段的短文，逐点比较两种生物或两种细胞，并使用表示相同和不同的过渡语。标准：`g6-compare-basis`（新）、`g6-likeness-and-difference`（新）、`g6-uses-transitions`（新）、`w4-concludes`。
 
@@ -124,23 +124,23 @@
 
 ### 7. 记忆与成长
 
-**词汇：** `words-of-memory` 记忆的词（先修 `context-clues`）：nostalgia, adolescent, reminisce, memento, recollection, upbringing, keepsake, souvenir, bittersweet, hometown；`words-for-friends-and-family` 朋友与家人的词（先修 `context-clues`）：sibling, companion, rivalry, confide, reconcile, betray, grudge, acquaintance, quarrel, feud；`words-for-fear-and-courage` 恐惧与勇气的词（先修 `context-clues`）：daunting, reluctant, apprehensive, falter, hesitant, flinch, bravado, qualm, wary, courageous。`adages-and-proverbs` 格言与谚语（先修 `literal-and-nonliteral-phrases`）：给出建议或讲出人生道理的老话：*Look before you leap*、*Many hands make light work*、*The early bird catches the worm*。步骤：选出谚语的意思；再选出适合某个情境的谚语。
+**词汇：** `words-of-memory` 记忆的词（先修 `context-clues`）：nostalgia, adolescent, reminisce, memento, recollection, upbringing, keepsake, souvenir, bittersweet, hometown；`words-for-friends-and-family` 朋友与家人的词（先修 `context-clues`）：sibling, companion, rivalry, confide, reconcile, betray, grudge, acquaintance, quarrel, feud；`words-for-fear-and-courage` 恐惧与勇气的词（先修 `context-clues`）：daunting, reluctant, apprehensive, falter, hesitant, flinch, bravado, qualm, wary, courageous。`more-adages-and-proverbs` 更多格言与谚语（先修 `adages-and-proverbs`）：另外十五句给出建议或讲出人生道理的老话，如 *A stitch in time saves nine* 和 *Necessity is the mother of invention*。步骤：选出谚语的意思；再选出适合某个情境的谚语。
 
-**语法：** `possessives-of-plural-and-compound-nouns` 复数名词和复合名词的所有格（先修 `plural-nouns`）：以 *s* 结尾的复数只加撇号（*the girls' room*），其他复数加 *'s*（*the children's room*）；复合名词加在末尾（*my sister-in-law's car*），两人共有一样东西只加一次（*Ana and Ben's dog*）。步骤：选出单数或复数所有格；再选出复合名词或两人共有的所有格。`spelling-doubling-final-consonants` 双写末尾辅音（先修 `adding-ed-and-ing`）：单音节词或重音在最后一个音节的词，末尾是一个短元音加一个辅音时，加以元音开头的后缀要双写辅音（*plan, planned*；*begin, beginning*）；重音在前面时不双写（*visit, visited*）。步骤：判断是否双写；再选出正确的拼写。
+**语法：** `possessives-of-plural-and-compound-nouns` 复数名词和复合名词的所有格（先修 `plural-nouns`）：以 *s* 结尾的复数只加撇号（*the girls' room*），其他复数加 *'s*（*the children's room*）；复合名词加在末尾（*my sister-in-law's car*），两人共有一样东西只加一次（*Ana and Ben's dog*）。步骤：选出单数或复数所有格；再选出复合名词或两人共有的所有格。`spelling-doubling-final-consonants` 双写末尾辅音（先修 `common-suffixes`）：单音节词或重音在最后一个音节的词，末尾是一个短元音加一个辅音时，加以元音开头的后缀要双写辅音（*plan, planned*；*begin, beginning*）；重音在前面时不双写（*visit, visited*）。步骤：判断是否双写；再选出正确的拼写。
 
-**阅读：** `memoir-or-fiction` 回忆录还是小说（先修 `legend-or-history`）：回忆录用第一人称讲述作者自己生活中的真实事件，并反思它们的意义；小说虚构人物和事件，即使由“我”来讲。步骤：根据特征区分回忆录和小说；再选出回忆录作者进行反思的句子。`how-setting-shapes-a-story` 背景怎样影响故事（先修 `setting-problem-and-solution`）：故事发生的地点和时间可以引发事件，限制人物能做的事，并营造氛围。步骤：选出背景怎样影响人物的选择；再选出背景营造的氛围。
+**阅读：** `memoir-or-fiction` 回忆录还是小说（先修 `legend-or-history`）：回忆录用第一人称讲述作者自己生活中的真实事件，并反思它们的意义；小说虚构人物和事件，即使由“我”来讲。步骤：根据特征区分回忆录、传记和小说；再选出回忆录作者回顾往事的句子。`dynamic-and-static-characters` 动态人物与静态人物（先修 `how-characters-face-challenges`）：动态人物在故事中内心发生变化，包括信念、感受或行为方式；静态人物保持不变，即使只是处境变了。步骤：区分动态人物、静态人物和只在外部变化的人物；再选出是什么改变了人物。
 
-**写作：** `showing-character-through-action` 通过行动表现人物（先修 `pacing-a-story`）：记叙文通过人物做什么、说什么、注意到什么来表现他是怎样的人，而不是直接说出性格。步骤：区分“表现”的句子和“告诉”的句子；再选出表现某种性格的行动。`ending-a-narrative` 给记叙文收尾（先修 `planning-a-story-arc`）：好的结尾顺着事件而来，解决冲突，并可以反思学到了什么，没有突如其来的解救，也不是“原来只是一场梦”。步骤：选出顺着事件而来的结尾；再选出同时有反思的结尾。`writing-a-memoir-scene` 写回忆录场景（由模型评判；先修 `writing-a-personal-narrative`、`showing-character-through-action`）：把作者生活中记得的一个时刻写成场景，写出当时看到的、说过的和感受到的，并在结尾反思它为什么重要。标准：`g6-scene-in-a-moment`（新）、`g6-reflects-on-meaning`（新）、`g35-narrative-shows`。
+**写作：** `showing-character-through-action` 通过行动表现人物（先修 `pacing-a-story`）：记叙文通过人物做什么、说什么、注意到什么来表现他是怎样的人，而不是直接说出性格。步骤：判断一个句子是直接说出性格、用行动表现还是用话语表现；再选出表现某种性格的行动。`ending-a-narrative` 给记叙文收尾（先修 `planning-a-story-arc`）：好的结尾顺着事件而来，解决冲突，并可以反思学到了什么，没有突如其来的解救，也不是“原来只是一场梦”。步骤：选出顺着事件而来的结尾；再选出同时回顾所学的结尾。`writing-a-memoir-scene` 写回忆录场景（由模型评判；先修 `writing-a-personal-narrative`、`showing-character-through-action`）：把作者生活中记得的一个时刻写成场景，写出当时看到的、说过的和感受到的，并在结尾反思它为什么重要。标准：`g6-scene-in-a-moment`（新）、`g6-reflects-on-meaning`（新）、`g35-narrative-shows`。
 
 **阅读单元：** `growing-up`（新），8 篇：我学会游泳的那个夏天；奶奶的厨房；新来的同学；搬家那天；和哥哥吵架；橱窗里的自行车；演奏会；家书。
 
-**对话：** `oral-history-interview` 口述历史访谈（新）。导师扮演在这个镇上长大的老邻居。任务：访问他童年的事，追问细节，并概括他讲的一个故事以及它反映了怎样的过去。
+**对话：** `neighbor-memories-interview` 口述历史访谈（新）。导师扮演在这个镇上长大的老邻居。任务：访问他童年的事，追问细节，并概括他讲的一个故事以及它反映了怎样的过去。
 
 **将来有了音频和录音：** 听一段录下的回忆，记下其中的时刻和反思；口头讲一段简短的回忆。
 
 ### 8. 人人有饭吃
 
-**词汇：** `words-of-nutrition` 营养的词（先修 `context-clues`）：protein, vitamin, calorie, diet, nutrition, carbohydrate, fiber, nutritious, sodium, wholesome；`words-of-modern-farming` 现代农业的词（先修 `context-clues`）：pesticide, fertilizer, yield, livestock, organic, cultivate, graze, fallow, erosion, pasture；`words-of-hunger-and-plenty` 饥饿与富足的词（先修 `context-clues`）：shortage, famine, distribute, feast, abundance, starve, hoard, plentiful, malnutrition, scarcity。`prefixes-of-place-and-direction` 表示位置和方向的前缀（先修 `common-prefixes`）：*sub-*（下）、*inter-*（之间）、*trans-*（穿越）、*ex-*（出）、*intra-*（之内）、*circum-*（环绕）、*super-*（之上）、*peri-*（周围、附近）、*pro-*（向前）、*retro-*（向后）。步骤：选出前缀表示的方向；再选出适合句子的词。
+**词汇：** `words-of-nutrition` 营养的词（先修 `context-clues`）：protein, vitamin, calorie, diet, nutrition, carbohydrate, fiber, nutritious, sodium, wholesome；`words-of-modern-farming` 现代农业的词（先修 `context-clues`）：pesticide, fertilizer, yield, livestock, organic, cultivate, graze, fallow, erosion, pasture；`words-of-hunger-and-plenty` 饥饿与富足的词（先修 `context-clues`）：shortage, famine, distribute, feast, abundance, starve, hoard, plentiful, malnutrition, scarcity。`prefixes-of-place-and-direction` 表示位置和方向的前缀（先修 `prefixes-of-number-and-position`）：*ex-*（出）、*intra-*（之内）、*circum-*（环绕）、*peri-*（周边）、*pro-*（向前）、*retro-*（向后）、*extra-*（之外）、*contra-*（相反）、*ante-*（之前）、*intro-*（向内）。步骤：选出前缀表示的方向；再选出各部分符合某个意思的词。
 
 **语法：** `colons-before-lists-and-explanations` 列举和解释前的冒号（先修 `commas-in-a-series`）：冒号放在完整的句子之后，引出列举或解释（*Plants need three things: light, water and air*）；不放在 *such as*、*include* 或动词之后。步骤：判断是否该用冒号；再选出标点正确的句子。`agreement-with-either-or-and-neither-nor` Either…or 和 Neither…nor 的主谓一致（先修 `correlative-conjunctions`、`subject-verb-agreement`）：用 *and* 连接的主语是复数；用 *or*、*nor*、*either…or* 或 *neither…nor* 连接时，动词与较近的那个主语一致。步骤：选出 *and* 或 *or* 连接的主语之后的动词；再在两个主语单复数不同时作出选择。
 
@@ -172,7 +172,7 @@
 
 ### 10. 词从哪里来
 
-**词汇：** `words-named-after-people` 以人名命名的词（先修 `context-clues`）：sandwich, boycott, cardigan, saxophone, diesel, braille, leotard, silhouette, maverick, pasteurize；`words-about-language` 关于语言的词（先修 `context-clues`）：dialect, accent, slang, jargon, idiom, fluent, bilingual, pronunciation, vocabulary, translate；`words-of-time-and-change` 时间与变化的词（先修 `context-clues`）：obsolete, evolve, permanent, temporary, epoch, prehistoric, contemporary, millennium, chronological, antique。`words-from-other-languages` 来自其他语言的词（先修 `latin-roots-3`）：英语从许多语言借词：*kindergarten* 来自德语，*ballet* 来自法语，*piano* 来自意大利语，*tsunami* 来自日语，*ketchup* 来自汉语，*safari* 来自斯瓦希里语。步骤：根据线索选出借词来自哪种语言；再选出适合句子的借词。
+**词汇：** `words-named-after-people` 以人名命名的词（先修 `context-clues`）：sandwich, boycott, cardigan, saxophone, diesel, braille, leotard, silhouette, maverick, pasteurize；`words-about-language` 关于语言的词（先修 `context-clues`）：dialect, accent, slang, jargon, idiom, fluent, bilingual, pronunciation, vocabulary, translate；`words-of-time-and-change` 时间与变化的词（先修 `context-clues`）：obsolete, evolve, permanent, temporary, epoch, prehistoric, contemporary, millennium, chronological, antique。`words-from-other-languages` 来自其他语言的词（先修 `latin-roots-3`）：英语从许多语言借词：*kindergarten* 来自德语，*ballet* 来自法语，*piano* 来自意大利语，*tsunami* 来自日语，*tea* 来自汉语，*algebra* 来自阿拉伯语。步骤：根据线索选出借词来自哪种语言；再选出适合句子的借词。
 
 **阅读：** `word-choice-and-meaning` 用词与意义（先修 `connotation-and-precise-words`）：作者选这个词而不选那个词，会影响意义和语气：*crept* 和 *strode*，*stubborn* 和 *determined*，*old* 和 *ancient*。步骤：选出一个用词暗示了人物或场景的什么；再选出能给文章带来预期语气的词。
 
@@ -232,7 +232,7 @@
 | `words-of-the-cell` | 词汇 | 6 | `context-clues` | 15 |
 | `words-of-life-processes` | 词汇 | 6 | `context-clues` | 15 |
 | `words-of-heredity` | 词汇 | 6 | `context-clues` | 15 |
-| `prefixes-of-number-and-amount` | 词汇 | 6 | `common-prefixes` | 14 |
+| `prefixes-of-number-and-amount` | 词汇 | 6 | `prefixes-of-number-and-position` | 14 |
 | `shifts-in-pronoun-number` | 语法 | 6 | `shifts-in-pronoun-person`、`indefinite-pronouns-and-agreement` | 14 |
 | `irregular-past-participles` | 语法 | 6 | `perfect-verb-tenses` | 14 |
 | `supported-and-unsupported-claims` | 阅读 | 6 | `fact-and-opinion`、`matching-points-and-evidence` | 14 |
@@ -241,18 +241,18 @@
 | `words-of-memory` | 词汇 | 7 | `context-clues` | 15 |
 | `words-for-friends-and-family` | 词汇 | 7 | `context-clues` | 15 |
 | `words-for-fear-and-courage` | 词汇 | 7 | `context-clues` | 15 |
-| `adages-and-proverbs` | 词汇 | 7 | `literal-and-nonliteral-phrases` | 14 |
+| `more-adages-and-proverbs` | 词汇 | 7 | `adages-and-proverbs` | 14 |
 | `possessives-of-plural-and-compound-nouns` | 语法 | 7 | `plural-nouns` | 14 |
-| `spelling-doubling-final-consonants` | 语法 | 7 | `adding-ed-and-ing` | 14 |
+| `spelling-doubling-final-consonants` | 语法 | 7 | `common-suffixes` | 14 |
 | `memoir-or-fiction` | 阅读 | 7 | `legend-or-history` | 14 |
-| `how-setting-shapes-a-story` | 阅读 | 7 | `setting-problem-and-solution` | 14 |
+| `dynamic-and-static-characters` | 阅读 | 7 | `how-characters-face-challenges` | 14 |
 | `showing-character-through-action` | 写作 | 7 | `pacing-a-story` | 14 |
 | `ending-a-narrative` | 写作 | 7 | `planning-a-story-arc` | 14 |
 | `writing-a-memoir-scene` | 写作（评判） | 7 | `writing-a-personal-narrative`、`showing-character-through-action` | 22 |
 | `words-of-nutrition` | 词汇 | 8 | `context-clues` | 15 |
 | `words-of-modern-farming` | 词汇 | 8 | `context-clues` | 15 |
 | `words-of-hunger-and-plenty` | 词汇 | 8 | `context-clues` | 15 |
-| `prefixes-of-place-and-direction` | 词汇 | 8 | `common-prefixes` | 14 |
+| `prefixes-of-place-and-direction` | 词汇 | 8 | `prefixes-of-number-and-position` | 14 |
 | `colons-before-lists-and-explanations` | 语法 | 8 | `commas-in-a-series` | 14 |
 | `agreement-with-either-or-and-neither-nor` | 语法 | 8 | `correlative-conjunctions`、`subject-verb-agreement` | 14 |
 | `tracing-an-argument` | 阅读 | 8 | `authors-purpose`、`matching-points-and-evidence` | 14 |
