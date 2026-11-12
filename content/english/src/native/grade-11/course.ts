@@ -247,6 +247,66 @@ const units: readonly UnitDef[] = [
     },
     undefined,
   ),
+  unit(
+    t("Academic Words of Sight and Sorting", "表示视觉与分类的学术词"),
+    {
+      words: ["words-for-showing-and-seeing", "words-for-sorting-and-differing", "words-for-supporting-and-making-up"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Academic Words of Study and Work", "表示研究与工作的学术词"),
+    {
+      words: ["words-for-research-and-numbers", "words-for-roles-and-institutions"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Academic Words of Ideas and Places", "表示观念与地点的学术词"),
+    {
+      words: ["words-for-thinking-ahead", "words-for-places-and-moving"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Academic Words of Writing and Getting", "表示写作与获取的学术词"),
+    {
+      words: ["words-for-drafting-and-editing", "words-for-gaining-and-giving", "words-for-meeting-and-talking"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Academic Words of Parts and Rank", "表示部分与主次的学术词"),
+    {
+      words: ["words-for-inside-and-outside", "words-for-exactness-and-rank"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Academic Words of Change and Reach", "表示变化与普及的学术词"),
+    {
+      words: ["words-for-changing-and-handling", "words-for-fitting-and-spreading"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
 ];
 
 /** courseGrade11 is the native course of grade 11. */
