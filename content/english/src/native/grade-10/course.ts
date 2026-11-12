@@ -232,6 +232,31 @@ const units: readonly UnitDef[] = [
     },
     undefined,
   ),
+  unit(
+    t("Fear, Shame, Pity and Anger", "恐惧、羞愧、怜悯与愤怒"),
+    {
+      words: ["words-of-fear-and-wonder", "words-of-shame-and-blame", "words-of-pity-and-mercy", "words-of-anger-and-bluntness"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Raids, Slips, Splendor and Daring", "突袭、跌倒、辉煌与冒险"),
+    {
+      words: [
+        "words-of-raids-and-rumors",
+        "words-of-slips-and-scrambles",
+        "words-of-spectacle-and-splendor",
+        "words-of-daring-and-promises",
+      ],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
 ];
 
 /** courseGrade10 is the native course of grade 10. */
