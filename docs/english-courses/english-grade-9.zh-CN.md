@@ -6,7 +6,7 @@
 - **阶段：** 九年级，面向以英语为母语、或英语阅读水平与同龄母语者相当的学习者
 - **先修：** `english-grade-8`，或能读写八年级程度的论证文、报告、故事、剧本和文章
 - **讲解语言：** 英语
-- **规模：** 9 个单元 · 74 个主题（已有 11 个，新增 63 个：词汇 27 个，语法与书写规范 10 个，阅读 13 个，按规则检查的写作 7 个，由模型评判的写作 6 个）· 约 1,150 XP · 8 个阅读单元共 66 篇文章（已有 2 个，新增 6 个）· 9 个对话（已有 2 个，新增 7 个）
+- **规模：** 16 个单元 · 100 个主题（已有 11 个，新增 89 个：词汇 53 个，语法与书写规范 10 个，阅读 13 个，按规则检查的写作 7 个，由模型评判的写作 6 个）· 约 1,540 XP · 8 个阅读单元共 66 篇文章（已有 2 个，新增 6 个）· 9 个对话（已有 2 个，新增 7 个）
 
 ## 目标
 
@@ -14,11 +14,11 @@
 
 ## 如何阅读本大纲
 
-每个单元有一个题材，同时教授四样东西：该题材的词汇、语法与书写规范、阅读技能，以及写作。单元以一个题材阅读单元和一个对话收尾；最后一个单元只有对话，没有阅读单元。标为“已有”的主题已在知识图中，属于学段课程 `english-grades-9-12`，保留各自的 id 和先修；每个新主题列出其先修，先修可能在前面的单元或更早的年级中。新的词汇主题列出它教的词，这些词不在母语课程的其他词汇组中；其他新主题说明它教什么，并把它的各个知识点列为步骤。由模型评判的写作主题给出任务和评分标准，并标出新增的标准。
+每个单元有一个题材，同时教授四样东西：该题材的词汇、语法与书写规范、阅读技能，以及写作。单元以一个题材阅读单元和一个对话收尾；第 9 单元只有对话，没有阅读单元。第 10 到 16 单元只教词汇，每组十个词，没有阅读单元和对话：日常生活、情感与行为、学校与工作的词，有些单元教短语动词或学术词。标为“已有”的主题已在知识图中，属于学段课程 `english-grades-9-12`，保留各自的 id 和先修；每个新主题列出其先修，先修可能在前面的单元或更早的年级中。新的词汇主题列出它教的词，这些词不在母语课程的其他词汇组中；其他新主题说明它教什么，并把它的各个知识点列为步骤。由模型评判的写作主题给出任务和评分标准，并标出新增的标准。
 
-各部分比例：74 个主题中，词汇 29 个（39%），语法与书写规范 11 个（15%），阅读 17 个（23%），按规则检查的写作 9 个（12%），由模型评判的写作 8 个（11%）。
+各部分比例：100 个主题中，词汇 55 个（55%），语法与书写规范 11 个（11%），阅读 17 个（17%），按规则检查的写作 9 个（9%），由模型评判的写作 8 个（8%）。
 
-深度：每个新的语法、阅读或按规则检查的写作知识点有 30 到 48 道题，由手写的核心经模板生成；词汇组中每个词出现在三个句子中，所以每个词汇知识点有 30 道题；每个由模型评判的写作知识点有 12 个带范文的任务；新的阅读单元有 8 篇 300 到 600 词的文章，每篇三道题。一组十个词约得 15 XP，一个构词、语法、阅读或按规则检查的写作主题约 14 XP，一个由模型评判的写作主题约 24 XP，已有主题保留各自的 XP，所以本年级的课程约 1,150 XP。
+深度：每个新的语法、阅读或按规则检查的写作知识点有 30 到 48 道题，由手写的核心经模板生成；词汇组中每个词出现在三个句子中，所以每个词汇知识点有 30 道题；每个由模型评判的写作知识点有 12 个带范文的任务；新的阅读单元有 8 篇 300 到 600 词的文章，每篇三道题。一组十个词约得 15 XP，一个构词、语法、阅读或按规则检查的写作主题约 14 XP，一个由模型评判的写作主题约 24 XP，已有主题保留各自的 XP，所以本年级的课程约 1,540 XP。
 
 听力和口语要等音频和录音：在此之前，单元列出对话但不提供，每个单元说明届时会增加什么。
 
@@ -162,6 +162,34 @@
 
 **将来有了音频和录音：** 听一个关于词语历史的讲座，记下词义是怎样变化的；就词语话题采访一个人。
 
+### 10. 身体、健康与体育
+
+**词汇：** `words-of-injuries` 受伤的词（先修 `context-clues`）：bruise, scar, splinter, fracture, concussion, swollen, bandage, splint, sling, crutch；`words-of-illness` 生病的词（先修 `context-clues`）：fever, cough, sneeze, itch, ache, migraine, nausea, dizzy, allergy, stitches；`words-of-sport` 体育的词（先修 `context-clues`）：coach, umpire, trophy, stadium, tackle, dribble, relay, knockout, rematch, underdog；`words-of-cooking` 烹饪的词（先修 `context-clues`）：roast, grill, marinate, skewer, whisk, batter, dough, garnish, seasoning, utensil。
+
+### 11. 味道、天气、宠物与衣物
+
+**词汇：** `words-of-taste-and-texture` 味道与口感的词（先修 `context-clues`）：spicy, tangy, savory, bitter, juicy, tender, crispy, soggy, stale, greasy；`words-of-weather` 天气的词（先修 `context-clues`）：thunder, lightning, hail, downpour, damp, muggy, heatwave, chilly, breezy, icicle；`words-of-pets` 宠物的词（先修 `context-clues`）：leash, collar, muzzle, kennel, stray, tame, groom, veterinarian, purr, growl；`words-of-clothes` 衣物的词（先修 `context-clues`）：sleeve, zipper, buckle, seam, fabric, denim, tailor, outfit, wardrobe, fashion。
+
+### 12. 电脑、家庭、商店与军队
+
+**词汇：** `words-of-software-and-security` 软件与安全的词（先修 `context-clues`）：software, server, cursor, browse, update, charger, wireless, firewall, malware, hack；`words-of-family` 家庭的词（先修 `context-clues`）：cousin, nephew, toddler, orphan, stepfather, spouse, fiance, newlywed, widow, in-law；`words-of-shopping` 购物的词（先修 `context-clues`）：aisle, queue, trolley, shopper, cashier, checkout, coupon, warranty, stock, tip；`words-of-the-army` 军队的词（先修 `context-clues`）：soldier, sergeant, recruit, platoon, barracks, infantry, artillery, tank, retreat, medal。
+
+### 13. 出行、情绪、状态与安全
+
+**词汇：** `words-of-getting-around` 出行的词（先修 `context-clues`）：ferry, tram, subway, terminal, fare, toll, highway, lane, detour, roundabout；`words-of-moods` 情绪的词（先修 `context-clues`）：cheerful, lonely, nervous, jittery, ashamed, bored, grumpy, cranky, moody, sulky；`words-of-how-things-are` 事物状态的词（先修 `context-clues`）：awkward, clumsy, casual, eager, elderly, fragile, hollow, vacant, moist, stained；`words-of-staying-safe` 保持安全的词（先修 `context-clues`）：emergency, warn, sting, heal, unharmed, unscathed, intact, composure, poise, sigh。
+
+### 14. 开始、解决与人际的短语动词
+
+**词汇：** `phrasal-verbs-of-starting-and-stopping` 开始与停止的短语动词（先修 `context-clues`）：set off, kick off, take off, put off, call off, give up, give in, drop out, step down, back down；`phrasal-verbs-of-solving-problems` 解决问题的短语动词（先修 `context-clues`）：figure out, work out, sort out, deal with, find out, look into, rule out, point out, think over, come up with；`phrasal-verbs-of-people` 人际关系的短语动词（先修 `context-clues`）：get along, look after, take after, bring up, let down, count on, stand up for, look down on, tell off, make up；`phrasal-verbs-of-more-and-less` 增减的短语动词（先修 `context-clues`）：cut down, use up, run out, sell out, wear out, die out, wipe out, fill up, catch up, keep up。
+
+### 15. 破坏、相遇与应对的短语动词
+
+**词汇：** `phrasal-verbs-of-breaking-and-building` 破坏与建立的短语动词（先修 `context-clues`）：break down, break out, break into, blow up, tear down, fall apart, set up, put out, turn into, turn out；`phrasal-verbs-of-meeting-and-arriving` 相遇与到达的短语动词（先修 `context-clues`）：show up, turn up, come across, run into, hang out, hang up, hold on, wake up, check in, pick up；`phrasal-verbs-of-coping` 应对的短语动词（先修 `context-clues`）：get over, pull through, get by, do without, put up with, calm down, cheer up, settle down, live up to, own up；`phrasal-verbs-of-papers-and-things` 文件与物品的短语动词（先修 `context-clues`）：hand in, fill in, cross out, look up, back up, set aside, give away, throw away, get rid of, chip in。
+
+### 16. 家务与工作的短语动词
+
+**词汇：** `words-of-housework` 家务的词（先修 `context-clues`）：sweep, mop, dust, polish, broom, bucket, sponge, laundry, detergent, bleach；`phrasal-verbs-of-work-and-choices` 工作与选择的短语动词（先修 `context-clues`）：take over, take up, turn down, lay off, carry out, bring about, go on, slow down, stick to, stand out。
+
 ## 下一年级在此基础上继续
 
 `english-grade-10` 在本年级的基础上继续：文学分析文章发展为对演讲的修辞分析和对一首诗的分析；阅读人物塑造、典故和用词延伸到修辞情境、诉诸方式和修辞手法，以及诗的体式和格律；语法转向圆周句和累积句，以及为强调而调整语序。
@@ -233,3 +261,29 @@
 | `academic-words-5` | 词汇 | 9 | `context-clues` | 15 |
 | `usage-rules-and-myths` | 语法 | 9 | `formal-and-informal-english`、`subject-verb-agreement` | 14 |
 | `spelling-commonly-misspelled-words` | 语法 | 9 | `spelling-words-with-suffixes`、`spelling-words-with-prefixes` | 14 |
+| `words-of-injuries` | 词汇 | 10 | `context-clues` | 15 |
+| `words-of-illness` | 词汇 | 10 | `context-clues` | 15 |
+| `words-of-sport` | 词汇 | 10 | `context-clues` | 15 |
+| `words-of-cooking` | 词汇 | 10 | `context-clues` | 15 |
+| `words-of-taste-and-texture` | 词汇 | 11 | `context-clues` | 15 |
+| `words-of-weather` | 词汇 | 11 | `context-clues` | 15 |
+| `words-of-pets` | 词汇 | 11 | `context-clues` | 15 |
+| `words-of-clothes` | 词汇 | 11 | `context-clues` | 15 |
+| `words-of-software-and-security` | 词汇 | 12 | `context-clues` | 15 |
+| `words-of-family` | 词汇 | 12 | `context-clues` | 15 |
+| `words-of-shopping` | 词汇 | 12 | `context-clues` | 15 |
+| `words-of-the-army` | 词汇 | 12 | `context-clues` | 15 |
+| `words-of-getting-around` | 词汇 | 13 | `context-clues` | 15 |
+| `words-of-moods` | 词汇 | 13 | `context-clues` | 15 |
+| `words-of-how-things-are` | 词汇 | 13 | `context-clues` | 15 |
+| `words-of-staying-safe` | 词汇 | 13 | `context-clues` | 15 |
+| `phrasal-verbs-of-starting-and-stopping` | 词汇 | 14 | `context-clues` | 15 |
+| `phrasal-verbs-of-solving-problems` | 词汇 | 14 | `context-clues` | 15 |
+| `phrasal-verbs-of-people` | 词汇 | 14 | `context-clues` | 15 |
+| `phrasal-verbs-of-more-and-less` | 词汇 | 14 | `context-clues` | 15 |
+| `phrasal-verbs-of-breaking-and-building` | 词汇 | 15 | `context-clues` | 15 |
+| `phrasal-verbs-of-meeting-and-arriving` | 词汇 | 15 | `context-clues` | 15 |
+| `phrasal-verbs-of-coping` | 词汇 | 15 | `context-clues` | 15 |
+| `phrasal-verbs-of-papers-and-things` | 词汇 | 15 | `context-clues` | 15 |
+| `words-of-housework` | 词汇 | 16 | `context-clues` | 15 |
+| `phrasal-verbs-of-work-and-choices` | 词汇 | 16 | `context-clues` | 15 |

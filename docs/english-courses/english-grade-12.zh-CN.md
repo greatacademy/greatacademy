@@ -6,7 +6,7 @@
 - **阶段：** 十二年级，面向以英语为母语、或英语阅读水平与同龄母语者相当的学习者
 - **先修：** `english-grade-11`，或能读写十一年级程度的议论文、资料综合、论证评论和母题分析
 - **讲解语言：** 英语
-- **规模：** 7 个单元 · 35 个主题（已有 4 个，新增 31 个：词汇 14 个，语法与书写规范 4 个，阅读 5 个，按规则检查的写作 3 个，由模型评判的写作 5 个）· 约 580 XP · 6 个阅读单元共 48 篇文章（已有 1 个，新增 5 个）· 7 个对话（已有 1 个，新增 6 个）
+- **规模：** 22 个单元 · 100 个主题（已有 4 个，新增 96 个：词汇 79 个，语法与书写规范 4 个，阅读 5 个，按规则检查的写作 3 个，由模型评判的写作 5 个）· 约 1,550 XP · 6 个阅读单元共 48 篇文章（已有 1 个，新增 5 个）· 7 个对话（已有 1 个，新增 6 个）
 
 ## 目标
 
@@ -14,11 +14,11 @@
 
 ## 如何阅读本大纲
 
-每个单元有一个题材，同时教授四样东西：该题材的词汇、语法与书写规范、阅读技能，以及写作。单元以一个题材阅读单元和一个对话收尾；最后一个单元只有对话，没有阅读单元。标为“已有”的主题已在知识图中，属于学段课程 `english-grades-9-12`，保留各自的 id 和先修；每个新主题列出其先修，先修可能在前面的单元或更早的年级中。新的词汇主题列出它教的词，这些词不在母语课程的其他词汇组中；其他新主题说明它教什么，并把它的各个知识点列为步骤。由模型评判的写作主题给出任务和评分标准，并标出新增的标准。
+每个单元有一个题材，同时教授四样东西：该题材的词汇、语法与书写规范、阅读技能，以及写作。单元以一个题材阅读单元和一个对话收尾；第 7 单元只有对话，没有阅读单元。第 8 到 22 单元只教词汇，每组十个词，没有阅读单元和对话：日常生活、情感与行为、学校与工作的词，有些单元教短语动词或学术词。标为“已有”的主题已在知识图中，属于学段课程 `english-grades-9-12`，保留各自的 id 和先修；每个新主题列出其先修，先修可能在前面的单元或更早的年级中。新的词汇主题列出它教的词，这些词不在母语课程的其他词汇组中；其他新主题说明它教什么，并把它的各个知识点列为步骤。由模型评判的写作主题给出任务和评分标准，并标出新增的标准。
 
-各部分比例：35 个主题中，词汇 15 个（43%），语法与书写规范 4 个（11%），阅读 6 个（17%），按规则检查的写作 3 个（9%），由模型评判的写作 7 个（20%）。
+各部分比例：100 个主题中，词汇 80 个（80%），语法与书写规范 4 个（4%），阅读 6 个（6%），按规则检查的写作 3 个（3%），由模型评判的写作 7 个（7%）。
 
-深度：每个新的语法、阅读或按规则检查的写作知识点有 30 到 48 道题，由手写的核心经模板生成；词汇组中每个词出现在三个句子中，所以每个词汇知识点有 30 道题；每个由模型评判的写作知识点有 12 个带范文的任务；新的阅读单元有 8 篇 300 到 600 词的文章，每篇三道题。一组十个词约得 15 XP，一个构词、语法、阅读或按规则检查的写作主题约 14 XP，一个由模型评判的写作主题约 24 XP，已有主题保留各自的 XP，所以本年级的课程约 580 XP。
+深度：每个新的语法、阅读或按规则检查的写作知识点有 30 到 48 道题，由手写的核心经模板生成；词汇组中每个词出现在三个句子中，所以每个词汇知识点有 30 道题；每个由模型评判的写作知识点有 12 个带范文的任务；新的阅读单元有 8 篇 300 到 600 词的文章，每篇三道题。一组十个词约得 15 XP，一个构词、语法、阅读或按规则检查的写作主题约 14 XP，一个由模型评判的写作主题约 24 XP，已有主题保留各自的 XP，所以本年级的课程约 1,550 XP。
 
 听力和口语要等音频和录音：在此之前，单元列出对话但不提供，每个单元说明届时会增加什么。
 
@@ -58,7 +58,7 @@
 
 ### 3. 信念与怀疑
 
-**词汇：** `words-of-philosophy` 哲学的词（先修 `context-clues`）：metaphysics, epistemology, ontology, empiricism, rationalism, dualism, determinism, materialism, stoicism, utilitarianism；`words-of-belief-and-doubt` 信仰与怀疑的词（先修 `context-clues`）：dogma, dogmatic, agnostic, orthodoxy, heterodox, zealot, certitude, apostate, creed, devout。
+**词汇：** `words-of-philosophy` 哲学的词（先修 `context-clues`）：metaphysics, epistemology, ontology, empiricism, rationalism, dualism, determinism, materialism, stoicism, utilitarianism；`words-of-belief-and-doubt` 信仰与怀疑的词（先修 `context-clues`）：dogma, dogmatic, agnostic, orthodoxy, heterodox, zealot, certitude, apostate, creed, devout；`words-of-worship-and-belief` 崇拜与信仰的词（先修 `context-clues`）：sacred, profane, secular, pious, pilgrim, shrine, heretic, doctrine, sect, clergy。
 
 **语法：** `inverted-conditionals` 倒装条件句（先修 `conditional-sentences`、`the-subjunctive-in-wishes-and-conditions`）：不用 if 的条件句：把 had、were 或 should 放到主语前面，如 Had I known、Were it true 和 Should you need help。步骤：这是哪种条件；再合适的倒装。
 
@@ -74,7 +74,7 @@
 
 ### 4. 艺术与评论
 
-**词汇：** `words-of-art-criticism` 艺术批评的词（先修 `context-clues`）：chiaroscuro, oeuvre, derivative, brushwork, figurative, iconography, impasto, installation, masterwork, tableau；`words-of-taste-and-beauty` 品味与美的词（先修 `context-clues`）：exquisite, garish, tawdry, gaudy, understated, philistine, harmonious, picturesque, insipid, ornate。
+**词汇：** `words-of-art-criticism` 艺术批评的词（先修 `context-clues`）：chiaroscuro, oeuvre, derivative, brushwork, figurative, iconography, impasto, installation, masterwork, tableau；`words-of-taste-and-beauty` 品味与美的词（先修 `context-clues`）：exquisite, garish, tawdry, gaudy, understated, philistine, harmonious, picturesque, insipid, ornate；`words-of-architecture` 建筑的词（先修 `context-clues`）：buttress, facade, cornice, gable, lintel, parapet, colonnade, portico, cupola, atrium。
 
 **阅读：** `evaluating-a-review` 评价一篇评论（先修 `supported-and-unsupported-claims`、`connotation-and-precise-words`）：评论家如何描述作品、评判作品并给出理由，以及读者如何区分有充分依据的评判和单纯的个人意见。步骤：这个句子做了什么；再依据最充分的评判。
 
@@ -118,13 +118,73 @@
 
 ### 7. 词根与词缀
 
-**词汇：** `latin-roots-10` 拉丁词根 10（先修 `latin-roots-9`）：另外十个拉丁词根：cord、gress、plic、volv、sid、sign、dorm、jud、nunc 和 brev。步骤：拉丁词根的意思；再根据构词成分选词。`greek-roots-9` 希腊词根 9（先修 `greek-roots-8`）：另外十个希腊词根：ped、agog、tax、top、tom、zo、odont、phras、stas 和 orama。步骤：希腊词根的意思；再根据构词成分选词。`academic-words-10` 学术词汇 10（先修 `context-clues`）：十个有关论述本质、普遍与相关的词：preclude、ascertain、concomitant、intrinsic 等。步骤：它们的含义；再使用它们；再拼写它们。`academic-words-11` 学术词汇 11（先修 `context-clues`）：十个有关论述主张、条件与效果的词：contingent、efficacy、ameliorate、provisional 等。步骤：它们的含义；再使用它们；再拼写它们。
+**词汇：** `latin-roots-10` 拉丁词根 10（先修 `latin-roots-9`）：另外十个拉丁词根：cord、gress、plic、volv、sid、sign、dorm、jud、nunc 和 brev。步骤：拉丁词根的意思；再根据构词成分选词。`greek-roots-9` 希腊词根 9（先修 `greek-roots-8`）：另外十个希腊词根：ped、agog、tax、top、tom、zo、odont、phras、stas 和 orama。步骤：希腊词根的意思；再根据构词成分选词。`academic-words-10` 学术词汇 10（先修 `context-clues`）：十个有关论述本质、普遍与相关的词：preclude、ascertain、concomitant、intrinsic 等。步骤：它们的含义；再使用它们；再拼写它们。`academic-words-11` 学术词汇 11（先修 `context-clues`）：十个有关论述主张、条件与效果的词：contingent、efficacy、ameliorate、provisional 等。步骤：它们的含义；再使用它们；再拼写它们。`latin-roots-11` 拉丁词根 11（先修 `latin-roots-10`）：另外十个拉丁词根：am、ann、clin、doc、fin、flu、grav、hab、man 和 nav。步骤：拉丁词根的意思；再根据构词成分选词。`greek-roots-10` 希腊词根 10（先修 `greek-roots-9`）：另外十个希腊词根：acro、cardi、cephal、cycl、derm、gastr、iso、macro、neur 和 pod。步骤：希腊词根的意思；再根据构词成分选词。`latin-roots-12` 拉丁词根 12（先修 `latin-roots-11`）：另外十个拉丁词根：mar、matr、med、migr、noc、patr、plen、pon、punct 和 rect。步骤：拉丁词根的意思；再根据构词成分选词。`greek-roots-11` 希腊词根 11（先修 `greek-roots-10`）：另外十个希腊词根：gon、hier、mis、opt、oste、psych、soma、techn、tox 和 typ。步骤：希腊词根的意思；再根据构词成分选词。`latin-roots-13` 拉丁词根 13（先修 `latin-roots-12`）：另外十个拉丁词根：sci、sol、son、spir、string、sumpt、tact、ten、turb 和 urb。步骤：拉丁词根的意思；再根据构词成分选词。`academic-words-12` 学术词汇 12（先修 `context-clues`）：disseminate, promulgate, codify, conflate, connote, denote, entail, necessitate, obviate, engender。`academic-words-13` 学术词汇 13（先修 `context-clues`）：foster, catalyze, impede, hinder, underpin, underscore, augment, supplant, supersede, negate。`academic-words-14` 学术词汇 14（先修 `context-clues`）：nullify, invalidate, schema, typology, criterion, prevalent, endemic, innate, latent, manifest。
 
 **语法：** `commonly-confused-words-8` 易混淆词 8（先修 `commonly-confused-words-7`）：ascent 和 assent、defuse 和 diffuse、forbear 和 forebear 这样的词形或读音相近，意思却不同。步骤：合适的词；再符合释义的词。
 
 **对话：** `word-detective` 单词侦探（新增）。任务：一个低年级同学被科学和历史课文里的长单词难住了。把三个单词拆成拉丁语或希腊语词根和词缀，解释各部分如何构成词义，并给出一个猜测无法干净拆分的单词的窍门。
 
 **将来有了音频和录音：** 听一个关于词根的讲座，记下其中提到的构词部分；辅导低年级同学理解长单词。
+
+### 8. 科学与探究
+
+**词汇：** `words-of-the-scientific-method` 科学方法的词（先修 `context-clues`）：falsifiable, meticulous, peer-reviewed, quantify, calibrate, interpolate, causation, deduction, induction, theorem；`words-of-physics-and-energy` 物理与能量的词（先修 `context-clues`）：inertia, momentum, torque, acceleration, buoyancy, gravitation, radiation, conduction, insulation, kinetic；`words-of-chemistry-and-matter` 化学与物质的词（先修 `context-clues`）：element, molecule, isotope, alloy, solvent, oxidation, corrosion, alkaline, inert, distillation；`words-of-the-cosmos` 宇宙的词（先修 `context-clues`）：meteorite, supernova, quasar, pulsar, stellar, interstellar, cosmic, planetary, light-year, perihelion；`words-of-medicine-and-disease` 医学与疾病的词（先修 `context-clues`）：infectious, contagion, benign, malignant, tumor, biopsy, remission, relapse, inflammation, palliative；`words-of-the-mind` 心智的词（先修 `context-clues`）：cognition, perception, neurosis, phobia, compulsion, trauma, projection, introvert, extrovert, stimulus。
+
+### 9. 法律与国家
+
+**词汇：** `words-of-the-courtroom` 法庭的词（先修 `context-clues`）：indictment, acquittal, affidavit, subpoena, perjury, jurisdiction, litigation, tribunal, felony, misdemeanor；`words-of-embassies-and-treaties` 外交的词（先修 `context-clues`）：embassy, consulate, attaché, sanction, embargo, truce, accord, neutrality, annexation, détente；`words-of-crowns-and-colonies` 王权与殖民地的词（先修 `context-clues`）：coup, junta, monarchy, theocracy, regicide, vassal, fiefdom, serfdom, colonial, imperialism；`words-of-debt-and-credit` 债务与信贷的词（先修 `context-clues`）：asset, liability, collateral, mortgage, deflation, bankrupt, arrears, audit, creditor, debtor；`words-of-elections-and-office` 选举与公职的词（先修 `context-clues`）：municipal, bureaucracy, constituency, lobby, gerrymander, plebiscite, quorum, incumbency, hustings, canvass。
+
+### 10. 修辞与理性
+
+**词汇：** `words-of-rhetoric-and-oratory` 修辞与演说的词（先修 `context-clues`）：ethos, pathos, antithesis, litotes, invective, diatribe, harangue, eulogy, panegyric, oratory；`words-of-logic-and-error` 逻辑与谬误的词（先修 `context-clues`）：fallacy, tautology, sophistry, casuistry, counterexample, contradiction, paradox, plausible, non sequitur, ad hominem。
+
+### 11. 气质与品格
+
+**词汇：** `words-of-the-four-temperaments` 四种气质的词（先修 `context-clues`）：phlegmatic, choleric, sanguine, melancholic, mercurial, placid, stolid, equable, irascible, petulant；`words-of-company-and-solitude` 合群与孤僻的词（先修 `context-clues`）：gregarious, affable, genial, jovial, congenial, taciturn, reticent, diffident, morose, dour；`words-of-pride-and-humility` 骄傲与谦卑的词（先修 `context-clues`）：haughty, supercilious, condescending, conceited, arrogant, self-effacing, unassuming, deferential, servile, fawning；`words-of-generosity-and-greed` 慷慨与贪婪的词（先修 `context-clues`）：munificent, philanthropic, altruistic, avaricious, miserly, parsimonious, stingy, prodigal, profligate, spendthrift；`words-of-anger-and-calm` 愤怒与平静的词（先修 `context-clues`）：irate, incensed, livid, wrathful, vexed, unflappable, imperturbable, equanimity, placate, mollify；`words-of-deceit-and-candor` 欺骗与坦率的词（先修 `context-clues`）：mendacious, disingenuous, guileful, wily, deceitful, ingenuous, guileless, artless, impostor, fraud。
+
+### 12. 文风与感官
+
+**词汇：** `words-for-the-style-of-prose` 描述文风的词（先修 `context-clues`）：lucid, limpid, pellucid, turgid, florid, pithy, stilted, bombastic, grandiloquent, austere；`words-for-sounds-and-voices` 描述声音和嗓音的词（先修 `context-clues`）：mellifluous, euphonious, cacophonous, sonorous, strident, raucous, dulcet, plangent, stentorian, sibilant；`words-of-light-and-color` 光与色的词（先修 `context-clues`）：incandescent, iridescent, opalescent, phosphorescent, lustrous, burnished, lurid, wan, sallow, ruddy；`words-of-walking-and-moving` 行走与移动的词（先修 `context-clues`）：amble, plod, lumber, strut, swagger, totter, scamper, flit, careen, slither；`words-of-surfaces-and-textures` 表面与质地的词（先修 `context-clues`）：sleek, velvety, gritty, grainy, supple, taut, gnarled, jagged, serrated, corrugated。
+
+### 13. 名声与秘密
+
+**词汇：** `words-of-praise` 赞扬的词（先修 `context-clues`）：commend, laud, extol, acclaim, accolade, exalt, glorify, prestige, laurels, luminary；`words-of-blame` 责备的词（先修 `context-clues`）：vilify, disparage, denigrate, deride, belittle, castigate, censure, rebuke, admonish, berate；`words-of-fame-and-obscurity` 声名与默默无闻的词（先修 `context-clues`）：renowned, illustrious, eminent, celebrated, notorious, infamous, obscure, unsung, anonymous, celebrity；`words-of-secrets` 秘密的词（先修 `context-clues`）：surreptitious, furtive, stealthy, confidential, cryptic, enigmatic, inscrutable, arcane, esoteric, divulge。
+
+### 14. 变化与秩序
+
+**词汇：** `words-of-change-and-constancy` 变化与恒常的词（先修 `context-clues`）：metamorphosis, transmute, mutable, immutable, flux, vicissitude, fluctuate, oscillate, vacillate, waver；`words-of-decay-and-ruin` 衰败与毁坏的词（先修 `context-clues`）：dilapidated, ramshackle, derelict, decrepit, moribund, putrid, rancid, decompose, atrophy, fester；`words-of-order-and-chaos` 秩序与混乱的词（先修 `context-clues`）：pandemonium, tumult, disarray, mayhem, bedlam, anarchy, methodical, systematic, regimented, haphazard；`words-of-plenty-and-want` 富足与匮乏的词（先修 `context-clues`）：surfeit, glut, plethora, superfluity, dearth, paucity, sparse, meager, ample, copious。
+
+### 15. 礼貌、勤奋与年龄
+
+**词汇：** `words-of-manners-good-and-bad` 礼貌与粗鲁的词（先修 `context-clues`）：courteous, gracious, suave, impudent, insolent, brusque, curt, churlish, boorish, uncouth；`words-of-diligence-and-sloth` 勤奋与懒惰的词（先修 `context-clues`）：diligent, industrious, assiduous, sedulous, indefatigable, tireless, indolent, slothful, lethargic, languid；`words-of-delay-and-idleness` 拖延与闲散的词（先修 `context-clues`）：sluggish, torpid, listless, loiter, dawdle, procrastinate, sporadic, desultory, slapdash, shirk；`words-of-youth-and-old-age` 青年与老年的词（先修 `context-clues`）：puerile, infantile, senile, venerable, geriatric, octogenarian, centenarian, sprightly, spry, doddering。
+
+### 16. 战争与调停
+
+**词汇：** `words-of-battle-and-siege` 战斗与围攻的词（先修 `context-clues`）：bellicose, pugnacious, ceasefire, hostilities, skirmish, onslaught, besiege, mercenary, sortie, foray；`words-of-calming-and-defiance` 安抚与固执的词（先修 `context-clues`）：conciliate, assuage, appease, soothe, pacify, propitiate, intransigent, obdurate, recalcitrant, implacable；`words-of-daring-and-timidity` 大胆与胆怯的词（先修 `context-clues`）：dauntless, fearless, plucky, gutsy, daring, foolhardy, timorous, fainthearted, cowardly, spineless。
+
+### 17. 言谈与情感
+
+**词汇：** `words-for-talkers-and-the-silent` 健谈者与寡言者的词（先修 `context-clues`）：terse, loquacious, garrulous, uncommunicative, reserved, prolix, voluble, chatty, effusive, glib；`words-of-rapture-and-gloom` 狂喜与忧郁的词（先修 `context-clues`）：euphoria, ecstatic, exultant, blithe, forlorn, disconsolate, doleful, lugubrious, dejected, woebegone；`words-of-remembering-and-forgetting` 记忆与遗忘的词（先修 `context-clues`）：amnesia, mnemonic, recollect, evocative, indelible, reminiscent, forgetful, unforgettable, hindsight, memorabilia。
+
+### 18. 起源、诡计与相似
+
+**词汇：** `words-of-beginnings-and-endings` 开端与终结的词（先修 `context-clues`）：inception, genesis, nascent, incipient, embryonic, outset, advent, culminate, cessation, demise；`words-of-wit-and-wiles` 机智与诡计的词（先修 `context-clues`）：conniving, astute, judicious, crafty, artful, canny, devious, scheming, perspicacious, sagacious；`words-of-likeness-and-difference` 相似与差异的词（先修 `context-clues`）：analogous, akin, disparate, homogeneous, heterogeneous, divergent, congruent, dissimilar, kindred, semblance。
+
+### 19. 食欲与身体
+
+**词汇：** `words-of-taste-and-appetite` 口味与食欲的词（先修 `context-clues`）：gourmet, gastronomy, epicure, glutton, gourmand, voracious, ravenous, delectable, succulent, palatable；`words-for-the-build-of-the-body` 体型的词（先修 `context-clues`）：frail, sturdy, brawny, emaciated, portly, corpulent, svelte, lanky, stocky, burly；`words-of-envy-and-malice` 嫉妒与恶意的词（先修 `context-clues`）：envy, covet, begrudge, rancorous, spiteful, malicious, vindictive, malevolent, malign, beneficent。
+
+### 20. 权力与旅途
+
+**词汇：** `words-of-obedience-and-revolt` 服从与反抗的词（先修 `context-clues`）：oppress, docile, subservient, insubordinate, submissive, meek, rebellious, tractable, unruly, biddable；`words-of-roaming-and-wandering` 漫游与流浪的词（先修 `context-clues`）：peregrination, wanderlust, vagabond, roam, wayfarer, drifter, rove, ramble, traverse, globetrotter；`words-of-luxury-and-penury` 奢华与贫困的词（先修 `context-clues`）：sumptuous, luxurious, spartan, penurious, indigent, impoverished, penniless, well-heeled, moneyed, threadbare。
+
+### 21. 清晰思维与遗嘱
+
+**词汇：** `words-of-clear-and-muddled-thought` 清晰与混乱思维的词（先修 `context-clues`）：abstruse, turbid, nebulous, vague, crystalline, perspicuous, intelligible, unintelligible, convoluted, muddled；`words-of-wills-and-inheritance` 遗嘱与继承的词（先修 `context-clues`）：bequeath, bequest, heiress, executor, testament, primogeniture, disinherit, beneficiary, probate, intestate。
+
+### 22. 船与海盗
+
+**词汇：** `words-of-ships-and-sailors` 船与水手的词（先修 `context-clues`）：mariner, stevedore, frigate, schooner, regatta, seafaring, capsize, scuttle, jettison, flotsam；`words-of-pirates-and-plunder` 海盗与劫掠的词（先修 `context-clues`）：buccaneer, corsair, privateer, plunder, booty, maraud, pillage, loot, ransack, contraband。
 
 ## 下一年级在此基础上继续
 
@@ -165,3 +225,68 @@
 | `academic-words-10` | 词汇 | 7 | `context-clues` | 15 |
 | `academic-words-11` | 词汇 | 7 | `context-clues` | 15 |
 | `commonly-confused-words-8` | 语法 | 7 | `commonly-confused-words-7` | 14 |
+| `words-of-worship-and-belief` | 词汇 | 3 | `context-clues` | 15 |
+| `words-of-architecture` | 词汇 | 4 | `context-clues` | 15 |
+| `latin-roots-11` | 词汇 | 7 | `latin-roots-10` | 14 |
+| `greek-roots-10` | 词汇 | 7 | `greek-roots-9` | 14 |
+| `latin-roots-12` | 词汇 | 7 | `latin-roots-11` | 14 |
+| `greek-roots-11` | 词汇 | 7 | `greek-roots-10` | 14 |
+| `latin-roots-13` | 词汇 | 7 | `latin-roots-12` | 14 |
+| `academic-words-12` | 词汇 | 7 | `context-clues` | 15 |
+| `academic-words-13` | 词汇 | 7 | `context-clues` | 15 |
+| `academic-words-14` | 词汇 | 7 | `context-clues` | 15 |
+| `words-of-the-scientific-method` | 词汇 | 8 | `context-clues` | 15 |
+| `words-of-physics-and-energy` | 词汇 | 8 | `context-clues` | 15 |
+| `words-of-chemistry-and-matter` | 词汇 | 8 | `context-clues` | 15 |
+| `words-of-the-cosmos` | 词汇 | 8 | `context-clues` | 15 |
+| `words-of-medicine-and-disease` | 词汇 | 8 | `context-clues` | 15 |
+| `words-of-the-mind` | 词汇 | 8 | `context-clues` | 15 |
+| `words-of-the-courtroom` | 词汇 | 9 | `context-clues` | 15 |
+| `words-of-embassies-and-treaties` | 词汇 | 9 | `context-clues` | 15 |
+| `words-of-crowns-and-colonies` | 词汇 | 9 | `context-clues` | 15 |
+| `words-of-debt-and-credit` | 词汇 | 9 | `context-clues` | 15 |
+| `words-of-elections-and-office` | 词汇 | 9 | `context-clues` | 15 |
+| `words-of-rhetoric-and-oratory` | 词汇 | 10 | `context-clues` | 15 |
+| `words-of-logic-and-error` | 词汇 | 10 | `context-clues` | 15 |
+| `words-of-the-four-temperaments` | 词汇 | 11 | `context-clues` | 15 |
+| `words-of-company-and-solitude` | 词汇 | 11 | `context-clues` | 15 |
+| `words-of-pride-and-humility` | 词汇 | 11 | `context-clues` | 15 |
+| `words-of-generosity-and-greed` | 词汇 | 11 | `context-clues` | 15 |
+| `words-of-anger-and-calm` | 词汇 | 11 | `context-clues` | 15 |
+| `words-of-deceit-and-candor` | 词汇 | 11 | `context-clues` | 15 |
+| `words-for-the-style-of-prose` | 词汇 | 12 | `context-clues` | 15 |
+| `words-for-sounds-and-voices` | 词汇 | 12 | `context-clues` | 15 |
+| `words-of-light-and-color` | 词汇 | 12 | `context-clues` | 15 |
+| `words-of-walking-and-moving` | 词汇 | 12 | `context-clues` | 15 |
+| `words-of-surfaces-and-textures` | 词汇 | 12 | `context-clues` | 15 |
+| `words-of-praise` | 词汇 | 13 | `context-clues` | 15 |
+| `words-of-blame` | 词汇 | 13 | `context-clues` | 15 |
+| `words-of-fame-and-obscurity` | 词汇 | 13 | `context-clues` | 15 |
+| `words-of-secrets` | 词汇 | 13 | `context-clues` | 15 |
+| `words-of-change-and-constancy` | 词汇 | 14 | `context-clues` | 15 |
+| `words-of-decay-and-ruin` | 词汇 | 14 | `context-clues` | 15 |
+| `words-of-order-and-chaos` | 词汇 | 14 | `context-clues` | 15 |
+| `words-of-plenty-and-want` | 词汇 | 14 | `context-clues` | 15 |
+| `words-of-manners-good-and-bad` | 词汇 | 15 | `context-clues` | 15 |
+| `words-of-diligence-and-sloth` | 词汇 | 15 | `context-clues` | 15 |
+| `words-of-delay-and-idleness` | 词汇 | 15 | `context-clues` | 15 |
+| `words-of-youth-and-old-age` | 词汇 | 15 | `context-clues` | 15 |
+| `words-of-battle-and-siege` | 词汇 | 16 | `context-clues` | 15 |
+| `words-of-calming-and-defiance` | 词汇 | 16 | `context-clues` | 15 |
+| `words-of-daring-and-timidity` | 词汇 | 16 | `context-clues` | 15 |
+| `words-for-talkers-and-the-silent` | 词汇 | 17 | `context-clues` | 15 |
+| `words-of-rapture-and-gloom` | 词汇 | 17 | `context-clues` | 15 |
+| `words-of-remembering-and-forgetting` | 词汇 | 17 | `context-clues` | 15 |
+| `words-of-beginnings-and-endings` | 词汇 | 18 | `context-clues` | 15 |
+| `words-of-wit-and-wiles` | 词汇 | 18 | `context-clues` | 15 |
+| `words-of-likeness-and-difference` | 词汇 | 18 | `context-clues` | 15 |
+| `words-of-taste-and-appetite` | 词汇 | 19 | `context-clues` | 15 |
+| `words-for-the-build-of-the-body` | 词汇 | 19 | `context-clues` | 15 |
+| `words-of-envy-and-malice` | 词汇 | 19 | `context-clues` | 15 |
+| `words-of-obedience-and-revolt` | 词汇 | 20 | `context-clues` | 15 |
+| `words-of-roaming-and-wandering` | 词汇 | 20 | `context-clues` | 15 |
+| `words-of-luxury-and-penury` | 词汇 | 20 | `context-clues` | 15 |
+| `words-of-clear-and-muddled-thought` | 词汇 | 21 | `context-clues` | 15 |
+| `words-of-wills-and-inheritance` | 词汇 | 21 | `context-clues` | 15 |
+| `words-of-ships-and-sailors` | 词汇 | 22 | `context-clues` | 15 |
+| `words-of-pirates-and-plunder` | 词汇 | 22 | `context-clues` | 15 |

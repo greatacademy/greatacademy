@@ -6,7 +6,7 @@
 - **Level:** Grade 9, for learners whose first language is English or who read English as well as a native speaker of their age
 - **Prerequisite(s):** `english-grade-8`, or reading and writing arguments, reports, tales, scenes and essays at the level of grade 8
 - **Language of explanation:** English
-- **Size:** 9 units · 74 topics (11 existing, 63 new: 27 of vocabulary, 10 of grammar and mechanics, 13 of reading, 7 of writing checked by rules, 6 of writing judged by a model) · about 1,150 XP · 8 reading units of 66 passages (2 existing, 6 new) · 9 conversations (2 existing, 7 new)
+- **Size:** 16 units · 100 topics (11 existing, 89 new: 53 of vocabulary, 10 of grammar and mechanics, 13 of reading, 7 of writing checked by rules, 6 of writing judged by a model) · about 1,540 XP · 8 reading units of 66 passages (2 existing, 6 new) · 9 conversations (2 existing, 7 new)
 
 ## Aim
 
@@ -14,11 +14,11 @@ By the end of grade 9 a learner reads the epics, tragedies, stories of growing u
 
 ## How to Read This Outline
 
-Every unit is a theme and teaches four things together: the words of the theme, grammar and mechanics, reading skills, and writing. It ends with a reading unit on the theme and a conversation, except the last, which has a conversation but no reading unit. Topics marked *existing* are in the graph already, in the band course `english-grades-9-12`, and keep their ids and their own prerequisites; each new topic lists its prerequisites, which may lie in an earlier unit or an earlier grade. A new topic of words lists the words it teaches, none of which another batch of the native courses teaches; any other new topic says what it teaches and its knowledge points as steps. A judged writing topic names its task and the criteria of its rubric, marking the criteria that are new.
+Every unit is a theme and teaches four things together: the words of the theme, grammar and mechanics, reading skills, and writing. It ends with a reading unit on the theme and a conversation, except unit 9, which has a conversation but no reading unit. Units 10 to 16 teach words alone, ten to a batch, with no reading unit or conversation: the words of everyday life, of feelings and actions, of school and work and, in some, phrasal verbs or academic words. Topics marked *existing* are in the graph already, in the band course `english-grades-9-12`, and keep their ids and their own prerequisites; each new topic lists its prerequisites, which may lie in an earlier unit or an earlier grade. A new topic of words lists the words it teaches, none of which another batch of the native courses teaches; any other new topic says what it teaches and its knowledge points as steps. A judged writing topic names its task and the criteria of its rubric, marking the criteria that are new.
 
-Strands: of the 74 topics, 29 teach words (39%), 11 grammar and mechanics (15%), 17 reading (23%), 9 writing checked by rules (12%) and 8 writing judged by a model (11%).
+Strands: of the 100 topics, 55 teach words (55%), 11 grammar and mechanics (11%), 17 reading (17%), 9 writing checked by rules (9%) and 8 writing judged by a model (8%).
 
-Depth: each new grammar, reading or rule-checked writing knowledge point has 30 to 48 items built from hand-written cores by templates; each word of a vocabulary batch appears in three sentences, so each vocabulary knowledge point has 30 items; each judged writing knowledge point has 12 tasks with a model; new reading units have 8 passages of 300 to 600 words, with three questions each. A batch of ten words earns about 15 XP, a word-study, grammar, reading or rule-checked writing topic about 14 and a judged writing topic about 24, and the existing topics keep their own XP, so the lessons of the grade come to about 1,150 XP.
+Depth: each new grammar, reading or rule-checked writing knowledge point has 30 to 48 items built from hand-written cores by templates; each word of a vocabulary batch appears in three sentences, so each vocabulary knowledge point has 30 items; each judged writing knowledge point has 12 tasks with a model; new reading units have 8 passages of 300 to 600 words, with three questions each. A batch of ten words earns about 15 XP, a word-study, grammar, reading or rule-checked writing topic about 14 and a judged writing topic about 24, and the existing topics keep their own XP, so the lessons of the grade come to about 1,540 XP.
 
 Listening and speaking wait for audio and recording: until then a unit lists its conversation but does not offer it, and each unit says what it will gain.
 
@@ -162,6 +162,34 @@ The band course `english-grades-9-12` retires once `english-grade-9` to `english
 
 **Later, with audio and recording:** Listening to a talk on the history of a word and noting how its meaning changed; interviewing a person about words.
 
+### 10. Body, Health and Sport
+
+**Words:** `words-of-injuries` Words of Injuries (after `context-clues`): bruise, scar, splinter, fracture, concussion, swollen, bandage, splint, sling, crutch; `words-of-illness` Words of Illness (after `context-clues`): fever, cough, sneeze, itch, ache, migraine, nausea, dizzy, allergy, stitches; `words-of-sport` Words of Sport (after `context-clues`): coach, umpire, trophy, stadium, tackle, dribble, relay, knockout, rematch, underdog; `words-of-cooking` Words of Cooking (after `context-clues`): roast, grill, marinate, skewer, whisk, batter, dough, garnish, seasoning, utensil.
+
+### 11. Taste, Weather, Pets and Clothes
+
+**Words:** `words-of-taste-and-texture` Words of Taste and Texture (after `context-clues`): spicy, tangy, savory, bitter, juicy, tender, crispy, soggy, stale, greasy; `words-of-weather` Words of Weather (after `context-clues`): thunder, lightning, hail, downpour, damp, muggy, heatwave, chilly, breezy, icicle; `words-of-pets` Words of Pets (after `context-clues`): leash, collar, muzzle, kennel, stray, tame, groom, veterinarian, purr, growl; `words-of-clothes` Words of Clothes (after `context-clues`): sleeve, zipper, buckle, seam, fabric, denim, tailor, outfit, wardrobe, fashion.
+
+### 12. Computers, Family, Shops and the Army
+
+**Words:** `words-of-software-and-security` Words of Software and Security (after `context-clues`): software, server, cursor, browse, update, charger, wireless, firewall, malware, hack; `words-of-family` Words of Family (after `context-clues`): cousin, nephew, toddler, orphan, stepfather, spouse, fiance, newlywed, widow, in-law; `words-of-shopping` Words of Shopping (after `context-clues`): aisle, queue, trolley, shopper, cashier, checkout, coupon, warranty, stock, tip; `words-of-the-army` Words of the Army (after `context-clues`): soldier, sergeant, recruit, platoon, barracks, infantry, artillery, tank, retreat, medal.
+
+### 13. Travel, Moods, States and Safety
+
+**Words:** `words-of-getting-around` Words of Getting Around (after `context-clues`): ferry, tram, subway, terminal, fare, toll, highway, lane, detour, roundabout; `words-of-moods` Words of Moods (after `context-clues`): cheerful, lonely, nervous, jittery, ashamed, bored, grumpy, cranky, moody, sulky; `words-of-how-things-are` Words of How Things Are (after `context-clues`): awkward, clumsy, casual, eager, elderly, fragile, hollow, vacant, moist, stained; `words-of-staying-safe` Words of Staying Safe (after `context-clues`): emergency, warn, sting, heal, unharmed, unscathed, intact, composure, poise, sigh.
+
+### 14. Phrasal Verbs of Starting, Solving and People
+
+**Words:** `phrasal-verbs-of-starting-and-stopping` Phrasal Verbs of Starting and Stopping (after `context-clues`): set off, kick off, take off, put off, call off, give up, give in, drop out, step down, back down; `phrasal-verbs-of-solving-problems` Phrasal Verbs of Solving Problems (after `context-clues`): figure out, work out, sort out, deal with, find out, look into, rule out, point out, think over, come up with; `phrasal-verbs-of-people` Phrasal Verbs of People (after `context-clues`): get along, look after, take after, bring up, let down, count on, stand up for, look down on, tell off, make up; `phrasal-verbs-of-more-and-less` Phrasal Verbs of More and Less (after `context-clues`): cut down, use up, run out, sell out, wear out, die out, wipe out, fill up, catch up, keep up.
+
+### 15. Phrasal Verbs of Breaking, Meeting and Coping
+
+**Words:** `phrasal-verbs-of-breaking-and-building` Phrasal Verbs of Breaking and Building (after `context-clues`): break down, break out, break into, blow up, tear down, fall apart, set up, put out, turn into, turn out; `phrasal-verbs-of-meeting-and-arriving` Phrasal Verbs of Meeting and Arriving (after `context-clues`): show up, turn up, come across, run into, hang out, hang up, hold on, wake up, check in, pick up; `phrasal-verbs-of-coping` Phrasal Verbs of Coping (after `context-clues`): get over, pull through, get by, do without, put up with, calm down, cheer up, settle down, live up to, own up; `phrasal-verbs-of-papers-and-things` Phrasal Verbs of Papers and Things (after `context-clues`): hand in, fill in, cross out, look up, back up, set aside, give away, throw away, get rid of, chip in.
+
+### 16. Housework and Phrasal Verbs of Work
+
+**Words:** `words-of-housework` Words of Housework (after `context-clues`): sweep, mop, dust, polish, broom, bucket, sponge, laundry, detergent, bleach; `phrasal-verbs-of-work-and-choices` Phrasal Verbs of Work and Choices (after `context-clues`): take over, take up, turn down, lay off, carry out, bring about, go on, slow down, stick to, stand out.
+
 ## What the Next Grade Builds On
 
 `english-grade-10` builds on this year: the literary analysis essay grows into the rhetorical analysis of speeches and the analysis of a poem; reading for characterization, allusion and word choice goes on to the rhetorical situation, appeals and devices and to poetic forms and meter; and grammar moves to periodic and cumulative sentences and word order for emphasis.
@@ -233,3 +261,29 @@ The band course `english-grades-9-12` retires once `english-grade-9` to `english
 | `academic-words-5` | vocabulary | 9 | `context-clues` | 15 |
 | `usage-rules-and-myths` | grammar | 9 | `formal-and-informal-english`, `subject-verb-agreement` | 14 |
 | `spelling-commonly-misspelled-words` | grammar | 9 | `spelling-words-with-suffixes`, `spelling-words-with-prefixes` | 14 |
+| `words-of-injuries` | vocabulary | 10 | `context-clues` | 15 |
+| `words-of-illness` | vocabulary | 10 | `context-clues` | 15 |
+| `words-of-sport` | vocabulary | 10 | `context-clues` | 15 |
+| `words-of-cooking` | vocabulary | 10 | `context-clues` | 15 |
+| `words-of-taste-and-texture` | vocabulary | 11 | `context-clues` | 15 |
+| `words-of-weather` | vocabulary | 11 | `context-clues` | 15 |
+| `words-of-pets` | vocabulary | 11 | `context-clues` | 15 |
+| `words-of-clothes` | vocabulary | 11 | `context-clues` | 15 |
+| `words-of-software-and-security` | vocabulary | 12 | `context-clues` | 15 |
+| `words-of-family` | vocabulary | 12 | `context-clues` | 15 |
+| `words-of-shopping` | vocabulary | 12 | `context-clues` | 15 |
+| `words-of-the-army` | vocabulary | 12 | `context-clues` | 15 |
+| `words-of-getting-around` | vocabulary | 13 | `context-clues` | 15 |
+| `words-of-moods` | vocabulary | 13 | `context-clues` | 15 |
+| `words-of-how-things-are` | vocabulary | 13 | `context-clues` | 15 |
+| `words-of-staying-safe` | vocabulary | 13 | `context-clues` | 15 |
+| `phrasal-verbs-of-starting-and-stopping` | vocabulary | 14 | `context-clues` | 15 |
+| `phrasal-verbs-of-solving-problems` | vocabulary | 14 | `context-clues` | 15 |
+| `phrasal-verbs-of-people` | vocabulary | 14 | `context-clues` | 15 |
+| `phrasal-verbs-of-more-and-less` | vocabulary | 14 | `context-clues` | 15 |
+| `phrasal-verbs-of-breaking-and-building` | vocabulary | 15 | `context-clues` | 15 |
+| `phrasal-verbs-of-meeting-and-arriving` | vocabulary | 15 | `context-clues` | 15 |
+| `phrasal-verbs-of-coping` | vocabulary | 15 | `context-clues` | 15 |
+| `phrasal-verbs-of-papers-and-things` | vocabulary | 15 | `context-clues` | 15 |
+| `words-of-housework` | vocabulary | 16 | `context-clues` | 15 |
+| `phrasal-verbs-of-work-and-choices` | vocabulary | 16 | `context-clues` | 15 |

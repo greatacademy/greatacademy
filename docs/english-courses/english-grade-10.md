@@ -6,7 +6,7 @@
 - **Level:** Grade 10, for learners whose first language is English or who read English as well as a native speaker of their age
 - **Prerequisite(s):** `english-grade-9`, or reading and writing literary analyses, scenes, narratives and arguments with sources at the level of grade 9
 - **Language of explanation:** English
-- **Size:** 9 units · 52 topics (10 existing, 42 new: 20 of vocabulary, 6 of grammar and mechanics, 7 of reading, 3 of writing checked by rules, 6 of writing judged by a model) · about 830 XP · 8 reading units of 66 passages (2 existing, 6 new) · 9 conversations (2 existing, 7 new)
+- **Size:** 21 units · 100 topics (10 existing, 90 new: 68 of vocabulary, 6 of grammar and mechanics, 7 of reading, 3 of writing checked by rules, 6 of writing judged by a model) · about 1,550 XP · 8 reading units of 66 passages (2 existing, 6 new) · 9 conversations (2 existing, 7 new)
 
 ## Aim
 
@@ -14,11 +14,11 @@ By the end of grade 10 a learner reads the speeches, poems, stories of ambition 
 
 ## How to Read This Outline
 
-Every unit is a theme and teaches four things together: the words of the theme, grammar and mechanics, reading skills, and writing. It ends with a reading unit on the theme and a conversation, except the last, which has a conversation but no reading unit. Topics marked *existing* are in the graph already, in the band course `english-grades-9-12`, and keep their ids and their own prerequisites; each new topic lists its prerequisites, which may lie in an earlier unit or an earlier grade. A new topic of words lists the words it teaches, none of which another batch of the native courses teaches; any other new topic says what it teaches and its knowledge points as steps. A judged writing topic names its task and the criteria of its rubric, marking the criteria that are new.
+Every unit is a theme and teaches four things together: the words of the theme, grammar and mechanics, reading skills, and writing. It ends with a reading unit on the theme and a conversation, except unit 9, which has a conversation but no reading unit. Units 10 to 21 teach words alone, ten to a batch, with no reading unit or conversation: the words of everyday life, of feelings and actions, of school and work and, in some, phrasal verbs or academic words. Topics marked *existing* are in the graph already, in the band course `english-grades-9-12`, and keep their ids and their own prerequisites; each new topic lists its prerequisites, which may lie in an earlier unit or an earlier grade. A new topic of words lists the words it teaches, none of which another batch of the native courses teaches; any other new topic says what it teaches and its knowledge points as steps. A judged writing topic names its task and the criteria of its rubric, marking the criteria that are new.
 
-Strands: of the 52 topics, 22 teach words (42%), 8 grammar and mechanics (15%), 11 reading (21%), 3 writing checked by rules (6%) and 8 writing judged by a model (15%).
+Strands: of the 100 topics, 70 teach words (70%), 8 grammar and mechanics (8%), 11 reading (11%), 3 writing checked by rules (3%) and 8 writing judged by a model (8%).
 
-Depth: each new grammar, reading or rule-checked writing knowledge point has 30 to 48 items built from hand-written cores by templates; each word of a vocabulary batch appears in three sentences, so each vocabulary knowledge point has 30 items; each judged writing knowledge point has 12 tasks with a model; new reading units have 8 passages of 300 to 600 words, with three questions each. A batch of ten words earns about 15 XP, a word-study, grammar, reading or rule-checked writing topic about 14 and a judged writing topic about 24, and the existing topics keep their own XP, so the lessons of the grade come to about 830 XP.
+Depth: each new grammar, reading or rule-checked writing knowledge point has 30 to 48 items built from hand-written cores by templates; each word of a vocabulary batch appears in three sentences, so each vocabulary knowledge point has 30 items; each judged writing knowledge point has 12 tasks with a model; new reading units have 8 passages of 300 to 600 words, with three questions each. A batch of ten words earns about 15 XP, a word-study, grammar, reading or rule-checked writing topic about 14 and a judged writing topic about 24, and the existing topics keep their own XP, so the lessons of the grade come to about 1,550 XP.
 
 Listening and speaking wait for audio and recording: until then a unit lists its conversation but does not offer it, and each unit says what it will gain.
 
@@ -156,6 +156,54 @@ The band course `english-grades-9-12` retires once `english-grade-9` to `english
 
 **Later, with audio and recording:** Listening to a talk on the roots of words and noting the parts it names; working out unfamiliar words aloud from their parts.
 
+### 10. Puzzles, Hands and Fire
+
+**Words:** `words-of-puzzling-and-pondering` Words of Puzzling and Pondering (after `context-clues`): baffle, bewilder, perplex, fluster, dazed, garble, ponder, surmise, comprehend, query; `words-of-rough-handling` Words of Rough Handling (after `context-clues`): brandish, grope, jostle, lunge, hurl, rummage, scour, scrawl, douse, contort; `words-of-fire-and-heat` Words of Fire and Heat (after `context-clues`): ignite, kindle, smolder, scald, simmer, seethe, swelter, parch, quench, illuminate; `words-of-crowds-and-gatherings` Words of Crowds and Gatherings (after `context-clues`): congregate, throng, mingle, merge, converge, disperse, ally, conspire, commotion, uproar.
+
+### 11. Blocking, Urging and Loathing
+
+**Words:** `words-of-blocking-and-breaking` Words of Blocking and Breaking (after `context-clues`): hamper, thwart, foil, obstruct, impair, disrupt, stifle, sever, rupture, topple; `words-of-coaxing-and-urging` Words of Coaxing and Urging (after `context-clues`): coax, entice, lure, implore, incite, compel, prod, rouse, arouse, oblige; `words-of-flinching-and-fretting` Words of Flinching and Fretting (after `context-clues`): elude, evade, recoil, cringe, wince, grimace, startle, fret, brood, linger; `words-of-loathing-and-bullying` Words of Loathing and Bullying (after `context-clues`): despise, detest, loathe, resent, appall, irk, harass, humiliate, intimidate, alienate.
+
+### 12. Food, Eyes and Sleep
+
+**Words:** `words-of-eating-and-hunger` Words of Eating and Hunger (after `context-clues`): devour, gobble, munch, nibble, savor, relish, appetite, famished, nourish, morsel; `words-of-looking` Words of Looking (after `context-clues`): glimpse, glance, gaze, stare, gape, peer, squint, blink, twinkle, dazzle; `words-of-tiredness-and-sleep` Words of Tiredness and Sleep (after `context-clues`): drowsy, groggy, weary, exhausted, fatigue, haggard, doze, snooze, slumber, lull; `words-of-the-odd-and-the-dull` Words of the Odd and the Dull (after `context-clues`): odd, bizarre, eccentric, quaint, lofty, vibrant, drab, dreary, dismal, monotonous.
+
+### 13. Danger, Disaster and Blunders
+
+**Words:** `words-of-danger-and-threats` Words of Danger and Threats (after `context-clues`): imminent, brink, jeopardy, menace, plight, threaten, endanger, hazardous, risky, unsafe; `words-of-natural-disasters` Words of Natural Disasters (after `context-clues`): hurricane, avalanche, landslide, mudslide, torrent, deluge, engulf, drown, erupt, quake; `words-of-wrecking-and-remains` Words of Wrecking and Remains (after `context-clues`): demolish, dismantle, shatter, ruin, eradicate, rubble, wreckage, remnant, scrap, salvage; `words-of-blunders-and-snags` Words of Blunders and Snags (after `context-clues`): blunder, bungle, botch, fumble, fiasco, misstep, lapse, defect, snag, hiccup.
+
+### 14. Effort, Hoards and Talent
+
+**Words:** `words-of-hard-effort` Words of Hard Effort (after `context-clues`): strive, endeavor, toil, labor, slog, exert, grapple, haul, lug, heave; `words-of-gathering-and-discarding` Words of Gathering and Discarding (after `context-clues`): amass, stockpile, stash, glean, forage, scavenge, heap, pile, discard, dump; `words-of-skill-and-showing-off` Words of Skill and Showing Off (after `context-clues`): gifted, knack, prowess, versatile, agile, nimble, boast, flaunt, showoff, flamboyant; `words-of-copying-and-zest` Words of Copying and Zest (after `context-clues`): mimic, impersonate, parrot, copycat, zest, gusto, verve, vigor, eagerness, enthusiasm.
+
+### 15. Grief, Noises, Talk and Rules
+
+**Words:** `words-of-grief-and-comfort` Words of Grief and Comfort (after `context-clues`): anguish, agony, torment, distress, sorrow, woe, heartache, weep, sob, console; `words-of-moaning-and-mumbling` Words of Moaning and Mumbling (after `context-clues`): moan, groan, whine, howl, yell, holler, grunt, mutter, mumble, stammer; `words-of-chatter-and-gossip` Words of Chatter and Gossip (after `context-clues`): chatter, prattle, babble, jabber, gossip, blab, banter, quip, retort, rant; `words-of-rules-and-orders` Words of Rules and Orders (after `context-clues`): adhere, abide, heed, obedient, forbid, breach, waive, allowance, summon, truant.
+
+### 16. School, College, Crime and Travel
+
+**Words:** `words-of-courses-and-campus` Words of Courses and Campus (after `context-clues`): curriculum, syllabus, seminar, tutorial, semester, enroll, faculty, campus, dormitory, transcript; `words-of-college-life` Words of College Life (after `context-clues`): tuition, scholarship, freshman, sophomore, undergraduate, graduate, dropout, alumni, diploma, plagiarism; `words-of-crime` Words of Crime (after `context-clues`): theft, burglar, shoplift, vandal, arson, smuggling, forgery, ransom, hostage, parole; `words-of-travel` Words of Travel (after `context-clues`): itinerary, luggage, departure, excursion, cruise, cabin, hostel, layover, disembark, jet lag.
+
+### 17. City, Office, Media and Amounts
+
+**Words:** `words-of-the-city` Words of the City (after `context-clues`): downtown, suburban, sprawl, congestion, commuter, boulevard, precinct, zoning, tenant, landlord; `words-of-the-office` Words of the Office (after `context-clues`): supervisor, intern, memo, workload, schedule, payroll, promotion, resign, retire, task; `words-of-media` Words of Media (after `context-clues`): editorial, columnist, subscriber, podcast, series, medium, publicity, label, device, virtual; `academic-words-of-amounts-and-cases` Academic Words of Amounts and Cases (after `context-clues`): bulk, capacity, incidence, instance, guideline, emphasis, mode, dispose, implicate, ignorance.
+
+### 18. Fights, Tricks, Cruelty and Mess
+
+**Words:** `words-of-fights-and-squabbles` Words of Fights and Squabbles (after `context-clues`): bicker, tiff, spat, scuffle, brawl, clash, fray, strife, agitate, vehement; `words-of-schemes-and-tricks` Words of Schemes and Tricks (after `context-clues`): invent, devise, concoct, brew, conjure, contrive, ruse, gimmick, tactic, divert; `words-of-cruelty` Words of Cruelty (after `context-clues`): cruel, brutal, savage, vicious, ferocious, heartless, merciless, sadistic, inflict, obnoxious; `words-of-mess-and-dirt` Words of Mess and Dirt (after `context-clues`): messy, untidy, sloppy, scruffy, unkempt, disheveled, grimy, grubby, filthy, sordid.
+
+### 19. Cleaning, Money and Sources
+
+**Words:** `words-of-cleaning-and-order` Words of Cleaning and Order (after `context-clues`): tidy, neat, orderly, spotless, immaculate, hygienic, sanitary, wipe, rinse, scrub; `words-of-rich-and-poor` Words of Rich and Poor (after `context-clues`): wealthy, prosperous, profitable, lucrative, thrifty, extravagant, pricey, costly, affordable, broke; `words-of-pay-and-bills` Words of Pay and Bills (after `context-clues`): wage, salary, earnings, bonus, pension, fee, invoice, refund, voucher, installment; `academic-words-of-sources-and-steps` Academic Words of Sources and Steps (after `context-clues`): select, register, input, emit, offset, trace, site, ongoing, rely, reluctance.
+
+### 20. Fear, Shame, Pity and Anger
+
+**Words:** `words-of-fear-and-wonder` Words of Fear and Wonder (after `context-clues`): frighten, horrify, terror, astonish, marvel, gasp, shiver, faint, paralyze, overwhelm; `words-of-shame-and-blame` Words of Shame and Blame (after `context-clues`): embarrass, blush, guilt, confess, apologize, modest, flatter, tease, insult, scold; `words-of-pity-and-mercy` Words of Pity and Mercy (after `context-clues`): pity, sympathy, mercy, grateful, deserve, plead, mourn, misery, poverty, tolerate; `words-of-anger-and-bluntness` Words of Anger and Bluntness (after `context-clues`): rage, outrage, provoke, confront, aggressive, grumble, nuisance, disgust, abrupt, frank.
+
+### 21. Raids, Slips, Splendor and Daring
+
+**Words:** `words-of-raids-and-rumors` Words of Raids and Rumors (after `context-clues`): raid, ambush, kidnap, snatch, flee, bribe, poison, torture, leak, rumor; `words-of-slips-and-scrambles` Words of Slips and Scrambles (after `context-clues`): stumble, tumble, slippery, crouch, scramble, soar, squeeze, spill, smash, haste; `words-of-spectacle-and-splendor` Words of Spectacle and Splendor (after `context-clues`): parade, spectacle, splendid, gorgeous, glamour, exotic, myth, miracle, thrill, gesture; `words-of-daring-and-promises` Words of Daring and Promises (after `context-clues`): dare, venture, tempt, impulse, pledge, swear, pretend, swap, cope, burden.
+
 ## What the Next Grade Builds On
 
 `english-grade-11` builds on this year: the rhetorical analysis and the editorial grow into the argumentative essay on rights and laws and the synthesis of sources on science; reading for bias and misleading numbers goes on to logical fallacies, the evaluation of sources and historical documents; and grammar moves to absolute phrases, noun clauses and integrating quotations.
@@ -206,3 +254,51 @@ The band course `english-grades-9-12` retires once `english-grade-9` to `english
 | `academic-words-6` | vocabulary | 9 | `context-clues` | 15 |
 | `academic-words-7` | vocabulary | 9 | `context-clues` | 15 |
 | `commonly-confused-words-6` | grammar | 9 | `commonly-confused-words-5` | 14 |
+| `words-of-puzzling-and-pondering` | vocabulary | 10 | `context-clues` | 15 |
+| `words-of-rough-handling` | vocabulary | 10 | `context-clues` | 15 |
+| `words-of-fire-and-heat` | vocabulary | 10 | `context-clues` | 15 |
+| `words-of-crowds-and-gatherings` | vocabulary | 10 | `context-clues` | 15 |
+| `words-of-blocking-and-breaking` | vocabulary | 11 | `context-clues` | 15 |
+| `words-of-coaxing-and-urging` | vocabulary | 11 | `context-clues` | 15 |
+| `words-of-flinching-and-fretting` | vocabulary | 11 | `context-clues` | 15 |
+| `words-of-loathing-and-bullying` | vocabulary | 11 | `context-clues` | 15 |
+| `words-of-eating-and-hunger` | vocabulary | 12 | `context-clues` | 15 |
+| `words-of-looking` | vocabulary | 12 | `context-clues` | 15 |
+| `words-of-tiredness-and-sleep` | vocabulary | 12 | `context-clues` | 15 |
+| `words-of-the-odd-and-the-dull` | vocabulary | 12 | `context-clues` | 15 |
+| `words-of-danger-and-threats` | vocabulary | 13 | `context-clues` | 15 |
+| `words-of-natural-disasters` | vocabulary | 13 | `context-clues` | 15 |
+| `words-of-wrecking-and-remains` | vocabulary | 13 | `context-clues` | 15 |
+| `words-of-blunders-and-snags` | vocabulary | 13 | `context-clues` | 15 |
+| `words-of-hard-effort` | vocabulary | 14 | `context-clues` | 15 |
+| `words-of-gathering-and-discarding` | vocabulary | 14 | `context-clues` | 15 |
+| `words-of-skill-and-showing-off` | vocabulary | 14 | `context-clues` | 15 |
+| `words-of-copying-and-zest` | vocabulary | 14 | `context-clues` | 15 |
+| `words-of-grief-and-comfort` | vocabulary | 15 | `context-clues` | 15 |
+| `words-of-moaning-and-mumbling` | vocabulary | 15 | `context-clues` | 15 |
+| `words-of-chatter-and-gossip` | vocabulary | 15 | `context-clues` | 15 |
+| `words-of-rules-and-orders` | vocabulary | 15 | `context-clues` | 15 |
+| `words-of-courses-and-campus` | vocabulary | 16 | `context-clues` | 15 |
+| `words-of-college-life` | vocabulary | 16 | `context-clues` | 15 |
+| `words-of-crime` | vocabulary | 16 | `context-clues` | 15 |
+| `words-of-travel` | vocabulary | 16 | `context-clues` | 15 |
+| `words-of-the-city` | vocabulary | 17 | `context-clues` | 15 |
+| `words-of-the-office` | vocabulary | 17 | `context-clues` | 15 |
+| `words-of-media` | vocabulary | 17 | `context-clues` | 15 |
+| `academic-words-of-amounts-and-cases` | vocabulary | 17 | `context-clues` | 15 |
+| `words-of-fights-and-squabbles` | vocabulary | 18 | `context-clues` | 15 |
+| `words-of-schemes-and-tricks` | vocabulary | 18 | `context-clues` | 15 |
+| `words-of-cruelty` | vocabulary | 18 | `context-clues` | 15 |
+| `words-of-mess-and-dirt` | vocabulary | 18 | `context-clues` | 15 |
+| `words-of-cleaning-and-order` | vocabulary | 19 | `context-clues` | 15 |
+| `words-of-rich-and-poor` | vocabulary | 19 | `context-clues` | 15 |
+| `words-of-pay-and-bills` | vocabulary | 19 | `context-clues` | 15 |
+| `academic-words-of-sources-and-steps` | vocabulary | 19 | `context-clues` | 15 |
+| `words-of-fear-and-wonder` | vocabulary | 20 | `context-clues` | 15 |
+| `words-of-shame-and-blame` | vocabulary | 20 | `context-clues` | 15 |
+| `words-of-pity-and-mercy` | vocabulary | 20 | `context-clues` | 15 |
+| `words-of-anger-and-bluntness` | vocabulary | 20 | `context-clues` | 15 |
+| `words-of-raids-and-rumors` | vocabulary | 21 | `context-clues` | 15 |
+| `words-of-slips-and-scrambles` | vocabulary | 21 | `context-clues` | 15 |
+| `words-of-spectacle-and-splendor` | vocabulary | 21 | `context-clues` | 15 |
+| `words-of-daring-and-promises` | vocabulary | 21 | `context-clues` | 15 |

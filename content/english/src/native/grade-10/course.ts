@@ -264,8 +264,8 @@ export const courseGrade10: CourseDef = {
   id: "english-grade-10",
   title: t("English, Grade 10", "英语：十年级"),
   description: t(
-    "English for readers and writers of grade 10, in nine themed units from voices of persuasion and poems across time to ambition and power, war and memory, the natural world, media and truth, money and work, satire and humor and the roots and parts of words. Each unit teaches the words of its theme, grammar and style, reading skills and a kind of writing together, and most give a set of passages to read on the theme. The analyses, comparisons, descriptions, editorials, letters and satires written in the course are judged by a model.",
-    "面向十年级读者和写作者的英语课程，共九个主题单元，从说服之声和穿越时代的诗歌，到野心与权力、战争与记忆、自然世界、媒体与真相、金钱与工作、讽刺与幽默以及词根与词缀。每个单元同时教授该主题的词汇、语法和文体、阅读技能和一种写作，大多数单元还提供一组围绕主题的阅读文章。课程中写的分析、比较、描写、社论、求职信和讽刺文由模型评判。",
+    "English for readers and writers of grade 10, in nine themed units from voices of persuasion and poems across time to ambition and power, war and memory, the natural world, media and truth, money and work, satire and humor and the roots and parts of words. Each unit teaches the words of its theme, grammar and style, reading skills and a kind of writing together, and most give a set of passages to read on the theme. The analyses, comparisons, descriptions, editorials, letters and satires written in the course are judged by a model. Twelve more units teach words alone, ten to a batch: the words of everyday life, of feelings and actions, of school and work, and academic words.",
+    "面向十年级读者和写作者的英语课程，共九个主题单元，从说服之声和穿越时代的诗歌，到野心与权力、战争与记忆、自然世界、媒体与真相、金钱与工作、讽刺与幽默以及词根与词缀。每个单元同时教授该主题的词汇、语法和文体、阅读技能和一种写作，大多数单元还提供一组围绕主题的阅读文章。课程中写的分析、比较、描写、社论、求职信和讽刺文由模型评判。另有十二个单元只教词汇，每组十个词：日常生活、情感与行为、学校与工作的词，以及学术词汇。",
   ),
   group: t("English", "英语"),
   buildsOn: ["english-grade-9"],

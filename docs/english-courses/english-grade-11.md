@@ -6,7 +6,7 @@
 - **Level:** Grade 11, for learners whose first language is English or who read English as well as a native speaker of their age
 - **Prerequisite(s):** `english-grade-10`, or reading and writing rhetorical analyses, thematic analyses, comparisons, editorials and satires at the level of grade 10
 - **Language of explanation:** English
-- **Size:** 9 units · 43 topics (12 existing, 31 new: 15 of vocabulary, 4 of grammar and mechanics, 4 of reading, 3 of writing checked by rules, 5 of writing judged by a model) · about 710 XP · 8 reading units of 64 passages (3 existing, 5 new) · 9 conversations (3 existing, 6 new)
+- **Size:** 31 units · 100 topics (12 existing, 88 new: 72 of vocabulary, 4 of grammar and mechanics, 4 of reading, 3 of writing checked by rules, 5 of writing judged by a model) · about 1,570 XP · 8 reading units of 64 passages (3 existing, 5 new) · 9 conversations (3 existing, 6 new)
 
 ## Aim
 
@@ -14,11 +14,11 @@ By the end of grade 11 a learner reads the arguments on rights and laws, histori
 
 ## How to Read This Outline
 
-Every unit is a theme and teaches four things together: the words of the theme, grammar and mechanics, reading skills, and writing. It ends with a reading unit on the theme and a conversation, except the last, which has a conversation but no reading unit. Topics marked *existing* are in the graph already, in the band course `english-grades-9-12`, and keep their ids and their own prerequisites; each new topic lists its prerequisites, which may lie in an earlier unit or an earlier grade. A new topic of words lists the words it teaches, none of which another batch of the native courses teaches; any other new topic says what it teaches and its knowledge points as steps. A judged writing topic names its task and the criteria of its rubric, marking the criteria that are new.
+Every unit is a theme and teaches four things together: the words of the theme, grammar and mechanics, reading skills, and writing. It ends with a reading unit on the theme and a conversation, except unit 9, which has a conversation but no reading unit. Units 10 to 31 teach words alone, ten to a batch, with no reading unit or conversation: the words of everyday life, of feelings and actions, of school and work and, in some, phrasal verbs or academic words. Topics marked *existing* are in the graph already, in the band course `english-grades-9-12`, and keep their ids and their own prerequisites; each new topic lists its prerequisites, which may lie in an earlier unit or an earlier grade. A new topic of words lists the words it teaches, none of which another batch of the native courses teaches; any other new topic says what it teaches and its knowledge points as steps. A judged writing topic names its task and the criteria of its rubric, marking the criteria that are new.
 
-Strands: of the 43 topics, 18 teach words (42%), 6 grammar and mechanics (14%), 7 reading (16%), 4 writing checked by rules (9%) and 8 writing judged by a model (19%).
+Strands: of the 100 topics, 75 teach words (75%), 6 grammar and mechanics (6%), 7 reading (7%), 4 writing checked by rules (4%) and 8 writing judged by a model (8%).
 
-Depth: each new grammar, reading or rule-checked writing knowledge point has 30 to 48 items built from hand-written cores by templates; each word of a vocabulary batch appears in three sentences, so each vocabulary knowledge point has 30 items; each judged writing knowledge point has 12 tasks with a model; new reading units have 8 passages of 300 to 600 words, with three questions each. A batch of ten words earns about 15 XP, a word-study, grammar, reading or rule-checked writing topic about 14 and a judged writing topic about 24, and the existing topics keep their own XP, so the lessons of the grade come to about 710 XP.
+Depth: each new grammar, reading or rule-checked writing knowledge point has 30 to 48 items built from hand-written cores by templates; each word of a vocabulary batch appears in three sentences, so each vocabulary knowledge point has 30 items; each judged writing knowledge point has 12 tasks with a model; new reading units have 8 passages of 300 to 600 words, with three questions each. A batch of ten words earns about 15 XP, a word-study, grammar, reading or rule-checked writing topic about 14 and a judged writing topic about 24, and the existing topics keep their own XP, so the lessons of the grade come to about 1,570 XP.
 
 Listening and speaking wait for audio and recording: until then a unit lists its conversation but does not offer it, and each unit says what it will gain.
 
@@ -158,6 +158,94 @@ The band course `english-grades-9-12` retires once `english-grade-9` to `english
 
 **Later, with audio and recording:** Listening to a talk on the roots of words and noting the parts it names; working out long words aloud from their parts.
 
+### 10. Easing and Society
+
+**Words:** `words-of-easing-and-stopping` Words of Easing and Stopping (after `context-clues`): abate, allay, alleviate, quell, dispel, dissipate, curtail, deter, rectify, facilitate; `words-of-sociable-and-solitary-people` Words of Sociable and Solitary People (after `context-clues`): amiable, amicable, convivial, ebullient, vivacious, boisterous, reclusive, insular, provincial, standoffish; `words-of-nerve-and-offense` Words of Nerve and Offense (after `context-clues`): brazen, effrontery, temerity, impertinent, impetuous, rash, blatant, flagrant, presumptuous, gratuitous.
+
+### 11. Skill and Dullness
+
+**Words:** `words-of-skill-and-clumsiness` Words of Skill and Clumsiness (after `context-clues`): adept, adroit, deft, dexterity, acumen, erudite, novice, inept, rudimentary, prodigious; `words-of-dull-and-stale-things` Words of Dull and Stale Things (after `context-clues`): banal, bland, hackneyed, trite, prosaic, mundane, vapid, tedious, soporific, jaded.
+
+### 12. Scorn and Trickery
+
+**Words:** `words-of-scolding-and-scorn` Words of Scolding and Scorn (after `context-clues`): chastise, upbraid, denounce, deplore, tirade, vitriolic, disdain, repudiate, ostracize, truculent; `words-of-harm-and-trickery` Words of Harm and Trickery (after `context-clues`): cajole, chicanery, nefarious, unscrupulous, insidious, pernicious, deleterious, illicit, foment, instigate; `words-of-care-and-carelessness` Words of Care and Carelessness (after `context-clues`): fastidious, punctilious, painstaking, exhaustive, circumspect, negligent, lax, perfunctory, inadvertent, officious.
+
+### 13. Firm Minds and Measures
+
+**Words:** `words-of-firm-and-fickle-minds` Words of Firm and Fickle Minds (after `context-clues`): adamant, obstinate, incorrigible, inveterate, amenable, capricious, erratic, fervent, zealous, nonchalant; `words-of-much-and-little` Words of Much and Little (after `context-clues`): myriad, replete, devoid, inundate, prolific, diminutive, peripheral, inconsequential, palpable, conspicuous; `words-of-holding-and-letting-go` Words of Holding and Letting Go (after `context-clues`): consolidate, coalesce, relinquish, rescind, relegate, squander, languish, stagnant, defunct, transient.
+
+### 14. Feeling and Belief
+
+**Words:** `words-of-dislike-and-levity` Words of Dislike and Levity (after `context-clues`): chagrin, aversion, animosity, apathy, abhor, levity, pensive, querulous, indifferent, exasperate; `words-of-doubt-and-belief` Words of Doubt and Belief (after `context-clues`): dubious, equivocal, illusory, elusive, infallible, credulous, cognizant, oblivious, construe, conundrum.
+
+### 15. Excellence and Hardship
+
+**Words:** `words-of-excellence-and-awe` Words of Excellence and Awe (after `context-clues`): epitome, paragon, exemplary, impeccable, pristine, profound, ineffable, venerate, adulation, charisma; `words-of-harshness-and-hardship` Words of Harshness and Hardship (after `context-clues`): stringent, onerous, grievous, abject, squalid, acrid, abrasive, callous, debilitate, enervate; `words-of-ranks-and-types` Words of Ranks and Types (after `context-clues`): hierarchy, subordinate, indigenous, conventional, iconoclast, hedonist, opportunist, pedantic, traditionalist, elitist.
+
+### 16. Company and Whims
+
+**Words:** `words-of-company-and-candor` Words of Company and Candor (after `context-clues`): camaraderie, rapport, squabble, contentious, antagonize, decorum, demure, candor, condone, facetious; `words-of-leanings-and-whims` Words of Leanings and Whims (after `context-clues`): penchant, predilection, propensity, spontaneous, intuitive, indulgent, frivolous, preposterous, eclectic, emulate; `words-of-the-relentless-and-the-calm` Words of the Relentless and the Calm (after `context-clues`): incessant, relentless, inexorable, unprecedented, turbulent, tranquil, vigilant, impervious, innocuous, sedentary.
+
+### 17. Writing and Means
+
+**Words:** `words-for-trimming-and-padding-writing` Words for Trimming and Padding Writing (after `context-clues`): wordy, brevity, concise, embellish, extraneous, redundant, incisive, elicit, superficial, verbiage; `words-of-means-that-work` Words of Means That Work (after `context-clues`): circumvent, expedient, viable, conducive, workable, practicable, makeshift, ploy, loophole, expedite; `words-of-yielding-and-resisting` Words of Yielding and Resisting (after `context-clues`): acquiesce, capitulate, renege, flout, forestall, stymie, goad, entreat, espouse, garner.
+
+### 18. Dark and Daily Times
+
+**Words:** `words-of-dark-times` Words of Dark Times (after `context-clues`): hapless, harbinger, impasse, maelstrom, morass, nadir, pariah, odious, inimical, virulent; `words-of-the-commonplace-and-the-spreading` Words of the Commonplace and the Spreading (after `context-clues`): quotidian, rife, pervade, burgeon, seminal, panacea, platitude, modicum, motley, milieu.
+
+### 19. Minds and Characters
+
+**Words:** `words-of-hazy-and-sharp-thinking` Words of Hazy and Sharp Thinking (after `context-clues`): myopic, obfuscate, vacuous, trenchant, vociferous, umbrage, vicarious, veneer, pliant, propitious; `words-for-characters-in-company` Words for Characters in Company (after `context-clues`): juggernaut, lionize, neophyte, savant, raconteur, misanthrope, jocular, histrionic, maudlin, dupe; `words-of-the-fleeting-and-the-sharp` Words of the Fleeting and the Sharp (after `context-clues`): transitory, profuse, salubrious, pungent, fractious, restive, alacrity, foible, apocryphal, antipathy.
+
+### 20. Academic Words of Process
+
+**Words:** `words-for-starting-and-finishing` Words for Starting and Finishing (after `context-clues`): commence, initiate, cease, terminate, proceed, precede, undertake, eventual, ultimate, preliminary; `words-for-more-and-less` Words for More and Less (after `context-clues`): accumulate, exceed, maximize, minimize, diminish, enhance, accentuate, appreciable, minimal, sufficient.
+
+### 21. Academic Words of Structure
+
+**Words:** `words-for-joining-and-matching` Words for Joining and Matching (after `context-clues`): assemble, compile, incorporate, integral, unify, coincide, concurrent, consecutive, overlap, parallel; `words-for-limiting-and-keeping` Words for Limiting and Keeping (after `context-clues`): constrain, restrain, restrict, inhibit, exclude, eliminate, impose, retain, reject, withhold.
+
+### 22. Academic Words of Sight and Sorting
+
+**Words:** `words-for-showing-and-seeing` Words for Showing and Seeing (after `context-clues`): depict, illustrate, highlight, visible, visual, vision, image, expose, evident, apparent; `words-for-sorting-and-differing` Words for Sorting and Differing (after `context-clues`): distinct, discrete, differentiate, discriminate, diverse, vary, uniform, equate, distort, reverse; `words-for-supporting-and-making-up` Words for Supporting and Making Up (after `context-clues`): accommodate, compensate, complement, supplement, substitute, equip, enable, sustain, guarantee, mediate.
+
+### 23. Academic Words of Study and Work
+
+**Words:** `words-for-research-and-numbers` Words for Research and Numbers (after `context-clues`): survey, statistic, ratio, simulate, predict, formula, index, thesis, insight, random; `words-for-roles-and-institutions` Words for Roles and Institutions (after `context-clues`): practitioner, professional, successor, affiliate, panel, institute, ministry, sector, corporate, welfare.
+
+### 24. Academic Words of Ideas and Places
+
+**Words:** `words-for-thinking-ahead` Words for Thinking Ahead (after `context-clues`): presume, anticipate, notion, ideology, rational, norm, ethic, scenario, prospect, incline; `words-for-places-and-moving` Words for Places and Moving (after `context-clues`): transfer, transit, displace, immigrate, locate, reside, occupy, orient, overseas, domestic.
+
+### 25. Academic Words of Writing and Getting
+
+**Words:** `words-for-drafting-and-editing` Words for Drafting and Editing (after `context-clues`): clarify, specify, quote, edit, draft, format, paragraph, summary, append, insert; `words-for-gaining-and-giving` Words for Gaining and Giving (after `context-clues`): acquisition, attain, confer, grant, devote, invest, purchase, pursue, seek, secure; `words-for-meeting-and-talking` Words for Meeting and Talking (after `context-clues`): convene, converse, correspond, coordinate, participate, intervene, acknowledge, controversy, encounter, link.
+
+### 26. Academic Words of Parts and Rank
+
+**Words:** `words-for-inside-and-outside` Words for Inside and Outside (after `context-clues`): internal, external, intermediate, adjacent, configuration, infrastructure, domain, sphere, entity, section; `words-for-exactness-and-rank` Words for Exactness and Rank (after `context-clues`): definite, specific, initial, prior, overall, predominant, fundamental, principal, prime, sole.
+
+### 27. Academic Words of Change and Reach
+
+**Words:** `words-for-changing-and-handling` Words for Changing and Handling (after `context-clues`): alter, conform, manipulate, monitor, inspect, generate, induce, trigger, undergo, utilize; `words-for-fitting-and-spreading` Words for Fitting and Spreading (after `context-clues`): accessible, authentic, compatible, passive, positive, potential, straightforward, voluntary, widespread, mutual.
+
+### 28. Attack and Deceit
+
+**Words:** `words-of-attack-and-defense` Words of Attack and Defense (after `context-clues`): assail, barrage, barricade, fortify, subdue, retaliate, avenge, oust, raze, ravage; `words-of-fakes-and-lies` Words of Fakes and Lies (after `context-clues`): counterfeit, fabricate, feign, hoax, swindle, delude, covert, insinuate, pretext, snare; `words-of-arrest-and-mercy` Words of Arrest and Mercy (after `context-clues`): accomplice, apprehend, convict, detain, interrogate, confiscate, attest, clemency, lenient, exempt.
+
+### 29. Scorn and Decline
+
+**Words:** `words-of-mockery-and-rebuke` Words of Mockery and Rebuke (after `context-clues`): scoff, sneer, taunt, gloat, mock, scorn, spurn, shun, reproach, reprimand; `words-of-decline-and-prevailing` Words of Decline and Prevailing (after `context-clues`): deteriorate, dwindle, wane, recede, subside, succumb, relent, prevail, surpass, teem; `words-of-smell-taste-and-touch` Words of Smell, Taste and Touch (after `context-clues`): whet, satiate, palliate, emollient, cloying, redolent, fetid, noisome, viscous, variegated.
+
+### 30. Truth and Temper
+
+**Words:** `words-of-truth-and-denial` Words of Truth and Denial (after `context-clues`): belie, aver, gainsay, impugn, prevaricate, dissemble, disabuse, exculpate, remonstrate, demur; `words-of-drive-and-inertia` Words of Drive and Inertia (after `context-clues`): dogged, pertinacious, feckless, fatuous, hidebound, protean, peripatetic, somnolent, lassitude, quiescent; `words-of-money-and-greed` Words of Money and Greed (after `context-clues`): impecunious, pecuniary, lucre, venal, cupidity, largesse, mendicant, bilk, abscond, aggrandize.
+
+### 31. Honor and Hard Tasks
+
+**Words:** `words-of-acclaim-and-abuse` Words of Acclaim and Abuse (after `context-clues`): approbation, plaudit, encomium, laudatory, obloquy, opprobrium, calumny, pillory, vituperate, fulminate; `words-of-awkward-fixes` Words of Awkward Fixes (after `context-clues`): adverse, obtuse, quandary, reprehensible, solicitous, stupor, imbroglio, discomfit, ignoble, turpitude; `words-of-hard-and-costly-tasks` Words of Hard and Costly Tasks (after `context-clues`): intricate, cumbersome, elaborate, grueling, strenuous, formidable, stupendous, outlandish, exorbitant, paltry.
+
 ## What the Next Grade Builds On
 
 `english-grade-12` builds on this year: the critique and the argumentative essay grow into the personal essay and the college application essay; reading for assumptions and motifs goes on to personal essays and longer works; and the vocabulary moves to words of reflection and the last sets of roots and academic words.
@@ -197,3 +285,60 @@ The band course `english-grades-9-12` retires once `english-grade-9` to `english
 | `academic-words-8` | vocabulary | 9 | `context-clues` | 15 |
 | `academic-words-9` | vocabulary | 9 | `context-clues` | 15 |
 | `commonly-confused-words-7` | grammar | 9 | `commonly-confused-words-6` | 14 |
+| `words-of-easing-and-stopping` | vocabulary | 10 | `context-clues` | 15 |
+| `words-of-sociable-and-solitary-people` | vocabulary | 10 | `context-clues` | 15 |
+| `words-of-nerve-and-offense` | vocabulary | 10 | `context-clues` | 15 |
+| `words-of-skill-and-clumsiness` | vocabulary | 11 | `context-clues` | 15 |
+| `words-of-dull-and-stale-things` | vocabulary | 11 | `context-clues` | 15 |
+| `words-of-scolding-and-scorn` | vocabulary | 12 | `context-clues` | 15 |
+| `words-of-harm-and-trickery` | vocabulary | 12 | `context-clues` | 15 |
+| `words-of-care-and-carelessness` | vocabulary | 12 | `context-clues` | 15 |
+| `words-of-firm-and-fickle-minds` | vocabulary | 13 | `context-clues` | 15 |
+| `words-of-much-and-little` | vocabulary | 13 | `context-clues` | 15 |
+| `words-of-holding-and-letting-go` | vocabulary | 13 | `context-clues` | 15 |
+| `words-of-dislike-and-levity` | vocabulary | 14 | `context-clues` | 15 |
+| `words-of-doubt-and-belief` | vocabulary | 14 | `context-clues` | 15 |
+| `words-of-excellence-and-awe` | vocabulary | 15 | `context-clues` | 15 |
+| `words-of-harshness-and-hardship` | vocabulary | 15 | `context-clues` | 15 |
+| `words-of-ranks-and-types` | vocabulary | 15 | `context-clues` | 15 |
+| `words-of-company-and-candor` | vocabulary | 16 | `context-clues` | 15 |
+| `words-of-leanings-and-whims` | vocabulary | 16 | `context-clues` | 15 |
+| `words-of-the-relentless-and-the-calm` | vocabulary | 16 | `context-clues` | 15 |
+| `words-for-trimming-and-padding-writing` | vocabulary | 17 | `context-clues` | 15 |
+| `words-of-means-that-work` | vocabulary | 17 | `context-clues` | 15 |
+| `words-of-yielding-and-resisting` | vocabulary | 17 | `context-clues` | 15 |
+| `words-of-dark-times` | vocabulary | 18 | `context-clues` | 15 |
+| `words-of-the-commonplace-and-the-spreading` | vocabulary | 18 | `context-clues` | 15 |
+| `words-of-hazy-and-sharp-thinking` | vocabulary | 19 | `context-clues` | 15 |
+| `words-for-characters-in-company` | vocabulary | 19 | `context-clues` | 15 |
+| `words-of-the-fleeting-and-the-sharp` | vocabulary | 19 | `context-clues` | 15 |
+| `words-for-starting-and-finishing` | vocabulary | 20 | `context-clues` | 15 |
+| `words-for-more-and-less` | vocabulary | 20 | `context-clues` | 15 |
+| `words-for-joining-and-matching` | vocabulary | 21 | `context-clues` | 15 |
+| `words-for-limiting-and-keeping` | vocabulary | 21 | `context-clues` | 15 |
+| `words-for-showing-and-seeing` | vocabulary | 22 | `context-clues` | 15 |
+| `words-for-sorting-and-differing` | vocabulary | 22 | `context-clues` | 15 |
+| `words-for-supporting-and-making-up` | vocabulary | 22 | `context-clues` | 15 |
+| `words-for-research-and-numbers` | vocabulary | 23 | `context-clues` | 15 |
+| `words-for-roles-and-institutions` | vocabulary | 23 | `context-clues` | 15 |
+| `words-for-thinking-ahead` | vocabulary | 24 | `context-clues` | 15 |
+| `words-for-places-and-moving` | vocabulary | 24 | `context-clues` | 15 |
+| `words-for-drafting-and-editing` | vocabulary | 25 | `context-clues` | 15 |
+| `words-for-gaining-and-giving` | vocabulary | 25 | `context-clues` | 15 |
+| `words-for-meeting-and-talking` | vocabulary | 25 | `context-clues` | 15 |
+| `words-for-inside-and-outside` | vocabulary | 26 | `context-clues` | 15 |
+| `words-for-exactness-and-rank` | vocabulary | 26 | `context-clues` | 15 |
+| `words-for-changing-and-handling` | vocabulary | 27 | `context-clues` | 15 |
+| `words-for-fitting-and-spreading` | vocabulary | 27 | `context-clues` | 15 |
+| `words-of-attack-and-defense` | vocabulary | 28 | `context-clues` | 15 |
+| `words-of-fakes-and-lies` | vocabulary | 28 | `context-clues` | 15 |
+| `words-of-arrest-and-mercy` | vocabulary | 28 | `context-clues` | 15 |
+| `words-of-mockery-and-rebuke` | vocabulary | 29 | `context-clues` | 15 |
+| `words-of-decline-and-prevailing` | vocabulary | 29 | `context-clues` | 15 |
+| `words-of-smell-taste-and-touch` | vocabulary | 29 | `context-clues` | 15 |
+| `words-of-truth-and-denial` | vocabulary | 30 | `context-clues` | 15 |
+| `words-of-drive-and-inertia` | vocabulary | 30 | `context-clues` | 15 |
+| `words-of-money-and-greed` | vocabulary | 30 | `context-clues` | 15 |
+| `words-of-acclaim-and-abuse` | vocabulary | 31 | `context-clues` | 15 |
+| `words-of-awkward-fixes` | vocabulary | 31 | `context-clues` | 15 |
+| `words-of-hard-and-costly-tasks` | vocabulary | 31 | `context-clues` | 15 |

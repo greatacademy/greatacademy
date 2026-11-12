@@ -6,7 +6,7 @@
 - **阶段：** 十年级，面向以英语为母语、或英语阅读水平与同龄母语者相当的学习者
 - **先修：** `english-grade-9`，或能读写九年级程度的文学分析、剧本、记叙文和基于资料的论证文
 - **讲解语言：** 英语
-- **规模：** 9 个单元 · 52 个主题（已有 10 个，新增 42 个：词汇 20 个，语法与书写规范 6 个，阅读 7 个，按规则检查的写作 3 个，由模型评判的写作 6 个）· 约 830 XP · 8 个阅读单元共 66 篇文章（已有 2 个，新增 6 个）· 9 个对话（已有 2 个，新增 7 个）
+- **规模：** 21 个单元 · 100 个主题（已有 10 个，新增 90 个：词汇 68 个，语法与书写规范 6 个，阅读 7 个，按规则检查的写作 3 个，由模型评判的写作 6 个）· 约 1,550 XP · 8 个阅读单元共 66 篇文章（已有 2 个，新增 6 个）· 9 个对话（已有 2 个，新增 7 个）
 
 ## 目标
 
@@ -14,11 +14,11 @@
 
 ## 如何阅读本大纲
 
-每个单元有一个题材，同时教授四样东西：该题材的词汇、语法与书写规范、阅读技能，以及写作。单元以一个题材阅读单元和一个对话收尾；最后一个单元只有对话，没有阅读单元。标为“已有”的主题已在知识图中，属于学段课程 `english-grades-9-12`，保留各自的 id 和先修；每个新主题列出其先修，先修可能在前面的单元或更早的年级中。新的词汇主题列出它教的词，这些词不在母语课程的其他词汇组中；其他新主题说明它教什么，并把它的各个知识点列为步骤。由模型评判的写作主题给出任务和评分标准，并标出新增的标准。
+每个单元有一个题材，同时教授四样东西：该题材的词汇、语法与书写规范、阅读技能，以及写作。单元以一个题材阅读单元和一个对话收尾；第 9 单元只有对话，没有阅读单元。第 10 到 21 单元只教词汇，每组十个词，没有阅读单元和对话：日常生活、情感与行为、学校与工作的词，有些单元教短语动词或学术词。标为“已有”的主题已在知识图中，属于学段课程 `english-grades-9-12`，保留各自的 id 和先修；每个新主题列出其先修，先修可能在前面的单元或更早的年级中。新的词汇主题列出它教的词，这些词不在母语课程的其他词汇组中；其他新主题说明它教什么，并把它的各个知识点列为步骤。由模型评判的写作主题给出任务和评分标准，并标出新增的标准。
 
-各部分比例：52 个主题中，词汇 22 个（42%），语法与书写规范 8 个（15%），阅读 11 个（21%），按规则检查的写作 3 个（6%），由模型评判的写作 8 个（15%）。
+各部分比例：100 个主题中，词汇 70 个（70%），语法与书写规范 8 个（8%），阅读 11 个（11%），按规则检查的写作 3 个（3%），由模型评判的写作 8 个（8%）。
 
-深度：每个新的语法、阅读或按规则检查的写作知识点有 30 到 48 道题，由手写的核心经模板生成；词汇组中每个词出现在三个句子中，所以每个词汇知识点有 30 道题；每个由模型评判的写作知识点有 12 个带范文的任务；新的阅读单元有 8 篇 300 到 600 词的文章，每篇三道题。一组十个词约得 15 XP，一个构词、语法、阅读或按规则检查的写作主题约 14 XP，一个由模型评判的写作主题约 24 XP，已有主题保留各自的 XP，所以本年级的课程约 830 XP。
+深度：每个新的语法、阅读或按规则检查的写作知识点有 30 到 48 道题，由手写的核心经模板生成；词汇组中每个词出现在三个句子中，所以每个词汇知识点有 30 道题；每个由模型评判的写作知识点有 12 个带范文的任务；新的阅读单元有 8 篇 300 到 600 词的文章，每篇三道题。一组十个词约得 15 XP，一个构词、语法、阅读或按规则检查的写作主题约 14 XP，一个由模型评判的写作主题约 24 XP，已有主题保留各自的 XP，所以本年级的课程约 1,550 XP。
 
 听力和口语要等音频和录音：在此之前，单元列出对话但不提供，每个单元说明届时会增加什么。
 
@@ -156,6 +156,54 @@
 
 **将来有了音频和录音：** 听一个关于词根的讲座，记下其中提到的构词部分；口头根据构词部分推断陌生词的意思。
 
+### 10. 困惑、动作与火
+
+**词汇：** `words-of-puzzling-and-pondering` 困惑与思考的词（先修 `context-clues`）：baffle, bewilder, perplex, fluster, dazed, garble, ponder, surmise, comprehend, query；`words-of-rough-handling` 粗暴动作的词（先修 `context-clues`）：brandish, grope, jostle, lunge, hurl, rummage, scour, scrawl, douse, contort；`words-of-fire-and-heat` 火与热的词（先修 `context-clues`）：ignite, kindle, smolder, scald, simmer, seethe, swelter, parch, quench, illuminate；`words-of-crowds-and-gatherings` 人群与聚集的词（先修 `context-clues`）：congregate, throng, mingle, merge, converge, disperse, ally, conspire, commotion, uproar。
+
+### 11. 阻挠、劝诱与憎恶
+
+**词汇：** `words-of-blocking-and-breaking` 阻挠与破坏的词（先修 `context-clues`）：hamper, thwart, foil, obstruct, impair, disrupt, stifle, sever, rupture, topple；`words-of-coaxing-and-urging` 劝诱与催促的词（先修 `context-clues`）：coax, entice, lure, implore, incite, compel, prod, rouse, arouse, oblige；`words-of-flinching-and-fretting` 退缩与焦虑的词（先修 `context-clues`）：elude, evade, recoil, cringe, wince, grimace, startle, fret, brood, linger；`words-of-loathing-and-bullying` 憎恶与欺凌的词（先修 `context-clues`）：despise, detest, loathe, resent, appall, irk, harass, humiliate, intimidate, alienate。
+
+### 12. 食物、目光与睡眠
+
+**词汇：** `words-of-eating-and-hunger` 进食与饥饿的词（先修 `context-clues`）：devour, gobble, munch, nibble, savor, relish, appetite, famished, nourish, morsel；`words-of-looking` 看的词（先修 `context-clues`）：glimpse, glance, gaze, stare, gape, peer, squint, blink, twinkle, dazzle；`words-of-tiredness-and-sleep` 疲倦与睡眠的词（先修 `context-clues`）：drowsy, groggy, weary, exhausted, fatigue, haggard, doze, snooze, slumber, lull；`words-of-the-odd-and-the-dull` 怪异与乏味的词（先修 `context-clues`）：odd, bizarre, eccentric, quaint, lofty, vibrant, drab, dreary, dismal, monotonous。
+
+### 13. 危险、灾害与失误
+
+**词汇：** `words-of-danger-and-threats` 危险与威胁的词（先修 `context-clues`）：imminent, brink, jeopardy, menace, plight, threaten, endanger, hazardous, risky, unsafe；`words-of-natural-disasters` 自然灾害的词（先修 `context-clues`）：hurricane, avalanche, landslide, mudslide, torrent, deluge, engulf, drown, erupt, quake；`words-of-wrecking-and-remains` 毁坏与残余的词（先修 `context-clues`）：demolish, dismantle, shatter, ruin, eradicate, rubble, wreckage, remnant, scrap, salvage；`words-of-blunders-and-snags` 失误与障碍的词（先修 `context-clues`）：blunder, bungle, botch, fumble, fiasco, misstep, lapse, defect, snag, hiccup。
+
+### 14. 努力、收藏与才能
+
+**词汇：** `words-of-hard-effort` 艰苦努力的词（先修 `context-clues`）：strive, endeavor, toil, labor, slog, exert, grapple, haul, lug, heave；`words-of-gathering-and-discarding` 收集与丢弃的词（先修 `context-clues`）：amass, stockpile, stash, glean, forage, scavenge, heap, pile, discard, dump；`words-of-skill-and-showing-off` 才能与炫耀的词（先修 `context-clues`）：gifted, knack, prowess, versatile, agile, nimble, boast, flaunt, showoff, flamboyant；`words-of-copying-and-zest` 模仿与热情的词（先修 `context-clues`）：mimic, impersonate, parrot, copycat, zest, gusto, verve, vigor, eagerness, enthusiasm。
+
+### 15. 悲伤、声音、闲谈与规则
+
+**词汇：** `words-of-grief-and-comfort` 悲伤与安慰的词（先修 `context-clues`）：anguish, agony, torment, distress, sorrow, woe, heartache, weep, sob, console；`words-of-moaning-and-mumbling` 呻吟与嘟囔的词（先修 `context-clues`）：moan, groan, whine, howl, yell, holler, grunt, mutter, mumble, stammer；`words-of-chatter-and-gossip` 闲聊与八卦的词（先修 `context-clues`）：chatter, prattle, babble, jabber, gossip, blab, banter, quip, retort, rant；`words-of-rules-and-orders` 规则与命令的词（先修 `context-clues`）：adhere, abide, heed, obedient, forbid, breach, waive, allowance, summon, truant。
+
+### 16. 学校、大学、犯罪与旅行
+
+**词汇：** `words-of-courses-and-campus` 课程与校园的词（先修 `context-clues`）：curriculum, syllabus, seminar, tutorial, semester, enroll, faculty, campus, dormitory, transcript；`words-of-college-life` 大学生活的词（先修 `context-clues`）：tuition, scholarship, freshman, sophomore, undergraduate, graduate, dropout, alumni, diploma, plagiarism；`words-of-crime` 犯罪的词（先修 `context-clues`）：theft, burglar, shoplift, vandal, arson, smuggling, forgery, ransom, hostage, parole；`words-of-travel` 旅行的词（先修 `context-clues`）：itinerary, luggage, departure, excursion, cruise, cabin, hostel, layover, disembark, jet lag。
+
+### 17. 城市、职场、媒体与数量
+
+**词汇：** `words-of-the-city` 城市的词（先修 `context-clues`）：downtown, suburban, sprawl, congestion, commuter, boulevard, precinct, zoning, tenant, landlord；`words-of-the-office` 职场的词（先修 `context-clues`）：supervisor, intern, memo, workload, schedule, payroll, promotion, resign, retire, task；`words-of-media` 媒体的词（先修 `context-clues`）：editorial, columnist, subscriber, podcast, series, medium, publicity, label, device, virtual；`academic-words-of-amounts-and-cases` 数量与事例的学术词（先修 `context-clues`）：bulk, capacity, incidence, instance, guideline, emphasis, mode, dispose, implicate, ignorance。
+
+### 18. 争吵、诡计、残忍与凌乱
+
+**词汇：** `words-of-fights-and-squabbles` 打斗与争吵的词（先修 `context-clues`）：bicker, tiff, spat, scuffle, brawl, clash, fray, strife, agitate, vehement；`words-of-schemes-and-tricks` 计谋与把戏的词（先修 `context-clues`）：invent, devise, concoct, brew, conjure, contrive, ruse, gimmick, tactic, divert；`words-of-cruelty` 残忍的词（先修 `context-clues`）：cruel, brutal, savage, vicious, ferocious, heartless, merciless, sadistic, inflict, obnoxious；`words-of-mess-and-dirt` 凌乱与肮脏的词（先修 `context-clues`）：messy, untidy, sloppy, scruffy, unkempt, disheveled, grimy, grubby, filthy, sordid。
+
+### 19. 清洁、金钱与来源
+
+**词汇：** `words-of-cleaning-and-order` 清洁与整齐的词（先修 `context-clues`）：tidy, neat, orderly, spotless, immaculate, hygienic, sanitary, wipe, rinse, scrub；`words-of-rich-and-poor` 贫富的词（先修 `context-clues`）：wealthy, prosperous, profitable, lucrative, thrifty, extravagant, pricey, costly, affordable, broke；`words-of-pay-and-bills` 薪酬与账单的词（先修 `context-clues`）：wage, salary, earnings, bonus, pension, fee, invoice, refund, voucher, installment；`academic-words-of-sources-and-steps` 来源与步骤的学术词（先修 `context-clues`）：select, register, input, emit, offset, trace, site, ongoing, rely, reluctance。
+
+### 20. 恐惧、羞愧、怜悯与愤怒
+
+**词汇：** `words-of-fear-and-wonder` 恐惧与惊奇的词（先修 `context-clues`）：frighten, horrify, terror, astonish, marvel, gasp, shiver, faint, paralyze, overwhelm；`words-of-shame-and-blame` 羞愧与责备的词（先修 `context-clues`）：embarrass, blush, guilt, confess, apologize, modest, flatter, tease, insult, scold；`words-of-pity-and-mercy` 怜悯与宽恕的词（先修 `context-clues`）：pity, sympathy, mercy, grateful, deserve, plead, mourn, misery, poverty, tolerate；`words-of-anger-and-bluntness` 愤怒与直率的词（先修 `context-clues`）：rage, outrage, provoke, confront, aggressive, grumble, nuisance, disgust, abrupt, frank。
+
+### 21. 突袭、跌倒、辉煌与冒险
+
+**词汇：** `words-of-raids-and-rumors` 突袭与谣言的词（先修 `context-clues`）：raid, ambush, kidnap, snatch, flee, bribe, poison, torture, leak, rumor；`words-of-slips-and-scrambles` 滑倒与攀爬的词（先修 `context-clues`）：stumble, tumble, slippery, crouch, scramble, soar, squeeze, spill, smash, haste；`words-of-spectacle-and-splendor` 壮观与辉煌的词（先修 `context-clues`）：parade, spectacle, splendid, gorgeous, glamour, exotic, myth, miracle, thrill, gesture；`words-of-daring-and-promises` 冒险与承诺的词（先修 `context-clues`）：dare, venture, tempt, impulse, pledge, swear, pretend, swap, cope, burden。
+
 ## 下一年级在此基础上继续
 
 `english-grade-11` 在本年级的基础上继续：修辞分析和社论发展为关于权利与法律的议论文和对科学资料的综合；阅读偏见和误导人的数字延伸到逻辑谬误、对资料来源的评估和历史文献；语法转向独立主格结构、名词从句和引文的融入。
@@ -206,3 +254,51 @@
 | `academic-words-6` | 词汇 | 9 | `context-clues` | 15 |
 | `academic-words-7` | 词汇 | 9 | `context-clues` | 15 |
 | `commonly-confused-words-6` | 语法 | 9 | `commonly-confused-words-5` | 14 |
+| `words-of-puzzling-and-pondering` | 词汇 | 10 | `context-clues` | 15 |
+| `words-of-rough-handling` | 词汇 | 10 | `context-clues` | 15 |
+| `words-of-fire-and-heat` | 词汇 | 10 | `context-clues` | 15 |
+| `words-of-crowds-and-gatherings` | 词汇 | 10 | `context-clues` | 15 |
+| `words-of-blocking-and-breaking` | 词汇 | 11 | `context-clues` | 15 |
+| `words-of-coaxing-and-urging` | 词汇 | 11 | `context-clues` | 15 |
+| `words-of-flinching-and-fretting` | 词汇 | 11 | `context-clues` | 15 |
+| `words-of-loathing-and-bullying` | 词汇 | 11 | `context-clues` | 15 |
+| `words-of-eating-and-hunger` | 词汇 | 12 | `context-clues` | 15 |
+| `words-of-looking` | 词汇 | 12 | `context-clues` | 15 |
+| `words-of-tiredness-and-sleep` | 词汇 | 12 | `context-clues` | 15 |
+| `words-of-the-odd-and-the-dull` | 词汇 | 12 | `context-clues` | 15 |
+| `words-of-danger-and-threats` | 词汇 | 13 | `context-clues` | 15 |
+| `words-of-natural-disasters` | 词汇 | 13 | `context-clues` | 15 |
+| `words-of-wrecking-and-remains` | 词汇 | 13 | `context-clues` | 15 |
+| `words-of-blunders-and-snags` | 词汇 | 13 | `context-clues` | 15 |
+| `words-of-hard-effort` | 词汇 | 14 | `context-clues` | 15 |
+| `words-of-gathering-and-discarding` | 词汇 | 14 | `context-clues` | 15 |
+| `words-of-skill-and-showing-off` | 词汇 | 14 | `context-clues` | 15 |
+| `words-of-copying-and-zest` | 词汇 | 14 | `context-clues` | 15 |
+| `words-of-grief-and-comfort` | 词汇 | 15 | `context-clues` | 15 |
+| `words-of-moaning-and-mumbling` | 词汇 | 15 | `context-clues` | 15 |
+| `words-of-chatter-and-gossip` | 词汇 | 15 | `context-clues` | 15 |
+| `words-of-rules-and-orders` | 词汇 | 15 | `context-clues` | 15 |
+| `words-of-courses-and-campus` | 词汇 | 16 | `context-clues` | 15 |
+| `words-of-college-life` | 词汇 | 16 | `context-clues` | 15 |
+| `words-of-crime` | 词汇 | 16 | `context-clues` | 15 |
+| `words-of-travel` | 词汇 | 16 | `context-clues` | 15 |
+| `words-of-the-city` | 词汇 | 17 | `context-clues` | 15 |
+| `words-of-the-office` | 词汇 | 17 | `context-clues` | 15 |
+| `words-of-media` | 词汇 | 17 | `context-clues` | 15 |
+| `academic-words-of-amounts-and-cases` | 词汇 | 17 | `context-clues` | 15 |
+| `words-of-fights-and-squabbles` | 词汇 | 18 | `context-clues` | 15 |
+| `words-of-schemes-and-tricks` | 词汇 | 18 | `context-clues` | 15 |
+| `words-of-cruelty` | 词汇 | 18 | `context-clues` | 15 |
+| `words-of-mess-and-dirt` | 词汇 | 18 | `context-clues` | 15 |
+| `words-of-cleaning-and-order` | 词汇 | 19 | `context-clues` | 15 |
+| `words-of-rich-and-poor` | 词汇 | 19 | `context-clues` | 15 |
+| `words-of-pay-and-bills` | 词汇 | 19 | `context-clues` | 15 |
+| `academic-words-of-sources-and-steps` | 词汇 | 19 | `context-clues` | 15 |
+| `words-of-fear-and-wonder` | 词汇 | 20 | `context-clues` | 15 |
+| `words-of-shame-and-blame` | 词汇 | 20 | `context-clues` | 15 |
+| `words-of-pity-and-mercy` | 词汇 | 20 | `context-clues` | 15 |
+| `words-of-anger-and-bluntness` | 词汇 | 20 | `context-clues` | 15 |
+| `words-of-raids-and-rumors` | 词汇 | 21 | `context-clues` | 15 |
+| `words-of-slips-and-scrambles` | 词汇 | 21 | `context-clues` | 15 |
+| `words-of-spectacle-and-splendor` | 词汇 | 21 | `context-clues` | 15 |
+| `words-of-daring-and-promises` | 词汇 | 21 | `context-clues` | 15 |

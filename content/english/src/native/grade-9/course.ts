@@ -219,8 +219,8 @@ export const courseGrade9: CourseDef = {
   id: "english-grade-9",
   title: t("English, Grade 9", "英语：九年级"),
   description: t(
-    "English for readers and writers of grade 9, in nine themed units from the writer's craft, heroes and epics and the tragic stage to coming of age, worlds of tomorrow, food and health, stories from many cultures, art and its subjects and the life of words. Each unit teaches the words of its theme, grammar and usage, reading skills and a kind of writing together, and most give a set of passages to read on the theme. The analyses, narratives, stories, scenes and arguments written in the course are judged by a model.",
-    "面向九年级读者和写作者的英语课程，共九个主题单元，从作家的技艺、英雄与史诗和悲剧舞台，到成长、未来的世界、食物与健康、多元文化的故事、艺术及其题材以及词语的生命。每个单元同时教授该主题的词汇、语法和用法、阅读技能和一种写作，大多数单元还提供一组围绕主题的阅读文章。课程中写的分析文章、记叙文、故事、剧本和议论文由模型评判。",
+    "English for readers and writers of grade 9, in nine themed units from the writer's craft, heroes and epics and the tragic stage to coming of age, worlds of tomorrow, food and health, stories from many cultures, art and its subjects and the life of words. Each unit teaches the words of its theme, grammar and usage, reading skills and a kind of writing together, and most give a set of passages to read on the theme. The analyses, narratives, stories, scenes and arguments written in the course are judged by a model. Seven more units teach words alone, ten to a batch: the words of everyday life, of feelings and actions, of school and work, and phrasal verbs.",
+    "面向九年级读者和写作者的英语课程，共九个主题单元，从作家的技艺、英雄与史诗和悲剧舞台，到成长、未来的世界、食物与健康、多元文化的故事、艺术及其题材以及词语的生命。每个单元同时教授该主题的词汇、语法和用法、阅读技能和一种写作，大多数单元还提供一组围绕主题的阅读文章。课程中写的分析文章、记叙文、故事、剧本和议论文由模型评判。另有七个单元只教词汇，每组十个词：日常生活、情感与行为、学校与工作的词，以及短语动词。",
   ),
   group: t("English", "英语"),
   buildsOn: ["english-grade-8"],

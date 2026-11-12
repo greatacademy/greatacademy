@@ -296,8 +296,8 @@ export const courseGrade12: CourseDef = {
   id: "english-grade-12",
   title: t("English, Grade 12", "英语：十二年级"),
   description: t(
-    "English for readers and writers of grade 12, in seven themed units from essays of experience, power and conscience and belief and doubt to art and its critics, literature across languages, risk and responsibility and the roots and parts of words. Each unit teaches the words of its theme, grammar and style, reading skills and a kind of writing together, and most give a set of passages to read on the theme. The personal essays, profiles, philosophical essays, reviews, comparisons of translations and proposals written in the course are judged by a model.",
-    "面向十二年级读者和写作者的英语课程，共七个主题单元，从经验之文、权力与良知和信念与怀疑，到艺术与评论、跨越语言的文学、风险与责任以及词根与词缀。每个单元同时教授该主题的词汇、语法和文体、阅读技能和一种写作，大多数单元还提供一组围绕主题的阅读文章。课程中写的个人随笔、人物特写、哲学短文、评论、译本比较和提案由模型评判。",
+    "English for readers and writers of grade 12, in seven themed units from essays of experience, power and conscience and belief and doubt to art and its critics, literature across languages, risk and responsibility and the roots and parts of words. Each unit teaches the words of its theme, grammar and style, reading skills and a kind of writing together, and most give a set of passages to read on the theme. The personal essays, profiles, philosophical essays, reviews, comparisons of translations and proposals written in the course are judged by a model. Fifteen more units teach words alone, ten to a batch: the words of everyday life, of feelings and actions, of school and work, and academic words.",
+    "面向十二年级读者和写作者的英语课程，共七个主题单元，从经验之文、权力与良知和信念与怀疑，到艺术与评论、跨越语言的文学、风险与责任以及词根与词缀。每个单元同时教授该主题的词汇、语法和文体、阅读技能和一种写作，大多数单元还提供一组围绕主题的阅读文章。课程中写的个人随笔、人物特写、哲学短文、评论、译本比较和提案由模型评判。另有十五个单元只教词汇，每组十个词：日常生活、情感与行为、学校与工作的词，以及学术词汇。",
   ),
   group: t("English", "英语"),
   buildsOn: ["english-grade-11"],

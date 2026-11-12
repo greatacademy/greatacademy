@@ -6,7 +6,7 @@
 - **阶段：** 十一年级，面向以英语为母语、或英语阅读水平与同龄母语者相当的学习者
 - **先修：** `english-grade-10`，或能读写十年级程度的修辞分析、主题分析、比较文章、社论和讽刺文
 - **讲解语言：** 英语
-- **规模：** 9 个单元 · 43 个主题（已有 12 个，新增 31 个：词汇 15 个，语法与书写规范 4 个，阅读 4 个，按规则检查的写作 3 个，由模型评判的写作 5 个）· 约 710 XP · 8 个阅读单元共 64 篇文章（已有 3 个，新增 5 个）· 9 个对话（已有 3 个，新增 6 个）
+- **规模：** 31 个单元 · 100 个主题（已有 12 个，新增 88 个：词汇 72 个，语法与书写规范 4 个，阅读 4 个，按规则检查的写作 3 个，由模型评判的写作 5 个）· 约 1,570 XP · 8 个阅读单元共 64 篇文章（已有 3 个，新增 5 个）· 9 个对话（已有 3 个，新增 6 个）
 
 ## 目标
 
@@ -14,11 +14,11 @@
 
 ## 如何阅读本大纲
 
-每个单元有一个题材，同时教授四样东西：该题材的词汇、语法与书写规范、阅读技能，以及写作。单元以一个题材阅读单元和一个对话收尾；最后一个单元只有对话，没有阅读单元。标为“已有”的主题已在知识图中，属于学段课程 `english-grades-9-12`，保留各自的 id 和先修；每个新主题列出其先修，先修可能在前面的单元或更早的年级中。新的词汇主题列出它教的词，这些词不在母语课程的其他词汇组中；其他新主题说明它教什么，并把它的各个知识点列为步骤。由模型评判的写作主题给出任务和评分标准，并标出新增的标准。
+每个单元有一个题材，同时教授四样东西：该题材的词汇、语法与书写规范、阅读技能，以及写作。单元以一个题材阅读单元和一个对话收尾；第 9 单元只有对话，没有阅读单元。第 10 到 31 单元只教词汇，每组十个词，没有阅读单元和对话：日常生活、情感与行为、学校与工作的词，有些单元教短语动词或学术词。标为“已有”的主题已在知识图中，属于学段课程 `english-grades-9-12`，保留各自的 id 和先修；每个新主题列出其先修，先修可能在前面的单元或更早的年级中。新的词汇主题列出它教的词，这些词不在母语课程的其他词汇组中；其他新主题说明它教什么，并把它的各个知识点列为步骤。由模型评判的写作主题给出任务和评分标准，并标出新增的标准。
 
-各部分比例：43 个主题中，词汇 18 个（42%），语法与书写规范 6 个（14%），阅读 7 个（16%），按规则检查的写作 4 个（9%），由模型评判的写作 8 个（19%）。
+各部分比例：100 个主题中，词汇 75 个（75%），语法与书写规范 6 个（6%），阅读 7 个（7%），按规则检查的写作 4 个（4%），由模型评判的写作 8 个（8%）。
 
-深度：每个新的语法、阅读或按规则检查的写作知识点有 30 到 48 道题，由手写的核心经模板生成；词汇组中每个词出现在三个句子中，所以每个词汇知识点有 30 道题；每个由模型评判的写作知识点有 12 个带范文的任务；新的阅读单元有 8 篇 300 到 600 词的文章，每篇三道题。一组十个词约得 15 XP，一个构词、语法、阅读或按规则检查的写作主题约 14 XP，一个由模型评判的写作主题约 24 XP，已有主题保留各自的 XP，所以本年级的课程约 710 XP。
+深度：每个新的语法、阅读或按规则检查的写作知识点有 30 到 48 道题，由手写的核心经模板生成；词汇组中每个词出现在三个句子中，所以每个词汇知识点有 30 道题；每个由模型评判的写作知识点有 12 个带范文的任务；新的阅读单元有 8 篇 300 到 600 词的文章，每篇三道题。一组十个词约得 15 XP，一个构词、语法、阅读或按规则检查的写作主题约 14 XP，一个由模型评判的写作主题约 24 XP，已有主题保留各自的 XP，所以本年级的课程约 1,570 XP。
 
 听力和口语要等音频和录音：在此之前，单元列出对话但不提供，每个单元说明届时会增加什么。
 
@@ -158,6 +158,94 @@
 
 **将来有了音频和录音：** 听一个关于词根的讲座，记下其中提到的构词部分；口头根据构词部分推断长单词的意思。
 
+### 10. 缓解与交往
+
+**词汇：** `words-of-easing-and-stopping` 缓解与制止的词（先修 `context-clues`）：abate, allay, alleviate, quell, dispel, dissipate, curtail, deter, rectify, facilitate；`words-of-sociable-and-solitary-people` 合群者与孤僻者的词（先修 `context-clues`）：amiable, amicable, convivial, ebullient, vivacious, boisterous, reclusive, insular, provincial, standoffish；`words-of-nerve-and-offense` 胆大妄为与冒犯的词（先修 `context-clues`）：brazen, effrontery, temerity, impertinent, impetuous, rash, blatant, flagrant, presumptuous, gratuitous。
+
+### 11. 技艺与乏味
+
+**词汇：** `words-of-skill-and-clumsiness` 技艺与笨拙的词（先修 `context-clues`）：adept, adroit, deft, dexterity, acumen, erudite, novice, inept, rudimentary, prodigious；`words-of-dull-and-stale-things` 乏味与陈腐之物的词（先修 `context-clues`）：banal, bland, hackneyed, trite, prosaic, mundane, vapid, tedious, soporific, jaded。
+
+### 12. 蔑视与欺诈
+
+**词汇：** `words-of-scolding-and-scorn` 斥责与蔑视的词（先修 `context-clues`）：chastise, upbraid, denounce, deplore, tirade, vitriolic, disdain, repudiate, ostracize, truculent；`words-of-harm-and-trickery` 伤害与欺诈的词（先修 `context-clues`）：cajole, chicanery, nefarious, unscrupulous, insidious, pernicious, deleterious, illicit, foment, instigate；`words-of-care-and-carelessness` 细心与粗心的词（先修 `context-clues`）：fastidious, punctilious, painstaking, exhaustive, circumspect, negligent, lax, perfunctory, inadvertent, officious。
+
+### 13. 坚定心志与多少
+
+**词汇：** `words-of-firm-and-fickle-minds` 坚定与多变心志的词（先修 `context-clues`）：adamant, obstinate, incorrigible, inveterate, amenable, capricious, erratic, fervent, zealous, nonchalant；`words-of-much-and-little` 多与少的词（先修 `context-clues`）：myriad, replete, devoid, inundate, prolific, diminutive, peripheral, inconsequential, palpable, conspicuous；`words-of-holding-and-letting-go` 保持与放弃的词（先修 `context-clues`）：consolidate, coalesce, relinquish, rescind, relegate, squander, languish, stagnant, defunct, transient。
+
+### 14. 情感与信念
+
+**词汇：** `words-of-dislike-and-levity` 厌恶与轻松的词（先修 `context-clues`）：chagrin, aversion, animosity, apathy, abhor, levity, pensive, querulous, indifferent, exasperate；`words-of-doubt-and-belief` 怀疑与相信的词（先修 `context-clues`）：dubious, equivocal, illusory, elusive, infallible, credulous, cognizant, oblivious, construe, conundrum。
+
+### 15. 卓越与艰苦
+
+**词汇：** `words-of-excellence-and-awe` 卓越与敬畏的词（先修 `context-clues`）：epitome, paragon, exemplary, impeccable, pristine, profound, ineffable, venerate, adulation, charisma；`words-of-harshness-and-hardship` 严厉与艰苦的词（先修 `context-clues`）：stringent, onerous, grievous, abject, squalid, acrid, abrasive, callous, debilitate, enervate；`words-of-ranks-and-types` 等级与类型的词（先修 `context-clues`）：hierarchy, subordinate, indigenous, conventional, iconoclast, hedonist, opportunist, pedantic, traditionalist, elitist。
+
+### 16. 相处与心血来潮
+
+**词汇：** `words-of-company-and-candor` 相处与坦率的词（先修 `context-clues`）：camaraderie, rapport, squabble, contentious, antagonize, decorum, demure, candor, condone, facetious；`words-of-leanings-and-whims` 倾向与心血来潮的词（先修 `context-clues`）：penchant, predilection, propensity, spontaneous, intuitive, indulgent, frivolous, preposterous, eclectic, emulate；`words-of-the-relentless-and-the-calm` 无休止与平静的词（先修 `context-clues`）：incessant, relentless, inexorable, unprecedented, turbulent, tranquil, vigilant, impervious, innocuous, sedentary。
+
+### 17. 写作与办法
+
+**词汇：** `words-for-trimming-and-padding-writing` 精简与充数文字的词（先修 `context-clues`）：wordy, brevity, concise, embellish, extraneous, redundant, incisive, elicit, superficial, verbiage；`words-of-means-that-work` 可行办法的词（先修 `context-clues`）：circumvent, expedient, viable, conducive, workable, practicable, makeshift, ploy, loophole, expedite；`words-of-yielding-and-resisting` 屈服与抵抗的词（先修 `context-clues`）：acquiesce, capitulate, renege, flout, forestall, stymie, goad, entreat, espouse, garner。
+
+### 18. 黑暗与日常
+
+**词汇：** `words-of-dark-times` 黑暗时期的词（先修 `context-clues`）：hapless, harbinger, impasse, maelstrom, morass, nadir, pariah, odious, inimical, virulent；`words-of-the-commonplace-and-the-spreading` 寻常与蔓延的词（先修 `context-clues`）：quotidian, rife, pervade, burgeon, seminal, panacea, platitude, modicum, motley, milieu。
+
+### 19. 思维与人物
+
+**词汇：** `words-of-hazy-and-sharp-thinking` 模糊与敏锐思维的词（先修 `context-clues`）：myopic, obfuscate, vacuous, trenchant, vociferous, umbrage, vicarious, veneer, pliant, propitious；`words-for-characters-in-company` 社交中人物的词（先修 `context-clues`）：juggernaut, lionize, neophyte, savant, raconteur, misanthrope, jocular, histrionic, maudlin, dupe；`words-of-the-fleeting-and-the-sharp` 短暂与刺激之物的词（先修 `context-clues`）：transitory, profuse, salubrious, pungent, fractious, restive, alacrity, foible, apocryphal, antipathy。
+
+### 20. 表示过程的学术词
+
+**词汇：** `words-for-starting-and-finishing` 开始与完成的词（先修 `context-clues`）：commence, initiate, cease, terminate, proceed, precede, undertake, eventual, ultimate, preliminary；`words-for-more-and-less` 增多与减少的词（先修 `context-clues`）：accumulate, exceed, maximize, minimize, diminish, enhance, accentuate, appreciable, minimal, sufficient。
+
+### 21. 表示结构的学术词
+
+**词汇：** `words-for-joining-and-matching` 结合与相合的词（先修 `context-clues`）：assemble, compile, incorporate, integral, unify, coincide, concurrent, consecutive, overlap, parallel；`words-for-limiting-and-keeping` 限制与保留的词（先修 `context-clues`）：constrain, restrain, restrict, inhibit, exclude, eliminate, impose, retain, reject, withhold。
+
+### 22. 表示视觉与分类的学术词
+
+**词汇：** `words-for-showing-and-seeing` 展示与看见的词（先修 `context-clues`）：depict, illustrate, highlight, visible, visual, vision, image, expose, evident, apparent；`words-for-sorting-and-differing` 分类与差异的词（先修 `context-clues`）：distinct, discrete, differentiate, discriminate, diverse, vary, uniform, equate, distort, reverse；`words-for-supporting-and-making-up` 支持与补足的词（先修 `context-clues`）：accommodate, compensate, complement, supplement, substitute, equip, enable, sustain, guarantee, mediate。
+
+### 23. 表示研究与工作的学术词
+
+**词汇：** `words-for-research-and-numbers` 研究与数据的词（先修 `context-clues`）：survey, statistic, ratio, simulate, predict, formula, index, thesis, insight, random；`words-for-roles-and-institutions` 角色与机构的词（先修 `context-clues`）：practitioner, professional, successor, affiliate, panel, institute, ministry, sector, corporate, welfare。
+
+### 24. 表示观念与地点的学术词
+
+**词汇：** `words-for-thinking-ahead` 预想与观念的词（先修 `context-clues`）：presume, anticipate, notion, ideology, rational, norm, ethic, scenario, prospect, incline；`words-for-places-and-moving` 地点与迁移的词（先修 `context-clues`）：transfer, transit, displace, immigrate, locate, reside, occupy, orient, overseas, domestic。
+
+### 25. 表示写作与获取的学术词
+
+**词汇：** `words-for-drafting-and-editing` 起草与编辑的词（先修 `context-clues`）：clarify, specify, quote, edit, draft, format, paragraph, summary, append, insert；`words-for-gaining-and-giving` 获得与给予的词（先修 `context-clues`）：acquisition, attain, confer, grant, devote, invest, purchase, pursue, seek, secure；`words-for-meeting-and-talking` 会面与交流的词（先修 `context-clues`）：convene, converse, correspond, coordinate, participate, intervene, acknowledge, controversy, encounter, link。
+
+### 26. 表示部分与主次的学术词
+
+**词汇：** `words-for-inside-and-outside` 内部与外部的词（先修 `context-clues`）：internal, external, intermediate, adjacent, configuration, infrastructure, domain, sphere, entity, section；`words-for-exactness-and-rank` 精确与主次的词（先修 `context-clues`）：definite, specific, initial, prior, overall, predominant, fundamental, principal, prime, sole。
+
+### 27. 表示变化与普及的学术词
+
+**词汇：** `words-for-changing-and-handling` 改变与操控的词（先修 `context-clues`）：alter, conform, manipulate, monitor, inspect, generate, induce, trigger, undergo, utilize；`words-for-fitting-and-spreading` 相容与传播的词（先修 `context-clues`）：accessible, authentic, compatible, passive, positive, potential, straightforward, voluntary, widespread, mutual。
+
+### 28. 攻击与欺骗
+
+**词汇：** `words-of-attack-and-defense` 进攻与防御的词（先修 `context-clues`）：assail, barrage, barricade, fortify, subdue, retaliate, avenge, oust, raze, ravage；`words-of-fakes-and-lies` 伪造与谎言的词（先修 `context-clues`）：counterfeit, fabricate, feign, hoax, swindle, delude, covert, insinuate, pretext, snare；`words-of-arrest-and-mercy` 逮捕与宽恕的词（先修 `context-clues`）：accomplice, apprehend, convict, detain, interrogate, confiscate, attest, clemency, lenient, exempt。
+
+### 29. 嘲讽与衰退
+
+**词汇：** `words-of-mockery-and-rebuke` 嘲笑与责备的词（先修 `context-clues`）：scoff, sneer, taunt, gloat, mock, scorn, spurn, shun, reproach, reprimand；`words-of-decline-and-prevailing` 衰退与胜出的词（先修 `context-clues`）：deteriorate, dwindle, wane, recede, subside, succumb, relent, prevail, surpass, teem；`words-of-smell-taste-and-touch` 嗅觉、味觉与触觉的词（先修 `context-clues`）：whet, satiate, palliate, emollient, cloying, redolent, fetid, noisome, viscous, variegated。
+
+### 30. 真相与秉性
+
+**词汇：** `words-of-truth-and-denial` 真相与否认的词（先修 `context-clues`）：belie, aver, gainsay, impugn, prevaricate, dissemble, disabuse, exculpate, remonstrate, demur；`words-of-drive-and-inertia` 干劲与惰性的词（先修 `context-clues`）：dogged, pertinacious, feckless, fatuous, hidebound, protean, peripatetic, somnolent, lassitude, quiescent；`words-of-money-and-greed` 金钱与贪婪的词（先修 `context-clues`）：impecunious, pecuniary, lucre, venal, cupidity, largesse, mendicant, bilk, abscond, aggrandize。
+
+### 31. 荣辱与艰巨任务
+
+**词汇：** `words-of-acclaim-and-abuse` 赞誉与辱骂的词（先修 `context-clues`）：approbation, plaudit, encomium, laudatory, obloquy, opprobrium, calumny, pillory, vituperate, fulminate；`words-of-awkward-fixes` 尴尬处境的词（先修 `context-clues`）：adverse, obtuse, quandary, reprehensible, solicitous, stupor, imbroglio, discomfit, ignoble, turpitude；`words-of-hard-and-costly-tasks` 艰巨与昂贵任务的词（先修 `context-clues`）：intricate, cumbersome, elaborate, grueling, strenuous, formidable, stupendous, outlandish, exorbitant, paltry。
+
 ## 下一年级在此基础上继续
 
 `english-grade-12` 在本年级的基础上继续：论证评论和议论文发展为个人随笔和大学申请文书；阅读假设和母题延伸到个人随笔和更长的作品；词汇转向反思的词汇以及最后几组词根和学术词汇。
@@ -197,3 +285,60 @@
 | `academic-words-8` | 词汇 | 9 | `context-clues` | 15 |
 | `academic-words-9` | 词汇 | 9 | `context-clues` | 15 |
 | `commonly-confused-words-7` | 语法 | 9 | `commonly-confused-words-6` | 14 |
+| `words-of-easing-and-stopping` | 词汇 | 10 | `context-clues` | 15 |
+| `words-of-sociable-and-solitary-people` | 词汇 | 10 | `context-clues` | 15 |
+| `words-of-nerve-and-offense` | 词汇 | 10 | `context-clues` | 15 |
+| `words-of-skill-and-clumsiness` | 词汇 | 11 | `context-clues` | 15 |
+| `words-of-dull-and-stale-things` | 词汇 | 11 | `context-clues` | 15 |
+| `words-of-scolding-and-scorn` | 词汇 | 12 | `context-clues` | 15 |
+| `words-of-harm-and-trickery` | 词汇 | 12 | `context-clues` | 15 |
+| `words-of-care-and-carelessness` | 词汇 | 12 | `context-clues` | 15 |
+| `words-of-firm-and-fickle-minds` | 词汇 | 13 | `context-clues` | 15 |
+| `words-of-much-and-little` | 词汇 | 13 | `context-clues` | 15 |
+| `words-of-holding-and-letting-go` | 词汇 | 13 | `context-clues` | 15 |
+| `words-of-dislike-and-levity` | 词汇 | 14 | `context-clues` | 15 |
+| `words-of-doubt-and-belief` | 词汇 | 14 | `context-clues` | 15 |
+| `words-of-excellence-and-awe` | 词汇 | 15 | `context-clues` | 15 |
+| `words-of-harshness-and-hardship` | 词汇 | 15 | `context-clues` | 15 |
+| `words-of-ranks-and-types` | 词汇 | 15 | `context-clues` | 15 |
+| `words-of-company-and-candor` | 词汇 | 16 | `context-clues` | 15 |
+| `words-of-leanings-and-whims` | 词汇 | 16 | `context-clues` | 15 |
+| `words-of-the-relentless-and-the-calm` | 词汇 | 16 | `context-clues` | 15 |
+| `words-for-trimming-and-padding-writing` | 词汇 | 17 | `context-clues` | 15 |
+| `words-of-means-that-work` | 词汇 | 17 | `context-clues` | 15 |
+| `words-of-yielding-and-resisting` | 词汇 | 17 | `context-clues` | 15 |
+| `words-of-dark-times` | 词汇 | 18 | `context-clues` | 15 |
+| `words-of-the-commonplace-and-the-spreading` | 词汇 | 18 | `context-clues` | 15 |
+| `words-of-hazy-and-sharp-thinking` | 词汇 | 19 | `context-clues` | 15 |
+| `words-for-characters-in-company` | 词汇 | 19 | `context-clues` | 15 |
+| `words-of-the-fleeting-and-the-sharp` | 词汇 | 19 | `context-clues` | 15 |
+| `words-for-starting-and-finishing` | 词汇 | 20 | `context-clues` | 15 |
+| `words-for-more-and-less` | 词汇 | 20 | `context-clues` | 15 |
+| `words-for-joining-and-matching` | 词汇 | 21 | `context-clues` | 15 |
+| `words-for-limiting-and-keeping` | 词汇 | 21 | `context-clues` | 15 |
+| `words-for-showing-and-seeing` | 词汇 | 22 | `context-clues` | 15 |
+| `words-for-sorting-and-differing` | 词汇 | 22 | `context-clues` | 15 |
+| `words-for-supporting-and-making-up` | 词汇 | 22 | `context-clues` | 15 |
+| `words-for-research-and-numbers` | 词汇 | 23 | `context-clues` | 15 |
+| `words-for-roles-and-institutions` | 词汇 | 23 | `context-clues` | 15 |
+| `words-for-thinking-ahead` | 词汇 | 24 | `context-clues` | 15 |
+| `words-for-places-and-moving` | 词汇 | 24 | `context-clues` | 15 |
+| `words-for-drafting-and-editing` | 词汇 | 25 | `context-clues` | 15 |
+| `words-for-gaining-and-giving` | 词汇 | 25 | `context-clues` | 15 |
+| `words-for-meeting-and-talking` | 词汇 | 25 | `context-clues` | 15 |
+| `words-for-inside-and-outside` | 词汇 | 26 | `context-clues` | 15 |
+| `words-for-exactness-and-rank` | 词汇 | 26 | `context-clues` | 15 |
+| `words-for-changing-and-handling` | 词汇 | 27 | `context-clues` | 15 |
+| `words-for-fitting-and-spreading` | 词汇 | 27 | `context-clues` | 15 |
+| `words-of-attack-and-defense` | 词汇 | 28 | `context-clues` | 15 |
+| `words-of-fakes-and-lies` | 词汇 | 28 | `context-clues` | 15 |
+| `words-of-arrest-and-mercy` | 词汇 | 28 | `context-clues` | 15 |
+| `words-of-mockery-and-rebuke` | 词汇 | 29 | `context-clues` | 15 |
+| `words-of-decline-and-prevailing` | 词汇 | 29 | `context-clues` | 15 |
+| `words-of-smell-taste-and-touch` | 词汇 | 29 | `context-clues` | 15 |
+| `words-of-truth-and-denial` | 词汇 | 30 | `context-clues` | 15 |
+| `words-of-drive-and-inertia` | 词汇 | 30 | `context-clues` | 15 |
+| `words-of-money-and-greed` | 词汇 | 30 | `context-clues` | 15 |
+| `words-of-acclaim-and-abuse` | 词汇 | 31 | `context-clues` | 15 |
+| `words-of-awkward-fixes` | 词汇 | 31 | `context-clues` | 15 |
+| `words-of-hard-and-costly-tasks` | 词汇 | 31 | `context-clues` | 15 |
