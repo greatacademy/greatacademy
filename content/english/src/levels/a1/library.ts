@@ -13,7 +13,7 @@ import {
   writingGenerator,
 } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
-import { interleave, pairUp, vocabularyTopic, word } from "../words.ts";
+import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
 
 const library = vocabularyTopic({
   id: "a1-words-library",
@@ -213,36 +213,62 @@ const objectFrames: readonly string[] = [
   "Come to the library with ___.",
   "Tom sits next to ___.",
   "Look at ___!",
+  "Mom made a cake for ___.",
+  "Dad is looking for ___.",
+  "Can you see ___?",
+  "The teacher asks ___ a question.",
+  "Lily writes to ___ every week.",
+  "The cat follows ___ home.",
+  "Our friends play with ___.",
+  "The bus waits for ___.",
+  "Anna smiles at ___.",
+  "Please tell ___ the answer.",
+  "Sit with ___ at lunch.",
+  "Read the story to ___.",
 ];
 
-const objectItems = (from: number, count: number) =>
-  pairUp(from + count, objectForms, objectFrames)
-    .slice(from)
-    .map(([[subject, object, wrong], frame]) => ({ shown: `${frame} (${subject})`, object, wrong }));
+const objectItems = () =>
+  everyPair(objectForms, objectFrames).map(([[subject, object, wrong], frame]) => ({ shown: `${frame} (${subject})`, object, wrong }));
 
-const objectChoiceBank: readonly ChoiceItem[] = objectItems(0, 40).map(({ shown, object, wrong }): ChoiceItem => [shown, object, wrong]);
+const objectChoiceBank: readonly ChoiceItem[] = objectItems().map(({ shown, object, wrong }): ChoiceItem => [shown, object, wrong]);
 
-/** namedPeople are nouns and the pronouns that replace them after a verb. */
+/** namedPeople are people and the pronouns that replace them after a verb. */
 const namedPeople: readonly (readonly [noun: string, object: string, wrong: string])[] = [
   ["Tom", "him", "he"],
   ["Anna", "her", "she"],
   ["my parents", "them", "they"],
-  ["the books", "them", "they"],
   ["my brother", "him", "he"],
   ["Grandma", "her", "she"],
   ["the children", "them", "they"],
   ["Ben and me", "us", "we"],
 ];
 
+/** namedThings are things, which them replaces. */
+const namedThings: readonly (readonly [noun: string, object: string, wrong: string])[] = [
+  ["the books", "them", "they"],
+  ["the flowers", "them", "they"],
+  ["the photos", "them", "they"],
+];
+
+/** replaceFrames fit any person; thingFrames fit any thing. */
 const replaceFrames: readonly string[] = [
   "Lily sees {x} every day.",
   "Can you help {x}?",
   "The teacher waits for {x} after school.",
   "Give the cake to {x}.",
   "Mom calls {x} at night.",
+  "I often visit {x}.",
+  "We play with {x} after school.",
+  "Dad drives {x} to the station.",
+  "Please ask {x}.",
+  "I like {x} a lot.",
+  "The dog follows {x}.",
+  "Sit next to {x}.",
+  "Write a letter to {x}.",
 ];
+const thingFrames: readonly string[] = ["I like {x} a lot.", "Put {x} on the desk.", "Can you find {x}?", "Look at {x}!", "Take {x} home."];
 
-const replaceBank: readonly TypedItem[] = pairUp(40, namedPeople, replaceFrames).map(
+const replaceBank: readonly TypedItem[] = interleave([everyPair(namedPeople, replaceFrames), everyPair(namedThings, thingFrames)]).map(
   ([[noun, object, wrong], frame]): TypedItem => ({
     shown: `${frame.replace("{x}", noun)} (${noun})`,
     accepted: [frame.replace("{x}", object)],
@@ -316,7 +342,7 @@ const objectPronouns: TopicDef = {
       ),
       typedGenerator("sentence", t("Use a pronoun.", "使用代词。"), replaceBank, (right, shown) => {
         const noun = shown.match(/\((.*)\)$/u)?.[1] ?? "";
-        const object = namedPeople.find(([n]) => n === noun)?.[1] ?? "";
+        const object = [...namedPeople, ...namedThings].find(([n]) => n === noun)?.[1] ?? "";
         return t(
           `*${noun}* is ${objectFor[object]?.en}, and after a verb or a word like *to* that is *${object}*: ${right}`,
           `*${noun}* 指${objectFor[object]?.["zh-CN"]}，在动词或 *to* 这样的词后面用 *${object}*：${right}`,
@@ -341,24 +367,34 @@ const articleNouns: readonly string[] = [
   "letter",
   "old map",
 ];
-const firstFrames: readonly string[] = ["I have ___ {n}.", "There is ___ {n} on the table.", "Can I borrow ___ {n}?"];
+const firstFrames: readonly string[] = [
+  "I have ___ {n}.",
+  "There is ___ {n} on the table.",
+  "Can I borrow ___ {n}?",
+  "Here is ___ {n}.",
+  "I see ___ {n} in the box.",
+  "Anna has ___ {n} in her bag.",
+];
 const describe: readonly string[] = ["new", "old", "very nice", "mine", "Tom's"];
 
 const an = (noun: string) => (/^[aeiou]/u.test(noun) ? "an" : "a");
 
-const firstItems = (from: number, count: number) =>
-  pairUp(from + count, articleNouns, firstFrames)
-    .slice(from)
-    .map(([noun, frame]) => ({ shown: frame.replace("{n}", noun), right: an(noun), wrong: [an(noun) === "a" ? "an" : "a", "the"] }));
+/** rotated starts a list at the given place, so two banks open on different sentences. */
+const rotated = <T>(items: readonly T[], from: number): readonly T[] => [...items.slice(from), ...items.slice(0, from)];
 
-const secondItems = (from: number, count: number) =>
-  pairUp(from + count, articleNouns, describe)
-    .slice(from)
-    .map(([noun, adjective]) => ({
-      shown: `There is ${an(noun)} ${noun} on the desk. ___ ${noun} is ${adjective}.`,
-      right: "The",
-      wrong: ["A", "An"],
-    }));
+const firstItems = (from: number) =>
+  rotated(everyPair(articleNouns, firstFrames), from).map(([noun, frame]) => ({
+    shown: frame.replace("{n}", noun),
+    right: an(noun),
+    wrong: [an(noun) === "a" ? "an" : "a", "the"],
+  }));
+
+const secondItems = (from: number) =>
+  rotated(everyPair(articleNouns, describe), from).map(([noun, adjective]) => ({
+    shown: `There is ${an(noun)} ${noun} on the desk. ___ ${noun} is ${adjective}.`,
+    right: "The",
+    wrong: ["A", "An"],
+  }));
 
 /** onlyOnes are sentences where the reader knows which one: the only one, the first or best, or one named by more words. */
 const onlyOnes: readonly string[] = [
@@ -396,11 +432,11 @@ const onlyItems = (from: number, count: number) =>
     return { shown, right: start ? "The" : "the", wrong: start ? ["A", "An"] : ["a", "an"] };
   });
 
-const articleChoiceBank: readonly ChoiceItem[] = interleave([firstItems(0, 14), secondItems(0, 14), onlyItems(0, 14)]).map(
+const articleChoiceBank: readonly ChoiceItem[] = interleave([firstItems(0), secondItems(0), onlyItems(0, 13)]).map(
   ({ shown, right, wrong }): ChoiceItem => [shown, right, wrong],
 );
 
-const articleTypedBank: readonly TypedItem[] = interleave([firstItems(14, 12), secondItems(14, 12), onlyItems(14, 12)]).map(
+const articleTypedBank: readonly TypedItem[] = interleave([firstItems(30), secondItems(25), onlyItems(13, 13)]).map(
   ({ shown, right, wrong }): TypedItem => ({ shown, accepted: [right], wrong }),
 );
 

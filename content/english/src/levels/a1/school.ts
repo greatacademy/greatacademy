@@ -4,7 +4,7 @@
 import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
-import { interleave, pairUp, sentenceCase, vocabularyTopic, word } from "../words.ts";
+import { everyPair, interleave, sentenceCase, vocabularyTopic, word } from "../words.ts";
 
 const schoolSubjects = vocabularyTopic({
   id: "a1-words-school-subjects",
@@ -321,12 +321,20 @@ const deeds: readonly (readonly [verb: string, third: string, rest: string])[] =
   ["ride", "rides", "a bike"],
 ];
 
-const deedItems = (from: number, count: number) =>
-  pairUp(from + count, doers, deeds)
-    .slice(from)
-    .map(([[subject, single], [verb, third, rest]]) => ({ subject, single, verb, third, rest, aux: single ? "does" : "do" }));
+/** deedAll are every doer with every deed. */
+const deedAll = everyPair(doers, deeds).map(([[subject, single], [verb, third, rest]]) => ({
+  subject,
+  single,
+  verb,
+  third,
+  rest,
+  aux: single ? "does" : "do",
+}));
 
-const negChoiceBank: readonly ChoiceItem[] = deedItems(0, 44).map(
+/** deedItems are all the pairs starting at the given place, so each bank opens on different sentences. */
+const deedItems = (from: number) => [...deedAll.slice(from), ...deedAll.slice(0, from)];
+
+const negChoiceBank: readonly ChoiceItem[] = deedItems(0).map(
   ({ subject, single, verb, rest }): ChoiceItem => [
     `${subject} ___ ${verb} ${rest}.`,
     single ? "doesn't" : "don't",
@@ -334,7 +342,7 @@ const negChoiceBank: readonly ChoiceItem[] = deedItems(0, 44).map(
   ],
 );
 
-const negFixBank: readonly TypedItem[] = deedItems(44, 40).map(({ subject, single, verb, third, rest }, k): TypedItem => {
+const negFixBank: readonly TypedItem[] = deedItems(44).map(({ subject, single, verb, third, rest }, k): TypedItem => {
   const right = single ? `${subject} [doesn't|does not] ${verb} ${rest}.` : `${subject} [don't|do not] ${verb} ${rest}.`;
   const canonical = `${subject} ${single ? "doesn't" : "don't"} ${verb} ${rest}.`;
   const shown = single
@@ -354,7 +362,7 @@ const negFixBank: readonly TypedItem[] = deedItems(44, 40).map(({ subject, singl
   };
 });
 
-const negMakeBank: readonly TypedItem[] = deedItems(84, 39).map(
+const negMakeBank: readonly TypedItem[] = deedItems(84).map(
   ({ subject, single, verb, third, rest }): TypedItem => ({
     shown: `${subject} ${single ? third : verb} ${rest}.`,
     accepted: [single ? `${subject} [doesn't|does not] ${verb} ${rest}.` : `${subject} [don't|do not] ${verb} ${rest}.`],
@@ -459,7 +467,7 @@ const askedSubject = (subject: string) => (subject === "I" ? "you" : lowerSubjec
 const replyPronoun = (asked: string, single: boolean): string =>
   asked === "you" ? "I" : asked === "we" ? "we" : !single ? "they" : /^(she|lily)$/u.test(asked) ? "she" : "he";
 
-const questionChoiceBank: readonly ChoiceItem[] = deedItems(3, 44).map(
+const questionChoiceBank: readonly ChoiceItem[] = deedItems(3).map(
   ({ subject, single, verb, rest }): ChoiceItem => [
     `___ ${lowerSubject(subject)} ${verb} ${rest}?`,
     single ? "Does" : "Do",
@@ -467,7 +475,7 @@ const questionChoiceBank: readonly ChoiceItem[] = deedItems(3, 44).map(
   ],
 );
 
-const questionWriteBank: readonly TypedItem[] = deedItems(50, 39).map(({ subject, single, verb, third, rest, aux }): TypedItem => {
+const questionWriteBank: readonly TypedItem[] = deedItems(50).map(({ subject, single, verb, third, rest, aux }): TypedItem => {
   const who = askedSubject(subject);
   const Aux = sentenceCase(aux);
   return {
@@ -484,7 +492,7 @@ const questionWriteBank: readonly TypedItem[] = deedItems(50, 39).map(({ subject
   };
 });
 
-const shortAnswerBank: readonly ChoiceItem[] = deedItems(17, 40).map(({ subject, single, verb, rest, aux }, k): ChoiceItem => {
+const shortAnswerBank: readonly ChoiceItem[] = deedItems(17).map(({ subject, single, verb, rest, aux }, k): ChoiceItem => {
   const who = askedSubject(subject);
   const reply = replyPronoun(who, single);
   const yes = k % 2 === 0;

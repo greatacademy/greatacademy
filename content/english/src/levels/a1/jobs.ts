@@ -13,7 +13,7 @@ import {
   writingGenerator,
 } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
-import { pairUp, vocabularyTopic, word } from "../words.ts";
+import { everyPair, vocabularyTopic, word } from "../words.ts";
 
 const jobs = vocabularyTopic({
   id: "a1-words-jobs",
@@ -323,22 +323,23 @@ const pastPlaces: readonly string[] = [
   "in the garden an hour ago",
 ];
 
-// 13 and 11 are coprime, so the first 143 pairs are all different.
-const pastPairs = pairUp(120, pastSubjects, pastPlaces).map(([s, place]) => ({ ...s, place }));
+const pastPairs = everyPair(pastSubjects, pastPlaces).map(([s, place]) => ({ ...s, place }));
 
-const pastChoiceBank: readonly ChoiceItem[] = pastPairs
-  .slice(0, 40)
-  .map(({ who, be, now, place }): ChoiceItem => [`${who} ___ ${place}.`, be, [be === "was" ? "were" : "was", now]]);
+/** pastFrom are the pairs starting at the given place, so each bank opens on different sentences. */
+const pastFrom = (skip: number) => [...pastPairs.slice(skip), ...pastPairs.slice(0, skip)];
 
-const pastFixBank: readonly TypedItem[] = pastPairs.slice(40, 76).map(({ who, be, now, place }, k): TypedItem => {
+const pastChoiceBank: readonly ChoiceItem[] = pastPairs.map(
+  ({ who, be, now, place }): ChoiceItem => [`${who} ___ ${place}.`, be, [be === "was" ? "were" : "was", now]],
+);
+
+const pastFixBank: readonly TypedItem[] = pastFrom(40).map(({ who, be, now, place }, k): TypedItem => {
   const shown = `${who} ${k % 2 === 0 ? (be === "was" ? "were" : "was") : now} ${place}.`;
   return { shown, accepted: [`${who} ${be} ${place}.`], wrong: [shown] };
 });
 
 const lower = (who: string): string => (who === "I" || who.startsWith("Mr.") || who.includes(" and ") ? who : who.toLowerCase());
 
-const pastAskBank: readonly TypedItem[] = pastPairs
-  .slice(76)
+const pastAskBank: readonly TypedItem[] = pastFrom(76)
   .filter(({ who }) => who !== "I")
   .map(({ who, be, place }): TypedItem => {
     const asker = be === "was" ? "Was" : "Were";

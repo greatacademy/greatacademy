@@ -4,7 +4,7 @@
 import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
-import { interleave, pairUp, sentenceCase, vocabularyTopic, word } from "../words.ts";
+import { everyPair, interleave, pairUp, sentenceCase, vocabularyTopic, word } from "../words.ts";
 
 const home = vocabularyTopic({
   id: "a1-words-home",
@@ -303,23 +303,28 @@ const manyThings: readonly string[] = [
   "five pictures",
   "two doors",
 ];
-const rooms: readonly string[] = ["in my room", "in our house", "in the bedroom", "in the kitchen", "in the apartment"];
+const rooms: readonly string[] = [
+  "in my room",
+  "in our house",
+  "in the bedroom",
+  "in the kitchen",
+  "in the apartment",
+  "in the living room",
+];
 
-const thereItems = (skip: number, count: number) =>
-  interleave([
-    pairUp(skip + count, oneThing, rooms)
-      .slice(skip)
-      .map(([thing, room]) => ({ thing, room, be: "is", other: "are" })),
-    pairUp(skip + count, manyThings, rooms)
-      .slice(skip)
-      .map(([thing, room]) => ({ thing, room, be: "are", other: "is" })),
-  ]);
+/** thereAll are every thing in every room; each bank starts at its own place in them. */
+const thereAll = interleave([
+  everyPair(oneThing, rooms).map(([thing, room]) => ({ thing, room, be: "is", other: "are" })),
+  everyPair(manyThings, rooms).map(([thing, room]) => ({ thing, room, be: "are", other: "is" })),
+]);
 
-const thereChoiceBank: readonly ChoiceItem[] = thereItems(0, 22).map(
+const thereItems = (skip: number) => [...thereAll.slice(skip), ...thereAll.slice(0, skip)];
+
+const thereChoiceBank: readonly ChoiceItem[] = thereItems(0).map(
   ({ thing, room, be, other }): ChoiceItem => [`There ___ ${thing} ${room}.`, be, [other, "have"]],
 );
 
-const thereFixBank: readonly TypedItem[] = thereItems(22, 18).map(({ thing, room, be }, k): TypedItem => {
+const thereFixBank: readonly TypedItem[] = thereItems(22).map(({ thing, room, be }, k): TypedItem => {
   const shown = k % 2 === 0 ? `Have ${thing} ${room}.` : `There have ${thing} ${room}.`;
   return {
     shown,
@@ -329,7 +334,7 @@ const thereFixBank: readonly TypedItem[] = thereItems(22, 18).map(({ thing, room
   };
 });
 
-const thereQuestionBank: readonly TypedItem[] = thereItems(5, 17).map(({ thing, room, be }): TypedItem => {
+const thereQuestionBank: readonly TypedItem[] = thereItems(5).map(({ thing, room, be }): TypedItem => {
   const any = thing.replace(/^(some|two|three|four|five)\b/u, "any");
   const asked = be === "is" ? thing : any;
   return {
@@ -440,11 +445,13 @@ type Scene = { readonly text: string; readonly right: string; readonly wrong: re
 
 /** scene k describes where one thing is from another, without naming the word. */
 const scene = (k: number): Scene => {
-  const a = furniture[k % furniture.length] ?? "lamp";
-  const b = furniture[(k + 4) % furniture.length] ?? "bed";
-  const c = furniture[(k + 6) % furniture.length] ?? "desk";
-  const s = small[k % small.length] ?? "ball";
-  const l = large[k % large.length] ?? "table";
+  const j = Math.floor(k / 7);
+  const gap = 1 + (Math.floor(j / furniture.length) % (furniture.length - 2));
+  const a = furniture[j % furniture.length] ?? "lamp";
+  const b = furniture[(j + gap) % furniture.length] ?? "bed";
+  const c = furniture[(j + gap + 1) % furniture.length] ?? "desk";
+  const s = small[j % small.length] ?? "ball";
+  const l = large[(j + Math.floor(j / small.length)) % large.length] ?? "table";
   switch (k % 7) {
     case 0:
       return {
@@ -472,7 +479,7 @@ const scene = (k: number): Scene => {
       return { text: `The ${l} is under the ${s}, so the ${s} is ___ the ${l}.`, right: "on", wrong: ["under", "between"] };
     default:
       return {
-        text: `The ${near[k % near.length] ?? "shop"} is only two minutes from my home. It's ___ my home.`,
+        text: `The ${near[j % near.length] ?? "shop"} is only ${["two", "three", "five"][Math.floor(j / near.length) % 3]} minutes from my home. It's ___ my home.`,
         right: "near",
         wrong: ["between", "under"],
       };
@@ -481,15 +488,15 @@ const scene = (k: number): Scene => {
 
 const scenes = (from: number, count: number): readonly Scene[] => {
   const seen = new Map<string, Scene>();
-  for (let k = from; seen.size < count && k < from + 500; k++) {
+  for (let k = from; seen.size < count && k < from + 1000; k++) {
     const s = scene(k);
     if (!seen.has(s.text)) seen.set(s.text, s);
   }
   return [...seen.values()];
 };
 
-const placeChoiceBank: readonly ChoiceItem[] = scenes(0, 42).map(({ text, right, wrong }): ChoiceItem => [text, right, wrong]);
-const placeTypedBank: readonly TypedItem[] = scenes(42, 35).map(
+const placeChoiceBank: readonly ChoiceItem[] = scenes(0, 120).map(({ text, right, wrong }): ChoiceItem => [text, right, wrong]);
+const placeTypedBank: readonly TypedItem[] = scenes(500, 110).map(
   ({ text, right, wrong }): TypedItem => ({ shown: text, accepted: [right], wrong }),
 );
 

@@ -4,7 +4,7 @@
 import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
-import { interleave, pairUp, sentenceCase, vocabularyTopic, word } from "../words.ts";
+import { everyPair, interleave, sentenceCase, vocabularyTopic, word } from "../words.ts";
 
 const food = vocabularyTopic({
   id: "a1-words-food",
@@ -408,7 +408,7 @@ const someFrames: readonly string[] = [
   "We need some ___ for dinner.",
   "Do you like ___?",
   "I'm buying some ___ today.",
-  "Mom puts some ___ in the bag.",
+  "We have some ___ at home.",
 ];
 
 const article = (noun: string) => (/^[aeiou]/u.test(noun) ? `an ${noun}` : `a ${noun}`);
@@ -424,7 +424,7 @@ const countNouns: readonly (readonly [noun: string, right: string, wrong: readon
   ],
 ]);
 
-const countChoiceBank: readonly ChoiceItem[] = pairUp(44, countNouns, someFrames).map(
+const countChoiceBank: readonly ChoiceItem[] = everyPair(countNouns, someFrames).map(
   ([[noun, right, wrong], frame]): ChoiceItem => [`${frame} (${noun})`, right, wrong],
 );
 
@@ -435,12 +435,14 @@ const uncountFixFrames: readonly (readonly [right: string, mistake: "s" | "a"])[
   ["There is a lot of ___ in the kitchen.", "s"],
   ["I need (some )___ for dinner.", "a"],
   ["Mom buys ___ at the market.", "s"],
+  ["We have (some )___ at home.", "a"],
+  ["There isn't much ___ here.", "s"],
 ];
 
 const plain = (pattern: string) => pattern.replace("(some )", "some ");
 
 const countFixBank: readonly TypedItem[] = interleave([
-  pairUp(24, uncountables, uncountFixFrames).map(([u, [pattern, mistake]]): TypedItem => {
+  everyPair(uncountables, uncountFixFrames).map(([u, [pattern, mistake]]): TypedItem => {
     const wrongNoun = mistake === "s" ? `${u}s` : article(u);
     const shown = pattern.replace("(some )", "").replace("___", wrongNoun);
     return {
@@ -450,7 +452,13 @@ const countFixBank: readonly TypedItem[] = interleave([
       wrong: [...new Set([shown, plain(pattern).replace("___", `${u}s`)])],
     };
   }),
-  pairUp(20, countables, ["I eat two ___ every morning.", "There are three ___ on the plate.", "Mom buys five ___ at the market."]).map(
+  everyPair(countables, [
+    "I eat two ___ every morning.",
+    "There are three ___ on the plate.",
+    "Mom buys five ___ at the market.",
+    "I can see six ___ in the box.",
+    "We have ten ___ at home.",
+  ]).map(
     ([[one, many, misspelled], frame]): TypedItem => ({
       shown: frame.replace("___", one),
       accepted: [frame.replace("___", many)],
@@ -569,10 +577,11 @@ const somePlaces: readonly string[] = ["in the kitchen", "on the table", "here",
 type SomeKind = "statement" | "question" | "negative";
 const someKinds: readonly SomeKind[] = ["statement", "question", "negative"];
 
+/** someAll are every noun in every kind of sentence at every place. */
+const someAll = everyPair(everyPair(someNouns, someKinds), somePlaces);
+
 const someSentence = (k: number) => {
-  const [noun, many] = someNouns[k % someNouns.length] ?? ["milk", false];
-  const kind = someKinds[k % someKinds.length] ?? "statement";
-  const place = somePlaces[k % somePlaces.length] ?? "on the table";
+  const [[[noun, many], kind], place] = someAll[k % someAll.length] ?? [[["milk", false], "statement"], "on the table"];
   const be = many ? "are" : "is";
   const sentence =
     kind === "statement"
@@ -583,22 +592,23 @@ const someSentence = (k: number) => {
   return { sentence, right: kind === "statement" ? "some" : "any", wrong: [kind === "statement" ? "any" : "some", "a"] };
 };
 
-const someChoiceBank: readonly ChoiceItem[] = Array.from({ length: 45 }, (_, k): ChoiceItem => {
+const someChoiceBank: readonly ChoiceItem[] = Array.from({ length: someAll.length }, (_, k): ChoiceItem => {
   const { sentence, right, wrong } = someSentence(k);
   return [sentence, right, wrong];
 });
 
-const someTypedBank: readonly TypedItem[] = Array.from({ length: 36 }, (_, k): TypedItem => {
+const someTypedBank: readonly TypedItem[] = Array.from({ length: someAll.length }, (_, k): TypedItem => {
   const { sentence, right, wrong } = someSentence(k + 45);
   return { shown: sentence, accepted: [right], wrong };
 });
 
-const changeBank: readonly TypedItem[] = Array.from({ length: 39 }, (_, k): TypedItem => {
-  const [noun, many] = someNouns[k % someNouns.length] ?? ["milk", false];
-  const place = ["in the kitchen", "on the table", "at home"][k % 3] ?? "on the table";
+/** changeAll are every noun at every place, to be made negative or a question in turn. */
+const changeAll = everyPair(everyPair(someNouns, ["in the kitchen", "on the table", "at home", "here"]), [true, false]);
+
+const changeBank: readonly TypedItem[] = changeAll.map(([[[noun, many], place], negative]): TypedItem => {
   const be = many ? "are" : "is";
   const statement = `There ${be} some ${noun} ${place}.`;
-  if (k % 2 === 0) {
+  if (negative) {
     return {
       shown: statement,
       accepted: [`There [${be}n't|${be} not] any ${noun} ${place}.`],

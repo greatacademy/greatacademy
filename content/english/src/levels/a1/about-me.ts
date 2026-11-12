@@ -4,7 +4,7 @@
 import { type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
-import { pairUp, vocabularyTopic, word } from "../words.ts";
+import { everyPair, vocabularyTopic, word } from "../words.ts";
 
 const numbers = vocabularyTopic({
   id: "a1-words-numbers-to-hundred",
@@ -383,7 +383,18 @@ const everyday = vocabularyTopic({
 // The present simple with I, you, we and they.
 
 /** plainSubjects take the verb with no ending. */
-const plainSubjects: readonly string[] = ["I", "You", "We", "They", "My parents", "Tom and I", "My friends"];
+const plainSubjects: readonly string[] = [
+  "I",
+  "You",
+  "We",
+  "They",
+  "My parents",
+  "Tom and I",
+  "My friends",
+  "Lily and Ben",
+  "The children",
+  "My brothers",
+];
 
 /** verbPhrases are a verb and the rest, true of anyone. */
 const verbPhrases: readonly (readonly [verb: string, rest: string, ing: string])[] = [
@@ -400,8 +411,7 @@ const verbPhrases: readonly (readonly [verb: string, rest: string, ing: string])
   ["speak", "Chinese at home", "speaking"],
 ];
 
-const plainBank: readonly (readonly [subject: string, verb: string, rest: string, ing: string])[] = pairUp(
-  44,
+const plainBank: readonly (readonly [subject: string, verb: string, rest: string, ing: string])[] = everyPair(
   plainSubjects,
   verbPhrases,
 ).map(([subject, [verb, rest, ing]]) => [subject, verb, rest, ing] as const);
@@ -412,7 +422,7 @@ const presentChoiceBank: readonly ChoiceItem[] = plainBank.map(
   ([subject, verb, rest, ing]): ChoiceItem => [`${subject} ___ ${rest}. (${verb})`, verb, [`${beFor(subject)} ${verb}`, ing]],
 );
 
-const presentTypedBank: readonly TypedItem[] = pairUp(35, plainSubjects, verbPhrases.slice(0, 5)).map(
+const presentTypedBank: readonly TypedItem[] = everyPair([...plainSubjects].reverse(), verbPhrases).map(
   ([subject, [verb, rest]]): TypedItem => {
     const be = beFor(subject);
     return {

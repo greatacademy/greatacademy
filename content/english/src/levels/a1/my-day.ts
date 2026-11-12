@@ -4,7 +4,7 @@
 import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
-import { interleave, pairUp, vocabularyTopic, word } from "../words.ts";
+import { everyPair, interleave, pairUp, vocabularyTopic, word } from "../words.ts";
 
 const myDay = vocabularyTopic({
   id: "a1-words-my-day",
@@ -376,15 +376,15 @@ const singleSubjects: readonly string[] = [
   "Our teacher",
   "My dad",
   "Anna",
-  "The baby",
+  "My sister",
   "Ben",
 ];
 
-const thirdChoiceBank: readonly ChoiceItem[] = pairUp(44, singleSubjects, routines).map(
+const thirdChoiceBank: readonly ChoiceItem[] = everyPair(singleSubjects, routines).map(
   ([subject, [verb, third, rest, wrong]]): ChoiceItem => [`${subject} ___ ${rest}. (${verb})`, third, [verb, wrong]],
 );
 
-const thirdTypedBank: readonly TypedItem[] = pairUp(39, singleSubjects.slice(0, 3), routines).map(
+const thirdTypedBank: readonly TypedItem[] = everyPair(singleSubjects, routines).map(
   ([subject, [verb, third, rest, wrong]]): TypedItem => ({
     shown: `${subject} ___ ${rest}. (${verb})`,
     accepted: [third],
@@ -392,7 +392,7 @@ const thirdTypedBank: readonly TypedItem[] = pairUp(39, singleSubjects.slice(0, 
   }),
 );
 
-const thirdFixBank: readonly TypedItem[] = pairUp(39, singleSubjects.slice(3, 6), routines).map(
+const thirdFixBank: readonly TypedItem[] = everyPair([...singleSubjects.slice(5), ...singleSubjects.slice(0, 5)], routines).map(
   ([subject, [verb, third, rest, wrong]]): TypedItem => ({
     shown: `${subject} ${verb} ${rest}.`,
     accepted: [`${subject} ${third} ${rest}.`],
@@ -490,8 +490,6 @@ const thirdPersonS: TopicDef = {
 
 // Always, usually, sometimes, never.
 
-const adverbs: readonly string[] = ["always", "usually", "often", "sometimes", "never"];
-
 /** frequencyVerbs are routines with a plain subject and a verb. */
 const frequencyActions: readonly (readonly [subject: string, verb: string, rest: string])[] = [
   ["I", "get", "up at seven"],
@@ -503,6 +501,19 @@ const frequencyActions: readonly (readonly [subject: string, verb: string, rest:
   ["I", "do", "my homework after school"],
   ["You", "brush", "your teeth at night"],
   ["Lily", "reads", "before bed"],
+  ["He", "rides", "his bike to school"],
+  ["We", "have", "pizza on Friday"],
+  ["My sister", "plays", "the piano after school"],
+  ["They", "go", "to the park on Sunday"],
+  ["I", "drink", "milk at breakfast"],
+  ["Ben", "takes", "the bus to school"],
+  ["My mom", "cooks", "dinner"],
+  ["You", "help", "your dad on Saturday"],
+  ["Anna", "walks", "the dog in the morning"],
+  ["We", "eat", "fish on Friday"],
+  ["My grandpa", "sleeps", "after lunch"],
+  ["The cat", "sleeps", "on my bed"],
+  ["They", "watch", "a film on Friday night"],
 ];
 
 /** frequencyStates are sentences with be, where the word goes after the verb. */
@@ -514,17 +525,25 @@ const frequencyStates: readonly (readonly [subject: string, be: string, rest: st
   ["We", "are", "happy at the weekend"],
   ["He", "is", "hungry after school"],
   ["My mom", "is", "busy"],
+  ["The shop", "is", "open on Sunday"],
+  ["My room", "is", "clean"],
+  ["Our teacher", "is", "kind"],
+  ["You", "are", "late"],
+  ["The park", "is", "busy at the weekend"],
 ];
 
+/** placedAdverbs are the words of frequency that can't also end a sentence, so a sentence ending in one is wrong. */
+const placedAdverbs: readonly string[] = ["always", "usually", "never"];
+
 const frequencyChoiceBank: readonly ChoiceItem[] = interleave([
-  pairUp(36, frequencyActions, adverbs.slice(0, 4)).map(
+  everyPair(frequencyActions, placedAdverbs).map(
     ([[subject, verb, rest], adverb]): ChoiceItem => [
       `${subject} / ${verb} ${rest} (${adverb})`,
       `${subject} ${adverb} ${verb} ${rest}.`,
       [`${subject} ${verb} ${adverb} ${rest}.`, `${subject} ${verb} ${rest} ${adverb}.`],
     ],
   ),
-  pairUp(14, frequencyStates, ["never", "always"]).map(
+  everyPair(frequencyStates, placedAdverbs).map(
     ([[subject, be, rest], adverb]): ChoiceItem => [
       `${subject} / ${be} ${rest} (${adverb})`,
       `${subject} ${be} ${adverb} ${rest}.`,
@@ -534,7 +553,7 @@ const frequencyChoiceBank: readonly ChoiceItem[] = interleave([
 ]);
 
 const frequencyTypedBank: readonly TypedItem[] = interleave([
-  pairUp(36, frequencyActions, ["never", "often", "usually", "always"]).map(
+  everyPair(frequencyActions, [...placedAdverbs].reverse()).map(
     ([[subject, verb, rest], adverb]): TypedItem => ({
       shown: `${subject} ${verb} ${rest}. (${adverb})`,
       accepted: [`${subject} ${adverb} ${verb} ${rest}.`],
@@ -542,7 +561,7 @@ const frequencyTypedBank: readonly TypedItem[] = interleave([
       instruction: t("Put the word in brackets in the sentence.", "把括号里的词放进句子。"),
     }),
   ),
-  pairUp(14, frequencyStates, ["usually", "sometimes"]).map(
+  everyPair(frequencyStates, [...placedAdverbs].reverse()).map(
     ([[subject, be, rest], adverb]): TypedItem => ({
       shown: `${subject} ${be} ${rest}. (${adverb})`,
       accepted: [`${subject} ${be} ${adverb} ${rest}.`],

@@ -13,7 +13,7 @@ import {
   writingGenerator,
 } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
-import { interleave, pairUp, vocabularyTopic, word } from "../words.ts";
+import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
 
 const weather = vocabularyTopic({
   id: "a1-words-weather",
@@ -404,7 +404,17 @@ const weatherStates: readonly string[] = [
   "very windy",
 ];
 
-const weatherTimes: readonly string[] = ["today", "now", "this morning", "in Beijing", "outside"];
+const weatherTimes: readonly string[] = [
+  "today",
+  "now",
+  "this morning",
+  "in Beijing",
+  "outside",
+  "this afternoon",
+  "in London",
+  "in the north",
+  "here",
+];
 
 /** clockStates are the time and the day, which also take It's. */
 const clockStates: readonly string[] = [
@@ -422,10 +432,14 @@ const clockStates: readonly string[] = [
   "June 1st today",
 ];
 
-/** itRests are what follows It's: sixty weather sentences (12 and 5 are coprime) and twelve about the time. */
-const weatherRests = pairUp(60, weatherStates, weatherTimes).map(([state, when]) => `${state} ${when}`);
+/** itRests are what follows It's: every weather state at every time and place, and the twelve about the time, each bank
+ * starting at its own place. */
+const weatherRests = everyPair(weatherStates, weatherTimes).map(([state, when]) => `${state} ${when}`);
 const itRests = (half: 0 | 1): readonly string[] =>
-  interleave([weatherRests.slice(half * 30, half * 30 + 30), clockStates.slice(half * 6, half * 6 + 6)]);
+  interleave([
+    [...weatherRests.slice(half * 54), ...weatherRests.slice(0, half * 54)],
+    [...clockStates.slice(half * 6), ...clockStates.slice(0, half * 6)],
+  ]);
 
 const itChoiceBank: readonly ChoiceItem[] = itRests(0).map(
   (rest, k): ChoiceItem => [

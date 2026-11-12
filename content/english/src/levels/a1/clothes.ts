@@ -4,7 +4,7 @@
 import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
-import { interleave, pairUp, vocabularyTopic, word } from "../words.ts";
+import { everyPair, interleave, pairUp, vocabularyTopic, word } from "../words.ts";
 
 const clothes = vocabularyTopic({
   id: "a1-words-clothes",
@@ -315,15 +315,23 @@ const pcActions: readonly (readonly [verb: string, ing: string, misspelled: stri
   ["try", "trying", "triing", "on a hat"],
 ];
 
-const pcItems = (n: number, skip: number) =>
-  pairUp(n + skip, pcSubjects, pcActions)
-    .slice(skip)
-    .map(([[subject, be, short], [verb, ing, misspelled, rest]]) => ({ subject, be, short, verb, ing, misspelled, rest }));
+/** pcAll are every subject with every action; each bank starts at its own place in them. */
+const pcAll = everyPair(pcSubjects, pcActions).map(([[subject, be, short], [verb, ing, misspelled, rest]]) => ({
+  subject,
+  be,
+  short,
+  verb,
+  ing,
+  misspelled,
+  rest,
+}));
+
+const pcItems = (skip: number) => [...pcAll.slice(skip), ...pcAll.slice(0, skip)];
 
 /** otherBe is a form of be that does not match the subject that takes the given one. */
 const otherBe = (be: string): string => (be === "is" ? "are" : "is");
 
-const pcChoiceBank: readonly ChoiceItem[] = pcItems(44, 0).map(
+const pcChoiceBank: readonly ChoiceItem[] = pcItems(0).map(
   ({ subject, be, verb, ing, rest }): ChoiceItem => [
     `${subject} ___ ${rest} now. (${verb})`,
     `${be} ${ing}`,
@@ -331,7 +339,7 @@ const pcChoiceBank: readonly ChoiceItem[] = pcItems(44, 0).map(
   ],
 );
 
-const pcSpellBank: readonly TypedItem[] = pcItems(40, 44).map(
+const pcSpellBank: readonly TypedItem[] = pcItems(44).map(
   ({ subject, be, verb, ing, misspelled, rest }): TypedItem => ({
     shown: `${subject} ${be} ___ ${rest}. (${verb})`,
     accepted: [ing],
@@ -339,7 +347,7 @@ const pcSpellBank: readonly TypedItem[] = pcItems(40, 44).map(
   }),
 );
 
-const pcWriteBank: readonly TypedItem[] = pcItems(40, 84).map(({ subject, be, short, verb, ing, rest }): TypedItem => {
+const pcWriteBank: readonly TypedItem[] = pcItems(84).map(({ subject, be, short, verb, ing, rest }): TypedItem => {
   const full = `${subject} ${be} ${ing} ${rest}.`;
   return {
     shown: `${subject} / ${verb} ${rest} / now`,
@@ -352,7 +360,7 @@ const pcWriteBank: readonly TypedItem[] = pcItems(40, 84).map(({ subject, be, sh
 /** ingRule says how a verb makes its -ing form, in every locale. */
 const ingRule = (verb: string, ing: string): Text =>
   ing === `${verb}ing`
-    ? t(`*${verb}* just adds *-ing*`, `*${verb}* 直接加 *-ing*`)
+    ? t(`*${verb}* just adds *-ing*, with no other change to the verb`, `*${verb}* 直接加 *-ing*，动词本身不做其他变化`)
     : ing === `${verb.slice(0, -1)}ing`
       ? t(`*${verb}* ends in *e*, so it drops the *e* before *-ing*`, `*${verb}* 以 *e* 结尾，去掉 *e* 再加 *-ing*`)
       : t(
@@ -472,6 +480,8 @@ const howFrames: readonly (readonly [many: string, much: string])[] = [
   ["How ___ {n} do you want?", "How ___ {n} do you want?"],
   ["How ___ {n} are there?", "How ___ {n} is there?"],
   ["How ___ {n} do we need?", "How ___ {n} do we need?"],
+  ["How ___ {n} do you have?", "How ___ {n} do you have?"],
+  ["How ___ {n} does she need?", "How ___ {n} does she need?"],
 ];
 
 /** priced are things a shopper asks the price of. */
@@ -487,15 +497,15 @@ const priced: readonly (readonly [thing: string, be: string, answer: string])[] 
 ];
 
 const howChoiceBank: readonly ChoiceItem[] = interleave([
-  pairUp(22, manyNouns, howFrames).map(([n, [frame]]): ChoiceItem => [frame.replace("{n}", n), "many", ["much", "lot"]]),
-  pairUp(16, muchNouns, howFrames).map(([n, [, frame]]): ChoiceItem => [frame.replace("{n}", n), "much", ["many", "lot"]]),
+  everyPair(manyNouns, howFrames).map(([n, [frame]]): ChoiceItem => [frame.replace("{n}", n), "many", ["much", "lot"]]),
+  everyPair(muchNouns, howFrames).map(([n, [, frame]]): ChoiceItem => [frame.replace("{n}", n), "much", ["many", "lot"]]),
   priced.map(([thing, be]): ChoiceItem => [`How ___ ${be} ${thing}?`, "much", ["many", "lot"]]),
 ]);
 
 const numberWords: readonly string[] = ["three", "six", "ten", "twelve", "five", "eight", "four"];
 
 const howTypedBank: readonly TypedItem[] = interleave([
-  pairUp(14, manyNouns, numberWords).map(
+  everyPair(manyNouns, numberWords).map(
     ([n, number]): TypedItem => ({
       shown: `There are ${number} ${n}.`,
       accepted: [`How many ${n} are there?`],
@@ -503,9 +513,9 @@ const howTypedBank: readonly TypedItem[] = interleave([
       instruction: t("Write the question for this answer.", "写出这个回答对应的问句。"),
     }),
   ),
-  muchNouns.map(
-    (n): TypedItem => ({
-      shown: `There is a lot of ${n}.`,
+  everyPair(muchNouns, ["a lot of", "a little"]).map(
+    ([n, amount]): TypedItem => ({
+      shown: `There is ${amount} ${n}.`,
       accepted: [`How much ${n} is there?`],
       wrong: [`How many ${n} is there?`, `How much ${n} are there?`],
       instruction: t("Write the question for this answer.", "写出这个回答对应的问句。"),

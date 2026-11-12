@@ -4,7 +4,7 @@
 import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
-import { interleave, pairUp, sentenceCase, vocabularyTopic, word } from "../words.ts";
+import { everyPair, interleave, sentenceCase, vocabularyTopic, word } from "../words.ts";
 
 const time = vocabularyTopic({
   id: "a1-words-time",
@@ -386,18 +386,23 @@ const phrases: Readonly<Record<"at" | "on" | "in", readonly string[]>> = {
 
 const preps = ["at", "on", "in"] as const;
 
-const prepItems = (count: number, skip: number) =>
-  interleave(
-    preps.map((prep) =>
-      pairUp(count + skip, timeFrames, phrases[prep])
-        .slice(skip)
-        .map(([frame, phrase]) => ({ prep, sentence: `${frame} ___ ${phrase}.`, others: preps.filter((p) => p !== prep) })),
-    ),
-  );
+/** prepAll are every frame with every phrase of every word. */
+const prepAll = interleave(
+  preps.map((prep) =>
+    everyPair(timeFrames, phrases[prep]).map(([frame, phrase]) => ({
+      prep,
+      sentence: `${frame} ___ ${phrase}.`,
+      others: preps.filter((p) => p !== prep),
+    })),
+  ),
+);
 
-const prepChoiceBank: readonly ChoiceItem[] = prepItems(14, 0).map(({ prep, sentence, others }): ChoiceItem => [sentence, prep, others]);
+/** prepItems are all the items starting at the given place, so each bank opens on different sentences. */
+const prepItems = (skip: number) => [...prepAll.slice(skip), ...prepAll.slice(0, skip)];
 
-const prepTypedBank: readonly TypedItem[] = prepItems(12, 14).map(
+const prepChoiceBank: readonly ChoiceItem[] = prepItems(0).map(({ prep, sentence, others }): ChoiceItem => [sentence, prep, others]);
+
+const prepTypedBank: readonly TypedItem[] = prepItems(42).map(
   ({ prep, sentence, others }): TypedItem => ({ shown: sentence, accepted: [prep], wrong: [...others] }),
 );
 
@@ -408,6 +413,16 @@ const noPrepFrames: readonly string[] = [
   "The shop is closed",
   "We play football",
   "Our class has a test",
+  "I see my friends",
+  "We go swimming",
+  "My dad works late",
+  "We clean the house",
+  "I have a piano lesson",
+  "The children go to the park",
+  "We start a new book",
+  "My mom goes shopping",
+  "I call my grandpa",
+  "We eat fish",
 ];
 
 const noPrepPhrases: readonly (readonly [phrase: string, wrongPrep: string])[] = [
@@ -420,7 +435,7 @@ const noPrepPhrases: readonly (readonly [phrase: string, wrongPrep: string])[] =
   ["next month", "in"],
 ];
 
-const noPrepBank: readonly TypedItem[] = pairUp(35, noPrepFrames, noPrepPhrases).map(
+const noPrepBank: readonly TypedItem[] = everyPair(noPrepFrames, noPrepPhrases).map(
   ([frame, [phrase, wrongPrep]]): TypedItem => ({
     shown: `${frame} ${wrongPrep} ${phrase}.`,
     accepted: [`${frame} ${phrase}.`],

@@ -4,7 +4,7 @@
 import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
-import { pairUp, vocabularyTopic, word } from "../words.ts";
+import { everyPair, vocabularyTopic, word } from "../words.ts";
 
 const sportsAndMusic = vocabularyTopic({
   id: "a1-words-sports-and-music",
@@ -415,12 +415,21 @@ const pastimes: readonly (readonly [verb: string, ing: string, misspelled: strin
   ["draw", "drawing", "drawwing", " animals"],
 ];
 
-const likeItems = (from: number, count: number) =>
-  pairUp(from + count, likers, pastimes)
-    .slice(from)
-    .map(([[subject, verb, enjoy], [base, ing, misspelled, rest]]) => ({ subject, verb, enjoy, base, ing, misspelled, rest }));
+/** likeAll are every liker with every pastime. */
+const likeAll = everyPair(likers, pastimes).map(([[subject, verb, enjoy], [base, ing, misspelled, rest]]) => ({
+  subject,
+  verb,
+  enjoy,
+  base,
+  ing,
+  misspelled,
+  rest,
+}));
 
-const likeChoiceBank: readonly ChoiceItem[] = likeItems(0, 44).map(
+/** likeItems are all the pairs starting at the given place, so each bank opens on different sentences. */
+const likeItems = (from: number) => [...likeAll.slice(from), ...likeAll.slice(0, from)];
+
+const likeChoiceBank: readonly ChoiceItem[] = likeItems(0).map(
   ({ subject, verb, base, ing, misspelled, rest }): ChoiceItem => [
     `${subject} ${verb} ___${rest}. (${base})`,
     ing,
@@ -432,7 +441,7 @@ const likeChoiceBank: readonly ChoiceItem[] = likeItems(0, 44).map(
   ],
 );
 
-const likeSpellBank: readonly TypedItem[] = likeItems(44, 39).map(
+const likeSpellBank: readonly TypedItem[] = likeItems(44).map(
   ({ subject, verb, base, ing, misspelled, rest }): TypedItem => ({
     shown: `${subject} ${verb} ___${rest}. (${base})`,
     accepted: [ing],
@@ -440,7 +449,7 @@ const likeSpellBank: readonly TypedItem[] = likeItems(44, 39).map(
   }),
 );
 
-const likeFixBank: readonly TypedItem[] = likeItems(83, 39).map(
+const likeFixBank: readonly TypedItem[] = likeItems(83).map(
   ({ subject, verb, enjoy, base, ing, rest }): TypedItem => ({
     shown: `${subject} ${verb} ${base}${rest}.`,
     accepted: [enjoy ? `${subject} ${verb} ${ing}${rest}.` : `${subject} ${verb} [${ing}|to ${base}]${rest}.`],

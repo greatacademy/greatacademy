@@ -13,7 +13,7 @@ import {
   writingGenerator,
 } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
-import { interleave, vocabularyTopic, word } from "../words.ts";
+import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
 
 const town = vocabularyTopic({
   id: "a1-words-town",
@@ -350,6 +350,44 @@ const whItems: readonly WhItem[] = [
   return { ask, question, statement, answer, wrong };
 });
 
+/** whPeople are who the made questions ask about: as the statement names them, and as the question does. */
+const whPeople: readonly (readonly [said: string, asked: string])[] = [
+  ["Tom", "Tom"],
+  ["Lily", "Lily"],
+  ["My dad", "your dad"],
+  ["My sister", "your sister"],
+  ["Ben", "Ben"],
+  ["Our teacher", "your teacher"],
+  ["Anna", "Anna"],
+  ["My brother", "your brother"],
+];
+
+/** whFacts are a question word, a verb and its -s form with what follows, and the answers that fit. */
+const whFacts: readonly (readonly [ask: string, verb: string, third: string, before: string, answers: readonly string[]])[] = [
+  ["Where", "live", "lives", "", ["near the station", "on Green Street", "next to the park", "in a small town", "on a farm"]],
+  ["When", "play", "plays", " tennis", ["on Sundays", "after school", "on Saturday mornings", "in the summer"]],
+  ["What", "study", "studies", "", ["math", "history", "art", "music", "Chinese"]],
+  ["How", "go", "goes", " to school", ["by bus", "by train", "by bike", "on foot"]],
+  ["What time", "get", "gets", " up", ["at six", "at seven", "at half past six", "at a quarter past seven"]],
+  ["What", "eat", "eats", " for lunch", ["noodles", "rice", "sandwiches", "dumplings"]],
+];
+
+/** madeWhItems are every person with every fact, so the bank holds well over a hundred questions. */
+const madeWhItems: readonly WhItem[] = everyPair(
+  whPeople,
+  whFacts.flatMap(([ask, verb, third, after, answers]) => answers.map((answer) => [ask, verb, third, after, answer] as const)),
+).map(([[said, asked], [ask, verb, third, after, answer]]): WhItem => {
+  // What asks for the object, which comes before the rest; the other words ask for what ends the sentence.
+  const statement = ask === "What" ? `${said} ${third} ${answer}${after}.` : `${said} ${third}${after} ${answer}.`;
+  return {
+    ask,
+    question: `${ask} does ${asked} ${verb}${after}?`,
+    statement,
+    answer: `${answer.charAt(0).toUpperCase()}${answer.slice(1)}.`,
+    wrong: `${ask} ${asked} ${third}${after}?`,
+  };
+});
+
 /** whDecoys are two wrong question words for each right one; When and What time never stand against each other. */
 const whDecoys: Readonly<Record<string, readonly [string, string]>> = {
   Where: ["When", "What"],
@@ -362,7 +400,7 @@ const whDecoys: Readonly<Record<string, readonly [string, string]>> = {
 
 const firstWord = (s: string): string => s.slice(0, s.indexOf(" "));
 
-const whChoiceBank: readonly ChoiceItem[] = whItems.map(({ question, answer }): ChoiceItem => {
+const whChoiceBank: readonly ChoiceItem[] = interleave([whItems, madeWhItems]).map(({ question, answer }): ChoiceItem => {
   const wh = firstWord(question);
   return [`___${question.slice(wh.length)} — ${answer}`, wh, whDecoys[wh] ?? ["Where", "Who"]];
 });
@@ -373,7 +411,7 @@ const whPattern = ({ question, answer }: WhItem): string => {
   return timed.replace(/^(Where|What|Who|How) is /u, "[$1 is|$1's] ");
 };
 
-const whAskBank: readonly TypedItem[] = whItems.map(
+const whAskBank: readonly TypedItem[] = interleave([[...madeWhItems].reverse(), whItems]).map(
   (item): TypedItem => ({
     shown: item.statement,
     instruction: t(`Ask a question with ${item.ask} about this sentence.`, `用 ${item.ask} 对这个句子提问。`),
@@ -550,24 +588,34 @@ const iAsks: readonly string[] = [
   "visit you on Sunday",
 ];
 
+/** pleased are a request without and with please at the end. */
+const pleased = ["", ", please"] as const;
+
 const requestChoiceBank: readonly ChoiceItem[] = interleave([
-  youAsks.slice(0, 18).map((ask): ChoiceItem => ["", `Can you ${ask}?`, [`Can you to ${ask}?`, `You can ${ask}?`]]),
-  iAsks.slice(0, 12).map((ask): ChoiceItem => ["", `Can I ${ask}?`, [`Can I to ${ask}?`, `I can ${ask}?`]]),
+  everyPair(youAsks, pleased).map(
+    ([ask, please]): ChoiceItem => ["", `Can you ${ask}${please}?`, [`Can you to ${ask}${please}?`, `You can ${ask}${please}?`]],
+  ),
+  everyPair(iAsks, pleased).map(
+    ([ask, please]): ChoiceItem => ["", `Can I ${ask}${please}?`, [`Can I to ${ask}${please}?`, `I can ${ask}${please}?`]],
+  ),
 ]);
 
+/** wanted are two ways a learner says what they want to do, which the request turns into Can I. */
+const wanted = ["I want to", "I'd like to"] as const;
+
 const requestTypedBank: readonly TypedItem[] = interleave([
-  youAsks.slice(18).map(
-    (ask): TypedItem => ({
-      shown: `${ask.charAt(0).toUpperCase()}${ask.slice(1)}.`,
+  everyPair(youAsks, ["", "Please "] as const).map(
+    ([ask, please]): TypedItem => ({
+      shown: please === "" ? `${ask.charAt(0).toUpperCase()}${ask.slice(1)}.` : `${please}${ask}.`,
       instruction: t("Ask politely with Can you.", "用 Can you 礼貌地请求。"),
       accepted: [`Can you ${ask}(, please)?`, `Please, can you ${ask}?`],
       canonical: `Can you ${ask}, please?`,
       wrong: [`Can you to ${ask}?`, `You can ${ask}?`],
     }),
   ),
-  iAsks.slice(12).map(
-    (ask): TypedItem => ({
-      shown: `I want to ${ask}.`,
+  everyPair(iAsks, wanted).map(
+    ([ask, want]): TypedItem => ({
+      shown: `${want} ${ask}.`,
       instruction: t("Ask politely with Can I.", "用 Can I 礼貌地请求。"),
       accepted: [`Can I ${ask}(, please)?`],
       canonical: `Can I ${ask}, please?`,

@@ -329,7 +329,7 @@ const canChoiceBank: readonly ChoiceItem[] = abilities.map(([subject, can, verb,
 });
 
 const canTypedBank: readonly TypedItem[] = abilities.map(([subject, can, verb, rest]): TypedItem => {
-  const lower = subject === "I" ? "I" : subject.charAt(0).toLowerCase() + subject.slice(1);
+  const lower = /^(A|My|We|They|You|She|He)\b/u.test(subject) ? subject.charAt(0).toLowerCase() + subject.slice(1) : subject;
   return {
     shown: `${lower} / ${verb}${rest} (${can ? "yes" : "no"})`,
     accepted: [can ? `${subject} can ${verb}${rest}.` : `${subject} [can't|cannot] ${verb}${rest}.`],
