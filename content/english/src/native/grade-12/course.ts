@@ -249,6 +249,46 @@ const units: readonly UnitDef[] = [
     },
     undefined,
   ),
+  unit(
+    t("Appetite and the Body", "食欲与身体"),
+    {
+      words: ["words-of-taste-and-appetite", "words-for-the-build-of-the-body", "words-of-envy-and-malice"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Power and the Road", "权力与旅途"),
+    {
+      words: ["words-of-obedience-and-revolt", "words-of-roaming-and-wandering", "words-of-luxury-and-penury"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Clear Thought and Last Wills", "清晰思维与遗嘱"),
+    {
+      words: ["words-of-clear-and-muddled-thought", "words-of-wills-and-inheritance"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Ships and Pirates", "船与海盗"),
+    {
+      words: ["words-of-ships-and-sailors", "words-of-pirates-and-plunder"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
 ];
 
 /** courseGrade12 is the native course of grade 12. */
