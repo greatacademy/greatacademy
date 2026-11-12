@@ -6,6 +6,7 @@ import { joinText, same, type Text, type TopicDef, t } from "@ga/content";
 import { point } from "@ga/subject-english";
 import { filled, type GapItem, gapGenerator, shownGap } from "./cambridge-first-use-of-english.ts";
 import { examTopic, quote, type SolvedChoice, solvedChoiceGenerator } from "./kit.ts";
+import { moreGivenWords, moreNoWordGiven } from "./more-gaps.ts";
 
 // Seven-from-five.
 
@@ -1089,7 +1090,7 @@ export const grammarFilling: TopicDef = examTopic({
       gapGenerator(
         "word-form",
         t("Type the right form of the word in brackets.", "填入括号中所给词的正确形式。"),
-        givenWords.map(fillItem(formWhy)),
+        [...givenWords, ...moreGivenWords].map(fillItem(formWhy)),
       ),
     ),
     point(
@@ -1099,7 +1100,11 @@ export const grammarFilling: TopicDef = examTopic({
         "When no word is given, the gap needs a small word that the grammar of the sentence is missing. Before a noun, think of an article or a preposition; between two clauses, a conjunction or a relative word; in the place of a noun, a pronoun. Read the words on both sides: a noun after the gap and a clause after it need different words.",
         "没有给出提示词时，空格需要的是句子语法上缺少的一个虚词。名词前，考虑冠词或介词；两个分句之间，考虑连词或关系词；代替名词时，考虑代词。要看空格两边的词：空格后是名词还是从句，需要的词并不相同。",
       ),
-      gapGenerator("word-form", t("Type the one word that fills the gap.", "填入一个适当的词。"), noWordGiven.map(fillItem(freeWhy))),
+      gapGenerator(
+        "word-form",
+        t("Type the one word that fills the gap.", "填入一个适当的词。"),
+        [...noWordGiven, ...moreNoWordGiven].map(fillItem(freeWhy)),
+      ),
     ),
   ],
 });

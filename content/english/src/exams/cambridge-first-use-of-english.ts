@@ -5,6 +5,7 @@
 import { type Generator, joinText, type Problem, type Rng, same, type Text, type TopicDef, t } from "@ga/content";
 import { expandPattern, point } from "@ga/subject-english";
 import { examTopic, quote, type SolvedChoice, solvedChoiceGenerator } from "./kit.ts";
+import { moreConditionalsAndModals, moreGrammarWords, moreLinkingWords, morePassivesAndComparisons } from "./more-gaps.ts";
 
 /** gap is how a gap is shown: a line the reader can see, escaped for Markdown. */
 export const gap = "\\_\\_\\_\\_\\_";
@@ -454,7 +455,7 @@ export const openCloze: TopicDef = examTopic({
         "The words of Part 2 are short and grammatical: they carry little meaning of their own, so the sentence around the gap decides them. Ask what is missing. Before a noun, is it an article or a preposition? Next to a verb, is a helping verb needed for the tense or the passive (*had started*, *is being built*)? Does the gap stand for a noun, or is it *there* or *it* at the start of a sentence? Write one word only, and spell it exactly.",
         "第 2 部分要填的词很短，是语法功能词：它们本身意思不多，由空格周围的句子决定。先问缺的是什么。在名词前，是冠词还是介词？在动词旁，是否需要助动词构成时态或被动语态（*had started*、*is being built*）？空格是代替一个名词，还是句首的 *there* 或 *it*？只写一个词，并且拼写准确。",
       ),
-      gapGenerator("word-form", openQuestion, grammarWords.map(openGap)),
+      gapGenerator("word-form", openQuestion, [...grammarWords, ...moreGrammarWords].map(openGap)),
     ),
     point(
       "linkers-and-phrases",
@@ -463,7 +464,7 @@ export const openCloze: TopicDef = examTopic({
         "Other gaps link ideas or complete a phrase. Find the relation between the two parts (contrast, reason, result, condition) and the grammar that follows: *although* takes a clause, *despite* a noun. After a noun, a relative word may begin a clause: *who*, *which*, *whose*, *where*, *when*. Before a noun, a quantifier must match it: *few* with plurals, *little* and *much* with uncountable nouns. Many gaps are one word of a fixed phrase, such as *as soon as*, *in order to*, *so ... that* or *such a ... that*.",
         "另一些空格用来连接意思或补全短语。找出两部分之间的关系（转折、原因、结果、条件）以及后面的语法：*although* 后接从句，*despite* 后接名词。名词之后可能是关系词引导的从句：*who*、*which*、*whose*、*where*、*when*。名词之前的数量词必须与名词一致：*few* 与复数名词连用，*little* 和 *much* 与不可数名词连用。许多空格是固定短语中的一个词，例如 *as soon as*、*in order to*、*so ... that* 或 *such a ... that*。",
       ),
-      gapGenerator("word-form", openQuestion, linkingWords.map(openGap)),
+      gapGenerator("word-form", openQuestion, [...linkingWords, ...moreLinkingWords].map(openGap)),
     ),
   ],
 });
@@ -1273,7 +1274,7 @@ export const keyWordTransformations: TopicDef = examTopic({
         "Each item tests two things at once, usually a structure and a word or phrase. Start from the key word: what pattern does it bring? *BY* or *BEEN* signals a passive; *AS*, *THAN* or *ENOUGH* a comparison turned around; a verb such as *SUCCEEDED*, *MIND* or *SPENT* its own pattern (*succeeded in finishing*, *spent two hours writing*). Then compare the two sentences word by word, keep the tense and every piece of meaning, and count: two to five words, with a contraction such as *wasn't* counted as two. Never change the key word.",
         "每道题通常同时考两点：一个结构和一个词或短语。先看关键词：它带来什么结构？*BY* 或 *BEEN* 提示被动语态；*AS*、*THAN* 或 *ENOUGH* 提示换个方向的比较；*SUCCEEDED*、*MIND*、*SPENT* 等动词有自己的结构（*succeeded in finishing*、*spent two hours writing*）。然后逐词比较两个句子，保持时态和每一点意思，再数词数：二至五个词，*wasn't* 这样的缩写算两个词。绝不能改变关键词。",
       ),
-      gapGenerator("sentence-pattern", transformQuestion, passivesAndPatterns.map(transformation)),
+      gapGenerator("sentence-pattern", transformQuestion, [...passivesAndPatterns, ...morePassivesAndComparisons].map(transformation)),
     ),
     point(
       "conditionals-reporting-modals",
@@ -1282,7 +1283,7 @@ export const keyWordTransformations: TopicDef = examTopic({
         "These items change how a sentence relates to reality or to a speaker. If the first sentence states a fact, the second often imagines the opposite: *I didn't know* becomes *If I had known*, and *I'm sorry I didn't* becomes *I wish I had*. A quotation becomes reported speech with its tense moved back, or a reporting verb with its pattern: *suggested going*, *denied taking*, *advised me to see*. *I'm sure* and *it's impossible* become *must have* and *can't have*; *it was a mistake* becomes *should have*. A phrasal verb often replaces a single verb: *postpone*, *put off*; *tolerate*, *put up with*.",
         "这些题改变的是句子与事实或与说话人的关系。第一句陈述事实时，第二句常常设想相反的情况：*I didn't know* 变成 *If I had known*，*I'm sorry I didn't* 变成 *I wish I had*。直接引语变成时态后移的间接引语，或者变成带固定结构的转述动词：*suggested going*、*denied taking*、*advised me to see*。*I'm sure* 和 *it's impossible* 变成 *must have* 和 *can't have*；*it was a mistake* 变成 *should have*。短语动词常常替换单个动词：*postpone* 换成 *put off*，*tolerate* 换成 *put up with*。",
       ),
-      gapGenerator("sentence-pattern", transformQuestion, conditionalsAndModals.map(transformation)),
+      gapGenerator("sentence-pattern", transformQuestion, [...conditionalsAndModals, ...moreConditionalsAndModals].map(transformation)),
     ),
   ],
 });
