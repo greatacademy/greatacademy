@@ -7,8 +7,10 @@ import { batchesA } from "./words-a.ts";
 import { batchesB } from "./words-b.ts";
 import { batchesC } from "./words-c.ts";
 import { batchesD } from "./words-d.ts";
+import { batchesE } from "./words-e.ts";
+import { batchesF } from "./words-f.ts";
 
-const batches = [...batchesA, ...batchesB, ...batchesC, ...batchesD];
+const batches = [...batchesA, ...batchesB, ...batchesC, ...batchesD, ...batchesE, ...batchesF];
 
 /** batchTopics11 are the vocabulary batches of grade 11. */
 export const batchTopics11: readonly TopicDef[] = batches.map(batchTopic);

@@ -187,6 +187,66 @@ const units: readonly UnitDef[] = [
     },
     undefined,
   ),
+  unit(
+    t("Company and Whims", "相处与心血来潮"),
+    {
+      words: ["words-of-company-and-candor", "words-of-leanings-and-whims", "words-of-the-relentless-and-the-calm"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Writing and Means", "写作与办法"),
+    {
+      words: ["words-for-trimming-and-padding-writing", "words-of-means-that-work", "words-of-yielding-and-resisting"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Dark and Daily Times", "黑暗与日常"),
+    {
+      words: ["words-of-dark-times", "words-of-the-commonplace-and-the-spreading"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Minds and Characters", "思维与人物"),
+    {
+      words: ["words-of-hazy-and-sharp-thinking", "words-for-characters-in-company", "words-of-the-fleeting-and-the-sharp"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Academic Words of Process", "表示过程的学术词"),
+    {
+      words: ["words-for-starting-and-finishing", "words-for-more-and-less"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Academic Words of Structure", "表示结构的学术词"),
+    {
+      words: ["words-for-joining-and-matching", "words-for-limiting-and-keeping"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
 ];
 
 /** courseGrade11 is the native course of grade 11. */
