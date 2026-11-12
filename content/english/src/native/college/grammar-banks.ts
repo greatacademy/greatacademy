@@ -3,6 +3,7 @@
 // knowledge point has thirty or more items, built the same way on every run.
 
 import type { ChoiceItem } from "@ga/subject-english";
+import { moreCitingRows, moreClarityLines, moreCohesionLines, moreHedgingLines, moreToneLines } from "./grammar-more.ts";
 
 /** pick takes an element of a list by an index that may run past its end. */
 const pick = <T>(list: readonly T[], i: number): T => list[i % list.length] as T;
@@ -25,6 +26,7 @@ const threeWay = (lines: string): ChoiceItem[] =>
 
 /** hedgingBank gives the evidence for a claim and asks which claim is as strong as that evidence, no more and no less. */
 export const hedgingBank: readonly ChoiceItem[] = threeWay(`
+  ${moreHedgingLines}
   One survey of 30 older adults found that those who walked daily reported better memory.|Daily walking may be linked to better memory in older adults.|Daily walking improves the memory of every older adult.|This survey proves that walking prevents memory loss.
   Over forty controlled trials with thousands of older adults found that those assigned to regular exercise scored higher on memory tests.|Regular exercise improves memory test scores in older adults.|Exercise might possibly have some small effect on memory, perhaps.|Exercise cures memory loss in people of every age.
   In one classroom of 25 pupils, the children who read aloud each day improved their spelling more than the others.|Reading aloud every day may help some children's spelling.|Reading aloud is the best way for any child to learn to spell.|Children who do not read aloud every day cannot learn to spell well at any age.
@@ -65,6 +67,7 @@ const citingVerbs = ["argues", "concedes", "refutes", "observes", "suggests", "d
 
 /** citingBank describes what a source does and asks which verb reports it. */
 export const citingBank: readonly ChoiceItem[] = rows(`
+  ${moreCitingRows}
   Ito gives three reasons for her position and defends it against objections. Ito ___ that cities should ban cars from their centers.|argues
   Throughout the book, Mensah builds a case for one view with evidence. Mensah ___ that the empire fell because of its debts, not its enemies.|argues
   Rossi takes a side in the debate and supports it with data from ten schools. Rossi ___ that homework should be optional before the age of twelve.|argues
@@ -476,6 +479,7 @@ export const referenceBank: readonly ChoiceItem[] = [
 
 /** cohesionBank gives a sentence and asks which next sentence begins with what the reader already knows. */
 export const cohesionBank: readonly ChoiceItem[] = threeWay(`
+  ${moreCohesionLines}
   Last year the city built a new bridge over the river.|The bridge was designed by a young engineer from the university.|A young engineer from the university designed the bridge.|There was a young engineer from the university who designed the bridge.
   Every cell in the body contains DNA.|This DNA carries the instructions for building proteins.|The instructions for building proteins are carried by this DNA.|Proteins are built from instructions that this DNA carries.
   Last spring, the school opened a garden behind the gym.|The garden is now looked after by students from every grade.|Students from every grade now look after the garden.|Now students from every grade are looking after the garden.
@@ -514,6 +518,7 @@ export const cohesionBank: readonly ChoiceItem[] = threeWay(`
 
 /** clarityBank gives a sentence thick with abstract nouns and asks which revision is clearest and still means the same. */
 export const clarityBank: readonly ChoiceItem[] = threeWay(`
+  ${moreClarityLines}
   The committee's decision was the postponement of the vote until a review of the costs had been carried out.|The committee decided to postpone the vote until it had reviewed the costs.|A decision for postponement of the vote was made by the committee pending a cost review.|The committee voted after reviewing the costs.
   There was a failure on the part of the city to provide an explanation of the increase in fares.|The city failed to explain why fares had increased.|An explanation of the fare increase was not provided by the city, which was a failure.|The city explained why fares had increased.
   The analysis of the data by the researchers led to the discovery of an error in the measurement of temperature.|When the researchers analyzed the data, they discovered that the temperature had been measured wrongly.|An error in temperature measurement was discovered through the analysis of the data by the researchers.|The researchers measured the temperature and analyzed the data.
@@ -648,6 +653,7 @@ export const numberBank: readonly (readonly [item: ChoiceItem, rule: NumberRule]
 
 /** toneBank describes a situation at work and asks which sentence suits its reader and purpose. */
 export const toneBank: readonly ChoiceItem[] = threeWay(`
+  ${moreToneLines}
   Asking your manager, whom you know only slightly, for next Friday off.|Would it be possible for me to take next Friday off? I have finished the report, and Sam has agreed to cover my calls.|hey can i grab next friday off? thx|I am taking next Friday off. I have finished the report, and Sam will cover my calls, so there is nothing further to discuss.
   Declining a colleague's request to take over her project, because your schedule is full.|Thank you for thinking of me. I can't take on the project this month, since I'm committed to the audit until the 30th, but I'd be glad to help after that.|lol no way, I'm swamped|I refuse to take on your project. My schedule is already full with the audit until the 30th, and it is not my job to fix your workload for you.
   Reminding a client that an invoice is two weeks overdue.|I'm writing about invoice 2041, which was due on 3 May. Could you let me know when we can expect payment?|Hey, you still owe us money!|You have failed to pay invoice 2041, which was due on 3 May, two weeks ago. We demand payment immediately, or we will take further action.
@@ -687,7 +693,8 @@ export const toneBank: readonly ChoiceItem[] = threeWay(`
 /** listForm names the three forms a list may keep: the -ing form, the command and the to-form. */
 export type ListForm = "the -ing form" | "the command form" | "the to-form";
 
-const listCores: readonly (readonly [topic: string, items: readonly (readonly [base: string, ing: string, rest: string])[]])[] = [
+/** listCores are topics with four steps each, as base form, -ing form and the rest of the phrase. */
+export const listCores: readonly (readonly [topic: string, items: readonly (readonly [base: string, ing: string, rest: string])[]])[] = [
   [
     "opening a community garden",
     [
@@ -811,13 +818,15 @@ const listIntro: Readonly<Record<ListForm, string>> = {
 
 /** listBank shows a list or set of headings with one gap and asks which item keeps the list parallel. */
 export const listBank: readonly (readonly [item: ChoiceItem, form: ListForm])[] = listCores.flatMap(([topic, items], i) =>
-  forms.map((form, f): readonly [ChoiceItem, ListForm] => {
-    const gap = (i + f) % items.length;
-    const lines = items.map((item, k) => `- ${k === gap ? "___" : inForm(form, item)}`).join("\n");
-    const target = items[gap] as readonly [string, string, string];
-    return [
-      [`${listIntro[form]} ${topic}:\n\n${lines}`, inForm(form, target), forms.filter((o) => o !== form).map((o) => inForm(o, target))],
-      form,
-    ];
-  }),
+  forms.flatMap((form, f) =>
+    items.map((_, g): readonly [ChoiceItem, ListForm] => {
+      const gap = (i + f + g) % items.length;
+      const lines = items.map((item, k) => `- ${k === gap ? "___" : inForm(form, item)}`).join("\n");
+      const target = items[gap] as readonly [string, string, string];
+      return [
+        [`${listIntro[form]} ${topic}:\n\n${lines}`, inForm(form, target), forms.filter((o) => o !== form).map((o) => inForm(o, target))],
+        form,
+      ];
+    }),
+  ),
 );

@@ -6,6 +6,15 @@
 import { t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point } from "@ga/subject-english";
 import { bars, fields, kindedChoice, type Label, labelChoice } from "../../topics/steps.ts";
+import { listCores } from "./grammar-banks.ts";
+import {
+  moreActorLines,
+  moreBreakLines,
+  moreClaimLines,
+  moreListBreakLines,
+  moreStanceLines,
+  moreToneProblemLines,
+} from "./grammar-more.ts";
 
 // Fixing a claim's strength.
 
@@ -62,6 +71,7 @@ const claimLabels: Readonly<Record<string, Label>> = {
 };
 
 const claimLines = `
+  ${moreClaimLines(causal, broad, timid, fits)}
   Evidence: a survey of 300 students found that those who ate breakfast had higher grades.\\nClaim: Eating breakfast raises students' grades.|${causal}
   Evidence: a study of 40 nurses in one hospital found that night shifts disturbed their sleep.\\nClaim: Night shifts disturb the sleep of all workers.|${broad}
   Evidence: forty controlled trials with 20,000 patients found that the vaccine prevented the disease.\\nClaim: The vaccine may possibly prevent the disease in some patients.|${timid}
@@ -148,6 +158,7 @@ const stanceLabels: Readonly<Record<string, Label>> = {
 };
 
 const stanceLines = `
+  ${moreStanceLines(accepts, doubts, neutral)}
   Okafor **shows** that the policy reduced unemployment.|${accepts}
   Okafor **claims** that the policy reduced unemployment.|${doubts}
   Okafor **writes** that the policy reduced unemployment.|${neutral}
@@ -266,6 +277,7 @@ export const paraphraseStep = point(
 
 /** breakLines are four sentences, the number of the one that starts with something new, and what it starts with. */
 const breakLines = fields(`
+  ${moreBreakLines}
   Last year the city built a new bridge.|The bridge was designed by a young engineer.|A national prize was later given to the engineer.|The prize came with money for her next project.|3|*A national prize*, which is new, instead of the engineer named just before
   The school opened a garden in March.|In the garden, students grow beans and tomatoes.|Most of the tomatoes go to the school kitchen.|A hot lunch is cooked from them every Friday by the kitchen staff.|4|*A hot lunch*, which is new, instead of the kitchen or the tomatoes named just before
   Bees pollinate many crops.|Without these crops, our diet would be much poorer.|A disease is now killing bees in many countries.|The disease spreads quickly through a hive.|3|*A disease*, which is new, instead of the crops or the diet named just before
@@ -338,6 +350,7 @@ export const cohesionBreakStep = point(
 /** actorBank gives a sentence; its wrong options take an abstraction for the character, then a weak verb for the action. */
 const actorBank = bars(
   `
+  ${moreActorLines}
   The committee's decision was the postponement of the vote.|Character: the committee. Action: decide, and postpone.|Character: the decision. Action: postpone.|Character: the committee. Action: was.
   There was a failure by the engineers to test the brakes.|Character: the engineers. Action: fail to test.|Character: the failure. Action: test.|Character: the engineers. Action: there was.
   The analysis of the data by the team took three weeks.|Character: the team. Action: analyze.|Character: the analysis. Action: took.|Character: the team. Action: took.
@@ -589,6 +602,7 @@ const toneLabels: Readonly<Record<string, Label>> = {
 };
 
 const toneLines = `
+  ${moreToneProblemLines(suits, casual, blunt, stiff)}
   To your manager, asking for a day off: Would it be possible for me to take Friday off? My sister is getting married, and I have finished the report early.|${suits}
   To your manager, asking for a day off: hey can i skip friday?? wedding thing lol|${casual}
   To your manager, asking for a day off: I am taking Friday off. Put it in the calendar.|${blunt}
@@ -636,6 +650,7 @@ export const toneProblemStep = point(
 
 /** listLines are a lead-in, the form of the list, three items in that form, the odd item and its form. */
 const listLines = fields(`
+  ${moreListBreakLines(listCores)}
   Steps for opening the shop:|the command form|Unlock the front door.;Turn on the lights.;Count the cash in the till.|Checking the stock.|the -ing form
   Goals of the project:|the to-form|To reduce waste in the kitchens;To lower costs across the company;To train new staff in the first month|Better customer service|a noun phrase
   Headings of the report:|the -ing form|Choosing a site near the station;Raising the money for the building;Hiring staff for the opening|To build the hall|the to-form
