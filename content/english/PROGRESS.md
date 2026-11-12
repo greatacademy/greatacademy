@@ -43,6 +43,7 @@ Content that needs audio or recording (listening of S1, speaking of S2 to S4, ph
 | One course per grade (E8.2), grades 6 to 8: `english-grade-6` (108 topics, 1,557 XP), `english-grade-7` (102, 1,506) and `english-grade-8` (94, 1,422), 249 new topics, 19 new reading units, 22 new conversations, 55 new criteria; `english-grades-6-8` retired | Done |
 | One course per grade (E8.2), grades 9 to 12: `english-grade-9` (74 topics, 1,153 XP), `english-grade-10` (52, 831), `english-grade-11` (43, 710) and `english-grade-12` (35, 580), 167 new topics, 22 new reading units, 26 new conversations, 66 new criteria; `english-grades-9-12` retired | Done |
 | Larger banks from frames (E8.3): `everyPair` crosses read frames with word lists; the 73 grammar knowledge points of Pre-A1 and A1 hold 100 to 243 distinct sentences each; of the 434 of A2 and above, all but one still draw on hand-written lists of 30 to 99 | Pre-A1 and A1 done |
+| Whole-subject simulation, 2026-11-12: strong, typical and placed students finish all 20 courses in 20 of 20 runs; a typical student takes 26 days for Pre-A1, 103 to 348 for the CEFR levels, 105 to 204 for the grades and 84 to 127 for college writing and the exams. Struggling students at 20 XP a day finish B1 in 11 runs of 20 and B2 in none within the simulator's year | Done; B1 and B2 too long for a struggling student |
 
 ## Reasons for Encompassing Weights
 
