@@ -64,7 +64,7 @@ const units: readonly UnitDef[] = [
   unit(
     t("Art and Its Critics", "艺术与评论"),
     {
-      words: ["words-of-art-criticism", "words-of-taste-and-beauty"],
+      words: ["words-of-art-criticism", "words-of-taste-and-beauty", "words-of-architecture"],
       grammar: [],
       reading: ["evaluating-a-review"],
       writing: ["writing-a-review-of-a-work-of-art"],
@@ -107,6 +107,9 @@ const units: readonly UnitDef[] = [
         "latin-roots-13",
         "academic-words-10",
         "academic-words-11",
+        "academic-words-12",
+        "academic-words-13",
+        "academic-words-14",
       ],
       grammar: ["commonly-confused-words-8"],
       reading: [],
@@ -180,6 +183,16 @@ const units: readonly UnitDef[] = [
         "words-of-walking-and-moving",
         "words-of-surfaces-and-textures",
       ],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Reputation and Secrets", "名声与秘密"),
+    {
+      words: ["words-of-praise", "words-of-blame", "words-of-fame-and-obscurity", "words-of-secrets"],
       grammar: [],
       reading: [],
       writing: [],
