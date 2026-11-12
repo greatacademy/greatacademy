@@ -2,7 +2,609 @@
 // pronouns in pairs, adjective and adverb clauses, interrupters and tricky subjects.
 
 import type { TopicDef } from "@ga/content";
+import { everyPair } from "../../levels/words.ts";
 import { choose, type Label, label, topic } from "../grade-6/kit.ts";
+
+// Crossed items: frames, people and phrases multiply the lines below into a hundred items or more for each bank.
+
+const join = (lines: readonly string[]) => lines.join("\n");
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+const low = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
+
+/** commands are a first command, the verb of a second one and the words after it. */
+const commands = [
+  ["Raise your hand", "wait for", "the teacher"],
+  ["Plan your speech", "practice", "it twice"],
+  ["Read both articles", "choose", "the stronger one"],
+  ["Open your notebook", "copy", "the chart"],
+  ["Listen to the speaker", "take", "notes"],
+  ["Check the time", "finish", "your answer"],
+  ["Sharpen your pencil", "start", "the test"],
+  ["Wash your hands", "set", "the table"],
+  ["Pack your bag", "meet", "us at the gate"],
+  ["Find a partner", "share", "your idea"],
+  ["Fold the letter", "seal", "the envelope"],
+  ["Turn off the stove", "cover", "the pot"],
+  ["Water the seeds", "place", "the pot in the sun"],
+  ["Mix the flour and eggs", "pour", "the batter into the pan"],
+  ["Write your name", "answer", "the first question"],
+  ["Feed the dog", "walk", "him around the block"],
+  ["Clear your desk", "take out", "a pencil"],
+  ["Read the question twice", "underline", "the key words"],
+  ["Put on your boots", "grab", "an umbrella"],
+  ["Close the window", "lock", "the door"],
+] as const;
+/** factsAndOrders are a statement, an order that follows from it, and a statement that could follow instead. */
+const factsAndOrders = [
+  ["The bus leaves at eight", "be at the stop early", "most students are at the stop early"],
+  ["The library closes at five", "return your books today", "most people return their books by then"],
+  ["The test has three parts", "budget your time", "most students budget their time"],
+  ["The floor is wet", "walk slowly", "the janitor has put out a sign"],
+  ["The museum is free on Sundays", "visit then", "many families visit then"],
+  ["The ice is thin", "stay off the pond", "the rangers keep people off the pond"],
+  ["The play starts at seven", "take your seats", "the ushers seat everyone"],
+  ["The paint is still wet", "do not touch the door", "a sign warns people about the door"],
+  ["The soup is hot", "blow on it first", "Dad blows on it first"],
+  ["The road is closed", "take the other route", "drivers take the other route"],
+] as const;
+/** wishes are an unreal condition, its pronoun, what would follow, and a second action in its base and present forms. */
+const wishes = [
+  ["If I were the coach", "I", "change the lineup", "explain it to the team", "explain it to the team"],
+  ["If she were the mayor", "she", "build more parks", "plant trees everywhere", "plants trees everywhere"],
+  ["If he were our teacher", "he", "give less homework", "grade it quickly", "grades it quickly"],
+  ["If we were in charge", "we", "open the pool early", "keep it open late", "keep it open late"],
+  ["If they were rich", "they", "buy a farm", "raise horses", "raise horses"],
+  ["If I were older", "I", "drive to the coast", "stay for a week", "stay for a week"],
+  ["If she were the principal", "she", "lengthen recess", "join the games", "joins the games"],
+  ["If he were taller", "he", "play center", "block every shot", "blocks every shot"],
+  ["If you were the captain", "you", "choose the plays", "call them loudly", "call them loudly"],
+  ["If the park were bigger", "it", "have a lake", "attract more birds", "attracts more birds"],
+] as const;
+const moodNames = join([
+  ...commands.flatMap(([first, verb, rest]) => [
+    `${first}, and then you should ${verb} ${rest}.|imperative to indicative`,
+    `${first}, and then ${verb} ${rest}.|no shift`,
+    `${first}, and you will ${verb} ${rest}.|imperative to indicative`,
+  ]),
+  ...factsAndOrders.flatMap(([fact, order, statement]) => [
+    `${fact}, so ${order}.|indicative to imperative`,
+    `${fact}, so ${statement}.|no shift`,
+  ]),
+  ...wishes.flatMap(([condition, who, first, base, present]) => [
+    `${condition}, ${who} would ${first}, and ${who} ${present}.|subjunctive to indicative`,
+    `${condition}, ${who} would ${first} and would ${base}.|no shift`,
+  ]),
+]);
+const linkers = ["and ___", "and then ___", "and after that ___", "and next ___"] as const;
+const moodKeeps = join([
+  ...commands.flatMap(([first, verb, rest], k) =>
+    [0, 1, 2, 3].map((j) => {
+      const wrongs = (k + j) % 2 === 0 ? [`you should ${verb}`, `you will ${verb}`] : [`you will ${verb}`, `you can ${verb}`];
+      return `${first}, ${linkers[j]} ${rest}.|${verb}|${wrongs[0]}|${wrongs[1]}`;
+    }),
+  ),
+  ...wishes.map(([condition, who, first, base]) => `${condition}, ${who} would ${first} and ___ ${base}.|would|will|can`),
+]);
+
+/** scenes are a subject, its verb, a prepositional phrase, an appositive, an infinitive of purpose and a participial phrase. */
+const scenes = [
+  ["The octopus", "hid", "under a rock", "a clever hunter", "to escape the shark", "sensing danger"],
+  ["The crab", "scuttled", "across the sand", "a small gray creature", "to find shelter", "startled by our steps"],
+  ["The seal", "slept", "on the warm rocks", "a young pup", "to rest after the hunt", "warmed by the sun"],
+  ["The fishermen", "waited", "by the harbor", "three old friends", "to unload their catch", "tired after the night"],
+  ["The gulls", "circled", "above the boat", "noisy white birds", "to steal some fish", "screaming at each other"],
+  ["The children", "swam", "near the shore", "my younger cousins", "to cool off", "laughing loudly"],
+  ["The diver", "searched", "among the reeds", "an expert on coral", "to find the lost ring", "holding a flashlight"],
+  ["The whale", "rose", "from the deep water", "a huge humpback", "to take a breath", "covered in barnacles"],
+  ["The turtle", "crawled", "toward the sea", "a newborn hatchling", "to escape the birds", "moving slowly"],
+  ["The sailor", "rowed", "past the lighthouse", "a retired captain", "to reach the island", "singing an old song"],
+  ["The dolphins", "leaped", "beside the ship", "playful bottlenoses", "to chase the waves", "flashing in the sun"],
+  ["The girl", "ran", "along the beach", "my best friend", "to catch the kite", "shouting with joy"],
+  ["The pelican", "dived", "into the bay", "a hungry bird", "to catch a fish", "folding its wings"],
+  ["The lifeguard", "climbed", "onto the tower", "a strong swimmer", "to watch the swimmers", "wearing a red cap"],
+  ["The otter", "floated", "on its back", "a playful animal", "to crack open a clam", "holding a stone"],
+  ["The scientists", "sailed", "through the strait", "a team from Chile", "to study the whales", "carrying special cameras"],
+] as const;
+const sceneOpeners = [
+  "When the storm hit",
+  "Because the tide rose",
+  "After the boat left",
+  "Although the water was cold",
+  "Before the sun rose",
+  "While the divers watched",
+] as const;
+const phraseClause = join(
+  scenes.flatMap(([who, verb, place], k) => {
+    const [a = "", b = ""] = [sceneOpeners[k % 6], sceneOpeners[(k + 3) % 6]];
+    return [
+      `${who} ${verb} *${place}*.|phrase`,
+      `*${who} ${verb} ${place}*, and the sea was calm.|independent clause`,
+      ...[a, b].flatMap((opener) => [
+        `*${opener}*, ${low(who)} ${verb} ${place}.|dependent clause`,
+        `${opener}, ${low(who)} ${verb} *${place}*.|phrase`,
+        `${opener}, *${low(who)} ${verb} ${place}*.|independent clause`,
+      ]),
+    ];
+  }),
+);
+const phraseKindLines = join(
+  scenes.flatMap(([who, verb, place, appositive, purpose, participle]) => [
+    `${who} ${verb} *${place}*.|prepositional phrase`,
+    `${who}, *${appositive}*, ${verb} ${place}.|appositive phrase`,
+    `${who} ${verb} ${place} *${purpose}*.|infinitive phrase`,
+    `${who}, *${participle}*, ${verb} ${place}.|participial phrase`,
+    `*${cap(participle)}*, ${low(who)} ${verb} ${place}.|participial phrase`,
+  ]),
+);
+
+/** danglers are an opening phrase, what the doers did, two endings with the wrong subject, and an action that misplaces it. */
+const danglers = [
+  ["Walking into the museum", "admired the statues", "the statues impressed everyone", "the statues seemed huge", "photographed a guard"],
+  ["Climbing the steep hill", "saw the whole valley", "the valley came into view", "the view was breathtaking", "spotted a goat"],
+  ["Running for the bus", "dropped our tickets", "the tickets fell out of the bag", "our tickets were lost", "passed a dog"],
+  ["Opening the old trunk", "found a faded map", "a faded map was inside", "the smell was terrible", "noticed a spider"],
+  ["Hiking through the forest", "heard a woodpecker", "a woodpecker was heard", "the trees blocked the sun", "met a ranger"],
+  ["Looking out the window", "watched the snow fall", "the snow looked beautiful", "the street was white", "saw a cat"],
+  ["Swimming in the lake", "felt the cold water", "the water felt cold", "the fish swam past", "waved to a boy"],
+  ["Reading the letter", "learned the secret", "the secret was revealed", "the news was shocking", "called a friend"],
+  ["Crossing the bridge", "heard the river below", "the river roared below", "the wind was strong", "greeted a farmer"],
+  ["Waiting in line", "talked about the movie", "the movie started late", "the hour passed slowly", "chatted with a clerk"],
+  ["Riding our bikes", "enjoyed the cool breeze", "the breeze felt cool", "the hill seemed endless", "passed a jogger"],
+  ["Cooking dinner", "burned the rice", "the rice was burned", "the smoke alarm went off", "heard a neighbor"],
+] as const;
+const danglerDoers = ["we", "my cousins", "the students", "the tourists"] as const;
+const danglerSpot = join(
+  danglers.flatMap(([opening, done, wrong1, wrong2, misplaced], k) => [
+    ...danglerDoers.map((who) => `${opening}, ${who} ${done}.|clear`),
+    `${opening}, ${wrong1}.|dangling`,
+    `${opening}, ${wrong2}.|dangling`,
+    `${cap(danglerDoers[k % 4] ?? "we")} ${misplaced} ${low(opening)}.|misplaced`,
+    `${cap(danglerDoers[(k + 2) % 4] ?? "we")} ${misplaced} ${low(opening)}.|misplaced`,
+  ]),
+);
+const danglerFix = join(
+  danglers.flatMap(([opening, done, wrong1, wrong2], k) =>
+    [wrong1, wrong2].flatMap((wrong, j) =>
+      [0, 1, 2].map((d) => {
+        const who = danglerDoers[(k + j + d) % 4] ?? "we";
+        return `${opening}, ${wrong}.|${opening}, ${who} ${done}.|${cap(wrong)}, ${low(opening)}.|${opening}, ${wrong} again.`;
+      }),
+    ),
+  ),
+);
+
+/** spellDouble doubles the first consonant after the second letter, a common slip. */
+const spellDouble = (word: string) => {
+  const at = [...word].findIndex((c, i) => i >= 2 && /[bcdfgklmnprstvz]/.test(c));
+  const i = at < 0 ? [...word].findIndex((c) => /[bcdfgklmnprstvz]/.test(c)) : at;
+  return i < 0 ? `${word}${word.at(-1)}` : `${word.slice(0, i + 1)}${word.slice(i)}`;
+};
+/** silentE are a base, a suffix and the right spelling. */
+const silentE = [
+  "ride ing riding",
+  "smile ing smiling",
+  "bake er baker",
+  "value able valuable",
+  "desire able desirable",
+  "adore able adorable",
+  "nerve ous nervous",
+  "adventure ous adventurous",
+  "close ure closure",
+  "guide ance guidance",
+  "continue ous continuous",
+  "arrive al arrival",
+  "survive al survival",
+  "refuse al refusal",
+  "dispose al disposal",
+  "insure ance insurance",
+  "please ure pleasure",
+  "move ing moving",
+  "shine y shiny",
+  "ice y icy",
+  "noise y noisy",
+  "ease y easy",
+  "complete ion completion",
+  "use ful useful",
+  "grace ful graceful",
+  "waste ful wasteful",
+  "peace ful peaceful",
+  "shame ful shameful",
+  "place ment placement",
+  "agree ment agreement",
+  "safe ty safety",
+  "nine ty ninety",
+  "lone ly lonely",
+  "live ly lively",
+  "late ly lately",
+  "sincere ly sincerely",
+  "rude ness rudeness",
+  "polite ness politeness",
+  "like ness likeness",
+  "hope less hopeless",
+  "use less useless",
+  "tire less tireless",
+  "name less nameless",
+  "change able changeable",
+  "manage able manageable",
+  "outrage ous outrageous",
+  "peace able peaceable",
+  "trace able traceable",
+  "true ly truly",
+  "argue ment argument",
+  "nine th ninth",
+  "whole ly wholly",
+  "awe ful awful",
+  "write er writer",
+  "excite able excitable",
+  "advise able advisable",
+  "compare ison comparison",
+  "admire ation admiration",
+  "operate ion operation",
+  "confuse ion confusion",
+  "fame ous famous",
+  "invite ation invitation",
+  "settle ment settlement",
+  "engage ment engagement",
+  "wise ly wisely",
+  "brave ly bravely",
+  "care ful careful",
+  "pure ly purely",
+  "time less timeless",
+  "taste less tasteless",
+  "blame less blameless",
+  "smoke y smoky",
+] as const;
+const silentELines = join(
+  silentE
+    .filter((entry) => entry !== "fame ous famous")
+    .map((entry) => {
+      const [base = "", suffix = "", right = ""] = entry.split(" ");
+      const kept = `${base}${suffix}`;
+      const rule = right === kept ? `${base.slice(0, -1)}${suffix}` : kept;
+      return `${base} + ${suffix}|${right}|${rule}|${spellDouble(right)}`;
+    }),
+);
+/** finalY are a base, a suffix and the right spelling. */
+const finalY = [
+  "easy ly easily",
+  "heavy er heavier",
+  "funny est funniest",
+  "pretty er prettier",
+  "tiny est tiniest",
+  "hungry ly hungrily",
+  "noisy ly noisily",
+  "lucky ly luckily",
+  "ready ly readily",
+  "cry ed cried",
+  "try ed tried",
+  "fry ed fried",
+  "spy ed spied",
+  "copy ed copied",
+  "marry ed married",
+  "apply ed applied",
+  "deny al denial",
+  "bury al burial",
+  "carry age carriage",
+  "marry age marriage",
+  "plenty ful plentiful",
+  "fancy ful fanciful",
+  "mystery ous mysterious",
+  "fury ous furious",
+  "glory ous glorious",
+  "luxury ous luxurious",
+  "vary ous various",
+  "envy ous envious",
+  "ugly ness ugliness",
+  "empty ness emptiness",
+  "silly ness silliness",
+  "friendly ness friendliness",
+  "happy ly happily",
+  "play ing playing",
+  "pay able payable",
+  "stay ed stayed",
+  "obey ed obeyed",
+  "pray er prayer",
+  "joy ful joyful",
+  "buy er buyer",
+  "cry ing crying",
+  "try ing trying",
+  "worry ing worrying",
+  "copy ing copying",
+  "fly ing flying",
+  "deny ing denying",
+  "bury ing burying",
+  "spy ing spying",
+  "day ly daily",
+  "pay ed paid",
+  "lay ed laid",
+  "say ed said",
+  "shy ly shyly",
+  "dry ness dryness",
+  "convey ed conveyed",
+  "survey ed surveyed",
+  "betray al betrayal",
+  "portray ed portrayed",
+  "rely able reliable",
+  "deny able deniable",
+  "envy able enviable",
+  "pity less pitiless",
+  "mercy less merciless",
+  "body ly bodily",
+  "steady ly steadily",
+  "busy est busiest",
+  "early er earlier",
+  "dirty est dirtiest",
+  "sunny er sunnier",
+  "salty est saltiest",
+  "magnify ed magnified",
+  "satisfy ed satisfied",
+] as const;
+const finalYLines = join(
+  finalY.map((entry) => {
+    const [base = "", suffix = "", right = ""] = entry.split(" ");
+    const kept = `${base}${suffix}`;
+    const rule = right === kept ? `${base.slice(0, -1)}i${suffix}` : kept;
+    return `${base} + ${suffix}|${right}|${rule}|${spellDouble(right)}`;
+  }),
+);
+
+/** pronounSets are a subject pronoun, its object form and its reflexive form. */
+const pronounSets = [
+  ["I", "me", "myself"],
+  ["he", "him", "himself"],
+  ["she", "her", "herself"],
+  ["we", "us", "ourselves"],
+  ["they", "them", "themselves"],
+] as const;
+const partners = ["Amara", "My cousin", "Leo", "Our neighbor"] as const;
+const pairActs = [
+  "visited the old mosque",
+  "read about the pyramids",
+  "built a model ship",
+  "won the spelling bee",
+  "cleaned the garage",
+  "walked to the museum",
+  "painted the fence",
+  "baked a cake",
+  "planted a tree",
+  "found a lost wallet",
+  "wrote a play",
+  "caught the early train",
+] as const;
+const pairObjects = [
+  ["The guide showed", "the library"],
+  ["Grandma thanked", "for the flowers"],
+  ["The coach chose", "for the relay"],
+  ["Our teacher praised", "in front of the class"],
+  ["The driver took", "to the station"],
+  ["Mom invited", "to the picnic"],
+] as const;
+const pairLines = join([
+  ...everyPair(pronounSets, pairActs).map(
+    ([[subject, object, self], act], k) => `${partners[k % 4]} and ___ ${act}.|${subject}|${object}|${self}`,
+  ),
+  ...everyPair(pronounSets, pairObjects).map(([[subject, object, self], [opening, rest]], k) => {
+    const partner = low(partners[(k + 1) % 4] ?? "Leo");
+    const who = partner.startsWith("my") || partner.startsWith("our") ? partner : cap(partner);
+    return `${opening} ${who} and ___ ${rest}.|${object}|${subject}|${self}`;
+  }),
+]);
+const prepFrames = [
+  "The gift is for {N} and ___.",
+  "Everyone came except {N} and ___.",
+  "Mom sat beside {N} and ___.",
+  "The letter was from {N} and ___.",
+  "The teacher spoke to {N} and ___.",
+  "We walked behind {N} and ___.",
+  "The story is about {N} and ___.",
+  "Grandpa made pancakes for {N} and ___.",
+  "A note arrived for {N} and ___.",
+  "The ball rolled past {N} and ___.",
+  "Nobody sat near {N} and ___.",
+  "The prize went to {N} and ___.",
+  "The puppy ran toward {N} and ___.",
+  "Keep the secret between {N} and ___.",
+] as const;
+const prepNames = ["Ama", "Musa", "my sister", "the coach", "Ravi"] as const;
+const prepLines = join(
+  everyPair(prepFrames, pronounSets).map(([frame, [subject, object, self]], k) => {
+    const shown = frame.replace("{N}", prepNames[k % prepNames.length] ?? "Ama");
+    return `${shown}|${object}|${subject}|${self}`;
+  }),
+);
+
+/** clauseFolk are described by adjective clauses; nounClauses follow a verb of knowing. */
+const clauseFolk = ["The girl", "The man", "The traveler", "The trader", "The farmer", "The teacher"] as const;
+const folkActs = ["*who sold us the map*", "*who lives by the river*", "*who found the coins*"] as const;
+const folkEnds = ["was from Timbuktu", "spoke three languages", "waved to us"] as const;
+const clauseThings = ["book", "map", "letter", "coin", "bowl"] as const;
+const thingClauses = ["*that we borrowed*", "*which my uncle found*"] as const;
+const adverbOpeners = [
+  "When the caravan arrived",
+  "Because the road was flooded",
+  "After the market closed",
+  "If the rains come",
+  "Although the trip was long",
+  "Before the sun set",
+] as const;
+const adverbMains = [
+  ["the traders rested", "the traders will rest"],
+  ["the town grew quiet", "the town will grow quiet"],
+  ["we went home", "we will go home"],
+] as const;
+const knowers = ["No one knew", "We wondered", "The guide explained", "I learned", "She remembered", "They forgot"] as const;
+const nounClauses = [
+  "what the letter said",
+  "why the road was closed",
+  "where the well was",
+  "that the river had flooded",
+  "how the map was made",
+  "who had built the tower",
+] as const;
+const mainFor = (opener: string, [past, future]: readonly [string, string]) => (opener.startsWith("If") ? future : past);
+const clauseNames = join([
+  ...everyPair(clauseFolk, folkActs).map(([who, act], k) => `${who} ${act} ${folkEnds[k % 3]}.|adjective clause`),
+  ...everyPair(clauseThings, thingClauses).map(
+    ([thing, clause], k) => `The ${thing} ${clause} ${k % 2 === 0 ? "was very old" : "is on my desk"}.|adjective clause`,
+  ),
+  ...everyPair(adverbOpeners, adverbMains).flatMap(([opener, main]) => [
+    `*${opener}*, ${mainFor(opener, main)}.|adverb clause`,
+    `${cap(mainFor(opener, main))} *${low(opener)}*.|adverb clause`,
+  ]),
+  ...everyPair(knowers, nounClauses).map(([knower, clause]) => `${knower} *${clause}*.|noun clause`),
+]);
+/** adverbJobRows are what a clause tells, the clause, and two main clauses that fit it. */
+const adverbJobRows = [
+  ["time", "When the rains ended", "the traders set out", "the roads dried quickly"],
+  ["time", "After the market closed", "the merchants counted their coins", "the square grew quiet"],
+  ["time", "Before the sun rose", "the camels were loaded", "we left the oasis"],
+  ["time", "While the camels rested", "the guides cooked dinner", "we drew water from the well"],
+  ["time", "As soon as the gate opened", "the crowd rushed in", "the traders set up their stalls"],
+  ["reason", "Because the road was flooded", "we stayed in town", "the caravan waited a week"],
+  ["reason", "Since the well was dry", "the travelers moved on", "we carried extra water"],
+  ["reason", "Because the guide was sick", "the trip was delayed", "we hired a new guide"],
+  ["reason", "Since the prices rose", "people bought less salt", "the merchants grew rich"],
+  ["reason", "Because the wind was strong", "the tents blew down", "we stayed inside"],
+  ["condition", "If the rains come", "the river will rise", "the crops will grow"],
+  ["condition", "Unless the river floods", "the bridge will stay open", "we will cross tomorrow"],
+  ["condition", "If the guide agrees", "we will leave at dawn", "the trip will be shorter"],
+  ["condition", "If the road is open", "the caravan will arrive tonight", "we will reach the city by noon"],
+  ["condition", "Unless the camels rest", "they will collapse", "the trip will fail"],
+  ["contrast", "Although the trip was long", "no one complained", "the travelers stayed cheerful"],
+  ["contrast", "Even though the camels were tired", "they kept walking", "the caravan reached the city"],
+  ["contrast", "Though the market was crowded", "we found the spice seller", "the prices were fair"],
+  ["contrast", "Although the price was high", "she bought the cloth", "many people paid it"],
+  ["contrast", "Even though the water was cold", "the children swam", "we washed in the river"],
+] as const;
+const adverbTells = join(
+  adverbJobRows.flatMap(([job, clause, main1, main2]) => [
+    `*${clause}*, ${main1}.|${job}`,
+    `*${clause}*, ${main2}.|${job}`,
+    `${cap(main1)} *${low(clause)}*.|${job}`,
+    `${cap(main2)} *${low(clause)}*.|${job}`,
+  ]),
+);
+
+/** interrupted are a subject and what it did, broken by interrupterWords. */
+const interrupted = [
+  ["the plan", "worked well"],
+  ["our team", "won the final"],
+  ["the bridge", "was closed for repairs"],
+  ["the museum", "opened late"],
+  ["the storm", "missed our town"],
+  ["the bus", "arrived early"],
+  ["my sister", "finished first"],
+  ["the concert", "was sold out"],
+] as const;
+const interrupterWords = [
+  "however",
+  "of course",
+  "in fact",
+  "I think",
+  "as it turned out",
+  "by the way",
+  "for once",
+  "after all",
+  "it seems",
+] as const;
+const interrupterLines = join(
+  everyPair(interrupted, interrupterWords).map(([[who, did], word]) => {
+    const words = did.split(" ");
+    const cut = `${words.slice(0, -1).join(" ")}, ${words.at(-1)}`;
+    return `${who} ${word} ${did}|${cap(who)}, ${word}, ${did}.|${cap(who)}, ${word} ${did}.|${cap(who)} ${word}, ${did}.|${cap(who)}, ${word}, ${cut}.`;
+  }),
+);
+const callNames = ["Doctor", "Maria", "Coach", "Grandma", "Sam", "Mr. Kim"] as const;
+const callQuestions = [
+  "is it serious",
+  "can we go now",
+  "where is the nurse",
+  "did you see the bird",
+  "is the game over",
+  "may I leave early",
+] as const;
+const openers = ["Yes", "No", "Well", "Oh"] as const;
+const statements = [
+  "I had the shot",
+  "we are ready",
+  "the bus is late",
+  "I finished my homework",
+  "the store is closed",
+  "I found the key",
+] as const;
+const farewells = ["Thank you", "See you tomorrow", "Good morning", "Come here"] as const;
+const splitAt = (s: string, n: number) => {
+  const words = s.split(" ");
+  return [words.slice(0, n).join(" "), words.slice(n).join(" ")] as const;
+};
+const nameLines = join([
+  ...everyPair(callNames, callQuestions).map(([name, question]) => {
+    const [head, tail] = splitAt(question, 2);
+    return `${low(name)} ${question}|${name}, ${question}?|${name} ${head}, ${tail}?|${name} ${question}?`;
+  }),
+  ...everyPair(openers, statements).map(([opener, statement]) => {
+    const [head, tail] = splitAt(statement, 1);
+    return `${low(opener)} ${statement}|${opener}, ${statement}.|${opener} ${head}, ${tail}.|${opener} ${statement}.`;
+  }),
+  ...everyPair(farewells, callNames).map(([farewell, name]) => {
+    const [head, tail] = splitAt(farewell, 1);
+    return `${low(farewell)} ${name}|${farewell}, ${name}.|${head}, ${tail} ${name}.|${farewell} ${name}.`;
+  }),
+]);
+
+/** oneThing are subjects that look plural but name one thing, each with three endings. */
+const oneThing = [
+  ["The news", ["on at six tonight", "better than yesterday's", "full of storms today"]],
+  ["Mathematics", ["my best subject now", "harder this year", "useful every day"]],
+  ["Measles", ["spreading in the town now", "rare in our country today", "easy to prevent today"]],
+  ["Physics", ["my sister's favorite class now", "taught in the new lab", "full of puzzles"]],
+  ["Economics", ["the study of money and choices", "a popular course here", "on the timetable this term"]],
+  ["The United States", ["a large country", "hosting the games this year", "home to many languages"]],
+  ["Gymnastics", ["a hard sport", "on television tonight", "my brother's hobby now"]],
+  ["Mumps", ["a disease of the glands", "rare these days", "going around the school now"]],
+  ["Civics", ["taught on Fridays", "about how government works", "my favorite class this term"]],
+  ["Checkers", ["a game for two players", "easier than chess", "a game of moves and jumps"]],
+  ["Billiards", ["played on a big table", "popular at the club", "hard to learn"]],
+  ["Dominoes", ["Grandpa's favorite game", "fun on rainy days", "a quick game to learn"]],
+] as const;
+const pairTools = [
+  "My scissors",
+  "These jeans",
+  "Her glasses",
+  "His pants",
+  "The binoculars",
+  "My shorts",
+  "The tongs",
+  "The pliers",
+] as const;
+const toolEnds = ["on the table now", "too small for me now", "brand new"] as const;
+const pairOfs = ["A pair of scissors", "This pair of jeans", "That pair of glasses", "A pair of pliers"] as const;
+const lookPlural = join([
+  ...oneThing.flatMap(([subject, ends]) => ends.map((end) => `${subject} ___ ${end}.|is|are|were`)),
+  ...everyPair(pairTools, toolEnds).map(([subject, end]) => `${subject} ___ ${end}.|are|is|were`),
+  ...everyPair(pairOfs, toolEnds).map(([subject, end]) => `${subject} ___ ${end}.|is|are|were`),
+]);
+const groupsOfOne = ["team", "class", "band", "jury", "crowd", "committee", "audience", "choir"] as const;
+const groupEnds = ["ready now", "in the hall now", "waiting outside now"] as const;
+const amounts = [
+  ["Ten dollars", "too much for a sandwich"],
+  ["Five miles", "a long way to walk"],
+  ["Three hours", "enough time for the trip"],
+  ["Two weeks", "a long time to wait"],
+  ["Fifty pounds", "heavy for one bag"],
+  ["Twenty minutes", "plenty of time"],
+  ["Six meters", "the length of the boat"],
+  ["Forty dollars", "the price of the ticket"],
+] as const;
+const counted = ["students", "players", "birds", "cars", "visitors", "parents"] as const;
+const aNumberEnds = ["waiting outside", "sick this week", "late today"] as const;
+const theNumberEnds = ["growing every year", "smaller than last year", "hard to count"] as const;
+const groupLines = join([
+  ...everyPair(groupsOfOne, groupEnds).map(([group, end]) => `The ${group} ___ ${end}.|is|are|were`),
+  ...amounts.flatMap(([amount, end]) => [`${amount} ___ ${end}.|is|are|were`, `I think ${low(amount)} ___ ${end}.|is|are|were`]),
+  ...everyPair(counted, aNumberEnds).map(([things, end]) => `A number of ${things} ___ ${end}.|are|is|was`),
+  ...everyPair(counted, theNumberEnds).map(([things, end]) => `The number of ${things} ___ ${end}.|is|are|was`),
+]);
 
 const shiftLabels: Readonly<Record<string, Label>> = {
   "no shift": {
@@ -63,6 +665,7 @@ const moodShifts = topic("grammar", {
       ],
       ["Does the sentence shift mood, and how?", "这个句子是否转换了语气？怎样转换的？"],
       `
+${moodNames}
         Read the motion aloud, and then you should give your first reason.|imperative to indicative
         Read the motion aloud, and then give your first reason.|no shift
         Each speaker has two minutes, so watch the clock.|indicative to imperative
@@ -105,6 +708,7 @@ const moodShifts = topic("grammar", {
       ],
       ["Which words keep the sentence in one mood?", "哪个选项能让句子保持同一种语气？"],
       `
+${moodKeeps}
         Raise your hand, and then ___ your question.|ask|you should ask|you will ask
         Plan your speech, and ___ it twice before the debate.|practice|you should practice|you practiced
         Read both articles, and ___ the stronger one.|choose|you will choose|you can choose
@@ -243,6 +847,7 @@ const phrasesAndClauses = topic("grammar", {
       ],
       ["What is the group of words in italics?", "斜体部分是什么？"],
       `
+${phraseClause}
         The octopus hid *under a rock*.|phrase
         *The octopus hid* under a rock.|independent clause
         *When the shark swam past*, the octopus hid.|dependent clause
@@ -285,6 +890,7 @@ const phrasesAndClauses = topic("grammar", {
       ],
       ["What kind of phrase is in italics?", "斜体部分是哪种短语？"],
       `
+${phraseKindLines}
         The ship sank *beneath the waves*.|prepositional phrase
         The rock, *covered in barnacles*, was slippery.|participial phrase
         The blue whale, *the largest animal on Earth*, eats tiny krill.|appositive phrase
@@ -375,6 +981,7 @@ const dangling = topic("grammar", {
       ],
       ["Is the modifier in this sentence dangling, misplaced or clear?", "这个句子中的修饰语是垂悬的、错位的，还是清楚的？"],
       `
+${danglerSpot}
         Walking into the chapel, the paintings amazed us.|dangling
         Walking into the chapel, we were amazed by the paintings.|clear
         We saw a fresco walking through the palace.|misplaced
@@ -417,6 +1024,7 @@ const dangling = topic("grammar", {
       ],
       ["Which sentence fixes the dangling modifier?", "哪个句子改正了垂悬修饰语？"],
       `
+${danglerFix}
         Walking into the chapel, the paintings amazed us.|Walking into the chapel, we were amazed by the paintings.|The paintings amazed us, walking into the chapel.|Walking into the chapel, the paintings were amazing to us.
         Having studied for years, the painting was finally finished.|Having studied for years, the apprentice finally finished the painting.|The painting was finally finished, having studied for years.|Having studied for years, the painting was finally finished by her.
         To become a master, years of training were needed.|To become a master, an apprentice needed years of training.|Years of training were needed to become a master.|To become a master, years of training were needed by many.
@@ -484,6 +1092,7 @@ const suffixSpelling = topic("grammar", {
       ],
       ["How is the word with its suffix spelled?", "这个词加上后缀后怎样拼写？"],
       `
+${silentELines}
         hope + ing|hoping|hopeing|hopping
         hope + ful|hopeful|hopful|hoppful
         fame + ous|famous|fameous|famos
@@ -536,6 +1145,7 @@ const suffixSpelling = topic("grammar", {
       ],
       ["How is the word with its suffix spelled?", "这个词加上后缀后怎样拼写？"],
       `
+${finalYLines}
         happy + ness|happiness|happyness|happieness
         carry + ed|carried|carryed|caried
         carry + ing|carrying|carriing|caring
@@ -600,6 +1210,7 @@ const pairs = topic("grammar", {
       ],
       ["Which pronoun completes the sentence?", "哪个代词能补全句子？"],
       `
+${pairLines}
         Amara and ___ visited the old mosque.|I|me|myself
         The guide showed Amara and ___ the library.|me|I|myself
         My cousin and ___ read about Mansa Musa.|I|me|myself
@@ -655,6 +1266,7 @@ const pairs = topic("grammar", {
       ],
       ["Which pronoun completes the sentence?", "哪个代词能补全句子？"],
       `
+${prepLines}
         Keep this secret between you and ___.|me|I|myself
         The gift is for Ama and ___.|him|he|himself
         Everyone came except Musa and ___.|her|she|herself
@@ -787,6 +1399,7 @@ const clauses = topic("grammar", {
       ],
       ["What kind of clause is in italics?", "斜体部分是哪种从句？"],
       `
+${clauseNames}
         The scholar *who copied the book* lived in Timbuktu.|adjective clause
         *When the caravan arrived*, the market filled with people.|adverb clause
         No one knew *what the letter said*.|noun clause
@@ -829,6 +1442,7 @@ const clauses = topic("grammar", {
       ],
       ["What does the clause in italics tell?", "斜体的从句说明什么？"],
       `
+${adverbTells}
         *When the rains ended*, the traders set out.|time
         The traders set out *because the rains had ended*.|reason
         The traders will set out *if the rains end soon*.|condition
@@ -883,6 +1497,7 @@ const interrupters = topic("grammar", {
       ],
       ["Which sentence is punctuated correctly?", "哪个句子的标点正确？"],
       `
+${interrupterLines}
         the vaccine however was not ready|The vaccine, however, was not ready.|The vaccine, however was not ready.|The vaccine however, was not ready.|The vaccine, however, was not, ready.
         the doctor of course washed her hands|The doctor, of course, washed her hands.|The doctor, of course washed her hands.|The doctor of course, washed her hands.|The doctor, of course, washed her, hands.
         smallpox in fact has been ended|Smallpox, in fact, has been ended.|Smallpox, in fact has been ended.|Smallpox in fact, has been ended.|Smallpox, in fact, has been, ended.
@@ -942,6 +1557,7 @@ const interrupters = topic("grammar", {
       ],
       ["Which sentence is punctuated correctly?", "哪个句子的标点正确？"],
       `
+${nameLines}
         doctor is it serious|Doctor, is it serious?|Doctor is it, serious?|Doctor is it serious?
         thank you Maria|Thank you, Maria.|Thank, you Maria.|Thank you Maria.
         yes I had the shot|Yes, I had the shot.|Yes I, had the shot.|Yes I had the shot.
@@ -1006,6 +1622,7 @@ const tricky = topic("grammar", {
       ],
       ["Which verb completes the sentence?", "哪个动词能补全句子？"],
       `
+${lookPlural}
         The news ___ good today.|is|are|were
         Mathematics ___ my favorite subject this year.|is|are|were
         Measles ___ a very contagious disease.|is|are|were
@@ -1058,6 +1675,7 @@ const tricky = topic("grammar", {
       ],
       ["Which verb completes the sentence?", "哪个动词能补全句子？"],
       `
+${groupLines}
         The team ___ ready for the game now.|is|are|were
         Ten dollars ___ too much for a sandwich today.|is|are|were
         A number of students ___ sick this week.|are|is|was

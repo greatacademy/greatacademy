@@ -2,7 +2,541 @@
 // the passive in science and plurals from Latin and Greek.
 
 import type { TopicDef } from "@ga/content";
+import { everyPair } from "../../levels/words.ts";
 import { choose, type Label, label, topic } from "../grade-6/kit.ts";
+
+// Crossed items: frames, people and phrases multiply the lines below into a hundred items or more for each bank.
+
+const join = (lines: readonly string[]) => lines.join("\n");
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+/** wordFrames are a word, the word it is confused with, and frames with fillers that each take the word. */
+type WordFrames = readonly [string, string, readonly (readonly [string, readonly string[]])[]];
+/** confusedLines crosses each word's frames with their fillers; the third option is a word from another pair. */
+const confusedLines = (words: readonly WordFrames[]) =>
+  join(
+    words.flatMap(([word, partner, frames], i) =>
+      frames.flatMap(([frame, fillers]) =>
+        fillers.map((filler, j) => {
+          const other = words[(i + 2 * (1 + (j % (words.length / 2 - 1)))) % words.length]?.[0] ?? partner;
+          return `${frame.replace("{x}", filler)}|${word}|${partner}|${other}`;
+        }),
+      ),
+    ),
+  );
+const soundAlike: readonly WordFrames[] = [
+  [
+    "principal",
+    "principle",
+    [
+      [
+        "The ___ {x}.",
+        [
+          "greeted every student at the door",
+          "spoke at the assembly",
+          "called my parents",
+          "visited our classroom",
+          "announced a snow day",
+        ],
+      ],
+      ["The ___ reason for the delay was {x}.", ["the snow", "the traffic", "a broken bus", "the storm", "a power cut"]],
+    ],
+  ],
+  [
+    "principle",
+    "principal",
+    [
+      [
+        "Fairness is a ___ that {x}.",
+        ["our club follows", "the judge respects", "guides the team", "the founders believed in", "every referee needs"],
+      ],
+      ["The machine works on a simple ___ of {x}.", ["physics", "balance", "leverage", "motion", "heat"]],
+    ],
+  ],
+  [
+    "complement",
+    "compliment",
+    [
+      ["The red scarf is a perfect ___ to {x}.", ["her gray coat", "the white dress", "his blue suit", "the green hat", "the black boots"]],
+      ["The ship sailed with a full ___ of {x}.", ["sailors", "officers", "passengers", "engineers", "cooks"]],
+    ],
+  ],
+  [
+    "compliment",
+    "complement",
+    [
+      ["She paid me a ___ on {x}.", ["my drawing", "my speech", "my new haircut", "my essay", "my garden"]],
+      ["He blushed at the ___ about {x}.", ["his singing", "his cooking", "his poem", "his painting", "his goal"]],
+    ],
+  ],
+  [
+    "council",
+    "counsel",
+    [
+      [
+        "The city ___ voted to {x}.",
+        ["build a new library", "close the old bridge", "plant more trees", "repair the roads", "open a skate park"],
+      ],
+      ["The student ___ meets {x}.", ["every Monday", "after school", "in the library", "once a month", "before each dance"]],
+    ],
+  ],
+  [
+    "counsel",
+    "council",
+    [
+      ["The coach gave wise ___ to {x}.", ["the new players", "the nervous goalie", "the young team", "the captain", "the rookies"]],
+      ["Her lawyer will ___ her to {x}.", ["stay quiet", "settle the case", "wait a week", "sign the deal", "appeal"]],
+    ],
+  ],
+  [
+    "stationary",
+    "stationery",
+    [
+      [
+        "The bike stays ___ while {x}.",
+        ["you pedal", "the trainer adjusts it", "we fix the chain", "the rider warms up", "the class exercises"],
+      ],
+      ["The truck remained ___ {x}.", ["for an hour", "in the traffic jam", "at the crossing", "behind the bus", "near the gate"]],
+    ],
+  ],
+  [
+    "stationery",
+    "stationary",
+    [
+      ["She wrote the letter on {x} ___.", ["pink", "fancy", "plain", "new", "her grandmother's"]],
+      ["The shop sells {x} and ___.", ["pens", "ink", "envelopes", "cards", "stamps"]],
+    ],
+  ],
+];
+const closeInForm: readonly WordFrames[] = [
+  [
+    "allusion",
+    "illusion",
+    [
+      ["The poem makes an ___ to {x}.", ["an old myth", "a famous speech", "a fairy tale", "Shakespeare", "the flood story"]],
+      [
+        "Her joke was an ___ to {x}.",
+        ["a popular movie", "our trip last year", "a famous painting", "a song we all knew", "an old cartoon"],
+      ],
+    ],
+  ],
+  [
+    "illusion",
+    "allusion",
+    [
+      ["The painting creates the ___ of {x}.", ["depth", "an open window", "motion", "a deep tunnel", "water"]],
+      ["The magician's trick was only an ___ {x}.", ["of fire", "done with mirrors", "of flying", "that fooled us", "of a vanishing coin"]],
+    ],
+  ],
+  [
+    "emigrate",
+    "immigrate",
+    [
+      ["My grandparents chose to ___ from {x}.", ["Ireland", "Poland", "Korea", "Italy", "Mexico"]],
+      ["Many families had to ___ from {x}.", ["the war zone", "the dry plains", "the poor villages", "the island", "the flooded valley"]],
+    ],
+  ],
+  [
+    "immigrate",
+    "emigrate",
+    [
+      ["They decided to ___ to {x}.", ["Canada", "Brazil", "Australia", "the United States", "New Zealand"]],
+      ["Her uncle hoped to ___ to {x} for work.", ["Germany", "Singapore", "Chile", "Kenya", "Ireland"]],
+    ],
+  ],
+  [
+    "farther",
+    "further",
+    [
+      ["The village is ___ {x}.", ["than the lake", "than we thought", "down the road", "up the valley", "from the station than the farm"]],
+      ["Can you throw the ball ___ than {x}?", ["your brother", "last time", "the fence", "the coach", "me"]],
+    ],
+  ],
+  [
+    "further",
+    "farther",
+    [
+      ["We need ___ {x} before we decide.", ["information", "study", "research", "details", "practice"]],
+      ["Let's discuss this ___ {x}.", ["tomorrow", "after lunch", "at the meeting", "next week", "in class"]],
+    ],
+  ],
+  [
+    "adopt",
+    "adapt",
+    [
+      ["The family will ___ {x}.", ["a puppy", "a kitten", "a baby girl", "a rescue dog", "an orphan"]],
+      ["The school voted to ___ {x}.", ["a new dress code", "the plan", "a later start time", "the new rules", "a shorter lunch"]],
+    ],
+  ],
+  [
+    "adapt",
+    "adopt",
+    [
+      ["Animals must ___ to {x}.", ["the cold", "the desert heat", "new habitats", "changes in their food", "the long winter"]],
+      ["She had to ___ {x} for the younger readers.", ["the story", "the play", "her speech", "the lesson", "the poem"]],
+    ],
+  ],
+  [
+    "imply",
+    "infer",
+    [
+      ["Are you trying to ___ that {x}?", ["I lied", "the test was easy", "we were late", "the plan failed", "I cheated"]],
+      [
+        "His frown seemed to ___ that {x}.",
+        ["he was angry", "the answer was wrong", "the news was bad", "he disagreed", "we should leave"],
+      ],
+    ],
+  ],
+  [
+    "infer",
+    "imply",
+    [
+      [
+        "From the clues, we can ___ that {x}.",
+        ["the butler did it", "it rained last night", "the dog was hungry", "the house was empty", "someone had left early"],
+      ],
+      ["What can you ___ from {x}?", ["the graph", "her smile", "the title", "the footprints", "the last paragraph"]],
+    ],
+  ],
+  [
+    "precede",
+    "proceed",
+    [
+      ["A short speech will ___ {x}.", ["the award ceremony", "the concert", "the dinner", "the parade", "the game"]],
+      ["Did the storm ___ {x}?", ["the flood", "the power cut", "the landslide", "the blackout", "the rescue"]],
+    ],
+  ],
+  [
+    "proceed",
+    "precede",
+    [
+      ["Please ___ to {x}.", ["the next question", "gate four", "the exit", "the main hall", "the front desk"]],
+      ["After the delay, the trial will ___ {x}.", ["on Monday", "as planned", "without him", "tomorrow", "at noon"]],
+    ],
+  ],
+];
+const soundAlikeLines = confusedLines(soundAlike);
+const closeFormLines = confusedLines(closeInForm);
+
+/** clausePairs are two related clauses about a person and a transition that can join them. */
+const clausePairs = [
+  ["{N} studied all week", "she passed the test", "therefore"],
+  ["{N} missed the bus", "she walked to school", "instead"],
+  ["{N} loves soccer", "her brother prefers chess", "however"],
+  ["{N} practiced every day", "she won the contest", "as a result"],
+  ["{N} forgot her umbrella", "she got soaked", "consequently"],
+  ["{N} finished early", "she helped her friends", "then"],
+  ["{N} wanted a puppy", "her parents said no", "however"],
+  ["{N} saved her money", "she bought a bike", "eventually"],
+  ["{N} hates spinach", "she ate it anyway", "nevertheless"],
+  ["{N} read the map", "she found the trail", "meanwhile"],
+  ["{N} trained for months", "she ran the marathon", "finally"],
+  ["{N} speaks Spanish", "she translated the letter", "therefore"],
+  ["{N} lost her key", "she climbed in the window", "instead"],
+  ["{N} wrote the song", "her sister sang it", "later"],
+  ["{N} planted the seeds", "the rain watered them", "afterward"],
+  ["{N} fixed the lamp", "the room was bright again", "now"],
+] as const;
+const girls = ["Maya", "Lena", "Aisha", "Rosa"] as const;
+const semicolonLines = join(
+  clausePairs.flatMap(([first, second, linker], k) =>
+    [0, 1, 2, 3].flatMap((n) => {
+      const a = first.replace("{N}", girls[(k + n) % girls.length] ?? "Maya");
+      const [head = "", ...tail] = a.split(" ");
+      const [bHead = "", ...bTail] = second.split(" ");
+      return n === 3
+        ? [`${a} ${linker} ${second}|${a}; ${linker}, ${second}.|${a}, ${linker}, ${second}.|${a}; ${linker} ${bHead}, ${bTail.join(" ")}.`]
+        : [
+            `${a} ${second}|${a}; ${second}.|${a}, ${second}.|${head}; ${tail.join(" ")} ${second}.`,
+            ...(n === 0
+              ? [
+                  `${a} ${linker} ${second}|${a}; ${linker}, ${second}.|${a}, ${linker}, ${second}.|${a}; ${linker} ${bHead}, ${bTail.join(" ")}.`,
+                ]
+              : []),
+          ];
+    }),
+  ),
+);
+/** listItem builds one list with three two-part items. */
+const listItem = (frame: string, items: readonly (readonly [string, string])[]) => {
+  const [a, b, c] = items;
+  if (!a || !b || !c) return "";
+  const shown = `${frame} ${a[0]} ${a[1]} ${b[0]} ${b[1]} and ${c[0]} ${c[1]}.`;
+  const right = `${frame} ${a[0]}, ${a[1]}; ${b[0]}, ${b[1]}; and ${c[0]}, ${c[1]}.`;
+  const commas = `${frame} ${a[0]}, ${a[1]}, ${b[0]}, ${b[1]}, and ${c[0]}, ${c[1]}.`;
+  const inside = `${frame} ${a[0]}; ${a[1]}, ${b[0]}; ${b[1]}, and ${c[0]}; ${c[1]}.`;
+  return `${shown}|${right}|${commas}|${inside}`;
+};
+const cityPairs = [
+  ["Madrid", "Spain"],
+  ["Nairobi", "Kenya"],
+  ["Hanoi", "Vietnam"],
+  ["Cairo", "Egypt"],
+  ["Oslo", "Norway"],
+  ["Santiago", "Chile"],
+  ["Manila", "the Philippines"],
+  ["Accra", "Ghana"],
+  ["Toronto", "Canada"],
+] as const;
+const peopleRoles = [
+  ["Ana Ruiz", "a pilot"],
+  ["Ben Cho", "a nurse"],
+  ["Kofi Mensah", "a poet"],
+  ["Mei Lin", "a judge"],
+  ["Omar Haddad", "a baker"],
+  ["Lucy Park", "a coach"],
+  ["Raj Patel", "an architect"],
+  ["Elena Rossi", "a painter"],
+  ["Sam Okafor", "a vet"],
+] as const;
+const datePairs = [
+  ["June 5", "2019"],
+  ["July 9", "2020"],
+  ["May 1", "2021"],
+  ["March 3", "2018"],
+  ["October 12", "2022"],
+  ["April 20", "2017"],
+  ["August 8", "2023"],
+  ["January 15", "2016"],
+  ["November 30", "2024"],
+] as const;
+const triples = [0, 1, 2, 3, 4, 5, 6, 7, 8].flatMap((k) => [
+  [k, (k + 1) % 9, (k + 2) % 9],
+  [k, (k + 3) % 9, (k + 6) % 9],
+  [k, (k + 2) % 9, (k + 4) % 9],
+  [k, (k + 4) % 9, (k + 1) % 9],
+]);
+const pickThree = <T>(pool: readonly T[], [a, b, c]: readonly number[]) =>
+  [pool[a ?? 0], pool[b ?? 0], pool[c ?? 0]].filter((x): x is T => x !== undefined);
+const listLines = join([
+  ...triples.flatMap((t, k) => [
+    listItem(
+      ["We visited", "The tour stopped in", "Our pen pals live in", "Flights left for"][k % 4] ?? "We visited",
+      pickThree(cityPairs, t),
+    ),
+    listItem(
+      ["The speakers were", "The winners were", "The team included", "The guests were"][k % 4] ?? "The speakers were",
+      pickThree(peopleRoles, t),
+    ),
+    listItem(
+      ["The fairs were held on", "The storms struck on", "The team won titles on", "The club met on"][k % 4] ?? "The fairs were held on",
+      pickThree(datePairs, t),
+    ),
+  ]),
+]);
+
+/** earlier are events finished before another: a subject, past, past participle, present, and the rest. */
+const earlier = [
+  ["the snow", "melted", "melted", "melts", ""],
+  ["the cat", "ate", "eaten", "eats", " the fish"],
+  ["the train", "left", "left", "leaves", ""],
+  ["someone", "locked", "locked", "locks", " the door"],
+  ["the baby", "fell", "fallen", "falls", " asleep"],
+  ["the rain", "stopped", "stopped", "stops", ""],
+  ["the store", "closed", "closed", "closes", ""],
+  ["the cake", "burned", "burned", "burns", ""],
+] as const;
+const later = ["we arrived", "the guests came", "the bell rang", "the teacher returned", "the sun came up", "Dad got home"] as const;
+const firstLines = join(
+  everyPair(earlier, later).flatMap(([[who, past, done, , rest], then]) =>
+    [
+      `When ${then}, ${who} had ${done}${rest}.`,
+      `By the time ${then}, ${who} had ${done}${rest}.`,
+      `${cap(who)} had ${done}${rest} before ${then}.`,
+    ].map((sentence) => `${sentence}|${who} ${past}${rest}|${then}|the two happened at the same moment`),
+  ),
+);
+const perfectMore = join(
+  everyPair(earlier, later).map(
+    ([[who, , done, now, rest], then]) => `${cap(who)} ___${rest} before ${then}.|had ${done}|has ${done}|${now}`,
+  ),
+);
+const perfectLines = join([
+  perfectMore,
+  ...everyPair(earlier, later).flatMap(([[who, , done, now, rest], then], k) => [
+    `${k % 2 === 0 ? "When" : "By the time"} ${then}, ${who} ___${rest}.|had ${done}|has ${done}|${now}`,
+  ]),
+]);
+
+/** demanders are openings that call for the base form; clauses are a subject, base, -s form, past and the rest. */
+const demanders = [
+  "The coach insisted that",
+  "The rules require that",
+  "The doctor recommended that",
+  "Our teacher asked that",
+  "The judge ordered that",
+  "The club proposed that",
+  "Mom suggested that",
+  "The principal demanded that",
+  "The guide advised that",
+  "The captain urged that",
+] as const;
+const thatClauses = [
+  ["every player", "arrive", "arrives", "arrived", " on time"],
+  ["she", "rest", "rests", "rested", " for a week"],
+  ["he", "be", "is", "was", " quiet"],
+  ["the door", "stay", "stays", "stayed", " locked"],
+  ["each student", "bring", "brings", "brought", " a pencil"],
+  ["the team", "practice", "practices", "practiced", " daily"],
+  ["he", "apologize", "apologizes", "apologized", " to her"],
+  ["the dog", "wear", "wears", "wore", " a leash"],
+  ["she", "take", "takes", "took", " the medicine"],
+  ["the meeting", "end", "ends", "ended", " by noon"],
+] as const;
+const baseLines = join(
+  everyPair(demanders, thatClauses).map(([opening, [who, base, s, past, rest]]) => `${opening} ${who} ___${rest}.|${base}|${s}|${past}`),
+);
+const noticers = ["She noticed that", "I heard that", "We knew that", "Everyone saw that", "The news said that"] as const;
+const subjunctiveLabels = join([
+  ...everyPair(demanders, thatClauses).map(([opening, [who, base, s, , rest]], k) =>
+    k % 2 === 0 ? `${opening} ${who} *${base}*${rest}.|correct` : `${opening} ${who} *${s}*${rest}.|should be the base form`,
+  ),
+  ...everyPair(noticers, thatClauses).map(([opening, [who, base, , past, rest]], k) =>
+    k % 2 === 0 ? `${opening} ${who} *${past}*${rest}.|correct` : `${opening} ${who} *${base}*${rest}.|should be an ordinary tense`,
+  ),
+]);
+
+/** samples are things tested in a lab; labVerbs are a participle, its past and its -ing form. */
+const samples = ["rock sample", "soil sample", "water sample", "ice sample", "leaf sample", "sand sample"] as const;
+const labVerbs = [
+  ["heated", "heated", "heating", "to 80 degrees"],
+  ["weighed", "weighed", "weighing", "three times"],
+  ["measured", "measured", "measuring", "with a ruler"],
+  ["tested", "tested", "testing", "for salt"],
+  ["cooled", "cooled", "cooling", "in the fridge"],
+  ["labeled", "labeled", "labeling", "with a date"],
+  ["photographed", "photographed", "photographing", "under the microscope"],
+  ["stored", "stored", "storing", "in a jar"],
+  ["examined", "examined", "examining", "by two students"],
+  ["sealed", "sealed", "sealing", "in a bag"],
+  ["frozen", "froze", "freezing", "overnight"],
+  ["shaken", "shook", "shaking", "for a minute"],
+] as const;
+const passiveLines = join([
+  ...everyPair(samples, labVerbs).map(
+    ([sample, [done, past, ing, rest]]) => `Yesterday the ${sample} ___ ${rest}.|was ${done}|${past}|was ${ing}`,
+  ),
+  ...everyPair(samples, labVerbs).map(
+    ([sample, [done, past, ing, rest]]) => `Last week the ${sample}s ___ ${rest}.|were ${done}|${past}|were ${ing}`,
+  ),
+]);
+const makers = [
+  ["The telephone", "invented", "Alexander Graham Bell"],
+  ["Radium", "discovered", "Marie Curie"],
+  ["Penicillin", "discovered", "Alexander Fleming"],
+  ["The theory of relativity", "developed", "Albert Einstein"],
+  ["The World Wide Web", "invented", "Tim Berners-Lee"],
+  ["The polio vaccine", "developed", "Jonas Salk"],
+  ["The laws of motion", "described", "Isaac Newton"],
+  ["The theory of evolution", "proposed", "Charles Darwin"],
+  ["The Mona Lisa", "painted", "Leonardo da Vinci"],
+  ["Dynamite", "invented", "Alfred Nobel"],
+  ["The periodic table", "created", "Dmitri Mendeleev"],
+  ["The first printing press in Europe", "built", "Johannes Gutenberg"],
+  ["The Great Wall's oldest parts", "ordered", "early Chinese kings"],
+  ["The first computer program", "written", "Ada Lovelace"],
+] as const;
+const blamed = [
+  ["the test results", "were", "lost"],
+  ["the money", "was", "spent"],
+  ["the window", "was", "broken"],
+  ["the files", "were", "deleted"],
+  ["the report", "was", "changed"],
+  ["the cookies", "were", "eaten"],
+  ["the warnings", "were", "ignored"],
+  ["the lamp", "was", "knocked over"],
+  ["the river", "was", "polluted"],
+  ["the deadline", "was", "missed"],
+  ["the trees", "were", "cut down"],
+  ["the prices", "were", "raised"],
+  ["the data", "were", "changed"],
+  ["the letters", "were", "never sent"],
+  ["the bridge", "was", "badly built"],
+  ["the plan", "was", "kept secret"],
+  ["the safety check", "was", "skipped"],
+  ["mistakes", "were", "made"],
+] as const;
+const blameFrames = ["Sorry, {x}.", "The company said that {x}.", "When asked, the team admitted that {x}."] as const;
+const passiveFitLines = join([
+  ...makers.flatMap(([work, done, who]) => [
+    `${work} was ${done} by ${who}.|the active is better: the doer is the point`,
+    `Everyone knows that ${work.charAt(0).toLowerCase()}${work.slice(1)} was ${done} by ${who}.|the active is better: the doer is the point`,
+  ]),
+  ...blamed.flatMap(([thing, be, done], k) =>
+    [0, 1]
+      .map(
+        (n) =>
+          `${(blameFrames[(k + n) % 3] ?? "{x}").replace("{x}", `${thing} ${be} ${done}`)}|the active is better: the passive hides who is responsible`,
+      )
+      .map((line) => cap(line)),
+  ),
+  ...everyPair(samples, labVerbs)
+    .filter((_, k) => k % 2 === 0)
+    .map(([sample, [done, , , rest]]) => `The ${sample} was ${done} ${rest}.|the passive fits`),
+]);
+
+/** latinPlurals are a singular, its plural, the English plural and a wrong Latin ending. */
+const latinPlurals = [
+  ["fungus", "fungi", "funguses", "fungae"],
+  ["bacterium", "bacteria", "bacteriums", "bacterii"],
+  ["analysis", "analyses", "analysises", "analysi"],
+  ["criterion", "criteria", "criterions", "criterii"],
+  ["larva", "larvae", "larvas", "larvi"],
+  ["nucleus", "nuclei", "nucleuses", "nucleae"],
+  ["hypothesis", "hypotheses", "hypothesises", "hypothesi"],
+  ["phenomenon", "phenomena", "phenomenons", "phenomeni"],
+  ["stimulus", "stimuli", "stimuluses", "stimulae"],
+  ["crisis", "crises", "crisises", "crisi"],
+  ["radius", "radii", "radiuses", "radiae"],
+  ["thesis", "theses", "thesises", "thesi"],
+  ["vertebra", "vertebrae", "vertebras", "vertebri"],
+  ["oasis", "oases", "oasises", "oasi"],
+  ["diagnosis", "diagnoses", "diagnosises", "diagnosi"],
+  ["alga", "algae", "algas", "algi"],
+  ["axis", "axes", "axises", "axi"],
+  ["bacillus", "bacilli", "bacilluses", "bacillae"],
+  ["nebula", "nebulae", "nebulas", "nebuli"],
+  ["locus", "loci", "locuses", "locae"],
+  ["ovum", "ova", "ovums", "ovi"],
+  ["genus", "genera", "genuses", "geni"],
+  ["synopsis", "synopses", "synopsises", "synopsi"],
+  ["ellipsis", "ellipses", "ellipsises", "ellipsi"],
+  ["emphasis", "emphases", "emphasises", "emphasi"],
+  ["parenthesis", "parentheses", "parenthesises", "parenthesi"],
+  ["basis", "bases", "basises", "basi"],
+  ["prognosis", "prognoses", "prognosises", "prognosi"],
+  ["metamorphosis", "metamorphoses", "metamorphosises", "metamorphosi"],
+  ["antithesis", "antitheses", "antithesises", "antithesi"],
+  ["synthesis", "syntheses", "synthesises", "synthesi"],
+  ["cumulus", "cumuli", "cumuluses", "cumulae"],
+  ["erratum", "errata", "erratums", "errati"],
+  ["addendum", "addenda", "addendums", "addendi"],
+  ["phylum", "phyla", "phylums", "phyli"],
+  ["quantum", "quanta", "quantums", "quanti"],
+] as const;
+const pluralFrames = ["one {s}, two ___", "a single {s}, several ___", "this {s} and those ___"] as const;
+const pluralLines = join(
+  latinPlurals.flatMap(([one, many, english, wrong], k) =>
+    pluralFrames.filter((_, f) => k >= 18 || f > 0).map((frame) => `${frame.replace("{s}", one)}|${many}|${english}|${wrong}`),
+  ),
+);
+const manyFrames = ["These ___ were studied in class.", "Both ___ appear in the report.", "Several ___ were listed on the board."] as const;
+const oneFrames = [
+  "This ___ was studied in class.",
+  "Only one ___ appears in the report.",
+  "A single ___ was listed on the board.",
+] as const;
+const plusS = (word: string) => (word.endsWith("s") ? `${word}es` : `${word}s`);
+const numberLines = join(
+  latinPlurals
+    .filter((_, k) => k % 2 === 0 || k >= 18)
+    .flatMap(([one, many], k) => [
+      `${manyFrames[k % 3]?.replace("___", "___")}|${many}|${one}|${many.endsWith("s") ? plusS(one) : plusS(many)}`,
+      `${oneFrames[(k + 1) % 3]}|${one}|${many}|${plusS(one)}`,
+      `${manyFrames[(k + 2) % 3]}|${many}|${one}|${many.endsWith("s") ? plusS(one) : plusS(many)}`,
+      `${oneFrames[k % 3]}|${one}|${many}|${plusS(one)}`,
+    ]),
+);
 
 const confusedLabels: Readonly<Record<string, Label>> = {
   principal: {
@@ -155,6 +689,7 @@ const confused = topic("grammar", {
       ],
       ["Which word belongs in the blank?", "空格里应该填哪个词？"],
       `
+${soundAlikeLines}
         The ___ welcomed the new students at the assembly.|principal|principle|counsel
         Honesty is a ___ she never breaks.|principle|principal|council
         The ___ reason for the delay was the snow.|principal|principle|complement
@@ -197,6 +732,7 @@ const confused = topic("grammar", {
       ],
       ["Which word belongs in the blank?", "空格里应该填哪个词？"],
       `
+${closeFormLines}
         Her speech made an ___ to Martin Luther King's dream.|allusion|illusion|infer
         The mirror created the ___ of a bigger room.|illusion|allusion|imply
         His family decided to ___ from Ireland in 1880.|emigrate|immigrate|adopt
@@ -251,6 +787,7 @@ const semicolons = topic("grammar", {
       ],
       ["Which sentence is punctuated correctly?", "哪个句子的标点正确？"],
       `
+${semicolonLines}
         the price rose few people bought it|The price rose; few people bought it.|The price rose, few people bought it.|The price; rose few people bought it.
         the price rose however people kept buying|The price rose; however, people kept buying.|The price rose, however, people kept buying.|The price rose; however people, kept buying.
         the shop opened early therefore the line was short|The shop opened early; therefore, the line was short.|The shop opened early, therefore, the line was short.|The shop opened early; therefore the line, was short.
@@ -306,6 +843,7 @@ const semicolons = topic("grammar", {
       ],
       ["Which sentence is punctuated correctly?", "哪个句子的标点正确？"],
       `
+${listLines}
         We visited Lima Peru Quito Ecuador and Bogotá Colombia.|We visited Lima, Peru; Quito, Ecuador; and Bogotá, Colombia.|We visited Lima, Peru, Quito, Ecuador, and Bogotá, Colombia.|We visited Lima; Peru, Quito; Ecuador, and Bogotá; Colombia.
         The speakers were Ana Ruiz a banker Tom Lee a farmer and Sara Diaz a chef.|The speakers were Ana Ruiz, a banker; Tom Lee, a farmer; and Sara Diaz, a chef.|The speakers were Ana Ruiz, a banker, Tom Lee, a farmer, and Sara Diaz, a chef.|The speakers were Ana Ruiz; a banker, Tom Lee; a farmer, and Sara Diaz; a chef.
         The meetings are on May 2 2025 June 6 2025 and July 4 2025.|The meetings are on May 2, 2025; June 6, 2025; and July 4, 2025.|The meetings are on May 2, 2025, June 6, 2025, and July 4, 2025.|The meetings are on May 2; 2025, June 6; 2025, and July 4; 2025.
@@ -370,6 +908,7 @@ const pastPerfect = topic("grammar", {
       ],
       ["Which event happened first?", "哪件事先发生？"],
       `
+${firstLines}
         When the crew woke, the ship had drifted off course.|the ship drifted|the crew woke|the two happened at the same moment
         By the time the rescue came, the robot had fixed the engine.|the robot fixed the engine|the rescue came|the two happened at the same moment
         She had never seen Earth from space before she joined the mission.|she had not seen Earth|she joined the mission|the two happened at the same moment
@@ -425,6 +964,7 @@ const pastPerfect = topic("grammar", {
       ],
       ["Which verb completes the sentence?", "哪个动词能补全句子？"],
       `
+${perfectLines}
         When I got home, my brother ___ all the soup.|had eaten|has eaten|eats
         By the time the robot arrived, the fire ___ out.|had gone|has gone|goes
         She ___ the book before, so she knew the ending.|had read|has read|reads
@@ -489,6 +1029,7 @@ const demands = topic("grammar", {
       ],
       ["Which verb completes the sentence?", "哪个动词能补全句子？"],
       `
+${baseLines}
         The marchers demanded that the law ___.|change|changes|changed
         We propose that she ___ our speaker.|be|is|was
         The judge insisted that the witness ___ the truth.|tell|tells|told
@@ -544,6 +1085,7 @@ const demands = topic("grammar", {
       ],
       ["Is the verb in italics correct?", "斜体的动词是否正确？"],
       `
+${subjunctiveLabels}
         The marchers demanded that the law *change*.|correct
         The marchers demanded that the law *changes*.|should be the base form
         She noticed that he *leave* early every day.|should be an ordinary tense
@@ -659,6 +1201,7 @@ const passiveScience = topic("grammar", {
       ],
       ["Which words complete the sentence in the passive?", "哪个选项能用被动语态补全句子？"],
       `
+${passiveLines}
         Yesterday the wing ___ in a wind tunnel.|was tested|tested|was testing
         Each paper plane ___ three times last week.|was thrown|threw|was throwing
         The results ___ in the table below.|are shown|show|are showing
@@ -711,6 +1254,7 @@ const passiveScience = topic("grammar", {
       ],
       ["Is the passive a good choice here, or would the active be better?", "这里用被动语态好，还是用主动语态更好？"],
       `
+${passiveFitLines}
         The water was heated to 80 degrees.|the passive fits
         The first powered flight was made by the Wright brothers in 1903.|the active is better: the doer is the point
         Each sample was weighed three times.|the passive fits
@@ -765,6 +1309,7 @@ const plurals = topic("grammar", {
       ],
       ["What is the plural?", "复数形式是什么？"],
       `
+${pluralLines}
         one fungus, two ___|fungi|funguses|fungae
         one bacterium, many ___|bacteria|bacteriums|bacterii
         one analysis, two ___|analyses|analysises|analysi
@@ -817,6 +1362,7 @@ const plurals = topic("grammar", {
       ],
       ["Which word completes the sentence?", "哪个词能补全句子？"],
       `
+${numberLines}
         These ___ are strict.|criteria|criterion|criterias
         This ___ is the most important one.|criterion|criteria|criterions
         The northern lights are a beautiful ___.|phenomenon|phenomena|phenomenas
