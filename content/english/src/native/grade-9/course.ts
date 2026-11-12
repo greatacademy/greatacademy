@@ -9,12 +9,12 @@ const grammar = t("Grammar", "语法");
 const reading = t("Reading", "阅读");
 const writing = t("Writing", "写作");
 
-/** unit builds a unit of four modules on a theme, leaving out a module with no topics and a missing reading unit. */
+/** unit builds a unit of four modules on a theme, leaving out a module with no topics, a missing reading unit and a missing conversation. */
 const unit = (
   title: Text,
   parts: { words: string[]; grammar: string[]; reading: string[]; writing: string[] },
   readingUnit: string | undefined,
-  conversation: string,
+  conversation?: string,
 ): UnitDef => ({
   title,
   modules: [
@@ -24,7 +24,7 @@ const unit = (
     { title: writing, topics: parts.writing },
   ].filter((m) => m.topics.length > 0),
   ...(readingUnit === undefined ? {} : { reading: [readingUnit] }),
-  conversation,
+  ...(conversation === undefined ? {} : { conversation }),
 });
 
 const units: readonly UnitDef[] = [
@@ -131,6 +131,26 @@ const units: readonly UnitDef[] = [
     },
     undefined,
     "dictionary-editor-interview",
+  ),
+  unit(
+    t("Body, Health and Sport", "身体、健康与体育"),
+    {
+      words: ["words-of-injuries", "words-of-illness", "words-of-sport", "words-of-cooking"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Taste, Weather, Pets and Clothes", "味道、天气、宠物与衣物"),
+    {
+      words: ["words-of-taste-and-texture", "words-of-weather", "words-of-pets", "words-of-clothes"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
   ),
 ];
 
