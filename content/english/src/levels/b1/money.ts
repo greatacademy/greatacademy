@@ -5,7 +5,7 @@ import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
-import { interleave, vocabularyTopic, word } from "../words.ts";
+import { everyTriple, interleave, vocabularyTopic, word } from "../words.ts";
 
 const finance = vocabularyTopic({
   id: "b1-words-personal-finance",
@@ -515,7 +515,7 @@ const online = vocabularyTopic({
 // Gerunds and infinitives.
 
 /** ingVerbs are verbs followed by the -ing form, each with a sentence, the verb in brackets and the -ing form. */
-const ingVerbs: readonly (readonly [string, string, string])[] = [
+const handIngVerbs: readonly (readonly [string, string, string])[] = [
   ["I enjoy ___ for clothes online.", "shop", "shopping"],
   ["Try to avoid ___ money on things you don't need.", "spend", "spending"],
   ["Have you finished ___ the report?", "write", "writing"],
@@ -547,7 +547,7 @@ const ingVerbs: readonly (readonly [string, string, string])[] = [
 ];
 
 /** toVerbs are verbs followed by to and the base form, each with a sentence, the verb in brackets, the answer and the wrong -ing form. */
-const toVerbs: readonly (readonly [string, string, string, string])[] = [
+const handToVerbs: readonly (readonly [string, string, string, string])[] = [
   ["I can't afford ___ a new phone.", "buy", "to buy", "buying"],
   ["We decided ___ at home this summer.", "stay", "to stay", "staying"],
   ["I hope ___ you again soon.", "see", "to see", "seeing"],
@@ -578,6 +578,52 @@ const toVerbs: readonly (readonly [string, string, string, string])[] = [
   ["They threatened ___ the police.", "call", "to call", "calling"],
 ];
 
+/** doings are a verb, its -ing form and the rest of what is done, which fit after any verb or preposition below. */
+const doings: readonly (readonly [string, string, string])[] = [
+  ["cook", "cooking", "dinner"],
+  ["paint", "painting", "the fence"],
+  ["clean", "cleaning", "the kitchen"],
+  ["visit", "visiting", "the museum"],
+  ["learn", "learning", "Spanish"],
+  ["ride", "riding", "a horse"],
+  ["swim", "swimming", "in the lake"],
+  ["play", "playing", "chess"],
+  ["bake", "baking", "a cake"],
+  ["watch", "watching", "the match"],
+  ["walk", "walking", "to work"],
+];
+/** doers are people whose verbs need no agreement in the past, and doersOne are people for is and -s. */
+const doers = ["Tom", "My sister", "We", "They", "Grandpa"] as const;
+const doersOne = ["Tom", "My sister", "Grandpa", "Our teacher", "Lucy"] as const;
+/** ingTriggers, toTriggers and prepositionTriggers are words that take -ing, to, or -ing after a preposition. */
+const ingTriggers = ["enjoyed", "finished", "avoided", "suggested", "kept", "considered", "missed", "didn't mind"] as const;
+const toTriggers = ["decided", "hoped", "planned", "agreed", "refused", "promised", "managed", "wanted", "needed", "chose"] as const;
+const prepositionTriggers = [
+  "is good at",
+  "is tired of",
+  "is interested in",
+  "is excited about",
+  "is bored with",
+  "dreams of",
+  "thinks about",
+  "is keen on",
+  "talks about",
+] as const;
+
+/** ingVerbs and toVerbs are the hand-written items and items for every trigger with every doing. */
+const ingVerbs: readonly (readonly [string, string, string])[] = [
+  ...handIngVerbs,
+  ...everyTriple(ingTriggers, doings, doers).map(
+    ([trigger, [verb, ing, rest], who]) => [`${who} ${trigger} ___ ${rest}.`, verb, ing] as const,
+  ),
+];
+const toVerbs: readonly (readonly [string, string, string, string])[] = [
+  ...handToVerbs,
+  ...everyTriple(toTriggers, doings, doers).map(
+    ([trigger, [verb, ing, rest], who]) => [`${who} ${trigger} ___ ${rest}.`, verb, `to ${verb}`, ing] as const,
+  ),
+];
+
 const gerundChoice: readonly ChoiceItem[] = interleave([
   ingVerbs.map(([s, verb, ing]): ChoiceItem => [`${s} (${verb})`, ing, [`to ${verb}`, verb]]),
   toVerbs.map(([s, verb, inf, ing]): ChoiceItem => [`${s} (${verb})`, inf, [ing, verb]]),
@@ -589,7 +635,7 @@ const gerundTyped: readonly TypedItem[] = interleave([
 ]);
 
 /** afterPreposition are the -ing items whose verb follows a preposition. */
-const afterPreposition = ingVerbs.slice(17);
+const afterPreposition = handIngVerbs.slice(17);
 
 const prepositionChoice: readonly ChoiceItem[] = [
   ...afterPreposition.map(([s, verb, ing]): ChoiceItem => [`${s} (${verb})`, ing, [`to ${verb}`, verb]]),
@@ -615,6 +661,9 @@ const prepositionChoice: readonly ChoiceItem[] = [
   ["He's nervous about ___ in public. (speak)", "speaking", ["to speak", "speak"]],
   ["Thanks for ___ me the money. (lend)", "lending", ["to lend", "lend"]],
   ["She dreams of ___ a famous singer. (become)", "becoming", ["to become", "become"]],
+  ...everyTriple(prepositionTriggers, doings, doersOne).map(
+    ([trigger, [verb, ing, rest], who]): ChoiceItem => [`${who} ${trigger} ___ ${rest}. (${verb})`, ing, [`to ${verb}`, verb]],
+  ),
 ];
 
 const prepositions = new Set(["at", "of", "in", "about", "for", "by", "without", "before", "after", "on", "with", "to"]);

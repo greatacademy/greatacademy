@@ -5,7 +5,7 @@ import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { fill } from "../a2/kit.ts";
-import { interleave, vocabularyTopic, word } from "../words.ts";
+import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
 
 const cityLife = vocabularyTopic({
   id: "b1-words-city-life",
@@ -616,17 +616,44 @@ const soSuchPairs: readonly (readonly [string, string])[] = [
   ["This town is ___ quiet.", "It's ___ quiet town."],
 ];
 
+/** placeNouns and placeAdjectives cross into sentences with so before an adjective and such a before the noun. */
+const placeNouns = ["city", "town", "street", "park", "museum", "hotel", "station", "market"] as const;
+const placeAdjectives = [
+  "crowded",
+  "noisy",
+  "quiet",
+  "beautiful",
+  "busy",
+  "old",
+  "modern",
+  "clean",
+  "expensive",
+  "famous",
+  "interesting",
+  "ugly",
+] as const;
+
+/** soSuchAll are the hand-written pairs and a pair for every place and adjective, in the present and the past. */
+const soSuchAll: readonly (readonly [string, string])[] = [
+  ...soSuchPairs,
+  ...everyPair(placeNouns, placeAdjectives).map(([noun, adjective], k): readonly [string, string] =>
+    k % 2 === 0
+      ? [`The ${noun} is ___ ${adjective}.`, `It's ___ ${adjective} ${noun}.`]
+      : [`The ${noun} was ___ ${adjective}.`, `It was ___ ${adjective} ${noun}.`],
+  ),
+];
+
 const aBefore = (rest: string) => (/^[aeiou]/u.test(rest) ? "such an" : "such a");
 /** firstWordAfterGap is the word that follows the gap. */
 const afterGap = (s: string) => s.split("___ ")[1] ?? "";
 
 const soOrSuchA: readonly ChoiceItem[] = interleave([
-  soSuchPairs.map(([so]): ChoiceItem => [so, "so", [aBefore(afterGap(so)), "such"]]),
-  soSuchPairs.map(([, such]): ChoiceItem => [such, aBefore(afterGap(such)), ["so", "so a"]]),
+  soSuchAll.map(([so]): ChoiceItem => [so, "so", [aBefore(afterGap(so)), "such"]]),
+  soSuchAll.map(([, such]): ChoiceItem => [such, aBefore(afterGap(such)), ["so", "so a"]]),
 ]);
 
 /** suchItems are sentences with such before a plural or an uncountable noun, such a before a singular one, or so with many and much. */
-const suchItems: readonly (readonly [string, string])[] = [
+const handSuchItems: readonly (readonly [string, string])[] = [
   ["They are ___ nice people.", "such"],
   ["It was ___ good weather that we ate outside.", "such"],
   ["She gives ___ good advice.", "such"],
@@ -661,6 +688,37 @@ const suchItems: readonly (readonly [string, string])[] = [
   ["The hotel offers ___ good service.", "such"],
 ];
 
+/** placePlurals and plainAdjectives cross into sentences with such before a plural noun. */
+const placePlurals = ["streets", "parks", "buildings", "shops", "buses", "museums", "restaurants", "bridges"] as const;
+const plainAdjectives = [
+  "beautiful",
+  "old",
+  "modern",
+  "clean",
+  "busy",
+  "famous",
+  "new",
+  "lovely",
+  "small",
+  "crowded",
+  "nice",
+  "big",
+] as const;
+/** uncountables are nouns with no plural, for so much. */
+const uncountables = ["traffic", "noise", "pollution", "rain", "snow", "litter", "smoke", "dust"] as const;
+
+/** suchItems are the hand-written items and items made from places, adjectives and amounts. */
+const suchItems: readonly (readonly [string, string])[] = [
+  ...handSuchItems,
+  ...everyPair(placePlurals, plainAdjectives).map(([plural, adjective], k): readonly [string, string] =>
+    k % 2 === 0 ? [`The city has ___ ${adjective} ${plural}.`, "such"] : [`They have ___ ${adjective} ${plural} here.`, "such"],
+  ),
+  ...placePlurals.map((plural): readonly [string, string] => [`There are ___ many ${plural} in this town.`, "so"]),
+  ...placePlurals.map((plural): readonly [string, string] => [`There were ___ few ${plural} in the old city.`, "so"]),
+  ...uncountables.map((noun): readonly [string, string] => [`There is ___ much ${noun} today.`, "so"]),
+  ...uncountables.map((noun): readonly [string, string] => [`There was ___ little ${noun} last year.`, "so"]),
+];
+
 const suchChoice: readonly ChoiceItem[] = suchItems.map(([shown, right]): ChoiceItem => {
   const all = ["so", "such", right === "such an" || right === "such a" ? right : aBefore(afterGap(shown))];
   const options = [...new Set([right, ...all])].filter((o) => o !== right);
@@ -668,7 +726,7 @@ const suchChoice: readonly ChoiceItem[] = suchItems.map(([shown, right]): Choice
 });
 
 /** resultItems are two sentences, the word to join them with, and the joined sentence without that. */
-const resultItems: readonly (readonly [string, string, "so" | "such", string, string])[] = [
+const handResultItems: readonly (readonly [string, string, "so" | "such", string, string])[] = [
   ["The coffee was very hot.", "I couldn't drink it.", "so", "The coffee was so hot", "I couldn't drink it"],
   ["It was a very good film.", "We watched it twice.", "such", "It was such a good film", "we watched it twice"],
   ["The traffic was very bad.", "We missed the train.", "so", "The traffic was so bad", "we missed the train"],
@@ -719,6 +777,60 @@ const resultItems: readonly (readonly [string, string, "so" | "such", string, st
   ["It was a very boring lesson.", "Half the class fell asleep.", "such", "It was such a boring lesson", "half the class fell asleep"],
   ["The road was very icy.", "Many cars slid off it.", "so", "The road was so icy", "many cars slid off it"],
   ["It was a very difficult exam.", "Only a few students passed.", "such", "It was such a difficult exam", "only a few students passed"],
+];
+
+/** resultPeople are a person with the pronouns that stand for them: subject, object and possessive. */
+const resultPeople: readonly (readonly [string, string, string, string])[] = [
+  ["Tom", "he", "him", "his"],
+  ["Anna", "she", "her", "her"],
+  ["My uncle", "he", "him", "his"],
+  ["My grandmother", "she", "her", "her"],
+  ["Our teacher", "she", "her", "her"],
+  ["Leo", "he", "him", "his"],
+  ["Mia", "she", "her", "her"],
+];
+
+/** soStates are how a person felt and what they did because of it, with {he}, {him} and {his} for the pronouns. */
+const soStates: readonly (readonly [string, string])[] = [
+  ["tired", "{he} went to bed at eight"],
+  ["hungry", "{he} ate three sandwiches"],
+  ["nervous", "{he} couldn't speak"],
+  ["happy", "{he} started to sing"],
+  ["excited", "{he} couldn't sleep"],
+  ["cold", "{he} put on two coats"],
+  ["busy", "{he} forgot to eat lunch"],
+  ["late", "{he} missed the train"],
+  ["angry", "{he} left the room"],
+];
+
+/** suchKinds are what kind of person someone is and what follows from it, with {he}, {him} and {his} for the pronouns. */
+const suchKinds: readonly (readonly [string, string])[] = [
+  ["good singer", "everyone wants to hear {him}"],
+  ["fast runner", "nobody can catch {him}"],
+  ["kind person", "everyone likes {him}"],
+  ["careful driver", "{he} has never had an accident"],
+  ["funny storyteller", "everyone laughs at {his} stories"],
+  ["hard worker", "{he} always finishes early"],
+  ["good cook", "{his} friends always ask {him} to cook"],
+];
+
+/** withPronouns puts a person's pronouns into a sentence. */
+const withPronouns = (text: string, [, he, him, his]: readonly [string, string, string, string]) =>
+  text.replaceAll("{he}", he).replaceAll("{him}", him).replaceAll("{his}", his);
+const capital = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+/** resultItems are the hand-written items and items for every person with every feeling and kind. */
+const resultItems: readonly (readonly [string, string, "so" | "such", string, string])[] = [
+  ...handResultItems,
+  ...everyPair(resultPeople, soStates).map(([person, [adjective, then]]) => {
+    const result = withPronouns(then, person);
+    return [`${person[0]} was very ${adjective}.`, `${capital(result)}.`, "so", `${person[0]} was so ${adjective}`, result] as const;
+  }),
+  ...everyPair(resultPeople, suchKinds).map(([person, [kind, then]]) => {
+    const result = withPronouns(then, person);
+    const a = /^[aeiou]/u.test(kind) ? "an" : "a";
+    return [`${person[0]} is ${a} very ${kind}.`, `${capital(result)}.`, "such", `${person[0]} is such ${a} ${kind}`, result] as const;
+  }),
 ];
 
 const resultTyped: readonly TypedItem[] = resultItems.map(
@@ -843,7 +955,7 @@ const soAndSuch: TopicDef = {
  * maybes are a sentence with perhaps, its subject, the verb phrase in the base form, that verb with -s or the wrong
  * form a learner writes, the sentence said as certain, and whether it is negative.
  */
-const maybes: readonly (readonly [string, string, string, string, string, boolean])[] = [
+const handMaybes: readonly (readonly [string, string, string, string, string, boolean])[] = [
   ["Perhaps it will rain later.", "It", "rain later", "rains later", "It will rain later.", false],
   ["Perhaps the bus is late.", "The bus", "be late", "is late", "The bus is late.", false],
   ["Perhaps Tom is at home.", "Tom", "be at home", "is at home", "Tom is at home.", false],
@@ -908,6 +1020,69 @@ const maybes: readonly (readonly [string, string, string, string, string, boolea
     "The shops aren't open on Sunday.",
     true,
   ],
+];
+
+/** maybeSubjects are a subject, and its form of be: am, is or are. */
+const maybeSubjects: readonly (readonly [string, string])[] = [
+  ["Tom", "is"],
+  ["My parents", "are"],
+  ["We", "are"],
+  ["She", "is"],
+  ["The teacher", "is"],
+  ["They", "are"],
+  ["Our team", "is"],
+  ["I", "am"],
+];
+
+/** maybeActs are a verb phrase in the base form and with -s. */
+const maybeActs: readonly (readonly [string, string])[] = [
+  ["win the match", "wins the match"],
+  ["be late", "is late"],
+  ["go to the beach", "goes to the beach"],
+  ["buy a new car", "buys a new car"],
+  ["come to the party", "comes to the party"],
+  ["move to a new city", "moves to a new city"],
+  ["take the bus", "takes the bus"],
+  ["stay at home", "stays at home"],
+  ["visit the museum", "visits the museum"],
+  ["need some help", "needs some help"],
+  ["forget the tickets", "forgets the tickets"],
+  ["change the plan", "changes the plan"],
+  ["get lost", "gets lost"],
+];
+
+/** maybeNegatives are verb phrases for sentences with won't. */
+const maybeNegatives: readonly (readonly [string, string])[] = [
+  ["agree", "agrees"],
+  ["come", "comes"],
+  ["have time", "has time"],
+  ["finish today", "finishes today"],
+  ["win", "wins"],
+  ["be ready", "is ready"],
+];
+
+/** wrongFormOf is the form a learner may write after the modal: with -s after a singular subject, or with -ing. */
+const wrongFormOf = ([, be]: readonly [string, string], [base, third]: readonly [string, string]) => {
+  if (base.startsWith("be ")) return `${be} ${base.slice(3)}`;
+  if (be === "is") return third;
+  const [verb = "", ...rest] = base.split(" ");
+  const ing = verb.endsWith("e") && verb !== "be" && verb !== "see" ? `${verb.slice(0, -1)}ing` : `${verb}ing`;
+  return [ing, ...rest].join(" ");
+};
+
+/** maybes are the hand-written sentences and one for every subject with every act, said with will or won't. */
+const maybes: readonly (readonly [string, string, string, string, string, boolean])[] = [
+  ...handMaybes,
+  ...everyPair(maybeSubjects, maybeActs).map(([subject, act]) => {
+    const [who] = subject;
+    const lowerWho = who === "I" ? who : who.charAt(0).toLowerCase() + who.slice(1);
+    return [`Perhaps ${lowerWho} will ${act[0]}.`, who, act[0], wrongFormOf(subject, act), `${who} will ${act[0]}.`, false] as const;
+  }),
+  ...everyPair(maybeSubjects, maybeNegatives).map(([subject, act]) => {
+    const [who] = subject;
+    const lowerWho = who === "I" ? who : who.charAt(0).toLowerCase() + who.slice(1);
+    return [`Perhaps ${lowerWho} won't ${act[0]}.`, who, act[0], wrongFormOf(subject, act), `${who} won't ${act[0]}.`, true] as const;
+  }),
 ];
 
 const positiveModals = ["might", "may", "could"] as const;

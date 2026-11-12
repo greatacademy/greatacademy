@@ -2,7 +2,7 @@
 
 import { type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point } from "@ga/subject-english";
-import { everyPair } from "../levels/words.ts";
+import { everyPair, everyTriple } from "../levels/words.ts";
 import {
   lateComma,
   moreAppositiveCommas,
@@ -1169,6 +1169,102 @@ const conjunctionCommaFrames: readonly ChoiceItem[] = framedCompounds.map(([firs
   ];
 });
 
+/** runonKindFrames are every framed compound as a run-on, a comma splice and a correct sentence. */
+const runonKindFrames: readonly ChoiceItem[] = framedCompounds.flatMap(([first, conjunction, second]): ChoiceItem[] => [
+  kind(`${first} ${second}.`, 1),
+  kind(`${first}, ${second}.`, 2),
+  kind(`${first}, ${conjunction} ${second}.`, 0),
+]);
+/** firstSentenceFrames are the framed compounds as run-ons, with a word too early and a word too late as wrong breaks. */
+const firstSentenceFrames: readonly ChoiceItem[] = framedCompounds.map(([first, , second]): ChoiceItem => {
+  const words = first.split(" ");
+  return [`${first} ${second}.`, lastWord(first), [words.at(-2)!, lastWord(second)]];
+});
+
+/** framedRelatives are sentences with a relative clause: noun, relative word, clause, rest, and whether the clause only adds information. */
+const framedRelatives: readonly (readonly [string, "who" | "that" | "which" | "whose", string, string, boolean])[] = [
+  ...everyTriple(
+    ["The girl", "The man", "The woman", "The boy", "The teacher", "The doctor", "The nurse"],
+    ["lives next door", "helped me", "found my keys", "sings in the choir", "sits by the window", "called you"],
+    ["is my cousin", "waved at us", "says hello every day", "is very kind"],
+  ).map(([noun, clause, rest]) => [noun, "who", clause, rest, false] as const),
+  ...everyTriple(
+    ["The bag", "The bike", "The phone", "The book", "The lamp", "The jacket"],
+    ["I bought", "Mia lent me", "we found in the park", "Dad fixed", "you wanted"],
+    ["is on the table", "is in my room", "is under the bed"],
+  ).map(([noun, clause, rest]) => [noun, "that", clause, rest, false] as const),
+  ...everyTriple(
+    ["The boy", "The woman", "The man", "The girl", "The teacher"],
+    ["bike was stolen", "dog ran away", "car broke down", "phone rang", "bag was lost"],
+    ["called the police", "looked upset", "asked for help"],
+  ).map(([noun, clause, rest]) => [noun, "whose", clause, rest, false] as const),
+  ...everyTriple(
+    ["My bike", "Our old car", "This bag", "My laptop", "The blue lamp"],
+    ["is quite old", "was a gift", "cost a lot", "I bought last year"],
+    ["is my favorite", "is still in good shape"],
+  ).map(([noun, clause, rest]) => [noun, "which", clause, rest, true] as const),
+];
+const relativeWrongs: Readonly<Record<string, readonly [string, string]>> = {
+  who: ["which", "whose"],
+  that: ["who", "whose"],
+  which: ["who", "whose"],
+  whose: ["who", "which"],
+};
+const relativeOf = (noun: string, word: string, clause: string, rest: string, adds: boolean) =>
+  adds ? `${noun}, ${word} ${clause}, ${rest}.` : `${noun} ${word} ${clause} ${rest}.`;
+/** relativeWordFrames and relativeFindFrames ask for the relative word, and for the clause, of the framed relatives. */
+const relativeWordFrames: readonly ChoiceItem[] = framedRelatives.map(
+  ([noun, word, clause, rest, adds]): ChoiceItem => [relativeOf(noun, "___", clause, rest, adds), word, [...relativeWrongs[word]!]],
+);
+const relativeFindFrames: readonly ChoiceItem[] = framedRelatives.map(
+  ([noun, word, clause, rest, adds]): ChoiceItem => [
+    relativeOf(noun, word, clause, rest, adds),
+    `${word} ${clause}`,
+    [noun, rest, `${clause.split(" ").slice(-2).join(" ")}${adds ? "," : ""} ${rest.split(" ")[0]}`],
+  ],
+);
+
+/** voiceDoers are a doer as it reads inside a sentence, and whether it is plural. */
+const voiceDoers: readonly (readonly [string, boolean])[] = [
+  ["Sam", false],
+  ["Mia", false],
+  ["the children", true],
+  ["my mother", false],
+  ["the teacher", false],
+  ["our neighbors", true],
+  ["Grandpa", false],
+];
+/** voiceActs are a verb in the past, its participle and what it was done to. */
+const voiceActs: readonly (readonly [string, string, string])[] = [
+  ["painted", "painted", "the fence"],
+  ["cleaned", "cleaned", "the room"],
+  ["wrote", "written", "the letter"],
+  ["opened", "opened", "the window"],
+  ["found", "found", "the map"],
+  ["cooked", "cooked", "the dinner"],
+  ["fixed", "fixed", "the bike"],
+  ["washed", "washed", "the car"],
+  ["broke", "broken", "the vase"],
+  ["sold", "sold", "the house"],
+];
+const voicePairs = everyPair(voiceDoers, voiceActs);
+/** voiceKindFrames are every doer and act as an active sentence, a passive naming the doer, and a passive without it. */
+const voiceKindFrames: readonly ChoiceItem[] = voicePairs
+  .slice(0, 40)
+  .flatMap(([[doer], [past, participle, object]]): ChoiceItem[] => [
+    voice(`${upper(doer)} ${past} ${object}.`, true),
+    voice(`${upper(object)} was ${participle} by ${doer}.`, false),
+    voice(`${upper(object)} was ${participle}.`, false),
+  ]);
+/** toActiveFrames ask for the active version of a passive naming the doer, with the roles swapped in the wrong ones. */
+const toActiveFrames: readonly ChoiceItem[] = voicePairs.map(
+  ([[doer, plural], [past, participle, object]]): ChoiceItem => [
+    `${upper(object)} was ${participle} by ${doer}.`,
+    `${upper(doer)} ${past} ${object}.`,
+    [`${upper(object)} ${past} ${doer}.`, `${upper(doer)} ${plural ? "were" : "was"} ${participle} by ${object}.`],
+  ],
+);
+
 /** clauseFrames are a subordinating conjunction, a clause and a main clause about a person, the name in whichever comes first. */
 const clauseFrames: readonly (readonly [sub: string, clause: string, main: string, wrong: readonly [string, string, string]])[] = [
   ["When", "{S} got home", "{p} made some tea", ["got", "home", "tea"]],
@@ -1421,7 +1517,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("What is this?", "这属于哪一种？"),
-          [...runonKindBank, ...runonKindMore],
+          [...runonKindBank, ...runonKindMore, ...runonKindFrames],
           (right, shown) =>
             t(
               `**${right}**. Find where the first complete sentence ends, then look at what comes between it and the next: ${shown}`,
@@ -1439,7 +1535,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("This is a run-on. Which word ends the first complete sentence?", "这是一个连写句。哪个词结束了第一个完整句子？"),
-          [...firstSentenceBank, ...firstSentenceMore],
+          [...firstSentenceBank, ...firstSentenceMore, ...firstSentenceFrames],
           (right, shown) =>
             t(
               `The first sentence ends at **${right}**, and a new subject follows it: ${shown}`,
@@ -1531,7 +1627,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which words form the relative clause?", "哪些词构成关系从句？"),
-          [...relativeFindBank, ...moreRelativeFinds],
+          [...relativeFindBank, ...moreRelativeFinds, ...relativeFindFrames],
           (right) =>
             t(
               `**${right}** begins with a relative word and describes the noun before it.`,
@@ -1549,7 +1645,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which word completes the sentence?", "哪个词能补全句子？"),
-          [...relativeWordBank, ...moreRelativeWords],
+          [...relativeWordBank, ...moreRelativeWords, ...relativeWordFrames],
           (right, shown) =>
             t(
               `${shown.replace("___", `**${right}**`)} Look at what the word refers to, and whether it shows ownership.`,
@@ -1720,7 +1816,7 @@ export const clauseTopics: readonly TopicDef[] = [
             "Is this sentence active or passive, and if passive, does it name the doer?",
             "这句话是主动还是被动？如果是被动，是否点出了动作发出者？",
           ),
-          [...voiceKindBank, ...voiceSentences.map(([sentence, active]) => voice(sentence, active))],
+          [...voiceKindBank, ...voiceSentences.map(([sentence, active]) => voice(sentence, active)), ...voiceKindFrames],
           (right) =>
             t(
               `**${right}**. Ask whether the subject does the action or receives it.`,
@@ -1738,7 +1834,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which sentence is the active version?", "哪句是主动形式？"),
-          [...toActiveBank, ...moreToActive],
+          [...toActiveBank, ...moreToActive, ...toActiveFrames],
           (right) =>
             t(`**${right}** The doer is now the subject, and the meaning is unchanged.`, `**${right}** 动作发出者现在是主语，意思不变。`),
           notActiveVersion,

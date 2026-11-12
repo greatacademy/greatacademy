@@ -5,7 +5,7 @@ import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { fill } from "../a2/kit.ts";
-import { interleave, sentenceCase, vocabularyTopic, word } from "../words.ts";
+import { everyPair, interleave, sentenceCase, vocabularyTopic, word } from "../words.ts";
 
 const digital = vocabularyTopic({
   id: "b1-words-digital",
@@ -614,6 +614,46 @@ const imagined: readonly (readonly [string, string, string, string, string, stri
   ["it", "were", "be", "is", "warmer", "we", "have", "lunch outside"],
 ];
 
+/** imaginePeople are a person, the pronoun that stands for them, and whether the present takes -s after them. */
+const imaginePeople: readonly (readonly [string, string, boolean])[] = [
+  ["Sam", "he", true],
+  ["Lucy", "she", true],
+  ["my cousins", "they", false],
+  ["we", "we", false],
+  ["you", "you", false],
+  ["I", "I", false],
+  ["my sister", "she", true],
+  ["our neighbors", "they", false],
+];
+
+/** imagineActs are the past, base form and present with -s of a verb, the rest of the if-part, and the verb and rest of the result. */
+const imagineActs: readonly (readonly [string, string, string, string, string, string])[] = [
+  ["had", "have", "has", "a faster computer", "finish", "the work sooner"],
+  ["knew", "know", "knows", "how to code", "build", "a game"],
+  ["lived", "live", "lives", "near the beach", "go", "swimming every day"],
+  ["owned", "own", "owns", "a 3D printer", "make", "toys"],
+  ["spoke", "speak", "speaks", "Japanese", "travel", "to Tokyo"],
+  ["won", "win", "wins", "a lot of money", "buy", "a new laptop"],
+  ["got", "get", "gets", "up earlier", "have", "time for breakfast"],
+  ["used", "use", "uses", "the phone less", "sleep", "better"],
+  ["found", "find", "finds", "a lost dog", "take", "it home"],
+  ["practiced", "practice", "practices", "more", "play", "the guitar well"],
+  ["saw", "see", "sees", "a ghost", "run", "away"],
+  ["drove", "drive", "drives", "to school", "save", "a lot of time"],
+  ["ate", "eat", "eats", "less sugar", "feel", "healthier"],
+];
+
+/** imaginedRows builds imagined situations for every person and act, with the name in the clause that comes first. */
+const imaginedRows = (nameFirstInIf: boolean) =>
+  everyPair(imaginePeople, imagineActs).map(([[person, pronoun, s], [past, base, third, rest, rv, rr]]) => {
+    const [ifSubject, resultSubject] = nameFirstInIf ? [person, pronoun] : [pronoun, person];
+    return [ifSubject, past, base, s ? third : base, rest, resultSubject, rv, rr] as const;
+  });
+
+/** imaginedIfFirst and imaginedResultFirst are the situations for sentences that start with the if-part or the result. */
+const imaginedIfFirst = [...imagined, ...imaginedRows(true)];
+const imaginedResultFirst = [...imagined, ...imaginedRows(false)];
+
 const joinWords = (...parts: readonly string[]) => parts.filter((p) => p !== "").join(" ");
 const singular = new Set(["I", "he", "she", "it"]);
 
@@ -626,14 +666,14 @@ const wouldOf = (subject: string, capital: boolean) => {
 };
 
 const ifPastChoice: readonly ChoiceItem[] = interleave([
-  imagined.map(
+  imaginedIfFirst.map(
     ([s, past, base, present, rest, rs, rv, rr]): ChoiceItem => [
       `${joinWords("If", s, "___", rest)}, ${joinWords(rs, "would", rv, rr)}.`,
       past,
       [`would ${base}`, present],
     ],
   ),
-  imagined.map(
+  imaginedResultFirst.map(
     ([s, past, base, present, rest, rs, rv, rr]): ChoiceItem => [
       `${joinWords(sentenceCase(rs), "would", rv, rr, "if", s, "___", rest)}.`,
       past,
@@ -643,14 +683,14 @@ const ifPastChoice: readonly ChoiceItem[] = interleave([
 ]);
 
 const wouldChoice: readonly ChoiceItem[] = interleave([
-  imagined.map(
+  imaginedIfFirst.map(
     ([s, past, , , rest, rs, rv, rr]): ChoiceItem => [
       `${joinWords("If", s, past, rest)}, ${joinWords(rs, "___", rr)}.`,
       `would ${rv}`,
       [`will ${rv}`, `would to ${rv}`],
     ],
   ),
-  imagined.map(
+  imaginedResultFirst.map(
     ([s, past, , , rest, rs, rv, rr]): ChoiceItem => [
       `${joinWords(sentenceCase(rs), "___", rr, "if", s, past, rest)}.`,
       `would ${rv}`,
@@ -660,7 +700,7 @@ const wouldChoice: readonly ChoiceItem[] = interleave([
 ]);
 
 const imaginedTyped: readonly TypedItem[] = interleave([
-  imagined.map(
+  imaginedIfFirst.map(
     ([s, past, base, present, rest, rs, rv, rr]): TypedItem => ({
       shown: `imagine: if ${joinWords(s, base, rest)} → ${joinWords(rs, rv, rr)}`,
       accepted: [`${joinWords("If", s, pastOf(s, past), rest)}, ${joinWords(wouldOf(rs, false), rv, rr)}.`],
@@ -671,7 +711,7 @@ const imaginedTyped: readonly TypedItem[] = interleave([
       ],
     }),
   ),
-  imagined.map(
+  imaginedResultFirst.map(
     ([s, past, base, present, rest, rs, rv, rr]): TypedItem => ({
       shown: `imagine: ${joinWords(rs, rv, rr)} ← if ${joinWords(s, base, rest)}`,
       accepted: [`${joinWords(wouldOf(rs, true), rv, rr, "if", s, pastOf(s, past), rest)}.`],

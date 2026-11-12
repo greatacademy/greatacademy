@@ -5,7 +5,7 @@ import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
-import { vocabularyTopic, word } from "../words.ts";
+import { everyPair, vocabularyTopic, word } from "../words.ts";
 
 const arts = vocabularyTopic({
   id: "b1-words-arts",
@@ -707,7 +707,7 @@ const goingOut = vocabularyTopic({
  * phrasals are sentences with a phrasal verb: the sentence with its small word missing, the small word, two wrong
  * small words, the phrasal verb, its meaning here and two meanings it does not have.
  */
-const phrasals: readonly (readonly [string, string, readonly [string, string], string, string, readonly [string, string]])[] = [
+const handPhrasals: readonly (readonly [string, string, readonly [string, string], string, string, readonly [string, string]])[] = [
   ["I can't hear the TV. Can you turn it ___?", "up", ["down", "off"], "turn up", "make louder", ["leave the ground", "become an adult"]],
   ["The music is too loud! Please turn it ___.", "down", ["up", "in"], "turn down", "make quieter", ["phone again", "learn a fact"]],
   [
@@ -855,6 +855,44 @@ const phrasals: readonly (readonly [string, string, readonly [string, string], s
   ["The fire alarm went ___ in the middle of the night.", "off", ["in", "up"], "go off", "start ringing", ["take care of", "return"]],
 ];
 
+/** phrasalDoers are people who do the things in phrasalFrames. */
+const phrasalDoers = ["Tom", "Anna", "My dad", "Our neighbor", "My cousin", "The new student", "Grandma"] as const;
+
+/** phrasalFrames are sentences with {who}, the small word, two wrong small words, the phrasal verb and its meaning here. */
+const phrasalFrames: readonly (readonly [string, string, readonly [string, string], string, string])[] = [
+  ["{who} grew ___ in a small village.", "up", ["out", "on"], "grow up", "become an adult"],
+  ["{who} gave ___ after trying three times.", "up", ["back", "away"], "give up", "stop trying"],
+  ["{who} looked ___ the word in a dictionary.", "up", ["after", "out"], "look up", "search for in a book or online"],
+  ["{who} looked ___ our cat while we were away.", "after", ["up", "into"], "look after", "take care of"],
+  ["{who} found ___ the answer on the internet.", "out", ["up", "over"], "find out", "learn a fact"],
+  ["{who} woke ___ at five this morning.", "up", ["on", "off"], "wake up", "stop sleeping"],
+  ["{who} filled ___ the form and signed it.", "in", ["on", "at"], "fill in", "write information in a form"],
+  ["{who} put ___ a warm coat and went out.", "on", ["off", "out"], "put on", "start wearing"],
+  ["{who} took ___ the wet boots at the door.", "off", ["on", "up"], "take off", "remove clothes"],
+  ["{who} wrote ___ the address on a piece of paper.", "down", ["off", "in"], "write down", "write on paper"],
+  ["{who} called me ___ an hour later.", "back", ["out", "off"], "call back", "phone again"],
+  ["{who} threw ___ the old newspapers.", "away", ["off", "in"], "throw away", "put in the rubbish"],
+  ["{who} turned ___ the job offer.", "down", ["up", "on"], "turn down", "refuse"],
+  ["{who} set ___ before sunrise.", "off", ["on", "down"], "set off", "start a journey"],
+  ["{who} came ___ from the trip last night.", "back", ["on", "off"], "come back", "return"],
+  ["{who} tried ___ the jacket in the shop.", "on", ["in", "up"], "try on", "put on to see if it fits"],
+  ["{who} worked ___ the answer in two minutes.", "out", ["in", "off"], "work out", "find the answer to"],
+  ["{who} handed ___ the homework a day late.", "in", ["on", "at"], "hand in", "give work to a teacher"],
+  ["{who} picked ___ the pen from the floor.", "up", ["on", "off"], "pick up", "lift from a surface"],
+  ["{who} turned ___ the lights and went to bed.", "off", ["on", "up"], "turn off", "stop a light or a machine with a switch"],
+  ["{who} turned ___ the radio because it was too quiet.", "up", ["down", "off"], "turn up", "make louder"],
+  ["{who} turned ___ the music because the baby was asleep.", "down", ["up", "in"], "turn down", "make quieter"],
+];
+
+/** phrasals are the hand-written sentences and one for every person with every frame, with the wrong meanings of the hand-written one. */
+const phrasals: readonly (readonly [string, string, readonly [string, string], string, string, readonly [string, string]])[] = [
+  ...handPhrasals,
+  ...everyPair(phrasalFrames, phrasalDoers).map(([[frame, particle, wrong, verb, meaning], who]) => {
+    const wrongMeanings = handPhrasals.find(([, , , v, m]) => v === verb && m === meaning)?.[5] ?? ["", ""];
+    return [frame.replace("{who}", who), particle, wrong, verb, meaning, wrongMeanings] as const;
+  }),
+];
+
 const particleChoice: readonly ChoiceItem[] = phrasals.map(([s, right, wrong]): ChoiceItem => [s, right, wrong]);
 
 const meaningChoice: readonly ChoiceItem[] = phrasals.map(
@@ -865,7 +903,7 @@ const meaningChoice: readonly ChoiceItem[] = phrasals.map(
  * separable are phrasal verbs that take an object pronoun between the verb and the small word: the context with a gap,
  * the verb as it appears, the small word and the pronoun.
  */
-const separable: readonly (readonly [string, string, string, string])[] = [
+const handSeparable: readonly (readonly [string, string, string, string])[] = [
   ["The music is too loud. Please ___.", "turn", "down", "it"],
   ["I can't hear the radio. Can you ___?", "turn", "up", "it"],
   ["It's dark in here. Where's the light? Can you ___?", "turn", "on", "it"],
@@ -900,6 +938,45 @@ const separable: readonly (readonly [string, string, string, string])[] = [
   ["The computer is very slow. Try to ___ and on again.", "turn", "off", "it"],
 ];
 
+/** objectScenes are a sentence about a thing or a person, the verb and small word to do to it, and its pronoun. */
+const objectScenes: readonly (readonly [string, string, string, string])[] = [
+  ["Your coat is on the floor.", "pick", "up", "it"],
+  ["The toys are on the floor.", "pick", "up", "them"],
+  ["It's cold, and here is your hat.", "put", "on", "it"],
+  ["Here are your gloves.", "put", "on", "them"],
+  ["Your boots are muddy.", "take", "off", "them"],
+  ["Your jacket is wet.", "take", "off", "it"],
+  ["This bread is old.", "throw", "away", "it"],
+  ["These bananas are bad.", "throw", "away", "them"],
+  ["It's dark in here, and here's the lamp.", "turn", "on", "it"],
+  ["Nobody is watching the TV.", "turn", "off", "it"],
+  ["The lights are still on.", "turn", "off", "them"],
+  ["The radio is too loud.", "turn", "down", "it"],
+  ["I can't hear the music.", "turn", "up", "it"],
+  ["Here is my new address.", "write", "down", "it"],
+  ["I don't know these words.", "look", "up", "them"],
+  ["Here are the forms.", "fill", "in", "them"],
+  ["That's my pen.", "give", "back", "it"],
+  ["Those are my books.", "give", "back", "them"],
+  ["The dishes are dry now.", "put", "away", "them"],
+  ["Your clothes are clean now.", "put", "away", "them"],
+  ["The kitchen is a mess.", "clean", "up", "it"],
+  ["Anna phoned.", "call", "back", "her"],
+  ["Your dad phoned.", "call", "back", "him"],
+  ["The children are at the park.", "pick", "up", "them"],
+];
+
+/** requestFrames ask for something to be done, with a gap for the phrasal verb and its pronoun. */
+const requestFrames = ["Please ___.", "Can you ___?", "Could you ___, please?", "Don't forget to ___.", "I'll ___ later."] as const;
+
+/** separable are the hand-written items and one for every scene with every request. */
+const separable: readonly (readonly [string, string, string, string])[] = [
+  ...handSeparable,
+  ...everyPair(objectScenes, requestFrames).map(
+    ([[scene, verb, particle, pronoun], frame]) => [`${scene} ${frame}`, verb, particle, pronoun] as const,
+  ),
+];
+
 const pronounTyped: readonly TypedItem[] = separable.map(
   ([s, verb, particle, pronoun]): TypedItem => ({
     shown: `${s} (${verb} ${particle} · ${pronoun})`,
@@ -909,7 +986,8 @@ const pronounTyped: readonly TypedItem[] = separable.map(
 );
 
 /** phrasalOf finds the phrasal verb of a gapped sentence. */
-const phrasalOf = (shown: string) => phrasals.find(([s]) => s === shown || shown.startsWith(s.replace(/___.*$/u, "")));
+const phrasalOf = (shown: string) =>
+  phrasals.find(([s]) => s === shown) ?? phrasals.find(([s]) => shown.startsWith(s.replace(/___.*$/u, "")));
 
 /** verbWithMeaning is the first phrasal verb that has a meaning. */
 const verbWithMeaning = (meaning: string): string | undefined => phrasals.find(([, , , , m]) => m === meaning)?.[3];

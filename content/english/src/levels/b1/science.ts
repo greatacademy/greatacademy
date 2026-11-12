@@ -5,7 +5,7 @@ import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
-import { interleave, vocabularyTopic, word } from "../words.ts";
+import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
 
 const science = vocabularyTopic({
   id: "b1-words-science",
@@ -715,7 +715,7 @@ const change = vocabularyTopic({
  * earlier are sentences with the past perfect: the sentence with a gap, the verb to use, the right form, two wrong
  * forms, and the earlier and the later of the two events, or empty strings when the sentence has no two events to order.
  */
-const earlier: readonly (readonly [string, string, string, readonly [string, string], string, string])[] = [
+const handEarlier: readonly (readonly [string, string, string, readonly [string, string], string, string])[] = [
   ["When we arrived, the film ___.", "start", "had started", ["has started", "had start"], "The film started.", "We arrived."],
   [
     "When I got to the station, the train ___.",
@@ -894,6 +894,42 @@ const earlier: readonly (readonly [string, string, string, readonly [string, str
   ["The road was dry; it ___ for weeks.", "not rain", "hadn't rained", ["hasn't rained", "hadn't rain"], "", ""],
   ["I ___ my umbrella, so I got wet.", "not bring", "hadn't brought", ["haven't brought", "hadn't bringed"], "", ""],
   ["The baby was crying because she ___ all afternoon.", "not sleep", "hadn't slept", ["hasn't slept", "hadn't sleeped"], "", ""],
+];
+
+/** laterEvents are a clause with when for the later event, and that event as a sentence. */
+const laterEvents: readonly (readonly [string, string])[] = [
+  ["When we got there", "We got there."],
+  ["When I arrived", "I arrived."],
+  ["When Tom got home", "Tom got home."],
+  ["When my parents came back", "My parents came back."],
+  ["When the police arrived", "The police arrived."],
+  ["When Anna woke up", "Anna woke up."],
+  ["When we finally found the place", "We finally found the place."],
+  ["By the time the taxi came", "The taxi came."],
+  ["By the time I finished work", "I finished work."],
+];
+
+/** earlierEvents are a subject, the verb, its past perfect, two wrong forms, and the event as a sentence. */
+const earlierEvents: readonly (readonly [string, string, string, readonly [string, string], string])[] = [
+  ["the show", "start", "had started", ["has started", "had start"], "The show started."],
+  ["everyone", "leave", "had left", ["has left", "had leaved"], "Everyone left."],
+  ["the shop", "close", "had closed", ["has closed", "had close"], "The shop closed."],
+  ["the rain", "stop", "had stopped", ["has stopped", "had stop"], "The rain stopped."],
+  ["the others", "eat", "had eaten", ["have eaten", "had ate"], "The others ate."],
+  ["the bus", "go", "had gone", ["has gone", "had went"], "The bus went."],
+  ["the meeting", "finish", "had finished", ["has finished", "had finish"], "The meeting finished."],
+  ["the snow", "melt", "had melted", ["has melted", "had melt"], "The snow melted."],
+  ["the sun", "set", "had set", ["has set", "had setted"], "The sun set."],
+  ["the lesson", "begin", "had begun", ["has begun", "had began"], "The lesson began."],
+  ["the guests", "arrive", "had arrived", ["have arrived", "had arrive"], "The guests arrived."],
+];
+
+/** earlier are the hand-written sentences and one for every later event with every earlier one. */
+const earlier: readonly (readonly [string, string, string, readonly [string, string], string, string])[] = [
+  ...handEarlier,
+  ...everyPair(laterEvents, earlierEvents).map(
+    ([[when, then], [subject, verb, right, wrong, first]]) => [`${when}, ${subject} ___.`, verb, right, wrong, first, then] as const,
+  ),
 ];
 
 const perfectChoice: readonly ChoiceItem[] = earlier.map(([s, verb, right, wrong]): ChoiceItem => [`${s} (${verb})`, right, wrong]);

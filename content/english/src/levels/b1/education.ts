@@ -5,7 +5,7 @@ import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
-import { interleave, vocabularyTopic, word } from "../words.ts";
+import { everyTriple, interleave, vocabularyTopic, word } from "../words.ts";
 
 const schoolLife = vocabularyTopic({
   id: "b1-words-school-life",
@@ -816,7 +816,7 @@ const linking = vocabularyTopic({
 type StateVerb = readonly [string, string, string, string, string, string, string, string];
 
 /** stateVerbs are subject, base, present, past, present perfect, rest, since and a finished past time. */
-const stateVerbs: readonly StateVerb[] = [
+const handStateVerbs: readonly StateVerb[] = [
   ["My aunt", "live", "lives", "lived", "has lived", "in Paris", "since 2019", "in 2015"],
   ["I", "know", "know", "knew", "have known", "Anna", "since we were five", "when we were at primary school"],
   ["We", "have", "have", "had", "have had", "this car", "since last summer", "in 2018"],
@@ -833,6 +833,57 @@ const stateVerbs: readonly StateVerb[] = [
   ["I", "sing", "sing", "sang", "have sung", "in the school choir", "since Grade 3", "when I was in Grade 3"],
   ["Our dog", "sleep", "sleeps", "slept", "has slept", "in the kitchen", "since he was a puppy", "last night"],
   ["My parents", "run", "run", "ran", "have run", "a small shop", "since 2010", "in the 1990s"],
+];
+
+/** stateSubjects are a subject and whether its present takes -s. */
+const stateSubjects: readonly (readonly [string, boolean])[] = [
+  ["My uncle", true],
+  ["I", false],
+  ["We", false],
+  ["Anna", true],
+  ["They", false],
+  ["Our neighbor", true],
+  ["My cousins", false],
+];
+
+/** stateActs are a state or a habit: base, present with -s, past, participle and the rest of the sentence. */
+const stateActs: readonly (readonly [string, string, string, string, string])[] = [
+  ["live", "lives", "lived", "lived", "in this town"],
+  ["work", "works", "worked", "worked", "at the bank"],
+  ["play", "plays", "played", "played", "the violin"],
+  ["know", "knows", "knew", "known", "the Smiths"],
+  ["have", "has", "had", "had", "a cat"],
+  ["teach", "teaches", "taught", "taught", "English"],
+  ["study", "studies", "studied", "studied", "French"],
+  ["own", "owns", "owned", "owned", "a bike"],
+  ["keep", "keeps", "kept", "kept", "a diary"],
+  ["sing", "sings", "sang", "sung", "in a band"],
+  ["drive", "drives", "drove", "driven", "a taxi"],
+];
+
+/** stateTimes are a point with since and a finished time in the past. */
+const stateTimes: readonly (readonly [string, string])[] = [
+  ["since 2018", "in 2014"],
+  ["since last summer", "two years ago"],
+  ["since January", "last year"],
+  ["since 2020", "in the 1990s"],
+];
+
+/** stateVerbs are the hand-written verbs and one for every subject and act, with a pair of times. */
+const stateVerbs: readonly StateVerb[] = [
+  ...handStateVerbs,
+  ...everyTriple(stateSubjects, stateActs, stateTimes).map(
+    ([[subject, s], [base, third, past, participle, rest], [since, ago]]): StateVerb => [
+      subject,
+      base,
+      s ? third : base,
+      past,
+      `${s ? "has" : "have"} ${participle}`,
+      rest,
+      since,
+      ago,
+    ],
+  ),
 ];
 
 /** firstTimes are a subject, the base, the past and the participle of a verb, and its object. */

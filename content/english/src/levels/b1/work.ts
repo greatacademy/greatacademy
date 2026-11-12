@@ -5,7 +5,7 @@ import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
-import { interleave, vocabularyTopic, word } from "../words.ts";
+import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
 
 const applying = vocabularyTopic({
   id: "b1-words-applying",
@@ -799,7 +799,7 @@ const linking = vocabularyTopic({
 // Used to.
 
 /** habits are a subject, the subject in a question, and a past habit or state that has ended. */
-const habits: readonly (readonly [string, string, string])[] = [
+const handHabits: readonly (readonly [string, string, string])[] = [
   ["I", "you", "live in a small village"],
   ["My dad", "your dad", "smoke"],
   ["We", "you", "go to the beach every summer"],
@@ -817,6 +817,44 @@ const habits: readonly (readonly [string, string, string])[] = [
   ["My brother", "your brother", "collect stamps"],
   ["We", "you", "have a dog"],
   ["This street", "this street", "be very quiet"],
+];
+
+/** habitPeople are a subject and the subject in a question. */
+const habitPeople: readonly (readonly [string, string])[] = [
+  ["I", "you"],
+  ["My dad", "your dad"],
+  ["We", "you"],
+  ["She", "she"],
+  ["They", "they"],
+  ["Tom", "Tom"],
+  ["My grandma", "your grandma"],
+  ["He", "he"],
+  ["My parents", "your parents"],
+  ["Lisa", "Lisa"],
+  ["My brother", "your brother"],
+  ["Our neighbors", "your neighbors"],
+];
+
+/** pastHabits are past habits or states that anyone could have had. */
+const pastHabits: readonly string[] = [
+  "live in a small village",
+  "go to the beach every summer",
+  "have long hair",
+  "play football after school",
+  "be very shy",
+  "work in a factory",
+  "hate vegetables",
+  "walk to school",
+  "ride a bike to work",
+  "run a small shop",
+  "write to a pen friend",
+  "collect stamps",
+  "have a dog",
+];
+
+const habits: readonly (readonly [string, string, string])[] = [
+  ...handHabits,
+  ...everyPair(habitPeople, pastHabits).map(([[subject, asked], habit]) => [subject, asked, habit] as const),
 ];
 
 const usedToChoice: readonly ChoiceItem[] = interleave([
@@ -935,7 +973,7 @@ const usedTo: TopicDef = {
 // The present perfect continuous.
 
 /** activities are a subject, have or has, the base and -ing form of a verb, the rest, a starting point and a length of time. */
-const activities: readonly (readonly [string, string, string, string, string, string, string])[] = [
+const handActivities: readonly (readonly [string, string, string, string, string, string, string])[] = [
   ["I", "have", "wait", "waiting", "for the bus", "eight o'clock", "twenty minutes"],
   ["She", "has", "work", "working", "here", "May", "six months"],
   ["We", "have", "live", "living", "in this flat", "2020", "five years"],
@@ -950,8 +988,31 @@ const activities: readonly (readonly [string, string, string, string, string, st
   ["We", "have", "clean", "cleaning", "the house", "ten o'clock", "two hours"],
   ["He", "has", "drive", "driving", "", "six this morning", "five hours"],
   ["My parents", "have", "run", "running", "the restaurant", "2010", "sixteen years"],
-  ["Lily", "has", "practice", "practicing", "the piano", "she was six", "ten years"],
+  ["Lily", "has", "practice", "practicing", "the piano", "2016", "ten years"],
   ["They", "have", "build", "building", "the new bridge", "last spring", "eighteen months"],
+];
+
+/** ppcPeople are a subject and its form of have, for the activities anyone could be doing. */
+const ppcPeople: readonly (readonly [string, string])[] = [
+  ["I", "have"],
+  ["She", "has"],
+  ["We", "have"],
+  ["They", "have"],
+  ["My brother", "has"],
+  ["Tom", "has"],
+  ["You", "have"],
+  ["Anna", "has"],
+  ["He", "has"],
+  ["My parents", "have"],
+  ["Lily", "has"],
+];
+
+const activities: readonly (readonly [string, string, string, string, string, string, string])[] = [
+  ...handActivities,
+  ...everyPair(
+    ppcPeople,
+    handActivities.filter(([subject]) => subject !== "It" && subject !== "The baby"),
+  ).map(([[subject, have], [, , base, ing, rest, since, dur]]) => [subject, have, base, ing, rest, since, dur] as const),
 ];
 
 const beOf = (subject: string, have: string) => (subject === "I" ? "am" : have === "has" ? "is" : "are");

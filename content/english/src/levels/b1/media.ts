@@ -5,7 +5,7 @@ import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
-import { vocabularyTopic, word } from "../words.ts";
+import { everyPair, vocabularyTopic, word } from "../words.ts";
 
 const news = vocabularyTopic({
   id: "b1-words-news",
@@ -689,7 +689,7 @@ const opinions = vocabularyTopic({
 // Reported speech.
 
 /** said are reported statements: who spoke, the words said, the report after "that", and the verb in it with two wrong forms. */
-const said: readonly (readonly [string, string, string, string, readonly [string, string]])[] = [
+const handSaid: readonly (readonly [string, string, string, string, readonly [string, string]])[] = [
   ["Anna", "I am tired", "she was tired", "was", ["am", "been"]],
   ["Tom", "I like my new school", "he liked his new school", "liked", ["like", "liking"]],
   ["Lucy", "I have a headache", "she had a headache", "had", ["have", "having"]],
@@ -722,6 +722,37 @@ const said: readonly (readonly [string, string, string, string, readonly [string
   ["Oscar", "I am very happy", "he was very happy", "was", ["am", "been"]],
   ["Mary", "My computer doesn't work", "her computer didn't work", "didn't", ["don't", "not"]],
   ["Adam", "I enjoy my English lessons", "he enjoyed his English lessons", "enjoyed", ["enjoy", "enjoying"]],
+];
+
+/** reporters are more speakers, and whether they are a man. */
+const reporters: readonly (readonly [string, boolean])[] = [
+  ["Ken", true],
+  ["Rosa", false],
+  ["Omar", true],
+  ["Mei", false],
+  ["Hugo", true],
+  ["Hana", false],
+  ["Ali", true],
+  ["Clara", false],
+];
+
+/** reportFor puts the pronouns of a man or a woman into a report. */
+const reportFor = (report: string, man: boolean) =>
+  report
+    .split(" ")
+    .map((w) => {
+      if (w === "he" || w === "she") return man ? "he" : "she";
+      if (w === "his" || w === "her") return man ? "his" : "her";
+      return w;
+    })
+    .join(" ");
+
+/** said are the hand-written statements and every statement said again by every other speaker. */
+const said: readonly (readonly [string, string, string, string, readonly [string, string]])[] = [
+  ...handSaid,
+  ...everyPair(handSaid, reporters).map(
+    ([[, words, report, verb, wrong], [name, man]]) => [name, words, reportFor(report, man), verb, wrong] as const,
+  ),
 ];
 
 /** quoteOf is the direct speech of a reported statement: "I am tired," Anna said. */

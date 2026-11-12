@@ -899,7 +899,7 @@ const thenThanMore: readonly ChoiceItem[] = [
 ];
 
 /** shiftScenes are two actions at one time: lead words, the first verb in past and present, its rest, the second verb in past and present, its rest, and whether the time is past. */
-const shiftScenes: readonly (readonly [
+const handShiftScenes: readonly (readonly [
   lead: string,
   v1: string,
   v1Now: string,
@@ -930,6 +930,37 @@ const shiftScenes: readonly (readonly [
   ["On his birthday Sam", "opened", "opens", "his gifts", "thanked", "thanks", "everyone", true],
   ["Every afternoon my brother", "practiced", "practices", "the piano", "did", "does", "his homework", false],
   ["Yesterday the wind", "blew", "blows", "all day", "knocked", "knocks", "over our fence", true],
+];
+/** shiftTimes are a time and whether it is past; shiftPeople do two things at that time. */
+const shiftTimes: readonly (readonly [string, boolean])[] = [
+  ["Last week", true],
+  ["Every morning", false],
+  ["Yesterday", true],
+  ["Each weekend", false],
+  ["On Saturday", true],
+  ["Every evening", false],
+  ["Last night", true],
+  ["Every day", false],
+];
+const shiftPeople = ["Tom", "my aunt", "our neighbor", "Grandma", "the coach"] as const;
+/** shiftActs are two things done one after the other, each in the past and the present, with its rest. */
+const shiftActs: readonly (readonly [string, string, string, string, string, string])[] = [
+  ["walked", "walks", "to the park", "fed", "feeds", "the ducks"],
+  ["cooked", "cooks", "dinner", "washed", "washes", "the dishes"],
+  ["read", "reads", "the news", "drank", "drinks", "a coffee"],
+  ["watered", "waters", "the plants", "swept", "sweeps", "the porch"],
+  ["called", "calls", "a friend", "talked", "talks", "for an hour"],
+  ["wrote", "writes", "a letter", "posted", "posts", "it"],
+  ["went", "goes", "to the market", "bought", "buys", "some fruit"],
+  ["took", "takes", "the bus", "met", "meets", "a friend downtown"],
+];
+
+/** shiftScenes are the hand-written scenes and one for every time, person and pair of acts. */
+const shiftScenes: typeof handShiftScenes = [
+  ...handShiftScenes,
+  ...everyPair(everyPair(shiftTimes, shiftPeople), shiftActs).map(
+    ([[[time, past], who], [v1, v1Now, r1, v2, v2Now, r2]]) => [`${time} ${who}`, v1, v1Now, r1, v2, v2Now, r2, past] as const,
+  ),
 ];
 const shiftForms = ([lead, v1, v1Now, r1, v2, v2Now, r2, past]: (typeof shiftScenes)[number]) => {
   const [a1, a2, b1, b2] = past ? [v1, v2, v1Now, v2Now] : [v1Now, v2Now, v1, v2];

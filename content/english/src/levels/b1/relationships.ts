@@ -5,7 +5,7 @@ import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
-import { interleave, vocabularyTopic, word } from "../words.ts";
+import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
 
 const relationships = vocabularyTopic({
   id: "b1-words-relationships",
@@ -702,7 +702,7 @@ const family = vocabularyTopic({
 // Question tags.
 
 /** positives are positive statements with their negative tag and two wrong tags. */
-const positives: readonly (readonly [string, string, readonly [string, string]])[] = [
+const handPositives: readonly (readonly [string, string, readonly [string, string]])[] = [
   ["You're coming to the party", "aren't you", ["isn't you", "don't you"]],
   ["She plays tennis", "doesn't she", ["isn't she", "don't she"]],
   ["They live in Shanghai", "don't they", ["aren't they", "doesn't they"]],
@@ -740,7 +740,7 @@ const positives: readonly (readonly [string, string, readonly [string, string]])
 ];
 
 /** negatives are negative statements with their positive tag and two wrong tags. */
-const negatives: readonly (readonly [string, string, readonly [string, string]])[] = [
+const handNegatives: readonly (readonly [string, string, readonly [string, string]])[] = [
   ["You aren't angry", "are you", ["aren't you", "do you"]],
   ["She doesn't eat meat", "does she", ["doesn't she", "is she"]],
   ["They didn't call", "did they", ["didn't they", "were they"]],
@@ -775,6 +775,72 @@ const negatives: readonly (readonly [string, string, readonly [string, string]])
   ["We weren't late", "were we", ["weren't we", "did we"]],
   ["You wouldn't lie to me", "would you", ["wouldn't you", "do you"]],
   ["Lily can't swim", "can she", ["can't she", "does she"]],
+];
+
+/** tagPeople are a subject, its pronoun in a tag, and whether it takes the forms for one person. */
+const tagPeople: readonly (readonly [string, string, boolean])[] = [
+  ["She", "she", true],
+  ["Tom", "he", true],
+  ["Your parents", "they", false],
+  ["Anna", "she", true],
+  ["They", "they", false],
+  ["He", "he", true],
+  ["Your brother", "he", true],
+  ["The children", "they", false],
+  ["You", "you", false],
+  ["We", "we", false],
+];
+
+/**
+ * tagFrames are a statement after the subject, its tag's helping verb, and a wrong helping verb from another family,
+ * each as the forms for one person and for more than one: is|are.
+ */
+const tagFrames: readonly (readonly [statement: string, tag: string, other: string])[] = [
+  ["is|are at home", "isn't|aren't", "doesn't|don't"],
+  ["likes|like coffee", "doesn't|don't", "isn't|aren't"],
+  ["went to the cinema", "didn't", "wasn't|weren't"],
+  ["can swim", "can't", "doesn't|don't"],
+  ["will be late", "won't", "isn't|aren't"],
+  ["has|have finished the work", "hasn't|haven't", "didn't"],
+  ["was|were at school yesterday", "wasn't|weren't", "didn't"],
+  ["isn't|aren't ready", "is|are", "does|do"],
+  ["doesn't|don't eat meat", "does|do", "is|are"],
+  ["didn't call", "did", "was|were"],
+  ["can't drive", "can", "does|do"],
+  ["won't tell anyone", "will", "does|do"],
+  ["hasn't|haven't seen the film", "has|have", "did"],
+  ["wasn't|weren't listening", "was|were", "did"],
+  ["couldn't come", "could", "did"],
+];
+
+/** formFor picks the form for one person or for more than one from words such as is|are. */
+const formFor = (forms: string, single: boolean) =>
+  forms.replace(/(\S+)\|(\S+)/gu, (_, one: string, more: string) => (single ? one : more));
+
+/** opposite turns a helping verb of a tag to the other polarity: isn't to is, is to isn't. */
+const opposite = (helper: string) =>
+  helper.endsWith("n't")
+    ? (({ "can't": "can", "won't": "will" } as Record<string, string>)[helper] ?? helper.slice(0, -3))
+    : (({ can: "can't", will: "won't" } as Record<string, string>)[helper] ?? `${helper}n't`);
+
+const framedTags = everyPair(tagFrames, tagPeople).map(([[statement, tag, other], [subject, pronoun, single]]) => {
+  const helper = formFor(tag, single);
+  return [
+    `${subject} ${formFor(statement, single)}`,
+    `${helper} ${pronoun}`,
+    [`${opposite(helper)} ${pronoun}`, `${formFor(other, single)} ${pronoun}`] as const,
+    tag.includes("n't"),
+  ] as const;
+});
+
+const positives: readonly (readonly [string, string, readonly [string, string]])[] = [
+  ...handPositives,
+  ...framedTags.filter(([, , , negativeTag]) => negativeTag).map(([statement, tag, wrong]) => [statement, tag, wrong] as const),
+];
+
+const negatives: readonly (readonly [string, string, readonly [string, string]])[] = [
+  ...handNegatives,
+  ...framedTags.filter(([, , , negativeTag]) => !negativeTag).map(([statement, tag, wrong]) => [statement, tag, wrong] as const),
 ];
 
 const tagChoice = (list: typeof positives): readonly ChoiceItem[] =>
@@ -912,7 +978,7 @@ const questionTags: TopicDef = {
 // Indirect questions.
 
 /** whItems are a direct question, a longer frame with a gap, the words in statement order, and two wrong orders. */
-const whItems: readonly (readonly [string, string, string, readonly [string, string]])[] = [
+const handWhItems: readonly (readonly [string, string, string, readonly [string, string]])[] = [
   ["Where is the station?", "Do you know where ___?", "the station is", ["is the station", "the station it is"]],
   ["What time does the film start?", "Can you tell me what time ___?", "the film starts", ["does the film start", "the film start"]],
   ["Where does Anna live?", "Do you know where ___?", "Anna lives", ["does Anna live", "Anna live"]],
@@ -970,7 +1036,7 @@ const whItems: readonly (readonly [string, string, string, readonly [string, str
 ];
 
 /** yesNoItems are a yes-no question, a frame with a gap, and the words in statement order with if; the wrong orders follow. */
-const yesNoItems: readonly (readonly [string, string, string, string])[] = [
+const handYesNoItems: readonly (readonly [string, string, string, string])[] = [
   ["Is the museum open today?", "Do you know ___?", "the museum is open today", "is the museum open today"],
   ["Does this bus go to the airport?", "Can you tell me ___?", "this bus goes to the airport", "does this bus go to the airport"],
   ["Is there a bank near here?", "Do you know ___?", "there is a bank near here", "is there a bank near here"],
@@ -1003,6 +1069,37 @@ const yesNoItems: readonly (readonly [string, string, string, string])[] = [
   ["Did you lock the car?", "Can you remember ___?", "you locked the car", "did you lock the car"],
   ["Are the tickets still available?", "Do you know ___?", "the tickets are still available", "are the tickets still available"],
   ["Does the library open on Mondays?", "Can you tell me ___?", "the library opens on Mondays", "does the library open on Mondays"],
+];
+
+/** openers are the starts of a longer sentence that holds a question, and the mark that ends it. */
+const openers: readonly (readonly [string, string])[] = [
+  ["Do you know", "?"],
+  ["Can you tell me", "?"],
+  ["Could you tell me", "?"],
+  ["Do you have any idea", "?"],
+  ["I wonder", "."],
+  ["I'm not sure", "."],
+  ["I'd like to know", "."],
+  ["I don't know", "."],
+];
+
+/** whWord finds the question word before the gap of a frame, with what follows the gap. */
+const whWord = (frame: string) =>
+  /\b((?:what time|how much|how old|how far|how long|how often|what|where|why|when|how)) ___( in Beijing)?[?.]$/u.exec(frame);
+
+const whItems: readonly (readonly [string, string, string, readonly [string, string]])[] = [
+  ...handWhItems,
+  ...everyPair(handWhItems, openers).flatMap(([[direct, frame, right, wrong], [open, mark]]) => {
+    const found = whWord(frame);
+    return found ? [[direct, `${open} ${found[1]} ___${found[2] ?? ""}${mark}`, right, wrong] as const] : [];
+  }),
+];
+
+const yesNoItems: readonly (readonly [string, string, string, string])[] = [
+  ...handYesNoItems,
+  ...everyPair(handYesNoItems, openers).map(
+    ([[direct, , statement, question], [open, mark]]) => [direct, `${open} ___${mark}`, statement, question] as const,
+  ),
 ];
 
 const whChoice: readonly ChoiceItem[] = whItems.map(([, frame, right, wrong]): ChoiceItem => [frame, right, wrong]);

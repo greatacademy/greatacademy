@@ -5,7 +5,7 @@ import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { fill } from "../a2/kit.ts";
-import { interleave, sentenceCase, vocabularyTopic, word } from "../words.ts";
+import { everyPair, interleave, sentenceCase, vocabularyTopic, word } from "../words.ts";
 
 const illness = vocabularyTopic({
   id: "b1-words-illness",
@@ -836,6 +836,46 @@ const conditions: readonly (readonly [string, string, string, string, string, st
   ["Anna", "calls", "call", "called", "me", "I", "tell", "her the news"],
 ];
 
+/** condPeople are a person, the pronoun that stands for them, and whether the verb takes -s after them. */
+const condPeople: readonly (readonly [string, string, boolean])[] = [
+  ["Tom", "he", true],
+  ["Anna", "she", true],
+  ["my parents", "they", false],
+  ["we", "we", false],
+  ["you", "you", false],
+  ["I", "I", false],
+  ["my brother", "he", true],
+  ["the children", "they", false],
+];
+
+/** condActs are a verb with -s, its base form and past, the rest of the if-clause, and the verb and rest of the result. */
+const condActs: readonly (readonly [string, string, string, string, string, string])[] = [
+  ["studies", "study", "studied", "hard", "pass", "the exam"],
+  ["leaves", "leave", "left", "now", "catch", "the train"],
+  ["misses", "miss", "missed", "the bus", "be", "late"],
+  ["takes", "take", "took", "this medicine", "feel", "better soon"],
+  ["hurries", "hurry", "hurried", "", "get", "there on time"],
+  ["practices", "practice", "practiced", "every day", "win", "the race"],
+  ["has", "have", "had", "time", "finish", "the project"],
+  ["eats", "eat", "ate", "too much cake", "feel", "sick"],
+  ["goes", "go", "went", "to bed late", "be", "tired tomorrow"],
+  ["saves", "save", "saved", "some money", "buy", "a new bike"],
+  ["forgets", "forget", "forgot", "the map", "get", "lost"],
+  ["wins", "win", "won", "the match", "be", "very happy"],
+  ["reads", "read", "read", "the instructions", "understand", "the game"],
+];
+
+/** condRows builds conditions for every person and act, with the name in the clause that comes first. */
+const condRows = (nameFirstInIf: boolean) =>
+  everyPair(condPeople, condActs).map(([[person, pronoun, s], [third, base, past, rest, rv, rr]]) => {
+    const [ifSubject, resultSubject] = nameFirstInIf ? [person, pronoun] : [pronoun, person];
+    return [ifSubject, s ? third : base, base, past, rest, resultSubject, rv, rr] as const;
+  });
+
+/** conditionsIfFirst and conditionsResultFirst are the conditions for sentences that start with the if-part or the result. */
+const conditionsIfFirst = [...conditions, ...condRows(true)];
+const conditionsResultFirst = [...conditions, ...condRows(false)];
+
 const join = (...parts: readonly string[]) => parts.filter((p) => p !== "").join(" ");
 const pronouns = new Set(["I", "you", "we", "they", "he", "she", "it"]);
 /** willOf is the result's subject with will, or with 'll after a pronoun, as a pattern. */
@@ -845,14 +885,14 @@ const willOf = (subject: string, capital: boolean) => {
 };
 
 const ifVerbChoice: readonly ChoiceItem[] = interleave([
-  conditions.map(
+  conditionsIfFirst.map(
     ([s, present, base, past, rest, rs, rv, rr]): ChoiceItem => [
       `${join("If", s, "___", rest)}, ${join(rs, "will", rv, rr)}.`,
       present,
       [`will ${base}`, past],
     ],
   ),
-  conditions.map(
+  conditionsResultFirst.map(
     ([s, present, base, past, rest, rs, rv, rr]): ChoiceItem => [
       `${join(sentenceCase(rs), "will", rv, rr, "if", s, "___", rest)}.`,
       present,
@@ -862,14 +902,14 @@ const ifVerbChoice: readonly ChoiceItem[] = interleave([
 ]);
 
 const resultChoice: readonly ChoiceItem[] = interleave([
-  conditions.map(
+  conditionsIfFirst.map(
     ([s, present, , , rest, rs, rv, rr]): ChoiceItem => [
       `${join("If", s, present, rest)}, ${join(rs, "___", rr)}.`,
       `will ${rv}`,
       [`would ${rv}`, `to ${rv}`],
     ],
   ),
-  conditions.map(
+  conditionsResultFirst.map(
     ([s, present, , , rest, rs, rv, rr]): ChoiceItem => [
       `${join(sentenceCase(rs), "___", rr, "if", s, present, rest)}.`,
       `will ${rv}`,
@@ -879,7 +919,7 @@ const resultChoice: readonly ChoiceItem[] = interleave([
 ]);
 
 const conditionalTyped: readonly TypedItem[] = interleave([
-  conditions.map(
+  conditionsIfFirst.map(
     ([s, present, base, past, rest, rs, rv, rr]): TypedItem => ({
       shown: `if ${join(s, base, rest)} → ${join(rs, rv, rr)}`,
       accepted: [`${join("If", s, present, rest)}, ${join(willOf(rs, false), rv, rr)}.`],
@@ -890,7 +930,7 @@ const conditionalTyped: readonly TypedItem[] = interleave([
       ],
     }),
   ),
-  conditions.map(
+  conditionsResultFirst.map(
     ([s, present, base, past, rest, rs, rv, rr]): TypedItem => ({
       shown: `${join(rs, rv, rr)} ← if ${join(s, base, rest)}`,
       accepted: [`${join(willOf(rs, true), rv, rr, "if", s, present, rest)}.`],

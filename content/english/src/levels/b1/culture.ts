@@ -5,7 +5,7 @@ import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
-import { interleave, vocabularyTopic, word } from "../words.ts";
+import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
 
 const culture = vocabularyTopic({
   id: "b1-words-culture",
@@ -693,7 +693,7 @@ const places = vocabularyTopic({
 // The article with things in general, with particular things, and with places.
 
 /** generalPairs are a noun said in general and the same noun with the, said of particular things, each with its sentence. */
-const generalPairs: readonly (readonly [string, string, string, string])[] = [
+const handGeneralPairs: readonly (readonly [string, string, string, string])[] = [
   ["tea", "___ is popular in China.", "the tea", "___ in this cup is cold."],
   ["cats", "___ sleep for about fifteen hours a day.", "the cats", "Both of ___ next door are black."],
   ["music", "I love ___. It makes me happy.", "the music", "I love ___ of this film."],
@@ -720,6 +720,30 @@ const generalPairs: readonly (readonly [string, string, string, string])[] = [
   ["animals", "Some ___ sleep all winter.", "the animals", "One of ___ at the farm was a baby goat."],
 ];
 
+/** foodNouns and thingNouns are an uncountable and a plural noun, crossed with sentences about them in general and in particular. */
+const foodNouns = ["tea", "coffee", "milk", "rice", "bread", "cheese", "chocolate", "juice", "soup", "honey"] as const;
+const foodFrames: readonly (readonly [string, string])[] = [
+  ["___ is popular in many countries.", "___ on the table is for you."],
+  ["My grandfather loves ___.", "Who finished ___ I bought?"],
+  ["I don't like ___ very much.", "___ we had at lunch was delicious."],
+  ["Many children like ___.", "I put ___ from the market in the kitchen."],
+];
+const thingNouns = ["books", "cats", "dogs", "flowers", "apples", "cars", "phones", "songs", "games", "films"] as const;
+const thingFrames: readonly (readonly [string, string])[] = [
+  ["I really like ___.", "___ on the table are mine."],
+  ["My brother is interested in ___.", "Where are ___ I bought yesterday?"],
+  ["Some people don't like ___.", "Most of ___ in this shop are new."],
+  ["My aunt has always loved ___.", "I gave away ___ we didn't need."],
+];
+
+/** generalPairs are the hand-written pairs and a pair for every noun with every pair of sentences. */
+const generalPairs: readonly (readonly [string, string, string, string])[] = [
+  ...handGeneralPairs,
+  ...[...everyPair(foodNouns, foodFrames), ...everyPair(thingNouns, thingFrames)].map(
+    ([noun, [general, particular]]) => [noun, general, `the ${noun}`, particular] as const,
+  ),
+];
+
 const capitalFirst = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 /** atStartOf capitalizes words that fill a gap at the start of a sentence. */
 const atStartOf = (sentence: string) => (s: string) => (sentence.startsWith("___") ? capitalFirst(s) : s);
@@ -740,7 +764,7 @@ const generalChoice: readonly ChoiceItem[] = interleave([
 ]);
 
 /** placeItems are sentences with the name of a place, and whether the name takes the. */
-const placeItems: readonly (readonly [string, string, boolean])[] = [
+const handPlaceItems: readonly (readonly [string, string, boolean])[] = [
   ["We flew to ___ last summer.", "Japan", false],
   ["The longest river in China is ___.", "Yangtze", true],
   ["___ is the capital of France.", "Paris", false],
@@ -775,6 +799,51 @@ const placeItems: readonly (readonly [string, string, boolean])[] = [
   ["Llamas live high in ___.", "Andes", true],
 ];
 
+/** travelFrames, riverFrames and rangeFrames are sentences for the names of countries and cities, rivers, and mountain ranges. */
+const travelFrames = [
+  "We flew to ___ last summer.",
+  "My uncle lives in ___.",
+  "I've always wanted to visit ___.",
+  "She is going to ___ next month.",
+  "They spent a week in ___.",
+  "Have you ever been to ___?",
+] as const;
+const plainPlaces = [
+  "Japan",
+  "Canada",
+  "Brazil",
+  "Egypt",
+  "Mexico",
+  "Finland",
+  "Spain",
+  "India",
+  "Kenya",
+  "Paris",
+  "Rome",
+  "Shanghai",
+  "Tokyo",
+  "Sydney",
+] as const;
+const thePlaces = ["United States", "United Kingdom", "Netherlands", "Philippines"] as const;
+const riverFrames = [
+  "We took a boat trip on ___.",
+  "There are many bridges over ___.",
+  "___ flows into the sea.",
+  "We had a picnic by ___.",
+] as const;
+const rivers = ["Yangtze", "Nile", "Thames", "Amazon", "Danube", "Mississippi", "Rhine"] as const;
+const rangeFrames = ["We went skiing in ___.", "They went hiking in ___.", "There is snow in ___ all year."] as const;
+const ranges = ["Alps", "Himalayas", "Andes", "Rockies"] as const;
+
+/** placeItems are the hand-written items and an item for every place with every sentence that fits it. */
+const placeItems: readonly (readonly [string, string, boolean])[] = [
+  ...handPlaceItems,
+  ...everyPair(plainPlaces, travelFrames).map(([name, frame]) => [frame, name, false] as const),
+  ...everyPair(thePlaces, travelFrames).map(([name, frame]) => [frame, name, true] as const),
+  ...everyPair(rivers, riverFrames).map(([name, frame]) => [frame, name, true] as const),
+  ...everyPair(ranges, rangeFrames).map(([name, frame]) => [frame, name, true] as const),
+];
+
 const placeChoice: readonly ChoiceItem[] = placeItems.map(([sentence, name, the]): ChoiceItem => {
   const c = atStartOf(sentence);
   const withThe = c(`the ${name}`);
@@ -796,6 +865,12 @@ const placeKinds: Readonly<Record<string, readonly [string, string]>> = {
   Nile: ["a river", "河流"],
   Thames: ["a river", "河流"],
   Amazon: ["a river", "河流"],
+  Danube: ["a river", "河流"],
+  Mississippi: ["a river", "河流"],
+  Rhine: ["a river", "河流"],
+  Rockies: ["a mountain range", "山脉"],
+  Tokyo: ["a city", "城市"],
+  Sydney: ["a city", "城市"],
   Mediterranean: ["a sea", "海"],
   Atlantic: ["an ocean", "大洋"],
   Pacific: ["an ocean", "大洋"],
