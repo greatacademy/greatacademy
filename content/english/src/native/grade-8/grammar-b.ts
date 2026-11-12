@@ -2,7 +2,441 @@
 // inverted sentences, confused words and prepositions before relative pronouns.
 
 import type { TopicDef } from "@ga/content";
+import { everyPair } from "../../levels/words.ts";
 import { choose, type Label, label, topic } from "../grade-6/kit.ts";
+
+// Crossed items: frames, people and phrases multiply the lines below into a hundred items or more for each bank.
+
+const join = (lines: readonly string[]) => lines.join("\n");
+const upper = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+/** pastimes are an -ing form, a base form and a past form. */
+const pastimes = [
+  ["reading", "read", "read"],
+  ["drawing", "draw", "drew"],
+  ["singing", "sing", "sang"],
+  ["swimming", "swim", "swam"],
+  ["cooking", "cook", "cooked"],
+  ["dancing", "dance", "danced"],
+  ["painting", "paint", "painted"],
+  ["hiking", "hike", "hiked"],
+  ["sewing", "sew", "sewed"],
+  ["gardening", "garden", "gardened"],
+  ["fishing", "fish", "fished"],
+  ["writing", "write", "wrote"],
+] as const;
+const seriesOf = [1, 3, 5].flatMap((step) => pastimes.map((_, k) => [k, (k + step) % 12, (k + step * 2 + 1) % 12] as const));
+const gerundOpeners = [
+  ["She loved", "she"],
+  ["They spent the summer", "they"],
+  ["He enjoyed", "he"],
+  ["We filled the weekend with", "we"],
+] as const;
+const infinitiveOpeners = [
+  ["She wanted", "she"],
+  ["They planned", "they"],
+  ["He hoped", "he"],
+  ["We decided", "we"],
+] as const;
+const at = (k: number) => pastimes[k] ?? pastimes[0];
+const formLines = join(
+  seriesOf.flatMap(([a, b, c], k) => {
+    const [x, y, z] = [at(a), at(b), at(c)];
+    const [gOpen, gWho] = gerundOpeners[k % 4] ?? gerundOpeners[0];
+    const [iOpen, iWho] = infinitiveOpeners[(k + 1) % 4] ?? infinitiveOpeners[0];
+    return [
+      `${gOpen} ${x[0]}, ${y[0]} and ___.|${z[0]}|to ${z[1]}|${gWho} ${z[2]}`,
+      `${iOpen} to ${x[1]}, to ${y[1]} and ___.|to ${z[1]}|${z[0]}|that ${iWho} would ${z[1]}`,
+    ];
+  }),
+);
+const seriesLabels = join(
+  seriesOf.flatMap(([a, b, c], k) => {
+    const [x, y, z] = [at(a), at(b), at(c)];
+    const [gOpen] = gerundOpeners[k % 4] ?? gerundOpeners[0];
+    const [iOpen, iWho] = infinitiveOpeners[(k + 2) % 4] ?? infinitiveOpeners[0];
+    return [
+      k % 2 === 0 ? `${gOpen} ${x[0]}, ${y[0]} and ${z[0]}.|parallel` : `${iOpen} to ${x[1]}, to ${y[1]} and to ${z[1]}.|parallel`,
+      k % 2 === 0
+        ? `${iOpen} to ${x[1]}, ${y[0]} and to ${z[1]}.|mixes gerunds and infinitives`
+        : `${gOpen} ${x[0]}, to ${y[1]} and ${z[0]}.|mixes gerunds and infinitives`,
+      `${iOpen} to ${x[1]}, to ${y[1]} and that ${iWho} could ${z[1]}.|mixes a verbal with a clause`,
+    ];
+  }),
+);
+
+/** numbers and units make modifiers such as two-year study; famed are modifiers that describe people. */
+const counts = ["two", "three", "five", "ten", "twelve", "twenty"] as const;
+const units = [
+  ["year", "study"],
+  ["hour", "flight"],
+  ["mile", "hike"],
+  ["day", "journey"],
+  ["week", "course"],
+  ["minute", "speech"],
+  ["page", "report"],
+  ["story", "building"],
+] as const;
+const famed = ["well-known", "little-known", "world-famous", "hard-working", "kind-hearted", "award-winning"] as const;
+const roles = ["scientist", "painter", "doctor", "teacher", "writer"] as const;
+const article = (word: string) => (/^[aeiou]/.test(word) ? "an" : "a");
+const joinLines = join([
+  ...everyPair(counts, units).map(([n, [unit, noun]]) => `It was a ___.|${n}-${unit} ${noun}|${n} ${unit} ${noun}|${n}-${unit}-${noun}`),
+  ...everyPair(famed, roles).map(
+    ([mod, role]) => `She met ${article(mod)} ___.|${mod} ${role}|${mod.replace("-", " ")} ${role}|${mod}-${role}`,
+  ),
+]);
+const lyMods = [
+  ["highly skilled", "team"],
+  ["newly built", "bridge"],
+  ["widely read", "book"],
+  ["carefully planned", "trip"],
+  ["freshly baked", "bread"],
+  ["brightly lit", "room"],
+  ["badly damaged", "roof"],
+  ["deeply moving", "film"],
+] as const;
+const hyphenLines = join([
+  ...everyPair(famed, roles).flatMap(([mod, role], k) => {
+    const open = mod.replace("-", " ");
+    return k % 2 === 0
+      ? [
+          `She met ${article(mod)} *${open}* ${role}.|hyphen: it comes before the noun`,
+          `The ${role} was *${open}*.|no hyphen: it comes after the noun`,
+        ]
+      : [
+          `The ${role} became *${open}*.|no hyphen: it comes after the noun`,
+          `He was ${article(mod)} *${open}* ${role}.|hyphen: it comes before the noun`,
+        ];
+  }),
+  ...everyPair(counts, units)
+    .filter((_, k) => k % 2 === 0)
+    .map(([n, [unit, noun]]) => `It was a *${n} ${unit}* ${noun}.|hyphen: it comes before the noun`),
+  ...lyMods.flatMap(([mod, noun]) => [
+    `It was a *${mod}* ${noun}.|no hyphen: the first word ends in -ly`,
+    `We saw a *${mod}* ${noun}.|no hyphen: the first word ends in -ly`,
+  ]),
+]);
+
+/** whoParts feed the who, whom, whoever and whomever items. */
+const gifts = ["the lantern", "the key", "the map", "the last candle", "the old book"] as const;
+const doers = [
+  "goes down to the crypt first",
+  "finds the secret door",
+  "wakes up first",
+  "answers the riddle",
+  "reaches the tower",
+] as const;
+const choosers = [
+  ["She will haunt", "she pleases"],
+  ["The king will reward", "he chooses"],
+  ["You may invite", "you like"],
+  ["They will hire", "they trust"],
+  ["We will thank", "we meet"],
+] as const;
+const persons = ["poet", "knight", "lady", "stranger", "servant"] as const;
+const personActs = ["wrote the tale", "lived in the tower", "found the ring", "opened the gate", "saw the ghost"] as const;
+const personEnds = ["died young", "never came back", "told no one", "left at dawn", "spoke to the king"] as const;
+const metVerbs = ["met", "feared", "trusted", "hired", "saw"] as const;
+const rightForm = join([
+  ...everyPair(gifts, doers).map(([gift, doer]) => `Give ${gift} to ___ ${doer}.|whoever|whomever|whom`),
+  ...everyPair(choosers, persons).map(([[opening, rest], person]) => `${opening} ___ ${rest}, even the ${person}.|whomever|whoever|who`),
+  ...everyPair(persons, personActs).map(([person, act], k) => `The ${person} ___ ${act} ${personEnds[k % 5]}.|who|whom|whoever`),
+  ...everyPair(persons, metVerbs).map(([person, verb], k) => `The ${person} ___ we ${verb} ${personEnds[(k + 2) % 5]}.|whom|who|whomever`),
+]);
+const preps = ["to", "with", "for", "about", "from"] as const;
+const jobLines = join([
+  ...everyPair(doers, personEnds).map(([doer, end]) => `**Whoever** ${doer} ${end}.|subject of its clause`),
+  ...everyPair(persons, personActs).map(([person, act], k) => `The ${person} **who** ${act} ${personEnds[k % 5]}.|subject of its clause`),
+  ...everyPair(persons, metVerbs).map(
+    ([person, verb], k) => `The ${person} **whom** we ${verb} ${personEnds[(k + 1) % 5]}.|object of its clause`,
+  ),
+  ...everyPair(persons, preps).map(
+    ([person, prep], k) => `The ${person} **${prep} whom** we wrote ${personEnds[(k + 3) % 5]}.|object of a preposition`,
+  ),
+]);
+
+/** places open inverted sentences; arrivals and dwellers are a verb and a subject. */
+const moving = [
+  "Into the hall",
+  "Onto the stage",
+  "Through the gate",
+  "Out of the forest",
+  "Down the stairs",
+  "Across the bridge",
+] as const;
+const arrivals = [
+  ["burst", "the angry duke"],
+  ["rode", "three knights"],
+  ["marched", "the royal guard"],
+  ["crept", "a hungry fox"],
+  ["came", "the old king"],
+  ["stumbled", "a weary messenger"],
+] as const;
+const resting = [
+  "On the hill",
+  "Beside the river",
+  "In the corner",
+  "Under the bridge",
+  "Behind the door",
+  "At the top of the tower",
+] as const;
+const dwellers = [
+  ["stood", "an old oak"],
+  ["lay", "a sleeping dog"],
+  ["sat", "two old men"],
+  ["hid", "a frightened cat"],
+  ["was", "a small chest"],
+  ["lived", "a lonely giant"],
+] as const;
+const placeNoun = (place: string) => place.slice(place.indexOf("the "));
+const subjectLines = join([
+  ...everyPair(moving, arrivals).map(([place, [verb, who]]) => `${place} ${verb} ${who}.|${who}|${placeNoun(place)}|${verb} ${who}`),
+  ...everyPair(resting, dwellers).map(([place, [verb, who]]) => `${place} ${verb} ${who}.|${who}|${placeNoun(place)}|${verb} ${who}`),
+]);
+const agreeing = [
+  ["an old oak", "three old oaks", "stand", "stands", "standing"],
+  ["a sleeping dog", "two sleeping dogs", "lie", "lies", "lying"],
+  ["a lonely giant", "two lonely giants", "live", "lives", "living"],
+  ["a small chest", "several small chests", "sit", "sits", "sitting"],
+  ["a frightened cat", "two frightened cats", "hide", "hides", "hiding"],
+  ["a tall statue", "two tall statues", "stand", "stands", "standing"],
+] as const;
+const thereThings = [
+  ["a letter", "two letters"],
+  ["a candle", "three candles"],
+  ["a key", "some keys"],
+  ["a sword", "two swords"],
+  ["a crown", "two crowns"],
+  ["a mirror", "four mirrors"],
+] as const;
+const thereSpots = ["on the table", "in the chest", "by the window", "under the bed", "on the shelf", "near the door"] as const;
+const agreeLines = join([
+  ...everyPair(resting, agreeing).flatMap(([place, [one, many, base, s, ing]]) => [
+    `${place} ___ ${one}.|${s}|${base}|${ing}`,
+    `${place} ___ ${many}.|${base}|${s}|${ing}`,
+  ]),
+  ...everyPair(thereThings, thereSpots).flatMap(([[one, many], spot], k) =>
+    k % 2 === 0 ? [`There ___ ${one} ${spot}.|is|are|being`] : [`There ___ ${many} ${spot}.|are|is|being`],
+  ),
+]);
+
+/** wordFrames are a word, the word it is confused with, and frames with fillers that each take the word. */
+type WordFrames = readonly [string, string, readonly (readonly [string, readonly string[]])[]];
+/** confusedLines crosses each word's frames with their fillers; the third option comes from another pair. */
+const confusedLines = (words: readonly WordFrames[]) =>
+  join(
+    words.flatMap(([word, partner, frames], i) =>
+      frames.flatMap(([frame, fillers]) =>
+        fillers.map((filler, j) => {
+          const other = words[(i + 2 * (1 + (j % (words.length / 2 - 1)))) % words.length]?.[0] ?? partner;
+          return `${frame.replace("{x}", filler)}|${word}|${partner}|${other}`;
+        }),
+      ),
+    ),
+  );
+const lookAlike: readonly WordFrames[] = [
+  [
+    "elicit",
+    "illicit",
+    [
+      ["The teacher tried to ___ {x}.", ["an answer from the class", "a smile from the shy boy", "more ideas", "a response", "the truth"]],
+      ["Good questions ___ {x}.", ["honest answers", "new ideas", "strong feelings", "long replies", "useful facts"]],
+    ],
+  ],
+  [
+    "illicit",
+    "elicit",
+    [
+      [
+        "The police found an ___ {x}.",
+        ["stash of gold", "copy of the files", "trade in ivory", "factory in the woods", "deal with the smugglers"],
+      ],
+      [
+        "The pirates sold ___ {x}.",
+        ["goods at night", "silk in the harbor", "rum to the sailors", "weapons to the rebels", "tea without paying tax"],
+      ],
+    ],
+  ],
+  [
+    "eminent",
+    "imminent",
+    [
+      ["An ___ {x} spoke at the meeting.", ["historian", "scientist", "judge", "surgeon", "poet"]],
+      ["She grew up to be an ___ {x}.", ["lawyer", "architect", "professor", "writer", "explorer"]],
+    ],
+  ],
+  [
+    "imminent",
+    "eminent",
+    [
+      ["The sailors could tell that {x} was ___.", ["a storm", "the attack", "danger", "the end", "the flood"]],
+      ["With the clouds so dark, {x} seemed ___.", ["rain", "a storm", "thunder", "a flood", "the downpour"]],
+    ],
+  ],
+  [
+    "flaunt",
+    "flout",
+    [
+      ["The rich merchant liked to ___ {x}.", ["his gold rings", "his new coach", "his silk coat", "his wealth", "his fine horses"]],
+      ["She did not need to ___ {x}.", ["her prize", "her talent", "her new dress", "her medals", "her success"]],
+    ],
+  ],
+  [
+    "flout",
+    "flaunt",
+    [
+      ["The smugglers ___ {x} every night.", ["the law", "the curfew", "the rules", "the ban", "the tax laws"]],
+      ["Drivers who ___ {x} will be fined.", ["the speed limit", "the parking rules", "the traffic laws", "the ban on horns", "the signs"]],
+    ],
+  ],
+  [
+    "ensure",
+    "insure",
+    [
+      [
+        "Check the list twice to ___ {x}.",
+        [
+          "that nothing is missing",
+          "that no one is left out",
+          "that the facts are right",
+          "that every name is spelled right",
+          "that the dates match",
+        ],
+      ],
+      [
+        "The guards will ___ {x}.",
+        [
+          "that the gate stays shut",
+          "that the king is safe",
+          "that no one enters",
+          "that the prisoners stay inside",
+          "the safety of the guests",
+        ],
+      ],
+    ],
+  ],
+  [
+    "insure",
+    "ensure",
+    [
+      [
+        "The family decided to ___ {x}.",
+        ["their house against fire", "the new car", "the shop against theft", "the farm against floods", "their boat"],
+      ],
+      ["It costs a lot to ___ {x}.", ["a racehorse", "a ship and its cargo", "a famous painting", "a diamond ring", "a sports car"]],
+    ],
+  ],
+];
+const soundAlike: readonly WordFrames[] = [
+  [
+    "discreet",
+    "discrete",
+    [
+      ["Please be ___ about {x}.", ["the surprise party", "her illness", "the secret plan", "my grades", "the gift"]],
+      ["The ___ {x} kept every secret.", ["servant", "butler", "assistant", "doctor", "banker"]],
+      ["He made a ___ {x}.", ["phone call", "exit", "inquiry", "signal", "note"]],
+    ],
+  ],
+  [
+    "discrete",
+    "discreet",
+    [
+      ["The project was split into ___ {x}.", ["stages", "parts", "tasks", "steps", "units"]],
+      ["Count the ___ {x} in the sample.", ["cells", "grains", "particles", "beads", "seeds"]],
+      ["The data fall into ___ {x}.", ["groups", "categories", "classes", "bands", "levels"]],
+    ],
+  ],
+  [
+    "censor",
+    "censure",
+    [
+      ["The government tried to ___ {x}.", ["the newspapers", "the film", "the letters", "the radio", "the books"]],
+      [
+        "The ___ cut {x}.",
+        ["three scenes from the movie", "a page from the book", "the soldiers' letters", "the last chapter", "a line from the song"],
+      ],
+      ["Some schools ___ {x}.", ["student newspapers", "library books", "websites", "school plays", "art shows"]],
+    ],
+  ],
+  [
+    "censure",
+    "censor",
+    [
+      ["The council voted to ___ {x}.", ["the mayor", "the senator", "the judge", "the officer", "the chairman"]],
+      ["The board issued a ___ of {x}.", ["the manager", "the coach", "the director", "the treasurer", "the captain"]],
+      ["The judge received a formal ___ from {x}.", ["the court", "the bar", "the senate", "the panel", "the board"]],
+    ],
+  ],
+  [
+    "adverse",
+    "averse",
+    [
+      ["The ship turned back because of ___ {x}.", ["winds", "weather", "seas", "currents", "conditions"]],
+      ["The new medicine had ___ {x}.", ["effects", "reactions", "results", "side effects", "outcomes"]],
+      ["Farmers suffered from ___ {x}.", ["weather", "prices", "conditions", "rulings", "events"]],
+    ],
+  ],
+  [
+    "averse",
+    "adverse",
+    [
+      ["She is not ___ to {x}.", ["hard work", "taking risks", "long walks", "early mornings", "new ideas"]],
+      ["My cat is ___ to {x}.", ["water", "loud noises", "strangers", "the cold", "baths"]],
+      ["The old captain was ___ to {x}.", ["change", "new maps", "steam engines", "risk", "advice"]],
+    ],
+  ],
+];
+const lookAlikeLines = confusedLines(lookAlike);
+const soundAlikeLines = confusedLines(soundAlike);
+
+/** placesAndFolk are a noun, its preposition and a clause that ends with that preposition. */
+const thingsWith = [
+  ["the town", "in", "I lived"],
+  ["the island", "to", "they sailed"],
+  ["the ship", "on", "we traveled"],
+  ["the house", "in", "he grew up"],
+  ["the box", "in", "she kept her letters"],
+  ["the hill", "from", "we watched the fireworks"],
+  ["the bridge", "under", "the boats passed"],
+  ["the river", "across", "they swam"],
+  ["the chair", "on", "the king sat"],
+  ["the book", "about", "she spoke"],
+] as const;
+const folkWith = [
+  ["the friend", "with", "she traveled"],
+  ["the captain", "to", "she wrote"],
+  ["the woman", "for", "he worked"],
+  ["the boy", "about", "they talked"],
+  ["the teacher", "from", "I learned the most"],
+  ["the neighbor", "with", "we shared the garden"],
+  ["the cousin", "to", "he sent the photos"],
+  ["the guide", "after", "the town was named"],
+] as const;
+const relativeEnds = ["was far away", "has changed a lot", "is in my diary", "still matters to me"] as const;
+const afterPrep = join([
+  ...everyPair(thingsWith, relativeEnds).map(
+    ([[noun, prep, clause], end]) => `${upper(noun)} ___ ${clause} ${end}.|${prep} which|${prep} that|${prep} whom`,
+  ),
+  ...everyPair(folkWith, relativeEnds).map(
+    ([[noun, prep, clause], end]) => `${upper(noun)} ___ ${clause} ${end}.|${prep} whom|${prep} who|${prep} which`,
+  ),
+]);
+const subjects = ["I", "she", "they", "we"] as const;
+const swapSubject = (clause: string, who: string) => {
+  const [, ...rest] = clause.split(" ");
+  return `${who} ${rest.join(" ")}`;
+};
+const formalLines = join([
+  ...everyPair(thingsWith, subjects).map(([[noun, prep, clause], who]) => {
+    const c = swapSubject(clause, who);
+    return `${noun} ${c} ${prep}|${noun} ${prep} which ${c}|${noun} ${prep} which ${c} ${prep}|${noun} ${prep} that ${c}`;
+  }),
+  ...everyPair(folkWith, subjects).map(([[noun, prep, clause], who]) => {
+    const c = swapSubject(clause, who);
+    return `${noun} ${c} ${prep}|${noun} ${prep} whom ${c}|${noun} ${prep} whom ${c} ${prep}|${noun} ${prep} that ${c}`;
+  }),
+]);
 
 const parallelLabels: Readonly<Record<string, Label>> = {
   parallel: {
@@ -49,6 +483,7 @@ const parallelVerbals = topic("grammar", {
       ],
       ["Which words complete the series in the same form?", "哪个选项能让并列项形式一致？"],
       `
+${formLines}
         The children spent their days spinning, weaving and ___.|sweeping|to sweep|they swept the floor
         The reformers wanted to shorten the hours, to raise the pay and ___.|to close the worst mills|closing the worst mills|they closed the worst mills
         She loved reading, drawing and ___.|singing|to sing|she sang
@@ -104,6 +539,7 @@ const parallelVerbals = topic("grammar", {
       ],
       ["Is the series in this sentence parallel?", "这个句子里的并列平行吗？"],
       `
+${seriesLabels}
         The workers wanted to rest, to eat and to sleep.|parallel
         The workers wanted to rest, eating and to sleep.|mixes gerunds and infinitives
         The workers wanted to rest, to eat and that they could sleep.|mixes a verbal with a clause
@@ -185,6 +621,7 @@ const compoundModifiers = topic("grammar", {
       ],
       ["Which is hyphenated correctly?", "哪个选项的连字符用法正确？"],
       `
+${joinLines}
         Darwin was a ___.|well-known naturalist|well known naturalist|well-known-naturalist
         The finches were studied in a ___.|twenty-year project|twenty year project|twenty-year-project
         The glacier is a ___.|slow-moving river of ice|slow moving river of ice|slow-moving-river of ice
@@ -240,6 +677,7 @@ const compoundModifiers = topic("grammar", {
       ],
       ["The hyphens have been taken out. Which rule applies to the words in italics?", "连字符已被去掉。斜体部分适用哪条规则？"],
       `
+${hyphenLines}
         Darwin was a *well known* naturalist.|hyphen: it comes before the noun
         The naturalist was *well known*.|no hyphen: it comes after the noun
         She led a *highly skilled* team.|no hyphen: the first word ends in -ly
@@ -324,6 +762,7 @@ const whoever = topic("grammar", {
       ],
       ["Which pronoun fits the blank?", "空格里应该填哪个代词？"],
       `
+${rightForm}
         Give the lantern to ___ goes down to the crypt first.|whoever|whomever|whom
         The ghost appeared to ___ slept in the east room.|whoever|whomever|whom
         She will haunt ___ she pleases.|whomever|whoever|who
@@ -379,6 +818,7 @@ const whoever = topic("grammar", {
       ],
       ["What job does the pronoun in bold do?", "粗体的代词起什么作用？"],
       `
+${jobLines}
         **Whoever** knocks at midnight must not be let in.|subject of its clause
         The guest **whom** the host feared never arrived.|object of its clause
         The lady **to whom** he wrote never answered.|object of a preposition
@@ -433,6 +873,7 @@ const inverted = topic("grammar", {
       ],
       ["What is the subject of the sentence?", "这个句子的主语是什么？"],
       `
+${subjectLines}
         Into the hall burst the angry duke.|the angry duke|the hall|burst the angry duke
         On the stage stood three witches.|three witches|the stage|stood
         Sweet are the uses of adversity.|the uses of adversity|sweet|are the uses of adversity
@@ -488,6 +929,7 @@ const inverted = topic("grammar", {
       ],
       ["Which verb agrees with the subject?", "哪个动词与主语一致？"],
       `
+${agreeLines}
         On the stage ___ three witches.|stand|stands|standing
         Beyond the castle walls ___ the tents of the army.|stand|stands|standing
         Into the room ___ the duke.|bursts|burst|bursting
@@ -649,6 +1091,7 @@ const confused4 = topic("grammar", {
       ],
       ["Which word belongs in the blank?", "空格里应该填哪个词？"],
       `
+${lookAlikeLines}
         The question was meant to ___ an honest answer.|elicit|illicit|ensure
         The smugglers ran an ___ trade in tea.|illicit|elicit|discrete
         An ___ historian spoke at the meeting.|eminent|imminent|discreet
@@ -691,6 +1134,7 @@ const confused4 = topic("grammar", {
       ],
       ["Which word belongs in the blank?", "空格里应该填哪个词？"],
       `
+${soundAlikeLines}
         The ship turned back because of ___ winds.|adverse|averse|discrete
         She is not ___ to hard work.|averse|adverse|eminent
         The rich merchant liked to ___ his gold rings.|flaunt|flout|censure
@@ -745,6 +1189,7 @@ const prepositionRelatives = topic("grammar", {
       ],
       ["Which words complete the formal sentence?", "哪个选项能补全这个正式的句子？"],
       `
+${afterPrep}
         The island ___ they sailed was far to the west.|to which|to that|to whom
         The captain ___ she wrote never replied.|to whom|to who|to which
         The house ___ he grew up has been torn down.|in which|in that|in whom
@@ -800,6 +1245,7 @@ const prepositionRelatives = topic("grammar", {
       ],
       ["Which is the correct formal version?", "哪个是正确的正式说法？"],
       `
+${formalLines}
         the town I lived in|the town in which I lived|the town in which I lived in|the town in that I lived
         the friend I wrote to|the friend to whom I wrote|the friend to whom I wrote to|the friend to that I wrote
         the ship they sailed on|the ship on which they sailed|the ship on which they sailed on|the ship on that they sailed

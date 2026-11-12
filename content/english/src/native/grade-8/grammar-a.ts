@@ -3,7 +3,388 @@
 
 import type { TopicDef } from "@ga/content";
 import type { ChoiceItem } from "@ga/subject-english";
+import { everyPair } from "../../levels/words.ts";
 import { choose, field, type Label, label, rows, topic } from "../grade-6/kit.ts";
+
+// Crossed items: frames, people and phrases multiply the lines below into a hundred items or more for each bank.
+
+const join = (lines: readonly string[]) => lines.join("\n");
+const upper = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+/** verbalActs are an -ing form, its base and what follows it. */
+const verbalActs = [
+  ["sailing", "sail", "around the world"],
+  ["painting", "paint", "the old barn"],
+  ["climbing", "climb", "the north face"],
+  ["building", "build", "a raft"],
+  ["learning", "learn", "Arabic"],
+  ["repairing", "repair", "the engine"],
+  ["mapping", "map", "the coast"],
+  ["training", "train", "the horses"],
+  ["writing", "write", "the report"],
+  ["baking", "bake", "bread for the fair"],
+  ["planting", "plant", "the rice"],
+  ["exploring", "explore", "the cave"],
+] as const;
+const gerundEnds = ["was her dream", "took all summer", "made him proud", "became their hobby"] as const;
+const infinitiveFrames = ["She hoped", "They planned", "He wanted", "We tried"] as const;
+const participleMains = ["she kept a diary", "he whistled a tune", "they lost track of time", "we met an old friend"] as const;
+const namingLines = join([
+  ...everyPair(verbalActs, gerundEnds).map(([[ing, , rest], end]) => `**${upper(ing)}** ${rest} ${end}.|gerund`),
+  ...everyPair(verbalActs, infinitiveFrames).map(([[, base, rest], frame]) => `${frame} **to ${base}** ${rest}.|infinitive`),
+  ...everyPair(verbalActs, participleMains).map(([[ing, , rest], main]) => `**${upper(ing)}** ${rest}, ${main}.|participle`),
+]);
+const helpers = ["She was", "They were", "He is", "We are"] as const;
+const describing = [
+  ["barking", "dog", "woke the whole street", "The dog was barking all night."],
+  ["rising", "tide", "covered the rocks", "The tide is rising fast."],
+  ["falling", "leaves", "filled the yard", "The leaves were falling all day."],
+  ["howling", "wind", "rattled the windows", "The wind is howling outside."],
+  ["sleeping", "baby", "smiled in her dream", "The baby was sleeping in the cradle."],
+  ["running", "water", "kept the wheel turning", "The water was running over the dam."],
+  ["shining", "stars", "guided the sailors", "The stars were shining over the bay."],
+  ["blooming", "roses", "smelled sweet", "The roses are blooming early this year."],
+  ["melting", "snow", "flooded the path", "The snow is melting in the sun."],
+  ["ringing", "phone", "interrupted the meeting", "The phone was ringing in the hall."],
+] as const;
+const verbOrVerbal = join([
+  ...everyPair(verbalActs, helpers).map(([[ing, , rest], helper]) => `${helper} **${ing}** ${rest}.|main verb`),
+  ...everyPair(verbalActs, gerundEnds).map(([[ing, , rest], end]) => `**${upper(ing)}** ${rest} ${end}.|gerund`),
+  ...describing.flatMap(([ing, noun, pred, main]) => [
+    `The **${ing}** ${noun} ${pred}.|participle`,
+    `We watched the **${ing}** ${noun}.|participle`,
+    `${main.replace(` ${ing} `, ` **${ing}** `)}|main verb`,
+  ]),
+]);
+
+/** complexScenes are opening words with clauses, and main clauses that follow from any of them. */
+const complexScenes = [
+  [
+    [
+      ["When", "the whistle blew"],
+      ["After", "the shift ended"],
+      ["As soon as", "the bell rang"],
+    ],
+    ["the workers went home", "the machines fell silent", "the manager locked the gate"],
+  ],
+  [
+    [
+      ["Because", "the river ran dry"],
+      ["Since", "the rains failed"],
+      ["After", "the dam was built"],
+    ],
+    ["the mill wheel stopped", "the farmers dug new wells", "the town bought water by the barrel"],
+  ],
+  [
+    [
+      ["If", "the valve sticks"],
+      ["Unless", "someone checks the gauge"],
+      ["Whenever", "the pressure rises"],
+    ],
+    ["the boiler may burst", "the engine will shake", "the whistle will scream"],
+  ],
+  [
+    [
+      ["Before", "the railway came"],
+      ["Until", "the canal opened"],
+      ["While", "the roads were muddy"],
+    ],
+    ["goods moved slowly", "letters took weeks", "most people stayed close to home"],
+  ],
+  [
+    [
+      ["Once", "the telegraph arrived"],
+      ["After", "the cable was laid"],
+      ["When", "the line was finished"],
+    ],
+    ["news crossed the ocean in minutes", "traders learned prices at once", "the newspapers printed fresher stories"],
+  ],
+] as const;
+const contrastEnds = [
+  "although it was slow",
+  "even though the pay was low",
+  "though the hours were long",
+  "whereas the old one broke often",
+] as const;
+const contrastMains = [
+  "The machine never broke down",
+  "The workers stayed",
+  "The factory kept running",
+  "The new loom was trusted",
+] as const;
+const complexMore = join(
+  complexScenes.flatMap(([openers, mains]) => openers.flatMap(([conj, clause]) => mains.map((main) => `${conj}|${clause}|${main}`))),
+);
+const commaNeeds = join([
+  ...complexScenes.flatMap(([openers, mains]) =>
+    openers.flatMap(([conj, clause]) =>
+      mains.flatMap((main) => [
+        `${conj} ${clause} ${main}.|comma after the opening clause`,
+        `${upper(main)} ${conj.toLowerCase()} ${clause}.|no comma: the clause comes last`,
+      ]),
+    ),
+  ),
+  ...everyPair(contrastMains, contrastEnds).map(([main, end]) => `${main} ${end}.|comma before a contrast`),
+]);
+
+/** meanings are a relationship, its conjunctions, whether they may open the sentence, and clause pairs. */
+const meanings = [
+  [
+    "time",
+    ["when", "after", "as soon as", "once"],
+    true,
+    [
+      ["the whistle blew", "the workers left the mill"],
+      ["the rain stopped", "the farmers went back to the fields"],
+      ["the train arrived", "the crowd cheered"],
+      ["the bell rang", "the children ran outside"],
+      ["the sun set", "the lamps were lit"],
+      ["the ship docked", "the sailors came ashore"],
+    ],
+  ],
+  [
+    "cause",
+    ["because", "since"],
+    true,
+    [
+      ["the river ran dry", "the mill closed"],
+      ["the bridge was broken", "the carts went the long way"],
+      ["the wages were low", "many workers left"],
+      ["the road was icy", "the coach drove slowly"],
+      ["the lamp was out", "we read by the fire"],
+      ["the price of bread rose", "the families ate less"],
+      ["the loom was faster", "the weavers lost their jobs"],
+      ["the coal was cheap", "the factories grew"],
+      ["the boy was sick", "his sister took his shift"],
+      ["the gate was locked", "the workers waited outside"],
+    ],
+  ],
+  [
+    "condition",
+    ["if", "provided that", "as long as"],
+    true,
+    [
+      ["the fuel is dry", "the engine will start"],
+      ["the weather holds", "the harvest will be good"],
+      ["the bridge is repaired", "the carts can cross"],
+      ["you have a pass", "you may enter the mill"],
+      ["the river stays high", "the wheel will turn"],
+      ["the tickets are cheap", "the hall will be full"],
+    ],
+  ],
+  [
+    "contrast",
+    ["although", "though", "even though"],
+    true,
+    [
+      ["the work was dangerous", "children were hired"],
+      ["the pay was low", "the jobs filled quickly"],
+      ["the machine was old", "it never broke down"],
+      ["the night was cold", "the guards stayed outside"],
+      ["the road was long", "the carts arrived on time"],
+      ["the boss was strict", "the workers liked him"],
+    ],
+  ],
+  [
+    "purpose",
+    ["so that", "in order that"],
+    false,
+    [
+      ["their children could attend school", "the workers saved coins"],
+      ["barges could carry coal", "the town built a canal"],
+      ["the sailors could see the rocks", "she lit a lamp"],
+      ["the wheel would turn smoothly", "they oiled the gears"],
+      ["the workers could see better", "the owner added windows"],
+      ["the fields would drain", "the farmers dug ditches"],
+    ],
+  ],
+] as const;
+const showsLines = join(
+  meanings.flatMap(([meaning, conjs, opens, pairs]) =>
+    everyPair(conjs as readonly string[], pairs as readonly (readonly [string, string])[]).flatMap(([conj, [clause, main]]) => [
+      `${upper(main)} **${conj}** ${clause}.|${meaning}`,
+      ...(opens ? [`**${upper(conj)}** ${clause}, ${main}.|${meaning}`] : []),
+    ]),
+  ),
+);
+/** fitting are clause pairs with the conjunction that fits and two that do not. */
+const fitting = [
+  ...meanings[0][3].flatMap(([clause, main]) =>
+    (["when", "after", "as soon as"] as const).map((conj) => [conj, clause, main, "although", "unless"] as const),
+  ),
+  ...meanings[1][3].map(([clause, main]) => ["because", clause, main, "although", "unless"] as const),
+  ...meanings[3][3].map(([clause, main]) => ["although", clause, main, "because", "unless"] as const),
+  ...(
+    [
+      ["someone oils the gears", "the wheel will jam"],
+      ["it rains soon", "the crops will fail"],
+      ["you have a pass", "you cannot enter the mill"],
+      ["the bridge is repaired", "the carts cannot cross"],
+      ["the guards stay awake", "the fort will fall"],
+      ["we leave now", "we will miss the train"],
+    ] as const
+  ).map(([clause, main]) => ["unless", clause, main, "because", "although"] as const),
+];
+const fitLines = join([
+  ...fitting.flatMap(([conj, clause, main, w0, w1]) => [
+    `___ ${clause}, ${main}.|${upper(conj)}|${upper(w0)}|${upper(w1)}`,
+    `${upper(main)} ___ ${clause}.|${conj}|${w0}|${w1}`,
+  ]),
+  ...meanings[4][3].map(([clause, main]) => `${upper(main)} ___ ${clause}.|so that|although|unless`),
+]);
+
+/** quoted are a subject with two endings; asides are words that can be cut from the middle. */
+const quoted = [
+  ["The voyage", "changed how Europeans saw the world", "took three long years"],
+  ["The captain", "kept a careful log", "never lost a ship"],
+  ["Magellan's fleet", "crossed the Pacific", "ran short of food"],
+  ["The new maps", "showed a vast ocean", "were wildly wrong"],
+  ["The sailors", "feared the open sea", "ate rats to survive"],
+  ["The spice trade", "made a few men rich", "drove the search for new routes"],
+] as const;
+const asides = [
+  "as the records show",
+  "according to the ship's log",
+  "in the view of most historians",
+  "despite years of doubt",
+  "for the most part",
+  "as one sailor later wrote",
+] as const;
+const fillers = ["actually", "finally", "clearly", "always", "really"] as const;
+const shortenLines = join(
+  everyPair(
+    quoted.flatMap(([who, a, b]) => [
+      [who, a],
+      [who, b],
+    ]),
+    asides,
+  ).map(
+    ([[who, rest], aside], k) =>
+      `Original: "${who}, ${aside}, ${rest}." Leave out "${aside}".|"${who} … ${rest}."|"${who} ${rest}."|"${who} … ${fillers[k % 5]} ${rest}."`,
+  ),
+);
+const negated = [
+  ["The captain", "to blame for the wreck"],
+  ["The map", "accurate"],
+  ["The treaty", "signed by the king"],
+  ["The crew", "paid on time"],
+  ["The island", "empty"],
+  ["The voyage", "a failure"],
+  ["The cargo", "lost at sea"],
+  ["The letter", "written by Magellan"],
+] as const;
+const fairLines = join([
+  ...everyPair(quoted, asides).flatMap(([[who, a], aside], k) => [
+    k % 2 === 0
+      ? `Original: "${who}, ${aside}, ${a}." Quoted: "${who} … ${a}."|fair`
+      : `Original: "${who}, ${aside}, ${a}." Quoted: "${who} ${a}."|unmarked: no ellipsis`,
+  ]),
+  ...everyPair(quoted, asides).flatMap(([[who, , b], aside], k) => [
+    k % 2 === 1
+      ? `Original: "${who}, ${aside}, ${b}." Quoted: "${who} … ${b}."|fair`
+      : `Original: "${who}, ${aside}, ${b}." Quoted: "${who} ${b}."|unmarked: no ellipsis`,
+  ]),
+  ...negated.flatMap(([who, rest]) => [
+    `Original: "${who} was not ${rest}." Quoted: "${who} was … ${rest}."|unfair: the meaning changed`,
+    `Original: "${who} was never ${rest}." Quoted: "${who} was … ${rest}."|unfair: the meaning changed`,
+  ]),
+]);
+
+/** unreal are a subject, what it would be, and what would or will follow. */
+const unreal = [
+  ["the voyage", "shorter", "we would reach home sooner", "we will reach home sooner"],
+  ["the king", "wiser", "he would listen to his people", "he will listen to his people"],
+  ["my brother", "here", "he would help us", "he will help us"],
+  ["the road", "safer", "we would travel at night", "we will travel at night"],
+  ["the river", "calmer", "the boats would cross", "the boats will cross"],
+  ["the winter", "milder", "the sheep would survive", "the sheep will survive"],
+  ["the castle", "closer", "the army would rest there", "the army will rest there"],
+  ["the queen", "kinder", "the prisoners would go free", "the prisoners will go free"],
+  ["the test", "easier", "everyone would pass", "everyone will pass"],
+  ["the market", "open", "we would buy bread", "we will buy bread"],
+  ["the bridge", "finished", "the carts would cross", "the carts will cross"],
+  ["the weather", "warmer", "the children would swim", "the children will swim"],
+  ["the ship", "ready", "the crew would sail", "the crew will sail"],
+  ["the harvest", "bigger", "the village would feast", "the village will feast"],
+  ["the gate", "open", "the guests would come in", "the guests will come in"],
+  ["the map", "clearer", "we would find the pass", "we will find the pass"],
+] as const;
+const roles = [
+  ["the captain", "turn back"],
+  ["the mayor", "fix the roads"],
+  ["a bird", "fly over the wall"],
+  ["taller", "reach the shelf"],
+  ["older", "drive the cart"],
+  ["rich", "buy the ship"],
+] as const;
+const people = [
+  ["I", "I"],
+  ["he", "he"],
+  ["she", "she"],
+] as const;
+const wereLines = join([
+  ...unreal.flatMap(([who, what], k) =>
+    [`I wish ${who} ___ ${what}.`, `If only ${who} ___ ${what}.`, `Suppose ${who} ___ ${what}.`]
+      .filter((_, f) => f !== k % 3)
+      .map((frame) => `${frame}|were|was|would be`),
+  ),
+  ...unreal.map(([who, what, would]) => `If ${who} ___ ${what}, ${would}.|were|was|would be`),
+  ...everyPair(people, roles).flatMap(([[p, q], [role, act]]) => [
+    `If ${p} ___ ${role}, ${q} would ${act}.|were|was|would be`.replace(/^If i /, "If I "),
+    `${p === "I" ? "I wish I" : `I wish ${p}`} ___ ${role}.|were|was|would be`,
+  ]),
+]);
+const realLines = join(
+  unreal.flatMap(([who, what, would, will]) => [
+    `I wish ${who} were ${what}.|a wish`,
+    `If only ${who} were ${what}.|a wish`,
+    `If ${who} were ${what}, ${would}.|an unreal condition`,
+    `Suppose ${who} were ${what}; ${would}.|an unreal condition`,
+    `If ${who} is ${what}, ${will}.|a real possibility`,
+  ]),
+);
+
+/** voiceDoers can each do every pair of actions in voiceActs. */
+const voiceDoers = [
+  "The colonists",
+  "The farmers",
+  "The rebels",
+  "The villagers",
+  "The sailors",
+  "The merchants",
+  "The students",
+  "The miners",
+] as const;
+/** voiceActs are a first action, the second action, both in the passive, and an awkward passive. */
+const voiceActs = [
+  ["wrote a letter", "sent it to the governor", "A letter was written", "it was sent to the governor"],
+  ["built a wall", "guarded it day and night", "A wall was built", "it was guarded day and night"],
+  ["found an old map", "followed it to the coast", "An old map was found", "it was followed to the coast"],
+  ["made a flag", "raised it over the square", "A flag was made", "it was raised over the square"],
+  ["dug a well", "shared the water with everyone", "A well was dug", "the water was shared with everyone"],
+  ["planned a march", "led it through the town", "A march was planned", "it was led through the town"],
+  ["caught a thief", "took him to the judge", "A thief was caught", "he was taken to the judge"],
+  ["repaired the bridge", "opened it in May", "The bridge was repaired", "it was opened in May"],
+  ["collected the grain", "stored it in the barn", "The grain was collected", "it was stored in the barn"],
+] as const;
+const lowerFirst = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
+const voiceSpot = join(
+  everyPair(voiceDoers, voiceActs).flatMap(([who, [first, second, firstPassive, secondPassive]], k) =>
+    k % 3 === 0
+      ? [`${who} ${first}, and ${secondPassive}.|active to passive`, `${who} ${first} and ${second}.|no shift`]
+      : k % 3 === 1
+        ? [`${firstPassive}, and ${lowerFirst(who)} ${second}.|passive to active`, `${who} ${first} and then ${second}.|no shift`]
+        : [
+            `${who} ${first}, and ${secondPassive}.|active to passive`,
+            `${firstPassive}, and ${lowerFirst(who)} ${second}.|passive to active`,
+          ],
+  ),
+);
+const voiceKeep = join(
+  everyPair(voiceDoers, voiceActs).map(
+    ([who, [first, second, , secondPassive]]) => `${who} ${first}, and ___|they ${second}.|${secondPassive}.|${secondPassive} by them.`,
+  ),
+);
 
 const verbalLabels: Readonly<Record<string, Label>> = {
   gerund: {
@@ -89,6 +470,7 @@ const verbals = topic("grammar", {
       ],
       ["What kind of verbal is the word in bold?", "粗体的词是哪种非谓语形式？"],
       `
+${namingLines}
         **Sailing** around the world was her dream.|gerund
         The **sinking** ship sent up flares.|participle
         She hoped **to reach** the island by dawn.|infinitive
@@ -131,6 +513,7 @@ const verbals = topic("grammar", {
       ],
       ["What is the *-ing* word in bold doing?", "粗体的 *-ing* 词在句中起什么作用？"],
       `
+${verbOrVerbal}
         The crew was **rowing** toward shore.|main verb
         **Rowing** toward shore took all night.|gerund
         The **rowing** sailors sang to keep time.|participle
@@ -169,6 +552,7 @@ const verbals = topic("grammar", {
 
 // Complex sentences: conjunction|dependent clause|main clause, built in both orders.
 const complexLines = rows(`
+${complexMore}
   When|the engine started|the whole room shook
   Because|the belt snapped|the machine stopped
   After|the telegraph arrived|news traveled in minutes
@@ -286,6 +670,7 @@ const complexCommas = topic("grammar", {
       ],
       ["The commas have been taken out. Which rule applies to this sentence?", "句子里的逗号已被去掉。哪条规则适用于这个句子？"],
       `
+${commaNeeds}
         Although the machine was slow it never broke down.|comma after the opening clause
         The machine never broke down although it was slow.|comma before a contrast
         The machine stopped because the belt snapped.|no comma: the clause comes last
@@ -383,6 +768,7 @@ const conjunctions = topic("grammar", {
       ],
       ["What relation does the conjunction in bold show?", "粗体的连词表示什么关系？"],
       `
+${showsLines}
         The mill closed **because** the river ran dry.|cause
         **Although** the work was dangerous, children were hired.|contrast
         The engine will start **provided that** the fuel is dry.|condition
@@ -425,6 +811,7 @@ const conjunctions = topic("grammar", {
       ],
       ["Which conjunction makes the sentence say what is meant?", "哪个连词能让句子表达出应有的意思？"],
       `
+${fitLines}
         ___ the factory paid low wages, workers kept coming from the farms.|Although|Because|Unless
         The machine stopped ___ the belt snapped.|because|although|unless
         You cannot enter the mill ___ you have a pass.|unless|because|although
@@ -519,6 +906,7 @@ const ellipses = topic("grammar", {
       ],
       ["Which shortened quotation is correct and fair?", "哪个缩短的引文正确而公正？"],
       `
+${shortenLines}
         Original: "The voyage, which lasted three long years, changed how Europeans saw the world." Leave out the clause about the years.|"The voyage … changed how Europeans saw the world."|"The voyage changed how Europeans saw the world."|"The voyage … actually changed how Europeans saw the world."
         Original: "The captain did not, as some have claimed, abandon his crew." Leave out the words between commas.|"The captain did not … abandon his crew."|"The captain did not abandon his crew."|"The captain did not … finally abandon his crew."
         Original: "Magellan, a Portuguese sailor in the service of Spain, led the fleet." Leave out the description.|"Magellan … led the fleet."|"Magellan led the fleet."|"Magellan … clearly led the fleet."
@@ -574,6 +962,7 @@ const ellipses = topic("grammar", {
       ],
       ["Compare the quotation with the original. What is true of it?", "把引文与原文比较。哪个说法正确？"],
       `
+${fairLines}
         Original: "The ship, battered by storms, reached port." Quoted: "The ship … reached port."|fair
         Original: "The ship, battered by storms, reached port." Quoted: "The ship reached port."|unmarked: no ellipsis
         Original: "The captain was not to blame for the wreck." Quoted: "The captain was … to blame for the wreck."|unfair: the meaning changed
@@ -658,6 +1047,7 @@ const wishes = topic("grammar", {
       ],
       ["Which verb is right in careful, formal writing?", "在严谨的正式写作中，哪个动词是正确的？"],
       `
+${wereLines}
         I wish the voyage ___ shorter.|were|was|would be
         If the king ___ wiser, he would listen to his people.|were|was|would be
         She speaks as if she ___ the queen herself.|were|was|would be
@@ -713,6 +1103,7 @@ const wishes = topic("grammar", {
       ],
       ["What does the sentence describe?", "这个句子描述的是什么？"],
       `
+${realLines}
         I wish the colony were free.|a wish
         If the king were here, he would see the damage.|an unreal condition
         If the messenger was here this morning, he left a letter.|a real possibility
@@ -791,6 +1182,7 @@ const voiceShifts = topic("grammar", {
       ],
       ["Does the sentence shift voice?", "这个句子转换了语态吗？"],
       `
+${voiceSpot}
         The colonists wrote a petition, and it was sent to the king.|active to passive
         The colonists wrote a petition and sent it to the king.|no shift
         The tax was announced in March, and the merchants protested at once.|passive to active
@@ -833,6 +1225,7 @@ const voiceShifts = topic("grammar", {
       ],
       ["Which version keeps one voice and keeps the doer clear?", "哪个版本保持了一种语态，并且执行者清楚？"],
       `
+${voiceKeep}
         The farmers built a wall, and ___|they guarded it day and night.|it was guarded day and night.|day and night it was guarded by someone.
         The crowd surrounded the palace, and ___|it shouted for bread.|bread was shouted for.|the palace was shouted at for bread.
         The rebels wrote a manifesto, and ___|they nailed it to the church door.|it was nailed to the church door.|the church door was where it was nailed.
