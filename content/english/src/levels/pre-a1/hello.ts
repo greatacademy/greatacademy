@@ -4,7 +4,7 @@ import { type Text, type TopicDef, t } from "@ga/content";
 
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
-import { interleave, pairUp, vocabularyTopic, word } from "../words.ts";
+import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
 
 const hello = vocabularyTopic({
   id: "pre-a1-words-hello",
@@ -191,7 +191,26 @@ const subjects: readonly (readonly [subject: string, be: "am" | "is" | "are", sh
 ];
 
 /** complements fit any subject: they say how someone is or where. */
-const complements: readonly string[] = ["happy", "at home", "at school", "very small", "in the classroom", "sad today", "with my mom"];
+const complements: readonly string[] = [
+  "happy",
+  "at home",
+  "at school",
+  "very small",
+  "in the classroom",
+  "sad today",
+  "with my mom",
+  "here",
+  "there",
+  "very happy",
+  "very big",
+  "with my friends",
+  "happy today",
+  "at school today",
+  "sad",
+];
+
+/** places fit any named subject, a person, an animal or a thing: they say where it is. */
+const places: readonly string[] = ["here", "there", "at home", "at school", "in the classroom"];
 
 /** namedSubjects are nouns and names, each with its form of be. */
 const namedSubjects: readonly (readonly [subject: string, be: "is" | "are"])[] = [
@@ -209,16 +228,16 @@ const namedSubjects: readonly (readonly [subject: string, be: "is" | "are"])[] =
 ];
 
 const beChoiceBank: readonly ChoiceItem[] = interleave([
-  pairUp(35, subjects, ["happy", "at home", "at school", "sad today", "in the classroom"]).map(
+  everyPair(subjects, complements).map(
     ([[subject, be], rest]): ChoiceItem => [`${subject} ___ ${rest}.`, be, (["am", "is", "are"] as const).filter((b) => b !== be)],
   ),
-  pairUp(22, namedSubjects, ["here", "at home"]).map(
+  everyPair(namedSubjects, places).map(
     ([[subject, be], rest]): ChoiceItem => [`${subject} ___ ${rest}.`, be, ["am", be === "is" ? "are" : "is"]],
   ),
-]).filter((item, i, all) => all.findIndex((other) => other[0] === item[0]) === i);
+]);
 
 const missingBeBank: readonly TypedItem[] = interleave([
-  pairUp(35, subjects, complements.slice(0, 5)).map(([[subject, be, short], rest]): TypedItem => {
+  everyPair(subjects, complements).map(([[subject, be, short], rest]): TypedItem => {
     const wrongBe = be === "is" ? "are" : "is";
     return {
       shown: `${subject} ${rest}.`,
@@ -227,7 +246,7 @@ const missingBeBank: readonly TypedItem[] = interleave([
       wrong: [`${subject} ${rest}.`, `${subject} ${wrongBe} ${rest}.`],
     };
   }),
-  pairUp(11, namedSubjects, ["very nice"]).map(([[subject, be], rest]): TypedItem => {
+  everyPair(namedSubjects, places).map(([[subject, be], rest]): TypedItem => {
     const wrongBe = be === "is" ? "are" : "is";
     return {
       shown: `${subject} ${rest}.`,
@@ -238,14 +257,11 @@ const missingBeBank: readonly TypedItem[] = interleave([
   }),
 ]);
 
-const shortFormBank: readonly ChoiceItem[] = pairUp(35, subjects, ["happy", "here", "at school", "very tall", "at home"]).map(
-  ([[subject, be, short], rest]): ChoiceItem => {
-    const plain = subject === "I" ? "I" : subject;
-    const badApostrophe = `${plain}${be === "am" ? "m" : be === "is" ? "s" : "re"}`;
-    const wrongBe = `${plain}'${be === "is" ? "re" : "s"}`;
-    return [`${subject} ${be} ${rest}.`, `${short} ${rest}.`, [`${badApostrophe} ${rest}.`, `${wrongBe} ${rest}.`]];
-  },
-);
+const shortFormBank: readonly ChoiceItem[] = everyPair(subjects, complements).map(([[subject, be, short], rest]): ChoiceItem => {
+  const badApostrophe = `${subject}${be === "am" ? "m" : be === "is" ? "s" : "re"}`;
+  const wrongBe = `${subject}'${be === "is" ? "re" : "s"}`;
+  return [`${subject} ${be} ${rest}.`, `${short} ${rest}.`, [`${badApostrophe} ${rest}.`, `${wrongBe} ${rest}.`]];
+});
 
 /** beRule says which subjects take a form of be, in every locale. */
 const beRule: Record<string, Text> = {

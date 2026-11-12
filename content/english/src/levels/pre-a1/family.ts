@@ -3,7 +3,7 @@
 import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
-import { interleave, pairUp, sentenceCase, vocabularyTopic, word } from "../words.ts";
+import { everyPair, interleave, sentenceCase, vocabularyTopic, word } from "../words.ts";
 
 const family = vocabularyTopic({
   id: "pre-a1-words-family",
@@ -290,10 +290,13 @@ const referents: readonly (readonly [noun: string, kind: Kind])[] = [
   ["The pen", "thing"],
 ];
 
-const pronounChoiceBank: readonly ChoiceItem[] = pairUp(45, referents, [
+const pronounChoiceBank: readonly ChoiceItem[] = everyPair(referents, [
   "X is here. ___ is very nice.",
   "Look at X. ___ is very big.",
   "Where is X? ___ is at home.",
+  "Where is X? ___ is here.",
+  "I see X. ___ is there.",
+  "X is not here. ___ is at home.",
 ]).map(([[noun, kind], frame]): ChoiceItem => {
   const lower = noun.startsWith("My") || noun.startsWith("The") ? noun.charAt(0).toLowerCase() + noun.slice(1) : noun;
   const shown = frame.startsWith("X") ? frame.replace("X", noun) : frame.replace("X", lower);
@@ -301,19 +304,26 @@ const pronounChoiceBank: readonly ChoiceItem[] = pairUp(45, referents, [
   return [shown, right, ["He", "She", "It"].filter((p) => p !== right)];
 });
 
-const personComplements: readonly string[] = ["is at school.", "is very kind.", "is in the garden.", "is my friend.", "is not at home."];
-const thingComplements: readonly string[] = ["is red.", "is very small.", "is on the desk.", "is not big."];
+const personComplements: readonly string[] = [
+  "is at school.",
+  "is very kind.",
+  "is in the garden.",
+  "is my friend.",
+  "is not at home.",
+  "is in the classroom.",
+  "is very happy.",
+];
+/** thingComplements fit an animal as well as a thing. */
+const thingComplements: readonly string[] = ["is very small.", "is here.", "is not big.", "is at home.", "is there.", "is black."];
 
 const pronounTypedBank: readonly TypedItem[] = interleave([
-  pairUp(
-    26,
+  everyPair(
     referents.filter(([, kind]) => kind !== "thing"),
     personComplements,
   ),
-  pairUp(
-    10,
+  everyPair(
     referents.filter(([, kind]) => kind === "thing"),
-    thingComplements.slice(0, 2),
+    thingComplements,
   ),
 ]).map(([[noun, kind], rest]): TypedItem => {
   const right = sentenceCase(pronounOf[kind]);
@@ -415,20 +425,34 @@ const owned: readonly (readonly [thing: string, color: string])[] = [
   ["pen", "green"],
   ["book", "yellow"],
   ["chair", "white"],
+  ["cat", "gray"],
+  ["kite", "pink"],
+  ["desk", "brown"],
+  ["box", "black"],
+  ["bed", "brown"],
 ];
+
+/** ownedBy pairs every owner with every thing it could have: a dog has only a ball or a bed. */
+const ownedBy = (things: readonly (readonly [string, string])[]) =>
+  interleave([
+    everyPair(
+      owners.filter(([owner]) => owner !== "The dog"),
+      things,
+    ),
+    everyPair(
+      owners.filter(([owner]) => owner === "The dog"),
+      things.filter(([thing]) => thing === "ball" || thing === "bed"),
+    ),
+  ]);
 
 const ownedSentence = (owner: string, verb: string, thing: string, color: string) =>
   `${owner} ${verb} a ${thing}. ___ ${thing} is ${color}.`;
 
-const whoseChoiceBank: readonly ChoiceItem[] = pairUp(44, owners, owned).map(
+const whoseChoiceBank: readonly ChoiceItem[] = ownedBy(owned).map(
   ([[owner, verb, whose, wrong], [thing, color]]): ChoiceItem => [ownedSentence(owner, verb, thing, color), whose, wrong],
 );
 
-const whoseTypedBank: readonly TypedItem[] = pairUp(33, owners, [
-  ["cat", "gray"],
-  ["kite", "pink"],
-  ["desk", "brown"],
-] as const).map(
+const whoseTypedBank: readonly TypedItem[] = ownedBy(owned.map(([thing], k) => [thing, owned[(k + 3) % owned.length]![1]] as const)).map(
   ([[owner, verb, whose, wrong], [thing, color]]): TypedItem => ({
     shown: ownedSentence(owner, verb, thing, color),
     accepted: [whose],
@@ -538,9 +562,33 @@ const haveSubjects: readonly (readonly [subject: string, verb: "have" | "has"])[
   ["Anna and Ben", "have"],
 ];
 
-const haveObjects: readonly string[] = ["a red bag", "two sisters", "long hair", "a big dog", "many books"];
+/** haveObjects fit any person; the cat has only catObjects. */
+const haveObjects: readonly string[] = [
+  "a red bag",
+  "two sisters",
+  "long hair",
+  "a big dog",
+  "many books",
+  "a new pen",
+  "three pens",
+  "black hair",
+  "a cat",
+  "big eyes",
+];
+const catObjects: readonly string[] = ["big eyes", "a red ball", "long hair"];
 
-const haveChoiceBank: readonly ChoiceItem[] = pairUp(44, haveSubjects, haveObjects).map(
+const haveItems = interleave([
+  everyPair(
+    haveSubjects.filter(([subject]) => subject !== "The cat"),
+    haveObjects,
+  ),
+  everyPair(
+    haveSubjects.filter(([subject]) => subject === "The cat"),
+    catObjects,
+  ),
+]);
+
+const haveChoiceBank: readonly ChoiceItem[] = haveItems.map(
   ([[subject, verb], object]): ChoiceItem => [
     `${subject} ___ ${object}.`,
     verb,
@@ -548,16 +596,14 @@ const haveChoiceBank: readonly ChoiceItem[] = pairUp(44, haveSubjects, haveObjec
   ],
 );
 
-const haveTypedBank: readonly TypedItem[] = pairUp(33, haveSubjects, ["a cat", "black hair", "three pens"]).map(
-  ([[subject, verb], object]): TypedItem => {
-    const wrongVerb = verb === "have" ? "has" : "have";
-    return {
-      shown: `${subject} ${wrongVerb} ${object}.`,
-      accepted: [`${subject} ${verb} ${object}.`],
-      wrong: [`${subject} ${wrongVerb} ${object}.`],
-    };
-  },
-);
+const haveTypedBank: readonly TypedItem[] = haveItems.map(([[subject, verb], object]): TypedItem => {
+  const wrongVerb = verb === "have" ? "has" : "have";
+  return {
+    shown: `${subject} ${wrongVerb} ${object}.`,
+    accepted: [`${subject} ${verb} ${object}.`],
+    wrong: [`${subject} ${wrongVerb} ${object}.`],
+  };
+});
 
 /** haveRule says which subjects take have and which take has, in every locale. */
 const haveRule: Record<string, Text> = {

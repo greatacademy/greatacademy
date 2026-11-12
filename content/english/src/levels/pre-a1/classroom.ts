@@ -4,7 +4,7 @@
 import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
-import { interleave, pairUp, sentenceCase, vocabularyTopic, word } from "../words.ts";
+import { everyPair, interleave, sentenceCase, vocabularyTopic, word } from "../words.ts";
 
 const classroom = vocabularyTopic({
   id: "pre-a1-words-classroom",
@@ -267,6 +267,9 @@ const pointedNouns: readonly (readonly [one: string, many: string])[] = [
   ["box", "boxes"],
   ["dog", "dogs"],
   ["eraser", "erasers"],
+  ["apple", "apples"],
+  ["ball", "balls"],
+  ["kite", "kites"],
 ];
 
 type Pointer = "This" | "That" | "These" | "Those";
@@ -276,6 +279,10 @@ const pointerFrames: readonly (readonly [pointer: Pointer, make: (one: string, m
   ["That", (one) => `___ is my ${one}, over there.`],
   ["These", (_, many) => `___ are my ${many}, here on my desk.`],
   ["Those", (_, many) => `___ are my ${many}, over there.`],
+  ["This", (one) => `___ is your ${one}, here.`],
+  ["That", (one) => `___ is your ${one}, over there by the door.`],
+  ["These", (_, many) => `___ are your ${many}, here in my bag.`],
+  ["Those", (_, many) => `___ are your ${many}, over there on the chair.`],
 ];
 
 const wrongPointers: Record<Pointer, readonly [Pointer, Pointer]> = {
@@ -285,31 +292,36 @@ const wrongPointers: Record<Pointer, readonly [Pointer, Pointer]> = {
   Those: ["That", "These"],
 };
 
-const pointerChoiceBank: readonly ChoiceItem[] = pairUp(44, pointedNouns, pointerFrames).map(
+const pointerChoiceBank: readonly ChoiceItem[] = everyPair(pointedNouns, pointerFrames).map(
   ([[one, many], [pointer, make]]): ChoiceItem => [make(one, many), pointer, [...wrongPointers[pointer]]],
 );
 
-const pointerTypedBank: readonly TypedItem[] = pairUp(22, pointedNouns, ["This", "That"] as const).map(
-  ([[one, many], pointer]): TypedItem => {
-    const plural = pointer === "This" ? "These" : "Those";
-    return {
-      shown: `${pointer} is my ${one}.`,
-      accepted: [`${plural} are my ${many}.`],
-      wrong: [`${plural} is my ${many}.`, `${plural} are my ${one}.`, `${pointer} are my ${many}.`],
-    };
-  },
-);
+/** whose are the words for whose that the sentences to change carry along. */
+const whose: readonly string[] = ["my", "your", "his", "her"];
 
-const pointerTypedBank2: readonly TypedItem[] = pairUp(11, pointedNouns, ["These", "Those"] as const).map(
-  ([[one, many], pointer]): TypedItem => {
-    const single = pointer === "These" ? "This" : "That";
-    return {
-      shown: `${pointer} are my ${many}.`,
-      accepted: [`${single} is my ${one}.`],
-      wrong: [`${single} are my ${one}.`, `${single} is my ${many}.`],
-    };
-  },
-);
+const pointerTypedBank: readonly TypedItem[] = everyPair(
+  pointedNouns,
+  (["This", "That"] as const).flatMap((pointer) => whose.map((w) => [pointer, w] as const)),
+).map(([[one, many], [pointer, w]]): TypedItem => {
+  const plural = pointer === "This" ? "These" : "Those";
+  return {
+    shown: `${pointer} is ${w} ${one}.`,
+    accepted: [`${plural} are ${w} ${many}.`],
+    wrong: [`${plural} is ${w} ${many}.`, `${plural} are ${w} ${one}.`, `${pointer} are ${w} ${many}.`],
+  };
+});
+
+const pointerTypedBank2: readonly TypedItem[] = everyPair(
+  pointedNouns,
+  (["These", "Those"] as const).flatMap((pointer) => whose.map((w) => [pointer, w] as const)),
+).map(([[one, many], [pointer, w]]): TypedItem => {
+  const single = pointer === "These" ? "This" : "That";
+  return {
+    shown: `${pointer} are ${w} ${many}.`,
+    accepted: [`${single} is ${w} ${one}.`],
+    wrong: [`${single} are ${w} ${one}.`, `${single} is ${w} ${many}.`],
+  };
+});
 
 /** pointerSense says where a pointer word points and how many, in every locale. */
 const pointerSense = (near: boolean, many: boolean): Text =>
@@ -406,13 +418,18 @@ const cue: Record<Place, string> = { in: "inside", on: "on top", under: "below" 
 
 const cueZh: Record<Place, string> = { in: "在里面", on: "在上面", under: "在下面" };
 
-const placeChoiceBank: readonly ChoiceItem[] = pairUp(42, things, placesFor).map(([thing, place], k): ChoiceItem => {
-  const prep = (["in", "on", "under"] as const)[k % 3]!;
+/** placed puts every thing on and under every place, and in only the places that hold things. */
+const placed = interleave<readonly [readonly [string, string], Place]>([
+  everyPair(things, placesFor).map((pair) => [pair, "on"] as const),
+  everyPair(things, placesFor).map((pair) => [pair, "under"] as const),
+  everyPair(things, ["box", "bag", "desk"]).map((pair) => [pair, "in"] as const),
+]);
+
+const placeChoiceBank: readonly ChoiceItem[] = placed.map(([[thing, place], prep]): ChoiceItem => {
   return [`The ${thing} is ___ the ${place}. (${cue[prep]})`, prep, (["in", "on", "under"] as const).filter((p) => p !== prep)];
 });
 
-const placeTypedBank: readonly TypedItem[] = pairUp(42, things, placesFor).map(([thing, place], k): TypedItem => {
-  const prep = (["under", "in", "on"] as const)[k % 3]!;
+const placeTypedBank: readonly TypedItem[] = placed.map(([[thing, place], prep]): TypedItem => {
   return {
     shown: `the ${thing} / ${prep} / the ${place} (${cue[prep]})`,
     accepted: [`The ${thing} is ${prep} the ${place}.`],
@@ -471,42 +488,24 @@ const inOnAndUnder: TopicDef = {
 
 // Commands.
 
-/** commands are classroom commands, each a verb and the rest. */
-const commands: readonly (readonly [verb: string, rest: string])[] = [
-  ["open", "your book"],
-  ["close", "the door"],
-  ["sit", "down, please"],
-  ["stand", "up"],
-  ["look", "at the board"],
-  ["listen", "to your teacher"],
-  ["read", "page five"],
-  ["write", "your name"],
-  ["draw", "a cat"],
-  ["open", "the window, please"],
-  ["close", "your eyes"],
-  ["look", "at me"],
-  ["listen", "to the song"],
-  ["read", "the story"],
-  ["write", "the word"],
-  ["draw", "a red flower"],
-  ["sit", "next to Tom"],
-  ["stand", "in a line"],
-  ["open", "your bag"],
-  ["close", "your books"],
-  ["look", "at the picture"],
-  ["listen", "to me, please"],
-  ["read", "this word"],
-  ["write", "the number ten"],
-  ["draw", "your family"],
-  ["sit", "on your chair"],
-  ["stand", "next to your desk"],
-  ["open", "the box"],
-  ["close", "the window"],
-  ["look", "at page six"],
-  ["listen", "to the bird"],
-  ["write", "a big A"],
-  ["draw", "a line"],
+/** commandRests are, for each verb of a classroom command, the rests it takes. */
+const commandRests: readonly (readonly [verb: string, rests: readonly string[]])[] = [
+  ["open", ["your book", "the door", "the window", "your bag", "the box", "your eyes", "your books"]],
+  ["close", ["your book", "the door", "the window", "your bag", "the box", "your eyes", "your books"]],
+  ["look", ["at the board", "at me", "at the picture", "at page six", "at the cat", "at your book", "at the window"]],
+  ["listen", ["to your teacher", "to the song", "to me", "to the bird", "to the story", "to your friend"]],
+  ["read", ["page five", "the story", "this word", "the book", "your name", "the numbers"]],
+  ["write", ["your name", "the word", "the number ten", "a big A", "a small b", "the word cat"]],
+  ["draw", ["a cat", "a red flower", "your family", "a line", "a big house", "a dog", "a green tree"]],
+  ["sit", ["down", "next to Tom", "on your chair", "next to me", "here"]],
+  ["stand", ["up", "in a line", "next to your desk", "here", "next to Anna"]],
 ];
+
+/** commands are classroom commands, each a verb and the rest, with and without please. */
+const commands: readonly (readonly [verb: string, rest: string])[] = interleave([
+  commandRests.flatMap(([verb, rests]) => rests.map((rest) => [verb, rest] as const)),
+  commandRests.flatMap(([verb, rests]) => rests.map((rest) => [verb, `${rest}, please`] as const)),
+]);
 
 const third = (verb: string) => (verb === "do" ? "does" : `${verb}s`);
 
@@ -536,7 +535,7 @@ const dontTypedBank: readonly TypedItem[] = interleave([
       wrong: [`No ${verb} ${rest}.`, `Not ${verb} ${rest}.`, `You don't ${verb} ${rest}.`],
     }),
   ),
-  commands.slice(0, 26).map(
+  commands.map(
     ([verb, rest]): TypedItem => ({
       shown: `${verb} / ${rest}`,
       accepted: [`${sentenceCase(verb)} ${rest}.`],

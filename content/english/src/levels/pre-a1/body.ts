@@ -3,7 +3,7 @@
 import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
-import { pairUp, vocabularyTopic, word } from "../words.ts";
+import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
 
 const body = vocabularyTopic({
   id: "pre-a1-words-body",
@@ -100,35 +100,58 @@ const body = vocabularyTopic({
 
 // Describing words before nouns.
 
-/** owners have the described things. */
+/** describers are people, who have the personal things. */
 const describers: readonly (readonly [owner: string, verb: string])[] = [
   ["She", "has"],
   ["I", "have"],
-  ["The cat", "has"],
-  ["My dog", "has"],
   ["Tom", "has"],
   ["The baby", "has"],
   ["My grandpa", "has"],
+  ["My mom", "has"],
+  ["You", "have"],
+  ["Anna", "has"],
 ];
 
-/** described are a count or article, a describing word and a noun. */
+/** animals are pets, who have the animal things. */
+const animals: readonly (readonly [owner: string, verb: string])[] = [
+  ["The cat", "has"],
+  ["My dog", "has"],
+];
+
+/** described are a count or article, a describing word and a noun, for a person. */
 const described: readonly (readonly [count: string, adjective: string, noun: string])[] = [
   ["", "long", "hair"],
   ["two", "big", "eyes"],
   ["a", "small", "nose"],
   ["two", "blue", "eyes"],
   ["", "black", "hair"],
-  ["four", "long", "legs"],
   ["two", "small", "ears"],
   ["", "big", "feet"],
   ["a", "red", "bag"],
-  ["", "white", "hair"],
   ["two", "green", "eyes"],
+  ["", "small", "hands"],
+  ["", "long", "arms"],
+  ["a", "big", "mouth"],
+  ["two", "brown", "eyes"],
+];
+
+/** animalThings are what a pet has. */
+const animalThings: readonly (readonly [count: string, adjective: string, noun: string])[] = [
+  ["four", "long", "legs"],
+  ["two", "small", "ears"],
+  ["a", "long", "tail"],
+  ["two", "big", "eyes"],
+  ["a", "small", "nose"],
+  ["", "big", "feet"],
+  ["a", "red", "ball"],
 ];
 
 const phrase = (count: string, words: string) => (count === "" ? words : `${count} ${words}`);
 
-const adjectiveChoiceBank: readonly ChoiceItem[] = pairUp(44, describers, described).map(
+/** describedItems pairs every person with every personal thing and every pet with every animal thing. */
+const describedItems = interleave([everyPair(describers, described), everyPair(animals, animalThings)]);
+
+const adjectiveChoiceBank: readonly ChoiceItem[] = describedItems.map(
   ([[owner, verb], [count, adjective, noun]]): ChoiceItem => [
     "",
     `${owner} ${verb} ${phrase(count, `${adjective} ${noun}`)}.`,
@@ -136,7 +159,7 @@ const adjectiveChoiceBank: readonly ChoiceItem[] = pairUp(44, describers, descri
   ],
 );
 
-const adjectiveTypedBank: readonly TypedItem[] = pairUp(33, describers.slice(0, 3), described).map(
+const adjectiveTypedBank: readonly TypedItem[] = describedItems.map(
   ([[owner, verb], [count, adjective, noun]]): TypedItem => ({
     shown: `${owner} ${verb} ${phrase(count, noun)}. (${adjective})`,
     accepted: [`${owner} ${verb} ${phrase(count, `${adjective} ${noun}`)}.`],

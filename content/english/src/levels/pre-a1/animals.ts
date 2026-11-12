@@ -3,7 +3,7 @@
 import { type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
-import { sentenceCase, vocabularyTopic, word } from "../words.ts";
+import { everyPair, interleave, sentenceCase, vocabularyTopic, word } from "../words.ts";
 
 const animals = vocabularyTopic({
   id: "pre-a1-words-animals",
@@ -275,45 +275,47 @@ const littleWords = vocabularyTopic({
 
 // Can and can't.
 
-/** abilities are true facts about what animals and people can and can't do. */
-const abilities: readonly (readonly [subject: string, can: boolean, verb: string, rest: string])[] = [
-  ["A bird", true, "fly", ""],
-  ["A fish", true, "swim", ""],
-  ["A fish", false, "walk", ""],
-  ["A horse", true, "run", " fast"],
-  ["A rabbit", true, "jump", ""],
-  ["A cow", false, "fly", ""],
-  ["A duck", true, "swim", ""],
-  ["A pig", false, "fly", ""],
-  ["A frog", true, "jump", ""],
-  ["A cat", true, "see", " at night"],
-  ["A dog", true, "run", ""],
-  ["A mouse", false, "swim", " very far"],
-  ["A baby", false, "walk", ""],
-  ["My dad", true, "swim", ""],
-  ["I", true, "draw", " a cat"],
-  ["A horse", false, "fly", ""],
-  ["A bird", true, "sing", ""],
-  ["A cow", true, "eat", " grass"],
-  ["A frog", true, "swim", ""],
-  ["A rabbit", false, "fly", ""],
-  ["We", true, "read", " and write"],
-  ["A fish", false, "run", ""],
-  ["My sister", true, "ride", " a horse"],
-  ["A duck", true, "fly", ""],
-  ["A dog", false, "fly", ""],
-  ["They", true, "jump", " very high"],
-  ["A baby", false, "read", ""],
-  ["You", true, "open", " the door"],
-  ["A cat", false, "talk", ""],
-  ["A bird", false, "swim", " under the water"],
-  ["Tom", true, "run", " very fast"],
-  ["A pig", true, "eat", " a lot"],
-  ["She", true, "sing", " very well"],
-  ["He", false, "swim", ""],
-  ["A mouse", true, "run", " very fast"],
-  ["A cow", false, "jump", " very high"],
+/** profiles say, for animals and people, what each can and can't do; every sentence they make is true. */
+const profiles: readonly (readonly [subject: string, can: readonly string[], cannot: readonly string[]])[] = [
+  ["A bird", ["fly", "sing", "walk"], ["swim under the water"]],
+  ["A fish", ["swim"], ["walk", "run", "fly", "climb a tree"]],
+  ["A horse", ["run fast", "jump", "eat grass"], ["fly", "climb a tree"]],
+  ["A rabbit", ["jump", "run fast", "eat carrots"], ["fly", "climb a tree"]],
+  ["A cow", ["eat grass", "walk"], ["fly", "jump very high", "climb a tree"]],
+  ["A duck", ["swim", "fly", "walk"], ["climb a tree"]],
+  ["A pig", ["eat a lot", "run"], ["fly", "climb a tree"]],
+  ["A frog", ["jump", "swim"], ["fly"]],
+  ["A cat", ["see at night", "jump", "climb a tree", "run"], ["fly", "talk"]],
+  ["A dog", ["run", "swim", "jump"], ["fly", "talk"]],
+  ["A mouse", ["run very fast", "climb"], ["fly", "talk"]],
+  ["A baby", ["eat", "sleep a lot"], ["walk", "run fast", "ride a bike"]],
+  ["My dad", ["swim", "read", "ride a bike", "run fast"], ["fly"]],
+  ["I", ["draw a cat", "read", "write", "sing"], ["fly"]],
+  ["We", ["read and write", "run", "jump", "swim"], ["fly"]],
+  ["They", ["jump very high", "ride a horse", "sing"], ["fly"]],
+  ["You", ["open the door", "sing", "read"], ["fly"]],
+  ["Tom", ["run very fast", "swim", "read"], ["fly"]],
+  ["She", ["sing very well", "ride a horse", "swim"], ["fly"]],
 ];
+
+/** animalsCannot are what no animal can do, said of every animal in the profiles. */
+const animalsCannot: readonly string[] = ["read", "write", "ride a bike"];
+
+/** abilities are true facts about what animals and people can and can't do, each verb split from the rest. */
+const abilities: readonly (readonly [subject: string, can: boolean, verb: string, rest: string])[] = interleave(
+  profiles.map(([subject, can, cannot]) => {
+    const isAnimal = subject.startsWith("A ") && subject !== "A baby";
+    const facts = [
+      ...can.map((v) => [true, v] as const),
+      ...cannot.map((v) => [false, v] as const),
+      ...(isAnimal ? animalsCannot.map((v) => [false, v] as const) : []),
+    ];
+    return facts.map(([yes, phrase]) => {
+      const [verb = "", ...rest] = phrase.split(" ");
+      return [subject, yes, verb, rest.length > 0 ? ` ${rest.join(" ")}` : ""] as const;
+    });
+  }),
+);
 
 const third = (verb: string) => (verb.endsWith("y") ? `${verb.slice(0, -1)}ies` : `${verb}s`);
 
@@ -407,43 +409,24 @@ const canForAbility: TopicDef = {
 
 // Questions with be.
 
-/** statements are sentences with be, each with its subject and the rest. */
-const statements: readonly (readonly [subject: string, be: "am" | "is" | "are", rest: string])[] = [
-  ["it", "is", "a cat"],
-  ["it", "is", "a frog"],
-  ["Tom", "is", "happy"],
-  ["they", "are", "ducks"],
-  ["you", "are", "a student"],
-  ["he", "is", "at school"],
-  ["she", "is", "your sister"],
-  ["the dog", "is", "big"],
-  ["the cats", "are", "black"],
-  ["it", "is", "a pig"],
-  ["we", "are", "late"],
-  ["Anna", "is", "at home"],
-  ["the horse", "is", "fast"],
-  ["they", "are", "rabbits"],
-  ["it", "is", "an egg"],
-  ["the birds", "are", "in the tree"],
-  ["he", "is", "your brother"],
-  ["the mouse", "is", "under the bed"],
-  ["you", "are", "sad"],
-  ["it", "is", "a fish"],
-  ["the cow", "is", "on the farm"],
-  ["she", "is", "a teacher"],
-  ["they", "are", "your friends"],
-  ["it", "is", "blue"],
-  ["the frogs", "are", "green"],
-  ["Ben", "is", "ten"],
-  ["the bag", "is", "red"],
-  ["it", "is", "a horse"],
-  ["your mom", "is", "at work"],
-  ["they", "are", "in the classroom"],
-  ["the duck", "is", "on the lake"],
-  ["it", "is", "a mouse"],
-  ["the pens", "are", "in the bag"],
-  ["Lily", "is", "your friend"],
+/** statementGroups pair subjects with the rests that fit them, in sentences with be. */
+const statementGroups: readonly (readonly [subjects: readonly string[], be: "am" | "is" | "are", rests: readonly string[]])[] = [
+  [["it"], "is", ["a cat", "a frog", "a pig", "an egg", "a fish", "a horse", "a mouse", "blue", "red", "big", "small", "a book", "a pen"]],
+  [
+    ["Tom", "Anna", "he", "she", "Ben", "Lily", "your mom"],
+    "is",
+    ["happy", "sad", "at school", "at home", "in the classroom", "here", "your friend"],
+  ],
+  [["you"], "are", ["a student", "sad", "happy", "at home", "late", "ten"]],
+  [["we"], "are", ["late", "here", "at school", "happy"]],
+  [["they", "the cats", "the birds", "the frogs", "the ducks"], "are", ["black", "green", "in the tree", "here", "big", "small"]],
+  [["the dog", "the horse", "the mouse", "the cow", "the duck"], "is", ["big", "small", "here", "black", "fast", "at home"]],
 ];
+
+/** statements are sentences with be, each with its subject and the rest. */
+const statements: readonly (readonly [subject: string, be: "am" | "is" | "are", rest: string])[] = interleave(
+  statementGroups.map(([subjects, be, rests]) => everyPair(subjects, rests).map(([subject, rest]) => [subject, be, rest] as const)),
+);
 
 const asStatement = (subject: string, be: string, rest: string) => `${sentenceCase(subject)} ${be} ${rest}.`;
 const asQuestion = (subject: string, be: string, rest: string) => `${sentenceCase(be)} ${subject} ${rest}?`;

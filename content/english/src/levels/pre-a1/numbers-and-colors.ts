@@ -4,7 +4,7 @@
 import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
-import { interleave, pairUp, vocabularyTopic, word } from "../words.ts";
+import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
 
 const numbers = vocabularyTopic({
   id: "pre-a1-words-numbers",
@@ -293,15 +293,17 @@ const consonantNouns: readonly string[] = [
 /** vowelNouns start with a vowel sound and take an. */
 const vowelNouns: readonly string[] = ["egg", "apple", "orange", "eraser", "elephant", "old book", "umbrella", "ant", "owl", "ear", "eye"];
 
+/** articleFrames read naturally with every noun of both lists: they point at a thing, an animal or a person. */
+const articleFrames: readonly string[] = ["It is ___ X.", "This is ___ X.", "That is ___ X.", "I see ___ X.", "Here is ___ X."];
+
 const articleChoiceBank: readonly ChoiceItem[] = interleave([
-  pairUp(26, consonantNouns, ["It is ___ X.", "I have ___ X."]).map(([noun, frame]): ChoiceItem => [frame.replace("X", noun), "a", ["an"]]),
-  pairUp(22, vowelNouns, ["This is ___ X.", "I see ___ X."]).map(([noun, frame]): ChoiceItem => [frame.replace("X", noun), "an", ["a"]]),
+  everyPair(consonantNouns, articleFrames).map(([noun, frame]): ChoiceItem => [frame.replace("X", noun), "a", ["an"]]),
+  everyPair(vowelNouns, articleFrames).map(([noun, frame]): ChoiceItem => [frame.replace("X", noun), "an", ["a"]]),
 ]);
 
-const missingArticleBank: readonly TypedItem[] = pairUp(
-  48,
-  [...consonantNouns.slice(0, 8).map((n) => [n, "a"] as const), ...vowelNouns.slice(0, 8).map((n) => [n, "an"] as const)],
-  ["It is X.", "This is X.", "That is X."],
+const missingArticleBank: readonly TypedItem[] = everyPair(
+  interleave<readonly [string, "a" | "an"]>([consonantNouns.map((n) => [n, "a"] as const), vowelNouns.map((n) => [n, "an"] as const)]),
+  articleFrames.map((f) => f.replace("___ ", "")),
 ).map(([[noun, article], frame]): TypedItem => {
   const other = article === "a" ? "an" : "a";
   return {
@@ -395,19 +397,13 @@ const counts: readonly string[] = ["two", "three", "four", "five", "six", "seven
 const plural = (noun: string) => (esNouns.includes(noun) ? `${noun}es` : `${noun}s`);
 
 const pluralChoiceBank: readonly ChoiceItem[] = interleave([
-  pairUp(33, sNouns, counts).map(([noun, count]): ChoiceItem => [`I have ${count} ___. (${noun})`, `${noun}s`, [noun, `${noun}es`]]),
-  pairUp(14, esNouns, ["three", "six"]).map(
-    ([noun, count]): ChoiceItem => [`There are ${count} ___. (${noun})`, `${noun}es`, [noun, `${noun}s`]],
-  ),
+  everyPair(sNouns, counts).map(([noun, count]): ChoiceItem => [`I see ${count} ___. (${noun})`, `${noun}s`, [noun, `${noun}es`]]),
+  everyPair(esNouns, counts).map(([noun, count]): ChoiceItem => [`There are ${count} ___. (${noun})`, `${noun}es`, [noun, `${noun}s`]]),
 ]);
 
-const pluralTypedBank: readonly TypedItem[] = pairUp(
-  40,
-  [...sNouns, ...esNouns],
-  ["one X, two ___", "one X, four ___", "one X, ten ___"],
-).map(
-  ([noun, frame]): TypedItem => ({
-    shown: frame.replace("X", noun),
+const pluralTypedBank: readonly TypedItem[] = everyPair(interleave([sNouns, esNouns]), ["two", "three", "four", "five", "six", "ten"]).map(
+  ([noun, count]): TypedItem => ({
+    shown: `one ${noun}, ${count} ___`,
     accepted: [plural(noun)],
     wrong: [noun, esNouns.includes(noun) ? `${noun}s` : `${noun}es`],
   }),

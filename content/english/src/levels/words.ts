@@ -321,6 +321,14 @@ export function pairUp<A, B>(n: number, a: readonly A[], b: readonly B[]): reado
   return Array.from({ length: n }, (_, k) => [a[k % a.length]!, b[k % b.length]!] as const);
 }
 
+/**
+ * everyPair pairs every item of `a` with every item of `b`, in diagonals so that neighbors differ in both: the frames of
+ * a bank crossed with the words for their slot (E8.3). Every frame must read naturally with every word it is crossed with.
+ */
+export function everyPair<A, B>(a: readonly A[], b: readonly B[]): readonly (readonly [A, B])[] {
+  return Array.from({ length: b.length }, (_, d) => a.map((item, r) => [item, b[(r + d) % b.length]!] as const)).flat();
+}
+
 /** sentenceCase capitalizes the first letter of a sentence. */
 export function sentenceCase(s: string): string {
   return capitalize(s);
