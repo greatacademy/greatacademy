@@ -14,7 +14,7 @@ const unit = (
   title: Text,
   parts: { words: string[]; grammar: string[]; reading: string[]; writing: string[] },
   readingUnit: string | undefined,
-  conversation: string,
+  conversation?: string,
 ): UnitDef => ({
   title,
   modules: [
@@ -24,7 +24,7 @@ const unit = (
     { title: writing, topics: parts.writing },
   ].filter((m) => m.topics.length > 0),
   ...(readingUnit === undefined ? {} : { reading: [readingUnit] }),
-  conversation,
+  ...(conversation === undefined ? {} : { conversation }),
 });
 
 const units: readonly UnitDef[] = [
@@ -53,7 +53,7 @@ const units: readonly UnitDef[] = [
   unit(
     t("Belief and Doubt", "信念与怀疑"),
     {
-      words: ["words-of-philosophy", "words-of-belief-and-doubt"],
+      words: ["words-of-philosophy", "words-of-belief-and-doubt", "words-of-worship-and-belief"],
       grammar: ["inverted-conditionals"],
       reading: ["following-a-thought-experiment"],
       writing: ["defining-a-term-in-an-argument", "writing-a-philosophical-essay"],
@@ -104,6 +104,50 @@ const units: readonly UnitDef[] = [
     },
     undefined,
     "word-detective",
+  ),
+  unit(
+    t("Science and Inquiry", "科学与探究"),
+    {
+      words: [
+        "words-of-the-scientific-method",
+        "words-of-physics-and-energy",
+        "words-of-chemistry-and-matter",
+        "words-of-the-cosmos",
+        "words-of-medicine-and-disease",
+        "words-of-the-mind",
+      ],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Law and Nations", "法律与国家"),
+    { words: ["words-of-the-courtroom", "words-of-embassies-and-treaties"], grammar: [], reading: [], writing: [] },
+    undefined,
+  ),
+  unit(
+    t("Rhetoric and Reason", "修辞与理性"),
+    { words: ["words-of-rhetoric-and-oratory", "words-of-logic-and-error"], grammar: [], reading: [], writing: [] },
+    undefined,
+  ),
+  unit(
+    t("Temperament and Character", "气质与品格"),
+    {
+      words: [
+        "words-of-the-four-temperaments",
+        "words-of-company-and-solitude",
+        "words-of-pride-and-humility",
+        "words-of-generosity-and-greed",
+        "words-of-anger-and-calm",
+        "words-of-deceit-and-candor",
+      ],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
   ),
 ];
 
