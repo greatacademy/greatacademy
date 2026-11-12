@@ -1,0 +1,146 @@
+// Grade 11: the course. Each unit is a theme and teaches words, grammar, reading and writing together, with a reading
+// unit on the theme and a conversation that closes it. Three units gather topics of the band course of grades 9 to 12,
+// which keep their ids.
+
+import { type CourseDef, type Text, t, type UnitDef } from "@ga/content";
+
+const words = t("Words", "词汇");
+const grammar = t("Grammar", "语法");
+const reading = t("Reading", "阅读");
+const writing = t("Writing", "写作");
+
+/** unit builds a unit of four modules on a theme, leaving out a module with no topics and a missing reading unit. */
+const unit = (
+  title: Text,
+  parts: { words: string[]; grammar: string[]; reading: string[]; writing: string[] },
+  readingUnit: string | undefined,
+  conversation: string,
+): UnitDef => ({
+  title,
+  modules: [
+    { title: words, topics: parts.words },
+    { title: grammar, topics: parts.grammar },
+    { title: reading, topics: parts.reading },
+    { title: writing, topics: parts.writing },
+  ].filter((m) => m.topics.length > 0),
+  ...(readingUnit === undefined ? {} : { reading: [readingUnit] }),
+  conversation,
+});
+
+const units: readonly UnitDef[] = [
+  unit(
+    t("Rights and Laws", "权利与法律"),
+    {
+      words: ["words-of-government-and-law"],
+      grammar: ["absolute-phrases"],
+      reading: ["logical-fallacies"],
+      writing: ["writing-an-argumentative-essay"],
+    },
+    "rights-and-laws",
+    "mock-trial-witness",
+  ),
+  unit(
+    t("A Century of Change", "百年变迁"),
+    {
+      words: ["words-of-modern-history"],
+      grammar: ["integrating-quotations"],
+      reading: ["analyzing-historical-documents"],
+      writing: ["writing-an-explanatory-essay"],
+    },
+    "a-century-of-change",
+    "oral-history-interview",
+  ),
+  unit(
+    t("Science and Society", "科学与社会"),
+    {
+      words: ["words-of-scientific-inquiry"],
+      grammar: ["noun-clauses"],
+      reading: ["evaluating-sources"],
+      writing: ["synthesizing-sources"],
+    },
+    "science-and-society",
+    "science-fair-judge-questions",
+  ),
+  unit(
+    t("Dreams and Promises", "梦想与承诺"),
+    {
+      words: ["words-of-wealth-and-class", "words-of-hope-and-disillusion"],
+      grammar: ["reducing-nominalizations"],
+      reading: ["unstated-assumptions"],
+      writing: ["summarizing-an-opposing-view-fairly", "writing-a-critique-of-an-argument"],
+    },
+    "dreams-and-promises",
+    "american-dream-panel",
+  ),
+  unit(
+    t("Nature and the Self", "自然与自我"),
+    {
+      words: ["words-of-nature-and-the-self", "words-of-solitude-and-simplicity"],
+      grammar: [],
+      reading: ["motifs-in-a-story"],
+      writing: ["moving-between-concrete-and-abstract", "writing-a-meditative-essay"],
+    },
+    "nature-and-the-self",
+    "nature-journal-sharing",
+  ),
+  unit(
+    t("Justice and Protest", "正义与抗议"),
+    {
+      words: ["words-of-justice-and-protest", "words-of-equality-and-freedom"],
+      grammar: ["restrictive-and-nonrestrictive-elements"],
+      reading: ["comparing-arguments-on-one-issue"],
+      writing: ["conclusions-that-widen-the-view", "writing-an-open-letter"],
+    },
+    "justice-and-protest",
+    "student-protest-planning",
+  ),
+  unit(
+    t("Between Two Worlds", "两个世界之间"),
+    {
+      words: ["words-of-migration-and-identity", "words-of-home-and-exile"],
+      grammar: ["mixed-constructions"],
+      reading: ["free-indirect-discourse"],
+      writing: ["writing-a-narrative-of-two-worlds"],
+    },
+    "between-two-worlds",
+    "welcoming-a-new-student",
+  ),
+  unit(
+    t("Machines and Makers", "机器与制造者"),
+    {
+      words: ["words-of-industry-and-labor", "words-of-machines-and-ethics"],
+      grammar: [],
+      reading: [],
+      writing: ["writing-an-analysis-of-a-motif"],
+    },
+    "machines-and-makers",
+    "automation-town-meeting",
+  ),
+  unit(
+    t("Roots and Parts", "词根与词缀"),
+    {
+      words: ["latin-roots-9", "greek-roots-8", "word-parts-that-form-nouns", "academic-words-8", "academic-words-9"],
+      grammar: ["commonly-confused-words-7"],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+    "etymology-detective",
+  ),
+];
+
+/** courseGrade11 is the native course of grade 11. */
+export const courseGrade11: CourseDef = {
+  id: "english-grade-11",
+  title: t("English, Grade 11", "英语：十一年级"),
+  description: t(
+    "English for readers and writers of grade 11, in nine themed units from rights and laws, a century of change and science and society to dreams and promises, nature and the self, justice and protest, life between two worlds, machines and makers and the roots and parts of words. Each unit teaches the words of its theme, grammar and style, reading skills and a kind of writing together, and most give a set of passages to read on the theme. The arguments, critiques, meditations, open letters, narratives and analyses written in the course are judged by a model.",
+    "面向十一年级读者和写作者的英语课程，共九个主题单元，从权利与法律、百年变迁和科学与社会，到梦想与承诺、自然与自我、正义与抗议、两个世界之间、机器与制造者以及词根与词缀。每个单元同时教授该主题的词汇、语法和文体、阅读技能和一种写作，大多数单元还提供一组围绕主题的阅读文章。课程中写的议论文、评论、沉思随笔、公开信、叙事和分析由模型评判。",
+  ),
+  group: t("English", "英语"),
+  buildsOn: ["english-grade-10"],
+  explanationLocale: "en",
+  units,
+  reading: units.flatMap((u) => u.reading ?? []),
+  conversations: units.flatMap((u) => (u.conversation === undefined ? [] : [u.conversation])),
+};
