@@ -1,5 +1,5 @@
 // Grades 6 to 8: the item banks of the grammar and punctuation topics. Most are built from hand-written cores by
-// templates that vary the people and the sentences, so each knowledge point has thirty or more items; every one is
+// templates that vary the people and the sentences, so each knowledge point has a hundred or more items; every one is
 // built the same way on every run.
 
 import type { ChoiceItem } from "@ga/subject-english";
@@ -33,6 +33,14 @@ const subjectFrames = [
   "Yesterday {N} and ___ found a lost kitten under the porch.",
   "Last summer, {N} and ___ learned to sail on the lake.",
   "{N} and ___ were the last ones to leave the gym.",
+  "{N} and ___ built a birdhouse for the garden.",
+  "On Friday {N} and ___ cooked dinner for the whole family.",
+  "{N} and ___ won the three-legged race at the fair.",
+  "After the storm, {N} and ___ helped clear the branches.",
+  "{N} and ___ have been friends since kindergarten.",
+  "Every morning {N} and ___ walk the dog before school.",
+  "{N} and ___ wrote a play for the spring show.",
+  "Last week {N} and ___ visited the science museum.",
 ];
 
 const objectFrames = [
@@ -40,18 +48,26 @@ const objectFrames = [
   "Grandma knitted warm sweaters for {N} and ___.",
   "The teacher asked {N} and ___ to hand out the new books.",
   "Please save two seats for {N} and ___ at the front.",
+  "The librarian showed {N} and ___ the new computers.",
+  "Mom made pancakes for {N} and ___ on Sunday.",
+  "The guide led {N} and ___ through the cave.",
+  "A letter arrived for {N} and ___ this morning.",
+  "The judges praised {N} and ___ for the clever design.",
+  "Our neighbor invited {N} and ___ to the barbecue.",
+  "The story was written by {N} and ___ together.",
+  "Nobody sat between {N} and ___ on the bus.",
 ];
 
 /** compoundCaseBank asks for the pronoun of a compound subject or object. */
 export const compoundCaseBank: readonly ChoiceItem[] = [
   ...subjectFrames.flatMap((frame, f) =>
-    pronouns.map(
-      ([subject, object, reflexive], p): ChoiceItem => [frame.replace("{N}", pick(names, f * 4 + p)), subject, [object, reflexive]],
+    pronouns.flatMap(([subject, object, reflexive], p) =>
+      [0, 3].map((n): ChoiceItem => [frame.replace("{N}", pick(names, f * 4 + p + n)), subject, [object, reflexive]]),
     ),
   ),
   ...objectFrames.flatMap((frame, f) =>
-    pronouns.map(
-      ([subject, object, reflexive], p): ChoiceItem => [frame.replace("{N}", pick(names, f * 4 + p + 3)), object, [subject, reflexive]],
+    pronouns.flatMap(([subject, object, reflexive], p) =>
+      [3, 6].map((n): ChoiceItem => [frame.replace("{N}", pick(names, f * 4 + p + n)), object, [subject, reflexive]]),
     ),
   ),
   ["Between you and ___, I think the movie was far too long.", "me", ["I", "myself"]],
@@ -60,8 +76,19 @@ export const compoundCaseBank: readonly ChoiceItem[] = [
   ["It was Kai and ___ who painted the mural in the hallway.", "I", ["me", "myself"]],
 ];
 
+/** whoPeople are people described by who or whom clauses; whoDid are what they did, whomDone what was done to them. */
+const whoPeople = ["The neighbor", "The coach", "The pilot", "The artist", "The nurse", "The author", "The stranger", "The tutor"] as const;
+const whoDid = ["helped us", "called this morning", "found the wallet", "spoke at the assembly", "fixed the swing"] as const;
+const whomDone = ["we met", "my parents hired", "everyone admired", "the town honored", "you recommended"] as const;
+const whoEnds = ["lives on our street", "is moving to Spain", "gave us a gift", "was very kind", "is coming back next year"] as const;
+const whoMore = [
+  ...whoPeople.flatMap((who, i) => whoDid.map((did, j) => `${who} ___ ${did} ${pick(whoEnds, i + j)}.|who`)),
+  ...whoPeople.flatMap((who, i) => whomDone.map((done, j) => `${who} ___ ${done} ${pick(whoEnds, i + j + 2)}.|whom`)),
+].join("\n");
+
 /** whoBank asks for who or whom: who as a subject, whom as an object. */
 export const whoBank: readonly ChoiceItem[] = rows(`
+${whoMore}
   The neighbor ___ fixed our fence refused to take any money.|who
   The neighbor ___ we thanked had fixed our fence for free.|whom
   The girl ___ won the spelling bee is in my class.|who
@@ -180,8 +207,119 @@ export const adjectiveTestBank: readonly ChoiceItem[] = [
 
 const moods = ["indicative", "imperative", "conditional", "subjunctive"] as const;
 
+/** moodTopics give the four moods one subject at a time: a fact, a command, what would happen and a wish. */
+const moodTopics = [
+  [
+    "The bakery opens at six",
+    "Buy the bread before noon",
+    "With more flour, we would bake two loaves",
+    "I wish the bakery were open all night",
+  ],
+  [
+    "The river floods every spring",
+    "Stay away from the riverbank",
+    "With a higher wall, the town would stay dry",
+    "If the river were calmer, we could swim",
+  ],
+  [
+    "The museum has a dinosaur skeleton",
+    "Look at the dinosaur skeleton first",
+    "With more time, we would see every room",
+    "The guide asks that each visitor stay with the group",
+  ],
+  [
+    "Our team practices on Tuesdays",
+    "Bring your water bottle to practice",
+    "With a new coach, we might win the cup",
+    "The coach insists that every player be on time",
+  ],
+  ["The bus stops at the corner", "Wait for the bus at the corner", "Without the bus, I would walk an hour", "I wish the bus were faster"],
+  [
+    "The garden needs water",
+    "Water the garden tonight",
+    "With more rain, the roses would bloom",
+    "If I were the gardener, I would plant tulips",
+  ],
+  [
+    "My sister plays the violin",
+    "Practice the violin every day",
+    "With a better bow, she could play louder",
+    "Her teacher recommends that she practice daily",
+  ],
+  [
+    "The library lends laptops",
+    "Return the laptop by Friday",
+    "With a laptop, I could finish faster",
+    "The rules require that each laptop be returned on time",
+  ],
+  [
+    "The volcano erupted in 1980",
+    "Read the chapter about the volcano",
+    "A bigger eruption would have buried the town",
+    "If the volcano were active, we would leave",
+  ],
+  [
+    "The kittens sleep in the barn",
+    "Feed the kittens twice a day",
+    "Without the barn, the kittens would freeze",
+    "I wish the kittens were mine",
+  ],
+  [
+    "The concert begins at eight",
+    "Turn off your phone during the concert",
+    "With better seats, we could see the stage",
+    "The usher asks that everyone be seated by eight",
+  ],
+  [
+    "Snow fell all night",
+    "Shovel the path before breakfast",
+    "With more snow, school would close",
+    "If it were warmer, the snow would melt",
+  ],
+  ["The ferry crosses the bay", "Hold the rail on the ferry", "In a storm, the ferry would stay in port", "I wish the ferry were free"],
+  [
+    "The class planted an oak",
+    "Plant the seeds in rows",
+    "With good soil, the oak could live for centuries",
+    "The teacher suggests that each student plant a seed",
+  ],
+  [
+    "Dad drives a blue truck",
+    "Fasten your seat belt",
+    "With a bigger truck, we could carry the couch",
+    "If Dad were here, he would drive us",
+  ],
+  [
+    "The owl hunts at night",
+    "Listen for the owl after dark",
+    "Without mice, the owl would go hungry",
+    "I wish I were able to see in the dark",
+  ],
+  [
+    "The market sells fresh fish",
+    "Ask the seller for the price",
+    "With more money, I would buy the lobster",
+    "The doctor recommends that she eat more fish",
+  ],
+  [
+    "The school has a new gym",
+    "Wear sneakers in the gym",
+    "With a pool, the school would be perfect",
+    "If the gym were bigger, we could play tennis",
+  ],
+] as const;
+const moodMore = moodTopics
+  .flatMap(([fact, command, would, wish]) => [
+    `${fact}.|indicative`,
+    `${command}.|imperative`,
+    `${would}.|conditional`,
+    `${wish}.|subjunctive`,
+  ])
+  .join("\n");
+
 /** moodBank asks for the mood of a sentence's main verb. */
 export const moodBank: readonly ChoiceItem[] = rows(`
+${moodMore}
   The library opens at nine on Saturdays.|indicative
   Did you remember to feed the fish?|indicative
   Our team won the regional final last night.|indicative
@@ -219,8 +357,53 @@ export const moodBank: readonly ChoiceItem[] = rows(`
   return [shown!, right!, [pick(others, i), pick(others, i + 1)]];
 });
 
+/** unrealWho are subjects with their present form of be; unrealWhat are what they might be, with what would follow. */
+const unrealWho = [
+  ["I", "am"],
+  ["Leo", "is"],
+  ["my aunt", "is"],
+  ["the dog", "is"],
+  ["she", "is"],
+  ["he", "is"],
+] as const;
+const unrealWhat = [
+  ["taller", "could reach the shelf"],
+  ["here", "would know the answer"],
+  ["less tired", "would come to the game"],
+  ["braver", "would jump into the lake"],
+  ["older", "could drive us home"],
+] as const;
+const demandsOf = [
+  "The coach insists that",
+  "The doctor recommends that",
+  "It is important that",
+  "The rules require that",
+  "Mom asks that",
+] as const;
+const demanded = [
+  ["Leo", "rest", "rests", "rested", "for a week"],
+  ["each student", "bring", "brings", "brought", "a pencil"],
+  ["she", "arrive", "arrives", "arrived", "on time"],
+  ["he", "wear", "wears", "wore", "a helmet"],
+  ["the door", "stay", "stays", "stayed", "locked"],
+  ["the team", "practice", "practices", "practiced", "every day"],
+  ["he", "be", "is", "was", "quiet in the library"],
+  ["she", "take", "takes", "took", "the medicine"],
+  ["the meeting", "end", "ends", "ended", "by noon"],
+] as const;
+const subjunctiveMore = [
+  ...unrealWho.flatMap(([who, be], i) =>
+    unrealWhat.map(([what, then], j) => {
+      const after = who === "I" ? "I" : ["she", "he"].includes(who) ? who : i % 2 === 0 ? "she" : "he";
+      return (i + j) % 2 === 0 ? `If ${who} ___ ${what}, ${after} ${then}.|were|was|${be}` : `I wish ${who} ___ ${what}.|were|was|${be}`;
+    }),
+  ),
+  ...demandsOf.flatMap((opening) => demanded.map(([who, base, s, past, rest]) => `${opening} ${who} ___ ${rest}.|${base}|${s}|${past}`)),
+].join("\n");
+
 /** subjunctiveBank asks for the verb form of a wish, a condition contrary to fact, or a demand. */
 export const subjunctiveBank: readonly ChoiceItem[] = rows(`
+${subjunctiveMore}
   If I ___ taller, I could reach the top shelf.|were|was|am
   If Leo ___ here, he would know what to do.|were|was|is
   I wish my grandmother ___ still alive to see this.|were|was|is
@@ -259,6 +442,36 @@ export const subjunctiveBank: readonly ChoiceItem[] = rows(`
 
 /** Verbals are four sentences around one action: a gerund as subject, a gerund as object, a participle and an infinitive. */
 type Verbals = readonly [subject: string, object: string, participle: string, infinitive: string];
+
+/** verbalActs are an -ing phrase, the same phrase after to, what it is as a subject, and what someone does while doing it. */
+const verbalActs = [
+  ["flying a kite on the beach", "fly a kite on the beach", "was the highlight of the trip", "lost track of time"],
+  ["painting the fence", "paint the fence", "took the whole weekend", "got paint on the dog"],
+  ["learning to juggle", "learn to juggle", "takes a lot of patience", "dropped the balls again and again"],
+  ["building a sandcastle", "build a sandcastle", "kept the twins busy all afternoon", "found a crab in the moat"],
+  ["practicing the piano", "practice the piano", "filled every evening", "counted the beats aloud"],
+  ["collecting old coins", "collect old coins", "became a family hobby", "found a coin from 1890"],
+  ["cleaning the attic", "clean the attic", "turned up a box of old letters", "sneezed at all the dust"],
+  ["feeding the ducks", "feed the ducks", "is the best part of the walk", "ran out of bread"],
+  ["hiking up the mountain", "hike up the mountain", "left everyone tired but happy", "stopped to watch an eagle"],
+  ["sorting the recycling", "sort the recycling", "is a weekly chore", "found a lost earring"],
+  ["drawing comic strips", "draw comic strips", "made the long winter go faster", "invented a talking cat"],
+  ["mending the old quilt", "mend the old quilt", "took Grandma three days", "told stories about each patch"],
+] as const;
+const verbalPeople = ["Mia", "Leo", "Priya", "Sam", "Ana", "Jun"] as const;
+const likeVerbs = ["loves", "enjoys", "finished", "started", "kept"] as const;
+const wantVerbs = ["wants", "hopes", "plans", "decided", "promised"] as const;
+const verbalMore: readonly Verbals[] = verbalActs.flatMap(([ing, base, asSubject, meanwhile], i) =>
+  [0, 1, 2].map((n): Verbals => {
+    const who = pick(verbalPeople, i + n * 2);
+    return [
+      `**${capital(ing)}** ${asSubject}${n === 0 ? "" : n === 1 ? " for " + who : " last year"}.`,
+      `${who} ${pick(likeVerbs, i + n)} **${ing}**.`,
+      `**${capital(ing)}**, ${who} ${meanwhile}.`,
+      `${who} ${pick(wantVerbs, i + n)} **to ${base}**.`,
+    ];
+  }),
+);
 
 const verbals: readonly Verbals[] = [
   [
@@ -333,6 +546,7 @@ const verbals: readonly Verbals[] = [
     "**Planting tomatoes along the fence**, Rosa found an old silver coin in the soil.",
     "Rosa needs **to plant the tomatoes** before the rain.",
   ],
+  ...verbalMore,
 ];
 
 const gerund = "a gerund phrase";
@@ -383,6 +597,38 @@ const clauses: readonly Clauses[] = [
   ["Omar missed the bus", "he walked two miles to school", "so", "because"],
   ["the soup smelled delicious", "it was far too salty", "but", "although"],
   ["the play ended", "the audience stood and cheered", "and", "when"],
+  ["the wind was strong", "the ferry stayed in the harbor", "so", "because"],
+  ["Ana trained all winter", "she lost the first race", "but", "although"],
+  ["the guests arrived", "Dad served the soup", "and", "after"],
+  ["the shop was out of milk", "we had juice with breakfast", "so", "since"],
+  ["the hike was long", "nobody complained", "but", "although"],
+  ["the lights went out", "the audience gasped", "and", "when"],
+  ["the ice was thin", "the skaters stayed off the pond", "so", "because"],
+  ["Jun was tired", "he finished his homework", "but", "although"],
+  ["the paint dried", "we hung the pictures", "and", "once"],
+  ["the printer jammed", "the report was late", "so", "because"],
+  ["the movie was long", "the children loved it", "but", "although"],
+  ["the whistle blew", "the players left the field", "and", "as soon as"],
+  ["the roads were icy", "school started late", "so", "since"],
+  ["the test was hard", "most students passed", "but", "although"],
+  ["the baby fell asleep", "the house grew quiet", "and", "after"],
+  ["the price went up", "fewer people bought tickets", "so", "because"],
+  ["Lena was shy", "she gave a great speech", "but", "although"],
+  ["the music started", "everyone began to dance", "and", "when"],
+  ["the creek dried up", "the frogs moved to the pond", "so", "because"],
+  ["the house was old", "it stayed warm all winter", "but", "although"],
+  ["Mom fixed the bike", "we rode to the park", "and", "after"],
+  ["the trail was closed", "we hiked along the river", "so", "since"],
+  ["the dog was old", "it still chased every ball", "but", "although"],
+  ["the snow melted", "the crocuses came up", "and", "once"],
+  ["the oven broke", "we ate sandwiches for dinner", "so", "because"],
+  ["the room was crowded", "we found two seats", "but", "although"],
+  ["the teacher spoke", "the class listened closely", "and", "while"],
+  ["the battery died", "the clock stopped", "so", "because"],
+  ["Sam was new", "he made friends quickly", "but", "although"],
+  ["the sun came up", "the birds began to sing", "and", "as soon as"],
+  ["the field was muddy", "the game was moved indoors", "so", "since"],
+  ["the coat was expensive", "Rosa bought it anyway", "but", "although"],
 ];
 
 const simple = "simple";
