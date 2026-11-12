@@ -8,23 +8,15 @@ const courseId = process.argv[2] ?? "algebra-foundations";
 // English compiles in a moment and mathematics takes seconds, so English is tried first.
 const english = compileEnglish();
 const subject = english.courses.has(courseId) ? english : compileMath();
+// A placed student starts with the course: they know its foundations, the topics of earlier courses it builds on, and
+// the diagnostic should find them. Students who start from nothing learn the foundations as lessons on the way.
+const foundations = subject.courses.get(courseId)?.foundations ?? [];
 const students = [
   { name: "strong", ability: 0.95, xpPerDay: 40 },
   { name: "typical", ability: 0.85, xpPerDay: 30 },
   { name: "struggling", ability: 0.7, xpPerDay: 20 },
-  {
-    name: "placed",
-    ability: 0.85,
-    xpPerDay: 30,
-    knows: [
-      "integers-and-opposites",
-      "absolute-value",
-      "adding-integers",
-      "subtracting-integers",
-      "multiplying-integers",
-      "dividing-integers",
-    ],
-  },
+  { name: "placed", ability: 0.85, xpPerDay: 30, knows: foundations },
+  { name: "struggling, placed", ability: 0.7, xpPerDay: 20, knows: foundations },
 ];
 const rows = students.map(({ name, ...student }) => {
   const runs = Array.from({ length: 20 }, (_, i) => simulate(subject, courseId, student, i + 1));

@@ -75,7 +75,7 @@ export interface CompiledCourse {
   /** topics are the course's topics in display order. */
   readonly topics: readonly string[];
   readonly masteryFloor: ReadonlySet<string>;
-  /** foundations are ancestors of course topics outside the course and its floor. */
+  /** foundations are the ancestors of course topics, and the topics its passages need with their ancestors, outside the course and its floor. */
   readonly foundations: readonly string[];
 }
 
@@ -398,10 +398,17 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
       }
     }
     const foundations = new Set<string>();
-    for (const id of list) {
-      for (const a of ancestors.get(id) ?? []) {
-        if (!position.has(a) && !floor.has(a) && ![...floor].some((f) => ancestors.get(f)?.has(a))) foundations.add(a);
-      }
+    const found = (a: string) => {
+      if (!position.has(a) && !floor.has(a) && ![...floor].some((f) => ancestors.get(f)?.has(a))) foundations.add(a);
+    };
+    for (const id of list) for (const a of ancestors.get(id) ?? []) found(a);
+    // A passage is offered once its topics and the topics that teach its words are known, so they and their ancestors
+    // are foundations too: a learner who starts with this course is placed on them or taught them.
+    const reading = new Set(course.reading ?? []);
+    for (const p of graphPassages.values()) {
+      if (!reading.has(p.unit)) continue;
+      for (const t of [...p.topics.map((e) => e.topic), ...Object.keys(p.wordsByTopic)])
+        for (const a of [t, ...(ancestors.get(t) ?? [])]) found(a);
     }
     for (const before of course.buildsOn ?? []) {
       if (before === course.id) error(path, "a course cannot build on itself");
