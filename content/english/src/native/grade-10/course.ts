@@ -9,12 +9,12 @@ const grammar = t("Grammar", "语法");
 const reading = t("Reading", "阅读");
 const writing = t("Writing", "写作");
 
-/** unit builds a unit of four modules on a theme, leaving out a module with no topics and a missing reading unit. */
+/** unit builds a unit of four modules on a theme, leaving out a module with no topics, a missing reading unit and a missing conversation. */
 const unit = (
   title: Text,
   parts: { words: string[]; grammar: string[]; reading: string[]; writing: string[] },
   readingUnit: string | undefined,
-  conversation: string,
+  conversation?: string,
 ): UnitDef => ({
   title,
   modules: [
@@ -24,7 +24,7 @@ const unit = (
     { title: writing, topics: parts.writing },
   ].filter((m) => m.topics.length > 0),
   ...(readingUnit === undefined ? {} : { reading: [readingUnit] }),
-  conversation,
+  ...(conversation === undefined ? {} : { conversation }),
 });
 
 const units: readonly UnitDef[] = [
@@ -126,6 +126,31 @@ const units: readonly UnitDef[] = [
     },
     undefined,
     "word-roots-challenge",
+  ),
+  unit(
+    t("Puzzles, Hands and Fire", "困惑、动作与火"),
+    {
+      words: ["words-of-puzzling-and-pondering", "words-of-rough-handling", "words-of-fire-and-heat", "words-of-crowds-and-gatherings"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Blocking, Urging and Loathing", "阻挠、劝诱与憎恶"),
+    {
+      words: [
+        "words-of-blocking-and-breaking",
+        "words-of-coaxing-and-urging",
+        "words-of-flinching-and-fretting",
+        "words-of-loathing-and-bullying",
+      ],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
   ),
 ];
 
