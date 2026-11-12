@@ -454,6 +454,8 @@ const confused7 = topic("grammar", {
         The negotiations followed a long and ___ route.|tortuous|torturous|torrential
         A good sauce should ___ the dish, not hide it.|complement|compliment|complete
         The speech seemed to ___ that the war was coming.|imply|infer|impale
+        The lawyer gave a ___ cough to signal that she had a question.|discreet|discrete|discern
+        The rebels chose to ___ the king's order and marched anyway.|flout|flaunt|float
       `,
       (right) => [
         `**${right}** has the meaning this sentence needs; the other choices are look-alike words whose meanings differ.`,

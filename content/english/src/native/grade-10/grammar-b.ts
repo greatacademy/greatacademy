@@ -327,6 +327,8 @@ const confused6 = topic("grammar", {
         The club holds a ___ meeting, in spring and in autumn.|biannual|biennial|bilingual
         The art show is ___; it takes place every two years.|biennial|biannual|bicentennial
         The ___ election comes around every second year.|biennial|biannual|binary
+        Years of drought ___ the farmers until many gave up their land.|wrecked|wreaked|reeked
+        The nurses checked on the patient at ___ intervals through the night.|continual|continuous|contentious
       `,
       (right) => [
         `**${right}** has this meaning; the other choices are look-alike words whose meanings differ.`,

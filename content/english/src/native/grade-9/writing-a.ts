@@ -61,6 +61,9 @@ const thesis = topic("writing", {
         The play's characters are interesting and I liked the brothers.|a bare opinion
         Brothers are always rivals.|too broad
         The story's narrator is unreliable, and her contradictions reveal the guilt she will not admit.|an analytical thesis
+        The story is told by a woman who describes the night her brother disappeared.|a plot summary
+        The narrator of the story is annoying and I did not believe her.|a bare opinion
+        Nobody ever tells the whole truth about themselves.|too broad
       `,
       {
         "an analytical thesis": L(
