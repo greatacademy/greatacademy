@@ -97,7 +97,17 @@ const units: readonly UnitDef[] = [
   unit(
     t("Roots and Parts", "词根与词缀"),
     {
-      words: ["latin-roots-10", "greek-roots-9", "academic-words-10", "academic-words-11"],
+      words: [
+        "latin-roots-10",
+        "greek-roots-9",
+        "latin-roots-11",
+        "greek-roots-10",
+        "latin-roots-12",
+        "greek-roots-11",
+        "latin-roots-13",
+        "academic-words-10",
+        "academic-words-11",
+      ],
       grammar: ["commonly-confused-words-8"],
       reading: [],
       writing: [],
@@ -124,7 +134,18 @@ const units: readonly UnitDef[] = [
   ),
   unit(
     t("Law and Nations", "法律与国家"),
-    { words: ["words-of-the-courtroom", "words-of-embassies-and-treaties"], grammar: [], reading: [], writing: [] },
+    {
+      words: [
+        "words-of-the-courtroom",
+        "words-of-embassies-and-treaties",
+        "words-of-crowns-and-colonies",
+        "words-of-debt-and-credit",
+        "words-of-elections-and-office",
+      ],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
     undefined,
   ),
   unit(
@@ -142,6 +163,22 @@ const units: readonly UnitDef[] = [
         "words-of-generosity-and-greed",
         "words-of-anger-and-calm",
         "words-of-deceit-and-candor",
+      ],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Style and the Senses", "文风与感官"),
+    {
+      words: [
+        "words-for-the-style-of-prose",
+        "words-for-sounds-and-voices",
+        "words-of-light-and-color",
+        "words-of-walking-and-moving",
+        "words-of-surfaces-and-textures",
       ],
       grammar: [],
       reading: [],
