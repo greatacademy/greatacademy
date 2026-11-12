@@ -172,6 +172,26 @@ const units: readonly UnitDef[] = [
     },
     undefined,
   ),
+  unit(
+    t("Effort, Hoards and Talent", "努力、收藏与才能"),
+    {
+      words: ["words-of-hard-effort", "words-of-gathering-and-discarding", "words-of-skill-and-showing-off", "words-of-copying-and-zest"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Grief, Noises, Talk and Rules", "悲伤、声音、闲谈与规则"),
+    {
+      words: ["words-of-grief-and-comfort", "words-of-moaning-and-mumbling", "words-of-chatter-and-gossip", "words-of-rules-and-orders"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
 ];
 
 /** courseGrade10 is the native course of grade 10. */
