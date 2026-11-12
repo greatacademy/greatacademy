@@ -9,12 +9,12 @@ const grammar = t("Grammar", "语法");
 const reading = t("Reading", "阅读");
 const writing = t("Writing", "写作");
 
-/** unit builds a unit of four modules on a theme, leaving out a module with no topics and a missing reading unit. */
+/** unit builds a unit of four modules on a theme, leaving out a module with no topics, a missing reading unit and a missing conversation. */
 const unit = (
   title: Text,
   parts: { words: string[]; grammar: string[]; reading: string[]; writing: string[] },
   readingUnit: string | undefined,
-  conversation: string,
+  conversation?: string,
 ): UnitDef => ({
   title,
   modules: [
@@ -24,7 +24,7 @@ const unit = (
     { title: writing, topics: parts.writing },
   ].filter((m) => m.topics.length > 0),
   ...(readingUnit === undefined ? {} : { reading: [readingUnit] }),
-  conversation,
+  ...(conversation === undefined ? {} : { conversation }),
 });
 
 const units: readonly UnitDef[] = [
@@ -126,6 +126,66 @@ const units: readonly UnitDef[] = [
     },
     undefined,
     "etymology-detective",
+  ),
+  unit(
+    t("Easing and Society", "缓解与交往"),
+    {
+      words: ["words-of-easing-and-stopping", "words-of-sociable-and-solitary-people", "words-of-nerve-and-offense"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Skill and Dullness", "技艺与乏味"),
+    {
+      words: ["words-of-skill-and-clumsiness", "words-of-dull-and-stale-things"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Scorn and Trickery", "蔑视与欺诈"),
+    {
+      words: ["words-of-scolding-and-scorn", "words-of-harm-and-trickery", "words-of-care-and-carelessness"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Firm Minds and Measures", "坚定心志与多少"),
+    {
+      words: ["words-of-firm-and-fickle-minds", "words-of-much-and-little", "words-of-holding-and-letting-go"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Feeling and Belief", "情感与信念"),
+    {
+      words: ["words-of-dislike-and-levity", "words-of-doubt-and-belief"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Excellence and Hardship", "卓越与艰苦"),
+    {
+      words: ["words-of-excellence-and-awe", "words-of-harshness-and-hardship", "words-of-ranks-and-types"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
   ),
 ];
 
