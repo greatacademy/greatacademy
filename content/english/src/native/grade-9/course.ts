@@ -172,6 +172,36 @@ const units: readonly UnitDef[] = [
     },
     undefined,
   ),
+  unit(
+    t("Phrasal Verbs of Starting, Solving and People", "开始、解决与人际的短语动词"),
+    {
+      words: [
+        "phrasal-verbs-of-starting-and-stopping",
+        "phrasal-verbs-of-solving-problems",
+        "phrasal-verbs-of-people",
+        "phrasal-verbs-of-more-and-less",
+      ],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Phrasal Verbs of Breaking, Meeting and Coping", "破坏、相遇与应对的短语动词"),
+    {
+      words: [
+        "phrasal-verbs-of-breaking-and-building",
+        "phrasal-verbs-of-meeting-and-arriving",
+        "phrasal-verbs-of-coping",
+        "phrasal-verbs-of-papers-and-things",
+      ],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
 ];
 
 /** courseGrade9 is the native course of grade 9. */
