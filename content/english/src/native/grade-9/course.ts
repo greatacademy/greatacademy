@@ -152,6 +152,26 @@ const units: readonly UnitDef[] = [
     },
     undefined,
   ),
+  unit(
+    t("Computers, Family, Shops and the Army", "电脑、家庭、商店与军队"),
+    {
+      words: ["words-of-software-and-security", "words-of-family", "words-of-shopping", "words-of-the-army"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Travel, Moods, States and Safety", "出行、情绪、状态与安全"),
+    {
+      words: ["words-of-getting-around", "words-of-moods", "words-of-how-things-are", "words-of-staying-safe"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
 ];
 
 /** courseGrade9 is the native course of grade 9. */
