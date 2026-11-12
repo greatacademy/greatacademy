@@ -18,7 +18,7 @@ Every unit is a theme and teaches four things together: the words of the theme, 
 
 Strands: of the 94 topics, 38 teach words (40%), 14 grammar and mechanics (15%), 22 reading (23%), 8 writing checked by rules (9%) and 12 writing judged by a model (13%).
 
-Depth: each new grammar, reading or rule-checked writing knowledge point has 30 to 48 items built from hand-written cores by templates; each word of a vocabulary batch appears in three sentences, so each vocabulary knowledge point has 30 items; each judged writing knowledge point has 10 tasks with a model; new reading units have 8 passages of 200 to 400 words, with three questions each. A batch of ten words earns about 15 XP, a word-study, grammar, reading or rule-checked writing topic about 14 and a judged writing topic about 24, and the existing topics keep their own XP, so the lessons of the grade come to about 1,420 XP.
+Depth: each new grammar, reading or rule-checked writing knowledge point has 30 to 48 items built from hand-written cores by templates; each word of a vocabulary batch appears in three sentences, so each vocabulary knowledge point has 30 items; each judged writing knowledge point has 12 tasks with a model; new reading units have 8 passages of 200 to 400 words, with three questions each. A batch of ten words earns about 15 XP, a word-study, grammar, reading or rule-checked writing topic about 14 and a judged writing topic about 24, and the existing topics keep their own XP, so the lessons of the grade come to about 1,420 XP.
 
 Listening and speaking wait for audio and recording: until then a unit lists its conversation but does not offer it, and each unit says what it will gain.
 
