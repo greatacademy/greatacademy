@@ -1,0 +1,15 @@
+// Grade 9: the vocabulary topics of the grade, ten words to a batch, and the words they teach.
+
+import type { TopicDef } from "@ga/content";
+import type { WordBatch } from "../../pack.ts";
+import { batchTopic, batchWords } from "../grade-5/batches.ts";
+import { batchesA } from "./words-a.ts";
+import { batchesB } from "./words-b.ts";
+
+const batches = [...batchesA, ...batchesB];
+
+/** batchTopics9 are the vocabulary batches of grade 9. */
+export const batchTopics9: readonly TopicDef[] = batches.map(batchTopic);
+
+/** vocabulary9 are the words the batches of grade 9 teach. */
+export const vocabulary9: readonly WordBatch[] = batches.map(batchWords);

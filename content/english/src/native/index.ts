@@ -22,6 +22,10 @@ import { grade5 } from "./grade-5/index.ts";
 import { grade6 } from "./grade-6/index.ts";
 import { grade7 } from "./grade-7/index.ts";
 import { grade8 } from "./grade-8/index.ts";
+import { grade9 } from "./grade-9/index.ts";
+import { grade10 } from "./grade-10/index.ts";
+import { grade11 } from "./grade-11/index.ts";
+import { grade12 } from "./grade-12/index.ts";
 import { conversations35 } from "./grades-3-5/conversations.ts";
 import { course35 } from "./grades-3-5/course.ts";
 import { grammarTopics35 } from "./grades-3-5/grammar.ts";
@@ -111,4 +115,19 @@ const college: Pack = {
 };
 
 /** nativePacks are the native courses by grade band, one pack each, so that each band has its own passage lengths. */
-export const nativePacks: readonly Pack[] = [grades35, grade3, grade4, grade5, grades68, grade6, grade7, grade8, grades912, college];
+export const nativePacks: readonly Pack[] = [
+  grades35,
+  grade3,
+  grade4,
+  grade5,
+  grades68,
+  grade6,
+  grade7,
+  grade8,
+  grades912,
+  grade9,
+  grade10,
+  grade11,
+  grade12,
+  college,
+];
