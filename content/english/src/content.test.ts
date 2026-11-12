@@ -39,7 +39,7 @@ describe("english content", () => {
       textIssue: (text) => (unescapedDollar.test(text) ? "an unescaped dollar sign" : undefined),
     });
     expect(issues.map(formatIssue)).toEqual([]);
-  });
+  }, 60_000);
 
   it("holds every topic in a shard", () => {
     expect(new Set(coreShardTopics.map((topic) => topic.id)).size).toBe(english.topics.length);

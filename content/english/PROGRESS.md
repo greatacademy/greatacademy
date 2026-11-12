@@ -12,7 +12,7 @@ The level courses of [docs/english-curriculum.md §6](../../docs/english-curricu
 | `levels-courses` | `src/levels/*/reading.ts`, `src/levels/*/conversations.ts`, `src/levels/*/course.ts` and files beside them, `src/exams/` | For each level once its topics are in: its reading units, conversations and course; then the exam courses |
 | `native` | `src/native/`, `src/topics/`, `src/reading/`, `libs/subject-english/src/criteria-native.ts`, `docs/english-courses/english-grade*.md`, `docs/english-courses/english-college-*.md` | The outlines of the native courses, then grades 3 to 5, 6 to 8, 9 to 12 and college writing in turn |
 
-Course ids: `english-pre-a1`, `english-a1`, `english-a2`, `english-b1`, `english-b2`; `english-grade-3`, `english-grade-4`, `english-grade-5`, `english-grade-6`, `english-grade-7`, `english-grade-8`, `english-grade-9`, `english-grade-10`, `english-grade-11`, `english-grades-9-12`, `english-college-writing`; `english-ielts`, `english-toefl`, `english-cambridge-first`, `english-gaokao`.
+Course ids: `english-pre-a1`, `english-a1`, `english-a2`, `english-b1`, `english-b2`; `english-grade-3`, `english-grade-4`, `english-grade-5`, `english-grade-6`, `english-grade-7`, `english-grade-8`, `english-grade-9`, `english-grade-10`, `english-grade-11`, `english-grade-12`, `english-grades-9-12`, `english-college-writing`; `english-ielts`, `english-toefl`, `english-cambridge-first`, `english-gaokao`.
 
 **Depth before breadth.** Rule-checked grammar, usage and sentence-writing knowledge points have at least 30 distinct items, each vocabulary word appears in at least three sentences (25 items or more per knowledge point), judged writing has at least 12 tasks per knowledge point, and reading units have 6 to 8 passages (native units 8 to 10). Fewer topics are written rather than thin ones.
 
@@ -41,7 +41,7 @@ Content that needs audio or recording (listening of S1, speaking of S2 to S4, ph
 | Grades 3 to 5: 78 topics in 9 themed units, `our-solar-system`, 9 conversations; retired once the grade courses hold its topics | Done |
 | One course per grade (E8.2), grades 3 to 5: `english-grade-3` (116 topics, 1,572 XP), `english-grade-4` (114, 1,643) and `english-grade-5` (114, 1,674), 266 new topics, 21 new reading units, 21 new conversations, 61 new criteria; `english-grades-3-5` retired | Done |
 | One course per grade (E8.2), grades 6 to 8: `english-grade-6` (108 topics, 1,557 XP), `english-grade-7` (102, 1,506) and `english-grade-8` (94, 1,422), 249 new topics, 19 new reading units, 22 new conversations, 55 new criteria; `english-grades-6-8` retired | Done |
-| One course per grade (E8.2), grades 9 to 12: `english-grade-9` (74 topics, 1,153 XP), `english-grade-10` (52, 831) and `english-grade-11` (43, 710), 136 new topics, 17 new reading units, 20 new conversations, 51 new criteria | In progress |
+| One course per grade (E8.2), grades 9 to 12: `english-grade-9` (74 topics, 1,153 XP), `english-grade-10` (52, 831), `english-grade-11` (43, 710) and `english-grade-12` (35, 580), 167 new topics, 22 new reading units, 26 new conversations, 66 new criteria | In progress |
 
 ## Reasons for Encompassing Weights
 
