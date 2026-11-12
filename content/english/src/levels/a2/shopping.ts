@@ -4,7 +4,7 @@
 import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
-import { interleave, pairUp, vocabularyTopic, word } from "../words.ts";
+import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
 import { fill, judgedTopic } from "./kit.ts";
 
 const money = vocabularyTopic({
@@ -432,11 +432,40 @@ const sizeItems: readonly (readonly [string, string, "too" | "enough"])[] = [
   ["This box isn't ___ to hold all the books.", "strong", "enough"],
 ];
 
-const sizeChoiceBank: readonly ChoiceItem[] = sizeItems.map(([shown, adjective, word]): ChoiceItem => {
-  const right = word === "too" ? `too ${adjective}` : `${adjective} enough`;
-  const wrong = word === "too" ? [`${adjective} enough`, `enough ${adjective}`] : [`too ${adjective}`, `enough ${adjective}`];
-  return [`${shown} (${adjective})`, right, wrong];
-});
+/** sizeThings are a thing, its pronoun, its forms of be, what you do with it, adjectives that make it too much and ones that make it enough. */
+const sizeThings: readonly (readonly [string, string, string, string, string, readonly string[], readonly string[]])[] = [
+  ["this jacket", "It", "'s", " isn't", "wear", ["small", "big", "tight", "short", "thin"], ["big", "warm", "long", "thick"]],
+  ["these boots", "They", "'re", " aren't", "wear", ["small", "big", "tight", "heavy"], ["big", "warm", "strong", "light"]],
+  ["this box", "It", "'s", " isn't", "carry", ["heavy", "big", "wide"], ["light", "small"]],
+  ["this bag", "It", "'s", " isn't", "take on the plane", ["big", "heavy", "long"], ["small", "light"]],
+  ["the ladder", "It", "'s", " isn't", "use to reach the roof", ["short", "old"], ["long", "tall", "strong"]],
+  ["this rope", "It", "'s", " isn't", "use to climb the tree", ["short", "thin", "old"], ["long", "strong", "thick"]],
+  ["the room", "It", "'s", " isn't", "use for the party", ["small", "dark", "cold"], ["big", "warm"]],
+  ["the soup", "It", "'s", " isn't", "eat", ["hot", "salty", "spicy"], ["warm", "hot"]],
+  ["the water", "It", "'s", " isn't", "swim in", ["cold", "dirty", "deep"], ["warm", "clean"]],
+  ["this phone", "It", "'s", " isn't", "buy", ["expensive", "old"], ["cheap", "good"]],
+];
+
+const sizeChoiceBank: readonly ChoiceItem[] = [
+  ...sizeItems.map(([shown, adjective, word]): ChoiceItem => {
+    const right = word === "too" ? `too ${adjective}` : `${adjective} enough`;
+    const wrong = word === "too" ? [`${adjective} enough`, `enough ${adjective}`] : [`too ${adjective}`, `enough ${adjective}`];
+    return [`${shown} (${adjective})`, right, wrong];
+  }),
+  ...sizeThings.flatMap(([thing, it, be, not, verb, tooAdjectives, enoughAdjectives]): ChoiceItem[] => [
+    ...tooAdjectives.map(
+      (adjective): ChoiceItem => [
+        `I can't ${verb} ${thing}. ${it}${be} ___. (${adjective})`,
+        `too ${adjective}`,
+        [`${adjective} enough`, `enough ${adjective}`],
+      ],
+    ),
+    ...enoughAdjectives.flatMap((adjective): ChoiceItem[] => [
+      [`I can't ${verb} ${thing}. ${it}${not} ___. (${adjective})`, `${adjective} enough`, [`too ${adjective}`, `enough ${adjective}`]],
+      [`Good, I can ${verb} ${thing}. ${it}${be} ___. (${adjective})`, `${adjective} enough`, [`too ${adjective}`, `enough ${adjective}`]],
+    ]),
+  ]),
+];
 
 /** tooThings are a thing, its form of be and its negative. */
 const tooThings: readonly (readonly [string, string, string])[] = [
@@ -447,24 +476,29 @@ const tooThings: readonly (readonly [string, string, string])[] = [
   ["The gloves", "are", "aren't"],
   ["This box", "is", "isn't"],
   ["The sweater", "is", "isn't"],
+  ["The shelves", "are", "aren't"],
+  ["My suitcase", "is", "isn't"],
+  ["The trousers", "are", "aren't"],
 ];
-const tooAdjectives: readonly string[] = ["small", "big", "long", "heavy", "thin", "thick"];
+const tooAdjectives: readonly string[] = ["small", "big", "long", "heavy", "thin", "thick", "short", "wide"];
 
-const tooTypedBank: readonly TypedItem[] = pairUp(42, tooThings, tooAdjectives).map(([[thing, be, not], adjective], k): TypedItem => {
-  if (k % 2 === 0)
+const tooTypedBank: readonly TypedItem[] = everyPair(tooThings, tooAdjectives).flatMap(([[thing, be, not], adjective]): TypedItem[] =>
+  [0, 1].map((k): TypedItem => {
+    if (k % 2 === 0)
+      return {
+        shown: `${thing} / ${adjective} / too`,
+        accepted: [`${thing} ${be} too ${adjective}.`],
+        wrong: [`${thing} ${be} ${adjective} enough.`, `${thing} too ${adjective}.`],
+      };
+    const full = `${be} not`;
     return {
-      shown: `${thing} / ${adjective} / too`,
-      accepted: [`${thing} ${be} too ${adjective}.`],
-      wrong: [`${thing} ${be} ${adjective} enough.`, `${thing} too ${adjective}.`],
+      shown: `${thing} / ${adjective} / not enough`,
+      accepted: [`${thing} [${not}|${full}] ${adjective} enough.`],
+      canonical: `${thing} ${not} ${adjective} enough.`,
+      wrong: [`${thing} ${not} enough ${adjective}.`, `${thing} ${be} ${adjective} enough.`],
     };
-  const full = `${be} not`;
-  return {
-    shown: `${thing} / ${adjective} / not enough`,
-    accepted: [`${thing} [${not}|${full}] ${adjective} enough.`],
-    canonical: `${thing} ${not} ${adjective} enough.`,
-    wrong: [`${thing} ${not} enough ${adjective}.`, `${thing} ${be} ${adjective} enough.`],
-  };
-});
+  }),
+);
 
 /** amountItems are a sentence with a gap, the right words and the wrong ones, for too much, too many and enough with nouns. */
 const amountItems: readonly ChoiceItem[] = [
@@ -502,6 +536,26 @@ const amountItems: readonly ChoiceItem[] = [
   ["There's ___ milk in this coffee. It's almost white.", "too much", ["too many", "very many"]],
   ["Do you have ___ to buy lunch?", "enough coins", ["coins enough", "too much coins"]],
   ["He gets ___ messages. He can't answer them all.", "too many", ["too much", "very much"]],
+];
+
+/** countables are nouns you can count, and uncountables nouns you cannot, for too many, too much and enough. */
+const countables: readonly string[] = ["people", "cars", "apps", "mistakes", "tourists", "messages", "shoes", "books", "chairs", "eggs"];
+const uncountables: readonly string[] = ["sugar", "noise", "traffic", "water", "milk", "salt", "homework", "luggage", "coffee", "bread"];
+
+const amountFrames: readonly ChoiceItem[] = [
+  ...everyPair(["There are ___ {n} here.", "There were ___ {n} today.", "Why are there ___ {n}?"], countables).map(
+    ([frame, noun]): ChoiceItem => [frame.replace("{n}", noun), "too many", ["too much", "very much"]],
+  ),
+  ...everyPair(["There is ___ {n} here.", "There was ___ {n} today.", "Why is there ___ {n}?"], uncountables).map(
+    ([frame, noun]): ChoiceItem => [frame.replace("{n}", noun), "too much", ["too many", "very many"]],
+  ),
+  ...everyPair(["Do we have ___?", "We didn't have ___."], [...countables, ...uncountables]).map(
+    ([frame, noun]): ChoiceItem => [
+      frame,
+      `enough ${noun}`,
+      [`${noun} enough`, `${countables.includes(noun) ? "too much" : "too many"} ${noun}`],
+    ],
+  ),
 ];
 
 /** sizeWhy explains too before an adjective or enough after it. */
@@ -628,7 +682,12 @@ const tooAndEnough: TopicDef = {
         "With nouns, use *too many* for things you can count and *too much* for things you cannot count:\n\n- *There are too many cars.*\n- *There is too much traffic.*\n\n*enough* goes **before** a noun: *We don't have enough money*, not *money enough*.",
         "和名词连用时，可数名词用 *too many*，不可数名词用 *too much*：\n\n- *There are too many cars.*\n- *There is too much traffic.*\n\n*enough* 放在名词**前面**：说 *We don't have enough money*，不说 *money enough*。注意：*enough* 在形容词后面，却在名词前面。",
       ),
-      choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), amountItems, amountWhy, whyNotAmount),
+      choiceGenerator(
+        t("Choose the words for the gap.", "选出填入空白处的词。"),
+        [...amountItems, ...amountFrames],
+        amountWhy,
+        whyNotAmount,
+      ),
     ),
   ],
 };
@@ -648,42 +707,50 @@ const oneNouns: readonly (readonly [string, string, string, string])[] = [
   ["table", "tables", "wooden", "metal"],
   ["umbrella", "umbrellas", "long", "short"],
   ["shirt", "shirts", "white", "green"],
+  ["bag", "bags", "leather", "plastic"],
+  ["hat", "hats", "black", "brown"],
+  ["cup", "cups", "big", "small"],
 ];
+
+const an = (next: string) => (/^[aeiou]/u.test(next) ? "an" : "a");
+
+/** oneRows are the nouns with their two adjectives in both orders. */
+const oneRows = oneNouns.flatMap(([noun, nouns, a, b]) => [[noun, nouns, a, b] as const, [noun, nouns, b, a] as const]);
 
 const oneFrames: readonly ((n: readonly [string, string, string, string]) => ChoiceItem)[] = [
   ([noun, , a, b]) => [`I don't like the ${a} ${noun}. I like the ${b} ___.`, "one", ["ones", "it"]],
   ([, nouns, a, b]) => [`I don't like the ${a} ${nouns}. I like the ${b} ___.`, "ones", ["one", "them"]],
   ([noun, , , b]) => [`Which ${noun} do you want? — The ${b} ___, please.`, "one", ["ones", "it"]],
   ([, nouns, a]) => [`These ${nouns} are nice, but I prefer the ${a} ___.`, "ones", ["one", "them"]],
+  ([, nouns, a]) => [`Which ${nouns} do you like? — The ${a} ___.`, "ones", ["one", "them"]],
+  ([noun, , a, b]) => [`My ${noun} is ${b}, but I want ${an(a)} ${a} ___.`, "one", ["ones", "it"]],
 ];
 
-const oneChoiceBank: readonly ChoiceItem[] = interleave(oneFrames.map((frame) => oneNouns.map(frame)));
-
-const an = (next: string) => (/^[aeiou]/u.test(next) ? "an" : "a");
+const oneChoiceBank: readonly ChoiceItem[] = interleave(oneFrames.map((frame) => oneRows.map(frame)));
 
 const oneTypedBank: readonly TypedItem[] = interleave([
-  oneNouns.map(
+  oneRows.map(
     ([noun, , a, b]): TypedItem => ({
       shown: `This ${a} ${noun} isn't right for me. Can I see the ${b} ${noun}?`,
       accepted: [`Can I see the ${b} one?`],
       wrong: [`Can I see the ${b} ones?`, `Can I see the ${b}?`],
     }),
   ),
-  oneNouns.map(
+  oneRows.map(
     ([, nouns, a, b]): TypedItem => ({
       shown: `I don't want the ${a} ${nouns}. I want the ${b} ${nouns}.`,
       accepted: [`I want the ${b} ones.`],
       wrong: [`I want the ${b} one.`, `I want the ${b} them.`],
     }),
   ),
-  oneNouns.map(
+  oneRows.map(
     ([noun, , a, b]): TypedItem => ({
       shown: `Your ${a} ${noun} is nice. I'd like ${an(b)} ${b} ${noun} too.`,
       accepted: [`I'd like ${an(b)} ${b} one too.`],
       wrong: [`I'd like ${an(b)} ${b} too.`, `I'd like ${an(b)} ${b} it too.`],
     }),
   ),
-  oneNouns.map(
+  oneRows.map(
     ([, nouns, a]): TypedItem => ({
       shown: `Do you have any ${a} ${nouns}? I like ${a} ${nouns}.`,
       accepted: [`I like ${a} ones.`],

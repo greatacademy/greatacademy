@@ -4,7 +4,7 @@
 import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
-import { interleave, pairUp, vocabularyTopic, word } from "../words.ts";
+import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
 import { fill, judgedTopic } from "./kit.ts";
 
 const devices = vocabularyTopic({
@@ -415,6 +415,10 @@ const yetFrames: readonly ((done: readonly [string, string, string]) => ChoiceIt
   ([, participle, rest]) => [`Have you ${participle} ${rest} ___?`, "yet", ["just", "never"]],
   ([, participle, rest]) => [`Don't worry. I've ___ ${participle} ${rest}.`, "already", ["yet", "ever"]],
   ([, participle, rest]) => [`I've ___ ${participle} ${rest}. I did it a minute ago.`, "just", ["yet", "ever"]],
+  ([, participle, rest]) => [`She hasn't ${participle} ${rest} ___.`, "yet", ["already", "just"]],
+  ([, participle, rest]) => [`Has Tom ${participle} ${rest} ___?`, "yet", ["just", "never"]],
+  ([, participle, rest]) => [`We've ___ ${participle} ${rest}, so we can go now.`, "already", ["yet", "ever"]],
+  ([, participle, rest]) => [`Look! Dad has ___ ${participle} ${rest}. He did it a second ago.`, "just", ["yet", "ever"]],
 ];
 
 const justBank: readonly ChoiceItem[] = interleave(yetFrames.map((frame) => doneThings.map(frame)));
@@ -429,8 +433,10 @@ const jaySubjects: readonly (readonly [string, string, string, string])[] = [
   ["My dad", "has", "", "hasn't"],
 ];
 
-const jayTypedBank: readonly TypedItem[] = pairUp(52, jaySubjects, doneThings).map(
-  ([[subject, have, short, not], [verb, participle, rest]], k): TypedItem => {
+// Each pair of a subject and a thing done comes twice, so it is asked in two of the four ways.
+const jayTypedBank: readonly TypedItem[] = everyPair(jaySubjects, doneThings)
+  .flatMap((row) => [row, row])
+  .map(([[subject, have, short, not], [verb, participle, rest]], k): TypedItem => {
     const other = have === "have" ? "has" : "have";
     const kind = k % 4;
     if (kind === 0 || kind === 3) {
@@ -463,8 +469,7 @@ const jayTypedBank: readonly TypedItem[] = pairUp(52, jaySubjects, doneThings).m
           : `${askHave} ${asked} ${verb} ${rest} yet?`,
       ],
     };
-  },
-);
+  });
 
 /** jayReason says why a sentence takes just, already or yet, and where the word goes. */
 const jayReason = (word: string, sentence: string): Text => {

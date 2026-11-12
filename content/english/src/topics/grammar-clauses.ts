@@ -2,6 +2,7 @@
 
 import { type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point } from "@ga/subject-english";
+import { everyPair } from "../levels/words.ts";
 import {
   lateComma,
   moreAppositiveCommas,
@@ -1108,8 +1109,140 @@ const clauseCommaMore: readonly ChoiceItem[] = clausePairs.flatMap(([sub, clause
   ];
 });
 
+/** framePeople are a name, its pronoun, its past and present forms of be, for sentences built from frames. */
+const framePeople: readonly (readonly [name: string, pronoun: string, was: string, is: string])[] = [
+  ["Mia", "she", "was", "is"],
+  ["Tom", "he", "was", "is"],
+  ["My parents", "they", "were", "are"],
+  ["Ben", "he", "was", "is"],
+  ["The twins", "they", "were", "are"],
+  ["Grandma", "she", "was", "is"],
+  ["Our teacher", "she", "was", "is"],
+  ["Leo", "he", "was", "is"],
+];
+/** inner writes a word from the start of a sentence as it reads inside one: names keep their capital. */
+const inner = (s: string) => (/^(Mia|Tom|Ben|Leo|Grandma)\b/u.test(s) ? s : s[0]!.toLowerCase() + s.slice(1));
+const fillPerson = (frame: string, [name, pronoun, was, is]: (typeof framePeople)[number]) =>
+  upper(
+    frame
+      .replace(/^\{S\}/u, name)
+      .replaceAll("{S}", inner(name))
+      .replaceAll("{p}", pronoun)
+      .replaceAll("{was}", was)
+      .replaceAll("{is}", is),
+  );
+
+/** conjunctionFrames are sentences about a person with a gap for a coordinating conjunction, the right one and two wrong ones. */
+const conjunctionFrames: readonly (readonly [frame: string, right: string, wrong: readonly [string, string]])[] = [
+  ["{S} {was} tired, ___ {p} went to bed early.", "so", ["but", "or"]],
+  ["{S} {was} tired, ___ {p} kept working.", "but", ["so", "or"]],
+  ["{S} can walk, ___ {p} can take the bus.", "or", ["so", "nor"]],
+  ["{S} missed the bus, ___ {p} walked to school.", "so", ["or", "nor"]],
+  ["{S} studied hard, ___ {p} failed the test.", "but", ["so", "or"]],
+  ["{S} did not eat breakfast, ___ did {p} eat lunch.", "nor", ["and", "so"]],
+  ["{S} found a coin, ___ {p} gave it to the teacher.", "and", ["or", "nor"]],
+  ["{S} felt sick, ___ {p} stayed at home.", "so", ["but", "or"]],
+  ["{S} {was} hungry, ___ the fridge was empty.", "but", ["so", "or"]],
+  ["Should {p} take the train, ___ should {p} drive?", "or", ["so", "nor"]],
+  ["{S} {was} not at school, ___ {was} {p} at home.", "nor", ["and", "so"]],
+  ["{S} washed the dishes, ___ {p} dried them.", "and", ["or", "nor"]],
+];
+const fanboysFrames: readonly ChoiceItem[] = everyPair(conjunctionFrames, framePeople).map(
+  ([[frame, right, wrong], who]): ChoiceItem => [fillPerson(frame, who), right, wrong],
+);
+
+/** framedCompounds are the plain frames as two complete thoughts and a conjunction, for the comma before it. */
+const framedCompounds: readonly (readonly [first: string, conjunction: string, second: string])[] = everyPair(
+  conjunctionFrames.filter(([frame]) => !/\?$|did \{p\}|\{was\} \{p\}/u.test(frame)),
+  framePeople,
+).map(([[frame, right], who]) => {
+  const [first, second] = fillPerson(frame, who).split(", ___ ") as [string, string];
+  return [first, right, second.slice(0, -1)] as const;
+});
+const conjunctionCommaFrames: readonly ChoiceItem[] = framedCompounds.map(([first, conjunction, second]): ChoiceItem => {
+  const words = first.split(" ");
+  const k = words.length > 3 ? 2 : 1;
+  return [
+    "",
+    `${first}, ${conjunction} ${second}.`,
+    [`${first} ${conjunction}, ${second}.`, `${words.slice(0, k).join(" ")}, ${words.slice(k).join(" ")} ${conjunction} ${second}.`],
+  ];
+});
+
+/** clauseFrames are a subordinating conjunction, a clause and a main clause about a person, the name in whichever comes first. */
+const clauseFrames: readonly (readonly [sub: string, clause: string, main: string, wrong: readonly [string, string, string]])[] = [
+  ["When", "{S} got home", "{p} made some tea", ["got", "home", "tea"]],
+  ["Because", "{S} {was} late", "{p} ran to the bus stop", ["late", "ran", "bus"]],
+  ["Although", "{S} {was} tired", "{p} finished the work", ["tired", "finished", "work"]],
+  ["After", "{S} ate lunch", "{p} went for a walk", ["ate", "lunch", "walk"]],
+  ["Before", "{S} left the house", "{p} locked the door", ["left", "house", "door"]],
+  ["If", "{S} {is} free tomorrow", "{p} will help us", ["free", "tomorrow", "help"]],
+  ["While", "{S} waited for the bus", "{p} read a book", ["waited", "bus", "book"]],
+  ["Since", "{S} had no money", "{p} stayed at home", ["had", "money", "stayed"]],
+  ["As soon as", "{S} saw the dog", "{p} smiled", ["saw", "dog", "smiled"]],
+];
+const swapNames = (frame: string) => frame.replaceAll("{S}", "\u0000").replaceAll("{p}", "{S}").replaceAll("\u0000", "{p}");
+const clauseCommaFrames: readonly ChoiceItem[] = everyPair(clauseFrames, framePeople).map(([[sub, clause, main], who], k): ChoiceItem => {
+  if (k % 2 === 0) {
+    const c = inner(fillPerson(clause, who));
+    const m = inner(fillPerson(main, who));
+    const [head, ...rest] = m.split(" ");
+    return ["", `${sub} ${c}, ${m}.`, [`${sub}, ${c} ${m}.`, `${sub} ${c} ${head}, ${rest.join(" ")}.`]];
+  }
+  const m = fillPerson(swapNames(main), who);
+  const c = inner(fillPerson(swapNames(clause), who));
+  const [head, ...rest] = m.split(" ");
+  const low = sub.toLowerCase();
+  return ["", `${m} ${low} ${c}.`, [`${m} ${low}, ${c}.`, `${head}, ${rest.join(" ")} ${low} ${c}.`]];
+});
+const subordinatorFrames: readonly ChoiceItem[] = everyPair(clauseFrames, framePeople).map(
+  ([[sub, clause, main, wrong], who], k): ChoiceItem => {
+    const sentence =
+      k % 2 === 0
+        ? `${sub} ${inner(fillPerson(clause, who))}, ${inner(fillPerson(main, who))}.`
+        : `${fillPerson(swapNames(main), who)} ${sub.toLowerCase()} ${inner(fillPerson(swapNames(clause), who))}.`;
+    return [sentence, k % 2 === 0 ? sub : sub.toLowerCase(), wrong];
+  },
+);
+
+/** meaningFrames are sentences about a person with a gap for a subordinating conjunction, the right one and two wrong ones. */
+const meaningFrames: readonly (readonly [frame: string, right: string, wrong: readonly [string, string]])[] = [
+  ["{S} stayed indoors ___ it was raining.", "because", ["although", "until"]],
+  ["___ the test was hard, {S} passed it.", "Although", ["Because", "Unless"]],
+  ["{S} waited at the door ___ the bell rang.", "until", ["although", "because"]],
+  ["{S} will miss the bus ___ {p} hurries.", "unless", ["because", "while"]],
+  ["{S} hummed a song ___ {p} cooked.", "while", ["because", "unless"]],
+  ["___ it is sunny tomorrow, {S} will go to the beach.", "If", ["Although", "Until"]],
+  ["{S} washed {p} hands ___ {p} ate.", "before", ["although", "unless"]],
+  ["{S} went to bed ___ the film ended.", "after", ["although", "unless"]],
+  ["{S} smiled ___ {p} {was} very nervous.", "although", ["because", "if"]],
+  ["{S} could not sleep ___ the room was too hot.", "because", ["although", "unless"]],
+];
+const subordinatorMeaningFrames: readonly ChoiceItem[] = everyPair(meaningFrames, framePeople)
+  .filter(([[frame], [, pronoun]]) => !(frame.includes("hurries") && pronoun === "they"))
+  .map(
+    ([[frame, right, wrong], who]): ChoiceItem => [
+      fillPerson(frame, who).replace(
+        /\b(she|he|they) hands\b/u,
+        (_, p: string) => `${{ she: "her", he: "his", they: "their" }[p as "she"]} hands`,
+      ),
+      right,
+      wrong,
+    ],
+  );
+
+/** frameWordClass gives the class of every wrong option in the sentences built from frames. */
+const frameWordClass: Readonly<Record<string, WordClass>> = {
+  ...Object.fromEntries("home tea bus work lunch walk house door book money dog".split(" ").map((w) => [w, "noun"])),
+  ...Object.fromEntries("got ran finished ate left waited had stayed saw smiled help".split(" ").map((w) => [w, "verb"])),
+  late: "adjective",
+  tired: "adjective",
+  free: "adjective",
+  tomorrow: "adverb",
+};
+
 /** allWordClass is the class of every word used as a wrong option. */
-const allWordClass: Readonly<Record<string, WordClass>> = { ...wordClass, ...moreWordClass };
+const allWordClass: Readonly<Record<string, WordClass>> = { ...wordClass, ...moreWordClass, ...frameWordClass };
 
 /** clauseTopics are the topics of phrases and clauses. */
 export const clauseTopics: readonly TopicDef[] = [
@@ -1242,7 +1375,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which word best completes the sentence?", "哪个词最适合补全句子？"),
-          [...fanboysBank, ...fanboysMore],
+          [...fanboysBank, ...fanboysMore, ...fanboysFrames],
           (right, shown) =>
             t(
               `${shown.replace("___", `**${right}**`)} The two parts of the sentence relate in the way this word shows.`,
@@ -1260,7 +1393,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Choose the correct sentence.", "选出正确的句子。"),
-          [...conjunctionCommaBank, ...conjunctionCommaMore],
+          [...conjunctionCommaBank, ...conjunctionCommaMore, ...conjunctionCommaFrames],
           (right) =>
             t(
               `**${right}** The comma goes before the conjunction only when both sides could stand alone.`,
@@ -1334,7 +1467,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which word is the subordinating conjunction?", "哪个词是从属连词？"),
-          [...subordinatorBank, ...subordinatorMore],
+          [...subordinatorBank, ...subordinatorMore, ...subordinatorFrames],
           (right) =>
             t(
               `**${right}** begins the clause that cannot stand alone. Cover the clause it starts, and the rest of the sentence still makes sense on its own.`,
@@ -1355,7 +1488,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which word best completes the sentence?", "哪个词最适合补全句子？"),
-          [...subordinatorMeaningBank, ...subordinatorMeaningMore],
+          [...subordinatorMeaningBank, ...subordinatorMeaningMore, ...subordinatorMeaningFrames],
           (right, shown) =>
             t(
               `${shown.replace("___", `**${right}**`)} This word shows how the two ideas relate.`,
@@ -1373,7 +1506,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Choose the correct sentence.", "选出正确的句子。"),
-          [...clauseCommaBank, ...clauseCommaMore],
+          [...clauseCommaBank, ...clauseCommaMore, ...clauseCommaFrames],
           (right) =>
             t(`**${right}** A comma follows a dependent clause that opens the sentence.`, `**${right}** 从句放在句首时，后面要加逗号。`),
           clauseComma,

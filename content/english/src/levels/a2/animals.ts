@@ -420,40 +420,35 @@ const pcEvents: readonly (readonly [string, string, string, string, string])[] =
 
 const inside = ([subject, , , keep]: readonly [string, string, string, boolean]) => (keep ? subject : subject.toLowerCase());
 
-const pcRows = combos(120, pcSubjects, pcActions, pcEvents);
+// Seven subjects, eight actions and five events have no common factor, so 280 rows give every combination once.
+const pcRows = combos(280, pcSubjects, pcActions, pcEvents);
 
-const pcFormBank: readonly ChoiceItem[] = pcRows
-  .slice(0, 40)
-  .map(
-    ([s, [verb, ing, , rest], [es, past, , , after]]): ChoiceItem => [
-      `When ${es} ${past}${after}, ${inside(s)} ___ ${rest}. (${verb})`,
-      `${s[1]} ${ing}`,
-      [`${s[2]} ${ing}`, `${s[1]} ${verb}`],
-    ],
-  );
+const pcFormBank: readonly ChoiceItem[] = pcRows.map(
+  ([s, [verb, ing, , rest], [es, past, , , after]]): ChoiceItem => [
+    `When ${es} ${past}${after}, ${inside(s)} ___ ${rest}. (${verb})`,
+    `${s[1]} ${ing}`,
+    [`${s[2]} ${ing}`, `${s[1]} ${verb}`],
+  ],
+);
 
-const pcWhichBank: readonly ChoiceItem[] = pcRows
-  .slice(40, 80)
-  .map(
-    ([s, [verb, ing, simple, rest], [es, past, cont, base, after]]): ChoiceItem => [
-      `${s[0]} ___ (${verb}) ${rest} when ${es} ___ (${base})${after}.`,
-      `${s[1]} ${ing} … ${past}`,
-      [`${simple} … ${cont}`, `${s[1]} ${ing} … ${cont}`],
-    ],
-  );
+const pcWhichBank: readonly ChoiceItem[] = pcRows.map(
+  ([s, [verb, ing, simple, rest], [es, past, cont, base, after]]): ChoiceItem => [
+    `${s[0]} ___ (${verb}) ${rest} when ${es} ___ (${base})${after}.`,
+    `${s[1]} ${ing} … ${past}`,
+    [`${simple} … ${cont}`, `${s[1]} ${ing} … ${cont}`],
+  ],
+);
 
-const pcTypedBank: readonly TypedItem[] = pcRows
-  .slice(80, 120)
-  .map(([s, [verb, ing, , rest], [es, past, cont, base, after]]): TypedItem => {
-    const long = `${s[1]} ${ing} ${rest}`;
-    const short = `${es} ${past}${after}`;
-    return {
-      shown: `${s[0]} / ${verb} ${rest} / when / ${es} ${base}${after}`,
-      accepted: [`${s[0]} ${long} when ${short}.`, `When ${short}, ${inside(s)} ${long}.`],
-      canonical: `${s[0]} ${long} when ${short}.`,
-      wrong: [`${s[0]} ${s[2]} ${ing} ${rest} when ${short}.`, `${s[0]} ${long} when ${es} ${cont}${after}.`],
-    };
-  });
+const pcTypedBank: readonly TypedItem[] = pcRows.map(([s, [verb, ing, , rest], [es, past, cont, base, after]]): TypedItem => {
+  const long = `${s[1]} ${ing} ${rest}`;
+  const short = `${es} ${past}${after}`;
+  return {
+    shown: `${s[0]} / ${verb} ${rest} / when / ${es} ${base}${after}`,
+    accepted: [`${s[0]} ${long} when ${short}.`, `When ${short}, ${inside(s)} ${long}.`],
+    canonical: `${s[0]} ${long} when ${short}.`,
+    wrong: [`${s[0]} ${s[2]} ${ing} ${rest} when ${short}.`, `${s[0]} ${long} when ${es} ${cont}${after}.`],
+  };
+});
 
 /** beRule says which subjects take the form of be in words. */
 const beRule = (words: string): Text =>

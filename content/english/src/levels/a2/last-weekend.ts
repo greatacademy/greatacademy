@@ -4,8 +4,8 @@
 import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
-import { vocabularyTopic, word } from "../words.ts";
-import { combos, fill, judgedTopic } from "./kit.ts";
+import { everyTriple, vocabularyTopic, word } from "../words.ts";
+import { fill, judgedTopic } from "./kit.ts";
 
 const pastTime = vocabularyTopic({
   id: "a2-words-past-time",
@@ -507,19 +507,17 @@ const pastTimes: readonly string[] = ["Yesterday", "Last Saturday", "Last night"
 const inner = (subject: string): string =>
   /^(I|Tom|Lily|Ben|Anna|Sam|Grandma)$/u.test(subject) ? subject : subject.charAt(0).toLowerCase() + subject.slice(1);
 
-const regularRows = combos(119, pastSubjects, regulars, pastTimes);
+const regularRows = everyTriple(pastSubjects, regulars, pastTimes);
 
-const regularChoiceBank: readonly ChoiceItem[] = regularRows
-  .slice(0, 40)
-  .map(
-    ([subject, [verb, past, rest, misspelt], time]): ChoiceItem => [
-      `${time}, ${inner(subject)} ___ ${rest}. (${verb})`,
-      past,
-      [verb, misspelt],
-    ],
-  );
+const regularChoiceBank: readonly ChoiceItem[] = regularRows.map(
+  ([subject, [verb, past, rest, misspelt], time]): ChoiceItem => [
+    `${time}, ${inner(subject)} ___ ${rest}. (${verb})`,
+    past,
+    [verb, misspelt],
+  ],
+);
 
-const regularTypedBank: readonly TypedItem[] = regularRows.slice(40, 80).map(
+const regularTypedBank: readonly TypedItem[] = regularRows.map(
   ([subject, [verb, past, rest, misspelt], time]): TypedItem => ({
     shown: `${time}, ${inner(subject)} ___ ${rest}. (${verb})`,
     accepted: [past],
@@ -527,7 +525,7 @@ const regularTypedBank: readonly TypedItem[] = regularRows.slice(40, 80).map(
   }),
 );
 
-const regularFixBank: readonly TypedItem[] = regularRows.slice(80, 119).map(([subject, [verb, past, rest], time]): TypedItem => {
+const regularFixBank: readonly TypedItem[] = regularRows.map(([subject, [verb, past, rest], time]): TypedItem => {
   const present = ["I", "We", "My parents", "They"].includes(subject)
     ? verb
     : verb === "watch"
@@ -667,15 +665,13 @@ const irregulars: readonly (readonly [verb: string, past: string, rest: string, 
   ["drink", "drank", "some hot milk", "drinked"],
 ];
 
-const irregularRows = combos(207, pastSubjects.slice(0, 9), irregulars, pastTimes);
+const irregularRows = everyTriple(pastSubjects.slice(0, 9), irregulars, pastTimes);
 
-const irregularChoiceBank: readonly ChoiceItem[] = irregularRows
-  .slice(0, 46)
-  .map(
-    ([subject, [verb, past, rest, made], time]): ChoiceItem => [`${time}, ${inner(subject)} ___ ${rest}. (${verb})`, past, [made, verb]],
-  );
+const irregularChoiceBank: readonly ChoiceItem[] = irregularRows.map(
+  ([subject, [verb, past, rest, made], time]): ChoiceItem => [`${time}, ${inner(subject)} ___ ${rest}. (${verb})`, past, [made, verb]],
+);
 
-const irregularTypedBank: readonly TypedItem[] = irregularRows.slice(46, 92).map(
+const irregularTypedBank: readonly TypedItem[] = irregularRows.map(
   ([subject, [verb, past, rest, made], time]): TypedItem => ({
     shown: `${time}, ${inner(subject)} ___ ${rest}. (${verb})`,
     accepted: [past],
@@ -755,9 +751,9 @@ const didSubjects: readonly (readonly [subject: string, asked: string])[] = [
   ["He", "he"],
 ];
 
-const didRows = combos(184, didSubjects, irregulars, pastTimes);
+const didRows = everyTriple(didSubjects, irregulars, pastTimes);
 
-const negativeChoiceBank: readonly ChoiceItem[] = didRows.slice(0, 46).map(([[subject], [verb, past, rest], time]): ChoiceItem => {
+const negativeChoiceBank: readonly ChoiceItem[] = didRows.map(([[subject], [verb, past, rest], time]): ChoiceItem => {
   const when = time.charAt(0).toLowerCase() + time.slice(1);
   return [
     `${subject} / not / ${verb} ${rest} / ${when}`,
@@ -766,7 +762,7 @@ const negativeChoiceBank: readonly ChoiceItem[] = didRows.slice(0, 46).map(([[su
   ];
 });
 
-const negativeTypedBank: readonly TypedItem[] = didRows.slice(46, 92).map(([[subject], [verb, past, rest], time]): TypedItem => {
+const negativeTypedBank: readonly TypedItem[] = didRows.map(([[subject], [verb, past, rest], time]): TypedItem => {
   const when = time.charAt(0).toLowerCase() + time.slice(1);
   return {
     shown: `${subject} ${past} ${rest} ${when}.`,
@@ -776,7 +772,7 @@ const negativeTypedBank: readonly TypedItem[] = didRows.slice(46, 92).map(([[sub
   };
 });
 
-const questionTypedBank: readonly TypedItem[] = didRows.slice(92, 138).map(([[subject, asked], [verb, past, rest], time]): TypedItem => {
+const questionTypedBank: readonly TypedItem[] = didRows.map(([[subject, asked], [verb, past, rest], time]): TypedItem => {
   const when = time.charAt(0).toLowerCase() + time.slice(1);
   return {
     shown: `${subject} ${past} ${rest} ${when}.`,
@@ -785,7 +781,7 @@ const questionTypedBank: readonly TypedItem[] = didRows.slice(92, 138).map(([[su
   };
 });
 
-const questionChoiceBank: readonly ChoiceItem[] = didRows.slice(138, 184).map(([[, asked], [verb, past, rest], time]): ChoiceItem => {
+const questionChoiceBank: readonly ChoiceItem[] = didRows.map(([[, asked], [verb, past, rest], time]): ChoiceItem => {
   const when = time.charAt(0).toLowerCase() + time.slice(1);
   return ["", `Did ${asked} ${verb} ${rest} ${when}?`, [`Did ${asked} ${past} ${rest} ${when}?`, `Do ${asked} ${past} ${rest} ${when}?`]];
 });
@@ -917,19 +913,17 @@ const noteActions: readonly (readonly [plain: string, past: string])[] = [
   ["swim in the lake", "swam in the lake"],
 ];
 
-const noteRows = combos(77, noteNames, noteActions, noteDays);
+const noteRows = everyTriple(noteNames, noteActions, noteDays);
 
-const noteChoiceBank: readonly ChoiceItem[] = noteRows
-  .slice(0, 38)
-  .map(
-    ([name, [plain, past], day]): ChoiceItem => [
-      `${name} / ${plain} / ${day}`,
-      `${name} ${past} on ${day}.`,
-      [`${name} ${plain} on ${day}.`, `${name} on ${day} ${past}.`],
-    ],
-  );
+const noteChoiceBank: readonly ChoiceItem[] = noteRows.map(
+  ([name, [plain, past], day]): ChoiceItem => [
+    `${name} / ${plain} / ${day}`,
+    `${name} ${past} on ${day}.`,
+    [`${name} ${plain} on ${day}.`, `${name} on ${day} ${past}.`],
+  ],
+);
 
-const noteTypedBank: readonly TypedItem[] = noteRows.slice(38, 77).map(
+const noteTypedBank: readonly TypedItem[] = noteRows.map(
   ([name, [plain, past], day]): TypedItem => ({
     shown: `${name} / ${plain} / ${day}`,
     accepted: [`${name} ${past} [on|last] ${day}.`, `[On|Last] ${day}(,) ${inner(name)} ${past}.`],

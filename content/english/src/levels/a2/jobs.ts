@@ -4,7 +4,7 @@
 import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
-import { interleave, vocabularyTopic, word } from "../words.ts";
+import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
 import { judgedTopic } from "./kit.ts";
 
 const jobs2 = vocabularyTopic({
@@ -301,7 +301,7 @@ const ambitions = vocabularyTopic({
  * deeds are a subject, its question word, whether it keeps its capital inside a sentence, the past of the verb, its
  * first form, the object and the object's question word.
  */
-const deeds: readonly (readonly [string, string, boolean, string, string, string, string])[] = [
+const handDeeds: readonly (readonly [string, string, boolean, string, string, string, string])[] = [
   ["Lily", "Who", true, "called", "call", "Sam", "Who"],
   ["My uncle", "Who", false, "met", "meet", "the manager", "Who"],
   ["The waiter", "Who", false, "helped", "help", "the old man", "Who"],
@@ -323,6 +323,44 @@ const deeds: readonly (readonly [string, string, boolean, string, string, string
   ["The noise", "What", false, "scared", "scare", "the children", "Who"],
   ["My colleague", "Who", false, "interviewed", "interview", "the singer", "Who"],
   ["The teacher", "Who", false, "praised", "praise", "my essay", "What"],
+];
+
+/** doers are people who do the deeds, and whether each keeps its capital inside a sentence. */
+const doers: readonly (readonly [string, boolean])[] = [
+  ["Lily", true],
+  ["My uncle", false],
+  ["The waiter", false],
+  ["Tom", true],
+  ["The boss", false],
+  ["My sister", false],
+  ["Dad", true],
+  ["Mia", true],
+  ["Grandma", true],
+  ["The chef", false],
+  ["Ben", true],
+  ["Our teacher", false],
+];
+
+/** acts are the past of a verb, its first form, its object and the object's question word, for any person to do. */
+const acts: readonly (readonly [string, string, string, string])[] = [
+  ["called", "call", "Sam", "Who"],
+  ["met", "meet", "the manager", "Who"],
+  ["helped", "help", "the old man", "Who"],
+  ["invited", "invite", "Anna", "Who"],
+  ["saw", "see", "a famous actor", "Who"],
+  ["cooked", "cook", "dinner", "What"],
+  ["wrote", "write", "the email", "What"],
+  ["sent", "send", "a card", "What"],
+  ["found", "find", "the keys", "What"],
+  ["fixed", "fix", "the printer", "What"],
+  ["visited", "visit", "the new office", "What"],
+];
+
+const deeds: readonly (readonly [string, string, boolean, string, string, string, string])[] = [
+  ...handDeeds,
+  ...everyPair(doers, acts).map(
+    ([[subject, keep], [past, base, object, what]]) => [subject, "Who", keep, past, base, object, what] as const,
+  ),
 ];
 
 type Deed = (typeof deeds)[number];

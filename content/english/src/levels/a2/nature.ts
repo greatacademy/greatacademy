@@ -4,8 +4,8 @@
 import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
-import { interleave, pairUp, vocabularyTopic, word } from "../words.ts";
-import { combos, fill, judgedTopic } from "./kit.ts";
+import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
+import { fill, judgedTopic } from "./kit.ts";
 
 const landscape = vocabularyTopic({
   id: "a2-words-landscape",
@@ -496,6 +496,18 @@ const experiences: readonly (readonly [string, string, string, string])[] = [
   ["climb", "climbed", "climbed", "a mountain"],
   ["sleep", "slept", "slept", "in a tent"],
   ["visit", "visited", "visited", "a cave"],
+  ["meet", "met", "met", "a famous person"],
+  ["win", "won", "won", "a prize"],
+  ["do", "did", "done", "a bungee jump"],
+  ["sing", "sang", "sung", "on a stage"],
+  ["drive", "drove", "driven", "a car"],
+  ["give", "gave", "given", "a speech"],
+  ["fall", "fell", "fallen", "off a bike"],
+  ["throw", "threw", "thrown", "a snowball"],
+  ["wear", "wore", "worn", "a costume"],
+  ["grow", "grew", "grown", "vegetables"],
+  ["speak", "spoke", "spoken", "on the radio"],
+  ["forget", "forgot", "forgotten", "a friend's birthday"],
 ];
 
 /** ppSubjects are a subject, its form of have, the short form, and whether it keeps its capital inside a sentence. */
@@ -515,6 +527,10 @@ const participleFrames: readonly ((rest: string) => string)[] = [
   (rest) => `Have you ever ___ ${rest}?`,
   (rest) => `I have never ___ ${rest}.`,
   (rest) => `My sister has ___ ${rest} twice.`,
+  (rest) => `She has never ___ ${rest}.`,
+  (rest) => `Have your parents ever ___ ${rest}?`,
+  (rest) => `We have ___ ${rest} once.`,
+  (rest) => `Has Tom ever ___ ${rest}?`,
 ];
 
 /** regularized is the -ed form a learner might give an irregular verb: swimmed, flied, rided. */
@@ -543,52 +559,46 @@ const ppIn = (s: readonly [string, string, string, boolean]) => (s[3] ? s[0] : s
 const other = (have: string) => (have === "have" ? "has" : "have");
 const beFor = (subject: string) => (subject === "I" ? "am" : /^(My brother|She|Tom)$/u.test(subject) ? "is" : "are");
 
-const ppRows = combos(91, ppSubjects, experiences, [0]);
+const ppRows = everyPair(ppSubjects, experiences);
 
 const haveBank: readonly ChoiceItem[] = interleave([
   ppRows
-    .slice(0, 20)
+    .filter((_, k) => k % 2 === 0)
     .map(([s, [, , participle, rest]]): ChoiceItem => [`${s[0]} ___ never ${participle} ${rest}.`, s[1], [other(s[1]), beFor(s[0])]]),
   ppRows
-    .slice(20, 40)
-    .filter(([s]) => s[0] !== "I" && s[0] !== "We")
+    .filter(([s], k) => k % 2 === 1 && s[0] !== "I" && s[0] !== "We")
     .map(([s, [, , participle, rest]]): ChoiceItem => {
       const have = s[0] === "You" ? "Have" : s[1] === "has" ? "Has" : "Have";
       return [`___ ${ppIn(s)} ever ${participle} ${rest}?`, have, [have === "Have" ? "Has" : "Have", "Did"]];
     }),
 ]);
 
-const ppTypedBank: readonly TypedItem[] = pairUp(52, ppSubjects, experiences)
-  .slice(0, 52)
-  .flatMap(([s, [, past, participle, rest]], k): TypedItem[] => {
-    if (k % 2 === 0) {
-      const [subject, have, short] = s;
-      const start = short ? `[${subject} ${have}|${short}]` : `${subject} ${have}`;
-      return [
-        {
-          shown: `${subject} / never / ${experiences.find((e) => e[2] === participle)?.[0]} ${rest}`,
-          accepted: [`${start} never ${participle} ${rest}.`],
-          canonical: `${subject} ${have} never ${participle} ${rest}.`,
-          wrong: [
-            `${subject} ${other(have)} never ${participle} ${rest}.`,
-            `${subject} ${have} never ${past === participle ? `${past}s` : past} ${rest}.`,
-          ],
-        },
-      ];
-    }
-    if (s[0] === "I" || s[0] === "We") return [];
-    const have = s[0] === "You" ? "Have" : s[1] === "has" ? "Has" : "Have";
+const ppTypedBank: readonly TypedItem[] = everyPair(ppSubjects, experiences).flatMap(([s, [, past, participle, rest]], k): TypedItem[] => {
+  if (k % 2 === 0) {
+    const [subject, have, short] = s;
+    const start = short ? `[${subject} ${have}|${short}]` : `${subject} ${have}`;
     return [
       {
-        shown: `${ppIn(s)} / ever / ${experiences.find((e) => e[2] === participle)?.[0]} ${rest}`,
-        accepted: [`${have} ${ppIn(s)} ever ${participle} ${rest}?`],
+        shown: `${subject} / never / ${experiences.find((e) => e[2] === participle)?.[0]} ${rest}`,
+        accepted: [`${start} never ${participle} ${rest}.`],
+        canonical: `${subject} ${have} never ${participle} ${rest}.`,
         wrong: [
-          `Did ${ppIn(s)} ever ${participle} ${rest}?`,
-          `${have} ${ppIn(s)} ever ${past === participle ? `${past}s` : past} ${rest}?`,
+          `${subject} ${other(have)} never ${participle} ${rest}.`,
+          `${subject} ${have} never ${past === participle ? `${past}s` : past} ${rest}.`,
         ],
       },
     ];
-  });
+  }
+  if (s[0] === "I" || s[0] === "We") return [];
+  const have = s[0] === "You" ? "Have" : s[1] === "has" ? "Has" : "Have";
+  return [
+    {
+      shown: `${ppIn(s)} / ever / ${experiences.find((e) => e[2] === participle)?.[0]} ${rest}`,
+      accepted: [`${have} ${ppIn(s)} ever ${participle} ${rest}?`],
+      wrong: [`Did ${ppIn(s)} ever ${participle} ${rest}?`, `${have} ${ppIn(s)} ever ${past === participle ? `${past}s` : past} ${rest}?`],
+    },
+  ];
+});
 
 /** formsOf lists the three forms of a verb of the experiences, as see – saw – seen. */
 const formsOf = (verb: string): string => {

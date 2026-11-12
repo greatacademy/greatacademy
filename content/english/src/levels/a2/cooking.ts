@@ -4,7 +4,7 @@
 import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
-import { interleave, pairUp, vocabularyTopic, word } from "../words.ts";
+import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
 import { fill, judgedTopic } from "./kit.ts";
 
 const cooking = vocabularyTopic({
@@ -408,41 +408,43 @@ const frames: readonly string[] = [
   "We only have ___ {} left.",
   "I need ___ {} for the recipe.",
   "Can you give me ___ {}, please?",
+  "Put ___ {} in the bowl.",
+  "Let's add ___ {}.",
 ];
 
-const quantRows = (nouns: readonly string[]) => pairUp(44, nouns, frames).map(([noun, frame]) => frame.replace("{}", noun));
+const quantRows = (nouns: readonly string[]) => everyPair(nouns, frames).map(([noun, frame]) => frame.replace("{}", noun));
 
 const quantChoiceBank: readonly ChoiceItem[] = interleave([
-  quantRows(counted)
-    .slice(0, 22)
-    .map((s): ChoiceItem => [s, "a few", ["a little", "a bit"]]),
-  quantRows(uncounted)
-    .slice(0, 22)
-    .map((s): ChoiceItem => [s, "a little", ["a few", "a bit"]]),
+  quantRows(counted).map((s): ChoiceItem => [s, "a few", ["a little", "a bit"]]),
+  quantRows(uncounted).map((s): ChoiceItem => [s, "a little", ["a few", "a bit"]]),
 ]);
 
 const quantFixBank: readonly TypedItem[] = interleave([
-  quantRows(counted)
-    .slice(22, 44)
-    .map((s): TypedItem => {
-      const shown = s.replace("___", "a little");
-      return { shown, accepted: [s.replace("___", "a few")], wrong: [shown] };
-    }),
-  quantRows(uncounted)
-    .slice(22, 44)
-    .map((s): TypedItem => {
-      const shown = s.replace("___", "a few");
-      return { shown, accepted: [s.replace("___", "a little")], wrong: [shown] };
-    }),
+  quantRows(counted).map((s): TypedItem => {
+    const shown = s.replace("___", "a little");
+    return { shown, accepted: [s.replace("___", "a few")], wrong: [shown] };
+  }),
+  quantRows(uncounted).map((s): TypedItem => {
+    const shown = s.replace("___", "a few");
+    return { shown, accepted: [s.replace("___", "a little")], wrong: [shown] };
+  }),
 ]);
 
 const manyMuchBank: readonly ChoiceItem[] = interleave([
-  pairUp(22, counted, ["How ___ {} do we need?", "There aren't ___ {} in the fridge."]).map(
-    ([noun, frame]): ChoiceItem => [frame.replace("{}", noun), "many", ["much", "a little"]],
-  ),
-  pairUp(22, uncounted, ["How ___ {} do we need?", "There isn't ___ {} in the fridge."]).map(
-    ([noun, frame]): ChoiceItem => [frame.replace("{}", noun), "much", ["many", "a few"]],
-  ),
+  everyPair(counted, [
+    "How ___ {} do we need?",
+    "There aren't ___ {} in the fridge.",
+    "We don't have ___ {}.",
+    "Did you buy ___ {}?",
+    "How ___ {} are there?",
+  ]).map(([noun, frame]): ChoiceItem => [frame.replace("{}", noun), "many", ["much", "a little"]]),
+  everyPair(uncounted, [
+    "How ___ {} do we need?",
+    "There isn't ___ {} in the fridge.",
+    "We don't have ___ {}.",
+    "Did you buy ___ {}?",
+    "How ___ {} is there?",
+  ]).map(([noun, frame]): ChoiceItem => [frame.replace("{}", noun), "much", ["many", "a few"]]),
 ]);
 
 /** quantNoun is the noun after the gap, or after the quantifier, of a sentence. */

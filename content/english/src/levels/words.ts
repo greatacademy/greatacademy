@@ -329,6 +329,11 @@ export function everyPair<A, B>(a: readonly A[], b: readonly B[]): readonly (rea
   return Array.from({ length: b.length }, (_, d) => a.map((item, r) => [item, b[(r + d) % b.length]!] as const)).flat();
 }
 
+/** everyTriple pairs every item of `a` with every item of `b`, as everyPair does, and gives each pair an item of `c` in turn. */
+export function everyTriple<A, B, C>(a: readonly A[], b: readonly B[], c: readonly C[]): readonly (readonly [A, B, C])[] {
+  return everyPair(a, b).map(([x, y], k) => [x, y, c[k % c.length]!] as const);
+}
+
 /** sentenceCase capitalizes the first letter of a sentence. */
 export function sentenceCase(s: string): string {
   return capitalize(s);

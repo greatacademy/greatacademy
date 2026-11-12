@@ -4,7 +4,7 @@
 import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
-import { interleave, vocabularyTopic, word } from "../words.ts";
+import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
 import { combos, fill, judgedTopic } from "./kit.ts";
 
 const sports = vocabularyTopic({
@@ -501,9 +501,23 @@ const manners: readonly (readonly [string, string, string, string, string])[] = 
   ["beautiful", "beautifully", "dancer", "dances", "beautifuly"],
 ];
 
-const mannerSubjects: readonly string[] = ["Tom", "My sister", "Our coach", "Mr. Li", "Anna"];
+const mannerSubjects: readonly string[] = [
+  "Tom",
+  "My sister",
+  "Our coach",
+  "Mr. Li",
+  "Anna",
+  "My uncle",
+  "Lucy",
+  "Our neighbor",
+  "Sam",
+  "My cousin",
+  "Mrs. Wang",
+  "Ben",
+  "Her brother",
+];
 
-const mannerRows = combos(40, manners, mannerSubjects, [0]);
+const mannerRows = everyPair(manners, mannerSubjects);
 
 const mannerChoiceBank: readonly ChoiceItem[] = interleave([
   mannerRows.map(
@@ -649,7 +663,8 @@ const couldAges: readonly string[] = ["four", "five", "six", "seven", "ten"];
 
 const couldName = (subject: string) => (/^(I|Lin|Tom)$/u.test(subject) ? subject : subject.toLowerCase());
 
-const couldRows = combos(70, couldLeads, couldActs, couldAges);
+// Six leads, seven actions and five ages have no common factor, so 210 rows give every combination once.
+const couldRows = combos(210, couldLeads, couldActs, couldAges);
 
 const couldNegatives: readonly string[] = [
   "It was very foggy, so we ___ see the ball.",
@@ -671,15 +686,13 @@ const couldNegatives: readonly string[] = [
 ];
 
 const couldChoiceBank: readonly ChoiceItem[] = interleave([
-  couldRows
-    .slice(0, 32)
-    .map(
-      ([[subject, was], act, age]): ChoiceItem => [`When ${was} ${age}, ${couldName(subject)} ___ ${act}.`, "could", ["can", "could to"]],
-    ),
+  couldRows.map(
+    ([[subject, was], act, age]): ChoiceItem => [`When ${was} ${age}, ${couldName(subject)} ___ ${act}.`, "could", ["can", "could to"]],
+  ),
   couldNegatives.map((s): ChoiceItem => [s, "couldn't", ["can't", "didn't could"]]),
 ]);
 
-const couldTypedBank: readonly TypedItem[] = couldRows.slice(32, 70).map(([[subject, was], act, age], k): TypedItem => {
+const couldTypedBank: readonly TypedItem[] = couldRows.map(([[subject, was], act, age], k): TypedItem => {
   const not = k % 4 >= 2;
   const when = `when ${was} ${age}`;
   return {

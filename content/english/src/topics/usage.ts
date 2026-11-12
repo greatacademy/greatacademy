@@ -2,6 +2,7 @@
 
 import { type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typed, typedGenerator } from "@ga/subject-english";
+import { everyPair } from "../levels/words.ts";
 
 const form = (shown: string, right: string, ...wrong: readonly string[]): TypedItem => ({
   shown,
@@ -562,10 +563,51 @@ const shortAdjectives: readonly (readonly [
   ["sunny", "sunnier", "sunniest", "sunnyer", "sunnyest", "two afternoons", "all the days this month"],
   ["wide", "wider", "widest", "wideer", "wideest", "two rivers", "all the roads in town"],
 ];
-const erEstMore: readonly TypedItem[] = shortAdjectives.flatMap(([w, er, est, badEr, badEst, two, group]) => [
-  form(`${w}: comparing ${two}`, er, badEr || est, `more ${w}`),
-  form(`${w}: standing out among ${group}`, est, badEst || er, `most ${w}`),
-]);
+/** moreShortAdjectives are more adjectives that compare with *-er* and *-est*, each with two pairs to compare and two groups. */
+const moreShortAdjectives: readonly (readonly [string, string, string, string, string, string, string, string, string])[] = [
+  ["tall", "taller", "tallest", "", "", "two trees", "two brothers", "all the buildings in town", "all the players"],
+  ["big", "bigger", "biggest", "biger", "bigest", "two dogs", "two houses", "all the fish in the tank", "all the cities in the country"],
+  ["hot", "hotter", "hottest", "hoter", "hotest", "two cups of tea", "two summers", "all the days in July", "all the dishes on the menu"],
+  ["happy", "happier", "happiest", "happyer", "happyest", "two children", "two endings", "all the puppies", "all the songs on the radio"],
+  ["large", "larger", "largest", "largeer", "largeest", "two pizzas", "two rooms", "all the lakes", "all the boxes in the shop"],
+  ["fast", "faster", "fastest", "", "", "two runners", "two trains", "all the cars in the race", "all the birds"],
+  ["easy", "easier", "easiest", "easyer", "easyest", "two tests", "two puzzles", "all the questions", "all the recipes in the book"],
+  ["old", "older", "oldest", "", "", "two castles", "two cousins", "all the trees in the park", "all the people in the village"],
+  ["young", "younger", "youngest", "", "", "two sisters", "two kittens", "all the players on the team", "all the children in the class"],
+  ["safe", "safer", "safest", "safeer", "safeest", "two roads", "two cars", "all the beaches", "all the bridges in the city"],
+  [
+    "wet",
+    "wetter",
+    "wettest",
+    "weter",
+    "wetest",
+    "two towels",
+    "two springs",
+    "all the months of the year",
+    "all the towns in the country",
+  ],
+  ["funny", "funnier", "funniest", "funnyer", "funnyest", "two jokes", "two films", "all the clowns", "all the stories"],
+  ["long", "longer", "longest", "", "", "two rivers", "two queues", "all the bridges", "all the days of the year"],
+  ["close", "closer", "closest", "closeer", "closeest", "two shops", "two friends", "all the stations", "all the stars"],
+  ["dry", "drier", "driest", "dryer", "dryest", "two shirts", "two summers", "all the places in the country", "all the deserts"],
+  ["fat", "fatter", "fattest", "fater", "fatest", "two cats", "two books", "all the pigs on the farm", "all the pumpkins"],
+  ["loud", "louder", "loudest", "", "", "two drums", "two voices", "all the bands", "all the children in the room"],
+  ["pretty", "prettier", "prettiest", "prettyer", "prettyest", "two gardens", "two dresses", "all the villages", "all the flowers"],
+  ["late", "later", "latest", "lateer", "lateest", "two buses", "two trains", "all the guests", "all the flights"],
+  ["early", "earlier", "earliest", "earlyer", "earlyest", "two flights", "two classes", "all the birds", "all the guests"],
+];
+const erEstMore: readonly TypedItem[] = [
+  ...moreShortAdjectives.flatMap(([w, er, est, badEr, badEst, two1, two2, group1, group2]) => [
+    form(`${w}: comparing ${two1}`, er, badEr || est, `more ${w}`),
+    form(`${w}: standing out among ${group1}`, est, badEst || er, `most ${w}`),
+    form(`${w}: comparing ${two2}`, er, badEr || est, `more ${w}`),
+    form(`${w}: standing out among ${group2}`, est, badEst || er, `most ${w}`),
+  ]),
+  ...shortAdjectives.flatMap(([w, er, est, badEr, badEst, two, group]) => [
+    form(`${w}: comparing ${two}`, er, badEr || est, `more ${w}`),
+    form(`${w}: standing out among ${group}`, est, badEst || er, `most ${w}`),
+  ]),
+];
 
 /** longAdjectives are adjectives that compare with *more* and *most*, with a sentence comparing two and one picking from a group. */
 const longAdjectives: readonly (readonly [word: string, er: string, two: string, group: string])[] = [
@@ -581,12 +623,61 @@ const longAdjectives: readonly (readonly [word: string, er: string, two: string,
   ["powerful", "powerfuler", "The new engine is ___ than the old one.", "It is the ___ storm on record."],
   ["surprising", "surprisinger", "The ending was ___ than I expected.", "That was the ___ news of the year."],
 ];
-const moreMostMore: readonly ChoiceItem[] = longAdjectives.flatMap(([w, er, two, group]): ChoiceItem[] => [
-  [two, `more ${w}`, [er, `most ${w}`]],
-  [group, `most ${w}`, [`${er.slice(0, -2)}est`, `more ${w}`]],
-]);
+/** longNouns are adjectives that compare with *more* and *most*, and things each can describe. */
+const longNouns: readonly (readonly [word: string, nouns: readonly string[]])[] = [
+  ["famous", ["singer", "painting", "building", "actor"]],
+  ["important", ["rule", "lesson", "meeting", "letter"]],
+  ["delicious", ["cake", "soup", "pie", "meal"]],
+  ["comfortable", ["chair", "bed", "sofa", "car"]],
+  ["expensive", ["hotel", "bike", "phone", "coat"]],
+  ["popular", ["game", "song", "café", "sport"]],
+  ["beautiful", ["garden", "beach", "photo", "village"]],
+  ["interesting", ["book", "museum", "story", "film"]],
+  ["difficult", ["test", "puzzle", "question", "climb"]],
+  ["dangerous", ["road", "river", "trip", "job"]],
+];
+const moreFrames: readonly string[] = ["This {n} is ___ than that one.", "The new {n} is ___ than the old one."];
+const mostFrames: readonly string[] = ["It is the ___ {n} of all.", "That was the ___ {n} I have ever seen."];
+const moreMostMore: readonly ChoiceItem[] = [
+  ...longAdjectives.flatMap(([w, er, two, group]): ChoiceItem[] => [
+    [two, `more ${w}`, [er, `most ${w}`]],
+    [group, `most ${w}`, [`${er.slice(0, -2)}est`, `more ${w}`]],
+  ]),
+  ...longNouns.flatMap(([w, nouns]): ChoiceItem[] =>
+    nouns.flatMap((n, k): ChoiceItem[] => [
+      [moreFrames[k % 2]!.replace("{n}", n), `more ${w}`, [`${w}er`, `most ${w}`]],
+      [mostFrames[k % 2]!.replace("{n}", n), `most ${w}`, [`${w}est`, `more ${w}`]],
+    ]),
+  ),
+];
 
+/** irregularFrames are sentences for good and bad, with the right form and the wrong ones. */
+const irregularFrames: readonly (readonly [frame: string, right: string, wrong: readonly [string, string]])[] = [
+  ["Your {n} is ___ than mine. (good)", "better", ["gooder", "best"]],
+  ["It was the ___ {n} in the class. (good)", "best", ["goodest", "better"]],
+  ["My {n} was ___ than yours. (bad)", "worse", ["badder", "worst"]],
+  ["That was the ___ {n} of all. (bad)", "worst", ["baddest", "worse"]],
+  ["This {n} is even ___ than the last one. (good)", "better", ["gooder", "best"]],
+  ["Which was the ___ {n}, do you think? (bad)", "worst", ["baddest", "worse"]],
+];
+const irregularNouns: readonly string[] = [
+  "idea",
+  "plan",
+  "photo",
+  "story",
+  "joke",
+  "song",
+  "drawing",
+  "answer",
+  "seat",
+  "cake",
+  "map",
+  "game",
+  "poem",
+  "result",
+];
 const irregularMore: readonly ChoiceItem[] = [
+  ...everyPair(irregularFrames, irregularNouns).map(([[frame, right, wrong], n]): ChoiceItem => [frame.replace("{n}", n), right, wrong]),
   ["Your idea is ___ than mine.", "better", ["gooder", "best"]],
   ["This is the ___ cold I have ever had.", "worst", ["baddest", "worse"]],
   ["The second test was ___ than the first.", "worse", ["badder", "worst"]],
@@ -625,9 +716,17 @@ const singularOwners: readonly (readonly [thing: string, owner: string, possessi
   ["locker", "the student", "student's", "students", "students'"],
   ["apron", "the chef", "chef's", "chefs", "chefs'"],
 ];
-const singularPossessiveMore: readonly TypedItem[] = singularOwners.map(([thing, owner, right, w1, w2]) =>
-  form(`the ${thing} that ${thing.endsWith("s") ? "belong" : "belongs"} to ${owner}`, right, w1, w2),
-);
+/** ownedThings are things any person can own. */
+const ownedThings: readonly string[] = ["bag", "hat", "phone", "umbrella", "notebook", "coat", "key", "photo"];
+const singularPeople = singularOwners.filter(([, owner]) => !/horse|puppy|robot|library/u.test(owner));
+const singularPossessiveMore: readonly TypedItem[] = [
+  ...singularOwners.map(([thing, owner, right, w1, w2]) =>
+    form(`the ${thing} that ${thing.endsWith("s") ? "belong" : "belongs"} to ${owner}`, right, w1, w2),
+  ),
+  ...everyPair(singularPeople, ownedThings).map(([[, owner, right, w1, w2], thing]) =>
+    form(`the ${thing} that belongs to ${owner}`, right, w1, w2),
+  ),
+];
 
 /** pluralOwners are many owners and what they own, with the forms learners write by mistake. */
 const pluralOwners: readonly (readonly [thing: string, owners: string, possessive: string, wrong1: string, wrong2: string])[] = [
@@ -652,11 +751,57 @@ const pluralOwners: readonly (readonly [thing: string, owners: string, possessiv
   ["pen", "the sheep", "sheep's", "sheeps'", "sheeps"],
   ["choir", "the men", "men's", "mens'", "mens"],
 ];
-const pluralPossessiveMore: readonly TypedItem[] = pluralOwners.map(([thing, owners, right, w1, w2]) =>
-  form(`the ${thing} that ${thing.endsWith("s") ? "belong" : "belongs"} to ${owners}`, right, w1, w2),
-);
+/** ownedThingsMany are things many people can own together. */
+const ownedThingsMany: readonly string[] = ["bags", "coats", "photos", "lockers", "tickets", "names", "seats", "books", "shoes", "room"];
+const pluralPeople = pluralOwners.filter(([, owners]) => !/kittens|dogs|teams|babies|wolves|puppies|geese|oxen|sheep/u.test(owners));
+const pluralPossessiveMore: readonly TypedItem[] = [
+  ...pluralOwners.map(([thing, owners, right, w1, w2]) =>
+    form(`the ${thing} that ${thing.endsWith("s") ? "belong" : "belongs"} to ${owners}`, right, w1, w2),
+  ),
+  ...everyPair(pluralPeople, ownedThingsMany).map(([[, owners, right, w1, w2], thing]) =>
+    form(`the ${thing} that ${thing.endsWith("s") ? "belong" : "belongs"} to ${owners}`, right, w1, w2),
+  ),
+];
 
+/** itsParts are a thing and a part of it, for its. */
+const itsParts: readonly (readonly [string, string])[] = [
+  ["bird", "wings"],
+  ["cat", "tail"],
+  ["tree", "leaves"],
+  ["car", "wheel"],
+  ["shop", "sign"],
+  ["phone", "screen"],
+  ["school", "gate"],
+  ["team", "captain"],
+  ["kite", "string"],
+  ["house", "roof"],
+  ["town", "market"],
+  ["dog", "ball"],
+  ["clock", "hands"],
+  ["book", "cover"],
+  ["river", "banks"],
+];
+const itsFrames: readonly string[] = ["Look at the {o} and ___ {p}.", "I like the {o}, but not ___ {p}.", "The {o} has lost ___ {p}."];
+/** itIsStates are what it is, for it's. */
+const itIsStates: readonly string[] = [
+  "sunny",
+  "too late",
+  "cold outside",
+  "ready",
+  "open",
+  "my turn",
+  "time to go",
+  "windy",
+  "warm",
+  "quiet",
+  "dark",
+];
+const itIsFrames: readonly string[] = ["I think ___ {s}.", "Tell me if ___ {s}.", "We can go when ___ {s}.", "Do you know if ___ {s}?"];
 const itsMore: readonly ChoiceItem[] = [
+  ...everyPair(itsFrames, itsParts).map(
+    ([frame, [o, p]]): ChoiceItem => [frame.replace("{o}", o).replace("{p}", p), "its", ["it's", "its'"]],
+  ),
+  ...everyPair(itIsFrames, itIsStates).map(([frame, state]): ChoiceItem => [frame.replace("{s}", state), "it's", ["its", "its'"]]),
   ["The bird flapped ___ wings.", "its", ["it's", "its'"]],
   ["___ too windy to fly a kite.", "It's", ["Its", "Its'"]],
   ["The bakery changed ___ hours.", "its", ["it's", "its'"]],

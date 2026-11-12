@@ -4,7 +4,7 @@
 import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
-import { interleave, pairUp, vocabularyTopic, word } from "../words.ts";
+import { everyPair, interleave, sentenceCase, vocabularyTopic, word } from "../words.ts";
 import { combos, fill, judgedTopic } from "./kit.ts";
 
 const holidays = vocabularyTopic({
@@ -397,24 +397,23 @@ const goPlans: readonly string[] = [
 ];
 const goTimes: readonly string[] = ["next summer", "tomorrow", "on Saturday", "next week", "this weekend"];
 
-const goRows = combos(120, goSubjects, goPlans, goTimes);
+// Seven subjects, eight plans and five times have no common factor, so 280 rows give every combination once.
+const goRows = combos(280, goSubjects, goPlans, goTimes);
 
 const subjectIn = (subject: string) => (/^(I|Tom)$/u.test(subject) ? subject : subject.toLowerCase());
 const capital = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
-const goChoiceBank: readonly ChoiceItem[] = goRows
-  .slice(0, 40)
-  .map(
-    ([[subject, be, , bad], plan, time]): ChoiceItem => [
-      `${capital(time)}, ${subjectIn(subject)} ___ ${plan}.`,
-      `${be} going to`,
-      [`${bad} going to`, `${be} going`],
-    ],
-  );
+const goChoiceBank: readonly ChoiceItem[] = goRows.map(
+  ([[subject, be, , bad], plan, time]): ChoiceItem => [
+    `${capital(time)}, ${subjectIn(subject)} ___ ${plan}.`,
+    `${be} going to`,
+    [`${bad} going to`, `${be} going`],
+  ],
+);
 
 const goStatement = (subject: string, be: string, short: string) => (short ? `[${subject} ${be}|${short}]` : `${subject} ${be}`);
 
-const goTypedBank: readonly TypedItem[] = goRows.slice(40, 80).map(
+const goTypedBank: readonly TypedItem[] = goRows.map(
   ([[subject, be, short, bad], plan, time]): TypedItem => ({
     shown: `${subject} / ${plan} / ${time}`,
     accepted: [`${goStatement(subject, be, short)} going to ${plan} ${time}.`],
@@ -426,7 +425,7 @@ const goTypedBank: readonly TypedItem[] = goRows.slice(40, 80).map(
 const questionSubject = (subject: string) => (subject === "I" ? "you" : subject === "We" ? "you" : subjectIn(subject));
 const questionBe = (subject: string, be: string) => (subject === "I" || subject === "We" ? "are" : be);
 
-const goQuestionBank: readonly TypedItem[] = goRows.slice(80, 120).map(([[subject, be], plan, time]): TypedItem => {
+const goQuestionBank: readonly TypedItem[] = goRows.map(([[subject, be], plan, time]): TypedItem => {
   const qs = questionSubject(subject);
   const qb = questionBe(subject, be);
   const statement = `${subject === "I" || subject === "We" ? "You" : subject} ${qb} going to ${plan} ${time}.`;
@@ -527,86 +526,133 @@ const beGoingTo: TopicDef = {
 
 // Will for the future.
 
-/** willVerbs are sentences with a gap, the first form of the verb, and its form with -s. */
+/** willStarts are the openings of a guess about the future and its subject, which may take -s. */
+const willStarts: readonly string[] = ["I think", "Don't worry.", "I'm sure", "Maybe", "I bet", "I hope"];
+const willWho: readonly string[] = ["you", "we", "they", "she", "he", "our team", "my brother", "the children"];
+
+/** willPredictions are the first form of a verb, its form with -s, and what follows it. */
 const willPredictions: readonly (readonly [string, string, string])[] = [
-  ["Take a coat. It ___ cold in the mountains.", "be", "is"],
-  ["Don't worry. You ___ the test easily.", "pass", "passes"],
-  ["I think Brazil ___ the final.", "win", "wins"],
-  ["In the future, robots ___ our homes.", "clean", "cleans"],
-  ["The flight is delayed, so we ___ late.", "arrive", "arrives"],
-  ["Ask Grandma. She ___ you.", "help", "helps"],
-  ["The traffic is terrible. We ___ the train!", "miss", "misses"],
-  ["Try the soup. I'm sure you ___ it.", "like", "likes"],
-  ["The ferry ___ at six tomorrow morning.", "leave", "leaves"],
-  ["People ___ to Mars one day.", "travel", "travels"],
-  ["Wait here. The guide ___ back in five minutes.", "come", "comes"],
-  ["It's late. The shops ___ soon.", "close", "closes"],
-  ["Call me when you land. I ___ you at the airport.", "meet", "meets"],
-  ["Don't touch the dog. It ___ you.", "bite", "bites"],
-  ["I'm tired. I think I ___ to bed early.", "go", "goes"],
-  ["Our team is strong. We ___ them easily.", "beat", "beats"],
+  ["be", "is", "cold in the mountains"],
+  ["pass", "passes", "the test easily"],
+  ["win", "wins", "the final"],
+  ["arrive", "arrives", "late"],
+  ["help", "helps", "us with the bags"],
+  ["miss", "misses", "the train"],
+  ["like", "likes", "the soup"],
+  ["love", "loves", "the beach"],
+  ["come", "comes", "back in five minutes"],
+  ["find", "finds", "a good hotel"],
+  ["get", "gets", "there before dark"],
+  ["enjoy", "enjoys", "the trip"],
+  ["meet", "meets", "us at the airport"],
+  ["need", "needs", "a coat"],
+  ["learn", "learns", "a lot on the trip"],
 ];
 
+/** willNegatives are the first form of a verb and what follows it, for won't. */
 const willNegatives: readonly (readonly [string, string])[] = [
-  ["I promise I ___ anyone your secret.", "tell"],
-  ["Don't worry. It ___ long.", "take"],
-  ["Take an umbrella, or you ___ dry.", "stay"],
-  ["Hurry up, or we ___ a seat.", "find"],
-  ["The shop is closed, so I ___ any souvenirs today.", "buy"],
-  ["He's sick. He ___ to school tomorrow.", "go"],
-  ["It's a long journey, so we ___ there before dark.", "get"],
-  ["My suitcase is full. These shoes ___ in it.", "fit"],
-  ["She's very busy, so she ___ time to help us.", "have"],
-  ["Let's take the subway. It ___ in traffic.", "stop"],
-  ["Don't wait for me. I ___ home before ten.", "be"],
-  ["The water is too cold. The children ___ in the sea.", "swim"],
-  ["I ___ the same mistake again. I promise.", "make"],
-  ["The castle is closed today, so we ___ it.", "visit"],
-  ["It's too far to walk. We ___ there in time.", "get"],
+  ["tell", "anyone the secret"],
+  ["take", "long"],
+  ["stay", "dry without an umbrella"],
+  ["find", "a seat on the train"],
+  ["buy", "any souvenirs today"],
+  ["go", "to school tomorrow"],
+  ["get", "there in time"],
+  ["have", "time to help"],
+  ["be", "home before ten"],
+  ["swim", "in the cold sea"],
+  ["make", "the same mistake again"],
+  ["visit", "the castle today"],
+  ["forget", "the tickets"],
+  ["like", "the long journey"],
+  ["sleep", "on the night bus"],
 ];
+
+const willOpenings: readonly string[] = everyPair(willStarts, willWho).map(([start, who]) =>
+  start.endsWith(".") ? `${start} ${sentenceCase(who)}` : `${start} ${who}`,
+);
 
 const willChoiceBank: readonly ChoiceItem[] = interleave([
-  willPredictions.map(([shown, verb, third]): ChoiceItem => [`${shown} (${verb})`, `will ${verb}`, [`will ${third}`, `will to ${verb}`]]),
-  willNegatives.map(([shown, verb]): ChoiceItem => [`${shown} (not ${verb})`, `won't ${verb}`, [`don't will ${verb}`, `won't to ${verb}`]]),
+  everyPair(willOpenings, willPredictions).map(
+    ([open, [verb, third, rest]]): ChoiceItem => [`${open} ___ ${rest}. (${verb})`, `will ${verb}`, [`will ${third}`, `will to ${verb}`]],
+  ),
+  everyPair([...willOpenings.slice(5), ...willOpenings.slice(0, 5)], willNegatives).map(
+    ([open, [verb, rest]]): ChoiceItem => [
+      `${open} ___ ${rest}. (not ${verb})`,
+      `won't ${verb}`,
+      [`don't will ${verb}`, `won't to ${verb}`],
+    ],
+  ),
 ]);
 
-/** planOrNow are a sentence, whether it is a plan made before, and the form of be for its subject. */
-const planOrNow: readonly (readonly [string, boolean, string])[] = [
-  ["We bought the tickets last month. We ___ fly to Rome on Friday.", true, "are"],
-  ["The phone is ringing. — Wait, I ___ answer it.", false, "am"],
-  ["I've saved money all year. I ___ buy a new bike in June.", true, "am"],
-  ["It's cold in here. — You're right. I ___ close the window.", false, "am"],
-  ["She has already packed her suitcase. She ___ stay with her aunt in July.", true, "is"],
-  ["I'm thirsty. — Sit down. I ___ get you some water.", false, "am"],
-  ["Look at our plan! We ___ visit three castles next week.", true, "are"],
-  ["This bag is heavy! — Give it to me. I ___ carry it.", false, "am"],
-  ["They've booked a hotel. They ___ spend a week by the sea.", true, "are"],
-  ["I don't understand this word. — I ___ explain it to you.", false, "am"],
-  ["Mom has decided. She ___ learn to drive this year.", true, "is"],
-  ["Oh no, I forgot my wallet! — Don't worry, I ___ pay.", false, "am"],
-  ["My brother got a new job last week. He ___ start next Monday.", true, "is"],
-  ["The bus isn't coming. — OK, I ___ take a taxi then.", false, "am"],
-  ["We talked about it yesterday. We ___ paint the kitchen on Saturday.", true, "are"],
-  ["Which cake do you want? — Hmm, I ___ have the chocolate one.", false, "am"],
-  ["I've already asked my boss for a day off. I ___ visit my parents on Friday.", true, "am"],
-  ["Someone is at the door. — I ___ see who it is.", false, "am"],
-  ["Lin has bought paint and brushes. She ___ paint her room this weekend.", true, "is"],
-  ["I can't open this jar. — Let me try. I ___ do it.", false, "am"],
-  ["The tickets are in my bag. We ___ watch the final on Sunday.", true, "are"],
-  ["It's starting to rain! — Wait here. I ___ get an umbrella.", false, "am"],
-  ["My cousins planned their trip for months. They ___ travel across Canada by train.", true, "are"],
-  ["The baby is crying. — Don't get up. I ___ go.", false, "am"],
-  ["Dad has packed the car. He ___ drive us to the coast tomorrow.", true, "is"],
-  ["There's no milk. — Really? I ___ buy some on my way home.", false, "am"],
-  ["We have already chosen the music. We ___ dance at the wedding.", true, "are"],
-  ["You look tired. — I know. I think I ___ go to bed.", false, "am"],
-  ["Tom has signed up for the race. He ___ run five kilometers in May.", true, "is"],
-  ["I forgot to call Grandma! — It's not too late. I ___ call her now.", false, "am"],
+/** planPeople are a subject, its form of be, and its form of have. */
+const planPeople: readonly (readonly [string, string, string])[] = [
+  ["We", "are", "have"],
+  ["I", "am", "have"],
+  ["She", "is", "has"],
+  ["They", "are", "have"],
+  ["He", "is", "has"],
+  ["My cousins", "are", "have"],
+  ["Lin", "is", "has"],
 ];
 
-const planChoiceBank: readonly ChoiceItem[] = planOrNow.map(
-  ([shown, plan, be]): ChoiceItem => (plan ? [shown, `${be} going to`, ["will", be]] : [shown, "'ll", [`${be} going to`, "am"]]),
-);
+/** planEvidence are signs that a plan was made before, after the subject and have. */
+const planEvidence: readonly string[] = [
+  "already made all the plans",
+  "planned it for weeks",
+  "booked everything",
+  "talked about it for months",
+  "already decided",
+];
+
+/** planActs are plans for later. */
+const planActs: readonly string[] = [
+  "fly to Rome on Friday",
+  "buy a new bike in June",
+  "stay with an aunt in July",
+  "visit three castles next week",
+  "spend a week by the sea",
+  "learn to drive this year",
+  "start a new job next Monday",
+  "paint the kitchen on Saturday",
+  "run five kilometers in May",
+  "travel across Canada by train",
+  "watch the final on Sunday",
+  "take a cooking class in the autumn",
+];
+
+/** decisions are something that happens and a decision made at that moment with I. */
+const decisions: readonly (readonly [string, string])[] = [
+  ["The phone is ringing.", "answer it"],
+  ["It's cold in here.", "close the window"],
+  ["I'm thirsty.", "get you some water"],
+  ["This bag is heavy!", "carry it"],
+  ["I don't understand this word.", "explain it to you"],
+  ["Oh no, I forgot my wallet!", "pay"],
+  ["The bus isn't coming.", "call a taxi"],
+  ["Someone is at the door.", "see who it is"],
+  ["I can't open this jar.", "do it"],
+  ["It's starting to rain!", "get an umbrella"],
+  ["The baby is crying.", "go"],
+  ["There's no milk.", "buy some on my way home"],
+  ["I forgot to call Grandma!", "call her now"],
+  ["The printer isn't working.", "fix it"],
+  ["My hands are full.", "open the door for you"],
+];
+const decisionReplies: readonly string[] = ["Don't worry,", "Wait,", "OK,", "Leave it to me.", "No problem,"];
+
+const planChoiceBank: readonly ChoiceItem[] = interleave([
+  everyPair(everyPair(planPeople, planEvidence), planActs).map(
+    ([[[subject, be, have], evidence], act]): ChoiceItem => [
+      `${subject} ${have} ${evidence}. ${subject === "I" ? "I" : subject === "We" ? "We" : /^(She|Lin)$/u.test(subject) ? "She" : subject === "He" ? "He" : "They"} ___ ${act}.`,
+      `${be} going to`,
+      ["will", be],
+    ],
+  ),
+  everyPair(decisionReplies, decisions).map(
+    ([reply, [happens, act]]): ChoiceItem => [`${happens} — ${reply} I ___ ${act}.`, "'ll", ["am going to", "am"]],
+  ),
+]);
 
 const willSubjects: readonly (readonly [string, string])[] = [
   ["I", "I'll"],
@@ -617,6 +663,16 @@ const willSubjects: readonly (readonly [string, string])[] = [
   ["He", "He'll"],
 ];
 const willGuesses: readonly string[] = [
+  "enjoy the trip",
+  "find the hotel easily",
+  "need a map",
+  "get lost in the old town",
+  "take a lot of photos",
+  "want to come back",
+  "sleep on the plane",
+  "make new friends",
+  "learn some Italian",
+  "spend too much money",
   "be late",
   "pass the test",
   "love the city",
@@ -626,7 +682,7 @@ const willGuesses: readonly string[] = [
   "like the food",
 ];
 
-const willTypedBank: readonly TypedItem[] = pairUp(42, willSubjects, willGuesses).map(([[subject, short], guess], k): TypedItem => {
+const willTypedBank: readonly TypedItem[] = everyPair(willSubjects, willGuesses).map(([[subject, short], guess], k): TypedItem => {
   const not = k % 3 === 0;
   return not
     ? {

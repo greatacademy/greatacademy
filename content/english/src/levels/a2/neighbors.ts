@@ -4,7 +4,7 @@
 import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
-import { interleave, pairUp, vocabularyTopic, word } from "../words.ts";
+import { everyPair, interleave, pairUp, vocabularyTopic, word } from "../words.ts";
 import { fill, judgedTopic } from "./kit.ts";
 
 const neighborhood = vocabularyTopic({
@@ -491,11 +491,19 @@ const owners: readonly (readonly [who: string, alone: string, before: string, ot
 
 const things: readonly string[] = ["bag", "pen", "coat", "bike", "umbrella", "ticket", "phone", "ball", "book", "cup", "key"];
 
-const ownerRows = pairUp(66, owners, things);
+const ownerRows = everyPair(owners, things);
 
-const possessiveChoiceBank: readonly ChoiceItem[] = ownerRows
-  .slice(0, 33)
-  .map(([[who, alone, before, other], thing]): ChoiceItem => [`This ${thing} is ___. (${who})`, alone, [before, other]]);
+/** aloneFrames are sentences with a gap for a word that stands alone. */
+const aloneFrames: readonly ((thing: string) => string)[] = [
+  (thing) => `This ${thing} is ___.`,
+  (thing) => `Is this ${thing} ___?`,
+  (thing) => `The ${thing} on the table is ___.`,
+  (thing) => `That ${thing} isn't ___.`,
+];
+
+const possessiveChoiceBank: readonly ChoiceItem[] = ownerRows.flatMap(([[who, alone, before, other], thing], k): ChoiceItem[] =>
+  [aloneFrames[k % 4]!, aloneFrames[(k + 2) % 4]!].map((frame): ChoiceItem => [`${frame(thing)} (${who})`, alone, [before, other]]),
+);
 
 /** beforeNoun is the word that goes before a noun: his for he. */
 const beforeNoun = (who: string, before: string) => (who === "he" ? "his" : before);
@@ -503,27 +511,18 @@ const beforeNoun = (who: string, before: string) => (who === "he" ? "his" : befo
 const wrongAlone = (who: string, before: string) => (who === "he" ? "him" : before);
 
 const possessiveFixBank: readonly TypedItem[] = interleave([
-  ownerRows
-    .slice(33, 66)
-    .filter((_, k) => k % 2 === 0)
-    .map(([[who, alone, before], thing]): TypedItem => {
-      const shown = `This ${thing} is ${wrongAlone(who, before)}.`;
-      return { shown, accepted: [`This ${thing} is ${alone}.`], wrong: [shown] };
-    }),
-  ownerRows
-    .slice(33, 66)
-    .filter((_, k) => k % 2 === 1)
-    .map(([[who, alone, before], thing]): TypedItem => {
-      const shown = `Is this ${who === "he" ? "him" : alone} ${thing}?`;
-      return { shown, accepted: [`Is this ${beforeNoun(who, before)} ${thing}?`], wrong: [shown] };
-    }),
-  ownerRows
-    .slice(0, 33)
-    .filter((_, k) => k % 3 === 0)
-    .map(([[who, alone, before], thing]): TypedItem => {
-      const shown = `The ${thing} on the table is ${wrongAlone(who, before)}.`;
-      return { shown, accepted: [`The ${thing} on the table is ${alone}.`], wrong: [shown] };
-    }),
+  ownerRows.map(([[who, alone, before], thing]): TypedItem => {
+    const shown = `This ${thing} is ${wrongAlone(who, before)}.`;
+    return { shown, accepted: [`This ${thing} is ${alone}.`], wrong: [shown] };
+  }),
+  ownerRows.map(([[who, alone, before], thing]): TypedItem => {
+    const shown = `Is this ${who === "he" ? "him" : alone} ${thing}?`;
+    return { shown, accepted: [`Is this ${beforeNoun(who, before)} ${thing}?`], wrong: [shown] };
+  }),
+  ownerRows.map(([[who, alone, before], thing]): TypedItem => {
+    const shown = `The ${thing} on the table is ${wrongAlone(who, before)}.`;
+    return { shown, accepted: [`The ${thing} on the table is ${alone}.`], wrong: [shown] };
+  }),
 ]);
 
 /** ownerOf finds the row of owners for a word that stands alone or goes before a noun. */

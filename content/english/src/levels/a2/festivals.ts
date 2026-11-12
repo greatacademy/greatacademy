@@ -4,7 +4,7 @@
 import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
-import { pairUp, vocabularyTopic, word } from "../words.ts";
+import { everyPair, vocabularyTopic, word } from "../words.ts";
 import { combos, fill, judgedTopic } from "./kit.ts";
 
 const festivalWords = vocabularyTopic({
@@ -400,9 +400,14 @@ const toActions: readonly (readonly [string, string])[] = [
   ["book", "the tickets"],
   ["clean", "the kitchen"],
   ["send", "the invitations"],
+  ["learn", "the dragon dance"],
+  ["watch", "the lantern parade"],
+  ["help", "with the dinner"],
+  ["paint", "the lanterns"],
+  ["cook", "a big meal"],
 ];
 
-const toChoiceBank: readonly ChoiceItem[] = pairUp(42, toVerbs, toActions).map(([start, [verb, rest]]): ChoiceItem => {
+const toChoiceBank: readonly ChoiceItem[] = everyPair(toVerbs, toActions).map(([start, [verb, rest]]): ChoiceItem => {
   const ing = verb === "make" ? "making" : `${verb}ing`;
   return [`${start} ___ ${rest}. (${verb})`, `to ${verb}`, [verb, ing]];
 });
@@ -439,7 +444,8 @@ const toRests: readonly string[] = [
   "move to the city",
 ];
 
-const toTypedBank: readonly TypedItem[] = combos(40, toSubjects, toVerbForms, toRests).map(
+// Seven subjects, five verbs and eleven actions have no common factor, so 385 rows give every combination once.
+const toTypedBank: readonly TypedItem[] = combos(385, toSubjects, toVerbForms, toRests).map(
   ([[subject, s], [verb, third, past, isPast], rest]): TypedItem => {
     if (isPast) {
       return {

@@ -4,8 +4,7 @@
 import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
-import { interleave, pairUp, vocabularyTopic, word } from "../words.ts";
-import { combos } from "./kit.ts";
+import { everyPair, interleave, pairUp, vocabularyTopic, word } from "../words.ts";
 
 const health = vocabularyTopic({
   id: "a2-words-health",
@@ -407,7 +406,9 @@ const adviceActions: readonly (readonly [verb: string, third: string, rest: stri
   ["wash", "washes", "your hands"],
 ];
 
-const modalRows = combos(77, modalSubjects, adviceActions, ["should", "must"]);
+const modalRows = everyPair(everyPair(modalSubjects, adviceActions), ["should", "must"]).map(
+  ([[subject, action], modal]) => [subject, action, modal] as const,
+);
 
 /** own is the possessive word of a subject, for the hands it washes. */
 const own = (subject: string): string =>
@@ -415,7 +416,7 @@ const own = (subject: string): string =>
 
 const withOwn = (subject: string, rest: string) => rest.replace(/\byour\b/gu, own(subject));
 
-const modalChoiceBank: readonly ChoiceItem[] = modalRows.slice(0, 40).map(([[subject], [verb, third, rest], modal]): ChoiceItem => {
+const modalChoiceBank: readonly ChoiceItem[] = modalRows.map(([[subject], [verb, third, rest], modal]): ChoiceItem => {
   const fixed = withOwn(subject, rest);
   return [
     "",
@@ -424,7 +425,7 @@ const modalChoiceBank: readonly ChoiceItem[] = modalRows.slice(0, 40).map(([[sub
   ];
 });
 
-const modalFixBank: readonly TypedItem[] = modalRows.slice(40, 77).map(([[subject, single], [verb, third, rest], modal], k): TypedItem => {
+const modalFixBank: readonly TypedItem[] = modalRows.map(([[subject, single], [verb, third, rest], modal], k): TypedItem => {
   const fixed = withOwn(subject, rest);
   const shown = k % 2 === 0 || !single ? `${subject} ${modal} to ${verb} ${fixed}.` : `${subject} ${modal} ${third} ${fixed}.`;
   return { shown, accepted: [`${subject} ${modal} ${verb} ${fixed}.`], wrong: [shown] };
@@ -549,10 +550,10 @@ const haveToSubjects: readonly (readonly [subject: string, single: boolean])[] =
 const neg = (single: boolean) => (single ? "doesn't have to" : "don't have to");
 
 const meaningBank: readonly ChoiceItem[] = interleave([
-  pairUp(30, haveToSubjects, needlessContexts).map(
+  everyPair(haveToSubjects, needlessContexts).map(
     ([[subject, single], [reason, rest]]): ChoiceItem => [`${reason} ${subject} ___ ${rest}.`, neg(single), ["mustn't", neg(!single)]],
   ),
-  pairUp(30, haveToSubjects, forbiddenContexts).map(
+  everyPair(haveToSubjects, forbiddenContexts).map(
     ([[subject, single], [reason, rest]]): ChoiceItem => [
       `${reason} ${subject} ___ ${withOwn(subject, rest).replace(/\b(our|their) hand\b/u, "$1 hands")}.`,
       "mustn't",
@@ -562,21 +563,42 @@ const meaningBank: readonly ChoiceItem[] = interleave([
 ]);
 
 /** haveToRules are sentences with must to say again with have to. */
-const haveToRules: readonly (readonly [subject: string, single: boolean, rest: string])[] = [
-  ["Tom", true, "stay in bed"],
-  ["I", false, "go to the dentist"],
-  ["She", true, "wear glasses"],
-  ["We", false, "be home by nine"],
-  ["My mom", true, "work on Saturday"],
-  ["They", false, "wear a uniform at school"],
-  ["He", true, "take a pill every morning"],
-  ["You", false, "show your ticket"],
-  ["Lily", true, "practice the piano every day"],
-  ["The children", false, "wash their hands before lunch"],
-  ["My grandpa", true, "walk with a stick"],
-  ["Our teacher", true, "check a lot of homework"],
-  ["The nurses", false, "work at night"],
+const haveToPeople: readonly (readonly [subject: string, single: boolean])[] = [
+  ["Tom", true],
+  ["I", false],
+  ["She", true],
+  ["We", false],
+  ["My mom", true],
+  ["They", false],
+  ["He", true],
+  ["You", false],
+  ["Lily", true],
+  ["The children", false],
+  ["My grandpa", true],
+  ["Our teacher", true],
+  ["The nurses", false],
 ];
+
+/** haveToThings are what someone must do, fitting any subject. */
+const haveToThings: readonly string[] = [
+  "stay in bed",
+  "go to the dentist",
+  "wear glasses",
+  "be home by nine",
+  "work on Saturday",
+  "wear a uniform",
+  "take a pill every morning",
+  "show a ticket",
+  "practice the piano every day",
+  "wash the dishes after lunch",
+  "walk to the station",
+  "check a lot of emails",
+  "get up at six",
+];
+
+const haveToRules: readonly (readonly [subject: string, single: boolean, rest: string])[] = everyPair(haveToPeople, haveToThings).map(
+  ([[subject, single], rest]) => [subject, single, rest] as const,
+);
 
 const haveToTypedBank: readonly TypedItem[] = interleave([
   haveToRules.map(
