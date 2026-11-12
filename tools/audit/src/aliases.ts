@@ -83,3 +83,18 @@ export const outlineAliases: ReadonlyMap<string, readonly string[]> = new Map<st
   ["Inequalities", ["inequalities-and-solutions"]],
   ["Solving Two-Step Inequalities", ["two-step-inequalities", "solving-multi-step-inequalities"]],
 ]);
+
+/**
+ * binaryChoices are knowledge points whose choice has two options by nature, such as *a* or *an*, so the audit does not
+ * report them as two-option choices. Add an entry only after reading the knowledge point and its topic's other points.
+ */
+export const binaryChoices: ReadonlySet<string> = new Set<string>([
+  "a-and-an#choose",
+  "primary-and-secondary-sources#primary-or-secondary",
+]);
+
+/**
+ * noDrawingNeeded are knowledge points that name something visual without explaining it, such as the graphs a reader
+ * finds in the results of a paper, so the audit does not ask for a drawing. Add an entry only after reading the point.
+ */
+export const noDrawingNeeded: ReadonlySet<string> = new Set<string>(["reading-a-research-paper#where-to-look"]);

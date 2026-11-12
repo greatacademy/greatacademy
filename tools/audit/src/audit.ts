@@ -1,6 +1,6 @@
 import { type CompiledSubject, generateProblem } from "@ga/content";
 
-import { outlineAliases } from "./aliases.ts";
+import { binaryChoices, noDrawingNeeded, outlineAliases } from "./aliases.ts";
 
 /** Outline is a reference course outline: its stated size and its topic titles in order. */
 export interface Outline {
@@ -33,10 +33,10 @@ export const longestShare = 0.6;
 const cjk = /[一-鿿]/;
 /** visualTitle matches titles that name a picture; the *graph* of a paragraph and the plot of a story ("the plot") are not one. */
 const visualTitle =
-  /(?<!crypto|para)graph(?!ing calculator)|(?<!the )plot(?! and conflict)|diagram|number line|(?<!significant |similar )figure|picture|chart|histogram|box plot|dot plot|scatter|shaded|\bnet|polygon|triangle|circle/i;
+  /(?<!crypto|para|biblio)graph(?!ing calculator)|(?<!the )plot(?! and conflict)|diagram|number line|(?<!significant |similar |words or )figure|picture|chart|histogram|box plot|dot plot|scatter|shaded|\bnet|polygon|triangle|circle/i;
 
 const visualExplanation =
-  /\b(rotat|reflect(?:s|ed|ing|ion)? (?:across|over|in the (?:x|y|line|origin))|translat(?:e|es|ed|ing|ion|ions) (?:of (?:the |a |an )?(?:figure|shape|graph|point|triangle|polygon|function|y|f)|by|it|the (?:figure|shape|graph|point|triangle)|\d|\(|left|right|up|down)|dilat|triangle|quadrilateral|parallelogram|trapezoid|rectangle|polygon|circle|chord|tangent to|arc\b|sector|angle|perpendicular|(?<!\*)parallel(?! structure)|prism|cylinder|cone\b|sphere|pyramid|net\b|number line|bar model|area model|tape diagram|fraction of a shape|(?<!\*)graph|parabola|asymptote|vertex|coordinate plane|histogram|box plot|dot plot|scatter)/i;
+  /\b(rotat|reflect(?:s|ed|ing|ion)? (?:across|over|in the (?:x|y|line|origin))|translat(?:e|es|ed|ing|ion|ions) (?:of (?:the |a |an )?(?:figure|shape|graph|point|triangle|polygon|function|y|f)|by|the (?:figure|shape|graph|point|triangle)|\d|\(|left|right|up|down)|dilat|triangle|quadrilateral|parallelogram|trapezoid|rectangle|polygon|circle|chord|tangent to|arc\b|sector|angle|perpendicular|parallel(?: lines?| sides?| segments?| planes?| vectors?| pairs?| to\b)|(?:lines?|sides|segments|planes|vectors) (?:are |is )?parallel|prism|cylinder|cone\b|sphere|pyramid|(?<!like a )net\b|number line|bar model|area model|tape diagram|fraction of a shape|(?<!\*)graph|parabola|asymptote|vertex|coordinate plane|histogram|box plot|dot plot|scatter)/i;
 
 /** normalizeTitle reduces a title to lowercase words so that outline and code titles compare equal. */
 export function normalizeTitle(title: string): string {
@@ -119,7 +119,7 @@ export function audit(subject: CompiledSubject, outlines: ReadonlyMap<string, Ou
       if (!cjk.test(kp.explanation["zh-CN"])) add("zh explanation without Chinese", path);
       if (kp.figure || kp.figures?.length) hasFigure = true;
       // A vocabulary topic lists its words, such as pyramid or prism, without explaining a shape.
-      else if (topic.strand !== "vocabulary" && visualExplanation.test(`${kp.title.en} ${kp.explanation.en}`))
+      else if (topic.strand !== "vocabulary" && !noDrawingNeeded.has(path) && visualExplanation.test(`${kp.title.en} ${kp.explanation.en}`))
         add("explanation of something visual without a drawing", path);
 
       let choices = 0;
@@ -147,7 +147,8 @@ export function audit(subject: CompiledSubject, outlines: ReadonlyMap<string, Ou
           if (problem.mistakes?.length) explained++;
           const lengths = problem.answer.input.options.map((o) => o.en.length);
           const right = lengths[Number(problem.answer.expected)] ?? 0;
-          if (lengths.every((n, i) => i === Number(problem.answer.expected) || n < right)) longest++;
+          // Options of a word or two letters, such as a, an and the, give no length cue.
+          if (right > 3 && lengths.every((n, i) => i === Number(problem.answer.expected) || n < right)) longest++;
         }
         if (!problem.wrong?.length) noWrong++;
         if (!cjk.test(problem.prompt["zh-CN"])) add("zh prompt without Chinese", `${path} seed ${seed}`);
@@ -165,7 +166,7 @@ export function audit(subject: CompiledSubject, outlines: ReadonlyMap<string, Ou
       for (const solution of terse) add("terse solution (under 25 characters)", `${path}: ${solution}`);
       if (unworked > samplesPerKnowledgePoint / 2) add(`solution with no relation and under ${minSolutionWords} words of prose`, path);
       if (choices === samplesPerKnowledgePoint && answerIndexes.size === 1) add("choice answer always at the same index", path);
-      if (choices === samplesPerKnowledgePoint && options === 2) add("two-option choice", path);
+      if (choices === samplesPerKnowledgePoint && options === 2 && !binaryChoices.has(path)) add("two-option choice", path);
       if (choices > 0 && explained === 0) add("choice whose wrong options are not explained", path);
       // With three or more options, the right one is longest by chance in a third of items or fewer.
       if (choices >= samplesPerKnowledgePoint / 2 && options >= 3 && longest > choices * longestShare)
@@ -173,7 +174,7 @@ export function audit(subject: CompiledSubject, outlines: ReadonlyMap<string, Ou
       if (noWrong === samplesPerKnowledgePoint) add("no wrong responses listed", path);
       if (leaks > samplesPerKnowledgePoint / 2) add("canonical answer appears in the prompt", path);
     });
-    if (visualTitle.test(topic.title.en) && !hasFigure && !topic.practiceOnly)
+    if (topic.strand !== "vocabulary" && visualTitle.test(topic.title.en) && !hasFigure && !topic.practiceOnly)
       add("visual topic without a figure", `${topic.id}: ${topic.title.en}`);
   }
   return { gaps, findings };
