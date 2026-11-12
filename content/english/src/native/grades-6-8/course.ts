@@ -117,9 +117,10 @@ const units: readonly UnitDef[] = [
   ),
 ];
 
-/** course68 is the native course of grades 6 to 8. */
+/** course68 is the native course of grades 6 to 8, retired now that the courses of grades 6, 7 and 8 hold all its topics. */
 export const course68: CourseDef = {
   id: "english-grades-6-8",
+  retired: true,
   title: t("English, Grades 6 to 8", "英语：六至八年级"),
   description: t(
     "English for readers and writers of grades 6 to 8, in eight themed units from myths to voyages of exploration. Each unit teaches the words of its theme, grammar and punctuation, reading skills for stories, poems, arguments and informational texts, and a kind of writing together, and gives a set of passages to read on the theme. The pieces written in the course are judged by a model.",

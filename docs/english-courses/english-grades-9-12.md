@@ -4,7 +4,7 @@
 
 - **Course:** `english-grades-9-12`
 - **Level:** Grades 9 to 12, for learners whose first language is English or who read English as well as a native speaker of their age
-- **Prerequisite(s):** [English, Grades 6 to 8](english-grades-6-8.md) (`buildsOn: ["english-grades-6-8"]`)
+- **Prerequisite(s):** [English, Grade 8](english-grade-8.md) (`buildsOn: ["english-grade-8"]`)
 - **Language of explanation:** English
 - **Size:** 8 units · 37 topics (10 existing, 27 new: 8 of vocabulary, 8 of grammar and mechanics, 4 of reading, 7 of writing judged by a model) · 8 reading units (2 existing, 6 new) · 8 conversations
 
