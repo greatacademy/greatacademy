@@ -1,8 +1,9 @@
 // Grades 9 to 12: the item banks of the grammar and style topics. Most are built from hand-written cores by
-// templates that vary the people and the order of the parts, so each knowledge point has thirty or more items; every
+// templates that vary the people and the order of the parts, so each knowledge point has a hundred or more items; every
 // one is built the same way on every run.
 
 import type { ChoiceItem } from "@ga/subject-english";
+import { moreAbsoluteCores, moreConditionalRows, moreEmphasisLines, moreNounClauses, moreShapeCores } from "./grammar-more.ts";
 
 /** pick takes an element of a list by an index that may run past its end. */
 const pick = <T>(list: readonly T[], i: number): T => list[i % list.length] as T;
@@ -107,7 +108,7 @@ const cumulative = (main: string, mods: readonly string[]) => `${capital(main)},
 
 /** shapeBank asks whether a sentence is periodic, cumulative or balanced. */
 export const shapeBank: readonly ChoiceItem[] = [
-  ...shapeCores.flatMap(([main, mods], i): ChoiceItem[] => {
+  ...[...shapeCores, ...moreShapeCores].flatMap(([main, mods], i): ChoiceItem[] => {
     const p: ChoiceItem = [periodic(main, mods), "periodic", ["cumulative", "balanced"]];
     const c: ChoiceItem = [cumulative(main, mods), "cumulative", ["periodic", "balanced"]];
     return i % 2 === 0 ? [p, c] : [c, p];
@@ -162,6 +163,7 @@ export const conditionalBank: readonly ChoiceItem[] = rows(`
   If you mix blue and yellow, you ___ green.|get|would get|got
   If the bakery ___ out of bread, we will buy rolls instead.|runs|ran|had run
   If I won the prize, I ___ the money to the animal shelter.|would give|will give|would have given
+${moreConditionalRows}
 `).map(([s, right, ...wrong], i): ChoiceItem => [named(s ?? "", i), right ?? "", wrong]);
 
 // Absolute phrases.
@@ -187,15 +189,17 @@ const absoluteCores: readonly (readonly [main: string, absolute: string, partici
 ];
 
 /** absoluteBank asks which phrase of a sentence is the absolute phrase, a noun with a participle of its own. */
-export const absoluteBank: readonly ChoiceItem[] = absoluteCores.flatMap(([main, absolute, participial, prepositional], i) => {
-  const m = named(main, i);
-  const front = `${capital(participial)}, ${m} ${prepositional}, ${absolute}.`;
-  const back = `${capital(absolute)}, ${m} ${prepositional}, ${participial}.`;
-  return [
-    [front, absolute, [participial, prepositional]],
-    [back, absolute, [participial, prepositional]],
-  ] satisfies ChoiceItem[];
-});
+export const absoluteBank: readonly ChoiceItem[] = [...absoluteCores, ...moreAbsoluteCores].flatMap(
+  ([main, absolute, participial, prepositional], i) => {
+    const m = named(main, i);
+    const front = `${capital(participial)}, ${m} ${prepositional}, ${absolute}.`;
+    const back = `${capital(absolute)}, ${m} ${prepositional}, ${participial}.`;
+    return [
+      [front, absolute, [participial, prepositional]],
+      [back, absolute, [participial, prepositional]],
+    ] satisfies ChoiceItem[];
+  },
+);
 
 // Noun clauses.
 
@@ -227,7 +231,7 @@ const jobFrames: Readonly<Record<string, readonly string[]>> = {
 };
 
 /** nounClauseBank asks what job a noun clause, in bold, does in its sentence. */
-export const nounClauseBank: readonly ChoiceItem[] = nounClauses.flatMap(([clause, afterPreposition], i) =>
+export const nounClauseBank: readonly ChoiceItem[] = [...nounClauses, ...moreNounClauses].flatMap(([clause, afterPreposition], i) =>
   nounJobs
     .filter((job) => afterPreposition || job !== prepObject)
     .map((job, j): ChoiceItem => {
@@ -321,6 +325,7 @@ export const emphasisBank: readonly ChoiceItem[] = labelled(
   It was the youngest player who scored the winning goal.|${cleft}
   What matters is not how fast you run but whether you finish.|${cleft}
   It was not the cold but the hunger that defeated the army.|${cleft}
+${moreEmphasisLines(inversion, fronting, cleft)}
 `,
   [inversion, fronting, cleft],
 );

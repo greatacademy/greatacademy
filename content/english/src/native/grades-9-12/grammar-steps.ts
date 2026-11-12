@@ -6,6 +6,7 @@ import { t } from "@ga/content";
 import type { ChoiceItem } from "@ga/subject-english";
 import { point } from "@ga/subject-english";
 import { bars, fields, kindedChoice, type Label, labelChoice } from "../../topics/steps.ts";
+import { moreAbsoluteCombineLines, moreClauseLines, moreConditionLines, moreShapeParts, moreStressLines } from "./grammar-more.ts";
 
 // Fixing semicolons and colons.
 
@@ -124,6 +125,7 @@ const shapeParts = fields(`
   the climbers reached the summit|exhausted and frostbitten; after eleven hours on the ice|Exhausted and frostbitten, after eleven hours on the ice, the climbers reached the summit.|The climbers reached the summit, exhausted and frostbitten, after eleven hours on the ice.|Exhausted and frostbitten, the climbers reached the summit after eleven hours on the ice.
   the judge read the verdict|slowly; her voice steady in the hushed courtroom|Slowly, her voice steady in the hushed courtroom, the judge read the verdict.|The judge read the verdict slowly, her voice steady in the hushed courtroom.|Slowly, the judge read the verdict, her voice steady in the hushed courtroom.
   the kite rose|tugging at its string; climbing above the trees|Tugging at its string, climbing above the trees, the kite rose.|The kite rose, tugging at its string, climbing above the trees.|Tugging at its string, the kite rose, climbing above the trees.
+${moreShapeParts}
 `);
 
 const shapeBuildBank: ChoiceItem[] = shapeParts.flatMap(([main, details, periodic, cumulative, split]): ChoiceItem[] => {
@@ -257,6 +259,7 @@ const conditionLines = `
   If the dam had not been built, this valley would be a lake now.|${mixed}
   If the meeting ends early, I will call you.|${real}
   If my brother were here, he would know how to fix the bike.|${unrealNow}
+${moreConditionLines(real, unrealNow, unrealPast, mixed)}
 `;
 
 /** conditionStep asks what kind of conditional a sentence is. */
@@ -305,6 +308,7 @@ const absoluteCombineBank = bars(
   The guests sat down to dinner. Their glasses were already filled.|The guests sat down to dinner, their glasses already filled.|The guests sat down to dinner, their glasses were already filled.|Already filling their glasses, the guests sat down to dinner.
   The goalkeeper dived to the left. His gloves were stretched toward the ball.|The goalkeeper dived to the left, his gloves stretched toward the ball.|The goalkeeper dived to the left, his gloves were stretched toward the ball.|Stretching his gloves toward the ball, the goalkeeper dived to the left.
   The writer stared at the blank page. Her coffee was growing cold beside her.|The writer stared at the blank page, her coffee growing cold beside her.|The writer stared at the blank page, her coffee was growing cold beside her.|Growing cold beside her, the writer stared at the blank page.
+${moreAbsoluteCombineLines}
   `,
   2,
 );
@@ -410,6 +414,7 @@ const clauseLines = `
   We argued about **which road led to the village**.|${nounClause}
   The road **which led to the village** was blocked by snow.|${relativeClause}
   **Wherever the road led**, the dog followed us.|${adverbClause}
+${moreClauseLines(nounClause, relativeClause, adverbClause)}
 `;
 
 /** clauseKindStep asks whether a bold clause is a noun, relative or adverb clause. */
@@ -569,6 +574,7 @@ const stressBank = bars(
   The ghost of the old captain stood **at the top of the stairs**.|At the top of the stairs stood the ghost of the old captain.|At the top of the stairs the ghost of the old captain it stood.|It was the ghost of the old captain who stood at the top of the stairs.
   **Courage**, more than strength, wins battles.|What wins battles is courage, more than strength.|What wins battles courage is, more than strength.|Battles are won by courage, more than strength.
   I have **never in my life** been so cold.|Never in my life have I been so cold.|Never in my life I have been so cold.|So cold I have never been in my life.
+${moreStressLines}
   `,
   2,
 );
