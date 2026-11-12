@@ -152,6 +152,26 @@ const units: readonly UnitDef[] = [
     },
     undefined,
   ),
+  unit(
+    t("Food, Eyes and Sleep", "食物、目光与睡眠"),
+    {
+      words: ["words-of-eating-and-hunger", "words-of-looking", "words-of-tiredness-and-sleep", "words-of-the-odd-and-the-dull"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Danger, Disaster and Blunders", "危险、灾害与失误"),
+    {
+      words: ["words-of-danger-and-threats", "words-of-natural-disasters", "words-of-wrecking-and-remains", "words-of-blunders-and-snags"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
 ];
 
 /** courseGrade10 is the native course of grade 10. */
