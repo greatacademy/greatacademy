@@ -1337,8 +1337,130 @@ const frameWordClass: Readonly<Record<string, WordClass>> = {
   tomorrow: "adverb",
 };
 
+// Crossed items: frames, people and phrases multiply the scenes above into a hundred items or more for each bank.
+
+/** sceneFrames open a scene with a phrase whose noun is the last word, so that noun can serve as a wrong option. */
+const sceneFrames: readonly (readonly [opening: string, noun: string])[] = [
+  ["In the story", "story"],
+  ["In the film", "film"],
+  ["In my dream", "dream"],
+  ["In the picture book", "book"],
+  ["In the video", "video"],
+];
+const modifierKindCross: readonly ChoiceItem[] = sceneFrames.flatMap(([opening], f) =>
+  describedScenes.map(
+    ([a, n, v, o], i): ChoiceItem => [`${opening}, the ${a} ${n} ${v} the ${o}.`, a, (i + f) % 2 === 0 ? [n, v, o] : [o, n, v]],
+  ),
+);
+const adverbCross: readonly ChoiceItem[] = sceneFrames.flatMap(([opening, noun]) =>
+  actionScenes.map(([n, v, d]): ChoiceItem => [`${opening}, the ${n} ${v} ${d}.`, d, [n, v, noun]]),
+);
+/** sceneFrameClass gives the class of the nouns in the scene frames. */
+const sceneFrameClass: Readonly<Record<string, WordClass>> = Object.fromEntries(sceneFrames.map(([, noun]) => [noun, "noun"]));
+
+/** formPeople take turns as the subject of the adjective and adverb items. */
+const formPeople = ["The new student", "My grandfather", "Our neighbor", "The little girl", "The coach", "Aunt May"] as const;
+/** formActs are an adjective, its adverb and its noun, with a predicate for the adverb and one for the adjective. */
+const formActs: readonly (readonly [adjective: string, adverb: string, noun: string, forAdverb: string, forAdjective: string])[] = [
+  ["careful", "carefully", "carefulness", "checked the answers ___", "is always ___"],
+  ["quiet", "quietly", "quietness", "closed the door ___", "was ___ all morning"],
+  ["happy", "happily", "happiness", "hummed ___ in the kitchen", "looked ___ in the kitchen"],
+  ["calm", "calmly", "calmness", "spoke ___ to the crowd", "felt ___ before the race"],
+  ["polite", "politely", "politeness", "thanked the driver ___", "was ___ to the driver"],
+  ["neat", "neatly", "neatness", "folded the shirts ___", "keeps the room ___"],
+  ["eager", "eagerly", "eagerness", "opened the letter ___", "seemed ___ to begin"],
+  ["sad", "sadly", "sadness", "waved ___ at the station", "looked ___ at the station"],
+  ["kind", "kindly", "kindness", "offered help ___", "was ___ to everyone"],
+  ["loud", "loudly", "loudness", "laughed ___ at the joke", "got ___ at the party"],
+  ["rude", "rudely", "rudeness", "interrupted ___", "was ___ at dinner"],
+  ["gentle", "gently", "gentleness", "patted the horse ___", "was ___ with the horse"],
+  ["glad", "gladly", "gladness", "agreed ___ to help", "was ___ to help"],
+  ["clever", "cleverly", "cleverness", "solved the riddle ___", "seemed ___ in class"],
+  ["cheerful", "cheerfully", "cheerfulness", "greeted everyone ___", "stayed ___ all day"],
+  ["nervous", "nervously", "nervousness", "tapped the table ___", "felt ___ before the test"],
+  ["serious", "seriously", "seriousness", "listened ___ to the news", "looked ___ during the news"],
+  ["lazy", "lazily", "laziness", "stretched ___ on the couch", "felt ___ on the couch"],
+  ["fair", "fairly", "fairness", "shared the cake ___", "was ___ about the cake"],
+  ["quick", "quickly", "quickness", "answered ___", "was ___ to answer"],
+  ["weak", "weakly", "weakness", "smiled ___ from the bed", "felt ___ in bed"],
+  ["clumsy", "clumsily", "clumsiness", "dropped the plates ___", "was ___ with the plates"],
+  ["slow", "slowly", "slowness", "walked ___ up the hill", "was ___ on the hill"],
+];
+const adjOrAdvCross: readonly ChoiceItem[] = formActs.flatMap(([adj, adv, noun, forAdv, forAdj], i) =>
+  [0, 1, 2].flatMap((j): ChoiceItem[] => {
+    const who = formPeople[(i + 2 * j) % formPeople.length]!;
+    return [
+      [`${who} ${forAdv}.`, adv, [adj, noun]],
+      [`${who} ${forAdj}.`, adj, [adv, noun]],
+    ];
+  }),
+);
+
+/** movers are people and animals that go somewhere; moves are a verb and the phrase that follows it. */
+const movers = [
+  "The tired hikers",
+  "My little cousin",
+  "Our new puppy",
+  "A young deer",
+  "Grandpa Joe",
+  "The two boys",
+  "The black cat",
+  "The lost tourist",
+  "The twins",
+  "A tiny mouse",
+] as const;
+const moves: readonly (readonly [verb: string, phrase: string])[] = [
+  ["walked", "across the bridge"],
+  ["rested", "under the old oak"],
+  ["hid", "behind the shed"],
+  ["waited", "beside the gate"],
+  ["ran", "through the tall grass"],
+  ["stopped", "near the river"],
+  ["slept", "on the porch"],
+  ["climbed", "over the fence"],
+  ["wandered", "into the garden"],
+  ["sat", "by the fire"],
+  ["stood", "at the corner"],
+  ["came", "from the forest"],
+];
+const phraseCross: readonly ChoiceItem[] = everyPair(movers, moves).map(
+  ([who, [verb, phrase]]): ChoiceItem => [
+    `${who} ${verb} ${phrase}.`,
+    phrase,
+    [who, `${verb} ${phrase}`, phrase.split(" ").slice(1).join(" ")],
+  ],
+);
+
+/** placePhrases tell where, so they can describe a thing or an action. */
+const placePhrases = ["on the table", "by the door", "in the hall", "under the stairs", "near the window"] as const;
+const things = ["box", "bag", "lamp", "chair", "basket", "bottle"] as const;
+const thingStates: readonly (readonly [predicate: string, word: string])[] = [
+  ["is new", "new"],
+  ["is broken", "broken"],
+  ["looks old", "looks"],
+  ["is empty", "empty"],
+  ["belongs to me", "belongs"],
+];
+const doers = ["We", "They", "She", "He", "Mom", "Dad"] as const;
+const doings = ["waited", "rested", "read", "played", "talked", "slept"] as const;
+const timePhrases = ["after dinner", "before school", "during the storm", "in the hall", "by the door", "near the window"] as const;
+const phraseJobCross: readonly ChoiceItem[] = [
+  ...everyPair(things, placePhrases).flatMap(([thing, phrase], k) =>
+    [0, 2].map((j): ChoiceItem => {
+      const [predicate, word] = thingStates[(k + j) % thingStates.length]!;
+      return [`The ${thing} **${phrase}** ${predicate}.`, thing, [word, lastWord(phrase)]];
+    }),
+  ),
+  ...everyPair(doers, doings).flatMap(([who, verb], k) =>
+    [0, 3].map((j): ChoiceItem => {
+      const phrase = timePhrases[(k + j) % timePhrases.length]!;
+      return [`${who} ${verb} **${phrase}**.`, verb, [who, lastWord(phrase)]];
+    }),
+  ),
+];
+
 /** allWordClass is the class of every word used as a wrong option. */
-const allWordClass: Readonly<Record<string, WordClass>> = { ...wordClass, ...moreWordClass, ...frameWordClass };
+const allWordClass: Readonly<Record<string, WordClass>> = { ...wordClass, ...moreWordClass, ...frameWordClass, ...sceneFrameClass };
 
 /** clauseTopics are the topics of phrases and clauses. */
 export const clauseTopics: readonly TopicDef[] = [
@@ -1359,7 +1481,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which word is an adjective?", "哪个词是形容词？"),
-          [...modifierKindBank, ...modifierKindMore],
+          [...modifierKindBank, ...modifierKindMore, ...modifierKindCross],
           (right) =>
             t(
               `**${right}** describes a noun, so it is an adjective. An adverb would describe a verb, an adjective or another adverb instead.`,
@@ -1380,7 +1502,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which word is an adverb?", "哪个词是副词？"),
-          [...adverbBank, ...adverbMore],
+          [...adverbBank, ...adverbMore, ...adverbCross],
           (right) =>
             t(
               `**${right}** tells how, when or how often the action happens, so it is an adverb.`,
@@ -1401,7 +1523,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which word completes the sentence?", "哪个词能补全句子？"),
-          [...adjOrAdvBank, ...adjOrAdvMore],
+          [...adjOrAdvBank, ...adjOrAdvMore, ...adjOrAdvCross],
           (right, shown) =>
             t(
               `${shown.replace("___", `**${right}**`)} Decide whether the word describes a noun or an action.`,
@@ -1429,7 +1551,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which words form a prepositional phrase?", "哪些词构成介词短语？"),
-          [...phraseBank, ...phraseMore],
+          [...phraseBank, ...phraseMore, ...phraseCross],
           (right) => t(`**${right}** starts with a preposition and ends with a noun.`, `**${right}** 以介词开头，以名词结尾。`),
           notPhrase,
         ),
@@ -1443,7 +1565,7 @@ export const clauseTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which word does the phrase in bold describe?", "粗体短语修饰哪个词？"),
-          [...phraseJobBank, ...phraseJobMore],
+          [...phraseJobBank, ...phraseJobMore, ...phraseJobCross],
           (right) =>
             t(
               `The phrase tells more about **${right}**. Ask which word the phrase answers a question about, such as which one, where or when.`,

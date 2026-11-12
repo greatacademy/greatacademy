@@ -2,6 +2,7 @@
 
 import { type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, typed, typedGenerator } from "@ga/subject-english";
+import { everyPair } from "../levels/words.ts";
 
 const subjectBank: readonly ChoiceItem[] = [
   ["The tired farmer fed the horses.", "The tired farmer", ["fed the horses", "the horses"]],
@@ -532,7 +533,7 @@ const notAntecedent = (wrong: string) => {
 // More items, built from hand-written cores by deterministic templates.
 
 /** scenes are hand-written sentences in four parts: subject, predicate, the object inside the predicate, and a place phrase. */
-const scenes: readonly (readonly [subject: string, predicate: string, object: string, place: string])[] = [
+const handScenes: readonly (readonly [subject: string, predicate: string, object: string, place: string])[] = [
   ["The young pilot", "landed the plane on the runway", "the plane", "near the hangar"],
   ["My cousin Leo", "built a birdhouse for the garden", "a birdhouse", "in the backyard"],
   ["A gray squirrel", "buried an acorn under the oak", "an acorn", "beside the path"],
@@ -555,7 +556,37 @@ const scenes: readonly (readonly [subject: string, predicate: string, object: st
   ["The class president", "read the announcement aloud", "the announcement", "at the podium"],
 ];
 
-const lower = (s: string) => (/^(Grandpa|Mrs?\.|Dr\.)/.test(s) ? s : s[0]!.toLowerCase() + s.slice(1));
+/** crossPeople and crossActs cross into further scenes: every person does every act. */
+const crossPeople = [
+  "My older sister",
+  "The new student",
+  "Our music teacher",
+  "Uncle Ray",
+  "The tired nurse",
+  "A kind stranger",
+  "The team captain",
+  "My best friend",
+  "Aunt Lucy",
+  "Our class helper",
+] as const;
+const crossActs: readonly (readonly [predicate: string, object: string, place: string])[] = [
+  ["packed a lunch for the trip", "a lunch", "in the kitchen"],
+  ["found a wallet on the bus", "a wallet", "at the bus stop"],
+  ["painted a picture of the sea", "a picture", "in the art room"],
+  ["fixed the broken chair", "the broken chair", "in the garage"],
+  ["wrote a letter to a friend", "a letter", "at the desk"],
+  ["planted tulips by the fence", "tulips", "in the garden"],
+  ["carried the heavy boxes upstairs", "the heavy boxes", "in the old building"],
+  ["baked a pie for the fair", "a pie", "at home"],
+  ["washed the muddy boots", "the muddy boots", "on the back porch"],
+  ["read a poem aloud", "a poem", "in the library"],
+];
+const scenes: readonly (readonly [subject: string, predicate: string, object: string, place: string])[] = [
+  ...handScenes,
+  ...everyPair(crossPeople, crossActs).map(([who, [p, o, place]]) => [who, p, o, place] as const),
+];
+
+const lower = (s: string) => (/^(Grandpa|Grandma|Uncle|Aunt|Mrs?\.|Dr\.)/.test(s) ? s : s[0]!.toLowerCase() + s.slice(1));
 const upper = (s: string) => s[0]!.toUpperCase() + s.slice(1);
 
 const openers: readonly (readonly [opener: string, noun: string])[] = [
@@ -588,7 +619,7 @@ const predicateMore: readonly ChoiceItem[] = scenes.map(([s, p, o, place], i) =>
   return [`${subject} ${p}.`, p, [subject, o]];
 });
 const movedSubjectMore: readonly ChoiceItem[] = scenes.map(([s, p, o], i) => {
-  const [opener, noun] = openers[i]!;
+  const [opener, noun] = openers[i % openers.length]!;
   return [`${opener}, ${lower(s)} ${p}.`, lower(s), [noun, o]];
 });
 const missingPartMore: readonly ChoiceItem[] = scenes.map(([s, p, , place], i) =>
@@ -662,12 +693,17 @@ const actors: readonly (readonly [subject: string, base: string, s: string, past
 const pastTimes = ["Yesterday", "Last summer", "Two days ago", "Last night", "Last month", "On Friday night", "A week ago"] as const;
 const presentTimes = ["Every day", "Each morning", "Every weekend", "Most evenings", "Each spring", "Every Sunday", "Every year"] as const;
 const futureTimes = ["Tomorrow", "Next week", "Next summer", "In two days", "Later tonight", "Next Monday", "In a month"] as const;
-const tenseMore: readonly ChoiceItem[] = actors.map(([who, base, s, past, rest], i) => {
-  const k = Math.floor(i / 3);
-  if (i % 3 === 0) return [`${pastTimes[k % 7]}, ${who} ___ ${rest}.`, past, [s, `will ${base}`]];
-  if (i % 3 === 1) return [`${presentTimes[k % 7]}, ${who} ___ ${rest}.`, s, [past, `will ${base}`]];
-  return [`${futureTimes[k % 7]}, ${who} ___ ${rest}.`, `will ${base}`, [past, s]];
-});
+// Every actor appears in all three times, each with two time words.
+const tenseMore: readonly ChoiceItem[] = actors.flatMap(([who, base, s, past, rest], i): ChoiceItem[] =>
+  [0, 1].flatMap((j): ChoiceItem[] => {
+    const k = (i + 3 * j) % 7;
+    return [
+      [`${pastTimes[k]}, ${who} ___ ${rest}.`, past, [s, `will ${base}`]],
+      [`${presentTimes[k]}, ${who} ___ ${rest}.`, s, [past, `will ${base}`]],
+      [`${futureTimes[k]}, ${who} ___ ${rest}.`, `will ${base}`, [past, s]],
+    ];
+  }),
+);
 
 /** pairs are singular and plural subjects for agreement: subject, plural?, base verb, *-s* form, *-ing* form, the rest. */
 const pairs: readonly (readonly [subject: string, plural: boolean, base: string, s: string, ing: string, rest: string])[] = [
@@ -804,12 +840,12 @@ const moreWordClass: Readonly<Record<string, WordClass>> = {
     ]),
   ),
   ...Object.fromEntries(
-    "puppy ball cookies twins kite aunt postcard students classroom coach trip farmer goats neighbors picnic pilot flight bird nest plants children painter mural kittens milk medal runners waiter water robot crate scouts bags baby rattle"
+    "girl boy nurse players teacher cook lunch cups map bike fence door puppy ball cookies twins kite aunt postcard students classroom coach trip farmer goats neighbors picnic pilot flight bird nest plants children painter mural kittens milk medal runners waiter water robot crate scouts bags baby rattle"
       .split(" ")
       .map((w) => [w, "noun"]),
   ),
   ...Object.fromEntries(
-    "chased baked shared said sent cleaned asked fed invited thanked built watered laughed juggled finished smiled drank slept gave cheered brought lifted packed dropped"
+    "packed washed found fixed painted opened chased baked shared said sent cleaned asked fed invited thanked built watered laughed juggled finished smiled drank slept gave cheered brought lifted packed dropped"
       .split(" ")
       .map((w) => [w, "verb"]),
   ),
@@ -890,6 +926,249 @@ const irregularMore = [
   typed("Today you throw. Yesterday you ___.", "threw", ["throwed", "thrown"]),
   typed("Today our team wins. Yesterday our team ___.", "won", ["winned", "wan"]),
 ];
+
+// Crossed items: lists of people, acts and frames multiply into a hundred items or more for each bank.
+
+/** agreementPeople are singular subjects beside their plural partners. */
+const agreementPeople: readonly (readonly [subject: string, plural: boolean])[] = [
+  ["My aunt", false],
+  ["My aunts", true],
+  ["The new teacher", false],
+  ["The new teachers", true],
+  ["Our neighbor", false],
+  ["Our neighbors", true],
+  ["Sam", false],
+  ["Sam and Mia", true],
+  ["She", false],
+  ["They", true],
+  ["The doctor", false],
+  ["The doctors", true],
+];
+const agreementActs: readonly (readonly [base: string, s: string, ing: string, rest: string])[] = [
+  ["walk", "walks", "walking", "to work every day"],
+  ["read", "reads", "reading", "the paper each morning"],
+  ["cook", "cooks", "cooking", "dinner on Sundays"],
+  ["play", "plays", "playing", "tennis after lunch"],
+  ["drink", "drinks", "drinking", "tea in the evening"],
+  ["write", "writes", "writing", "long emails"],
+  ["swim", "swims", "swimming", "at the lake in summer"],
+  ["teach", "teaches", "teaching", "a class on Fridays"],
+  ["call", "calls", "calling", "home every week"],
+  ["fix", "fixes", "fixing", "old radios for fun"],
+];
+const agreementCross: readonly ChoiceItem[] = everyPair(agreementPeople, agreementActs).map(
+  ([[who, plural], [base, s, ing, rest]]): ChoiceItem =>
+    plural ? [`${who} ___ ${rest}.`, base, [s, ing]] : [`${who} ___ ${rest}.`, s, [base, ing]],
+);
+
+/** containers are one container and many, each followed by a phrase whose noun is plural. */
+const containers: readonly (readonly [one: string, many: string])[] = [
+  ["The box", "The boxes"],
+  ["The basket", "The baskets"],
+  ["The jar", "The jars"],
+  ["The bag", "The bags"],
+  ["The bowl", "The bowls"],
+  ["The tin", "The tins"],
+  ["The crate", "The crates"],
+  ["The bucket", "The buckets"],
+  ["The tray", "The trays"],
+  ["The pouch", "The pouches"],
+];
+const contents = ["of old toys", "of shiny coins", "of colored beads", "of tiny buttons", "of dried leaves", "of glass marbles"] as const;
+const containerPlaces = ["on the shelf", "under the bed", "by the door", "in the closet", "near the window"] as const;
+const hardAgreementCross: readonly ChoiceItem[] = containers.flatMap(([one, many], c) =>
+  contents.flatMap((content, k): ChoiceItem[] => [
+    [`${one} ${content} ___ ${containerPlaces[(c + k) % 5]}.`, "is", ["are", "am"]],
+    [`${many} ${content} ___ ${containerPlaces[(c + k + 2) % 5]}.`, "are", ["is", "am"]],
+  ]),
+);
+
+/** formPeople are girls and boys named in brackets after the pronoun items. */
+const formPeople: readonly (readonly [name: string, girl: boolean])[] = [
+  ["Mina", true],
+  ["Owen", false],
+  ["Hana", true],
+  ["Tom", false],
+  ["Zoe", true],
+  ["Ravi", false],
+  ["Rosa", true],
+  ["Leo", false],
+  ["Lucy", true],
+  ["Sam", false],
+];
+const formSubjectActs = ["built a sandcastle", "won the spelling bee", "fed the ducks", "cleaned the board"] as const;
+const formObjectFrames = [
+  "The coach gave ___ a medal.",
+  "Mom called ___ for dinner.",
+  "The class cheered for ___.",
+  "I sat next to ___ on the bus.",
+] as const;
+const formOwnerThings = ["umbrella", "backpack", "drawing", "left shoe"] as const;
+const pronounFormCross: readonly ChoiceItem[] = formPeople.flatMap(([name, girl]): ChoiceItem[] => [
+  ...formSubjectActs.map(
+    (act): ChoiceItem => [`___ and Kim ${act}. (${name})`, girl ? "She" : "He", girl ? ["Her", "Hers"] : ["Him", "His"]],
+  ),
+  ...formObjectFrames.map((frame): ChoiceItem => [`${frame} (${name})`, girl ? "her" : "him", girl ? ["she", "hers"] : ["he", "his"]]),
+  ...formOwnerThings.map(
+    (thing): ChoiceItem => [`${name} forgot ___ ${thing}.`, girl ? "her" : "his", girl ? ["she", "hers"] : ["he", "him"]],
+  ),
+]);
+
+/** nounFrames put each noun scene into further sentences. */
+const nounFrames = ["We noticed that the", "In the story, the", "Everyone saw how the", "Last year the", "I heard that the"] as const;
+const nounCross: readonly ChoiceItem[] = nounFrames.flatMap((frame, f) =>
+  nounScenes.map(
+    ([a, n, v, d], i): ChoiceItem => [
+      `${frame} ${a} ${n} ${v} ${d}.`,
+      n,
+      (i + f) % 3 === 0 ? [a, v, d] : (i + f) % 3 === 1 ? [v, d, a] : [d, a, v],
+    ],
+  ),
+);
+
+/** pronounPeople are nouns with the pronoun for the one doing an act and the one owning a thing. */
+const pronounPeople: readonly (readonly [noun: string, subject: string, owner: string])[] = [
+  ["girl", "she", "her"],
+  ["boy", "he", "his"],
+  ["farmer", "he", "his"],
+  ["nurse", "she", "her"],
+  ["children", "they", "their"],
+  ["players", "they", "their"],
+  ["teacher", "she", "her"],
+  ["pilot", "he", "his"],
+  ["cook", "he", "his"],
+  ["twins", "they", "their"],
+];
+const pronounActs: readonly (readonly [verb: string, object: string, after: string])[] = [
+  ["packed", "lunch", "left"],
+  ["washed", "cups", "rested"],
+  ["found", "map", "smiled"],
+  ["fixed", "bike", "cheered"],
+  ["painted", "fence", "stopped"],
+  ["opened", "door", "waved"],
+];
+const pronounCross: readonly ChoiceItem[] = everyPair(pronounPeople, pronounActs).flatMap(
+  ([[n, subject, owner], [v, o, after]]): ChoiceItem[] => [
+    [`The ${n} ${v} the ${o}, and then ${subject} ${after}.`, subject, [n, v, o]],
+    [`The ${n} ${v} ${owner} ${o}.`, owner, [n, v, o]],
+  ],
+);
+
+/** antecedentOwners are people and groups with the pronoun that owns their things, and its wrong options. */
+const antecedentOwners: readonly (readonly [who: string, right: string, wrong: readonly [string, string]])[] = [
+  ["Grandpa", "his", ["their", "her"]],
+  ["Mr. Chen", "his", ["their", "its"]],
+  ["Felix", "his", ["her", "their"]],
+  ["Uncle Sam", "his", ["their", "its"]],
+  ["Aunt Rita", "her", ["his", "their"]],
+  ["Nadia", "her", ["their", "its"]],
+  ["Mrs. Park", "her", ["his", "their"]],
+  ["Grandma", "her", ["their", "its"]],
+  ["The girls", "their", ["her", "its"]],
+  ["The twins", "their", ["his", "its"]],
+  ["My cousins", "their", ["his", "its"]],
+  ["The players", "their", ["her", "its"]],
+];
+const antecedentActs = [
+  "packed ___ lunch",
+  "lost ___ keys",
+  "washed ___ hands",
+  "found ___ jacket",
+  "fed ___ dog",
+  "cleaned ___ room",
+  "finished ___ homework",
+  "called ___ grandmother",
+] as const;
+const antecedentGroups = ["The team", "The school", "The club", "The library", "The museum", "The company"] as const;
+const antecedentGroupActs = ["changed ___ schedule", "opened ___ doors early", "celebrated ___ birthday", "posted ___ rules"] as const;
+const antecedentCross: readonly ChoiceItem[] = [
+  ...everyPair(antecedentOwners, antecedentActs).map(([[who, right, wrong], act]): ChoiceItem => [`${who} ${act}.`, right, wrong]),
+  ...everyPair(antecedentGroups, antecedentGroupActs).map(([who, act]): ChoiceItem => [`${who} ${act}.`, "its", ["their", "his"]]),
+];
+
+/** referenceNames pair two girls or two boys, so a lone pronoun could mean either. */
+const referenceNames: readonly (readonly [a: string, b: string, pronoun: string])[] = [
+  ["Ava", "Lily", "she"],
+  ["Sam", "Leo", "he"],
+  ["Nora", "Zoe", "she"],
+  ["Omar", "Ben", "he"],
+  ["Rita", "Jade", "she"],
+  ["Max", "Eli", "he"],
+  ["Hana", "Mei", "she"],
+  ["Luis", "Kai", "he"],
+  ["Tess", "Ruby", "she"],
+  ["Finn", "Owen", "he"],
+  ["Iris", "Paula", "she"],
+  ["Noah", "Adam", "he"],
+];
+const referenceMeetings = ["talked to", "met", "called", "visited", "sat with", "waited for"] as const;
+const referenceStates = ["tired", "nervous", "excited", "hungry", "sad", "sleepy", "worried", "proud"] as const;
+const clearReferenceCross: readonly ChoiceItem[] = referenceNames.flatMap(([a, b, p], i) =>
+  [0, 1, 2, 3, 4].flatMap((j): ChoiceItem[] => {
+    const met = referenceMeetings[(i + j) % 6]!;
+    const state = referenceStates[(i + 2 * j + 1) % 8]!;
+    return [
+      [
+        `Which sentence makes it clear who was ${state}?`,
+        `${b} was ${state} when ${p} ${met} ${a}.`,
+        [`When ${b} ${met} ${a}, ${p} was ${state}.`, `${b} ${met} ${a}, and ${p} was ${state}.`],
+      ],
+      [
+        `Which sentence makes it clear who felt ${state}?`,
+        `${a} ${met} ${b} and said, "I feel ${state}."`,
+        [`${a} ${met} ${b}, and ${p} felt ${state}.`, `After ${a} ${met} ${b}, ${p} felt ${state}.`],
+      ],
+    ];
+  }),
+);
+
+/** irregularVerbs are verbs with their *-s* form, their past and two wrong pasts. */
+const irregularVerbs: readonly (readonly [base: string, s: string, past: string, wrong: readonly [string, string]])[] = [
+  ["see", "sees", "saw", ["seed", "seen"]],
+  ["teach", "teaches", "taught", ["teached", "tought"]],
+  ["buy", "buys", "bought", ["buyed", "brought"]],
+  ["fly", "flies", "flew", ["flyed", "flown"]],
+  ["drink", "drinks", "drank", ["drinked", "drunk"]],
+  ["sing", "sings", "sang", ["singed", "sung"]],
+  ["speak", "speaks", "spoke", ["speaked", "spoken"]],
+  ["take", "takes", "took", ["taked", "taken"]],
+  ["give", "gives", "gave", ["gived", "given"]],
+  ["find", "finds", "found", ["finded", "founded"]],
+  ["sit", "sits", "sat", ["sitted", "set"]],
+  ["sleep", "sleeps", "slept", ["sleeped", "slep"]],
+  ["keep", "keeps", "kept", ["keeped", "kep"]],
+  ["tell", "tells", "told", ["telled", "tolled"]],
+  ["break", "breaks", "broke", ["breaked", "broken"]],
+  ["drive", "drives", "drove", ["drived", "driven"]],
+  ["ride", "rides", "rode", ["rided", "ridden"]],
+  ["know", "knows", "knew", ["knowed", "known"]],
+  ["grow", "grows", "grew", ["growed", "grown"]],
+  ["throw", "throws", "threw", ["throwed", "thrown"]],
+  ["win", "wins", "won", ["winned", "wan"]],
+  ["write", "writes", "wrote", ["writed", "written"]],
+  ["eat", "eats", "ate", ["eated", "eaten"]],
+  ["swim", "swims", "swam", ["swimmed", "swum"]],
+  ["bring", "brings", "brought", ["bringed", "brang"]],
+  ["catch", "catches", "caught", ["catched", "cought"]],
+  ["run", "runs", "ran", ["runned", "runed"]],
+  ["begin", "begins", "began", ["beginned", "begun"]],
+  ["wear", "wears", "wore", ["weared", "worn"]],
+  ["draw", "draws", "drew", ["drawed", "drawn"]],
+];
+const irregularPeople: readonly (readonly [who: string, single: boolean])[] = [
+  ["I", false],
+  ["my friend", true],
+  ["we", false],
+  ["he", true],
+  ["they", false],
+  ["our teacher", true],
+];
+const irregularCross = irregularVerbs.flatMap(([base, s, past, wrong], i) =>
+  [0, 1, 2, 3].map((j) => {
+    const [who, single] = irregularPeople[(i + j) % 6]!;
+    return typed(`Today ${who} ${single ? s : base}. Yesterday ${who} ___.`, past, wrong);
+  }),
+);
 
 /** allWordClass is the class of every word used as a wrong option. */
 const allWordClass: Readonly<Record<string, WordClass>> = { ...wordClass, ...moreWordClass };
@@ -1001,7 +1280,7 @@ export const sentenceTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which word in this sentence is a noun?", "这句话中哪个词是名词？"),
-          [...nounBank, ...nounMore],
+          [...nounBank, ...nounMore, ...nounCross],
           (right) =>
             t(
               `**${right}** names a person, place, thing or idea, so it is a noun.`,
@@ -1019,7 +1298,7 @@ export const sentenceTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which word in this sentence is a pronoun?", "这句话中哪个词是代词？"),
-          [...pronounBank, ...pronounMore],
+          [...pronounBank, ...pronounMore, ...pronounCross],
           (right) =>
             t(
               `**${right}** stands in for a noun, so it is a pronoun. The other words name, describe or show action, but none of them takes the place of a noun.`,
@@ -1037,7 +1316,7 @@ export const sentenceTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which pronoun completes the sentence?", "哪个代词能补全句子？"),
-          [...pronounFormBank, ...pronounFormMore],
+          [...pronounFormBank, ...pronounFormMore, ...pronounFormCross],
           (right, shown) =>
             t(
               `The right form is **${right}**: ${shown.replace("___", right)} Try the pronoun alone to hear which form fits its job.`,
@@ -1148,7 +1427,7 @@ export const sentenceTopics: readonly TopicDef[] = [
         typedGenerator(
           "word-form",
           t("Type the past form of the verb.", "输入动词的过去式。"),
-          [...irregularBank, ...irregularMore],
+          [...irregularBank, ...irregularMore, ...irregularCross],
           (right) => t(`The past form is **${right}**. This verb does not add *-ed*.`, `过去式是 **${right}**。这个动词不加 *-ed*。`),
         ),
       ),
@@ -1171,7 +1450,7 @@ export const sentenceTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which verb agrees with the subject?", "哪个动词与主语一致？"),
-          [...agreementBank, ...agreementMore],
+          [...agreementBank, ...agreementMore, ...agreementCross],
           (right, shown) =>
             t(
               `${shown.replace("___", `**${right}**`)} The verb matches its subject in number.`,
@@ -1189,7 +1468,7 @@ export const sentenceTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which verb agrees with the subject?", "哪个动词与主语一致？"),
-          [...hardAgreementBank, ...hardAgreementMore],
+          [...hardAgreementBank, ...hardAgreementMore, ...hardAgreementCross],
           (right, shown) =>
             t(
               `${shown.replace("___", `**${right}**`)} Find the real subject, ignoring any phrase between it and the verb.`,
@@ -1217,7 +1496,7 @@ export const sentenceTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which pronoun completes the sentence?", "哪个代词能补全句子？"),
-          [...antecedentBank, ...antecedentMore],
+          [...antecedentBank, ...antecedentMore, ...antecedentCross],
           (right, shown) =>
             t(
               `${shown.replace("___", `**${right}**`)} The pronoun matches the noun it stands for.`,
@@ -1235,7 +1514,7 @@ export const sentenceTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Choose the clearest sentence.", "选出最清楚的句子。"),
-          [...clearReferenceBank, ...clearReferenceMore],
+          [...clearReferenceBank, ...clearReferenceMore, ...clearReferenceCross],
           (right) =>
             t(
               `**${right}** can be read only one way. In the others, the pronoun could point to either noun.`,

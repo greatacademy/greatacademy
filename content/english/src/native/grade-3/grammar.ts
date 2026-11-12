@@ -3,8 +3,549 @@
 
 import { type Text, type TopicDef, t } from "@ga/content";
 import { point, typed, typedGenerator } from "@ga/subject-english";
+import { everyPair, everyTriple } from "../../levels/words.ts";
 import { labelChoice } from "../../topics/steps.ts";
 import { type Ask, askGenerator, gapFill, kinded, need, rows, topic } from "./kit.ts";
+
+// Lines built from frames, so that each bank has a hundred sentences or more. Each is joined to the hand-written lines
+// of its bank below.
+
+/** lines joins built rows into the bar-separated lines a bank reads. */
+const lines = (built: readonly (readonly string[])[]) => built.map((r) => r.join("|")).join("\n");
+
+const feelingPeople = [
+  ["The farmer", "farmer"],
+  ["The little girl", "girl"],
+  ["The old king", "king"],
+  ["The puppy", "puppy"],
+  ["The sailor", "sailor"],
+  ["My cousin", "cousin"],
+  ["The baker", "baker"],
+  ["The teacher", "teacher"],
+] as const;
+const feelings = [
+  "joy",
+  "fear",
+  "hope",
+  "pride",
+  "anger",
+  "sadness",
+  "delight",
+  "surprise",
+  "relief",
+  "worry",
+  "excitement",
+  "calm",
+  "wonder",
+] as const;
+const feelingEvents = [
+  ["the letter arrived", "letter"],
+  ["the bell rang", "bell"],
+  ["the boat came back", "boat"],
+  ["the train left", "train"],
+  ["the gate opened", "gate"],
+  ["the parcel came", "parcel"],
+] as const;
+const abstractBuilt = lines(
+  everyTriple(feelingPeople, feelings, feelingEvents).map(([[who, person], feeling, [event, thing]]) => [
+    `${who} felt ${feeling} when ${event}.`,
+    feeling,
+    person,
+    thing,
+  ]),
+);
+
+/** abstractFrames are sentences that can hold any abstract noun. */
+const abstractFrames = ["Our class read a story about ___.", "The poem on the wall is about ___.", "We had a long talk about ___."];
+
+const landGroups = [
+  ["herd", "cows", "grazed"],
+  ["flock", "sheep", "grazed"],
+  ["swarm", "bees", "buzzed"],
+  ["pack", "wolves", "howled"],
+  ["pride", "lions", "rested"],
+  ["colony", "ants", "marched"],
+  ["troop", "monkeys", "played"],
+  ["litter", "kittens", "slept"],
+  ["gaggle", "geese", "waddled"],
+] as const;
+const landPlaces = [
+  ["near the river", "river"],
+  ["by the old barn", "barn"],
+  ["beside the lake", "lake"],
+  ["behind the hill", "hill"],
+  ["across the field", "field"],
+  ["near the road", "road"],
+  ["under the trees", "trees"],
+  ["at the edge of the forest", "forest"],
+] as const;
+const waterGroups = [
+  ["school", "fish"],
+  ["pod", "dolphins"],
+  ["raft", "ducks"],
+] as const;
+const waterPlaces = [
+  ["near the boat", "boat"],
+  ["under the bridge", "bridge"],
+  ["beside the rocks", "rocks"],
+  ["close to the shore", "shore"],
+  ["past the island", "island"],
+  ["by the pier", "pier"],
+] as const;
+const collectiveBuilt = lines([
+  ...everyPair(landGroups, landPlaces).map(([[group, members, verb], [place, noun]]) => [
+    `A ${group} of ${members} ${verb} ${place}.`,
+    group,
+    members,
+    noun,
+  ]),
+  ...everyPair(waterGroups, waterPlaces).map(([[group, members], [place, noun]]) => [
+    `A ${group} of ${members} swam ${place}.`,
+    group,
+    members,
+    noun,
+  ]),
+]);
+
+const groupSubjects = [
+  "The herd of cows",
+  "The flock of sheep",
+  "The swarm of bees",
+  "The pack of wolves",
+  "The pride of lions",
+  "The colony of ants",
+  "The troop of monkeys",
+  "The litter of kittens",
+  "The gaggle of geese",
+  "The school of fish",
+  "The pod of dolphins",
+  "The team",
+] as const;
+const groupActs = [
+  ["rests", "rest", "resting", "in the shade every afternoon"],
+  ["moves", "move", "moving", "slowly in the morning"],
+  ["stays", "stay", "staying", "close together at night"],
+  ["gathers", "gather", "gathering", "near the water each day"],
+  ["waits", "wait", "waiting", "for the rain to stop"],
+  ["sleeps", "sleep", "sleeping", "after a long day"],
+  ["travels", "travel", "traveling", "a long way each year"],
+  ["hides", "hide", "hiding", "when danger comes"],
+] as const;
+const agreementBuilt = lines(
+  everyPair(groupSubjects, groupActs).map(([who, [one, many, ing, rest]]) => [`${who} ___ ${rest}.`, one, many, ing]),
+);
+
+/** endingForms builds the -ed and -ing forms of a verb, with two wrong spellings of each, by its rule. */
+const endingForms = (verb: string, rule: string): string[] => {
+  const last = verb.slice(-1);
+  const stem = verb.slice(0, -1);
+  switch (rule) {
+    case "double":
+      return [`${verb}${last}ed`, `${verb}ed`, `${verb}t`, `${verb}${last}ing`, `${verb}ing`, `${verb}eing`];
+    case "drop-e": {
+      const c = stem.slice(-1);
+      return [`${stem}ed`, `${verb}ed`, `${stem}${c}ed`, `${stem}ing`, `${verb}ing`, `${stem}${c}ing`];
+    }
+    case "y-to-i":
+      return [`${stem}ied`, `${verb}ed`, `${stem}ed`, `${verb}ing`, `${stem}iing`, `${stem}ing`];
+    case "keep-y":
+      return [`${verb}ed`, `${stem}ied`, `${stem}id`, `${verb}ing`, `${stem}iing`, `${stem}ing`];
+    default:
+      return [`${verb}ed`, `${verb}${last}ed`, `${verb}t`, `${verb}ing`, `${verb}${last}ing`, `${verb}eing`];
+  }
+};
+const moreEndingVerbs = [
+  ["grab", "trip", "rub", "chop", "drag", "pat", "shop", "step", "wag", "jog", "tap", "beg", "mop", "ship"].map((v) => [v, "double"]),
+  ["like", "use", "close", "share", "joke", "wipe", "chase", "glide", "rake", "trade", "bounce", "juggle", "tune"].map((v) => [
+    v,
+    "drop-e",
+  ]),
+  ["copy", "worry", "fry", "reply", "marry", "bury", "tidy", "empty"].map((v) => [v, "y-to-i"]),
+  ["pray", "spray", "destroy", "delay", "obey", "annoy"].map((v) => [v, "keep-y"]),
+  ["help", "wash", "pick", "push", "kick", "melt", "paint", "climb", "walk"].map((v) => [v, "plain"]),
+].flat();
+const endingBuilt = lines(moreEndingVerbs.map(([verb = "", rule = ""]) => [verb, rule, ...endingForms(verb, rule)]));
+
+const commaOpeners = [
+  "My aunt lives in",
+  "We stayed in",
+  "The parcel came from",
+  "Our new friend moved here from",
+  "The train stopped in",
+  "My pen pal writes from",
+  "The story takes place in",
+] as const;
+const commaPlaces = [
+  "Madrid, Spain",
+  "Lima, Peru",
+  "Miami, Florida",
+  "Osaka, Japan",
+  "Vancouver, Canada",
+  "Dallas, Texas",
+  "Seoul, South Korea",
+  "Berlin, Germany",
+  "Mumbai, India",
+  "Phoenix, Arizona",
+] as const;
+const commaEvents = [
+  "The school fair is on",
+  "The book sale began on",
+  "My brother was born on",
+  "Our class trip was on",
+  "The museum opened on",
+] as const;
+const commaDates = ["May 4, 2026", "Tuesday, November 10, 2026", "February 14, 2025", "Saturday, June 6, 2026"] as const;
+const commaBuilt = lines([
+  ...everyPair(commaOpeners, commaPlaces).map(([opener, place]) => [`${opener} ${place}.`]),
+  ...everyPair(commaEvents, commaDates).map(([event, date]) => [`${event} ${date}.`]),
+]);
+
+const moreGreetingNames = [
+  "Aunt Lily",
+  "Uncle Sam",
+  "Grandma Rose",
+  "Grandpa Joe",
+  "Mrs. Park",
+  "Mr. Diaz",
+  "Ms. Green",
+  "Coach Brown",
+  "Leo",
+  "Zoe",
+  "Omar",
+  "Priya",
+  "Noah",
+  "Ella",
+  "Kai",
+  "Ruby",
+  "Jack",
+  "Hana",
+  "Luis",
+  "Maya",
+  "Ivy",
+  "Finn",
+  "Aria",
+  "Theo",
+  "Nora",
+  "Eli",
+  "Grace",
+  "Owen",
+  "Lucy",
+  "Ravi",
+  "Chloe",
+  "Diego",
+  "Amara",
+  "Felix",
+  "Sofia",
+  "Jonah",
+  "Mei",
+  "Ali",
+  "Rosa",
+  "Tom",
+] as const;
+const moreClosings = [
+  "Your brother|Your Brother",
+  "Your sister|Your Sister",
+  "Your classmate|Your Classmate",
+  "Your neighbor|Your Neighbor",
+  "Your teammate|Your Teammate",
+  "Your student|Your Student",
+  "Your son|Your Son",
+  "Your daughter|Your Daughter",
+  "Your buddy|Your Buddy",
+  "Love and hugs|Love And Hugs",
+  "With thanks|With Thanks",
+  "Warm wishes|Warm Wishes",
+  "All my love|All My Love",
+  "Many thanks|Many Thanks",
+  "Best regards|Best Regards",
+  "Kind regards|Kind Regards",
+  "Talk soon|Talk Soon",
+  "Write soon|Write Soon",
+  "Miss you|Miss You",
+  "Your biggest fan|Your Biggest Fan",
+  "Cheers|Cheers",
+  "Thanks|Thanks",
+  "Fondly|Fondly",
+  "Your old friend|Your Old Friend",
+  "Your best friend|Your Best Friend",
+  "Your pen pal|Your Pen Pal",
+  "Lots of love|Lots Of Love",
+  "Have fun|Have Fun",
+] as const;
+
+/** moreContractions are more pairs of words, each with its contraction, two wrong spellings and a sentence that uses the words. */
+const moreContractions = rows(`
+  he would|he'd|hed|he'ld|I think he would like the book.
+  she would|she'd|shed|she'ld|She would rather walk home.
+  we would|we'd|wed|we'ld|We would love to come.
+  they would|they'd|theyd|they'ld|They would help if you asked.
+  you would|you'd|youd|you'ld|You would enjoy the show.
+  it will|it'll|itll|it'l|It will rain later.
+  she will|she'll|shell|she'l|She will be here soon.
+  we will|we'll|well|we'l|We will win next time.
+  that will|that'll|thatll|tha'll|That will be fun.
+  who will|who'll|wholl|who'l|Who will feed the fish?
+  where is|where's|wheres|whe'res|Where is my hat?
+  here is|here's|heres|her'es|Here is your pencil.
+  how is|how's|hows|ho'ws|How is your grandma?
+  when is|when's|whens|whe'ns|When is the party?
+  must not|mustn't|mustnt|must'nt|You must not touch the stove.
+  need not|needn't|neednt|need'nt|You need not bring lunch.
+  he has|he's|hes|he'has|He has lost his key.
+  she has|she's|shes|she'has|She has finished her work.
+  it has|it's|its|it'has|It has stopped snowing.
+  I had|I'd|Id|I'hd|I had never seen a whale before.
+  we had|we'd|wed|we'hd|We had just left when it rained.
+  they have|they've|theyve|they'v|They have gone to the park.
+  who would|who'd|whod|who'ld|Who would like some soup?
+  could have|could've|couldve|could'v|We could have won.
+  should have|should've|shouldve|should'v|I should have asked first.
+  would have|would've|wouldve|would'v|She would have liked the cake.
+  might not|mightn't|mightnt|might'nt|It might not snow after all.
+  there will|there'll|therell|there'l|There will be a test on Friday.
+  what will|what'll|whatll|wha'll|What will we eat?
+  it would|it'd|itd|it'ld|It would be nice to swim.
+  you had|you'd|youd|you'hd|You had better hurry.
+  he had|he'd|hed|he'hd|He had forgotten his coat.
+  there has|there's|theres|ther'es|There has been a mistake.
+  I would|I'd|Id|I'ld|I would like a glass of water.
+  are not|aren't|arent|are'nt|The shops are not open yet.
+  is not|isn't|isnt|is'nt|The bus is not here yet.
+`);
+
+const itsAnimals = ["dog", "cat", "fox", "puppy", "kitten", "pony"] as const;
+const itsActs = ["licked ___ paw", "shook ___ fur", "wagged ___ tail"] as const;
+const itsStates = ["too cold to swim", "time for lunch", "going to snow", "a good idea", "very late", "Sam's turn"] as const;
+const theirGroups = ["The kids", "The players", "The twins"] as const;
+const theirActs = ["packed ___ bags", "washed ___ hands", "found ___ seats"] as const;
+const theyreAdjs = ["ready", "on time", "happy"] as const;
+const thereThings = ["boxes", "chairs", "boots", "books", "plates", "toys", "bags", "cups", "coats"] as const;
+const yourThings = ["coat", "lunch", "ticket", "library book", "water bottle", "scarf", "pencil case", "homework", "hat"] as const;
+const yourAdjs = ["right", "tired", "hungry"] as const;
+const openers3 = ["I think", "Mom says", "I hope"] as const;
+const whoseThings = ["kite", "coat", "pencil", "ball", "lunch box", "drawing"] as const;
+const whosDoings = ["coming to lunch", "ready for the game", "at the gate", "making that noise", "next in line", "on the phone"] as const;
+const possessiveBuilt = lines([
+  ...everyPair(itsAnimals, itsActs).map(([animal, act]) => [`The ${animal} ${act}.`, "its", "it's", "its'"]),
+  ...everyPair(openers3, itsStates).map(([opener, state]) => [`${opener} ___ ${state}.`, "it's", "its", "its'"]),
+  ...everyPair(theirGroups, theirActs).map(([who, act]) => [`${who} ${act}.`, "their", "there", "they're"]),
+  ...everyPair(openers3, theyreAdjs).map(([opener, adj]) => [`${opener} ___ ${adj}.`, "they're", "their", "there"]),
+  ...thereThings.map((thing) => [`Put the ${thing} over ___.`, "there", "their", "they're"]),
+  ...yourThings.map((thing) => [`Please bring ___ ${thing}.`, "your", "you're", "youre"]),
+  ...everyPair(openers3, yourAdjs).map(([opener, adj]) => [`${opener} ___ ${adj}.`, "you're", "your", "youre"]),
+  ...whoseThings.map((thing) => [`___ ${thing} is this?`, "Whose", "Who's", "Whos"]),
+  ...whosDoings.map((doing) => [`___ ${doing}?`, "Who's", "Whose", "Whos"]),
+]);
+
+const actionSubjects = ["The baker", "My brother", "The fisherman", "Our teacher", "The pilot", "The gardener"] as const;
+const actionActs = [
+  "**carried** a basket of bread",
+  "**opened** the heavy door",
+  "**painted** the fence blue",
+  "**fixed** the broken chair",
+  "**cleaned** the windows",
+  "**caught** the bus",
+] as const;
+const linkingActs = [
+  "**was** tired after work",
+  "**seemed** happy today",
+  "**looked** worried",
+  "**felt** cold in the wind",
+  "**became** a friend of ours",
+  "**is** very busy",
+] as const;
+const notVerbScenes = [
+  ["The **tall** tree", "swayed"],
+  ["The **red** kite", "flew"],
+  ["A **happy** dog", "barked"],
+  ["The **old** clock", "ticked"],
+  ["The **little** boat", "drifted"],
+  ["A **cold** wind", "blew"],
+] as const;
+const notVerbEnds = ["in the morning", "near the river", "all afternoon"] as const;
+const verbKindBuilt = lines([
+  ...everyPair(actionSubjects, actionActs).map(([who, act]) => [`${who} ${act}.`, "action verb"]),
+  ...everyPair(actionSubjects, linkingActs).map(([who, act]) => [`${who} ${act}.`, "linking verb"]),
+  ...everyPair(notVerbScenes, notVerbEnds).map(([[scene, verb], end]) => [`${scene} ${verb} ${end}.`, "not a verb"]),
+]);
+
+const linkedSubjects = [
+  ["The baker", "baker"],
+  ["The puppy", "puppy"],
+  ["My aunt", "aunt"],
+  ["The pilot", "pilot"],
+  ["The children", "children"],
+  ["The old man", "man"],
+] as const;
+const linkedStates = [
+  ["seemed", "tired"],
+  ["looked", "happy"],
+  ["felt", "cold"],
+  ["was", "hungry"],
+  ["became", "quiet"],
+  ["grew", "sleepy"],
+  ["looked", "proud"],
+  ["seemed", "nervous"],
+  ["felt", "warm"],
+  ["was", "excited"],
+  ["became", "calm"],
+  ["seemed", "lonely"],
+] as const;
+const linkedPlaces = [
+  ["at the station", "station"],
+  ["by the lake", "lake"],
+  ["in the garden", "garden"],
+  ["after the trip", "trip"],
+  ["near the window", "window"],
+  ["on the bus", "bus"],
+] as const;
+const linkedBuilt = lines(
+  everyTriple(linkedSubjects, linkedStates, linkedPlaces).map(([[who, noun], [verb, adj], [place, thing]]) => [
+    `${who} ${verb} ${adj} ${place}.`,
+    adj,
+    noun,
+    thing,
+  ]),
+);
+
+/** kindNouns are a thing, an adjective that describes it, a different adjective and a verb that does something to it. */
+const kindNouns = [
+  ["kite", "red", "blue", "fly"],
+  ["garden", "big", "green", "water"],
+  ["puppy", "sleepy", "small", "feed"],
+  ["castle", "tall", "dark", "draw"],
+  ["train", "fast", "long", "watch"],
+  ["cake", "sweet", "soft", "cut"],
+  ["boat", "slow", "white", "paint"],
+  ["box", "heavy", "full", "open"],
+  ["drum", "loud", "new", "play"],
+  ["window", "dirty", "wide", "close"],
+  ["lamp", "bright", "broken", "fix"],
+  ["map", "useful", "torn", "fold"],
+  ["shell", "pretty", "pink", "find"],
+  ["bike", "shiny", "fast", "ride"],
+  ["tent", "warm", "dry", "pack"],
+  ["garden gate", "rusty", "narrow", "shut"],
+  ["soup", "hot", "thick", "stir"],
+  ["picture", "funny", "bright", "hang"],
+] as const;
+const upper = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+const kindBuilt = lines(
+  kindNouns.flatMap(([noun, adj, other, verb]) => [
+    [`The ${noun} is ${adj}.`, "statement"],
+    [`Is the ${noun} ${other}?`, "question"],
+    [`What a ${adj} ${noun}!`, "exclamation"],
+    [`Please ${verb} the ${noun}.`, "command"],
+  ]),
+);
+
+/** moreSpellRows are more words that end in the sounds /k/, /ch/ and /j/, each with its rule and a sentence. */
+const moreSpellRows = rows(`
+  ck|kick|Give the ball a hard ___.
+  ck|brick|He laid one ___ on top of another.
+  ck|snack|I eat an apple as a ___ after school.
+  ck|track|The runners raced around the ___.
+  ck|deck|We sat on the ___ of the ship.
+  ck|check|Please ___ your answers before you hand them in.
+  ck|lock|Turn the key in the ___.
+  ck|knock|I heard a ___ at the door.
+  ck|luck|Good ___ on your test!
+  ck|chick|The little ___ hatched from its egg.
+  ck|crack|There is a ___ in the glass.
+  ck|pack|Please ___ your bag for the trip.
+  ck|thick|The dictionary is a very ___ book.
+  ck|quick|The rabbit made a ___ jump.
+  k|park|We played on the swings at the ___.
+  k|fork|Eat your salad with a ___.
+  k|tank|The fish swim in a glass ___.
+  k|pink|She wore a ___ dress.
+  k|sink|Wash the cups in the ___.
+  k|bank|I keep my coins in a piggy ___.
+  k|shark|A ___ swam near the boat.
+  k|mask|He wore a lion ___ in the play.
+  k|snake|A long ___ slid under the rock.
+  k|joke|Dad told a funny ___.
+  k|rake|Use the ___ to gather the leaves.
+  k|week|There are seven days in a ___.
+  tch|hatch|The eggs will ___ in the spring.
+  tch|pitch|The coach asked me to ___ the ball.
+  tch|stitch|Grandma sewed one more ___.
+  tch|switch|Flip the ___ to turn on the light.
+  tch|scratch|The cat left a ___ on my arm.
+  tch|stretch|We ___ before we run.
+  tch|hutch|Our rabbit lives in a ___.
+  tch|latch|Close the ___ on the gate.
+  tch|batch|Mom baked a ___ of cookies.
+  tch|crutch|He walked with a ___ after he hurt his leg.
+  tch|notch|Cut a ___ in the stick.
+  tch|witch|The ___ in the story rode a broom.
+  ch|reach|I can't ___ the top shelf.
+  ch|couch|We sat on the ___ to watch TV.
+  ch|porch|Grandpa sat on the front ___.
+  ch|branch|A bird sat on the ___.
+  ch|punch|We drank fruit ___ at the party.
+  ch|crunch|I heard the leaves ___ under my feet.
+  ch|speech|She gave a ___ to the class.
+  ch|torch|He lit a ___ to see in the cave.
+  ch|march|The band will ___ down the street.
+  ch|launch|They will ___ the rocket tomorrow.
+  dge|ridge|We walked along the ___ of the mountain.
+  dge|nudge|Give your friend a gentle ___.
+  dge|smudge|There is a ___ of paint on my nose.
+  dge|wedge|Put a ___ under the door.
+  dge|dodge|Try to ___ the ball.
+  dge|lodge|We stayed in a ___ in the woods.
+  dge|ledge|A bird sat on the window ___.
+  dge|trudge|We had to ___ through the deep snow.
+  ge|age|What is your ___?
+  ge|charge|Plug in the phone to ___ it.
+  ge|hinge|The door ___ needs oil.
+  ge|orange|I peeled an ___ for lunch.
+  ge|strange|We heard a ___ noise.
+  ge|range|The mountain ___ is covered in snow.
+  ge|bulge|The bag had a ___ where the ball was.
+  ge|plunge|The divers ___ into the pool.
+`);
+
+/** spellForms gives the start of a word and two wrong spellings of its ending, by its rule. */
+const spellForms = (rule: string, word: string): [start: string, w1: string, w2: string] => {
+  switch (rule) {
+    case "ck": {
+      const s = word.slice(0, -2);
+      return [s, `${s}k`, `${s}ch`];
+    }
+    case "k": {
+      if (word.endsWith("e")) {
+        const s = word.slice(0, -2);
+        return [s, `${s}cke`, `${s}ck`];
+      }
+      const s = word.slice(0, -1);
+      return [s, `${s}ck`, `${s}c`];
+    }
+    case "tch": {
+      const s = word.slice(0, -3);
+      return [s, `${s}ch`, `${s}dge`];
+    }
+    case "ch": {
+      const s = word.slice(0, -2);
+      return [s, `${s}tch`, `${s}ge`];
+    }
+    case "dge": {
+      const s = word.slice(0, -3);
+      return [s, `${s}ge`, `${s}tch`];
+    }
+    default: {
+      const s = word.slice(0, -2);
+      return [s, `${s}dge`, `${s}tch`];
+    }
+  }
+};
+const spellBuilt = lines(
+  moreSpellRows.map(([rule = "", word = "", sentence = ""]) => {
+    const [start, w1, w2] = spellForms(rule, word);
+    return [sentence, word, w1, w2, rule, start];
+  }),
+);
 
 // Abstract nouns: sentence|abstract noun|concrete noun|concrete noun.
 
@@ -41,6 +582,7 @@ const abstractRows = rows(`
   The rabbit's speed helped it escape the fox.|speed|rabbit|fox
   The students showed respect to the visitor from the museum.|respect|students|visitor
   The boy's sadness disappeared when his dog came home.|sadness|boy|dog
+${abstractBuilt}
 `).map((row) => need(row, 4));
 
 const abstractBank: readonly Ask[] = abstractRows.map(([shown = "", right = "", c1 = "", c2 = ""]) => ({
@@ -99,8 +641,8 @@ const formingRows = rows(`
   The ___ of the lake surprised the divers.|deep|depth|deepness|deepth
 `).map((row) => need(row, 5));
 
-const formingBank = formingRows.map(([sentence = "", base = "", noun = "", w1 = "", w2 = ""]) =>
-  typed(`${sentence} (${base})`, noun, [w1, w2, base]),
+const formingBank = formingRows.flatMap(([sentence = "", base = "", noun = "", w1 = "", w2 = ""]) =>
+  [sentence, ...abstractFrames].map((frame) => typed(`${frame} (${base})`, noun, [w1, w2, base])),
 );
 
 const formingBase = new Map(formingRows.map(([, base = "", noun = ""]) => [noun, base]));
@@ -140,6 +682,7 @@ const collectiveRows = rows(`
   A group of children waited at the bus stop.|group|children|stop
   A pile of leaves covered the garden path.|pile|leaves|path
   A string of beads hung around her neck.|string|beads|neck
+${collectiveBuilt}
 `).map((row) => need(row, 4));
 
 const collectiveBank: readonly Ask[] = collectiveRows.map(([shown = "", right = "", members = "", other = ""]) => ({
@@ -217,6 +760,7 @@ const agreementBank: readonly Ask[] = rows(`
   The class ___ excited about the play.|is|are|be
   Our team ___ won three games this year.|has|have|having
   The band ___ been practicing for weeks.|has|have|having
+${agreementBuilt}
 `).map((row) => agreement(need(row, 4)));
 
 // Adding -ed and -ing: verb|rule|-ed form|wrong|wrong|-ing form|wrong|wrong.
@@ -248,6 +792,7 @@ const endingRows = rows(`
   jump|plain|jumped|jumpped|jumpt|jumping|jumpping|jumpeing
   rain|plain|rained|rainned|raind|raining|rainning|raineing
   look|plain|looked|lookked|lookt|looking|lookking|lookeing
+${endingBuilt}
 `).map((row) => need(row, 8));
 
 const endingRule = (verb: string, rule: string, ending: string): [string, string] => {
@@ -342,6 +887,7 @@ const commaSentences = rows(`
   The giant panda was born in Chengdu, China.
   Our soccer camp starts on June 29, 2026.
   The new park opened on Wednesday, April 1, 2026.
+${commaBuilt}
 `).map((row) => need(row, 1)[0] ?? "");
 
 const commaBank = commaSentences.map((right) => {
@@ -369,26 +915,28 @@ const greetingBank: readonly Ask[] = rows(`
   Mia
   Aunt Rosa
   Uncle Wei
-`).map(([name = ""]) => ({
-  question: t(`Which greeting of a friendly letter to ${name} is written correctly?`, `给 ${name} 的一封友好书信，哪个称呼写得正确？`),
-  shown: "",
-  right: `Dear ${name},`,
-  wrong: [`Dear ${name}.`, `Dear, ${name}`],
-  why: t(
-    `The greeting of a friendly letter begins with a capital letter and ends with a comma: **Dear ${name},**. The body of the letter starts on the next line.`,
-    `友好书信的称呼以大写字母开头，以逗号结尾：**Dear ${name},**。正文从下一行开始。`,
-  ),
-  whyNot: [
-    t(
-      "A greeting is not a sentence, so it does not end with a period; it ends with a comma.",
-      "称呼不是句子，所以不以句号结尾，而以逗号结尾。",
+`)
+  .concat(moreGreetingNames.map((name) => [name]))
+  .map(([name = ""]) => ({
+    question: t(`Which greeting of a friendly letter to ${name} is written correctly?`, `给 ${name} 的一封友好书信，哪个称呼写得正确？`),
+    shown: "",
+    right: `Dear ${name},`,
+    wrong: [`Dear ${name}.`, `Dear, ${name}`],
+    why: t(
+      `The greeting of a friendly letter begins with a capital letter and ends with a comma: **Dear ${name},**. The body of the letter starts on the next line.`,
+      `友好书信的称呼以大写字母开头，以逗号结尾：**Dear ${name},**。正文从下一行开始。`,
     ),
-    t(
-      `The comma goes after the name, at the end of the greeting, not between *Dear* and the name.`,
-      "逗号放在名字后面、称呼的末尾，而不是放在 *Dear* 和名字之间。",
-    ),
-  ],
-}));
+    whyNot: [
+      t(
+        "A greeting is not a sentence, so it does not end with a period; it ends with a comma.",
+        "称呼不是句子，所以不以句号结尾，而以逗号结尾。",
+      ),
+      t(
+        `The comma goes after the name, at the end of the greeting, not between *Dear* and the name.`,
+        "逗号放在名字后面、称呼的末尾，而不是放在 *Dear* 和名字之间。",
+      ),
+    ],
+  }));
 
 const closingBank: readonly Ask[] = rows(`
   Your friend|Your Friend
@@ -407,6 +955,7 @@ const closingBank: readonly Ask[] = rows(`
   Your niece|Your Niece
   Your nephew|Your Nephew
   Take care|Take Care
+${moreClosings.join("\n")}
 `).map(([closing = "", capitals = ""]) => {
   const oneWord = !closing.includes(" ");
   return {
@@ -469,9 +1018,18 @@ const contractionRows = rows(`
   he will|he'll|hell|he'l
 `).map((row) => need(row, 4));
 
-const contractionBank = contractionRows.map(([words = "", short = "", w1 = "", w2 = ""]) => typed(words, short, [w1, w2, words]));
+const contractionBank = [
+  ...contractionRows.map(([words = "", short = "", w1 = "", w2 = ""]) => typed(words, short, [w1, w2, words])),
+  ...moreContractions
+    .filter(([words = ""]) => !contractionRows.some(([w]) => w === words))
+    .map(([words = "", short = "", w1 = "", w2 = ""]) => typed(words, short, [w1, w2, words])),
+  ...moreContractions.map(([words = "", short = "", w1 = "", w2 = "", sentence = ""]) =>
+    typed(`${sentence} (${words})`, short, [w1, w2, words]),
+  ),
+];
 
-const contractionOf = new Map(contractionRows.map(([words = "", short = ""]) => [short, words]));
+/** wordsOf finds the two words a contraction item shows, alone or in brackets after a sentence. */
+const wordsOf = (shown: string) => /\(([^)]+)\)$/.exec(shown)?.[1] ?? shown;
 
 // Contractions or possessives: which word fits the gap.
 
@@ -531,6 +1089,7 @@ const possessiveBank: readonly Ask[] = rows(`
   Is that ___ dog barking?|your|you're|youre
   Let me know if ___ hungry.|you're|your|youre
   ___ painting is this?|Whose|Who's|Whos
+${possessiveBuilt}
 `).map((row) => {
   const [shown = "", right = "", w1 = "", w2 = ""] = need(row, 4);
   const [en, zh] = meaningOfWord(right);
@@ -619,6 +1178,7 @@ const verbKindLines = `
   The merchant **sold** silk at the market.|action verb
   The old map **seemed** strange to us.|linking verb
   The students **read** the old poem aloud.|action verb
+${verbKindBuilt}
 `;
 
 const linked = kinded(
@@ -669,6 +1229,7 @@ const linkedBank: readonly Ask[] = rows(`
   My sister is a dancer in the parade.|dancer|sister|parade
   The jade carving looked shiny under the lamp.|shiny|carving|lamp
   The poem seemed sad to the class.|sad|poem|class
+${linkedBuilt}
 `).map((row) => linked(need(row, 4)));
 
 // The four kinds of sentences.
@@ -745,6 +1306,7 @@ const kindLines = `
   The flute is a woodwind instrument.|statement
   Hooray, the band is here!|exclamation
   Bring your recorder to class tomorrow.|command
+${kindBuilt}
 `;
 
 const asQuestion = t("Rewrite it as a question.", "把它改写成疑问句。");
@@ -804,6 +1366,12 @@ const rewriteBank = [
   toExclamation("This is a huge tuba.", "What a huge tuba", "this is"),
   toExclamation("That was a funny dance.", "What a funny dance", "that was"),
   toExclamation("That is a sweet tune.", "What a sweet tune", "that is"),
+  ...kindNouns.flatMap(([noun, adj, other, verb]) => [
+    toQuestion(`The ${noun} is ${adj}.`, `Is the ${noun} ${adj}?`),
+    toStatement(`Is the ${noun} ${other}?`, `The ${noun} is ${other}.`),
+    toCommand(`You should ${verb} the ${noun}.`, `${upper(verb)} the ${noun}.`),
+    toExclamation(`That is a ${adj} ${noun}.`, `What a ${adj} ${noun}`, "that is"),
+  ]),
 ];
 
 const rewriteWhy = (right: string): Text => {
@@ -878,6 +1446,7 @@ const endingSpellRows = rows(`
   I ordered a ___ glass of juice.|large|lardge|larch|ge|lar
   The leaves ___ color in the fall.|change|chandge|chanch|ge|chan
   I used a ___ to wash the dishes.|sponge|spondge|sponch|ge|spon
+${spellBuilt}
 `).map((row) => need(row, 6));
 
 const spellRule = (word: string, rule: string): readonly [string, string] => {
@@ -1095,10 +1664,10 @@ export const grammarTopics: readonly TopicDef[] = [
           "A **contraction** is two words squeezed into one. An apostrophe takes the place of the letters that are left out: *do not* → *don't* (the *o* of *not* is gone), *I am* → *I'm*, *they are* → *they're*, *we have* → *we've*.\n\nThe apostrophe goes exactly where the letters were, not between the two words: *don't*, not *do'nt*. Two contractions are special: *will not* → *won't* and *cannot* → *can't*.",
           "**缩约形式**是把两个词压缩成一个词。撇号代替被省略的字母：*do not* → *don't*（*not* 的 *o* 省略了），*I am* → *I'm*，*they are* → *they're*，*we have* → *we've*。\n\n撇号要放在字母被省略的地方，而不是两个词之间：写 *don't*，不写 *do'nt*。有两个特殊的：*will not* → *won't*，*cannot* → *can't*。",
         ),
-        typedGenerator("word-form", t("Type the contraction of these words.", "输入这些词的缩约形式。"), contractionBank, (right) =>
+        typedGenerator("word-form", t("Type the contraction of these words.", "输入这些词的缩约形式。"), contractionBank, (right, shown) =>
           t(
-            `*${contractionOf.get(right) ?? ""}* becomes **${right}**: the apostrophe stands where letters were left out.`,
-            `*${contractionOf.get(right) ?? ""}* 缩约成 **${right}**：撇号代替了被省略的字母。`,
+            `*${wordsOf(shown)}* becomes **${right}**: the apostrophe stands where letters were left out.`,
+            `*${wordsOf(shown)}* 缩约成 **${right}**：撇号代替了被省略的字母。`,
           ),
         ),
       ),

@@ -898,6 +898,107 @@ const thenThanMore: readonly ChoiceItem[] = [
   ["The music had a calming ___ on the baby.", "effect", ["affect", "effort"]],
 ];
 
+// Crossed items for the words that sound alike: people, things and frames multiply into a hundred items or more.
+
+/** groupOwners are plural subjects; groupActs leave a gap for the word that owns the thing. */
+const groupOwners = ["The twins", "My cousins", "The players", "Our neighbors", "The children", "The hikers"] as const;
+const groupActs = ["packed ___ bags", "washed ___ hands", "found ___ seats", "fed ___ dog", "cleaned ___ rooms"] as const;
+const groupStates = [
+  "ready for the trip",
+  "hungry after the game",
+  "late for the show",
+  "busy this weekend",
+  "excited about the fair",
+] as const;
+const lostThings = ["a cat", "a letter", "a puddle", "a key", "a spider", "a note"] as const;
+const lostPlaces = ["on the step", "under the mat", "by the sink", "in the box", "near the gate"] as const;
+const theirCross: readonly ChoiceItem[] = [
+  ...everyPair(groupOwners, groupActs).map(([who, act]): ChoiceItem => [`${who} ${act}.`, "their", ["there", "they're"]]),
+  ...everyPair(groupOwners, groupStates).map(([who, state]): ChoiceItem => [`${who} said ___ ${state}.`, "they're", ["their", "there"]]),
+  ...everyPair(lostThings, lostPlaces).flatMap(([thing, place]): ChoiceItem[] => [
+    [`___ is ${thing} ${place}.`, "There", ["Their", "They're"]],
+    [`Is ___ ${thing} ${place}?`, "there", ["their", "they're"]],
+  ]),
+];
+
+const yourThings = ["coat", "ticket", "lunch", "phone", "umbrella", "library card", "homework", "scarf"] as const;
+const yourFrames = ["Don't forget ___ {x}.", "Is this ___ {x}?", "Please put ___ {x} away.", "I found ___ {x} on the bus."] as const;
+const youreStates = ["ready", "late", "right", "tired", "welcome", "next", "lucky", "early"] as const;
+const youreFrames = ["I think ___ {x}.", "Tell me if ___ {x}.", "Mom says ___ {x}."] as const;
+const toPlaces = ["the park", "the store", "school", "the beach", "the library", "the station", "the zoo", "the market"] as const;
+const toFrames = ["We walked ___ {x}.", "Grandpa drove ___ {x}.", "The bus goes ___ {x}."] as const;
+const tooLimits: readonly (readonly [adjective: string, verb: string])[] = [
+  ["hot", "drink"],
+  ["cold", "swim"],
+  ["heavy", "lift"],
+  ["late", "go in"],
+  ["dark", "read"],
+  ["tired", "play"],
+  ["full", "eat more"],
+  ["far", "walk"],
+];
+const tooFoods = ["some soup", "a sandwich", "an apple", "more rice", "a glass of milk", "some cake", "a pear", "some tea"] as const;
+const twoThings = ["dogs", "sisters", "tickets", "apples", "pencils", "goals", "hours", "days"] as const;
+const fill = (frame: string, x: string) => frame.replace("{x}", x);
+const yourToCross: readonly ChoiceItem[] = [
+  ...everyPair(yourFrames, yourThings).map(([frame, x]): ChoiceItem => [fill(frame, x), "your", ["you're", "yore"]]),
+  ...everyPair(youreFrames, youreStates).map(([frame, x]): ChoiceItem => [fill(frame, x), "you're", ["your", "youre"]]),
+  ...everyPair(toFrames, toPlaces).map(([frame, x]): ChoiceItem => [fill(frame, x), "to", ["too", "two"]]),
+  ...tooLimits.map(([adjective, verb]): ChoiceItem => [`It is ___ ${adjective} to ${verb}.`, "too", ["to", "two"]]),
+  ...tooFoods.map((food): ChoiceItem => [`I would like ${food}, ___.`, "too", ["to", "two"]]),
+  ...twoThings.flatMap((x): ChoiceItem[] => [
+    [`We have ___ ${x}.`, "two", ["to", "too"]],
+    [`She found ___ ${x}.`, "two", ["to", "too"]],
+  ]),
+];
+
+/** comparisons are two things and the word that compares them. */
+const comparisons: readonly (readonly [a: string, compared: string, b: string])[] = [
+  ["an elephant", "heavier", "a horse"],
+  ["a mouse", "smaller", "a cat"],
+  ["the sun", "hotter", "the moon"],
+  ["a car", "faster", "a bike"],
+  ["summer", "warmer", "winter"],
+  ["a river", "longer", "a stream"],
+  ["a mountain", "taller", "a hill"],
+  ["a lake", "bigger", "a pond"],
+  ["a rock", "harder", "a sponge"],
+  ["an hour", "longer", "a minute"],
+  ["a lemon", "sourer", "an orange"],
+  ["a whale", "larger", "a shark"],
+];
+/** steps are two things done one after the other. */
+const steps: readonly (readonly [first: string, second: string])[] = [
+  ["finish your homework", "go outside"],
+  ["wash the apples", "cut them"],
+  ["read the question", "write your answer"],
+  ["put on your socks", "put on your shoes"],
+  ["boil the water", "add the pasta"],
+  ["look both ways", "cross the street"],
+  ["warm up", "start the race"],
+  ["pack your bag", "check the tickets"],
+  ["water the seeds", "cover the pots"],
+  ["sweep the floor", "mop it"],
+  ["knock on the door", "wait"],
+  ["plan the story", "write the first page"],
+];
+const causes = ["Noise", "The weather", "Lack of sleep", "Food", "Music", "Exercise"] as const;
+const touched = ["your mood", "your grades", "your health", "how you feel", "your focus"] as const;
+const thenThanCross: readonly ChoiceItem[] = [
+  ...comparisons.flatMap(([a, compared, b]): ChoiceItem[] => [
+    [`${a[0]!.toUpperCase()}${a.slice(1)} is ${compared} ___ ${b}.`, "than", ["then", "that"]],
+    [`Is ${a} ${compared} ___ ${b}?`, "than", ["then", "that"]],
+  ]),
+  ...steps.flatMap(([first, second]): ChoiceItem[] => [
+    [`First ${first}, and ___ ${second}.`, "then", ["than", "that"]],
+    [`We will ${first}, and ___ we will ${second}.`, "then", ["than", "that"]],
+  ]),
+  ...everyPair(causes, touched).flatMap(([cause, what]): ChoiceItem[] => [
+    [`${cause} can ___ ${what}.`, "affect", ["effect", "afford"]],
+    [`${cause} has a big ___ on ${what}.`, "effect", ["affect", "effort"]],
+  ]),
+];
+
 /** shiftScenes are two actions at one time: lead words, the first verb in past and present, its rest, the second verb in past and present, its rest, and whether the time is past. */
 const handShiftScenes: readonly (readonly [
   lead: string,
@@ -1146,7 +1247,7 @@ export const usageTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which word completes the sentence?", "哪个词能补全句子？"),
-          [...theirBank, ...theirMore],
+          [...theirBank, ...theirMore, ...theirCross],
           (right, shown) =>
             t(
               `${shown.replace("___", `**${right}**`)} ${right.toLowerCase() === "their" ? "It shows ownership." : right.toLowerCase() === "there" ? "It names a place or begins the sentence." : "It means *they are*."}`,
@@ -1164,7 +1265,7 @@ export const usageTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which word completes the sentence?", "哪个词能补全句子？"),
-          [...yourToBank, ...yourToMore],
+          [...yourToBank, ...yourToMore, ...yourToCross],
           (right, shown) =>
             t(
               `${shown.replace("___", `**${right}**`)} ${{ your: "It shows ownership.", "you're": "It means *you are*.", two: "It is the number 2.", too: "It means *also* or *more than enough*.", to: "It is neither the number nor *also*." }[right.toLowerCase()] ?? ""}`,
@@ -1182,7 +1283,7 @@ export const usageTopics: readonly TopicDef[] = [
         ),
         choiceGenerator(
           t("Which word completes the sentence?", "哪个词能补全句子？"),
-          [...thenThanBank, ...thenThanMore],
+          [...thenThanBank, ...thenThanMore, ...thenThanCross],
           (right, shown) =>
             t(
               `${shown.replace("___", `**${right}**`)} ${thenThanWhy.get(right)?.en ?? ""}`,

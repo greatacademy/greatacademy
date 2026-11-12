@@ -56,6 +56,72 @@ const plurals: readonly (readonly [one: string, many: string, ...wrong: string[]
   ["life", "lives", "lifes", "lifs"],
   ["watch", "watches", "watchs", "watchies"],
   ["pony", "ponies", "ponys", "ponyes"],
+  ["dress", "dresses", "dresss", "dressies"],
+  ["beach", "beaches", "beachs", "beachies"],
+  ["inch", "inches", "inchs", "inchies"],
+  ["kiss", "kisses", "kisss", "kissies"],
+  ["match", "matches", "matchs", "matchies"],
+  ["branch", "branches", "branchs", "branchies"],
+  ["ax", "axes", "axs", "axies"],
+  ["bush", "bushes", "bushs", "bushies"],
+  ["crash", "crashes", "crashs", "crashies"],
+  ["guess", "guesses", "guesss", "guessies"],
+  ["coach", "coaches", "coachs", "coachies"],
+  ["sandwich", "sandwiches", "sandwichs", "sandwichies"],
+  ["address", "addresses", "addresss", "addressies"],
+  ["waltz", "waltzes", "waltzs", "waltzies"],
+  ["torch", "torches", "torchs", "torchies"],
+  ["flash", "flashes", "flashs", "flashies"],
+  ["boss", "bosses", "bosss", "bossies"],
+  ["ditch", "ditches", "ditchs", "ditchies"],
+  ["lady", "ladies", "ladys", "ladyes"],
+  ["cherry", "cherries", "cherrys", "cherryes"],
+  ["penny", "pennies", "pennys", "pennyes"],
+  ["bunny", "bunnies", "bunnys", "bunnyes"],
+  ["country", "countries", "countrys", "countryes"],
+  ["candy", "candies", "candys", "candyes"],
+  ["lily", "lilies", "lilys", "lilyes"],
+  ["army", "armies", "armys", "armyes"],
+  ["diary", "diaries", "diarys", "diaryes"],
+  ["hobby", "hobbies", "hobbys", "hobbyes"],
+  ["library", "libraries", "librarys", "libraryes"],
+  ["body", "bodies", "bodys", "bodyes"],
+  ["spy", "spies", "spys", "spyes"],
+  ["daisy", "daisies", "daisys", "daisyes"],
+  ["enemy", "enemies", "enemys", "enemyes"],
+  ["donkey", "donkeys", "donkies", "donkeyes"],
+  ["turkey", "turkeys", "turkies", "turkeyes"],
+  ["valley", "valleys", "vallies", "valleyes"],
+  ["chimney", "chimneys", "chimnies", "chimneyes"],
+  ["tray", "trays", "traies", "trayes"],
+  ["ray", "rays", "raies", "rayes"],
+  ["play", "plays", "plaies", "playes"],
+  ["journey", "journeys", "journies", "journeyes"],
+  ["jockey", "jockeys", "jockies", "jockeyes"],
+  ["highway", "highways", "highwaies", "highwayes"],
+  ["thief", "thieves", "thiefs", "thiefes"],
+  ["elf", "elves", "elfs", "elfes"],
+  ["scarf", "scarves", "scarfs", "scarfes"],
+  ["sheaf", "sheaves", "sheafs", "sheafes"],
+  ["self", "selves", "selfs", "selfes"],
+  ["hat", "hats", "hates", "hatz"],
+  ["frog", "frogs", "froges", "frogz"],
+  ["desk", "desks", "deskes", "deskies"],
+  ["chair", "chairs", "chaires", "chairies"],
+  ["apple", "apples", "applees", "applies"],
+  ["river", "rivers", "riveres", "riveries"],
+  ["planet", "planets", "planetes", "planeties"],
+  ["window", "windows", "windowes", "windowies"],
+  ["garden", "gardens", "gardenes", "gardenies"],
+  ["pencil", "pencils", "penciles", "pencilies"],
+  ["rabbit", "rabbits", "rabbites", "rabbities"],
+  ["bridge", "bridges", "bridgees", "bridgies"],
+  ["tiger", "tigers", "tigeres", "tigeries"],
+  ["mountain", "mountains", "mountaines", "mountainies"],
+  ["blanket", "blankets", "blanketes", "blanketies"],
+  ["bottle", "bottles", "bottlees", "bottlies"],
+  ["cloud", "clouds", "cloudes", "cloudies"],
+  ["wax", "waxes", "waxs", "waxies"],
 ];
 
 /** pluralSpellingBank asks for the plural of a regular or f-to-v noun. */
@@ -129,10 +195,21 @@ const irregulars: readonly (readonly [plural: string, wrong: readonly [string, s
   ],
 ];
 
+/** countingFrames count several of anything, so any irregular plural fits them. */
+const countingFrames = [
+  "I drew four ___ in my notebook.",
+  "The picture book shows many ___.",
+  "We read a story about two ___.",
+  "There were six ___ in the photo.",
+  "Can you count the ___ in this picture?",
+  "The poem names ten ___.",
+] as const;
+
 /** irregularPluralBank asks for an irregular plural in a sentence. */
-export const irregularPluralBank: readonly ChoiceItem[] = [0, 1, 2].flatMap((r) =>
-  irregulars.map(([plural, wrong, sentences]): ChoiceItem => [pick(sentences, r), plural, wrong]),
-);
+export const irregularPluralBank: readonly ChoiceItem[] = [
+  ...[0, 1, 2].flatMap((r) => irregulars.map(([plural, wrong, sentences]): ChoiceItem => [pick(sentences, r), plural, wrong])),
+  ...countingFrames.flatMap((frame) => irregulars.map(([plural, wrong]): ChoiceItem => [frame, plural, wrong])),
+];
 
 // The order of adjectives.
 
@@ -151,8 +228,8 @@ const things: readonly (readonly [noun: string, frame: string])[] = [
 ];
 
 /** adjectiveOrderBank asks for opinion, size and color in order before a noun. */
-export const adjectiveOrderBank: readonly ChoiceItem[] = range(40).map((i): ChoiceItem => {
-  const [o, s, c] = [pick(opinions, i), pick(sizes, Math.floor(i / 5)), pick(colors, i)];
+export const adjectiveOrderBank: readonly ChoiceItem[] = range(120).map((i): ChoiceItem => {
+  const [o, s, c] = [pick(opinions, i), pick(sizes, Math.floor(i / 5)), pick(colors, Math.floor(i / 20))];
   const [noun, frame] = pick(things, i);
   const say = (np: string) => frame.replace("{}", np);
   return [
@@ -187,21 +264,21 @@ const np = (words: string, noun: string) => (noun.endsWith("s") ? words : `${art
 
 /** nearNounBank asks for color, origin, material and purpose in order next to a noun. */
 export const nearNounBank: readonly ChoiceItem[] = [
-  ...range(18).map((i): ChoiceItem => {
+  ...range(54).map((i): ChoiceItem => {
     const [noun, materials, frame] = pick(materialThings, i);
-    const [c, m] = [pick(colors, i + Math.floor(i / 6)), pick(materials, Math.floor(i / 6))];
+    const [c, m] = [pick(colors, Math.floor(i / 6) + Math.floor(i / 18)), pick(materials, Math.floor(i / 18))];
     const say = (words: string) => frame.replace("{}", np(words, noun));
     return [which, say(`${c} ${m} ${noun}`), [say(`${m} ${c} ${noun}`), say(`${noun} ${c} ${m}`)]];
   }),
-  ...range(12).map((i): ChoiceItem => {
+  ...range(36).map((i): ChoiceItem => {
     const [noun, materials, frame] = pick(materialThings, i);
-    const [o, m] = [pick(origins, i + Math.floor(i / 6)), pick(materials, i + 1)];
+    const [o, m] = [pick(origins, Math.floor(i / 6)), pick(materials, i + Math.floor(i / 6))];
     const say = (words: string) => frame.replace("{}", np(words, noun));
     return [which, say(`${o} ${m} ${noun}`), [say(`${m} ${o} ${noun}`), say(`${noun} ${o} ${m}`)]];
   }),
-  ...range(12).map((i): ChoiceItem => {
+  ...range(36).map((i): ChoiceItem => {
     const [p, noun, frame] = pick(purposeThings, i);
-    const c = pick(colors, i + Math.floor(i / 8) * 3);
+    const c = pick(colors, Math.floor(i / 8) + i);
     const say = (words: string) => frame.replace("{}", np(words, noun));
     return [which, say(`${c} ${p} ${noun}`), [say(`${p} ${c} ${noun}`), say(`${noun} ${c} ${p}`)]];
   }),
@@ -229,10 +306,10 @@ const doings: readonly (readonly [ing: string, rest: string])[] = [
 ];
 
 /** progressiveFormBank asks for the progressive form that fits the subject and the time. */
-export const progressiveFormBank: readonly ChoiceItem[] = range(48).map((i): ChoiceItem => {
+export const progressiveFormBank: readonly ChoiceItem[] = range(144).map((i): ChoiceItem => {
   const time = i % 3;
   const [subject, now, past, wrongNow, wrongPast] = pick(people, Math.floor(i / 3));
-  const [ing, rest] = pick(doings, i + Math.floor(i / 24));
+  const [ing, rest] = pick(doings, Math.floor(i / 24));
   const opening = ["Right now", "At noon yesterday", "This time tomorrow"][time];
   const shown = `${opening}, ${subject} ___ ${rest}.`;
   if (time === 0) return [shown, `${now} ${ing}`, [`${wrongNow} ${ing}`, ing]];
@@ -261,6 +338,30 @@ const activities: readonly (readonly [
   ["Omar", "writing", "writes", "wrote", "in his diary", "before bed", "his pen ran out of ink"],
   ["Aunt Rosa", "cooking", "cooks", "cooked", "dinner", "every day", "the power went out"],
   ["Kim", "swimming", "swims", "swam", "laps", "every Saturday", "the whistle blew"],
+  ["Nina", "feeding", "feeds", "fed", "the ducks", "every Sunday", "a dog ran up"],
+  ["Uncle Ray", "fixing", "fixes", "fixed", "the car", "every month", "his tool broke"],
+  ["Carlos", "playing", "plays", "played", "tag", "after lunch", "the bell rang"],
+  ["Mom", "reading", "reads", "read", "the news", "every morning", "the kettle whistled"],
+  ["Leo", "building", "builds", "built", "a tower", "on rainy days", "the cat knocked it over"],
+  ["Ana", "drawing", "draws", "drew", "a horse", "after school", "her pencil broke"],
+  ["The farmer", "milking", "milks", "milked", "the cows", "every dawn", "the barn door slammed"],
+  ["Jake", "washing", "washes", "washed", "the dishes", "after dinner", "a plate slipped"],
+  ["Grandpa", "telling", "tells", "told", "a story", "every bedtime", "we fell asleep"],
+  ["The team", "training", "trains", "trained", "on the field", "every Tuesday", "the lights went off"],
+  ["Mia", "singing", "sings", "sang", "in the choir", "every Friday", "she lost her voice"],
+  ["The dog", "digging", "digs", "dug", "in the yard", "every afternoon", "it found a bone"],
+  ["Dr. Patel", "checking", "checks", "checked", "the patients", "every morning", "an alarm sounded"],
+  ["Tom", "sweeping", "sweeps", "swept", "the porch", "every Saturday", "the broom snapped"],
+  ["The baker", "making", "makes", "made", "rolls", "before sunrise", "the oven stopped"],
+  ["Lucy", "studying", "studies", "studied", "for her test", "every evening", "her friend called"],
+  ["The pilot", "flying", "flies", "flew", "over the hills", "every week", "the clouds rolled in"],
+  ["Ms. Lopez", "grading", "grades", "graded", "papers", "on Sundays", "her pen ran dry"],
+  ["Pedro", "fishing", "fishes", "fished", "at the lake", "every summer", "the boat tipped"],
+  ["Eva", "knitting", "knits", "knitted", "a scarf", "in the evenings", "the yarn tangled"],
+  ["The bird", "building", "builds", "built", "a nest", "each spring", "the branch shook"],
+  ["Max", "jogging", "jogs", "jogged", "around the lake", "every morning", "he twisted his ankle"],
+  ["Aunt Lily", "planting", "plants", "planted", "tulips", "every fall", "the hose burst"],
+  ["Rosa", "climbing", "climbs", "climbed", "the rope", "in gym class", "the coach blew the whistle"],
 ];
 
 /** progressiveMeaningBank asks which tense shows an action in progress, a habit, or an action that was interrupted. */
@@ -296,6 +397,20 @@ const modalSentences: readonly (readonly [
       "Everyone ___ leave the building when the fire alarm rings.",
       "Library books ___ be returned within two weeks.",
       "Swimmers ___ shower before they enter the pool.",
+      "Students ___ wear their name tags on the trip.",
+      "Cyclists ___ stop at the crossing.",
+      "You ___ show your ticket at the gate.",
+      "Every player ___ shake hands after the match.",
+      "Visitors ___ stay behind the yellow line.",
+      "Dogs ___ be on a leash in the park.",
+      "Passengers ___ wear seat belts on the plane.",
+      "All bikes ___ be locked to the rack.",
+      "Runners ___ stay in their own lanes.",
+      "Pupils ___ raise a hand before they speak in class.",
+      "Guests ___ check out of the hotel by noon.",
+      "Workers ___ wear hard hats on the building site.",
+      "Campers ___ put out the fire before they sleep.",
+      "Riders ___ be taller than this sign.",
     ],
   ],
   [
@@ -309,6 +424,20 @@ const modalSentences: readonly (readonly [
       "Grandpa ___ speak three languages.",
       "A camel ___ go for days without drinking water.",
       "My sister ___ play the violin.",
+      "Bats ___ fly in the dark.",
+      "My aunt ___ bake bread without a recipe.",
+      "Penguins ___ swim but not fly.",
+      "Our parrot ___ say ten words.",
+      "Frogs ___ jump many times their length.",
+      "The baby ___ walk now.",
+      "Ravi ___ count to a hundred in French.",
+      "Dolphins ___ hear very high sounds.",
+      "My dad ___ fix almost any bike.",
+      "Some lizards ___ grow a new tail.",
+      "Mia ___ type very fast.",
+      "Kangaroos ___ jump over a fence.",
+      "Our robot ___ pick up small blocks.",
+      "Lena ___ juggle three balls.",
     ],
   ],
   [
@@ -322,6 +451,20 @@ const modalSentences: readonly (readonly [
       "I am not sure, but the store ___ be closed today.",
       "Ask Dad; he ___ know the answer.",
       "The game ___ end early if the storm comes.",
+      "The ice ___ melt by noon.",
+      "Grandma ___ visit us next week, but she is not sure.",
+      "The puppy ___ be hungry; let us check.",
+      "My kite ___ get stuck in that tree.",
+      "The show ___ sell out before we arrive.",
+      "We ___ see a rainbow after the rain.",
+      "The bridge ___ close if the river rises.",
+      "Ben ___ come to the party if he feels better.",
+      "The test ___ be easier than we think.",
+      "That cloud ___ bring snow.",
+      "The cat ___ be hiding under the bed.",
+      "My shoes ___ be too small now.",
+      "The train ___ arrive a little late.",
+      "The team ___ win if they keep playing well.",
     ],
   ],
   [
@@ -335,6 +478,20 @@ const modalSentences: readonly (readonly [
       "You ___ say thank you when someone helps you.",
       "If you have a cough, you ___ see a doctor.",
       "You ___ read the directions before you start.",
+      "You ___ drink water when it is hot.",
+      "We ___ turn off the lights when we leave.",
+      "You ___ wash your hands before you eat.",
+      "You ___ ask for help if you are stuck.",
+      "He ___ apologize to his sister.",
+      "You ___ put on sunscreen at the beach.",
+      "We ___ check the map before the hike.",
+      "You ___ eat more fruit and vegetables.",
+      "You ___ save some money for the trip.",
+      "She ___ practice every day before the concert.",
+      "You ___ tie your laces before you run.",
+      "We ___ pack the night before.",
+      "You ___ write the date at the top of the page.",
+      "You ___ return the book on time.",
     ],
   ],
   [
@@ -348,12 +505,26 @@ const modalSentences: readonly (readonly [
       "___ I open the window? It is hot in here.",
       "___ we sit at this table?",
       "___ I use your phone to call my mom?",
+      "___ I sit next to you?",
+      "___ we bring our dog inside?",
+      "___ I take a cookie?",
+      "___ I ask a question?",
+      "___ we leave early today?",
+      "___ I turn on the fan?",
+      "___ I join your game?",
+      "___ we start the test now?",
+      "___ I close the door?",
+      "___ I borrow your eraser?",
+      "___ we feed the ducks?",
+      "___ I sharpen my pencil?",
+      "___ I try on these shoes?",
+      "___ we play in the garden?",
     ],
   ],
 ];
 
 /** modalMeaningBank asks for the modal verb with a meaning. */
-export const modalMeaningBank: readonly ChoiceItem[] = range(6).flatMap((r) =>
+export const modalMeaningBank: readonly ChoiceItem[] = range(20).flatMap((r) =>
   modalSentences.map(([modal, wrong, question, sentences]): ChoiceItem => [`${question} *${pick(sentences, r)}*`, modal, wrong]),
 );
 
@@ -368,9 +539,9 @@ const modalVerbs: readonly (readonly [plain: string, s: string, rest: string])[]
 const modals = ["can", "must", "might", "should", "may"];
 
 /** modalFormBank asks for a modal followed by the plain verb. */
-export const modalFormBank: readonly ChoiceItem[] = range(40).map((i): ChoiceItem => {
+export const modalFormBank: readonly ChoiceItem[] = range(120).map((i): ChoiceItem => {
   const subject = pick(modalSubjects, i);
-  const modal = pick(modals, i + Math.floor(i / 8));
+  const modal = pick(modals, Math.floor(i / 8) + Math.floor(i / 40));
   const [plain, s, rest] = pick(modalVerbs, Math.floor(i / 8));
   return [
     which,
@@ -414,15 +585,61 @@ const participles: readonly (readonly [plain: string, past: string, participle: 
   ["bite", "bit", "bitten", "bited", "A mosquito has ___ me on the arm."],
   ["freeze", "froze", "frozen", "freezed", "The pond had ___ solid by morning."],
   ["wake", "woke", "woken", "waked", "The baby has ___ up from her nap."],
+  ["do", "did", "done", "doed", "Have you ___ your homework yet?"],
+  ["rise", "rose", "risen", "rised", "The sun had ___ before we woke up."],
+  ["sink", "sank", "sunk", "sinked", "The old boat has ___ to the bottom of the lake."],
+  ["shrink", "shrank", "shrunk", "shrinked", "My wool sweater has ___ in the wash."],
 ];
 
+/** moreParticipleSentences are two more sentences for each verb in a perfect tense. */
+const moreParticipleSentences: Readonly<Record<string, readonly string[]>> = {
+  eat: ["The goats have ___ all the grass.", "Had you ___ breakfast before the trip?"],
+  write: ["He had ___ his name on every page.", "Have you ___ to your pen pal yet?"],
+  go: ["Dad has ___ to the store for milk.", "The snow had ___ by April."],
+  see: ["Has anyone ___ my blue cap?", "We had ___ the movie twice before."],
+  take: ["Someone has ___ my seat.", "The nurse had ___ my temperature."],
+  break: ["The vase had ___ into three pieces.", "I have ___ my pencil again."],
+  fly: ["The kite has ___ higher than the roof.", "Have you ever ___ in a plane?"],
+  give: ["The coach had ___ us a short break.", "Who has ___ the cat its dinner?"],
+  swim: ["I have ___ in this lake every summer.", "The ducks had ___ to the far shore."],
+  ride: ["She has ___ her bike to school all year.", "We had never ___ a train before."],
+  choose: ["Have you ___ a book to read?", "They had ___ blue for the walls."],
+  drive: ["Grandpa had ___ all night to reach us.", "The bus has ___ past our stop."],
+  speak: ["Have you ___ to the coach yet?", "She had never ___ in front of a crowd."],
+  fall: ["Leaves have ___ all over the path.", "The baby had ___ asleep in the car."],
+  grow: ["The tomatoes have ___ very tall.", "My hair had ___ long by summer."],
+  know: ["We had ___ about the plan for weeks.", "Have you ___ him for long?"],
+  throw: ["The pitcher has ___ ten strikes today.", "Who has ___ paper on the floor?"],
+  begin: ["Has the game ___ yet?", "School had ___ by the time we moved."],
+  sing: ["Have you ever ___ on a stage?", "The birds had ___ since dawn."],
+  drink: ["The plants have ___ all the rain.", "I had ___ too much juice."],
+  ring: ["Has the phone ___ today?", "The church bells had ___ at noon."],
+  wear: ["The steps have ___ smooth over the years.", "She had ___ that dress only once."],
+  tear: ["I have ___ my jeans on the fence.", "The dog had ___ the newspaper to bits."],
+  steal: ["Someone has ___ the last cookie!", "The fox had ___ two eggs from the farm."],
+  forget: ["Have you ___ my birthday?", "He had ___ the words of the song."],
+  hide: ["Where have you ___ the present?", "The moon had ___ behind a cloud."],
+  shake: ["The news has ___ the whole town.", "He had ___ the bottle before he opened it."],
+  blow: ["The wind had ___ my hat into the pond.", "Have you ___ out the candles yet?"],
+  draw: ["Have you ever ___ a dragon?", "The artist had ___ the whole street."],
+  bite: ["The cat has never ___ anyone.", "A fish had ___ the hook."],
+  freeze: ["The water pipes have ___ again.", "The lake had ___ before the holidays."],
+  wake: ["Have the twins ___ up yet?", "The noise had ___ the whole house."],
+  do: ["We had ___ the dishes before Mom got home.", "She has ___ her best on every test."],
+  rise: ["The bread has ___ in the warm kitchen.", "Prices have ___ since last year."],
+  sink: ["The stone had ___ before I could grab it.", "The sun has ___ behind the hills."],
+  shrink: ["The puddle has ___ in the sun.", "My shirt had ___ two sizes."],
+};
+
 /** participleBank asks for the past participle of a verb in a perfect tense. */
-export const participleBank: readonly TypedItem[] = participles.map(([plain, past, participle, regular, sentence]) => ({
-  shown: `${plain}: ${sentence}`,
-  accepted: [participle],
-  canonical: participle,
-  wrong: [past, regular],
-}));
+export const participleBank: readonly TypedItem[] = participles.flatMap(([plain, past, participle, regular, sentence]) =>
+  [sentence, ...(moreParticipleSentences[plain] ?? [])].map((s) => ({
+    shown: `${plain}: ${s}`,
+    accepted: [participle],
+    canonical: participle,
+    wrong: [past, regular],
+  })),
+);
 
 const beforeScenes: readonly (readonly [later: string, earlier: string, had: string, did: string, has: string])[] = [
   ["When we reached the station", "the train", "had left", "left", "has left"],
@@ -440,6 +657,26 @@ const beforeScenes: readonly (readonly [later: string, earlier: string, had: str
   ["When the bell rang", "I", "had finished the test", "finished the test", "have finished the test"],
   ["By the time the doctor came", "the fever", "had gone down", "went down", "has gone down"],
   ["When we found the dog", "it", "had run three miles", "ran three miles", "has run three miles"],
+  ["When Grandma called", "we", "had left for the beach", "left for the beach", "have left for the beach"],
+  ["By the time the bus came", "the rain", "had stopped", "stopped", "has stopped"],
+  ["When I reached the shop", "it", "had closed", "closed", "has closed"],
+  ["Before the race started", "Leo", "had tied his laces twice", "tied his laces twice", "has tied his laces twice"],
+  ["When the guests arrived", "Mom", "had set the table", "set the table", "has set the table"],
+  ["By the time we got there", "the ice cream", "had melted", "melted", "has melted"],
+  ["When the lights came on", "the cat", "had hidden under the bed", "hid under the bed", "has hidden under the bed"],
+  ["Before the test began", "Nina", "had read every chapter", "read every chapter", "has read every chapter"],
+  ["When Dad checked the oven", "the bread", "had burned", "burned", "has burned"],
+  ["By the time the sun rose", "the farmers", "had milked the cows", "milked the cows", "have milked the cows"],
+  ["When we returned from the trip", "the plants", "had died", "died", "have died"],
+  ["Before the movie ended", "the baby", "had fallen asleep", "fell asleep", "has fallen asleep"],
+  ["When the coach arrived", "the players", "had warmed up", "warmed up", "have warmed up"],
+  ["By the time I found my ticket", "the train", "had gone", "went", "has gone"],
+  ["When the snow melted", "the crocuses", "had already bloomed", "already bloomed", "have already bloomed"],
+  ["Before Sam moved away", "he", "had lived here for ten years", "lived here for ten years", "has lived here for ten years"],
+  ["When the alarm rang", "I", "had already woken up", "already woke up", "have already woken up"],
+  ["By the time the pizza came", "we", "had finished the game", "finished the game", "have finished the game"],
+  ["When the teacher looked up", "the class", "had stopped talking", "stopped talking", "has stopped talking"],
+  ["Before the storm passed", "the river", "had flooded the road", "flooded the road", "has flooded the road"],
 ];
 
 const sinceScenes: readonly (readonly [subject: string, has: string, did: string, had: string])[] = [
@@ -463,13 +700,45 @@ const sinceScenes: readonly (readonly [subject: string, has: string, did: string
   ["The twins", "have shared a room all their lives", "shared a room when they were small", "had shared a room before they moved"],
   ["This bridge", "has carried cars since 1950", "carried cars in 1950", "had carried cars before 1950"],
   ["Leo", "has collected stamps since he was seven", "collected stamps when he was seven", "had collected stamps before he was seven"],
+  ["My aunt", "has lived in Spain since 2015", "lived in Spain in 2015", "had lived in Spain before 2015"],
+  ["The museum", "has stayed open late all summer", "stayed open late last summer", "had stayed open late before that summer"],
+  ["Our class", "has kept a fish tank since October", "kept a fish tank in October", "had kept a fish tank before October"],
+  ["Mia", "has played soccer for three years", "played soccer three years ago", "had played soccer for three years by then"],
+  ["The shop", "has sold bikes since it opened", "sold bikes when it opened", "had sold bikes before it closed"],
+  [
+    "Grandpa",
+    "has walked every morning since he retired",
+    "walked every morning after he retired",
+    "had walked every morning before he retired",
+  ],
+  ["The river", "has risen all week", "rose last week", "had risen all that week"],
+  ["Our team", "has won every game this season", "won every game last season", "had won every game that season"],
+  ["I", "have worn glasses since I was five", "wore glasses when I was five", "had worn glasses before I was five"],
+  ["The library", "has lent books for a hundred years", "lent books a hundred years ago", "had lent books for a hundred years by then"],
+  ["Ben", "has wanted a puppy for months", "wanted a puppy last month", "had wanted a puppy for months before that"],
+  ["My parents", "have owned this car since 2019", "owned this car in 2019", "had owned this car before 2019"],
+  ["The baby", "has slept since lunch", "slept after lunch yesterday", "had slept before lunch"],
+  ["Ms. Park", "has coached the team since spring", "coached the team last spring", "had coached the team before spring"],
+  ["We", "have waited for the bus for an hour", "waited for the bus an hour ago", "had waited for the bus for an hour by then"],
+  ["The bakery", "has made this cake since 1980", "made this cake in 1980", "had made this cake before 1980"],
+  ["My cousin", "has studied piano since she was four", "studied piano when she was four", "had studied piano before she was four"],
+  ["This road", "has been closed since Monday", "was closed on Monday", "had been closed before Monday"],
+  ["The cat", "has sat by the window all day", "sat by the window yesterday", "had sat by the window before dinner"],
+  ["Our town", "has held a fair every June since 1990", "held a fair in June 1990", "had held a fair every June before 1990"],
 ];
 
 /** perfectMeaningBank asks for the perfect tense that shows an order of times. */
-export const perfectMeaningBank: readonly ChoiceItem[] = range(15).flatMap((i): ChoiceItem[] => {
+export const perfectMeaningBank: readonly ChoiceItem[] = range(35).flatMap((i): ChoiceItem[] => {
   const [later, subject, had, did, has] = pick(beforeScenes, i);
   const [who, hasSince, didOnce, hadBefore] = pick(sinceScenes, i);
+  const when = later.charAt(0).toLowerCase() + later.slice(1);
+  const lead = capital(subject);
   return [
+    [
+      "Which sentence shows an action that was already complete when another past action happened?",
+      `${lead} ${had} ${when}.`,
+      [`${lead} ${did} ${when}.`, `${lead} ${has} ${when}.`],
+    ],
     [
       "Which sentence shows an action that was already complete when another past action happened?",
       `${later}, ${subject} ${had}.`,
@@ -496,6 +765,26 @@ const pairs: readonly (readonly [string, string])[] = [
   ["books", "games"],
   ["soup", "bread"],
   ["pencils", "erasers"],
+  ["a kite", "a ball"],
+  ["rice", "beans"],
+  ["paint", "brushes"],
+  ["milk", "cookies"],
+  ["a scarf", "gloves"],
+  ["stickers", "markers"],
+  ["a tent", "a sleeping bag"],
+  ["carrots", "peas"],
+  ["a pen", "a notebook"],
+  ["grapes", "plums"],
+  ["a jacket", "boots"],
+  ["popcorn", "lemonade"],
+  ["a ruler", "glue"],
+  ["shells", "stones"],
+  ["a whistle", "a compass"],
+  ["eggs", "toast"],
+  ["a camera", "a snack"],
+  ["tea", "honey"],
+  ["a blanket", "a pillow"],
+  ["string", "tape"],
 ];
 
 /** pairBank asks for the half of a paired conjunction that matches the other. */
@@ -519,14 +808,14 @@ const actions: readonly (readonly [s: string, plain: string, rest: string])[] = 
 ];
 
 /** pairAgreementBank asks for the verb that agrees with subjects joined by a paired conjunction. */
-export const pairAgreementBank: readonly ChoiceItem[] = range(45).map((i): ChoiceItem => {
+export const pairAgreementBank: readonly ChoiceItem[] = range(120).map((i): ChoiceItem => {
   const kind = i % 3;
   const [one, many, other] = [
     pick(singular, Math.floor(i / 3)),
-    pick(plural, i + Math.floor(i / 15)),
-    pick(singular, Math.floor(i / 3) + 2),
+    pick(plural, Math.floor(i / 15)),
+    pick(singular, Math.floor(i / 3) + 1 + (Math.floor(i / 15) % 4)),
   ];
-  const [s, plain, rest] = pick(actions, i + Math.floor(i / 9));
+  const [s, plain, rest] = pick(actions, Math.floor(i / 3) + Math.floor(i / 75));
   if (kind === 0)
     return [
       which,
