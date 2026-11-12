@@ -118,9 +118,10 @@ const units: readonly UnitDef[] = [
   ),
 ];
 
-/** course912 is the native course of grades 9 to 12. */
+/** course912 is the native course of grades 9 to 12, retired now that the courses of grades 9, 10, 11 and 12 hold all its topics. */
 export const course912: CourseDef = {
   id: "english-grades-9-12",
+  retired: true,
   title: t("English, Grades 9 to 12", "英语：九至十二年级"),
   description: t(
     "English for readers and writers of high school, in eight themed units from the writer's craft to essays of experience. Each unit teaches the words of its theme, control of the sentence, reading skills for literature, drama, poetry, speeches and historical and scientific writing, and a kind of essay together, and gives a set of passages to read on the theme. The essays written in the course are judged by a model.",

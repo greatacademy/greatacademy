@@ -127,7 +127,7 @@ export const courseCollege: CourseDef = {
   ),
   group: t("English", "英语"),
   explanationLocale: "en",
-  buildsOn: ["english-grades-9-12"],
+  buildsOn: ["english-grade-12"],
   units,
   reading: units.flatMap((u) => u.reading ?? []),
   conversations: units.flatMap((u) => (u.conversation === undefined ? [] : [u.conversation])),

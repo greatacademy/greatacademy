@@ -4,7 +4,7 @@
 
 - **Course:** `english-college-writing`
 - **Level:** First year of university, and adults who write for study or work
-- **Prerequisite(s):** [English, Grades 9 to 12](english-grades-9-12.md) (`buildsOn: ["english-grades-9-12"]`)
+- **Prerequisite(s):** [English, Grade 12](english-grade-12.md) (`buildsOn: ["english-grade-12"]`)
 - **Language of explanation:** English
 - **Size:** 8 units · 38 topics, all new (8 of vocabulary, 9 of grammar, style and mechanics, 8 of reading, 13 of writing judged by a model) · 8 reading units of 8 passages each · 8 conversations
 

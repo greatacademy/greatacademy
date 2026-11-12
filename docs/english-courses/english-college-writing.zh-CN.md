@@ -4,7 +4,7 @@
 
 - **课程：** `english-college-writing`
 - **阶段：** 大学一年级，以及为学习或工作而写作的成年人
-- **先修：** [英语：九至十二年级](english-grades-9-12.zh-CN.md)（`buildsOn: ["english-grades-9-12"]`）
+- **先修：** [英语：十二年级](english-grade-12.zh-CN.md)（`buildsOn: ["english-grade-12"]`）
 - **讲解语言：** 英语
 - **规模：** 8 个单元 · 38 个知识点，全部新增（词汇 8 个，语法、文体与书写规范 9 个，阅读 8 个，由模型评判的写作 13 个）· 8 个阅读单元，每个 8 篇 · 8 个对话
 
