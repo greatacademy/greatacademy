@@ -1159,7 +1159,7 @@ const capital = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
  * contrasts are two facts that contrast: the first as a clause, the second as a clause, and the first as a noun phrase
  * or an -ing form that can follow despite.
  */
-const contrasts: readonly (readonly [string, string, string])[] = [
+const handContrasts: readonly (readonly [string, string, string])[] = [
   ["it was raining", "we went for a walk", "the rain"],
   ["he was tired", "he finished the report", "being tired"],
   ["the law was passed", "the protests continued", "the new law"],
@@ -1190,6 +1190,42 @@ const contrasts: readonly (readonly [string, string, string])[] = [
   ["the plan was risky", "the council approved it", "the risks"],
   ["the road was icy", "he drove fast", "the icy road"],
   ["the law protects free speech", "journalists are often arrested", "the law on free speech"],
+];
+
+/** contrastPeople are a name and its pronoun for the generated contrasts. */
+const contrastPeople: readonly (readonly [string, string])[] = [
+  ["Tom", "he"],
+  ["Anna", "she"],
+  ["my uncle", "he"],
+  ["the old woman", "she"],
+  ["our coach", "he"],
+  ["Lucy", "she"],
+];
+
+/** contrastActs are the first fact after the subject, the contrasting fact after the pronoun, and the -ing form of the first. */
+const contrastActs: readonly (readonly [string, string, string])[] = [
+  ["was very tired", "kept working", "being very tired"],
+  ["had a bad cold", "ran the race", "having a bad cold"],
+  ["felt nervous", "gave a great speech", "feeling nervous"],
+  ["knew the risks", "climbed the mountain alone", "knowing the risks"],
+  ["had little money", "helped everyone in the village", "having little money"],
+  ["was afraid of dogs", "looked after the neighbor's puppy", "being afraid of dogs"],
+  ["lived next to the school", "was often late", "living next to the school"],
+  ["trained every day", "didn't win a medal", "training every day"],
+  ["had never cooked before", "made a delicious dinner", "never having cooked before"],
+  ["was the youngest player", "scored three goals", "being the youngest player"],
+  ["read the manual twice", "couldn't fix the printer", "reading the manual twice"],
+  ["had a broken arm", "finished the exam", "having a broken arm"],
+  ["was born in Spain", "didn't speak Spanish", "being born in Spain"],
+  ["slept for ten hours", "still felt tired", "sleeping for ten hours"],
+];
+
+/** contrasts are the hand-written contrasts, then those from people and acts. */
+const contrasts: readonly (readonly [string, string, string])[] = [
+  ...handContrasts,
+  ...contrastActs.flatMap(([first, second, ing]) =>
+    contrastPeople.map(([name, pronoun]) => [`${name} ${first}`, `${pronoun} ${second}`, ing] as const),
+  ),
 ];
 
 const contrastChoice: readonly ChoiceItem[] = interleave([

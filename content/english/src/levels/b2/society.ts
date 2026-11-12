@@ -6,7 +6,7 @@ import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { fill } from "../a2/kit.ts";
-import { interleave, sentenceCase, vocabularyTopic, word } from "../words.ts";
+import { everyPair, interleave, sentenceCase, vocabularyTopic, word } from "../words.ts";
 
 const society = vocabularyTopic({
   id: "b2-words-society",
@@ -1123,7 +1123,7 @@ const opinionVerbs = vocabularyTopic({
  * pastIfs are the subject of the if-clause, the base form, the past participle and the past simple of its verb, the
  * rest of the if-clause, and the subject, the base form and the past participle of the verb and the rest of the result.
  */
-const pastIfs: readonly (readonly [string, string, string, string, string, string, string, string, string])[] = [
+const handPastIfs: readonly (readonly [string, string, string, string, string, string, string, string, string])[] = [
   ["they", "vote", "voted", "voted", "", "the result", "be", "been", "different"],
   ["I", "know", "known", "knew", "about the party", "I", "come", "come", ""],
   ["she", "leave", "left", "left", "earlier", "she", "catch", "caught", "the train"],
@@ -1147,6 +1147,43 @@ const pastIfs: readonly (readonly [string, string, string, string, string, strin
   ["the government", "act", "acted", "acted", "sooner", "fewer people", "lose", "lost", "their homes"],
 ];
 
+/** pastIfPeople are a person and the pronoun that stands for them. */
+const pastIfPeople: readonly (readonly [string, string])[] = [
+  ["Tom", "he"],
+  ["Maria", "she"],
+  ["my parents", "they"],
+  ["our team", "it"],
+  ["the manager", "she"],
+  ["my brother", "he"],
+  ["the students", "they"],
+];
+
+/** pastIfActs are the base, participle and past of the if-part's verb, its rest, and the base, participle and rest of the result. */
+const pastIfActs: readonly (readonly [string, string, string, string, string, string, string])[] = [
+  ["leave", "left", "left", "earlier", "catch", "caught", "the train"],
+  ["prepare", "prepared", "prepared", "better", "do", "done", "well"],
+  ["read", "read", "read", "the email", "know", "known", "about the change"],
+  ["take", "taken", "took", "a map", "find", "found", "the way"],
+  ["save", "saved", "saved", "more money", "afford", "afforded", "the trip"],
+  ["listen", "listened", "listened", "to the advice", "avoid", "avoided", "the mistake"],
+  ["check", "checked", "checked", "the forecast", "bring", "brought", "umbrellas"],
+  ["book", "booked", "booked", "in advance", "get", "got", "better seats"],
+  ["practice", "practiced", "practiced", "more", "win", "won", "the competition"],
+  ["ask", "asked", "asked", "for directions", "arrive", "arrived", "on time"],
+  ["sleep", "slept", "slept", "well", "feel", "felt", "less tired"],
+];
+
+/** pastIfRows builds imagined pasts for every person and act, with the name in the clause that comes first. */
+const pastIfRows = (nameFirstInIf: boolean) =>
+  everyPair(pastIfPeople, pastIfActs).map(([[person, pronoun], [base, pp, past, rest, rbase, rpp, rr]]) => {
+    const [ifSubject, resultSubject] = nameFirstInIf ? [person, pronoun] : [pronoun, person];
+    return [ifSubject, base, pp, past, rest, resultSubject, rbase, rpp, rr] as const;
+  });
+
+/** pastIfsIfFirst and pastIfsResultFirst are the imagined pasts for sentences that start with the if-part or the result. */
+const pastIfsIfFirst = [...handPastIfs, ...pastIfRows(true)];
+const pastIfsResultFirst = [...handPastIfs, ...pastIfRows(false)];
+
 const joinWords = (...parts: readonly string[]) => parts.filter((p) => p !== "").join(" ");
 const pronouns = new Set(["I", "you", "he", "she", "it", "we", "they"]);
 /** hadOf is the if-clause's subject with had, or with 'd after a pronoun, as a pattern. */
@@ -1158,14 +1195,14 @@ const wouldHaveOf = (subject: string, capital: boolean) => {
 };
 
 const pastIfChoice: readonly ChoiceItem[] = interleave([
-  pastIfs.map(
+  pastIfsIfFirst.map(
     ([s, , pp, past, rest, rs, , rpp, rr]): ChoiceItem => [
       `${joinWords("If", s, "___", rest)}, ${joinWords(rs, "would have", rpp, rr)}.`,
       `had ${pp}`,
       [`would have ${pp}`, past],
     ],
   ),
-  pastIfs.map(
+  pastIfsResultFirst.map(
     ([s, , pp, past, rest, rs, , rpp, rr]): ChoiceItem => [
       `${joinWords(sentenceCase(rs), "would have", rpp, rr, "if", s, "___", rest)}.`,
       `had ${pp}`,
@@ -1175,14 +1212,14 @@ const pastIfChoice: readonly ChoiceItem[] = interleave([
 ]);
 
 const wouldHaveChoice: readonly ChoiceItem[] = interleave([
-  pastIfs.map(
+  pastIfsIfFirst.map(
     ([s, , pp, , rest, rs, , rpp, rr]): ChoiceItem => [
       `${joinWords("If", s, "had", pp, rest)}, ${joinWords(rs, "___", rr)}.`,
       `would have ${rpp}`,
       [`would had ${rpp}`, `had ${rpp}`],
     ],
   ),
-  pastIfs.map(
+  pastIfsResultFirst.map(
     ([s, , pp, , rest, rs, , rpp, rr]): ChoiceItem => [
       `${joinWords(sentenceCase(rs), "___", rr, "if", s, "had", pp, rest)}.`,
       `would have ${rpp}`,
@@ -1192,7 +1229,7 @@ const wouldHaveChoice: readonly ChoiceItem[] = interleave([
 ]);
 
 const pastIfTyped: readonly TypedItem[] = interleave([
-  pastIfs.map(
+  pastIfsIfFirst.map(
     ([s, base, pp, past, rest, rs, rbase, rpp, rr]): TypedItem => ({
       shown: `past, imagined: if ${joinWords(s, base, rest)} → ${joinWords(rs, rbase, rr)}`,
       accepted: [`${joinWords("If", hadOf(s), pp, rest)}, ${joinWords(wouldHaveOf(rs, false), rpp, rr)}.`],
@@ -1203,7 +1240,7 @@ const pastIfTyped: readonly TypedItem[] = interleave([
       ],
     }),
   ),
-  pastIfs.map(
+  pastIfsResultFirst.map(
     ([s, base, pp, past, rest, rs, rbase, rpp, rr]): TypedItem => ({
       shown: `past, imagined: ${joinWords(rs, rbase, rr)} ← if ${joinWords(s, base, rest)}`,
       accepted: [`${joinWords(wouldHaveOf(rs, true), rpp, rr, "if", hadOf(s), pp, rest)}.`],

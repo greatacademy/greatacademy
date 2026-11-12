@@ -1170,7 +1170,7 @@ const wouldHaveOf = (subject: string) =>
  * pastNows imagine a different past with a result now: the if-clause's subject, base form, past participle and rest,
  * then the result's subject, base form, past participle and rest.
  */
-const pastNows: readonly (readonly [string, string, string, string, string, string, string, string])[] = [
+const handPastNows: readonly (readonly [string, string, string, string, string, string, string, string])[] = [
   ["I", "take", "taken", "the job in Tokyo in 2019", "I", "be", "been", "in Japan now"],
   ["she", "study", "studied", "medicine at university", "she", "be", "been", "a doctor now"],
   ["we", "buy", "bought", "that house ten years ago", "we", "be", "been", "rich now"],
@@ -1210,7 +1210,7 @@ const pastNows: readonly (readonly [string, string, string, string, string, stri
  * nowPasts imagine a different present with a result in the past: the if-clause's subject, base form, past form and
  * rest, then the result's subject, base form, past participle and rest.
  */
-const nowPasts: readonly (readonly [string, string, string, string, string, string, string, string])[] = [
+const handNowPasts: readonly (readonly [string, string, string, string, string, string, string, string])[] = [
   ["I", "speak", "spoke", "French", "I", "understand", "understood", "the film last night"],
   ["she", "be", "were", "taller", "she", "join", "joined", "the basketball team last year"],
   ["he", "be", "were", "braver", "he", "ask", "asked", "her to dance yesterday"],
@@ -1243,6 +1243,57 @@ const nowPasts: readonly (readonly [string, string, string, string, string, stri
   ["they", "care", "cared", "about the environment", "they", "vote", "voted", "for the green party in the last election"],
   ["you", "read", "read", "the news", "you", "hear", "heard", "about the strike last week"],
   ["the town", "have", "had", "a hospital", "the injured man", "be", "been", "treated sooner last night"],
+];
+
+/** mixedPeople are the subjects of the generated mixed conditionals, the same in both clauses. */
+const mixedPeople = ["I", "you", "she", "he", "we", "they"] as const;
+
+/** pastNowActs are a different past and its result now: base form, past participle and rest of each. */
+const pastNowActs: readonly (readonly [string, string, string, string, string, string])[] = [
+  ["take", "taken", "the train at six", "be", "been", "at work now"],
+  ["learn", "learned", "to drive last year", "have", "had", "more freedom now"],
+  ["save", "saved", "the file before the crash", "have", "had", "a copy now"],
+  ["go", "gone", "to the doctor last week", "feel", "felt", "better now"],
+  ["buy", "bought", "a ticket yesterday", "be", "been", "at the concert now"],
+  ["miss", "missed", "the bus this morning", "be", "been", "late now"],
+  ["lose", "lost", "the keys last night", "be", "been", "locked out now"],
+  ["pack", "packed", "a coat this morning", "be", "been", "warm now"],
+  ["sleep", "slept", "well last night", "feel", "felt", "fresh now"],
+  ["study", "studied", "harder at school", "have", "had", "more choices now"],
+  ["answer", "answered", "the email on Monday", "know", "known", "the plan now"],
+  ["join", "joined", "the gym in January", "be", "been", "fitter now"],
+  ["skip", "skipped", "lunch today", "be", "been", "hungry now"],
+  ["move", "moved", "to the coast last year", "live", "lived", "by the sea now"],
+];
+
+/** nowPastActs are a different present and its result in the past: base and past form, rest, then the result. */
+const nowPastActs: readonly (readonly [string, string, string, string, string, string])[] = [
+  ["be", "were", "less shy", "speak", "spoken", "at the meeting yesterday"],
+  ["have", "had", "a phone", "call", "called", "home last night"],
+  ["know", "knew", "the way", "drive", "driven", "there last weekend"],
+  ["like", "liked", "horror films", "watch", "watched", "the new one last night"],
+  ["live", "lived", "nearer", "walk", "walked", "to the party on Saturday"],
+  ["be", "were", "fitter", "run", "run", "the marathon last month"],
+  ["speak", "spoke", "Italian", "enjoy", "enjoyed", "the tour of Rome last summer"],
+  ["have", "had", "more time", "help", "helped", "with the move last week"],
+  ["be", "were", "taller", "reach", "reached", "the top shelf this morning"],
+  ["own", "owned", "a bike", "cycle", "cycled", "to school yesterday"],
+  ["be", "were", "a morning person", "catch", "caught", "the early train today"],
+  ["trust", "trusted", "doctors", "see", "seen", "one last month"],
+  ["play", "played", "the piano", "join", "joined", "the band last year"],
+  ["be", "were", "less afraid of heights", "climb", "climbed", "the tower last week"],
+];
+
+/** pastNows are the hand-written mixed conditionals of a different past, then those from people and acts. */
+const pastNows = [
+  ...handPastNows,
+  ...pastNowActs.flatMap(([b, pp, rest, rb, rpp, rr]) => mixedPeople.map((p) => [p, b, pp, rest, p, rb, rpp, rr] as const)),
+];
+
+/** nowPasts are the hand-written mixed conditionals of a different present, then those from people and acts. */
+const nowPasts = [
+  ...handNowPasts,
+  ...nowPastActs.flatMap(([b, past, rest, rb, rpp, rr]) => mixedPeople.map((p) => [p, b, past, rest, p, rb, rpp, rr] as const)),
 ];
 
 const pastNowChoice: readonly ChoiceItem[] = pastNows.map(

@@ -1155,7 +1155,7 @@ const plural = new Set(["you", "we", "they", "my parents"]);
  * wishNows are wishes about the present: the fact, the opener, the subject, the right form, a wrong form in the present
  * and a wrong form in the past perfect, then the rest of the sentence.
  */
-const wishNows: readonly (readonly [string, string, string, string, string, string, string])[] = [
+const handWishNows: readonly (readonly [string, string, string, string, string, string, string])[] = [
   ["I don't know the answer.", "I wish", "I", "knew", "know", "had known", "the answer"],
   ["I can't swim.", "I wish", "I", "could", "can", "could have", "swim"],
   ["It's raining.", "I wish", "it", "weren't", "isn't", "hadn't been", "raining"],
@@ -1194,7 +1194,7 @@ const wishNows: readonly (readonly [string, string, string, string, string, stri
  * wishPasts are regrets about the past: the fact, the opener, the subject, the right form in the past perfect, a wrong
  * form in the past simple and a wrong form in the present perfect, then the rest of the sentence.
  */
-const wishPasts: readonly (readonly [string, string, string, string, string, string, string])[] = [
+const handWishPasts: readonly (readonly [string, string, string, string, string, string, string])[] = [
   ["I didn't back up my files.", "If only", "I", "had backed up", "backed up", "have backed up", "my files"],
   ["I didn't study for the test.", "I wish", "I", "had studied", "studied", "have studied", "for the test"],
   ["We missed the train.", "I wish", "we", "hadn't missed", "didn't miss", "haven't missed", "the train"],
@@ -1228,6 +1228,68 @@ const wishPasts: readonly (readonly [string, string, string, string, string, str
   ["I didn't charge my phone.", "I wish", "I", "had charged", "charged", "have charged", "my phone"],
   ["They cut down the old tree.", "If only", "they", "hadn't cut", "didn't cut", "haven't cut", "down the old tree"],
 ];
+
+/** wishPeople are the subjects of the generated wishes, each one person. */
+const wishPeople = ["Tom", "Anna", "my sister", "my brother", "our neighbor", "Mr. Lee"] as const;
+
+/** wishNowActs are a fact about now after the subject, the right form, the present and past perfect forms, and the rest. */
+const wishNowActs: readonly (readonly [string, string, string, string, string])[] = [
+  ["doesn't have a car", "had", "has", "had had", "a car"],
+  ["doesn't know the way", "knew", "knows", "had known", "the way"],
+  ["can't drive", "could", "can", "could have", "drive"],
+  ["isn't here", "were", "is", "had been", "here"],
+  ["works on Sundays", "didn't work", "doesn't work", "hadn't worked", "on Sundays"],
+  ["lives so far away", "lived", "lives", "had lived", "closer"],
+  ["doesn't speak English", "spoke", "speaks", "had spoken", "English"],
+  ["is always busy", "weren't", "isn't", "hadn't been", "always busy"],
+  ["doesn't like dogs", "liked", "likes", "had liked", "dogs"],
+  ["smokes", "didn't smoke", "doesn't smoke", "hadn't smoked", ""],
+  ["doesn't eat vegetables", "ate", "eats", "had eaten", "vegetables"],
+  ["plays loud music at night", "didn't play", "doesn't play", "hadn't played", "loud music at night"],
+  ["can't come to the wedding", "could", "can", "could have", "come to the wedding"],
+  ["is so shy", "weren't", "isn't", "hadn't been", "so shy"],
+];
+
+/** wishPastActs are a fact about the past after the subject, the past perfect, past simple and present perfect forms, and the rest. */
+const wishPastActs: readonly (readonly [string, string, string, string, string])[] = [
+  ["missed the bus", "hadn't missed", "didn't miss", "hasn't missed", "the bus"],
+  ["didn't call me", "had called", "called", "has called", "me"],
+  ["sold the bike", "hadn't sold", "didn't sell", "hasn't sold", "the bike"],
+  ["didn't come to the party", "had come", "came", "has come", "to the party"],
+  ["broke the window", "hadn't broken", "didn't break", "hasn't broken", "the window"],
+  ["didn't see the match", "had seen", "saw", "has seen", "the match"],
+  ["lost the tickets", "hadn't lost", "didn't lose", "hasn't lost", "the tickets"],
+  ["didn't wait for us", "had waited", "waited", "has waited", "for us"],
+  ["moved to another city", "hadn't moved", "didn't move", "hasn't moved", "to another city"],
+  ["didn't take the job", "had taken", "took", "has taken", "the job"],
+  ["told everyone the secret", "hadn't told", "didn't tell", "hasn't told", "everyone the secret"],
+  ["didn't write back", "had written", "wrote", "has written", "back"],
+  ["forgot the keys", "hadn't forgotten", "didn't forget", "hasn't forgotten", "the keys"],
+  ["didn't say goodbye", "had said", "said", "has said", "goodbye"],
+];
+
+/** wishRows crosses wishPeople with acts, alternating I wish and If only. */
+const wishRows = (acts: readonly (readonly [string, string, string, string, string])[]) =>
+  acts.flatMap(([fact, right, one, two, rest], a) =>
+    wishPeople.map(
+      (who, k) =>
+        [
+          `${who.charAt(0).toUpperCase()}${who.slice(1)} ${fact}.`,
+          (a + k) % 3 === 0 ? "If only" : "I wish",
+          who,
+          right,
+          one,
+          two,
+          rest,
+        ] as const,
+    ),
+  );
+
+/** wishNows are the hand-written wishes about the present, then those from people and acts. */
+const wishNows = [...handWishNows, ...wishRows(wishNowActs)];
+
+/** wishPasts are the hand-written regrets about the past, then those from people and acts. */
+const wishPasts = [...handWishPasts, ...wishRows(wishPastActs)];
 
 const wishNowChoice: readonly ChoiceItem[] = wishNows.map(
   ([fact, opener, s, right, present, perfect, rest]): ChoiceItem => [

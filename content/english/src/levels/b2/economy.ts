@@ -6,7 +6,7 @@ import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
-import { interleave, vocabularyTopic, word } from "../words.ts";
+import { everyTriple, interleave, vocabularyTopic, word } from "../words.ts";
 
 const economy = vocabularyTopic({
   id: "b2-words-economy",
@@ -1124,7 +1124,7 @@ const joinWords = (...parts: readonly string[]) => parts.filter((p) => p !== "")
 const lower = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
 
 /** perfects are the subject of a present perfect passive, has or have, the base form and the past participle of its verb, and the rest. */
-const perfects: readonly (readonly [string, string, string, string, string])[] = [
+const handPerfects: readonly (readonly [string, string, string, string, string])[] = [
   ["The new hospital", "has", "build", "built", "near the station"],
   ["Three hundred jobs", "have", "lose", "lost", "this year"],
   ["The report", "has", "publish", "published", "online"],
@@ -1148,7 +1148,7 @@ const perfects: readonly (readonly [string, string, string, string, string])[] =
 ];
 
 /** modals are the subject of a passive with a modal, the modal, the base form and the past participle of the verb, and the rest. */
-const modals: readonly (readonly [string, string, string, string, string])[] = [
+const handModals: readonly (readonly [string, string, string, string, string])[] = [
   ["The workers", "could", "replace", "replaced", "with robots"],
   ["The report", "must", "write", "written", "by Friday"],
   ["Phones", "should", "switch", "switched", "off during the exam"],
@@ -1170,6 +1170,42 @@ const modals: readonly (readonly [string, string, string, string, string])[] = [
   ["The waste", "must", "recycle", "recycled", ""],
   ["The old building", "may", "pull", "pulled", "down"],
   ["The data", "must", "store", "stored", "safely"],
+];
+
+/** passiveThings are a thing and whether it takes has; passiveDeeds are a base form, past participle and rest done to it. */
+const passiveThings: readonly (readonly [string, boolean])[] = [
+  ["The car", true],
+  ["The bikes", false],
+  ["The old sofa", true],
+  ["The computers", false],
+  ["The house", true],
+  ["The boat", true],
+  ["The tables", false],
+];
+const passiveDeeds: readonly (readonly [string, string, string])[] = [
+  ["clean", "cleaned", ""],
+  ["paint", "painted", ""],
+  ["check", "checked", ""],
+  ["repair", "repaired", ""],
+  ["sell", "sold", ""],
+  ["move", "moved", "to the new building"],
+  ["replace", "replaced", ""],
+];
+const perfectTimes = ["this week", "", "again", "already", "twice this year"] as const;
+const passiveModalWords = ["could", "must", "should", "will", "might", "can", "may"] as const;
+
+/** perfects and modals are the hand-written passives and one for every thing and deed. */
+const perfects: readonly (readonly [string, string, string, string, string])[] = [
+  ...handPerfects,
+  ...everyTriple(passiveThings, passiveDeeds, perfectTimes).map(
+    ([[thing, has], [base, pp, rest], time]) => [thing, has ? "has" : "have", base, pp, joinWords(rest, time)] as const,
+  ),
+];
+const modals: readonly (readonly [string, string, string, string, string])[] = [
+  ...handModals,
+  ...everyTriple(passiveThings, passiveDeeds, passiveModalWords).map(
+    ([[thing], [base, pp, rest], modal]) => [thing, modal, base, pp, joinWords(rest, modal === "will" ? "next week" : "")] as const,
+  ),
 ];
 
 const modalPattern = (modal: string) => (modal === "can't" ? "[can't|cannot]" : modal === "must not" ? "[must not|mustn't]" : modal);
@@ -1325,7 +1361,7 @@ const passiveForms: TopicDef = {
 // Have something done.
 
 /** causatives are the subject, the forms of have and of get, the object, the base form and the past participle of the verb, and the rest. */
-const causatives: readonly (readonly [string, string, string, string, string, string, string])[] = [
+const handCausatives: readonly (readonly [string, string, string, string, string, string, string])[] = [
   ["We", "had", "got", "the office", "paint", "painted", "last month"],
   ["I", "had", "got", "my hair", "cut", "cut", "yesterday"],
   ["She", "has", "gets", "her eyes", "test", "tested", "every year"],
@@ -1358,6 +1394,36 @@ const causatives: readonly (readonly [string, string, string, string, string, st
   ["We", "should have", "should get", "the heating", "check", "checked", "before winter"],
   ["Tom", "had", "got", "his name", "engrave", "engraved", "on the ring"],
   ["My uncle", "has", "gets", "his hair", "cut", "cut", "every two weeks"],
+];
+
+/** serviceUsers are people who have things done; services are an object, the base form and participle, and the rest. */
+const serviceUsers = ["We", "I", "She", "My parents", "Tom", "Our neighbors", "He"] as const;
+const services: readonly (readonly [string, string, string, string])[] = [
+  ["the car", "repair", "repaired", "at the garage"],
+  ["the windows", "clean", "cleaned", ""],
+  ["the roof", "fix", "fixed", ""],
+  ["the walls", "paint", "painted", "blue"],
+  ["the photos", "print", "printed", ""],
+  ["the old sofa", "clean", "cleaned", ""],
+  ["the lock", "change", "changed", ""],
+  ["the bike", "check", "checked", ""],
+  ["the documents", "translate", "translated", "into Spanish"],
+  ["the grass", "cut", "cut", ""],
+  ["the heating", "repair", "repaired", ""],
+];
+const serviceTimes: readonly (readonly [string, string, string])[] = [
+  ["had", "got", "last week"],
+  ["will have", "will get", "next week"],
+  ["had", "got", "yesterday"],
+  ["will have", "will get", "tomorrow"],
+];
+
+/** causatives are the hand-written sentences and one for every person and service, at a time. */
+const causatives: readonly (readonly [string, string, string, string, string, string, string])[] = [
+  ...handCausatives,
+  ...everyTriple(serviceUsers, services, serviceTimes).map(
+    ([who, [object, base, pp, rest], [have, get, time]]) => [who, have, get, object, base, pp, joinWords(rest, time)] as const,
+  ),
 ];
 
 const ingOf: Readonly<Record<string, string>> = { cut: "cutting", put: "putting" };

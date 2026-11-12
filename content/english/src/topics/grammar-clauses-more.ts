@@ -1,6 +1,7 @@
 // More items for the grades 6 to 8 clause and sentence topics: hand-written records that both grammar-clauses.ts and writing-sentences.ts build banks from.
 
 import type { ChoiceItem } from "@ga/subject-english";
+import { everyPair, everyTriple } from "../levels/words.ts";
 
 const upper = (s: string) => s[0]!.toUpperCase() + s.slice(1);
 const lower = (s: string) => s[0]!.toLowerCase() + s.slice(1);
@@ -98,7 +99,7 @@ export const moreRelativeFinds: readonly ChoiceItem[] = relativeRecords.map((r) 
 export type AppositiveRecord = readonly [noun: string, appositive: string, rest: string, second: string];
 
 /** appositiveRecords are sentences whose appositive follows the subject. */
-export const appositiveRecords: readonly AppositiveRecord[] = [
+const handAppositiveRecords: readonly AppositiveRecord[] = [
   ["Mr. Ortiz", "our science teacher", "keeps a snake in the classroom", "He is our science teacher."],
   ["Venus", "the hottest planet", "is covered in thick clouds", "It is the hottest planet."],
   ["My sister", "a nurse at the city hospital", "works at night", "She is a nurse at the city hospital."],
@@ -121,6 +122,38 @@ export const appositiveRecords: readonly AppositiveRecord[] = [
   ["Our town library", "a brick building from 1910", "is getting a new roof", "It is a brick building from 1910."],
   ["Mei", "the fastest runner in our grade", "won the relay", "She is the fastest runner in our grade."],
   ["The cheetah", "the fastest land animal", "can run seventy miles an hour", "It is the fastest land animal."],
+];
+
+/** appositiveNames, appositiveRoles and appositiveActs are crossed into more sentences whose appositive follows the subject. */
+const appositiveNames = ["Mr. Patel", "Ms. Rivera", "Uncle Joe", "Hana", "Carlos", "Dr. Brooks", "Grandpa Lee", "Nina"] as const;
+const appositiveRoles = [
+  "our new neighbor",
+  "the team captain",
+  "a retired pilot",
+  "my piano teacher",
+  "the school nurse",
+  "a talented chef",
+  "the club president",
+  "my oldest friend",
+  "a local artist",
+  "the bus driver",
+] as const;
+const appositiveActs = [
+  "arrived early",
+  "told us a funny story",
+  "helped me with my homework",
+  "won a prize last year",
+  "lives on our street",
+  "fixed the broken gate",
+  "loves old movies",
+] as const;
+
+/** appositiveRecords are sentences whose appositive follows the subject: the hand-written ones, then the crossed ones. */
+export const appositiveRecords: readonly AppositiveRecord[] = [
+  ...handAppositiveRecords,
+  ...everyTriple(appositiveNames, appositiveRoles, appositiveActs).map(
+    ([noun, role, act]): AppositiveRecord => [noun, role, act, `${noun} is ${role}.`],
+  ),
 ];
 
 /** lateComma moves the comma that closes a mid-sentence appositive one word too far, past the verb that follows it. */
@@ -207,7 +240,7 @@ export type ParticipleRecord = readonly [
 ];
 
 /** participleRecords are the participial-phrase records. */
-export const participleRecords: readonly ParticipleRecord[] = [
+const handParticipleRecords: readonly ParticipleRecord[] = [
   ["Grabbing", "Grabbed", "Grabs", "grabbed", "her umbrella", "Nora", "ran out the door into the rain", true],
   ["Surprising", "Surprised", "Surprises", "", "by the news", "Kayla", "dropped her phone on the floor", false],
   ["Whistling", "Whistled", "Whistles", "whistled", "a happy tune", "the farmer", "fed the chickens in the yard", true],
@@ -241,6 +274,40 @@ export const participleRecords: readonly ParticipleRecord[] = [
   ["Mumbling", "Mumbled", "Mumbles", "mumbled", "an excuse", "Theo", "handed in his late homework", true],
 ];
 
+/** participlePhrases are the -ing, past participle and -s forms of a verb, the rest of its phrase, and whether the subject does the action. */
+const participlePhrases: readonly (readonly [string, string, string, string, boolean])[] = [
+  ["Humming", "Hummed", "Hums", "a song", true],
+  ["Checking", "Checked", "Checks", "the time", true],
+  ["Holding", "Held", "Holds", "an umbrella", true],
+  ["Carrying", "Carried", "Carries", "a heavy bag", true],
+  ["Wearing", "Worn", "Wears", "a red scarf", true],
+  ["Whistling", "Whistled", "Whistles", "a tune", true],
+  ["Reading", "Read", "Reads", "a text message", true],
+  ["Surprising", "Surprised", "Surprises", "by the noise", false],
+  ["Soaking", "Soaked", "Soaks", "by the rain", false],
+  ["Exhausting", "Exhausted", "Exhausts", "by the long trip", false],
+  ["Delighting", "Delighted", "Delights", "by the news", false],
+  ["Covering", "Covered", "Covers", "in mud", false],
+];
+
+/** participleScenes are a person and what the person did, for the sentences the phrases open. */
+const participleScenes: readonly (readonly [string, string])[] = [
+  ["Mia", "walked into the kitchen"],
+  ["Mr. Grant", "sat down on the bench"],
+  ["Lena", "waited at the bus stop"],
+  ["Omar", "opened the front door"],
+  ["Mrs. Diaz", "crossed the street"],
+  ["Sam", "stepped onto the train"],
+];
+
+/** participleRecords are the participial-phrase records: the hand-written ones, then phrases crossed with scenes. */
+export const participleRecords: readonly ParticipleRecord[] = [
+  ...handParticipleRecords,
+  ...everyPair(participlePhrases, participleScenes).map(
+    ([[ing, done, s, phrase, active], [subject, predicate]]): ParticipleRecord => [ing, done, s, "", phrase, subject, predicate, active],
+  ),
+];
+
 /** participleWord is the participle that opens a record's sentence. */
 export const participleWord = (r: ParticipleRecord): string => (r[7] ? r[0] : r[1]);
 
@@ -265,7 +332,7 @@ export const moreParticipleForms: readonly ChoiceItem[] = participleRecords.map(
 ]);
 
 /** misplacedRecords are pairs of sentences whose describing phrases sit next to the words they describe, and pairs whose phrases do not. */
-export const misplacedRecords: readonly { readonly good: readonly [string, string]; readonly bad: readonly [string, string] }[] = [
+const handMisplacedRecords: readonly { readonly good: readonly [string, string]; readonly bad: readonly [string, string] }[] = [
   {
     good: ["Hiking up the trail, we saw a deer.", "We saw a deer while we were hiking up the trail."],
     bad: ["Hiking up the trail, a deer came into view.", "A deer was seen by us hiking up the trail."],
@@ -356,6 +423,41 @@ export const misplacedRecords: readonly { readonly good: readonly [string, strin
   },
 ];
 
+/** danglingPhrases are -ing phrases of what a person was doing. */
+const danglingPhrases = [
+  "Walking home from school",
+  "Looking out of the window",
+  "Driving along the coast",
+  "Sitting on the balcony",
+  "Waiting for the bus",
+  "Jogging in the park",
+  "Cycling to work",
+  "Standing at the gate",
+  "Crossing the bridge",
+  "Resting under a tree",
+  "Leaving the library",
+  "Turning the corner",
+] as const;
+
+/** danglingScenes are a person, the pronoun, what the person sensed, and the same event with the thing as the subject. */
+const danglingScenes: readonly (readonly [string, string, string, string])[] = [
+  ["Mia", "she", "noticed a rainbow", "a rainbow appeared"],
+  ["Omar", "he", "heard a strange noise", "a strange noise started"],
+  ["Lena", "she", "spotted an old friend", "an old friend waved"],
+  ["Sam", "he", "saw a fox", "a fox ran across the road"],
+  ["Mrs. Diaz", "she", "felt a few drops of rain", "a few drops of rain fell"],
+  ["Mr. Grant", "he", "smelled fresh bread", "the smell of fresh bread drifted by"],
+];
+
+/** misplacedRecords are pairs of sentences whose describing phrases sit next to the words they describe, and pairs whose phrases do not: the hand-written ones, then phrases crossed with scenes. */
+export const misplacedRecords: readonly { readonly good: readonly [string, string]; readonly bad: readonly [string, string] }[] = [
+  ...handMisplacedRecords,
+  ...everyPair(danglingPhrases, danglingScenes).map(([phrase, [name, pronoun, sensed, event]]) => ({
+    good: [`${phrase}, ${name} ${sensed}.`, `${name} ${sensed} while ${pronoun} was ${lower(phrase)}.`] as const,
+    bad: [`${phrase}, ${event}.`, `${name} ${sensed} ${lower(phrase)}.`] as const,
+  })),
+];
+
 /** moreMisplacedFinds are items that ask which sentence has a misplaced or dangling modifier. */
 export const moreMisplacedFinds: readonly ChoiceItem[] = misplacedRecords.map(({ good, bad }, i) => ["", bad[i % 2]!, [...good]]);
 
@@ -418,7 +520,7 @@ export const voiceSentences: readonly (readonly [sentence: string, active: boole
 ];
 
 /** parallelRecords are lists of three: the words before the list, then each item as the parallel form, a form that breaks the pattern, and another wrong form. */
-export const parallelRecords: readonly (readonly [before: string, ...items: string[]])[] = [
+const handParallelRecords: readonly (readonly [before: string, ...items: string[]])[] = [
   ["On weekends, Sara loves", "dancing|to dance|danced", "singing|to sing|sang", "acting|acts|acted"],
   [
     "The puppy likes",
@@ -517,6 +619,37 @@ export const parallelRecords: readonly (readonly [before: string, ...items: stri
     "rode the train|riding the train|rides the train",
   ],
   ["Nadia promised", "to call|calling|called", "to visit|visiting|visited", "to send photos|sending photos|sent photos"],
+];
+
+/** pastimes are an activity as an -ing form, a to-infinitive and a past form. */
+const pastimes = [
+  "swimming|to swim|swam",
+  "drawing|to draw|drew",
+  "baking bread|to bake bread|baked bread",
+  "playing chess|to play chess|played chess",
+  "painting|to paint|painted",
+  "riding a bike|to ride a bike|rode a bike",
+  "writing stories|to write stories|wrote stories",
+  "fishing|to fish|fished",
+  "gardening|to garden|gardened",
+  "watching films|to watch films|watched films",
+  "dancing|to dance|danced",
+  "hiking|to hike|hiked",
+] as const;
+
+/** pastimePeople are the people whose lists of pastimes the crossed records describe. */
+const pastimePeople = ["Mia", "Omar", "Grandpa Lee", "Hana", "Carlos", "Ms. Rivera"] as const;
+
+/** pastimeVerbs open a list of -ing forms. */
+const pastimeVerbs = ["enjoys", "loves", "spent Sunday"] as const;
+
+/** parallelRecords are lists of three: the hand-written ones, then people crossed with sets of pastimes. */
+export const parallelRecords: readonly (readonly [before: string, ...items: string[]])[] = [
+  ...handParallelRecords,
+  ...everyPair(
+    pastimePeople,
+    pastimes.map((_, k) => [pastimes[k]!, pastimes[(k + 1) % 12]!, pastimes[(k + 4) % 12]!] as const),
+  ).map(([who, set], i) => [`${who} ${pastimeVerbs[i % 3]!}`, ...set] as const),
 ];
 
 const parallelParts = ([before, ...items]: readonly [string, ...string[]]) =>

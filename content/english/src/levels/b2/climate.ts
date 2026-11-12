@@ -6,7 +6,7 @@ import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator, type WritingItem } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { fill, judgedTopic } from "../a2/kit.ts";
-import { interleave, vocabularyTopic, word } from "../words.ts";
+import { everyPair, interleave, vocabularyTopic, word } from "../words.ts";
 
 const climate = vocabularyTopic({
   id: "b2-words-climate-change",
@@ -1140,7 +1140,7 @@ const cueOfAspect: Readonly<Record<Aspect, string>> = {
 };
 
 /** futures are a time, the subject, the base form, the -ing form and the past participle of the verb, the rest, the aspect and has or have. */
-const futures: readonly (readonly [string, string, string, string, string, string, Aspect, string])[] = [
+const handFutures: readonly (readonly [string, string, string, string, string, string, Aspect, string])[] = [
   ["By 2050", "most glaciers in the Alps", "melt", "melting", "melted", "", "perfect", "have"],
   ["By 2030", "the city", "ban", "banning", "banned", "petrol cars", "perfect", "has"],
   ["By the end of the year", "we", "install", "installing", "installed", "solar panels on every school", "perfect", "have"],
@@ -1182,6 +1182,52 @@ const futures: readonly (readonly [string, string, string, string, string, strin
   ["On Sunday morning", "I", "play", "playing", "played", "tennis", "continuous", "am"],
   ["When the plane lands", "it", "rain", "raining", "rained", "in Beijing", "continuous", "is"],
   ["This time next week", "we", "swim", "swimming", "swum", "in the sea", "continuous", "are"],
+];
+
+/** futurePeople are a subject with its has or have and its am, is or are. */
+const futurePeople: readonly (readonly [string, string, string])[] = [
+  ["my sister", "has", "is"],
+  ["we", "have", "are"],
+  ["Tom", "has", "is"],
+  ["the workers", "have", "are"],
+  ["I", "have", "am"],
+  ["our neighbors", "have", "are"],
+];
+/** perfectActs and continuousActs are a base form, -ing form, past participle and rest, for actions finished by a time or in progress at it. */
+const perfectActs: readonly (readonly [string, string, string, string])[] = [
+  ["finish", "finishing", "finished", "the project"],
+  ["paint", "painting", "painted", "the house"],
+  ["read", "reading", "read", "all the books"],
+  ["save", "saving", "saved", "enough money"],
+  ["pack", "packing", "packed", "the bags"],
+  ["write", "writing", "written", "the report"],
+  ["clean", "cleaning", "cleaned", "the garage"],
+  ["sell", "selling", "sold", "the old car"],
+];
+const continuousActs: readonly (readonly [string, string, string, string])[] = [
+  ["paint", "painting", "painted", "the fence"],
+  ["drive", "driving", "driven", "to the coast"],
+  ["cook", "cooking", "cooked", "dinner"],
+  ["watch", "watching", "watched", "the match"],
+  ["work", "working", "worked", "in the garden"],
+  ["travel", "traveling", "traveled", "to Rome"],
+  ["sleep", "sleeping", "slept", ""],
+  ["have", "having", "had", "lunch"],
+];
+const perfectTimes = ["By Friday", "By the end of the month", "By next summer", "By the time you get back"] as const;
+const continuousTimes = ["This time tomorrow", "At nine o'clock tonight", "This time next week", "When you arrive"] as const;
+
+/** futures are the hand-written sentences and one for every person and act, at a time that fits. */
+const futures: readonly (readonly [string, string, string, string, string, string, Aspect, string])[] = [
+  ...handFutures,
+  ...everyPair(futurePeople, perfectActs).map(
+    ([[who, have], [base, ing, pp, rest]], k) =>
+      [perfectTimes[k % perfectTimes.length]!, who, base, ing, pp, rest, "perfect", have] as const,
+  ),
+  ...everyPair(futurePeople, continuousActs).map(
+    ([[who, , be], [base, ing, pp, rest]], k) =>
+      [continuousTimes[k % continuousTimes.length]!, who, base, ing, pp, rest, "continuous", be] as const,
+  ),
 ];
 
 const pastOf: Readonly<Record<string, string>> = {

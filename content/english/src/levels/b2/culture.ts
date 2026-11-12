@@ -1172,7 +1172,7 @@ type Role = "subject" | "object";
  * itClefts are a plain sentence, the part to put in focus, is or was, the rest of the sentence after that, the rest
  * with a pronoun wrongly repeating the focus, the focus's role, and whether the focus is a person.
  */
-const itClefts: readonly (readonly [string, string, "is" | "was", string, string, Role, boolean])[] = [
+const handItClefts: readonly (readonly [string, string, "is" | "was", string, string, Role, boolean])[] = [
   ["The food surprised me most.", "the food", "was", "surprised me most", "it surprised me most", "subject", false],
   ["I miss the language most.", "the language", "is", "I miss most", "I miss it most", "object", false],
   ["My grandmother taught me to cook.", "my grandmother", "was", "taught me to cook", "she taught me to cook", "subject", true],
@@ -1256,7 +1256,7 @@ const itClefts: readonly (readonly [string, string, "is" | "was", string, string
 ];
 
 /** whatClefts are a plain sentence, the clause after what, is or was, and the part in focus. */
-const whatClefts: readonly (readonly [string, string, "is" | "was", string])[] = [
+const handWhatClefts: readonly (readonly [string, string, "is" | "was", string])[] = [
   ["The food surprised me.", "surprised me", "was", "the food"],
   ["I need a long holiday.", "I need", "is", "a long holiday"],
   ["She loves the old music.", "she loves", "is", "the old music"],
@@ -1289,6 +1289,62 @@ const whatClefts: readonly (readonly [string, string, "is" | "was", string])[] =
   ["Good teachers inspire curiosity.", "good teachers inspire", "is", "curiosity"],
   ["The smell of the spices reminds me of home.", "reminds me of home", "is", "the smell of the spices"],
   ["The lack of rain worries the farmers.", "worries the farmers", "is", "the lack of rain"],
+];
+
+/** cleftPeople are the subjects of the generated cleft sentences. */
+const cleftPeople = ["Anna", "Tom", "my brother", "our teacher", "the children", "the visitors"] as const;
+
+/** itCleftActs are a past verb and its object, a thing, for the generated it-clefts. */
+const itCleftActs: readonly (readonly [string, string])[] = [
+  ["chose", "the blue car"],
+  ["painted", "the kitchen"],
+  ["broke", "the old vase"],
+  ["cooked", "the fish"],
+  ["fixed", "the radio"],
+  ["sold", "the piano"],
+  ["found", "the map"],
+  ["cleaned", "the garage"],
+  ["wrote", "the poem"],
+  ["opened", "the window"],
+  ["forgot", "the cake"],
+  ["photographed", "the bridge"],
+];
+
+/** whatCleftActs are a past verb and its object for the generated what-clefts. */
+const whatCleftActs: readonly (readonly [string, string])[] = [
+  ["wanted", "a new bike"],
+  ["ordered", "the soup"],
+  ["needed", "a long rest"],
+  ["missed", "the sea"],
+  ["liked", "the music"],
+  ["noticed", "the smell"],
+  ["bought", "a new coat"],
+  ["remembered", "the songs"],
+  ["hated", "the cold"],
+  ["heard", "a strange noise"],
+  ["planned", "a surprise party"],
+  ["saw", "a fox"],
+];
+
+/** sentenceOf capitalizes the first letter of a sentence. */
+const sentenceOf = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+/** itClefts are the hand-written it-clefts, then those from people and acts with the object in focus. */
+const itClefts: readonly (readonly [string, string, "is" | "was", string, string, Role, boolean])[] = [
+  ...handItClefts,
+  ...itCleftActs.flatMap(([verb, thing]) =>
+    cleftPeople.map(
+      (who) => [sentenceOf(`${who} ${verb} ${thing}.`), thing, "was", `${who} ${verb}`, `${who} ${verb} it`, "object", false] as const,
+    ),
+  ),
+];
+
+/** whatClefts are the hand-written what-clefts, then those from people and acts with the object in focus. */
+const whatClefts: readonly (readonly [string, string, "is" | "was", string])[] = [
+  ...handWhatClefts,
+  ...whatCleftActs.flatMap(([verb, thing]) =>
+    cleftPeople.map((who) => [sentenceOf(`${who} ${verb} ${thing}.`), `${who} ${verb}`, "was", thing] as const),
+  ),
 ];
 
 const itChoice: readonly ChoiceItem[] = itClefts.map(

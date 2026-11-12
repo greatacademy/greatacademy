@@ -1172,7 +1172,7 @@ const weighing = vocabularyTopic({
  * inversions are formal sentences that begin with a negative word: the opening, the auxiliary, the subject, the rest,
  * the same idea in normal word order, and two wrong auxiliaries.
  */
-const inversions: readonly (readonly [string, string, string, string, string, string, string])[] = [
+const handInversions: readonly (readonly [string, string, string, string, string, string, string])[] = [
   ["Never", "have", "I", "felt so tired", "I have never felt so tired.", "did", "am"],
   ["Rarely", "do", "people", "admit their mistakes", "People rarely admit their mistakes.", "are", "have"],
   ["Seldom", "does", "she", "eat meat", "She seldom eats meat.", "is", "has"],
@@ -1231,8 +1231,44 @@ const inversions: readonly (readonly [string, string, string, string, string, st
   ["Not once", "has", "she", "complained about the work", "She has not complained about the work once.", "did", "is"],
 ];
 
+/** inversionPeople are the subjects of the generated inversions, each one person. */
+const inversionPeople = ["Tom", "Anna", "my father", "our teacher", "the manager", "Grace"] as const;
+
+/**
+ * inversionActs are an opening, its auxiliary, the rest after the subject, the normal sentence after the subject, and
+ * two wrong auxiliaries.
+ */
+const inversionActs: readonly (readonly [string, string, string, string, string, string])[] = [
+  ["Never", "has", "seen such a mess", "has never seen such a mess", "did", "is"],
+  ["Rarely", "does", "cook at home", "rarely cooks at home", "is", "has"],
+  ["Seldom", "does", "take a day off", "seldom takes a day off", "is", "has"],
+  ["Not once", "did", "complain about the food", "did not complain about the food once", "has", "was"],
+  ["Never", "had", "felt so proud", "had never felt so proud", "did", "was"],
+  ["Little", "did", "know about the surprise party", "did not know about the surprise party", "has", "was"],
+  ["Hardly ever", "does", "watch television", "hardly ever watches television", "is", "has"],
+  ["Never", "will", "forget this trip", "will never forget this trip", "has", "is"],
+  ["Only then", "did", "notice the mistake", "noticed the mistake only then", "had", "was"],
+  ["Rarely", "has", "been so angry", "has rarely been so angry", "did", "is"],
+  ["No sooner", "had", "left than the bus arrived", "had no sooner left than the bus arrived", "did", "has"],
+  ["Hardly", "had", "opened the door when the dog ran out", "had hardly opened the door when the dog ran out", "did", "has"],
+  ["Seldom", "is", "late for work", "is seldom late for work", "does", "has"],
+  ["Not until midnight", "did", "finish the essay", "did not finish the essay until midnight", "has", "was"],
+];
+
+/** inversions are the hand-written inversions, then those from people and acts. */
+const inversions: readonly (readonly [string, string, string, string, string, string, string])[] = [
+  ...handInversions,
+  ...inversionActs.flatMap(([neg, aux, rest, normal, w1, w2]) =>
+    inversionPeople.map((who) => [neg, aux, who, rest, `${who.charAt(0).toUpperCase()}${who.slice(1)} ${normal}.`, w1, w2] as const),
+  ),
+];
+
 const orderChoice: readonly ChoiceItem[] = inversions.map(
-  ([neg, aux, subject, rest]): ChoiceItem => [`${neg} ___ ${rest}.`, `${aux} ${subject}`, [`${subject} ${aux}`, subject]],
+  ([neg, aux, subject, rest, normal]): ChoiceItem => [
+    `${normal} → ${neg} ___ ${rest}.`,
+    `${aux} ${subject}`,
+    [`${subject} ${aux}`, subject],
+  ],
 );
 
 const auxiliaryChoice: readonly ChoiceItem[] = inversions.map(
@@ -1251,8 +1287,10 @@ const inversionTyped: readonly TypedItem[] = inversions.map(
 /** inversionOf finds the inversion of a sentence with a gap, or of a written sentence. */
 const inversionOf = (text: string) =>
   inversions.find(
-    ([neg, aux, subject, rest]) =>
-      text === `${neg} ___ ${rest}.` || text === `${neg} ___ ${subject} ${rest}.` || text === `${neg} ${aux} ${subject} ${rest}.`,
+    ([neg, aux, subject, rest, normal]) =>
+      text === `${normal} → ${neg} ___ ${rest}.` ||
+      text === `${neg} ___ ${subject} ${rest}.` ||
+      text === `${neg} ${aux} ${subject} ${rest}.`,
   );
 
 /** orderRule names the question order after the negative opening of text. */

@@ -6,7 +6,7 @@ import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typedGenerator } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
 import { fill } from "../a2/kit.ts";
-import { vocabularyTopic, word } from "../words.ts";
+import { everyPair, vocabularyTopic, word } from "../words.ts";
 
 const medicine = vocabularyTopic({
   id: "b2-words-medicine",
@@ -1089,7 +1089,8 @@ const risk = vocabularyTopic({
 // Modals of deduction about the present.
 
 const joinWords = (...parts: readonly string[]) => parts.filter((p) => p !== "").join(" ");
-const lower = (s: string) => (s === "I" ? s : s.charAt(0).toLowerCase() + s.slice(1));
+/** lower writes a subject as it reads inside a sentence: I and the names of people keep their capital. */
+const lower = (s: string) => (s === "I" || guessPeople.some(([name]) => s === name) ? s : s.charAt(0).toLowerCase() + s.slice(1));
 
 type Deduction = "must" | "can't" | "might";
 
@@ -1108,7 +1109,7 @@ const othersOf: Readonly<Record<Deduction | "should", readonly [string, string]>
 };
 
 /** guesses are a situation, the subject, is or are, what the subject probably is, and how sure the speaker is. */
-const guesses: readonly (readonly [string, string, string, string, Deduction])[] = [
+const handGuesses: readonly (readonly [string, string, string, string, Deduction])[] = [
   ["She has been working for fourteen hours.", "She", "is", "exhausted", "must"],
   ["The phone is ringing, and it's your number.", "It", "is", "for you", "must"],
   ["He has lived in Paris for twenty years.", "His French", "is", "very good", "must"],
@@ -1145,6 +1146,41 @@ const guesses: readonly (readonly [string, string, string, string, Deduction])[]
   ["There's a strange noise in the engine.", "Something", "is", "wrong", "might"],
   ["The results look strange.", "There", "is", "a mistake in the data", "might"],
   ["He's wearing a uniform I don't know.", "He", "is", "a pilot", "might"],
+];
+
+/** guessPeople are a person and the pronoun that stands for them, for guesses built from frames. */
+const guessPeople: readonly (readonly [string, string])[] = [
+  ["Anna", "She"],
+  ["Tom", "He"],
+  ["Mrs. Lee", "She"],
+  ["Mr. Brown", "He"],
+  ["Lucy", "She"],
+  ["David", "He"],
+];
+
+/** guessFrames are a situation with {N} for the person, what they probably are, and how sure the speaker is. */
+const guessFrames: readonly (readonly [string, string, Deduction])[] = [
+  ["{N} has been working for fourteen hours.", "exhausted", "must"],
+  ["{N} has just won the lottery.", "very happy", "must"],
+  ["{N} has a fever and a bad cough.", "ill", "must"],
+  ["{N} owns three houses and a boat.", "rich", "must"],
+  ["{N} hasn't eaten all day.", "hungry", "must"],
+  ["{N} ate a huge lunch ten minutes ago.", "hungry", "can't"],
+  ["{N} is only twelve.", "a teacher", "can't"],
+  ["I saw {N} in the office a moment ago.", "on holiday", "can't"],
+  ["{N} is laughing with friends.", "unhappy", "can't"],
+  ["{N} has just slept for ten hours.", "tired", "can't"],
+  ["{N} hasn't replied to my message.", "busy", "might"],
+  ["{N} isn't at the desk.", "at lunch", "might"],
+  ["{N} looks pale today.", "ill", "might"],
+  ["{N} is wearing a uniform I don't know.", "a pilot", "might"],
+  ["{N} didn't come to the meeting.", "on holiday", "might"],
+];
+
+/** guesses are the hand-written guesses and one for every person with every frame, the person named again as the subject. */
+const guesses: readonly (readonly [string, string, string, string, Deduction])[] = [
+  ...handGuesses,
+  ...everyPair(guessFrames, guessPeople).map(([[frame, x, kind], [name]]) => [frame.replace("{N}", name), name, "is", x, kind] as const),
 ];
 
 /** noAfter adds nothing after the modal; haveAfter adds have and the past participle. */
@@ -1225,7 +1261,7 @@ const guessTyped: readonly TypedItem[] = guesses.map(([, s, be, x, kind]): Typed
 });
 
 /** doings are a situation, the subject, the modal, the base form and the -ing form of the verb, and the rest. */
-const doings: readonly (readonly [string, string, Deduction, string, string, string])[] = [
+const handDoings: readonly (readonly [string, string, Deduction, string, string, string])[] = [
   ["She isn't answering her phone.", "She", "must", "sleep", "sleeping", ""],
   ["I can hear loud music next door.", "They", "must", "have", "having", "a party"],
   ["He's wearing a suit and tie.", "He", "might", "go", "going", "to an interview"],
@@ -1258,6 +1294,30 @@ const doings: readonly (readonly [string, string, Deduction, string, string, str
   ["The phones haven't stopped ringing.", "Customers", "must", "complain", "complaining", "about something"],
   ["He's reading the same page again and again.", "He", "can't", "concentrate", "concentrating", "today"],
   ["She's wearing her running shoes.", "She", "might", "train", "training", "for the marathon"],
+];
+
+/** doingFrames are a situation with {N} for the person, the modal, the base form and the -ing form of the verb, and the rest. */
+const doingFrames: readonly (readonly [string, Deduction, string, string, string])[] = [
+  ["{N} isn't answering the phone.", "must", "sleep", "sleeping", ""],
+  ["{N} is wearing a suit and tie.", "might", "go", "going", "to an interview"],
+  ["{N} is carrying a tennis racket.", "must", "play", "playing", "tennis today"],
+  ["{N} is still in bed at noon.", "can't", "feel", "feeling", "well"],
+  ["{N} keeps looking at the clock.", "must", "wait", "waiting", "for someone"],
+  ["{N} is typing very fast.", "must", "finish", "finishing", "a report"],
+  ["{N} looks very calm.", "can't", "worry", "worrying", "about the exam"],
+  ["{N} is wearing running shoes.", "might", "train", "training", "for a race"],
+  ["{N} is reading the same page again and again.", "can't", "concentrate", "concentrating", ""],
+  ["{N} is speaking French on the phone.", "might", "talk", "talking", "to a friend in Paris"],
+  ["{N} is humming a song.", "must", "feel", "feeling", "happy"],
+  ["{N} has put some bags by the door.", "might", "leave", "leaving", "today"],
+];
+
+/** doings are the hand-written situations and one for every person with every frame. */
+const doings: readonly (readonly [string, string, Deduction, string, string, string])[] = [
+  ...handDoings,
+  ...everyPair(doingFrames, guessPeople).map(
+    ([[frame, modal, base, ing, rest], [name, pronoun]]) => [frame.replace("{N}", name), pronoun, modal, base, ing, rest] as const,
+  ),
 ];
 
 const doingChoice: readonly ChoiceItem[] = doings.map(
@@ -1352,7 +1412,7 @@ const deduction: TopicDef = {
 // Past modals.
 
 /** pasts are a situation, the subject, the past simple, the base form and the past participle, the rest, and the modal. */
-const pasts: readonly (readonly [string, string, string, string, string, string, Deduction | "should"])[] = [
+const handPasts: readonly (readonly [string, string, string, string, string, string, Deduction | "should"])[] = [
   ["She is late again.", "She", "missed", "miss", "missed", "the bus", "must"],
   ["He didn't come to the meeting.", "He", "forgot", "forget", "forgotten", "about it", "must"],
   ["Their car isn't outside.", "They", "left", "leave", "left", "already", "must"],
@@ -1385,6 +1445,33 @@ const pasts: readonly (readonly [string, string, string, string, string, string,
   ["He made many mistakes on his own.", "He", "asked", "ask", "asked", "for help", "should"],
   ["The diagnosis was wrong.", "The doctors", "checked", "check", "checked", "the results again", "should"],
   ["We missed the start of the film.", "We", "left", "leave", "left", "earlier", "should"],
+];
+
+/** pastFrames are a situation with {N} for the person, the past simple, base and participle, the rest, and the modal. */
+const pastFrames: readonly (readonly [string, string, string, string, string, Deduction | "should"])[] = [
+  ["{N} is late again.", "missed", "miss", "missed", "the bus", "must"],
+  ["{N} didn't come to the party.", "forgot", "forget", "forgotten", "about it", "must"],
+  ["{N} looks very tired.", "stayed", "stay", "stayed", "up late", "must"],
+  ["{N} came out of the exam smiling.", "did", "do", "done", "well", "must"],
+  ["{N} has just bought a new car.", "saved", "save", "saved", "a lot of money", "must"],
+  ["{N} was in another city all day.", "took", "take", "taken", "my bike", "can't"],
+  ["{N} doesn't speak Japanese, and the letter is in Japanese.", "wrote", "write", "written", "it", "can't"],
+  ["{N} was asleep at the time.", "heard", "hear", "heard", "the noise", "can't"],
+  ["{N} only started five minutes ago.", "finished", "finish", "finished", "the work", "can't"],
+  ["{N} isn't here yet.", "got", "get", "got", "stuck in traffic", "might"],
+  ["{N} isn't answering the phone.", "fell", "fall", "fallen", "asleep", "might"],
+  ["{N} isn't at home.", "went", "go", "gone", "to the shops", "might"],
+  ["{N} failed the test.", "studied", "study", "studied", "harder", "should"],
+  ["{N} is freezing.", "wore", "wear", "worn", "a coat", "should"],
+  ["{N} got lost in the city.", "took", "take", "taken", "a map", "should"],
+];
+
+/** pasts are the hand-written situations and one for every person with every frame, the person named again as the subject. */
+const pasts: readonly (readonly [string, string, string, string, string, string, Deduction | "should"])[] = [
+  ...handPasts,
+  ...everyPair(pastFrames, guessPeople).map(
+    ([[frame, past, base, pp, rest, kind], [name]]) => [frame.replace("{N}", name), name, past, base, pp, rest, kind] as const,
+  ),
 ];
 
 const pastChoice: readonly ChoiceItem[] = pasts.map(

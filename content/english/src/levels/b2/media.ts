@@ -1127,7 +1127,7 @@ type Pattern = "ing" | "prep-ing" | "to" | "object-to";
  * pattern after the verb, the two wrong forms of that pattern, two verbs that cannot take it, the rest of the report,
  * and another right form of the pattern (or "").
  */
-const reports: readonly (readonly [
+const handReports: readonly (readonly [
   string,
   string,
   string,
@@ -1662,6 +1662,40 @@ const reports: readonly (readonly [
   ],
 ];
 
+/** speakerSexes are the speakers of the hand-written reports who can be swapped for another person, and whether they are men. */
+const speakerSexes: Readonly<Record<string, boolean>> = {
+  Tom: true,
+  Leo: true,
+  Jake: true,
+  Sam: true,
+  Ben: true,
+  Omar: true,
+  Ana: false,
+  Anna: false,
+  Lily: false,
+  Mia: false,
+  Nina: false,
+  Kim: false,
+  Ella: false,
+  Lisa: false,
+  Grandma: false,
+};
+const otherMen = ["Daniel", "Marco", "Hiro", "Kevin", "Ahmed"] as const;
+const otherWomen = ["Sofia", "Priya", "Elena", "Rachel", "Yuki"] as const;
+
+/** extraReports are the hand-written reports said again by other speakers of the same sex. */
+const extraReports: typeof handReports = handReports.flatMap((report) => {
+  const [quote, base, past, subject, ...more] = report;
+  const man = speakerSexes[subject];
+  if (man === undefined) return [];
+  return (man ? otherMen : otherWomen).map(
+    (name) => [quote.replace(new RegExp(`\\b${subject}\\b`, "u"), name), base, past, name, ...more] as const,
+  );
+});
+
+/** reports are the hand-written reports and the same reports from other speakers. */
+const reports: typeof handReports = [...handReports, ...extraReports];
+
 const patternChoice: readonly ChoiceItem[] = reports.map(
   ([quote, , past, subject, object, right, , wrong, , rest]): ChoiceItem => [
     `${quote} → ${joinWords(subject, past, object, "___", rest)}.`,
@@ -1670,7 +1704,7 @@ const patternChoice: readonly ChoiceItem[] = reports.map(
   ],
 );
 
-const verbChoice: readonly ChoiceItem[] = interleave([reports.slice(20), reports.slice(0, 20)]).map(
+const verbChoice: readonly ChoiceItem[] = interleave([handReports.slice(20), handReports.slice(0, 20), extraReports]).map(
   ([quote, , past, subject, object, form, , , wrongVerbs, rest]): ChoiceItem => [
     `${quote} → ${joinWords(subject, "___", object, form, rest)}.`,
     past,
