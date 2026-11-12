@@ -199,6 +199,56 @@ const units: readonly UnitDef[] = [
     },
     undefined,
   ),
+  unit(
+    t("Change and Order", "变化与秩序"),
+    {
+      words: ["words-of-change-and-constancy", "words-of-decay-and-ruin", "words-of-order-and-chaos", "words-of-plenty-and-want"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Manners, Effort and Age", "礼貌、勤奋与年龄"),
+    {
+      words: ["words-of-manners-good-and-bad", "words-of-diligence-and-sloth", "words-of-delay-and-idleness", "words-of-youth-and-old-age"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("War and Peacemaking", "战争与调停"),
+    {
+      words: ["words-of-battle-and-siege", "words-of-calming-and-defiance", "words-of-daring-and-timidity"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Talk and Feeling", "言谈与情感"),
+    {
+      words: ["words-for-talkers-and-the-silent", "words-of-rapture-and-gloom", "words-of-remembering-and-forgetting"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Origins, Wiles and Likeness", "起源、诡计与相似"),
+    {
+      words: ["words-of-beginnings-and-endings", "words-of-wit-and-wiles", "words-of-likeness-and-difference"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
 ];
 
 /** courseGrade12 is the native course of grade 12. */
