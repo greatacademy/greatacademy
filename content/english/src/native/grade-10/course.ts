@@ -212,6 +212,26 @@ const units: readonly UnitDef[] = [
     },
     undefined,
   ),
+  unit(
+    t("Fights, Tricks, Cruelty and Mess", "争吵、诡计、残忍与凌乱"),
+    {
+      words: ["words-of-fights-and-squabbles", "words-of-schemes-and-tricks", "words-of-cruelty", "words-of-mess-and-dirt"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Cleaning, Money and Sources", "清洁、金钱与来源"),
+    {
+      words: ["words-of-cleaning-and-order", "words-of-rich-and-poor", "words-of-pay-and-bills", "academic-words-of-sources-and-steps"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
 ];
 
 /** courseGrade10 is the native course of grade 10. */
