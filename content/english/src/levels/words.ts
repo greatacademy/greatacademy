@@ -92,7 +92,10 @@ const minItems = 25;
 const quote = (s: string) => same(`> ${s}`);
 
 const explained = (w: WordDef, sentence: string): Text =>
-  t(`*${w.head}*: ${w.meaning.en}.\n\n${sentence}`, `*${w.head}*：${w.meaning["zh-CN"]}。\n\n${sentence}`);
+  t(
+    `*${w.head}* means “${w.meaning.en}”, and that meaning is the one this sentence needs:\n\n${sentence}`,
+    `*${w.head}* 的意思是“${w.meaning["zh-CN"]}”，这正是这个句子需要的意思：\n\n${sentence}`,
+  );
 
 /**
  * glossary maps each spelling of every headword of a vocabulary topic, in lower case, to its word, so that choosing a

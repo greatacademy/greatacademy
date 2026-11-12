@@ -336,13 +336,26 @@ const aAndAn: TopicDef = {
         "Use *an* when the next word starts with the sound of *a*, *e*, *i*, *o* or *u*: *an egg*, *an apple*, *an old book*. Use *a* before other sounds: *a pen*, *a big egg*.\n\nLook at the word right after it, not at the noun: *a big egg*, but *an egg*.",
         "下一个词以 *a*、*e*、*i*、*o*、*u* 的音开头时用 *an*：*an egg*、*an apple*、*an old book*。其他音前面用 *a*：*a pen*、*a big egg*。\n\n要看紧跟在后面的那个词，而不是名词：*a big egg*，但 *an egg*。",
       ),
-      choiceGenerator(t("Choose a or an.", "选择 a 或 an。"), articleChoiceBank, (right, shown) => {
-        const sound = soundOf(right, nextWord(shown));
-        return t(
-          `The word after the gap decides: ${sound.en}. ${shown.replace("___", `*${right}*`)}`,
-          `看空白后面的那个词：${sound["zh-CN"]}。${shown.replace("___", `*${right}*`)}`,
-        );
-      }),
+      choiceGenerator(
+        t("Choose a or an.", "选择 a 或 an。"),
+        articleChoiceBank,
+        (right, shown) => {
+          const sound = soundOf(right, nextWord(shown));
+          return t(
+            `The word after the gap decides: ${sound.en}. ${shown.replace("___", `*${right}*`)}`,
+            `看空白后面的那个词：${sound["zh-CN"]}。${shown.replace("___", `*${right}*`)}`,
+          );
+        },
+        (wrong, _right, shown) => {
+          const next = nextWord(shown);
+          return wrong === "an"
+            ? t(
+                `*an* goes before a vowel sound, but *${next}* starts with a consonant sound.`,
+                `*an* 用在元音前，但 *${next}* 以辅音开头。`,
+              )
+            : t(`*a* goes before a consonant sound, but *${next}* starts with a vowel sound.`, `*a* 用在辅音前，但 *${next}* 以元音开头。`);
+        },
+      ),
     ),
     point(
       "do-not-leave-out",
