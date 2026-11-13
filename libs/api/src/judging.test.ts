@@ -223,6 +223,16 @@ describe("judged writing", () => {
     expect(await topics()).toEqual(["basics", "paragraphs"]);
   });
 
+  it("counts the same topics on the profile as on the dashboard, with or without a route", async () => {
+    const totals = async () => [
+      (await learning.getProfile({ timeZone: "UTC" })).enrollments.find((x) => x.courseId === COURSE)?.stats?.total,
+      (await learning.getDashboard({ courseId: COURSE, timeZone: "UTC" })).stats?.total,
+    ];
+    expect(await totals()).toEqual([1, 1]);
+    await addRoutes();
+    expect(await totals()).toEqual([2, 2]);
+  });
+
   it("waits for the verdict, sends a weak text back once, and counts the rewrite", async () => {
     await addRoutes();
     const session = await startParagraphs();

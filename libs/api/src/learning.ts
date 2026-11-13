@@ -111,7 +111,8 @@ function placementReport(
 
 /** foundationsLeft counts the course's foundations the learner has not shown they know. */
 function foundationsLeft(c: CourseEntry, s: LearnerState): number {
-  return c.course.foundations.filter((id) => !c.planner.scope.assumed.has(id) && !isKnown(c.planner, s, id)).length;
+  const { scope } = c.planner;
+  return scope.topics.filter((id) => !scope.inCourse.has(id) && !scope.assumed.has(id) && !isKnown(c.planner, s, id)).length;
 }
 
 /**
@@ -119,7 +120,7 @@ function foundationsLeft(c: CourseEntry, s: LearnerState): number {
  * course needs more topics of earlier courses than it has of its own, the course it builds on; empty otherwise.
  */
 function startEarlier(c: CourseEntry, diagnosed: boolean, foundations: number): string {
-  if (diagnosed || foundations <= c.course.topics.length) return "";
+  if (diagnosed || foundations <= c.planner.scope.inCourse.size) return "";
   return c.course.def.buildsOn?.[0] ?? "";
 }
 
@@ -306,8 +307,10 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
       const now = deps.now();
       const list = [];
       for (const e of await currentCourses(db, learnerId)) {
-        const c = await registry.course(e.courseId);
-        if (!c) continue;
+        const entry = await registry.course(e.courseId);
+        if (!entry) continue;
+        // The learner's own view, as on the dashboard: without the topics no route may judge for them.
+        const c = await forLearner(db, entry, learnerId, now);
         const { state: s } = await state(db, learnerId, c);
         const p = courseProgress(c.planner, s, now);
         list.push({
