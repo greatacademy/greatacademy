@@ -14,7 +14,7 @@ const unit = (
   title: Text,
   parts: { words: string[]; grammar: string[]; reading: string[]; writing: string[] },
   readingUnit: string | undefined,
-  conversation: string,
+  conversation?: string,
 ): UnitDef => ({
   title,
   modules: [
@@ -24,7 +24,7 @@ const unit = (
     { title: writing, topics: parts.writing },
   ].filter((m) => m.topics.length > 0),
   ...(readingUnit === undefined ? {} : { reading: [readingUnit] }),
-  conversation,
+  ...(conversation === undefined ? {} : { conversation }),
 });
 
 const units: readonly UnitDef[] = [
@@ -149,6 +149,26 @@ const units: readonly UnitDef[] = [
     undefined,
     "ethics-club-debate",
   ),
+  unit(
+    t("The Organs, the Blood and Waves", "器官、血液与波"),
+    {
+      words: ["words-of-the-organs", "words-of-blood", "words-of-waves"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
+  unit(
+    t("Food Webs, the Newsroom and Banking", "食物网、新闻编辑室与银行"),
+    {
+      words: ["words-of-food-webs", "words-of-the-newsroom", "words-of-banking"],
+      grammar: [],
+      reading: [],
+      writing: [],
+    },
+    undefined,
+  ),
 ];
 
 /** courseGrade8 is the native course of grade 8. */
@@ -156,8 +176,8 @@ export const courseGrade8: CourseDef = {
   id: "english-grade-8",
   title: t("English, Grade 8", "英语：八年级"),
   description: t(
-    "English for readers and writers of grade 8, in ten themed units from turning points in stories, machines and voyages to the age of revolutions, the industrial age, the story of life, tales of dread, Shakespeare's stage, journeys to a new home and questions of right and wrong. Each unit teaches the words of its theme, grammar and mechanics, reading skills and a kind of writing together, and gives a set of passages to read on the theme. The arguments, reports, explanations, tales, scenes and essays written in the course are judged by a model.",
-    "面向八年级读者和写作者的英语课程，共十个主题单元，从故事中的转折点、机器和航行到革命时代、工业时代、生命的故事、恐怖故事、莎士比亚的舞台、迁往新家园以及是与非的问题。每个单元同时教授该主题的词汇、语法和书写规范、阅读技能和一种写作，并提供一组围绕主题的阅读文章。课程中写的议论文、报告、科学解释、故事、剧本和文章由模型评判。",
+    "English for readers and writers of grade 8, in ten themed units from turning points in stories, machines and voyages to the age of revolutions, the industrial age, the story of life, tales of dread, Shakespeare's stage, journeys to a new home and questions of right and wrong. Each unit teaches the words of its theme, grammar and mechanics, reading skills and a kind of writing together, and gives a set of passages to read on the theme. The arguments, reports, explanations, tales, scenes and essays written in the course are judged by a model. Two more units teach words alone, ten to a batch: the organs, the blood and waves, and food webs, the newsroom and banking.",
+    "面向八年级读者和写作者的英语课程，共十个主题单元，从故事中的转折点、机器和航行到革命时代、工业时代、生命的故事、恐怖故事、莎士比亚的舞台、迁往新家园以及是与非的问题。每个单元同时教授该主题的词汇、语法和书写规范、阅读技能和一种写作，并提供一组围绕主题的阅读文章。课程中写的议论文、报告、科学解释、故事、剧本和文章由模型评判。另有两个单元只教词汇，每组十个词：器官、血液与波，以及食物网、新闻编辑室与银行。",
   ),
   group: t("English", "英语"),
   buildsOn: ["english-grade-7"],
