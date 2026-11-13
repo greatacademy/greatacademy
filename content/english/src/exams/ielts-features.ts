@@ -399,7 +399,7 @@ for (const f of texts) {
   for (const person of f.people) if (!f.text.includes(person)) throw new Error(`person not in its text: ${person}`);
 }
 
-const peopleList = (f: Featured) => f.people.map((p, i) => `**${letters[i]}** ${p}`).join("\n");
+const peopleList = (f: Featured) => f.people.map((p, i) => `**${letters[i]}** ${p}`).join("\n\n");
 
 function statementItems(f: Featured): readonly LabelledItem[] {
   return f.statements.map(([statement, person, evidence]) => {

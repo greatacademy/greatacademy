@@ -67,7 +67,7 @@ const texts: readonly Everyday[] = [
     ],
   },
   {
-    text: "Hi Jordan,\n\nI think I left my blue umbrella in your car after you drove me home on Friday. Could you have a look when you get a chance? It's not urgent, as the forecast is dry until the weekend, but it was a present from my grandmother, so I'd hate to lose it. I'll be at the sports centre on Wednesday evening if you're going too.\n\nThanks,\nMaya",
+    text: "Hi Jordan,\n\nI think I left my blue umbrella in your car after you drove me home on Friday. Could you have a look when you get a chance? It's not urgent, as the forecast is dry until the weekend, but it was a present from my grandmother, so I'd hate to lose it. I'll be at the sports centre on Wednesday evening if you're going too.\n\nThanks,\n\nMaya",
     details: [
       [
         "What does Maya think she left in Jordan's car?",
@@ -153,7 +153,7 @@ const texts: readonly Everyday[] = [
     ],
   },
   {
-    text: "**Sam (4:12 p.m.):** The landlord just called. Someone's coming to fix the washing machine tomorrow between 9 and 12.\n**Lee (4:20 p.m.):** I've got an exam at 10. Can you be in?\n**Sam (4:21 p.m.):** I've got work till 11, but I'll ask if I can start later.\n**Lee (4:35 p.m.):** Thanks! If not, my sister could let them in. She has a key.",
+    text: "**Sam (4:12 p.m.):** The landlord just called. Someone's coming to fix the washing machine tomorrow between 9 and 12.\n\n**Lee (4:20 p.m.):** I've got an exam at 10. Can you be in?\n\n**Sam (4:21 p.m.):** I've got work till 11, but I'll ask if I can start later.\n\n**Lee (4:35 p.m.):** Thanks! If not, my sister could let them in. She has a key.",
     details: [
       [
         "Why is someone coming to the flat?",
@@ -282,7 +282,7 @@ const texts: readonly Everyday[] = [
     ],
   },
   {
-    text: "Dear volunteers,\n\nThank you for helping at last Saturday's family day, which attracted over 900 visitors, our highest number ever. Several of you mentioned that the queue for the face-painting table was too long, so next time we will have two tables. The next family day is on 14 June. If you can help, please reply by 1 June so that we can plan the rota. Lunch will be provided as usual.\n\nBest wishes,\nRosa Lee, Volunteer Coordinator",
+    text: "Dear volunteers,\n\nThank you for helping at last Saturday's family day, which attracted over 900 visitors, our highest number ever. Several of you mentioned that the queue for the face-painting table was too long, so next time we will have two tables. The next family day is on 14 June. If you can help, please reply by 1 June so that we can plan the rota. Lunch will be provided as usual.\n\nBest wishes,\n\nRosa Lee, Volunteer Coordinator",
     details: [
       [
         "How many visitors came to the family day?",
