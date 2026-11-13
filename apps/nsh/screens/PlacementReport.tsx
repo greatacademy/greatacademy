@@ -92,6 +92,33 @@ export function PlacementReport(props: { dash: GetDashboardResponse; learnerId?:
   );
 }
 
+/**
+ * StartEarlier offers, while a course's diagnostic is due and the course needs more topics of earlier courses than its
+ * own, to start with the course it builds on instead, as on the web.
+ */
+export function StartEarlier(props: { dash: GetDashboardResponse; learnerId?: string; onChosen: () => void }) {
+  const title = useCourseTitle();
+  const choice = useCourseChoice(props.learnerId, props.onChosen);
+  return (
+    <If when={props.dash.startEarlier && !props.dash.active}>
+      <Card>
+        <Text style={{ color: colors().ink, fontSize: 17, fontWeight: "600" }}>{m().earlierTitle}</Text>
+        <Text style={{ color: colors().ink, fontSize: 15 }}>{m().earlierBody(props.dash.foundations, title(props.dash.startEarlier))}</Text>
+        <If when={choice.error()}>
+          <ErrorNote message={choice.error()} />
+        </If>
+        <If when={props.dash.canDecide} else={<Muted>{m().earlierAskGuardian}</Muted>}>
+          <Quiet
+            label={m().earlierSwitch(title(props.dash.startEarlier))}
+            disabled={choice.busy()}
+            onPress={() => void choice.choose(props.dash.startEarlier)}
+          />
+        </If>
+      </Card>
+    </If>
+  );
+}
+
 /** CourseDone congratulates on a finished course and offers the courses that follow it. */
 export function CourseDone(props: { dash: GetDashboardResponse; learnerId?: string; onChosen: () => void }) {
   const title = useCourseTitle();

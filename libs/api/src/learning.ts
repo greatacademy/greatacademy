@@ -103,10 +103,24 @@ function placementReport(
   return {
     placed: own.filter((id) => known.has(id)).length,
     total: own.length,
-    foundations: c.course.foundations.filter((id) => !c.planner.scope.assumed.has(id) && !isKnown(c.planner, s, id)).length,
+    foundations: foundationsLeft(c, s),
     recommended: advice.kind === "stay" ? "" : advice.course,
     earlier: advice.kind === "earlier",
   };
+}
+
+/** foundationsLeft counts the course's foundations the learner has not shown they know. */
+function foundationsLeft(c: CourseEntry, s: LearnerState): number {
+  return c.course.foundations.filter((id) => !c.planner.scope.assumed.has(id) && !isKnown(c.planner, s, id)).length;
+}
+
+/**
+ * startEarlier is the course a learner new to the subject may start with instead: while the diagnostic is due and the
+ * course needs more topics of earlier courses than it has of its own, the course it builds on; empty otherwise.
+ */
+function startEarlier(c: CourseEntry, diagnosed: boolean, foundations: number): string {
+  if (diagnosed || foundations <= c.course.topics.length) return "";
+  return c.course.def.buildsOn?.[0] ?? "";
 }
 
 /** LearningDeps are the learning service's dependencies besides the request context. */
@@ -361,6 +375,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
       const diagnosed = !diagnosticDue(c.planner, s);
       const placed = diagnosed && !decided ? await placedEvent(db, learnerId, c.subject.def.id, c.id) : undefined;
       const report = placed && (placed.tested.length > 0 || (placed.missed?.length ?? 0) > 0) ? placementReport(c, s, placed) : undefined;
+      const foundations = foundationsLeft(c, s);
       return {
         courseId: c.id,
         diagnosed,
@@ -371,6 +386,8 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
         subjectId: c.subject.def.id,
         goals: { weekdays: [...(settings.goals ?? [])], paused: settings.goalsPaused },
         endDate: settings.endDate ?? "",
+        foundations,
+        startEarlier: startEarlier(c, diagnosed, foundations),
         tasks: nextTasks(c.planner, s, now).map((t) => taskMessage(c, t, s)),
         ...(active && run && { active: { id: active.id, task: taskMessage(c, runTask(run), s) } }),
         stats: { learned: p.learned, total: p.total, due: p.due },

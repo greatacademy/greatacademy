@@ -531,6 +531,23 @@ export declare type GetDashboardResponse = Message<"ga.learning.v1.GetDashboardR
    * @generated from field: string end_date = 16;
    */
   endDate: string;
+
+  /**
+   * foundations counts the topics of earlier courses the course still needs and the
+   * learner has not shown they know; the diagnostic finds which of them they know.
+   *
+   * @generated from field: int32 foundations = 17;
+   */
+  foundations: number;
+
+  /**
+   * start_earlier is, while the diagnostic is due and the course needs more topics of
+   * earlier courses than it has of its own, the course it builds on, which a learner
+   * new to the subject may start with instead; empty otherwise.
+   *
+   * @generated from field: string start_earlier = 18;
+   */
+  startEarlier: string;
 };
 
 /**

@@ -207,6 +207,22 @@ describe("LearningService", () => {
     expect((await learning.getDashboard({ courseId: COURSE })).stats?.learned).toBe(knows.size);
   });
 
+  it("suggests the course a course builds on while its diagnostic is due and it needs more earlier topics than its own", async () => {
+    await learning.chooseCourse({ courseId: "prealgebra" });
+    const due = await learning.getDashboard({ courseId: "prealgebra" });
+    const c = (await registry.course("prealgebra"))!;
+    expect(due.foundations).toBeGreaterThan(c.course.topics.length);
+    expect(due.startEarlier).toBe("5th-grade-math");
+    await learning.skipDiagnostic({ courseId: "prealgebra" });
+    expect((await learning.getDashboard({ courseId: "prealgebra" })).startEarlier).toBe("");
+
+    // A course that needs fewer earlier topics than its own suggests none.
+    await learning.chooseCourse({ courseId: COURSE });
+    const own = await learning.getDashboard({ courseId: COURSE });
+    expect(own.diagnosed).toBe(false);
+    expect(own.startEarlier).toBe("");
+  });
+
   it("retakes a diagnostic and resets a subject, keeping lessons' topics, XP and history as each says", async () => {
     await skipToLessons();
     const dash = await learning.getDashboard({ courseId: COURSE });

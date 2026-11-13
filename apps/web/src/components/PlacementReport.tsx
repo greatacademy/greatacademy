@@ -85,6 +85,33 @@ export function PlacementReport({ d, learnerId }: { d: GetDashboardResponse; lea
   );
 }
 
+/**
+ * StartEarlier offers, while a course's diagnostic is due and the course needs more topics of earlier courses than its
+ * own, to start with the course it builds on instead (docs/learning-engine.md §9).
+ */
+export function StartEarlier({ d, learnerId }: { d: GetDashboardResponse; learnerId?: string }) {
+  const { m } = useI18n();
+  const title = useCourseTitle();
+  const { choose, busy, failed } = useCourseChoice(learnerId);
+  if (!d.startEarlier || d.active) return null;
+  return (
+    <Card className="space-y-3 border-accent/40">
+      <h2 className="flex items-center gap-2 text-lg font-semibold">
+        <Compass size={22} weight="duotone" className="text-accent" /> {m.earlierTitle}
+      </h2>
+      <p className="text-sm">{m.earlierBody(d.foundations, title(d.startEarlier))}</p>
+      {failed && <ErrorNote message={m.error} />}
+      {d.canDecide ? (
+        <Button variant="secondary" onClick={() => choose.mutate(d.startEarlier)} disabled={busy}>
+          {m.earlierSwitch(title(d.startEarlier))}
+        </Button>
+      ) : (
+        <p className="text-sm text-muted">{m.earlierAskGuardian}</p>
+      )}
+    </Card>
+  );
+}
+
 /** CourseDone congratulates on a finished course and offers the courses that follow it. */
 export function CourseDone({ d, learnerId }: { d: GetDashboardResponse; learnerId?: string }) {
   const { m } = useI18n();

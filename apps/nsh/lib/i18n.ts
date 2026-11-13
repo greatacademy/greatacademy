@@ -374,6 +374,11 @@ const messages = {
     reportKeep: "Keep this course",
     reportOk: "Start learning",
     reportAskGuardian: "Your guardian sees this report and may change your course.",
+    earlierTitle: "New to the subject?",
+    earlierBody: (n: number, title: string) =>
+      `This course also needs ${n} topics of earlier courses. The diagnostic finds the ones already known so they are skipped; without it, all of them are taught first. To start from the beginning, ${title} is the better place.`,
+    earlierSwitch: (title: string) => `Start with ${title}`,
+    earlierAskGuardian: "Your guardian may change your course.",
     courseDone: "Course complete",
     courseDoneBody: "Every topic of this course is learned; reviews keep it fresh. The courses that follow:",
     courseDoneAsk: "Ask your guardian to choose the next course.",
@@ -787,6 +792,11 @@ const messages = {
     reportKeep: "保留这门课",
     reportOk: "开始学习",
     reportAskGuardian: "监护人会看到这份报告，并可能为你换课。",
+    earlierTitle: "刚开始学这个科目？",
+    earlierBody: (n: number, title: string) =>
+      `这门课还需要前面课程的 ${n} 个知识点。诊断会找出已经掌握的，把它们跳过；不做诊断的话，这些都要先学一遍。如果从零开始，「${title}」是更好的起点。`,
+    earlierSwitch: (title: string) => `从「${title}」开始`,
+    earlierAskGuardian: "监护人可以为你换课。",
     courseDone: "课程完成",
     courseDoneBody: "这门课的所有知识点都已学会，复习会帮你保持记忆。接下来的课程：",
     courseDoneAsk: "请监护人选择下一门课。",

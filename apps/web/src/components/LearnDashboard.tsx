@@ -9,7 +9,7 @@ import { account, catalog, learning, timeZone } from "../lib/rpc.ts";
 import { ConversationsCard } from "./Conversations.tsx";
 import { LoadError } from "./LoadError.tsx";
 import { Markdown } from "./Markdown.tsx";
-import { CourseDone, PlacementReport } from "./PlacementReport.tsx";
+import { CourseDone, PlacementReport, StartEarlier } from "./PlacementReport.tsx";
 import { ForecastCard, GoalsCard } from "./SubjectDecisions.tsx";
 import { TaskCard } from "./TaskCard.tsx";
 import { Bar, Button, Card, ErrorNote, Spinner } from "./ui.tsx";
@@ -187,6 +187,7 @@ export function LearnDashboard({ courseId, subjectId }: { courseId: string; subj
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
         <div className="min-w-0 space-y-6">
           <PlacementReport d={d} />
+          <StartEarlier d={d} />
           <CourseDone d={d} />
           <section className="space-y-3">
             <div className="flex flex-wrap items-baseline justify-between gap-x-4">

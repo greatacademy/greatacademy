@@ -23,7 +23,7 @@ import {
   Skeleton,
 } from "../lib/ui.tsx";
 import { Header } from "./Header.tsx";
-import { CourseDone, PlacementReport } from "./PlacementReport.tsx";
+import { CourseDone, PlacementReport, StartEarlier } from "./PlacementReport.tsx";
 import { bandName, confirm, ScopeRow } from "./Privacy.tsx";
 import { openWeb } from "./Settings.tsx";
 import { Bar } from "./SubjectCards.tsx";
@@ -155,6 +155,7 @@ export function Learner(props: { learnerId: string }) {
                                     {(d) => (
                                       <>
                                         <PlacementReport dash={d()} learnerId={props.learnerId} onAnswered={() => data.refetch()} />
+                                        <StartEarlier dash={d()} learnerId={props.learnerId} onChosen={() => data.refetch()} />
                                         <CourseDone dash={d()} learnerId={props.learnerId} onChosen={() => data.refetch()} />
                                       </>
                                     )}

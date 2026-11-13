@@ -38,7 +38,7 @@ XP is earned in a subject and counted there. The account's total is the sum, whi
 
 Each subject has three pages, the same on the web and in the apps:
 
-- **Learn** — what to do now: the course and how far it is, the task in progress or the next tasks, the diagnostic or its report, and the last few finished tasks; beside them the subject's total XP with today's, the weekly goals with the last 14 days, the forecast with other paces to compare, and the week's league.
+- **Learn** — what to do now: the course and how far it is, the task in progress or the next tasks, the diagnostic or its report, the offer to start with an earlier course when the course needs more of them than its own ([Learning engine §9](learning-engine.md#9-diagnostic)), and the last few finished tasks; beside them the subject's total XP with today's, the weekly goals with the last 14 days, the forecast with other paces to compare, and the week's league.
 - **Progress** — how far the learner is: the course's topic map, and beside it the same goals and forecast cards as Learn; the history of finished tasks opens from its head.
 - **Course** — what is being learned: the current course and its outline, the other courses of the subject, and the decisions about them: changing course, retaking the diagnostic and resetting the knowledge profile.
 

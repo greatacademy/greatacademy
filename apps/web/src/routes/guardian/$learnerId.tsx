@@ -9,7 +9,7 @@ import { LearnerPrivacy } from "../../components/LearnerPrivacy.tsx";
 import { ActiveLine, signText } from "../../components/LearnerStatus.tsx";
 import { LoadError } from "../../components/LoadError.tsx";
 import { Markdown } from "../../components/Markdown.tsx";
-import { CourseDone, PlacementReport } from "../../components/PlacementReport.tsx";
+import { CourseDone, PlacementReport, StartEarlier } from "../../components/PlacementReport.tsx";
 import { ForecastCard, GoalsCard, StartOverCard } from "../../components/SubjectDecisions.tsx";
 import { TopicLegend, TopicMap } from "../../components/TopicMap.tsx";
 import { Bar, Button, buttonClass, Card, Spinner } from "../../components/ui.tsx";
@@ -177,6 +177,7 @@ function GuardedReport({ learnerId, courseId }: { learnerId: string; courseId: s
   return (
     <>
       <PlacementReport d={dash.data} learnerId={learnerId} />
+      <StartEarlier d={dash.data} learnerId={learnerId} />
       <CourseDone d={dash.data} learnerId={learnerId} />
     </>
   );

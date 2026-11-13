@@ -189,6 +189,13 @@ message GetDashboardResponse {
   Goals goals = 15;
   // end_date is the day the course should be finished by, "YYYY-MM-DD", or empty.
   string end_date = 16;
+  // foundations counts the topics of earlier courses the course still needs and the
+  // learner has not shown they know; the diagnostic finds which of them they know.
+  int32 foundations = 17;
+  // start_earlier is, while the diagnostic is due and the course needs more topics of
+  // earlier courses than it has of its own, the course it builds on, which a learner
+  // new to the subject may start with instead; empty otherwise.
+  string start_earlier = 18;
 }
 
 // Task is a unit of work offered on the dashboard.
