@@ -4,6 +4,7 @@
 import { type CourseDef, type TopicDef, t } from "@ga/content";
 import { sentenceAndSummaryCompletion } from "./ielts-completion.ts";
 import { describingData } from "./ielts-data.ts";
+import { matchingFeaturesAndChoice } from "./ielts-features.ts";
 import { matchingHeadings } from "./ielts-matching.ts";
 import { ieltsReading } from "./ielts-reading.ts";
 import { trueFalseNotGiven } from "./ielts-true-false.ts";
@@ -15,6 +16,7 @@ export const topics: readonly TopicDef[] = [
   trueFalseNotGiven,
   matchingHeadings,
   sentenceAndSummaryCompletion,
+  matchingFeaturesAndChoice,
   describingData,
   writingTask1,
   writingTask2,
@@ -28,8 +30,8 @@ export const course: CourseDef = {
   id: "english-ielts",
   title: t("IELTS Academic", "雅思学术类"),
   description: t(
-    "Practice for IELTS Academic Reading and Writing after English B2: True/False/Not given, matching headings and information, sentence and summary completion, the academic words of the test's subjects, academic passages in the formats of the test, describing data for Task 1 and the essay of Task 2. It teaches nothing new: its own topics start with practice, and every text is written for this course. Listening and Speaking will follow with audio.",
-    "学完英语 B2 之后的雅思学术类阅读与写作练习：判断题、段落标题与信息匹配、句子与摘要填空、考试常见话题的学术词汇、按考试题型出题的学术文章、Task 1 的数据描述和 Task 2 的议论文。本课程不教新知识：它自己的主题一开始就是练习，所有文章都是为本课程原创的。听力和口语将在有了音频之后加入。",
+    "Practice for IELTS Academic Reading and Writing after English B2: True/False/Not given, matching headings and information, sentence and summary completion, matching features and multiple choice, the academic words of the test's subjects, academic passages in the formats of the test, describing data for Task 1 and the essay of Task 2. It teaches nothing new: its own topics start with practice, and every text is written for this course. Listening and Speaking will follow with audio.",
+    "学完英语 B2 之后的雅思学术类阅读与写作练习：判断题、段落标题与信息匹配、句子与摘要填空、人物观点匹配与单项选择、考试常见话题的学术词汇、按考试题型出题的学术文章、Task 1 的数据描述和 Task 2 的议论文。本课程不教新知识：它自己的主题一开始就是练习，所有文章都是为本课程原创的。听力和口语将在有了音频之后加入。",
   ),
   group: examGroup,
   buildsOn: ["english-b2"],
@@ -43,7 +45,12 @@ export const course: CourseDef = {
         },
         {
           title: t("IELTS Question Types", "雅思题型"),
-          topics: ["ielts-true-false-not-given", "ielts-matching-headings", "ielts-sentence-and-summary-completion"],
+          topics: [
+            "ielts-true-false-not-given",
+            "ielts-matching-headings",
+            "ielts-sentence-and-summary-completion",
+            "ielts-matching-features-and-multiple-choice",
+          ],
         },
         {
           title: t("Academic Words", "学术词汇"),

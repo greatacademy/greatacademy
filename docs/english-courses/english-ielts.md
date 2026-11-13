@@ -6,7 +6,7 @@
 - **Level:** CEFR B2 and above, for learners of English as a foreign language preparing for IELTS Academic
 - **Prerequisite(s):** English B2 (`english-b2`)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 3 units · 43 topics (6 new, all practice-only) · 1 reading unit of 6 passages
+- **Size:** 3 units · 44 topics (7 new, all practice-only) · 1 reading unit of 6 passages
 
 ## The Test
 
@@ -47,6 +47,7 @@ Each unit lists the topics it reuses (*existing*) and its new topics. A new topi
 - `ielts-true-false-not-given` True, False or Not Given (practice-only; after `fact-and-opinion`, `making-inferences`). Statements about short texts: (1) *True / False / Not given* about facts; (2) *Yes / No / Not given* about a writer's views and claims.
 - `ielts-matching-headings` Matching Headings and Information (practice-only; after `supporting-details`). Texts of four lettered paragraphs: (1) choose the heading of a paragraph; (2) find the paragraph that contains a piece of information.
 - `ielts-sentence-and-summary-completion` Sentence and Summary Completion (practice-only; after `supporting-details`). Short texts with gaps: (1) complete a sentence with one word copied from the text; (2) complete a summary with a word from a box that says the same in other words.
+- `ielts-matching-features-and-multiple-choice` Matching Features and Multiple Choice (practice-only; after `supporting-details`, `making-inferences`). Texts that report what three people found or think: (1) match a statement to the person, A, B or C; (2) choose the answer to a question that follows the text.
 
 **Academic words (existing):** `b2-words-research-2`, `b2-words-scientific-adjectives`, `b2-words-abstract-nouns`, `b2-words-society`, `b2-words-higher-education`, `b2-words-climate-change`, `b2-words-globalization`, `b2-words-innovation`: the subjects IELTS passages and essays come back to.
 
@@ -78,6 +79,7 @@ Each unit lists the topics it reuses (*existing*) and its new topics. A new topi
 | `ielts-true-false-not-given` | True/False/Not given; Yes/No/Not given | 30; 30 | Rules |
 | `ielts-matching-headings` | Headings; information | 32; 32 | Rules |
 | `ielts-sentence-and-summary-completion` | Sentences; summaries | 30; 30 | Rules |
+| `ielts-matching-features-and-multiple-choice` | Matching features; multiple choice | 30; 30 | Rules |
 | `ielts-describing-data` | Trends; proportions and comparisons | 32; 39 | Rules |
 | `ielts-writing-task-1` | Task 1 | 12 tasks | Model |
 | `ielts-writing-task-2` | Task 2 | 12 tasks | Model |
