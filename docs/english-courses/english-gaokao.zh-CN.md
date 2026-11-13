@@ -6,7 +6,7 @@
 - **级别：** CEFR B1 及以上，面向准备普通高等学校招生全国统一考试英语科的学生
 - **先修：** 英语 B1（`english-b1`）
 - **讲解语言：** 界面语言：中文或英文
-- **规模：** 3 个单元 · 22 个主题（新增 5 个，均为只练习主题）· 1 个阅读单元，8 篇文章
+- **规模：** 3 个单元 · 47 个主题（新增 6 个，均为只练习主题）· 1 个阅读单元，8 篇文章
 
 ## 考试
 
@@ -33,7 +33,7 @@
 
 ### 1. 阅读
 
-**已有：** `main-idea`、`supporting-details`、`making-inferences`、`authors-purpose`、`ordering-sentences-in-a-paragraph`、`choosing-transitions`。
+**已有：** `main-idea`、`supporting-details`、`making-inferences`、`authors-purpose`、`identifying-topic-sentences`、`summarizing-a-text`、`ordering-sentences-in-a-paragraph`、`choosing-transitions`；试卷常用话题（学校、人际、健康、环境、文化和科学）的词汇：`b1-words-school-life`、`b1-words-learning`、`b1-words-study-skills`、`b1-words-relationships`、`b1-words-emotions`、`b1-words-healthy-habits`、`b1-words-environment`、`b1-words-green-living`、`b1-words-culture`、`b1-words-science`、`b1-words-inventions`、`b1-words-describing-events`。
 
 **新增**
 
@@ -43,7 +43,7 @@
 
 ### 2. 语言运用
 
-**已有：** `articles-in-general-and-specific`、`relative-clauses`、`active-and-passive-voice`、`past-perfect`、`gerunds-and-infinitives`、`phrasal-verbs`、`comparatives-and-superlatives`。
+**已有：** `articles-in-general-and-specific`、`active-and-passive-voice`、`present-perfect-or-past-simple`、`present-perfect-continuous`、`past-perfect`、`verb-tense-consistency`、`first-conditional`、`second-conditional`、`may-might-and-could`、`gerunds-and-infinitives`、`relative-clauses`、`combining-with-relative-clauses`、`phrasal-verbs`、`comparatives-and-superlatives`；语法填空排在完形填空之前。
 
 **新增**
 
@@ -52,11 +52,12 @@
 
 ### 3. 写作
 
-**已有：** `writing-a-formal-email`、`writing-an-informal-email`、`writing-a-letter-of-advice`、`writing-a-story`。
+**已有：** `writing-a-formal-email`、`writing-an-informal-email`、`writing-a-letter-of-advice`、`writing-a-letter-of-complaint`、`writing-an-article`、`b1-words-life-events`、`writing-a-story`。
 
 **新增**
 
 - `gaokao-practical-writing` 应用文写作（由模型评判；只练习；在 `writing-a-formal-email`、`writing-an-informal-email` 之后）。写一篇约 80 词的邮件、书信、通知、邀请或校报短讯，涵盖任务的每个要点。
+- `gaokao-continuation-skills` 续写的衔接与描写（只练习；在 `b1-words-emotions`、`ordering-sentences-in-a-paragraph` 之后）。续写依靠的两项能力，按规则判分：（1）承接段首句并与故事一致的句子，共 15 个故事，每个两个段首句；（2）通过动作表现情感、而不是直接说出情感的句子。
 - `gaokao-continuation-writing` 读后续写（由模型评判；只练习；在 `writing-a-story` 之后）。读一个故事，续写两段共约 150 词，每段以给出的句子开头，人物保持一致，并引向结局。
 
 **以后有了音频和录音：** 听力部分，包括关于校园生活的对话和独白。
@@ -68,5 +69,6 @@
 | `gaokao-seven-from-five` | 段首段尾的空；段中的空 | 39；31 | 规则 |
 | `gaokao-cloze` | 由本句决定；由上下文决定 | 33；32 | 规则 |
 | `gaokao-grammar-filling` | 给出的词；不给词 | 35；34 | 规则 |
+| `gaokao-continuation-skills` | 承接段首句；表现情感 | 30；30 | 规则 |
 | `gaokao-practical-writing` | 应用文 | 12 个任务 | 模型：`gaokao-practical-points`、`gaokao-practical-form` |
 | `gaokao-continuation-writing` | 续写 | 12 个任务 | 模型：`gaokao-continuation-plot`、`gaokao-continuation-detail` |

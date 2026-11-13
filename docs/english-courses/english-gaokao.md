@@ -6,7 +6,7 @@
 - **Level:** CEFR B1 and above, for students preparing for the English paper of China's national college entrance examination
 - **Prerequisite(s):** English B1 (`english-b1`)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 3 units · 22 topics (5 new, all practice-only) · 1 reading unit of 8 passages
+- **Size:** 3 units · 47 topics (6 new, all practice-only) · 1 reading unit of 8 passages
 
 ## The Test
 
@@ -33,7 +33,7 @@ Each unit lists the topics it reuses (*existing*) and its new topics. A new topi
 
 ### 1. Reading
 
-**Existing:** `main-idea`, `supporting-details`, `making-inferences`, `authors-purpose`, `ordering-sentences-in-a-paragraph`, `choosing-transitions`.
+**Existing:** `main-idea`, `supporting-details`, `making-inferences`, `authors-purpose`, `identifying-topic-sentences`, `summarizing-a-text`, `ordering-sentences-in-a-paragraph`, `choosing-transitions`; the words of the themes the paper draws on, school, people, health, the environment, culture and science: `b1-words-school-life`, `b1-words-learning`, `b1-words-study-skills`, `b1-words-relationships`, `b1-words-emotions`, `b1-words-healthy-habits`, `b1-words-environment`, `b1-words-green-living`, `b1-words-culture`, `b1-words-science`, `b1-words-inventions`, `b1-words-describing-events`.
 
 **New**
 
@@ -43,7 +43,7 @@ Each unit lists the topics it reuses (*existing*) and its new topics. A new topi
 
 ### 2. Language Use
 
-**Existing:** `articles-in-general-and-specific`, `relative-clauses`, `active-and-passive-voice`, `past-perfect`, `gerunds-and-infinitives`, `phrasal-verbs`, `comparatives-and-superlatives`.
+**Existing:** `articles-in-general-and-specific`, `active-and-passive-voice`, `present-perfect-or-past-simple`, `present-perfect-continuous`, `past-perfect`, `verb-tense-consistency`, `first-conditional`, `second-conditional`, `may-might-and-could`, `gerunds-and-infinitives`, `relative-clauses`, `combining-with-relative-clauses`, `phrasal-verbs`, `comparatives-and-superlatives`; grammar filling comes before the cloze.
 
 **New**
 
@@ -52,11 +52,12 @@ Each unit lists the topics it reuses (*existing*) and its new topics. A new topi
 
 ### 3. Writing
 
-**Existing:** `writing-a-formal-email`, `writing-an-informal-email`, `writing-a-letter-of-advice`, `writing-a-story`.
+**Existing:** `writing-a-formal-email`, `writing-an-informal-email`, `writing-a-letter-of-advice`, `writing-a-letter-of-complaint`, `writing-an-article`, `b1-words-life-events`, `writing-a-story`.
 
 **New**
 
 - `gaokao-practical-writing` Practical Writing (judged by a model; practice-only; after `writing-a-formal-email`, `writing-an-informal-email`). An email, a letter, a notice, an invitation or a short report for the school newspaper, of about 80 words, that covers every point of the task.
+- `gaokao-continuation-skills` Continuing a Story (practice-only; after `b1-words-emotions`, `ordering-sentences-in-a-paragraph`). The two skills a continuation rests on, judged by rules: (1) the sentence that follows a paragraph's given opening and agrees with the story, over 15 stories with two openings each; (2) the sentence that shows a feeling through action instead of naming it.
 - `gaokao-continuation-writing` Continuation Writing (judged by a model; practice-only; after `writing-a-story`). Read a story and continue it in two paragraphs of about 150 words in all, each beginning with the given sentence, keeping its characters and leading to an ending.
 
 **Later, with audio and recording:** the listening part, with conversations and talks on school life.
@@ -68,5 +69,6 @@ Each unit lists the topics it reuses (*existing*) and its new topics. A new topi
 | `gaokao-seven-from-five` | Opening and closing gaps; middle gaps | 39; 31 | Rules |
 | `gaokao-cloze` | The sentence; the story | 33; 32 | Rules |
 | `gaokao-grammar-filling` | Given words; no word given | 35; 34 | Rules |
+| `gaokao-continuation-skills` | Following the opening; showing a feeling | 30; 30 | Rules |
 | `gaokao-practical-writing` | Practical writing | 12 tasks | Model: `gaokao-practical-points`, `gaokao-practical-form` |
 | `gaokao-continuation-writing` | Continuation | 12 tasks | Model: `gaokao-continuation-plot`, `gaokao-continuation-detail` |
