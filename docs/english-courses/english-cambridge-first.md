@@ -6,7 +6,7 @@
 - **Level:** CEFR B2, for learners of English as a foreign language preparing for B2 First
 - **Prerequisite(s):** English B2 (`english-b2`)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 3 units · 28 topics (6 new, all practice-only) · 1 reading unit of 6 passages
+- **Size:** 3 units · 45 topics (7 new, all practice-only) · 1 reading unit of 6 passages
 
 ## The Test
 
@@ -32,7 +32,7 @@ Each unit lists the topics it reuses (*existing*) and its new topics. A new topi
 
 ### 1. Use of English
 
-**Existing:** `phrasal-verbs`, `b2-words-linking-1`, `common-prefixes`, `suffixes-that-change-word-class`, `articles-in-general-and-specific`, `relative-clauses`, `gerunds-and-infinitives`, `reported-speech`, `third-conditional`, `passive-with-modals-and-perfect-forms`, `causative-have-and-get`, in three modules: words in context (Parts 1 and 3), grammar words (Part 2) and key word transformations (Part 4).
+**Existing:** `phrasal-verbs`, `idioms`, `more-idioms`, `b2-words-linking-1`, `b2-words-linking-2`, `b2-words-personality-3`, `b2-words-strong-feelings`, `common-prefixes`, `suffixes-that-change-word-class`, `articles-in-general-and-specific`, `relative-clauses`, `prepositions-before-relative-pronouns`, `gerunds-and-infinitives`, `used-to`, `so-and-such`, `reported-speech`, `third-conditional`, `passive-with-modals-and-perfect-forms`, `causative-have-and-get`, `reporting-verbs`, `modals-of-deduction`, `past-modals`, `mixed-conditionals`, `wish-and-if-only`, in three modules: words in context (Parts 1 and 3), grammar words (Part 2) and key word transformations (Part 4).
 
 **New**
 
@@ -45,7 +45,11 @@ Each unit lists the topics it reuses (*existing*) and its new topics. A new topi
 
 ### 2. Reading
 
-**Existing:** `making-inferences`, `authors-purpose`, `tone-and-mood`, `ordering-sentences-in-a-paragraph`, `choosing-transitions`.
+**Existing:** `making-inferences`, `authors-purpose`, `tone-and-mood`, `b2-words-tone`, `ordering-sentences-in-a-paragraph`, `choosing-transitions`.
+
+**New**
+
+- `fce-multiple-matching` Multiple Matching (practice-only; after `making-inferences`). Eight sets of four people, A to D, writing on one subject, each with eight statements: (1) what a person did or what happened to them; (2) how a person felt or what they think, said in other words.
 
 **Reading:** `fce-reading`, 6 passages of 300 to 500 words with 36 questions in the formats of Parts 5 to 7. Multiple choice on a long text (Part 5), six questions each: A year without a phone; The woman who mapped the ocean floor. Gapped text (Part 6), five gaps each, with one sentence that fits no gap: Learning to cook at forty; A theatre that saved a town. Multiple matching (Part 7), seven questions each across four short texts: Four young volunteers; Night shift at the zoo.
 
@@ -53,7 +57,7 @@ Each unit lists the topics it reuses (*existing*) and its new topics. A new topi
 
 ### 3. Writing
 
-**Existing:** `writing-an-opinion-essay`, `writing-an-informal-email`, `writing-a-formal-email`, `writing-an-article`, `writing-a-review`, `writing-a-report`.
+**Existing:** `writing-an-opinion-essay`, `writing-an-informal-email`, `writing-a-formal-email`, `writing-an-article`, `b2-words-film-and-tv`, `b2-words-tourism`, `writing-a-review`, `writing-a-report`.
 
 **New**
 
@@ -68,5 +72,6 @@ Each unit lists the topics it reuses (*existing*) and its new topics. A new topi
 | `fce-open-cloze` | Grammar words; linkers, relative words, quantifiers and fixed phrases | 34; 36 | Rules |
 | `fce-word-formation` | Nouns, adjectives and verbs; prefixes, adverbs and plurals | 33; 34 | Rules |
 | `fce-key-word-transformations` | Passives, comparisons, patterns; conditionals, reporting, modals, phrasal verbs | 33; 35 | Rules |
+| `fce-multiple-matching` | What people did; feelings and views | 32; 32 | Rules |
 | `fce-writing-an-essay` | Essay | 12 tasks | Model: `fce-essay-notes`, `fce-essay-answer`, `fce-organized` |
 | `fce-writing-part-2` | Article, email or letter, report, review | 12 tasks | Model: `fce-part2-content`, `fce-part2-form`, `fce-register`, `fce-organized` |

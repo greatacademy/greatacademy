@@ -6,7 +6,7 @@
 - **级别：** CEFR B2，面向准备 B2 First 的英语外语学习者
 - **先修：** 英语 B2（`english-b2`）
 - **讲解语言：** 界面语言：中文或英文
-- **规模：** 3 个单元 · 28 个主题（新增 6 个，均为只练习主题）· 1 个阅读单元，6 篇文章
+- **规模：** 3 个单元 · 45 个主题（新增 7 个，均为只练习主题）· 1 个阅读单元，6 篇文章
 
 ## 考试
 
@@ -32,7 +32,7 @@
 
 ### 1. 语言运用
 
-**已有：** `phrasal-verbs`、`b2-words-linking-1`、`common-prefixes`、`suffixes-that-change-word-class`、`articles-in-general-and-specific`、`relative-clauses`、`gerunds-and-infinitives`、`reported-speech`、`third-conditional`、`passive-with-modals-and-perfect-forms`、`causative-have-and-get`，分为三个模块：语境中的词汇（第 1、3 部分）、语法功能词（第 2 部分）和关键词句型转换（第 4 部分）。
+**已有：** `phrasal-verbs`、`idioms`、`more-idioms`、`b2-words-linking-1`、`b2-words-linking-2`、`b2-words-personality-3`、`b2-words-strong-feelings`、`common-prefixes`、`suffixes-that-change-word-class`、`articles-in-general-and-specific`、`relative-clauses`、`prepositions-before-relative-pronouns`、`gerunds-and-infinitives`、`used-to`、`so-and-such`、`reported-speech`、`third-conditional`、`passive-with-modals-and-perfect-forms`、`causative-have-and-get`、`reporting-verbs`、`modals-of-deduction`、`past-modals`、`mixed-conditionals`、`wish-and-if-only`，分为三个模块：语境中的词汇（第 1、3 部分）、语法功能词（第 2 部分）和关键词句型转换（第 4 部分）。
 
 **新增**
 
@@ -45,7 +45,11 @@
 
 ### 2. 阅读
 
-**已有：** `making-inferences`、`authors-purpose`、`tone-and-mood`、`ordering-sentences-in-a-paragraph`、`choosing-transitions`。
+**已有：** `making-inferences`、`authors-purpose`、`tone-and-mood`、`b2-words-tone`、`ordering-sentences-in-a-paragraph`、`choosing-transitions`。
+
+**新增**
+
+- `fce-multiple-matching` 多项匹配（只练习；在 `making-inferences` 之后）。八组，每组四个人（A 到 D）就同一话题各写一段，每组八个陈述：（1）某人做了什么或遇到了什么；（2）某人有什么感受或看法，换了说法表达。
 
 **阅读：** `fce-reading`，6 篇 300 到 500 词的文章，按第 5 至 7 部分的题型共出 36 题。长文单选（第 5 部分），每篇六题：一年不用手机；绘制海底地图的女人。句子还原（第 6 部分），每篇五个空，另有一个不适合任何空的干扰句：四十岁学做饭；救活一座小镇的剧院。多项匹配（第 7 部分），在四篇短文之间各出七题：四位年轻志愿者；动物园的夜班。
 
@@ -53,7 +57,7 @@
 
 ### 3. 写作
 
-**已有：** `writing-an-opinion-essay`、`writing-an-informal-email`、`writing-a-formal-email`、`writing-an-article`、`writing-a-review`、`writing-a-report`。
+**已有：** `writing-an-opinion-essay`、`writing-an-informal-email`、`writing-a-formal-email`、`writing-an-article`、`b2-words-film-and-tv`、`b2-words-tourism`、`writing-a-review`、`writing-a-report`。
 
 **新增**
 
@@ -68,5 +72,6 @@
 | `fce-open-cloze` | 语法词；连接词、关系词、数量词和固定短语 | 34；36 | 规则 |
 | `fce-word-formation` | 名词、形容词和动词；前缀、副词和复数 | 33；34 | 规则 |
 | `fce-key-word-transformations` | 被动、比较、句型；条件、转述、情态、短语动词 | 33；35 | 规则 |
+| `fce-multiple-matching` | 做了什么；感受和看法 | 32；32 | 规则 |
 | `fce-writing-an-essay` | 议论文 | 12 个任务 | 模型：`fce-essay-notes`、`fce-essay-answer`、`fce-organized` |
 | `fce-writing-part-2` | 文章、邮件或信件、报告、评论 | 12 个任务 | 模型：`fce-part2-content`、`fce-part2-form`、`fce-register`、`fce-organized` |
