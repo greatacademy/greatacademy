@@ -130,7 +130,7 @@ export function CourseList(props: { visible: () => boolean; choose?: Choosing; i
     const words = needle().trim().toLowerCase();
     return all()
       .filter(({ title }) => !shelf() || title === shelf())
-      .map(({ title, courses }) => ({ title, courses: courses.filter((c) => !words || tx(c.title).toLowerCase().includes(words)) }))
+      .map(({ title, courses }) => ({ title, courses: courses.filter((c) => !words || titleMatches(c, words)) }))
       .filter(({ courses }) => courses.length > 0);
   });
   const busy = signal(false);
@@ -300,4 +300,9 @@ export function CourseList(props: { visible: () => boolean; choose?: Choosing; i
       </Loaded>
     </View>
   );
+}
+
+/** titleMatches tells whether a course's title, in any language, contains the search words, so "IELTS" finds 雅思学术类. */
+function titleMatches(course: { title?: { values: Record<string, string> } }, words: string): boolean {
+  return Object.values(course.title?.values ?? {}).some((title) => title.toLowerCase().includes(words));
 }

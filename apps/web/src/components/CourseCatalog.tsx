@@ -56,7 +56,7 @@ export function CourseCatalog({
   const needle = query.trim().toLowerCase();
   const shown = shelves
     .filter(([title]) => !shelf || title === shelf)
-    .map(([title, list]) => [title, list.filter((c) => !needle || tx(c.title).toLowerCase().includes(needle))] as const)
+    .map(([title, list]) => [title, list.filter((c) => !needle || titleMatches(c, needle))] as const)
     .filter(([, list]) => list.length > 0);
   const chip = (active: boolean) =>
     `shrink-0 rounded-full border px-3 py-1.5 text-sm transition ${active ? "border-accent bg-accent-soft font-medium text-accent" : "border-line bg-surface text-muted hover:text-ink"}`;
@@ -154,4 +154,9 @@ export function CourseCatalog({
       ))}
     </div>
   );
+}
+
+/** titleMatches tells whether a course's title, in any language, contains the search words, so "IELTS" finds 雅思学术类. */
+function titleMatches(course: { title?: { values: Record<string, string> } }, words: string): boolean {
+  return Object.values(course.title?.values ?? {}).some((title) => title.toLowerCase().includes(words));
 }
