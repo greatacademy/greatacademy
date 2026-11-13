@@ -17,6 +17,8 @@ import { essaysOnWriting } from "./college/reading-style.ts";
 import { writingAtWork } from "./college/reading-work.ts";
 import { vocabularyCollege, wordTopicsCollege } from "./college/words.ts";
 import { writingTopicsCollege } from "./college/writing.ts";
+import { judgingResearchQuestions } from "./college/writing-research-questions.ts";
+import { signposting } from "./college/writing-signposts.ts";
 import { grade3 } from "./grade-3/index.ts";
 import { grade4 } from "./grade-4/index.ts";
 import { grade5 } from "./grade-5/index.ts";
@@ -97,7 +99,15 @@ const grades912: Pack = {
 /** college is the content of the college writing course, with passages of 500 to 900 words. */
 const college: Pack = {
   ...emptyPack,
-  topics: [...wordTopicsCollege, ...grammarTopicsCollege, ...readingSkillTopicsCollege, abstractMoves, ...writingTopicsCollege],
+  topics: [
+    ...wordTopicsCollege,
+    ...grammarTopicsCollege,
+    ...readingSkillTopicsCollege,
+    abstractMoves,
+    judgingResearchQuestions,
+    signposting,
+    ...writingTopicsCollege,
+  ],
   courses: [courseCollege],
   reading: [
     academicProse,

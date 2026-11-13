@@ -44,7 +44,7 @@ const units: readonly UnitDef[] = [
       words: ["words-of-research", "b2-words-research-2"],
       style: ["verbs-for-citing-sources"],
       reading: ["finding-scholarly-sources"],
-      writing: ["forming-a-research-question", "writing-an-annotated-bibliography"],
+      writing: ["judging-research-questions", "forming-a-research-question", "writing-an-annotated-bibliography"],
     },
     "research-in-practice",
     "librarian-research-consultation",
@@ -64,7 +64,7 @@ const units: readonly UnitDef[] = [
     t("The Research Paper", "研究论文"),
     {
       words: ["words-of-scholarly-argument", "b2-words-linking-3", "b2-words-certainty"],
-      style: ["cohesion-old-before-new"],
+      style: ["cohesion-old-before-new", "signposting-in-academic-writing"],
       reading: ["reading-a-research-paper", "the-moves-of-an-abstract"],
       writing: ["writing-a-literature-review", "writing-a-research-paper"],
     },

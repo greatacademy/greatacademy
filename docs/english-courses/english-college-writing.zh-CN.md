@@ -6,7 +6,7 @@
 - **阶段：** 大学一年级，以及为学习或工作而写作的成年人
 - **先修：** [英语：十二年级](english-grade-12.zh-CN.md)（`buildsOn: ["english-grade-12"]`）
 - **讲解语言：** 英语
-- **规模：** 8 个单元 · 54 个主题，新增 39 个（词汇 8 个，语法、文体与书写规范 9 个，阅读 9 个，由模型评判的写作 13 个），另有 15 个复用自英语 B2 和 9 到 12 年级· 8 个阅读单元，每个 8 篇 · 8 个对话
+- **规模：** 8 个单元 · 56 个主题，新增 41 个（词汇 8 个，语法、文体与书写规范 10 个，阅读 9 个，按规则评判的写作 1 个，由模型评判的写作 13 个），另有 15 个复用自英语 B2 和 9 到 12 年级· 8 个阅读单元，每个 8 篇 · 8 个对话
 
 ## 目标
 
@@ -48,7 +48,7 @@
 
 **阅读：** `finding-scholarly-sources` 查找学术资料（先修 `evaluating-sources`）：同行评审、摘要、检索词，以及区分学术资料和大众资料。
 
-**写作：** `forming-a-research-question` 提出研究问题（由模型评判；先修 `reading-academic-arguments`）：问题要窄到能够回答，又开放到值得论证。`writing-an-annotated-bibliography` 写带注释的参考文献（由模型评判；先修 `finding-scholarly-sources`、`writing-a-critical-summary`）。
+**写作：** `judging-research-questions` 判断研究问题的好坏（先修 `words-of-research`）：判断问题是太宽泛、查一个事实就能回答、属于品味问题，还是聚焦且可以研究，并从研究谁、在哪里、衡量什么三方面收窄宽泛的问题。`forming-a-research-question` 提出研究问题（由模型评判；先修 `reading-academic-arguments`）：问题要窄到能够回答，又开放到值得论证。`writing-an-annotated-bibliography` 写带注释的参考文献（由模型评判；先修 `finding-scholarly-sources`、`writing-a-critical-summary`）。
 
 **同时练习（已有）：** `b2-words-research-2`。
 
@@ -80,7 +80,7 @@
 
 **词汇：** `words-of-scholarly-argument` 学术论证的词（先修 `context-clues`）：albeit, notwithstanding, thereby, whereas, insofar, hence, conversely, nonetheless, moreover, furthermore。
 
-**文体：** `cohesion-old-before-new` 连贯：旧信息在前（先修 `choosing-transitions`、`word-order-for-emphasis`）：句子以读者已知的内容开头，以新信息结尾。
+**文体：** `cohesion-old-before-new` 连贯：旧信息在前（先修 `choosing-transitions`、`word-order-for-emphasis`）：句子以读者已知的内容开头，以新信息结尾。 `signposting-in-academic-writing` 学术写作中的路标词（先修 `cohesion-old-before-new`）：预告下文、补充、对比、举例、说明结果和总结的短语。
 
 **阅读：** `reading-a-research-paper` 阅读研究论文（先修 `reading-academic-arguments`）：摘要、引言、方法、结果和讨论，以及先读哪一部分。`the-moves-of-an-abstract` 摘要的语步（先修 `reading-a-research-paper`）：说出摘要中每句话的语步，即背景、研究空白或目的、方法、结果和意义，并找出摘要缺少的语步。
 
@@ -175,6 +175,7 @@
 | `words-of-research` | 词汇 | 2 | `context-clues` |
 | `verbs-for-citing-sources` | 语法 | 2 | `integrating-quotations` |
 | `finding-scholarly-sources` | 阅读 | 2 | `evaluating-sources` |
+| `judging-research-questions` | 写作 | 2 | `words-of-research` |
 | `forming-a-research-question` | 写作（模型评判） | 2 | `reading-academic-arguments` |
 | `writing-an-annotated-bibliography` | 写作（模型评判） | 2 | `finding-scholarly-sources`，`writing-a-critical-summary` |
 | `words-of-evidence-and-inference` | 词汇 | 3 | `context-clues` |
@@ -184,6 +185,7 @@
 | `writing-a-paraphrase` | 写作（模型评判） | 3 | `quoting-and-paraphrasing` |
 | `words-of-scholarly-argument` | 词汇 | 4 | `context-clues` |
 | `cohesion-old-before-new` | 语法 | 4 | `choosing-transitions`，`word-order-for-emphasis` |
+| `signposting-in-academic-writing` | 写作 | 4 | `cohesion-old-before-new` |
 | `reading-a-research-paper` | 阅读 | 4 | `reading-academic-arguments` |
 | `the-moves-of-an-abstract` | 阅读 | 4 | `reading-a-research-paper` |
 | `writing-a-literature-review` | 写作（模型评判） | 4 | `writing-an-annotated-bibliography`，`synthesizing-sources` |

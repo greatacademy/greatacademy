@@ -6,7 +6,7 @@
 - **Level:** First year of university, and adults who write for study or work
 - **Prerequisite(s):** [English, Grade 12](english-grade-12.md) (`buildsOn: ["english-grade-12"]`)
 - **Language of explanation:** English
-- **Size:** 8 units · 54 topics, 39 new (8 of vocabulary, 9 of grammar, style and mechanics, 9 of reading, 13 of writing judged by a model) and 15 reused from English B2 and grades 9 to 12 · 8 reading units of 8 passages each · 8 conversations
+- **Size:** 8 units · 56 topics, 41 new (8 of vocabulary, 10 of grammar, style and mechanics, 9 of reading, 1 of writing judged by rules, 13 of writing judged by a model) and 15 reused from English B2 and grades 9 to 12 · 8 reading units of 8 passages each · 8 conversations
 
 ## Aim
 
@@ -48,7 +48,7 @@ Listening and speaking wait for audio and recording: until then a unit lists its
 
 **Reading:** `finding-scholarly-sources` Finding Scholarly Sources (after `evaluating-sources`): peer review, abstracts, search terms, and telling a scholarly source from a popular one.
 
-**Writing:** `forming-a-research-question` Forming a Research Question (judged by a model; after `reading-academic-arguments`): a question narrow enough to answer and open enough to argue. `writing-an-annotated-bibliography` Writing an Annotated Bibliography (judged by a model; after `finding-scholarly-sources`, `writing-a-critical-summary`).
+**Writing:** `judging-research-questions` Judging Research Questions (after `words-of-research`): naming a question as too broad, answered by one fact, a matter of taste, or focused and researchable, and narrowing a broad question by who, where and what is measured. `forming-a-research-question` Forming a Research Question (judged by a model; after `reading-academic-arguments`): a question narrow enough to answer and open enough to argue. `writing-an-annotated-bibliography` Writing an Annotated Bibliography (judged by a model; after `finding-scholarly-sources`, `writing-a-critical-summary`).
 
 **Also practised (existing):** `b2-words-research-2`.
 
@@ -80,7 +80,7 @@ Listening and speaking wait for audio and recording: until then a unit lists its
 
 **Words:** `words-of-scholarly-argument` Words of Scholarly Argument (after `context-clues`): albeit, notwithstanding, thereby, whereas, insofar, hence, conversely, nonetheless, moreover, furthermore.
 
-**Style:** `cohesion-old-before-new` Cohesion: Old Before New (after `choosing-transitions`, `word-order-for-emphasis`): beginning sentences with what the reader knows and ending with what is new.
+**Style:** `cohesion-old-before-new` Cohesion: Old Before New (after `choosing-transitions`, `word-order-for-emphasis`): beginning sentences with what the reader knows and ending with what is new. `signposting-in-academic-writing` Signposting in Academic Writing (after `cohesion-old-before-new`): the phrases that preview, add, contrast, give an example, show a result and sum up.
 
 **Reading:** `reading-a-research-paper` Reading a Research Paper (after `reading-academic-arguments`): the abstract, introduction, methods, results and discussion, and what to read first. `the-moves-of-an-abstract` The Moves of an Abstract (after `reading-a-research-paper`): naming the move of each sentence of an abstract, background, gap or aim, method, result and implication, and finding the move an abstract leaves out.
 
@@ -175,6 +175,7 @@ Listening and speaking wait for audio and recording: until then a unit lists its
 | `words-of-research` | vocabulary | 2 | `context-clues` |
 | `verbs-for-citing-sources` | grammar | 2 | `integrating-quotations` |
 | `finding-scholarly-sources` | reading | 2 | `evaluating-sources` |
+| `judging-research-questions` | writing | 2 | `words-of-research` |
 | `forming-a-research-question` | writing (judged) | 2 | `reading-academic-arguments` |
 | `writing-an-annotated-bibliography` | writing (judged) | 2 | `finding-scholarly-sources`, `writing-a-critical-summary` |
 | `words-of-evidence-and-inference` | vocabulary | 3 | `context-clues` |
@@ -184,6 +185,7 @@ Listening and speaking wait for audio and recording: until then a unit lists its
 | `writing-a-paraphrase` | writing (judged) | 3 | `quoting-and-paraphrasing` |
 | `words-of-scholarly-argument` | vocabulary | 4 | `context-clues` |
 | `cohesion-old-before-new` | grammar | 4 | `choosing-transitions`, `word-order-for-emphasis` |
+| `signposting-in-academic-writing` | writing | 4 | `cohesion-old-before-new` |
 | `reading-a-research-paper` | reading | 4 | `reading-academic-arguments` |
 | `the-moves-of-an-abstract` | reading | 4 | `reading-a-research-paper` |
 | `writing-a-literature-review` | writing (judged) | 4 | `writing-an-annotated-bibliography`, `synthesizing-sources` |
