@@ -7,6 +7,9 @@ import { type TopicDef, t } from "@ga/content";
 import { point } from "@ga/subject-english";
 import { examTopic, interleave, type LabelledItem, labelGenerator } from "./kit.ts";
 
+/** end gives the period a quoted piece of evidence needs when it has no closing punctuation of its own. */
+const end = (evidence: string) => (/[.!?…]$/u.test(evidence) ? "" : ".");
+
 /** Matched is a statement, the index of the person it matches, and their words that decide it. */
 type Matched = readonly [statement: string, person: number, evidence: string];
 
@@ -233,12 +236,12 @@ function items(matched: (s: MatchingSet) => readonly Matched[], attitude: boolea
         right: person,
         solution: attitude
           ? t(
-              `**${letters[person]}**: "${evidence}" The statement names a feeling or a view in other words. Others may mention the same subject, so check that the person's attitude, not only the topic, matches.`,
-              `**${letters[person]}**："${evidence}" 陈述用别的话说出一种感受或看法。其他人可能也提到同一件事，所以要核对此人的态度，而不只是话题。`,
+              `**${letters[person]}**: "${evidence}${end(evidence)}" The statement names a feeling or a view in other words. Others may mention the same subject, so check that the person's attitude, not only the topic, matches.`,
+              `**${letters[person]}**："${evidence}${end(evidence)}" 陈述用别的话说出一种感受或看法。其他人可能也提到同一件事，所以要核对此人的态度，而不只是话题。`,
             )
           : t(
-              `**${letters[person]}**: "${evidence}" The statement says it in other words. Find the person whose words mean the same, and check that every part of the statement fits them.`,
-              `**${letters[person]}**："${evidence}" 陈述换了说法。找到话的意思与之相同的人，并核对陈述的每一部分都符合此人。`,
+              `**${letters[person]}**: "${evidence}${end(evidence)}" The statement says it in other words. Find the person whose words mean the same, and check that every part of the statement fits them.`,
+              `**${letters[person]}**："${evidence}${end(evidence)}" 陈述换了说法。找到话的意思与之相同的人，并核对陈述的每一部分都符合此人。`,
             ),
       })),
     ),

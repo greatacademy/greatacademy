@@ -6,6 +6,9 @@ import { type TopicDef, t } from "@ga/content";
 import { point } from "@ga/subject-english";
 import { examTopic, interleave, type SolvedChoice, solvedChoiceGenerator } from "./kit.ts";
 
+/** end gives the period a quoted piece of evidence needs when it has no closing punctuation of its own. */
+const end = (evidence: string) => (/[.!?…]$/u.test(evidence) ? "" : ".");
+
 /** Gap is a sentence with a gap, its right word, wrong words and the words of the text that decide it. */
 type Gap = readonly [sentence: string, right: string, wrong: readonly string[], evidence: string];
 
@@ -398,12 +401,12 @@ function items(gaps: (c: Completed) => readonly Gap[], boxed: boolean): readonly
         wrong,
         solution: boxed
           ? t(
-              `**${right}**. The text says it in other words: "${evidence}" In a summary the words usually differ from the text's, so match the meaning, then check that the word fits the grammar of the gap.`,
-              `**${right}**。原文换了说法："${evidence}" 摘要用词通常与原文不同，要按意思匹配，再检查这个词是否符合空格处的语法。`,
+              `**${right}**. The text says it in other words: "${evidence}${end(evidence)}" In a summary the words usually differ from the text's, so match the meaning, then check that the word fits the grammar of the gap.`,
+              `**${right}**。原文换了说法："${evidence}${end(evidence)}" 摘要用词通常与原文不同，要按意思匹配，再检查这个词是否符合空格处的语法。`,
             )
           : t(
-              `**${right}**. The text says: "${evidence}" Copy the word exactly as the text spells it; a word that is in the text but means something else does not fit.`,
-              `**${right}**。原文是："${evidence}" 要按原文拼写照抄；出现在原文中但意思不对的词不能填。`,
+              `**${right}**. The text says: "${evidence}${end(evidence)}" Copy the word exactly as the text spells it; a word that is in the text but means something else does not fit.`,
+              `**${right}**。原文是："${evidence}${end(evidence)}" 要按原文拼写照抄；出现在原文中但意思不对的词不能填。`,
             ),
       })),
     ),
