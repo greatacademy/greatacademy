@@ -2,6 +2,7 @@
 // topics already in the graph. See docs/english-courses/english-cambridge-first.md.
 
 import { type CourseDef, type TopicDef, t } from "@ga/content";
+import { gappedText } from "./cambridge-first-gapped.ts";
 import { multipleMatching } from "./cambridge-first-matching.ts";
 import { fceReading } from "./cambridge-first-reading.ts";
 import { keyWordTransformations, multipleChoiceCloze, openCloze, wordFormation } from "./cambridge-first-use-of-english.ts";
@@ -14,6 +15,7 @@ export const topics: readonly TopicDef[] = [
   openCloze,
   wordFormation,
   keyWordTransformations,
+  gappedText,
   multipleMatching,
   essayTopic,
   part2Topic,
@@ -88,7 +90,7 @@ export const course: CourseDef = {
           title: t("Multiple Choice and Matching", "多项选择与匹配"),
           topics: ["making-inferences", "authors-purpose", "tone-and-mood", "b2-words-tone", "fce-multiple-matching"],
         },
-        { title: t("Gapped Text", "段落填句"), topics: ["ordering-sentences-in-a-paragraph", "choosing-transitions"] },
+        { title: t("Gapped Text", "段落填句"), topics: ["ordering-sentences-in-a-paragraph", "choosing-transitions", "fce-gapped-text"] },
       ],
       reading: ["fce-reading"],
     },
