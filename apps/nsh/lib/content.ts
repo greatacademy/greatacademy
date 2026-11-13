@@ -75,6 +75,7 @@ export function pageHtml(body: string, palette: Palette, options: { fontSize?: n
 .no-katex .katex-html{display:none}
 html,body{margin:0;padding:0;background:transparent;color:${palette.ink};font:${options.fontSize ?? 16}px/1.6 -apple-system,system-ui,Roboto,"Segoe UI","Noto Sans SC",sans-serif;overflow-wrap:anywhere}
 p{margin:0}*+p,ul,ol{margin-top:.75em}ul,ol{margin-bottom:0;padding-left:1.25em}strong{font-weight:600}
+blockquote{margin:.75em 0 0;padding-left:.75em;border-left:3px solid ${palette.muted}}blockquote:first-child{margin-top:0}
 .katex-display{margin:.75em 0;overflow-x:auto;overflow-y:hidden}.katex{white-space:normal}
 figure{margin:.75em 0 0}figcaption{margin-top:.5em;color:${palette.muted};font-size:.875em}
 .figure-ga{display:flex;justify-content:center}.figure-ga svg{width:100%;max-width:28rem;height:auto;max-height:18rem;overflow:visible}

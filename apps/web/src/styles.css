@@ -75,6 +75,10 @@
 .prose-ga strong {
   font-weight: 600;
 }
+.prose-ga blockquote {
+  border-left: 3px solid var(--color-line);
+  padding-left: 0.75em;
+}
 .prose-ga ul {
   list-style: disc;
   padding-left: 1.25em;
