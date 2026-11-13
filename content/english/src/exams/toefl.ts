@@ -6,6 +6,7 @@ import { examGroup } from "./kit.ts";
 import { buildASentence } from "./toefl-build-a-sentence.ts";
 import { completeTheWords } from "./toefl-complete-the-words.ts";
 import { dailyLifeReading } from "./toefl-daily-life.ts";
+import { discussionReplies } from "./toefl-discussion-replies.ts";
 import { passageQuestions } from "./toefl-passage-questions.ts";
 import { toeflReading } from "./toefl-reading.ts";
 import { academicDiscussion, writingAnEmail } from "./toefl-writing.ts";
@@ -17,6 +18,7 @@ export const topics: readonly TopicDef[] = [
   passageQuestions,
   buildASentence,
   writingAnEmail,
+  discussionReplies,
   academicDiscussion,
 ];
 
@@ -28,8 +30,8 @@ export const course: CourseDef = {
   id: "english-toefl",
   title: t("TOEFL iBT", "托福网考"),
   description: t(
-    "Practice for the Reading and Writing sections of the TOEFL iBT after English B2: completing words in academic texts, the words of campus and academic subjects, everyday notices, emails and messages with questions on details and inferences, short academic passages with questions on words and purpose, building replies word by word, an email and a post to an academic discussion. It teaches nothing new: its own topics start with practice, and every text is written for this course. Listening and Speaking will follow with audio.",
-    "学完英语 B2 之后的托福网考阅读和写作练习：在学术短文中补全单词、校园与学术话题的词汇、带细节题和推断题的日常通知、邮件与短信、带词义与写作意图题的简短学术文章、逐词组成回答、写电子邮件和学术讨论帖。本课程不教新知识：它自己的主题一开始就是练习，所有文章都是为本课程原创的。听力和口语将在有了音频之后加入。",
+    "Practice for the Reading and Writing sections of the TOEFL iBT after English B2: completing words in academic texts, the words of campus and academic subjects, everyday notices, emails and messages with questions on details and inferences, short academic passages with questions on words and purpose, building replies word by word, an email, reading a class discussion and choosing a reply that adds to it, and a post to an academic discussion. It teaches nothing new: its own topics start with practice, and every text is written for this course. Listening and Speaking will follow with audio.",
+    "学完英语 B2 之后的托福网考阅读和写作练习：在学术短文中补全单词、校园与学术话题的词汇、带细节题和推断题的日常通知、邮件与短信、带词义与写作意图题的简短学术文章、逐词组成回答、写电子邮件、读懂课堂讨论并选出推进讨论的回复，以及写学术讨论帖。本课程不教新知识：它自己的主题一开始就是练习，所有文章都是为本课程原创的。听力和口语将在有了音频之后加入。",
   ),
   group: examGroup,
   buildsOn: ["english-b2"],
@@ -100,6 +102,7 @@ export const course: CourseDef = {
             "writing-an-evidence-paragraph",
             "counterclaims-and-rebuttals",
             "writing-a-counterclaim-paragraph",
+            "toefl-reading-the-discussion",
             "toefl-academic-discussion",
           ],
         },

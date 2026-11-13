@@ -6,7 +6,7 @@
 - **级别：** CEFR B2 及以上，面向准备托福 iBT 的英语外语学习者
 - **先修：** 英语 B2（`english-b2`）
 - **讲解语言：** 界面语言：中文或英文
-- **规模：** 2 个单元 · 42 个主题（新增 6 个，均为只练习主题）· 1 个阅读单元，8 篇文章
+- **规模：** 2 个单元 · 43 个主题（新增 7 个，均为只练习主题）· 1 个阅读单元，8 篇文章
 
 ## 考试
 
@@ -60,6 +60,7 @@
 
 - `toefl-build-a-sentence` 连词成句（只练习；在 `indirect-questions`、`subject-and-object-questions` 之后）。把词和短语排成对另一位说话人的回答：（1）陈述句；（2）疑问句和间接疑问句。
 - `toefl-writing-an-email` 写邮件（由模型评判；只练习；在 `writing-a-formal-email` 之后）。写一封约 100 词或更长的邮件，完成情境要求的每件事，收件人是教授、同学或某个办公室。
+- `toefl-reading-the-discussion` 读懂讨论并推进讨论（只练习；在 `counterclaims-and-rebuttals` 之后）。十五场课堂讨论，每场有教授的问题和两条帖子：（1）说出每位同学的立场；（2）选出补充了新理由和例子的回复，而不是重复同学、回答别的问题或只表示赞同的回复。
 - `toefl-academic-discussion` 学术讨论写作（由模型评判；只练习；在 `writing-an-opinion-paragraph`、`counterclaims-and-rebuttals` 之后）。写一条约 100 词或更长的帖子，用明确的观点和理由回答教授的问题，并在两位同学所说的基础上有所补充。
 
 ## 新主题
@@ -71,4 +72,5 @@
 | `toefl-passage-questions` | 上下文中的词义；为什么提到 | 30；30 | 规则 |
 | `toefl-build-a-sentence` | 陈述句；疑问句 | 32；33 | 规则 |
 | `toefl-writing-an-email` | 邮件 | 12 个任务 | 模型 |
+| `toefl-reading-the-discussion` | 立场；推进讨论 | 30；30 | 规则 |
 | `toefl-academic-discussion` | 讨论帖 | 12 个任务 | 模型 |

@@ -6,7 +6,7 @@
 - **Level:** CEFR B2 and above, for learners of English as a foreign language preparing for the TOEFL iBT
 - **Prerequisite(s):** English B2 (`english-b2`)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 2 units · 42 topics (6 new, all practice-only) · 1 reading unit of 8 passages
+- **Size:** 2 units · 43 topics (7 new, all practice-only) · 1 reading unit of 8 passages
 
 ## The Test
 
@@ -60,6 +60,7 @@ Each unit lists the topics it reuses (*existing*) and its new topics. A new topi
 
 - `toefl-build-a-sentence` Build a Sentence (practice-only; after `indirect-questions`, `subject-and-object-questions`). Order words and phrases into a reply to another speaker: (1) statements; (2) questions and indirect questions.
 - `toefl-writing-an-email` Writing an Email (judged by a model; practice-only; after `writing-a-formal-email`). An email of about 100 words or more that does each thing the situation asks, to a professor, a classmate or an office.
+- `toefl-reading-the-discussion` Reading the Discussion and Adding to It (practice-only; after `counterclaims-and-rebuttals`). Fifteen class discussions of a professor's question and two posts: (1) stating each student's position; (2) choosing the reply that adds a new reason and example, not one that repeats a classmate, answers another question or only agrees.
 - `toefl-academic-discussion` Writing for an Academic Discussion (judged by a model; practice-only; after `writing-an-opinion-paragraph`, `counterclaims-and-rebuttals`). A post of about 100 words or more that answers the professor's question with a clear opinion and a reason, and adds something to what two classmates said.
 
 ## New Topics
@@ -71,4 +72,5 @@ Each unit lists the topics it reuses (*existing*) and its new topics. A new topi
 | `toefl-passage-questions` | Word in context; why mentioned | 30; 30 | Rules |
 | `toefl-build-a-sentence` | Statements; questions | 32; 33 | Rules |
 | `toefl-writing-an-email` | Email | 12 tasks | Model |
+| `toefl-reading-the-discussion` | Positions; adding to the discussion | 30; 30 | Rules |
 | `toefl-academic-discussion` | Discussion post | 12 tasks | Model |
