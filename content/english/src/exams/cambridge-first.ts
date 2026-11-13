@@ -2,6 +2,7 @@
 // topics already in the graph. See docs/english-courses/english-cambridge-first.md.
 
 import { type CourseDef, type TopicDef, t } from "@ga/content";
+import { closeReading } from "./cambridge-first-close-reading.ts";
 import { gappedText } from "./cambridge-first-gapped.ts";
 import { multipleMatching } from "./cambridge-first-matching.ts";
 import { fceReading } from "./cambridge-first-reading.ts";
@@ -15,6 +16,7 @@ export const topics: readonly TopicDef[] = [
   openCloze,
   wordFormation,
   keyWordTransformations,
+  closeReading,
   gappedText,
   multipleMatching,
   essayTopic,
@@ -29,8 +31,8 @@ export const course: CourseDef = {
   id: "english-cambridge-first",
   title: t("Cambridge B2 First", "剑桥 B2 First"),
   description: t(
-    "Practice for B2 First Reading and Use of English and Writing after English B2: the multiple-choice cloze, the open cloze, word formation and key word transformations, with the idioms, modals and conditionals they test; long texts with multiple choice, gapped texts and multiple matching; the essay of Part 1 and the article, email or letter, report and review of Part 2. It teaches nothing new: its own topics start with practice, and every text is written for this course. Listening and Speaking will follow with audio.",
-    "学完英语 B2 之后的 B2 First 阅读与英语运用及写作练习：多项选择完形填空、开放式完形填空、构词和关键词句型转换，以及它们考查的习语、情态动词和条件句；长篇文章的多项选择、段落填句和多项匹配；第 1 部分的议论文，以及第 2 部分的文章、电子邮件或信件、报告和评论。本课程不教新知识：它自己的主题一开始就是练习，所有文章都是为本课程原创的。听力和口语将在有了音频之后加入。",
+    "Practice for B2 First Reading and Use of English and Writing after English B2: the multiple-choice cloze, the open cloze, word formation and key word transformations, with the idioms, modals and conditionals they test; long texts with multiple choice, what words refer to and what the writer means, gapped texts and multiple matching; the essay of Part 1 and the article, email or letter, report and review of Part 2. It teaches nothing new: its own topics start with practice, and every text is written for this course. Listening and Speaking will follow with audio.",
+    "学完英语 B2 之后的 B2 First 阅读与英语运用及写作练习：多项选择完形填空、开放式完形填空、构词和关键词句型转换，以及它们考查的习语、情态动词和条件句；长篇文章的多项选择、词语指代与作者意思、段落填句和多项匹配；第 1 部分的议论文，以及第 2 部分的文章、电子邮件或信件、报告和评论。本课程不教新知识：它自己的主题一开始就是练习，所有文章都是为本课程原创的。听力和口语将在有了音频之后加入。",
   ),
   group: examGroup,
   buildsOn: ["english-b2"],
@@ -88,7 +90,14 @@ export const course: CourseDef = {
       modules: [
         {
           title: t("Multiple Choice and Matching", "多项选择与匹配"),
-          topics: ["making-inferences", "authors-purpose", "tone-and-mood", "b2-words-tone", "fce-multiple-matching"],
+          topics: [
+            "making-inferences",
+            "authors-purpose",
+            "tone-and-mood",
+            "b2-words-tone",
+            "fce-reading-closely",
+            "fce-multiple-matching",
+          ],
         },
         { title: t("Gapped Text", "段落填句"), topics: ["ordering-sentences-in-a-paragraph", "choosing-transitions", "fce-gapped-text"] },
       ],
