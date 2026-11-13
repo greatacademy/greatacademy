@@ -6,7 +6,7 @@
 - **级别：** CEFR B2 及以上，面向准备雅思学术类考试的英语外语学习者
 - **先修：** 英语 B2（`english-b2`）
 - **讲解语言：** 界面语言：中文或英文
-- **规模：** 3 个单元 · 44 个主题（新增 7 个，均为只练习主题）· 1 个阅读单元，6 篇文章
+- **规模：** 3 个单元 · 45 个主题（新增 8 个，均为只练习主题）· 1 个阅读单元，6 篇文章
 
 ## 考试
 
@@ -48,6 +48,7 @@
 - `ielts-matching-headings` 段落标题与信息匹配（只练习；在 `supporting-details` 之后）。四个带字母段落的短文：（1）为段落选标题；（2）找出包含某条信息的段落。
 - `ielts-sentence-and-summary-completion` 句子填空与摘要填空（只练习；在 `supporting-details` 之后）。带空格的短文：（1）用从原文照抄的一个词完成句子；（2）从方框中选一个换了说法、意思相同的词完成摘要。
 - `ielts-matching-features-and-multiple-choice` 人物观点匹配与单项选择（只练习；在 `supporting-details`、`making-inferences` 之后）。短文介绍三个人的发现或看法：（1）把陈述与说出它的人 A、B 或 C 匹配；（2）回答按原文顺序出的单项选择题。
+- `ielts-notes-and-short-answers` 笔记填空与简答题（只练习；在 `ielts-sentence-and-summary-completion` 之后）。十篇短文，从原文中照抄词语并键入作答：（1）笔记填空，只填一个词（ONE WORD ONLY）；（2）简答题，不超过两个词和/或一个数字（NO MORE THAN TWO WORDS AND/OR A NUMBER），正确的词多出一个也算错。
 
 **学术词汇（已有）：** `b2-words-research-2`、`b2-words-scientific-adjectives`、`b2-words-abstract-nouns`、`b2-words-society`、`b2-words-higher-education`、`b2-words-climate-change`、`b2-words-globalization`、`b2-words-innovation`：雅思文章和作文反复出现的话题。
 
@@ -80,6 +81,7 @@
 | `ielts-matching-headings` | 段落标题；信息 | 32；32 | 规则 |
 | `ielts-sentence-and-summary-completion` | 句子；摘要 | 30；30 | 规则 |
 | `ielts-matching-features-and-multiple-choice` | 人物观点匹配；单项选择 | 30；30 | 规则 |
+| `ielts-notes-and-short-answers` | 笔记填空；简答题 | 30；30 | 规则 |
 | `ielts-describing-data` | 趋势；比例与比较 | 32；39 | 规则 |
 | `ielts-writing-task-1` | Task 1 | 12 个任务 | 模型 |
 | `ielts-writing-task-2` | Task 2 | 12 个任务 | 模型 |
