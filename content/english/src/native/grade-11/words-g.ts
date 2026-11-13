@@ -9,16 +9,16 @@ const showing = batch(
   ["Words for Showing and Seeing", "展示与看见的词"],
   ["academic words for pictures, sight and what is plain to see", "表示图像、视觉和显而易见的学术词"],
   `
-  depict|to show or represent in a picture or in words|描绘，描述|The painting will ___ a battle.|The film tries to ___ life in prison.|How does the poet ___ the sea?|illustrate,expose|depicted,depiction
-  illustrate|to explain by examples or pictures|说明，图解|Let me ___ my point with a story.|She was hired to ___ the book.|The chart helps ___ the trend.|depict,highlight|illustrated,illustration
-  highlight|to draw special attention to; the best part|强调；最精彩部分|The report will ___ three problems.|The goal was the ___ of the match.|Use a pen to ___ key words.|illustrate,expose|highlighted
-  visible|able to be seen|可见的|The stars are ___ tonight.|The mountain is ___ from the town.|There was no ___ damage.|evident,visual|visibly,visibility
+  depict|to show or represent in a picture or in words|描绘，描述|The painting will ___ a battle.|The film tries to ___ life in prison.|How does the poet ___ the sea?|expose,evident|depicted,depiction
+  illustrate|to explain by examples or pictures|说明，图解|Let me ___ my point with a story.|She was hired to ___ the book.|The chart helps ___ the trend.|expose,visible|illustrated,illustration
+  highlight|to draw special attention to; the best part|强调；最精彩部分|The report will ___ three problems.|The goal was the ___ of the match.|Use a pen to ___ key words.|visible,evident|highlighted
+  visible|able to be seen|可见的|The stars are ___ tonight.|The mountain is ___ from the town.|There was no ___ damage.|visual,vision|visibly,visibility
   visual|relating to seeing or sight|视觉的|The film has great ___ effects.|She has a strong ___ memory.|Use ___ aids in your talk.|visible,vision|visually
   vision|the ability to see; an idea of the future|视力；远见|He has poor ___ in one eye.|The leader had a ___ of a fairer society.|She saw a ___ in her dream.|image,visual|visions,visionary
   image|a picture or likeness; the way something is seen by the public|图像；形象|The ___ on the screen was blurred.|The firm wants to improve its ___.|She is the ___ of her mother.|vision,depict|images,imagery
-  expose|to uncover; to make something secret known|暴露；揭露|The reporter wanted to ___ the fraud.|Don't ___ your skin to the sun too long.|The test will ___ any weakness.|depict,highlight|exposed,exposure
-  evident|plain or obvious|明显的|It was ___ that she was tired.|Her joy was ___ to everyone.|The damage is ___.|apparent,visible|evidently
-  apparent|clearly visible or understood; seeming real but perhaps not|明显的；表面上的|For no ___ reason, he left.|It soon became ___ that we were lost.|Her ___ calm hid her fear.|evident,visual|apparently
+  expose|to uncover; to make something secret known|暴露；揭露|The reporter wanted to ___ the fraud.|Don't ___ your skin to the sun too long.|The test will ___ any weakness.|depict,visual|exposed,exposure
+  evident|plain or obvious|明显的|It was ___ that she was tired.|Her joy was ___ to everyone.|The damage is ___.|visual,vision|evidently
+  apparent|clearly visible or understood; seeming real but perhaps not|明显的；表面上的|For no ___ reason, he left.|It soon became ___ that we were lost.|Her ___ calm hid her fear.|visual,vision|apparently
   `,
 );
 
@@ -28,10 +28,10 @@ const sorting = batch(
   ["academic words for telling things apart and for sameness", "表示区分与相同的学术词"],
   `
   distinct|recognizably different; clear|截然不同的；清楚的|The two words have ___ meanings.|There was a ___ smell of gas.|She has a ___ accent.|discrete,diverse|distinctly,distinction
-  discrete|separate and distinct|分离的，不连续的|The course has five ___ parts.|Count the ___ steps.|The data fall into ___ groups.|distinct,uniform|discretely
+  discrete|separate and distinct|分离的，不连续的|The course has five ___ parts.|Count the ___ steps.|The data fall into ___ groups.|equate,vary|discretely
   differentiate|to recognize or show what makes things different|区分，区别|Can you ___ the twins?|Color helps ___ the species.|The firm tries to ___ its products.|discriminate,equate|differentiated,differentiation
   discriminate|to recognize a difference; to treat people unfairly|区别；歧视|It is illegal to ___ against women.|Bats can ___ between sounds.|Banks must not ___ on age.|differentiate,distort|discriminated
-  diverse|showing a great deal of variety|多种多样的|The city has a ___ population.|They have ___ interests.|The forest is home to ___ birds.|uniform,distinct|diversity,diversify
+  diverse|showing a great deal of variety|多种多样的|The city has a ___ population.|They have ___ interests.|The forest is home to ___ birds.|uniform,equate|diversity,diversify
   vary|to differ in size, amount or degree|变化，不同|Prices ___ from shop to shop.|The weather may ___ by the hour.|Try to ___ your diet.|reverse,distort|variety
   uniform|remaining the same in all cases; a set of special clothes|一致的；制服|The rooms are of ___ size.|Pupils must wear a ___.|Rules should be ___ across schools.|diverse,discrete|
   equate|to consider one thing to be the same as another|等同|Don't ___ wealth with happiness.|Many ___ silence with agreement.|We cannot ___ the two crimes.|differentiate,vary|equated,equation
@@ -81,7 +81,7 @@ const roles = batch(
   ["Words for Roles and Institutions", "角色与机构的词"],
   ["academic words for people at work and the bodies they serve", "表示工作者及其所服务机构的学术词"],
   `
-  practitioner|a person actively engaged in an art or profession|从业者|She is a medical ___.|Every ___ needs a license.|The workshop is for every ___ of yoga.|professional,successor|practitioners
+  practitioner|a person actively engaged in an art or profession|从业者|She is a medical ___.|Every ___ needs a license.|The workshop is for every ___ of yoga.|successor,welfare|practitioners
   professional|relating to a job that needs special training; a person in such a job|职业的；专业人士|She is a ___ singer.|Seek ___ advice.|He acted like a true ___.|practitioner,corporate|professionally,professionalism
   successor|a person or thing that follows another|继任者|The king named his ___.|Who will be her ___ as head?|The new phone is the ___ to the old model.|affiliate,practitioner|successors
   affiliate|a person or group officially attached to a larger body; to attach|附属机构；使隶属|The station is an ___ of the network.|The club chose to ___ with the national body.|Each ___ pays a fee.|institute,successor|affiliated,affiliation

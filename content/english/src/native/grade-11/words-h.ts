@@ -12,8 +12,8 @@ const drafting = batch(
   clarify|to make a statement or situation clearer|澄清，阐明|Could you ___ what you mean?|The teacher will ___ the rules.|Let me ___ one point.|specify,edit|clarified,clarification
   specify|to state clearly and exactly|具体说明|Please ___ the size you need.|The rules ___ a start time of nine.|He did not ___ a date.|clarify,insert|specified,specification
   quote|to repeat words from a text or speaker; a price offered|引用；报价|She likes to ___ Shakespeare.|Get a ___ from three builders.|Don't ___ me on that.|paragraph,summary|quoted,quotation
-  edit|to prepare a text by correcting and shortening it|编辑|She will ___ the magazine.|Please ___ your essay before you hand it in.|He had to ___ the film.|draft,format|edited
-  draft|a first version of a piece of writing; to write one|草稿；起草|Write a ___ of your speech.|The lawyer will ___ the contract.|This is only the first ___.|edit,summary|drafted,drafts
+  edit|to prepare a text by correcting and shortening it|编辑|She will ___ the magazine.|Please ___ your essay before you hand it in.|He had to ___ the film.|summary,paragraph|edited
+  draft|a first version of a piece of writing; to write one|草稿；起草|Write a ___ of your speech.|The lawyer will ___ the contract.|This is only the first ___.|edit,append|drafted,drafts
   format|the way something is arranged or set out|格式，版式|The ___ of the exam has changed.|Save the file in a different ___.|The show has a new ___.|paragraph,insert|formatted,formatting
   paragraph|a section of a text that deals with one idea|段落|Begin a new ___ for each point.|The first ___ is too long.|Read the last ___ again.|summary,format|paragraphs
   summary|a brief statement of the main points|摘要，总结|Write a ___ of the chapter.|Here is a ___ of the news.|In ___, the plan failed.|paragraph,quote|summaries,summarize
@@ -27,8 +27,8 @@ const gaining = batch(
   ["Words for Gaining and Giving", "获得与给予的词"],
   ["academic words for getting, chasing and handing out", "表示获取、追求和授予的学术词"],
   `
-  acquisition|an asset or object bought or obtained; the learning of a skill|获得物；习得|The museum's latest ___ is a Roman vase.|Language ___ starts at birth.|The ___ of the firm cost millions.|purchase,grant|acquisitions,acquire
-  attain|to succeed in achieving|达到，获得|She hopes to ___ a high grade.|Few people ___ perfection.|He did ___ the rank of general.|pursue,secure|attained,attainment
+  acquisition|an asset or object bought or obtained; the learning of a skill|获得物；习得|The museum's latest ___ is a Roman vase.|Language ___ starts at birth.|The ___ of the firm cost millions.|devote,attain|acquisitions,acquire
+  attain|to succeed in achieving|达到，获得|She hopes to ___ a high grade.|Few people ___ perfection.|He did ___ the rank of general.|devote,confer|attained,attainment
   confer|to grant a title or right; to discuss together|授予；商议|The university will ___ a degree on her.|The lawyers need to ___.|The title may ___ great honor.|grant,devote|conferred
   grant|a sum of money given for a purpose; to agree to give or allow|拨款；准予|She won a ___ to study abroad.|The king will ___ him a pardon.|I ___ that you are right.|confer,invest|granted
   devote|to give all or most of one's time or effort to|致力于，献身|She will ___ her life to music.|He chose to ___ an hour a day to reading.|Let's ___ this meeting to the budget.|invest,pursue|
@@ -63,8 +63,8 @@ const structure = batch(
   ["Words for Inside and Outside", "内部与外部的词"],
   ["academic words for parts, areas and how things are arranged", "表示部分、领域和排列方式的学术词"],
   `
-  internal|of or on the inside|内部的|The report deals with ___ affairs.|He had ___ injuries.|The ___ walls are thin.|external,intermediate|internally
-  external|belonging to or forming the outer surface|外部的|The cream is for ___ use only.|The ___ walls need paint.|They faced ___ pressure.|internal,adjacent|externally
+  internal|of or on the inside|内部的|The report deals with ___ affairs, not foreign ones.|He had ___ injuries, bleeding inside his body.|The ___ walls between the rooms are thin.|external,intermediate|internally
+  external|belonging to or forming the outer surface|外部的|The cream is for ___ use only.|The ___ walls facing the street need paint.|They faced ___ pressure from other countries.|internal,adjacent|externally
   intermediate|coming between two things in time, place or order|中级的，中间的|She is in the ___ class.|There is an ___ stage.|The book is for ___ learners.|internal,configuration|
   adjacent|next to or adjoining something else|邻近的|Our house is ___ to the park.|They booked ___ rooms.|The ___ field belongs to a farmer.|external,section|
   configuration|an arrangement of parts|配置，布局|The ___ of the seats can change.|Check the ___ of your computer.|The star ___ looked like a bear.|infrastructure,entity|configurations
@@ -86,9 +86,9 @@ const exactness = batch(
   initial|existing or occurring at the beginning; the first letter of a name|最初的；首字母|Her ___ reaction was shock.|The ___ cost was low.|Write your ___ here.|prior,prime|initially,initials
   prior|existing or coming before in time or importance|先前的|You need no ___ knowledge.|She had a ___ engagement.|The house was checked ___ to the sale.|initial,predominant|
   overall|taking everything into account|全面的，总的|The ___ cost was high.|___, the trip was a success.|She won the ___ prize.|definite,principal|
-  predominant|present as the strongest or main element|主要的，占优势的|Red is the ___ color in the painting.|Fear was the ___ feeling.|The ___ view is that it will rain.|principal,fundamental|predominantly
+  predominant|present as the strongest or main element|主要的，占优势的|Red is the ___ color in the painting.|Fear was the ___ feeling.|The ___ view is that it will rain.|initial,prior|predominantly
   fundamental|forming a necessary base or core|基本的，根本的|Reading is a ___ skill.|There is a ___ flaw in the plan.|They made ___ changes.|principal,prime|fundamentally,fundamentals
-  principal|first in order of importance; the head of a school|主要的；校长|The ___ cause of the fire was a cigarette.|The ___ called a meeting.|Rice is their ___ food.|predominant,sole|principally
+  principal|first in order of importance; the head of a school|主要的；校长|The ___ of the school gave a speech.|The ___ called a meeting.|Rice is their ___ food.|specific,initial|principally
   prime|of first importance; the best part of something|首要的；全盛时期|She is the ___ suspect.|He was in the ___ of life.|The house is in a ___ location.|initial,fundamental|
   sole|one and only; the underside of a foot or shoe|唯一的；脚底|She is the ___ owner of the shop.|The ___ of my shoe has a hole.|His ___ aim is to win.|specific,overall|solely
   `,
@@ -104,9 +104,9 @@ const handling = batch(
   manipulate|to control or influence cleverly or unfairly; to handle skillfully|操纵；熟练操作|He tried to ___ the voters.|She can ___ the puppet with ease.|Don't let them ___ you.|monitor,induce|manipulated,manipulation,manipulative
   monitor|to observe and check over time; a screen|监测；显示器|Doctors will ___ his heart.|Teachers ___ students' progress.|The ___ shows the image.|inspect,manipulate|monitored,monitoring
   inspect|to look at closely in order to assess|检查|Officers ___ every truck.|She will ___ the kitchen.|Let me ___ your work.|monitor,generate|inspected,inspection,inspector
-  generate|to produce or create|产生|The plant will ___ electricity.|The idea may ___ interest.|Tourism will ___ jobs.|induce,trigger|generated
+  generate|to produce or create|产生|The plant will ___ electricity.|The idea may ___ interest.|Tourism will ___ jobs.|undergo,conform|generated
   induce|to succeed in persuading; to bring about|劝使；引起|Nothing could ___ her to stay.|The drug may ___ sleep.|Doctors had to ___ labor.|trigger,generate|induced,inducement
-  trigger|to cause an event to happen; the part of a gun one pulls|引发；扳机|Dust may ___ an attack of asthma.|Pull the ___ slowly.|The news will ___ protests.|induce,undergo|triggered
+  trigger|to cause an event to happen; the part of a gun one pulls|引发；扳机|Dust may ___ an attack of asthma.|Pull the ___ slowly.|The news will ___ protests.|undergo,conform|triggered
   undergo|to experience something unpleasant or demanding|经历，经受|He will ___ surgery next week.|The city must ___ great change.|Recruits ___ hard training.|utilize,conform|underwent,undergone
   utilize|to make practical and effective use of|利用|We should ___ solar power.|The firm will ___ new methods.|They ___ every inch of the room.|undergo,alter|utilized,utilization
   `,
@@ -123,7 +123,7 @@ const fitting = batch(
   passive|accepting what happens without active response|被动的，消极的|He was too ___ to complain.|___ smoking harms children.|"The cake was eaten" is in the ___ voice.|positive,voluntary|passively
   positive|showing confidence or hope; certain; above zero|积极的；确定的|Stay ___!|I am ___ that I locked the door.|The test was ___.|passive,potential|positively
   potential|possible but not yet real; capacity to develop|潜在的；潜力|She has great ___.|They warned of ___ danger.|He is a ___ buyer.|positive,authentic|potentially
-  straightforward|easy to do or understand; honest and frank|简单的；坦率的|The test was ___.|She gave a ___ answer.|The route is ___.|accessible,widespread|straightforwardly
+  straightforward|easy to do or understand; honest and frank|简单的；坦率的|The test was ___.|She gave a ___ answer.|The route is ___.|widespread,mutual|straightforwardly
   voluntary|done by choice; working without pay|自愿的|Attendance is ___.|She does ___ work at the hospital.|It was a ___ decision.|passive,mutual|voluntarily
   widespread|found or spread over a large area|普遍的，广泛的|There is ___ support for the plan.|The storm caused ___ damage.|The belief is ___.|straightforward,mutual|
   mutual|experienced or done by each of two or more people|相互的；共同的|The feeling is ___.|They have a ___ friend.|It is a matter of ___ respect.|compatible,voluntary|mutually

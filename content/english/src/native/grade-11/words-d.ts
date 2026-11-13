@@ -9,15 +9,15 @@ const stubborn = batch(
   ["Words of Firm and Fickle Minds", "坚定与多变心志的词"],
   ["holding fast, changing often and caring much or little", "坚持、多变与在乎的多少"],
   `
-  adamant|refusing to be persuaded or to change one's mind|坚决的，固执的|She was ___ that she had locked the door.|He remained ___ in his refusal.|The ___ coach would not change the team.|obstinate,amenable|adamantly
-  obstinate|stubbornly refusing to change one's opinion|固执的，顽固的|The ___ mule would not move.|He was too ___ to say sorry.|An ___ cough kept her awake.|adamant,capricious|obstinately,obstinacy
-  incorrigible|not able to be corrected or reformed|无可救药的|He is an ___ liar.|The ___ boy kept playing tricks.|She is an ___ optimist.|inveterate,amenable|incorrigibly
-  inveterate|having a long-standing habit that is unlikely to change|积习难改的|He is an ___ gambler.|She was an ___ reader of novels.|Her ___ lateness annoyed us.|incorrigible,erratic|
+  adamant|refusing to be persuaded or to change one's mind|坚决的，固执的|She was ___ that she had locked the door.|He remained ___ in his refusal.|The ___ coach would not change the team.|amenable,erratic|adamantly
+  obstinate|stubbornly refusing to change one's opinion|固执的，顽固的|The ___ mule would not move.|He was too ___ to say sorry.|An ___ cough kept her awake.|capricious,nonchalant|obstinately,obstinacy
+  incorrigible|not able to be corrected or reformed|无可救药的|He is an ___ liar.|The ___ boy kept playing tricks.|She is an ___ optimist.|amenable,nonchalant|incorrigibly
+  inveterate|having a long-standing habit that is unlikely to change|积习难改的|He is an ___ gambler.|She was an ___ reader of novels.|Her ___ lateness annoyed us.|erratic,nonchalant|
   amenable|open and responsive to suggestion|顺从的，愿意接受的|She was ___ to the new plan.|The boss is ___ to change.|The patient was ___ to treatment.|adamant,obstinate|
-  capricious|given to sudden changes of mood or behavior|反复无常的|The ___ queen changed her mind daily.|Spring weather is ___.|A ___ boss is hard to work for.|erratic,obstinate|capriciously
-  erratic|not even or regular in pattern or movement|不稳定的，古怪的|His ___ driving alarmed us.|The patient's pulse was ___.|Her work has been ___ this term.|capricious,inveterate|erratically
-  fervent|having or showing passionate intensity|热烈的，强烈的|She is a ___ supporter of the team.|He said a ___ prayer.|They had a ___ hope of peace.|zealous,nonchalant|fervently,fervor
-  zealous|showing great energy or enthusiasm for a cause|热心的，狂热的|The ___ fans painted their faces.|A ___ officer stopped every car.|She was ___ in her work for the poor.|fervent,nonchalant|zealously,zeal
+  capricious|given to sudden changes of mood or behavior|反复无常的|The ___ queen changed her mind daily.|Spring weather is ___.|A ___ boss is hard to work for.|obstinate,fervent|capriciously
+  erratic|not even or regular in pattern or movement|不稳定的，古怪的|His ___ driving alarmed us.|The patient's pulse was ___.|Her work has been ___ this term.|inveterate,fervent|erratically
+  fervent|having or showing passionate intensity|热烈的，强烈的|She is a ___ supporter of the team.|He said a ___ prayer.|They had a ___ hope of peace.|nonchalant,amenable|fervently,fervor
+  zealous|showing great energy or enthusiasm for a cause|热心的，狂热的|The ___ fans painted their faces.|A ___ officer stopped every car.|She was ___ in her work for the poor.|nonchalant,amenable|zealously,zeal
   nonchalant|calm and relaxed; seeming not to care|若无其事的，漠不关心的|He gave a ___ shrug.|She was ___ about the exam.|His ___ manner hid his nerves.|zealous,adamant|nonchalantly,nonchalance
   `,
 );
@@ -82,13 +82,13 @@ const doubt = batch(
   ["what is uncertain, what is false and who believes it", "不确定的、虚假的与谁相信"],
   `
   dubious|hesitating or doubting; not to be relied on|怀疑的；可疑的|I was ___ about the plan.|He has a ___ reputation.|The claim is ___.|equivocal,credulous|dubiously
-  equivocal|open to more than one interpretation; ambiguous|模棱两可的|Her answer was ___.|The evidence is ___.|He gave an ___ reply to avoid trouble.|dubious,infallible|
-  illusory|based on illusion; not real|虚幻的|The gains proved ___.|Their safety was ___.|The calm was ___.|elusive,infallible|
-  elusive|difficult to find, catch or achieve|难以捉摸的，难找到的|Success remained ___.|The ___ fox escaped the hounds.|The answer is ___.|illusory,oblivious|elusively
+  equivocal|open to more than one interpretation; ambiguous|模棱两可的|Her answer was ___.|The evidence is ___.|He gave an ___ reply to avoid trouble.|credulous,cognizant|
+  illusory|based on illusion; not real|虚幻的|The gains proved ___.|Their safety was ___.|The calm was ___.|credulous,cognizant|
+  elusive|difficult to find, catch or achieve|难以捉摸的，难找到的|Success remained ___.|The ___ fox escaped the hounds.|The answer is ___.|oblivious,credulous|elusively
   infallible|incapable of making mistakes or being wrong|永无过失的，绝对可靠的|No doctor is ___.|They believed the leader was ___.|There is no ___ test.|equivocal,credulous|infallibility
   credulous|too ready to believe things|轻信的|The ___ tourists bought the fake gold.|Only a ___ reader would believe that.|He was ___ and easily fooled.|cognizant,dubious|credulity
-  cognizant|having knowledge or awareness|认识到的，知晓的|We are ___ of the risks.|She was ___ of his feelings.|Be ___ of the rules.|oblivious,credulous|cognizance
-  oblivious|not aware of what is happening around one|未察觉的，不注意的|He was ___ to the danger.|She seemed ___ of the noise.|They walked on, ___ of the rain.|cognizant,elusive|obliviously
+  cognizant|having knowledge or awareness|认识到的，知晓的|We are ___ of the risks.|She was ___ of his feelings.|Be ___ of the rules.|credulous,illusory|cognizance
+  oblivious|not aware of what is happening around one|未察觉的，不注意的|He was ___ to the danger.|She seemed ___ of the noise.|They walked on, ___ of the rain.|elusive,credulous|obliviously
   construe|to interpret a word or action in a particular way|理解，解释|Some may ___ his silence as consent.|Don't ___ my words as a threat.|How should we ___ this remark?|conundrum,illusory|construed
   conundrum|a confusing and difficult problem or question|难题，谜语|Where to put everyone was a ___.|It is a moral ___.|The riddle was a real ___.|construe,illusory|conundrums
   `,
@@ -99,11 +99,11 @@ const excellence = batch(
   ["Words of Excellence and Awe", "卓越与敬畏的词"],
   ["the best of things and the honor they win", "事物的最佳状态及所获敬仰"],
   `
-  epitome|a perfect example of a quality or type|典范，缩影|She is the ___ of calm.|The hotel is the ___ of luxury.|He was the ___ of a gentleman.|paragon,charisma|epitomize
+  epitome|a perfect example of a quality or type|典范，缩影|She is the ___ of calm.|The hotel is the ___ of luxury.|He was the ___ of a gentleman.|charisma,adulation|epitomize
   paragon|a model of excellence or of a particular quality|模范，典范|She was a ___ of virtue.|He is no ___ of patience.|The school sees him as a ___.|epitome,adulation|paragons
-  exemplary|serving as a desirable model; very good|模范的，典范的|Her behavior was ___.|He has an ___ record.|They received ___ punishment as a warning.|impeccable,profound|
-  impeccable|in accordance with the highest standards; faultless|无可挑剔的|She has ___ manners.|His timing was ___.|The house was kept in ___ order.|exemplary,pristine|impeccably
-  pristine|in its original condition; perfectly clean|原始的；崭新的|The car is in ___ condition.|They walked on ___ beaches.|The ___ forest had never been logged.|impeccable,ineffable|
+  exemplary|serving as a desirable model; very good|模范的，典范的|Her behavior was ___.|He has an ___ record.|They received ___ punishment as a warning.|profound,ineffable|
+  impeccable|in accordance with the highest standards; faultless|无可挑剔的|She has ___ manners.|His timing was ___.|The house was kept in ___ order.|ineffable,profound|impeccably
+  pristine|in its original condition; perfectly clean|原始的；崭新的|The car is in ___ condition.|They walked on ___ beaches.|The ___ forest had never been logged.|ineffable,profound|
   profound|very great or intense; showing deep insight|深远的；深刻的|The war had a ___ effect on him.|She made a ___ remark.|There was a ___ silence.|ineffable,exemplary|profoundly,profundity
   ineffable|too great or extreme to be expressed in words|难以言喻的|They felt an ___ joy.|The view had an ___ beauty.|The poem speaks of ___ things.|profound,venerate|
   venerate|to regard with great respect|崇敬，敬重|The people ___ their ancestors.|Many ___ the old poet.|They ___ the saint at this shrine.|adulation,paragon|venerated,veneration
@@ -117,16 +117,16 @@ const hardship = batch(
   ["Words of Harshness and Hardship", "严厉与艰苦的词"],
   ["strict rules, heavy burdens and misery", "严格的规定、沉重的负担与苦难"],
   `
-  stringent|strict, precise and exacting|严格的|The rules on safety are ___.|They face ___ tests.|The bank set ___ conditions for the loan.|onerous,callous|stringently
-  onerous|involving heavy effort and difficulty; burdensome|繁重的|It was an ___ duty.|The ___ task fell to her.|The new rules were ___.|stringent,grievous|
+  stringent|strict, precise and exacting|严格的|The rules on safety are ___.|They face ___ tests.|The bank set ___ conditions for the loan.|callous,acrid|stringently
+  onerous|involving heavy effort and difficulty; burdensome|繁重的|It was an ___ duty.|The ___ task fell to her.|The new rules were ___.|acrid,squalid|
   grievous|very severe or serious|严重的，极严重的|He suffered ___ injuries.|It was a ___ error.|The loss was a ___ blow.|abject,onerous|grievously
   abject|extremely bad or unpleasant; without pride|凄惨的；卑躬屈膝的|They live in ___ poverty.|The plan was an ___ failure.|He made an ___ apology.|squalid,grievous|abjectly
   squalid|extremely dirty and unpleasant; morally degraded|肮脏的；卑劣的|They lived in a ___ hut.|The prison was ___.|It was a ___ affair.|abject,acrid|squalor
   acrid|unpleasantly bitter or sharp to the smell or taste|辛辣的，刺鼻的|___ smoke filled the room.|The ___ smell of burning rubber made us cough.|He gave an ___ reply.|abrasive,squalid|
   abrasive|rough and able to wear away; harsh in manner|粗糙的，有研磨作用的；粗鲁的|Use an ___ cloth to clean the pan.|His ___ manner upset the staff.|The ___ paste scratched the glass.|acrid,callous|abrasively
   callous|showing a cruel disregard for others|冷酷无情的|It was a ___ act.|The ___ landlord evicted the family.|His ___ remark shocked us.|abrasive,stringent|callously,callousness
-  debilitate|to make someone very weak and infirm|使衰弱|The illness began to ___ him.|Long strikes ___ the economy.|Heat can ___ older people.|enervate,grievous|debilitated,debilitating
-  enervate|to drain of energy or vitality|使衰弱，使无力|The heat began to ___ the runners.|Long meetings ___ me.|Illness can ___ the body.|debilitate,onerous|enervated,enervating
+  debilitate|to make someone very weak and infirm|使衰弱|The illness began to ___ him.|Long strikes ___ the economy.|Heat can ___ older people.|grievous,onerous|debilitated,debilitating
+  enervate|to drain of energy or vitality|使衰弱，使无力|The heat began to ___ the runners.|Long meetings ___ me.|Illness can ___ the body.|onerous,acrid|enervated,enervating
   `,
 );
 
