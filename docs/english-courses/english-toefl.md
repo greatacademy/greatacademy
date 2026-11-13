@@ -6,7 +6,7 @@
 - **Level:** CEFR B2 and above, for learners of English as a foreign language preparing for the TOEFL iBT
 - **Prerequisite(s):** English B2 (`english-b2`)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 2 units · 13 topics (4 new, all practice-only) · 1 reading unit of 8 passages
+- **Size:** 2 units · 41 topics (5 new, all practice-only) · 1 reading unit of 8 passages
 
 ## The Test
 
@@ -30,7 +30,7 @@ Questions, texts and word lists of the test are never copied: every text and ite
 
 ## Aim
 
-The course practices the short, quick tasks of the updated TOEFL: reading words from their first half and their context, reading everyday notices and short academic texts for what they say and imply, ordering a reply word by word, and writing an email and a post to a class discussion in a few minutes. It teaches nothing new. Its own topics are practice-only: a lesson starts with practice, and the explanation appears only after a failed attempt.
+The course practices the short, quick tasks of the updated TOEFL: reading words from their first half and their context, reading everyday notices and short academic texts for what they say and imply, what their words mean in context and why they mention what they do, ordering a reply word by word, and writing an email and a post to a class discussion in a few minutes. It teaches nothing new. Its own topics are practice-only: a lesson starts with practice, and the explanation appears only after a failed attempt.
 
 ## How to Read This Outline
 
@@ -40,11 +40,12 @@ Each unit lists the topics it reuses (*existing*) and its new topics. A new topi
 
 ### 1. Reading
 
-**Existing:** `main-idea`, `supporting-details`, `making-inferences`, `authors-purpose`, `reading-workplace-documents`.
+**Existing:** `main-idea`, `supporting-details`, `making-inferences`, `authors-purpose`, `reading-workplace-documents`, `context-clues`; the academic words `b2-words-higher-education`, `b2-words-learning-2`, `b2-words-teaching`, `b2-words-assessment`, `b2-words-digital-learning`, `b2-words-genetics`, `b2-words-ecosystems`, `b2-words-psychology`, `b2-words-memory-and-sleep`, `b2-words-science-verbs`, `b2-words-thinking-verbs`, `b2-words-academic-adjectives`, `b2-words-transitions`: the subjects of campus life and of the academic passages.
 
 **New**
 
 - `toefl-complete-the-words` Complete the Words (practice-only; after `b2-words-linking-1`, `b2-words-research-2`). A short academic text with one word cut after its first half: (1) everyday and academic words of up to seven letters; (2) longer words, whose form depends on the sentence.
+- `toefl-passage-questions` Words and Purpose in Academic Passages (practice-only; after `context-clues`, `authors-purpose`). Short academic passages of about 100 words: (1) the meaning of a word in its context; (2) why the writer mentions something: an example, a contrast, a cause or a limitation.
 
 **Reading:** `toefl-reading`, 8 passages: four everyday texts of 100 to 160 words (a library notice, an email from a professor, a housing message, a poster for a club) and four academic passages of about 200 words (how bats find their way, the first maps, why bread rises, the coral and the alga).
 
@@ -52,7 +53,7 @@ Each unit lists the topics it reuses (*existing*) and its new topics. A new topi
 
 ### 2. Writing
 
-**Existing:** `indirect-questions`, `subject-and-object-questions`, `writing-a-formal-email`, `writing-an-opinion-paragraph`, `counterclaims-and-rebuttals`.
+**Existing:** `indirect-questions`, `subject-and-object-questions`, `reporting-verbs`, `participial-phrases`, `appositives`, `b2-words-formal-verbs`, `writing-a-formal-email`, `b2-words-opinion-verbs`, `b2-words-certainty`, `b2-words-tech-in-society`, `linking-words-of-contrast`, `writing-an-opinion-paragraph`, `writing-an-evidence-paragraph`, `counterclaims-and-rebuttals`, `writing-a-counterclaim-paragraph`.
 
 **New**
 
@@ -65,6 +66,7 @@ Each unit lists the topics it reuses (*existing*) and its new topics. A new topi
 | Topic | Knowledge points | Items | Judged by |
 | :--- | :--- | :--- | :--- |
 | `toefl-complete-the-words` | Short words; longer words | 32; 33 | Rules |
+| `toefl-passage-questions` | Word in context; why mentioned | 30; 30 | Rules |
 | `toefl-build-a-sentence` | Statements; questions | 32; 33 | Rules |
 | `toefl-writing-an-email` | Email | 12 tasks | Model |
 | `toefl-academic-discussion` | Discussion post | 12 tasks | Model |

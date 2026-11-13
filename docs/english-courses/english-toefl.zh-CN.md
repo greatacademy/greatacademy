@@ -6,7 +6,7 @@
 - **级别：** CEFR B2 及以上，面向准备托福 iBT 的英语外语学习者
 - **先修：** 英语 B2（`english-b2`）
 - **讲解语言：** 界面语言：中文或英文
-- **规模：** 2 个单元 · 13 个主题（新增 4 个，均为只练习主题）· 1 个阅读单元，8 篇文章
+- **规模：** 2 个单元 · 41 个主题（新增 5 个，均为只练习主题）· 1 个阅读单元，8 篇文章
 
 ## 考试
 
@@ -30,7 +30,7 @@
 
 ## 目标
 
-本课程练习新版托福短而快的任务：凭前半个词和上下文读出整个词，读懂日常通知和学术短文说了什么、暗示了什么，逐词排出一句回答，并在几分钟内写一封邮件和一条课堂讨论帖。它不教新知识。它自己的主题都是只练习主题：课一开始就是练习，只有练习失败后才显示讲解。
+本课程练习新版托福短而快的任务：凭前半个词和上下文读出整个词，读懂日常通知和学术短文说了什么、暗示了什么、词在上下文中是什么意思、作者为什么提到某事，逐词排出一句回答，并在几分钟内写一封邮件和一条课堂讨论帖。它不教新知识。它自己的主题都是只练习主题：课一开始就是练习，只有练习失败后才显示讲解。
 
 ## 如何阅读本大纲
 
@@ -40,11 +40,12 @@
 
 ### 1. 阅读
 
-**已有：** `main-idea`、`supporting-details`、`making-inferences`、`authors-purpose`、`reading-workplace-documents`。
+**已有：** `main-idea`、`supporting-details`、`making-inferences`、`authors-purpose`、`reading-workplace-documents`、`context-clues`；学术词汇 `b2-words-higher-education`、`b2-words-learning-2`、`b2-words-teaching`、`b2-words-assessment`、`b2-words-digital-learning`、`b2-words-genetics`、`b2-words-ecosystems`、`b2-words-psychology`、`b2-words-memory-and-sleep`、`b2-words-science-verbs`、`b2-words-thinking-verbs`、`b2-words-academic-adjectives`、`b2-words-transitions`：校园生活和学术文章的话题。
 
 **新增**
 
 - `toefl-complete-the-words` 补全单词（只练习；在 `b2-words-linking-1`、`b2-words-research-2` 之后）。一段学术短文中有一个词只给出前半部分：（1）七个字母以内的日常和学术词；（2）更长的词，其形式取决于句子。
+- `toefl-passage-questions` 学术文章中的词义与写作意图（只练习；在 `context-clues`、`authors-purpose` 之后）。约 100 词的学术短文：（1）词在上下文中的意思；（2）作者为什么提到某事：举例、对比、原因还是局限。
 
 **阅读：** `toefl-reading`，8 篇：四篇 100 到 160 词的日常短文（图书馆通知、教授的邮件、住宿消息、社团海报）和四篇约 200 词的学术短文（蝙蝠如何辨别方向、最早的地图、面包为什么会发、珊瑚与藻类）。
 
@@ -52,7 +53,7 @@
 
 ### 2. 写作
 
-**已有：** `indirect-questions`、`subject-and-object-questions`、`writing-a-formal-email`、`writing-an-opinion-paragraph`、`counterclaims-and-rebuttals`。
+**已有：** `indirect-questions`、`subject-and-object-questions`、`reporting-verbs`、`participial-phrases`、`appositives`、`b2-words-formal-verbs`、`writing-a-formal-email`、`b2-words-opinion-verbs`、`b2-words-certainty`、`b2-words-tech-in-society`、`linking-words-of-contrast`、`writing-an-opinion-paragraph`、`writing-an-evidence-paragraph`、`counterclaims-and-rebuttals`、`writing-a-counterclaim-paragraph`。
 
 **新增**
 
@@ -65,6 +66,7 @@
 | 主题 | 知识点 | 题量 | 判定方式 |
 | :--- | :--- | :--- | :--- |
 | `toefl-complete-the-words` | 短词；长词 | 32；33 | 规则 |
+| `toefl-passage-questions` | 上下文中的词义；为什么提到 | 30；30 | 规则 |
 | `toefl-build-a-sentence` | 陈述句；疑问句 | 32；33 | 规则 |
 | `toefl-writing-an-email` | 邮件 | 12 个任务 | 模型 |
 | `toefl-academic-discussion` | 讨论帖 | 12 个任务 | 模型 |
