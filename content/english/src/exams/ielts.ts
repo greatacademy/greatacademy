@@ -8,6 +8,7 @@ import { matchingFeaturesAndChoice } from "./ielts-features.ts";
 import { matchingHeadings } from "./ielts-matching.ts";
 import { notesAndShortAnswers } from "./ielts-notes-and-short-answers.ts";
 import { ieltsReading } from "./ielts-reading.ts";
+import { sentenceEndings } from "./ielts-sentence-endings.ts";
 import { trueFalseNotGiven } from "./ielts-true-false.ts";
 import { writingTask1, writingTask2 } from "./ielts-writing.ts";
 import { examGroup } from "./kit.ts";
@@ -19,6 +20,7 @@ export const topics: readonly TopicDef[] = [
   sentenceAndSummaryCompletion,
   matchingFeaturesAndChoice,
   notesAndShortAnswers,
+  sentenceEndings,
   describingData,
   writingTask1,
   writingTask2,
@@ -32,8 +34,8 @@ export const course: CourseDef = {
   id: "english-ielts",
   title: t("IELTS Academic", "雅思学术类"),
   description: t(
-    "Practice for IELTS Academic Reading and Writing after English B2: True/False/Not given, matching headings and information, sentence and summary completion, matching features and multiple choice, note completion and short answers, the academic words of the test's subjects, academic passages in the formats of the test, describing data for Task 1 and the essay of Task 2. It teaches nothing new: its own topics start with practice, and every text is written for this course. Listening and Speaking will follow with audio.",
-    "学完英语 B2 之后的雅思学术类阅读与写作练习：判断题、段落标题与信息匹配、句子与摘要填空、人物观点匹配与单项选择、笔记填空与简答题、考试常见话题的学术词汇、按考试题型出题的学术文章、Task 1 的数据描述和 Task 2 的议论文。本课程不教新知识：它自己的主题一开始就是练习，所有文章都是为本课程原创的。听力和口语将在有了音频之后加入。",
+    "Practice for IELTS Academic Reading and Writing after English B2: True/False/Not given, matching headings and information, sentence and summary completion, matching features and multiple choice, note completion and short answers, matching sentence endings, the academic words of the test's subjects, academic passages in the formats of the test, describing data for Task 1 and the essay of Task 2. It teaches nothing new: its own topics start with practice, and every text is written for this course. Listening and Speaking will follow with audio.",
+    "学完英语 B2 之后的雅思学术类阅读与写作练习：判断题、段落标题与信息匹配、句子与摘要填空、人物观点匹配与单项选择、笔记填空与简答题、句子结尾匹配、考试常见话题的学术词汇、按考试题型出题的学术文章、Task 1 的数据描述和 Task 2 的议论文。本课程不教新知识：它自己的主题一开始就是练习，所有文章都是为本课程原创的。听力和口语将在有了音频之后加入。",
   ),
   group: examGroup,
   buildsOn: ["english-b2"],
@@ -53,6 +55,7 @@ export const course: CourseDef = {
             "ielts-sentence-and-summary-completion",
             "ielts-matching-features-and-multiple-choice",
             "ielts-notes-and-short-answers",
+            "ielts-matching-sentence-endings",
           ],
         },
         {

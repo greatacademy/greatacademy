@@ -6,7 +6,7 @@
 - **Level:** CEFR B2 and above, for learners of English as a foreign language preparing for IELTS Academic
 - **Prerequisite(s):** English B2 (`english-b2`)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 3 units · 45 topics (8 new, all practice-only) · 1 reading unit of 6 passages
+- **Size:** 3 units · 46 topics (9 new, all practice-only) · 1 reading unit of 6 passages
 
 ## The Test
 
@@ -49,6 +49,7 @@ Each unit lists the topics it reuses (*existing*) and its new topics. A new topi
 - `ielts-sentence-and-summary-completion` Sentence and Summary Completion (practice-only; after `supporting-details`). Short texts with gaps: (1) complete a sentence with one word copied from the text; (2) complete a summary with a word from a box that says the same in other words.
 - `ielts-matching-features-and-multiple-choice` Matching Features and Multiple Choice (practice-only; after `supporting-details`, `making-inferences`). Texts that report what three people found or think: (1) match a statement to the person, A, B or C; (2) choose the answer to a question that follows the text.
 - `ielts-notes-and-short-answers` Note Completion and Short Answers (practice-only; after `ielts-sentence-and-summary-completion`). Ten short texts answered by typing words copied from them: (1) gaps in notes, ONE WORD ONLY; (2) questions answered in NO MORE THAN TWO WORDS AND/OR A NUMBER, where the right words with one word too many are wrong.
+- `ielts-matching-sentence-endings` Matching Sentence Endings (practice-only; after `ielts-true-false-not-given`). Ten short texts, each with three sentence beginnings: (1) choosing the ending of one beginning among its right ending, a near miss that reuses the text's words and two endings the text does not support; (2) matching each beginning to its ending in a list of six, A to F.
 
 **Academic words (existing):** `b2-words-research-2`, `b2-words-scientific-adjectives`, `b2-words-abstract-nouns`, `b2-words-society`, `b2-words-higher-education`, `b2-words-climate-change`, `b2-words-globalization`, `b2-words-innovation`: the subjects IELTS passages and essays come back to.
 
@@ -82,6 +83,7 @@ Each unit lists the topics it reuses (*existing*) and its new topics. A new topi
 | `ielts-sentence-and-summary-completion` | Sentences; summaries | 30; 30 | Rules |
 | `ielts-matching-features-and-multiple-choice` | Matching features; multiple choice | 30; 30 | Rules |
 | `ielts-notes-and-short-answers` | Note completion; short answers | 30; 30 | Rules |
+| `ielts-matching-sentence-endings` | Choosing an ending; matching from a list of endings | 30; 30 | Rules |
 | `ielts-describing-data` | Trends; proportions and comparisons | 32; 39 | Rules |
 | `ielts-writing-task-1` | Task 1 | 12 tasks | Model |
 | `ielts-writing-task-2` | Task 2 | 12 tasks | Model |
