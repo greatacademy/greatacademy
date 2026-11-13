@@ -18,6 +18,14 @@
 | 写作 | 60 分钟；Task 1：至少 150 词描述图表、表格或示意图（约 20 分钟）；Task 2：至少 250 词回应一个观点、论点或问题（约 40 分钟，分值是 Task 1 的两倍）。评分维度为任务完成或回应、连贯与衔接、词汇丰富程度、语法多样性与准确性 | 第 2、3 单元 |
 | 听力、口语 | 30 分钟录音；11 到 14 分钟的面对面口试 | 暂无：见下文 |
 
+成绩是 0 到 9 的总分，以半分为单位。2026-11-12 按 [ielts.org：IELTS 与 CEFR](https://ielts.org/news-and-insights/everything-you-need-to-know-about-ielts-and-the-cefr) 和 [ielts.org：对齐研究](https://ielts.org/organisations/ielts-for-organisations/compare-ielts/ielts-and-the-cefr) 核对，IELTS 把总分与 CEFR 对应如下，并提醒这只表示一种关系，不是精确等值：
+
+| 总分 | 4.0 到 5.0 | 5.5 到 6.5 | 7.0 到 8.0 | 8.5 到 9.0 |
+| :--- | :--- | :--- | :--- | :--- |
+| CEFR | B1 | B2 | C1 | C2 |
+
+学完英语 B2 的目标约为 5.5 到 6.5；本课程的目标是 6.5 及以上，朝向 C1 和许多大学要求的 7 分。
+
 本课程从不照搬考试的题目、文章或词表：所有文章和题目都是按上述题型为本课程原创的。
 
 ## 目标

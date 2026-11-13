@@ -103,7 +103,7 @@ Levels follow the CEFR, whose levels are widely used by tests and textbooks. The
 | B1 | Authentic texts, complex sentences, paragraphs, opinions, longer conversations |
 | B2 | Argument and discussion, essays, fluent reading of general texts |
 | C1 to C2 | **Merge with the native secondary and college courses** |
-| Exam courses | IELTS, TOEFL, Cambridge, Gaokao: practice-only courses over topics already in the graph |
+| Exam courses | IELTS, TOEFL, Cambridge, Gaokao: practice-only courses over topics already in the graph; each outline gives the test's official alignment with the CEFR (IELTS 5.5 to 6.5 and TOEFL 4 to 4.5 are B2) |
 
 Practice in these courses follows Nation's four strands, in roughly equal time: meaning-focused input, meaning-focused output, language-focused learning and fluency development. Without this balance a course turns into grammar and word lists (§6.4).
 

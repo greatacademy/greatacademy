@@ -18,7 +18,15 @@ Checked on 2026-11-10 against the official descriptions of the updated test give
 | Writing | Build a Sentence: arrange words and phrases into a grammatical sentence or question that answers another. Write an Email: a request, information or a proposed solution in an academic or social situation (7 minutes). Write for an Academic Discussion: state and support an opinion in an online class discussion (10 minutes) | Unit 2 |
 | Listening, Speaking | Conversations, announcements and talks; repeating sentences and a short interview | Not yet: see below |
 
-Scores are reported in bands from 1 to 6. Questions, texts and word lists of the test are never copied: every text and item here is written for this course in the formats above.
+Scores are reported in bands from 1 to 6, in steps of 0.5, for each section and in total; the total is the average of the four sections rounded to the nearest half band. Checked on 2026-11-12 against [ets.org: the score scale update](https://www.ets.org/toefl/institutions/ibt/score-scale-update.html), ETS aligns the bands with the CEFR the same way in every section:
+
+| Band | 1 to 1.5 | 2 to 2.5 | 3 to 3.5 | 4 to 4.5 | 5 to 5.5 | 6 |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| CEFR | A1 | A2 | B1 | B2 | C1 | C2 |
+
+Until January 2028 the score report also gives the CEFR level and a comparable total on the former 0 to 120 scale ([ets.org: score displays in 2026](https://www.ets.org/toefl/blog/understanding-toefl-ibt-score-displays.html)); ETS recommends a 4 where 80 was required, 4.5 for 90 and 5 for 100. Finishing English B2 aims at band 4; this course aims at 4.5 and above.
+
+Questions, texts and word lists of the test are never copied: every text and item here is written for this course in the formats above.
 
 ## Aim
 

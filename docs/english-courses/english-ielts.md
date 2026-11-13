@@ -18,6 +18,14 @@ Checked on 2026-11-10 against the official descriptions at [ielts.org: Academic 
 | Writing | 60 minutes; Task 1: at least 150 words describing a graph, table, chart or diagram (about 20 minutes); Task 2: at least 250 words answering a point of view, argument or problem (about 40 minutes, counting twice as much). Judged on task achievement or response, coherence and cohesion, lexical resource, and grammatical range and accuracy | Units 2 and 3 |
 | Listening, Speaking | 30 minutes of recordings; a face-to-face interview of 11 to 14 minutes | Not yet: see below |
 
+Scores are overall bands from 0 to 9 in half bands. Checked on 2026-11-12 against [ielts.org: IELTS and the CEFR](https://ielts.org/news-and-insights/everything-you-need-to-know-about-ielts-and-the-cefr) and [ielts.org: the alignment research](https://ielts.org/organisations/ielts-for-organisations/compare-ielts/ielts-and-the-cefr), IELTS places overall bands against the CEFR as follows, and warns that the figure shows a relationship, not an exact equivalence:
+
+| Overall band | 4.0 to 5.0 | 5.5 to 6.5 | 7.0 to 8.0 | 8.5 to 9.0 |
+| :--- | :--- | :--- | :--- | :--- |
+| CEFR | B1 | B2 | C1 | C2 |
+
+Finishing English B2 aims at about 5.5 to 6.5; this course aims at 6.5 and above, toward the 7 that C1 and many universities ask for.
+
 Questions, texts and word lists of the test are never copied: every text and item here is written for this course in the formats above.
 
 ## Aim
