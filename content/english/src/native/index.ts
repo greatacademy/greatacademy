@@ -5,6 +5,7 @@ import { conversationsCollege } from "./college/conversations.ts";
 import { courseCollege } from "./college/course.ts";
 import { grammarTopicsCollege } from "./college/grammar.ts";
 import { lexiconCollege } from "./college/lexicon.ts";
+import { abstractMoves } from "./college/reading-abstracts.ts";
 import { academicProse } from "./college/reading-academic.ts";
 import { theEthicsOfKnowledge } from "./college/reading-ethics.ts";
 import { numbersInTheNews } from "./college/reading-numbers.ts";
@@ -96,7 +97,7 @@ const grades912: Pack = {
 /** college is the content of the college writing course, with passages of 500 to 900 words. */
 const college: Pack = {
   ...emptyPack,
-  topics: [...wordTopicsCollege, ...grammarTopicsCollege, ...readingSkillTopicsCollege, ...writingTopicsCollege],
+  topics: [...wordTopicsCollege, ...grammarTopicsCollege, ...readingSkillTopicsCollege, abstractMoves, ...writingTopicsCollege],
   courses: [courseCollege],
   reading: [
     academicProse,

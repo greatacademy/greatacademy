@@ -30,9 +30,9 @@ const units: readonly UnitDef[] = [
   unit(
     t("Reading Academic Prose", "阅读学术文章"),
     {
-      words: ["words-of-academic-discourse"],
+      words: ["words-of-academic-discourse", "b2-words-academic-adjectives", "b2-words-logic"],
       style: ["hedging-and-qualification"],
-      reading: ["reading-academic-arguments"],
+      reading: ["reading-academic-arguments", "logical-fallacies"],
       writing: ["writing-a-critical-summary"],
     },
     "academic-prose",
@@ -41,7 +41,7 @@ const units: readonly UnitDef[] = [
   unit(
     t("Questions and Sources", "问题与资料"),
     {
-      words: ["words-of-research"],
+      words: ["words-of-research", "b2-words-research-2"],
       style: ["verbs-for-citing-sources"],
       reading: ["finding-scholarly-sources"],
       writing: ["forming-a-research-question", "writing-an-annotated-bibliography"],
@@ -52,8 +52,8 @@ const units: readonly UnitDef[] = [
   unit(
     t("Using Sources Honestly", "诚实地使用资料"),
     {
-      words: ["words-of-evidence-and-inference"],
-      style: ["quoting-and-paraphrasing", "citing-in-mla-and-apa"],
+      words: ["words-of-evidence-and-inference", "b2-words-reporting-verbs"],
+      style: ["reporting-verbs", "quoting-and-paraphrasing", "citing-in-mla-and-apa"],
       reading: ["tracing-claims-to-sources"],
       writing: ["writing-a-paraphrase"],
     },
@@ -63,9 +63,9 @@ const units: readonly UnitDef[] = [
   unit(
     t("The Research Paper", "研究论文"),
     {
-      words: ["words-of-scholarly-argument"],
+      words: ["words-of-scholarly-argument", "b2-words-linking-3", "b2-words-certainty"],
       style: ["cohesion-old-before-new"],
-      reading: ["reading-a-research-paper"],
+      reading: ["reading-a-research-paper", "the-moves-of-an-abstract"],
       writing: ["writing-a-literature-review", "writing-a-research-paper"],
     },
     "inside-a-research-paper",
@@ -75,7 +75,7 @@ const units: readonly UnitDef[] = [
     t("Style and Clarity", "文风与清晰"),
     {
       words: ["words-often-misused"],
-      style: ["clear-sentences-characters-and-actions"],
+      style: ["clear-sentences-characters-and-actions", "parallel-structure", "misplaced-modifiers", "varying-sentence-openings"],
       reading: ["analyzing-prose-style"],
       writing: ["revising-for-clarity"],
     },
@@ -85,9 +85,9 @@ const units: readonly UnitDef[] = [
   unit(
     t("Numbers in Arguments", "论证中的数字"),
     {
-      words: ["words-of-statistics"],
+      words: ["words-of-statistics", "b2-words-quantity"],
       style: ["numbers-in-writing"],
-      reading: ["reading-charts-and-statistics"],
+      reading: ["reading-charts-and-statistics", "how-numbers-can-mislead"],
       writing: ["writing-about-data"],
     },
     "numbers-in-the-news",
@@ -96,7 +96,7 @@ const units: readonly UnitDef[] = [
   unit(
     t("Writing at Work", "职场写作"),
     {
-      words: ["words-of-the-workplace"],
+      words: ["words-of-the-workplace", "b2-words-formal-verbs", "b2-words-employment"],
       style: ["tone-and-register-at-work"],
       reading: ["reading-workplace-documents"],
       writing: ["writing-a-professional-email", "writing-a-memo", "writing-a-cover-letter"],

@@ -6,7 +6,7 @@
 - **阶段：** 大学一年级，以及为学习或工作而写作的成年人
 - **先修：** [英语：十二年级](english-grade-12.zh-CN.md)（`buildsOn: ["english-grade-12"]`）
 - **讲解语言：** 英语
-- **规模：** 8 个单元 · 38 个知识点，全部新增（词汇 8 个，语法、文体与书写规范 9 个，阅读 8 个，由模型评判的写作 13 个）· 8 个阅读单元，每个 8 篇 · 8 个对话
+- **规模：** 8 个单元 · 54 个主题，新增 39 个（词汇 8 个，语法、文体与书写规范 9 个，阅读 9 个，由模型评判的写作 13 个），另有 15 个复用自英语 B2 和 9 到 12 年级· 8 个阅读单元，每个 8 篇 · 8 个对话
 
 ## 目标
 
@@ -32,6 +32,8 @@
 
 **写作：** `writing-a-critical-summary` 写评述性摘要（由模型评判；先修 `writing-an-objective-summary`、`reading-academic-arguments`）：用一段话概括文章的论证，再指出一个长处和一个局限。
 
+**同时练习（已有）：** `b2-words-academic-adjectives`、`b2-words-logic`、`logical-fallacies`。
+
 **阅读单元：** `academic-prose`，8 篇仿学术期刊风格的原创文章：一项关于记忆的研究；最低工资；历史学家之间的一场争论；儿童怎样习得语法；城市里的鸟；青少年与社交媒体；自由意志；一门正在消亡的语言。
 
 **对话：** `professor-office-hours`。导师扮演答疑时间的教授。任务：说明你在一篇指定文章中觉得难懂的地方，并提一个有针对性的问题。
@@ -47,6 +49,8 @@
 **阅读：** `finding-scholarly-sources` 查找学术资料（先修 `evaluating-sources`）：同行评审、摘要、检索词，以及区分学术资料和大众资料。
 
 **写作：** `forming-a-research-question` 提出研究问题（由模型评判；先修 `reading-academic-arguments`）：问题要窄到能够回答，又开放到值得论证。`writing-an-annotated-bibliography` 写带注释的参考文献（由模型评判；先修 `finding-scholarly-sources`、`writing-a-critical-summary`）。
+
+**同时练习（已有）：** `b2-words-research-2`。
 
 **阅读单元：** `research-in-practice`，8 篇关于虚构研究者怎样工作的原创文章：选择研究问题；一次失败的检索；地下室里的档案；村庄里的访谈；实验记录本；出人意料的实验；跨领域的合作；无法重复的结果。
 
@@ -64,6 +68,8 @@
 
 **写作：** `writing-a-paraphrase` 写转述（由模型评判；先修 `quoting-and-paraphrasing`）：用新的措辞和结构忠实地重述一段文字，并注明出处。
 
+**同时练习（已有）：** `b2-words-reporting-verbs`、`reporting-verbs`。
+
 **阅读单元：** `the-ethics-of-knowledge`，8 篇原创文章，案例均为虚构：骗过整个领域的造假；论文是怎样被撤回的；同行评审是怎样运作的；脚注简史；人人可编辑的百科全书；没有出处的统计数字；合著者之间的署名；抄袭与署名。
 
 **对话：** `writing-center-citation-help`。导师是写作中心的辅导员。任务：指出你在草稿中使用资料的地方，一起弄清楚怎样正确地引用或转述并注明出处。
@@ -76,9 +82,11 @@
 
 **文体：** `cohesion-old-before-new` 连贯：旧信息在前（先修 `choosing-transitions`、`word-order-for-emphasis`）：句子以读者已知的内容开头，以新信息结尾。
 
-**阅读：** `reading-a-research-paper` 阅读研究论文（先修 `reading-academic-arguments`）：摘要、引言、方法、结果和讨论，以及先读哪一部分。
+**阅读：** `reading-a-research-paper` 阅读研究论文（先修 `reading-academic-arguments`）：摘要、引言、方法、结果和讨论，以及先读哪一部分。`the-moves-of-an-abstract` 摘要的语步（先修 `reading-a-research-paper`）：说出摘要中每句话的语步，即背景、研究空白或目的、方法、结果和意义，并找出摘要缺少的语步。
 
 **写作：** `writing-a-literature-review` 写文献综述（由模型评判；先修 `writing-an-annotated-bibliography`、`synthesizing-sources`）。`writing-a-research-paper` 写研究论文（由模型评判，W6；先修 `writing-a-literature-review`、`citing-in-mla-and-apa`、`writing-an-argumentative-essay`）。
+
+**同时练习（已有）：** `b2-words-linking-3`、`b2-words-certainty`。
 
 **阅读单元：** `inside-a-research-paper`，8 篇，从头到尾跟随一项虚构的研究（学校周边绿地与儿童注意力）：研究问题；文献；研究方法；数据；研究结果；讨论；局限；其他研究者的回应。
 
@@ -96,6 +104,8 @@
 
 **写作：** `revising-for-clarity` 为清晰而修改（由模型评判；先修 `clear-sentences-characters-and-actions`、`revising-a-draft`）：把一段晦涩的文字改写清楚，而不丢失原意。
 
+**同时练习（已有）：** `parallel-structure`、`misplaced-modifiers`、`varying-sentence-openings`。
+
 **阅读单元：** `essays-on-writing`，8 篇关于写作的原创文章：行话为何蔓延；法律中的平实语言；长句与短句；为屏幕写作；为被动语态辩护；编辑怎样阅读；用第二语言写作；修改即重新思考。
 
 **对话：** `editor-style-review`。导师是编辑。任务：在编辑质疑之后，为你段落中的三处选择辩护或作出修改。
@@ -112,6 +122,8 @@
 
 **写作：** `writing-about-data` 写数据（由模型评判；先修 `reading-charts-and-statistics`、`numbers-in-writing`、`writing-an-explanatory-essay`）：写一段话准确地报告一张表或图，只得出它所支持的结论。
 
+**同时练习（已有）：** `b2-words-quantity`、`how-numbers-can-mislead`。
+
 **阅读单元：** `numbers-in-the-news`，8 篇原创文章，每篇附一张用文字描述的虚构表或图：选举前的民调；犯罪率统计的是什么；住房的价格；屏幕时间与睡眠；考试成绩与排名；空气糟糕的日子；一项医疗风险；联赛最佳投手。
 
 **对话：** `presenting-findings-to-a-panel`。导师主持一个评审小组。任务：介绍一项小型研究的一个发现，并回答一个关于数据不能说明什么的问题。
@@ -127,6 +139,8 @@
 **阅读：** `reading-workplace-documents` 阅读职场文件（先修 `text-features`）：招聘启事、规章、会议纪要和操作说明，以及它们要求读者做什么。
 
 **写作：** `writing-a-professional-email` 写工作邮件（由模型评判；先修 `tone-and-register-at-work`）。`writing-a-memo` 写备忘录（由模型评判；先修 `writing-a-professional-email`）。`writing-a-cover-letter` 写求职信（由模型评判；先修 `writing-a-professional-email`、`reading-workplace-documents`）。
+
+**同时练习（已有）：** `b2-words-formal-verbs`、`b2-words-employment`。
 
 **阅读单元：** `writing-at-work`，8 篇原创范例文书，每篇后附评注：给经理的请求；得体地拒绝；会议纪要；关于新规定的备忘录；读懂招聘启事；求职信；投诉与回复；给新员工的说明。
 
@@ -171,6 +185,7 @@
 | `words-of-scholarly-argument` | 词汇 | 4 | `context-clues` |
 | `cohesion-old-before-new` | 语法 | 4 | `choosing-transitions`，`word-order-for-emphasis` |
 | `reading-a-research-paper` | 阅读 | 4 | `reading-academic-arguments` |
+| `the-moves-of-an-abstract` | 阅读 | 4 | `reading-a-research-paper` |
 | `writing-a-literature-review` | 写作（模型评判） | 4 | `writing-an-annotated-bibliography`，`synthesizing-sources` |
 | `writing-a-research-paper` | 写作（模型评判，W6） | 4 | `writing-a-literature-review`，`citing-in-mla-and-apa`，`writing-an-argumentative-essay` |
 | `words-often-misused` | 词汇 | 5 | `connotation-and-precise-words` |

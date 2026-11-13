@@ -6,7 +6,7 @@
 - **Level:** First year of university, and adults who write for study or work
 - **Prerequisite(s):** [English, Grade 12](english-grade-12.md) (`buildsOn: ["english-grade-12"]`)
 - **Language of explanation:** English
-- **Size:** 8 units · 38 topics, all new (8 of vocabulary, 9 of grammar, style and mechanics, 8 of reading, 13 of writing judged by a model) · 8 reading units of 8 passages each · 8 conversations
+- **Size:** 8 units · 54 topics, 39 new (8 of vocabulary, 9 of grammar, style and mechanics, 9 of reading, 13 of writing judged by a model) and 15 reused from English B2 and grades 9 to 12 · 8 reading units of 8 passages each · 8 conversations
 
 ## Aim
 
@@ -32,6 +32,8 @@ Listening and speaking wait for audio and recording: until then a unit lists its
 
 **Writing:** `writing-a-critical-summary` Writing a Critical Summary (judged by a model; after `writing-an-objective-summary`, `reading-academic-arguments`): an article's argument in a paragraph, then one strength and one limitation.
 
+**Also practised (existing):** `b2-words-academic-adjectives`, `b2-words-logic`, `logical-fallacies`.
+
 **Reading unit:** `academic-prose`, 8 original passages in the manner of journal articles: a study of memory; the minimum wage; a debate among historians; how children learn grammar; birds in cities; teenagers and social media; free will; a language that is dying.
 
 **Conversation:** `professor-office-hours`. The tutor is a professor in office hours. Task: explain what you found hard in an assigned article and ask a focused question about it.
@@ -47,6 +49,8 @@ Listening and speaking wait for audio and recording: until then a unit lists its
 **Reading:** `finding-scholarly-sources` Finding Scholarly Sources (after `evaluating-sources`): peer review, abstracts, search terms, and telling a scholarly source from a popular one.
 
 **Writing:** `forming-a-research-question` Forming a Research Question (judged by a model; after `reading-academic-arguments`): a question narrow enough to answer and open enough to argue. `writing-an-annotated-bibliography` Writing an Annotated Bibliography (judged by a model; after `finding-scholarly-sources`, `writing-a-critical-summary`).
+
+**Also practised (existing):** `b2-words-research-2`.
 
 **Reading unit:** `research-in-practice`, 8 original essays on how invented researchers work: Choosing a Question; A Search That Failed; An Archive in a Basement; Interviews in a Village; The Lab Notebook; An Experiment That Surprised; A Collaboration Across Fields; A Result That Would Not Replicate.
 
@@ -64,6 +68,8 @@ Listening and speaking wait for audio and recording: until then a unit lists its
 
 **Writing:** `writing-a-paraphrase` Writing a Paraphrase (judged by a model; after `quoting-and-paraphrasing`): a passage restated faithfully in new words and structure, with its citation.
 
+**Also practised (existing):** `b2-words-reporting-verbs`, `reporting-verbs`.
+
 **Reading unit:** `the-ethics-of-knowledge`, 8 original essays, the cases invented: The Fraud That Fooled a Field; How a Paper Is Retracted; How Peer Review Works; A Short History of the Footnote; An Encyclopedia Anyone Can Edit; A Statistic Without a Source; Credit Among Co-Authors; Copying and Credit.
 
 **Conversation:** `writing-center-citation-help`. The tutor is a writing center tutor. Task: show where you used a source in a draft, and work out together how to quote or paraphrase and cite it correctly.
@@ -76,9 +82,11 @@ Listening and speaking wait for audio and recording: until then a unit lists its
 
 **Style:** `cohesion-old-before-new` Cohesion: Old Before New (after `choosing-transitions`, `word-order-for-emphasis`): beginning sentences with what the reader knows and ending with what is new.
 
-**Reading:** `reading-a-research-paper` Reading a Research Paper (after `reading-academic-arguments`): the abstract, introduction, methods, results and discussion, and what to read first.
+**Reading:** `reading-a-research-paper` Reading a Research Paper (after `reading-academic-arguments`): the abstract, introduction, methods, results and discussion, and what to read first. `the-moves-of-an-abstract` The Moves of an Abstract (after `reading-a-research-paper`): naming the move of each sentence of an abstract, background, gap or aim, method, result and implication, and finding the move an abstract leaves out.
 
 **Writing:** `writing-a-literature-review` Writing a Literature Review (judged by a model; after `writing-an-annotated-bibliography`, `synthesizing-sources`). `writing-a-research-paper` Writing a Research Paper (judged by a model, W6; after `writing-a-literature-review`, `citing-in-mla-and-apa`, `writing-an-argumentative-essay`).
+
+**Also practised (existing):** `b2-words-linking-3`, `b2-words-certainty`.
 
 **Reading unit:** `inside-a-research-paper`, 8 passages that follow one invented study, of green space near schools and children's attention, from start to finish: The Question; The Literature; The Method; The Data; The Results; The Discussion; The Limitations; The Response of Other Researchers.
 
@@ -96,6 +104,8 @@ Listening and speaking wait for audio and recording: until then a unit lists its
 
 **Writing:** `revising-for-clarity` Revising for Clarity (judged by a model; after `clear-sentences-characters-and-actions`, `revising-a-draft`): a dense paragraph rewritten to be clear without losing its meaning.
 
+**Also practised (existing):** `parallel-structure`, `misplaced-modifiers`, `varying-sentence-openings`.
+
 **Reading unit:** `essays-on-writing`, 8 original essays on writing: Why Jargon Spreads; Plain Language in Law; The Long Sentence and the Short; Writing for a Screen; The Passive Voice Defended; How Editors Read; Writing in a Second Language; Revision as Rethinking.
 
 **Conversation:** `editor-style-review`. The tutor is an editor. Task: defend or revise three choices in your paragraph after the editor questions them.
@@ -112,6 +122,8 @@ Listening and speaking wait for audio and recording: until then a unit lists its
 
 **Writing:** `writing-about-data` Writing About Data (judged by a model; after `reading-charts-and-statistics`, `numbers-in-writing`, `writing-an-explanatory-essay`): a paragraph that reports a table or chart accurately and draws only the conclusion it supports.
 
+**Also practised (existing):** `b2-words-quantity`, `how-numbers-can-mislead`.
+
 **Reading unit:** `numbers-in-the-news`, 8 original articles, each with an invented table or figure described in words: A Poll Before an Election; Crime Rates and What They Count; The Price of a Home; Screen Time and Sleep; Test Scores and Rankings; Air on a Bad Day; A Medical Risk; The Best Shooter in the League.
 
 **Conversation:** `presenting-findings-to-a-panel`. The tutor chairs a panel. Task: present one finding from a small study and answer a question about what the data cannot show.
@@ -127,6 +139,8 @@ Listening and speaking wait for audio and recording: until then a unit lists its
 **Reading:** `reading-workplace-documents` Reading Workplace Documents (after `text-features`): job postings, policies, minutes and instructions, and what they require of the reader.
 
 **Writing:** `writing-a-professional-email` Writing a Professional Email (judged by a model; after `tone-and-register-at-work`). `writing-a-memo` Writing a Memo (judged by a model; after `writing-a-professional-email`). `writing-a-cover-letter` Writing a Cover Letter (judged by a model; after `writing-a-professional-email`, `reading-workplace-documents`).
+
+**Also practised (existing):** `b2-words-formal-verbs`, `b2-words-employment`.
 
 **Reading unit:** `writing-at-work`, 8 original model documents, each followed by a commentary: A Request to a Manager; Saying No Well; A Meeting Summary; A Memo on a New Policy; Reading a Job Posting; A Cover Letter; A Complaint and Its Reply; Instructions for a New Hire.
 
@@ -171,6 +185,7 @@ Listening and speaking wait for audio and recording: until then a unit lists its
 | `words-of-scholarly-argument` | vocabulary | 4 | `context-clues` |
 | `cohesion-old-before-new` | grammar | 4 | `choosing-transitions`, `word-order-for-emphasis` |
 | `reading-a-research-paper` | reading | 4 | `reading-academic-arguments` |
+| `the-moves-of-an-abstract` | reading | 4 | `reading-a-research-paper` |
 | `writing-a-literature-review` | writing (judged) | 4 | `writing-an-annotated-bibliography`, `synthesizing-sources` |
 | `writing-a-research-paper` | writing (judged, W6) | 4 | `writing-a-literature-review`, `citing-in-mla-and-apa`, `writing-an-argumentative-essay` |
 | `words-often-misused` | vocabulary | 5 | `connotation-and-precise-words` |
