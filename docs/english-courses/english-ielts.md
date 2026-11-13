@@ -6,7 +6,7 @@
 - **Level:** CEFR B2 and above, for learners of English as a foreign language preparing for IELTS Academic
 - **Prerequisite(s):** English B2 (`english-b2`)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 3 units · 15 topics (5 new, all practice-only) · 1 reading unit of 6 passages
+- **Size:** 3 units · 43 topics (6 new, all practice-only) · 1 reading unit of 6 passages
 
 ## The Test
 
@@ -30,7 +30,7 @@ Questions, texts and word lists of the test are never copied: every text and ite
 
 ## Aim
 
-The course turns the reading and writing of B2 into the habits IELTS rewards: telling what a text states from what it does not, finding the paragraph that says something, describing data precisely, and arguing an essay in a fixed time. It teaches nothing new. Its own topics are practice-only: a lesson starts with practice, and the explanation appears only after a failed attempt. The topics it reuses keep their place in the graph, so a learner who has learned them at B2 or in the native courses is credited and moves on.
+The course turns the reading and writing of B2 into the habits IELTS rewards: telling what a text states from what it does not, finding the paragraph that says something, completing sentences and summaries, describing data precisely, and arguing an essay in a fixed time. It teaches nothing new. Its own topics are practice-only: a lesson starts with practice, and the explanation appears only after a failed attempt. The topics it reuses keep their place in the graph, so a learner who has learned them at B2 or in the native courses is credited and moves on.
 
 ## How to Read This Outline
 
@@ -46,6 +46,9 @@ Each unit lists the topics it reuses (*existing*) and its new topics. A new topi
 
 - `ielts-true-false-not-given` True, False or Not Given (practice-only; after `fact-and-opinion`, `making-inferences`). Statements about short texts: (1) *True / False / Not given* about facts; (2) *Yes / No / Not given* about a writer's views and claims.
 - `ielts-matching-headings` Matching Headings and Information (practice-only; after `supporting-details`). Texts of four lettered paragraphs: (1) choose the heading of a paragraph; (2) find the paragraph that contains a piece of information.
+- `ielts-sentence-and-summary-completion` Sentence and Summary Completion (practice-only; after `supporting-details`). Short texts with gaps: (1) complete a sentence with one word copied from the text; (2) complete a summary with a word from a box that says the same in other words.
+
+**Academic words (existing):** `b2-words-research-2`, `b2-words-scientific-adjectives`, `b2-words-abstract-nouns`, `b2-words-society`, `b2-words-higher-education`, `b2-words-climate-change`, `b2-words-globalization`, `b2-words-innovation`: the subjects IELTS passages and essays come back to.
 
 **Reading:** `ielts-reading`, 6 passages of 400 to 500 words in IELTS question formats: A short history of glass; How honeybees choose a home; Why we sleep; Cities that make their own weather; The last speakers; Paying for museums.
 
@@ -53,7 +56,7 @@ Each unit lists the topics it reuses (*existing*) and its new topics. A new topi
 
 ### 2. Writing Task 1
 
-**Existing:** `b2-words-trends`, `comparatives-and-superlatives`, `writing-a-report`.
+**Existing:** `b2-words-trends`, `b2-words-quantity`, `b2-words-population`, `b2-words-change-verbs`, `comparatives-and-superlatives`, `numbers-in-writing`, `how-numbers-can-mislead`, `passive-with-modals-and-perfect-forms`, `writing-a-report`.
 
 **New**
 
@@ -62,7 +65,7 @@ Each unit lists the topics it reuses (*existing*) and its new topics. A new topi
 
 ### 3. Writing Task 2
 
-**Existing:** `writing-a-thesis-statement`, `introductions-and-conclusions`, `writing-an-opinion-essay`, `hedging-and-qualification`, `b2-words-linking-1`.
+**Existing:** `b2-words-linking-1`, `b2-words-linking-2`, `b2-words-linking-3`, `b2-words-cause-and-effect`, `b2-words-opinion-verbs`, `hedging-and-qualification`, `writing-a-thesis-statement`, `introductions-and-conclusions`, `cohesion-old-before-new`, `parallel-structure`, `cutting-wordiness`, `writing-an-opinion-essay`, `writing-a-for-and-against-essay`, `writing-a-problem-solution-essay`.
 
 **New**
 
@@ -74,6 +77,7 @@ Each unit lists the topics it reuses (*existing*) and its new topics. A new topi
 | :--- | :--- | :--- | :--- |
 | `ielts-true-false-not-given` | True/False/Not given; Yes/No/Not given | 30; 30 | Rules |
 | `ielts-matching-headings` | Headings; information | 32; 32 | Rules |
+| `ielts-sentence-and-summary-completion` | Sentences; summaries | 30; 30 | Rules |
 | `ielts-describing-data` | Trends; proportions and comparisons | 32; 39 | Rules |
 | `ielts-writing-task-1` | Task 1 | 12 tasks | Model |
 | `ielts-writing-task-2` | Task 2 | 12 tasks | Model |

@@ -6,7 +6,7 @@
 - **级别：** CEFR B2 及以上，面向准备雅思学术类考试的英语外语学习者
 - **先修：** 英语 B2（`english-b2`）
 - **讲解语言：** 界面语言：中文或英文
-- **规模：** 3 个单元 · 15 个主题（新增 5 个，均为只练习主题）· 1 个阅读单元，6 篇文章
+- **规模：** 3 个单元 · 43 个主题（新增 6 个，均为只练习主题）· 1 个阅读单元，6 篇文章
 
 ## 考试
 
@@ -30,7 +30,7 @@
 
 ## 目标
 
-本课程把 B2 的读写能力变成雅思所看重的习惯：分清文章说了什么、没说什么，找到说某件事的段落，准确描述数据，在限定时间内写好议论文。它不教新知识。它自己的主题都是只练习主题：课一开始就是练习，只有练习失败后才显示讲解。它复用的主题在知识图中位置不变，所以在 B2 或母语课程中学过它们的学习者会得到认可，直接往前走。
+本课程把 B2 的读写能力变成雅思所看重的习惯：分清文章说了什么、没说什么，找到说某件事的段落，完成句子和摘要填空，准确描述数据，在限定时间内写好议论文。它不教新知识。它自己的主题都是只练习主题：课一开始就是练习，只有练习失败后才显示讲解。它复用的主题在知识图中位置不变，所以在 B2 或母语课程中学过它们的学习者会得到认可，直接往前走。
 
 ## 如何阅读本大纲
 
@@ -46,6 +46,9 @@
 
 - `ielts-true-false-not-given` 判断题（只练习；在 `fact-and-opinion`、`making-inferences` 之后）。就短文判断陈述：（1）关于事实的 *True / False / Not given*；（2）关于作者观点和主张的 *Yes / No / Not given*。
 - `ielts-matching-headings` 段落标题与信息匹配（只练习；在 `supporting-details` 之后）。四个带字母段落的短文：（1）为段落选标题；（2）找出包含某条信息的段落。
+- `ielts-sentence-and-summary-completion` 句子填空与摘要填空（只练习；在 `supporting-details` 之后）。带空格的短文：（1）用从原文照抄的一个词完成句子；（2）从方框中选一个换了说法、意思相同的词完成摘要。
+
+**学术词汇（已有）：** `b2-words-research-2`、`b2-words-scientific-adjectives`、`b2-words-abstract-nouns`、`b2-words-society`、`b2-words-higher-education`、`b2-words-climate-change`、`b2-words-globalization`、`b2-words-innovation`：雅思文章和作文反复出现的话题。
 
 **阅读：** `ielts-reading`，6 篇 400 到 500 词的文章，采用雅思题型：玻璃简史；蜜蜂如何选择新家；我们为什么睡觉；自己制造天气的城市；最后的说话人；博物馆该不该收费。
 
@@ -53,7 +56,7 @@
 
 ### 2. 写作 Task 1
 
-**已有：** `b2-words-trends`、`comparatives-and-superlatives`、`writing-a-report`。
+**已有：** `b2-words-trends`、`b2-words-quantity`、`b2-words-population`、`b2-words-change-verbs`、`comparatives-and-superlatives`、`numbers-in-writing`、`how-numbers-can-mislead`、`passive-with-modals-and-perfect-forms`、`writing-a-report`。
 
 **新增**
 
@@ -62,7 +65,7 @@
 
 ### 3. 写作 Task 2
 
-**已有：** `writing-a-thesis-statement`、`introductions-and-conclusions`、`writing-an-opinion-essay`、`hedging-and-qualification`、`b2-words-linking-1`。
+**已有：** `b2-words-linking-1`、`b2-words-linking-2`、`b2-words-linking-3`、`b2-words-cause-and-effect`、`b2-words-opinion-verbs`、`hedging-and-qualification`、`writing-a-thesis-statement`、`introductions-and-conclusions`、`cohesion-old-before-new`、`parallel-structure`、`cutting-wordiness`、`writing-an-opinion-essay`、`writing-a-for-and-against-essay`、`writing-a-problem-solution-essay`。
 
 **新增**
 
@@ -74,6 +77,7 @@
 | :--- | :--- | :--- | :--- |
 | `ielts-true-false-not-given` | True/False/Not given；Yes/No/Not given | 30；30 | 规则 |
 | `ielts-matching-headings` | 段落标题；信息 | 32；32 | 规则 |
+| `ielts-sentence-and-summary-completion` | 句子；摘要 | 30；30 | 规则 |
 | `ielts-describing-data` | 趋势；比例与比较 | 32；39 | 规则 |
 | `ielts-writing-task-1` | Task 1 | 12 个任务 | 模型 |
 | `ielts-writing-task-2` | Task 2 | 12 个任务 | 模型 |
