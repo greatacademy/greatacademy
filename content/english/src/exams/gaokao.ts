@@ -5,12 +5,14 @@
 import { type CourseDef, type TopicDef, t } from "@ga/content";
 import { continuationSkills } from "./gaokao-continuation.ts";
 import { cloze, grammarFilling, sevenFromFive } from "./gaokao-language.ts";
+import { mainIdeaAndInference } from "./gaokao-main-idea.ts";
 import { gaokaoReading } from "./gaokao-reading.ts";
 import { continuationWriting, practicalWriting } from "./gaokao-writing.ts";
 import { examGroup } from "./kit.ts";
 
 /** topics are the new topics of the Gaokao English course, all practice-only. */
 export const topics: readonly TopicDef[] = [
+  mainIdeaAndInference,
   sevenFromFive,
   cloze,
   grammarFilling,
@@ -27,8 +29,8 @@ export const course: CourseDef = {
   id: "english-gaokao",
   title: t("Gaokao English", "高考英语"),
   description: t(
-    "Practice for the English paper of China's national college entrance examination after English B1: reading comprehension and seven-from-five, with the words of the themes the paper draws on; cloze and grammar filling, with the tenses, conditionals and clauses they test; practical writing and continuation writing, with the sentences that follow a given opening and show feelings. It teaches nothing new: its own topics start with practice, and every text is written for this course in the words of B1 and below. Listening will follow with audio.",
-    "学完英语 B1 之后的高考英语练习：阅读理解和七选五，以及试卷常用话题的词汇；完形填空和语法填空，以及它们考查的时态、条件句和从句；应用文写作和读后续写，以及承接段首句、表现情感的句子。本课程不教新知识：它自己的主题一开始就是练习，所有文章都是用 B1 及以下的词为本课程原创的。听力将在有了音频之后加入。",
+    "Practice for the English paper of China's national college entrance examination after English B1: reading comprehension, with questions on the main idea and on inferences, and seven-from-five, with the words of the themes the paper draws on; cloze and grammar filling, with the tenses, conditionals and clauses they test; practical writing and continuation writing, with the sentences that follow a given opening and show feelings. It teaches nothing new: its own topics start with practice, and every text is written for this course in the words of B1 and below. Listening will follow with audio.",
+    "学完英语 B1 之后的高考英语练习：阅读理解（包括主旨大意题和推理判断题）和七选五，以及试卷常用话题的词汇；完形填空和语法填空，以及它们考查的时态、条件句和从句；应用文写作和读后续写，以及承接段首句、表现情感的句子。本课程不教新知识：它自己的主题一开始就是练习，所有文章都是用 B1 及以下的词为本课程原创的。听力将在有了音频之后加入。",
   ),
   group: examGroup,
   buildsOn: ["english-b1"],
@@ -45,6 +47,7 @@ export const course: CourseDef = {
             "authors-purpose",
             "identifying-topic-sentences",
             "summarizing-a-text",
+            "gaokao-main-idea-and-inference",
           ],
         },
         {

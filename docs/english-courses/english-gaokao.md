@@ -6,7 +6,7 @@
 - **Level:** CEFR B1 and above, for students preparing for the English paper of China's national college entrance examination
 - **Prerequisite(s):** English B1 (`english-b1`)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 3 units · 47 topics (6 new, all practice-only) · 1 reading unit of 8 passages
+- **Size:** 3 units · 48 topics (7 new, all practice-only) · 1 reading unit of 8 passages
 
 ## The Test
 
@@ -37,6 +37,7 @@ Each unit lists the topics it reuses (*existing*) and its new topics. A new topi
 
 **New**
 
+- `gaokao-main-idea-and-inference` Main Idea and Inference Questions (practice-only; after `identifying-topic-sentences`, `making-inferences`). Fifteen short texts in the words of B1 and below, each with four questions: (1) what the text is mainly about and its best title; (2) what it suggests about people and results, and the writer's attitude or purpose.
 - `gaokao-seven-from-five` Seven-from-Five (practice-only; after `ordering-sentences-in-a-paragraph`, `choosing-transitions`). Choose the sentence that fits a gap in a short text: (1) a gap that opens or closes a paragraph; (2) a gap in the middle, decided by the sentences on both sides.
 
 **Reading:** `gaokao-reading`, 8 passages of 250 to 350 words with four questions each, 32 in all, on the main idea, details, inferences and the writer's purpose: a notice of summer courses; a school's robot club; a grandmother's garden; how ants find food; a museum without walls; the boy who fixed bicycles; sleep and teenagers; a letter to a future self.
@@ -66,6 +67,7 @@ Each unit lists the topics it reuses (*existing*) and its new topics. A new topi
 
 | Topic | Knowledge points | Items | Judged by |
 | :--- | :--- | :--- | :--- |
+| `gaokao-main-idea-and-inference` | Main idea and title; inference and attitude | 30; 30 | Rules |
 | `gaokao-seven-from-five` | Opening and closing gaps; middle gaps | 39; 31 | Rules |
 | `gaokao-cloze` | The sentence; the story | 33; 32 | Rules |
 | `gaokao-grammar-filling` | Given words; no word given | 35; 34 | Rules |
