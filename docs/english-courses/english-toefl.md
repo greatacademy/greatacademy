@@ -6,7 +6,7 @@
 - **Level:** CEFR B2 and above, for learners of English as a foreign language preparing for the TOEFL iBT
 - **Prerequisite(s):** English B2 (`english-b2`)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 2 units · 41 topics (5 new, all practice-only) · 1 reading unit of 8 passages
+- **Size:** 2 units · 42 topics (6 new, all practice-only) · 1 reading unit of 8 passages
 
 ## The Test
 
@@ -45,6 +45,7 @@ Each unit lists the topics it reuses (*existing*) and its new topics. A new topi
 **New**
 
 - `toefl-complete-the-words` Complete the Words (practice-only; after `b2-words-linking-1`, `b2-words-research-2`). A short academic text with one word cut after its first half: (1) everyday and academic words of up to seven letters; (2) longer words, whose form depends on the sentence.
+- `toefl-daily-life-reading` Read in Daily Life (practice-only; after `reading-workplace-documents`, `making-inferences`). Notices, emails, text messages and adverts: (1) practical details such as times, places, prices and reasons; (2) what the text suggests but does not say.
 - `toefl-passage-questions` Words and Purpose in Academic Passages (practice-only; after `context-clues`, `authors-purpose`). Short academic passages of about 100 words: (1) the meaning of a word in its context; (2) why the writer mentions something: an example, a contrast, a cause or a limitation.
 
 **Reading:** `toefl-reading`, 8 passages: four everyday texts of 100 to 160 words (a library notice, an email from a professor, a housing message, a poster for a club) and four academic passages of about 200 words (how bats find their way, the first maps, why bread rises, the coral and the alga).
@@ -66,6 +67,7 @@ Each unit lists the topics it reuses (*existing*) and its new topics. A new topi
 | Topic | Knowledge points | Items | Judged by |
 | :--- | :--- | :--- | :--- |
 | `toefl-complete-the-words` | Short words; longer words | 32; 33 | Rules |
+| `toefl-daily-life-reading` | Details; inferences | 30; 30 | Rules |
 | `toefl-passage-questions` | Word in context; why mentioned | 30; 30 | Rules |
 | `toefl-build-a-sentence` | Statements; questions | 32; 33 | Rules |
 | `toefl-writing-an-email` | Email | 12 tasks | Model |
