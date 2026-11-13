@@ -217,7 +217,13 @@ export function vocabularyTopic(spec: VocabularySpec): VocabularyTopic {
     interleave(
       words.map((w, i) => {
         const others = [...words.slice(i + 1), ...words.slice(0, i)].map((o) => o.head).filter((h) => !isAlike(w, h));
-        const sets = [w.confusions.slice(0, 2), [others[0], others[1]], [others[2], others[4] ?? others[3]]];
+        const sets = [
+          w.confusions.slice(0, 2),
+          [others[0], others[1]],
+          [others[2], others[4] ?? others[3]],
+          // A fourth set when the batch has enough other words, so that a batch of ten words still has 30 items.
+          ...(others[5] !== undefined && others[4] !== undefined ? [[others[3], others[5]]] : []),
+        ];
         return sets.map(
           (wrong): ChoiceItem => ({
             prompt: joinText([

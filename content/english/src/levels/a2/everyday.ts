@@ -108,7 +108,7 @@ const sounds = vocabularyTopic({
       "sound sounds",
       "something that you hear",
       "声音",
-      "I love the {sound} of the sea.|letter mistake | Can you hear that {sound}? I think it's a bird.|letter secret | The word 'cat' has three {sounds}.|letters secrets",
+      "I love the {sound} of the sea.|letter mistake | Can you hear that {sound}? I think it's a bird.|letter secret | The word 'cat' has three {sounds}.|letters secrets | The {sound} of the rain helps me sleep.|letter mistake",
       "letter voice",
       "noise",
     ),
@@ -130,7 +130,7 @@ const sounds = vocabularyTopic({
       "radio radios",
       "a machine that you listen to music, news and talk on",
       "收音机；广播",
-      "My dad listens to the news on the {radio} every morning.|letter voice | Turn the {radio} down, please. It's too loud.|letter secret | I heard my favorite song on the {radio}.|letter mistake",
+      "My dad listens to the news on the {radio} every morning.|letter voice | Turn the {radio} down, please. It's too loud.|letter secret | I heard my favorite song on the {radio}.|letter mistake | Grandma has an old {radio} in the kitchen.|secret voice",
       "letter voice",
     ),
     word(
@@ -144,7 +144,7 @@ const sounds = vocabularyTopic({
       "secret secrets",
       "something that you tell nobody, or only a few people",
       "秘密",
-      "Can you keep a {secret}? Don't tell anyone.|mistake radio | The party is a {secret}. Mom doesn't know.|radio letter | We share all our {secrets}.|radios voices",
+      "Can you keep a {secret}? Don't tell anyone.|mistake radio | The party is a {secret}. Mom doesn't know.|radio letter | We share all our {secrets}.|radios voices | It's a {secret}, so please don't tell Tom.|radio noise",
       "mistake noise",
     ),
     word(
