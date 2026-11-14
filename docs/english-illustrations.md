@@ -4,16 +4,7 @@
 
 ## 1. Where Illustrations Go
 
-English has two kinds of picture, made in two ways.
-
-| Kind | Used for | Made by |
-| :--- | :--- | :--- |
-| Line drawings | Phonics and every problem that asks a learner to recognize one object: a picture's word, the picture of a word | Claude Code, the coding agent, writes them as SVG in `currentColor` ([content](content.md)), so they follow the light and dark themes and the compiler checks them |
-| Color illustrations | The cover of a reading unit, the scene of a conversation | ChatGPT, from the prompts of this document |
-
-Nobody draws the line drawings by hand, and none of them needs a prompt from this document. When content needs a picture, the agent writes the SVG next to the content, as in `content/english/src/native/phonics/pictures.ts`. It then renders every drawing on one page in a headless browser, looks at the screenshot, and redraws any object that a child would not recognize at once.
-
-A color illustration sets a scene; it never carries an answer. No problem may depend on a detail of one, because a generated picture can be wrong in small ways that a reviewer misses.
+Color illustrations make the cover of a reading unit and the scene of a conversation. An illustration sets a scene; it never carries an answer. No problem may depend on a detail of one, because a generated picture can be wrong in small ways that a reviewer misses.
 
 ## 2. Using ChatGPT
 
@@ -71,7 +62,7 @@ Every image is checked before it is used. Reject or fix one that has:
 
 ## 6. Prompts
 
-Each file is named `<kind>-<id>.png`, where `kind` is `reading` for the cover of a reading unit and `conversation` for the scene of a conversation, and `id` is the id in the content, so that it can be matched without a list. Keep the original PNG files from ChatGPT; they are imported into the content when illustrations are supported there.
+Each file is named `<kind>-<id>.png`, where `kind` is `reading` for the cover of a reading unit and `conversation` for the scene of a conversation, and `id` is the id in the content, so that it can be matched without a list. ChatGPT saves its images as PNG whatever a prompt asks for, so keep the PNG it gives as the original. Learners receive WebP instead: the import converts each original to WebP, so nothing needs converting by hand, and the originals stay for a later conversion at another size or quality.
 
 ### 6.1 Batch 1: Grade 3 Reading Units
 
