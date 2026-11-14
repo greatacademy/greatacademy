@@ -15,6 +15,7 @@
 | [docs/math-curriculum.zh-CN.md](docs/math-curriculum.zh-CN.md) | 完整数学课程体系的参考目录（37 门课），即内容规划依据 |
 | [docs/english-curriculum.zh-CN.md](docs/english-curriculum.zh-CN.md) | 英语学科的设计：图谱、母语和外语课程、写作与口语、技术与部署 |
 | [docs/english-development-plan.zh-CN.md](docs/english-development-plan.zh-CN.md) | 构建英语的里程碑、文件、验收标准和关卡 |
+| [docs/english-illustrations.zh-CN.md](docs/english-illustrations.zh-CN.md) | 用 ChatGPT 制作的英语彩色插图：风格、固定角色、提示词与审核 |
 | [docs/minors-data.zh-CN.md](docs/minors-data.zh-CN.md) | 如何处理未成年人的文本和录音：首批市场、年龄段、同意、保存期限、供应商；等待法律审阅 |
 | [docs/billing.zh-CN.md](docs/billing.zh-CN.md) | 方案与价格、谁来付款、Stripe 账户、退款、访问，以及通过付款验证监护人 |
 | [docs/admin.zh-CN.md](docs/admin.zh-CN.md) | `/admin` 管理后台：谁能进入、各页面、市场、AI 服务、供应商登记表和通知 |

@@ -15,6 +15,7 @@ This is the working guide for AI coding agents and contributors. It summarizes t
 | [docs/math-curriculum.md](docs/math-curriculum.md) | Reference catalog of a complete mathematics curriculum (37 courses), the plan for content |
 | [docs/english-curriculum.md](docs/english-curriculum.md) | Design of the English subject: graph, native and foreign-language courses, writing and speaking, technology and deployment |
 | [docs/english-development-plan.md](docs/english-development-plan.md) | Milestones, files, acceptance criteria and gates for building English |
+| [docs/english-illustrations.md](docs/english-illustrations.md) | Color illustrations of English made in ChatGPT: the style, the recurring characters, the prompts and the review |
 | [docs/minors-data.md](docs/minors-data.md) | How minors' text and recordings are handled: first markets, age bands, consent, retention, vendors; awaiting legal review |
 | [docs/billing.md](docs/billing.md) | Plans and prices, who pays, the Stripe account, refunds, access and guardian verification by payment |
 | [docs/admin.md](docs/admin.md) | The admin console at `/admin`: who gets in, its pages, markets, AI services, the vendor register and notices |
