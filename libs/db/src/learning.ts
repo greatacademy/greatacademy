@@ -1,5 +1,5 @@
 import type { EngineEvent, LearnerState } from "@ga/engine";
-import { and, asc, desc, eq, gte, isNull, ne, sql, sum } from "drizzle-orm";
+import { and, asc, desc, eq, gte, inArray, isNull, ne, or, sql, sum } from "drizzle-orm";
 
 import type { Db } from "./db.ts";
 import { answer, enrollment, event, learner, learnerState, type SessionStatus, taskSession } from "./schema/learning.ts";
@@ -220,6 +220,37 @@ export async function completedSessions(db: Db, learnerId: string, courseId: str
     .where(and(eq(taskSession.learnerId, learnerId), eq(taskSession.courseId, courseId), eq(taskSession.status, "completed")))
     .orderBy(desc(taskSession.completedAt))
     .limit(limit);
+}
+
+/** submittedSessions returns up to limit submitted sessions of every learner, the longest waiting first. */
+export async function submittedSessions(db: Db, limit: number): Promise<SessionRow[]> {
+  return db.select().from(taskSession).where(eq(taskSession.status, "submitted")).orderBy(asc(taskSession.updatedAt)).limit(limit);
+}
+
+/**
+ * essaySessions returns a learner's sessions of a course on the given topics that are submitted, or that completed at
+ * or after since, newest first.
+ */
+export async function essaySessions(
+  db: Db,
+  learnerId: string,
+  courseId: string,
+  topicIds: readonly string[],
+  since: Date,
+): Promise<SessionRow[]> {
+  if (topicIds.length === 0) return [];
+  return db
+    .select()
+    .from(taskSession)
+    .where(
+      and(
+        eq(taskSession.learnerId, learnerId),
+        eq(taskSession.courseId, courseId),
+        inArray(taskSession.topicId, [...topicIds]),
+        or(eq(taskSession.status, "submitted"), and(eq(taskSession.status, "completed"), gte(taskSession.completedAt, since))),
+      ),
+    )
+    .orderBy(desc(taskSession.updatedAt));
 }
 
 /** NewSession is a session to create. */

@@ -114,6 +114,8 @@ A passed lesson:
 - estimates `speed = 0.5 + fewest / asked`, where `fewest` = knowledge points × 2 (a perfect lesson gives 1.5);
 - counts as a full repetition of the topics it encompasses.
 
+**Essays.** The lesson of an essay ([Content §5](content.md#5-answers-and-checkers)) asks once and passes or fails on that one text's verdict. A passed essay learns the topic with `speed` 1, since one text says nothing about pace, and counts as a repetition of the topics it encompasses. An essay is never reviewed, quizzed or asked by the diagnostic, so it never falls due: the topics it encompasses carry its practice on. While its verdict is awaited, its lesson is not offered again.
+
 **Reviews.** A review asks three questions, starting from the topic's last (most complete) knowledge points and shuffled. Two or more correct is a pass with result `correct / 3`; fewer is a failure (result 0). Each review also moves the topic's speed: `speed ← 0.8 · speed + 0.2 · (0.5 + correct / total)`.
 
 ## 7. Quizzes

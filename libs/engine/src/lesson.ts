@@ -20,11 +20,13 @@ export interface LessonProgress {
   readonly asked: number;
   readonly correct: number;
   readonly outcome?: "passed" | "failed";
+  /** essay tells that the lesson asks one essay, whose verdict passes or fails it. */
+  readonly essay?: boolean;
 }
 
-/** startLesson begins a lesson on a topic with kpCount knowledge points. */
-export function startLesson(topic: string, kpCount: number): LessonProgress {
-  return { topic, kpCount, kp: 0, streak: 0, kpAsked: 0, asked: 0, correct: 0 };
+/** startLesson begins a lesson on a topic with kpCount knowledge points; an essay's lesson asks one text. */
+export function startLesson(topic: string, kpCount: number, essay = false): LessonProgress {
+  return { topic, kpCount, kp: 0, streak: 0, kpAsked: 0, asked: 0, correct: 0, ...(essay && { essay: true }) };
 }
 
 /** answerLesson records one answer to the current practice question. */
@@ -32,6 +34,7 @@ export function answerLesson(p: Params, l: LessonProgress, correct: boolean): Le
   if (l.outcome) throw new Error("the lesson is over");
   const streak = correct ? l.streak + 1 : 0;
   const next = { ...l, streak, kpAsked: l.kpAsked + 1, asked: l.asked + 1, correct: l.correct + (correct ? 1 : 0) };
+  if (l.essay) return { ...next, outcome: correct ? "passed" : "failed" };
   if (streak >= p.kpStreak) {
     if (l.kp + 1 >= l.kpCount) return { ...next, outcome: "passed" };
     return { ...next, kp: l.kp + 1, streak: 0, kpAsked: 0 };

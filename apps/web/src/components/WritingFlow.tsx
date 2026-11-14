@@ -145,7 +145,9 @@ export function WritingFlow({
       learning.submitAnswer({ sessionId: session.id, index: question.index, response: skip ? "" : text, skip }),
     onSuccess: (res, skip) => {
       const next = res.session!;
-      if (res.pending) {
+      // A whole essay ends its session when handed in; its verdict comes later.
+      if (next.step.case === "submitted") finish(undefined, next, text);
+      else if (res.pending) {
         setSent(text);
         setRevise(undefined);
         setJudging(next.step.case === "question" ? next.step.value.judging : undefined);
@@ -211,6 +213,7 @@ export function WritingFlow({
   }
   return (
     <div className="space-y-4">
+      {question.essay && <p className="rounded-xl border border-line bg-surface px-4 py-3 text-sm text-muted">{m.essayNote}</p>}
       {revise && (
         <Card className="space-y-3 border-warn/40 bg-warn-soft/50">
           <div className="text-lg font-semibold">{m.reviseTitle}</div>
@@ -225,7 +228,7 @@ export function WritingFlow({
           // biome-ignore lint/a11y/noAutofocus: the text field is the point of the page
           autoFocus
           maxLength={limits.maxChars}
-          rows={8}
+          rows={question.essay ? 18 : 8}
           onChange={(e) => setText(e.target.value)}
           className="w-full resize-y rounded-lg border border-line bg-surface px-3 py-2 text-lg leading-relaxed outline-none focus:border-accent focus:ring-2 focus:ring-accent/25"
         />
@@ -234,7 +237,7 @@ export function WritingFlow({
             {m.writingWords(words, limits.minWords)}
           </span>
           <Button onClick={() => canSend && submit.mutate(false)} disabled={!canSend} className="px-6">
-            {revise ? m.rewrite : m.sendWriting}
+            {revise ? m.rewrite : question.essay ? m.submitEssay : m.sendWriting}
           </Button>
         </div>
         {submit.isError && <ErrorNote message={errorText(submit.error, locale, m.error)} />}

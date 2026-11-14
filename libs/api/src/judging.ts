@@ -72,12 +72,19 @@ const routeKey = (r: QualifiedRoute) => `${r.providerId}|${r.model}|${r.promptVe
  * qualifying route for each criterion, named by its key (id@version) as routes
  * and calibrations name it, calls the model of each route once for
  * the criteria it holds, and stores the checked verdict. A failure waits and is
- * tried again, on the backup after the first two tries, until JUDGE_LIMIT_MS
+ * tried again, on the backup after the first two tries, until limitMs (JUDGE_LIMIT_MS)
  * has passed or MAX_TRIES were made. Every call is recorded with its cost at
  * the model's price, failed ones too. A text already taken is finished even
  * when its vendor's budget has since been spent. It never throws for a model's failure.
  */
-export async function runJudgment(db: Db, c: CourseEntry, id: string, deps: JudgingDeps, now: number): Promise<void> {
+export async function runJudgment(
+  db: Db,
+  c: CourseEntry,
+  id: string,
+  deps: JudgingDeps,
+  now: number,
+  limitMs = JUDGE_LIMIT_MS,
+): Promise<void> {
   const row = await claimJudgment(db, id, new Date(now), JUDGE_LEASE_MS);
   if (!row) return;
   const calls: NewCall[] = [];
@@ -96,7 +103,7 @@ export async function runJudgment(db: Db, c: CourseEntry, id: string, deps: Judg
   let current: QualifiedRoute | undefined;
   const fail = async (reason: string) => {
     await recordCalls(db, calls);
-    const give = now - row.createdAt.getTime() >= JUDGE_LIMIT_MS || row.tries >= MAX_TRIES;
+    const give = now - row.createdAt.getTime() >= limitMs || row.tries >= MAX_TRIES;
     await retryJudgment(db, row.id, reason, new Date(now), give ? undefined : new Date(now + retryDelay(row.tries)));
   };
   try {

@@ -109,7 +109,7 @@ export function startRun(c: CourseEntry, task: Task, state: LearnerState, now: n
       return {
         kind: "lesson",
         topic: task.topic,
-        lesson: startLesson(task.topic, kpCount(c, task.topic)),
+        lesson: startLesson(task.topic, kpCount(c, task.topic), c.ctx.graph.graph.topics.get(task.topic)?.essay === true),
         example,
         ...(c.subject.topics.get(task.topic)?.practiceOnly && state.topics[task.topic]?.failedAt === undefined && { practice: true }),
         ...served,

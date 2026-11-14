@@ -1,6 +1,6 @@
 import type { Subject } from "@ga/proto/catalog/v1/catalog_pb";
-import type { Feedback, Passage, ProblemView, Question, Result, Session } from "@ga/proto/learning/v1/learning_pb";
-import { ArrowLeft, ArrowRight, CheckCircle, Lightbulb, XCircle } from "@phosphor-icons/react";
+import type { Feedback, Passage, ProblemView, Question, Result, Session, Submitted } from "@ga/proto/learning/v1/learning_pb";
+import { ArrowLeft, ArrowRight, CheckCircle, Lightbulb, PaperPlaneTilt, XCircle } from "@phosphor-icons/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { type ReactNode, useEffect, useState } from "react";
@@ -55,6 +55,8 @@ function Player() {
       <PlayerHeader session={session} subject={subject} />
       {session.step.case === "result" ? (
         <ResultView session={session} result={session.step.value} />
+      ) : session.step.case === "submitted" ? (
+        <SubmittedView session={session} submitted={session.step.value} onJudged={setSession} />
       ) : session.step.case === "question" ? (
         <QuestionFlow
           key={`${session.id}:${session.step.value.index}`}
@@ -490,6 +492,81 @@ function FeedbackView({
   );
 }
 
+/** ESSAY_WAIT_MS bounds how long a learner left on a submitted essay's page waits there for its verdict. */
+const ESSAY_WAIT_MS = 10 * 60_000;
+
+/**
+ * SubmittedView shows an essay handed in and waiting for its verdict. While
+ * the page stays open it asks every few seconds; the verdict also appears on
+ * the dashboard, so the learner may leave.
+ */
+function SubmittedView({ session, submitted, onJudged }: { session: Session; submitted: Submitted; onJudged(next: Session): void }) {
+  const { m } = useI18n();
+  const qc = useQueryClient();
+  const subjectId = useSubjectOfCourse(session.courseId)?.id ?? "";
+  const [since] = useState(() => Date.now());
+  const poll = useQuery({
+    queryKey: ["essay", session.id],
+    queryFn: () => learning.getJudgment({ sessionId: session.id, index: 0 }),
+    enabled: !submitted.failed,
+    refetchInterval: (q) => ((q.state.data && !q.state.data.pending) || Date.now() - since > ESSAY_WAIT_MS ? false : 5_000),
+    gcTime: 0,
+  });
+  // onJudged changes on every render; the verdict is acted on once, when it arrives.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: see above
+  useEffect(() => {
+    const res = poll.data;
+    if (!res || res.pending || !res.session) return;
+    void qc.invalidateQueries({ queryKey: ["dashboard", session.courseId] });
+    void qc.invalidateQueries({ queryKey: ["progress", session.courseId] });
+    void qc.invalidateQueries({ queryKey: ["profile"] });
+    onJudged(res.session);
+  }, [poll.data]);
+  const waiting = poll.data?.pending !== false && (poll.data?.pending === undefined || poll.dataUpdatedAt - since < ESSAY_WAIT_MS);
+  return (
+    <Card className="space-y-4">
+      <div className="flex items-center gap-2 text-lg font-semibold">
+        <PaperPlaneTilt size={22} weight="fill" className="text-accent" /> {m.essaySubmittedTitle}
+      </div>
+      {submitted.failed ? (
+        <p role="alert" className="text-sm text-muted">
+          {m.essayFailed}
+        </p>
+      ) : (
+        <>
+          <p className="text-sm text-muted">{m.essaySubmitted}</p>
+          {waiting && <Spinner label={m.judging} />}
+        </>
+      )}
+      <div className="rounded-xl border border-line bg-surface px-4 py-3">
+        <p className="whitespace-pre-wrap leading-relaxed">{submitted.response}</p>
+      </div>
+      <Link to="/$subject" params={{ subject: subjectId }} className={buttonClass("primary", "px-6")}>
+        {m.backToDashboard} <ArrowRight size={16} />
+      </Link>
+    </Card>
+  );
+}
+
+/** EssayVerdict shows the verdict on an essay with the text it judged and a model essay. */
+function EssayVerdict({ feedback, text, problem }: { feedback: Feedback; text: string; problem?: ProblemView }) {
+  const { m } = useI18n();
+  return (
+    <Card className="space-y-4">
+      <h3 className="text-lg font-semibold">{m.essayVerdict}</h3>
+      <JudgedFeedback feedback={feedback} text={text} />
+      {feedback.answer && (
+        <details>
+          <summary className="cursor-pointer text-sm font-medium text-muted select-none">{m.modelAnswer}</summary>
+          <div className="mt-2">
+            <AnswerText problem={problem} answer={feedback.answer} />
+          </div>
+        </details>
+      )}
+    </Card>
+  );
+}
+
 function ResultView({ session, result }: { session: Session; result: Result }) {
   const { m, tx } = useI18n();
   const subjectId = useSubjectOfCourse(session.courseId)?.id ?? "";
@@ -538,51 +615,60 @@ function ResultView({ session, result }: { session: Session; result: Result }) {
         </div>
       </Card>
       {result.passage && <PassageCard passage={result.passage} />}
-      {result.items.map((item, i) => (
-        <Card
-          // biome-ignore lint/suspicious/noArrayIndexKey: items are positional
-          key={i}
-          className="space-y-3"
-        >
-          <div className="flex items-center justify-between gap-3">
-            <div className="text-sm font-medium text-muted">
-              {i + 1}.{" "}
-              {kind === "reading" ? (
-                <Markdown source={tx(item.title)} inline />
-              ) : (
-                <Link to="/$subject/topics/$topicId" params={{ subject: subjectId, topicId: item.topicId }} className="hover:underline">
+      {result.feedback && result.items[0] && (
+        <>
+          <Card>
+            <ProblemPrompt problem={result.items[0].problem} />
+          </Card>
+          <EssayVerdict feedback={result.feedback} text={result.items[0].response} problem={result.items[0].problem} />
+        </>
+      )}
+      {!result.feedback &&
+        result.items.map((item, i) => (
+          <Card
+            // biome-ignore lint/suspicious/noArrayIndexKey: items are positional
+            key={i}
+            className="space-y-3"
+          >
+            <div className="flex items-center justify-between gap-3">
+              <div className="text-sm font-medium text-muted">
+                {i + 1}.{" "}
+                {kind === "reading" ? (
                   <Markdown source={tx(item.title)} inline />
-                </Link>
+                ) : (
+                  <Link to="/$subject/topics/$topicId" params={{ subject: subjectId, topicId: item.topicId }} className="hover:underline">
+                    <Markdown source={tx(item.title)} inline />
+                  </Link>
+                )}
+              </div>
+              {item.correct ? (
+                <CheckCircle size={22} weight="fill" className="text-good" />
+              ) : (
+                <XCircle size={22} weight="fill" className="text-bad" />
               )}
             </div>
-            {item.correct ? (
-              <CheckCircle size={22} weight="fill" className="text-good" />
-            ) : (
-              <XCircle size={22} weight="fill" className="text-bad" />
-            )}
-          </div>
-          <ProblemPrompt problem={item.problem} />
-          <div className="grid gap-1 text-sm sm:grid-cols-2">
-            <div>
-              <span className="mr-2 text-muted">{m.yourAnswer}:</span>
-              <AnswerText problem={item.problem} answer={item.response} />
+            <ProblemPrompt problem={item.problem} />
+            <div className="grid gap-1 text-sm sm:grid-cols-2">
+              <div>
+                <span className="mr-2 text-muted">{m.yourAnswer}:</span>
+                <AnswerText problem={item.problem} answer={item.response} />
+              </div>
+              {!item.correct && (
+                <div>
+                  <span className="mr-2 text-muted">{m.correctAnswer}:</span>
+                  <AnswerText problem={item.problem} answer={item.answer} />
+                </div>
+              )}
             </div>
             {!item.correct && (
-              <div>
-                <span className="mr-2 text-muted">{m.correctAnswer}:</span>
-                <AnswerText problem={item.problem} answer={item.answer} />
-              </div>
+              <details>
+                <summary className="cursor-pointer text-sm font-medium text-muted select-none">{m.solution}</summary>
+                <Markdown source={tx(item.solution)} className="mt-2" />
+                <FigureView figure={item.solutionFigure} className="mt-3" />
+              </details>
             )}
-          </div>
-          {!item.correct && (
-            <details>
-              <summary className="cursor-pointer text-sm font-medium text-muted select-none">{m.solution}</summary>
-              <Markdown source={tx(item.solution)} className="mt-2" />
-              <FigureView figure={item.solutionFigure} className="mt-3" />
-            </details>
-          )}
-        </Card>
-      ))}
+          </Card>
+        ))}
     </div>
   );
 }

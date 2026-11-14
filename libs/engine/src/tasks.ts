@@ -67,11 +67,16 @@ export function remedialTopics(pl: Planner, state: LearnerState): string[] {
   return [...out];
 }
 
-/** dueTopics lists the learned topics in scope due for review at now, most forgotten first. */
+/** essayTopic tells whether a topic is an essay, which is never reviewed explicitly, quizzed or asked by the diagnostic. */
+function essayTopic(pl: Planner, t: string): boolean {
+  return pl.graph.graph.topics.get(t)?.essay === true;
+}
+
+/** dueTopics lists the learned topics in scope due for review at now, most forgotten first; an essay is never due. */
 export function dueTopics(pl: Planner, state: LearnerState, now: number): string[] {
   const p = pl.params;
   return pl.scope.topics
-    .filter((t) => !pl.scope.assumed.has(t) && state.topics[t] && isDue(p, state.topics[t]!, now))
+    .filter((t) => !pl.scope.assumed.has(t) && !essayTopic(pl, t) && state.topics[t] && isDue(p, state.topics[t]!, now))
     .sort((a, b) => memory(p, state.topics[a]!, now) - memory(p, state.topics[b]!, now));
 }
 
@@ -92,7 +97,7 @@ export function coverage(pl: Planner, topic: string, due: ReadonlySet<string>): 
  */
 export function compressReviews(pl: Planner, state: LearnerState, due: readonly string[], covered: ReadonlySet<string>): Task[] {
   const open = new Set(due.filter((t) => !covered.has(t)));
-  const candidates = pl.scope.topics.filter((t) => !pl.scope.assumed.has(t) && state.topics[t]?.learned);
+  const candidates = pl.scope.topics.filter((t) => !pl.scope.assumed.has(t) && !essayTopic(pl, t) && state.topics[t]?.learned);
   const rank = new Map(pl.graph.graph.order.map((t, i) => [t, i]));
   const reviews: Task[] = [];
   while (open.size > 0) {
@@ -129,7 +134,7 @@ export function quizDue(pl: Planner, state: LearnerState): boolean {
  * subject are not asked again.
  */
 export function diagnosticCandidates(pl: Planner, state: LearnerState): string[] {
-  return pl.scope.topics.filter((t) => !isKnown(pl, state, t));
+  return pl.scope.topics.filter((t) => !isKnown(pl, state, t) && !essayTopic(pl, t));
 }
 
 /** diagnosticDue tells whether the course's diagnostic is still to be offered: not yet taken or skipped, with topics left to place. */
@@ -222,7 +227,7 @@ export function nextTasks(pl: Planner, state: LearnerState, now: number, limit =
  */
 export function quizPlan(pl: Planner, state: LearnerState, rng: Rng): string[] {
   const learned = pl.scope.topics
-    .filter((t) => state.topics[t]?.learned)
+    .filter((t) => state.topics[t]?.learned && !essayTopic(pl, t))
     .sort((a, b) => (state.topics[b]!.learnedAt ?? 0) - (state.topics[a]!.learnedAt ?? 0));
   const n = Math.min(pl.params.quizQuestions, learned.length);
   const recent = learned.slice(0, Math.ceil(n * 0.75));

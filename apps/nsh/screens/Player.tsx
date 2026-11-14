@@ -1,5 +1,6 @@
-import type { Feedback, Question, Result, ResultItem, Session } from "@ga/proto/learning/v1/learning_pb";
+import type { Feedback, Question, Result, ResultItem, Session, Submitted } from "@ga/proto/learning/v1/learning_pb";
 import {
+  cleanup,
   computed,
   type JSX,
   keyboardFrame,
@@ -400,6 +401,89 @@ function ResultItemCard(props: { item: ResultItem; at: number }) {
   );
 }
 
+/** ESSAY_POLL_MS is how often a submitted essay's page asks for its verdict, and ESSAY_WAIT_MS how long it keeps asking. */
+const ESSAY_POLL_MS = 5_000;
+const ESSAY_WAIT_MS = 10 * 60_000;
+
+/**
+ * SubmittedView shows an essay handed in and waiting for its verdict, as on the
+ * web: while the screen stays open it asks every few seconds; the verdict also
+ * appears on Learn, so the learner may leave.
+ */
+function SubmittedView(props: { session: Session; submitted: Submitted; onJudged: (next: Session) => void }) {
+  const since = Date.now();
+  const waiting = signal(!props.submitted.failed);
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  let gone = false;
+  cleanup(() => {
+    gone = true;
+    clearTimeout(timer);
+  });
+  const poll = async () => {
+    if (gone) return;
+    try {
+      const res = await learning.getJudgment({ sessionId: props.session.id, index: 0 });
+      if (gone) return;
+      if (!res.pending && res.session) {
+        waiting.set(false);
+        props.onJudged(res.session);
+        return;
+      }
+    } catch {
+      // The verdict is asked for again; it is also kept for the Learn tab.
+    }
+    if (Date.now() - since < ESSAY_WAIT_MS) timer = setTimeout(() => void poll(), ESSAY_POLL_MS);
+    else waiting.set(false);
+  };
+  if (waiting()) timer = setTimeout(() => void poll(), 0);
+  return (
+    <>
+      <Body>
+        <Card>
+          <Text style={{ color: colors().ink, fontSize: 22, fontWeight: "700" }}>{m().essaySubmittedTitle}</Text>
+          <Muted>{props.submitted.failed ? m().essayFailed : m().essaySubmitted}</Muted>
+          <If when={waiting()}>
+            <Muted>{m().judging}</Muted>
+          </If>
+        </Card>
+        <Card>
+          <Text style={{ color: colors().ink, fontSize: 16, lineHeight: 24 }}>{props.submitted.response}</Text>
+        </Card>
+      </Body>
+      <BottomBar>
+        <Action label={m().backToDashboard} onPress={() => nav.pop()} />
+      </BottomBar>
+    </>
+  );
+}
+
+/** EssayVerdict shows the verdict on an essay with the text it judged and a model essay. */
+function EssayVerdict(props: { feedback: Feedback; item: ResultItem }) {
+  const shown = signal(false);
+  return (
+    <>
+      <If when={props.item.problem}>
+        {(problem) => (
+          <Card>
+            <Prompt problem={problem()} />
+          </Card>
+        )}
+      </If>
+      <Card>
+        <Text style={{ color: colors().ink, fontSize: 18, fontWeight: "700" }}>{m().essayVerdict}</Text>
+        <Text style={{ color: colors().ink, fontSize: 16, lineHeight: 24 }}>{props.item.response}</Text>
+        <JudgedFeedback feedback={props.feedback} />
+        <If when={props.feedback.answer}>
+          <If when={shown()} else={<Quiet label={m().modelAnswer} onPress={() => shown.set(true)} />}>
+            <Muted>{m().modelAnswer}</Muted>
+            <Text style={{ color: colors().ink, fontSize: 16, lineHeight: 24 }}>{props.feedback.answer}</Text>
+          </If>
+        </If>
+      </Card>
+    </>
+  );
+}
+
 function ResultView(props: { session: Session; result: Result }) {
   const { result } = props;
   const kind = props.session.task?.kind.case;
@@ -475,7 +559,12 @@ function ResultView(props: { session: Session; result: Result }) {
             </Card>
           )}
         </If>
-        <Each of={items}>{(entry) => <ResultItemCard item={entry()[1]} at={entry()[0]} />}</Each>
+        <If
+          when={result.feedback && result.items[0] ? { feedback: result.feedback, item: result.items[0] } : undefined}
+          else={<Each of={items}>{(entry) => <ResultItemCard item={entry()[1]} at={entry()[0]} />}</Each>}
+        >
+          {(essay) => <EssayVerdict feedback={essay().feedback} item={essay().item} />}
+        </If>
       </Body>
       <BottomBar>
         <If when={error()}>
@@ -514,7 +603,7 @@ export function Player(props: { sessionId: string }) {
   });
   const progress = computed(() => {
     const current = session();
-    if (current?.step.case === "result") return { label: title(), share: 1 };
+    if (current?.step.case === "result" || current?.step.case === "submitted") return { label: title(), share: 1 };
     if (current?.step.case === "question") {
       const { label, share } = progressOf(current, current.step.value);
       return { label: `${title()} · ${label}`, share };
@@ -523,7 +612,7 @@ export function Player(props: { sessionId: string }) {
   });
   // Work is kept on the server after every answer, so leaving loses nothing; it is asked only to catch a slip.
   const leave = async () => {
-    if (session()?.step.case === "result" || !session()) {
+    if (session()?.step.case === "result" || session()?.step.case === "submitted" || !session()) {
       nav.pop();
       return;
     }
@@ -570,6 +659,11 @@ export function Player(props: { sessionId: string }) {
                   />
                 )}
               </Each>
+              <If when={session()?.step.case === "submitted" ? (session()?.step.value as Submitted) : undefined}>
+                {(submitted) => (
+                  <SubmittedView session={session() as Session} submitted={submitted()} onJudged={(next) => latest.set(next)} />
+                )}
+              </If>
               <If when={session()?.step.case === "result" ? (session()?.step.value as Result) : undefined}>
                 {(result) => <ResultView session={session() as Session} result={result()} />}
               </If>

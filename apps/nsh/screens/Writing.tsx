@@ -121,7 +121,9 @@ export function WritingFlow(props: {
       const res = await learning.submitAnswer({ sessionId: session.id, index: question.index, response, skip });
       const next = res.session;
       if (!next) return;
-      if (res.pending) {
+      // A whole essay ends its session when handed in; its verdict comes later.
+      if (next.step.case === "submitted") finish(undefined, next, response);
+      else if (res.pending) {
         sent.set(response);
         revise.set(undefined);
         judging.set(judgingOf(next));
@@ -141,6 +143,9 @@ export function WritingFlow(props: {
   const canSend = () => words() >= limits.minWords && text().length <= limits.maxChars && !busy();
   return (
     <View style={{ gap: 16 }}>
+      <If when={question.essay}>
+        <Muted>{m().essayNote}</Muted>
+      </If>
       <If when={revise()}>
         {(feedback) => (
           <View
@@ -174,12 +179,16 @@ export function WritingFlow(props: {
               autoCapitalize="sentences"
               disabled={busy()}
               onChange={({ value }) => text.set(value)}
-              style={{ ...fieldStyle(), minHeight: 180, textAlignVertical: "top" }}
+              style={{ ...fieldStyle(), minHeight: question.essay ? 360 : 180, textAlignVertical: "top" }}
             />
             <Text style={{ color: words() >= limits.minWords ? colors().muted : colors().warn, fontSize: 14 }}>
               {m().writingWords(words(), limits.minWords)}
             </Text>
-            <Action label={revise() ? m().rewrite : m().sendWriting} disabled={!canSend()} onPress={() => void submit(false)} />
+            <Action
+              label={revise() ? m().rewrite : question.essay ? m().submitEssay : m().sendWriting}
+              disabled={!canSend()}
+              onPress={() => void submit(false)}
+            />
           </Card>
         }
       >

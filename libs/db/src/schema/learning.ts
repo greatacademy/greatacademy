@@ -134,8 +134,11 @@ export const learnerState = pgTable(
   (t) => [primaryKey({ columns: [t.learnerId, t.subjectId] })],
 );
 
-/** SessionStatus is the life cycle of a task session. */
-export type SessionStatus = "active" | "completed" | "abandoned";
+/**
+ * SessionStatus is the life cycle of a task session. A submitted session is an essay handed in: over for the learner,
+ * it completes once a model has judged the essay, or is abandoned when the essay could not be judged.
+ */
+export type SessionStatus = "active" | "submitted" | "completed" | "abandoned";
 
 /**
  * taskSession is a task being carried out: a lesson, review, quiz or

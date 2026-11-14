@@ -4,6 +4,7 @@ import { diagnosticCandidates, diagnosticLength, homeCourse, type LearnerState, 
 import type { FigureSchema } from "@ga/proto/common/v1/figure_pb";
 import type { TextSchema } from "@ga/proto/common/v1/text_pb";
 import type {
+  FeedbackSchema,
   InputSchema,
   KnowledgePointIntroSchema,
   ProblemViewSchema,
@@ -141,6 +142,7 @@ async function question(
     canSkip: canSkip(run),
     total: run.kind === "review" ? run.plan.length : run.kind === "quiz" ? run.topics.length : run.kind === "reading" ? run.questions : 0,
     attempt: run.attempt ?? 0,
+    essay: run.kind === "lesson" && run.lesson.essay === true,
     ...(run.pending && {
       judging: { response: run.pending.response, delayed: judging?.delayed ?? false, failed: judging?.failed ?? false },
     }),
@@ -154,7 +156,7 @@ async function question(
   }
   if (run.kind !== "lesson") return q;
   const l = run.lesson;
-  const lesson = { knowledgePoint: l.kp, knowledgePoints: l.kpCount, streak: l.streak, needed: c.ctx.params.kpStreak };
+  const lesson = { knowledgePoint: l.kp, knowledgePoints: l.kpCount, streak: l.streak, needed: l.essay ? 1 : c.ctx.params.kpStreak };
   if (!intro) return { ...q, lesson };
   const kp = await c.source.lesson(run.topic, l.kp);
   return {
@@ -164,7 +166,11 @@ async function question(
   };
 }
 
-async function result(c: CourseEntry, run: RunState): Promise<MessageInitShape<typeof ResultSchema>> {
+async function result(
+  c: CourseEntry,
+  run: RunState,
+  feedback: MessageInitShape<typeof FeedbackSchema> | undefined,
+): Promise<MessageInitShape<typeof ResultSchema>> {
   const r = run.result!;
   const listed = run.kind !== "diagnostic";
   const problems = listed ? await c.source.problems(run.asked.map(({ topic, kp, seed }) => ({ topic, kp, seed }))) : [];
@@ -193,26 +199,30 @@ async function result(c: CourseEntry, run: RunState): Promise<MessageInitShape<t
     blownOff: r.blownOff ?? false,
     placed: r.placed,
     items,
+    ...(feedback && { feedback }),
     ...(passage && {
       passage: { title: text(passage.title), body: passage.body, illustration: illustrationPath(c.subject.def.id, passage.illustration) },
     }),
   };
 }
 
-/** sessionMessage describes a session: its task and its current question or result. */
+/** EssayView is what a session's message shows of its essay: submitted and waiting, or the verdict on its result. */
+export interface EssayView {
+  readonly submitted?: { readonly response: string; readonly failed: boolean };
+  readonly feedback?: MessageInitShape<typeof FeedbackSchema>;
+}
+
+/** sessionMessage describes a session: its task and its current question, its submitted essay, or its result. */
 export async function sessionMessage(
   c: CourseEntry,
   id: string,
   run: RunState,
   state: LearnerState,
   judging?: { readonly delayed: boolean; readonly failed: boolean },
+  essay?: EssayView,
 ): Promise<MessageInitShape<typeof SessionSchema>> {
-  const q = run.result ? undefined : await question(c, run, judging);
-  return {
-    id,
-    courseId: c.id,
-    task: taskMessage(c, runTask(run), state),
-    answered: run.asked.length,
-    step: q ? { case: "question", value: q } : { case: "result", value: await result(c, run) },
-  };
+  const base = { id, courseId: c.id, task: taskMessage(c, runTask(run), state), answered: run.asked.length };
+  if (essay?.submitted) return { ...base, step: { case: "submitted", value: essay.submitted } };
+  if (run.result) return { ...base, step: { case: "result", value: await result(c, run, essay?.feedback) } };
+  return { ...base, step: { case: "question", value: await question(c, run, judging) } };
 }

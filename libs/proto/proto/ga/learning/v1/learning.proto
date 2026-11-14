@@ -196,6 +196,18 @@ message GetDashboardResponse {
   // earlier courses than it has of its own, the course it builds on, which a learner
   // new to the subject may start with instead; empty otherwise.
   string start_earlier = 18;
+  // essays are the learner's essays being judged, then those judged in the last week, newest first.
+  repeated Essay essays = 19;
+}
+
+// Essay is an essay the learner submitted, with its verdict once a model has judged it.
+message Essay {
+  string session_id = 1;
+  // title is the essay topic's.
+  ga.common.v1.Text title = 2;
+  // judged is false while a model is still judging it.
+  bool judged = 3;
+  bool passed = 4;
 }
 
 // Task is a unit of work offered on the dashboard.
@@ -344,7 +356,17 @@ message Session {
     Question question = 5;
     // result ends the session.
     Result result = 6;
+    // submitted is an essay handed in: the session is over for the learner, and its result comes once a model has
+    // judged the essay.
+    Submitted submitted = 7;
   }
+}
+
+// Submitted is an essay waiting for a model's verdict after its session ended.
+message Submitted {
+  string response = 1;
+  // failed is true when the essay could not be judged; the lesson comes again, with no result.
+  bool failed = 2;
 }
 
 // Question is a question of a session.
@@ -370,6 +392,8 @@ message Question {
   optional Judging judging = 9;
   // attempt counts the tries at this question so far; a rewrite after feedback is the next.
   int32 attempt = 10;
+  // essay is true when the answer is an essay: submitting it ends the session, and its verdict comes later.
+  bool essay = 11;
 }
 
 // Judging is an answer waiting for a model's verdict.
@@ -617,6 +641,8 @@ message Result {
   bool blown_off = 8;
   // passage is the text a reading task asked about, so that its answers can be read against it.
   optional Passage passage = 9;
+  // feedback is a model's verdict on the essay of an essay's lesson.
+  optional Feedback feedback = 10;
 }
 
 message ResultItem {

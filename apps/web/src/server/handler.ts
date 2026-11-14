@@ -23,6 +23,7 @@ import {
   recordApple,
   runBillingReminders,
   runCostCheck,
+  runEssays,
   runRetention,
   userIdKey,
   type VoiceConfig,
@@ -263,7 +264,10 @@ const reminder = (db: Db) => async (to: string, kind: Parameters<typeof billingE
 /** DAILY_CRON is the schedule of the daily jobs; every other schedule is the cost check. */
 export const DAILY_CRON = "0 3 * * *";
 
-/** runScheduled runs the daily retention rules and plan reminders, or the cost check of docs/admin.md §5 every quarter hour. */
+/**
+ * runScheduled runs the daily retention rules and plan reminders, or, every quarter hour, the cost check of
+ * docs/admin.md §5 and the judgments of submitted essays.
+ */
 export async function runScheduled(at: number, cron: string): Promise<void> {
   const conn = connect(env.HYPERDRIVE.connectionString);
   try {
@@ -273,6 +277,11 @@ export async function runScheduled(at: number, cron: string): Promise<void> {
         send(alarmEmail(to, alarm, (await localeOfEmail(conn.db, to)) ?? "en")),
       );
       if (raised.length > 0) console.log("cost alarms", JSON.stringify(raised.map((a) => `${a.target}: ${a.detail}`)));
+      if (env.AI_KEYS_SECRET) {
+        const registry = await Registry.open(subjectGateways());
+        const seed = () => Math.floor(Math.random() * 0x7fffffff);
+        console.log("essays", JSON.stringify(await runEssays(conn.db, registry, { aiKeysSecret: env.AI_KEYS_SECRET }, at, seed)));
+      }
       return;
     }
     const result = await runRetention(conn.db, at, { forms: forms(), notify });

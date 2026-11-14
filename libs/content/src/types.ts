@@ -152,6 +152,12 @@ export interface TopicDef {
    * not get the topic, so no topic without criteria may depend on one with them.
    */
   readonly criteria?: readonly CriterionSpec[];
+  /**
+   * essay makes a judged topic an essay: its lesson asks one text, which ends the session when it is submitted and
+   * passes or fails the lesson once a model has judged it. An essay is never reviewed explicitly, quizzed or asked by
+   * the diagnostic; it gives implicit credit to the topics it encompasses. It needs criteria and one knowledge point.
+   */
+  readonly essay?: boolean;
   /** strand is the id of the subject's strand the topic belongs to, such as "grammar"; required when the subject declares strands. */
   readonly strand?: string;
 }

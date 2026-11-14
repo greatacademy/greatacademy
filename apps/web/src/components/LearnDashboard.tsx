@@ -1,5 +1,5 @@
-import type { Task } from "@ga/proto/learning/v1/learning_pb";
-import { CheckCircle, Lightning, Trophy, XCircle } from "@phosphor-icons/react";
+import type { Essay, Task } from "@ga/proto/learning/v1/learning_pb";
+import { CheckCircle, HourglassMedium, Lightning, Trophy, XCircle } from "@phosphor-icons/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 
@@ -68,6 +68,40 @@ function LeagueSummary() {
         {l.enabled ? m.leagueSeeAll : m.leagueLearnMore}
       </Link>
     </Card>
+  );
+}
+
+/** EssaysCard lists the learner's essays still being judged and those judged in the last days, each linking to its verdict. */
+function EssaysCard({ essays }: { essays: readonly Essay[] }) {
+  const { m, tx } = useI18n();
+  if (essays.length === 0) return null;
+  return (
+    <section className="space-y-3">
+      <h2 className="text-sm font-medium text-muted">{m.essays}</h2>
+      <ul className="divide-y divide-line rounded-2xl border border-line bg-surface">
+        {essays.map((e) => (
+          <li key={e.sessionId}>
+            <Link
+              to="/session/$sessionId"
+              params={{ sessionId: e.sessionId }}
+              className="flex items-center gap-3 px-4 py-3 text-sm hover:bg-page"
+            >
+              {!e.judged ? (
+                <HourglassMedium size={20} weight="fill" className="shrink-0 text-muted" />
+              ) : e.passed ? (
+                <CheckCircle size={20} weight="fill" className="shrink-0 text-good" />
+              ) : (
+                <XCircle size={20} weight="fill" className="shrink-0 text-bad" />
+              )}
+              <span className="min-w-0 flex-1 truncate">
+                <Markdown source={tx(e.title)} inline />
+              </span>
+              <span className="shrink-0 text-muted">{!e.judged ? m.essayJudging : e.passed ? m.essayPassed : m.essayNotPassed}</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 
@@ -225,6 +259,7 @@ export function LearnDashboard({ courseId, subjectId }: { courseId: string; subj
             {!d.active && d.tasks.length > 1 && <p className="text-sm text-muted">{m.tasksHint}</p>}
             {!d.active && d.tasks.length === 0 && <Card className="text-muted">{m.nothingToDo}</Card>}
           </section>
+          <EssaysCard essays={d.essays} />
           <ConversationsCard courseId={courseId} subjectId={subjectId} />
           <RecentWork courseId={courseId} subject={subjectId} />
         </div>

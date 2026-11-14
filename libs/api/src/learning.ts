@@ -1,8 +1,7 @@
 import { Code, ConnectError, type HandlerContext, type ServiceImpl } from "@connectrpc/connect";
-import { createRng, type Judged, type Problem, type ProblemRef, type Rng, type Verdict } from "@ga/content";
+import { createRng, type Judged, type Problem, type Rng, type Verdict } from "@ga/content";
 import {
   activeSession,
-  appendEvent,
   chooseCourse,
   completedSessions,
   createJudgment,
@@ -11,15 +10,14 @@ import {
   currentCourses,
   type Db,
   decidePlacement,
+  essaySessions,
   getSession,
   guardiansOf,
   isGuardian,
   type JudgmentRow,
   latestJudgment,
   learnerFor,
-  loadState,
   placedEvent,
-  recordAnswer,
   reopenPlacement,
   type SessionRow,
   subjectSettings,
@@ -27,13 +25,10 @@ import {
   updateSubjectSettings,
 } from "@ga/db";
 import {
-  applyEvent,
   courseFinished,
   courseProgress,
   diagnosticDue,
-  type EngineEvent,
   frontier,
-  initialState,
   isDue,
   isKnown,
   type LearnerState,
@@ -52,10 +47,11 @@ import { accessOf, requireStudy, studiedToday } from "./capabilities.ts";
 import { dbKey, userIdKey } from "./context.ts";
 import { figure, knowledgePointIntro, sessionMessage, taskMessage, text } from "./convert.ts";
 import { requireJudgingQuota } from "./costs.ts";
+import { ESSAY_NOTICE_MS, essayRun, essayTopics, finishEssay, judgeEssay } from "./essays.ts";
 import { forLearner, type JudgingDeps, judgedCriteria, runJudgment, viewJudgment } from "./judging.ts";
-import { joinLeague } from "./league.ts";
 import type { CourseEntry, Registry } from "./registry.ts";
-import { type Answered, answerRun, canSkip, type Given, type RunState, runTask, startRun } from "./runner.ts";
+import { answerRun, canSkip, type Given, type RunState, runTask, startRun } from "./runner.ts";
+import { appendTo, learnerState, settleAnswer } from "./sessions.ts";
 import { xpSummary } from "./summary.ts";
 
 /** maxDailyGoal bounds a weekday's goal, far above what anyone studies in a day. */
@@ -240,57 +236,52 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
     return id;
   };
 
-  const state = async (db: Db, learnerId: string, c: CourseEntry, lock = false) =>
-    loadState(db, learnerId, c.subject.def.id, initialState, lock);
+  const state = learnerState;
+  const append = appendTo;
+  const settle = settleAnswer;
 
-  /** append folds an event into the learner's state and appends it, in the caller's transaction. */
-  const append = async (db: Db, learnerId: string, c: CourseEntry, e: EngineEvent, sessionId?: string) => {
-    const stored = await state(db, learnerId, c, true);
-    const next = applyEvent(c.ctx, stored.state, e);
-    await appendEvent(db, {
-      learnerId,
-      subjectId: c.subject.def.id,
-      seq: stored.seq + 1,
-      event: e,
-      xp: next.xp - stored.state.xp,
-      state: next,
-      courseId: c.id,
-      ...(sessionId && { sessionId }),
-    });
-    return next;
-  };
-
+  /** view describes a session; an essay shows as submitted until it is judged, then its result carries the verdict. */
   const view = async (db: Db, learnerId: string, row: SessionRow) => {
     const c = await course(row.courseId);
     const { state: s } = await state(db, learnerId, c);
     const run = row.state as RunState;
+    if (essayRun(run) && run.pending && (row.status === "submitted" || row.status === "abandoned")) {
+      const submitted = { response: run.pending.response, failed: row.status === "abandoned" };
+      return sessionMessage(c, row.id, run, s, undefined, { submitted });
+    }
+    if (essayRun(run) && run.result) {
+      const j = await latestJudgment(db, row.id, run.asked.length - 1);
+      if (j?.status === "done") {
+        const [problem] = await c.source.problems([{ topic: j.topicId, kp: j.kp, seed: j.seed }]);
+        const feedback = feedbackOf(problem!, { correct: viewJudgment(j).passed }, { row: j, revise: false });
+        return sessionMessage(c, row.id, run, s, undefined, { feedback });
+      }
+    }
     const j = run.pending ? await latestJudgment(db, row.id, run.asked.length) : undefined;
     return sessionMessage(c, row.id, run, s, j && { delayed: j.status === "pending" && j.error !== null, failed: j.status === "failed" });
   };
 
-  /** settle records an answer that moved the run on, appending the run's event when it ended. */
-  const settle = async (db: Db, learnerId: string, c: CourseEntry, row: SessionRow, ref: ProblemRef, answered: Answered, at: number) => {
-    const last = answered.run.asked[answered.run.asked.length - 1]!;
-    await recordAnswer(db, {
-      sessionId: row.id,
-      learnerId,
-      index: answered.run.asked.length - 1,
-      topicId: ref.topic,
-      kp: ref.kp,
-      seed: ref.seed,
-      response: last.response,
-      skipped: answered.skipped,
-      correct: answered.verdict.correct,
-      ...(last.score !== undefined && { score: last.score }),
-      at: new Date(at),
-    });
-    if (answered.event) {
-      await append(db, learnerId, c, answered.event, row.id);
-      await joinLeague(db, learnerId, at);
+  /**
+   * settleEssays settles the learner's submitted essays of a course whose judgments ended, and carries on, after the
+   * response, those whose judgment is due. It returns the topics of the essays still being judged, which are not
+   * offered again meanwhile.
+   */
+  const settleEssays = async (db: Db, c: CourseEntry, learnerId: string, now: number): Promise<Set<string>> => {
+    const waiting = new Set<string>();
+    for (const row of await essaySessions(db, learnerId, c.id, essayTopics(c), new Date(now))) {
+      if (row.status !== "submitted") continue;
+      const after = await finishEssay(db, c, learnerId, row.id, now, deps.seed());
+      if (after) continue;
+      if (row.topicId) waiting.add(row.topicId);
+      const { judging, defer } = deps;
+      if (judging && defer) defer(judgeEssay(db, c, row, judging, now, deps.seed()).catch(() => undefined));
     }
-    await updateSession(db, row.id, answered.run, answered.event ? "completed" : "active", new Date(at));
-    return { ...row, state: answered.run };
+    return waiting;
   };
+
+  /** offered are the tasks the planner offers, without the lesson of an essay still being judged. */
+  const offered = (c: CourseEntry, s: LearnerState, now: number, waiting: ReadonlySet<string>) =>
+    nextTasks(c.planner, s, now).filter((t) => !(t.kind === "lesson" && waiting.has(t.topic)));
 
   /** judgeLater runs a judgment after the response, where work can be deferred. */
   const judgeLater = (db: Db, c: CourseEntry, id: string) => {
@@ -369,8 +360,10 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
     async getDashboard(req, ctx) {
       const { db, c, learnerId, guardian, decided } = await current(ctx, req.courseId, req.learnerId);
       const now = deps.now();
+      const waiting = await settleEssays(db, c, learnerId, now);
       const { state: s } = await state(db, learnerId, c);
       const active = await activeSession(db, learnerId, c.id);
+      const essays = await essaySessions(db, learnerId, c.id, essayTopics(c), new Date(now - ESSAY_NOTICE_MS));
       const p = courseProgress(c.planner, s, now);
       const run = active?.state as RunState | undefined;
       const xp = await xpSummary(db, learnerId, now, req.timeZone, c.subject.def.id);
@@ -391,7 +384,13 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
         endDate: settings.endDate ?? "",
         foundations,
         startEarlier: startEarlier(c, diagnosed, foundations),
-        tasks: nextTasks(c.planner, s, now).map((t) => taskMessage(c, t, s)),
+        tasks: offered(c, s, now, waiting).map((t) => taskMessage(c, t, s)),
+        essays: essays.map((row) => ({
+          sessionId: row.id,
+          title: text(c.subject.topics.get(row.topicId ?? "")?.title ?? { en: "", "zh-CN": "" }),
+          judged: row.status === "completed",
+          passed: (row.state as RunState).result?.passed ?? false,
+        })),
         ...(active && run && { active: { id: active.id, task: taskMessage(c, runTask(run), s) } }),
         stats: { learned: p.learned, total: p.total, due: p.due },
         xp,
@@ -487,8 +486,13 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
         if (active) return active;
         if (timeLimit !== null && (await studiedToday(tx, learnerId, now, req.timeZone)) >= timeLimit * 60_000)
           throw new ConnectError("today's study time is used up", Code.ResourceExhausted);
+        const waiting = new Set(
+          (await essaySessions(tx, learnerId, c.id, essayTopics(c), new Date(now))).flatMap((r) =>
+            r.status === "submitted" && r.topicId ? [r.topicId] : [],
+          ),
+        );
         const { state: s } = await state(tx, learnerId, c, true);
-        const task = nextTasks(c.planner, s, now).find((t) => sameTask(req.task, t));
+        const task = offered(c, s, now, waiting).find((t) => sameTask(req.task, t));
         if (!task) throw new ConnectError("that task is not offered now", Code.FailedPrecondition);
         const run = startRun(c, task, s, now, rng());
         return createSession(tx, {
@@ -556,7 +560,12 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
       await requireStudy(db, learnerId, deps.now());
       const row = await getSession(db, learnerId, req.id);
       if (!row) throw new ConnectError("no such session", Code.NotFound);
-      return { session: await view(db, learnerId, row) };
+      // A submitted essay whose judgment has ended is settled when it is looked at.
+      const settled =
+        row.status === "submitted"
+          ? await finishEssay(db, await course(row.courseId), learnerId, row.id, deps.now(), deps.seed())
+          : undefined;
+      return { session: await view(db, learnerId, settled ?? row) };
     },
 
     async submitAnswer(req, ctx) {
@@ -601,14 +610,20 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
             nextAt: new Date(now),
           });
           const next = { ...run, pending: { judgment: j.id, response: req.response } } as RunState;
-          await updateSession(tx, row.id, next, "active", new Date(now));
-          return { kind: "pending" as const, row: { ...row, state: next }, c, judgment: j.id };
+          // An essay ends its session when it is submitted; it is judged after.
+          const status = essayRun(run) ? ("submitted" as const) : ("active" as const);
+          await updateSession(tx, row.id, next, status, new Date(now));
+          return { kind: "pending" as const, row: { ...row, status, state: next }, c, judgment: j.id };
         }
         const { state: before } = await state(tx, learnerId, c, true);
         const answered = await answerRun(c, run, before, req.response, req.skip, now, rng(), judged as Given | undefined);
         return { kind: "answered" as const, row: await settle(tx, learnerId, c, row, ref, answered, now), answered };
       });
-      if (out.kind === "pending") judgeLater(db, out.c, out.judgment);
+      if (out.kind === "pending" && out.row.status === "submitted") {
+        const { judging, defer } = deps;
+        const { c, row } = out;
+        if (judging && defer) defer(judgeEssay(db, c, row, judging, now, deps.seed()).catch(() => undefined));
+      } else if (out.kind === "pending") judgeLater(db, out.c, out.judgment);
       const session = await view(db, learnerId, out.row);
       if (out.kind === "pending") return { pending: true, session };
       if (out.kind === "rejected") return { feedback: feedbackOf(out.judged.problem, out.judged.verdict), session };
@@ -624,6 +639,11 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
       await requireStudy(db, learnerId, now);
       const found = await getSession(db, learnerId, req.sessionId);
       if (!found) throw new ConnectError("no such session", Code.NotFound);
+      if (found.status === "submitted") {
+        // A learner still on the page of a submitted essay sees its verdict as soon as it comes.
+        const after = await judgeEssay(db, await course(found.courseId), found, deps.judging, now, deps.seed());
+        return { pending: !after, session: await view(db, learnerId, after ?? found) };
+      }
       let j = await latestJudgment(db, found.id, req.index);
       if (!j) throw new ConnectError("no judgment for that question", Code.NotFound);
       const c = await course(found.courseId);

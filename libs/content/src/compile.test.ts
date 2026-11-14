@@ -427,6 +427,18 @@ describe("judged topics", () => {
     ]);
   });
 
+  it("keeps an essay judged, with one knowledge point, and never encompassed", () => {
+    const essay = judgedTopic("e", undefined, { essay: true });
+    expect(errors(subject([essay]))).toEqual([]);
+    expect(compileSubject(subject([essay])).graph.topics.get("e")?.essay).toBe(true);
+    expect(errors(subject([topic("a", { essay: true })]))).toEqual(["topic a: an essay must be judged by a model"]);
+    const two = { ...essay, knowledgePoints: [...essay.knowledgePoints, { ...essay.knowledgePoints[0]!, id: "kp2" }] };
+    expect(errors(subject([two]))).toEqual(["topic e: an essay has one knowledge point"]);
+    expect(
+      errors(subject([essay, judgedTopic("w", undefined, { encompasses: [{ topic: "e", weight: 0.5, nonAncestor: true }] })])),
+    ).toEqual(["topic w: encompassed topic e is an essay, which is never repeated"]);
+  });
+
   it("lists each criterion of the judged topics once", () => {
     const listing = subjectListing(subjectManifest(compileSubject(subject([judgedTopic("w"), judgedTopic("v")]))));
     expect(listing.criteria).toEqual([criterion]);

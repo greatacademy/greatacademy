@@ -127,7 +127,8 @@ function applyTask(ctx: EngineContext, state: LearnerState, e: TaskEvent): Learn
         return { ...setTopic(state, e.topic, { ...failed, failedAt: e.at }), xp, reviewsSinceLesson: 0 };
       }
       if (prev?.learned) return { ...applyRepetition(p, g, state, e.topic, 1, e.at), xp, reviewsSinceLesson: 0 };
-      const speed = clampSpeed(p, lessonSpeed(p, topic.knowledgePoints.length, e.asked));
+      // One essay says nothing about how fast its writer learns.
+      const speed = topic.essay ? 1 : clampSpeed(p, lessonSpeed(p, topic.knowledgePoints.length, e.asked));
       const learned = setTopic(state, e.topic, newTopicState(e.at, 0, speed, false));
       // A lesson is also a full repetition of the topics it encompasses. The new topic itself starts at repNum 0.
       const after = applyRepetition(p, g, learned, e.topic, 1, e.at);

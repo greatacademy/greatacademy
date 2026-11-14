@@ -132,6 +132,8 @@ A checker returns a `Verdict`: `correct`, and optional `feedback` for a rejectio
 
 **Answers judged by a model.** A problem whose `answer.judged` lists criteria is judged by a model on those criteria once its checker accepts the length; `judged.source` gives the text the learner writes from, if any. The criteria are defined on the topic, `TopicDef.criteria`, each with a kebab-case `id`, a short `version`, a yes-or-no `question` ending in a question mark, and `quoteWhenMet`, whether a met criterion must quote the learner's text. The problem's `canonical` is a model answer shown after a verdict that counts, never one that sends the text back. Defining `criteria` makes the topic judged by a model ([Architecture §7](architecture.md#7-storage)).
 
+**Essays.** `TopicDef.essay` marks a whole essay: a topic judged by a model, with one knowledge point, whose text is handed in once. Handing it in ends the session; the verdict comes afterwards, with no rewrite, and passes or fails the lesson on that one text ([Learning Engine §6](learning-engine.md#6-lessons-and-reviews), [Architecture §7](architecture.md#7-storage)). An essay is never reviewed, so no topic may encompass it.
+
 Checkers must be strict about **value** and explicit about **form**: when a topic teaches simplification, `expected` says that the simplified form is required, and the checker rejects equal but unsimplified answers with feedback.
 
 ## 6. Courses
@@ -182,6 +184,7 @@ const prealgebra: CourseDef = {
 | A unit's reading units and conversation are offered by its course, and no conversation closes two units | Error |
 | A topic's criteria have kebab-case ids, no repeats, a short version and a question ending in `?`; a criterion shared by two topics is defined the same in both | Error |
 | A topic judged by rules neither depends on nor encompasses a topic judged by a model, since a learner with no route never gets the latter | Error |
+| An essay is judged by a model, has one knowledge point, and is encompassed by no topic | Error |
 
 The compiled graph provides:
 

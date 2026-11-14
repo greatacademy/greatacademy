@@ -548,6 +548,13 @@ export declare type GetDashboardResponse = Message<"ga.learning.v1.GetDashboardR
    * @generated from field: string start_earlier = 18;
    */
   startEarlier: string;
+
+  /**
+   * essays are the learner's essays being judged, then those judged in the last week, newest first.
+   *
+   * @generated from field: repeated ga.learning.v1.Essay essays = 19;
+   */
+  essays: Essay[];
 };
 
 /**
@@ -555,6 +562,43 @@ export declare type GetDashboardResponse = Message<"ga.learning.v1.GetDashboardR
  * Use `create(GetDashboardResponseSchema)` to create a new message.
  */
 export declare const GetDashboardResponseSchema: GenMessage<GetDashboardResponse>;
+
+/**
+ * Essay is an essay the learner submitted, with its verdict once a model has judged it.
+ *
+ * @generated from message ga.learning.v1.Essay
+ */
+export declare type Essay = Message<"ga.learning.v1.Essay"> & {
+  /**
+   * @generated from field: string session_id = 1;
+   */
+  sessionId: string;
+
+  /**
+   * title is the essay topic's.
+   *
+   * @generated from field: ga.common.v1.Text title = 2;
+   */
+  title?: Text | undefined;
+
+  /**
+   * judged is false while a model is still judging it.
+   *
+   * @generated from field: bool judged = 3;
+   */
+  judged: boolean;
+
+  /**
+   * @generated from field: bool passed = 4;
+   */
+  passed: boolean;
+};
+
+/**
+ * Describes the message ga.learning.v1.Essay.
+ * Use `create(EssaySchema)` to create a new message.
+ */
+export declare const EssaySchema: GenMessage<Essay>;
 
 /**
  * Task is a unit of work offered on the dashboard.
@@ -1084,6 +1128,15 @@ export declare type Session = Message<"ga.learning.v1.Session"> & {
      */
     value: Result;
     case: "result";
+  } | {
+    /**
+     * submitted is an essay handed in: the session is over for the learner, and its result comes once a model has
+     * judged the essay.
+     *
+     * @generated from field: ga.learning.v1.Submitted submitted = 7;
+     */
+    value: Submitted;
+    case: "submitted";
   } | { case: undefined; value?: undefined };
 };
 
@@ -1092,6 +1145,31 @@ export declare type Session = Message<"ga.learning.v1.Session"> & {
  * Use `create(SessionSchema)` to create a new message.
  */
 export declare const SessionSchema: GenMessage<Session>;
+
+/**
+ * Submitted is an essay waiting for a model's verdict after its session ended.
+ *
+ * @generated from message ga.learning.v1.Submitted
+ */
+export declare type Submitted = Message<"ga.learning.v1.Submitted"> & {
+  /**
+   * @generated from field: string response = 1;
+   */
+  response: string;
+
+  /**
+   * failed is true when the essay could not be judged; the lesson comes again, with no result.
+   *
+   * @generated from field: bool failed = 2;
+   */
+  failed: boolean;
+};
+
+/**
+ * Describes the message ga.learning.v1.Submitted.
+ * Use `create(SubmittedSchema)` to create a new message.
+ */
+export declare const SubmittedSchema: GenMessage<Submitted>;
 
 /**
  * Question is a question of a session.
@@ -1168,6 +1246,13 @@ export declare type Question = Message<"ga.learning.v1.Question"> & {
    * @generated from field: int32 attempt = 10;
    */
   attempt: number;
+
+  /**
+   * essay is true when the answer is an essay: submitting it ends the session, and its verdict comes later.
+   *
+   * @generated from field: bool essay = 11;
+   */
+  essay: boolean;
 };
 
 /**
@@ -2123,6 +2208,13 @@ export declare type Result = Message<"ga.learning.v1.Result"> & {
    * @generated from field: optional ga.learning.v1.Passage passage = 9;
    */
   passage?: Passage | undefined;
+
+  /**
+   * feedback is a model's verdict on the essay of an essay's lesson.
+   *
+   * @generated from field: optional ga.learning.v1.Feedback feedback = 10;
+   */
+  feedback?: Feedback | undefined;
 };
 
 /**

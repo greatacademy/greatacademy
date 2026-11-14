@@ -34,6 +34,8 @@ export interface GraphTopic {
   readonly knowledgePoints: readonly GraphKnowledgePoint[];
   /** diagnosticKp is the index of the knowledge point the diagnostic asks. */
   readonly diagnosticKp: number;
+  /** essay tells that the topic is an essay (TopicDef.essay). */
+  readonly essay?: boolean;
 }
 
 /** GraphPassage is what the engine needs of a passage. */
@@ -184,6 +186,10 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
     }
     if (topic.diagnostic !== undefined && !kpIds.has(topic.diagnostic))
       error(path, `diagnostic knowledge point ${topic.diagnostic} does not exist`);
+    if (topic.essay) {
+      if (!topic.criteria) error(path, "an essay must be judged by a model");
+      if (topic.knowledgePoints.length !== 1) error(path, "an essay has one knowledge point");
+    }
     if (topic.criteria) {
       if (topic.criteria.length === 0) error(path, "a judged topic needs at least one criterion");
       const own = new Set<string>();
@@ -248,6 +254,7 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
       seen.add(e.topic);
       if (!topic.criteria && topics.get(e.topic)?.criteria)
         error(path, `encompassed topic ${e.topic} is judged by a model, so a topic that is not cannot encompass it`);
+      if (topics.get(e.topic)?.essay) error(path, `encompassed topic ${e.topic} is an essay, which is never repeated`);
     }
     for (const kp of topic.knowledgePoints) {
       for (const k of kp.keyPrerequisites ?? []) {
@@ -444,6 +451,7 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
         topic.diagnostic === undefined
           ? topic.knowledgePoints.length - 1
           : topic.knowledgePoints.findIndex((kp) => kp.id === topic.diagnostic),
+      ...(topic.essay && { essay: true }),
     });
   }
 

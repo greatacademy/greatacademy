@@ -1,8 +1,8 @@
-import type { FinishedSession, GetDashboardResponse, Task } from "@ga/proto/learning/v1/learning_pb";
+import type { Essay, FinishedSession, GetDashboardResponse, Task } from "@ga/proto/learning/v1/learning_pb";
 import { computed, effect, type Resource, signal, Text, View, windowSize } from "nsh";
 import checkCircle from "../assets/icons/check-circle.svg";
 import xCircle from "../assets/icons/x-circle.svg";
-import { errorText, m } from "../lib/i18n.ts";
+import { errorText, m, tx } from "../lib/i18n.ts";
 import { nav, openTab } from "../lib/nav.ts";
 import { markChanged, query } from "../lib/query.ts";
 import { learning, timeZone } from "../lib/rpc.ts";
@@ -65,6 +65,51 @@ function RecentLine(props: { session: FinishedSession; first: boolean }) {
         <Text style={{ color: props.session.xp < 0 ? colors().bad : colors().muted, fontSize: 14 }}>{`${props.session.xp} XP`}</Text>
       </If>
     </View>
+  );
+}
+
+/** EssayLine is one essay as on the web: being judged, passed or not; it opens the essay's page. */
+function EssayLine(props: { essay: Essay; first: boolean }) {
+  const e = () => props.essay;
+  return (
+    <View
+      role="button"
+      onPress={() => nav.push({ name: "session", sessionId: e().sessionId })}
+      hoverStyle={{ backgroundColor: colors().page }}
+      style={{
+        alignItems: "center",
+        borderColor: colors().line,
+        borderTopWidth: props.first ? 0 : 1,
+        flexDirection: "row",
+        gap: 12,
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+      }}
+    >
+      <If when={e().judged} else={<Text style={{ color: colors().muted, fontSize: 16 }}>…</Text>}>
+        <Icon src={e().passed ? checkCircle : xCircle} size={20} color={e().passed ? colors().good : colors().bad} />
+      </If>
+      <Text style={{ color: colors().ink, flex: 1, fontSize: 14, numberOfLines: 1 }}>{tx(e().title)}</Text>
+      <Text style={{ color: colors().muted, fontSize: 14 }}>
+        {!e().judged ? m().essayJudging : e().passed ? m().essayPassed : m().essayNotPassed}
+      </Text>
+    </View>
+  );
+}
+
+/** Essays lists the learner's essays still being judged and those judged in the last days, as on the web. */
+function Essays(props: { essays: readonly Essay[] }) {
+  return (
+    <If when={props.essays.length > 0}>
+      <View style={{ gap: 8 }}>
+        <Text style={{ color: colors().muted, fontSize: 14, fontWeight: "500" }}>{m().essays}</Text>
+        <View style={{ backgroundColor: colors().surface, borderColor: colors().line, borderRadius: 12, borderWidth: 1 }}>
+          <Each of={props.essays} key={(e) => e.sessionId}>
+            {(e, index) => <EssayLine essay={e()} first={index() === 0} />}
+          </Each>
+        </View>
+      </View>
+    </If>
   );
 }
 
@@ -199,6 +244,7 @@ function Today(props: {
                   <Muted>{m().nothingToDo}</Muted>
                 </If>
               </If>
+              <Essays essays={d().essays} />
               <Conversations courseId={d().courseId} visible={props.visible} />
               <RecentWork courseId={d().courseId} visible={props.visible} />
               <If when={!wide()}>
