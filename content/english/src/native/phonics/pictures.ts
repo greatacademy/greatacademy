@@ -1,5 +1,6 @@
-// Phonics: line drawings of the short-vowel words a young reader decodes, one per word. Each is an SVG drawn in
-// currentColor with no words in it, so a child must read the word to match it; only the numbers 6 and 10 are written.
+// Phonics: line drawings of the words a young reader decodes, one per word: short-vowel words, then words with a
+// digraph. Each is an SVG drawn in currentColor with no words in it, so a child must read the word to match it; only
+// the numbers 6 and 10 are written.
 
 import { type Figure, type Text, t } from "@ga/content";
 
@@ -214,6 +215,174 @@ const drawings: Record<string, readonly [body: string, en: string, zh: string]> 
   ],
 };
 
+const waves = (y: number) =>
+  `M6 ${y} Q16 ${y - 6} 26 ${y} Q36 ${y + 6} 46 ${y} Q56 ${y - 6} 66 ${y} Q76 ${y + 6} 86 ${y} Q91 ${y - 3} 96 ${y}`;
+
+const digraphDrawings: Record<string, readonly [body: string, en: string, zh: string]> = {
+  ship: [
+    `<path d="M10 62 L90 62 L78 80 L22 80 Z M50 62 L50 12"/><path ${accent} d="M53 16 L53 56 L82 56 Z M47 22 L47 56 L22 56 Z"/><path d="${waves(90)}"/>`,
+    "A sailing ship on the waves.",
+    "海浪上的一艘帆船。",
+  ],
+  shell: [
+    `<path d="M50 82 Q22 62 16 40 Q28 14 50 14 Q72 14 84 40 Q78 62 50 82 Z"/><path d="M50 82 L24 30 M50 82 L36 19 M50 82 L50 15 M50 82 L64 19 M50 82 L76 30"/><path ${accent} d="M40 82 L60 82 L56 92 L44 92 Z"/>`,
+    "A seashell.",
+    "一个扇贝壳。",
+  ],
+  fish: [
+    `<path d="M14 50 Q40 20 70 50 Q40 80 14 50 Z M70 50 L90 32 L90 68 Z"/>${dot(28, 46)}<path ${accent} d="M36 34 Q46 22 56 34 M40 60 Q46 66 52 62"/>`,
+    "A fish.",
+    "一条鱼。",
+  ],
+  dish: [
+    `<ellipse cx="50" cy="58" rx="42" ry="16"/><ellipse cx="50" cy="56" rx="28" ry="9"/><path ${accent} d="M38 54 Q44 46 50 54 Q56 46 62 54"/><path d="M40 36 Q36 28 42 22 M50 36 Q46 28 52 20 M60 36 Q56 28 62 22"/>`,
+    "A dish of hot food.",
+    "一盘热腾腾的菜。",
+  ],
+  shed: [
+    `<path ${accent} d="M14 38 L86 54"/><path d="M20 40 L20 88 L80 88 L80 53 M6 88 L94 88"/><rect x="30" y="56" width="20" height="32"/><path d="M37 56 L37 88 M43 56 L43 88"/><rect x="58" y="60" width="14" height="12"/>`,
+    "A garden shed with a sloping roof.",
+    "一间斜屋顶的花园小棚。",
+  ],
+  chick: [
+    `<ellipse cx="54" cy="62" rx="26" ry="20"/><circle cx="38" cy="36" r="13"/><path ${accent} d="M26 34 L16 38 L26 42 Z" fill="currentColor"/>${dot(35, 33)}<path d="M50 60 Q62 52 70 64 M46 82 L44 94 M60 82 L62 94 M38 94 L48 94 M58 94 L68 94 M38 23 Q40 16 44 20"/>`,
+    "A baby chick.",
+    "一只小鸡。",
+  ],
+  chin: [
+    `<path d="M26 34 Q26 8 50 8 Q74 8 74 34 L74 50 Q74 78 50 80 Q26 78 26 50 Z"/>${dot(41, 38)}${dot(59, 38)}<path d="M50 42 L47 54 L52 54 M41 64 Q50 70 59 64"/><path ${accent} d="M92 94 L58 84 M58 84 L68 80 M58 84 L66 91"/>`,
+    "A face, with an arrow pointing to its chin.",
+    "一张脸，箭头指着下巴。",
+  ],
+  chips: [
+    `<path d="M33 30 L31 8 L37 8 L39 30 M42 30 L42 4 L48 4 L48 30 M51 30 L53 6 L59 7 L57 30 M60 30 L64 10 L70 12 L66 30"/><path ${accent} d="M26 34 L74 34 L66 92 L34 92 Z"/><path d="M30 34 Q50 46 70 34"/>`,
+    "Chips, also called fries, in a box.",
+    "一盒薯条。",
+  ],
+  bench: [
+    `<rect x="12" y="22" width="76" height="9" rx="2"/><rect x="12" y="36" width="76" height="9" rx="2"/><path ${accent} d="M8 58 L92 58" stroke-width="7"/><path d="M22 31 L22 36 M78 31 L78 36 M22 45 L22 58 M78 45 L78 58 M20 58 L16 86 M80 58 L84 86 M30 58 L30 74 M70 58 L70 74"/>`,
+    "A park bench.",
+    "公园里的一张长椅。",
+  ],
+  bath: [
+    `<path d="M8 50 L92 50 L86 74 Q82 82 72 82 L28 82 Q18 82 14 74 Z M26 82 L22 92 M74 82 L78 92 M82 50 L82 26 Q82 18 74 18 L66 18 L66 26 M62 26 L70 26"/><path ${accent} d="M14 58 Q24 54 34 58 Q44 62 54 58 Q64 54 74 58 Q80 60 86 58"/><path d="M66 32 L66 36 M66 42 L66 46"/>`,
+    "A bath being filled from its tap.",
+    "一个正从水龙头放水的浴缸。",
+  ],
+  moth: [
+    `<ellipse cx="50" cy="52" rx="4" ry="22" fill="currentColor"/><path d="M48 32 Q42 18 34 16 M52 32 Q58 18 66 16 M34 16 L30 20 M34 16 L36 11 M66 16 L70 20 M66 16 L64 11 M46 40 Q20 16 10 38 Q12 56 46 54 Z M54 40 Q80 16 90 38 Q88 56 54 54 Z M46 58 Q24 62 28 82 Q40 86 47 64 M54 58 Q76 62 72 82 Q60 86 53 64"/><circle ${accent} cx="28" cy="40" r="5"/><circle ${accent} cx="72" cy="40" r="5"/>`,
+    "A moth with wide wings and feathery feelers.",
+    "一只翅膀宽大、触角像羽毛的飞蛾。",
+  ],
+  path: [
+    `<path d="M14 96 Q36 70 44 46 Q48 34 50 26 M86 96 Q64 70 58 46 Q54 34 52 26"/><ellipse ${accent} cx="50" cy="84" rx="9" ry="4"/><ellipse ${accent} cx="51" cy="66" rx="7" ry="3"/><ellipse ${accent} cx="51" cy="50" rx="5" ry="2.5"/><path d="M4 30 Q30 20 46 26 M56 26 Q74 20 96 30 M14 60 L12 52 M16 60 L18 52 M84 64 L82 56 M86 64 L88 56"/><circle cx="80" cy="12" r="6"/>`,
+    "A path of stepping stones leading away over the grass.",
+    "一条铺着踏脚石、穿过草地伸向远处的小路。",
+  ],
+  duck: [
+    `<path d="M56 48 Q52 62 30 60 Q16 60 14 68 Q18 86 50 86 Q80 86 84 66 Q84 56 74 50"/><circle cx="64" cy="36" r="14"/><path ${accent} d="M76 34 L92 38 L76 44 Z" fill="currentColor"/>${dot(66, 32)}<path d="M36 70 Q50 62 62 72"/><path d="${waves(94)}"/>`,
+    "A duck on the water.",
+    "水面上的一只鸭子。",
+  ],
+  sock: [
+    `<path d="M34 8 L60 8 L60 54 Q60 62 68 65 L82 70 Q94 76 88 87 Q82 94 70 89 L42 76 Q34 72 34 62 Z"/><path ${accent} d="M34 20 L60 20 M34 27 L60 27"/><path d="M76 72 Q72 80 76 88"/>`,
+    "A sock.",
+    "一只袜子。",
+  ],
+  rock: [
+    `<path d="M14 80 L22 54 L40 38 L62 34 L80 46 L90 80 Z"/><path ${accent} d="M40 38 L46 54 L38 64 M62 34 L66 50"/><path d="M4 80 L96 80 M20 90 L30 90 M60 90 L76 90"/>`,
+    "A big rock on the ground.",
+    "地上的一块大石头。",
+  ],
+  lock: [
+    `<path d="M34 46 L34 30 Q34 12 50 12 Q66 12 66 30 L66 46"/><rect ${accent} x="22" y="46" width="56" height="42" rx="5"/><circle cx="50" cy="62" r="5" fill="currentColor"/><path d="M50 66 L50 77" stroke-width="5"/>`,
+    "A padlock.",
+    "一把挂锁。",
+  ],
+  neck: [
+    `<path d="M42 96 L46 32 M62 96 L58 30 Q58 16 44 15 Q26 15 16 24 Q12 32 24 35 Q36 37 46 32 M50 16 L49 6 M57 19 L61 9 M58 24 L70 20 L62 30"/>${dot(49, 6, 3)}${dot(61, 9, 3)}${dot(42, 22, 2.5)}${dot(20, 28, 1.5)}<path ${accent} d="M48 46 L56 46 M47 60 L57 60 M46 74 L58 74 M45 88 L59 88"/>`,
+    "A giraffe with a very long neck.",
+    "一只脖子很长的长颈鹿。",
+  ],
+  shelf: [
+    `<rect x="8" y="58" width="84" height="7"/><path d="M20 65 L20 80 L32 65 M80 65 L80 80 L68 65"/><rect x="16" y="30" width="8" height="28"/><rect x="26" y="34" width="8" height="24"/><path ${accent} d="M37 58 L44 30 L51 32 L44 58"/><path d="M62 58 L60 44 L80 44 L78 58 Z M70 44 Q62 30 66 22 M70 44 Q78 30 76 24"/>`,
+    "A shelf on a wall, with books and a plant.",
+    "墙上的一块搁板，上面放着书和一盆植物。",
+  ],
+  brush: [
+    `<path d="M88 12 L52 48 M84 8 L92 16 L56 52 L48 44 Z"/><path ${accent} d="M48 44 L56 52 Q40 80 14 90 Q22 62 48 44 Z" fill="currentColor"/>`,
+    "A paintbrush with paint on it.",
+    "一支沾着颜料的画笔。",
+  ],
+  shop: [
+    `<path d="M14 40 L14 90 L86 90 L86 40 M6 90 L94 90"/><path ${accent} d="M10 22 L90 22 L94 40 L6 40 Z M26 22 L22 40 M42 22 L40 40 M58 22 L60 40 M74 22 L78 40"/><rect x="22" y="52" width="30" height="24"/><path d="M62 90 L62 52 L78 52 L78 90"/>${dot(66, 72, 2)}<circle cx="32" cy="70" r="4"/><circle cx="42" cy="70" r="4"/>`,
+    "A small shop with a striped awning.",
+    "一家挂着条纹遮阳篷的小商店。",
+  ],
+  chest: [
+    `<rect x="16" y="46" width="68" height="40" rx="2"/><path d="M16 46 Q16 22 50 22 Q84 22 84 46"/><path ${accent} d="M28 24 L28 86 M72 24 L72 86"/><rect x="44" y="40" width="12" height="14" fill="currentColor"/>`,
+    "A treasure chest.",
+    "一个宝箱。",
+  ],
+  chimp: [
+    `<circle cx="18" cy="44" r="10"/><circle cx="82" cy="44" r="10"/><path d="M28 40 Q28 12 50 12 Q72 12 72 40 Q76 70 50 86 Q24 70 28 40 Z"/><path ${accent} d="M34 36 Q42 28 50 36 Q58 28 66 36 Q68 46 50 46 Q32 46 34 36 Z"/>${dot(42, 38, 2.5)}${dot(58, 38, 2.5)}<ellipse cx="50" cy="64" rx="15" ry="12"/>${dot(46, 58, 1.5)}${dot(54, 58, 1.5)}<path d="M42 68 Q50 72 58 68"/>`,
+    "A chimp's face.",
+    "一张黑猩猩的脸。",
+  ],
+  bunch: [
+    `${[
+      [38, 30],
+      [52, 30],
+      [66, 30],
+      [32, 44],
+      [46, 44],
+      [60, 44],
+      [39, 58],
+      [53, 58],
+      [46, 72],
+    ]
+      .map(([x, y]) => `<circle cx="${x}" cy="${y}" r="7"/>`)
+      .join("")}<path d="M52 23 L56 8"/><path ${accent} d="M56 12 Q70 2 82 12 Q70 22 56 12 Z"/>`,
+    "A bunch of grapes.",
+    "一串葡萄。",
+  ],
+  cloth: [
+    `<path d="M14 30 L80 30 L86 76 L20 76 Z M20 76 Q34 84 44 76 M80 30 Q90 26 86 76"/><path ${accent} d="M30 30 L36 76 M48 30 L52 76 M66 30 L68 76 M16 45 L82 45 M18 60 L84 60"/>`,
+    "A folded cloth with a checked pattern.",
+    "一块叠好的格子布。",
+  ],
+  sack: [
+    `<path d="M40 26 Q18 40 18 66 Q18 90 50 90 Q82 90 82 66 Q82 40 60 26"/><path d="M40 26 L36 14 L50 20 L64 14 L60 26"/><path ${accent} d="M38 28 L62 28" stroke-width="5"/><path d="M34 58 L40 52 M44 70 L52 64 M60 54 L66 48"/>`,
+    "A sack tied at the top.",
+    "一个顶部扎紧的麻袋。",
+  ],
+  tick: [
+    `<rect x="14" y="14" width="72" height="72" rx="8"/><path ${accent} d="M28 50 L44 66 L74 32" stroke-width="8"/>`,
+    "A tick in a box, the mark for a right answer.",
+    "方框里的一个对勾，表示答对了。",
+  ],
+  clock: [
+    `<circle cx="50" cy="50" r="38"/><path d="${spokes(50, 50, 30, 35, 12)}"/><path ${accent} d="M50 50 L50 24 M50 50 L66 58"/>${dot(50, 50, 3)}`,
+    "A clock.",
+    "一个钟。",
+  ],
+  truck: [
+    `<rect x="6" y="30" width="56" height="38"/><path d="M62 42 L82 42 L94 56 L94 68 L62 68 Z"/><path ${accent} d="M68 46 L80 46 L88 56 L68 56 Z"/><circle cx="24" cy="72" r="8" fill="currentColor"/><circle cx="78" cy="72" r="8" fill="currentColor"/>`,
+    "A truck.",
+    "一辆卡车。",
+  ],
+  brick: [
+    `<path ${accent} d="M8 50 L68 50 L68 78 L8 78 Z"/><path d="M8 50 L30 34 L90 34 L68 50 M90 34 L90 62 L68 78"/><path d="M4 86 L94 86"/>`,
+    "A brick.",
+    "一块砖。",
+  ],
+  kick: [
+    `<path d="M12 6 L34 54 M28 2 L50 46 M34 54 Q32 68 46 70 L68 70 Q78 68 74 59 Q70 52 60 52 L50 46"/><circle ${accent} cx="88" cy="56" r="10"/><path d="M76 46 L72 42 M78 40 L76 34"/>`,
+    "A foot kicking a ball.",
+    "一只正在踢球的脚。",
+  ],
+};
+
 /** pictureWords are the words that have a picture, grouped by their short vowel. */
 export const pictureWords: Record<"a" | "e" | "i" | "o" | "u", readonly string[]> = {
   a: ["cat", "hat", "cap", "map", "fan", "van", "pan", "bag", "can", "rat"],
@@ -226,9 +395,20 @@ export const pictureWords: Record<"a" | "e" | "i" | "o" | "u", readonly string[]
 /** allPictureWords are the words that have a picture, in vowel order. */
 export const allPictureWords: readonly string[] = Object.values(pictureWords).flat();
 
+/** digraphPictureWords are the words with a digraph that have a picture, grouped by the digraph. */
+export const digraphPictureWords: Record<"sh" | "ch" | "th" | "ck", readonly string[]> = {
+  sh: ["ship", "shell", "fish", "dish", "shed", "shelf", "brush", "shop"],
+  ch: ["chick", "chin", "chips", "bench", "chest", "chimp", "bunch"],
+  th: ["bath", "moth", "path", "cloth"],
+  ck: ["duck", "sock", "rock", "lock", "neck", "sack", "tick", "clock", "truck", "brick", "kick"],
+};
+
+/** allDigraphPictureWords are the words with a digraph that have a picture, in the order of the digraphs. */
+export const allDigraphPictureWords: readonly string[] = Object.values(digraphPictureWords).flat();
+
 /** picture is the drawing of a word, with what it shows for screen readers. */
 export function picture(word: string): Figure {
-  const drawn = drawings[word];
+  const drawn = drawings[word] ?? digraphDrawings[word];
   if (!drawn) throw new Error(`no picture of ${word}`);
   const [body, en, zh] = drawn;
   return { svg: svg(body), alt: t(en, zh) };
@@ -239,5 +419,8 @@ export function pictureName(word: string): Text {
   return picture(word).alt;
 }
 
-for (const word of allPictureWords) picture(word);
+for (const word of [...allPictureWords, ...allDigraphPictureWords]) picture(word);
 for (const word of Object.keys(drawings)) if (!allPictureWords.includes(word)) throw new Error(`picture of ${word} is in no list`);
+for (const word of Object.keys(digraphDrawings)) {
+  if (!allDigraphPictureWords.includes(word)) throw new Error(`picture of ${word} is in no list`);
+}
