@@ -1,6 +1,6 @@
-// Phonics: line drawings of the words a young reader decodes, one per word: short-vowel words, words with a digraph
-// and words with a consonant blend. Each is an SVG drawn in currentColor with no words in it, so a child must read the
-// word to match it; only the numbers 6 and 10 are written.
+// Phonics: line drawings of the words a young reader decodes, one per word: short-vowel words, words with a digraph,
+// words with a consonant blend and words with a silent e. Each is an SVG drawn in currentColor with no words in it,
+// so a child must read the word to match it; only the numbers 6 and 10 are written.
 
 import { type Figure, type Text, t } from "@ga/content";
 
@@ -536,6 +536,159 @@ const blendDrawings: Record<string, readonly [body: string, en: string, zh: stri
   ],
 };
 
+const silentEDrawings: Record<string, readonly [body: string, en: string, zh: string]> = {
+  cake: [
+    `<path d="M16 50 L84 50 L84 88 L16 88 Z"/><path ${accent} d="M16 50 Q16 40 26 40 L74 40 Q84 40 84 50 Q78 60 72 52 Q66 62 60 52 Q54 62 48 52 Q42 62 36 52 Q30 62 24 52 Q20 58 16 50 Z"/><path d="M16 70 L84 70 M34 40 L34 24 M50 40 L50 24 M66 40 L66 24"/><path d="M34 22 Q30 16 34 10 Q38 16 34 22 M50 22 Q46 16 50 10 Q54 16 50 22 M66 22 Q62 16 66 10 Q70 16 66 22"/>`,
+    "A birthday cake with three candles.",
+    "一个插着三支蜡烛的生日蛋糕。",
+  ],
+  cape: [
+    `<path d="M38 16 Q50 24 62 16 L64 22 Q84 60 88 90 Q50 82 12 90 Q16 60 36 22 Z"/><circle ${accent} cx="50" cy="24" r="5"/><path d="M50 30 L46 86 M36 22 Q30 54 30 86 M64 22 Q70 54 70 86"/>`,
+    "A long cape with a round clasp at the neck.",
+    "一件领口有圆扣的长披风。",
+  ],
+  cane: [
+    `<path d="M56 94 L56 28 Q56 10 40 10 Q24 10 24 26"/><path ${accent} d="M56 40 L56 50 M56 62 L56 72 M56 84 L56 92" stroke-width="6"/>`,
+    "A walking cane.",
+    "一根手杖。",
+  ],
+  gate: [
+    `<path d="M10 90 L10 20 M90 90 L90 20 M10 30 L90 30 M10 80 L90 80"/><path ${accent} d="M26 30 L26 80 M42 30 L42 80 M58 30 L58 80 M74 30 L74 80 M10 80 L90 30"/>${dot(10, 18, 4)}${dot(90, 18, 4)}<path d="M2 92 L98 92"/>`,
+    "A wooden gate.",
+    "一扇木门。",
+  ],
+  vase: [
+    `<path d="M40 50 Q26 62 30 80 Q34 92 50 92 Q66 92 70 80 Q74 62 60 50 L60 42 L40 42 Z"/><path ${accent} d="M33 70 Q50 64 67 70"/><path d="M50 42 L50 22 M46 42 L34 18 M54 42 L66 20"/><circle cx="50" cy="16" r="6"/><circle cx="32" cy="14" r="5"/><circle cx="68" cy="16" r="5"/>`,
+    "A vase with three flowers.",
+    "一个插着三朵花的花瓶。",
+  ],
+  wave: [
+    `<path ${accent} d="M6 84 Q20 84 30 60 Q44 24 72 24 Q90 26 92 44 Q80 34 70 42 Q62 50 72 58 Q56 60 52 84"/><path d="M4 90 Q27 84 50 90 Q73 96 96 90"/>`,
+    "A big wave curling over.",
+    "一个卷起来的大浪。",
+  ],
+  rake: [
+    `<path d="M80 10 L36 72"/><path ${accent} d="M22 62 L50 82"/><path d="M22 62 L14 74 M29 67 L21 79 M36 72 L28 84 M43 77 L35 89 M50 82 L42 94"/>`,
+    "A garden rake.",
+    "一把耙子。",
+  ],
+  tape: [
+    `<circle cx="44" cy="50" r="30"/><circle ${accent} cx="44" cy="50" r="13"/><path d="M74 50 L92 50 L92 64 L66 66"/><path d="M84 50 L86 46 L88 50 L90 46 L92 50"/>`,
+    "A roll of sticky tape.",
+    "一卷胶带。",
+  ],
+  cave: [
+    `<path d="M4 88 L16 50 Q30 18 52 16 Q78 16 90 48 L96 88 Z"/><path ${accent} d="M30 88 Q30 52 50 50 Q70 52 70 88" fill="currentColor"/><path d="M24 40 L32 46 M76 38 L68 44"/>`,
+    "A cave in a hill, dark inside.",
+    "山里的一个山洞，里面黑黑的。",
+  ],
+  kite: [
+    `<path ${accent} d="M60 8 L82 32 L60 62 L38 32 Z"/><path d="M60 8 L60 62 M38 32 L82 32 M60 62 Q50 74 58 82 Q66 90 54 96"/><path d="M53 76 L47 72 M53 76 L49 82 M58 88 L52 86 M58 88 L56 94"/><path d="M38 32 L10 92" stroke-dasharray="2 4"/>`,
+    "A kite with a tail, on a string.",
+    "一只带尾巴、拴着线的风筝。",
+  ],
+  bike: [
+    `<circle cx="24" cy="66" r="16"/><circle cx="76" cy="66" r="16"/><path ${accent} d="M24 66 L42 40 L66 40 L76 66 M42 40 L50 66 L66 40"/><path d="M50 66 L24 66 M38 32 L48 32 M42 40 L40 32 M66 40 L62 26 L72 24"/>${dot(24, 66, 3)}${dot(76, 66, 3)}`,
+    "A bike.",
+    "一辆自行车。",
+  ],
+  hive: [
+    `<path d="M50 10 L50 18"/><path d="M50 18 Q28 18 26 34 L74 34 Q72 18 50 18 Z M22 34 L78 34 Q84 50 78 54 L22 54 Q16 50 22 34 Z M20 54 L80 54 Q86 70 80 74 L20 74 Q14 70 20 54 Z M24 74 L76 74 Q78 88 70 90 L30 90 Q22 88 24 74 Z"/><path ${accent} d="M44 90 Q44 82 50 82 Q56 82 56 90" fill="currentColor"/><ellipse cx="84" cy="24" rx="5" ry="3.5"/><path d="M82 20 Q80 14 84 16 M86 20 Q90 14 88 18"/>`,
+    "A beehive with a bee flying by.",
+    "一个蜂窝，旁边飞着一只蜜蜂。",
+  ],
+  pine: [
+    `<path ${accent} d="M50 6 L30 34 L40 34 L22 58 L36 58 L14 82 L86 82 L64 58 L78 58 L60 34 L70 34 Z"/><path d="M44 82 L44 94 L56 94 L56 82"/>`,
+    "A pine tree.",
+    "一棵松树。",
+  ],
+  pipe: [
+    `<path d="M10 30 L50 30 Q62 30 62 42 L62 90 M10 46 L42 46 Q46 46 46 50 L46 90"/><path ${accent} d="M6 26 L14 26 L14 50 L6 50 Z M42 86 L66 86 L66 94 L42 94 Z"/><path d="M50 30 L50 44"/>`,
+    "A bent pipe.",
+    "一根弯管子。",
+  ],
+  vine: [
+    `<path d="M10 90 Q30 70 22 52 Q14 34 34 26 Q54 18 52 40 Q50 62 72 58 Q92 54 88 30 Q86 16 72 14"/><path ${accent} d="M22 52 Q8 50 10 40 Q22 40 22 52 Z M52 40 Q66 34 64 24 Q52 26 52 40 Z M72 58 Q72 74 84 74 Q86 62 72 58 Z"/><path d="M34 26 Q38 20 34 14 M88 30 Q96 32 94 40"/>`,
+    "A vine climbing with curly tips.",
+    "一根卷着须往上爬的藤。",
+  ],
+  mice: [
+    `<ellipse cx="30" cy="44" rx="16" ry="11"/><path ${accent} d="M44 39 L56 46 L44 52"/><circle cx="38" cy="32" r="6"/>${dot(46, 42, 2)}<path d="M14 46 Q2 48 4 60 M22 54 L20 60 M36 54 L38 60"/><ellipse cx="60" cy="76" rx="16" ry="11"/><path ${accent} d="M74 71 L86 78 L74 84"/><circle cx="68" cy="64" r="6"/>${dot(76, 74, 2)}<path d="M44 78 Q32 80 34 92 M52 86 L50 92 M66 86 L68 92"/>`,
+    "Two mice.",
+    "两只老鼠。",
+  ],
+  dice: [
+    `<rect x="12" y="34" width="40" height="40" rx="6"/>${dot(22, 44, 3.5)}${dot(32, 54, 3.5)}${dot(42, 64, 3.5)}<rect ${accent} x="52" y="20" width="36" height="36" rx="6" transform="rotate(15 70 38)"/>${dot(62, 32, 3.5)}${dot(76, 36, 3.5)}${dot(58, 44, 3.5)}${dot(72, 48, 3.5)}`,
+    "A pair of dice.",
+    "一对骰子。",
+  ],
+  rice: [
+    `<path d="M12 50 L88 50 Q86 84 50 86 Q14 84 12 50 Z M40 86 L38 92 L62 92 L60 86"/><path ${accent} d="M14 50 Q20 34 34 38 Q42 28 54 34 Q66 28 72 38 Q84 36 86 50"/><path d="M30 44 L34 44 M46 40 L50 40 M60 44 L64 44 M40 46 L44 46 M70 46 L74 46 M78 20 L58 46 M86 22 L64 48"/>`,
+    "A bowl of rice with chopsticks.",
+    "一碗米饭，上面放着筷子。",
+  ],
+  rope: [
+    `<ellipse cx="50" cy="60" rx="36" ry="14"/><ellipse cx="50" cy="54" rx="28" ry="10"/><ellipse ${accent} cx="50" cy="48" rx="20" ry="7"/><path d="M70 48 Q86 36 80 22 Q76 12 66 14"/><path d="M62 26 L66 20 M70 38 L74 32"/>`,
+    "A coil of rope.",
+    "一卷绳子。",
+  ],
+  rose: [
+    `<path ${accent} d="M50 16 Q34 16 32 32 Q32 46 50 48 Q68 46 68 32 Q66 16 50 16 Z M50 24 Q42 26 44 34 Q50 38 56 32 Q58 24 50 24"/><path d="M50 48 L50 94 M50 70 Q36 68 30 58 Q42 56 50 66 M50 80 L56 76"/>`,
+    "A rose.",
+    "一朵玫瑰。",
+  ],
+  nose: [
+    `<path d="M40 10 Q46 40 34 62 Q30 72 42 74 Q48 80 56 74 Q66 72 62 62"/><path ${accent} d="M38 66 Q42 68 44 64 M54 64 Q56 68 60 66"/><path d="M28 30 Q34 26 40 30 M58 30 Q64 26 70 30"/>`,
+    "A nose.",
+    "一个鼻子。",
+  ],
+  bone: [
+    `<path d="M26 40 L74 40 Q78 26 88 32 Q96 38 88 50 Q96 62 88 68 Q78 74 74 60 L26 60 Q22 74 12 68 Q4 62 12 50 Q4 38 12 32 Q22 26 26 40 Z"/><path ${accent} d="M32 50 L68 50"/>`,
+    "A bone.",
+    "一根骨头。",
+  ],
+  cone: [
+    `<path d="M28 44 L50 94 L72 44"/><path d="M34 58 L62 70 M40 72 L58 80 M36 50 L66 62"/><path ${accent} d="M24 46 Q18 30 34 26 Q36 10 50 12 Q64 10 66 26 Q82 30 76 46 Z"/>`,
+    "An ice cream cone.",
+    "一个冰淇淋甜筒。",
+  ],
+  robe: [
+    `<path d="M36 10 L50 30 L64 10 L82 18 L94 52 L84 56 L76 36 L78 92 L22 92 L24 36 L16 56 L6 52 L18 18 Z M50 30 L40 92"/><path ${accent} d="M26 60 Q50 66 76 58 M50 62 L46 76 M52 62 L60 74"/>`,
+    "A bathrobe with a belt.",
+    "一件系着腰带的浴袍。",
+  ],
+  hole: [
+    `<path d="M4 50 L22 50 M78 50 L96 50"/><ellipse ${accent} cx="50" cy="56" rx="30" ry="12" fill="currentColor"/><path d="M8 50 Q14 38 24 42 Q30 34 38 42 M62 42 Q70 34 76 42 Q86 38 92 50"/><path d="M20 70 L80 70 M30 80 L70 80" stroke-dasharray="3 6"/>`,
+    "A hole in the ground.",
+    "地上的一个洞。",
+  ],
+  mole: [
+    `<path d="M20 74 Q18 52 44 50 Q66 50 76 62 L88 64 Q92 68 86 72 L76 74 Z"/>${dot(70, 60, 2.5)}<path ${accent} d="M24 74 L18 82 M34 74 L30 84 M28 82 L18 84 M60 74 L64 84"/><path d="M4 90 Q30 72 54 90 Z"/>`,
+    "A mole beside a pile of earth.",
+    "一只鼹鼠，旁边有一堆土。",
+  ],
+  note: [
+    `<ellipse ${accent} cx="36" cy="76" rx="14" ry="10" transform="rotate(-20 36 76)" fill="currentColor"/><path d="M48 72 L48 14 Q60 26 74 30 Q80 36 76 48"/><path d="M6 20 L94 20 M6 34 L94 34 M6 48 L94 48 M6 62 L94 62 M6 76 L94 76" stroke-width="1"/>`,
+    "A musical note.",
+    "一个音符。",
+  ],
+  cube: [
+    `<path d="M20 36 L52 20 L84 36 L84 72 L52 88 L20 72 Z M20 36 L52 52 L84 36 M52 52 L52 88"/><path ${accent} d="M28 48 L44 56 M60 56 L76 48"/>`,
+    "A cube.",
+    "一个正方体。",
+  ],
+  tube: [
+    `<path d="M24 36 L76 36 L88 30 L88 70 L76 64 L24 64 Q20 64 20 60 L20 40 Q20 36 24 36 Z"/><rect ${accent} x="6" y="42" width="14" height="16" rx="2"/><path d="M40 44 L64 44 M40 56 L56 56"/>`,
+    "A tube of toothpaste.",
+    "一管牙膏。",
+  ],
+  mule: [
+    `<path d="M18 40 Q16 34 24 34 L64 34 Q70 34 72 28 L76 16 Q80 10 86 14 L94 28 Q96 34 90 36 L80 36 L76 46 Q74 54 66 54 L26 54 Q18 54 18 46 Z M26 54 L24 88 M34 54 L34 88 M58 54 L58 88 M66 54 L68 88 M18 40 Q8 44 10 58"/><path ${accent} d="M78 14 L72 0 L82 12 M84 13 L88 0 L88 14"/>${dot(86, 22, 2.5)}<path d="M60 34 L72 28"/>`,
+    "A mule with long ears.",
+    "一头长耳朵的骡子。",
+  ],
+};
+
 /** pictureWords are the words that have a picture, grouped by their short vowel. */
 export const pictureWords: Record<"a" | "e" | "i" | "o" | "u", readonly string[]> = {
   a: ["cat", "hat", "cap", "map", "fan", "van", "pan", "bag", "can", "rat"],
@@ -565,12 +718,23 @@ export const blendPictureWords: Record<"start" | "end", readonly string[]> = {
 /** allBlendPictureWords are the words with a consonant blend that have a picture, blends at the start first. */
 export const allBlendPictureWords: readonly string[] = Object.values(blendPictureWords).flat();
 
+/** silentEPictureWords are the words with a silent e that have a picture, grouped by their long vowel. */
+export const silentEPictureWords: Record<"a" | "i" | "o" | "u", readonly string[]> = {
+  a: ["cake", "cape", "cane", "gate", "vase", "wave", "rake", "tape", "cave"],
+  i: ["kite", "bike", "hive", "pine", "pipe", "vine", "mice", "dice", "rice"],
+  o: ["rope", "rose", "nose", "bone", "cone", "robe", "hole", "mole", "note"],
+  u: ["cube", "tube", "mule"],
+};
+
+/** allSilentEPictureWords are the words with a silent e that have a picture, in vowel order. */
+export const allSilentEPictureWords: readonly string[] = Object.values(silentEPictureWords).flat();
+
 /** allDigraphPictureWords are the words with a digraph that have a picture, in the order of the digraphs. */
 export const allDigraphPictureWords: readonly string[] = Object.values(digraphPictureWords).flat();
 
 /** picture is the drawing of a word, with what it shows for screen readers. */
 export function picture(word: string): Figure {
-  const drawn = drawings[word] ?? digraphDrawings[word] ?? blendDrawings[word];
+  const drawn = drawings[word] ?? digraphDrawings[word] ?? blendDrawings[word] ?? silentEDrawings[word];
   if (!drawn) throw new Error(`no picture of ${word}`);
   const [body, en, zh] = drawn;
   return { svg: svg(body), alt: t(en, zh) };
@@ -581,8 +745,11 @@ export function pictureName(word: string): Text {
   return picture(word).alt;
 }
 
-for (const word of [...allPictureWords, ...allDigraphPictureWords, ...allBlendPictureWords]) picture(word);
+for (const word of [...allPictureWords, ...allDigraphPictureWords, ...allBlendPictureWords, ...allSilentEPictureWords]) picture(word);
 for (const word of Object.keys(drawings)) if (!allPictureWords.includes(word)) throw new Error(`picture of ${word} is in no list`);
+for (const word of Object.keys(silentEDrawings)) {
+  if (!allSilentEPictureWords.includes(word)) throw new Error(`picture of ${word} is in no list`);
+}
 for (const word of Object.keys(blendDrawings)) {
   if (!allBlendPictureWords.includes(word)) throw new Error(`picture of ${word} is in no list`);
 }
