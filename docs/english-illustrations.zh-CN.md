@@ -13,7 +13,14 @@
 3. **每条消息一张图。** 每次粘贴 §6 的一条提示词。每条提示词都是完整的，所以也可以在新对话中粘贴风格块之后单独使用。
 4. **保持风格。** 第一张满意的场景图出来后，之后的消息也附上它，并加上：*Match the style, palette and grain of the attached image.*
 5. **尺寸。** 所有封面和场景都用横版 3:2（1536 × 1024）。如果 ChatGPT 返回了其他比例，就再要求一次。
-6. **修改图片。** 说明问题所在和要保留的部分：*Keep everything, but give the girl five fingers on each hand and remove the letters on the book spines.* 如果越改越差，就用原提示词重新生成。
+6. **缩小文件。** 这个尺寸生成的 PNG 通常有 2 到 3 MB。用手机学习的人下载这么大的文件太多了，而图片提示词怎么写都不能让它变小。所以图片通过 §5 的审核后，在同一个对话中发送下面这段，把 `{name}` 换成 §6 规定的文件名：
+
+   ```text
+   Make a smaller copy of the last image for the web. Use Python with Pillow: resize it to 1200 × 800 pixels with LANCZOS, reduce it to 128 colors, and save it as an optimized PNG named {name}. If the file is larger than 500 KB, use 96 colors instead. Tell me the final size in KB and give me the file to download.
+   ```
+
+   以原尺寸打开缩小的副本，与原图对比。如果颜色出现色带，或颗粒变成斑块，就改用 160 色再要求一次。
+7. **修改图片。** 说明问题所在和要保留的部分：*Keep everything, but give the girl five fingers on each hand and remove the letters on the book spines.* 如果越改越差，就用原提示词重新生成。
 
 ## 3. 风格块
 
@@ -62,7 +69,7 @@ Character sheet in the style above, on a plain cream background, each character 
 
 ## 6. 提示词
 
-每个文件命名为 `<kind>-<id>.png`：阅读单元封面的 `kind` 是 `reading`，对话场景的 `kind` 是 `conversation`，`id` 是内容中的 id，这样无需清单就能对应。无论提示词怎么要求，ChatGPT 都把图片保存为 PNG，所以把它给出的 PNG 作为原件保留。学习者收到的是 WebP：导入时把每个原件转换为 WebP，无需手动转换；原件留着，以便日后按其他尺寸或质量重新转换。
+每个文件命名为 `<kind>-<id>.png`：阅读单元封面的 `kind` 是 `reading`，对话场景的 `kind` 是 `conversation`，`id` 是内容中的 id，这样无需清单就能对应。用这个文件名保存 §2 中缩小的副本：1200 × 800 像素、不超过 500 KB 的 PNG。ChatGPT 的原图以 `<kind>-<id>.original.png` 保存在旁边，以备日后需要其他尺寸。
 
 ### 6.1 第一批：三年级阅读单元
 

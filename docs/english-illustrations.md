@@ -13,7 +13,14 @@ Color illustrations make the cover of a reading unit and the scene of a conversa
 3. **One image per message.** Paste one prompt of §6 at a time. Each prompt is complete on its own, so a prompt can also be pasted into a fresh chat after the style block.
 4. **Keep the style.** After the first scene that looks right, attach it to later messages as well, with: *Match the style, palette and grain of the attached image.*
 5. **Size.** Landscape 3:2 (1536 × 1024) for every cover and scene. Ask again if ChatGPT returns another shape.
-6. **Fixing an image.** Name the fault and what to keep: *Keep everything, but give the girl five fingers on each hand and remove the letters on the book spines.* Regenerate from the prompt when a fix makes it worse.
+6. **A smaller file.** A generated PNG of that size is usually 2 to 3 MB. That is too much for a learner on a phone, and no wording in the image prompt makes it smaller. So once an image passes the review of §5, send this in the same chat, with `{name}` replaced by the file name of §6:
+
+   ```text
+   Make a smaller copy of the last image for the web. Use Python with Pillow: resize it to 1200 × 800 pixels with LANCZOS, reduce it to 128 colors, and save it as an optimized PNG named {name}. If the file is larger than 500 KB, use 96 colors instead. Tell me the final size in KB and give me the file to download.
+   ```
+
+   Open the copy at full size and compare it with the original. If the colors band or the grain turns blotchy, ask again with 160 colors.
+7. **Fixing an image.** Name the fault and what to keep: *Keep everything, but give the girl five fingers on each hand and remove the letters on the book spines.* Regenerate from the prompt when a fix makes it worse.
 
 ## 3. The Style Block
 
@@ -62,7 +69,7 @@ Every image is checked before it is used. Reject or fix one that has:
 
 ## 6. Prompts
 
-Each file is named `<kind>-<id>.png`, where `kind` is `reading` for the cover of a reading unit and `conversation` for the scene of a conversation, and `id` is the id in the content, so that it can be matched without a list. ChatGPT saves its images as PNG whatever a prompt asks for, so keep the PNG it gives as the original. Learners receive WebP instead: the import converts each original to WebP, so nothing needs converting by hand, and the originals stay for a later conversion at another size or quality.
+Each file is named `<kind>-<id>.png`, where `kind` is `reading` for the cover of a reading unit and `conversation` for the scene of a conversation, and `id` is the id in the content, so that it can be matched without a list. Save the smaller copy of §2 under that name: a PNG of 1200 × 800 pixels and at most 500 KB. Keep ChatGPT's original next to it as `<kind>-<id>.original.png`, in case the image is needed again at another size.
 
 ### 6.1 Batch 1: Grade 3 Reading Units
 
