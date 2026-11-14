@@ -3,7 +3,7 @@ import { same } from "@ga/content";
 import { passageRecording } from "@ga/content-english/audio";
 import { describe, expect, it } from "vitest";
 
-import { current, plan, readEnv, recordingsModule } from "./plan.ts";
+import { current, plan, readEnv, recordingsModule, toUpload } from "./plan.ts";
 
 const passage = (id: string, body: string): PassageDef => ({ id, title: same(id), body, topics: [], xp: 5, questions: [] });
 const units: ReadingUnitDef[] = [
@@ -29,6 +29,13 @@ describe("recordingsModule", () => {
   it("writes a sorted list as a module", () => {
     expect(recordingsModule([])).toContain("= [];");
     expect(recordingsModule(["ab", "cd"])).toContain('[\n  "ab",\n  "cd",\n]');
+  });
+});
+
+describe("toUpload", () => {
+  it("lists the recordings listed that the bucket does not hold", () => {
+    expect(toUpload(["cd", "ab", "ef", "ab"], new Set(["ef"]))).toEqual(["ab", "cd"]);
+    expect(toUpload(["ab"], new Set(["ab", "zz"]))).toEqual([]);
   });
 });
 

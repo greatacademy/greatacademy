@@ -11,11 +11,12 @@ export interface AudioStore {
   get(key: string, options: { range: Headers }): Promise<AudioObject | null>;
 }
 
-/** AUDIO_PATH is a recording's path under /audio: a subject and a recording's name. */
-const AUDIO_PATH = /^\/audio\/([a-z][a-z0-9-]*\/[0-9a-f]{16}\.mp3)$/u;
+/** AUDIO_PATH is a recording's path, which is also its key in the bucket: audio/, a subject and the recording's name. */
+const AUDIO_PATH = /^\/(audio\/[a-z][a-z0-9-]*\/[0-9a-f]{16}\.mp3)$/u;
 
 /**
- * serveAudio serves a recording of a subject from R2 at /audio/<subject>/<name>.mp3, with ranges, which players on
+ * serveAudio serves a recording of a subject from the R2 bucket, under the same key as its path,
+ * /audio/<subject>/<name>.mp3, with ranges, which players on
  * phones ask for. A recording never changes, since its name is a hash of what it reads, so it is cached for a year.
  */
 export async function serveAudio(store: AudioStore, request: Request): Promise<Response> {

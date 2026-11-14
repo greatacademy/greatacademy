@@ -633,6 +633,9 @@ importers:
       '@types/node':
         specifier: 26.6.3
         version: 26.6.3
+      cf:
+        specifier: 1.0.0-beta.25
+        version: 1.0.0-beta.25(@types/node@26.6.3)
       typescript:
         specifier: 7.0.2
         version: 7.0.2

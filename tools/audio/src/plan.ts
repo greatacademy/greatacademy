@@ -59,3 +59,11 @@ export function readEnv(text: string): Record<string, string> {
   }
   return env;
 }
+
+/**
+ * toUpload lists the recordings to upload: those listed in recordings.ts that the bucket does not hold, sorted. A
+ * recording made but not listed belongs to no passage now and stays out.
+ */
+export function toUpload(listed: readonly string[], stored: ReadonlySet<string>): string[] {
+  return [...new Set(listed)].filter((name) => !stored.has(name)).sort();
+}

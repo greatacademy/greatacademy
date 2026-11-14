@@ -1,10 +1,13 @@
 // The recordings of English: passages read aloud by a synthetic voice, made by tools/audio. A recording is named by a
 // hash of the SSML it was made from, so that a passage whose text, voice or speed changes has no recording until it
-// is made again. The web app serves the files of content/english/audio/files at /audio/english/.
+// is made again. tools/audio uploads them to the R2 bucket greatacademy under audio/english/, and the web app serves
+// them at the same path; in development, from content/english/audio/files.
 
 import type { PassageDef, ReadingUnitDef } from "@ga/content";
 
 import { recordings } from "./recordings.ts";
+
+export { recordings };
 
 /** voice is the voice that reads passages aloud, its language, and how much slower than its usual speed it reads. */
 export const voice = { name: "en-US-Ava:DragonHDLatestNeural", lang: "en-US", rate: "-10%" } as const;

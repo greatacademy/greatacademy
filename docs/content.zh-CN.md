@@ -335,4 +335,4 @@ const prealgebra: CourseDef = {
 
 **写作规则。** 输入题会指明要用什么并提供分句，这样模式才能列出所有接受的句子；模式拒绝了正确的句子就是题目的缺陷，试点报告会列出这些回答供人阅读。字面的美元符号写作 `\$`，因为 `$` 表示 TeX 的开始，`content/english` 传入的 `textIssue` 会拒绝未转义的美元符号。
 
-**录音。** 文章可以被朗读。`tools/audio` 用合成声音（Azure AI Speech 的 `en-US-Ava:DragonHDLatestNeural`，比常速慢 10%）提前生成每条录音，所用 SSML 在 `content/english/src/audio.ts` 中构造：正文各段依次朗读，段间停顿。录音以该 SSML 的 64 位 FNV-1a 哈希命名，所以文章的文字、声音或语速一改，在重新生成之前它就没有录音。工具把文件写入 `content/english/audio/files`（被 git 忽略），并把文件名列在 `content/english/src/recordings.ts` 中；`withRecordings` 给录音已列出的文章附上 `audio`，若列出的名字不再属于任何文章，测试就失败。API 给出路径 `audio/english/<name>`，两个应用都在正文上方播放 `<path>.mp3`。
+**录音。** 文章可以被朗读。`tools/audio` 用合成声音（Azure AI Speech 的 `en-US-Ava:DragonHDLatestNeural`，比常速慢 10%）提前生成每条录音，所用 SSML 在 `content/english/src/audio.ts` 中构造：正文各段依次朗读，段间停顿。录音以该 SSML 的 64 位 FNV-1a 哈希命名，所以文章的文字、声音或语速一改，在重新生成之前它就没有录音。工具把文件写入 `content/english/audio/files`（被 git 忽略），并把文件名列在 `content/english/src/recordings.ts` 中；`withRecordings` 给录音已列出的文章附上 `audio`，若列出的名字不再属于任何文章，测试就失败。API 给出路径 `audio/english/<name>`，两个应用都在正文上方播放 `<path>.mp3`。`pnpm nx run audio:upload` 把已列出、而 R2 存储桶 `greatacademy` 尚未存放的录音上传到 `audio/english/` 下，Web Worker 按存放的键提供每条录音。

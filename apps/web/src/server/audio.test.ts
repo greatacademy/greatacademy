@@ -6,7 +6,7 @@ const bytes = new Uint8Array(100);
 const store = (seen: string[]) => ({
   async get(key: string, { range }: { range: Headers }): Promise<AudioObject | null> {
     seen.push(key);
-    if (key !== "english/0123456789abcdef.mp3") return null;
+    if (key !== "audio/english/0123456789abcdef.mp3") return null;
     const asked = range.get("Range");
     return {
       body: new Blob([bytes]).stream(),
