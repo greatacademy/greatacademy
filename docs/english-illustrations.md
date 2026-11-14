@@ -1,17 +1,17 @@
 # English Illustrations
 
-> Instructions for the coding agent that generates the color illustrations of English with its image tool: what to make, how to write each prompt, how to check, shrink and save each image. [简体中文](english-illustrations.zh-CN.md).
+> Instructions for the coding agent that generates the color illustrations of English with its image tool: what to make, how to write each prompt, how to check each image and make its small web files. [简体中文](english-illustrations.zh-CN.md).
 
 ## 1. The Task
 
-You are a coding agent working in this repository, with a tool that generates images. Your task is to make every image listed in §7 that does not exist yet in `content/english/illustrations/`, check it, shrink it and commit it. A file that already exists is done; skip it.
+You are a coding agent working in this repository, with a tool that generates images. Your task is to make every image listed in §7 whose files do not exist yet in `content/english/illustrations/`, check it, make its web files and commit them. An image whose two WebP files of §6 exist is done; skip it. An image whose original exists in `originals/` but whose WebP files do not needs only step 2 of §6, not a new generation.
 
 The images are the covers of reading units and the scenes of conversations. An illustration sets a scene and never carries an answer, so it never has to show a detail precisely; but it must not show anything wrong.
 
 Work in this order:
 
-1. If `content/english/illustrations/characters.png` is missing, make the character sheet of §4 first, through steps 2 to 4.
-2. For each missing file of §7, in the order listed: write its prompt (§2), generate it, review it (§5), and save and shrink it (§6).
+1. If `content/english/illustrations/originals/characters.png` is missing, make the character sheet of §4 first, through steps 2 to 4.
+2. For each image of §7 that is not done, in the order listed: write its prompt (§2), generate it, review it (§5), and save it and make its web files (§6).
 3. When a batch is done, commit it (§6) and report to the user: the files made, the size of each, and any image you gave up on, with why.
 
 ## 2. Writing a Prompt
@@ -22,7 +22,7 @@ The image tool keeps no memory between calls, so every prompt is complete in its
 2. The line of §4 for each character the scene names, unchanged.
 3. The scene of §7, unchanged.
 
-Ask for landscape 1536 × 1024. If the tool accepts reference images, pass `content/english/illustrations/characters.png` with every scene that names a character, and the first scene of the batch that passed review with every later one, and add: *Keep the characters exactly as in the reference sheet, and match the style, palette and grain of the reference scene.*
+Ask for landscape 1536 × 1024. If the tool accepts reference images, pass `content/english/illustrations/originals/characters.png` with every scene that names a character, and the first scene of the batch that passed review with every later one, and add: *Keep the characters exactly as in the reference sheet, and match the style, palette and grain of the reference scene.*
 
 Do not add to a prompt or reword it. If an image keeps failing the same point of §5, you may add one sentence that names the fault, such as *The girl has five fingers on each hand.*
 
@@ -54,7 +54,7 @@ Grandpa Wei: a grandfather in his seventies with short grey hair, a dusty blue j
 Mr. Okafor: a man in his forties with a short beard, a walnut brown jacket over an olive shirt.
 ```
 
-The scene of the character sheet, saved as `characters.png`:
+The scene of the character sheet, whose name is `characters`:
 
 ```text
 A character sheet on a plain cream background: Mia, Leo, Amara, Ms. Rivera, Grandpa Wei and Mr. Okafor standing in a row, full body, each facing slightly to the side, evenly spaced, no labels. No text anywhere.
@@ -78,30 +78,38 @@ If the tool can edit an image, fix a small fault by editing, naming the fault an
 
 ## 6. Files
 
-Each image is named `<kind>-<id>.png`, where `kind` is `reading` for the cover of a reading unit and `conversation` for the scene of a conversation, and `id` is the id in the content, so that it can be matched without a list.
+Each image has a name `<kind>-<id>`, where `kind` is `reading` for the cover of a reading unit and `conversation` for the scene of a conversation, and `id` is the id in the content, so that it can be matched without a list. §7 lists each image by the file name of its original.
 
-1. Save the image as generated to `content/english/illustrations/originals/<file>`. Git ignores that folder; the originals stay on this machine, in case an image is needed again at another size.
-2. Shrink it to a PNG of 1200 × 800 pixels and at most 300 KB, from the root of the repository:
+Learners download the web files, so they are kept small: an illustration is decoration, and a page must never wait for it. Each image has two web files in WebP, which every browser and both phone systems display and which is four to six times smaller than PNG for these flat pictures:
+
+| File | Size | Limit | Shown |
+| :--- | :--- | :--- | :--- |
+| `<name>.webp` | 960 × 640 | 80 KB | On the page of a unit or a conversation, as wide as a phone screen |
+| `<name>.thumb.webp` | 480 × 320 | 30 KB | In lists of courses and units |
+
+1. Save the image as generated to `content/english/illustrations/originals/<name>.png`. Git ignores that folder; the originals stay on this machine, so that the web files can be made again at another size or in another format without generating anything.
+2. Make the two web files from the root of the repository, with `<name>` replaced by the image's name:
 
    ```bash
-   mise exec -- uv run --no-project --with pillow==11.3.0 python - \
-     content/english/illustrations/originals/<file> content/english/illustrations/<file> <<'EOF'
+   mise exec -- uv run --no-project --with pillow==11.3.0 python - <name> <<'EOF'
    import os, sys
-   from PIL import Image, ImageFilter
-   src, dst = sys.argv[1], sys.argv[2]
-   image = Image.open(src).convert("RGB").resize((1200, 800), Image.Resampling.LANCZOS)
-   for colors, smooth in ((96, 0), (64, 0), (96, 3), (64, 3), (64, 5)):
-       step = image.filter(ImageFilter.MedianFilter(smooth)) if smooth else image
-       step.quantize(colors=colors, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE).save(dst, optimize=True)
-       if os.path.getsize(dst) <= 300_000:
-           break
-   print(f"{dst}: {colors} colors, smoothing {smooth}, {os.path.getsize(dst) // 1000} KB")
+   from PIL import Image
+   folder, name = "content/english/illustrations", sys.argv[1]
+   original = Image.open(f"{folder}/originals/{name}.png").convert("RGB")
+   for width, limit, suffix in ((960, 80_000, ".webp"), (480, 30_000, ".thumb.webp")):
+       path = f"{folder}/{name}{suffix}"
+       image = original.resize((width, width * 2 // 3), Image.Resampling.LANCZOS)
+       for quality in (80, 75, 70, 65, 60):
+           image.save(path, "WEBP", quality=quality, method=6)
+           if os.path.getsize(path) <= limit:
+               break
+       print(f"{path}: {width} × {width * 2 // 3}, quality {quality}, {os.path.getsize(path) // 1000} KB")
    EOF
    ```
 
-   The script tries fewer colors, then a light smoothing of the grain, until the file fits. It prints what it used.
-3. Open the shrunk file and compare it with the original. If the colors band or the shapes turn blotchy, the image is too detailed for the limit: generate it again with a simpler background, and say so in the report.
-4. Commit the shrunk files of a batch, and `characters.png`, in one commit, following [AGENTS.md](../AGENTS.md): `feat(content-english): illustrations of grade 3, reading covers and conversation scenes`. Do not commit the originals.
+   The script lowers the quality step by step until each file fits its limit, and prints what it used. A quality of 80 is usual; one below 70 means the picture is busy.
+3. Open the larger web file and compare it with the original. If edges blur or the colors turn blotchy, the picture is too detailed for the limit: generate it again with a simpler background, and say so in the report.
+4. Commit the web files of a batch, the character sheet's included, in one commit, following [AGENTS.md](../AGENTS.md): `feat(content-english): illustrations of grade 3, reading covers and conversation scenes`. Do not commit the originals. Delete any PNG left in `content/english/illustrations/` by an earlier version of this guide.
 
 ## 7. Scenes
 
