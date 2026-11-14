@@ -223,6 +223,38 @@ export const WRITING_CRITERIA: readonly CriterionSpec[] = [
     question: "Does the revision keep the main point of the original draft?",
     quoteWhenMet: false,
   },
+  {
+    id: "w5-essay-thesis",
+    version: "1",
+    question: "Does the essay's introduction end with a thesis that takes a clear side on the question?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "w5-essay-reasons",
+    version: "1",
+    question:
+      "Do at least two body paragraphs each give a different reason for the thesis, supported by an example or evidence that the paragraph explains?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "w5-essay-counterclaim",
+    version: "1",
+    question: "Does the essay state a view against its thesis fairly and then answer it with a reason or evidence?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "w5-essay-conclusion",
+    version: "1",
+    question: "Does the conclusion restate the thesis in new words and end with a final thought, without adding new evidence?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "w5-essay-organized",
+    version: "1",
+    question:
+      "Is the essay written in paragraphs, in an order that makes sense, with words or phrases that link one paragraph to the next?",
+    quoteWhenMet: false,
+  },
   ...LEVEL_CRITERIA,
   ...NATIVE_CRITERIA,
   ...GRADE_3_CRITERIA,

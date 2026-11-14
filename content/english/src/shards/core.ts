@@ -28,6 +28,7 @@ import { rhetoricTopics } from "../topics/rhetoric.ts";
 import { usageTopics } from "../topics/usage.ts";
 import { wordTopics } from "../topics/words.ts";
 import { academicWordTopics } from "../topics/words-academic.ts";
+import { argumentEssayTopics } from "../topics/writing-argument-essay.ts";
 import { judgedEssayTopics } from "../topics/writing-essays-judged.ts";
 import { paragraphTopics } from "../topics/writing-paragraphs.ts";
 import { judgedParagraphTopics } from "../topics/writing-paragraphs-judged.ts";
@@ -47,6 +48,7 @@ const skillTopics: readonly TopicDef[] = [
     ...judgedParagraphTopics,
     ...mechanicsTopics,
     ...judgedEssayTopics,
+    ...argumentEssayTopics,
   ]),
   ...inStrand("vocabulary", [...wordTopics, ...academicWordTopics]),
   ...inStrand(

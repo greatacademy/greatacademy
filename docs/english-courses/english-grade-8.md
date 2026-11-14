@@ -66,7 +66,7 @@ The band course `english-grades-6-8` retires once `english-grade-6`, `english-gr
 
 **Reading:** `symbolism` *(existing)*. `conflicting-accounts-of-one-event` Conflicting Accounts of One Event (after `comparing-texts-on-a-topic`, `primary-and-secondary-sources`): Two accounts of the same event can disagree on the facts or on what they mean, often because of where the writers stood or whose side they were on. Steps: Where They Disagree; then Why the Accounts Differ.
 
-**Writing:** `revising-a-draft`, `writing-a-narrative-from-a-point-of-view` *(existing)*.
+**Writing:** `revising-a-draft`, `writing-an-argument-essay`, `writing-a-narrative-from-a-point-of-view` *(existing)*.
 
 **Reading unit:** `explorers-and-voyages` *(existing)*, 8 passages: The Fleets of Zheng He; Polynesian Navigators; Ibn Battuta; The Voyage of Columbus and Its Costs; Around the World with Magellan's Crew; The Race to the South Pole; The Dive to the Deepest Sea; The First Steps on the Moon.
 

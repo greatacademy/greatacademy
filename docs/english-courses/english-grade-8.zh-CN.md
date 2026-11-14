@@ -66,7 +66,7 @@
 
 **阅读：** `symbolism`（已有）。`conflicting-accounts-of-one-event` 对同一事件的不同记述（先修 `comparing-texts-on-a-topic`、`primary-and-secondary-sources`）：对同一事件的两份记述可能在事实上或对事实的解释上存在分歧，原因往往是作者的位置或立场不同。步骤：分歧在哪里；再记述为什么不同。
 
-**写作：** `revising-a-draft`、`writing-a-narrative-from-a-point-of-view`（已有）。
+**写作：** `revising-a-draft`、`writing-an-argument-essay`、`writing-a-narrative-from-a-point-of-view`（已有）。
 
 **阅读单元：** `explorers-and-voyages`（已有），8 篇：郑和的船队；波利尼西亚航海者；伊本·白图泰；哥伦布的航行及其代价；麦哲伦船队环游世界；南极点竞赛；潜入最深的海底；踏上月球的第一步。
 

@@ -179,6 +179,7 @@ export const literatureArgument: CourseDef = {
             "writing-a-counterclaim-paragraph",
             "introductions-and-conclusions",
             "revising-a-draft",
+            "writing-an-argument-essay",
             "writing-a-literary-analysis-paragraph",
           ],
         },

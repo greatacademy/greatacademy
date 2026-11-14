@@ -51,9 +51,10 @@ How stories and poems make meaning, and how arguments are built from claims, evi
 2.2.4. Writing a Counterclaim Paragraph  
 2.2.5. Introductions and Conclusions  
 2.2.6. Revising a Draft  
-2.2.7. Writing About a Passage
+2.2.7. Writing an Argument Essay  
+2.2.8. Writing About a Passage
 
-The topics of 2.2 are judged by a model, one move of an essay at a time; a learner whom no route may serve goes through the course without them.
+The topics of 2.2 are judged by a model, one move of an essay at a time, then the whole essay, which is handed in at once and judged after the session ends; a learner whom no route may serve goes through the course without them.
 
 ## Reading
 

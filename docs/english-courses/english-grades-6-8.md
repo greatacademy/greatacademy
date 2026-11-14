@@ -142,7 +142,7 @@ Listening and speaking wait for audio and recording: until then a unit lists its
 
 **Reading:** `symbolism` *(existing)*.
 
-**Writing:** `revising-a-draft` *(existing)*; `writing-a-narrative-from-a-point-of-view` Writing a Narrative from a Point of View (judged by a model; after `writing-a-narrative-paragraph`, `narrative-point-of-view`): an event told by one character, with what that character can know and feel.
+**Writing:** `revising-a-draft`, `writing-an-argument-essay` *(existing)*; `writing-a-narrative-from-a-point-of-view` Writing a Narrative from a Point of View (judged by a model; after `writing-a-narrative-paragraph`, `narrative-point-of-view`): an event told by one character, with what that character can know and feel.
 
 **Reading unit:** `explorers-and-voyages` *(new)*, 8 passages: the fleets of Zheng He; Polynesian navigators; Ibn Battuta; the voyage of Columbus and its costs; Magellan's crew sails around the world; the race to the South Pole; the dive to the deepest sea; the first steps on the moon.
 

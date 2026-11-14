@@ -142,7 +142,7 @@
 
 **阅读：** `symbolism`（已有）。
 
-**写作：** `revising-a-draft`（已有）；`writing-a-narrative-from-a-point-of-view` 从某一视角写叙事（由模型评判；先修 `writing-a-narrative-paragraph`、`narrative-point-of-view`）：由一个人物讲述一件事，只写这个人物能知道和感受到的。
+**写作：** `revising-a-draft`、`writing-an-argument-essay`（已有）；`writing-a-narrative-from-a-point-of-view` 从某一视角写叙事（由模型评判；先修 `writing-a-narrative-paragraph`、`narrative-point-of-view`）：由一个人物讲述一件事，只写这个人物能知道和感受到的。
 
 **阅读单元：** `explorers-and-voyages`（新增），8 篇：郑和的船队；波利尼西亚航海者；伊本·白图泰；哥伦布的航行及其代价；麦哲伦船队环游世界；奔向南极的竞赛；潜入最深的海；在月球上迈出第一步。
 

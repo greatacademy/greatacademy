@@ -61,7 +61,7 @@ const units: readonly UnitDef[] = [
       words: ["words-of-exploration", "words-of-navigation-at-sea", "words-of-life-aboard-ship", "words-of-perils-at-sea"],
       grammar: ["dashes-parentheses-and-ellipses", "ellipses-in-quotations"],
       reading: ["symbolism", "conflicting-accounts-of-one-event"],
-      writing: ["revising-a-draft", "writing-a-narrative-from-a-point-of-view"],
+      writing: ["revising-a-draft", "writing-an-argument-essay", "writing-a-narrative-from-a-point-of-view"],
     },
     "explorers-and-voyages",
     "expedition-planning-meeting",
