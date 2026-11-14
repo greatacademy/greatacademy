@@ -1,5 +1,5 @@
 import type { MessageInitShape } from "@bufbuild/protobuf";
-import type { Figure, InputSpec, KnowledgePointLesson, Problem, Text } from "@ga/content";
+import type { Figure, InputSpec, KnowledgePointLesson, PassageView, Problem, Text } from "@ga/content";
 import { diagnosticCandidates, diagnosticLength, homeCourse, type LearnerState, reviewXp, type Task } from "@ga/engine";
 import type { FigureSchema } from "@ga/proto/common/v1/figure_pb";
 import type { TextSchema } from "@ga/proto/common/v1/text_pb";
@@ -7,6 +7,7 @@ import type {
   FeedbackSchema,
   InputSchema,
   KnowledgePointIntroSchema,
+  PassageSchema,
   ProblemViewSchema,
   QuestionSchema,
   ResultSchema,
@@ -20,6 +21,21 @@ import { canSkip, type RunState, runTask } from "./runner.ts";
 /** illustrationPath is the path, from the site's root and without an extension, of a subject's illustration; "" for none. */
 export function illustrationPath(subject: string, name: string | undefined): string {
   return name ? `illustrations/${subject}/${name}` : "";
+}
+
+/** audioPath is the path, from the site's root and without an extension, of a subject's recording; "" for none. */
+export function audioPath(subject: string, name: string | undefined): string {
+  return name ? `audio/${subject}/${name}` : "";
+}
+
+/** passageMessage converts what a reader sees of a passage. */
+function passageMessage(subject: string, passage: PassageView): MessageInitShape<typeof PassageSchema> {
+  return {
+    title: text(passage.title),
+    body: passage.body,
+    illustration: illustrationPath(subject, passage.illustration),
+    audio: audioPath(subject, passage.audio),
+  };
 }
 
 /** text converts a content text to its message. */
@@ -151,7 +167,7 @@ async function question(
     const passage = await c.source.passage(run.passage);
     return {
       ...q,
-      passage: { title: text(passage.title), body: passage.body, illustration: illustrationPath(c.subject.def.id, passage.illustration) },
+      passage: passageMessage(c.subject.def.id, passage),
     };
   }
   if (run.kind !== "lesson") return q;
@@ -201,7 +217,7 @@ async function result(
     items,
     ...(feedback && { feedback }),
     ...(passage && {
-      passage: { title: text(passage.title), body: passage.body, illustration: illustrationPath(c.subject.def.id, passage.illustration) },
+      passage: passageMessage(c.subject.def.id, passage),
     }),
   };
 }

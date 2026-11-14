@@ -37,6 +37,7 @@ import { Route as AdminNoticesRouteImport } from './routes/admin/notices'
 import { Route as AdminRegisterRouteImport } from './routes/admin/register'
 import { Route as AdminVerificationsRouteImport } from './routes/admin/verifications'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
+import { Route as AudioSplatRouteImport } from './routes/audio/$'
 import { Route as CoursesIndexRouteImport } from './routes/courses/index'
 import { Route as CoursesCourseIdRouteImport } from './routes/courses/$courseId'
 import { Route as GuardianIndexRouteImport } from './routes/guardian/index'
@@ -191,6 +192,11 @@ const ApiSplatRoute = ApiSplatRouteImport.update({
   path: '/api/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AudioSplatRoute = AudioSplatRouteImport.update({
+  id: '/audio/$',
+  path: '/audio/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CoursesIndexRoute = CoursesIndexRouteImport.update({
   id: '/courses/',
   path: '/courses/',
@@ -285,6 +291,7 @@ export interface FileRoutesByFullPath {
   '/admin/register': typeof AdminRegisterRoute
   '/admin/verifications': typeof AdminVerificationsRoute
   '/api/$': typeof ApiSplatRoute
+  '/audio/$': typeof AudioSplatRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/guardian/$learnerId': typeof GuardianLearnerIdRoute
   '/legal/$page': typeof LegalPageRoute
@@ -325,6 +332,7 @@ export interface FileRoutesByTo {
   '/admin/register': typeof AdminRegisterRoute
   '/admin/verifications': typeof AdminVerificationsRoute
   '/api/$': typeof ApiSplatRoute
+  '/audio/$': typeof AudioSplatRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/guardian/$learnerId': typeof GuardianLearnerIdRoute
   '/legal/$page': typeof LegalPageRoute
@@ -369,6 +377,7 @@ export interface FileRoutesById {
   '/admin/register': typeof AdminRegisterRoute
   '/admin/verifications': typeof AdminVerificationsRoute
   '/api/$': typeof ApiSplatRoute
+  '/audio/$': typeof AudioSplatRoute
   '/courses/$courseId': typeof CoursesCourseIdRoute
   '/guardian/$learnerId': typeof GuardianLearnerIdRoute
   '/legal/$page': typeof LegalPageRoute
@@ -414,6 +423,7 @@ export interface FileRouteTypes {
     | '/admin/register'
     | '/admin/verifications'
     | '/api/$'
+    | '/audio/$'
     | '/courses/$courseId'
     | '/guardian/$learnerId'
     | '/legal/$page'
@@ -454,6 +464,7 @@ export interface FileRouteTypes {
     | '/admin/register'
     | '/admin/verifications'
     | '/api/$'
+    | '/audio/$'
     | '/courses/$courseId'
     | '/guardian/$learnerId'
     | '/legal/$page'
@@ -497,6 +508,7 @@ export interface FileRouteTypes {
     | '/admin/register'
     | '/admin/verifications'
     | '/api/$'
+    | '/audio/$'
     | '/courses/$courseId'
     | '/guardian/$learnerId'
     | '/legal/$page'
@@ -529,6 +541,7 @@ export interface RootRouteChildren {
   SignInRoute: typeof SignInRoute
   SignUpRoute: typeof SignUpRoute
   ApiSplatRoute: typeof ApiSplatRoute
+  AudioSplatRoute: typeof AudioSplatRoute
   CoursesCourseIdRoute: typeof CoursesCourseIdRoute
   GuardianLearnerIdRoute: typeof GuardianLearnerIdRoute
   LegalPageRoute: typeof LegalPageRoute
@@ -736,6 +749,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/audio/$': {
+      id: '/audio/$'
+      path: '/audio/$'
+      fullPath: '/audio/$'
+      preLoaderRoute: typeof AudioSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/courses/': {
       id: '/courses/'
       path: '/courses'
@@ -915,6 +935,7 @@ const rootRouteChildren: RootRouteChildren = {
   SignInRoute: SignInRoute,
   SignUpRoute: SignUpRoute,
   ApiSplatRoute: ApiSplatRoute,
+  AudioSplatRoute: AudioSplatRoute,
   CoursesCourseIdRoute: CoursesCourseIdRoute,
   GuardianLearnerIdRoute: GuardianLearnerIdRoute,
   LegalPageRoute: LegalPageRoute,

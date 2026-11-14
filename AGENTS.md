@@ -49,6 +49,7 @@ tools/simulate/      Simulated students
 tools/audit/         Content audit
 tools/pilot/         Pilot report from real answers
 tools/calibrate/     Calibration of AI routes against texts scored by people
+tools/audio/         Recordings of passages read aloud, made ahead of time
 deploy/voice/        Kustomize manifests of the voice service on Kubernetes
 deploy/postgres/     The Cloudflare Tunnel through which Hyperdrive reaches PostgreSQL
 ```

@@ -1316,6 +1316,14 @@ export declare type Passage = Message<"ga.learning.v1.Passage"> & {
    * @generated from field: string illustration = 3;
    */
   illustration: string;
+
+  /**
+   * audio is the path of the body read aloud from the site's root, without an extension: the recording is
+   * <audio>.mp3. It is empty when there is none.
+   *
+   * @generated from field: string audio = 4;
+   */
+  audio: string;
 };
 
 /**

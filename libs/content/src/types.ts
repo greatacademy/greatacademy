@@ -241,6 +241,8 @@ export interface PassageDef {
   /** xp is the expected minutes of reading and answering for a serious learner. */
   readonly xp: number;
   readonly questions: readonly PassageQuestionDef[];
+  /** audio names the recording of the body read aloud in the subject's audio, a file `<audio>.mp3`. */
+  readonly audio?: string;
 }
 
 /** ReadingUnitDef is a sequence of passages on one domain: each is offered after the one before it, which makes it easier to read. */

@@ -1,0 +1,25 @@
+{
+  "name": "@ga/audio",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "make": "mise exec -- node src/main.ts",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "lint": "biome check ."
+  },
+  "nx": {
+    "name": "audio"
+  },
+  "dependencies": {
+    "@ga/content": "workspace:*",
+    "@ga/content-english": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.3",
+    "typescript": "7.0.2",
+    "vitest": "5.0.3"
+  }
+}

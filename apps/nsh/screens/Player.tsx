@@ -23,6 +23,7 @@ import { learning, timeZone } from "../lib/rpc.ts";
 import { Action, Card, colors, ErrorNote, headerStyle, Loaded, Muted, Quiet } from "../lib/ui.tsx";
 import { AnswerInput, AnswerText, Prompt } from "./Answer.tsx";
 import { Illustration } from "./Illustration.tsx";
+import { Listen } from "./Listen.tsx";
 import { FigureView, Rich } from "./Rich.tsx";
 import { JudgedFeedback, WritingFlow } from "./Writing.tsx";
 
@@ -322,6 +323,7 @@ function QuestionFlow(props: {
             {(passage) => (
               <Card>
                 <Illustration path={passage().illustration} />
+                <If when={passage().audio}>{(path) => <Listen path={path()} />}</If>
                 <Text style={{ color: colors().ink, fontSize: 18, lineHeight: 28 }}>{passage().body}</Text>
               </Card>
             )}
@@ -555,6 +557,7 @@ function ResultView(props: { session: Session; result: Result }) {
           {(passage) => (
             <Card>
               <Illustration path={passage().illustration} />
+              <If when={passage().audio}>{(path) => <Listen path={path()} />}</If>
               <Text style={{ color: colors().ink, fontSize: 18, lineHeight: 28 }}>{passage().body}</Text>
             </Card>
           )}

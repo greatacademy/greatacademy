@@ -1,4 +1,5 @@
-import { cpSync, existsSync, mkdirSync, readdirSync, rmSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readdirSync, rmSync, symlinkSync } from "node:fs";
+import { resolve } from "node:path";
 import { cloudflare } from "@cloudflare/vite-plugin";
 import { gatewayWorker as englishGateway, shardWorkers as englishShards } from "@ga/english-workers/workers";
 import { gatewayWorker as mathGateway, shardWorkers as mathShards } from "@ga/math-workers/workers";
@@ -50,6 +51,30 @@ function illustrationAssets(): Plugin {
   };
 }
 
+/**
+ * audioFiles links public/audio/<subject> to the recordings made on this machine, content/<subject>/audio/files, so
+ * that Vite serves them in development; a build leaves them out, since the Worker serves them from R2.
+ */
+function audioFiles(): Plugin {
+  let serving = false;
+  return {
+    name: "audio-files",
+    configResolved(config) {
+      serving = config.command === "serve";
+    },
+    buildStart() {
+      rmSync("public/audio", { recursive: true, force: true });
+      if (!serving) return;
+      for (const subject of readdirSync("../../content")) {
+        const folder = `../../content/${subject}/audio/files`;
+        if (!existsSync(folder)) continue;
+        mkdirSync("public/audio", { recursive: true });
+        symlinkSync(resolve(folder), `public/audio/${subject}`, "dir");
+      }
+    },
+  };
+}
+
 export default defineConfig({
   // DEV_HOST=0.0.0.0 lets a phone on the same network reach the dev server; the voice service in
   // compose reaches it as host.docker.internal.
@@ -57,6 +82,7 @@ export default defineConfig({
   plugins: [
     embedAssets(),
     illustrationAssets(),
+    audioFiles(),
     cloudflare({
       viteEnvironment: { name: "ssr" },
       // In development the subject Workers run alongside the web Worker; in production they are deployed on their own.

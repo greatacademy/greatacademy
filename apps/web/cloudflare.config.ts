@@ -37,6 +37,8 @@ export default defineConfig({
       EMAIL_FROM: bindings.secret(),
       // Guardians' signed forms, kept only until an administrator decides.
       GUARDIAN_FORMS: bindings.r2({ name: "ga-guardian-forms" }),
+      // The recordings of passages read aloud, made by tools/speak, at <subject>/<name>.mp3 (docs/content.md).
+      AUDIO: bindings.r2({ name: "ga-audio" }),
       // Encrypts AI vendors' API keys; the database never sees it. Locally from .dev.vars.
       AI_KEYS_SECRET: bindings.secret(),
       // The Stripe account; without its key billing is off and anyone can study (docs/billing.md §3, §6).

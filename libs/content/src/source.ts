@@ -125,7 +125,12 @@ export function topicSource(
       const passage = passages.get(id);
       if (!passage) throw new Error(`unknown passage ${id}`);
       const illustration = covers.get(id);
-      return { title: passage.title, body: passage.body, ...(illustration && { illustration }) };
+      return {
+        title: passage.title,
+        body: passage.body,
+        ...(illustration && { illustration }),
+        ...(passage.audio && { audio: passage.audio }),
+      };
     },
   };
 }

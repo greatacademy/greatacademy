@@ -8,6 +8,8 @@ export interface PassageView {
   readonly body: string;
   /** illustration names the cover of the passage's reading unit in the subject's illustrations. */
   readonly illustration?: string;
+  /** audio names the recording of the body read aloud in the subject's audio. */
+  readonly audio?: string;
 }
 
 /** bodyWords lists the running words of a passage body, lowercased; a word with an apostrophe or a hyphen counts once. */

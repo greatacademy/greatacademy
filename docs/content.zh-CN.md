@@ -21,7 +21,7 @@
 | 课程 | `CourseDef` | 按单元和模块排列的一组有序知识点，以及掌握下限 |
 | 题目 | `Problem` | 一次生成的实例：题面、答案规格、解答、标准答案和错误答案 |
 | 判定器 | `Checker` | 根据题目的期望数据判断作答 |
-| 文章 | `PassageDef` | 一篇供阅读的文本，附简短的理解检查；是图谱中独立于知识点的节点，其 id 与知识点共用命名空间 |
+| 文章 | `PassageDef` | 一篇供阅读的文本，附简短的理解检查；是图谱中独立于知识点的节点，其 id 与知识点共用命名空间；可带朗读录音的名字（`audio`） |
 | 阅读单元 | `ReadingUnitDef` | 同一领域的一组有序文章，可带封面在学科插图中的名字，封面显示在每篇文章上方；课程在 `CourseDef.reading` 中列出它提供的单元 |
 | 对话 | `ConversationDef` | 与 AI 老师的一段口语情景（S6）：标题、学习者的任务、导师的英文情景设定（从不展示给学习者）、开场白、以分钟计的时长，以及可选的情景插图在学科插图中的名字；课程在 `CourseDef.conversations` 中列出它提供的对话 |
 | 线 | `StrandDef` | 知识点的一类，例如阅读或写作；声明了线（`SubjectDef.strands`）的学科为每个知识点指定一条（`TopicDef.strand`），以便审核课程并在各条线之间平衡 |
@@ -334,3 +334,5 @@ const prealgebra: CourseDef = {
 **由模型判定的写作。** `writingGenerator` 接受问题、写作任务的题库（每项含据以写作的笔记或文本和一篇范文）、标准、长度上限，以及一个构造解答的函数；范文的前几个词列为错误回答，长度检查会拒绝它。`libs/subject-english` 在 `WRITING_CRITERIA` 中定义写作共用的标准，即 W2 的句意检查和 W4 的段落动作，主题用 `criterionById` 取用自己的标准。第一个这样的主题是 `writing-a-paragraph`，排在 `removing-off-topic-sentences` 和 `choosing-transitions` 之后，要求根据笔记写一段话、写出具体细节、写出结尾句，分别至少 25、30 和 35 个单词。
 
 **写作规则。** 输入题会指明要用什么并提供分句，这样模式才能列出所有接受的句子；模式拒绝了正确的句子就是题目的缺陷，试点报告会列出这些回答供人阅读。字面的美元符号写作 `\$`，因为 `$` 表示 TeX 的开始，`content/english` 传入的 `textIssue` 会拒绝未转义的美元符号。
+
+**录音。** 文章可以被朗读。`tools/audio` 用合成声音（Azure AI Speech 的 `en-US-Ava:DragonHDLatestNeural`，比常速慢 10%）提前生成每条录音，所用 SSML 在 `content/english/src/audio.ts` 中构造：正文各段依次朗读，段间停顿。录音以该 SSML 的 64 位 FNV-1a 哈希命名，所以文章的文字、声音或语速一改，在重新生成之前它就没有录音。工具把文件写入 `content/english/audio/files`（被 git 忽略），并把文件名列在 `content/english/src/recordings.ts` 中；`withRecordings` 给录音已列出的文章附上 `audio`，若列出的名字不再属于任何文章，测试就失败。API 给出路径 `audio/english/<name>`，两个应用都在正文上方播放 `<path>.mp3`。

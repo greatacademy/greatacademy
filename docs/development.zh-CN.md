@@ -59,6 +59,7 @@ Nx 把这些目标的结果缓存在 `.nx/`（被 git 忽略）中；只有输�
 | `voice` | `apps/voice` | 英语实时对话的语音服务，用 Python 基于 Pipecat 编写；用模拟的语音服务和模拟的 Web Worker 测试（§7） |
 | `pilot` | `tools/pilot` | 根据数据库生成某门课程的试点报告：`DATABASE_URL=… pnpm nx run pilot:report -- --course algebra-i`（[路线图 §3](roadmap.zh-CN.md#3-试点)） |
 | `calibrate` | `tools/calibrate` | 在一项标准上校准一条路由：`DATABASE_URL=… AI_KEYS_SECRET=… pnpm nx run calibrate:calibrate -- --criterion w4-topic-sentence@1 --provider <id> --model <model> --prompt writing-1 --set scored.jsonl`。评分集每行是 `{id, task: {prompt, modelAnswer, source?}, text, scores: {"<id@version>": [第一人, 第二人]}}`，即两人的是或否。它记录校准结果，无论是否通过，并输出只用 id 指称文本的报告（[英语开发计划 §4](english-development-plan.zh-CN.md#4-阶段-2阅读与写作)） |
+| `audio` | `tools/audio` | 文章的朗读录音：`pnpm nx run audio:make -- --unit water-on-earth` 生成一个或多个阅读单元的录音，`--all --limit 50` 生成尚未生成的录音。它从仓库根目录的 `.env.local`（被 git 忽略）读取 `AZURE_SPEECH_KEY` 和 `AZURE_SPEECH_REGION`，把文件写入 `content/english/audio/files`，并列在 `content/english/src/recordings.ts` 中（[内容 §11](content.zh-CN.md#11-英语)） |
 
 此表随仓库增长；[架构 §3](architecture.zh-CN.md#3-仓库结构) 给出目标结构。
 
@@ -135,6 +136,7 @@ pnpm nx run nsh:android               # 模拟器或真机；需要 Android SDK 
 - `nsh test` 在无界面模式下按 iOS 运行，系统标签栏在那里不接受点按，所以切换标签页的测试用 `platform: "macos"` 打开应用，并使用侧边栏。
 - 含公式和配图的文本显示在 Web 视图中，它们从 Web 应用的 `/embed` 加载 KaTeX 和 MathLive。`apps/web/vite.config.ts` 把它们复制到 `public/embed`，该目录被 git 忽略。纯文本使用原生视图。
 - 插图是 `content/<subject>/illustrations` 中的 WebP 文件。`apps/web/vite.config.ts` 把它们复制到 `public/illustrations/<subject>`（同样被 git 忽略），由 Worker 提供。API 给有插图的阅读单元的文章和有插图的对话附上图片的路径，网页从自己的源加载，原生应用从 `API_URL` 加载。
+- 在本机生成的录音位于 `content/<subject>/audio/files`。开发时 `apps/web/vite.config.ts` 把它们链接到 `public/audio/<subject>`（被 git 忽略），由 Vite 按范围提供；构建时不包含它们，因为 Worker 从 R2 存储桶 `ga-audio` 提供录音。
 - `nsh test` 不运行 Web 视图，所以作图题和数学输入框没有无头测试。
 - Web 视图中的页面如果加载不到 KaTeX 样式表，就改为显示每个公式的 MathML。在 `--target web` 下，页面是没有来源的沙箱框架，所以 `/embed` 允许任意来源。有些内嵌浏览器（例如 Claude 桌面应用的浏览器面板）会拒绝沙箱框架的所有请求，所以要在普通浏览器或原生目标上检查公式。
 - 桌面窗口不能缩小到 420×600 点以下（`lib/window.ts`）。

@@ -56,7 +56,7 @@ This document describes the system as built: technology choices, repository stru
 | Database | **PostgreSQL 18**, reached from the Worker through **Hyperdrive**; **Drizzle ORM** + drizzle-kit migrations | **PGlite** in tests; a `postgres:18-alpine` container (OrbStack) in development |
 | Mobile and desktop | **[Native Shell](https://nsh.dev)** (`nsh`, from the `greatacademy` branch of the project's fork), with StoreKit for in-app purchases in the app's own Rust crate, with the app in TSX on its QuickJS runtime | One app with each platform's own views on iOS, Android, macOS, Windows and Linux; same contracts and tokens as the web app |
 | Voice service | **Python 3.14** managed by **uv**, **Pipecat** 1.15.0 with its FastAPI WebSocket transport on **uvicorn**; **pytest**, **ruff**, **pyright** | Live conversation in English, a long-lived process that Workers cannot run; no LLM service inside, since the tutor's turns come from the web Worker over HTTP; tickets verified with Ed25519 (`cryptography`) |
-| Object storage | **R2** | Images of content, generated figures being inline SVG ([Content §4](content.md#4-knowledge-points-and-generators)); guardians' signed forms, in their own bucket, until decided ([Minors' Data §6](minors-data.md#6-accounts-and-consent)) |
+| Object storage | **R2** | Images of content, generated figures being inline SVG ([Content §4](content.md#4-knowledge-points-and-generators)); recordings of passages read aloud, in the bucket `ga-audio`, served by the web Worker at `/audio/<subject>/<name>.mp3` with ranges and cached for a year, since a name never changes what it holds ([Content §11](content.md#11-english)); guardians' signed forms, in their own bucket, until decided ([Minors' Data §6](minors-data.md#6-accounts-and-consent)) |
 
 ## 3. Repository Structure
 
@@ -82,6 +82,7 @@ tools/simulate/       Simulated students for tuning and checking the engine
 tools/audit/          Content audit: outline coverage and heuristic quality checks
 tools/pilot/          Pilot report: where real learners fail, from the answer and event logs
 tools/calibrate/      Calibration: runs a route on texts scored by two people and records its agreement
+tools/audio/          Recordings: reads passages aloud with a synthetic voice ahead of time and lists what it made
 deploy/voice/         The voice service on Kubernetes: a Kustomize base and overlays, with mise tasks to push and check
 deploy/postgres/      The Cloudflare Tunnel through which Hyperdrive reaches PostgreSQL
 docs/                 Documents (English + Simplified Chinese)
@@ -106,6 +107,7 @@ tools/simulate ──► libs/engine, content/math, content/english
 tools/audit ──► libs/content, content/math, content/english
 tools/pilot ──► libs/db, libs/engine, content/math, content/english
 tools/calibrate ──► libs/judge, libs/db, libs/api, libs/subject-english
+tools/audio ──► libs/content, content/english
 apps/voice ╌╌► apps/web over HTTP (no package dependency)
 ```
 
@@ -166,7 +168,7 @@ A guardian reads a learner through the same read-only calls a learner uses: `Get
 ## 6. Deployment
 
 - **Production:**
-  - The web Worker (`apps/web`), served at `greatacademy.dev` and deployed with `cf deploy`, with a Hyperdrive binding to PostgreSQL, an R2 binding for media and another for signed forms (`GUARDIAN_FORMS`), a service binding to each subject's gateway Worker, a daily Cron Trigger and one every 15 minutes, the secret `AI_KEYS_SECRET`, which encrypts AI vendors' API keys, and the Stripe secrets of [Billing](billing.md) §10.
+  - The web Worker (`apps/web`), served at `greatacademy.dev` and deployed with `cf deploy`, with a Hyperdrive binding to PostgreSQL, an R2 binding for recordings (`AUDIO`) and another for signed forms (`GUARDIAN_FORMS`), a service binding to each subject's gateway Worker, a daily Cron Trigger and one every 15 minutes, the secret `AI_KEYS_SECRET`, which encrypts AI vendors' API keys, and the Stripe secrets of [Billing](billing.md) §10.
   - The Workers of each subject (§6.1), deployed before the web Worker, shards before their gateway, because a service binding must name a Worker that exists.
   - Migrations are applied with drizzle-kit before a deployment.
   - The subjects' Workers have no `workers.dev` address, since only service bindings reach them, and each has a `fetch` handler that answers 404, because Cloudflare refuses a Worker without an event handler.

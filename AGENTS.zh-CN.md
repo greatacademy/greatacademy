@@ -49,6 +49,7 @@ tools/simulate/      模拟学生
 tools/audit/         内容审计
 tools/pilot/         根据真实作答生成试点报告
 tools/calibrate/     用人工评分的文本校准 AI 路由
+tools/audio/         提前生成的文章朗读录音
 deploy/voice/        语音服务在 Kubernetes 上的 Kustomize 清单
 deploy/postgres/     Hyperdrive 访问 PostgreSQL 所经的 Cloudflare Tunnel
 ```
