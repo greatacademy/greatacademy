@@ -5,6 +5,7 @@ import { blendTopics } from "./blends.ts";
 import { coursePhonics } from "./course.ts";
 import { digraphTopics } from "./digraphs.ts";
 import { letterTopics } from "./letters.ts";
+import { sentenceTopics } from "./sentences.ts";
 import { shortVowelTopics } from "./short-vowels.ts";
 import { sightWordTopics } from "./sight-words.ts";
 import { silentETopics } from "./silent-e.ts";
@@ -17,6 +18,7 @@ const reading = [
   ...silentETopics.slice(0, 1),
   ...vowelTeamTopics.slice(0, 1),
   ...sightWordTopics.slice(0, 1),
+  ...sentenceTopics.slice(0, 1),
 ];
 const spelling = [
   ...shortVowelTopics.slice(1),
@@ -25,6 +27,7 @@ const spelling = [
   ...silentETopics.slice(1),
   ...vowelTeamTopics.slice(1),
   ...sightWordTopics.slice(1),
+  ...sentenceTopics.slice(1),
 ];
 
 /** phonics is the content of the phonics course. */

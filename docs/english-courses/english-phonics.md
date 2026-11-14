@@ -6,17 +6,17 @@
 - **Level:** Kindergarten to grade 2, for children learning to read English, with an adult nearby
 - **Prerequisite(s):** None
 - **Language of explanation:** The interface's, so that a guardian can read the explanations in their own language
-- **Size:** 7 units · 15 topics (all new: 9 of reading, 6 of writing checked by rules) · 144 XP · 159 pictures
+- **Size:** 8 units · 17 topics (all new: 10 of reading, 7 of writing checked by rules) · 164 XP · 159 pictures
 
 ## Aim
 
-By the end of the course a child knows the capital and small form of every letter, says the alphabet in order and puts words in ABC order, names the first and last letters of a picture's word, reads three-letter words with a short vowel by sounding out and blending their letters, and spells them, then reads and spells words in which two letters, *sh*, *ch*, *th* or *ck*, make one sound, and words with a consonant blend, two consonants side by side whose sounds are both heard, such as *frog* and *nest*, and words in which a silent *e* at the end makes the vowel say its name, such as *cake* and *kite*, and words in which a vowel team, *ee*, *ea*, *ai*, *ay* or *oa*, spells a long vowel, such as *feet*, *rain* and *boat*, and reads and spells 30 common sight words with a tricky part, such as *said*, *was* and *one*, in short sentences. The course then grows to short decodable sentences, and with audio to sounds heard and spoken: rhyme, blending and segmenting by ear, and reading aloud.
+By the end of the course a child knows the capital and small form of every letter, says the alphabet in order and puts words in ABC order, names the first and last letters of a picture's word, reads three-letter words with a short vowel by sounding out and blending their letters, and spells them, then reads and spells words in which two letters, *sh*, *ch*, *th* or *ck*, make one sound, and words with a consonant blend, two consonants side by side whose sounds are both heard, such as *frog* and *nest*, and words in which a silent *e* at the end makes the vowel say its name, such as *cake* and *kite*, and words in which a vowel team, *ee*, *ea*, *ai*, *ay* or *oa*, spells a long vowel, such as *feet*, *rain* and *boat*, and reads and spells 30 common sight words with a tricky part, such as *said*, *was* and *one*, in short sentences, and last reads and writes 30 short sentences made only of what was taught, such as *A frog can hop on a log.* With audio the course then grows to sounds heard and spoken: rhyme, blending and segmenting by ear, and reading aloud.
 
 ## How to Read This Outline
 
 The course starts with the side of phonics that can be practiced from print and pictures, so it needs no audio. Each picture is a line drawing made for this course with no words in it, so a child must read the word to match it; only the numbers 6 and 10 are written. Explanations ask an adult to say words with the child where a sound must be heard. Every topic is new and lists its prerequisites.
 
-Depth: each knowledge point has 30 to 117 distinct items. The 39 short-vowel picture words each have six near spellings that change one letter: two the vowel, two the first letter and two the last, so a wrong option always differs from the right word by one letter. The 30 digraph picture words each have three: one with another digraph, one with only one letter of its digraph, and one with another vowel. The 30 blend picture words, 15 with the blend at the start and 15 at the end, each have three: one that drops a letter of the blend, one that changes a letter of the blend, and one with another vowel. The 30 silent-e picture words each have three: one without the *e*, one with another vowel, and one with the *e* before the last consonant. The 30 vowel-team picture words each have three: one with only one letter of the team, one that spells the same sound another way, and one with a team of another sound. The 30 sight words have no pictures: each comes in a short sentence with a gap, with three near spellings, often written the way the word sounds, and two other sight words that the sentence does not take.
+Depth: each knowledge point has 30 to 117 distinct items. The 39 short-vowel picture words each have six near spellings that change one letter: two the vowel, two the first letter and two the last, so a wrong option always differs from the right word by one letter. The 30 digraph picture words each have three: one with another digraph, one with only one letter of its digraph, and one with another vowel. The 30 blend picture words, 15 with the blend at the start and 15 at the end, each have three: one that drops a letter of the blend, one that changes a letter of the blend, and one with another vowel. The 30 silent-e picture words each have three: one without the *e*, one with another vowel, and one with the *e* before the last consonant. The 30 vowel-team picture words each have three: one with only one letter of the team, one that spells the same sound another way, and one with a team of another sound. The 30 sight words have no pictures: each comes in a short sentence with a gap, with three near spellings, often written the way the word sounds, and two other sight words that the sentence does not take. The 30 short sentences each name one picture word and come with two other picture words that look like it, such as *cat*, *hat* and *rat*.
 
 ## Units
 
@@ -56,6 +56,11 @@ Depth: each knowledge point has 30 to 117 distinct items. The 39 short-vowel pic
 - `reading-sight-words` Reading Sight Words (after `reading-short-vowel-words`). Steps: choosing the spelling of the word a sentence needs, among near spellings; then choosing the sight word that makes sense in the sentence.
 - `spelling-sight-words` Spelling Sight Words (writing; after `reading-sight-words` and `spelling-short-vowel-words`). Steps: typing the tricky part of the word a sentence needs, with its other letters shown; then typing the whole word, given its first letter and length.
 
+### 8. Short Sentences
+
+- `reading-decodable-sentences` Reading Short Sentences (after `reading-words-with-vowel-teams`, `reading-sight-words`, `reading-words-with-blends` and `reading-words-with-digraphs`). Steps: choosing the picture a sentence is about, among pictures whose words look alike; then choosing the sentence about a picture, among sentences that differ in that word.
+- `writing-decodable-sentences` Writing Short Sentences (writing; after `reading-decodable-sentences`, `spelling-words-with-vowel-teams` and `spelling-sight-words`). Steps: typing the picture's word in the gap of its sentence; then writing a sentence shown without its capital letter and full stop, with both.
+
 ## New Topics
 
 | Topic | Knowledge points | Items | Judged by |
@@ -75,3 +80,5 @@ Depth: each knowledge point has 30 to 117 distinct items. The 39 short-vowel pic
 | `spelling-words-with-vowel-teams` | The missing vowel team; spelling the whole word | 30; 30 | Rules |
 | `reading-sight-words` | The right spelling; the word that fits | 30; 30 | Rules |
 | `spelling-sight-words` | The tricky part; spelling the whole word | 30; 30 | Rules |
+| `reading-decodable-sentences` | The picture for a sentence; the sentence for a picture | 30; 30 | Rules |
+| `writing-decodable-sentences` | The missing word; a capital letter and a full stop | 30; 30 | Rules |
