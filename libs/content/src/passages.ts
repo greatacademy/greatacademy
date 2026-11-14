@@ -6,6 +6,8 @@ import type { LexiconEntry, PassageDef, Problem, ReadingUnitDef } from "./types.
 export interface PassageView {
   readonly title: Text;
   readonly body: string;
+  /** illustration names the cover of the passage's reading unit in the subject's illustrations. */
+  readonly illustration?: string;
 }
 
 /** bodyWords lists the running words of a passage body, lowercased; a word with an apostrophe or a hyphen counts once. */

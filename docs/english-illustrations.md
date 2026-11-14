@@ -111,7 +111,8 @@ Learners download the web files, so they are kept small: an illustration is deco
 
    The script lowers the quality step by step until each file fits its limit, and prints what it used. A quality of 80 is usual; one below 70 means the picture is busy.
 3. Open the larger web file and compare it with the original. If edges blur or the colors turn blotchy, the picture is too detailed for the limit: generate it again with a simpler background, and say so in the report.
-4. Commit the web files of a batch, the character sheet's included, in one commit, following [AGENTS.md](../AGENTS.md): `feat(content-english): illustrations of grade 3, reading covers and conversation scenes`. Do not commit the originals. Delete any PNG left in `content/english/illustrations/` by an earlier version of this guide.
+4. Add the name of each new image to `illustrations` in `content/english/src/illustrations.ts`, whose test checks the list against the files. The content then gives the reading unit or the conversation its illustration, and the web app serves the files at `/illustrations/english/`.
+5. Commit the web files of a batch, the character sheet's included, with that list in one commit, following [AGENTS.md](../AGENTS.md): `feat(content-english): illustrations of grade 3, reading covers and conversation scenes`. Do not commit the originals. Delete any PNG left in `content/english/illustrations/` by an earlier version of this guide.
 
 ## 7. Scenes
 

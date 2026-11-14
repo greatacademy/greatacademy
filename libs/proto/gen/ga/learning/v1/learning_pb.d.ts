@@ -1223,6 +1223,14 @@ export declare type Passage = Message<"ga.learning.v1.Passage"> & {
    * @generated from field: string body = 2;
    */
   body: string;
+
+  /**
+   * illustration is the path of the cover of the passage's reading unit from the site's root, without an extension:
+   * the picture is <illustration>.webp. It is empty when there is none.
+   *
+   * @generated from field: string illustration = 3;
+   */
+  illustration: string;
 };
 
 /**

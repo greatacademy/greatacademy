@@ -24,7 +24,7 @@ import type { ConversationService, Session } from "@ga/proto/conversation/v1/con
 import { requirePlan } from "./billing.ts";
 import { type QualifiedRoute, qualifyingRoute, requireStudy } from "./capabilities.ts";
 import { dbKey, userIdKey } from "./context.ts";
-import { text } from "./convert.ts";
+import { illustrationPath, text } from "./convert.ts";
 import type { JudgingDeps } from "./judging.ts";
 import type { CourseEntry, Registry } from "./registry.ts";
 import { decryptSecret } from "./secrets.ts";
@@ -166,12 +166,13 @@ export function conversationService(deps: ConversationDeps): ServiceImpl<typeof 
       return def ? [def] : [];
     });
 
-  const message = (def: ConversationDef, available: boolean) => ({
+  const message = (c: CourseEntry, def: ConversationDef, available: boolean) => ({
     id: def.id,
     title: text(def.title),
     task: text(def.task),
     minutes: def.minutes,
     available,
+    illustration: illustrationPath(c.subject.def.id, def.illustration),
   });
 
   return {
@@ -184,7 +185,7 @@ export function conversationService(deps: ConversationDeps): ServiceImpl<typeof 
           ? "daily-limit"
           : "";
       const conversations = await Promise.all(
-        offered(c).map(async (def) => message(def, !unavailable && (await conversationRoute(db, def.id, learnerId, now)) !== undefined)),
+        offered(c).map(async (def) => message(c, def, !unavailable && (await conversationRoute(db, def.id, learnerId, now)) !== undefined)),
       );
       const recent = await recentConversations(db, learnerId, c.id, 10);
       return { conversations, unavailable, recent: recent.map(sessionMessage) };
@@ -219,7 +220,7 @@ export function conversationService(deps: ConversationDeps): ServiceImpl<typeof 
         iat,
         exp: iat + TICKET_LIFETIME_SECS,
       });
-      return { sessionId: row.id, ticket, url: voice.url, conversation: message(def, true) };
+      return { sessionId: row.id, ticket, url: voice.url, conversation: message(c, def, true) };
     },
 
     async getConversation(req, ctx) {

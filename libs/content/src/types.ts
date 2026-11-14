@@ -242,6 +242,8 @@ export interface ReadingUnitDef {
   readonly id: string;
   readonly title: Text;
   readonly passages: readonly PassageDef[];
+  /** illustration names the unit's cover in the subject's illustrations, shown above each of its passages. */
+  readonly illustration?: string;
 }
 
 /**
@@ -261,6 +263,8 @@ export interface ConversationDef {
   readonly opening: string;
   /** minutes is how long the conversation should last; after it the tutor brings it to an end. */
   readonly minutes: number;
+  /** illustration names the conversation's scene in the subject's illustrations. */
+  readonly illustration?: string;
 }
 
 /** LexiconEntry is a word of the language a subject teaches. */

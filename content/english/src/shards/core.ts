@@ -1,6 +1,7 @@
 // The topics of the `core` shard: for now, all of English. See docs/architecture.md on why content is split.
 
 import type { ReadingUnitDef, TopicDef } from "@ga/content";
+import { withCovers } from "../illustrations.ts";
 import { inStrand } from "../pack.ts";
 import { englishPacks } from "../packs.ts";
 import { howAnimalsSurvive } from "../reading/animals.ts";
@@ -65,7 +66,7 @@ const skillTopics: readonly TopicDef[] = [
 export const coreShardTopics: readonly TopicDef[] = [...skillTopics, ...englishPacks.flatMap((pack) => pack.topics)];
 
 /** coreShardReading are the reading units held by the `core` shard. */
-export const coreShardReading: readonly ReadingUnitDef[] = [
+export const coreShardReading: readonly ReadingUnitDef[] = withCovers([
   waterOnEarth,
   howPlantsLive,
   lifeOnTheNile,
@@ -79,4 +80,4 @@ export const coreShardReading: readonly ReadingUnitDef[] = [
   voicesOfPersuasion,
   theWritersCraft,
   ...englishPacks.flatMap((pack) => pack.reading),
-];
+]);

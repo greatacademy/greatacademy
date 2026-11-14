@@ -111,7 +111,8 @@ A character sheet on a plain cream background: Mia, Leo, Amara, Ms. Rivera, Gran
 
    脚本逐步降低质量，直到每个文件不超过上限，并打印最终采用的设置。质量通常是 80；低于 70 说明画面太繁杂。
 3. 打开较大的网页文件，与原图对比。如果边缘模糊或颜色变成斑块，说明这张图对这个上限来说太复杂：用更简单的背景重新生成，并写进报告。
-4. 一批网页文件（包括角色表的）一起提交，遵循 [AGENTS.md](../AGENTS.md)：`feat(content-english): illustrations of grade 3, reading covers and conversation scenes`。不要提交原图。删除本说明旧版本在 `content/english/illustrations/` 中留下的 PNG。
+4. 把每张新图的名字加入 `content/english/src/illustrations.ts` 的 `illustrations`，它的测试会把列表和文件对照检查。之后内容会把插图交给对应的阅读单元或对话，Web 应用在 `/illustrations/english/` 提供这些文件。
+5. 一批网页文件（包括角色表的）和这个列表一起提交，遵循 [AGENTS.md](../AGENTS.md)：`feat(content-english): illustrations of grade 3, reading covers and conversation scenes`。不要提交原图。删除本说明旧版本在 `content/english/illustrations/` 中留下的 PNG。
 
 ## 7. 场景
 

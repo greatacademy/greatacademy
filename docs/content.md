@@ -22,8 +22,8 @@ The pedagogical background is in [The Math Academy Way](the-math-academy-way.md)
 | Problem | `Problem` | One generated instance: prompt, answer specification, solution, canonical and wrong responses |
 | Checker | `Checker` | Judges a response against a problem's expected data |
 | Passage | `PassageDef` | A text to read with a short comprehension check; a graph node apart from the topics, whose id shares their namespace |
-| Reading unit | `ReadingUnitDef` | An ordered sequence of passages on one domain; a course lists the units it offers in `CourseDef.reading` |
-| Conversation | `ConversationDef` | A spoken scene with the AI tutor (S6): a title, the learner's task, the tutor's scenario in English (never shown to the learner), its opening line and its length in minutes; a course lists the conversations it offers in `CourseDef.conversations` |
+| Reading unit | `ReadingUnitDef` | An ordered sequence of passages on one domain, optionally with the name of its cover among the subject's illustrations, shown above each passage; a course lists the units it offers in `CourseDef.reading` |
+| Conversation | `ConversationDef` | A spoken scene with the AI tutor (S6): a title, the learner's task, the tutor's scenario in English (never shown to the learner), its opening line, its length in minutes and optionally the name of its scene among the subject's illustrations; a course lists the conversations it offers in `CourseDef.conversations` |
 | Strand | `StrandDef` | A kind of topic, such as reading or writing; a subject that declares strands (`SubjectDef.strands`) gives each topic one (`TopicDef.strand`), so that a course can be reviewed and balanced across them |
 | Lexicon | `LexiconEntry` | The subject's known spellings of each word, each optionally tied to the topic that teaches it |
 

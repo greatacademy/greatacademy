@@ -16,6 +16,11 @@ import type {
 import type { CourseEntry } from "./registry.ts";
 import { canSkip, type RunState, runTask } from "./runner.ts";
 
+/** illustrationPath is the path, from the site's root and without an extension, of a subject's illustration; "" for none. */
+export function illustrationPath(subject: string, name: string | undefined): string {
+  return name ? `illustrations/${subject}/${name}` : "";
+}
+
 /** text converts a content text to its message. */
 export function text(t: Text): MessageInitShape<typeof TextSchema> {
   return { values: { ...t } };
@@ -142,7 +147,10 @@ async function question(
   };
   if (run.kind === "reading") {
     const passage = await c.source.passage(run.passage);
-    return { ...q, passage: { title: text(passage.title), body: passage.body } };
+    return {
+      ...q,
+      passage: { title: text(passage.title), body: passage.body, illustration: illustrationPath(c.subject.def.id, passage.illustration) },
+    };
   }
   if (run.kind !== "lesson") return q;
   const l = run.lesson;
@@ -185,7 +193,9 @@ async function result(c: CourseEntry, run: RunState): Promise<MessageInitShape<t
     blownOff: r.blownOff ?? false,
     placed: r.placed,
     items,
-    ...(passage && { passage: { title: text(passage.title), body: passage.body } }),
+    ...(passage && {
+      passage: { title: text(passage.title), body: passage.body, illustration: illustrationPath(c.subject.def.id, passage.illustration) },
+    }),
   };
 }
 

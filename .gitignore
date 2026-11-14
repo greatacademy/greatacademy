@@ -20,6 +20,7 @@ coverage/
 
 # Copied from packages at build time (apps/web/vite.config.ts)
 apps/web/public/embed/
+apps/web/public/illustrations/
 
 # OS / editors
 .DS_Store

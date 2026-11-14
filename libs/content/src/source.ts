@@ -101,6 +101,12 @@ export function topicSource(
     return found;
   };
   const passages = new Map(passagesOf(reading).map((p) => [p.id, p]));
+  const covers = new Map(
+    reading.flatMap((u) => {
+      const cover = u.illustration;
+      return cover ? u.passages.map((p) => [p.id, cover] as const) : [];
+    }),
+  );
   const generate = (ref: ProblemRef) => {
     const passage = passages.get(ref.topic);
     return passage ? passageProblem(passage, ref.kp, createRng(ref.seed)) : point(ref.topic, ref.kp).generate(createRng(ref.seed));
@@ -118,7 +124,8 @@ export function topicSource(
     passage: async (id) => {
       const passage = passages.get(id);
       if (!passage) throw new Error(`unknown passage ${id}`);
-      return { title: passage.title, body: passage.body };
+      const illustration = covers.get(id);
+      return { title: passage.title, body: passage.body, ...(illustration && { illustration }) };
     },
   };
 }

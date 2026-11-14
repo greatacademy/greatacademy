@@ -1,4 +1,4 @@
-import { cpSync, mkdirSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readdirSync, rmSync } from "node:fs";
 import { cloudflare } from "@cloudflare/vite-plugin";
 import { gatewayWorker as englishGateway, shardWorkers as englishShards } from "@ga/english-workers/workers";
 import { gatewayWorker as mathGateway, shardWorkers as mathShards } from "@ga/math-workers/workers";
@@ -30,12 +30,33 @@ function embedAssets(): Plugin {
   };
 }
 
+/**
+ * illustrationAssets copies the web files of each subject's illustrations, content/<subject>/illustrations/*.webp,
+ * into public/illustrations/<subject>, so that the Worker serves them to the web pages and the native apps.
+ */
+function illustrationAssets(): Plugin {
+  return {
+    name: "illustration-assets",
+    buildStart() {
+      rmSync("public/illustrations", { recursive: true, force: true });
+      for (const subject of readdirSync("../../content")) {
+        const folder = `../../content/${subject}/illustrations`;
+        if (!existsSync(folder)) continue;
+        mkdirSync(`public/illustrations/${subject}`, { recursive: true });
+        for (const file of readdirSync(folder).filter((f) => f.endsWith(".webp")))
+          cpSync(`${folder}/${file}`, `public/illustrations/${subject}/${file}`);
+      }
+    },
+  };
+}
+
 export default defineConfig({
   // DEV_HOST=0.0.0.0 lets a phone on the same network reach the dev server; the voice service in
   // compose reaches it as host.docker.internal.
   server: { port: 5173, host: process.env.DEV_HOST, allowedHosts: ["host.docker.internal"] },
   plugins: [
     embedAssets(),
+    illustrationAssets(),
     cloudflare({
       viteEnvironment: { name: "ssr" },
       // In development the subject Workers run alongside the web Worker; in production they are deployed on their own.

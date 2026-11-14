@@ -22,8 +22,8 @@
 | 题目 | `Problem` | 一次生成的实例：题面、答案规格、解答、标准答案和错误答案 |
 | 判定器 | `Checker` | 根据题目的期望数据判断作答 |
 | 文章 | `PassageDef` | 一篇供阅读的文本，附简短的理解检查；是图谱中独立于知识点的节点，其 id 与知识点共用命名空间 |
-| 阅读单元 | `ReadingUnitDef` | 同一领域的一组有序文章；课程在 `CourseDef.reading` 中列出它提供的单元 |
-| 对话 | `ConversationDef` | 与 AI 老师的一段口语情景（S6）：标题、学习者的任务、导师的英文情景设定（从不展示给学习者）、开场白和以分钟计的时长；课程在 `CourseDef.conversations` 中列出它提供的对话 |
+| 阅读单元 | `ReadingUnitDef` | 同一领域的一组有序文章，可带封面在学科插图中的名字，封面显示在每篇文章上方；课程在 `CourseDef.reading` 中列出它提供的单元 |
+| 对话 | `ConversationDef` | 与 AI 老师的一段口语情景（S6）：标题、学习者的任务、导师的英文情景设定（从不展示给学习者）、开场白、以分钟计的时长，以及可选的情景插图在学科插图中的名字；课程在 `CourseDef.conversations` 中列出它提供的对话 |
 | 线 | `StrandDef` | 知识点的一类，例如阅读或写作；声明了线（`SubjectDef.strands`）的学科为每个知识点指定一条（`TopicDef.strand`），以便审核课程并在各条线之间平衡 |
 | 词表 | `LexiconEntry` | 学科中每个词的已知拼写，可关联到教授它的知识点 |
 

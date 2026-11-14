@@ -1,11 +1,12 @@
 import type { Subject } from "@ga/proto/catalog/v1/catalog_pb";
-import type { Feedback, ProblemView, Question, Result, Session } from "@ga/proto/learning/v1/learning_pb";
+import type { Feedback, Passage, ProblemView, Question, Result, Session } from "@ga/proto/learning/v1/learning_pb";
 import { ArrowLeft, ArrowRight, CheckCircle, Lightbulb, XCircle } from "@phosphor-icons/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { type ReactNode, useEffect, useState } from "react";
 
 import { CaptionedFigure, Explanation, FigureView } from "../../components/Figure.tsx";
+import { Illustration } from "../../components/Illustration.tsx";
 import { LoadError } from "../../components/LoadError.tsx";
 import { Markdown, Tex } from "../../components/Markdown.tsx";
 import { MathField } from "../../components/MathField.tsx";
@@ -184,7 +185,7 @@ function QuestionFlow({
   if (question.problem?.input?.kind.case === "writing") {
     return (
       <div className="space-y-4">
-        {question.passage && <PassageCard body={question.passage.body} />}
+        {question.passage && <PassageCard passage={question.passage} />}
         <Card className="space-y-6">
           {question.lesson && <div className="text-xs font-medium tracking-wide text-muted uppercase">{m.practice}</div>}
           <ProblemPrompt problem={question.problem} answering />
@@ -204,7 +205,7 @@ function QuestionFlow({
   }
   return (
     <div className="space-y-4">
-      {question.passage && <PassageCard body={question.passage.body} />}
+      {question.passage && <PassageCard passage={question.passage} />}
       <Card className="space-y-6">
         {question.lesson && <div className="text-xs font-medium tracking-wide text-muted uppercase">{m.practice}</div>}
         <ProblemPrompt problem={question.problem} answering />
@@ -279,11 +280,12 @@ function IntroView({ intro, onDone }: { intro: NonNullable<Question["intro"]>; o
   );
 }
 
-/** PassageCard shows a text to read; it stays in view while its questions are answered. */
-function PassageCard({ body }: { body: string }) {
+/** PassageCard shows a text to read, under its reading unit's cover; it stays in view while its questions are answered. */
+function PassageCard({ passage }: { passage: Passage }) {
   return (
     <Card className="space-y-4">
-      {body.split(/\n\s*\n/).map((paragraph) => (
+      <Illustration path={passage.illustration} className="mx-auto w-full max-w-md" />
+      {passage.body.split(/\n\s*\n/).map((paragraph) => (
         <p key={paragraph} className="text-lg leading-relaxed">
           {paragraph}
         </p>
@@ -535,7 +537,7 @@ function ResultView({ session, result }: { session: Session; result: Result }) {
           </Link>
         </div>
       </Card>
-      {result.passage && <PassageCard body={result.passage.body} />}
+      {result.passage && <PassageCard passage={result.passage} />}
       {result.items.map((item, i) => (
         <Card
           // biome-ignore lint/suspicious/noArrayIndexKey: items are positional

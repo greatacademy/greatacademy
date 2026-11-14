@@ -4,6 +4,7 @@ import { Link } from "@tanstack/react-router";
 
 import { useI18n } from "../lib/i18n.tsx";
 import { conversation } from "../lib/rpc.ts";
+import { Illustration } from "./Illustration.tsx";
 import { buttonClass, Card } from "./ui.tsx";
 
 /** conversationsQuery is the conversations of a course, which the card and the player share. */
@@ -30,7 +31,8 @@ export function ConversationsCard({ courseId, subjectId }: { courseId: string; s
       </div>
       {d.conversations.map((c) => (
         <Card key={c.id} className="flex flex-wrap items-center justify-between gap-3 p-4">
-          <div className="min-w-0 space-y-1">
+          <Illustration path={c.illustration} thumb className="w-24 shrink-0 rounded-lg" />
+          <div className="min-w-0 flex-1 basis-40 space-y-1">
             <div className="font-medium">{tx(c.title)}</div>
             <div className="text-sm text-muted">{c.available || note ? m.aboutMinutes(c.minutes) : m.conversationNotOffered}</div>
           </div>

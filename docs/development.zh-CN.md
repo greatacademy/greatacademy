@@ -134,6 +134,7 @@ pnpm nx run nsh:android               # 模拟器或真机；需要 Android SDK 
 - 桌面上应用会在系统托盘放一个图标（`lib/tray.ts`、`assets/tray.svg`），它的菜单可以打开窗口或某个标签页，也可以退出。
 - `nsh test` 在无界面模式下按 iOS 运行，系统标签栏在那里不接受点按，所以切换标签页的测试用 `platform: "macos"` 打开应用，并使用侧边栏。
 - 含公式和配图的文本显示在 Web 视图中，它们从 Web 应用的 `/embed` 加载 KaTeX 和 MathLive。`apps/web/vite.config.ts` 把它们复制到 `public/embed`，该目录被 git 忽略。纯文本使用原生视图。
+- 插图是 `content/<subject>/illustrations` 中的 WebP 文件。`apps/web/vite.config.ts` 把它们复制到 `public/illustrations/<subject>`（同样被 git 忽略），由 Worker 提供。API 给有插图的阅读单元的文章和有插图的对话附上图片的路径，网页从自己的源加载，原生应用从 `API_URL` 加载。
 - `nsh test` 不运行 Web 视图，所以作图题和数学输入框没有无头测试。
 - Web 视图中的页面如果加载不到 KaTeX 样式表，就改为显示每个公式的 MathML。在 `--target web` 下，页面是没有来源的沙箱框架，所以 `/embed` 允许任意来源。有些内嵌浏览器（例如 Claude 桌面应用的浏览器面板）会拒绝沙箱框架的所有请求，所以要在普通浏览器或原生目标上检查公式。
 - 桌面窗口不能缩小到 420×600 点以下（`lib/window.ts`）。

@@ -134,6 +134,7 @@ pnpm nx run nsh:android               # An emulator or device; needs the Android
 - On desktops the app puts an icon in the system tray (`lib/tray.ts`, `assets/tray.svg`) whose menu opens the window or a tab and quits.
 - `nsh test` runs headless as iOS, where the system tab bar takes no presses, so tests that switch tabs open the app with `platform: "macos"` and use the sidebar.
 - Text with math and figures shows in web views, which load KaTeX and MathLive from the web app under `/embed`. `apps/web/vite.config.ts` copies them into `public/embed`, which is ignored by git. Plain text uses native views.
+- Illustrations are WebP files in `content/<subject>/illustrations`. `apps/web/vite.config.ts` copies them into `public/illustrations/<subject>`, also ignored by git, so the Worker serves them. The API gives each illustrated reading unit's passages and each illustrated conversation the path of its picture, which the web pages load from their own origin and the native app from `API_URL`.
 - `nsh test` does not run web views, so plots and the math field have no headless test.
 - A page in a web view that cannot load the KaTeX stylesheet shows each formula's MathML instead. On `--target web` the page is a sandboxed frame without an origin, so `/embed` allows any origin. Some embedded browsers, such as the Claude desktop app's browser pane, refuse every request from a sandboxed frame, so check math in a regular browser or on a native target.
 - A desktop window cannot be made smaller than 420 by 600 points (`lib/window.ts`).

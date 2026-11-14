@@ -21,6 +21,7 @@ import { nav } from "../lib/nav.ts";
 import { learning, timeZone } from "../lib/rpc.ts";
 import { Action, Card, colors, ErrorNote, headerStyle, Loaded, Muted, Quiet } from "../lib/ui.tsx";
 import { AnswerInput, AnswerText, Prompt } from "./Answer.tsx";
+import { Illustration } from "./Illustration.tsx";
 import { FigureView, Rich } from "./Rich.tsx";
 import { JudgedFeedback, WritingFlow } from "./Writing.tsx";
 
@@ -319,6 +320,7 @@ function QuestionFlow(props: {
           <If when={question.passage}>
             {(passage) => (
               <Card>
+                <Illustration path={passage().illustration} />
                 <Text style={{ color: colors().ink, fontSize: 18, lineHeight: 28 }}>{passage().body}</Text>
               </Card>
             )}
@@ -468,6 +470,7 @@ function ResultView(props: { session: Session; result: Result }) {
         <If when={result.passage}>
           {(passage) => (
             <Card>
+              <Illustration path={passage().illustration} />
               <Text style={{ color: colors().ink, fontSize: 18, lineHeight: 28 }}>{passage().body}</Text>
             </Card>
           )}

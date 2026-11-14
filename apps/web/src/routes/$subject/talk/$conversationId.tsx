@@ -4,6 +4,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 
 import { conversationsQuery } from "../../../components/Conversations.tsx";
+import { Illustration } from "../../../components/Illustration.tsx";
 import { LoadError } from "../../../components/LoadError.tsx";
 import { Bar, Button, buttonClass, Card, ErrorNote, Spinner } from "../../../components/ui.tsx";
 import { useI18n } from "../../../lib/i18n.tsx";
@@ -146,6 +147,7 @@ function Talk() {
         {back}
         <h1 className="text-2xl font-semibold tracking-tight">{tx(conv.title)}</h1>
       </div>
+      {phase === "check" && <Illustration path={conv.illustration} className="w-full" />}
       <Card className="space-y-1 p-4">
         <div className="text-sm font-medium text-muted">{m.yourTask}</div>
         <p>{tx(conv.task)}</p>

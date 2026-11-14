@@ -64,4 +64,9 @@ describe("topicSource", () => {
     const wrong = await source.judge({ topic: "p", kp: 0, seed: 7 }, problem!.wrong![0]!);
     expect(wrong.verdict.correct).toBe(false);
   });
+
+  it("serves a passage with its unit's cover", async () => {
+    const covered = topicSource([], [], [{ id: "u", title: t("U", "单元"), passages: [passage], illustration: "reading-u" }]);
+    await expect(covered.passage("p")).resolves.toEqual({ title: passage.title, body: passage.body, illustration: "reading-u" });
+  });
 });

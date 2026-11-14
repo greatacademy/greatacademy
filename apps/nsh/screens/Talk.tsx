@@ -8,6 +8,7 @@ import { conversation } from "../lib/rpc.ts";
 import { Action, Card, colors, ErrorNote, headerStyle, Loaded, Muted, Quiet, Skeleton } from "../lib/ui.tsx";
 import { isDenied, VoiceSession, voiceAvailable } from "../lib/voice.ts";
 import { Header } from "./Header.tsx";
+import { Illustration } from "./Illustration.tsx";
 import { Bar } from "./SubjectCards.tsx";
 
 type Phase = "check" | "connecting" | "live" | "over";
@@ -42,6 +43,7 @@ export function Conversations(props: { courseId: string; visible: () => boolean 
           {(c) => (
             <Card>
               <View style={{ alignItems: "center", flexDirection: "row", gap: 12 }}>
+                <Illustration path={c().illustration} width={72} thumb />
                 <View style={{ flex: 1, gap: 2 }}>
                   <Text style={{ color: colors().ink, fontSize: 15, fontWeight: "500" }}>{tx(c().title)}</Text>
                   <Muted>{c().available || note() ? m().aboutMinutes(c().minutes) : m().conversationNotOffered}</Muted>
@@ -188,6 +190,9 @@ function Live(props: { conv: Conversation; courseId: string }) {
     <Scroll ref={(r) => (scroll = r)} style={{ flex: 1 }}>
       <View style={{ alignSelf: "center", gap: 16, maxWidth: 720, padding: 16, paddingBottom: 32, width: "100%" }}>
         <Text style={{ color: colors().ink, fontSize: 24, fontWeight: "700" }}>{tx(props.conv.title)}</Text>
+        <If when={phase() === "check"}>
+          <Illustration path={props.conv.illustration} />
+        </If>
         <Card>
           <Muted>{m().yourTask}</Muted>
           <Text style={{ color: colors().ink, fontSize: 15 }}>{tx(props.conv.task)}</Text>

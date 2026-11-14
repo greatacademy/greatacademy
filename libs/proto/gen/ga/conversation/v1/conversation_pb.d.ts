@@ -45,6 +45,14 @@ export declare type Conversation = Message<"ga.conversation.v1.Conversation"> & 
    * @generated from field: bool available = 5;
    */
   available: boolean;
+
+  /**
+   * illustration is the path of the conversation's scene from the site's root, without an extension: the picture is
+   * <illustration>.webp and its thumbnail <illustration>.thumb.webp. It is empty when there is none.
+   *
+   * @generated from field: string illustration = 6;
+   */
+  illustration: string;
 };
 
 /**
