@@ -16,10 +16,10 @@ Color illustrations make the cover of a reading unit and the scene of a conversa
 6. **A smaller file.** A generated PNG of that size is usually 2 to 3 MB. That is too much for a learner on a phone, and no wording in the image prompt makes it smaller. So once an image passes the review of §5, send this in the same chat, with `{name}` replaced by the file name of §6:
 
    ```text
-   Make a smaller copy of the last image for the web. Use Python with Pillow: resize it to 1200 × 800 pixels with LANCZOS, reduce it to 128 colors, and save it as an optimized PNG named {name}. If the file is larger than 500 KB, use 96 colors instead. Tell me the final size in KB and give me the file to download.
+   Make a smaller copy of the last image for the web. Use Python with Pillow: resize it to 1200 × 800 pixels with LANCZOS, reduce it to 96 colors, and save it as an optimized PNG named {name}. If the file is larger than 300 KB, use 64 colors instead. Tell me the final size in KB and give me the file to download.
    ```
 
-   Open the copy at full size and compare it with the original. If the colors band or the grain turns blotchy, ask again with 160 colors.
+   Open the copy at full size and compare it with the original. If the colors band or the grain turns blotchy, ask again with 128 colors, as long as the file stays within 300 KB.
 7. **Fixing an image.** Name the fault and what to keep: *Keep everything, but give the girl five fingers on each hand and remove the letters on the book spines.* Regenerate from the prompt when a fix makes it worse.
 
 ## 3. The Style Block
@@ -30,7 +30,7 @@ Paste this, unchanged, as the first message of every chat:
 Style for every image in this chat:
 Mid-century modern children's book illustration. Flat shapes with soft edges and no outlines.
 A warm, muted palette: mustard yellow, terracotta red, olive and teal green, dusty blue, warm cream and walnut brown, with deep navy for the darkest shadows.
-A subtle paper grain and a light printed texture over the whole image. Soft daylight, gentle long shadows, calm and friendly mood.
+A very fine, faint paper grain over the whole image. Soft daylight, gentle long shadows, calm and friendly mood.
 Simple, rounded figures with small dot eyes and simple faces; natural proportions for adults, slightly larger heads for children.
 People of many backgrounds, shown with respect and without stereotypes.
 Absolutely no text: no letters, words, numbers, logos or signs with writing anywhere, including book spines, posters, maps and screens. Where writing would appear, use plain color blocks or simple lines.
@@ -69,7 +69,7 @@ Every image is checked before it is used. Reject or fix one that has:
 
 ## 6. Prompts
 
-Each file is named `<kind>-<id>.png`, where `kind` is `reading` for the cover of a reading unit and `conversation` for the scene of a conversation, and `id` is the id in the content, so that it can be matched without a list. Save the smaller copy of §2 under that name: a PNG of 1200 × 800 pixels and at most 500 KB. Keep ChatGPT's original next to it as `<kind>-<id>.original.png`, in case the image is needed again at another size.
+Each file is named `<kind>-<id>.png`, where `kind` is `reading` for the cover of a reading unit and `conversation` for the scene of a conversation, and `id` is the id in the content, so that it can be matched without a list. Save the smaller copy of §2 under that name: a PNG of 1200 × 800 pixels and at most 300 KB. Keep ChatGPT's original next to it as `<kind>-<id>.original.png`, in case the image is needed again at another size.
 
 ### 6.1 Batch 1: Grade 3 Reading Units
 

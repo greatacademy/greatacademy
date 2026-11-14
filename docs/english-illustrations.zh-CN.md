@@ -16,10 +16,10 @@
 6. **缩小文件。** 这个尺寸生成的 PNG 通常有 2 到 3 MB。用手机学习的人下载这么大的文件太多了，而图片提示词怎么写都不能让它变小。所以图片通过 §5 的审核后，在同一个对话中发送下面这段，把 `{name}` 换成 §6 规定的文件名：
 
    ```text
-   Make a smaller copy of the last image for the web. Use Python with Pillow: resize it to 1200 × 800 pixels with LANCZOS, reduce it to 128 colors, and save it as an optimized PNG named {name}. If the file is larger than 500 KB, use 96 colors instead. Tell me the final size in KB and give me the file to download.
+   Make a smaller copy of the last image for the web. Use Python with Pillow: resize it to 1200 × 800 pixels with LANCZOS, reduce it to 96 colors, and save it as an optimized PNG named {name}. If the file is larger than 300 KB, use 64 colors instead. Tell me the final size in KB and give me the file to download.
    ```
 
-   以原尺寸打开缩小的副本，与原图对比。如果颜色出现色带，或颗粒变成斑块，就改用 160 色再要求一次。
+   以原尺寸打开缩小的副本，与原图对比。如果颜色出现色带，或颗粒变成斑块，就改用 128 色再要求一次，前提是文件不超过 300 KB。
 7. **修改图片。** 说明问题所在和要保留的部分：*Keep everything, but give the girl five fingers on each hand and remove the letters on the book spines.* 如果越改越差，就用原提示词重新生成。
 
 ## 3. 风格块
@@ -30,7 +30,7 @@
 Style for every image in this chat:
 Mid-century modern children's book illustration. Flat shapes with soft edges and no outlines.
 A warm, muted palette: mustard yellow, terracotta red, olive and teal green, dusty blue, warm cream and walnut brown, with deep navy for the darkest shadows.
-A subtle paper grain and a light printed texture over the whole image. Soft daylight, gentle long shadows, calm and friendly mood.
+A very fine, faint paper grain over the whole image. Soft daylight, gentle long shadows, calm and friendly mood.
 Simple, rounded figures with small dot eyes and simple faces; natural proportions for adults, slightly larger heads for children.
 People of many backgrounds, shown with respect and without stereotypes.
 Absolutely no text: no letters, words, numbers, logos or signs with writing anywhere, including book spines, posters, maps and screens. Where writing would appear, use plain color blocks or simple lines.
@@ -69,7 +69,7 @@ Character sheet in the style above, on a plain cream background, each character 
 
 ## 6. 提示词
 
-每个文件命名为 `<kind>-<id>.png`：阅读单元封面的 `kind` 是 `reading`，对话场景的 `kind` 是 `conversation`，`id` 是内容中的 id，这样无需清单就能对应。用这个文件名保存 §2 中缩小的副本：1200 × 800 像素、不超过 500 KB 的 PNG。ChatGPT 的原图以 `<kind>-<id>.original.png` 保存在旁边，以备日后需要其他尺寸。
+每个文件命名为 `<kind>-<id>.png`：阅读单元封面的 `kind` 是 `reading`，对话场景的 `kind` 是 `conversation`，`id` 是内容中的 id，这样无需清单就能对应。用这个文件名保存 §2 中缩小的副本：1200 × 800 像素、不超过 300 KB 的 PNG。ChatGPT 的原图以 `<kind>-<id>.original.png` 保存在旁边，以备日后需要其他尺寸。
 
 ### 6.1 第一批：三年级阅读单元
 
