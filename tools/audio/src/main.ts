@@ -40,6 +40,16 @@ for (const id of values.unit ?? []) if (!known.has(id)) throw new Error(`unknown
 const jobs = plan(units, values.all ? "all" : new Set(values.unit), madeNow(), values.limit ? Number(values.limit) : Infinity);
 console.log(`${jobs.length} recordings to make`);
 
+/** Stop is an error after which no further recording is tried. */
+class Stop extends Error {}
+
+/** list writes the recordings made so far to recordings.ts, so that a run cut short keeps what it made. */
+const list = () => {
+  const listed = current(units, madeNow());
+  writeFileSync(listFile, recordingsModule(listed));
+  return listed;
+};
+
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function make(job: Job): Promise<void> {
@@ -63,7 +73,10 @@ async function make(job: Job): Promise<void> {
       return;
     }
     const retry = res.status === 429 || res.status >= 500;
-    if (!retry || attempt >= TRIES) throw new Error(`${job.passage}: ${res.status} ${(await res.text()).slice(0, 200)}`);
+    const message = `${job.passage}: ${res.status} ${(await res.text()).slice(0, 200)}`;
+    // A rejected key or a used-up quota fails every recording alike, so the run stops instead of trying the rest.
+    if (res.status === 401 || res.status === 403) throw new Stop(message);
+    if (!retry || attempt >= TRIES) throw new Error(message);
     await wait(Number(res.headers.get("retry-after") ?? 0) * 1000 || 2 ** attempt * 1000);
   }
 }
@@ -78,16 +91,19 @@ await Promise.all(
       try {
         await make(job);
         done++;
-        if (done % 25 === 0 || done === jobs.length) console.log(`${done}/${jobs.length}`);
+        if (done % 25 === 0 || done === jobs.length) {
+          list();
+          console.log(`${done}/${jobs.length}`);
+        }
       } catch (e) {
         failures.push(String(e instanceof Error ? e.message : e));
+        if (e instanceof Stop) next = jobs.length;
       }
     }
   }),
 );
 
-const listed = current(units, madeNow());
-writeFileSync(listFile, recordingsModule(listed));
+const listed = list();
 console.log(`${listed.length} recordings listed in content/english/src/recordings.ts`);
 if (failures.length > 0) {
   for (const f of failures) console.error(f);
