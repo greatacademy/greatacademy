@@ -1,6 +1,6 @@
-// Phonics: line drawings of the words a young reader decodes, one per word: short-vowel words, then words with a
-// digraph. Each is an SVG drawn in currentColor with no words in it, so a child must read the word to match it; only
-// the numbers 6 and 10 are written.
+// Phonics: line drawings of the words a young reader decodes, one per word: short-vowel words, words with a digraph
+// and words with a consonant blend. Each is an SVG drawn in currentColor with no words in it, so a child must read the
+// word to match it; only the numbers 6 and 10 are written.
 
 import { type Figure, type Text, t } from "@ga/content";
 
@@ -383,6 +383,159 @@ const digraphDrawings: Record<string, readonly [body: string, en: string, zh: st
   ],
 };
 
+const blendDrawings: Record<string, readonly [body: string, en: string, zh: string]> = {
+  frog: [
+    `<path d="M20 70 Q16 46 34 38 Q50 32 66 38 Q84 46 80 70 Q50 82 20 70 Z"/><circle cx="35" cy="32" r="9"/><circle cx="65" cy="32" r="9"/>${dot(35, 32, 3.5)}${dot(65, 32, 3.5)}<path d="M32 54 Q50 64 68 54 M20 70 Q8 74 8 86 L28 86 M80 70 Q92 74 92 86 L72 86"/><path ${accent} d="M34 72 Q50 78 66 72"/>`,
+    "A frog.",
+    "一只青蛙。",
+  ],
+  crab: [
+    `<ellipse ${accent} cx="50" cy="60" rx="24" ry="14"/><path d="M42 47 L40 34 M58 47 L60 34"/>${dot(40, 32, 3.5)}${dot(60, 32, 3.5)}<path d="M28 54 Q16 48 18 36 M72 54 Q84 48 82 36 M18 36 Q6 30 10 18 L20 26 L18 14 Q28 22 18 36 Z M82 36 Q94 30 90 18 L80 26 L82 14 Q72 22 82 36 Z M30 66 L14 72 M32 70 L18 82 M70 66 L86 72 M68 70 L82 82"/>`,
+    "A crab with big claws.",
+    "一只有大钳子的螃蟹。",
+  ],
+  drum: [
+    `<ellipse cx="50" cy="44" rx="30" ry="9"/><path d="M20 44 L20 78 Q50 92 80 78 L80 44"/><path ${accent} d="M20 50 L32 82 L44 52 L56 84 L68 52 L80 80"/><path d="M38 34 L18 10 M62 34 L82 10"/>${dot(17, 9, 4)}${dot(83, 9, 4)}`,
+    "A drum with two sticks.",
+    "一面鼓和两根鼓槌。",
+  ],
+  flag: [
+    `<path d="M24 94 L24 10 M14 94 L36 94"/>${dot(24, 8, 4)}<path ${accent} d="M24 16 Q42 8 58 16 Q74 24 90 16 L90 50 Q74 58 58 50 Q42 42 24 50 Z"/>`,
+    "A flag on a pole.",
+    "旗杆上的一面旗。",
+  ],
+  sled: [
+    `<path d="M8 72 L80 72 Q94 72 92 58 M22 72 L22 60 M68 72 L68 60"/><rect ${accent} x="14" y="50" width="64" height="10" rx="3"/><path d="M14 55 Q6 50 4 40"/><path d="M4 84 Q30 78 50 84 Q70 90 96 84"/>`,
+    "A sled on the snow.",
+    "雪地上的一架雪橇。",
+  ],
+  plug: [
+    `<rect x="30" y="38" width="40" height="34" rx="6"/><path d="M40 38 L40 18 M60 38 L60 18" stroke-width="6"/><path d="M50 72 L50 80 Q50 94 70 92 Q88 90 92 78"/><path ${accent} d="M38 54 L62 54"/>`,
+    "An electric plug.",
+    "一个电源插头。",
+  ],
+  plum: [
+    `<circle ${accent} cx="50" cy="60" r="28"/><path d="M50 34 Q40 60 50 88 M50 33 L54 16"/><path d="M54 20 Q66 8 80 16 Q68 28 54 20 Z"/>`,
+    "A plum with a leaf.",
+    "一个带叶子的李子。",
+  ],
+  clam: [
+    `<path d="M12 62 Q50 96 88 62 Z"/><path d="M12 58 Q14 22 50 18 Q84 18 88 46 Z M30 54 Q32 34 46 24 M50 52 Q56 34 66 24"/><circle ${accent} cx="56" cy="66" r="6"/>`,
+    "A clam open with a pearl inside.",
+    "一只张开的蛤蜊，里面有一颗珍珠。",
+  ],
+  slug: [
+    `<path d="M8 80 Q10 64 36 64 L66 62 Q80 60 84 48 Q88 40 92 52 Q94 76 66 80 Z"/><path d="M82 50 L76 34 M88 47 L92 32"/>${dot(76, 32, 3)}${dot(92, 30, 3)}<path ${accent} d="M6 88 L60 88" stroke-dasharray="3 6"/>`,
+    "A slug leaving a trail.",
+    "一只留下黏痕的鼻涕虫。",
+  ],
+  twig: [
+    `<path d="M10 82 L90 28 M38 64 L40 44 M58 50 L76 52 M70 40 L68 26"/><ellipse ${accent} cx="40" cy="38" rx="5" ry="8" transform="rotate(-20 40 38)"/><ellipse ${accent} cx="82" cy="54" rx="5" ry="8" transform="rotate(70 82 54)"/><ellipse ${accent} cx="66" cy="20" rx="5" ry="8" transform="rotate(-10 66 20)"/>`,
+    "A twig with three leaves.",
+    "一根长着三片叶子的小树枝。",
+  ],
+  crib: [
+    `<path d="M14 28 L14 88 M86 28 L86 88 M14 38 L86 38 M14 74 L86 74 M26 38 L26 74 M38 38 L38 74 M50 38 L50 74 M62 38 L62 74 M74 38 L74 74"/>${dot(14, 26, 4)}${dot(86, 26, 4)}<path ${accent} d="M30 14 L70 14 M38 14 L38 22 M50 14 L50 24 M62 14 L62 22"/><circle cx="38" cy="25" r="3"/><circle cx="50" cy="27" r="3"/><circle cx="62" cy="25" r="3"/>`,
+    "A baby's crib with a toy hanging above.",
+    "一张婴儿床，上方挂着玩具。",
+  ],
+  dress: [
+    `<path d="M38 16 L62 16 L64 38 L82 90 L18 90 L36 38 Z M40 16 L38 6 M60 16 L62 6"/><path ${accent} d="M35 40 L65 40" stroke-width="6"/><path d="M30 76 Q50 82 70 76"/>`,
+    "A dress.",
+    "一条连衣裙。",
+  ],
+  glass: [
+    `<path d="M28 12 L72 12 L64 90 L36 90 Z"/><path ${accent} d="M31 40 Q40 34 50 40 Q60 46 69 40"/><circle cx="44" cy="62" r="3"/><circle cx="56" cy="72" r="2.5"/><circle cx="50" cy="52" r="2"/>`,
+    "A glass of water.",
+    "一杯水。",
+  ],
+  cliff: [
+    `<path d="M4 22 L46 22 L52 38 L46 52 L54 66 L50 94 L4 94"/><path d="M46 52 L36 46 M52 38 L40 34"/><path ${accent} d="${waves(80)}"/><path d="M70 30 Q75 25 80 30 Q85 25 90 30"/>`,
+    "A tall cliff above the sea.",
+    "海边高高的悬崖。",
+  ],
+  stamp: [
+    `<rect x="20" y="16" width="60" height="68"/>${[24, 32, 40, 48, 56, 64, 72, 80].map((y) => `${dot(20, y, 2.5)}${dot(80, y, 2.5)}`).join("")}${[28, 36, 44, 52, 60, 68, 76].map((x) => `${dot(x, 16, 2.5)}${dot(x, 84, 2.5)}`).join("")}<rect x="30" y="26" width="40" height="48"/><path ${accent} d="M32 70 L46 48 L54 60 L60 52 L68 70"/><circle cx="60" cy="36" r="4"/>`,
+    "A postage stamp.",
+    "一张邮票。",
+  ],
+  nest: [
+    `<path d="M10 58 Q50 98 90 58 M14 60 L86 72 M16 72 L84 60 M24 80 L76 64 M28 64 L72 84"/><ellipse ${accent} cx="36" cy="52" rx="9" ry="11"/><ellipse ${accent} cx="52" cy="50" rx="9" ry="11"/><ellipse ${accent} cx="67" cy="53" rx="9" ry="11"/>`,
+    "A nest with three eggs.",
+    "一个有三枚蛋的鸟窝。",
+  ],
+  tent: [
+    `<path d="M8 84 L50 18 L92 84 Z M50 18 L50 10"/><path ${accent} d="M50 18 L38 84 M50 18 L62 84 M38 84 Q50 64 62 84"/><path d="M8 84 L2 92 M92 84 L98 92 M2 94 L98 94"/>`,
+    "A tent.",
+    "一顶帐篷。",
+  ],
+  hand: [
+    `<path d="M30 94 L30 60 L18 44 Q14 36 22 36 L34 50 L34 20 Q34 13 40 13 Q46 13 46 20 L46 44 L46 12 Q46 5 52 5 Q58 5 58 12 L58 44 L58 16 Q58 9 64 9 Q70 9 70 16 L70 48 L70 30 Q70 23 76 23 Q82 23 82 30 L82 64 Q82 94 58 94 Z"/>`,
+    "An open hand.",
+    "一只张开的手。",
+  ],
+  lamp: [
+    `<path ${accent} d="M30 16 L70 16 L82 46 L18 46 Z"/><path d="M50 46 L50 82 M30 88 L70 88 L66 82 L34 82 Z M60 46 L60 58"/>${dot(60, 60, 3)}`,
+    "A table lamp.",
+    "一盏台灯。",
+  ],
+  pond: [
+    `<ellipse cx="50" cy="66" rx="42" ry="20"/><path d="M28 64 Q34 60 40 64 M56 74 Q62 70 68 74"/><path ${accent} d="M66 58 A9 5 0 1 1 74 62 L66 58 Z"/><path d="M14 54 L12 14 M22 54 L24 22"/><rect x="9" y="16" width="6" height="16" rx="3"/><rect x="21" y="24" width="6" height="16" rx="3"/>`,
+    "A pond with reeds and a lily pad.",
+    "一个长着芦苇和睡莲叶的池塘。",
+  ],
+  desk: [
+    `<rect x="8" y="40" width="84" height="8"/><path d="M14 48 L14 90 M86 48 L86 90"/><rect x="56" y="48" width="30" height="20"/><path ${accent} d="M66 58 L76 58"/><rect x="22" y="24" width="20" height="16"/><path d="M32 24 L28 10 L36 10 Z"/>`,
+    "A desk with a drawer and a pencil pot.",
+    "一张有抽屉和笔筒的书桌。",
+  ],
+  milk: [
+    `<path d="M24 34 L56 34 L56 92 L24 92 Z M24 34 L32 16 L64 16 L56 34 M64 16 L76 30 L76 84 L56 92 M32 16 L36 8 L64 8 L64 16"/><path ${accent} d="M30 56 Q36 48 42 56 Q48 64 50 56 L50 80 L30 80 Z"/>`,
+    "A carton of milk.",
+    "一盒牛奶。",
+  ],
+  belt: [
+    `<rect x="6" y="40" width="88" height="18" rx="3"/><rect ${accent} x="14" y="34" width="20" height="30" rx="3"/><path d="M24 49 L40 49"/>${dot(56, 49, 2.5)}${dot(66, 49, 2.5)}${dot(76, 49, 2.5)}`,
+    "A belt with a buckle.",
+    "一条带扣的腰带。",
+  ],
+  gift: [
+    `<rect x="16" y="40" width="68" height="50"/><rect x="12" y="30" width="76" height="12"/><path ${accent} d="M50 30 L50 90 M50 30 Q34 10 26 20 Q22 30 50 30 Q66 10 74 20 Q78 30 50 30"/>`,
+    "A gift with a bow.",
+    "一个系着蝴蝶结的礼物。",
+  ],
+  raft: [
+    `<path d="M8 66 L92 66 L88 80 L12 80 Z M30 66 L28 80 M50 66 L50 80 M70 66 L72 80"/><path ${accent} d="M18 72 L82 72"/><path d="M60 66 L76 26 M72 30 Q82 20 86 30 Q82 38 76 34"/><path d="${waves(90)}"/>`,
+    "A log raft with a paddle, on the water.",
+    "水面上的一只木筏，上面有一支桨。",
+  ],
+  mask: [
+    `<path d="M10 44 Q12 30 30 32 Q44 34 50 42 Q56 34 70 32 Q88 30 90 44 Q92 66 70 64 Q56 62 50 52 Q44 62 30 64 Q8 66 10 44 Z"/><ellipse ${accent} cx="30" cy="47" rx="9" ry="6"/><ellipse ${accent} cx="70" cy="47" rx="9" ry="6"/><path d="M10 44 L4 36 M90 44 L96 36"/>`,
+    "A mask for the eyes.",
+    "一个遮住眼睛的面具。",
+  ],
+  vest: [
+    `<path d="M30 10 L50 46 L70 10 L84 22 L80 90 L20 90 L16 22 Z M50 46 L50 90"/>${dot(56, 56, 2.5)}${dot(56, 68, 2.5)}${dot(56, 80, 2.5)}<path ${accent} d="M26 66 L40 66 M60 66 L74 66"/>`,
+    "A vest with buttons.",
+    "一件有扣子的背心。",
+  ],
+  ant: [
+    `<circle cx="22" cy="54" r="10"/><ellipse cx="44" cy="56" rx="10" ry="8"/><ellipse ${accent} cx="72" cy="56" rx="16" ry="12"/><path d="M18 45 L10 30 M24 44 L28 28 M40 62 L30 80 M44 63 L44 82 M48 62 L58 80 M40 50 L32 36 M48 50 L58 36"/>${dot(18, 52, 2)}`,
+    "An ant.",
+    "一只蚂蚁。",
+  ],
+  pump: [
+    `<rect x="40" y="30" width="20" height="56" rx="3"/><path d="M50 30 L50 14 M34 14 L66 14" stroke-width="6"/><path d="M30 90 L70 90 M40 86 L36 90 M60 86 L64 90"/><path ${accent} d="M60 74 Q84 74 84 56 Q84 40 72 40"/>`,
+    "A pump for blowing up tyres.",
+    "一个给轮胎打气的打气筒。",
+  ],
+  plant: [
+    `<path ${accent} d="M30 62 L70 62 L64 92 L36 92 Z"/><path d="M50 62 L50 30 M50 46 Q30 44 24 28 Q42 26 50 46 M50 36 Q70 34 76 18 Q58 16 50 36 M50 30 Q44 16 50 6 Q56 16 50 30"/>`,
+    "A plant in a pot.",
+    "一盆植物。",
+  ],
+};
+
 /** pictureWords are the words that have a picture, grouped by their short vowel. */
 export const pictureWords: Record<"a" | "e" | "i" | "o" | "u", readonly string[]> = {
   a: ["cat", "hat", "cap", "map", "fan", "van", "pan", "bag", "can", "rat"],
@@ -403,12 +556,21 @@ export const digraphPictureWords: Record<"sh" | "ch" | "th" | "ck", readonly str
   ck: ["duck", "sock", "rock", "lock", "neck", "sack", "tick", "clock", "truck", "brick", "kick"],
 };
 
+/** blendPictureWords are the words with a consonant blend that have a picture, by where the blend stands. */
+export const blendPictureWords: Record<"start" | "end", readonly string[]> = {
+  start: ["frog", "crab", "drum", "flag", "sled", "plug", "plum", "clam", "slug", "twig", "crib", "dress", "glass", "cliff", "stamp"],
+  end: ["nest", "tent", "hand", "lamp", "pond", "desk", "milk", "belt", "gift", "raft", "mask", "vest", "ant", "pump", "plant"],
+};
+
+/** allBlendPictureWords are the words with a consonant blend that have a picture, blends at the start first. */
+export const allBlendPictureWords: readonly string[] = Object.values(blendPictureWords).flat();
+
 /** allDigraphPictureWords are the words with a digraph that have a picture, in the order of the digraphs. */
 export const allDigraphPictureWords: readonly string[] = Object.values(digraphPictureWords).flat();
 
 /** picture is the drawing of a word, with what it shows for screen readers. */
 export function picture(word: string): Figure {
-  const drawn = drawings[word] ?? digraphDrawings[word];
+  const drawn = drawings[word] ?? digraphDrawings[word] ?? blendDrawings[word];
   if (!drawn) throw new Error(`no picture of ${word}`);
   const [body, en, zh] = drawn;
   return { svg: svg(body), alt: t(en, zh) };
@@ -419,8 +581,11 @@ export function pictureName(word: string): Text {
   return picture(word).alt;
 }
 
-for (const word of [...allPictureWords, ...allDigraphPictureWords]) picture(word);
+for (const word of [...allPictureWords, ...allDigraphPictureWords, ...allBlendPictureWords]) picture(word);
 for (const word of Object.keys(drawings)) if (!allPictureWords.includes(word)) throw new Error(`picture of ${word} is in no list`);
+for (const word of Object.keys(blendDrawings)) {
+  if (!allBlendPictureWords.includes(word)) throw new Error(`picture of ${word} is in no list`);
+}
 for (const word of Object.keys(digraphDrawings)) {
   if (!allDigraphPictureWords.includes(word)) throw new Error(`picture of ${word} is in no list`);
 }
