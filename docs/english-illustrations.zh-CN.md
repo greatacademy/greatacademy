@@ -24,6 +24,8 @@
 
 要求横版 1536 × 1024。如果工具接受参考图，凡是提到角色的场景都传入 `content/english/illustrations/originals/characters.png`，本批第一张通过审核的场景也传给之后的每一张，并加上：*Keep the characters exactly as in the reference sheet, and match the style, palette and grain of the reference scene.*
 
+只有场景点名的角色才能像角色表中的人。场景中的其他人物在场景里另行描述，不能与任何固定角色有相同的面孔、发型或服装：图书管理员不是换了个房间的 Ms. Rivera。
+
 不要增删或改写提示词。如果一张图在 §5 的同一点上反复不合格，可以加一句点明问题的话，比如 *The girl has five fingers on each hand.*
 
 ## 3. 风格块
@@ -180,7 +182,7 @@ one tree shown through four seasons in a single landscape, left to right: blosso
 `conversation-library-help-desk.png`
 
 ```text
-a bright school library with tall wooden bookshelves and a large arched window onto green trees. Amara stands at the wooden help desk asking a question, and a friendly librarian in a mustard cardigan leans forward to listen, a small stack of books on the desk between them. A few readers sit at tables in the background. All book spines are plain color blocks. No text anywhere.
+a bright school library with tall wooden bookshelves and a large arched window onto green trees. Amara stands at the wooden help desk asking a question, and a friendly librarian, a tall woman in her fifties with short curly grey hair and a dark green dress, leans forward to listen, a small stack of books on the desk between them. A few adult readers, none of them from the character sheet, sit at tables in the background. All book spines are plain color blocks. No text anywhere.
 ```
 
 `conversation-fable-for-a-younger-cousin.png`
@@ -192,13 +194,13 @@ a living room at bedtime. Mia sits on a sofa telling a story to her younger cous
 `conversation-garden-center-plant-advice.png`
 
 ```text
-a garden center greenhouse full of potted plants on wooden tables. Leo holds a small potted plant and asks a question, while a gardener in a green apron and gloves kneels to his height and points at the plant's leaves and soil. Bags of soil, watering cans and hanging plants around them. Price tags are blank. No text anywhere.
+a garden center greenhouse full of potted plants on wooden tables. Leo holds a small potted plant and asks a question, while a gardener, an older man with a white moustache in a green apron and gloves, kneels to his height and points at the plant's leaves and soil. Bags of soil, watering cans and hanging plants around them. Price tags are blank. No text anywhere.
 ```
 
 `conversation-zookeeper-interview.png`
 
 ```text
-at a zoo, beside a wide open enclosure where two giraffes eat leaves from a tall tree. Amara holds a notebook with blank pages and asks a question, and a zookeeper in an olive uniform and hat answers, holding a bucket of food. A low wooden fence and grass in front. Signs are blank boards. No text anywhere.
+at a zoo, beside a wide open enclosure where two giraffes eat leaves from a tall tree. Amara holds a notebook with blank pages and asks a question, and a zookeeper, a young woman with a short blonde ponytail in a khaki uniform and hat, answers, holding a bucket of food. A low wooden fence and grass in front. Signs are blank boards. No text anywhere.
 ```
 
 `conversation-hiking-trip-weather-check.png`
@@ -210,19 +212,19 @@ the start of a mountain trail on a cool morning. Mr. Okafor and Leo, both in hik
 `conversation-lost-visitor-directions.png`
 
 ```text
-a small town square with a fountain, a clock tower, a bakery and a park gate. A tourist with a rolling suitcase and a paper map with no writing looks puzzled, while Mia points down a street to the left. Shop signs are plain shapes, such as a loaf of bread, without words. No text or numbers anywhere, including the clock face, which has only marks.
+a small town square with a fountain, a clock tower, a bakery and a park gate. A tourist, a tall man with a grey ponytail and a red backpack, holds a rolling suitcase and a paper map with no writing and looks puzzled, while Mia points down a street to the left. Shop signs are plain shapes, such as a loaf of bread, without words. No text or numbers anywhere, including the clock face, which has only marks.
 ```
 
 `conversation-egyptian-gallery-guide.png`
 
 ```text
-a calm museum gallery of ancient Egypt. A painted wooden coffin stands in a glass case, with a stone statue of a seated pharaoh and small clay pots on plinths. A museum guide in a dusty blue blazer gestures toward the coffin while Leo and Amara listen. Walls are decorated with simple patterns only, no hieroglyphs or writing. No text anywhere.
+a calm museum gallery of ancient Egypt. A painted wooden coffin stands in a glass case, with a stone statue of a seated pharaoh and small clay pots on plinths. A museum guide, a young man with curly red hair and a cream sweater, gestures toward the coffin while Leo and Amara listen. Walls are decorated with simple patterns only, no hieroglyphs or writing. No text anywhere.
 ```
 
 `conversation-great-wall-guide.png`
 
 ```text
-the Great Wall of China winding over green mountain ridges in autumn, with square stone watchtowers along it and battlements on its edges. On the wall in front, a tour guide in a walnut brown jacket points toward a watchtower while Leo and Grandpa Wei look out over the hills. Clear sky. No text anywhere.
+the Great Wall of China winding over green mountain ridges in autumn, with square stone watchtowers along it and battlements on its edges. On the wall in front, a tour guide, a young woman with a long black braid and a red windbreaker, points toward a watchtower while Leo and Grandpa Wei look out over the hills. Clear sky. No text anywhere.
 ```
 
 `conversation-toy-car-ramp-test.png`
@@ -234,7 +236,7 @@ a living room floor. Leo kneels beside a ramp made of a wooden board propped on 
 `conversation-music-shop-first-instrument.png`
 
 ```text
-a cozy music shop with guitars and ukuleles hanging on the wall, a cello in the corner and a row of small keyboards. Mia holds a ukulele and looks at it closely, while a shop worker with curly hair shows her how to strum. No musical notes, price tags with writing or brand names. No text anywhere.
+a cozy music shop with guitars and ukuleles hanging on the wall, a cello in the corner and a row of small keyboards. Mia holds a ukulele and looks at it closely, while a shop worker, a young man with curly blond hair and a teal T-shirt, shows her how to strum. No musical notes, price tags with writing or brand names. No text anywhere.
 ```
 
 `conversation-poem-for-a-grandparent.png`
