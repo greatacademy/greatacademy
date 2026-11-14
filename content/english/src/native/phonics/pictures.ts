@@ -1,6 +1,6 @@
 // Phonics: line drawings of the words a young reader decodes, one per word: short-vowel words, words with a digraph,
-// words with a consonant blend and words with a silent e. Each is an SVG drawn in currentColor with no words in it,
-// so a child must read the word to match it; only the numbers 6 and 10 are written.
+// a consonant blend, a silent e or a vowel team. Each is an SVG drawn in currentColor with no words in it, so a child
+// must read the word to match it; only the numbers 6 and 10 are written.
 
 import { type Figure, type Text, t } from "@ga/content";
 
@@ -689,6 +689,159 @@ const silentEDrawings: Record<string, readonly [body: string, en: string, zh: st
   ],
 };
 
+const vowelTeamDrawings: Record<string, readonly [body: string, en: string, zh: string]> = {
+  bee: [
+    `<ellipse ${accent} cx="50" cy="60" rx="24" ry="16"/><path d="M42 45 L42 75 M54 44 L54 76 M74 60 L86 60"/><circle cx="24" cy="58" r="8"/>${dot(21, 56, 2)}<path d="M22 50 L16 40 M27 50 L30 40"/><path d="M44 44 Q30 18 44 14 Q56 16 52 42 M54 44 Q62 16 76 22 Q84 30 60 46"/>`,
+    "A bee.",
+    "一只蜜蜂。",
+  ],
+  feet: [
+    `<path d="M16 88 Q12 66 18 46 Q22 34 32 36 Q42 40 40 56 Q38 72 42 86 Q34 94 16 88 Z M58 88 Q54 66 60 46 Q64 34 74 36 Q84 40 82 56 Q80 72 84 86 Q76 94 58 88 Z"/><g ${accent}><circle cx="21" cy="32" r="4"/><circle cx="30" cy="29" r="3.5"/><circle cx="38" cy="32" r="3"/><circle cx="63" cy="32" r="4"/><circle cx="72" cy="29" r="3.5"/><circle cx="80" cy="32" r="3"/></g>`,
+    "Two bare feet.",
+    "一双光脚。",
+  ],
+  seed: [
+    `<path d="M4 72 L96 72"/><ellipse ${accent} cx="50" cy="84" rx="10" ry="6" fill="currentColor"/><path d="M50 78 L50 46 M50 56 Q34 50 30 36 Q46 36 50 56 M50 48 Q66 40 70 28 Q54 28 50 48"/>`,
+    "A seed in the soil, sprouting.",
+    "土里一颗正在发芽的种子。",
+  ],
+  tree: [
+    `<path d="M44 92 L46 60 L36 50 M46 60 L56 52 M56 92 L54 60"/><path ${accent} d="M50 8 Q30 8 28 26 Q12 30 16 46 Q14 62 34 60 Q44 68 56 60 Q80 64 84 46 Q90 30 72 26 Q70 8 50 8 Z"/><path d="M30 92 L70 92"/>`,
+    "A tree.",
+    "一棵树。",
+  ],
+  sheep: [
+    `<path d="M22 56 Q14 52 18 42 Q16 30 30 30 Q36 20 50 24 Q62 18 70 28 Q84 28 82 42 Q88 52 78 58 Q74 68 60 64 Q50 70 40 64 Q26 68 22 56 Z"/><path ${accent} d="M80 38 Q94 36 94 48 Q94 58 84 56" fill="currentColor"/><path d="M32 64 L32 86 M44 66 L44 86 M58 66 L58 86 M70 62 L70 86"/>`,
+    "A sheep with a woolly coat.",
+    "一只毛茸茸的绵羊。",
+  ],
+  queen: [
+    `<path ${accent} d="M30 30 L34 10 L42 22 L50 8 L58 22 L66 10 L70 30 Z"/><circle cx="50" cy="48" r="16"/>${dot(44, 46, 2)}${dot(56, 46, 2)}<path d="M44 54 Q50 58 56 54 M34 64 L22 94 L78 94 L66 64 Q50 72 34 64"/>`,
+    "A queen with a crown.",
+    "一位戴着王冠的女王。",
+  ],
+  wheel: [
+    `<circle cx="50" cy="50" r="38"/><circle cx="50" cy="50" r="30"/><circle ${accent} cx="50" cy="50" r="7"/><path d="${spokes(50, 50, 8, 30, 8)}"/>`,
+    "A wheel with spokes.",
+    "一个有辐条的轮子。",
+  ],
+  teeth: [
+    `<path d="M10 50 Q50 10 90 50 Q50 90 10 50 Z"/><path ${accent} d="M18 46 L82 46 M18 54 L82 54"/><path d="M28 39 L28 46 M40 34 L40 46 M50 32 L50 46 M60 34 L60 46 M72 39 L72 46 M28 54 L28 61 M40 54 L40 66 M50 54 L50 68 M60 54 L60 66 M72 54 L72 61"/>`,
+    "Teeth in a smile.",
+    "笑着露出的牙齿。",
+  ],
+  leaf: [
+    `<path ${accent} d="M16 84 Q14 30 84 14 Q88 70 16 84 Z"/><path d="M16 84 L72 28 M36 64 L34 44 M36 64 L58 62 M52 48 L52 30 M52 48 L70 46 M16 84 L8 92"/>`,
+    "A leaf.",
+    "一片叶子。",
+  ],
+  seal: [
+    `<path d="M8 78 Q6 66 22 64 L56 62 Q64 60 66 48 Q68 36 80 36 Q92 38 90 50 Q88 58 80 60 Q74 78 50 80 Z"/>${dot(80, 44, 2.5)}<path d="M90 50 L96 50 M44 80 L36 92 L54 88 M8 78 L2 70 M8 78 L2 86 M84 52 L94 56 M84 54 L92 60"/><circle ${accent} cx="88" cy="20" r="8"/>`,
+    "A seal with a ball above its nose.",
+    "一只鼻子上方顶着球的海豹。",
+  ],
+  peach: [
+    `<path ${accent} d="M50 30 Q22 22 18 52 Q18 86 50 88 Q82 86 82 52 Q78 22 50 30 Z"/><path d="M50 30 Q42 56 50 86 M50 30 L52 18 M52 20 Q64 8 76 14 Q66 26 52 20 Z"/>`,
+    "A peach.",
+    "一个桃子。",
+  ],
+  bead: [
+    `<path d="M4 50 L96 50" stroke-width="1.5"/><ellipse cx="18" cy="50" rx="9" ry="10"/><ellipse ${accent} cx="50" cy="50" rx="13" ry="14"/><ellipse cx="82" cy="50" rx="9" ry="10"/><circle cx="50" cy="50" r="3"/>`,
+    "Beads on a string.",
+    "穿在线上的珠子。",
+  ],
+  rain: [
+    `<path d="M24 42 Q10 42 12 30 Q14 18 28 22 Q34 8 50 12 Q64 8 70 20 Q86 18 88 32 Q88 44 74 42 Z"/><path ${accent} d="M26 54 L22 66 M44 52 L40 64 M62 54 L58 66 M80 52 L76 64 M34 74 L30 86 M52 72 L48 84 M70 74 L66 86"/>`,
+    "Rain falling from a cloud.",
+    "从云里落下的雨。",
+  ],
+  snail: [
+    `<path ${accent} d="M58 70 Q30 72 30 46 Q30 22 54 22 Q76 24 74 46 Q72 62 54 60 Q40 58 42 46 Q44 36 54 38 Q62 40 60 48"/><path d="M8 72 L86 72 Q92 72 90 62 L82 50 M82 50 L78 38 M86 54 L92 42"/>${dot(78, 36, 2.5)}${dot(92, 40, 2.5)}`,
+    "A snail with a spiral shell.",
+    "一只背着螺旋壳的蜗牛。",
+  ],
+  mail: [
+    `<rect x="12" y="26" width="76" height="50" rx="3"/><path ${accent} d="M12 28 L50 56 L88 28"/><path d="M12 74 L40 50 M88 74 L60 50"/><rect x="70" y="32" width="12" height="12"/>`,
+    "A letter in the mail.",
+    "一封邮件。",
+  ],
+  nail: [
+    `<path d="M24 22 L76 22 M50 22 L50 82 L46 74 M50 82 L54 74" stroke-width="4"/><path ${accent} d="M28 16 L72 16 L72 24 L28 24 Z"/><path d="M50 82 L50 90"/>`,
+    "A nail.",
+    "一根钉子。",
+  ],
+  train: [
+    `<rect x="54" y="38" width="38" height="40"/><rect x="62" y="46" width="14" height="12"/><path d="M8 50 L54 50 L54 78 L8 78 Z M20 50 L20 34 L30 34 L30 50 M8 44 L8 50"/><path ${accent} d="M18 30 Q14 22 20 18 Q16 10 26 8"/><circle cx="20" cy="84" r="6"/><circle cx="40" cy="84" r="6"/><circle cx="64" cy="84" r="6"/><circle cx="84" cy="84" r="6"/><path d="M2 92 L98 92"/>`,
+    "A train.",
+    "一列火车。",
+  ],
+  paint: [
+    `<path d="M24 40 L76 40 L72 90 L28 90 Z"/><path ${accent} d="M24 40 L76 40 L75 52 Q62 60 58 52 Q54 64 46 52 Q38 60 25 52 Z"/><path d="M24 40 Q50 4 76 40"/><path d="M84 8 L66 40 M84 8 L92 12 L74 44 L66 40"/>`,
+    "A can of paint with a brush.",
+    "一罐油漆和一把刷子。",
+  ],
+  chain: [
+    `<ellipse cx="18" cy="50" rx="13" ry="8"/><ellipse ${accent} cx="34" cy="50" rx="8" ry="13"/><ellipse cx="50" cy="50" rx="13" ry="8"/><ellipse ${accent} cx="66" cy="50" rx="8" ry="13"/><ellipse cx="82" cy="50" rx="13" ry="8"/>`,
+    "A chain.",
+    "一条链子。",
+  ],
+  sail: [
+    `<path d="M50 8 L50 74"/><path ${accent} d="M54 12 L86 66 L54 66 Z"/><path d="M46 20 L20 66 L46 66 Z M14 74 L86 74 L76 86 L24 86 Z"/><path d="M4 92 Q27 86 50 92 Q73 98 96 92"/>`,
+    "A sailboat with its sails up.",
+    "一只扬着帆的帆船。",
+  ],
+  hay: [
+    `<path d="M10 88 Q10 40 50 34 Q90 40 90 88 Z"/><path ${accent} d="M22 88 L28 52 M36 88 L38 44 M50 88 L50 40 M64 88 L62 44 M78 88 L72 52"/><path d="M30 36 L24 26 M50 34 L50 22 M70 36 L76 26 M40 34 L36 24 M60 34 L64 24"/>`,
+    "A pile of hay.",
+    "一堆干草。",
+  ],
+  tray: [
+    `<path d="M6 66 L94 66 L86 78 L14 78 Z M6 66 L4 58 M94 66 L96 58"/><path d="M24 66 L28 46 L44 46 L48 66"/><path ${accent} d="M58 66 Q58 50 70 50 Q82 50 82 66"/><path d="M28 46 Q36 40 44 46"/>`,
+    "A tray with a cup and a bowl.",
+    "一个托盘，上面放着杯子和碗。",
+  ],
+  jay: [
+    `<ellipse ${accent} cx="48" cy="56" rx="22" ry="14"/><circle ${accent} cx="70" cy="40" r="11"/><path d="M66 30 L62 16 L72 29 M74 30 L78 18 L77 31 M80 40 L92 44 L80 46 M26 54 L6 46 L10 62 L28 60 M40 56 Q50 48 60 58 M44 70 L42 84 M54 70 L56 84 M38 84 L46 84 M52 84 L60 84"/>${dot(73, 38, 2.5)}`,
+    "A jay, a bird with a crest.",
+    "一只头上有冠羽的松鸦。",
+  ],
+  boat: [
+    `<path d="M8 56 L92 56 L80 78 L20 78 Z"/><path ${accent} d="M30 56 L30 42 L60 42 L60 56 M38 42 L38 36 L52 36 L52 42"/><path d="M4 86 Q27 80 50 86 Q73 92 96 86"/>`,
+    "A boat on the water.",
+    "水上的一条船。",
+  ],
+  goat: [
+    `<path d="M20 44 L62 44 Q66 30 74 30 L86 36 Q88 44 80 46 L74 46 L70 60 L22 60 Q14 58 20 44 Z M26 60 L26 88 M36 60 L36 88 M58 60 L58 88 M66 60 L66 88 M20 48 L10 42"/><path ${accent} d="M74 30 Q72 16 60 12 M78 30 Q80 16 70 8 M82 46 L80 58 L76 48"/>${dot(78, 38, 2)}`,
+    "A goat with horns and a beard.",
+    "一只长着角和胡子的山羊。",
+  ],
+  coat: [
+    `<path d="M36 10 L50 22 L64 10 L84 18 L94 60 L84 62 L78 40 L78 92 L22 92 L22 40 L16 62 L6 60 L16 18 Z M50 22 L50 92 M36 10 L44 36 L50 22 L56 36 L64 10"/>${dot(56, 50, 2.5)}${dot(56, 64, 2.5)}${dot(56, 78, 2.5)}<path ${accent} d="M28 66 L42 66 M28 66 L28 76 M42 66 L42 76"/>`,
+    "A coat with buttons and a pocket.",
+    "一件有扣子和口袋的外套。",
+  ],
+  road: [
+    `<path d="M38 10 L4 92 M62 10 L96 92"/><path ${accent} d="M50 16 L50 26 M50 38 L50 52 M50 66 L50 86" stroke-width="5"/><path d="M4 10 L96 10"/>`,
+    "A road going far away.",
+    "一条伸向远方的路。",
+  ],
+  toad: [
+    `<path d="M14 76 Q12 50 34 44 Q50 40 66 44 Q88 50 86 76 Z"/><circle cx="34" cy="42" r="7"/><circle cx="66" cy="42" r="7"/>${dot(34, 42, 3)}${dot(66, 42, 3)}<path ${accent} d="M30 56 L32 56 M46 62 L48 62 M62 58 L64 58 M40 70 L42 70 M58 70 L60 70" stroke-width="5"/><path d="M14 76 L6 86 L22 84 M86 76 L94 86 L78 84"/>`,
+    "A bumpy toad.",
+    "一只疙疙瘩瘩的蟾蜍。",
+  ],
+  soap: [
+    `<rect ${accent} x="18" y="46" width="64" height="30" rx="12"/><circle cx="34" cy="34" r="8"/><circle cx="52" cy="24" r="6"/><circle cx="66" cy="34" r="5"/><circle cx="74" cy="16" r="4"/>`,
+    "A bar of soap with bubbles.",
+    "一块冒着泡泡的肥皂。",
+  ],
+  loaf: [
+    `<path d="M10 80 L10 50 Q10 26 50 26 Q90 26 90 50 L90 80 Z"/><path ${accent} d="M30 40 L40 32 M46 40 L56 32 M62 40 L72 32"/>`,
+    "A loaf of bread.",
+    "一条面包。",
+  ],
+};
+
 /** pictureWords are the words that have a picture, grouped by their short vowel. */
 export const pictureWords: Record<"a" | "e" | "i" | "o" | "u", readonly string[]> = {
   a: ["cat", "hat", "cap", "map", "fan", "van", "pan", "bag", "can", "rat"],
@@ -729,12 +882,24 @@ export const silentEPictureWords: Record<"a" | "i" | "o" | "u", readonly string[
 /** allSilentEPictureWords are the words with a silent e that have a picture, in vowel order. */
 export const allSilentEPictureWords: readonly string[] = Object.values(silentEPictureWords).flat();
 
+/** vowelTeamPictureWords are the words with a vowel team that have a picture, grouped by the team. */
+export const vowelTeamPictureWords: Record<"ee" | "ea" | "ai" | "ay" | "oa", readonly string[]> = {
+  ee: ["bee", "feet", "seed", "tree", "sheep", "queen", "wheel", "teeth"],
+  ea: ["leaf", "seal", "peach", "bead"],
+  ai: ["rain", "snail", "mail", "nail", "train", "paint", "chain", "sail"],
+  ay: ["hay", "tray", "jay"],
+  oa: ["boat", "goat", "coat", "road", "toad", "soap", "loaf"],
+};
+
+/** allVowelTeamPictureWords are the words with a vowel team that have a picture, in the order of the teams. */
+export const allVowelTeamPictureWords: readonly string[] = Object.values(vowelTeamPictureWords).flat();
+
 /** allDigraphPictureWords are the words with a digraph that have a picture, in the order of the digraphs. */
 export const allDigraphPictureWords: readonly string[] = Object.values(digraphPictureWords).flat();
 
 /** picture is the drawing of a word, with what it shows for screen readers. */
 export function picture(word: string): Figure {
-  const drawn = drawings[word] ?? digraphDrawings[word] ?? blendDrawings[word] ?? silentEDrawings[word];
+  const drawn = drawings[word] ?? digraphDrawings[word] ?? blendDrawings[word] ?? silentEDrawings[word] ?? vowelTeamDrawings[word];
   if (!drawn) throw new Error(`no picture of ${word}`);
   const [body, en, zh] = drawn;
   return { svg: svg(body), alt: t(en, zh) };
@@ -745,8 +910,19 @@ export function pictureName(word: string): Text {
   return picture(word).alt;
 }
 
-for (const word of [...allPictureWords, ...allDigraphPictureWords, ...allBlendPictureWords, ...allSilentEPictureWords]) picture(word);
+for (const word of [
+  ...allPictureWords,
+  ...allDigraphPictureWords,
+  ...allBlendPictureWords,
+  ...allSilentEPictureWords,
+  ...allVowelTeamPictureWords,
+]) {
+  picture(word);
+}
 for (const word of Object.keys(drawings)) if (!allPictureWords.includes(word)) throw new Error(`picture of ${word} is in no list`);
+for (const word of Object.keys(vowelTeamDrawings)) {
+  if (!allVowelTeamPictureWords.includes(word)) throw new Error(`picture of ${word} is in no list`);
+}
 for (const word of Object.keys(silentEDrawings)) {
   if (!allSilentEPictureWords.includes(word)) throw new Error(`picture of ${word} is in no list`);
 }

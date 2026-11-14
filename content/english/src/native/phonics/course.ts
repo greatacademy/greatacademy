@@ -1,6 +1,6 @@
 // Phonics: the course of kindergarten to grade 2. It starts with the side of phonics a child can practice from print
-// and pictures: letters, then reading and spelling short-vowel words, words with digraphs, words with consonant blends
-// and words with a silent e. Sounds heard and spoken join it with audio.
+// and pictures: letters, then reading and spelling short-vowel words and words with digraphs, consonant blends, a silent
+// e and vowel teams. Sounds heard and spoken join it with audio.
 
 import { type CourseDef, t } from "@ga/content";
 
@@ -9,8 +9,8 @@ export const coursePhonics: CourseDef = {
   id: "english-phonics",
   title: t("Phonics, Kindergarten to Grade 2", "自然拼读：幼儿园到二年级"),
   description: t(
-    "The first steps of reading for young children, with an adult nearby: capital and small letters, ABC order and the first and last letters of words, then reading and spelling three-letter words with short vowels words with the digraphs *sh*, *ch*, *th* and *ck*, words with consonant blends such as *frog* and *nest*, and words with a silent e such as *cake* and *kite*, matched to pictures. Every picture is drawn for this course. Vowel teams and sight words follow, and sounds heard and spoken join with audio.",
-    "面向幼儿的阅读第一步，需要大人在旁陪伴：大写和小写字母、字母表顺序、词的首字母和尾字母，然后借助图片读和拼写带短元音的三字母词，含二合字母 *sh*、*ch*、*th*、*ck* 的词，*frog*、*nest* 这样含辅音连缀的词，以及 *cake*、*kite* 这样含不发音 e 的词。所有图片都是为本课程绘制的。之后是元音组合和常见词；有了音频后再加入听音和发音练习。",
+    "The first steps of reading for young children, with an adult nearby: capital and small letters, ABC order and the first and last letters of words, then reading and spelling three-letter words with short vowels words with the digraphs *sh*, *ch*, *th* and *ck*, words with consonant blends such as *frog* and *nest*, words with a silent e such as *cake* and *kite*, and words with vowel teams such as *feet*, *rain* and *boat*, matched to pictures. Every picture is drawn for this course. Sight words and short sentences follow, and sounds heard and spoken join with audio.",
+    "面向幼儿的阅读第一步，需要大人在旁陪伴：大写和小写字母、字母表顺序、词的首字母和尾字母，然后借助图片读和拼写带短元音的三字母词，含二合字母 *sh*、*ch*、*th*、*ck* 的词，*frog*、*nest* 这样含辅音连缀的词，*cake*、*kite* 这样含不发音 e 的词，以及 *feet*、*rain*、*boat* 这样含元音组合的词。所有图片都是为本课程绘制的。之后是常见词和短句；有了音频后再加入听音和发音练习。",
   ),
   group: t("English", "英语"),
   units: [
@@ -47,6 +47,13 @@ export const coursePhonics: CourseDef = {
       modules: [
         { title: t("Reading", "阅读"), topics: ["reading-words-with-silent-e"] },
         { title: t("Spelling", "拼写"), topics: ["spelling-words-with-silent-e"] },
+      ],
+    },
+    {
+      title: t("Vowel Teams", "元音组合"),
+      modules: [
+        { title: t("Reading", "阅读"), topics: ["reading-words-with-vowel-teams"] },
+        { title: t("Spelling", "拼写"), topics: ["spelling-words-with-vowel-teams"] },
       ],
     },
   ],
