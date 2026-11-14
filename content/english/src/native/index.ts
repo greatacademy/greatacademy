@@ -62,6 +62,7 @@ import { readingSkillTopics912 } from "./grades-9-12/reading-skills.ts";
 import { tragedyOnTheStage } from "./grades-9-12/reading-stage.ts";
 import { vocabulary912, wordTopics912 } from "./grades-9-12/words.ts";
 import { writingTopics912 } from "./grades-9-12/writing.ts";
+import { phonics } from "./phonics/index.ts";
 
 /** grades35 is the content of the grades 3 to 5 course. */
 const grades35: Pack = {
@@ -127,6 +128,7 @@ const college: Pack = {
 
 /** nativePacks are the native courses by grade band, one pack each, so that each band has its own passage lengths. */
 export const nativePacks: readonly Pack[] = [
+  phonics,
   grades35,
   grade3,
   grade4,
