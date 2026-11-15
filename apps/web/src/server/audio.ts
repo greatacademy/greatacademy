@@ -11,21 +11,26 @@ export interface AudioStore {
   get(key: string, options: { range: Headers }): Promise<AudioObject | null>;
 }
 
-/** AUDIO_PATH is a recording's path, which is also its key in the bucket: audio/, a subject and the recording's name. */
-const AUDIO_PATH = /^\/(audio\/[a-z][a-z0-9-]*\/[0-9a-f]{16}\.mp3)$/u;
+/** AUDIO_PATH is a recording's path, which is also its key in the bucket: audio/, a subject, the recording's name and its format. */
+const AUDIO_PATH = /^\/(audio\/[a-z][a-z0-9-]*\/[0-9a-f]{16}\.(mp3|wav))$/u;
+
+/** TYPES are the media types of the formats of recordings: MP3 for the apps, WAV for the voice service. */
+const TYPES = { mp3: "audio/mpeg", wav: "audio/wav" } as const;
 
 /**
  * serveAudio serves a recording of a subject from the R2 bucket, under the same key as its path,
- * /audio/<subject>/<name>.mp3, with ranges, which players on
+ * /audio/<subject>/<name>.mp3 or .wav, with ranges, which players on
  * phones ask for. A recording never changes, since its name is a hash of what it reads, so it is cached for a year.
  */
 export async function serveAudio(store: AudioStore, request: Request): Promise<Response> {
-  const key = AUDIO_PATH.exec(new URL(request.url).pathname)?.[1];
-  if (!key) return new Response("Not Found", { status: 404 });
+  const match = AUDIO_PATH.exec(new URL(request.url).pathname);
+  const key = match?.[1];
+  const ext = match?.[2] as keyof typeof TYPES | undefined;
+  if (!key || !ext) return new Response("Not Found", { status: 404 });
   const object = await store.get(key, { range: request.headers });
   if (!object) return new Response("Not Found", { status: 404 });
   const headers = new Headers({
-    "Content-Type": "audio/mpeg",
+    "Content-Type": TYPES[ext],
     "Cache-Control": "public, max-age=31536000, immutable",
     "Accept-Ranges": "bytes",
     ETag: object.httpEtag,

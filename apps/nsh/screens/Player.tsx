@@ -25,6 +25,7 @@ import { AnswerInput, AnswerText, Prompt } from "./Answer.tsx";
 import { Illustration } from "./Illustration.tsx";
 import { Listen } from "./Listen.tsx";
 import { FigureView, Rich } from "./Rich.tsx";
+import { Sounds } from "./Sounds.tsx";
 import { JudgedFeedback, WritingFlow } from "./Writing.tsx";
 
 type Answered = { feedback: Feedback; next: Session; response: string };
@@ -198,6 +199,7 @@ function Intro(props: { intro: NonNullable<Question["intro"]> }) {
               <View style={{ gap: 8 }}>
                 <Rich source={tx(worked().solution)} />
                 <If when={worked().solutionFigure}>{(figure) => <FigureView figure={figure()} />}</If>
+                <Sounds sounds={worked().solutionSounds} />
                 <Muted>{m().answer}</Muted>
                 <If when={worked().problem}>{(problem) => <AnswerText problem={problem()} answer={worked().answer} />}</If>
               </View>
@@ -228,6 +230,7 @@ function Solution(props: { answered: Answered; question: Question }) {
         <Muted>{judged ? m().modelAnswer : m().solution}</Muted>
         <Rich source={tx(feedback.solution)} />
         <If when={feedback.solutionFigure}>{(figure) => <FigureView figure={figure()} />}</If>
+        <Sounds sounds={feedback.solutionSounds} />
       </Card>
     </If>
   );
@@ -395,6 +398,7 @@ function ResultItemCard(props: { item: ResultItem; at: number }) {
               <Muted>{m().solution}</Muted>
               <Rich source={tx(props.item.solution)} />
               <If when={props.item.solutionFigure}>{(figure) => <FigureView figure={figure()} />}</If>
+              <Sounds sounds={props.item.solutionSounds} />
             </If>
           </View>
         )}

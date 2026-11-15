@@ -90,12 +90,22 @@ export interface Problem {
   readonly solution: Text;
   /** solutionFigure is a drawing that shows the solution, such as the prompt's figure with the answer worked out on it; it stays hidden until the solution is shown. */
   readonly solutionFigure?: Figure;
+  /** solutionSounds are recordings that stay hidden, like the solution, until it is shown: never ones that would give the answer away before. */
+  readonly solutionSounds?: readonly Sound[];
   /** canonical is a response the checker must accept; it is also the answer shown after a wrong attempt. */
   readonly canonical: string;
   /** wrong are plausible mistaken responses the checker must reject; the compiler checks them. */
   readonly wrong?: readonly string[];
   /** mistakes are wrong responses that get feedback of their own; the compiler checks that they are rejected. */
   readonly mistakes?: readonly Mistake[];
+}
+
+/** Sound is a recording: a word, a sentence or the sounds of a word, read aloud. */
+export interface Sound {
+  /** text is what the recording says, in the language practiced, shown on its button. */
+  readonly text: string;
+  /** audio is the recording's path from the site's root without an extension, such as "audio/english/<name>": the file is <audio>.mp3. */
+  readonly audio: string;
 }
 
 /** Generator produces a problem from a seeded Rng; it must be deterministic. */
@@ -269,6 +279,8 @@ export interface ConversationDef {
   readonly scenario: string;
   /** opening is the tutor's first line, in the language practiced, spoken before any model is called. */
   readonly opening: string;
+  /** openingAudio names the recording of the opening in the subject's audio, a file `<openingAudio>.wav` of 16 kHz 16-bit mono PCM, which the voice service plays instead of speaking the line. */
+  readonly openingAudio?: string;
   /** minutes is how long the conversation should last; after it the tutor brings it to an end. */
   readonly minutes: number;
   /** illustration names the conversation's scene in the subject's illustrations. */

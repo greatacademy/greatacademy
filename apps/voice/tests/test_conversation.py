@@ -8,6 +8,7 @@ from pipecat.frames.frames import (
     OutputTransportMessageUrgentFrame,
     TranscriptionFrame,
     TTSAudioRawFrame,
+    TTSSpeakFrame,
     VADUserStartedSpeakingFrame,
     VADUserStoppedSpeakingFrame,
 )
@@ -16,6 +17,7 @@ from ga_voice.conversation import Conversation, LearnerEndedFrame
 from ga_voice.speech import FakeAudioOutput, FakeTextToSpeech
 from ga_voice.worker_client import FakeWorkerClient, TutorTurn
 from tests.harness import Harness, make_ticket
+from tests.test_recordings import wav
 
 PAUSE = 0.4
 VAD_STOP = 0.1
@@ -26,9 +28,14 @@ def said(text: str) -> TranscriptionFrame:
 
 
 def build(
-    turns: list[TutorTurn], *, limit: float = 60.0, secs_per_char: float = 0.005, delay: float = 0.0
+    turns: list[TutorTurn],
+    *,
+    limit: float = 60.0,
+    secs_per_char: float = 0.005,
+    delay: float = 0.0,
+    recordings: dict[str, bytes] | None = None,
 ) -> tuple[Harness, Conversation, FakeWorkerClient]:
-    worker = FakeWorkerClient(turns, delay_secs=delay)
+    worker = FakeWorkerClient(turns, delay_secs=delay, recordings=recordings)
     conversation = Conversation(
         ticket=make_ticket(),
         worker=worker,
@@ -158,3 +165,25 @@ async def test_session_limit_ends_the_conversation() -> None:
     assert conversation.reason == "time_limit"
     assert 0.45 <= time.monotonic() - started < 2.0
     assert 0.45 <= conversation.result("disconnected").duration_secs < 1.0
+
+
+async def test_a_recorded_opening_is_played_instead_of_spoken() -> None:
+    path = "audio/english/0123456789abcdef.wav"
+    harness, conversation, _worker = build([TutorTurn("Hello!", audio=path)], recordings={path: wav(frames=800)})
+    await harness.start()
+    await harness.wait_for(lambda: bool(harness.collector.of(TTSAudioRawFrame)))
+    await harness.stop()
+    played = harness.collector.of(TTSAudioRawFrame)
+    assert sum(len(f.audio) for f in played if isinstance(f, TTSAudioRawFrame)) == 1600
+    assert not harness.collector.of(TTSSpeakFrame)
+    assert [line.text for line in conversation.transcript.lines] == ["Hello!"]
+    assert {"type": "caption", "speaker": "tutor", "text": "Hello!"} in messages(harness)
+
+
+async def test_a_missing_recording_is_spoken_instead() -> None:
+    harness, conversation, _worker = build([TutorTurn("Hello!", audio="audio/english/0123456789abcdef.wav")])
+    await harness.start()
+    await harness.wait_for(lambda: bool(harness.collector.of(TTSAudioRawFrame)))
+    await harness.stop()
+    assert all(len(f.audio) != 1600 for f in harness.collector.of(TTSAudioRawFrame) if isinstance(f, TTSAudioRawFrame))
+    assert [line.text for line in conversation.transcript.lines] == ["Hello!"]

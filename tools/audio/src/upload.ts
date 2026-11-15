@@ -32,7 +32,7 @@ async function stored(): Promise<Set<string>> {
     if (after) args.push("--start-after", after);
     const { stdout } = await run(cf, args, { maxBuffer: 64 << 20 });
     const page = JSON.parse(stdout) as { key: string }[];
-    for (const { key } of page) names.add(key.slice(PREFIX.length).replace(/\.mp3$/u, ""));
+    for (const { key } of page) names.add(key.slice(PREFIX.length));
     if (page.length < PAGE) return names;
     after = page.at(-1)!.key;
   }
@@ -46,9 +46,9 @@ await Promise.all(
   Array.from({ length: WORKERS }, async () => {
     while (next < names.length) {
       const name = names[next++]!;
-      const file = fileURLToPath(new URL(`${name}.mp3`, folder));
-      const key = `${PREFIX}${name}.mp3`;
-      await run(cf, ["r2", "objects", "put", key, "--bucket-name", BUCKET, "--file", file, "--content-type", "audio/mpeg", "-q"]);
+      const file = fileURLToPath(new URL(name, folder));
+      const type = name.endsWith(".wav") ? "audio/wav" : "audio/mpeg";
+      await run(cf, ["r2", "objects", "put", `${PREFIX}${name}`, "--bucket-name", BUCKET, "--file", file, "--content-type", type, "-q"]);
       done++;
       if (done % 25 === 0 || done === names.length) console.log(`${done}/${names.length}`);
     }

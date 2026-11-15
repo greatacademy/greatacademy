@@ -45,7 +45,7 @@ import { type LearningService, type Task as TaskMessage, TopicStatus } from "@ga
 import { requirePlan } from "./billing.ts";
 import { accessOf, requireStudy, studiedToday } from "./capabilities.ts";
 import { dbKey, userIdKey } from "./context.ts";
-import { figure, knowledgePointIntro, sessionMessage, taskMessage, text } from "./convert.ts";
+import { figure, knowledgePointIntro, sessionMessage, sounds, taskMessage, text } from "./convert.ts";
 import { requireJudgingQuota } from "./costs.ts";
 import { ESSAY_NOTICE_MS, essayRun, essayTopics, finishEssay, judgeEssay } from "./essays.ts";
 import { forLearner, type JudgingDeps, judgedCriteria, runJudgment, viewJudgment } from "./judging.ts";
@@ -147,6 +147,7 @@ function feedbackOf(problem: Problem, verdict: Verdict, judged?: { readonly row:
     ...(!hide && {
       solution: text(problem.solution),
       ...(problem.solutionFigure && { solutionFigure: figure(problem.solutionFigure) }),
+      solutionSounds: sounds(problem.solutionSounds),
       answer: problem.canonical,
     }),
     ...(judged?.row.verdict && {

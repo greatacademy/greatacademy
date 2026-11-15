@@ -1,5 +1,5 @@
 import type { MessageInitShape } from "@bufbuild/protobuf";
-import type { Figure, InputSpec, KnowledgePointLesson, PassageView, Problem, Text } from "@ga/content";
+import type { Figure, InputSpec, KnowledgePointLesson, PassageView, Problem, Sound, Text } from "@ga/content";
 import { diagnosticCandidates, diagnosticLength, homeCourse, type LearnerState, reviewXp, type Task } from "@ga/engine";
 import type { FigureSchema } from "@ga/proto/common/v1/figure_pb";
 import type { TextSchema } from "@ga/proto/common/v1/text_pb";
@@ -12,6 +12,7 @@ import type {
   QuestionSchema,
   ResultSchema,
   SessionSchema,
+  SoundSchema,
   TaskSchema,
 } from "@ga/proto/learning/v1/learning_pb";
 
@@ -36,6 +37,11 @@ function passageMessage(subject: string, passage: PassageView): MessageInitShape
     illustration: illustrationPath(subject, passage.illustration),
     audio: audioPath(subject, passage.audio),
   };
+}
+
+/** sounds converts the recordings of a solution. */
+export function sounds(list: readonly Sound[] | undefined): MessageInitShape<typeof SoundSchema>[] {
+  return (list ?? []).map(({ text, audio }) => ({ text, audio }));
 }
 
 /** text converts a content text to its message. */
@@ -136,6 +142,7 @@ export function knowledgePointIntro(
       solution: text(example.solution),
       answer: example.canonical,
       ...(example.solutionFigure && { solutionFigure: figure(example.solutionFigure) }),
+      solutionSounds: sounds(example.solutionSounds),
     },
     ...(kp.figure && { figure: figure(kp.figure) }),
     figures: (kp.figures ?? []).map(figure),
@@ -202,6 +209,7 @@ async function result(
           answer: p.canonical,
           response: a.response,
           ...(p.solutionFigure && { solutionFigure: figure(p.solutionFigure) }),
+          solutionSounds: sounds(p.solutionSounds),
         };
       })
     : [];

@@ -1333,6 +1333,33 @@ export declare type Passage = Message<"ga.learning.v1.Passage"> & {
 export declare const PassageSchema: GenMessage<Passage>;
 
 /**
+ * Sound is a recording shown with a solution: a word, a sentence or the sounds of a word, read aloud.
+ *
+ * @generated from message ga.learning.v1.Sound
+ */
+export declare type Sound = Message<"ga.learning.v1.Sound"> & {
+  /**
+   * text is what the recording says, in the language practiced, shown on its button.
+   *
+   * @generated from field: string text = 1;
+   */
+  text: string;
+
+  /**
+   * audio is the path of the recording from the site's root, without an extension: the recording is <audio>.mp3.
+   *
+   * @generated from field: string audio = 2;
+   */
+  audio: string;
+};
+
+/**
+ * Describes the message ga.learning.v1.Sound.
+ * Use `create(SoundSchema)` to create a new message.
+ */
+export declare const SoundSchema: GenMessage<Sound>;
+
+/**
  * @generated from message ga.learning.v1.KnowledgePointIntro
  */
 export declare type KnowledgePointIntro = Message<"ga.learning.v1.KnowledgePointIntro"> & {
@@ -1412,6 +1439,13 @@ export declare type WorkedExample = Message<"ga.learning.v1.WorkedExample"> & {
    * @generated from field: optional ga.common.v1.Figure solution_figure = 4;
    */
   solutionFigure?: Figure | undefined;
+
+  /**
+   * solution_sounds are recordings shown with the solution.
+   *
+   * @generated from field: repeated ga.learning.v1.Sound solution_sounds = 5;
+   */
+  solutionSounds: Sound[];
 };
 
 /**
@@ -1937,6 +1971,13 @@ export declare type Feedback = Message<"ga.learning.v1.Feedback"> & {
    * @generated from field: bool revise = 9;
    */
   revise: boolean;
+
+  /**
+   * solution_sounds are recordings shown with the solution.
+   *
+   * @generated from field: repeated ga.learning.v1.Sound solution_sounds = 10;
+   */
+  solutionSounds: Sound[];
 };
 
 /**
@@ -2276,6 +2317,13 @@ export declare type ResultItem = Message<"ga.learning.v1.ResultItem"> & {
    * @generated from field: optional ga.common.v1.Figure solution_figure = 8;
    */
   solutionFigure?: Figure | undefined;
+
+  /**
+   * solution_sounds are recordings shown with the solution.
+   *
+   * @generated from field: repeated ga.learning.v1.Sound solution_sounds = 9;
+   */
+  solutionSounds: Sound[];
 };
 
 /**

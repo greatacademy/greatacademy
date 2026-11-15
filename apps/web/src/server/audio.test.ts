@@ -6,7 +6,7 @@ const bytes = new Uint8Array(100);
 const store = (seen: string[]) => ({
   async get(key: string, { range }: { range: Headers }): Promise<AudioObject | null> {
     seen.push(key);
-    if (key !== "audio/english/0123456789abcdef.mp3") return null;
+    if (key !== "audio/english/0123456789abcdef.mp3" && key !== "audio/english/0123456789abcdef.wav") return null;
     const asked = range.get("Range");
     return {
       body: new Blob([bytes]).stream(),
@@ -26,6 +26,8 @@ describe("serveAudio", () => {
     expect(res.headers.get("Content-Type")).toBe("audio/mpeg");
     expect(res.headers.get("Content-Length")).toBe("100");
     expect(res.headers.get("Cache-Control")).toContain("immutable");
+    const wav = await serveAudio(store([]), get("/audio/english/0123456789abcdef.wav"));
+    expect(wav.headers.get("Content-Type")).toBe("audio/wav");
   });
 
   it("serves the range asked for", async () => {
@@ -38,7 +40,12 @@ describe("serveAudio", () => {
 
   it("reads no key for a path that names no recording", async () => {
     const seen: string[] = [];
-    for (const path of ["/audio/english/../secret.mp3", "/audio/english/abc.mp3", "/audio/0123456789abcdef.mp3"])
+    for (const path of [
+      "/audio/english/../secret.mp3",
+      "/audio/english/abc.mp3",
+      "/audio/0123456789abcdef.mp3",
+      "/audio/english/0123456789abcdef.ogg",
+    ])
       expect((await serveAudio(store(seen), get(path))).status).toBe(404);
     expect(seen).toEqual([]);
     expect((await serveAudio(store([]), get("/audio/english/ffffffffffffffff.mp3"))).status).toBe(404);

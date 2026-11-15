@@ -56,7 +56,7 @@ Great Academy 是一个自适应学习平台，基于 [The Math Academy Way](the
 | 数据库 | **PostgreSQL 18**，Worker 通过 **Hyperdrive** 访问；**Drizzle ORM** + drizzle-kit 迁移 | 测试中用 **PGlite**；开发时用 OrbStack 中的 `postgres:18-alpine` 容器 |
 | 移动端和桌面端 | **[Native Shell](https://nsh.dev)**（`nsh`，来自项目 fork 的 `greatacademy` 分支），内购用的 StoreKit 在应用自己的 Rust crate 中，应用用 TSX 编写，运行在它的 QuickJS 运行时上 | 一个应用，在 iOS、Android、macOS、Windows 和 Linux 上使用各平台自己的视图；与 Web 共用契约和 token |
 | 语音服务 | 由 **uv** 管理的 **Python 3.14**，**Pipecat** 1.15.0 及其 FastAPI WebSocket 传输，运行在 **uvicorn** 上；**pytest**、**ruff**、**pyright** | 英语实时对话，是 Worker 无法运行的长驻进程；内部没有 LLM 服务，导师的回合由 Web Worker 通过 HTTP 给出；票据用 Ed25519 校验（`cryptography`） |
-| 对象存储 | **R2** | 内容中的图片，生成的图形是内嵌 SVG（[内容 §4](content.zh-CN.md#4-knowledge-point-与生成器)）；文章的朗读录音，存放在网站公开文件的存储桶 `greatacademy` 中的 `audio/<subject>/<name>.mp3`，由 Web Worker 在同一路径提供，支持范围请求并缓存一年，因为一个名字所指的内容从不改变（[内容 §11](content.zh-CN.md#11-英语)）；监护人的签字表格，存放在单独的存储桶中，决定后删除（[未成年人数据 §6](minors-data.zh-CN.md#6-账号与同意)） |
+| 对象存储 | **R2** | 内容中的图片，生成的图形是内嵌 SVG（[内容 §4](content.zh-CN.md#4-knowledge-point-与生成器)）；朗读录音，存放在网站公开文件的存储桶 `greatacademy` 中的 `audio/<subject>/<name>.mp3`，供语音服务用的为 `.wav`，由 Web Worker 在同一路径提供，支持范围请求并缓存一年，因为一个名字所指的内容从不改变（[内容 §11](content.zh-CN.md#11-英语)）；监护人的签字表格，存放在单独的存储桶中，决定后删除（[未成年人数据 §6](minors-data.zh-CN.md#6-账号与同意)） |
 
 ## 3. 仓库结构
 
@@ -82,7 +82,7 @@ tools/simulate/       模拟学生，用于调参和检验引擎
 tools/audit/          内容审计：大纲覆盖和启发式质量检查
 tools/pilot/          试点报告：根据作答和事件日志，找出真实学习者卡住的地方
 tools/calibrate/      校准：在两人评分的文本上运行一条路由，并记录它的一致性
-tools/audio/          录音：提前用合成声音朗读文章，列出已生成的录音并上传
+tools/audio/          录音：提前朗读文章、单词、句子、发音和开场白，列出已生成的录音并上传
 deploy/voice/         语音服务在 Kubernetes 上的部署：Kustomize base 和 overlay，以及推送和校验的 mise 任务
 deploy/postgres/      Hyperdrive 访问 PostgreSQL 所经的 Cloudflare Tunnel
 docs/                 文档（英文 + 简体中文）

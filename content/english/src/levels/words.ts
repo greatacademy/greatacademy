@@ -2,8 +2,20 @@
 // model sentences and the words a learner confuses it with. From them a topic gets three knowledge points: choose the
 // word that completes a sentence, choose the word for a meaning, and type the word for a meaning in a sentence.
 
-import { type EncompassingDef, type Generator, joinText, type Problem, type Rng, same, type Text, type TopicDef, t } from "@ga/content";
+import {
+  type EncompassingDef,
+  type Generator,
+  joinText,
+  type Problem,
+  type Rng,
+  type Sound,
+  same,
+  type Text,
+  type TopicDef,
+  t,
+} from "@ga/content";
 import { point } from "@ga/subject-english";
+import { spoken, withSounds } from "../audio.ts";
 import type { WordBatch } from "../pack.ts";
 
 /** WordSentence is one model sentence of a word: the sentence with a gap, the spelling that fills it, and wrong fillers. */
@@ -116,6 +128,8 @@ interface ChoiceItem {
   readonly solution: Text;
   /** whyNot says what choosing a wrong option shows, when there is something to say about it. */
   readonly whyNot: (wrong: string) => Text | undefined;
+  /** sounds are the recordings shown with the solution. */
+  readonly sounds: { solutionSounds?: readonly Sound[] };
 }
 
 function choiceFrom(items: readonly ChoiceItem[]): Generator {
@@ -131,6 +145,7 @@ function choiceFrom(items: readonly ChoiceItem[]): Generator {
       prompt: item.prompt,
       answer: { checker: "choice", expected: answer, input: { kind: "choice", options: options.map(same) } },
       solution: item.solution,
+      ...item.sounds,
       canonical: String(answer),
       wrong: options.map((_, i) => String(i)).filter((i) => i !== String(answer)),
       ...(mistakes.length > 0 && { mistakes }),
@@ -163,6 +178,24 @@ function fitsNot(w: WordDef, wrong: string, answer: string): Text | undefined {
     `*${wrong}* 的意思是“${other.meaning["zh-CN"]}”，放进这个句子意思说不通。`,
   );
 }
+
+/**
+ * heteronyms are headwords spelled alike but said differently by meaning, such as *read* now and in the past or
+ * *record* as a noun and a verb: alone they would be read one way whatever the meaning, so only their sentences are
+ * recorded.
+ */
+const heteronyms = new Set(
+  `abstract address advocate alternate appropriate associate attribute august bass bow close combat compact complex
+  compound conduct conflict console content contest contract contrast convert decrease defect desert digest discount
+  does dove duplicate elaborate entrance escort estimate excuse export extract frequent graduate house import incline
+  increase insert insult intimate invalid lead live minute moderate number object perfect permit polish present produce
+  progress project protest read rebel recall record refuse reject row separate sow subject survey suspect tear
+  transport upset use wind wound`.split(/\s+/u),
+);
+
+/** sentenceSounds are the recordings of a word and of one of its sentences, shown with a solution. */
+const sentenceSounds = (w: WordDef, sentence: string) =>
+  withSounds(heteronyms.has(w.head.toLowerCase()) ? undefined : spoken(w.head), spoken(sentence));
 
 /** interleave orders items by sentence and then by word, so consecutive seeds show different words. */
 /** interleave takes the first item of each list, then the second of each, and so on, so that kinds alternate. */
@@ -206,6 +239,7 @@ export function vocabularyTopic(spec: VocabularySpec): VocabularyTopic {
             wrong: s.wrong,
             solution: explained(w, s.full),
             whyNot: (wrong) => fitsNot(w, wrong, s.answer),
+            sounds: sentenceSounds(w, s.full),
           }),
         ),
       ),
@@ -234,6 +268,7 @@ export function vocabularyTopic(spec: VocabularySpec): VocabularyTopic {
             wrong: wrong.filter((x): x is string => x !== undefined),
             solution: explained(w, w.sentences[0]?.full ?? ""),
             whyNot: meansOther,
+            sounds: sentenceSounds(w, w.sentences[0]?.full ?? ""),
           }),
         );
       }),
@@ -252,6 +287,7 @@ export function vocabularyTopic(spec: VocabularySpec): VocabularyTopic {
         answer: s.answer,
         wrong: s.wrong,
         solution: explained(w, s.full),
+        sounds: sentenceSounds(w, s.full),
       })),
     ),
   );
@@ -271,6 +307,7 @@ export function vocabularyTopic(spec: VocabularySpec): VocabularyTopic {
       prompt: item.prompt,
       answer: { checker: "word-form", expected: [item.answer], input: { kind: "text" } },
       solution: item.solution,
+      ...item.sounds,
       canonical: item.answer,
       wrong: item.wrong.filter((w) => w.toLowerCase() !== item.answer.toLowerCase()),
     };

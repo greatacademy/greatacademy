@@ -4,8 +4,10 @@
 
 import { type Figure, joinText, type Problem, type Rng, same, type Text, type TopicDef, t } from "@ga/content";
 import { point } from "@ga/subject-english";
+import { spoken, withSounds } from "../../audio.ts";
 import { letters, phonicsTopic } from "./kit.ts";
 import { picture } from "./pictures.ts";
+import { wordSounds } from "./sounds.ts";
 
 /** Sentence is a short sentence about a picture word, with two other picture words that look like it. */
 interface Sentence {
@@ -90,6 +92,9 @@ const notIt = (s: Sentence, other: string): Text =>
     `那个说的是 ${other}，拼作 *${letters(other)}*，而图片是 ${s.word}，*${letters(s.word)}*。把句子的每个词再读一遍。`,
   );
 
+/** sentenceSounds are the recordings of each sentence and its picture's word, shown with the solution. */
+const sentenceSounds = new Map(sentences.map((s) => [s.text, withSounds(spoken(s.text), ...wordSounds(s.word))]));
+
 /** sentenceToPicture shows a sentence and asks to choose the picture it is about. */
 const sentenceToPicture = (rng: Rng): Problem => {
   const s = rng.cycle(sentences);
@@ -100,6 +105,7 @@ const sentenceToPicture = (rng: Rng): Problem => {
     prompt: joinText([t("Which picture is this sentence about?", "这个句子说的是哪张图片？"), same(`**${s.text}**`)]),
     answer: { checker: "choice", expected: answer, input: { kind: "choice", options: figures.map((f) => f.alt), figures } },
     solution: why(s),
+    ...sentenceSounds.get(s.text),
     canonical: String(answer),
     wrong: options.map((_, i) => String(i)).filter((i) => i !== String(answer)),
     mistakes: s.others.map((o) => ({ response: String(options.indexOf(o)), feedback: notIt(s, o) })),
@@ -117,6 +123,7 @@ const pictureToSentence = (rng: Rng): Problem => {
     figure: picture(s.word),
     answer: { checker: "choice", expected: answer, input: { kind: "choice", options: options.map(same) } },
     solution: why(s),
+    ...sentenceSounds.get(s.text),
     canonical: String(answer),
     wrong: options.map((_, i) => String(i)).filter((i) => i !== String(answer)),
     mistakes: s.others.map((o, i) => ({ response: String(options.indexOf(wrong[i] ?? "")), feedback: notIt(s, o) })),
@@ -131,6 +138,7 @@ const missingWord = (rng: Rng): Problem => {
     figure: picture(s.word),
     answer: { checker: "word-form", expected: [s.word], input: { kind: "text" } },
     solution: why(s),
+    ...sentenceSounds.get(s.text),
     canonical: s.word,
     wrong: [...s.others],
   };
@@ -162,6 +170,7 @@ const fullSentence = (rng: Rng): Problem => {
       `A sentence starts with a capital letter and ends with a full stop: "${s.text}"`,
       `句子以大写字母开头，以句号结尾："${s.text}"`,
     ),
+    ...sentenceSounds.get(s.text),
     canonical: s.text,
     wrong: [...new Set([`${bare.charAt(0).toLowerCase()}${bare.slice(1)}.`, bare])].filter((w) => w !== s.text),
   };

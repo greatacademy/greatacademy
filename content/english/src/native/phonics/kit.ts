@@ -1,7 +1,9 @@
 // Phonics: the words a young reader decodes, each with near spellings, and the generators of problems with pictures.
 
 import { type Figure, joinText, type Problem, type Rng, same, type Text, type TopicDef, t } from "@ga/content";
+import { withSounds } from "../../audio.ts";
 import { allPictureWords, picture } from "./pictures.ts";
+import { wordSounds } from "./sounds.ts";
 
 /** Spellings are a picture word with near spellings: two that change the vowel, two the first letter, two the last. */
 export interface Spellings {
@@ -101,8 +103,13 @@ export interface PictureItem {
   readonly whyNot?: (wrong: string) => Text;
 }
 
+/** soundsFor are the recordings of each word of a bank, asked for when the bank is built and shown with the solution. */
+const soundsFor = (bank: readonly { readonly word: string }[]) =>
+  new Map(bank.map((item) => [item.word, withSounds(...wordSounds(item.word))]));
+
 /** pictureChoice shows a picture, with any words of the item, and asks to choose among words or letters. */
 export function pictureChoice(question: Text, bank: readonly PictureItem[]) {
+  const sounds = soundsFor(bank);
   return (rng: Rng): Problem => {
     const item = rng.cycle(bank);
     const options = rng.shuffle([item.right, ...item.wrong]);
@@ -112,6 +119,7 @@ export function pictureChoice(question: Text, bank: readonly PictureItem[]) {
       figure: picture(item.word),
       answer: { checker: "choice", expected: answer, input: { kind: "choice", options: options.map(same) } },
       solution: item.solution,
+      ...sounds.get(item.word),
       canonical: String(answer),
       wrong: options.map((_, i) => String(i)).filter((i) => i !== String(answer)),
       ...(item.whyNot && { mistakes: item.wrong.map((w) => ({ response: String(options.indexOf(w)), feedback: item.whyNot!(w) })) }),
@@ -128,6 +136,7 @@ export interface PicturesItem {
 
 /** pictureOptions shows a word and asks to choose the picture it names. */
 export function pictureOptions(question: Text, bank: readonly PicturesItem[]) {
+  const sounds = soundsFor(bank);
   return (rng: Rng): Problem => {
     const item = rng.cycle(bank);
     const options = rng.shuffle([...item.pictures]);
@@ -137,6 +146,7 @@ export function pictureOptions(question: Text, bank: readonly PicturesItem[]) {
       prompt: joinText([question, same(`**${item.word}**`)]),
       answer: { checker: "choice", expected: answer, input: { kind: "choice", options: figures.map((f) => f.alt), figures } },
       solution: item.solution,
+      ...sounds.get(item.word),
       canonical: String(answer),
       wrong: options.map((_, i) => String(i)).filter((i) => i !== String(answer)),
       mistakes: options
@@ -163,6 +173,7 @@ export interface TypedPictureItem {
 
 /** pictureTyped shows a picture and asks to type a letter or a word. */
 export function pictureTyped(question: Text, bank: readonly TypedPictureItem[]) {
+  const sounds = soundsFor(bank);
   return (rng: Rng): Problem => {
     const item = rng.cycle(bank);
     return {
@@ -170,6 +181,7 @@ export function pictureTyped(question: Text, bank: readonly TypedPictureItem[]) 
       figure: picture(item.word),
       answer: { checker: "word-form", expected: [...item.accepted], input: { kind: "text" } },
       solution: item.solution,
+      ...sounds.get(item.word),
       canonical: item.accepted[0] ?? "",
       wrong: [...item.wrong],
     };

@@ -23,13 +23,17 @@ from pipecat.frames.frames import (
     StartFrame,
     SystemFrame,
     TranscriptionFrame,
+    TTSAudioRawFrame,
     TTSSpeakFrame,
+    TTSStartedFrame,
+    TTSStoppedFrame,
     VADUserStartedSpeakingFrame,
     VADUserStoppedSpeakingFrame,
 )
 from pipecat.processors.frame_processor import FrameDirection, FrameProcessor
 
 from ga_voice.messages import (
+    SAMPLE_RATE,
     CaptionMessage,
     EndedMessage,
     EndReason,
@@ -38,6 +42,7 @@ from ga_voice.messages import (
     Transcript,
     to_dict,
 )
+from ga_voice.recordings import chunks, pcm_of_wav
 from ga_voice.tickets import Ticket
 from ga_voice.turns import SessionClock, TurnState, should_barge_in
 from ga_voice.worker_client import SessionResult, TurnRequest, WorkerClient
@@ -196,14 +201,31 @@ class Conversation(FrameProcessor):
             logger.warning("voice: tutor turn failed: {}", type(error).__name__)
             await self._end("error")
             return
+        pcm = await self._recorded(turn.audio) if turn.audio else None
         if self.ending:
             return
         self.transcript.add("tutor", turn.text)
         self._tutor_speaking = True
         await self._send(CaptionMessage(speaker="tutor", text=turn.text), urgent=False)
-        await self.push_frame(TTSSpeakFrame(text=turn.text))
+        if pcm is None:
+            await self.push_frame(TTSSpeakFrame(text=turn.text))
+        else:
+            await self.push_frame(TTSStartedFrame())
+            for chunk in chunks(pcm):
+                await self.push_frame(TTSAudioRawFrame(audio=chunk, sample_rate=SAMPLE_RATE, num_channels=1))
+            await self.push_frame(TTSStoppedFrame())
         if turn.end:
             await self._end("tutor_ended")
+
+    async def _recorded(self, path: str) -> bytes | None:
+        """_recorded returns the samples of a turn's recording, or None to speak the line instead."""
+        try:
+            return pcm_of_wav(await self._worker.recording(path))
+        except asyncio.CancelledError:
+            raise
+        except Exception as error:  # noqa: BLE001 - a missing or broken recording is spoken instead
+            logger.warning("voice: recording not played: {}", type(error).__name__)
+            return None
 
     async def _watch_limit(self) -> None:
         clock = self._session_clock

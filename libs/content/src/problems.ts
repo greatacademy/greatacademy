@@ -169,6 +169,10 @@ function checkSample(
     const figure = drawn && figureIssue(drawn);
     if (figure) return figure;
   }
+  for (const sound of a.solutionSounds ?? []) {
+    if (sound.text.trim() === "") return "a sound needs its text";
+    if (!/^audio\/[a-z][a-z0-9-]*\/[0-9a-f]{16}$/u.test(sound.audio)) return `a sound's path is not a recording's: ${sound.audio}`;
+  }
   const { answer } = a;
   if (!subject.checkers.has(answer.checker)) return `unknown checker ${answer.checker}`;
   if (answer.input.kind === "choice") {

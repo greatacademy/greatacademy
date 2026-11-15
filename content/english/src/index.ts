@@ -2,6 +2,7 @@ import type { SubjectDef } from "@ga/content";
 import { compileSubject, t } from "@ga/content";
 import { englishCheckers } from "@ga/subject-english";
 
+import { withOpenings } from "./audio.ts";
 import { englishConversations } from "./conversations.ts";
 import { englishCourses } from "./courses.ts";
 import { withScenes } from "./illustrations.ts";
@@ -20,7 +21,7 @@ export const english: SubjectDef = {
   checkers: englishCheckers,
   reading: coreShardReading,
   lexicon: packLexicon(englishLexicon),
-  conversations: withScenes([...englishConversations, ...englishPacks.flatMap((pack) => pack.conversations)]),
+  conversations: withOpenings(withScenes([...englishConversations, ...englishPacks.flatMap((pack) => pack.conversations)])),
   strands: [
     { id: "vocabulary", title: t("Vocabulary", "词汇") },
     { id: "grammar", title: t("Grammar", "语法") },

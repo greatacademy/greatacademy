@@ -7,12 +7,16 @@ with its own credential, not the learner's ticket.
 """
 
 import asyncio
+import re
 from dataclasses import asdict, dataclass
 from typing import Protocol, cast
 
 import httpx
 
 from ga_voice.messages import EndReason, Line
+
+_RECORDING = re.compile(r"audio/[a-z][a-z0-9-]*/[0-9a-f]{16}\.wav")
+"""_RECORDING is the path of a recording a turn may name: a WAV file under audio/<subject>/."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -27,10 +31,14 @@ class TurnRequest:
 
 @dataclass(frozen=True, slots=True)
 class TutorTurn:
-    """TutorTurn is what the tutor says next; ``end`` closes the conversation after it is spoken."""
+    """TutorTurn is what the tutor says next; ``end`` closes the conversation after it is spoken.
+
+    ``audio`` is the path of a recording of the line, when there is one, which is played instead of speaking it.
+    """
 
     text: str
     end: bool = False
+    audio: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -56,6 +64,10 @@ class WorkerClient(Protocol):
         """write_result stores the session's result; writing the same session twice stores it once."""
         ...
 
+    async def recording(self, path: str) -> bytes:
+        """recording returns the file of a recording a turn names."""
+        ...
+
 
 class WorkerError(Exception):
     """WorkerError is raised when the Worker does not answer as expected."""
@@ -64,7 +76,8 @@ class WorkerError(Exception):
 class HttpWorkerClient:
     """HttpWorkerClient calls the Worker's voice endpoints over HTTP with a bearer credential.
 
-    ``POST /voice/v1/turn`` takes a TurnRequest and returns ``{"text", "end"}``;
+    ``POST /voice/v1/turn`` takes a TurnRequest and returns ``{"text", "end"}`` and
+    perhaps ``"audio"``, the path of a recording served at ``GET /{audio}``;
     ``PUT /voice/v1/sessions/{session}/result`` stores a SessionResult and is
     idempotent by session id, which is also sent as the ``Idempotency-Key``.
     """
@@ -87,9 +100,21 @@ class HttpWorkerClient:
         data = cast("dict[str, object]", body)
         text = data.get("text")
         end = data.get("end", False)
-        if not isinstance(text, str) or not isinstance(end, bool):
+        audio = data.get("audio")
+        if not isinstance(text, str) or not isinstance(end, bool) or not (audio is None or isinstance(audio, str)):
             raise WorkerError("turn: bad shape")
-        return TutorTurn(text=text, end=end)
+        if audio is not None and not _RECORDING.fullmatch(audio):
+            raise WorkerError("turn: bad audio")
+        return TutorTurn(text=text, end=end, audio=audio)
+
+    async def recording(self, path: str) -> bytes:
+        """recording fetches a recording from the Worker, which serves recordings without a credential."""
+        if not _RECORDING.fullmatch(path):
+            raise WorkerError("recording: bad path")
+        response = await self._client.get(f"{self._base_url}/{path}")
+        if response.status_code != 200:
+            raise WorkerError(f"recording: HTTP {response.status_code}")
+        return response.content
 
     async def write_result(self, result: SessionResult) -> None:
         """write_result stores the result; the Worker ignores a second write for the same session."""
@@ -109,8 +134,11 @@ class HttpWorkerClient:
 class FakeWorkerClient:
     """FakeWorkerClient answers with scripted tutor turns and keeps results by session id, for tests."""
 
-    def __init__(self, turns: list[TutorTurn], delay_secs: float = 0.0) -> None:
+    def __init__(
+        self, turns: list[TutorTurn], delay_secs: float = 0.0, recordings: dict[str, bytes] | None = None
+    ) -> None:
         self._turns = list(turns)
+        self._recordings = dict(recordings or {})
         self._delay_secs = delay_secs
         self.requests: list[TurnRequest] = []
         self.results: dict[str, SessionResult] = {}
@@ -129,3 +157,9 @@ class FakeWorkerClient:
         """write_result keeps the first result written for a session, as the Worker does."""
         self.result_writes += 1
         self.results.setdefault(result.session, result)
+
+    async def recording(self, path: str) -> bytes:
+        """recording returns a recording given to the fake, or fails as a missing file does."""
+        if path not in self._recordings:
+            raise WorkerError("recording: HTTP 404")
+        return self._recordings[path]

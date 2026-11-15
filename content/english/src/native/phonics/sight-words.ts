@@ -4,6 +4,7 @@
 
 import { joinText, type Problem, type Rng, same, type Text, type TopicDef, t } from "@ga/content";
 import { point } from "@ga/subject-english";
+import { spoken, withSounds } from "../../audio.ts";
 import { letters, phonicsTopic } from "./kit.ts";
 
 /** SightWord is a common word with its tricky part, near spellings, a sentence that needs it, two words the sentence
@@ -320,6 +321,9 @@ const why = (s: SightWord): Text => {
   );
 };
 
+/** sightSounds are the recordings of each sight word and its sentence, shown with the solution. */
+const sightSounds = new Map(sightWords.map((s) => [s.word, withSounds(spoken(s.word), spoken(s.sentence.replace("___", s.word)))]));
+
 /** choice asks a question about a sentence with options to choose among, with feedback on each wrong option. */
 const choice =
   (question: Text, build: (s: SightWord) => { right: string; wrong: readonly string[]; whyNot: (w: string) => Text }) =>
@@ -332,6 +336,7 @@ const choice =
       prompt: joinText([question, same(s.sentence)]),
       answer: { checker: "choice", expected: answer, input: { kind: "choice", options: options.map(same) } },
       solution: why(s),
+      ...sightSounds.get(s.word),
       canonical: String(answer),
       wrong: options.map((_, i) => String(i)).filter((i) => i !== String(answer)),
       mistakes: wrong.map((w) => ({ response: String(options.indexOf(w)), feedback: whyNot(w) })),
@@ -348,6 +353,7 @@ const typed =
       prompt: joinText([question, same(s.sentence), same(extra)]),
       answer: { checker: "word-form", expected: [accepted], input: { kind: "text" } },
       solution: why(s),
+      ...sightSounds.get(s.word),
       canonical: accepted,
       wrong: [...wrong],
     };

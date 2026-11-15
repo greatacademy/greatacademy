@@ -8,6 +8,7 @@ import { CaptionedFigure, Explanation, FigureView } from "../../../components/Fi
 import { LoadError } from "../../../components/LoadError.tsx";
 import { Markdown } from "../../../components/Markdown.tsx";
 import { AnswerText, ProblemPrompt } from "../../../components/Problem.tsx";
+import { Sounds } from "../../../components/Sounds.tsx";
 import { Button, buttonClass, Card, Spinner } from "../../../components/ui.tsx";
 import { useI18n } from "../../../lib/i18n.tsx";
 import { learning } from "../../../lib/rpc.ts";
@@ -39,6 +40,7 @@ function Step({ step }: { step: KnowledgePointIntro }) {
             <div className="space-y-3 border-t border-accent/20 pt-4">
               <Markdown source={tx(ex.solution)} />
               <FigureView figure={ex.solutionFigure} />
+              <Sounds sounds={ex.solutionSounds} />
               <div className="text-sm">
                 <span className="mr-2 text-muted">{m.answer}:</span>
                 <AnswerText problem={ex.problem} answer={ex.answer} />

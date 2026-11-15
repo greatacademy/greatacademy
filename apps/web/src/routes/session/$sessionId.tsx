@@ -13,6 +13,7 @@ import { MathField } from "../../components/MathField.tsx";
 import { OrderField } from "../../components/OrderField.tsx";
 import { PlotField } from "../../components/PlotField.tsx";
 import { AnswerText, ProblemPrompt } from "../../components/Problem.tsx";
+import { Sounds } from "../../components/Sounds.tsx";
 import { Bar, Button, buttonClass, Card, ErrorNote, Spinner } from "../../components/ui.tsx";
 import { JudgedFeedback, WritingFlow } from "../../components/WritingFlow.tsx";
 import { useRequireSession } from "../../lib/hooks.ts";
@@ -261,6 +262,7 @@ function IntroView({ intro, onDone }: { intro: NonNullable<Question["intro"]>; o
             <div className="space-y-3 border-t border-accent/20 pt-4">
               <Markdown source={tx(ex.solution)} />
               <FigureView figure={ex.solutionFigure} />
+              <Sounds sounds={ex.solutionSounds} />
               <div className="text-sm">
                 <span className="mr-2 text-muted">{m.answer}:</span>
                 <AnswerText problem={ex.problem} answer={ex.answer} />
@@ -477,6 +479,7 @@ function FeedbackView({
         <summary className="cursor-pointer text-sm font-medium text-muted select-none">{m.solution}</summary>
         <Markdown source={tx(feedback.solution)} className="mt-2" />
         <FigureView figure={feedback.solutionFigure} className="mt-3" />
+        <Sounds sounds={feedback.solutionSounds} className="mt-3" />
       </details>
       <div className={`flex items-center gap-3 ${topicId && !feedback.correct ? "justify-between" : "justify-end"}`}>
         {topicId && !feedback.correct && (
@@ -670,6 +673,7 @@ function ResultView({ session, result }: { session: Session; result: Result }) {
                 <summary className="cursor-pointer text-sm font-medium text-muted select-none">{m.solution}</summary>
                 <Markdown source={tx(item.solution)} className="mt-2" />
                 <FigureView figure={item.solutionFigure} className="mt-3" />
+                <Sounds sounds={item.solutionSounds} className="mt-3" />
               </details>
             )}
           </Card>

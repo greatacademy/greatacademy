@@ -59,7 +59,7 @@ Nx 把这些目标的结果缓存在 `.nx/`（被 git 忽略）中；只有输�
 | `voice` | `apps/voice` | 英语实时对话的语音服务，用 Python 基于 Pipecat 编写；用模拟的语音服务和模拟的 Web Worker 测试（§7） |
 | `pilot` | `tools/pilot` | 根据数据库生成某门课程的试点报告：`DATABASE_URL=… pnpm nx run pilot:report -- --course algebra-i`（[路线图 §3](roadmap.zh-CN.md#3-试点)） |
 | `calibrate` | `tools/calibrate` | 在一项标准上校准一条路由：`DATABASE_URL=… AI_KEYS_SECRET=… pnpm nx run calibrate:calibrate -- --criterion w4-topic-sentence@1 --provider <id> --model <model> --prompt writing-1 --set scored.jsonl`。评分集每行是 `{id, task: {prompt, modelAnswer, source?}, text, scores: {"<id@version>": [第一人, 第二人]}}`，即两人的是或否。它记录校准结果，无论是否通过，并输出只用 id 指称文本的报告（[英语开发计划 §4](english-development-plan.zh-CN.md#4-阶段-2阅读与写作)） |
-| `audio` | `tools/audio` | 文章的朗读录音：`pnpm nx run audio:make -- --unit water-on-earth` 生成一个或多个阅读单元的录音，`--all --limit 50` 生成尚未生成的录音。它从仓库根目录的 `.env.local`（被 git 忽略）读取 `AZURE_SPEECH_KEY` 和 `AZURE_SPEECH_REGION`，把文件写入 `content/english/audio/files`，并列在 `content/english/src/recordings.ts` 中；`pnpm nx run audio:upload` 通过用 `cf auth login` 登录的 Cloudflare CLI，把已列出而 R2 存储桶 `greatacademy` 缺少的录音上传（[内容 §11](content.zh-CN.md#11-英语)） |
+| `audio` | `tools/audio` | 朗读录音：`pnpm nx run audio:make -- --unit water-on-earth` 生成一个或多个阅读单元的文章录音，`--kind word`（或 `sentence`、`sounds`、`opening`、`passage`，可重复）生成某几类录音，`--all --limit 50` 生成尚未生成的录音；`--workers 8` 同时生成更多条（默认 3 条）。它从仓库根目录的 `.env.local`（被 git 忽略）读取 `AZURE_SPEECH_KEY` 和 `AZURE_SPEECH_REGION`，把文件写入 `content/english/audio/files`，并列在 `content/english/src/recordings.ts` 中；`pnpm nx run audio:upload` 通过用 `cf auth login` 登录的 Cloudflare CLI，把已列出而 R2 存储桶 `greatacademy` 缺少的录音上传（[内容 §11](content.zh-CN.md#11-英语)） |
 
 此表随仓库增长；[架构 §3](architecture.zh-CN.md#3-仓库结构) 给出目标结构。
 

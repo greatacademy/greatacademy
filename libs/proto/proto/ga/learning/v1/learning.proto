@@ -418,6 +418,14 @@ message Passage {
   string audio = 4;
 }
 
+// Sound is a recording shown with a solution: a word, a sentence or the sounds of a word, read aloud.
+message Sound {
+  // text is what the recording says, in the language practiced, shown on its button.
+  string text = 1;
+  // audio is the path of the recording from the site's root, without an extension: the recording is <audio>.mp3.
+  string audio = 2;
+}
+
 message KnowledgePointIntro {
   int32 index = 1;
   int32 count = 2;
@@ -439,6 +447,8 @@ message WorkedExample {
   string answer = 3;
   // solution_figure is a drawing that shows the solution.
   optional ga.common.v1.Figure solution_figure = 4;
+  // solution_sounds are recordings shown with the solution.
+  repeated Sound solution_sounds = 5;
 }
 
 message LessonProgress {
@@ -573,6 +583,8 @@ message Feedback {
   optional double score = 8;
   // revise is true when the learner may rewrite the same text; the rewrite is what counts.
   bool revise = 9;
+  // solution_sounds are recordings shown with the solution.
+  repeated Sound solution_sounds = 10;
 }
 
 message GetTopicRequest {
@@ -658,4 +670,6 @@ message ResultItem {
   string response = 7;
   // solution_figure is a drawing that shows the solution.
   optional ga.common.v1.Figure solution_figure = 8;
+  // solution_sounds are recordings shown with the solution.
+  repeated Sound solution_sounds = 9;
 }

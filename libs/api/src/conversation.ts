@@ -262,7 +262,8 @@ async function readSession(db: Db, body: Record<string, unknown>): Promise<Conve
 
 /**
  * handleVoice answers the voice service's calls (apps/voice/src/ga_voice/worker_client.py):
- * POST turn asks for the tutor's next line, and PUT sessions/{id}/result writes
+ * POST turn asks for the tutor's next line, with the path of its recording when
+ * it has one, and PUT sessions/{id}/result writes
  * the session's result, idempotently. Both need the service's credential. The
  * first turn is the conversation's opening line, with no model call; after
  * the conversation's minutes or MAX_TURNS the tutor is asked to close.
@@ -289,8 +290,14 @@ export async function handleVoice(request: Request, db: Db, deps: ConversationDe
     if (row.status !== "active") return json({ error: "ended" }, 409);
     const c = await deps.registry.course(row.courseId);
     const def = c?.subject.conversations.get(row.conversationId);
-    if (!def) return json({ error: "no-conversation" }, 404);
-    if (lines.length === 0) return json({ text: def.opening, end: false });
+    if (!c || !def) return json({ error: "no-conversation" }, 404);
+    if (lines.length === 0)
+      return json({
+        text: def.opening,
+        end: false,
+        // The recording of the opening, which the voice service plays instead of speaking the line.
+        ...(def.openingAudio && { audio: `audio/${c.subject.def.id}/${def.openingAudio}.wav` }),
+      });
     const turns = await countTurn(db, row.id);
     if (turns === undefined) return json({ error: "ended" }, 409);
     if (turns > MAX_TURNS + 1) return json({ error: "too-many-turns" }, 429);

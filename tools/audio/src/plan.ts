@@ -1,42 +1,36 @@
-import type { ReadingUnitDef } from "@ga/content";
-import { passageRecording, passageSsml } from "@ga/content-english/audio";
+import type { RecordingKind, Wanted } from "@ga/content-english/audio";
 
-/** Job is one recording to make: the passage it reads, its name and the SSML it is made from. */
-export interface Job {
-  readonly passage: string;
-  readonly name: string;
-  readonly ssml: string;
+/** Job is one recording to make: its file and how it is made. */
+export interface Job extends Wanted {
+  readonly file: string;
+}
+
+/** Choice is which recordings a run makes: those of some kinds, of some reading units' passages, or all. */
+export interface Choice {
+  readonly kinds?: ReadonlySet<RecordingKind>;
+  readonly units?: ReadonlySet<string>;
 }
 
 /**
- * plan lists the recordings to make for the reading units chosen, by unit id or all of them, that are not made
- * yet; at most limit of them. Two passages with the same body share one recording.
+ * plan lists the recordings to make, in the order the content asks for them, of those chosen that are not made yet;
+ * at most limit of them. Choosing nothing chooses all.
  */
-export function plan(
-  units: readonly ReadingUnitDef[],
-  chosen: ReadonlySet<string> | "all",
-  made: ReadonlySet<string>,
-  limit = Infinity,
-): Job[] {
+export function plan(wanted: ReadonlyMap<string, Wanted>, choice: Choice, made: ReadonlySet<string>, limit = Infinity): Job[] {
+  const all = !choice.kinds?.size && !choice.units?.size;
   const jobs: Job[] = [];
-  const seen = new Set(made);
-  for (const unit of units) {
-    if (chosen !== "all" && !chosen.has(unit.id)) continue;
-    for (const p of unit.passages) {
-      const name = passageRecording(p);
-      if (seen.has(name)) continue;
-      seen.add(name);
-      if (jobs.length >= limit) return jobs;
-      jobs.push({ passage: p.id, name, ssml: passageSsml(p.body) });
-    }
+  for (const [file, w] of wanted) {
+    if (made.has(file)) continue;
+    const chosen = all || choice.kinds?.has(w.kind) || (w.unit !== undefined && choice.units?.has(w.unit));
+    if (!chosen) continue;
+    if (jobs.length >= limit) break;
+    jobs.push({ file, ...w });
   }
   return jobs;
 }
 
-/** current lists, sorted, the recordings made that belong to a passage as it is now. */
-export function current(units: readonly ReadingUnitDef[], made: ReadonlySet<string>): string[] {
-  const names = new Set(units.flatMap((u) => u.passages.map(passageRecording)));
-  return [...made].filter((name) => names.has(name)).sort();
+/** current lists, sorted, the recordings made that the content asks for as it is now. */
+export function current(wanted: ReadonlyMap<string, Wanted>, made: ReadonlySet<string>): string[] {
+  return [...made].filter((file) => wanted.has(file)).sort();
 }
 
 /** recordingsModule is the source of content/english/src/recordings.ts listing the recordings given. */
@@ -44,7 +38,7 @@ export function recordingsModule(names: readonly string[]): string {
   const list = names.length === 0 ? "[]" : `[\n${names.map((n) => `  "${n}",`).join("\n")}\n]`;
   return `// Written by tools/audio; do not edit.
 
-/** recordings are the names of the recordings made into content/english/audio/files. */
+/** recordings are the files of the recordings made into content/english/audio/files. */
 export const recordings: readonly string[] = ${list};
 `;
 }

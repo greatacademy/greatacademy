@@ -71,3 +71,29 @@ async def test_fake_keeps_the_first_result() -> None:
     await fake.write_result(replace(RESULT, reason="error"))
     assert fake.result_writes == 2
     assert fake.results == {"s-1": RESULT}
+
+
+async def test_a_turn_may_name_a_recording_fetched_without_the_credential() -> None:
+    path = "audio/english/0123456789abcdef.wav"
+    seen: list[httpx.Request] = []
+
+    def handle(request: httpx.Request) -> httpx.Response:
+        seen.append(request)
+        if request.url.path == "/voice/v1/turn":
+            return httpx.Response(200, json={"text": "Hi!", "end": False, "audio": path})
+        return httpx.Response(200, content=b"RIFF")
+
+    worker = client(httpx.MockTransport(handle))
+    turn = await worker.next_turn(TurnRequest(session="s", learner="l", course="c", lines=()))
+    assert turn == TutorTurn("Hi!", audio=path)
+    assert await worker.recording(path) == b"RIFF"
+    assert str(seen[1].url) == f"http://worker.test/{path}"
+    assert "authorization" not in seen[1].headers
+
+
+async def test_a_recording_outside_audio_is_refused() -> None:
+    worker = client(httpx.MockTransport(lambda _r: httpx.Response(200, json={"text": "Hi", "audio": "../secret"})))
+    with pytest.raises(WorkerError):
+        await worker.next_turn(TurnRequest(session="s", learner="l", course="c", lines=()))
+    with pytest.raises(WorkerError):
+        await worker.recording("voice/v1/turn")
