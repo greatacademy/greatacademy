@@ -67,6 +67,33 @@ export function textSsml(text: string): string {
   return speak(voice, escapeXml(text.replace(/\s+/gu, " ").trim()));
 }
 
+/** partner is the second speaker of a dialogue, a man's voice beside the usual one, at the same speed. */
+export const partner: Voice = { name: "en-US-Andrew:DragonHDLatestNeural", lang: "en-US", rate: "-10%" };
+
+/** TURN_BREAK is the pause between two lines of a dialogue. */
+const TURN_BREAK = "500ms";
+
+/** Line is one line of a dialogue: who says it, the usual voice "a" or its partner "b", and what is said. */
+export interface Line {
+  readonly speaker: "a" | "b";
+  readonly text: string;
+}
+
+/**
+ * dialogueSsml is the SSML that reads a dialogue aloud, each line in its speaker's voice with a pause between lines:
+ * one speaker throughout makes an announcement or a message.
+ */
+export function dialogueSsml(lines: readonly Line[]): string {
+  const inner = lines
+    .map((line, i) => {
+      const v = line.speaker === "a" ? voice : partner;
+      const pause = i < lines.length - 1 ? `<break time="${TURN_BREAK}"/>` : "";
+      return `<voice name="${v.name}"><prosody rate="${v.rate}">${escapeXml(line.text.replace(/\s+/gu, " ").trim())}${pause}</prosody></voice>`;
+    })
+    .join("");
+  return `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="${voice.lang}">${inner}</speak>`;
+}
+
 /** SOUND_BREAK is the pause between two sounds of a word, and before the whole word. */
 const SOUND_BREAK = "400ms";
 
@@ -112,8 +139,11 @@ export const MP3: Format = { azure: "audio-24khz-48kbitrate-mono-mp3", ext: "mp3
 /** WAV is 16 kHz 16-bit mono PCM, the audio of the voice service, which plays it as it is. */
 export const WAV: Format = { azure: "riff-16khz-16bit-mono-pcm", ext: "wav" };
 
-/** RecordingKind is what a recording reads: a passage, a word, a sentence, the sounds of a word, or a conversation's opening. */
-export type RecordingKind = "passage" | "word" | "sentence" | "sounds" | "opening";
+/**
+ * RecordingKind is what a recording reads: a passage, a word, a sentence, the sounds of a word, a conversation's
+ * opening, or a dialogue or announcement a listening problem plays.
+ */
+export type RecordingKind = "passage" | "word" | "sentence" | "sounds" | "opening" | "dialogue";
 
 /** Wanted is a recording the content asks for: what it reads, the SSML and format it is made in, and, for a passage, its unit. */
 export interface Wanted {
@@ -153,6 +183,18 @@ export const spoken = (text: string): Sound | undefined => recorded(/\s/u.test(t
 /** sounded is the Sound of a word said one sound at a time and then whole, once it is recorded; its button shows the letters of each sound, "c-a-t". */
 export const sounded = (word: string, sounds: readonly Phoneme[]): Sound | undefined =>
   recorded("sounds", soundsSsml(sounds, word), sounds.map((p) => p.letters).join("-"));
+
+/**
+ * heard asks for the recording of a word or sentence, or of a dialogue when given lines, that a listening problem
+ * plays, and gives its path whether it is made or not: a test fails while one is missing, since the problem cannot be
+ * answered without it.
+ */
+export function heard(said: string | readonly Line[]): string {
+  const ssml = typeof said === "string" ? textSsml(said) : dialogueSsml(said);
+  const kind: RecordingKind = typeof said !== "string" ? "dialogue" : /\s/u.test(said.trim()) ? "sentence" : "word";
+  want({ kind, ssml, format: MP3 });
+  return `audio/english/${recordingName(ssml)}`;
+}
 
 /** withSounds gives a problem the sounds that are recorded among those given, when there are any. */
 export const withSounds = (...sounds: readonly (Sound | undefined)[]): { solutionSounds?: readonly Sound[] } => {

@@ -85,6 +85,11 @@ export interface Problem {
   readonly prompt: Text;
   /** figure is a drawing the prompt refers to. */
   readonly figure?: Figure;
+  /**
+   * listen are the recordings played to answer, such as a dialogue a question asks about, by path as in Sound: the
+   * learner hears them but does not see what they say, which the solution may show.
+   */
+  readonly listen?: readonly string[];
   readonly answer: AnswerSpec;
   /** solution is the worked solution, shown after an answer and in worked examples. */
   readonly solution: Text;

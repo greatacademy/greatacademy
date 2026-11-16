@@ -6,6 +6,9 @@ import type { Locale, Text } from "./text.ts";
 import { isText, locales } from "./text.ts";
 import type { PlotGrid, Problem, TopicDef } from "./types.ts";
 
+/** RECORDING matches the path of a recording from the site's root, without its extension. */
+const RECORDING = /^audio\/[a-z][a-z0-9-]*\/[0-9a-f]{16}$/u;
+
 /** ProblemRef identifies a problem instance: the knowledge point that generates it and its seed. */
 export interface ProblemRef {
   readonly topic: string;
@@ -26,19 +29,26 @@ export function generateProblem(subject: CompiledSubject, ref: ProblemRef): Prob
 export interface ProblemView {
   readonly prompt: Text;
   readonly figure?: Figure;
+  /** listen are the recordings played to answer. */
+  readonly listen?: readonly string[];
   readonly input: Problem["answer"]["input"];
 }
 
 /** viewOf strips a problem down to its ProblemView. */
 export function viewOf(problem: Problem): ProblemView {
-  return { prompt: problem.prompt, ...(problem.figure && { figure: problem.figure }), input: problem.answer.input };
+  return {
+    prompt: problem.prompt,
+    ...(problem.figure && { figure: problem.figure }),
+    ...(problem.listen && { listen: problem.listen }),
+    input: problem.answer.input,
+  };
 }
 
 /** SampleOptions controls sampleGenerators. */
 export interface SampleOptions {
   /** samples is the number of seeds tried per knowledge point. */
   readonly samples?: number;
-  /** minDistinct is the fewest distinct prompts (with their figures and sets of options) expected among the samples before a warning. */
+  /** minDistinct is the fewest distinct prompts (with their figures and sets of options) expected among the samples before a warning; a prompt played from other recordings counts as another. */
   readonly minDistinct?: number;
   /** shard limits sampling to the topics at positions index, index + count, … so that test files can sample in parallel. */
   readonly shard?: { readonly index: number; readonly count: number };
@@ -80,7 +90,7 @@ export function sampleGenerators(subject: CompiledSubject, options: SampleOption
           return;
         }
         const p = generateProblem(subject, { topic: topic.id, kp: index, seed });
-        prompts.add(JSON.stringify([p.prompt, p.figure?.svg, optionsOf(p)]));
+        prompts.add(JSON.stringify([p.prompt, p.figure?.svg, p.listen, optionsOf(p)]));
         if (p.answer.input.kind === "choice")
           positions.set(p.answer.expected as number, (positions.get(p.answer.expected as number) ?? 0) + 1);
       }
@@ -171,8 +181,9 @@ function checkSample(
   }
   for (const sound of a.solutionSounds ?? []) {
     if (sound.text.trim() === "") return "a sound needs its text";
-    if (!/^audio\/[a-z][a-z0-9-]*\/[0-9a-f]{16}$/u.test(sound.audio)) return `a sound's path is not a recording's: ${sound.audio}`;
+    if (!RECORDING.test(sound.audio)) return `a sound's path is not a recording's: ${sound.audio}`;
   }
+  for (const path of a.listen ?? []) if (!RECORDING.test(path)) return `a recording to listen to has no recording's path: ${path}`;
   const { answer } = a;
   if (!subject.checkers.has(answer.checker)) return `unknown checker ${answer.checker}`;
   if (answer.input.kind === "choice") {

@@ -16,7 +16,7 @@ The grammar adds the past and the future: the past simple of regular and irregul
 
 ## How to Read This Outline
 
-Each unit lists its topics by strand. A vocabulary topic teaches its batch of headwords; the spellings in parentheses are the forms a passage of this level or a higher one may also use. Every word is taught once in all levels, and a passage uses only words taught at its level or below. Grammar and writing topics list their prerequisites; a topic marked *existing* is already in the graph and keeps its own prerequisites. Writing topics are judged by rules or by a model (§8). The reading unit and the conversation are written from this outline in a later step; listening and speaking wait for audio and recording, and each unit says what it will gain.
+Each unit lists its topics by strand. A vocabulary topic teaches its batch of headwords; the spellings in parentheses are the forms a passage of this level or a higher one may also use. Every word is taught once in all levels, and a passage uses only words taught at its level or below. Grammar and writing topics list their prerequisites; a topic marked *existing* is already in the graph and keeps its own prerequisites. Writing topics are judged by rules or by a model (§8). The reading unit and the conversation are written from this outline in a later step; each unit's listening topic is listed after it, and speaking waits for recording, each unit saying what it will gain.
 
 ## Units
 
@@ -45,7 +45,9 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Conversation:** `telling-about-your-weekend`. The tutor is a classmate on Monday morning. Task: Tell what you did last weekend, ask what they did, and react to their news.
 
-**Later, with audio and recording:** Listening to a story of a weekend and putting events in order; telling your weekend aloud in the past simple, with the right *-ed* sounds.
+**Listening:** `a2-listening-last-weekend`, the unit's words heard in sentences, then dialogues and announcements that answer: *What did the man do on Saturday?* *Where did the man go last weekend?* *When did the man get home?* *When does Dan want to meet?*
+
+**Later, with recording:** Telling your weekend aloud in the past simple, with the right *-ed* sounds.
 
 ### 2. Health and the Body
 
@@ -69,7 +71,9 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Conversation:** `at-the-doctor`. The tutor is a doctor at a clinic. Task: Say what is wrong and since when, answer the doctor's questions, and check what you should do.
 
-**Later, with audio and recording:** Listening to a doctor's advice and choosing what the patient must do; describing a pain and asking for advice.
+**Listening:** `a2-listening-health-and-the-body`, the unit's words heard in sentences, then dialogues and announcements that answer: *What's the matter with the man today?* *How often should the woman take the medicine?* *When can the woman see the doctor?* *Which part of the man's body hurts?*
+
+**Later, with recording:** Describing a pain and asking for advice.
 
 ### 3. Neighbors and Community
 
@@ -96,7 +100,9 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Conversation:** `meeting-a-new-neighbor`. The tutor is a neighbor who has just moved in. Task: Welcome them, tell them where the useful places are, and offer to help.
 
-**Later, with audio and recording:** Listening to a description of a town and marking places on a map; comparing two places aloud.
+**Listening:** `a2-listening-neighbors-and-community`, the unit's words heard in sentences, then dialogues and announcements that answer: *When is the street party?* *Who lives next to the man?* *What will the volunteers do on Saturday morning?* *Which street is the new café on?*
+
+**Later, with recording:** Comparing two places aloud.
 
 ### 4. Cooking
 
@@ -120,7 +126,9 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Conversation:** `cooking-together`. The tutor is a friend in your kitchen who wants to learn your favorite dish. Task: Say what you need, then explain the steps in order and answer their questions.
 
-**Later, with audio and recording:** Listening to a recipe and ordering the steps; explaining how to cook something.
+**Listening:** `a2-listening-cooking`, the unit's words heard in sentences, then dialogues and announcements that answer: *How long should the pasta cook?* *What do they need to buy for the cake?* *What is the man making now?* *How hot should the oven be?*
+
+**Later, with recording:** Explaining how to cook something.
 
 ### 5. Sports and Games
 
@@ -145,7 +153,9 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Conversation:** `talking-about-a-match`. The tutor is a friend who missed the match. Task: Tell them who played, what happened and who won, and answer their questions.
 
-**Later, with audio and recording:** Listening to a short sports report and noting the score; describing a game you played.
+**Listening:** `a2-listening-sports-and-games`, the unit's words heard in sentences, then dialogues and announcements that answer: *Which team won?* *What was the final score?* *When does the swimming class start?* *Which sport does the man prefer?*
+
+**Later, with recording:** Describing a game you played.
 
 ### 6. Animals and Pets
 
@@ -169,7 +179,9 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Conversation:** `choosing-a-pet`. The tutor works in a pet shop. Task: Ask about two pets, find out how to care for them, and choose one with a reason.
 
-**Later, with audio and recording:** Listening to an animal fact file and answering questions; telling a short story in the past continuous.
+**Listening:** `a2-listening-animals-and-pets`, the unit's words heard in sentences, then dialogues and announcements that answer: *What pet does the man have?* *How old is the man's dog?* *Which animals are fed at two o'clock?* *What does the man's rabbit eat?*
+
+**Later, with recording:** Telling a short story in the past continuous.
 
 ### 7. Travel and Holidays
 
@@ -193,7 +205,9 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Conversation:** `checking-into-a-hotel`. The tutor is the receptionist at a hotel. Task: Check in, ask about breakfast and one thing to see in town, and say how long you will stay.
 
-**Later, with audio and recording:** Listening to station announcements and finding the platform; talking about a holiday plan.
+**Listening:** `a2-listening-travel-and-holidays`, the unit's words heard in sentences, then dialogues and announcements that answer: *Which gate does the flight to Rome leave from?* *Where is the man going this summer?* *How long is the man staying?* *How is the man getting to the airport?*
+
+**Later, with recording:** Talking about a holiday plan.
 
 ### 8. The Natural World
 
@@ -217,7 +231,9 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Conversation:** `planning-a-day-outdoors`. The tutor is a friend planning a day out with you. Task: Agree on where to go, check the weather, and decide what to bring.
 
-**Later, with audio and recording:** Listening to a nature program and choosing true sentences; describing a place in nature.
+**Listening:** `a2-listening-the-natural-world`, the unit's words heard in sentences, then dialogues and announcements that answer: *How high is the mountain?* *What animal did they see near the river?* *Which river does the man think is the longest?* *What weather will there be in the north?*
+
+**Later, with recording:** Describing a place in nature.
 
 ### 9. Shopping and Money
 
@@ -241,7 +257,9 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Conversation:** `returning-something-to-a-shop`. The tutor is the shop assistant at a clothes store. Task: Explain what is wrong with something you bought, show the receipt, and ask for another one or your money back.
 
-**Later, with audio and recording:** Listening to prices and offers and choosing the best buy; asking for a different size or color.
+**Listening:** `a2-listening-shopping-and-money`, the unit's words heard in sentences, then dialogues and announcements that answer: *How much did the man pay for his shoes?* *Where can the woman buy stamps?* *Which floor has twenty percent off?* *Which phone is cheaper?*
+
+**Later, with recording:** Asking for a different size or color.
 
 ### 10. Technology
 
@@ -264,7 +282,9 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Conversation:** `helping-with-a-new-phone`. The tutor is a grandparent with a new phone. Task: Explain how to send a message and a photo, step by step, and check they understand.
 
-**Later, with audio and recording:** Listening to instructions for a device and choosing the right screen; explaining how to do something on a phone.
+**Listening:** `a2-listening-technology`, the unit's words heard in sentences, then dialogues and announcements that answer: *What is the Wi-Fi password?* *How long does the man's battery last?* *How many messages did the man get today?* *When does the computer room open today?*
+
+**Later, with recording:** Explaining how to do something on a phone.
 
 ### 11. Festivals and Celebrations
 
@@ -288,7 +308,9 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Conversation:** `planning-a-party`. The tutor is a friend planning a party with you. Task: Agree on the day, the food and the music, and decide who will invite the guests.
 
-**Later, with audio and recording:** Listening to people's plans for a festival and matching them; giving and answering an invitation aloud.
+**Listening:** `a2-listening-festivals-and-celebrations`, the unit's words heard in sentences, then dialogues and announcements that answer: *On which day of October does the festival start?* *What is the man going to dress up as?* *When do the fireworks begin?* *What did the man get from his parents?*
+
+**Later, with recording:** Giving and answering an invitation aloud.
 
 ### 12. Jobs and Dreams
 
@@ -310,7 +332,9 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Conversation:** `a-summer-job-interview`. The tutor is the manager of a cafe that needs summer staff. Task: Answer questions about yourself, say what you can do and when you are free, and ask one question about the job.
 
-**Later, with audio and recording:** Listening to people describe their jobs and noting the details; answering interview questions aloud.
+**Listening:** `a2-listening-jobs-and-dreams`, the unit's words heard in sentences, then dialogues and announcements that answer: *What does the man want to be?* *How many hours a day does the man work?* *When is the interview?* *What did the man study?*
+
+**Later, with recording:** Answering interview questions aloud.
 
 ### Everyday Words
 

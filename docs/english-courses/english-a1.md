@@ -16,7 +16,7 @@ The grammar is the present: the present simple with its third-person *-s*, its n
 
 ## How to Read This Outline
 
-Each unit lists its topics by strand. A vocabulary topic teaches its batch of headwords; the spellings in parentheses are the forms a passage of this level or a higher one may also use. Every word is taught once in all levels, and a passage uses only words taught at its level or below. Grammar and writing topics list their prerequisites; a topic marked *existing* is already in the graph and keeps its own prerequisites. Writing topics are judged by rules or by a model (§8). Each unit closes with the reading unit and the conversation named below; listening and speaking wait for audio and recording, and each unit says what it will gain.
+Each unit lists its topics by strand. A vocabulary topic teaches its batch of headwords; the spellings in parentheses are the forms a passage of this level or a higher one may also use. Every word is taught once in all levels, and a passage uses only words taught at its level or below. Grammar and writing topics list their prerequisites; a topic marked *existing* is already in the graph and keeps its own prerequisites. Writing topics are judged by rules or by a model (§8). Each unit closes with the reading unit and the conversation named below; each unit's listening topic is listed after it, and speaking waits for recording, each unit saying what it will gain.
 
 ## Units
 
@@ -38,7 +38,9 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Conversation:** `introducing-yourself`. The tutor is a teacher in an online class with students from many countries. Task: Say your name, your age, where you are from and which languages you speak.
 
-**Later, with audio and recording:** Listening to people introduce themselves and noting their age and country; saying numbers to a hundred and introducing yourself.
+**Listening:** `a1-listening-all-about-me`, the unit's words heard in sentences, then dialogues and announcements that answer: *How old is the man's brother?* *Where is the man from?* *What is the man's phone number?* *How is Sam today?* Before it, `listening-ship-and-sheep` Hearing Ship and Sheep: Tell apart the short sound of *ship* and the long sound of *sheep*.
+
+**Later, with recording:** Saying numbers to a hundred and introducing yourself.
 
 ### 2. My Day
 
@@ -62,7 +64,9 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Conversation:** `talking-about-your-day`. The tutor is a friend in another country. Task: Tell your friend when you get up, what you do after school and when you go to bed, and ask about their day.
 
-**Later, with audio and recording:** Listening to someone describe their day and putting the pictures in order; saying your routine with *always* and *never*.
+**Listening:** `a1-listening-my-day`, the unit's words heard in sentences, then dialogues and announcements that answer: *When does the man get up?* *How does the man usually go to school?* *What does the man usually do after school?* *When does Anna want to meet?* Before it, `listening-bad-and-bed` Hearing Bad and Bed: Tell apart the open sound of *bad* and the sound of *bed*.
+
+**Later, with recording:** Saying your routine with *always* and *never*.
 
 ### 3. Time and Dates
 
@@ -86,7 +90,9 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Conversation:** `making-a-plan-to-meet`. The tutor is a friend who wants to meet this week. Task: Agree on a day and a time to meet, and say why other times are no good.
 
-**Later, with audio and recording:** Listening for times and dates in short messages; saying the time and your birthday.
+**Listening:** `a1-listening-time-and-dates`, the unit's words heard in sentences, then dialogues and announcements that answer: *Which day of May is the man's birthday?* *What day is the party?* *When does the museum close today?* *When is the man's exam?* Before it, `listening-light-and-right` Hearing Light and Right: Tell apart *l* and *r* at the start of a word and after another consonant.
+
+**Later, with recording:** Saying the time and your birthday.
 
 ### 4. Food and Drink
 
@@ -110,7 +116,9 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Conversation:** `ordering-lunch`. The tutor is the waiter at a small cafe. Task: Order something to eat and something to drink, and ask for one more thing you need.
 
-**Later, with audio and recording:** Listening to an order in a cafe and choosing the right tray; saying food words and *I'd like...*
+**Listening:** `a1-listening-food-and-drink`, the unit's words heard in sentences, then dialogues and announcements that answer: *What does the man want?* *What does the man usually have for breakfast?* *What does the man want to drink?* *What is today's lunch?* Before it, `listening-think-and-sink` Hearing Think and Sink: Tell apart the *th* of *think* and the *s* of *sink*.
+
+**Later, with recording:** Saying food words and *I'd like...*
 
 ### 5. Clothes and Shopping
 
@@ -133,7 +141,9 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Conversation:** `buying-clothes`. The tutor works in a clothes shop. Task: Ask for a piece of clothing in your size and a color you like, ask the price, and decide whether to buy it.
 
-**Later, with audio and recording:** Listening to prices and choosing the right amount; describing what someone is wearing.
+**Listening:** `a1-listening-clothes-and-shopping`, the unit's words heard in sentences, then dialogues and announcements that answer: *How much is this T-shirt?* *What is the man looking for?* *What color is Lucy's dress?* *What is half price today?* Before it, `listening-win-and-wing` Hearing Win and Wing: Tell apart words that end in *n* and in *ng*.
+
+**Later, with recording:** Describing what someone is wearing.
 
 ### 6. Home
 
@@ -156,7 +166,9 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Conversation:** `describing-your-home`. The tutor is a friend who will visit you next week. Task: Describe the rooms of your home and say where your bedroom is.
 
-**Later, with audio and recording:** Listening to a description and choosing the right room; saying where things are.
+**Listening:** `a1-listening-home`, the unit's words heard in sentences, then dialogues and announcements that answer: *Where are the keys?* *How many bedrooms are there in the man's house?* *What is the man's favorite room?* *What must Ben do before dinner?*
+
+**Later, with recording:** Saying where things are.
 
 ### 7. Free Time
 
@@ -179,7 +191,9 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Conversation:** `inviting-a-friend`. The tutor is a friend who is free this weekend. Task: Invite your friend to do something with you, and agree on what, when and where.
 
-**Later, with audio and recording:** Listening to people talk about hobbies and matching them to pictures; saying what you like doing.
+**Listening:** `a1-listening-free-time`, the unit's words heard in sentences, then dialogues and announcements that answer: *What does the man play on Saturdays?* *What does the man love?* *When is the party?* *When does the music club meet?*
+
+**Later, with recording:** Saying what you like doing.
 
 ### 8. School
 
@@ -202,7 +216,9 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Conversation:** `asking-about-school`. The tutor is a new student from another school. Task: Ask which subjects they like and don't like, and tell them about your school.
 
-**Later, with audio and recording:** Listening to a timetable and answering questions; asking and answering *Do you...?* aloud.
+**Listening:** `a1-listening-school`, the unit's words heard in sentences, then dialogues and announcements that answer: *What is the man's favorite subject?* *What lesson do they have now?* *Which room is the man's classroom?* *Which page must the class open their books at?*
+
+**Later, with recording:** Asking and answering *Do you...?* aloud.
 
 ### 9. The Library
 
@@ -224,7 +240,9 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Conversation:** `library-help-desk`. The tutor is the librarian at the help desk of a school library (an existing conversation). Task: Say what your project is about, ask for a book on it, and find out when it is due back.
 
-**Later, with audio and recording:** Listening to a librarian's directions and dates; asking *Can I borrow...?* and *When is it due?*
+**Listening:** `a1-listening-the-library`, the unit's words heard in sentences, then dialogues and announcements that answer: *When does the library open on weekdays?* *How many books can the woman borrow?* *What books is the woman looking for?* *How long can the woman keep the book?*
+
+**Later, with recording:** Asking *Can I borrow...?* and *When is it due?*
 
 ### 10. Weather and Nature
 
@@ -247,7 +265,9 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Conversation:** `talking-about-the-weather`. The tutor is a friend on a video call from another city. Task: Say what the weather is like where you are and what you are doing, and ask about their weather.
 
-**Later, with audio and recording:** Listening to a weather report and choosing the pictures; saying what the weather is like.
+**Listening:** `a1-listening-weather-and-nature`, the unit's words heard in sentences, then dialogues and announcements that answer: *What will the weather be like in the morning?* *How warm is it in the man's city today?* *What is the man's favorite season?* *What animal can the man see?*
+
+**Later, with recording:** Saying what the weather is like.
 
 ### 11. People and Jobs
 
@@ -269,7 +289,9 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Conversation:** `asking-about-a-job`. The tutor is a worker who visits your class on careers day. Task: Find out what their job is, where they work and what they do every day.
 
-**Later, with audio and recording:** Listening to people describe their jobs and matching them to pictures; describing a person.
+**Listening:** `a1-listening-people-and-jobs`, the unit's words heard in sentences, then dialogues and announcements that answer: *What is the man's mother's job?* *Where does the man's brother work?* *What is Tom's hair like?* *How old is the man's teacher?*
+
+**Later, with recording:** Describing a person.
 
 ### 12. Town and Travel
 
@@ -292,7 +314,9 @@ Each unit lists its topics by strand. A vocabulary topic teaches its batch of he
 
 **Conversation:** `asking-the-way`. The tutor is a person in the street of a town you are visiting. Task: Ask the way to the station, check the directions, and thank them.
 
-**Later, with audio and recording:** Listening to directions and following them on a map; asking for and giving directions.
+**Listening:** `a1-listening-town-and-travel`, the unit's words heard in sentences, then dialogues and announcements that answer: *Where does the woman want to go?* *Which platform does the train to London leave from?* *Which bus should the woman take to the station?* *How long does it take to walk to the movie theater?*
+
+**Later, with recording:** Asking for and giving directions.
 
 ## Topics and Prerequisites
 

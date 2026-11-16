@@ -16,7 +16,7 @@
 
 ## 阅读说明
 
-每个单元按技能分列知识点。词汇知识点教一批词条；括号中是本级及更高级别的文章也可以使用的词形。每个词在所有级别中只教一次，一篇文章只用本级及以下教过的词。语法和写作知识点列出先修；标为*已有*的知识点已在图中，保留自己的先修。写作知识点由规则或模型评判（§8）。阅读单元和对话在后续步骤中依照本大纲编写；听力和口语要等音频和录音服务就绪，每个单元说明届时增加的内容。
+每个单元按技能分列知识点。词汇知识点教一批词条；括号中是本级及更高级别的文章也可以使用的词形。每个词在所有级别中只教一次，一篇文章只用本级及以下教过的词。语法和写作知识点列出先修；标为*已有*的知识点已在图中，保留自己的先修。写作知识点由规则或模型评判（§8）。阅读单元和对话在后续步骤中依照本大纲编写；每个单元的听力知识点列在其后，口语要等录音服务就绪，每个单元说明届时增加的内容。
 
 ## 单元
 
@@ -45,7 +45,9 @@
 
 **对话：** `telling-about-your-weekend`。导师扮演星期一早上的同学。 任务：讲讲你上周末做了什么，问问对方做了什么，并对对方的事作出回应。
 
-**有了音频和录音之后：** 听一个周末的故事并给事件排序；用一般过去时讲述自己的周末，读准 *-ed* 的发音。
+**听力：** `a2-listening-last-weekend`，先在句子里听出本单元的词，再听对话和通知回答：*What did the man do on Saturday?*（这个男人星期六做了什么？）*Where did the man go last weekend?*（这个男人上个周末去了哪里？）*When did the man get home?*（这个男人几点到家？）*When does Dan want to meet?*（Dan 想哪天见面？）
+
+**有了录音之后：** 用一般过去时讲述自己的周末，读准 *-ed* 的发音。
 
 ### 2. 健康与身体
 
@@ -69,7 +71,9 @@
 
 **对话：** `at-the-doctor`。导师扮演诊所里的医生。 任务：说出哪里不舒服、从什么时候开始，回答医生的问题，并确认你该怎么做。
 
-**有了音频和录音之后：** 听医生的建议并选出病人必须做的事；描述病痛并寻求建议。
+**听力：** `a2-listening-health-and-the-body`，先在句子里听出本单元的词，再听对话和通知回答：*What's the matter with the man today?*（这个男人今天哪里不舒服？）*How often should the woman take the medicine?*（这个女人应该多久吃一次药？）*When can the woman see the doctor?*（这个女人什么时候可以看医生？）*Which part of the man's body hurts?*（这个男人身体哪个部位疼？）
+
+**有了录音之后：** 描述病痛并寻求建议。
 
 ### 3. 邻里与社区
 
@@ -96,7 +100,9 @@
 
 **对话：** `meeting-a-new-neighbor`。导师扮演刚搬来的邻居。 任务：欢迎对方，告诉对方有用的地方在哪里，并主动提供帮助。
 
-**有了音频和录音之后：** 听对一个城镇的描述并在地图上标出地点；口头比较两个地方。
+**听力：** `a2-listening-neighbors-and-community`，先在句子里听出本单元的词，再听对话和通知回答：*When is the street party?*（街头聚会在什么时候？）*Who lives next to the man?*（谁住在这个男人隔壁？）*What will the volunteers do on Saturday morning?*（志愿者星期六上午要做什么？）*Which street is the new café on?*（新咖啡馆在哪条街上？）
+
+**有了录音之后：** 口头比较两个地方。
 
 ### 4. 做饭
 
@@ -120,7 +126,9 @@
 
 **对话：** `cooking-together`。导师扮演在你家厨房里、想学做你最拿手的菜的朋友。 任务：说出需要什么，然后按顺序讲解步骤并回答对方的问题。
 
-**有了音频和录音之后：** 听菜谱并给步骤排序；讲解怎样做一道菜。
+**听力：** `a2-listening-cooking`，先在句子里听出本单元的词，再听对话和通知回答：*How long should the pasta cook?*（意大利面要煮多久？）*What do they need to buy for the cake?*（做蛋糕他们需要买什么？）*What is the man making now?*（这个男人现在在做什么菜？）*How hot should the oven be?*（烤箱要预热到多少度？）
+
+**有了录音之后：** 讲解怎样做一道菜。
 
 ### 5. 运动与比赛
 
@@ -145,7 +153,9 @@
 
 **对话：** `talking-about-a-match`。导师扮演错过了比赛的朋友。 任务：告诉对方谁参赛、发生了什么、谁赢了，并回答对方的问题。
 
-**有了音频和录音之后：** 听简短的体育报道并记下比分；描述你参加过的比赛。
+**听力：** `a2-listening-sports-and-games`，先在句子里听出本单元的词，再听对话和通知回答：*Which team won?*（哪个队赢了？）*What was the final score?*（最终比分是多少？）*When does the swimming class start?*（游泳课几点开始？）*Which sport does the man prefer?*（这个男人更喜欢哪项运动？）
+
+**有了录音之后：** 描述你参加过的比赛。
 
 ### 6. 动物与宠物
 
@@ -169,7 +179,9 @@
 
 **对话：** `choosing-a-pet`。导师在宠物店工作。 任务：问问两种宠物的情况，了解怎样照料它们，然后选一种并说明理由。
 
-**有了音频和录音之后：** 听动物资料并回答问题；用过去进行时讲一个小故事。
+**听力：** `a2-listening-animals-and-pets`，先在句子里听出本单元的词，再听对话和通知回答：*What pet does the man have?*（这个男人养了什么宠物？）*How old is the man's dog?*（这个男人的狗几岁？）*Which animals are fed at two o'clock?*（哪种动物在两点喂食？）*What does the man's rabbit eat?*（这个男人的兔子吃什么？）
+
+**有了录音之后：** 用过去进行时讲一个小故事。
 
 ### 7. 旅行与假期
 
@@ -193,7 +205,9 @@
 
 **对话：** `checking-into-a-hotel`。导师扮演酒店前台接待员。 任务：办理入住，问早餐和城里一个值得看的地方，并说明你要住几天。
 
-**有了音频和录音之后：** 听车站广播并找到站台；谈论假期计划。
+**听力：** `a2-listening-travel-and-holidays`，先在句子里听出本单元的词，再听对话和通知回答：*Which gate does the flight to Rome leave from?*（去罗马的航班从几号登机口出发？）*Where is the man going this summer?*（这个男人今年夏天要去哪里？）*How long is the man staying?*（这个男人要待多久？）*How is the man getting to the airport?*（这个男人怎么去机场？）
+
+**有了录音之后：** 谈论假期计划。
 
 ### 8. 自然世界
 
@@ -217,7 +231,9 @@
 
 **对话：** `planning-a-day-outdoors`。导师扮演和你一起计划出游的朋友。 任务：商定去哪里，了解天气，并决定带什么。
 
-**有了音频和录音之后：** 听自然节目并选出正确的句子；描述大自然中的一个地方。
+**听力：** `a2-listening-the-natural-world`，先在句子里听出本单元的词，再听对话和通知回答：*How high is the mountain?*（这座山有多高？）*What animal did they see near the river?*（他们在河边看到了什么动物？）*Which river does the man think is the longest?*（这个男人认为哪条河最长？）*What weather will there be in the north?*（北部会是什么天气？）
+
+**有了录音之后：** 描述大自然中的一个地方。
 
 ### 9. 购物与金钱
 
@@ -241,7 +257,9 @@
 
 **对话：** `returning-something-to-a-shop`。导师扮演服装店的店员。 任务：说明你买的东西有什么问题，出示收据，要求换一件或退款。
 
-**有了音频和录音之后：** 听价格和优惠并选出最划算的；要求换尺码或颜色。
+**听力：** `a2-listening-shopping-and-money`，先在句子里听出本单元的词，再听对话和通知回答：*How much did the man pay for his shoes?*（这个男人买鞋花了多少钱？）*Where can the woman buy stamps?*（这个女人在哪里可以买到邮票？）*Which floor has twenty percent off?*（哪一层打八折？）*Which phone is cheaper?*（哪部手机更便宜？）
+
+**有了录音之后：** 要求换尺码或颜色。
 
 ### 10. 科技
 
@@ -264,7 +282,9 @@
 
 **对话：** `helping-with-a-new-phone`。导师扮演一位刚有了新手机的祖辈。 任务：一步一步讲解怎样发消息和照片，并确认对方听懂了。
 
-**有了音频和录音之后：** 听设备的使用说明并选出正确的屏幕；讲解怎样在手机上做一件事。
+**听力：** `a2-listening-technology`，先在句子里听出本单元的词，再听对话和通知回答：*What is the Wi-Fi password?*（无线网密码是什么？）*How long does the man's battery last?*（这个男人的手机电池能用多久？）*How many messages did the man get today?*（这个男人今天收到了多少条消息？）*When does the computer room open today?*（电脑室今天几点开门？）
+
+**有了录音之后：** 讲解怎样在手机上做一件事。
 
 ### 11. 节日与庆祝
 
@@ -288,7 +308,9 @@
 
 **对话：** `planning-a-party`。导师扮演和你一起筹备聚会的朋友。 任务：商定日期、食物和音乐，并决定谁去邀请客人。
 
-**有了音频和录音之后：** 听人们的节日计划并配对；口头发出邀请和回应邀请。
+**听力：** `a2-listening-festivals-and-celebrations`，先在句子里听出本单元的词，再听对话和通知回答：*On which day of October does the festival start?*（节日在十月几号开始？）*What is the man going to dress up as?*（这个男人要装扮成什么？）*When do the fireworks begin?*（烟花几点开始？）*What did the man get from his parents?*（这个男人从父母那里得到了什么？）
+
+**有了录音之后：** 口头发出邀请和回应邀请。
 
 ### 12. 工作与梦想
 
@@ -310,7 +332,9 @@
 
 **对话：** `a-summer-job-interview`。导师扮演一家招暑期工的咖啡馆经理。 任务：回答关于你自己的问题，说出你会做什么、什么时候有空，并就这份工作问一个问题。
 
-**有了音频和录音之后：** 听别人描述工作并记下细节；口头回答面试问题。
+**听力：** `a2-listening-jobs-and-dreams`，先在句子里听出本单元的词，再听对话和通知回答：*What does the man want to be?*（这个男人想成为什么？）*How many hours a day does the man work?*（这个男人每天工作几个小时？）*When is the interview?*（面试在哪天？）*What did the man study?*（这个男人学的是什么？）
+
+**有了录音之后：** 口头回答面试问题。
 
 ### 常用词
 

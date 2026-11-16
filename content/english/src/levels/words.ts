@@ -116,6 +116,33 @@ const explained = (w: WordDef, sentence: string): Text =>
  */
 const glossary = new Map<string, WordDef>();
 
+/** taught maps the id of each vocabulary topic to its words and prerequisites, filled as the content modules build their topics. */
+const taught = new Map<string, { readonly words: readonly WordDef[]; readonly prerequisites: readonly string[] }>();
+
+/** wordsOf are the words of a vocabulary topic already built; a module that asks must import the module that builds it. */
+export function wordsOf(topic: string): readonly WordDef[] {
+  const built = taught.get(topic);
+  if (!built) throw new Error(`no vocabulary topic ${topic} is built yet`);
+  return built.words;
+}
+
+/**
+ * latestOf are the vocabulary topics of a list that no other one of it needs, through the prerequisites of the
+ * vocabulary topics built: needing them needs all of the list that the vocabulary topics reach.
+ */
+export function latestOf(topics: readonly string[]): readonly string[] {
+  const reach = (id: string, seen = new Set<string>()): Set<string> => {
+    for (const p of taught.get(id)?.prerequisites ?? [])
+      if (!seen.has(p)) {
+        seen.add(p);
+        reach(p, seen);
+      }
+    return seen;
+  };
+  const needed = new Set(topics.flatMap((id) => [...reach(id)]));
+  return topics.filter((id) => !needed.has(id));
+}
+
 /** gloss is the word a spelling belongs to, if a vocabulary topic teaches it. */
 export function gloss(spelling: string): WordDef | undefined {
   return glossary.get(spelling.toLowerCase());
@@ -180,11 +207,11 @@ function fitsNot(w: WordDef, wrong: string, answer: string): Text | undefined {
 }
 
 /**
- * heteronyms are headwords spelled alike but said differently by meaning, such as *read* now and in the past or
+ * heteronyms are words spelled alike but said differently by meaning, such as *read* now and in the past or
  * *record* as a noun and a verb: alone they would be read one way whatever the meaning, so only their sentences are
  * recorded.
  */
-const heteronyms = new Set(
+export const heteronyms: ReadonlySet<string> = new Set(
   `abstract address advocate alternate appropriate associate attribute august bass bow close combat compact complex
   compound conduct conflict console content contest contract contrast convert decrease defect desert digest discount
   does dove duplicate elaborate entrance escort estimate excuse export extract frequent graduate house import incline
@@ -225,6 +252,7 @@ export function vocabularyTopic(spec: VocabularySpec): VocabularyTopic {
   const { id, words } = spec;
   const heads = words.map((w) => w.head);
   if (new Set(heads.map((h) => h.toLowerCase())).size !== heads.length) throw new Error(`${id}: a headword twice`);
+  taught.set(id, { words, prerequisites: spec.prerequisites });
   for (const w of words)
     for (const spelling of w.spellings) if (!glossary.has(spelling.toLowerCase())) glossary.set(spelling.toLowerCase(), w);
   const isAlike = (a: WordDef, b: string) => a.alike.includes(b) || (words.find((w) => w.head === b)?.alike.includes(a.head) ?? false);

@@ -1520,6 +1520,14 @@ export declare type ProblemView = Message<"ga.learning.v1.ProblemView"> & {
    * @generated from field: optional ga.common.v1.Figure figure = 3;
    */
   figure?: Figure | undefined;
+
+  /**
+   * listen are the recordings played to answer, by path from the site's root without an extension, as in Sound:
+   * what they say stays hidden until the solution.
+   *
+   * @generated from field: repeated string listen = 4;
+   */
+  listen: string[];
 };
 
 /**

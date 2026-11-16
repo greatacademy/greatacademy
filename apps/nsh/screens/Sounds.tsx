@@ -9,7 +9,7 @@ import { colors, Quiet } from "../lib/ui.tsx";
  * Sounds shows the recordings of a solution as buttons, each with what it says: a word, a sentence or the sounds of a
  * word. A recording loads only when it is first played; playing one stops the one before, and all stop when the view goes.
  */
-export function Sounds(props: { sounds: readonly Sound[] }) {
+export function Sounds(props: { sounds: readonly Pick<Sound, "text" | "audio">[] }) {
   let player: AudioPlayer | undefined;
   const playing = signal<number | undefined>(undefined);
   const failed = signal(false);
@@ -18,7 +18,7 @@ export function Sounds(props: { sounds: readonly Sound[] }) {
     player = undefined;
   };
   cleanup(stop);
-  const play = (i: number, sound: Sound) => {
+  const play = (i: number, sound: Pick<Sound, "text" | "audio">) => {
     stop();
     const p = new AudioPlayer(`${API_URL}/${sound.audio}.mp3`);
     player = p;

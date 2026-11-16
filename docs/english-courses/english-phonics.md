@@ -10,13 +10,13 @@
 
 ## Aim
 
-By the end of the course a child knows the capital and small form of every letter, says the alphabet in order and puts words in ABC order, names the first and last letters of a picture's word, reads three-letter words with a short vowel by sounding out and blending their letters, and spells them, then reads and spells words in which two letters, *sh*, *ch*, *th* or *ck*, make one sound, and words with a consonant blend, two consonants side by side whose sounds are both heard, such as *frog* and *nest*, and words in which a silent *e* at the end makes the vowel say its name, such as *cake* and *kite*, and words in which a vowel team, *ee*, *ea*, *ai*, *ay* or *oa*, spells a long vowel, such as *feet*, *rain* and *boat*, and reads and spells 30 common sight words with a tricky part, such as *said*, *was* and *one*, in short sentences, and last reads and writes 30 short sentences made only of what was taught, such as *A frog can hop on a log.* With audio the course then grows to sounds heard and spoken: rhyme, blending and segmenting by ear, and reading aloud.
+By the end of the course a child knows the capital and small form of every letter, says the alphabet in order and puts words in ABC order, names the first and last letters of a picture's word, reads three-letter words with a short vowel by sounding out and blending their letters, and spells them, then reads and spells words in which two letters, *sh*, *ch*, *th* or *ck*, make one sound, and words with a consonant blend, two consonants side by side whose sounds are both heard, such as *frog* and *nest*, and words in which a silent *e* at the end makes the vowel say its name, such as *cake* and *kite*, and words in which a vowel team, *ee*, *ea*, *ai*, *ay* or *oa*, spells a long vowel, such as *feet*, *rain* and *boat*, and reads and spells 30 common sight words with a tricky part, such as *said*, *was* and *one*, in short sentences, and last reads and writes 30 short sentences made only of what was taught, such as *A frog can hop on a log.* From the short vowels on, the child also hears words read aloud and picks out their pictures and their sounds, and tells apart pairs such as *kit* and *kite*. With recording the course then grows to sounds spoken: rhyme, blending and segmenting by ear, and reading aloud.
 
 ## How to Read This Outline
 
-The course starts with the side of phonics that can be practiced from print and pictures, so it needs no audio. Each picture is a line drawing made for this course with no words in it, so a child must read the word to match it; only the numbers 6 and 10 are written. Explanations ask an adult to say words with the child where a sound must be heard. Every topic is new and lists its prerequisites.
+The course starts with the side of phonics that can be practiced from print and pictures, plus listening to recorded words: the listening topics play a word and let the child choose; nothing needs the child's voice. Each picture is a line drawing made for this course with no words in it, so a child must read the word to match it; only the numbers 6 and 10 are written. Explanations ask an adult to say words with the child where a sound must be heard. Every topic is new and lists its prerequisites.
 
-Depth: each knowledge point has 30 to 117 distinct items. The 39 short-vowel picture words each have six near spellings that change one letter: two the vowel, two the first letter and two the last, so a wrong option always differs from the right word by one letter. The 30 digraph picture words each have three: one with another digraph, one with only one letter of its digraph, and one with another vowel. The 30 blend picture words, 15 with the blend at the start and 15 at the end, each have three: one that drops a letter of the blend, one that changes a letter of the blend, and one with another vowel. The 30 silent-e picture words each have three: one without the *e*, one with another vowel, and one with the *e* before the last consonant. The 30 vowel-team picture words each have three: one with only one letter of the team, one that spells the same sound another way, and one with a team of another sound. The 30 sight words have no pictures: each comes in a short sentence with a gap, with three near spellings, often written the way the word sounds, and two other sight words that the sentence does not take. The 30 short sentences each name one picture word and come with two other picture words that look like it, such as *cat*, *hat* and *rat*.
+Depth: each knowledge point has 30 to 117 distinct items. The 39 short-vowel picture words each have six near spellings that change one letter: two the vowel, two the first letter and two the last, so a wrong option always differs from the right word by one letter. The 30 digraph picture words each have three: one with another digraph, one with only one letter of its digraph, and one with another vowel. The 30 blend picture words, 15 with the blend at the start and 15 at the end, each have three: one that drops a letter of the blend, one that changes a letter of the blend, and one with another vowel. The 30 silent-e picture words each have three: one without the *e*, one with another vowel, and one with the *e* before the last consonant. The 30 vowel-team picture words each have three: one with only one letter of the team, one that spells the same sound another way, and one with a team of another sound. The 30 sight words have no pictures: each comes in a short sentence with a gap, with three near spellings, often written the way the word sounds, and two other sight words that the sentence does not take. The 30 short sentences each name one picture word and come with two other picture words that look like it, such as *cat*, *hat* and *rat*. The listening topics play the recorded picture words, and add 20 silent-e pairs such as *kit* and *kite* and 18 vowel-team pairs such as *bet* and *beat*, no word in two pairs.
 
 ## Units
 
@@ -30,26 +30,31 @@ Depth: each knowledge point has 30 to 117 distinct items. The 39 short-vowel pic
 
 - `reading-short-vowel-words` Reading Words with Short Vowels (after `first-and-last-letters`). Steps: choosing the word that names a picture, among words one letter away; then choosing the picture a word names, among pictures whose words share its letters.
 - `spelling-short-vowel-words` Spelling Words with Short Vowels (writing; after `reading-short-vowel-words`). Steps: typing the vowel missing from the middle of a picture's word; then typing the whole word.
+- `hearing-short-vowel-words` Hearing Short Vowels (listening; after `first-and-last-letters`). Steps: hearing a word and choosing its picture, among pictures of words that look alike; then choosing the vowel heard in the middle of the word.
 
 ### 3. Digraphs
 
 - `reading-words-with-digraphs` Reading Words with Digraphs (after `reading-short-vowel-words`). Steps: choosing the word that names a picture, among spellings with another digraph, one letter of the digraph, or another vowel; then choosing the picture a word names, among pictures whose words share its digraph.
 - `spelling-words-with-digraphs` Spelling Words with Digraphs (writing; after `reading-words-with-digraphs` and `spelling-short-vowel-words`). Steps: typing the two letters missing from a picture's word; then typing the whole word.
+- `hearing-words-with-digraphs` Hearing Digraphs (listening; after `reading-words-with-digraphs`). Steps: hearing a word and choosing its picture, among pictures of words that look alike; then choosing the two letters that spell a sound heard in the word.
 
 ### 4. Blends
 
 - `reading-words-with-blends` Reading Words with Blends (after `reading-short-vowel-words`). Steps: choosing the word that names a picture, among spellings that drop or change a letter of the blend or change the vowel; then choosing the picture a word names, among pictures whose words have a blend in the same place.
 - `spelling-words-with-blends` Spelling Words with Blends (writing; after `reading-words-with-blends` and `spelling-short-vowel-words`). Steps: typing the two letters of the blend missing from a picture's word; then typing the whole word.
+- `hearing-words-with-blends` Hearing Blends (listening; after `reading-words-with-blends`). Steps: hearing a word and choosing its picture, among pictures of words that look alike; then choosing the two consonants heard together in the word.
 
 ### 5. Silent E
 
 - `reading-words-with-silent-e` Reading Words with a Silent E (after `reading-short-vowel-words`). Steps: choosing the word that names a picture, among spellings without the *e*, with another vowel, or with the *e* in the middle; then choosing the picture a word names, among pictures whose words share its letters.
 - `spelling-words-with-silent-e` Spelling Words with a Silent E (writing; after `reading-words-with-silent-e` and `spelling-short-vowel-words`). Steps: typing the vowel missing from a picture's word; then typing the whole word.
+- `hearing-words-with-silent-e` Hearing Silent E (listening; after `reading-words-with-silent-e`). Steps: hearing a word and choosing its picture; then hearing one of a pair such as *kit* and *kite* and choosing which; then hearing two recordings and saying whether they are the same word.
 
 ### 6. Vowel Teams
 
 - `reading-words-with-vowel-teams` Reading Words with Vowel Teams (after `reading-words-with-silent-e`). Steps: choosing the word that names a picture, among spellings with one letter of the team, another spelling of the same sound, or a team of another sound; then choosing the picture a word names, among pictures whose words share its team.
 - `spelling-words-with-vowel-teams` Spelling Words with Vowel Teams (writing; after `reading-words-with-vowel-teams` and `spelling-words-with-silent-e`). Steps: typing the two letters of the team missing from a picture's word; then typing the whole word.
+- `hearing-words-with-vowel-teams` Hearing Vowel Teams (listening; after `reading-words-with-vowel-teams`). Steps: hearing a word and choosing its picture; then hearing one of a pair such as *bet* and *beat* and choosing which; then hearing two recordings and saying whether they are the same word.
 
 ### 7. Sight Words
 
@@ -70,14 +75,19 @@ Depth: each knowledge point has 30 to 117 distinct items. The 39 short-vowel pic
 | `first-and-last-letters` | The first letter; the last letter | 39; 39 | Rules |
 | `reading-short-vowel-words` | The word for a picture; the picture for a word | 117; 39 | Rules |
 | `spelling-short-vowel-words` | The missing vowel; spelling the whole word | 39; 39 | Rules |
+| `hearing-short-vowel-words` | Hearing the word, finding the picture; the vowel in the middle | 39; 39 | Rules |
 | `reading-words-with-digraphs` | The word for a picture; the picture for a word | 30; 30 | Rules |
 | `spelling-words-with-digraphs` | The missing digraph; spelling the whole word | 30; 30 | Rules |
+| `hearing-words-with-digraphs` | Hearing the word, finding the picture; two letters, one sound | 30; 30 | Rules |
 | `reading-words-with-blends` | The word for a picture; the picture for a word | 30; 30 | Rules |
 | `spelling-words-with-blends` | The missing blend; spelling the whole word | 30; 30 | Rules |
+| `hearing-words-with-blends` | Hearing the word, finding the picture; two consonants together | 30; 30 | Rules |
 | `reading-words-with-silent-e` | The word for a picture; the picture for a word | 30; 30 | Rules |
 | `spelling-words-with-silent-e` | The missing vowel; spelling the whole word | 30; 30 | Rules |
+| `hearing-words-with-silent-e` | Hearing the word, finding the picture; which word; the same or different | 30; 40; 80 | Rules |
 | `reading-words-with-vowel-teams` | The word for a picture; the picture for a word | 30; 30 | Rules |
 | `spelling-words-with-vowel-teams` | The missing vowel team; spelling the whole word | 30; 30 | Rules |
+| `hearing-words-with-vowel-teams` | Hearing the word, finding the picture; which word; the same or different | 30; 36; 72 | Rules |
 | `reading-sight-words` | The right spelling; the word that fits | 30; 30 | Rules |
 | `spelling-sight-words` | The tricky part; spelling the whole word | 30; 30 | Rules |
 | `reading-decodable-sentences` | The picture for a sentence; the sentence for a picture | 30; 30 | Rules |

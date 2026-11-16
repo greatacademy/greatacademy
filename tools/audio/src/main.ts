@@ -1,5 +1,6 @@
 // Makes the recordings the English content asks for with Azure AI Speech and lists them in
-// content/english/src/recordings.ts: passages, words, sentences, the sounds of words, and conversations' openings.
+// content/english/src/recordings.ts: passages, words, sentences, the sounds of words, conversations' openings, and
+// the dialogues of listening problems.
 //
 //   pnpm nx run audio:make -- --unit water-on-earth          # the passages of one or more reading units
 //   pnpm nx run audio:make -- --kind word --kind sounds      # the recordings of some kinds
@@ -19,7 +20,7 @@ const root = new URL("../../../", import.meta.url);
 const folder = new URL("content/english/audio/files/", root);
 const listFile = new URL("content/english/src/recordings.ts", root);
 /** KINDS are the kinds of recording --kind may name. */
-const KINDS: readonly RecordingKind[] = ["passage", "word", "sentence", "sounds", "opening"];
+const KINDS: readonly RecordingKind[] = ["passage", "word", "sentence", "sounds", "opening", "dialogue"];
 /** WORKERS is how many recordings are made at once unless --workers says otherwise. */
 const WORKERS = 3;
 /** TRIES is how often a recording is tried before the run gives up on it. */

@@ -5,6 +5,7 @@ import { type Text, t, type UnitDef } from "@ga/content";
 const modules = {
   words: t("Words", "词汇"),
   grammar: t("Grammar", "语法"),
+  listening: t("Listening", "听力"),
   reading: t("Reading", "阅读"),
   writing: t("Writing", "写作"),
 } as const;
@@ -13,13 +14,14 @@ const modules = {
 export interface UnitParts {
   readonly words?: readonly string[];
   readonly grammar?: readonly string[];
+  readonly listening?: readonly string[];
   readonly reading?: readonly string[];
   readonly writing?: readonly string[];
 }
 
 /** levelUnit builds a unit of a level course on a theme, with a module for each strand that has topics, its reading unit and its conversation. */
 export function levelUnit(title: Text, parts: UnitParts, readingUnit: string, conversation: string): UnitDef {
-  const strands = ["words", "grammar", "reading", "writing"] as const;
+  const strands = ["words", "grammar", "listening", "reading", "writing"] as const;
   return {
     title,
     modules: strands

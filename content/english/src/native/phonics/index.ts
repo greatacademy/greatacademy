@@ -5,6 +5,7 @@ import { blendTopics } from "./blends.ts";
 import { coursePhonics } from "./course.ts";
 import { digraphTopics } from "./digraphs.ts";
 import { letterTopics } from "./letters.ts";
+import { listeningTopics } from "./listening.ts";
 import { sentenceTopics } from "./sentences.ts";
 import { shortVowelTopics } from "./short-vowels.ts";
 import { sightWordTopics } from "./sight-words.ts";
@@ -33,6 +34,6 @@ const spelling = [
 /** phonics is the content of the phonics course. */
 export const phonics: Pack = {
   ...emptyPack,
-  topics: [...inStrand("reading", [...letterTopics, ...reading]), ...inStrand("writing", spelling)],
+  topics: [...inStrand("reading", [...letterTopics, ...reading]), ...inStrand("writing", spelling), ...listeningTopics],
   courses: [coursePhonics],
 };

@@ -19,7 +19,7 @@
 | 包含边 | `EncompassingDef` | 练习该知识点会隐式地练习一个更简单的知识点的一部分（`weight`） |
 | 关键先修 | `KnowledgePointDef.keyPrerequisites` | 这一步最直接依赖的先前知识点，用于补救 |
 | 课程 | `CourseDef` | 按单元和模块排列的一组有序知识点，以及掌握下限 |
-| 题目 | `Problem` | 一次生成的实例：题面、答案规格、解答、标准答案和错误答案，以及可选的随解答显示的录音（`solutionSounds`，每条是一个标签及其录音的路径） |
+| 题目 | `Problem` | 一次生成的实例：题面、答案规格、解答、标准答案和错误答案，以及可选的作答时播放、但不显示内容的录音（`listen`，录音的路径），和随解答显示的录音（`solutionSounds`，每条是一个标签及其录音的路径） |
 | 判定器 | `Checker` | 根据题目的期望数据判断作答 |
 | 文章 | `PassageDef` | 一篇供阅读的文本，附简短的理解检查；是图谱中独立于知识点的节点，其 id 与知识点共用命名空间；可带朗读录音的名字（`audio`），以及不是通常口音时所用的口音（`accent`） |
 | 阅读单元 | `ReadingUnitDef` | 同一领域的一组有序文章，可带封面在学科插图中的名字，封面显示在每篇文章上方；课程在 `CourseDef.reading` 中列出它提供的单元 |
@@ -335,8 +335,9 @@ const prealgebra: CourseDef = {
 
 **写作规则。** 输入题会指明要用什么并提供分句，这样模式才能列出所有接受的句子；模式拒绝了正确的句子就是题目的缺陷，试点报告会列出这些回答供人阅读。字面的美元符号写作 `\$`，因为 `$` 表示 TeX 的开始，`content/english` 传入的 `textIssue` 会拒绝未转义的美元符号。
 
-**录音。** 文章、单词、句子、单词的发音和对话的开场白都有朗读。`tools/audio` 用 Azure AI Speech 提前生成每条录音，所用 SSML 在 `content/english/src/audio.ts` 中构造：文章各段依次朗读、段间停顿，单独一个单词或一句话，或者把单词的音逐个读出再读整个单词。都由 `en-US-Ava:DragonHDLatestNeural` 朗读，比常速慢 10%；单词的发音除外，由同一位说话人的非 HD 声音 `en-US-AvaNeural` 朗读，因为 HD 声音不遵循用 IPA 写的音素。`content/english/src/accents.ts` 列出的文章（每个 B1 和 B2 阅读单元约三篇、全部 FCE 文章和雅思文章）改由英音 `en-GB-Ada:DragonHDLatestNeural` 或澳音 `en-au-cyanspark:DragonHDOmniLatestNeural` 朗读，让学习者听到考试所用的口音；这些文章采用英式拼写，由 `content/english/src/spelling.ts` 转换并由测试检查，单词的英式拼写在词表和词汇批次中都算作同一个词。录音以其 SSML 的 64 位 FNV-1a 哈希命名，所以文字、声音或语速一改，在重新生成之前就没有录音。内容模块在构建时登记所需的录音，从不在生成器内登记，所以工具知道全部录音；工具把文件写入 `content/english/audio/files`（被 git 忽略），并列在 `content/english/src/recordings.ts` 中；若列出的文件内容已不再需要，测试就失败。只有已录好的才会到达学习者：
+**录音。** 文章、单词、句子、单词的发音、对话的开场白和听力题的对话都有朗读。`tools/audio` 用 Azure AI Speech 提前生成每条录音，所用 SSML 在 `content/english/src/audio.ts` 中构造：文章各段依次朗读、段间停顿，单独一个单词或一句话，把单词的音逐个读出再读整个单词，或者由两个声音轮流说出、句间停顿的对话。都由 `en-US-Ava:DragonHDLatestNeural` 朗读，比常速慢 10%；单词的发音除外，由同一位说话人的非 HD 声音 `en-US-AvaNeural` 朗读，因为 HD 声音不遵循用 IPA 写的音素；对话的第二位说话人由 `en-US-Andrew:DragonHDLatestNeural` 以同样语速朗读。`content/english/src/accents.ts` 列出的文章（每个 B1 和 B2 阅读单元约三篇、全部 FCE 文章和雅思文章）改由英音 `en-GB-Ada:DragonHDLatestNeural` 或澳音 `en-au-cyanspark:DragonHDOmniLatestNeural` 朗读，让学习者听到考试所用的口音；这些文章采用英式拼写，由 `content/english/src/spelling.ts` 转换并由测试检查，单词的英式拼写在词表和词汇批次中都算作同一个词。录音以其 SSML 的 64 位 FNV-1a 哈希命名，所以文字、声音或语速一改，在重新生成之前就没有录音。内容模块在构建时登记所需的录音，从不在生成器内登记，所以工具知道全部录音；工具把文件写入 `content/english/audio/files`（被 git 忽略），并列在 `content/english/src/recordings.ts` 中；若列出的文件内容已不再需要，测试就失败。只有已录好的才会到达学习者：
 
 - 录音已列出的文章附上 `audio`，用其他口音朗读时还附上 `accent`；API 给出路径 `audio/english/<name>`，两个应用都在正文上方播放 `<path>.mp3`，并在播放器旁标出口音。
 - 单词、自然拼读和常见词的题目带有 `solutionSounds`：单词、它的例句，图片词还有它的各个音，以字母为标签（"c-a-t"）。它们随解答、例题和结果显示，从不在作答之前出现，所以听到录音不会泄露答案。读音随词义而变的词汇（如 *wind*、*record*）只有例句录音。
+- 听力题（S1）在作答之前播放其 `listen` 录音，按钮上只写“听”，解答引用录音的内容。与其他录音不同，`heard` 无论录音是否已生成都给出路径，因为没有录音就无法作答；只要其中有一条缺失，测试就失败。音对主题用只差这两个音的词分辨两个音，如 *ship* 和 *sheep*：听到的是两者中的哪一个，以及先后播放的两个词是否相同。A1 和 A2 每个单元的听力主题先问句子里说到了本单元的哪个词，再就一段简短的对话或通知回答问题；对话由带两个空位的框架生成，一个空位放答案，另一个放录音里也说到的另一个值。自然拼读从短元音到元音组合的各单元播放一个图片词，让孩子在名称听起来相近的图片中找出它，再问它的元音、二合字母或辅音连缀，或分辨带不发音 e 或元音组合的词和它所改变的短词。
 - 对话的开场白录成 16 kHz 16 位单声道 WAV，即语音服务的音频；服务播放它而不朗读这句话，取不到录音时就朗读。`pnpm nx run audio:upload` 把已列出、而 R2 存储桶 `greatacademy` 尚未存放的录音上传到 `audio/english/` 下，Web Worker 按存放的键提供每条录音。

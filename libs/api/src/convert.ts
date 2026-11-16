@@ -74,7 +74,12 @@ function input(spec: InputSpec): MessageInitShape<typeof InputSchema> {
 
 /** problemView converts what the learner may see of a problem before answering. */
 export function problemView(p: Problem): MessageInitShape<typeof ProblemViewSchema> {
-  return { prompt: text(p.prompt), input: input(p.answer.input), ...(p.figure && { figure: figure(p.figure) }) };
+  return {
+    prompt: text(p.prompt),
+    input: input(p.answer.input),
+    ...(p.figure && { figure: figure(p.figure) }),
+    listen: [...(p.listen ?? [])],
+  };
 }
 
 /** fromCourse names the earlier course a foundation of the course comes from, as Math Academy labels such tasks. */

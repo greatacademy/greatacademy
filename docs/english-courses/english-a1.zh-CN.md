@@ -16,7 +16,7 @@
 
 ## 阅读说明
 
-每个单元按技能分列知识点。词汇知识点教一批词条；括号中是本级及更高级别的文章也可以使用的词形。每个词在所有级别中只教一次，一篇文章只用本级及以下教过的词。语法和写作知识点列出先修；标为*已有*的知识点已在图中，保留自己的先修。写作知识点由规则或模型评判（§8）。每个单元以下面列出的阅读单元和对话收尾；听力和口语要等音频和录音服务就绪，每个单元说明届时增加的内容。
+每个单元按技能分列知识点。词汇知识点教一批词条；括号中是本级及更高级别的文章也可以使用的词形。每个词在所有级别中只教一次，一篇文章只用本级及以下教过的词。语法和写作知识点列出先修；标为*已有*的知识点已在图中，保留自己的先修。写作知识点由规则或模型评判（§8）。每个单元以下面列出的阅读单元和对话收尾；每个单元的听力知识点列在其后，口语要等录音服务就绪，每个单元说明届时增加的内容。
 
 ## 单元
 
@@ -38,7 +38,9 @@
 
 **对话：** `introducing-yourself`。导师是一个在线课堂的老师，学生来自许多国家。 任务：说出你的名字、年龄、来自哪里以及会说哪些语言。
 
-**有了音频和录音之后：** 听别人自我介绍，记下他们的年龄和国家；说一百以内的数字并介绍自己。
+**听力：** `a1-listening-all-about-me`，先在句子里听出本单元的词，再听对话和通知回答：*How old is the man's brother?*（这个男人的哥哥（弟弟）几岁？）*Where is the man from?*（这个男人来自哪里？）*What is the man's phone number?*（这个男人的电话号码是多少？）*How is Sam today?*（Sam 今天感觉怎么样？）。在它之前，`listening-ship-and-sheep` 听辨 ship 和 sheep：分辨 *ship* 的短音和 *sheep* 的长音。
+
+**有了录音之后：** 说一百以内的数字并介绍自己。
 
 ### 2. 我的一天
 
@@ -62,7 +64,9 @@
 
 **对话：** `talking-about-your-day`。导师扮演一位在另一个国家的朋友。 任务：告诉朋友你几点起床、放学后做什么、几点睡觉，并问问对方的一天。
 
-**有了音频和录音之后：** 听别人描述一天并给图片排序；用 *always* 和 *never* 说出自己的作息。
+**听力：** `a1-listening-my-day`，先在句子里听出本单元的词，再听对话和通知回答：*When does the man get up?*（这个男人几点起床？）*How does the man usually go to school?*（这个男人平时怎么去上学？）*What does the man usually do after school?*（这个男人放学后通常做什么？）*When does Anna want to meet?*（Anna 想几点见面？）。在它之前，`listening-bad-and-bed` 听辨 bad 和 bed：分辨 *bad* 的开口音和 *bed* 的音。
+
+**有了录音之后：** 用 *always* 和 *never* 说出自己的作息。
 
 ### 3. 时间与日期
 
@@ -86,7 +90,9 @@
 
 **对话：** `making-a-plan-to-meet`。导师扮演一位这周想见面的朋友。 任务：商定见面的日期和时间，并说明其他时间为什么不行。
 
-**有了音频和录音之后：** 在简短的留言中听时间和日期；说出时间和自己的生日。
+**听力：** `a1-listening-time-and-dates`，先在句子里听出本单元的词，再听对话和通知回答：*Which day of May is the man's birthday?*（这个男人的生日是五月几号？）*What day is the party?*（聚会在星期几？）*When does the museum close today?*（博物馆今天几点关门？）*When is the man's exam?*（这个男人的考试在什么时候？）。在它之前，`listening-light-and-right` 听辨 light 和 right：分辨词首和辅音后的 *l* 和 *r*。
+
+**有了录音之后：** 说出时间和自己的生日。
 
 ### 4. 食物与饮料
 
@@ -110,7 +116,9 @@
 
 **对话：** `ordering-lunch`。导师扮演一家小咖啡馆的服务员。 任务：点一样吃的和一样喝的，再要一样你需要的东西。
 
-**有了音频和录音之后：** 听咖啡馆里的点餐并选出正确的餐盘；说食物名称和 *I'd like...*。
+**听力：** `a1-listening-food-and-drink`，先在句子里听出本单元的词，再听对话和通知回答：*What does the man want?*（这个男人想要什么？）*What does the man usually have for breakfast?*（这个男人早餐通常吃什么？）*What does the man want to drink?*（这个男人想喝什么？）*What is today's lunch?*（今天的午饭是什么？）。在它之前，`listening-think-and-sink` 听辨 think 和 sink：分辨 *think* 中的 *th* 和 *sink* 中的 *s*。
+
+**有了录音之后：** 说食物名称和 *I'd like...*。
 
 ### 5. 衣服与购物
 
@@ -133,7 +141,9 @@
 
 **对话：** `buying-clothes`。导师在一家服装店工作。 任务：要一件你的尺码、你喜欢的颜色的衣服，问价钱，并决定买不买。
 
-**有了音频和录音之后：** 听价格并选出正确的金额；描述某人穿着什么。
+**听力：** `a1-listening-clothes-and-shopping`，先在句子里听出本单元的词，再听对话和通知回答：*How much is this T-shirt?*（这件 T 恤多少钱？）*What is the man looking for?*（这个男人在找什么？）*What color is Lucy's dress?*（Lucy 的连衣裙是什么颜色的？）*What is half price today?*（今天什么东西半价？）。在它之前，`listening-win-and-wing` 听辨 win 和 wing：分辨以 *n* 和 *ng* 结尾的词。
+
+**有了录音之后：** 描述某人穿着什么。
 
 ### 6. 家
 
@@ -156,7 +166,9 @@
 
 **对话：** `describing-your-home`。导师扮演一位下周要来拜访你的朋友。 任务：描述你家的房间，并说出你的卧室在哪里。
 
-**有了音频和录音之后：** 听描述并选出正确的房间；说出东西在哪里。
+**听力：** `a1-listening-home`，先在句子里听出本单元的词，再听对话和通知回答：*Where are the keys?*（钥匙在哪里？）*How many bedrooms are there in the man's house?*（这个男人的房子里有几间卧室？）*What is the man's favorite room?*（这个男人最喜欢哪个房间？）*What must Ben do before dinner?*（Ben 晚饭前必须做什么？）
+
+**有了录音之后：** 说出东西在哪里。
 
 ### 7. 业余时间
 
@@ -179,7 +191,9 @@
 
 **对话：** `inviting-a-friend`。导师扮演一位这个周末有空的朋友。 任务：邀请朋友和你一起做件事，商定做什么、什么时候、在哪里。
 
-**有了音频和录音之后：** 听别人谈爱好并与图片配对；说出你喜欢做什么。
+**听力：** `a1-listening-free-time`，先在句子里听出本单元的词，再听对话和通知回答：*What does the man play on Saturdays?*（这个男人星期六玩什么？）*What does the man love?*（这个男人非常喜欢什么？）*When is the party?*（聚会在什么时候？）*When does the music club meet?*（音乐俱乐部什么时候活动？）
+
+**有了录音之后：** 说出你喜欢做什么。
 
 ### 8. 学校
 
@@ -202,7 +216,9 @@
 
 **对话：** `asking-about-school`。导师扮演从另一所学校转来的新同学。 任务：问对方喜欢和不喜欢哪些科目，并介绍你的学校。
 
-**有了音频和录音之后：** 听课程表并回答问题；大声问答 *Do you...?*。
+**听力：** `a1-listening-school`，先在句子里听出本单元的词，再听对话和通知回答：*What is the man's favorite subject?*（这个男人最喜欢哪门课？）*What lesson do they have now?*（他们现在上什么课？）*Which room is the man's classroom?*（这个男人的教室是几号房间？）*Which page must the class open their books at?*（全班要把书翻到第几页？）
+
+**有了录音之后：** 大声问答 *Do you...?*。
 
 ### 9. 图书馆
 
@@ -224,7 +240,9 @@
 
 **对话：** `library-help-desk`。导师扮演学校图书馆服务台的图书管理员（已有的对话）。 任务：说出你的课题是关于什么的，请对方帮你找一本相关的书，并问清楚什么时候还书。
 
-**有了音频和录音之后：** 听图书管理员说位置和日期；问 *Can I borrow...?* 和 *When is it due?*。
+**听力：** `a1-listening-the-library`，先在句子里听出本单元的词，再听对话和通知回答：*When does the library open on weekdays?*（图书馆工作日几点开门？）*How many books can the woman borrow?*（这个女人可以借几本书？）*What books is the woman looking for?*（这个女人在找什么书？）*How long can the woman keep the book?*（这个女人可以借这本书多久？）
+
+**有了录音之后：** 问 *Can I borrow...?* 和 *When is it due?*。
 
 ### 10. 天气与自然
 
@@ -247,7 +265,9 @@
 
 **对话：** `talking-about-the-weather`。导师扮演在另一座城市和你视频通话的朋友。 任务：说说你那里的天气和你正在做什么，再问问对方那里的天气。
 
-**有了音频和录音之后：** 听天气预报并选出图片；说出天气情况。
+**听力：** `a1-listening-weather-and-nature`，先在句子里听出本单元的词，再听对话和通知回答：*What will the weather be like in the morning?*（上午天气怎么样？）*How warm is it in the man's city today?*（今天这个男人所在的城市有多少度？）*What is the man's favorite season?*（这个男人最喜欢哪个季节？）*What animal can the man see?*（这个男人能看到什么动物？）
+
+**有了录音之后：** 说出天气情况。
 
 ### 11. 人与职业
 
@@ -269,7 +289,9 @@
 
 **对话：** `asking-about-a-job`。导师扮演职业日来班上的一位工作者。 任务：问清楚对方做什么工作、在哪里工作、每天做什么。
 
-**有了音频和录音之后：** 听别人描述自己的工作并与图片配对；描述一个人。
+**听力：** `a1-listening-people-and-jobs`，先在句子里听出本单元的词，再听对话和通知回答：*What is the man's mother's job?*（这个男人的妈妈做什么工作？）*Where does the man's brother work?*（这个男人的兄弟在哪里工作？）*What is Tom's hair like?*（Tom 的头发是什么样的？）*How old is the man's teacher?*（这个男人的老师大约多大年纪？）
+
+**有了录音之后：** 描述一个人。
 
 ### 12. 城镇与出行
 
@@ -292,7 +314,9 @@
 
 **对话：** `asking-the-way`。导师扮演你所游览的小镇街上的一个人。 任务：问去车站的路，确认一遍路线，然后道谢。
 
-**有了音频和录音之后：** 听路线说明并在地图上找路；问路和指路。
+**听力：** `a1-listening-town-and-travel`，先在句子里听出本单元的词，再听对话和通知回答：*Where does the woman want to go?*（这个女人想去哪里？）*Which platform does the train to London leave from?*（去伦敦的火车从几号站台出发？）*Which bus should the woman take to the station?*（这个女人应该坐几路公交车去车站？）*How long does it take to walk to the movie theater?*（走路去电影院要多久？）
+
+**有了录音之后：** 问路和指路。
 
 ## 知识点与先修
 

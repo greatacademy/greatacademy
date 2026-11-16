@@ -25,7 +25,7 @@ describe("english content", () => {
     for (const topic of subject.topics.values()) {
       topic.knowledgePoints.forEach((kp, index) => {
         const prompts = [1, 2, 3, 4].map((seed) => kp.generate(createRng(seed + index)));
-        const distinct = new Set(prompts.map((p) => JSON.stringify([p.prompt, p.canonical, p.answer.input])));
+        const distinct = new Set(prompts.map((p) => JSON.stringify([p.prompt, p.listen, p.canonical, p.answer.input])));
         expect(distinct.size, `${topic.id} ${index}`).toBe(4);
       });
     }

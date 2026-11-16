@@ -469,6 +469,9 @@ message ProblemView {
   Input input = 2;
   // figure is a drawing the prompt refers to.
   optional ga.common.v1.Figure figure = 3;
+  // listen are the recordings played to answer, by path from the site's root without an extension, as in Sound:
+  // what they say stays hidden until the solution.
+  repeated string listen = 4;
 }
 
 message Input {

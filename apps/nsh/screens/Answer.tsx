@@ -7,14 +7,20 @@ import { colors, fieldStyle, Muted } from "../lib/ui.tsx";
 import { MathField } from "./MathField.tsx";
 import { PlotField } from "./PlotField.tsx";
 import { FigureView, Rich, Tex } from "./Rich.tsx";
+import { Sounds } from "./Sounds.tsx";
 
-/** Prompt shows a problem's prompt and its drawing; while a plot is answered, the drawing is the input itself. */
+/** listenTo labels the recordings a problem plays to answer, numbered when there are several, without what they say. */
+const listenTo = (paths: readonly string[]) =>
+  paths.map((audio, i) => ({ audio, text: paths.length > 1 ? `${m().listen} ${i + 1}` : m().listen }));
+
+/** Prompt shows a problem's prompt, the recordings it plays and its drawing; while a plot is answered, the drawing is the input itself. */
 export function Prompt(props: { problem: ProblemView; answering?: boolean }) {
   const input = props.problem.input?.kind;
   const figure = props.answering && input?.case === "plot" ? undefined : props.problem.figure;
   return (
     <View style={{ gap: 12 }}>
       <Rich source={tx(props.problem.prompt)} fontSize={18} />
+      <Sounds sounds={listenTo(props.problem.listen)} />
       <If when={figure}>{(drawn) => <FigureView figure={drawn()} />}</If>
       <If when={!props.answering && input?.case === "order"}>
         <View style={{ gap: 4 }}>
