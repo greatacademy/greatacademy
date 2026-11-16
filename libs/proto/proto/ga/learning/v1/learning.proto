@@ -416,6 +416,8 @@ message Passage {
   // audio is the path of the body read aloud from the site's root, without an extension: the recording is
   // <audio>.mp3. It is empty when there is none.
   string audio = 4;
+  // accent names the accent the recording is read in when it is not the subject's usual one; unset otherwise.
+  ga.common.v1.Text accent = 5;
 }
 
 // Sound is a recording shown with a solution: a word, a sentence or the sounds of a word, read aloud.

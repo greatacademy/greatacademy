@@ -259,7 +259,7 @@ This does not mean that illnesses are imagined, or that placebos can cure seriou
       title: ["Loneliness as a Health Risk", "孤独是一种健康风险"],
       body: `For most of history, loneliness has been seen as a private problem, something to discuss with friends, not with doctors. In recent years, however, scientists have begun to see it as a serious threat to public health.
 
-The evidence is strong. In 2010, an American scientist called Julianne Holt-Lunstad analyzed the results of 148 studies of more than 300,000 people. She found that the risk of dying during the studies was much higher for people with weak relationships than for people with strong ones. Being cut off from others, she argued, was as great a risk as smoking fifteen cigarettes a day, and greater than being overweight or getting too little exercise.
+The evidence is strong. In 2010, an American scientist called Julianne Holt-Lunstad analysed the results of 148 studies of more than 300,000 people. She found that the risk of dying during the studies was much higher for people with weak relationships than for people with strong ones. Being cut off from others, she argued, was as great a risk as smoking fifteen cigarettes a day, and greater than being overweight or getting too little exercise.
 
 How can a feeling affect the body? Scientists believe that, for most of history, being alone was dangerous. A person who was far from the group could easily be caught by predators. As a result, the body responds to loneliness as it does to a threat: it produces more of the hormones of stress, sleep gets worse, and the body changes in other harmful ways. Over many years, these changes may play a part in heart disease, depression and the loss of memory.
 
@@ -269,7 +269,7 @@ Who is most at risk? Elderly people who have lost a partner or who cannot leave 
 
 Some governments have responded. In 2018, Britain gave one of its ministers the job of reducing loneliness, and Japan followed in 2021. Some doctors now send lonely patients to groups such as garden clubs, choirs or volunteering, as well as giving them medication.
 
-The answer, scientists say, does not need to be difficult. Regular contact with other people, even short conversations with neighbors or shop assistants, can improve wellbeing. In the end, the best medicine for loneliness may be the simplest one: other people.`,
+The answer, scientists say, does not need to be difficult. Regular contact with other people, even short conversations with neighbours or shop assistants, can improve wellbeing. In the end, the best medicine for loneliness may be the simplest one: other people.`,
       names: ["Julianne", "Holt-Lunstad", "Britain", "Japan", "American"],
       questions: [
         [
@@ -313,7 +313,7 @@ The answer, scientists say, does not need to be difficult. Regular contact with 
     passage({
       id: "b2-medicine-the-trial-that-went-wrong",
       title: ["The Trial That Went Wrong", "出了差错的试验"],
-      body: `In March 2006, eight healthy young men arrived at a clinic of Northwick Park Hospital in London. They had volunteered to take part in a clinical trial of a new medication for illnesses in which the body harms its own cells. Each of them would be paid about three thousand dollars.
+      body: `In March 2006, eight healthy young men arrived at a clinic of Northwick Park Hospital in London. They had volunteered to take part in a clinical trial of a new medication for illnesses in which the body harms its own cells. Each of them would be paid a generous fee.
 
 It was the first time that the medication had been given to people. Before the trial, it had been given to animals such as monkeys, at doses hundreds of times higher, with no serious effects. The scientists were confident that the dose they had chosen was safe.
 

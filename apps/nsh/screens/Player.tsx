@@ -326,7 +326,7 @@ function QuestionFlow(props: {
             {(passage) => (
               <Card>
                 <Illustration path={passage().illustration} />
-                <If when={passage().audio}>{(path) => <Listen path={path()} />}</If>
+                <If when={passage().audio}>{(path) => <Listen path={path()} accent={tx(passage().accent)} />}</If>
                 <Text style={{ color: colors().ink, fontSize: 18, lineHeight: 28 }}>{passage().body}</Text>
               </Card>
             )}
@@ -561,7 +561,7 @@ function ResultView(props: { session: Session; result: Result }) {
           {(passage) => (
             <Card>
               <Illustration path={passage().illustration} />
-              <If when={passage().audio}>{(path) => <Listen path={path()} />}</If>
+              <If when={passage().audio}>{(path) => <Listen path={path()} accent={tx(passage().accent)} />}</If>
               <Text style={{ color: colors().ink, fontSize: 18, lineHeight: 28 }}>{passage().body}</Text>
             </Card>
           )}

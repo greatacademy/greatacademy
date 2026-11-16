@@ -79,11 +79,11 @@ So the next time you throw something away, think for a second. Is it clean? Is i
     passage({
       id: "b1-environment-the-coral-reef-in-danger",
       title: ["The Coral Reef in Danger", "危险中的珊瑚礁"],
-      body: `Under the warm, clear water near many coasts, there are huge gardens of every color under the sea. These are coral reefs. They look like rocks or plants, but coral is actually made of millions of tiny animals that live together.
+      body: `Under the warm, clear water near many coasts, there are huge gardens of every colour under the sea. These are coral reefs. They look like rocks or plants, but coral is actually made of millions of tiny animals that live together.
 
 Coral reefs take up only a tiny part of the ocean floor, but about a quarter of all ocean species live on them or near them. Fish lay their eggs there, turtles feed there, and sharks hunt there. Reefs also protect coasts from storms and waves, and millions of people need them for food and for jobs with tourists.
 
-Today many reefs are at serious risk. The biggest threat is climate change. As the oceans become warmer, the coral becomes weak and loses its colors. It turns white. If the water stays too hot for too long, the coral dies. In the last thirty years, about half of the coral in some famous reefs has been destroyed in this way.
+Today many reefs are at serious risk. The biggest threat is climate change. As the oceans become warmer, the coral becomes weak and loses its colours. It turns white. If the water stays too hot for too long, the coral dies. In the last thirty years, about half of the coral in some famous reefs has been destroyed in this way.
 
 There are other threats too. Pollution from farms and cities is carried into the sea by rivers. Plastic is caught on the coral. In some places, reefs have been damaged by boats and by people who take coral home as a souvenir.
 
@@ -134,7 +134,7 @@ If we do something now, our children may still be able to swim with these living
     passage({
       id: "b1-environment-a-town-that-runs-on-the-sun",
       title: ["A Town That Runs on the Sun", "靠太阳运转的小镇"],
-      body: `Ten years ago, the small town of Hollowell, in a dry, sunny valley, got all its electricity from a coal power station two hundred kilometers away. Today almost every roof in the town has solar panels on it, and on most days the town makes more electricity than it uses.
+      body: `Ten years ago, the small town of Hollowell, in a dry, sunny valley, got all its electricity from a coal power station two hundred kilometres away. Today almost every roof in the town has solar panels on it, and on most days the town makes more electricity than it uses.
 
 The change started with a problem. The old power station was going to close, and electricity prices were rising fast. At a town meeting, a retired electrician called Ruth Adams stood up. "We have three hundred sunny days a year," she said. "Why are we buying power from far away?"
 
@@ -157,7 +157,7 @@ The results have been great. The town has reduced its carbon emissions to less t
             ["From a huge battery next to the school", "来自学校旁边的大电池"],
           ],
           [
-            'Ten years ago the town "got all its electricity from a coal power station two hundred kilometers away". The panels and the battery came later.',
+            'Ten years ago the town "got all its electricity from a coal power station two hundred kilometres away". The panels and the battery came later.',
             "十年前小镇的电来自两百公里外的燃煤电厂，太阳能板和大电池都是后来才有的。",
           ],
         ],

@@ -2,6 +2,7 @@ import { bodyWords } from "@ga/content";
 import { describe, expect, it } from "vitest";
 
 import { englishTracks, levelPacks } from "./packs.ts";
+import { britishSpelling } from "./spelling.ts";
 
 describe("english packs", () => {
   it("teaches each word in one batch only within a track, of a topic of the same pack", () => {
@@ -24,10 +25,17 @@ describe("english packs", () => {
   it("writes the passages of each level in words taught at that level or below, needing their batches", () => {
     const taught = new Map<string, string>();
     for (const [level, pack] of levelPacks) {
-      for (const batch of pack.vocabulary) for (const word of batch.words) taught.set(word, batch.topic);
+      // A word's British spelling, which the passages read in a British or Australian voice use, is the same word.
+      for (const batch of pack.vocabulary)
+        for (const word of batch.words) {
+          taught.set(word, batch.topic);
+          taught.set(britishSpelling(word), batch.topic);
+        }
       for (const unit of pack.reading) {
         for (const passage of unit.passages) {
-          const free = new Set([...(passage.names ?? []), ...(passage.glossed ?? [])].map((w) => w.toLowerCase()));
+          const free = new Set(
+            [...(passage.names ?? []), ...(passage.glossed ?? [])].flatMap((w) => [w.toLowerCase(), britishSpelling(w.toLowerCase())]),
+          );
           const needs = new Set(passage.topics.map((edge) => edge.topic));
           for (const word of bodyWords(passage.body)) {
             if (free.has(word)) continue;

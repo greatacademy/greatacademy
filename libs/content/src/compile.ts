@@ -297,6 +297,7 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
       if (!idPattern.test(passage.id)) error(path, "id must be kebab case");
       if (topics.has(passage.id) || graphPassages.has(passage.id)) error(path, "the id is already used by a topic or a passage");
       text(`${path} › title`, passage.title);
+      if (passage.accent) text(`${path} › accent`, passage.accent);
       if (!(Number.isFinite(passage.xp) && passage.xp > 0)) error(path, `xp must be positive, got ${passage.xp}`);
       const words = bodyWords(passage.body);
       if (words.length === 0) error(path, "a passage needs a body");

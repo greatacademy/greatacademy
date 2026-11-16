@@ -36,6 +36,7 @@ function passageMessage(subject: string, passage: PassageView): MessageInitShape
     body: passage.body,
     illustration: illustrationPath(subject, passage.illustration),
     audio: audioPath(subject, passage.audio),
+    ...(passage.accent && { accent: text(passage.accent) }),
   };
 }
 

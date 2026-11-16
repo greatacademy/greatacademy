@@ -130,6 +130,7 @@ export function topicSource(
         body: passage.body,
         ...(illustration && { illustration }),
         ...(passage.audio && { audio: passage.audio }),
+        ...(passage.audio && passage.accent && { accent: passage.accent }),
       };
     },
   };

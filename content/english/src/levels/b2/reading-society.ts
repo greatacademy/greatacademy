@@ -262,7 +262,7 @@ The second was about money. Protecting such long borders required a huge army, w
 
 The third was pressure from outside. From the late fourth century, Goths, Vandals and other groups crossed the borders, some of them running from invasions from farther east. Rome increasingly relied on these groups as allies and soldiers, but it could not always control them. In 410, an army of Goths took Rome itself, an event that the whole Mediterranean world could hardly believe.
 
-It is worth emphasizing that the half of the empire in the east, with its capital at Constantinople, survived for nearly another thousand years, until 1453. For the people who lived there, the Roman Empire had not ended at all. This reminds us that the "fall" of an empire is often not a sudden end but a slow change.`,
+It is worth emphasising that the half of the empire in the east, with its capital at Constantinople, survived for nearly another thousand years, until 1453. For the people who lived there, the Roman Empire had not ended at all. This reminds us that the "fall" of an empire is often not a sudden end but a slow change.`,
       names: [
         "Roman",
         "Western",
@@ -446,7 +446,7 @@ The effects on health were significant. Studies found that the air in pubs becam
 
 The example of Ireland spread quickly. Within a few years, Norway, Italy, Britain, France and many other countries had introduced similar laws, and today public places without smoke are normal in much of the world.
 
-The story shows how a law can change not only behavior but also social norms. Twenty years later, most young Irish people cannot imagine a pub full of smoke. If someone started smoking in a restaurant today, the other customers would be surprised, just as people in 2003 would have been surprised by the idea of a pub without smoke.`,
+The story shows how a law can change not only behaviour but also social norms. Twenty years later, most young Irish people cannot imagine a pub full of smoke. If someone started smoking in a restaurant today, the other customers would be surprised, just as people in 2003 would have been surprised by the idea of a pub without smoke.`,
       names: ["March", "Ireland", "Irish", "Norway", "Italy", "Britain", "France"],
       glossed: ["pub", "pubs"],
       questions: [

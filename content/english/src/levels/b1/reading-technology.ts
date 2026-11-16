@@ -86,9 +86,9 @@ Would I live without a smartphone? Probably not. It is too useful. But I have ma
       title: ["How Drones Deliver", "无人机是怎样送货的"],
       body: `In a small village in the mountains, a nurse hears a soft sound in the sky. A few seconds later, a white drone stops above the clinic and drops a small box onto the ground near the door. Inside the box there is blood for a woman who has just had a baby. By road, the blood would take three hours to arrive. The drone took twenty minutes.
 
-Drones are small flying machines that are controlled by computers. Most drones that deliver things look like small planes or have four to eight small wings that turn. They carry boxes of up to a few kilos, and they can fly for about a hundred kilometers before their batteries need charging.
+Drones are small flying machines that are controlled by computers. Most drones that deliver things look like small planes or have four to eight small wings that turn. They carry boxes of up to a few kilos, and they can fly for about a hundred kilometres before their batteries need charging.
 
-Each trip starts at a center that receives orders by phone or online. A worker puts the box in the drone, and the computer plans the way. During the flight, the drone uses signals from space to know where it is, and cameras to avoid birds, trees and other drones. When it arrives, it either lands or drops the box. Then it flies back on its own.
+Each trip starts at a centre that receives orders by phone or online. A worker puts the box in the drone, and the computer plans the way. During the flight, the drone uses signals from space to know where it is, and cameras to avoid birds, trees and other drones. When it arrives, it either lands or drops the box. Then it flies back on its own.
 
 Drones are already used to deliver medicine, blood and vaccines to places that are difficult to get to. Some companies are also trying drones that deliver food and shopping to homes in cities.
 

@@ -13,9 +13,10 @@ const clock = (seconds: number) => {
 /**
  * Listen plays a passage read aloud from the web app: a button that plays and pauses, and the time played. path is
  * the recording's path from the site's root without an extension, as the API gives it, never "". The
- * recording loads only when it is first played, and stops when the view goes.
+ * recording loads only when it is first played, and stops when the view goes. accent names the recording's accent
+ * when it is not the usual one, shown beside the time; "" for none.
  */
-export function Listen(props: { path: string }) {
+export function Listen(props: { path: string; accent?: string }) {
   const player = new AudioPlayer(`${API_URL}/${props.path}.mp3`);
   const state = signal(player.state);
   const at = signal(0);
@@ -57,6 +58,7 @@ export function Listen(props: { path: string }) {
         <Text style={{ color: colors().muted, fontSize: 14 }}>
           {Number.isFinite(length()) ? `${clock(at())} / ${clock(length())}` : ""}
         </Text>
+        <If when={props.accent}>{(accent) => <Text style={{ color: colors().muted, fontSize: 14 }}>{accent()}</Text>}</If>
       </View>
       <If when={failed()}>
         <Text style={{ color: colors().bad, fontSize: 14 }}>{m().listenFailed}</Text>

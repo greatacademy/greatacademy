@@ -10,6 +10,8 @@ export interface PassageView {
   readonly illustration?: string;
   /** audio names the recording of the body read aloud in the subject's audio. */
   readonly audio?: string;
+  /** accent names the accent of the recording when it is not the subject's usual one. */
+  readonly accent?: Text;
 }
 
 /** bodyWords lists the running words of a passage body, lowercased; a word with an apostrophe or a hyphen counts once. */

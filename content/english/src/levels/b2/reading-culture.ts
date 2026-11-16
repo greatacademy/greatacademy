@@ -35,7 +35,7 @@ For years, she moved between these two worlds without thinking about it. It was 
 
 This feeling is common in the children of immigrants, and scientists have studied it for decades. Some young people respond by rejecting the culture of their parents and trying to assimilate completely. Others hold on hard to their heritage and keep their distance from the majority. Many, however, eventually find a third way: a mixed identity in which both cultures have a place. Studies suggest that this third group often does best, both at school and in terms of wellbeing.
 
-For Mei, the turning point came at university, where she met other students with similar stories, from Nigeria, Poland and Pakistan. What surprised her was how much they had in common. Talking with them, she realized that being between two cultures was not a lack of identity but an identity of its own.
+For Mei, the turning point came at university, where she met other students with similar stories, from Nigeria, Poland and Pakistan. What surprised her was how much they had in common. Talking with them, she realised that being between two cultures was not a lack of identity but an identity of its own.
 
 Now over thirty, she works as an interpreter and is bringing up her own daughter in two languages. She takes her to the Moon Festival and to bonfire night. "What I want her to know," she says, "is that she doesn't have to choose. She can be both, and that's a gift."`,
       grammar: ["cleft-sentences"],

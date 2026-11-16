@@ -331,7 +331,7 @@ Then, in 2009, the company that owned it announced that the factory would be clo
 
 The effects were felt far beyond the factory gates. Shops and restaurants lost their customers, and many of them had to close. Young people left to look for work in the cities, and house prices collapsed. Within five years, the population had fallen by a fifth, and problems with mental health and alcohol had increased very quickly.
 
-For a long time, many people in Millbrook believed that the factory would open again. "We kept waiting for someone to save us," says Karen Doyle, who worked in the office for twenty-two years. "Eventually we realized that nobody was coming."
+For a long time, many people in Millbrook believed that the factory would open again. "We kept waiting for someone to save us," says Karen Doyle, who worked in the office for twenty-two years. "Eventually we realised that nobody was coming."
 
 The turning point came when a group of workers who had lost their jobs, the local college and the town council decided to work together. The old factory was converted into offices and rooms for small workshops, which were rented at low prices to small businesses. The college started courses to retrain workers, from welding for wind turbines to computer skills. Grants from the government helped to fund the project.
 

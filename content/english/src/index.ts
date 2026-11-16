@@ -9,6 +9,7 @@ import { withScenes } from "./illustrations.ts";
 import { englishPacks, packLexicon } from "./packs.ts";
 import { englishLexicon } from "./reading/lexicon.ts";
 import { coreShardReading, coreShardTopics } from "./shards/core.ts";
+import { withBritishForms } from "./spelling.ts";
 
 /** english is the definition of the English subject. */
 export const english: SubjectDef = {
@@ -20,7 +21,7 @@ export const english: SubjectDef = {
   courses: [...englishPacks.flatMap((pack) => pack.courses), ...englishCourses],
   checkers: englishCheckers,
   reading: coreShardReading,
-  lexicon: packLexicon(englishLexicon),
+  lexicon: withBritishForms(packLexicon(englishLexicon)),
   conversations: withOpenings(withScenes([...englishConversations, ...englishPacks.flatMap((pack) => pack.conversations)])),
   strands: [
     { id: "vocabulary", title: t("Vocabulary", "词汇") },

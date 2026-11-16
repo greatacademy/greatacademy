@@ -286,13 +286,16 @@ function IntroView({ intro, onDone }: { intro: NonNullable<Question["intro"]>; o
 
 /** PassageCard shows a text to read, under its reading unit's cover; it stays in view while its questions are answered. */
 function PassageCard({ passage }: { passage: Passage }) {
-  const { m } = useI18n();
+  const { m, tx } = useI18n();
   return (
     <Card className="space-y-4">
       <Illustration path={passage.illustration} className="mx-auto w-full max-w-md" />
       {passage.audio && (
-        // biome-ignore lint/a11y/useMediaCaption: the passage's text, shown below, is the recording's transcript
-        <audio controls preload="none" src={`/${passage.audio}.mp3`} aria-label={m.listen} className="w-full" />
+        <div className="space-y-1">
+          {/* biome-ignore lint/a11y/useMediaCaption: the passage's text, shown below, is the recording's transcript */}
+          <audio controls preload="none" src={`/${passage.audio}.mp3`} aria-label={m.listen} className="w-full" />
+          {passage.accent && <p className="text-sm text-muted">{tx(passage.accent)}</p>}
+        </div>
       )}
       {passage.body.split(/\n\s*\n/).map((paragraph) => (
         <p key={paragraph} className="text-lg leading-relaxed">

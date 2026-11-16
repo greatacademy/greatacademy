@@ -79,7 +79,7 @@ Last summer Elena visited her daughter again. At dinner, the youngest child aske
       title: ["Why We Forget", "我们为什么会忘记"],
       body: `Have you ever studied hard for a test and then forgotten almost everything a week later? You are not alone. Scientists have studied memory for more than a hundred years, and they have found that we forget new information very quickly.
 
-More than a hundred and forty years ago, a German scientist called Hermann Ebbinghaus checked his own memory. He memorized hundreds of short words that had no meaning. Then he checked how many he could remember after an hour, a day and a week. What he found surprised him. After one hour, more than half of the words were gone. After a day, he remembered only about a third of them.
+More than a hundred and forty years ago, a German scientist called Hermann Ebbinghaus checked his own memory. He memorised hundreds of short words that had no meaning. Then he checked how many he could remember after an hour, a day and a week. What he found surprised him. After one hour, more than half of the words were gone. After a day, he remembered only about a third of them.
 
 Why does this happen? Every day we see and hear thousands of things, and most of them do not matter. Our memory cannot keep everything, so it keeps what we use and lets the rest go.
 

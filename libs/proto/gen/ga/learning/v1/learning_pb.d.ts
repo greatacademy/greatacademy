@@ -1324,6 +1324,13 @@ export declare type Passage = Message<"ga.learning.v1.Passage"> & {
    * @generated from field: string audio = 4;
    */
   audio: string;
+
+  /**
+   * accent names the accent the recording is read in when it is not the subject's usual one; unset otherwise.
+   *
+   * @generated from field: ga.common.v1.Text accent = 5;
+   */
+  accent?: Text | undefined;
 };
 
 /**

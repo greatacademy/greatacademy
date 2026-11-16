@@ -28,7 +28,7 @@ export const readingClimate: ReadingUnitDef = {
     passage({
       id: "b2-climate-how-a-glacier-remembers",
       title: ["How a Glacier Remembers", "冰川如何记住过去"],
-      body: `Every winter, snow falls on the great areas of ice that lie over Antarctica and Greenland. Because it is so cold there, the snow never melts. Instead, the snow of each year is pushed down by the snow that falls on top of it, and slowly it turns into ice. Over hundreds of thousands of years, the ice has become more than three kilometers thick, and every layer holds a message from the past.
+      body: `Every winter, snow falls on the great areas of ice that lie over Antarctica and Greenland. Because it is so cold there, the snow never melts. Instead, the snow of each year is pushed down by the snow that falls on top of it, and slowly it turns into ice. Over hundreds of thousands of years, the ice has become more than three kilometres thick, and every layer holds a message from the past.
 
 To read that message, scientists cut down into the ice and bring up long pieces of it, known as ice cores: long samples of ice, as thick as an arm. Each sample is like a book of history. Near the top, the layers are thin and easy to count, like the rings of a tree. Lower down, they are pushed together so hard that scientists must use other methods to determine their age. The oldest ice that has been found is about 800,000 years old.
 
@@ -92,9 +92,9 @@ His argument worked. Over the next ten years, the inhabitants built eleven large
 
 Heating was the next challenge. A number of villages built plants that burn dried grass and other waste from agriculture, to heat water that is sent under the ground to every house. Other families replaced their old oil heating with solar energy, and improved the insulation of their homes to increase their efficiency.
 
-By 2007, Samsø produced more energy from renewable sources than it used, which made it carbon neutral: the carbon it saved by selling clean electricity was greater than the carbon it still emitted. Transport is still the hardest part. Most cars and farm vehicles on the island still run on gasoline and diesel, and the ferry to the rest of Denmark uses a great deal of fuel. The inhabitants have committed themselves to becoming completely free of fossil fuels by 2030.
+By 2007, Samsø produced more energy from renewable sources than it used, which made it carbon neutral: the carbon it saved by selling clean electricity was greater than the carbon it still emitted. Transport is still the hardest part. Most cars and farm vehicles on the island still run on diesel and other fuels, and the ferry to the rest of Denmark uses a great deal of fuel. The inhabitants have committed themselves to becoming completely free of fossil fuels by 2030.
 
-Today, thousands of visitors come to Samsø every year to learn how it was done. Hermansen believes the lesson is simple. "People will not change because you tell them that the world is ending," he says. "They will change when they can see that it is good for them and for their neighbors." By 2030, if all goes to plan, Samsø will have shown that a whole community can live without fossil fuels.`,
+Today, thousands of visitors come to Samsø every year to learn how it was done. Hermansen believes the lesson is simple. "People will not change because you tell them that the world is ending," he says. "They will change when they can see that it is good for them and for their neighbours." By 2030, if all goes to plan, Samsø will have shown that a whole community can live without fossil fuels.`,
       grammar: ["future-continuous-and-future-perfect"],
       names: ["Samsø", "Denmark", "Søren", "Hermansen"],
       questions: [
@@ -130,7 +130,7 @@ Today, thousands of visitors come to Samsø every year to learn how it was done.
             ["Generating electricity", "发电"],
           ],
           [
-            '"Transport is still the hardest part." Most cars and farm vehicles still run on gasoline and diesel.',
+            '"Transport is still the hardest part." Most cars and farm vehicles still run on diesel and other fuels.',
             "交通仍然是最难的部分，岛上大多数汽车和农用车辆仍在使用汽油和柴油。",
           ],
         ],
@@ -250,7 +250,7 @@ However, farmers can only adapt so far. If the planet becomes more than two degr
     passage({
       id: "b2-climate-the-aftermath-of-a-cyclone",
       title: ["The Aftermath of a Cyclone", "气旋过后"],
-      body: `On the night of 14 March 2019, Cyclone Idai hit the coast of Mozambique near the city of Beira. Winds of nearly two hundred kilometers an hour pulled the roofs off houses, brought down power lines and pulled trees out of the ground. Then came the rain. In the following days, rivers rose over their banks, and an area of land larger than a small country disappeared under water.
+      body: `On the night of 14 March 2019, Cyclone Idai hit the coast of Mozambique near the city of Beira. Winds of nearly two hundred kilometres an hour pulled the roofs off houses, brought down power lines and pulled trees out of the ground. Then came the rain. In the following days, rivers rose over their banks, and an area of land larger than a small country disappeared under water.
 
 Fátima Joaquim, a mother of four, spent two days with her children on the roof of a school, waiting for help. "The water rose so fast," she remembers. "We could see people in the trees around us, calling for help. Some of them were still there when the boats came. Some were not."
 

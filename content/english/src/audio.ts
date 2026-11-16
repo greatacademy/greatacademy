@@ -4,7 +4,9 @@
 // uploads them to the R2 bucket greatacademy under audio/english/, and the web app serves them at the same path; in
 // development, from content/english/audio/files.
 
-import type { ConversationDef, PassageDef, ReadingUnitDef, Sound } from "@ga/content";
+import { type ConversationDef, type PassageDef, type ReadingUnitDef, type Sound, type Text, t } from "@ga/content";
+
+import { type Accent, accents } from "./accents.ts";
 
 import { recordings } from "./recordings.ts";
 
@@ -19,6 +21,21 @@ export interface Voice {
 
 /** voice reads passages, words and sentences aloud. */
 export const voice: Voice = { name: "en-US-Ava:DragonHDLatestNeural", lang: "en-US", rate: "-10%" };
+
+/** AccentVoice is the voice that reads the passages of an accent, and the accent's name shown beside their player. */
+export interface AccentVoice {
+  readonly voice: Voice;
+  readonly label: Text;
+}
+
+/** accentVoices are the voices of the passages read in an accent other than the usual one. */
+export const accentVoices: Readonly<Record<Accent, AccentVoice>> = {
+  gb: { voice: { name: "en-GB-Ada:DragonHDLatestNeural", lang: "en-GB", rate: "-10%" }, label: t("British accent", "英式口音") },
+  au: {
+    voice: { name: "en-au-cyanspark:DragonHDOmniLatestNeural", lang: "en-AU", rate: "-10%" },
+    label: t("Australian accent", "澳大利亚口音"),
+  },
+};
 
 /**
  * soundVoice says the sounds of words, one phoneme at a time: the same speaker without HD, since the HD voice does not
@@ -36,13 +53,13 @@ const PARAGRAPH_BREAK = "700ms";
 
 const escapeXml = (s: string) => s.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 
-/** passageSsml is the SSML that reads a passage's body aloud: its paragraphs in order, with a pause between them. */
-export function passageSsml(body: string): string {
+/** passageSsml is the SSML that reads a passage's body aloud in a voice: its paragraphs in order, with a pause between them. */
+export function passageSsml(body: string, v: Voice = voice): string {
   const paragraphs = body
     .split(/\n\s*\n/u)
     .map((p) => escapeXml(p.replace(/\s+/gu, " ").trim()))
     .filter((p) => p !== "");
-  return speak(voice, paragraphs.join(`<break time="${PARAGRAPH_BREAK}"/>`));
+  return speak(v, paragraphs.join(`<break time="${PARAGRAPH_BREAK}"/>`));
 }
 
 /** textSsml is the SSML that reads one line aloud, a word or a sentence. */
@@ -74,8 +91,14 @@ export function recordingName(ssml: string): string {
   return h.toString(16).padStart(16, "0");
 }
 
+/** passageVoice is the voice that reads a passage: that of its accent, or the usual one. */
+const passageVoice = (passage: PassageDef): Voice => {
+  const accent = accents.get(passage.id);
+  return accent ? accentVoices[accent].voice : voice;
+};
+
 /** passageRecording names the recording of a passage's body, made or not. */
-export const passageRecording = (passage: PassageDef): string => recordingName(passageSsml(passage.body));
+export const passageRecording = (passage: PassageDef): string => recordingName(passageSsml(passage.body, passageVoice(passage)));
 
 /** Format is how a recording is encoded: Azure AI Speech's name for it and the file's extension. */
 export interface Format {
@@ -137,13 +160,14 @@ export const withSounds = (...sounds: readonly (Sound | undefined)[]): { solutio
   return given.length > 0 ? { solutionSounds: given } : {};
 };
 
-/** withRecordings gives each passage whose recording has been made its audio. */
+/** withRecordings gives each passage whose recording has been made its audio, and the name of its accent when it has one. */
 export const withRecordings = (units: readonly ReadingUnitDef[]): ReadingUnitDef[] =>
   units.map((u) => ({
     ...u,
     passages: u.passages.map((p) => {
-      const name = want({ kind: "passage", ssml: passageSsml(p.body), format: MP3, unit: u.id });
-      return name ? { ...p, audio: name } : p;
+      const name = want({ kind: "passage", ssml: passageSsml(p.body, passageVoice(p)), format: MP3, unit: u.id });
+      const accent = accents.get(p.id);
+      return name ? { ...p, audio: name, ...(accent && { accent: accentVoices[accent].label }) } : p;
     }),
   }));
 

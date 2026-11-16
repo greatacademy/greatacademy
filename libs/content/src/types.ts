@@ -253,6 +253,8 @@ export interface PassageDef {
   readonly questions: readonly PassageQuestionDef[];
   /** audio names the recording of the body read aloud in the subject's audio, a file `<audio>.mp3`. */
   readonly audio?: string;
+  /** accent names the accent the recording is read in when it is not the subject's usual one, shown beside its player. */
+  readonly accent?: Text;
 }
 
 /** ReadingUnitDef is a sequence of passages on one domain: each is offered after the one before it, which makes it easier to read. */

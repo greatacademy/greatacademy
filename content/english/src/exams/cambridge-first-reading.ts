@@ -164,7 +164,7 @@ When the year ended, I bought a new phone. I use it in a different way now. It s
       title: ["The Woman Who Mapped the Ocean Floor", "绘制海底地图的女性"],
       body: `For most of history, people knew less about the floor of the ocean than about the far side of the moon. They knew that the sea went down a long way, but they imagined its floor as empty and even, like a desert under the water. The person who did most to change that picture never once went down to see it. Her name was Marie Tharp, and she drew the first map of the floor of all the oceans of the world.
 
-Tharp was born in Michigan in 1920. Her father made maps of the land for the government, and as a child she often traveled with him for his work. Later, she studied the science of rocks at a time when few women did. During the Second World War, many young men were away at war, and universities began to accept women in subjects that had been closed to them before. In 1948, she found a job at a research center of Columbia University in New York, where she began to work with a young scientist called Bruce Heezen.
+Tharp was born in Michigan in 1920. Her father made maps of the land for the government, and as a child she often travelled with him for his work. Later, she studied the science of rocks at a time when few women did. During the Second World War, many young men were away at war, and universities began to accept women in subjects that had been closed to them before. In 1948, she found a job at a research centre of Columbia University in New York, where she began to work with a young scientist called Bruce Heezen.
 
 Their work was divided in a way that seems strange today. Women were not allowed on the research ships of the university, so Heezen crossed the Atlantic by ship, measuring how far down the ocean floor was, while Tharp stayed in the office and turned thousands of numbers into pictures. It was slow, careful work, done by hand with pens and long pieces of paper.
 
@@ -261,7 +261,7 @@ For many years, Tharp's part in the discovery was hardly mentioned, and the scie
       title: ["Learning to Cook at Forty", "四十岁学做饭"],
       body: `Until last year, I could cook boiled eggs, bread with cheese and anything that came in a box with instructions on the back. I am forty-one, and for most of my adult life this did not seem like a problem. I lived in a city full of cheap restaurants, and I was usually too busy to care. **[1]**
 
-My daughter was the reason I changed. She came home from school one day and announced that her class was making a book of recipes, and that every child had to bring a dish cooked by a parent. Her mother was working abroad that month. **[2]** I realized, and I was a little embarrassed, that I did not know how to cook a single meal from the beginning.
+My daughter was the reason I changed. She came home from school one day and announced that her class was making a book of recipes, and that every child had to bring a dish cooked by a parent. Her mother was working abroad that month. **[2]** I realised, and I was a little embarrassed, that I did not know how to cook a single meal from the beginning.
 
 I signed up for an evening class at the local college, where twelve of us met every Tuesday in a large kitchen. Most of the others had stopped working, and several had cooked for decades but wanted to learn new dishes. **[3]** They showed me how to hold a knife the right way, how to tell when oil was hot enough, and why you should taste food while you cook it and not only at the end.
 
@@ -313,15 +313,15 @@ By the end of the course, I could make about ten dishes well, and I had cooked t
     passage({
       id: "fce-reading-a-theatre-that-saved-a-town",
       title: ["A Theatre That Saved a Town", "一座拯救了小镇的剧院"],
-      body: `Twenty years ago, Holbridge was a town that people left. The factory that had employed half of its workers had closed, the shops on the main street were empty one after another, and young people moved to the city as soon as they finished school. In the middle of the main street stood the Royal, an old theater with broken windows, which had not shown a play since 1985. **[1]**
+      body: `Twenty years ago, Holbridge was a town that people left. The factory that had employed half of its workers had closed, the shops on the main street were empty one after another, and young people moved to the city as soon as they finished school. In the middle of the main street stood the Royal, an old theatre with broken windows, which had not shown a play since 1985. **[1]**
 
 The change began with a retired teacher called Margaret Hale. She had acted at the Royal as a girl, and she could not bear to watch it fall down. In 2006 she wrote a letter to the local newspaper, asking anyone who cared about the building to meet her there one Saturday morning. She expected perhaps a dozen people. **[2]**
 
-The group had no money and no experience of running a theater, but it had plenty of energy. Volunteers took out years of old trash, painted walls and repaired seats, while others organized concerts and cake sales to pay for a new roof. **[3]** It took four years, and many arguments, before the Royal opened its doors again with a show performed by local children.
+The group had no money and no experience of running a theatre, but it had plenty of energy. Volunteers took out years of old rubbish, painted walls and repaired seats, while others organised concerts and cake sales to pay for a new roof. **[3]** It took four years, and many arguments, before the Royal opened its doors again with a show performed by local children.
 
-What happened next surprised everyone. People came from other towns to see shows at the Royal, and they needed a place to eat before and after. A coffee shop opened opposite the theater, then a restaurant, then a small hotel. **[4]** Today, the main street has hardly any empty shops, and the population of the town is growing for the first time in fifty years.
+What happened next surprised everyone. People came from other towns to see shows at the Royal, and they needed a place to eat before and after. A coffee shop opened opposite the theatre, then a restaurant, then a small hotel. **[4]** Today, the main street has hardly any empty shops, and the population of the town is growing for the first time in fifty years.
 
-Not everyone is happy about the change. Some older people complain that house prices have risen and that the town is full of strangers at weekends. Margaret Hale, now over eighty, understands their point of view. **[5]** "A theater can't save a town on its own," she says. "People do that. The theater just gave them a reason to come."`,
+Not everyone is happy about the change. Some older people complain that house prices have risen and that the town is full of strangers at weekends. Margaret Hale, now over eighty, understands their point of view. **[5]** "A theatre can't save a town on its own," she says. "People do that. The theatre just gave them a reason to come."`,
       grammar: gappedText,
       names: ["Holbridge", "Royal", "Margaret", "Hale"],
       questions: gapQuestions(
@@ -370,7 +370,7 @@ Not everyone is happy about the change. Some older people complain that house pr
       title: ["Four Young Volunteers", "四位年轻的志愿者"],
       body: `**Hana**
 
-I started at the animal center because I needed something for my university application, if I'm honest. For the first few weeks I nearly stopped going. The work was dirty, the dogs were noisy, and nobody seemed to notice whether I was there or not. Then a very scared old dog arrived who wouldn't let anyone near him. I sat beside him every afternoon for a month, reading, until one day he put his head on my knee. After that I was completely won over. I had planned to study business, but I've changed my plans: I'm applying to train as an animal doctor next year.
+I started at the animal centre because I needed something for my university application, if I'm honest. For the first few weeks I nearly stopped going. The work was dirty, the dogs were noisy, and nobody seemed to notice whether I was there or not. Then a very scared old dog arrived who wouldn't let anyone near him. I sat beside him every afternoon for a month, reading, until one day he put his head on my knee. After that I was completely won over. I had planned to study business, but I've changed my plans: I'm applying to train as an animal doctor next year.
 
 **Leo**
 

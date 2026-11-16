@@ -354,8 +354,8 @@ Many teachers advise families to do the same thing every day. One parent, one la
     }),
     passage({
       id: "b1-culture-when-the-flight-was-canceled",
-      title: ["When the Flight Was Canceled", "航班被取消的时候"],
-      body: `It was supposed to be a simple trip home. On a Friday evening in December, Sara Novak arrived at the airport two hours before her departure, with a backpack, a passport and a small gift for her mother. Then she looked at the screen. Next to her flight, there was one word: CANCELED.
+      title: ["When the Flight Was Cancelled", "航班被取消的时候"],
+      body: `It was supposed to be a simple trip home. On a Friday evening in December, Sara Novak arrived at the airport two hours before her departure, with a backpack, a passport and a small gift for her mother. Then she looked at the screen. Next to her flight, there was one word: CANCELLED.
 
 A storm with heavy snow had closed the airport in the city where the plane was coming from. Within minutes, a long queue grew at the check-in desk. Sara waited for an hour and a half. When she finally got to the desk, the woman there looked tired. She told Sara that the next free seat was on Monday.
 
@@ -370,7 +370,7 @@ But on Sunday afternoon, her mother opened the door and saw her. "I was tired, m
       names: ["Sara", "Novak", "Vienna", "December"],
       questions: [
         [
-          ["Why was Sara's flight canceled?", "萨拉的航班为什么被取消了？"],
+          ["Why was Sara's flight cancelled?", "萨拉的航班为什么被取消了？"],
           ["A storm with heavy snow had closed another airport", "暴风雪导致另一个机场关闭"],
           [
             ["The pilot was ill", "飞行员生病了"],
@@ -386,7 +386,7 @@ But on Sunday afternoon, her mother opened the door and saw her. "I was tired, m
           ["On a seat in the terminal", "航站楼里的座椅上"],
           [
             ["In a hotel near the airport", "机场附近的酒店"],
-            ["At her mother's apartment", "她妈妈的公寓"],
+            ["At her mother's home", "她妈妈的公寓"],
           ],
           [
             'She was given a free night at a hotel, "but the bus to the hotel was full, so she spent the night on a seat in the terminal".',

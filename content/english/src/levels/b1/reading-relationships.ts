@@ -31,7 +31,7 @@ export const readingRelationships: ReadingUnitDef = {
 
 That does not mean the relationship is always easy. Young siblings quarrel a lot. Scientists who watched families at home found that children between three and seven argued with a brother or sister about once every ten minutes. They argued about toys, about who sat where in the car, and about who got more attention from their parents.
 
-These arguments may seem like a problem, but they can actually be useful. With a sibling, children practice how to disagree, how to apologize and how to forgive, because they cannot just walk away. They learn that another person can be angry with them one minute and play with them the next.
+These arguments may seem like a problem, but they can actually be useful. With a sibling, children practice how to disagree, how to apologise and how to forgive, because they cannot just walk away. They learn that another person can be angry with them one minute and play with them the next.
 
 The order of birth may affect personality too, although scientists disagree about how much. Many people believe that older children are more responsible, and that the youngest ones are more easygoing and outgoing. Some studies support this, while others find almost no difference.
 
@@ -54,13 +54,13 @@ As siblings grow up, their relationship often changes. Teenagers may spend less 
         ],
         [
           ["Why can arguments between young siblings be useful?", "为什么年幼兄弟姐妹之间的争吵可能有益？"],
-          ["Children practice how to disagree, apologize and forgive", "孩子们练习如何表达不同意见、道歉和原谅"],
+          ["Children practice how to disagree, apologise and forgive", "孩子们练习如何表达不同意见、道歉和原谅"],
           [
             ["Children learn to walk away from problems", "孩子们学会回避问题"],
             ["Parents give more attention to the winner", "父母会更关注赢的一方"],
           ],
           [
-            '"With a sibling, children practice how to disagree, how to apologize and how to forgive, because they cannot just walk away."',
+            '"With a sibling, children practice how to disagree, how to apologise and how to forgive, because they cannot just walk away."',
             "和兄弟姐妹无法一走了之，所以孩子们在争吵中学会表达分歧、道歉和原谅。",
           ],
         ],
@@ -257,7 +257,7 @@ Introverts, on the other hand, are not always afraid. They just get their energy
 
 So a person can be quiet but not shy. And a person can be outgoing and sociable but still feel shy inside.
 
-Why does this matter? Because other people often do not understand quiet people. At school, teachers may criticize them for not speaking in class. At work, they may not get the opportunity to lead, even when they have good ideas. Many famous scientists, writers and leaders have been introverts, and they did their best work alone.
+Why does this matter? Because other people often do not understand quiet people. At school, teachers may criticise them for not speaking in class. At work, they may not get the opportunity to lead, even when they have good ideas. Many famous scientists, writers and leaders have been introverts, and they did their best work alone.
 
 If you are shy and want to change, small changes can help: ask one question at a gathering, or prepare a few topics of conversation before a party. If you are just an introvert, there is nothing to fix. Just make sure that the people around you understand.
 

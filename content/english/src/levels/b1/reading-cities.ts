@@ -136,11 +136,11 @@ Now I have lived in the city for six years. I have a job, good friends and an ap
     passage({
       id: "b1-cities-the-bike-lanes",
       title: ["The Bike Lanes That Changed a City", "改变一座城市的自行车道"],
-      body: `Twenty years ago, the center of Velden had the same problems as many other cities. The streets were full of cars, traffic jams were common at rush hour, and on some days the smog was so thick that people could hardly see the end of the street. Cyclists were not safe, so only a few brave people rode bikes to work.
+      body: `Twenty years ago, the centre of Velden had the same problems as many other cities. The streets were full of cars, traffic jams were common at rush hour, and on some days the smog was so thick that people could hardly see the end of the street. Cyclists were not safe, so only a few brave people rode bikes to work.
 
 Then the city chose a new mayor. She promised to build bike lanes across the whole city, and many people laughed at her. "Nobody here will cycle in the rain," they said. Shop owners were angry too. They believed that if there were not so many parking places, customers would stop coming.
 
-The council built the first lanes anyway. They were big, and a low concrete wall stood between them and the cars, so that cyclists felt safe. The lanes connected the suburbs with the downtown district, the schools and the train station.
+The council built the first lanes anyway. They were big, and a low concrete wall stood between them and the cars, so that cyclists felt safe. The lanes connected the suburbs with the city centre, the schools and the train station.
 
 At first, the number of cyclists grew slowly. But every year more lanes were added, and more people tried them. Parents started cycling with their children to school. Office workers discovered that the bike was often faster than the car, because they did not have to sit in jams or look for parking.
 
@@ -166,7 +166,7 @@ Not everyone is happy. Some drivers say that the city is now too difficult for c
           ["Why did cyclists feel safe in the new lanes?", "骑车的人为什么在新车道上感到安全？"],
           ["A low concrete wall separated them from the cars", "一道低矮的混凝土墙把他们和汽车隔开"],
           [
-            ["Cars were not allowed in the downtown district", "汽车不允许进入市中心"],
+            ["Cars were not allowed in the city centre", "汽车不允许进入市中心"],
             ["The lanes were only open at rush hour", "车道只在高峰时段开放"],
           ],
           [
@@ -249,7 +249,7 @@ Not one of these ideas works alone, and each one has people who are against it. 
 
 The council decided to build a tunnel under the river. It was the biggest construction project in the history of the city, and it took six years.
 
-Building a tunnel under water is not like building one through a mountain. The ground under a river is soft and wet, so the workers used a huge machine that cut through the earth and built the walls of the tunnel behind it as it went. The walls were made of concrete and steel, strong enough to hold back the weight of the river above. The machine moved about ten meters a day.
+Building a tunnel under water is not like building one through a mountain. The ground under a river is soft and wet, so the workers used a huge machine that cut through the earth and built the walls of the tunnel behind it as it went. The walls were made of concrete and steel, strong enough to hold back the weight of the river above. The machine moved about ten metres a day.
 
 There were problems. Once, water came into the tunnel, and the work had to stop for two months. The project cost much more than the council planned, and many residents complained about the noise and the heavy vehicles.
 
@@ -356,9 +356,9 @@ Tomas has driven the night bus for eleven years, and he knows many of his passen
 
 The job is not always easy. Sometimes passengers are rude, and once someone broke a window. There is a camera on the bus and a button that Tomas can press to call the police. "But I have hardly ever used it," he says. "Most people are just tired and kind."
 
-What he likes most is the empty city. "At three in the morning, the streets are only for the bus. The traffic lights change for nobody, the streetlights shine on empty sidewalks, and you can see all the way along the highway."
+What he likes most is the empty city. "At three in the morning, the streets are only for the bus. The traffic lights change for nobody, the streetlights shine on empty roads, and you can see all the way along the highway."
 
-At five o'clock, Tomas drives the bus back to the station and goes home. He eats breakfast while his neighbors leave for work, and then he goes to sleep. "It's a strange life," he says. "But somebody has to take the city home."`,
+At five o'clock, Tomas drives the bus back to the station and goes home. He eats breakfast while his neighbours leave for work, and then he goes to sleep. "It's a strange life," he says. "But somebody has to take the city home."`,
       names: ["Tomas"],
       questions: [
         [

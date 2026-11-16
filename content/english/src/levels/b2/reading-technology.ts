@@ -87,7 +87,7 @@ Perhaps the most likely future is not paradise, and not catastrophe either. Some
       title: ["The Car That Drives Itself", "自动驾驶的汽车"],
       body: `In several cities in the United States and China, it is now possible to call a taxi with no driver. The car arrives empty, opens its doors, and takes the passenger across the city while the wheel turns by itself. For the people who build such cars, this is the beginning of a revolution. For many others, it is still a slightly worrying experiment.
 
-A self-driving car depends on several sophisticated technologies working together. Cameras and other sensors on the roof and sides of the car build a picture of the world around it many times a second. Careful maps tell it exactly where it is. Software that has learned from millions of kilometers of driving then decides what to do: when to stop, when to change lanes and how to respond to a child who runs into the road.
+A self-driving car depends on several sophisticated technologies working together. Cameras and other sensors on the roof and sides of the car build a picture of the world around it many times a second. Careful maps tell it exactly where it is. Software that has learned from millions of kilometres of driving then decides what to do: when to stop, when to change lanes and how to respond to a child who runs into the road.
 
 The arguments for such cars are strong. More than a million people die on the roads every year, and the great majority of accidents are caused by the mistakes of people: drivers who are tired, busy with something else, drunk or just driving too fast. A machine does not get tired or look at its phone. Self-driving cars could also give independence to people who cannot drive, such as the elderly or people who cannot see, and they could make ride-sharing so cheap that not as many families would need to own a car.
 
@@ -148,7 +148,7 @@ Engineers are working on answers. Instead of carrying everything from Earth, set
 
 Even so, the challenges are not only about technology. Living for years with a small group of people, far from family and friends, with messages to Earth taking up to twenty minutes each way, would test anyone. Scientists study volunteers who spend months together in isolated places, such as stations in Antarctica, to learn how to prepare future teams.
 
-Is it worth it? Those in favor argue that becoming a species of two planets would protect us from a catastrophe on Earth, and that trying would drive innovation, as the journeys to the Moon did. Others reply that the money would be better spent solving problems on our own planet. For now, Mars is still, as it has always been, a place we can only dream about.`,
+Is it worth it? Those in favour argue that becoming a species of two planets would protect us from a catastrophe on Earth, and that trying would drive innovation, as the journeys to the Moon did. Others reply that the money would be better spent solving problems on our own planet. For now, Mars is still, as it has always been, a place we can only dream about.`,
       grammar: ["wish-and-if-only"],
       names: ["Mars", "Earth", "Antarctica", "Moon"],
       glossed: ["dioxide", "radiation", "settlers"],
@@ -200,9 +200,9 @@ The city had been hit by ransomware, a kind of malware that keeps the data of it
 
 Experts later discovered how the hack had begun. Several weeks earlier, an employee had received an email that seemed to come from a colleague, asking her to open a document. It was phishing. The document installed a small program that gave the hackers access to the network. For weeks, they explored it quietly, found the most important servers and deleted the backups, before finally encrypting everything at once.
 
-The council had a terrible dilemma. Paying would probably have been cheaper and faster, but there was no guarantee that the hackers would keep their promise, and paying would encourage more hacks. The council refused. It took almost four months and several million dollars to build its computer network again, far more than the hackers had asked for.
+The council had a terrible dilemma. Paying would probably have been cheaper and faster, but there was no guarantee that the hackers would keep their promise, and paying would encourage more hacks. The council refused. It took almost four months and a fortune to build its computer network again, far more than the hackers had asked for.
 
-Hacks like this have become common, and hospitals, schools and small companies are common targets, because they often have outdated software and little money for cybersecurity. Experts say that most hacks could be prevented with simple measures: updating software regularly, using a second password to authenticate when signing in, keeping backups offline, and teaching staff to recognize strange emails.
+Hacks like this have become common, and hospitals, schools and small companies are common targets, because they often have outdated software and little money for cybersecurity. Experts say that most hacks could be prevented with simple measures: updating software regularly, using a second password to authenticate when signing in, keeping backups offline, and teaching staff to recognise strange emails.
 
 After the hack, the city did all of these things. "We wish we had done it earlier," one manager admitted. "If only we had spent a small part of what this cost us on protecting ourselves, nothing would have happened." The phishing email, the experts found, had been opened by less than one in twenty employees. It only takes one.`,
       grammar: ["wish-and-if-only"],

@@ -133,7 +133,7 @@ So what can we do? Doctors say we don't need to avoid sugar completely. Instead,
     passage({
       id: "b1-health-training-for-a-first-marathon",
       title: ["Training for a First Marathon", "为第一次马拉松做训练"],
-      body: `A year ago, Lucas Moreau could not run to the bus stop without stopping to breathe. Last Sunday he finished his first marathon, forty-two kilometers through the streets of his city, in four hours and thirty-one minutes.
+      body: `A year ago, Lucas Moreau could not run to the bus stop without stopping to breathe. Last Sunday he finished his first marathon, forty-two kilometres through the streets of his city, in four hours and thirty-one minutes.
 
 "I wasn't an athlete at all," he says. "I worked in an office, I ate a lot of junk food, and my only exercise was walking to the car." Then his doctor told him that he was overweight and that his heart was working too hard. "She said that if I didn't change my lifestyle, I would have serious problems by fifty. That made me scared."
 
@@ -141,7 +141,7 @@ Lucas started slowly. In the first month he jogged for ten minutes, three times 
 
 He also changed his diet. He stopped buying snacks and started cooking balanced meals with more vegetables and protein. He drank less alcohol and more water. Over the year he lost eighteen kilos.
 
-The last five kilometers of the marathon were the hardest. "My legs hurt so much," Lucas laughs. "But people at the side of the road were cheering, and I kept going."
+The last five kilometres of the marathon were the hardest. "My legs hurt so much," Lucas laughs. "But people at the side of the road were cheering, and I kept going."
 
 What is his advice for people who are just starting? "Don't think about the whole marathon. Think about the next run. If you do that every week, you'll be surprised where you end up."`,
       grammar: [conditional],

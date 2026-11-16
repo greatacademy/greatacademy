@@ -89,9 +89,9 @@ Not everyone admires the jury. Some argue that difficult trials, for example abo
 
 For the next eighteen years, Daniel wrote letters to anyone who might listen: lawyers, journalists, members of parliament. Most never replied. Then, in 2011, a group of law students working with a charity that investigates wrongful convictions agreed to look at his file. They discovered that the police had kept a sample of blood from the clothes of the victim, which had never been examined, because nobody knew how to do so at the time of the trial.
 
-When the sample was finally examined with modern methods, the result was undeniable: the blood came from another man, whose record was already in a police database. He had committed several similar offenses in the same area. The verdict against Daniel was overturned, and he walked out of prison at the age of forty-one.
+When the sample was finally examined with modern methods, the result was undeniable: the blood came from another man, whose record was already in a police database. He had committed several similar offences in the same area. The verdict against Daniel was overturned, and he walked out of prison at the age of forty-one.
 
-How could such an injustice happen? The answer is not a happy one. Nobody in the trial had told lies. The victim really believed that she had recognized the man; the police really believed they had the right suspect. Yet studies show that memory is far less reliable than most people assume, especially after a terrible event, and that witnesses can become more certain over time, even when they are wrong. Identification of the wrong person is one of the most common causes of wrongful convictions.
+How could such an injustice happen? The answer is not a happy one. Nobody in the trial had told lies. The victim really believed that she had recognised the man; the police really believed they had the right suspect. Yet studies show that memory is far less reliable than most people assume, especially after a terrible event, and that witnesses can become more certain over time, even when they are wrong. Identification of the wrong person is one of the most common causes of wrongful convictions.
 
 Since then, many police forces have changed the way they show photos to witnesses, and some countries keep evidence for much longer, so that it can be examined again. Daniel received compensation from the state, but he says that no amount of money can give him back the best years of his life. What he wants most is for the courts to admit their mistakes faster. "I was lucky," he says. "Somebody finally listened. Many people in my situation are still waiting."`,
       grammar: ["misplaced-modifiers"],
@@ -197,11 +197,11 @@ Many countries are trying to do both. Offenders still lose their liberty, which 
 
 Consider the right of women to vote. At the beginning of the twentieth century, women could vote in national elections in almost no country in the world. In Britain, activists first tried polite methods: letters, petitions and visits to members of parliament. When these achieved little, some turned to stronger forms of protest. They held huge rallies, fixed themselves to railings and broke windows. Hundreds were imprisoned, and some refused to eat in prison. Their actions divided public opinion, but they made it impossible to pay no attention to the issue. In 1918, some British women finally won the vote, and in 1928, all women over twenty-one.
 
-A generation later, in the United States, the campaign for civil liberty used different methods. In 1955, in the city of Montgomery, a black woman called Rosa Parks refused to give up her seat on a bus to a white passenger, as the law of the city required. She was arrested. In response, the black residents of the city organized a boycott of the buses that went on for more than a year. The boycott was peaceful and organized, and it worked: it ended when the highest court in the country decided that the law was against the constitution. Over the following ten years, through demonstrations, sit-ins and acts of civil disobedience, the activists helped to bring about laws against discrimination in voting, work and public places.
+A generation later, in the United States, the campaign for civil liberty used different methods. In 1955, in the city of Montgomery, a black woman called Rosa Parks refused to give up her seat on a bus to a white passenger, as the law of the city required. She was arrested. In response, the black residents of the city organised a boycott of the buses that went on for more than a year. The boycott was peaceful and organised, and it worked: it ended when the highest court in the country decided that the law was against the constitution. Over the following ten years, through demonstrations, sit-ins and acts of civil disobedience, the activists helped to bring about laws against discrimination in voting, work and public places.
 
 Workers, too, won many of their rights through protest. The weekend, the working day of eight hours and laws against work by children were all the result of strikes and demonstrations, often met with violence by employers or the police.
 
-Not every protest succeeds, of course, and protests can turn into riots that harm innocent people. Experts on history point out that the protests that achieved most usually mixed protest with other strategies: legal challenges, organizing at the grassroots and the patient work of persuading the public. Nevertheless, history suggests that when ordinary people mobilize in large numbers and refuse to give up, even the strongest institutions can be made to change.`,
+Not every protest succeeds, of course, and protests can turn into riots that harm innocent people. Experts on history point out that the protests that achieved most usually mixed protest with other strategies: legal challenges, organising at the grassroots and the patient work of persuading the public. Nevertheless, history suggests that when ordinary people mobilise in large numbers and refuse to give up, even the strongest institutions can be made to change.`,
       grammar: ["linking-words-of-contrast"],
       names: ["Britain", "British", "United", "States", "Montgomery", "Rosa", "Parks"],
       glossed: ["railings", "sit-ins"],
@@ -238,7 +238,7 @@ Not every protest succeeds, of course, and protests can turn into riots that har
             ["Avoid any contact with politicians", "避免与政治人物有任何接触"],
           ],
           [
-            'They "mixed protest with other strategies: legal challenges, organizing at the grassroots and the patient work of persuading the public."',
+            'They "mixed protest with other strategies: legal challenges, organising at the grassroots and the patient work of persuading the public."',
             "它们把抗议与其他策略相结合：法律挑战、政治组织以及耐心说服公众。",
           ],
         ],
@@ -298,17 +298,17 @@ As a result, forensic scientists now insist that fingerprint evidence should be 
     passage({
       id: "b2-law-when-laws-disagree",
       title: ["When Laws Disagree", "当法律相互冲突时"],
-      body: `Imagine that you live near the border between two states of the same country. On one side of the border, a certain action is completely legal; on the other side, a few kilometers away, it can lead to a fine or even prison. Situations like this are more common than many people think, and they raise difficult questions about how a country should be governed.
+      body: `Imagine that you live near the border between two states of the same country. On one side of the border, a certain action is completely legal; on the other side, a few kilometres away, it can lead to a fine or even prison. Situations like this are more common than many people think, and they raise difficult questions about how a country should be governed.
 
 In federal countries such as the United States, Germany or Australia, power is divided between a national government and the governments of the states or regions. Each level has its own jurisdiction: the national government usually decides matters such as the army and the currency, while the states often decide on education, the police and many areas of criminal law. As a result, laws can be very different from one state to the next. In the United States, for example, the penalty for the same crime may be a few years in one state and many more in another, and some states have abolished the death penalty while others have not.
 
-Sometimes the laws of different levels clearly contradict each other. In the United States, several states have legalized cannabis, while federal law still prohibits it. In theory, a shop selling it within the law of its state could be prosecuted under federal law. In practice, the federal government has usually chosen not to enforce the prohibition, but the conflict creates real uncertainty for businesses, banks and citizens.
+Sometimes the laws of different levels clearly contradict each other. In the United States, several states have legalised cannabis, while federal law still prohibits it. In theory, a shop selling it within the law of its state could be prosecuted under federal law. In practice, the federal government has usually chosen not to enforce the prohibition, but the conflict creates real uncertainty for businesses, banks and citizens.
 
 When such conflicts get to the courts, judges must decide which law prevails. In most federal constitutions, national law takes priority in the areas where the national government has authority. However, the courts must also decide where that authority ends, and those decisions can be very controversial.
 
 The same problem is found between countries. A company that operates online may have to comply with the laws of dozens of countries at the same time, and those laws may conflict. A message that is protected by the freedom to say what you think in one country may be illegal in another.
 
-Those in favor of federal government argue that the differences are a benefit: states can experiment with different policies, learn from each other and reflect the values of their own residents. Others reply that justice should not depend on where you happen to live. Both sides agree on one thing: when laws disagree, ordinary people pay the price.`,
+Those in favour of federal government argue that the differences are a benefit: states can experiment with different policies, learn from each other and reflect the values of their own residents. Others reply that justice should not depend on where you happen to live. Both sides agree on one thing: when laws disagree, ordinary people pay the price.`,
       grammar: ["linking-words-of-contrast"],
       names: ["United", "States", "Germany", "Australia"],
       glossed: ["cannabis", "prevails"],
@@ -330,10 +330,10 @@ Those in favor of federal government argue that the differences are a benefit: s
           ["It is legal under state law but prohibited under federal law", "它在州法律下合法，却被联邦法律禁止"],
           [
             ["Every state has the same law about it", "每个州对它的规定都一样"],
-            ["Federal law has recently legalized it", "联邦法律最近已将其合法化"],
+            ["Federal law has recently legalised it", "联邦法律最近已将其合法化"],
           ],
           [
-            '"Several states have legalized cannabis, while federal law still prohibits it", so a legal shop could still be prosecuted.',
+            '"Several states have legalised cannabis, while federal law still prohibits it", so a legal shop could still be prosecuted.',
             "几个州已将大麻合法化，而联邦法律仍然禁止，所以合法经营的商店仍可能被起诉。",
           ],
         ],
@@ -345,7 +345,7 @@ Those in favor of federal government argue that the differences are a benefit: s
             ["National law should never take priority", "国家法律永远不应优先"],
           ],
           [
-            'Others "reply that justice should not depend on where you happen to live." Experimenting is an argument of those in favor.',
+            'Others "reply that justice should not depend on where you happen to live." Experimenting is an argument of those in favour.',
             "批评者反驳说，正义不应取决于你碰巧住在哪里；可以尝试不同政策是支持者的论点。",
           ],
         ],

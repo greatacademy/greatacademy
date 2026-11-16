@@ -195,7 +195,7 @@ On the first night, the hall was full. When the play ended, there was loud appla
     passage({
       id: "b1-arts-the-street-artist",
       title: ["The Street Artist", "街头艺术家"],
-      body: `Ten years ago, the walls of the old factory near the station were gray and full of graffiti. Today, people travel from other cities to see them. The reason is a street artist who calls herself Lumi.
+      body: `Ten years ago, the walls of the old factory near the station were grey and full of graffiti. Today, people travel from other cities to see them. The reason is a street artist who calls herself Lumi.
 
 Lumi does not show her face, and she never gives her real name. She works at night, usually alone, with paint and a ladder. In the morning, people find a new picture on a wall: a huge child holding a bird, an old man reading a newspaper made of leaves, a cat that seems to walk off the wall.
 

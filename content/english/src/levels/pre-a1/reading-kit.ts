@@ -4,6 +4,7 @@
 
 import { bodyWords, type PassageDef, type PassageQuestionDef, t } from "@ga/content";
 import type { WordBatch } from "../../pack.ts";
+import { britishSpelling } from "../../spelling.ts";
 
 /** Pair is a text in English and in Simplified Chinese, in that order. */
 export type Pair = readonly [en: string, zh: string];
@@ -34,11 +35,16 @@ export const passageXp = (words: number) => 2 + Math.ceil(words / 40);
 /**
  * passageMaker returns a builder of passages for a unit. batches are the vocabulary of the level and the levels
  * below; own are the topics of the unit, whose batches weigh more. A word no batch teaches is left for the tests
- * of the packs to report.
+ * of the packs to report; its British spelling counts as the word.
  */
 export function passageMaker(batches: readonly WordBatch[], own: readonly string[]) {
   const topicOf = new Map<string, string>();
-  for (const batch of batches) for (const word of batch.words) topicOf.set(word.toLowerCase(), batch.topic);
+  for (const batch of batches)
+    for (const word of batch.words) {
+      topicOf.set(word.toLowerCase(), batch.topic);
+      // A passage read in a British or Australian voice spells the word the British way.
+      topicOf.set(britishSpelling(word.toLowerCase()), batch.topic);
+    }
   const mine = new Set(own);
   return (spec: PassageSpec): PassageDef => {
     const free = new Set([...(spec.names ?? []), ...(spec.glossed ?? [])].map((w) => w.toLowerCase()));

@@ -90,7 +90,7 @@ Neither side, notably, disputes the main point: that talent is found in every pa
 
 In study after study, the answer has been the second group. Learning by doing, an approach that goes back at least a hundred years to the teacher John Dewey, rests on a simple notion: we retain what we work out for ourselves far better than what we are told. When students have to solve a real problem, they must recall what they know, test their ideas and correct their mistakes. In this way, knowledge is not just absorbed but built.
 
-The approach takes many forms. In science, it means experiments instead of explanations alone. In history, students might interview older people about the past and compare their stories with written sources. In some schools, whole terms are organized around a project, such as designing a garden for the school or making a short movie about the local river, and the subjects of the curriculum are integrated into it.
+The approach takes many forms. In science, it means experiments instead of explanations alone. In history, students might interview older people about the past and compare their stories with written sources. In some schools, whole terms are organised around a project, such as designing a garden for the school or making a short film about the local river, and the subjects of the curriculum are integrated into it.
 
 Its fans say that such projects engage students who are bored by traditional lessons, and that they develop skills that employers value: working in a team, planning, and persistence when things go wrong. Many students also find the work more rewarding, because they can see the result.
 

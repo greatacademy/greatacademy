@@ -85,28 +85,28 @@ Every time astronomers have built a better telescope, they have found something 
       title: ["The Accidental Discovery", "意外的发现"],
       body: `In September 1928, a Scottish scientist called Alexander Fleming came back to his laboratory in London after a holiday. Before he left, he had grown bacteria in a number of small glass dishes, and he had left them on a table in the corner instead of cleaning them.
 
-When he looked at the dishes, he noticed something strange. A green mold had grown on one of them. Around the mold there was a clear ring where the bacteria had died. Something from the mold was making them die.
+When he looked at the dishes, he noticed something strange. A green mould had grown on one of them. Around the mould there was a clear ring where the bacteria had died. Something from the mould was making them die.
 
-Many scientists would have thrown the dish away. Fleming did not. He wanted to know why, so he grew more of the mold and did experiments with the substance it made. He found that it destroyed many types of dangerous bacteria, but did not seem to harm the cells of our bodies. He called it penicillin.
+Many scientists would have thrown the dish away. Fleming did not. He wanted to know why, so he grew more of the mould and did experiments with the substance it made. He found that it destroyed many types of dangerous bacteria, but did not seem to harm the cells of our bodies. He called it penicillin.
 
 However, Fleming could not make enough of it, and it was hard to keep. For more than ten years, hardly anyone used it. Then, during the Second World War, a team of scientists at Oxford found a way to make it in large amounts. Factories in Britain and the United States started making it, and by 1944 there was enough for thousands of people who were hurt in the war.
 
 Penicillin was the first antibiotic, and it has saved millions of lives. Before penicillin, a person could die from a small cut if bacteria got into it.
 
-Was it just luck? In part, yes. If Fleming had cleaned his dishes, or if the weather had been different that summer, the mold might never have grown. But many people had seen mold destroy bacteria before and hadn't thought about it. Fleming's real genius was that he noticed, and asked why. As one scientist said, luck comes to the people who are ready for it.`,
+Was it just luck? In part, yes. If Fleming had cleaned his dishes, or if the weather had been different that summer, the mould might never have grown. But many people had seen mould destroy bacteria before and hadn't thought about it. Fleming's real genius was that he noticed, and asked why. As one scientist said, luck comes to the people who are ready for it.`,
       grammar: [pastPerfect],
       names: ["Scottish", "Alexander", "Fleming", "Fleming's", "London", "Second", "World", "War", "Oxford", "Britain", "United", "States"],
       glossed: ["bacteria", "mold", "penicillin", "antibiotic"],
       questions: [
         [
           ["What did Fleming notice on one of the dishes?", "弗莱明在其中一个培养皿上注意到了什么？"],
-          ["The bacteria had died in a ring around a mold", "霉菌周围一圈的细菌都死了"],
+          ["The bacteria had died in a ring around a mould", "霉菌周围一圈的细菌都死了"],
           [
             ["The bacteria had grown much faster than usual", "细菌长得比平时快得多"],
-            ["The mold had killed the human cells in the dish", "霉菌杀死了培养皿里的人体细胞"],
+            ["The mould had killed the human cells in the dish", "霉菌杀死了培养皿里的人体细胞"],
           ],
           [
-            '"Around the mold there was a clear ring where the bacteria had died." The substance did not seem to harm the cells of our bodies.',
+            '"Around the mould there was a clear ring where the bacteria had died." The substance did not seem to harm the cells of our bodies.',
             "霉菌周围出现了一圈细菌死亡的透明区域；这种物质似乎并不伤害人体细胞。",
           ],
         ],
@@ -126,11 +126,11 @@ Was it just luck? In part, yes. If Fleming had cleaned his dishes, or if the wea
           ['What was Fleming\'s "real genius", according to the passage?', "根据文章，弗莱明真正的天才之处是什么？"],
           ["He noticed something and asked why", "他注意到了异常并追问原因"],
           [
-            ["He was the only one who had ever seen mold", "他是唯一见过霉菌的人"],
+            ["He was the only one who had ever seen mould", "他是唯一见过霉菌的人"],
             ["He had planned the discovery for many years", "他为这一发现计划了很多年"],
           ],
           [
-            "\"Many people had seen mold destroy bacteria before and hadn't thought about it. Fleming's real genius was that he noticed, and asked why.\"",
+            "\"Many people had seen mould destroy bacteria before and hadn't thought about it. Fleming's real genius was that he noticed, and asked why.\"",
             "很多人见过霉菌杀死细菌却没多想，弗莱明的过人之处在于他注意到了并追问原因。",
           ],
         ],
@@ -200,7 +200,7 @@ Comets are balls of ice and rock that travel around the sun. Scientists think th
 
 Getting to a comet is not easy. The comet that Rosetta was sent to, called 67P, was moving at a great speed, so the spacecraft had to travel for ten years and use the gravity of the Earth and Mars to increase its own speed. For almost three years of the journey, Rosetta was so far from the sun that it did not have enough power, so the scientists turned it off. Nobody knew for certain that it would wake up again. In January 2014, it did, and the team cheered.
 
-In August 2014, Rosetta arrived at the comet and began to orbit it. The pictures surprised everyone: 67P looked like a huge toy duck, about four kilometers long, with a dark surface full of rocks and high walls of stone.
+In August 2014, Rosetta arrived at the comet and began to orbit it. The pictures surprised everyone: 67P looked like a huge toy duck, about four kilometres long, with a dark surface full of rocks and high walls of stone.
 
 In November, the small robot, Philae, was sent down. It was meant to fix itself to the surface, but this failed. It hit the ground and jumped up two times before it stopped in a dark place behind a high rock. Without light from the sun, its batteries ran out after about sixty hours. But in that short time, it sent back important information.
 
