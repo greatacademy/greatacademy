@@ -88,6 +88,8 @@ Topics on which the learner is **slow** (speed < 1) receive **no implicit credit
 
 A check that shows understanding (at least half right) gives each topic of the passage implicit credit of `readingCredit × weight`, under the same condition as other implicit credit. A failed check neither credits nor penalizes, since the passage may simply be hard.
 
+**Spoken topics.** A topic answered aloud is in scope only while a speech route may hear the learner and the learner has not turned speaking off, for the day or until turned on again ([Content §3](content.md#3-topics)). Turning it off leaves a session waiting on a spoken question with nothing counted. Spoken topics are never quizzed or asked by the diagnostic, since a quiz or a placement must not depend on a microphone.
+
 **Lesson share.** When lessons are available, at least 25% of the offered tasks are lessons. Reviews never crowd out new learning; new learning is also the cheapest way to review, as the next point explains. The order matters too, since many learners take the first task: the state counts the reviews since the last lesson, and after four in a row a lesson comes first. Without this, a learner whose reviews keep failing and coming due could spend weeks on reviews alone.
 
 **Repetition compression.** Due topics are not reviewed one by one:

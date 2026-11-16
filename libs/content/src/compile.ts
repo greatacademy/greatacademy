@@ -38,6 +38,8 @@ export interface GraphTopic {
   readonly essay?: boolean;
   /** spoken is the language a spoken topic is answered in (TopicDef.spoken). */
   readonly spoken?: string;
+  /** verbatim says a spoken topic is heard word for word, errors kept (TopicDef.verbatim). */
+  readonly verbatim?: boolean;
 }
 
 /** GraphPassage is what the engine needs of a passage. */
@@ -191,6 +193,7 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
     if (topic.spoken !== undefined && !/^[a-z]{2}(-[A-Z]{2})?$/.test(topic.spoken))
       error(path, "spoken must be a language tag such as en-US");
     if (topic.spoken && (topic.criteria || topic.essay)) error(path, "a spoken topic is checked by rules, not judged by a model");
+    if (topic.verbatim && !topic.spoken) error(path, "only a spoken topic is heard verbatim");
     if (topic.essay) {
       if (!topic.criteria) error(path, "an essay must be judged by a model");
       if (topic.knowledgePoints.length !== 1) error(path, "an essay has one knowledge point");
@@ -353,6 +356,7 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
     const path = `conversation ${c.id}`;
     if (!idPattern.test(c.id)) error(path, "id must be kebab case");
     if (conversations.has(c.id)) error(path, "duplicate conversation id");
+    if (c.spoken !== undefined && !/^[a-z]{2}(-[A-Z]{2})?$/.test(c.spoken)) error(path, "spoken must be a language tag such as en-US");
     conversations.add(c.id);
     text(`${path} › title`, c.title);
     text(`${path} › task`, c.task);
@@ -462,6 +466,7 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
           : topic.knowledgePoints.findIndex((kp) => kp.id === topic.diagnostic),
       ...(topic.essay && { essay: true }),
       ...(topic.spoken && { spoken: topic.spoken }),
+      ...(topic.verbatim && { verbatim: true }),
     });
   }
 

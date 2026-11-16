@@ -23,7 +23,7 @@ The pedagogical background is in [The Math Academy Way](the-math-academy-way.md)
 | Checker | `Checker` | Judges a response against a problem's expected data |
 | Passage | `PassageDef` | A text to read with a short comprehension check; a graph node apart from the topics, whose id shares their namespace; optionally the name of its recording read aloud (`audio`) and the accent it is read in when not the usual one (`accent`) |
 | Reading unit | `ReadingUnitDef` | An ordered sequence of passages on one domain, optionally with the name of its cover among the subject's illustrations, shown above each passage; a course lists the units it offers in `CourseDef.reading` |
-| Conversation | `ConversationDef` | A spoken scene with the AI tutor (S6): a title, the learner's task, the tutor's scenario in English (never shown to the learner), its opening line, its length in minutes, optionally the name of its scene among the subject's illustrations and the name of the opening's recording (`openingAudio`); a course lists the conversations it offers in `CourseDef.conversations` |
+| Conversation | `ConversationDef` | A spoken scene with the AI tutor (S6): a title, the learner's task, the tutor's scenario in English (never shown to the learner), its opening line, its length in minutes, optionally the name of its scene among the subject's illustrations and the name of the opening's recording (`openingAudio`), and the language it is spoken and heard in (`spoken`, such as `en-US`); a course lists the conversations it offers in `CourseDef.conversations` |
 | Strand | `StrandDef` | A kind of topic, such as reading or writing; a subject that declares strands (`SubjectDef.strands`) gives each topic one (`TopicDef.strand`), so that a course can be reviewed and balanced across them |
 | Lexicon | `LexiconEntry` | The subject's known spellings of each word, each optionally tied to the topic that teaches it |
 
@@ -63,6 +63,7 @@ Rules:
 - **Encompassings** point to ancestors (direct or indirect prerequisites). An equivalent topic that is not an ancestor may be encompassed only with `nonAncestor: true`. `weight` is in (0, 1]: 1 means the whole simpler topic is practiced, 0.5 half of it.
 - **Practice-only topics.** `practiceOnly: true` marks a topic that teaches nothing new, such as an exam topic: its lesson starts with practice, and the explanations and worked examples appear only after a failed lesson.
 - **Diagnostic knowledge point.** The diagnostic asks one problem per topic, from the knowledge point named by `diagnostic`, or the last one by default, because it is the most complete.
+- **Spoken topics.** `spoken: "en-US"` makes a topic answered aloud in that language: its problems take a recording. A learner for whom no speech route qualifies, or who turned speaking off, does not get it, so a topic that is not spoken may neither depend on nor encompass one that is. A spoken topic is checked by rules, never judged by a model, and is never quizzed or asked by the diagnostic. `verbatim: true` marks a spoken topic whose answers must be heard word for word, errors kept, as answering a question aloud does; it is offered only through a speech route that also passed the test of keeping errors ([Admin Console §5](admin.md#5-ai-services)).
 
 ## 4. Knowledge Points and Generators
 
@@ -115,14 +116,16 @@ A generator is a function from a seeded `Rng` to a `Problem`:
 | `text` | A plain text field | The text |
 | `order` | The `items`, each with buttons to move it | The indexes of the items in the chosen order, joined by commas |
 | `writing` | A long text field that counts words against `minWords`, limited to `maxChars` | The text |
+| `speech` | A recorder of at most `maxSeconds`, with the `text` to repeat or read aloud above it (none for `say`), and the `mode`: `repeat`, `read` or `say` | A 16 kHz mono 16-bit WAV, sent in the request; the server has a speech service of the `language` hear it and checks what was heard |
 
-`checker` names a registered checker and `expected` is that checker's data. The core registers four checkers (`choice`, `text`, `order`, whose `expected` lists the right orders, and `writing`); subjects register their own (for mathematics: numbers, fractions, expressions, equations, and so on).
+`checker` names a registered checker and `expected` is that checker's data. The core registers five checkers (`choice`, `text`, `order`, whose `expected` lists the right orders, `writing` and `speech`); subjects register their own (for mathematics: numbers, fractions, expressions, equations, and so on).
 
 | Checker | `expected` | Accepts |
 | :--- | :--- | :--- |
 | `choice` | The index of the correct option | Exactly that index |
 | `text` | An array of accepted strings | Any of them, ignoring case, Unicode width and spacing |
 | `writing` | `minWords` and `maxChars` | A text of at least `minWords` words and at most `maxChars` characters; it only checks the length before a model judges the text |
+| `speech` | `mode`, the `reference` to repeat or read, the sentences that `accept` a `say` answer, and optionally `minAccuracy` | For `repeat` and `read`, the reference's words heard in order, all of one of up to four words and 80% of a longer one, and, when pronunciation was assessed, an accuracy of at least 60 (*starting*), which an understood accent reaches; for `say`, one of the accepted sentences, word for word. Words are compared as heard: lower case, without punctuation, contractions in full, “OK” as “okay” and numbers below 100 in words |
 
 A checker returns a `Verdict`: `correct`, and optional `feedback` for a rejection that deserves an explanation (for example "simplify the fraction"). The `CheckerRegistry`:
 
@@ -179,6 +182,7 @@ const prealgebra: CourseDef = {
 | Reading units and passages have unique ids that no topic uses; a passage has a body, positive `xp`, at least one question, and topics that exist | Error |
 | Every word of a passage is in the lexicon, or listed in its `names` or `glossed` | Error |
 | A course's reading units exist | Error |
+| A spoken topic or conversation names a language tag; a spoken topic is not judged by a model, and no topic that is not spoken depends on or encompasses one; only a spoken topic is `verbatim` | Error |
 | Conversations have unique kebab-case ids, texts in every locale, a scenario and an opening line, and a whole number of minutes from 1 to 15; a course's conversations exist and are not repeated | Error |
 | Strands have unique kebab-case ids; when a subject declares strands, every topic names one of them, and otherwise none does | Error |
 | A unit's reading units and conversation are offered by its course, and no conversation closes two units | Error |

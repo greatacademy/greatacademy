@@ -194,6 +194,12 @@ export interface TopicDef {
    * is not spoken may depend on one that is. A spoken topic is never quizzed or asked by the diagnostic.
    */
   readonly spoken?: string;
+  /**
+   * verbatim makes a spoken topic need what was said heard word for word, errors kept, as answering a question aloud
+   * does: a service that hears "She go" as "She goes" would pass a wrong answer. It is offered only through a speech
+   * route that also passed the test of keeping errors (criterion `stt-verbatim:<language>`).
+   */
+  readonly verbatim?: boolean;
 }
 
 /** StrandDef is a strand of a subject: a kind of topic a course balances against the others, such as reading or writing. */
@@ -307,6 +313,11 @@ export interface ConversationDef {
   readonly opening: string;
   /** openingAudio names the recording of the opening in the subject's audio, a file `<openingAudio>.wav` of 16 kHz 16-bit mono PCM, which the voice service plays instead of speaking the line. */
   readonly openingAudio?: string;
+  /**
+   * spoken is the language the conversation is spoken in, as a language tag such as en-US: the language its speech is
+   * heard and spoken in. Without it the voice service has nothing to hear the learner with.
+   */
+  readonly spoken?: string;
   /** minutes is how long the conversation should last; after it the tutor brings it to an end. */
   readonly minutes: number;
   /** illustration names the conversation's scene in the subject's illustrations. */

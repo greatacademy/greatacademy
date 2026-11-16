@@ -45,7 +45,7 @@ export interface SpeechExpected {
   readonly minAccuracy?: number;
 }
 
-/** MIN_CONFIDENCE is the confidence below which a recording is asked again and counts nothing (*starting*). */
+/** MIN_CONFIDENCE is the confidence below which a recording that would be wrong is asked again and counts nothing (*starting*). */
 export const MIN_CONFIDENCE = 0.5;
 
 /** MIN_ACCURACY is the pronunciation accuracy a word or text needs when assessed (*starting*): low enough that an accent that is understood passes. */
@@ -109,6 +109,7 @@ const CONTRACTIONS: readonly (readonly [RegExp, string])[] = [
   [/\b(\w+)'d\b/g, "$1 would"],
   [/\b(he|she|it|that|there|what|who|where|here)'s\b/g, "$1 is"],
   [/\blet's\b/g, "let us"],
+  [/\bok\b/g, "okay"],
 ];
 
 const ONES = [
@@ -145,8 +146,8 @@ function numberWords(w: string): string {
 
 /**
  * spokenWords turns a text into the words a listener hears: lower case, no
- * punctuation, contractions said in full and numbers below 100 in words, since a
- * speech service may write either form of what was said.
+ * punctuation, contractions said in full, "OK" as "okay" and numbers below 100 in
+ * words, since a speech service may write either form of what was said.
  */
 export function spokenWords(text: string): string[] {
   let s = text.normalize("NFKC").toLowerCase().replace(/[‘’]/g, "'");
