@@ -8,7 +8,10 @@ from ga_voice.messages import Line
 from ga_voice.worker_client import (
     FakeWorkerClient,
     HttpWorkerClient,
+    SessionRef,
     SessionResult,
+    SessionSpeech,
+    SpeechService,
     TurnRequest,
     TutorTurn,
     WorkerError,
@@ -97,3 +100,35 @@ async def test_a_recording_outside_audio_is_refused() -> None:
         await worker.next_turn(TurnRequest(session="s", learner="l", course="c", lines=()))
     with pytest.raises(WorkerError):
         await worker.recording("voice/v1/turn")
+
+
+SPEECH = {
+    "stt": {"vendor": "azure", "region": "eastus", "key": "k1", "language": "en-US", "voice": ""},
+    "tts": {"vendor": "azure", "region": "eastus", "key": "k2", "language": "en-US", "voice": "en-US-AvaNeural"},
+}
+
+
+async def test_speech() -> None:
+    seen: list[httpx.Request] = []
+
+    def handle(request: httpx.Request) -> httpx.Response:
+        seen.append(request)
+        return httpx.Response(200, json=SPEECH)
+
+    speech = await client(httpx.MockTransport(handle)).speech(SessionRef(session="s-1", learner="l-1", course="c-1"))
+    assert speech == SessionSpeech(
+        stt=SpeechService("azure", "eastus", "k1", "en-US"),
+        tts=SpeechService("azure", "eastus", "k2", "en-US", "en-US-AvaNeural"),
+    )
+    assert str(seen[0].url) == "http://worker.test/voice/v1/speech"
+    assert json.loads(seen[0].content) == {"session": "s-1", "learner": "l-1", "course": "c-1"}
+    assert "k1" not in repr(speech)
+
+
+async def test_speech_without_a_route_and_bad_answers() -> None:
+    ref = SessionRef(session="s", learner="l", course="c")
+    assert await client(httpx.MockTransport(lambda _r: httpx.Response(503))).speech(ref) is None
+    bad = {**SPEECH, "stt": {**SPEECH["stt"], "region": "east us/../x"}}
+    for response in (httpx.Response(500), httpx.Response(200, json=bad), httpx.Response(200, json=[1])):
+        with pytest.raises(WorkerError):
+            await client(httpx.MockTransport(lambda _r, r=response: r)).speech(ref)

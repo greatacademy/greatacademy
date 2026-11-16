@@ -18,7 +18,7 @@ from ga_voice.drain import Admission
 from ga_voice.messages import SAMPLE_RATE, ErrorMessage, MessageError, StartMessage, decode_client, encode
 from ga_voice.serializer import VoiceSerializer
 from ga_voice.session import SessionSettings, run_session
-from ga_voice.speech import SpeechServices, SpeechUnavailableError
+from ga_voice.speech import SpeechSource, SpeechUnavailableError
 from ga_voice.tickets import TicketError, TicketVerifier
 from ga_voice.worker_client import WorkerClient
 
@@ -41,7 +41,7 @@ class VoiceApp:
 
     admission: Admission
     verifier: TicketVerifier
-    services: SpeechServices
+    speech: SpeechSource
     worker: WorkerClient
     settings: SessionSettings = field(default_factory=SessionSettings)
 
@@ -82,7 +82,8 @@ async def handle_conversation(app: VoiceApp, websocket: WebSocket) -> None:
         await _refuse(websocket, error.code, CLOSE_POLICY)
         return
     try:
-        app.services.vad_params()
+        services = await app.speech.for_session(ticket)
+        services.vad_params()
     except SpeechUnavailableError:
         await _refuse(websocket, "speech_unavailable", CLOSE_TRY_AGAIN)
         return
@@ -109,7 +110,7 @@ async def handle_conversation(app: VoiceApp, websocket: WebSocket) -> None:
 
         await run_session(
             ticket=ticket,
-            services=app.services,
+            services=services,
             worker=app.worker,
             settings=app.settings,
             source=transport.input(),

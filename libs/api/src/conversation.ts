@@ -18,11 +18,22 @@ import {
   type StoredLine,
 } from "@ga/db";
 import { DAY } from "@ga/engine";
-import { type ConversationLine, callCost, configure, converse, gatewayHeaders, MAX_LINE_CHARS, MAX_LINES, ReplyRejected } from "@ga/judge";
+import {
+  azureRegion,
+  type ConversationLine,
+  callCost,
+  configure,
+  converse,
+  gatewayHeaders,
+  MAX_LINE_CHARS,
+  MAX_LINES,
+  ReplyRejected,
+  speechProtocol,
+} from "@ga/judge";
 import type { ConversationService, Session } from "@ga/proto/conversation/v1/conversation_pb";
 
 import { requirePlan } from "./billing.ts";
-import { type QualifiedRoute, qualifyingRoute, requireStudy } from "./capabilities.ts";
+import { type QualifiedRoute, qualifyingRoute, requireStudy, speechRoute } from "./capabilities.ts";
 import { dbKey, userIdKey } from "./context.ts";
 import { illustrationPath, text } from "./convert.ts";
 import type { JudgingDeps } from "./judging.ts";
@@ -262,7 +273,8 @@ async function readSession(db: Db, body: Record<string, unknown>): Promise<Conve
 
 /**
  * handleVoice answers the voice service's calls (apps/voice/src/ga_voice/worker_client.py):
- * POST turn asks for the tutor's next line, with the path of its recording when
+ * POST speech asks which speech services hear and speak a session (see
+ * sessionSpeech), POST turn asks for the tutor's next line, with the path of its recording when
  * it has one, and PUT sessions/{id}/result writes
  * the session's result, idempotently. Both need the service's credential. The
  * first turn is the conversation's opening line, with no model call; after
@@ -280,6 +292,16 @@ export async function handleVoice(request: Request, db: Db, deps: ConversationDe
     body = parsed as Record<string, unknown>;
   } catch {
     return json({ error: "bad-request" }, 400);
+  }
+
+  if (path === "speech" && request.method === "POST") {
+    const row = await readSession(db, body);
+    if (!row) return json({ error: "no-session" }, 404);
+    if (row.status !== "active") return json({ error: "ended" }, 409);
+    const def = (await deps.registry.course(row.courseId))?.subject.conversations.get(row.conversationId);
+    if (!def) return json({ error: "no-conversation" }, 404);
+    const speech = await sessionSpeech(db, deps, row.learnerId, def, deps.now());
+    return speech ? json(speech) : json({ error: "no-route" }, 503);
   }
 
   if (path === "turn" && request.method === "POST") {
@@ -317,6 +339,7 @@ export async function handleVoice(request: Request, db: Db, deps: ConversationDe
     if (!row) return json({ error: "no-session" }, 404);
     // A child's transcript is never kept (docs/minors-data.md §10).
     const kept = (await learnerAge(db, row.learnerId)).band !== "child";
+    if (row.status === "active") await recordSpeech(db, deps, row, lines, duration);
     await endConversation(db, row.id, {
       reason: reason as string,
       durationSecs: duration,
@@ -327,6 +350,87 @@ export async function handleVoice(request: Request, db: Db, deps: ConversationDe
     return new Response(null, { status: 204 });
   }
   return json({ error: "not-found" }, 404);
+}
+
+/** SpeechService is one speech service a session uses, as apps/voice/src/ga_voice/worker_client.py reads it. */
+interface SpeechService {
+  readonly vendor: "azure";
+  readonly region: string;
+  readonly key: string;
+  readonly language: string;
+  readonly voice: string;
+}
+
+/**
+ * sessionSpeech chooses the speech services of a conversation for a learner:
+ * speech-to-text in the conversation's language through a route that keeps
+ * errors as they were said (the tutor's rubric judges them, docs/english-curriculum.md §13.2),
+ * and text-to-speech in a route's voice, both under the speech scope. The
+ * vendor's key goes to the voice service, which holds it for the session only.
+ * Without either, or for a vendor whose protocol the voice service does not
+ * speak, it returns undefined and the session is refused.
+ */
+async function sessionSpeech(
+  db: Db,
+  deps: ConversationDeps,
+  learnerId: string,
+  def: ConversationDef,
+  now: number,
+): Promise<{ stt: SpeechService; tts: SpeechService } | undefined> {
+  if (!def.spoken || !deps.judging) return undefined;
+  const [stt, tts] = await Promise.all([
+    speechRoute(db, "stt", def.spoken, learnerId, now, true),
+    speechRoute(db, "tts", def.spoken, learnerId, now),
+  ]);
+  if (!stt || !tts || !tts.voice) return undefined;
+  const list = await providers(db);
+  const service = async (route: QualifiedRoute): Promise<SpeechService | undefined> => {
+    const p = list.find((x) => x.id === route.providerId);
+    if (!p?.keyCipher || speechProtocol(p.baseUrl) !== "azure") return undefined;
+    const key = await decryptSecret(deps.judging!.aiKeysSecret, p.keyCipher);
+    return { vendor: "azure", region: azureRegion(p.baseUrl), key, language: def.spoken!, voice: route.voice };
+  };
+  const [heard, spoken] = await Promise.all([service(stt), service(tts)]);
+  return heard && spoken ? { stt: heard, tts: spoken } : undefined;
+}
+
+/**
+ * recordSpeech records what a finished conversation cost in speech: the
+ * session's seconds heard by speech-to-text and the characters of the tutor's
+ * lines spoken, on the routes that serve the learner now. Lines played from a
+ * recording are counted too, as an upper bound.
+ */
+async function recordSpeech(
+  db: Db,
+  deps: ConversationDeps,
+  row: ConversationRow,
+  lines: readonly ConversationLine[],
+  seconds: number,
+): Promise<void> {
+  const def = (await deps.registry.course(row.courseId))?.subject.conversations.get(row.conversationId);
+  if (!def?.spoken) return;
+  const now = deps.now();
+  const chars = lines.filter((l) => l.speaker === "tutor").reduce((n, l) => n + l.text.length, 0);
+  const calls: NewCall[] = [];
+  for (const [use, amount] of [
+    ["stt", Math.ceil(seconds)],
+    ["tts", chars],
+  ] as const) {
+    const route = await speechRoute(db, use, def.spoken, row.learnerId, now, use === "stt");
+    if (!route || amount === 0) continue;
+    calls.push({
+      providerId: route.providerId,
+      model: route.model,
+      use: "speech",
+      learnerId: row.learnerId,
+      inputTokens: amount,
+      outputTokens: 0,
+      cost: callCost({ input: amount, output: 0 }, route.price),
+      ok: true,
+      at: new Date(now),
+    });
+  }
+  await recordCalls(db, calls);
 }
 
 /**

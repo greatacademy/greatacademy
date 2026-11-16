@@ -12,6 +12,8 @@ COPY src ./src
 RUN --mount=type=cache,target=/root/.cache/uv uv sync --locked --no-dev
 
 FROM python:3.14.8-slim-trixie
+# Azure's Speech SDK loads ALSA's library even with no device; it uses the image's OpenSSL and certificates.
+RUN apt-get update && apt-get install -y --no-install-recommends libasound2t64 && rm -rf /var/lib/apt/lists/*
 RUN useradd --uid 10001 --no-create-home --shell /usr/sbin/nologin gavoice
 COPY --from=build /app /app
 ENV PATH=/app/.venv/bin:$PATH PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1

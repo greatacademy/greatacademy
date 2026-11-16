@@ -1,9 +1,10 @@
 """The speech services a session needs, behind one interface.
 
-No provider or model is chosen in code: administrators configure them, and
-adapters to real providers implement SpeechServices. Until one exists the
-service refuses sessions with ``speech_unavailable``, unless the fake services
-are switched on for local development.
+No provider or model is chosen in code: administrators configure routes, and
+for each session the Worker names the services that may serve its learner,
+which an adapter implements (Azure AI Speech so far). Without them the service
+refuses the session with ``speech_unavailable``; fake services can be switched
+on for local development.
 """
 
 import asyncio
@@ -11,6 +12,7 @@ import math
 import struct
 from typing import Protocol, override
 
+from pipecat.audio.vad.silero import SileroVADAnalyzer
 from pipecat.audio.vad.vad_analyzer import VADAnalyzer, VADParams
 from pipecat.frames.frames import (
     BotStartedSpeakingFrame,
@@ -26,8 +28,13 @@ from pipecat.frames.frames import (
     VADUserStoppedSpeakingFrame,
 )
 from pipecat.processors.frame_processor import FrameDirection, FrameProcessor
+from pipecat.services.azure.stt import AzureSTTService
+from pipecat.services.azure.tts import AzureTTSService
+from pipecat.transcriptions.language import Language
 
 from ga_voice.messages import SAMPLE_RATE
+from ga_voice.tickets import Ticket
+from ga_voice.worker_client import SessionRef, SessionSpeech, WorkerClient, WorkerError
 
 
 class SpeechServices(Protocol):
@@ -217,3 +224,88 @@ class FakeSpeechServices:
     def tts(self) -> FrameProcessor:
         """tts returns a FakeTextToSpeech."""
         return FakeTextToSpeech()
+
+
+AZURE_VAD_PARAMS = VADParams(confidence=0.7, start_secs=0.2, stop_secs=0.8, min_volume=0.6)
+"""AZURE_VAD_PARAMS are the voice activity settings with a real recognizer: a learner may pause briefly mid-sentence."""
+
+
+class AzureSpeechServices:
+    """AzureSpeechServices hears the learner with Azure AI Speech and speaks the tutor's lines with it.
+
+    Silero tells speech from silence on the server, Azure's real-time recognition turns the learner's audio into
+    text and its streaming synthesis speaks in the route's voice. Real-time recognition and synthesis keep no audio.
+    """
+
+    def __init__(self, speech: SessionSpeech) -> None:
+        if speech.stt.vendor != "azure" or speech.tts.vendor != "azure" or not speech.tts.voice:
+            raise SpeechUnavailableError
+        self._speech = speech
+
+    def vad_params(self) -> VADParams:
+        """vad_params returns AZURE_VAD_PARAMS."""
+        return AZURE_VAD_PARAMS
+
+    def vad(self) -> VADAnalyzer:
+        """vad returns a Silero analyzer."""
+        return SileroVADAnalyzer(sample_rate=SAMPLE_RATE, params=self.vad_params())
+
+    def stt(self) -> FrameProcessor:
+        """stt returns Azure's real-time recognition in the session's language."""
+        stt = self._speech.stt
+        return AzureSTTService(
+            api_key=stt.key,
+            region=stt.region,
+            sample_rate=SAMPLE_RATE,
+            settings=AzureSTTService.Settings(language=Language(stt.language)),
+        )
+
+    def tts(self) -> FrameProcessor:
+        """tts returns Azure's streaming synthesis in the route's voice."""
+        tts = self._speech.tts
+        return AzureTTSService(
+            api_key=tts.key,
+            region=tts.region,
+            sample_rate=SAMPLE_RATE,
+            settings=AzureTTSService.Settings(voice=tts.voice),
+        )
+
+
+class SpeechSource(Protocol):
+    """SpeechSource gives each session its speech services."""
+
+    async def for_session(self, ticket: Ticket) -> SpeechServices:
+        """for_session returns the session's services, or raises SpeechUnavailableError."""
+        ...
+
+
+class FixedSpeech:
+    """FixedSpeech gives every session the same kind of services: fake ones locally, or none."""
+
+    def __init__(self, services: SpeechServices) -> None:
+        self._services = services
+
+    async def for_session(self, ticket: Ticket) -> SpeechServices:
+        """for_session returns the services, raising SpeechUnavailableError when they are not configured."""
+        del ticket
+        self._services.vad_params()
+        return self._services
+
+
+class WorkerSpeech:
+    """WorkerSpeech asks the Worker which speech services may serve a session's learner, as administrators set them."""
+
+    def __init__(self, worker: WorkerClient) -> None:
+        self._worker = worker
+
+    async def for_session(self, ticket: Ticket) -> SpeechServices:
+        """for_session builds the session's services, or raises SpeechUnavailableError when no route serves it."""
+        try:
+            speech = await self._worker.speech(
+                SessionRef(session=ticket.session, learner=ticket.learner, course=ticket.course)
+            )
+        except WorkerError as error:
+            raise SpeechUnavailableError from error
+        if speech is None:
+            raise SpeechUnavailableError
+        return AzureSpeechServices(speech)

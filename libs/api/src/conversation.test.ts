@@ -58,6 +58,7 @@ const def: SubjectDef = {
       task: t("Ask for a book.", "借一本书。"),
       scenario: "You are a librarian.",
       opening: "Hello! How can I help?",
+      spoken: "en-US",
       minutes: 3,
     },
   ],
@@ -236,6 +237,54 @@ describe("conversations", () => {
     expect(got.session).toMatchObject({ status: "ended", reason: "tutor_ended", durationSecs: 250, learnerLines: 1 });
     expect(got.lines.map((l) => l.text)).toEqual(["Hello! How can I help?", "A book about volcanoes, please."]);
     expect((await voice("turn", "POST", { ...base, lines })).status).toBe(409);
+  });
+
+  it("names a session's speech services only through routes that keep errors, and records their use", async () => {
+    await addRoute();
+    const started = await client.startConversation({ courseId: COURSE, conversationId: "at-the-desk" });
+    const learner = JSON.parse(Buffer.from(started.ticket.split(".")[0]!, "base64url").toString()).learner as string;
+    const base = { session: started.sessionId, learner, course: COURSE };
+    expect((await voice("speech", "POST", base)).status).toBe(503);
+
+    const at = new Date(now);
+    const providerId = await createProvider(db, {
+      name: "Speech",
+      api: "",
+      baseUrl: "https://eastus.api.cognitive.microsoft.com",
+      keyCipher: await encryptSecret(SECRET, "speech-key"),
+      enabled: true,
+      createdAt: at,
+      updatedAt: at,
+    });
+    await setPrice(db, { providerId, model: "default", inputPerMillion: 277.78, outputPerMillion: 0, updatedAt: at });
+    await setPrice(db, { providerId, model: "neural", inputPerMillion: 15, outputPerMillion: 0, updatedAt: at });
+    const calibration = { providerId, model: "default", promptVersion: "", kappa: 0.95, humanKappa: 0.9, passed: true, at };
+    await recordCalibration(db, { ...calibration, criterion: "stt:en" });
+    const route = { position: "primary" as const, providerId, promptVersion: "", live: true, updatedAt: at };
+    await setRoute(db, { ...route, use: "stt", target: "en", model: "default" });
+    await setRoute(db, { ...route, use: "tts", target: "en-US", model: "neural", voice: "en-US-AvaNeural" });
+    // Speech-to-text that has not been shown to keep errors would hide what the tutor's rubric judges.
+    expect((await voice("speech", "POST", base)).status).toBe(503);
+
+    await recordCalibration(db, { ...calibration, criterion: "stt-verbatim:en" });
+    const speech = await voice("speech", "POST", base);
+    expect(await speech.json()).toEqual({
+      stt: { vendor: "azure", region: "eastus", key: "speech-key", language: "en-US", voice: "" },
+      tts: { vendor: "azure", region: "eastus", key: "speech-key", language: "en-US", voice: "en-US-AvaNeural" },
+    });
+
+    const lines = [
+      { speaker: "tutor", text: "Hello! How can I help?" },
+      { speaker: "learner", text: "A book, please." },
+    ];
+    await voice(`sessions/${started.sessionId}/result`, "PUT", { ...base, lines, reason: "learner_ended", duration_secs: 61.5 });
+    await voice(`sessions/${started.sessionId}/result`, "PUT", { ...base, lines, reason: "learner_ended", duration_secs: 61.5 });
+    const calls = (await db.select().from(schema.aiCall)).filter((c) => c.use === "speech");
+    expect(calls.map((c) => [c.model, c.inputTokens])).toEqual([
+      ["default", 62],
+      ["neural", 22],
+    ]);
+    expect((await voice("speech", "POST", base)).status).toBe(409);
   });
 
   it("refuses calls without the credential, or for another learner's session", async () => {

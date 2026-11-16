@@ -327,11 +327,11 @@ Only platform administrators can reach the console, and every change is logged w
 
 ### 13.2 Recorded Speech
 
-S2 to S5 are recorded and then submitted in an ordinary request, judged in a workflow like writing. Only S6 needs a live connection (§13.3). Audio goes to speech-to-text and pronunciation services through one interface on the server, so that a provider can change.
+S2 to S5 are recorded and then submitted in an ordinary request: the recording, at most 30 seconds of 16 kHz mono WAV, is heard within the request and kept nowhere, and only the words heard are kept with the answer, for 30 days. A recording that is too short, not heard, or heard with low confidence and wrong asks for another and counts nothing. Only S6 needs a live connection (§13.3). Audio goes to speech-to-text and pronunciation services through one interface on the server, so that a provider can change.
 
 **Pronunciation assessment has no chosen provider.** It is needed only by foreign-language courses, so the choice waits for stage 3. Azure AI Speech, SpeechSuper, Speechace and Language Confidence are compared on recordings scored by people, including learners whose first language is Chinese, other accents and children. The comparison measures agreement with people and, above all, how often it rejects speech that is accented but understood. It also tests the cheaper measure of intelligibility: whether speech-to-text recognizes the target word.
 
-Speech-to-text may silently correct a learner's grammar, which would hide the errors S4 and S6 judge. Every recognizer is tested for this before use.
+Speech-to-text may silently correct a learner's grammar, which would hide the errors S4 and S6 judge. Every recognizer is tested for this before use, on sentences with a learner's error (`stt-verbatim`): S4 and S6 are offered only through a recognizer that passes, while S2 and S3, whose sentences are given, need only `stt`. Azure AI Speech heard 77% of 200 synthetic sentences with errors word for word, so with it S4 and S6 stay off.
 
 ### 13.3 The Voice Service
 
@@ -344,7 +344,7 @@ client ──wss with a short-lived ticket──► Cloudflare ──Tunnel─�
                                                                     └─► web Worker: model answers, results
 ```
 
-- **Pipeline.** Pipecat handles voice activity, the end of a turn, interruption and the speech services. It has no LLM service: answers come from the Worker through pi-ai, so that every model call is in one place. Learners pause longer than native speakers, so the longest pause in a turn is set by level.
+- **Pipeline.** Pipecat handles voice activity (Silero), the end of a turn, interruption and the speech services. The services are not configured in the service: at the start of each session it asks the Worker which speech-to-text and text-to-speech its routes name, with the key, and refuses the session when none qualifies (`VOICE_SPEECH=worker`); Azure AI Speech is the one vendor it speaks to so far. It has no LLM service: answers come from the Worker through pi-ai, so that every model call is in one place. Learners pause longer than native speakers, so the longest pause in a turn is set by level.
 - **Project.** Python and uv are pinned in `mise.toml`, with pytest, ruff and pyright. Pipecat is pinned exactly (1.15.0 is current). The image holds the model weights, so that a first session downloads nothing.
 - **Tickets.** The Worker signs a ticket valid for about 60 seconds that names the learner, course and session; the service checks it with a public key. The service calls the Worker with its own credential, and writing a result is idempotent by session id.
 - **Turns.** The service sends the Worker the conversation so far and gets the tutor's next line and whether it ends; the first line is the conversation's opening, with no model call, which the service plays from its recording made ahead of time ([Content §11](content.md#11-english)) and speaks only when the recording cannot be fetched. The Worker plays the conversation's scenario through the route of use `conversation`, primary then backup, and ends it after 40 turns or once its minutes have passed. A learner has at most 10 conversations a day.

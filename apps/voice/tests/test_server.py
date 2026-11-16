@@ -14,11 +14,22 @@ from websockets.asyncio.client import ClientConnection, connect
 from websockets.exceptions import ConnectionClosed
 
 from ga_voice.drain import Admission
+from ga_voice.levels import LearnerLevel
 from ga_voice.server import CONVERSATION_PATH, DrainingServer, VoiceApp, make_server
 from ga_voice.session import SessionSettings
-from ga_voice.speech import FakeSpeechServices, SpeechServices, UnconfiguredSpeechServices, silence, tone
-from ga_voice.tickets import TicketVerifier
-from ga_voice.worker_client import FakeWorkerClient, TutorTurn
+from ga_voice.speech import (
+    AzureSpeechServices,
+    FakeSpeechServices,
+    FixedSpeech,
+    SpeechServices,
+    SpeechSource,
+    UnconfiguredSpeechServices,
+    WorkerSpeech,
+    silence,
+    tone,
+)
+from ga_voice.tickets import Ticket, TicketVerifier
+from ga_voice.worker_client import FakeWorkerClient, SessionRef, SessionSpeech, SpeechService, TutorTurn
 from tests.harness import signed
 
 KEY = Ed25519PrivateKey.from_private_bytes(bytes(range(32)))
@@ -40,13 +51,17 @@ class Running:
 
 @asynccontextmanager
 async def running(
-    turns: list[TutorTurn], *, services: SpeechServices | None = None, capacity: int = 4
+    turns: list[TutorTurn],
+    *,
+    services: SpeechServices | None = None,
+    speech: SpeechSource | None = None,
+    capacity: int = 4,
 ) -> AsyncGenerator[Running]:
     worker = FakeWorkerClient(turns)
     voice = VoiceApp(
         admission=Admission(capacity),
         verifier=TicketVerifier(KEY.public_key(), clock=lambda: 1_010),
-        services=services or FakeSpeechServices(["I am fine."]),
+        speech=speech or FixedSpeech(services or FakeSpeechServices(["I am fine."])),
         worker=worker,
         settings=SessionSettings(limit_secs=30, closing_grace_secs=2, result_retry_secs=0.01),
     )
@@ -176,6 +191,26 @@ async def test_no_speech_services_configured() -> None:
         async with session(run.url, signed(KEY)) as client:
             await asyncio.wait_for(client.closed.wait(), 5)
         assert client.of("error") == [{"code": "speech_unavailable", "type": "error"}]
+
+
+async def test_a_learner_no_route_serves_is_refused() -> None:
+    async with running([TutorTurn("Hi.")]) as run:
+        run.voice.speech = WorkerSpeech(run.worker)
+        async with session(run.url, signed(KEY)) as client:
+            await asyncio.wait_for(client.closed.wait(), 5)
+        assert client.of("error") == [{"code": "speech_unavailable", "type": "error"}]
+        assert run.worker.speech_asked == [
+            SessionRef(session="session-1", learner="learner-1", course="english-conversation-a2")
+        ]
+
+
+async def test_the_worker_names_the_speech_services() -> None:
+    azure = SpeechService("azure", "eastus", "key", "en-US", "en-US-AvaNeural")
+    worker = FakeWorkerClient([], speech=SessionSpeech(stt=azure, tts=azure))
+    ticket = Ticket(id="t", learner="l", course="c", session="s", level=LearnerLevel(), issued_at=0, expires_at=1)
+    services = await WorkerSpeech(worker).for_session(ticket)
+    assert isinstance(services, AzureSpeechServices)
+    assert services.vad_params().stop_secs == 0.8
 
 
 async def test_disconnect_writes_the_result() -> None:

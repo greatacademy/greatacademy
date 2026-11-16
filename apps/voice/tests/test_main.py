@@ -17,7 +17,7 @@ def test_load_config_defaults() -> None:
     assert config.port == 8080
     assert config.capacity == 4
     assert config.session_limit_secs == 1200
-    assert config.speech == "unconfigured"
+    assert config.speech == "worker"
 
 
 def test_load_config_errors() -> None:

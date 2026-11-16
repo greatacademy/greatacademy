@@ -58,7 +58,7 @@ Nx 把这些目标的结果缓存在 `.nx/`（被 git 忽略）中；只有输�
 | `audit` | `tools/audit` | 内容审计：课程相对大纲缺少的知识点，以及启发式检查（讲解过短、解答过简、缺少 `wrong`、缺少图形、正确选项总是最长等）。`pnpm nx run audit:audit -- <绝对路径>` 生成 Markdown 报告；结果是待复核的线索，不一定是错误。`pnpm nx run audit:stats -- <学科> [路径] [种子数]` 统计一个学科的课程、topic、知识点、文章和对话，按种子采样每个知识点的不同题目数，并列出低于 content/english/PROGRESS.md 所要求深度的知识点和只有一个知识点的 topic |
 | `voice` | `apps/voice` | 英语实时对话的语音服务，用 Python 基于 Pipecat 编写；用模拟的语音服务和模拟的 Web Worker 测试（§7） |
 | `pilot` | `tools/pilot` | 根据数据库生成某门课程的试点报告：`DATABASE_URL=… pnpm nx run pilot:report -- --course algebra-i`（[路线图 §3](roadmap.zh-CN.md#3-试点)） |
-| `calibrate` | `tools/calibrate` | 在一项标准上校准一条路由：`DATABASE_URL=… AI_KEYS_SECRET=… pnpm nx run calibrate:calibrate -- --criterion w4-topic-sentence@1 --provider <id> --model <model> --prompt writing-1 --set scored.jsonl`。评分集每行是 `{id, task: {prompt, modelAnswer, source?}, text, scores: {"<id@version>": [第一人, 第二人]}}`，即两人的是或否。它记录校准结果，无论是否通过，并输出只用 id 指称文本的报告（[英语开发计划 §4](english-development-plan.zh-CN.md#4-阶段-2阅读与写作)） |
+| `calibrate` | `tools/calibrate` | 在一项标准上校准一条路由：`DATABASE_URL=… AI_KEYS_SECRET=… pnpm nx run calibrate:calibrate -- --criterion w4-topic-sentence@1 --provider <id> --model <model> --prompt writing-1 --set scored.jsonl`。评分集每行是 `{id, task: {prompt, modelAnswer, source?}, text, scores: {"<id@version>": [第一人, 第二人]}}`，即两人的是或否。它记录校准结果，无论是否通过，并输出只用 id 指称文本的报告（[英语开发计划 §4](english-development-plan.zh-CN.md#4-阶段-2阅读与写作)）。改用 `--speech stt:<语言>` 或 `--speech pronunciation:<语言>` 和 `--set clips.jsonl` 时，它校准语音路由：每行是 `{id, audio, said, reference?, source, ratings?}`，即评分集旁边的 WAV、实际说的话、含错误时本应说的句子，以及发音校准所需的两人评分。语音转文字同时在正确片段上记录 `stt:<语言>`，在含错误的片段上记录 `stt-verbatim:<语言>`。`node src/clips.ts --out <目录>` 用 `AZURE_SPEECH_KEY` 和 `AZURE_SPEECH_REGION`，以几种 Azure 音色朗读 200 个带有学习者错误的句子及其改正，写出一个合成评分集：它测试的是路由，而不是学习者的声音 |
 | `audio` | `tools/audio` | 朗读录音：`pnpm nx run audio:make -- --unit water-on-earth` 生成一个或多个阅读单元的文章录音，`--kind word`（或 `sentence`、`sounds`、`opening`、`passage`，可重复）生成某几类录音，`--all --limit 50` 生成尚未生成的录音；`--workers 8` 同时生成更多条（默认 3 条）。它从仓库根目录的 `.env.local`（被 git 忽略）读取 `AZURE_SPEECH_KEY` 和 `AZURE_SPEECH_REGION`，把文件写入 `content/english/audio/files`，并列在 `content/english/src/recordings.ts` 中；`pnpm nx run audio:upload` 通过用 `cf auth login` 登录的 Cloudflare CLI，把已列出而 R2 存储桶 `greatacademy` 缺少的录音上传（[内容 §11](content.zh-CN.md#11-英语)） |
 
 此表随仓库增长；[架构 §3](architecture.zh-CN.md#3-仓库结构) 给出目标结构。
@@ -153,7 +153,7 @@ cd apps/voice && uv run python -m ga_voice.devkeys # 生成用于票据的开发
 ```
 
 - 测试不需要网络：语音服务、语音活动检测和 Web Worker 都是模拟的；一个端到端测试在进程内用真实的 WebSocket 运行服务器，包括会话进行中的 `SIGTERM`。
-- 服务读取 `VOICE_*` 变量：`VOICE_TICKET_PUBLIC_KEY`（Worker 签发票据所用密钥的公钥）、`VOICE_WORKER_URL` 和 `VOICE_WORKER_CREDENTIAL` 是必需的；`VOICE_SPEECH` 为 `unconfigured`（以 `speech_unavailable` 拒绝会话）或 `fake`（脚本化的语音，仅用于本地开发）。代码中不选定任何语音服务商。
+- 服务读取 `VOICE_*` 变量：`VOICE_TICKET_PUBLIC_KEY`（Worker 签发票据所用密钥的公钥）、`VOICE_WORKER_URL` 和 `VOICE_WORKER_CREDENTIAL` 是必需的；`VOICE_SPEECH` 为 `worker`（默认值：每个会话开始时，服务向 Worker 的 `POST /voice/v1/speech` 询问其路由所指定的语音识别与语音合成服务，没有时以 `speech_unavailable` 拒绝会话）、`unconfigured`（拒绝所有会话）或 `fake`（脚本化的语音，仅用于本地开发）。代码中不选定任何语音服务商；生产环境使用 `worker`。
 - 像生产环境一样在容器中运行：把 `apps/voice/.env.example` 复制为 `apps/voice/.env.local`（被 git 忽略）并填入公钥，然后：
 
 ```bash
@@ -165,6 +165,7 @@ docker compose stop voice           # SIGTERM：拒绝新会话，等待进行�
 - `voice` 服务属于 `voice` profile，所以普通的 `docker compose up -d` 仍然只启动 PostgreSQL。它通过 `http://host.docker.internal:5173` 访问主机上的 `cf dev`；要指向别处，设置 `VOICE_WORKER_URL`。如果容器访问不到 Web 应用，用 `DEV_HOST=0.0.0.0` 启动 Web 应用。
 - 要端到端运行一次对话，把密钥对的私钥写入 `apps/web/.dev.vars` 的 `VOICE_TICKET_PRIVATE_KEY`，并设置 `VOICE_URL=ws://localhost:8089/v1/conversation`，以及与容器的 `VOICE_WORKER_CREDENTIAL` 相同的 `VOICE_SERVICE_CREDENTIAL`。只有当某段对话有用途为 `conversation` 的、已上线、已校准、有价格的路由时，学习者才能使用它；在本地数据库中，在管理后台添加供应商、价格和路由，再手动插入一行该对话 id 的通过的校准记录。
 - 在 `VOICE_SPEECH=fake` 下，学习者每一轮中的第一段声音被识别为四句脚本台词中的下一句，台词用完后从头开始，导师的话则是一段提示音。无头 Chrome 可以用 `--use-fake-ui-for-media-stream`、`--use-fake-device-for-media-stream` 和 `--use-file-for-fake-audio-capture=<file.wav>` 播放录音；在 macOS 上还需要 `--disable-features=AudioServiceSandbox`，否则假麦克风只有静音。
+- 在 `VOICE_SPEECH=worker` 下，会话只通过这样的路由获得语音服务：对话所用语言的一条生效的语音识别路由，且其服务商还通过了 `stt-verbatim:<语言>`（对话要按原样听出错误），以及一条带有音色的生效语音合成路由；否则 Worker 回答 503 `no-route`。服务随后以 Silero 检测说话，用 Azure AI Speech 的识别与合成，所用密钥由 Worker 为该会话解密；结果送达时，Worker 把听取的秒数和说出的字符数记为用途为 `speech` 的调用。
 - 容器没有卷，文件系统只读，`/tmp` 在内存中。日志中没有音频或转写文本：Pipecat 自己的日志只保留警告及以上级别，调试输出从不打开。
 - `/metrics` 以 Prometheus 文本格式报告 `voice_sessions_active`、`voice_sessions_capacity` 和 `voice_draining`，用于扩缩容。
 

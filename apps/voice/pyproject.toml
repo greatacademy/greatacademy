@@ -5,7 +5,7 @@ description = "The voice service of Great Academy: live conversation (S6) on Pip
 requires-python = "==3.14.*"
 license = "MIT"
 dependencies = [
-  "pipecat-ai[websocket]==1.15.0",
+  "pipecat-ai[websocket,azure]==1.15.0",
   "fastapi==0.162.0",
   "uvicorn==0.54.0",
   "cryptography==50.0.2",

@@ -12,10 +12,10 @@ from loguru import logger
 from ga_voice.drain import Admission
 from ga_voice.server import VoiceApp, make_server
 from ga_voice.session import SessionSettings
-from ga_voice.speech import FakeSpeechServices, SpeechServices, UnconfiguredSpeechServices
+from ga_voice.speech import FakeSpeechServices, FixedSpeech, SpeechSource, UnconfiguredSpeechServices, WorkerSpeech
 from ga_voice.tickets import TicketVerifier, load_public_key
 from ga_voice.turns import SESSION_LIMIT_SECS
-from ga_voice.worker_client import HttpWorkerClient
+from ga_voice.worker_client import HttpWorkerClient, WorkerClient
 
 
 @dataclass(frozen=True, slots=True)
@@ -30,7 +30,7 @@ class Config:
     capacity: int = 4
     session_limit_secs: float = SESSION_LIMIT_SECS
     drain_timeout_secs: float = 24 * 60
-    speech: str = "unconfigured"
+    speech: str = "worker"
     log_level: str = "INFO"
 
 
@@ -47,9 +47,9 @@ def load_config(env: Mapping[str, str]) -> Config:
             raise ConfigError(f"{name} is not set")
         return value
 
-    speech = env.get("VOICE_SPEECH", "unconfigured")
-    if speech not in ("unconfigured", "fake"):
-        raise ConfigError("VOICE_SPEECH must be 'unconfigured' or 'fake'")
+    speech = env.get("VOICE_SPEECH", "worker")
+    if speech not in ("worker", "unconfigured", "fake"):
+        raise ConfigError("VOICE_SPEECH must be 'worker', 'unconfigured' or 'fake'")
     try:
         return Config(
             ticket_public_key=required("VOICE_TICKET_PUBLIC_KEY"),
@@ -87,14 +87,16 @@ def configure_logging(level: str) -> None:
     logger.add(sys.stderr, level=effective, filter=keep, backtrace=False, diagnose=False)
 
 
-def speech_services(kind: str) -> SpeechServices:
-    """speech_services returns the configured services; real providers come from the admin console later."""
+def speech_source(kind: str, worker: WorkerClient) -> SpeechSource:
+    """speech_source returns where sessions get their speech: the Worker's routes, fake services, or none."""
+    if kind == "worker":
+        return WorkerSpeech(worker)
     if kind == "fake":
         logger.warning("voice: fake speech services are on; for local development only")
         # Someone trying the apps by voice says a scripted line each turn, as long as they talk.
         lines = ["Hello.", "I would like to borrow a book.", "Yes, I have a library card.", "Thank you. Goodbye."]
-        return FakeSpeechServices(lines, cycle=True)
-    return UnconfiguredSpeechServices()
+        return FixedSpeech(FakeSpeechServices(lines, cycle=True))
+    return FixedSpeech(UnconfiguredSpeechServices())
 
 
 async def serve(config: Config) -> None:
@@ -103,7 +105,7 @@ async def serve(config: Config) -> None:
     voice = VoiceApp(
         admission=Admission(config.capacity),
         verifier=TicketVerifier(load_public_key(config.ticket_public_key), clock=time.time),
-        services=speech_services(config.speech),
+        speech=speech_source(config.speech, worker),
         worker=worker,
         settings=SessionSettings(limit_secs=config.session_limit_secs),
     )
