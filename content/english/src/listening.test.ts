@@ -31,8 +31,8 @@ describe("listening", () => {
     expect(ssml).toContain(`<voice name="${partner.name}"><prosody rate="${partner.rate}">I'm from Spain.</prosody></voice></speak>`);
   });
 
-  it("gives each unit of A1 and A2 a listening module after its words and grammar", () => {
-    for (const id of ["english-a1", "english-a2"]) {
+  it("gives each unit of A1 to B2 a listening module after its words and grammar", () => {
+    for (const id of ["english-a1", "english-a2", "english-b1", "english-b2"]) {
       const course = english.courses.find((c) => c.id === id);
       for (const unit of course?.units ?? []) {
         const titles = unit.modules.map((m) => m.title.en);

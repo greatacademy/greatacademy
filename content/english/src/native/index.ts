@@ -1,6 +1,8 @@
 // The native courses by grade band, built from the topics of the skill courses and new ones by theme.
 
 import { emptyPack, type Pack } from "../pack.ts";
+import { baseReading } from "../reading/base.ts";
+import { withAural } from "./aural.ts";
 import { conversationsCollege } from "./college/conversations.ts";
 import { courseCollege } from "./college/course.ts";
 import { grammarTopicsCollege } from "./college/grammar.ts";
@@ -126,21 +128,45 @@ const college: Pack = {
   passageWords: [500, 900],
 };
 
+/** grades are the packs of the native grades, by the grade each teaches. */
+const grades: readonly (readonly [grade: string, pack: Pack])[] = [
+  ["grade-3", grade3],
+  ["grade-4", grade4],
+  ["grade-5", grade5],
+  ["grade-6", grade6],
+  ["grade-7", grade7],
+  ["grade-8", grade8],
+  ["grade-9", grade9],
+  ["grade-10", grade10],
+  ["grade-11", grade11],
+  ["grade-12", grade12],
+];
+
+/** readingUnits are all the reading units a grade's unit may read, by which its listening and reading aloud are built. */
+const readingUnits = [
+  ...baseReading,
+  ...[phonics, grades35, grades68, grades912, college, ...grades.map(([, pack]) => pack)].flatMap((pack) => pack.reading),
+];
+
+/** aural are the packs of the grades, each unit with its listening and reading aloud. */
+const aural = new Map(grades.map(([grade, pack]) => [grade, withAural(pack, grade, readingUnits)]));
+const graded = (grade: string): Pack => aural.get(grade)!;
+
 /** nativePacks are the native courses by grade band, one pack each, so that each band has its own passage lengths. */
 export const nativePacks: readonly Pack[] = [
   phonics,
   grades35,
-  grade3,
-  grade4,
-  grade5,
+  graded("grade-3"),
+  graded("grade-4"),
+  graded("grade-5"),
   grades68,
-  grade6,
-  grade7,
-  grade8,
+  graded("grade-6"),
+  graded("grade-7"),
+  graded("grade-8"),
   grades912,
-  grade9,
-  grade10,
-  grade11,
-  grade12,
+  graded("grade-9"),
+  graded("grade-10"),
+  graded("grade-11"),
+  graded("grade-12"),
   college,
 ];

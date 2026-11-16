@@ -5,18 +5,7 @@ import { withRecordings } from "../audio.ts";
 import { withCovers } from "../illustrations.ts";
 import { inStrand } from "../pack.ts";
 import { englishPacks } from "../packs.ts";
-import { howAnimalsSurvive } from "../reading/animals.ts";
-import { makingTheCase } from "../reading/arguments.ts";
-import { theHumanBody } from "../reading/body.ts";
-import { theWritersCraft } from "../reading/craft.ts";
-import { ourChangingEarth } from "../reading/earth.ts";
-import { lifeOnTheNile } from "../reading/nile.ts";
-import { howPlantsLive } from "../reading/plants.ts";
-import { voicesOfPersuasion } from "../reading/speeches.ts";
-import { storiesAndFables } from "../reading/stories.ts";
-import { talesAndPoems } from "../reading/tales.ts";
-import { waterOnEarth } from "../reading/water.ts";
-import { weatherAndClimate } from "../reading/weather.ts";
+import { baseReading } from "../reading/base.ts";
 import { argumentTopics } from "../topics/argument.ts";
 import { clauseTopics } from "../topics/grammar-clauses.ts";
 import { sentenceTopics } from "../topics/grammar-sentences.ts";
@@ -70,19 +59,5 @@ export const coreShardTopics: readonly TopicDef[] = [...skillTopics, ...englishP
 
 /** coreShardReading are the reading units held by the `core` shard. */
 export const coreShardReading: readonly ReadingUnitDef[] = withRecordings(
-  withCovers([
-    waterOnEarth,
-    howPlantsLive,
-    lifeOnTheNile,
-    weatherAndClimate,
-    theHumanBody,
-    ourChangingEarth,
-    howAnimalsSurvive,
-    storiesAndFables,
-    talesAndPoems,
-    makingTheCase,
-    voicesOfPersuasion,
-    theWritersCraft,
-    ...englishPacks.flatMap((pack) => pack.reading),
-  ]),
+  withCovers([...baseReading, ...englishPacks.flatMap((pack) => pack.reading)]),
 );
