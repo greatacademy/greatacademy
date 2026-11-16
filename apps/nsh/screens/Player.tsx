@@ -26,6 +26,7 @@ import { Illustration } from "./Illustration.tsx";
 import { Listen } from "./Listen.tsx";
 import { FigureView, Rich } from "./Rich.tsx";
 import { Sounds } from "./Sounds.tsx";
+import { SpeechFlow } from "./Speech.tsx";
 import { JudgedFeedback, WritingFlow } from "./Writing.tsx";
 
 type Answered = { feedback: Feedback; next: Session; response: string };
@@ -262,7 +263,9 @@ function QuestionFlow(props: {
   onContinue: () => void;
 }) {
   const question = props.question;
-  const writing = question.problem?.input?.kind.case === "writing";
+  const kind = question.problem?.input?.kind;
+  const writing = kind?.case === "writing";
+  const speech = kind?.case === "speech" ? kind.value : undefined;
   const practicing = signal(!question.intro || !!question.judging);
   const response = signal("");
   const busy = signal(false);
@@ -271,7 +274,7 @@ function QuestionFlow(props: {
   // Far enough down to show what was added below, the solution or the math keyboard; the view stops at the end.
   const toEnd = () => setTimeout(() => scroll?.scrollTo({ y: 100_000, animated: true }), 50);
   const send = async (skip: boolean) => {
-    if (writing || busy() || props.answered() || (!skip && response().trim() === "")) return;
+    if (writing || speech || busy() || props.answered() || (!skip && response().trim() === "")) return;
     busy.set(true);
     error.set("");
     try {
@@ -311,6 +314,17 @@ function QuestionFlow(props: {
         </>
       }
     >
+      <If when={speech && !props.answered() ? speech : undefined}>
+        {(input) => (
+          <Body>
+            <If when={question.lesson}>
+              <Muted>{m().practice}</Muted>
+            </If>
+            <If when={question.problem}>{(problem) => <Prompt problem={problem()} answering />}</If>
+            <SpeechFlow session={props.session} question={question} input={input()} onAnswered={props.onAnswered} />
+          </Body>
+        )}
+      </If>
       <If when={writing && !props.answered()}>
         <Body>
           <If when={question.lesson}>
@@ -320,7 +334,7 @@ function QuestionFlow(props: {
           <WritingFlow session={props.session} question={question} onAnswered={props.onAnswered} />
         </Body>
       </If>
-      <If when={!writing || props.answered()}>
+      <If when={(!writing && !speech) || props.answered()}>
         <Body ref={(node) => (scroll = node)}>
           <If when={question.passage}>
             {(passage) => (

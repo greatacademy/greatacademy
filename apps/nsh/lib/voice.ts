@@ -24,6 +24,8 @@ export interface VoiceHandlers {
   closed(failed: boolean): void;
   /** silent tells the microphone gave nothing but digital silence for two seconds; device names it. */
   silent?(device: string): void;
+  /** frame is every 20 ms frame of the microphone, as 16 kHz 16-bit PCM, sent or not: a recorder keeps them. */
+  frame?(pcm: Uint8Array): void;
 }
 
 /** TICK_MS is how often the captured audio is taken, in milliseconds. */
@@ -91,6 +93,13 @@ export class VoiceSession {
     return this.ended ? 0 : Microphone.outputLevel();
   }
 
+  /** play plays 16 kHz 16-bit PCM through the speaker, as a recorder plays a recording back. */
+  play(pcm: Uint8Array) {
+    if (this.ended) return;
+    Microphone.stopPlaying();
+    Microphone.play(pcm);
+  }
+
   /** connect opens the WebSocket at url and sends the ticket first; what the learner says meanwhile is held. */
   connect(url: string, ticket: string) {
     if (this.ended || this.connecting) return;
@@ -124,6 +133,7 @@ export class VoiceSession {
   }
 
   private audio(frame: Uint8Array) {
+    this.h.frame?.(frame);
     if (this.zeros >= 0) {
       const heard = frame.some((b) => b !== 0);
       this.zeros = heard ? -1 : this.zeros + 1;
@@ -169,4 +179,42 @@ export class VoiceSession {
     );
     this.h.closed(this.connecting && !this.ready);
   }
+}
+
+/** SAMPLE_RATE is the rate of the audio both ways, in hertz. */
+const SAMPLE_RATE = 16_000;
+
+/** pcmOf joins 16-bit PCM frames into one. */
+export function pcmOf(frames: readonly Uint8Array[]): Uint8Array {
+  const out = new Uint8Array(frames.reduce((n, f) => n + f.byteLength, 0));
+  let at = 0;
+  for (const f of frames) {
+    out.set(f, at);
+    at += f.byteLength;
+  }
+  return out;
+}
+
+/** wavOf wraps 16-bit PCM at SAMPLE_RATE in a WAV header, the recording a spoken answer sends, as the web does. */
+export function wavOf(pcm: Uint8Array): Uint8Array {
+  const out = new Uint8Array(44 + pcm.byteLength);
+  const view = new DataView(out.buffer);
+  const put = (at: number, s: string) => {
+    for (let i = 0; i < s.length; i++) out[at + i] = s.charCodeAt(i);
+  };
+  put(0, "RIFF");
+  view.setUint32(4, 36 + pcm.byteLength, true);
+  put(8, "WAVE");
+  put(12, "fmt ");
+  view.setUint32(16, 16, true);
+  view.setUint16(20, 1, true);
+  view.setUint16(22, 1, true);
+  view.setUint32(24, SAMPLE_RATE, true);
+  view.setUint32(28, SAMPLE_RATE * 2, true);
+  view.setUint16(32, 2, true);
+  view.setUint16(34, 16, true);
+  put(36, "data");
+  view.setUint32(40, pcm.byteLength, true);
+  out.set(pcm, 44);
+  return out;
 }

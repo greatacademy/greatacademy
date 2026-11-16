@@ -13,6 +13,7 @@ import { API_URL, account } from "../lib/rpc.ts";
 import { canBuy } from "../lib/store.ts";
 import { barSpace, colors, ErrorNote, followScroll, Muted, Quiet, Row, Section, Segmented, topSpace } from "../lib/ui.tsx";
 import { LeagueSettings, openAccountPage, settingsQuery } from "./Account.tsx";
+import { SpeakingSettings } from "./Speech.tsx";
 
 function Swatch(props: { palette: Palette; scheme: ColorScheme; chosen: boolean; onPress: () => void }) {
   const look = () => resolveColors({ ...appearance(), theme: props.scheme, [props.scheme]: props.palette } as Appearance, props.scheme);
@@ -178,6 +179,9 @@ export function SettingsBody(props: {
       </Section>
       <Section title={m().league}>
         <LeagueSettings />
+      </Section>
+      <Section title={m().speakingSetting}>
+        <SpeakingSettings />
       </Section>
       <Section title={m().language}>
         <Segmented label={m().language} items={languages} value={languageChoice()} onChange={chooseLanguage} />

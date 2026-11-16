@@ -8,6 +8,7 @@ import { MathField } from "./MathField.tsx";
 import { PlotField } from "./PlotField.tsx";
 import { FigureView, Rich, Tex } from "./Rich.tsx";
 import { Sounds } from "./Sounds.tsx";
+import { heardText } from "./Speech.tsx";
 
 /** listenTo labels the recordings a problem plays to answer, numbered when there are several, without what they say. */
 const listenTo = (paths: readonly string[]) =>
@@ -50,6 +51,8 @@ export function AnswerText(props: { problem: ProblemView; answer: string }) {
       return <Tex tex={[input.value.prefix, props.answer, input.value.suffix].filter(Boolean).join(" ")} />;
     case "plot":
       return <Text style={{ color: colors().ink }}>{props.answer}</Text>;
+    case "speech":
+      return <Text style={{ color: colors().ink }}>{`${m().weHeard}: “${heardText(props.answer)}”`}</Text>;
     default:
       return <Text style={{ color: colors().ink }}>{props.answer}</Text>;
   }
@@ -219,6 +222,8 @@ export function AnswerInput(props: {
           <If when={input.value.suffix}>{(tex) => <Tex tex={tex()} fontSize={20} />}</If>
         </View>
       );
+    case "speech":
+      return <Text style={{ color: colors().ink, fontSize: 16 }}>{`${m().weHeard}: “${heardText(props.value)}”`}</Text>;
     case "writing":
       return (
         <Input accessibilityLabel={m().yourAnswer} value={props.value} multiline readonly style={{ ...fieldStyle(), minHeight: 120 }} />
