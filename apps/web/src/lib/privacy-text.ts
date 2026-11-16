@@ -283,6 +283,10 @@ const serverErrorsZh: Record<string, string> = {
   "billing is off": "未开启计费",
   "too many texts in a minute; wait a moment": "一分钟内提交的文字太多，请稍等片刻",
   "today's texts are used up; come back tomorrow": "今天的写作批改次数已用完，明天再来；其他课程可以照常学习",
+  "too many recordings in a minute; wait a moment": "一分钟内录音次数太多，请稍等片刻",
+  "today's recordings are used up; come back tomorrow": "今天的录音次数已用完，明天再来；其他题目可以照常学习",
+  "speaking is not available": "口语题暂不可用",
+  "a recording is a WAV of 16 kHz mono 16-bit PCM": "录音格式不正确，请重新录音",
 };
 
 /** errorText words a failed call for the person who made it. */

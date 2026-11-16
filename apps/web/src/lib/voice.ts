@@ -37,6 +37,8 @@ export interface VoiceHandlers {
   capturing?(): void;
   /** silent tells every microphone gave nothing but digital silence; device names the first. */
   silent?(device: string): void;
+  /** frame is every 20 ms frame of the microphone, as 16-bit PCM at SAMPLE_RATE, sent or not: a recorder keeps them. */
+  frame?(pcm: ArrayBuffer): void;
 }
 
 /** microphoneAllowed tells whether the page may open the microphone: browsers give it only to secure pages. */
@@ -277,6 +279,7 @@ export class VoiceSession {
 
   private audio(pcm: ArrayBuffer) {
     if (this.ended) return;
+    this.h.frame?.(pcm);
     const heard = new Int16Array(pcm).some((x) => x !== 0);
     if (!this.captured && heard) {
       this.captured = true;
@@ -378,4 +381,33 @@ export class VoiceSession {
     this.ws?.close();
     this.h.closed(this.connecting && !this.ready);
   }
+}
+
+/** wavOf wraps 16-bit PCM frames at SAMPLE_RATE in a WAV header, the recording a spoken answer sends. */
+export function wavOf(frames: readonly ArrayBuffer[]): Uint8Array<ArrayBuffer> {
+  const length = frames.reduce((n, f) => n + f.byteLength, 0);
+  const out = new Uint8Array(44 + length);
+  const view = new DataView(out.buffer);
+  const put = (at: number, s: string) => {
+    for (let i = 0; i < s.length; i++) out[at + i] = s.charCodeAt(i);
+  };
+  put(0, "RIFF");
+  view.setUint32(4, 36 + length, true);
+  put(8, "WAVE");
+  put(12, "fmt ");
+  view.setUint32(16, 16, true);
+  view.setUint16(20, 1, true);
+  view.setUint16(22, 1, true);
+  view.setUint32(24, SAMPLE_RATE, true);
+  view.setUint32(28, SAMPLE_RATE * 2, true);
+  view.setUint16(32, 2, true);
+  view.setUint16(34, 16, true);
+  put(36, "data");
+  view.setUint32(40, length, true);
+  let at = 44;
+  for (const f of frames) {
+    out.set(new Uint8Array(f), at);
+    at += f.byteLength;
+  }
+  return out;
 }

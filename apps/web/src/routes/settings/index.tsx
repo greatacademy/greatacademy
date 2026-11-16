@@ -8,6 +8,7 @@ import { type FormEvent, type ReactNode, useEffect, useState } from "react";
 import { field } from "../../components/AuthForm.tsx";
 import { LoadError } from "../../components/LoadError.tsx";
 import { PrivacySettings } from "../../components/PrivacySettings.tsx";
+import { SpeakingSetting } from "../../components/SpeakingSetting.tsx";
 import { Subscriptions } from "../../components/Subscriptions.tsx";
 import { Button, Card, ErrorNote, Spinner } from "../../components/ui.tsx";
 import { hasInbox, useAccess } from "../../lib/access.ts";
@@ -189,6 +190,8 @@ function Settings() {
       <Subscriptions />
 
       <PrivacySettings />
+
+      <SpeakingSetting />
 
       <Section id="league" title={m.league}>
         <p className="text-sm text-muted">{m.leagueIntro}</p>

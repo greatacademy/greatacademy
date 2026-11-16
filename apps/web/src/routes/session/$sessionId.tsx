@@ -14,6 +14,7 @@ import { OrderField } from "../../components/OrderField.tsx";
 import { PlotField } from "../../components/PlotField.tsx";
 import { AnswerText, ProblemPrompt } from "../../components/Problem.tsx";
 import { Sounds } from "../../components/Sounds.tsx";
+import { SpeechFlow } from "../../components/SpeechFlow.tsx";
 import { Bar, Button, buttonClass, Card, ErrorNote, Spinner } from "../../components/ui.tsx";
 import { JudgedFeedback, WritingFlow } from "../../components/WritingFlow.tsx";
 import { useRequireSession } from "../../lib/hooks.ts";
@@ -184,6 +185,25 @@ function QuestionFlow({
   if (question.intro && !practicing) {
     const intro = question.intro;
     return <IntroView intro={intro} onDone={() => setPracticing(true)} />;
+  }
+  const spoken = question.problem?.input?.kind;
+  if (spoken?.case === "speech") {
+    return (
+      <div className="space-y-4">
+        <Card className="space-y-6">
+          {question.lesson && <div className="text-xs font-medium tracking-wide text-muted uppercase">{m.practice}</div>}
+          <ProblemPrompt problem={question.problem} answering />
+          {pending ? (
+            <div className="rounded-xl border border-line bg-surface px-4 py-3 text-sm">
+              <span className="mr-2 text-muted">{m.weHeard}:</span>“{pending.response}”
+            </div>
+          ) : (
+            <SpeechFlow session={session} question={question} input={spoken.value} onAnswered={onAnswered} />
+          )}
+        </Card>
+        {pending && <FeedbackView feedback={pending.feedback} problem={question.problem} session={session} onContinue={onContinue} />}
+      </div>
+    );
   }
   if (question.problem?.input?.kind.case === "writing") {
     return (
