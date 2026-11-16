@@ -1,4 +1,4 @@
-// Listening and reading aloud in the native grades (S1 and S3, §9.1 of the design): each unit of a grade from grade 3
+// Listening and reading aloud in the native grades (S1 and S3, §9.1 of the design): each unit of a grade from grade 1
 // gets a listening topic, which plays the passages of the unit's reading unit read aloud, without their text, and asks
 // their questions, and then a topic of reading aloud, where sentences and short stretches of those passages are read
 // at a speaking pace. Native courses do not practice pronunciation: an accent passes as long as the words are clear.

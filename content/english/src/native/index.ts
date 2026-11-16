@@ -21,6 +21,8 @@ import { vocabularyCollege, wordTopicsCollege } from "./college/words.ts";
 import { writingTopicsCollege } from "./college/writing.ts";
 import { judgingResearchQuestions } from "./college/writing-research-questions.ts";
 import { signposting } from "./college/writing-signposts.ts";
+import { grade1 } from "./grade-1/index.ts";
+import { grade2 } from "./grade-2/index.ts";
 import { grade3 } from "./grade-3/index.ts";
 import { grade4 } from "./grade-4/index.ts";
 import { grade5 } from "./grade-5/index.ts";
@@ -130,6 +132,8 @@ const college: Pack = {
 
 /** grades are the packs of the native grades, by the grade each teaches. */
 const grades: readonly (readonly [grade: string, pack: Pack])[] = [
+  ["grade-1", grade1],
+  ["grade-2", grade2],
   ["grade-3", grade3],
   ["grade-4", grade4],
   ["grade-5", grade5],
@@ -155,6 +159,8 @@ const graded = (grade: string): Pack => aural.get(grade)!;
 /** nativePacks are the native courses by grade band, one pack each, so that each band has its own passage lengths. */
 export const nativePacks: readonly Pack[] = [
   phonics,
+  graded("grade-1"),
+  graded("grade-2"),
   grades35,
   graded("grade-3"),
   graded("grade-4"),

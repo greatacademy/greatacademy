@@ -13,9 +13,9 @@ describe("listening and reading aloud in the grades", () => {
     expect(sentencesOf("The wind blew\nacross the hill.")).toEqual(["The wind blew across the hill."]);
   });
 
-  it("gives each unit of grades 3 to 12 that reads a reading unit a listening module and then reading aloud", () => {
+  it("gives each unit of grades 1 to 12 that reads a reading unit a listening module and then reading aloud", () => {
     const topics = new Map(english.topics.map((topic) => [topic.id, topic]));
-    for (let grade = 3; grade <= 12; grade++) {
+    for (let grade = 1; grade <= 12; grade++) {
       const course = english.courses.find((c) => c.id === `english-grade-${grade}`);
       const units = (course?.units ?? []).filter((u) => (u.reading ?? []).length > 0);
       expect(units.length, `grade ${grade}`).toBeGreaterThan(0);
