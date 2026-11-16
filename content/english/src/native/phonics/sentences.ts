@@ -71,6 +71,9 @@ for (const s of sentences) {
 }
 if (new Set(sentences.map((s) => s.word)).size !== sentences.length) throw new Error("sentence words repeat");
 
+/** decodableSentences are the course's short sentences, each about a picture word. */
+export const decodableSentences: readonly { readonly word: string; readonly text: string }[] = sentences;
+
 /** swapped is a sentence with its picture word replaced by another. */
 const swapped = (s: Sentence, other: string) =>
   wordsOf(s.text)

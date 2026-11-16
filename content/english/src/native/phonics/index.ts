@@ -10,6 +10,7 @@ import { sentenceTopics } from "./sentences.ts";
 import { shortVowelTopics } from "./short-vowels.ts";
 import { sightWordTopics } from "./sight-words.ts";
 import { silentETopics } from "./silent-e.ts";
+import { speakingTopics } from "./speaking.ts";
 import { vowelTeamTopics } from "./vowel-teams.ts";
 
 const reading = [
@@ -34,6 +35,6 @@ const spelling = [
 /** phonics is the content of the phonics course. */
 export const phonics: Pack = {
   ...emptyPack,
-  topics: [...inStrand("reading", [...letterTopics, ...reading]), ...inStrand("writing", spelling), ...listeningTopics],
+  topics: [...inStrand("reading", [...letterTopics, ...reading]), ...inStrand("writing", spelling), ...listeningTopics, ...speakingTopics],
   courses: [coursePhonics],
 };
