@@ -12,10 +12,7 @@ export const topics: readonly TopicDef[] = [
   unitSpeaking({
     id: "a1-speaking-all-about-me",
     title: t("Speaking: All About Me", "口语：关于我"),
-    summary: t(
-      "Say the unit's words, read its sentences aloud, and answer questions on its theme aloud.",
-      "说出“关于我”的词汇，朗读句子，并开口回答相关问题。",
-    ),
+    summary: t("Say the unit's words, and read its sentences aloud.", "说出“关于我”的词汇，并朗读句子。"),
     listening: "a1-listening-all-about-me",
     words: ["a1-words-numbers-to-hundred", "a1-words-about-me", "a1-words-feelings", "a1-words-everyday-words", "a1-words-little-words-3"],
     frames: [
@@ -26,10 +23,7 @@ export const topics: readonly TopicDef[] = [
   unitSpeaking({
     id: "a1-speaking-my-day",
     title: t("Speaking: My Day", "口语：我的一天"),
-    summary: t(
-      "Say the unit's words, read its sentences aloud, and answer questions on its theme aloud.",
-      "说出“我的一天”的词汇，朗读句子，并开口回答相关问题。",
-    ),
+    summary: t("Say the unit's words, and read its sentences aloud.", "说出“我的一天”的词汇，并朗读句子。"),
     listening: "a1-listening-my-day",
     words: ["a1-words-my-day", "a1-words-times-of-day", "a1-words-how-often", "a1-words-little-words-1"],
     frames: [
@@ -40,10 +34,7 @@ export const topics: readonly TopicDef[] = [
   unitSpeaking({
     id: "a1-speaking-time-and-dates",
     title: t("Speaking: Time and Dates", "口语：时间和日期"),
-    summary: t(
-      "Say the unit's words, read its sentences aloud, and answer questions on its theme aloud.",
-      "说出“时间和日期”的词汇，朗读句子，并开口回答相关问题。",
-    ),
+    summary: t("Say the unit's words, and read its sentences aloud.", "说出“时间和日期”的词汇，并朗读句子。"),
     listening: "a1-listening-time-and-dates",
     words: ["a1-words-time", "a1-words-days", "a1-words-months", "a1-words-dates", "a1-words-ordinals"],
     frames: [
@@ -54,10 +45,7 @@ export const topics: readonly TopicDef[] = [
   unitSpeaking({
     id: "a1-speaking-food-and-drink",
     title: t("Speaking: Food and Drink", "口语：食物和饮料"),
-    summary: t(
-      "Say the unit's words, read its sentences aloud, and answer questions on its theme aloud.",
-      "说出“食物和饮料”的词汇，朗读句子，并开口回答相关问题。",
-    ),
+    summary: t("Say the unit's words, and read its sentences aloud.", "说出“食物和饮料”的词汇，并朗读句子。"),
     listening: "a1-listening-food-and-drink",
     words: ["a1-words-food", "a1-words-drinks", "a1-words-meals", "a1-words-favorite-foods"],
     frames: [
@@ -72,10 +60,7 @@ export const topics: readonly TopicDef[] = [
   unitSpeaking({
     id: "a1-speaking-clothes-and-shopping",
     title: t("Speaking: Clothes and Shopping", "口语：衣服和购物"),
-    summary: t(
-      "Say the unit's words, read its sentences aloud, and answer questions on its theme aloud.",
-      "说出“衣服和购物”的词汇，朗读句子，并开口回答相关问题。",
-    ),
+    summary: t("Say the unit's words, and read its sentences aloud.", "说出“衣服和购物”的词汇，并朗读句子。"),
     listening: "a1-listening-clothes-and-shopping",
     words: ["a1-words-clothes", "a1-words-shopping", "a1-words-at-the-shop"],
     frames: [
@@ -90,10 +75,7 @@ export const topics: readonly TopicDef[] = [
   unitSpeaking({
     id: "a1-speaking-home",
     title: t("Speaking: Home", "口语：家"),
-    summary: t(
-      "Say the unit's words, read its sentences aloud, and answer questions on its theme aloud.",
-      "说出“家”的词汇，朗读句子，并开口回答相关问题。",
-    ),
+    summary: t("Say the unit's words, and read its sentences aloud.", "说出“家”的词汇，并朗读句子。"),
     listening: "a1-listening-home",
     words: ["a1-words-home", "a1-words-things-at-home", "a1-words-housework"],
     frames: [
@@ -108,10 +90,7 @@ export const topics: readonly TopicDef[] = [
   unitSpeaking({
     id: "a1-speaking-free-time",
     title: t("Speaking: Free Time", "口语：业余时间"),
-    summary: t(
-      "Say the unit's words, read its sentences aloud, and answer questions on its theme aloud.",
-      "说出“业余时间”的词汇，朗读句子，并开口回答相关问题。",
-    ),
+    summary: t("Say the unit's words, and read its sentences aloud.", "说出“业余时间”的词汇，并朗读句子。"),
     listening: "a1-listening-free-time",
     words: ["a1-words-sports-and-music", "a1-words-hobbies", "a1-words-parties", "a1-words-actions"],
     frames: [
@@ -126,10 +105,7 @@ export const topics: readonly TopicDef[] = [
   unitSpeaking({
     id: "a1-speaking-school",
     title: t("Speaking: School", "口语：学校"),
-    summary: t(
-      "Say the unit's words, read its sentences aloud, and answer questions on its theme aloud.",
-      "说出“学校”的词汇，朗读句子，并开口回答相关问题。",
-    ),
+    summary: t("Say the unit's words, and read its sentences aloud.", "说出“学校”的词汇，并朗读句子。"),
     listening: "a1-listening-school",
     words: ["a1-words-school-subjects", "a1-words-schoolwork", "a1-words-little-words-2"],
     frames: [
@@ -140,10 +116,7 @@ export const topics: readonly TopicDef[] = [
   unitSpeaking({
     id: "a1-speaking-the-library",
     title: t("Speaking: The Library", "口语：图书馆"),
-    summary: t(
-      "Say the unit's words, read its sentences aloud, and answer questions on its theme aloud.",
-      "说出“图书馆”的词汇，朗读句子，并开口回答相关问题。",
-    ),
+    summary: t("Say the unit's words, and read its sentences aloud.", "说出“图书馆”的词汇，并朗读句子。"),
     listening: "a1-listening-the-library",
     words: ["a1-words-library", "a1-words-books"],
     frames: [
@@ -154,10 +127,7 @@ export const topics: readonly TopicDef[] = [
   unitSpeaking({
     id: "a1-speaking-weather-and-nature",
     title: t("Speaking: Weather and Nature", "口语：天气和自然"),
-    summary: t(
-      "Say the unit's words, read its sentences aloud, and answer questions on its theme aloud.",
-      "说出“天气和自然”的词汇，朗读句子，并开口回答相关问题。",
-    ),
+    summary: t("Say the unit's words, and read its sentences aloud.", "说出“天气和自然”的词汇，并朗读句子。"),
     listening: "a1-listening-weather-and-nature",
     words: ["a1-words-weather", "a1-words-seasons", "a1-words-nature", "a1-words-wild-animals"],
     frames: [
@@ -168,10 +138,7 @@ export const topics: readonly TopicDef[] = [
   unitSpeaking({
     id: "a1-speaking-people-and-jobs",
     title: t("Speaking: People and Jobs", "口语：人和职业"),
-    summary: t(
-      "Say the unit's words, read its sentences aloud, and answer questions on its theme aloud.",
-      "说出“人和职业”的词汇，朗读句子，并开口回答相关问题。",
-    ),
+    summary: t("Say the unit's words, and read its sentences aloud.", "说出“人和职业”的词汇，并朗读句子。"),
     listening: "a1-listening-people-and-jobs",
     words: ["a1-words-jobs", "a1-words-describing-people", "a1-words-work-actions"],
     frames: [
@@ -182,10 +149,7 @@ export const topics: readonly TopicDef[] = [
   unitSpeaking({
     id: "a1-speaking-town-and-travel",
     title: t("Speaking: Town and Travel", "口语：城镇和出行"),
-    summary: t(
-      "Say the unit's words, read its sentences aloud, and answer questions on its theme aloud.",
-      "说出“城镇和出行”的词汇，朗读句子，并开口回答相关问题。",
-    ),
+    summary: t("Say the unit's words, and read its sentences aloud.", "说出“城镇和出行”的词汇，并朗读句子。"),
     listening: "a1-listening-town-and-travel",
     words: ["a1-words-town", "a1-words-directions", "a1-words-trips"],
     frames: [
@@ -193,4 +157,4 @@ export const topics: readonly TopicDef[] = [
       say("Where is the bank?", "It is next to the {x}. / The bank is next to the {x}.", "park, station, school, hotel, library"),
     ],
   }),
-];
+].flat();

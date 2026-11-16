@@ -1,6 +1,7 @@
 import {
   clearInactiveNotices,
   clearOldConversationLines,
+  clearOldHeard,
   clearOldResponses,
   clearOldSessionTraces,
   contactsOf,
@@ -23,6 +24,8 @@ export const RETENTION = {
   teenResponses: 365 * DAY,
   sessionTraces: 30 * DAY,
   conversationLines: 30 * DAY,
+  /** heard is how long the words heard in a recording are kept; the recording is never kept. */
+  heard: 30 * DAY,
   consentReminder: 30 * DAY,
   inactive: 365 * DAY,
   inactiveNotice: 30 * DAY,
@@ -36,6 +39,8 @@ export interface RetentionResult {
   readonly responses: number;
   readonly traces: number;
   readonly transcripts: number;
+  /** heard counts the spoken answers whose heard words were emptied. */
+  readonly heard: number;
   readonly reminders: number;
   readonly notices: number;
   readonly deleted: number;
@@ -48,6 +53,7 @@ export async function runRetention(db: Db, at: number, deps: { forms: FormStore;
   const teen = await clearOldResponses(db, "teen", new Date(at - RETENTION.teenResponses));
   const traces = await clearOldSessionTraces(db, new Date(at - RETENTION.sessionTraces));
   const transcripts = await clearOldConversationLines(db, new Date(at - RETENTION.conversationLines));
+  const heard = await clearOldHeard(db, new Date(at - RETENTION.heard));
 
   const expiring = await expiringConsents(db, date, new Date(at + RETENTION.consentReminder));
   for (const c of expiring) {
@@ -71,6 +77,7 @@ export async function runRetention(db: Db, at: number, deps: { forms: FormStore;
     responses: child + teen,
     traces,
     transcripts,
+    heard,
     reminders: expiring.length,
     notices: inactive.length,
     deleted: due.length,

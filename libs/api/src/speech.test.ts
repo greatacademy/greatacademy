@@ -6,10 +6,11 @@ import { type HearRequest, writeWav } from "@ga/judge";
 import { LearningService, type Session } from "@ga/proto/learning/v1/learning_pb";
 import { eq } from "drizzle-orm";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-
+import { speechRoute } from "./capabilities.ts";
 import { dbKey, userIdKey } from "./context.ts";
 import { learningService } from "./learning.ts";
 import { localGateway, Registry } from "./registry.ts";
+import { RETENTION, runRetention } from "./retention.ts";
 import { encryptSecret } from "./secrets.ts";
 
 const SECRET = "test-secret-for-keys-0123456789";
@@ -87,7 +88,7 @@ let learning: ReturnType<typeof createClient<typeof LearningService>>;
 
 const second = writeWav(new Uint8Array(32_000));
 
-async function addSpeech(use: "stt" | "pronunciation" = "stt", target = "en"): Promise<void> {
+async function addSpeech(use: "stt" | "pronunciation" = "stt", target = "en"): Promise<string> {
   const at = new Date(now);
   const providerId = await createProvider(db, {
     name: `Speech ${use} ${target}`,
@@ -111,6 +112,7 @@ async function addSpeech(use: "stt" | "pronunciation" = "stt", target = "en"): P
     at,
   });
   await setRoute(db, { use, target, position: "primary", providerId, model: "default", promptVersion: "", live: true, updatedAt: at });
+  return providerId;
 }
 
 beforeEach(async () => {
@@ -208,7 +210,18 @@ describe("speaking", () => {
     expect(res.feedback?.message?.values.en).toContain("Ship.");
   });
 
-  it("asks again for a recording not understood, counting nothing", async () => {
+  it("keeps the words heard for 30 days, then empties them, keeping whether they were right", async () => {
+    await addSpeech();
+    const session = await startSpeaking();
+    await learning.submitAnswer({ sessionId: session.id, index: 0, audio: second });
+    const deps = { forms: { put: async () => {}, get: async () => undefined, delete: async () => {} }, notify: async () => {} };
+    expect((await runRetention(db, now + RETENTION.heard - 24 * 3600_000, deps)).heard).toBe(0);
+    expect((await runRetention(db, now + RETENTION.heard + 24 * 3600_000, deps)).heard).toBe(1);
+    const [row] = await db.select().from(schema.answer);
+    expect(row).toMatchObject({ response: "", correct: true });
+  });
+
+  it("asks again for a recording not understood, counting nothing, but takes the right words heard with low confidence", async () => {
     await addSpeech();
     heard = () => ({ text: "", confidence: 0, seconds: 1 });
     const session = await startSpeaking();
@@ -217,7 +230,11 @@ describe("speaking", () => {
     expect(res.feedback).toBeUndefined();
     const again = await learning.submitAnswer({ sessionId: session.id, index: 0, audio: writeWav(new Uint8Array(1000)) });
     expect(again.recordAgain?.values.en).toMatch(/could not hear/);
-    heard = () => ({ text: "sheep", confidence: 0.9, seconds: 1 });
+    heard = () => ({ text: "Ship.", confidence: 0.3, seconds: 1 });
+    expect((await learning.submitAnswer({ sessionId: session.id, index: 0, audio: second })).recordAgain?.values.en).toMatch(
+      /could not make out/,
+    );
+    heard = () => ({ text: "Sheep.", confidence: 0.3, seconds: 1 });
     expect((await learning.submitAnswer({ sessionId: session.id, index: 0, audio: second })).feedback?.correct).toBe(true);
   });
 
@@ -244,5 +261,21 @@ describe("speaking", () => {
     expect(await topics()).toEqual(["basics"]);
     await learning.setSpeaking({ on: true });
     expect(await topics()).toEqual(["basics", "say-sheep"]);
+  });
+});
+
+describe("verbatim speech routes", () => {
+  it("hear answers given aloud only through a route tested for keeping errors", async () => {
+    const providerId = await addSpeech();
+    await learning.getProfile({ timeZone: "UTC" });
+    const id = (await db.select().from(schema.learner)).find((l) => l.userId === "u1")!.id;
+    expect(await speechRoute(db, "stt", "en-US", id, now)).toBeDefined();
+    expect(await speechRoute(db, "stt", "en-US", id, now, true)).toBeUndefined();
+    const at = new Date(now);
+    const verbatim = { criterion: "stt-verbatim:en", providerId, model: "default", promptVersion: "", humanKappa: 0.9, at };
+    await recordCalibration(db, { ...verbatim, kappa: 0.77, passed: false });
+    expect(await speechRoute(db, "stt", "en-US", id, now, true)).toBeUndefined();
+    await recordCalibration(db, { ...verbatim, kappa: 0.95, passed: true, at: new Date(now + 1) });
+    expect(await speechRoute(db, "stt", "en-US", id, now + 2, true)).toMatchObject({ providerId });
   });
 });

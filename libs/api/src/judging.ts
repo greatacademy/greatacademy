@@ -228,7 +228,8 @@ export function viewJudgment(row: JudgmentRow): JudgmentView {
  * forLearner narrows a course to what a learner can be taught: a topic judged
  * by a model stays only when every one of its criteria has a route that may
  * receive this learner's text, and a spoken topic only when a route may hear
- * the learner speak its language and they have not turned speaking off; without
+ * the learner speak its language (word for word, errors kept, for a verbatim
+ * topic) and they have not turned speaking off; without
  * them the course goes on without those topics.
  */
 export async function forLearner(db: Db, c: CourseEntry, learnerId: string, now: number): Promise<CourseEntry> {
@@ -243,10 +244,10 @@ export async function forLearner(db: Db, c: CourseEntry, learnerId: string, now:
     }
   }
   const spoken = spokenTopics(c);
-  if (spoken.size > 0) {
+  if (spoken.length > 0) {
     const silent = await speakingOff(db, learnerId, now);
-    for (const [language, ids] of spoken)
-      if (silent || !(await speechRoute(db, "stt", language, learnerId, now))) for (const id of ids) off.add(id);
+    for (const g of spoken)
+      if (silent || !(await speechRoute(db, "stt", g.language, learnerId, now, g.verbatim))) for (const id of g.ids) off.add(id);
   }
   if (off.size === 0) return c;
   const { scope } = c.planner;

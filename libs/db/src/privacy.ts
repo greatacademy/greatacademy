@@ -219,6 +219,35 @@ export async function clearOldResponses(db: Db, band: AgeBand, before: Date): Pr
   return rows.length;
 }
 
+/** heardLike selects a stored response that holds what a speech service heard: the JSON of a Heard. */
+const heardLike = sql`${answer.response} like '{%"confidence":%'`;
+
+/**
+ * clearOldHeard empties, for every learner, what a speech service heard in
+ * recordings older than a time: the response of each spoken answer, and the
+ * responses of runs that ended by then and hold one. The recordings themselves
+ * were never stored. Whether each answer was right remains.
+ */
+export async function clearOldHeard(db: Db, before: Date): Promise<number> {
+  const rows = await db
+    .update(answer)
+    .set({ response: "" })
+    .where(and(lt(answer.at, before), heardLike))
+    .returning({ id: answer.id });
+  await db
+    .update(taskSession)
+    .set({ state: blankedRuns })
+    .where(
+      and(
+        sql`${taskSession.status} <> 'active'`,
+        lt(taskSession.updatedAt, before),
+        hasAsked,
+        sql`${taskSession.state}::text like '%confidence\\\\":%'`,
+      ),
+    );
+  return rows.length;
+}
+
 /** clearOldSessionTraces empties the addresses and browsers of sign-in sessions begun before a time. */
 export async function clearOldSessionTraces(db: Db, before: Date): Promise<number> {
   const rows = await db

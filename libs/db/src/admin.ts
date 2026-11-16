@@ -223,8 +223,11 @@ export async function calibrationPassed(
 
 /**
  * routeCalibrated tells whether a route has a passing calibration: judgment
- * against its criterion, conversation against its conversation's id. A route
- * of a speech use has none so far, so it stays a draft.
+ * against its criterion, conversation against its conversation's id, and a
+ * speech route against its use and language (stt:en-US). A route that hears
+ * answers given aloud word for word needs stt-verbatim:<language> as well,
+ * which the route that serves those topics checks. A text-to-speech route
+ * needs none.
  */
 export async function routeCalibrated(
   db: Db,
@@ -233,6 +236,8 @@ export async function routeCalibrated(
   if (r.use === "judgment" || r.use === "conversation") return calibrationPassed(db, { ...r, criterion: r.target });
   // A speech route is calibrated per use and language, such as stt:en-US: what a speech service hears is tested, not a prompt.
   if (r.use === "stt" || r.use === "pronunciation") return calibrationPassed(db, { ...r, criterion: `${r.use}:${r.target}` });
+  // Text-to-speech judges nothing and hears no one: it speaks the tutor's lines, which an administrator listens to.
+  if (r.use === "tts") return Promise.resolve(true);
   return Promise.resolve(false);
 }
 

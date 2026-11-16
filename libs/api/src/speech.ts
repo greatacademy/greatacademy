@@ -1,5 +1,15 @@
 import { Code, ConnectError } from "@connectrpc/connect";
-import { type Heard, heardResponse, MIN_CONFIDENCE, type Problem, type SpeechExpected, spokenWords, type Text, t } from "@ga/content";
+import {
+  type Heard,
+  heardResponse,
+  MIN_CONFIDENCE,
+  type Problem,
+  type SpeechExpected,
+  speechChecker,
+  spokenWords,
+  type Text,
+  t,
+} from "@ga/content";
 import { callsSince, type Db, type NewCall, providers, recordCalls, setSpeakingOffUntil, speakingOffUntil } from "@ga/db";
 import { callCost, readWav, type SpeechConfig, SpeechFailed, type SpeechProvider, speechProvider, WavRejected } from "@ga/judge";
 
@@ -41,9 +51,9 @@ const RECORD_FAILED = t("We could not hear that just now. Please try again.", "å
  * problem, and returns what was heard as the response to check. The recording
  * goes to the route allowed to hear this learner (one that assesses
  * pronunciation when there is a text to repeat or read and such a route
- * qualifies) and is kept nowhere; the call is recorded with its seconds and
+ * qualifies, and one that hears errors as said when the topic is verbatim) and is kept nowhere; the call is recorded with its seconds and
  * cost. A recording too short, not understood, or not heard by the service asks
- * for another and counts nothing.
+ * for another and counts nothing, as does one heard with low confidence that would be wrong.
  */
 export async function hearRecording(
   db: Db,
@@ -52,6 +62,7 @@ export async function hearRecording(
   problem: Problem,
   audio: Uint8Array,
   now: number,
+  verbatim = false,
 ): Promise<Hearing> {
   const spec = problem.answer.input;
   if (spec.kind !== "speech") throw new ConnectError("this question is not answered by speaking", Code.InvalidArgument);
@@ -72,7 +83,7 @@ export async function hearRecording(
   const expected = problem.answer.expected as unknown as SpeechExpected;
   const reference = expected.mode === "say" ? undefined : expected.reference;
   const assessing = reference ? await speechRoute(db, "pronunciation", spec.language, learnerId, now) : undefined;
-  const route = assessing ?? (await speechRoute(db, "stt", spec.language, learnerId, now));
+  const route = assessing ?? (await speechRoute(db, "stt", spec.language, learnerId, now, verbatim));
   if (!route) throw new ConnectError("speaking is not available", Code.FailedPrecondition);
   const vendor = (await providers(db)).find((p) => p.id === route.providerId);
   if (!vendor?.keyCipher) throw new ConnectError("speaking is not available", Code.FailedPrecondition);
@@ -98,8 +109,13 @@ export async function hearRecording(
     return { again: RECORD_FAILED };
   }
   await recordCalls(db, [call(route, true)]);
-  if (heard.confidence < MIN_CONFIDENCE || spokenWords(heard.text).length === 0) return { again: RECORD_UNCLEAR };
-  return { response: heardResponse(heard), heard };
+  if (spokenWords(heard.text).length === 0) return { again: RECORD_UNCLEAR };
+  const response = heardResponse(heard);
+  // Low confidence only keeps a recording from counting against the learner: a service is often unsure of a single
+  // word said clearly, so what it heard still counts when it is what was asked.
+  if (heard.confidence < MIN_CONFIDENCE && !speechChecker.check(problem.answer.expected, response).correct)
+    return { again: RECORD_UNCLEAR };
+  return { response, heard };
 }
 
 /** speakingAvailable tells whether some speech route may hear a learner in any language spoken problems use. */
@@ -124,12 +140,24 @@ export function setSpeaking(db: Db, learnerId: string, until: Date | null): Prom
   return setSpeakingOffUntil(db, learnerId, until);
 }
 
-/** spokenTopics are the spoken topics of a course in scope, by the language they are spoken in. */
-export function spokenTopics(c: CourseEntry): Map<string, string[]> {
-  const out = new Map<string, string[]>();
+/** SpokenGroup is the spoken topics of a course that are heard in one language, and whether word for word. */
+export interface SpokenGroup {
+  readonly language: string;
+  readonly verbatim: boolean;
+  readonly ids: readonly string[];
+}
+
+/** spokenTopics are the spoken topics of a course in scope, grouped by the language they are spoken in and verbatim. */
+export function spokenTopics(c: CourseEntry): SpokenGroup[] {
+  const out = new Map<string, { language: string; verbatim: boolean; ids: string[] }>();
   for (const id of c.planner.scope.topics) {
-    const language = c.subject.topics.get(id)?.spoken;
-    if (language) out.set(language, [...(out.get(language) ?? []), id]);
+    const topic = c.subject.topics.get(id);
+    if (!topic?.spoken) continue;
+    const verbatim = !!topic.verbatim;
+    const key = `${topic.spoken}|${verbatim}`;
+    const group = out.get(key) ?? { language: topic.spoken, verbatim, ids: [] };
+    group.ids.push(id);
+    out.set(key, group);
   }
-  return out;
+  return [...out.values()];
 }

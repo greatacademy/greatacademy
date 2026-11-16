@@ -2,6 +2,7 @@ import { Code, ConnectError } from "@connectrpc/connect";
 import {
   type ConsentRow,
   type ConsentScope,
+  calibrationPassed,
   currentConsents,
   type Db,
   type LearnerAge,
@@ -107,6 +108,8 @@ export interface QualifiedRoute {
   readonly providerId: string;
   readonly model: string;
   readonly promptVersion: string;
+  /** voice is the voice a text-to-speech route speaks in; empty for other uses. */
+  readonly voice: string;
   readonly price: { readonly inputPerMillion: number; readonly outputPerMillion: number };
 }
 
@@ -131,13 +134,16 @@ export function qualifyingRoute(
   return routeOf(db, useForScope(scope), criterion, learnerId, scope, at, avoid, budget);
 }
 
-/** SpeechUse is a use of route that hears speech: transcription, or the assessment of pronunciation as well. */
-export type SpeechUse = "stt" | "pronunciation";
+/** SpeechUse is a use of route for speech: transcription, the assessment of pronunciation as well, or speaking a text. */
+export type SpeechUse = "stt" | "pronunciation" | "tts";
 
 /**
  * speechRoute finds the route that may hear a learner speak a language, under
  * the speech scope and the same conditions as qualifyingRoute: a route for the
- * language itself ("en-GB"), or else one for its base language ("en").
+ * language itself ("en-GB"), or else one for its base language ("en"). With
+ * verbatim, the route must also have passed the test of hearing errors as they
+ * were said (criterion stt-verbatim:<language>), which answering aloud needs; a
+ * primary that has not is passed over for a backup that has.
  */
 export async function speechRoute(
   db: Db,
@@ -145,12 +151,18 @@ export async function speechRoute(
   language: string,
   learnerId: string,
   at: number,
+  verbatim = false,
 ): Promise<QualifiedRoute | undefined> {
   const base = language.split("-")[0]!;
-  return (
-    (await routeOf(db, use, language, learnerId, "speech", at)) ??
-    (base !== language ? await routeOf(db, use, base, learnerId, "speech", at) : undefined)
-  );
+  const keeps = (r: QualifiedRoute, target: string) =>
+    calibrationPassed(db, { criterion: `stt-verbatim:${target}`, providerId: r.providerId, model: r.model, promptVersion: "" });
+  const of = async (target: string) => {
+    const first = await routeOf(db, use, target, learnerId, "speech", at);
+    if (!first || !verbatim || (await keeps(first, target))) return first;
+    const second = await routeOf(db, use, target, learnerId, "speech", at, first.position);
+    return second && (await keeps(second, target)) ? second : undefined;
+  };
+  return (await of(language)) ?? (base !== language ? await of(base) : undefined);
 }
 
 async function routeOf(
@@ -199,6 +211,7 @@ async function routeOf(
       providerId: r.providerId,
       model: r.model,
       promptVersion: r.promptVersion,
+      voice: r.voice,
       price: { inputPerMillion: price.inputPerMillion, outputPerMillion: price.outputPerMillion },
     };
   }

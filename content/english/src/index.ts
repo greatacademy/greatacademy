@@ -22,7 +22,11 @@ export const english: SubjectDef = {
   checkers: englishCheckers,
   reading: coreShardReading,
   lexicon: withBritishForms(packLexicon(englishLexicon)),
-  conversations: withOpenings(withScenes([...englishConversations, ...englishPacks.flatMap((pack) => pack.conversations)])),
+  // Every conversation is spoken in American English, the accent of its opening's recording.
+  conversations: withOpenings(withScenes([...englishConversations, ...englishPacks.flatMap((pack) => pack.conversations)])).map((c) => ({
+    ...c,
+    spoken: "en-US",
+  })),
   strands: [
     { id: "vocabulary", title: t("Vocabulary", "词汇") },
     { id: "grammar", title: t("Grammar", "语法") },

@@ -592,8 +592,10 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
         if (row.status !== "active" || req.index !== run.asked.length || !run.current)
           throw new ConnectError("that question was already answered", Code.FailedPrecondition);
         if (!deps.judging) throw new ConnectError("speaking is not available", Code.FailedPrecondition);
-        const [problem] = await (await course(row.courseId)).source.problems([run.current]);
-        const hearing = await hearRecording(db, deps.judging, learnerId, problem!, req.audio, now);
+        const entry = await course(row.courseId);
+        const [problem] = await entry.source.problems([run.current]);
+        const verbatim = !!entry.subject.topics.get(run.current.topic)?.verbatim;
+        const hearing = await hearRecording(db, deps.judging, learnerId, problem!, req.audio, now, verbatim);
         if ("again" in hearing) return { recordAgain: text(hearing.again), session: await view(db, learnerId, row) };
         ({ response, heard } = hearing);
       }

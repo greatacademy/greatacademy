@@ -1,6 +1,8 @@
 // Speaking topics of the levels (S2–S4): problems answered by speaking, heard by a speech service and checked by the
-// speech checker. Each unit has one, after its listening: the unit's words said after a recording (S2), its sentences
-// read aloud (S3), and questions on its theme answered aloud in a full sentence with a given word (S4). An accent
+// speech checker. Each unit has two, after its listening: one where the unit's words are said after a recording (S2)
+// and its sentences read aloud (S3), then one where questions on its theme are answered aloud in a full sentence with a
+// given word (S4). Answering aloud is verbatim: a service that corrects "She go" to "She goes" would pass a wrong
+// answer, so it is taught only through a route tested for keeping errors, and without one the course goes on. An accent
 // passes as long as the words are understood: a pronunciation score, when a route gives one, only needs to reach a
 // bar that a clear speaker with any accent reaches.
 
@@ -85,8 +87,12 @@ export function spokenProblem(
 const sayable = (words: readonly WordDef[]) =>
   words.filter((w) => /^\p{L}+$/u.test(w.head) && !heteronyms.has(w.head.toLowerCase()) && w.head.length > 1);
 
-/** unitSpeaking builds a unit's speaking topic. */
-export function unitSpeaking(spec: UnitSpeakingSpec): TopicDef {
+/** answeringId is the id of a unit's topic of answering aloud, from its speaking topic's: a1-speaking-x is a1-answering-x. */
+export const answeringId = (speakingId: string) => speakingId.replace("-speaking-", "-answering-");
+
+/** unitSpeaking builds a unit's two speaking topics: saying and reading aloud, then answering aloud. */
+export function unitSpeaking(spec: UnitSpeakingSpec): readonly [TopicDef, TopicDef] {
+  if (!spec.id.includes("-speaking-")) throw new Error(`${spec.id}: a speaking topic's id holds -speaking-`);
   const words = spec.words.flatMap(wordsOf);
   const said = sayable(words);
   ensureItems(spec.id, "repeat", said.length);
@@ -166,7 +172,7 @@ export function unitSpeaking(spec: UnitSpeakingSpec): TopicDef {
     );
   };
 
-  return {
+  const speaking: TopicDef = {
     id: spec.id,
     title: spec.title,
     summary: spec.summary,
@@ -194,6 +200,22 @@ export function unitSpeaking(spec: UnitSpeakingSpec): TopicDef {
         ),
         read,
       ),
+    ],
+  };
+  const answering: TopicDef = {
+    id: answeringId(spec.id),
+    title: t(`Answering Aloud: ${spec.title.en.replace(/^Speaking: /, "")}`, `开口回答：${spec.title["zh-CN"].replace(/^口语：/, "")}`),
+    summary: t(
+      "Answer questions on the unit's theme aloud, in a full sentence with a given word.",
+      "用给出的词，完整地大声回答本单元主题的问题。",
+    ),
+    prerequisites: [spec.id],
+    encompasses: [],
+    xp: 8,
+    strand: "speaking",
+    spoken: LANGUAGE,
+    verbatim: true,
+    knowledgePoints: [
       point(
         "say",
         t("Answer aloud", "开口回答"),
@@ -205,4 +227,5 @@ export function unitSpeaking(spec: UnitSpeakingSpec): TopicDef {
       ),
     ],
   };
+  return [speaking, answering];
 }
