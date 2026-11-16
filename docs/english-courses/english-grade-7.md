@@ -184,6 +184,28 @@ The band course `english-grades-6-8` retires once `english-grade-6`, `english-gr
 
 **Later, with audio and recording:** Listening to a news report and an advertisement and telling them apart; reading a news lead aloud.
 
+## Added for Depth
+
+After this outline, 17 grammar and writing topics gained a third step, so that most of them teach three; some of these topics come from the band and skill courses. The step each adds:
+
+- `active-and-passive-voice` Active and Passive Voice: Who Did It in a Passive.
+- `verb-moods` Verb Moods: Would in the Result.
+- `parallel-structure` Parallel Structure: Parallel After Not Only and Either.
+- `plurals-from-latin-and-greek` Plurals from Latin and Greek: The Verb with a Latin Plural.
+- `phrases-and-clauses` Phrases and Clauses: Fixing a Fragment.
+- `adjective-and-adverb-clauses` Adjective and Adverb Clauses: The Comma with an Adverb Clause.
+- `commas-with-interrupters` Commas with Interrupters: Commas Before a Tag Question.
+- `past-perfect-for-earlier-events` The Past Perfect for Earlier Events: Forming the Past Perfect.
+- `semicolons-between-clauses` Semicolons between Clauses: Fixing a Comma Splice.
+- `passive-voice-in-science` The Passive Voice in Science: The Passive in a Method.
+- `agreement-with-tricky-subjects` Agreement with Tricky Subjects: Each and Every with And.
+- `shifts-in-verb-mood` Shifts in Verb Mood: Revising Directions.
+- `dangling-modifiers` Dangling Modifiers: The Doer After the Opener.
+- `the-subjunctive-in-demands-and-proposals` The Subjunctive in Demands and Proposals: It Is Essential That.
+- `pronouns-in-compound-subjects-and-objects` Pronouns in Pairs: We or Us Before a Noun.
+- `spelling-words-with-suffixes` Spelling Words with Suffixes: Keeping E After C and G.
+- `commonly-confused-words-3` Commonly Confused Words 3: Proofreading for Confused Words.
+
 ## What the Next Grade Builds On
 
 `english-grade-8` builds on this year: the literary analysis paragraph grows from comparing points of view and story elements, and irony, foreshadowing and symbolism join the reader's tools; the five-paragraph argument and the informative essay go on to comparing texts on one topic, introductions and conclusions and revising a draft; grammar moves to gerund and infinitive phrases, the kinds of sentences, and dashes, parentheses and ellipses; and the themes of flight and the Renaissance go on to the machines that changed the world and the voyages of exploration.

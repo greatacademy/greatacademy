@@ -1,0 +1,571 @@
+// Grade 7: a third knowledge point for each grammar topic of the grade, most of them applying the rule in editing.
+
+import type { KnowledgePointDef } from "@ga/content";
+import { choose, type Label, label } from "../grade-6/kit.ts";
+
+const join = (lines: readonly string[]) => lines.join("\n");
+
+/** L builds a label from its Chinese name, why it is right and why it is not. */
+const L = (zh: string, whyEn: string, whyZh: string, notEn: string, notZh: string): Label => ({
+  zh,
+  why: [whyEn, whyZh],
+  not: [notEn, notZh],
+});
+
+const doer = choose(
+  "who-did-it-in-a-passive",
+  ["Who Did It in a Passive", "被动句中的施动者"],
+  [
+    "In a passive sentence the subject receives the action, and the one who did it comes after *by*, if at all: *The ball was kicked **by Sam***. Often there is no *by* phrase: *The window was broken* does not say who broke it. Reading a passive closely means asking who acted, and noticing when the sentence does not say.",
+    "在被动句中，主语是动作的承受者，施动者如果出现，放在 *by* 后面：*The ball was kicked **by Sam***。很多时候没有 *by* 短语：*The window was broken* 并没有说是谁打破的。仔细读被动句，就要问是谁做的，并注意句子什么时候没有说。",
+  ],
+  ["Who did the action?", "动作是谁做的？"],
+  `
+  The ball was kicked by Sam.|Sam|the ball|the sentence does not say
+  The cake was baked by my grandmother.|my grandmother|the cake|the sentence does not say
+  The window was broken during the game.|the sentence does not say|the window|the game
+  The letter was written by a famous poet.|a famous poet|the letter|the sentence does not say
+  The bridge was built in 1890.|the sentence does not say|the bridge|1890
+  The thief was caught by two police officers.|two police officers|the thief|the sentence does not say
+  The rules were changed last year.|the sentence does not say|the rules|last year
+  The song was sung by the whole class.|the whole class|the song|the sentence does not say
+  The trees were planted along the river.|the sentence does not say|the trees|the river
+  The prize was won by a girl from Kenya.|a girl from Kenya|the prize|the sentence does not say
+  `,
+  (right) => [
+    right === "the sentence does not say"
+      ? "There is no *by* phrase, so the sentence does not say who acted."
+      : `*${right}* follows *by*, so ${right} did the action.`,
+    right === "the sentence does not say"
+      ? "句中没有 *by* 短语，所以没有说是谁做的。"
+      : `*${right}* 在 *by* 后面，所以动作是 ${right} 做的。`,
+  ],
+  [
+    ["*{wrong}* is the subject, which receives the action in a passive.", "*{wrong}* 是主语，在被动句中是动作的承受者。"],
+    ["*{wrong}* is not the answer: look for a *by* phrase.", "*{wrong}* 不对：找一找 *by* 短语。"],
+  ],
+);
+
+const would = choose(
+  "would-in-the-result",
+  ["Would in the Result", "结果中的 would"],
+  [
+    "An unreal condition, something that is not true now, uses the past form in the *if* clause and **would** (or *could*, *might*) in the result: *If I had wings, I **would** fly*. *Will* belongs to real conditions, ones that may well happen: *If it rains, we will stay in*.",
+    "不真实的条件，即现在并不成立的事，在 *if* 从句中用过去式，在结果中用 **would**（或 *could*、*might*）：*If I had wings, I **would** fly*。*will* 用于很可能发生的真实条件：*If it rains, we will stay in*。",
+  ],
+  ["Which word completes the sentence?", "哪个词能补全句子？"],
+  `
+  If I had wings, I ___ fly to school.|would|will|am
+  If she were taller, she ___ reach the shelf.|could|can|is
+  If we lived by the sea, we ___ swim every day.|would|will|are
+  If it rains tomorrow, we ___ stay inside.|will|would|were
+  If dogs could talk, they ___ tell us their secrets.|would|will|are
+  If you heat ice, it ___ melt.|will|would|were
+  If I knew the answer, I ___ tell you.|would|will|am
+  If the bus comes late, we ___ miss the start.|will|would|were
+  If he practiced more, he ___ win the match.|might|will|is
+  If you study tonight, you ___ do well on the test.|will|would|were
+  `,
+  (right, shown) => [
+    `"${shown.replace("___", right)}": the condition is ${right === "will" ? "real, so the result takes *will*" : "unreal, so the result takes a past modal"}.`,
+    `“${shown.replace("___", right)}”：这个条件${right === "will" ? "是真实的，所以结果用 *will*" : "是不真实的，所以结果用过去式情态动词"}。`,
+  ],
+  [
+    ["*{wrong}* belongs to the other kind of condition, real or unreal.", "*{wrong}* 属于另一种条件，真实或不真实。"],
+    ["*{wrong}* does not make a result clause here.", "*{wrong}* 在这里构不成结果从句。"],
+  ],
+);
+
+const correlative = choose(
+  "parallel-after-not-only-and-either",
+  ["Parallel After Not Only and Either", "not only 和 either 后的平行结构"],
+  [
+    "Pairs such as *not only … but also*, *either … or*, *neither … nor* and *both … and* need the **same kind of words** after each half: *She is not only smart but also **kind*** (two adjectives); *We can either **walk** or **take** the bus* (two verbs).",
+    "*not only … but also*、*either … or*、*neither … nor* 和 *both … and* 这样的成对连词，两半后面要跟**同类的词**：*She is not only smart but also **kind***（两个形容词）；*We can either **walk** or **take** the bus*（两个动词）。",
+  ],
+  ["Which words complete the sentence in parallel?", "哪组词能用平行结构补全句子？"],
+  `
+  She is not only smart but also ___.|kind|has kindness|being kind
+  We can either walk or ___.|take the bus|the bus|taking the bus
+  The film was both funny and ___.|sad|it made us sad|sadness
+  He neither called nor ___.|wrote|a letter|writing
+  The coach praised not only our speed but also ___.|our teamwork|we worked as a team|working together
+  You can pay either by card or ___.|by cash|you can use cash|cash paying
+  The garden was both large and ___.|beautiful|it had flowers|beauty
+  She likes neither swimming nor ___.|running|to run|she runs
+  The book is not only long but also ___.|boring|it bores me|a bore to read
+  We will either finish today or ___.|finish tomorrow|tomorrow is fine|finishing tomorrow
+  `,
+  (right) => [`*${right}* matches the words after the first half of the pair.`, `*${right}* 与成对连词前半部分后面的词结构一致。`],
+  [
+    [
+      "*{wrong}* is a different kind of word or a whole clause, so the halves are not parallel.",
+      "*{wrong}* 是另一类词或一个完整分句，两半就不平行了。",
+    ],
+    ["*{wrong}* uses a different form from the first half.", "*{wrong}* 与前半部分的形式不同。"],
+  ],
+);
+
+const latinVerb = choose(
+  "the-verb-with-a-latin-plural",
+  ["The Verb with a Latin Plural", "拉丁语复数后的动词"],
+  [
+    "A plural from Latin or Greek takes a **plural** verb, even without an *-s*: *The criteria **are** clear*; *These phenomena **are** rare*; *The bacteria **multiply***. Its singular takes a singular verb: *The crisis **is** over*; *This analysis **shows***. In formal writing *data* is plural: *The data **show***.",
+    "来自拉丁语或希腊语的复数名词即使没有 *-s* 也要用**复数**动词：*The criteria **are** clear*；*These phenomena **are** rare*；*The bacteria **multiply***。它的单数形式用单数动词：*The crisis **is** over*；*This analysis **shows***。在正式写作中，*data* 是复数：*The data **show***。",
+  ],
+  ["Which verb agrees with the subject?", "哪个动词与主语一致？"],
+  `
+  The criteria for the prize ___ clear.|are|is|being
+  These phenomena ___ rare in winter.|are|is|being
+  The bacteria ___ quickly in warm water.|multiply|multiplies|multiplying
+  The crisis ___ over at last.|is|are|being
+  This analysis ___ a rise in prices.|shows|show|showing
+  The data from the survey ___ a clear pattern.|show|shows|showing
+  The alumni ___ a reunion every June.|hold|holds|holding
+  The main criterion ___ speed.|is|are|being
+  The fungi ___ on the fallen log.|grow|grows|growing
+  Both analyses ___ the same result.|reach|reaches|reaching
+  `,
+  (right, shown) => [
+    `"${shown.replace("___", right)}": the verb agrees with whether the Latin or Greek noun is singular or plural.`,
+    `“${shown.replace("___", right)}”：动词与这个拉丁语或希腊语名词的单复数一致。`,
+  ],
+  [
+    ["*{wrong}* treats the noun as the wrong number: these plurals have no *-s*.", "*{wrong}* 把名词的单复数弄错了：这些复数没有 *-s*。"],
+    ["*{wrong}* is not a finite verb, so the sentence would have none.", "*{wrong}* 不是限定动词，句子就没有谓语动词了。"],
+  ],
+);
+
+const fragment = choose(
+  "fixing-a-fragment",
+  ["Fixing a Fragment", "修正句子片段"],
+  [
+    "A phrase or a dependent clause punctuated as a sentence is a **fragment**: *After the long game.* *Because the bus was late.* Fix it by joining it to a nearby independent clause: *After the long game, we rested.* Adding a period or a capital does not help; it needs a subject and verb that can stand alone.",
+    "被当作句子加了句号的短语或从句是**句子片段**：*After the long game.* *Because the bus was late.* 修正的方法是把它与附近的独立分句连在一起：*After the long game, we rested.* 加句号或大写字母都没用；它需要一个能独立存在的主语和谓语。",
+  ],
+  ["Which revision fixes the fragment?", "哪个修改纠正了句子片段？"],
+  `
+  We rested. After the long game.|After the long game, we rested.|We rested. After the long game ended.|After the long game. We rested and ate.
+  I missed class. Because the bus was late.|I missed class because the bus was late.|I missed class. Because the bus was very late.|Because the bus was late. I missed class.
+  She waited. Until the rain stopped.|She waited until the rain stopped.|She waited. Until the rain stopped at last.|Until the rain stopped. She waited.
+  The dog barked. At the mail carrier.|The dog barked at the mail carrier.|The dog barked. At the mail carrier again.|At the mail carrier. The dog barked.
+  We found shells. Walking along the beach.|Walking along the beach, we found shells.|We found shells. Walking slowly along the beach.|Walking along the beach. We found shells.
+  He smiled. When he saw the cake.|He smiled when he saw the cake.|He smiled. When he saw the big cake.|When he saw the cake. He smiled.
+  The town flooded. After three days of rain.|The town flooded after three days of rain.|The town flooded. After three long days of rain.|After three days of rain. The town flooded.
+  I read a book. Which my aunt gave me.|I read a book which my aunt gave me.|I read a book. Which my aunt gave me last year.|Which my aunt gave me. I read a book.
+  They cheered. As the runners crossed the line.|They cheered as the runners crossed the line.|They cheered. As the runners crossed the finish line.|As the runners crossed the line. They cheered.
+  Mia laughed. Since the joke was silly.|Mia laughed since the joke was silly.|Mia laughed. Since the joke was very silly.|Since the joke was silly. Mia laughed.
+  `,
+  (right) => [`"${right}" joins the fragment to an independent clause.`, `“${right}”把片段与一个独立分句连在了一起。`],
+  [
+    ['"{wrong}" adds words to the fragment but leaves it standing alone.', "“{wrong}”给片段加了词，但它仍然独立成句。"],
+    ['"{wrong}" moves the fragment but still punctuates it as a sentence.', "“{wrong}”移动了片段，但仍把它当作句子加标点。"],
+  ],
+);
+
+const adverbComma = choose(
+  "the-comma-with-an-adverb-clause",
+  ["The Comma with an Adverb Clause", "状语从句与逗号"],
+  [
+    "An adverb clause that **opens** a sentence is followed by a comma: *Because it rained, we stayed in*. When the clause comes **last**, it usually needs no comma: *We stayed in because it rained*. A comma between a main clause and a closing *because* clause, or no comma after an opening one, is an error.",
+    "**放在句首**的状语从句后面要加逗号：*Because it rained, we stayed in*。从句**放在句末**时，通常不需要逗号：*We stayed in because it rained*。在主句和句末的 *because* 从句之间加逗号，或在句首的从句后面不加逗号，都是错误的。",
+  ],
+  ["Which sentence is punctuated correctly?", "哪个句子的标点正确？"],
+  join(
+    [
+      ["Because it rained", "we stayed in"],
+      ["When the bell rang", "the students left"],
+      ["If you finish early", "you may read"],
+      ["Because she was tired", "she slowed down"],
+      ["After the storm passed", "we went outside"],
+      ["Before you leave", "turn off the lights"],
+      ["Since the shop was closed", "we went home"],
+      ["After the guests left", "we washed the dishes"],
+      ["Until the bus arrives", "we will wait here"],
+      ["As soon as I got home", "I called my friend"],
+    ].map(([clause, main], i) => {
+      const lower = `${clause[0]!.toLowerCase()}${clause.slice(1)}`;
+      const cap = `${main[0]!.toUpperCase()}${main.slice(1)}`;
+      return i % 2 === 0
+        ? `${clause} / ${main}|${clause}, ${main}.|${clause} ${main}.|${clause}; ${main}.`
+        : `${main} / ${lower}|${cap} ${lower}.|${cap}, ${lower}.|${cap}; ${lower}.`;
+    }),
+  ),
+  (right) => [
+    `"${right}" puts a comma after an opening adverb clause and none before a closing one.`,
+    `“${right}”在句首的状语从句后加逗号，在句末的状语从句前不加。`,
+  ],
+  [
+    ['"{wrong}" gets the comma wrong for where the adverb clause stands.', "“{wrong}”没有根据状语从句的位置正确使用逗号。"],
+    ['"{wrong}" uses a semicolon, which joins only two independent clauses.', "“{wrong}”用了分号，而分号只能连接两个独立分句。"],
+  ],
+);
+
+const tag = choose(
+  "commas-before-a-tag-question",
+  ["Commas Before a Tag Question", "反意疑问句前的逗号"],
+  [
+    "A **tag question** at the end of a sentence, such as *isn't it?* or *did you?*, is set off by a comma, and the sentence ends with a question mark: *It's cold, **isn't it?*** The tag usually reverses the statement: a positive statement takes a negative tag, and a negative statement a positive one.",
+    "句末的**反意疑问部分**，如 *isn't it?* 或 *did you?*，要用逗号隔开，整个句子以问号结尾：*It's cold, **isn't it?*** 反意疑问部分通常与陈述部分相反：肯定陈述用否定疑问，否定陈述用肯定疑问。",
+  ],
+  ["Which sentence is correct?", "哪个句子正确？"],
+  `
+  It's cold / isn't it|It's cold, isn't it?|It's cold isn't it?|It's cold, is it?
+  You finished the book / didn't you|You finished the book, didn't you?|You finished the book didn't you?|You finished the book, did you?
+  She can swim / can't she|She can swim, can't she?|She can swim can't she?|She can swim, can she?
+  They aren't coming / are they|They aren't coming, are they?|They aren't coming are they?|They aren't coming, aren't they?
+  He likes pizza / doesn't he|He likes pizza, doesn't he?|He likes pizza doesn't he?|He likes pizza, does he?
+  We won the game / didn't we|We won the game, didn't we?|We won the game didn't we?|We won the game, did we?
+  You won't forget / will you|You won't forget, will you?|You won't forget will you?|You won't forget, won't you?
+  The shop is open / isn't it|The shop is open, isn't it?|The shop is open isn't it?|The shop is open, is it?
+  She hasn't left yet / has she|She hasn't left yet, has she?|She hasn't left yet has she?|She hasn't left yet, hasn't she?
+  This is your coat / isn't it|This is your coat, isn't it?|This is your coat isn't it?|This is your coat, is it?
+  `,
+  (right) => [
+    `"${right}" sets off the tag with a comma and reverses the statement.`,
+    `“${right}”用逗号隔开了反意疑问部分，并与陈述部分相反。`,
+  ],
+  [
+    ['"{wrong}" leaves out the comma before the tag.', "“{wrong}”在反意疑问部分前漏掉了逗号。"],
+    ['"{wrong}" does not reverse the statement in the tag.', "“{wrong}”的反意疑问部分没有与陈述部分相反。"],
+  ],
+);
+
+const hadForm = choose(
+  "forming-the-past-perfect",
+  ["Forming the Past Perfect", "过去完成时的构成"],
+  [
+    "The past perfect is **had** plus the **past participle**, for every subject: *By the time we arrived, the train **had left***. With an irregular verb, take care to use the participle, not the simple past: *had gone*, *had written*, *had eaten*. *Has* belongs to the present perfect.",
+    "过去完成时由 **had** 加**过去分词**构成，所有主语都一样：*By the time we arrived, the train **had left***。遇到不规则动词时，要注意用过去分词而不是一般过去式：*had gone*、*had written*、*had eaten*。*has* 属于现在完成时。",
+  ],
+  ["Which form completes the sentence?", "哪个形式能补全句子？"],
+  `
+  By the time we arrived, the train ___.|had left|had leave|has left
+  She ___ the book before she saw the film.|had read|had readed|has read
+  We ___ dinner when the phone rang.|had eaten|had ate|has eaten
+  They ___ home before the storm began.|had gone|had went|has gone
+  He ___ the letter, so he knew the news.|had written|had wrote|has written
+  I ___ my keys, so I could not get in.|had lost|had lose|have lost
+  The guests ___ by the time we finished.|had arrived|had arrive|have arrived
+  The river ___ over its banks before dawn.|had risen|had rose|has risen
+  She ___ the race twice before that year.|had won|had win|has won
+  The class ___ the song many times.|had sung|had sang|has sung
+  `,
+  (right) => [`*${right}*: *had* plus the past participle.`, `*${right}*：*had* 加过去分词。`],
+  [
+    ["*{wrong}* puts the wrong form of the verb after *had*.", "*{wrong}* 在 *had* 后面用了错误的动词形式。"],
+    ["*{wrong}* is the present perfect, not the past perfect.", "*{wrong}* 是现在完成时，不是过去完成时。"],
+  ],
+);
+
+const splice = choose(
+  "fixing-a-comma-splice",
+  ["Fixing a Comma Splice", "修正逗号粘连"],
+  [
+    "Two independent clauses joined by a comma alone make a **comma splice**: *The rain stopped, we went outside.* Fix it with a **semicolon**, with a **period**, or with a comma plus a conjunction such as *and* or *so*. Just removing the comma makes a run-on sentence.",
+    "两个独立分句只用逗号连接，就是**逗号粘连**：*The rain stopped, we went outside.* 修正的方法是用**分号**、用**句号**，或者用逗号加上 *and*、*so* 等连词。只删掉逗号会造成连写句。",
+  ],
+  ["Which revision fixes the comma splice?", "哪个修改纠正了逗号粘连？"],
+  `
+  The rain stopped, we went outside.|The rain stopped; we went outside.|The rain stopped we went outside.|The rain stopped, then we went outside.
+  My brother loves soccer, he plays every day.|My brother loves soccer; he plays every day.|My brother loves soccer he plays every day.|My brother loves soccer, also he plays every day.
+  The test was hard, I passed it anyway.|The test was hard, but I passed it anyway.|The test was hard I passed it anyway.|The test was hard, however I passed it anyway.
+  It was late, the store was closed.|It was late. The store was closed.|It was late the store was closed.|It was late, therefore the store was closed.
+  The dog barked, the cat ran away.|The dog barked, and the cat ran away.|The dog barked the cat ran away.|The dog barked, then the cat ran away.
+  We missed the bus, we walked to school.|We missed the bus, so we walked to school.|We missed the bus we walked to school.|We missed the bus, thus we walked to school.
+  She studied hard, her grades improved.|She studied hard; her grades improved.|She studied hard her grades improved.|She studied hard, as a result her grades improved.
+  The sun set, the stars came out.|The sun set. The stars came out.|The sun set the stars came out.|The sun set, soon the stars came out.
+  I called him, he did not answer.|I called him, but he did not answer.|I called him he did not answer.|I called him, still he did not answer.
+  The road was icy, the bus was late.|The road was icy; the bus was late.|The road was icy the bus was late.|The road was icy, consequently the bus was late.
+  `,
+  (right) => [`"${right}" joins the two clauses correctly.`, `“${right}”正确地连接了两个分句。`],
+  [
+    ['"{wrong}" removes the comma and makes a run-on sentence.', "“{wrong}”删掉了逗号，造成了连写句。"],
+    [
+      '"{wrong}" still joins two clauses with a comma, adding only an adverb, not a conjunction.',
+      "“{wrong}”仍然只用逗号连接两个分句，加的是副词而不是连词。",
+    ],
+  ],
+);
+
+const method = choose(
+  "the-passive-in-a-method",
+  ["The Passive in a Method", "实验方法中的被动语态"],
+  [
+    "The method of a lab report tells what was done, in the **past passive**: *The samples **were heated** for ten minutes*. *Was* goes with a singular subject and *were* with a plural one. The active *We heated* is acceptable in some reports, but a bare past form with the thing as subject, *The samples heated*, says the samples did the heating.",
+    "实验报告的方法部分用**一般过去时的被动语态**说明做了什么：*The samples **were heated** for ten minutes*。单数主语用 *was*，复数主语用 *were*。有些报告也可以用主动的 *We heated*，但把物当主语、只用过去式，如 *The samples heated*，就成了样本自己在加热。",
+  ],
+  ["Which words complete the method?", "哪组词能补全方法部分？"],
+  `
+  The samples ___ for ten minutes.|were heated|was heated|heated
+  The solution ___ into three beakers.|was poured|were poured|poured
+  The seeds ___ in damp soil.|were planted|was planted|planted
+  The mixture ___ every five minutes.|was stirred|were stirred|stirred
+  The plants ___ twice a day.|were watered|was watered|watered
+  The water ___ to 80 degrees.|was cooled|were cooled|cooled
+  The results ___ in a table.|were recorded|was recorded|recorded
+  The leaf ___ under a microscope.|was examined|were examined|examined
+  The rocks ___ before and after soaking.|were weighed|was weighed|weighed
+  The jars ___ in a dark cupboard.|were stored|was stored|stored
+  `,
+  (right, shown) => [
+    `"${shown.replace("___", right)}": the past passive, agreeing with the subject.`,
+    `“${shown.replace("___", right)}”：一般过去时的被动语态，与主语一致。`,
+  ],
+  [
+    ["*{wrong}* does not agree with the subject in number.", "*{wrong}* 与主语的单复数不一致。"],
+    ["*{wrong}* is active, so it says the thing did the action itself.", "*{wrong}* 是主动形式，意思就成了物自己做了这个动作。"],
+  ],
+);
+
+const every = choose(
+  "each-and-every-with-and",
+  ["Each and Every with And", "each 和 every 与 and"],
+  [
+    "Two subjects joined by *and* usually take a plural verb, but when *each* or *every* comes before them, each is taken **one at a time**, so the verb is singular: ***Every** boy and girl **has** a ticket*; ***Each** chair and table **was** cleaned*. Without *each* or *every*, the plural returns: *The boy and the girl have tickets*.",
+    "用 *and* 连接的两个主语通常用复数动词，但如果前面有 *each* 或 *every*，就是**逐个**来看，所以动词用单数：***Every** boy and girl **has** a ticket*；***Each** chair and table **was** cleaned*。没有 *each* 或 *every* 时，又要用复数：*The boy and the girl have tickets*。",
+  ],
+  ["Which verb agrees with the subject?", "哪个动词与主语一致？"],
+  `
+  Every boy and girl ___ a ticket.|has|have|having
+  Each chair and table ___ cleaned.|was|were|being
+  Every teacher and student ___ invited.|is|are|being
+  The teacher and the student ___ invited.|are|is|being
+  Each book and magazine ___ a label.|has|have|having
+  Every cat and dog ___ a checkup.|needs|need|needing
+  My cat and my dog ___ along well.|get|gets|getting
+  Each man and woman ___ a vote.|has|have|having
+  Every house and shop ___ power again.|has|have|having
+  The house and the shop ___ power again.|have|has|having
+  `,
+  (right, shown) => [
+    `"${shown.replace("___", right)}": ${shown.startsWith("Each") || shown.startsWith("Every") ? "*each* or *every* takes the subjects one at a time" : "two subjects joined by *and* are plural"}.`,
+    `“${shown.replace("___", right)}”：${shown.startsWith("Each") || shown.startsWith("Every") ? "*each* 或 *every* 表示逐个来看" : "用 *and* 连接的两个主语是复数"}。`,
+  ],
+  [
+    [
+      "*{wrong}* has the wrong number: check for *each* or *every* before the subjects.",
+      "*{wrong}* 的单复数不对：看看主语前有没有 *each* 或 *every*。",
+    ],
+    ["*{wrong}* is not a finite verb, so the sentence would have none.", "*{wrong}* 不是限定动词，句子就没有谓语动词了。"],
+  ],
+);
+
+const directions = choose(
+  "revising-directions",
+  ["Revising Directions", "修改说明文字"],
+  [
+    "Directions are clearest in the **imperative** throughout: *Mix the flour. Add the eggs. Stir well.* A step that slips into another mood, *You should add the eggs* or *The eggs are added*, breaks the pattern. Revise every step to begin with its verb.",
+    "说明文字从头到尾都用**祈使语气**最清楚：*Mix the flour. Add the eggs. Stir well.* 某一步换成别的语气，如 *You should add the eggs* 或 *The eggs are added*，就打破了统一的格式。把每一步都改成以动词开头。",
+  ],
+  ["Which step keeps the directions in one mood?", "哪一步让说明文字保持了统一的语气？"],
+  `
+  Mix the flour. ___ Stir well.|Add the eggs.|You should add the eggs.|The eggs are added.
+  Open the lid. ___ Close it tightly.|Pour in the water.|You could pour in the water.|The water is poured in.
+  Turn left at the bank. ___ Stop at the red door.|Walk two blocks.|You will walk two blocks.|Two blocks are walked.
+  Wash your hands. ___ Dry them well.|Use warm soap and water.|You should use warm soap and water.|Warm soap and water are used.
+  Read the question. ___ Write your answer.|Underline the key words.|You might underline the key words.|The key words are underlined.
+  Unplug the lamp. ___ Screw in the new bulb.|Remove the old bulb.|You should remove the old bulb.|The old bulb is removed.
+  Fold the paper in half. ___ Crease the edge.|Fold it again.|You can fold it again.|It is folded again.
+  Fill the pot with water. ___ Add the pasta.|Bring it to a boil.|You should bring it to a boil.|It is brought to a boil.
+  Choose a topic. ___ Write a draft.|Make a plan.|You ought to make a plan.|A plan is made.
+  Set the timer. ___ Check the oven.|Wait ten minutes.|You should wait ten minutes.|Ten minutes are waited.
+  `,
+  (right) => [`"${right}" begins with its verb, like the other steps.`, `“${right}”像其他步骤一样以动词开头。`],
+  [
+    ['"{wrong}" slips into advice with a modal, not a command.', "“{wrong}”变成了带情态动词的建议，而不是指令。"],
+    ['"{wrong}" slips into the passive, which hides who does the step.', "“{wrong}”变成了被动语态，看不出是谁做这一步。"],
+  ],
+);
+
+const opener = choose(
+  "the-doer-after-the-opener",
+  ["The Doer After the Opener", "开头短语后的施动者"],
+  [
+    "An opening phrase with a verb in it describes whoever comes right after the comma, so the **doer** of that action must be the subject: *Running for the bus, **I** dropped my bag*. If the subject is something else, *my bag fell*, the bag was running.",
+    "含有动词的开头短语描述的是紧跟在逗号后面的那个人或物，所以这个动作的**施动者**必须做主语：*Running for the bus, **I** dropped my bag*。如果主语是别的东西，如 *my bag fell*，那就成了包在跑。",
+  ],
+  ["Which words complete the sentence correctly?", "哪组词能正确地补全句子？"],
+  `
+  Running for the bus, ___|I dropped my bag.|my bag fell.|the bag was dropped.
+  Opening the door, ___|she saw a puppy.|a puppy was there.|the puppy was seen.
+  Tired after the game, ___|the players went home.|the bus took the players home.|home was where the players went.
+  Climbing the hill, ___|we saw the whole town.|the town came into view.|the whole town was seen.
+  Hungry after school, ___|Leo ate a sandwich.|a sandwich was eaten.|the sandwich looked good.
+  Reading the letter, ___|Grandma began to cry.|tears ran down Grandma's face.|the letter made Grandma cry.
+  Excited about the trip, ___|the students packed early.|the bags were packed early.|packing was done early.
+  Looking out the window, ___|I saw the snow.|the snow was falling.|the snow could be seen.
+  Finishing the race, ___|the runner raised her arms.|the crowd cheered for the runner.|the arms of the runner went up.
+  Walking into the kitchen, ___|Dad smelled smoke.|smoke filled the air.|the smell of smoke was noticed.
+  `,
+  (right) => [`"${right}" makes the doer of the opening action the subject.`, `“${right}”让开头动作的施动者做了主语。`],
+  [
+    ['"{wrong}" makes something else the subject, so the opener dangles.', "“{wrong}”让别的东西做了主语，开头短语成了悬垂修饰语。"],
+    ['"{wrong}" is passive, so the doer never becomes the subject.', "“{wrong}”是被动语态，施动者没有做主语。"],
+  ],
+);
+
+const essential = choose(
+  "it-is-essential-that",
+  ["It Is Essential That", "It is essential that 句型"],
+  [
+    "After *it is essential that*, *it is important that*, *it is necessary that* and *it is vital that*, formal English uses the subjunctive, the **base form** of the verb for every subject: *It is essential that he **be** on time*; *It is important that she **arrive** early*. The base form has no *-s* and no past tense.",
+    "在 *it is essential that*、*it is important that*、*it is necessary that* 和 *it is vital that* 之后，正式英语用虚拟语气，即所有主语都用动词**原形**：*It is essential that he **be** on time*；*It is important that she **arrive** early*。原形不加 *-s*，也不用过去式。",
+  ],
+  ["Which verb completes the sentence in formal English?", "在正式英语中，哪个动词能补全句子？"],
+  `
+  It is essential that he ___ on time.|be|is|was
+  It is important that she ___ early.|arrive|arrives|arrived
+  It is necessary that every student ___ a form.|sign|signs|signed
+  It is vital that the doctor ___ the results.|see|sees|saw
+  It is essential that the bridge ___ repaired.|be|is|was
+  It is important that he ___ the medicine daily.|take|takes|took
+  It was necessary that she ___ the truth.|know|knows|knew
+  It is vital that the door ___ locked.|be|is|was
+  It is important that the team ___ together.|practice|practices|practiced
+  It is essential that each player ___ a helmet.|wear|wears|wore
+  `,
+  (right, shown) => [
+    `"${shown.replace("___", right)}": the subjunctive uses the base form for every subject.`,
+    `“${shown.replace("___", right)}”：虚拟语气对所有主语都用动词原形。`,
+  ],
+  [
+    [
+      "*{wrong}* is the present tense with *-s* or a form of *be*, not the base form.",
+      "*{wrong}* 是带 *-s* 的现在时或 *be* 的变化形式，不是原形。",
+    ],
+    ["*{wrong}* is the past tense, not the base form.", "*{wrong}* 是过去式，不是原形。"],
+  ],
+);
+
+const weUs = choose(
+  "we-or-us-before-a-noun",
+  ["We or Us Before a Noun", "名词前用 we 还是 us"],
+  [
+    "When *we* or *us* comes right before a noun, as in *we students*, drop the noun to choose: *(We) students want a longer lunch* → ***We** want*, so *We students*. *The coach praised (us) players* → *praised **us***, so *us players*.",
+    "当 *we* 或 *us* 紧挨在名词前面时，如 *we students*，先把名词去掉再选：*(We) students want a longer lunch* → ***We** want*，所以是 *We students*。*The coach praised (us) players* → *praised **us***，所以是 *us players*。",
+  ],
+  ["Which pronoun completes the sentence?", "哪个代词能补全句子？"],
+  `
+  ___ students want a longer lunch.|We|Us|Our
+  The coach praised ___ players after the game.|us|we|our
+  ___ neighbors planted the garden together.|We|Us|Our
+  The prize was shared by ___ winners.|us|we|our
+  ___ fans cheered louder than ever.|We|Us|Ours
+  The museum gave ___ visitors a free map.|us|we|our
+  Some of ___ singers had colds.|us|we|our
+  ___ sixth graders will lead the parade.|We|Us|Our
+  The rules apply to ___ swimmers too.|us|we|our
+  ___ campers built the fire ourselves.|We|Us|Our
+  `,
+  (right) => [
+    `Drop the noun and *${right}* still fits: it is the ${right === "We" ? "subject" : "object"}.`,
+    `去掉名词后 *${right}* 仍然通顺：它是${right === "We" ? "主语" : "宾语"}。`,
+  ],
+  [
+    ["*{wrong}* is the wrong case: drop the noun and read the sentence.", "*{wrong}* 的格不对：去掉名词再读一读句子。"],
+    ["*{wrong}* is a possessive, which changes the meaning.", "*{wrong}* 是所有格，改变了句子的意思。"],
+  ],
+);
+
+const keepE = choose(
+  "keeping-e-after-c-and-g",
+  ["Keeping E After C and G", "c 和 g 之后保留 e"],
+  [
+    "A silent *e* is usually dropped before a suffix that starts with a vowel: *hope*, *hoping*. But after a **soft c or g**, the *e* stays before *-able* and *-ous*, to keep the sound soft: *notice*, *noticeable*; *courage*, *courageous*; *change*, *changeable*. Before a suffix starting with a consonant, the *e* stays: *hopeful*, *careless*.",
+    "不发音的 *e* 在以元音开头的后缀前通常要去掉：*hope*、*hoping*。但在**软音 c 或 g** 后面，*e* 在 *-able* 和 *-ous* 前要保留，以保持软音：*notice*、*noticeable*；*courage*、*courageous*；*change*、*changeable*。在以辅音开头的后缀前，*e* 保留：*hopeful*、*careless*。",
+  ],
+  ["Which spelling is correct?", "哪个拼写正确？"],
+  `
+  notice + able|noticeable|noticable|noticeible
+  courage + ous|courageous|couragous|couragious
+  change + able|changeable|changable|changeible
+  outrage + ous|outrageous|outragous|outragious
+  manage + able|manageable|managable|manageible
+  peace + able|peaceable|peacable|peaceible
+  advantage + ous|advantageous|advantagous|advantagious
+  hope + ful|hopeful|hopful|hopefull
+  care + less|careless|carless|carelless
+  replace + able|replaceable|replacable|replaceible
+  `,
+  (right) => [`*${right}* keeps the *e* where the rule needs it.`, `*${right}* 在规则需要的地方保留了 *e*。`],
+  [
+    ["*{wrong}* drops the *e* that keeps the sound or the base word.", "*{wrong}* 去掉了用来保持读音或词根的 *e*。"],
+    ["*{wrong}* misspells the suffix.", "*{wrong}* 拼错了后缀。"],
+  ],
+);
+
+const confusedLines = join([
+  ...[
+    "The principal welcomed the new students.",
+    "Honesty is a principle she lives by.",
+    "Her red scarf complements her coat.",
+    "He paid me a kind compliment.",
+    "The bus remained stationary in the snow.",
+    "She wrote the note on pink stationery.",
+    "The city council voted on the plan.",
+    "Lawyers counsel their clients.",
+    "The magician's trick was a clever illusion.",
+    "The poem makes an allusion to a Greek myth.",
+  ].map((s) => `${s}|correct`),
+  ...[
+    "The principle welcomed the new students.",
+    "Honesty is a principal she lives by.",
+    "Her red scarf compliments her coat.",
+    "He paid me a kind complement.",
+    "The bus remained stationery in the snow.",
+    "She wrote the note on pink stationary.",
+    "The city counsel voted on the plan.",
+    "Lawyers council their clients.",
+    "The magician's trick was a clever allusion.",
+    "The poem makes an illusion to a Greek myth.",
+  ].map((s) => `${s}|wrong word`),
+]);
+
+const confused = label(
+  "proofreading-for-confused-words",
+  ["Proofreading for Confused Words", "校对易混淆词"],
+  [
+    "A spell checker will not catch a confused word, because the wrong word is spelled correctly. Proofread by stopping at each word of a confused pair and asking which meaning the sentence needs: a person who runs a school is a **principal**, a rule is a **principle**; praise is a **compliment**, completing is a **complement**.",
+    "拼写检查发现不了易混淆词，因为错用的词本身拼写正确。校对时，遇到易混淆词组中的每个词都停下来，问一问句子需要哪个意思：管理学校的人是 **principal**，原则是 **principle**；称赞是 **compliment**，补充使完整是 **complement**。",
+  ],
+  ["Is the confused word used correctly?", "这个易混淆词用对了吗？"],
+  confusedLines,
+  {
+    correct: L(
+      "正确",
+      "The word has the meaning the sentence needs.",
+      "这个词的意思正是句子所需要的。",
+      "The word is its pair's partner, with a different meaning.",
+      "这个词是与它成对的那个词，意思不同。",
+    ),
+    "wrong word": L(
+      "用错了词",
+      "The word is spelled correctly, but the sentence needs its pair's meaning.",
+      "这个词拼写正确，但句子需要的是与它成对的那个词的意思。",
+      "The word has the meaning the sentence needs.",
+      "这个词的意思正是句子所需要的。",
+    ),
+  },
+);
+
+/** deeper7 are the third knowledge points of the grammar topics of grade 7, by topic id. */
+export const deeper7: Readonly<Record<string, readonly KnowledgePointDef[]>> = {
+  "active-and-passive-voice": [doer],
+  "verb-moods": [would],
+  "parallel-structure": [correlative],
+  "plurals-from-latin-and-greek": [latinVerb],
+  "phrases-and-clauses": [fragment],
+  "adjective-and-adverb-clauses": [adverbComma],
+  "commas-with-interrupters": [tag],
+  "past-perfect-for-earlier-events": [hadForm],
+  "semicolons-between-clauses": [splice],
+  "passive-voice-in-science": [method],
+  "agreement-with-tricky-subjects": [every],
+  "shifts-in-verb-mood": [directions],
+  "dangling-modifiers": [opener],
+  "the-subjunctive-in-demands-and-proposals": [essential],
+  "pronouns-in-compound-subjects-and-objects": [weUs],
+  "spelling-words-with-suffixes": [keepE],
+  "commonly-confused-words-3": [confused],
+};

@@ -88,3 +88,16 @@ export const field = (row: readonly string[], i: number): string => {
   if (value === undefined || value === "") throw new Error(`a row lacks field ${i}: ${row.join("|")}`);
   return value;
 };
+
+/** deepen appends more knowledge points to topics by id, failing loudly if an id names no topic or adds nothing. */
+export const deepen = (topics: readonly TopicDef[], extra: Readonly<Record<string, readonly KnowledgePointDef[]>>): TopicDef[] => {
+  const ids = new Set(topics.map((topic) => topic.id));
+  for (const [id, points] of Object.entries(extra)) {
+    if (!ids.has(id)) throw new Error(`deepen: no topic ${id}`);
+    if (points.length === 0) throw new Error(`deepen: nothing to add to ${id}`);
+  }
+  return topics.map((topic) => {
+    const points = extra[topic.id];
+    return points ? { ...topic, knowledgePoints: [...topic.knowledgePoints, ...points] } : topic;
+  });
+};

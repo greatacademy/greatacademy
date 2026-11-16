@@ -182,6 +182,32 @@
 
 **将来有了音频和录音：** 听三个词的故事，记下它们的来源；用两种口音说同一个词，并描述其中的差别。
 
+## 为加深而新增
+
+本大纲写成之后，有 21 个语法和写作主题增加了第三个步骤，使其中大多数主题都有三个步骤；其中一些主题来自分段课程和技能课程。各主题新增的步骤：
+
+- `relative-clauses` 关系从句：从句修饰的名词。
+- `pronoun-case` 代词的格：than 和 as 后面的代词。
+- `who-and-whom` who 与 whom：介词后面的 whom。
+- `appositives` 同位语：同位语用不用逗号。
+- `participial-phrases` 分词短语：-ing 还是 -ed 分词。
+- `misplaced-modifiers` 错位修饰语：句子实际上说了什么。
+- `who-which-and-that` who、which 与 that：逗号后面用 which。
+- `commas-with-nonessential-elements` 非必要成分的逗号：第二个逗号。
+- `intensive-pronouns` 强调代词：反身代词还是宾格代词。
+- `vague-pronouns` 指代不清的代词：this 加名词。
+- `subject-verb-agreement-with-phrases-between` 主谓之间有短语时的一致：校对主谓一致。
+- `numbers-in-words-or-figures` 数字用文字还是阿拉伯数字：句首的数字。
+- `shifts-in-pronoun-number` 代词数的不当转换：用复数纠正数的变换。
+- `irregular-past-participles` 不规则过去分词：be 后面的过去分词。
+- `possessives-of-plural-and-compound-nouns` 复数名词和复合名词的所有格：所有格还是复数。
+- `spelling-doubling-final-consonants` 双写末尾辅音字母：什么时候不双写。
+- `colons-before-lists-and-explanations` 列举和解释前的冒号：不该用的冒号。
+- `agreement-with-either-or-and-neither-nor` either/or 与 neither/nor 的一致：neither of 和 either of。
+- `good-and-well-bad-and-badly` good 与 well，bad 与 badly：系动词之后。
+- `capitals-in-titles-and-headings` 标题中的大写：标题中冒号之后。
+- `spelling-words-with-prefixes` 带前缀的词的拼写：要加连字符的前缀。
+
 ## 下一年级在此基础上继续
 
 `english-grade-7` 在本年级的基础上继续：追踪论证发展为写有论点、证据段落和反方观点的论证文；有依据的说法引向证据与推理；过程说明和比较对照文章引向客观摘要和说明文；语法转向主动语态和被动语态、动词语气和平行结构；躁动的地球和活细胞的题材延续到海洋及其生态系统。

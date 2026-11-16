@@ -192,6 +192,25 @@ The band course `english-grades-6-8` retires once `english-grade-6`, `english-gr
 
 **Words:** `words-of-food-webs` Words of Food Webs (after `context-clues`): niche, parasite, host, mutualism, herbivore, carnivore, omnivore, canopy, wetland, grazer; `words-of-the-newsroom` Words of the Newsroom (after `context-clues`): interview, caption, press, scoop, newsroom, masthead, paparazzi, feature, newsreader, front page; `words-of-banking` Words of Banking (after `context-clues`): account, statement, balance, cheque, debit, teller, withdraw, overdraft, transaction, lender.
 
+## Added for Depth
+
+After this outline, 14 grammar and writing topics gained a third step, so that most of them teach three; some of these topics come from the band and skill courses. The step each adds:
+
+- `gerund-and-infinitive-phrases` Gerund and Infinitive Phrases: Gerund or Infinitive After a Verb.
+- `identifying-verbals` Identifying Verbals: The Job of the Gerund.
+- `simple-compound-and-complex-sentences` Simple, Compound and Complex Sentences: Compound-Complex Sentences.
+- `commas-in-complex-sentences` Commas in Complex Sentences: No Comma Before That.
+- `choosing-the-subordinating-conjunction` Choosing the Subordinating Conjunction: Fixing the Wrong Conjunction.
+- `ellipses-in-quotations` Ellipses in Quotations: No Dots Around a Woven Phrase.
+- `the-subjunctive-in-wishes-and-conditions` The Subjunctive in Wishes and Unreal Conditions: Wishes About the Past.
+- `parallel-verbals` Parallel Verbals: To Once or Every Time.
+- `shifts-in-voice` Shifts in Voice: The Passive in Every Tense.
+- `hyphenating-compound-modifiers` Hyphens in Compound Modifiers: No Hyphen After -ly.
+- `who-whoever-whom-whomever` Who, Whoever, Whom and Whomever: The Clause, Not the Preposition.
+- `reading-inverted-sentences` Reading Inverted Sentences: Putting the Line in Plain Order.
+- `prepositions-before-relative-pronouns` Prepositions Before Relative Pronouns: The Preposition Only Once.
+- `commonly-confused-words-4` Commonly Confused Words 4: Proofreading for Confused Words.
+
 ## What the Next Grade Builds On
 
 `english-grade-9` builds on this year: the argument about history and the essay on a retold tale grow into the analytical essay and the argument with sources; tracking a central idea and evaluating an argument go on to rhetoric, a speaker's purpose and the development of a theme; the reading of Shakespeare goes on to a whole tragedy; and grammar moves to conditional sentences, sentence variety for effect and the punctuation of the essay.

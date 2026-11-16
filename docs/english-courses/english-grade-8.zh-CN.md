@@ -192,6 +192,25 @@
 
 **词汇：** `words-of-food-webs` 食物网的词（先修 `context-clues`）：niche, parasite, host, mutualism, herbivore, carnivore, omnivore, canopy, wetland, grazer；`words-of-the-newsroom` 新闻编辑室的词（先修 `context-clues`）：interview, caption, press, scoop, newsroom, masthead, paparazzi, feature, newsreader, front page；`words-of-banking` 银行业务的词（先修 `context-clues`）：account, statement, balance, cheque, debit, teller, withdraw, overdraft, transaction, lender。
 
+## 为加深而新增
+
+本大纲写成之后，有 14 个语法和写作主题增加了第三个步骤，使其中大多数主题都有三个步骤；其中一些主题来自分段课程和技能课程。各主题新增的步骤：
+
+- `gerund-and-infinitive-phrases` 动名词短语和不定式短语：动词后用动名词还是不定式。
+- `identifying-verbals` 辨认非谓语动词：动名词的作用。
+- `simple-compound-and-complex-sentences` 简单句、并列句和复合句：并列复合句。
+- `commas-in-complex-sentences` 复合句中的逗号：that 前不加逗号。
+- `choosing-the-subordinating-conjunction` 选择从属连词：改正用错的连词。
+- `ellipses-in-quotations` 引文中的省略号：嵌入的短语两端不加省略号。
+- `the-subjunctive-in-wishes-and-conditions` 愿望和虚拟条件中的虚拟语气：对过去的愿望。
+- `parallel-verbals` 平行的非谓语形式：to 用一次还是每次都用。
+- `shifts-in-voice` 语态的转换：各种时态的被动语态。
+- `hyphenating-compound-modifiers` 复合修饰语中的连字符：-ly 后不加连字符。
+- `who-whoever-whom-whomever` who、whoever、whom 和 whomever：看从句，不看介词。
+- `reading-inverted-sentences` 读懂倒装句：把诗行还原为正常语序。
+- `prepositions-before-relative-pronouns` 关系代词前的介词：介词只用一次。
+- `commonly-confused-words-4` 易混淆词（四）：校对易混淆词。
+
 ## 下一年级在此基础上继续
 
 `english-grade-9` 在本年级的基础上继续：关于历史的论证文和关于重述故事的文章发展为分析性文章和基于资料的论证文；追踪中心思想和评价论证延伸到修辞、说话者的目的和主题的展开；阅读莎士比亚延伸到读一整部悲剧；语法转向条件句、为效果而变换句式，以及文章的标点。

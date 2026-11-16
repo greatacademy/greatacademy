@@ -184,6 +184,28 @@
 
 **将来有了音频和录音：** 听一则新闻报道和一则广告，把二者区分开；朗读一则新闻导语。
 
+## 为加深而新增
+
+本大纲写成之后，有 17 个语法和写作主题增加了第三个步骤，使其中大多数主题都有三个步骤；其中一些主题来自分段课程和技能课程。各主题新增的步骤：
+
+- `active-and-passive-voice` 主动语态和被动语态：被动句中的施动者。
+- `verb-moods` 动词的语气：结果中的 would。
+- `parallel-structure` 平行结构：not only 和 either 后的平行结构。
+- `plurals-from-latin-and-greek` 来自拉丁语和希腊语的复数：拉丁语复数后的动词。
+- `phrases-and-clauses` 短语与从句：修正句子片段。
+- `adjective-and-adverb-clauses` 形容词从句与副词从句：状语从句与逗号。
+- `commas-with-interrupters` 插入语的逗号：反意疑问句前的逗号。
+- `past-perfect-for-earlier-events` 用过去完成时表示更早的事：过去完成时的构成。
+- `semicolons-between-clauses` 从句之间的分号：修正逗号粘连。
+- `passive-voice-in-science` 科学写作中的被动语态：实验方法中的被动语态。
+- `agreement-with-tricky-subjects` 棘手主语的主谓一致：each 和 every 与 and。
+- `shifts-in-verb-mood` 动词语气的转换：修改说明文字。
+- `dangling-modifiers` 垂悬修饰语：开头短语后的施动者。
+- `the-subjunctive-in-demands-and-proposals` 要求和提议中的虚拟语气：It is essential that 句型。
+- `pronouns-in-compound-subjects-and-objects` 并列结构中的代词：名词前用 we 还是 us。
+- `spelling-words-with-suffixes` 加后缀的拼写：c 和 g 之后保留 e。
+- `commonly-confused-words-3` 易混淆词（三）：校对易混淆词。
+
 ## 下一年级在此基础上继续
 
 `english-grade-8` 在本年级的基础上继续：文学分析段落由对比视角和故事要素发展而来，反讽、伏笔和象征成为读者的新工具；五段式论证文和说明文延伸到比较同一话题的多篇文章、开头和结尾，以及修改草稿；语法转向动名词短语和不定式短语、句子的类型，以及破折号、括号和省略号；飞行和文艺复兴的题材延续到改变世界的机器和探险航行。

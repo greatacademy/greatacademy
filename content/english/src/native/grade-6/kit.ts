@@ -6,7 +6,7 @@ import { type ChoiceItem, choiceGenerator, point } from "@ga/subject-english";
 import { bars } from "../../topics/steps.ts";
 import { field, type Pair, rows, topic } from "../grade-5/kit.ts";
 
-export { choose, field, type Label, label, type Pair, rows, topic, type Why } from "../grade-5/kit.ts";
+export { choose, deepen, field, type Label, label, type Pair, rows, topic, type Why } from "../grade-5/kit.ts";
 
 /** Part is a root or prefix: what it means, in English and in Chinese, and three words with their definitions. */
 export interface Part {

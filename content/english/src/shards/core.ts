@@ -3,6 +3,8 @@
 import type { ReadingUnitDef, TopicDef } from "@ga/content";
 import { withRecordings } from "../audio.ts";
 import { withCovers } from "../illustrations.ts";
+import { deeperPoints } from "../native/deeper.ts";
+import { deepen } from "../native/grade-5/kit.ts";
 import { inStrand } from "../pack.ts";
 import { englishPacks } from "../packs.ts";
 import { baseReading } from "../reading/base.ts";
@@ -55,7 +57,7 @@ const skillTopics: readonly TopicDef[] = [
 ];
 
 /** coreShardTopics are the topics held by the `core` shard: for now, all of English. */
-export const coreShardTopics: readonly TopicDef[] = [...skillTopics, ...englishPacks.flatMap((pack) => pack.topics)];
+export const coreShardTopics: readonly TopicDef[] = deepen([...skillTopics, ...englishPacks.flatMap((pack) => pack.topics)], deeperPoints);
 
 /** coreShardReading are the reading units held by the `core` shard. */
 export const coreShardReading: readonly ReadingUnitDef[] = withRecordings(

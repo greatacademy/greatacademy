@@ -182,6 +182,32 @@ The band course `english-grades-6-8` retires once `english-grade-6`, `english-gr
 
 **Later, with audio and recording:** Listening to the stories of three words and noting their origins; saying the same word in two accents and describing the difference.
 
+## Added for Depth
+
+After this outline, 21 grammar and writing topics gained a third step, so that most of them teach three; some of these topics come from the band and skill courses. The step each adds:
+
+- `relative-clauses` Relative Clauses: The Noun the Clause Describes.
+- `pronoun-case` Pronoun Case: Pronouns After Than and As.
+- `who-and-whom` Who and Whom: Whom After a Preposition.
+- `appositives` Appositives: Commas or None with an Appositive.
+- `participial-phrases` Participial Phrases: -ing or -ed Participles.
+- `misplaced-modifiers` Misplaced Modifiers: What the Sentence Really Says.
+- `who-which-and-that` Who, Which and That: Which After a Comma.
+- `commas-with-nonessential-elements` Commas with Nonessential Elements: The Second Comma.
+- `intensive-pronouns` Intensive Pronouns: Self-Pronoun or Object Pronoun.
+- `vague-pronouns` Vague Pronouns: This with a Noun.
+- `subject-verb-agreement-with-phrases-between` Agreement with Phrases Between: Proofreading for Agreement.
+- `numbers-in-words-or-figures` Numbers in Words or Figures: A Number at the Start.
+- `shifts-in-pronoun-number` Shifts in Pronoun Number: Fixing a Shift with the Plural.
+- `irregular-past-participles` Irregular Past Participles: The Participle After Be.
+- `possessives-of-plural-and-compound-nouns` Possessives of Plural and Compound Nouns: Possessive or Plural.
+- `spelling-doubling-final-consonants` Doubling Final Consonants: When Not to Double.
+- `colons-before-lists-and-explanations` Colons Before Lists and Explanations: Colons That Do Not Belong.
+- `agreement-with-either-or-and-neither-nor` Agreement with Either/Or and Neither/Nor: Neither Of and Either Of.
+- `good-and-well-bad-and-badly` Good and Well, Bad and Badly: After a Linking Verb.
+- `capitals-in-titles-and-headings` Capitals in Titles and Headings: After a Colon in a Title.
+- `spelling-words-with-prefixes` Spelling Words with Prefixes: Prefixes That Take a Hyphen.
+
 ## What the Next Grade Builds On
 
 `english-grade-7` builds on this year: tracing an argument grows into writing one with a thesis, evidence paragraphs and a counterclaim; supported claims lead to evidence and reasoning; the explanation of a process and the compare-and-contrast essay lead to the objective summary and the informative essay; grammar moves to active and passive voice, verb moods and parallel structure; and the themes of the restless Earth and living cells go on to the oceans and their ecosystems.
