@@ -16,8 +16,10 @@ export interface HeardWord {
  * client, and the checker reads it.
  */
 export interface Heard {
-  /** text is the words heard, as the service wrote them. */
+  /** text is the words heard, as the service wrote them for reading. */
   readonly text: string;
+  /** lexical is the words heard as said, when the service gives them: numbers and symbols in words, as "fifteen dollars" for "$15". */
+  readonly lexical?: string;
   /** confidence is the service's confidence in the text, from 0 to 1. */
   readonly confidence: number;
   /** seconds is how long the speech lasted. */
@@ -85,6 +87,7 @@ export function parseHeard(response: string): Heard | undefined {
     : undefined;
   return {
     text: o.text,
+    ...(typeof o.lexical === "string" && { lexical: o.lexical }),
     confidence: o.confidence,
     seconds: o.seconds,
     ...(score(o.accuracy) !== undefined && { accuracy: score(o.accuracy) }),
@@ -108,25 +111,41 @@ const CONTRACTIONS: readonly (readonly [RegExp, string])[] = [
   [/\blet's\b/g, "let us"],
 ];
 
-const NUMBERS: Readonly<Record<string, string>> = {
-  "0": "zero",
-  "1": "one",
-  "2": "two",
-  "3": "three",
-  "4": "four",
-  "5": "five",
-  "6": "six",
-  "7": "seven",
-  "8": "eight",
-  "9": "nine",
-  "10": "ten",
-  "11": "eleven",
-  "12": "twelve",
-};
+const ONES = [
+  "zero",
+  "one",
+  "two",
+  "three",
+  "four",
+  "five",
+  "six",
+  "seven",
+  "eight",
+  "nine",
+  "ten",
+  "eleven",
+  "twelve",
+  "thirteen",
+  "fourteen",
+  "fifteen",
+  "sixteen",
+  "seventeen",
+  "eighteen",
+  "nineteen",
+];
+const TENS = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
+
+/** numberWords says a whole number below 100 in words, as "twenty five", or gives it back as it is. */
+function numberWords(w: string): string {
+  if (!/^\d{1,2}$/.test(w)) return w;
+  const n = Number(w);
+  if (n < 20) return ONES[n]!;
+  return n % 10 === 0 ? TENS[n / 10]! : `${TENS[Math.floor(n / 10)]} ${ONES[n % 10]}`;
+}
 
 /**
  * spokenWords turns a text into the words a listener hears: lower case, no
- * punctuation, contractions said in full and small numbers in words, since a
+ * punctuation, contractions said in full and numbers below 100 in words, since a
  * speech service may write either form of what was said.
  */
 export function spokenWords(text: string): string[] {
@@ -137,7 +156,7 @@ export function spokenWords(text: string): string[] {
     .replace(/(^|\s)'|'(\s|$)/g, " ")
     .split(/[\s-]+/u)
     .filter(Boolean)
-    .map((w) => NUMBERS[w] ?? w);
+    .flatMap((w) => numberWords(w).split(" "));
 }
 
 /** heardInOrder is how many words of a reference were heard, in order: the longest common subsequence. */
@@ -185,7 +204,7 @@ export const speechChecker: Checker = {
     const e = expected as unknown as SpeechExpected;
     const heard = parseHeard(response);
     if (!heard) return { correct: false };
-    const said = spokenWords(heard.text);
+    const said = spokenWords(heard.lexical ?? heard.text);
     if (e.mode === "say") {
       const ok = (e.accept ?? []).some((a) => spokenWords(a).join(" ") === said.join(" "));
       return ok ? { correct: true } : { correct: false, feedback: t(`We heard: “${heard.text}”.`, `我们听到的是：“${heard.text}”。`) };
@@ -220,7 +239,7 @@ export const speechChecker: Checker = {
 /** wordsPerMinute is how fast a text was read: the reference's words heard in order, per minute of speech. */
 export function wordsPerMinute(reference: string, heard: Heard): number {
   if (heard.seconds <= 0) return 0;
-  return Math.round((heardInOrder(spokenWords(reference), spokenWords(heard.text)) * 60) / heard.seconds);
+  return Math.round((heardInOrder(spokenWords(reference), spokenWords(heard.lexical ?? heard.text)) * 60) / heard.seconds);
 }
 
 /** speechExpected checks that a checker's data is a SpeechExpected, for the compiler. */

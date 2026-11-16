@@ -175,6 +175,7 @@ export function heardFromAzure(r: AzureResult, seconds: number): Heard {
   });
   return {
     text: best.Display ?? r.DisplayText ?? best.Lexical ?? "",
+    ...(best.Lexical && { lexical: best.Lexical }),
     confidence: best.Confidence ?? 0,
     seconds: r.Duration ? Math.min(seconds, r.Duration / 1e7) : seconds,
     ...(accuracy !== undefined && { accuracy }),

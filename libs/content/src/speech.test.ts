@@ -7,6 +7,8 @@ const heard = (text: string, more: Partial<Heard> = {}) => heardResponse({ text,
 describe("spokenWords", () => {
   it("says contractions in full, numbers in words, and drops punctuation", () => {
     expect(spokenWords("I'm 7, and I can't swim!")).toEqual(["i", "am", "seven", "and", "i", "cannot", "swim"]);
+    expect(spokenWords("It's 15 or 25 minutes.")).toEqual(["it", "is", "fifteen", "or", "twenty", "five", "minutes"]);
+    expect(spokenWords("twenty-five")).toEqual(["twenty", "five"]);
     expect(spokenWords("She doesn’t like well-known songs.")).toEqual(["she", "does", "not", "like", "well", "known", "songs"]);
   });
 
