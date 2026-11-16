@@ -27,6 +27,8 @@ const scenes = [
   ["the clinic", "treats", "children", "on weekdays"],
   ["my father", "cooks", "fish", "on Fridays"],
   ["the paper", "prints", "letters", "in winter"],
+  ["the farm", "sells", "eggs", "on Saturdays"],
+  ["my aunt", "plays", "chess", "in the evening"],
 ] as const;
 
 /** onlyLines place only before the subject, the object and the time, each with what it limits. */
@@ -62,6 +64,29 @@ const nearly = [
     "The library lends only three books at a time.",
   ],
   ["just", "The play lasts an hour.", "The play just lasts an hour.", "The play lasts just an hour."],
+  ["almost", "The fire burned every tree.", "The fire almost burned every tree.", "The fire burned almost every tree."],
+  ["nearly", "They sold all the tickets.", "They nearly sold all the tickets.", "They sold nearly all the tickets."],
+  ["almost", "She answered every question.", "She almost answered every question.", "She answered almost every question."],
+  [
+    "nearly",
+    "We visited every museum in the city.",
+    "We nearly visited every museum in the city.",
+    "We visited nearly every museum in the city.",
+  ],
+  ["only", "The shop accepts cash.", "The shop only accepts cash.", "The shop accepts only cash."],
+  ["just", "I have five dollars.", "I just have five dollars.", "I have just five dollars."],
+  ["almost", "He drank the whole bottle.", "He almost drank the whole bottle.", "He drank almost the whole bottle."],
+  ["nearly", "The rain lasted all week.", "The rain nearly lasted all week.", "The rain lasted nearly all week."],
+  ["only", "The bus runs twice a day.", "The bus only runs twice a day.", "The bus runs only twice a day."],
+  ["almost", "The crowd filled every seat.", "The crowd almost filled every seat.", "The crowd filled almost every seat."],
+  ["nearly", "She knew everyone at the party.", "She nearly knew everyone at the party.", "She knew nearly everyone at the party."],
+  ["just", "We need one more player.", "We just need one more player.", "We need just one more player."],
+  ["almost", "The heat killed all the plants.", "The heat almost killed all the plants.", "The heat killed almost all the plants."],
+  ["only", "The pool opens two days a week.", "The pool only opens two days a week.", "The pool opens only two days a week."],
+  ["nearly", "The snow closed every road.", "The snow nearly closed every road.", "The snow closed nearly every road."],
+  ["almost", "I forgot all the words.", "I almost forgot all the words.", "I forgot almost all the words."],
+  ["just", "The walk takes ten minutes.", "The walk just takes ten minutes.", "The walk takes just ten minutes."],
+  ["nearly", "The team scored every penalty.", "The team nearly scored every penalty.", "The team scored nearly every penalty."],
 ] as const;
 
 const placeLines = join(
@@ -201,6 +226,26 @@ const fronted = [
   ["At the end of the road lies the harbor.", "the harbor", "the road", "lies"],
   ["Under the bridge flowed a slow river.", "a slow river", "the bridge", "flowed"],
   ["Behind the curtain stood the actors.", "the actors", "the curtain", "stood"],
+  ["Through the window came the sound of rain.", "the sound of rain", "the window", "came"],
+  ["Over the wall climbed two boys.", "two boys", "the wall", "climbed"],
+  ["In the corner sat an old man.", "an old man", "the corner", "sat"],
+  ["From the kitchen came a smell of bread.", "a smell of bread", "the kitchen", "came"],
+  ["Up the hill marched the soldiers.", "the soldiers", "the hill", "marched"],
+  ["Near the river lived a poor farmer.", "a poor farmer", "the river", "lived"],
+  ["Around the fire sat the children.", "the children", "the fire", "sat"],
+  ["Along the path grew wild roses.", "wild roses", "the path", "grew"],
+  ["Above the town rose a castle.", "a castle", "the town", "rose"],
+  ["Inside the box lay a silver ring.", "a silver ring", "the box", "lay"],
+  ["Through the forest rode a knight.", "a knight", "the forest", "rode"],
+  ["Outside the gate waited the reporters.", "the reporters", "the gate", "waited"],
+  ["Off the cliff jumped the divers.", "the divers", "the cliff", "jumped"],
+  ["On the shelf sat a dusty clock.", "a dusty clock", "the shelf", "sat"],
+  ["Into the sea plunged the whale.", "the whale", "the sea", "plunged"],
+  ["Beneath the floor lived a family of mice.", "a family of mice", "the floor", "lived"],
+  ["Past the window flew a flock of geese.", "a flock of geese", "the window", "flew"],
+  ["Around the corner came a bus.", "a bus", "the corner", "came"],
+  ["Across the sky streaked a comet.", "a comet", "the sky", "streaked"],
+  ["Between the two houses stood a tall fence.", "a tall fence", "the two houses", "stood"],
 ] as const;
 
 const subjectLines = join(fronted.map((row) => row.join("|")));
@@ -219,6 +264,24 @@ const agreeing = [
   ["Beside the queen ___ her two sons.", "stand", "stands", "standing"],
   ["Not far from the school ___ a library and a pool.", "are", "is", "being"],
   ["Rarely ___ such courage been seen.", "has", "have", "having"],
+  ["On the wall ___ two old maps.", "hang", "hangs", "hanging"],
+  ["Here ___ the book you wanted.", "is", "are", "being"],
+  ["There ___ many reasons to stay.", "are", "is", "being"],
+  ["In the garden ___ a statue of a horse.", "stands", "stand", "standing"],
+  ["Among the papers ___ a letter from her father.", "was", "were", "being"],
+  ["Behind the clouds ___ the sun.", "was", "were", "being"],
+  ["Under the bed ___ two pairs of shoes.", "were", "was", "being"],
+  ["Gone ___ the old farmhouse.", "is", "are", "being"],
+  ["Inside the cave ___ hundreds of bats.", "live", "lives", "living"],
+  ["Next to the bank ___ a bakery and a café.", "are", "is", "being"],
+  ["Seldom ___ the twins agreed on anything.", "have", "has", "having"],
+  ["Along the coast ___ a chain of small islands.", "lies", "lie", "lying"],
+  ["There ___ a key under the mat.", "is", "are", "being"],
+  ["Across the road ___ the new houses.", "stand", "stands", "standing"],
+  ["In the middle of the lake ___ a tiny island.", "sits", "sit", "sitting"],
+  ["Here ___ the twins now.", "come", "comes", "coming"],
+  ["Never ___ the river risen so high.", "has", "have", "having"],
+  ["Above the door ___ a sign and a bell.", "were", "was", "being"],
 ] as const;
 
 const agreementLines = join(agreeing.map((row) => row.join("|")));
@@ -291,6 +354,104 @@ const negatives = [
     "Only later did the truth come out.",
     "Only later the truth came out.",
     "Only later came out the truth.",
+  ],
+  [
+    "She had hardly sat down when the phone rang.",
+    "Hardly had she sat down when the phone rang.",
+    "Hardly she had sat down when the phone rang.",
+    "Hardly had sat she down when the phone rang.",
+  ],
+  [
+    "We had no sooner arrived than it began to rain.",
+    "No sooner had we arrived than it began to rain.",
+    "No sooner we had arrived than it began to rain.",
+    "No sooner had arrived we than it began to rain.",
+  ],
+  [
+    "I have rarely heard such a fine voice.",
+    "Rarely have I heard such a fine voice.",
+    "Rarely I have heard such a fine voice.",
+    "Rarely have heard I such a fine voice.",
+  ],
+  [
+    "He seldom speaks about the war.",
+    "Seldom does he speak about the war.",
+    "Seldom he speaks about the war.",
+    "Seldom speaks does he about the war.",
+  ],
+  [
+    "You should not open this door under any circumstances.",
+    "Under no circumstances should you open this door.",
+    "Under no circumstances you should open this door.",
+    "Under no circumstances should open you this door.",
+  ],
+  ["She did not cry at all.", "Not once did she cry.", "Not once she cried.", "Not once cried did she."],
+  ["They had never been so happy.", "Never had they been so happy.", "Never they had been so happy.", "Never had been they so happy."],
+  [
+    "We understood the problem only after the meeting.",
+    "Only after the meeting did we understand the problem.",
+    "Only after the meeting we understood the problem.",
+    "Only after the meeting understood we the problem.",
+  ],
+  [
+    "He not only sings but also dances.",
+    "Not only does he sing, but he also dances.",
+    "Not only he sings, but he also dances.",
+    "Not only sings does he, but he also dances.",
+  ],
+  [
+    "I had scarcely closed my eyes when the alarm went off.",
+    "Scarcely had I closed my eyes when the alarm went off.",
+    "Scarcely I had closed my eyes when the alarm went off.",
+    "Scarcely had closed I my eyes when the alarm went off.",
+  ],
+  [
+    "You will find a better friend nowhere.",
+    "Nowhere will you find a better friend.",
+    "Nowhere you will find a better friend.",
+    "Nowhere will find you a better friend.",
+  ],
+  [
+    "She realized the truth only when she read the letter.",
+    "Only when she read the letter did she realize the truth.",
+    "Only when she read the letter she realized the truth.",
+    "Only when she read the letter realized she the truth.",
+  ],
+  [
+    "We have never seen such a storm.",
+    "Never have we seen such a storm.",
+    "Never we have seen such a storm.",
+    "Never have seen we such a storm.",
+  ],
+  [
+    "The team rarely loses at home.",
+    "Rarely does the team lose at home.",
+    "Rarely the team loses at home.",
+    "Rarely loses does the team at home.",
+  ],
+  [
+    "I did not suspect a thing for a moment.",
+    "Not for a moment did I suspect a thing.",
+    "Not for a moment I suspected a thing.",
+    "Not for a moment suspected did I a thing.",
+  ],
+  [
+    "He had barely left when the guests arrived.",
+    "Barely had he left when the guests arrived.",
+    "Barely he had left when the guests arrived.",
+    "Barely had left he when the guests arrived.",
+  ],
+  [
+    "You can enter the lab only with a pass.",
+    "Only with a pass can you enter the lab.",
+    "Only with a pass you can enter the lab.",
+    "Only with a pass can enter you the lab.",
+  ],
+  [
+    "They little suspected what was coming.",
+    "Little did they suspect what was coming.",
+    "Little they suspected what was coming.",
+    "Little suspected did they what was coming.",
   ],
 ] as const;
 
@@ -382,6 +543,26 @@ const hidden = [
   ["Workers were let go without notice.", "the company", "The company let workers go without notice."],
   ["The documents were destroyed.", "the minister's staff", "The minister's staff destroyed the documents."],
   ["Prices were raised twice this year.", "the landlords", "The landlords raised prices twice this year."],
+  ["The forest was cleared for cattle.", "the ranchers", "The ranchers cleared the forest for cattle."],
+  ["The emails were deleted before the inquiry.", "the director", "The director deleted the emails before the inquiry."],
+  ["The tenants were evicted in winter.", "the owners", "The owners evicted the tenants in winter."],
+  ["The records were changed after the vote.", "the officials", "The officials changed the records after the vote."],
+  ["The warning signs were ignored.", "the managers", "The managers ignored the warning signs."],
+  ["The players were paid less than promised.", "the club", "The club paid the players less than promised."],
+  ["The park was sold to developers.", "the mayor", "The mayor sold the park to developers."],
+  ["The test results were hidden from the public.", "the company", "The company hid the test results from the public."],
+  ["The strikers were threatened with dismissal.", "the owners", "The owners threatened the strikers with dismissal."],
+  ["The waste was dumped in the river.", "the factory", "The factory dumped the waste in the river."],
+  ["The library's budget was cut in half.", "the council", "The council cut the library's budget in half."],
+  ["The complaints were never answered.", "the landlord", "The landlord never answered the complaints."],
+  ["The old trees were cut down overnight.", "the builders", "The builders cut down the old trees overnight."],
+  ["The protest was broken up.", "the police", "The police broke up the protest."],
+  ["The data was sold to advertisers.", "the app's makers", "The app's makers sold the data to advertisers."],
+  ["The safety checks were skipped.", "the airline", "The airline skipped the safety checks."],
+  ["The ballots were lost.", "the election staff", "The election staff lost the ballots."],
+  ["The prisoners were moved without warning.", "the guards", "The guards moved the prisoners without warning."],
+  ["The fees were raised without notice.", "the bank", "The bank raised the fees without notice."],
+  ["The reporter's notes were taken.", "the agents", "The agents took the reporter's notes."],
 ] as const;
 
 /** apt are passives that suit their purpose: the actor is unknown, obvious or unimportant. */
@@ -413,12 +594,10 @@ const revealLines = join(
 );
 
 const whyLines = join([
-  ...hidden
-    .slice(0, 6)
-    .map(
-      ([p, agent]) =>
-        `A press release about a scandal says: "${p}" What does the passive do here?|It leaves out who did it, ${agent}, so no one is blamed.|It shows the action is a scientific process.|It names who did it more clearly than the active would.`,
-    ),
+  ...hidden.map(
+    ([p, agent]) =>
+      `A press release about a scandal says: "${p}" What does the passive do here?|It leaves out who did it, ${agent}, so no one is blamed.|It shows the action is a scientific process.|It names who did it more clearly than the active would.`,
+  ),
   ...[
     [
       'A lab report says: "The samples were heated to 100 degrees." Why is the passive apt?',

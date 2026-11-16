@@ -36,6 +36,21 @@ const terms = [
   ],
   ["A paradox", "is when a statement seems to contradict itself", "is a statement that seems to contradict itself"],
   ["An alibi", "is where you prove you were somewhere else", "is proof that a suspect was somewhere else"],
+  ["A metaphor", "is when you call one thing another", "is a figure of speech that calls one thing another"],
+  ["A famine", "is when there is not enough food in a region", "is a severe shortage of food in a region"],
+  ["Migration", "is when animals move to another region each year", "is the seasonal movement of animals to another region"],
+  ["A veto", "is when a leader blocks a law", "is a leader's power to block a law"],
+  ["Evaporation", "is when water turns into vapor", "is the change of water into vapor"],
+  ["A boycott", "is where people refuse to buy from a company", "is a refusal to buy from a company as a protest"],
+  ["Censorship", "is when a government blocks what people may read", "is the control of what people may read or say"],
+  ["A census", "is when a country counts its people", "is an official count of a country's people"],
+  ["Hibernation", "is when animals sleep through the winter", "is a deep sleep in which some animals pass the winter"],
+  ["A tariff", "is when a country taxes imported goods", "is a tax on imported goods"],
+  ["Foreshadowing", "is where a writer hints at what will happen", "is a hint of what will happen later in a story"],
+  ["An epidemic", "is when a disease spreads quickly through a community", "is the rapid spread of a disease through a community"],
+  ["Inertia", "is when an object keeps doing what it is doing", "is the tendency of an object to keep its motion"],
+  ["A strike", "is where workers refuse to work", "is a refusal by workers to work until demands are met"],
+  ["Hyperbole", "is when a writer exaggerates for effect", "is exaggeration used for effect"],
 ] as const;
 
 /** reasons are a claim and its reason, joined faultily with the reason is because and soundly. */
@@ -213,6 +228,24 @@ const owned = [
   ["The rules of chess", "checkers", "harder"],
   ["The economy of Germany", "Greece", "stronger"],
   ["This year's harvest", "last year", "smaller"],
+  ["Her handwriting", "her brother", "neater"],
+  ["The roads of Rome", "Athens", "busier"],
+  ["My phone's battery", "my sister", "weaker"],
+  ["The weather in Seattle", "Phoenix", "wetter"],
+  ["Our team's defense", "the champions", "stronger"],
+  ["The rivers of Brazil", "Spain", "longer"],
+  ["A whale's heart", "an elephant", "heavier"],
+  ["The streets of Venice", "Madrid", "narrower"],
+  ["Her voice", "a professional singer", "clearer"],
+  ["The price of bread in Oslo", "Warsaw", "higher"],
+  ["This car's engine", "the old model", "quieter"],
+  ["The paintings of Monet", "Picasso", "softer"],
+  ["My dog's bark", "the neighbor's dog", "louder"],
+  ["The winters of Canada", "Mexico", "colder"],
+  ["The author's first book", "her rival", "better"],
+  ["The language of the law", "everyday speech", "more formal"],
+  ["A giraffe's neck", "a camel", "longer"],
+  ["The schools of Finland", "many countries", "better funded"],
 ] as const;
 
 /** fixedOther are the right revision of the second half of each comparison in owned. */
@@ -229,6 +262,24 @@ const fixedOther: Record<string, string> = {
   checkers: "those of checkers",
   Greece: "that of Greece",
   "last year": "last year's",
+  "her brother": "her brother's",
+  Athens: "those of Athens",
+  "my sister": "my sister's",
+  Phoenix: "that in Phoenix",
+  "the champions": "the champions'",
+  Spain: "those of Spain",
+  "an elephant": "an elephant's",
+  Madrid: "those of Madrid",
+  "a professional singer": "a professional singer's",
+  Warsaw: "that in Warsaw",
+  "the old model": "the old model's",
+  Picasso: "those of Picasso",
+  "the neighbor's dog": "that of the neighbor's dog",
+  Mexico: "those of Mexico",
+  "her rival": "her rival's",
+  "everyday speech": "that of everyday speech",
+  "a camel": "a camel's",
+  "many countries": "those of many countries",
 };
 
 /** ranked are a member of a group and the group it is compared with. */
@@ -243,9 +294,12 @@ const ranked = [
   ["Shakespeare is quoted more than", "English writer"],
 ] as const;
 
+/** be is the verb that agrees with the head noun of a compared phrase. */
+const be = (phrase: string) => ((phrase.split(" of ")[0]!.split(" ").at(-1) ?? "").endsWith("s") ? "are" : "is");
+
 const comparisonLines = join([
-  ...owned.map(([a, b, adj]) => `${a} is ${adj} than ${b}.|illogical: unlike things compared`),
-  ...owned.map(([a, b, adj]) => `${a} is ${adj} than ${fixedOther[b]}.|logical`),
+  ...owned.map(([a, b, adj]) => `${a} ${be(a)} ${adj} than ${b}.|illogical: unlike things compared`),
+  ...owned.map(([a, b, adj]) => `${a} ${be(a)} ${adj} than ${fixedOther[b]}.|logical`),
   ...ranked.map(([a, group]) => `${a} any ${group}.|illogical: compared with itself`),
   ...ranked.map(([a, group]) => `${a} any other ${group}.|logical`),
   "I like her more than my sister.|ambiguous: two meanings",
@@ -265,12 +319,12 @@ const comparisonLines = join([
 const comparisonFixes = join([
   ...owned.map(
     ([a, b, adj]) =>
-      `${a} is ${adj} than ${b}.|${a} is ${adj} than ${fixedOther[b]}.|${a} is much ${adj} than ${b}.|${a} is ${adj} than ${b} is.`,
+      `${a} ${be(a)} ${adj} than ${b}.|${a} ${be(a)} ${adj} than ${fixedOther[b]}.|${a} ${be(a)} much ${adj} than ${b}.|${a} ${be(a)} ${adj} than ${b} is.`,
   ),
   ...ranked.map(([a, group]) => `${a} any ${group}.|${a} any other ${group}.|${a} any ${group} at all.|${a} every ${group}.`),
 ]);
 
-const comparisonChoices = join(owned.map(([a, b, adj]) => `${a} is ${adj} than ___.|${fixedOther[b]}|${b}|${b} is`));
+const comparisonChoices = join(owned.map(([a, b, adj]) => `${a} ${be(a)} ${adj} than ___.|${fixedOther[b]}|${b}|${b} is`));
 
 const comparisons = topic("grammar", {
   id: "illogical-comparisons",
@@ -379,6 +433,24 @@ const contrasts = [
   ["the river was high", "the high water", "the ferry crossed safely"],
   ["she was nervous", "her nerves", "she gave a fine speech"],
   ["the house was old", "its age", "it sold quickly"],
+  ["the sea was rough", "the rough sea", "the boat reached the island"],
+  ["he had a fever", "his fever", "he sat the exam"],
+  ["the shop was small", "its size", "it sold everything we needed"],
+  ["the forecast was bad", "the bad forecast", "the picnic went ahead"],
+  ["she was the youngest", "her youth", "she led the team"],
+  ["the book was long", "its length", "I read it in a weekend"],
+  ["the pay was low", "the low pay", "many people applied"],
+  ["the hall was cold", "the cold", "the audience stayed until the end"],
+  ["the town was poor", "its poverty", "it built a fine library"],
+  ["the coach was strict", "his strictness", "the players liked him"],
+  ["the film was slow", "its slow pace", "it won three awards"],
+  ["the path was steep", "the steep path", "the children climbed it easily"],
+  ["they were outnumbered", "the odds", "they won the battle"],
+  ["the hotel was cheap", "the low price", "the rooms were clean"],
+  ["the test was hard", "its difficulty", "most students passed"],
+  ["the dog was old", "its age", "it chased the ball all day"],
+  ["the lights went out", "the power cut", "the concert continued"],
+  ["the city was crowded", "the crowds", "we found a quiet café"],
 ] as const;
 
 const cap = (s: string) => `${s[0]!.toUpperCase()}${s.slice(1)}`;
@@ -539,6 +611,24 @@ const stacks = [
   ["the youth soccer league registration fee increase", "the increase in the fee for registering in the youth soccer league", "increase"],
   ["the airport security screening wait times", "the time travelers wait for security screening at the airport", "times"],
   ["the climate change research funding decision", "the decision on funding research into climate change", "decision"],
+  ["the public transport ticket price review", "the review of the prices of public transport tickets", "review"],
+  ["the hospital emergency room waiting times", "the time patients wait in the hospital's emergency room", "times"],
+  ["the school bus safety inspection report", "the report on inspecting the safety of school buses", "report"],
+  ["the forest fire prevention campaign launch", "the launch of the campaign to prevent forest fires", "launch"],
+  ["the city council budget vote delay", "the delay in the city council's vote on the budget", "delay"],
+  ["the student exam results release date", "the date for releasing the results of students' exams", "date"],
+  ["the town water pipe replacement plan", "the plan to replace the town's water pipes", "plan"],
+  ["the online banking password reset process", "the process for resetting passwords for online banking", "process"],
+  ["the factory worker health insurance costs", "the costs of health insurance for factory workers", "costs"],
+  ["the national park visitor fee changes", "the changes to the fees for visitors to national parks", "changes"],
+  ["the museum ticket discount scheme review", "the review of the scheme that discounts museum tickets", "review"],
+  ["the road accident data collection method", "the method for collecting data on road accidents", "method"],
+  ["the government housing loan approval rules", "the rules for approving government loans for housing", "rules"],
+  ["the coastal erosion protection wall project", "the project to build a wall that protects the coast from erosion", "project"],
+  ["the teacher training course enrollment numbers", "the number of people enrolling in courses that train teachers", "numbers"],
+  ["the airport noise complaint response time", "the time the airport takes to respond to complaints about noise", "time"],
+  ["the farm animal welfare law reform", "the reform of the law on the welfare of farm animals", "reform"],
+  ["the child car seat safety rules", "the safety rules for children's car seats", "rules"],
 ] as const;
 
 /** fine are compound nouns of two or three words that read clearly. */
@@ -669,6 +759,13 @@ const places = [
   ["Perth", "Australia"],
   ["Quebec City", "Canada"],
   ["Kraków", "Poland"],
+  ["Seville", "Spain"],
+  ["Munich", "Germany"],
+  ["Bergen", "Norway"],
+  ["Cusco", "Peru"],
+  ["Hanoi", "Vietnam"],
+  ["Nairobi", "Kenya"],
+  ["Adelaide", "Australia"],
 ] as const;
 
 /** people are a person and their role. */
@@ -681,6 +778,13 @@ const people = [
   ["Sara Khan", "a local author"],
   ["Ravi Rao", "the treasurer"],
   ["Lena Berg", "the chief engineer"],
+  ["Omar Haddad", "the head nurse"],
+  ["Mei Tanaka", "the band's drummer"],
+  ["Dr. Patel", "the dentist"],
+  ["Ms. Novak", "the librarian"],
+  ["Jon Reyes", "the team doctor"],
+  ["Ines Duarte", "the school's chef"],
+  ["Mr. Mensah", "the head of science"],
 ] as const;
 
 const triples = <T>(items: readonly T[]): (readonly [T, T, T])[] =>
@@ -734,6 +838,28 @@ const independents = [
   ["The witness lied", "moreover", "she hid the evidence"],
   ["The bridge was old", "however", "it carried heavy trucks"],
   ["The vote was close", "therefore", "a recount was ordered"],
+  ["The museum was crowded", "however", "we saw every painting"],
+  ["The engine failed", "consequently", "the plane turned back"],
+  ["The team trained hard", "nevertheless", "it lost the final"],
+  ["The rain stopped", "therefore", "the game resumed"],
+  ["The town grew quickly", "as a result", "new schools were built"],
+  ["The report was late", "moreover", "it was full of errors"],
+  ["The rent was high", "however", "the flat was tiny"],
+  ["The river rose", "consequently", "the farms were flooded"],
+  ["The singer was ill", "nevertheless", "she gave the concert"],
+  ["The bank cut its rates", "as a result", "more people borrowed"],
+  ["The plan was cheap", "moreover", "it was quick to build"],
+  ["The map was old", "therefore", "we got lost twice"],
+  ["The film was long", "however", "nobody left early"],
+  ["The factory closed", "consequently", "hundreds lost their jobs"],
+  ["The evidence was clear", "nevertheless", "the jury was divided"],
+  ["The roads were icy", "as a result", "schools stayed closed"],
+  ["The hotel was cheap", "moreover", "it was close to the beach"],
+  ["The coach was ill", "therefore", "his assistant led the team"],
+  ["The question was simple", "however", "few people answered it"],
+  ["The storm grew stronger", "consequently", "the ferry was cancelled"],
+  ["The offer was generous", "nevertheless", "she turned it down"],
+  ["The wall was weak", "as a result", "it collapsed in the storm"],
 ] as const;
 
 const adverbChoices = join(independents.map(([a, adv, b]) => `${a} ___ ${adv}, ${b}.|;|,|:`));

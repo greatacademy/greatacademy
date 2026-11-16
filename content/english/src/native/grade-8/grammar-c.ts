@@ -31,6 +31,26 @@ const afterVerb = choose(
   The band plans ___ a new album.|to record|recording|record
   He keeps ___ the same mistake.|making|to make|make
   We agreed ___ the costs.|to share|sharing|share
+  He enjoys ___ old movies.|watching|to watch|watch
+  She decided ___ a new bike.|to buy|buying|buy
+  They finished ___ the walls at noon.|painting|to paint|paint
+  We hope ___ you soon.|to see|seeing|see
+  I avoid ___ on icy roads.|driving|to drive|drive
+  He promised ___ on time.|to arrive|arriving|arrive
+  She keeps ___ about the trip.|talking|to talk|talk
+  We plan ___ the museum on Sunday.|to visit|visiting|visit
+  They practiced ___ the song all week.|singing|to sing|sing
+  I want ___ how to fly a kite.|to learn|learning|learn
+  He suggested ___ a break.|taking|to take|take
+  She agreed ___ us with the project.|to help|helping|help
+  We missed ___ the sunrise.|seeing|to see|see
+  They refused ___ the old rules.|to follow|following|follow
+  I don't mind ___ the dishes.|washing|to wash|wash
+  He learned ___ at age five.|to read|reading|read
+  She gave up ___ sweets for a month.|eating|to eat|eat
+  We expect ___ by ten.|to finish|finishing|finish
+  They considered ___ to a bigger house.|moving|to move|move
+  I need ___ more water.|to drink|drinking|drink
   `,
   (right, shown) => [
     `"${shown.replace("___", right)}": this verb takes ${right.startsWith("to ") ? "an infinitive" : "a gerund"} as its object.`,
@@ -61,6 +81,26 @@ const gerundJob = choose(
   We enjoyed hiking in the hills.|object of a verb|subject|object of a preposition
   Thank you for helping me.|object of a preposition|subject|object of a verb
   Winning the cup was a dream.|subject|object of a verb|object of a preposition
+  Running is my favorite sport.|subject|object of a verb|object of a preposition
+  I enjoy running in the park.|object of a verb|subject|object of a preposition
+  She is tired of running every day.|object of a preposition|subject|object of a verb
+  Dancing makes her happy.|subject|object of a verb|object of a preposition
+  He hates waiting in line.|object of a verb|subject|object of a preposition
+  We talked about moving to the coast.|object of a preposition|subject|object of a verb
+  Cooking dinner takes an hour.|subject|object of a verb|object of a preposition
+  They finished painting the shed.|object of a verb|subject|object of a preposition
+  Writing letters is a lost art.|subject|object of a verb|object of a preposition
+  My dog loves chasing balls.|object of a verb|subject|object of a preposition
+  She left without saying goodbye.|object of a preposition|subject|object of a verb
+  Gardening relaxes my grandmother.|subject|object of a verb|object of a preposition
+  I started learning French last year.|object of a verb|subject|object of a preposition
+  He is afraid of flying.|object of a preposition|subject|object of a verb
+  Climbing that hill was hard.|subject|object of a verb|object of a preposition
+  We avoided driving at night.|object of a verb|subject|object of a preposition
+  She dreams of becoming a pilot.|object of a preposition|subject|object of a verb
+  Skating on thin ice is dangerous.|subject|object of a verb|object of a preposition
+  They kept laughing all night.|object of a verb|subject|object of a preposition
+  We are excited about visiting the zoo.|object of a preposition|subject|object of a verb
   `,
   (right) => [
     `The gerund here is the **${right}**.`,
@@ -91,6 +131,10 @@ const compoundComplex = label(
       "The dog barked when the bell rang, so we opened the door.",
       "Because the road was closed, we turned back, and we took the long way.",
       "She read the letter that her aunt had sent, and then she smiled.",
+      "After the game ended, the fans cheered, and the players waved.",
+      "We stayed inside while it snowed, but the kids wanted to play.",
+      "The cake that Grandma baked was delicious, and everyone asked for more.",
+      "If you finish early, you can read, or you can draw.",
     ].map((s) => `${s}|compound-complex`),
     ...[
       "The rain stopped, and we went out.",
@@ -99,6 +143,10 @@ const compoundComplex = label(
       "The dog barked, so we opened the door.",
       "We turned back, and we took the long way.",
       "She read the letter, and then she smiled.",
+      "The game ended, and the fans cheered.",
+      "It snowed all day, but the kids wanted to play.",
+      "Grandma baked a cake; everyone asked for more.",
+      "You can read, or you can draw.",
     ].map((s) => `${s}|compound`),
     ...[
       "When the rain stopped, we went out.",
@@ -107,6 +155,10 @@ const compoundComplex = label(
       "The dog barked when the bell rang.",
       "Because the road was closed, we turned back.",
       "She read the letter that her aunt had sent.",
+      "After the game ended, the fans cheered.",
+      "We stayed inside while it snowed.",
+      "The cake that Grandma baked was delicious.",
+      "If you finish early, you can read.",
     ].map((s) => `${s}|complex`),
   ]),
   {
@@ -154,6 +206,26 @@ const thatComma = choose(
       ["The road", "that leads to the lake is steep", "The road"],
       ["Scientists found", "that the ice is melting"],
       ["The coat", "that I wanted was sold", "The coat"],
+      ["We noticed", "that the door was open"],
+      ["The house", "that we rented had a garden", "The house"],
+      ["He explained", "that the bus was late"],
+      ["The cake", "that she baked was delicious", "The cake"],
+      ["I believe", "that honesty matters"],
+      ["The dog", "that lives next door barks at night", "The dog"],
+      ["They learned", "that the museum was free"],
+      ["The bike", "that he fixed works again", "The bike"],
+      ["She promised", "that she would call"],
+      ["The letter", "that came today is for you", "The letter"],
+      ["We discovered", "that the cave was deep"],
+      ["The path", "that we chose was muddy", "The path"],
+      ["My mom thinks", "that I should rest"],
+      ["The plant", "that you gave me is growing", "The plant"],
+      ["He admitted", "that he was wrong"],
+      ["The movie", "that we watched was scary", "The movie"],
+      ["The teacher announced", "that the test was moved"],
+      ["The jacket", "that I borrowed was warm", "The jacket"],
+      ["We heard", "that the bridge had reopened"],
+      ["The game", "that they played lasted hours", "The game"],
     ].map(([a = "", b = ""]) => `${a} / ${b}|${a} ${b}.|${a}, ${b}.|${a} ${b.replace(/^that /u, "that, ")}.`),
   ),
   (right) => [`"${right}" joins the *that* clause with no comma.`, `“${right}”连接 *that* 从句时没有用逗号。`],
@@ -176,15 +248,35 @@ const wrongConjunction = choose(
   ["Which revision states the relation correctly?", "哪个修改正确地表达了两者的关系？"],
   `
   Because it was raining, we played outside.|Although it was raining, we played outside.|Since it was raining, we played outside.|Until it was raining, we played outside.
-  Although she studied hard, she passed the test.|Because she studied hard, she passed the test.|Unless she studied hard, she passed the test.|Even though she studied hard, she passed the test.
-  If the bell rang, the students left the room.|When the bell rang, the students left the room.|Although the bell rang, the students left the room.|Unless the bell rang, the students left the room.
+  Although she studied hard, she passed the test.|Because she studied hard, she passed the test.|Even though she studied hard, she passed the test.|Unless she studied hard, she passed the test.
+  If the bell rang, the students left the room.|When the bell rang, the students left the room.|Unless the bell rang, the students left the room.|Although the bell rang, the students left the room.
   Since he was tired, he kept running.|Though he was tired, he kept running.|Because he was tired, he kept running.|Once he was tired, he kept running.
-  Unless we leave now, we will catch the train.|If we leave now, we will catch the train.|Although we leave now, we will catch the train.|Unless we leave soon, we will catch the train.
+  Unless we leave now, we will catch the train.|If we leave now, we will catch the train.|Unless we leave soon, we will catch the train.|Although we leave now, we will catch the train.
   Even though the shop was closed, we went home.|Because the shop was closed, we went home.|Although the shop was closed, we went home.|Unless the shop was closed, we went home.
-  Before the storm passed, we went outside.|After the storm passed, we went outside.|Although the storm passed, we went outside.|Unless the storm passed, we went outside.
-  Because the film was long, nobody left early.|Although the film was long, nobody left early.|Since the film was long, nobody left early.|As the film was long, nobody left early.
-  While you finish your homework, you cannot play.|Until you finish your homework, you cannot play.|Because you finish your homework, you cannot play.|Although you finish your homework, you cannot play.
-  Although the river flooded, the farmers moved their animals.|Because the river flooded, the farmers moved their animals.|Unless the river flooded, the farmers moved their animals.|Though the river flooded, the farmers moved their animals.
+  Before the storm passed, we went outside.|After the storm passed, we went outside.|Until the storm passed, we went outside.|Although the storm passed, we went outside.
+  Because the film was long, nobody left early.|Although the film was long, nobody left early.|Since the film was long, nobody left early.|Until the film was long, nobody left early.
+  While you finish your homework, you cannot play.|Until you finish your homework, you cannot play.|As you finish your homework, you cannot play.|Because you finish your homework, you cannot play.
+  Although the river flooded, the farmers moved their animals.|Because the river flooded, the farmers moved their animals.|Though the river flooded, the farmers moved their animals.|Unless the river flooded, the farmers moved their animals.
+  Because the soup was cold, he ate it.|Although the soup was cold, he ate it.|Since the soup was cold, he ate it.|Until the soup was cold, he ate it.
+  Although we left early, we arrived on time.|Because we left early, we arrived on time.|Though we left early, we arrived on time.|Unless we left early, we arrived on time.
+  If the movie ended, everyone clapped.|When the movie ended, everyone clapped.|Unless the movie ended, everyone clapped.|Although the movie ended, everyone clapped.
+  Since she was afraid, she climbed the ladder.|Though she was afraid, she climbed the ladder.|Because she was afraid, she climbed the ladder.|Once she was afraid, she climbed the ladder.
+  Before the game ended, the fans went home.|After the game ended, the fans went home.|Until the game ended, the fans went home.|Although the game ended, the fans went home.
+  Because the shop was crowded, we found a seat.|Although the shop was crowded, we found a seat.|Since the shop was crowded, we found a seat.|Until the shop was crowded, we found a seat.
+  While you clean your room, you cannot go out.|Until you clean your room, you cannot go out.|As you clean your room, you cannot go out.|Because you clean your room, you cannot go out.
+  Although the bridge was closed, we took the ferry.|Because the bridge was closed, we took the ferry.|Though the bridge was closed, we took the ferry.|Unless the bridge was closed, we took the ferry.
+  Because he was hungry, he skipped lunch.|Although he was hungry, he skipped lunch.|Since he was hungry, he skipped lunch.|Until he was hungry, he skipped lunch.
+  Although it was sunny, we wore sunscreen.|Because it was sunny, we wore sunscreen.|Even though it was sunny, we wore sunscreen.|Unless it was sunny, we wore sunscreen.
+  If the lights went out, we lit candles last night.|When the lights went out, we lit candles last night.|Unless the lights went out, we lit candles last night.|Although the lights went out, we lit candles last night.
+  Since the team lost, they kept smiling.|Though the team lost, they kept smiling.|Because the team lost, they kept smiling.|Once the team lost, they kept smiling.
+  Before the paint dried, we hung the picture.|After the paint dried, we hung the picture.|Until the paint dried, we hung the picture.|Although the paint dried, we hung the picture.
+  Because the hill was steep, the old man reached the top.|Although the hill was steep, the old man reached the top.|Since the hill was steep, the old man reached the top.|Until the hill was steep, the old man reached the top.
+  While you return the book, you cannot borrow another.|Until you return the book, you cannot borrow another.|As you return the book, you cannot borrow another.|Because you return the book, you cannot borrow another.
+  Although the baby was tired, she fell asleep quickly.|Because the baby was tired, she fell asleep quickly.|Though the baby was tired, she fell asleep quickly.|Unless the baby was tired, she fell asleep quickly.
+  Because the water was freezing, they swam anyway.|Although the water was freezing, they swam anyway.|Since the water was freezing, they swam anyway.|Until the water was freezing, they swam anyway.
+  Although the alarm rang, we left the building at once.|Because the alarm rang, we left the building at once.|Even though the alarm rang, we left the building at once.|Unless the alarm rang, we left the building at once.
+  Before the guests ate, we washed their dirty plates.|After the guests ate, we washed their dirty plates.|Until the guests ate, we washed their dirty plates.|Although the guests ate, we washed their dirty plates.
+  Since the price was high, she bought the coat.|Though the price was high, she bought the coat.|Because the price was high, she bought the coat.|Once the price was high, she bought the coat.
   `,
   (right) => [`"${right}" states the relation the two clauses actually have.`, `“${right}”表达了两个分句之间实际的关系。`],
   [
@@ -205,6 +297,26 @@ const woven = [
   ["the report", "a slow but steady recovery"],
   ["the judge", "a fair and careful decision"],
   ["the guide", "the oldest bridge in the region"],
+  ["Senator Ruiz", "a turning point for the state"],
+  ["the critic", "a bold and beautiful album"],
+  ["Professor Hale", "the clearest proof we have"],
+  ["the newspaper", "a night the town will never forget"],
+  ["the scientist", "a small step toward a cure"],
+  ["Coach Rivera", "the best defense in the league"],
+  ["the poet", "a city made of light"],
+  ["the manager", "a simple plan that works"],
+  ["Governor Kim", "a promise kept"],
+  ["the historian", "the most famous battle of the war"],
+  ["the chef", "a dish full of surprises"],
+  ["the article", "a quiet revolution in farming"],
+  ["Mayor Grant", "a park for everyone"],
+  ["the referee", "a clean and fair match"],
+  ["the director", "a film about courage"],
+  ["the teacher", "a class that loves to read"],
+  ["Dr. Patel", "a rare but treatable illness"],
+  ["the magazine", "the trip of a lifetime"],
+  ["the singer", "a song about my mother"],
+  ["the explorer", "the coldest place on earth"],
 ] as const;
 
 const wovenLines = join(
@@ -253,6 +365,26 @@ const wishPast = choose(
   I live far from the sea. I wish I ___ near it.|lived|had lived|would live
   She forgot his birthday. She wishes she ___.|had remembered|remembered|would remember
   We can't swim. We wish we ___ swim.|could|could have|would
+  I broke the vase. I wish I ___ more careful.|had been|was|would be
+  He shouted at his friend. He wishes he ___.|had not shouted|did not shout|would not shout
+  We missed the concert. I wish we ___.|had gone|went|would go
+  She lost her ring. She wishes she ___ it off.|had not taken|did not take|would not take
+  I can't play the guitar. I wish I ___ play it.|could|could have|would
+  It is raining. I wish it ___ sunny.|were|had been|would be
+  They ate all the cake. They wish they ___ some.|had saved|saved|would save
+  I don't have a dog. I wish I ___ one.|had|had had|would have
+  He forgot his lines. He wishes he ___ more.|had practiced|practiced|would practice
+  I told the secret. I wish I ___ quiet.|had kept|kept|would keep
+  She lives in a small flat. She wishes she ___ a garden.|had|had had|would have
+  We sold the old car. We wish we ___ it.|had kept|kept|would keep
+  I am not good at math. I wish I ___ better at it.|were|had been|would be
+  He didn't call his grandma. He wishes he ___ her.|had called|called|would call
+  They don't speak Spanish. They wish they ___ it.|spoke|had spoken|would speak
+  I stayed up too late. I wish I ___ to bed earlier.|had gone|went|would go
+  She didn't bring a coat. She wishes she ___ one.|had brought|brought|would bring
+  We don't live near our cousins. We wish we ___ closer.|lived|had lived|would live
+  I didn't read the instructions. I wish I ___ them.|had read|read|would read
+  He wasn't at the party. He wishes he ___ there.|had been|was|would be
   `,
   (right, shown) => [
     `"${shown.replace("___", right)}": a wish about ${right.startsWith("had") ? "the past takes the past perfect" : "the present takes the past form"}.`,
@@ -283,6 +415,26 @@ const repeatTo = choose(
   Our club aims / read / discuss / write|Our club aims to read, discuss and write.|Our club aims to read, discuss and to write.|Our club aims to read, to discuss and write.
   She learned / sail / fish / swim|She learned to sail, to fish and to swim.|She learned to sail, fish and to swim.|She learned to sail, to fish and swim.
   We need / plan / measure / cut|We need to plan, measure and cut.|We need to plan, measure and to cut.|We need to plan, to measure and cut.
+  He hopes / win / travel / rest|He hopes to win, travel and rest.|He hopes to win, travel and to rest.|He hopes to win, to travel and rest.
+  They decided / paint / clean / fix the fence|They decided to paint, to clean and to fix the fence.|They decided to paint, clean and to fix the fence.|They decided to paint, to clean and fix the fence.
+  I love / sing / dance / act|I love to sing, dance and act.|I love to sing, dance and to act.|I love to sing, to dance and act.
+  We want / explore / camp / fish|We want to explore, to camp and to fish.|We want to explore, camp and to fish.|We want to explore, to camp and fish.
+  She needs / rest / eat / drink water|She needs to rest, eat and drink water.|She needs to rest, eat and to drink water.|She needs to rest, to eat and drink water.
+  Our aim is / teach / inspire / help|Our aim is to teach, to inspire and to help.|Our aim is to teach, inspire and to help.|Our aim is to teach, to inspire and help.
+  He tried / run / jump / climb|He tried to run, jump and climb.|He tried to run, jump and to climb.|He tried to run, to jump and climb.
+  The plan is / save / invest / spend wisely|The plan is to save, to invest and to spend wisely.|The plan is to save, invest and to spend wisely.|The plan is to save, to invest and spend wisely.
+  They like / read / talk / laugh|They like to read, talk and laugh.|They like to read, talk and to laugh.|They like to read, to talk and laugh.
+  I came / see / hear / understand|I came to see, to hear and to understand.|I came to see, hear and to understand.|I came to see, to hear and understand.
+  She wants / swim / surf / sail|She wants to swim, surf and sail.|She wants to swim, surf and to sail.|She wants to swim, to surf and sail.
+  We hope / grow / change / improve|We hope to grow, to change and to improve.|We hope to grow, change and to improve.|We hope to grow, to change and improve.
+  He learned / cook / bake / grill|He learned to cook, bake and grill.|He learned to cook, bake and to grill.|He learned to cook, to bake and grill.
+  The goal is / listen / think / respond|The goal is to listen, to think and to respond.|The goal is to listen, think and to respond.|The goal is to listen, to think and respond.
+  I promised / call / write / visit|I promised to call, write and visit.|I promised to call, write and to visit.|I promised to call, to write and visit.
+  They agreed / share / help / wait|They agreed to share, to help and to wait.|They agreed to share, help and to wait.|They agreed to share, to help and wait.
+  She chose / stay / study / work|She chose to stay, study and work.|She chose to stay, study and to work.|She chose to stay, to study and work.
+  We aim / build / test / launch|We aim to build, to test and to launch.|We aim to build, test and to launch.|We aim to build, to test and launch.
+  He likes / draw / paint / sculpt|He likes to draw, paint and sculpt.|He likes to draw, paint and to sculpt.|He likes to draw, to paint and sculpt.
+  Our job is / plan / measure / build|Our job is to plan, to measure and to build.|Our job is to plan, measure and to build.|Our job is to plan, to measure and build.
   `,
   (right) => [`"${right}" uses *to* once or every time, not both.`, `“${right}”的 *to* 要么只用一次，要么每次都用，没有混用。`],
   [
@@ -310,6 +462,26 @@ const passiveTenses = choose(
   The thief ___ last night.|was caught|was catch|is catching
   The new library ___ next year.|will be opened|will opened|will be open
   Three trees ___ in the storm so far.|have been knocked down|have knocked down|have being knocked down
+  Right now the road ___ by the city.|is being repaired|is repairing|is been repaired
+  The cookies ___ last night.|were baked|were bake|are baking
+  The museum ___ since June.|has been closed|has closed|has being closed
+  The winners ___ next week.|will be named|will named|will be name
+  At this moment the patient ___ by a doctor.|is being examined|is examining|is been examined
+  The windows ___ on Monday.|were washed|were wash|are washing
+  The park ___ for two years.|has been cleaned up|has cleaned up|has being cleaned up
+  The new rules ___ in May.|will be introduced|will introduced|will be introduce
+  The tickets ___ online every day.|are sold|are sell|are selling
+  The book ___ into ten languages.|has been translated|has translated|has being translated
+  The pizza ___ in twenty minutes.|will be delivered|will delivered|will be deliver
+  The car ___ when I arrived.|was being washed|was washing|was been washed
+  The fence ___ before the storm came.|had been fixed|had fixed|had being fixed
+  English ___ in many countries.|is spoken|is speak|is speaking
+  The match ___ because of rain.|was canceled|was cancel|is canceling
+  The bridge ___ by next summer.|will have been built|will have built|will have be built
+  At the moment the files ___.|are being copied|are copying|are been copied
+  The letters ___ by hand every week.|are written|are write|are writing
+  The mistake ___ yet.|has not been noticed|has not noticed|has not being noticed
+  The doors ___ at nine tomorrow.|will be opened|will opened|will be open
   `,
   (right) => [`*${right}*: the tense is carried by *be*, followed by the past participle.`, `*${right}*：时态由 *be* 体现，后接过去分词。`],
   [
@@ -337,6 +509,26 @@ const ly = choose(
   a part time job|a part-time job|a part time job|a part-time-job
   a badly damaged car|a badly damaged car|a badly-damaged car|a badly damaged-car
   a long term plan|a long-term plan|a long term plan|a long-term-plan
+  a freshly baked pie|a freshly baked pie|a freshly-baked pie|a freshly baked-pie
+  a well dressed man|a well-dressed man|a well dressed man|a well-dressed-man
+  a highly trained dog|a highly trained dog|a highly-trained dog|a highly trained-dog
+  a slow moving line|a slow-moving line|a slow moving line|a slow-moving-line
+  a perfectly cooked steak|a perfectly cooked steak|a perfectly-cooked steak|a perfectly cooked-steak
+  a full time worker|a full-time worker|a full time worker|a full-time-worker
+  a recently opened shop|a recently opened shop|a recently-opened shop|a recently opened-shop
+  a short term loan|a short-term loan|a short term loan|a short-term-loan
+  a beautifully painted wall|a beautifully painted wall|a beautifully-painted wall|a beautifully painted-wall
+  a hard working student|a hard-working student|a hard working student|a hard-working-student
+  a nicely written letter|a nicely written letter|a nicely-written letter|a nicely written-letter
+  a good looking horse|a good-looking horse|a good looking horse|a good-looking-horse
+  a widely read author|a widely read author|a widely-read author|a widely read-author
+  a low cost flight|a low-cost flight|a low cost flight|a low-cost-flight
+  a poorly lit street|a poorly lit street|a poorly-lit street|a poorly lit-street
+  a big city lawyer|a big-city lawyer|a big city lawyer|a big-city-lawyer
+  a happily married couple|a happily married couple|a happily-married couple|a happily married-couple
+  a last minute change|a last-minute change|a last minute change|a last-minute-change
+  a deeply moving speech|a deeply moving speech|a deeply-moving speech|a deeply moving-speech
+  a world famous singer|a world-famous singer|a world famous singer|a world-famous-singer
   `,
   (right) => [
     `"${right}" ${right.includes("ly ") ? "keeps the -ly adverb without a hyphen" : "joins the compound modifier with a hyphen"}.`,
@@ -367,6 +559,26 @@ const whoeverPrep = choose(
   Write a note to ___ found the wallet.|whoever|whomever|whom
   The prize goes to ___ the judges choose.|whomever|whoever|who
   Ask for help from ___ knows the way.|whoever|whomever|whom
+  Give the tickets to ___ arrives first.|whoever|whomever|whom
+  The medal goes to ___ runs fastest.|whoever|whomever|whom
+  Show the photos to ___ you meet.|whomever|whoever|who
+  Ask for help from ___ is on duty.|whoever|whomever|whom
+  Lend the book to ___ needs it.|whoever|whomever|whom
+  Offer a seat to ___ looks tired.|whoever|whomever|whom
+  Write to ___ you admire.|whomever|whoever|who
+  The prize will go to ___ the judges choose.|whomever|whoever|who
+  Speak with ___ answers the phone.|whoever|whomever|whom
+  Sell the bike to ___ pays the most.|whoever|whomever|whom
+  Give a copy to ___ wants one.|whoever|whomever|whom
+  Send a card to ___ you invited.|whomever|whoever|who
+  Hand the keys to ___ is driving.|whoever|whomever|whom
+  The letter is for ___ finds it.|whoever|whomever|whom
+  Pass the ball to ___ is open.|whoever|whomever|whom
+  We will work with ___ the coach picks.|whomever|whoever|who
+  Thanks go to ___ cleaned the kitchen.|whoever|whomever|whom
+  Report the problem to ___ is in charge.|whoever|whomever|whom
+  Give the job to ___ you trust.|whomever|whoever|who
+  Talk to ___ knows the answer.|whoever|whomever|whom
   `,
   (right, shown) => [
     `"${shown.replace("___", right)}": the pronoun is ${right === "whoever" ? "the subject" : "an object"} inside its own clause.`,
@@ -400,6 +612,26 @@ const plainOrder = choose(
   Up from the river the mist came.|The mist came up from the river.|The river came up from the mist.|Up from the mist the river came.
   Gone are the summers of my youth.|The summers of my youth are gone.|My youth is gone from the summers.|The summers are of my gone youth.
   The bells of morning soft did ring.|The bells of morning rang softly.|Morning rang the soft bells.|The soft morning rang the bells.
+  Into the woods the children ran.|The children ran into the woods.|The woods ran into the children.|Into the children the woods ran.
+  Bright were the stars that night.|The stars were bright that night.|The night was bright with stars that ran.|The bright night was the stars.
+  Down the road the old cart rolled.|The old cart rolled down the road.|The road rolled down the old cart.|Down the cart the old road rolled.
+  The book upon the shelf I found.|I found the book upon the shelf.|The book found me upon the shelf.|The shelf found the book.
+  Cold was the wind from the north.|The wind from the north was cold.|The north was cold with wind.|The cold north was the wind.
+  Through the window the sunlight fell.|The sunlight fell through the window.|The window fell through the sunlight.|Through the sunlight the window fell.
+  His secret he told to no one.|He told his secret to no one.|His secret told him to no one.|No one told him his secret.
+  Over the sea the gulls flew.|The gulls flew over the sea.|The sea flew over the gulls.|Over the gulls the sea flew.
+  Loud was the cry of the crowd.|The cry of the crowd was loud.|The crowd was loud in its cry.|The loud crowd was the cry.
+  The rose in her hair she wore.|She wore the rose in her hair.|The rose wore her in her hair.|Her hair wore the rose.
+  Across the lake the boat drifted.|The boat drifted across the lake.|The lake drifted across the boat.|Across the boat the lake drifted.
+  Dark grew the sky above.|The sky above grew dark.|Above grew the dark sky.|The dark above grew the sky.
+  The song of the bird we heard.|We heard the song of the bird.|The song of the bird heard us.|The bird heard our song.
+  Beneath the bridge the river flowed.|The river flowed beneath the bridge.|The bridge flowed beneath the river.|Beneath the river the bridge flowed.
+  Long was the road ahead of them.|The road ahead of them was long.|They were long ahead of the road.|The long road was ahead of the long.
+  The gift from his mother he kept.|He kept the gift from his mother.|The gift kept him from his mother.|His mother kept the gift.
+  From the chimney the smoke rose.|The smoke rose from the chimney.|The chimney rose from the smoke.|From the smoke the chimney rose.
+  Soft was the voice that called her.|The voice that called her was soft.|She was soft and called a voice.|The soft voice was her call.
+  Upon the hill the castle stood.|The castle stood upon the hill.|The hill stood upon the castle.|Upon the castle the hill stood.
+  The answer to the riddle she knew.|She knew the answer to the riddle.|The answer knew her riddle.|The riddle knew her answer.
   `,
   (right) => [`"${right}" keeps who does what and puts the subject first.`, `“${right}”保持了谁做什么不变，并把主语放在了前面。`],
   [
@@ -427,6 +659,26 @@ const prepOnce = choose(
   the chair / sat on|That is the chair on which she sat.|That is the chair on which she sat on.|That is the chair on where she sat.
   the people / worked with|They are the people with whom I worked.|They are the people with whom I worked with.|They are the people with who I worked.
   the river / swam in|This is the river in which we swam.|This is the river in which we swam in.|This is the river in where we swam.
+  the city / grew up in|This is the city in which I grew up.|This is the city in which I grew up in.|This is the city in where I grew up.
+  the teacher / talked to|She is the teacher to whom I talked.|She is the teacher to whom I talked to.|She is the teacher to who I talked.
+  the drawer / kept keys in|That is the drawer in which he kept his keys.|That is the drawer in which he kept his keys in.|That is the drawer in where he kept his keys.
+  the author / heard about|He is the author about whom I heard.|He is the author about whom I heard about.|He is the author about who I heard.
+  the bench / sat on|This is the bench on which we sat.|This is the bench on which we sat on.|This is the bench on where we sat.
+  the friends / traveled with|They are the friends with whom I traveled.|They are the friends with whom I traveled with.|They are the friends with who I traveled.
+  the lake / fished in|This is the lake in which we fished.|This is the lake in which we fished in.|This is the lake in where we fished.
+  the girl / wrote to|She is the girl to whom I wrote.|She is the girl to whom I wrote to.|She is the girl to who I wrote.
+  the problem / thought about|This is the problem about which I thought.|This is the problem about which I thought about.|This is the problem about what I thought.
+  the shelf / put books on|That is the shelf on which she put the books.|That is the shelf on which she put the books on.|That is the shelf on where she put the books.
+  the doctor / got advice from|He is the doctor from whom I got advice.|He is the doctor from whom I got advice from.|He is the doctor from who I got advice.
+  the box / found coins in|That is the box in which we found the coins.|That is the box in which we found the coins in.|That is the box in where we found the coins.
+  the neighbor / borrowed a ladder from|She is the neighbor from whom we borrowed a ladder.|She is the neighbor from whom we borrowed a ladder from.|She is the neighbor from who we borrowed a ladder.
+  the house / stayed in|This is the house in which we stayed.|This is the house in which we stayed in.|This is the house in where we stayed.
+  the player / passed the ball to|He is the player to whom I passed the ball.|He is the player to whom I passed the ball to.|He is the player to who I passed the ball.
+  the song / danced to|This is the song to which we danced.|This is the song to which we danced to.|This is the song to what we danced.
+  the team / played against|They are the team against whom we played.|They are the team against whom we played against.|They are the team against who we played.
+  the room / slept in|That is the room in which I slept.|That is the room in which I slept in.|That is the room in where I slept.
+  the cousin / stayed with|She is the cousin with whom I stayed.|She is the cousin with whom I stayed with.|She is the cousin with who I stayed.
+  the park / walked through|This is the park through which we walked.|This is the park through which we walked through.|This is the park through where we walked.
   `,
   (right) => [`"${right}" uses the preposition once, before the relative pronoun.`, `“${right}”只用了一次介词，放在关系代词前面。`],
   [
@@ -449,6 +701,9 @@ const confusedLines = join([
     "The senate voted to censure the official.",
     "The rich man liked to flaunt his cars.",
     "The drivers flout the speed limit every day.",
+    "The police found illicit drugs in the car.",
+    "Her speech was meant to elicit support.",
+    "The eminent judge retired last year.",
   ].map((s) => `${s}|correct`),
   ...[
     "The question was meant to illicit an honest answer.",
@@ -463,6 +718,9 @@ const confusedLines = join([
     "The senate voted to censor the official.",
     "The rich man liked to flout his cars.",
     "The drivers flaunt the speed limit every day.",
+    "The comedian tried to illicit a laugh.",
+    "The mayor's visit is eminent, so clean the hall.",
+    "Some students flaunt the school rules.",
   ].map((s) => `${s}|wrong word`),
 ]);
 

@@ -26,6 +26,26 @@ const ofOrHave = [
   ["I ___ finished sooner with a better map.", "could", "finished"],
   ["The thieves ___ used a ladder.", "must", "used"],
   ["Nobody ___ guessed the ending.", "could", "guessed"],
+  ["You ___ warned me about the ice.", "should", "warned"],
+  ["She ___ forgotten our meeting; she is never late.", "must", "forgotten"],
+  ["We ___ stayed longer if it had not rained.", "would", "stayed"],
+  ["He ___ taken the wrong road.", "might", "taken"],
+  ["I ___ studied harder for the exam.", "should", "studied"],
+  ["They ___ heard the news by now.", "must", "heard"],
+  ["The cat ___ eaten the fish.", "could", "eaten"],
+  ["You ___ been tired after the long drive.", "must", "been"],
+  ["We ___ bought tickets earlier.", "should", "bought"],
+  ["She ___ passed if she had studied.", "would", "passed"],
+  ["He ___ dropped his wallet in the taxi.", "may", "dropped"],
+  ["I ___ known you were coming.", "should", "known"],
+  ["The storm ___ knocked down the tree.", "must", "knocked"],
+  ["They ___ joined us if they had been free.", "could", "joined"],
+  ["You ___ gone to bed earlier.", "should", "gone"],
+  ["The children ___ broken the window.", "might", "broken"],
+  ["She ___ told him the truth.", "would", "told"],
+  ["We ___ missed the turn in the dark.", "must", "missed"],
+  ["He ___ called for help.", "could", "called"],
+  ["The package ___ come while we were out.", "may", "come"],
 ] as const;
 
 const ofLines = join(
@@ -47,6 +67,26 @@ const pastIfs = [
   ["If I ___ the recipe, the cake would not have burned.", "had followed", "would have followed", "have followed"],
   ["If the council ___ the bridge, the town would have been cut off.", "had not repaired", "would not have repaired", "has not repaired"],
   ["If she ___ the letter, she would have known the truth.", "had read", "would have read", "has read"],
+  ["If we ___ a map, we would not have got lost.", "had brought", "would have brought", "have brought"],
+  ["If he ___ his alarm, he would have woken up on time.", "had set", "would have set", "has set"],
+  ["If they ___ the tickets, they could have gone to the show.", "had bought", "would have bought", "have bought"],
+  ["If I ___ more carefully, I would have seen the mistake.", "had looked", "would have looked", "have looked"],
+  ["If she ___ the plants, they would not have died.", "had watered", "would have watered", "has watered"],
+  ["If you ___ earlier, you might have caught the train.", "had run", "would have run", "have run"],
+  ["If the team ___ harder, it could have won the cup.", "had played", "would have played", "has played"],
+  ["If we ___ the warning, we would have stayed inside.", "had heard", "would have heard", "have heard"],
+  ["If he ___ his homework, he would have passed.", "had done", "would have done", "has done"],
+  ["If I ___ the answer, I would have told you.", "had known", "would have known", "have known"],
+  ["If they ___ the door, the dog would not have escaped.", "had locked", "would have locked", "have locked"],
+  ["If she ___ the job, she would have moved to Rome.", "had taken", "would have taken", "has taken"],
+  ["If we ___ sooner, we could have saved the boat.", "had acted", "would have acted", "have acted"],
+  ["If you ___ the instructions, the shelf would not have fallen.", "had followed", "would have followed", "have followed"],
+  ["If the doctor ___ the X-ray, she would have found the break.", "had checked", "would have checked", "has checked"],
+  ["If I ___ my umbrella, I would not have got wet.", "had taken", "would have taken", "have taken"],
+  ["If he ___ the truth, they would have forgiven him.", "had told", "would have told", "has told"],
+  ["If they ___ the river, they would have reached the village.", "had crossed", "would have crossed", "have crossed"],
+  ["If we ___ the café, we would never have met.", "had not visited", "would not have visited", "have not visited"],
+  ["If she ___ her coat, she would not have caught a cold.", "had worn", "would have worn", "has worn"],
 ] as const;
 
 const pastIfLines = join(pastIfs.map((row) => row.join("|")));
@@ -75,6 +115,24 @@ const guesses: readonly (readonly [string, Sense])[] = [
   ["She can't have written this; she was abroad all year.", "cannot"],
   ["He couldn't have seen us; the room was dark.", "cannot"],
   ["The dog can't have opened the fridge by itself.", "cannot"],
+  ["The grass is flattened. A deer must have slept here.", "must"],
+  ["All the lights are on. They must have come home.", "must"],
+  ["His shoes are muddy. He must have walked across the field.", "must"],
+  ["The ground is white. It must have snowed overnight.", "must"],
+  ["She hasn't replied. She might have been busy.", "might"],
+  ["The bike is gone. Someone may have borrowed it.", "might"],
+  ["The window is open. The bird could have flown in that way.", "might"],
+  ["He looks upset. He might have heard the news.", "might"],
+  ["You should have worn a coat; it is freezing.", "should"],
+  ["I should have checked the time before I called.", "should"],
+  ["The builders ought to have finished by May.", "should"],
+  ["We should have listened to the guide.", "should"],
+  ["He can't have stolen the money; he was with me.", "cannot"],
+  ["She couldn't have known; nobody told her.", "cannot"],
+  ["They can't have finished already; they only started an hour ago.", "cannot"],
+  ["The baby couldn't have climbed onto the roof.", "cannot"],
+  ["You can't have read the whole book in ten minutes.", "cannot"],
+  ["It must have been a mistake; the price is far too low.", "must"],
 ];
 
 const order: readonly Sense[] = ["must", "might", "should", "cannot"];
@@ -230,9 +288,149 @@ const useLabels = join(
   ]),
 );
 
-const fairLines = join(
-  uses.map(([author, source, copied, patched, paraphrased]) => `Source (${author}): "${source}"|${paraphrased}|${copied}|${patched}`),
-);
+/** moreFair are more sources with their author, a patchwritten use and a fair paraphrase. */
+const moreFair = [
+  [
+    "Alvarez",
+    "Bees visit flowers in a fixed order, which helps them gather nectar with the least effort.",
+    "Bees go to flowers in a set order, which helps them collect nectar with the smallest effort (Alvarez).",
+    "Alvarez reports that bees save energy by following the same route from flower to flower.",
+  ],
+  [
+    "Chen",
+    "Children who read for pleasure tend to have larger vocabularies than those who read only for school.",
+    "Kids who read for fun tend to have bigger vocabularies than those who read just for school (Chen).",
+    "Chen finds that reading for enjoyment, not only for assignments, goes along with knowing more words.",
+  ],
+  [
+    "Novak",
+    "Ancient Romans built roads so straight that some still guide modern highways.",
+    "Ancient Romans made roads so direct that some still lead modern highways (Novak).",
+    "According to Novak, a few of today's highways still follow the straight lines the Romans laid down.",
+  ],
+  [
+    "Mensah",
+    "Plastic bags take hundreds of years to break down, so most of them are still somewhere on Earth.",
+    "Plastic bags need hundreds of years to break apart, so most of them are still someplace on Earth (Mensah).",
+    "Mensah points out that because plastic bags last for centuries, nearly every one ever made still exists.",
+  ],
+  [
+    "Ibrahim",
+    "Regular exercise improves memory by increasing the flow of blood to the brain.",
+    "Frequent exercise boosts memory by raising the flow of blood to the brain (Ibrahim).",
+    "Ibrahim explains that working out helps people remember because it sends more blood to the brain.",
+  ],
+  [
+    "Kowalski",
+    "The first public libraries let workers borrow books they could never have afforded to buy.",
+    "The earliest public libraries allowed workers to borrow books they could never have been able to buy (Kowalski).",
+    "Kowalski argues that public libraries opened reading to working people who had no money for books.",
+  ],
+  [
+    "Duarte",
+    "Wolves returned to the park and changed the behavior of deer, which allowed young trees to grow again.",
+    "Wolves came back to the park and altered the behavior of deer, which let young trees grow once more (Duarte).",
+    "Duarte shows that the wolves' return made deer move differently, and the forest began to recover.",
+  ],
+  [
+    "Sato",
+    "Earthquakes cannot be predicted, but buildings can be designed to sway rather than collapse.",
+    "Earthquakes can't be forecast, but buildings can be planned to sway instead of collapse (Sato).",
+    "Sato notes that while no one can foresee an earthquake, engineers can make buildings that bend without falling.",
+  ],
+  [
+    "Fischer",
+    "Most of the salt people eat comes from bread and ready meals, not from the salt shaker.",
+    "Most of the salt people consume comes from bread and prepared meals, not from the salt shaker (Fischer).",
+    "Fischer observes that packaged food, more than the salt we add at the table, supplies most of our salt.",
+  ],
+  [
+    "Abara",
+    "Students remember more when they test themselves than when they simply reread their notes.",
+    "Students recall more when they quiz themselves than when they just reread their notes (Abara).",
+    "Abara finds that practice tests fix ideas in memory better than another pass through the notes.",
+  ],
+  [
+    "Lindgren",
+    "The telegraph shrank the time it took news to cross an ocean from weeks to minutes.",
+    "The telegraph reduced the time it took news to cross an ocean from weeks to minutes (Lindgren).",
+    "Lindgren describes how the telegraph let a message reach another continent almost at once.",
+  ],
+  [
+    "Park",
+    "Octopuses can change the color of their skin in less than a second to hide from predators.",
+    "Octopuses can alter the color of their skin in under a second to hide from hunters (Park).",
+    "Park notes that an octopus escapes its enemies by changing color almost instantly.",
+  ],
+  [
+    "Rossi",
+    "Cities with good public transport have fewer traffic deaths than cities built around cars.",
+    "Cities with strong public transport have fewer traffic deaths than cities designed around cars (Rossi).",
+    "Rossi links safer streets to buses and trains: where fewer people drive, fewer die on the roads.",
+  ],
+  [
+    "Nkosi",
+    "Music that is learned in childhood is often the last thing a person with memory loss forgets.",
+    "Music that is learned in youth is often the final thing a person with memory loss forgets (Nkosi).",
+    "Nkosi observes that songs from early life tend to stay with people even as other memories fade.",
+  ],
+  [
+    "Varga",
+    "Medieval monks copied books by hand, and a single Bible could take years to finish.",
+    "Medieval monks copied books by hand, and one Bible could need years to complete (Varga).",
+    "Varga explains that before printing, making one Bible by hand was the work of years.",
+  ],
+  [
+    "Hughes",
+    "Wetlands soak up floodwater like a sponge and release it slowly, protecting nearby towns.",
+    "Wetlands absorb floodwater like a sponge and let it out slowly, guarding nearby towns (Hughes).",
+    "Hughes argues that marshes protect towns by holding back floodwater and letting it drain over time.",
+  ],
+  [
+    "Oduya",
+    "Teenagers' body clocks shift later, so early school start times leave many of them tired.",
+    "Teens' body clocks move later, so early school start times leave lots of them tired (Oduya).",
+    "Oduya explains that teenagers naturally fall asleep and wake later, which makes early classes hard for them.",
+  ],
+  [
+    "Marchetti",
+    "The invention of the refrigerator changed diets, because fresh food could be kept for days.",
+    "The creation of the refrigerator altered diets, because fresh food could be stored for days (Marchetti).",
+    "Marchetti shows how keeping food cold at home let families eat fresh food far more often.",
+  ],
+  [
+    "Bauer",
+    "Many birds find their way across continents by sensing the Earth's magnetic field.",
+    "Lots of birds find their way across continents by detecting the Earth's magnetic field (Bauer).",
+    "Bauer reports that migrating birds seem to steer by the planet's magnetism.",
+  ],
+  [
+    "Quispe",
+    "The potato was first grown in the Andes and later fed much of Europe.",
+    "The potato was originally grown in the Andes and later fed a lot of Europe (Quispe).",
+    "Quispe traces the potato from its first fields in South American mountains to European tables.",
+  ],
+  [
+    "Eriksen",
+    "Video calls feel more tiring than meetings in person, because people watch their own faces.",
+    "Video calls feel more exhausting than meetings in person, because people look at their own faces (Eriksen).",
+    "Eriksen suggests that seeing ourselves on screen is part of why online meetings wear us out.",
+  ],
+  [
+    "Achebe-Lowe",
+    "Small farms grow most of the world's food, even though they hold a minority of its farmland.",
+    "Small farms produce most of the world's food, although they hold a minority of its farmland (Achebe-Lowe).",
+    "Achebe-Lowe points out that farms with little land still feed most of the planet.",
+  ],
+] as const;
+
+const fairLines = join([
+  ...uses.map(([author, source, copied, patched, paraphrased]) => `Source (${author}): "${source}"|${paraphrased}|${copied}|${patched}`),
+  ...moreFair.map(
+    ([author, source, patched, paraphrased]) =>
+      `Source (${author}): "${source}"|${paraphrased}|${source.replace(/\.$/u, "")} (${author}).|${patched}`,
+  ),
+]);
 
 /** citing are facts a reader can check anywhere, and facts that came from one source. */
 const commonKnowledge = [
@@ -246,6 +444,11 @@ const commonKnowledge = [
   "Plants need sunlight to grow.",
   "The Great Wall is in China.",
   "George Washington was the first president of the United States.",
+  "The Moon orbits the Earth.",
+  "Mount Everest is the highest mountain on Earth.",
+  "There are seven continents.",
+  "The Nile flows through Egypt.",
+  "Humans need oxygen to live.",
 ];
 
 const fromASource = [
@@ -259,6 +462,11 @@ const fromASource = [
   "Recent measurements show the glacier shrank by 30 meters in one year.",
   "An economist predicts that prices will rise by four percent next year.",
   "A survey of nurses found that most work more than one night shift a week.",
+  "A 2021 study found that walking for twenty minutes a day lowers stress.",
+  "One biographer claims the painter was happiest in his last years.",
+  "A poll of 1,200 voters showed that most favor a new library.",
+  "Researchers estimate that the forest stores ten million tonnes of carbon.",
+  "A local report says traffic on the bridge doubled after it reopened.",
 ];
 
 const citeLabels = join([...commonKnowledge.map((f) => `${f}|common knowledge`), ...fromASource.map((f) => `${f}|needs a citation`)]);

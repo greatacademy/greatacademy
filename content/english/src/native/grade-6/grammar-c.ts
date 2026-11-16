@@ -31,6 +31,26 @@ const relative = choose(
   The river that runs past our school floods in spring.|river|school|spring
   She found the key that opens the old shed.|key|shed|She
   The players who trained all summer won the cup.|players|summer|cup
+  The boy who lost his jacket asked at the office.|boy|jacket|office
+  The song that we sang at the concert was new.|song|concert|we
+  I know a place where we can swim safely.|place|we|I
+  The bakery that sells bagels opens at six.|bakery|bagels|six
+  My cousin, who studies in Paris, sent a postcard.|cousin|Paris|postcard
+  The photo that hangs in the hall shows my grandparents.|photo|hall|grandparents
+  We thanked the woman whose dog found the lost child.|woman|dog|child
+  The bridge that crosses the bay is closed for repairs.|bridge|bay|repairs
+  He returned the bike that he borrowed from Sam.|bike|Sam|He
+  The students who painted the mural got an award.|students|mural|award
+  The tree that fell in the storm crushed a fence.|tree|storm|fence
+  I still have the letter that my grandfather wrote in 1960.|letter|grandfather|I
+  The city where my parents met is on the coast.|city|parents|coast
+  The doctor who treated my arm works at the clinic.|doctor|arm|clinic
+  The game that we played at recess has simple rules.|game|recess|rules
+  Our neighbor, whose garden is full of roses, won a prize.|neighbor|garden|prize
+  The shoes that I wore to the wedding hurt my feet.|shoes|wedding|feet
+  The river where we fished last summer is now dry.|river|summer|we
+  The pilot who flew the plane spoke to the passengers.|pilot|plane|passengers
+  The map that the explorer drew showed a hidden lake.|map|explorer|lake
   `,
   (right) => [`The clause comes right after *${right}* and tells which one is meant.`, `从句紧跟在 *${right}* 后面，说明指的是哪一个。`],
   [
@@ -61,6 +81,26 @@ const pronounCase = choose(
   The twins are younger than ___.|we|us|ourselves
   The coach praised Lena more than ___ (than the coach praised me).|me|I|myself
   The story surprised my parents as much as ___ (as it surprised us).|us|we|ourselves
+  My cousin can swim farther than ___.|I|me|myself
+  No one sings as well as ___.|she|her|herself
+  Our neighbors have lived here longer than ___.|we|us|ourselves
+  The other team trained harder than ___.|they|them|themselves
+  Dad is not as tall as ___.|he|him|himself
+  She has visited more countries than ___ have.|I|me|myself
+  Is your brother older than ___?|she|her|herself
+  The new students are as friendly as ___.|we|us|ourselves
+  Mom trusts my sister more than ___ (than she trusts me).|me|I|myself
+  The noise bothered our dog as much as ___ (as it bothered him).|him|he|himself
+  Few people work as hard as ___.|they|them|themselves
+  You finished the race faster than ___ did.|he|him|himself
+  The teacher knows the answer better than ___.|we|us|ourselves
+  The joke amused Dad more than ___ (than it amused me).|me|I|myself
+  Nobody in our family cooks as well as ___.|she|her|herself
+  My friends spent more money than ___.|I|me|myself
+  They are just as tired as ___.|we|us|ourselves
+  The storm scared the cats more than ___ (than it scared them).|them|they|themselves
+  His sister reads faster than ___.|he|him|himself
+  Grandma likes you as much as ___ (as she likes us).|us|we|ourselves
   `,
   (right, shown) => [
     `Finish the comparison: "${shown.replace("___", right)}" The missing words show the case.`,
@@ -91,6 +131,26 @@ const whom = choose(
   Ask the girl beside ___ you sat in class.|whom|who|whose
   From ___ did you hear the news?|whom|who|whose
   The neighbors for ___ we cooked dinner were grateful.|whom|who|whose
+  To ___ did you lend your bike?|whom|who|whose
+  The singer for ___ we waited never came.|whom|who|whose
+  With ___ did you go to the fair?|whom|who|whose
+  The teacher to ___ I wrote sent a reply.|whom|who|whose
+  About ___ is the new film?|whom|who|whose
+  The children for ___ the toys were bought were thrilled.|whom|who|whose
+  From ___ did this package come?|whom|who|whose
+  The woman next to ___ I sat was a doctor.|whom|who|whose
+  By ___ was this poem written?|whom|who|whose
+  The cousin with ___ I share a room snores.|whom|who|whose
+  The players against ___ we played were very fast.|whom|who|whose
+  For ___ is this seat saved?|whom|who|whose
+  The guide from ___ we got the map was kind.|whom|who|whose
+  To ___ should we give the award?|whom|who|whose
+  The friend behind ___ I stood in line was late.|whom|who|whose
+  Of ___ were you thinking?|whom|who|whose
+  The scientist about ___ we wrote won a prize.|whom|who|whose
+  With ___ are you working on the project?|whom|who|whose
+  The boy to ___ the dog belongs lives nearby.|whom|who|whose
+  Among ___ did you divide the cake?|whom|who|whose
   `,
   (_right, shown) => [
     `"${shown.replace("___", "whom")}": a preposition comes right before the pronoun, so it takes the object form.`,
@@ -112,6 +172,13 @@ const appositiveLines = join([
     "Our neighbor Mr. Diaz grows tomatoes.",
     "The painting *The Starry Night* hangs in New York.",
     "The inventor Thomas Edison held many patents.",
+    "The composer Ludwig van Beethoven lost his hearing.",
+    "My cousin Ella lives in Denver.",
+    "The film *Finding Nemo* takes place in the ocean.",
+    "The explorer Roald Amundsen reached the South Pole.",
+    "Our teacher Mrs. Grant coaches the debate team.",
+    "The athlete Jesse Owens won four gold medals.",
+    "The poem *The Road Not Taken* is about a choice.",
   ].map((s) => `${s}|no commas: the name tells which one`),
   ...[
     "Langston Hughes, a poet, wrote about Harlem.",
@@ -122,6 +189,13 @@ const appositiveLines = join([
     "Mr. Diaz, our neighbor, grows tomatoes.",
     "Paris, the capital of France, sits on the Seine.",
     "Mount Everest, the highest mountain on Earth, lies in Nepal.",
+    "Beethoven, a German composer, lost his hearing.",
+    "Ella, my youngest cousin, lives in Denver.",
+    "Tokyo, the capital of Japan, is a huge city.",
+    "Roald Amundsen, a Norwegian explorer, reached the South Pole.",
+    "Mrs. Grant, our English teacher, coaches the debate team.",
+    "Jesse Owens, an American runner, won four gold medals.",
+    "The Nile, the longest river in Africa, flows north.",
   ].map((s) => `${s}|commas: the appositive adds information`),
 ]);
 
@@ -171,6 +245,26 @@ const participle = choose(
   The thunder made a ___ noise.|frightening|frightened|frighten
   The test results were ___, so we studied harder.|disappointing|disappointed|disappoint
   The ___ team walked slowly off the field.|disappointed|disappointing|disappoint
+  The ___ crowd waited for the band to start.|excited|exciting|excite
+  The roller coaster was the most ___ ride in the park.|exciting|excited|excite
+  The lecture was long and ___.|boring|bored|bore
+  The ___ children asked to go home early.|bored|boring|bore
+  The ___ guests gasped when the lights went out.|surprised|surprising|surprise
+  The ending of the movie was very ___.|surprising|surprised|surprise
+  The ___ kitten would not come out of the box.|frightened|frightening|frighten
+  The movie had a ___ scene in a dark forest.|frightening|frightened|frighten
+  The ___ fans left before the game ended.|disappointed|disappointing|disappoint
+  The team's ___ season ended in March.|disappointing|disappointed|disappoint
+  The ___ hikers sat down to rest.|tired|tiring|tire
+  Carrying the boxes upstairs was a ___ job.|tiring|tired|tire
+  The ___ student raised her hand to ask again.|confused|confusing|confuse
+  The directions to the farm were ___.|confusing|confused|confuse
+  We were ___ by the size of the whale.|amazed|amazing|amaze
+  The magician did an ___ trick with a coin.|amazing|amazed|amaze
+  The ___ visitors looked at the giant painting.|interested|interesting|interest
+  She told an ___ story about her trip.|interesting|interested|interest
+  The ___ boy waved to his friends from the stage.|embarrassed|embarrassing|embarrass
+  Tripping on stage was an ___ moment.|embarrassing|embarrassed|embarrass
   `,
   (right, shown) => [
     `"${shown.replace("___", right)}": the participle shows whether the noun causes the feeling or feels it.`,
@@ -201,6 +295,26 @@ const misplaced = choose(
   The teacher returned the tests to the students with red marks.|The students had red marks.|The tests had red marks.|The teacher had red marks.
   Covered in mud, Mom washed the boots.|Mom was covered in mud.|The boots were covered in mud.|The water was covered in mud.
   I read about the fire that destroyed the barn in the newspaper.|The barn was in the newspaper.|I read about it in the newspaper.|The fire was a newspaper.
+  She showed the photo to her friend with a big smile.|The photo had a big smile.|She had a big smile.|The friend was a photo.
+  We saw a bear hiking in the mountains.|The bear was hiking in the mountains.|We were hiking in the mountains.|The mountains were hiking.
+  The boy fed the duck wearing a red cap.|The duck was wearing a red cap.|The boy was wearing a red cap.|The cap fed the duck.
+  Running for the bus, my backpack fell open.|My backpack was running for the bus.|I was running for the bus.|The bus was running.
+  The waiter brought soup to the man in a bowl.|The man was in a bowl.|The soup was in a bowl.|The waiter was in a bowl.
+  Hanging on the wall, Dad admired the painting.|Dad was hanging on the wall.|The painting was hanging on the wall.|The wall admired the painting.
+  The girl walked the dog in a yellow raincoat.|The dog was in a yellow raincoat.|The girl was in a yellow raincoat.|The walk was in a raincoat.
+  Flying over the city, the buildings looked tiny.|The buildings were flying over the city.|We were flying over the city.|The city was flying.
+  She gave the flowers to her mother in a glass vase.|Her mother was in a glass vase.|The flowers were in a glass vase.|She was in a glass vase.
+  Sitting on the shelf, I noticed the old clock.|I was sitting on the shelf.|The old clock was sitting on the shelf.|The shelf noticed the clock.
+  The coach handed medals to the players made of gold.|The players were made of gold.|The medals were made of gold.|The coach was made of gold.
+  We bought a puppy for my sister with floppy ears.|My sister had floppy ears.|The puppy had floppy ears.|We had floppy ears.
+  Swimming in the pond, Grandpa watched the ducks.|Grandpa was swimming in the pond.|The ducks were swimming in the pond.|The pond was swimming.
+  The chef served pasta to the diners covered in sauce.|The diners were covered in sauce.|The pasta was covered in sauce.|The chef was covered in sauce.
+  Melting in the sun, the children ate their ice cream.|The children were melting in the sun.|The ice cream was melting in the sun.|The sun was melting.
+  He mailed a package to his aunt wrapped in brown paper.|His aunt was wrapped in brown paper.|The package was wrapped in brown paper.|He was wrapped in brown paper.
+  Barking at the mailman, I tried to calm the dog.|I was barking at the mailman.|The dog was barking at the mailman.|The mailman was barking.
+  The nurse gave a sticker to the boy shaped like a star.|The boy was shaped like a star.|The sticker was shaped like a star.|The nurse was shaped like a star.
+  Chewing on a bone, we found the puppy under the table.|We were chewing on a bone.|The puppy was chewing on a bone.|The table was chewing.
+  The teacher read a story to the class about dragons.|The class was about dragons.|The story was about dragons.|The teacher was about dragons.
   `,
   (right) => [`Read literally, the modifier attaches to the wrong word: ${right}`, `按字面理解，修饰语依附在了错误的词上：${right}`],
   [
@@ -228,6 +342,26 @@ const thatWhich = choose(
   Our principal, ___ loves jazz, plays the trumpet.|who|that|which
   The play, ___ the students wrote themselves, ran for a week.|which|that|who
   My cousins, ___ live in Toronto, visit every summer.|who|that|which
+  The lake, ___ freezes every winter, is popular with skaters.|which|that|who
+  My uncle, ___ fixes old cars, lives on a farm.|who|that|which
+  Our school, ___ was built in 1950, needs a new roof.|which|that|who
+  The mayor, ___ spoke at the fair, promised a new park.|who|that|which
+  The Amazon, ___ crosses several countries, is full of life.|which|that|who
+  Ms. Kim, ___ teaches art, painted the mural.|who|that|which
+  The library, ___ stays open late, is always busy.|which|that|who
+  My best friend, ___ moved to Texas, writes every week.|who|that|which
+  The movie, ___ lasted three hours, was worth it.|which|that|who
+  Our dog, ___ is afraid of thunder, hid under the bed.|which|that|who
+  The pilot, ___ had flown for thirty years, landed smoothly.|who|that|which
+  Mount Fuji, ___ is in Japan, is a volcano.|which|that|who
+  My grandfather, ___ was a sailor, tells great stories.|who|that|which
+  The garden, ___ my mother planted, is full of roses.|which|that|who
+  Dr. Lee, ___ works at the clinic, gave me a shot.|who|that|which
+  The new bike, ___ cost a lot, is already scratched.|which|that|who
+  The twins, ___ are in sixth grade, play the violin.|who|that|which
+  The river, ___ floods every spring, runs past our town.|which|that|who
+  Our coach, ___ played for a national team, is very strict.|who|that|which
+  The old clock, ___ belonged to my grandmother, still works.|which|that|who
   `,
   (right) => [
     `After a comma the clause adds information, so it begins with *${right}*.`,
@@ -262,6 +396,26 @@ const secondComma = choose(
       ["Venus", "the hottest planet", "is covered in clouds"],
       ["The recipe", "which my grandfather wrote", "uses three eggs"],
       ["Sara", "the fastest runner in our class", "won the medal"],
+      ["My grandmother", "who grew up on a farm", "still bakes bread"],
+      ["The Pacific", "the largest ocean", "covers a third of Earth"],
+      ["Our car", "an old blue van", "broke down again"],
+      ["The museum", "which opened in May", "has free tickets on Sundays"],
+      ["Dr. Patel", "our family doctor", "moved to Chicago"],
+      ["My sister", "who loves spiders", "wants to be a scientist"],
+      ["The bridge", "finished in 1937", "is painted orange"],
+      ["Mars", "the red planet", "has two small moons"],
+      ["The movie", "which I watched twice", "has a sad ending"],
+      ["Leo", "the youngest player on the team", "scored the goal"],
+      ["Our principal", "a former soccer coach", "plays at recess"],
+      ["The library", "which is near the park", "stays open late"],
+      ["Tom", "who sits next to me", "forgot his lunch"],
+      ["The cheetah", "the fastest land animal", "can run seventy miles an hour"],
+      ["My bike", "a gift from my uncle", "has a flat tire"],
+      ["The volcano", "which last erupted in 1980", "is quiet now"],
+      ["Ms. Rivera", "the new music teacher", "plays the harp"],
+      ["The storm", "the worst in ten years", "knocked out the power"],
+      ["Our neighbor", "who keeps bees", "gave us honey"],
+      ["The book", "written by my aunt", "won a prize"],
     ].map(([a, middle, b]) => `${a} ___ ${middle} ___ ${b}.|${a}, ${middle}, ${b}.|${a}, ${middle} ${b}.|${a} ${middle}, ${b}.`),
   ),
   (right) => [`"${right}" puts a comma on each side of the nonessential element.`, `“${right}”在非必要成分的两边各加了一个逗号。`],
@@ -290,6 +444,26 @@ const myself = choose(
   The letter was addressed to you and ___.|me|myself|I
   Between you and ___, the plan will not work.|me|myself|I
   I reminded ___ to bring an umbrella.|myself|me|I
+  The teacher asked Sam and ___ to help.|me|myself|I
+  Call Dad or ___ when you get there.|me|myself|I
+  The cookies were for Grace and ___.|me|myself|I
+  Grandma sent a card to my brother and ___.|me|myself|I
+  The judges chose Lily and ___ for the final.|me|myself|I
+  I taught ___ to play the guitar.|myself|me|I
+  I painted the whole fence ___.|myself|me|I
+  The coach wants to see you and ___ after practice.|me|myself|I
+  Thank you for inviting my family and ___.|me|myself|I
+  I told ___ not to give up.|myself|me|I
+  The waiter brought menus to Jen and ___.|me|myself|I
+  I cut ___ while chopping onions.|myself|me|I
+  Please send the photos to Tom or ___.|me|myself|I
+  The prize goes to whoever answers first: you or ___.|me|myself|I
+  I bought ___ a new notebook.|myself|me|I
+  Mom drove Eva and ___ to the library.|me|myself|I
+  The story was written by my friend and ___.|me|myself|I
+  I wrote the whole speech ___.|myself|me|I
+  Uncle Ray took Max and ___ fishing.|me|myself|I
+  I promised ___ I would finish the book.|myself|me|I
   `,
   (right, shown) => [
     `"${shown.replace("___", right)}": a self-pronoun only when the sentence has a word it refers back to.`,
@@ -323,6 +497,26 @@ const thisNoun = choose(
   Scientists found water on the moon. ___ could help future astronauts.|This discovery|This|It
   The city closed the main road. ___ sent traffic through our street.|This closure|This|It
   The coach changed the lineup. ___ surprised the fans.|This change|This|It
+  The power went out for two days. ___ spoiled all our food.|This outage|This|It
+  The school started later in the morning. ___ helped students sleep more.|This change|This|It
+  Our team lost five games in a row. ___ worried the coach.|This losing streak|This|It
+  Bees are disappearing from many farms. ___ threatens our food supply.|This decline|This|It
+  The town planted a thousand trees. ___ made the streets cooler.|This project|This|It
+  Sara practiced the piano every night. ___ helped her win the contest.|This practice|This|It
+  The bridge was closed for repairs. ___ added an hour to our drive.|This closure|This|It
+  Many people now work from home. ___ has emptied city offices.|This trend|This|It
+  The library cut its hours in half. ___ upset many readers.|This cut|This|It
+  The weather turned freezing overnight. ___ killed the young plants.|This frost|This|It
+  The class raised money for the shelter. ___ paid for new beds.|This fundraiser|This|It
+  The river was full of plastic. ___ harmed the fish.|This pollution|This|It
+  Our neighbor built a tall fence. ___ blocked our view of the hills.|This fence|This|It
+  Students voted to ban phones at lunch. ___ made the cafeteria louder with talk.|This rule|This|It
+  The factory shut down last year. ___ cost the town many jobs.|This shutdown|This|It
+  The coach added an extra practice each week. ___ made the players stronger.|This extra practice|This|It
+  Ticket prices doubled this year. ___ kept many fans away.|This increase|This|It
+  The volcano erupted without warning. ___ covered the village in ash.|This eruption|This|It
+  Our class read a book every week. ___ improved our vocabulary.|This routine|This|It
+  The road was repaved over the summer. ___ made biking much safer.|This repair|This|It
   `,
   (right) => [`*${right}* names the idea the pronoun points at.`, `*${right}* 把代词所指的意思说了出来。`],
   [
@@ -344,6 +538,13 @@ const agreementLabels = join([
     "The leader of the climbers carries the map.",
     "The members of the band practice daily.",
     "The sound of the waves helps me sleep.",
+    "The cost of the tickets is too high.",
+    "The books on the top shelf are dusty.",
+    "A team of scientists studies the volcano.",
+    "The pictures on the wall show our trip.",
+    "The girl with the red shoes runs fast.",
+    "The flowers in the garden need water.",
+    "One of my friends lives in Spain.",
   ].map((s) => `${s}|correct`),
   ...[
     "The box of old letters are in the attic.",
@@ -354,6 +555,13 @@ const agreementLabels = join([
     "The leader of the climbers carry the map.",
     "The members of the band practices daily.",
     "The sound of the waves help me sleep.",
+    "The cost of the tickets are too high.",
+    "The books on the top shelf is dusty.",
+    "A team of scientists study the volcano.",
+    "The pictures on the wall shows our trip.",
+    "The girl with the red shoes run fast.",
+    "The flowers in the garden needs water.",
+    "One of my friends live in Spain.",
   ].map((s) => `${s}|agrees with the noun in the phrase`),
 ]);
 
@@ -403,6 +611,26 @@ const numberStart = choose(
   ___ teams entered the contest.|Thirty-six|36|Thirty six
   ___ steps lead to the top of the tower.|Seventy-two|72|Seventy two
   ___ children joined the choir this year.|Eighty-five|85|Eighty five
+  ___ players tried out for the team.|Twenty-seven|27|Twenty seven
+  ___ cars were parked along the street.|Thirty-four|34|Thirty four
+  ___ students wrote poems for the contest.|Forty-six|46|Forty six
+  ___ apples fell from the tree in the storm.|Fifty-three|53|Fifty three
+  ___ musicians played in the orchestra.|Sixty-one|61|Sixty one
+  ___ kites flew over the beach.|Twenty-two|22|Twenty two
+  ___ ducks swam across the pond.|Thirty-nine|39|Thirty nine
+  ___ families moved into the new building.|Forty-eight|48|Forty eight
+  ___ volunteers cleaned the park on Saturday.|Fifty-seven|57|Fifty seven
+  ___ countries sent athletes to the games.|Ninety-two|92|Ninety two
+  ___ seats were empty at the show.|Seventy-three|73|Seventy three
+  ___ pages of the book were torn.|Eighty-one|81|Eighty one
+  ___ boats sailed in the race.|Sixty-eight|68|Sixty eight
+  ___ stars were visible through the telescope.|Ninety-four|94|Ninety four
+  ___ cookies were baked for the sale.|Seventy-six|76|Seventy six
+  ___ dogs entered the show this year.|Thirty-one|31|Thirty one
+  ___ trees were planted along the river.|Eighty-seven|87|Eighty seven
+  ___ letters arrived on Monday.|Forty-three|43|Forty three
+  ___ bikes were stolen last month.|Twenty-nine|29|Twenty nine
+  ___ climbers reached the top of the mountain.|Fifty-two|52|Fifty two
   `,
   (right) => [
     `*${right}* spells the number out, with a hyphen, at the start of the sentence.`,
@@ -433,6 +661,26 @@ const plural = choose(
   Each singer chooses their own song.|All singers choose their own songs.|All singers chooses his or her own song.|Each singers choose their own songs.
   A pilot checks their plane before takeoff.|Pilots check their planes before takeoff.|Pilots checks his or her plane before takeoff.|A pilots check their planes before takeoff.
   Every voter must show their card.|All voters must show their cards.|All voters must show his or her card.|Every voters must show their cards.
+  Every child should wash their hands.|All children should wash their hands.|All children should wash his or her hands.|Every children should wash their hands.
+  Each runner must wear their number.|All runners must wear their numbers.|All runners must wear his or her number.|Each runners must wear their numbers.
+  A swimmer needs their own towel.|Swimmers need their own towels.|Swimmers need his or her own towel.|A swimmers need their own towels.
+  Every guest signs their name at the door.|All guests sign their names at the door.|All guests signs his or her name at the door.|Every guests sign their names at the door.
+  Each worker gets their pay on Friday.|All workers get their pay on Friday.|All workers gets his or her pay on Friday.|Each workers get their pay on Friday.
+  A reader can choose their own book.|Readers can choose their own books.|Readers can choose his or her own book.|A readers can choose their own books.
+  Every passenger must show their ticket.|All passengers must show their tickets.|All passengers must show his or her ticket.|Every passengers must show their tickets.
+  Each artist signs their painting.|All artists sign their paintings.|All artists signs his or her painting.|Each artists sign their paintings.
+  A cook washes their hands first.|Cooks wash their hands first.|Cooks washes his or her hands first.|A cooks wash their hands first.
+  Every patient waits for their turn.|All patients wait for their turns.|All patients waits for his or her turn.|Every patients wait for their turns.
+  Each scout carries their own water.|All scouts carry their own water.|All scouts carries his or her own water.|Each scouts carry their own water.
+  A traveler should keep their passport safe.|Travelers should keep their passports safe.|Travelers should keep his or her passport safe.|A travelers should keep their passports safe.
+  Every athlete stretches before their race.|All athletes stretch before their races.|All athletes stretches before his or her race.|Every athletes stretch before their races.
+  Each child hangs up their coat.|All children hang up their coats.|All children hangs up his or her coat.|Each children hang up their coats.
+  A student who is late must give their reason.|Students who are late must give their reasons.|Students who are late must give his or her reason.|A students who are late must give their reasons.
+  Every dancer brings their own shoes.|All dancers bring their own shoes.|All dancers brings his or her own shoes.|Every dancers bring their own shoes.
+  Each driver parks their car in the lot.|All drivers park their cars in the lot.|All drivers parks his or her car in the lot.|Each drivers park their cars in the lot.
+  A hiker should carry their own map.|Hikers should carry their own maps.|Hikers should carry his or her own map.|A hikers should carry their own maps.
+  Every author reads their book aloud.|All authors read their books aloud.|All authors reads his or her book aloud.|Every authors read their books aloud.
+  Each team member wears their jersey.|All team members wear their jerseys.|All team members wears his or her jersey.|Each team members wear their jerseys.
   `,
   (right) => [`"${right}" makes the subject, the pronoun and the verb all plural.`, `“${right}”让主语、代词和动词都成了复数。`],
   [
@@ -463,6 +711,26 @@ const passiveParticiple = choose(
   The fish were ___ in the river.|caught|catched|caughted
   The lake was ___ solid all winter.|frozen|froze|freezed
   The book has been ___ by millions.|read|readed|reading
+  The vase was ___ during the move.|broken|broke|breaked
+  The poem was ___ by a young girl.|written|wrote|writed
+  My wallet was ___ on the train.|stolen|stole|stealed
+  The house was ___ in 1920.|built|build|builded
+  The cookies were ___ before lunch.|eaten|ate|eated
+  The anthem was ___ before the game.|sung|sang|singed
+  The award was ___ to our coach.|given|gave|gived
+  The thief was ___ by the police.|caught|catched|caughted
+  The pond was ___ by morning.|frozen|froze|freezed
+  The rules were ___ aloud to the class.|read|readed|reading
+  The ball was ___ over the fence.|thrown|threw|throwed
+  The race was ___ by a runner from Kenya.|won|win|winned
+  The picture was ___ by my aunt.|drawn|drew|drawed
+  The truth was finally ___.|told|tell|telled
+  The keys were ___ under the couch.|found|find|finded
+  The boat was ___ away by the waves.|driven|drove|drived
+  The shirt was ___ only once.|worn|wore|weared
+  The letter was ___ to the wrong house.|sent|send|sended
+  The tree was ___ down by the wind.|blown|blew|blowed
+  The trophy was ___ in the front window.|hidden|hid|hided
   `,
   (right) => [
     `After a form of *be*, the passive takes the past participle *${right}*.`,
@@ -493,6 +761,26 @@ const possessiveOrPlural = choose(
   The ___ desks were moved for the test.|students'|students|student's
   Our ___ voices filled the hall.|singers'|singers|singer's
   Several ___ were planted along the road.|trees|trees'|tree's
+  The ___ bikes were parked by the gate.|boys'|boys|boy's
+  Six ___ marched in the parade.|bands|bands'|band's
+  Both ___ tails were wagging.|dogs'|dogs|dog's
+  The ___ uniforms were washed after the game.|players'|players|player's
+  Three ___ sang at the wedding.|singers|singers'|singer's
+  The two ___ nests were in the same tree.|birds'|birds|bird's
+  Many ___ came to the open house.|parents|parents'|parent's
+  All the ___ backpacks were on the floor.|students'|students|student's
+  The ___ roots spread under the road.|trees'|trees|tree's
+  Hundreds of ___ filled the sky.|kites|kites'|kite's
+  The ___ hats blew off in the wind.|girls'|girls|girl's
+  Five ___ arrived late to the meeting.|teachers|teachers'|teacher's
+  The ___ voices echoed in the cave.|hikers'|hikers|hiker's
+  Several ___ crossed the road at dawn.|horses|horses'|horse's
+  The ___ wings were bright blue.|butterflies'|butterflies|butterfly's
+  The ___ lined up at the bus stop.|kids|kids'|kid's
+  Both ___ owners came to pick them up.|cats'|cats|cat's
+  The ___ rang at noon in every church.|bells|bells'|bell's
+  The ___ cages were cleaned every day.|rabbits'|rabbits|rabbit's
+  Our ___ names were called one by one.|cousins'|cousins|cousin's
   `,
   (right, shown) => [
     `"${shown.replace("___", right)}": the word is ${right.endsWith("'") ? "a plural that owns the next noun" : "a plural that only counts"}.`,
@@ -526,6 +814,26 @@ const noDouble = choose(
   help + er|helper|helpper|helpr
   play + ed|played|playyed|plaied
   listen + ing|listening|listenning|listning
+  cook + ing|cooking|cookking|cookin
+  paint + ed|painted|paintted|paintd
+  fix + ing|fixing|fixxing|fixeing
+  happen + ed|happened|happenned|happend
+  float + ing|floating|floatting|floatng
+  show + ed|showed|showwed|shoed
+  limit + ed|limited|limitted|limitd
+  teach + er|teacher|teachher|teachr
+  stay + ing|staying|stayying|staing
+  order + ing|ordering|orderring|ordring
+  look + ed|looked|lookked|lookd
+  mix + ed|mixed|mixxed|mixd
+  enter + ing|entering|enterring|entring
+  clean + er|cleaner|cleanner|cleanr
+  need + ed|needed|needded|neded
+  blow + ing|blowing|blowwing|bloing
+  edit + ed|edited|editted|editd
+  sing + er|singer|singger|singr
+  pray + ed|prayed|prayyed|praied
+  offer + ing|offering|offerring|offring
   `,
   (right) => [
     `*${right}* keeps a single consonant: the rule for doubling does not apply.`,
@@ -547,6 +855,13 @@ const colonLabels = join([
     "The rule is clear: no phones in class.",
     "Our team has two strengths: speed and teamwork.",
     "There was only one problem: the door was locked.",
+    "I have one wish: a week at the beach.",
+    "Pack these items: a tent, a lamp and a sleeping bag.",
+    "The reason was obvious: the bus was late.",
+    "She speaks three languages: English, Spanish and French.",
+    "We learned an important lesson: always check the weather.",
+    "The menu had two choices: soup or salad.",
+    "The coach gave one order: run faster.",
   ].map((s) => `${s}|correct colon`),
   ...[
     "My favorite sports are: soccer, tennis and swimming.",
@@ -557,6 +872,13 @@ const colonLabels = join([
     "Our club meets on: Monday and Thursday.",
     "The recipe calls for: rice, beans and salt.",
     "He is good at: drawing and singing.",
+    "The colors of the flag are: red, white and blue.",
+    "We visited: Rome, Paris and London.",
+    "My lunch includes: a sandwich, an apple and juice.",
+    "The kit comes with: glue, tape and scissors.",
+    "Her best subjects are: math and science.",
+    "The team needs: a goalie and two defenders.",
+    "I am afraid of: spiders, snakes and heights.",
   ].map((s) => `${s}|colon after a verb or preposition`),
 ]);
 
@@ -606,6 +928,26 @@ const neitherOf = choose(
   Either of the buses ___ at the station.|stops|stop|stopping
   Neither of the plans ___ enough money.|saves|save|saving
   Either of my sisters ___ drive us.|is able to|are able to|being able to
+  Neither of the girls ___ the answer.|knows|know|knowing
+  Either of the paths ___ to the river.|goes|go|going
+  Neither of the cakes ___ ready yet.|is|are|being
+  Either of these shirts ___ fine for the party.|looks|look|looking
+  Neither of my brothers ___ to swim.|likes|like|liking
+  Either of the doctors ___ see you today.|is able to|are able to|being able to
+  Neither of the lights ___ on.|was|were|being
+  Either of the trains ___ at noon.|leaves|leave|leaving
+  Neither of the songs ___ my favorite.|is|are|being
+  Either of the rooms ___ a view of the sea.|has|have|having
+  Neither of the players ___ hurt.|was|were|being
+  Either of the answers ___ correct.|seems|seem|seeming
+  Neither of the computers ___ working.|is|are|being
+  Either of my parents ___ sign the form.|is allowed to|are allowed to|being allowed to
+  Neither of the boxes ___ heavy.|feels|feel|feeling
+  Either of the stores ___ milk.|sells|sell|selling
+  Neither of the keys ___ the lock.|fits|fit|fitting
+  Either of the coaches ___ the drills.|runs|run|running
+  Neither of the stories ___ true.|was|were|being
+  Either of the cats ___ on my bed.|sleeps|sleep|sleeping
   `,
   (right, shown) => [
     `"${shown.replace("___", right)}": *either* or *neither* means one of two, so the verb is singular.`,
@@ -639,6 +981,26 @@ const linking = choose(
   He seems ___ with his new job.|happy|happily|happiness
   The baby grew ___ during the long drive.|quiet|quietly|quietness
   The room felt ___ after we lit the fire.|warm|warmly|warmth
+  The pie smells ___.|good|well|goodly
+  The fish tasted ___, so we sent it back.|bad|badly|worse
+  That plan sounds ___ to me.|good|well|goodly
+  The sky looked ___ at sunset.|beautiful|beautifully|beauty
+  The coffee smells ___.|wonderful|wonderfully|wonder
+  I feel ___ about forgetting your birthday.|bad|badly|worse
+  The class became ___ when the principal walked in.|silent|silently|silence
+  She seemed ___ after the long trip.|tired|tiredly|tiredness
+  The water felt ___ on my hot feet.|cool|coolly|coolness
+  The puppy looks ___ in its new bed.|comfortable|comfortably|comfort
+  The answer seems ___ to me.|correct|correctly|correctness
+  His voice sounded ___ on the phone.|calm|calmly|calmness
+  The streets grew ___ after dark.|quiet|quietly|quietness
+  The roses smell ___.|sweet|sweetly|sweetness
+  The test looked ___ at first.|easy|easily|ease
+  My grandmother stays ___ by walking every day.|healthy|healthily|health
+  The leaves turned ___ in October.|red|redly|redness
+  The kitten seemed ___ during the storm.|nervous|nervously|nerve
+  The cake tastes ___.|delicious|deliciously|delight
+  The baby looks ___ in that hat.|cute|cutely|cuteness
   `,
   (right, shown) => [
     `"${shown.replace("___", right)}": a linking verb connects the subject to an adjective that describes it.`,
@@ -672,6 +1034,26 @@ const titleColon = choose(
   baking bread: from flour to loaf|Baking Bread: From Flour to Loaf|Baking Bread: from Flour to Loaf|Baking Bread: From Flour To Loaf
   space travel: the next step|Space Travel: The Next Step|Space Travel: the Next Step|Space travel: The next step
   ancient egypt: a land of pharaohs|Ancient Egypt: A Land of Pharaohs|Ancient Egypt: a Land of Pharaohs|Ancient Egypt: A Land Of Pharaohs
+  the rainforest: a living world|The Rainforest: A Living World|The Rainforest: a Living World|The rainforest: A living world
+  cats: the inside story|Cats: The Inside Story|Cats: the Inside Story|Cats: The Inside story
+  the civil war: a short history|The Civil War: A Short History|The Civil War: a Short History|The Civil War: A Short history
+  robots: how they work|Robots: How They Work|Robots: how They Work|Robots: How they work
+  the arctic: a frozen land|The Arctic: A Frozen Land|The Arctic: a Frozen Land|The Arctic: A Frozen land
+  soccer: the beautiful game|Soccer: The Beautiful Game|Soccer: the Beautiful Game|Soccer: The Beautiful game
+  the human body: an owner's guide|The Human Body: An Owner's Guide|The Human Body: an Owner's Guide|The Human Body: An Owner's guide
+  bees: the tiny farmers|Bees: The Tiny Farmers|Bees: the Tiny Farmers|Bees: The tiny farmers
+  the moon landing: one giant leap|The Moon Landing: One Giant Leap|The Moon Landing: one Giant Leap|The Moon landing: One giant leap
+  music: a world of sound|Music: A World of Sound|Music: a World of Sound|Music: A World Of Sound
+  dinosaurs: the last days|Dinosaurs: The Last Days|Dinosaurs: the Last Days|Dinosaurs: The Last days
+  the great lakes: a journey|The Great Lakes: A Journey|The Great Lakes: a Journey|The Great lakes: A journey
+  growing up: a memoir|Growing Up: A Memoir|Growing Up: a Memoir|Growing up: A memoir
+  storms: the power of weather|Storms: The Power of Weather|Storms: the Power of Weather|Storms: The Power Of Weather
+  the brain: an introduction|The Brain: An Introduction|The Brain: an Introduction|The brain: An introduction
+  chess: the game of kings|Chess: The Game of Kings|Chess: the Game of Kings|Chess: The Game Of Kings
+  deserts: life in the dry lands|Deserts: Life in the Dry Lands|Deserts: life in the Dry Lands|Deserts: Life In The Dry Lands
+  the sea: a history|The Sea: A History|The Sea: a History|The sea: A history
+  inventions: the ideas that changed us|Inventions: The Ideas That Changed Us|Inventions: the Ideas That Changed Us|Inventions: The ideas that changed us
+  gardens: a year of growing|Gardens: A Year of Growing|Gardens: a Year of Growing|Gardens: A Year Of Growing
   `,
   (right) => [
     `"${right}" capitalizes the first word after the colon and keeps other small words small.`,
@@ -702,6 +1084,26 @@ const hyphenPrefix = choose(
   re + elect|re-elect|reelect|re elect
   mis + spell|misspell|mis-spell|mispell
   self + confident|self-confident|selfconfident|self confident
+  self + taught|self-taught|selftaught|self taught
+  ex + champion (former)|ex-champion|exchampion|ex champion
+  re + build|rebuild|re-build|re build
+  pre + heat|preheat|pre-heat|pre heat
+  anti + British|anti-British|antiBritish|anti British
+  un + kind|unkind|un-kind|un kind
+  all + inclusive|all-inclusive|allinclusive|all inclusive
+  re + enter|re-enter|reenter|re enter
+  dis + agree|disagree|dis-agree|dis agree
+  self + aware|self-aware|selfaware|self aware
+  pre + Columbian|pre-Columbian|preColumbian|pre Columbian
+  un + tie|untie|un-tie|un tie
+  ex + mayor (former)|ex-mayor|exmayor|ex mayor
+  re + paint|repaint|re-paint|re paint
+  all + around|all-around|allaround|all around
+  mis + read|misread|mis-read|mis read
+  self + respect|self-respect|selfrespect|self respect
+  un + American|un-American|unAmerican|un American
+  over + cook|overcook|over-cook|over cook
+  semi + circle|semicircle|semi-circle|semi circle
   `,
   (right) => [`*${right}* follows the rule for this prefix.`, `*${right}* 符合这个前缀的规则。`],
   [

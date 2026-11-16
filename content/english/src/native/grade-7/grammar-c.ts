@@ -31,6 +31,26 @@ const doer = choose(
   The song was sung by the whole class.|the whole class|the song|the sentence does not say
   The trees were planted along the river.|the sentence does not say|the trees|the river
   The prize was won by a girl from Kenya.|a girl from Kenya|the prize|the sentence does not say
+  The fence was painted by my uncle.|my uncle|the fence|the sentence does not say
+  The money was stolen last night.|the sentence does not say|the money|last night
+  The play was written by a student.|a student|the play|the sentence does not say
+  The road was closed after the storm.|the sentence does not say|the road|the storm
+  The fish was caught by my little sister.|my little sister|the fish|the sentence does not say
+  The house was sold in March.|the sentence does not say|the house|March
+  The speech was given by the mayor.|the mayor|the speech|the sentence does not say
+  The cookies were eaten before lunch.|the sentence does not say|the cookies|lunch
+  The picture was drawn by a famous artist.|a famous artist|the picture|the sentence does not say
+  The mistake was found in the second test.|the sentence does not say|the mistake|the second test
+  The game was won by the visiting team.|the visiting team|the game|the sentence does not say
+  The lights were turned off at midnight.|the sentence does not say|the lights|midnight
+  The car was repaired by a mechanic.|a mechanic|the car|the sentence does not say
+  The message was deleted yesterday.|the sentence does not say|the message|yesterday
+  The trees were cut down by the city.|the city|the trees|the sentence does not say
+  The bell was rung at noon.|the sentence does not say|the bell|noon
+  The puppy was rescued by a firefighter.|a firefighter|the puppy|the sentence does not say
+  The prices were raised in January.|the sentence does not say|the prices|January
+  The book was read by every student in the class.|every student in the class|the book|the sentence does not say
+  The vase was knocked over during the party.|the sentence does not say|the vase|the party
   `,
   (right) => [
     right === "the sentence does not say"
@@ -65,6 +85,26 @@ const would = choose(
   If the bus comes late, we ___ miss the start.|will|would|were
   If he practiced more, he ___ win the match.|might|will|is
   If you study tonight, you ___ do well on the test.|will|would|were
+  If I had a car, I ___ drive to the beach.|would|will|am
+  If he were older, he ___ vote.|could|can|is
+  If we had more time, we ___ visit the museum.|would|will|are
+  If it snows tonight, the school ___ close.|will|would|were
+  If cats could fly, they ___ catch birds easily.|would|will|are
+  If you mix red and blue, you ___ get purple.|will|would|were
+  If I won the lottery, I ___ buy a house.|would|will|am
+  If the store is open, we ___ buy some milk.|will|would|were
+  If she trained harder, she ___ make the team.|might|will|is
+  If you leave now, you ___ catch the train.|will|would|were
+  If I lived in Paris, I ___ eat croissants every day.|would|will|am
+  If they were here, they ___ help us.|could|can|are
+  If we had a boat, we ___ sail to the island.|would|will|are
+  If the bus is late, I ___ call you.|will|would|were
+  If trees could talk, they ___ tell old stories.|would|will|are
+  If you drop the glass, it ___ break.|will|would|were
+  If I knew her number, I ___ call her.|would|will|am
+  If the weather is nice, we ___ have a picnic.|will|would|were
+  If he studied more, he ___ pass the exam.|might|will|is
+  If you water the plant, it ___ grow.|will|would|were
   `,
   (right, shown) => [
     `"${shown.replace("___", right)}": the condition is ${right === "will" ? "real, so the result takes *will*" : "unreal, so the result takes a past modal"}.`,
@@ -95,6 +135,26 @@ const correlative = choose(
   She likes neither swimming nor ___.|running|to run|she runs
   The book is not only long but also ___.|boring|it bores me|a bore to read
   We will either finish today or ___.|finish tomorrow|tomorrow is fine|finishing tomorrow
+  He is not only fast but also ___.|strong|has strength|being strong
+  We can either cook at home or ___.|eat out|a restaurant|eating out
+  The test was both long and ___.|hard|it was hard|hardness
+  She neither smiled nor ___.|waved|a wave|waving
+  The teacher praised not only our ideas but also ___.|our writing|we wrote well|writing it well
+  You can travel either by train or ___.|by plane|you can fly|plane flying
+  The room was both bright and ___.|warm|it felt warm|warmth
+  He enjoys neither singing nor ___.|dancing|to dance|he dances
+  The movie was not only exciting but also ___.|funny|it made us laugh|a comedy to watch
+  They will either win today or ___.|win next week|next week is fine|winning next week
+  The new park is both large and ___.|peaceful|it has peace|peacefulness
+  I want not only to travel but also ___.|to learn languages|languages to learn|learning languages
+  She can either sing or ___.|play the piano|the piano|playing the piano
+  The soup was neither hot nor ___.|tasty|it had taste|tastiness
+  The plan saves not only time but also ___.|money|we save money|saving money
+  We will meet either at the library or ___.|at the park|the park is better|meeting at the park
+  The puppy is both playful and ___.|gentle|it is gentle|gentleness
+  He neither apologized nor ___.|explained|an explanation|explaining
+  The trip was not only cheap but also ___.|fun|we had fun|funny times
+  You may either stay or ___.|leave|your leaving|leaving now
   `,
   (right) => [`*${right}* matches the words after the first half of the pair.`, `*${right}* 与成对连词前半部分后面的词结构一致。`],
   [
@@ -125,6 +185,26 @@ const latinVerb = choose(
   The main criterion ___ speed.|is|are|being
   The fungi ___ on the fallen log.|grow|grows|growing
   Both analyses ___ the same result.|reach|reaches|reaching
+  The criteria for the job ___ strict.|are|is|being
+  These phenomena ___ hard to explain.|are|is|being
+  Bacteria ___ in the warm, wet soil.|thrive|thrives|thriving
+  The crisis ___ getting worse.|is|are|being
+  The analysis ___ that sales fell.|suggests|suggest|suggesting
+  The data ___ that more students walk to school.|show|shows|showing
+  The alumni ___ money to the school.|give|gives|giving
+  One criterion ___ cost.|is|are|being
+  The fungi ___ under the old leaves.|spread|spreads|spreading
+  The two crises ___ at the same time.|overlap|overlaps|overlapping
+  The cacti ___ little water.|need|needs|needing
+  That phenomenon ___ every summer.|occurs|occur|occurring
+  The curricula of both schools ___ new.|are|is|being
+  The stimuli ___ the plants to grow.|cause|causes|causing
+  This bacterium ___ illness.|causes|cause|causing
+  The theses ___ due in May.|are|is|being
+  The nuclei of the cells ___ dark.|look|looks|looking
+  The diagnosis ___ a relief to the family.|was|were|being
+  The larvae ___ into moths.|turn|turns|turning
+  The appendices ___ extra charts.|contain|contains|containing
   `,
   (right, shown) => [
     `"${shown.replace("___", right)}": the verb agrees with whether the Latin or Greek noun is singular or plural.`,
@@ -155,6 +235,26 @@ const fragment = choose(
   I read a book. Which my aunt gave me.|I read a book which my aunt gave me.|I read a book. Which my aunt gave me last year.|Which my aunt gave me. I read a book.
   They cheered. As the runners crossed the line.|They cheered as the runners crossed the line.|They cheered. As the runners crossed the finish line.|As the runners crossed the line. They cheered.
   Mia laughed. Since the joke was silly.|Mia laughed since the joke was silly.|Mia laughed. Since the joke was very silly.|Since the joke was silly. Mia laughed.
+  We went home. After the party ended.|We went home after the party ended.|We went home. After the party ended late.|After the party ended. We went home.
+  I stayed inside. Because it was cold.|I stayed inside because it was cold.|I stayed inside. Because it was very cold.|Because it was cold. I stayed inside.
+  He kept running. Until he reached the gate.|He kept running until he reached the gate.|He kept running. Until he reached the front gate.|Until he reached the gate. He kept running.
+  The cat slept. On the warm windowsill.|The cat slept on the warm windowsill.|The cat slept. On the warm windowsill again.|On the warm windowsill. The cat slept.
+  We saw deer. Driving through the forest.|Driving through the forest, we saw deer.|We saw deer. Driving slowly through the forest.|Driving through the forest. We saw deer.
+  She cried. When she heard the news.|She cried when she heard the news.|She cried. When she heard the sad news.|When she heard the news. She cried.
+  The game stopped. During the thunderstorm.|The game stopped during the thunderstorm.|The game stopped. During the long thunderstorm.|During the thunderstorm. The game stopped.
+  I lost the pen. That my friend lent me.|I lost the pen that my friend lent me.|I lost the pen. That my friend lent me yesterday.|That my friend lent me. I lost the pen.
+  The crowd went quiet. As the singer stepped forward.|The crowd went quiet as the singer stepped forward.|The crowd went quiet. As the singer slowly stepped forward.|As the singer stepped forward. The crowd went quiet.
+  Ben stayed up late. Since there was no school.|Ben stayed up late since there was no school.|Ben stayed up late. Since there was no school the next day.|Since there was no school. Ben stayed up late.
+  The birds sang. Before the sun came up.|The birds sang before the sun came up.|The birds sang. Before the sun came up over the hill.|Before the sun came up. The birds sang.
+  We ate lunch. In the shade of a tree.|We ate lunch in the shade of a tree.|We ate lunch. In the shade of a tall tree.|In the shade of a tree. We ate lunch.
+  He fell asleep. While the movie was playing.|He fell asleep while the movie was playing.|He fell asleep. While the long movie was playing.|While the movie was playing. He fell asleep.
+  I met a girl. Who knows my cousin.|I met a girl who knows my cousin.|I met a girl. Who knows my cousin from school.|Who knows my cousin. I met a girl.
+  They left early. To avoid the traffic.|They left early to avoid the traffic.|They left early. To avoid the heavy traffic.|To avoid the traffic. They left early.
+  The dog waited. By the front door.|The dog waited by the front door.|The dog waited. By the big front door.|By the front door. The dog waited.
+  We found the map. Hidden under the floor.|We found the map hidden under the floor.|We found the map. Hidden deep under the floor.|Hidden under the floor. We found the map.
+  She smiled. Although she was tired.|She smiled although she was tired.|She smiled. Although she was very tired.|Although she was tired. She smiled.
+  The bus stopped. At the corner of Main Street.|The bus stopped at the corner of Main Street.|The bus stopped. At the busy corner of Main Street.|At the corner of Main Street. The bus stopped.
+  The baby laughed. Whenever the dog barked.|The baby laughed whenever the dog barked.|The baby laughed. Whenever the big dog barked.|Whenever the dog barked. The baby laughed.
   `,
   (right) => [`"${right}" joins the fragment to an independent clause.`, `“${right}”把片段与一个独立分句连在了一起。`],
   [
@@ -183,6 +283,26 @@ const adverbComma = choose(
       ["After the guests left", "we washed the dishes"],
       ["Until the bus arrives", "we will wait here"],
       ["As soon as I got home", "I called my friend"],
+      ["When the movie ended", "we walked home"],
+      ["Because the road was icy", "the bus was late"],
+      ["If it snows tonight", "school will close"],
+      ["After we ate dinner", "we played a game"],
+      ["Before the race started", "the runners stretched"],
+      ["When the lights went out", "the baby cried"],
+      ["Because he practiced daily", "he played well"],
+      ["If you need help", "ask the librarian"],
+      ["After the sun set", "the air grew cold"],
+      ["Until the paint dries", "do not touch the wall"],
+      ["As soon as the door opened", "the dog ran out"],
+      ["When Grandma visits", "she bakes bread"],
+      ["Because the test was hard", "the teacher gave extra time"],
+      ["If the team wins", "we will celebrate"],
+      ["Before you swim", "check the water"],
+      ["After the concert ended", "the crowd cheered"],
+      ["When the alarm rang", "I jumped out of bed"],
+      ["Because the shop was busy", "we waited an hour"],
+      ["Until the rain stops", "we will stay inside"],
+      ["As soon as the bell rings", "the class will begin"],
     ].map(([clause = "", main = ""], i) => {
       const lower = `${clause[0]!.toLowerCase()}${clause.slice(1)}`;
       const cap = `${main[0]!.toUpperCase()}${main.slice(1)}`;
@@ -220,6 +340,26 @@ const tag = choose(
   The shop is open / isn't it|The shop is open, isn't it?|The shop is open isn't it?|The shop is open, is it?
   She hasn't left yet / has she|She hasn't left yet, has she?|She hasn't left yet has she?|She hasn't left yet, hasn't she?
   This is your coat / isn't it|This is your coat, isn't it?|This is your coat isn't it?|This is your coat, is it?
+  It's raining / isn't it|It's raining, isn't it?|It's raining isn't it?|It's raining, is it?
+  You saw the movie / didn't you|You saw the movie, didn't you?|You saw the movie didn't you?|You saw the movie, did you?
+  He can drive / can't he|He can drive, can't he?|He can drive can't he?|He can drive, can he?
+  We aren't late / are we|We aren't late, are we?|We aren't late are we?|We aren't late, aren't we?
+  She plays chess / doesn't she|She plays chess, doesn't she?|She plays chess doesn't she?|She plays chess, does she?
+  They lost the match / didn't they|They lost the match, didn't they?|They lost the match didn't they?|They lost the match, did they?
+  You won't tell anyone / will you|You won't tell anyone, will you?|You won't tell anyone will you?|You won't tell anyone, won't you?
+  The water is warm / isn't it|The water is warm, isn't it?|The water is warm isn't it?|The water is warm, is it?
+  He hasn't eaten yet / has he|He hasn't eaten yet, has he?|He hasn't eaten yet has he?|He hasn't eaten yet, hasn't he?
+  That is your bike / isn't it|That is your bike, isn't it?|That is your bike isn't it?|That is your bike, is it?
+  You like chocolate / don't you|You like chocolate, don't you?|You like chocolate don't you?|You like chocolate, do you?
+  She was at the party / wasn't she|She was at the party, wasn't she?|She was at the party wasn't she?|She was at the party, was she?
+  We should leave now / shouldn't we|We should leave now, shouldn't we?|We should leave now shouldn't we?|We should leave now, should we?
+  They don't know / do they|They don't know, do they?|They don't know do they?|They don't know, don't they?
+  He will come / won't he|He will come, won't he?|He will come won't he?|He will come, will he?
+  The test wasn't hard / was it|The test wasn't hard, was it?|The test wasn't hard was it?|The test wasn't hard, wasn't it?
+  You have a sister / don't you|You have a sister, don't you?|You have a sister don't you?|You have a sister, do you?
+  It isn't broken / is it|It isn't broken, is it?|It isn't broken is it?|It isn't broken, isn't it?
+  She could hear us / couldn't she|She could hear us, couldn't she?|She could hear us couldn't she?|She could hear us, could she?
+  They have finished / haven't they|They have finished, haven't they?|They have finished haven't they?|They have finished, have they?
   `,
   (right) => [
     `"${right}" sets off the tag with a comma and reverses the statement.`,
@@ -250,6 +390,26 @@ const hadForm = choose(
   The river ___ over its banks before dawn.|had risen|had rose|has risen
   She ___ the race twice before that year.|had won|had win|has won
   The class ___ the song many times.|had sung|had sang|has sung
+  By noon, the snow ___.|had melted|had melt|has melted
+  He ___ the movie before he read the book.|had seen|had saw|has seen
+  We ___ the dishes when the guests arrived.|had washed|had wash|have washed
+  They ___ the house before the rain started.|had left|had leaved|have left
+  She ___ a poem, so she read it aloud.|had written|had wrote|has written
+  I ___ my homework, so I went outside.|had finished|had finish|have finished
+  The plane ___ by the time we got to the gate.|had taken off|had took off|has taken off
+  The children ___ asleep before the movie ended.|had fallen|had fell|have fallen
+  He ___ that song many times before.|had heard|had hear|has heard
+  The team ___ every game that season.|had won|had winned|has won
+  By Friday, she ___ three books.|had read|had readed|has read
+  We ___ the museum twice before.|had visited|had visit|have visited
+  The guests ___ all the cake by eight.|had eaten|had ate|have eaten
+  He ___ his arm, so he could not play.|had broken|had broke|has broken
+  The store ___ before we got there.|had closed|had close|has closed
+  I ___ her before at a party.|had met|had meet|have met
+  The sun ___ by the time we reached camp.|had set|had setted|has set
+  They ___ the bridge long before the war.|had built|had builded|have built
+  She ___ the answer, so she raised her hand.|had known|had knew|has known
+  The bus ___ by the time I ran outside.|had gone|had went|has gone
   `,
   (right) => [`*${right}*: *had* plus the past participle.`, `*${right}*：*had* 加过去分词。`],
   [
@@ -277,6 +437,26 @@ const splice = choose(
   The sun set, the stars came out.|The sun set. The stars came out.|The sun set the stars came out.|The sun set, soon the stars came out.
   I called him, he did not answer.|I called him, but he did not answer.|I called him he did not answer.|I called him, still he did not answer.
   The road was icy, the bus was late.|The road was icy; the bus was late.|The road was icy the bus was late.|The road was icy, consequently the bus was late.
+  The phone rang, nobody answered.|The phone rang, but nobody answered.|The phone rang nobody answered.|The phone rang, however nobody answered.
+  I was tired, I went to bed early.|I was tired, so I went to bed early.|I was tired I went to bed early.|I was tired, therefore I went to bed early.
+  The snow fell all night, the roads were closed.|The snow fell all night; the roads were closed.|The snow fell all night the roads were closed.|The snow fell all night, as a result the roads were closed.
+  My sister plays the violin, I play the drums.|My sister plays the violin, and I play the drums.|My sister plays the violin I play the drums.|My sister plays the violin, also I play the drums.
+  The movie was long, we enjoyed it.|The movie was long, but we enjoyed it.|The movie was long we enjoyed it.|The movie was long, still we enjoyed it.
+  The bell rang, the students left.|The bell rang. The students left.|The bell rang the students left.|The bell rang, then the students left.
+  He forgot his umbrella, he got wet.|He forgot his umbrella, so he got wet.|He forgot his umbrella he got wet.|He forgot his umbrella, thus he got wet.
+  The cake was in the oven, the kitchen smelled sweet.|The cake was in the oven; the kitchen smelled sweet.|The cake was in the oven the kitchen smelled sweet.|The cake was in the oven, soon the kitchen smelled sweet.
+  We practiced every day, we won the contest.|We practiced every day, and we won the contest.|We practiced every day we won the contest.|We practiced every day, consequently we won the contest.
+  The river was high, the bridge was closed.|The river was high; the bridge was closed.|The river was high the bridge was closed.|The river was high, therefore the bridge was closed.
+  I knocked twice, no one opened the door.|I knocked twice, but no one opened the door.|I knocked twice no one opened the door.|I knocked twice, however no one opened the door.
+  The store was out of milk, we bought juice.|The store was out of milk, so we bought juice.|The store was out of milk we bought juice.|The store was out of milk, instead we bought juice.
+  The wind howled, the windows rattled.|The wind howled. The windows rattled.|The wind howled the windows rattled.|The wind howled, meanwhile the windows rattled.
+  My dog is old, he still loves to run.|My dog is old, but he still loves to run.|My dog is old he still loves to run.|My dog is old, nevertheless he still loves to run.
+  The lights went out, we lit candles.|The lights went out, so we lit candles.|The lights went out we lit candles.|The lights went out, then we lit candles.
+  Ana studied all week, she felt ready.|Ana studied all week; she felt ready.|Ana studied all week she felt ready.|Ana studied all week, finally she felt ready.
+  The game ended, the fans went home.|The game ended. The fans went home.|The game ended the fans went home.|The game ended, afterward the fans went home.
+  The soup was cold, I heated it up.|The soup was cold, so I heated it up.|The soup was cold I heated it up.|The soup was cold, therefore I heated it up.
+  Leo likes math, his twin likes art.|Leo likes math, and his twin likes art.|Leo likes math his twin likes art.|Leo likes math, besides his twin likes art.
+  The trail was steep, we kept climbing.|The trail was steep, but we kept climbing.|The trail was steep we kept climbing.|The trail was steep, still we kept climbing.
   `,
   (right) => [`"${right}" joins the two clauses correctly.`, `“${right}”正确地连接了两个分句。`],
   [
@@ -307,6 +487,26 @@ const method = choose(
   The leaf ___ under a microscope.|was examined|were examined|examined
   The rocks ___ before and after soaking.|were weighed|was weighed|weighed
   The jars ___ in a dark cupboard.|were stored|was stored|stored
+  The beakers ___ with clean water.|were rinsed|was rinsed|rinsed
+  The powder ___ into the flask.|was added|were added|added
+  The worms ___ under a lamp.|were placed|was placed|placed
+  The liquid ___ through a filter.|was passed|were passed|passed
+  The cups ___ with labels.|were marked|was marked|marked
+  The metal ___ in acid for an hour.|was soaked|were soaked|soaked
+  The temperatures ___ every hour.|were measured|was measured|measured
+  The sample ___ under a strong light.|was viewed|were viewed|viewed
+  The eggs ___ in salt water.|were tested|was tested|tested
+  The paper ___ into strips.|was cut|were cut|cut
+  The tubes ___ for two days.|were left|was left|left
+  The salt ___ in warm water.|was dissolved|were dissolved|dissolved
+  The beans ___ in wet cotton.|were grown|was grown|grown
+  The ice ___ in a dish.|was melted|were melted|melted
+  The magnets ___ near the compass.|were held|was held|held
+  The soil ___ for moisture.|was tested|were tested|tested
+  The marbles ___ down the ramp.|were rolled|was rolled|rolled
+  The gas ___ in a balloon.|was collected|were collected|collected
+  The shells ___ by size.|were sorted|was sorted|sorted
+  The thermometer ___ in the water.|was placed|were placed|placed
   `,
   (right, shown) => [
     `"${shown.replace("___", right)}": the past passive, agreeing with the subject.`,
@@ -337,6 +537,26 @@ const every = choose(
   Each man and woman ___ a vote.|has|have|having
   Every house and shop ___ power again.|has|have|having
   The house and the shop ___ power again.|have|has|having
+  Every parent and teacher ___ welcome.|is|are|being
+  Each pen and pencil ___ a name on it.|has|have|having
+  The pen and the pencil ___ on the desk.|are|is|being
+  Every bike and scooter ___ a lock.|needs|need|needing
+  Each room and hallway ___ painted.|was|were|being
+  The room and the hallway ___ painted.|were|was|being
+  Every player and coach ___ a jersey.|wears|wear|wearing
+  My brother and my sister ___ in college.|are|is|being
+  Each girl and boy ___ a turn.|gets|get|getting
+  Every street and park ___ clean.|looks|look|looking
+  The street and the park ___ clean.|look|looks|looking
+  Each apple and pear ___ washed.|was|were|being
+  Every window and door ___ locked.|is|are|being
+  The window and the door ___ locked.|are|is|being
+  Each singer and dancer ___ a costume.|has|have|having
+  Every lamp and fan ___ turned off.|was|were|being
+  My aunt and my uncle ___ near the lake.|live|lives|living
+  Each desk and chair ___ a number.|has|have|having
+  Every song and poem ___ a title.|needs|need|needing
+  The song and the poem ___ titles.|need|needs|needing
   `,
   (right, shown) => [
     `"${shown.replace("___", right)}": ${shown.startsWith("Each") || shown.startsWith("Every") ? "*each* or *every* takes the subjects one at a time" : "two subjects joined by *and* are plural"}.`,
@@ -370,6 +590,26 @@ const directions = choose(
   Fill the pot with water. ___ Add the pasta.|Bring it to a boil.|You should bring it to a boil.|It is brought to a boil.
   Choose a topic. ___ Write a draft.|Make a plan.|You ought to make a plan.|A plan is made.
   Set the timer. ___ Check the oven.|Wait ten minutes.|You should wait ten minutes.|Ten minutes are waited.
+  Preheat the oven. ___ Bake for twenty minutes.|Grease the pan.|You should grease the pan.|The pan is greased.
+  Find a seat. ___ Listen to the guide.|Turn off your phone.|You should turn off your phone.|Your phone is turned off.
+  Plug in the cable. ___ Wait for the light.|Press the power button.|You might press the power button.|The power button is pressed.
+  Sweep the floor. ___ Let it dry.|Mop it with warm water.|You should mop it with warm water.|It is mopped with warm water.
+  Open the box. ___ Read the instructions.|Take out the parts.|You can take out the parts.|The parts are taken out.
+  Peel the potatoes. ___ Boil them for ten minutes.|Cut them into cubes.|You should cut them into cubes.|They are cut into cubes.
+  Stand up straight. ___ Breathe slowly.|Relax your shoulders.|You could relax your shoulders.|Your shoulders are relaxed.
+  Write your name. ___ Begin the test.|Read all the questions.|You should read all the questions.|All the questions are read.
+  Dig a small hole. ___ Cover it with soil.|Drop in the seed.|You will drop in the seed.|The seed is dropped in.
+  Rinse the brush. ___ Dip it in the paint.|Dry it on a cloth.|You should dry it on a cloth.|It is dried on a cloth.
+  Take off your shoes. ___ Step onto the mat.|Put on the slippers.|You ought to put on the slippers.|The slippers are put on.
+  Cut the bread. ___ Add the cheese.|Spread the butter.|You should spread the butter.|The butter is spread.
+  Lock the door. ___ Hang up the key.|Turn off the lights.|You might turn off the lights.|The lights are turned off.
+  Sort the papers. ___ Put them in the folder.|Staple each set.|You should staple each set.|Each set is stapled.
+  Shake the bottle. ___ Pour a little into the cup.|Open the cap.|You can open the cap.|The cap is opened.
+  Measure the wood. ___ Sand the edges.|Saw it to length.|You should saw it to length.|It is sawed to length.
+  Fill the bucket. ___ Wash the car.|Add the soap.|You should add the soap.|The soap is added.
+  Warm up for five minutes. ___ Cool down slowly.|Run two laps.|You should run two laps.|Two laps are run.
+  Choose a book. ___ Write a short summary.|Read the first chapter.|You might read the first chapter.|The first chapter is read.
+  Line up at the door. ___ Walk to the bus.|Wait for your name.|You should wait for your name.|Your name is waited for.
   `,
   (right) => [`"${right}" begins with its verb, like the other steps.`, `“${right}”像其他步骤一样以动词开头。`],
   [
@@ -397,6 +637,26 @@ const opener = choose(
   Looking out the window, ___|I saw the snow.|the snow was falling.|the snow could be seen.
   Finishing the race, ___|the runner raised her arms.|the crowd cheered for the runner.|the arms of the runner went up.
   Walking into the kitchen, ___|Dad smelled smoke.|smoke filled the air.|the smell of smoke was noticed.
+  Jumping into the pool, ___|the kids splashed everyone.|water splashed everywhere.|everyone was splashed.
+  Lost in the woods, ___|the hikers used a compass.|the compass showed the way.|the way was found.
+  Waiting for the bus, ___|I read my book.|the rain started to fall.|my book was read.
+  Painting the fence, ___|Tom got paint on his shoes.|paint dripped onto Tom's shoes.|Tom's shoes were covered in paint.
+  Nervous before the test, ___|Ana took a deep breath.|a deep breath helped Ana.|a deep breath was taken.
+  Turning the corner, ___|we saw the ocean.|the ocean appeared.|the ocean was seen.
+  Baking the cake, ___|Dad burned his hand.|the oven burned Dad's hand.|Dad's hand was burned.
+  Proud of her work, ___|Lena showed the poster to her class.|the poster hung on the wall.|the poster was shown to the class.
+  Opening the gift, ___|Max gasped with joy.|joy filled Max's face.|the gift was opened.
+  Cleaning the attic, ___|Mom found old photos.|old photos fell out of a box.|old photos were found.
+  Swimming across the lake, ___|the girl felt tired.|the lake seemed huge.|the lake was crossed.
+  Hearing the thunder, ___|the dog hid under the bed.|the bed hid the dog.|the dog was hidden.
+  Covered in snow, ___|the children built a fort.|the fort stood in the yard.|a fort was built.
+  Writing the essay, ___|I checked every fact.|every fact seemed true.|every fact was checked.
+  Entering the museum, ___|the students saw a dinosaur.|a dinosaur stood by the door.|a dinosaur was seen.
+  Late for class, ___|Sam ran down the hall.|the hall was empty.|the hall was crossed quickly.
+  Fixing the bike, ___|Grandpa whistled a tune.|a tune filled the garage.|a tune was whistled.
+  Reaching the top, ___|the climbers took photos.|the view was amazing.|photos were taken.
+  Excited by the news, ___|the fans danced in the street.|the street filled with music.|dancing was done in the street.
+  Watching the movie, ___|we ate popcorn.|the popcorn ran out.|popcorn was eaten.
   `,
   (right) => [`"${right}" makes the doer of the opening action the subject.`, `“${right}”让开头动作的施动者做了主语。`],
   [
@@ -424,6 +684,26 @@ const essential = choose(
   It is vital that the door ___ locked.|be|is|was
   It is important that the team ___ together.|practice|practices|practiced
   It is essential that each player ___ a helmet.|wear|wears|wore
+  It is essential that she ___ the form today.|send|sends|sent
+  It is important that he ___ quiet during the test.|stay|stays|stayed
+  It is necessary that the patient ___ in bed.|rest|rests|rested
+  It is vital that the child ___ safe.|be|is|was
+  It is essential that the report ___ finished by Friday.|be|is|was
+  It is important that everyone ___ the rules.|follow|follows|followed
+  It was necessary that he ___ the letter himself.|sign|signs|signed
+  It is vital that the water ___ clean.|be|is|was
+  It is important that the class ___ on time.|begin|begins|began
+  It is essential that each driver ___ a seat belt.|wear|wears|wore
+  It is necessary that she ___ her passport.|bring|brings|brought
+  It is important that he ___ his mother.|call|calls|called
+  It is vital that the bridge ___ checked every year.|be|is|was
+  It is essential that the team ___ together.|work|works|worked
+  It was important that the doctor ___ immediately.|come|comes|came
+  It is necessary that every visitor ___ in.|sign|signs|signed
+  It is vital that the plant ___ sunlight.|get|gets|got
+  It is essential that he ___ honest.|be|is|was
+  It is important that she ___ enough sleep.|get|gets|got
+  It is necessary that the door ___ shut.|stay|stays|stayed
   `,
   (right, shown) => [
     `"${shown.replace("___", right)}": the subjunctive uses the base form for every subject.`,
@@ -457,6 +737,26 @@ const weUs = choose(
   ___ sixth graders will lead the parade.|We|Us|Our
   The rules apply to ___ swimmers too.|us|we|our
   ___ campers built the fire ourselves.|We|Us|Our
+  ___ drivers must follow the rules.|We|Us|Our
+  The guide showed ___ tourists the old castle.|us|we|our
+  ___ readers loved the ending.|We|Us|Our
+  The award was given to ___ volunteers.|us|we|our
+  ___ musicians practiced all night.|We|Us|Our
+  The teacher gave ___ students extra time.|us|we|our
+  Some of ___ runners got lost.|us|we|our
+  ___ seventh graders planned the trip.|We|Us|Our
+  The new rule affects ___ cyclists most.|us|we|our
+  ___ swimmers dove in together.|We|Us|Our
+  The mayor thanked ___ helpers in a speech.|us|we|our
+  ___ kids want a bigger playground.|We|Us|Our
+  The storm surprised ___ hikers on the trail.|us|we|our
+  ___ dancers wore matching shoes.|We|Us|Our
+  The chef taught ___ cooks a new recipe.|us|we|our
+  ___ players never give up.|We|Us|Our
+  The bus left ___ passengers at the station.|us|we|our
+  ___ scouts set up the tents.|We|Us|Our
+  The judges watched ___ singers closely.|us|we|our
+  ___ artists painted the mural in a week.|We|Us|Our
   `,
   (right) => [
     `Drop the noun and *${right}* still fits: it is the ${right === "We" ? "subject" : "object"}.`,
@@ -487,6 +787,26 @@ const keepE = choose(
   hope + ful|hopeful|hopful|hopefull
   care + less|careless|carless|carelless
   replace + able|replaceable|replacable|replaceible
+  trace + able|traceable|tracable|traceible
+  knowledge + able|knowledgeable|knowledgable|knowledgeible
+  service + able|serviceable|servicable|serviceible
+  enforce + able|enforceable|enforcable|enforceible
+  acknowledge + able|acknowledgeable|acknowledgable|acknowledgeible
+  pronounce + able|pronounceable|pronouncable|pronounceible
+  use + ful|useful|usful|usefull
+  hate + ful|hateful|hatful|hatefull
+  home + less|homeless|homless|homelless
+  age + less|ageless|agless|agelless
+  place + ment|placement|placment|placemint
+  manage + ment|management|managment|managemint
+  change + less|changeless|changless|changelless
+  grace + ful|graceful|gracful|gracefull
+  price + less|priceless|pricless|pricelless
+  care + ful|careful|carful|carefull
+  waste + ful|wasteful|wastful|wastefull
+  move + ment|movement|movment|movemint
+  peace + ful|peaceful|peacful|peacefull
+  taste + less|tasteless|tastless|tastelless
   `,
   (right) => [`*${right}* keeps the *e* where the rule needs it.`, `*${right}* 在规则需要的地方保留了 *e*。`],
   [
@@ -507,6 +827,11 @@ const confusedLines = join([
     "Lawyers counsel their clients.",
     "The magician's trick was a clever illusion.",
     "The poem makes an allusion to a Greek myth.",
+    "Our principal reads the news each morning.",
+    "The cheese complements the apples well.",
+    "The town council meets on Mondays.",
+    "Mirrors create the illusion of a bigger room.",
+    "Fairness is the first principle of the club.",
   ].map((s) => `${s}|correct`),
   ...[
     "The principle welcomed the new students.",
@@ -519,6 +844,11 @@ const confusedLines = join([
     "Lawyers council their clients.",
     "The magician's trick was a clever allusion.",
     "The poem makes an illusion to a Greek myth.",
+    "Our principle reads the news each morning.",
+    "The cheese compliments the apples well.",
+    "The town counsel meets on Mondays.",
+    "Mirrors create the allusion of a bigger room.",
+    "Fairness is the first principal of the club.",
   ].map((s) => `${s}|wrong word`),
 ]);
 
