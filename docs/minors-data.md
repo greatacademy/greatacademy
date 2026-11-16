@@ -208,11 +208,11 @@ Korea lists student evaluation as high-impact. The same logic is why AI that sco
 
 1. **Local first.** Where the device can recognize speech itself, audio does not leave it, as in Duolingo ABC.
 2. **Otherwise streamed, not stored.** Prefer real-time services that keep nothing. [Microsoft states](https://learn.microsoft.com/legal/cognitive-services/speech-service/speech-to-text/data-privacy-security) that real-time recognition and pronunciation assessment retain no customer data.
-3. **When a file is needed,** it goes to R2 by a short-lived URL, is deleted as soon as it is judged, and a lifecycle rule removes anything left within a day. The voice service keeps no audio, as designed.
-4. **Before recording:** the learner sees a recording indicator and can skip without penalty. Nothing records in the background, and prompts do not ask for names.
+3. **A spoken answer is heard in its own request.** The app sends the recording, a WAV of at most the question's limit, with the answer; the server passes it to the route's real-time service while the learner waits, and checks the words heard. The recording is written nowhere, neither in R2 nor in the database nor in a log; only the words heard are kept, in `answer.response`, and emptied after 30 days. The voice service keeps no audio, as designed.
+4. **Before recording:** the learner sees a recording indicator and can skip without penalty: "Can't speak now" turns speaking off for the day, and a setting turns it off for good, and the course goes on without spoken topics. Nothing records in the background, and prompts do not ask for names.
 5. **Never:** a voice stored as a profile, recognition of who is speaking, speaker embeddings kept by us or a vendor, or inference of emotion, health or age. A vendor's contract must say this.
 6. **As if biometric.** The Illinois question is open and penalties there are private suits, so in every market the `speech` consent is written, names the vendor, and links the published retention schedule. This costs almost nothing.
-7. **Calibration.** Clips of children (E4.6) are collected only under `research`, with a separate form saying who rates them and when they are destroyed, and are never mixed with learners' recordings.
+7. **Calibration.** Clips of children (E4.6) are collected only under `research`, with the [research recording consent form](../apps/web/src/lib/legal.ts) (`/legal/research-form`), signed per collection, saying who rates them, which speech service hears them and when they are destroyed (at most 12 months), and are never mixed with learners' recordings. Synthetic clips need no form.
 
 **Signs of harm** in writing or speech go to a review path. It must exist before E3. Duties differ: China's Art. 38 requires reporting to police in some cases, and others are unknown (§13).
 
@@ -220,8 +220,9 @@ Korea lists student evaluation as high-impact. The same logic is why AI that sco
 
 | Data | Child | Teen | After that |
 | :--- | :--- | :--- | :--- |
-| Audio | Until judged, at most 1 day | The same | Deleted |
-| Transcripts | 30 days *starting* | 30 days *starting* | Scores remain |
+| Audio of spoken answers | Not kept: heard within the request | The same | Not applicable |
+| Words heard in spoken answers | 30 days *starting* | 30 days *starting* | Emptied; correct or not remains |
+| Research clips (E4.6) | Until the form's date, at most 12 months | The same | Destroyed; counts remain |
 | Conversation transcripts | Not kept | 30 days *starting* | Deleted |
 | Free text in `answer.response`, and in `judgment` with its quotations, notes and feedback | 90 days *starting* | 1 year *starting* | Emptied; correct or not, and each criterion met or not, remain |
 | Essays and feedback quoting them | 1 year *starting* | 1 year *starting* | Deleted; scores remain |
@@ -269,7 +270,7 @@ These are candidates we have read about, not choices:
 | :--- | :--- | :--- |
 | OpenAI API | [Serves all open markets but Hong Kong](https://developers.openai.com/api/docs/supported-countries). [Requires zero data retention](https://developers.openai.com/api/docs/guides/safety-checks/under-18-api-guidance) for under-13s or the consent age | Contract |
 | Anthropic API | [Serves all open markets but Hong Kong](https://www.anthropic.com/supported-countries), policy effective November 12, 2026. [Allows organizations to serve minors](https://support.claude.com/en/articles/9307344) with age assurance, moderation, monitoring, AI disclosure and a public statement of compliance | Whether zero retention is available to us |
-| Azure AI Speech | See §9 | Contract, regions per market |
+| Azure AI Speech | See §9. Real-time recognition and pronunciation assessment keep no audio or text; customer data is not used to train, under Microsoft's Product Terms and Data Protection Addendum. Speech-to-text of `en-US` passed `stt:en-US` on synthetic clips and failed `stt-verbatim:en-US` (E4.5 in the [English plan](english-development-plan.md#5-stage-3-level-courses)) | Before minors: the register entry per market (region, the Addendum's transfer terms, minors allowed), the region of the resource, and the notice naming it |
 | Azure OpenAI in Hong Kong | [Microsoft said it served eligible customers there](https://sg.finance.yahoo.com/news/microsoft-maintains-ai-services-hong-093000823.html); undated, and terms not read | Whether it still does, and for minors |
 | Other speech and AI vendors, pi-ai routes, AI Gateway | Not checked | Each one, before use |
 | Hetzner (PostgreSQL and the voice service) | Hetzner Cloud in Hillsboro, Oregon, United States. Its data processing agreement under GDPR Art. 28 was concluded in the account on November 10, 2026, naming children's data and learners' texts and recordings in Appendix 1. Hetzner Online GmbH is the contracting party; Hetzner US LLC runs the US locations in third-party data centres | Whether the agreement meets each market's rules, such as COPPA, Korea's disclosure of entrusted processing and Quebec's assessment before a transfer |
@@ -287,14 +288,14 @@ These are candidates we have read about, not choices:
 - **Staff access** to minors' text goes through an audited tool, not direct SQL in production.
 - **Withdrawing `basic`** stops study and empties the text of past answers. Progress stays until the account is deleted, or until the inactivity rule of §10 deletes it.
 
-**Gaps today.** Card verification arrives with billing ([Billing](billing.md)), and the native app (`apps/nsh`) asks the age question and stops where the rules stop, but has no consent screens or settings, so those still happen on the web; it also keeps the session token in a plain file, which must change before release. The `/legal` pages are drafts that counsel has not read, in English and Simplified Chinese only, so the other notice languages are missing. Store age signals, the impact assessment and the marked-text log test do not exist yet, nor does the audited staff tool. AI scopes can be consented to only once a vendor has a live route, and no code calls a vendor yet: pi-ai and `tools/calibrate` arrive with E3.
+**Gaps today.** Card verification arrives with billing ([Billing](billing.md)), and the native app (`apps/nsh`) asks the age question and stops where the rules stop, but has no consent screens or settings, so those still happen on the web; it also keeps the session token in a plain file, which must change before release. The `/legal` pages are drafts that counsel has not read, in English and Simplified Chinese only, so the other notice languages are missing. Store age signals, the impact assessment and the marked-text log test do not exist yet, nor does the audited staff tool. AI scopes can be consented to only once a vendor has a live route; `tools/calibrate` tests each route before an administrator can set it live.
 
 | Before | Needed | Size |
 | :--- | :--- | :--- |
 | **English pilot (E1.6)** | In one open market, not China: signed guardian forms stating purpose, access and deletion date; accounts made by the team, with pseudonyms; the notice in the market's language; reports read only by named people; data deleted at the stated date. No new code beyond the deletion | S |
 | **Public sign-up to minors (any subject)** | Counsel's review of the pages and rows, the impact assessment, translated legal text per market, representatives, card verification where wanted, the age flow in the native app; then each market's switch | L |
 | **AI writing (E3)** | `writing` consent, §8, §9, vendor register, per-market check | M |
-| **Recording (E4)** | `speech` consent, §9, deletion test across R2 and transcripts, `research` form for E4.6 | M |
+| **Recording (E4)** | Done: `speech` consent, §9 in code (no stored audio, words heard emptied after 30 days, with a test), the `research` form for E4.6. Left: the register entry for the speech vendor in each market, and counsel's answer to question 3 | M |
 | **Conversation (E5)** | `conversation` consent, safety review path, end-to-end test of no retention | M |
 | **Reopening mainland China** | A new decision by the owner on §5, with Chinese counsel | Separate project |
 

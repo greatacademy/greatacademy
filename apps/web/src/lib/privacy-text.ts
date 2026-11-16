@@ -62,10 +62,10 @@ const en = {
     writing: { name: "AI-judged writing", body: "An AI model reads what you write and gives feedback. You can keep studying without it." },
     speech: {
       name: "Recorded speech",
-      body: "Recordings go to speech services and an AI model, and are deleted within a day. You can keep studying without it.",
+      body: "Questions you answer aloud. A recording goes to the speech service named in the privacy notice, which turns it into words, and is kept by no one; the words are kept 30 days. You can keep studying without it.",
     },
     conversation: { name: "Conversation", body: "Not offered to anyone under 18 yet." },
-    research: { name: "Research", body: "Not offered through this page." },
+    research: { name: "Research", body: "Only with a signed research consent form for one collection; not offered through this page." },
   } as Record<string, { name: string; body: string }>,
   on: "On",
   off: "Off",
@@ -166,9 +166,12 @@ const zh: typeof en = {
   scopes: {
     basic: { name: "课程和答题", body: "课程、复习和测验，答案由规则判定。不会发送给任何 AI 公司。" },
     writing: { name: "AI 评判写作", body: "AI 模型会阅读你写的内容并给出反馈。不开启也可以继续学习。" },
-    speech: { name: "录音口语", body: "录音会发送给语音服务和 AI 模型，并在一天内删除。不开启也可以继续学习。" },
+    speech: {
+      name: "录音口语",
+      body: "开口回答的题目。录音会发送给隐私声明中列出的语音服务，转成文字后不被任何一方保存；识别出的文字保存 30 天。不开启也可以继续学习。",
+    },
     conversation: { name: "对话", body: "暂不向未满 18 岁的人提供。" },
-    research: { name: "研究", body: "不通过此页面提供。" },
+    research: { name: "研究", body: "仅凭针对某一次采集签署的研究录音同意书开启，不通过此页面提供。" },
   },
   on: "已开启",
   off: "已关闭",

@@ -13,7 +13,7 @@ export interface LegalPage {
 }
 
 /** LEGAL_PAGES are the pages under /legal, by name. They go through review because they are in the code; counsel has not reviewed this version. */
-export const LEGAL_PAGES = ["terms", "privacy", "children", "retention", "guardian-form"] as const;
+export const LEGAL_PAGES = ["terms", "privacy", "children", "retention", "guardian-form", "research-form"] as const;
 
 /** LegalPageName names a page under /legal. */
 export type LegalPageName = (typeof LEGAL_PAGES)[number];
@@ -88,6 +88,7 @@ const en: Record<LegalPageName, LegalPage> = {
           "Your age group, the date it ends and your country. We don't keep your date of birth.",
           "What you study: which questions you saw, whether each answer was right, and the XP you earned.",
           "The text of your answers, for a limited time (see how long we keep things).",
+          "If speaking is on, the words a speech service heard in your spoken answers, for 30 days. We don't keep the recordings.",
           "Sign-in records with an address and browser, for 30 days.",
         ],
       },
@@ -102,7 +103,19 @@ const en: Record<LegalPageName, LegalPage> = {
         items: [
           "Our hosting providers, Cloudflare and Hetzner, and our email provider, who process it only for us.",
           "AI companies only if an AI feature is on, only for that feature, and only companies named in the notice you agreed to. They may not train on it.",
+          "For speaking, Microsoft (Azure AI Speech), only if speaking is on, to turn your recordings into words.",
           "Your guardian, if you have one, can see your progress and activity. They don't see the text of your answers in the app.",
+        ],
+      },
+      {
+        heading: "Speaking",
+        items: [
+          "Some questions are answered aloud. They are optional, and on only if you, or your guardian for a learner under 18, agreed to speaking. We ask a child too.",
+          "Nothing records until you press record, and you see that it is recording. The recording stays on your device until you send it.",
+          "When you send it, we pass it to Microsoft Azure AI Speech, which turns it into words, and may score how clearly the words were said, while you wait. Neither we nor Microsoft keep the recording, and Microsoft may not train on it.",
+          "We keep the words heard for 30 days, so you can see what was heard; then they are emptied, and whether the answer was right stays.",
+          "We never make a voiceprint, recognise who is speaking, or guess emotions, health or age from your voice. An accent is fine: only whether the words are clear counts.",
+          "Turn speaking off in Settings at any time, or for the day with “Can’t speak now”. The course goes on without it.",
         ],
       },
       {
@@ -142,6 +155,7 @@ const en: Record<LegalPageName, LegalPage> = {
           "Your guardian can see how you're doing, but not what you type.",
           "You can turn things off and delete what you typed whenever you like. Your guardian is told.",
           "If an AI reads your work, we'll tell you, and we'll ask you first too. If you say no, it stays off.",
+          "If speaking is on, you can answer some questions aloud. Your voice is turned into words and then thrown away. You can always press “Can’t speak now”.",
           "Nobody else can talk to you here, and nobody sees your real name, because we don't ask for it.",
         ],
       },
@@ -149,7 +163,7 @@ const en: Record<LegalPageName, LegalPage> = {
         heading: "If you're a guardian",
         items: [
           "You verify once with a signed form. A person checks it, and it's deleted once they've decided.",
-          "You agree to each purpose separately. Refusing an optional one keeps the course.",
+          "You agree to each purpose separately. Refusing an optional one keeps the course. Speaking is its own purpose: recordings are heard by the speech service in the privacy notice and kept by no one.",
           "An agreement lasts 12 months. We remind you before it ends; then that feature stops.",
           "You can see progress, set a daily limit, download the data, delete typed answers, or delete the account, at any time. Deleting takes effect at once.",
         ],
@@ -164,6 +178,9 @@ const en: Record<LegalPageName, LegalPage> = {
         heading: "For learners under 18",
         items: [
           "Text of answers: 90 days for a child's account, 1 year for other learners under 18. After that it's emptied; whether it was right stays.",
+          "Recordings of spoken answers: not kept. They are heard while the learner waits, then discarded.",
+          "Words heard in spoken answers: 30 days. After that they're emptied; whether the answer was right stays.",
+          "Recordings collected for research with a signed form: until the date on the form, at most 12 months, then destroyed.",
           "Addresses and browsers in sign-in records: 30 days.",
           "Progress: while the account is active, then deleted with the account.",
           "An inactive account: after 12 months we send a notice, and 30 days later we delete it.",
@@ -194,6 +211,52 @@ const en: Record<LegalPageName, LegalPage> = {
         items: [
           "Email of my Great Academy account: ____________________",
           "My name: ____________________",
+          "Date: ____________________",
+          "Signature: ____________________",
+        ],
+      },
+    ],
+  },
+  "research-form": {
+    title: "Research recording consent form",
+    intro:
+      "Print this page for one collection of recordings, fill it in and sign it, and hand it to the person running the collection. Recordings made with it test speech services; they are never part of a learner's account.",
+    sections: [
+      {
+        heading: "What happens",
+        items: [
+          "The speaker reads short words and sentences aloud, for about 15 minutes. Nothing else is recorded, and no name is said.",
+          "The recordings are kept apart from any Great Academy account, under a number, not a name.",
+          "Two people named below listen to each recording and rate whether the words are clear. A speech service named below hears them too, to compare its results with the ratings.",
+          "No one trains a model on the recordings, makes a voiceprint, or recognises who is speaking.",
+          "The recordings and ratings are destroyed on the date below, at most 12 months after the collection. Only counts, with no voice, remain.",
+          "You may withdraw at any time before that date, without giving a reason, and the speaker's recordings are destroyed at once.",
+        ],
+      },
+      {
+        heading: "Filled in by Great Academy",
+        items: [
+          "Collection: ____________________",
+          "People who rate the recordings: ____________________",
+          "Speech service: ____________________",
+          "Recordings destroyed on: ____________________",
+        ],
+      },
+      {
+        heading: "I state that",
+        items: [
+          "I'm the speaker and an adult, or a parent or legal guardian of the speaker.",
+          "I've read this form, and agree to the recordings being made and used as it says.",
+          "If the speaker is a child, they were told what will happen in words they understand, and said yes. If they say no, now or later, nothing is recorded.",
+        ],
+      },
+      {
+        heading: "To fill in",
+        items: [
+          "Speaker's age: ____________________",
+          "My name: ____________________",
+          "Relationship to the speaker: ____________________",
+          "Email or phone, to withdraw: ____________________",
           "Date: ____________________",
           "Signature: ____________________",
         ],
@@ -264,6 +327,7 @@ const zh: Record<LegalPageName, LegalPage> = {
           "你的年龄段、其结束日期和国家或地区。我们不保存你的出生日期。",
           "你的学习情况：看过哪些题、每题是否正确、获得的 XP。",
           "你答案的文本，保存有限的时间（见“数据保存多久”）。",
+          "如果开启了口语，语音服务从你开口回答中识别出的文字，保存 30 天。我们不保存录音。",
           "带有地址和浏览器信息的登录记录，保存 30 天。",
         ],
       },
@@ -273,7 +337,19 @@ const zh: Record<LegalPageName, LegalPage> = {
         items: [
           "我们的托管服务商 Cloudflare 和 Hetzner，以及邮件服务商，它们只代我们处理。",
           "只有开启 AI 功能时才会发送给 AI 公司，仅用于该功能，且仅限你同意的通知中写明的公司。它们不得用这些数据训练模型。",
+          "口语：仅在开启口语时发送给 Microsoft（Azure AI Speech），用于把你的录音转成文字。",
           "你的监护人（如果有）可以看到你的进度和活动。他们在应用中看不到你答案的文本。",
+        ],
+      },
+      {
+        heading: "口语",
+        items: [
+          "有些题目需要开口回答。它们是可选的，只有你（未满 18 岁的学习者则由监护人）同意了口语才会开启。我们也会问孩子本人。",
+          "在你按下录音之前不会录音，录音时你会看到提示。录音在你发送之前一直留在你的设备上。",
+          "你发送后，我们把录音交给 Microsoft Azure AI Speech，在你等待时把它转成文字，并可能评估发音是否清楚。我们和 Microsoft 都不保存录音，Microsoft 也不得用它训练模型。",
+          "识别出的文字保存 30 天，方便你查看听到了什么；之后会被清空，答案是否正确仍保留。",
+          "我们绝不制作声纹、识别说话人，也不从你的声音推断情绪、健康或年龄。有口音没关系，只看词是否说清楚。",
+          "你随时可以在“设置”中关闭口语，或用“现在不方便说话”关闭当天的口语。不开口语，课程照常进行。",
         ],
       },
       {
@@ -309,6 +385,7 @@ const zh: Record<LegalPageName, LegalPage> = {
           "你的监护人能看到你学得怎么样，但看不到你输入的内容。",
           "你随时可以关闭功能、删除你输入的内容。你的监护人会收到通知。",
           "如果有 AI 读你的作业，我们会告诉你，也会先问你。如果你说不，它就保持关闭。",
+          "如果开启了口语，有些题你可以开口回答。你的声音会被转成文字，然后丢掉。你随时可以按“现在不方便说话”。",
           "这里没有其他人能和你说话，也没有人能看到你的真实姓名，因为我们不会问。",
         ],
       },
@@ -316,7 +393,7 @@ const zh: Record<LegalPageName, LegalPage> = {
         heading: "如果你是监护人",
         items: [
           "你只需用签字表格验证一次。会有人工审核，决定后表格即被删除。",
-          "你对每个用途分别同意。拒绝可选用途不影响课程。",
+          "你对每个用途分别同意。拒绝可选用途不影响课程。口语是单独的用途：录音由隐私声明中列出的语音服务识别，不被任何一方保存。",
           "同意的有效期为 12 个月。到期前我们会提醒你，到期后该功能停止。",
           "你随时可以查看进度、设置每日上限、下载数据、删除输入的答案或删除账号。删除立即生效。",
         ],
@@ -331,6 +408,9 @@ const zh: Record<LegalPageName, LegalPage> = {
         heading: "未满 18 岁的学习者",
         items: [
           "答案的文本：儿童账号 90 天，其他未满 18 岁的学习者 1 年。之后会被清空，是否正确仍保留。",
+          "开口回答的录音：不保存。在学习者等待时识别，随即丢弃。",
+          "开口回答中识别出的文字：30 天。之后会被清空，答案是否正确仍保留。",
+          "凭签字表格为研究采集的录音：保存到表格上写明的日期，最长 12 个月，然后销毁。",
           "登录记录中的地址和浏览器信息：30 天。",
           "学习进度：账号活跃期间保留，随账号一起删除。",
           "不活跃的账号：12 个月后发送通知，30 天后删除。",
@@ -358,6 +438,51 @@ const zh: Record<LegalPageName, LegalPage> = {
         items: [
           "我的 Great Academy 账号邮箱：____________________",
           "我的姓名：____________________",
+          "日期：____________________",
+          "签名：____________________",
+        ],
+      },
+    ],
+  },
+  "research-form": {
+    title: "研究录音同意表",
+    intro: "每次采集录音请打印本页，填写并签字后交给负责采集的人。用它录下的声音用于测试语音服务，绝不会成为任何学习者账号的一部分。",
+    sections: [
+      {
+        heading: "会做什么",
+        items: [
+          "说话人大声读出一些简短的词和句子，约 15 分钟。不录其他内容，也不会说出姓名。",
+          "录音与任何 Great Academy 账号分开保存，只用编号标记，不用姓名。",
+          "下面写明的两个人会听每一段录音，评定词是否说清楚。下面写明的语音服务也会识别这些录音，用来和评定结果比较。",
+          "任何人都不会用这些录音训练模型、制作声纹或识别说话人。",
+          "录音和评定结果会在下面写明的日期销毁，最晚为采集后 12 个月。之后只留下不含声音的统计数字。",
+          "在那之前你随时可以撤回，无需说明理由，说话人的录音会立即销毁。",
+        ],
+      },
+      {
+        heading: "由 Great Academy 填写",
+        items: [
+          "采集名称：____________________",
+          "评定录音的人：____________________",
+          "语音服务：____________________",
+          "录音销毁日期：____________________",
+        ],
+      },
+      {
+        heading: "本人声明",
+        items: [
+          "我是说话人本人且已成年，或是说话人的父母或法定监护人。",
+          "我已阅读本表，同意按本表所述录音和使用录音。",
+          "如果说话人是孩子，已经用他们能听懂的话告诉他们会发生什么，他们也同意了。如果他们现在或以后说不，就不会录音。",
+        ],
+      },
+      {
+        heading: "请填写",
+        items: [
+          "说话人的年龄：____________________",
+          "我的姓名：____________________",
+          "与说话人的关系：____________________",
+          "用于撤回的邮箱或电话：____________________",
           "日期：____________________",
           "签名：____________________",
         ],
