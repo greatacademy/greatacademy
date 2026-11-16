@@ -1,5 +1,6 @@
 import type { Figure } from "./figure.ts";
 import type { Rng } from "./rng.ts";
+import type { SpeechMode } from "./speech.ts";
 import type { Locale, Text } from "./text.ts";
 
 /** Json is a JSON-serializable value. */
@@ -21,7 +22,19 @@ export type InputSpec =
    */
   | { readonly kind: "plot"; readonly grid: PlotGrid; readonly points: number }
   /** A long text field for writing judged by a model; the response is the learner's text, of at least minWords words and at most maxChars characters. */
-  | { readonly kind: "writing"; readonly minWords: number; readonly maxChars: number };
+  | { readonly kind: "writing"; readonly minWords: number; readonly maxChars: number }
+  /**
+   * A recording of the learner speaking, at most maxSeconds long; the server sends it to a speech service of the
+   * language and checks what was heard (Heard). text is what to repeat or read aloud, shown above the recorder; a
+   * "say" problem shows none.
+   */
+  | {
+      readonly kind: "speech";
+      readonly language: string;
+      readonly mode: SpeechMode;
+      readonly text?: string;
+      readonly maxSeconds: number;
+    };
 
 /** PlotGrid says where a figure's coordinates lie and which points of it a learner can mark. */
 export interface PlotGrid {
@@ -175,6 +188,12 @@ export interface TopicDef {
   readonly essay?: boolean;
   /** strand is the id of the subject's strand the topic belongs to, such as "grammar"; required when the subject declares strands. */
   readonly strand?: string;
+  /**
+   * spoken makes a topic answered aloud, in the language given, such as "en-US": its problems take a recording. A
+   * learner for whom no speech service qualifies, or who turned speaking off, does not get the topic, so no topic that
+   * is not spoken may depend on one that is. A spoken topic is never quizzed or asked by the diagnostic.
+   */
+  readonly spoken?: string;
 }
 
 /** StrandDef is a strand of a subject: a kind of topic a course balances against the others, such as reading or writing. */

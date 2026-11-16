@@ -72,6 +72,11 @@ function essayTopic(pl: Planner, t: string): boolean {
   return pl.graph.graph.topics.get(t)?.essay === true;
 }
 
+/** spokenTopic tells whether a topic is answered aloud, which is never quizzed or asked by the diagnostic. */
+function spokenTopic(pl: Planner, t: string): boolean {
+  return pl.graph.graph.topics.get(t)?.spoken !== undefined;
+}
+
 /** dueTopics lists the learned topics in scope due for review at now, most forgotten first; an essay is never due. */
 export function dueTopics(pl: Planner, state: LearnerState, now: number): string[] {
   const p = pl.params;
@@ -130,11 +135,11 @@ export function quizDue(pl: Planner, state: LearnerState): boolean {
 
 /**
  * diagnosticCandidates are the topics a diagnostic of the course would place:
- * the topics in scope not yet known. Topics learned in another course of the
- * subject are not asked again.
+ * the topics in scope not yet known, but for essays and spoken topics. Topics
+ * learned in another course of the subject are not asked again.
  */
 export function diagnosticCandidates(pl: Planner, state: LearnerState): string[] {
-  return pl.scope.topics.filter((t) => !isKnown(pl, state, t) && !essayTopic(pl, t));
+  return pl.scope.topics.filter((t) => !isKnown(pl, state, t) && !essayTopic(pl, t) && !spokenTopic(pl, t));
 }
 
 /** diagnosticDue tells whether the course's diagnostic is still to be offered: not yet taken or skipped, with topics left to place. */
@@ -227,7 +232,7 @@ export function nextTasks(pl: Planner, state: LearnerState, now: number, limit =
  */
 export function quizPlan(pl: Planner, state: LearnerState, rng: Rng): string[] {
   const learned = pl.scope.topics
-    .filter((t) => state.topics[t]?.learned && !essayTopic(pl, t))
+    .filter((t) => state.topics[t]?.learned && !essayTopic(pl, t) && !spokenTopic(pl, t))
     .sort((a, b) => (state.topics[b]!.learnedAt ?? 0) - (state.topics[a]!.learnedAt ?? 0));
   const n = Math.min(pl.params.quizQuestions, learned.length);
   const recent = learned.slice(0, Math.ceil(n * 0.75));

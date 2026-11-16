@@ -1,0 +1,1 @@
+ALTER TABLE "learner" ADD COLUMN "speaking_off_until" timestamp with time zone;

@@ -45,6 +45,9 @@ service LearningService {
   rpc GetSession(GetSessionRequest) returns (GetSessionResponse);
   // SubmitAnswer answers the current question of a session.
   rpc SubmitAnswer(SubmitAnswerRequest) returns (SubmitAnswerResponse);
+  // SetSpeaking turns spoken topics on or off, or off for the rest of the day; turning them off leaves a session
+  // waiting on a spoken question, with nothing counted.
+  rpc SetSpeaking(SetSpeakingRequest) returns (SetSpeakingResponse);
   // GetJudgment asks after an answer a model is judging: still pending, or its
   // verdict as feedback, with the session moved on.
   rpc GetJudgment(GetJudgmentRequest) returns (GetJudgmentResponse);
@@ -67,6 +70,10 @@ message GetProfileResponse {
   // can_decide tells whether the learner is their own supervisor, who
   // chooses courses and sets goals; otherwise a guardian does.
   bool can_decide = 3;
+  // speaking tells whether spoken topics are taught: a speech service serves the learner and speaking is not off.
+  bool speaking = 4;
+  // speaking_available tells whether a speech service serves the learner, so that turning speaking on would teach it.
+  bool speaking_available = 5;
 }
 
 // Enrollment is a learner's current course of a subject.
@@ -482,7 +489,21 @@ message Input {
     PlotInput plot = 4;
     OrderInput order = 5;
     WritingInput writing = 6;
+    SpeechInput speech = 7;
   }
+}
+
+// SpeechInput: a recording of the learner speaking, sent as audio with
+// SubmitAnswer; the server has it heard by a speech service and checks that.
+message SpeechInput {
+  // language is the language spoken, such as "en-US".
+  string language = 1;
+  // mode is "repeat" (say what was heard), "read" (read text aloud) or "say" (say a sentence of one's own under a rule).
+  string mode = 2;
+  // text is what to repeat or read, shown above the recorder; empty for "say".
+  string text = 3;
+  // max_seconds is the longest recording taken.
+  int32 max_seconds = 4;
 }
 
 // WritingInput: a long text field. The response is the learner's text, judged
@@ -537,6 +558,9 @@ message SubmitAnswerRequest {
   string response = 3;
   // skip answers "I don't know" where allowed, and leaves a question whose judging failed.
   bool skip = 4;
+  // audio answers a spoken question: a WAV file of 16 kHz mono 16-bit PCM, at most the question's max_seconds long.
+  // It is sent to a speech service and never stored.
+  bytes audio = 5;
 }
 
 message SubmitAnswerResponse {
@@ -545,6 +569,9 @@ message SubmitAnswerResponse {
   Session session = 2;
   // pending is true while a model judges the answer; ask again with GetJudgment.
   bool pending = 3;
+  // record_again asks for another recording of a spoken answer, saying why, such as nothing being heard; the
+  // recording counted nothing.
+  optional ga.common.v1.Text record_again = 4;
 }
 
 message GetJudgmentRequest {
@@ -590,6 +617,8 @@ message Feedback {
   bool revise = 9;
   // solution_sounds are recordings shown with the solution.
   repeated Sound solution_sounds = 10;
+  // heard is what a speech service heard in a spoken answer.
+  string heard = 11;
 }
 
 message GetTopicRequest {
@@ -678,3 +707,12 @@ message ResultItem {
   // solution_sounds are recordings shown with the solution.
   repeated Sound solution_sounds = 9;
 }
+
+message SetSpeakingRequest {
+  bool on = 1;
+  // today_only turns speaking off until the learner's next day begins, in time_zone.
+  bool today_only = 2;
+  string time_zone = 3;
+}
+
+message SetSpeakingResponse {}

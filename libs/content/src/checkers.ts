@@ -1,3 +1,4 @@
+import { speechChecker } from "./speech.ts";
 import { t } from "./text.ts";
 import type { Checker, Json, Problem, Verdict } from "./types.ts";
 
@@ -67,7 +68,7 @@ export const writingChecker: Checker = {
 };
 
 /** coreCheckers are the checkers every subject has. */
-export const coreCheckers: readonly Checker[] = [choiceChecker, textChecker, orderChecker, writingChecker];
+export const coreCheckers: readonly Checker[] = [choiceChecker, textChecker, orderChecker, writingChecker, speechChecker];
 
 /** CheckerRegistry finds checkers by id. */
 export class CheckerRegistry {

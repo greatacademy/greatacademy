@@ -1,5 +1,5 @@
 import { Code, ConnectError, type HandlerContext, type ServiceImpl } from "@connectrpc/connect";
-import { createRng, type Judged, type Problem, type Rng, type Verdict } from "@ga/content";
+import { createRng, type Heard, type Judged, type Problem, type Rng, type Verdict } from "@ga/content";
 import {
   activeSession,
   chooseCourse,
@@ -52,6 +52,7 @@ import { forLearner, type JudgingDeps, judgedCriteria, runJudgment, viewJudgment
 import type { CourseEntry, Registry } from "./registry.ts";
 import { answerRun, canSkip, type Given, type RunState, runTask, startRun } from "./runner.ts";
 import { appendTo, learnerState, settleAnswer } from "./sessions.ts";
+import { hearRecording, setSpeaking, speakingAvailable, speakingOff, speakingUntil } from "./speech.ts";
 import { xpSummary } from "./summary.ts";
 
 /** maxDailyGoal bounds a weekday's goal, far above what anyone studies in a day. */
@@ -136,6 +137,12 @@ export interface LearningDeps {
    * outlives the request. Without it a judgment runs when GetJudgment first asks after it.
    */
   readonly defer?: (work: Promise<unknown>) => void;
+}
+
+/** speakingOf tells whether spoken topics are taught to a learner, and whether a speech service serves them at all. */
+async function speakingOf(db: Db, learnerId: string, now: number) {
+  const available = await speakingAvailable(db, learnerId, now);
+  return { speaking: available && !(await speakingOff(db, learnerId, now)), speakingAvailable: available };
 }
 
 /** feedbackOf is the feedback on an answer, with a model's verdict when one judged it; a text sent back for a rewrite shows no model answer. */
@@ -316,6 +323,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
         enrollments: list,
         xp: await xpSummary(db, learnerId, now, req.timeZone),
         canDecide: await canDecide(db, learnerId, false),
+        ...(await speakingOf(db, learnerId, now)),
       };
     },
 
@@ -574,6 +582,21 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
       const learnerId = await learnerFor(db, userId);
       const now = deps.now();
       await requireStudy(db, learnerId, now);
+      // A recording is heard before the answer is taken, outside the transaction: what was heard is the response.
+      let response = req.response;
+      let heard: Heard | undefined;
+      if (req.audio.length > 0 && !req.skip) {
+        const row = await getSession(db, learnerId, req.sessionId);
+        if (!row) throw new ConnectError("no such session", Code.NotFound);
+        const run = row.state as RunState;
+        if (row.status !== "active" || req.index !== run.asked.length || !run.current)
+          throw new ConnectError("that question was already answered", Code.FailedPrecondition);
+        if (!deps.judging) throw new ConnectError("speaking is not available", Code.FailedPrecondition);
+        const [problem] = await (await course(row.courseId)).source.problems([run.current]);
+        const hearing = await hearRecording(db, deps.judging, learnerId, problem!, req.audio, now);
+        if ("again" in hearing) return { recordAgain: text(hearing.again), session: await view(db, learnerId, row) };
+        ({ response, heard } = hearing);
+      }
       const out = await db.transaction(async (tx) => {
         const row = await getSession(tx, learnerId, req.sessionId, true);
         if (!row) throw new ConnectError("no such session", Code.NotFound);
@@ -593,7 +616,9 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
           if (!failed && !j?.error) throw new ConnectError("the answer is still being judged", Code.FailedPrecondition);
         }
         const skipping = req.skip && canSkip(run);
-        const judged: Judged | undefined = skipping ? undefined : await c.source.judge(ref, req.response);
+        const judged: Judged | undefined = skipping ? undefined : await c.source.judge(ref, response);
+        if (judged?.problem.answer.input.kind === "speech" && !heard)
+          throw new ConnectError("a spoken question is answered with a recording", Code.InvalidArgument);
         if (judged?.problem.answer.judged) {
           if (!judged.verdict.correct) return { kind: "rejected" as const, row, judged };
           await requireJudgingQuota(tx, learnerId, now);
@@ -605,19 +630,19 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
             topicId: ref.topic,
             kp: ref.kp,
             seed: ref.seed,
-            response: req.response,
+            response,
             criteria: judgedCriteria(c, ref.topic, judged.problem).map(criterionKey),
             createdAt: new Date(now),
             nextAt: new Date(now),
           });
-          const next = { ...run, pending: { judgment: j.id, response: req.response } } as RunState;
+          const next = { ...run, pending: { judgment: j.id, response } } as RunState;
           // An essay ends its session when it is submitted; it is judged after.
           const status = essayRun(run) ? ("submitted" as const) : ("active" as const);
           await updateSession(tx, row.id, next, status, new Date(now));
           return { kind: "pending" as const, row: { ...row, status, state: next }, c, judgment: j.id };
         }
         const { state: before } = await state(tx, learnerId, c, true);
-        const answered = await answerRun(c, run, before, req.response, req.skip, now, rng(), judged as Given | undefined);
+        const answered = await answerRun(c, run, before, response, req.skip, now, rng(), judged as Given | undefined);
         return { kind: "answered" as const, row: await settle(tx, learnerId, c, row, ref, answered, now), answered };
       });
       if (out.kind === "pending" && out.row.status === "submitted") {
@@ -630,7 +655,30 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
       if (out.kind === "rejected") return { feedback: feedbackOf(out.judged.problem, out.judged.verdict), session };
       if (out.kind === "abandoned") return { session };
       const run = out.row.state as RunState;
-      return { ...(withFeedback(run) && { feedback: feedbackOf(out.answered.problem, out.answered.verdict) }), session };
+      return {
+        ...(withFeedback(run) && {
+          feedback: { ...feedbackOf(out.answered.problem, out.answered.verdict), ...(heard && { heard: heard.text }) },
+        }),
+        session,
+      };
+    },
+
+    async setSpeaking(req, ctx) {
+      const { db, userId } = auth(ctx);
+      const learnerId = await learnerFor(db, userId);
+      const now = deps.now();
+      await requireStudy(db, learnerId, now);
+      await setSpeaking(db, learnerId, req.on ? null : speakingUntil(req.todayOnly, now, req.timeZone || "UTC"));
+      if (req.on) return {};
+      // A session waiting on a spoken question is left with nothing counted, so that study goes on without speaking.
+      for (const e of await currentCourses(db, learnerId)) {
+        const row = await activeSession(db, learnerId, e.courseId);
+        const c = row && (await registry.course(row.courseId));
+        const ref = (row?.state as RunState | undefined)?.current;
+        if (row && c && ref && c.subject.topics.get(ref.topic)?.spoken)
+          await updateSession(db, row.id, row.state, "abandoned", new Date(now));
+      }
+      return {};
     },
 
     async getJudgment(req, ctx) {

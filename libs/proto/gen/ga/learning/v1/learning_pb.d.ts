@@ -55,6 +55,20 @@ export declare type GetProfileResponse = Message<"ga.learning.v1.GetProfileRespo
    * @generated from field: bool can_decide = 3;
    */
   canDecide: boolean;
+
+  /**
+   * speaking tells whether spoken topics are taught: a speech service serves the learner and speaking is not off.
+   *
+   * @generated from field: bool speaking = 4;
+   */
+  speaking: boolean;
+
+  /**
+   * speaking_available tells whether a speech service serves the learner, so that turning speaking on would teach it.
+   *
+   * @generated from field: bool speaking_available = 5;
+   */
+  speakingAvailable: boolean;
 };
 
 /**
@@ -1579,6 +1593,12 @@ export declare type Input = Message<"ga.learning.v1.Input"> & {
      */
     value: WritingInput;
     case: "writing";
+  } | {
+    /**
+     * @generated from field: ga.learning.v1.SpeechInput speech = 7;
+     */
+    value: SpeechInput;
+    case: "speech";
   } | { case: undefined; value?: undefined };
 };
 
@@ -1587,6 +1607,48 @@ export declare type Input = Message<"ga.learning.v1.Input"> & {
  * Use `create(InputSchema)` to create a new message.
  */
 export declare const InputSchema: GenMessage<Input>;
+
+/**
+ * SpeechInput: a recording of the learner speaking, sent as audio with
+ * SubmitAnswer; the server has it heard by a speech service and checks that.
+ *
+ * @generated from message ga.learning.v1.SpeechInput
+ */
+export declare type SpeechInput = Message<"ga.learning.v1.SpeechInput"> & {
+  /**
+   * language is the language spoken, such as "en-US".
+   *
+   * @generated from field: string language = 1;
+   */
+  language: string;
+
+  /**
+   * mode is "repeat" (say what was heard), "read" (read text aloud) or "say" (say a sentence of one's own under a rule).
+   *
+   * @generated from field: string mode = 2;
+   */
+  mode: string;
+
+  /**
+   * text is what to repeat or read, shown above the recorder; empty for "say".
+   *
+   * @generated from field: string text = 3;
+   */
+  text: string;
+
+  /**
+   * max_seconds is the longest recording taken.
+   *
+   * @generated from field: int32 max_seconds = 4;
+   */
+  maxSeconds: number;
+};
+
+/**
+ * Describes the message ga.learning.v1.SpeechInput.
+ * Use `create(SpeechInputSchema)` to create a new message.
+ */
+export declare const SpeechInputSchema: GenMessage<SpeechInput>;
 
 /**
  * WritingInput: a long text field. The response is the learner's text, judged
@@ -1785,6 +1847,14 @@ export declare type SubmitAnswerRequest = Message<"ga.learning.v1.SubmitAnswerRe
    * @generated from field: bool skip = 4;
    */
   skip: boolean;
+
+  /**
+   * audio answers a spoken question: a WAV file of 16 kHz mono 16-bit PCM, at most the question's max_seconds long.
+   * It is sent to a speech service and never stored.
+   *
+   * @generated from field: bytes audio = 5;
+   */
+  audio: Uint8Array;
 };
 
 /**
@@ -1815,6 +1885,14 @@ export declare type SubmitAnswerResponse = Message<"ga.learning.v1.SubmitAnswerR
    * @generated from field: bool pending = 3;
    */
   pending: boolean;
+
+  /**
+   * record_again asks for another recording of a spoken answer, saying why, such as nothing being heard; the
+   * recording counted nothing.
+   *
+   * @generated from field: optional ga.common.v1.Text record_again = 4;
+   */
+  recordAgain?: Text | undefined;
 };
 
 /**
@@ -1993,6 +2071,13 @@ export declare type Feedback = Message<"ga.learning.v1.Feedback"> & {
    * @generated from field: repeated ga.learning.v1.Sound solution_sounds = 10;
    */
   solutionSounds: Sound[];
+
+  /**
+   * heard is what a speech service heard in a spoken answer.
+   *
+   * @generated from field: string heard = 11;
+   */
+  heard: string;
 };
 
 /**
@@ -2348,6 +2433,46 @@ export declare type ResultItem = Message<"ga.learning.v1.ResultItem"> & {
 export declare const ResultItemSchema: GenMessage<ResultItem>;
 
 /**
+ * @generated from message ga.learning.v1.SetSpeakingRequest
+ */
+export declare type SetSpeakingRequest = Message<"ga.learning.v1.SetSpeakingRequest"> & {
+  /**
+   * @generated from field: bool on = 1;
+   */
+  on: boolean;
+
+  /**
+   * today_only turns speaking off until the learner's next day begins, in time_zone.
+   *
+   * @generated from field: bool today_only = 2;
+   */
+  todayOnly: boolean;
+
+  /**
+   * @generated from field: string time_zone = 3;
+   */
+  timeZone: string;
+};
+
+/**
+ * Describes the message ga.learning.v1.SetSpeakingRequest.
+ * Use `create(SetSpeakingRequestSchema)` to create a new message.
+ */
+export declare const SetSpeakingRequestSchema: GenMessage<SetSpeakingRequest>;
+
+/**
+ * @generated from message ga.learning.v1.SetSpeakingResponse
+ */
+export declare type SetSpeakingResponse = Message<"ga.learning.v1.SetSpeakingResponse"> & {
+};
+
+/**
+ * Describes the message ga.learning.v1.SetSpeakingResponse.
+ * Use `create(SetSpeakingResponseSchema)` to create a new message.
+ */
+export declare const SetSpeakingResponseSchema: GenMessage<SetSpeakingResponse>;
+
+/**
  * TopicStatus is a learner's standing on a topic.
  *
  * @generated from enum ga.learning.v1.TopicStatus
@@ -2553,6 +2678,17 @@ export declare const LearningService: GenService<{
     methodKind: "unary";
     input: typeof SubmitAnswerRequestSchema;
     output: typeof SubmitAnswerResponseSchema;
+  },
+  /**
+   * SetSpeaking turns spoken topics on or off, or off for the rest of the day; turning them off leaves a session
+   * waiting on a spoken question, with nothing counted.
+   *
+   * @generated from rpc ga.learning.v1.LearningService.SetSpeaking
+   */
+  setSpeaking: {
+    methodKind: "unary";
+    input: typeof SetSpeakingRequestSchema;
+    output: typeof SetSpeakingResponseSchema;
   },
   /**
    * GetJudgment asks after an answer a model is judging: still pending, or its

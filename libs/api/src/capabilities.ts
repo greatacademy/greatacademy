@@ -119,8 +119,43 @@ export interface QualifiedRoute {
  * Its model must have a price, and no budget its vendor has may be spent;
  * a text already taken is finished whatever the budget, with budget false.
  */
-export async function qualifyingRoute(
+export function qualifyingRoute(
   db: Db,
+  criterion: string,
+  learnerId: string,
+  scope: ConsentScope,
+  at: number,
+  avoid?: RoutePosition,
+  budget = true,
+): Promise<QualifiedRoute | undefined> {
+  return routeOf(db, useForScope(scope), criterion, learnerId, scope, at, avoid, budget);
+}
+
+/** SpeechUse is a use of route that hears speech: transcription, or the assessment of pronunciation as well. */
+export type SpeechUse = "stt" | "pronunciation";
+
+/**
+ * speechRoute finds the route that may hear a learner speak a language, under
+ * the speech scope and the same conditions as qualifyingRoute: a route for the
+ * language itself ("en-GB"), or else one for its base language ("en").
+ */
+export async function speechRoute(
+  db: Db,
+  use: SpeechUse,
+  language: string,
+  learnerId: string,
+  at: number,
+): Promise<QualifiedRoute | undefined> {
+  const base = language.split("-")[0]!;
+  return (
+    (await routeOf(db, use, language, learnerId, "speech", at)) ??
+    (base !== language ? await routeOf(db, use, base, learnerId, "speech", at) : undefined)
+  );
+}
+
+async function routeOf(
+  db: Db,
+  use: RouteUse,
   criterion: string,
   learnerId: string,
   scope: ConsentScope,
@@ -144,7 +179,7 @@ export async function qualifyingRoute(
     budget ? providerSpend(db, at) : undefined,
   ]);
   const candidates = all
-    .filter((r) => r.use === useForScope(scope) && r.target === criterion && r.position !== avoid)
+    .filter((r) => r.use === use && r.target === criterion && r.position !== avoid)
     .sort((a, b) => a.position.localeCompare(b.position))
     .reverse();
   for (const r of candidates) {

@@ -635,10 +635,14 @@ describe("the admin console", () => {
 
   it("takes only a supported API, and a vendor without one serves no text use", async () => {
     expect(await code(admin("root").saveProvider({ provider: { name: "X", api: "x", enabled: false } }))).toBe(Code.InvalidArgument);
-    const { id } = await admin("root").saveProvider({ provider: { name: "Voice", enabled: false } });
+    const { id } = await admin("root").saveProvider({
+      provider: { name: "Voice", baseUrl: "https://eastus.api.cognitive.microsoft.com", enabled: false },
+    });
     const route = { use: "judgment", target: "w1", position: "primary", providerId: id, model: "m1", promptVersion: "writing-1" };
     expect(await code(admin("root").saveRoute({ route }))).toBe(Code.InvalidArgument);
     const stt = { use: "stt", target: "en", position: "primary", providerId: id, model: "s1", promptVersion: "writing-1", voice: "v" };
+    const other = await admin("root").saveProvider({ provider: { name: "Other", baseUrl: "https://speech.example.com", enabled: false } });
+    expect(await code(admin("root").saveRoute({ route: { ...stt, providerId: other.id } }))).toBe(Code.InvalidArgument);
     await admin("root").saveRoute({ route: stt });
     expect((await admin("root").listRoutes({})).routes).toMatchObject([
       { use: "stt", target: "en", model: "s1", promptVersion: "", voice: "", calibrated: false, live: false },

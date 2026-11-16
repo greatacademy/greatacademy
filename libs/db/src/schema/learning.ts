@@ -45,6 +45,8 @@ export const learner = pgTable("learner", {
   dailyMinutes: integer("daily_minutes"),
   /** inactiveNoticeAt is when the notice of coming deletion for inactivity was sent. */
   inactiveNoticeAt: at("inactive_notice_at"),
+  /** speakingOffUntil is when spoken topics come back after the learner turned them off; null while they are on. */
+  speakingOffUntil: at("speaking_off_until"),
 });
 
 /**

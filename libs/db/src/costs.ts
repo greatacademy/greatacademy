@@ -3,7 +3,7 @@ import { and, asc, count, desc, eq, gte, isNotNull, sql, sum } from "drizzle-orm
 import type { Db } from "./db.ts";
 import { user } from "./schema/auth.ts";
 import { judgment, learner } from "./schema/learning.ts";
-import { adminLog, aiCall, aiPrice } from "./schema/privacy.ts";
+import { type AiUse, adminLog, aiCall, aiPrice } from "./schema/privacy.ts";
 
 /** PriceRow is what a vendor charges for a model. */
 export type PriceRow = typeof aiPrice.$inferSelect;
@@ -75,6 +75,15 @@ export async function judgmentsSince(db: Db, learnerId: string, since: Date): Pr
     .select({ n: count() })
     .from(judgment)
     .where(and(eq(judgment.learnerId, learnerId), gte(judgment.createdAt, since)));
+  return row?.n ?? 0;
+}
+
+/** callsSince counts a learner's calls of one use since a time, failed ones too. */
+export async function callsSince(db: Db, learnerId: string, use: AiUse, since: Date): Promise<number> {
+  const [row] = await db
+    .select({ n: count() })
+    .from(aiCall)
+    .where(and(eq(aiCall.learnerId, learnerId), eq(aiCall.use, use), gte(aiCall.at, since)));
   return row?.n ?? 0;
 }
 

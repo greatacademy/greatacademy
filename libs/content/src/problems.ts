@@ -2,6 +2,7 @@ import { MAX_WRITING_CHARS, orderIndexes } from "./checkers.ts";
 import type { CompiledSubject, Issue } from "./compile.ts";
 import { type Figure, figureIssue, plottedPoints } from "./figure.ts";
 import { createRng } from "./rng.ts";
+import { speechExpected } from "./speech.ts";
 import type { Locale, Text } from "./text.ts";
 import { isText, locales } from "./text.ts";
 import type { PlotGrid, Problem, TopicDef } from "./types.ts";
@@ -90,7 +91,7 @@ export function sampleGenerators(subject: CompiledSubject, options: SampleOption
           return;
         }
         const p = generateProblem(subject, { topic: topic.id, kp: index, seed });
-        prompts.add(JSON.stringify([p.prompt, p.figure?.svg, p.listen, optionsOf(p)]));
+        prompts.add(JSON.stringify([p.prompt, p.figure?.svg, p.listen, optionsOf(p), spokenTextOf(p)]));
         if (p.answer.input.kind === "choice")
           positions.set(p.answer.expected as number, (positions.get(p.answer.expected as number) ?? 0) + 1);
       }
@@ -103,6 +104,9 @@ export function sampleGenerators(subject: CompiledSubject, options: SampleOption
   }
   return issues;
 }
+
+/** spokenTextOf is the text a spoken problem shows to repeat or read, which tells two problems apart. */
+const spokenTextOf = (p: Problem) => (p.answer.input.kind === "speech" ? p.answer.input.text : undefined);
 
 /** plotIssue tells what keeps a plot's canonical response from being marked on its grid. */
 function plotIssue(grid: PlotGrid, points: number, canonical: string): string | undefined {
@@ -133,6 +137,24 @@ function judgedIssue(topic: TopicDef, problem: Problem): string | undefined {
     return `maxChars must be a whole number from 1 to ${MAX_WRITING_CHARS}`;
   const e = expected as { minWords?: unknown; maxChars?: unknown };
   if (e.minWords !== input.minWords || e.maxChars !== input.maxChars) return "the writing checker must expect the input's limits";
+  return undefined;
+}
+
+/** MAX_SPEECH_SECONDS is the longest recording a spoken problem may ask for: a service's short-audio limit, with room. */
+export const MAX_SPEECH_SECONDS = 30;
+
+/** spokenIssue tells what is wrong with a spoken problem: its input, its topic or its checker's data. */
+function spokenIssue(topic: TopicDef, problem: Problem): string | undefined {
+  const { input, checker, expected } = problem.answer;
+  if (input.kind !== "speech" || checker !== "speech" || !topic.spoken)
+    return "a speech input, the speech checker and a spoken topic go together";
+  if (input.language !== topic.spoken) return `a spoken problem is in its topic's language, ${topic.spoken}`;
+  if (!(Number.isInteger(input.maxSeconds) && input.maxSeconds > 0 && input.maxSeconds <= MAX_SPEECH_SECONDS))
+    return `maxSeconds must be a whole number from 1 to ${MAX_SPEECH_SECONDS}`;
+  if (!speechExpected(expected)) return "the speech checker needs a mode with a reference, or accepted sentences to say";
+  if (expected.mode !== input.mode) return "the speech checker must expect the input's mode";
+  if (input.mode === "say" ? input.text !== undefined : input.text !== expected.reference)
+    return "a text to repeat or read is shown as the reference; a sentence to say shows none";
   return undefined;
 }
 
@@ -216,6 +238,10 @@ function checkSample(
   }
   if (answer.input.kind === "writing" || answer.judged) {
     const issue = judgedIssue(topic, a);
+    if (issue) return issue;
+  }
+  if (answer.input.kind === "speech" || answer.checker === "speech" || topic.spoken) {
+    const issue = spokenIssue(topic, a);
     if (issue) return issue;
   }
   const verdict = subject.checkers.check(answer.checker, answer.expected, a.canonical);

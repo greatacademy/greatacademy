@@ -14,6 +14,17 @@ export interface LearnerAge {
   readonly dailyMinutes: number | null;
 }
 
+/** speakingOffUntil is when a learner's spoken topics come back, or null while they are on. */
+export async function speakingOffUntil(db: Db, learnerId: string): Promise<Date | null> {
+  const [row] = await db.select({ until: learner.speakingOffUntil }).from(learner).where(eq(learner.id, learnerId));
+  return row?.until ?? null;
+}
+
+/** setSpeakingOffUntil turns a learner's spoken topics off until a time, or on with null. */
+export async function setSpeakingOffUntil(db: Db, learnerId: string, until: Date | null): Promise<void> {
+  await db.update(learner).set({ speakingOffUntil: until }).where(eq(learner.id, learnerId));
+}
+
 /** learnerAge reads a learner's age band and limits. */
 export async function learnerAge(db: Db, learnerId: string): Promise<LearnerAge> {
   const [row] = await db

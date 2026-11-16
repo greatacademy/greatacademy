@@ -127,6 +127,13 @@
       "when": 1794315793653,
       "tag": "0017_conversations",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1794809925162,
+      "tag": "0018_speaking",
+      "breakpoints": true
     }
   ]
 }

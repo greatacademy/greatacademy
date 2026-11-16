@@ -20,14 +20,17 @@ import {
   JudgeRejected,
   judge,
   type ProviderConfig,
+  type SpeechConfig,
+  type SpeechProvider,
   type Verdict,
 } from "@ga/judge";
 
-import { type QualifiedRoute, qualifyingRoute } from "./capabilities.ts";
+import { type QualifiedRoute, qualifyingRoute, speechRoute } from "./capabilities.ts";
 import { CHECK_SHARE, sampled } from "./checks.ts";
 import { MAX_TRIES } from "./costs.ts";
 import type { CourseEntry } from "./registry.ts";
 import { decryptSecret } from "./secrets.ts";
+import { speakingOff, spokenTopics } from "./speech.ts";
 
 /** JUDGED_PASS is the score at which a judged answer counts as correct (*starting*). */
 export const JUDGED_PASS = 0.75;
@@ -51,6 +54,8 @@ export interface JudgingDeps {
   readonly aiKeysSecret: string;
   /** connect builds a model client; tests pass one backed by pi-ai's faux provider. */
   readonly connect?: (config: ProviderConfig, model: string) => Configured;
+  /** hear builds a speech provider for spoken answers; tests pass a fake. */
+  readonly hear?: (config: SpeechConfig) => SpeechProvider;
   /** checkShare is the share of finished judgments sampled for people to check; the default is CHECK_SHARE. */
   readonly checkShare?: number;
 }
@@ -222,19 +227,26 @@ export function viewJudgment(row: JudgmentRow): JudgmentView {
 /**
  * forLearner narrows a course to what a learner can be taught: a topic judged
  * by a model stays only when every one of its criteria has a route that may
- * receive this learner's text, so without one the course goes on without it.
+ * receive this learner's text, and a spoken topic only when a route may hear
+ * the learner speak its language and they have not turned speaking off; without
+ * them the course goes on without those topics.
  */
 export async function forLearner(db: Db, c: CourseEntry, learnerId: string, now: number): Promise<CourseEntry> {
-  const judged = c.planner.scope.topics.filter((id) => c.subject.topics.get(id)?.criteria);
-  if (judged.length === 0) return c;
-  const routed = new Map<string, boolean>();
   const off = new Set<string>();
+  const judged = c.planner.scope.topics.filter((id) => c.subject.topics.get(id)?.criteria);
+  const routed = new Map<string, boolean>();
   for (const id of judged) {
     for (const criterion of c.subject.topics.get(id)!.criteria!) {
       const key = criterionKey(criterion);
       if (!routed.has(key)) routed.set(key, (await qualifyingRoute(db, key, learnerId, "writing", now)) !== undefined);
       if (!routed.get(key)) off.add(id);
     }
+  }
+  const spoken = spokenTopics(c);
+  if (spoken.size > 0) {
+    const silent = await speakingOff(db, learnerId, now);
+    for (const [language, ids] of spoken)
+      if (silent || !(await speechRoute(db, "stt", language, learnerId, now))) for (const id of ids) off.add(id);
   }
   if (off.size === 0) return c;
   const { scope } = c.planner;

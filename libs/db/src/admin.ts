@@ -230,7 +230,10 @@ export async function routeCalibrated(
   db: Db,
   r: { use: RouteUse; target: string; providerId: string; model: string; promptVersion: string },
 ): Promise<boolean> {
-  return (r.use === "judgment" || r.use === "conversation") && calibrationPassed(db, { ...r, criterion: r.target });
+  if (r.use === "judgment" || r.use === "conversation") return calibrationPassed(db, { ...r, criterion: r.target });
+  // A speech route is calibrated per use and language, such as stt:en-US: what a speech service hears is tested, not a prompt.
+  if (r.use === "stt" || r.use === "pronunciation") return calibrationPassed(db, { ...r, criterion: `${r.use}:${r.target}` });
+  return Promise.resolve(false);
 }
 
 /** NoticeRow is a stored notice version. */

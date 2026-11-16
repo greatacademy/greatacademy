@@ -134,7 +134,7 @@ export const aiPrice = pgTable(
 );
 
 /** AiUse is what a model call was for. */
-export type AiUse = "judgment" | "conversation" | "calibration";
+export type AiUse = "judgment" | "conversation" | "calibration" | "speech";
 
 /**
  * aiCall is one call to a vendor, failed ones included, with its tokens and

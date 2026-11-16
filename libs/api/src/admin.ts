@@ -43,7 +43,16 @@ import {
   waitingForm,
   waitingVerifications,
 } from "@ga/db";
-import { CONVERSATION_PROMPTS, catalogProviders, catalogVendor, criterionKey, PROMPTS, redact, SUPPORTED_APIS } from "@ga/judge";
+import {
+  CONVERSATION_PROMPTS,
+  catalogProviders,
+  catalogVendor,
+  criterionKey,
+  PROMPTS,
+  redact,
+  SUPPORTED_APIS,
+  speechProtocol,
+} from "@ga/judge";
 import type { AdminService } from "@ga/proto/admin/v1/admin_pb";
 
 import { CHECK_VALID_MS, checkValid, scopeOffered } from "./capabilities.ts";
@@ -382,6 +391,10 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
       const vendor = (await providers(db)).find((p) => p.id === r.providerId);
       need(vendor, "no such vendor");
       need(!text || vendor.api, "this vendor has no text API");
+      need(
+        text || speechProtocol(vendor.baseUrl),
+        "this vendor's base URL names no supported speech service, such as https://<region>.api.cognitive.microsoft.com",
+      );
       const before = (await routes(db)).find((x) => x.use === use && x.target === r.target && x.position === position);
       const changed =
         before !== undefined &&

@@ -36,6 +36,8 @@ export interface GraphTopic {
   readonly diagnosticKp: number;
   /** essay tells that the topic is an essay (TopicDef.essay). */
   readonly essay?: boolean;
+  /** spoken is the language a spoken topic is answered in (TopicDef.spoken). */
+  readonly spoken?: string;
 }
 
 /** GraphPassage is what the engine needs of a passage. */
@@ -186,6 +188,9 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
     }
     if (topic.diagnostic !== undefined && !kpIds.has(topic.diagnostic))
       error(path, `diagnostic knowledge point ${topic.diagnostic} does not exist`);
+    if (topic.spoken !== undefined && !/^[a-z]{2}(-[A-Z]{2})?$/.test(topic.spoken))
+      error(path, "spoken must be a language tag such as en-US");
+    if (topic.spoken && (topic.criteria || topic.essay)) error(path, "a spoken topic is checked by rules, not judged by a model");
     if (topic.essay) {
       if (!topic.criteria) error(path, "an essay must be judged by a model");
       if (topic.knowledgePoints.length !== 1) error(path, "an essay has one knowledge point");
@@ -219,6 +224,7 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
       seen.add(p);
       if (!topic.criteria && topics.get(p)?.criteria)
         error(path, `prerequisite ${p} is judged by a model, so a topic that is not cannot depend on it`);
+      if (!topic.spoken && topics.get(p)?.spoken) error(path, `prerequisite ${p} is spoken, so a topic that is not cannot depend on it`);
     }
   }
 
@@ -255,6 +261,8 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
       if (!topic.criteria && topics.get(e.topic)?.criteria)
         error(path, `encompassed topic ${e.topic} is judged by a model, so a topic that is not cannot encompass it`);
       if (topics.get(e.topic)?.essay) error(path, `encompassed topic ${e.topic} is an essay, which is never repeated`);
+      if (!topic.spoken && topics.get(e.topic)?.spoken)
+        error(path, `encompassed topic ${e.topic} is spoken, so a topic that is not cannot encompass it`);
     }
     for (const kp of topic.knowledgePoints) {
       for (const k of kp.keyPrerequisites ?? []) {
@@ -453,6 +461,7 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
           ? topic.knowledgePoints.length - 1
           : topic.knowledgePoints.findIndex((kp) => kp.id === topic.diagnostic),
       ...(topic.essay && { essay: true }),
+      ...(topic.spoken && { spoken: topic.spoken }),
     });
   }
 

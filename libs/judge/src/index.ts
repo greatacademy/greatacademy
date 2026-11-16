@@ -8,3 +8,4 @@ export * from "./prompt.ts";
 export * from "./provider.ts";
 export * from "./redact.ts";
 export * from "./respond.ts";
+export * from "./speech.ts";
