@@ -225,7 +225,7 @@ export async function calibrationPassed(
  * routeCalibrated tells whether a route has a passing calibration: judgment
  * against its criterion, conversation against its conversation's id, and a
  * speech route against its use and language (stt:en-US). A route that hears
- * answers given aloud word for word needs stt-verbatim:<language> as well,
+ * answers given aloud, errors kept, needs stt-verbatim:<language> as well,
  * which the route that serves those topics checks. A text-to-speech route
  * needs none.
  */

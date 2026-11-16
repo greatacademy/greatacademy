@@ -1,5 +1,5 @@
 import { decryptSecret } from "@ga/api";
-import { heardInOrder, heardResponse, MIN_ACCURACY, speechChecker, spokenWords } from "@ga/content";
+import { type Heard, heardResponse, MIN_ACCURACY, speechChecker, spokenWords } from "@ga/content";
 import { type Db, type NewCall, prices, providers, recordCalibration, recordCalls } from "@ga/db";
 import { callCost, readWav, type SpeechConfig, SpeechFailed, type SpeechProvider, speechProvider } from "@ga/judge";
 
@@ -8,8 +8,12 @@ import { type Agreement, agreement } from "./agreement.ts";
 /** MIN_CLIPS is how many recordings a speech route needs to be tested on before it can pass (*starting*). */
 export const MIN_CLIPS = 200;
 
-/** MIN_VERBATIM is the share of recordings a speech-to-text route must hear word for word, errors kept (*starting*). */
-export const MIN_VERBATIM = 0.9;
+/**
+ * MIN_KEPT is the share of sentences with an error a speech-to-text route must
+ * hear so that the checker still marks them wrong, and of correct sentences so
+ * that it marks them right, to hear answers aloud (*starting*).
+ */
+export const MIN_KEPT = 0.95;
 
 /** MAX_WER is the share of words a speech-to-text route may get wrong in recordings said correctly (*starting*). */
 export const MAX_WER = 0.05;
@@ -109,7 +113,13 @@ export interface SpeechReport {
   /** verbatim is the share of clips heard word for word; wordErrorRate the words wrong over the words said. */
   readonly verbatim: number;
   readonly wordErrorRate: number;
-  /** corrected are the ids of clips whose errors were heard as correct words: the silent correction E4.5 looks for. */
+  /**
+   * kept is, for stt-verbatim, the share of clips with an error that the checker still marks wrong as heard, and
+   * accepted the share of correct clips it marks right.
+   */
+  readonly kept?: number;
+  readonly accepted?: number;
+  /** corrected are the ids of clips whose errors were heard as the correct sentence: the silent correction E4.5 looks for. */
   readonly corrected: readonly string[];
   /** agreement compares, for pronunciation, the checker's verdicts on what was heard with the people's ratings. */
   readonly agreement?: Agreement;
@@ -122,17 +132,24 @@ export interface SpeechReport {
 /** hasError tells whether a clip says something other than what its speaker meant: a sentence with an error in it. */
 const hasError = (c: SpeechClip) => !!c.reference && spokenWords(c.reference).join(" ") !== spokenWords(c.said).join(" ");
 
+/** judgedRight tells whether the checker would accept what was heard as an answer whose one accepted sentence is given. */
+const judgedRight = (heard: Heard, sentence: string) =>
+  speechChecker.check({ mode: "say", accept: [sentence] }, heardResponse(heard)).correct;
+
 /**
  * runSpeechCalibration has a speech route hear every clip of a set and records
  * the calibrations it measures, passed or not, which the console needs before
  * it sets a speech route live. Speech-to-text is measured twice. On the clips
  * said correctly it records `stt:<language>`, passed when at least MIN_CLIPS
  * were heard with a word error rate of at most MAX_WER: enough for repeating
- * and reading aloud, where the text is known. On the clips with an error in
- * them it records `stt-verbatim:<language>`, passed when at least MIN_CLIPS
- * were heard and MIN_VERBATIM of them word for word, errors kept: what
- * answering aloud needs, since a service that hears "She go" as "She goes"
- * would pass a wrong answer. Pronunciation (`pronunciation:<language>`) needs
+ * and reading aloud, where the text is known. It also records
+ * `stt-verbatim:<language>`, what answering aloud needs, since a service that
+ * hears "She go" as "She goes" would pass a wrong answer: each clip is checked
+ * as heard against the sentence its speaker meant, as a spoken answer is, and
+ * the criterion passes when at least MIN_CLIPS of each kind were heard, and
+ * MIN_KEPT of those with an error are still marked wrong and MIN_KEPT of the
+ * correct ones right. An error heard as another error ("She go" as "She
+ * goes") keeps the verdict and counts as kept; word for word is reported too. Pronunciation (`pronunciation:<language>`) needs
  * two people's ratings of each clip and passes when the speech checker's
  * verdicts agree with them as the people agree with each other. A clip the
  * route could not hear counts against it. Every call is recorded as a
@@ -148,6 +165,7 @@ export async function runSpeechCalibration(db: Db, run: SpeechRun, at: Date): Pr
   const price = (await prices(db)).find((x) => x.providerId === p.id && x.model === run.model);
   const calls: NewCall[] = [];
   const heardWords: (string[] | undefined)[] = new Array(clips.length);
+  const heardAs: (Heard | undefined)[] = new Array(clips.length);
   const verdicts: (boolean | undefined)[] = new Array(clips.length);
   const failed: { id: string; reason: string }[] = [];
   let seconds = 0;
@@ -197,6 +215,7 @@ export async function runSpeechCalibration(db: Db, run: SpeechRun, at: Date): Pr
         const heard = await hear();
         calls.push(call(true));
         heardWords[i] = spokenWords(heard.lexical ?? heard.text);
+        heardAs[i] = heard;
         if (clip.reference) {
           const expected = { mode: "read", reference: clip.reference, minAccuracy: MIN_ACCURACY };
           verdicts[i] = speechChecker.check(expected, heardResponse(heard)).correct;
@@ -217,6 +236,8 @@ export async function runSpeechCalibration(db: Db, run: SpeechRun, at: Date): Pr
     let errors = 0;
     let words = 0;
     let verbatim = 0;
+    let kept = 0;
+    let accepted = 0;
     const corrected: string[] = [];
     for (const clip of part) {
       const said = spokenWords(clip.said);
@@ -224,11 +245,18 @@ export async function runSpeechCalibration(db: Db, run: SpeechRun, at: Date): Pr
       words += said.length;
       errors += heard ? wordErrors(said, heard) : said.length;
       if (heard && heard.join(" ") === said.join(" ")) verbatim++;
-      // An error heard as the correct word: what was heard holds the reference the error departs from.
-      const reference = hasError(clip) && spokenWords(clip.reference!);
-      if (heard && reference && heardInOrder(reference, heard) === reference.length) corrected.push(clip.id);
+      // A clip not heard is marked neither way: it counts against the route.
+      const as = heardAs[index.get(clip.id)!];
+      if (hasError(clip)) {
+        if (as && !judgedRight(as, clip.reference!)) kept++;
+        else if (as) corrected.push(clip.id);
+      } else if (as && judgedRight(as, clip.said)) accepted++;
     }
     const share = verbatim / part.length;
+    const errorClips = part.filter(hasError).length;
+    const rightClips = part.length - errorClips;
+    const keptShare = errorClips ? kept / errorClips : 0;
+    const acceptedShare = rightClips ? accepted / rightClips : 0;
     const wer = words ? errors / words : 0;
     const agreed =
       run.use === "pronunciation"
@@ -239,17 +267,21 @@ export async function runSpeechCalibration(db: Db, run: SpeechRun, at: Date): Pr
             minClips,
           )
         : undefined;
-    const kept = criterion.startsWith("stt-verbatim:");
-    const passed = agreed ? agreed.passed : part.length >= minClips && (kept ? share >= MIN_VERBATIM : wer <= MAX_WER);
+    const judged = criterion.startsWith("stt-verbatim:");
+    const passed = agreed
+      ? agreed.passed
+      : judged
+        ? errorClips >= minClips && rightClips >= minClips && keptShare >= MIN_KEPT && acceptedShare >= MIN_KEPT
+        : part.length >= minClips && wer <= MAX_WER;
     // A speech calibration stores, as kappa, what it measured on a scale where more is better (the checker's agreement
-    // with people, the share heard word for word, or one less the word error rate), and as humanKappa the bar.
+    // with people, the lesser of the shares kept and accepted, or one less the word error rate), and as humanKappa the bar.
     await recordCalibration(db, {
       criterion,
       providerId: p.id,
       model: run.model,
       promptVersion: "",
-      kappa: agreed ? agreed.kappa : kept ? share : 1 - wer,
-      humanKappa: agreed ? agreed.humanKappa : kept ? MIN_VERBATIM : 1 - MAX_WER,
+      kappa: agreed ? agreed.kappa : judged ? Math.min(keptShare, acceptedShare) : 1 - wer,
+      humanKappa: agreed ? agreed.humanKappa : judged ? MIN_KEPT : 1 - MAX_WER,
       passed,
       at,
     });
@@ -259,6 +291,7 @@ export async function runSpeechCalibration(db: Db, run: SpeechRun, at: Date): Pr
       people: part.filter((c) => c.source === "person").length,
       verbatim: share,
       wordErrorRate: wer,
+      ...(judged && { kept: keptShare, accepted: acceptedShare }),
       corrected,
       ...(agreed && { agreement: agreed }),
       failed: failed.filter((f) => part.some((c) => c.id === f.id)),
@@ -272,7 +305,7 @@ export async function runSpeechCalibration(db: Db, run: SpeechRun, at: Date): Pr
   const wrong = clips.filter(hasError);
   const out: SpeechReport[] = [];
   if (right.length) out.push(await measure(`stt:${run.language}`, right));
-  if (wrong.length) out.push(await measure(`stt-verbatim:${run.language}`, wrong));
+  if (wrong.length) out.push(await measure(`stt-verbatim:${run.language}`, clips));
   return out;
 }
 
@@ -284,7 +317,7 @@ export function renderSpeechReport(r: SpeechReport, route: { providerName: strin
     `Route: ${route.providerName}, ${route.model}`,
     "",
     r.criterion.startsWith("stt-verbatim:")
-      ? `Clips with an error in them, passed when at least ${(MIN_VERBATIM * 100).toFixed(0)}% are heard word for word.`
+      ? `Clips with an error and correct clips, checked as heard against the sentence meant; passed when at least ${(MIN_KEPT * 100).toFixed(0)}% of those with an error are still marked wrong and ${(MIN_KEPT * 100).toFixed(0)}% of the correct ones right.`
       : r.criterion.startsWith("stt:")
         ? `Clips said correctly, passed when at most ${(MAX_WER * 100).toFixed(0)}% of the words are heard wrong.`
         : "Clips rated by two people, passed when the checker agrees with them as they agree with each other.",
@@ -293,13 +326,16 @@ export function renderSpeechReport(r: SpeechReport, route: { providerName: strin
     "| ---: | ---: | ---: | ---: | :--- |",
     `| ${r.clips} | ${r.people} | ${(r.verbatim * 100).toFixed(1)}% | ${(r.wordErrorRate * 100).toFixed(1)}% | ${r.passed ? "yes" : "no"} |`,
     "",
+    ...(r.kept !== undefined && r.accepted !== undefined
+      ? [`Errors still marked wrong: ${(r.kept * 100).toFixed(1)}%. Correct sentences marked right: ${(r.accepted * 100).toFixed(1)}%.`, ""]
+      : []),
     `${r.seconds.toFixed(0)} s of audio in the run, cost ${r.cost.toFixed(4)}.`,
   ];
   if (r.people < r.clips)
     lines.push("", `${r.clips - r.people} clips are synthetic: a test of the route, not of learners' voices; people's recordings remain.`);
   if (r.agreement)
     lines.push("", `Checker κ with people ${r.agreement.kappa.toFixed(3)}, people's κ ${r.agreement.humanKappa.toFixed(3)}.`);
-  if (r.corrected.length) lines.push("", `Errors heard as correct words (${r.corrected.length}): ${r.corrected.join(", ")}`);
+  if (r.corrected.length) lines.push("", `Errors heard as the correct sentence (${r.corrected.length}): ${r.corrected.join(", ")}`);
   if (r.failed.length) lines.push("", `Not heard (${r.failed.length}): ${r.failed.map((f) => `${f.id} (${f.reason})`).join(", ")}`);
   return `${lines.join("\n")}\n`;
 }

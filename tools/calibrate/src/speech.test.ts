@@ -93,13 +93,13 @@ describe("runSpeechCalibration", () => {
     const reports = await stt(clips, (said) => said);
     expect(reports.map((r) => r.criterion)).toEqual(["stt:en-US", "stt-verbatim:en-US"]);
     expect(reports[0]).toMatchObject({ clips: 10, wordErrorRate: 0, passed: true });
-    expect(reports[1]).toMatchObject({ clips: 10, verbatim: 1, passed: true, corrected: [] });
+    expect(reports[1]).toMatchObject({ clips: 20, verbatim: 1, kept: 1, accepted: 1, passed: true, corrected: [] });
     expect(await passed("stt:en-US")).toBe(true);
     expect(await passed("stt-verbatim:en-US")).toBe(true);
     const calls = await db.select().from(schema.aiCall);
     expect(calls).toHaveLength(20);
     expect(calls[0]).toMatchObject({ use: "calibration", inputTokens: 1, ok: true });
-    expect(renderSpeechReport(reports[1]!, { providerName: "Speech", model: "default" })).toContain("10 clips are synthetic");
+    expect(renderSpeechReport(reports[1]!, { providerName: "Speech", model: "default" })).toContain("20 clips are synthetic");
   });
 
   it("passes for repeating and reading, not for answering, speech-to-text that corrects errors", async () => {
@@ -108,9 +108,17 @@ describe("runSpeechCalibration", () => {
     expect(plain).toMatchObject({ passed: true, wordErrorRate: 0 });
     expect(verbatim!.passed).toBe(false);
     expect(verbatim!.corrected).toHaveLength(10);
-    expect(verbatim!.wordErrorRate).toBeCloseTo(1 / 6);
+    expect(verbatim).toMatchObject({ kept: 0, accepted: 1 });
+    expect(verbatim!.wordErrorRate).toBeCloseTo(1 / 12);
     expect(await passed("stt:en-US")).toBe(true);
     expect(await passed("stt-verbatim:en-US")).toBe(false);
+  });
+
+  it("counts an error heard as another error as kept: the answer is still marked wrong", async () => {
+    const clips = [...Array.from({ length: 10 }, (_, i) => clip(i)), ...Array.from({ length: 10 }, (_, i) => right(i))];
+    const [, verbatim] = await stt(clips, (said) => said.replace(" go ", " went "));
+    expect(verbatim).toMatchObject({ verbatim: 0.5, kept: 1, accepted: 1, passed: true, corrected: [] });
+    expect(await passed("stt-verbatim:en-US")).toBe(true);
   });
 
   it("fails speech-to-text that mishears correct sentences", async () => {

@@ -38,7 +38,7 @@ export interface GraphTopic {
   readonly essay?: boolean;
   /** spoken is the language a spoken topic is answered in (TopicDef.spoken). */
   readonly spoken?: string;
-  /** verbatim says a spoken topic is heard word for word, errors kept (TopicDef.verbatim). */
+  /** verbatim says a spoken topic is heard with its errors kept (TopicDef.verbatim). */
   readonly verbatim?: boolean;
 }
 

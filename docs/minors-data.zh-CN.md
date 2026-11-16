@@ -270,7 +270,7 @@ Common Sense 给多邻国的评级是"Warning"，出自[一份未注明日期的
 | :--- | :--- | :--- |
 | OpenAI API | [服务香港以外的所有开放市场](https://developers.openai.com/api/docs/supported-countries)。对未满 13 岁或同意年龄者[要求零数据保留](https://developers.openai.com/api/docs/guides/safety-checks/under-18-api-guidance) | 合同 |
 | Anthropic API | [服务香港以外的所有开放市场](https://www.anthropic.com/supported-countries)，政策自 2026 年 11 月 12 日起生效。[允许组织服务未成年人](https://support.claude.com/en/articles/9307344)，要求年龄确认、内容审核、监控、AI 披露和公开的合规声明 | 我们能否获得零保留 |
-| Azure AI Speech | 见第 9 节。实时识别和发音评估不保存音频或文字；按 Microsoft 的产品条款和数据保护附录，客户数据不用于训练。`en-US` 的语音转文字在合成片段上通过了 `stt:en-US`，未通过 `stt-verbatim:en-US`（见[英语开发计划](english-development-plan.zh-CN.md#5-阶段-3级别课程)的 E4.5） | 向未成年人开放之前：各市场的登记条目（区域、附录的跨境传输条款、是否允许未成年人）、资源所在区域，以及写明它的通知 |
+| Azure AI Speech | 见第 9 节。实时识别和发音评估不保存音频或文字；按 Microsoft 的产品条款和数据保护附录，客户数据不用于训练。`en-US` 的语音转文字在合成片段上通过了 `stt:en-US` 和 `stt-verbatim:en-US`（见[英语开发计划](english-development-plan.zh-CN.md#5-阶段-3级别课程)的 E4.5） | 向未成年人开放之前：各市场的登记条目（区域、附录的跨境传输条款、是否允许未成年人）、资源所在区域，以及写明它的通知 |
 | 香港的 Azure OpenAI | [微软称向当地符合条件的客户提供服务](https://sg.finance.yahoo.com/news/microsoft-maintains-ai-services-hong-093000823.html)；未注明日期，也未读条款 | 是否仍然提供，是否接受未成年人 |
 | 其他语音和 AI 供应商、pi-ai 路由、AI Gateway | 未核查 | 使用前逐一核查 |
 | Hetzner（PostgreSQL 和语音服务） | Hetzner Cloud 位于美国俄勒冈州 Hillsboro 的机房。依 GDPR 第 28 条的数据处理协议已于 2026 年 11 月 10 日在账号中签订，附件 1 写明了儿童数据以及学习者的文字和录音。签约方是 Hetzner Online GmbH；美国机房由 Hetzner US LLC 在第三方数据中心运营 | 协议是否满足各市场的规则，例如 COPPA、韩国对委托处理的公开要求、魁北克在传输前的评估 |

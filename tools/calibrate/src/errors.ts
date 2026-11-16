@@ -15,8 +15,9 @@ const third: readonly [string, string][] = [
   ["play football after school", "plays football after school"],
   ["want a new bike", "wants a new bike"],
   ["read a book at night", "reads a book at night"],
-  ["watch TV on Sunday", "watches TV on Sunday"],
-  ["live near the park", "lives near the park"],
+  // Not "watch TV" or "live near": said together, "watch TV" sounds as "watched TV" and "live near" as "lived near".
+  ["eat rice for lunch", "eats rice for lunch"],
+  ["sing in the choir", "sings in the choir"],
   ["have a big dog", "has a big dog"],
 ];
 const thirdSubjects = ["She", "He", "My sister", "The boy", "Tom"];

@@ -195,9 +195,10 @@ export interface TopicDef {
    */
   readonly spoken?: string;
   /**
-   * verbatim makes a spoken topic need what was said heard word for word, errors kept, as answering a question aloud
-   * does: a service that hears "She go" as "She goes" would pass a wrong answer. It is offered only through a speech
-   * route that also passed the test of keeping errors (criterion `stt-verbatim:<language>`).
+   * verbatim makes a spoken topic need what was said heard with its errors kept, so that a wrong answer stays wrong,
+   * as answering a question aloud does: a service that hears "She go" as "She goes" would pass a wrong answer. It is
+   * offered only through a speech route that also passed the test of keeping errors (criterion
+   * `stt-verbatim:<language>`).
    */
   readonly verbatim?: boolean;
 }
