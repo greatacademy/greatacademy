@@ -190,6 +190,14 @@
 
 **词汇：** `words-of-housework` 家务的词（先修 `context-clues`）：sweep, mop, dust, polish, broom, bucket, sponge, laundry, detergent, bleach；`phrasal-verbs-of-work-and-choices` 工作与选择的短语动词（先修 `context-clues`）：take over, take up, turn down, lay off, carry out, bring about, go on, slow down, stick to, stand out。
 
+## 为加深而新增
+
+本大纲写成之后，课程又增加了下列主题，共 119 个主题、约 1,790 XP；标为*已有*的主题沿用其他课程的主题及其 id。每个带阅读单元的单元最后还有一个听力主题，不显示原文，播放本单元篇章的朗读并提出篇章的问题，以及一个朗读这些篇章的主题（[英语课程设计](../english-curriculum.zh-CN.md) §9）。
+
+- 第 5 单元《未来的世界》，语法：`modal-perfects-in-writing` 写作中的情态动词完成式（先修 `conditional-sentences`）：*should have*、*could have*、*must have* 和 *might have*：绝不写成 *should of*，过去的 *if* 从句中不用 *would have*，以及它们各自对过去表达了什么。步骤：是 have，不是 of；过去的 if 从句；然后情态动词完成式表达了什么。
+- 第 6 单元《食物、健康与身体》，写作：`avoiding-plagiarism` 避免抄袭（先修 `paraphrasing-a-source`）：诚实地使用资料：抄录的词句要加引号，转述要用自己的词语和句式，来自他人的每个观点都要注明出处，常识则不需要。步骤：合理使用还是抄袭；合理的转述；然后什么需要注明出处。
+- 第 9 单元《词语的生命》，写作：`numbers-in-writing` 数字的书写（已有）。
+
 ## 下一年级在此基础上继续
 
 `english-grade-10` 在本年级的基础上继续：文学分析文章发展为对演讲的修辞分析和对一首诗的分析；阅读人物塑造、典故和用词延伸到修辞情境、诉诸方式和修辞手法，以及诗的体式和格律；语法转向圆周句和累积句，以及为强调而调整语序。

@@ -204,6 +204,15 @@ The band course `english-grades-9-12` retires once `english-grade-9` to `english
 
 **Words:** `words-of-raids-and-rumors` Words of Raids and Rumors (after `context-clues`): raid, ambush, kidnap, snatch, flee, bribe, poison, torture, leak, rumor; `words-of-slips-and-scrambles` Words of Slips and Scrambles (after `context-clues`): stumble, tumble, slippery, crouch, scramble, soar, squeeze, spill, smash, haste; `words-of-spectacle-and-splendor` Words of Spectacle and Splendor (after `context-clues`): parade, spectacle, splendid, gorgeous, glamour, exotic, myth, miracle, thrill, gesture; `words-of-daring-and-promises` Words of Daring and Promises (after `context-clues`): dare, venture, tempt, impulse, pledge, swear, pretend, swap, cope, burden.
 
+## Added for Depth
+
+After this outline, the course gained the topics below, so that it holds 120 topics and about 1,810 XP; topics marked *existing* are reused from other courses with their ids. Each unit with a reading unit also ends with a listening topic, which plays the unit's passages read aloud without their text and asks their questions, and a topic of reading them aloud ([English Curriculum](../english-curriculum.md) §9).
+
+- Unit 5, *The Natural World*, writing: `replacing-cliches` Replacing Clichés (after `choosing-precise-diction`): Clichés, phrases such as *a piece of cake* and *at the end of the day* that were vivid once and are worn out now, and how to replace them with a precise detail. Steps: What a Cliché Says; Cliché or Fresh; then The Fresh Revision.
+- Unit 6, *Media and Truth*, grammar: `cohesion-old-before-new` Cohesion: Old Before New *(existing)*.
+- Unit 7, *Money and Work*, grammar: `agreement-in-hard-cases` Agreement in Hard Cases (after `agreement-with-tricky-subjects`, `indefinite-pronouns-and-agreement`): The hardest cases of agreement: *one of those who*, titles and clauses that take a singular verb, and subjects followed by *as well as* or *along with*. Steps: One of Those Who; Titles, Clauses and Dishes; then As Well As and Along With.
+- Unit 8, *Satire and Humor*, grammar: `parallel-lists-and-headings` Parallel Lists and Headings *(existing)*.
+
 ## What the Next Grade Builds On
 
 `english-grade-11` builds on this year: the rhetorical analysis and the editorial grow into the argumentative essay on rights and laws and the synthesis of sources on science; reading for bias and misleading numbers goes on to logical fallacies, the evaluation of sources and historical documents; and grammar moves to absolute phrases, noun clauses and integrating quotations.

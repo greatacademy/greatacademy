@@ -190,6 +190,14 @@ The band course `english-grades-9-12` retires once `english-grade-9` to `english
 
 **Words:** `words-of-housework` Words of Housework (after `context-clues`): sweep, mop, dust, polish, broom, bucket, sponge, laundry, detergent, bleach; `phrasal-verbs-of-work-and-choices` Phrasal Verbs of Work and Choices (after `context-clues`): take over, take up, turn down, lay off, carry out, bring about, go on, slow down, stick to, stand out.
 
+## Added for Depth
+
+After this outline, the course gained the topics below, so that it holds 119 topics and about 1,790 XP; topics marked *existing* are reused from other courses with their ids. Each unit with a reading unit also ends with a listening topic, which plays the unit's passages read aloud without their text and asks their questions, and a topic of reading them aloud ([English Curriculum](../english-curriculum.md) §9).
+
+- Unit 5, *Worlds of Tomorrow*, grammar: `modal-perfects-in-writing` Modal Perfects in Writing (after `conditional-sentences`): *Should have*, *could have*, *must have* and *might have*: never *should of*, never *would have* in the *if* clause of the past, and what each says about the past. Steps: Have, Not Of; The Past If Clause; then What the Modal Perfect Says.
+- Unit 6, *Food, Health and the Body*, writing: `avoiding-plagiarism` Avoiding Plagiarism (after `paraphrasing-a-source`): Using a source honestly: copied words in quotation marks, a paraphrase in your own words and structure, a citation for each idea that came from someone else, and none for common knowledge. Steps: Fair Use or Plagiarism; The Fair Paraphrase; then What Needs a Citation.
+- Unit 9, *The Life of Words*, writing: `numbers-in-writing` Numbers in Writing *(existing)*.
+
 ## What the Next Grade Builds On
 
 `english-grade-10` builds on this year: the literary analysis essay grows into the rhetorical analysis of speeches and the analysis of a poem; reading for characterization, allusion and word choice goes on to the rhetorical situation, appeals and devices and to poetic forms and meter; and grammar moves to periodic and cumulative sentences and word order for emphasis.

@@ -78,7 +78,7 @@ const units: readonly UnitDef[] = [
       words: ["words-of-ecology-and-climate", "words-of-landscapes-and-weather"],
       grammar: ["subordination-for-emphasis"],
       reading: ["extended-metaphor"],
-      writing: ["writing-a-descriptive-essay-on-a-place"],
+      writing: ["writing-a-descriptive-essay-on-a-place", "replacing-cliches"],
     },
     "the-natural-world",
     "wetland-hearing",
@@ -87,7 +87,7 @@ const units: readonly UnitDef[] = [
     t("Media and Truth", "媒体与真相"),
     {
       words: ["words-of-journalism-and-ethics", "words-of-media-and-attention"],
-      grammar: [],
+      grammar: ["cohesion-old-before-new"],
       reading: ["identifying-bias-in-the-news", "how-numbers-can-mislead"],
       writing: ["keeping-an-objective-tone", "writing-an-editorial"],
     },
@@ -98,7 +98,7 @@ const units: readonly UnitDef[] = [
     t("Money and Work", "金钱与工作"),
     {
       words: ["words-of-economics", "words-of-careers-and-employment"],
-      grammar: [],
+      grammar: ["agreement-in-hard-cases"],
       reading: [],
       writing: ["showing-qualifications-with-evidence", "writing-a-letter-of-application"],
     },
@@ -109,7 +109,7 @@ const units: readonly UnitDef[] = [
     t("Satire and Humor", "讽刺与幽默"),
     {
       words: ["words-of-satire-and-wit", "words-of-folly-and-vanity"],
-      grammar: [],
+      grammar: ["parallel-lists-and-headings"],
       reading: ["understanding-satire"],
       writing: ["writing-a-satire"],
     },

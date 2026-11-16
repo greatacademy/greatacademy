@@ -65,7 +65,7 @@ const units: readonly UnitDef[] = [
     t("Art and Its Critics", "艺术与评论"),
     {
       words: ["words-of-art-criticism", "words-of-taste-and-beauty", "words-of-architecture"],
-      grammar: [],
+      grammar: ["illogical-comparisons"],
       reading: ["evaluating-a-review"],
       writing: ["writing-a-review-of-a-work-of-art"],
     },
@@ -76,7 +76,7 @@ const units: readonly UnitDef[] = [
     t("Literature Across Languages", "跨越语言的文学"),
     {
       words: ["words-of-translation-and-meaning", "words-of-world-literature"],
-      grammar: [],
+      grammar: ["clauses-and-phrases-of-concession"],
       reading: ["comparing-translations"],
       writing: ["writing-a-comparison-of-translations"],
     },
@@ -129,9 +129,9 @@ const units: readonly UnitDef[] = [
         "words-of-medicine-and-disease",
         "words-of-the-mind",
       ],
-      grammar: [],
+      grammar: ["stacks-of-nouns"],
       reading: [],
-      writing: [],
+      writing: ["citing-in-mla-and-apa"],
     },
     undefined,
   ),
@@ -145,7 +145,7 @@ const units: readonly UnitDef[] = [
         "words-of-debt-and-credit",
         "words-of-elections-and-office",
       ],
-      grammar: [],
+      grammar: ["semicolons-in-complex-series"],
       reading: [],
       writing: [],
     },
@@ -153,7 +153,12 @@ const units: readonly UnitDef[] = [
   ),
   unit(
     t("Rhetoric and Reason", "修辞与理性"),
-    { words: ["words-of-rhetoric-and-oratory", "words-of-logic-and-error"], grammar: [], reading: [], writing: [] },
+    {
+      words: ["words-of-rhetoric-and-oratory", "words-of-logic-and-error"],
+      grammar: ["faulty-predication"],
+      reading: [],
+      writing: ["revising-for-clarity"],
+    },
     undefined,
   ),
   unit(
@@ -213,7 +218,7 @@ const units: readonly UnitDef[] = [
     t("Manners, Effort and Age", "礼貌、勤奋与年龄"),
     {
       words: ["words-of-manners-good-and-bad", "words-of-diligence-and-sloth", "words-of-delay-and-idleness", "words-of-youth-and-old-age"],
-      grammar: [],
+      grammar: ["tone-and-register-at-work"],
       reading: [],
       writing: [],
     },

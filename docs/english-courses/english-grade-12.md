@@ -186,6 +186,19 @@ The band course `english-grades-9-12` retires once `english-grade-9` to `english
 
 **Words:** `words-of-ships-and-sailors` Words of Ships and Sailors (after `context-clues`): mariner, stevedore, frigate, schooner, regatta, seafaring, capsize, scuttle, jettison, flotsam; `words-of-pirates-and-plunder` Words of Pirates and Plunder (after `context-clues`): buccaneer, corsair, privateer, plunder, booty, maraud, pillage, loot, ransack, contraband.
 
+## Added for Depth
+
+After this outline, the course gained the topics below, so that it holds 120 topics and about 1,810 XP; topics marked *existing* are reused from other courses with their ids. Each unit with a reading unit also ends with a listening topic, which plays the unit's passages read aloud without their text and asks their questions, and a topic of reading them aloud ([English Curriculum](../english-curriculum.md) §9).
+
+- Unit 4, *Art and Its Critics*, grammar: `illogical-comparisons` Illogical Comparisons (after `parallel-structure`, `elliptical-clauses`): Comparisons of unlike things, of a thing with a group that includes it, and of two things left unclear, and how to make each compare what it means to. Steps: Is the Comparison Logical; The Logical Revision; then Completing the Comparison.
+- Unit 5, *Literature Across Languages*, grammar: `clauses-and-phrases-of-concession` Clauses and Phrases of Concession (after `subordination-for-emphasis`): Conceding a fact that might have stopped what happened: *although* and *even though* before a clause, *despite* and *in spite of* before a noun, and how concession differs from contrast and cause. Steps: Clause or Noun; Concession, Contrast or Cause; then Combining with a Concession.
+- Unit 8, *Science and Inquiry*, grammar: `stacks-of-nouns` Stacks of Nouns (after `jargon-and-plain-language`): Strings of nouns used as modifiers, as in *the student loan repayment policy review*, how to find the noun they all describe, and how to unpack them with prepositions and verbs. Steps: Finding the Head; Stacked or Clear; then Unpacking a Stack.
+- Unit 8, *Science and Inquiry*, writing: `citing-in-mla-and-apa` Citing in MLA and APA *(existing)*.
+- Unit 9, *Law and Nations*, grammar: `semicolons-in-complex-series` Semicolons in Complex Series (after `semicolons-and-colons`, `commas-with-nonessential-elements`): Semicolons between the items of a series when the items have commas of their own, and before a conjunctive adverb such as *however* that joins two clauses. Steps: Punctuating the Series; Semicolons or Commas; then Before a Conjunctive Adverb.
+- Unit 10, *Rhetoric and Reason*, grammar: `faulty-predication` Faulty Predication (after `mixed-constructions`, `noun-clauses`): Sentences whose predicate cannot belong to their subject, as in *Democracy is when…* and *The reason is because…*, and how to join them soundly. Steps: Is the Predicate Sound; The Sound Revision; then Completing a Definition.
+- Unit 10, *Rhetoric and Reason*, writing: `revising-for-clarity` Revising for Clarity *(existing)*.
+- Unit 15, *Manners, Effort and Age*, grammar: `tone-and-register-at-work` Tone and Register at Work *(existing)*.
+
 ## What the Next Grade Builds On
 
 `english-college-writing` builds on this year: the personal and philosophical essays grow into academic essays and research papers, and reading for argument, translation and risk goes on to scholarly sources.

@@ -186,6 +186,19 @@
 
 **词汇：** `words-of-ships-and-sailors` 船与水手的词（先修 `context-clues`）：mariner, stevedore, frigate, schooner, regatta, seafaring, capsize, scuttle, jettison, flotsam；`words-of-pirates-and-plunder` 海盗与劫掠的词（先修 `context-clues`）：buccaneer, corsair, privateer, plunder, booty, maraud, pillage, loot, ransack, contraband。
 
+## 为加深而新增
+
+本大纲写成之后，课程又增加了下列主题，共 120 个主题、约 1,810 XP；标为*已有*的主题沿用其他课程的主题及其 id。每个带阅读单元的单元最后还有一个听力主题，不显示原文，播放本单元篇章的朗读并提出篇章的问题，以及一个朗读这些篇章的主题（[英语课程设计](../english-curriculum.zh-CN.md) §9）。
+
+- 第 4 单元《艺术与评论》，语法：`illogical-comparisons` 不合逻辑的比较（先修 `parallel-structure`、`elliptical-clauses`）：把不同类的事物相比、把事物与包含它的群体相比，以及两种理解都说得通的比较，以及如何让每个比较都比得恰当。步骤：比较是否合乎逻辑；合乎逻辑的修改；然后补全比较。
+- 第 5 单元《跨越语言的文学》，语法：`clauses-and-phrases-of-concession` 让步从句与短语（先修 `subordination-for-emphasis`）：承认一个本可能阻止事情发生的事实：*although* 和 *even though* 后接从句，*despite* 和 *in spite of* 后接名词，以及让步与对比、因果的区别。步骤：从句还是名词；让步、对比还是因果；然后用让步合并句子。
+- 第 8 单元《科学与探究》，语法：`stacks-of-nouns` 名词堆叠（先修 `jargon-and-plain-language`）：用作修饰语的一串名词，如 *the student loan repayment policy review*，如何找出它们共同修饰的中心名词，以及如何用介词和动词把它们拆开。步骤：找出中心词；堆叠还是清楚；然后拆开名词堆叠。
+- 第 8 单元《科学与探究》，写作：`citing-in-mla-and-apa` MLA 与 APA 引用格式（已有）。
+- 第 9 单元《法律与国家》，语法：`semicolons-in-complex-series` 复杂列举中的分号（先修 `semicolons-and-colons`、`commas-with-nonessential-elements`）：当列举的各项内部本身带有逗号时，用分号隔开各项；以及在连接两个分句的连接副词（如 *however*）之前使用分号。步骤：给列举加标点；分号还是逗号；然后连接副词之前。
+- 第 10 单元《修辞与理性》，语法：`faulty-predication` 主谓搭配不当（先修 `mixed-constructions`、`noun-clauses`）：谓语与主语不能搭配的句子，如 *Democracy is when…* 和 *The reason is because…*，以及如何把它们改通顺。步骤：谓语搭配是否恰当；恰当的修改；然后补全定义。
+- 第 10 单元《修辞与理性》，写作：`revising-for-clarity` 为求清晰而修改（已有）。
+- 第 15 单元《礼貌、勤奋与年龄》，语法：`tone-and-register-at-work` 职场中的语气与语体（已有）。
+
 ## 下一年级在此基础上继续
 
 `english-college-writing` 在本年级的基础上继续：个人随笔和哲学论文发展为学术论文和研究论文，对论证、翻译和风险的阅读延伸到学术资料。

@@ -3,6 +3,7 @@ import { conversations9 } from "./conversations.ts";
 import { courseGrade9 } from "./course.ts";
 import { grammarTopics9a } from "./grammar-a.ts";
 import { grammarTopics9b } from "./grammar-b.ts";
+import { grammarTopics9c } from "./grammar-c.ts";
 import { lexicon9 } from "./lexicon.ts";
 import { readingTopics9a } from "./reading-a.ts";
 import { artAndItsSubjects } from "./reading-art.ts";
@@ -27,6 +28,7 @@ export const grade9: Pack = {
     ...wordStudyTopics9,
     ...grammarTopics9a,
     ...grammarTopics9b,
+    ...grammarTopics9c,
     ...readingTopics9a,
     ...readingTopics9b,
     ...writingTopics9a,

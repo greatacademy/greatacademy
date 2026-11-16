@@ -204,6 +204,15 @@
 
 **词汇：** `words-of-raids-and-rumors` 突袭与谣言的词（先修 `context-clues`）：raid, ambush, kidnap, snatch, flee, bribe, poison, torture, leak, rumor；`words-of-slips-and-scrambles` 滑倒与攀爬的词（先修 `context-clues`）：stumble, tumble, slippery, crouch, scramble, soar, squeeze, spill, smash, haste；`words-of-spectacle-and-splendor` 壮观与辉煌的词（先修 `context-clues`）：parade, spectacle, splendid, gorgeous, glamour, exotic, myth, miracle, thrill, gesture；`words-of-daring-and-promises` 冒险与承诺的词（先修 `context-clues`）：dare, venture, tempt, impulse, pledge, swear, pretend, swap, cope, burden。
 
+## 为加深而新增
+
+本大纲写成之后，课程又增加了下列主题，共 120 个主题、约 1,810 XP；标为*已有*的主题沿用其他课程的主题及其 id。每个带阅读单元的单元最后还有一个听力主题，不显示原文，播放本单元篇章的朗读并提出篇章的问题，以及一个朗读这些篇章的主题（[英语课程设计](../english-curriculum.zh-CN.md) §9）。
+
+- 第 5 单元《自然世界》，写作：`replacing-cliches` 替换陈词滥调（先修 `choosing-precise-diction`）：陈词滥调，即 *a piece of cake* 和 *at the end of the day* 这类曾经生动、如今已被用滥的说法，以及如何用一个准确的细节替换它们。步骤：陈词滥调说了什么；陈词滥调还是新鲜表达；然后新鲜的修改。
+- 第 6 单元《媒体与真相》，语法：`cohesion-old-before-new` 衔接：旧信息在前，新信息在后（已有）。
+- 第 7 单元《金钱与工作》，语法：`agreement-in-hard-cases` 疑难情况下的主谓一致（先修 `agreement-with-tricky-subjects`、`indefinite-pronouns-and-agreement`）：主谓一致中最难的几种情况：*one of those who*、要用单数动词的书名和从句，以及后面跟着 *as well as* 或 *along with* 的主语。步骤：one of those who；书名、从句和菜名；然后as well as 和 along with。
+- 第 8 单元《讽刺与幽默》，语法：`parallel-lists-and-headings` 平行的列表与标题（已有）。
+
 ## 下一年级在此基础上继续
 
 `english-grade-11` 在本年级的基础上继续：修辞分析和社论发展为关于权利与法律的议论文和对科学资料的综合；阅读偏见和误导人的数字延伸到逻辑谬误、对资料来源的评估和历史文献；语法转向独立主格结构、名词从句和引文的融入。

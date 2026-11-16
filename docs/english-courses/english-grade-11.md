@@ -246,6 +246,19 @@ The band course `english-grades-9-12` retires once `english-grade-9` to `english
 
 **Words:** `words-of-acclaim-and-abuse` Words of Acclaim and Abuse (after `context-clues`): approbation, plaudit, encomium, laudatory, obloquy, opprobrium, calumny, pillory, vituperate, fulminate; `words-of-awkward-fixes` Words of Awkward Fixes (after `context-clues`): adverse, obtuse, quandary, reprehensible, solicitous, stupor, imbroglio, discomfit, ignoble, turpitude; `words-of-hard-and-costly-tasks` Words of Hard and Costly Tasks (after `context-clues`): intricate, cumbersome, elaborate, grueling, strenuous, formidable, stupendous, outlandish, exorbitant, paltry.
 
+## Added for Depth
+
+After this outline, the course gained the topics below, so that it holds 124 topics and about 1,890 XP; topics marked *existing* are reused from other courses with their ids. Each unit with a reading unit also ends with a listening topic, which plays the unit's passages read aloud without their text and asks their questions, and a topic of reading them aloud ([English Curriculum](../english-curriculum.md) §9).
+
+- Unit 5, *Nature and the Self*, grammar: `placing-limiting-modifiers` Placing Limiting Modifiers (after `dangling-modifiers`): Words such as *only*, *just*, *almost* and *nearly*, which limit the word right after them, and modifiers that squint at two words at once. Steps: What Only Limits; Placing Almost and Nearly; then Clear or Squinting.
+- Unit 8, *Machines and Makers*, grammar: `the-passive-and-agency` The Passive and Agency (after `reducing-nominalizations`): The passive without an agent, which can hide who is responsible, as in *Mistakes were made*, how to tell it from a passive that suits its purpose, and how to name who acted. Steps: Hiding or Suiting; Naming the Actor; then What the Passive Does Here.
+- Unit 9, *Roots and Parts*, writing: `quoting-and-paraphrasing` Quoting and Paraphrasing *(existing)*.
+- Unit 9, *Roots and Parts*, writing: `verbs-for-citing-sources` Verbs for Citing Sources *(existing)*.
+- Unit 10, *Easing and Society*, grammar: `inversion-for-effect` Inversion for Effect (after `reading-inverted-sentences`, `word-order-for-emphasis`): Sentences that put a place, a negative or *only* first and the verb before the subject, as in *Into the room walked a stranger* and *Never have I seen such a crowd*, and the agreement they need. Steps: Finding the Subject; Agreement After Inversion; then Inverting After a Negative.
+- Unit 10, *Easing and Society*, writing: `hedging-and-qualification` Hedging and Qualification *(existing)*.
+- Unit 11, *Skill and Dullness*, writing: `signposting-in-academic-writing` Signposting in Academic Writing *(existing)*.
+- Unit 12, *Scorn and Trickery*, grammar: `clear-sentences-characters-and-actions` Clear Sentences: Characters and Actions *(existing)*.
+
 ## What the Next Grade Builds On
 
 `english-grade-12` builds on this year: the critique and the argumentative essay grow into the personal essay and the college application essay; reading for assumptions and motifs goes on to personal essays and longer works; and the vocabulary moves to words of reflection and the last sets of roots and academic words.

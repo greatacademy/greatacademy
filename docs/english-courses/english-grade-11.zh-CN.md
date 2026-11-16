@@ -246,6 +246,19 @@
 
 **词汇：** `words-of-acclaim-and-abuse` 赞誉与辱骂的词（先修 `context-clues`）：approbation, plaudit, encomium, laudatory, obloquy, opprobrium, calumny, pillory, vituperate, fulminate；`words-of-awkward-fixes` 尴尬处境的词（先修 `context-clues`）：adverse, obtuse, quandary, reprehensible, solicitous, stupor, imbroglio, discomfit, ignoble, turpitude；`words-of-hard-and-costly-tasks` 艰巨与昂贵任务的词（先修 `context-clues`）：intricate, cumbersome, elaborate, grueling, strenuous, formidable, stupendous, outlandish, exorbitant, paltry。
 
+## 为加深而新增
+
+本大纲写成之后，课程又增加了下列主题，共 124 个主题、约 1,890 XP；标为*已有*的主题沿用其他课程的主题及其 id。每个带阅读单元的单元最后还有一个听力主题，不显示原文，播放本单元篇章的朗读并提出篇章的问题，以及一个朗读这些篇章的主题（[英语课程设计](../english-curriculum.zh-CN.md) §9）。
+
+- 第 5 单元《自然与自我》，语法：`placing-limiting-modifiers` 限定修饰语的位置（先修 `dangling-modifiers`）：*only*、*just*、*almost* 和 *nearly* 等词限定紧跟在它们后面的词，以及同时可能修饰前后两个词的“斜视”修饰语。步骤：only 限定了什么；almost 和 nearly 的位置；然后清楚还是斜视。
+- 第 8 单元《机器与制造者》，语法：`the-passive-and-agency` 被动语态与施动者（先修 `reducing-nominalizations`）：不带施动者的被动语态，它可能掩盖责任人，如 *Mistakes were made*；如何把它与恰当使用的被动语态区分开，以及如何点明施动者。步骤：掩盖还是恰当；点明施动者；然后被动语态在这里的作用。
+- 第 9 单元《词根与词缀》，写作：`quoting-and-paraphrasing` 引用与转述（已有）。
+- 第 9 单元《词根与词缀》，写作：`verbs-for-citing-sources` 引述资料的动词（已有）。
+- 第 10 单元《缓解与交往》，语法：`inversion-for-effect` 为效果而倒装（先修 `reading-inverted-sentences`、`word-order-for-emphasis`）：把地点、否定词或 *only* 放在句首、把动词放在主语前面的句子，如 *Into the room walked a stranger* 和 *Never have I seen such a crowd*，以及它们所需的主谓一致。步骤：找出主语；倒装后的主谓一致；然后否定词后的倒装。
+- 第 10 单元《缓解与交往》，写作：`hedging-and-qualification` 模糊限制与限定（已有）。
+- 第 11 单元《技艺与乏味》，写作：`signposting-in-academic-writing` 学术写作中的路标词（已有）。
+- 第 12 单元《蔑视与欺诈》，语法：`clear-sentences-characters-and-actions` 清晰的句子：人物与动作（已有）。
+
 ## 下一年级在此基础上继续
 
 `english-grade-12` 在本年级的基础上继续：论证评论和议论文发展为个人随笔和大学申请文书；阅读假设和母题延伸到个人随笔和更长的作品；词汇转向反思的词汇以及最后几组词根和学术词汇。

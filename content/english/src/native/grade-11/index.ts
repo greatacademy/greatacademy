@@ -4,6 +4,7 @@ import { emptyPack, type Pack } from "../../pack.ts";
 import { conversations11 } from "./conversations.ts";
 import { courseGrade11 } from "./course.ts";
 import { grammarTopics11 } from "./grammar.ts";
+import { grammarTopics11b } from "./grammar-b.ts";
 import { lexicon11 } from "./lexicon.ts";
 import { readingTopics11 } from "./reading.ts";
 import { dreamsAndPromises } from "./reading-dreams.ts";
@@ -24,6 +25,7 @@ export const grade11: Pack = {
     ...batchTopics11,
     ...wordStudyTopics11,
     ...grammarTopics11,
+    ...grammarTopics11b,
     ...readingTopics11,
     ...writingTopics11,
     ...judgedTopics11a,
