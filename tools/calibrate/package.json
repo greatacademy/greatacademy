@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "calibrate": "mise exec -- node src/main.ts",
+    "clips": "mise exec -- node src/clips.ts",
     "typecheck": "tsc -p tsconfig.json",
     "test": "vitest run",
     "lint": "biome check ."
@@ -15,6 +16,7 @@
   },
   "dependencies": {
     "@ga/api": "workspace:*",
+    "@ga/content": "workspace:*",
     "@ga/db": "workspace:*",
     "@ga/judge": "workspace:*",
     "@ga/subject-english": "workspace:*"

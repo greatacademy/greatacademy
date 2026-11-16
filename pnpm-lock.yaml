@@ -670,6 +670,9 @@ importers:
       '@ga/api':
         specifier: workspace:*
         version: link:../../libs/api
+      '@ga/content':
+        specifier: workspace:*
+        version: link:../../libs/content
       '@ga/db':
         specifier: workspace:*
         version: link:../../libs/db
