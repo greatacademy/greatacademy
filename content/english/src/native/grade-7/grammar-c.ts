@@ -183,7 +183,7 @@ const adverbComma = choose(
       ["After the guests left", "we washed the dishes"],
       ["Until the bus arrives", "we will wait here"],
       ["As soon as I got home", "I called my friend"],
-    ].map(([clause, main], i) => {
+    ].map(([clause = "", main = ""], i) => {
       const lower = `${clause[0]!.toLowerCase()}${clause.slice(1)}`;
       const cap = `${main[0]!.toUpperCase()}${main.slice(1)}`;
       return i % 2 === 0

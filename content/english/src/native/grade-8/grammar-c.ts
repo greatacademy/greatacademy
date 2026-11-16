@@ -154,7 +154,7 @@ const thatComma = choose(
       ["The road", "that leads to the lake is steep", "The road"],
       ["Scientists found", "that the ice is melting"],
       ["The coat", "that I wanted was sold", "The coat"],
-    ].map(([a, b]) => `${a} / ${b}|${a} ${b}.|${a}, ${b}.|${a} ${b.replace(/^that /u, "that, ")}.`),
+    ].map(([a = "", b = ""]) => `${a} / ${b}|${a} ${b}.|${a}, ${b}.|${a} ${b.replace(/^that /u, "that, ")}.`),
   ),
   (right) => [`"${right}" joins the *that* clause with no comma.`, `“${right}”连接 *that* 从句时没有用逗号。`],
   [
