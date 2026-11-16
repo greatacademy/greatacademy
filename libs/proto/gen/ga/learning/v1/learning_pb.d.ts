@@ -69,6 +69,13 @@ export declare type GetProfileResponse = Message<"ga.learning.v1.GetProfileRespo
    * @generated from field: bool speaking_available = 5;
    */
   speakingAvailable: boolean;
+
+  /**
+   * speaking_back_tomorrow tells that speaking was turned off for the day only, and comes back at the start of the next.
+   *
+   * @generated from field: bool speaking_back_tomorrow = 6;
+   */
+  speakingBackTomorrow: boolean;
 };
 
 /**

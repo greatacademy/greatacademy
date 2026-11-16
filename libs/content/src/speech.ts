@@ -208,7 +208,7 @@ export const speechChecker: Checker = {
     const said = spokenWords(heard.lexical ?? heard.text);
     if (e.mode === "say") {
       const ok = (e.accept ?? []).some((a) => spokenWords(a).join(" ") === said.join(" "));
-      return ok ? { correct: true } : { correct: false, feedback: t(`We heard: “${heard.text}”.`, `我们听到的是：“${heard.text}”。`) };
+      return { correct: ok };
     }
     const reference = spokenWords(e.reference ?? "");
     const got = heardInOrder(reference, said);
@@ -217,10 +217,7 @@ export const speechChecker: Checker = {
       const missed = missedWords(reference, said).join(", ");
       return {
         correct: false,
-        feedback: t(
-          `We heard: “${heard.text}”. Listen again for: ${missed}.`,
-          `我们听到的是：“${heard.text}”。再听一听这些词：${missed}。`,
-        ),
+        feedback: t(`Listen again for: ${missed}.`, `再听一听这些词：${missed}。`),
       };
     }
     const bar = e.minAccuracy ?? MIN_ACCURACY;

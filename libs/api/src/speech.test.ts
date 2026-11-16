@@ -207,7 +207,8 @@ describe("speaking", () => {
     const res = await learning.submitAnswer({ sessionId: session.id, index: 0, audio: second });
     expect(sent[0]?.reference).toBe("sheep");
     expect(res.feedback?.correct).toBe(false);
-    expect(res.feedback?.message?.values.en).toContain("Ship.");
+    expect(res.feedback).toMatchObject({ heard: "Ship." });
+    expect(res.feedback?.message?.values.en).toBe("Listen again for: sheep.");
   });
 
   it("keeps the words heard for 30 days, then empties them, keeping whether they were right", async () => {
@@ -253,14 +254,41 @@ describe("speaking", () => {
     const [row] = await db.select().from(schema.taskSession).where(eq(schema.taskSession.id, session.id));
     expect(row?.status).toBe("abandoned");
     expect(await topics()).toEqual(["basics"]);
-    expect(await learning.getProfile({ timeZone: "UTC" })).toMatchObject({ speaking: false, speakingAvailable: true });
+    expect(await learning.getProfile({ timeZone: "UTC" })).toMatchObject({
+      speaking: false,
+      speakingAvailable: true,
+      speakingBackTomorrow: true,
+    });
     now += 24 * 3600_000;
     expect(await topics()).toEqual(["basics", "say-sheep"]);
     await learning.setSpeaking({ on: false });
+    expect(await learning.getProfile({ timeZone: "UTC" })).toMatchObject({ speaking: false, speakingBackTomorrow: false });
     now += 400 * 24 * 3600_000;
     expect(await topics()).toEqual(["basics"]);
     await learning.setSpeaking({ on: true });
     expect(await topics()).toEqual(["basics", "say-sheep"]);
+  });
+});
+
+describe("a course with speaking turned off", () => {
+  it("is not finished while spoken topics wait for speaking to come back", async () => {
+    await addSpeech();
+    const [row] = await db.select().from(schema.learnerState);
+    const known = { learned: true, placed: true, repNum: 1, last: now, speed: 1, explicitReviews: 0 };
+    await db
+      .update(schema.learnerState)
+      .set({ state: { ...row!.state, topics: { basics: known } } })
+      .where(eq(schema.learnerState.learnerId, row!.learnerId));
+    const finished = async () => (await learning.getDashboard({ courseId: COURSE, timeZone: "UTC" })).finished;
+    expect(await finished()).toBe(false);
+    await learning.setSpeaking({ on: false, todayOnly: true, timeZone: "UTC" });
+    expect(await topics()).toEqual(["basics"]);
+    expect(await finished()).toBe(false);
+    await db
+      .update(schema.learnerState)
+      .set({ state: { ...row!.state, topics: { basics: known, "say-sheep": known } } })
+      .where(eq(schema.learnerState.learnerId, row!.learnerId));
+    expect(await finished()).toBe(true);
   });
 });
 

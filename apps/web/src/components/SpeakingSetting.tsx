@@ -27,7 +27,7 @@ export function SpeakingSetting() {
         <p className="text-sm text-muted">{m.speakingUnavailable}</p>
       ) : (
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="text-sm">{p.speaking ? m.speakingOn : m.speakingOffNote}</p>
+          <p className="text-sm">{p.speaking ? m.speakingOn : p.speakingBackTomorrow ? m.speakingOffToday : m.speakingOffNote}</p>
           <Button variant="secondary" onClick={() => set.mutate(!p.speaking)} disabled={set.isPending}>
             {p.speaking ? m.turnSpeakingOff : m.turnSpeakingOn}
           </Button>

@@ -148,6 +148,8 @@ const messages = {
     speakingSetting: "Speaking questions",
     speakingOn: "Speaking questions are on: some questions ask you to say words and sentences aloud.",
     speakingOffNote: "Speaking questions are off. Lessons go on without them; turn them on again at any time.",
+    speakingOffToday:
+      "Speaking questions are off for today and come back tomorrow. Lessons go on without them; turn them on again at any time.",
     speakingUnavailable: "Speaking questions are not available yet: no speech service serves your account.",
     turnSpeakingOn: "Turn on",
     turnSpeakingOff: "Turn off",
@@ -706,6 +708,7 @@ const messages = {
     speakingSetting: "口语题",
     speakingOn: "口语题已开启：有些题目要求你大声说出单词和句子。",
     speakingOffNote: "口语题已关闭。课程会跳过它们继续进行，随时可以重新开启。",
+    speakingOffToday: "口语题今天已关闭，明天自动恢复。课程会跳过它们继续进行，随时可以重新开启。",
     speakingUnavailable: "口语题暂不可用：还没有语音服务为你的账户提供服务。",
     turnSpeakingOn: "开启",
     turnSpeakingOff: "关闭",

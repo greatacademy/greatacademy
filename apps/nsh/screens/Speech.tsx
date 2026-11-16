@@ -215,7 +215,7 @@ export function SpeakingSettings() {
         {(p) => (
           <If when={p().speakingAvailable} else={<Muted>{m().speakingUnavailable}</Muted>}>
             <Toggle label={m().speakingSetting} checked={p().speaking} disabled={busy()} onChange={(on) => void set(on)} />
-            <Muted>{p().speaking ? m().speakingOn : m().speakingOffNote}</Muted>
+            <Muted>{p().speaking ? m().speakingOn : p().speakingBackTomorrow ? m().speakingOffToday : m().speakingOffNote}</Muted>
           </If>
         )}
       </If>

@@ -20,6 +20,7 @@ import {
   placedEvent,
   reopenPlacement,
   type SessionRow,
+  speakingOffUntil,
   subjectSettings,
   updateSession,
   updateSubjectSettings,
@@ -43,7 +44,7 @@ import { criterionKey } from "@ga/judge";
 import { type LearningService, type Task as TaskMessage, TopicStatus } from "@ga/proto/learning/v1/learning_pb";
 
 import { requirePlan } from "./billing.ts";
-import { accessOf, requireStudy, studiedToday } from "./capabilities.ts";
+import { accessOf, requireStudy, speechRoute, studiedToday } from "./capabilities.ts";
 import { dbKey, userIdKey } from "./context.ts";
 import { figure, knowledgePointIntro, sessionMessage, sounds, taskMessage, text } from "./convert.ts";
 import { requireJudgingQuota } from "./costs.ts";
@@ -52,7 +53,7 @@ import { forLearner, type JudgingDeps, judgedCriteria, runJudgment, viewJudgment
 import type { CourseEntry, Registry } from "./registry.ts";
 import { answerRun, canSkip, type Given, type RunState, runTask, startRun } from "./runner.ts";
 import { appendTo, learnerState, settleAnswer } from "./sessions.ts";
-import { hearRecording, setSpeaking, speakingAvailable, speakingOff, speakingUntil } from "./speech.ts";
+import { hearRecording, SPEAKING_OFF_FOREVER, setSpeaking, speakingAvailable, speakingOff, speakingUntil, spokenTopics } from "./speech.ts";
 import { xpSummary } from "./summary.ts";
 
 /** maxDailyGoal bounds a weekday's goal, far above what anyone studies in a day. */
@@ -139,10 +140,28 @@ export interface LearningDeps {
   readonly defer?: (work: Promise<unknown>) => void;
 }
 
+/**
+ * speakingWaits tells whether spoken topics of a course are left unlearned only because the learner turned speaking
+ * off: the course is not finished then, since they come back when speaking does.
+ */
+async function speakingWaits(db: Db, full: CourseEntry, learnerId: string, s: LearnerState, now: number): Promise<boolean> {
+  if (!(await speakingOff(db, learnerId, now))) return false;
+  for (const g of spokenTopics(full)) {
+    if (g.ids.some((id) => !s.topics[id]?.learned) && (await speechRoute(db, "stt", g.language, learnerId, now, g.verbatim))) return true;
+  }
+  return false;
+}
+
 /** speakingOf tells whether spoken topics are taught to a learner, and whether a speech service serves them at all. */
 async function speakingOf(db: Db, learnerId: string, now: number) {
   const available = await speakingAvailable(db, learnerId, now);
-  return { speaking: available && !(await speakingOff(db, learnerId, now)), speakingAvailable: available };
+  const until = await speakingOffUntil(db, learnerId);
+  const off = until !== null && until.getTime() > now;
+  return {
+    speaking: available && !off,
+    speakingAvailable: available,
+    speakingBackTomorrow: off && until.getTime() < SPEAKING_OFF_FOREVER.getTime(),
+  };
 }
 
 /** feedbackOf is the feedback on an answer, with a model's verdict when one judged it; a text sent back for a rewrite shows no model answer. */
@@ -385,7 +404,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
         courseId: c.id,
         diagnosed,
         ...(report && { report }),
-        finished: courseFinished(c.planner, s),
+        finished: courseFinished(c.planner, s) && !(await speakingWaits(db, await course(c.id), learnerId, s, now)),
         nextCourses: [...(c.index.next.get(c.id) ?? [])],
         canDecide: await canDecide(db, learnerId, guardian),
         subjectId: c.subject.def.id,

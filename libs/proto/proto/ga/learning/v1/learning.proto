@@ -74,6 +74,8 @@ message GetProfileResponse {
   bool speaking = 4;
   // speaking_available tells whether a speech service serves the learner, so that turning speaking on would teach it.
   bool speaking_available = 5;
+  // speaking_back_tomorrow tells that speaking was turned off for the day only, and comes back at the start of the next.
+  bool speaking_back_tomorrow = 6;
 }
 
 // Enrollment is a learner's current course of a subject.

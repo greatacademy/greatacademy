@@ -22,11 +22,11 @@ describe("spokenWords", () => {
 describe("speechChecker", () => {
   const repeat = { mode: "repeat", reference: "sheep" };
 
-  it("accepts a word heard, and rejects another word with what was heard", () => {
+  it("accepts a word heard, and rejects another word naming the word to listen for", () => {
     expect(speechChecker.check(repeat, heard("Sheep.")).correct).toBe(true);
     const wrong = speechChecker.check(repeat, heard("Ship."));
     expect(wrong.correct).toBe(false);
-    expect(wrong.feedback?.en).toContain("Ship.");
+    expect(wrong.feedback?.en).toBe("Listen again for: sheep.");
   });
 
   it("asks an accent only to be understood: accuracy at the bar passes", () => {
