@@ -91,14 +91,20 @@ By the end of grade 9 a learner has read all 3,500 common characters, the goal o
 
 - `classical-words-9-01` Classical Chinese: Borrowed Characters and Sentences: Borrowed Characters; Putting Sentences into Modern Chinese
 
+## Reading
+
+- `chinese-reading-9-choices` Choices in Growing Up: The Final Pass; The Last Ferryman; The Light Across the Street
+- `chinese-reading-9-science` Through the Eyes of Science: Lightning and Thunder; Why the Earth Shakes; How Satellite Navigation Finds You
+- `chinese-reading-9-debate` Weighing Views: The Use of the Useless; Is Talent Everything?; Can a Search Engine Think for You?
+
 ## Simulated Students
 
 `pnpm nx run simulate:simulate -- chinese-grade-9`, the mean of 20 runs of each student. A placed student already knows the course's foundations.
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 20/20 | 40.65 | 73.50 | 0.35 | 227.30 | 3.11 | 10.60 | 0.00 |
-| typical | 20/20 | 49.45 | 78.25 | 5.10 | 265.50 | 3.64 | 9.80 | 0.00 |
-| struggling | 20/20 | 70.15 | 107.45 | 34.30 | 384.45 | 5.26 | 9.75 | 0.00 |
-| placed | 20/20 | 30.80 | 47.20 | 3.75 | 164.05 | 3.77 | 6.05 | 0.00 |
-| struggling, placed | 20/20 | 43.90 | 64.90 | 21.45 | 235.35 | 5.42 | 5.95 | 0.00 |
+| strong | 20/20 | 224.60 | 341.45 | 2.10 | 1322.50 | 3.90 | 59.40 | 9.00 |
+| typical | 20/20 | 260.60 | 364.85 | 25.50 | 1427.35 | 4.21 | 53.65 | 9.00 |
+| struggling | 14/20 | 350.95 | 469.80 | 132.75 | 1851.80 | 5.50 | 49.40 | 9.00 |
+| placed | 20/20 | 38.85 | 56.55 | 3.80 | 202.65 | 3.80 | 7.70 | 9.00 |
+| struggling, placed | 20/20 | 55.70 | 78.20 | 25.45 | 291.35 | 5.45 | 7.60 | 9.00 |

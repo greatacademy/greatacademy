@@ -1,7 +1,9 @@
 import { CompileError, createRng, formatIssue, sampleGenerators } from "@ga/content";
 import { describe, expect, it } from "vitest";
 
+import { recognitionByGrade } from "./characters/index.ts";
 import { chinese, compileChinese } from "./index.ts";
+import { chineseReading } from "./reading/index.ts";
 import { coreShardTopics } from "./shards/core.ts";
 
 describe("chinese content", () => {
@@ -51,6 +53,20 @@ describe("chinese content", () => {
         const p = kp.generate(createRng(1));
         expect(p.prompt["zh-CN"], `${topic.id}#${kp.id}`).toMatch(/[一-鿿]/u);
         expect(p.solution["zh-CN"], `${topic.id}#${kp.id}`).toMatch(/[一-鿿]/u);
+      }
+    }
+  });
+
+  it("reads passages mostly in the characters taught by their grade", () => {
+    const han = /\p{Script=Han}/u;
+    for (const { grade, unit } of chineseReading) {
+      const known = new Set(
+        recognitionByGrade.filter((r) => r.grade <= grade).flatMap((r) => r.batches.flatMap((b) => b.entries.map((e) => e.char))),
+      );
+      for (const passage of unit.passages) {
+        const chars = [...passage.body].filter((c) => han.test(c));
+        const unknown = chars.filter((c) => !known.has(c));
+        expect(unknown.length / chars.length, `${passage.id}: ${[...new Set(unknown)].join("")}`).toBeLessThanOrEqual(0.02);
       }
     }
   });

@@ -2,31 +2,11 @@
 // grade, each passage with a short check. A passage is offered once its characters are known well enough and the grade's first word
 // batch is learned; its questions ask what it says, what a word or sentence means in it, and what it is about.
 
-import { type PassageDef, type PassageQuestionDef, type ReadingUnitDef, type Text, t } from "@ga/content";
+import type { ReadingUnitDef } from "@ga/content";
 
-import { wordId } from "../words/index.ts";
-
-/** Pair is a text in Chinese and in English, in that order. */
-type Pair = readonly [zh: string, en: string];
-
-const text = ([zh, en]: Pair): Text => t(en, zh);
-
-/** question builds a comprehension question from its prompt, right option, wrong options and solution. */
-function question(prompt: Pair, right: Pair, wrong: readonly Pair[], solution: Pair): PassageQuestionDef {
-  return { prompt: text(prompt), right: text(right), wrong: wrong.map(text), solution: text(solution) };
-}
-
-/** PassageData is a passage without the topics it needs, which are its grade's. */
-type PassageData = Omit<PassageDef, "topics" | "title"> & { readonly title: Pair };
-
-/** unit builds a grade's reading unit; each passage needs the grade's first word batch. */
-function unit(grade: number, id: string, title: Pair, passages: readonly PassageData[]): ReadingUnitDef {
-  return {
-    id,
-    title: text(title),
-    passages: passages.map((p) => ({ ...p, title: text(p.title), topics: [{ topic: wordId(grade, 1), weight: 0.2 }] })),
-  };
-}
+import { earlyReading } from "./early.ts";
+import { juniorReading } from "./junior.ts";
+import { question, unit } from "./kit.ts";
 
 /** gradeThreeReading is the reading unit of grade 3: nature close at hand. */
 const gradeThreeReading = unit(
@@ -2140,6 +2120,7 @@ const gradeSixThinking = unit(
 
 /** chineseReading are the reading units of Chinese, with the grade that offers each. */
 export const chineseReading: readonly { readonly grade: number; readonly unit: ReadingUnitDef }[] = [
+  ...earlyReading,
   { grade: 3, unit: gradeThreeReading },
   { grade: 3, unit: gradeThreeFriends },
   { grade: 3, unit: gradeThreeCurious },
@@ -2152,4 +2133,5 @@ export const chineseReading: readonly { readonly grade: number; readonly unit: R
   { grade: 6, unit: gradeSixReading },
   { grade: 6, unit: gradeSixHistory },
   { grade: 6, unit: gradeSixThinking },
+  ...juniorReading,
 ];

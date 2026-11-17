@@ -91,14 +91,20 @@ By the end of grade 8 a learner reads about 170 more characters of the second ta
 
 - `classical-function-words-8-01` Classical Chinese: 其 and 为: The Usages of 其 and 为; Content Words of Grade 8
 
+## Reading
+
+- `chinese-reading-8-remembered` People and Places Remembered: The Watchmaker on Old Street; The Blue Umbrella; The River of My Hometown
+- `chinese-reading-8-things` The Wisdom of Things: Why Arches Carry Weight; How Paper Is Made; How a Vacuum Flask Keeps Heat
+- `chinese-reading-8-reasoning` The Force of Reasoning: More Haste, Less Speed; Many Hands Make a Big Fire; What Failure Teaches
+
 ## Simulated Students
 
 `pnpm nx run simulate:simulate -- chinese-grade-8`, the mean of 20 runs of each student. A placed student already knows the course's foundations.
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 20/20 | 31.90 | 63.95 | 0.45 | 185.50 | 2.93 | 8.00 | 0.00 |
-| typical | 20/20 | 39.40 | 68.45 | 4.95 | 225.25 | 3.55 | 7.55 | 0.00 |
-| struggling | 20/20 | 54.50 | 93.50 | 30.00 | 324.20 | 5.10 | 7.10 | 0.00 |
-| placed | 20/20 | 26.90 | 45.80 | 3.50 | 158.80 | 3.75 | 4.95 | 0.00 |
-| struggling, placed | 20/20 | 37.65 | 62.90 | 20.60 | 228.95 | 5.42 | 4.80 | 0.00 |
+| strong | 20/20 | 211.65 | 323.70 | 1.60 | 1250.40 | 3.88 | 55.75 | 9.00 |
+| typical | 20/20 | 245.15 | 345.60 | 23.50 | 1350.30 | 4.19 | 50.40 | 9.00 |
+| struggling | 20/20 | 333.35 | 449.00 | 126.90 | 1767.55 | 5.49 | 46.70 | 9.00 |
+| placed | 20/20 | 35.40 | 56.55 | 4.00 | 202.00 | 3.80 | 6.75 | 9.00 |
+| struggling, placed | 20/20 | 49.10 | 76.25 | 23.70 | 282.30 | 5.34 | 6.60 | 9.00 |

@@ -91,14 +91,20 @@ By the end of grade 7 a learner reads about 170 more characters of the second ta
 
 - `classical-words-7-01` Classical Chinese: Words and Sentences of Grade 7: Content Words; Putting Sentences into Modern Chinese
 
+## Reading
+
+- `chinese-reading-7-home` Warmth at Home: The Night the Lights Went Out; The Old Tree by the Gate; My First Dish
+- `chinese-reading-7-small-wonders` Small Wonders: How Spiders Build Webs; Why Leaves Change Colour; How Fireflies Glow
+- `chinese-reading-7-habits` Habits of Work and Study: Dripping Water Wears Away Stone; Learning Begins with Questions; Small Things Are Not Small
+
 ## Simulated Students
 
 `pnpm nx run simulate:simulate -- chinese-grade-7`, the mean of 20 runs of each student. A placed student already knows the course's foundations.
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 20/20 | 24.05 | 51.55 | 0.45 | 130.90 | 2.58 | 5.95 | 0.00 |
-| typical | 20/20 | 31.45 | 55.65 | 4.55 | 174.40 | 3.41 | 5.85 | 0.00 |
-| struggling | 20/20 | 43.95 | 75.20 | 24.10 | 257.50 | 5.05 | 5.75 | 0.00 |
-| placed | 20/20 | 26.55 | 45.75 | 3.60 | 154.75 | 3.67 | 4.85 | 0.00 |
-| struggling, placed | 20/20 | 37.30 | 62.80 | 20.65 | 227.85 | 5.40 | 4.70 | 0.00 |
+| strong | 20/20 | 204.70 | 312.90 | 1.55 | 1207.90 | 3.88 | 53.90 | 9.00 |
+| typical | 20/20 | 238.05 | 334.20 | 22.85 | 1304.30 | 4.19 | 48.85 | 9.00 |
+| struggling | 20/20 | 321.90 | 433.40 | 122.05 | 1705.30 | 5.48 | 45.15 | 9.00 |
+| placed | 20/20 | 33.50 | 54.35 | 2.70 | 193.75 | 3.72 | 6.40 | 9.00 |
+| struggling, placed | 20/20 | 47.90 | 76.45 | 24.80 | 283.75 | 5.43 | 6.35 | 9.00 |

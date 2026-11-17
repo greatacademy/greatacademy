@@ -176,14 +176,20 @@ By the end of grade 1 a learner reads and writes pinyin with its tones, hears an
 - `recite-chi-shang` On the Pond: Reciting the Lines; What the Lines Mean; Writing the Lines
 - `recite-xiao-chi` The Little Pond: Reciting the Lines; What the Lines Mean; Writing the Lines
 
+## Reading
+
+- `chinese-reading-1-home` My Home: Laughter Fills Our Home; Grandma's Soup; Little Sister Learns to Walk
+- `chinese-reading-1-animals` Animal Friends: In the Yard; The Little Bird's New Home; The Snow Dog
+- `chinese-reading-1-seasons` Through the Year: The Spring Wind; What the Cicada Knows; Frost Flowers
+
 ## Simulated Students
 
 `pnpm nx run simulate:simulate -- chinese-grade-1`, the mean of 20 runs of each student. A placed student already knows the course's foundations.
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 20/20 | 51.85 | 86.00 | 0.25 | 284.20 | 3.32 | 13.45 | 0.00 |
-| typical | 20/20 | 62.30 | 91.05 | 5.30 | 323.00 | 3.77 | 12.50 | 0.00 |
-| struggling | 20/20 | 85.85 | 120.25 | 34.50 | 441.45 | 5.16 | 11.75 | 0.00 |
-| placed | 20/20 | 62.30 | 91.05 | 5.30 | 323.00 | 3.77 | 12.50 | 0.00 |
-| struggling, placed | 20/20 | 85.85 | 120.25 | 34.50 | 441.45 | 5.16 | 11.75 | 0.00 |
+| strong | 20/20 | 52.30 | 86.00 | 0.25 | 284.60 | 3.33 | 13.40 | 9.00 |
+| typical | 20/20 | 62.90 | 91.00 | 5.25 | 325.20 | 3.79 | 12.60 | 9.00 |
+| struggling | 20/20 | 86.30 | 118.90 | 33.15 | 437.55 | 5.10 | 12.00 | 9.00 |
+| placed | 20/20 | 62.90 | 91.00 | 5.25 | 325.20 | 3.79 | 12.60 | 9.00 |
+| struggling, placed | 20/20 | 86.30 | 118.90 | 33.15 | 437.55 | 5.10 | 12.00 | 9.00 |
