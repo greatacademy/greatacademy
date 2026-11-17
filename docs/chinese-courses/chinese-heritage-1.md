@@ -137,14 +137,19 @@ The first literacy bridge takes a learner who speaks Chinese but cannot yet read
 - `heritage-sound-alike` Characters That Sound Alike: Choosing the Character; Finding the Wrong Character
 - `heritage-de-and-pronouns` 的, 地, 得 and 他, 她, 它: 的, 地 and 得; 他, 她 and 它
 
+## Reading
+
+- `chinese-reading-heritage-1-family` One Family, Two Countries: Grandma on the Screen; New Year Far from Home; The Words We Speak at Home
+- `chinese-reading-heritage-1-weekends` My Weekends: Saturdays at the Restaurant; Sunday Chinese School; A Letter from Grandpa
+
 ## Simulated Students
 
 `pnpm nx run simulate:simulate -- chinese-heritage-1`, the mean of 20 runs of each student. A placed student already knows the course's foundations.
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 20/20 | 39.65 | 62.40 | 0.50 | 183.65 | 2.98 | 10.55 | 0.00 |
-| typical | 20/20 | 49.00 | 66.20 | 4.30 | 222.00 | 3.60 | 10.20 | 0.00 |
-| struggling | 20/20 | 66.80 | 84.65 | 22.75 | 300.15 | 4.84 | 9.90 | 0.00 |
-| placed | 20/20 | 49.00 | 66.20 | 4.30 | 222.00 | 3.60 | 10.20 | 0.00 |
-| struggling, placed | 20/20 | 66.80 | 84.65 | 22.75 | 300.15 | 4.84 | 9.90 | 0.00 |
+| strong | 20/20 | 44.10 | 68.70 | 0.30 | 214.80 | 3.15 | 11.80 | 6.00 |
+| typical | 20/20 | 52.60 | 72.70 | 4.30 | 246.05 | 3.60 | 11.00 | 6.00 |
+| struggling | 20/20 | 68.35 | 93.55 | 25.15 | 324.55 | 4.75 | 9.95 | 6.00 |
+| placed | 20/20 | 48.40 | 65.80 | 3.25 | 231.80 | 3.69 | 10.15 | 6.00 |
+| struggling, placed | 20/20 | 63.10 | 83.85 | 21.30 | 304.15 | 4.86 | 9.20 | 6.00 |

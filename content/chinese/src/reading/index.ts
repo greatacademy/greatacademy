@@ -7,6 +7,7 @@ import type { ReadingUnitDef } from "@ga/content";
 import { earlyReading } from "./early.ts";
 import { juniorReading } from "./junior.ts";
 import { question, unit } from "./kit.ts";
+import { seniorReading } from "./senior.ts";
 
 /** gradeThreeReading is the reading unit of grade 3: nature close at hand. */
 const gradeThreeReading = unit(
@@ -2134,4 +2135,5 @@ export const chineseReading: readonly { readonly grade: number; readonly unit: R
   { grade: 6, unit: gradeSixHistory },
   { grade: 6, unit: gradeSixThinking },
   ...juniorReading,
+  ...seniorReading,
 ];

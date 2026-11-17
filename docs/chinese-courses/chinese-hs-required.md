@@ -85,14 +85,20 @@ By the end of the required course a learner uses forty more words common in essa
 - `classical-function-words-10-03` Classical Chinese: 何 and 乎: The Usages of 何; The Usages of 乎
 - `classical-sentence-patterns-10-01` Classical Chinese: Kinds of Sentence: Four Kinds of Sentence; Four Kinds of Inversion
 
+## Reading
+
+- `chinese-reading-10-ideas` The Power of Reasoning: Science Needs Imagination Too; Tradition Is a River; Slow Reading in a Fast Age
+- `chinese-reading-10-knowledge` Doorways to Knowledge: The Wisdom of the Dougong; The Far Side of the Moon; What Tree Rings Remember
+- `chinese-reading-10-lives` The Warmth of Ordinary Lives: The Substitute Teacher; Listening to the Rain; The Letter Never Sent
+
 ## Simulated Students
 
 `pnpm nx run simulate:simulate -- chinese-hs-required`, the mean of 20 runs of each student. A placed student already knows the course's foundations.
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 20/20 | 55.00 | 83.40 | 0.90 | 275.40 | 3.35 | 14.60 | 0.00 |
-| typical | 20/20 | 64.85 | 89.60 | 7.10 | 312.60 | 3.79 | 13.40 | 0.00 |
-| struggling | 20/20 | 91.80 | 126.65 | 44.15 | 459.90 | 5.57 | 13.40 | 0.00 |
-| placed | 20/20 | 38.10 | 52.00 | 4.40 | 180.65 | 3.78 | 7.80 | 0.00 |
-| struggling, placed | 20/20 | 56.35 | 74.05 | 26.45 | 267.30 | 5.62 | 8.20 | 0.00 |
+| strong | 20/20 | 236.60 | 345.95 | 2.15 | 1342.20 | 3.91 | 62.75 | 9.00 |
+| typical | 20/20 | 275.00 | 368.05 | 24.25 | 1441.00 | 4.19 | 56.70 | 9.00 |
+| struggling | 3/20 | 361.15 | 468.25 | 137.80 | 1845.30 | 5.59 | 51.35 | 9.00 |
+| placed | 20/20 | 45.80 | 58.75 | 4.85 | 211.85 | 3.92 | 9.50 | 9.00 |
+| struggling, placed | 20/20 | 67.00 | 82.30 | 28.40 | 307.10 | 5.68 | 9.55 | 9.00 |

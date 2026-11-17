@@ -146,14 +146,19 @@ The second bridge adds the other 1,000 characters that grades 1 and 2 teach, 1,6
 - `heritage-written-forms` Writing the Words You Say: Everyday Words; Set Phrases
 - `heritage-dialect-words` Dialect Words and Mandarin: The Mandarin Word; The Dialect Word
 
+## Reading
+
+- `chinese-reading-heritage-2-visit` Back to the Home Town: The First Trip Back; The Morning Market; Saying Goodbye
+- `chinese-reading-heritage-2-kitchen` The Taste of Home: Mum's Red-Braised Pork; Mooncakes in Our Kitchen; Learning Grandma's Soup by Phone
+
 ## Simulated Students
 
 `pnpm nx run simulate:simulate -- chinese-heritage-2`, the mean of 20 runs of each student. A placed student already knows the course's foundations.
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 20/20 | 82.80 | 127.10 | 0.65 | 450.05 | 3.57 | 21.75 | 0.00 |
-| typical | 20/20 | 97.30 | 134.75 | 8.30 | 498.50 | 3.95 | 19.75 | 0.00 |
-| struggling | 20/20 | 132.65 | 171.05 | 44.60 | 650.65 | 5.15 | 18.25 | 0.00 |
-| placed | 20/20 | 63.80 | 86.75 | 4.00 | 324.55 | 3.91 | 12.80 | 0.00 |
-| struggling, placed | 20/20 | 86.35 | 110.70 | 27.95 | 421.85 | 5.11 | 11.75 | 0.00 |
+| strong | 20/20 | 88.35 | 137.60 | 0.80 | 490.65 | 3.59 | 23.10 | 6.00 |
+| typical | 20/20 | 104.50 | 146.65 | 9.85 | 548.75 | 4.01 | 21.20 | 6.00 |
+| struggling | 20/20 | 140.15 | 187.70 | 50.90 | 718.60 | 5.26 | 19.60 | 6.00 |
+| placed | 20/20 | 63.40 | 88.65 | 4.95 | 331.30 | 3.96 | 12.70 | 6.00 |
+| struggling, placed | 20/20 | 84.65 | 115.25 | 31.55 | 438.55 | 5.24 | 11.70 | 6.00 |

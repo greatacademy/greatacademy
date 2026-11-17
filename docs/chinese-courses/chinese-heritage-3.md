@@ -135,14 +135,19 @@ The third bridge completes the 2,500 characters of the first table with the 900 
 - `heritage-register` Spoken and Written Chinese: Words of Writing; The Wording of a Notice
 - `heritage-traditional` Traditional Characters: Single Characters; Words
 
+## Reading
+
+- `chinese-reading-heritage-3-work` Between Two Languages: The Translator at Table Six; Teaching the Little Ones; Calling on Grandpa's Behalf
+- `chinese-reading-heritage-3-roots` Where the Family Came From: My First Letter in Chinese; The Old Photo Album; Two Ways of Saying It
+
 ## Simulated Students
 
 `pnpm nx run simulate:simulate -- chinese-heritage-3`, the mean of 20 runs of each student. A placed student already knows the course's foundations.
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 20/20 | 44.70 | 72.60 | 0.30 | 230.65 | 3.21 | 11.40 | 0.00 |
-| typical | 20/20 | 53.90 | 77.40 | 5.10 | 264.85 | 3.67 | 10.70 | 0.00 |
-| struggling | 20/20 | 73.30 | 96.65 | 24.35 | 349.55 | 4.85 | 10.05 | 0.00 |
-| placed | 20/20 | 53.90 | 77.40 | 5.10 | 264.85 | 3.67 | 10.70 | 0.00 |
-| struggling, placed | 20/20 | 73.30 | 96.65 | 24.35 | 349.55 | 4.85 | 10.05 | 0.00 |
+| strong | 20/20 | 138.00 | 208.95 | 0.95 | 785.10 | 3.78 | 36.30 | 6.00 |
+| typical | 20/20 | 161.30 | 221.55 | 13.55 | 850.65 | 4.09 | 33.10 | 6.00 |
+| struggling | 20/20 | 213.75 | 282.75 | 74.75 | 1101.10 | 5.29 | 30.15 | 6.00 |
+| placed | 20/20 | 57.45 | 81.60 | 4.75 | 301.20 | 3.92 | 11.55 | 6.00 |
+| struggling, placed | 20/20 | 75.65 | 104.60 | 27.75 | 395.70 | 5.14 | 10.40 | 6.00 |

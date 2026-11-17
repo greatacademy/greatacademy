@@ -85,14 +85,20 @@ By the end of the selective required course a learner uses forty more words, amo
 - `classical-function-words-11-03` Classical Chinese: 也 and 者: The Usages of 也; The Usages of 者
 - `classical-words-11-01` Classical Chinese: Words Used Anew and Words Changed: Words Used as Another Part of Speech; Words Whose Meaning Has Changed
 
+## Reading
+
+- `chinese-reading-11-debates` Weighing Many Views: Who Should Choose for Us; Forgetting in a Digital Age; Imitation and Creation
+- `chinese-reading-11-disciplines` Through the Eyes of a Discipline: How Historians Weigh Their Sources; The Logic of the Control Group; Mending Old Paintings
+- `chinese-reading-11-fiction` The Aftertaste of Fiction: The Small Station; The Unfinished Game; The Kiln Master
+
 ## Simulated Students
 
 `pnpm nx run simulate:simulate -- chinese-hs-selective`, the mean of 20 runs of each student. A placed student already knows the course's foundations.
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 20/20 | 73.25 | 107.10 | 0.80 | 368.00 | 3.47 | 19.25 | 0.00 |
-| typical | 20/20 | 85.50 | 115.65 | 9.35 | 417.30 | 3.93 | 17.60 | 0.00 |
-| struggling | 20/20 | 119.30 | 159.80 | 53.50 | 595.95 | 5.61 | 17.45 | 0.00 |
-| placed | 20/20 | 38.50 | 51.80 | 4.15 | 176.00 | 3.69 | 7.80 | 0.00 |
-| struggling, placed | 20/20 | 51.75 | 71.80 | 24.15 | 255.65 | 5.36 | 7.55 | 0.00 |
+| strong | 20/20 | 258.15 | 377.95 | 3.10 | 1468.75 | 3.92 | 68.75 | 9.00 |
+| typical | 20/20 | 300.50 | 403.15 | 28.30 | 1581.95 | 4.22 | 62.40 | 9.00 |
+| struggling | 2/20 | 363.95 | 479.15 | 142.95 | 1888.90 | 5.62 | 51.70 | 4.60 |
+| placed | 20/20 | 47.45 | 58.80 | 4.40 | 212.10 | 3.88 | 9.75 | 9.00 |
+| struggling, placed | 20/20 | 63.85 | 81.60 | 27.20 | 304.25 | 5.58 | 9.30 | 9.00 |

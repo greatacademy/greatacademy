@@ -17,11 +17,16 @@ export function question(prompt: Pair, right: Pair, wrong: readonly Pair[], solu
 /** PassageData is a passage without the topics it needs, which are its grade's. */
 export type PassageData = Omit<PassageDef, "topics" | "title"> & { readonly title: Pair };
 
-/** unit builds a grade's reading unit; each passage needs the grade's first word batch. */
-export function unit(grade: number, id: string, title: Pair, passages: readonly PassageData[]): ReadingUnitDef {
+/** unitAfter builds a reading unit whose passages each need the given topic. */
+export function unitAfter(topic: string, id: string, title: Pair, passages: readonly PassageData[]): ReadingUnitDef {
   return {
     id,
     title: text(title),
-    passages: passages.map((p) => ({ ...p, title: text(p.title), topics: [{ topic: wordId(grade, 1), weight: 0.2 }] })),
+    passages: passages.map((p) => ({ ...p, title: text(p.title), topics: [{ topic, weight: 0.2 }] })),
   };
+}
+
+/** unit builds a grade's reading unit; each passage needs the grade's first word batch. */
+export function unit(grade: number, id: string, title: Pair, passages: readonly PassageData[]): ReadingUnitDef {
+  return unitAfter(wordId(grade, 1), id, title, passages);
 }

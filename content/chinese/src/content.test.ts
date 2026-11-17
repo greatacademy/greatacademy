@@ -1,8 +1,9 @@
 import { CompileError, createRng, formatIssue, sampleGenerators } from "@ga/content";
 import { describe, expect, it } from "vitest";
 
-import { recognitionByGrade } from "./characters/index.ts";
+import { type GradeCharacters, recognitionByGrade } from "./characters/index.ts";
 import { chinese, compileChinese } from "./index.ts";
+import { heritageReading } from "./reading/heritage.ts";
 import { chineseReading } from "./reading/index.ts";
 import { coreShardTopics } from "./shards/core.ts";
 
@@ -67,6 +68,25 @@ describe("chinese content", () => {
         const chars = [...passage.body].filter((c) => han.test(c));
         const unknown = chars.filter((c) => !known.has(c));
         expect(unknown.length / chars.length, `${passage.id}: ${[...new Set(unknown)].join("")}`).toBeLessThanOrEqual(0.02);
+      }
+    }
+  });
+
+  it("reads heritage passages in the characters their bridge has taught", () => {
+    const han = /\p{Script=Han}/u;
+    const chars = (grades: readonly GradeCharacters[]) => grades.flatMap((g) => g.batches.flatMap((b) => b.entries.map((e) => e.char)));
+    const first = recognitionByGrade[0]!;
+    const taught = [
+      new Set(chars([{ ...first, batches: first.batches.slice(0, 50) }])),
+      new Set(chars(recognitionByGrade.filter((r) => r.grade <= 2))),
+      new Set(chars(recognitionByGrade.filter((r) => r.grade <= 4))),
+    ];
+    for (const { bridge, unit } of heritageReading) {
+      const known = taught[bridge - 1]!;
+      for (const passage of unit.passages) {
+        const all = [...passage.body].filter((c) => han.test(c));
+        const unknown = all.filter((c) => !known.has(c));
+        expect(unknown.length / all.length, `${passage.id}: ${[...new Set(unknown)].join("")}`).toBeLessThanOrEqual(0.02);
       }
     }
   });

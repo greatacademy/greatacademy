@@ -11,6 +11,7 @@ import { levelOneTopics } from "../level-1/index.ts";
 import { levelTwoTopics } from "../level-2/index.ts";
 import { levelThreeTopics } from "../level-3/index.ts";
 import { pinyinTopics } from "../pinyin/index.ts";
+import { heritageReading } from "../reading/heritage.ts";
 import { chineseReading } from "../reading/index.ts";
 import { recitationTopics } from "../recitation/index.ts";
 import { componentTopics, strokeOrderTopics } from "../strokes/index.ts";
@@ -34,4 +35,4 @@ export const coreShardTopics: readonly TopicDef[] = [
 ];
 
 /** coreShardReading are the reading units held by the `core` shard. */
-export const coreShardReading: readonly ReadingUnitDef[] = chineseReading.map((r) => r.unit);
+export const coreShardReading: readonly ReadingUnitDef[] = [...chineseReading, ...heritageReading].map((r) => r.unit);

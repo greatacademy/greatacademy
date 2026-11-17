@@ -9,6 +9,7 @@ import { idiomsByGrade } from "./idioms/index.ts";
 import { levelOneCourse } from "./level-1/index.ts";
 import { levelTwoCourse } from "./level-2/index.ts";
 import { levelThreeCourse } from "./level-3/index.ts";
+import { heritageReading } from "./reading/heritage.ts";
 import { chineseReading } from "./reading/index.ts";
 import { recitedPoems } from "./recitation/index.ts";
 import { componentTopics, strokeOrderTopics } from "./strokes/index.ts";
@@ -103,6 +104,7 @@ function seniorCourse(grade: number, id: string, title: CourseDef["title"], desc
       },
       { title: t("Classical Chinese", "文言"), modules: classicalModules(grade) },
     ],
+    reading: chineseReading.filter((r) => r.grade === grade).map((r) => r.unit.id),
     buildsOn: [grade === 10 ? "chinese-grade-9" : "chinese-hs-required"],
   };
 }
@@ -196,6 +198,7 @@ function heritageCourse(
       { title: t("Characters", "识字"), modules: setModules(batches) },
       { title: t("Writing What You Say", "我手写我口"), modules: [{ title: t("Writing What You Say", "我手写我口"), topics: own }] },
     ],
+    reading: heritageReading.filter((r) => r.bridge === n).map((r) => r.unit.id),
     ...(n > 1 && { buildsOn: [`chinese-heritage-${n - 1}`] }),
   };
 }
