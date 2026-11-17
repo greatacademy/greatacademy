@@ -8,6 +8,7 @@ import { heritageTopics } from "./heritage/topics.ts";
 import { idiomsByGrade } from "./idioms/index.ts";
 import { levelOneCourse } from "./level-1/index.ts";
 import { levelTwoCourse } from "./level-2/index.ts";
+import { levelThreeCourse } from "./level-3/index.ts";
 import { chineseReading } from "./reading/index.ts";
 import { recitedPoems } from "./recitation/index.ts";
 import { componentTopics, strokeOrderTopics } from "./strokes/index.ts";
@@ -281,4 +282,5 @@ export const chineseCourses: readonly CourseDef[] = [
   ...heritageCourses,
   levelOneCourse,
   levelTwoCourse,
+  levelThreeCourse,
 ];

@@ -23,15 +23,20 @@ const HAN = /^\p{Script=Han}$/u;
 
 /** parseLevelOneCharacters reads a batch of level 1 characters (see character-data.ts). */
 export function parseLevelOneCharacters(data: string): readonly LevelOneCharacter[] {
+  return parseLevelCharacters(data, 1);
+}
+
+/** parseLevelCharacters reads a batch of characters of a level, written as in level 1, naming the level in its errors. */
+export function parseLevelCharacters(data: string, level: number): readonly LevelOneCharacter[] {
   return dataLines(data).map((line) => {
-    const [head = "", en = "", zh = "", looks = "", near = ""] = fields(line, 4, 5);
+    const [head = "", en = "", zh = "", looks = "", near = ""] = fields(line, 4, 5, `level ${level}`);
     const [char = "", readings = ""] = head.split(" ");
     const [reading = "", ...rest] = readings.split("/");
-    if (!HAN.test(char) || reading === "") throw new Error(`level 1 characters: ${line}`);
-    if (zh.includes(char)) throw new Error(`level 1 characters: the meaning of ${char} uses it`);
+    if (!HAN.test(char) || reading === "") throw new Error(`level ${level} characters: ${line}`);
+    if (zh.includes(char)) throw new Error(`level ${level} characters: the meaning of ${char} uses it`);
     const lookalikes = [...looks];
     if (lookalikes.length < 2 || lookalikes.includes(char) || !lookalikes.every((c) => HAN.test(c))) {
-      throw new Error(`level 1 characters: the characters ${char} looks like`);
+      throw new Error(`level ${level} characters: the characters ${char} looks like`);
     }
     return {
       char,
@@ -59,24 +64,32 @@ export interface LevelOneCharacterSpec {
   readonly batch: readonly LevelOneCharacter[];
   /** all are all the level 1 characters, whose meanings may be offered against a character that looks like them. */
   readonly all: ReadonlyMap<string, LevelOneCharacter>;
+  /** level names the level in errors; it is 1 when left out. */
+  readonly level?: number;
 }
 
 /** levelOneCharacterTopic builds a level 1 character topic with its three knowledge points. */
 export function levelOneCharacterTopic(spec: LevelOneCharacterSpec): TopicDef {
   const { batch, all, id } = spec;
-  const near = nearOf(batch.map((c) => ({ key: c.char, near: c.near })));
+  const level = spec.level ?? 1;
+  const near = nearOf(
+    batch.map((c) => ({ key: c.char, near: c.near })),
+    `level ${level}`,
+  );
   for (const [i, c] of batch.entries()) {
     for (const d of batch.slice(i + 1))
-      if (clash(c.meaning, d.meaning)) throw new Error(`level 1 characters: ${c.char} and ${d.char} mean the same`);
+      if (clash(c.meaning, d.meaning)) throw new Error(`level ${level} characters: ${c.char} and ${d.char} mean the same`);
   }
   const apart = (c: LevelOneCharacter, d: LevelOneCharacter): boolean => d.char !== c.char && !near.get(c.char)!.has(d.char);
 
   const form: readonly Asked[] = batch.map((c, i) => {
     const mates = spread(batch, i).filter((d) => apart(c, d));
-    const wrong = threeOf(`the character of ${c.char}`, c.char, [
-      ...c.looks.filter((l) => !near.get(c.char)!.has(l)),
-      ...mates.map((d) => d.char),
-    ]);
+    const wrong = threeOf(
+      `the character of ${c.char}`,
+      c.char,
+      [...c.looks.filter((l) => !near.get(c.char)!.has(l)), ...mates.map((d) => d.char)],
+      `level ${level}`,
+    );
     return { shown: c.meaning, right: same(c.char), wrong: three(wrong), solution: why(c) };
   });
 
@@ -86,7 +99,7 @@ export function levelOneCharacterTopic(spec: LevelOneCharacterSpec): TopicDef {
     const mates = spread(batch, i)
       .map((d) => d.reading)
       .filter((r) => !own.has(r.normalize("NFC")));
-    const wrong = threeOf(`the reading of ${c.char}`, c.reading, [...tones, ...mates]);
+    const wrong = threeOf(`the reading of ${c.char}`, c.reading, [...tones, ...mates], `level ${level}`);
     return {
       shown: same(c.char),
       right: same(c.reading),
@@ -108,7 +121,7 @@ export function levelOneCharacterTopic(spec: LevelOneCharacterSpec): TopicDef {
       if (picked.length === 3) break;
       if (!clash(d.meaning, c.meaning) && picked.every((p) => !clash(p, d.meaning))) picked.push(d.meaning);
     }
-    if (picked.length < 3) throw new Error(`level 1: too few wrong meanings for ${c.char}`);
+    if (picked.length < 3) throw new Error(`level ${level}: too few wrong meanings for ${c.char}`);
     return { shown: same(c.char), right: c.meaning, wrong: [picked[0]!, picked[1]!, picked[2]!], solution: why(c) };
   });
 

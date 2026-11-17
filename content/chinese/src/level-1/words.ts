@@ -21,13 +21,18 @@ export interface LevelOneWord {
 
 /** parseLevelOneWords reads a batch of level 1 words (see word-data.ts). */
 export function parseLevelOneWords(data: string): readonly LevelOneWord[] {
+  return parseLevelWords(data, 1);
+}
+
+/** parseLevelWords reads a batch of words of a level, written as in level 1, naming the level in its errors. */
+export function parseLevelWords(data: string, level: number): readonly LevelOneWord[] {
   return dataLines(data).map((line) => {
-    const [word = "", pinyin = "", en = "", zh = "", sentence = "", near = ""] = fields(line, 5, 6);
+    const [word = "", pinyin = "", en = "", zh = "", sentence = "", near = ""] = fields(line, 5, 6, `level ${level}`);
     const syllables = pinyin.split(" ").map((s) => s.normalize("NFC"));
-    if ([...word].length !== syllables.length) throw new Error(`level 1 words: the pinyin of ${word}`);
-    if (zh.includes(word)) throw new Error(`level 1 words: the meaning of ${word} uses it`);
-    if (sentence.split(GAP).length !== 2) throw new Error(`level 1 words: the sentence of ${word} needs one gap`);
-    if (sentence.includes(word)) throw new Error(`level 1 words: the sentence of ${word} gives it away`);
+    if ([...word].length !== syllables.length) throw new Error(`level ${level} words: the pinyin of ${word}`);
+    if (zh.includes(word)) throw new Error(`level ${level} words: the meaning of ${word} uses it`);
+    if (sentence.split(GAP).length !== 2) throw new Error(`level ${level} words: the sentence of ${word} needs one gap`);
+    if (sentence.includes(word)) throw new Error(`level ${level} words: the sentence of ${word} gives it away`);
     return { word, syllables, meaning: t(en, zh), sentence, near: near === "" ? [] : near.split(" ") };
   });
 }
@@ -68,16 +73,22 @@ export interface LevelOneWordSpec {
   readonly batch: readonly LevelOneWord[];
   /** chars are all the level 1 characters, whose other readings are never offered as wrong readings of a one-character word. */
   readonly chars: ReadonlyMap<string, LevelOneCharacter>;
+  /** level names the level in errors; it is 1 when left out. */
+  readonly level?: number;
 }
 
 /** levelOneWordTopic builds a level 1 word topic with its three knowledge points. */
 export function levelOneWordTopic(spec: LevelOneWordSpec): TopicDef {
   const { batch, id } = spec;
-  const near = nearOf(batch.map((w) => ({ key: w.word, near: w.near })));
+  const level = spec.level ?? 1;
+  const near = nearOf(
+    batch.map((w) => ({ key: w.word, near: w.near })),
+    `level ${level}`,
+  );
   for (const [i, w] of batch.entries()) {
     for (const v of batch.slice(i + 1)) {
       if (w.meaning.en === v.meaning.en || w.meaning["zh-CN"] === v.meaning["zh-CN"]) {
-        throw new Error(`level 1 words: ${w.word} and ${v.word} mean the same`);
+        throw new Error(`level ${level} words: ${w.word} and ${v.word} mean the same`);
       }
     }
   }
@@ -92,6 +103,7 @@ export function levelOneWordTopic(spec: LevelOneWordSpec): TopicDef {
         `the word of ${w.word}`,
         w.word,
         mates(w, i).map((v) => v.word),
+        `level ${level}`,
       ),
     ),
     solution: why(w),
@@ -99,7 +111,12 @@ export function levelOneWordTopic(spec: LevelOneWordSpec): TopicDef {
 
   const reading: readonly Asked[] = batch.map((w, i) => {
     const right = pinyin(w);
-    const wrong = threeOf(`the reading of ${w.word}`, right, [...wrongReadings(w, spec.chars), ...spread(batch, i).map(pinyin)]);
+    const wrong = threeOf(
+      `the reading of ${w.word}`,
+      right,
+      [...wrongReadings(w, spec.chars), ...spread(batch, i).map(pinyin)],
+      `level ${level}`,
+    );
     return {
       shown: same(w.word),
       right: same(right),
@@ -118,6 +135,7 @@ export function levelOneWordTopic(spec: LevelOneWordSpec): TopicDef {
           `the gap of ${w.word}`,
           w.word,
           mates(w, i).map((v) => v.word),
+          `level ${level}`,
         ),
       ),
       solution: t(

@@ -50,10 +50,10 @@ export function askedGenerator(question: Text, asked: readonly Asked[]): Generat
   };
 }
 
-/** threeOf is the first three distinct candidates that differ from the right one; it throws if there are fewer. */
-export function threeOf(what: string, right: string, candidates: readonly string[]): [string, string, string] {
+/** threeOf is the first three distinct candidates that differ from the right one; it throws, naming `where`, if there are fewer. */
+export function threeOf(what: string, right: string, candidates: readonly string[], where = "level 1"): [string, string, string] {
   const out = [...new Set(candidates.filter((c) => c !== right))];
-  if (out.length < 3) throw new Error(`level 1: too few wrong answers for ${what}`);
+  if (out.length < 3) throw new Error(`${where}: too few wrong answers for ${what}`);
   return [out[0]!, out[1]!, out[2]!];
 }
 
@@ -75,10 +75,10 @@ export function toneOf(syllable: string): number {
 /** withTone writes a syllable of pinyin with another tone, 0 for the neutral tone. */
 export const withTone = (syllable: string, tone: number): string => withMarks(`${toneless(syllable)}${tone === 0 ? 5 : tone}`);
 
-/** fields splits a line of data at ` | `, checking it has between `min` and `max` fields. */
-export function fields(line: string, min: number, max: number): readonly string[] {
+/** fields splits a line of data at ` | `, checking it has between `min` and `max` fields; its error names `where`. */
+export function fields(line: string, min: number, max: number, where = "level 1"): readonly string[] {
   const parts = line.split(" | ").map((f) => f.trim());
-  if (parts.length < min || parts.length > max) throw new Error(`level 1 data: ${line}`);
+  if (parts.length < min || parts.length > max) throw new Error(`${where} data: ${line}`);
   return parts;
 }
 
@@ -89,15 +89,16 @@ export const dataLines = (data: string): readonly string[] =>
     .map((line) => line.trim())
     .filter((line) => line !== "");
 
-/** nearOf makes the words or characters kept apart symmetric: each one's set and every one whose set names it. */
+/** nearOf makes the words or characters kept apart symmetric: each one's set and every one whose set names it; its error names `where`. */
 export function nearOf(
   items: readonly { readonly key: string; readonly near: readonly string[] }[],
+  where = "level 1",
 ): ReadonlyMap<string, ReadonlySet<string>> {
   const keys = new Set(items.map((i) => i.key));
   const out = new Map<string, Set<string>>(items.map((i) => [i.key, new Set<string>()]));
   for (const item of items) {
     for (const n of item.near) {
-      if (!keys.has(n)) throw new Error(`level 1 data: ${n}, kept apart from ${item.key}, is not in its batch`);
+      if (!keys.has(n)) throw new Error(`${where} data: ${n}, kept apart from ${item.key}, is not in its batch`);
       out.get(item.key)!.add(n);
       out.get(n)!.add(item.key);
     }
