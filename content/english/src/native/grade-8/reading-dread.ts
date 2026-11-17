@@ -74,6 +74,15 @@ The Gothic did not disappear when its first fashion passed. Its castles became h
             "第四段说她常在结尾把鬼魂解释为诡计或意外，此前已经营造了数百页的悬念。",
           ),
         ),
+        ask(
+          t("What crushed the young prince at the start of The Castle of Otranto?", "《奥特兰托城堡》开头是什么压死了年轻的王子？"),
+          t("A giant helmet falling from the sky", "从天而降的巨大头盔"),
+          [t("A falling statue", "倒下的雕像"), t("A collapsing tower", "倒塌的塔楼"), t("A portrait", "一幅画像")],
+          t(
+            "It began with a giant helmet falling from the sky and crushing a young prince.",
+            "小说开头，一顶巨大的头盔从天而降压死了年轻的王子。",
+          ),
+        ),
       ],
       ["English", "Horace", "Walpole", "Castle", "Otranto", "Walpole's", "Gothic", "Ann", "Radcliffe"],
     ),
@@ -135,6 +144,16 @@ Frankenstein is often called the first science fiction novel. It also asks a que
             "The last paragraph says the novel asks what responsibility creators have for what they create, a question that remains alive today.",
             "最后一段说这部小说提出了创造者对其创造物负有什么责任的问题，这个问题至今仍有意义。",
           ),
+        ),
+        ask(
+          t("Where had the writers rented a villa that summer?", "那年夏天作家们在哪里租了一座别墅？"),
+          t("Beside Lake Geneva in Switzerland", "瑞士日内瓦湖畔"),
+          [
+            t("On an island in Indonesia", "印度尼西亚的一座岛上"),
+            t("In the center of London", "伦敦市中心"),
+            t("On a lonely moor in England", "英格兰荒凉的沼地"),
+          ],
+          t("The writers had rented a villa beside Lake Geneva, in Switzerland.", "作家们在瑞士日内瓦湖畔租了一座别墅。"),
         ),
       ],
       [
@@ -219,6 +238,12 @@ Poe wrote many tales of terror, and his short life was marked by poverty and gri
             "第三段说他听到一个自认为是心跳的声音，确信警察也听到了，于是在狂乱中认罪。",
           ),
         ),
+        ask(
+          t("Where did the narrator hide the body?", "叙述者把尸体藏在哪里？"),
+          t("Under the floorboards", "地板下面"),
+          [t("In the garden", "花园里"), t("In a trunk", "箱子里"), t("In the river", "河里")],
+          t("He killed him and hid the body under the floorboards.", "他杀了老人，把尸体藏在地板下面。"),
+        ),
       ],
       ["Edgar", "Allan", "Poe's", "Poe", "Tell-Tale", "Heart"],
     ),
@@ -284,6 +309,16 @@ The supply boat's captain added a note below the last entry: Pryce reached the m
             "每一篇日志都比上一篇更离奇，从风声到楼梯上的人，再到熄灭的灯，这种形式一步步营造恐惧。",
           ),
         ),
+        ask(
+          t("Why had Pryce left the lighthouse?", "普赖斯为什么离开灯塔？"),
+          t("He had a fever", "他发烧了"),
+          [
+            t("He was afraid of ghosts", "他怕鬼"),
+            t("He had finished his years of service", "他服务期满了"),
+            t("He quarreled with the keeper", "他和看守人吵架了"),
+          ],
+          t("My assistant, Pryce, left on the last boat with a fever.", "我的助手普赖斯发着烧坐最后一班船走了。"),
+        ),
       ],
       ["Gull", "Rock", "October", "Pryce", "Pryce's"],
     ),
@@ -344,6 +379,15 @@ That night, Nadia left her door open. When the humming began, she did not hide. 
           t(
             "The story uses a haunted house and strange sounds, but the ghost is a mother's lullaby, and Nadia's kindness lets it rest.",
             "故事运用了鬼屋和怪声，但鬼魂是一位母亲的摇篮曲，而娜迪娅的善意让它得以安息。",
+          ),
+        ),
+        ask(
+          t("Why did Nadia choose the small bedroom at the top of the stairs?", "娜迪娅为什么选了楼梯顶上的小卧室？"),
+          t("It had a window seat", "它有一个靠窗的座位"),
+          [t("It was the warmest room", "它最暖和"), t("Her mother told her to", "她妈妈让她选的"), t("It was the biggest room", "它最大")],
+          t(
+            "Nadia chose the small bedroom at the top of the stairs because it had a window seat.",
+            "娜迪娅选了楼梯顶上的小卧室，因为它有靠窗的座位。",
           ),
         ),
       ],
@@ -407,6 +451,19 @@ I did not touch it. In the morning, I asked the lawyer to sell the house. I have
           t(
             "The knocks come from behind the wall after the narrator has refused to move the portrait, so the story ends on a chilling question rather than an answer.",
             "敲击声在叙述者拒绝移动肖像后从墙后传来，所以故事以一个令人发寒的问题而不是答案结尾。",
+          ),
+        ),
+        ask(
+          t("What did the uncle's letter tell the narrator?", "叔叔的信上告诉叙述者什么？"),
+          t("Not to move the portrait in the hall", "不要移动大厅里的画像"),
+          [
+            t("To sell the house at once", "马上卖掉房子"),
+            t("To trust Mrs. Crane", "信任克兰太太"),
+            t("Never to go down at night", "夜里别下楼"),
+          ],
+          t(
+            'The letter said only: "Whatever you do, do not move the portrait in the hall."',
+            "信上只写着：“无论如何，不要移动大厅里的画像。”",
           ),
         ),
       ],

@@ -29,6 +29,14 @@ export const topics: readonly TopicDef[] = [
         "played tennis, visited my grandmother, watched a film, went swimming, cleaned my room",
       ),
       say("Where did you go on Saturday?", "I went to the {x} on Saturday. / I went to the {x}.", "park, beach, cinema, museum, zoo"),
+      say("What did you eat on Sunday?", "I ate {x} on Sunday. / I ate {x}.", "pizza, fish, noodles, chicken, pancakes"),
+      say("Who did you see last weekend?", "I saw my {x}. / I saw my {x} last weekend.", "grandparents, cousins, friends, uncle, aunt"),
+      say(
+        "What did you watch on Saturday?",
+        "I watched {x}. / I watched {x} on Saturday.",
+        "a film, a football match, a cartoon, a concert, a quiz show",
+      ),
+      say("How did you feel on Sunday evening?", "I felt {x}. / I felt {x} on Sunday evening.", "tired, happy, bored, relaxed, excited"),
     ],
   }),
   unitSpeaking({
@@ -40,6 +48,10 @@ export const topics: readonly TopicDef[] = [
     frames: [
       say("What's the matter?", "I have a {x}. / I have got a {x}.", "headache, cold, cough, stomachache, sore throat"),
       say("How often do you exercise?", "I exercise {x}.", "every day, twice a week, three times a week, once a week, every morning"),
+      say("What should I do for a cold?", "You should {x}.", "drink hot tea, stay in bed, see a doctor, take some medicine, rest at home"),
+      say("Which part of your body hurts?", "My {x} hurts. / My {x} hurts a lot.", "leg, arm, back, knee, foot"),
+      say("How many hours do you sleep?", "I sleep {x} hours. / I sleep for {x} hours.", "six, seven, eight, nine, ten"),
+      say("What do you eat to stay healthy?", "I eat {x} to stay healthy. / I eat {x}.", "fruit, vegetables, fish, salad, nuts"),
     ],
   }),
   unitSpeaking({
@@ -66,6 +78,14 @@ export const topics: readonly TopicDef[] = [
         "We can {x} there. / We can {x} at the community center. / We can {x}.",
         "play games, learn to cook, read books, meet friends, take a dance class",
       ),
+      say("Who lives next door?", "An old {x} lives next door. / My neighbor is an old {x}.", "man, woman, couple, teacher, doctor"),
+      say(
+        "How can we help our neighbors?",
+        "We can {x}. / We can help by trying to {x}.",
+        "carry their shopping, walk their dog, clean the street, water their plants, visit them",
+      ),
+      say("Where is the bus stop?", "It is behind the {x}. / The bus stop is behind the {x}.", "school, bank, caf\u00e9, hospital, church"),
+      say("What is your street like?", "My street is {x}. / It is {x}.", "quiet, busy, noisy, clean, long"),
     ],
   }),
   unitSpeaking({
@@ -81,6 +101,14 @@ export const topics: readonly TopicDef[] = [
         "wash, cut, peel, chop, boil",
       ),
       say("How does it taste?", "It tastes {x}.", "sweet, salty, sour, spicy, delicious"),
+      say("What do we need for the cake?", "We need {x}. / We need some {x}.", "eggs, flour, sugar, butter, milk"),
+      say("How long do we cook it?", "We cook it for {x} minutes. / For {x} minutes.", "ten, fifteen, twenty, thirty, forty"),
+      say("What can you cook?", "I can cook {x}.", "rice, pasta, eggs, soup, pancakes"),
+      say(
+        "What do we do next?",
+        "Next, we {x}. / Then we {x}.",
+        "cut the onions, boil the water, mix the eggs, add the salt, wash the vegetables",
+      ),
     ],
   }),
   unitSpeaking({
@@ -92,6 +120,10 @@ export const topics: readonly TopicDef[] = [
     frames: [
       say("Which sport are you good at?", "I am good at {x}.", "running, swimming, basketball, tennis, table tennis"),
       say("Who won the match?", "The {x} team won. / The {x} team won the match.", "red, blue, green, yellow, white"),
+      say("What sport do you watch on TV?", "I watch {x} on TV. / I watch {x}.", "football, tennis, basketball, swimming, golf"),
+      say("How often do you play sports?", "I play sports {x}.", "every day, twice a week, at the weekend, once a week, after school"),
+      say("Where do you play football?", "I play football in the {x}. / In the {x}.", "park, playground, garden, stadium, street"),
+      say("What was the score?", "It was {x} to one. / The score was {x} to one.", "two, three, four, five, six"),
     ],
   }),
   unitSpeaking({
@@ -103,6 +135,18 @@ export const topics: readonly TopicDef[] = [
     frames: [
       say("What pet would you like?", "I would like a {x}.", "dog, cat, rabbit, parrot, hamster"),
       say("What does your dog eat?", "It eats {x}. / My dog eats {x}.", "meat, biscuits, rice, fish, vegetables"),
+      say(
+        "What is your favorite wild animal?",
+        "My favorite wild animal is the {x}. / It is the {x}.",
+        "lion, tiger, elephant, giraffe, monkey",
+      ),
+      say("Where does your cat sleep?", "It sleeps on the {x}. / My cat sleeps on the {x}.", "sofa, bed, floor, chair, carpet"),
+      say("How old is your pet?", "It is {x} years old. / My pet is {x}.", "two, three, four, five, six"),
+      say(
+        "What animal is the biggest?",
+        "The {x} is the biggest. / I think the {x} is the biggest.",
+        "whale, elephant, giraffe, bear, horse",
+      ),
     ],
   }),
   unitSpeaking({
@@ -118,6 +162,14 @@ export const topics: readonly TopicDef[] = [
         "I am going to {x} this summer. / I am going to {x}.",
         "London, Paris, Beijing, Sydney, New York",
       ),
+      say("Where did you stay on holiday?", "We stayed in a {x}. / We stayed at a {x}.", "hotel, tent, cottage, flat, guesthouse"),
+      say("What did you take with you?", "I took {x}. / I took {x} with me.", "a camera, a map, a suitcase, my passport, some books"),
+      say("How long was your holiday?", "It was {x}. / My holiday was {x}.", "one week, two weeks, ten days, three days, a month"),
+      say(
+        "What did you see on your trip?",
+        "I saw {x}. / I saw {x} on my trip.",
+        "a castle, the sea, some mountains, a waterfall, an old church",
+      ),
     ],
   }),
   unitSpeaking({
@@ -129,6 +181,14 @@ export const topics: readonly TopicDef[] = [
     frames: [
       say("What can you see in the sky at night?", "I can see the {x}.", "moon, stars, planets, clouds, lights"),
       say("What will the weather be like tomorrow?", "It will be {x} tomorrow. / It will be {x}.", "sunny, rainy, windy, snowy, foggy"),
+      say("What lives in the forest?", "{x} live in the forest. / I think {x} live in the forest.", "bears, wolves, foxes, deer, owls"),
+      say(
+        "Where is the highest mountain?",
+        "It is in {x}. / The highest mountain is in {x}.",
+        "Asia, Nepal, China, the Himalayas, the east",
+      ),
+      say("What was the weather like yesterday?", "It was {x} yesterday. / It was {x}.", "sunny, rainy, windy, snowy, foggy"),
+      say("What do you like doing outside?", "I like {x}. / I like {x} outside.", "walking, climbing, swimming, camping, fishing"),
     ],
   }),
   unitSpeaking({
@@ -140,6 +200,10 @@ export const topics: readonly TopicDef[] = [
     frames: [
       say("How much does it cost?", "It costs {x} dollars.", "ten, twenty, thirty, forty, fifty"),
       say("What is the bag made of?", "It is made of {x}.", "leather, cotton, plastic, paper, wool"),
+      say("Where can I buy bread?", "You can buy bread at the {x}. / At the {x}.", "bakery, supermarket, market, corner shop, caf\u00e9"),
+      say("How would you like to pay?", "I would like to pay {x}. / I'll pay {x}.", "by card, in cash, by phone, with coins, with notes"),
+      say("What size do you need?", "I need a {x}. / I need size {x}.", "small, medium, large, ten, twelve"),
+      say("What did you buy yesterday?", "I bought {x}. / I bought {x} yesterday.", "a shirt, some apples, a book, new shoes, a present"),
     ],
   }),
   unitSpeaking({
@@ -159,6 +223,22 @@ export const topics: readonly TopicDef[] = [
         "I spend {x} hours online. / I spend about {x} hours online. / I spend {x} hours online every day.",
         "two, three, four, five, six",
       ),
+      say("What do you use your computer for?", "I use it for {x}. / I use my computer for {x}.", "homework, games, music, films, emails"),
+      say(
+        "How do you talk to your friends?",
+        "I {x}. / I talk to them when I {x}.",
+        "send messages, call them, use video chat, write emails, meet them",
+      ),
+      say(
+        "What app do you use most?",
+        "I use {x} most. / I use {x} the most.",
+        "a music app, a map app, a game app, a photo app, a chat app",
+      ),
+      say(
+        "How often do you check your phone?",
+        "I check it {x}. / I check my phone {x}.",
+        "every hour, every morning, ten times a day, after school, all the time",
+      ),
     ],
   }),
   unitSpeaking({
@@ -174,6 +254,14 @@ export const topics: readonly TopicDef[] = [
         "dumplings, fish, noodles, rice cakes, sweets",
       ),
       say("When is the festival?", "It is in {x}. / The festival is in {x}.", "January, February, April, September, December"),
+      say(
+        "What do you do on your birthday?",
+        "I {x} on my birthday. / On my birthday, I {x}.",
+        "have a party, eat cake, open presents, go out for dinner, see my friends",
+      ),
+      say("What do people wear at the festival?", "They wear {x}. / People wear {x}.", "red clothes, costumes, masks, new clothes, hats"),
+      say("What do you give your friends?", "I give them {x}. / I give my friends {x}.", "cards, sweets, flowers, books, toys"),
+      say("Where do you watch the fireworks?", "I watch them from the {x}. / From the {x}.", "park, roof, beach, bridge, window"),
     ],
   }),
   unitSpeaking({
@@ -193,6 +281,22 @@ export const topics: readonly TopicDef[] = [
         "Because I want to {x}. / I want to {x}.",
         "help sick people, work in a hospital, save lives, learn about medicine, help children",
       ),
+      say(
+        "Where would you like to work?",
+        "I would like to work in {x}. / I'd like to work in {x}.",
+        "a hospital, a school, an office, a shop, a studio",
+      ),
+      say(
+        "What do you want to learn?",
+        "I want to learn {x}. / I want to learn how to play {x}.",
+        "the guitar, the piano, chess, tennis, the drums",
+      ),
+      say(
+        "What is your dream?",
+        "My dream is to {x}. / I want to {x}.",
+        "travel the world, write a book, be famous, help people, live by the sea",
+      ),
+      say("How many hours does a nurse work?", "A nurse works {x} hours a day. / About {x} hours.", "eight, nine, ten, eleven, twelve"),
     ],
   }),
 ].flat();

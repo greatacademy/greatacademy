@@ -79,6 +79,15 @@ Walden sold slowly at first. Today it is one of the most widely read books in Am
             "第四段说这个湖反复出现，几乎是一个人物，梭罗称它为大地之眼，人在其中衡量自己本性的深度。",
           ),
         ),
+        ask(
+          t("In which year was Walden published?", "《瓦尔登湖》哪年出版？"),
+          t("In 1854", "1854年"),
+          [t("In 1845", "1845年"), t("In 1836", "1836年"), t("In 1892", "1892年")],
+          t(
+            "His book about the experience, Walden, published in 1854, records the colors of the water in different seasons.",
+            "他写这段经历的书《瓦尔登湖》出版于1854年，记录了不同季节湖水的颜色。",
+          ),
+        ),
       ],
       ["Henry", "David", "Thoreau", "Thoreau's", "Walden", "Massachusetts", "Concord", "Ralph", "Waldo", "Emerson", "American"],
     ),
@@ -146,6 +155,12 @@ Still, his central challenge remains a powerful one. In a world full of advice, 
             "第五段说有些读者认为自立可能成为自私的借口，或忽视了人们对他人的依赖。",
           ),
         ),
+        ask(
+          t('What was the message of Emerson\'s essay "Self-Reliance"?', "爱默生的《论自助》传达了什么信息？"),
+          t("Trust thyself", "相信你自己"),
+          [t("Obey your church", "服从你的教会"), t("Return to Europe", "回到欧洲"), t("Work for the rich", "为富人工作")],
+          t("Its message was simple and bold: trust thyself.", "它的信息简单而大胆：相信你自己。"),
+        ),
       ],
       ["Ralph", "Waldo", "Emerson", "Emerson's", "Boston", "Concord", "Thoreau", "Nature", "American", "Americans", "Europe"],
     ),
@@ -206,6 +221,16 @@ Today, Muir is honored as a founder of the movement to protect wild places. Hist
             "The last paragraph says historians note that his vision of empty wilderness overlooked the Native peoples who had lived there and been forced out.",
             "最后一段说历史学家指出，他关于空旷荒野的设想忽视了曾住在那里又被迫离开的原住民。",
           ),
+        ),
+        ask(
+          t("What did Muir found in 1892?", "缪尔在1892年创立了什么？"),
+          t("The Sierra Club", "塞拉俱乐部"),
+          [
+            t("Yosemite National Park", "优胜美地国家公园"),
+            t("A sawmill company", "一家锯木厂"),
+            t("A school in Indiana", "印第安纳的一所学校"),
+          ],
+          t("In 1892 he founded the Sierra Club to protect the mountains.", "1892年，他创立了塞拉俱乐部来保护山脉。"),
         ),
       ],
       [
@@ -288,6 +313,19 @@ The daffodils by the lake still bloom each spring. Visitors who come to see them
             "第五段说一些评论家认为她本身就是一位伟大的作家，因为选择为哥哥的工作服务，她的才华被掩盖了。",
           ),
         ),
+        ask(
+          t("Where did Dorothy and William Wordsworth live for most of their lives?", "多萝西和威廉·华兹华斯一生大部分时间住在哪里？"),
+          t("A small cottage in Grasmere", "格拉斯米尔的一座小屋"),
+          [
+            t("A large house in London", "伦敦的一座大宅"),
+            t("A farm in Scotland", "苏格兰的一座农场"),
+            t("A city flat in Manchester", "曼彻斯特的一套公寓"),
+          ],
+          t(
+            "Dorothy and William lived together for most of their lives in a small cottage in Grasmere, in the Lake District.",
+            "多萝西和威廉一生大部分时间一起住在湖区格拉斯米尔的一座小屋里。",
+          ),
+        ),
       ],
       ["William", "Wordsworth", "Wordsworth's", "Dorothy", "Dorothy's", "Grasmere", "Lake", "District", "England", "Ullswater", "English"],
     ),
@@ -344,6 +382,15 @@ Tao's choice has inspired readers for sixteen centuries. In a world that often m
           t(
             "The fifth paragraph says the Peach Blossom Spring has become an image of an ideal place, always longed for and never quite reached.",
             "第五段说桃花源已成为一个理想之地的意象，总是令人向往，却永远无法真正到达。",
+          ),
+        ),
+        ask(
+          t("How long had Tao Yuanming been magistrate when he resigned?", "陶渊明辞官时已当了多久县令？"),
+          t("About eighty days", "约八十天"),
+          [t("About eight years", "约八年"), t("About twenty years", "约二十年"), t("About eight days", "约八天")],
+          t(
+            "He had held the post for only about eighty days when word came that an inspector was on his way.",
+            "他才任职约八十天，就传来督邮要来的消息。",
           ),
         ),
       ],
@@ -405,6 +452,15 @@ The idea also had a lasting practical effect. As the sublime became fashionable,
           t(
             "The last paragraph says that as the sublime became fashionable, wild places came to be valued, mountain tourism grew and some places were protected as parks.",
             "最后一段说随着崇高成为时尚，荒野受到重视，山地旅游兴起，有些地方被保护为公园。",
+          ),
+        ),
+        ask(
+          t("Who published a book about the sublime in 1757?", "谁在1757年出版了一本论崇高的书？"),
+          t("Edmund Burke", "埃德蒙·伯克"),
+          [t("John Muir", "约翰·缪尔"), t("Ralph Waldo Emerson", "拉尔夫·沃尔多·爱默生"), t("William Wordsworth", "威廉·华兹华斯")],
+          t(
+            "In 1757, a young Irish writer named Edmund Burke published a book that tried to explain why people were drawn to things that frightened them.",
+            "1757年，年轻的爱尔兰作家埃德蒙·伯克出版了一本书，试图解释人为何被令他们恐惧的事物吸引。",
           ),
         ),
       ],

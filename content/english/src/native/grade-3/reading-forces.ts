@@ -64,6 +64,16 @@ Forces are all around us. Without them, nothing in the world would ever move.`,
             "第三段说，你的手必须碰到门，而重力是一种不用接触就能起作用的拉力。",
           ],
         ),
+        ask(
+          ["Why does a dropped apple fall and not float away?", "掉落的苹果为什么会落下而不会飘走？"],
+          ["Gravity pulls everything toward the ground", "重力把一切拉向地面"],
+          [
+            ["The wind pushes it down", "风把它往下吹"],
+            ["Your hand pushes it", "你的手推了它"],
+            ["Apples are too heavy to float", "苹果太重，飘不起来"],
+          ],
+          ["Gravity pulls everything toward the ground, which is why a dropped apple falls.", "重力把一切拉向地面，所以掉落的苹果会落下。"],
+        ),
       ],
     ),
     passage(
@@ -117,6 +127,19 @@ That is why seat belts matter. When a car stops suddenly, your body keeps moving
           [
             "The last paragraph says your body keeps moving forward, and the seat belt is the force that holds you back.",
             "最后一段说，你的身体会继续往前冲，安全带就是把你拉回来的力。",
+          ],
+        ),
+        ask(
+          ["What happens when you kick a ball hard instead of tapping it?", "用力踢球而不是轻轻碰它，会怎样？"],
+          ["It shoots across the field", "它飞快地穿过球场"],
+          [
+            ["It rolls only a little way", "它只滚一小段"],
+            ["It stays still", "它一动不动"],
+            ["It gets heavier", "它变得更重"],
+          ],
+          [
+            "If you kick it hard, it shoots across the field, because a strong push gives more speed.",
+            "如果用力踢，它会飞快地穿过球场，因为大的推力给它更大的速度。",
           ],
         ),
       ],
@@ -174,6 +197,19 @@ Next time you rub your hands together on a cold day, feel the warmth. That is fr
             "第四段说，自行车的刹车利用摩擦力让车轮停下来。",
           ],
         ),
+        ask(
+          ["Why do people put oil on the parts of machines?", "人们为什么给机器零件上油？"],
+          ["To help the parts slide", "帮助零件滑动"],
+          [
+            ["To make the parts heavier", "让零件更重"],
+            ["To make more friction", "产生更多摩擦"],
+            ["To make the parts shine", "让零件发亮"],
+          ],
+          [
+            "Friction makes the parts of machines hot, so people put oil on them to help the parts slide.",
+            "摩擦让机器零件发热，所以人们给零件上油，帮助它们滑动。",
+          ],
+        ),
       ],
     ),
     passage(
@@ -228,6 +264,16 @@ Ramps are useful in real life too. A ramp makes it easier to roll a heavy box or
             "The fourth paragraph says Mei used the same car from the same spot and changed only one thing at a time.",
             "第四段说，梅用同一辆车从同一个地方出发，每次只改变一样东西。",
           ],
+        ),
+        ask(
+          ["What did Mei and her brother first make the ramp from?", "梅和哥哥一开始用什么搭斜坡？"],
+          ["A board and two books", "一块木板和两本书"],
+          [
+            ["A box and a rug", "一个箱子和一块地毯"],
+            ["Two chairs", "两把椅子"],
+            ["A wheelchair ramp", "一个轮椅坡道"],
+          ],
+          ["First they made a ramp from a board and two books.", "他们先用一块木板和两本书搭了一个斜坡。"],
         ),
       ],
       ["Mei"],
@@ -285,6 +331,19 @@ If you push the book across the table, your push is bigger than the friction hol
             "第四段说，重力把书往下拉，桌子用同样大的力往上推，所以这两个力是平衡的。",
           ],
         ),
+        ask(
+          ["Why does a book soon stop after you stop pushing it?", "你停止推书后，书为什么很快停下？"],
+          ["Friction is the only force left", "只剩下摩擦力"],
+          [
+            ["Gravity pushes it back", "重力把它推回去"],
+            ["The table pulls it", "桌子拉住了它"],
+            ["The forces are still balanced", "力仍然是平衡的"],
+          ],
+          [
+            "When you stop pushing, friction is the only force left, and the book soon stops.",
+            "你停止推时，只剩下摩擦力，书很快就停下了。",
+          ],
+        ),
       ],
     ),
     passage(
@@ -336,6 +395,19 @@ A magnet's pull can even pass through some materials. A magnet can hold a drawin
           [
             "The third paragraph says that tiny bits of iron sprinkled on paper over a magnet line up in curved patterns that show where the field is.",
             "第三段说，撒在磁铁上方纸上的细小铁屑会排成弯弯的图案，显示出磁场在哪里。",
+          ],
+        ),
+        ask(
+          ["How can a magnet hold a drawing to the refrigerator?", "磁铁怎样把画固定在冰箱上？"],
+          ["Its pull can pass through a sheet of paper", "它的吸力能穿过一张纸"],
+          [
+            ["It is sticky like glue", "它像胶水一样黏"],
+            ["It attracts paper", "它吸引纸"],
+            ["The drawing is made of iron", "画是铁做的"],
+          ],
+          [
+            "A magnet's pull can pass through some materials, so it can hold a drawing through a sheet of paper.",
+            "磁铁的吸力能穿过一些材料，所以它能隔着一张纸把画固定住。",
           ],
         ),
       ],

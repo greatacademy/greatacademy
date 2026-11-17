@@ -77,6 +77,15 @@ His book did not end the Depression. But it named an aspiration that has outlast
             "第五段说双方都假定梦想关乎向上流动，而亚当斯还指把每个人都当作有价值的人来对待。",
           ),
         ),
+        ask(
+          t("What was the name of the book in which Adams named the American dream?", "亚当斯在哪本书中提出了“美国梦”？"),
+          t("The Epic of America", "《美国史诗》"),
+          [t("The Gospel of Wealth", "《财富的福音》"), t("Ragged Dick", "《衣衫褴褛的迪克》"), t("Walden", "《瓦尔登湖》")],
+          t(
+            "A historian named James Truslow Adams published a book called The Epic of America.",
+            "历史学家詹姆斯·特拉斯洛·亚当斯出版了一本名为《美国史诗》的书。",
+          ),
+        ),
       ],
       ["James", "Truslow", "Adams", "American", "Americans", "Epic", "America"],
     ),
@@ -141,6 +150,12 @@ None of this means that effort does not matter. Many people have improved their 
             "第五段说对那些男孩来说，这种乐观的信息可能像一种无声的指责。",
           ),
         ),
+        ask(
+          t("What jobs do Alger's poor heroes often do at the start?", "阿尔杰笔下的穷孩子起初常做什么工作？"),
+          t("They shine shoes or sell newspapers", "擦鞋或卖报"),
+          [t("They work in steel mills", "在钢铁厂做工"), t("They farm on the plains", "在平原上务农"), t("They work as clerks", "当职员")],
+          t("A poor boy, often an orphan, shines shoes or sells newspapers on the streets.", "一个穷男孩，常常是孤儿，在街头擦鞋或卖报。"),
+        ),
       ],
       ["Horatio", "Alger", "Ragged", "Dick", "Dick's", "American", "Americans", "New", "York"],
     ),
@@ -196,6 +211,12 @@ The Homestead Act is sometimes held up as the purest example of the American dre
             "The fourth paragraph says the law assumed that land not farmed in the European way was unused and available, though Native nations lived there.",
             "第四段说该法假定没有按欧洲方式耕种的土地是闲置可用的，尽管原住民部族住在那里。",
           ),
+        ),
+        ask(
+          t("How much land could a settler claim under the Homestead Act?", "根据《宅地法》，定居者可申领多少土地？"),
+          t("160 acres", "160英亩"),
+          [t("16 acres", "16英亩"), t("1,600 acres", "1600英亩"), t("As much as they could farm", "能耕种多少就多少")],
+          t("Any adult citizen could claim 160 acres of public land.", "任何成年公民都可以申领160英亩公共土地。"),
         ),
       ],
       [
@@ -278,6 +299,15 @@ The libraries still stand in many towns. So do the questions about how their bui
             "第五段提出的问题是：是富人慷慨捐赠好，还是社会通过工资和税收更公平地分配财富好。",
           ),
         ),
+        ask(
+          t("How old was Carnegie when he arrived in the United States?", "卡内基到达美国时几岁？"),
+          t("Twelve", "十二岁"),
+          [t("Twenty", "二十岁"), t("Six", "六岁"), t("Thirty", "三十岁")],
+          t(
+            "Andrew Carnegie arrived in the United States from Scotland in 1848 as a poor boy of twelve.",
+            "安德鲁·卡内基1848年从苏格兰来到美国，当时是个十二岁的穷孩子。",
+          ),
+        ),
       ],
       ["Andrew", "Carnegie", "Carnegie's", "Scotland", "Pittsburgh", "Homestead", "American", "Americans"],
     ),
@@ -337,6 +367,15 @@ Levittown still stands, and many of its houses have been enlarged and changed be
           t(
             "The fifth paragraph says a house is the main way most families build wealth, so excluded families had nothing to pass on.",
             "第五段说房子是大多数家庭积累财富的主要方式，被排除的家庭就没有什么可以传给下一代。",
+          ),
+        ),
+        ask(
+          t("About how much did a Levittown house cost in 1950?", "1950年一栋莱维敦房子大约多少钱？"),
+          t("About 8,000 dollars", "约8000美元"),
+          [t("About 800 dollars", "约800美元"), t("About 80,000 dollars", "约80000美元"), t("About a dollar a week", "约每周一美元")],
+          t(
+            "Families who bought a Levittown house in 1950 for about 8,000 dollars could pass on a valuable property.",
+            "1950年花约8000美元买下莱维敦房子的家庭，可以传下一份有价值的房产。",
           ),
         ),
       ],
@@ -400,6 +439,15 @@ The data, in other words, turn an argument about faith into a question of design
           t(
             "The fifth paragraph says that despite the belief in exceptional American opportunity, poor children in Denmark or Canada had a better chance of rising.",
             "第五段说尽管人们相信美国机会格外多，丹麦或加拿大的穷孩子向上流动的机会却更大。",
+          ),
+        ),
+        ask(
+          t("What records did Chetty's team use to measure mobility?", "切蒂团队用什么记录来衡量社会流动性？"),
+          t("Tax records with names removed", "去掉姓名的税务记录"),
+          [t("School report cards", "学校成绩单"), t("Interviews with families", "家庭访谈"), t("Newspaper stories", "报纸报道")],
+          t(
+            "A team led by the economist Raj Chetty used tax records, with names removed, for tens of millions of Americans.",
+            "经济学家拉吉·切蒂领导的团队使用了数千万美国人去掉姓名的税务记录。",
           ),
         ),
       ],

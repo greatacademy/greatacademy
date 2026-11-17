@@ -71,6 +71,12 @@ The story is often told as a warning about critics who failed to recognize geniu
             "最后一段说评判取决于评判者的期待，而期待需要时间才能改变。",
           ),
         ),
+        ask(
+          t("Who composed the music for The Rite of Spring?", "谁为《春之祭》作曲？"),
+          t("Igor Stravinsky", "伊戈尔·斯特拉文斯基"),
+          [t("Ludwig van Beethoven", "路德维希·凡·贝多芬"), t("Claude Monet", "克劳德·莫奈"), t("Marcel Duchamp", "马塞尔·杜尚")],
+          t("The music was by a young Russian composer, Igor Stravinsky.", "音乐出自年轻的俄国作曲家伊戈尔·斯特拉文斯基之手。"),
+        ),
       ],
       [
         "Igor",
@@ -142,6 +148,15 @@ Yet Leroy was not simply foolish. He noticed exactly what was new about the work
           t(
             "The last paragraph says a careful reader separates what the critic observes, which may be accurate, from the standard of judgment, which may be in question.",
             "最后一段说细心的读者会把评论家所观察到的（可能准确）与评判标准（可能有问题）区分开。",
+          ),
+        ),
+        ask(
+          t("What did Monet's harbor painting show above the water?", "莫奈的港口画中水面上方有什么？"),
+          t("A small orange sun", "一轮橙色的小太阳"),
+          [t("A full moon", "一轮满月"), t("A flock of birds", "一群鸟"), t("Fireworks", "烟花")],
+          t(
+            "One of Monet's paintings showed the harbor of Le Havre in the early morning, with a small orange sun above gray-blue water.",
+            "莫奈的一幅画描绘清晨的勒阿弗尔港，灰蓝色水面上有一轮橙色的小太阳。",
           ),
         ),
       ],
@@ -225,6 +240,15 @@ Both sides agree on one point. Fountain made it impossible to ask "Is this good 
             "第五段说批评者认为，如果什么都能是艺术，这个词就毫无意义，而技艺和美并不是任意的标准。",
           ),
         ),
+        ask(
+          t("In which city was the 1917 exhibition held?", "1917年的展览在哪个城市举办？"),
+          t("New York", "纽约"),
+          [t("Paris", "巴黎"), t("London", "伦敦"), t("Chicago", "芝加哥")],
+          t(
+            "In 1917, a new art society in New York announced an exhibition that would accept any work.",
+            "1917年，纽约一个新艺术协会宣布举办一场接受任何作品的展览。",
+          ),
+        ),
       ],
       [
         "Marcel",
@@ -299,6 +323,15 @@ The disagreement turns partly on intention and partly on effect. If the purpose 
             "最后一段说公正的评论必须权衡两者：艺术家显然想表达什么，以及这一行为实际造成了什么。",
           ),
         ),
+        ask(
+          t("What new title was given to the half-shredded painting?", "被碎掉一半的画得到了什么新名字？"),
+          t("Love Is in the Bin", "《爱在垃圾桶里》"),
+          [t("Girl with Balloon", "《女孩与气球》"), t("The Red Heart", "《红心》"), t("Half a Picture", "《半幅画》")],
+          t(
+            "Banksy's team gave the half-shredded piece a new title, Love Is in the Bin.",
+            "班克斯团队给这幅被碎掉一半的作品取了新名字《爱在垃圾桶里》。",
+          ),
+        ),
       ],
       ["Banksy", "Banksy's", "Girl", "Balloon", "Love", "Bin", "London", "Sotheby's"],
     ),
@@ -353,6 +386,19 @@ Her admirers reply that the quality of the pictures is evident in thousands of t
           t(
             "The last paragraph says judging a work of art can depend on more than the work, including who made the choices that shaped what we see.",
             "最后一段说评判艺术作品可能不只取决于作品本身，还取决于谁作出了塑造我们所见内容的选择。",
+          ),
+        ),
+        ask(
+          t("How much did John Maloof pay for the box of negatives?", "约翰·马卢夫花多少钱买下那箱底片？"),
+          t("About four hundred dollars", "约四百美元"),
+          [
+            t("About four thousand dollars", "约四千美元"),
+            t("About forty dollars", "约四十美元"),
+            t("Nothing; he found it", "没花钱，是捡到的"),
+          ],
+          t(
+            "He bought a box of old photographic negatives at an auction for about four hundred dollars.",
+            "他在拍卖会上花约四百美元买了一箱旧底片。",
           ),
         ),
       ],
@@ -411,6 +457,15 @@ Neither man won. But the case still raises a question for anyone who writes revi
           t(
             "The last paragraph says a critic may dislike a work strongly, but Ruskin judged the painter's honesty without reasons a reader could check.",
             "最后一段说评论家可以强烈地不喜欢一件作品，但罗斯金评判的是画家的诚实，且没有给出读者能核实的理由。",
+          ),
+        ),
+        ask(
+          t("How much did the jury award Whistler in damages?", "陪审团判给惠斯勒多少赔偿？"),
+          t("One farthing, the smallest coin", "一法寻，最小的硬币"),
+          [t("Two hundred guineas", "两百几尼"), t("A thousand pounds", "一千英镑"), t("Nothing at all", "什么也没有")],
+          t(
+            "The jury awarded him damages of one farthing, the smallest coin in the country.",
+            "陪审团判给他一法寻的赔偿，那是全国最小的硬币。",
           ),
         ),
       ],

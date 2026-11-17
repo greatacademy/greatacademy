@@ -27,8 +27,14 @@ const MIN_QUESTIONS = 8;
 const MIN_SENTENCES = 10;
 const MIN_STRETCHES = 5;
 
-/** A sentence read aloud has 6 to 24 words; a stretch of sentences has 25 to 45, about 20 seconds at a speaking pace. */
+/**
+ * A sentence read aloud has 6 to 24 words, or from SHORT_SENTENCE words when the passages give fewer than FEW_SENTENCES
+ * of those, as the short sentences of the first grades do; a stretch of sentences has 25 to 45, about 20 seconds at a
+ * speaking pace.
+ */
 const SENTENCE_WORDS = [6, 24] as const;
+const SHORT_SENTENCE = 4;
+const FEW_SENTENCES = 30;
 const STRETCH_WORDS = [25, 45] as const;
 
 /** readAloudSeconds is how long a recording of a text read aloud may be: about two words a second, and some to start. */
@@ -58,12 +64,15 @@ export function sentencesOf(body: string): readonly string[] {
 /** readable tells whether a sentence can be read aloud and heard back as written: words only, without numerals. */
 const readable = (s: string) => !/\d|[—–-]{2}|[[\]{}/*_#]/u.test(s) && /[.!?][”"’)]?$/u.test(s);
 
-/** FEW_STRETCHES is the number of stretches below which the runs may overlap, so that short passages give enough. */
-const FEW_STRETCHES = 8;
+/**
+ * FEW_STRETCHES is the number of stretches below which the runs may overlap, so that short passages give as many
+ * stretches as a knowledge point needs for its practice.
+ */
+const FEW_STRETCHES = 30;
 
 /**
  * stretchesOf are runs of consecutive sentences of a passage within STRETCH_WORDS, each starting a new run; when they
- * overlap, a run starts at every sentence.
+ * overlap, a run starts at every sentence and ends at every sentence that keeps it within STRETCH_WORDS.
  */
 function stretchesOf(sentences: readonly string[], overlap = false): readonly string[] {
   const out: string[] = [];
@@ -75,8 +84,9 @@ function stretchesOf(sentences: readonly string[], overlap = false): readonly st
       n += spokenWords(sentences[j]!).length;
       run.push(sentences[j]!);
       j++;
+      if (overlap && j < sentences.length && n >= STRETCH_WORDS[0] && run.length > 1) out.push(run.join(" "));
     }
-    if (n >= STRETCH_WORDS[0] && run.length > 1) out.push(run.join(" "));
+    if (n >= STRETCH_WORDS[0] && run.length > 1 && !(overlap && out.at(-1) === run.join(" "))) out.push(run.join(" "));
     i = overlap ? i + 1 : Math.max(j, i + 1);
   }
   return out;
@@ -171,14 +181,16 @@ function listeningTopic(id: string, unit: Text, reading: ReadingUnitDef, prerequ
 /** readingAloudTopic reads aloud sentences, then stretches of sentences, of a reading unit's passages. */
 function readingAloudTopic(id: string, unit: Text, reading: ReadingUnitDef, listening: string): TopicDef {
   const all = reading.passages.map((p) => sentencesOf(p.body));
-  const sentences = [
+  const within = (least: number) => [
     ...new Set(
       all.flat().filter((s) => {
         const n = spokenWords(s).length;
-        return readable(s) && n >= SENTENCE_WORDS[0] && n <= SENTENCE_WORDS[1];
+        return readable(s) && n >= least && n <= SENTENCE_WORDS[1];
       }),
     ),
   ];
+  const usual = within(SENTENCE_WORDS[0]);
+  const sentences = usual.length >= FEW_SENTENCES ? usual : within(SHORT_SENTENCE);
   const apart = [...new Set(all.flatMap((p) => stretchesOf(p)))];
   const stretches = apart.length >= FEW_STRETCHES ? apart : [...new Set(all.flatMap((p) => stretchesOf(p, true)))];
   if (sentences.length < MIN_SENTENCES) throw new Error(`${id}: ${sentences.length} sentences, fewer than ${MIN_SENTENCES}`);

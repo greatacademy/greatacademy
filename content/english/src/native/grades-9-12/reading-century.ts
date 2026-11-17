@@ -69,6 +69,15 @@ The legislature refused. Over the next decades, the original mill girls were gra
             "文章最后说，她们证明了工厂工人能够组织起来、公开发言并争取话语权。",
           ),
         ),
+        ask(
+          t("In which town were the cotton mills?", "这些棉纺厂在哪个城镇？"),
+          t("Lowell, Massachusetts", "马萨诸塞州洛厄尔"),
+          [t("New York City", "纽约市"), t("Detroit, Michigan", "密歇根州底特律"), t("Manchester, England", "英国曼彻斯特")],
+          t(
+            "Thousands of young women left farms across New England to work in the cotton mills of Lowell, Massachusetts.",
+            "成千上万的年轻女性离开新英格兰的农场，到马萨诸塞州洛厄尔的棉纺厂做工。",
+          ),
+        ),
       ],
       ["New", "England", "Lowell", "Massachusetts", "United", "States", "Ireland"],
     ),
@@ -125,6 +134,15 @@ The poet Emma Lazarus had written in 1883 of a lamp lifted "beside the golden do
           t(
             "Lazarus's image of a lamp beside the golden door welcomes the poor and tired; for millions, Ellis Island was that welcome.",
             "拉撒路笔下金门旁的明灯欢迎贫穷和疲惫的人；对数百万人来说，埃利斯岛就是那份欢迎。",
+          ),
+        ),
+        ask(
+          t("About how many people passed through Ellis Island between 1892 and 1954?", "1892年至1954年间约有多少人经过埃利斯岛？"),
+          t("About twelve million", "约一千二百万"),
+          [t("About twelve thousand", "约一万二千"), t("About one million", "约一百万"), t("About a hundred million", "约一亿")],
+          t(
+            "Between 1892 and 1954, about twelve million people passed through Ellis Island.",
+            "1892年至1954年间，约一千二百万人经过埃利斯岛。",
           ),
         ),
       ],
@@ -196,6 +214,12 @@ A historian reading this letter would notice several things. It is a primary sou
             "最后一段说，这些细节更可靠，因为他没有理由编造它们。",
           ),
         ),
+        ask(
+          t("What has Tom kept in his pocket?", "汤姆在口袋里留着什么？"),
+          t("Little Annie's drawing", "小安妮的画"),
+          [t("A photograph of his father", "他父亲的照片"), t("A piece of the cake", "一块蛋糕"), t("His mother's letter", "他母亲的信")],
+          t("Tell little Annie that I have kept her drawing in my pocket.", "告诉小安妮，我把她的画留在口袋里了。"),
+        ),
       ],
       ["France", "Davies", "Annie", "Tom"],
     ),
@@ -252,6 +276,15 @@ Historians still debate the exact causes. Most agree that the crash revealed dee
           t(
             "People bought fewer goods, factories laid off workers, and those workers had even less to spend, so the cycle repeated.",
             "人们买的东西更少，工厂解雇工人，这些工人可花的钱更少，于是循环往复。",
+          ),
+        ),
+        ask(
+          t("What was the day prices collapsed in 1929 later called?", "1929年股价暴跌的那一天后来被称为什么？"),
+          t("Black Tuesday", "黑色星期二"),
+          [t("Black Friday", "黑色星期五"), t("Red Monday", "红色星期一"), t("The Day of Doubt", "怀疑之日")],
+          t(
+            "Five days later, on a day later called Black Tuesday, prices collapsed.",
+            "五天后，在后来被称为“黑色星期二”的那天，股价暴跌。",
           ),
         ),
       ],
@@ -313,6 +346,12 @@ Looking at a poster, a historian asks: Who made this? For whom? What did they wa
             "文章说，这样的海报也告诉我们，有些人需要被说服，相信妇女能做好这份工作。",
           ),
         ),
+        ask(
+          t("What did governments want everyone to buy during the war?", "战争期间政府希望每个人买什么？"),
+          t("War bonds", "战争债券"),
+          [t("New cars", "新汽车"), t("Radios", "收音机"), t("Posters", "海报")],
+          t("They needed everyone to buy war bonds that helped pay for the fighting.", "他们需要每个人购买战争债券来帮助支付战争费用。"),
+        ),
       ],
       ["Britain", "United", "States"],
     ),
@@ -370,6 +409,15 @@ The new nations faced enormous challenges. Many had borders drawn by colonial of
           t(
             "The last paragraph says many borders were drawn by colonial officials who knew little about the peoples living there.",
             "最后一段说，许多边界是由对当地民族了解甚少的殖民官员划定的。",
+          ),
+        ),
+        ask(
+          t("Who spoke at midnight in New Delhi as India became independent?", "印度独立的午夜，谁在新德里发表讲话？"),
+          t("Jawaharlal Nehru", "贾瓦哈拉尔·尼赫鲁"),
+          [t("Mohandas Gandhi", "莫罕达斯·甘地"), t("The British king", "英国国王"), t("A British general", "一位英国将军")],
+          t(
+            "At midnight in the hall of the Constituent Assembly in New Delhi, Jawaharlal Nehru rose to speak.",
+            "午夜时分，在新德里制宪会议大厅里，贾瓦哈拉尔·尼赫鲁起身讲话。",
           ),
         ),
       ],

@@ -18,6 +18,10 @@ export const topics: readonly TopicDef[] = [
     frames: [
       say("How old are you?", "I am {x}. / I am {x} years old.", "nine, ten, eleven, twelve, thirteen"),
       say("Where are you from?", "I am from {x}.", "China, Brazil, Spain, Canada, Japan"),
+      say("What is your name?", "My name is {x}. / I am {x}.", "Tom, Anna, Leo, Mia, Sam"),
+      say("How many brothers do you have?", "I have {x} brothers. / I have got {x} brothers.", "two, three, four, five, six"),
+      say("What color are your eyes?", "My eyes are {x}. / They are {x}.", "brown, blue, green, gray, black"),
+      say("What can you do?", "I can {x}.", "swim, sing, dance, draw, cook"),
     ],
   }),
   unitSpeaking({
@@ -29,6 +33,14 @@ export const topics: readonly TopicDef[] = [
     frames: [
       say("What time do you get up?", "I get up at {x}. / I get up at {x} o'clock.", "six, seven, eight, nine, ten"),
       say("Do you walk to school?", "I {x} walk to school.", "always, usually, often, sometimes, never"),
+      say("What time do you go to bed?", "I go to bed at {x}. / I go to bed at {x} o'clock.", "eight, nine, ten, eleven, twelve"),
+      say(
+        "What do you do after school?",
+        "I {x} after school. / After school, I {x}.",
+        "play football, do my homework, watch TV, read a book, play games",
+      ),
+      say("When do you have lunch?", "I have lunch at {x}. / I have lunch at {x} o'clock.", "eleven, twelve, one, two, three"),
+      say("How often do you read before bed?", "I {x} read before bed.", "always, usually, often, sometimes, never"),
     ],
   }),
   unitSpeaking({
@@ -40,6 +52,10 @@ export const topics: readonly TopicDef[] = [
     frames: [
       say("When is your birthday?", "My birthday is in {x}. / It is in {x}.", "January, March, May, July, October"),
       say("What day is it today?", "It is {x}. / Today is {x}. / It is {x} today.", "Monday, Tuesday, Wednesday, Thursday, Friday"),
+      say("What month is it?", "It is {x}. / It is {x} now.", "April, June, August, September, November"),
+      say("What time is it?", "It is {x} o'clock. / It is {x}.", "one, two, three, four, five"),
+      say("What day is your party?", "It is on {x}. / My party is on {x}.", "Saturday, Sunday, Monday, Friday, Wednesday"),
+      say("When do you go swimming?", "I go swimming on {x}. / On {x}.", "Mondays, Tuesdays, Thursdays, Saturdays, Sundays"),
     ],
   }),
   unitSpeaking({
@@ -55,6 +71,10 @@ export const topics: readonly TopicDef[] = [
         "water, milk, juice, tea, coffee",
       ),
       say("What do you have for breakfast?", "I have {x} for breakfast. / I have {x}.", "eggs, bread, rice, fruit, noodles"),
+      say("What is your favorite fruit?", "My favorite fruit is {x}. / I like {x}.", "apples, bananas, oranges, grapes, pears"),
+      say("What do you have for lunch?", "I have {x} for lunch. / I have {x}.", "soup, rice, a sandwich, pasta, chicken"),
+      say("Do you like vegetables?", "I like {x}. / Yes, I like {x}.", "carrots, beans, tomatoes, potatoes, peas"),
+      say("What would you like to eat?", "I would like {x}, please. / I'd like {x}.", "a pizza, a burger, some fish, some cake, an egg"),
     ],
   }),
   unitSpeaking({
@@ -70,6 +90,10 @@ export const topics: readonly TopicDef[] = [
         "a blue shirt, a red dress, jeans, a black coat, a green hat",
       ),
       say("How much is the T-shirt?", "It is {x} dollars. / The T-shirt is {x} dollars.", "five, ten, twelve, fifteen, twenty"),
+      say("What color is your coat?", "My coat is {x}. / It is {x}.", "red, blue, black, green, yellow"),
+      say("What do you want to buy?", "I want to buy {x}. / I want {x}.", "a hat, a dress, some shoes, a bag, a jacket"),
+      say("How much are the shoes?", "They are {x} dollars. / The shoes are {x} dollars.", "twenty, thirty, forty, fifty, sixty"),
+      say("What do you wear when it is cold?", "I wear {x}. / I wear {x} when it is cold.", "a coat, a scarf, boots, gloves, a sweater"),
     ],
   }),
   unitSpeaking({
@@ -85,6 +109,10 @@ export const topics: readonly TopicDef[] = [
         "There are {x} rooms. / There are {x} rooms in my home.",
         "three, four, five, six, seven",
       ),
+      say("Where do you live?", "I live in {x}. / I live in {x} with my family.", "a house, a flat, a big city, a small town, a village"),
+      say("Where is the sofa?", "It is in the {x}. / The sofa is in the {x}.", "living room, kitchen, bedroom, hall, garden"),
+      say("What is in your bedroom?", "There is {x} in my bedroom. / There is {x}.", "a bed, a desk, a lamp, a chair, a mirror"),
+      say("What color is your door?", "My door is {x}. / It is {x}.", "white, red, blue, green, brown"),
     ],
   }),
   unitSpeaking({
@@ -100,6 +128,14 @@ export const topics: readonly TopicDef[] = [
         "swimming, reading, dancing, painting, playing football",
       ),
       say("What instrument do you play?", "I play the {x}.", "piano, guitar, violin, drums, flute"),
+      say("What sport do you play?", "I play {x}.", "football, tennis, basketball, volleyball, badminton"),
+      say(
+        "What do you do on Sundays?",
+        "I {x} on Sundays. / On Sundays, I {x}.",
+        "visit my grandma, go to the park, ride my bike, watch films, play with friends",
+      ),
+      say("What games do you like?", "I like {x}.", "chess, cards, computer games, board games, hide and seek"),
+      say("What do you like watching?", "I like watching {x}.", "cartoons, films, football, music videos, nature shows"),
     ],
   }),
   unitSpeaking({
@@ -111,6 +147,14 @@ export const topics: readonly TopicDef[] = [
     frames: [
       say("What is your favorite subject?", "My favorite subject is {x}. / It is {x}.", "math, music, art, science, history"),
       say("When is your English lesson?", "It is on {x}. / My English lesson is on {x}.", "Monday, Tuesday, Wednesday, Thursday, Friday"),
+      say("What is your teacher's name?", "My teacher's name is {x}. / It is {x}.", "Mr. Brown, Ms. Green, Mr. Smith, Ms. White, Mrs. Lee"),
+      say("What do you have in your bag?", "I have {x} in my bag. / I have {x}.", "a pencil, a book, a ruler, an eraser, a notebook"),
+      say(
+        "How many students are in your class?",
+        "There are {x} students in my class. / There are {x}.",
+        "twenty, twenty-five, thirty, thirty-five, forty",
+      ),
+      say("What is your favorite day at school?", "My favorite day is {x}. / It is {x}.", "Monday, Tuesday, Wednesday, Thursday, Friday"),
     ],
   }),
   unitSpeaking({
@@ -118,10 +162,22 @@ export const topics: readonly TopicDef[] = [
     title: t("Speaking: The Library", "口语：图书馆"),
     summary: t("Say the unit's words, and read its sentences aloud.", "说出“图书馆”的词汇，并朗读句子。"),
     listening: "a1-listening-the-library",
-    words: ["a1-words-library", "a1-words-books"],
+    words: ["a1-words-library", "a1-words-books", "a1-words-schoolwork"],
     frames: [
       say("What kind of books do you like?", "I like {x}.", "comics, stories, poems, novels, picture books"),
       say("How many books can I borrow?", "You can borrow {x} books.", "two, three, four, five, six"),
+      say("When does the library open?", "It opens at {x}. / The library opens at {x}.", "eight, nine, ten, eleven, noon"),
+      say(
+        "What book are you reading?",
+        "I am reading {x}. / I'm reading {x}.",
+        "a story, a comic, a poem book, a book about animals, a book about space",
+      ),
+      say(
+        "How often do you go to the library?",
+        "I go to the library {x}. / I go {x}.",
+        "every day, every week, on Saturdays, on Sundays, once a month",
+      ),
+      say("Where is the library?", "It is next to the {x}. / The library is next to the {x}.", "school, park, bank, station, museum"),
     ],
   }),
   unitSpeaking({
@@ -133,6 +189,10 @@ export const topics: readonly TopicDef[] = [
     frames: [
       say("What is the weather like today?", "It is {x}. / It is {x} today.", "sunny, rainy, windy, cloudy, cold"),
       say("What is your favorite season?", "My favorite season is {x}. / It is {x}.", "spring, summer, autumn, winter, fall"),
+      say("What is the weather like in winter?", "It is {x} in winter. / It is {x}.", "cold, snowy, windy, cloudy, rainy"),
+      say("What animal do you like?", "I like {x}.", "birds, horses, rabbits, fish, cats"),
+      say("What color are the flowers?", "They are {x}. / The flowers are {x}.", "red, yellow, pink, white, purple"),
+      say("Where do you like to walk?", "I like to walk in the {x}. / In the {x}.", "park, forest, garden, mountains, fields"),
     ],
   }),
   unitSpeaking({
@@ -144,6 +204,10 @@ export const topics: readonly TopicDef[] = [
     frames: [
       say("What does your mother do?", "She is a {x}. / My mother is a {x}.", "teacher, doctor, nurse, farmer, driver"),
       say("What is your friend like?", "He is {x}. / My friend is {x}.", "tall, short, friendly, funny, kind"),
+      say("What does your father do?", "He is a {x}. / My father is a {x}.", "cook, doctor, pilot, farmer, police officer"),
+      say("What job do you like?", "I like the job of a {x}. / I like {x}s.", "teacher, nurse, vet, singer, driver"),
+      say("What does your best friend look like?", "She is {x}. / My best friend is {x}.", "tall, short, pretty, slim, strong"),
+      say("Who is your favorite person?", "My favorite person is my {x}. / It is my {x}.", "mother, father, grandma, sister, brother"),
     ],
   }),
   unitSpeaking({
@@ -155,6 +219,10 @@ export const topics: readonly TopicDef[] = [
     frames: [
       say("How do you go to school?", "I go to school by {x}. / I go by {x}.", "bus, bike, car, train, taxi"),
       say("Where is the bank?", "It is next to the {x}. / The bank is next to the {x}.", "park, station, school, hotel, library"),
+      say("Where is the station?", "It is near the {x}. / The station is near the {x}.", "bank, hotel, park, school, market"),
+      say("How do you go to the city?", "I go by {x}. / I go to the city by {x}.", "train, bus, car, bike, taxi"),
+      say("What is there in your town?", "There is {x} in my town. / There is {x}.", "a museum, a park, a cinema, a zoo, a market"),
+      say("Where do you want to go?", "I want to go to the {x}. / To the {x}.", "beach, zoo, museum, cinema, mountains"),
     ],
   }),
 ].flat();

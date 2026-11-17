@@ -70,6 +70,15 @@ In this way, the mountains kept the Greeks apart, while the sea brought them tog
             "最后一句把文章解释过的两个原因联系在一起：群山让希腊人彼此分开，而大海把他们与外面的世界联系起来。",
           ),
         ),
+        ask(
+          t("What grew well in the thin, stony soil of Greece?", "希腊贫瘠多石的土壤适合种什么？"),
+          t("Olive trees and grapevines", "橄榄树和葡萄藤"),
+          [t("Large fields of wheat", "大片小麦"), t("Rice", "水稻"), t("Corn and beans", "玉米和豆子")],
+          t(
+            "The soil was good for olive trees and grapevines but poor for large fields of wheat.",
+            "土壤适合种橄榄树和葡萄藤，却不适合种大片小麦。",
+          ),
+        ),
       ],
     ),
     passage(
@@ -123,6 +132,15 @@ The two most famous city-states, Athens and Sparta, were very different, as you 
           t(
             "The fourth paragraph says they shared the same language, gods and stories, even though each had its own laws, army and money.",
             "第四段说，它们有相同的语言、神灵和故事，尽管各有自己的法律、军队和货币。",
+          ),
+        ),
+        ask(
+          t("What was the agora?", "集市广场是什么？"),
+          t("An open marketplace", "一个露天市场"),
+          [t("A hill with temples", "一座有神庙的山丘"), t("An army camp", "一个军营"), t("A school", "一所学校")],
+          t(
+            "Below the acropolis lay the agora, an open marketplace where citizens bought food and traded news.",
+            "卫城下面是集市广场，一个市民买食物、交流消息的露天市场。",
           ),
         ),
       ],
@@ -180,6 +198,12 @@ Even so, the idea that people can govern themselves spread far beyond Athens. Ma
             "第四段说，只有生在雅典的自由男子才是公民；妇女、奴隶和外国人都不能投票。",
           ),
         ),
+        ask(
+          t("How were votes in the Assembly often counted?", "公民大会上的投票通常怎样计数？"),
+          t("By a show of hands", "举手表决"),
+          [t("By drawing names", "抽签"), t("By writing on paper", "写在纸上"), t("By the king alone", "只由国王决定")],
+          t("The text says votes were often counted by a show of hands.", "短文说投票通常以举手的方式计数。"),
+        ),
       ],
     ),
     passage(
@@ -235,6 +259,12 @@ The Spartans were also known for saying a lot in very few words. Our word "lacon
             '最后一段用这个回答举例说明言简意赅："If" 的意思是敌人未必能攻进来。',
           ),
         ),
+        ask(
+          t("How many kings did Sparta have at the same time?", "斯巴达同时有几位国王？"),
+          t("Two", "两位"),
+          [t("One", "一位"), t("None", "没有"), t("Seven", "七位")],
+          t("The text says Sparta had two kings at the same time.", "短文说斯巴达同时有两位国王。"),
+        ),
       ],
     ),
     passage(
@@ -285,6 +315,12 @@ The ancient games ended about 1,600 years ago. In 1896, they were brought back t
             "The last paragraph links the two: the ancient games ended, and in 1896 they were brought back to life in Athens.",
             "最后一段把两者联系起来：古代运动会结束了，1896 年又在雅典重新举办。",
           ),
+        ),
+        ask(
+          t("In honor of which god were the Olympic Games held?", "奥林匹克运动会是为了纪念哪位神？"),
+          t("Zeus, the king of the gods", "众神之王宙斯"),
+          [t("The god of the sea", "海神"), t("The god of the sun", "太阳神"), t("The goddess of wisdom", "智慧女神")],
+          t("The Olympic Games were held in honor of Zeus, the king of the gods.", "奥林匹克运动会是为纪念众神之王宙斯而举行的。"),
         ),
       ],
     ),
@@ -340,6 +376,12 @@ Teacher to student, student to teacher, these three thinkers passed their ideas 
             "Socrates taught Plato, and Plato taught Aristotle; the last paragraph calls this a chain of teacher and student.",
             "苏格拉底教了柏拉图，柏拉图又教了亚里士多德；最后一段称之为师生相传的链条。",
           ),
+        ),
+        ask(
+          t("What did Plato found?", "柏拉图创办了什么？"),
+          t("A school called the Academy", "一所叫学园的学校"),
+          [t("The Olympic Games", "奥林匹克运动会"), t("The Assembly", "公民大会"), t("A new city-state", "一个新的城邦")],
+          t("Plato founded a school called the Academy.", "柏拉图创办了一所叫学园的学校。"),
         ),
       ],
     ),

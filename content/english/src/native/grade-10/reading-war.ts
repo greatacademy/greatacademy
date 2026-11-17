@@ -69,6 +69,16 @@ For a long time, the truce was half-forgotten, treated as a strange story rather
             "在礼物和游戏的温暖细节之后，第五段转为沉重：数百万人死去，其中包括许多唱过颂歌的人。",
           ),
         ),
+        ask(
+          t("What did British soldiers hear from the German trenches on Christmas Eve?", "平安夜英国士兵从德军战壕听到了什么？"),
+          t("Voices singing carols", "唱圣诞颂歌的声音"),
+          [
+            t("Guns firing in celebration", "庆祝的枪声"),
+            t("Officers giving orders to attack", "军官下令进攻"),
+            t("Church bells ringing", "教堂钟声"),
+          ],
+          t("On Christmas Eve, British soldiers heard German voices singing carols.", "平安夜，英国士兵听到德国人在唱圣诞颂歌。"),
+        ),
       ],
       ["Belgium", "France", "British", "German"],
     ),
@@ -127,6 +137,15 @@ At the center stands a building called the Ossuary, which holds the bones of abo
           t(
             "It holds unidentified French and German soldiers and is described as a memorial to what victory and defeat both cost.",
             "它安放着无法辨认的法德士兵遗骨，被描述为纪念胜利与失败双方代价的纪念馆。",
+          ),
+        ),
+        ask(
+          t("What was the single supply road to Verdun later called?", "通往凡尔登的那条补给路后来叫什么？"),
+          t("The Sacred Way", "神圣之路"),
+          [t("The Road of Glory", "荣耀之路"), t("No man's land", "无人区"), t("The Emperor's Road", "皇帝之路")],
+          t(
+            "A single road, later called the Sacred Way, carried supplies and fresh troops.",
+            "一条后来被称为“神圣之路”的道路运送补给和新部队。",
           ),
         ),
       ],
@@ -190,6 +209,15 @@ Both flowers grew from the same soil. Both ask the same question: what do the li
           t(
             "The sixth paragraph says some felt the red poppy could seem to celebrate war, so white poppies were sold as a symbol of peace.",
             "第六段说一些人觉得红色罂粟花可能显得像在颂扬战争，所以出售白色罂粟花作为和平的象征。",
+          ),
+        ),
+        ask(
+          t("What was John McCrae's job in the war?", "约翰·麦克雷在战争中的职务是什么？"),
+          t("An army doctor", "军医"),
+          [t("A teacher", "教师"), t("A general", "将军"), t("A chaplain", "随军牧师")],
+          t(
+            "A Canadian army doctor named John McCrae stood near the town of Ypres in Belgium.",
+            "一位名叫约翰·麦克雷的加拿大军医站在比利时伊普尔镇附近。",
           ),
         ),
       ],
@@ -264,6 +292,12 @@ Every year, children from around the world send paper cranes to Hiroshima, milli
             "开头描述一座瞬间被毁的城市；结尾描述数百万只脆弱的纸鹤，把一个孩子的希望变成和平的呼吁。",
           ),
         ),
+        ask(
+          t("What did Sadako hope to become when she grew up?", "贞子长大后想成为什么？"),
+          t("A physical education teacher", "体育老师"),
+          [t("A doctor", "医生"), t("A painter", "画家"), t("A pilot", "飞行员")],
+          t("She loved running and hoped to become a physical education teacher.", "她喜欢跑步，希望成为一名体育老师。"),
+        ),
       ],
       ["Japanese", "Hiroshima", "Sasaki", "Sadako", "Japan"],
     ),
@@ -321,6 +355,16 @@ France buried its own unknown soldier beneath the Arc de Triomphe in Paris on th
             t("Two minutes of silence", "两分钟的默哀"),
           ],
           t('The fifth paragraph says the name comes from Greek words meaning "empty tomb."', '第五段说这个名字来自意为"空墓"的希腊语词。'),
+        ),
+        ask(
+          t("How was the unknown soldier for Westminster Abbey chosen?", "威斯敏斯特教堂的无名战士是怎样选出的？"),
+          t("A blindfolded senior officer chose one of several", "一位蒙着眼的高级军官从几具遗体中选了一具"),
+          [
+            t("The king chose him by name", "国王点名选出"),
+            t("His mother identified him", "他的母亲认出了他"),
+            t("The first body found was used", "用了最先找到的遗体"),
+          ],
+          t("A senior officer, blindfolded, chose one.", "一位蒙着眼的高级军官选了一具。"),
         ),
       ],
       [
@@ -401,6 +445,12 @@ Today the Vietnam Veterans Memorial is one of the most visited monuments in the 
             "The fourth paragraph says visitors see their own reflections among the names, as if the living and the dead were standing together.",
             "第四段说参观者看到自己的倒影映在名字中间，仿佛生者与死者站在一起。",
           ),
+        ),
+        ask(
+          t("What are the walls of the Vietnam Veterans Memorial made of?", "越战老兵纪念碑的墙是用什么做的？"),
+          t("Polished black granite", "抛光的黑色花岗岩"),
+          [t("White marble", "白色大理石"), t("Bronze", "青铜"), t("Gray concrete", "灰色混凝土")],
+          t("Two long walls of polished black granite would meet in a wide V.", "两道抛光黑色花岗岩长墙会合成一个宽阔的V字。"),
         ),
       ],
       ["Vietnam", "Maya", "Lin", "China", "Americans"],

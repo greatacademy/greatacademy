@@ -79,6 +79,12 @@ The same forces act on a bird, a paper airplane and a rocket. Only the ways of p
             "文中说要加速，飞行员会增大推力。在图中，这意味着向前的箭头变得比向后的阻力箭头更长。",
           ),
         ),
+        ask(
+          t("Where does a plane's thrust come from?", "飞机的推力来自哪里？"),
+          t("The engines", "发动机"),
+          [t("The wings", "机翼"), t("Gravity", "重力"), t("The resistance of the air", "空气阻力")],
+          t("Thrust comes from the engines, which push air or hot gases backward.", "推力来自发动机，它把空气或热气向后推。"),
+        ),
       ],
       [],
     ),
@@ -134,6 +140,12 @@ You may have heard that air over the top must travel faster because it has to me
             "The last paragraph calls the popular explanation wrong and gives the evidence: air over the top arrives at the back edge well before the air from below.",
             "最后一段称这个流行的解释是错的，并给出了证据：上方的空气比下方的空气早得多到达后缘。",
           ),
+        ),
+        ask(
+          t("What is the cross-section of a wing called?", "机翼的横截面形状叫什么？"),
+          t("An airfoil", "翼型"),
+          [t("A propeller", "螺旋桨"), t("A runway", "跑道"), t("A wind tunnel", "风洞")],
+          t("A wing cut across from front to back has a shape called an airfoil.", "机翼从前到后切开的形状叫翼型。"),
         ),
       ],
       ["Isaac", "Newton's"],
@@ -192,6 +204,15 @@ The balloon could not be steered; it went wherever the wind blew. But it had pro
             "最后一段说气球无法操纵，随风飘荡，所以下一个挑战是控制人们飞往何处。",
           ),
         ),
+        ask(
+          t("What business did the Montgolfier brothers run?", "孟格菲兄弟经营什么生意？"),
+          t("A paper factory", "一家造纸厂"),
+          [t("A bicycle shop", "一家自行车店"), t("A farm", "一个农场"), t("A barbershop", "一家理发店")],
+          t(
+            "Joseph and Étienne Montgolfier were brothers who ran a paper factory in France.",
+            "约瑟夫和艾蒂安·孟格菲兄弟在法国经营一家造纸厂。",
+          ),
+        ),
       ],
       ["Joseph", "Étienne", "Montgolfier", "France", "King", "Louis", "XVI", "Versailles", "November", "Paris"],
     ),
@@ -248,6 +269,15 @@ On December 17, 1903, at Kitty Hawk, Orville flew their powered Flyer for twelve
           t(
             "The first paragraph says their success came not from a sudden flash of genius but from years of patient trial and error, and the rest of the passage shows each step.",
             "第一段说他们的成功不是来自灵光一现，而是来自多年耐心的反复试验，文章其余部分展示了每一步。",
+          ),
+        ),
+        ask(
+          t("How long did Orville's first powered flight last?", "奥维尔的第一次动力飞行持续了多久？"),
+          t("Twelve seconds", "十二秒"),
+          [t("Fifty-nine seconds", "五十九秒"), t("Two minutes", "两分钟"), t("An hour", "一小时")],
+          t(
+            "Orville flew their powered Flyer for twelve seconds, covering about thirty-seven meters.",
+            "奥维尔驾驶动力飞行者号飞了十二秒，约三十七米。",
           ),
         ),
       ],
@@ -310,6 +340,12 @@ Coleman dreamed of opening a flight school for Black students. She died in a cra
             "The fifth paragraph says she refused to perform where Black spectators were not allowed to enter through the same gates as white spectators.",
             "第五段说她拒绝在黑人观众不能与白人观众走同一入口的地方表演。",
           ),
+        ),
+        ask(
+          t("What did crowds call Bessie Coleman?", "观众怎样称呼贝茜·科尔曼？"),
+          t('"Queen Bess"', "“贝丝女王”"),
+          [t('"The Flying Barber"', "“飞行理发师”"), t('"Lady Lindy"', "“林迪夫人”"), t('"Miss Chicago"', "“芝加哥小姐”")],
+          t('Crowds called her "Queen Bess."', "观众叫她“贝丝女王”。"),
         ),
       ],
       [
@@ -391,6 +427,16 @@ Controllers keep planes a safe distance apart, both side by side and up and down
             "The fourth paragraph explains that runway 9 points east, toward ninety degrees; from the other end the same strip points west, toward two hundred and seventy degrees, so it is runway 27.",
             "第四段解释说，9号跑道指向东方，即90度；从另一端看，同一条跑道指向西方，即270度，所以是27号跑道。",
           ),
+        ),
+        ask(
+          t("What are taxiways?", "滑行道是什么？"),
+          t("Roads that connect the gates to the runways", "连接登机口和跑道的道路"),
+          [
+            t("Paths through the sky between cities", "城市之间的空中航线"),
+            t("Rooms where controllers sit", "管制员工作的房间"),
+            t("The ends of a runway", "跑道的两端"),
+          ],
+          t("Taxiways are the roads that connect the gates to the runways.", "滑行道是连接登机口和跑道的道路。"),
         ),
       ],
       [],

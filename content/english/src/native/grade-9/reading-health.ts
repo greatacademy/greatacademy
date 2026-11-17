@@ -75,6 +75,15 @@ Lind's twelve sailors still matter. Every time a new medicine is tested against 
             "第五段说林德不确定柑橘为何有效，后来还推荐了一种失去大部分效力的煮过的果汁。",
           ),
         ),
+        ask(
+          t("Which disease did Lind's experiment study?", "林德的实验研究的是哪种病？"),
+          t("Scurvy", "坏血病"),
+          [t("Fever after childbirth", "产褥热"), t("Seasickness", "晕船"), t("Malaria", "疟疾")],
+          t(
+            "For centuries, the most dangerous enemy of sailors on long voyages was a disease called scurvy.",
+            "几个世纪以来，远航水手最危险的敌人是一种叫坏血病的疾病。",
+          ),
+        ),
       ],
       ["Scottish", "James", "Lind", "Salisbury", "Lind's", "British", "C"],
     ),
@@ -129,6 +138,19 @@ Today, most medical journals require authors to disclose their funding and any c
           t(
             "The last paragraph says the question to ask is who paid for the research and what they hoped it would show.",
             "最后一段说要问的问题是谁资助了这项研究，他们希望它表明什么。",
+          ),
+        ),
+        ask(
+          t("Who paid for the 1967 review of diet and heart disease?", "谁资助了1967年那篇关于饮食与心脏病的综述？"),
+          t("The Sugar Research Foundation", "糖业研究基金会"),
+          [
+            t("The University of California", "加州大学"),
+            t("The medical journal itself", "医学期刊本身"),
+            t("The United States government", "美国政府"),
+          ],
+          t(
+            "The Sugar Research Foundation, which was funded by the sugar industry, paid three scientists at Harvard to write a review.",
+            "由糖业资助的糖业研究基金会出钱请哈佛的三位科学家写了一篇综述。",
           ),
         ),
       ],
@@ -203,6 +225,19 @@ Both effects remind us that the mind and the body are not separate. What we beli
             "第四段说在双盲试验中，病人和医生都不知道谁服用的是哪一种。",
           ),
         ),
+        ask(
+          t("What is the nocebo effect?", "什么是反安慰剂效应？"),
+          t("Feeling side effects one was warned about, even from a placebo", "即使服用安慰剂，也出现被告知的副作用"),
+          [
+            t("A placebo that cures infections", "能治愈感染的安慰剂"),
+            t("A drug that works only when expensive", "只有昂贵时才有效的药"),
+            t("A trial in which doctors know everything", "医生知道一切的试验"),
+          ],
+          t(
+            "Patients who are warned that a drug may cause headaches sometimes develop headaches even when they have been given a placebo.",
+            "被告知药物可能引起头痛的病人，即使服的是安慰剂，有时也会头痛。",
+          ),
+        ),
       ],
       ["Second", "World", "War", "American", "Henry", "Beecher", "Italy", "Beecher's", "Powerful", "Placebo"],
       ["morphine", "placebo", "placebos", "nocebo", "double-blind", "placebo-controlled"],
@@ -260,6 +295,19 @@ Only after his death did the work of scientists such as Louis Pasteur and Joseph
           t(
             "The fifth paragraph says some were offended by the suggestion that gentlemen's hands could be unclean, and he did not explain his findings clearly in print.",
             "第五段说有些人被“绅士的手可能不干净”这一说法冒犯，而且他多年没有在出版物中清楚地解释他的发现。",
+          ),
+        ),
+        ask(
+          t("What did Semmelweis order everyone in his clinic to do?", "塞麦尔维斯要求诊所里每个人做什么？"),
+          t("Wash their hands in chlorinated lime before examining patients", "检查病人前用含氯石灰溶液洗手"),
+          [
+            t("Stop performing autopsies", "停止做尸检"),
+            t("Let only midwives deliver babies", "只让助产士接生"),
+            t("Open the windows to let in fresh air", "开窗通风"),
+          ],
+          t(
+            "He ordered everyone in his clinic to wash their hands in a solution of chlorinated lime before examining patients.",
+            "他要求诊所里每个人在检查病人前用含氯石灰溶液洗手。",
           ),
         ),
       ],
@@ -321,6 +369,15 @@ Gage's story, then, teaches two lessons. One is about the brain's importance in 
             "第五段说这份工作需要技巧、计划和责任心，一些科学家认为他可能恢复了以前的大部分自我。",
           ),
         ),
+        ask(
+          t("What was Phineas Gage's job at the time of the accident?", "事故发生时菲尼亚斯·盖奇的工作是什么？"),
+          t("A railroad construction foreman", "铁路施工工头"),
+          [t("A stagecoach driver", "驿站马车夫"), t("A doctor's assistant", "医生助手"), t("A miner in Chile", "智利矿工")],
+          t(
+            "A railroad construction foreman named Phineas Gage was preparing to blast rock in Vermont.",
+            "一位名叫菲尼亚斯·盖奇的铁路施工工头正准备在佛蒙特州爆破岩石。",
+          ),
+        ),
       ],
       ["September", "Phineas", "Gage", "Vermont", "John", "Harlow", "Harlow's", "Gage's", "Chile"],
       ["stagecoach", "foremen"],
@@ -375,6 +432,15 @@ Morton spent the rest of his life fighting with others who claimed to have disco
           t(
             "The fifth paragraph says that because surgeons no longer had to rush, they could perform longer and more careful operations.",
             "第五段说外科医生不必再匆忙，因而可以做更长、更细致的手术。",
+          ),
+        ),
+        ask(
+          t("What did William Morton give his patient before the operation?", "手术前威廉·莫顿给病人用了什么？"),
+          t("Ether", "乙醚"),
+          [t("Chloroform", "氯仿"), t("Opium", "鸦片"), t("Alcohol", "酒精")],
+          t(
+            "On October 16, 1846, he gave ether to a young man named Gilbert Abbott.",
+            "1846年10月16日，他给一位名叫吉尔伯特·阿博特的年轻人使用了乙醚。",
           ),
         ),
       ],

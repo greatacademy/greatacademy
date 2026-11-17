@@ -66,6 +66,12 @@ Scientists sort the world by its properties. Once you know what something is mad
             "文章说光、声和热没有质量，也不占空间，所以阳光不是物质。空气、软木塞和石头都是物质。",
           ),
         ),
+        ask(
+          t("Why does a cork float in water?", "软木塞为什么能浮在水上？"),
+          t("It is not dense", "它的密度不大"),
+          [t("It is heavier than a rock", "它比石头重"), t("It has no mass", "它没有质量"), t("It is made of light", "它是光做的")],
+          t("A rock is dense, so it sinks, while a cork is not, so it floats.", "石头密度大，所以下沉；软木塞不是，所以漂浮。"),
+        ),
       ],
     ),
     passage(
@@ -120,6 +126,16 @@ The tiny particles explain much of what we see, from a melting ice cube to the s
             "The third paragraph says particles in a gas zoom around freely and spread out to fill a container. Shaking in place describes a solid, and sliding describes a liquid.",
             "第三段说气体中的颗粒自由飞快地运动，散开充满容器。在原地颤动说的是固体，相互滑过说的是液体。",
           ),
+        ),
+        ask(
+          t("How do particles behave in a solid?", "固体中的粒子怎样运动？"),
+          t("They are packed tightly and shake in place", "它们紧密排列，在原地振动"),
+          [
+            t("They zoom around freely", "它们自由地飞来飞去"),
+            t("They slide past one another", "它们互相滑过"),
+            t("They do not move at all", "它们完全不动"),
+          ],
+          t("In a solid, particles are packed tightly and only shake in place.", "在固体中，粒子紧密排列，只在原地振动。"),
         ),
       ],
     ),
@@ -176,6 +192,16 @@ These three forms are called states of matter. The same substance can move from 
             "正如一个人会经历不同的年龄，冰、水和蒸汽都是同一种物质：水。",
           ),
         ),
+        ask(
+          t("Where can you find water as a gas on an ordinary day?", "平常的一天里，你在哪里能找到气态的水？"),
+          t("In the steam above a pot of soup", "在一锅汤上方的蒸汽里"),
+          [
+            t("In the ice cubes in the freezer", "在冰箱的冰块里"),
+            t("In a glass of water", "在一杯水里"),
+            t("In a bottle of perfume", "在一瓶香水里"),
+          ],
+          t("Water is gas in the invisible steam above a pot of soup.", "水在一锅汤上方看不见的蒸汽里是气态的。"),
+        ),
       ],
     ),
     passage(
@@ -230,6 +256,16 @@ Different substances melt and boil at different temperatures. Butter melts in a 
             "The third paragraph says steam that touches a cold window cools and turns back into drops of liquid water.",
             "第三段说，碰到冰冷窗户的蒸汽会冷却，变回液态的水滴。",
           ),
+        ),
+        ask(
+          t("At what temperature does water boil?", "水在多少度沸腾？"),
+          t("One hundred degrees Celsius", "一百摄氏度"),
+          [
+            t("Zero degrees Celsius", "零摄氏度"),
+            t("Fifty degrees Celsius", "五十摄氏度"),
+            t("More than 1,500 degrees Celsius", "一千五百多摄氏度"),
+          ],
+          t('The text says, "At one hundred degrees Celsius, water boils."', "短文说：“水在一百摄氏度时沸腾。”"),
         ),
       ],
     ),
@@ -286,6 +322,15 @@ Knowing which substances dissolve helps cooks, doctors and scientists every day.
             "沉下去的沙子没有溶解。其他细节说的都是能溶解的糖。",
           ),
         ),
+        ask(
+          t("How could you separate sand from dried beans?", "怎样把沙子和干豆子分开？"),
+          t("With a sieve", "用筛子"),
+          [t("By boiling them", "煮它们"), t("By adding sugar", "加糖"), t("By freezing them", "冷冻它们")],
+          t(
+            "You could separate them with a sieve, because the beans are too big to pass through its holes.",
+            "可以用筛子把它们分开，因为豆子太大，漏不过筛孔。",
+          ),
+        ),
       ],
     ),
     passage(
@@ -338,6 +383,12 @@ Not every clue proves a chemical change. Boiling water bubbles too, but it is st
             "Boiling water bubbles but stays water, so the author uses it to show that one clue is not proof.",
             "沸水会冒泡但仍然是水，所以作者用它来说明一条线索不等于证据。",
           ),
+        ),
+        ask(
+          t("What happens when baking soda meets vinegar?", "小苏打遇到醋会怎样？"),
+          t("Bubbles of gas fizz up", "冒出气泡"),
+          [t("It turns into rust", "变成铁锈"), t("It melts", "融化了"), t("It gives off light", "发出光")],
+          t("Bubbles of gas may fizz up, as when baking soda meets vinegar.", "会冒出气泡，就像小苏打遇到醋那样。"),
         ),
       ],
     ),

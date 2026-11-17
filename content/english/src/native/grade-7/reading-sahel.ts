@@ -72,6 +72,15 @@ Ghana's power faded in the 1100s, but the trade it had built did not. Other empi
             "第四段说巴克里在西班牙写作，依据的是商人的报告，所以他的描述是转述。",
           ),
         ),
+        ask(
+          t("In what year did al-Bakri write his description of Ghana?", "巴克里是哪一年写下对加纳的描述的？"),
+          t("In 1068", "1068年"),
+          [t("In 1324", "1324年"), t("In 1235", "1235年"), t("In 1375", "1375年")],
+          t(
+            "In 1068, a scholar in Spain named al-Bakri wrote a description of Ghana's capital.",
+            "1068年，西班牙学者巴克里写下了对加纳都城的描述。",
+          ),
+        ),
       ],
       ["Ghana", "Ghana's", "Sahara", "Mauritania", "Mali", "Mediterranean", "Spain", "al-Bakri", "North", "Africa"],
     ),
@@ -128,6 +137,12 @@ That night, Yusuf lay beside the fire and looked up at Ibrahim's stars. He was t
             "The uncle explains it in the next sentence: a caravan that loses its way dies of thirst.",
             "叔叔在下一句话中作了解释：迷路的商队会渴死。",
           ),
+        ),
+        ask(
+          t("What were the houses of Taghaza built from?", "塔加扎的房子是用什么建的？"),
+          t("Blocks of salt", "盐块"),
+          [t("Mud bricks", "泥砖"), t("Stone from the mountains", "山上的石头"), t("Wood from the forests", "森林里的木头")],
+          t("The houses of the town were built from blocks of salt, with roofs of camel skins.", "镇上的房子用盐块建成，屋顶是骆驼皮。"),
         ),
       ],
       ["Yusuf", "Sijilmasa", "Ibrahim", "Ibrahim's", "Quran", "Taghaza", "Mali"],
@@ -188,6 +203,15 @@ For the griots, these details are not mistakes. They express what the people of 
             "最后一段说对格里奥而言这些细节不是错误；它们表达了一种信念：松迪亚塔从弱小走向伟大，团结众多民族推翻了暴君。",
           ),
         ),
+        ask(
+          t("What did Sundiata pull himself up on when he first walked?", "松迪亚塔第一次走路时是扶着什么站起来的？"),
+          t("A heavy iron rod that bent", "一根被压弯的沉重铁棒"),
+          [t("His mother's arm", "他母亲的手臂"), t("A wooden stick", "一根木棍"), t("The wall of the palace", "宫殿的墙")],
+          t(
+            "Sundiata pulled himself up on an iron rod so heavy that it bent, and he walked.",
+            "松迪亚塔扶着一根重得被压弯的铁棒站了起来，走了路。",
+          ),
+        ),
       ],
       ["Sundiata", "Sundiata's", "Keita", "Sumanguru", "Sosso", "Mali", "Arab", "West", "Africa"],
       ["griots"],
@@ -244,6 +268,12 @@ Mansa Musa also brought back more than memories. He returned with scholars and a
             "The last paragraph describes the scholars, architect, mosques and schools he brought to Timbuktu; the last sentence says his pilgrimage turned gold into knowledge, which lasted longer.",
             "最后一段描述了他带到廷巴克图的学者、建筑师、清真寺和学校；最后一句说他的朝圣把黄金变成了更持久的东西：知识。",
           ),
+        ),
+        ask(
+          t("In what year did Mansa Musa begin his journey to Mecca?", "曼萨·穆萨哪一年开始前往麦加？"),
+          t("In 1324", "1324年"),
+          [t("In 1375", "1375年"), t("In 1068", "1068年"), t("In 1235", "1235年")],
+          t("In 1324, a caravan left the empire of Mali, led by Mansa Musa.", "1324年，曼萨·穆萨率领驼队离开马里帝国。"),
         ),
       ],
       [
@@ -319,6 +349,19 @@ For a historian, the picture of Mansa Musa is powerful evidence. Fifty years aft
             "第四段说克雷斯克斯从未去过马里，是根据商人的报告画的，所以细节很模糊。",
           ),
         ),
+        ask(
+          t("Where is the Catalan Atlas kept today?", "加泰罗尼亚地图集如今保存在哪里？"),
+          t("In a library in Paris", "巴黎的一座图书馆"),
+          [
+            t("In a mosque in Timbuktu", "廷巴克图的一座清真寺"),
+            t("On the island of Majorca", "马略卡岛上"),
+            t("In a museum in Cairo", "开罗的一座博物馆"),
+          ],
+          t(
+            "Today it is called the Catalan Atlas, and it is kept in a library in Paris.",
+            "它如今叫加泰罗尼亚地图集，保存在巴黎的一座图书馆里。",
+          ),
+        ),
       ],
       [
         "Abraham",
@@ -392,6 +435,15 @@ These collections changed how historians see Africa. Some writers in Europe once
           t(
             "The last paragraph says some writers in Europe once claimed Africa south of the Sahara had no written history, and the manuscripts show that this was simply wrong.",
             "最后一段说欧洲一些作者曾声称撒哈拉以南的非洲没有书面历史，而这些手稿表明这种说法完全错误。",
+          ),
+        ),
+        ask(
+          t("Near which river does Timbuktu sit?", "廷巴克图坐落在哪条河附近？"),
+          t("The Niger River", "尼日尔河"),
+          [t("The Nile", "尼罗河"), t("The Congo River", "刚果河"), t("The Tigris", "底格里斯河")],
+          t(
+            "Timbuktu sits at the edge of the Sahara, near a great bend in the Niger River.",
+            "廷巴克图坐落在撒哈拉边缘，靠近尼日尔河的大弯道。",
           ),
         ),
       ],

@@ -70,6 +70,15 @@ The bald eagle, which had almost disappeared from much of the country, slowly re
             "第五段说她把自然描述为一张每根丝都相连的网，一处的伤害会在别处被感受到。",
           ),
         ),
+        ask(
+          t("In which year did Rachel Carson publish her book?", "蕾切尔·卡森哪年出版了她的书？"),
+          t("In 1962", "1962年"),
+          [t("In 1945", "1945年"), t("In 1964", "1964年"), t("In 1972", "1972年")],
+          t(
+            "In 1962, an American scientist and writer named Rachel Carson published a book.",
+            "1962年，美国科学家、作家蕾切尔·卡森出版了一本书。",
+          ),
+        ),
       ],
       ["Rachel", "Carson", "America", "DDT"],
     ),
@@ -128,6 +137,16 @@ The true story is more complicated than the popular one, but its lesson remains 
             "最后一段把这种变化描述为贯穿整个系统向下传递，就像水一级一级往下落。",
           ),
         ),
+        ask(
+          t("How many wolves did scientists release into Yellowstone?", "科学家向黄石公园放了多少只狼？"),
+          t("Thirty-one, brought from Canada", "三十一只，从加拿大带来"),
+          [
+            t("Twenty-four, brought from England", "二十四只，从英国带来"),
+            t("About a hundred, bred in zoos", "约一百只，动物园繁殖"),
+            t("Two, a male and a female", "两只，一公一母"),
+          ],
+          t("Scientists brought thirty-one wolves from Canada and released them into the park.", "科学家从加拿大带来三十一只狼放进公园。"),
+        ),
       ],
       ["Yellowstone", "Canada"],
     ),
@@ -184,6 +203,19 @@ Today there are still hundreds of millions of rabbits in Australia. The story of
           t(
             "The passage ends by saying the safest moment to stop an invasion is before it begins.",
             "文章结尾说阻止入侵最安全的时机是在它开始之前。",
+          ),
+        ),
+        ask(
+          t("Why did Thomas Austin want rabbits?", "托马斯·奥斯汀为什么想要兔子？"),
+          t("He wanted rabbits to shoot on his land", "他想在自己的土地上打兔子"),
+          [
+            t("He wanted to sell their fur", "他想卖兔毛"),
+            t("He wanted pets for his children", "他想给孩子们当宠物"),
+            t("He wanted them to eat weeds", "他想让它们吃杂草"),
+          ],
+          t(
+            "Austin missed the hunting of his youth, and he wanted rabbits to shoot on his land.",
+            "奥斯汀怀念年轻时打猎的日子，想在自己的土地上打兔子。",
           ),
         ),
       ],
@@ -249,6 +281,19 @@ The Amazon is often called the lungs of the planet, though in fact it uses most 
             "最后一段说森林消耗了它产生的大部分氧气，但它像心脏一样泵送水分，而缓慢受损的心脏可能突然衰竭。",
           ),
         ),
+        ask(
+          t("How large is the Amazon rainforest?", "亚马孙雨林有多大？"),
+          t("More than five million square kilometers, larger than India", "超过五百万平方公里，比印度还大"),
+          [
+            t("About the size of France", "大约和法国一样大"),
+            t("Smaller than Brazil's largest city", "比巴西最大的城市还小"),
+            t("Exactly one million square kilometers", "正好一百万平方公里"),
+          ],
+          t(
+            "The Amazon rainforest covers more than five million square kilometers of South America, an area larger than India.",
+            "亚马孙雨林覆盖南美洲五百多万平方公里，面积比印度还大。",
+          ),
+        ),
       ],
       ["Amazon", "America", "India", "Andes", "Brazil", "Paraguay", "Argentina"],
     ),
@@ -308,6 +353,12 @@ The Dust Bowl is remembered as one of the worst environmental disasters in Ameri
             "It says the soil seems permanent but can be lost in a few seasons, and takes far longer to replenish.",
             "它说土壤看似永恒，却可能在几个季节内流失，而补充它需要长得多的时间。",
           ),
+        ),
+        ask(
+          t("About how many people left the plains during the 1930s?", "二十世纪三十年代约有多少人离开了大平原？"),
+          t("About two and a half million", "约二百五十万"),
+          [t("About twenty-five thousand", "约两万五千"), t("About fifty million", "约五千万"), t("Only a few hundred", "只有几百人")],
+          t("About two and a half million people left the plains during the 1930s.", "二十世纪三十年代，约二百五十万人离开了大平原。"),
         ),
       ],
       ["Oklahoma", "Texas", "Asia", "Washington", "York", "California", "American"],
@@ -371,6 +422,16 @@ Standing on the deck beneath those cliffs, a visitor sees a landscape that seems
             "It seems eternal, but the land is rising, glaciers are shrinking and the story is still being written.",
             "它看似永恒，但土地在上升，冰川在退缩，这个故事仍在书写之中。",
           ),
+        ),
+        ask(
+          t("When did the ice melt and retreat from the fjords?", "冰川是什么时候融化后退的？"),
+          t("About ten thousand years ago", "约一万年前"),
+          [
+            t("About two and a half million years ago", "约二百五十万年前"),
+            t("About a thousand years ago", "约一千年前"),
+            t("In the last century", "上个世纪"),
+          ],
+          t("When the climate warmed, about ten thousand years ago, the ice melted and retreated.", "约一万年前气候变暖，冰融化并后退。"),
         ),
       ],
       ["Norway", "Europe", "Scandinavia", "Greenland", "Chile", "Zealand", "Alaska", "Canada"],

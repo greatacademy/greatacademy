@@ -71,6 +71,12 @@ Some living things, such as bacteria, are unicellular, made of only a single cel
             "最后一段在这个词后面紧接着给出了定义：只由一个细胞构成，比如细菌。",
           ),
         ),
+        ask(
+          t("What did Robert Hooke look at under his microscope?", "罗伯特·胡克在显微镜下观察了什么？"),
+          t("A thin slice of cork", "一片薄薄的软木"),
+          [t("A drop of blood", "一滴血"), t("A leaf", "一片叶子"), t("Pond water", "池塘水")],
+          t("In 1665, Hooke placed a thin slice of cork under his microscope.", "1665年，胡克把一片薄软木放在显微镜下。"),
+        ),
       ],
       ["Robert", "Hooke", "Matthias", "Schleiden", "Theodor", "Schwann", "Rudolf", "Virchow", "English"],
     ),
@@ -127,6 +133,19 @@ Other organelles have jobs of their own. Ribosomes build proteins, the materials
             "第四段说线粒体把食物转化为能量，而像肌肉细胞这样工作强度大的细胞可能含有数千个线粒体。",
           ),
         ),
+        ask(
+          t("What do ribosomes do?", "核糖体做什么？"),
+          t("They build proteins", "制造蛋白质"),
+          [
+            t("They store water and waste", "储存水和废物"),
+            t("They turn food into energy", "把食物转化为能量"),
+            t("They hold the DNA", "保存DNA"),
+          ],
+          t(
+            "Ribosomes build proteins, the materials the cell uses to grow and repair itself.",
+            "核糖体制造蛋白质，细胞用它来生长和修复自己。",
+          ),
+        ),
       ],
       ["DNA"],
     ),
@@ -181,6 +200,12 @@ The third difference is storage. Most plant cells have one large central vacuole
             "最后一段说，液泡储存水分，让植物保持挺立，植物缺水时液泡会缩小，植物就会枯萎。",
           ),
         ),
+        ask(
+          t("What is the cell wall mostly made of?", "细胞壁主要由什么构成？"),
+          t("Cellulose", "纤维素"),
+          [t("Chlorophyll", "叶绿素"), t("Glucose", "葡萄糖"), t("Protein", "蛋白质")],
+          t("The cell wall is a stiff layer made mostly of a material called cellulose.", "细胞壁是一层坚硬的结构，主要由纤维素构成。"),
+        ),
       ],
     ),
     passage(
@@ -233,6 +258,12 @@ So the material van Helmont's willow gained came not only from the water he gave
             "The last paragraph says the material came not only from the water he gave it but also from the air, as carbon dioxide.",
             "最后一段说，这些物质不仅来自他浇的水，也来自空气中的二氧化碳。",
           ),
+        ),
+        ask(
+          t("What did van Helmont give the willow tree for five years?", "范·海尔蒙特五年里给柳树浇了什么？"),
+          t("Nothing but rainwater", "只有雨水"),
+          [t("Extra soil", "额外的土"), t("Sugar water", "糖水"), t("Plant food", "肥料")],
+          t("For five years, he gave it nothing but rainwater.", "五年里，他只给它浇雨水。"),
         ),
       ],
       ["Belgian", "Jan", "van", "Helmont", "Helmont's"],
@@ -290,6 +321,16 @@ All the chemical work that goes on inside your body, including respiration, is c
             "最后一段说，肌肉细胞需要更多氧气和葡萄糖来释放它们所消耗的额外能量。",
           ),
         ),
+        ask(
+          t("About how many times a day do your heart cells contract?", "你的心肌细胞每天大约收缩多少次？"),
+          t("About a hundred thousand times", "大约十万次"),
+          [
+            t("About a hundred times", "大约一百次"),
+            t("About a thousand times", "大约一千次"),
+            t("About thirty trillion times", "大约三十万亿次"),
+          ],
+          t("Your heart cells contract about a hundred thousand times a day.", "你的心肌细胞每天大约收缩十万次。"),
+        ),
       ],
     ),
     passage(
@@ -344,6 +385,15 @@ Organs, in turn, work together in organ systems. The digestive system includes t
           t(
             "The passage builds up step by step: cells group into tissues, tissues join into organs, and organs work together in organ systems.",
             "文章一步步递进：细胞组成组织，组织组成器官，器官共同构成器官系统。",
+          ),
+        ),
+        ask(
+          t("Why does a red blood cell have no nucleus?", "红细胞为什么没有细胞核？"),
+          t("To leave more room for the substance that carries oxygen", "给运输氧气的物质留出更多空间"),
+          [t("To carry signals faster", "更快地传递信号"), t("To pull on bones", "拉动骨头"), t("To make digestive juices", "分泌消化液")],
+          t(
+            "A red blood cell has no nucleus, which leaves more room for the substance that carries oxygen.",
+            "红细胞没有细胞核，这样能给运输氧气的物质留出更多空间。",
           ),
         ),
       ],

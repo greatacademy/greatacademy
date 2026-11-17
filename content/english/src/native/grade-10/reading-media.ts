@@ -72,6 +72,15 @@ The Great Moon Hoax, as it came to be called, is often remembered as a funny epi
             "它说人们更容易相信听起来刺激、技术性强、来源又无法核实的故事，而这些原因至今未变。",
           ),
         ),
+        ask(
+          t("Where was Herschel's great telescope said to be?", "据说赫歇尔的大望远镜在哪里？"),
+          t("At the Cape of Good Hope in southern Africa", "南部非洲的好望角"),
+          [t("In Edinburgh", "爱丁堡"), t("On a mountain in New York", "纽约的一座山上"), t("In London", "伦敦")],
+          t(
+            "Sir John Herschel, it said, had built an enormous new telescope at the Cape of Good Hope in southern Africa.",
+            "报道说，约翰·赫歇尔爵士在南部非洲的好望角建了一台巨大的新望远镜。",
+          ),
+        ),
       ],
       ["Sun", "Sir", "John", "Herschel", "Cape", "Africa", "Edinburgh", "Richard", "Adams", "Locke", "British"],
     ),
@@ -132,6 +141,16 @@ Bly's work helped to create a new kind of journalism, sometimes called investiga
             "The last paragraph asks whether it is ever right for a reporter to lie about who she is.",
             "最后一段问记者在身份上撒谎是否在任何时候都是正当的。",
           ),
+        ),
+        ask(
+          t("How did Nellie Bly get out of the asylum?", "内莉·布莱是怎样离开疯人院的？"),
+          t("A lawyer from the World secured her release", "《世界报》的一位律师把她弄了出来"),
+          [
+            t("She escaped at night", "她夜里逃走了"),
+            t("The doctors found her sane", "医生判定她神志正常"),
+            t("Her family came for her", "她的家人来接她"),
+          ],
+          t("After ten days, a lawyer from the World arrived to secure her release.", "十天后，《世界报》的一位律师前来让她获释。"),
         ),
       ],
       ["Nellie", "Bly", "Bly's", "Blackwell's", "World", "English"],
@@ -194,6 +213,15 @@ And what destroyed the Maine? A navy investigation in 1898 blamed a mine. In 197
           t(
             "The fourth paragraph says historians doubt he said it, but the story survived because it seemed to fit.",
             "第四段说历史学家怀疑他说过这句话，但这个故事因为似乎符合事实而流传下来。",
+          ),
+        ),
+        ask(
+          t("What did the 1976 study conclude had most likely destroyed the Maine?", "1976年的研究认为“缅因号”最可能是被什么摧毁的？"),
+          t("A fire in the ship's own coal store", "船上煤仓起火"),
+          [t("A Spanish mine", "西班牙的水雷"), t("A storm in the harbor", "港口的风暴"), t("Cuban rebels", "古巴起义者")],
+          t(
+            "The study concluded that the most likely cause was a fire in the ship's own coal store, which set off its ammunition.",
+            "研究认为最可能的原因是船上煤仓起火，引爆了弹药。",
           ),
         ),
       ],
@@ -285,6 +313,16 @@ Watergate made investigative reporting famous, and many young people became jour
             "第六段说尼克松在办公室秘密录制的录音表明他帮助掩盖了罪行。",
           ),
         ),
+        ask(
+          t("What did the security guard notice at the Watergate building?", "水门大楼的保安注意到了什么？"),
+          t("Tape holding a door unlocked", "一块胶带让门无法锁上"),
+          [
+            t("A broken window", "一扇破窗"),
+            t("Men climbing the wall", "有人在爬墙"),
+            t("A light on in an empty office", "空办公室里亮着灯"),
+          ],
+          t("A security guard noticed a piece of tape holding a door unlocked.", "一名保安注意到一块胶带让一扇门锁不上。"),
+        ),
       ],
       [
         "Watergate",
@@ -366,6 +404,15 @@ The lesson of 1936 still applies whenever a number is used to describe what "peo
             "第七段说盖洛普用了大约五万人，他们是按年龄、收入、地区等与总体相匹配挑选出来的。",
           ),
         ),
+        ask(
+          t("About how many people were in George Gallup's sample?", "乔治·盖洛普的样本大约有多少人？"),
+          t("About fifty thousand", "约五万人"),
+          [t("About ten million", "约一千万人"), t("About two million", "约二百万人"), t("About five hundred", "约五百人")],
+          t(
+            "George Gallup predicted Roosevelt's victory using a sample of only about fifty thousand people.",
+            "乔治·盖洛普只用约五万人的样本就预测了罗斯福的胜利。",
+          ),
+        ),
       ],
       [
         "Depression",
@@ -441,6 +488,15 @@ Survivorship bias is dangerous because the missing data is, by its nature, invis
           t(
             "The last paragraph says the missing data is invisible by its nature, and no one notices what is not there.",
             "最后一段说缺失的数据本质上是看不见的，没有人会注意到不存在的东西。",
+          ),
+        ),
+        ask(
+          t("Where did the returning bombers have many bullet holes?", "返航的轰炸机在哪些部位有很多弹孔？"),
+          t("In the wings, the body and around the tail", "机翼、机身和机尾周围"),
+          [t("Mostly in the engines", "主要在发动机"), t("Only in the cockpit", "只在驾驶舱"), t("Nowhere at all", "根本没有")],
+          t(
+            "The planes had many bullet holes in the wings, in the body and around the tail.",
+            "这些飞机的机翼、机身和机尾周围有很多弹孔。",
           ),
         ),
       ],

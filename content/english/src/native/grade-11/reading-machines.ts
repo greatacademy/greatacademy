@@ -76,6 +76,15 @@ Today, engineers who build powerful computer systems sometimes speak of the prob
             "第六段说在每个故事中，创造者都假设被造物会一直是仆人，而这个假设受到了考验。",
           ),
         ),
+        ask(
+          t("In which city is the legend of the Golem told?", "魔像的传说流传在哪个城市？"),
+          t("Prague", "布拉格"),
+          [t("Lyon", "里昂"), t("Vienna", "维也纳"), t("Warsaw", "华沙")],
+          t(
+            "In the old Jewish quarter of Prague, there is a legend that has been told for more than four hundred years.",
+            "在布拉格古老的犹太区，有一个流传了四百多年的传说。",
+          ),
+        ),
       ],
       ["Prague", "Judah", "Loew", "Loew's", "Jewish", "Hebrew", "Golem", "Mary", "Shelley"],
     ),
@@ -132,6 +141,15 @@ Few of the weavers of Lyon could have guessed that a pattern of holes in a card 
           t(
             "The last paragraph says Jacquard's central idea, separating the machine from the instructions it follows, is at the heart of every program.",
             "最后一段说雅卡尔的核心理念，即把机器与它执行的指令分开，是每个程序的核心。",
+          ),
+        ),
+        ask(
+          t("Who praised Jacquard's loom and granted him a pension?", "谁称赞了雅卡尔的织机并给了他养老金？"),
+          t("Napoleon", "拿破仑"),
+          [t("The king of England", "英国国王"), t("The weavers of Lyon", "里昂的织工"), t("The pope", "教皇")],
+          t(
+            "Napoleon, the emperor of France, praised the loom and granted Jacquard a pension.",
+            "法国皇帝拿破仑称赞了这台织机，并给了雅卡尔一笔养老金。",
           ),
         ),
       ],
@@ -195,6 +213,15 @@ The Lawrence strike showed that the poorest workers, from many nations, could un
           t(
             "The sixth paragraph says the words meant workers wanted not only bread to survive but also roses: dignity, rest and beauty.",
             "第六段说这句话的意思是工人不仅想要赖以生存的面包，还想要玫瑰：尊严、休息和美。",
+          ),
+        ),
+        ask(
+          t("In which year did the Lawrence strike begin?", "劳伦斯罢工是哪年开始的？"),
+          t("In 1912", "1912年"),
+          [t("In 1834", "1834年"), t("In 1911", "1911年"), t("In 1965", "1965年")],
+          t(
+            "In January 1912, in the mill town of Lawrence, Massachusetts, women weavers found their wages had been cut.",
+            "1912年1月，在马萨诸塞州的纺织镇劳伦斯，女织工们发现工资被削减了。",
           ),
         ),
       ],
@@ -273,6 +300,12 @@ The match of 1997 did not end human chess. It changed the question from whether 
             "第五段说最好的组合不一定是棋手最强或机器最快的，而是最懂得与计算机合作的。",
           ),
         ),
+        ask(
+          t("What was the computer that played Kasparov called?", "和卡斯帕罗夫对弈的计算机叫什么？"),
+          t("Deep Blue", "深蓝"),
+          [t("AlphaZero", "AlphaZero 程序"), t("The Moral Machine", "道德机器"), t("Big Mind", "大心智")],
+          t("The machine, called Deep Blue, had been built by a team of engineers.", "这台名叫“深蓝”的机器由一个工程师团队制造。"),
+        ),
       ],
       ["Garry", "Kasparov", "Kasparov's", "Deep", "Blue", "IBM", "New", "York", "Russian", "AlphaZero"],
     ),
@@ -336,6 +369,15 @@ The puzzle may be rare on real roads. But it forces makers to ask what values th
             "第六段说真正的责任是让汽车刹车更早、看得更清楚、事故比人类驾驶者少得多。",
           ),
         ),
+        ask(
+          t("Which website did MIT researchers launch in 2016?", "麻省理工学院的研究者在2016年推出了哪个网站？"),
+          t("The Moral Machine", "道德机器"),
+          [t("Deep Blue", "深蓝"), t("The Trolley Game", "电车游戏"), t("Safe Roads", "安全道路")],
+          t(
+            "In 2016, researchers at the Massachusetts Institute of Technology launched a website called the Moral Machine.",
+            "2016年，麻省理工学院的研究者推出了一个名为“道德机器”的网站。",
+          ),
+        ),
       ],
       ["Moral", "Machine", "MIT", "Massachusetts", "Germany", "German", "Japan", "Colombia", "China", "Finland"],
     ),
@@ -392,6 +434,15 @@ The government promised compensation to tens of thousands of families, though ma
           t(
             "The fifth paragraph says the system had been built on an unstated assumption: that the people it flagged were probably guilty.",
             "第五段说这个系统建立在一个隐含的假设之上：被它标记的人很可能有罪。",
+          ),
+        ),
+        ask(
+          t("What did the government help families pay for?", "政府帮助家庭支付什么费用？"),
+          t("Childcare", "托儿费"),
+          [t("Housing", "住房"), t("University fees", "大学学费"), t("Medical bills", "医疗费")],
+          t(
+            "Many families with young children receive help from the government to pay for childcare.",
+            "许多有幼儿的家庭得到政府补助来支付托儿费。",
           ),
         ),
       ],

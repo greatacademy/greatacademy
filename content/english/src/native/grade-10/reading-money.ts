@@ -75,6 +75,19 @@ Whether it was a national disaster or a smaller event, the tulip trade has given
             "它说价格上涨是因为人们预期它会上涨，变化的是信念，而不是所交易的东西。",
           ),
         ),
+        ask(
+          t("Where did the tulip prices suddenly collapse in February 1637?", "1637年2月，郁金香价格在哪里突然崩盘？"),
+          t("At an auction in Haarlem", "哈勒姆的一场拍卖会"),
+          [
+            t("At the port of Amsterdam", "阿姆斯特丹港"),
+            t("At a market in London", "伦敦的一个市场"),
+            t("In the gardens of Leiden", "莱顿的花园"),
+          ],
+          t(
+            "In February 1637, at an auction in the city of Haarlem, buyers suddenly failed to appear.",
+            "1637年2月，在哈勒姆的一场拍卖会上，买家突然没有出现。",
+          ),
+        ),
       ],
       ["Dutch", "Turkey", "Amsterdam", "Haarlem"],
     ),
@@ -134,6 +147,12 @@ The five-dollar day is often remembered as an act of generosity. It was also a c
             "It says the five-dollar day was both generosity and calculation, and that paying well can be good for workers and for business.",
             "它说五美元工作日既是慷慨也是算计，高薪可以既有利于工人，也有利于企业。",
           ),
+        ),
+        ask(
+          t("What had Ford introduced the year before the five-dollar day?", "在五美元日薪的前一年，福特引入了什么？"),
+          t("The moving assembly line", "移动装配线"),
+          [t("The eight-hour day", "八小时工作制"), t("Electric cars", "电动汽车"), t("Home visits to workers", "家访工人")],
+          t("The year before, the company had introduced the moving assembly line.", "前一年，公司引入了移动装配线。"),
         ),
       ],
       ["Ford", "Ford's", "Detroit", "Model", "T", "Henry"],
@@ -195,6 +214,19 @@ Japan remained a rich and stable country throughout. But its experience became a
           t(
             "The sixth paragraph says if people expect things to be cheaper next year they delay buying, so companies sell less, cut wages and investment.",
             "第六段说如果人们预期明年东西更便宜，就会推迟购买，于是公司卖得更少，削减工资和投资。",
+          ),
+        ),
+        ask(
+          t("What did the central bank do at the end of 1989?", "1989年底中央银行做了什么？"),
+          t("It began to raise interest rates", "开始提高利率"),
+          [
+            t("It printed more money", "印了更多钱"),
+            t("It bought all the land", "买下所有土地"),
+            t("It closed the stock market", "关闭了股市"),
+          ],
+          t(
+            "At the end of 1989, the central bank began to raise interest rates to cool the economy.",
+            "1989年底，中央银行开始加息以给经济降温。",
           ),
         ),
       ],
@@ -260,6 +292,19 @@ None of this means that averages are useless. It means that when you see one, yo
             "第五段说政府可能偏好平均值而工会偏好中位数；两者都可能准确，却讲述不同的故事。",
           ),
         ),
+        ask(
+          t("How do you find the median?", "怎样找到中位数？"),
+          t("Put the values in order and choose the one in the middle", "把数值排好序，取中间那个"),
+          [
+            t("Add the values and divide by how many there are", "把数值加起来再除以个数"),
+            t("Choose the largest value", "取最大的数值"),
+            t("Choose the value that appears most often", "取出现最多的数值"),
+          ],
+          t(
+            "To find the median, put all the values in order and choose the one in the middle.",
+            "要找中位数，就把所有数值排序，取中间那个。",
+          ),
+        ),
       ],
       [],
     ),
@@ -323,6 +368,15 @@ For Jonas, the choice has been a good one. "My friends at university talk about 
             "他说他能解释理论，然后去修好机器，表明他的培训把知识和实践结合了起来。",
           ),
         ),
+        ask(
+          t("In which city does Jonas train?", "约纳斯在哪个城市接受培训？"),
+          t("Stuttgart", "斯图加特"),
+          [t("Berlin", "柏林"), t("Munich", "慕尼黑"), t("Hamburg", "汉堡")],
+          t(
+            "Three days a week, he worked at a company in Stuttgart that builds machines for factories.",
+            "他每周三天在斯图加特一家为工厂造机器的公司工作。",
+          ),
+        ),
       ],
       ["Jonas", "Jonas's", "Stuttgart", "Germany", "Germans", "German", "Europe", "Middle", "Ages"],
     ),
@@ -380,6 +434,12 @@ Greece's economy began to grow again in the late 2010s, and in 2018 it left the 
             "It gives the view that Greece overspent and hid its debts, then the view that the lenders' demands were too harsh, and leaves the debate open.",
             "它先给出希腊过度开支、隐瞒债务的观点，再给出债权人要求过于苛刻的观点，并让争论保持开放。",
           ),
+        ),
+        ask(
+          t("In which year did Greece leave the last of its rescue programs?", "希腊哪年退出了最后一个救助计划？"),
+          t("In 2018", "2018年"),
+          [t("In 2009", "2009年"), t("In 2012", "2012年"), t("In 2001", "2001年")],
+          t("In 2018 it left the last of its rescue programs.", "2018年，它退出了最后一个救助计划。"),
         ),
       ],
       ["Greece", "Greece's", "Greek", "Greeks", "Athens", "International", "Monetary", "Fund", "European"],

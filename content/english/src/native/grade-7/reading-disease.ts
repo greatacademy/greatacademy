@@ -74,6 +74,15 @@ The miasma theory was eventually replaced by the germ theory: the idea that many
             "最后一句点明了这一点：一个理论可以看起来与证据相符，甚至带来有用的行动，却仍然在原因上出错。",
           ),
         ),
+        ask(
+          t("What did plague doctors stuff into their beak-shaped masks?", "瘟疫医生在鸟嘴面具里塞了什么？"),
+          t("Sweet-smelling herbs", "气味芳香的草药"),
+          [t("Chlorine", "氯"), t("Garbage", "垃圾"), t("Cotton soaked in water", "浸水的棉花")],
+          t(
+            "Doctors wore masks shaped like long beaks, stuffed with sweet-smelling herbs.",
+            "医生戴着长鸟嘴形的面具，里面塞着芳香的草药。",
+          ),
+        ),
       ],
       ["Greek"],
       ["miasma"],
@@ -131,6 +140,15 @@ Many doctors refused to believe him. Semmelweis could not explain what the parti
           t(
             "The fifth paragraph says that within months of the chlorine handwashing, the death rate fell to about the level of the Second Clinic.",
             "第五段说用氯水洗手几个月之内，死亡率就降到了与第二诊室大致相同的水平。",
+          ),
+        ),
+        ask(
+          t("What did Semmelweis order everyone in the First Clinic to wash their hands in?", "塞麦尔维斯要求第一产科的人用什么洗手？"),
+          t("A solution of chlorine", "氯溶液"),
+          [t("Hot soup", "热汤"), t("Cold river water", "冷河水"), t("Beer", "啤酒")],
+          t(
+            "He ordered everyone to wash their hands in a solution of chlorine before examining patients.",
+            "他要求所有人在检查病人前用氯溶液洗手。",
           ),
         ),
       ],
@@ -191,6 +209,12 @@ These cases pointed to the water, not the air. Snow presented his evidence to th
             "The last paragraph says the outbreak was already declining by September 8, so the fall in deaths after the removal cannot be credited to it alone.",
             "最后一段说到9月8日疫情已经在消退，所以拆除之后死亡人数的下降不能完全归功于它。",
           ),
+        ),
+        ask(
+          t("On what date was the handle of the pump removed?", "水泵的把手是哪天被拆掉的？"),
+          t("September 8", "9月8日"),
+          [t("August 31", "8月31日"), t("October 1", "10月1日"), t("December 25", "12月25日")],
+          t("On September 8 the officials removed the handle of the pump.", "9月8日，官员拆掉了水泵的把手。"),
         ),
       ],
       ["Soho", "London", "John", "Snow", "Snow's", "Broad", "September", "August"],
@@ -253,6 +277,16 @@ His experiment helped support the germ theory of disease and led to many practic
             "清澈或浑浊的肉汤、弯曲处的水汽都是他能看到的。微生物来自空气，是他根据这些观察得出的结论。",
           ),
         ),
+        ask(
+          t("What is pasteurization?", "巴氏消毒是什么？"),
+          t("Heating milk to kill harmful bacteria", "加热牛奶杀死有害细菌"),
+          [
+            t("Boiling broth in a swan-neck flask", "在鹅颈瓶里煮肉汤"),
+            t("Freezing food to keep it fresh", "冷冻食物保鲜"),
+            t("Washing hands in chlorine", "用氯水洗手"),
+          ],
+          t("Pasteurization is the heating of milk to kill harmful bacteria.", "巴氏消毒就是加热牛奶以杀死有害细菌。"),
+        ),
       ],
       ["Louis", "Pasteur", "French", "Paris"],
     ),
@@ -309,6 +343,15 @@ In the 1960s and 1970s, the World Health Organization led a worldwide effort to 
           t(
             "The fifth paragraph says Jenner called his method vaccination, from vacca, the Latin word for cow.",
             "第五段说詹纳把他的方法称为 vaccination，来自拉丁语中表示奶牛的 vacca。",
+          ),
+        ),
+        ask(
+          t("In what year did the WHO announce that smallpox was eradicated?", "世卫组织哪一年宣布天花被根除？"),
+          t("In 1980", "1980年"),
+          [t("In 1796", "1796年"), t("In 1960", "1960年"), t("In 1945", "1945年")],
+          t(
+            "In 1980, the World Health Organization announced that smallpox had been eradicated.",
+            "1980年，世界卫生组织宣布天花已被根除。",
           ),
         ),
       ],
@@ -385,6 +428,12 @@ In 1945, Fleming, Florey and Chain shared the Nobel Prize. Fleming's luck had ma
             "The last sentence says Fleming's luck mattered, but so did his curiosity and the long work of others, such as Florey, Chain and the companies that grew the mold.",
             "最后一句说弗莱明的运气很重要，但他的好奇心和其他人长期的工作同样重要，比如弗洛里、钱恩和大量培养霉菌的公司。",
           ),
+        ),
+        ask(
+          t("Where did Fleming return from in September 1928?", "1928年9月弗莱明是从哪里回到实验室的？"),
+          t("A summer holiday", "暑假度假"),
+          [t("A war hospital", "战地医院"), t("The University of Oxford", "牛津大学"), t("A trip to the United States", "美国之行")],
+          t("Fleming returned to his laboratory in London after a summer holiday.", "弗莱明度完暑假回到了伦敦的实验室。"),
         ),
       ],
       [

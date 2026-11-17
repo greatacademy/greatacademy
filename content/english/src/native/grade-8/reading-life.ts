@@ -72,6 +72,12 @@ Because she was a woman and not wealthy, Anning was not allowed to join the scie
             "第四段说她的发现帮助科学家相信，整类动物曾经存在后来又消失了，也就是灭绝的观念。",
           ),
         ),
+        ask(
+          t("What does the name Ichthyosaurus mean?", "“鱼龙”这个名字是什么意思？"),
+          t("Fish lizard", "鱼蜥蜴"),
+          [t("Sea dragon", "海龙"), t("Long neck", "长脖子"), t("Wise human", "智人")],
+          t('Scientists named it Ichthyosaurus, which means "fish lizard."', "科学家把它命名为鱼龙，意思是“鱼蜥蜴”。"),
+        ),
       ],
       ["English", "Lyme", "Regis", "Mary", "Anning", "Mary's", "Anning's", "Ichthyosaurus", "Earth"],
     ),
@@ -127,6 +133,12 @@ Linnaeus himself named more than ten thousand species. His two-part names are st
             "The fourth paragraph says he decided whales belonged with mammals because they breathe air and feed their young on milk; size and range do not decide the group.",
             "第四段说他认为鲸属于哺乳动物，因为它们呼吸空气并用乳汁喂养幼崽；体型和分布范围并不决定类别。",
           ),
+        ),
+        ask(
+          t("What is the scientific name of humans?", "人类的学名是什么？"),
+          t("Homo sapiens", "智人（Homo sapiens）"),
+          [t("Felis catus", "家猫（Felis catus）"), t("Ichthyosaurus", "鱼龙"), t("Linnaeus", "林奈")],
+          t('Humans became Homo sapiens, meaning "wise human."', "人类被命名为Homo sapiens，意思是“智慧的人”。"),
         ),
       ],
       ["Europe", "Swedish", "Carl", "Linnaeus", "Latin", "Homo", "sapiens", "Felis", "catus"],
@@ -184,6 +196,12 @@ In the 1970s, two biologists, Peter and Rosemary Grant, began studying the finch
             "The Grants observed the cause, a drought that left only hard seeds, and measured the effect, larger beaks in the next generation, which tests Darwin's idea directly.",
             "格兰特夫妇观察到了原因（干旱只留下坚硬的种子），并测量了结果（下一代的喙更大），这直接检验了达尔文的观点。",
           ),
+        ),
+        ask(
+          t("In what year did the Beagle reach the Galápagos?", "“小猎犬号”哪一年到达加拉帕戈斯？"),
+          t("In 1835", "1835年"),
+          [t("In 1977", "1977年"), t("In 1859", "1859年"), t("In 1700", "1700年")],
+          t("In 1835, the Beagle reached the Galápagos.", "1835年，“小猎犬号”到达加拉帕戈斯群岛。"),
         ),
       ],
       [
@@ -262,6 +280,16 @@ In that vast span of geologic time, human beings are newcomers. If Earth's histo
             "把四十五亿年压缩成一天、人类只出现在最后几秒，使人们容易想象地质时间的漫长。",
           ),
         ),
+        ask(
+          t("About how old is Earth?", "地球大约有多少岁？"),
+          t("About four and a half billion years", "大约四十五亿年"),
+          [
+            t("About two billion years", "大约二十亿年"),
+            t("About ten thousand years", "大约一万年"),
+            t("About 252 million years", "大约二亿五千二百万年"),
+          ],
+          t("Earth itself is about four and a half billion years old.", "地球本身大约有四十五亿年历史。"),
+        ),
       ],
       ["Grand", "Canyon", "Arizona", "Danish", "Nicolas", "Steno", "English", "William", "Smith", "Earth's", "Earth", "Steno's", "Smith's"],
     ),
@@ -316,6 +344,15 @@ Each extinction was also a new beginning. With so many species gone, the survivo
           t(
             "The last paragraph says that with so many species gone, the survivors spread into empty habitats and evolved into new forms.",
             "最后一段说由于许多物种消失，幸存者扩散到空出的栖息地并进化出新的形态。",
+          ),
+        ),
+        ask(
+          t("Where did the eruptions behind the Great Dying take place?", "导致大灭绝的火山喷发发生在哪里？"),
+          t("In what is now Siberia", "今天的西伯利亚"),
+          [t("In what is now Mexico", "今天的墨西哥"), t("In the Grand Canyon", "大峡谷"), t("In the Galápagos", "加拉帕戈斯群岛")],
+          t(
+            "The strongest evidence points to enormous eruptions in what is now Siberia.",
+            "最有力的证据指向今天西伯利亚的大规模火山喷发。",
           ),
         ),
       ],
@@ -375,6 +412,15 @@ Mendel published his findings in 1866, but almost no one paid attention. His pap
           t(
             "The last paragraph says his paper was read by few scientists and his use of mathematics in biology was unusual.",
             "最后一段说他的论文很少有科学家读过，而且他在生物学中使用数学很不寻常。",
+          ),
+        ),
+        ask(
+          t("About how many pea plants did Mendel study?", "孟德尔大约研究了多少株豌豆？"),
+          t("About twenty-eight thousand", "大约两万八千株"),
+          [t("About twenty-eight", "大约二十八株"), t("About one thousand", "大约一千株"), t("About a million", "大约一百万株")],
+          t(
+            "Between 1856 and 1863, Mendel grew and studied about twenty-eight thousand pea plants.",
+            "1856年到1863年间，孟德尔种植并研究了约两万八千株豌豆。",
           ),
         ),
       ],

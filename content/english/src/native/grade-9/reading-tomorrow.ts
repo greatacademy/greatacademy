@@ -71,6 +71,19 @@ His influence on real explorers was enormous. Several pioneers of rocket science
             "最后一段说齐奥尔科夫斯基等先驱称读凡尔纳的书让他们梦想太空旅行，他用种种可能填满年轻的头脑，从而帮助建造了未来。",
           ),
         ),
+        ask(
+          t("What did Verne imagine in Twenty Thousand Leagues Under the Seas?", "凡尔纳在《海底两万里》中想象了什么？"),
+          t("An electric submarine called the Nautilus", "一艘名叫鹦鹉螺号的电动潜艇"),
+          [
+            t("A rocket to Mars", "飞往火星的火箭"),
+            t("A flying ship over the poles", "飞越两极的飞船"),
+            t("A giant cannon in Florida", "佛罗里达的巨炮"),
+          ],
+          t(
+            "In Twenty Thousand Leagues Under the Seas, he imagined the Nautilus, an electric submarine that could travel around the world underwater.",
+            "在《海底两万里》中，他想象了鹦鹉螺号，一艘能在水下环游世界的电动潜艇。",
+          ),
+        ),
       ],
       [
         "French",
@@ -148,6 +161,16 @@ Yet Čapek's play is not really about technology. It is about what happens when 
             "最后一段说这部剧真正讲的不是技术，而是人被当作工具对待会发生什么。",
           ),
         ),
+        ask(
+          t("Who suggested the word robot to Karel Čapek?", "谁向卡雷尔·恰佩克建议了“robot”这个词？"),
+          t("His brother Josef, a painter", "他的哥哥画家约瑟夫"),
+          [
+            t("A factory owner in Prague", "布拉格的一位工厂主"),
+            t("Isaac Asimov", "艾萨克·阿西莫夫"),
+            t("His teacher at school", "他的学校老师"),
+          ],
+          t("His brother Josef, a painter, suggested robot.", "他的哥哥、画家约瑟夫建议用“robot”。"),
+        ),
       ],
       ["Prague", "Czech", "Karel", "Čapek", "R.U.R.", "Rossum's", "Universal", "Robots", "Josef", "Čapek's", "Earth", "Adam", "Eve"],
       ["robota"],
@@ -206,6 +229,22 @@ Today, engineers designing artificial intelligence face similar questions. Real 
           t(
             "The last paragraph says it is not enough to tell a machine to be good; we must decide very carefully what good means.",
             "最后一段说只告诉机器要向善是不够的，我们必须非常仔细地界定什么是善。",
+          ),
+        ),
+        ask(
+          t("What does the First Law of Robotics say?", "机器人第一定律说了什么？"),
+          t(
+            "A robot may not injure a human or, through inaction, allow a human to come to harm",
+            "机器人不得伤害人类，也不得因不作为使人类受到伤害",
+          ),
+          [
+            t("A robot must always protect itself first", "机器人必须首先保护自己"),
+            t("A robot must obey every order without exception", "机器人必须无条件服从每个命令"),
+            t("A robot may never leave the factory", "机器人永远不得离开工厂"),
+          ],
+          t(
+            "First, a robot may not injure a human being or, through inaction, allow a human being to come to harm.",
+            "第一，机器人不得伤害人类，也不得因不作为而使人类受到伤害。",
           ),
         ),
       ],
@@ -269,6 +308,12 @@ Turing died in 1954, long before any of this. But the question he asked has only
             "第五段说预测下一个可能出现的词的系统，也许只是模仿理解而并不真正理解。",
           ),
         ),
+        ask(
+          t("What did Turing originally call his test?", "图灵最初怎么称呼他的测试？"),
+          t("The imitation game", "模仿游戏"),
+          [t("The thinking machine", "思考机器"), t("The question game", "提问游戏"), t("The mind test", "心智测试")],
+          t("He called it the imitation game.", "他称之为模仿游戏。"),
+        ),
       ],
       ["British", "Alan", "Turing"],
     ),
@@ -330,6 +375,15 @@ More than half a billion people watched the landing on television. It was the wo
             "第四段说阿姆斯特朗发现电脑正把他们引向一片巨石区，于是改为手动操控。",
           ),
         ),
+        ask(
+          t("How many people worked on the Moon landing?", "有多少人参与了登月工作？"),
+          t("About four hundred thousand", "约四十万人"),
+          [t("About four thousand", "约四千人"), t("About half a billion", "约五亿人"), t("Three", "三人")],
+          t(
+            "It was the work of about four hundred thousand engineers, scientists and workers.",
+            "这是约四十万名工程师、科学家和工人的成果。",
+          ),
+        ),
       ],
       ["July", "Florida", "Neil", "Armstrong", "Buzz", "Aldrin", "Michael", "Collins", "Moon", "Saturn", "V", "Earth", "Earth's", "Moon's"],
     ),
@@ -389,6 +443,15 @@ Supporters argue that a settlement on Mars could protect humanity if a disaster 
           t(
             "The fifth paragraph says studies of isolated places like Antarctica show that loneliness and conflict can be as dangerous as any machine failure.",
             "第五段说对南极等偏远之地的研究表明，孤独与冲突可能和机器故障一样危险。",
+          ),
+        ),
+        ask(
+          t("What is the Martian atmosphere made of, mostly?", "火星大气主要由什么组成？"),
+          t("Carbon dioxide", "二氧化碳"),
+          [t("Oxygen", "氧气"), t("Hydrogen", "氢气"), t("Water vapor", "水蒸气")],
+          t(
+            "Mars has an atmosphere about one hundred times thinner than Earth's, made mostly of carbon dioxide.",
+            "火星的大气比地球稀薄约一百倍，主要由二氧化碳组成。",
           ),
         ),
       ],

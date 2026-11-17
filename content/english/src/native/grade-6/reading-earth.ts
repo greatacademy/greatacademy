@@ -69,6 +69,12 @@ Still, most scientists rejected the idea. Wegener could not explain what force w
             "最后一段说，魏格纳无法解释是什么力量强大到足以推动整块大陆。",
           ),
         ),
+        ask(
+          t("In what year did Wegener offer his idea?", "魏格纳是哪一年提出他的观点的？"),
+          t("In 1912", "1912年"),
+          [t("In 1930", "1930年"), t("In the 1960s", "20世纪60年代"), t("In 1801", "1801年")],
+          t("In 1912, a German scientist named Alfred Wegener offered an answer.", "1912年，德国科学家阿尔弗雷德·魏格纳提出了一个解释。"),
+        ),
       ],
       ["America", "Africa", "Alfred", "Wegener", "Wegener's", "Pangaea", "Mesosaurus", "Brazil", "Greenland"],
     ),
@@ -125,6 +131,12 @@ The crust and the top of the mantle together are broken into giant pieces called
             "第四段说，内核之所以保持固态，只是因为上面所有层的巨大压力。",
           ),
         ),
+        ask(
+          t("What is the outer core made of?", "外核是由什么构成的？"),
+          t("Liquid metal, mostly iron and nickel", "液态金属，主要是铁和镍"),
+          [t("Solid rock", "固态岩石"), t("Thin, rocky crust", "薄薄的岩石地壳"), t("Water and ice", "水和冰")],
+          t("The outer core is liquid metal, mostly iron and nickel.", "外核是液态金属，主要是铁和镍。"),
+        ),
       ],
     ),
     passage(
@@ -176,6 +188,15 @@ At a transform boundary, two plates slide past each other sideways. They do not 
           t(
             "The third paragraph says that when two continental plates collide, the crust crumples and is pushed upward, and this uplift created the Himalayas, which are still growing.",
             "第三段说，两个大陆板块碰撞时，地壳被挤皱并向上推起，这种抬升造就了仍在长高的喜马拉雅山脉。",
+          ),
+        ),
+        ask(
+          t("How fast do tectonic plates move?", "构造板块移动得有多快？"),
+          t("A few centimeters a year", "每年几厘米"),
+          [t("A few meters a day", "每天几米"), t("A few kilometers a year", "每年几公里"), t("They do not move at all", "根本不动")],
+          t(
+            "They move only a few centimeters a year, about as fast as your fingernails grow.",
+            "它们每年只移动几厘米，和指甲生长的速度差不多。",
           ),
         ),
       ],
@@ -235,6 +256,12 @@ Many millions of people live along the Ring of Fire, in cities such as Tokyo, Ma
             "文章描述的是世界地图上的一种分布规律；标出火山的地图能让人一眼看出这种规律。",
           ),
         ),
+        ask(
+          t("What share of the world's earthquakes happen along the Ring of Fire?", "世界上多大比例的地震发生在环太平洋火山带？"),
+          t("About nine out of every ten", "大约十分之九"),
+          [t("About one in ten", "大约十分之一"), t("About half", "大约一半"), t("All of them", "全部")],
+          t("About nine out of every ten earthquakes happen along it.", "大约十分之九的地震发生在这一带。"),
+        ),
       ],
       ["Pacific", "America", "Alaska", "Japan", "Philippines", "Indonesia", "Zealand", "Tokyo", "Manila", "Lima", "Los", "Angeles"],
     ),
@@ -292,6 +319,15 @@ Layer by layer, the lava and ash build up around the opening and form a cone. Pa
             "开头讲述了普利多在田里看到的情景，接下来的段落解释了背后的过程。",
           ),
         ),
+        ask(
+          t("In which country was Parícutin born?", "帕里库廷火山诞生在哪个国家？"),
+          t("Mexico", "墨西哥"),
+          [t("Japan", "日本"), t("Indonesia", "印度尼西亚"), t("Peru", "秘鲁")],
+          t(
+            "Dionisio Pulido was working in his cornfield in Mexico when the volcano appeared.",
+            "火山出现时，迪奥尼西奥·普利多正在墨西哥的玉米地里干活。",
+          ),
+        ),
       ],
       ["Dionisio", "Pulido", "Mexico", "Parícutin"],
     ),
@@ -345,6 +381,12 @@ Most earthquakes are so small that nobody feels them. Scientists record hundreds
             "The third paragraph says surface waves come last and are the slowest, but they usually do the most damage to buildings and roads.",
             "第三段说，面波最后到达，速度最慢，但通常对建筑和道路破坏最大。",
           ),
+        ),
+        ask(
+          t("Which seismic waves arrive first?", "哪种地震波最先到达？"),
+          t("Primary waves", "纵波（P波）"),
+          [t("Secondary waves", "横波（S波）"), t("Surface waves", "面波"), t("They all arrive together", "同时到达")],
+          t("The fastest, called primary waves, arrive first, often as a sharp jolt.", "最快的纵波最先到达，常常是一下猛烈的震动。"),
         ),
       ],
     ),

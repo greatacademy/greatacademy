@@ -62,6 +62,12 @@ Never look straight at the sun, even for a moment. Its light is strong enough to
             "这一段以“Without the sun, there would be no life on Earth”开头，其他每个句子都是它的例子。",
           ),
         },
+        {
+          prompt: t("How many Earths could fit inside the sun?", "太阳里能装下多少个地球？"),
+          right: t("More than one million", "一百多万个"),
+          wrong: [t("About one hundred", "大约一百个"), t("Exactly eight", "正好八个"), t("More than one thousand", "一千多个")],
+          solution: t("The sun is so big that more than one million Earths could fit inside it.", "太阳大到能装下一百多万个地球。"),
+        },
       ],
     },
     {
@@ -117,6 +123,12 @@ So when it is lunchtime for you, it is the middle of the night for children on t
             "因为地球一半朝向太阳、另一半处在黑暗中，所以你的午饭时间正是远方孩子的夜晚。",
           ),
         },
+        {
+          prompt: t("How long does the earth take to make one full turn?", "地球转一整圈需要多久？"),
+          right: t("Twenty-four hours", "二十四小时"),
+          wrong: [t("One month", "一个月"), t("One year", "一年"), t("Twelve hours", "十二小时")],
+          solution: t("The earth makes one full turn around its axis every twenty-four hours.", "地球每二十四小时绕地轴转一整圈。"),
+        },
       ],
     },
     {
@@ -167,6 +179,12 @@ These changing shapes are called the phases of the moon. Long ago, people used t
             "The moon's orbit takes about a month, and its phases go from new to full and back, so people could count months by them.",
             "月亮绕地球一圈大约一个月，月相从新月到满月再回到新月，所以人们可以用它来计算月份。",
           ),
+        },
+        {
+          prompt: t("How long does the moon take to travel around the earth?", "月球绕地球一周需要多久？"),
+          right: t("About one month", "大约一个月"),
+          wrong: [t("About one day", "大约一天"), t("About one year", "大约一年"), t("About one week", "大约一周")],
+          solution: t("The moon travels around the earth in an orbit that takes about one month.", "月球绕地球运行一周大约需要一个月。"),
         },
       ],
     },
@@ -228,6 +246,19 @@ Mars, the fourth planet, is called the Red Planet because its dusty soil is red 
             "最后一句说，科学家的机器人发现了火星上很久以前曾有河流流过的迹象。",
           ),
         },
+        {
+          prompt: t("Why is Mars called the Red Planet?", "火星为什么被称为红色星球？"),
+          right: t("Its dusty soil is red with rust", "它尘土飞扬的土壤因铁锈而呈红色"),
+          wrong: [
+            t("It is the hottest planet", "它是最热的行星"),
+            t("It has red clouds", "它有红色的云"),
+            t("It is close to the sun", "它离太阳很近"),
+          ],
+          solution: t(
+            "Mars is called the Red Planet because its dusty soil is red with rust.",
+            "火星被称为红色星球，因为它的尘土因铁锈而发红。",
+          ),
+        },
       ],
     },
     {
@@ -285,6 +316,19 @@ The giant planets also have many moons. Jupiter and Saturn each have more than n
             "第四段说天王星不寻常，因为它侧着身子自转，好像很久以前被撞倒了一样。",
           ),
         },
+        {
+          prompt: t("What is the Great Red Spot?", "大红斑是什么？"),
+          right: t("A giant storm on Jupiter", "木星上的一场巨大风暴"),
+          wrong: [
+            t("A ring around Saturn", "土星的一道环"),
+            t("A moon of Neptune", "海王星的一颗卫星"),
+            t("A volcano on Mars", "火星上的一座火山"),
+          ],
+          solution: t(
+            "A giant storm called the Great Red Spot has been spinning on Jupiter for hundreds of years.",
+            "一场叫大红斑的巨大风暴已经在木星上旋转了几百年。",
+          ),
+        },
       ],
     },
     {
@@ -340,6 +384,19 @@ As the earth travels around the sun, we see different constellations in differen
           solution: t(
             "The last paragraph says that as the earth travels around the sun, we see different constellations in different seasons.",
             "最后一段说，随着地球绕太阳运行，我们在不同季节看到不同的星座。",
+          ),
+        },
+        {
+          prompt: t("Why did farmers watch for certain constellations?", "农民为什么留意某些星座？"),
+          right: t("To know when to plant their seeds", "为了知道什么时候播种"),
+          wrong: [
+            t("To find their way across the ocean", "为了在海上辨别方向"),
+            t("To tell the time of day", "为了知道一天中的时间"),
+            t("To make maps of their fields", "为了画田地的地图"),
+          ],
+          solution: t(
+            "Farmers watched for certain constellations to know when to plant their seeds.",
+            "农民留意某些星座，以便知道什么时候播种。",
           ),
         },
       ],

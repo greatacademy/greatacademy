@@ -68,6 +68,12 @@ Anansi is not always admirable. He is greedy, lazy and often punished for his tr
             "第四段说对被奴役的人而言，一个弱小却能智胜强者的生物是希望和无声反抗的象征。",
           ),
         ),
+        ask(
+          t("To whom did the stories belong in the beginning?", "起初这些故事属于谁？"),
+          t("Nyame, the sky god", "天神尼亚梅"),
+          [t("The python", "蟒蛇"), t("The great families of the Akan", "阿坎族的大家族"), t("Anansi's mother", "阿南西的母亲")],
+          t("In the beginning, the stories belonged to Nyame, the sky god.", "起初，故事属于天神尼亚梅。"),
+        ),
       ],
       [
         "Akan",
@@ -139,6 +145,12 @@ The stories are short, but they carry sharp lessons about vanity, honesty and th
             "The last paragraph says the stories carry lessons about the way people look for easy answers in the wrong places.",
             "最后一段说这些故事蕴含着关于人们在错误的地方寻找简单答案的教训。",
           ),
+        ),
+        ask(
+          t("In which century is Nasreddin said to have lived?", "据说纳斯尔丁生活在哪个世纪？"),
+          t("The thirteenth century", "十三世纪"),
+          [t("The eighth century", "八世纪"), t("The eighteenth century", "十八世纪"), t("The twentieth century", "二十世纪")],
+          t("He is said to have lived in Anatolia in the thirteenth century.", "据说他生活在十三世纪的安纳托利亚。"),
         ),
       ],
       [
@@ -213,6 +225,12 @@ The collection is a story about the power of stories. Shahrazad has no weapons a
             t("Why merchants become thieves", "商人为何沦为盗贼"),
           ],
           t("The last paragraph says the collection is a story about the power of stories.", "最后一段说这部故事集讲的是故事的力量。"),
+        ),
+        ask(
+          t("Who was Shahrazad's father?", "山鲁佐德的父亲是谁？"),
+          t("The king's own minister", "国王的大臣"),
+          [t("A French translator", "一位法国翻译家"), t("A merchant from Egypt", "一位埃及商人"), t("The king of Persia", "波斯国王")],
+          t("Shahrazad was the clever and well-read daughter of the king's own minister.", "山鲁佐德是国王大臣聪明博学的女儿。"),
         ),
       ],
       [
@@ -295,6 +313,15 @@ The story has puzzled readers for centuries. Is it a punishment for disobedience
             "最后一段说这些故事的结局很少是圆满的，暗示天堂的代价也许是我们留下的一切。",
           ),
         ),
+        ask(
+          t("What gift does the princess give Urashima when he leaves?", "乌岛太郎离开时公主送他什么礼物？"),
+          t("A lacquered box he must never open", "一个绝不能打开的漆盒"),
+          [t("A fishing net of gold", "一张金渔网"), t("A small turtle", "一只小海龟"), t("A pearl from the sea", "一颗海里的珍珠")],
+          t(
+            "As a parting gift, she gives him a beautiful lacquered box, but she warns him never to open it.",
+            "临别时，她送他一个漂亮的漆盒，但警告他绝不能打开。",
+          ),
+        ),
       ],
       ["Japan", "Urashima", "Taro", "Dragon", "King", "Otohime", "Irish", "Oisín"],
       ["lacquered"],
@@ -353,6 +380,16 @@ The novel's title comes from a poem by the Irish writer W. B. Yeats, which descr
             "The fifth paragraph says a society that values the skill of speech so highly is clearly not without culture.",
             "第五段说一个如此重视说话技巧的社会显然并非没有文化。",
           ),
+        ),
+        ask(
+          t("Where does the title Things Fall Apart come from?", "《瓦解》这个书名出自哪里？"),
+          t("A poem by W. B. Yeats", "叶芝的一首诗"),
+          [
+            t("An Igbo proverb", "一句伊博族谚语"),
+            t("A British missionary's diary", "一位英国传教士的日记"),
+            t("A European novel set in Africa", "一部以非洲为背景的欧洲小说"),
+          ],
+          t("The novel's title comes from a poem by the Irish writer W. B. Yeats.", "小说的书名来自爱尔兰作家叶芝的一首诗。"),
         ),
       ],
       [
@@ -435,6 +472,12 @@ Folklorists today study the Grimms' work with both admiration and caution. The b
             "The fifth paragraph says he made the language smoother, added moral lessons and removed details that seemed unsuitable for children.",
             "第五段说他让语言更流畅，加入道德教训，删去了似乎不适合儿童的细节。",
           ),
+        ),
+        ask(
+          t("In which year did the Grimms publish their first volume of tales?", "格林兄弟哪年出版了第一卷故事集？"),
+          t("In 1812", "1812年"),
+          [t("In 1874", "1874年"), t("In 1785", "1785年"), t("In 1852", "1852年")],
+          t("In 1812 they published the first volume of Children's and Household Tales.", "1812年，他们出版了《儿童与家庭童话集》第一卷。"),
         ),
       ],
       [

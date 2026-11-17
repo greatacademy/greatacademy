@@ -67,6 +67,16 @@ The tragedies usually told old stories that the audience already knew, about the
             "上下文线索：看着统治者倒下，观众感到怜悯和恐惧，离开时仿佛得到了净化；亚里士多德把这种感受称为 catharsis。",
           ),
         ),
+        ask(
+          t("Which god did the Athenian festival of plays honor?", "雅典的戏剧节是为了纪念哪位神？"),
+          t("Dionysus, the god of wine", "酒神狄俄尼索斯"),
+          [
+            t("Zeus, the king of the gods", "众神之王宙斯"),
+            t("Athena, the goddess of wisdom", "智慧女神雅典娜"),
+            t("Apollo, the god of the sun", "太阳神阿波罗"),
+          ],
+          t("The festival honored Dionysus, the god of wine and celebration.", "这个节日纪念酒神与欢庆之神狄俄尼索斯。"),
+        ),
       ],
       ["Athens", "Dionysus", "Aeschylus", "Sophocles", "Euripides", "Aristotle", "Greeks", "Greek"],
     ),
@@ -127,6 +137,15 @@ All the roles, including those of women, were played by men and boys. Shakespear
           t(
             "Audiences were loud, so a playwright had to give them sword fights, jokes and ghosts as well as great speeches.",
             "观众很吵闹，所以剧作家除了精彩的独白，还得提供剑斗、笑话和鬼魂。",
+          ),
+        ),
+        ask(
+          t("How much did the poorer members of the audience pay?", "较穷的观众付多少钱？"),
+          t("A single penny", "一便士"),
+          [t("Three pennies", "三便士"), t("A pound", "一英镑"), t("Nothing", "不用付钱")],
+          t(
+            "In the center, standing on the bare ground, were the poorer members of the audience, who paid a single penny.",
+            "站在中间空地上的是较穷的观众，他们只付一便士。",
           ),
         ),
       ],
@@ -190,6 +209,19 @@ Dramatic irony adds to the tension throughout. When the audience knows something
             "当观众知道人物所不知道的事情时，人物的自信恰恰说明他对自身危险知之甚少。",
           ),
         ),
+        ask(
+          t("What is the climax of a tragedy?", "悲剧的高潮是什么？"),
+          t("The highest point of tension, with no turning back", "张力的最高点，从此无法回头"),
+          [
+            t("The opening that introduces the characters", "介绍人物的开场"),
+            t("The final resolution", "最后的结局"),
+            t("The event that starts the conflict", "引发冲突的事件"),
+          ],
+          t(
+            "At the climax, the highest point of tension, the protagonist reaches a point of no return.",
+            "高潮是张力的最高点，主人公从此无法回头。",
+          ),
+        ),
       ],
       ["Athens"],
     ),
@@ -244,6 +276,19 @@ When you read a play with a chorus, pay attention to the gap between what the ch
           t(
             "The chorus often sees the danger clearly while the protagonist rushes on, and that gap is a source of power.",
             "歌队常常清楚地看到危险，而主人公却一意孤行，这种差距就是悲剧力量的来源之一。",
+          ),
+        ),
+        ask(
+          t("How did a Greek chorus speak, though it was made of many people?", "希腊歌队虽然由很多人组成，却怎样说话？"),
+          t("As a single character", "作为一个角色"),
+          [
+            t("Each member as a different god", "每个成员扮演不同的神"),
+            t("Only through masks of kings", "只戴国王面具说话"),
+            t("It never spoke, only danced", "从不说话，只跳舞"),
+          ],
+          t(
+            "A Greek chorus spoke and sang as a single character, though it was made up of many people.",
+            "希腊歌队虽由很多人组成，却作为一个角色说唱。",
           ),
         ),
       ],
@@ -304,6 +349,16 @@ She stumbled once, in the third act, and the actor beside her covered the moment
             "导演用回开头说过的那个词；她成功之后，就不再只是一个备用人选了。",
           ),
         ),
+        ask(
+          t("Why did Maya have to perform on opening night?", "为什么首演夜玛雅必须上台？"),
+          t("The lead actor had a fever", "主演发烧了"),
+          [
+            t("The director chose her instead", "导演改选了她"),
+            t("The lead actor was late", "主演迟到了"),
+            t("The play was changed", "剧目改了"),
+          ],
+          t("The lead actor had a fever and could barely speak.", "主演发烧了，几乎说不出话。"),
+        ),
       ],
       ["Maya", "Okonkwo", "Macbeth"],
     ),
@@ -361,6 +416,15 @@ Farce is also extremely hard to perform. Timing must be exact: a door that opens
           t(
             "The phrase joins opposite ideas: what looks like chaos is the product of exact planning, as the paragraph says every fall is planned to the inch.",
             "这个说法把相反的概念放在一起：看起来的混乱其实是精确策划的产物，正如这一段所说，每一次摔倒都经过分毫不差的设计。",
+          ),
+        ),
+        ask(
+          t("What kind of characters usually appear in a farce?", "闹剧里通常是什么样的人物？"),
+          t("Types, such as the jealous husband or the clever servant", "类型化人物，如嫉妒的丈夫、聪明的仆人"),
+          [t("Deep and complex heroes", "深刻复杂的英雄"), t("Gods and kings", "神和国王"), t("Real people from history", "历史上的真人")],
+          t(
+            "The characters are usually types, such as the jealous husband, the clever servant or the nervous guest.",
+            "人物通常是类型化的，如嫉妒的丈夫、聪明的仆人或紧张的客人。",
           ),
         ),
       ],

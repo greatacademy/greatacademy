@@ -70,6 +70,16 @@ So the secret of a bridge is not only what it is made of, but how it is shaped.`
             "第三段说，石头和混凝土被拉时会开裂，而钢在受压和受拉时都很坚固。",
           ),
         ),
+        ask(
+          t("What is compression?", "压缩力是什么？"),
+          t("A pushing force that squeezes material together", "把材料挤压在一起的推力"),
+          [
+            t("A pulling force that stretches material apart", "把材料拉开的拉力"),
+            t("The weight of a coin", "一枚硬币的重量"),
+            t("The wind on a bridge", "桥上的风"),
+          ],
+          t("Compression is a pushing force that squeezes material together.", "压缩力是把材料挤压在一起的推力。"),
+        ),
       ],
     ),
     passage(
@@ -125,6 +135,12 @@ The ancient Romans built arches so well that some of their arched bridges still 
             "第四段指出了危险：拱向外推时，拱脚可能滑开，所以要加固两端。",
           ),
         ),
+        ask(
+          t("What is the last stone put into an arch called?", "拱上最后放进去的石头叫什么？"),
+          t("The keystone", "拱顶石"),
+          [t("The cornerstone", "基石"), t("The anchorage", "锚碇"), t("The oculus", "天窗")],
+          t("The last stone to go in is the keystone, at the very top.", "最后放进去的是最顶上的拱顶石。"),
+        ),
       ],
     ),
     passage(
@@ -177,6 +193,16 @@ Today, domes cover sports stadiums, train stations and museums, sheltering thous
             "The third paragraph states the problem: how to build a dome too wide for any wooden frame. Two shells and spiraling bricks were his answer.",
             "第三段说明了这个问题：怎样建造一个宽得任何木架都撑不住的穹顶。双层外壳和螺旋砌砖是他的办法。",
           ),
+        ),
+        ask(
+          t("How wide is the dome of the Pantheon?", "万神殿的穹顶有多宽？"),
+          t("More than 43 meters across", "直径超过43米"),
+          [
+            t("About 7 meters across", "直径约7米"),
+            t("About 600 meters across", "直径约600米"),
+            t("Exactly 1,900 meters across", "直径正好1900米"),
+          ],
+          t("Its concrete dome is more than 43 meters across.", "它的混凝土穹顶直径超过43米。"),
         ),
       ],
     ),
@@ -233,6 +259,16 @@ Today, the Zhaozhou Bridge is closed to traffic to protect it, but visitors can 
             "历经洪水、战争和八次大地震仍然屹立，这是坚固的证据。其他细节是关于桥的事实，并不能说明这一点。",
           ),
         ),
+        ask(
+          t("Who built the Zhaozhou Bridge?", "赵州桥是谁建的？"),
+          t("A craftsman named Li Chun", "一位叫李春的工匠"),
+          [
+            t("Filippo Brunelleschi", "布鲁内莱斯基"),
+            t("The ancient Romans", "古罗马人"),
+            t("Engineers from San Francisco", "旧金山的工程师"),
+          ],
+          t("It was built around the year 600 by a craftsman named Li Chun.", "它大约建于公元600年，建造者是一位叫李春的工匠。"),
+        ),
       ],
     ),
     passage(
@@ -286,6 +322,16 @@ Tall towers face a special force: wind. Near the top, strong winds push hard aga
             "最后一段说，这些重物逆着风引起的晃动摆动，让大楼保持稳定。",
           ),
         ),
+        ask(
+          t("Which two inventions let cities grow upward?", "哪两项发明让城市向高处发展？"),
+          t("The steel frame and the safe passenger elevator", "钢框架和安全的载客电梯"),
+          [
+            t("Thick brick walls and stone arches", "厚砖墙和石拱"),
+            t("Concrete domes and cables", "混凝土穹顶和缆索"),
+            t("Large windows and heavy weights", "大窗户和重物"),
+          ],
+          t("The steel frame and the safe passenger elevator changed everything.", "钢框架和安全的载客电梯改变了一切。"),
+        ),
       ],
     ),
     passage(
@@ -338,6 +384,12 @@ The idea of hanging a path is very old. Long before steel, people in the mountai
             "The last paragraph moves back in time, showing that people hung paths across valleys long before steel. The wires and the date belong to the paragraph before.",
             "最后一段回溯历史，说明早在钢材出现之前，人们就在山谷间悬挂步道。钢丝和年份属于前一段。",
           ),
+        ),
+        ask(
+          t("When was the Golden Gate Bridge finished?", "金门大桥是哪一年完工的？"),
+          t("In 1937", "1937年"),
+          [t("In 1880", "1880年"), t("Around the year 600", "大约公元600年"), t("In 2000", "2000年")],
+          t("The Golden Gate Bridge in San Francisco was finished in 1937.", "旧金山的金门大桥于1937年完工。"),
         ),
       ],
     ),

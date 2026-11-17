@@ -67,6 +67,15 @@ Historians still wonder what might have happened if the voyages had continued. C
             "“仍在争论”这个说法表明宝船的大小还不能确定。",
           ),
         ),
+        ask(
+          t("What animal did one voyage bring back to the capital?", "有一次航行带回了什么动物？"),
+          t("A giraffe", "一只长颈鹿"),
+          [t("An elephant", "一头大象"), t("A lion", "一头狮子"), t("A camel", "一头骆驼")],
+          t(
+            "From one voyage they brought back a giraffe, which amazed the people of the capital.",
+            "有一次航行带回了一只长颈鹿，让京城的人惊叹不已。",
+          ),
+        ),
       ],
       ["Zheng", "Ming", "Arabia", "Asian", "Southeast"],
       ["envoys"],
@@ -121,6 +130,15 @@ The voyage proved that the old methods worked. It also helped bring the art of w
             "一些学者认为定居是偶然的；毛·皮亚卢格不用仪器的航行表明传统方法是可行的。",
           ),
         ),
+        ask(
+          t("Who guided Hokulea from Hawaii to Tahiti?", "谁引领霍库莱阿号从夏威夷航行到塔希提？"),
+          t("Mau Piailug, a navigator from Micronesia", "来自密克罗尼西亚的领航员毛·皮艾卢格"),
+          [t("Zheng He", "郑和"), t("Captain Cook", "库克船长"), t("A pilot using a compass", "一个用指南针的领航员")],
+          t(
+            "Mau Piailug, a master navigator from Micronesia, steered it without instruments.",
+            "密克罗尼西亚的领航大师毛·皮艾卢格不用仪器驾驶它。",
+          ),
+        ),
       ],
       ["Polynesian", "Hawaii", "Zealand", "Easter", "Hawaiians", "Hokulea", "Mau", "Piailug", "Micronesia", "Tahiti", "Islanders"],
       ["wayfinding", "hulls"],
@@ -170,6 +188,12 @@ Historians use the Rihla carefully, since some parts may be borrowed from other 
             "The last paragraph gives the reason directly: some parts may be borrowed from other writers or misremembered.",
             "最后一段直接给出原因：有些部分可能借自其他作者，或者记错了。",
           ),
+        ),
+        ask(
+          t("What did the sultan of Delhi make Ibn Battuta?", "德里苏丹让伊本·白图泰担任什么？"),
+          t("A judge", "法官"),
+          [t("An admiral", "海军将领"), t("A merchant", "商人"), t("A doctor", "医生")],
+          t("He spent years in India, where the sultan of Delhi made him a judge.", "他在印度待了多年，德里苏丹任命他为法官。"),
         ),
       ],
       [
@@ -244,6 +268,15 @@ For a long time, Columbus was celebrated simply as a brave explorer. Today, many
           ],
           t("The last paragraph says his story must be told whole, with both sides.", "最后一段说，他的故事要完整地讲，两面都要讲。"),
         ),
+        ask(
+          t("On what date did a sailor first spot land?", "水手哪天第一次望见陆地？"),
+          t("October 12", "10月12日"),
+          [t("August 3", "8月3日"), t("July 4", "7月4日"), t("December 25", "12月25日")],
+          t(
+            "On October 12, a sailor spotted land: an island in what is now the Bahamas.",
+            "10月12日，一名水手望见了陆地：今巴哈马的一座岛。",
+          ),
+        ),
       ],
       ["August", "Christopher", "Columbus", "Spain", "October", "Bahamas", "Indians", "Americas", "Columbian", "Exchange", "Taino"],
       ["smallpox"],
@@ -299,6 +332,15 @@ Only one ship, the Victoria, made it home. Under the command of Juan Sebastian E
           t(
             "The last paragraph says the Victoria reached Spain under Elcano with just eighteen of the original crew.",
             "最后一段说，维多利亚号在埃尔卡诺指挥下回到西班牙，原船员只剩十八人。",
+          ),
+        ),
+        ask(
+          t("Where was Magellan killed?", "麦哲伦在哪里被杀？"),
+          t("On the island of Mactan in the Philippines", "菲律宾的马克坦岛"),
+          [t("In the Strait of Magellan", "麦哲伦海峡"), t("In the Spice Islands", "香料群岛"), t("At sea in the Pacific", "太平洋上")],
+          t(
+            "Magellan took sides in a local conflict and was killed in battle on the island of Mactan.",
+            "麦哲伦卷入当地冲突，在马克坦岛的战斗中被杀。",
           ),
         ),
       ],
@@ -367,6 +409,12 @@ On the long march back, Scott's party ran short of food and fuel, and terrible s
             "The last sentence says Amundsen's careful planning, not luck, won the race.",
             "最后一句说，赢得竞赛的是阿蒙森周密的计划，而不是运气。",
           ),
+        ),
+        ask(
+          t("On what date did Amundsen reach the Pole?", "阿蒙森哪天到达南极点？"),
+          t("December 14, 1911", "1911年12月14日"),
+          [t("January 17, 1912", "1912年1月17日"), t("July 4, 1911", "1911年7月4日"), t("March 1, 1912", "1912年3月1日")],
+          t("Amundsen reached the Pole on December 14, 1911.", "阿蒙森于1911年12月14日到达南极点。"),
         ),
       ],
       [

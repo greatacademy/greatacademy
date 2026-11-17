@@ -68,6 +68,19 @@ Within a few decades, the work of other scientists showed that germs cause disea
             "文章结尾说，仅有证据并不总能说服人，尤其当证据威胁到他们的自尊时。",
           ),
         ),
+        ask(
+          t("What did Semmelweis order everyone in the first clinic to do?", "塞麦尔维斯要求第一诊所的每个人做什么？"),
+          t("Wash their hands in a chlorine solution", "用氯溶液洗手"),
+          [
+            t("Stop examining patients", "停止检查病人"),
+            t("Move the beds to the second clinic", "把床搬到第二诊所"),
+            t("Wear masks", "戴口罩"),
+          ],
+          t(
+            "He ordered everyone in the first clinic to wash their hands in a chlorine solution before examining patients.",
+            "他要求第一诊所的每个人在检查病人前用氯溶液洗手。",
+          ),
+        ),
       ],
       ["Vienna", "Hungarian", "Ignaz", "Semmelweis", "Semmelweis's"],
     ),
@@ -135,6 +148,19 @@ How do scientists find out which is true? The strongest method is a controlled e
             "如果只有一个变量改变，结果的任何差异都可以归因于它，而不是某个隐藏因素。",
           ),
         ),
+        ask(
+          t("What has decades of research shown about smoking and lung cancer?", "几十年的研究表明吸烟和肺癌有什么关系？"),
+          t("Smoking does cause the disease", "吸烟确实会导致这种病"),
+          [
+            t("The link is pure coincidence", "这种关联纯属巧合"),
+            t("Lung cancer causes people to smoke", "肺癌导致人吸烟"),
+            t("A hidden factor causes both", "一个隐藏因素导致两者"),
+          ],
+          t(
+            "Smoking and lung cancer are correlated, and decades of careful research have shown that smoking does cause the disease.",
+            "吸烟和肺癌相关，几十年的研究表明吸烟确实会导致这种病。",
+          ),
+        ),
       ],
     ),
     passage(
@@ -195,6 +221,12 @@ Such trials are expensive and slow, but they are one of the great achievements o
             "第五段说，如果两组改善程度相同，这种药很可能并不比糖丸好。",
           ),
         ),
+        ask(
+          t("How are patients divided in a randomized controlled trial?", "在随机对照试验中，病人是怎样分组的？"),
+          t("By chance", "随机"),
+          [t("By age", "按年龄"), t("By how ill they are", "按病情轻重"), t("By their own choice", "按自己的选择")],
+          t("Patients are divided by chance into two groups.", "病人被随机分成两组。"),
+        ),
       ],
     ),
     passage(
@@ -251,6 +283,16 @@ For readers, the lesson is clear. A single surprising study, however widely repo
             "The fourth paragraph says studies with dull results sit unseen in a drawer, which makes published effects look stronger than they are.",
             "第四段说，结果平淡的研究被放在抽屉里无人问津，这让已发表的效果看起来比实际更强。",
           ),
+        ),
+        ask(
+          t("What do many researchers now do before collecting data?", "现在许多研究者在收集数据前做什么？"),
+          t("Publish their plans", "公布研究计划"),
+          [
+            t("Ask newspapers for advice", "向报纸征求意见"),
+            t("Choose only surprising questions", "只选令人惊奇的问题"),
+            t("Decide what result to publish", "决定公布什么结果"),
+          ],
+          t("Many researchers now publish their plans before collecting data.", "现在许多研究者在收集数据前公布他们的计划。"),
         ),
       ],
     ),
@@ -311,6 +353,15 @@ None of this means that science news is useless. It means that a headline is an 
             "最后一段说，科学新闻并非无用；标题应当开启审慎的提问，而不是结束提问。",
           ),
         ),
+        ask(
+          t("What headline does the passage begin with?", "文章开头是哪条标题？"),
+          t("Chocolate makes you smarter", "巧克力让你更聪明"),
+          [t("Coffee helps you sleep", "咖啡助眠"), t("Mice can read", "老鼠会读书"), t("Breakfast cures headaches", "早餐治头痛")],
+          t(
+            '"Chocolate Makes You Smarter, Scientists Say." Headlines like this appear every week.',
+            "“科学家称巧克力让你更聪明。”这样的标题每周都有。",
+          ),
+        ),
       ],
     ),
     passage(
@@ -369,6 +420,15 @@ The story is often held up as proof that the world can act together on an enviro
           t(
             "The fifth paragraph says CFCs remain in the atmosphere for decades, so the hole did not close at once.",
             "第五段说，氟氯化碳会在大气中停留几十年，所以臭氧洞没有立即闭合。",
+          ),
+        ),
+        ask(
+          t("Which agreement promised to phase out CFCs?", "哪项协议承诺逐步淘汰氟氯烃？"),
+          t("The Montreal Protocol, in 1987", "1987年的《蒙特利尔议定书》"),
+          [t("The Paris Agreement", "《巴黎协定》"), t("The Antarctic Treaty", "《南极条约》"), t("The Kyoto Protocol", "《京都议定书》")],
+          t(
+            "In 1987, countries around the world signed an agreement called the Montreal Protocol, promising to phase out CFCs.",
+            "1987年，世界各国签署了《蒙特利尔议定书》，承诺逐步淘汰氟氯烃。",
           ),
         ),
       ],

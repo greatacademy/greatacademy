@@ -73,6 +73,12 @@ No single cause explains the Renaissance. It grew from the meeting of ruins, ric
             "第五段说1453年后许多希腊学者向西逃到意大利，带去了珍贵的手稿和阅读它们的知识。",
           ),
         ),
+        ask(
+          t("In what year did Constantinople fall to the Ottoman Turks?", "君士坦丁堡哪一年被奥斯曼土耳其人攻陷？"),
+          t("In 1453", "1453年"),
+          [t("In 1350", "1350年"), t("In 1600", "1600年"), t("In 1519", "1519年")],
+          t("In 1453 the city of Constantinople fell to the Ottoman Turks.", "1453年，君士坦丁堡被奥斯曼土耳其人攻陷。"),
+        ),
       ],
       [
         "Renaissance",
@@ -154,6 +160,19 @@ The Medici were not always popular, and they were driven from Florence more than
             "第五段说一座美丽的礼拜堂向全城展示了这个家族的财富和品味，赢得了被统治者的尊重；最后一段说他们仍不止一次被赶走。",
           ),
         ),
+        ask(
+          t("Whom did Lorenzo invite to live in his palace?", "洛伦佐邀请谁住进他的宫殿？"),
+          t("A teenage sculptor named Michelangelo", "一个叫米开朗基罗的少年雕塑家"),
+          [
+            t("The architect Brunelleschi", "建筑师布鲁内莱斯基"),
+            t("The Greek thinker Plato", "希腊思想家柏拉图"),
+            t("A banker from London", "一位伦敦银行家"),
+          ],
+          t(
+            "Lorenzo invited a teenage sculptor named Michelangelo to live in his palace.",
+            "洛伦佐邀请一个叫米开朗基罗的少年雕塑家住进他的宫殿。",
+          ),
+        ),
       ],
       [
         "Medici",
@@ -230,6 +249,15 @@ This system trained many of the greatest artists of the age. Leonardo da Vinci w
             "最后一句给出了作者的理由：这个故事可能不是真的，但它说明了作坊如何把学徒培养成大师。",
           ),
         ),
+        ask(
+          t("In whose workshop was Leonardo an apprentice?", "列奥纳多在谁的作坊里当学徒？"),
+          t("Andrea del Verrocchio's", "安德烈亚·德尔·韦罗基奥"),
+          [t("Cosimo de' Medici's", "科西莫·德·美第奇"), t("Michelangelo's", "米开朗基罗"), t("Donatello's", "多纳泰罗")],
+          t(
+            "Leonardo was an apprentice in the workshop of Andrea del Verrocchio in Florence.",
+            "列奥纳多在佛罗伦萨安德烈亚·德尔·韦罗基奥的作坊当学徒。",
+          ),
+        ),
       ],
       ["Leonardo", "da", "Vinci", "Andrea", "del", "Verrocchio", "Verrocchio's", "Florence", "Renaissance", "Italy", "Rome"],
       ["gesso"],
@@ -290,6 +318,12 @@ After his death in 1519, his notebooks were scattered. Some pages were lost, and
             "最后一段说笔记本散落各处，在私人收藏中沉睡了几百年，正因为他的发现一直不为人知，它们对当时的科学影响不大。",
           ),
         ),
+        ask(
+          t("How did Leonardo write his notes?", "列奥纳多怎样书写他的笔记？"),
+          t("In mirror writing, from right to left", "用镜像文字从右往左写"),
+          [t("In a secret code of numbers", "用数字密码"), t("In Greek letters", "用希腊字母"), t("Only in drawings", "只画图")],
+          t("Leonardo wrote his notes in mirror writing, from right to left.", "列奥纳多用镜像文字从右往左写笔记。"),
+        ),
       ],
       ["Leonardo", "da", "Vinci", "Mona", "Lisa", "Supper"],
     ),
@@ -346,6 +380,12 @@ The printing press did not cause the Renaissance, which had already begun. But i
             "最后一段说印刷机没有引发已经开始的文艺复兴，但把它带到了意大利以外的远方。",
           ),
         ),
+        ask(
+          t("What had Gutenberg's press been adapted from?", "古腾堡的印刷机是由什么改造的？"),
+          t("A press used to squeeze grapes for wine", "酿酒用的榨葡萄机"),
+          [t("A goldsmith's furnace", "金匠的熔炉"), t("A Korean printing block", "朝鲜的雕版"), t("A scribe's desk", "抄写员的书桌")],
+          t("He adapted a press like those used to squeeze grapes for wine.", "他改造了一台类似榨葡萄酿酒的压榨机。"),
+        ),
       ],
       ["Gutenberg", "Johannes", "Mainz", "German", "China", "Korea", "Bible", "Europe", "European", "Renaissance", "Italy"],
     ),
@@ -401,6 +441,12 @@ Proof would come later, from new instruments and careful measurements. Copernicu
             "The fourth paragraph gives three reasons: the idea seemed to go against common sense, it went against the teachings of the Church, and Copernicus could only show it was simpler, not prove it.",
             "第四段给出了三个原因：这个观点似乎违背常识，违背教会的教义，而且哥白尼只能说明它更简单，却无法证明。",
           ),
+        ),
+        ask(
+          t("In what year did Copernicus publish his book?", "哥白尼哪一年出版了他的书？"),
+          t("In 1543", "1543年"),
+          [t("In 1450", "1450年"), t("In 1453", "1453年"), t("In 1600", "1600年")],
+          t("In 1543, Nicolaus Copernicus published a book with a bold idea.", "1543年，尼古拉·哥白尼出版了一本观点大胆的书。"),
         ),
       ],
       ["Ptolemy", "Ptolemy's", "Nicolaus", "Copernicus", "Copernicus's", "Polish", "Mars", "Church", "Earth", "European", "Greek"],

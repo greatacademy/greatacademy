@@ -75,6 +75,15 @@ Every year, December 10 is celebrated as Human Rights Day.`,
             "第四段承认它不是法律，但说它成为人们衡量政府的标准，许多国家以它为范本制定宪法。",
           ),
         ),
+        ask(
+          t("Who led the committee that wrote the Declaration?", "谁领导了起草《世界人权宣言》的委员会？"),
+          t("Eleanor Roosevelt", "埃莉诺·罗斯福"),
+          [t("Franklin Roosevelt", "富兰克林·罗斯福"), t("Kate Sheppard", "凯特·谢泼德"), t("Mohandas Gandhi", "甘地")],
+          t(
+            "The committee was led by Eleanor Roosevelt, the widow of President Franklin Roosevelt.",
+            "委员会由罗斯福总统的遗孀埃莉诺·罗斯福领导。",
+          ),
+        ),
       ],
       [
         "Second",
@@ -151,6 +160,12 @@ Two months later, women voted for the first time. Kate Sheppard's face now appea
             "铺满辩论厅的纸卷把数字变成了画面：议员们可以真切地看到他们需要回应的支持有多大。",
           ),
         ),
+        ask(
+          t("Whose face appears on New Zealand's ten-dollar note?", "新西兰十元纸币上印着谁的头像？"),
+          t("Kate Sheppard's", "凯特·谢泼德"),
+          [t("Eleanor Roosevelt's", "埃莉诺·罗斯福"), t("The queen's", "女王"), t("A prime minister's", "一位总理")],
+          t("Kate Sheppard's face now appears on New Zealand's ten-dollar note.", "凯特·谢泼德的头像如今印在新西兰十元纸币上。"),
+        ),
       ],
       ["New", "Zealand", "Zealand's", "Kate", "Sheppard", "Sheppard's", "Parliament", "September"],
     ),
@@ -211,6 +226,12 @@ In two minutes, Lincoln turned a ceremony for the dead into a call to the living
             "The last sentence says Lincoln turned a ceremony for the dead into a call to the living, matching the fifth paragraph, where he says it is for the living to finish the soldiers' work.",
             "最后一句说林肯把悼念死者的仪式变成了对生者的号召，这与第五段相呼应，他在那里说生者应当完成士兵们的事业。",
           ),
+        ),
+        ask(
+          t("How long did Edward Everett speak?", "爱德华·埃弗里特讲了多久？"),
+          t("About two hours", "大约两小时"),
+          [t("About two minutes", "大约两分钟"), t("About ten minutes", "大约十分钟"), t("All day", "一整天")],
+          t("The main speaker, Edward Everett, talked for about two hours.", "主讲人爱德华·埃弗里特讲了大约两小时。"),
         ),
       ],
       [
@@ -282,6 +303,15 @@ The march did not win independence at once. That would not come until 1947. But 
             "最后一段给出了定义：和平地拒绝服从不公正的法律，并接受惩罚。",
           ),
         ),
+        ask(
+          t("At which village did Gandhi pick up the salt?", "甘地在哪个村子拾起了盐？"),
+          t("Dandi", "丹迪"),
+          [t("Ahmedabad", "艾哈迈达巴德"), t("Delhi", "德里"), t("Montgomery", "蒙哥马利")],
+          t(
+            "On April 6, at the coastal village of Dandi, Gandhi picked up a lump of natural salt.",
+            "4月6日，甘地在海边村庄丹迪拾起一块天然盐。",
+          ),
+        ),
       ],
       ["India", "Indians", "Indian", "Britain", "British", "Mohandas", "Gandhi", "Ahmedabad", "Dandi", "Salt", "March", "April"],
     ),
@@ -340,6 +370,12 @@ Change came slowly, and many states passed their own laws first. In 1938, the Un
             "第五段说这些记录让他的照片不只是图片：它们是可以核实的证据，这让工厂主的说法难以自圆其说。",
           ),
         ),
+        ask(
+          t("What did Hine sometimes pretend to be?", "海因有时会假扮成什么人？"),
+          t("A salesman or a fire inspector", "推销员或消防检查员"),
+          [t("A factory owner", "工厂老板"), t("A lawmaker", "立法者"), t("A child worker", "童工")],
+          t("Hine sometimes pretended to be a salesman or a fire inspector.", "海因有时假扮成推销员或消防检查员。"),
+        ),
       ],
       ["United", "States", "Americans", "National", "Child", "Labor", "Committee", "Lewis", "Hine"],
       ["shucking"],
@@ -396,6 +432,12 @@ Still, they kept going, not for a week or a month, but for 381 days. The bus com
             "The last paragraph describes both: the boycott lasted 381 days and cost the company its income, while lawyers took the case to court, and the Supreme Court ruled the separation unconstitutional.",
             "最后一段描述了两方面：抵制持续了381天，使公司失去收入；同时律师把案件提交法院，最高法院裁定隔离违宪。",
           ),
+        ),
+        ask(
+          t("How many days did the boycott last?", "抵制运动持续了多少天？"),
+          t("381 days", "381天"),
+          [t("30 days", "30天"), t("7 days", "7天"), t("1,955 days", "1955天")],
+          t("They kept going for 381 days.", "他们坚持了381天。"),
         ),
       ],
       [

@@ -25,7 +25,7 @@ export const passage = (
   title: Pair,
   body: string,
   topics: readonly Edge[],
-  questions: readonly [PassageQuestionDef, PassageQuestionDef, PassageQuestionDef],
+  questions: readonly [PassageQuestionDef, PassageQuestionDef, PassageQuestionDef, ...PassageQuestionDef[]],
   extra: { readonly names?: readonly string[]; readonly glossed?: readonly string[] } = {},
 ): PassageDef => ({
   id,

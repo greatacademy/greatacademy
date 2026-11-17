@@ -72,6 +72,12 @@ When James Watt improved the steam engine in the 1770s and 1780s, factories no l
             "最后一段说瓦特改进蒸汽机后，只要有煤可烧，哪里都可以建工厂。",
           ),
         ),
+        ask(
+          t("How many threads could one worker spin at once on the spinning jenny?", "用珍妮纺纱机一个工人能同时纺几根线？"),
+          t("Eight", "八根"),
+          [t("Two", "两根"), t("Twelve", "十二根"), t("One hundred", "一百根")],
+          t("The spinning jenny let one worker spin eight threads at once.", "珍妮纺纱机让一个工人能同时纺八根线。"),
+        ),
       ],
       ["Britain", "James", "Hargreaves", "Richard", "Arkwright", "Cromford", "England", "Watt"],
     ),
@@ -126,6 +132,15 @@ In 1833, Parliament passed a Factory Act that banned children under nine from wo
           t(
             "The fourth paragraph says that at New Lanark, Owen refused to hire children under ten and built a school for them instead.",
             "第四段说欧文在新拉纳克拒绝雇用十岁以下的儿童，而是为他们建了一所学校。",
+          ),
+        ),
+        ask(
+          t("In what year did Parliament pass the Factory Act?", "议会哪一年通过了《工厂法》？"),
+          t("In 1833", "1833年"),
+          [t("In 1832", "1832年"), t("In 1771", "1771年"), t("In 1850", "1850年")],
+          t(
+            "In 1833, Parliament passed a Factory Act that banned children under nine from textile mills.",
+            "1833年，议会通过了禁止九岁以下儿童在纺织厂工作的《工厂法》。",
           ),
         ),
       ],
@@ -188,6 +203,16 @@ Coal also changed the air above ground. In mining and factory towns, smoke from 
             "最后一段说人们把烟雾当作进步的代价来接受，很少有人明白它对肺的伤害有多大。",
           ),
         ),
+        ask(
+          t("What was firedamp?", "什么是沼气（firedamp）？"),
+          t("A gas that could explode at a candle flame", "遇到烛火就会爆炸的气体"),
+          [
+            t("A gas that suffocated miners without warning", "无声无息让矿工窒息的气体"),
+            t("Water that seeped into the mine", "渗进矿井的水"),
+            t("A kind of coal", "一种煤"),
+          ],
+          t("Firedamp could explode at the touch of a candle flame.", "沼气一碰到烛火就可能爆炸。"),
+        ),
       ],
       ["Industrial", "Revolution", "Britain", "Hartley", "Colliery", "England", "Parliament"],
     ),
@@ -243,6 +268,15 @@ By 1850, Britain had more than six thousand miles of railway. Fresh food could b
           t(
             "The last sentence says that to keep timetables accurate, the whole country began to set its clocks to London time.",
             "最后一句说为了让时刻表准确，全国开始把时钟调成伦敦时间。",
+          ),
+        ),
+        ask(
+          t("Who designed the Rocket?", "谁设计了“火箭号”？"),
+          t("George and Robert Stephenson", "乔治和罗伯特·斯蒂芬森"),
+          [t("James Watt", "詹姆斯·瓦特"), t("Richard Arkwright", "理查德·阿克赖特"), t("James Hargreaves", "詹姆斯·哈格里夫斯")],
+          t(
+            "Its most famous engine, the Rocket, was designed by George and Robert Stephenson.",
+            "它最著名的机车“火箭号”由乔治和罗伯特·斯蒂芬森设计。",
           ),
         ),
       ],
@@ -312,6 +346,15 @@ Visitors who saw only the city center told a different story. They admired grand
             "最后一段说两种看法都是对的：这座城市有巨大的财富和发明，而许多市民生活在可怕的条件下。",
           ),
         ),
+        ask(
+          t("About how many people lived in Manchester in 1851?", "1851年曼彻斯特大约有多少人？"),
+          t("About three hundred thousand", "大约三十万"),
+          [t("About seventy-five thousand", "大约七万五千"), t("About three million", "大约三百万"), t("About ten thousand", "大约一万")],
+          t(
+            "The population rose from about seventy-five thousand in 1801 to about three hundred thousand in 1851.",
+            "人口从1801年的约七万五千增长到1851年的约三十万。",
+          ),
+        ),
       ],
       ["Manchester", "Britain", "Ireland", "German", "Friedrich", "Engels"],
     ),
@@ -368,6 +411,12 @@ The government responded harshly. It sent twelve thousand soldiers to the affect
             "The last paragraph says the government sent twelve thousand soldiers and made machine breaking a crime punishable by death.",
             "最后一段说政府派出一万二千名士兵，并把砸机器定为可处死刑的罪行。",
           ),
+        ),
+        ask(
+          t("How many men were hanged in York in 1813?", "1813年在约克有多少人被绞死？"),
+          t("Seventeen", "十七人"),
+          [t("Twelve", "十二人"), t("Two hundred", "二百人"), t("None", "没有")],
+          t("In 1813, seventeen men were hanged in York.", "1813年，有十七人在约克被绞死。"),
         ),
       ],
       ["Nottinghamshire", "England", "General", "Ludd", "King", "Luddites", "Luddite", "Britain", "France", "Portugal", "York"],

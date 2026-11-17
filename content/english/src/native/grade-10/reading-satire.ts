@@ -79,6 +79,12 @@ Nearly three hundred years later, "a modest proposal" is still used to describe 
             "他以没人会采纳为由把真正的改革斥为不可能，此时他对自满的统治者的愤怒显露出来。",
           ),
         ),
+        ask(
+          t("Where and when did the pamphlet first appear?", "这本小册子最早在何时何地出现？"),
+          t("In Dublin, in 1729", "1729年，都柏林"),
+          [t("In London, in 1726", "1726年，伦敦"), t("In Paris, in 1789", "1789年，巴黎"), t("In Edinburgh, in 1835", "1835年，爱丁堡")],
+          t("In 1729, a short pamphlet appeared in Dublin with a long title.", "1729年，一本标题很长的小册子在都柏林出现。"),
+        ),
       ],
       ["Dublin", "Ireland", "Ireland's", "Irish", "Jonathan", "Swift", "Swift's", "Gulliver's", "English"],
     ),
@@ -135,6 +141,15 @@ The genius of the satire is its scale. By shrinking the people, Swift shrinks th
           t(
             "The last paragraph says by shrinking the people, Swift shrinks their quarrels, and readers can see how small and foolish they are.",
             "最后一段说斯威夫特缩小了人，也就缩小了他们的争吵，读者便能看清这些争吵多么渺小和愚蠢。",
+          ),
+        ),
+        ask(
+          t("What was Lemuel Gulliver's job?", "莱缪尔·格列佛的职业是什么？"),
+          t("A ship's doctor", "船医"),
+          [t("A ship's captain", "船长"), t("A rope dancer", "走钢丝的人"), t("A royal minister", "王室大臣")],
+          t(
+            "A ship's doctor named Lemuel Gulliver is shipwrecked and wakes to find himself tied to the ground.",
+            "一位名叫莱缪尔·格列佛的船医遭遇海难，醒来发现自己被绑在地上。",
           ),
         ),
       ],
@@ -211,6 +226,12 @@ The story mocks more than one folly. It mocks the vanity of the emperor, the obs
             "他怀疑人群是对的，却比以往任何时候都更骄傲地走完游行，选择了面子而非真相。",
           ),
         ),
+        ask(
+          t('Who were the two "weavers" really?', "那两个“织工”到底是什么人？"),
+          t("Swindlers", "骗子"),
+          [t("The emperor's ministers", "皇帝的大臣"), t("Famous artists", "著名艺术家"), t("Children from the crowd", "人群中的孩子")],
+          t("Two swindlers arrive in the city and claim to be weavers.", "两个骗子来到城里，自称是织工。"),
+        ),
       ],
       ["Danish", "Hans", "Christian", "Andersen"],
     ),
@@ -269,6 +290,15 @@ Today, every April 1, newspapers and websites around the world publish their own
           t(
             "The writer says pasta was not common in 1950s Britain and the gullible viewers were not stupid but trusting.",
             "作者说意大利面在20世纪50年代的英国并不常见，那些容易受骗的观众不是愚蠢，而是信任。",
+          ),
+        ),
+        ask(
+          t("Which pest's disappearance supposedly led to a record spaghetti crop?", "据说是哪种害虫的消失带来了意大利面大丰收？"),
+          t("The spaghetti weevil", "意大利面象鼻虫"),
+          [t("The pasta moth", "面条蛾"), t("The tomato beetle", "番茄甲虫"), t("The noodle worm", "面条虫")],
+          t(
+            "The mild winter and the disappearance of a pest called the spaghetti weevil had led to a record crop.",
+            "暖冬和一种叫意大利面象鼻虫的害虫消失，带来了创纪录的丰收。",
           ),
         ),
       ],
@@ -331,6 +361,12 @@ You Zhan's method was simple but brilliant. Instead of saying that the emperor w
             "他指出晾干漆需要一座罩住全城的房子，使这个计划的代价和愚蠢无法被忽视。",
           ),
         ),
+        ask(
+          t("What was You Zhan like in appearance?", "优旃的外表是什么样的？"),
+          t("He was very short", "他个子很矮"),
+          [t("He was very tall", "他个子很高"), t("He was very old", "他年纪很大"), t("He wore a famous mask", "他戴着著名的面具")],
+          t("There lived a jester named You Zhan. He was very short.", "有一个名叫优旃的俳优，他个子很矮。"),
+        ),
       ],
       ["China", "BC", "You", "Zhan", "Zhan's", "Sima", "Qian", "Majesty", "Europe"],
     ),
@@ -387,6 +423,19 @@ The film was released in 1940 and was a great success. Years later, after the fu
           t(
             "He wrote that had he known the truth he could not have made fun of the Nazis, which raises whether some evils are too terrible to laugh at.",
             "他写道，如果当时知道真相，他就不可能嘲笑纳粹，这引出了某些罪恶是否可怕到不能被嘲笑的问题。",
+          ),
+        ),
+        ask(
+          t("Which two roles did Chaplin play in The Great Dictator?", "卓别林在《大独裁者》中扮演哪两个角色？"),
+          t("A poor Jewish barber and the dictator Hynkel", "一个贫穷的犹太理发师和独裁者欣克尔"),
+          [
+            t("The Little Tramp and a soldier", "小流浪汉和一个士兵"),
+            t("Hitler and a British minister", "希特勒和一位英国大臣"),
+            t("A banker and a policeman", "一个银行家和一个警察"),
+          ],
+          t(
+            "He would play two roles: a poor Jewish barber, and the dictator Hynkel.",
+            "他扮演两个角色：一个贫穷的犹太理发师和独裁者欣克尔。",
           ),
         ),
       ],

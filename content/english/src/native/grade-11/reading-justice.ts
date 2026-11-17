@@ -82,6 +82,12 @@ Thoreau spent only one night behind bars. But the question he asked that night, 
             "第五段说甘地称这篇文章影响了他的思想，民权运动的领袖们也读过它。",
           ),
         ),
+        ask(
+          t("Why had Thoreau walked into town that day in July 1846?", "1846年7月那天梭罗为什么进城？"),
+          t("To collect a mended shoe", "去取一只补好的鞋"),
+          [t("To pay his poll tax", "去交人头税"), t("To give a lecture", "去做演讲"), t("To visit his mother", "去看望母亲")],
+          t("Thoreau walked into the town of Concord to collect a mended shoe.", "梭罗走进康科德镇去取一只补好的鞋。"),
+        ),
       ],
       [
         "Henry",
@@ -158,6 +164,19 @@ Within months, Birmingham's leaders agreed to end segregation in many stores. Th
             "第六段说最大的障碍不是公开的种族主义者，而是更看重秩序而非正义的温和派。",
           ),
         ),
+        ask(
+          t("Why was King arrested in Birmingham?", "金为什么在伯明翰被捕？"),
+          t("For leading a march without a permit", "未经许可领导游行"),
+          [
+            t("For refusing to pay his taxes", "拒绝纳税"),
+            t("For writing a letter to a newspaper", "给报纸写信"),
+            t("For sitting at a lunch counter", "坐在午餐柜台前"),
+          ],
+          t(
+            "Martin Luther King Jr. was arrested in Birmingham, Alabama, for leading a march without a permit.",
+            "马丁·路德·金因未经许可领导游行在阿拉巴马州伯明翰被捕。",
+          ),
+        ),
       ],
       ["Martin", "Luther", "King", "Jr", "Birmingham", "Alabama", "King's", "Black", "American", "Americans", "Easter"],
     ),
@@ -217,6 +236,16 @@ In 1970, five years after the strike began, the major grape growers signed contr
             "The sixth paragraph says growers argued the boycott hurt small farmers and some workers felt pressured, and calls these objections not all unreasonable.",
             "第六段说种植者认为抵制伤害了小农户，一些工人感到有压力，并称这些反对意见并非都不合理。",
           ),
+        ),
+        ask(
+          t("How much were the grape pickers paid when they walked out in 1965?", "1965年葡萄采摘工罢工时工资是多少？"),
+          t("About a dollar and twenty-five cents an hour", "每小时约一美元二十五美分"),
+          [
+            t("About five dollars a day", "每天约五美元"),
+            t("About ten dollars an hour", "每小时约十美元"),
+            t("Nothing at all", "一分钱也没有"),
+          ],
+          t("They were paid about a dollar and twenty-five cents an hour.", "他们每小时只拿约一美元二十五美分。"),
         ),
       ],
       [
@@ -298,6 +327,15 @@ Every year, on the anniversary of the fire, people gather outside the building, 
             "第五段说该州通过了数十项关于消防演习、喷淋装置、不锁门和工作时间的新法律，这些法律成为全国的范本。",
           ),
         ),
+        ask(
+          t("What did the Triangle Shirtwaist Company make?", "三角衬衫厂生产什么？"),
+          t("Women's blouses", "女式衬衫"),
+          [t("Men's suits", "男式西装"), t("Shoes", "鞋子"), t("Cotton thread", "棉线")],
+          t(
+            "The top three floors were occupied by the Triangle Shirtwaist Company, which made women's blouses.",
+            "顶层三层是三角衬衫厂，生产女式衬衫。",
+          ),
+        ),
       ],
       ["Triangle", "Shirtwaist", "Company", "New", "York", "Manhattan", "Frances", "Perkins", "Italian", "Jewish", "American"],
     ),
@@ -362,6 +400,15 @@ Many Freedom Riders went on to lead the civil rights movement; one of them, John
           t(
             "The fifth paragraph says she believed that if the rides stopped, it would send the message that violence could defeat nonviolence.",
             "第五段说她认为如果停止乘车，就等于告诉人们暴力可以战胜非暴力。",
+          ),
+        ),
+        ask(
+          t("How many people set out on the first Freedom Ride in May 1961?", "1961年5月第一次自由乘车有多少人出发？"),
+          t("Thirteen", "十三人"),
+          [t("Four hundred", "四百人"), t("Three", "三人"), t("About a thousand", "约一千人")],
+          t(
+            "In May 1961, a group of thirteen people, Black and white, decided to test the law.",
+            "1961年5月，一群十三个人，有黑人也有白人，决定检验这条法律。",
           ),
         ),
       ],
@@ -443,6 +490,12 @@ The debate between them was not about the goal, which both men shared, but about
             "The last paragraph says the debate was not about the goal, which both shared, but about the road.",
             "最后一段说争论不在于目标，两人目标相同，而在于道路。",
           ),
+        ),
+        ask(
+          t("Which book did Du Bois publish in 1903?", "杜波依斯在1903年出版了哪本书？"),
+          t("The Souls of Black Folk", "《黑人的灵魂》"),
+          [t("The Epic of America", "《美国史诗》"), t("Up from Slavery", "《超越奴役》"), t("Civil Disobedience", "《论公民的不服从》")],
+          t("In 1903, W. E. B. Du Bois published a book called The Souls of Black Folk.", "1903年，杜波依斯出版了《黑人的灵魂》一书。"),
         ),
       ],
       [

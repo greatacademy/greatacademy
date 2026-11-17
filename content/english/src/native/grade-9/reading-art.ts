@@ -69,6 +69,15 @@ Auden's poem does something the painting cannot. It tells us what to notice, and
             "最后一段说奥登的诗告诉我们该注意什么，并加入一种平静而反讽的声音，而画则让我们去寻找。",
           ),
         ),
+        ask(
+          t("What were Icarus's wings made of?", "伊卡洛斯的翅膀是用什么做的？"),
+          t("Feathers and wax", "羽毛和蜡"),
+          [t("Wood and cloth", "木头和布"), t("Leaves and string", "树叶和绳子"), t("Paper and glue", "纸和胶水")],
+          t(
+            "Daedalus made wings of feathers and wax so that he and his son could escape.",
+            "代达罗斯用羽毛和蜡做了翅膀，让他和儿子得以逃走。",
+          ),
+        ),
       ],
       [
         "Greek",
@@ -152,6 +161,12 @@ The story is a reminder that critics can be wrong, especially about new art. It 
             "第四段说他把这当作一种侮辱，暗指他们只能画出模糊的印象，而非真正的艺术。",
           ),
         ),
+        ask(
+          t("What did Monet call his painting of the harbor at Le Havre?", "莫奈把他画的勒阿弗尔港口叫什么？"),
+          t("Impression, Sunrise", "《印象·日出》"),
+          [t("The Great Wave", "《神奈川冲浪里》"), t("Morning Mist", "《晨雾》"), t("Boats on a River", "《河上的船》")],
+          t("He called it Impression, Sunrise.", "他把它称为《印象·日出》。"),
+        ),
       ],
       [
         "April",
@@ -234,6 +249,16 @@ The painting has become one of the most famous images against war. A copy hangs 
             "第五段说毕加索表示，在西班牙恢复民主之前，这幅画不应回去。",
           ),
         ),
+        ask(
+          t("Where does a copy of Guernica hang today?", "今天《格尔尼卡》的一件复制品挂在哪里？"),
+          t("At the United Nations headquarters in New York", "纽约联合国总部"),
+          [
+            t("In the town of Guernica", "格尔尼卡镇"),
+            t("At the World's Fair in Paris", "巴黎世界博览会"),
+            t("In Picasso's house", "毕加索的家中"),
+          ],
+          t("A copy hangs at the headquarters of the United Nations in New York.", "一件复制品挂在纽约的联合国总部。"),
+        ),
       ],
       [
         "April",
@@ -315,6 +340,15 @@ Hokusai was never satisfied with his own work. In his seventies he wrote that no
           t(
             "The fifth paragraph says they admired the bold outlines, the flat areas of color and the unusual compositions.",
             "第五段说他们欣赏大胆的轮廓、平涂的色块和不寻常的构图。",
+          ),
+        ),
+        ask(
+          t("What new imported pigment did Hokusai use?", "北斋使用了哪种新进口的颜料？"),
+          t("Prussian blue", "普鲁士蓝"),
+          [t("Vermilion red", "朱红"), t("Gold leaf", "金箔"), t("Indigo from India", "印度靛蓝")],
+          t(
+            "Hokusai used a new imported pigment, Prussian blue, which gave the print its deep, rich color.",
+            "北斋使用了新进口的颜料普鲁士蓝，使版画有了深沉浓郁的颜色。",
           ),
         ),
       ],
@@ -400,6 +434,15 @@ Today the melody of the Ode to Joy serves as the anthem of the European Union. I
             "第五段说一位歌手轻轻把他转过身来，让他看到人群在鼓掌。",
           ),
         ),
+        ask(
+          t("How did friends communicate with Beethoven once he was almost deaf?", "贝多芬几乎全聋后，朋友们怎样和他交流？"),
+          t("By writing in notebooks", "在笔记本上写字"),
+          [t("By sign language", "用手语"), t("By shouting into a horn", "对着号角喊"), t("Through his brothers", "通过他的兄弟")],
+          t(
+            "Friends communicated with him by writing in notebooks, and many of these conversation books survive.",
+            "朋友们在笔记本上写字和他交流，许多谈话本留存了下来。",
+          ),
+        ),
       ],
       [
         "German",
@@ -474,6 +517,12 @@ From these two beginnings, film developed in two directions that still exist tod
             "The last paragraph says one direction records real life, leading to the documentary, and the other creates impossible worlds, leading to fantasy.",
             "最后一段说一个方向记录真实生活，发展出纪录片；另一个创造不可能的世界，发展出奇幻片。",
           ),
+        ),
+        ask(
+          t("How much did each person pay at the first Lumière screening?", "卢米埃尔首场放映每人付多少钱？"),
+          t("One franc", "一法郎"),
+          [t("Ten francs", "十法郎"), t("One penny", "一便士"), t("Nothing", "免费")],
+          t("About thirty people paid one franc each to watch something new.", "约三十人每人付一法郎观看新鲜事物。"),
         ),
       ],
       [

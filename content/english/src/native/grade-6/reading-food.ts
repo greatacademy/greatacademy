@@ -67,6 +67,12 @@ No single food contains everything the body needs. That is why doctors recommend
             "最后一段说，没有一种食物包含身体所需的一切，结尾写道：营养午餐不在于某一种完美的食物，而在于均衡。",
           ),
         ),
+        ask(
+          t("Which mineral builds strong bones?", "哪种矿物质能让骨骼强壮？"),
+          t("Calcium", "钙"),
+          [t("Vitamin C", "维生素C"), t("Sodium", "钠"), t("Fiber", "纤维")],
+          t("Calcium, a mineral found in milk and green vegetables, builds strong bones.", "牛奶和绿色蔬菜中的矿物质钙能让骨骼强壮。"),
+        ),
       ],
     ),
     passage(
@@ -119,6 +125,12 @@ The Green Revolution saved many lives, and in 1970 Borlaug received the Nobel Pe
             "The paragraph says it saved many lives and won a prize, then begins Yet it also had costs and lists pollution, falling water and small farmers left behind.",
             "这一段先说它拯救了许多生命并获奖，然后以 Yet it also had costs 转折，列举了污染、地下水下降和小农被落下。",
           ),
+        ),
+        ask(
+          t("What prize did Norman Borlaug receive in 1970?", "诺曼·博洛格在1970年获得了什么奖？"),
+          t("The Nobel Peace Prize", "诺贝尔和平奖"),
+          [t("An Olympic medal", "奥运奖牌"), t("A prize for farming in Mexico", "墨西哥的农业奖"), t("No prize at all", "没有获奖")],
+          t("In 1970 Borlaug received the Nobel Peace Prize.", "1970年博洛格获得了诺贝尔和平奖。"),
         ),
       ],
       ["Asia", "India", "American", "Norman", "Borlaug", "Borlaug's", "Mexico", "Pakistan", "Nobel"],
@@ -179,6 +191,15 @@ Critics point out that urban farms are small and expensive. Indoor farms need a 
             "在列出双方观点后，作者总结说，城市农业不会取代传统农业，但在新鲜蔬菜方面可能变得重要。",
           ),
         ),
+        ask(
+          t("Where do vegetables grow on tall towers of shelves under purple lights?", "在哪里蔬菜长在紫光下的高层架子上？"),
+          t("In Singapore", "在新加坡"),
+          [t("In Brooklyn", "在布鲁克林"), t("In California", "在加利福尼亚"), t("In India", "在印度")],
+          t(
+            "In Singapore, vegetables grow on tall towers of shelves inside buildings, under purple lights.",
+            "在新加坡，蔬菜长在室内紫光下的高层架子上。",
+          ),
+        ),
       ],
       ["Brooklyn", "York", "Singapore"],
     ),
@@ -236,6 +257,15 @@ There are ways to help. Farmers can use fewer pesticides and plant strips of wil
           t(
             "The fourth paragraph says there is no single cause and lists pesticides, diseases and mites, and meadows turned into fields of a single crop.",
             "第四段说原因不止一个，并列举了农药、疾病和螨虫，以及草地变成单一作物的农田。",
+          ),
+        ),
+        ask(
+          t("About what share of our food depends partly on pollinators?", "我们的食物大约有多少部分依赖传粉者？"),
+          t("About a third", "大约三分之一"),
+          [t("About a tenth", "大约十分之一"), t("Almost all of it", "几乎全部"), t("None of it", "一点也没有")],
+          t(
+            "Scientists estimate that about a third of the food we eat depends at least partly on pollinators.",
+            "科学家估计我们吃的食物约有三分之一至少部分依赖传粉者。",
           ),
         ),
       ],
@@ -298,6 +328,12 @@ Some people say that one family's waste is too small to matter. But small action
             "这一段说，种植这些食物用了水、土地、燃料和劳动，而食物在垃圾填埋场腐烂会释放使地球变暖的气体。",
           ),
         ),
+        ask(
+          t('What does "use by" on a label tell you about?', "标签上的“use by”说的是什么？"),
+          t("Safety", "安全"),
+          [t("Quality", "品质"), t("Price", "价格"), t("Shape", "形状")],
+          t('"Best before" is about quality, and "use by" is about safety.', "“best before”说的是品质，“use by”说的是安全。"),
+        ),
       ],
     ),
     passage(
@@ -351,6 +387,15 @@ Today, the famine is remembered with memorials in Dublin and in cities where its
           t(
             "After the details about exports and slow help, In other words sums them up simply: there was food in Ireland, but the hungry could not get it.",
             "在讲述了出口和迟缓的救济之后，In other words 简单地总结道：爱尔兰有粮食，但饥饿的人得不到。",
+          ),
+        ),
+        ask(
+          t("When did the potato blight first appear in Ireland?", "马铃薯晚疫病最早在什么时候出现在爱尔兰？"),
+          t("In the summer of 1845", "1845年夏天"),
+          [t("In 1852", "1852年"), t("In 1921", "1921年"), t("In 1896", "1896年")],
+          t(
+            "In the summer of 1845, Irish farmers noticed the leaves of their potato plants turning black.",
+            "1845年夏天，爱尔兰农民发现马铃薯的叶子变黑了。",
           ),
         ),
       ],

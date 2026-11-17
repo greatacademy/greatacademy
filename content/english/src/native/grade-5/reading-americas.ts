@@ -69,6 +69,15 @@ Then, around 1,100 years ago, many of the great cities in the southern rainfores
             "最后一段说，科学家认为长期干旱、人口过多和连年战争共同导致了衰落。森林重新生长是之后的结果。",
           ),
         ),
+        ask(
+          t("Where did priests hold ceremonies?", "祭司在哪里举行仪式？"),
+          t("At the top of the stepped temples", "在阶梯式神庙的顶上"),
+          [t("Deep in the forest", "在森林深处"), t("In the ball courts", "在球场里"), t("In the stone tanks", "在石砌水池里")],
+          t(
+            "Priests climbed the steep stairs to hold ceremonies at the top, where everyone could see them.",
+            "祭司登上陡峭的台阶，在顶上举行仪式，让所有人都能看见。",
+          ),
+        ),
       ],
     ),
     passage(
@@ -119,6 +128,12 @@ To make all these calculations, the Maya used a number system based on twenty, a
             "The last paragraph says the Maya used a number system based on twenty and were among the first to use a sign for zero.",
             "最后一段说，玛雅人使用以二十为基数的计数法，而且是最早使用零的符号的民族之一。",
           ),
+        ),
+        ask(
+          t("What were Maya folding books made of?", "玛雅人的折叠书是用什么做的？"),
+          t("Bark paper", "树皮纸"),
+          [t("Silk", "丝绸"), t("Clay", "陶土"), t("Animal skins", "兽皮")],
+          t("The Maya wrote in folding books made of bark paper.", "玛雅人在用树皮纸做的折叠书上书写。"),
         ),
       ],
     ),
@@ -173,6 +188,19 @@ Today, corn is grown on every continent except Antarctica. Every time you eat po
           t(
             "The fourth paragraph begins by saying corn was especially important, and the story that people were made from corn dough supports that.",
             "第四段开头说玉米格外重要，而人是用玉米面团造出来的故事支持了这一点。",
+          ),
+        ),
+        ask(
+          t("How do squash leaves help the other crops?", "南瓜叶怎样帮助其他作物？"),
+          t("They shade the soil and block weeds", "遮住土壤，挡住杂草"),
+          [
+            t("They give the beans a pole to climb", "给豆藤一根杆子攀爬"),
+            t("They add nitrogen to the soil", "给土壤增加氮"),
+            t("They make the corn grow faster", "让玉米长得更快"),
+          ],
+          t(
+            "The leaves shade the soil so it stays damp, block weeds from growing and keep animals away.",
+            "叶子遮住土壤保持湿润，挡住杂草，还能赶走动物。",
           ),
         ),
       ],
@@ -230,6 +258,12 @@ Today, Mexico City stands on the same spot, and the eagle on the cactus appears 
             "第四段说，经过激烈的战斗以及西班牙人带来的可怕疾病，这座城市陷落了。",
           ),
         ),
+        ask(
+          t("About how many people lived in Tenochtitlan by about 1500?", "大约1500年时，特诺奇蒂特兰住着多少人？"),
+          t("Perhaps 200,000", "大约二十万"),
+          [t("About 2,000", "大约两千"), t("About 20 million", "大约两千万"), t("Exactly 1,325", "正好一千三百二十五")],
+          t("By about 1500, Tenochtitlan had perhaps 200,000 people.", "到大约1500年，特诺奇蒂特兰大约有二十万人。"),
+        ),
       ],
     ),
     passage(
@@ -285,6 +319,12 @@ Thousands of chinampas surrounded Tenochtitlan, separated by canals. A few still
             "第四段说，水从下面渗进土壤，所以庄稼很少需要浇水。",
           ),
         ),
+        ask(
+          t("Why did farmers plant willow trees along the edges?", "农民为什么在边上种柳树？"),
+          t("Their roots held the garden in place", "树根把菜园牢牢固定住"),
+          [t("To give shade to the farmers", "给农民遮阴"), t("To make the garden float", "让菜园漂起来"), t("To sell the wood", "卖木头")],
+          t("The willow roots grew down and held the garden firmly in place.", "柳树的根向下生长，把菜园牢牢固定住。"),
+        ),
       ],
     ),
     passage(
@@ -339,6 +379,16 @@ Parts of the Inca road are still used today, and some hikers walk it for days to
             "The second paragraph says villagers rebuilt the bridges every year so they never wore out.",
             "第二段说，村民每年重建这些桥，这样它们就不会磨损。",
           ),
+        ),
+        ask(
+          t("How long was the Inca road network?", "印加的道路网有多长？"),
+          t("About 40,000 kilometers", "大约四万公里"),
+          [
+            t("About 4,000 kilometers", "大约四千公里"),
+            t("About 240 kilometers", "大约二百四十公里"),
+            t("About 400 kilometers", "大约四百公里"),
+          ],
+          t("The road network covered about 40,000 kilometers, enough to wrap around the Earth.", "道路网长约四万公里，足够绕地球一圈。"),
         ),
       ],
     ),

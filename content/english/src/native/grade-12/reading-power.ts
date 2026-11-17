@@ -75,6 +75,12 @@ In 1911, the Supreme Court ruled that Standard Oil had broken the law against mo
             "第三段把贪污受贿定义为贿赂官员，并说这些做法表明的是一家公司利用其规模使公平竞争变得不可能。",
           ),
         ),
+        ask(
+          t("For which magazine did Ida Tarbell write her series?", "艾达·塔贝尔为哪家杂志写了她的系列文章？"),
+          t("McClure's", "《麦克卢尔》"),
+          [t("The New York Times", "《纽约时报》"), t("The Washington Post", "《华盛顿邮报》"), t("The Literary Digest", "《文学文摘》")],
+          t("She was a writer for McClure's, a popular magazine.", "她是流行杂志《麦克卢尔》的撰稿人。"),
+        ),
       ],
       [
         "Ida",
@@ -146,6 +152,19 @@ The same year, Congress passed a law that required drug companies to show that a
           t(
             "The last paragraph says Congress required companies to show that a medicine was effective and safe, which turned her careful doubt into law.",
             "最后一段说国会要求公司证明药物有效且安全，这把她审慎的怀疑变成了法律。",
+          ),
+        ),
+        ask(
+          t("Where did Frances Kelsey start a new job in 1960?", "1960年弗朗西丝·凯尔西在哪里开始新工作？"),
+          t("At the Food and Drug Administration", "美国食品药品监督管理局"),
+          [
+            t("At a drug company in Germany", "德国的一家药厂"),
+            t("At a hospital in Australia", "澳大利亚的一家医院"),
+            t("At Yale University", "耶鲁大学"),
+          ],
+          t(
+            "In the autumn of 1960, a doctor named Frances Kelsey started a new job at the Food and Drug Administration.",
+            "1960年秋，医生弗朗西丝·凯尔西在食品药品监督管理局开始了新工作。",
           ),
         ),
       ],
@@ -221,6 +240,12 @@ The study has been criticized ever since. Some argue that it was cruel to the vo
             "最后一段说做错事可能只需要权威、秩序和一系列小步骤，而那些拒绝的人表明这些步骤是可以抵抗的。",
           ),
         ),
+        ask(
+          t("What did Milgram's newspaper advertisement say the study was about?", "米尔格拉姆的报纸广告说这项研究是关于什么的？"),
+          t("Memory", "记忆"),
+          [t("Obedience", "服从"), t("Pain", "疼痛"), t("Electricity", "电")],
+          t("He offered a small payment to people who would take part in a study of memory.", "他向参加一项记忆研究的人提供少量报酬。"),
+        ),
       ],
       ["Stanley", "Milgram", "Milgram's", "Yale", "Connecticut"],
     ),
@@ -280,6 +305,15 @@ Watkins became one of the best-known figures of the scandal. She had not gone to
           t(
             "The last paragraph says her case showed the value and the limits of an inside voice: a warning helps only if those in power are willing to hear it.",
             "最后一段说她的事例显示了内部发声的价值和局限：只有掌权者愿意听，警告才有用。",
+          ),
+        ),
+        ask(
+          t("Where was Enron based?", "安然公司总部在哪里？"),
+          t("Houston, Texas", "得克萨斯州休斯敦"),
+          [t("New York", "纽约"), t("Chicago", "芝加哥"), t("Washington, D.C.", "华盛顿特区")],
+          t(
+            "Enron, an energy company based in Houston, Texas, was one of the most admired businesses in the United States.",
+            "总部位于得克萨斯州休斯敦的能源公司安然，曾是美国最受推崇的企业之一。",
           ),
         ),
       ],
@@ -343,6 +377,15 @@ Yet Acton's sentence has outlived the argument that produced it. It is quoted by
             "第四段说这些制度在权力的推动变成有恃无恐之前加以制约。",
           ),
         ),
+        ask(
+          t("In which year did Lord Acton write the letter with his famous sentence?", "阿克顿勋爵在哪一年写下那封含名言的信？"),
+          t("In 1887", "1887年"),
+          [t("In 1641", "1641年"), t("In 1740", "1740年"), t("In 1911", "1911年")],
+          t(
+            "In fact it comes from a letter written in 1887 by a British historian, Lord Acton.",
+            "事实上，它出自英国历史学家阿克顿勋爵1887年写的一封信。",
+          ),
+        ),
       ],
       ["Lord", "Acton", "Acton's", "John", "Dalberg-Acton", "Mandell", "Creighton", "Creighton's", "Cambridge", "Europe", "Catholic"],
     ),
@@ -402,6 +445,15 @@ Ellsberg always said that he had acted on conscience and was prepared to accept 
           t(
             "The fifth paragraph says the judge dismissed the case because of government misconduct, including the break-in at his psychiatrist's office.",
             "第五段说法官因政府的不当行为驳回了此案，其中包括闯入他的心理医生办公室。",
+          ),
+        ),
+        ask(
+          t("Who ordered the secret study of the Vietnam War?", "谁下令对越战进行秘密研究？"),
+          t("Robert McNamara, the secretary of defense", "国防部长罗伯特·麦克纳马拉"),
+          [t("President Richard Nixon", "尼克松总统"), t("Daniel Ellsberg", "丹尼尔·埃尔斯伯格"), t("The New York Times", "《纽约时报》")],
+          t(
+            "In 1967, Robert McNamara, the American secretary of defense, ordered a secret study.",
+            "1967年，美国国防部长罗伯特·麦克纳马拉下令进行一项秘密研究。",
           ),
         ),
       ],

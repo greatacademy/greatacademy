@@ -73,6 +73,15 @@ Yet his method changed philosophy. Epistemology, the study of what we can know a
             "第五段说许多读者认为这种重建远不如之前的怀疑有说服力。",
           ),
         ),
+        ask(
+          t("Which book of Descartes was published in 1641?", "笛卡尔哪本书出版于1641年？"),
+          t("The Meditations", "《沉思集》"),
+          [t("The Republic", "《理想国》"), t("A Theory of Justice", "《正义论》"), t("Nature", "《论自然》")],
+          t(
+            "He carried out the plan years later in a short book, the Meditations, published in 1641.",
+            "多年后他在1641年出版的短书《沉思集》中实施了这个计划。",
+          ),
+        ),
       ],
       ["René", "Descartes", "Descartes's", "Meditations", "Latin", "French", "Europe", "Germany", "God"],
     ),
@@ -130,6 +139,15 @@ But the ring has outlasted the argument. It is a simple way to ask a question th
           t(
             "The last paragraph says a person who would act the same either way is not just because of fear, so their honesty does not depend on being seen.",
             "最后一段说一个无论如何都会同样行事的人并非出于恐惧而正义，所以他的诚实不取决于被看见。",
+          ),
+        ),
+        ask(
+          t("What was Gyges's job?", "古各斯是做什么的？"),
+          t("A shepherd", "牧羊人"),
+          [t("A king", "国王"), t("A soldier", "士兵"), t("A goldsmith", "金匠")],
+          t(
+            "A shepherd named Gyges, working in the hills of Lydia, finds a gold ring.",
+            "在吕底亚山中放牧的牧羊人古各斯发现了一枚金戒指。",
           ),
         ),
       ],
@@ -193,6 +211,19 @@ Scientists rely on induction every day, and science works remarkably well. Some 
             "第五段说他承认，一离开书房去和朋友吃饭、玩游戏，他就忘了自己的怀疑。",
           ),
         ),
+        ask(
+          t("What kind of philosopher was Hume?", "休谟是哪一类哲学家？"),
+          t("An empiricist, who believed knowledge comes from experience", "经验主义者，认为知识来自经验"),
+          [
+            t("A rationalist, who trusted pure reason alone", "理性主义者，只相信纯粹理性"),
+            t("A hedonist, who valued only pleasure", "享乐主义者，只看重快乐"),
+            t("A Confucian scholar", "儒家学者"),
+          ],
+          t(
+            "Hume was an empiricist: he believed that all our knowledge of the world comes from experience.",
+            "休谟是经验主义者：他认为我们对世界的一切知识都来自经验。",
+          ),
+        ),
       ],
       ["David", "Hume", "Hume's", "Scotland", "Scottish", "Bertrand", "Russell", "Russell's"],
     ),
@@ -249,6 +280,12 @@ Neither view has been proved. Studies of babies and young children have found bo
             "第四段说两人都相信任何人都能成为好人，也都认为学习至关重要。",
           ),
         ),
+        ask(
+          t("What did Mencius believe about human nature?", "孟子对人性怎么看？"),
+          t("It is good", "人性本善"),
+          [t("It is bad", "人性本恶"), t("It is neither good nor bad", "无善无恶"), t("It cannot be known", "不可知")],
+          t("Mencius argued that human nature is good.", "孟子认为人性本善。"),
+        ),
       ],
       ["Mencius", "Xunzi", "Xunzi's", "Confucius", "Mencius's", "China", "Chinese", "Warring", "States"],
     ),
@@ -304,6 +341,12 @@ The experiment does not settle the matter. What it does is make an abstract ques
             "The fourth paragraph says many people would not choose to unplug, so our refusal may reflect habit rather than a deep principle.",
             "第四段说许多人不会选择断开，所以我们的拒绝可能反映的是习惯，而不是深层的原则。",
           ),
+        ),
+        ask(
+          t("In which year did Robert Nozick propose his machine?", "罗伯特·诺齐克在哪一年提出他的机器？"),
+          t("In 1974", "1974年"),
+          [t("In 1971", "1971年"), t("In 1997", "1997年"), t("In 1641", "1641年")],
+          t("In 1974, the American philosopher Robert Nozick proposed a machine.", "1974年，美国哲学家罗伯特·诺齐克提出了一台机器。"),
         ),
       ],
       ["Robert", "Nozick", "Nozick's", "Anarchy", "State", "Utopia", "American"],
@@ -364,6 +407,15 @@ The debate continues. But the veil itself has become a common tool. Whenever peo
           t(
             "The fifth paragraph says some critics argued that people might gamble instead, choosing greater rewards and greater risks.",
             "第五段说一些批评者认为人们可能会冒险，选择更大回报和更大风险的社会。",
+          ),
+        ),
+        ask(
+          t("Which book contains the thought experiment of the veil of ignorance?", "哪本书包含“无知之幕”这个思想实验？"),
+          t("A Theory of Justice", "《正义论》"),
+          [t("The Republic", "《理想国》"), t("The Meditations", "《沉思集》"), t("Civil Disobedience", "《论公民的不服从》")],
+          t(
+            "This is the thought experiment at the heart of A Theory of Justice, published in 1971 by the American philosopher John Rawls.",
+            "这是美国哲学家约翰·罗尔斯1971年出版的《正义论》的核心思想实验。",
           ),
         ),
       ],

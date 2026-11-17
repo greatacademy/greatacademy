@@ -75,6 +75,16 @@ Yet the passage has lasted because it names the problem clearly. Every translato
             "第四段说赫胥黎主张伦理应抵抗自然的竞争，而严复的读者却把这本书当作赢得竞争的号召。",
           ),
         ),
+        ask(
+          t("Where had Yan Fu studied as a young man?", "严复年轻时在哪里学习？"),
+          t("At a naval college in Britain", "英国的一所海军学院"),
+          [
+            t("At a university in Tokyo", "东京的一所大学"),
+            t("At a school in Paris", "巴黎的一所学校"),
+            t("At home with private teachers", "在家跟私塾先生"),
+          ],
+          t("As a young man he had studied at a naval college in Britain.", "他年轻时在英国的一所海军学院学习。"),
+        ),
       ],
       [
         "Yan",
@@ -151,6 +161,15 @@ Lu Xun's hard translations are seldom read today, but his argument has proved in
           t(
             "The fourth paragraph says Liang asked what use a translation is if a reader cannot understand it, since a translator's duty is also to the reader.",
             "第四段说梁实秋问，读者看不懂的译文有什么用，因为译者也要对读者负责。",
+          ),
+        ),
+        ask(
+          t("Where were the two brothers studying when they published their anthology?", "兄弟俩出版选集时在哪里留学？"),
+          t("In Tokyo", "东京"),
+          [t("In Moscow", "莫斯科"), t("In London", "伦敦"), t("In Beijing", "北京")],
+          t(
+            "In 1909, two young Chinese brothers studying in Tokyo published a small anthology of stories.",
+            "1909年，两个在东京留学的中国兄弟出版了一本小说选集。",
           ),
         ),
       ],
@@ -232,6 +251,12 @@ Many critics now treat the English Gitanjali as a separate work, with its own be
             "最后一段说许多评论家把它当作一部有自身之美的独立作品，与孟加拉语原作相关但不等同。",
           ),
         ),
+        ask(
+          t("Which prize did Tagore win the year after his London visit?", "泰戈尔访问伦敦后的第二年获得了什么奖？"),
+          t("The Nobel Prize in Literature", "诺贝尔文学奖"),
+          [t("The Nobel Peace Prize", "诺贝尔和平奖"), t("A prize for music", "一个音乐奖"), t("A prize for translation", "一个翻译奖")],
+          t("The following year, Tagore was awarded the Nobel Prize in Literature.", "第二年，泰戈尔获得了诺贝尔文学奖。"),
+        ),
       ],
       [
         "Rabindranath",
@@ -310,6 +335,16 @@ What is not in doubt is Garnett's achievement. Whatever her faults, she made a w
             "The fifth paragraph says one reader will call the newer version truer and another Garnett's more readable, and both judgments can be supported with evidence.",
             "第五段说一个读者会说新版更忠实，另一个会说加内特的更好读，两种判断都能找到证据支持。",
           ),
+        ),
+        ask(
+          t("Why did Constance Garnett's secretary read the Russian aloud to her?", "为什么康斯坦斯·加内特的秘书要把俄文念给她听？"),
+          t("Her eyesight had grown very weak", "她的视力变得很差"),
+          [
+            t("She could not read Russian", "她不识俄文"),
+            t("She liked to hear the music of the words", "她喜欢听文字的音乐"),
+            t("She was working on two books at once", "她同时在译两本书"),
+          ],
+          t("Her eyesight grew so weak that a secretary read the Russian aloud to her.", "她的视力变得很差，秘书只好把俄文念给她听。"),
         ),
       ],
       [
@@ -396,6 +431,15 @@ No version is simply right. Each serves a different reader: one who wants a beau
             "最后一段说没有哪个版本是绝对正确的，每个版本服务于不同的读者。",
           ),
         ),
+        ask(
+          t("Who wrote The Tale of Genji?", "谁写了《源氏物语》？"),
+          t("Murasaki Shikibu, a woman at the imperial court", "宫廷女官紫式部"),
+          [t("Arthur Waley", "亚瑟·韦利"), t("Prince Genji himself", "源氏亲王本人"), t("Royall Tyler", "罗亚尔·泰勒")],
+          t(
+            "A woman at the imperial court of Japan, known to us as Murasaki Shikibu, wrote a long work of fiction.",
+            "日本宫廷中一位被我们称为紫式部的女子写了一部长篇小说。",
+          ),
+        ),
       ],
       [
         "Murasaki",
@@ -475,6 +519,15 @@ Borges loved such puzzles, and his stories have been translated into dozens of l
           t(
             "The fifth paragraph says a translator cannot simply carry words over, because words carry their meaning partly from their place in a culture.",
             "第五段说译者不能简单地搬运词语，因为词语的部分含义来自它们在文化中的位置。",
+          ),
+        ),
+        ask(
+          t("Which classic did Pierre Menard try to write again?", "皮埃尔·梅纳尔想重写哪部经典？"),
+          t("Don Quixote", "《堂吉诃德》"),
+          [t("The Tale of Genji", "《源氏物语》"), t("Gitanjali", "《吉檀迦利》"), t("War and Peace", "《战争与和平》")],
+          t(
+            "Menard's greatest project was to write pages identical to Don Quixote.",
+            "梅纳尔最大的计划是写出与《堂吉诃德》一模一样的篇章。",
           ),
         ),
       ],

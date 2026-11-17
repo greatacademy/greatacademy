@@ -70,6 +70,12 @@ Not every colonist wanted to break with Britain. Many, later called Loyalists, b
             "最后一段说许多后来被称为效忠派的殖民者认为抗议过火了，殖民地在国王统治下更安全。",
           ),
         ),
+        ask(
+          t("How many chests of tea were thrown into Boston harbor?", "有多少箱茶叶被倒进波士顿港？"),
+          t("342", "342箱"),
+          [t("3", "3箱"), t("1,765", "1765箱"), t("42", "42箱")],
+          t("Colonists threw 342 chests of tea into the water.", "殖民者把342箱茶叶倒进了水里。"),
+        ),
       ],
       [
         "Britain",
@@ -141,6 +147,15 @@ Congress approved the Declaration on July 4, 1776. Its words were soon read alou
           t(
             "The passage notes that Jefferson held more than six hundred people in slavery and asks how a country founded on equality could allow some people to own others.",
             "文章指出杰斐逊一生奴役过六百多人，并问一个建立在平等之上的国家怎能允许一些人拥有另一些人。",
+          ),
+        ),
+        ask(
+          t("How old was Thomas Jefferson when he drafted the Declaration?", "杰斐逊起草宣言时多大？"),
+          t("Thirty-three", "三十三岁"),
+          [t("Twenty-one", "二十一岁"), t("Fifty", "五十岁"), t("Seventy-six", "七十六岁")],
+          t(
+            "The committee chose Thomas Jefferson, a thirty-three-year-old lawyer from Virginia.",
+            "委员会选了来自弗吉尼亚的三十三岁律师托马斯·杰斐逊。",
           ),
         ),
       ],
@@ -219,6 +234,15 @@ In Paris, rumors spread that the king was gathering soldiers to crush them. On J
             "最后一段解释说，巴士底狱象征着一个可以不经审判就监禁人民的国王的权力。",
           ),
         ),
+        ask(
+          t("Where did the third estate swear not to separate?", "第三等级在哪里宣誓不解散？"),
+          t("On a tennis court", "在一个网球场上"),
+          [t("In the Bastille", "在巴士底狱"), t("In the palace of Versailles", "在凡尔赛宫"), t("In a church", "在一座教堂里")],
+          t(
+            "Locked out of their hall, they gathered on a nearby tennis court and swore not to separate.",
+            "被锁在会场外，他们聚到附近的网球场宣誓不解散。",
+          ),
+        ),
       ],
       ["France", "French", "Europe", "American", "Revolution", "Versailles", "King", "Louis", "XVI", "Paris", "July", "Bastille"],
     ),
@@ -271,6 +295,12 @@ Many revolutionaries mocked her. In the violent years that followed, she critici
             "The third paragraph says she argued that if women could be punished by the law, they should also have a voice in making it.",
             "第三段说她认为，既然女性会受到法律惩罚，她们也应该在制定法律时拥有发言权。",
           ),
+        ),
+        ask(
+          t("When did French women win the right to vote?", "法国女性何时获得投票权？"),
+          t("In 1944", "1944年"),
+          [t("In 1791", "1791年"), t("In 1793", "1793年"), t("In 1893", "1893年")],
+          t("French women would not win the right to vote until 1944.", "法国女性直到1944年才获得投票权。"),
         ),
       ],
       [
@@ -346,6 +376,12 @@ Then, in 1802, Napoleon sent a huge army to bring back French control, and many 
             "最后一句说海地是第一个由摆脱奴隶制的人建立的国家。",
           ),
         ),
+        ask(
+          t("Who declared the independence of Haiti?", "谁宣布了海地独立？"),
+          t("Jean-Jacques Dessalines", "让-雅克·德萨林"),
+          [t("Toussaint Louverture", "杜桑·卢维杜尔"), t("Napoleon", "拿破仑"), t("Simón Bolívar", "西蒙·玻利瓦尔")],
+          t("On January 1, 1804, Dessalines declared the independence of Haiti.", "1804年1月1日，德萨林宣布海地独立。"),
+        ),
       ],
       [
         "French",
@@ -420,6 +456,12 @@ By 1825, Bolívar's campaigns had freed the lands that became Venezuela, Colombi
             "The last paragraph says he was called the Liberator, yet as he took more power, critics began to call him a dictator.",
             "最后一段说他被称为解放者，但随着他掌握更多权力，批评者开始称他为独裁者。",
           ),
+        ),
+        ask(
+          t("Which country was named in Bolívar's honor?", "哪个国家以玻利瓦尔的名字命名？"),
+          t("Bolivia", "玻利维亚"),
+          [t("Venezuela", "委内瑞拉"), t("Colombia", "哥伦比亚"), t("Ecuador", "厄瓜多尔")],
+          t("Bolivia was named in his honor.", "玻利维亚以他的名字命名。"),
         ),
       ],
       [

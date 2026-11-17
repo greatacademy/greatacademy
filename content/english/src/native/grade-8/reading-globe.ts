@@ -75,6 +75,12 @@ The Globe was rebuilt the next year, and a modern copy now stands near the origi
             "第四段说在演出《亨利八世》时作为音效发射的炮点燃了茅草屋顶。",
           ),
         ),
+        ask(
+          t("In what year did the Globe open?", "环球剧院哪一年开张？"),
+          t("In 1599", "1599年"),
+          [t("In 1613", "1613年"), t("In 1564", "1564年"), t("In 1660", "1660年")],
+          t("The Globe opened in 1599.", "环球剧院于1599年开张。"),
+        ),
       ],
       [
         "December",
@@ -151,6 +157,19 @@ All the parts are played by men and boys. Women were not allowed to act on the E
             "最后一段说所有角色都由男人和男孩扮演，因为直到1660年女性才被允许在英国舞台上表演。",
           ),
         ),
+        ask(
+          t("What showed that there would be a play that day?", "什么表示当天有戏演？"),
+          t("A flag flying from the top of the Globe", "剧院顶上飘扬的旗子"),
+          [
+            t("A bell ringing in the church", "教堂敲钟"),
+            t("A notice in the newspaper", "报纸上的通知"),
+            t("Lights in the windows", "窗户里的灯光"),
+          ],
+          t(
+            "A flag is flying from the top of the Globe to show that there will be a play today.",
+            "环球剧院顶上飘着旗子，表示今天有戏演。",
+          ),
+        ),
       ],
       ["Globe", "London", "Bridge", "English", "Juliet"],
     ),
@@ -209,6 +228,12 @@ He retired to Stratford and died there in 1616. Seven years later, two of his fe
             "The last paragraph says two fellow actors collected his plays in the First Folio, and without it, half of them might have been lost.",
             "最后一段说两位同事把他的剧本收集成《第一对开本》，没有它，其中一半可能已经失传。",
           ),
+        ),
+        ask(
+          t("What was Shakespeare's father's trade?", "莎士比亚的父亲是做什么的？"),
+          t("A glove maker", "手套匠"),
+          [t("A playwright", "剧作家"), t("A schoolteacher", "教师"), t("A boatman", "船夫")],
+          t("His father was a glove maker who became an important man in the town.", "他父亲是个手套匠，后来成了镇上的要人。"),
         ),
       ],
       [
@@ -289,6 +314,12 @@ Only then, standing over the bodies of their children, do the two families agree
             "第三段说茂丘西奥被杀后，罗密欧一怒之下杀了提伯尔特，随后亲王把他逐出维罗纳。",
           ),
         ),
+        ask(
+          t("Who secretly married Romeo and Juliet?", "谁秘密为罗密欧和朱丽叶主持了婚礼？"),
+          t("Friar Laurence", "劳伦斯神父"),
+          [t("The Prince of Verona", "维罗纳亲王"), t("Mercutio", "茂丘西奥"), t("Lord Montague", "蒙太古勋爵")],
+          t("The next day, they are secretly married by Friar Laurence.", "第二天，劳伦斯神父秘密为他们主持了婚礼。"),
+        ),
       ],
       [
         "Romeo",
@@ -365,6 +396,12 @@ Above all, remember that these plays were written to be heard, not read silently
             "第四段给出了这个例子，建议把主语和动词放回通常的位置：I have seen him。",
           ),
         ),
+        ask(
+          t('What did "anon" mean in Shakespeare\'s English?', "莎士比亚时代的“anon”是什么意思？"),
+          t("Soon", "很快"),
+          [t("Before", "以前"), t("Hurry", "赶快"), t("Why", "为什么")],
+          t('"Anon" meant "soon," "ere" meant "before," and "hie" meant "hurry."', "“anon”意思是“很快”，“ere”是“以前”，“hie”是“赶快”。"),
+        ),
       ],
       ["Shakespeare", "English", "Early", "Modern", "Shakespeare's", "Juliet", "Romeo"],
     ),
@@ -420,6 +457,12 @@ The play asks whether Macbeth's fate was decided by the witches or by his own ch
             "The last paragraph says the witches only told him what might happen, and it was Macbeth who chose villainy to make it happen.",
             "最后一段说女巫只是告诉他可能会发生什么，是麦克白自己选择用罪恶让它成真。",
           ),
+        ),
+        ask(
+          t("Where does Macbeth begin?", "《麦克白》开场在哪里？"),
+          t("On a lonely heath in Scotland", "苏格兰荒凉的荒野上"),
+          [t("In King Duncan's castle", "邓肯国王的城堡里"), t("At a feast", "宴会上"), t("In Verona", "维罗纳")],
+          t("It begins on a lonely heath in Scotland, in thunder and lightning.", "它在电闪雷鸣中苏格兰荒凉的荒野上开场。"),
         ),
       ],
       ["Macbeth", "Shakespeare's", "Scotland", "King", "Duncan", "Banquo", "Lady", "Duncan's", "Malcolm", "Macbeth's"],

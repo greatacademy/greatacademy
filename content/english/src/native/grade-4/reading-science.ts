@@ -72,6 +72,16 @@ export const biomesUnit: ReadingUnitDef = {
             "最后一段解释说，沙漠慢慢变成草原，草原又慢慢变成森林。",
           ],
         ),
+        q(
+          ["What kind of biome has four seasons?", "哪种生物群落有四季？"],
+          ["A temperate forest", "温带森林"],
+          [
+            ["A desert", "沙漠"],
+            ["A rainforest", "雨林"],
+            ["The tundra", "苔原"],
+          ],
+          ["The text says a temperate forest has four seasons.", "短文说温带森林有四季。"],
+        ),
       ],
     ),
     passage(
@@ -124,6 +134,16 @@ export const biomesUnit: ReadingUnitDef = {
             "The last paragraph defines an oasis as a place where water rises from under the ground, so plants can grow.",
             "最后一段把绿洲定义为有水从地下涌出的地方，所以植物能生长。",
           ],
+        ),
+        q(
+          ["Why can the Sahara become cold at night?", "撒哈拉夜里为什么会变冷？"],
+          ["The heat escapes into the clear sky", "热量散到晴朗的夜空中"],
+          [
+            ["Rain falls every night", "每晚都下雨"],
+            ["Snow covers the sand", "雪覆盖了沙子"],
+            ["The wind comes from the sea", "风从海上吹来"],
+          ],
+          ["At night, the heat escapes into the clear sky, and the air can become cold.", "夜里热量散到晴朗的天空中，空气就会变冷。"],
         ),
       ],
       { names: ["Sahara", "Africa", "United States"] },
@@ -179,6 +199,16 @@ export const biomesUnit: ReadingUnitDef = {
             "最后一段讲了其他办法：很长的根，或以种子的形式等到下雨。其他细节说的都是仙人掌。",
           ],
         ),
+        q(
+          ["Where do the saguaro's roots spread?", "巨人柱仙人掌的根向哪里伸展？"],
+          ["Wide, just under the surface", "在地表下浅浅地向四周铺开"],
+          [
+            ["Deep down to underground water", "深深扎到地下水"],
+            ["Up into the air", "向上伸到空中"],
+            ["Around other plants", "缠在别的植物上"],
+          ],
+          ["Its shallow roots spread wide just under the surface.", "它的浅根在地表下向四周铺开。"],
+        ),
       ],
       { names: ["saguaro"] },
     ),
@@ -233,6 +263,19 @@ export const biomesUnit: ReadingUnitDef = {
           [
             "The passage begins with the emergent layer at the very top and ends with the forest floor at the bottom.",
             "文章从最顶部的露生层开始，到最底部的地面层结束。",
+          ],
+        ),
+        q(
+          ["What happens to leaves that fall on the forest floor?", "落到森林地面的树叶会怎样？"],
+          ["They rot quickly and go back into the soil", "很快腐烂，回到土壤里"],
+          [
+            ["They stay there for years", "在那里留很多年"],
+            ["They are blown up to the canopy", "被吹到树冠层"],
+            ["They dry out in the sun", "在阳光下晒干"],
+          ],
+          [
+            "Leaves that fall there rot quickly in the warm, wet air, and their goodness goes back into the soil.",
+            "落在那里的树叶在温暖潮湿的空气中很快腐烂，养分回到土壤里。",
           ],
         ),
       ],
@@ -291,6 +334,16 @@ export const biomesUnit: ReadingUnitDef = {
             "第三段说，树懒的毛里长着绿色的小植物，这帮它与树叶融为一体。",
           ],
         ),
+        q(
+          ["How does the flying frog get from one tree to the next?", "飞蛙怎样从一棵树到另一棵树？"],
+          ["It glides on its webbed feet", "靠有蹼的脚滑翔"],
+          [
+            ["It climbs down and walks", "爬下来走过去"],
+            ["It swings by its tail", "用尾巴荡过去"],
+            ["It flies with wings", "用翅膀飞过去"],
+          ],
+          ["When it leaps, it spreads its toes, and the webs act like small parachutes.", "它跳起时张开脚趾，蹼就像小降落伞一样。"],
+        ),
       ],
     ),
     passage(
@@ -343,6 +396,16 @@ export const biomesUnit: ReadingUnitDef = {
             "The last paragraph says a few animals, such as the arctic fox and the musk ox, stay all year, while caribou and birds come and go.",
             "最后一段说，有几种动物全年留下，比如北极狐和麝牛，而驯鹿和鸟会来来去去。",
           ],
+        ),
+        q(
+          ["How long does summer last on the tundra?", "苔原上的夏天有多长？"],
+          ["Only about two months", "只有大约两个月"],
+          [
+            ["About six months", "大约六个月"],
+            ["All year", "一整年"],
+            ["About two weeks", "大约两周"],
+          ],
+          ["The text says summer lasts only about two months.", "短文说夏天只有大约两个月。"],
         ),
       ],
     ),
@@ -513,6 +576,19 @@ export const energyUnit: ReadingUnitDef = {
             "文章称能量只是从一种形式变成另一种形式是最重要的事实之一，并在结尾再次强调。",
           ],
         ),
+        q(
+          ["Where is energy stored, according to the passage?", "根据短文，能量储存在哪里？"],
+          ["In food, fuel and batteries", "在食物、燃料和电池里"],
+          [
+            ["Only in the sun", "只在太阳里"],
+            ["Only in wires", "只在电线里"],
+            ["In shadows", "在影子里"],
+          ],
+          [
+            "The text says energy is stored in food, in fuel such as wood and gas, and in batteries.",
+            "短文说能量储存在食物、木柴和燃气等燃料以及电池里。",
+          ],
+        ),
       ],
     ),
     passage(
@@ -565,6 +641,16 @@ export const energyUnit: ReadingUnitDef = {
             "The last paragraph says some energy changes into heat and sound as the wheels rub and rumble, so it no longer pushes the cars.",
             "最后一段说，车轮摩擦、轰隆作响时，一部分能量变成热和声音，不再推动车厢。",
           ],
+        ),
+        q(
+          ["What pulls the cars up the first big hill?", "什么把车厢拉上第一座大坡？"],
+          ["A chain", "一条链条"],
+          [
+            ["The brakes", "刹车"],
+            ["The wind", "风"],
+            ["Gravity", "重力"],
+          ],
+          ["The text says a chain pulls the cars slowly up the first big hill.", "短文说一条链条把车厢慢慢拉上第一座大坡。"],
         ),
       ],
     ),
@@ -621,6 +707,19 @@ export const energyUnit: ReadingUnitDef = {
             "最后一段说，外套是隔热体：它减慢热量从身体流出。",
           ],
         ),
+        q(
+          ["What are insulators?", "什么是隔热材料？"],
+          ["Materials that slow down the flow of heat", "能减缓热量流动的材料"],
+          [
+            ["Materials that let heat pass easily", "让热量容易通过的材料"],
+            ["Machines that make heat", "产生热量的机器"],
+            ["Ways that heat travels through space", "热量穿过太空的方式"],
+          ],
+          [
+            "Some materials, called insulators, slow heat down, such as wool, feathers and trapped air.",
+            "有些材料叫隔热材料，能减缓热量流动，比如羊毛、羽毛和被困住的空气。",
+          ],
+        ),
       ],
       { glossed: ["conduction", "convection", "radiation", "insulators"] },
     ),
@@ -675,6 +774,16 @@ export const energyUnit: ReadingUnitDef = {
             "最后一段说，光从红苹果上反射进入你的眼睛，你就看到了苹果和它的颜色。",
           ],
         ),
+        q(
+          ["How long does sunlight take to reach the Earth?", "阳光到达地球需要多久？"],
+          ["About eight minutes", "大约八分钟"],
+          [
+            ["About eight seconds", "大约八秒"],
+            ["About one day", "大约一天"],
+            ["About eight hours", "大约八小时"],
+          ],
+          ["Sunlight takes only about eight minutes to cross from the sun to the Earth.", "阳光从太阳到地球只需大约八分钟。"],
+        ),
       ],
     ),
     passage(
@@ -724,6 +833,16 @@ export const energyUnit: ReadingUnitDef = {
             "The last paragraph says fast vibrations make high sounds and slow vibrations make low sounds; strength makes a sound loud or soft.",
             "最后一段说，快的振动产生高音，慢的振动产生低音；振动的强弱决定声音的大小。",
           ],
+        ),
+        q(
+          ["Where does sound travel fastest?", "声音在哪里传播得最快？"],
+          ["In solids", "在固体中"],
+          [
+            ["In air", "在空气中"],
+            ["In water", "在水中"],
+            ["In empty space", "在真空中"],
+          ],
+          ["Sound travels faster in water than in air, and faster still in solids.", "声音在水中比在空气中快，在固体中更快。"],
         ),
       ],
     ),
@@ -782,6 +901,16 @@ export const energyUnit: ReadingUnitDef = {
             "The fourth paragraph says that at a dam, water rushing downhill spins the turbines.",
             "第四段说，在水坝，向下奔流的水转动涡轮。",
           ],
+        ),
+        q(
+          ["What does a generator have inside it?", "发电机里面有什么？"],
+          ["A coil of wire and a set of magnets", "一个线圈和一组磁铁"],
+          [
+            ["A pot of boiling water", "一锅沸水"],
+            ["A battery and a lamp", "一个电池和一盏灯"],
+            ["A dam and a river", "一座水坝和一条河"],
+          ],
+          ["A generator has a coil of wire and a set of magnets.", "发电机有一个线圈和一组磁铁。"],
         ),
       ],
     ),

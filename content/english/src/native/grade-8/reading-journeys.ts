@@ -70,6 +70,15 @@ For the rest, it was the beginning of a new life. They took a ferry to Manhattan
             "第四段说约百分之二的人被拒绝入境并被遣返，对这些家庭来说，埃利斯岛成了“泪水之岛”。",
           ),
         ),
+        ask(
+          t('What did a chalk "E" on a coat stand for?', "外套上的粉笔“E”代表什么？"),
+          t("Eyes", "眼睛"),
+          [t("Ears", "耳朵"), t("England", "英格兰"), t("Entry refused", "拒绝入境")],
+          t(
+            'Doctors marked people with chalk: "H" for heart, "E" for eyes, "L" for lameness.',
+            "医生用粉笔做记号：“H”代表心脏，“E”代表眼睛，“L”代表跛足。",
+          ),
+        ),
       ],
       [
         "Ellis",
@@ -150,6 +159,12 @@ In 1940, a fire destroyed the administration building, and the station closed. Y
             "这些诗由被拘留的移民亲手刻下，诉说着孤独、愤怒和思乡之情，是别处找不到的第一手记录。",
           ),
         ),
+        ask(
+          t("In what year was the Chinese Exclusion Act repealed?", "《排华法案》哪一年被废除？"),
+          t("In 1943", "1943年"),
+          [t("In 1882", "1882年"), t("In 1910", "1910年"), t("In 1940", "1940年")],
+          t("The Chinese Exclusion Act itself was not repealed until 1943.", "《排华法案》直到1943年才被废除。"),
+        ),
       ],
       ["United", "States", "San", "Francisco", "Bay", "Angel", "Island", "Ellis", "China", "Chinese", "Exclusion", "Act", "American"],
     ),
@@ -213,6 +228,12 @@ Mr. Le: For a long time, I thought home was the place I lost. Now I think home i
             "In his last answer, he says that for a long time home was the place he lost, but now he thinks home is the people.",
             "在最后一个回答中，他说很长时间以来家是他失去的地方，但现在他认为家是人。",
           ),
+        ),
+        ask(
+          t("Which city's church sponsored Mr. Le's family?", "哪座城市的教会资助了黎先生一家？"),
+          t("Winnipeg", "温尼伯"),
+          [t("Toronto", "多伦多"), t("Vancouver", "温哥华"), t("Montreal", "蒙特利尔")],
+          t("A church in Winnipeg sponsored our family.", "温尼伯的一个教会资助了我们一家。"),
         ),
       ],
       [
@@ -291,6 +312,16 @@ The writer Isabel Wilkerson, who interviewed more than a thousand people for her
             "Asylum is protection sought by people fleeing danger; Wilkerson's comparison shows that the migrants fled injustice without crossing a border.",
             "庇护是逃离危险的人所寻求的保护；威尔克森的比较表明，这些移民没有越过国界，却在逃离不公。",
           ),
+        ),
+        ask(
+          t("Which newspaper urged readers to come north?", "哪家报纸鼓励读者北上？"),
+          t("The Chicago Defender", "《芝加哥保卫者报》"),
+          [
+            t("The New York Times", "《纽约时报》"),
+            t("A paper in Harlem", "哈莱姆的一家报纸"),
+            t("A Southern farm paper", "南方的一份农业报"),
+          ],
+          t("Black newspapers such as the Chicago Defender urged readers to come.", "《芝加哥保卫者报》等黑人报纸鼓励读者北上。"),
         ),
       ],
       [
@@ -375,6 +406,12 @@ After the war, Sugihara left the diplomatic service and lived quietly for many y
             "最后一段说这个称号授予那些冒着自身危险从迫害中拯救犹太人的人，杉原千亩违抗命令正是这样做的。",
           ),
         ),
+        ask(
+          t("In which city was Sugihara's consulate?", "杉原千亩所在的领事馆在哪座城市？"),
+          t("Kaunas, in Lithuania", "立陶宛的考纳斯"),
+          [t("Warsaw, in Poland", "波兰的华沙"), t("Tokyo", "东京"), t("Berlin", "柏林")],
+          t("The crowd gathered outside the Japanese consulate in Kaunas, a city in Lithuania.", "人群聚集在立陶宛考纳斯的日本领事馆外。"),
+        ),
       ],
       [
         "Japanese",
@@ -452,6 +489,12 @@ Each account does something the other cannot. The report gives the facts: dates,
             "The passage ends by saying a report without memoirs can seem cold and a memoir without reports can be hard to place in the larger story.",
             "文章结尾说没有回忆录的报告会显得冷冰冰，而没有报告的回忆录则难以放进更大的历史背景中。",
           ),
+        ),
+        ask(
+          t("About how many children did the Kindertransport bring to Britain?", "儿童转运行动大约把多少孩子带到了英国？"),
+          t("About ten thousand", "大约一万"),
+          [t("About one hundred", "大约一百"), t("About a million", "大约一百万"), t("About two thousand", "大约两千")],
+          t("The Kindertransport brought about ten thousand children to Britain.", "儿童转运行动把大约一万名儿童带到了英国。"),
         ),
       ],
       [

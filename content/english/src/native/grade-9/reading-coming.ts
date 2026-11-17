@@ -72,6 +72,19 @@ Perhaps that is why so many young people create their own rites: a first job, a 
             "第四段说界线模糊了，开车、投票、饮酒的年龄各不相同，没有明确的仪式，步入成年就变得更令人困惑。",
           ),
         ),
+        ask(
+          t("When does Japan hold its coming-of-age ceremonies?", "日本在什么时候举行成人礼？"),
+          t("On the second Monday of January", "一月的第二个星期一"),
+          [
+            t("On a person's fifteenth birthday", "本人十五岁生日"),
+            t("In the spring festival", "春节期间"),
+            t("On the last day of school", "学年最后一天"),
+          ],
+          t(
+            "Every year on the second Monday of January, Japanese cities hold ceremonies for new adults.",
+            "每年一月的第二个星期一，日本各城市为新成年人举行仪式。",
+          ),
+        ),
       ],
       ["French", "Arnold", "van", "Gennep", "Sateré-Mawé", "Amazon", "Latin", "America", "Japan", "Monday", "January", "Gennep's"],
       ["quinceañera", "kimono"],
@@ -134,6 +147,18 @@ Scientists warn against using this research to dismiss young people as foolish. 
             "第五段说青少年知道朋友在隔壁房间时冒了多得多的风险，而成年人没有。",
           ),
         ),
+        ask(
+          t(
+            "By what age does a child's brain reach about ninety percent of its adult size?",
+            "孩子的大脑到几岁达到成人大小的约百分之九十？",
+          ),
+          t("By six", "六岁"),
+          [t("By twelve", "十二岁"), t("By eighteen", "十八岁"), t("By twenty-five", "二十五岁")],
+          t(
+            "A child's brain reaches about ninety percent of its adult size by the age of six.",
+            "孩子的大脑到六岁时就达到成人大小的约百分之九十。",
+          ),
+        ),
       ],
     ),
     passage(
@@ -190,6 +215,12 @@ The form is still alive. Novels about young people from many backgrounds, findin
             "The fifth paragraph says looking back creates two voices at once, the young person who does not yet understand and the adult who does.",
             "第五段说回顾往事同时产生两种声音：尚不明白的年轻人和已经明白的成年人。",
           ),
+        ),
+        ask(
+          t("In which year was Jane Eyre published?", "《简·爱》哪一年出版？"),
+          t("In 1847", "1847年"),
+          [t("In 1868", "1868年"), t("In 1799", "1799年"), t("In 1909", "1909年")],
+          t("Charlotte Brontë's Jane Eyre was published in 1847.", "夏洛蒂·勃朗特的《简·爱》出版于1847年。"),
         ),
       ],
       [
@@ -274,6 +305,12 @@ Otto Frank published it in 1947. It has since been translated into more than sev
             "第四段说她听到广播请荷兰人保存日记作为战争记录，于是开始改写日记，希望出版。",
           ),
         ),
+        ask(
+          t("What did Anne call the imaginary friend she wrote to?", "安妮把日记写给的想象中的朋友叫什么？"),
+          t("Kitty", "基蒂"),
+          [t("Margot", "玛格特"), t("Otto", "奥托"), t("Marmee", "玛米")],
+          t("She addressed her entries to an imaginary friend she called Kitty.", "她把日记写给一个叫基蒂的想象中的朋友。"),
+        ),
       ],
       [
         "June",
@@ -346,6 +383,12 @@ Malala has often said that she does not want to be remembered as the girl who wa
             "The last paragraph says she wants to be remembered not as the girl who was shot, but as the girl who stood up.",
             "最后一段说她希望人们记住的不是中枪的女孩，而是挺身而出的女孩。",
           ),
+        ),
+        ask(
+          t("At what age did Malala receive the Nobel Peace Prize?", "马拉拉几岁获得诺贝尔和平奖？"),
+          t("Seventeen", "十七岁"),
+          [t("Eleven", "十一岁"), t("Sixteen", "十六岁"), t("Twenty-one", "二十一岁")],
+          t("In 2014, at the age of seventeen, Malala received the Nobel Peace Prize.", "2014年，十七岁的马拉拉获得诺贝尔和平奖。"),
         ),
       ],
       [
@@ -422,6 +465,15 @@ Little Women is about how four very different young women grow up within one fam
           t(
             "The fourth paragraph says Alcott, under pressure from her publisher, gave Jo a different husband and privately complained about it.",
             "第四段说奥尔科特在出版商的压力下给乔安排了另一位丈夫，并私下抱怨过此事。",
+          ),
+        ),
+        ask(
+          t("Which sister burns Jo's manuscript?", "哪个妹妹烧了乔的手稿？"),
+          t("Amy", "艾米"),
+          [t("Meg", "梅格"), t("Beth", "贝丝"), t("Marmee", "玛米")],
+          t(
+            "Amy, angry at being left out, burns the manuscript of a book Jo has been writing.",
+            "艾米因被冷落而生气，烧了乔正在写的书稿。",
           ),
         ),
       ],

@@ -71,6 +71,12 @@ By August I could swim the length of the pool. I was slow and clumsy, but I coul
             "一开始她害怕地抓着池边；到了八月，她已经能独自游完泳池全长，虽然游得很慢。",
           ),
         ),
+        ask(
+          t("Who taught the writer to swim?", "谁教作者游泳？"),
+          t("Her aunt", "她的姑妈"),
+          [t("Her uncle", "她的叔叔"), t("Her little cousins", "她的小表亲"), t("A coach she did not know", "一位陌生的教练")],
+          t("Her aunt, who taught swimming at the town pool, offered to give her lessons.", "在镇游泳池教游泳的姑妈主动提出给她上课。"),
+        ),
       ],
     ),
     passage(
@@ -129,6 +135,12 @@ My grandmother died when I was fourteen. Her kitchen is gone now, and someone el
             "结尾呼应了外婆的举动：现在作者成了和孩子一起包饺子的长辈，她做了外婆曾经做的事。",
           ),
         ),
+        ask(
+          t("What was the writer's job in the kitchen every Sunday?", "每个星期天作者在厨房里的任务是什么？"),
+          t("Folding dumplings", "包饺子"),
+          [t("Baking bread", "烤面包"), t("Washing the dishes", "洗碗"), t("Chopping ginger", "切姜")],
+          t("Every Sunday my grandmother put me to work folding dumplings.", "每个星期天奶奶都让我包饺子。"),
+        ),
       ],
       ["Lunar"],
     ),
@@ -183,6 +195,19 @@ We stayed in that town for four years, the longest I had ever lived anywhere. Ma
           t(
             "He says he was hiding from the very thing he wanted most, which reveals that what he really wanted was friends.",
             "他说自己当时躲避的正是他最想要的东西，这表明他真正想要的是朋友。",
+          ),
+        ),
+        ask(
+          t("Who was the writer's lab partner?", "作者的实验搭档是谁？"),
+          t("A tall boy named Marcus", "一个叫马库斯的高个男孩"),
+          [
+            t("Ms. Okafor", "奥卡福老师"),
+            t("One of Marcus's sisters", "马库斯的一个姐妹"),
+            t("Nobody; he worked alone", "没有人，他单独做"),
+          ],
+          t(
+            "My partner was a tall boy named Marcus who talked more than anyone I had ever met.",
+            "我的搭档是一个叫马库斯的高个男孩，他比谁都能说。",
           ),
         ),
       ],
@@ -244,6 +269,16 @@ That paper is pinned to the wall of my room in our new apartment. I have added t
             "描下来的身高刻度如今钉在他新房间的墙上，是他从旧家带来的一部分，结尾那句话回顾的正是这一点。",
           ),
         ),
+        ask(
+          t("Why was the family moving?", "这家人为什么搬家？"),
+          t("The mother had found a better job", "妈妈找到了更好的工作"),
+          [
+            t("The house was too small", "房子太小"),
+            t("The father had retired", "爸爸退休了"),
+            t("Jada's family was moving too", "贾达一家也要搬"),
+          ],
+          t("They were moving to a city where the mother had found a better job.", "他们要搬到妈妈找到更好工作的城市。"),
+        ),
       ],
       ["Linden", "Jada"],
     ),
@@ -300,6 +335,12 @@ In the end, Theo was the one who broke it. He knocked on my door with the plane 
             "最后一段说，西奥拿着飞机敲她的门，问她愿不愿意帮忙把它好好修好，尽管两人都没有口头道歉。",
           ),
         ),
+        ask(
+          t("What color had Theo painted the plane's wings?", "西奥把飞机的机翼涂成了什么颜色？"),
+          t("Silver", "银色"),
+          [t("Red", "红色"), t("Gold", "金色"), t("White", "白色")],
+          t("Theo had spent weeks building it, painting the wings silver.", "西奥花了几周造它，把机翼涂成了银色。"),
+        ),
       ],
       ["Theo"],
     ),
@@ -355,6 +396,12 @@ I rode that bike until it was much too small for me. I have owned better bikes s
             "The last sentence states the lesson his father's question taught him: the things you work for are the ones you value most.",
             "最后一句点明了父亲的问题教给他的道理：你努力争取来的东西，才是你最珍惜的。",
           ),
+        ),
+        ask(
+          t("How long did it take to save for the bike?", "攒钱买自行车用了多久？"),
+          t("Eleven months", "十一个月"),
+          [t("Two weeks", "两个星期"), t("Two years", "两年"), t("One summer", "一个夏天")],
+          t("It took me eleven months.", "我用了十一个月。"),
         ),
       ],
       ["Hassan's", "Hassan"],

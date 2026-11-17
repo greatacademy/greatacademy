@@ -78,6 +78,12 @@ Today, the twenty-second of June is celebrated in Britain as Windrush Day, a rec
             "第六段说一些合法居住了几十年的人，因缺少政府从未发放的证件，被错误地告知他们是非法居留。",
           ),
         ),
+        ask(
+          t("Where did the Empire Windrush dock in 1948?", "1948年“帝国疾风号”停靠在哪里？"),
+          t("At Tilbury, near London", "伦敦附近的蒂尔伯里"),
+          [t("At Liverpool", "利物浦"), t("In Jamaica", "牙买加"), t("At Dover", "多佛")],
+          t("A ship called the Empire Windrush docked at Tilbury, near London.", "一艘名为“帝国疾风号”的船停靠在伦敦附近的蒂尔伯里。"),
+        ),
       ],
       [
         "Empire",
@@ -151,6 +157,16 @@ The line Radcliffe drew still divides the two countries. It reminds us that a bo
             "The sixth paragraph says the stories describe kindness too: neighbors who hid families of the other religion and strangers who shared water.",
             "第六段说这些故事也记录了善意：邻居藏匿其他宗教的家庭，陌生人在路上分享水。",
           ),
+        ),
+        ask(
+          t("When were the borders announced?", "边界是什么时候公布的？"),
+          t("Two days after independence", "独立两天后"),
+          [
+            t("A year before independence", "独立前一年"),
+            t("On the day of independence", "独立当天"),
+            t("Five weeks after independence", "独立五周后"),
+          ],
+          t("The borders were announced on the seventeenth of August, two days after independence.", "边界于8月17日公布，即独立两天后。"),
         ),
       ],
       [
@@ -227,6 +243,12 @@ Today, many descendants of those emigrants live around the world. Some travel to
             "第五段说妻子可能要等几十年，孩子成长时只能通过书信和照片认识父亲。",
           ),
         ),
+        ask(
+          t("What were the tall towers of Kaiping called?", "开平的高楼叫什么？"),
+          t("Diaolou", "碉楼"),
+          [t("Qiaopi", "侨批"), t("Pagodas", "宝塔"), t("Qiaoxiang", "侨乡")],
+          t("Families built tall towers of concrete and stone called diaolou.", "人们建起了叫作碉楼的混凝土和石头高楼。"),
+        ),
       ],
       ["Guangdong", "Fujian", "Kaiping", "Taishan", "Southeast", "Asia", "America", "Chinese", "UNESCO", "qiaoxiang", "diaolou"],
     ),
@@ -289,6 +311,12 @@ Many adult third-culture kids say they found their sense of belonging not in a p
             "The sixth paragraph says that on returning to their parents' country, many feel like foreigners in the place that is supposed to be home.",
             "第六段说回到父母的祖国时，许多人在本该是家的地方感到自己像外国人。",
           ),
+        ),
+        ask(
+          t("How many times has Mei Lin's family moved?", "美琳一家搬过几次家？"),
+          t("Four times", "四次"),
+          [t("Twice", "两次"), t("Ten times", "十次"), t("Never", "从没搬过")],
+          t("Her family has moved four times.", "她家搬过四次。"),
         ),
       ],
       [
@@ -362,6 +390,12 @@ Some readers have wondered why he did not write in Polish or French. Conrad once
             "The last paragraph says that for a man who had lost his country, parents and home, a language may have been the one place he could make his own.",
             "最后一段说对一个失去祖国、父母和家园的人来说，语言也许是他唯一能据为己有的地方。",
           ),
+        ),
+        ask(
+          t("Where did Conrad settle in England?", "康拉德在英国定居在哪里？"),
+          t("In Kent, in the south of England", "英格兰南部的肯特"),
+          [t("In London", "伦敦"), t("In Scotland", "苏格兰"), t("In Marseille", "马赛")],
+          t("He became a British citizen and settled in Kent, in the south of England.", "他成为英国公民，定居在英格兰南部的肯特。"),
         ),
       ],
       [
@@ -443,6 +477,19 @@ The story of the braceros is repeated in many countries today, wherever temporar
           t(
             "The fifth paragraph says they were welcome as long as their labor was needed but not expected to stay, bring families or become part of the communities.",
             "第五段说只要需要他们的劳动，他们就受欢迎，但人们并不希望他们留下、带来家人或融入社区。",
+          ),
+        ),
+        ask(
+          t("About how many work contracts were signed from 1942 to 1964?", "1942年至1964年约签订了多少份工作合同？"),
+          t("About four and a half million", "约四百五十万份"),
+          [
+            t("About forty-five thousand", "约四万五千份"),
+            t("About half a million", "约五十万份"),
+            t("About forty-five million", "约四千五百万份"),
+          ],
+          t(
+            "From 1942 to 1964, about four and a half million work contracts were signed.",
+            "从1942年到1964年，约签订了四百五十万份工作合同。",
           ),
         ),
       ],

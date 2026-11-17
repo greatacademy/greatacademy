@@ -67,6 +67,12 @@ Today, microscopes can magnify things a million times. But it all began with a c
             "第三段说，其他科学家自己制作了显微镜，也看到了同样的微小生物。",
           ),
         ),
+        ask(
+          t("What was van Leeuwenhoek's job?", "列文虎克是做什么工作的？"),
+          t("He sold cloth", "他卖布"),
+          [t("He was a doctor", "他是医生"), t("He was a sailor", "他是水手"), t("He taught science", "他教科学")],
+          t("The text says he was a Dutch cloth seller.", "短文说他是一个荷兰布商。"),
+        ),
       ],
     ),
     passage(
@@ -120,6 +126,19 @@ Cells also make more cells. A cell divides into two, then those two divide, and 
           t(
             "The fourth paragraph compares the nucleus to a control center that directs what the cell does. The membrane is the part like a bag.",
             "第四段把细胞核比作指挥中心，它指挥细胞的活动。像袋子的是细胞膜。",
+          ),
+        ),
+        ask(
+          t("What does the membrane of a cell do?", "细胞膜有什么作用？"),
+          t("It controls what goes in and out", "控制物质的进出"),
+          [
+            t("It carries messages through the body", "在身体里传递信息"),
+            t("It holds the plant upright", "让植物直立"),
+            t("It makes food from sunlight", "利用阳光制造食物"),
+          ],
+          t(
+            "A thin membrane surrounds each cell like a bag, controlling what goes in and out.",
+            "一层薄膜像袋子一样包住每个细胞，控制物质的进出。",
           ),
         ),
       ],
@@ -179,6 +198,12 @@ Every one of these creatures is busy finding food, escaping danger and making co
             "第一段和最后一段把这滴水称为拥挤繁忙的城市，因为有这么多生物在觅食和躲避危险。",
           ),
         ),
+        ask(
+          t("What is the green ball rolling across the slide?", "在载玻片上滚动的绿球是什么？"),
+          t("A colony of algae", "一群藻类"),
+          [t("A water flea", "一只水蚤"), t("An amoeba", "一只变形虫"), t("A paramecium", "一只草履虫")],
+          t("The green ball is a colony of algae, thousands of cells living together.", "绿球是一群藻类，成千上万个细胞生活在一起。"),
+        ),
       ],
     ),
     passage(
@@ -229,6 +254,16 @@ Without bacteria, the world would be buried under dead plants and animals, and t
             "The last paragraph says the world would be buried under dead things, and the soil would have no food for crops.",
             "最后一段说，世界会被死去的生物掩埋，土壤也没有养分供给庄稼。",
           ),
+        ),
+        ask(
+          t("How do some bacteria help make food?", "有些细菌怎样帮助制作食物？"),
+          t("They help make cheese and yogurt", "帮助制作奶酪和酸奶"),
+          [
+            t("They help bread rise", "帮助面包发酵"),
+            t("They grow into mushrooms", "长成蘑菇"),
+            t("They turn milk into water", "把牛奶变成水"),
+          ],
+          t("The text says other bacteria help make cheese and yogurt.", "短文说还有些细菌帮助制作奶酪和酸奶。"),
         ),
       ],
     ),
@@ -285,6 +320,15 @@ Some fungi are dangerous. Certain wild mushrooms are poisonous, and only an expe
             "第四段说，孢子落在温暖、潮湿、食物丰富的地方就开始生长。",
           ),
         ),
+        ask(
+          t("What medicine came from a mold?", "哪种药来自一种霉菌？"),
+          t("Penicillin", "青霉素"),
+          [t("Aspirin", "阿司匹林"), t("Yogurt", "酸奶"), t("Yeast", "酵母")],
+          t(
+            "One mold gave the world penicillin, a medicine that has saved millions of lives.",
+            "一种霉菌给世界带来了青霉素，这种药挽救了数百万人的生命。",
+          ),
+        ),
       ],
     ),
     passage(
@@ -339,6 +383,12 @@ In the hot oven, the bubbles grew larger still, and then the heat killed the yea
             'She says "too hot, and you\'ll kill your helper before it works," meaning heat that is too strong kills the yeast.',
             '她说 "too hot, and you\'ll kill your helper before it works"，意思是温度太高会杀死酵母。',
           ),
+        ),
+        ask(
+          t("What gas does yeast give off as it feeds on sugar?", "酵母吃糖时会放出什么气体？"),
+          t("Carbon dioxide", "二氧化碳"),
+          [t("Oxygen", "氧气"), t("Steam", "水蒸气"), t("Smoke", "烟")],
+          t("As yeast feeds on sugar, it gives off a gas called carbon dioxide.", "酵母吃糖时会放出一种叫二氧化碳的气体。"),
         ),
       ],
     ),

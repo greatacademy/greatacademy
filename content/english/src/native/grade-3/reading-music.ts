@@ -65,6 +65,16 @@ Every musical instrument is a way of making something vibrate. A guitar shakes i
             "第三段说，声音能在水中传播，所以鲸鱼能听见远处同伴的声音。",
           ],
         ),
+        ask(
+          ["What is the thin piece of skin inside your ear called?", "耳朵里那层薄薄的膜叫什么？"],
+          ["The eardrum", "鼓膜"],
+          [
+            ["The throat", "喉咙"],
+            ["The drum skin", "鼓皮"],
+            ["The pond", "池塘"],
+          ],
+          ["Inside your ear, a thin piece of skin called the eardrum starts to vibrate.", "在耳朵里，一层叫鼓膜的薄膜开始振动。"],
+        ),
       ],
     ),
     passage(
@@ -114,6 +124,16 @@ Drummers are the keepers of the beat in many bands. If they speed up or slow dow
             "The last paragraph says drummers keep the beat in many bands, so if they speed up or slow down, everyone else must follow.",
             "最后一段说，在很多乐队里鼓手掌握节拍，所以他们加快或放慢时，其他人都得跟着。",
           ],
+        ),
+        ask(
+          ["What is rhythm?", "什么是节奏？"],
+          ["The pattern of long and short sounds on top of the beat", "拍子之上长短声音的组合"],
+          [
+            ["How fast the beat goes", "拍子有多快"],
+            ["How loud the music is", "音乐有多响"],
+            ["The steady pulse of the music", "音乐稳定的脉动"],
+          ],
+          ["Rhythm is the pattern of long and short sounds that sit on top of the beat.", "节奏是落在拍子之上的长短声音的组合。"],
         ),
       ],
       ["Twinkle"],
@@ -166,6 +186,16 @@ Pitch is different from loudness. A high note can be soft, like a gentle whistle
             "第三段说，木琴上短的琴键发出高音，长的琴键发出低音。",
           ],
         ),
+        ask(
+          ["Which glass rings with the highest note?", "哪个杯子敲出的音最高？"],
+          ["The glass with the least water", "水最少的杯子"],
+          [
+            ["The glass with the most water", "水最多的杯子"],
+            ["The biggest glass", "最大的杯子"],
+            ["An empty bottle", "一个空瓶子"],
+          ],
+          ["The text says the glass with the least water rings with the highest note.", "短文说水最少的杯子敲出的音最高。"],
+        ),
       ],
     ),
     passage(
@@ -217,6 +247,19 @@ The body of a string instrument is hollow wood. When the strings vibrate, the wo
           [
             "The third paragraph says pressing a string down makes the part that vibrates shorter, and a shorter string plays a higher note.",
             "第三段说，按住琴弦会让振动的那一段变短，而更短的琴弦发出更高的音。",
+          ],
+        ),
+        ask(
+          ["Why is the body of a string instrument hollow wood?", "弦乐器的琴身为什么是空心木头？"],
+          ["It vibrates too and makes the sound much louder", "它也会振动，让声音响得多"],
+          [
+            ["It makes the instrument lighter to carry", "让乐器更轻便"],
+            ["It keeps the strings dry", "让琴弦保持干燥"],
+            ["It changes the pitch", "它改变音高"],
+          ],
+          [
+            "When the strings vibrate, the wooden body vibrates too and makes the sound much louder.",
+            "琴弦振动时，木质琴身也振动，使声音响得多。",
           ],
         ),
       ],
@@ -272,6 +315,19 @@ In both families, the bigger the instrument, the lower its notes. The tiny picco
             "最后一段说，乐器越大，音越低，所以巨大的大号在小小的短笛下面低沉地轰鸣。",
           ],
         ),
+        ask(
+          ["What is a reed?", "簧片是什么？"],
+          ["A thin, flat piece of cane that vibrates", "一片会振动的薄而扁的藤片"],
+          [
+            ["A button on a trumpet", "小号上的按键"],
+            ["A long metal slide", "一根长长的金属滑管"],
+            ["A hole along a flute", "长笛上的孔"],
+          ],
+          [
+            "A clarinet player blows against a thin, flat piece of cane called a reed, which vibrates.",
+            "单簧管演奏者吹向一片叫簧片的薄而扁的藤片，簧片会振动。",
+          ],
+        ),
       ],
       ["French"],
     ),
@@ -325,6 +381,16 @@ In an orchestra, the percussion players stand at the back. They often have many 
             "The third paragraph says a tighter skin plays a higher sound, and a looser one plays a lower sound.",
             "第三段说，鼓皮越紧声音越高，越松声音越低。",
           ],
+        ),
+        ask(
+          ["Where do the percussion players stand in an orchestra?", "管弦乐队中打击乐手站在哪里？"],
+          ["At the back", "在后面"],
+          [
+            ["At the front", "在前面"],
+            ["In the middle", "在中间"],
+            ["Beside the conductor", "在指挥旁边"],
+          ],
+          ['The text says, "In an orchestra, the percussion players stand at the back."', "短文说：“在管弦乐队中，打击乐手站在后面。”"],
         ),
       ],
     ),
