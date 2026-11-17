@@ -2,6 +2,7 @@ import type { CourseDef, ModuleDef } from "@ga/content";
 import { t } from "@ga/content";
 
 import { recognitionByGrade } from "./characters/index.ts";
+import { idiomsByGrade } from "./idioms/index.ts";
 
 const NUMERALS = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九"];
 
@@ -20,6 +21,10 @@ function recognitionModules(grade: number): readonly ModuleDef[] {
   return modules;
 }
 
+/** idiomTopicsOf are the ids of a grade's idiom batches. */
+const idiomTopicsOf = (grade: number): readonly string[] =>
+  (idiomsByGrade.find((g) => g.grade === grade)?.batches ?? []).map((b) => b.topic.id);
+
 /** gradeCourse is the native course of a grade. */
 function gradeCourse(grade: number, description: CourseDef["description"]): CourseDef {
   return {
@@ -28,7 +33,10 @@ function gradeCourse(grade: number, description: CourseDef["description"]): Cour
     description,
     group: t("Chinese", "语文"),
     explanationLocale: "zh-CN",
-    units: [{ title: t("Characters", "识字"), modules: recognitionModules(grade) }],
+    units: [
+      { title: t("Characters", "识字"), modules: recognitionModules(grade) },
+      { title: t("Words", "词语"), modules: [{ title: t("Idioms", "成语"), topics: idiomTopicsOf(grade) }] },
+    ],
     ...(grade > 3 && { buildsOn: [`chinese-grade-${grade - 1}`] }),
   };
 }

@@ -2,6 +2,22 @@ course chinese-grade-3
 course chinese-grade-4
 course chinese-grade-5
 course chinese-grade-6
+topic idioms-3-01 idioms-3-01-meaning idioms-3-01-use idioms-3-01-writing
+topic idioms-3-02 idioms-3-02-meaning idioms-3-02-use idioms-3-02-writing
+topic idioms-3-03 idioms-3-03-meaning idioms-3-03-use idioms-3-03-writing
+topic idioms-3-04 idioms-3-04-meaning idioms-3-04-use idioms-3-04-writing
+topic idioms-4-01 idioms-4-01-meaning idioms-4-01-use idioms-4-01-writing
+topic idioms-4-02 idioms-4-02-meaning idioms-4-02-use idioms-4-02-writing
+topic idioms-4-03 idioms-4-03-meaning idioms-4-03-use idioms-4-03-writing
+topic idioms-4-04 idioms-4-04-meaning idioms-4-04-use idioms-4-04-writing
+topic idioms-5-01 idioms-5-01-meaning idioms-5-01-use idioms-5-01-writing
+topic idioms-5-02 idioms-5-02-meaning idioms-5-02-use idioms-5-02-writing
+topic idioms-5-03 idioms-5-03-meaning idioms-5-03-use idioms-5-03-writing
+topic idioms-5-04 idioms-5-04-meaning idioms-5-04-use idioms-5-04-writing
+topic idioms-6-01 idioms-6-01-meaning idioms-6-01-use idioms-6-01-writing
+topic idioms-6-02 idioms-6-02-meaning idioms-6-02-use idioms-6-02-writing
+topic idioms-6-03 idioms-6-03-meaning idioms-6-03-use idioms-6-03-writing
+topic idioms-6-04 idioms-6-04-meaning idioms-6-04-use idioms-6-04-writing
 topic recognizing-characters-3-01 recognizing-characters-3-01-reading recognizing-characters-3-01-writing
 topic recognizing-characters-3-02 recognizing-characters-3-02-reading recognizing-characters-3-02-writing
 topic recognizing-characters-3-03 recognizing-characters-3-03-reading recognizing-characters-3-03-writing

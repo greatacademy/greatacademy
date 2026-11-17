@@ -3,6 +3,7 @@
 import type { TopicDef } from "@ga/content";
 
 import { characterTopics } from "../characters/index.ts";
+import { idiomTopics } from "../idioms/index.ts";
 
 /** coreShardTopics are the topics of the core shard. */
-export const coreShardTopics: readonly TopicDef[] = [...characterTopics];
+export const coreShardTopics: readonly TopicDef[] = [...characterTopics, ...idiomTopics];

@@ -4,9 +4,10 @@ import { chineseCheckers, segmenter } from "@ga/subject-chinese";
 
 import { characterLexicon } from "./characters/index.ts";
 import { chineseCourses } from "./courses.ts";
+import { idiomLexicon } from "./idioms/index.ts";
 import { coreShardTopics } from "./shards/core.ts";
 
-const lexicon = characterLexicon();
+const lexicon = [...characterLexicon(), ...idiomLexicon()];
 
 /** chinese is the definition of the Chinese subject. */
 export const chinese: SubjectDef = {
