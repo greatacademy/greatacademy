@@ -85,7 +85,7 @@ tools/simulate/       Simulated students for tuning and checking the engine
 tools/audit/          Content audit: outline coverage and heuristic quality checks
 tools/pilot/          Pilot report: where real learners fail, from the answer and event logs
 tools/calibrate/      Calibration: runs a route on texts scored by two people and records its agreement
-tools/audio/          Recordings: reads passages, words, sentences, sounds and openings aloud ahead of time, lists what it made and uploads it
+tools/audio/          Recordings: reads passages, words, sentences, sounds, syllables and openings aloud ahead of time, lists what it made and uploads it
 deploy/voice/         The voice service on Kubernetes: a Kustomize base and overlays, with mise tasks to push and check
 deploy/postgres/      The Cloudflare Tunnel through which Hyperdrive reaches PostgreSQL
 docs/                 Documents (English + Simplified Chinese)
@@ -111,7 +111,7 @@ tools/simulate ──► libs/engine, content/math, content/english
 tools/audit ──► libs/content, content/math, content/english, content/chinese
 tools/pilot ──► libs/db, libs/engine, content/math, content/english
 tools/calibrate ──► libs/judge, libs/db, libs/api, libs/subject-english
-tools/audio ──► libs/content, content/english
+tools/audio ──► libs/content, content/english, content/chinese
 apps/voice ╌╌► apps/web over HTTP (no package dependency)
 ```
 

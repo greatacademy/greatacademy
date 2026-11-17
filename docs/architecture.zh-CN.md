@@ -85,7 +85,7 @@ tools/simulate/       模拟学生，用于调参和检验引擎
 tools/audit/          内容审计：大纲覆盖和启发式质量检查
 tools/pilot/          试点报告：根据作答和事件日志，找出真实学习者卡住的地方
 tools/calibrate/      校准：在两人评分的文本上运行一条路由，并记录它的一致性
-tools/audio/          录音：提前朗读文章、单词、句子、发音和开场白，列出已生成的录音并上传
+tools/audio/          录音：提前朗读文章、单词、句子、发音、音节和开场白，列出已生成的录音并上传
 deploy/voice/         语音服务在 Kubernetes 上的部署：Kustomize base 和 overlay，以及推送和校验的 mise 任务
 deploy/postgres/      Hyperdrive 访问 PostgreSQL 所经的 Cloudflare Tunnel
 docs/                 文档（英文 + 简体中文）
@@ -111,7 +111,7 @@ tools/simulate ──► libs/engine, content/math, content/english
 tools/audit ──► libs/content, content/math, content/english, content/chinese
 tools/pilot ──► libs/db, libs/engine, content/math, content/english
 tools/calibrate ──► libs/judge, libs/db, libs/api, libs/subject-english
-tools/audio ──► libs/content, content/english
+tools/audio ──► libs/content, content/english, content/chinese
 apps/voice ╌╌► apps/web，经 HTTP（没有包依赖）
 ```
 

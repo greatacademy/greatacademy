@@ -1,26 +1,30 @@
-// Makes the recordings the English content asks for with Azure AI Speech and lists them in
-// content/english/src/recordings.ts: passages, words, sentences, the sounds of words, conversations' openings, and
-// the dialogues of listening problems.
+// Makes the recordings a subject's content asks for with Azure AI Speech and lists them in
+// content/<subject>/src/recordings.ts. For English: passages, words, sentences, the sounds of words, conversations'
+// openings, and the dialogues of listening problems; for Chinese (--subject chinese): syllables, words and sentences.
 //
 //   pnpm nx run audio:make -- --unit water-on-earth          # the passages of one or more reading units
 //   pnpm nx run audio:make -- --kind word --kind sounds      # the recordings of some kinds
 //   pnpm nx run audio:make -- --all --limit 50               # any not yet recorded, at most 50
+//   pnpm nx run audio:make -- --subject chinese --all        # the recordings of Chinese
 //
 // The key and region come from AZURE_SPEECH_KEY and AZURE_SPEECH_REGION in .env.local at the repository's root,
 // which git ignores; the key is never printed.
 
 import { mkdirSync, readdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { parseArgs } from "node:util";
+import { chinese } from "@ga/content-chinese";
+import { wantedRecordings as chineseRecordings } from "@ga/content-chinese/audio";
 import { english } from "@ga/content-english";
-import { type RecordingKind, wantedRecordings } from "@ga/content-english/audio";
+import { wantedRecordings as englishRecordings } from "@ga/content-english/audio";
 
 import { current, type Job, plan, readEnv, recordingsModule } from "./plan.ts";
 
 const root = new URL("../../../", import.meta.url);
-const folder = new URL("content/english/audio/files/", root);
-const listFile = new URL("content/english/src/recordings.ts", root);
-/** KINDS are the kinds of recording --kind may name. */
-const KINDS: readonly RecordingKind[] = ["passage", "word", "sentence", "sounds", "opening", "dialogue"];
+/** SUBJECTS are, for each subject with recordings, the kinds of recording --kind may name, its content and what it asks for. */
+const SUBJECTS = {
+  english: { kinds: ["passage", "word", "sentence", "sounds", "opening", "dialogue"], subject: english, wanted: englishRecordings },
+  chinese: { kinds: ["syllable", "word", "sentence"], subject: chinese, wanted: chineseRecordings },
+} as const;
 /** WORKERS is how many recordings are made at once unless --workers says otherwise. */
 const WORKERS = 3;
 /** TRIES is how often a recording is tried before the run gives up on it. */
@@ -33,10 +37,16 @@ const { values } = parseArgs({
     all: { type: "boolean" },
     limit: { type: "string" },
     workers: { type: "string" },
+    subject: { type: "string", default: "english" },
   },
 });
+const name = values.subject as keyof typeof SUBJECTS;
+const chosen = SUBJECTS[name];
+if (!chosen) throw new Error(`unknown subject ${values.subject}`);
+const folder = new URL(`content/${name}/audio/files/`, root);
+const listFile = new URL(`content/${name}/src/recordings.ts`, root);
 if (!values.all && !values.unit?.length && !values.kind?.length) throw new Error("name --unit <id>, --kind <kind> or --all");
-for (const k of values.kind ?? []) if (!KINDS.includes(k as RecordingKind)) throw new Error(`unknown kind ${k}`);
+for (const k of values.kind ?? []) if (!(chosen.kinds as readonly string[]).includes(k)) throw new Error(`unknown kind ${k}`);
 
 const env = readEnv(readFileSync(new URL(".env.local", root), "utf8"));
 const key = env.AZURE_SPEECH_KEY;
@@ -45,10 +55,10 @@ if (!key || !region) throw new Error("AZURE_SPEECH_KEY and AZURE_SPEECH_REGION a
 
 mkdirSync(folder, { recursive: true });
 const madeNow = () => new Set(readdirSync(folder).filter((f) => /\.(mp3|wav)$/u.test(f)));
-const known = new Set((english.reading ?? []).map((u) => u.id));
+const known = new Set((chosen.subject.reading ?? []).map((u) => u.id));
 for (const id of values.unit ?? []) if (!known.has(id)) throw new Error(`unknown reading unit ${id}`);
-const wanted = wantedRecordings();
-const choice = values.all ? {} : { units: new Set(values.unit), kinds: new Set(values.kind as RecordingKind[] | undefined) };
+const wanted = chosen.wanted();
+const choice = values.all ? {} : { units: new Set(values.unit), kinds: new Set(values.kind) };
 const jobs = plan(wanted, choice, madeNow(), values.limit ? Number(values.limit) : Infinity);
 console.log(`${jobs.length} recordings to make`);
 
@@ -58,7 +68,7 @@ class Stop extends Error {}
 /** list writes the recordings made so far to recordings.ts, so that a run cut short keeps what it made. */
 const list = () => {
   const listed = current(wanted, madeNow());
-  writeFileSync(listFile, recordingsModule(listed));
+  writeFileSync(listFile, recordingsModule(listed, name));
   return listed;
 };
 
@@ -116,7 +126,7 @@ await Promise.all(
 );
 
 const listed = list();
-console.log(`${listed.length} recordings listed in content/english/src/recordings.ts`);
+console.log(`${listed.length} recordings listed in content/${name}/src/recordings.ts`);
 if (failures.length > 0) {
   for (const f of failures) console.error(f);
   process.exitCode = 1;

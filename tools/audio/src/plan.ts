@@ -1,4 +1,10 @@
-import type { RecordingKind, Wanted } from "@ga/content-english/audio";
+/** Wanted is a recording a subject's content asks for: what it reads, the SSML and format it is made in, and, for a passage, its unit. */
+export interface Wanted {
+  readonly kind: string;
+  readonly ssml: string;
+  readonly format: { readonly azure: string; readonly ext: string };
+  readonly unit?: string;
+}
 
 /** Job is one recording to make: its file and how it is made. */
 export interface Job extends Wanted {
@@ -7,7 +13,7 @@ export interface Job extends Wanted {
 
 /** Choice is which recordings a run makes: those of some kinds, of some reading units' passages, or all. */
 export interface Choice {
-  readonly kinds?: ReadonlySet<RecordingKind>;
+  readonly kinds?: ReadonlySet<string>;
   readonly units?: ReadonlySet<string>;
 }
 
@@ -33,12 +39,12 @@ export function current(wanted: ReadonlyMap<string, Wanted>, made: ReadonlySet<s
   return [...made].filter((file) => wanted.has(file)).sort();
 }
 
-/** recordingsModule is the source of content/english/src/recordings.ts listing the recordings given. */
-export function recordingsModule(names: readonly string[]): string {
+/** recordingsModule is the source of content/<subject>/src/recordings.ts listing the recordings given. */
+export function recordingsModule(names: readonly string[], subject = "english"): string {
   const list = names.length === 0 ? "[]" : `[\n${names.map((n) => `  "${n}",`).join("\n")}\n]`;
   return `// Written by tools/audio; do not edit.
 
-/** recordings are the files of the recordings made into content/english/audio/files. */
+/** recordings are the files of the recordings made into content/${subject}/audio/files. */
 export const recordings: readonly string[] = ${list};
 `;
 }

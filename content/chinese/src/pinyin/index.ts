@@ -1,12 +1,12 @@
 // The pinyin topics of the Chinese subject (docs/chinese-curriculum.md §5 and §8): tones and their marks, initials,
 // finals, the spelling rules of the Scheme of the Chinese Phonetic Alphabet, and the tones that change in speech while
-// the written tone stays (GB/T 16159-2012). These are the topics that need no audio; listening joins them with the
-// recordings (docs/chinese-development-plan.md C2.3).
+// the written tone stays (GB/T 16159-2012); hearing syllables plays recordings (listening.ts).
 
 import { type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point } from "@ga/subject-chinese";
 
 import { gradesFiveAndSixEntries, gradesThreeAndFourEntries } from "../characters/index.ts";
+import { pinyinHearing } from "./listening.ts";
 import { INITIALS, mark, markAt, parseSyllable, type Syllable, TONE_NAMES, vowelsOf } from "./syllables.ts";
 
 /** syllables are the distinct readings of the characters this subject teaches, in the order of the tables. */
@@ -558,7 +558,15 @@ const pinyinThirdTones: TopicDef = {
 };
 
 /** pinyinTopics are the pinyin topics, in order. */
-export const pinyinTopics: readonly TopicDef[] = [pinyinTones, pinyinInitials, pinyinFinals, pinyinSpelling, pinyinYiBu, pinyinThirdTones];
+export const pinyinTopics: readonly TopicDef[] = [
+  pinyinTones,
+  pinyinInitials,
+  pinyinFinals,
+  pinyinSpelling,
+  pinyinHearing,
+  pinyinYiBu,
+  pinyinThirdTones,
+];
 
 /** pinyinTitle names the strand of pinyin. */
 export const pinyinTitle: Text = t("Pinyin", "拼音");

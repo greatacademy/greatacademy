@@ -695,6 +695,9 @@ importers:
       '@ga/content':
         specifier: workspace:*
         version: link:../../libs/content
+      '@ga/content-chinese':
+        specifier: workspace:*
+        version: link:../../content/chinese
       '@ga/content-english':
         specifier: workspace:*
         version: link:../../content/english

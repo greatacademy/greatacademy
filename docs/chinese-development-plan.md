@@ -84,7 +84,7 @@ Native grades 3 to 6 without new input, testing whether mastery learning and spa
 
 **Done when** simulated students finish each grade course, no topic is unreachable, and the reviews per topic are recorded here.
 
-**Done.** The outlines are in [docs/chinese-courses](chinese-courses/), one per course with its simulated students. Every student finished every course in all 20 runs. Reviews per topic for the typical, strong and struggling student: grade 3 3.58, 2.83 and 4.90; grade 4 3.92, 3.45 and 5.28; grade 5 3.99, 3.63 and 5.33; grade 6 4.05, 3.66 and 5.32; pinyin 0.55, 0.62 and 0.98, a short course whose reviews mostly fall after it ends. A typical student takes 38, 74, 96 and 102 days for grades 3 to 6, and 2 for pinyin.
+**Done.** The outlines are in [docs/chinese-courses](chinese-courses/), one per course with its simulated students. Every student finished every course in all 20 runs. Reviews per topic for the typical, strong and struggling student: grade 3 3.58, 2.83 and 4.90; grade 4 3.92, 3.45 and 5.28; grade 5 3.99, 3.63 and 5.33; grade 6 4.05, 3.66 and 5.32; pinyin 0.58, 0.58 and 1.14, a short course whose reviews mostly fall after it ends. A typical student takes 38, 74, 96 and 102 days for grades 3 to 6, and 2 for pinyin.
 
 ### C1.4 Review and Pilot (M, waiting for people)
 
@@ -128,6 +128,8 @@ Words and characters are taken from lists counsel has cleared (C0.2); until then
 | Listening topics: choose the syllable, the tone, the word or the meaning heard | `content/chinese` |
 
 Recordings are uploaded with the rest of the subject's audio when the subject is deployed (C0.4).
+
+**Built so far.** `content/chinese/src/audio.ts` builds the SSML of syllables, words and sentences, read by `zh-CN-XiaoxiaoNeural` 10% slower than usual; a syllable is said by a character with that reading, its tone fixed by SAPI phonemes (ü written v). `tools/audio` takes `--subject chinese`, and the 71 recordings of the topic `pinyin-hearing` are made: hearing the tone of a syllable among its four tones, and telling apart initials and finals that sound alike (zh and z, n and l, f and h, an and ang, in and ing). A test fails while a problem plays a recording not made. iFlytek's assessment of the isolated syllables marked some third tones wrong whichever voice read them, so it is no test of the recordings: a teacher listens to them before they are published. Words, sentences and dialogues come with the courses of levels 1 to 3.
 
 ### C2.4 Speaking (M)
 

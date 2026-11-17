@@ -133,6 +133,7 @@ export const chineseCourses: readonly CourseDef[] = [
         title: t("Initials and Finals", "声母和韵母"),
         modules: [{ title: t("Initials and Finals", "声母和韵母"), topics: ["pinyin-initials", "pinyin-finals", "pinyin-spelling"] }],
       },
+      { title: t("Hearing", "听音"), modules: [{ title: t("Hearing Syllables", "听音节"), topics: ["pinyin-hearing"] }] },
       {
         title: t("Tones in Speech", "语流变调"),
         modules: [{ title: t("Tones in Speech", "语流变调"), topics: ["pinyin-yi-and-bu", "pinyin-third-tones"] }],

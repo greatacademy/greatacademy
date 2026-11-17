@@ -206,7 +206,7 @@ export function punctuationTopic(spec: PunctuationSpec): TopicDef {
           t("Which sentence is punctuated correctly?", "哪个句子的标点符号用得正确？"),
           checkBank,
           () => t("This sentence uses each mark for what it does.", "这个句子的每个标点都用对了。"),
-          (wrong, right) => t(`This one has a wrong mark. Correct: ${right}`, `这个句子有标点用错了。正确的是：${right}`),
+          (_wrong, right) => t(`This one has a wrong mark. Correct: ${right}`, `这个句子有标点用错了。正确的是：${right}`),
         ),
       ),
     ],
