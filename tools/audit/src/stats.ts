@@ -67,7 +67,8 @@ export const depthBuckets: readonly (readonly [string, number])[] = [
 
 /**
  * problemKey names what a problem asks regardless of the order its options or items are shuffled in: its prompt, its
- * figure, its options or items sorted, and its right option, or its canonical response for other inputs.
+ * figure, the recordings it plays, its options or items sorted, and its right option, or its canonical response for other
+ * inputs.
  */
 export function problemKey(p: Problem): string {
   const input = p.answer.input;
@@ -78,7 +79,7 @@ export function problemKey(p: Problem): string {
       : input.kind === "order"
         ? [sorted(input.items)]
         : [p.canonical];
-  return JSON.stringify([p.prompt, p.figure?.svg, answer]);
+  return JSON.stringify([p.prompt, p.figure?.svg, p.listen, answer]);
 }
 
 /** distinctProblems counts the problems a knowledge point generates within `samples` seeds that differ by `problemKey`. */

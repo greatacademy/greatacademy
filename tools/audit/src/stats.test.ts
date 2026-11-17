@@ -74,4 +74,9 @@ describe("problem keys", () => {
     expect(problemKey(shuffled)).toBe(problemKey(a));
     expect(problemKey({ ...a, canonical: "1" })).not.toBe(problemKey(a));
   });
+
+  it("tell problems apart by the recordings they play", () => {
+    const a = choice(1);
+    expect(problemKey({ ...a, listen: ["kit.mp3"] })).not.toBe(problemKey({ ...a, listen: ["kite.mp3"] }));
+  });
 });
