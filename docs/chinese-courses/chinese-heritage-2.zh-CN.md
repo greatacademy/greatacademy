@@ -18,128 +18,128 @@
 
 **第1至6组**
 
-- `recognizing-characters-1-26` 一年级识字 第26组：读准字音；分清字形
-- `recognizing-characters-2-26` 二年级识字 第26组：读准字音；分清字形
-- `recognizing-characters-1-27` 一年级识字 第27组：读准字音；分清字形
-- `recognizing-characters-2-27` 二年级识字 第27组：读准字音；分清字形
-- `recognizing-characters-1-28` 一年级识字 第28组：读准字音；分清字形
-- `recognizing-characters-2-28` 二年级识字 第28组：读准字音；分清字形
+- `recognizing-characters-1-51` 一年级识字 第51组：读准字音；分清字形
+- `recognizing-characters-1-52` 一年级识字 第52组：读准字音；分清字形
+- `recognizing-characters-1-53` 一年级识字 第53组：读准字音；分清字形
+- `recognizing-characters-1-54` 一年级识字 第54组：读准字音；分清字形
+- `recognizing-characters-1-55` 一年级识字 第55组：读准字音；分清字形
+- `recognizing-characters-1-56` 一年级识字 第56组：读准字音；分清字形
 
 **第7至12组**
 
-- `recognizing-characters-1-29` 一年级识字 第29组：读准字音；分清字形
-- `recognizing-characters-2-29` 二年级识字 第29组：读准字音；分清字形
-- `recognizing-characters-1-30` 一年级识字 第30组：读准字音；分清字形
-- `recognizing-characters-2-30` 二年级识字 第30组：读准字音；分清字形
-- `recognizing-characters-1-31` 一年级识字 第31组：读准字音；分清字形
-- `recognizing-characters-2-31` 二年级识字 第31组：读准字音；分清字形
+- `recognizing-characters-1-57` 一年级识字 第57组：读准字音；分清字形
+- `recognizing-characters-1-58` 一年级识字 第58组：读准字音；分清字形
+- `recognizing-characters-1-59` 一年级识字 第59组：读准字音；分清字形
+- `recognizing-characters-1-60` 一年级识字 第60组：读准字音；分清字形
+- `recognizing-characters-1-61` 一年级识字 第61组：读准字音；分清字形
+- `recognizing-characters-1-62` 一年级识字 第62组：读准字音；分清字形
 
 **第13至18组**
 
-- `recognizing-characters-1-32` 一年级识字 第32组：读准字音；分清字形
-- `recognizing-characters-2-32` 二年级识字 第32组：读准字音；分清字形
-- `recognizing-characters-1-33` 一年级识字 第33组：读准字音；分清字形
-- `recognizing-characters-2-33` 二年级识字 第33组：读准字音；分清字形
-- `recognizing-characters-1-34` 一年级识字 第34组：读准字音；分清字形
-- `recognizing-characters-2-34` 二年级识字 第34组：读准字音；分清字形
+- `recognizing-characters-1-63` 一年级识字 第63组：读准字音；分清字形
+- `recognizing-characters-1-64` 一年级识字 第64组：读准字音；分清字形
+- `recognizing-characters-1-65` 一年级识字 第65组：读准字音；分清字形
+- `recognizing-characters-1-66` 一年级识字 第66组：读准字音；分清字形
+- `recognizing-characters-1-67` 一年级识字 第67组：读准字音；分清字形
+- `recognizing-characters-2-01` 二年级识字 第1组：读准字音；分清字形
 
 **第19至24组**
 
-- `recognizing-characters-1-35` 一年级识字 第35组：读准字音；分清字形
-- `recognizing-characters-2-35` 二年级识字 第35组：读准字音；分清字形
-- `recognizing-characters-1-36` 一年级识字 第36组：读准字音；分清字形
-- `recognizing-characters-2-36` 二年级识字 第36组：读准字音；分清字形
-- `recognizing-characters-1-37` 一年级识字 第37组：读准字音；分清字形
-- `recognizing-characters-2-37` 二年级识字 第37组：读准字音；分清字形
+- `recognizing-characters-2-02` 二年级识字 第2组：读准字音；分清字形
+- `recognizing-characters-2-03` 二年级识字 第3组：读准字音；分清字形
+- `recognizing-characters-2-04` 二年级识字 第4组：读准字音；分清字形
+- `recognizing-characters-2-05` 二年级识字 第5组：读准字音；分清字形
+- `recognizing-characters-2-06` 二年级识字 第6组：读准字音；分清字形
+- `recognizing-characters-2-07` 二年级识字 第7组：读准字音；分清字形
 
 **第25至30组**
 
-- `recognizing-characters-1-38` 一年级识字 第38组：读准字音；分清字形
-- `recognizing-characters-2-38` 二年级识字 第38组：读准字音；分清字形
-- `recognizing-characters-1-39` 一年级识字 第39组：读准字音；分清字形
-- `recognizing-characters-2-39` 二年级识字 第39组：读准字音；分清字形
-- `recognizing-characters-1-40` 一年级识字 第40组：读准字音；分清字形
-- `recognizing-characters-2-40` 二年级识字 第40组：读准字音；分清字形
+- `recognizing-characters-2-08` 二年级识字 第8组：读准字音；分清字形
+- `recognizing-characters-2-09` 二年级识字 第9组：读准字音；分清字形
+- `recognizing-characters-2-10` 二年级识字 第10组：读准字音；分清字形
+- `recognizing-characters-2-11` 二年级识字 第11组：读准字音；分清字形
+- `recognizing-characters-2-12` 二年级识字 第12组：读准字音；分清字形
+- `recognizing-characters-2-13` 二年级识字 第13组：读准字音；分清字形
 
 **第31至36组**
 
-- `recognizing-characters-1-41` 一年级识字 第41组：读准字音；分清字形
-- `recognizing-characters-2-41` 二年级识字 第41组：读准字音；分清字形
-- `recognizing-characters-1-42` 一年级识字 第42组：读准字音；分清字形
-- `recognizing-characters-2-42` 二年级识字 第42组：读准字音；分清字形
-- `recognizing-characters-1-43` 一年级识字 第43组：读准字音；分清字形
-- `recognizing-characters-2-43` 二年级识字 第43组：读准字音；分清字形
+- `recognizing-characters-2-14` 二年级识字 第14组：读准字音；分清字形
+- `recognizing-characters-2-15` 二年级识字 第15组：读准字音；分清字形
+- `recognizing-characters-2-16` 二年级识字 第16组：读准字音；分清字形
+- `recognizing-characters-2-17` 二年级识字 第17组：读准字音；分清字形
+- `recognizing-characters-2-18` 二年级识字 第18组：读准字音；分清字形
+- `recognizing-characters-2-19` 二年级识字 第19组：读准字音；分清字形
 
 **第37至42组**
 
-- `recognizing-characters-1-44` 一年级识字 第44组：读准字音；分清字形
-- `recognizing-characters-2-44` 二年级识字 第44组：读准字音；分清字形
-- `recognizing-characters-1-45` 一年级识字 第45组：读准字音；分清字形
-- `recognizing-characters-2-45` 二年级识字 第45组：读准字音；分清字形
-- `recognizing-characters-1-46` 一年级识字 第46组：读准字音；分清字形
-- `recognizing-characters-2-46` 二年级识字 第46组：读准字音；分清字形
+- `recognizing-characters-2-20` 二年级识字 第20组：读准字音；分清字形
+- `recognizing-characters-2-21` 二年级识字 第21组：读准字音；分清字形
+- `recognizing-characters-2-22` 二年级识字 第22组：读准字音；分清字形
+- `recognizing-characters-2-23` 二年级识字 第23组：读准字音；分清字形
+- `recognizing-characters-2-24` 二年级识字 第24组：读准字音；分清字形
+- `recognizing-characters-2-25` 二年级识字 第25组：读准字音；分清字形
 
 **第43至48组**
 
-- `recognizing-characters-1-47` 一年级识字 第47组：读准字音；分清字形
-- `recognizing-characters-2-47` 二年级识字 第47组：读准字音；分清字形
-- `recognizing-characters-1-48` 一年级识字 第48组：读准字音；分清字形
-- `recognizing-characters-2-48` 二年级识字 第48组：读准字音；分清字形
-- `recognizing-characters-1-49` 一年级识字 第49组：读准字音；分清字形
-- `recognizing-characters-2-49` 二年级识字 第49组：读准字音；分清字形
+- `recognizing-characters-2-26` 二年级识字 第26组：读准字音；分清字形
+- `recognizing-characters-2-27` 二年级识字 第27组：读准字音；分清字形
+- `recognizing-characters-2-28` 二年级识字 第28组：读准字音；分清字形
+- `recognizing-characters-2-29` 二年级识字 第29组：读准字音；分清字形
+- `recognizing-characters-2-30` 二年级识字 第30组：读准字音；分清字形
+- `recognizing-characters-2-31` 二年级识字 第31组：读准字音；分清字形
 
 **第49至54组**
 
-- `recognizing-characters-1-50` 一年级识字 第50组：读准字音；分清字形
-- `recognizing-characters-2-50` 二年级识字 第50组：读准字音；分清字形
-- `recognizing-characters-1-51` 一年级识字 第51组：读准字音；分清字形
-- `recognizing-characters-2-51` 二年级识字 第51组：读准字音；分清字形
-- `recognizing-characters-1-52` 一年级识字 第52组：读准字音；分清字形
-- `recognizing-characters-2-52` 二年级识字 第52组：读准字音；分清字形
+- `recognizing-characters-2-32` 二年级识字 第32组：读准字音；分清字形
+- `recognizing-characters-2-33` 二年级识字 第33组：读准字音；分清字形
+- `recognizing-characters-2-34` 二年级识字 第34组：读准字音；分清字形
+- `recognizing-characters-2-35` 二年级识字 第35组：读准字音；分清字形
+- `recognizing-characters-2-36` 二年级识字 第36组：读准字音；分清字形
+- `recognizing-characters-2-37` 二年级识字 第37组：读准字音；分清字形
 
 **第55至60组**
 
-- `recognizing-characters-1-53` 一年级识字 第53组：读准字音；分清字形
-- `recognizing-characters-2-53` 二年级识字 第53组：读准字音；分清字形
-- `recognizing-characters-1-54` 一年级识字 第54组：读准字音；分清字形
-- `recognizing-characters-2-54` 二年级识字 第54组：读准字音；分清字形
-- `recognizing-characters-1-55` 一年级识字 第55组：读准字音；分清字形
-- `recognizing-characters-2-55` 二年级识字 第55组：读准字音；分清字形
+- `recognizing-characters-2-38` 二年级识字 第38组：读准字音；分清字形
+- `recognizing-characters-2-39` 二年级识字 第39组：读准字音；分清字形
+- `recognizing-characters-2-40` 二年级识字 第40组：读准字音；分清字形
+- `recognizing-characters-2-41` 二年级识字 第41组：读准字音；分清字形
+- `recognizing-characters-2-42` 二年级识字 第42组：读准字音；分清字形
+- `recognizing-characters-2-43` 二年级识字 第43组：读准字音；分清字形
 
 **第61至66组**
 
-- `recognizing-characters-1-56` 一年级识字 第56组：读准字音；分清字形
-- `recognizing-characters-2-56` 二年级识字 第56组：读准字音；分清字形
-- `recognizing-characters-1-57` 一年级识字 第57组：读准字音；分清字形
-- `recognizing-characters-2-57` 二年级识字 第57组：读准字音；分清字形
-- `recognizing-characters-1-58` 一年级识字 第58组：读准字音；分清字形
-- `recognizing-characters-2-58` 二年级识字 第58组：读准字音；分清字形
+- `recognizing-characters-2-44` 二年级识字 第44组：读准字音；分清字形
+- `recognizing-characters-2-45` 二年级识字 第45组：读准字音；分清字形
+- `recognizing-characters-2-46` 二年级识字 第46组：读准字音；分清字形
+- `recognizing-characters-2-47` 二年级识字 第47组：读准字音；分清字形
+- `recognizing-characters-2-48` 二年级识字 第48组：读准字音；分清字形
+- `recognizing-characters-2-49` 二年级识字 第49组：读准字音；分清字形
 
 **第67至72组**
 
-- `recognizing-characters-1-59` 一年级识字 第59组：读准字音；分清字形
-- `recognizing-characters-2-59` 二年级识字 第59组：读准字音；分清字形
-- `recognizing-characters-1-60` 一年级识字 第60组：读准字音；分清字形
-- `recognizing-characters-2-60` 二年级识字 第60组：读准字音；分清字形
-- `recognizing-characters-1-61` 一年级识字 第61组：读准字音；分清字形
-- `recognizing-characters-2-61` 二年级识字 第61组：读准字音；分清字形
+- `recognizing-characters-2-50` 二年级识字 第50组：读准字音；分清字形
+- `recognizing-characters-2-51` 二年级识字 第51组：读准字音；分清字形
+- `recognizing-characters-2-52` 二年级识字 第52组：读准字音；分清字形
+- `recognizing-characters-2-53` 二年级识字 第53组：读准字音；分清字形
+- `recognizing-characters-2-54` 二年级识字 第54组：读准字音；分清字形
+- `recognizing-characters-2-55` 二年级识字 第55组：读准字音；分清字形
 
 **第73至78组**
 
-- `recognizing-characters-1-62` 一年级识字 第62组：读准字音；分清字形
-- `recognizing-characters-2-62` 二年级识字 第62组：读准字音；分清字形
-- `recognizing-characters-1-63` 一年级识字 第63组：读准字音；分清字形
-- `recognizing-characters-2-63` 二年级识字 第63组：读准字音；分清字形
-- `recognizing-characters-1-64` 一年级识字 第64组：读准字音；分清字形
-- `recognizing-characters-2-64` 二年级识字 第64组：读准字音；分清字形
+- `recognizing-characters-2-56` 二年级识字 第56组：读准字音；分清字形
+- `recognizing-characters-2-57` 二年级识字 第57组：读准字音；分清字形
+- `recognizing-characters-2-58` 二年级识字 第58组：读准字音；分清字形
+- `recognizing-characters-2-59` 二年级识字 第59组：读准字音；分清字形
+- `recognizing-characters-2-60` 二年级识字 第60组：读准字音；分清字形
+- `recognizing-characters-2-61` 二年级识字 第61组：读准字音；分清字形
 
 **第79至83组**
 
-- `recognizing-characters-1-65` 一年级识字 第65组：读准字音；分清字形
+- `recognizing-characters-2-62` 二年级识字 第62组：读准字音；分清字形
+- `recognizing-characters-2-63` 二年级识字 第63组：读准字音；分清字形
+- `recognizing-characters-2-64` 二年级识字 第64组：读准字音；分清字形
 - `recognizing-characters-2-65` 二年级识字 第65组：读准字音；分清字形
-- `recognizing-characters-1-66` 一年级识字 第66组：读准字音；分清字形
 - `recognizing-characters-2-66` 二年级识字 第66组：读准字音；分清字形
-- `recognizing-characters-1-67` 一年级识字 第67组：读准字音；分清字形
 
 ### 2. 我手写我口
 
@@ -152,8 +152,8 @@
 
 | 学生 | 完成 | 天数 | 课 | 未通过的课 | 复习 | 每个主题的复习 | 测验 | 文章 |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 强 | 20/20 | 82.30 | 127.15 | 0.70 | 450.30 | 3.57 | 21.55 | 0.00 |
-| 一般 | 20/20 | 97.70 | 134.75 | 8.30 | 497.90 | 3.94 | 19.90 | 0.00 |
-| 吃力 | 20/20 | 131.50 | 169.75 | 43.30 | 645.95 | 5.11 | 18.25 | 0.00 |
-| 已入门 | 20/20 | 63.30 | 87.85 | 5.10 | 330.00 | 3.98 | 12.75 | 0.00 |
-| 吃力、已入门 | 20/20 | 84.35 | 108.60 | 25.85 | 414.25 | 5.00 | 11.50 | 0.00 |
+| 强 | 20/20 | 82.80 | 127.10 | 0.65 | 450.05 | 3.57 | 21.75 | 0.00 |
+| 一般 | 20/20 | 97.30 | 134.75 | 8.30 | 498.50 | 3.95 | 19.75 | 0.00 |
+| 吃力 | 20/20 | 132.65 | 171.05 | 44.60 | 650.65 | 5.15 | 18.25 | 0.00 |
+| 已入门 | 20/20 | 63.80 | 86.75 | 4.00 | 324.55 | 3.91 | 12.80 | 0.00 |
+| 吃力、已入门 | 20/20 | 86.35 | 110.70 | 27.95 | 421.85 | 5.11 | 11.75 | 0.00 |

@@ -33,7 +33,13 @@ describe("character lists", () => {
 describe("recognition data", () => {
   it("covers grades 1 to 9 in order, with common confusable characters", () => {
     const later = new Set([...gradesThreeAndFour, ...gradesFiveAndSix]);
-    expect(gradesOneAndTwoEntries.map((e) => e.char)).toEqual(tableOne.filter((c) => !later.has(c)));
+    expect(gradesOneAndTwoEntries.map((e) => e.char).sort()).toEqual(tableOne.filter((c) => !later.has(c)).sort());
+    expect(
+      gradesOneAndTwoEntries
+        .slice(0, 12)
+        .map((e) => e.char)
+        .join(""),
+    ).toBe("你我他她好是不人们吗的有");
     expect(gradesThreeAndFourEntries.map((e) => e.char)).toEqual(gradesThreeAndFour);
     expect(gradesFiveAndSixEntries.map((e) => e.char)).toEqual(gradesFiveAndSix);
     const fiveAndSix = new Set(gradesFiveAndSix);
@@ -57,7 +63,7 @@ describe("recognition data", () => {
     expect(() => parseCharacters("哀 āi 哀伤 悲哀 求情 衰埃")).toThrow(/求情/);
   });
 
-  it("deals the batches to the grades of a stage in turn", () => {
+  it("deals the batches to the grades of a stage, grades 1 and 2 in runs", () => {
     expect(recognitionByGrade.map((g) => [g.grade, g.batches.length])).toEqual([
       [1, 67],
       [2, 66],
@@ -70,7 +76,8 @@ describe("recognition data", () => {
       [9, 14],
     ]);
     expect(recognitionByGrade[8]?.batches.at(-1)?.entries).toHaveLength(10);
-    expect(recognitionByGrade[0]?.batches.at(-1)?.entries).toHaveLength(16);
+    expect(recognitionByGrade[0]?.batches.at(-1)?.entries).toHaveLength(12);
+    expect(recognitionByGrade[1]?.batches.at(-1)?.entries).toHaveLength(16);
     expect(recognitionByGrade[5]?.batches.at(-1)?.entries).toHaveLength(10);
     expect(recognitionByGrade[4]?.batches.at(-1)?.entries).toHaveLength(10);
     expect(recognitionByGrade[2]?.batches[0]?.entries.map((e) => e.char).join("")).toBe("哀埃癌艾碍氨俺昂凹熬傲澳");

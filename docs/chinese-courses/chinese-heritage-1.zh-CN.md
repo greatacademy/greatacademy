@@ -58,79 +58,79 @@
 **第1至6组**
 
 - `recognizing-characters-1-01` 一年级识字 第1组：读准字音；分清字形
-- `recognizing-characters-2-01` 二年级识字 第1组：读准字音；分清字形
 - `recognizing-characters-1-02` 一年级识字 第2组：读准字音；分清字形
-- `recognizing-characters-2-02` 二年级识字 第2组：读准字音；分清字形
 - `recognizing-characters-1-03` 一年级识字 第3组：读准字音；分清字形
-- `recognizing-characters-2-03` 二年级识字 第3组：读准字音；分清字形
+- `recognizing-characters-1-04` 一年级识字 第4组：读准字音；分清字形
+- `recognizing-characters-1-05` 一年级识字 第5组：读准字音；分清字形
+- `recognizing-characters-1-06` 一年级识字 第6组：读准字音；分清字形
 
 **第7至12组**
 
-- `recognizing-characters-1-04` 一年级识字 第4组：读准字音；分清字形
-- `recognizing-characters-2-04` 二年级识字 第4组：读准字音；分清字形
-- `recognizing-characters-1-05` 一年级识字 第5组：读准字音；分清字形
-- `recognizing-characters-2-05` 二年级识字 第5组：读准字音；分清字形
-- `recognizing-characters-1-06` 一年级识字 第6组：读准字音；分清字形
-- `recognizing-characters-2-06` 二年级识字 第6组：读准字音；分清字形
+- `recognizing-characters-1-07` 一年级识字 第7组：读准字音；分清字形
+- `recognizing-characters-1-08` 一年级识字 第8组：读准字音；分清字形
+- `recognizing-characters-1-09` 一年级识字 第9组：读准字音；分清字形
+- `recognizing-characters-1-10` 一年级识字 第10组：读准字音；分清字形
+- `recognizing-characters-1-11` 一年级识字 第11组：读准字音；分清字形
+- `recognizing-characters-1-12` 一年级识字 第12组：读准字音；分清字形
 
 **第13至18组**
 
-- `recognizing-characters-1-07` 一年级识字 第7组：读准字音；分清字形
-- `recognizing-characters-2-07` 二年级识字 第7组：读准字音；分清字形
-- `recognizing-characters-1-08` 一年级识字 第8组：读准字音；分清字形
-- `recognizing-characters-2-08` 二年级识字 第8组：读准字音；分清字形
-- `recognizing-characters-1-09` 一年级识字 第9组：读准字音；分清字形
-- `recognizing-characters-2-09` 二年级识字 第9组：读准字音；分清字形
+- `recognizing-characters-1-13` 一年级识字 第13组：读准字音；分清字形
+- `recognizing-characters-1-14` 一年级识字 第14组：读准字音；分清字形
+- `recognizing-characters-1-15` 一年级识字 第15组：读准字音；分清字形
+- `recognizing-characters-1-16` 一年级识字 第16组：读准字音；分清字形
+- `recognizing-characters-1-17` 一年级识字 第17组：读准字音；分清字形
+- `recognizing-characters-1-18` 一年级识字 第18组：读准字音；分清字形
 
 **第19至24组**
 
-- `recognizing-characters-1-10` 一年级识字 第10组：读准字音；分清字形
-- `recognizing-characters-2-10` 二年级识字 第10组：读准字音；分清字形
-- `recognizing-characters-1-11` 一年级识字 第11组：读准字音；分清字形
-- `recognizing-characters-2-11` 二年级识字 第11组：读准字音；分清字形
-- `recognizing-characters-1-12` 一年级识字 第12组：读准字音；分清字形
-- `recognizing-characters-2-12` 二年级识字 第12组：读准字音；分清字形
+- `recognizing-characters-1-19` 一年级识字 第19组：读准字音；分清字形
+- `recognizing-characters-1-20` 一年级识字 第20组：读准字音；分清字形
+- `recognizing-characters-1-21` 一年级识字 第21组：读准字音；分清字形
+- `recognizing-characters-1-22` 一年级识字 第22组：读准字音；分清字形
+- `recognizing-characters-1-23` 一年级识字 第23组：读准字音；分清字形
+- `recognizing-characters-1-24` 一年级识字 第24组：读准字音；分清字形
 
 **第25至30组**
 
-- `recognizing-characters-1-13` 一年级识字 第13组：读准字音；分清字形
-- `recognizing-characters-2-13` 二年级识字 第13组：读准字音；分清字形
-- `recognizing-characters-1-14` 一年级识字 第14组：读准字音；分清字形
-- `recognizing-characters-2-14` 二年级识字 第14组：读准字音；分清字形
-- `recognizing-characters-1-15` 一年级识字 第15组：读准字音；分清字形
-- `recognizing-characters-2-15` 二年级识字 第15组：读准字音；分清字形
+- `recognizing-characters-1-25` 一年级识字 第25组：读准字音；分清字形
+- `recognizing-characters-1-26` 一年级识字 第26组：读准字音；分清字形
+- `recognizing-characters-1-27` 一年级识字 第27组：读准字音；分清字形
+- `recognizing-characters-1-28` 一年级识字 第28组：读准字音；分清字形
+- `recognizing-characters-1-29` 一年级识字 第29组：读准字音；分清字形
+- `recognizing-characters-1-30` 一年级识字 第30组：读准字音；分清字形
 
 **第31至36组**
 
-- `recognizing-characters-1-16` 一年级识字 第16组：读准字音；分清字形
-- `recognizing-characters-2-16` 二年级识字 第16组：读准字音；分清字形
-- `recognizing-characters-1-17` 一年级识字 第17组：读准字音；分清字形
-- `recognizing-characters-2-17` 二年级识字 第17组：读准字音；分清字形
-- `recognizing-characters-1-18` 一年级识字 第18组：读准字音；分清字形
-- `recognizing-characters-2-18` 二年级识字 第18组：读准字音；分清字形
+- `recognizing-characters-1-31` 一年级识字 第31组：读准字音；分清字形
+- `recognizing-characters-1-32` 一年级识字 第32组：读准字音；分清字形
+- `recognizing-characters-1-33` 一年级识字 第33组：读准字音；分清字形
+- `recognizing-characters-1-34` 一年级识字 第34组：读准字音；分清字形
+- `recognizing-characters-1-35` 一年级识字 第35组：读准字音；分清字形
+- `recognizing-characters-1-36` 一年级识字 第36组：读准字音；分清字形
 
 **第37至42组**
 
-- `recognizing-characters-1-19` 一年级识字 第19组：读准字音；分清字形
-- `recognizing-characters-2-19` 二年级识字 第19组：读准字音；分清字形
-- `recognizing-characters-1-20` 一年级识字 第20组：读准字音；分清字形
-- `recognizing-characters-2-20` 二年级识字 第20组：读准字音；分清字形
-- `recognizing-characters-1-21` 一年级识字 第21组：读准字音；分清字形
-- `recognizing-characters-2-21` 二年级识字 第21组：读准字音；分清字形
+- `recognizing-characters-1-37` 一年级识字 第37组：读准字音；分清字形
+- `recognizing-characters-1-38` 一年级识字 第38组：读准字音；分清字形
+- `recognizing-characters-1-39` 一年级识字 第39组：读准字音；分清字形
+- `recognizing-characters-1-40` 一年级识字 第40组：读准字音；分清字形
+- `recognizing-characters-1-41` 一年级识字 第41组：读准字音；分清字形
+- `recognizing-characters-1-42` 一年级识字 第42组：读准字音；分清字形
 
 **第43至48组**
 
-- `recognizing-characters-1-22` 一年级识字 第22组：读准字音；分清字形
-- `recognizing-characters-2-22` 二年级识字 第22组：读准字音；分清字形
-- `recognizing-characters-1-23` 一年级识字 第23组：读准字音；分清字形
-- `recognizing-characters-2-23` 二年级识字 第23组：读准字音；分清字形
-- `recognizing-characters-1-24` 一年级识字 第24组：读准字音；分清字形
-- `recognizing-characters-2-24` 二年级识字 第24组：读准字音；分清字形
+- `recognizing-characters-1-43` 一年级识字 第43组：读准字音；分清字形
+- `recognizing-characters-1-44` 一年级识字 第44组：读准字音；分清字形
+- `recognizing-characters-1-45` 一年级识字 第45组：读准字音；分清字形
+- `recognizing-characters-1-46` 一年级识字 第46组：读准字音；分清字形
+- `recognizing-characters-1-47` 一年级识字 第47组：读准字音；分清字形
+- `recognizing-characters-1-48` 一年级识字 第48组：读准字音；分清字形
 
 **第49至50组**
 
-- `recognizing-characters-1-25` 一年级识字 第25组：读准字音；分清字形
-- `recognizing-characters-2-25` 二年级识字 第25组：读准字音；分清字形
+- `recognizing-characters-1-49` 一年级识字 第49组：读准字音；分清字形
+- `recognizing-characters-1-50` 一年级识字 第50组：读准字音；分清字形
 
 ### 4. 我手写我口
 
@@ -143,8 +143,8 @@
 
 | 学生 | 完成 | 天数 | 课 | 未通过的课 | 复习 | 每个主题的复习 | 测验 | 文章 |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 强 | 20/20 | 40.40 | 62.65 | 0.40 | 190.05 | 3.07 | 10.60 | 0.00 |
-| 一般 | 20/20 | 49.75 | 65.60 | 3.35 | 224.35 | 3.60 | 10.35 | 0.00 |
-| 吃力 | 20/20 | 66.55 | 83.55 | 21.30 | 297.15 | 4.78 | 9.80 | 0.00 |
-| 已入门 | 20/20 | 49.75 | 65.60 | 3.35 | 224.35 | 3.60 | 10.35 | 0.00 |
-| 吃力、已入门 | 20/20 | 66.55 | 83.55 | 21.30 | 297.15 | 4.78 | 9.80 | 0.00 |
+| 强 | 20/20 | 39.65 | 62.40 | 0.50 | 183.65 | 2.98 | 10.55 | 0.00 |
+| 一般 | 20/20 | 49.00 | 66.20 | 4.30 | 222.00 | 3.60 | 10.20 | 0.00 |
+| 吃力 | 20/20 | 66.80 | 84.65 | 22.75 | 300.15 | 4.84 | 9.90 | 0.00 |
+| 已入门 | 20/20 | 49.00 | 66.20 | 4.30 | 222.00 | 3.60 | 10.20 | 0.00 |
+| 吃力、已入门 | 20/20 | 66.80 | 84.65 | 22.75 | 300.15 | 4.84 | 9.90 | 0.00 |

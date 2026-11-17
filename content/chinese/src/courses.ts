@@ -147,9 +147,10 @@ function gradeCourse(grade: number, description: CourseDef["description"]): Cour
   };
 }
 
-/** stageBatches are the ids of a stage's recognition batches in the order of the tables: its two grades in turn. */
+/** stageBatches are the ids of a stage's recognition batches in the order of its characters: grades 1 and 2 one after the other, the others in turn. */
 function stageBatches(first: number): readonly string[] {
   const [a, b] = [first, first + 1].map((g) => recognitionByGrade.find((x) => x.grade === g)?.batches ?? []);
+  if (first === 1) return [...a!, ...b!].map((x) => x.topic.id);
   return Array.from({ length: Math.max(a!.length, b!.length) }, (_, i) => [a![i], b![i]])
     .flat()
     .filter((x) => x !== undefined)

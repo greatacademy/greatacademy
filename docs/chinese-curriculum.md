@@ -81,7 +81,7 @@ Foreign-language learners need meaning as well as sound, so their **character to
 
 The standard asks that the 300 basic characters of its appendix 4 be learned first: they are simple, frequent and most of them are parts of other characters. The graph does the same. Strokes and stroke order come first; then the basic characters; then the common components and radicals; then characters built from known parts, grouped where possible by a shared part, such as 河、湖、海、洋 by 氵. A character's components are prerequisites of its batch, so the frontier never asks for 想 before 相 and 心.
 
-Until component data is chosen (§5.3), the recognition batches of grades 1 to 6 follow the order of the tables of appendix 5: 12 consecutive characters a batch, dealt in turn to the two grades of a stage, each batch a prerequisite of the grade's next. Of table one, 1,600 characters go to grades 1 and 2 and the other 900 to grades 3 and 4; of table two, 500 go to grades 5 and 6. Reviewers who teach Chinese check the split.
+Until component data is chosen (§5.3), the recognition batches of grades 1 to 6 follow the order of the tables of appendix 5: 12 consecutive characters a batch, dealt in turn to the two grades of a stage, each batch a prerequisite of the grade's next. Grades 1 and 2 are the exception, since the tables are in the order of pinyin: their characters are ordered by frequency, the 900 characters of levels 1 to 3 first in the levels' order, with those of grade 1's words among level 1's, and grade 1 takes the first half of the batches, so that a child first reads 你, 我, 是 and 的. Of table one, 1,600 characters go to grades 1 and 2 and the other 900 to grades 3 and 4; of table two, 500 go to grades 5 and 6. Reviewers who teach Chinese check the split.
 
 ### 5.3 Data
 

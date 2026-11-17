@@ -165,7 +165,7 @@ CG0 ─► C1 第一切片 ─► CG1 ─┬─► C2 一至三级 ─► CG2 �
 
 笔画和部件、300 个基本字、先识字后学拼音、儿歌和短诗、最初的句子；课程 `chinese-grade-1` 和 `chinese-grade-2`。衔接课 `chinese-heritage-1` 至 `chinese-heritage-3` 是母语图谱上的视图，只有少量自己的主题（[§8.2](chinese-curriculum.zh-CN.md#82-华裔课程)）。
 
-**已完成。** 一、二年级的识字：字表一中三至六年级不教的 1600 个字，按字表顺序，每字三个词语和形近字，分成 133 个主题，含认读和书写（`recognizing-characters-1-01` 至 `recognizing-characters-2-66`）。二十首背诵短诗，每年级十首，选自课标推荐篇目。笔画和笔顺三个主题、偏旁部首三个主题，在有笔画数据之前用选择题检查。课程 `chinese-grade-1`（[大纲](chinese-courses/chinese-grade-1.zh-CN.md)）含用中文讲解的 `chinese-pinyin` 拼音内容，`chinese-grade-2`（[大纲](chinese-courses/chinese-grade-2.zh-CN.md)）是三年级的前置课程。华裔识字衔接课 `chinese-heritage-1` 至 `chinese-heritage-3`（[大纲](chinese-courses/chinese-heritage-1.zh-CN.md)）把一至四年级的识字批次排成 600、1600 和 2500 字三段，第一门含拼音、笔画和偏旁，另有六个自有主题：同音字，“的、地、得”和代词，词语和成语的写法，方言词和普通话，口语和书面语，繁体字。每个年级四批词语，共四十个日常词语。句子、儿歌和阅读短文、面向华裔学习者的文章以及手写尚待完成。多音字取的最常用读音、主读音为轻声的语气词，以及少数词语较弱的字，留待教师审读。
+**已完成。** 一、二年级的识字：字表一中三至六年级不教的 1600 个字，常用的在前，每字三个词语和形近字，分成 133 个主题，含认读和书写（`recognizing-characters-1-01` 至 `recognizing-characters-2-66`）。二十首背诵短诗，每年级十首，选自课标推荐篇目。笔画和笔顺三个主题、偏旁部首三个主题，在有笔画数据之前用选择题检查。课程 `chinese-grade-1`（[大纲](chinese-courses/chinese-grade-1.zh-CN.md)）含用中文讲解的 `chinese-pinyin` 拼音内容，`chinese-grade-2`（[大纲](chinese-courses/chinese-grade-2.zh-CN.md)）是三年级的前置课程。华裔识字衔接课 `chinese-heritage-1` 至 `chinese-heritage-3`（[大纲](chinese-courses/chinese-heritage-1.zh-CN.md)）把一至四年级的识字批次排成 600、1600 和 2500 字三段，第一门含拼音、笔画和偏旁，另有六个自有主题：同音字，“的、地、得”和代词，词语和成语的写法，方言词和普通话，口语和书面语，繁体字。每个年级四批词语，共四十个日常词语。阅读：六个单元，每单元三篇，其中有儿歌，都用本年级学过的字写成。句子、面向华裔学习者的文章以及手写尚待完成。多音字取的最常用读音、主读音为轻声的语气词，以及少数词语较弱的字，留待教师审读。
 
 ## 7. 阶段 5：七至九年级、高中和文言
 
