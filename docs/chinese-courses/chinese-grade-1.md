@@ -6,11 +6,11 @@
 - **Level:** Grade 1, native speakers
 - **Prerequisite(s):** None
 - **Language of explanation:** Chinese
-- **Size:** 4 units · 88 topics (8 of pinyin, 3 of strokes, 67 of characters, 10 of recitation) · 186 knowledge points
+- **Size:** 5 units · 92 topics (8 of pinyin, 3 of strokes, 67 of characters, 4 of words, 10 of recitation) · 198 knowledge points
 
 ## Aim
 
-By the end of grade 1 a learner reads and writes pinyin with its tones, hears and says syllables and words, names the basic strokes and follows the rules of stroke order, reads about 800 common characters in words and tells them from characters that look alike, and recites ten short classical poems with their meaning.
+By the end of grade 1 a learner reads and writes pinyin with its tones, hears and says syllables and words, names the basic strokes and follows the rules of stroke order, reads about 800 common characters in words and tells them from characters that look alike, knows forty everyday words, and recites ten short classical poems with their meaning.
 
 ## Units
 
@@ -152,7 +152,16 @@ By the end of grade 1 a learner reads and writes pinyin with its tones, hears an
 
 - `recognizing-characters-1-67` Grade 1 Characters, Set 67: Reading Them; Telling Them Apart
 
-### 4. Recitation
+### 4. Words
+
+**Words**
+
+- `words-1-01` Grade 1 Words: Daily Life: What They Mean; Using Them; Near-Synonyms and Antonyms
+- `words-1-02` Grade 1 Words: Actions: What They Mean; Using Them; Near-Synonyms and Antonyms
+- `words-1-03` Grade 1 Words: At School: What They Mean; Using Them; Near-Synonyms and Antonyms
+- `words-1-04` Grade 1 Words: Nature and Seasons: What They Mean; Using Them; Near-Synonyms and Antonyms
+
+### 5. Recitation
 
 **Classical Poems**
 
@@ -173,8 +182,8 @@ By the end of grade 1 a learner reads and writes pinyin with its tones, hears an
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 20/20 | 49.50 | 82.45 | 0.50 | 267.80 | 3.28 | 12.95 | 0.00 |
-| typical | 20/20 | 59.65 | 87.20 | 5.25 | 308.50 | 3.76 | 12.05 | 0.00 |
-| struggling | 20/20 | 81.05 | 111.55 | 29.60 | 409.15 | 4.98 | 11.25 | 0.00 |
-| placed | 20/20 | 59.65 | 87.20 | 5.25 | 308.50 | 3.76 | 12.05 | 0.00 |
-| struggling, placed | 20/20 | 81.05 | 111.55 | 29.60 | 409.15 | 4.98 | 11.25 | 0.00 |
+| strong | 20/20 | 51.85 | 86.00 | 0.25 | 284.20 | 3.32 | 13.45 | 0.00 |
+| typical | 20/20 | 62.30 | 91.05 | 5.30 | 323.00 | 3.77 | 12.50 | 0.00 |
+| struggling | 20/20 | 85.85 | 120.25 | 34.50 | 441.45 | 5.16 | 11.75 | 0.00 |
+| placed | 20/20 | 62.30 | 91.05 | 5.30 | 323.00 | 3.77 | 12.50 | 0.00 |
+| struggling, placed | 20/20 | 85.85 | 120.25 | 34.50 | 441.45 | 5.16 | 11.75 | 0.00 |

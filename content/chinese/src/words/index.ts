@@ -1,10 +1,11 @@
-// The word topics of the Chinese subject: batches of 10 by theme from grade 3 (docs/chinese-curriculum.md §6), each
+// The word topics of the Chinese subject: batches of 10 by theme from grade 1 (docs/chinese-curriculum.md §6), each
 // batch following the grade's one before.
 
 import type { LexiconEntry, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 
-import { wordData } from "./data.ts";
+import { wordData as laterWordData } from "./data.ts";
+import { earlyWordData } from "./early.ts";
 import { type Word, wordTopic } from "./words.ts";
 
 const NUMERALS = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九"];
@@ -18,6 +19,8 @@ export interface WordBatch {
 
 /** wordId is the id of a grade's word batch, counted from 1. */
 export const wordId = (grade: number, n: number): string => `words-${grade}-${String(n).padStart(2, "0")}`;
+
+const wordData = [...earlyWordData, ...laterWordData];
 
 /** wordBatches are the word batches of every grade, in order. */
 export const wordBatches: readonly WordBatch[] = wordData.map((batch, i) => {

@@ -100,17 +100,13 @@ function gradeCourse(grade: number, description: CourseDef["description"]): Cour
           ]
         : []),
       { title: t("Characters", "识字"), modules: recognitionModules(grade) },
-      ...(grade >= 3
-        ? [
-            {
-              title: t("Words", "词语"),
-              modules: [
-                { title: t("Words", "词语"), topics: wordBatches.filter((b) => b.grade === grade).map((b) => b.topic.id) },
-                { title: t("Idioms", "成语"), topics: idiomTopicsOf(grade) },
-              ],
-            },
-          ]
-        : []),
+      {
+        title: t("Words", "词语"),
+        modules: [
+          { title: t("Words", "词语"), topics: wordBatches.filter((b) => b.grade === grade).map((b) => b.topic.id) },
+          ...(idiomTopicsOf(grade).length > 0 ? [{ title: t("Idioms", "成语"), topics: idiomTopicsOf(grade) }] : []),
+        ],
+      },
       ...(grammarModules(grade).length > 0 ? [{ title: t("Grammar and Punctuation", "语法与标点"), modules: grammarModules(grade) }] : []),
       {
         title: t("Recitation", "积累与背诵"),

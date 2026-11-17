@@ -6,11 +6,11 @@
 - **Level:** Grade 2, native speakers
 - **Prerequisite(s):** Grade 1, or reading its 800 characters
 - **Language of explanation:** Chinese
-- **Size:** 3 units · 79 topics (3 of components, 66 of characters, 10 of recitation) · 168 knowledge points
+- **Size:** 4 units · 83 topics (3 of components, 66 of characters, 4 of words, 10 of recitation) · 180 knowledge points
 
 ## Aim
 
-By the end of grade 2 a learner names the common components and what they suggest of a character's meaning, reads about 800 more common characters in words, 1,600 in all, tells them from characters that look alike, and recites ten more classical poems with their meaning.
+By the end of grade 2 a learner names the common components and what they suggest of a character's meaning, reads about 800 more common characters in words, 1,600 in all, tells them from characters that look alike, knows forty more words, and recites ten more classical poems with their meaning.
 
 ## Units
 
@@ -123,7 +123,16 @@ By the end of grade 2 a learner names the common components and what they sugges
 - `recognizing-characters-2-65` Grade 2 Characters, Set 65: Reading Them; Telling Them Apart
 - `recognizing-characters-2-66` Grade 2 Characters, Set 66: Reading Them; Telling Them Apart
 
-### 3. Recitation
+### 3. Words
+
+**Words**
+
+- `words-2-01` Grade 2 Words: Feelings: What They Mean; Using Them; Near-Synonyms and Antonyms
+- `words-2-02` Grade 2 Words: Family and Friends: What They Mean; Using Them; Near-Synonyms and Antonyms
+- `words-2-03` Grade 2 Words: Animals and Plants: What They Mean; Using Them; Near-Synonyms and Antonyms
+- `words-2-04` Grade 2 Words: Around Us: What They Mean; Using Them; Near-Synonyms and Antonyms
+
+### 4. Recitation
 
 **Classical Poems**
 
@@ -144,8 +153,8 @@ By the end of grade 2 a learner names the common components and what they sugges
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 20/20 | 49.75 | 76.95 | 0.60 | 247.30 | 3.27 | 13.15 | 0.00 |
-| typical | 20/20 | 60.60 | 81.55 | 5.20 | 288.80 | 3.80 | 12.60 | 0.00 |
-| struggling | 20/20 | 81.80 | 104.55 | 28.20 | 391.95 | 5.15 | 11.70 | 0.00 |
-| placed | 20/20 | 58.05 | 77.55 | 4.35 | 285.45 | 3.91 | 11.85 | 0.00 |
-| struggling, placed | 20/20 | 78.85 | 101.40 | 28.20 | 388.20 | 5.30 | 11.25 | 0.00 |
+| strong | 20/20 | 52.25 | 80.65 | 0.55 | 261.50 | 3.30 | 13.80 | 0.00 |
+| typical | 20/20 | 63.10 | 85.50 | 5.40 | 306.05 | 3.83 | 13.05 | 0.00 |
+| struggling | 20/20 | 87.25 | 113.10 | 33.00 | 423.00 | 5.29 | 12.40 | 0.00 |
+| placed | 20/20 | 60.85 | 82.25 | 5.35 | 304.75 | 3.97 | 12.40 | 0.00 |
+| struggling, placed | 20/20 | 82.05 | 106.55 | 29.65 | 407.35 | 5.28 | 11.50 | 0.00 |
