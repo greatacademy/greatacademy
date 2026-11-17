@@ -384,6 +384,17 @@ describe("passages", () => {
     );
   });
 
+  it("splits a body with the subject's own words when it has them", () => {
+    const words = (body: string, known: readonly string[]) => [...known, ...body.replaceAll(known.join(""), "").split("|")];
+    const def = subject({
+      words,
+      reading: [{ id: "u", title: t("U", "单元"), passages: [{ ...passage, body: "bee|make|honey", names: [] }] }],
+    });
+    expect(compileSubject(def).graph.passages.get("bees")).toMatchObject({ words: 3, wordsByTopic: { b: 1 } });
+    const named = { ...passage, body: "Anabee|honey", names: ["Ana"] };
+    expect(errors(subject({ words, reading: [{ id: "u", title: t("U", "单元"), passages: [named] }] }))).toEqual([]);
+  });
+
   it("rejects ids that collide, missing references and questions without wrong options", () => {
     const unit = (p: object) => [{ id: "u", title: t("U", "单元"), passages: [{ ...passage, ...p }] }];
     expect(errors(subject({ reading: unit({ id: "a" }) })).join()).toContain("already used");

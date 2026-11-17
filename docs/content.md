@@ -180,7 +180,7 @@ const prealgebra: CourseDef = {
 | Course topics exist, are not repeated, follow their in-course prerequisites; floor topics are not in the course | Error |
 | Lexicon spellings are unique, and an entry's topic exists | Error |
 | Reading units and passages have unique ids that no topic uses; a passage has a body, positive `xp`, at least one question, and topics that exist | Error |
-| Every word of a passage is in the lexicon, or listed in its `names` or `glossed` | Error |
+| Every word of a passage is in the lexicon, or listed in its `names` or `glossed`; words are runs of letters, or what the subject's `words` splits the body into, as a language written without spaces needs | Error |
 | A course's reading units exist | Error |
 | A spoken topic or conversation names a language tag; a spoken topic is not judged by a model, and no topic that is not spoken depends on or encompasses one; only a spoken topic is `verbatim` | Error |
 | Conversations have unique kebab-case ids, texts in every locale, a scenario and an opening line, and a whole number of minutes from 1 to 15; a course's conversations exist and are not repeated | Error |

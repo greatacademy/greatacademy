@@ -45,9 +45,16 @@ export const orderChecker: Checker = {
 /** MAX_WRITING_CHARS is the longest text a writing response may be, whatever its problem allows. */
 export const MAX_WRITING_CHARS = 8000;
 
-/** wordCount counts the words of a text: runs without spaces that hold a letter or a digit. */
+/** wordCount counts the words of a text: runs without spaces that hold a letter or a digit, and each Chinese character, as languages written without spaces are counted. */
 export function wordCount(text: string): number {
-  return text.split(/\s+/u).filter((w) => /[\p{L}\p{N}]/u.test(w)).length;
+  const han = text.match(/\p{Script=Han}/gu)?.length ?? 0;
+  return (
+    han +
+    text
+      .replace(/\p{Script=Han}/gu, " ")
+      .split(/\s+/u)
+      .filter((w) => /[\p{L}\p{N}]/u.test(w)).length
+  );
 }
 
 /**

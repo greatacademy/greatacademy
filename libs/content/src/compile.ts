@@ -310,12 +310,14 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
       text(`${path} › title`, passage.title);
       if (passage.accent) text(`${path} › accent`, passage.accent);
       if (!(Number.isFinite(passage.xp) && passage.xp > 0)) error(path, `xp must be positive, got ${passage.xp}`);
-      const words = bodyWords(passage.body);
+      const known = [...(passage.names ?? []), ...(passage.glossed ?? [])];
+      const words = def.words ? def.words(passage.body, known) : bodyWords(passage.body);
       if (words.length === 0) error(path, "a passage needs a body");
-      const outside = new Set([...(passage.names ?? []), ...(passage.glossed ?? [])].map((w) => w.toLowerCase()));
+      const outside = new Set(known.map((w) => w.toLowerCase()));
       const wordsByTopic: Record<string, number> = {};
       const unlisted = new Set<string>();
-      for (const word of words) {
+      for (const running of words) {
+        const word = running.toLowerCase();
         if (outside.has(word)) continue;
         const entry = lexicon.get(word);
         if (!entry) unlisted.add(word);

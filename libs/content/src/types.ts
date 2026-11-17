@@ -367,6 +367,12 @@ export interface SubjectDef {
   readonly reading?: readonly ReadingUnitDef[];
   /** lexicon lists the words its passages may use; a subject with passages needs one. */
   readonly lexicon?: readonly LexiconEntry[];
+  /**
+   * words splits a passage body into its running words, each to be found in the lexicon or among `known`, the passage's
+   * names and glossed terms; a language written without spaces needs its own. Without it, words are runs of letters
+   * (bodyWords).
+   */
+  readonly words?: (body: string, known: readonly string[]) => readonly string[];
   /** conversations are the subject's spoken conversations. */
   readonly conversations?: readonly ConversationDef[];
   /** strands are the kinds of topic the subject has; when given, every topic names one. */
