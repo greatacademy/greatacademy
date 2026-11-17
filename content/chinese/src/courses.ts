@@ -5,6 +5,7 @@ import { recognitionByGrade } from "./characters/index.ts";
 import { classicalDrillTopics, classicalPassages } from "./classical/index.ts";
 import { connectiveTopics, faultyTopics, type GradeTopic, punctuationTopics, rhetoricTopics, sentenceTopics } from "./grammar/index.ts";
 import { idiomsByGrade } from "./idioms/index.ts";
+import { levelOneCourse } from "./level-1/index.ts";
 import { chineseReading } from "./reading/index.ts";
 import { recitedPoems } from "./recitation/index.ts";
 import { wordBatches } from "./words/index.ts";
@@ -141,4 +142,5 @@ export const chineseCourses: readonly CourseDef[] = [
       { title: t("Speaking", "开口说"), modules: [{ title: t("Saying Words", "说词语"), topics: ["pinyin-saying"] }] },
     ],
   },
+  levelOneCourse,
 ];

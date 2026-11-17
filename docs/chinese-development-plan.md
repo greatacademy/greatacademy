@@ -120,6 +120,8 @@ Native grades 3 to 6 without new input, testing whether mastery learning and spa
 
 Words and characters are taken from lists counsel has cleared (C0.2); until then they follow the standard's levels, as the native batches follow appendix 5.
 
+**Built so far.** Level 1, as the course `chinese-level-1` ([outline](chinese-courses/chinese-level-1.md)): 300 characters in 30 topics of form, reading and meaning, and 500 words in 50 topics of meaning, reading and use, in twelve themed units from greetings to health. Every sentence uses only characters already taught, which the content checks as it builds. The characters were chosen as the commonest of daily life; checking them against level 1 of GF 0025-2021, and a teacher's reading of the sentences, remain. Grammar points and levels 2 and 3 are not yet written.
+
 ### C2.3 Listening (M)
 
 | Work | Files |

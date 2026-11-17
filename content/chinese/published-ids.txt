@@ -2,6 +2,7 @@ course chinese-grade-3
 course chinese-grade-4
 course chinese-grade-5
 course chinese-grade-6
+course chinese-level-1
 course chinese-pinyin
 topic classical-function-words-6-01 classical-function-words-6-01-er-yi-yu classical-function-words-6-01-zhi
 topic classical-words-5-01 classical-words-5-01-meaning classical-words-5-01-sentences
@@ -29,6 +30,86 @@ topic idioms-6-01 idioms-6-01-meaning idioms-6-01-use idioms-6-01-writing
 topic idioms-6-02 idioms-6-02-meaning idioms-6-02-use idioms-6-02-writing
 topic idioms-6-03 idioms-6-03-meaning idioms-6-03-use idioms-6-03-writing
 topic idioms-6-04 idioms-6-04-meaning idioms-6-04-use idioms-6-04-writing
+topic level-1-characters-01 level-1-characters-01-form level-1-characters-01-meaning level-1-characters-01-reading
+topic level-1-characters-02 level-1-characters-02-form level-1-characters-02-meaning level-1-characters-02-reading
+topic level-1-characters-03 level-1-characters-03-form level-1-characters-03-meaning level-1-characters-03-reading
+topic level-1-characters-04 level-1-characters-04-form level-1-characters-04-meaning level-1-characters-04-reading
+topic level-1-characters-05 level-1-characters-05-form level-1-characters-05-meaning level-1-characters-05-reading
+topic level-1-characters-06 level-1-characters-06-form level-1-characters-06-meaning level-1-characters-06-reading
+topic level-1-characters-07 level-1-characters-07-form level-1-characters-07-meaning level-1-characters-07-reading
+topic level-1-characters-08 level-1-characters-08-form level-1-characters-08-meaning level-1-characters-08-reading
+topic level-1-characters-09 level-1-characters-09-form level-1-characters-09-meaning level-1-characters-09-reading
+topic level-1-characters-10 level-1-characters-10-form level-1-characters-10-meaning level-1-characters-10-reading
+topic level-1-characters-11 level-1-characters-11-form level-1-characters-11-meaning level-1-characters-11-reading
+topic level-1-characters-12 level-1-characters-12-form level-1-characters-12-meaning level-1-characters-12-reading
+topic level-1-characters-13 level-1-characters-13-form level-1-characters-13-meaning level-1-characters-13-reading
+topic level-1-characters-14 level-1-characters-14-form level-1-characters-14-meaning level-1-characters-14-reading
+topic level-1-characters-15 level-1-characters-15-form level-1-characters-15-meaning level-1-characters-15-reading
+topic level-1-characters-16 level-1-characters-16-form level-1-characters-16-meaning level-1-characters-16-reading
+topic level-1-characters-17 level-1-characters-17-form level-1-characters-17-meaning level-1-characters-17-reading
+topic level-1-characters-18 level-1-characters-18-form level-1-characters-18-meaning level-1-characters-18-reading
+topic level-1-characters-19 level-1-characters-19-form level-1-characters-19-meaning level-1-characters-19-reading
+topic level-1-characters-20 level-1-characters-20-form level-1-characters-20-meaning level-1-characters-20-reading
+topic level-1-characters-21 level-1-characters-21-form level-1-characters-21-meaning level-1-characters-21-reading
+topic level-1-characters-22 level-1-characters-22-form level-1-characters-22-meaning level-1-characters-22-reading
+topic level-1-characters-23 level-1-characters-23-form level-1-characters-23-meaning level-1-characters-23-reading
+topic level-1-characters-24 level-1-characters-24-form level-1-characters-24-meaning level-1-characters-24-reading
+topic level-1-characters-25 level-1-characters-25-form level-1-characters-25-meaning level-1-characters-25-reading
+topic level-1-characters-26 level-1-characters-26-form level-1-characters-26-meaning level-1-characters-26-reading
+topic level-1-characters-27 level-1-characters-27-form level-1-characters-27-meaning level-1-characters-27-reading
+topic level-1-characters-28 level-1-characters-28-form level-1-characters-28-meaning level-1-characters-28-reading
+topic level-1-characters-29 level-1-characters-29-form level-1-characters-29-meaning level-1-characters-29-reading
+topic level-1-characters-30 level-1-characters-30-form level-1-characters-30-meaning level-1-characters-30-reading
+topic level-1-words-01 level-1-words-01-meaning level-1-words-01-reading level-1-words-01-use
+topic level-1-words-02 level-1-words-02-meaning level-1-words-02-reading level-1-words-02-use
+topic level-1-words-03 level-1-words-03-meaning level-1-words-03-reading level-1-words-03-use
+topic level-1-words-04 level-1-words-04-meaning level-1-words-04-reading level-1-words-04-use
+topic level-1-words-05 level-1-words-05-meaning level-1-words-05-reading level-1-words-05-use
+topic level-1-words-06 level-1-words-06-meaning level-1-words-06-reading level-1-words-06-use
+topic level-1-words-07 level-1-words-07-meaning level-1-words-07-reading level-1-words-07-use
+topic level-1-words-08 level-1-words-08-meaning level-1-words-08-reading level-1-words-08-use
+topic level-1-words-09 level-1-words-09-meaning level-1-words-09-reading level-1-words-09-use
+topic level-1-words-10 level-1-words-10-meaning level-1-words-10-reading level-1-words-10-use
+topic level-1-words-11 level-1-words-11-meaning level-1-words-11-reading level-1-words-11-use
+topic level-1-words-12 level-1-words-12-meaning level-1-words-12-reading level-1-words-12-use
+topic level-1-words-13 level-1-words-13-meaning level-1-words-13-reading level-1-words-13-use
+topic level-1-words-14 level-1-words-14-meaning level-1-words-14-reading level-1-words-14-use
+topic level-1-words-15 level-1-words-15-meaning level-1-words-15-reading level-1-words-15-use
+topic level-1-words-16 level-1-words-16-meaning level-1-words-16-reading level-1-words-16-use
+topic level-1-words-17 level-1-words-17-meaning level-1-words-17-reading level-1-words-17-use
+topic level-1-words-18 level-1-words-18-meaning level-1-words-18-reading level-1-words-18-use
+topic level-1-words-19 level-1-words-19-meaning level-1-words-19-reading level-1-words-19-use
+topic level-1-words-20 level-1-words-20-meaning level-1-words-20-reading level-1-words-20-use
+topic level-1-words-21 level-1-words-21-meaning level-1-words-21-reading level-1-words-21-use
+topic level-1-words-22 level-1-words-22-meaning level-1-words-22-reading level-1-words-22-use
+topic level-1-words-23 level-1-words-23-meaning level-1-words-23-reading level-1-words-23-use
+topic level-1-words-24 level-1-words-24-meaning level-1-words-24-reading level-1-words-24-use
+topic level-1-words-25 level-1-words-25-meaning level-1-words-25-reading level-1-words-25-use
+topic level-1-words-26 level-1-words-26-meaning level-1-words-26-reading level-1-words-26-use
+topic level-1-words-27 level-1-words-27-meaning level-1-words-27-reading level-1-words-27-use
+topic level-1-words-28 level-1-words-28-meaning level-1-words-28-reading level-1-words-28-use
+topic level-1-words-29 level-1-words-29-meaning level-1-words-29-reading level-1-words-29-use
+topic level-1-words-30 level-1-words-30-meaning level-1-words-30-reading level-1-words-30-use
+topic level-1-words-31 level-1-words-31-meaning level-1-words-31-reading level-1-words-31-use
+topic level-1-words-32 level-1-words-32-meaning level-1-words-32-reading level-1-words-32-use
+topic level-1-words-33 level-1-words-33-meaning level-1-words-33-reading level-1-words-33-use
+topic level-1-words-34 level-1-words-34-meaning level-1-words-34-reading level-1-words-34-use
+topic level-1-words-35 level-1-words-35-meaning level-1-words-35-reading level-1-words-35-use
+topic level-1-words-36 level-1-words-36-meaning level-1-words-36-reading level-1-words-36-use
+topic level-1-words-37 level-1-words-37-meaning level-1-words-37-reading level-1-words-37-use
+topic level-1-words-38 level-1-words-38-meaning level-1-words-38-reading level-1-words-38-use
+topic level-1-words-39 level-1-words-39-meaning level-1-words-39-reading level-1-words-39-use
+topic level-1-words-40 level-1-words-40-meaning level-1-words-40-reading level-1-words-40-use
+topic level-1-words-41 level-1-words-41-meaning level-1-words-41-reading level-1-words-41-use
+topic level-1-words-42 level-1-words-42-meaning level-1-words-42-reading level-1-words-42-use
+topic level-1-words-43 level-1-words-43-meaning level-1-words-43-reading level-1-words-43-use
+topic level-1-words-44 level-1-words-44-meaning level-1-words-44-reading level-1-words-44-use
+topic level-1-words-45 level-1-words-45-meaning level-1-words-45-reading level-1-words-45-use
+topic level-1-words-46 level-1-words-46-meaning level-1-words-46-reading level-1-words-46-use
+topic level-1-words-47 level-1-words-47-meaning level-1-words-47-reading level-1-words-47-use
+topic level-1-words-48 level-1-words-48-meaning level-1-words-48-reading level-1-words-48-use
+topic level-1-words-49 level-1-words-49-meaning level-1-words-49-reading level-1-words-49-use
+topic level-1-words-50 level-1-words-50-meaning level-1-words-50-reading level-1-words-50-use
 topic pinyin-finals pinyin-finals-choosing pinyin-finals-finding
 topic pinyin-hearing pinyin-hearing-sounds pinyin-hearing-tones
 topic pinyin-initials pinyin-initials-choosing pinyin-initials-finding
