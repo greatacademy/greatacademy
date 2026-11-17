@@ -61,6 +61,19 @@ export function sentencesOf(body: string): readonly string[] {
     .filter((s) => s.length > 0);
 }
 
+/**
+ * spokenOf is the text of a passage as it is spoken: a play's list of characters, its setting and its stage directions
+ * in brackets are left out, and its lines keep the names of who says them.
+ */
+export function spokenOf(body: string): string {
+  return body
+    .split(/\n\s*\n/u)
+    .filter((paragraph) => !/^\s*(CHARACTERS|SETTING):/u.test(paragraph))
+    .map((paragraph) => paragraph.replace(/\s*\[[^\]]*\]/gu, "").trim())
+    .filter((paragraph) => paragraph.length > 0 && !/^[A-Z][A-Z ]*:$/u.test(paragraph))
+    .join("\n\n");
+}
+
 /** readable tells whether a sentence can be read aloud and heard back as written: words only, without numerals. */
 const readable = (s: string) => !/\d|[—–-]{2}|[[\]{}/*_#]/u.test(s) && /[.!?][”"’)]?$/u.test(s);
 
@@ -180,7 +193,7 @@ function listeningTopic(id: string, unit: Text, reading: ReadingUnitDef, prerequ
 
 /** readingAloudTopic reads aloud sentences, then stretches of sentences, of a reading unit's passages. */
 function readingAloudTopic(id: string, unit: Text, reading: ReadingUnitDef, listening: string): TopicDef {
-  const all = reading.passages.map((p) => sentencesOf(p.body));
+  const all = reading.passages.map((p) => sentencesOf(spokenOf(p.body)));
   const within = (least: number) => [
     ...new Set(
       all.flat().filter((s) => {

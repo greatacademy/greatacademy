@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { english } from "../index.ts";
-import { sentencesOf } from "./aural.ts";
+import { sentencesOf, spokenOf } from "./aural.ts";
 
 describe("listening and reading aloud in the grades", () => {
   it("splits a passage into its sentences, running a poem's lines on", () => {
@@ -11,6 +11,11 @@ describe("listening and reading aloud in the grades", () => {
       "It was late.",
     ]);
     expect(sentencesOf("The wind blew\nacross the hill.")).toEqual(["The wind blew across the hill."]);
+  });
+
+  it("reads a play's lines with the names of who says them, without its characters, setting and stage directions", () => {
+    const play = "CHARACTERS: MAYA; LEO.\n\nSETTING: A hall.\n\n[MAYA searches.]\n\nMAYA: It's gone!\n\nLEO: [Looking up] Did you look?";
+    expect(spokenOf(play)).toBe("MAYA: It's gone!\n\nLEO: Did you look?");
   });
 
   it("gives each unit of grades 1 to 12 that reads a reading unit a listening module and then reading aloud", () => {
