@@ -82,7 +82,7 @@ pnpm format                                # 用 Biome 格式化并修复
 ## 内容约定
 
 - 每段用户可见的文字都有英文和简体中文（`t(en, zh)`），编译器会拒绝缺少语言的文字。
-- 知识点、knowledge point 和课程的 id 使用 kebab case，一经发布不得更改，因为学习者状态引用它们。
+- 知识点、knowledge point 和课程的 id 使用 kebab case，一经发布不得更改，因为学习者状态引用它们。每个内容包把它们记录在 `published-ids.txt` 中并由测试检查；`pnpm nx run audit:ids` 补记新的 id。
 - 每个生成器都是确定性的，在 `wrong` 中列出常见错误答案，并通过 `sampleGenerators` 检查（由各内容包的测试运行）。
 - 绝不降低标准：不给泄露答案的提示；需要的铺垫放进讲解、例题和额外的 knowledge point。
 - 多个 agent 同时编写内容时，通过 [content/math/PROGRESS.md](content/math/PROGRESS.md) 认领课程、交接工作。

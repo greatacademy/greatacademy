@@ -57,7 +57,7 @@ const addingIntegers: TopicDef = {
 
 Rules:
 
-- **Ids** are kebab case, unique within the subject, and never change once published: learner state refers to them. Knowledge point ids are unique within their topic.
+- **Ids** are kebab case, unique within the subject, and never change once published: learner state refers to them. Knowledge point ids are unique within their topic. Each content package records the ids of its courses, topics, knowledge points, passages and conversations in `published-ids.txt`; its tests fail when an id there is no longer defined, or when a defined id is not recorded, and `pnpm nx run audit:ids` adds the new ones. A line is removed from the file only for an id never deployed.
 - **Granularity.** A topic is the smallest idea worth a lesson: two to five knowledge points, `xp` (expected minutes for a serious learner) usually between 8 and 25.
 - **Prerequisites** list only the direct ones. A prerequisite implied by another prerequisite is redundant and produces a warning.
 - **Encompassings** point to ancestors (direct or indirect prerequisites). An equivalent topic that is not an ancestor may be encompassed only with `nonAncestor: true`. `weight` is in (0, 1]: 1 means the whole simpler topic is practiced, 0.5 half of it.

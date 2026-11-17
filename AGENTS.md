@@ -82,7 +82,7 @@ Every package declares its targets as `package.json` scripts (`typecheck`, `test
 ## Content Conventions
 
 - Every user-visible text exists in English and Simplified Chinese (`t(en, zh)`); the compiler rejects missing locales.
-- Topic, knowledge point and course ids are kebab case and never change once published: learner state refers to them.
+- Topic, knowledge point and course ids are kebab case and never change once published: learner state refers to them. Each content package records them in `published-ids.txt`, which its tests check; `pnpm nx run audit:ids` records new ones.
 - Every generator is deterministic, lists plausible wrong responses in `wrong`, and passes `sampleGenerators` (run by each content package's tests).
 - Never lower the bar: no hints that give away answers; scaffolding goes into explanations, worked examples and extra knowledge points.
 - When several agents write content at once, claim courses and hand work over through [content/math/PROGRESS.md](content/math/PROGRESS.md).

@@ -57,7 +57,7 @@ const addingIntegers: TopicDef = {
 
 规则：
 
-- **Id** 使用 kebab case，在学科内唯一，一经发布不得更改，因为学习者状态引用它们。knowledge point 的 id 在所属知识点内唯一。
+- **Id** 使用 kebab case，在学科内唯一，一经发布不得更改，因为学习者状态引用它们。knowledge point 的 id 在所属知识点内唯一。每个内容包在 `published-ids.txt` 中记录其课程、topic、knowledge point、文章和对话的 id；文件中的 id 不再被定义，或已定义的 id 尚未记录时，它的测试都会失败，`pnpm nx run audit:ids` 会补记新的 id。只有从未部署过的 id 才可以从文件中删去。
 - **粒度。** 知识点是值得单独上一节课的最小概念：两到五个 knowledge point，`xp`（认真学习者预计花费的分钟数）通常在 8 到 25 之间。
 - **先修**只列直接先修。被另一个先修蕴含的先修是多余的，会产生警告。
 - **包含边**指向祖先（直接或间接先修）。不是祖先的等价知识点只有标记 `nonAncestor: true` 才能被包含。`weight` 在 (0, 1] 内：1 表示完整练习了那个更简单的知识点，0.5 表示练习了一半。
