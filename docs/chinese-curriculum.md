@@ -263,7 +263,7 @@ For comparison, `cn-math-taxonomy` has 682 knowledge points of primary and junio
 6. **Grades 7 to 9, senior secondary and classical language.**
 7. **Levels 4 to 9, judged writing, speech and conversations, then the exam courses.**
 
-[English Development Plan](english-development-plan.md) is the model for the milestones; a Chinese development plan breaks this list down when work begins.
+[Chinese Development Plan](chinese-development-plan.md) breaks this list down into milestones, files and gates.
 
 ## 16. Risks and Questions
 

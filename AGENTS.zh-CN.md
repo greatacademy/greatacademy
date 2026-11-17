@@ -17,6 +17,7 @@
 | [docs/english-development-plan.zh-CN.md](docs/english-development-plan.zh-CN.md) | 构建英语的里程碑、文件、验收标准和关卡 |
 | [docs/english-illustrations.zh-CN.md](docs/english-illustrations.zh-CN.md) | 给生成英语彩色插图的智能体的说明：风格、角色、场景、审核与文件 |
 | [docs/chinese-curriculum.zh-CN.md](docs/chinese-curriculum.zh-CN.md) | 中文学科的设计：依据、母语华裔和外语课程、汉字与背诵、按主题知识点和题目计的规模；第一切片母语三至六年级已建成 |
+| [docs/chinese-development-plan.zh-CN.md](docs/chinese-development-plan.zh-CN.md) | 构建中文的里程碑、文件、验收标准和闸门 |
 | [docs/minors-data.zh-CN.md](docs/minors-data.zh-CN.md) | 如何处理未成年人的文本和录音：首批市场、年龄段、同意、保存期限、供应商；等待法律审阅 |
 | [docs/billing.zh-CN.md](docs/billing.zh-CN.md) | 方案与价格、谁来付款、Stripe 账户、退款、访问，以及通过付款验证监护人 |
 | [docs/admin.zh-CN.md](docs/admin.zh-CN.md) | `/admin` 管理后台：谁能进入、各页面、市场、AI 服务、供应商登记表和通知 |

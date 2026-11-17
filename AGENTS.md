@@ -17,6 +17,7 @@ This is the working guide for AI coding agents and contributors. It summarizes t
 | [docs/english-development-plan.md](docs/english-development-plan.md) | Milestones, files, acceptance criteria and gates for building English |
 | [docs/english-illustrations.md](docs/english-illustrations.md) | Instructions for the agent that generates the color illustrations of English: the style, the cast, the scenes, the review and the files |
 | [docs/chinese-curriculum.md](docs/chinese-curriculum.md) | Design of the Chinese subject: sources, native, heritage and foreign-language courses, characters and recitation, sizes in topics, knowledge points and problems; the first slice, native grades 3 to 6, is built |
+| [docs/chinese-development-plan.md](docs/chinese-development-plan.md) | Milestones, files, acceptance criteria and gates for building Chinese |
 | [docs/minors-data.md](docs/minors-data.md) | How minors' text and recordings are handled: first markets, age bands, consent, retention, vendors; awaiting legal review |
 | [docs/billing.md](docs/billing.md) | Plans and prices, who pays, the Stripe account, refunds, access and guardian verification by payment |
 | [docs/admin.md](docs/admin.md) | The admin console at `/admin`: who gets in, its pages, markets, AI services, the vendor register and notices |
