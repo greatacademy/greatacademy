@@ -6,6 +6,7 @@ import { classicalDrillTopics, classicalPassages } from "./classical/index.ts";
 import { connectiveTopics, faultyTopics, type GradeTopic, punctuationTopics, rhetoricTopics, sentenceTopics } from "./grammar/index.ts";
 import { idiomsByGrade } from "./idioms/index.ts";
 import { levelOneCourse } from "./level-1/index.ts";
+import { levelTwoCourse } from "./level-2/index.ts";
 import { chineseReading } from "./reading/index.ts";
 import { recitedPoems } from "./recitation/index.ts";
 import { wordBatches } from "./words/index.ts";
@@ -143,4 +144,5 @@ export const chineseCourses: readonly CourseDef[] = [
     ],
   },
   levelOneCourse,
+  levelTwoCourse,
 ];

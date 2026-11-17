@@ -1,6 +1,6 @@
 # 中文一级
 
-> 这是伟大学院自己的大纲。设计见[中文课程设计](../chinese-curriculum.zh-CN.md)。[English](chinese-level-1.md)。
+> 这是 Great Academy 自己的大纲。设计见[中文课程体系](../chinese-curriculum.zh-CN.md)。[English](chinese-level-1.md)。
 
 - **课程：** `chinese-level-1`
 - **级别：** 一级，面向把中文作为外语学习的人

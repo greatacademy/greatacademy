@@ -7,6 +7,7 @@ import { classicalTopics } from "../classical/index.ts";
 import { grammarTopics } from "../grammar/index.ts";
 import { idiomTopics } from "../idioms/index.ts";
 import { levelOneTopics } from "../level-1/index.ts";
+import { levelTwoTopics } from "../level-2/index.ts";
 import { pinyinTopics } from "../pinyin/index.ts";
 import { chineseReading } from "../reading/index.ts";
 import { recitationTopics } from "../recitation/index.ts";
@@ -22,6 +23,7 @@ export const coreShardTopics: readonly TopicDef[] = [
   ...recitationTopics,
   ...classicalTopics,
   ...levelOneTopics,
+  ...levelTwoTopics,
 ];
 
 /** coreShardReading are the reading units held by the `core` shard. */
