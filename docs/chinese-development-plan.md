@@ -84,6 +84,8 @@ Native grades 3 to 6 without new input, testing whether mastery learning and spa
 
 **Done when** simulated students finish each grade course, no topic is unreachable, and the reviews per topic are recorded here.
 
+**Done.** The outlines are in [docs/chinese-courses](chinese-courses/), one per course with its simulated students. Every student finished every course in all 20 runs. Reviews per topic for the typical, strong and struggling student: grade 3 3.58, 2.83 and 4.90; grade 4 3.92, 3.45 and 5.28; grade 5 3.99, 3.63 and 5.33; grade 6 4.05, 3.66 and 5.32; pinyin 0.55, 0.62 and 0.98, a short course whose reviews mostly fall after it ends. A typical student takes 38, 74, 96 and 102 days for grades 3 to 6, and 2 for pinyin.
+
 ### C1.4 Review and Pilot (M, waiting for people)
 
 | Work | Owner |
