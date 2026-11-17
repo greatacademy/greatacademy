@@ -2,6 +2,7 @@ import type { CourseDef, ModuleDef } from "@ga/content";
 import { t } from "@ga/content";
 
 import { recognitionByGrade } from "./characters/index.ts";
+import { faultyTopics, type GradeTopic, punctuationTopics } from "./grammar/index.ts";
 import { idiomsByGrade } from "./idioms/index.ts";
 
 const NUMERALS = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九"];
@@ -25,6 +26,20 @@ function recognitionModules(grade: number): readonly ModuleDef[] {
 const idiomTopicsOf = (grade: number): readonly string[] =>
   (idiomsByGrade.find((g) => g.grade === grade)?.batches ?? []).map((b) => b.topic.id);
 
+/** ofGrade are the ids of the topics a grade teaches. */
+const ofGrade = (topics: readonly GradeTopic[], grade: number): readonly string[] =>
+  topics.filter((g) => g.grade === grade).map((g) => g.topic.id);
+
+/** grammarModules are a grade's modules of punctuation and faulty sentences, those it has. */
+function grammarModules(grade: number): readonly ModuleDef[] {
+  const modules: ModuleDef[] = [];
+  const punctuation = ofGrade(punctuationTopics, grade);
+  const faulty = ofGrade(faultyTopics, grade);
+  if (punctuation.length > 0) modules.push({ title: t("Punctuation", "标点符号"), topics: punctuation });
+  if (faulty.length > 0) modules.push({ title: t("Faulty Sentences", "修改病句"), topics: faulty });
+  return modules;
+}
+
 /** gradeCourse is the native course of a grade. */
 function gradeCourse(grade: number, description: CourseDef["description"]): CourseDef {
   return {
@@ -36,6 +51,7 @@ function gradeCourse(grade: number, description: CourseDef["description"]): Cour
     units: [
       { title: t("Characters", "识字"), modules: recognitionModules(grade) },
       { title: t("Words", "词语"), modules: [{ title: t("Idioms", "成语"), topics: idiomTopicsOf(grade) }] },
+      ...(grammarModules(grade).length > 0 ? [{ title: t("Grammar and Punctuation", "语法与标点"), modules: grammarModules(grade) }] : []),
     ],
     ...(grade > 3 && { buildsOn: [`chinese-grade-${grade - 1}`] }),
   };

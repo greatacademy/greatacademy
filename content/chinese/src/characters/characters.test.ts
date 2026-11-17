@@ -53,7 +53,8 @@ describe("recognition data", () => {
       [5, 21],
       [6, 21],
     ]);
-    expect(recognitionByGrade[3]?.batches.at(-1)?.entries).toHaveLength(8);
+    expect(recognitionByGrade[3]?.batches.at(-1)?.entries).toHaveLength(10);
+    expect(recognitionByGrade[2]?.batches.at(-1)?.entries).toHaveLength(10);
     expect(recognitionByGrade[0]?.batches[0]?.entries.map((e) => e.char).join("")).toBe("哀埃癌艾碍氨俺昂凹熬傲澳");
   });
 

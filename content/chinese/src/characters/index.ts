@@ -33,6 +33,13 @@ export const recognitionId = (grade: number, n: number): string => `recognizing-
 function stage(first: number, entries: readonly CharacterEntry[]): readonly GradeCharacters[] {
   const chunks: (readonly CharacterEntry[])[] = [];
   for (let i = 0; i < entries.length; i += BATCH) chunks.push(entries.slice(i, i + BATCH));
+  const last = chunks.at(-1);
+  if (chunks.length > 1 && last && last.length < BATCH) {
+    // A short last batch would have too few items; the last two share their characters evenly instead.
+    const both = [...chunks.at(-2)!, ...last];
+    const half = Math.ceil(both.length / 2);
+    chunks.splice(-2, 2, both.slice(0, half), both.slice(half));
+  }
   return [first, first + 1].map((grade, which) => ({
     grade,
     batches: chunks
