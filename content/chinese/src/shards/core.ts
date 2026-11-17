@@ -13,6 +13,7 @@ import { levelThreeTopics } from "../level-3/index.ts";
 import { levelFourTopics } from "../level-4/index.ts";
 import { levelFiveTopics } from "../level-5/index.ts";
 import { levelSixTopics } from "../level-6/index.ts";
+import { levelSevenTopics } from "../level-7/index.ts";
 import { pinyinTopics } from "../pinyin/index.ts";
 import { heritageReading } from "../reading/heritage.ts";
 import { chineseReading } from "../reading/index.ts";
@@ -38,6 +39,7 @@ export const coreShardTopics: readonly TopicDef[] = [
   ...levelFourTopics,
   ...levelFiveTopics,
   ...levelSixTopics,
+  ...levelSevenTopics,
 ];
 
 /** coreShardReading are the reading units held by the `core` shard. */
