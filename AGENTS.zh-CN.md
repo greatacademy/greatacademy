@@ -47,6 +47,7 @@ libs/db/             Drizzle schema、迁移、仓储
 libs/design/         颜色 token、配色和外观模型
 content/math/        数学内容
 content/english/     英语内容
+content/chinese/     语文内容
 tools/simulate/      模拟学生
 tools/audit/         内容审计
 tools/pilot/         根据真实作答生成试点报告

@@ -383,6 +383,25 @@ importers:
         specifier: 5.0.3
         version: 5.0.3(@types/node@26.6.3)(vite@8.3.5(@types/node@26.6.3)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.0))
 
+  content/chinese:
+    dependencies:
+      '@ga/content':
+        specifier: workspace:*
+        version: link:../../libs/content
+      '@ga/subject-chinese':
+        specifier: workspace:*
+        version: link:../../libs/subject-chinese
+    devDependencies:
+      '@types/node':
+        specifier: 26.6.3
+        version: 26.6.3
+      typescript:
+        specifier: 7.0.2
+        version: 7.0.2
+      vitest:
+        specifier: 5.0.3
+        version: 5.0.3(@types/node@26.6.3)(vite@8.3.5(@types/node@26.6.3)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.0))
+
   content/english:
     dependencies:
       '@ga/content':
@@ -664,6 +683,9 @@ importers:
       '@ga/content':
         specifier: workspace:*
         version: link:../../libs/content
+      '@ga/content-chinese':
+        specifier: workspace:*
+        version: link:../../content/chinese
       '@ga/content-english':
         specifier: workspace:*
         version: link:../../content/english

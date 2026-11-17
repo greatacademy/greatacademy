@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@ga/content": "workspace:*",
+    "@ga/content-chinese": "workspace:*",
     "@ga/content-english": "workspace:*",
     "@ga/content-math": "workspace:*"
   },

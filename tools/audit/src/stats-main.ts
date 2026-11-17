@@ -1,5 +1,6 @@
 import { writeFileSync } from "node:fs";
 
+import { compileChinese } from "@ga/content-chinese";
 import { compileEnglish } from "@ga/content-english";
 import { compileMath } from "@ga/content-math";
 
@@ -12,7 +13,10 @@ const subjectId = process.argv[2] ?? "english";
 const out = process.argv[3];
 const samples = Number(process.argv[4] ?? 200);
 const report = renderStats(
-  subjectStats(subjectId === "math" ? compileMath() : compileEnglish(), { samples, minRuledByStrand: { vocabulary: 25 } }),
+  subjectStats(subjectId === "math" ? compileMath() : subjectId === "chinese" ? compileChinese() : compileEnglish(), {
+    samples,
+    minRuledByStrand: { vocabulary: 25 },
+  }),
 );
 if (out && out !== "-") writeFileSync(out, report);
 else process.stdout.write(report);

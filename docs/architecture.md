@@ -79,6 +79,7 @@ libs/db/              Drizzle schema, migrations and repositories (PostgreSQL)
 libs/design/          Color tokens, palettes and the appearance model (§8), with their generated forms for web and native
 content/math/         Authored mathematics content: topics, courses
 content/english/      Authored English content: topics, courses
+content/chinese/      Authored Chinese content: topics, courses
 tools/simulate/       Simulated students for tuning and checking the engine
 tools/audit/          Content audit: outline coverage and heuristic quality checks
 tools/pilot/          Pilot report: where real learners fail, from the answer and event logs
@@ -105,7 +106,7 @@ apps/english-workers ──► libs/subject-worker ──► libs/content
    └──► content/english, libs/subject-english
 apps/nsh ──► libs/proto, libs/design
 tools/simulate ──► libs/engine, content/math, content/english
-tools/audit ──► libs/content, content/math, content/english
+tools/audit ──► libs/content, content/math, content/english, content/chinese
 tools/pilot ──► libs/db, libs/engine, content/math, content/english
 tools/calibrate ──► libs/judge, libs/db, libs/api, libs/subject-english
 tools/audio ──► libs/content, content/english

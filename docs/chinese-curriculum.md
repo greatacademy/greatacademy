@@ -81,6 +81,8 @@ Foreign-language learners need meaning as well as sound, so their **character to
 
 The standard asks that the 300 basic characters of its appendix 4 be learned first: they are simple, frequent and most of them are parts of other characters. The graph does the same. Strokes and stroke order come first; then the basic characters; then the common components and radicals; then characters built from known parts, grouped where possible by a shared part, such as 河、湖、海、洋 by 氵. A character's components are prerequisites of its batch, so the frontier never asks for 想 before 相 and 心.
 
+Until component data is chosen (§5.3), the recognition batches of grades 3 to 6 follow the order of the tables of appendix 5: 12 consecutive characters a batch, dealt in turn to the two grades of a stage, each batch a prerequisite of the grade's next. Of table one, the 900 characters that grades 1 and 2 do not teach go to grades 3 and 4; of table two, 500 go to grades 5 and 6. Reviewers who teach Chinese check the split.
+
 ### 5.3 Data
 
 Each character carries its standard form, its readings, its components, its stroke count and stroke order, its tier in the *Table of General Standard Chinese Characters* and its levels in the two standards. This is a subject's data, like the lexicon of English (§12). Stroke geometry for the handwriting checker comes from a data set whose license allows our use, to be chosen and recorded before handwriting is built (§13).

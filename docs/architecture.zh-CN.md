@@ -79,6 +79,7 @@ libs/db/              Drizzle schema、迁移和仓储（PostgreSQL）
 libs/design/          颜色 token、配色和外观模型（§8），以及为 Web 和原生应用生成的形式
 content/math/         编写的数学内容：知识点、课程
 content/english/      编写的英语内容：知识点、课程
+content/chinese/      编写的语文内容：知识点、课程
 tools/simulate/       模拟学生，用于调参和检验引擎
 tools/audit/          内容审计：大纲覆盖和启发式质量检查
 tools/pilot/          试点报告：根据作答和事件日志，找出真实学习者卡住的地方
@@ -105,7 +106,7 @@ apps/english-workers ──► libs/subject-worker ──► libs/content
    └──► content/english, libs/subject-english
 apps/nsh ──► libs/proto, libs/design
 tools/simulate ──► libs/engine, content/math, content/english
-tools/audit ──► libs/content, content/math, content/english
+tools/audit ──► libs/content, content/math, content/english, content/chinese
 tools/pilot ──► libs/db, libs/engine, content/math, content/english
 tools/calibrate ──► libs/judge, libs/db, libs/api, libs/subject-english
 tools/audio ──► libs/content, content/english

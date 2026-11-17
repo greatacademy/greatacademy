@@ -47,6 +47,7 @@ libs/db/             Drizzle schema, migrations, repositories
 libs/design/         Color tokens, palettes and the appearance model
 content/math/        Mathematics content
 content/english/     English content
+content/chinese/     Chinese content
 tools/simulate/      Simulated students
 tools/audit/         Content audit
 tools/pilot/         Pilot report from real answers
