@@ -33,7 +33,9 @@ describe("chinese content", () => {
   it("builds a grade only on its own grade and those before it", () => {
     const subject = compileChinese();
     for (const course of subject.courses.values()) {
-      const grade = Number(/^chinese-grade-(\d)$/.exec(course.def.id)?.[1] ?? 0);
+      const match = /^chinese-grade-(\d)$/.exec(course.def.id);
+      if (!match) continue;
+      const grade = Number(match[1]);
       const later = course.foundations.filter((id) => Number(/-(\d)-\d\d$/.exec(id)?.[1] ?? 0) > grade);
       expect(later, course.def.id).toEqual([]);
     }

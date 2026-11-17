@@ -4,6 +4,9 @@ course chinese-grade-3
 course chinese-grade-4
 course chinese-grade-5
 course chinese-grade-6
+course chinese-heritage-1
+course chinese-heritage-2
+course chinese-heritage-3
 course chinese-level-1
 course chinese-level-2
 course chinese-pinyin
@@ -20,6 +23,12 @@ topic faulty-missing-parts faulty-missing-parts-finding faulty-missing-parts-fix
 topic faulty-misused-connectives faulty-misused-connectives-finding faulty-misused-connectives-fixing
 topic faulty-repetition faulty-repetition-finding faulty-repetition-fixing
 topic faulty-word-order faulty-word-order-finding faulty-word-order-fixing
+topic heritage-de-and-pronouns heritage-de-and-pronouns-de heritage-de-and-pronouns-pronouns
+topic heritage-dialect-words heritage-dialect-words-dialect heritage-dialect-words-mandarin
+topic heritage-register heritage-register-notice heritage-register-words
+topic heritage-sound-alike heritage-sound-alike-choose heritage-sound-alike-mistake
+topic heritage-traditional heritage-traditional-characters heritage-traditional-words
+topic heritage-written-forms heritage-written-forms-phrases heritage-written-forms-words
 topic idioms-3-01 idioms-3-01-meaning idioms-3-01-use idioms-3-01-writing
 topic idioms-3-02 idioms-3-02-meaning idioms-3-02-use idioms-3-02-writing
 topic idioms-3-03 idioms-3-03-meaning idioms-3-03-use idioms-3-03-writing

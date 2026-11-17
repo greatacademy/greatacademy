@@ -4,6 +4,7 @@ import { t } from "@ga/content";
 import { recognitionByGrade } from "./characters/index.ts";
 import { classicalDrillTopics, classicalPassages } from "./classical/index.ts";
 import { connectiveTopics, faultyTopics, type GradeTopic, punctuationTopics, rhetoricTopics, sentenceTopics } from "./grammar/index.ts";
+import { heritageTopics } from "./heritage/topics.ts";
 import { idiomsByGrade } from "./idioms/index.ts";
 import { levelOneCourse } from "./level-1/index.ts";
 import { levelTwoCourse } from "./level-2/index.ts";
@@ -122,6 +123,99 @@ function gradeCourse(grade: number, description: CourseDef["description"]): Cour
   };
 }
 
+/** stageBatches are the ids of a stage's recognition batches in the order of the tables: its two grades in turn. */
+function stageBatches(first: number): readonly string[] {
+  const [a, b] = [first, first + 1].map((g) => recognitionByGrade.find((x) => x.grade === g)?.batches ?? []);
+  return Array.from({ length: Math.max(a!.length, b!.length) }, (_, i) => [a![i], b![i]])
+    .flat()
+    .filter((x) => x !== undefined)
+    .map((x) => x.topic.id);
+}
+
+/** setModules groups recognition batches into modules of six, numbered from `from`. */
+function setModules(ids: readonly string[], from = 1): readonly ModuleDef[] {
+  const modules: ModuleDef[] = [];
+  for (let i = 0; i < ids.length; i += MODULE) {
+    const part = ids.slice(i, i + MODULE);
+    const [first, last] = [from + i, from + i + part.length - 1];
+    modules.push({ title: t(`Sets ${first} to ${last}`, `第${first}至${last}组`), topics: part });
+  }
+  return modules;
+}
+
+/** HERITAGE_FIRST is how many batches of grades 1 and 2 the first heritage bridge teaches: 600 characters. */
+const HERITAGE_FIRST = 50;
+
+/** heritageOwn are the ids of the heritage topics a bridge teaches. */
+const heritageOwn = (...ids: readonly string[]): readonly string[] =>
+  ids.map((id) => {
+    if (!heritageTopics.some((x) => x.id === id)) throw new Error(`no heritage topic ${id}`);
+    return id;
+  });
+
+/** heritageCourse builds a heritage bridge: recognition batches of the native graph, with units before and after them. */
+function heritageCourse(
+  n: number,
+  description: CourseDef["description"],
+  batches: readonly string[],
+  own: readonly string[],
+  before: CourseDef["units"] = [],
+): CourseDef {
+  return {
+    id: `chinese-heritage-${n}`,
+    title: t(`Chinese for Heritage Learners ${n}`, `华裔识字衔接 ${NUMERALS[n]}`),
+    description,
+    group: t("Chinese", "语文"),
+    units: [
+      ...before,
+      { title: t("Characters", "识字"), modules: setModules(batches) },
+      { title: t("Writing What You Say", "我手写我口"), modules: [{ title: t("Writing What You Say", "我手写我口"), topics: own }] },
+    ],
+    ...(n > 1 && { buildsOn: [`chinese-heritage-${n - 1}`] }),
+  };
+}
+
+/** heritageCourses are the three literacy bridges for learners who speak Chinese (docs/chinese-curriculum.md §8.2). */
+const heritageCourses: readonly CourseDef[] = [
+  heritageCourse(
+    1,
+    t(
+      "For children and adults who speak Chinese but do not yet read it: pinyin, strokes and components, the first 600 common characters, characters that sound alike, and 的, 地, 得. Explanations are in the learner's language.",
+      "面向会说中文、还不识字的孩子和成人：拼音、笔画和偏旁，最常用的 600 个字，同音字，以及“的、地、得”。用学习者的语言讲解。",
+    ),
+    stageBatches(1).slice(0, HERITAGE_FIRST),
+    heritageOwn("heritage-sound-alike", "heritage-de-and-pronouns"),
+    [
+      { title: t("Pinyin", "汉语拼音"), modules: PINYIN_MODULES },
+      {
+        title: t("Strokes and Components", "笔画和偏旁"),
+        modules: [
+          { title: t("Strokes and Their Order", "笔画和笔顺"), topics: strokeOrderTopics.map((x) => x.id) },
+          { title: t("Components", "偏旁部首"), topics: componentTopics.map((x) => x.id) },
+        ],
+      },
+    ],
+  ),
+  heritageCourse(
+    2,
+    t(
+      "The second literacy bridge: 1,000 more common characters, 1,600 in all, the written forms of everyday words and set phrases, and dialect words and their Mandarin. Explanations are in the learner's language.",
+      "第二门识字衔接课：再认识 1000 个常用字，累计 1600 字，学会常用词和成语的写法，分清方言词和普通话。用学习者的语言讲解。",
+    ),
+    stageBatches(1).slice(HERITAGE_FIRST),
+    heritageOwn("heritage-written-forms", "heritage-dialect-words"),
+  ),
+  heritageCourse(
+    3,
+    t(
+      "The third literacy bridge: 900 more common characters, the 2,500 of the first table, spoken and written Chinese, and reading traditional characters. Explanations are in the learner's language.",
+      "第三门识字衔接课：再认识 900 个常用字，读完常用字表一的 2500 字，分清口语和书面语，认识繁体字。用学习者的语言讲解。",
+    ),
+    stageBatches(3),
+    heritageOwn("heritage-register", "heritage-traditional"),
+  ),
+];
+
 /** chineseCourses are the courses of Chinese. */
 export const chineseCourses: readonly CourseDef[] = [
   gradeCourse(
@@ -188,6 +282,7 @@ export const chineseCourses: readonly CourseDef[] = [
       { title: t("Speaking", "开口说"), modules: [{ title: t("Saying Words", "说词语"), topics: ["pinyin-saying"] }] },
     ],
   },
+  ...heritageCourses,
   levelOneCourse,
   levelTwoCourse,
 ];
