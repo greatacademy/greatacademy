@@ -11,11 +11,14 @@ import { levelTwoTopics } from "../level-2/index.ts";
 import { pinyinTopics } from "../pinyin/index.ts";
 import { chineseReading } from "../reading/index.ts";
 import { recitationTopics } from "../recitation/index.ts";
+import { componentTopics, strokeOrderTopics } from "../strokes/index.ts";
 import { wordTopics } from "../words/index.ts";
 
 /** coreShardTopics are the topics of the core shard. */
 export const coreShardTopics: readonly TopicDef[] = [
   ...pinyinTopics,
+  ...strokeOrderTopics,
+  ...componentTopics,
   ...characterTopics,
   ...wordTopics,
   ...idiomTopics,

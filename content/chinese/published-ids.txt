@@ -1,3 +1,5 @@
+course chinese-grade-1
+course chinese-grade-2
 course chinese-grade-3
 course chinese-grade-4
 course chinese-grade-5
@@ -7,6 +9,9 @@ course chinese-level-2
 course chinese-pinyin
 topic classical-function-words-6-01 classical-function-words-6-01-er-yi-yu classical-function-words-6-01-zhi
 topic classical-words-5-01 classical-words-5-01-meaning classical-words-5-01-sentences
+topic components-1 components-1-find components-1-name
+topic components-2 components-2-find components-2-name
+topic components-meaning components-meaning-meaning components-meaning-shared
 topic connectives-1 connectives-1-choosing connectives-1-relations
 topic connectives-2 connectives-2-checking connectives-2-choosing
 topic faulty-contradictions faulty-contradictions-finding faulty-contradictions-fixing
@@ -546,6 +551,9 @@ topic rhetoric-2 rhetoric-2-finding rhetoric-2-naming
 topic sentences-ba-and-bei sentences-ba-and-bei-to-ba sentences-ba-and-bei-to-bei
 topic sentences-reported-speech sentences-reported-speech-to-direct sentences-reported-speech-to-reported
 topic sentences-rhetorical-questions sentences-rhetorical-questions-to-question sentences-rhetorical-questions-to-statement
+topic strokes-basic strokes-basic-count strokes-basic-first
+topic strokes-order strokes-order-next strokes-order-rule
+topic strokes-turning strokes-turning-count strokes-turning-next
 topic words-3-01 words-3-01-meaning words-3-01-relations words-3-01-use
 topic words-3-02 words-3-02-meaning words-3-02-relations words-3-02-use
 topic words-3-03 words-3-03-meaning words-3-03-relations words-3-03-use

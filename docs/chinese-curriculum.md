@@ -81,7 +81,7 @@ Foreign-language learners need meaning as well as sound, so their **character to
 
 The standard asks that the 300 basic characters of its appendix 4 be learned first: they are simple, frequent and most of them are parts of other characters. The graph does the same. Strokes and stroke order come first; then the basic characters; then the common components and radicals; then characters built from known parts, grouped where possible by a shared part, such as 河、湖、海、洋 by 氵. A character's components are prerequisites of its batch, so the frontier never asks for 想 before 相 and 心.
 
-Until component data is chosen (§5.3), the recognition batches of grades 3 to 6 follow the order of the tables of appendix 5: 12 consecutive characters a batch, dealt in turn to the two grades of a stage, each batch a prerequisite of the grade's next. Of table one, the 900 characters that grades 1 and 2 do not teach go to grades 3 and 4; of table two, 500 go to grades 5 and 6. Reviewers who teach Chinese check the split.
+Until component data is chosen (§5.3), the recognition batches of grades 1 to 6 follow the order of the tables of appendix 5: 12 consecutive characters a batch, dealt in turn to the two grades of a stage, each batch a prerequisite of the grade's next. Of table one, 1,600 characters go to grades 1 and 2 and the other 900 to grades 3 and 4; of table two, 500 go to grades 5 and 6. Reviewers who teach Chinese check the split.
 
 ### 5.3 Data
 
@@ -259,7 +259,7 @@ For comparison, `cn-math-taxonomy` has 682 knowledge points of primary and junio
 2. **First slice: native grades 3 to 6 without new input.** Recognition batches, words, idioms, punctuation, faulty sentences, recited texts and passages, all checked by choices and typed Chinese. It tests whether mastery and spaced recitation work in Chinese, and needs neither handwriting nor speech. Built: four courses, `chinese-grade-3` to `chinese-grade-6`, with 209 topics and 488 knowledge points (117 recognition batches, 16 word batches, 16 idiom batches, 20 grammar topics of punctuation, faulty sentences, connectives, sentence forms and rhetoric, 32 recited poems, and in grades 5 and 6 six recited classical passages and two drills of classical words) and 36 passages in 12 reading units, served by `apps/chinese-workers`; the reviews and the counsel of step 1 remain.
 3. **Foreign-language levels 1 to 3**, with recordings made ahead of time as for English, and the pinyin checker. Begun: the course `chinese-pinyin`, 8 topics of tones, initials, finals, spelling rules, hearing syllables, tone changes and saying words; level 1, `chinese-level-1`, 80 topics teaching 300 characters and 500 words; level 2, `chinese-level-2`, 107 topics teaching 300 more characters and 770 words.
 4. **Handwriting:** the stroke pad in the web and the apps, the stroke checker, and the writing topics.
-5. **Grades 1 and 2** and the heritage bridges, which need handwriting, pinyin and recordings.
+5. **Grades 1 and 2** and the heritage bridges, which need handwriting, pinyin and recordings. Begun: `chinese-grade-1` and `chinese-grade-2`, 167 topics and 354 knowledge points: the pinyin of grade 1, three topics of strokes and their order and three of components, the other 1,600 characters of table one in 133 recognition batches, and twenty short poems; writing by hand waits for stroke data, and words, sentences and reading for later.
 6. **Grades 7 to 9, senior secondary and classical language.**
 7. **Levels 4 to 9, judged writing, speech and conversations, then the exam courses.**
 

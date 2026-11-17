@@ -9,12 +9,22 @@ import { levelOneCourse } from "./level-1/index.ts";
 import { levelTwoCourse } from "./level-2/index.ts";
 import { chineseReading } from "./reading/index.ts";
 import { recitedPoems } from "./recitation/index.ts";
+import { componentTopics, strokeOrderTopics } from "./strokes/index.ts";
 import { wordBatches } from "./words/index.ts";
 
 const NUMERALS = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九"];
 
 /** MODULE is the number of recognition batches of a module. */
 const MODULE = 6;
+
+/** PINYIN_MODULES are the pinyin of grade 1: the topics of the course chinese-pinyin, explained in Chinese. */
+const PINYIN_MODULES: readonly ModuleDef[] = [
+  { title: t("Tones", "声调"), topics: ["pinyin-tones"] },
+  { title: t("Initials and Finals", "声母和韵母"), topics: ["pinyin-initials", "pinyin-finals", "pinyin-spelling"] },
+  { title: t("Hearing", "听音"), topics: ["pinyin-hearing"] },
+  { title: t("Tones in Speech", "语流变调"), topics: ["pinyin-yi-and-bu", "pinyin-third-tones"] },
+  { title: t("Saying Words", "说词语"), topics: ["pinyin-saying"] },
+];
 
 /** recognitionModules groups a grade's recognition batches into modules of six. */
 function recognitionModules(grade: number): readonly ModuleDef[] {
@@ -71,14 +81,35 @@ function gradeCourse(grade: number, description: CourseDef["description"]): Cour
     group: t("Chinese", "语文"),
     explanationLocale: "zh-CN",
     units: [
+      ...(grade === 1
+        ? [
+            { title: t("Pinyin", "汉语拼音"), modules: PINYIN_MODULES },
+            {
+              title: t("Strokes", "笔画"),
+              modules: [{ title: t("Strokes and Their Order", "笔画和笔顺"), topics: strokeOrderTopics.map((x) => x.id) }],
+            },
+          ]
+        : []),
+      ...(grade === 2
+        ? [
+            {
+              title: t("Components", "偏旁部首"),
+              modules: [{ title: t("Components", "偏旁部首"), topics: componentTopics.map((x) => x.id) }],
+            },
+          ]
+        : []),
       { title: t("Characters", "识字"), modules: recognitionModules(grade) },
-      {
-        title: t("Words", "词语"),
-        modules: [
-          { title: t("Words", "词语"), topics: wordBatches.filter((b) => b.grade === grade).map((b) => b.topic.id) },
-          { title: t("Idioms", "成语"), topics: idiomTopicsOf(grade) },
-        ],
-      },
+      ...(grade >= 3
+        ? [
+            {
+              title: t("Words", "词语"),
+              modules: [
+                { title: t("Words", "词语"), topics: wordBatches.filter((b) => b.grade === grade).map((b) => b.topic.id) },
+                { title: t("Idioms", "成语"), topics: idiomTopicsOf(grade) },
+              ],
+            },
+          ]
+        : []),
       ...(grammarModules(grade).length > 0 ? [{ title: t("Grammar and Punctuation", "语法与标点"), modules: grammarModules(grade) }] : []),
       {
         title: t("Recitation", "积累与背诵"),
@@ -87,12 +118,26 @@ function gradeCourse(grade: number, description: CourseDef["description"]): Cour
       ...(classicalModules(grade).length > 0 ? [{ title: t("Classical Chinese", "文言"), modules: classicalModules(grade) }] : []),
     ],
     reading: chineseReading.filter((r) => r.grade === grade).map((r) => r.unit.id),
-    ...(grade > 3 && { buildsOn: [`chinese-grade-${grade - 1}`] }),
+    ...(grade > 1 && { buildsOn: [`chinese-grade-${grade - 1}`] }),
   };
 }
 
 /** chineseCourses are the courses of Chinese. */
 export const chineseCourses: readonly CourseDef[] = [
+  gradeCourse(
+    1,
+    t(
+      "Chinese for native speakers in grade 1: pinyin, strokes and their order, reading about 800 common characters in words, and short poems to recite, in Chinese.",
+      "面向母语学习者的一年级语文：汉语拼音、笔画和笔顺，在词语中认读约 800 个常用字，背诵短诗，用中文讲解。",
+    ),
+  ),
+  gradeCourse(
+    2,
+    t(
+      "Chinese for native speakers in grade 2: components, reading about 800 more common characters in words, and short poems to recite, in Chinese.",
+      "面向母语学习者的二年级语文：偏旁部首，在词语中再认读约 800 个常用字，背诵短诗，用中文讲解。",
+    ),
+  ),
   gradeCourse(
     3,
     t(
