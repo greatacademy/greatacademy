@@ -28,6 +28,38 @@ topic punctuation-semicolons punctuation-semicolons-checking punctuation-semicol
 topic punctuation-sentence-ends punctuation-sentence-ends-checking punctuation-sentence-ends-marks
 topic punctuation-speech punctuation-speech-checking punctuation-speech-marks
 topic punctuation-titles punctuation-titles-checking punctuation-titles-marks
+topic recite-chu-sai-wang-chang-ling recite-chu-sai-wang-chang-ling-lines recite-chu-sai-wang-chang-ling-meaning recite-chu-sai-wang-chang-ling-writing
+topic recite-chun-ri-zhu-xi recite-chun-ri-zhu-xi-lines recite-chun-ri-zhu-xi-meaning recite-chun-ri-zhu-xi-writing
+topic recite-cong-jun-xing-qing-hai recite-cong-jun-xing-qing-hai-lines recite-cong-jun-xing-qing-hai-meaning recite-cong-jun-xing-qing-hai-writing
+topic recite-cun-wan recite-cun-wan-lines recite-cun-wan-meaning recite-cun-wan-writing
+topic recite-fu-rong-lou recite-fu-rong-lou-lines recite-fu-rong-lou-meaning recite-fu-rong-lou-writing
+topic recite-hui-chong-chun-jiang recite-hui-chong-chun-jiang-lines recite-hui-chong-chun-jiang-meaning recite-hui-chong-chun-jiang-writing
+topic recite-ji-hai-za-shi-jiu-zhou recite-ji-hai-za-shi-jiu-zhou-lines recite-ji-hai-za-shi-jiu-zhou-meaning recite-ji-hai-za-shi-jiu-zhou-writing
+topic recite-lang-tao-sha-jiu-qu recite-lang-tao-sha-jiu-qu-lines recite-lang-tao-sha-jiu-qu-meaning recite-lang-tao-sha-jiu-qu-writing
+topic recite-liang-zhou-ci-wang-han recite-liang-zhou-ci-wang-han-lines recite-liang-zhou-ci-wang-han-meaning recite-liang-zhou-ci-wang-han-writing
+topic recite-ma-shi-da-mo recite-ma-shi-da-mo-lines recite-ma-shi-da-mo-meaning recite-ma-shi-da-mo-writing
+topic recite-qing-ping-yue-cun-ju recite-qing-ping-yue-cun-ju-lines recite-qing-ping-yue-cun-ju-meaning recite-qing-ping-yue-cun-ju-writing
+topic recite-qiu-ye-jiang-xiao recite-qiu-ye-jiang-xiao-lines recite-qiu-ye-jiang-xiao-meaning recite-qiu-ye-jiang-xiao-writing
+topic recite-sai-xia-qu-lu-lun recite-sai-xia-qu-lu-lun-lines recite-sai-xia-qu-lu-lun-meaning recite-sai-xia-qu-lu-lun-writing
+topic recite-san-qu-dao-zhong recite-san-qu-dao-zhong-lines recite-san-qu-dao-zhong-meaning recite-san-qu-dao-zhong-writing
+topic recite-shan-xing recite-shan-xing-lines recite-shan-xing-meaning recite-shan-xing-writing
+topic recite-shi-er recite-shi-er-lines recite-shi-er-meaning recite-shi-er-writing
+topic recite-shi-hui-yin recite-shi-hui-yin-lines recite-shi-hui-yin-meaning recite-shi-hui-yin-writing
+topic recite-si-shi-tian-yuan-zhou-chu recite-si-shi-tian-yuan-zhou-chu-lines recite-si-shi-tian-yuan-zhou-chu-meaning recite-si-shi-tian-yuan-zhou-chu-writing
+topic recite-su-jian-de-jiang recite-su-jian-de-jiang-lines recite-su-jian-de-jiang-meaning recite-su-jian-de-jiang-writing
+topic recite-ti-lin-an-di recite-ti-lin-an-di-lines recite-ti-lin-an-di-meaning recite-ti-lin-an-di-writing
+topic recite-ti-xi-lin-bi recite-ti-xi-lin-bi-lines recite-ti-xi-lin-bi-meaning recite-ti-xi-lin-bi-writing
+topic recite-wang-dong-ting recite-wang-dong-ting-lines recite-wang-dong-ting-meaning recite-wang-dong-ting-writing
+topic recite-wang-hu-lou recite-wang-hu-lou-lines recite-wang-hu-lou-meaning recite-wang-hu-lou-writing
+topic recite-wang-tian-men-shan recite-wang-tian-men-shan-lines recite-wang-tian-men-shan-meaning recite-wang-tian-men-shan-writing
+topic recite-xi-jiang-yue-huang-sha recite-xi-jiang-yue-huang-sha-lines recite-xi-jiang-yue-huang-sha-meaning recite-xi-jiang-yue-huang-sha-writing
+topic recite-xia-ri-jue-ju recite-xia-ri-jue-ju-lines recite-xia-ri-jue-ju-meaning recite-xia-ri-jue-ju-writing
+topic recite-xue-mei recite-xue-mei-lines recite-xue-mei-meaning recite-xue-mei-writing
+topic recite-ye-shu-suo-jian recite-ye-shu-suo-jian-lines recite-ye-shu-suo-jian-meaning recite-ye-shu-suo-jian-writing
+topic recite-yin-hu-shang recite-yin-hu-shang-lines recite-yin-hu-shang-meaning recite-yin-hu-shang-writing
+topic recite-zeng-liu-jing-wen recite-zeng-liu-jing-wen-lines recite-zeng-liu-jing-wen-meaning recite-zeng-liu-jing-wen-writing
+topic recite-zhi-zi-nong-bing recite-zhi-zi-nong-bing-lines recite-zhi-zi-nong-bing-meaning recite-zhi-zi-nong-bing-writing
+topic recite-zhu-shi recite-zhu-shi-lines recite-zhu-shi-meaning recite-zhu-shi-writing
 topic recognizing-characters-3-01 recognizing-characters-3-01-reading recognizing-characters-3-01-writing
 topic recognizing-characters-3-02 recognizing-characters-3-02-reading recognizing-characters-3-02-writing
 topic recognizing-characters-3-03 recognizing-characters-3-03-reading recognizing-characters-3-03-writing

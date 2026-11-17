@@ -4,6 +4,7 @@ import { t } from "@ga/content";
 import { recognitionByGrade } from "./characters/index.ts";
 import { faultyTopics, type GradeTopic, punctuationTopics } from "./grammar/index.ts";
 import { idiomsByGrade } from "./idioms/index.ts";
+import { recitedPoems } from "./recitation/index.ts";
 
 const NUMERALS = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九"];
 
@@ -52,6 +53,10 @@ function gradeCourse(grade: number, description: CourseDef["description"]): Cour
       { title: t("Characters", "识字"), modules: recognitionModules(grade) },
       { title: t("Words", "词语"), modules: [{ title: t("Idioms", "成语"), topics: idiomTopicsOf(grade) }] },
       ...(grammarModules(grade).length > 0 ? [{ title: t("Grammar and Punctuation", "语法与标点"), modules: grammarModules(grade) }] : []),
+      {
+        title: t("Recitation", "积累与背诵"),
+        modules: [{ title: t("Classical Poems", "古诗词"), topics: recitedPoems.filter((p) => p.grade === grade).map((p) => p.topic.id) }],
+      },
     ],
     ...(grade > 3 && { buildsOn: [`chinese-grade-${grade - 1}`] }),
   };
