@@ -5,6 +5,7 @@ import {
   characterLexicon,
   gradesFiveAndSixEntries,
   gradesOneAndTwoEntries,
+  gradesSevenToNineEntries,
   gradesThreeAndFourEntries,
   recognitionByGrade,
 } from "./index.ts";
@@ -30,13 +31,15 @@ describe("character lists", () => {
 });
 
 describe("recognition data", () => {
-  it("covers grades 1 to 6 in order, with common confusable characters", () => {
+  it("covers grades 1 to 9 in order, with common confusable characters", () => {
     const later = new Set([...gradesThreeAndFour, ...gradesFiveAndSix]);
     expect(gradesOneAndTwoEntries.map((e) => e.char)).toEqual(tableOne.filter((c) => !later.has(c)));
     expect(gradesThreeAndFourEntries.map((e) => e.char)).toEqual(gradesThreeAndFour);
     expect(gradesFiveAndSixEntries.map((e) => e.char)).toEqual(gradesFiveAndSix);
+    const fiveAndSix = new Set(gradesFiveAndSix);
+    expect(gradesSevenToNineEntries.map((e) => e.char)).toEqual(tableTwo.filter((c) => !fiveAndSix.has(c)));
     const common = new Set([...tableOne, ...tableTwo]);
-    for (const e of [...gradesOneAndTwoEntries, ...gradesThreeAndFourEntries, ...gradesFiveAndSixEntries]) {
+    for (const e of [...gradesOneAndTwoEntries, ...gradesThreeAndFourEntries, ...gradesFiveAndSixEntries, ...gradesSevenToNineEntries]) {
       expect(
         e.confusables.filter((c) => !common.has(c)),
         e.char,
@@ -54,7 +57,7 @@ describe("recognition data", () => {
     expect(() => parseCharacters("哀 āi 哀伤 悲哀 求情 衰埃")).toThrow(/求情/);
   });
 
-  it("deals the batches to the two grades of a stage in turn", () => {
+  it("deals the batches to the grades of a stage in turn", () => {
     expect(recognitionByGrade.map((g) => [g.grade, g.batches.length])).toEqual([
       [1, 67],
       [2, 66],
@@ -62,7 +65,11 @@ describe("recognition data", () => {
       [4, 37],
       [5, 21],
       [6, 21],
+      [7, 14],
+      [8, 14],
+      [9, 14],
     ]);
+    expect(recognitionByGrade[8]?.batches.at(-1)?.entries).toHaveLength(10);
     expect(recognitionByGrade[0]?.batches.at(-1)?.entries).toHaveLength(16);
     expect(recognitionByGrade[5]?.batches.at(-1)?.entries).toHaveLength(10);
     expect(recognitionByGrade[4]?.batches.at(-1)?.entries).toHaveLength(10);

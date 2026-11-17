@@ -1,5 +1,6 @@
-// The drills of classical language (文言) in grades 5 and 6 (docs/chinese-curriculum.md §7): content words and whole
-// sentences put into modern Chinese in grade 5, the function words 之, 而, 以 and 于 in grade 6. Every sentence is from
+// The drills of classical language (文言) in grades 5 to 9 (docs/chinese-curriculum.md §7): content words and whole
+// sentences put into modern Chinese in grades 5, 7 and 9, the function words 之, 而, 以 and 于 in grade 6, 其 and 为 in
+// grade 8, and borrowed characters in grade 9. Every sentence is from
 // a classical text in the public domain, most of them from the passages recited in these grades; the meanings, the
 // translations and the wrong answers are written for this subject.
 
@@ -129,6 +130,126 @@ const erYiYu = [
   ),
 ];
 
+const juniorWords = items(`
+陈太丘与友期行（期） | 约定 | 期望 | 日期 | 时期
+太丘舍去（舍） | 舍弃，丢下 | 房舍 | 宿舍 | 施舍
+尊君在不（不） | 同“否”，表示询问 | 不是 | 没有 | 不要
+相委而去（委） | 丢下，舍弃 | 委托 | 委屈 | 委员
+下车引之（引） | 拉 | 引导 | 引用 | 吸引
+元方入门不顾（顾） | 回头看 | 照顾 | 顾客 | 顾虑
+撒盐空中差可拟（拟） | 相比 | 拟定 | 模拟 | 打算
+未若柳絮因风起（因） | 凭借，趁着 | 因为 | 原因 | 因此
+非淡泊无以明志（明） | 明确 | 明亮 | 明天 | 聪明
+卿今当涂掌事（涂） | 同“途”，道路，这里指仕途 | 涂抹 | 糊涂 | 涂改
+孰若孤（孰） | 谁，哪个 | 熟悉 | 成熟 | 仔细
+即更刮目相待（更） | 另，重新 | 更加 | 更换 | 打更
+但微颔之（颔） | 点头 | 下巴 | 摇头 | 弯腰
+公亦以此自矜（矜） | 夸耀 | 怜悯 | 拘谨 | 谨慎
+无案牍之劳形（形） | 形体，身体 | 形状 | 形式 | 形容
+陶后鲜有闻（鲜） | 少 | 新鲜 | 鲜艳 | 鲜美
+`);
+
+const juniorSentences = items(`
+待君久不至，已去 | 等您很久您都没来，他已经走了 | 等了很久您不来，就让您走了 | 您等了很久他都没来，已经离开了 | 等待您的时间很长，现在要出去
+友人惭，下车引之 | 朋友感到惭愧，下车想去拉元方 | 朋友很生气，下车把元方引开 | 朋友很惭愧，下车引导元方进门 | 朋友惭愧地下了车，引来了元方
+撒盐空中差可拟 | 和把盐撒在空中差不多可以相比 | 把盐撒在空中，差别可以比较 | 在空中撒盐，差一点可以模仿 | 撒在空中的盐，差不多都落下了
+非淡泊无以明志 | 不恬淡寡欲就无法明确志向 | 不淡泊名利就没有明天的志向 | 不喝淡水就没有办法明白志向 | 淡泊的人没有远大的志向
+卿今当涂掌事，不可不学 | 你现在身居要职，掌管大事，不可以不学习 | 你现在正在涂抹，掌管事务，不能不学 | 你今天在路上掌管事情，可以不学 | 你应当在路上掌管事情，不可以学习
+士别三日，即更刮目相待 | 读书人分别几天，就要重新另眼相看 | 读书人分别三天，就更要刮擦眼睛对待 | 士兵分别三天，立刻更换眼光对待他 | 读书人离别三天，马上就更加看不起他
+无他，但手熟尔 | 没有别的奥妙，只不过是手法熟练罢了 | 没有他，只是手很熟悉你 | 他没有什么，但是手熟了 | 没有别人，只有你的手熟练
+斯是陋室，惟吾德馨 | 这是简陋的屋子，只是我的品德高尚 | 这间屋子简陋，只有我的德行是香的 | 这是陋室，我的德行也很简陋 | 斯先生的屋子简陋，只有我品德好
+何陋之有 | 有什么简陋的呢 | 什么简陋的东西都有 | 为什么会有简陋的东西 | 简陋的地方在哪里
+可远观而不可亵玩焉 | 只能远远地观赏，却不能靠近玩弄 | 可以远远地看，也可以拿来玩耍 | 可以远看，也可以近玩 | 远看可以，近看就不好看了
+吾射不亦精乎 | 我的箭法不是很高明吗 | 我射箭不也精通了吗，你也一样 | 我射得不精确吗 | 我也射得不精
+宜乎众矣 | 当然很多了 | 应该大众都喜欢 | 适宜众人 | 众人都很合适
+`);
+
+const QI = ["代词，他（们）的、它（们）的", "代词，他（们）、它（们）", "副词，表示反问或推测，难道、恐怕", "代词，其中的"];
+const WEI = ["动词，做、作为、成为", "介词，替、给、对", "介词，被", "动词，是"];
+
+const qiWei = [
+  ...usages(
+    `
+复前行，欲穷其林（其） | 0
+问其姓氏（其） | 0
+吾视其辙乱（其） | 0
+食之不能尽其材（其） | 0
+其真无马邪（其） | 2
+其真不知马也（其） | 2
+其如土石何（其） | 2
+安求其能千里也（其） | 1
+不知其能千里而食也（其） | 1
+其一犬坐于前（其） | 3
+择其善者而从之（其） | 3
+`,
+    QI,
+  ),
+  ...usages(
+    `
+武陵人捕鱼为业（为） | 0
+为坻，为屿，为嵁，为岩（为） | 0
+不为苟得也（为） | 0
+此人一一为具言所闻（为） | 1
+不足为外人道也（为） | 1
+为人谋而不忠乎（为） | 1
+而身为宋国笑（为） | 2
+身死人手，为天下笑者（为） | 2
+知之为知之，不知为不知（为） | 3
+中峨冠而多髯者为东坡（为） | 3
+`,
+    WEI,
+  ),
+];
+
+const eighthWords = items(`
+略无阙处（阙） | 同“缺”，空缺 | 宫阙 | 城楼 | 缺点
+不见曦月（曦） | 阳光，这里指太阳 | 月光 | 星光 | 早晨
+沿溯阻绝（溯） | 逆流而上 | 顺流而下 | 追溯 | 回忆
+虽乘奔御风（奔） | 飞奔的快马 | 奔跑 | 投奔 | 逃跑
+属引凄异（属） | 连接 | 属于 | 同“嘱”，嘱托 | 家属
+晓雾将歇（歇） | 消散 | 休息 | 歇脚 | 睡觉
+夕日欲颓（颓） | 坠落 | 颓废 | 倒塌 | 衰败
+盖竹柏影也（盖） | 原来是 | 盖子 | 遮盖 | 建造
+互相轩邈（邈） | 远 | 渺小 | 模糊 | 美貌
+窥谷忘反（反） | 同“返”，返回 | 反对 | 相反 | 反复
+策之不以其道（策） | 用鞭子打，驱使 | 计策 | 策划 | 政策
+一食或尽粟一石（或） | 有时 | 或者 | 也许 | 有人
+域民不以封疆之界（域） | 限制 | 区域 | 领域 | 疆域
+讲信修睦（修） | 培养 | 修理 | 修建 | 修改
+`);
+
+const borrowed = items(`
+便要还家（要） | 同“邀”，邀请 | 要求 | 重要 | 同“腰”，腰部
+才美不外见（见） | 同“现”，表现 | 看见 | 见解 | 拜见
+食马者不知其能千里而食也（食） | 同“饲”，喂 | 吃 | 粮食 | 食物
+其真无马邪（邪） | 同“耶”，表示疑问，吗 | 邪恶 | 不正 | 奇怪
+万钟则不辩礼义而受之（辩） | 同“辨”，辨别 | 辩论 | 辩护 | 争辩
+所识穷乏者得我与（得） | 同“德”，感激 | 得到 | 必须 | 得意
+乡为身死而不受（乡） | 同“向”，从前 | 家乡 | 乡村 | 乡亲
+故患有所不辟也（辟） | 同“避”，躲避 | 开辟 | 精辟 | 复辟
+亲戚畔之（畔） | 同“叛”，背叛 | 旁边 | 田界 | 河岸
+百废具兴（具） | 同“俱”，全，都 | 工具 | 具备 | 具体
+属予作文以记之（属） | 同“嘱”，嘱托 | 属于 | 家属 | 类别
+曾益其所不能（曾） | 同“增”，增加 | 曾经 | 竟然 | 姓曾
+衡于虑（衡） | 同“横”，梗塞，不顺 | 平衡 | 衡量 | 秤杆
+选贤与能（与） | 同“举”，选举 | 和 | 给予 | 参与
+`);
+
+const ninthSentences = items(`
+不足为外人道也 | 不值得对外面的人说 | 不足以作为外人的道路 | 不满足于对外人说 | 外面的人不知道这里的道理
+黄发垂髫，并怡然自乐 | 老人和孩子都安闲快乐，自得其乐 | 黄头发的人垂着头，一起快乐 | 头发黄的孩子垂下头，并且自己玩 | 老人垂着头发，自己高兴
+肉食者鄙，未能远谋 | 当权的人目光短浅，不能深谋远虑 | 吃肉的人很粗鄙，不能谋划远方的事 | 吃肉的人看不起别人，没有远大的谋略 | 当权的人鄙视远方的计谋
+一鼓作气，再而衰，三而竭 | 第一次击鼓能振作士气，第二次士气就衰退，第三次士气就耗尽了 | 一面鼓发出声音，两面鼓就衰弱，三面鼓就竭尽 | 一打鼓就生气，再打就衰老，第三次就枯竭 | 第一次打鼓有勇气，第二次还有，第三次更多
+不以物喜，不以己悲 | 不因为外物的好坏和自己的得失而或喜或悲 | 不拿东西来使人高兴，不拿自己来使人悲伤 | 不喜欢物品，也不为自己悲伤 | 不因为有东西而高兴，却因为自己而悲伤
+先天下之忧而忧，后天下之乐而乐 | 在天下人忧愁之前先忧愁，在天下人快乐之后才快乐 | 先为天下忧愁，然后让天下快乐 | 天下人先忧愁，然后我才快乐 | 在天下人快乐之前先快乐，在天下人忧愁之后再忧愁
+醉翁之意不在酒，在乎山水之间也 | 醉翁的心意不在喝酒，而在于欣赏山水的美景 | 醉翁的意思是不喝酒，只在山水之间喝 | 喝醉的老人不想喝酒，想去山水之间 | 醉翁的意思不在酒里，而在乎山水好不好
+二者不可得兼，舍生而取义者也 | 两样不能同时得到，就舍弃生命而选取道义 | 两个人不能都得到，就舍弃生活而取得义气 | 两者不能兼顾，就离开学生去拿正义 | 两样都得不到，就舍去生的选熟的
+此之谓失其本心 | 这就叫作丧失了人本来的天性 | 这就是说他失去了本来的心思 | 这叫作他的心丢失了 | 这是说他失去了本钱
+由此观之，王之蔽甚矣 | 由此看来，大王受蒙蔽很深了 | 从这里观察，大王的遮蔽物很多 | 由此看到，大王庇护了很多人 | 从这里看出，大王非常厉害
+令初下，群臣进谏，门庭若市 | 命令刚下达，许多大臣都来进言规劝，宫门和院子里像集市一样热闹 | 命令刚下，大臣们进门劝谏，门前庭院像一座城市 | 命令下了，大臣们都去集市上进言 | 命令开始下达，大臣们进宫劝谏，门庭冷落像散了的集市
+噫！微斯人，吾谁与归 | 唉！如果没有这种人，我同谁一道呢 | 唉！这个人很微小，我和谁一起回家 | 唉！微笑的人，我跟谁回去 | 唉！没有这个人，谁会归还给我
+`);
+
 /** classicalDrills are the drill topics of classical language, in the order they are taught. */
 export const classicalDrills: readonly ClassicalDrill[] = [
   {
@@ -191,6 +312,106 @@ export const classicalDrills: readonly ClassicalDrill[] = [
         question: t("What is the usage of the character in brackets in this sentence?", "括号里的字在这句话中是什么用法？"),
         items: erYiYu,
         why: usageWhy,
+      },
+    ],
+  },
+  {
+    grade: 7,
+    id: "classical-words-7-01",
+    title: t("Classical Chinese: Words and Sentences of Grade 7", "文言文：七年级字词和句子"),
+    summary: t(
+      "Content words of the classical passages of grade 7, and their sentences in modern Chinese.",
+      "七年级文言文中实词的意思，以及把句子翻译成现代汉语。",
+    ),
+    points: [
+      {
+        suffix: "meaning",
+        title: t("Content Words", "文言实词"),
+        explanation: t(
+          "Many characters of classical Chinese keep a meaning modern Chinese has lost: 期 is to agree on a time, 顾 is to look back, 鲜 is few. Read the whole sentence, then choose the meaning that makes sense in it, not the commonest one today.",
+          "许多文言字词保留着现代汉语已经不用的意思：“期”是约定，“顾”是回头看，“鲜”是少。先读懂整句话，再选出在句中讲得通的意思，而不是今天最常用的意思。",
+        ),
+        question: t("What does the character in brackets mean in this sentence?", "括号里的字在这句话中是什么意思？"),
+        items: juniorWords,
+        why: usageWhy,
+      },
+      {
+        suffix: "sentences",
+        title: t("Putting Sentences into Modern Chinese", "翻译句子"),
+        explanation: t(
+          "Translate every character, keep the order, and add only what modern Chinese needs. Watch the words whose meaning has changed: in 相委而去, 委 is to leave behind, not to entrust.",
+          "翻译时要字字落实，保持语序，只补上现代汉语需要的成分。特别留意古今意思不同的词：“相委而去”的“委”是丢下，不是委托。",
+        ),
+        question: t("Which is the right modern Chinese for this sentence?", "这句话翻译成现代汉语，哪一项正确？"),
+        items: juniorSentences,
+        why: (right, shown) => t(`${shown} means: ${right}.`, `“${shown}”的意思是：${right}。`),
+      },
+    ],
+  },
+  {
+    grade: 8,
+    id: "classical-function-words-8-01",
+    title: t("Classical Chinese: 其 and 为", "文言文：“其”和“为”"),
+    summary: t("The usages of 其 and 为 in classical sentences.", "文言句子中“其”和“为”的用法。"),
+    points: [
+      {
+        suffix: "qi-wei",
+        title: t("The Usages of 其 and 为", "“其”和“为”的用法"),
+        explanation: t(
+          `其: ${QI.join("; ")}. Before a noun it is usually his or its; before a verb it is he or it; at the head of a question it asks or guesses.
+
+为: ${WEI.join("; ")}. Before a noun of a person and a verb, it is for; before a person who acts on someone, it is by.`,
+          `“其”：${QI.join("；")}。用在名词前多是“他的”“它的”，用在动词前多是“他”“它”，用在问句开头表示反问或推测。
+
+“为”：${WEI.join("；")}。后面是人再接动词时多是“替”“给”；表示被动时是“被”。`,
+        ),
+        question: t("What is the usage of the character in brackets in this sentence?", "括号里的字在这句话中是什么用法？"),
+        items: qiWei,
+        why: usageWhy,
+      },
+      {
+        suffix: "words",
+        title: t("Content Words of Grade 8", "八年级文言实词"),
+        explanation: t(
+          "The passages of grade 8 use characters in meanings worth learning by heart: 阙 is a gap, 曦 the sun, 属 to join, 策 a whip and to whip. Read the sentence, then choose the meaning it needs.",
+          "八年级的文言文里有一些值得记住的字义：“阙”是空缺，“曦”是阳光，“属”是连接，“策”是马鞭或用鞭子打。读懂句子，再选出它需要的意思。",
+        ),
+        question: t("What does the character in brackets mean in this sentence?", "括号里的字在这句话中是什么意思？"),
+        items: eighthWords,
+        why: usageWhy,
+      },
+    ],
+  },
+  {
+    grade: 9,
+    id: "classical-words-9-01",
+    title: t("Classical Chinese: Borrowed Characters and Sentences", "文言文：通假字和句子"),
+    summary: t(
+      "Characters written for others that sound alike, and sentences of grade 9 in modern Chinese.",
+      "通假字的本字和意思，以及把九年级文言句子翻译成现代汉语。",
+    ),
+    points: [
+      {
+        suffix: "borrowed",
+        title: t("Borrowed Characters", "通假字"),
+        explanation: t(
+          "Classical texts sometimes write a character for another that sounded alike, its proper character: in 便要还家, 要 stands for 邀, to invite. If a character's usual meaning makes no sense, try a character that sounds like it.",
+          "古书中有时用一个读音相同或相近的字代替本字，这就是通假字：“便要还家”的“要”通“邀”，是邀请的意思。如果一个字的常用意思讲不通，就想一想与它读音相近的字。",
+        ),
+        question: t("What does the character in brackets stand for, and mean, here?", "括号里的字在这句话中通什么字，是什么意思？"),
+        items: borrowed,
+        why: usageWhy,
+      },
+      {
+        suffix: "sentences",
+        title: t("Putting Sentences into Modern Chinese", "翻译句子"),
+        explanation: t(
+          "Longer sentences of grade 9 hold words used in old senses and set forms such as 何……之有 and 之谓. Translate every part, keep its order, and check that the whole makes sense.",
+          "九年级的长句里有古义词和固定格式，如“何……之有”“此之谓”。翻译时要逐一落实，保持语序，最后检查整句是否通顺。",
+        ),
+        question: t("Which is the right modern Chinese for this sentence?", "这句话翻译成现代汉语，哪一项正确？"),
+        items: ninthSentences,
+        why: (right, shown) => t(`${shown} means: ${right}.`, `“${shown}”的意思是：${right}。`),
       },
     ],
   },

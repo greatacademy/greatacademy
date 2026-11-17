@@ -44,6 +44,16 @@ function recognitionModules(grade: number): readonly ModuleDef[] {
 const idiomTopicsOf = (grade: number): readonly string[] =>
   (idiomsByGrade.find((g) => g.grade === grade)?.batches ?? []).map((b) => b.topic.id);
 
+/** wordModules are a grade's modules of words and of idioms, those it has. */
+function wordModules(grade: number): readonly ModuleDef[] {
+  const words = wordBatches.filter((b) => b.grade === grade).map((b) => b.topic.id);
+  const idioms = idiomTopicsOf(grade);
+  return [
+    ...(words.length > 0 ? [{ title: t("Words", "词语"), topics: words }] : []),
+    ...(idioms.length > 0 ? [{ title: t("Idioms", "成语"), topics: idioms }] : []),
+  ];
+}
+
 /** ofGrade are the ids of the topics a grade teaches. */
 const ofGrade = (topics: readonly GradeTopic[], grade: number): readonly string[] =>
   topics.filter((g) => g.grade === grade).map((g) => g.topic.id);
@@ -101,13 +111,7 @@ function gradeCourse(grade: number, description: CourseDef["description"]): Cour
           ]
         : []),
       { title: t("Characters", "识字"), modules: recognitionModules(grade) },
-      {
-        title: t("Words", "词语"),
-        modules: [
-          { title: t("Words", "词语"), topics: wordBatches.filter((b) => b.grade === grade).map((b) => b.topic.id) },
-          ...(idiomTopicsOf(grade).length > 0 ? [{ title: t("Idioms", "成语"), topics: idiomTopicsOf(grade) }] : []),
-        ],
-      },
+      ...(wordModules(grade).length > 0 ? [{ title: t("Words", "词语"), modules: wordModules(grade) }] : []),
       ...(grammarModules(grade).length > 0 ? [{ title: t("Grammar and Punctuation", "语法与标点"), modules: grammarModules(grade) }] : []),
       {
         title: t("Recitation", "积累与背诵"),
@@ -255,6 +259,27 @@ export const chineseCourses: readonly CourseDef[] = [
     t(
       "Chinese for native speakers in grade 6: reading 250 more characters of the second table, 3,000 characters in all by the end of primary school, in Chinese.",
       "面向母语学习者的六年级语文：再认读常用字表二中的约 250 个字，小学阶段累计认识 3000 字，用中文讲解。",
+    ),
+  ),
+  gradeCourse(
+    7,
+    t(
+      "Chinese for native speakers in grade 7: reading about 170 more characters of the second table in words, forty words and thirty-two idioms, the rhetorical devices of metonymy, contrast, quotation and anadiplosis, twelve classical poems and eight passages of classical prose to recite, and the words of classical Chinese, in Chinese.",
+      "面向母语学习者的七年级语文：在词语中再认读常用字表二中的约 170 个字，积累四十个词语和三十二个成语，学习借代、对比、引用和顶真，背诵十二首古诗词和八篇文言文，学习文言字词，用中文讲解。",
+    ),
+  ),
+  gradeCourse(
+    8,
+    t(
+      "Chinese for native speakers in grade 8: reading about 170 more characters of the second table in words, forty words and thirty-two idioms, mixed-up sentence structures, twelve classical poems and eight passages of classical prose to recite, and the usages of 其 and 为, in Chinese.",
+      "面向母语学习者的八年级语文：在词语中再认读常用字表二中的约 170 个字，积累四十个词语和三十二个成语，辨析句式杂糅的病句，背诵十二首古诗词和八篇文言文，学习“其”“为”的用法，用中文讲解。",
+    ),
+  ),
+  gradeCourse(
+    9,
+    t(
+      "Chinese for native speakers in grade 9: reading the last characters of the second table, all 3,500 common characters by the end of junior secondary school, forty words and thirty-two idioms, illogical sentences, twelve classical poems and eight passages of classical prose to recite, and borrowed characters, in Chinese.",
+      "面向母语学习者的九年级语文：认读常用字表二中余下的字，初中阶段累计认识 3500 个常用字，积累四十个词语和三十二个成语，辨析不合逻辑的病句，背诵十二首古诗词和八篇文言文，学习通假字，用中文讲解。",
     ),
   ),
   {

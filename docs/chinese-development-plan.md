@@ -171,6 +171,8 @@ Strokes and components, the 300 basic characters, characters first and then piny
 
 The rest of table two of appendix 5, classical prose and its function words, argument and exposition, the 60 recited texts of grades 7 to 9 and the 72 of senior secondary school, and `chinese-hs-required` and `chinese-hs-selective`. Classical passages are in the public domain; modern ones are written for the subject.
 
+**Built so far.** Grades 7 to 9, as the courses `chinese-grade-7` to `chinese-grade-9` ([outlines](chinese-courses/chinese-grade-7.md)), 132 topics and 348 knowledge points: the 500 characters of table two that primary school does not teach, in 42 recognition batches, so that grade 9 ends at the 3,500 common characters; four word batches and four idiom batches a grade; the rhetoric of metonymy, contrast, quotation and anadiplosis, and sentences with mixed-up structures or no logic; the 60 recited texts, twelve poems and eight passages of classical prose a grade; and three drills of classical Chinese, on content words, on 其 and 为, and on borrowed characters. Argument, exposition and the reading passages of these grades remain, as do polyphonic readings and a few words that wait for the teacher's review.
+
 ## 8. Stage 6: Levels 4 to 9, Writing, Speech and Conversation, Exams
 
 Levels 4 to 9 continue C2. Judged writing reuses `libs/judge` with calibration sets scored by teachers of Chinese; conversations reuse the voice service. The exam courses `chinese-hsk-1` to `chinese-hsk-7-9` and `chinese-gaokao` follow the courses they test.

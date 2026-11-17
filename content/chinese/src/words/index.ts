@@ -6,6 +6,7 @@ import { t } from "@ga/content";
 
 import { wordData as laterWordData } from "./data.ts";
 import { earlyWordData } from "./early.ts";
+import { juniorWordData } from "./junior.ts";
 import { type Word, wordTopic } from "./words.ts";
 
 const NUMERALS = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九"];
@@ -20,7 +21,7 @@ export interface WordBatch {
 /** wordId is the id of a grade's word batch, counted from 1. */
 export const wordId = (grade: number, n: number): string => `words-${grade}-${String(n).padStart(2, "0")}`;
 
-const wordData = [...earlyWordData, ...laterWordData];
+const wordData = [...earlyWordData, ...laterWordData, ...juniorWordData];
 
 /** wordBatches are the word batches of every grade, in order. */
 export const wordBatches: readonly WordBatch[] = wordData.map((batch, i) => {

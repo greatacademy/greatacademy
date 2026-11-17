@@ -4,6 +4,9 @@ course chinese-grade-3
 course chinese-grade-4
 course chinese-grade-5
 course chinese-grade-6
+course chinese-grade-7
+course chinese-grade-8
+course chinese-grade-9
 course chinese-heritage-1
 course chinese-heritage-2
 course chinese-heritage-3
@@ -12,16 +15,21 @@ course chinese-level-2
 course chinese-level-3
 course chinese-pinyin
 topic classical-function-words-6-01 classical-function-words-6-01-er-yi-yu classical-function-words-6-01-zhi
+topic classical-function-words-8-01 classical-function-words-8-01-qi-wei classical-function-words-8-01-words
 topic classical-words-5-01 classical-words-5-01-meaning classical-words-5-01-sentences
+topic classical-words-7-01 classical-words-7-01-meaning classical-words-7-01-sentences
+topic classical-words-9-01 classical-words-9-01-borrowed classical-words-9-01-sentences
 topic components-1 components-1-find components-1-name
 topic components-2 components-2-find components-2-name
 topic components-meaning components-meaning-meaning components-meaning-shared
 topic connectives-1 connectives-1-choosing connectives-1-relations
 topic connectives-2 connectives-2-checking connectives-2-choosing
 topic faulty-contradictions faulty-contradictions-finding faulty-contradictions-fixing
+topic faulty-illogical faulty-illogical-finding faulty-illogical-fixing
 topic faulty-mismatches faulty-mismatches-finding faulty-mismatches-fixing
 topic faulty-missing-parts faulty-missing-parts-finding faulty-missing-parts-fixing
 topic faulty-misused-connectives faulty-misused-connectives-finding faulty-misused-connectives-fixing
+topic faulty-mixed-structures faulty-mixed-structures-finding faulty-mixed-structures-fixing
 topic faulty-repetition faulty-repetition-finding faulty-repetition-fixing
 topic faulty-word-order faulty-word-order-finding faulty-word-order-fixing
 topic heritage-de-and-pronouns heritage-de-and-pronouns-de heritage-de-and-pronouns-pronouns
@@ -46,6 +54,18 @@ topic idioms-6-01 idioms-6-01-meaning idioms-6-01-use idioms-6-01-writing
 topic idioms-6-02 idioms-6-02-meaning idioms-6-02-use idioms-6-02-writing
 topic idioms-6-03 idioms-6-03-meaning idioms-6-03-use idioms-6-03-writing
 topic idioms-6-04 idioms-6-04-meaning idioms-6-04-use idioms-6-04-writing
+topic idioms-7-01 idioms-7-01-meaning idioms-7-01-use idioms-7-01-writing
+topic idioms-7-02 idioms-7-02-meaning idioms-7-02-use idioms-7-02-writing
+topic idioms-7-03 idioms-7-03-meaning idioms-7-03-use idioms-7-03-writing
+topic idioms-7-04 idioms-7-04-meaning idioms-7-04-use idioms-7-04-writing
+topic idioms-8-01 idioms-8-01-meaning idioms-8-01-use idioms-8-01-writing
+topic idioms-8-02 idioms-8-02-meaning idioms-8-02-use idioms-8-02-writing
+topic idioms-8-03 idioms-8-03-meaning idioms-8-03-use idioms-8-03-writing
+topic idioms-8-04 idioms-8-04-meaning idioms-8-04-use idioms-8-04-writing
+topic idioms-9-01 idioms-9-01-meaning idioms-9-01-use idioms-9-01-writing
+topic idioms-9-02 idioms-9-02-meaning idioms-9-02-use idioms-9-02-writing
+topic idioms-9-03 idioms-9-03-meaning idioms-9-03-use idioms-9-03-writing
+topic idioms-9-04 idioms-9-04-meaning idioms-9-04-use idioms-9-04-writing
 topic level-1-characters-01 level-1-characters-01-form level-1-characters-01-meaning level-1-characters-01-reading
 topic level-1-characters-02 level-1-characters-02-form level-1-characters-02-meaning level-1-characters-02-reading
 topic level-1-characters-03 level-1-characters-03-form level-1-characters-03-meaning level-1-characters-03-reading
@@ -375,64 +395,124 @@ topic punctuation-semicolons punctuation-semicolons-checking punctuation-semicol
 topic punctuation-sentence-ends punctuation-sentence-ends-checking punctuation-sentence-ends-marks
 topic punctuation-speech punctuation-speech-checking punctuation-speech-marks
 topic punctuation-titles punctuation-titles-checking punctuation-titles-marks
+topic recite-ai-lian-shuo recite-ai-lian-shuo-lines recite-ai-lian-shuo-meaning recite-ai-lian-shuo-writing
+topic recite-bo-qin-huai recite-bo-qin-huai-lines recite-bo-qin-huai-meaning recite-bo-qin-huai-writing
 topic recite-bo-ya-gu-qin recite-bo-ya-gu-qin-lines recite-bo-ya-gu-qin-meaning recite-bo-ya-gu-qin-writing
+topic recite-bu-suan-zi-yong-mei recite-bu-suan-zi-yong-mei-lines recite-bu-suan-zi-yong-mei-meaning recite-bu-suan-zi-yong-mei-writing
+topic recite-cao-gui-lun-zhan recite-cao-gui-lun-zhan-lines recite-cao-gui-lun-zhan-meaning recite-cao-gui-lun-zhan-writing
 topic recite-cao-li-li recite-cao-li-li-lines recite-cao-li-li-meaning recite-cao-li-li-writing
+topic recite-chen-tai-qiu recite-chen-tai-qiu-lines recite-chen-tai-qiu-meaning recite-chen-tai-qiu-writing
+topic recite-chi-bi recite-chi-bi-lines recite-chi-bi-meaning recite-chi-bi-writing
 topic recite-chi-shang recite-chi-shang-lines recite-chi-shang-meaning recite-chi-shang-writing
+topic recite-chou-le-tian recite-chou-le-tian-lines recite-chou-le-tian-meaning recite-chou-le-tian-writing
 topic recite-chu-sai-wang-chang-ling recite-chu-sai-wang-chang-ling-lines recite-chu-sai-wang-chang-ling-meaning recite-chu-sai-wang-chang-ling-writing
+topic recite-chuan-jing-de-yi-ren recite-chuan-jing-de-yi-ren-lines recite-chuan-jing-de-yi-ren-meaning recite-chuan-jing-de-yi-ren-writing
 topic recite-chun-ri-zhu-xi recite-chun-ri-zhu-xi-lines recite-chun-ri-zhu-xi-meaning recite-chun-ri-zhu-xi-writing
+topic recite-chun-wang recite-chun-wang-lines recite-chun-wang-meaning recite-chun-wang-writing
 topic recite-chun-xiao recite-chun-xiao-lines recite-chun-xiao-meaning recite-chun-xiao-writing
+topic recite-ci-bei-gu-shan-xia recite-ci-bei-gu-shan-xia-lines recite-ci-bei-gu-shan-xia-meaning recite-ci-bei-gu-shan-xia-writing
 topic recite-cong-jun-xing-qing-hai recite-cong-jun-xing-qing-hai-lines recite-cong-jun-xing-qing-hai-meaning recite-cong-jun-xing-qing-hai-writing
 topic recite-cun-ju-gao-ding recite-cun-ju-gao-ding-lines recite-cun-ju-gao-ding-meaning recite-cun-ju-gao-ding-writing
 topic recite-cun-wan recite-cun-wan-lines recite-cun-wan-meaning recite-cun-wan-writing
+topic recite-da-dao-zhi-xing recite-da-dao-zhi-xing-lines recite-da-dao-zhi-xing-meaning recite-da-dao-zhi-xing-writing
+topic recite-da-xie-zhong-shu-shu recite-da-xie-zhong-shu-shu-lines recite-da-xie-zhong-shu-shu-meaning recite-da-xie-zhong-shu-shu-writing
+topic recite-de-dao-duo-zhu recite-de-dao-duo-zhu-lines recite-de-dao-duo-zhu-meaning recite-de-dao-duo-zhu-writing
 topic recite-deng-guan-que-lou recite-deng-guan-que-lou-lines recite-deng-guan-que-lou-meaning recite-deng-guan-que-lou-writing
+topic recite-deng-you-zhou-tai-ge recite-deng-you-zhou-tai-ge-lines recite-deng-you-zhou-tai-ge-meaning recite-deng-you-zhou-tai-ge-writing
+topic recite-du-jing-men-song-bie recite-du-jing-men-song-bie-lines recite-du-jing-men-song-bie-meaning recite-du-jing-men-song-bie-writing
+topic recite-e-mei-shan-yue-ge recite-e-mei-shan-yue-ge-lines recite-e-mei-shan-yue-ge-meaning recite-e-mei-shan-yue-ge-writing
 topic recite-feng-li-qiao recite-feng-li-qiao-lines recite-feng-li-qiao-meaning recite-feng-li-qiao-writing
+topic recite-feng-ru-jing-shi recite-feng-ru-jing-shi-lines recite-feng-ru-jing-shi-meaning recite-feng-ru-jing-shi-writing
 topic recite-fu-rong-lou recite-fu-rong-lou-lines recite-fu-rong-lou-meaning recite-fu-rong-lou-writing
 topic recite-gu-lang-yue-xing recite-gu-lang-yue-xing-lines recite-gu-lang-yue-xing-meaning recite-gu-lang-yue-xing-writing
+topic recite-guan-cang-hai recite-guan-cang-hai-lines recite-guan-cang-hai-meaning recite-guan-cang-hai-writing
+topic recite-gui-sui-shou recite-gui-sui-shou-lines recite-gui-sui-shou-meaning recite-gui-sui-shou-writing
+topic recite-guo-ling-ding-yang recite-guo-ling-ding-yang-lines recite-guo-ling-ding-yang-meaning recite-guo-ling-ding-yang-writing
+topic recite-hu-xin-ting-kan-xue recite-hu-xin-ting-kan-xue-lines recite-hu-xin-ting-kan-xue-meaning recite-hu-xin-ting-kan-xue-writing
+topic recite-huan-xi-sha-yi-qu recite-huan-xi-sha-yi-qu-lines recite-huan-xi-sha-yi-qu-meaning recite-huan-xi-sha-yi-qu-writing
+topic recite-huang-he-lou recite-huang-he-lou-lines recite-huang-he-lou-meaning recite-huang-he-lou-writing
 topic recite-hui-chong-chun-jiang recite-hui-chong-chun-jiang-lines recite-hui-chong-chun-jiang-meaning recite-hui-chong-chun-jiang-writing
+topic recite-ji-cheng-tian-si-ye-you recite-ji-cheng-tian-si-ye-you-lines recite-ji-cheng-tian-si-ye-you-meaning recite-ji-cheng-tian-si-ye-you-writing
 topic recite-ji-hai-za-shi-jiu-zhou recite-ji-hai-za-shi-jiu-zhou-lines recite-ji-hai-za-shi-jiu-zhou-meaning recite-ji-hai-za-shi-jiu-zhou-writing
+topic recite-jiang-cheng-zi-mi-zhou recite-jiang-cheng-zi-mi-zhou-lines recite-jiang-cheng-zi-mi-zhou-meaning recite-jiang-cheng-zi-mi-zhou-writing
 topic recite-jiang-nan recite-jiang-nan-lines recite-jiang-nan-meaning recite-jiang-nan-writing
+topic recite-jiang-nan-feng-li-gui-nian recite-jiang-nan-feng-li-gui-nian-lines recite-jiang-nan-feng-li-gui-nian-meaning recite-jiang-nan-feng-li-gui-nian-writing
 topic recite-jiang-xue recite-jiang-xue-lines recite-jiang-xue-meaning recite-jiang-xue-writing
+topic recite-jie-zi-shu recite-jie-zi-shu-lines recite-jie-zi-shu-meaning recite-jie-zi-shu-writing
 topic recite-jing-ye-si recite-jing-ye-si-lines recite-jing-ye-si-meaning recite-jing-ye-si-writing
 topic recite-jue-ju-huang-li recite-jue-ju-huang-li-lines recite-jue-ju-huang-li-meaning recite-jue-ju-huang-li-writing
 topic recite-lang-tao-sha-jiu-qu recite-lang-tao-sha-jiu-qu-lines recite-lang-tao-sha-jiu-qu-meaning recite-lang-tao-sha-jiu-qu-writing
 topic recite-liang-zhou-ci-wang-han recite-liang-zhou-ci-wang-han-lines recite-liang-zhou-ci-wang-han-meaning recite-liang-zhou-ci-wang-han-writing
+topic recite-lou-shi-ming recite-lou-shi-ming-lines recite-lou-shi-ming-meaning recite-lou-shi-ming-writing
 topic recite-ma-shi-da-mo recite-ma-shi-da-mo-lines recite-ma-shi-da-mo-meaning recite-ma-shi-da-mo-writing
+topic recite-ma-shuo recite-ma-shuo-lines recite-ma-shuo-meaning recite-ma-shuo-writing
+topic recite-mai-you-weng recite-mai-you-weng-lines recite-mai-you-weng-meaning recite-mai-you-weng-writing
 topic recite-min-nong-chu-he recite-min-nong-chu-he-lines recite-min-nong-chu-he-meaning recite-min-nong-chu-he-writing
 topic recite-min-nong-chun-zhong recite-min-nong-chun-zhong-lines recite-min-nong-chun-zhong-meaning recite-min-nong-chun-zhong-writing
 topic recite-nang-ying-ye-du recite-nang-ying-ye-du-lines recite-nang-ying-ye-du-meaning recite-nang-ying-ye-du-writing
+topic recite-po-zhen-zi recite-po-zhen-zi-lines recite-po-zhen-zi-meaning recite-po-zhen-zi-writing
+topic recite-qian-tang-hu-chun-xing recite-qian-tang-hu-chun-xing-lines recite-qian-tang-hu-chun-xing-meaning recite-qian-tang-hu-chun-xing-writing
 topic recite-qing-ping-yue-cun-ju recite-qing-ping-yue-cun-ju-lines recite-qing-ping-yue-cun-ju-meaning recite-qing-ping-yue-cun-ju-writing
+topic recite-qiu-ci recite-qiu-ci-lines recite-qiu-ci-meaning recite-qiu-ci-writing
 topic recite-qiu-ye-jiang-xiao recite-qiu-ye-jiang-xiao-lines recite-qiu-ye-jiang-xiao-meaning recite-qiu-ye-jiang-xiao-writing
 topic recite-sai-xia-qu-lu-lun recite-sai-xia-qu-lu-lun-lines recite-sai-xia-qu-lu-lun-meaning recite-sai-xia-qu-lu-lun-writing
 topic recite-san-qu-dao-zhong recite-san-qu-dao-zhong-lines recite-san-qu-dao-zhong-meaning recite-san-qu-dao-zhong-writing
+topic recite-san-xia recite-san-xia-lines recite-san-xia-meaning recite-san-xia-writing
 topic recite-shan-xing recite-shan-xing-lines recite-shan-xing-meaning recite-shan-xing-writing
+topic recite-sheng-yu-you-huan recite-sheng-yu-you-huan-lines recite-sheng-yu-you-huan-meaning recite-sheng-yu-you-huan-writing
 topic recite-shi-er recite-shi-er-lines recite-shi-er-meaning recite-shi-er-writing
 topic recite-shi-hui-yin recite-shi-hui-yin-lines recite-shi-hui-yin-meaning recite-shi-hui-yin-writing
+topic recite-shi-zhi-sai-shang recite-shi-zhi-sai-shang-lines recite-shi-zhi-sai-shang-meaning recite-shi-zhi-sai-shang-writing
 topic recite-shou-zhu-dai-tu recite-shou-zhu-dai-tu-lines recite-shou-zhu-dai-tu-meaning recite-shou-zhu-dai-tu-writing
+topic recite-shui-diao-ge-tou recite-shui-diao-ge-tou-lines recite-shui-diao-ge-tou-meaning recite-shui-diao-ge-tou-writing
 topic recite-si-shi-tian-yuan-zhou-chu recite-si-shi-tian-yuan-zhou-chu-lines recite-si-shi-tian-yuan-zhou-chu-meaning recite-si-shi-tian-yuan-zhou-chu-writing
+topic recite-song-du-shao-fu recite-song-du-shao-fu-lines recite-song-du-shao-fu-meaning recite-song-du-shao-fu-writing
+topic recite-song-you-ren recite-song-you-ren-lines recite-song-you-ren-meaning recite-song-you-ren-writing
 topic recite-su-jian-de-jiang recite-su-jian-de-jiang-lines recite-su-jian-de-jiang-meaning recite-su-jian-de-jiang-writing
+topic recite-sun-quan-quan-xue recite-sun-quan-quan-xue-lines recite-sun-quan-quan-xue-meaning recite-sun-quan-quan-xue-writing
+topic recite-tao-hua-yuan-ji recite-tao-hua-yuan-ji-lines recite-tao-hua-yuan-ji-meaning recite-tao-hua-yuan-ji-writing
 topic recite-ti-lin-an-di recite-ti-lin-an-di-lines recite-ti-lin-an-di-meaning recite-ti-lin-an-di-writing
 topic recite-ti-xi-lin-bi recite-ti-xi-lin-bi-lines recite-ti-xi-lin-bi-meaning recite-ti-xi-lin-bi-writing
+topic recite-tian-jing-sha-qiu-si recite-tian-jing-sha-qiu-si-lines recite-tian-jing-sha-qiu-si-meaning recite-tian-jing-sha-qiu-si-writing
 topic recite-tie-chu-cheng-zhen recite-tie-chu-cheng-zhen-lines recite-tie-chu-cheng-zhen-meaning recite-tie-chu-cheng-zhen-writing
+topic recite-wan-chun recite-wan-chun-lines recite-wan-chun-meaning recite-wan-chun-writing
 topic recite-wang-dong-ting recite-wang-dong-ting-lines recite-wang-dong-ting-meaning recite-wang-dong-ting-writing
 topic recite-wang-hu-lou recite-wang-hu-lou-lines recite-wang-hu-lou-meaning recite-wang-hu-lou-writing
 topic recite-wang-lu-shan-pu-bu recite-wang-lu-shan-pu-bu-lines recite-wang-lu-shan-pu-bu-meaning recite-wang-lu-shan-pu-bu-writing
 topic recite-wang-tian-men-shan recite-wang-tian-men-shan-lines recite-wang-tian-men-shan-meaning recite-wang-tian-men-shan-writing
+topic recite-wang-yue recite-wang-yue-lines recite-wang-yue-meaning recite-wang-yue-writing
+topic recite-wen-wang-chang-ling recite-wen-wang-chang-ling-lines recite-wen-wang-chang-ling-meaning recite-wen-wang-chang-ling-writing
+topic recite-wu-ti-xiang-jian recite-wu-ti-xiang-jian-lines recite-wu-ti-xiang-jian-meaning recite-wu-ti-xiang-jian-writing
 topic recite-xi-jiang-yue-huang-sha recite-xi-jiang-yue-huang-sha-lines recite-xi-jiang-yue-huang-sha-meaning recite-xi-jiang-yue-huang-sha-writing
 topic recite-xia-ri-jue-ju recite-xia-ri-jue-ju-lines recite-xia-ri-jue-ju-meaning recite-xia-ri-jue-ju-writing
 topic recite-xiao-chi recite-xiao-chi-lines recite-xiao-chi-meaning recite-xiao-chi-writing
 topic recite-xiao-chu-jing-ci-si recite-xiao-chu-jing-ci-si-lines recite-xiao-chu-jing-ci-si-meaning recite-xiao-chu-jing-ci-si-writing
+topic recite-xiao-shi-tan-ji recite-xiao-shi-tan-ji-lines recite-xiao-shi-tan-ji-meaning recite-xiao-shi-tan-ji-writing
 topic recite-xue-mei recite-xue-mei-lines recite-xue-mei-meaning recite-xue-mei-writing
 topic recite-xue-yi recite-xue-yi-lines recite-xue-yi-meaning recite-xue-yi-writing
 topic recite-xun-yin-zhe recite-xun-yin-zhe-lines recite-xun-yin-zhe-meaning recite-xun-yin-zhe-writing
+topic recite-yan-men-tai-shou-xing recite-yan-men-tai-shou-xing-lines recite-yan-men-tai-shou-xing-meaning recite-yan-men-tai-shou-xing-writing
 topic recite-yang-shi-zhi-zi recite-yang-shi-zhi-zi-lines recite-yang-shi-zhi-zi-meaning recite-yang-shi-zhi-zi-writing
+topic recite-ye-shang-shou-xiang-cheng recite-ye-shang-shou-xiang-cheng-lines recite-ye-shang-shou-xiang-cheng-meaning recite-ye-shang-shou-xiang-cheng-writing
 topic recite-ye-shu-suo-jian recite-ye-shu-suo-jian-lines recite-ye-shu-suo-jian-meaning recite-ye-shu-suo-jian-writing
 topic recite-ye-su-shan-si recite-ye-su-shan-si-lines recite-ye-su-shan-si-meaning recite-ye-su-shan-si-writing
+topic recite-ye-wang recite-ye-wang-lines recite-ye-wang-meaning recite-ye-wang-writing
+topic recite-ye-yu-ji-bei recite-ye-yu-ji-bei-lines recite-ye-yu-ji-bei-meaning recite-ye-yu-ji-bei-writing
 topic recite-yin-hu-shang recite-yin-hu-shang-lines recite-yin-hu-shang-meaning recite-yin-hu-shang-writing
+topic recite-yin-jiu-qi-wu recite-yin-jiu-qi-wu-lines recite-yin-jiu-qi-wu-meaning recite-yin-jiu-qi-wu-writing
 topic recite-yong-e recite-yong-e-lines recite-yong-e-meaning recite-yong-e-writing
 topic recite-yong-liu recite-yong-liu-lines recite-yong-liu-meaning recite-yong-liu-writing
+topic recite-yong-xue recite-yong-xue-lines recite-yong-xue-meaning recite-yong-xue-writing
+topic recite-yu-jia-ao-qiu-si recite-yu-jia-ao-qiu-si-lines recite-yu-jia-ao-qiu-si-meaning recite-yu-jia-ao-qiu-si-writing
+topic recite-yu-wo-suo-yu-ye recite-yu-wo-suo-yu-ye-lines recite-yu-wo-suo-yu-ye-meaning recite-yu-wo-suo-yu-ye-writing
+topic recite-yu-zhu-yuan-si-shu recite-yu-zhu-yuan-si-shu-lines recite-yu-zhu-yuan-si-shu-meaning recite-yu-zhu-yuan-si-shu-writing
+topic recite-yue-yang-lou-ji recite-yue-yang-lou-ji-lines recite-yue-yang-lou-ji-meaning recite-yue-yang-lou-ji-writing
+topic recite-yue-ye-yi-she-di recite-yue-ye-yi-she-di-lines recite-yue-ye-yi-she-di-meaning recite-yue-ye-yi-she-di-writing
 topic recite-zeng-liu-jing-wen recite-zeng-liu-jing-wen-lines recite-zeng-liu-jing-wen-meaning recite-zeng-liu-jing-wen-writing
 topic recite-zhi-zi-nong-bing recite-zhi-zi-nong-bing-lines recite-zhi-zi-nong-bing-meaning recite-zhi-zi-nong-bing-writing
 topic recite-zhu-shi recite-zhu-shi-lines recite-zhu-shi-meaning recite-zhu-shi-writing
+topic recite-zou-ji-feng-qi-wang recite-zou-ji-feng-qi-wang-lines recite-zou-ji-feng-qi-wang-meaning recite-zou-ji-feng-qi-wang-writing
+topic recite-zui-weng-ting-ji recite-zui-weng-ting-ji-lines recite-zui-weng-ting-ji-meaning recite-zui-weng-ting-ji-writing
 topic recognizing-characters-1-01 recognizing-characters-1-01-reading recognizing-characters-1-01-writing
 topic recognizing-characters-1-02 recognizing-characters-1-02-reading recognizing-characters-1-02-writing
 topic recognizing-characters-1-03 recognizing-characters-1-03-reading recognizing-characters-1-03-writing
@@ -683,8 +763,51 @@ topic recognizing-characters-6-18 recognizing-characters-6-18-reading recognizin
 topic recognizing-characters-6-19 recognizing-characters-6-19-reading recognizing-characters-6-19-writing
 topic recognizing-characters-6-20 recognizing-characters-6-20-reading recognizing-characters-6-20-writing
 topic recognizing-characters-6-21 recognizing-characters-6-21-reading recognizing-characters-6-21-writing
+topic recognizing-characters-7-01 recognizing-characters-7-01-reading recognizing-characters-7-01-writing
+topic recognizing-characters-7-02 recognizing-characters-7-02-reading recognizing-characters-7-02-writing
+topic recognizing-characters-7-03 recognizing-characters-7-03-reading recognizing-characters-7-03-writing
+topic recognizing-characters-7-04 recognizing-characters-7-04-reading recognizing-characters-7-04-writing
+topic recognizing-characters-7-05 recognizing-characters-7-05-reading recognizing-characters-7-05-writing
+topic recognizing-characters-7-06 recognizing-characters-7-06-reading recognizing-characters-7-06-writing
+topic recognizing-characters-7-07 recognizing-characters-7-07-reading recognizing-characters-7-07-writing
+topic recognizing-characters-7-08 recognizing-characters-7-08-reading recognizing-characters-7-08-writing
+topic recognizing-characters-7-09 recognizing-characters-7-09-reading recognizing-characters-7-09-writing
+topic recognizing-characters-7-10 recognizing-characters-7-10-reading recognizing-characters-7-10-writing
+topic recognizing-characters-7-11 recognizing-characters-7-11-reading recognizing-characters-7-11-writing
+topic recognizing-characters-7-12 recognizing-characters-7-12-reading recognizing-characters-7-12-writing
+topic recognizing-characters-7-13 recognizing-characters-7-13-reading recognizing-characters-7-13-writing
+topic recognizing-characters-7-14 recognizing-characters-7-14-reading recognizing-characters-7-14-writing
+topic recognizing-characters-8-01 recognizing-characters-8-01-reading recognizing-characters-8-01-writing
+topic recognizing-characters-8-02 recognizing-characters-8-02-reading recognizing-characters-8-02-writing
+topic recognizing-characters-8-03 recognizing-characters-8-03-reading recognizing-characters-8-03-writing
+topic recognizing-characters-8-04 recognizing-characters-8-04-reading recognizing-characters-8-04-writing
+topic recognizing-characters-8-05 recognizing-characters-8-05-reading recognizing-characters-8-05-writing
+topic recognizing-characters-8-06 recognizing-characters-8-06-reading recognizing-characters-8-06-writing
+topic recognizing-characters-8-07 recognizing-characters-8-07-reading recognizing-characters-8-07-writing
+topic recognizing-characters-8-08 recognizing-characters-8-08-reading recognizing-characters-8-08-writing
+topic recognizing-characters-8-09 recognizing-characters-8-09-reading recognizing-characters-8-09-writing
+topic recognizing-characters-8-10 recognizing-characters-8-10-reading recognizing-characters-8-10-writing
+topic recognizing-characters-8-11 recognizing-characters-8-11-reading recognizing-characters-8-11-writing
+topic recognizing-characters-8-12 recognizing-characters-8-12-reading recognizing-characters-8-12-writing
+topic recognizing-characters-8-13 recognizing-characters-8-13-reading recognizing-characters-8-13-writing
+topic recognizing-characters-8-14 recognizing-characters-8-14-reading recognizing-characters-8-14-writing
+topic recognizing-characters-9-01 recognizing-characters-9-01-reading recognizing-characters-9-01-writing
+topic recognizing-characters-9-02 recognizing-characters-9-02-reading recognizing-characters-9-02-writing
+topic recognizing-characters-9-03 recognizing-characters-9-03-reading recognizing-characters-9-03-writing
+topic recognizing-characters-9-04 recognizing-characters-9-04-reading recognizing-characters-9-04-writing
+topic recognizing-characters-9-05 recognizing-characters-9-05-reading recognizing-characters-9-05-writing
+topic recognizing-characters-9-06 recognizing-characters-9-06-reading recognizing-characters-9-06-writing
+topic recognizing-characters-9-07 recognizing-characters-9-07-reading recognizing-characters-9-07-writing
+topic recognizing-characters-9-08 recognizing-characters-9-08-reading recognizing-characters-9-08-writing
+topic recognizing-characters-9-09 recognizing-characters-9-09-reading recognizing-characters-9-09-writing
+topic recognizing-characters-9-10 recognizing-characters-9-10-reading recognizing-characters-9-10-writing
+topic recognizing-characters-9-11 recognizing-characters-9-11-reading recognizing-characters-9-11-writing
+topic recognizing-characters-9-12 recognizing-characters-9-12-reading recognizing-characters-9-12-writing
+topic recognizing-characters-9-13 recognizing-characters-9-13-reading recognizing-characters-9-13-writing
+topic recognizing-characters-9-14 recognizing-characters-9-14-reading recognizing-characters-9-14-writing
 topic rhetoric-1 rhetoric-1-finding rhetoric-1-naming
 topic rhetoric-2 rhetoric-2-finding rhetoric-2-naming
+topic rhetoric-3 rhetoric-3-finding rhetoric-3-naming
 topic sentences-ba-and-bei sentences-ba-and-bei-to-ba sentences-ba-and-bei-to-bei
 topic sentences-reported-speech sentences-reported-speech-to-direct sentences-reported-speech-to-reported
 topic sentences-rhetorical-questions sentences-rhetorical-questions-to-question sentences-rhetorical-questions-to-statement
@@ -715,6 +838,18 @@ topic words-6-01 words-6-01-meaning words-6-01-relations words-6-01-use
 topic words-6-02 words-6-02-meaning words-6-02-relations words-6-02-use
 topic words-6-03 words-6-03-meaning words-6-03-relations words-6-03-use
 topic words-6-04 words-6-04-meaning words-6-04-relations words-6-04-use
+topic words-7-01 words-7-01-meaning words-7-01-relations words-7-01-use
+topic words-7-02 words-7-02-meaning words-7-02-relations words-7-02-use
+topic words-7-03 words-7-03-meaning words-7-03-relations words-7-03-use
+topic words-7-04 words-7-04-meaning words-7-04-relations words-7-04-use
+topic words-8-01 words-8-01-meaning words-8-01-relations words-8-01-use
+topic words-8-02 words-8-02-meaning words-8-02-relations words-8-02-use
+topic words-8-03 words-8-03-meaning words-8-03-relations words-8-03-use
+topic words-8-04 words-8-04-meaning words-8-04-relations words-8-04-use
+topic words-9-01 words-9-01-meaning words-9-01-relations words-9-01-use
+topic words-9-02 words-9-02-meaning words-9-02-relations words-9-02-use
+topic words-9-03 words-9-03-meaning words-9-03-relations words-9-03-use
+topic words-9-04 words-9-04-meaning words-9-04-relations words-9-04-use
 passage chinese-a-letter-from-the-seaside
 passage chinese-a-letter-to-my-cousin
 passage chinese-a-silkworm-diary

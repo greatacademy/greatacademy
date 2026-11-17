@@ -5,6 +5,7 @@ import { type LexiconEntry, type TopicDef, t } from "@ga/content";
 
 import { gradeFiveIdioms, gradeFourIdioms, gradeSixIdioms, gradeThreeIdioms } from "./data.ts";
 import { type Idiom, idiomTopic, parseIdioms } from "./idioms.ts";
+import { gradeEightIdioms, gradeNineIdioms, gradeSevenIdioms } from "./junior.ts";
 
 /** BATCH is the number of idioms of a batch. */
 const BATCH = 8;
@@ -51,6 +52,9 @@ export const idiomsByGrade: readonly GradeIdioms[] = [
   grade(4, gradeFourIdioms),
   grade(5, gradeFiveIdioms),
   grade(6, gradeSixIdioms),
+  grade(7, gradeSevenIdioms),
+  grade(8, gradeEightIdioms),
+  grade(9, gradeNineIdioms),
 ];
 
 /** idiomTopics are every idiom topic. */

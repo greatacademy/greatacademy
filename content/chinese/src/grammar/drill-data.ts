@@ -493,9 +493,72 @@ const rhetoricTwo = deviceTopic(
   },
 );
 
+const rhetoricThree = deviceTopic(
+  7,
+  "rhetoric-3",
+  t("Rhetoric: Metonymy, Contrast, Quotation, Anadiplosis", "修辞：借代、对比、引用、顶真"),
+  [
+    {
+      name: "借代",
+      en: "metonymy",
+      mark: t(
+        "names a thing by something closely tied to it instead of by its own name",
+        "不直接说出要说的人或事物，而用和它密切相关的事物来代替",
+      ),
+    },
+    {
+      name: "对比",
+      en: "contrast",
+      mark: t(
+        "sets two opposite things, or two sides of one thing, against each other",
+        "把两种相反或不同的事物，或者一种事物的两个方面放在一起比较",
+      ),
+    },
+    {
+      name: "引用",
+      en: "quotation",
+      mark: t("quotes a line of poetry, a saying or a proverb to make a point", "引用诗句、名言、俗语或典故来说明道理"),
+    },
+    {
+      name: "顶真",
+      en: "anadiplosis",
+      mark: t(
+        "begins a clause with the word that ended the one before, linking them end to head",
+        "用前一句结尾的词语作为后一句的开头，使句子首尾相连",
+      ),
+    },
+  ],
+  {
+    借代: [
+      "红领巾们排着整齐的队伍走进了博物馆。",
+      "满屋子的白大褂都在忙着抢救病人。",
+      "他一口气读完了三本鲁迅。",
+      "黄发垂髫，并怡然自乐。",
+    ],
+    对比: [
+      "朱门酒肉臭，路有冻死骨。",
+      "过去这里是一片荒滩，如今已经变成了绿树成荫的公园。",
+      "懒惰的人抱怨时间太少，勤奋的人却总能挤出时间读书。",
+      "城里灯火通明，热闹非凡；村子里却一片漆黑，静悄悄的。",
+    ],
+    引用: [
+      "古人说：“三人行，必有我师焉。”我们要虚心向别人学习。",
+      "“少壮不努力，老大徒伤悲。”我们要珍惜青春时光。",
+      "俗话说：“一分耕耘，一分收获。”他的好成绩是用汗水换来的。",
+      "“海内存知己，天涯若比邻。”朋友虽然远在他乡，我们的心却连在一起。",
+    ],
+    顶真: [
+      "山上有座庙，庙里有个老和尚，老和尚在给小和尚讲故事。",
+      "知识来自学习，学习需要坚持，坚持才能成功。",
+      "我们要多读好书，好书能开阔眼界，眼界开阔了，心胸也就宽广了。",
+      "小河流向大河，大河流向大海，大海连着远方。",
+    ],
+  },
+);
+
 /** drillData are the drill topics, by kind, each kind in order. */
 export const drillData: Readonly<Record<"connectives" | "sentences" | "rhetoric", readonly DrillData[]>> = {
   connectives: [connectivesOne, connectivesTwo],
   sentences: [sentencesBaBei, sentencesRhetorical, sentencesReported],
-  rhetoric: [rhetoricOne, rhetoricTwo],
+  rhetoric: [rhetoricOne, rhetoricTwo, rhetoricThree],
 };
