@@ -1,5 +1,6 @@
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 
+import { compileChinese } from "@ga/content-chinese";
 import { compileEnglish } from "@ga/content-english";
 import { compileMath } from "@ga/content-math";
 
@@ -13,7 +14,8 @@ const outlines = new Map<string, Outline>();
 for (const file of readdirSync(outlineDir).filter((f) => f.endsWith(".md") && !f.endsWith(".zh-CN.md"))) {
   outlines.set(file.replace(/\.md$/, ""), parseOutline(readFileSync(new URL(file, outlineDir), "utf8")));
 }
-const report = audit(subjectId === "english" ? compileEnglish() : compileMath(), outlines);
+const compile = { chinese: compileChinese, english: compileEnglish }[subjectId] ?? compileMath;
+const report = audit(compile(), outlines);
 const out = process.argv[2];
 if (out) {
   writeFileSync(out, renderReport(report));

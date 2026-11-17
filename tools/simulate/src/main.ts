@@ -1,3 +1,4 @@
+import { compileChinese } from "@ga/content-chinese";
 import { compileEnglish } from "@ga/content-english";
 import { compileMath } from "@ga/content-math";
 
@@ -5,9 +6,10 @@ import { simulate } from "./simulate.ts";
 
 // The course to simulate is the first argument: `pnpm nx run simulate:simulate -- prealgebra`.
 const courseId = process.argv[2] ?? "algebra-foundations";
-// English compiles in a moment and mathematics takes seconds, so English is tried first.
-const english = compileEnglish();
-const subject = english.courses.has(courseId) ? english : compileMath();
+// Chinese courses are named chinese-…; English compiles in a moment and mathematics takes seconds, so English is tried
+// before mathematics.
+const english = courseId.startsWith("chinese-") ? undefined : compileEnglish();
+const subject = courseId.startsWith("chinese-") ? compileChinese() : english?.courses.has(courseId) ? english : compileMath();
 // A placed student starts with the course: they know its foundations, the topics of earlier courses it builds on, and
 // the diagnostic should find them. Students who start from nothing learn the foundations as lessons on the way.
 const foundations = subject.courses.get(courseId)?.foundations ?? [];
