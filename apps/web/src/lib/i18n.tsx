@@ -114,7 +114,8 @@ const messages = {
     gotIt: "Start practicing",
     submit: "Check",
     dontKnow: "I don't know",
-    writingWords: (words: number, min: number) => `${words} words · at least ${min}`,
+    writingWords: (words: number, min: number, characters = false) =>
+      characters ? `${words} characters · at least ${min}` : `${words} words · at least ${min}`,
     sendWriting: "Send for feedback",
     judging: "Reading your writing…",
     judgingDelayed: "Feedback is taking longer than usual. You can wait, or rewrite and send again.",
@@ -679,7 +680,8 @@ const messages = {
     gotIt: "开始练习",
     submit: "检查",
     dontKnow: "我不会",
-    writingWords: (words: number, min: number) => `${words} 个词 · 至少 ${min} 个`,
+    writingWords: (words: number, min: number, characters = false) =>
+      characters ? `${words} 个字 · 至少 ${min} 个` : `${words} 个词 · 至少 ${min} 个`,
     sendWriting: "提交获取反馈",
     judging: "正在阅读你的文字……",
     judgingDelayed: "反馈比平时慢。你可以等待，也可以改写后再提交。",

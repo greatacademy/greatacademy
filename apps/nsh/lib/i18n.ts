@@ -208,7 +208,8 @@ const messages = {
     transcriptNotKept: "The words of this conversation are not kept.",
     talkAgain: "Talk again",
     backToLearn: "Back to Learn",
-    writingWords: (words: number, min: number) => `${words} words · at least ${min}`,
+    writingWords: (words: number, min: number, characters = false) =>
+      characters ? `${words} characters · at least ${min}` : `${words} words · at least ${min}`,
     sendWriting: "Send for feedback",
     judging: "Reading your writing…",
     judgingDelayed: "Feedback is taking longer than usual. You can wait, or rewrite and send again.",
@@ -667,7 +668,8 @@ const messages = {
     transcriptNotKept: "这次对话的内容不会保存。",
     talkAgain: "再练一次",
     backToLearn: "返回学习",
-    writingWords: (words: number, min: number) => `${words} 个词 · 至少 ${min} 个`,
+    writingWords: (words: number, min: number, characters = false) =>
+      characters ? `${words} 个字 · 至少 ${min} 个` : `${words} 个词 · 至少 ${min} 个`,
     sendWriting: "提交获取反馈",
     judging: "正在阅读你的文字……",
     judgingDelayed: "反馈比平时慢。你可以等待，也可以改写后再提交。",

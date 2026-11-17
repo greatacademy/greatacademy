@@ -10,10 +10,20 @@ import { Rich } from "./Rich.tsx";
 /** POLL_MS is how often the app asks whether a text has been judged, as the web app does. */
 const POLL_MS = 2_000;
 
-/** countWords counts words as the server does: runs without spaces holding a letter or a digit. */
+/** countWords counts words as the server does (wordCount in @ga/content): runs without spaces holding a letter or a digit, and each Chinese character. */
 export function countWords(text: string): number {
-  return text.split(/\s+/u).filter((w) => /[\p{L}\p{N}]/u.test(w)).length;
+  const han = text.match(/\p{Script=Han}/gu)?.length ?? 0;
+  return (
+    han +
+    text
+      .replace(/\p{Script=Han}/gu, " ")
+      .split(/\s+/u)
+      .filter((w) => /[\p{L}\p{N}]/u.test(w)).length
+  );
 }
+
+/** inCharacters tells whether a text is counted mostly in Chinese characters, so its count is shown as characters. */
+export const inCharacters = (text: string): boolean => (text.match(/\p{Script=Han}/gu)?.length ?? 0) * 2 > countWords(text);
 
 /** JudgedFeedback lists a judge's verdict: the criteria met, with the words quoted, those missed, and at most two points to work on. */
 export function JudgedFeedback(props: { feedback: Feedback }) {
@@ -182,7 +192,7 @@ export function WritingFlow(props: {
               style={{ ...fieldStyle(), minHeight: question.essay ? 360 : 180, textAlignVertical: "top" }}
             />
             <Text style={{ color: words() >= limits.minWords ? colors().muted : colors().warn, fontSize: 14 }}>
-              {m().writingWords(words(), limits.minWords)}
+              {m().writingWords(words(), limits.minWords, inCharacters(text()))}
             </Text>
             <Action
               label={revise() ? m().rewrite : question.essay ? m().submitEssay : m().sendWriting}
