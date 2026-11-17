@@ -5,6 +5,7 @@ import { chineseCheckers, segmenter } from "@ga/subject-chinese";
 import { characterLexicon } from "./characters/index.ts";
 import { chineseCourses } from "./courses.ts";
 import { idiomLexicon } from "./idioms/index.ts";
+import { chineseReading } from "./reading/index.ts";
 import { coreShardTopics } from "./shards/core.ts";
 import { wordLexicon } from "./words/index.ts";
 
@@ -20,6 +21,7 @@ export const chinese: SubjectDef = {
   courses: chineseCourses,
   checkers: chineseCheckers,
   lexicon,
+  reading: chineseReading.map((r) => r.unit),
   words: segmenter(lexicon.flatMap((e) => [e.word, ...(e.forms ?? [])])),
   strands: [
     { id: "characters", title: t("Characters", "识字与写字") },

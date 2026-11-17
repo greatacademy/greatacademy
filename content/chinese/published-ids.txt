@@ -185,3 +185,15 @@ topic words-5-01 words-5-01-meaning words-5-01-relations words-5-01-use
 topic words-5-02 words-5-02-meaning words-5-02-relations words-5-02-use
 topic words-6-01 words-6-01-meaning words-6-01-relations words-6-01-use
 topic words-6-02 words-6-02-meaning words-6-02-relations words-6-02-use
+passage chinese-before-the-rain
+passage chinese-birds-that-migrate
+passage chinese-dew-and-fog
+passage chinese-fathers-vegetable-garden
+passage chinese-how-seeds-travel
+passage chinese-movable-type
+passage chinese-the-dance-of-the-bees
+passage chinese-the-orchard-in-autumn
+passage chinese-the-solar-terms
+passage chinese-the-story-of-kites
+passage chinese-uses-of-bamboo
+passage chinese-why-camels-go-without-water
