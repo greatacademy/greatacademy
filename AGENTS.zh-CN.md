@@ -38,6 +38,7 @@ libs/content/        内容模型、编译器、题目运行时、判定器（�
 libs/engine/         学习引擎（纯函数，与学科无关）
 libs/subject-math/   数学判定器和生成器辅助函数
 libs/subject-english/ 英语判定器和内容工具
+libs/subject-chinese/ 语文判定器、拼音、分词和内容工具
 libs/judge/          写作的 AI 判定：提示词、respond 工具、经过检查的判定结果、基于 pi-ai 的供应商
 libs/subject-worker/ 任何学科的网关和分片所用的 Worker 入口
 libs/proto/          Protobuf 契约与生成的 TypeScript
@@ -75,7 +76,7 @@ pnpm format                                # 用 Biome 格式化并修复
 - 库直接导出源码（`"exports": { ".": "./src/index.ts" }`），库没有构建步骤。
 - 依赖版本精确固定（`savePrefix: ''`）。
 - 每个导出的标识符都有以其名称开头的文档注释。
-- `libs/content`、`libs/engine`、`libs/subject-math`、`libs/subject-english`、`libs/design` 是纯的：不做 I/O，不调用 `Date.now()`，不调用 `Math.random()`。时间和种子都作为参数传入。
+- `libs/content`、`libs/engine`、`libs/subject-math`、`libs/subject-english`、`libs/subject-chinese`、`libs/design` 是纯的：不做 I/O，不调用 `Date.now()`，不调用 `Math.random()`。时间和种子都作为参数传入。
 - 核心代码从不提及具体学科。学科专属逻辑放在 `libs/subject-<id>` 和 `content/<id>` 中。
 - 用 Biome（`biome.json`）格式化和 lint，不要引入 Prettier 或 ESLint。
 - 不要把函数命名为 `fit`、`fdescribe` 之类：Biome 的 `noFocusedTests` 会把对它的调用当作聚焦测试报错。

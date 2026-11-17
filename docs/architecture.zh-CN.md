@@ -72,6 +72,7 @@ libs/engine/          学习引擎：图谱、知识前沿、FIRe、任务选择
 libs/content/         内容模型：知识点/课程定义、编译器与校验器、题目运行时、答案判定
 libs/subject-math/    数学学科：数学答案判定器、数学题目生成器的辅助函数
 libs/subject-english/ 英语学科：句子和单词判定器、题库工具
+libs/subject-chinese/ 语文学科：汉字和拼音判定器、拼音转换、分词、题库工具
 libs/judge/           写作的 AI 判定：提示词、respond 工具、引用经过原文核对的判定结果、经 pi-ai 连接的供应商
 libs/subject-worker/  任何学科的网关和分片都由它的 Worker 入口构成
 libs/db/              Drizzle schema、迁移和仓储（PostgreSQL）
@@ -113,7 +114,7 @@ apps/voice ╌╌► apps/web，经 HTTP（没有包依赖）
 
 - `libs/content` 不依赖仓库内任何库，它定义所有学科都要实现的类型。
 - `libs/engine` 只依赖 `libs/content` 的类型。它没有 I/O、没有时钟（时间作为参数传入），也没有随机性（种子作为参数传入）。
-- `libs/subject-math` 和 `libs/subject-english` 只依赖 `libs/content`。
+- `libs/subject-math`、`libs/subject-english` 和 `libs/subject-chinese` 只依赖 `libs/content`。
 - `libs/design` 不依赖仓库内任何库，也没有 I/O，因此 Web 和原生应用可以共用。
 - `content/<subject>` 依赖 `libs/content` 和对应的学科库。
 - `libs/api` 基于 `libs/db` 和引擎实现服务，但不知道宿主：请求的用户和数据库客户端以 Connect context value 传入，时钟和种子通过注入提供。它的测试在 PGlite 上端到端地运行服务。

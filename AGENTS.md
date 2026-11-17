@@ -38,6 +38,7 @@ libs/content/        Content model, compiler, problem runtime, checkers (subject
 libs/engine/         Learning engine (pure, subject-agnostic)
 libs/subject-math/   Mathematics checkers and generator helpers
 libs/subject-english/ English checkers and the content kit
+libs/subject-chinese/ Chinese checkers, pinyin, segmentation and the content kit
 libs/judge/          AI judgment of writing: prompts, the respond tool, checked verdicts, providers on pi-ai
 libs/subject-worker/ Worker entrypoints for any subject's gateway and shards
 libs/proto/          Protobuf contracts and generated TypeScript
@@ -75,7 +76,7 @@ Every package declares its targets as `package.json` scripts (`typecheck`, `test
 - Libraries export their source (`"exports": { ".": "./src/index.ts" }`); there is no library build step.
 - Pin exact dependency versions (`savePrefix: ''`).
 - Every exported identifier has a doc comment that starts with its name.
-- `libs/content`, `libs/engine`, `libs/subject-math`, `libs/subject-english` and `libs/design` are pure: no I/O, no `Date.now()`, no `Math.random()`. Time and seeds are parameters.
+- `libs/content`, `libs/engine`, `libs/subject-math`, `libs/subject-english`, `libs/subject-chinese` and `libs/design` are pure: no I/O, no `Date.now()`, no `Math.random()`. Time and seeds are parameters.
 - The core never mentions a subject. Subject-specific logic lives in `libs/subject-<id>` and `content/<id>`.
 - Format and lint with Biome (`biome.json`); do not add Prettier or ESLint.
 - Do not name a function `fit`, `fdescribe` or the like: Biome's `noFocusedTests` reports any call to it as a focused test.

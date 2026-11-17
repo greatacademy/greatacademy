@@ -72,6 +72,7 @@ libs/engine/          Learning engine: graph, frontier, FIRe, task selection, di
 libs/content/         Content model: topic/course definitions, compiler and validator, problem runtime, answer checking
 libs/subject-math/    The mathematics subject: math answer checkers and helpers for math problem generators
 libs/subject-english/ The English subject: sentence and word checkers and the kit for item banks
+libs/subject-chinese/ The Chinese subject: character and pinyin checkers, pinyin conversion, word segmentation and the kit for item banks
 libs/judge/           AI judgment of writing: the prompt, the respond tool, verdicts whose quotations are checked against the text, providers through pi-ai
 libs/subject-worker/  Worker entrypoints that any subject's gateway and shards are made from
 libs/db/              Drizzle schema, migrations and repositories (PostgreSQL)
@@ -113,7 +114,7 @@ apps/voice ╌╌► apps/web over HTTP (no package dependency)
 
 - `libs/content` depends on nothing in the repository. It defines the types every subject implements.
 - `libs/engine` depends only on `libs/content`'s types. It has no I/O, no clock (time is a parameter) and no randomness (seeds are parameters).
-- `libs/subject-math` and `libs/subject-english` depend only on `libs/content`.
+- `libs/subject-math`, `libs/subject-english` and `libs/subject-chinese` depend only on `libs/content`.
 - `libs/design` depends on nothing in the repository and has no I/O, so web and native share it.
 - `content/<subject>` depends on `libs/content` and its subject library.
 - `libs/api` implements the services against `libs/db` and the engine, but knows no host: the request's user and database client arrive as Connect context values, and the clock and seeds are injected. Its tests run the services end to end over PGlite.
