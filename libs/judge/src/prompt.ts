@@ -60,8 +60,24 @@ const v1: PromptBuilder = (task, criteria, text) => ({
     .join("\n\n"),
 });
 
+/**
+ * zh1 is v1 for writing in Chinese by native learners: wrong characters are judged only when a criterion asks about them,
+ * and the feedback is written in Simplified Chinese, so that a learner who writes in Chinese reads it in Chinese.
+ */
+const zh1: PromptBuilder = (task, criteria, text) => {
+  const base = v1(task, criteria, text);
+  return {
+    system: [
+      base.system,
+      "The learner writes in Chinese. Count length in Chinese characters, judge the text as Chinese writing, and copy quotations character for character, punctuation included.",
+      "Write every point of feedback in Simplified Chinese, in words a child of ten can follow.",
+    ].join("\n"),
+    user: base.user,
+  };
+};
+
 /** PROMPTS are the prompt versions by name; a route names one, and changing a version's text is forbidden once calibrated. */
-export const PROMPTS: Readonly<Record<string, PromptBuilder>> = { "writing-1": v1 };
+export const PROMPTS: Readonly<Record<string, PromptBuilder>> = { "writing-1": v1, "writing-zh-1": zh1 };
 
 /** promptFor finds a prompt version, throwing on an unknown name. */
 export function promptFor(version: string): PromptBuilder {
