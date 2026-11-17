@@ -10,6 +10,7 @@ import { levelOneCourse } from "./level-1/index.ts";
 import { levelTwoCourse } from "./level-2/index.ts";
 import { levelThreeCourse } from "./level-3/index.ts";
 import { levelFourCourse } from "./level-4/index.ts";
+import { levelFiveCourse } from "./level-5/index.ts";
 import { heritageReading } from "./reading/heritage.ts";
 import { chineseReading } from "./reading/index.ts";
 import { recitedPoems } from "./recitation/index.ts";
@@ -355,4 +356,5 @@ export const chineseCourses: readonly CourseDef[] = [
   levelTwoCourse,
   levelThreeCourse,
   levelFourCourse,
+  levelFiveCourse,
 ];
