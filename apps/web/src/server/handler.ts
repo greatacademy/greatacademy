@@ -50,6 +50,7 @@ export const RPC_PREFIX = "/api/rpc";
 const subjectGateways = (): readonly SubjectGateway[] => [
   env.SUBJECT_MATH as unknown as SubjectGateway,
   env.SUBJECT_ENGLISH as unknown as SubjectGateway,
+  env.SUBJECT_CHINESE as unknown as SubjectGateway,
 ];
 
 /** forms keeps guardians' signed forms in R2. */

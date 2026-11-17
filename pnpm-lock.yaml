@@ -176,6 +176,37 @@ importers:
         specifier: 7.0.2
         version: 7.0.2
 
+  apps/chinese-workers:
+    dependencies:
+      '@ga/content':
+        specifier: workspace:*
+        version: link:../../libs/content
+      '@ga/content-chinese':
+        specifier: workspace:*
+        version: link:../../content/chinese
+      '@ga/subject-chinese':
+        specifier: workspace:*
+        version: link:../../libs/subject-chinese
+      '@ga/subject-worker':
+        specifier: workspace:*
+        version: link:../../libs/subject-worker
+    devDependencies:
+      '@cloudflare/vite-plugin':
+        specifier: 2.0.0-beta.v.7
+        version: 2.0.0-beta.v.7(@types/node@26.6.3)(vite@8.3.5(@types/node@26.6.3)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.0))(workerd@1.20261023.1)
+      '@types/node':
+        specifier: 26.6.3
+        version: 26.6.3
+      cf:
+        specifier: 1.0.0-beta.25
+        version: 1.0.0-beta.25(@types/node@26.6.3)
+      typescript:
+        specifier: 7.0.2
+        version: 7.0.2
+      vite:
+        specifier: 8.3.5
+        version: 8.3.5(@types/node@26.6.3)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.0)
+
   apps/english-workers:
     dependencies:
       '@ga/content':
@@ -349,6 +380,9 @@ importers:
       '@cloudflare/vite-plugin':
         specifier: 2.0.0-beta.v.7
         version: 2.0.0-beta.v.7(@types/node@26.6.3)(vite@8.3.5(@types/node@26.6.3)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.0))(workerd@1.20261023.1)
+      '@ga/chinese-workers':
+        specifier: workspace:*
+        version: link:../chinese-workers
       '@ga/english-workers':
         specifier: workspace:*
         version: link:../english-workers

@@ -32,6 +32,7 @@ apps/web/public/audio/
 # Generated at build time (the subject Workers)
 apps/math-workers/gen/
 apps/english-workers/gen/
+apps/chinese-workers/gen/
 
 # Originals of the illustrations, kept on the machine that made them (docs/english-illustrations.md)
 content/english/illustrations/originals/

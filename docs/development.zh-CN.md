@@ -53,6 +53,7 @@ Nx 把这些目标的结果缓存在 `.nx/`（被 git 忽略）中；只有输�
 | `subject-worker` | `libs/subject-worker` | 任何学科的网关和分片所用的 Worker 入口 |
 | `math-workers` | `apps/math-workers` | 数学的网关和分片 Worker（[架构](architecture.zh-CN.md) §6.1）；`pnpm nx run math-workers:generate` 把 manifest 写入 `gen/`，需要它的 target 会先运行这一步 |
 | `english-workers` | `apps/english-workers` | 英语的网关和分片 Worker，构建方式相同 |
+| `chinese-workers` | `apps/chinese-workers` | 语文的网关和分片 Worker，构建方式相同 |
 | `nsh` | `apps/nsh` | Native Shell 应用：欢迎页、登录、注册和年龄问题；学习、进度、课程、我的四个标签页；账号设置（个人资料、每周目标、联赛、密码、监护人）；课程大纲、进度地图、历史记录和任务播放器；隐私、同意和监护人页面；连接 Web 应用的 API（§6） |
 | `simulate` | `tools/simulate` | 用于调校引擎的模拟学生：`pnpm nx run simulate:simulate`（[学习引擎 §8](learning-engine.zh-CN.md#8-参数)） |
 | `audit` | `tools/audit` | 内容审计：课程相对大纲缺少的知识点，以及启发式检查（讲解过短、解答过简、缺少 `wrong`、缺少图形、正确选项总是最长等）。`pnpm nx run audit:audit -- <绝对路径>` 生成 Markdown 报告；结果是待复核的线索，不一定是错误。`pnpm nx run audit:stats -- <学科> [路径] [种子数]` 统计一个学科的课程、topic、知识点、文章和对话，按种子采样每个知识点的不同题目数，并列出低于 content/english/PROGRESS.md 所要求深度的知识点和只有一个知识点的 topic。`pnpm nx run audit:ids` 把各学科已定义但尚未记录的 id 补记到其 `published-ids.txt`，从不删除 id |
@@ -86,7 +87,7 @@ pnpm nx run web:dev                   # http://localhost:5173
 - `pnpm nx run web:typecheck` 会先运行 `cf workers types`，把 `Env` 类型声明写入 `.cloudflare/types`。
 - `apps/web/vite.config.ts` 在开发时让学科 Worker 与 Web Worker 一起运行，所以 `web:dev` 不需要额外步骤。请通过 Nx 运行，它会先生成 manifest。
 - `pnpm nx run web:build` 把 Worker 构建到 `.cloudflare/output`；`cf deploy` 负责部署。Worker 对外提供 `greatacademy.dev`，同样声明在这个文件里。部署前需把该域名作为 zone 加入 Cloudflare 账号，创建 Hyperdrive 配置、把它的 id 填进 `cloudflare.config.ts`，创建 R2 存储桶 `ga-guardian-forms` 和 `greatacademy`，并设置密钥，其中 `EMAIL_FROM` 用该域名下已被 `EMAIL_PROVIDER` 所列每个服务验证的地址：用 `cloudflare` 时把域名接入 Cloudflare Email Service（需 Workers Paid），用 `resend` 时在 Resend 验证域名；两者都用时，保留一条同时包含两家服务的 SPF 记录。
-- 先部署学科：`pnpm nx run math-workers:deploy` 构建数学的 Worker，先部署分片，再部署网关；`pnpm nx run english-workers:deploy` 对英语做同样的事。之后再部署 Web Worker。
+- 先部署学科：`pnpm nx run math-workers:deploy` 构建数学的 Worker，先部署分片，再部署网关；`pnpm nx run english-workers:deploy` 和 `pnpm nx run chinese-workers:deploy` 对英语和语文做同样的事。之后再部署 Web Worker，它的服务绑定要求每个学科的网关都已存在。
 
 管理后台位于 `/admin`。先在账号上以成年人身份回答年龄问题，再用 `pnpm nx run db:grant-admin -- <email>` 授予角色。每个市场一开始都不向未成年人开放，所以试用儿童账号之前要先在后台开放一个市场。在 `web:dev` 运行时，可以这样运行一次保存期限规则：
 

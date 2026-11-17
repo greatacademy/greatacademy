@@ -64,6 +64,7 @@ Great Academy 是一个自适应学习平台，基于 [The Math Academy Way](the
 apps/web/             TanStack Start on Workers：页面、better-auth，并把 libs/api 挂载在 /api 下
 apps/math-workers/    提供数学内容的 Worker：一个网关和它的分片（§6.1）
 apps/english-workers/ 提供英语内容的 Worker：一个网关和它的分片
+apps/chinese-workers/ 提供语文内容的 Worker：一个网关和它的分片
 apps/nsh/             Native Shell 的 TSX 应用（iOS、Android、macOS、Windows、Linux）
 apps/voice/           英语的语音服务，用 Python 基于 Pipecat 编写：轮流说话、打断、票据、排空
 libs/proto/           契约：proto/ga/<domain>/v1/*.proto、buf 配置、gen/（生成代码，提交入库）
@@ -99,10 +100,11 @@ apps/web ──► libs/api ──► libs/db ──► libs/engine ──► li
    │            └──► libs/proto                         │
    ├──► libs/design
    │                                             libs/subject-math ◄── content/math
-   └╌╌► apps/math-workers, apps/english-workers（仅开发时，用来一起运行）
+   └╌╌► apps/math-workers, apps/english-workers, apps/chinese-workers（仅开发时，用来一起运行）
 apps/math-workers ──► libs/subject-worker ──► libs/content
    └──► content/math, libs/subject-math
 apps/english-workers ──► libs/subject-worker ──► libs/content
+apps/chinese-workers ──► libs/subject-worker ──► libs/content
    └──► content/english, libs/subject-english
 apps/nsh ──► libs/proto, libs/design
 tools/simulate ──► libs/engine, content/math, content/english
@@ -202,7 +204,7 @@ Web Worker ──服务绑定──► 学科网关 ──服务绑定──► 
 - **分片**持有学科中一部分 topic 的定义，用 `topicSource` 实现 `SubjectSource`。这些定义在第一次调用时才构建，不在启动时构建。
 - **`Registry`**（`libs/api`）每个 isolate 读取一次课程列表，这足以列出课程；某门课程第一次被使用时才加载该学科的 manifest。它只保留最近使用的两个学科，因为数学建好索引后约占 45 MB 内存，而一个 isolate 只有 128 MB。课程的 scope 在第一次使用时才计算。
 
-数学有五个分片，各对应课程体系的一段（`content/math/src/shards/`）。`apps/math-workers/gen/` 存放生成的 manifest 和每个分片的 topic 列表，不提交到仓库。英语目前只有一个分片 `core`，`apps/english-workers` 下的结构相同。
+数学有五个分片，各对应课程体系的一段（`content/math/src/shards/`）。`apps/math-workers/gen/` 存放生成的 manifest 和每个分片的 topic 列表，不提交到仓库。英语和语文目前各只有一个分片 `core`，`apps/english-workers` 和 `apps/chinese-workers` 下的结构相同。
 
 | Worker | 未压缩体积 | Node 下的模块加载时间 |
 | :--- | :--- | :--- |

@@ -2,7 +2,7 @@
 
 > English | [简体中文](chinese-curriculum.zh-CN.md)
 
-This document specifies the design of the Chinese subject: its sources, its audiences, its knowledge graph, its courses for native, heritage and foreign-language learners, the size of each course in topics, knowledge points and problems, how it teaches and assesses characters, reading, writing, classical texts and speech, and what the core needs for it. It applies the method of [The Math Academy Way](the-math-academy-way.md), runs on the core described in [Content](content.md) and [Learning Engine](learning-engine.md), and reuses what [English Curriculum](english-curriculum.md) built: themed units, passages, recordings, judged writing and the voice service. Nothing of it is built yet; §15 gives the order of work.
+This document specifies the design of the Chinese subject: its sources, its audiences, its knowledge graph, its courses for native, heritage and foreign-language learners, the size of each course in topics, knowledge points and problems, how it teaches and assesses characters, reading, writing, classical texts and speech, and what the core needs for it. It applies the method of [The Math Academy Way](the-math-academy-way.md), runs on the core described in [Content](content.md) and [Learning Engine](learning-engine.md), and reuses what [English Curriculum](english-curriculum.md) built: themed units, passages, recordings, judged writing and the voice service. The first slice of §15, native grades 3 to 6, is built; §15 gives the order of work.
 
 ---
 
@@ -256,7 +256,7 @@ For comparison, `cn-math-taxonomy` has 682 knowledge points of primary and junio
 ## 15. Order of Work
 
 1. **Decisions first:** counsel on character lists and stroke data (§13); a reviewer who teaches Chinese in primary school and one who teaches it as a foreign language; the core change for tokenizing (§12).
-2. **First slice: native grades 3 to 6 without new input.** Recognition batches, words, idioms, punctuation, faulty sentences, recited texts and passages, all checked by choices and typed Chinese. It tests whether mastery and spaced recitation work in Chinese, and needs neither handwriting nor speech.
+2. **First slice: native grades 3 to 6 without new input.** Recognition batches, words, idioms, punctuation, faulty sentences, recited texts and passages, all checked by choices and typed Chinese. It tests whether mastery and spaced recitation work in Chinese, and needs neither handwriting nor speech. Built: four courses, `chinese-grade-3` to `chinese-grade-6`, with 183 topics and 422 knowledge points (117 recognition batches, 24 word batches, idioms, 10 punctuation and faulty-sentence topics, 32 recited poems) and 12 passages in 4 reading units, served by `apps/chinese-workers`; the reviews and the counsel of step 1 remain.
 3. **Foreign-language levels 1 to 3**, with recordings made ahead of time as for English, and the pinyin checker.
 4. **Handwriting:** the stroke pad in the web and the apps, the stroke checker, and the writing topics.
 5. **Grades 1 and 2** and the heritage bridges, which need handwriting, pinyin and recordings.

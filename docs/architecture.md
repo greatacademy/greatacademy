@@ -64,6 +64,7 @@ This document describes the system as built: technology choices, repository stru
 apps/web/             TanStack Start on Workers: pages, better-auth, and libs/api mounted under /api
 apps/math-workers/    The Workers serving mathematics: a gateway and its shards (§6.1)
 apps/english-workers/ The Workers serving English: a gateway and its shard
+apps/chinese-workers/ The Workers serving Chinese: a gateway and its shard
 apps/nsh/             Native Shell app in TSX (iOS, Android, macOS, Windows, Linux)
 apps/voice/           The voice service of English in Python on Pipecat: turn taking, barge-in, tickets, drain
 libs/proto/           Contracts: proto/ga/<domain>/v1/*.proto, buf config, gen/ (generated, committed)
@@ -99,10 +100,11 @@ apps/web ──► libs/api ──► libs/db ──► libs/engine ──► li
    │            └──► libs/proto                         │
    ├──► libs/design
    │                                             libs/subject-math ◄── content/math
-   └╌╌► apps/math-workers, apps/english-workers (development only, to run them alongside)
+   └╌╌► apps/math-workers, apps/english-workers, apps/chinese-workers (development only, to run them alongside)
 apps/math-workers ──► libs/subject-worker ──► libs/content
    └──► content/math, libs/subject-math
 apps/english-workers ──► libs/subject-worker ──► libs/content
+apps/chinese-workers ──► libs/subject-worker ──► libs/content
    └──► content/english, libs/subject-english
 apps/nsh ──► libs/proto, libs/design
 tools/simulate ──► libs/engine, content/math, content/english
@@ -202,7 +204,7 @@ web Worker ──service binding──► subject gateway ──service bindings
 - **A shard** holds the definitions of some of a subject's topics and implements `SubjectSource` with `topicSource`. Its definitions are built on the first call, not at startup.
 - **`Registry`** (`libs/api`) reads the listings once per isolate, which is enough to list courses, and loads a subject's manifest when one of its courses is first used. It keeps the two most recently used subjects, because mathematics takes about 45 MB of memory once indexed and an isolate has 128 MB. A course's scope is computed when first used.
 
-Mathematics has five shards, one for each stretch of the curriculum (`content/math/src/shards/`). `apps/math-workers/gen/` holds the generated manifest and the topics of each shard; it is not committed. English has one shard for now, `core`, and the same layout under `apps/english-workers`.
+Mathematics has five shards, one for each stretch of the curriculum (`content/math/src/shards/`). `apps/math-workers/gen/` holds the generated manifest and the topics of each shard; it is not committed. English and Chinese have one shard each for now, `core`, and the same layout under `apps/english-workers` and `apps/chinese-workers`.
 
 | Worker | Uncompressed size | Module load under Node |
 | :--- | :--- | :--- |

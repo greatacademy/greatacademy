@@ -1,6 +1,7 @@
 import { cpSync, existsSync, mkdirSync, readdirSync, rmSync, symlinkSync } from "node:fs";
 import { resolve } from "node:path";
 import { cloudflare } from "@cloudflare/vite-plugin";
+import { gatewayWorker as chineseGateway, shardWorkers as chineseShards } from "@ga/chinese-workers/workers";
 import { gatewayWorker as englishGateway, shardWorkers as englishShards } from "@ga/english-workers/workers";
 import { gatewayWorker as mathGateway, shardWorkers as mathShards } from "@ga/math-workers/workers";
 import tailwindcss from "@tailwindcss/vite";
@@ -86,7 +87,10 @@ export default defineConfig({
     cloudflare({
       viteEnvironment: { name: "ssr" },
       // In development the subject Workers run alongside the web Worker; in production they are deployed on their own.
-      auxiliaryWorkers: [mathGateway, ...mathShards, englishGateway, ...englishShards].map((config) => ({ config, devOnly: true })),
+      auxiliaryWorkers: [mathGateway, ...mathShards, englishGateway, ...englishShards, chineseGateway, ...chineseShards].map((config) => ({
+        config,
+        devOnly: true,
+      })),
     }),
     tailwindcss(),
     tanstackStart(),

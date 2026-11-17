@@ -23,6 +23,7 @@ export default defineConfig({
       // The gateway Worker of each subject, from apps/<subject>-workers; see docs/architecture.md.
       SUBJECT_MATH: bindings.worker({ worker: "ga-math" }),
       SUBJECT_ENGLISH: bindings.worker({ worker: "ga-english" }),
+      SUBJECT_CHINESE: bindings.worker({ worker: "ga-chinese" }),
       // Signs better-auth sessions; locally from .dev.vars.
       BETTER_AUTH_SECRET: bindings.secret(),
       // EMAIL_PROVIDER lists the email services to try in order: "cloudflare" (Cloudflare Email Service through
