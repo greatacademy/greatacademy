@@ -5,6 +5,7 @@ import { recognitionByGrade } from "./characters/index.ts";
 import { faultyTopics, type GradeTopic, punctuationTopics } from "./grammar/index.ts";
 import { idiomsByGrade } from "./idioms/index.ts";
 import { recitedPoems } from "./recitation/index.ts";
+import { wordBatches } from "./words/index.ts";
 
 const NUMERALS = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九"];
 
@@ -51,7 +52,13 @@ function gradeCourse(grade: number, description: CourseDef["description"]): Cour
     explanationLocale: "zh-CN",
     units: [
       { title: t("Characters", "识字"), modules: recognitionModules(grade) },
-      { title: t("Words", "词语"), modules: [{ title: t("Idioms", "成语"), topics: idiomTopicsOf(grade) }] },
+      {
+        title: t("Words", "词语"),
+        modules: [
+          { title: t("Words", "词语"), topics: wordBatches.filter((b) => b.grade === grade).map((b) => b.topic.id) },
+          { title: t("Idioms", "成语"), topics: idiomTopicsOf(grade) },
+        ],
+      },
       ...(grammarModules(grade).length > 0 ? [{ title: t("Grammar and Punctuation", "语法与标点"), modules: grammarModules(grade) }] : []),
       {
         title: t("Recitation", "积累与背诵"),

@@ -6,8 +6,9 @@ import { characterLexicon } from "./characters/index.ts";
 import { chineseCourses } from "./courses.ts";
 import { idiomLexicon } from "./idioms/index.ts";
 import { coreShardTopics } from "./shards/core.ts";
+import { wordLexicon } from "./words/index.ts";
 
-const lexicon = [...characterLexicon(), ...idiomLexicon()];
+const lexicon = [...characterLexicon(), ...wordLexicon(), ...idiomLexicon()];
 
 /** chinese is the definition of the Chinese subject. */
 export const chinese: SubjectDef = {
