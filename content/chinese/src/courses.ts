@@ -49,4 +49,18 @@ export const chineseCourses: readonly CourseDef[] = [
       "面向母语学习者的四年级语文：再认读约 450 个常用字，读完常用字表一的 2500 字，用中文讲解。",
     ),
   ),
+  gradeCourse(
+    5,
+    t(
+      "Chinese for native speakers in grade 5: reading 250 characters of the second table of common characters in words, in Chinese.",
+      "面向母语学习者的五年级语文：在词语中认读常用字表二中的约 250 个字，用中文讲解。",
+    ),
+  ),
+  gradeCourse(
+    6,
+    t(
+      "Chinese for native speakers in grade 6: reading 250 more characters of the second table, 3,000 characters in all by the end of primary school, in Chinese.",
+      "面向母语学习者的六年级语文：再认读常用字表二中的约 250 个字，小学阶段累计认识 3000 字，用中文讲解。",
+    ),
+  ),
 ];

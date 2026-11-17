@@ -1,5 +1,7 @@
 course chinese-grade-3
 course chinese-grade-4
+course chinese-grade-5
+course chinese-grade-6
 topic recognizing-characters-3-01 recognizing-characters-3-01-reading recognizing-characters-3-01-writing
 topic recognizing-characters-3-02 recognizing-characters-3-02-reading recognizing-characters-3-02-writing
 topic recognizing-characters-3-03 recognizing-characters-3-03-reading recognizing-characters-3-03-writing
@@ -75,3 +77,45 @@ topic recognizing-characters-4-34 recognizing-characters-4-34-reading recognizin
 topic recognizing-characters-4-35 recognizing-characters-4-35-reading recognizing-characters-4-35-writing
 topic recognizing-characters-4-36 recognizing-characters-4-36-reading recognizing-characters-4-36-writing
 topic recognizing-characters-4-37 recognizing-characters-4-37-reading recognizing-characters-4-37-writing
+topic recognizing-characters-5-01 recognizing-characters-5-01-reading recognizing-characters-5-01-writing
+topic recognizing-characters-5-02 recognizing-characters-5-02-reading recognizing-characters-5-02-writing
+topic recognizing-characters-5-03 recognizing-characters-5-03-reading recognizing-characters-5-03-writing
+topic recognizing-characters-5-04 recognizing-characters-5-04-reading recognizing-characters-5-04-writing
+topic recognizing-characters-5-05 recognizing-characters-5-05-reading recognizing-characters-5-05-writing
+topic recognizing-characters-5-06 recognizing-characters-5-06-reading recognizing-characters-5-06-writing
+topic recognizing-characters-5-07 recognizing-characters-5-07-reading recognizing-characters-5-07-writing
+topic recognizing-characters-5-08 recognizing-characters-5-08-reading recognizing-characters-5-08-writing
+topic recognizing-characters-5-09 recognizing-characters-5-09-reading recognizing-characters-5-09-writing
+topic recognizing-characters-5-10 recognizing-characters-5-10-reading recognizing-characters-5-10-writing
+topic recognizing-characters-5-11 recognizing-characters-5-11-reading recognizing-characters-5-11-writing
+topic recognizing-characters-5-12 recognizing-characters-5-12-reading recognizing-characters-5-12-writing
+topic recognizing-characters-5-13 recognizing-characters-5-13-reading recognizing-characters-5-13-writing
+topic recognizing-characters-5-14 recognizing-characters-5-14-reading recognizing-characters-5-14-writing
+topic recognizing-characters-5-15 recognizing-characters-5-15-reading recognizing-characters-5-15-writing
+topic recognizing-characters-5-16 recognizing-characters-5-16-reading recognizing-characters-5-16-writing
+topic recognizing-characters-5-17 recognizing-characters-5-17-reading recognizing-characters-5-17-writing
+topic recognizing-characters-5-18 recognizing-characters-5-18-reading recognizing-characters-5-18-writing
+topic recognizing-characters-5-19 recognizing-characters-5-19-reading recognizing-characters-5-19-writing
+topic recognizing-characters-5-20 recognizing-characters-5-20-reading recognizing-characters-5-20-writing
+topic recognizing-characters-5-21 recognizing-characters-5-21-reading recognizing-characters-5-21-writing
+topic recognizing-characters-6-01 recognizing-characters-6-01-reading recognizing-characters-6-01-writing
+topic recognizing-characters-6-02 recognizing-characters-6-02-reading recognizing-characters-6-02-writing
+topic recognizing-characters-6-03 recognizing-characters-6-03-reading recognizing-characters-6-03-writing
+topic recognizing-characters-6-04 recognizing-characters-6-04-reading recognizing-characters-6-04-writing
+topic recognizing-characters-6-05 recognizing-characters-6-05-reading recognizing-characters-6-05-writing
+topic recognizing-characters-6-06 recognizing-characters-6-06-reading recognizing-characters-6-06-writing
+topic recognizing-characters-6-07 recognizing-characters-6-07-reading recognizing-characters-6-07-writing
+topic recognizing-characters-6-08 recognizing-characters-6-08-reading recognizing-characters-6-08-writing
+topic recognizing-characters-6-09 recognizing-characters-6-09-reading recognizing-characters-6-09-writing
+topic recognizing-characters-6-10 recognizing-characters-6-10-reading recognizing-characters-6-10-writing
+topic recognizing-characters-6-11 recognizing-characters-6-11-reading recognizing-characters-6-11-writing
+topic recognizing-characters-6-12 recognizing-characters-6-12-reading recognizing-characters-6-12-writing
+topic recognizing-characters-6-13 recognizing-characters-6-13-reading recognizing-characters-6-13-writing
+topic recognizing-characters-6-14 recognizing-characters-6-14-reading recognizing-characters-6-14-writing
+topic recognizing-characters-6-15 recognizing-characters-6-15-reading recognizing-characters-6-15-writing
+topic recognizing-characters-6-16 recognizing-characters-6-16-reading recognizing-characters-6-16-writing
+topic recognizing-characters-6-17 recognizing-characters-6-17-reading recognizing-characters-6-17-writing
+topic recognizing-characters-6-18 recognizing-characters-6-18-reading recognizing-characters-6-18-writing
+topic recognizing-characters-6-19 recognizing-characters-6-19-reading recognizing-characters-6-19-writing
+topic recognizing-characters-6-20 recognizing-characters-6-20-reading recognizing-characters-6-20-writing
+topic recognizing-characters-6-21 recognizing-characters-6-21-reading recognizing-characters-6-21-writing

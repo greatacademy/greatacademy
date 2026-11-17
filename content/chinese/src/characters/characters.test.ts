@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { gradesFiveAndSix, gradesThreeAndFour, tableOne, tableTwo } from "./common.ts";
-import { characterLexicon, gradesThreeAndFourEntries, recognitionByGrade } from "./index.ts";
+import { characterLexicon, gradesFiveAndSixEntries, gradesThreeAndFourEntries, recognitionByGrade } from "./index.ts";
 import { otherTones, parseCharacters } from "./recognition.ts";
 
 describe("character lists", () => {
@@ -24,10 +24,11 @@ describe("character lists", () => {
 });
 
 describe("recognition data", () => {
-  it("covers grades 3 and 4 in order, with common confusable characters", () => {
+  it("covers grades 3 to 6 in order, with common confusable characters", () => {
     expect(gradesThreeAndFourEntries.map((e) => e.char)).toEqual(gradesThreeAndFour);
+    expect(gradesFiveAndSixEntries.map((e) => e.char)).toEqual(gradesFiveAndSix);
     const common = new Set([...tableOne, ...tableTwo]);
-    for (const e of gradesThreeAndFourEntries) {
+    for (const e of [...gradesThreeAndFourEntries, ...gradesFiveAndSixEntries]) {
       expect(
         e.confusables.filter((c) => !common.has(c)),
         e.char,
@@ -45,18 +46,22 @@ describe("recognition data", () => {
     expect(() => parseCharacters("哀 āi 哀伤 悲哀 求情 衰埃")).toThrow(/求情/);
   });
 
-  it("deals the batches to grades 3 and 4 in turn", () => {
+  it("deals the batches to the two grades of a stage in turn", () => {
     expect(recognitionByGrade.map((g) => [g.grade, g.batches.length])).toEqual([
       [3, 38],
       [4, 37],
+      [5, 21],
+      [6, 21],
     ]);
+    expect(recognitionByGrade[3]?.batches.at(-1)?.entries).toHaveLength(8);
     expect(recognitionByGrade[0]?.batches[0]?.entries.map((e) => e.char).join("")).toBe("哀埃癌艾碍氨俺昂凹熬傲澳");
   });
 
   it("makes each character a word of the lexicon once", () => {
     const lexicon = characterLexicon();
-    expect(lexicon).toHaveLength(2500);
-    expect(new Set(lexicon.map((e) => e.word)).size).toBe(2500);
+    expect(lexicon).toHaveLength(3500);
+    expect(new Set(lexicon.map((e) => e.word)).size).toBe(3500);
+    expect(lexicon.filter((e) => e.topic !== undefined)).toHaveLength(1400);
   });
 });
 
