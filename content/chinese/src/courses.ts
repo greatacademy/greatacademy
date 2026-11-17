@@ -2,7 +2,7 @@ import type { CourseDef, ModuleDef } from "@ga/content";
 import { t } from "@ga/content";
 
 import { recognitionByGrade } from "./characters/index.ts";
-import { faultyTopics, type GradeTopic, punctuationTopics } from "./grammar/index.ts";
+import { connectiveTopics, faultyTopics, type GradeTopic, punctuationTopics, rhetoricTopics, sentenceTopics } from "./grammar/index.ts";
 import { idiomsByGrade } from "./idioms/index.ts";
 import { chineseReading } from "./reading/index.ts";
 import { recitedPoems } from "./recitation/index.ts";
@@ -33,12 +33,18 @@ const idiomTopicsOf = (grade: number): readonly string[] =>
 const ofGrade = (topics: readonly GradeTopic[], grade: number): readonly string[] =>
   topics.filter((g) => g.grade === grade).map((g) => g.topic.id);
 
-/** grammarModules are a grade's modules of punctuation and faulty sentences, those it has. */
+/** grammarModules are a grade's modules of punctuation, connectives, sentence forms, rhetoric and faulty sentences, those it has. */
 function grammarModules(grade: number): readonly ModuleDef[] {
   const modules: ModuleDef[] = [];
   const punctuation = ofGrade(punctuationTopics, grade);
   const faulty = ofGrade(faultyTopics, grade);
+  const connectives = ofGrade(connectiveTopics, grade);
+  const sentences = ofGrade(sentenceTopics, grade);
+  const rhetoric = ofGrade(rhetoricTopics, grade);
   if (punctuation.length > 0) modules.push({ title: t("Punctuation", "标点符号"), topics: punctuation });
+  if (connectives.length > 0) modules.push({ title: t("Connectives", "关联词"), topics: connectives });
+  if (sentences.length > 0) modules.push({ title: t("Changing Sentence Forms", "句式变换"), topics: sentences });
+  if (rhetoric.length > 0) modules.push({ title: t("Rhetorical Devices", "修辞手法"), topics: rhetoric });
   if (faulty.length > 0) modules.push({ title: t("Faulty Sentences", "修改病句"), topics: faulty });
   return modules;
 }

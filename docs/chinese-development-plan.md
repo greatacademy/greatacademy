@@ -66,12 +66,12 @@ Native grades 3 to 6 without new input, testing whether mastery learning and spa
 | Part | Built | Still to build |
 | :--- | :--- | :--- |
 | Recognition | 117 batches of 12, grades 3 to 6, from the tables of appendix 5 | — |
-| Words | 24 batches of 10, two a grade | Two more a grade, so that each grade has four themes |
+| Words | 16 batches of 10, four themes a grade | — |
 | Idioms | Batches of 8 from grade 3 | — |
-| Grammar | Punctuation and faulty sentences, 10 topics | Connectives (关联词), changing sentence forms (句式变换: 把 and 被, statements and rhetorical questions, direct and reported speech), rhetorical devices (修辞), and the grade 6 punctuation and faulty-sentence types |
+| Grammar | 19 topics: punctuation (6), faulty sentences (6, two of them grade 6's contradictions and mismatched connectives), connectives (2), changing sentence forms (3: 把 and 被, rhetorical questions, reported speech), rhetorical devices (2) | Punctuation of grade 6 (the dash) |
 | Recitation | 32 poems, 8 a grade | — |
 | Classical language | — | From grade 5: content words in batches, the first function words, and short public-domain passages read with notes |
-| Reading | 4 units of 3 passages | A second and third unit a grade, so that each grade has at least 9 passages |
+| Reading | 12 units of 3 passages, 9 passages a grade | — |
 
 **Done when** every topic compiles, every generator passes `sampleGenerators`, the audit reports no thin knowledge point, each grade course's foundations hold no later grade's topics, and every passage keeps to the characters of its grade.
 

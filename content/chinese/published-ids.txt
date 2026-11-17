@@ -2,8 +2,12 @@ course chinese-grade-3
 course chinese-grade-4
 course chinese-grade-5
 course chinese-grade-6
+topic connectives-1 connectives-1-choosing connectives-1-relations
+topic connectives-2 connectives-2-checking connectives-2-choosing
+topic faulty-contradictions faulty-contradictions-finding faulty-contradictions-fixing
 topic faulty-mismatches faulty-mismatches-finding faulty-mismatches-fixing
 topic faulty-missing-parts faulty-missing-parts-finding faulty-missing-parts-fixing
+topic faulty-misused-connectives faulty-misused-connectives-finding faulty-misused-connectives-fixing
 topic faulty-repetition faulty-repetition-finding faulty-repetition-fixing
 topic faulty-word-order faulty-word-order-finding faulty-word-order-fixing
 topic idioms-3-01 idioms-3-01-meaning idioms-3-01-use idioms-3-01-writing
@@ -177,23 +181,60 @@ topic recognizing-characters-6-18 recognizing-characters-6-18-reading recognizin
 topic recognizing-characters-6-19 recognizing-characters-6-19-reading recognizing-characters-6-19-writing
 topic recognizing-characters-6-20 recognizing-characters-6-20-reading recognizing-characters-6-20-writing
 topic recognizing-characters-6-21 recognizing-characters-6-21-reading recognizing-characters-6-21-writing
+topic rhetoric-1 rhetoric-1-finding rhetoric-1-naming
+topic rhetoric-2 rhetoric-2-finding rhetoric-2-naming
+topic sentences-ba-and-bei sentences-ba-and-bei-to-ba sentences-ba-and-bei-to-bei
+topic sentences-reported-speech sentences-reported-speech-to-direct sentences-reported-speech-to-reported
+topic sentences-rhetorical-questions sentences-rhetorical-questions-to-question sentences-rhetorical-questions-to-statement
 topic words-3-01 words-3-01-meaning words-3-01-relations words-3-01-use
 topic words-3-02 words-3-02-meaning words-3-02-relations words-3-02-use
+topic words-3-03 words-3-03-meaning words-3-03-relations words-3-03-use
+topic words-3-04 words-3-04-meaning words-3-04-relations words-3-04-use
 topic words-4-01 words-4-01-meaning words-4-01-relations words-4-01-use
 topic words-4-02 words-4-02-meaning words-4-02-relations words-4-02-use
+topic words-4-03 words-4-03-meaning words-4-03-relations words-4-03-use
+topic words-4-04 words-4-04-meaning words-4-04-relations words-4-04-use
 topic words-5-01 words-5-01-meaning words-5-01-relations words-5-01-use
 topic words-5-02 words-5-02-meaning words-5-02-relations words-5-02-use
+topic words-5-03 words-5-03-meaning words-5-03-relations words-5-03-use
+topic words-5-04 words-5-04-meaning words-5-04-relations words-5-04-use
 topic words-6-01 words-6-01-meaning words-6-01-relations words-6-01-use
 topic words-6-02 words-6-02-meaning words-6-02-relations words-6-02-use
+topic words-6-03 words-6-03-meaning words-6-03-relations words-6-03-use
+topic words-6-04 words-6-04-meaning words-6-04-relations words-6-04-use
+passage chinese-a-letter-from-the-seaside
+passage chinese-a-letter-to-my-cousin
+passage chinese-a-silkworm-diary
 passage chinese-before-the-rain
 passage chinese-birds-that-migrate
 passage chinese-dew-and-fog
 passage chinese-fathers-vegetable-garden
+passage chinese-grandmothers-sewing-machine
+passage chinese-grandpas-reply
+passage chinese-half-a-loaf
 passage chinese-how-seeds-travel
+passage chinese-huang-daopo
+passage chinese-li-shizhen
 passage chinese-movable-type
+passage chinese-my-first-snow
+passage chinese-the-beans-sprout
+passage chinese-the-colours-of-a-map
 passage chinese-the-dance-of-the-bees
+passage chinese-the-lantern-and-the-stars
+passage chinese-the-monkey-who-sold-umbrellas
 passage chinese-the-orchard-in-autumn
+passage chinese-the-quarrel-in-the-clock
+passage chinese-the-shapes-of-the-moon
 passage chinese-the-solar-terms
+passage chinese-the-squirrel-who-planted-trees
 passage chinese-the-story-of-kites
+passage chinese-the-travels-of-a-water-drop
 passage chinese-uses-of-bamboo
+passage chinese-watching-a-little-turtle
+passage chinese-where-city-rain-goes
 passage chinese-why-camels-go-without-water
+passage chinese-why-ice-floats
+passage chinese-why-the-sky-is-blue
+passage chinese-zhang-heng-and-his-seismoscope
+passage chinese-zheng-hes-voyages
+passage chinese-zu-chongzhi-and-pi
