@@ -3,6 +3,7 @@ import type { CompiledSubject, Issue } from "./compile.ts";
 import { type Figure, figureIssue, plottedPoints } from "./figure.ts";
 import { createRng } from "./rng.ts";
 import { speechExpected } from "./speech.ts";
+import { MAX_STROKES, parseStrokes } from "./strokes.ts";
 import type { Locale, Text } from "./text.ts";
 import { isText, locales } from "./text.ts";
 import type { PlotGrid, Problem, TopicDef } from "./types.ts";
@@ -235,6 +236,12 @@ function checkSample(
     if (!a.figure) return "a plot needs a figure to mark";
     const issue = plotIssue(answer.input.grid, answer.input.points, a.canonical);
     if (issue) return issue;
+  }
+  if (answer.input.kind === "strokes") {
+    const { strokes, trace } = answer.input;
+    if (!Number.isInteger(strokes) || strokes < 1 || strokes > MAX_STROKES) return `a character to write needs 1 to ${MAX_STROKES} strokes`;
+    if (trace !== undefined && [...trace].length !== 1) return "a character to trace must be one character";
+    if (parseStrokes(a.canonical)?.length !== strokes) return `the canonical response must draw ${strokes} strokes`;
   }
   if (answer.input.kind === "writing" || answer.judged) {
     const issue = judgedIssue(topic, a);

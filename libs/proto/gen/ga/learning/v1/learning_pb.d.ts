@@ -1606,6 +1606,12 @@ export declare type Input = Message<"ga.learning.v1.Input"> & {
      */
     value: SpeechInput;
     case: "speech";
+  } | {
+    /**
+     * @generated from field: ga.learning.v1.StrokesInput strokes = 8;
+     */
+    value: StrokesInput;
+    case: "strokes";
   } | { case: undefined; value?: undefined };
 };
 
@@ -1614,6 +1620,35 @@ export declare type Input = Message<"ga.learning.v1.Input"> & {
  * Use `create(InputSchema)` to create a new message.
  */
 export declare const InputSchema: GenMessage<Input>;
+
+/**
+ * StrokesInput: a character written by hand on a square pad of 1024 units a side, y pointing down. The response is
+ * the strokes drawn, each its points as "x,y" joined by spaces, the strokes joined by ";", sent once as many strokes
+ * are drawn as the character has; a client keeps at most 48 points of a stroke.
+ *
+ * @generated from message ga.learning.v1.StrokesInput
+ */
+export declare type StrokesInput = Message<"ga.learning.v1.StrokesInput"> & {
+  /**
+   * strokes is how many strokes the character has.
+   *
+   * @generated from field: int32 strokes = 1;
+   */
+  strokes: number;
+
+  /**
+   * trace is a character shown faintly under the pad to write over; empty when the learner writes from memory.
+   *
+   * @generated from field: string trace = 2;
+   */
+  trace: string;
+};
+
+/**
+ * Describes the message ga.learning.v1.StrokesInput.
+ * Use `create(StrokesInputSchema)` to create a new message.
+ */
+export declare const StrokesInputSchema: GenMessage<StrokesInput>;
 
 /**
  * SpeechInput: a recording of the learner speaking, sent as audio with

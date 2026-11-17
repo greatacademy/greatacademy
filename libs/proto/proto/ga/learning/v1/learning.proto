@@ -492,7 +492,18 @@ message Input {
     OrderInput order = 5;
     WritingInput writing = 6;
     SpeechInput speech = 7;
+    StrokesInput strokes = 8;
   }
+}
+
+// StrokesInput: a character written by hand on a square pad of 1024 units a side, y pointing down. The response is
+// the strokes drawn, each its points as "x,y" joined by spaces, the strokes joined by ";", sent once as many strokes
+// are drawn as the character has; a client keeps at most 48 points of a stroke.
+message StrokesInput {
+  // strokes is how many strokes the character has.
+  int32 strokes = 1;
+  // trace is a character shown faintly under the pad to write over; empty when the learner writes from memory.
+  string trace = 2;
 }
 
 // SpeechInput: a recording of the learner speaking, sent as audio with

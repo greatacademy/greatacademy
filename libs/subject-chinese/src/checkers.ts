@@ -1,6 +1,7 @@
 import { type Checker, type Json, t } from "@ga/content";
 
 import { pinyinKey, toneless } from "./pinyin.ts";
+import { strokesChecker } from "./strokes.ts";
 
 const HALF_TO_FULL: Readonly<Record<string, string>> = {
   ",": "，",
@@ -79,4 +80,4 @@ export const pinyinChecker: Checker = {
 };
 
 /** chineseCheckers are the checkers of the Chinese subject. */
-export const chineseCheckers: readonly Checker[] = [hanziChecker, pinyinChecker];
+export const chineseCheckers: readonly Checker[] = [hanziChecker, pinyinChecker, strokesChecker];

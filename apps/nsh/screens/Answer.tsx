@@ -9,6 +9,7 @@ import { PlotField } from "./PlotField.tsx";
 import { FigureView, Rich, Tex } from "./Rich.tsx";
 import { Sounds } from "./Sounds.tsx";
 import { heardText } from "./Speech.tsx";
+import { StrokesField } from "./StrokesField.tsx";
 
 /** listenTo labels the recordings a problem plays to answer, numbered when there are several, without what they say. */
 const listenTo = (paths: readonly string[]) =>
@@ -51,6 +52,8 @@ export function AnswerText(props: { problem: ProblemView; answer: string }) {
       return <Tex tex={[input.value.prefix, props.answer, input.value.suffix].filter(Boolean).join(" ")} />;
     case "plot":
       return <Text style={{ color: colors().ink }}>{props.answer}</Text>;
+    case "strokes":
+      return <Muted>{`${m().strokesDrawn}: ${props.answer.split(";").length}`}</Muted>;
     case "speech":
       return <Text style={{ color: colors().ink }}>{`${m().weHeard}: “${heardText(props.answer)}”`}</Text>;
     default:
@@ -208,6 +211,16 @@ export function AnswerInput(props: {
           answer={props.feedback && !props.feedback.correct ? props.feedback.answer : undefined}
         />
       ) : null;
+    case "strokes":
+      return (
+        <StrokesField
+          input={input.value}
+          value={props.value}
+          onChange={props.onChange}
+          disabled={props.disabled}
+          answer={props.feedback && !props.feedback.correct ? props.feedback.answer : undefined}
+        />
+      );
     case "math":
       return (
         <View style={{ gap: 6 }}>

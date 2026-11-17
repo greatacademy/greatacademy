@@ -69,6 +69,8 @@ function input(spec: InputSpec): MessageInitShape<typeof InputSchema> {
       return { kind: { case: "plot", value: { ...spec.grid, points: spec.points } } };
     case "writing":
       return { kind: { case: "writing", value: { minWords: spec.minWords, maxChars: spec.maxChars } } };
+    case "strokes":
+      return { kind: { case: "strokes", value: { strokes: spec.strokes, trace: spec.trace ?? "" } } };
     case "speech":
       return {
         kind: { case: "speech", value: { language: spec.language, mode: spec.mode, text: spec.text ?? "", maxSeconds: spec.maxSeconds } },

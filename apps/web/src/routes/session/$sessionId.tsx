@@ -15,6 +15,7 @@ import { PlotField } from "../../components/PlotField.tsx";
 import { AnswerText, ProblemPrompt } from "../../components/Problem.tsx";
 import { Sounds } from "../../components/Sounds.tsx";
 import { SpeechFlow } from "../../components/SpeechFlow.tsx";
+import { StrokesField } from "../../components/StrokesField.tsx";
 import { Bar, Button, buttonClass, Card, ErrorNote, Spinner } from "../../components/ui.tsx";
 import { JudgedFeedback, WritingFlow } from "../../components/WritingFlow.tsx";
 import { useRequireSession } from "../../lib/hooks.ts";
@@ -423,6 +424,17 @@ function AnswerInput({
           value={value}
           onChange={onChange}
           onSubmit={onSubmit}
+          disabled={disabled}
+          answer={feedback && !feedback.correct ? feedback.answer : undefined}
+        />
+      );
+    case "strokes":
+      return (
+        <StrokesField
+          key={tx(problem?.prompt)}
+          input={input.value}
+          value={value}
+          onChange={onChange}
           disabled={disabled}
           answer={feedback && !feedback.correct ? feedback.answer : undefined}
         />

@@ -117,6 +117,7 @@ A generator is a function from a seeded `Rng` to a `Problem`:
 | `order` | The `items`, each with buttons to move it | The indexes of the items in the chosen order, joined by commas |
 | `writing` | A long text field that counts words against `minWords`, limited to `maxChars` | The text |
 | `speech` | A recorder of at most `maxSeconds`, with the `text` to repeat or read aloud above it (none for `say`), and the `mode`: `repeat`, `read` or `say` | A 16 kHz mono 16-bit WAV, sent in the request; the server has a speech service of the `language` hear it and checks what was heard |
+| `strokes` | A square pad of 1,024 units a side with a 田 grid, the number of `strokes` the character has, and optionally a character to `trace` over | The strokes drawn, each its points as `x,y` joined by spaces, the strokes joined by `;`, once all are drawn; at most 48 points a stroke. The compiler checks that the canonical response draws as many strokes |
 
 `checker` names a registered checker and `expected` is that checker's data. The core registers five checkers (`choice`, `text`, `order`, whose `expected` lists the right orders, `writing` and `speech`); subjects register their own (for mathematics: numbers, fractions, expressions, equations, and so on).
 
@@ -126,6 +127,8 @@ A generator is a function from a seeded `Rng` to a `Problem`:
 | `text` | An array of accepted strings | Any of them, ignoring case, Unicode width and spacing |
 | `writing` | `minWords` and `maxChars` | A text of at least `minWords` words and at most `maxChars` characters; it only checks the length before a model judges the text |
 | `speech` | `mode`, the `reference` to repeat or read, the sentences that `accept` a `say` answer, and optionally `minAccuracy` | For `repeat` and `read`, the reference's words heard in order, all of one of up to four words and 80% of a longer one, and, when pronunciation was assessed, an accuracy of at least 60 (*starting*), which an understood accent reaches; for `say`, one of the accepted sentences, word for word. Words are compared as heard: lower case, without punctuation, contractions in full, “OK” as “okay” and numbers below 100 in words, and each Chinese character a word of its own. A word said too poorly is named in the feedback, a Chinese syllable with the parts said wrong, its initial, final or tone, when the assessment says them |
+
+Chinese registers `strokes`: `expected` holds the `medians` of the character's strokes in the standard order, and the checker moves and scales the drawing as a whole onto them, then compares each stroke with the stroke at its place, naming the first that is written the wrong way, out of order, or in the wrong shape or place.
 
 A checker returns a `Verdict`: `correct`, and optional `feedback` for a rejection that deserves an explanation (for example "simplify the fraction"). The `CheckerRegistry`:
 

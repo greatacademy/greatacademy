@@ -24,6 +24,12 @@ export type InputSpec =
   /** A long text field for writing judged by a model; the response is the learner's text, of at least minWords words and at most maxChars characters. */
   | { readonly kind: "writing"; readonly minWords: number; readonly maxChars: number }
   /**
+   * A character written by hand on a square pad, stroke by stroke; the response is the strokes drawn (parseStrokes),
+   * sent once the learner has drawn as many as the character has. trace is a character shown faintly under the pad to
+   * write over; without it the learner writes from memory.
+   */
+  | { readonly kind: "strokes"; readonly strokes: number; readonly trace?: string }
+  /**
    * A recording of the learner speaking, at most maxSeconds long; the server sends it to a speech service of the
    * language and checks what was heard (Heard). text is what to repeat or read aloud, shown above the recorder; a
    * "say" problem shows none.

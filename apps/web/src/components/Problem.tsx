@@ -5,6 +5,7 @@ import { FigureView } from "./Figure.tsx";
 import { Markdown, Tex } from "./Markdown.tsx";
 import { Sounds } from "./Sounds.tsx";
 import { heardText } from "./SpeechFlow.tsx";
+import { StrokesDrawing } from "./StrokesField.tsx";
 
 /** listenTo labels the recordings a problem plays to answer, numbered when there are several, without what they say. */
 export const listenTo = (paths: readonly string[], label: string) =>
@@ -62,6 +63,7 @@ export function AnswerText({ problem, answer }: { problem?: ProblemView; answer:
   }
   if (input?.case === "math") return <Tex tex={[input.value.prefix, answer, input.value.suffix].filter(Boolean).join(" ")} />;
   if (input?.case === "plot") return <Tex tex={answer.replaceAll(";", ";\\;")} />;
+  if (input?.case === "strokes") return <StrokesDrawing response={answer} />;
   if (input?.case === "speech") return <span>“{heardText(answer)}”</span>;
   return <span>{answer}</span>;
 }

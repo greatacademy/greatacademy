@@ -8,5 +8,6 @@ export * from "./published.ts";
 export * from "./rng.ts";
 export * from "./source.ts";
 export * from "./speech.ts";
+export * from "./strokes.ts";
 export * from "./text.ts";
 export * from "./types.ts";

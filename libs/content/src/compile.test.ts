@@ -262,6 +262,25 @@ describe("sampleGenerators", () => {
     expect(errors(plot("(0.5, 1)", 1, drawn))[0]).toMatch(/not a point of the grid/);
   });
 
+  it("checks that a character to write draws its strokes", () => {
+    const write = (canonical: string, strokes: number, trace?: string): Problem => ({
+      ...problem(1),
+      answer: { checker: "text", expected: [canonical], input: { kind: "strokes", strokes, ...(trace !== undefined && { trace }) } },
+      canonical,
+      wrong: [],
+    });
+    const errors = (p: Problem) =>
+      sampleGenerators(
+        withGenerator(() => p),
+        { samples: 1 },
+      ).map((i) => i.message);
+    expect(errors(write("100,500 900,500", 1, "一"))).toEqual([]);
+    expect(errors(write("100,500 900,500", 2))[0]).toMatch(/must draw 2 strokes/);
+    expect(errors(write("100,500 900,500", 0))[0]).toMatch(/1 to 40 strokes/);
+    expect(errors(write("100,500 900,500", 1, "一二"))[0]).toMatch(/one character/);
+    expect(errors(write("100,500 2000,500", 1))[0]).toMatch(/must draw 1 strokes/);
+  });
+
   it("warns about generators without variety", () => {
     const issues = sampleGenerators(
       withGenerator(() => problem(1)),

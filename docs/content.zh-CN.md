@@ -117,6 +117,7 @@ const sameSign: KnowledgePointDef = {
 | `order` | `items`，每项带移动按钮 | 所选顺序中各项的下标，用逗号连接 |
 | `writing` | 长文本框，按 `minWords` 计数单词，长度上限为 `maxChars` | 文本 |
 | `speech` | 至多 `maxSeconds` 秒的录音器，上方显示要跟读或朗读的 `text`（`say` 没有），以及 `mode`：`repeat`、`read` 或 `say` | 一段 16 kHz 单声道 16 位 WAV，随请求发送；服务端让 `language` 的语音服务听取，再检查听到的内容 |
+| `strokes` | 边长 1,024 单位、带田字格的方形写字板，这个字的笔画数 `strokes`，以及可选的描红字 `trace` | 写下的笔画，每一笔的点写成 `x,y`、用空格连接，笔画之间用 `;` 连接，全部写完才提交；每笔至多 48 个点。编译器检查标准答案的笔画数相符 |
 
 `checker` 指定一个已注册的判定器，`expected` 是该判定器的数据。核心注册五个判定器（`choice`、`text`、`order`，其 `expected` 列出正确的顺序，`writing` 以及 `speech`），学科注册自己的判定器（数学有数、分数、表达式、方程等）。
 
@@ -126,6 +127,8 @@ const sameSign: KnowledgePointDef = {
 | `text` | 可接受字符串的数组 | 其中任意一个，忽略大小写、Unicode 全半角和空白 |
 | `writing` | `minWords` 和 `maxChars` | 至少 `minWords` 个单词、至多 `maxChars` 个字符的文本；它只在模型判定之前检查长度 |
 | `speech` | `mode`、要跟读或朗读的 `reference`、`say` 答案可接受的句子 `accept`，以及可选的 `minAccuracy` | 对 `repeat` 和 `read`，按顺序听到参考文本的词：不超过四个词的全部听到，更长的听到 80%；评估了发音时，准确度至少 60（*初始值*），听得懂的口音都能达到。对 `say`，逐字是可接受的句子之一。词按听到的样子比较：小写、去掉标点、缩写展开、“OK” 写作 “okay”、100 以下的数写成英文单词，每个汉字算一个词。发音不够好的词在反馈中点出；评测给出时，汉语音节还注明读错的部分：声母、韵母或声调 |
+
+中文注册 `strokes`：`expected` 存放这个字按标准笔顺的各笔中线 `medians`，判定器先把整幅字移动、缩放到标准字形上，再把每一笔和同位置的标准笔画比较，指出第一处写反方向、笔顺不对或者形状位置不对的笔画。
 
 判定器返回 `Verdict`：`correct`，以及在拒绝需要解释时可选的 `feedback`（例如"请化简分数"）。`CheckerRegistry`：
 

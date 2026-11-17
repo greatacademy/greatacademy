@@ -157,6 +157,8 @@ A trial on synthetic recordings with deliberate errors found iFlytek's pupil mod
 | C3.4 | The pad in the web and the apps | `apps/web`, `apps/nsh` |
 | C3.5 | Writing topics: batches of 10 characters the learner recognizes, shared by all audiences | `content/chinese` |
 
+**Built so far.** C3.2 to C3.4: the input kind `strokes` in `libs/content` and `StrokesInput` in the protocol; the checker `strokes` in `libs/subject-chinese`, which moves and scales the drawing as a whole onto the standard medians, so that a small or off-centre character is still judged, then names the first stroke written the wrong way, out of order, or in the wrong shape or place, tested on medians written for the tests; and the pads, a 田 grid with an optional character to trace, with undo, in the web and the apps. C3.1 waits for a choice of stroke data with a license fit for a paid product, and C3.5 for that data; the tolerances are set by tests and wait for the teacher's sample of gate CG3.
+
 **Gate CG3.** Children's strokes on a phone are judged fairly: on a sample, the checker agrees with a teacher on whether each character is written correctly.
 
 ## 6. Stage 4: Grades 1 and 2, Heritage Bridges
