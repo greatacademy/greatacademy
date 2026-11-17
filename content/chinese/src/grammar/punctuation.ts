@@ -37,6 +37,14 @@ export const marks: Readonly<Record<string, Mark>> = Object.fromEntries(
       ],
       ["……", t("ellipsis", "省略号"), t("marks what is left out, or speech that breaks off", "标出省略的部分，或表示说话断断续续")],
       [
+        "——",
+        t("dash", "破折号"),
+        t(
+          "marks words that explain, a sound drawn out, or a sudden turn of what is said",
+          "标示解释说明的话、声音的延长，或话题的突然转换",
+        ),
+      ],
+      [
         "；",
         t("semicolon", "分号"),
         t(
@@ -50,6 +58,9 @@ export const marks: Readonly<Record<string, Mark>> = Object.fromEntries(
 
 /** GAP stands for the mark taken out. */
 const GAP = "＿＿";
+
+/** LONG are the marks written with two characters that are not a pair. */
+const LONG: ReadonlySet<string> = new Set(["……", "——", GAP]);
 
 /** PunctuationSpec describes a punctuation topic: the marks taken out, the marks offered with them, and its sentences. */
 export interface PunctuationSpec {
@@ -75,7 +86,7 @@ interface Gap {
 function gaps(sentence: string, taught: readonly string[]): readonly Gap[] {
   const found: Gap[] = [];
   for (const form of taught) {
-    const pair = form.length === 2 && form !== "……";
+    const pair = form.length === 2 && !LONG.has(form);
     const open = pair ? form[0]! : form;
     let at = sentence.indexOf(open);
     while (at >= 0) {
@@ -90,7 +101,7 @@ function gaps(sentence: string, taught: readonly string[]): readonly Gap[] {
   return found.sort((a, b) => a.at - b.at);
 }
 
-const isPair = (form: string): boolean => form.length === 2 && form !== "……" && form !== GAP;
+const isPair = (form: string): boolean => form.length === 2 && !LONG.has(form);
 
 /** put writes `by` where a sentence has the mark of a gap: the gap itself, or another mark. A pair put for a single mark is not written (undefined); a single mark put for a pair leaves the pair out. */
 function put(sentence: string, gap: Gap, by: string): string | undefined {

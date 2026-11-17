@@ -68,7 +68,7 @@ Native grades 3 to 6 without new input, testing whether mastery learning and spa
 | Recognition | 117 batches of 12, grades 3 to 6, from the tables of appendix 5 | — |
 | Words | 16 batches of 10, four themes a grade | — |
 | Idioms | Batches of 8 from grade 3 | — |
-| Grammar | 19 topics: punctuation (6), faulty sentences (6, two of them grade 6's contradictions and mismatched connectives), connectives (2), changing sentence forms (3: 把 and 被, rhetorical questions, reported speech), rhetorical devices (2) | Punctuation of grade 6 (the dash) |
+| Grammar | 20 topics: punctuation (7, the last grade 6's dash), faulty sentences (6, two of them grade 6's contradictions and mismatched connectives), connectives (2), changing sentence forms (3: 把 and 被, rhetorical questions, reported speech), rhetorical devices (2) | — |
 | Recitation | 32 poems, 8 a grade | — |
 | Classical language | Grades 5 and 6: six passages recited like poems (守株待兔, 杨氏之子, 囊萤夜读; 学弈, 伯牙鼓琴, 铁杵成针), content words and sentences put into modern Chinese, and the function words 之, 而, 以 and 于 | — |
 | Reading | 12 units of 3 passages, 9 passages a grade | — |
