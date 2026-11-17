@@ -30,6 +30,15 @@ describe("chinese content", () => {
     expect(issues.map(formatIssue)).toEqual([]);
   }, 60_000);
 
+  it("builds a grade only on its own grade and those before it", () => {
+    const subject = compileChinese();
+    for (const course of subject.courses.values()) {
+      const grade = Number(/^chinese-grade-(\d)$/.exec(course.def.id)?.[1] ?? 0);
+      const later = course.foundations.filter((id) => Number(/-(\d)-\d\d$/.exec(id)?.[1] ?? 0) > grade);
+      expect(later, course.def.id).toEqual([]);
+    }
+  });
+
   it("holds every topic in a shard", () => {
     expect(new Set(coreShardTopics.map((topic) => topic.id)).size).toBe(chinese.topics.length);
   });

@@ -37,11 +37,11 @@ const gradeThreeReading = unit(
     {
       id: "chinese-the-orchard-in-autumn",
       title: ["秋天的果园", "The Orchard in Autumn"],
-      body: `秋天到了，爷爷的果园热闹起来。苹果树上挂满了红红的苹果，像一个个小灯笼。梨树的枝条被金黄的梨压弯了腰。葡萄架下，一串串紫色的葡萄像珍珠一样，又大又圆。
+      body: `秋天到了，爷爷的果园热闹起来。苹果树上挂满了红红的苹果，像一张张笑脸。梨树的枝条被金黄的梨压弯了腰。葡萄架下，一串串紫色的葡萄又大又圆，像一颗颗亮晶晶的宝石。
 
 星期天，我跟爸爸妈妈去果园帮爷爷摘果子。爷爷说，摘苹果要轻轻地转一下，不能用力拉，不然会把树枝弄断。我按爷爷说的办法试了试，苹果果然一下子就摘下来了。
 
-中午，我们坐在树下休息。爷爷切开一个大苹果，分给大家吃。苹果又甜又脆，我一口气吃了两块。爷爷笑着说：“这些果子是我们一年的辛苦换来的。春天要浇水、施肥，夏天要捉虫，到了秋天才有这么好的收成。”
+中午，我们坐在树下休息。爷爷切开一个大苹果，分给大家吃。苹果又甜又脆，我一口气吃了两块。爷爷笑着说：“这些果子是我们一年的辛苦换来的。春天要浇水、除草，夏天要捉虫，到了秋天才有这么好的收成。”
 
 我看着满园的果子，心想：原来甜甜的果子里，藏着爷爷那么多的汗水啊！`,
       xp: 4,
@@ -58,15 +58,15 @@ const gradeThreeReading = unit(
         ),
         question(
           ["文中把葡萄比作什么？", "What does the passage compare the grapes to?"],
-          ["珍珠", "Pearls"],
+          ["宝石", "Gems"],
           [
-            ["小灯笼", "Little lanterns"],
+            ["笑脸", "Smiling faces"],
             ["金子", "Gold"],
             ["星星", "Stars"],
           ],
           [
-            "第一段说葡萄“像珍珠一样，又大又圆”。小灯笼说的是苹果。",
-            "The first paragraph says the grapes are like pearls; the lanterns are the apples.",
+            "第一段说葡萄“像一颗颗亮晶晶的宝石”。笑脸说的是苹果。",
+            "The first paragraph says the grapes are like shining gems; the smiling faces are the apples.",
           ],
         ),
         question(
@@ -78,8 +78,8 @@ const gradeThreeReading = unit(
             ["果园里的果子不够甜", "The fruit of the orchard is not sweet enough"],
           ],
           [
-            "爷爷说果子是“一年的辛苦换来的”：春天浇水施肥，夏天捉虫。汗水指的是辛苦的劳动。",
-            "Grandpa says the fruit came from a year of hard work, watering, feeding and catching insects; the sweat is that work.",
+            "爷爷说果子是“一年的辛苦换来的”：春天浇水除草，夏天捉虫。汗水指的是辛苦的劳动。",
+            "Grandpa says the fruit came from a year of hard work, watering, weeding and catching insects; the sweat is that work.",
           ],
         ),
       ],
@@ -87,13 +87,13 @@ const gradeThreeReading = unit(
     {
       id: "chinese-before-the-rain",
       title: ["下雨之前", "Before the Rain"],
-      body: `夏天的一个下午，天气闷热，一点风也没有。我和小伙伴在院子里玩，发现墙角有一大群蚂蚁，正排着长长的队伍搬东西。有的蚂蚁抬着白色的小颗粒，有的蚂蚁拖着小虫子，急急忙忙地往高处爬。
+      body: `夏天的一个下午，天气闷热，一点风也没有。我和小伙伴在院子里玩，发现墙角有一大群蚂蚁，正排着长长的队伍搬东西。有的蚂蚁抬着白色的小东西，有的蚂蚁拖着小虫子，急急忙忙地往高处爬。
 
 我跑去问奶奶：“蚂蚁为什么要搬家？”奶奶抬头看了看天，说：“快下雨了。蚂蚁的家在地下，下雨时会进水，所以它们要提前搬到高的地方去。”
 
 我又看见几只燕子贴着地面飞来飞去。奶奶告诉我，下雨前空气很潮湿，小虫子的翅膀沾了水汽，飞不高，燕子低飞是为了捉虫子吃。
 
-果然，没过多久，天上乌云密布，接着下起了大雨。我想：小动物们真聪明，它们比天气预报还要准呢！`,
+果然，没过多久，天上乌云密布，接着下起了大雨。我想：小动物们真聪明，它们比我们还早知道要下雨呢！`,
       xp: 4,
       questions: [
         question(
@@ -137,18 +137,18 @@ const gradeThreeReading = unit(
     {
       id: "chinese-how-seeds-travel",
       title: ["种子去远方", "How Seeds Travel"],
-      body: `植物不会走路，可是它们的种子却能去很远的地方。
+      body: `植物不会走路，可是它们的种子能去很远的地方。
 
-蒲公英的种子上长着白色的绒毛，像一把把小伞。风一吹，小伞就飞起来，飘到很远的地方，落在哪里，就在哪里安家。
+蒲公英的种子上长着白色的细毛，像一把把小伞。风一吹，小伞就飞起来，飘到很远的地方，落在哪里，就在哪里安家。
 
 苍耳的种子外面有很多小钩子。小动物从它身边走过，种子就钩在动物的毛上，被带到别的地方。
 
-豌豆的种子藏在豆荚里。到了秋天，太阳一晒，豆荚就“啪”的一声裂开了，豆子蹦了出去。
+大豆的种子藏在豆荚里。到了秋天，太阳一晒，豆荚就裂开了，豆子跳了出去。
 
 还有一些植物的种子，是小鸟帮忙带走的。小鸟吃下果子，种子跟着小鸟飞到远处，再落到地上。
 
 你看，植物妈妈的办法真多呀！`,
-      glossed: ["苍耳", "豆荚"],
+      glossed: ["苍耳", "豆荚", "蒲公英"],
       xp: 3,
       questions: [
         question(
@@ -173,7 +173,7 @@ const gradeThreeReading = unit(
             ["小鸟", "Little birds"],
           ],
           [
-            "第二段说，蒲公英的种子上长着白色的绒毛，“像一把把小伞”。",
+            "第二段说，蒲公英的种子上长着白色的细毛，“像一把把小伞”。",
             "The second paragraph says its white down is like little umbrellas.",
           ],
         ),
@@ -181,7 +181,7 @@ const gradeThreeReading = unit(
           ["这篇短文主要讲了什么？", "What is the passage mainly about?"],
           ["植物的种子用不同的办法去远方", "Plants' seeds travel far in different ways"],
           [
-            ["蒲公英怎样长出白色的绒毛", "How the dandelion grows its white down"],
+            ["蒲公英怎样长出白色的细毛", "How the dandelion grows its white hairs"],
             ["小动物喜欢吃什么果子", "What fruit small animals like"],
             ["秋天豆荚为什么会裂开", "Why pods burst in autumn"],
           ],
@@ -210,7 +210,7 @@ const gradeFourReading = unit(
 
 那么骆驼为什么不怕渴呢？原来，骆驼很少出汗，排出的水分也很少，身体里的水不容易流失。一旦找到水，它一次能喝下很多水，把身体里缺的水分一下子补回来。
 
-骆驼还有别的本领。它的脚掌又宽又厚，走在松软的沙子上不会陷下去。它长着长长的睫毛，鼻孔也能关上，风沙再大也不怕。正因为有这些本领，骆驼才成了沙漠里人们最好的帮手。`,
+骆驼还有别的本领。它的脚掌又宽又厚，走在松软的沙子上不会陷下去。它的眼睛周围长着长长的毛，鼻孔也能关上，风沙再大也不怕。正因为有这些本领，骆驼才成了沙漠里人们最好的帮手。`,
       glossed: ["驼峰"],
       xp: 4,
       questions: [
@@ -244,12 +244,12 @@ const gradeFourReading = unit(
           ["骆驼走在沙子上不会陷下去，是因为什么？", "Why does a camel not sink into the sand?"],
           ["它的脚掌又宽又厚", "Its feet are wide and thick"],
           [
-            ["它的睫毛很长", "Its eyelashes are long"],
+            ["它眼睛周围的毛很长", "The hair around its eyes is long"],
             ["它的鼻孔能关上", "It can close its nostrils"],
             ["它的身体很轻", "Its body is light"],
           ],
           [
-            "最后一段说：“它的脚掌又宽又厚，走在松软的沙子上不会陷下去。”睫毛和鼻孔是用来挡风沙的。",
+            "最后一段说：“它的脚掌又宽又厚，走在松软的沙子上不会陷下去。”眼睛周围的毛和能关上的鼻孔是用来挡风沙的。",
             "The last paragraph says its wide, thick feet keep it from sinking; the eyelashes and nostrils keep out the sand.",
           ],
         ),
@@ -312,7 +312,7 @@ const gradeFourReading = unit(
     {
       id: "chinese-birds-that-migrate",
       title: ["候鸟的远行", "Birds That Migrate"],
-      body: `每年秋天，天气渐渐变冷，北方的大雁就排成“人”字形或“一”字形的队伍，向南方飞去。第二年春天，它们又飞回北方。像大雁这样随着季节变化来回迁徙的鸟，叫作候鸟。
+      body: `每年秋天，天气渐渐变冷，北方的大雁就排成“人”字形或“一”字形的队伍，向南方飞去。第二年春天，它们又飞回北方。像大雁这样随着季节变化来回飞行的鸟，叫作候鸟。
 
 候鸟为什么要飞那么远呢？主要是为了食物。北方的冬天天寒地冻，湖面结了冰，草也枯了，鸟儿很难找到吃的。南方的冬天比较温暖，有充足的食物。到了春天，北方又变得温暖，食物多了起来，候鸟就飞回北方生儿育女。
 
@@ -323,7 +323,7 @@ const gradeFourReading = unit(
       xp: 4,
       questions: [
         question(
-          ["候鸟来回迁徙，主要是为了什么？", "Why do migrating birds fly back and forth?"],
+          ["候鸟来回飞行，主要是为了什么？", "Why do migrating birds fly back and forth?"],
           ["找到充足的食物", "To find enough food"],
           [
             ["躲避猎人", "To escape hunters"],
@@ -374,9 +374,9 @@ const gradeFiveReading = unit(
       title: ["父亲的菜园", "Father's Vegetable Garden"],
       body: `我家屋后有一块荒地，长满了野草，地里到处是石头。那年春天，父亲决定把它开成菜园。
 
-母亲说：“这块地太硬了，种不出东西的。”父亲没有说话，每天下班回来，就扛着锄头去地里。他先把石头一块一块地捡出来，堆在地边，又把野草连根拔掉，再把硬邦邦的土一锄一锄地翻松。我放学回家，常常看见父亲弯着腰在地里干活，汗水湿透了衣服。
+母亲说：“这块地太硬了，种不出东西的。”父亲没有说话，每天下班回来，就扛着锄头去地里。他先把石头一块一块地搬出来，堆在地边，又把野草连根拔掉，再把硬邦邦的土一锄一锄地翻松。我放学回家，常常看见父亲弯着腰在地里干活，汗水湿透了衣服。
 
-一个多月过去了，荒地终于变成了一块平整的菜地。父亲种上了青菜、豆角和西红柿，每天早晚都去浇水。夏天到了，豆角爬满了架子，西红柿红得发亮，青菜绿油油的，邻居们路过，都忍不住停下来看一看。
+一个多月过去了，荒地终于变成了一块平整的菜地。父亲种上了青菜、豆角和黄瓜，每天早晚都去浇水。夏天到了，豆角爬满了架子，黄瓜一根根挂在藤上，青菜绿油油的，邻居们路过，都忍不住停下来看一看。
 
 吃着自家种的菜，母亲笑着说：“还是你有办法。”父亲说：“哪有什么办法？地是硬的，人的手比它更硬。只要肯下力气，荒地也能长出好东西。”
 
@@ -385,15 +385,15 @@ const gradeFiveReading = unit(
       questions: [
         question(
           ["父亲开菜园，最先做的是什么？", "What does Father do first to make the garden?"],
-          ["把地里的石头捡出来", "He picks the stones out of the ground"],
+          ["把地里的石头搬出来", "He carries the stones out of the ground"],
           [
             ["把土翻松", "He loosens the soil"],
             ["种上青菜和豆角", "He plants greens and beans"],
             ["每天早晚去浇水", "He waters it morning and evening"],
           ],
           [
-            "第二段说：“他先把石头一块一块地捡出来……又把野草连根拔掉，再把硬邦邦的土一锄一锄地翻松。”",
-            "The second paragraph says he first picks out the stones, then pulls the weeds, then loosens the soil.",
+            "第二段说：“他先把石头一块一块地搬出来……又把野草连根拔掉，再把硬邦邦的土一锄一锄地翻松。”",
+            "The second paragraph says he first carries out the stones, then pulls the weeds, then loosens the soil.",
           ],
         ),
         question(
@@ -429,9 +429,9 @@ const gradeFiveReading = unit(
       title: ["竹子的用处", "The Uses of Bamboo"],
       body: `竹子是一种生长很快的植物。春天，竹笋从土里钻出来，有的竹子一天能长高将近一米，几个月就能长成高高的竹子。
 
-竹子的用处很多。竹笋可以做菜，味道鲜美。竹竿又轻又结实，可以用来搭架子、做竹梯。把竹子劈成细细的竹条，能编成竹篮、竹席和竹筐。很早以前，纸还没有发明的时候，人们把字写在竹片上，再用绳子把竹片串起来，就成了书，这叫作竹简。
+竹子的用处很多。竹笋可以做菜，味道鲜美。竹子又轻又结实，可以用来搭架子、做竹梯。把竹子劈成细细的竹条，能编成竹篮、竹席和竹筐。很早以前，纸还没有发明的时候，人们把字写在竹片上，再用绳子把竹片串起来，就成了书，这叫作竹简。
 
-竹子还能做乐器。笛子、箫都是用竹子做的，吹起来声音清脆悦耳。
+竹子还能做乐器。笛子就是用竹子做的，吹起来声音清脆悦耳。
 
 我国古人十分喜爱竹子。竹子的茎是空心的，一节一节地向上长，人们常用它比喻谦虚、有气节的人。很多诗人写诗赞美竹子，画家也喜欢画竹子。`,
       glossed: ["竹简"],
