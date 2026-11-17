@@ -70,7 +70,7 @@ Native grades 3 to 6 without new input, testing whether mastery learning and spa
 | Idioms | Batches of 8 from grade 3 | — |
 | Grammar | 19 topics: punctuation (6), faulty sentences (6, two of them grade 6's contradictions and mismatched connectives), connectives (2), changing sentence forms (3: 把 and 被, rhetorical questions, reported speech), rhetorical devices (2) | Punctuation of grade 6 (the dash) |
 | Recitation | 32 poems, 8 a grade | — |
-| Classical language | — | From grade 5: content words in batches, the first function words, and short public-domain passages read with notes |
+| Classical language | Grades 5 and 6: six passages recited like poems (守株待兔, 杨氏之子, 囊萤夜读; 学弈, 伯牙鼓琴, 铁杵成针), content words and sentences put into modern Chinese, and the function words 之, 而, 以 and 于 | — |
 | Reading | 12 units of 3 passages, 9 passages a grade | — |
 
 **Done when** every topic compiles, every generator passes `sampleGenerators`, the audit reports no thin knowledge point, each grade course's foundations hold no later grade's topics, and every passage keeps to the characters of its grade.

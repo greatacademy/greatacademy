@@ -35,6 +35,8 @@ export interface DrillSpec {
   readonly summary: Text;
   readonly prerequisites: readonly string[];
   readonly points: readonly [DrillPoint, DrillPoint];
+  /** strand is the topic's strand, grammar unless given. */
+  readonly strand?: string;
 }
 
 /** PAIRS are the pairs of wrong answers an item is asked with, one a round. */
@@ -59,7 +61,7 @@ export function drillTopic(spec: DrillSpec): TopicDef {
     prerequisites: [...spec.prerequisites],
     encompasses: [],
     xp: spec.points[0].items.length,
-    strand: "grammar",
+    strand: spec.strand ?? "grammar",
     knowledgePoints: spec.points.map((p) => {
       const bank: readonly ChoiceItem[] = PAIRS.flatMap(([a, b]) =>
         p.items.map((item): ChoiceItem => [item.shown, item.right, [item.wrong[a], item.wrong[b]]]),

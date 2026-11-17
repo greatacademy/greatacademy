@@ -2,6 +2,7 @@ import type { CourseDef, ModuleDef } from "@ga/content";
 import { t } from "@ga/content";
 
 import { recognitionByGrade } from "./characters/index.ts";
+import { classicalDrillTopics, classicalPassages } from "./classical/index.ts";
 import { connectiveTopics, faultyTopics, type GradeTopic, punctuationTopics, rhetoricTopics, sentenceTopics } from "./grammar/index.ts";
 import { idiomsByGrade } from "./idioms/index.ts";
 import { chineseReading } from "./reading/index.ts";
@@ -49,6 +50,16 @@ function grammarModules(grade: number): readonly ModuleDef[] {
   return modules;
 }
 
+/** classicalModules are a grade's modules of classical language, those it has. */
+function classicalModules(grade: number): readonly ModuleDef[] {
+  const passages = ofGrade(classicalPassages, grade);
+  const drills = ofGrade(classicalDrillTopics, grade);
+  return [
+    ...(passages.length > 0 ? [{ title: t("Classical Passages", "文言文"), topics: passages }] : []),
+    ...(drills.length > 0 ? [{ title: t("Words of Classical Chinese", "文言字词"), topics: drills }] : []),
+  ];
+}
+
 /** gradeCourse is the native course of a grade. */
 function gradeCourse(grade: number, description: CourseDef["description"]): CourseDef {
   return {
@@ -71,6 +82,7 @@ function gradeCourse(grade: number, description: CourseDef["description"]): Cour
         title: t("Recitation", "积累与背诵"),
         modules: [{ title: t("Classical Poems", "古诗词"), topics: recitedPoems.filter((p) => p.grade === grade).map((p) => p.topic.id) }],
       },
+      ...(classicalModules(grade).length > 0 ? [{ title: t("Classical Chinese", "文言"), modules: classicalModules(grade) }] : []),
     ],
     reading: chineseReading.filter((r) => r.grade === grade).map((r) => r.unit.id),
     ...(grade > 3 && { buildsOn: [`chinese-grade-${grade - 1}`] }),

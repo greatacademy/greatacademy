@@ -9,6 +9,7 @@ Every sentence, passage, question and explanation in this package is written for
 | Idioms | Common idioms of primary school, chosen by hand; meanings and sentences written here | Idioms themselves are not protected; awaiting the teacher's review | `src/idioms` |
 | Punctuation, faulty sentences, connectives, sentence forms and rhetoric | Rules of GB/T 15834-2011 and the kinds of faulty sentence, connective, sentence change and rhetorical device in general use; every sentence written here, apart from the classical couplets of `rhetoric-2` | Not applicable; the couplets are public domain | `src/grammar` |
 | Recited poems | Classical poems of the Tang, Song and Qing dynasties, in their usual modern editions | Public domain | `src/recitation` |
+| Classical passages and the sentences of the classical drills | Pre-Qin to Song texts (韩非子, 孟子, 列子, 论语, 世说新语, 晋书, 方舆胜览 and a few lines of others) in their usual modern editions; meanings, translations and wrong answers written here | Public domain | `src/classical` |
 | Passages of the reading units | Written for this package from general knowledge; none follows a textbook lesson | Not applicable | `src/reading` |
 | Grade lists of the 2022 standard (appendix 3, the recommended texts of appendix 1) | Read to choose what each grade covers; not copied as data | Awaiting counsel | Course scope |
 | `cn-math-taxonomy` | Read for orientation only | CC BY-NC 4.0, so nothing is taken | — |

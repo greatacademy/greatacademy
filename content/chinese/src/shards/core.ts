@@ -3,6 +3,7 @@
 import type { ReadingUnitDef, TopicDef } from "@ga/content";
 
 import { characterTopics } from "../characters/index.ts";
+import { classicalTopics } from "../classical/index.ts";
 import { grammarTopics } from "../grammar/index.ts";
 import { idiomTopics } from "../idioms/index.ts";
 import { pinyinTopics } from "../pinyin/index.ts";
@@ -18,6 +19,7 @@ export const coreShardTopics: readonly TopicDef[] = [
   ...idiomTopics,
   ...grammarTopics,
   ...recitationTopics,
+  ...classicalTopics,
 ];
 
 /** coreShardReading are the reading units held by the `core` shard. */

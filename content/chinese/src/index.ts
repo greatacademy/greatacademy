@@ -28,6 +28,7 @@ export const chinese: SubjectDef = {
     { id: "words", title: t("Words", "词语") },
     { id: "grammar", title: t("Grammar and Punctuation", "语法与标点") },
     { id: "recitation", title: t("Recitation", "积累与背诵") },
+    { id: "classical", title: t("Classical Chinese", "文言") },
     { id: "reading", title: t("Reading", "阅读") },
     { id: "writing", title: t("Writing", "写作") },
   ],
