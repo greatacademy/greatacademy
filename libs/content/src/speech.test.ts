@@ -13,6 +13,10 @@ describe("spokenWords", () => {
     expect(spokenWords("She doesn’t like well-known songs.")).toEqual(["she", "does", "not", "like", "well", "known", "songs"]);
   });
 
+  it("takes each Chinese character as a word of its own", () => {
+    expect(spokenWords("我去商店，买书。")).toEqual(["我", "去", "商", "店", "买", "书"]);
+  });
+
   it("counts the words of a reference heard in order", () => {
     expect(heardInOrder(["the", "cat", "sat"], ["the", "big", "cat", "sat"])).toBe(3);
     expect(heardInOrder(["the", "cat", "sat"], ["sat", "the", "cat"])).toBe(2);
@@ -21,6 +25,23 @@ describe("spokenWords", () => {
 
 describe("speechChecker", () => {
   const repeat = { mode: "repeat", reference: "sheep" };
+
+  it("names the parts of a Chinese syllable said wrong", () => {
+    const said = heard("你好", {
+      accuracy: 40,
+      words: [
+        { word: "你", accuracy: 90 },
+        { word: "好", accuracy: 30, error: "mispronunciation", wrong: ["initial", "tone"] },
+      ],
+    });
+    const wrong = speechChecker.check({ mode: "repeat", reference: "你好" }, said);
+    expect(wrong.correct).toBe(false);
+    expect(wrong.feedback?.["zh-CN"]).toBe("再听一遍，仔细模仿这些词：好（声母、声调）。");
+    expect(wrong.feedback?.en).toBe("Listen again and copy these words closely: 好 (initial, tone).");
+    expect(speechChecker.check({ mode: "repeat", reference: "你好" }, heard("你好。", { accuracy: 85 })).correct).toBe(true);
+    expect(speechChecker.check({ mode: "repeat", reference: "我去商店买书" }, heard("我去商店卖书")).correct).toBe(true);
+    expect(speechChecker.check({ mode: "repeat", reference: "我去商店买书" }, heard("我去书店")).correct).toBe(false);
+  });
 
   it("accepts a word heard, and rejects another word naming the word to listen for", () => {
     expect(speechChecker.check(repeat, heard("Sheep.")).correct).toBe(true);

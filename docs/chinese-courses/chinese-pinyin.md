@@ -6,11 +6,11 @@
 - **Level:** Before level 1, for learners of Chinese as a foreign language
 - **Prerequisite(s):** None
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 4 units · 7 topics (7 of pinyin) · 14 knowledge points
+- **Size:** 5 units · 8 topics (8 of pinyin) · 16 knowledge points
 
 ## Aim
 
-Pinyin is the tool a learner of Chinese reads sounds with. This course teaches it from print: the four tones and where the mark goes, the 21 initials and the finals, the spelling rules that write i, u and ü as y, w and u and shorten iou, uei and uen, and the tones 一, 不 and two third tones take in speech while pinyin writes their own. Every syllable it asks about is the reading of a character the subject teaches. Recordings of syllables then train the ear: the tone heard among a syllable's four, and initials and finals that sound alike. Saying them joins it with pronunciation assessment.
+Pinyin is the tool a learner of Chinese reads sounds with. This course teaches it from print: the four tones and where the mark goes, the 21 initials and the finals, the spelling rules that write i, u and ü as y, w and u and shorten iou, uei and uen, and the tones 一, 不 and two third tones take in speech while pinyin writes their own. Every syllable it asks about is the reading of a character the subject teaches. Recordings of syllables then train the ear: the tone heard among a syllable's four, and initials and finals that sound alike. Last, the learner says words of two syllables after their recordings, each syllable assessed for its initial, final and tone.
 
 ## Units
 
@@ -33,14 +33,18 @@ Pinyin is the tool a learner of Chinese reads sounds with. This course teaches i
 - `pinyin-yi-and-bu` The Tones of 一 and 不: Saying 一; Saying 不
 - `pinyin-third-tones` Two Third Tones: Saying Them; Writing Them
 
+### 5. Speaking
+
+- `pinyin-saying` Saying Words (spoken): Pairs of Tones; Tones That Change
+
 ## Simulated Students
 
 `pnpm nx run simulate:simulate -- chinese-pinyin`, the mean of 20 runs of each student. A placed student already knows the course's foundations.
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 20/20 | 1.90 | 6.60 | 0.00 | 4.00 | 0.58 | 0.00 | 0.00 |
-| typical | 20/20 | 2.30 | 7.15 | 0.55 | 4.00 | 0.58 | 0.00 | 0.00 |
-| struggling | 20/20 | 3.15 | 8.95 | 2.35 | 7.65 | 1.14 | 0.00 | 0.00 |
-| placed | 20/20 | 2.30 | 7.15 | 0.55 | 4.00 | 0.58 | 0.00 | 0.00 |
-| struggling, placed | 20/20 | 3.15 | 8.95 | 2.35 | 7.65 | 1.14 | 0.00 | 0.00 |
+| strong | 20/20 | 2.00 | 7.60 | 0.00 | 4.15 | 0.52 | 0.00 | 0.00 |
+| typical | 20/20 | 2.70 | 8.15 | 0.55 | 5.25 | 0.68 | 0.00 | 0.00 |
+| struggling | 20/20 | 3.65 | 10.30 | 2.70 | 9.75 | 1.25 | 0.00 | 0.00 |
+| placed | 20/20 | 2.70 | 8.15 | 0.55 | 5.25 | 0.68 | 0.00 | 0.00 |
+| struggling, placed | 20/20 | 3.65 | 10.30 | 2.70 | 9.75 | 1.25 | 0.00 | 0.00 |

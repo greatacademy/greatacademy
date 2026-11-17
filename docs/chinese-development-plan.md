@@ -84,7 +84,7 @@ Native grades 3 to 6 without new input, testing whether mastery learning and spa
 
 **Done when** simulated students finish each grade course, no topic is unreachable, and the reviews per topic are recorded here.
 
-**Done.** The outlines are in [docs/chinese-courses](chinese-courses/), one per course with its simulated students. Every student finished every course in all 20 runs. Reviews per topic for the typical, strong and struggling student: grade 3 3.58, 2.83 and 4.90; grade 4 3.92, 3.45 and 5.28; grade 5 3.99, 3.63 and 5.33; grade 6 4.05, 3.66 and 5.32; pinyin 0.58, 0.58 and 1.14, a short course whose reviews mostly fall after it ends. A typical student takes 38, 74, 96 and 102 days for grades 3 to 6, and 2 for pinyin.
+**Done.** The outlines are in [docs/chinese-courses](chinese-courses/), one per course with its simulated students. Every student finished every course in all 20 runs. Reviews per topic for the typical, strong and struggling student: grade 3 3.58, 2.83 and 4.90; grade 4 3.92, 3.45 and 5.28; grade 5 3.99, 3.63 and 5.33; grade 6 4.05, 3.66 and 5.32; pinyin 0.68, 0.52 and 1.25, a short course whose reviews mostly fall after it ends. A typical student takes 38, 74, 96 and 102 days for grades 3 to 6, and 3 for pinyin.
 
 ### C1.4 Review and Pilot (M, waiting for people)
 
@@ -139,7 +139,7 @@ Recordings are uploaded with the rest of the subject's audio when the subject is
 | `zh-CN` speech problems: repeat a syllable, a word, a sentence | `content/chinese` |
 | The provider is chosen by admins, as for every AI and speech vendor | `apps/web` admin |
 
-**Built so far.** The provider: `iflytekSpeech` in `libs/judge`, chosen by an iFlytek base URL, assesses `zh-CN` against a reference and gives each syllable its pinyin and the parts said wrong. Admins may route it to `pronunciation:zh-CN` only, and it was checked against the service on the trial's recordings. The speech problems wait for C2.3's recordings.
+**Built so far.** The provider: `iflytekSpeech` in `libs/judge`, chosen by an iFlytek base URL, assesses `zh-CN` against a reference and gives each syllable its pinyin and the parts said wrong. Admins may route it to `pronunciation:zh-CN` only, and it was checked against the service on the trial's recordings. The speech checker takes each Chinese character as a word and names a syllable said wrong with its parts, as 好（声母、声调）. The first spoken topic, `pinyin-saying`, ends the pinyin course: words of two syllables said after their recordings, 45 drilling the pairs of tones and 59 whose tones change in speech (two third tones, 一 and 不). Sentences come with levels 1 to 3.
 
 A trial on synthetic recordings with deliberate errors found iFlytek's pupil mode flags about 80% of single tone errors and Azure about 50%, and iFlytek flags initials and finals that Azure scores as correct. Thresholds are *starting* values, to confirm on real learners before they are relied on.
 

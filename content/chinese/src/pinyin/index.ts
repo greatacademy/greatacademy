@@ -7,6 +7,7 @@ import { type ChoiceItem, choiceGenerator, point } from "@ga/subject-chinese";
 
 import { gradesFiveAndSixEntries, gradesThreeAndFourEntries } from "../characters/index.ts";
 import { pinyinHearing } from "./listening.ts";
+import { type SaidWord, sayingTopic } from "./saying.ts";
 import { INITIALS, mark, markAt, parseSyllable, type Syllable, TONE_NAMES, vowelsOf } from "./syllables.ts";
 
 /** syllables are the distinct readings of the characters this subject teaches, in the order of the tables. */
@@ -557,6 +558,24 @@ const pinyinThirdTones: TopicDef = {
   ],
 };
 
+/** changedAt says a word of 一 or 不 with the syllable at `at` in a tone: the tone it takes in speech. */
+const changedAt = (data: string, plain: string, at: (pinyin: string) => number): readonly SaidWord[] =>
+  rows(data).map(([word, pinyin, tone]) => {
+    const syllables = pinyin!.split(" ");
+    const i = at(pinyin!);
+    return { word: word!, pinyin: pinyin!, said: syllables.map((x, j) => (j === i ? mark(plain, Number(tone)) : x)).join(" ") };
+  });
+
+/** pinyinSaying is the spoken topic: tone pairs, then the words whose tones change in speech. */
+const pinyinSaying: TopicDef = sayingTopic(
+  [
+    ...thirds.map((w) => ({ word: w.word, pinyin: w.pinyin, said: w.said })),
+    ...changedAt(yi, "yi", (p) => p.split(" ").indexOf("yī")),
+    ...changedAt(bu, "bu", () => 0),
+  ],
+  ["pinyin-hearing", "pinyin-yi-and-bu", "pinyin-third-tones"],
+);
+
 /** pinyinTopics are the pinyin topics, in order. */
 export const pinyinTopics: readonly TopicDef[] = [
   pinyinTones,
@@ -566,6 +585,7 @@ export const pinyinTopics: readonly TopicDef[] = [
   pinyinHearing,
   pinyinYiBu,
   pinyinThirdTones,
+  pinyinSaying,
 ];
 
 /** pinyinTitle names the strand of pinyin. */

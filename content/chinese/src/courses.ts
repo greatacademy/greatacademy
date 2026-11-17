@@ -138,6 +138,7 @@ export const chineseCourses: readonly CourseDef[] = [
         title: t("Tones in Speech", "语流变调"),
         modules: [{ title: t("Tones in Speech", "语流变调"), topics: ["pinyin-yi-and-bu", "pinyin-third-tones"] }],
       },
+      { title: t("Speaking", "开口说"), modules: [{ title: t("Saying Words", "说词语"), topics: ["pinyin-saying"] }] },
     ],
   },
 ];

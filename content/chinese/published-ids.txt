@@ -32,6 +32,7 @@ topic idioms-6-04 idioms-6-04-meaning idioms-6-04-use idioms-6-04-writing
 topic pinyin-finals pinyin-finals-choosing pinyin-finals-finding
 topic pinyin-hearing pinyin-hearing-sounds pinyin-hearing-tones
 topic pinyin-initials pinyin-initials-choosing pinyin-initials-finding
+topic pinyin-saying pinyin-saying-tone-changes pinyin-saying-tone-pairs
 topic pinyin-spelling pinyin-spelling-reading pinyin-spelling-writing
 topic pinyin-third-tones pinyin-third-tones-saying pinyin-third-tones-writing
 topic pinyin-tones pinyin-tones-naming pinyin-tones-placing

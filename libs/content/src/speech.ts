@@ -87,8 +87,17 @@ export function parseHeard(response: string): Heard | undefined {
         if (!w || typeof w !== "object" || typeof (w as { word?: unknown }).word !== "string") return [];
         const x = w as Record<string, unknown>;
         const error = x.error === "omission" || x.error === "insertion" || x.error === "mispronunciation" ? x.error : undefined;
+        const wrong = Array.isArray(x.wrong)
+          ? x.wrong.filter((p): p is SyllablePart => p === "initial" || p === "final" || p === "tone")
+          : [];
         return [
-          { word: x.word as string, ...(score(x.accuracy) !== undefined && { accuracy: score(x.accuracy) }), ...(error && { error }) },
+          {
+            word: x.word as string,
+            ...(score(x.accuracy) !== undefined && { accuracy: score(x.accuracy) }),
+            ...(error && { error }),
+            ...(typeof x.pinyin === "string" && x.pinyin.length <= 8 && { pinyin: x.pinyin }),
+            ...(wrong.length > 0 && { wrong: [...new Set(wrong)] }),
+          },
         ];
       })
     : undefined;
@@ -154,7 +163,9 @@ function numberWords(w: string): string {
 /**
  * spokenWords turns a text into the words a listener hears: lower case, no
  * punctuation, contractions said in full, "OK" as "okay" and numbers below 100 in
- * words, since a speech service may write either form of what was said.
+ * words, since a speech service may write either form of what was said. A
+ * Chinese character is a word of its own, one syllable, since Chinese is written
+ * without spaces.
  */
 export function spokenWords(text: string): string[] {
   let s = text.normalize("NFKC").toLowerCase().replace(/[‘’]/g, "'");
@@ -162,6 +173,7 @@ export function spokenWords(text: string): string[] {
   return s
     .replace(/[^\p{L}\p{N}'\s-]/gu, " ")
     .replace(/(^|\s)'|'(\s|$)/g, " ")
+    .replace(/\p{Script=Han}/gu, " $& ")
     .split(/[\s-]+/u)
     .filter(Boolean)
     .flatMap((w) => numberWords(w).split(" "));
@@ -190,12 +202,25 @@ function missedWords(reference: readonly string[], heard: readonly string[]): st
   return missed.slice(0, 5);
 }
 
-/** weakWords are the words an assessment scored below the bar, at most a few. */
-function weakWords(heard: Heard, bar: number): string[] {
-  return (heard.words ?? [])
+/** PARTS name the parts of a syllable of Chinese said wrong. */
+const PARTS: Readonly<Record<SyllablePart, { en: string; zh: string }>> = {
+  initial: { en: "initial", zh: "声母" },
+  final: { en: "final", zh: "韵母" },
+  tone: { en: "tone", zh: "声调" },
+};
+
+/** weakWords are the words an assessment scored below the bar, at most a few, in English and Chinese with the parts of a syllable said wrong. */
+function weakWords(heard: Heard, bar: number): { en: string; zh: string } {
+  const weak = (heard.words ?? [])
     .filter((w) => w.error === "mispronunciation" || (w.accuracy !== undefined && w.accuracy < bar))
-    .map((w) => w.word)
     .slice(0, 5);
+  const named = (w: HeardWord, lang: "en" | "zh") =>
+    !w.wrong?.length
+      ? w.word
+      : lang === "en"
+        ? `${w.word} (${w.wrong.map((p) => PARTS[p].en).join(", ")})`
+        : `${w.word}（${w.wrong.map((p) => PARTS[p].zh).join("、")}）`;
+  return { en: weak.map((w) => named(w, "en")).join(", "), zh: weak.map((w) => named(w, "zh")).join("、") };
 }
 
 /**
@@ -229,11 +254,11 @@ export const speechChecker: Checker = {
     }
     const bar = e.minAccuracy ?? MIN_ACCURACY;
     if (heard.accuracy !== undefined && heard.accuracy < bar) {
-      const weak = weakWords(heard, bar).join(", ");
+      const weak = weakWords(heard, bar);
       return {
         correct: false,
-        feedback: weak
-          ? t(`Listen again and copy these words closely: ${weak}.`, `再听一遍，仔细模仿这些词：${weak}。`)
+        feedback: weak.en
+          ? t(`Listen again and copy these words closely: ${weak.en}.`, `再听一遍，仔细模仿这些词：${weak.zh}。`)
           : t("Listen again and copy the sounds closely.", "再听一遍，仔细模仿其中的音。"),
       };
     }

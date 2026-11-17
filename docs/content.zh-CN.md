@@ -125,7 +125,7 @@ const sameSign: KnowledgePointDef = {
 | `choice` | 正确选项的下标 | 正好是该下标 |
 | `text` | 可接受字符串的数组 | 其中任意一个，忽略大小写、Unicode 全半角和空白 |
 | `writing` | `minWords` 和 `maxChars` | 至少 `minWords` 个单词、至多 `maxChars` 个字符的文本；它只在模型判定之前检查长度 |
-| `speech` | `mode`、要跟读或朗读的 `reference`、`say` 答案可接受的句子 `accept`，以及可选的 `minAccuracy` | 对 `repeat` 和 `read`，按顺序听到参考文本的词：不超过四个词的全部听到，更长的听到 80%；评估了发音时，准确度至少 60（*初始值*），听得懂的口音都能达到。对 `say`，逐字是可接受的句子之一。词按听到的样子比较：小写、去掉标点、缩写展开、“OK” 写作 “okay”、100 以下的数写成英文单词 |
+| `speech` | `mode`、要跟读或朗读的 `reference`、`say` 答案可接受的句子 `accept`，以及可选的 `minAccuracy` | 对 `repeat` 和 `read`，按顺序听到参考文本的词：不超过四个词的全部听到，更长的听到 80%；评估了发音时，准确度至少 60（*初始值*），听得懂的口音都能达到。对 `say`，逐字是可接受的句子之一。词按听到的样子比较：小写、去掉标点、缩写展开、“OK” 写作 “okay”、100 以下的数写成英文单词，每个汉字算一个词。发音不够好的词在反馈中点出；评测给出时，汉语音节还注明读错的部分：声母、韵母或声调 |
 
 判定器返回 `Verdict`：`correct`，以及在拒绝需要解释时可选的 `feedback`（例如"请化简分数"）。`CheckerRegistry`：
 
