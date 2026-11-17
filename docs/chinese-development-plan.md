@@ -177,6 +177,8 @@ The rest of table two of appendix 5, classical prose and its function words, arg
 
 Levels 4 to 9 continue C2. Judged writing reuses `libs/judge` with calibration sets scored by teachers of Chinese; conversations reuse the voice service. The exam courses `chinese-hsk-1` to `chinese-hsk-7-9` and `chinese-gaokao` follow the courses they test.
 
+**Built so far.** Level 4, as the course `chinese-level-4` ([outline](chinese-courses/chinese-level-4.md)), which builds on level 3: 300 more characters in 30 topics and 1,000 words in 100 topics, in twelve units from health and medicine to careers, written as levels 1 to 3 are. Some very common characters that levels 1 to 3 leave out, such as 始, 主, 之 and 与, are taught here where their unit's words need them; checking the characters against level 4 of GF 0025-2021, and a teacher's reading of the sentences, remain.
+
 ## 9. Across All Stages
 
 ### 9.1 Testing
