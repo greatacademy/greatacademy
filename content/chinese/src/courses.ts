@@ -107,4 +107,24 @@ export const chineseCourses: readonly CourseDef[] = [
       "面向母语学习者的六年级语文：再认读常用字表二中的约 250 个字，小学阶段累计认识 3000 字，用中文讲解。",
     ),
   ),
+  {
+    id: "chinese-pinyin",
+    title: t("Pinyin", "拼音"),
+    description: t(
+      "Pinyin for learners of Chinese as a foreign language: the four tones and their marks, initials, finals, the spelling rules, and the tones that change in speech. Explanations are in the learner's language.",
+      "面向把中文作为外语学习的人的拼音课：四个声调和调号、声母、韵母、拼写规则，以及说话时的变调。用学习者的语言讲解。",
+    ),
+    group: t("Chinese", "语文"),
+    units: [
+      { title: t("Tones", "声调"), modules: [{ title: t("Tones", "声调"), topics: ["pinyin-tones"] }] },
+      {
+        title: t("Initials and Finals", "声母和韵母"),
+        modules: [{ title: t("Initials and Finals", "声母和韵母"), topics: ["pinyin-initials", "pinyin-finals", "pinyin-spelling"] }],
+      },
+      {
+        title: t("Tones in Speech", "语流变调"),
+        modules: [{ title: t("Tones in Speech", "语流变调"), topics: ["pinyin-yi-and-bu", "pinyin-third-tones"] }],
+      },
+    ],
+  },
 ];

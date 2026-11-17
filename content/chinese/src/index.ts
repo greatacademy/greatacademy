@@ -23,6 +23,7 @@ export const chinese: SubjectDef = {
   reading: coreShardReading,
   words: segmenter(lexicon.flatMap((e) => [e.word, ...(e.forms ?? [])])),
   strands: [
+    { id: "pinyin", title: t("Pinyin", "拼音") },
     { id: "characters", title: t("Characters", "识字与写字") },
     { id: "words", title: t("Words", "词语") },
     { id: "grammar", title: t("Grammar and Punctuation", "语法与标点") },

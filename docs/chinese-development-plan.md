@@ -105,6 +105,8 @@ Native grades 3 to 6 without new input, testing whether mastery learning and spa
 | Typed pinyin with tone numbers or marks, checked by `pinyin` | `libs/subject-chinese` (done) |
 | Tone sandhi: 一, 不 and two third tones, heard and recognized; the written tone stays the original | `content/chinese` |
 
+**Built so far.** The side that needs no audio, as the course `chinese-pinyin`: 6 topics and 12 knowledge points of the strand `pinyin`, on the 686 syllables read by the characters of grades 3 to 6. Tones and where the mark goes, initials, finals, the spelling rules of y, w, ü and the shortened finals iu, ui and un, and the tones of 一, 不 and two third tones said and written. Listening and typed pinyin join with the recordings.
+
 ### C2.2 Characters, Words and Grammar of Levels 1 to 3 (L)
 
 | Part | Size | Form |

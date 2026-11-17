@@ -2,6 +2,7 @@ course chinese-grade-3
 course chinese-grade-4
 course chinese-grade-5
 course chinese-grade-6
+course chinese-pinyin
 topic connectives-1 connectives-1-choosing connectives-1-relations
 topic connectives-2 connectives-2-checking connectives-2-choosing
 topic faulty-contradictions faulty-contradictions-finding faulty-contradictions-fixing
@@ -26,6 +27,12 @@ topic idioms-6-01 idioms-6-01-meaning idioms-6-01-use idioms-6-01-writing
 topic idioms-6-02 idioms-6-02-meaning idioms-6-02-use idioms-6-02-writing
 topic idioms-6-03 idioms-6-03-meaning idioms-6-03-use idioms-6-03-writing
 topic idioms-6-04 idioms-6-04-meaning idioms-6-04-use idioms-6-04-writing
+topic pinyin-finals pinyin-finals-choosing pinyin-finals-finding
+topic pinyin-initials pinyin-initials-choosing pinyin-initials-finding
+topic pinyin-spelling pinyin-spelling-reading pinyin-spelling-writing
+topic pinyin-third-tones pinyin-third-tones-saying pinyin-third-tones-writing
+topic pinyin-tones pinyin-tones-naming pinyin-tones-placing
+topic pinyin-yi-and-bu pinyin-yi-and-bu-bu pinyin-yi-and-bu-yi
 topic punctuation-commas punctuation-commas-checking punctuation-commas-marks
 topic punctuation-ellipses punctuation-ellipses-checking punctuation-ellipses-marks
 topic punctuation-semicolons punctuation-semicolons-checking punctuation-semicolons-marks
