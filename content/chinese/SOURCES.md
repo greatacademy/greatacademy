@@ -12,6 +12,7 @@ Every sentence, passage, question and explanation in this package is written for
 | Classical passages and the sentences of the classical drills | Pre-Qin to Song texts (韩非子, 孟子, 列子, 论语, 世说新语, 晋书, 方舆胜览 and a few lines of others) in their usual modern editions; meanings, translations and wrong answers written here | Public domain | `src/classical` |
 | Passages of the reading units | Written for this package from general knowledge; none follows a textbook lesson | Not applicable | `src/reading` |
 | Grade lists of the 2022 standard (appendix 3, the recommended texts of appendix 1) | Read to choose what each grade covers; not copied as data | Awaiting counsel | Course scope |
+| Stroke medians and order of characters, for the `strokes` checker | Candidate: `graphics.txt` of Make Me a Hanzi, derived from two Arphic PL fonts, one median per stroke in the standard order on a 1,024 box; AnimCJK, derived from it, is the fallback for characters it lacks | Arphic Public License, a copyleft free license that allows paid use; whether medians drawn from it and served with problems stay under it is for counsel (C3.1). Not imported yet | Writing topics (C3.5) |
 | `cn-math-taxonomy` | Read for orientation only | CC BY-NC 4.0, so nothing is taken | — |
 | CC-CEDICT | Not used: CC BY-SA would make glosses share-alike | — | — |
 
