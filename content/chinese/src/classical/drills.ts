@@ -12,7 +12,7 @@ import { type DrillItem, type DrillSpec, drillItem, lines } from "../grammar/dri
 export type ClassicalDrill = Omit<DrillSpec, "prerequisites" | "strand"> & { readonly grade: number };
 
 /** items reads lines of a shown sentence, its right answer and three wrong ones. */
-const items = (data: string): readonly DrillItem[] =>
+export const items = (data: string): readonly DrillItem[] =>
   lines(data, 5).map(([shown, right, a, b, c]) => drillItem(shown!, right!, [a!, b!, c!]));
 
 /** others are the usages of a word other than one, which are the wrong answers when that one is right. */
@@ -23,7 +23,7 @@ function others(all: readonly string[], one: string): [string, string, string] {
 }
 
 /** usages reads lines of a shown sentence and the number of its usage among a word's four. */
-const usages = (data: string, all: readonly string[]): readonly DrillItem[] =>
+export const usages = (data: string, all: readonly string[]): readonly DrillItem[] =>
   lines(data, 2).map(([shown, n]) => {
     const right = all[Number(n)];
     if (right === undefined) throw new Error(`classical drill: usage ${n} of ${shown}`);
@@ -38,7 +38,7 @@ function marked(shown: string): readonly [string, string] {
 }
 
 /** usageWhy explains the meaning or usage of the character in brackets of a sentence. */
-const usageWhy = (right: string, shown: string) => {
+export const usageWhy = (right: string, shown: string) => {
   const [sentence, char] = marked(shown);
   return t(`In ${sentence}, ${char} is: ${right}.`, `在“${sentence}”中，“${char}”是：${right}。`);
 };

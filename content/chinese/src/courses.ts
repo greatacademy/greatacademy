@@ -84,6 +84,29 @@ function classicalModules(grade: number): readonly ModuleDef[] {
   ];
 }
 
+/** seniorCourse is a native course of senior secondary school; grade 10 is the required course and 11 the selective one. */
+function seniorCourse(grade: number, id: string, title: CourseDef["title"], description: CourseDef["description"]): CourseDef {
+  return {
+    id,
+    title,
+    description,
+    group: t("Chinese", "语文"),
+    explanationLocale: "zh-CN",
+    units: [
+      ...(wordModules(grade).length > 0 ? [{ title: t("Words", "词语"), modules: wordModules(grade) }] : []),
+      ...(grammarModules(grade).length > 0 ? [{ title: t("Grammar and Rhetoric", "语法与修辞"), modules: grammarModules(grade) }] : []),
+      {
+        title: t("Recitation", "积累与背诵"),
+        modules: [
+          { title: t("Classical Poems", "古诗词曲"), topics: recitedPoems.filter((p) => p.grade === grade).map((p) => p.topic.id) },
+        ],
+      },
+      { title: t("Classical Chinese", "文言"), modules: classicalModules(grade) },
+    ],
+    buildsOn: [grade === 10 ? "chinese-grade-9" : "chinese-hs-required"],
+  };
+}
+
 /** gradeCourse is the native course of a grade. */
 function gradeCourse(grade: number, description: CourseDef["description"]): CourseDef {
   return {
@@ -280,6 +303,24 @@ export const chineseCourses: readonly CourseDef[] = [
     t(
       "Chinese for native speakers in grade 9: reading the last characters of the second table, all 3,500 common characters by the end of junior secondary school, forty words and thirty-two idioms, illogical sentences, twelve classical poems and eight passages of classical prose to recite, and borrowed characters, in Chinese.",
       "面向母语学习者的九年级语文：认读常用字表二中余下的字，初中阶段累计认识 3500 个常用字，积累四十个词语和三十二个成语，辨析不合逻辑的病句，背诵十二首古诗词和八篇文言文，学习通假字，用中文讲解。",
+    ),
+  ),
+  seniorCourse(
+    10,
+    "chinese-hs-required",
+    t("Chinese, Senior Required", "高中语文 必修"),
+    t(
+      "Chinese for native speakers in the required course of senior secondary school: forty words of essays and arguments, thirty-two idioms often misused, the rhetoric of synaesthesia, paired phrasing, double meaning and irony, twenty classical poems and sixteen passages of classical prose to recite, the function words 乃, 且, 若, 焉, 何 and 乎, and the kinds of classical sentence, in Chinese.",
+      "面向母语学习者的高中必修语文：积累四十个论说文中常用的词语和三十二个容易误用的成语，学习通感、互文、双关和反语，背诵二十首古诗词曲和十六篇文言文，学习文言虚词“乃”“且”“若”“焉”“何”“乎”和文言特殊句式，用中文讲解。",
+    ),
+  ),
+  seniorCourse(
+    11,
+    "chinese-hs-selective",
+    t("Chinese, Senior Selective Required", "高中语文 选择性必修"),
+    t(
+      "Chinese for native speakers in the selective required course of senior secondary school: forty words, among them pairs easily confused, thirty-two idioms often misused, sentences with two meanings, twenty classical poems and sixteen passages of classical prose to recite, the function words 因, 与, 则, 所, 也 and 者, words used as another part of speech and words whose meaning has changed, in Chinese.",
+      "面向母语学习者的高中选择性必修语文：积累四十个词语（包括几组易混词）和三十二个容易误用的成语，辨析表意不明的病句，背诵二十首古诗词曲和十六篇文言文，学习文言虚词“因”“与”“则”“所”“也”“者”、词类活用和古今异义，用中文讲解。",
     ),
   ),
   {

@@ -36,7 +36,7 @@ describe("chinese content", () => {
       const match = /^chinese-grade-(\d)$/.exec(course.def.id);
       if (!match) continue;
       const grade = Number(match[1]);
-      const later = course.foundations.filter((id) => Number(/-(\d)-\d\d$/.exec(id)?.[1] ?? 0) > grade);
+      const later = course.foundations.filter((id) => Number(/-(\d+)-\d\d$/.exec(id)?.[1] ?? 0) > grade);
       expect(later, course.def.id).toEqual([]);
     }
   });

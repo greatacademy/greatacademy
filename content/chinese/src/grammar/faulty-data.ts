@@ -1,4 +1,4 @@
-// The faulty-sentence topics of grades 4 to 9. The sentences are written for this subject; each line is a faulty
+// The faulty-sentence topics of grades 4 to 9 and senior secondary school. The sentences are written for this subject; each line is a faulty
 // sentence, its correction and three revisions that leave a fault or add one, in the format parseFaulty reads.
 
 import { t } from "@ga/content";
@@ -185,6 +185,28 @@ export const faultyData: readonly FaultyData[] = [
 我们要尽可能节约不必要的开支。 | 我们要尽可能减少不必要的开支。 | 我们要尽可能节约不必要开支。 | 我们要尽可能增加不必要的开支。 | 我们要尽可能节约不必要的浪费。
 凡是去过西湖的人，没有一个不说西湖不美的。 | 凡是去过西湖的人，没有一个不说西湖美的。 | 凡是去过西湖的人，没有一个说西湖美的。 | 凡是去过西湖的人，有的不说西湖不美。 | 去过西湖的人，没有一个不说西湖不美的。
 他把报纸、书籍、刊物和杂志整齐地放在书架上。 | 他把报纸、书籍和杂志整齐地放在书架上。 | 他把报纸、刊物和杂志整齐地放在书架上。 | 他把书籍、刊物和杂志整齐地放在书架上。 | 他把报纸、书籍、刊物和杂志放在书架上。
+`),
+  },
+  {
+    grade: 11,
+    id: "faulty-ambiguous",
+    title: t("Faulty Sentences: Two Meanings", "病句：表意不明"),
+    fault: t("it can be read in two ways", "表意不明"),
+    explanation: t(
+      "A sentence is faulty when it can be read two ways: a phrase can be cut in two places (三个学校的老师 is three teachers or the teachers of three schools), a word has two meanings (背着 is to carry or to hide from), 他 could be either of two people, or who does what to whom is unclear (对他的批评 is criticism of him or by him). Ask what else the sentence could mean, then say it so that only one meaning is left.",
+      "一句话能有两种理解，就是表意不明：短语可以有两种切分（“三个学校的老师”是三位老师，还是三所学校的老师），词语有两个意思（“背着”是驮着还是瞒着），“他”可能指两个人中的任何一个，或者看不出谁对谁做了什么（“对他的批评”是批评他，还是他提出的批评）。想一想这句话还能怎样理解，再改成只有一种意思的说法。",
+    ),
+    items: parseFaulty(`
+三个学校的老师参加了这次培训。 | 三所学校的老师参加了这次培训。 | 三个学校的老师都参加了这次培训。 | 三个学校老师参加了这次培训。 | 三个学校的老师参加了培训。
+几个医院的大夫来我们学校做健康检查。 | 几位医院的大夫来我们学校做健康检查。 | 几个医院的大夫都来我们学校做健康检查。 | 几个医院大夫来我们学校做健康检查。 | 几个医院的大夫来我们学校做了健康检查。
+小王和小李是好朋友，他经常帮助他。 | 小王和小李是好朋友，小王经常帮助小李。 | 小王和小李是好朋友，他们经常帮助他。 | 小王和小李是好朋友，他常常帮助他。 | 小王和小李是好朋友，他经常热心地帮助他。
+他背着总经理和副总经理偷偷地把这笔钱存进了银行。 | 他瞒着总经理和副总经理，偷偷地把这笔钱存进了银行。 | 他背着总经理和副总经理，偷偷地把钱存进了银行。 | 他背着总经理、副总经理偷偷地把这笔钱存进了银行。 | 他偷偷地背着总经理和副总经理把这笔钱存进了银行。
+这是咬死了猎人的狗。 | 这是那只把猎人咬死了的狗。 | 这是咬死了猎人的那只狗。 | 这条是咬死了猎人的狗。 | 这是咬死猎人的狗。
+学校领导对他的批评是正确的。 | 学校领导批评他，批评得很正确。 | 学校领导对他的批评是对的。 | 学校领导对他的批评很正确。 | 学校的领导对他的批评是正确的。
+我想起来了。 | 我记起来了。 | 我想起来啦。 | 我已经想起来了。 | 我又想起来了。
+鸡不吃了。 | 鸡已经吃饱了，不吃了。 | 鸡不再吃了。 | 这只鸡不吃了。 | 鸡都不吃了。
+老师看到他很高兴。 | 老师看到他，心里很高兴。 | 老师看到他很开心。 | 老师看见他很高兴。 | 老师看到他十分高兴。
+张老师和李老师的学生都来了。 | 张老师的学生和李老师的学生都来了。 | 张老师和李老师的学生全来了。 | 张老师跟李老师的学生都来了。 | 张老师和李老师的几个学生都来了。
 `),
   },
 ];

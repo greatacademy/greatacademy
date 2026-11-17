@@ -1,4 +1,4 @@
-// The drill topics of grades 3 to 6: connectives (关联词), changes of sentence form (把/被, rhetorical questions, reported
+// The drill topics of grades 3 to 10: connectives (关联词), changes of sentence form (把/被, rhetorical questions, reported
 // speech) and rhetorical devices (修辞). Every sentence is written for the subject, apart from the classical couplets.
 
 import { type Text, t } from "@ga/content";
@@ -556,9 +556,68 @@ const rhetoricThree = deviceTopic(
   },
 );
 
+// Rhetoric of senior secondary school, grade 10: the required course.
+const rhetoricFour = deviceTopic(
+  10,
+  "rhetoric-4",
+  t("Rhetoric: Synaesthesia, Paired Phrasing, Double Meaning, Irony", "修辞：通感、互文、双关、反语"),
+  [
+    {
+      name: "通感",
+      en: "synaesthesia",
+      mark: t(
+        "describes what one sense takes in with the words of another, a sound that is sweet or a scent like music",
+        "用一种感官的感受去写另一种感官的感受，比如把声音写得有味道，把香气写得像音乐",
+      ),
+    },
+    {
+      name: "互文",
+      en: "paired phrasing",
+      mark: t(
+        "splits one meaning over two phrases that complete each other, to be read together",
+        "上下两句或一句中的两部分意思互相补充，合起来理解才完整",
+      ),
+    },
+    {
+      name: "双关",
+      en: "double meaning",
+      mark: t(
+        "uses a word that sounds like or means two things at once, saying one and meaning the other",
+        "利用词语同音或多义，让一句话同时有表面和内里两层意思",
+      ),
+    },
+    {
+      name: "反语",
+      en: "irony",
+      mark: t("says the opposite of what is meant, often to mock or criticize", "故意说和本意相反的话，常常带有讽刺或批评"),
+    },
+  ],
+  {
+    通感: [
+      "红杏枝头春意闹。",
+      "微风吹来缕缕荷香，像远处飘来的若有若无的琴声。",
+      "她的笑声甜甜的，像刚从罐子里舀出来的蜂蜜。",
+      "那一声汽笛又冷又硬，划破了清晨的寂静。",
+    ],
+    互文: ["秦时明月汉时关。", "主人下马客在船。", "烟笼寒水月笼沙。", "将军百战死，壮士十年归。"],
+    双关: [
+      "东边日出西边雨，道是无晴却有晴。",
+      "春蚕到死丝方尽，蜡炬成灰泪始干。",
+      "早知潮有信，嫁与弄潮儿。",
+      "理发店门口的招牌上写着四个大字：从头做起。",
+    ],
+    反语: [
+      "这位“大忙人”一个上午都躺在沙发上看电视。",
+      "你可真“勤快”，作业拖了一个星期还没动笔。",
+      "好一个“聪明”的办法，结果把事情弄得更糟了。",
+      "他这个“守时”的人，又迟到了半个小时。",
+    ],
+  },
+);
+
 /** drillData are the drill topics, by kind, each kind in order. */
 export const drillData: Readonly<Record<"connectives" | "sentences" | "rhetoric", readonly DrillData[]>> = {
   connectives: [connectivesOne, connectivesTwo],
   sentences: [sentencesBaBei, sentencesRhetorical, sentencesReported],
-  rhetoric: [rhetoricOne, rhetoricTwo, rhetoricThree],
+  rhetoric: [rhetoricOne, rhetoricTwo, rhetoricThree, rhetoricFour],
 };
