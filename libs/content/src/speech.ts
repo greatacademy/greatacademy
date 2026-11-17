@@ -8,7 +8,14 @@ export interface HeardWord {
   readonly accuracy?: number;
   /** error is what an assessment against a reference found: a word left out, added, or said so that it was hard to recognize. */
   readonly error?: "omission" | "insertion" | "mispronunciation";
+  /** pinyin is the reading the reference gives a syllable of Chinese, when the service says it. */
+  readonly pinyin?: string;
+  /** wrong are the parts of a syllable of Chinese the assessment found wrong. */
+  readonly wrong?: readonly SyllablePart[];
 }
+
+/** SyllablePart is a part of a syllable of Chinese that can be said wrong: its initial, its final or its tone. */
+export type SyllablePart = "initial" | "final" | "tone";
 
 /**
  * Heard is what a speech service heard in a recording: the response to a

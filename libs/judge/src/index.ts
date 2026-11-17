@@ -2,6 +2,7 @@ export * from "./catalog.ts";
 export * from "./converse.ts";
 export * from "./cost.ts";
 export * from "./criteria.ts";
+export * from "./iflytek.ts";
 export * from "./injection.ts";
 export * from "./judge.ts";
 export * from "./prompt.ts";

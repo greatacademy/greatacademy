@@ -137,6 +137,8 @@ Recordings are uploaded with the rest of the subject's audio when the subject is
 | `zh-CN` speech problems: repeat a syllable, a word, a sentence | `content/chinese` |
 | The provider is chosen by admins, as for every AI and speech vendor | `apps/web` admin |
 
+**Built so far.** The provider: `iflytekSpeech` in `libs/judge`, chosen by an iFlytek base URL, assesses `zh-CN` against a reference and gives each syllable its pinyin and the parts said wrong. Admins may route it to `pronunciation:zh-CN` only, and it was checked against the service on the trial's recordings. The speech problems wait for C2.3's recordings.
+
 A trial on synthetic recordings with deliberate errors found iFlytek's pupil mode flags about 80% of single tone errors and Azure about 50%, and iFlytek flags initials and finals that Azure scores as correct. Thresholds are *starting* values, to confirm on real learners before they are relied on.
 
 **Gate CG2.** Learners of levels 1 to 3 improve on an outside test, and the pronunciation feedback agrees with a teacher's judgment on a sample of real recordings.

@@ -86,7 +86,7 @@ const ROUTE_USES: readonly RouteUse[] = ["judgment", "conversation", "stt", "tts
 const TEXT_USES: readonly RouteUse[] = ["judgment", "conversation"];
 
 /** SPEECH_LANGUAGES are the language tags a speech route can serve: a language alone, or with the accent heard and scored. */
-export const SPEECH_LANGUAGES: readonly string[] = ["en", "en-US", "en-GB", "en-AU", "en-CA"];
+export const SPEECH_LANGUAGES: readonly string[] = ["en", "en-US", "en-GB", "en-AU", "en-CA", "zh-CN"];
 
 /** targetValid checks a route's target by use: a criterion key, a conversation's id, or one of the speech languages. */
 function targetValid(use: RouteUse, target: string): boolean {
@@ -394,6 +394,10 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
       need(
         text || speechProtocol(vendor.baseUrl),
         "this vendor's base URL names no supported speech service, such as https://<region>.api.cognitive.microsoft.com",
+      );
+      need(
+        text || use === "pronunciation" || speechProtocol(vendor.baseUrl) !== "iflytek",
+        "iFlytek only assesses pronunciation; route its vendor to pronunciation",
       );
       const before = (await routes(db)).find((x) => x.use === use && x.target === r.target && x.position === position);
       const changed =

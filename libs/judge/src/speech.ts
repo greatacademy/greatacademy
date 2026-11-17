@@ -1,5 +1,7 @@
 import type { Heard, HeardWord } from "@ga/content";
 
+import { iflytekSpeech, isIflytek } from "./iflytek.ts";
+
 /** SPEECH_RATE is the sample rate a recording must have: 16 kHz, what speech services expect. */
 export const SPEECH_RATE = 16_000;
 
@@ -104,14 +106,15 @@ export class SpeechFailed extends Error {
   }
 }
 
-/** SpeechProtocol is the protocol a speech vendor speaks, told by its base URL. */
-export type SpeechProtocol = "azure";
+/** SpeechProtocol is the protocol a speech vendor speaks, told by its base URL: Azure's, or iFlytek's assessment. */
+export type SpeechProtocol = "azure" | "iflytek";
 
 /** speechProtocol tells which protocol a speech vendor's base URL speaks, or undefined when none is supported. */
 export function speechProtocol(baseUrl: string): SpeechProtocol | undefined {
   try {
     const host = new URL(baseUrl).hostname;
-    return /\.(stt|tts)\.speech\.microsoft\.com$|\.api\.cognitive\.microsoft\.com$/.test(host) ? "azure" : undefined;
+    if (/\.(stt|tts)\.speech\.microsoft\.com$|\.api\.cognitive\.microsoft\.com$/.test(host)) return "azure";
+    return isIflytek(host) ? "iflytek" : undefined;
   } catch {
     return undefined;
   }
@@ -243,7 +246,9 @@ export function azureSpeech(config: SpeechConfig, fetcher: typeof fetch = fetch)
 
 /** speechProvider builds the provider of a speech vendor from its configuration. */
 export function speechProvider(config: SpeechConfig, fetcher?: typeof fetch): SpeechProvider {
-  if (speechProtocol(config.baseUrl) === "azure") return azureSpeech(config, fetcher);
+  const protocol = speechProtocol(config.baseUrl);
+  if (protocol === "azure") return azureSpeech(config, fetcher);
+  if (protocol === "iflytek") return iflytekSpeech(config);
   throw new SpeechFailed("unsupported-vendor");
 }
 
