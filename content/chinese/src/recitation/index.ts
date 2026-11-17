@@ -1,9 +1,10 @@
-// The recitation topics of the Chinese subject: a topic a poem from grade 3 (docs/chinese-curriculum.md §7), each poem
+// The recitation topics of the Chinese subject: a topic a poem from grade 1 (docs/chinese-curriculum.md §7), each poem
 // following the grade's one before. The lines of a grade's other poems are offered against a poem's own.
 
 import type { TopicDef } from "@ga/content";
 
 import { gradeFivePoems, gradeFourPoems, gradeSixPoems, gradeThreePoems } from "./data.ts";
+import { gradeOnePoems, gradeTwoPoems } from "./early.ts";
 import { type Poem, poemTopic } from "./poems.ts";
 
 /** GradePoem is a recitation topic and the grade it is taught in. */
@@ -27,6 +28,8 @@ function grade(n: number, poems: readonly Poem[]): readonly GradePoem[] {
 
 /** recitedPoems are the recited poems of every grade, in order. */
 export const recitedPoems: readonly GradePoem[] = [
+  ...grade(1, gradeOnePoems),
+  ...grade(2, gradeTwoPoems),
   ...grade(3, gradeThreePoems),
   ...grade(4, gradeFourPoems),
   ...grade(5, gradeFivePoems),

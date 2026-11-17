@@ -126,16 +126,29 @@ topic punctuation-sentence-ends punctuation-sentence-ends-checking punctuation-s
 topic punctuation-speech punctuation-speech-checking punctuation-speech-marks
 topic punctuation-titles punctuation-titles-checking punctuation-titles-marks
 topic recite-bo-ya-gu-qin recite-bo-ya-gu-qin-lines recite-bo-ya-gu-qin-meaning recite-bo-ya-gu-qin-writing
+topic recite-cao-li-li recite-cao-li-li-lines recite-cao-li-li-meaning recite-cao-li-li-writing
+topic recite-chi-shang recite-chi-shang-lines recite-chi-shang-meaning recite-chi-shang-writing
 topic recite-chu-sai-wang-chang-ling recite-chu-sai-wang-chang-ling-lines recite-chu-sai-wang-chang-ling-meaning recite-chu-sai-wang-chang-ling-writing
 topic recite-chun-ri-zhu-xi recite-chun-ri-zhu-xi-lines recite-chun-ri-zhu-xi-meaning recite-chun-ri-zhu-xi-writing
+topic recite-chun-xiao recite-chun-xiao-lines recite-chun-xiao-meaning recite-chun-xiao-writing
 topic recite-cong-jun-xing-qing-hai recite-cong-jun-xing-qing-hai-lines recite-cong-jun-xing-qing-hai-meaning recite-cong-jun-xing-qing-hai-writing
+topic recite-cun-ju-gao-ding recite-cun-ju-gao-ding-lines recite-cun-ju-gao-ding-meaning recite-cun-ju-gao-ding-writing
 topic recite-cun-wan recite-cun-wan-lines recite-cun-wan-meaning recite-cun-wan-writing
+topic recite-deng-guan-que-lou recite-deng-guan-que-lou-lines recite-deng-guan-que-lou-meaning recite-deng-guan-que-lou-writing
+topic recite-feng-li-qiao recite-feng-li-qiao-lines recite-feng-li-qiao-meaning recite-feng-li-qiao-writing
 topic recite-fu-rong-lou recite-fu-rong-lou-lines recite-fu-rong-lou-meaning recite-fu-rong-lou-writing
+topic recite-gu-lang-yue-xing recite-gu-lang-yue-xing-lines recite-gu-lang-yue-xing-meaning recite-gu-lang-yue-xing-writing
 topic recite-hui-chong-chun-jiang recite-hui-chong-chun-jiang-lines recite-hui-chong-chun-jiang-meaning recite-hui-chong-chun-jiang-writing
 topic recite-ji-hai-za-shi-jiu-zhou recite-ji-hai-za-shi-jiu-zhou-lines recite-ji-hai-za-shi-jiu-zhou-meaning recite-ji-hai-za-shi-jiu-zhou-writing
+topic recite-jiang-nan recite-jiang-nan-lines recite-jiang-nan-meaning recite-jiang-nan-writing
+topic recite-jiang-xue recite-jiang-xue-lines recite-jiang-xue-meaning recite-jiang-xue-writing
+topic recite-jing-ye-si recite-jing-ye-si-lines recite-jing-ye-si-meaning recite-jing-ye-si-writing
+topic recite-jue-ju-huang-li recite-jue-ju-huang-li-lines recite-jue-ju-huang-li-meaning recite-jue-ju-huang-li-writing
 topic recite-lang-tao-sha-jiu-qu recite-lang-tao-sha-jiu-qu-lines recite-lang-tao-sha-jiu-qu-meaning recite-lang-tao-sha-jiu-qu-writing
 topic recite-liang-zhou-ci-wang-han recite-liang-zhou-ci-wang-han-lines recite-liang-zhou-ci-wang-han-meaning recite-liang-zhou-ci-wang-han-writing
 topic recite-ma-shi-da-mo recite-ma-shi-da-mo-lines recite-ma-shi-da-mo-meaning recite-ma-shi-da-mo-writing
+topic recite-min-nong-chu-he recite-min-nong-chu-he-lines recite-min-nong-chu-he-meaning recite-min-nong-chu-he-writing
+topic recite-min-nong-chun-zhong recite-min-nong-chun-zhong-lines recite-min-nong-chun-zhong-meaning recite-min-nong-chun-zhong-writing
 topic recite-nang-ying-ye-du recite-nang-ying-ye-du-lines recite-nang-ying-ye-du-meaning recite-nang-ying-ye-du-writing
 topic recite-qing-ping-yue-cun-ju recite-qing-ping-yue-cun-ju-lines recite-qing-ping-yue-cun-ju-meaning recite-qing-ping-yue-cun-ju-writing
 topic recite-qiu-ye-jiang-xiao recite-qiu-ye-jiang-xiao-lines recite-qiu-ye-jiang-xiao-meaning recite-qiu-ye-jiang-xiao-writing
@@ -152,17 +165,157 @@ topic recite-ti-xi-lin-bi recite-ti-xi-lin-bi-lines recite-ti-xi-lin-bi-meaning 
 topic recite-tie-chu-cheng-zhen recite-tie-chu-cheng-zhen-lines recite-tie-chu-cheng-zhen-meaning recite-tie-chu-cheng-zhen-writing
 topic recite-wang-dong-ting recite-wang-dong-ting-lines recite-wang-dong-ting-meaning recite-wang-dong-ting-writing
 topic recite-wang-hu-lou recite-wang-hu-lou-lines recite-wang-hu-lou-meaning recite-wang-hu-lou-writing
+topic recite-wang-lu-shan-pu-bu recite-wang-lu-shan-pu-bu-lines recite-wang-lu-shan-pu-bu-meaning recite-wang-lu-shan-pu-bu-writing
 topic recite-wang-tian-men-shan recite-wang-tian-men-shan-lines recite-wang-tian-men-shan-meaning recite-wang-tian-men-shan-writing
 topic recite-xi-jiang-yue-huang-sha recite-xi-jiang-yue-huang-sha-lines recite-xi-jiang-yue-huang-sha-meaning recite-xi-jiang-yue-huang-sha-writing
 topic recite-xia-ri-jue-ju recite-xia-ri-jue-ju-lines recite-xia-ri-jue-ju-meaning recite-xia-ri-jue-ju-writing
+topic recite-xiao-chi recite-xiao-chi-lines recite-xiao-chi-meaning recite-xiao-chi-writing
+topic recite-xiao-chu-jing-ci-si recite-xiao-chu-jing-ci-si-lines recite-xiao-chu-jing-ci-si-meaning recite-xiao-chu-jing-ci-si-writing
 topic recite-xue-mei recite-xue-mei-lines recite-xue-mei-meaning recite-xue-mei-writing
 topic recite-xue-yi recite-xue-yi-lines recite-xue-yi-meaning recite-xue-yi-writing
+topic recite-xun-yin-zhe recite-xun-yin-zhe-lines recite-xun-yin-zhe-meaning recite-xun-yin-zhe-writing
 topic recite-yang-shi-zhi-zi recite-yang-shi-zhi-zi-lines recite-yang-shi-zhi-zi-meaning recite-yang-shi-zhi-zi-writing
 topic recite-ye-shu-suo-jian recite-ye-shu-suo-jian-lines recite-ye-shu-suo-jian-meaning recite-ye-shu-suo-jian-writing
+topic recite-ye-su-shan-si recite-ye-su-shan-si-lines recite-ye-su-shan-si-meaning recite-ye-su-shan-si-writing
 topic recite-yin-hu-shang recite-yin-hu-shang-lines recite-yin-hu-shang-meaning recite-yin-hu-shang-writing
+topic recite-yong-e recite-yong-e-lines recite-yong-e-meaning recite-yong-e-writing
+topic recite-yong-liu recite-yong-liu-lines recite-yong-liu-meaning recite-yong-liu-writing
 topic recite-zeng-liu-jing-wen recite-zeng-liu-jing-wen-lines recite-zeng-liu-jing-wen-meaning recite-zeng-liu-jing-wen-writing
 topic recite-zhi-zi-nong-bing recite-zhi-zi-nong-bing-lines recite-zhi-zi-nong-bing-meaning recite-zhi-zi-nong-bing-writing
 topic recite-zhu-shi recite-zhu-shi-lines recite-zhu-shi-meaning recite-zhu-shi-writing
+topic recognizing-characters-1-01 recognizing-characters-1-01-reading recognizing-characters-1-01-writing
+topic recognizing-characters-1-02 recognizing-characters-1-02-reading recognizing-characters-1-02-writing
+topic recognizing-characters-1-03 recognizing-characters-1-03-reading recognizing-characters-1-03-writing
+topic recognizing-characters-1-04 recognizing-characters-1-04-reading recognizing-characters-1-04-writing
+topic recognizing-characters-1-05 recognizing-characters-1-05-reading recognizing-characters-1-05-writing
+topic recognizing-characters-1-06 recognizing-characters-1-06-reading recognizing-characters-1-06-writing
+topic recognizing-characters-1-07 recognizing-characters-1-07-reading recognizing-characters-1-07-writing
+topic recognizing-characters-1-08 recognizing-characters-1-08-reading recognizing-characters-1-08-writing
+topic recognizing-characters-1-09 recognizing-characters-1-09-reading recognizing-characters-1-09-writing
+topic recognizing-characters-1-10 recognizing-characters-1-10-reading recognizing-characters-1-10-writing
+topic recognizing-characters-1-11 recognizing-characters-1-11-reading recognizing-characters-1-11-writing
+topic recognizing-characters-1-12 recognizing-characters-1-12-reading recognizing-characters-1-12-writing
+topic recognizing-characters-1-13 recognizing-characters-1-13-reading recognizing-characters-1-13-writing
+topic recognizing-characters-1-14 recognizing-characters-1-14-reading recognizing-characters-1-14-writing
+topic recognizing-characters-1-15 recognizing-characters-1-15-reading recognizing-characters-1-15-writing
+topic recognizing-characters-1-16 recognizing-characters-1-16-reading recognizing-characters-1-16-writing
+topic recognizing-characters-1-17 recognizing-characters-1-17-reading recognizing-characters-1-17-writing
+topic recognizing-characters-1-18 recognizing-characters-1-18-reading recognizing-characters-1-18-writing
+topic recognizing-characters-1-19 recognizing-characters-1-19-reading recognizing-characters-1-19-writing
+topic recognizing-characters-1-20 recognizing-characters-1-20-reading recognizing-characters-1-20-writing
+topic recognizing-characters-1-21 recognizing-characters-1-21-reading recognizing-characters-1-21-writing
+topic recognizing-characters-1-22 recognizing-characters-1-22-reading recognizing-characters-1-22-writing
+topic recognizing-characters-1-23 recognizing-characters-1-23-reading recognizing-characters-1-23-writing
+topic recognizing-characters-1-24 recognizing-characters-1-24-reading recognizing-characters-1-24-writing
+topic recognizing-characters-1-25 recognizing-characters-1-25-reading recognizing-characters-1-25-writing
+topic recognizing-characters-1-26 recognizing-characters-1-26-reading recognizing-characters-1-26-writing
+topic recognizing-characters-1-27 recognizing-characters-1-27-reading recognizing-characters-1-27-writing
+topic recognizing-characters-1-28 recognizing-characters-1-28-reading recognizing-characters-1-28-writing
+topic recognizing-characters-1-29 recognizing-characters-1-29-reading recognizing-characters-1-29-writing
+topic recognizing-characters-1-30 recognizing-characters-1-30-reading recognizing-characters-1-30-writing
+topic recognizing-characters-1-31 recognizing-characters-1-31-reading recognizing-characters-1-31-writing
+topic recognizing-characters-1-32 recognizing-characters-1-32-reading recognizing-characters-1-32-writing
+topic recognizing-characters-1-33 recognizing-characters-1-33-reading recognizing-characters-1-33-writing
+topic recognizing-characters-1-34 recognizing-characters-1-34-reading recognizing-characters-1-34-writing
+topic recognizing-characters-1-35 recognizing-characters-1-35-reading recognizing-characters-1-35-writing
+topic recognizing-characters-1-36 recognizing-characters-1-36-reading recognizing-characters-1-36-writing
+topic recognizing-characters-1-37 recognizing-characters-1-37-reading recognizing-characters-1-37-writing
+topic recognizing-characters-1-38 recognizing-characters-1-38-reading recognizing-characters-1-38-writing
+topic recognizing-characters-1-39 recognizing-characters-1-39-reading recognizing-characters-1-39-writing
+topic recognizing-characters-1-40 recognizing-characters-1-40-reading recognizing-characters-1-40-writing
+topic recognizing-characters-1-41 recognizing-characters-1-41-reading recognizing-characters-1-41-writing
+topic recognizing-characters-1-42 recognizing-characters-1-42-reading recognizing-characters-1-42-writing
+topic recognizing-characters-1-43 recognizing-characters-1-43-reading recognizing-characters-1-43-writing
+topic recognizing-characters-1-44 recognizing-characters-1-44-reading recognizing-characters-1-44-writing
+topic recognizing-characters-1-45 recognizing-characters-1-45-reading recognizing-characters-1-45-writing
+topic recognizing-characters-1-46 recognizing-characters-1-46-reading recognizing-characters-1-46-writing
+topic recognizing-characters-1-47 recognizing-characters-1-47-reading recognizing-characters-1-47-writing
+topic recognizing-characters-1-48 recognizing-characters-1-48-reading recognizing-characters-1-48-writing
+topic recognizing-characters-1-49 recognizing-characters-1-49-reading recognizing-characters-1-49-writing
+topic recognizing-characters-1-50 recognizing-characters-1-50-reading recognizing-characters-1-50-writing
+topic recognizing-characters-1-51 recognizing-characters-1-51-reading recognizing-characters-1-51-writing
+topic recognizing-characters-1-52 recognizing-characters-1-52-reading recognizing-characters-1-52-writing
+topic recognizing-characters-1-53 recognizing-characters-1-53-reading recognizing-characters-1-53-writing
+topic recognizing-characters-1-54 recognizing-characters-1-54-reading recognizing-characters-1-54-writing
+topic recognizing-characters-1-55 recognizing-characters-1-55-reading recognizing-characters-1-55-writing
+topic recognizing-characters-1-56 recognizing-characters-1-56-reading recognizing-characters-1-56-writing
+topic recognizing-characters-1-57 recognizing-characters-1-57-reading recognizing-characters-1-57-writing
+topic recognizing-characters-1-58 recognizing-characters-1-58-reading recognizing-characters-1-58-writing
+topic recognizing-characters-1-59 recognizing-characters-1-59-reading recognizing-characters-1-59-writing
+topic recognizing-characters-1-60 recognizing-characters-1-60-reading recognizing-characters-1-60-writing
+topic recognizing-characters-1-61 recognizing-characters-1-61-reading recognizing-characters-1-61-writing
+topic recognizing-characters-1-62 recognizing-characters-1-62-reading recognizing-characters-1-62-writing
+topic recognizing-characters-1-63 recognizing-characters-1-63-reading recognizing-characters-1-63-writing
+topic recognizing-characters-1-64 recognizing-characters-1-64-reading recognizing-characters-1-64-writing
+topic recognizing-characters-1-65 recognizing-characters-1-65-reading recognizing-characters-1-65-writing
+topic recognizing-characters-1-66 recognizing-characters-1-66-reading recognizing-characters-1-66-writing
+topic recognizing-characters-1-67 recognizing-characters-1-67-reading recognizing-characters-1-67-writing
+topic recognizing-characters-2-01 recognizing-characters-2-01-reading recognizing-characters-2-01-writing
+topic recognizing-characters-2-02 recognizing-characters-2-02-reading recognizing-characters-2-02-writing
+topic recognizing-characters-2-03 recognizing-characters-2-03-reading recognizing-characters-2-03-writing
+topic recognizing-characters-2-04 recognizing-characters-2-04-reading recognizing-characters-2-04-writing
+topic recognizing-characters-2-05 recognizing-characters-2-05-reading recognizing-characters-2-05-writing
+topic recognizing-characters-2-06 recognizing-characters-2-06-reading recognizing-characters-2-06-writing
+topic recognizing-characters-2-07 recognizing-characters-2-07-reading recognizing-characters-2-07-writing
+topic recognizing-characters-2-08 recognizing-characters-2-08-reading recognizing-characters-2-08-writing
+topic recognizing-characters-2-09 recognizing-characters-2-09-reading recognizing-characters-2-09-writing
+topic recognizing-characters-2-10 recognizing-characters-2-10-reading recognizing-characters-2-10-writing
+topic recognizing-characters-2-11 recognizing-characters-2-11-reading recognizing-characters-2-11-writing
+topic recognizing-characters-2-12 recognizing-characters-2-12-reading recognizing-characters-2-12-writing
+topic recognizing-characters-2-13 recognizing-characters-2-13-reading recognizing-characters-2-13-writing
+topic recognizing-characters-2-14 recognizing-characters-2-14-reading recognizing-characters-2-14-writing
+topic recognizing-characters-2-15 recognizing-characters-2-15-reading recognizing-characters-2-15-writing
+topic recognizing-characters-2-16 recognizing-characters-2-16-reading recognizing-characters-2-16-writing
+topic recognizing-characters-2-17 recognizing-characters-2-17-reading recognizing-characters-2-17-writing
+topic recognizing-characters-2-18 recognizing-characters-2-18-reading recognizing-characters-2-18-writing
+topic recognizing-characters-2-19 recognizing-characters-2-19-reading recognizing-characters-2-19-writing
+topic recognizing-characters-2-20 recognizing-characters-2-20-reading recognizing-characters-2-20-writing
+topic recognizing-characters-2-21 recognizing-characters-2-21-reading recognizing-characters-2-21-writing
+topic recognizing-characters-2-22 recognizing-characters-2-22-reading recognizing-characters-2-22-writing
+topic recognizing-characters-2-23 recognizing-characters-2-23-reading recognizing-characters-2-23-writing
+topic recognizing-characters-2-24 recognizing-characters-2-24-reading recognizing-characters-2-24-writing
+topic recognizing-characters-2-25 recognizing-characters-2-25-reading recognizing-characters-2-25-writing
+topic recognizing-characters-2-26 recognizing-characters-2-26-reading recognizing-characters-2-26-writing
+topic recognizing-characters-2-27 recognizing-characters-2-27-reading recognizing-characters-2-27-writing
+topic recognizing-characters-2-28 recognizing-characters-2-28-reading recognizing-characters-2-28-writing
+topic recognizing-characters-2-29 recognizing-characters-2-29-reading recognizing-characters-2-29-writing
+topic recognizing-characters-2-30 recognizing-characters-2-30-reading recognizing-characters-2-30-writing
+topic recognizing-characters-2-31 recognizing-characters-2-31-reading recognizing-characters-2-31-writing
+topic recognizing-characters-2-32 recognizing-characters-2-32-reading recognizing-characters-2-32-writing
+topic recognizing-characters-2-33 recognizing-characters-2-33-reading recognizing-characters-2-33-writing
+topic recognizing-characters-2-34 recognizing-characters-2-34-reading recognizing-characters-2-34-writing
+topic recognizing-characters-2-35 recognizing-characters-2-35-reading recognizing-characters-2-35-writing
+topic recognizing-characters-2-36 recognizing-characters-2-36-reading recognizing-characters-2-36-writing
+topic recognizing-characters-2-37 recognizing-characters-2-37-reading recognizing-characters-2-37-writing
+topic recognizing-characters-2-38 recognizing-characters-2-38-reading recognizing-characters-2-38-writing
+topic recognizing-characters-2-39 recognizing-characters-2-39-reading recognizing-characters-2-39-writing
+topic recognizing-characters-2-40 recognizing-characters-2-40-reading recognizing-characters-2-40-writing
+topic recognizing-characters-2-41 recognizing-characters-2-41-reading recognizing-characters-2-41-writing
+topic recognizing-characters-2-42 recognizing-characters-2-42-reading recognizing-characters-2-42-writing
+topic recognizing-characters-2-43 recognizing-characters-2-43-reading recognizing-characters-2-43-writing
+topic recognizing-characters-2-44 recognizing-characters-2-44-reading recognizing-characters-2-44-writing
+topic recognizing-characters-2-45 recognizing-characters-2-45-reading recognizing-characters-2-45-writing
+topic recognizing-characters-2-46 recognizing-characters-2-46-reading recognizing-characters-2-46-writing
+topic recognizing-characters-2-47 recognizing-characters-2-47-reading recognizing-characters-2-47-writing
+topic recognizing-characters-2-48 recognizing-characters-2-48-reading recognizing-characters-2-48-writing
+topic recognizing-characters-2-49 recognizing-characters-2-49-reading recognizing-characters-2-49-writing
+topic recognizing-characters-2-50 recognizing-characters-2-50-reading recognizing-characters-2-50-writing
+topic recognizing-characters-2-51 recognizing-characters-2-51-reading recognizing-characters-2-51-writing
+topic recognizing-characters-2-52 recognizing-characters-2-52-reading recognizing-characters-2-52-writing
+topic recognizing-characters-2-53 recognizing-characters-2-53-reading recognizing-characters-2-53-writing
+topic recognizing-characters-2-54 recognizing-characters-2-54-reading recognizing-characters-2-54-writing
+topic recognizing-characters-2-55 recognizing-characters-2-55-reading recognizing-characters-2-55-writing
+topic recognizing-characters-2-56 recognizing-characters-2-56-reading recognizing-characters-2-56-writing
+topic recognizing-characters-2-57 recognizing-characters-2-57-reading recognizing-characters-2-57-writing
+topic recognizing-characters-2-58 recognizing-characters-2-58-reading recognizing-characters-2-58-writing
+topic recognizing-characters-2-59 recognizing-characters-2-59-reading recognizing-characters-2-59-writing
+topic recognizing-characters-2-60 recognizing-characters-2-60-reading recognizing-characters-2-60-writing
+topic recognizing-characters-2-61 recognizing-characters-2-61-reading recognizing-characters-2-61-writing
+topic recognizing-characters-2-62 recognizing-characters-2-62-reading recognizing-characters-2-62-writing
+topic recognizing-characters-2-63 recognizing-characters-2-63-reading recognizing-characters-2-63-writing
+topic recognizing-characters-2-64 recognizing-characters-2-64-reading recognizing-characters-2-64-writing
+topic recognizing-characters-2-65 recognizing-characters-2-65-reading recognizing-characters-2-65-writing
+topic recognizing-characters-2-66 recognizing-characters-2-66-reading recognizing-characters-2-66-writing
 topic recognizing-characters-3-01 recognizing-characters-3-01-reading recognizing-characters-3-01-writing
 topic recognizing-characters-3-02 recognizing-characters-3-02-reading recognizing-characters-3-02-writing
 topic recognizing-characters-3-03 recognizing-characters-3-03-reading recognizing-characters-3-03-writing
