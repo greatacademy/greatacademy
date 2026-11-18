@@ -667,6 +667,79 @@ topic level-4-characters-27 level-4-characters-27-form level-4-characters-27-mea
 topic level-4-characters-28 level-4-characters-28-form level-4-characters-28-meaning level-4-characters-28-reading
 topic level-4-characters-29 level-4-characters-29-form level-4-characters-29-meaning level-4-characters-29-reading
 topic level-4-characters-30 level-4-characters-30-form level-4-characters-30-meaning level-4-characters-30-reading
+topic level-4-grammar-01 level-4-grammar-01-form level-4-grammar-01-use
+topic level-4-grammar-02 level-4-grammar-02-form level-4-grammar-02-use
+topic level-4-grammar-03 level-4-grammar-03-form level-4-grammar-03-use
+topic level-4-grammar-04 level-4-grammar-04-form level-4-grammar-04-use
+topic level-4-grammar-05 level-4-grammar-05-form level-4-grammar-05-use
+topic level-4-grammar-06 level-4-grammar-06-form level-4-grammar-06-use
+topic level-4-grammar-07 level-4-grammar-07-form level-4-grammar-07-use
+topic level-4-grammar-08 level-4-grammar-08-form level-4-grammar-08-use
+topic level-4-grammar-09 level-4-grammar-09-form level-4-grammar-09-use
+topic level-4-grammar-10 level-4-grammar-10-form level-4-grammar-10-use
+topic level-4-grammar-11 level-4-grammar-11-form level-4-grammar-11-use
+topic level-4-grammar-12 level-4-grammar-12-form level-4-grammar-12-use
+topic level-4-grammar-13 level-4-grammar-13-form level-4-grammar-13-use
+topic level-4-grammar-14 level-4-grammar-14-form level-4-grammar-14-use
+topic level-4-grammar-15 level-4-grammar-15-form level-4-grammar-15-use
+topic level-4-grammar-16 level-4-grammar-16-form level-4-grammar-16-use
+topic level-4-grammar-17 level-4-grammar-17-form level-4-grammar-17-use
+topic level-4-grammar-18 level-4-grammar-18-form level-4-grammar-18-use
+topic level-4-grammar-19 level-4-grammar-19-form level-4-grammar-19-use
+topic level-4-grammar-20 level-4-grammar-20-form level-4-grammar-20-use
+topic level-4-grammar-21 level-4-grammar-21-form level-4-grammar-21-use
+topic level-4-grammar-22 level-4-grammar-22-form level-4-grammar-22-use
+topic level-4-grammar-23 level-4-grammar-23-form level-4-grammar-23-use
+topic level-4-grammar-24 level-4-grammar-24-form level-4-grammar-24-use
+topic level-4-grammar-25 level-4-grammar-25-form level-4-grammar-25-use
+topic level-4-grammar-26 level-4-grammar-26-form level-4-grammar-26-use
+topic level-4-grammar-27 level-4-grammar-27-form level-4-grammar-27-use
+topic level-4-grammar-28 level-4-grammar-28-form level-4-grammar-28-use
+topic level-4-grammar-29 level-4-grammar-29-form level-4-grammar-29-use
+topic level-4-grammar-30 level-4-grammar-30-form level-4-grammar-30-use
+topic level-4-grammar-31 level-4-grammar-31-form level-4-grammar-31-use
+topic level-4-grammar-32 level-4-grammar-32-form level-4-grammar-32-use
+topic level-4-grammar-33 level-4-grammar-33-form level-4-grammar-33-use
+topic level-4-grammar-34 level-4-grammar-34-form level-4-grammar-34-use
+topic level-4-grammar-35 level-4-grammar-35-form level-4-grammar-35-use
+topic level-4-grammar-36 level-4-grammar-36-form level-4-grammar-36-use
+topic level-4-grammar-37 level-4-grammar-37-form level-4-grammar-37-use
+topic level-4-grammar-38 level-4-grammar-38-form level-4-grammar-38-use
+topic level-4-grammar-39 level-4-grammar-39-form level-4-grammar-39-use
+topic level-4-grammar-40 level-4-grammar-40-form level-4-grammar-40-use
+topic level-4-grammar-41 level-4-grammar-41-form level-4-grammar-41-use
+topic level-4-grammar-42 level-4-grammar-42-form level-4-grammar-42-use
+topic level-4-grammar-43 level-4-grammar-43-form level-4-grammar-43-use
+topic level-4-grammar-44 level-4-grammar-44-form level-4-grammar-44-use
+topic level-4-grammar-45 level-4-grammar-45-form level-4-grammar-45-use
+topic level-4-grammar-46 level-4-grammar-46-form level-4-grammar-46-use
+topic level-4-grammar-47 level-4-grammar-47-form level-4-grammar-47-use
+topic level-4-grammar-48 level-4-grammar-48-form level-4-grammar-48-use
+topic level-4-grammar-49 level-4-grammar-49-form level-4-grammar-49-use
+topic level-4-grammar-50 level-4-grammar-50-form level-4-grammar-50-use
+topic level-4-grammar-51 level-4-grammar-51-form level-4-grammar-51-use
+topic level-4-grammar-52 level-4-grammar-52-form level-4-grammar-52-use
+topic level-4-grammar-53 level-4-grammar-53-form level-4-grammar-53-use
+topic level-4-grammar-54 level-4-grammar-54-form level-4-grammar-54-use
+topic level-4-grammar-55 level-4-grammar-55-form level-4-grammar-55-use
+topic level-4-grammar-56 level-4-grammar-56-form level-4-grammar-56-use
+topic level-4-grammar-57 level-4-grammar-57-form level-4-grammar-57-use
+topic level-4-grammar-58 level-4-grammar-58-form level-4-grammar-58-use
+topic level-4-grammar-59 level-4-grammar-59-form level-4-grammar-59-use
+topic level-4-grammar-60 level-4-grammar-60-form level-4-grammar-60-use
+topic level-4-grammar-61 level-4-grammar-61-form level-4-grammar-61-use
+topic level-4-grammar-62 level-4-grammar-62-form level-4-grammar-62-use
+topic level-4-grammar-63 level-4-grammar-63-form level-4-grammar-63-use
+topic level-4-grammar-64 level-4-grammar-64-form level-4-grammar-64-use
+topic level-4-grammar-65 level-4-grammar-65-form level-4-grammar-65-use
+topic level-4-grammar-66 level-4-grammar-66-form level-4-grammar-66-use
+topic level-4-grammar-67 level-4-grammar-67-form level-4-grammar-67-use
+topic level-4-grammar-68 level-4-grammar-68-form level-4-grammar-68-use
+topic level-4-grammar-69 level-4-grammar-69-form level-4-grammar-69-use
+topic level-4-grammar-70 level-4-grammar-70-form level-4-grammar-70-use
+topic level-4-grammar-71 level-4-grammar-71-form level-4-grammar-71-use
+topic level-4-grammar-72 level-4-grammar-72-form level-4-grammar-72-use
+topic level-4-grammar-73 level-4-grammar-73-form level-4-grammar-73-use
 topic level-4-words-01 level-4-words-01-meaning level-4-words-01-reading level-4-words-01-use
 topic level-4-words-02 level-4-words-02-meaning level-4-words-02-reading level-4-words-02-use
 topic level-4-words-03 level-4-words-03-meaning level-4-words-03-reading level-4-words-03-use
@@ -797,6 +870,68 @@ topic level-5-characters-27 level-5-characters-27-form level-5-characters-27-mea
 topic level-5-characters-28 level-5-characters-28-form level-5-characters-28-meaning level-5-characters-28-reading
 topic level-5-characters-29 level-5-characters-29-form level-5-characters-29-meaning level-5-characters-29-reading
 topic level-5-characters-30 level-5-characters-30-form level-5-characters-30-meaning level-5-characters-30-reading
+topic level-5-grammar-01 level-5-grammar-01-form level-5-grammar-01-use
+topic level-5-grammar-02 level-5-grammar-02-form level-5-grammar-02-use
+topic level-5-grammar-03 level-5-grammar-03-form level-5-grammar-03-use
+topic level-5-grammar-04 level-5-grammar-04-form level-5-grammar-04-use
+topic level-5-grammar-05 level-5-grammar-05-form level-5-grammar-05-use
+topic level-5-grammar-06 level-5-grammar-06-form level-5-grammar-06-use
+topic level-5-grammar-07 level-5-grammar-07-form level-5-grammar-07-use
+topic level-5-grammar-08 level-5-grammar-08-form level-5-grammar-08-use
+topic level-5-grammar-09 level-5-grammar-09-form level-5-grammar-09-use
+topic level-5-grammar-10 level-5-grammar-10-form level-5-grammar-10-use
+topic level-5-grammar-11 level-5-grammar-11-form level-5-grammar-11-use
+topic level-5-grammar-12 level-5-grammar-12-form level-5-grammar-12-use
+topic level-5-grammar-13 level-5-grammar-13-form level-5-grammar-13-use
+topic level-5-grammar-14 level-5-grammar-14-form level-5-grammar-14-use
+topic level-5-grammar-15 level-5-grammar-15-form level-5-grammar-15-use
+topic level-5-grammar-16 level-5-grammar-16-form level-5-grammar-16-use
+topic level-5-grammar-17 level-5-grammar-17-form level-5-grammar-17-use
+topic level-5-grammar-18 level-5-grammar-18-form level-5-grammar-18-use
+topic level-5-grammar-19 level-5-grammar-19-form level-5-grammar-19-use
+topic level-5-grammar-20 level-5-grammar-20-form level-5-grammar-20-use
+topic level-5-grammar-21 level-5-grammar-21-form level-5-grammar-21-use
+topic level-5-grammar-22 level-5-grammar-22-form level-5-grammar-22-use
+topic level-5-grammar-23 level-5-grammar-23-form level-5-grammar-23-use
+topic level-5-grammar-24 level-5-grammar-24-form level-5-grammar-24-use
+topic level-5-grammar-25 level-5-grammar-25-form level-5-grammar-25-use
+topic level-5-grammar-26 level-5-grammar-26-form level-5-grammar-26-use
+topic level-5-grammar-27 level-5-grammar-27-form level-5-grammar-27-use
+topic level-5-grammar-28 level-5-grammar-28-form level-5-grammar-28-use
+topic level-5-grammar-29 level-5-grammar-29-form level-5-grammar-29-use
+topic level-5-grammar-30 level-5-grammar-30-form level-5-grammar-30-use
+topic level-5-grammar-31 level-5-grammar-31-form level-5-grammar-31-use
+topic level-5-grammar-32 level-5-grammar-32-form level-5-grammar-32-use
+topic level-5-grammar-33 level-5-grammar-33-form level-5-grammar-33-use
+topic level-5-grammar-34 level-5-grammar-34-form level-5-grammar-34-use
+topic level-5-grammar-35 level-5-grammar-35-form level-5-grammar-35-use
+topic level-5-grammar-36 level-5-grammar-36-form level-5-grammar-36-use
+topic level-5-grammar-37 level-5-grammar-37-form level-5-grammar-37-use
+topic level-5-grammar-38 level-5-grammar-38-form level-5-grammar-38-use
+topic level-5-grammar-39 level-5-grammar-39-form level-5-grammar-39-use
+topic level-5-grammar-40 level-5-grammar-40-form level-5-grammar-40-use
+topic level-5-grammar-41 level-5-grammar-41-form level-5-grammar-41-use
+topic level-5-grammar-42 level-5-grammar-42-form level-5-grammar-42-use
+topic level-5-grammar-43 level-5-grammar-43-form level-5-grammar-43-use
+topic level-5-grammar-44 level-5-grammar-44-form level-5-grammar-44-use
+topic level-5-grammar-45 level-5-grammar-45-form level-5-grammar-45-use
+topic level-5-grammar-46 level-5-grammar-46-form level-5-grammar-46-use
+topic level-5-grammar-47 level-5-grammar-47-form level-5-grammar-47-use
+topic level-5-grammar-48 level-5-grammar-48-form level-5-grammar-48-use
+topic level-5-grammar-49 level-5-grammar-49-form level-5-grammar-49-use
+topic level-5-grammar-50 level-5-grammar-50-form level-5-grammar-50-use
+topic level-5-grammar-51 level-5-grammar-51-form level-5-grammar-51-use
+topic level-5-grammar-52 level-5-grammar-52-form level-5-grammar-52-use
+topic level-5-grammar-53 level-5-grammar-53-form level-5-grammar-53-use
+topic level-5-grammar-54 level-5-grammar-54-form level-5-grammar-54-use
+topic level-5-grammar-55 level-5-grammar-55-form level-5-grammar-55-use
+topic level-5-grammar-56 level-5-grammar-56-form level-5-grammar-56-use
+topic level-5-grammar-57 level-5-grammar-57-form level-5-grammar-57-use
+topic level-5-grammar-58 level-5-grammar-58-form level-5-grammar-58-use
+topic level-5-grammar-59 level-5-grammar-59-form level-5-grammar-59-use
+topic level-5-grammar-60 level-5-grammar-60-form level-5-grammar-60-use
+topic level-5-grammar-61 level-5-grammar-61-form level-5-grammar-61-use
+topic level-5-grammar-62 level-5-grammar-62-form level-5-grammar-62-use
 topic level-5-words-01 level-5-words-01-meaning level-5-words-01-reading level-5-words-01-use
 topic level-5-words-02 level-5-words-02-meaning level-5-words-02-reading level-5-words-02-use
 topic level-5-words-03 level-5-words-03-meaning level-5-words-03-reading level-5-words-03-use
@@ -934,6 +1069,68 @@ topic level-6-characters-27 level-6-characters-27-form level-6-characters-27-mea
 topic level-6-characters-28 level-6-characters-28-form level-6-characters-28-meaning level-6-characters-28-reading
 topic level-6-characters-29 level-6-characters-29-form level-6-characters-29-meaning level-6-characters-29-reading
 topic level-6-characters-30 level-6-characters-30-form level-6-characters-30-meaning level-6-characters-30-reading
+topic level-6-grammar-01 level-6-grammar-01-form level-6-grammar-01-use
+topic level-6-grammar-02 level-6-grammar-02-form level-6-grammar-02-use
+topic level-6-grammar-03 level-6-grammar-03-form level-6-grammar-03-use
+topic level-6-grammar-04 level-6-grammar-04-form level-6-grammar-04-use
+topic level-6-grammar-05 level-6-grammar-05-form level-6-grammar-05-use
+topic level-6-grammar-06 level-6-grammar-06-form level-6-grammar-06-use
+topic level-6-grammar-07 level-6-grammar-07-form level-6-grammar-07-use
+topic level-6-grammar-08 level-6-grammar-08-form level-6-grammar-08-use
+topic level-6-grammar-09 level-6-grammar-09-form level-6-grammar-09-use
+topic level-6-grammar-10 level-6-grammar-10-form level-6-grammar-10-use
+topic level-6-grammar-11 level-6-grammar-11-form level-6-grammar-11-use
+topic level-6-grammar-12 level-6-grammar-12-form level-6-grammar-12-use
+topic level-6-grammar-13 level-6-grammar-13-form level-6-grammar-13-use
+topic level-6-grammar-14 level-6-grammar-14-form level-6-grammar-14-use
+topic level-6-grammar-15 level-6-grammar-15-form level-6-grammar-15-use
+topic level-6-grammar-16 level-6-grammar-16-form level-6-grammar-16-use
+topic level-6-grammar-17 level-6-grammar-17-form level-6-grammar-17-use
+topic level-6-grammar-18 level-6-grammar-18-form level-6-grammar-18-use
+topic level-6-grammar-19 level-6-grammar-19-form level-6-grammar-19-use
+topic level-6-grammar-20 level-6-grammar-20-form level-6-grammar-20-use
+topic level-6-grammar-21 level-6-grammar-21-form level-6-grammar-21-use
+topic level-6-grammar-22 level-6-grammar-22-form level-6-grammar-22-use
+topic level-6-grammar-23 level-6-grammar-23-form level-6-grammar-23-use
+topic level-6-grammar-24 level-6-grammar-24-form level-6-grammar-24-use
+topic level-6-grammar-25 level-6-grammar-25-form level-6-grammar-25-use
+topic level-6-grammar-26 level-6-grammar-26-form level-6-grammar-26-use
+topic level-6-grammar-27 level-6-grammar-27-form level-6-grammar-27-use
+topic level-6-grammar-28 level-6-grammar-28-form level-6-grammar-28-use
+topic level-6-grammar-29 level-6-grammar-29-form level-6-grammar-29-use
+topic level-6-grammar-30 level-6-grammar-30-form level-6-grammar-30-use
+topic level-6-grammar-31 level-6-grammar-31-form level-6-grammar-31-use
+topic level-6-grammar-32 level-6-grammar-32-form level-6-grammar-32-use
+topic level-6-grammar-33 level-6-grammar-33-form level-6-grammar-33-use
+topic level-6-grammar-34 level-6-grammar-34-form level-6-grammar-34-use
+topic level-6-grammar-35 level-6-grammar-35-form level-6-grammar-35-use
+topic level-6-grammar-36 level-6-grammar-36-form level-6-grammar-36-use
+topic level-6-grammar-37 level-6-grammar-37-form level-6-grammar-37-use
+topic level-6-grammar-38 level-6-grammar-38-form level-6-grammar-38-use
+topic level-6-grammar-39 level-6-grammar-39-form level-6-grammar-39-use
+topic level-6-grammar-40 level-6-grammar-40-form level-6-grammar-40-use
+topic level-6-grammar-41 level-6-grammar-41-form level-6-grammar-41-use
+topic level-6-grammar-42 level-6-grammar-42-form level-6-grammar-42-use
+topic level-6-grammar-43 level-6-grammar-43-form level-6-grammar-43-use
+topic level-6-grammar-44 level-6-grammar-44-form level-6-grammar-44-use
+topic level-6-grammar-45 level-6-grammar-45-form level-6-grammar-45-use
+topic level-6-grammar-46 level-6-grammar-46-form level-6-grammar-46-use
+topic level-6-grammar-47 level-6-grammar-47-form level-6-grammar-47-use
+topic level-6-grammar-48 level-6-grammar-48-form level-6-grammar-48-use
+topic level-6-grammar-49 level-6-grammar-49-form level-6-grammar-49-use
+topic level-6-grammar-50 level-6-grammar-50-form level-6-grammar-50-use
+topic level-6-grammar-51 level-6-grammar-51-form level-6-grammar-51-use
+topic level-6-grammar-52 level-6-grammar-52-form level-6-grammar-52-use
+topic level-6-grammar-53 level-6-grammar-53-form level-6-grammar-53-use
+topic level-6-grammar-54 level-6-grammar-54-form level-6-grammar-54-use
+topic level-6-grammar-55 level-6-grammar-55-form level-6-grammar-55-use
+topic level-6-grammar-56 level-6-grammar-56-form level-6-grammar-56-use
+topic level-6-grammar-57 level-6-grammar-57-form level-6-grammar-57-use
+topic level-6-grammar-58 level-6-grammar-58-form level-6-grammar-58-use
+topic level-6-grammar-59 level-6-grammar-59-form level-6-grammar-59-use
+topic level-6-grammar-60 level-6-grammar-60-form level-6-grammar-60-use
+topic level-6-grammar-61 level-6-grammar-61-form level-6-grammar-61-use
+topic level-6-grammar-62 level-6-grammar-62-form level-6-grammar-62-use
 topic level-6-words-01 level-6-words-01-meaning level-6-words-01-reading level-6-words-01-use
 topic level-6-words-02 level-6-words-02-meaning level-6-words-02-reading level-6-words-02-use
 topic level-6-words-03 level-6-words-03-meaning level-6-words-03-reading level-6-words-03-use

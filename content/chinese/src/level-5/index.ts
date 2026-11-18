@@ -11,6 +11,7 @@ import { buildLevel, type LevelUnit } from "../level-2/level.ts";
 import { levelFourCharacters, levelFourLast, levelFourWords } from "../level-4/index.ts";
 import { characterBatchesA } from "./character-data-a.ts";
 import { characterBatchesB } from "./character-data-b.ts";
+import { grammar } from "./grammar-data.ts";
 import { wordBatchesA } from "./word-data-a.ts";
 import { wordBatchesB } from "./word-data-b.ts";
 
@@ -36,6 +37,7 @@ const level = buildLevel({
   units: UNITS,
   characterBatches: [...characterBatchesA, ...characterBatchesB],
   wordBatches: [...wordBatchesA, ...wordBatchesB],
+  grammar,
   earlierCharacters: levelFourCharacters,
   earlierWords: levelFourWords,
   after: levelFourLast.words,
@@ -50,7 +52,7 @@ export const levelFiveWords: readonly string[] = level.words;
 /** levelFiveLast are the last character topic and the last word topic of level 5. */
 export const levelFiveLast: { readonly characters: string; readonly words: string } = level.last;
 
-/** levelFiveTopics are the 137 topics of level 5: 30 of characters and 107 of words. */
+/** levelFiveTopics are the 199 topics of level 5: 30 of characters, 107 of words and 62 of grammar. */
 export const levelFiveTopics: readonly TopicDef[] = level.topics;
 
 /** levelFiveCourse is the course of level 5 of Chinese as a foreign language. */

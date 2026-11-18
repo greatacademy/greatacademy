@@ -6,7 +6,7 @@
 - **Level:** Level 4 of the new HSK, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 3](chinese-level-3.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 13 units · 133 topics (3 new, all practice-only) · 396 knowledge points
+- **Size:** 13 units · 206 topics (3 new, all practice-only) · 542 knowledge points
 
 ## The Test
 
@@ -34,8 +34,8 @@ The course turns level 4 into test practice. It holds the units of [Chinese Leve
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 20/20 | 234.80 | 423.55 | 3.75 | 1626.90 | 3.88 | 61.25 | 0.00 |
-| typical | 20/20 | 276.55 | 460.95 | 41.15 | 1794.75 | 4.28 | 55.80 | 0.00 |
-| struggling | 3/20 | 344.65 | 581.15 | 212.60 | 2280.30 | 6.18 | 48.05 | 0.00 |
-| placed | 20/20 | 86.15 | 145.05 | 11.70 | 552.85 | 4.15 | 17.10 | 0.00 |
-| struggling, placed | 20/20 | 122.80 | 208.00 | 74.65 | 806.75 | 6.05 | 16.95 | 0.00 |
+| strong | 20/20 | 273.30 | 491.05 | 4.00 | 1896.25 | 3.89 | 71.50 | 0.00 |
+| typical | 20/20 | 320.05 | 533.10 | 46.05 | 2082.80 | 4.27 | 64.75 | 0.00 |
+| struggling | 2/20 | 348.70 | 583.10 | 208.25 | 2287.70 | 6.10 | 48.75 | 0.00 |
+| placed | 20/20 | 133.90 | 222.85 | 18.50 | 863.00 | 4.22 | 26.95 | 0.00 |
+| struggling, placed | 20/20 | 184.65 | 305.25 | 100.90 | 1193.95 | 5.84 | 25.60 | 0.00 |

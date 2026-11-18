@@ -6,7 +6,7 @@
 - **Level:** Level 6 of the new HSK, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 5](chinese-level-5.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 13 units · 147 topics (3 new, all practice-only) · 438 knowledge points
+- **Size:** 13 units · 209 topics (3 new, all practice-only) · 562 knowledge points
 
 ## The Test
 
@@ -34,8 +34,8 @@ The course turns level 6 into test practice. It holds the units of [Chinese Leve
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 3/20 | 343.55 | 615.60 | 5.15 | 2393.90 | 3.92 | 89.75 | 0.00 |
-| typical | 3/20 | 348.30 | 582.20 | 50.95 | 2280.50 | 4.29 | 70.65 | 0.00 |
-| struggling | 2/20 | 357.80 | 604.60 | 220.15 | 2376.10 | 6.19 | 49.90 | 0.00 |
-| placed | 20/20 | 94.30 | 158.95 | 13.30 | 609.15 | 4.18 | 18.85 | 0.00 |
-| struggling, placed | 20/20 | 133.05 | 227.65 | 82.00 | 883.85 | 6.07 | 18.35 | 0.00 |
+| strong | 3/20 | 347.40 | 621.35 | 5.35 | 2418.90 | 3.93 | 90.85 | 0.00 |
+| typical | 2/20 | 351.65 | 588.65 | 52.60 | 2306.95 | 4.30 | 71.35 | 0.00 |
+| struggling | 2/20 | 359.15 | 606.75 | 220.35 | 2385.05 | 6.17 | 50.20 | 0.00 |
+| placed | 20/20 | 138.45 | 230.95 | 18.15 | 896.90 | 4.21 | 27.85 | 0.00 |
+| struggling, placed | 20/20 | 192.25 | 320.75 | 107.95 | 1257.85 | 5.91 | 26.75 | 0.00 |

@@ -6,11 +6,11 @@
 - **Level:** Level 4, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 3](chinese-level-3.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 130 topics (30 of characters, 100 of words) · 390 knowledge points
+- **Size:** 12 units · 203 topics (30 of characters, 100 of words, 73 of grammar) · 536 knowledge points
 
 ## Aim
 
-Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: health and medicine, travel and transport, the media and the internet, history, the arts, law and rights, the economy, feelings, nature and climate, sport, science and careers. Characters and words are learned as in levels 1 to 3, and every sentence is written only with characters already taught. Some very common characters that levels 1 to 3 leave out, such as 始, 主, 之 and 与, are taught where their unit's words need them. The characters were chosen to be close to level 4 of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences.
+Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: health and medicine, travel and transport, the media and the internet, history, the arts, law and rights, the economy, feelings, nature and climate, sport, science and careers. Characters and words are learned as in levels 1 to 3, and every sentence is written only with characters already taught. Some very common characters that levels 1 to 3 leave out, such as 始, 主, 之 and 与, are taught where their unit's words need them. The characters were chosen to be close to level 4 of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain.
 
 ## Units
 
@@ -33,6 +33,17 @@ Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: hea
 - `level-4-words-07` Level 4 Words 07: In Hospital: Finding the Word; Reading the Word; Using the Word
 - `level-4-words-08` Level 4 Words 08: Body and Feelings: Finding the Word; Reading the Word; Using the Word
 - `level-4-words-09` Level 4 Words 09: Breaking and Pressing: Finding the Word; Reading the Word; Using the Word
+- `level-4-grammar-01` Extremely, in Speech: Adjective + 死了 and 坏了: Adjective + 死了 and 坏了: Completing Sentences; Adjective + 死了 and 坏了: The Right Sentence
+- `level-4-grammar-02` Very and Quite: 十分 and 相当: 十分 and 相当: Completing Sentences; 十分 and 相当: The Right Sentence
+- `level-4-grammar-03` As a Rule: 往往: 往往: Completing Sentences; 往往: The Right Sentence
+- `level-4-grammar-04` Never Again: 再也不 and 再也没: 再也不 and 再也没: Completing Sentences; 再也不 and 再也没: The Right Sentence
+- `level-4-grammar-05` On and On: 不断: 不断: Completing Sentences; 不断: The Right Sentence
+- `level-4-grammar-06` All Along: 始终: 始终: Completing Sentences; 始终: The Right Sentence
+- `level-4-grammar-07` Just as Expected: 果然: 果然: Completing Sentences; 果然: The Right Sentence
+- `level-4-grammar-08` Again and Again: 再三 and 一再: 再三 and 一再: Completing Sentences; 再三 and 一再: The Right Sentence
+- `level-4-grammar-09` Ever Since: 自从……以后: 自从……以后: Completing Sentences; 自从……以后: The Right Sentence
+- `level-4-grammar-10` Room or Appetite for It: V得下 and V不下: V得下 and V不下: Completing Sentences; V得下 and V不下: The Right Sentence
+- `level-4-grammar-11` Reaching or Closing: Verb + 上: Verb + 上: Completing Sentences; Verb + 上: The Right Sentence
 
 ### 2. Travel and Transport
 
@@ -53,6 +64,14 @@ Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: hea
 - `level-4-words-16` Level 4 Words 16: On the Road: Finding the Word; Reading the Word; Using the Word
 - `level-4-words-17` Level 4 Words 17: Seats and Distances: Finding the Word; Reading the Word; Using the Word
 - `level-4-words-18` Level 4 Words 18: More Travel Words: Finding the Word; Reading the Word; Using the Word
+- `level-4-grammar-12` Always Has Been: 一向 and 向来: 一向 and 向来: Completing Sentences; 一向 and 向来: The Right Sentence
+- `level-4-grammar-13` Any Time and As You Like: 随时 and 随便: 随时 and 随便: Completing Sentences; 随时 and 随便: The Right Sentence
+- `level-4-grammar-14` Along With: 随着: 随着: Completing Sentences; 随着: The Right Sentence
+- `level-4-grammar-15` Otherwise, in Speech: 要不然 and 要不: 要不然 and 要不: Completing Sentences; 要不然 and 要不: The Right Sentence
+- `level-4-grammar-16` Either This or That: 要么……要么……: 要么……要么……: Completing Sentences; 要么……要么……: The Right Sentence
+- `level-4-grammar-17` So As Not To: 省得 and 免得: 省得 and 免得: Completing Sentences; 省得 and 免得: The Right Sentence
+- `level-4-grammar-18` Opening and Leaving: Verb + 开: Verb + 开: Completing Sentences; Verb + 开: The Right Sentence
+- `level-4-grammar-19` Above, Below, Within and Outside: 以上, 以下, 以内 and 以外: 以上, 以下, 以内 and 以外: Completing Sentences; 以上, 以下, 以内 and 以外: The Right Sentence
 
 ### 3. Media and the Internet
 
@@ -73,6 +92,14 @@ Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: hea
 - `level-4-words-25` Level 4 Words 25: Reviews: Finding the Word; Reading the Word; Using the Word
 - `level-4-words-26` Level 4 Words 26: Online Life: Finding the Word; Reading the Word; Using the Word
 - `level-4-words-27` Level 4 Words 27: More Media Words: Finding the Word; Reading the Word; Using the Word
+- `level-4-grammar-20` What Was It Again: 来着: 来着: Completing Sentences; 来着: The Right Sentence
+- `level-4-grammar-21` And So On: 等 and 等等: 等 and 等等: Completing Sentences; 等 and 等等: The Right Sentence
+- `level-4-grammar-22` And Also: 并且 and 以及: 并且 and 以及: Completing Sentences; 并且 and 以及: The Right Sentence
+- `level-4-grammar-23` As For: 至于: 至于: Completing Sentences; 至于: The Right Sentence
+- `level-4-grammar-24` Which Shows That: 可见: 可见: Completing Sentences; 可见: The Right Sentence
+- `level-4-grammar-25` Take … for Example: 拿……来说: 拿……来说: Completing Sentences; 拿……来说: The Right Sentence
+- `level-4-grammar-26` In Someone's View: 在……看来: 在……看来: Completing Sentences; 在……看来: The Right Sentence
+- `level-4-grammar-27` Anyway: 反正: 反正: Completing Sentences; 反正: The Right Sentence
 
 ### 4. History
 
@@ -92,6 +119,13 @@ Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: hea
 - `level-4-words-33` Level 4 Words 33: Remains of the Past: Finding the Word; Reading the Word; Using the Word
 - `level-4-words-34` Level 4 Words 34: Rise and Fall: Finding the Word; Reading the Word; Using the Word
 - `level-4-words-35` Level 4 Words 35: Formal Words: Finding the Word; Reading the Word; Using the Word
+- `level-4-grammar-28` Once, in the Past: 曾经: 曾经: Completing Sentences; 曾经: The Right Sentence
+- `level-4-grammar-29` At Once: 立刻: 立刻: Completing Sentences; 立刻: The Right Sentence
+- `level-4-grammar-30` Therefore: 因此: 因此: Completing Sentences; 因此: The Right Sentence
+- `level-4-grammar-31` The Reason Why: 之所以……是因为……: 之所以……是因为……: Completing Sentences; 之所以……是因为……: The Right Sentence
+- `level-4-grammar-32` Rather Than: 与其……不如……: 与其……不如……: Completing Sentences; 与其……不如……: The Right Sentence
+- `level-4-grammar-33` While, by Contrast: 而: 而: Completing Sentences; 而: The Right Sentence
+- `level-4-grammar-34` 之 in 之一, 之间, 之前 and 之后: Completing Sentences; The Right Sentence
 
 ### 5. The Arts
 
@@ -111,6 +145,10 @@ Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: hea
 - `level-4-words-41` Level 4 Words 41: Performing: Finding the Word; Reading the Word; Using the Word
 - `level-4-words-42` Level 4 Words 42: Pictures and Mirrors: Finding the Word; Reading the Word; Using the Word
 - `level-4-words-43` Level 4 Words 43: More Art Words: Finding the Word; Reading the Word; Using the Word
+- `level-4-grammar-35` Just Like: 像……一样: 像……一样: Completing Sentences; 像……一样: The Right Sentence
+- `level-4-grammar-36` Interested In: 对……感兴趣: 对……感兴趣: Completing Sentences; 对……感兴趣: The Right Sentence
+- `level-4-grammar-37` Whether This or That: ……也好，……也好: ……也好，……也好: Completing Sentences; ……也好，……也好: The Right Sentence
+- `level-4-grammar-38` A Gentle But: 只是 and 不过: 只是 and 不过: Completing Sentences; 只是 and 不过: The Right Sentence
 
 ### 6. Law and Rights
 
@@ -131,6 +169,13 @@ Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: hea
 - `level-4-words-50` Level 4 Words 50: Prison and Doubt: Finding the Word; Reading the Word; Using the Word
 - `level-4-words-51` Level 4 Words 51: Calm and Strict: Finding the Word; Reading the Word; Using the Word
 - `level-4-words-52` Level 4 Words 52: More Law Words: Finding the Word; Reading the Word; Using the Word
+- `level-4-grammar-39` Perhaps: 也许: 也许: Completing Sentences; 也许: The Right Sentence
+- `level-4-grammar-40` A Certain: 某: 某: Completing Sentences; 某: The Right Sentence
+- `level-4-grammar-41` Any at All: 任何……都: 任何……都: Completing Sentences; 任何……都: The Right Sentence
+- `level-4-grammar-42` How, in Writing: 如何: 如何: Completing Sentences; 如何: The Right Sentence
+- `level-4-grammar-43` Whether, in Writing: 是否: 是否: Completing Sentences; 是否: The Right Sentence
+- `level-4-grammar-44` Let Alone: 何况: 何况: Completing Sentences; 何况: The Right Sentence
+- `level-4-grammar-45` How Could You: 怎么能……呢？: 怎么能……呢？: Completing Sentences; 怎么能……呢？: The Right Sentence
 
 ### 7. The Economy
 
@@ -151,6 +196,14 @@ Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: hea
 - `level-4-words-59` Level 4 Words 59: Finance: Finding the Word; Reading the Word; Using the Word
 - `level-4-words-60` Level 4 Words 60: Sums: Finding the Word; Reading the Word; Using the Word
 - `level-4-words-61` Level 4 Words 61: Change and Reform: Finding the Word; Reading the Word; Using the Word
+- `level-4-grammar-46` Altogether: 一共 and 总共: 一共 and 总共: Completing Sentences; 一共 and 总共: The Right Sentence
+- `level-4-grammar-47` Always, Again and Again: 总是 and 老是: 总是 and 老是: Completing Sentences; 总是 and 老是: The Right Sentence
+- `level-4-grammar-48` With Great Difficulty: 好不容易: 好不容易: Completing Sentences; 好不容易: The Right Sentence
+- `level-4-grammar-49` On the One Hand, On the Other: 一方面……另一方面……: 一方面……另一方面……: Completing Sentences; 一方面……另一方面……: The Right Sentence
+- `level-4-grammar-50` Fractions and Percentages: 分之 and 百分之: 分之 and 百分之: Completing Sentences; 分之 and 百分之: The Right Sentence
+- `level-4-grammar-51` Each of Them: 各: 各: Completing Sentences; 各: The Right Sentence
+- `level-4-grammar-52` Can or Can't Afford: V得起 and V不起: V得起 and V不起: Completing Sentences; V得起 and V不起: The Right Sentence
+- `level-4-grammar-53` About, with Numbers: 来 and 上下: 来 and 上下: Completing Sentences; 来 and 上下: The Right Sentence
 
 ### 8. Feelings
 
@@ -169,6 +222,12 @@ Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: hea
 - `level-4-words-67` Level 4 Words 67: Excitement and Regret: Finding the Word; Reading the Word; Using the Word
 - `level-4-words-68` Level 4 Words 68: Happiness: Finding the Word; Reading the Word; Using the Word
 - `level-4-words-69` Level 4 Words 69: The Heart: Finding the Word; Reading the Word; Using the Word
+- `level-4-grammar-54` How …!: 多么: 多么: Completing Sentences; 多么: The Right Sentence
+- `level-4-grammar-55` Luckily: 幸亏: 幸亏: Completing Sentences; 幸亏: The Right Sentence
+- `level-4-grammar-56` I'm Afraid That: 恐怕: 恐怕: Completing Sentences; 恐怕: The Right Sentence
+- `level-4-grammar-57` Terribly: 得不得了 and 得要命: 得不得了 and 得要命: Completing Sentences; 得不得了 and 得要命: The Right Sentence
+- `level-4-grammar-58` Making Someone Feel: 让人 + Feeling: 让人 + Feeling: Completing Sentences; 让人 + Feeling: The Right Sentence
+- `level-4-grammar-59` So … That: Feeling + 得 + Result: Feeling + 得 + Result: Completing Sentences; Feeling + 得 + Result: The Right Sentence
 
 ### 9. Nature and Climate
 
@@ -187,6 +246,10 @@ Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: hea
 - `level-4-words-75` Level 4 Words 75: Plants and Insects: Finding the Word; Reading the Word; Using the Word
 - `level-4-words-76` Level 4 Words 76: Climate: Finding the Word; Reading the Word; Using the Word
 - `level-4-words-77` Level 4 Words 77: Here and There: Finding the Word; Reading the Word; Using the Word
+- `level-4-grammar-60` A Spell Of: 一阵: 一阵: Completing Sentences; 一阵: The Right Sentence
+- `level-4-grammar-61` Now This, Now That: 一会儿……一会儿……: 一会儿……一会儿……: Completing Sentences; 一会儿……一会儿……: The Right Sentence
+- `level-4-grammar-62` Everywhere: 到处: 到处: Completing Sentences; 到处: The Right Sentence
+- `level-4-grammar-63` Not at All: 根本: 根本: Completing Sentences; 根本: The Right Sentence
 
 ### 10. Sport
 
@@ -205,6 +268,9 @@ Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: hea
 - `level-4-words-83` Level 4 Words 83: Ball and Board Games: Finding the Word; Reading the Word; Using the Word
 - `level-4-words-84` Level 4 Words 84: Big Events: Finding the Word; Reading the Word; Using the Word
 - `level-4-words-85` Level 4 Words 85: Strength: Finding the Word; Reading the Word; Using the Word
+- `level-4-grammar-64` Even: 连……都 and 连……也: 连……都 and 连……也: Completing Sentences; 连……都 and 连……也: The Right Sentence
+- `level-4-grammar-65` Able or Unable to Beat: V得过 and V不过: V得过 and V不过: Completing Sentences; V得过 and V不过: The Right Sentence
+- `level-4-grammar-66` Better Each Time: 一天比一天 and 一次比一次: 一天比一天 and 一次比一次: Completing Sentences; 一天比一天 and 一次比一次: The Right Sentence
 
 ### 11. Science
 
@@ -223,6 +289,10 @@ Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: hea
 - `level-4-words-91` Level 4 Words 91: Matter: Finding the Word; Reading the Word; Using the Word
 - `level-4-words-92` Level 4 Words 92: Analysis: Finding the Word; Reading the Word; Using the Word
 - `level-4-words-93` Level 4 Words 93: Ways and Times: Finding the Word; Reading the Word; Using the Word
+- `level-4-grammar-67` To Cause, in Writing: 使: 使: Completing Sentences; 使: The Right Sentence
+- `level-4-grammar-68` Even If: 即使……也: 即使……也: Completing Sentences; 即使……也: The Right Sentence
+- `level-4-grammar-69` According To: 根据: 根据: Completing Sentences; 根据: The Right Sentence
+- `level-4-grammar-70` Having to Do With: 跟……有关: 跟……有关: Completing Sentences; 跟……有关: The Right Sentence
 
 ### 12. Careers
 
@@ -239,6 +309,9 @@ Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: hea
 - `level-4-words-98` Level 4 Words 98: At the Office: Finding the Word; Reading the Word; Using the Word
 - `level-4-words-99` Level 4 Words 99: Jobs: Finding the Word; Reading the Word; Using the Word
 - `level-4-words-100` Level 4 Words 100: Strengths and Prospects: Finding the Word; Reading the Word; Using the Word
+- `level-4-grammar-71` As, in a Role: 作为: 作为: Completing Sentences; 作为: The Right Sentence
+- `level-4-grammar-72` To Become: 成为: 成为: Completing Sentences; 成为: The Right Sentence
+- `level-4-grammar-73` Not Only, in Speech: 不光……还 and 不光……也: 不光……还 and 不光……也: Completing Sentences; 不光……还 and 不光……也: The Right Sentence
 
 ## Simulated Students
 
@@ -246,8 +319,8 @@ Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: hea
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 20/20 | 233.20 | 420.80 | 3.80 | 1615.60 | 3.88 | 60.85 | 0.00 |
-| typical | 20/20 | 274.55 | 457.95 | 40.95 | 1784.20 | 4.28 | 55.55 | 0.00 |
-| struggling | 3/20 | 345.40 | 582.70 | 214.40 | 2287.00 | 6.22 | 48.20 | 0.00 |
-| placed | 20/20 | 84.20 | 142.00 | 11.65 | 542.10 | 4.16 | 16.65 | 0.00 |
-| struggling, placed | 20/20 | 119.95 | 203.85 | 73.50 | 791.20 | 6.07 | 16.50 | 0.00 |
+| strong | 20/20 | 271.35 | 488.10 | 4.00 | 1884.10 | 3.89 | 71.05 | 0.00 |
+| typical | 20/20 | 318.30 | 530.65 | 46.55 | 2073.85 | 4.29 | 64.50 | 0.00 |
+| struggling | 2/20 | 348.55 | 583.25 | 208.65 | 2288.50 | 6.10 | 48.70 | 0.00 |
+| placed | 20/20 | 131.90 | 219.65 | 18.30 | 851.90 | 4.23 | 26.50 | 0.00 |
+| struggling, placed | 20/20 | 181.55 | 301.10 | 99.75 | 1177.30 | 5.85 | 25.25 | 0.00 |

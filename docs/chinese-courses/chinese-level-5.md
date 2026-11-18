@@ -6,11 +6,11 @@
 - **Level:** Level 5, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 4](chinese-level-4.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 137 topics (30 of characters, 107 of words) · 411 knowledge points
+- **Size:** 12 units · 199 topics (30 of characters, 107 of words, 62 of grammar) · 535 knowledge points
 
 ## Aim
 
-Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: society, education, the environment, technology, traditions and customs, government and public life, the world, business and management, the mind, literature, food and cooking, and values and ideas. Characters and words are learned as in levels 1 to 4, and every sentence is written only with characters already taught. Common characters that the earlier levels leave out, and those needed by words such as the names of countries and writers, are taught where their unit's words need them. The characters were chosen to be close to level 5 of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences.
+Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: society, education, the environment, technology, traditions and customs, government and public life, the world, business and management, the mind, literature, food and cooking, and values and ideas. Characters and words are learned as in levels 1 to 4, and every sentence is written only with characters already taught. Common characters that the earlier levels leave out, and those needed by words such as the names of countries and writers, are taught where their unit's words need them. The characters were chosen to be close to level 5 of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain.
 
 ## Units
 
@@ -33,6 +33,10 @@ Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: soc
 - `level-5-words-07` Level 5 Words 07: Harmony and Courtesy: Finding the Word; Reading the Word; Using the Word
 - `level-5-words-08` Level 5 Words 08: Treating Others: Finding the Word; Reading the Word; Using the Word
 - `level-5-words-09` Level 5 Words 09: Gains and Steadiness: Finding the Word; Reading the Word; Using the Word
+- `level-5-grammar-01` Reportedly: 据说 and 据: 据说 and 据: Completing Sentences; 据说 and 据: The Right Sentence
+- `level-5-grammar-02` Increasingly, in Writing: 日益: 日益: Completing Sentences; 日益: The Right Sentence
+- `level-5-grammar-03` Receiving: 受到: 受到: Completing Sentences; 受到: The Right Sentence
+- `level-5-grammar-04` From Then Till Now: ……以来: ……以来: Completing Sentences; ……以来: The Right Sentence
 
 ### 2. Education
 
@@ -53,6 +57,10 @@ Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: soc
 - `level-5-words-16` Level 5 Words 16: Learning Step by Step: Finding the Word; Reading the Word; Using the Word
 - `level-5-words-17` Level 5 Words 17: At University: Finding the Word; Reading the Word; Using the Word
 - `level-5-words-18` Level 5 Words 18: School Life: Finding the Word; Reading the Word; Using the Word
+- `level-5-grammar-05` Relying On: 凭: 凭: Completing Sentences; 凭: The Right Sentence
+- `level-5-grammar-06` On Purpose: 特意 and 故意: 特意 and 故意: Completing Sentences; 特意 and 故意: The Right Sentence
+- `level-5-grammar-07` About and Probably: 大约 and 大概: 大约 and 大概: Completing Sentences; 大约 and 大概: The Right Sentence
+- `level-5-grammar-08` At Least and At Most: 至少 and 至多: 至少 and 至多: Completing Sentences; 至少 and 至多: The Right Sentence
 
 ### 3. The Environment
 
@@ -73,6 +81,11 @@ Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: soc
 - `level-5-words-25` Level 5 Words 25: Protecting Nature: Finding the Word; Reading the Word; Using the Word
 - `level-5-words-26` Level 5 Words 26: Energy: Finding the Word; Reading the Word; Using the Word
 - `level-5-words-27` Level 5 Words 27: Natural Disasters: Finding the Word; Reading the Word; Using the Word
+- `level-5-grammar-09` So That: 以便: 以便: Completing Sentences; 以便: The Right Sentence
+- `level-5-grammar-10` So As Not To: 以免: 以免: Completing Sentences; 以免: The Right Sentence
+- `level-5-grammar-11` Thereby: 从而: 从而: Completing Sentences; 从而: The Right Sentence
+- `level-5-grammar-12` Gradually: 逐渐 and 渐渐: 逐渐 and 渐渐: Completing Sentences; 逐渐 and 渐渐: The Right Sentence
+- `level-5-grammar-13` Applying, in Writing: 加以: 加以: Completing Sentences; 加以: The Right Sentence
 
 ### 4. Technology
 
@@ -93,6 +106,11 @@ Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: soc
 - `level-5-words-34` Level 5 Words 34: Apps and Devices: Finding the Word; Reading the Word; Using the Word
 - `level-5-words-35` Level 5 Words 35: Science and Research: Finding the Word; Reading the Word; Using the Word
 - `level-5-words-36` Level 5 Words 36: Technology in Daily Life: Finding the Word; Reading the Word; Using the Word
+- `level-5-grammar-14` Over and Over: V来V去: V来V去: Completing Sentences; V来V去: The Right Sentence
+- `level-5-grammar-15` No Longer: 不再: 不再: Completing Sentences; 不再: The Right Sentence
+- `level-5-grammar-16` In a Row: 一连: 一连: Completing Sentences; 一连: The Right Sentence
+- `level-5-grammar-17` Specially: 专门: 专门: Completing Sentences; 专门: The Right Sentence
+- `level-5-grammar-18` Treating As: 把……当作 and 把……看作: 把……当作 and 把……看作: Completing Sentences; 把……当作 and 把……看作: The Right Sentence
 
 ### 5. Traditions and Customs
 
@@ -113,6 +131,12 @@ Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: soc
 - `level-5-words-43` Level 5 Words 43: The Lunar Calendar: Finding the Word; Reading the Word; Using the Word
 - `level-5-words-44` Level 5 Words 44: Feasts and Table Manners: Finding the Word; Reading the Word; Using the Word
 - `level-5-words-45` Level 5 Words 45: Remembering and Respect: Finding the Word; Reading the Word; Using the Word
+- `level-5-grammar-19` Except: 除了……以外，都: 除了……以外，都: Completing Sentences; 除了……以外，都: The Right Sentence
+- `level-5-grammar-20` Besides: 除了……还／也: 除了……还／也: Completing Sentences; 除了……还／也: The Right Sentence
+- `level-5-grammar-21` Unless: 除非: 除非: Completing Sentences; 除非: The Right Sentence
+- `level-5-grammar-22` Whenever: 每当: 每当: Completing Sentences; 每当: The Right Sentence
+- `level-5-grammar-23` From … On: 从……起: 从……起: Completing Sentences; 从……起: The Right Sentence
+- `level-5-grammar-24` In Person: 亲自: 亲自: Completing Sentences; 亲自: The Right Sentence
 
 ### 6. Government and Public Life
 
@@ -133,6 +157,11 @@ Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: soc
 - `level-5-words-52` Level 5 Words 52: Town and Suburbs: Finding the Word; Reading the Word; Using the Word
 - `level-5-words-53` Level 5 Words 53: Honor and Service: Finding the Word; Reading the Word; Using the Word
 - `level-5-words-54` Level 5 Words 54: Public Life: Finding the Word; Reading the Word; Using the Word
+- `level-5-grammar-25` In Accordance With: 依照: 依照: Completing Sentences; 依照: The Right Sentence
+- `level-5-grammar-26` Must Not: 不得: 不得: Completing Sentences; 不得: The Right Sentence
+- `level-5-grammar-27` Carry Out: 对……进行: 对……进行: Completing Sentences; 对……进行: The Right Sentence
+- `level-5-grammar-28` Without Exception: 一律: 一律: Completing Sentences; 一律: The Right Sentence
+- `level-5-grammar-29` Under: 在……下: 在……下: Completing Sentences; 在……下: The Right Sentence
 
 ### 7. The World
 
@@ -152,6 +181,11 @@ Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: soc
 - `level-5-words-61` Level 5 Words 61: International Organizations: Finding the Word; Reading the Word; Using the Word
 - `level-5-words-62` Level 5 Words 62: Cooperation: Finding the Word; Reading the Word; Using the Word
 - `level-5-words-63` Level 5 Words 63: Globalization: Finding the Word; Reading the Word; Using the Word
+- `level-5-grammar-30` The More, the More: 越……越: 越……越: Completing Sentences; 越……越: The Right Sentence
+- `level-5-grammar-31` More and More: 越来越: 越来越: Completing Sentences; 越来越: The Right Sentence
+- `level-5-grammar-32` Compared With: 跟……相比: 跟……相比: Completing Sentences; 跟……相比: The Right Sentence
+- `level-5-grammar-33` Made Up Of: 由……组成: 由……组成: Completing Sentences; 由……组成: The Right Sentence
+- `level-5-grammar-34` And the Like: ……之类: ……之类: Completing Sentences; ……之类: The Right Sentence
 
 ### 8. Business and Management
 
@@ -171,6 +205,12 @@ Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: soc
 - `level-5-words-70` Level 5 Words 70: Production: Finding the Word; Reading the Word; Using the Word
 - `level-5-words-71` Level 5 Words 71: Deals: Finding the Word; Reading the Word; Using the Word
 - `level-5-words-72` Level 5 Words 72: Success and Failure in Business: Finding the Word; Reading the Word; Using the Word
+- `level-5-grammar-35` Moreover: 况且: 况且: Completing Sentences; 况且: The Right Sentence
+- `level-5-grammar-36` In Addition: 此外: 此外: Completing Sentences; 此外: The Right Sentence
+- `level-5-grammar-37` In Short: 总之: 总之: Completing Sentences; 总之: The Right Sentence
+- `level-5-grammar-38` In Any Case: 无论如何: 无论如何: Completing Sentences; 无论如何: The Right Sentence
+- `level-5-grammar-39` Fortunately, at Least: 好在: 好在: Completing Sentences; 好在: The Right Sentence
+- `level-5-grammar-40` Sooner or Later: 迟早: 迟早: Completing Sentences; 迟早: The Right Sentence
 
 ### 9. The Mind
 
@@ -190,6 +230,12 @@ Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: soc
 - `level-5-words-79` Level 5 Words 79: Attention and Doubt: Finding the Word; Reading the Word; Using the Word
 - `level-5-words-80` Level 5 Words 80: Will and Drive: Finding the Word; Reading the Word; Using the Word
 - `level-5-words-81` Level 5 Words 81: Dreams and Sleep: Finding the Word; Reading the Word; Using the Word
+- `level-5-grammar-41` Just Contrary to Wishes: 偏偏: 偏偏: Completing Sentences; 偏偏: The Right Sentence
+- `level-5-grammar-42` Plainly: 明明: 明明: Completing Sentences; 明明: The Right Sentence
+- `level-5-grammar-43` Not Necessarily: 未必 and 不见得: 未必 and 不见得: Completing Sentences; 未必 and 不见得: The Right Sentence
+- `level-5-grammar-44` Why Bother: 何必: 何必: Completing Sentences; 何必: The Right Sentence
+- `level-5-grammar-45` Rather Too: 未免: 未免: Completing Sentences; 未免: The Right Sentence
+- `level-5-grammar-46` Rare: 难得: 难得: Completing Sentences; 难得: The Right Sentence
 
 ### 10. Literature
 
@@ -209,6 +255,12 @@ Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: soc
 - `level-5-words-88` Level 5 Words 88: Stories for Children: Finding the Word; Reading the Word; Using the Word
 - `level-5-words-89` Level 5 Words 89: Chinese Classics: Finding the Word; Reading the Word; Using the Word
 - `level-5-words-90` Level 5 Words 90: Reading and Responding: Finding the Word; Reading the Word; Using the Word
+- `level-5-grammar-47` Rhetorical 哪里 and 哪儿: Completing Sentences; The Right Sentence
+- `level-5-grammar-48` Can't Help But: 不禁: 不禁: Completing Sentences; 不禁: The Right Sentence
+- `level-5-grammar-49` Not Only Not … but Rather: 不但不……反而: 不但不……反而: Completing Sentences; 不但不……反而: The Right Sentence
+- `level-5-grammar-50` For a Moment: 一时: 一时: Completing Sentences; 一时: The Right Sentence
+- `level-5-grammar-51` As … As: 像……一般: 像……一般: Completing Sentences; 像……一般: The Right Sentence
+- `level-5-grammar-52` Caring Only For: 只顾: 只顾: Completing Sentences; 只顾: The Right Sentence
 
 ### 11. Food and Cooking
 
@@ -228,6 +280,11 @@ Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: soc
 - `level-5-words-97` Level 5 Words 97: Meals: Finding the Word; Reading the Word; Using the Word
 - `level-5-words-98` Level 5 Words 98: Eating Out: Finding the Word; Reading the Word; Using the Word
 - `level-5-words-99` Level 5 Words 99: Healthy Eating: Finding the Word; Reading the Word; Using the Word
+- `level-5-grammar-53` For One Thing … for Another: 一来……二来: 一来……二来: Completing Sentences; 一来……二来: The Right Sentence
+- `level-5-grammar-54` One by One: 一个个 and 一次次: 一个个 and 一次次: Completing Sentences; 一个个 and 一次次: The Right Sentence
+- `level-5-grammar-55` Add to That: 加上: 加上: Completing Sentences; 加上: The Right Sentence
+- `level-5-grammar-56` Nothing But, in Speech: 光 and 净: 光 and 净: Completing Sentences; 光 and 净: The Right Sentence
+- `level-5-grammar-57` What's More, in Speech: 再说: 再说: Completing Sentences; 再说: The Right Sentence
 
 ### 12. Values and Ideas
 
@@ -246,6 +303,11 @@ Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: soc
 - `level-5-words-105` Level 5 Words 105: Thought: Finding the Word; Reading the Word; Using the Word
 - `level-5-words-106` Level 5 Words 106: A Life Well Lived: Finding the Word; Reading the Word; Using the Word
 - `level-5-words-107` Level 5 Words 107: The Individual and the Group: Finding the Word; Reading the Word; Using the Word
+- `level-5-grammar-58` Admittedly: 固然: 固然: Completing Sentences; 固然: The Right Sentence
+- `level-5-grammar-59` Not So Bad As: 不至于: 不至于: Completing Sentences; 不至于: The Right Sentence
+- `level-5-grammar-60` Hard to Avoid: 难免: 难免: Completing Sentences; 难免: The Right Sentence
+- `level-5-grammar-61` Worth It: 值得: 值得: Completing Sentences; 值得: The Right Sentence
+- `level-5-grammar-62` While You Are At It: 顺便: 顺便: Completing Sentences; 顺便: The Right Sentence
 
 ## Simulated Students
 
@@ -253,8 +315,8 @@ Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: soc
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 20/20 | 305.25 | 547.65 | 4.10 | 2124.70 | 3.91 | 79.75 | 0.00 |
-| typical | 3/20 | 341.40 | 570.25 | 49.45 | 2232.90 | 4.28 | 69.30 | 0.00 |
-| struggling | 2/20 | 352.35 | 595.90 | 219.35 | 2341.55 | 6.22 | 49.10 | 0.00 |
-| placed | 20/20 | 85.60 | 144.20 | 11.70 | 551.00 | 4.15 | 16.95 | 0.00 |
-| struggling, placed | 20/20 | 122.65 | 208.80 | 76.30 | 809.25 | 6.09 | 16.75 | 0.00 |
+| strong | 16/20 | 337.20 | 604.40 | 5.10 | 2350.85 | 3.92 | 88.40 | 0.00 |
+| typical | 3/20 | 344.15 | 573.55 | 49.65 | 2245.80 | 4.28 | 69.90 | 0.00 |
+| struggling | 2/20 | 353.30 | 596.25 | 218.40 | 2342.65 | 6.19 | 49.20 | 0.00 |
+| placed | 20/20 | 128.80 | 214.65 | 15.90 | 830.65 | 4.18 | 25.95 | 0.00 |
+| struggling, placed | 20/20 | 181.15 | 304.60 | 105.85 | 1190.20 | 5.99 | 25.25 | 0.00 |

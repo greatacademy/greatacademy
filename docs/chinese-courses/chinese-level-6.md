@@ -6,11 +6,11 @@
 - **Level:** Level 6, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 5](chinese-level-5.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 144 topics (30 of characters, 114 of words) · 432 knowledge points
+- **Size:** 12 units · 206 topics (30 of characters, 114 of words, 62 of grammar) · 556 knowledge points
 
 ## Aim
 
-Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: language and communication, families and generations, cities and the countryside, health and ways of living, science and discovery, culture and heritage, news and opinion, money and spending, relationships, the performing arts, geography and travel, and thinking and arguing. Characters and words are learned as in levels 1 to 5, and every sentence is written only with characters already taught. A few very common characters that the earlier levels leave out, such as 或, 它, 青, 派, 令, 似 and 若, come first, in unit 1. The characters were chosen to be close to level 6 of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences.
+Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: language and communication, families and generations, cities and the countryside, health and ways of living, science and discovery, culture and heritage, news and opinion, money and spending, relationships, the performing arts, geography and travel, and thinking and arguing. Characters and words are learned as in levels 1 to 5, and every sentence is written only with characters already taught. A few very common characters that the earlier levels leave out, such as 或, 它, 青, 派, 令, 似 and 若, come first, in unit 1. The characters were chosen to be close to level 6 of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain.
 
 ## Units
 
@@ -34,6 +34,15 @@ Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: lan
 - `level-6-words-08` Level 6 Words 08: Degree and Comparison: Finding the Word; Reading the Word; Using the Word
 - `level-6-words-09` Level 6 Words 09: Ways of Being Understood: Finding the Word; Reading the Word; Using the Word
 - `level-6-words-10` Level 6 Words 10: Young People's Words: Finding the Word; Reading the Word; Using the Word
+- `level-6-grammar-01` Not Only … but Also: 不仅……而且: 不仅……而且: Completing Sentences; 不仅……而且: The Right Sentence
+- `level-6-grammar-02` Or: 或者 versus 还是: 或者 versus 还是: Completing Sentences; 或者 versus 还是: The Right Sentence
+- `level-6-grammar-03` Seemingly: 似乎: 似乎: Completing Sentences; 似乎: The Right Sentence
+- `level-6-grammar-04` Almost: 几乎: 几乎: Completing Sentences; 几乎: The Right Sentence
+- `level-6-grammar-05` As If: 像……似的: 像……似的: Completing Sentences; 像……似的: The Right Sentence
+- `level-6-grammar-06` Be Willing: 肯: 肯: Completing Sentences; 肯: The Right Sentence
+- `level-6-grammar-07` Just Right: 恰好 and 恰恰: 恰好 and 恰恰: Completing Sentences; 恰好 and 恰恰: The Right Sentence
+- `level-6-grammar-08` That Is to Say: 也就是说: 也就是说: Completing Sentences; 也就是说: The Right Sentence
+- `level-6-grammar-09` It May Be Called, in Writing: 可谓: 可谓: Completing Sentences; 可谓: The Right Sentence
 
 ### 2. Families and Generations
 
@@ -55,6 +64,12 @@ Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: lan
 - `level-6-words-18` Level 6 Words 18: Getting Along: Finding the Word; Reading the Word; Using the Word
 - `level-6-words-19` Level 6 Words 19: Growing Up: Finding the Word; Reading the Word; Using the Word
 - `level-6-words-20` Level 6 Words 20: A Family Through Time: Finding the Word; Reading the Word; Using the Word
+- `level-6-grammar-10` Away: V掉: V掉: Completing Sentences; V掉: The Right Sentence
+- `level-6-grammar-11` The Two of Them: 俩: 俩: Completing Sentences; 俩: The Right Sentence
+- `level-6-grammar-12` Cannot Help It: 忍不住: 忍不住: Completing Sentences; 忍不住: The Right Sentence
+- `level-6-grammar-13` Even … Let Alone: 尚且……何况: 尚且……何况: Completing Sentences; 尚且……何况: The Right Sentence
+- `level-6-grammar-14` Without Stopping: V个不停: V个不停: Completing Sentences; V个不停: The Right Sentence
+- `level-6-grammar-15` To Some Degree, in Writing: 有所: 有所: Completing Sentences; 有所: The Right Sentence
 
 ### 3. Cities and the Countryside
 
@@ -76,6 +91,10 @@ Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: lan
 - `level-6-words-28` Level 6 Words 28: Getting Around: Finding the Word; Reading the Word; Using the Word
 - `level-6-words-29` Level 6 Words 29: Shops and Markets: Finding the Word; Reading the Word; Using the Word
 - `level-6-words-30` Level 6 Words 30: The Bustling City: Finding the Word; Reading the Word; Using the Word
+- `level-6-grammar-16` Would Rather: 宁可……也不: 宁可……也不: Completing Sentences; 宁可……也不: The Right Sentence
+- `level-6-grammar-17` Carelessly: 乱 + Verb: 乱 + Verb: Completing Sentences; 乱 + Verb: The Right Sentence
+- `level-6-grammar-18` Couldn't Be Better: 再……不过了: 再……不过了: Completing Sentences; 再……不过了: The Right Sentence
+- `level-6-grammar-19` And Further: 进而: 进而: Completing Sentences; 进而: The Right Sentence
 
 ### 4. Health and Ways of Living
 
@@ -97,6 +116,12 @@ Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: lan
 - `level-6-words-38` Level 6 Words 38: First Aid: Finding the Word; Reading the Word; Using the Word
 - `level-6-words-39` Level 6 Words 39: Chinese and Western Medicine: Finding the Word; Reading the Word; Using the Word
 - `level-6-words-40` Level 6 Words 40: Keeping Fit: Finding the Word; Reading the Word; Using the Word
+- `level-6-grammar-20` According To: 按照: 按照: Completing Sentences; 按照: The Right Sentence
+- `level-6-grammar-21` Hard To: 难以: 难以: Completing Sentences; 难以: The Right Sentence
+- `level-6-grammar-22` Merely: 只不过……而已: 只不过……而已: Completing Sentences; 只不过……而已: The Right Sentence
+- `level-6-grammar-23` Unavoidably: 不免: 不免: Completing Sentences; 不免: The Right Sentence
+- `level-6-grammar-24` Blindly: 一味: 一味: Completing Sentences; 一味: The Right Sentence
+- `level-6-grammar-25` Lies In: 在于: 在于: Completing Sentences; 在于: The Right Sentence
 
 ### 5. Science and Discovery
 
@@ -118,6 +143,13 @@ Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: lan
 - `level-6-words-48` Level 6 Words 48: In the Laboratory: Finding the Word; Reading the Word; Using the Word
 - `level-6-words-49` Level 6 Words 49: Light, Sound and Electricity: Finding the Word; Reading the Word; Using the Word
 - `level-6-words-50` Level 6 Words 50: Scientists and Methods: Finding the Word; Reading the Word; Using the Word
+- `level-6-grammar-26` Not in the Least: 毫不 and 毫无: 毫不 and 毫无: Completing Sentences; 毫不 and 毫无: The Right Sentence
+- `level-6-grammar-27` At, From and Than: 于: 于: Completing Sentences; 于: The Right Sentence
+- `level-6-grammar-28` So Much That: 以至于: 以至于: Completing Sentences; 以至于: The Right Sentence
+- `level-6-grammar-29` From This We Can See: 由此可见: 由此可见: Completing Sentences; 由此可见: The Right Sentence
+- `level-6-grammar-30` Passive with 为……所: Completing Sentences; The Right Sentence
+- `level-6-grammar-31` Enough To: 足以: 足以: Completing Sentences; 足以: The Right Sentence
+- `level-6-grammar-32` Never Once, in Writing: 未曾: 未曾: Completing Sentences; 未曾: The Right Sentence
 
 ### 6. Culture and Heritage
 
@@ -139,6 +171,12 @@ Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: lan
 - `level-6-words-58` Level 6 Words 58: Splendid Achievements: Finding the Word; Reading the Word; Using the Word
 - `level-6-words-59` Level 6 Words 59: Roots and Heritage: Finding the Word; Reading the Word; Using the Word
 - `level-6-words-60` Level 6 Words 60: Old Towns and Lucky Symbols: Finding the Word; Reading the Word; Using the Word
+- `level-6-grammar-33` Shall: 将: 将: Completing Sentences; 将: The Right Sentence
+- `level-6-grammar-34` Whereas: 则: 则: Completing Sentences; 则: The Right Sentence
+- `level-6-grammar-35` Conversely: 反之: 反之: Completing Sentences; 反之: The Right Sentence
+- `level-6-grammar-36` So-Called: 所谓: 所谓: Completing Sentences; 所谓: The Right Sentence
+- `level-6-grammar-37` Is Not: 并非: 并非: Completing Sentences; 并非: The Right Sentence
+- `level-6-grammar-38` Not That … Not, in Writing: 何尝: 何尝: Completing Sentences; 何尝: The Right Sentence
 
 ### 7. News and Opinion
 
@@ -158,6 +196,10 @@ Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: lan
 - `level-6-words-67` Level 6 Words 67: Public Opinion: Finding the Word; Reading the Word; Using the Word
 - `level-6-words-68` Level 6 Words 68: Judging What We Read: Finding the Word; Reading the Word; Using the Word
 - `level-6-words-69` Level 6 Words 69: People and Words of the Media: Finding the Word; Reading the Word; Using the Word
+- `level-6-grammar-39` So That, Badly: 以致: 以致: Completing Sentences; 以致: The Right Sentence
+- `level-6-grammar-40` Unexpectedly: 不料: 不料: Completing Sentences; 不料: The Right Sentence
+- `level-6-grammar-41` One After Another: 纷纷: 纷纷: Completing Sentences; 纷纷: The Right Sentence
+- `level-6-grammar-42` Known As: 称为 and 被称为: 称为 and 被称为: Completing Sentences; 称为 and 被称为: The Right Sentence
 
 ### 8. Money and Spending
 
@@ -177,6 +219,10 @@ Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: lan
 - `level-6-words-76` Level 6 Words 76: Spending Habits: Finding the Word; Reading the Word; Using the Word
 - `level-6-words-77` Level 6 Words 77: Offers and Members: Finding the Word; Reading the Word; Using the Word
 - `level-6-words-78` Level 6 Words 78: Accounts and Business: Finding the Word; Reading the Word; Using the Word
+- `level-6-grammar-43` Can't Bear To: 舍不得 and 舍得: 舍不得 and 舍得: Completing Sentences; 舍不得 and 舍得: The Right Sentence
+- `level-6-grammar-44` In Vain: 白 Before a Verb: 白 Before a Verb: Completing Sentences; 白 Before a Verb: The Right Sentence
+- `level-6-grammar-45` At Long Last: 总算: 总算: Completing Sentences; 总算: The Right Sentence
+- `level-6-grammar-46` Worth It or Not: 划得来 and 划不来: 划得来 and 划不来: Completing Sentences; 划得来 and 划不来: The Right Sentence
 
 ### 9. Relationships
 
@@ -196,6 +242,12 @@ Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: lan
 - `level-6-words-85` Level 6 Words 85: Making Up: Finding the Word; Reading the Word; Using the Word
 - `level-6-words-86` Level 6 Words 86: Caring and Missing: Finding the Word; Reading the Word; Using the Word
 - `level-6-words-87` Level 6 Words 87: Admiration and Distance: Finding the Word; Reading the Word; Using the Word
+- `level-6-grammar-47` Both … and: 既……又…… and 既……也……: 既……又…… and 既……也……: Completing Sentences; 既……又…… and 既……也……: The Right Sentence
+- `level-6-grammar-48` Since, Then: 既然……就……: 既然……就……: Completing Sentences; 既然……就……: The Right Sentence
+- `level-6-grammar-49` If It Weren't For: 要不是: 要不是: Completing Sentences; 要不是: The Right Sentence
+- `level-6-grammar-50` Let Alone, in Speech: 别说……连……都……: 别说……连……都……: Completing Sentences; 别说……连……都……: The Right Sentence
+- `level-6-grammar-51` It Is, But: A是A，可是……: A是A，可是……: Completing Sentences; A是A，可是……: The Right Sentence
+- `level-6-grammar-52` At the Slightest Thing: 动不动就: 动不动就: Completing Sentences; 动不动就: The Right Sentence
 
 ### 10. The Performing Arts
 
@@ -215,6 +267,10 @@ Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: lan
 - `level-6-words-94` Level 6 Words 94: Stars and Fans: Finding the Word; Reading the Word; Using the Word
 - `level-6-words-95` Level 6 Words 95: Dance and Magic: Finding the Word; Reading the Word; Using the Word
 - `level-6-words-96` Level 6 Words 96: Watching and Judging: Finding the Word; Reading the Word; Using the Word
+- `level-6-grammar-53` No Sooner Said Than Done: 说……就……: 说……就……: Completing Sentences; 说……就……: The Right Sentence
+- `level-6-grammar-54` As If, in Writing: 仿佛: 仿佛: Completing Sentences; 仿佛: The Right Sentence
+- `level-6-grammar-55` All the Same: 照样: 照样: Completing Sentences; 照样: The Right Sentence
+- `level-6-grammar-56` Still, in Writing: 依然: 依然: Completing Sentences; 依然: The Right Sentence
 
 ### 11. Geography and Travel
 
@@ -234,6 +290,9 @@ Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: lan
 - `level-6-words-103` Level 6 Words 103: Planning a Trip: Finding the Word; Reading the Word; Using the Word
 - `level-6-words-104` Level 6 Words 104: On the Way: Finding the Word; Reading the Word; Using the Word
 - `level-6-words-105` Level 6 Words 105: The Outdoors: Finding the Word; Reading the Word; Using the Word
+- `level-6-grammar-57` As Far As … Is Concerned: 对……而言: 对……而言: Completing Sentences; 对……而言: The Right Sentence
+- `level-6-grammar-58` North, South, East and West Of: 以北, 以南, 以东 and 以西: 以北, 以南, 以东 and 以西: Completing Sentences; 以北, 以南, 以东 and 以西: The Right Sentence
+- `level-6-grammar-59` Taking A as B: 以……为……: 以……为……: Completing Sentences; 以……为……: The Right Sentence
 
 ### 12. Thinking and Arguing
 
@@ -253,6 +312,9 @@ Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: lan
 - `level-6-words-112` Level 6 Words 112: Faulty Thinking: Finding the Word; Reading the Word; Using the Word
 - `level-6-words-113` Level 6 Words 113: Ways of Thinking: Finding the Word; Reading the Word; Using the Word
 - `level-6-words-114` Level 6 Words 114: Linking an Argument: Finding the Word; Reading the Word; Using the Word
+- `level-6-grammar-60` In Other Words: 换句话说: 换句话说: Completing Sentences; 换句话说: The Right Sentence
+- `level-6-grammar-61` Even Supposing, in Speech: 就算……也……: 就算……也……: Completing Sentences; 就算……也……: The Right Sentence
+- `level-6-grammar-62` If, in Formal Writing: 倘若: 倘若: Completing Sentences; 倘若: The Right Sentence
 
 ## Simulated Students
 
@@ -260,8 +322,8 @@ Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: lan
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 3/20 | 343.60 | 615.65 | 5.00 | 2394.85 | 3.92 | 89.85 | 0.00 |
-| typical | 3/20 | 348.95 | 582.95 | 51.50 | 2283.45 | 4.30 | 70.70 | 0.00 |
-| struggling | 2/20 | 358.70 | 605.75 | 221.65 | 2380.75 | 6.20 | 49.95 | 0.00 |
-| placed | 20/20 | 92.65 | 156.95 | 13.90 | 601.55 | 4.20 | 18.60 | 0.00 |
-| struggling, placed | 20/20 | 132.15 | 226.05 | 83.00 | 876.90 | 6.13 | 18.25 | 0.00 |
+| strong | 3/20 | 347.10 | 620.90 | 5.35 | 2416.95 | 3.93 | 90.75 | 0.00 |
+| typical | 2/20 | 351.45 | 588.35 | 52.60 | 2305.70 | 4.30 | 71.30 | 0.00 |
+| struggling | 2/20 | 358.90 | 606.40 | 220.30 | 2383.30 | 6.17 | 50.20 | 0.00 |
+| placed | 20/20 | 136.45 | 227.80 | 18.00 | 883.80 | 4.21 | 27.35 | 0.00 |
+| struggling, placed | 20/20 | 189.45 | 316.50 | 106.70 | 1239.30 | 5.91 | 26.45 | 0.00 |

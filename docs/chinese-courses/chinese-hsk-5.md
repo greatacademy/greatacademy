@@ -6,7 +6,7 @@
 - **Level:** Level 5 of the new HSK, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 4](chinese-level-4.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 13 units · 140 topics (3 new, all practice-only) · 417 knowledge points
+- **Size:** 13 units · 202 topics (3 new, all practice-only) · 541 knowledge points
 
 ## The Test
 
@@ -34,8 +34,8 @@ The course turns level 5 into test practice. It holds the units of [Chinese Leve
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 20/20 | 306.80 | 550.65 | 4.55 | 2136.90 | 3.91 | 80.10 | 0.00 |
-| typical | 3/20 | 341.95 | 571.20 | 50.40 | 2236.25 | 4.29 | 69.35 | 0.00 |
-| struggling | 2/20 | 352.30 | 596.20 | 218.60 | 2342.75 | 6.20 | 49.10 | 0.00 |
-| placed | 20/20 | 87.80 | 148.35 | 13.05 | 566.25 | 4.18 | 17.45 | 0.00 |
-| struggling, placed | 20/20 | 125.05 | 213.40 | 78.10 | 826.80 | 6.09 | 17.25 | 0.00 |
+| strong | 12/20 | 338.35 | 606.30 | 5.15 | 2357.00 | 3.92 | 88.65 | 0.00 |
+| typical | 3/20 | 344.40 | 573.50 | 49.25 | 2246.05 | 4.28 | 70.00 | 0.00 |
+| struggling | 2/20 | 353.40 | 596.40 | 218.35 | 2343.15 | 6.19 | 49.25 | 0.00 |
+| placed | 20/20 | 130.45 | 217.40 | 15.75 | 842.20 | 4.18 | 26.25 | 0.00 |
+| struggling, placed | 20/20 | 183.70 | 307.70 | 106.05 | 1203.35 | 5.97 | 25.55 | 0.00 |

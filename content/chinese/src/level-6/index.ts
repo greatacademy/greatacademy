@@ -10,6 +10,7 @@ import { buildLevel, type LevelUnit } from "../level-2/level.ts";
 import { levelFiveCharacters, levelFiveLast, levelFiveWords } from "../level-5/index.ts";
 import { characterBatchesA } from "./character-data-a.ts";
 import { characterBatchesB } from "./character-data-b.ts";
+import { grammar } from "./grammar-data.ts";
 import { wordBatchesA } from "./word-data-a.ts";
 import { wordBatchesB } from "./word-data-b.ts";
 
@@ -35,6 +36,7 @@ const level = buildLevel({
   units: UNITS,
   characterBatches: [...characterBatchesA, ...characterBatchesB],
   wordBatches: [...wordBatchesA, ...wordBatchesB],
+  grammar,
   earlierCharacters: levelFiveCharacters,
   earlierWords: levelFiveWords,
   after: levelFiveLast.words,
@@ -49,7 +51,7 @@ export const levelSixWords: readonly string[] = level.words;
 /** levelSixLast are the last character topic and the last word topic of level 6. */
 export const levelSixLast: { readonly characters: string; readonly words: string } = level.last;
 
-/** levelSixTopics are the 144 topics of level 6: 30 of characters and 114 of words. */
+/** levelSixTopics are the 206 topics of level 6: 30 of characters, 114 of words and 62 of grammar. */
 export const levelSixTopics: readonly TopicDef[] = level.topics;
 
 /** levelSixCourse is the course of level 6 of Chinese as a foreign language. */
