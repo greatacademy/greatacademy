@@ -10,6 +10,7 @@ import { levelTwoCharacters, levelTwoLast, levelTwoWords } from "../level-2/inde
 import { buildLevel, type LevelUnit } from "../level-2/level.ts";
 import { characterBatches } from "./character-data.ts";
 import { grammar } from "./grammar-data.ts";
+import { sentences } from "./sentence-data.ts";
 import { wordBatches } from "./word-data.ts";
 
 /** UNITS are the units of level 3. */
@@ -35,6 +36,7 @@ const level = buildLevel({
   characterBatches,
   wordBatches,
   grammar,
+  sentences,
   earlierCharacters: levelTwoCharacters,
   earlierWords: levelTwoWords,
   after: levelTwoLast.words,

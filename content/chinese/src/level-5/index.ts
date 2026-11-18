@@ -12,6 +12,7 @@ import { levelFourCharacters, levelFourLast, levelFourWords } from "../level-4/i
 import { characterBatchesA } from "./character-data-a.ts";
 import { characterBatchesB } from "./character-data-b.ts";
 import { grammar } from "./grammar-data.ts";
+import { sentences } from "./sentence-data.ts";
 import { wordBatchesA } from "./word-data-a.ts";
 import { wordBatchesB } from "./word-data-b.ts";
 
@@ -38,6 +39,7 @@ const level = buildLevel({
   characterBatches: [...characterBatchesA, ...characterBatchesB],
   wordBatches: [...wordBatchesA, ...wordBatchesB],
   grammar,
+  sentences,
   earlierCharacters: levelFourCharacters,
   earlierWords: levelFourWords,
   after: levelFourLast.words,

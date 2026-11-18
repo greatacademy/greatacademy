@@ -6,11 +6,11 @@
 - **Level:** Level 6, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 5](chinese-level-5.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 206 topics (30 of characters, 114 of words, 62 of grammar) · 556 knowledge points
+- **Size:** 12 units · 210 topics (30 of characters, 114 of words, 62 of grammar, 4 of sentence building) · 564 knowledge points
 
 ## Aim
 
-Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: language and communication, families and generations, cities and the countryside, health and ways of living, science and discovery, culture and heritage, news and opinion, money and spending, relationships, the performing arts, geography and travel, and thinking and arguing. Characters and words are learned as in levels 1 to 5, and every sentence is written only with characters already taught. A few very common characters that the earlier levels leave out, such as 或, 它, 青, 派, 令, 似 and 若, come first, in unit 1. The characters were chosen to be close to level 6 of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain.
+Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: language and communication, families and generations, cities and the countryside, health and ways of living, science and discovery, culture and heritage, news and opinion, money and spending, relationships, the performing arts, geography and travel, and thinking and arguing. Characters and words are learned as in levels 1 to 5, and every sentence is written only with characters already taught. A few very common characters that the earlier levels leave out, such as 或, 它, 青, 派, 令, 似 and 若, come first, in unit 1. The characters were chosen to be close to level 6 of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains.
 
 ## Units
 
@@ -95,6 +95,7 @@ Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: lan
 - `level-6-grammar-17` Carelessly: 乱 + Verb: 乱 + Verb: Completing Sentences; 乱 + Verb: The Right Sentence
 - `level-6-grammar-18` Couldn't Be Better: 再……不过了: 再……不过了: Completing Sentences; 再……不过了: The Right Sentence
 - `level-6-grammar-19` And Further: 进而: 进而: Completing Sentences; 进而: The Right Sentence
+- `level-6-sentences-01` Building Sentences 1: Language and Communication, Families and Generations, Cities and the Countryside: Short Sentences; Longer Sentences
 
 ### 4. Health and Ways of Living
 
@@ -177,6 +178,7 @@ Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: lan
 - `level-6-grammar-36` So-Called: 所谓: 所谓: Completing Sentences; 所谓: The Right Sentence
 - `level-6-grammar-37` Is Not: 并非: 并非: Completing Sentences; 并非: The Right Sentence
 - `level-6-grammar-38` Not That … Not, in Writing: 何尝: 何尝: Completing Sentences; 何尝: The Right Sentence
+- `level-6-sentences-02` Building Sentences 2: Health and Ways of Living, Science and Discovery, Culture and Heritage: Short Sentences; Longer Sentences
 
 ### 7. News and Opinion
 
@@ -248,6 +250,7 @@ Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: lan
 - `level-6-grammar-50` Let Alone, in Speech: 别说……连……都……: 别说……连……都……: Completing Sentences; 别说……连……都……: The Right Sentence
 - `level-6-grammar-51` It Is, But: A是A，可是……: A是A，可是……: Completing Sentences; A是A，可是……: The Right Sentence
 - `level-6-grammar-52` At the Slightest Thing: 动不动就: 动不动就: Completing Sentences; 动不动就: The Right Sentence
+- `level-6-sentences-03` Building Sentences 3: News and Opinion, Money and Spending, Relationships: Short Sentences; Longer Sentences
 
 ### 10. The Performing Arts
 
@@ -315,6 +318,7 @@ Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: lan
 - `level-6-grammar-60` In Other Words: 换句话说: 换句话说: Completing Sentences; 换句话说: The Right Sentence
 - `level-6-grammar-61` Even Supposing, in Speech: 就算……也……: 就算……也……: Completing Sentences; 就算……也……: The Right Sentence
 - `level-6-grammar-62` If, in Formal Writing: 倘若: 倘若: Completing Sentences; 倘若: The Right Sentence
+- `level-6-sentences-04` Building Sentences 4: The Performing Arts, Geography and Travel, Thinking and Arguing: Short Sentences; Longer Sentences
 
 ## Simulated Students
 

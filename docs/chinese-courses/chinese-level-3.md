@@ -6,11 +6,11 @@
 - **Level:** Level 3, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 2](chinese-level-2.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 208 topics (30 of characters, 97 of words, 81 of grammar) · 543 knowledge points
+- **Size:** 12 units · 212 topics (30 of characters, 97 of words, 81 of grammar, 4 of sentence building) · 551 knowledge points
 
 ## Aim
 
-Level 3 teaches 300 more characters and 970 words, in twelve themed units that move from daily life to opinions and reasons, personality, relationships, education, work, society, the environment, technology, culture, money, the news and ways of living. Characters and words are learned as in levels 1 and 2, and every sentence is written only with characters already taught. The characters were chosen to be close to level 3 of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Points that need characters level 3 does not teach, such as 连……都, 越……越 and 除了, wait for a later level.
+Level 3 teaches 300 more characters and 970 words, in twelve themed units that move from daily life to opinions and reasons, personality, relationships, education, work, society, the environment, technology, culture, money, the news and ways of living. Characters and words are learned as in levels 1 and 2, and every sentence is written only with characters already taught. The characters were chosen to be close to level 3 of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Points that need characters level 3 does not teach, such as 连……都, 越……越 and 除了, wait for a later level. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains.
 
 ## Units
 
@@ -92,6 +92,7 @@ Level 3 teaches 300 more characters and 970 words, in twelve themed units that m
 - `level-3-grammar-19` As for: 对于: 对于: Completing Sentences; 对于: The Right Sentence
 - `level-3-grammar-20` Be Sure To: 千万: 千万: Completing Sentences; 千万: The Right Sentence
 - `level-3-grammar-21` At Last: 终于: 终于: Completing Sentences; 终于: The Right Sentence
+- `level-3-sentences-01` Building Sentences 1: Opinions and Reasons, Personality, Relationships: Short Sentences; Longer Sentences
 
 ### 4. Education
 
@@ -172,6 +173,7 @@ Level 3 teaches 300 more characters and 970 words, in twelve themed units that m
 - `level-3-grammar-39` Even Though: 尽管: 尽管: Completing Sentences; 尽管: The Right Sentence
 - `level-3-grammar-40` In Case: 万一: 万一: Completing Sentences; 万一: The Right Sentence
 - `level-3-grammar-41` No Wonder: 难怪: 难怪: Completing Sentences; 难怪: The Right Sentence
+- `level-3-sentences-02` Building Sentences 2: Education, Work and Business, Society and Rules: Short Sentences; Longer Sentences
 
 ### 7. Environment
 
@@ -251,6 +253,7 @@ Level 3 teaches 300 more characters and 970 words, in twelve themed units that m
 - `level-3-grammar-61` Question Words for Everyone and Everything: Completing Sentences; The Right Sentence
 - `level-3-grammar-62` Not This but That: 不是……而是……: 不是……而是……: Completing Sentences; 不是……而是……: The Right Sentence
 - `level-3-grammar-63` Question Words in Pairs: 谁……谁……: 谁……谁……: Completing Sentences; 谁……谁……: The Right Sentence
+- `level-3-sentences-03` Building Sentences 3: Environment, Technology, Culture: Short Sentences; Longer Sentences
 
 ### 10. Money and Shopping
 
@@ -317,6 +320,7 @@ Level 3 teaches 300 more characters and 970 words, in twelve themed units that m
 - `level-3-grammar-79` 看起来 and 听起来 for Seeming: Completing Sentences; The Right Sentence
 - `level-3-grammar-80` 多 and 少 Before a Verb: Completing Sentences; The Right Sentence
 - `level-3-grammar-81` 从来不 and 从来没……过: Completing Sentences; The Right Sentence
+- `level-3-sentences-04` Building Sentences 4: Money and Shopping, News, Lifestyle: Short Sentences; Longer Sentences
 
 ## Simulated Students
 

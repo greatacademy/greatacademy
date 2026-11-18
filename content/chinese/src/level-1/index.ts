@@ -8,6 +8,8 @@ import { characterBatches } from "./character-data.ts";
 import { type LevelOneCharacter, levelOneCharacterTopic, parseLevelOneCharacters } from "./characters.ts";
 import { unitGrammarTopics } from "./grammar.ts";
 import { grammar } from "./grammar-data.ts";
+import { sentences } from "./sentence-data.ts";
+import { unitSentenceTopics } from "./sentences.ts";
 import { wordBatches } from "./word-data.ts";
 import { GAP, type LevelOneWord, levelOneWordTopic, parseLevelOneWords } from "./words.ts";
 
@@ -131,12 +133,22 @@ function build(): Built {
     });
     g += unitGrammar.length;
     topics.push(...unitGrammar);
+    const unitSentences = unitSentenceTopics({
+      level: 1,
+      unit: u,
+      sentences,
+      titles: UNITS.map((x) => x.title),
+      taught,
+      after: unitGrammar.at(-1)?.id ?? levelOneWordId(w),
+    });
+    topics.push(...unitSentences);
     units.push({
       title: unit.title,
       modules: [
         { title: t("Characters", "汉字"), topics: characterIds },
         { title: t("Words", "词语"), topics: wordIds },
         ...(unitGrammar.length > 0 ? [{ title: t("Grammar", "语法"), topics: unitGrammar.map((x) => x.id) }] : []),
+        ...(unitSentences.length > 0 ? [{ title: t("Writing", "写作"), topics: unitSentences.map((x) => x.id) }] : []),
       ],
     });
   }

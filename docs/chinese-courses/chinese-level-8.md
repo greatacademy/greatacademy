@@ -6,11 +6,11 @@
 - **Level:** Level 8, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 7](chinese-level-7.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 279 topics (40 of characters, 188 of words, 51 of grammar) · 786 knowledge points
+- **Size:** 12 units · 283 topics (40 of characters, 188 of words, 51 of grammar, 4 of sentence building) · 794 knowledge points
 
 ## Aim
 
-Level 8 is the second third of the advanced levels 7 to 9, the middle third by frequency: 400 more characters and 1,880 words, in twelve themed units: communities and social issues, research and academia, industry and farming, public health, energy and resources, engineering and inventions, civilizations, ethics, poetry and drama, music and film, institutions and administration, and finance and markets. Characters and words are learned as in levels 1 to 7, and every sentence is written only with characters already taught. Common characters that the earlier levels leave out, such as 详, 暂, 厚 and 泪, are taught where their unit's words need them. The characters were chosen to be close to the advanced band of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain.
+Level 8 is the second third of the advanced levels 7 to 9, the middle third by frequency: 400 more characters and 1,880 words, in twelve themed units: communities and social issues, research and academia, industry and farming, public health, energy and resources, engineering and inventions, civilizations, ethics, poetry and drama, music and film, institutions and administration, and finance and markets. Characters and words are learned as in levels 1 to 7, and every sentence is written only with characters already taught. Common characters that the earlier levels leave out, such as 详, 暂, 厚 and 泪, are taught where their unit's words need them. The characters were chosen to be close to the advanced band of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains.
 
 ## Units
 
@@ -109,6 +109,7 @@ Level 8 is the second third of the advanced levels 7 to 9, the middle third by f
 - `level-8-grammar-10` Respectively: 分别: 分别: Completing Sentences; 分别: The Right Sentence
 - `level-8-grammar-11` Up To and To This Day: 到……为止 and 至今: 到……为止 and 至今: Completing Sentences; 到……为止 and 至今: The Right Sentence
 - `level-8-grammar-12` 所 Before a Verb: 我所知道的: 我所知道的: Completing Sentences; 我所知道的: The Right Sentence
+- `level-8-sentences-01` Building Sentences 1: Communities and Social Issues, Research and Academia, Industry and Farming: Short Sentences; Longer Sentences
 
 ### 4. Public Health
 
@@ -203,6 +204,7 @@ Level 8 is the second third of the advanced levels 7 to 9, the middle third by f
 - `level-8-grammar-22` Bound To: 势必: 势必: Completing Sentences; 势必: The Right Sentence
 - `level-8-grammar-23` Provided That: 在……的前提下: 在……的前提下: Completing Sentences; 在……的前提下: The Right Sentence
 - `level-8-grammar-24` Starting From: 从……出发: 从……出发: Completing Sentences; 从……出发: The Right Sentence
+- `level-8-sentences-02` Building Sentences 2: Public Health, Energy and Resources, Engineering and Inventions: Short Sentences; Longer Sentences
 
 ### 7. Civilizations
 
@@ -295,6 +297,7 @@ Level 8 is the second third of the advanced levels 7 to 9, the middle third by f
 - `level-8-grammar-34` Half … Half: 半……半……: 半……半……: Completing Sentences; 半……半……: The Right Sentence
 - `level-8-grammar-35` Neither Too Much Nor Too Little: 不……不……: 不……不……: Completing Sentences; 不……不……: The Right Sentence
 - `level-8-grammar-36` Here and There: 东……西……: 东……西……: Completing Sentences; 东……西……: The Right Sentence
+- `level-8-sentences-03` Building Sentences 3: Civilizations, Ethics, Poetry and Drama: Short Sentences; Longer Sentences
 
 ### 10. Music and Film
 
@@ -388,6 +391,7 @@ Level 8 is the second third of the advanced levels 7 to 9, the middle third by f
 - `level-8-grammar-49` In the Final Analysis: 说到底 and 归根到底: 说到底 and 归根到底: Completing Sentences; 说到底 and 归根到底: The Right Sentence
 - `level-8-grammar-50` Not More Than: A不比B: A不比B: Completing Sentences; A不比B: The Right Sentence
 - `level-8-grammar-51` I'd Be Surprised If Not: 不……才怪: 不……才怪: Completing Sentences; 不……才怪: The Right Sentence
+- `level-8-sentences-04` Building Sentences 4: Music and Film, Institutions and Administration, Finance and Markets: Short Sentences; Longer Sentences
 
 ## Simulated Students
 

@@ -7,6 +7,7 @@ import { t } from "@ga/content";
 
 import { type LevelOneCharacter, levelOneCharacterTopic, parseLevelCharacters } from "../level-1/characters.ts";
 import { type LevelGrammar, unitGrammarTopics } from "../level-1/grammar.ts";
+import { type LevelSentences, unitSentenceTopics } from "../level-1/sentences.ts";
 import { GAP, type LevelOneWord, levelOneWordTopic, parseLevelWords } from "../level-1/words.ts";
 
 /** LevelUnit is a unit of a level: a theme, how many character batches and how many word batches it has. */
@@ -39,6 +40,8 @@ export interface LevelSpec {
   readonly after: string;
   /** grammar are the level's grammar topics, each naming its unit. */
   readonly grammar?: readonly LevelGrammar[];
+  /** sentences are the level's sentence-building topics, ending its third, sixth, ninth and twelfth units. */
+  readonly sentences?: readonly LevelSentences[];
 }
 
 /** Level is a built level: its characters and words, its topics, and the units of its course. */
@@ -150,12 +153,22 @@ export function buildLevel(spec: LevelSpec): Level {
     });
     g += unitGrammar.length;
     topics.push(...unitGrammar);
+    const unitSentences = unitSentenceTopics({
+      level,
+      unit: u,
+      sentences: spec.sentences ?? [],
+      titles: spec.units.map((x) => x.title),
+      taught,
+      after: unitGrammar.at(-1)?.id ?? levelWordId(level, w),
+    });
+    topics.push(...unitSentences);
     units.push({
       title: unit.title,
       modules: [
         { title: t("Characters", "汉字"), topics: characterIds },
         { title: t("Words", "词语"), topics: wordIds },
         ...(unitGrammar.length > 0 ? [{ title: t("Grammar", "语法"), topics: unitGrammar.map((x) => x.id) }] : []),
+        ...(unitSentences.length > 0 ? [{ title: t("Writing", "写作"), topics: unitSentences.map((x) => x.id) }] : []),
       ],
     });
   }

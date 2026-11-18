@@ -6,11 +6,11 @@
 - **Level:** Level 1, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Pinyin](chinese-pinyin.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 128 topics (30 of characters, 50 of words, 48 of grammar) · 336 knowledge points
+- **Size:** 12 units · 132 topics (30 of characters, 50 of words, 48 of grammar, 4 of sentence building) · 344 knowledge points
 
 ## Aim
 
-Level 1 teaches 300 basic characters and 500 words of daily life, in twelve themed units from greetings to health. A character is learned by its form, its reading in pinyin and its meaning in the learner's language; a word by its meaning, its reading and its use in a sentence. Every sentence is written only with characters already taught, so the learner can read each one. The characters were chosen as the commonest of daily life; they are still to be checked against level 1 of the standard (GF 0025-2021) and the lists counsel clears (C0.2). Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain.
+Level 1 teaches 300 basic characters and 500 words of daily life, in twelve themed units from greetings to health. A character is learned by its form, its reading in pinyin and its meaning in the learner's language; a word by its meaning, its reading and its use in a sentence. Every sentence is written only with characters already taught, so the learner can read each one. The characters were chosen as the commonest of daily life; they are still to be checked against level 1 of the standard (GF 0025-2021) and the lists counsel clears (C0.2). Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains.
 
 ## Units
 
@@ -50,6 +50,7 @@ Level 1 teaches 300 basic characters and 500 words of daily life, in twelve them
 - `level-1-grammar-10` 有 Sentences: Completing Sentences; The Right Sentence
 - `level-1-grammar-11` 和 Joining Nouns: Completing Sentences; The Right Sentence
 - `level-1-grammar-12` 去 and 来 with Places: Completing Sentences; The Right Sentence
+- `level-1-sentences-01` Building Sentences 1: Greetings and Introductions, Numbers and Age, Family: Short Sentences; Longer Sentences
 
 ### 4. Time and Dates
 
@@ -98,6 +99,7 @@ Level 1 teaches 300 basic characters and 500 words of daily life, in twelve them
 - `level-1-grammar-28` 吧 for Suggestions and Guesses: Completing Sentences; The Right Sentence
 - `level-1-grammar-29` Going Somewhere to Do Something: Completing Sentences; The Right Sentence
 - `level-1-grammar-30` Asking with 怎么样: Completing Sentences; The Right Sentence
+- `level-1-sentences-02` Building Sentences 2: Time and Dates, Food and Drink, Shopping and Money: Short Sentences; Longer Sentences
 
 ### 7. School and Study
 
@@ -142,6 +144,7 @@ Level 1 teaches 300 basic characters and 500 words of daily life, in twelve them
 - `level-1-grammar-40` Together: 跟……一起: 跟……一起: Completing Sentences; 跟……一起: The Right Sentence
 - `level-1-grammar-41` Requests and Commands: 请, 别 and 不要: 请, 别 and 不要: Completing Sentences; 请, 别 and 不要: The Right Sentence
 - `level-1-grammar-42` 次 for How Many Times: Completing Sentences; The Right Sentence
+- `level-1-sentences-03` Building Sentences 3: School and Study, Places and Directions, Transport and Travel: Short Sentences; Longer Sentences
 
 ### 10. Weather and Seasons
 
@@ -177,6 +180,7 @@ Level 1 teaches 300 basic characters and 500 words of daily life, in twelve them
 - `level-1-words-50` Level 1 Words 50: Growing Up: Finding the Word; Reading the Word; Using the Word
 - `level-1-grammar-47` Because: 因为……所以……: 因为……所以……: Completing Sentences; 因为……所以……: The Right Sentence
 - `level-1-grammar-48` 最 for the Most: Completing Sentences; The Right Sentence
+- `level-1-sentences-04` Building Sentences 4: Weather and Seasons, Hobbies and Free Time, Body and Health: Short Sentences; Longer Sentences
 
 ## Simulated Students
 

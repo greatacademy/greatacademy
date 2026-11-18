@@ -44,6 +44,17 @@ describe("chinese content", () => {
     }
   });
 
+  it("ends every third unit of each level with a topic of sentence building", () => {
+    const subject = compileChinese();
+    for (let level = 1; level <= 9; level++) {
+      const course = subject.courses.get(`chinese-level-${level}`);
+      const ends = course?.def.units.flatMap((unit, u) =>
+        unit.modules.some((m) => m.topics.some((id) => id.includes("-sentences-"))) ? [u + 1] : [],
+      );
+      expect(ends, `level ${level}`).toEqual([3, 6, 9, 12]);
+    }
+  });
+
   it("holds every topic in a shard", () => {
     expect(new Set(coreShardTopics.map((topic) => topic.id)).size).toBe(chinese.topics.length);
   });

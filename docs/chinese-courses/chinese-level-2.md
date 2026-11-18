@@ -6,11 +6,11 @@
 - **Level:** Level 2, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 1](chinese-level-1.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 177 topics (30 of characters, 77 of words, 70 of grammar) · 461 knowledge points
+- **Size:** 12 units · 181 topics (30 of characters, 77 of words, 70 of grammar, 4 of sentence building) · 469 knowledge points
 
 ## Aim
 
-Level 2 teaches 300 more characters and 770 words of daily life, in twelve themed units from the daily routine and the home to travel, feelings, nature and festivals. Characters and words are learned as in level 1, and every sentence is written only with characters already taught. The characters were chosen to be close to levels 2 and 3 of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain.
+Level 2 teaches 300 more characters and 770 words of daily life, in twelve themed units from the daily routine and the home to travel, feelings, nature and festivals. Characters and words are learned as in level 1, and every sentence is written only with characters already taught. The characters were chosen to be close to levels 2 and 3 of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains.
 
 ## Units
 
@@ -73,6 +73,7 @@ Level 2 teaches 300 more characters and 770 words of daily life, in twelve theme
 - `level-2-grammar-17` Measure Words 双, 条, 张 and 件: Completing Sentences; The Right Sentence
 - `level-2-grammar-18` The One That Is: Adjective + 的: Adjective + 的: Completing Sentences; Adjective + 的: The Right Sentence
 - `level-2-grammar-19` So: 这么 and 那么 + Adjective: 这么 and 那么 + Adjective: Completing Sentences; 这么 and 那么 + Adjective: The Right Sentence
+- `level-2-sentences-01` Building Sentences 1: Daily Routine, Home, Colours and Clothes: Short Sentences; Longer Sentences
 
 ### 4. Food and Restaurants
 
@@ -127,6 +128,7 @@ Level 2 teaches 300 more characters and 770 words of daily life, in twelve theme
 - `level-2-grammar-35` 有点儿 and 一点儿: Completing Sentences; The Right Sentence
 - `level-2-grammar-36` Should: 应该: 应该: Completing Sentences; 应该: The Right Sentence
 - `level-2-grammar-37` Advice with 最好: Completing Sentences; The Right Sentence
+- `level-2-sentences-02` Building Sentences 2: Food and Restaurants, Work and the Office, Health: Short Sentences; Longer Sentences
 
 ### 7. Travel
 
@@ -186,6 +188,7 @@ Level 2 teaches 300 more characters and 770 words of daily life, in twelve theme
 - `level-2-grammar-56` When: ……的时候: ……的时候: Completing Sentences; ……的时候: The Right Sentence
 - `level-2-grammar-57` How Big: 有 + Number + Adjective: 有 + Number + Adjective: Completing Sentences; 有 + Number + Adjective: The Right Sentence
 - `level-2-grammar-58` About the Same: 差不多: 差不多: Completing Sentences; 差不多: The Right Sentence
+- `level-2-sentences-03` Building Sentences 3: Travel, Feelings, Nature: Short Sentences; Longer Sentences
 
 ### 10. Sports
 
@@ -226,6 +229,7 @@ Level 2 teaches 300 more characters and 770 words of daily life, in twelve theme
 - `level-2-grammar-68` Advice with 还是……吧: Completing Sentences; The Right Sentence
 - `level-2-grammar-69` Good Wishes with 祝: Completing Sentences; The Right Sentence
 - `level-2-grammar-70` One More Thing: 还有: 还有: Completing Sentences; 还有: The Right Sentence
+- `level-2-sentences-04` Building Sentences 4: Sports, Media and Communication, Festivals: Short Sentences; Longer Sentences
 
 ## Simulated Students
 

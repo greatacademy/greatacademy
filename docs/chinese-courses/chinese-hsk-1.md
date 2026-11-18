@@ -6,7 +6,7 @@
 - **Level:** Level 1 of the new HSK, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Pinyin](chinese-pinyin.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 13 units · 131 topics (3 new, all practice-only) · 342 knowledge points
+- **Size:** 13 units · 135 topics (3 new, all practice-only) · 350 knowledge points
 
 ## The Test
 

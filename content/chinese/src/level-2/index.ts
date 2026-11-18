@@ -9,6 +9,7 @@ import { levelOneCharacters, levelOneWordId, levelOneWords } from "../level-1/in
 import { characterBatches } from "./character-data.ts";
 import { grammar } from "./grammar-data.ts";
 import { buildLevel, type LevelUnit } from "./level.ts";
+import { sentences } from "./sentence-data.ts";
 import { wordBatches } from "./word-data.ts";
 
 /** UNITS are the units of level 2. */
@@ -34,6 +35,7 @@ const level = buildLevel({
   characterBatches,
   wordBatches,
   grammar,
+  sentences,
   earlierCharacters: levelOneCharacters,
   earlierWords: levelOneWords,
   after: levelOneWordId(50),

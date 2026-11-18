@@ -6,11 +6,11 @@
 - **Level:** Level 7, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 6](chinese-level-6.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 277 topics (40 of characters, 188 of words, 49 of grammar) · 782 knowledge points
+- **Size:** 12 units · 281 topics (40 of characters, 188 of words, 49 of grammar, 4 of sentence building) · 790 knowledge points
 
 ## Aim
 
-Level 7 is the first third of the advanced levels 7 to 9. The standard keeps levels 7 to 9 together (1,200 characters and 5,636 words); the subject splits them into three courses by frequency, and level 7 takes the commonest third: 400 more characters and 1,880 words, in twelve themed units: social change, schools and learning, work and the workplace, medicine, nature and ecology, science and technology, history, thought and belief, literature and writing, art and design, law and society, and the economy and trade. Characters and words are learned as in levels 1 to 6, and every sentence is written only with characters already taught. Common characters that the earlier levels leave out, such as 缓, 烈, 替 and 顶, are taught where their unit's words need them. The characters were chosen to be close to the advanced band of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain.
+Level 7 is the first third of the advanced levels 7 to 9. The standard keeps levels 7 to 9 together (1,200 characters and 5,636 words); the subject splits them into three courses by frequency, and level 7 takes the commonest third: 400 more characters and 1,880 words, in twelve themed units: social change, schools and learning, work and the workplace, medicine, nature and ecology, science and technology, history, thought and belief, literature and writing, art and design, law and society, and the economy and trade. Characters and words are learned as in levels 1 to 6, and every sentence is written only with characters already taught. Common characters that the earlier levels leave out, such as 缓, 烈, 替 and 顶, are taught where their unit's words need them. The characters were chosen to be close to the advanced band of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains.
 
 ## Units
 
@@ -109,6 +109,7 @@ Level 7 is the first third of the advanced levels 7 to 9. The standard keeps lev
 - `level-7-grammar-10` Just Before: 临 + Verb: 临 + Verb: Completing Sentences; 临 + Verb: The Right Sentence
 - `level-7-grammar-11` Can't Do Anything With: 拿……没办法: 拿……没办法: Completing Sentences; 拿……没办法: The Right Sentence
 - `level-7-grammar-12` No Matter What, Won't: 说什么也不 and 怎么也不: 说什么也不 and 怎么也不: Completing Sentences; 说什么也不 and 怎么也不: The Right Sentence
+- `level-7-sentences-01` Building Sentences 1: Social Change, Schools and Learning, Work and the Workplace: Short Sentences; Longer Sentences
 
 ### 4. Medicine
 
@@ -203,6 +204,7 @@ Level 7 is the first third of the advanced levels 7 to 9. The standard keeps lev
 - `level-7-grammar-22` Degree and Rate: Word + 度 and Word + 率: Word + 度 and Word + 率: Completing Sentences; Word + 度 and Word + 率: The Right Sentence
 - `level-7-grammar-23` Having an Effect On: 对……有影响 and 对……起作用: 对……有影响 and 对……起作用: Completing Sentences; 对……有影响 and 对……起作用: The Right Sentence
 - `level-7-grammar-24` Bringing and Providing: 给……带来 and 为……提供: 给……带来 and 为……提供: Completing Sentences; 给……带来 and 为……提供: The Right Sentence
+- `level-7-sentences-02` Building Sentences 2: Medicine, Nature and Ecology, Science and Technology: Short Sentences; Longer Sentences
 
 ### 7. History
 
@@ -295,6 +297,7 @@ Level 7 is the first third of the advanced levels 7 to 9. The standard keeps lev
 - `level-7-grammar-34` One and the Other: 一A一B: 一A一B: Completing Sentences; 一A一B: The Right Sentence
 - `level-7-grammar-35` Again and Again Every Way: 左……右……: 左……右……: Completing Sentences; 左……右……: The Right Sentence
 - `level-7-grammar-36` Bringing Up: 说起, 提起 and 谈起: 说起, 提起 and 谈起: Completing Sentences; 说起, 提起 and 谈起: The Right Sentence
+- `level-7-sentences-03` Building Sentences 3: History, Thought and Belief, Literature and Writing: Short Sentences; Longer Sentences
 
 ### 10. Art and Design
 
@@ -386,6 +389,7 @@ Level 7 is the first third of the advanced levels 7 to 9. The standard keeps lev
 - `level-7-grammar-47` More Than: 不止: 不止: Completing Sentences; 不止: The Right Sentence
 - `level-7-grammar-48` Measure Words 项, 届 and 批: Completing Sentences; The Right Sentence
 - `level-7-grammar-49` Every So Often: 每隔: 每隔: Completing Sentences; 每隔: The Right Sentence
+- `level-7-sentences-04` Building Sentences 4: Art and Design, Law and Society, The Economy and Trade: Short Sentences; Longer Sentences
 
 ## Simulated Students
 
