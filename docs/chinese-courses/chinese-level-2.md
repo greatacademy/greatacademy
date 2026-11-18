@@ -6,11 +6,11 @@
 - **Level:** Level 2, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 1](chinese-level-1.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 183 topics (30 of characters, 77 of words, 70 of grammar, 4 of sentence building, 2 of writing) · 473 knowledge points
+- **Size:** 12 units · 207 topics (30 of characters, 77 of words, 70 of grammar, 24 of listening and speaking, 4 of sentence building, 2 of writing) · 521 knowledge points
 
 ## Aim
 
-Level 2 teaches 300 more characters and 770 words of daily life, in twelve themed units from the daily routine and the home to travel, feelings, nature and festivals. Characters and words are learned as in level 1, and every sentence is written only with characters already taught. The characters were chosen to be close to levels 2 and 3 of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains. The sixth and twelfth units end with a topic of paragraph writing as well, judged by a model against three yes-or-no criteria, at least 80 characters a piece, its tasks and model answers written with the characters taught by then; the criteria wait for texts scored by teachers of Chinese, and an admin routes them before they reach learners.
+Level 2 teaches 300 more characters and 770 words of daily life, in twelve themed units from the daily routine and the home to travel, feelings, nature and festivals. Characters and words are learned as in level 1, and every sentence is written only with characters already taught. The characters were chosen to be close to levels 2 and 3 of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains. The sixth and twelfth units end with a topic of paragraph writing as well, judged by a model against three yes-or-no criteria, at least 80 characters a piece, its tasks and model answers written with the characters taught by then; the criteria wait for texts scored by teachers of Chinese, and an admin routes them before they reach learners. After its grammar, each unit has a topic of listening and one of speaking, made from its words and their sentences read by a synthetic voice: the meaning of a word heard, and the word heard in a sentence; then the words said after the recording and the sentences read aloud, heard by a speech service whose thresholds await recordings of real learners.
 
 ## Units
 
@@ -37,6 +37,8 @@ Level 2 teaches 300 more characters and 770 words of daily life, in twelve theme
 - `level-2-grammar-05` 又 and 再: Completing Sentences; The Right Sentence
 - `level-2-grammar-06` Result Complements 完, 好, 见 and 到: Completing Sentences; The Right Sentence
 - `level-2-grammar-07` A Little While: 一会儿: 一会儿: Completing Sentences; 一会儿: The Right Sentence
+- `level-2-listening-01` Level 2 Listening 01: Daily Routine: Words You Hear; Words in Sentences
+- `level-2-speaking-01` Level 2 Speaking 01: Daily Routine: Saying Words; Reading Sentences Aloud
 
 ### 2. Home
 
@@ -56,6 +58,8 @@ Level 2 teaches 300 more characters and 770 words of daily life, in twelve theme
 - `level-2-grammar-10` Without Stopping: 一直: 一直: Completing Sentences; 一直: The Right Sentence
 - `level-2-grammar-11` How Often: 常常, 经常 and 不常: 常常, 经常 and 不常: Completing Sentences; 常常, 经常 and 不常: The Right Sentence
 - `level-2-grammar-12` Sometimes: 有时候……有时候……: 有时候……有时候……: Completing Sentences; 有时候……有时候……: The Right Sentence
+- `level-2-listening-02` Level 2 Listening 02: Home: Words You Hear; Words in Sentences
+- `level-2-speaking-02` Level 2 Speaking 02: Home: Saying Words; Reading Sentences Aloud
 
 ### 3. Colours and Clothes
 
@@ -73,6 +77,8 @@ Level 2 teaches 300 more characters and 770 words of daily life, in twelve theme
 - `level-2-grammar-17` Measure Words 双, 条, 张 and 件: Completing Sentences; The Right Sentence
 - `level-2-grammar-18` The One That Is: Adjective + 的: Adjective + 的: Completing Sentences; Adjective + 的: The Right Sentence
 - `level-2-grammar-19` So: 这么 and 那么 + Adjective: 这么 and 那么 + Adjective: Completing Sentences; 这么 and 那么 + Adjective: The Right Sentence
+- `level-2-listening-03` Level 2 Listening 03: Colours and Clothes: Words You Hear; Words in Sentences
+- `level-2-speaking-03` Level 2 Speaking 03: Colours and Clothes: Saying Words; Reading Sentences Aloud
 - `level-2-sentences-01` Building Sentences 1: Daily Routine, Home, Colours and Clothes: Short Sentences; Longer Sentences
 
 ### 4. Food and Restaurants
@@ -92,6 +98,8 @@ Level 2 teaches 300 more characters and 770 words of daily life, in twelve theme
 - `level-2-grammar-23` 只 for "Only": Completing Sentences; The Right Sentence
 - `level-2-grammar-24` Enough: 够 and 不够: 够 and 不够: Completing Sentences; 够 and 不够: The Right Sentence
 - `level-2-grammar-25` Other: 别的 and 别人: 别的 and 别人: Completing Sentences; 别的 and 别人: The Right Sentence
+- `level-2-listening-04` Level 2 Listening 04: Food and Restaurants: Words You Hear; Words in Sentences
+- `level-2-speaking-04` Level 2 Speaking 04: Food and Restaurants: Saying Words; Reading Sentences Aloud
 
 ### 5. Work and the Office
 
@@ -113,6 +121,8 @@ Level 2 teaches 300 more characters and 770 words of daily life, in twelve theme
 - `level-2-grammar-30` Surely: 一定: 一定: Completing Sentences; 一定: The Right Sentence
 - `level-2-grammar-31` Already, with Surprise: 都……了: 都……了: Completing Sentences; 都……了: The Right Sentence
 - `level-2-grammar-32` How Long or How Much It Takes: 要 + Amount: 要 + Amount: Completing Sentences; 要 + Amount: The Right Sentence
+- `level-2-listening-05` Level 2 Listening 05: Work and the Office: Words You Hear; Words in Sentences
+- `level-2-speaking-05` Level 2 Speaking 05: Work and the Office: Saying Words; Reading Sentences Aloud
 
 ### 6. Health
 
@@ -128,6 +138,8 @@ Level 2 teaches 300 more characters and 770 words of daily life, in twelve theme
 - `level-2-grammar-35` 有点儿 and 一点儿: Completing Sentences; The Right Sentence
 - `level-2-grammar-36` Should: 应该: 应该: Completing Sentences; 应该: The Right Sentence
 - `level-2-grammar-37` Advice with 最好: Completing Sentences; The Right Sentence
+- `level-2-listening-06` Level 2 Listening 06: Health: Words You Hear; Words in Sentences
+- `level-2-speaking-06` Level 2 Speaking 06: Health: Saying Words; Reading Sentences Aloud
 - `level-2-sentences-02` Building Sentences 2: Food and Restaurants, Work and the Office, Health: Short Sentences; Longer Sentences
 - `level-2-writing-01` My Day: Telling It in Time Order; Saying What You Do
 
@@ -151,6 +163,8 @@ Level 2 teaches 300 more characters and 770 words of daily life, in twelve theme
 - `level-2-grammar-43` How Many Times: 次 and 遍: 次 and 遍: Completing Sentences; 次 and 遍: The Right Sentence
 - `level-2-grammar-44` Right There: 就 Before 在 and 是: 就 Before 在 and 是: Completing Sentences; 就 Before 在 and 是: The Right Sentence
 - `level-2-grammar-45` All of It: 全 and 全部: 全 and 全部: Completing Sentences; 全 and 全部: The Right Sentence
+- `level-2-listening-07` Level 2 Listening 07: Travel: Words You Hear; Words in Sentences
+- `level-2-speaking-07` Level 2 Speaking 07: Travel: Saying Words; Reading Sentences Aloud
 
 ### 8. Feelings
 
@@ -169,6 +183,8 @@ Level 2 teaches 300 more characters and 770 words of daily life, in twelve theme
 - `level-2-grammar-50` 自己, 别人 and 大家: Completing Sentences; The Right Sentence
 - `level-2-grammar-51` What You Think: 觉得: 觉得: Completing Sentences; 觉得: The Right Sentence
 - `level-2-grammar-52` For Someone's Sake: 为 + Person: 为 + Person: Completing Sentences; 为 + Person: The Right Sentence
+- `level-2-listening-08` Level 2 Listening 08: Feelings: Words You Hear; Words in Sentences
+- `level-2-speaking-08` Level 2 Speaking 08: Feelings: Saying Words; Reading Sentences Aloud
 
 ### 9. Nature
 
@@ -189,6 +205,8 @@ Level 2 teaches 300 more characters and 770 words of daily life, in twelve theme
 - `level-2-grammar-56` When: ……的时候: ……的时候: Completing Sentences; ……的时候: The Right Sentence
 - `level-2-grammar-57` How Big: 有 + Number + Adjective: 有 + Number + Adjective: Completing Sentences; 有 + Number + Adjective: The Right Sentence
 - `level-2-grammar-58` About the Same: 差不多: 差不多: Completing Sentences; 差不多: The Right Sentence
+- `level-2-listening-09` Level 2 Listening 09: Nature: Words You Hear; Words in Sentences
+- `level-2-speaking-09` Level 2 Speaking 09: Nature: Saying Words; Reading Sentences Aloud
 - `level-2-sentences-03` Building Sentences 3: Travel, Feelings, Nature: Short Sentences; Longer Sentences
 
 ### 10. Sports
@@ -203,6 +221,8 @@ Level 2 teaches 300 more characters and 770 words of daily life, in twelve theme
 - `level-2-grammar-59` At the Same Time: 一边……一边……: 一边……一边……: Completing Sentences; 一边……一边……: The Right Sentence
 - `level-2-grammar-60` Before and After: ……以前 and ……以后: ……以前 and ……以后: Completing Sentences; ……以前 and ……以后: The Right Sentence
 - `level-2-grammar-61` Right After: V了……就……: V了……就……: Completing Sentences; V了……就……: The Right Sentence
+- `level-2-listening-10` Level 2 Listening 10: Sports: Words You Hear; Words in Sentences
+- `level-2-speaking-10` Level 2 Speaking 10: Sports: Saying Words; Reading Sentences Aloud
 
 ### 11. Media and Communication
 
@@ -217,6 +237,8 @@ Level 2 teaches 300 more characters and 770 words of daily life, in twelve theme
 - `level-2-grammar-63` Describing a Noun with a Phrase and 的: Completing Sentences; The Right Sentence
 - `level-2-grammar-64` Ending a List with 什么的: Completing Sentences; The Right Sentence
 - `level-2-grammar-65` Opinions and Wrong Guesses: 认为 and 以为: 认为 and 以为: Completing Sentences; 认为 and 以为: The Right Sentence
+- `level-2-listening-11` Level 2 Listening 11: Media and Communication: Words You Hear; Words in Sentences
+- `level-2-speaking-11` Level 2 Speaking 11: Media and Communication: Saying Words; Reading Sentences Aloud
 
 ### 12. Festivals
 
@@ -230,6 +252,8 @@ Level 2 teaches 300 more characters and 770 words of daily life, in twelve theme
 - `level-2-grammar-68` Advice with 还是……吧: Completing Sentences; The Right Sentence
 - `level-2-grammar-69` Good Wishes with 祝: Completing Sentences; The Right Sentence
 - `level-2-grammar-70` One More Thing: 还有: 还有: Completing Sentences; 还有: The Right Sentence
+- `level-2-listening-12` Level 2 Listening 12: Festivals: Words You Hear; Words in Sentences
+- `level-2-speaking-12` Level 2 Speaking 12: Festivals: Saying Words; Reading Sentences Aloud
 - `level-2-sentences-04` Building Sentences 4: Sports, Media and Communication, Festivals: Short Sentences; Longer Sentences
 - `level-2-writing-02` A Message to a Friend: The Form of a Message; Making the Plan Clear
 

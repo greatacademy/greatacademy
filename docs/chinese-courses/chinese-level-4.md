@@ -6,11 +6,11 @@
 - **Level:** Level 4, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 3](chinese-level-3.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 209 topics (30 of characters, 100 of words, 73 of grammar, 4 of sentence building, 2 of writing) · 548 knowledge points
+- **Size:** 12 units · 233 topics (30 of characters, 100 of words, 73 of grammar, 24 of listening and speaking, 4 of sentence building, 2 of writing) · 596 knowledge points · 4 conversations
 
 ## Aim
 
-Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: health and medicine, travel and transport, the media and the internet, history, the arts, law and rights, the economy, feelings, nature and climate, sport, science and careers. Characters and words are learned as in levels 1 to 3, and every sentence is written only with characters already taught. Some very common characters that levels 1 to 3 leave out, such as 始, 主, 之 and 与, are taught where their unit's words need them. The characters were chosen to be close to level 4 of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains. The sixth and twelfth units end with a topic of paragraph writing as well, judged by a model against three yes-or-no criteria, at least 120 characters a piece, its tasks and model answers written with the characters taught by then; the criteria wait for texts scored by teachers of Chinese, and an admin routes them before they reach learners.
+Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: health and medicine, travel and transport, the media and the internet, history, the arts, law and rights, the economy, feelings, nature and climate, sport, science and careers. Characters and words are learned as in levels 1 to 3, and every sentence is written only with characters already taught. Some very common characters that levels 1 to 3 leave out, such as 始, 主, 之 and 与, are taught where their unit's words need them. The characters were chosen to be close to level 4 of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains. The sixth and twelfth units end with a topic of paragraph writing as well, judged by a model against three yes-or-no criteria, at least 120 characters a piece, its tasks and model answers written with the characters taught by then; the criteria wait for texts scored by teachers of Chinese, and an admin routes them before they reach learners. After its grammar, each unit has a topic of listening and one of speaking, made from its words and their sentences read by a synthetic voice: the meaning of a word heard, and the word heard in a sentence; then the words said after the recording and the sentences read aloud, heard by a speech service whose thresholds await recordings of real learners. Units 3, 6, 9 and 12 each close with a conversation on the themes of their stretch, spoken in Mandarin with an AI tutor that plays a part and keeps to the level, through the voice service and the prompt `conversation-zh-1`; an admin routes each before it is offered.
 
 ## Units
 
@@ -44,6 +44,8 @@ Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: hea
 - `level-4-grammar-09` Ever Since: 自从……以后: 自从……以后: Completing Sentences; 自从……以后: The Right Sentence
 - `level-4-grammar-10` Room or Appetite for It: V得下 and V不下: V得下 and V不下: Completing Sentences; V得下 and V不下: The Right Sentence
 - `level-4-grammar-11` Reaching or Closing: Verb + 上: Verb + 上: Completing Sentences; Verb + 上: The Right Sentence
+- `level-4-listening-01` Level 4 Listening 01: Health and Medicine: Words You Hear; Words in Sentences
+- `level-4-speaking-01` Level 4 Speaking 01: Health and Medicine: Saying Words; Reading Sentences Aloud
 
 ### 2. Travel and Transport
 
@@ -72,6 +74,8 @@ Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: hea
 - `level-4-grammar-17` So As Not To: 省得 and 免得: 省得 and 免得: Completing Sentences; 省得 and 免得: The Right Sentence
 - `level-4-grammar-18` Opening and Leaving: Verb + 开: Verb + 开: Completing Sentences; Verb + 开: The Right Sentence
 - `level-4-grammar-19` Above, Below, Within and Outside: 以上, 以下, 以内 and 以外: 以上, 以下, 以内 and 以外: Completing Sentences; 以上, 以下, 以内 and 以外: The Right Sentence
+- `level-4-listening-02` Level 4 Listening 02: Travel and Transport: Words You Hear; Words in Sentences
+- `level-4-speaking-02` Level 4 Speaking 02: Travel and Transport: Saying Words; Reading Sentences Aloud
 
 ### 3. Media and the Internet
 
@@ -100,7 +104,11 @@ Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: hea
 - `level-4-grammar-25` Take … for Example: 拿……来说: 拿……来说: Completing Sentences; 拿……来说: The Right Sentence
 - `level-4-grammar-26` In Someone's View: 在……看来: 在……看来: Completing Sentences; 在……看来: The Right Sentence
 - `level-4-grammar-27` Anyway: 反正: 反正: Completing Sentences; 反正: The Right Sentence
+- `level-4-listening-03` Level 4 Listening 03: Media and the Internet: Words You Hear; Words in Sentences
+- `level-4-speaking-03` Level 4 Speaking 03: Media and the Internet: Saying Words; Reading Sentences Aloud
 - `level-4-sentences-01` Building Sentences 1: Health and Medicine, Travel and Transport, Media and the Internet: Short Sentences; Longer Sentences
+
+**Conversation:** `chinese-change-a-train-ticket` Changing a train ticket. Task: You feel unwell and want to take a later train. At the ticket counter, explain why, change your ticket to a train this afternoon, and ask about the seat and any extra cost.
 
 ### 4. History
 
@@ -127,6 +135,8 @@ Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: hea
 - `level-4-grammar-32` Rather Than: 与其……不如……: 与其……不如……: Completing Sentences; 与其……不如……: The Right Sentence
 - `level-4-grammar-33` While, by Contrast: 而: 而: Completing Sentences; 而: The Right Sentence
 - `level-4-grammar-34` 之 in 之一, 之间, 之前 and 之后: Completing Sentences; The Right Sentence
+- `level-4-listening-04` Level 4 Listening 04: History: Words You Hear; Words in Sentences
+- `level-4-speaking-04` Level 4 Speaking 04: History: Saying Words; Reading Sentences Aloud
 
 ### 5. The Arts
 
@@ -150,6 +160,8 @@ Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: hea
 - `level-4-grammar-36` Interested In: 对……感兴趣: 对……感兴趣: Completing Sentences; 对……感兴趣: The Right Sentence
 - `level-4-grammar-37` Whether This or That: ……也好，……也好: ……也好，……也好: Completing Sentences; ……也好，……也好: The Right Sentence
 - `level-4-grammar-38` A Gentle But: 只是 and 不过: 只是 and 不过: Completing Sentences; 只是 and 不过: The Right Sentence
+- `level-4-listening-05` Level 4 Listening 05: The Arts: Words You Hear; Words in Sentences
+- `level-4-speaking-05` Level 4 Speaking 05: The Arts: Saying Words; Reading Sentences Aloud
 
 ### 6. Law and Rights
 
@@ -177,8 +189,12 @@ Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: hea
 - `level-4-grammar-43` Whether, in Writing: 是否: 是否: Completing Sentences; 是否: The Right Sentence
 - `level-4-grammar-44` Let Alone: 何况: 何况: Completing Sentences; 何况: The Right Sentence
 - `level-4-grammar-45` How Could You: 怎么能……呢？: 怎么能……呢？: Completing Sentences; 怎么能……呢？: The Right Sentence
+- `level-4-listening-06` Level 4 Listening 06: Law and Rights: Words You Hear; Words in Sentences
+- `level-4-speaking-06` Level 4 Speaking 06: Law and Rights: Saying Words; Reading Sentences Aloud
 - `level-4-sentences-02` Building Sentences 2: History, The Arts, Law and Rights: Short Sentences; Longer Sentences
 - `level-4-writing-01` An Account of a Trip: Following the Way; Showing How You Felt
+
+**Conversation:** `chinese-museum-lost-bag` A bag lost at the museum. Task: You left a bag somewhere in a history museum. At the service desk, describe the bag and what is in it, and say where you last had it.
 
 ### 7. The Economy
 
@@ -207,6 +223,8 @@ Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: hea
 - `level-4-grammar-51` Each of Them: 各: 各: Completing Sentences; 各: The Right Sentence
 - `level-4-grammar-52` Can or Can't Afford: V得起 and V不起: V得起 and V不起: Completing Sentences; V得起 and V不起: The Right Sentence
 - `level-4-grammar-53` About, with Numbers: 来 and 上下: 来 and 上下: Completing Sentences; 来 and 上下: The Right Sentence
+- `level-4-listening-07` Level 4 Listening 07: The Economy: Words You Hear; Words in Sentences
+- `level-4-speaking-07` Level 4 Speaking 07: The Economy: Saying Words; Reading Sentences Aloud
 
 ### 8. Feelings
 
@@ -231,6 +249,8 @@ Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: hea
 - `level-4-grammar-57` Terribly: 得不得了 and 得要命: 得不得了 and 得要命: Completing Sentences; 得不得了 and 得要命: The Right Sentence
 - `level-4-grammar-58` Making Someone Feel: 让人 + Feeling: 让人 + Feeling: Completing Sentences; 让人 + Feeling: The Right Sentence
 - `level-4-grammar-59` So … That: Feeling + 得 + Result: Feeling + 得 + Result: Completing Sentences; Feeling + 得 + Result: The Right Sentence
+- `level-4-listening-08` Level 4 Listening 08: Feelings: Words You Hear; Words in Sentences
+- `level-4-speaking-08` Level 4 Speaking 08: Feelings: Saying Words; Reading Sentences Aloud
 
 ### 9. Nature and Climate
 
@@ -253,7 +273,11 @@ Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: hea
 - `level-4-grammar-61` Now This, Now That: 一会儿……一会儿……: 一会儿……一会儿……: Completing Sentences; 一会儿……一会儿……: The Right Sentence
 - `level-4-grammar-62` Everywhere: 到处: 到处: Completing Sentences; 到处: The Right Sentence
 - `level-4-grammar-63` Not at All: 根本: 根本: Completing Sentences; 根本: The Right Sentence
+- `level-4-listening-09` Level 4 Listening 09: Nature and Climate: Words You Hear; Words in Sentences
+- `level-4-speaking-09` Level 4 Speaking 09: Nature and Climate: Saying Words; Reading Sentences Aloud
 - `level-4-sentences-03` Building Sentences 3: The Economy, Feelings, Nature and Climate: Short Sentences; Longer Sentences
+
+**Conversation:** `chinese-return-a-leaking-raincoat` Returning a raincoat that leaks. Task: The raincoat you bought last week let the rain in. Go back to the shop, explain the problem and how you feel about it, and ask for a refund or an exchange.
 
 ### 10. Sport
 
@@ -275,6 +299,8 @@ Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: hea
 - `level-4-grammar-64` Even: 连……都 and 连……也: 连……都 and 连……也: Completing Sentences; 连……都 and 连……也: The Right Sentence
 - `level-4-grammar-65` Able or Unable to Beat: V得过 and V不过: V得过 and V不过: Completing Sentences; V得过 and V不过: The Right Sentence
 - `level-4-grammar-66` Better Each Time: 一天比一天 and 一次比一次: 一天比一天 and 一次比一次: Completing Sentences; 一天比一天 and 一次比一次: The Right Sentence
+- `level-4-listening-10` Level 4 Listening 10: Sport: Words You Hear; Words in Sentences
+- `level-4-speaking-10` Level 4 Speaking 10: Sport: Saying Words; Reading Sentences Aloud
 
 ### 11. Science
 
@@ -297,6 +323,8 @@ Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: hea
 - `level-4-grammar-68` Even If: 即使……也: 即使……也: Completing Sentences; 即使……也: The Right Sentence
 - `level-4-grammar-69` According To: 根据: 根据: Completing Sentences; 根据: The Right Sentence
 - `level-4-grammar-70` Having to Do With: 跟……有关: 跟……有关: Completing Sentences; 跟……有关: The Right Sentence
+- `level-4-listening-11` Level 4 Listening 11: Science: Words You Hear; Words in Sentences
+- `level-4-speaking-11` Level 4 Speaking 11: Science: Saying Words; Reading Sentences Aloud
 
 ### 12. Careers
 
@@ -316,8 +344,12 @@ Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: hea
 - `level-4-grammar-71` As, in a Role: 作为: 作为: Completing Sentences; 作为: The Right Sentence
 - `level-4-grammar-72` To Become: 成为: 成为: Completing Sentences; 成为: The Right Sentence
 - `level-4-grammar-73` Not Only, in Speech: 不光……还 and 不光……也: 不光……还 and 不光……也: Completing Sentences; 不光……还 and 不光……也: The Right Sentence
+- `level-4-listening-12` Level 4 Listening 12: Careers: Words You Hear; Words in Sentences
+- `level-4-speaking-12` Level 4 Speaking 12: Careers: Saying Words; Reading Sentences Aloud
 - `level-4-sentences-04` Building Sentences 4: Sport, Science, Careers: Short Sentences; Longer Sentences
 - `level-4-writing-02` Explaining Something: Step by Step; Clear and Correct
+
+**Conversation:** `chinese-sports-centre-class` Signing up for a class at the sports centre. Task: You want to take a badminton class at the sports centre. Find out which class suits your level, when it meets, how much it costs and who the coach is.
 
 ## Simulated Students
 

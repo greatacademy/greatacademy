@@ -6,11 +6,11 @@
 - **Level:** Level 8, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 7](chinese-level-7.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 285 topics (40 of characters, 188 of words, 51 of grammar, 4 of sentence building, 2 of writing) · 798 knowledge points
+- **Size:** 12 units · 309 topics (40 of characters, 188 of words, 51 of grammar, 24 of listening and speaking, 4 of sentence building, 2 of writing) · 846 knowledge points · 4 conversations
 
 ## Aim
 
-Level 8 is the second third of the advanced levels 7 to 9, the middle third by frequency: 400 more characters and 1,880 words, in twelve themed units: communities and social issues, research and academia, industry and farming, public health, energy and resources, engineering and inventions, civilizations, ethics, poetry and drama, music and film, institutions and administration, and finance and markets. Characters and words are learned as in levels 1 to 7, and every sentence is written only with characters already taught. Common characters that the earlier levels leave out, such as 详, 暂, 厚 and 泪, are taught where their unit's words need them. The characters were chosen to be close to the advanced band of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains. The sixth and twelfth units end with a topic of paragraph writing as well, judged by a model against three yes-or-no criteria, at least 300 characters a piece, its tasks and model answers written with the characters taught by then; the criteria wait for texts scored by teachers of Chinese, and an admin routes them before they reach learners.
+Level 8 is the second third of the advanced levels 7 to 9, the middle third by frequency: 400 more characters and 1,880 words, in twelve themed units: communities and social issues, research and academia, industry and farming, public health, energy and resources, engineering and inventions, civilizations, ethics, poetry and drama, music and film, institutions and administration, and finance and markets. Characters and words are learned as in levels 1 to 7, and every sentence is written only with characters already taught. Common characters that the earlier levels leave out, such as 详, 暂, 厚 and 泪, are taught where their unit's words need them. The characters were chosen to be close to the advanced band of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains. The sixth and twelfth units end with a topic of paragraph writing as well, judged by a model against three yes-or-no criteria, at least 300 characters a piece, its tasks and model answers written with the characters taught by then; the criteria wait for texts scored by teachers of Chinese, and an admin routes them before they reach learners. After its grammar, each unit has a topic of listening and one of speaking, made from its words and their sentences read by a synthetic voice: the meaning of a word heard, and the word heard in a sentence; then the words said after the recording and the sentences read aloud, heard by a speech service whose thresholds await recordings of real learners. Units 3, 6, 9 and 12 each close with a conversation on the themes of their stretch, spoken in Mandarin with an AI tutor that plays a part and keeps to the level, through the voice service and the prompt `conversation-zh-1`; an admin routes each before it is offered.
 
 ## Units
 
@@ -45,6 +45,8 @@ Level 8 is the second third of the advanced levels 7 to 9, the middle third by f
 - `level-8-grammar-02` Aimed At: 针对: 针对: Completing Sentences; 针对: The Right Sentence
 - `level-8-grammar-03` Out Of: 出于: 出于: Completing Sentences; 出于: The Right Sentence
 - `level-8-grammar-04` Meanwhile: 与此同时: 与此同时: Completing Sentences; 与此同时: The Right Sentence
+- `level-8-listening-01` Level 8 Listening 01: Communities and Social Issues: Words You Hear; Words in Sentences
+- `level-8-speaking-01` Level 8 Speaking 01: Communities and Social Issues: Saying Words; Reading Sentences Aloud
 
 ### 2. Research and Academia
 
@@ -77,6 +79,8 @@ Level 8 is the second third of the advanced levels 7 to 9, the middle third by f
 - `level-8-grammar-06` On the Basis Of: 在……的基础上: 在……的基础上: Completing Sentences; 在……的基础上: The Right Sentence
 - `level-8-grammar-07` Quite, in Writing: 颇 and 颇为: 颇 and 颇为: Completing Sentences; 颇 and 颇为: The Right Sentence
 - `level-8-grammar-08` All Who: 凡是……都: 凡是……都: Completing Sentences; 凡是……都: The Right Sentence
+- `level-8-listening-02` Level 8 Listening 02: Research and Academia: Words You Hear; Words in Sentences
+- `level-8-speaking-02` Level 8 Speaking 02: Research and Academia: Saying Words; Reading Sentences Aloud
 
 ### 3. Industry and Farming
 
@@ -109,7 +113,11 @@ Level 8 is the second third of the advanced levels 7 to 9, the middle third by f
 - `level-8-grammar-10` Respectively: 分别: 分别: Completing Sentences; 分别: The Right Sentence
 - `level-8-grammar-11` Up To and To This Day: 到……为止 and 至今: 到……为止 and 至今: Completing Sentences; 到……为止 and 至今: The Right Sentence
 - `level-8-grammar-12` 所 Before a Verb: 我所知道的: 我所知道的: Completing Sentences; 我所知道的: The Right Sentence
+- `level-8-listening-03` Level 8 Listening 03: Industry and Farming: Words You Hear; Words in Sentences
+- `level-8-speaking-03` Level 8 Speaking 03: Industry and Farming: Saying Words; Reading Sentences Aloud
 - `level-8-sentences-01` Building Sentences 1: Communities and Social Issues, Research and Academia, Industry and Farming: Short Sentences; Longer Sentences
+
+**Conversation:** `chinese-farm-cooperative-field-study` A field study plan for a farm cooperative. Task: As a student researcher, present a plan to study water-saving irrigation to the head of a farm cooperative. Explain the aim and method, answer two concerns, and agree on how farmers will take part.
 
 ### 4. Public Health
 
@@ -142,6 +150,8 @@ Level 8 is the second third of the advanced levels 7 to 9, the middle third by f
 - `level-8-grammar-14` Overly, in Writing: 过于: 过于: Completing Sentences; 过于: The Right Sentence
 - `level-8-grammar-15` Giving, Formally: 予以 and 给予: 予以 and 给予: Completing Sentences; 予以 and 给予: The Right Sentence
 - `level-8-grammar-16` Remains To Be: 有待: 有待: Completing Sentences; 有待: The Right Sentence
+- `level-8-listening-04` Level 8 Listening 04: Public Health: Words You Hear; Words in Sentences
+- `level-8-speaking-04` Level 8 Speaking 04: Public Health: Saying Words; Reading Sentences Aloud
 
 ### 5. Energy and Resources
 
@@ -173,6 +183,8 @@ Level 8 is the second third of the advanced levels 7 to 9, the middle third by f
 - `level-8-grammar-18` With the Help Of: 借助: 借助: Completing Sentences; 借助: The Right Sentence
 - `level-8-grammar-19` That Way: 这样一来: 这样一来: Completing Sentences; 这样一来: The Right Sentence
 - `level-8-grammar-20` Might As Well: 索性: 索性: Completing Sentences; 索性: The Right Sentence
+- `level-8-listening-05` Level 8 Listening 05: Energy and Resources: Words You Hear; Words in Sentences
+- `level-8-speaking-05` Level 8 Speaking 05: Energy and Resources: Saying Words; Reading Sentences Aloud
 
 ### 6. Engineering and Inventions
 
@@ -204,8 +216,12 @@ Level 8 is the second third of the advanced levels 7 to 9, the middle third by f
 - `level-8-grammar-22` Bound To: 势必: 势必: Completing Sentences; 势必: The Right Sentence
 - `level-8-grammar-23` Provided That: 在……的前提下: 在……的前提下: Completing Sentences; 在……的前提下: The Right Sentence
 - `level-8-grammar-24` Starting From: 从……出发: 从……出发: Completing Sentences; 从……出发: The Right Sentence
+- `level-8-listening-06` Level 8 Listening 06: Engineering and Inventions: Words You Hear; Words in Sentences
+- `level-8-speaking-06` Level 8 Speaking 06: Engineering and Inventions: Saying Words; Reading Sentences Aloud
 - `level-8-sentences-02` Building Sentences 2: Public Health, Energy and Resources, Engineering and Inventions: Short Sentences; Longer Sentences
 - `level-8-writing-01` A Problem and Its Solutions: The Problem and Its Causes; Weighing Proposals
+
+**Conversation:** `chinese-heat-pump-public-hearing` A public hearing on district heating. Task: At a public hearing on replacing a coal boiler with heat pumps, give a short statement for or against the plan, support it with evidence, and respond to the engineer's challenge.
 
 ### 7. Civilizations
 
@@ -237,6 +253,8 @@ Level 8 is the second third of the advanced levels 7 to 9, the middle third by f
 - `level-8-grammar-26` Right Afterwards: 随后 and 随即: 随后 and 随即: Completing Sentences; 随后 and 随即: The Right Sentence
 - `level-8-grammar-27` Just As: 正如: 正如: Completing Sentences; 正如: The Right Sentence
 - `level-8-grammar-28` Not Only That: 不仅如此: 不仅如此: Completing Sentences; 不仅如此: The Right Sentence
+- `level-8-listening-07` Level 8 Listening 07: Civilizations: Words You Hear; Words in Sentences
+- `level-8-speaking-07` Level 8 Speaking 07: Civilizations: Saying Words; Reading Sentences Aloud
 
 ### 8. Ethics
 
@@ -268,6 +286,8 @@ Level 8 is the second third of the advanced levels 7 to 9, the middle third by f
 - `level-8-grammar-30` Never, Firmly: 绝不 and 决不: 绝不 and 决不: Completing Sentences; 绝不 and 决不: The Right Sentence
 - `level-8-grammar-31` Precisely Because: 正因为……才……: 正因为……才……: Completing Sentences; 正因为……才……: The Right Sentence
 - `level-8-grammar-32` By Rights: 按理说 and 照理说: 按理说 and 照理说: Completing Sentences; 按理说 and 照理说: The Right Sentence
+- `level-8-listening-08` Level 8 Listening 08: Ethics: Words You Hear; Words in Sentences
+- `level-8-speaking-08` Level 8 Speaking 08: Ethics: Saying Words; Reading Sentences Aloud
 
 ### 9. Poetry and Drama
 
@@ -298,7 +318,11 @@ Level 8 is the second third of the advanced levels 7 to 9, the middle third by f
 - `level-8-grammar-34` Half … Half: 半……半……: 半……半……: Completing Sentences; 半……半……: The Right Sentence
 - `level-8-grammar-35` Neither Too Much Nor Too Little: 不……不……: 不……不……: Completing Sentences; 不……不……: The Right Sentence
 - `level-8-grammar-36` Here and There: 东……西……: 东……西……: Completing Sentences; 东……西……: The Right Sentence
+- `level-8-listening-09` Level 8 Listening 09: Poetry and Drama: Words You Hear; Words in Sentences
+- `level-8-speaking-09` Level 8 Speaking 09: Poetry and Drama: Saying Words; Reading Sentences Aloud
 - `level-8-sentences-03` Building Sentences 3: Civilizations, Ethics, Poetry and Drama: Short Sentences; Longer Sentences
+
+**Conversation:** `chinese-artifact-return-panel` A panel on returning museum objects. Task: On a youth panel, argue whether museums should return objects to the places they came from. State your view, use an example, and answer the moderator's counterargument with a reasoned reply.
 
 ### 10. Music and Film
 
@@ -329,6 +353,8 @@ Level 8 is the second third of the advanced levels 7 to 9, the middle third by f
 - `level-8-grammar-38` Wish One Could: 恨不得 and 巴不得: 恨不得 and 巴不得: Completing Sentences; 恨不得 and 巴不得: The Right Sentence
 - `level-8-grammar-39` For Hours On End: 一……就是……: 一……就是……: Completing Sentences; 一……就是……: The Right Sentence
 - `level-8-grammar-40` And All: 连……带……: 连……带……: Completing Sentences; 连……带……: The Right Sentence
+- `level-8-listening-10` Level 8 Listening 10: Music and Film: Words You Hear; Words in Sentences
+- `level-8-speaking-10` Level 8 Speaking 10: Music and Film: Saying Words; Reading Sentences Aloud
 
 ### 11. Institutions and Administration
 
@@ -360,6 +386,8 @@ Level 8 is the second third of the advanced levels 7 to 9, the middle third by f
 - `level-8-grammar-43` Can Hardly Be Called: 谈不上 and 算不上: 谈不上 and 算不上: Completing Sentences; 谈不上 and 算不上: The Right Sentence
 - `level-8-grammar-44` No Way To: 无法 and 无从: 无法 and 无从: Completing Sentences; 无法 and 无从: The Right Sentence
 - `level-8-grammar-45` Never Mind Whether: 什么A不A的: 什么A不A的: Completing Sentences; 什么A不A的: The Right Sentence
+- `level-8-listening-11` Level 8 Listening 11: Institutions and Administration: Words You Hear; Words in Sentences
+- `level-8-speaking-11` Level 8 Speaking 11: Institutions and Administration: Saying Words; Reading Sentences Aloud
 
 ### 12. Finance and Markets
 
@@ -392,8 +420,12 @@ Level 8 is the second third of the advanced levels 7 to 9, the middle third by f
 - `level-8-grammar-49` In the Final Analysis: 说到底 and 归根到底: 说到底 and 归根到底: Completing Sentences; 说到底 and 归根到底: The Right Sentence
 - `level-8-grammar-50` Not More Than: A不比B: A不比B: Completing Sentences; A不比B: The Right Sentence
 - `level-8-grammar-51` I'd Be Surprised If Not: 不……才怪: 不……才怪: Completing Sentences; 不……才怪: The Right Sentence
+- `level-8-listening-12` Level 8 Listening 12: Finance and Markets: Words You Hear; Words in Sentences
+- `level-8-speaking-12` Level 8 Speaking 12: Finance and Markets: Saying Words; Reading Sentences Aloud
 - `level-8-sentences-04` Building Sentences 4: Music and Film, Institutions and Administration, Finance and Markets: Short Sentences; Longer Sentences
 - `level-8-writing-02` A Commentary: A Clear Thesis; Analysing, Not Retelling
+
+**Conversation:** `chinese-documentary-fund-pitch` Pitching a documentary to a film fund. Task: Pitch a short documentary to a young filmmakers' fund. Explain the story and why it matters, justify the budget, and answer the panel's question about risk.
 
 ## Simulated Students
 

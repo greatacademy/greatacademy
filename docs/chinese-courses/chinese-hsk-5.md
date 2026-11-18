@@ -6,7 +6,7 @@
 - **Level:** Level 5 of the new HSK, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 4](chinese-level-4.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 13 units · 210 topics (5 new, all practice-only) · 557 knowledge points
+- **Size:** 13 units · 236 topics (7 new, all practice-only) · 609 knowledge points · 4 conversations
 
 ## The Test
 
@@ -14,7 +14,7 @@ The new HSK has nine levels built on the *Chinese Proficiency Grading Standards 
 
 ## Aim
 
-The course turns level 5 into test practice. It holds the units of [Chinese Level 5](chinese-level-5.md), so a learner who has not taken it learns it here, and then five exam topics that mix the words and characters of every theme, as a test does, rather than one batch at a time. It teaches nothing new. Its own topics are practice-only: a lesson starts with practice, and the explanation appears only after a failed attempt. The topics it reuses keep their place in the graph, so a learner who has learned them in the level course is credited and moves on.
+The course turns level 5 into test practice. It holds the units of [Chinese Level 5](chinese-level-5.md), so a learner who has not taken it learns it here, and then seven exam topics that mix the words and characters of every theme, as a test does, rather than one batch at a time. It teaches nothing new. Its own topics are practice-only: a lesson starts with practice, and the explanation appears only after a failed attempt. The topics it reuses keep their place in the graph, so a learner who has learned them in the level course is credited and moves on. The units' conversations come with them, 4 in all, spoken in Mandarin with an AI tutor and offered once an admin routes them.
 
 ## Units
 
@@ -26,9 +26,11 @@ The course turns level 5 into test practice. It holds the units of [Chinese Leve
 - `hsk-5-meanings` HSK 5: Words and Meanings (practice-only). Every word of level 5: (1) the word of a meaning among four; (2) the meaning of a word among four, in the learner's language.
 - `hsk-5-characters` HSK 5: Characters (practice-only). Every character of level 5: (1) by its reading and meaning, among characters that look like it; (2) the character missing from a word of level 5, given the word's pinyin and meaning, among the same, leaving out a word whose meaning would give it away.
 - `hsk-5-sentences` HSK 5: Building Sentences (practice-only; after the last sentence-building topic of level 5). The sentences of the sentence-building topics of level 5, mixed, each topic in turn: (1) short ones of three or four parts; (2) longer ones of five to seven.
+- `hsk-5-listening` HSK 5: Listening (practice-only; after the last listening topic of level 5). The words and sentences of every unit of level 5, heard without being seen, the units taking turns: (1) the meaning of a word heard, among three; (2) the word heard in a sentence, among three.
+- `hsk-5-speaking` HSK 5: Speaking (practice-only; after the last speaking topic of level 5). The same words and sentences, heard by a speech service: (1) a word said after its recording; (2) a sentence read aloud.
 - `hsk-5-writing` HSK 5: Writing (practice-only; after the last writing topic of level 5). Short texts written as the writing paper asks, judged by a model: a knowledge point for each kind of paragraph writing of level 5, with its tasks, judged by its three criteria.
 
-**Later, with audio:** listening and speaking, once the papers' question types are confirmed.
+**Later, once the papers' question types are confirmed:** the other kinds of listening, such as dialogues with questions, and the spoken tasks of the HSKK beyond repeating and reading aloud.
 
 ## Simulated Students
 

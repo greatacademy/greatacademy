@@ -6,11 +6,11 @@
 - **Level:** Level 6, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 5](chinese-level-5.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 212 topics (30 of characters, 114 of words, 62 of grammar, 4 of sentence building, 2 of writing) · 568 knowledge points
+- **Size:** 12 units · 236 topics (30 of characters, 114 of words, 62 of grammar, 24 of listening and speaking, 4 of sentence building, 2 of writing) · 616 knowledge points · 4 conversations
 
 ## Aim
 
-Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: language and communication, families and generations, cities and the countryside, health and ways of living, science and discovery, culture and heritage, news and opinion, money and spending, relationships, the performing arts, geography and travel, and thinking and arguing. Characters and words are learned as in levels 1 to 5, and every sentence is written only with characters already taught. A few very common characters that the earlier levels leave out, such as 或, 它, 青, 派, 令, 似 and 若, come first, in unit 1. The characters were chosen to be close to level 6 of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains. The sixth and twelfth units end with a topic of paragraph writing as well, judged by a model against three yes-or-no criteria, at least 200 characters a piece, its tasks and model answers written with the characters taught by then; the criteria wait for texts scored by teachers of Chinese, and an admin routes them before they reach learners.
+Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: language and communication, families and generations, cities and the countryside, health and ways of living, science and discovery, culture and heritage, news and opinion, money and spending, relationships, the performing arts, geography and travel, and thinking and arguing. Characters and words are learned as in levels 1 to 5, and every sentence is written only with characters already taught. A few very common characters that the earlier levels leave out, such as 或, 它, 青, 派, 令, 似 and 若, come first, in unit 1. The characters were chosen to be close to level 6 of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains. The sixth and twelfth units end with a topic of paragraph writing as well, judged by a model against three yes-or-no criteria, at least 200 characters a piece, its tasks and model answers written with the characters taught by then; the criteria wait for texts scored by teachers of Chinese, and an admin routes them before they reach learners. After its grammar, each unit has a topic of listening and one of speaking, made from its words and their sentences read by a synthetic voice: the meaning of a word heard, and the word heard in a sentence; then the words said after the recording and the sentences read aloud, heard by a speech service whose thresholds await recordings of real learners. Units 3, 6, 9 and 12 each close with a conversation on the themes of their stretch, spoken in Mandarin with an AI tutor that plays a part and keeps to the level, through the voice service and the prompt `conversation-zh-1`; an admin routes each before it is offered.
 
 ## Units
 
@@ -43,6 +43,8 @@ Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: lan
 - `level-6-grammar-07` Just Right: 恰好 and 恰恰: 恰好 and 恰恰: Completing Sentences; 恰好 and 恰恰: The Right Sentence
 - `level-6-grammar-08` That Is to Say: 也就是说: 也就是说: Completing Sentences; 也就是说: The Right Sentence
 - `level-6-grammar-09` It May Be Called, in Writing: 可谓: 可谓: Completing Sentences; 可谓: The Right Sentence
+- `level-6-listening-01` Level 6 Listening 01: Language and Communication: Words You Hear; Words in Sentences
+- `level-6-speaking-01` Level 6 Speaking 01: Language and Communication: Saying Words; Reading Sentences Aloud
 
 ### 2. Families and Generations
 
@@ -70,6 +72,8 @@ Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: lan
 - `level-6-grammar-13` Even … Let Alone: 尚且……何况: 尚且……何况: Completing Sentences; 尚且……何况: The Right Sentence
 - `level-6-grammar-14` Without Stopping: V个不停: V个不停: Completing Sentences; V个不停: The Right Sentence
 - `level-6-grammar-15` To Some Degree, in Writing: 有所: 有所: Completing Sentences; 有所: The Right Sentence
+- `level-6-listening-02` Level 6 Listening 02: Families and Generations: Words You Hear; Words in Sentences
+- `level-6-speaking-02` Level 6 Speaking 02: Families and Generations: Saying Words; Reading Sentences Aloud
 
 ### 3. Cities and the Countryside
 
@@ -95,7 +99,11 @@ Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: lan
 - `level-6-grammar-17` Carelessly: 乱 + Verb: 乱 + Verb: Completing Sentences; 乱 + Verb: The Right Sentence
 - `level-6-grammar-18` Couldn't Be Better: 再……不过了: 再……不过了: Completing Sentences; 再……不过了: The Right Sentence
 - `level-6-grammar-19` And Further: 进而: 进而: Completing Sentences; 进而: The Right Sentence
+- `level-6-listening-03` Level 6 Listening 03: Cities and the Countryside: Words You Hear; Words in Sentences
+- `level-6-speaking-03` Level 6 Speaking 03: Cities and the Countryside: Saying Words; Reading Sentences Aloud
 - `level-6-sentences-01` Building Sentences 1: Language and Communication, Families and Generations, Cities and the Countryside: Short Sentences; Longer Sentences
+
+**Conversation:** `chinese-village-guesthouse-advice` Advice for a village guesthouse owner. Task: The owner of a village guesthouse is thinking of selling it and moving to the city to live with her son. Compare life in the village and the city, and give her advice with reasons.
 
 ### 4. Health and Ways of Living
 
@@ -123,6 +131,8 @@ Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: lan
 - `level-6-grammar-23` Unavoidably: 不免: 不免: Completing Sentences; 不免: The Right Sentence
 - `level-6-grammar-24` Blindly: 一味: 一味: Completing Sentences; 一味: The Right Sentence
 - `level-6-grammar-25` Lies In: 在于: 在于: Completing Sentences; 在于: The Right Sentence
+- `level-6-listening-04` Level 6 Listening 04: Health and Ways of Living: Words You Hear; Words in Sentences
+- `level-6-speaking-04` Level 6 Speaking 04: Health and Ways of Living: Saying Words; Reading Sentences Aloud
 
 ### 5. Science and Discovery
 
@@ -151,6 +161,8 @@ Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: lan
 - `level-6-grammar-30` Passive with 为……所: Completing Sentences; The Right Sentence
 - `level-6-grammar-31` Enough To: 足以: 足以: Completing Sentences; 足以: The Right Sentence
 - `level-6-grammar-32` Never Once, in Writing: 未曾: 未曾: Completing Sentences; 未曾: The Right Sentence
+- `level-6-listening-05` Level 6 Listening 05: Science and Discovery: Words You Hear; Words in Sentences
+- `level-6-speaking-05` Level 6 Speaking 05: Science and Discovery: Saying Words; Reading Sentences Aloud
 
 ### 6. Culture and Heritage
 
@@ -178,8 +190,12 @@ Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: lan
 - `level-6-grammar-36` So-Called: 所谓: 所谓: Completing Sentences; 所谓: The Right Sentence
 - `level-6-grammar-37` Is Not: 并非: 并非: Completing Sentences; 并非: The Right Sentence
 - `level-6-grammar-38` Not That … Not, in Writing: 何尝: 何尝: Completing Sentences; 何尝: The Right Sentence
+- `level-6-listening-06` Level 6 Listening 06: Culture and Heritage: Words You Hear; Words in Sentences
+- `level-6-speaking-06` Level 6 Speaking 06: Culture and Heritage: Saying Words; Reading Sentences Aloud
 - `level-6-sentences-02` Building Sentences 2: Health and Ways of Living, Science and Discovery, Culture and Heritage: Short Sentences; Longer Sentences
 - `level-6-writing-01` Comparing Two Things: Comparing Point by Point; Drawing a Conclusion
+
+**Conversation:** `chinese-stone-bridge-guide-trial` A trial as a volunteer guide. Task: You are trying out as a volunteer guide at an old water town. Explain the stone bridge to the head guide as if to visitors, covering its age, how it was built and why it still stands.
 
 ### 7. News and Opinion
 
@@ -203,6 +219,8 @@ Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: lan
 - `level-6-grammar-40` Unexpectedly: 不料: 不料: Completing Sentences; 不料: The Right Sentence
 - `level-6-grammar-41` One After Another: 纷纷: 纷纷: Completing Sentences; 纷纷: The Right Sentence
 - `level-6-grammar-42` Known As: 称为 and 被称为: 称为 and 被称为: Completing Sentences; 称为 and 被称为: The Right Sentence
+- `level-6-listening-07` Level 6 Listening 07: News and Opinion: Words You Hear; Words in Sentences
+- `level-6-speaking-07` Level 6 Speaking 07: News and Opinion: Saying Words; Reading Sentences Aloud
 
 ### 8. Money and Spending
 
@@ -226,6 +244,8 @@ Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: lan
 - `level-6-grammar-44` In Vain: 白 Before a Verb: 白 Before a Verb: Completing Sentences; 白 Before a Verb: The Right Sentence
 - `level-6-grammar-45` At Long Last: 总算: 总算: Completing Sentences; 总算: The Right Sentence
 - `level-6-grammar-46` Worth It or Not: 划得来 and 划不来: 划得来 and 划不来: Completing Sentences; 划得来 and 划不来: The Right Sentence
+- `level-6-listening-08` Level 6 Listening 08: Money and Spending: Words You Hear; Words in Sentences
+- `level-6-speaking-08` Level 6 Speaking 08: Money and Spending: Saying Words; Reading Sentences Aloud
 
 ### 9. Relationships
 
@@ -251,7 +271,11 @@ Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: lan
 - `level-6-grammar-50` Let Alone, in Speech: 别说……连……都……: 别说……连……都……: Completing Sentences; 别说……连……都……: The Right Sentence
 - `level-6-grammar-51` It Is, But: A是A，可是……: A是A，可是……: Completing Sentences; A是A，可是……: The Right Sentence
 - `level-6-grammar-52` At the Slightest Thing: 动不动就: 动不动就: Completing Sentences; 动不动就: The Right Sentence
+- `level-6-listening-09` Level 6 Listening 09: Relationships: Words You Hear; Words in Sentences
+- `level-6-speaking-09` Level 6 Speaking 09: Relationships: Saying Words; Reading Sentences Aloud
 - `level-6-sentences-03` Building Sentences 3: News and Opinion, Money and Spending, Relationships: Short Sentences; Longer Sentences
+
+**Conversation:** `chinese-campus-radio-pocket-money` Campus radio: a survey on pocket money. Task: On the campus radio, report the results of a survey on how students spend pocket money, then give your own opinion and answer the host's question.
 
 ### 10. The Performing Arts
 
@@ -275,6 +299,8 @@ Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: lan
 - `level-6-grammar-54` As If, in Writing: 仿佛: 仿佛: Completing Sentences; 仿佛: The Right Sentence
 - `level-6-grammar-55` All the Same: 照样: 照样: Completing Sentences; 照样: The Right Sentence
 - `level-6-grammar-56` Still, in Writing: 依然: 依然: Completing Sentences; 依然: The Right Sentence
+- `level-6-listening-10` Level 6 Listening 10: The Performing Arts: Words You Hear; Words in Sentences
+- `level-6-speaking-10` Level 6 Speaking 10: The Performing Arts: Saying Words; Reading Sentences Aloud
 
 ### 11. Geography and Travel
 
@@ -297,6 +323,8 @@ Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: lan
 - `level-6-grammar-57` As Far As … Is Concerned: 对……而言: 对……而言: Completing Sentences; 对……而言: The Right Sentence
 - `level-6-grammar-58` North, South, East and West Of: 以北, 以南, 以东 and 以西: 以北, 以南, 以东 and 以西: Completing Sentences; 以北, 以南, 以东 and 以西: The Right Sentence
 - `level-6-grammar-59` Taking A as B: 以……为……: 以……为……: Completing Sentences; 以……为……: The Right Sentence
+- `level-6-listening-11` Level 6 Listening 11: Geography and Travel: Words You Hear; Words in Sentences
+- `level-6-speaking-11` Level 6 Speaking 11: Geography and Travel: Saying Words; Reading Sentences Aloud
 
 ### 12. Thinking and Arguing
 
@@ -319,8 +347,12 @@ Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: lan
 - `level-6-grammar-60` In Other Words: 换句话说: 换句话说: Completing Sentences; 换句话说: The Right Sentence
 - `level-6-grammar-61` Even Supposing, in Speech: 就算……也……: 就算……也……: Completing Sentences; 就算……也……: The Right Sentence
 - `level-6-grammar-62` If, in Formal Writing: 倘若: 倘若: Completing Sentences; 倘若: The Right Sentence
+- `level-6-listening-12` Level 6 Listening 12: Thinking and Arguing: Words You Hear; Words in Sentences
+- `level-6-speaking-12` Level 6 Speaking 12: Thinking and Arguing: Saying Words; Reading Sentences Aloud
 - `level-6-sentences-04` Building Sentences 4: The Performing Arts, Geography and Travel, Thinking and Arguing: Short Sentences; Longer Sentences
 - `level-6-writing-02` Arguing a View: A View with Reasons and an Example; Answering an Objection
+
+**Conversation:** `chinese-drama-club-tour-city` Choosing a city for the drama club tour. Task: The drama club can tour one city this summer. Persuade the club director to choose one of two cities, comparing them and answering the director's objection.
 
 ## Simulated Students
 

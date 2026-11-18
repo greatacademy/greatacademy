@@ -2,8 +2,9 @@
 // to 6 each go with the level of the same number, and HSK 7–9 with levels 7 to 9. Each course holds its levels' units and
 // four exam topics of its own, all practice-only, that mix the whole level as a test does: choosing the word for a
 // gap among five or six, matching words and meanings, telling a character from those that look like it, and putting
-// the parts of a sentence in order, as the writing paper asks. From HSK 3 on, a fifth topic, judged by a model, writes the
-// kinds of text of its levels' paragraph writing.
+// the parts of a sentence in order, as the writing paper asks. Two more mix the units' listening and speaking: words and
+// sentences heard without being seen, words said after a recording and sentences read aloud. From HSK 3 on, a further
+// topic, judged by a model, writes the kinds of text of its levels' paragraph writing.
 
 import {
   type CourseDef,
@@ -22,6 +23,15 @@ import { criterionById, point, quote, writingGenerator } from "@ga/subject-chine
 import type { LevelOneCharacter } from "../level-1/characters.ts";
 import { levelOneCourse, levelOneWordId } from "../level-1/index.ts";
 import { nearOf, spread } from "../level-1/kit.ts";
+import {
+  type Asked,
+  fromBank,
+  levelListeningId,
+  levelSpeakingId,
+  listeningBanks,
+  speakingBanks,
+  unitSpeechSpecs,
+} from "../level-1/listening.ts";
 import { sentences as levelOneSentences } from "../level-1/sentence-data.ts";
 import {
   type LevelSentences,
@@ -455,17 +465,98 @@ function examTopics(spec: HskSpec): readonly TopicDef[] {
   ];
 }
 
+/** speechExam builds the listening and speaking topics of an HSK course, each mixing every unit of the levels it tests. */
+function speechExam(spec: HskSpec): readonly TopicDef[] {
+  const id = (s: string): string => `hsk-${spec.key}-${s}`;
+  const units = spec.numbers.flatMap(unitSpeechSpecs);
+  const last = units.at(-1);
+  if (!last) throw new Error(`HSK ${spec.name}: no units with listening`);
+  const listening = units.map(listeningBanks);
+  const speaking = units.map(speakingBanks);
+  const mixed = (banks: readonly (readonly Asked[])[]): Generator => fromBank(interleave(banks));
+  return [
+    {
+      id: id("listening"),
+      title: t(`HSK ${spec.name}: Listening`, `HSK ${spec.name}：听力`),
+      summary: t(
+        `Words and sentences of every unit of the levels HSK ${spec.name} tests, heard without being seen, every theme mixed.`,
+        `不看文字，听 HSK ${spec.name} 所考等级各个单元的词语和句子，各个话题混在一起。`,
+      ),
+      prerequisites: [levelListeningId(last.level, last.unit)],
+      encompasses: [],
+      xp: 12,
+      practiceOnly: true,
+      strand: "listening",
+      knowledgePoints: [
+        point(
+          id("listening-words"),
+          t("Words You Hear", "听词语"),
+          t(
+            "Listen to every syllable and its tone before you look at the meanings: words of different themes may sound alike but for one tone.",
+            "先听清每个音节和它的声调，再看意思：不同话题的词可能只差一个声调。",
+          ),
+          mixed(listening.map((b) => b.hearWord)),
+        ),
+        point(
+          id("listening-sentences"),
+          t("Words in Sentences", "句子里的词"),
+          t(
+            "Listen to the whole sentence first; then check each word offered for its syllables, one after another, in what you heard.",
+            "先听完整个句子，再看每个选项的几个音节是不是连着出现在你听到的话里。",
+          ),
+          mixed(listening.map((b) => b.hearSentence)),
+        ),
+      ],
+    },
+    {
+      id: id("speaking"),
+      title: t(`HSK ${spec.name}: Speaking`, `HSK ${spec.name}：口语`),
+      summary: t(
+        `Saying words after a recording and reading sentences aloud, from every unit of the levels HSK ${spec.name} tests, every theme mixed.`,
+        `跟着录音说词语，朗读句子，内容来自 HSK ${spec.name} 所考等级的各个单元，各个话题混在一起。`,
+      ),
+      prerequisites: [levelSpeakingId(last.level, last.unit)],
+      encompasses: [],
+      xp: 12,
+      practiceOnly: true,
+      strand: "speaking",
+      spoken: "zh-CN",
+      knowledgePoints: [
+        point(
+          id("speaking-words"),
+          t("Saying Words", "说词语"),
+          t(
+            "Listen, then say the word at the same pace, each syllable in its tone, copying the recording where tones change in speech.",
+            "先听录音，再用同样的速度说出这个词，每个音节读准声调；说话时变调的地方，照录音说。",
+          ),
+          mixed(speaking.map((b) => b.sayWord)),
+        ),
+        point(
+          id("speaking-sentences"),
+          t("Reading Sentences Aloud", "朗读句子"),
+          t(
+            "Read at a calm speed, keeping the words of a phrase together and pausing at the commas.",
+            "用平稳的速度朗读，一个词组里的字连起来读，在逗号处稍作停顿。",
+          ),
+          mixed(speaking.map((b) => b.readSentence)),
+        ),
+      ],
+    },
+  ];
+}
+
 /** hsk builds an HSK course and its exam topics. */
 function hsk(spec: HskSpec): { readonly course: CourseDef; readonly topics: readonly TopicDef[] } {
-  const topics = [...examTopics(spec), ...writingExam(spec)];
+  const topics = [...examTopics(spec), ...speechExam(spec), ...writingExam(spec)];
+  const conversations = spec.courses.flatMap((c) => c.conversations ?? []);
   return {
     topics,
     course: {
       id: `chinese-hsk-${spec.key}`,
       title: t(`HSK ${spec.name}`, `HSK ${spec.name}`),
       description: t(
-        `Practice for level ${spec.name} of the new HSK over the ${spec.characters.toLocaleString("en")} characters and ${spec.words.toLocaleString("en")} words of ${spec.levels.length > 1 ? `levels ${spec.name}` : `level ${spec.name}`}: their units, then words in sentences, words and meanings, characters, and building sentences, with every theme mixed as a test mixes them${spec.numbers[0]! >= 3 ? ", and writing, judged by a model" : ""}. It teaches nothing new: its own topics start with practice. Listening and speaking will follow with audio.`,
-        `新 HSK ${spec.name} 级的练习，覆盖${spec.zh}的 ${spec.characters} 个汉字和 ${spec.words} 个词语：先是这些等级的单元，然后是选词填空、词语和意思、汉字和连词成句${spec.numbers[0]! >= 3 ? "，以及由 AI 评判的写作" : ""}，各个话题像考试一样混在一起。本课程不教新知识：它自己的主题一开始就是练习。听力和口语将在有了音频之后加入。`,
+        `Practice for level ${spec.name} of the new HSK over the ${spec.characters.toLocaleString("en")} characters and ${spec.words.toLocaleString("en")} words of ${spec.levels.length > 1 ? `levels ${spec.name}` : `level ${spec.name}`}: their units, then words in sentences, words and meanings, characters, and building sentences, with every theme mixed as a test mixes them${spec.numbers[0]! >= 3 ? ", and writing, judged by a model" : ""}, and listening and speaking. It teaches nothing new: its own topics start with practice.`,
+        `新 HSK ${spec.name} 级的练习，覆盖${spec.zh}的 ${spec.characters} 个汉字和 ${spec.words} 个词语：先是这些等级的单元，然后是选词填空、词语和意思、汉字和连词成句${spec.numbers[0]! >= 3 ? "，以及由 AI 评判的写作" : ""}，还有听力和口语，各个话题像考试一样混在一起。本课程不教新知识：它自己的主题一开始就是练习。`,
       ),
       group: examGroup,
       buildsOn: [...spec.buildsOn],
@@ -476,6 +567,7 @@ function hsk(spec: HskSpec): { readonly course: CourseDef; readonly topics: read
           modules: [{ title: t(`HSK ${spec.name}`, `HSK ${spec.name}`), topics: topics.map((x) => x.id) }],
         },
       ],
+      ...(conversations.length > 0 ? { conversations } : {}),
     },
   };
 }

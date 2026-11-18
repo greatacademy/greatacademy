@@ -1,7 +1,7 @@
 // The Gaokao course (docs/chinese-curriculum.md §8.5): practice for the Chinese paper of the university entrance
 // examination over the two senior courses. It holds their units and exam topics of its own, all practice-only,
 // that mix what grades 7 to 11 teach, as the paper does: idioms in context, lines of recited texts from a description of
-// their meaning, the words of classical Chinese, the use of language, and the reading of modern texts, informational and literary, and of classical poems.
+// their meaning, the words of classical Chinese, the use of language, with sentences written and judged by a model, and the reading of modern texts, informational and literary, and of classical poems.
 
 import { type CourseDef, same, type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typed, typedGenerator } from "@ga/subject-chinese";
@@ -17,6 +17,7 @@ import { recitedPoems } from "../recitation/index.ts";
 import type { Poem } from "../recitation/poems.ts";
 import { gaokaoEssayTopic } from "../writing/later.ts";
 import { informationalPassages } from "./informational-data.ts";
+import { languageWritingTopic } from "./language.ts";
 import { literaryPassages } from "./literary-data.ts";
 import { informationalSpec, literarySpec, modernTopics, poetrySpec } from "./modern.ts";
 import { poetryPassages } from "./poetry-data.ts";
@@ -325,6 +326,7 @@ export const gaokaoTopics: readonly TopicDef[] = [
     ],
   },
   languageTopic,
+  languageWritingTopic(languageTopic.id),
   ...modernReading,
   gaokaoEssayTopic,
 ];
@@ -335,8 +337,8 @@ export function gaokaoCourse(required: CourseDef, selective: CourseDef): CourseD
     id: "chinese-gaokao",
     title: t("Gaokao Chinese", "高考语文"),
     description: t(
-      "Practice for the Chinese paper of China's university entrance examination, whose basis is level 4 of the senior standard's academic quality: the units of the required and selective required courses, then idioms in context, lines of recited texts from their meaning, the words of classical Chinese, faulty sentences and rhetorical devices, with grades 7 to 11 mixed as the paper mixes them, the reading of informational and literary texts and of classical poems, with short answers judged by a model, and the essay, also judged. It teaches nothing new: its own topics start with practice. In Chinese.",
-      "高考语文的练习，依据高中课标学业质量水平 4：必修和选择性必修课程的单元，然后是成语辨析、情景式默写、文言字词、病句和修辞手法，七至十一年级的内容像试卷一样混在一起，信息类和文学类文本阅读以及古代诗歌阅读（简答由 AI 评判），以及同样由 AI 评判的作文。本课程不教新知识：它自己的主题一开始就是练习。用中文讲解。",
+      "Practice for the Chinese paper of China's university entrance examination, whose basis is level 4 of the senior standard's academic quality: the units of the required and selective required courses, then idioms in context, lines of recited texts from their meaning, the words of classical Chinese, faulty sentences and rhetorical devices, gaps filled and sentences rewritten, judged by a model, with grades 7 to 11 mixed as the paper mixes them, the reading of informational and literary texts and of classical poems, with short answers judged by a model, and the essay, also judged. It teaches nothing new: its own topics start with practice. In Chinese.",
+      "高考语文的练习，依据高中课标学业质量水平 4：必修和选择性必修课程的单元，然后是成语辨析、情景式默写、文言字词、病句和修辞手法、由 AI 评判的语段补写和句子改写，七至十一年级的内容像试卷一样混在一起，信息类和文学类文本阅读以及古代诗歌阅读（简答由 AI 评判），以及同样由 AI 评判的作文。本课程不教新知识：它自己的主题一开始就是练习。用中文讲解。",
     ),
     group: examGroup,
     buildsOn: [...(required.buildsOn ?? [])],

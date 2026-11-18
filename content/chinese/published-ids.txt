@@ -63,6 +63,7 @@ topic gaokao-idioms gaokao-idioms-meaning gaokao-idioms-sentence
 topic gaokao-informational-answers gaokao-informational-answers
 topic gaokao-informational-reading gaokao-informational-reading-analysis gaokao-informational-reading-understanding
 topic gaokao-language gaokao-language-rhetoric gaokao-language-sound
+topic gaokao-language-writing gaokao-language-fill gaokao-language-rewrite
 topic gaokao-literary-answers gaokao-literary-answers
 topic gaokao-literary-reading gaokao-literary-reading-analysis gaokao-literary-reading-understanding
 topic gaokao-poetry-answers gaokao-poetry-answers
@@ -76,36 +77,50 @@ topic heritage-traditional heritage-traditional-characters heritage-traditional-
 topic heritage-written-forms heritage-written-forms-phrases heritage-written-forms-words
 topic hsk-1-characters hsk-1-characters-reading hsk-1-characters-word
 topic hsk-1-gaps hsk-1-gaps-five hsk-1-gaps-six
+topic hsk-1-listening hsk-1-listening-sentences hsk-1-listening-words
 topic hsk-1-meanings hsk-1-meanings-meaning hsk-1-meanings-word
 topic hsk-1-sentences hsk-1-sentences-long hsk-1-sentences-short
+topic hsk-1-speaking hsk-1-speaking-sentences hsk-1-speaking-words
 topic hsk-2-characters hsk-2-characters-reading hsk-2-characters-word
 topic hsk-2-gaps hsk-2-gaps-five hsk-2-gaps-six
+topic hsk-2-listening hsk-2-listening-sentences hsk-2-listening-words
 topic hsk-2-meanings hsk-2-meanings-meaning hsk-2-meanings-word
 topic hsk-2-sentences hsk-2-sentences-long hsk-2-sentences-short
+topic hsk-2-speaking hsk-2-speaking-sentences hsk-2-speaking-words
 topic hsk-3-characters hsk-3-characters-reading hsk-3-characters-word
 topic hsk-3-gaps hsk-3-gaps-five hsk-3-gaps-six
+topic hsk-3-listening hsk-3-listening-sentences hsk-3-listening-words
 topic hsk-3-meanings hsk-3-meanings-meaning hsk-3-meanings-word
 topic hsk-3-sentences hsk-3-sentences-long hsk-3-sentences-short
+topic hsk-3-speaking hsk-3-speaking-sentences hsk-3-speaking-words
 topic hsk-3-writing hsk-3-writing-level-3-01 hsk-3-writing-level-3-02
 topic hsk-4-characters hsk-4-characters-reading hsk-4-characters-word
 topic hsk-4-gaps hsk-4-gaps-five hsk-4-gaps-six
+topic hsk-4-listening hsk-4-listening-sentences hsk-4-listening-words
 topic hsk-4-meanings hsk-4-meanings-meaning hsk-4-meanings-word
 topic hsk-4-sentences hsk-4-sentences-long hsk-4-sentences-short
+topic hsk-4-speaking hsk-4-speaking-sentences hsk-4-speaking-words
 topic hsk-4-writing hsk-4-writing-level-4-01 hsk-4-writing-level-4-02
 topic hsk-5-characters hsk-5-characters-reading hsk-5-characters-word
 topic hsk-5-gaps hsk-5-gaps-five hsk-5-gaps-six
+topic hsk-5-listening hsk-5-listening-sentences hsk-5-listening-words
 topic hsk-5-meanings hsk-5-meanings-meaning hsk-5-meanings-word
 topic hsk-5-sentences hsk-5-sentences-long hsk-5-sentences-short
+topic hsk-5-speaking hsk-5-speaking-sentences hsk-5-speaking-words
 topic hsk-5-writing hsk-5-writing-level-5-01 hsk-5-writing-level-5-02
 topic hsk-6-characters hsk-6-characters-reading hsk-6-characters-word
 topic hsk-6-gaps hsk-6-gaps-five hsk-6-gaps-six
+topic hsk-6-listening hsk-6-listening-sentences hsk-6-listening-words
 topic hsk-6-meanings hsk-6-meanings-meaning hsk-6-meanings-word
 topic hsk-6-sentences hsk-6-sentences-long hsk-6-sentences-short
+topic hsk-6-speaking hsk-6-speaking-sentences hsk-6-speaking-words
 topic hsk-6-writing hsk-6-writing-level-6-01 hsk-6-writing-level-6-02
 topic hsk-7-9-characters hsk-7-9-characters-reading hsk-7-9-characters-word
 topic hsk-7-9-gaps hsk-7-9-gaps-five hsk-7-9-gaps-six
+topic hsk-7-9-listening hsk-7-9-listening-sentences hsk-7-9-listening-words
 topic hsk-7-9-meanings hsk-7-9-meanings-meaning hsk-7-9-meanings-word
 topic hsk-7-9-sentences hsk-7-9-sentences-long hsk-7-9-sentences-short
+topic hsk-7-9-speaking hsk-7-9-speaking-sentences hsk-7-9-speaking-words
 topic hsk-7-9-writing hsk-7-9-writing-level-7-01 hsk-7-9-writing-level-7-02 hsk-7-9-writing-level-8-01 hsk-7-9-writing-level-8-02 hsk-7-9-writing-level-9-01 hsk-7-9-writing-level-9-02
 topic idioms-10-01 idioms-10-01-meaning idioms-10-01-use idioms-10-01-writing
 topic idioms-10-02 idioms-10-02-meaning idioms-10-02-use idioms-10-02-writing
@@ -221,10 +236,34 @@ topic level-1-grammar-45 level-1-grammar-45-form level-1-grammar-45-use
 topic level-1-grammar-46 level-1-grammar-46-form level-1-grammar-46-use
 topic level-1-grammar-47 level-1-grammar-47-form level-1-grammar-47-use
 topic level-1-grammar-48 level-1-grammar-48-form level-1-grammar-48-use
+topic level-1-listening-01 level-1-listening-01-sentences level-1-listening-01-words
+topic level-1-listening-02 level-1-listening-02-sentences level-1-listening-02-words
+topic level-1-listening-03 level-1-listening-03-sentences level-1-listening-03-words
+topic level-1-listening-04 level-1-listening-04-sentences level-1-listening-04-words
+topic level-1-listening-05 level-1-listening-05-sentences level-1-listening-05-words
+topic level-1-listening-06 level-1-listening-06-sentences level-1-listening-06-words
+topic level-1-listening-07 level-1-listening-07-sentences level-1-listening-07-words
+topic level-1-listening-08 level-1-listening-08-sentences level-1-listening-08-words
+topic level-1-listening-09 level-1-listening-09-sentences level-1-listening-09-words
+topic level-1-listening-10 level-1-listening-10-sentences level-1-listening-10-words
+topic level-1-listening-11 level-1-listening-11-sentences level-1-listening-11-words
+topic level-1-listening-12 level-1-listening-12-sentences level-1-listening-12-words
 topic level-1-sentences-01 level-1-sentences-01-long level-1-sentences-01-short
 topic level-1-sentences-02 level-1-sentences-02-long level-1-sentences-02-short
 topic level-1-sentences-03 level-1-sentences-03-long level-1-sentences-03-short
 topic level-1-sentences-04 level-1-sentences-04-long level-1-sentences-04-short
+topic level-1-speaking-01 level-1-speaking-01-sentences level-1-speaking-01-words
+topic level-1-speaking-02 level-1-speaking-02-sentences level-1-speaking-02-words
+topic level-1-speaking-03 level-1-speaking-03-sentences level-1-speaking-03-words
+topic level-1-speaking-04 level-1-speaking-04-sentences level-1-speaking-04-words
+topic level-1-speaking-05 level-1-speaking-05-sentences level-1-speaking-05-words
+topic level-1-speaking-06 level-1-speaking-06-sentences level-1-speaking-06-words
+topic level-1-speaking-07 level-1-speaking-07-sentences level-1-speaking-07-words
+topic level-1-speaking-08 level-1-speaking-08-sentences level-1-speaking-08-words
+topic level-1-speaking-09 level-1-speaking-09-sentences level-1-speaking-09-words
+topic level-1-speaking-10 level-1-speaking-10-sentences level-1-speaking-10-words
+topic level-1-speaking-11 level-1-speaking-11-sentences level-1-speaking-11-words
+topic level-1-speaking-12 level-1-speaking-12-sentences level-1-speaking-12-words
 topic level-1-words-01 level-1-words-01-meaning level-1-words-01-reading level-1-words-01-use
 topic level-1-words-02 level-1-words-02-meaning level-1-words-02-reading level-1-words-02-use
 topic level-1-words-03 level-1-words-03-meaning level-1-words-03-reading level-1-words-03-use
@@ -375,10 +414,34 @@ topic level-2-grammar-67 level-2-grammar-67-form level-2-grammar-67-use
 topic level-2-grammar-68 level-2-grammar-68-form level-2-grammar-68-use
 topic level-2-grammar-69 level-2-grammar-69-form level-2-grammar-69-use
 topic level-2-grammar-70 level-2-grammar-70-form level-2-grammar-70-use
+topic level-2-listening-01 level-2-listening-01-sentences level-2-listening-01-words
+topic level-2-listening-02 level-2-listening-02-sentences level-2-listening-02-words
+topic level-2-listening-03 level-2-listening-03-sentences level-2-listening-03-words
+topic level-2-listening-04 level-2-listening-04-sentences level-2-listening-04-words
+topic level-2-listening-05 level-2-listening-05-sentences level-2-listening-05-words
+topic level-2-listening-06 level-2-listening-06-sentences level-2-listening-06-words
+topic level-2-listening-07 level-2-listening-07-sentences level-2-listening-07-words
+topic level-2-listening-08 level-2-listening-08-sentences level-2-listening-08-words
+topic level-2-listening-09 level-2-listening-09-sentences level-2-listening-09-words
+topic level-2-listening-10 level-2-listening-10-sentences level-2-listening-10-words
+topic level-2-listening-11 level-2-listening-11-sentences level-2-listening-11-words
+topic level-2-listening-12 level-2-listening-12-sentences level-2-listening-12-words
 topic level-2-sentences-01 level-2-sentences-01-long level-2-sentences-01-short
 topic level-2-sentences-02 level-2-sentences-02-long level-2-sentences-02-short
 topic level-2-sentences-03 level-2-sentences-03-long level-2-sentences-03-short
 topic level-2-sentences-04 level-2-sentences-04-long level-2-sentences-04-short
+topic level-2-speaking-01 level-2-speaking-01-sentences level-2-speaking-01-words
+topic level-2-speaking-02 level-2-speaking-02-sentences level-2-speaking-02-words
+topic level-2-speaking-03 level-2-speaking-03-sentences level-2-speaking-03-words
+topic level-2-speaking-04 level-2-speaking-04-sentences level-2-speaking-04-words
+topic level-2-speaking-05 level-2-speaking-05-sentences level-2-speaking-05-words
+topic level-2-speaking-06 level-2-speaking-06-sentences level-2-speaking-06-words
+topic level-2-speaking-07 level-2-speaking-07-sentences level-2-speaking-07-words
+topic level-2-speaking-08 level-2-speaking-08-sentences level-2-speaking-08-words
+topic level-2-speaking-09 level-2-speaking-09-sentences level-2-speaking-09-words
+topic level-2-speaking-10 level-2-speaking-10-sentences level-2-speaking-10-words
+topic level-2-speaking-11 level-2-speaking-11-sentences level-2-speaking-11-words
+topic level-2-speaking-12 level-2-speaking-12-sentences level-2-speaking-12-words
 topic level-2-words-01 level-2-words-01-meaning level-2-words-01-reading level-2-words-01-use
 topic level-2-words-02 level-2-words-02-meaning level-2-words-02-reading level-2-words-02-use
 topic level-2-words-03 level-2-words-03-meaning level-2-words-03-reading level-2-words-03-use
@@ -569,10 +632,34 @@ topic level-3-grammar-78 level-3-grammar-78-form level-3-grammar-78-use
 topic level-3-grammar-79 level-3-grammar-79-form level-3-grammar-79-use
 topic level-3-grammar-80 level-3-grammar-80-form level-3-grammar-80-use
 topic level-3-grammar-81 level-3-grammar-81-form level-3-grammar-81-use
+topic level-3-listening-01 level-3-listening-01-sentences level-3-listening-01-words
+topic level-3-listening-02 level-3-listening-02-sentences level-3-listening-02-words
+topic level-3-listening-03 level-3-listening-03-sentences level-3-listening-03-words
+topic level-3-listening-04 level-3-listening-04-sentences level-3-listening-04-words
+topic level-3-listening-05 level-3-listening-05-sentences level-3-listening-05-words
+topic level-3-listening-06 level-3-listening-06-sentences level-3-listening-06-words
+topic level-3-listening-07 level-3-listening-07-sentences level-3-listening-07-words
+topic level-3-listening-08 level-3-listening-08-sentences level-3-listening-08-words
+topic level-3-listening-09 level-3-listening-09-sentences level-3-listening-09-words
+topic level-3-listening-10 level-3-listening-10-sentences level-3-listening-10-words
+topic level-3-listening-11 level-3-listening-11-sentences level-3-listening-11-words
+topic level-3-listening-12 level-3-listening-12-sentences level-3-listening-12-words
 topic level-3-sentences-01 level-3-sentences-01-long level-3-sentences-01-short
 topic level-3-sentences-02 level-3-sentences-02-long level-3-sentences-02-short
 topic level-3-sentences-03 level-3-sentences-03-long level-3-sentences-03-short
 topic level-3-sentences-04 level-3-sentences-04-long level-3-sentences-04-short
+topic level-3-speaking-01 level-3-speaking-01-sentences level-3-speaking-01-words
+topic level-3-speaking-02 level-3-speaking-02-sentences level-3-speaking-02-words
+topic level-3-speaking-03 level-3-speaking-03-sentences level-3-speaking-03-words
+topic level-3-speaking-04 level-3-speaking-04-sentences level-3-speaking-04-words
+topic level-3-speaking-05 level-3-speaking-05-sentences level-3-speaking-05-words
+topic level-3-speaking-06 level-3-speaking-06-sentences level-3-speaking-06-words
+topic level-3-speaking-07 level-3-speaking-07-sentences level-3-speaking-07-words
+topic level-3-speaking-08 level-3-speaking-08-sentences level-3-speaking-08-words
+topic level-3-speaking-09 level-3-speaking-09-sentences level-3-speaking-09-words
+topic level-3-speaking-10 level-3-speaking-10-sentences level-3-speaking-10-words
+topic level-3-speaking-11 level-3-speaking-11-sentences level-3-speaking-11-words
+topic level-3-speaking-12 level-3-speaking-12-sentences level-3-speaking-12-words
 topic level-3-words-01 level-3-words-01-meaning level-3-words-01-reading level-3-words-01-use
 topic level-3-words-02 level-3-words-02-meaning level-3-words-02-reading level-3-words-02-use
 topic level-3-words-03 level-3-words-03-meaning level-3-words-03-reading level-3-words-03-use
@@ -775,10 +862,34 @@ topic level-4-grammar-70 level-4-grammar-70-form level-4-grammar-70-use
 topic level-4-grammar-71 level-4-grammar-71-form level-4-grammar-71-use
 topic level-4-grammar-72 level-4-grammar-72-form level-4-grammar-72-use
 topic level-4-grammar-73 level-4-grammar-73-form level-4-grammar-73-use
+topic level-4-listening-01 level-4-listening-01-sentences level-4-listening-01-words
+topic level-4-listening-02 level-4-listening-02-sentences level-4-listening-02-words
+topic level-4-listening-03 level-4-listening-03-sentences level-4-listening-03-words
+topic level-4-listening-04 level-4-listening-04-sentences level-4-listening-04-words
+topic level-4-listening-05 level-4-listening-05-sentences level-4-listening-05-words
+topic level-4-listening-06 level-4-listening-06-sentences level-4-listening-06-words
+topic level-4-listening-07 level-4-listening-07-sentences level-4-listening-07-words
+topic level-4-listening-08 level-4-listening-08-sentences level-4-listening-08-words
+topic level-4-listening-09 level-4-listening-09-sentences level-4-listening-09-words
+topic level-4-listening-10 level-4-listening-10-sentences level-4-listening-10-words
+topic level-4-listening-11 level-4-listening-11-sentences level-4-listening-11-words
+topic level-4-listening-12 level-4-listening-12-sentences level-4-listening-12-words
 topic level-4-sentences-01 level-4-sentences-01-long level-4-sentences-01-short
 topic level-4-sentences-02 level-4-sentences-02-long level-4-sentences-02-short
 topic level-4-sentences-03 level-4-sentences-03-long level-4-sentences-03-short
 topic level-4-sentences-04 level-4-sentences-04-long level-4-sentences-04-short
+topic level-4-speaking-01 level-4-speaking-01-sentences level-4-speaking-01-words
+topic level-4-speaking-02 level-4-speaking-02-sentences level-4-speaking-02-words
+topic level-4-speaking-03 level-4-speaking-03-sentences level-4-speaking-03-words
+topic level-4-speaking-04 level-4-speaking-04-sentences level-4-speaking-04-words
+topic level-4-speaking-05 level-4-speaking-05-sentences level-4-speaking-05-words
+topic level-4-speaking-06 level-4-speaking-06-sentences level-4-speaking-06-words
+topic level-4-speaking-07 level-4-speaking-07-sentences level-4-speaking-07-words
+topic level-4-speaking-08 level-4-speaking-08-sentences level-4-speaking-08-words
+topic level-4-speaking-09 level-4-speaking-09-sentences level-4-speaking-09-words
+topic level-4-speaking-10 level-4-speaking-10-sentences level-4-speaking-10-words
+topic level-4-speaking-11 level-4-speaking-11-sentences level-4-speaking-11-words
+topic level-4-speaking-12 level-4-speaking-12-sentences level-4-speaking-12-words
 topic level-4-words-01 level-4-words-01-meaning level-4-words-01-reading level-4-words-01-use
 topic level-4-words-02 level-4-words-02-meaning level-4-words-02-reading level-4-words-02-use
 topic level-4-words-03 level-4-words-03-meaning level-4-words-03-reading level-4-words-03-use
@@ -973,10 +1084,34 @@ topic level-5-grammar-59 level-5-grammar-59-form level-5-grammar-59-use
 topic level-5-grammar-60 level-5-grammar-60-form level-5-grammar-60-use
 topic level-5-grammar-61 level-5-grammar-61-form level-5-grammar-61-use
 topic level-5-grammar-62 level-5-grammar-62-form level-5-grammar-62-use
+topic level-5-listening-01 level-5-listening-01-sentences level-5-listening-01-words
+topic level-5-listening-02 level-5-listening-02-sentences level-5-listening-02-words
+topic level-5-listening-03 level-5-listening-03-sentences level-5-listening-03-words
+topic level-5-listening-04 level-5-listening-04-sentences level-5-listening-04-words
+topic level-5-listening-05 level-5-listening-05-sentences level-5-listening-05-words
+topic level-5-listening-06 level-5-listening-06-sentences level-5-listening-06-words
+topic level-5-listening-07 level-5-listening-07-sentences level-5-listening-07-words
+topic level-5-listening-08 level-5-listening-08-sentences level-5-listening-08-words
+topic level-5-listening-09 level-5-listening-09-sentences level-5-listening-09-words
+topic level-5-listening-10 level-5-listening-10-sentences level-5-listening-10-words
+topic level-5-listening-11 level-5-listening-11-sentences level-5-listening-11-words
+topic level-5-listening-12 level-5-listening-12-sentences level-5-listening-12-words
 topic level-5-sentences-01 level-5-sentences-01-long level-5-sentences-01-short
 topic level-5-sentences-02 level-5-sentences-02-long level-5-sentences-02-short
 topic level-5-sentences-03 level-5-sentences-03-long level-5-sentences-03-short
 topic level-5-sentences-04 level-5-sentences-04-long level-5-sentences-04-short
+topic level-5-speaking-01 level-5-speaking-01-sentences level-5-speaking-01-words
+topic level-5-speaking-02 level-5-speaking-02-sentences level-5-speaking-02-words
+topic level-5-speaking-03 level-5-speaking-03-sentences level-5-speaking-03-words
+topic level-5-speaking-04 level-5-speaking-04-sentences level-5-speaking-04-words
+topic level-5-speaking-05 level-5-speaking-05-sentences level-5-speaking-05-words
+topic level-5-speaking-06 level-5-speaking-06-sentences level-5-speaking-06-words
+topic level-5-speaking-07 level-5-speaking-07-sentences level-5-speaking-07-words
+topic level-5-speaking-08 level-5-speaking-08-sentences level-5-speaking-08-words
+topic level-5-speaking-09 level-5-speaking-09-sentences level-5-speaking-09-words
+topic level-5-speaking-10 level-5-speaking-10-sentences level-5-speaking-10-words
+topic level-5-speaking-11 level-5-speaking-11-sentences level-5-speaking-11-words
+topic level-5-speaking-12 level-5-speaking-12-sentences level-5-speaking-12-words
 topic level-5-words-01 level-5-words-01-meaning level-5-words-01-reading level-5-words-01-use
 topic level-5-words-02 level-5-words-02-meaning level-5-words-02-reading level-5-words-02-use
 topic level-5-words-03 level-5-words-03-meaning level-5-words-03-reading level-5-words-03-use
@@ -1178,10 +1313,34 @@ topic level-6-grammar-59 level-6-grammar-59-form level-6-grammar-59-use
 topic level-6-grammar-60 level-6-grammar-60-form level-6-grammar-60-use
 topic level-6-grammar-61 level-6-grammar-61-form level-6-grammar-61-use
 topic level-6-grammar-62 level-6-grammar-62-form level-6-grammar-62-use
+topic level-6-listening-01 level-6-listening-01-sentences level-6-listening-01-words
+topic level-6-listening-02 level-6-listening-02-sentences level-6-listening-02-words
+topic level-6-listening-03 level-6-listening-03-sentences level-6-listening-03-words
+topic level-6-listening-04 level-6-listening-04-sentences level-6-listening-04-words
+topic level-6-listening-05 level-6-listening-05-sentences level-6-listening-05-words
+topic level-6-listening-06 level-6-listening-06-sentences level-6-listening-06-words
+topic level-6-listening-07 level-6-listening-07-sentences level-6-listening-07-words
+topic level-6-listening-08 level-6-listening-08-sentences level-6-listening-08-words
+topic level-6-listening-09 level-6-listening-09-sentences level-6-listening-09-words
+topic level-6-listening-10 level-6-listening-10-sentences level-6-listening-10-words
+topic level-6-listening-11 level-6-listening-11-sentences level-6-listening-11-words
+topic level-6-listening-12 level-6-listening-12-sentences level-6-listening-12-words
 topic level-6-sentences-01 level-6-sentences-01-long level-6-sentences-01-short
 topic level-6-sentences-02 level-6-sentences-02-long level-6-sentences-02-short
 topic level-6-sentences-03 level-6-sentences-03-long level-6-sentences-03-short
 topic level-6-sentences-04 level-6-sentences-04-long level-6-sentences-04-short
+topic level-6-speaking-01 level-6-speaking-01-sentences level-6-speaking-01-words
+topic level-6-speaking-02 level-6-speaking-02-sentences level-6-speaking-02-words
+topic level-6-speaking-03 level-6-speaking-03-sentences level-6-speaking-03-words
+topic level-6-speaking-04 level-6-speaking-04-sentences level-6-speaking-04-words
+topic level-6-speaking-05 level-6-speaking-05-sentences level-6-speaking-05-words
+topic level-6-speaking-06 level-6-speaking-06-sentences level-6-speaking-06-words
+topic level-6-speaking-07 level-6-speaking-07-sentences level-6-speaking-07-words
+topic level-6-speaking-08 level-6-speaking-08-sentences level-6-speaking-08-words
+topic level-6-speaking-09 level-6-speaking-09-sentences level-6-speaking-09-words
+topic level-6-speaking-10 level-6-speaking-10-sentences level-6-speaking-10-words
+topic level-6-speaking-11 level-6-speaking-11-sentences level-6-speaking-11-words
+topic level-6-speaking-12 level-6-speaking-12-sentences level-6-speaking-12-words
 topic level-6-words-01 level-6-words-01-meaning level-6-words-01-reading level-6-words-01-use
 topic level-6-words-02 level-6-words-02-meaning level-6-words-02-reading level-6-words-02-use
 topic level-6-words-03 level-6-words-03-meaning level-6-words-03-reading level-6-words-03-use
@@ -1387,10 +1546,34 @@ topic level-7-grammar-46 level-7-grammar-46-form level-7-grammar-46-use
 topic level-7-grammar-47 level-7-grammar-47-form level-7-grammar-47-use
 topic level-7-grammar-48 level-7-grammar-48-form level-7-grammar-48-use
 topic level-7-grammar-49 level-7-grammar-49-form level-7-grammar-49-use
+topic level-7-listening-01 level-7-listening-01-sentences level-7-listening-01-words
+topic level-7-listening-02 level-7-listening-02-sentences level-7-listening-02-words
+topic level-7-listening-03 level-7-listening-03-sentences level-7-listening-03-words
+topic level-7-listening-04 level-7-listening-04-sentences level-7-listening-04-words
+topic level-7-listening-05 level-7-listening-05-sentences level-7-listening-05-words
+topic level-7-listening-06 level-7-listening-06-sentences level-7-listening-06-words
+topic level-7-listening-07 level-7-listening-07-sentences level-7-listening-07-words
+topic level-7-listening-08 level-7-listening-08-sentences level-7-listening-08-words
+topic level-7-listening-09 level-7-listening-09-sentences level-7-listening-09-words
+topic level-7-listening-10 level-7-listening-10-sentences level-7-listening-10-words
+topic level-7-listening-11 level-7-listening-11-sentences level-7-listening-11-words
+topic level-7-listening-12 level-7-listening-12-sentences level-7-listening-12-words
 topic level-7-sentences-01 level-7-sentences-01-long level-7-sentences-01-short
 topic level-7-sentences-02 level-7-sentences-02-long level-7-sentences-02-short
 topic level-7-sentences-03 level-7-sentences-03-long level-7-sentences-03-short
 topic level-7-sentences-04 level-7-sentences-04-long level-7-sentences-04-short
+topic level-7-speaking-01 level-7-speaking-01-sentences level-7-speaking-01-words
+topic level-7-speaking-02 level-7-speaking-02-sentences level-7-speaking-02-words
+topic level-7-speaking-03 level-7-speaking-03-sentences level-7-speaking-03-words
+topic level-7-speaking-04 level-7-speaking-04-sentences level-7-speaking-04-words
+topic level-7-speaking-05 level-7-speaking-05-sentences level-7-speaking-05-words
+topic level-7-speaking-06 level-7-speaking-06-sentences level-7-speaking-06-words
+topic level-7-speaking-07 level-7-speaking-07-sentences level-7-speaking-07-words
+topic level-7-speaking-08 level-7-speaking-08-sentences level-7-speaking-08-words
+topic level-7-speaking-09 level-7-speaking-09-sentences level-7-speaking-09-words
+topic level-7-speaking-10 level-7-speaking-10-sentences level-7-speaking-10-words
+topic level-7-speaking-11 level-7-speaking-11-sentences level-7-speaking-11-words
+topic level-7-speaking-12 level-7-speaking-12-sentences level-7-speaking-12-words
 topic level-7-words-01 level-7-words-01-meaning level-7-words-01-reading level-7-words-01-use
 topic level-7-words-02 level-7-words-02-meaning level-7-words-02-reading level-7-words-02-use
 topic level-7-words-03 level-7-words-03-meaning level-7-words-03-reading level-7-words-03-use
@@ -1672,10 +1855,34 @@ topic level-8-grammar-48 level-8-grammar-48-form level-8-grammar-48-use
 topic level-8-grammar-49 level-8-grammar-49-form level-8-grammar-49-use
 topic level-8-grammar-50 level-8-grammar-50-form level-8-grammar-50-use
 topic level-8-grammar-51 level-8-grammar-51-form level-8-grammar-51-use
+topic level-8-listening-01 level-8-listening-01-sentences level-8-listening-01-words
+topic level-8-listening-02 level-8-listening-02-sentences level-8-listening-02-words
+topic level-8-listening-03 level-8-listening-03-sentences level-8-listening-03-words
+topic level-8-listening-04 level-8-listening-04-sentences level-8-listening-04-words
+topic level-8-listening-05 level-8-listening-05-sentences level-8-listening-05-words
+topic level-8-listening-06 level-8-listening-06-sentences level-8-listening-06-words
+topic level-8-listening-07 level-8-listening-07-sentences level-8-listening-07-words
+topic level-8-listening-08 level-8-listening-08-sentences level-8-listening-08-words
+topic level-8-listening-09 level-8-listening-09-sentences level-8-listening-09-words
+topic level-8-listening-10 level-8-listening-10-sentences level-8-listening-10-words
+topic level-8-listening-11 level-8-listening-11-sentences level-8-listening-11-words
+topic level-8-listening-12 level-8-listening-12-sentences level-8-listening-12-words
 topic level-8-sentences-01 level-8-sentences-01-long level-8-sentences-01-short
 topic level-8-sentences-02 level-8-sentences-02-long level-8-sentences-02-short
 topic level-8-sentences-03 level-8-sentences-03-long level-8-sentences-03-short
 topic level-8-sentences-04 level-8-sentences-04-long level-8-sentences-04-short
+topic level-8-speaking-01 level-8-speaking-01-sentences level-8-speaking-01-words
+topic level-8-speaking-02 level-8-speaking-02-sentences level-8-speaking-02-words
+topic level-8-speaking-03 level-8-speaking-03-sentences level-8-speaking-03-words
+topic level-8-speaking-04 level-8-speaking-04-sentences level-8-speaking-04-words
+topic level-8-speaking-05 level-8-speaking-05-sentences level-8-speaking-05-words
+topic level-8-speaking-06 level-8-speaking-06-sentences level-8-speaking-06-words
+topic level-8-speaking-07 level-8-speaking-07-sentences level-8-speaking-07-words
+topic level-8-speaking-08 level-8-speaking-08-sentences level-8-speaking-08-words
+topic level-8-speaking-09 level-8-speaking-09-sentences level-8-speaking-09-words
+topic level-8-speaking-10 level-8-speaking-10-sentences level-8-speaking-10-words
+topic level-8-speaking-11 level-8-speaking-11-sentences level-8-speaking-11-words
+topic level-8-speaking-12 level-8-speaking-12-sentences level-8-speaking-12-words
 topic level-8-words-01 level-8-words-01-meaning level-8-words-01-reading level-8-words-01-use
 topic level-8-words-02 level-8-words-02-meaning level-8-words-02-reading level-8-words-02-use
 topic level-8-words-03 level-8-words-03-meaning level-8-words-03-reading level-8-words-03-use
@@ -1957,10 +2164,34 @@ topic level-9-grammar-48 level-9-grammar-48-form level-9-grammar-48-use
 topic level-9-grammar-49 level-9-grammar-49-form level-9-grammar-49-use
 topic level-9-grammar-50 level-9-grammar-50-form level-9-grammar-50-use
 topic level-9-grammar-51 level-9-grammar-51-form level-9-grammar-51-use
+topic level-9-listening-01 level-9-listening-01-sentences level-9-listening-01-words
+topic level-9-listening-02 level-9-listening-02-sentences level-9-listening-02-words
+topic level-9-listening-03 level-9-listening-03-sentences level-9-listening-03-words
+topic level-9-listening-04 level-9-listening-04-sentences level-9-listening-04-words
+topic level-9-listening-05 level-9-listening-05-sentences level-9-listening-05-words
+topic level-9-listening-06 level-9-listening-06-sentences level-9-listening-06-words
+topic level-9-listening-07 level-9-listening-07-sentences level-9-listening-07-words
+topic level-9-listening-08 level-9-listening-08-sentences level-9-listening-08-words
+topic level-9-listening-09 level-9-listening-09-sentences level-9-listening-09-words
+topic level-9-listening-10 level-9-listening-10-sentences level-9-listening-10-words
+topic level-9-listening-11 level-9-listening-11-sentences level-9-listening-11-words
+topic level-9-listening-12 level-9-listening-12-sentences level-9-listening-12-words
 topic level-9-sentences-01 level-9-sentences-01-long level-9-sentences-01-short
 topic level-9-sentences-02 level-9-sentences-02-long level-9-sentences-02-short
 topic level-9-sentences-03 level-9-sentences-03-long level-9-sentences-03-short
 topic level-9-sentences-04 level-9-sentences-04-long level-9-sentences-04-short
+topic level-9-speaking-01 level-9-speaking-01-sentences level-9-speaking-01-words
+topic level-9-speaking-02 level-9-speaking-02-sentences level-9-speaking-02-words
+topic level-9-speaking-03 level-9-speaking-03-sentences level-9-speaking-03-words
+topic level-9-speaking-04 level-9-speaking-04-sentences level-9-speaking-04-words
+topic level-9-speaking-05 level-9-speaking-05-sentences level-9-speaking-05-words
+topic level-9-speaking-06 level-9-speaking-06-sentences level-9-speaking-06-words
+topic level-9-speaking-07 level-9-speaking-07-sentences level-9-speaking-07-words
+topic level-9-speaking-08 level-9-speaking-08-sentences level-9-speaking-08-words
+topic level-9-speaking-09 level-9-speaking-09-sentences level-9-speaking-09-words
+topic level-9-speaking-10 level-9-speaking-10-sentences level-9-speaking-10-words
+topic level-9-speaking-11 level-9-speaking-11-sentences level-9-speaking-11-words
+topic level-9-speaking-12 level-9-speaking-12-sentences level-9-speaking-12-words
 topic level-9-words-01 level-9-words-01-meaning level-9-words-01-reading level-9-words-01-use
 topic level-9-words-02 level-9-words-02-meaning level-9-words-02-reading level-9-words-02-use
 topic level-9-words-03 level-9-words-03-meaning level-9-words-03-reading level-9-words-03-use
@@ -2845,3 +3076,27 @@ passage chinese-why-the-sky-is-blue
 passage chinese-zhang-heng-and-his-seismoscope
 passage chinese-zheng-hes-voyages
 passage chinese-zu-chongzhi-and-pi
+conversation chinese-artifact-return-panel
+conversation chinese-campus-radio-pocket-money
+conversation chinese-canteen-plastic-proposal
+conversation chinese-change-a-train-ticket
+conversation chinese-cooking-show-guest
+conversation chinese-debate-classics-or-new-books
+conversation chinese-documentary-fund-pitch
+conversation chinese-drama-club-tour-city
+conversation chinese-farm-cooperative-field-study
+conversation chinese-folk-craft-fair-opening-speech
+conversation chinese-heat-pump-public-hearing
+conversation chinese-idiom-podcast-allusion
+conversation chinese-internship-interview
+conversation chinese-museum-lost-bag
+conversation chinese-old-quarter-planning-meeting
+conversation chinese-poster-commission-negotiation
+conversation chinese-public-service-app-feedback
+conversation chinese-return-a-leaking-raincoat
+conversation chinese-science-salon-astrobiologist
+conversation chinese-sports-centre-class
+conversation chinese-stone-bridge-guide-trial
+conversation chinese-tea-shop-second-branch
+conversation chinese-village-guesthouse-advice
+conversation chinese-wetland-ecologist-interview

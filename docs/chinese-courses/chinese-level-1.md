@@ -6,11 +6,11 @@
 - **Level:** Level 1, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Pinyin](chinese-pinyin.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 132 topics (30 of characters, 50 of words, 48 of grammar, 4 of sentence building) · 344 knowledge points
+- **Size:** 12 units · 156 topics (30 of characters, 50 of words, 48 of grammar, 24 of listening and speaking, 4 of sentence building) · 392 knowledge points
 
 ## Aim
 
-Level 1 teaches 300 basic characters and 500 words of daily life, in twelve themed units from greetings to health. A character is learned by its form, its reading in pinyin and its meaning in the learner's language; a word by its meaning, its reading and its use in a sentence. Every sentence is written only with characters already taught, so the learner can read each one. The characters were chosen as the commonest of daily life; they are still to be checked against level 1 of the standard (GF 0025-2021) and the lists counsel clears (C0.2). Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains.
+Level 1 teaches 300 basic characters and 500 words of daily life, in twelve themed units from greetings to health. A character is learned by its form, its reading in pinyin and its meaning in the learner's language; a word by its meaning, its reading and its use in a sentence. Every sentence is written only with characters already taught, so the learner can read each one. The characters were chosen as the commonest of daily life; they are still to be checked against level 1 of the standard (GF 0025-2021) and the lists counsel clears (C0.2). Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains. After its grammar, each unit has a topic of listening and one of speaking, made from its words and their sentences read by a synthetic voice: the meaning of a word heard, and the word heard in a sentence; then the words said after the recording and the sentences read aloud, heard by a speech service whose thresholds await recordings of real learners.
 
 ## Units
 
@@ -29,6 +29,8 @@ Level 1 teaches 300 basic characters and 500 words of daily life, in twelve them
 - `level-1-grammar-04` 的 for Whose: Completing Sentences; The Right Sentence
 - `level-1-grammar-05` 也 and 都: Completing Sentences; The Right Sentence
 - `level-1-grammar-06` 在 with 这里, 那里 and 哪里: Completing Sentences; The Right Sentence
+- `level-1-listening-01` Level 1 Listening 01: Greetings and Introductions: Words You Hear; Words in Sentences
+- `level-1-speaking-01` Level 1 Speaking 01: Greetings and Introductions: Saying Words; Reading Sentences Aloud
 
 ### 2. Numbers and Age
 
@@ -39,6 +41,8 @@ Level 1 teaches 300 basic characters and 500 words of daily life, in twelve them
 - `level-1-grammar-07` Numbers and 两: Completing Sentences; The Right Sentence
 - `level-1-grammar-08` Asking How Many: 几 and 多少: 几 and 多少: Completing Sentences; 几 and 多少: The Right Sentence
 - `level-1-grammar-09` 个 and Number Phrases: Completing Sentences; The Right Sentence
+- `level-1-listening-02` Level 1 Listening 02: Numbers and Age: Words You Hear; Words in Sentences
+- `level-1-speaking-02` Level 1 Speaking 02: Numbers and Age: Saying Words; Reading Sentences Aloud
 
 ### 3. Family
 
@@ -50,6 +54,8 @@ Level 1 teaches 300 basic characters and 500 words of daily life, in twelve them
 - `level-1-grammar-10` 有 Sentences: Completing Sentences; The Right Sentence
 - `level-1-grammar-11` 和 Joining Nouns: Completing Sentences; The Right Sentence
 - `level-1-grammar-12` 去 and 来 with Places: Completing Sentences; The Right Sentence
+- `level-1-listening-03` Level 1 Listening 03: Family: Words You Hear; Words in Sentences
+- `level-1-speaking-03` Level 1 Speaking 03: Family: Saying Words; Reading Sentences Aloud
 - `level-1-sentences-01` Building Sentences 1: Greetings and Introductions, Numbers and Age, Family: Short Sentences; Longer Sentences
 
 ### 4. Time and Dates
@@ -65,6 +71,8 @@ Level 1 teaches 300 basic characters and 500 words of daily life, in twelve them
 - `level-1-grammar-14` Dates and Days of the Week: Completing Sentences; The Right Sentence
 - `level-1-grammar-15` Where Time Words Go: Completing Sentences; The Right Sentence
 - `level-1-grammar-16` 会 and 要 for the Future: Completing Sentences; The Right Sentence
+- `level-1-listening-04` Level 1 Listening 04: Time and Dates: Words You Hear; Words in Sentences
+- `level-1-speaking-04` Level 1 Speaking 04: Time and Dates: Saying Words; Reading Sentences Aloud
 
 ### 5. Food and Drink
 
@@ -82,6 +90,8 @@ Level 1 teaches 300 basic characters and 500 words of daily life, in twelve them
 - `level-1-grammar-21` 不 and 没: Completing Sentences; The Right Sentence
 - `level-1-grammar-22` Questions with 不 in the Middle: Completing Sentences; The Right Sentence
 - `level-1-grammar-23` 给 for Someone: Completing Sentences; The Right Sentence
+- `level-1-listening-05` Level 1 Listening 05: Food and Drink: Words You Hear; Words in Sentences
+- `level-1-speaking-05` Level 1 Speaking 05: Food and Drink: Saying Words; Reading Sentences Aloud
 
 ### 6. Shopping and Money
 
@@ -99,6 +109,8 @@ Level 1 teaches 300 basic characters and 500 words of daily life, in twelve them
 - `level-1-grammar-28` 吧 for Suggestions and Guesses: Completing Sentences; The Right Sentence
 - `level-1-grammar-29` Going Somewhere to Do Something: Completing Sentences; The Right Sentence
 - `level-1-grammar-30` Asking with 怎么样: Completing Sentences; The Right Sentence
+- `level-1-listening-06` Level 1 Listening 06: Shopping and Money: Words You Hear; Words in Sentences
+- `level-1-speaking-06` Level 1 Speaking 06: Shopping and Money: Saying Words; Reading Sentences Aloud
 - `level-1-sentences-02` Building Sentences 2: Time and Dates, Food and Drink, Shopping and Money: Short Sentences; Longer Sentences
 
 ### 7. School and Study
@@ -114,6 +126,8 @@ Level 1 teaches 300 basic characters and 500 words of daily life, in twelve them
 - `level-1-grammar-31` Ordinals with 第: Completing Sentences; The Right Sentence
 - `level-1-grammar-32` Asking How with 怎么: Completing Sentences; The Right Sentence
 - `level-1-grammar-33` 在 + Place + Verb: Completing Sentences; The Right Sentence
+- `level-1-listening-07` Level 1 Listening 07: School and Study: Words You Hear; Words in Sentences
+- `level-1-speaking-07` Level 1 Speaking 07: School and Study: Saying Words; Reading Sentences Aloud
 
 ### 8. Places and Directions
 
@@ -131,6 +145,8 @@ Level 1 teaches 300 basic characters and 500 words of daily life, in twelve them
 - `level-1-grammar-36` Questions with 呢: Completing Sentences; The Right Sentence
 - `level-1-grammar-37` 从, 到 and 往: Completing Sentences; The Right Sentence
 - `level-1-grammar-38` 在……呢 for Actions in Progress: Completing Sentences; The Right Sentence
+- `level-1-listening-08` Level 1 Listening 08: Places and Directions: Words You Hear; Words in Sentences
+- `level-1-speaking-08` Level 1 Speaking 08: Places and Directions: Saying Words; Reading Sentences Aloud
 
 ### 9. Transport and Travel
 
@@ -144,6 +160,8 @@ Level 1 teaches 300 basic characters and 500 words of daily life, in twelve them
 - `level-1-grammar-40` Together: 跟……一起: 跟……一起: Completing Sentences; 跟……一起: The Right Sentence
 - `level-1-grammar-41` Requests and Commands: 请, 别 and 不要: 请, 别 and 不要: Completing Sentences; 请, 别 and 不要: The Right Sentence
 - `level-1-grammar-42` 次 for How Many Times: Completing Sentences; The Right Sentence
+- `level-1-listening-09` Level 1 Listening 09: Transport and Travel: Words You Hear; Words in Sentences
+- `level-1-speaking-09` Level 1 Speaking 09: Transport and Travel: Saying Words; Reading Sentences Aloud
 - `level-1-sentences-03` Building Sentences 3: School and Study, Places and Directions, Transport and Travel: Short Sentences; Longer Sentences
 
 ### 10. Weather and Seasons
@@ -154,6 +172,8 @@ Level 1 teaches 300 basic characters and 500 words of daily life, in twelve them
 - `level-1-words-38` Level 1 Words 38: Rain and Snow: Finding the Word; Reading the Word; Using the Word
 - `level-1-grammar-43` Comparing with 比: Completing Sentences; The Right Sentence
 - `level-1-grammar-44` 了 for a Change: Completing Sentences; The Right Sentence
+- `level-1-listening-10` Level 1 Listening 10: Weather and Seasons: Words You Hear; Words in Sentences
+- `level-1-speaking-10` Level 1 Speaking 10: Weather and Seasons: Saying Words; Reading Sentences Aloud
 
 ### 11. Hobbies and Free Time
 
@@ -168,6 +188,8 @@ Level 1 teaches 300 basic characters and 500 words of daily life, in twelve them
 - `level-1-words-45` Level 1 Words 45: Hobbies: Finding the Word; Reading the Word; Using the Word
 - `level-1-grammar-45` Doubled Verbs and 一下: Completing Sentences; The Right Sentence
 - `level-1-grammar-46` 得 for How Well: Completing Sentences; The Right Sentence
+- `level-1-listening-11` Level 1 Listening 11: Hobbies and Free Time: Words You Hear; Words in Sentences
+- `level-1-speaking-11` Level 1 Speaking 11: Hobbies and Free Time: Saying Words; Reading Sentences Aloud
 
 ### 12. Body and Health
 
@@ -180,6 +202,8 @@ Level 1 teaches 300 basic characters and 500 words of daily life, in twelve them
 - `level-1-words-50` Level 1 Words 50: Growing Up: Finding the Word; Reading the Word; Using the Word
 - `level-1-grammar-47` Because: 因为……所以……: 因为……所以……: Completing Sentences; 因为……所以……: The Right Sentence
 - `level-1-grammar-48` 最 for the Most: Completing Sentences; The Right Sentence
+- `level-1-listening-12` Level 1 Listening 12: Body and Health: Words You Hear; Words in Sentences
+- `level-1-speaking-12` Level 1 Speaking 12: Body and Health: Saying Words; Reading Sentences Aloud
 - `level-1-sentences-04` Building Sentences 4: Weather and Seasons, Hobbies and Free Time, Body and Health: Short Sentences; Longer Sentences
 
 ## Simulated Students

@@ -8,6 +8,7 @@ import { characterBatches } from "./character-data.ts";
 import { type LevelOneCharacter, levelOneCharacterTopic, parseLevelOneCharacters } from "./characters.ts";
 import { unitGrammarTopics } from "./grammar.ts";
 import { grammar } from "./grammar-data.ts";
+import { unitListeningTopic, unitSpeakingTopic } from "./listening.ts";
 import { sentences } from "./sentence-data.ts";
 import { unitSentenceTopics } from "./sentences.ts";
 import { wordBatches } from "./word-data.ts";
@@ -98,8 +99,10 @@ function build(): Built {
       characterIds.push(id);
     }
     const wordIds: string[] = [];
+    const unitWords: LevelOneWord[] = [];
     for (let k = 0; k < unit.words; k++) {
       const batch = words[w]!;
+      unitWords.push(...batch);
       const { theme } = wordBatches[w]!;
       w++;
       const id = levelOneWordId(w);
@@ -133,6 +136,17 @@ function build(): Built {
     });
     g += unitGrammar.length;
     topics.push(...unitGrammar);
+    const speech = {
+      level: 1,
+      numeral: "一",
+      unit: u + 1,
+      theme: unit.title,
+      words: unitWords,
+      chars: levelOneCharacters,
+      after: levelOneWordId(w),
+    };
+    const listening = [unitListeningTopic(speech), unitSpeakingTopic(speech)];
+    topics.push(...listening);
     const unitSentences = unitSentenceTopics({
       level: 1,
       unit: u,
@@ -148,6 +162,7 @@ function build(): Built {
         { title: t("Characters", "汉字"), topics: characterIds },
         { title: t("Words", "词语"), topics: wordIds },
         ...(unitGrammar.length > 0 ? [{ title: t("Grammar", "语法"), topics: unitGrammar.map((x) => x.id) }] : []),
+        { title: t("Listening and Speaking", "听和说"), topics: listening.map((x) => x.id) },
         ...(unitSentences.length > 0 ? [{ title: t("Writing", "写作"), topics: unitSentences.map((x) => x.id) }] : []),
       ],
     });

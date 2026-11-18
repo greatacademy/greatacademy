@@ -7,6 +7,7 @@ import { t } from "@ga/content";
 
 import { type LevelOneCharacter, levelOneCharacterTopic, parseLevelCharacters } from "../level-1/characters.ts";
 import { type LevelGrammar, unitGrammarTopics } from "../level-1/grammar.ts";
+import { unitListeningTopic, unitSpeakingTopic } from "../level-1/listening.ts";
 import { type LevelSentences, unitSentenceTopics } from "../level-1/sentences.ts";
 import { GAP, type LevelOneWord, levelOneWordTopic, parseLevelWords } from "../level-1/words.ts";
 import { type LevelWriting, unitWritingTopics } from "../level-1/writing.ts";
@@ -119,8 +120,10 @@ export function buildLevel(spec: LevelSpec): Level {
       characterIds.push(id);
     }
     const wordIds: string[] = [];
+    const unitWords: LevelOneWord[] = [];
     for (let k = 0; k < unit.words; k++) {
       const batch = words[w]!;
+      unitWords.push(...batch);
       const { theme } = spec.wordBatches[w]!;
       w++;
       const id = levelWordId(level, w);
@@ -156,6 +159,9 @@ export function buildLevel(spec: LevelSpec): Level {
     });
     g += unitGrammar.length;
     topics.push(...unitGrammar);
+    const speech = { level, numeral, unit: u + 1, theme: unit.title, words: unitWords, chars: characters, after: levelWordId(level, w) };
+    const listening = [unitListeningTopic(speech), unitSpeakingTopic(speech)];
+    topics.push(...listening);
     const unitSentences = unitSentenceTopics({
       level,
       unit: u,
@@ -179,6 +185,7 @@ export function buildLevel(spec: LevelSpec): Level {
         { title: t("Characters", "汉字"), topics: characterIds },
         { title: t("Words", "词语"), topics: wordIds },
         ...(unitGrammar.length > 0 ? [{ title: t("Grammar", "语法"), topics: unitGrammar.map((x) => x.id) }] : []),
+        { title: t("Listening and Speaking", "听和说"), topics: listening.map((x) => x.id) },
         ...(unitSentences.length > 0 ? [{ title: t("Writing", "写作"), topics: [...unitSentences, ...unitWriting].map((x) => x.id) }] : []),
       ],
     });

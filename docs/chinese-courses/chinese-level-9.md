@@ -6,11 +6,11 @@
 - **Level:** Level 9, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 8](chinese-level-8.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 285 topics (40 of characters, 188 of words, 51 of grammar, 4 of sentence building, 2 of writing) · 798 knowledge points
+- **Size:** 12 units · 309 topics (40 of characters, 188 of words, 51 of grammar, 24 of listening and speaking, 4 of sentence building, 2 of writing) · 846 knowledge points · 4 conversations
 
 ## Aim
 
-Level 9 is the last third of the advanced levels 7 to 9, the rarest third by frequency: 400 more characters and 1,880 words, reaching 3,000 characters, in twelve themed units: language and rhetoric, idioms and allusions, philosophy, behaviour and character, the universe, the life sciences, international affairs, communication and the media, architecture and planning, crafts and folk customs, sport and competition, and formal writing. Characters and words are learned as in levels 1 to 8, and every sentence is written only with characters already taught. The characters come first from the 3,500 common characters that the earlier levels leave out, the commoner first, such as 齐, 弄, 横 and 添. They were chosen to be close to the advanced band of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains. The sixth and twelfth units end with a topic of paragraph writing as well, judged by a model against three yes-or-no criteria, at least 350 characters a piece, its tasks and model answers written with the characters taught by then; the criteria wait for texts scored by teachers of Chinese, and an admin routes them before they reach learners.
+Level 9 is the last third of the advanced levels 7 to 9, the rarest third by frequency: 400 more characters and 1,880 words, reaching 3,000 characters, in twelve themed units: language and rhetoric, idioms and allusions, philosophy, behaviour and character, the universe, the life sciences, international affairs, communication and the media, architecture and planning, crafts and folk customs, sport and competition, and formal writing. Characters and words are learned as in levels 1 to 8, and every sentence is written only with characters already taught. The characters come first from the 3,500 common characters that the earlier levels leave out, the commoner first, such as 齐, 弄, 横 and 添. They were chosen to be close to the advanced band of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains. The sixth and twelfth units end with a topic of paragraph writing as well, judged by a model against three yes-or-no criteria, at least 350 characters a piece, its tasks and model answers written with the characters taught by then; the criteria wait for texts scored by teachers of Chinese, and an admin routes them before they reach learners. After its grammar, each unit has a topic of listening and one of speaking, made from its words and their sentences read by a synthetic voice: the meaning of a word heard, and the word heard in a sentence; then the words said after the recording and the sentences read aloud, heard by a speech service whose thresholds await recordings of real learners. Units 3, 6, 9 and 12 each close with a conversation on the themes of their stretch, spoken in Mandarin with an AI tutor that plays a part and keeps to the level, through the voice service and the prompt `conversation-zh-1`; an admin routes each before it is offered.
 
 ## Units
 
@@ -45,6 +45,8 @@ Level 9 is the last third of the advanced levels 7 to 9, the rarest third by fre
 - `level-9-grammar-02` Also, in Writing: 亦: 亦: Completing Sentences; 亦: The Right Sentence
 - `level-9-grammar-03` His, Its, in Writing: 其: 其: Completing Sentences; 其: The Right Sentence
 - `level-9-grammar-04` As One Can Imagine: 可想而知: 可想而知: Completing Sentences; 可想而知: The Right Sentence
+- `level-9-listening-01` Level 9 Listening 01: Language and Rhetoric: Words You Hear; Words in Sentences
+- `level-9-speaking-01` Level 9 Speaking 01: Language and Rhetoric: Saying Words; Reading Sentences Aloud
 
 ### 2. Idioms and Allusions
 
@@ -77,6 +79,8 @@ Level 9 is the last third of the advanced levels 7 to 9, the rarest third by fre
 - `level-9-grammar-06` Why or How, in Writing: 何以: 何以: Completing Sentences; 何以: The Right Sentence
 - `level-9-grammar-07` Why Not, in Writing: 何不: 何不: Completing Sentences; 何不: The Right Sentence
 - `level-9-grammar-08` Known For: 以……著称: 以……著称: Completing Sentences; 以……著称: The Right Sentence
+- `level-9-listening-02` Level 9 Listening 02: Idioms and Allusions: Words You Hear; Words in Sentences
+- `level-9-speaking-02` Level 9 Speaking 02: Idioms and Allusions: Saying Words; Reading Sentences Aloud
 
 ### 3. Philosophy
 
@@ -110,7 +114,11 @@ Level 9 is the last third of the advanced levels 7 to 9, the rarest third by fre
 - `level-9-grammar-11` Do Not, in Notices: 勿 and 切勿: 勿 and 切勿: Completing Sentences; 勿 and 切勿: The Right Sentence
 - `level-9-grammar-12` Or, in Writing: 抑或: 抑或: Completing Sentences; 抑或: The Right Sentence
 - `level-9-grammar-13` Seemingly Yet Not: 似……非……: 似……非……: Completing Sentences; 似……非……: The Right Sentence
+- `level-9-listening-03` Level 9 Listening 03: Philosophy: Words You Hear; Words in Sentences
+- `level-9-speaking-03` Level 9 Speaking 03: Philosophy: Saying Words; Reading Sentences Aloud
 - `level-9-sentences-01` Building Sentences 1: Language and Rhetoric, Idioms and Allusions, Philosophy: Short Sentences; Longer Sentences
+
+**Conversation:** `chinese-idiom-podcast-allusion` Explaining an idiom on a culture podcast. Task: On a culture podcast, choose a four-character idiom, tell the story it comes from, explain its meaning, and argue how its lesson applies, or does not apply, today.
 
 ### 4. Behaviour and Character
 
@@ -142,6 +150,8 @@ Level 9 is the last third of the advanced levels 7 to 9, the rarest third by fre
 - `level-9-grammar-14` Only Then, in Writing: 方: 方: Completing Sentences; 方: The Right Sentence
 - `level-9-grammar-15` In Order To, in Writing: 以 + Verb: 以 + Verb: Completing Sentences; 以 + Verb: The Right Sentence
 - `level-9-grammar-16` Because Of, in Writing: 因……而……: 因……而……: Completing Sentences; 因……而……: The Right Sentence
+- `level-9-listening-04` Level 9 Listening 04: Behaviour and Character: Words You Hear; Words in Sentences
+- `level-9-speaking-04` Level 9 Speaking 04: Behaviour and Character: Saying Words; Reading Sentences Aloud
 
 ### 5. The Universe
 
@@ -173,6 +183,8 @@ Level 9 is the last third of the advanced levels 7 to 9, the rarest third by fre
 - `level-9-grammar-18` As Many As, As High As: 多达 and 高达: 多达 and 高达: Completing Sentences; 多达 and 高达: The Right Sentence
 - `level-9-grammar-19` More Than, in Writing: 余 and 有余: 余 and 有余: Completing Sentences; 余 and 有余: The Right Sentence
 - `level-9-grammar-20` Not Known: 不得而知: 不得而知: Completing Sentences; 不得而知: The Right Sentence
+- `level-9-listening-05` Level 9 Listening 05: The Universe: Words You Hear; Words in Sentences
+- `level-9-speaking-05` Level 9 Speaking 05: The Universe: Saying Words; Reading Sentences Aloud
 
 ### 6. Life Sciences
 
@@ -205,8 +217,12 @@ Level 9 is the last third of the advanced levels 7 to 9, the rarest third by fre
 - `level-9-grammar-23` Not Advisable: 不宜: 不宜: Completing Sentences; 不宜: The Right Sentence
 - `level-9-grammar-24` Not Yet, in Writing: 尚未: 尚未: Completing Sentences; 尚未: The Right Sentence
 - `level-9-grammar-25` The Said, in Formal Writing: 该: 该: Completing Sentences; 该: The Right Sentence
+- `level-9-listening-06` Level 9 Listening 06: Life Sciences: Words You Hear; Words in Sentences
+- `level-9-speaking-06` Level 9 Speaking 06: Life Sciences: Saying Words; Reading Sentences Aloud
 - `level-9-sentences-02` Building Sentences 2: Behaviour and Character, The Universe, Life Sciences: Short Sentences; Longer Sentences
 - `level-9-writing-01` An Essay on an Idea: Making the Idea Clear and Taking a Position; Developing the Argument in Stages
+
+**Conversation:** `chinese-science-salon-astrobiologist` Moderating a science salon on life in space. Task: Moderate a science salon with an astrobiologist. Ask about the evidence for life beyond Earth, summarize her answer accurately, and put a reasoned objection to her.
 
 ### 7. International Affairs
 
@@ -238,6 +254,8 @@ Level 9 is the last third of the advanced levels 7 to 9, the rarest third by fre
 - `level-9-grammar-27` Can Still Count As: 不失为: 不失为: Completing Sentences; 不失为: The Right Sentence
 - `level-9-grammar-28` Such As: 诸如……等: 诸如……等: Completing Sentences; 诸如……等: The Right Sentence
 - `level-9-grammar-29` Amounts To: 无异于: 无异于: Completing Sentences; 无异于: The Right Sentence
+- `level-9-listening-07` Level 9 Listening 07: International Affairs: Words You Hear; Words in Sentences
+- `level-9-speaking-07` Level 9 Speaking 07: International Affairs: Saying Words; Reading Sentences Aloud
 
 ### 8. Communication and the Media
 
@@ -269,6 +287,8 @@ Level 9 is the last third of the advanced levels 7 to 9, the rarest third by fre
 - `level-9-grammar-31` Nothing But: 无非 and 不外乎: 无非 and 不外乎: Completing Sentences; 无非 and 不外乎: The Right Sentence
 - `level-9-grammar-32` Can Be Called: 堪称: 堪称: Completing Sentences; 堪称: The Right Sentence
 - `level-9-grammar-33` Owed To: 归功于: 归功于: Completing Sentences; 归功于: The Right Sentence
+- `level-9-listening-08` Level 9 Listening 08: Communication and the Media: Words You Hear; Words in Sentences
+- `level-9-speaking-08` Level 9 Speaking 08: Communication and the Media: Saying Words; Reading Sentences Aloud
 
 ### 9. Architecture and Planning
 
@@ -299,7 +319,11 @@ Level 9 is the last third of the advanced levels 7 to 9, the rarest third by fre
 - `level-9-grammar-35` No Shortage Of: 不乏: 不乏: Completing Sentences; 不乏: The Right Sentence
 - `level-9-grammar-36` Must Not Be: 不可 + Verb: 不可 + Verb: Completing Sentences; 不可 + Verb: The Right Sentence
 - `level-9-grammar-37` Beyond Question: 无可 + Verb: 无可 + Verb: Completing Sentences; 无可 + Verb: The Right Sentence
+- `level-9-listening-09` Level 9 Listening 09: Architecture and Planning: Words You Hear; Words in Sentences
+- `level-9-speaking-09` Level 9 Speaking 09: Architecture and Planning: Saying Words; Reading Sentences Aloud
 - `level-9-sentences-03` Building Sentences 3: International Affairs, Communication and the Media, Architecture and Planning: Short Sentences; Longer Sentences
+
+**Conversation:** `chinese-old-quarter-planning-meeting` A planning meeting on an old quarter. Task: At a planning meeting on renovating an old quarter, argue for a plan that balances preservation and development, negotiate with the developer's representative, and reach a compromise on at least one point.
 
 ### 10. Crafts and Folk Customs
 
@@ -330,6 +354,8 @@ Level 9 is the last third of the advanced levels 7 to 9, the rarest third by fre
 - `level-9-grammar-39` This and That: 此 and 彼 in Fixed Phrases: 此 and 彼 in Fixed Phrases: Completing Sentences; 此 and 彼 in Fixed Phrases: The Right Sentence
 - `level-9-grammar-40` At the Time Of: ……之际: ……之际: Completing Sentences; ……之际: The Right Sentence
 - `level-9-grammar-41` Known As: 有“……”之称: 有“……”之称: Completing Sentences; 有“……”之称: The Right Sentence
+- `level-9-listening-10` Level 9 Listening 10: Crafts and Folk Customs: Words You Hear; Words in Sentences
+- `level-9-speaking-10` Level 9 Speaking 10: Crafts and Folk Customs: Saying Words; Reading Sentences Aloud
 
 ### 11. Sport and Competition
 
@@ -360,6 +386,8 @@ Level 9 is the last third of the advanced levels 7 to 9, the rarest third by fre
 - `level-9-grammar-43` By a Score Of: 以 + Score: 以 + Score: Completing Sentences; 以 + Score: The Right Sentence
 - `level-9-grammar-44` None Other Than: 非……莫属: 非……莫属: Completing Sentences; 非……莫属: The Right Sentence
 - `level-9-grammar-45` Less Than: 不足 + Number: 不足 + Number: Completing Sentences; 不足 + Number: The Right Sentence
+- `level-9-listening-11` Level 9 Listening 11: Sport and Competition: Words You Hear; Words in Sentences
+- `level-9-speaking-11` Level 9 Speaking 11: Sport and Competition: Saying Words; Reading Sentences Aloud
 
 ### 12. Formal Writing
 
@@ -392,8 +420,12 @@ Level 9 is the last third of the advanced levels 7 to 9, the rarest third by fre
 - `level-9-grammar-49` Without Prior: 未经: 未经: Completing Sentences; 未经: The Right Sentence
 - `level-9-grammar-50` When the Time Comes: 届时: 届时: Completing Sentences; 届时: The Right Sentence
 - `level-9-grammar-51` Starting From the Day: 自……之日起: 自……之日起: Completing Sentences; 自……之日起: The Right Sentence
+- `level-9-listening-12` Level 9 Listening 12: Formal Writing: Words You Hear; Words in Sentences
+- `level-9-speaking-12` Level 9 Speaking 12: Formal Writing: Saying Words; Reading Sentences Aloud
 - `level-9-sentences-04` Building Sentences 4: Crafts and Folk Customs, Sport and Competition, Formal Writing: Short Sentences; Longer Sentences
 - `level-9-writing-02` Formal Applied Writing: The Form of Applied Writing; Complete, Ordered Content
+
+**Conversation:** `chinese-folk-craft-fair-opening-speech` Opening speech at a folk craft fair. Task: Give a short formal opening speech at a folk craft fair, with a proper greeting, a point about why crafts matter today, and a closing wish; then answer a reporter's question.
 
 ## Simulated Students
 

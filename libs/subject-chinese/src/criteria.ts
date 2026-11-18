@@ -4,7 +4,7 @@ import { LEVEL_CRITERIA_A } from "./criteria-levels-a.ts";
 import { LEVEL_CRITERIA_B } from "./criteria-levels-b.ts";
 
 /**
- * WRITING_CRITERIA are the criteria of the judged writing of native grades 3 to 11, the essay of the Gaokao and its short answers on modern texts (docs/chinese-curriculum.md §11): W4
+ * WRITING_CRITERIA are the criteria of the judged writing of native grades 3 to 11, the essay of the Gaokao, its short answers on modern texts and its judged use of language (docs/chinese-curriculum.md §11): W4
  * paragraphs and W5 compositions, with starting questions to be calibrated against texts scored by teachers of Chinese.
  * Their questions are in English, as the core asks; the texts they are asked of are in Chinese.
  */
@@ -440,6 +440,48 @@ export const WRITING_CRITERIA: readonly CriterionSpec[] = [
     version: "1",
     question: "Does the answer tie what it says to particular words, details or sentences of the passage, without misreading them?",
     quoteWhenMet: true,
+  },
+  // The Gaokao's judged use of language: filling gaps in a passage, and rewriting as asked.
+  {
+    id: "zhgk-fill-fit",
+    version: "1",
+    question:
+      "Does each sentence written into a gap fit where it goes: following from the sentence before it and leading into the one after it in the passage's logic, such as a cause, a turn, an example or a conclusion?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zhgk-fill-content",
+    version: "1",
+    question:
+      "Does each sentence written into a gap say what the passage needs there, as the text around it implies, without adding what the passage does not support?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zhgk-fill-form",
+    version: "1",
+    question:
+      "Does the answer fill every gap, in order, each with one complete and correct sentence within the number of characters the task allows?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "zhgk-rewrite-meaning",
+    version: "1",
+    question:
+      "Does the rewriting keep the meaning and every piece of information of the original that the task asks to keep, without changing or adding to it?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zhgk-rewrite-form",
+    version: "1",
+    question:
+      "Does the rewriting do what the task asks of its form, such as the number of sentences, the kind of sentence, the structure to imitate or the most characters?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zhgk-rewrite-fluent",
+    version: "1",
+    question: "Does the rewriting read as correct, natural Chinese, without faults of grammar, word order or wording?",
+    quoteWhenMet: false,
   },
 ];
 

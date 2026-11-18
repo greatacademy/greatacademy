@@ -6,11 +6,11 @@
 - **Level:** Level 7, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 6](chinese-level-6.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 283 topics (40 of characters, 188 of words, 49 of grammar, 4 of sentence building, 2 of writing) · 794 knowledge points
+- **Size:** 12 units · 307 topics (40 of characters, 188 of words, 49 of grammar, 24 of listening and speaking, 4 of sentence building, 2 of writing) · 842 knowledge points · 4 conversations
 
 ## Aim
 
-Level 7 is the first third of the advanced levels 7 to 9. The standard keeps levels 7 to 9 together (1,200 characters and 5,636 words); the subject splits them into three courses by frequency, and level 7 takes the commonest third: 400 more characters and 1,880 words, in twelve themed units: social change, schools and learning, work and the workplace, medicine, nature and ecology, science and technology, history, thought and belief, literature and writing, art and design, law and society, and the economy and trade. Characters and words are learned as in levels 1 to 6, and every sentence is written only with characters already taught. Common characters that the earlier levels leave out, such as 缓, 烈, 替 and 顶, are taught where their unit's words need them. The characters were chosen to be close to the advanced band of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains. The sixth and twelfth units end with a topic of paragraph writing as well, judged by a model against three yes-or-no criteria, at least 250 characters a piece, its tasks and model answers written with the characters taught by then; the criteria wait for texts scored by teachers of Chinese, and an admin routes them before they reach learners.
+Level 7 is the first third of the advanced levels 7 to 9. The standard keeps levels 7 to 9 together (1,200 characters and 5,636 words); the subject splits them into three courses by frequency, and level 7 takes the commonest third: 400 more characters and 1,880 words, in twelve themed units: social change, schools and learning, work and the workplace, medicine, nature and ecology, science and technology, history, thought and belief, literature and writing, art and design, law and society, and the economy and trade. Characters and words are learned as in levels 1 to 6, and every sentence is written only with characters already taught. Common characters that the earlier levels leave out, such as 缓, 烈, 替 and 顶, are taught where their unit's words need them. The characters were chosen to be close to the advanced band of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains. The sixth and twelfth units end with a topic of paragraph writing as well, judged by a model against three yes-or-no criteria, at least 250 characters a piece, its tasks and model answers written with the characters taught by then; the criteria wait for texts scored by teachers of Chinese, and an admin routes them before they reach learners. After its grammar, each unit has a topic of listening and one of speaking, made from its words and their sentences read by a synthetic voice: the meaning of a word heard, and the word heard in a sentence; then the words said after the recording and the sentences read aloud, heard by a speech service whose thresholds await recordings of real learners. Units 3, 6, 9 and 12 each close with a conversation on the themes of their stretch, spoken in Mandarin with an AI tutor that plays a part and keeps to the level, through the voice service and the prompt `conversation-zh-1`; an admin routes each before it is offered.
 
 ## Units
 
@@ -45,6 +45,8 @@ Level 7 is the first third of the advanced levels 7 to 9. The standard keeps lev
 - `level-7-grammar-02` Becoming: Word + 化: Word + 化: Completing Sentences; Word + 化: The Right Sentence
 - `level-7-grammar-03` Plenty Of: 有的是: 有的是: Completing Sentences; 有的是: The Right Sentence
 - `level-7-grammar-04` Don't Go By: 别看……: 别看……: Completing Sentences; 别看……: The Right Sentence
+- `level-7-listening-01` Level 7 Listening 01: Social Change: Words You Hear; Words in Sentences
+- `level-7-speaking-01` Level 7 Speaking 01: Social Change: Saying Words; Reading Sentences Aloud
 
 ### 2. Schools and Learning
 
@@ -77,6 +79,8 @@ Level 7 is the first third of the advanced levels 7 to 9. The standard keeps lev
 - `level-7-grammar-06` Learning From: 从……中 and 从中: 从……中 and 从中: Completing Sentences; 从……中 and 从中: The Right Sentence
 - `level-7-grammar-07` Really, in Speech: 可 for Emphasis: 可 for Emphasis: Completing Sentences; 可 for Emphasis: The Right Sentence
 - `level-7-grammar-08` Over and Over, Carefully: V了又V: V了又V: Completing Sentences; V了又V: The Right Sentence
+- `level-7-listening-02` Level 7 Listening 02: Schools and Learning: Words You Hear; Words in Sentences
+- `level-7-speaking-02` Level 7 Speaking 02: Schools and Learning: Saying Words; Reading Sentences Aloud
 
 ### 3. Work and the Workplace
 
@@ -109,7 +113,11 @@ Level 7 is the first third of the advanced levels 7 to 9. The standard keeps lev
 - `level-7-grammar-10` Just Before: 临 + Verb: 临 + Verb: Completing Sentences; 临 + Verb: The Right Sentence
 - `level-7-grammar-11` Can't Do Anything With: 拿……没办法: 拿……没办法: Completing Sentences; 拿……没办法: The Right Sentence
 - `level-7-grammar-12` No Matter What, Won't: 说什么也不 and 怎么也不: 说什么也不 and 怎么也不: Completing Sentences; 说什么也不 and 怎么也不: The Right Sentence
+- `level-7-listening-03` Level 7 Listening 03: Work and the Workplace: Words You Hear; Words in Sentences
+- `level-7-speaking-03` Level 7 Speaking 03: Work and the Workplace: Saying Words; Reading Sentences Aloud
 - `level-7-sentences-01` Building Sentences 1: Social Change, Schools and Learning, Work and the Workplace: Short Sentences; Longer Sentences
+
+**Conversation:** `chinese-internship-interview` An interview for a summer internship. Task: You are interviewing for a summer internship at a company that makes learning software. Explain why you want the role, describe a relevant skill with an example, and ask the interviewer one good question.
 
 ### 4. Medicine
 
@@ -142,6 +150,8 @@ Level 7 is the first third of the advanced levels 7 to 9. The standard keeps lev
 - `level-7-grammar-14` Strong Enough to Move: V得动 and V不动: V得动 and V不动: Completing Sentences; V得动 and V不动: The Right Sentence
 - `level-7-grammar-15` Quite, in Speech: Adjective + 着呢: Adjective + 着呢: Completing Sentences; Adjective + 着呢: The Right Sentence
 - `level-7-grammar-16` Certainly Not, in Speech: 才……呢: 才……呢: Completing Sentences; 才……呢: The Right Sentence
+- `level-7-listening-04` Level 7 Listening 04: Medicine: Words You Hear; Words in Sentences
+- `level-7-speaking-04` Level 7 Speaking 04: Medicine: Saying Words; Reading Sentences Aloud
 
 ### 5. Nature and Ecology
 
@@ -173,6 +183,8 @@ Level 7 is the first third of the advanced levels 7 to 9. The standard keeps lev
 - `level-7-grammar-18` Along: 沿着: 沿着: Completing Sentences; 沿着: The Right Sentence
 - `level-7-grammar-19` Suffering: 遭到 and 遭受: 遭到 and 遭受: Completing Sentences; 遭到 and 遭受: The Right Sentence
 - `level-7-grammar-20` Vivid Adjectives: ABB Forms Like 绿油油: ABB Forms Like 绿油油: Completing Sentences; ABB Forms Like 绿油油: The Right Sentence
+- `level-7-listening-05` Level 7 Listening 05: Nature and Ecology: Words You Hear; Words in Sentences
+- `level-7-speaking-05` Level 7 Speaking 05: Nature and Ecology: Saying Words; Reading Sentences Aloud
 
 ### 6. Science and Technology
 
@@ -204,8 +216,12 @@ Level 7 is the first third of the advanced levels 7 to 9. The standard keeps lev
 - `level-7-grammar-22` Degree and Rate: Word + 度 and Word + 率: Word + 度 and Word + 率: Completing Sentences; Word + 度 and Word + 率: The Right Sentence
 - `level-7-grammar-23` Having an Effect On: 对……有影响 and 对……起作用: 对……有影响 and 对……起作用: Completing Sentences; 对……有影响 and 对……起作用: The Right Sentence
 - `level-7-grammar-24` Bringing and Providing: 给……带来 and 为……提供: 给……带来 and 为……提供: Completing Sentences; 给……带来 and 为……提供: The Right Sentence
+- `level-7-listening-06` Level 7 Listening 06: Science and Technology: Words You Hear; Words in Sentences
+- `level-7-speaking-06` Level 7 Speaking 06: Science and Technology: Saying Words; Reading Sentences Aloud
 - `level-7-sentences-02` Building Sentences 2: Medicine, Nature and Ecology, Science and Technology: Short Sentences; Longer Sentences
 - `level-7-writing-01` Describing a Change: Before and After; Causes and Effects
+
+**Conversation:** `chinese-wetland-ecologist-interview` Interviewing a wetland ecologist. Task: For a school science magazine, interview an ecologist about a wetland that may become a theme park. Find out why the wetland matters, what the risks are, and what the expert would propose, then sum up her view.
 
 ### 7. History
 
@@ -237,6 +253,8 @@ Level 7 is the first third of the advanced levels 7 to 9. The standard keeps lev
 - `level-7-grammar-26` One After Another: 先后: 先后: Completing Sentences; 先后: The Right Sentence
 - `level-7-grammar-27` This, in Writing: 此: 此: Completing Sentences; 此: The Right Sentence
 - `level-7-grammar-28` By the Time: 等到……: 等到……: Completing Sentences; 等到……: The Right Sentence
+- `level-7-listening-07` Level 7 Listening 07: History: Words You Hear; Words in Sentences
+- `level-7-speaking-07` Level 7 Speaking 07: History: Saying Words; Reading Sentences Aloud
 
 ### 8. Thought and Belief
 
@@ -268,6 +286,8 @@ Level 7 is the first third of the advanced levels 7 to 9. The standard keeps lev
 - `level-7-grammar-30` Firmly So: 是……的 for a Stated View: 是……的 for a Stated View: Completing Sentences; 是……的 for a Stated View: The Right Sentence
 - `level-7-grammar-31` It's Not As If: 又不是 and 又没: 又不是 and 又没: Completing Sentences; 又不是 and 又没: The Right Sentence
 - `level-7-grammar-32` Rather, Contrary to Expectation: 倒 and 倒是: 倒 and 倒是: Completing Sentences; 倒 and 倒是: The Right Sentence
+- `level-7-listening-08` Level 7 Listening 08: Thought and Belief: Words You Hear; Words in Sentences
+- `level-7-speaking-08` Level 7 Speaking 08: Thought and Belief: Saying Words; Reading Sentences Aloud
 
 ### 9. Literature and Writing
 
@@ -298,7 +318,11 @@ Level 7 is the first third of the advanced levels 7 to 9. The standard keeps lev
 - `level-7-grammar-34` One and the Other: 一A一B: 一A一B: Completing Sentences; 一A一B: The Right Sentence
 - `level-7-grammar-35` Again and Again Every Way: 左……右……: 左……右……: Completing Sentences; 左……右……: The Right Sentence
 - `level-7-grammar-36` Bringing Up: 说起, 提起 and 谈起: 说起, 提起 and 谈起: Completing Sentences; 说起, 提起 and 谈起: The Right Sentence
+- `level-7-listening-09` Level 7 Listening 09: Literature and Writing: Words You Hear; Words in Sentences
+- `level-7-speaking-09` Level 7 Speaking 09: Literature and Writing: Saying Words; Reading Sentences Aloud
 - `level-7-sentences-03` Building Sentences 3: History, Thought and Belief, Literature and Writing: Short Sentences; Longer Sentences
+
+**Conversation:** `chinese-debate-classics-or-new-books` Debate: classics or new books?. Task: In a debate club practice, argue whether students should read mainly classics or mainly new books. State your position, give two arguments with examples, and rebut your opponent's point.
 
 ### 10. Art and Design
 
@@ -329,6 +353,8 @@ Level 7 is the first third of the advanced levels 7 to 9. The standard keeps lev
 - `level-7-grammar-38` To One's Heart's Content: V个 + Result: V个 + Result: Completing Sentences; V个 + Result: The Right Sentence
 - `level-7-grammar-39` Suit Yourself: 爱V不V: 爱V不V: Completing Sentences; 爱V不V: The Right Sentence
 - `level-7-grammar-40` Non-, Anti- and Super-: The Prefixes 非, 反 and 超: The Prefixes 非, 反 and 超: Completing Sentences; The Prefixes 非, 反 and 超: The Right Sentence
+- `level-7-listening-10` Level 7 Listening 10: Art and Design: Words You Hear; Words in Sentences
+- `level-7-speaking-10` Level 7 Speaking 10: Art and Design: Saying Words; Reading Sentences Aloud
 
 ### 11. Law and Society
 
@@ -359,6 +385,8 @@ Level 7 is the first third of the advanced levels 7 to 9. The standard keeps lev
 - `level-7-grammar-42` Can or Can't Compare: 比得上 and 比不上: 比得上 and 比不上: Completing Sentences; 比得上 and 比不上: The Right Sentence
 - `level-7-grammar-43` Free, So Why Not: 不V白不V: 不V白不V: Completing Sentences; 不V白不V: The Right Sentence
 - `level-7-grammar-44` Getting Along or Managing: V得来 and V不来: V得来 and V不来: Completing Sentences; V得来 and V不来: The Right Sentence
+- `level-7-listening-11` Level 7 Listening 11: Law and Society: Words You Hear; Words in Sentences
+- `level-7-speaking-11` Level 7 Speaking 11: Law and Society: Saying Words; Reading Sentences Aloud
 
 ### 12. The Economy and Trade
 
@@ -390,8 +418,12 @@ Level 7 is the first third of the advanced levels 7 to 9. The standard keeps lev
 - `level-7-grammar-47` More Than: 不止: 不止: Completing Sentences; 不止: The Right Sentence
 - `level-7-grammar-48` Measure Words 项, 届 and 批: Completing Sentences; The Right Sentence
 - `level-7-grammar-49` Every So Often: 每隔: 每隔: Completing Sentences; 每隔: The Right Sentence
+- `level-7-listening-12` Level 7 Listening 12: The Economy and Trade: Words You Hear; Words in Sentences
+- `level-7-speaking-12` Level 7 Speaking 12: The Economy and Trade: Saying Words; Reading Sentences Aloud
 - `level-7-sentences-04` Building Sentences 4: Art and Design, Law and Society, The Economy and Trade: Short Sentences; Longer Sentences
 - `level-7-writing-02` A Review: Saying What the Work Is; Strengths, Weaknesses and Evidence
+
+**Conversation:** `chinese-poster-commission-negotiation` Negotiating a poster commission. Task: You represent a student festival and want a designer to make the poster. Negotiate the price, the deadline and who owns the copyright, and reach an agreement on all three.
 
 ## Simulated Students
 

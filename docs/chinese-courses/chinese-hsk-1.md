@@ -6,7 +6,7 @@
 - **Level:** Level 1 of the new HSK, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Pinyin](chinese-pinyin.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 13 units · 136 topics (4 new, all practice-only) · 352 knowledge points
+- **Size:** 13 units · 162 topics (6 new, all practice-only) · 404 knowledge points
 
 ## The Test
 
@@ -14,7 +14,7 @@ The new HSK has nine levels built on the *Chinese Proficiency Grading Standards 
 
 ## Aim
 
-The course turns level 1 into test practice. It holds the units of [Chinese Level 1](chinese-level-1.md), so a learner who has not taken it learns it here, and then four exam topics that mix the words and characters of every theme, as a test does, rather than one batch at a time. It teaches nothing new. Its own topics are practice-only: a lesson starts with practice, and the explanation appears only after a failed attempt. The topics it reuses keep their place in the graph, so a learner who has learned them in the level course is credited and moves on.
+The course turns level 1 into test practice. It holds the units of [Chinese Level 1](chinese-level-1.md), so a learner who has not taken it learns it here, and then six exam topics that mix the words and characters of every theme, as a test does, rather than one batch at a time. It teaches nothing new. Its own topics are practice-only: a lesson starts with practice, and the explanation appears only after a failed attempt. The topics it reuses keep their place in the graph, so a learner who has learned them in the level course is credited and moves on.
 
 ## Units
 
@@ -26,8 +26,10 @@ The course turns level 1 into test practice. It holds the units of [Chinese Leve
 - `hsk-1-meanings` HSK 1: Words and Meanings (practice-only). Every word of level 1: (1) the word of a meaning among four; (2) the meaning of a word among four, in the learner's language.
 - `hsk-1-characters` HSK 1: Characters (practice-only). Every character of level 1: (1) by its reading and meaning, among characters that look like it; (2) the character missing from a word of level 1, given the word's pinyin and meaning, among the same, leaving out a word whose meaning would give it away.
 - `hsk-1-sentences` HSK 1: Building Sentences (practice-only; after the last sentence-building topic of level 1). The sentences of the sentence-building topics of level 1, mixed, each topic in turn: (1) short ones of three or four parts; (2) longer ones of five to seven.
+- `hsk-1-listening` HSK 1: Listening (practice-only; after the last listening topic of level 1). The words and sentences of every unit of level 1, heard without being seen, the units taking turns: (1) the meaning of a word heard, among three; (2) the word heard in a sentence, among three.
+- `hsk-1-speaking` HSK 1: Speaking (practice-only; after the last speaking topic of level 1). The same words and sentences, heard by a speech service: (1) a word said after its recording; (2) a sentence read aloud.
 
-**Later, with audio and judged answers:** listening, speaking and the rest of writing, once the papers' question types are confirmed.
+**Later, once the papers' question types are confirmed:** the other kinds of listening, such as dialogues with questions, and the spoken tasks of the HSKK beyond repeating and reading aloud, and the rest of writing.
 
 ## Simulated Students
 

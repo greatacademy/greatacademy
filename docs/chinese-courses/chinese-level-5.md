@@ -6,11 +6,11 @@
 - **Level:** Level 5, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 4](chinese-level-4.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 205 topics (30 of characters, 107 of words, 62 of grammar, 4 of sentence building, 2 of writing) · 547 knowledge points
+- **Size:** 12 units · 229 topics (30 of characters, 107 of words, 62 of grammar, 24 of listening and speaking, 4 of sentence building, 2 of writing) · 595 knowledge points · 4 conversations
 
 ## Aim
 
-Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: society, education, the environment, technology, traditions and customs, government and public life, the world, business and management, the mind, literature, food and cooking, and values and ideas. Characters and words are learned as in levels 1 to 4, and every sentence is written only with characters already taught. Common characters that the earlier levels leave out, and those needed by words such as the names of countries and writers, are taught where their unit's words need them. The characters were chosen to be close to level 5 of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains. The sixth and twelfth units end with a topic of paragraph writing as well, judged by a model against three yes-or-no criteria, at least 150 characters a piece, its tasks and model answers written with the characters taught by then; the criteria wait for texts scored by teachers of Chinese, and an admin routes them before they reach learners.
+Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: society, education, the environment, technology, traditions and customs, government and public life, the world, business and management, the mind, literature, food and cooking, and values and ideas. Characters and words are learned as in levels 1 to 4, and every sentence is written only with characters already taught. Common characters that the earlier levels leave out, and those needed by words such as the names of countries and writers, are taught where their unit's words need them. The characters were chosen to be close to level 5 of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains. The sixth and twelfth units end with a topic of paragraph writing as well, judged by a model against three yes-or-no criteria, at least 150 characters a piece, its tasks and model answers written with the characters taught by then; the criteria wait for texts scored by teachers of Chinese, and an admin routes them before they reach learners. After its grammar, each unit has a topic of listening and one of speaking, made from its words and their sentences read by a synthetic voice: the meaning of a word heard, and the word heard in a sentence; then the words said after the recording and the sentences read aloud, heard by a speech service whose thresholds await recordings of real learners. Units 3, 6, 9 and 12 each close with a conversation on the themes of their stretch, spoken in Mandarin with an AI tutor that plays a part and keeps to the level, through the voice service and the prompt `conversation-zh-1`; an admin routes each before it is offered.
 
 ## Units
 
@@ -37,6 +37,8 @@ Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: soc
 - `level-5-grammar-02` Increasingly, in Writing: 日益: 日益: Completing Sentences; 日益: The Right Sentence
 - `level-5-grammar-03` Receiving: 受到: 受到: Completing Sentences; 受到: The Right Sentence
 - `level-5-grammar-04` From Then Till Now: ……以来: ……以来: Completing Sentences; ……以来: The Right Sentence
+- `level-5-listening-01` Level 5 Listening 01: Society: Words You Hear; Words in Sentences
+- `level-5-speaking-01` Level 5 Speaking 01: Society: Saying Words; Reading Sentences Aloud
 
 ### 2. Education
 
@@ -61,6 +63,8 @@ Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: soc
 - `level-5-grammar-06` On Purpose: 特意 and 故意: 特意 and 故意: Completing Sentences; 特意 and 故意: The Right Sentence
 - `level-5-grammar-07` About and Probably: 大约 and 大概: 大约 and 大概: Completing Sentences; 大约 and 大概: The Right Sentence
 - `level-5-grammar-08` At Least and At Most: 至少 and 至多: 至少 and 至多: Completing Sentences; 至少 and 至多: The Right Sentence
+- `level-5-listening-02` Level 5 Listening 02: Education: Words You Hear; Words in Sentences
+- `level-5-speaking-02` Level 5 Speaking 02: Education: Saying Words; Reading Sentences Aloud
 
 ### 3. The Environment
 
@@ -86,7 +90,11 @@ Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: soc
 - `level-5-grammar-11` Thereby: 从而: 从而: Completing Sentences; 从而: The Right Sentence
 - `level-5-grammar-12` Gradually: 逐渐 and 渐渐: 逐渐 and 渐渐: Completing Sentences; 逐渐 and 渐渐: The Right Sentence
 - `level-5-grammar-13` Applying, in Writing: 加以: 加以: Completing Sentences; 加以: The Right Sentence
+- `level-5-listening-03` Level 5 Listening 03: The Environment: Words You Hear; Words in Sentences
+- `level-5-speaking-03` Level 5 Speaking 03: The Environment: Saying Words; Reading Sentences Aloud
 - `level-5-sentences-01` Building Sentences 1: Society, Education, The Environment: Short Sentences; Longer Sentences
+
+**Conversation:** `chinese-canteen-plastic-proposal` Less plastic in the school canteen. Task: Your student group wants the canteen to use less plastic. Persuade the canteen manager: explain the problem, propose two changes, and answer the manager's worry about cost.
 
 ### 4. Technology
 
@@ -112,6 +120,8 @@ Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: soc
 - `level-5-grammar-16` In a Row: 一连: 一连: Completing Sentences; 一连: The Right Sentence
 - `level-5-grammar-17` Specially: 专门: 专门: Completing Sentences; 专门: The Right Sentence
 - `level-5-grammar-18` Treating As: 把……当作 and 把……看作: 把……当作 and 把……看作: Completing Sentences; 把……当作 and 把……看作: The Right Sentence
+- `level-5-listening-04` Level 5 Listening 04: Technology: Words You Hear; Words in Sentences
+- `level-5-speaking-04` Level 5 Speaking 04: Technology: Saying Words; Reading Sentences Aloud
 
 ### 5. Traditions and Customs
 
@@ -138,6 +148,8 @@ Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: soc
 - `level-5-grammar-22` Whenever: 每当: 每当: Completing Sentences; 每当: The Right Sentence
 - `level-5-grammar-23` From … On: 从……起: 从……起: Completing Sentences; 从……起: The Right Sentence
 - `level-5-grammar-24` In Person: 亲自: 亲自: Completing Sentences; 亲自: The Right Sentence
+- `level-5-listening-05` Level 5 Listening 05: Traditions and Customs: Words You Hear; Words in Sentences
+- `level-5-speaking-05` Level 5 Speaking 05: Traditions and Customs: Saying Words; Reading Sentences Aloud
 
 ### 6. Government and Public Life
 
@@ -163,8 +175,12 @@ Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: soc
 - `level-5-grammar-27` Carry Out: 对……进行: 对……进行: Completing Sentences; 对……进行: The Right Sentence
 - `level-5-grammar-28` Without Exception: 一律: 一律: Completing Sentences; 一律: The Right Sentence
 - `level-5-grammar-29` Under: 在……下: 在……下: Completing Sentences; 在……下: The Right Sentence
+- `level-5-listening-06` Level 5 Listening 06: Government and Public Life: Words You Hear; Words in Sentences
+- `level-5-speaking-06` Level 5 Speaking 06: Government and Public Life: Saying Words; Reading Sentences Aloud
 - `level-5-sentences-02` Building Sentences 2: Technology, Traditions and Customs, Government and Public Life: Short Sentences; Longer Sentences
 - `level-5-writing-01` A Letter or an Email: Opening and Closing; Making the Request Clear
+
+**Conversation:** `chinese-public-service-app-feedback` Feedback on a public service app. Task: The district office is testing a new app for booking public services. Explain two problems you found, compare it with going to the office in person, and suggest one improvement.
 
 ### 7. The World
 
@@ -189,6 +205,8 @@ Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: soc
 - `level-5-grammar-32` Compared With: 跟……相比: 跟……相比: Completing Sentences; 跟……相比: The Right Sentence
 - `level-5-grammar-33` Made Up Of: 由……组成: 由……组成: Completing Sentences; 由……组成: The Right Sentence
 - `level-5-grammar-34` And the Like: ……之类: ……之类: Completing Sentences; ……之类: The Right Sentence
+- `level-5-listening-07` Level 5 Listening 07: The World: Words You Hear; Words in Sentences
+- `level-5-speaking-07` Level 5 Speaking 07: The World: Saying Words; Reading Sentences Aloud
 
 ### 8. Business and Management
 
@@ -214,6 +232,8 @@ Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: soc
 - `level-5-grammar-38` In Any Case: 无论如何: 无论如何: Completing Sentences; 无论如何: The Right Sentence
 - `level-5-grammar-39` Fortunately, at Least: 好在: 好在: Completing Sentences; 好在: The Right Sentence
 - `level-5-grammar-40` Sooner or Later: 迟早: 迟早: Completing Sentences; 迟早: The Right Sentence
+- `level-5-listening-08` Level 5 Listening 08: Business and Management: Words You Hear; Words in Sentences
+- `level-5-speaking-08` Level 5 Speaking 08: Business and Management: Saying Words; Reading Sentences Aloud
 
 ### 9. The Mind
 
@@ -239,7 +259,11 @@ Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: soc
 - `level-5-grammar-44` Why Bother: 何必: 何必: Completing Sentences; 何必: The Right Sentence
 - `level-5-grammar-45` Rather Too: 未免: 未免: Completing Sentences; 未免: The Right Sentence
 - `level-5-grammar-46` Rare: 难得: 难得: Completing Sentences; 难得: The Right Sentence
+- `level-5-listening-09` Level 5 Listening 09: The Mind: Words You Hear; Words in Sentences
+- `level-5-speaking-09` Level 5 Speaking 09: The Mind: Saying Words; Reading Sentences Aloud
 - `level-5-sentences-03` Building Sentences 3: The World, Business and Management, The Mind: Short Sentences; Longer Sentences
+
+**Conversation:** `chinese-tea-shop-second-branch` Where to open a second tea shop. Task: A tea shop owner is choosing between two places for a second shop. Compare the two places and recommend one, giving at least two reasons.
 
 ### 10. Literature
 
@@ -265,6 +289,8 @@ Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: soc
 - `level-5-grammar-50` For a Moment: 一时: 一时: Completing Sentences; 一时: The Right Sentence
 - `level-5-grammar-51` As … As: 像……一般: 像……一般: Completing Sentences; 像……一般: The Right Sentence
 - `level-5-grammar-52` Caring Only For: 只顾: 只顾: Completing Sentences; 只顾: The Right Sentence
+- `level-5-listening-10` Level 5 Listening 10: Literature: Words You Hear; Words in Sentences
+- `level-5-speaking-10` Level 5 Speaking 10: Literature: Saying Words; Reading Sentences Aloud
 
 ### 11. Food and Cooking
 
@@ -289,6 +315,8 @@ Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: soc
 - `level-5-grammar-55` Add to That: 加上: 加上: Completing Sentences; 加上: The Right Sentence
 - `level-5-grammar-56` Nothing But, in Speech: 光 and 净: 光 and 净: Completing Sentences; 光 and 净: The Right Sentence
 - `level-5-grammar-57` What's More, in Speech: 再说: 再说: Completing Sentences; 再说: The Right Sentence
+- `level-5-listening-11` Level 5 Listening 11: Food and Cooking: Words You Hear; Words in Sentences
+- `level-5-speaking-11` Level 5 Speaking 11: Food and Cooking: Saying Words; Reading Sentences Aloud
 
 ### 12. Values and Ideas
 
@@ -312,8 +340,12 @@ Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: soc
 - `level-5-grammar-60` Hard to Avoid: 难免: 难免: Completing Sentences; 难免: The Right Sentence
 - `level-5-grammar-61` Worth It: 值得: 值得: Completing Sentences; 值得: The Right Sentence
 - `level-5-grammar-62` While You Are At It: 顺便: 顺便: Completing Sentences; 顺便: The Right Sentence
+- `level-5-listening-12` Level 5 Listening 12: Values and Ideas: Words You Hear; Words in Sentences
+- `level-5-speaking-12` Level 5 Speaking 12: Values and Ideas: Saying Words; Reading Sentences Aloud
 - `level-5-sentences-04` Building Sentences 4: Literature, Food and Cooking, Values and Ideas: Short Sentences; Longer Sentences
 - `level-5-writing-02` Introducing a Custom or a Dish: What It Is and How It Is Done; What It Means
+
+**Conversation:** `chinese-cooking-show-guest` A guest on a cooking show. Task: You are a guest on a radio cooking show. Explain how to make a simple dish step by step, and say why the dish matters to the people who eat it.
 
 ## Simulated Students
 

@@ -5,6 +5,7 @@
 
 import { type CourseDef, type TopicDef, t } from "@ga/content";
 
+import { withConversations } from "../conversations.ts";
 import type { LevelOneCharacter } from "../level-1/characters.ts";
 import { buildLevel, type LevelUnit } from "../level-2/level.ts";
 import { levelThreeCharacters, levelThreeLast, levelThreeWords } from "../level-3/index.ts";
@@ -67,5 +68,5 @@ export const levelFourCourse: CourseDef = {
   ),
   group: t("Chinese", "语文"),
   buildsOn: ["chinese-level-3"],
-  units: level.units,
+  ...withConversations(4, level.units),
 };

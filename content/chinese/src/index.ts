@@ -3,6 +3,7 @@ import { compileSubject, t } from "@ga/content";
 import { chineseCheckers, segmenter } from "@ga/subject-chinese";
 
 import { characterLexicon } from "./characters/index.ts";
+import { chineseConversations } from "./conversations.ts";
 import { chineseCourses } from "./courses.ts";
 import { idiomLexicon } from "./idioms/index.ts";
 import { coreShardReading, coreShardTopics } from "./shards/core.ts";
@@ -21,6 +22,7 @@ export const chinese: SubjectDef = {
   checkers: chineseCheckers,
   lexicon,
   reading: coreShardReading,
+  conversations: chineseConversations,
   words: segmenter(lexicon.flatMap((e) => [e.word, ...(e.forms ?? [])])),
   strands: [
     { id: "pinyin", title: t("Pinyin", "拼音") },
@@ -31,6 +33,8 @@ export const chinese: SubjectDef = {
     { id: "classical", title: t("Classical Chinese", "文言") },
     { id: "reading", title: t("Reading", "阅读") },
     { id: "writing", title: t("Writing", "写作") },
+    { id: "listening", title: t("Listening", "听力") },
+    { id: "speaking", title: t("Speaking", "口语") },
   ],
 };
 
