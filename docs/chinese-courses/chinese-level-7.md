@@ -6,11 +6,11 @@
 - **Level:** Level 7, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 6](chinese-level-6.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 228 topics (40 of characters, 188 of words) · 684 knowledge points
+- **Size:** 12 units · 277 topics (40 of characters, 188 of words, 49 of grammar) · 782 knowledge points
 
 ## Aim
 
-Level 7 is the first third of the advanced levels 7 to 9. The standard keeps levels 7 to 9 together (1,200 characters and 5,636 words); the subject splits them into three courses by frequency, and level 7 takes the commonest third: 400 more characters and 1,880 words, in twelve themed units: social change, schools and learning, work and the workplace, medicine, nature and ecology, science and technology, history, thought and belief, literature and writing, art and design, law and society, and the economy and trade. Characters and words are learned as in levels 1 to 6, and every sentence is written only with characters already taught. Common characters that the earlier levels leave out, such as 缓, 烈, 替 and 顶, are taught where their unit's words need them. The characters were chosen to be close to the advanced band of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences.
+Level 7 is the first third of the advanced levels 7 to 9. The standard keeps levels 7 to 9 together (1,200 characters and 5,636 words); the subject splits them into three courses by frequency, and level 7 takes the commonest third: 400 more characters and 1,880 words, in twelve themed units: social change, schools and learning, work and the workplace, medicine, nature and ecology, science and technology, history, thought and belief, literature and writing, art and design, law and society, and the economy and trade. Characters and words are learned as in levels 1 to 6, and every sentence is written only with characters already taught. Common characters that the earlier levels leave out, such as 缓, 烈, 替 and 顶, are taught where their unit's words need them. The characters were chosen to be close to the advanced band of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain.
 
 ## Units
 
@@ -41,6 +41,10 @@ Level 7 is the first third of the advanced levels 7 to 9. The standard keeps lev
 - `level-7-words-14` Level 7 Words 14: The Planned Economy: Finding the Word; Reading the Word; Using the Word
 - `level-7-words-15` Level 7 Words 15: Care and Welfare: Finding the Word; Reading the Word; Using the Word
 - `level-7-words-16` Level 7 Words 16: Time and Experience: Finding the Word; Reading the Word; Using the Word
+- `level-7-grammar-01` However, in Writing: 然而: 然而: Completing Sentences; 然而: The Right Sentence
+- `level-7-grammar-02` Becoming: Word + 化: Word + 化: Completing Sentences; Word + 化: The Right Sentence
+- `level-7-grammar-03` Plenty Of: 有的是: 有的是: Completing Sentences; 有的是: The Right Sentence
+- `level-7-grammar-04` Don't Go By: 别看……: 别看……: Completing Sentences; 别看……: The Right Sentence
 
 ### 2. Schools and Learning
 
@@ -69,6 +73,10 @@ Level 7 is the first third of the advanced levels 7 to 9. The standard keeps lev
 - `level-7-words-30` Level 7 Words 30: Setbacks and Pressure: Finding the Word; Reading the Word; Using the Word
 - `level-7-words-31` Level 7 Words 31: Raising Children: Finding the Word; Reading the Word; Using the Word
 - `level-7-words-32` Level 7 Words 32: Study and Research: Finding the Word; Reading the Word; Using the Word
+- `level-7-grammar-05` The First Few: 头 + Number: 头 + Number: Completing Sentences; 头 + Number: The Right Sentence
+- `level-7-grammar-06` Learning From: 从……中 and 从中: 从……中 and 从中: Completing Sentences; 从……中 and 从中: The Right Sentence
+- `level-7-grammar-07` Really, in Speech: 可 for Emphasis: 可 for Emphasis: Completing Sentences; 可 for Emphasis: The Right Sentence
+- `level-7-grammar-08` Over and Over, Carefully: V了又V: V了又V: Completing Sentences; V了又V: The Right Sentence
 
 ### 3. Work and the Workplace
 
@@ -97,6 +105,10 @@ Level 7 is the first third of the advanced levels 7 to 9. The standard keeps lev
 - `level-7-words-46` Level 7 Words 46: Workers and Employers: Finding the Word; Reading the Word; Using the Word
 - `level-7-words-47` Level 7 Words 47: Planning and Raising Funds: Finding the Word; Reading the Word; Using the Word
 - `level-7-words-48` Level 7 Words 48: Making a Living: Finding the Word; Reading the Word; Using the Word
+- `level-7-grammar-09` In Front Of and Behind One's Back: 当着……的面 and 背着: 当着……的面 and 背着: Completing Sentences; 当着……的面 and 背着: The Right Sentence
+- `level-7-grammar-10` Just Before: 临 + Verb: 临 + Verb: Completing Sentences; 临 + Verb: The Right Sentence
+- `level-7-grammar-11` Can't Do Anything With: 拿……没办法: 拿……没办法: Completing Sentences; 拿……没办法: The Right Sentence
+- `level-7-grammar-12` No Matter What, Won't: 说什么也不 and 怎么也不: 说什么也不 and 怎么也不: Completing Sentences; 说什么也不 and 怎么也不: The Right Sentence
 
 ### 4. Medicine
 
@@ -125,6 +137,10 @@ Level 7 is the first third of the advanced levels 7 to 9. The standard keeps lev
 - `level-7-words-62` Level 7 Words 62: Ageing: Finding the Word; Reading the Word; Using the Word
 - `level-7-words-63` Level 7 Words 63: Hospital Departments: Finding the Word; Reading the Word; Using the Word
 - `level-7-words-64` Level 7 Words 64: Traditional Chinese Medicine: Finding the Word; Reading the Word; Using the Word
+- `level-7-grammar-13` Coming Round and Passing Out: V过来 and V过去: V过来 and V过去: Completing Sentences; V过来 and V过去: The Right Sentence
+- `level-7-grammar-14` Strong Enough to Move: V得动 and V不动: V得动 and V不动: Completing Sentences; V得动 and V不动: The Right Sentence
+- `level-7-grammar-15` Quite, in Speech: Adjective + 着呢: Adjective + 着呢: Completing Sentences; Adjective + 着呢: The Right Sentence
+- `level-7-grammar-16` Certainly Not, in Speech: 才……呢: 才……呢: Completing Sentences; 才……呢: The Right Sentence
 
 ### 5. Nature and Ecology
 
@@ -152,6 +168,10 @@ Level 7 is the first third of the advanced levels 7 to 9. The standard keeps lev
 - `level-7-words-78` Level 7 Words 78: Irrigation: Finding the Word; Reading the Word; Using the Word
 - `level-7-words-79` Level 7 Words 79: Burning and Pollution: Finding the Word; Reading the Word; Using the Word
 - `level-7-words-80` Level 7 Words 80: Ecological Balance: Finding the Word; Reading the Word; Using the Word
+- `level-7-grammar-17` Able to Reach or Get: V得着 and V不着: V得着 and V不着: Completing Sentences; V得着 and V不着: The Right Sentence
+- `level-7-grammar-18` Along: 沿着: 沿着: Completing Sentences; 沿着: The Right Sentence
+- `level-7-grammar-19` Suffering: 遭到 and 遭受: 遭到 and 遭受: Completing Sentences; 遭到 and 遭受: The Right Sentence
+- `level-7-grammar-20` Vivid Adjectives: ABB Forms Like 绿油油: ABB Forms Like 绿油油: Completing Sentences; ABB Forms Like 绿油油: The Right Sentence
 
 ### 6. Science and Technology
 
@@ -179,6 +199,10 @@ Level 7 is the first third of the advanced levels 7 to 9. The standard keeps lev
 - `level-7-words-94` Level 7 Words 94: Computers and Networks: Finding the Word; Reading the Word; Using the Word
 - `level-7-words-95` Level 7 Words 95: Exploring Space: Finding the Word; Reading the Word; Using the Word
 - `level-7-words-96` Level 7 Words 96: Research and Innovation: Finding the Word; Reading the Word; Using the Word
+- `level-7-grammar-21` -ness and -ity: Word + 性: Word + 性: Completing Sentences; Word + 性: The Right Sentence
+- `level-7-grammar-22` Degree and Rate: Word + 度 and Word + 率: Word + 度 and Word + 率: Completing Sentences; Word + 度 and Word + 率: The Right Sentence
+- `level-7-grammar-23` Having an Effect On: 对……有影响 and 对……起作用: 对……有影响 and 对……起作用: Completing Sentences; 对……有影响 and 对……起作用: The Right Sentence
+- `level-7-grammar-24` Bringing and Providing: 给……带来 and 为……提供: 给……带来 and 为……提供: Completing Sentences; 给……带来 and 为……提供: The Right Sentence
 
 ### 7. History
 
@@ -206,6 +230,10 @@ Level 7 is the first third of the advanced levels 7 to 9. The standard keeps lev
 - `level-7-words-110` Level 7 Words 110: World History: Finding the Word; Reading the Word; Using the Word
 - `level-7-words-111` Level 7 Words 111: Territory and Expansion: Finding the Word; Reading the Word; Using the Word
 - `level-7-words-112` Level 7 Words 112: History in Everyday Words: Finding the Word; Reading the Word; Using the Word
+- `level-7-grammar-25` As Early As: 早在……就: 早在……就: Completing Sentences; 早在……就: The Right Sentence
+- `level-7-grammar-26` One After Another: 先后: 先后: Completing Sentences; 先后: The Right Sentence
+- `level-7-grammar-27` This, in Writing: 此: 此: Completing Sentences; 此: The Right Sentence
+- `level-7-grammar-28` By the Time: 等到……: 等到……: Completing Sentences; 等到……: The Right Sentence
 
 ### 8. Thought and Belief
 
@@ -233,6 +261,10 @@ Level 7 is the first third of the advanced levels 7 to 9. The standard keeps lev
 - `level-7-words-126` Level 7 Words 126: Spirit and Will: Finding the Word; Reading the Word; Using the Word
 - `level-7-words-127` Level 7 Words 127: Rites and Practice: Finding the Word; Reading the Word; Using the Word
 - `level-7-words-128` Level 7 Words 128: Everyday Words with New Characters: Finding the Word; Reading the Word; Using the Word
+- `level-7-grammar-29` Seen From: 从……来看: 从……来看: Completing Sentences; 从……来看: The Right Sentence
+- `level-7-grammar-30` Firmly So: 是……的 for a Stated View: 是……的 for a Stated View: Completing Sentences; 是……的 for a Stated View: The Right Sentence
+- `level-7-grammar-31` It's Not As If: 又不是 and 又没: 又不是 and 又没: Completing Sentences; 又不是 and 又没: The Right Sentence
+- `level-7-grammar-32` Rather, Contrary to Expectation: 倒 and 倒是: 倒 and 倒是: Completing Sentences; 倒 and 倒是: The Right Sentence
 
 ### 9. Literature and Writing
 
@@ -259,6 +291,10 @@ Level 7 is the first third of the advanced levels 7 to 9. The standard keeps lev
 - `level-7-words-141` Level 7 Words 141: Songs and Old Writing: Finding the Word; Reading the Word; Using the Word
 - `level-7-words-142` Level 7 Words 142: Writers and Their Works: Finding the Word; Reading the Word; Using the Word
 - `level-7-words-143` Level 7 Words 143: Reading and Judging: Finding the Word; Reading the Word; Using the Word
+- `level-7-grammar-33` Both, Fully: 有A有B: 有A有B: Completing Sentences; 有A有B: The Right Sentence
+- `level-7-grammar-34` One and the Other: 一A一B: 一A一B: Completing Sentences; 一A一B: The Right Sentence
+- `level-7-grammar-35` Again and Again Every Way: 左……右……: 左……右……: Completing Sentences; 左……右……: The Right Sentence
+- `level-7-grammar-36` Bringing Up: 说起, 提起 and 谈起: 说起, 提起 and 谈起: Completing Sentences; 说起, 提起 and 谈起: The Right Sentence
 
 ### 10. Art and Design
 
@@ -285,6 +321,10 @@ Level 7 is the first third of the advanced levels 7 to 9. The standard keeps lev
 - `level-7-words-156` Level 7 Words 156: Product Design: Finding the Word; Reading the Word; Using the Word
 - `level-7-words-157` Level 7 Words 157: Galleries and Exhibitions: Finding the Word; Reading the Word; Using the Word
 - `level-7-words-158` Level 7 Words 158: Murals and Copies: Finding the Word; Reading the Word; Using the Word
+- `level-7-grammar-37` Style and Type: Word + 式 and Word + 型: Word + 式 and Word + 型: Completing Sentences; Word + 式 and Word + 型: The Right Sentence
+- `level-7-grammar-38` To One's Heart's Content: V个 + Result: V个 + Result: Completing Sentences; V个 + Result: The Right Sentence
+- `level-7-grammar-39` Suit Yourself: 爱V不V: 爱V不V: Completing Sentences; 爱V不V: The Right Sentence
+- `level-7-grammar-40` Non-, Anti- and Super-: The Prefixes 非, 反 and 超: The Prefixes 非, 反 and 超: Completing Sentences; The Prefixes 非, 反 and 超: The Right Sentence
 
 ### 11. Law and Society
 
@@ -311,6 +351,10 @@ Level 7 is the first third of the advanced levels 7 to 9. The standard keeps lev
 - `level-7-words-171` Level 7 Words 171: Fraud and Consumers: Finding the Word; Reading the Word; Using the Word
 - `level-7-words-172` Level 7 Words 172: Police and Public Order: Finding the Word; Reading the Word; Using the Word
 - `level-7-words-173` Level 7 Words 173: Civic Duties: Finding the Word; Reading the Word; Using the Word
+- `level-7-grammar-41` 给 Before the Verb in 被 and 把 Sentences: Completing Sentences; The Right Sentence
+- `level-7-grammar-42` Can or Can't Compare: 比得上 and 比不上: 比得上 and 比不上: Completing Sentences; 比得上 and 比不上: The Right Sentence
+- `level-7-grammar-43` Free, So Why Not: 不V白不V: 不V白不V: Completing Sentences; 不V白不V: The Right Sentence
+- `level-7-grammar-44` Getting Along or Managing: V得来 and V不来: V得来 and V不来: Completing Sentences; V得来 and V不来: The Right Sentence
 
 ### 12. The Economy and Trade
 
@@ -337,6 +381,11 @@ Level 7 is the first third of the advanced levels 7 to 9. The standard keeps lev
 - `level-7-words-186` Level 7 Words 186: Negotiation: Finding the Word; Reading the Word; Using the Word
 - `level-7-words-187` Level 7 Words 187: Trade Barriers: Finding the Word; Reading the Word; Using the Word
 - `level-7-words-188` Level 7 Words 188: The Wider Economy: Finding the Word; Reading the Word; Using the Word
+- `level-7-grammar-45` Nearly and As Many As: 将近 and 上 + Number: 将近 and 上 + Number: Completing Sentences; 将近 and 上 + Number: The Right Sentence
+- `level-7-grammar-46` The Purpose Is: ……，为的是……: ……，为的是……: Completing Sentences; ……，为的是……: The Right Sentence
+- `level-7-grammar-47` More Than: 不止: 不止: Completing Sentences; 不止: The Right Sentence
+- `level-7-grammar-48` Measure Words 项, 届 and 批: Completing Sentences; The Right Sentence
+- `level-7-grammar-49` Every So Often: 每隔: 每隔: Completing Sentences; 每隔: The Right Sentence
 
 ## Simulated Students
 
@@ -344,8 +393,8 @@ Level 7 is the first third of the advanced levels 7 to 9. The standard keeps lev
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 2/20 | 352.25 | 631.40 | 4.95 | 2458.50 | 3.92 | 92.35 | 0.00 |
-| typical | 2/20 | 356.30 | 595.75 | 51.65 | 2335.45 | 4.29 | 72.30 | 0.00 |
-| struggling | 1/20 | 363.40 | 614.05 | 224.65 | 2414.80 | 6.20 | 50.70 | 0.00 |
-| placed | 20/20 | 143.95 | 241.15 | 20.45 | 937.90 | 4.25 | 28.90 | 0.00 |
-| struggling, placed | 20/20 | 204.95 | 348.05 | 127.35 | 1366.25 | 6.19 | 28.50 | 0.00 |
+| strong | 2/20 | 353.50 | 633.60 | 5.50 | 2467.50 | 3.93 | 92.60 | 0.00 |
+| typical | 2/20 | 357.50 | 597.10 | 50.45 | 2340.70 | 4.28 | 72.60 | 0.00 |
+| struggling | 0/20 | 365.00 | 617.40 | 228.25 | 2428.50 | 6.24 | 50.95 | 0.00 |
+| placed | 20/20 | 181.95 | 302.95 | 23.95 | 1184.25 | 4.24 | 36.90 | 0.00 |
+| struggling, placed | 20/20 | 256.70 | 431.00 | 152.00 | 1698.75 | 6.09 | 35.85 | 0.00 |

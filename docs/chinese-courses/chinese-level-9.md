@@ -6,11 +6,11 @@
 - **Level:** Level 9, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 8](chinese-level-8.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 228 topics (40 of characters, 188 of words) · 684 knowledge points
+- **Size:** 12 units · 279 topics (40 of characters, 188 of words, 51 of grammar) · 786 knowledge points
 
 ## Aim
 
-Level 9 is the last third of the advanced levels 7 to 9, the rarest third by frequency: 400 more characters and 1,880 words, reaching 3,000 characters, in twelve themed units: language and rhetoric, idioms and allusions, philosophy, behaviour and character, the universe, the life sciences, international affairs, communication and the media, architecture and planning, crafts and folk customs, sport and competition, and formal writing. Characters and words are learned as in levels 1 to 8, and every sentence is written only with characters already taught. The characters come first from the 3,500 common characters that the earlier levels leave out, the commoner first, such as 齐, 弄, 横 and 添. They were chosen to be close to the advanced band of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences.
+Level 9 is the last third of the advanced levels 7 to 9, the rarest third by frequency: 400 more characters and 1,880 words, reaching 3,000 characters, in twelve themed units: language and rhetoric, idioms and allusions, philosophy, behaviour and character, the universe, the life sciences, international affairs, communication and the media, architecture and planning, crafts and folk customs, sport and competition, and formal writing. Characters and words are learned as in levels 1 to 8, and every sentence is written only with characters already taught. The characters come first from the 3,500 common characters that the earlier levels leave out, the commoner first, such as 齐, 弄, 横 and 添. They were chosen to be close to the advanced band of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain.
 
 ## Units
 
@@ -41,6 +41,10 @@ Level 9 is the last third of the advanced levels 7 to 9, the rarest third by fre
 - `level-9-words-14` Level 9 Words 14: Humour and Banter: Finding the Word; Reading the Word; Using the Word
 - `level-9-words-15` Level 9 Words 15: Kinds of Talk: Finding the Word; Reading the Word; Using the Word
 - `level-9-words-16` Level 9 Words 16: Dialects and Everyday Speech: Finding the Word; Reading the Word; Using the Word
+- `level-9-grammar-01` Is, in Writing: 乃: 乃: Completing Sentences; 乃: The Right Sentence
+- `level-9-grammar-02` Also, in Writing: 亦: 亦: Completing Sentences; 亦: The Right Sentence
+- `level-9-grammar-03` His, Its, in Writing: 其: 其: Completing Sentences; 其: The Right Sentence
+- `level-9-grammar-04` As One Can Imagine: 可想而知: 可想而知: Completing Sentences; 可想而知: The Right Sentence
 
 ### 2. Idioms and Allusions
 
@@ -69,6 +73,10 @@ Level 9 is the last third of the advanced levels 7 to 9, the rarest third by fre
 - `level-9-words-30` Level 9 Words 30: Myths and Old Tales: Finding the Word; Reading the Word; Using the Word
 - `level-9-words-31` Level 9 Words 31: Tales and Their Sources: Finding the Word; Reading the Word; Using the Word
 - `level-9-words-32` Level 9 Words 32: Fortune Turns: Finding the Word; Reading the Word; Using the Word
+- `level-9-grammar-05` How Could, in Writing: 岂 and 岂不: 岂 and 岂不: Completing Sentences; 岂 and 岂不: The Right Sentence
+- `level-9-grammar-06` Why or How, in Writing: 何以: 何以: Completing Sentences; 何以: The Right Sentence
+- `level-9-grammar-07` Why Not, in Writing: 何不: 何不: Completing Sentences; 何不: The Right Sentence
+- `level-9-grammar-08` Known For: 以……著称: 以……著称: Completing Sentences; 以……著称: The Right Sentence
 
 ### 3. Philosophy
 
@@ -97,6 +105,11 @@ Level 9 is the last third of the advanced levels 7 to 9, the rarest third by fre
 - `level-9-words-46` Level 9 Words 46: Attitudes to Life: Finding the Word; Reading the Word; Using the Word
 - `level-9-words-47` Level 9 Words 47: Dialectics: Finding the Word; Reading the Word; Using the Word
 - `level-9-words-48` Level 9 Words 48: Meditation and Insight: Finding the Word; Reading the Word; Using the Word
+- `level-9-grammar-09` Not Without: 不无: 不无: Completing Sentences; 不无: The Right Sentence
+- `level-9-grammar-10` Nothing Is More Than: 莫过于: 莫过于: Completing Sentences; 莫过于: The Right Sentence
+- `level-9-grammar-11` Do Not, in Notices: 勿 and 切勿: 勿 and 切勿: Completing Sentences; 勿 and 切勿: The Right Sentence
+- `level-9-grammar-12` Or, in Writing: 抑或: 抑或: Completing Sentences; 抑或: The Right Sentence
+- `level-9-grammar-13` Seemingly Yet Not: 似……非……: 似……非……: Completing Sentences; 似……非……: The Right Sentence
 
 ### 4. Behaviour and Character
 
@@ -125,6 +138,9 @@ Level 9 is the last third of the advanced levels 7 to 9, the rarest third by fre
 - `level-9-words-62` Level 9 Words 62: Faults of Character: Finding the Word; Reading the Word; Using the Word
 - `level-9-words-63` Level 9 Words 63: Effort and Spirit: Finding the Word; Reading the Word; Using the Word
 - `level-9-words-64` Level 9 Words 64: Mixing and Muddling: Finding the Word; Reading the Word; Using the Word
+- `level-9-grammar-14` Only Then, in Writing: 方: 方: Completing Sentences; 方: The Right Sentence
+- `level-9-grammar-15` In Order To, in Writing: 以 + Verb: 以 + Verb: Completing Sentences; 以 + Verb: The Right Sentence
+- `level-9-grammar-16` Because Of, in Writing: 因……而……: 因……而……: Completing Sentences; 因……而……: The Right Sentence
 
 ### 5. The Universe
 
@@ -152,6 +168,10 @@ Level 9 is the last third of the advanced levels 7 to 9, the rarest third by fre
 - `level-9-words-78` Level 9 Words 78: Satellites and Probes: Finding the Word; Reading the Word; Using the Word
 - `level-9-words-79` Level 9 Words 79: Origins and the Unknown: Finding the Word; Reading the Word; Using the Word
 - `level-9-words-80` Level 9 Words 80: Time and Motion: Finding the Word; Reading the Word; Using the Word
+- `level-9-grammar-17` No Fewer Than: 不下: 不下: Completing Sentences; 不下: The Right Sentence
+- `level-9-grammar-18` As Many As, As High As: 多达 and 高达: 多达 and 高达: Completing Sentences; 多达 and 高达: The Right Sentence
+- `level-9-grammar-19` More Than, in Writing: 余 and 有余: 余 and 有余: Completing Sentences; 余 and 有余: The Right Sentence
+- `level-9-grammar-20` Not Known: 不得而知: 不得而知: Completing Sentences; 不得而知: The Right Sentence
 
 ### 6. Life Sciences
 
@@ -179,6 +199,11 @@ Level 9 is the last third of the advanced levels 7 to 9, the rarest third by fre
 - `level-9-words-94` Level 9 Words 94: Flowers and Fruits: Finding the Word; Reading the Word; Using the Word
 - `level-9-words-95` Level 9 Words 95: Plants We Know: Finding the Word; Reading the Word; Using the Word
 - `level-9-words-96` Level 9 Words 96: Microbes and Biotechnology: Finding the Word; Reading the Word; Using the Word
+- `level-9-grammar-21` All, in Writing: 皆 and 均: 皆 and 均: Completing Sentences; 皆 and 均: The Right Sentence
+- `level-9-grammar-22` Easy To and Convenient For: 易于 and 便于: 易于 and 便于: Completing Sentences; 易于 and 便于: The Right Sentence
+- `level-9-grammar-23` Not Advisable: 不宜: 不宜: Completing Sentences; 不宜: The Right Sentence
+- `level-9-grammar-24` Not Yet, in Writing: 尚未: 尚未: Completing Sentences; 尚未: The Right Sentence
+- `level-9-grammar-25` The Said, in Formal Writing: 该: 该: Completing Sentences; 该: The Right Sentence
 
 ### 7. International Affairs
 
@@ -206,6 +231,10 @@ Level 9 is the last third of the advanced levels 7 to 9, the rarest third by fre
 - `level-9-words-110` Level 9 Words 110: Crossing Borders: Finding the Word; Reading the Word; Using the Word
 - `level-9-words-111` Level 9 Words 111: Global Challenges: Finding the Word; Reading the Word; Using the Word
 - `level-9-words-112` Level 9 Words 112: Countries and Regions: Finding the Word; Reading the Word; Using the Word
+- `level-9-grammar-26` Aimed At: 旨在: 旨在: Completing Sentences; 旨在: The Right Sentence
+- `level-9-grammar-27` Can Still Count As: 不失为: 不失为: Completing Sentences; 不失为: The Right Sentence
+- `level-9-grammar-28` Such As: 诸如……等: 诸如……等: Completing Sentences; 诸如……等: The Right Sentence
+- `level-9-grammar-29` Amounts To: 无异于: 无异于: Completing Sentences; 无异于: The Right Sentence
 
 ### 8. Communication and the Media
 
@@ -233,6 +262,10 @@ Level 9 is the last third of the advanced levels 7 to 9, the rarest third by fre
 - `level-9-words-126` Level 9 Words 126: Attention: Finding the Word; Reading the Word; Using the Word
 - `level-9-words-127` Level 9 Words 127: Advertising: Finding the Word; Reading the Word; Using the Word
 - `level-9-words-128` Level 9 Words 128: Media Literacy: Finding the Word; Reading the Word; Using the Word
+- `level-9-grammar-30` Little Do They Know: 殊不知: 殊不知: Completing Sentences; 殊不知: The Right Sentence
+- `level-9-grammar-31` Nothing But: 无非 and 不外乎: 无非 and 不外乎: Completing Sentences; 无非 and 不外乎: The Right Sentence
+- `level-9-grammar-32` Can Be Called: 堪称: 堪称: Completing Sentences; 堪称: The Right Sentence
+- `level-9-grammar-33` Owed To: 归功于: 归功于: Completing Sentences; 归功于: The Right Sentence
 
 ### 9. Architecture and Planning
 
@@ -259,6 +292,10 @@ Level 9 is the last third of the advanced levels 7 to 9, the rarest third by fre
 - `level-9-words-141` Level 9 Words 141: Renewal and Housing: Finding the Word; Reading the Word; Using the Word
 - `level-9-words-142` Level 9 Words 142: Roads: Finding the Word; Reading the Word; Using the Word
 - `level-9-words-143` Level 9 Words 143: Public Facilities: Finding the Word; Reading the Word; Using the Word
+- `level-9-grammar-34` Thus Able To: 得以: 得以: Completing Sentences; 得以: The Right Sentence
+- `level-9-grammar-35` No Shortage Of: 不乏: 不乏: Completing Sentences; 不乏: The Right Sentence
+- `level-9-grammar-36` Must Not Be: 不可 + Verb: 不可 + Verb: Completing Sentences; 不可 + Verb: The Right Sentence
+- `level-9-grammar-37` Beyond Question: 无可 + Verb: 无可 + Verb: Completing Sentences; 无可 + Verb: The Right Sentence
 
 ### 10. Crafts and Folk Customs
 
@@ -285,6 +322,10 @@ Level 9 is the last third of the advanced levels 7 to 9, the rarest third by fre
 - `level-9-words-156` Level 9 Words 156: Festivals: Finding the Word; Reading the Word; Using the Word
 - `level-9-words-157` Level 9 Words 157: The New Year: Finding the Word; Reading the Word; Using the Word
 - `level-9-words-158` Level 9 Words 158: Folk Arts: Finding the Word; Reading the Word; Using the Word
+- `level-9-grammar-38` Without Doing A, B Happens: 不A而B: 不A而B: Completing Sentences; 不A而B: The Right Sentence
+- `level-9-grammar-39` This and That: 此 and 彼 in Fixed Phrases: 此 and 彼 in Fixed Phrases: Completing Sentences; 此 and 彼 in Fixed Phrases: The Right Sentence
+- `level-9-grammar-40` At the Time Of: ……之际: ……之际: Completing Sentences; ……之际: The Right Sentence
+- `level-9-grammar-41` Known As: 有“……”之称: 有“……”之称: Completing Sentences; 有“……”之称: The Right Sentence
 
 ### 11. Sport and Competition
 
@@ -311,6 +352,10 @@ Level 9 is the last third of the advanced levels 7 to 9, the rarest third by fre
 - `level-9-words-171` Level 9 Words 171: The Games: Finding the Word; Reading the Word; Using the Word
 - `level-9-words-172` Level 9 Words 172: On the Field and the Court: Finding the Word; Reading the Word; Using the Word
 - `level-9-words-173` Level 9 Words 173: The Outdoors: Finding the Word; Reading the Word; Using the Word
+- `level-9-grammar-42` No Less Than: 不亚于: 不亚于: Completing Sentences; 不亚于: The Right Sentence
+- `level-9-grammar-43` By a Score Of: 以 + Score: 以 + Score: Completing Sentences; 以 + Score: The Right Sentence
+- `level-9-grammar-44` None Other Than: 非……莫属: 非……莫属: Completing Sentences; 非……莫属: The Right Sentence
+- `level-9-grammar-45` Less Than: 不足 + Number: 不足 + Number: Completing Sentences; 不足 + Number: The Right Sentence
 
 ### 12. Formal Writing
 
@@ -337,6 +382,12 @@ Level 9 is the last third of the advanced levels 7 to 9, the rarest third by fre
 - `level-9-words-186` Level 9 Words 186: Places and Contacts: Finding the Word; Reading the Word; Using the Word
 - `level-9-words-187` Level 9 Words 187: Hope and Honour: Finding the Word; Reading the Word; Using the Word
 - `level-9-words-188` Level 9 Words 188: Times, Keys and Land: Finding the Word; Reading the Word; Using the Word
+- `level-9-grammar-46` Hereby: 特此: 特此: Completing Sentences; 特此: The Right Sentence
+- `level-9-grammar-47` As Follows: 如下: 如下: Completing Sentences; 如下: The Right Sentence
+- `level-9-grammar-48` The One Who: Verb + 者: Verb + 者: Completing Sentences; Verb + 者: The Right Sentence
+- `level-9-grammar-49` Without Prior: 未经: 未经: Completing Sentences; 未经: The Right Sentence
+- `level-9-grammar-50` When the Time Comes: 届时: 届时: Completing Sentences; 届时: The Right Sentence
+- `level-9-grammar-51` Starting From the Day: 自……之日起: 自……之日起: Completing Sentences; 自……之日起: The Right Sentence
 
 ## Simulated Students
 
@@ -344,8 +395,8 @@ Level 9 is the last third of the advanced levels 7 to 9, the rarest third by fre
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 1/20 | 361.65 | 647.00 | 5.25 | 2522.15 | 3.93 | 94.65 | 0.00 |
-| typical | 1/20 | 364.55 | 610.65 | 53.90 | 2396.90 | 4.31 | 74.05 | 0.00 |
-| struggling | 0/20 | 365.00 | 615.85 | 227.50 | 2423.45 | 6.24 | 50.85 | 0.00 |
-| placed | 20/20 | 149.85 | 252.85 | 24.90 | 983.45 | 4.31 | 30.15 | 0.00 |
-| struggling, placed | 20/20 | 209.70 | 354.10 | 126.15 | 1391.45 | 6.10 | 29.25 | 0.00 |
+| strong | 1/20 | 362.10 | 647.45 | 5.55 | 2523.60 | 3.93 | 94.90 | 0.00 |
+| typical | 1/20 | 364.95 | 611.85 | 53.60 | 2400.95 | 4.30 | 74.15 | 0.00 |
+| struggling | 0/20 | 365.00 | 615.60 | 227.20 | 2422.45 | 6.24 | 50.80 | 0.00 |
+| placed | 20/20 | 180.95 | 302.80 | 25.50 | 1182.55 | 4.27 | 36.45 | 0.00 |
+| struggling, placed | 20/20 | 253.20 | 423.50 | 146.20 | 1669.05 | 6.02 | 35.25 | 0.00 |

@@ -6,11 +6,11 @@
 - **Level:** Level 8, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 7](chinese-level-7.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 228 topics (40 of characters, 188 of words) · 684 knowledge points
+- **Size:** 12 units · 279 topics (40 of characters, 188 of words, 51 of grammar) · 786 knowledge points
 
 ## Aim
 
-Level 8 is the second third of the advanced levels 7 to 9, the middle third by frequency: 400 more characters and 1,880 words, in twelve themed units: communities and social issues, research and academia, industry and farming, public health, energy and resources, engineering and inventions, civilizations, ethics, poetry and drama, music and film, institutions and administration, and finance and markets. Characters and words are learned as in levels 1 to 7, and every sentence is written only with characters already taught. Common characters that the earlier levels leave out, such as 详, 暂, 厚 and 泪, are taught where their unit's words need them. The characters were chosen to be close to the advanced band of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences.
+Level 8 is the second third of the advanced levels 7 to 9, the middle third by frequency: 400 more characters and 1,880 words, in twelve themed units: communities and social issues, research and academia, industry and farming, public health, energy and resources, engineering and inventions, civilizations, ethics, poetry and drama, music and film, institutions and administration, and finance and markets. Characters and words are learned as in levels 1 to 7, and every sentence is written only with characters already taught. Common characters that the earlier levels leave out, such as 详, 暂, 厚 and 泪, are taught where their unit's words need them. The characters were chosen to be close to the advanced band of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain.
 
 ## Units
 
@@ -41,6 +41,10 @@ Level 8 is the second third of the advanced levels 7 to 9, the middle third by f
 - `level-8-words-14` Level 8 Words 14: Traps and Escapes: Finding the Word; Reading the Word; Using the Word
 - `level-8-words-15` Level 8 Words 15: Saving and Destroying: Finding the Word; Reading the Word; Using the Word
 - `level-8-words-16` Level 8 Words 16: Social Issues: Finding the Word; Reading the Word; Using the Word
+- `level-8-grammar-01` In View Of: 鉴于: 鉴于: Completing Sentences; 鉴于: The Right Sentence
+- `level-8-grammar-02` Aimed At: 针对: 针对: Completing Sentences; 针对: The Right Sentence
+- `level-8-grammar-03` Out Of: 出于: 出于: Completing Sentences; 出于: The Right Sentence
+- `level-8-grammar-04` Meanwhile: 与此同时: 与此同时: Completing Sentences; 与此同时: The Right Sentence
 
 ### 2. Research and Academia
 
@@ -69,6 +73,10 @@ Level 8 is the second third of the advanced levels 7 to 9, the middle third by f
 - `level-8-words-30` Level 8 Words 30: Creatures of the Laboratory: Finding the Word; Reading the Word; Using the Word
 - `level-8-words-31` Level 8 Words 31: Databases and Searching: Finding the Word; Reading the Word; Using the Word
 - `level-8-words-32` Level 8 Words 32: The World of Scholars: Finding the Word; Reading the Word; Using the Word
+- `level-8-grammar-05` Based On: 基于: 基于: Completing Sentences; 基于: The Right Sentence
+- `level-8-grammar-06` On the Basis Of: 在……的基础上: 在……的基础上: Completing Sentences; 在……的基础上: The Right Sentence
+- `level-8-grammar-07` Quite, in Writing: 颇 and 颇为: 颇 and 颇为: Completing Sentences; 颇 and 颇为: The Right Sentence
+- `level-8-grammar-08` All Who: 凡是……都: 凡是……都: Completing Sentences; 凡是……都: The Right Sentence
 
 ### 3. Industry and Farming
 
@@ -97,6 +105,10 @@ Level 8 is the second third of the advanced levels 7 to 9, the middle third by f
 - `level-8-words-46` Level 8 Words 46: Fertilizers and Pesticides: Finding the Word; Reading the Word; Using the Word
 - `level-8-words-47` Level 8 Words 47: In the Factory: Finding the Word; Reading the Word; Using the Word
 - `level-8-words-48` Level 8 Words 48: Industry and Farm Business: Finding the Word; Reading the Word; Using the Word
+- `level-8-grammar-09` Depends On: 取决于: 取决于: Completing Sentences; 取决于: The Right Sentence
+- `level-8-grammar-10` Respectively: 分别: 分别: Completing Sentences; 分别: The Right Sentence
+- `level-8-grammar-11` Up To and To This Day: 到……为止 and 至今: 到……为止 and 至今: Completing Sentences; 到……为止 and 至今: The Right Sentence
+- `level-8-grammar-12` 所 Before a Verb: 我所知道的: 我所知道的: Completing Sentences; 我所知道的: The Right Sentence
 
 ### 4. Public Health
 
@@ -125,6 +137,10 @@ Level 8 is the second third of the advanced levels 7 to 9, the middle third by f
 - `level-8-words-62` Level 8 Words 62: Addiction: Finding the Word; Reading the Word; Using the Word
 - `level-8-words-63` Level 8 Words 63: The Public Health System: Finding the Word; Reading the Word; Using the Word
 - `level-8-words-64` Level 8 Words 64: Health Statistics: Finding the Word; Reading the Word; Using the Word
+- `level-8-grammar-13` For the Sake Of: 为……起见: 为……起见: Completing Sentences; 为……起见: The Right Sentence
+- `level-8-grammar-14` Overly, in Writing: 过于: 过于: Completing Sentences; 过于: The Right Sentence
+- `level-8-grammar-15` Giving, Formally: 予以 and 给予: 予以 and 给予: Completing Sentences; 予以 and 给予: The Right Sentence
+- `level-8-grammar-16` Remains To Be: 有待: 有待: Completing Sentences; 有待: The Right Sentence
 
 ### 5. Energy and Resources
 
@@ -152,6 +168,10 @@ Level 8 is the second third of the advanced levels 7 to 9, the middle third by f
 - `level-8-words-78` Level 8 Words 78: Saving Energy: Finding the Word; Reading the Word; Using the Word
 - `level-8-words-79` Level 8 Words 79: Limited Resources: Finding the Word; Reading the Word; Using the Word
 - `level-8-words-80` Level 8 Words 80: Oil and Gas: Finding the Word; Reading the Word; Using the Word
+- `level-8-grammar-17` In the Spirit Of: 本着: 本着: Completing Sentences; 本着: The Right Sentence
+- `level-8-grammar-18` With the Help Of: 借助: 借助: Completing Sentences; 借助: The Right Sentence
+- `level-8-grammar-19` That Way: 这样一来: 这样一来: Completing Sentences; 这样一来: The Right Sentence
+- `level-8-grammar-20` Might As Well: 索性: 索性: Completing Sentences; 索性: The Right Sentence
 
 ### 6. Engineering and Inventions
 
@@ -179,6 +199,10 @@ Level 8 is the second third of the advanced levels 7 to 9, the middle third by f
 - `level-8-words-94` Level 8 Words 94: Machine Parts: Finding the Word; Reading the Word; Using the Word
 - `level-8-words-95` Level 8 Words 95: Inventions and Design: Finding the Word; Reading the Word; Using the Word
 - `level-8-words-96` Level 8 Words 96: Building Materials: Finding the Word; Reading the Word; Using the Word
+- `level-8-grammar-21` Might Want To: 不妨: 不妨: Completing Sentences; 不妨: The Right Sentence
+- `level-8-grammar-22` Bound To: 势必: 势必: Completing Sentences; 势必: The Right Sentence
+- `level-8-grammar-23` Provided That: 在……的前提下: 在……的前提下: Completing Sentences; 在……的前提下: The Right Sentence
+- `level-8-grammar-24` Starting From: 从……出发: 从……出发: Completing Sentences; 从……出发: The Right Sentence
 
 ### 7. Civilizations
 
@@ -206,6 +230,10 @@ Level 8 is the second third of the advanced levels 7 to 9, the middle third by f
 - `level-8-words-110` Level 8 Words 110: Swords and Shields: Finding the Word; Reading the Word; Using the Word
 - `level-8-words-111` Level 8 Words 111: Greece and Rome: Finding the Word; Reading the Word; Using the Word
 - `level-8-words-112` Level 8 Words 112: Cultures Meeting: Finding the Word; Reading the Word; Using the Word
+- `level-8-grammar-25` And Even: 乃至: 乃至: Completing Sentences; 乃至: The Right Sentence
+- `level-8-grammar-26` Right Afterwards: 随后 and 随即: 随后 and 随即: Completing Sentences; 随后 and 随即: The Right Sentence
+- `level-8-grammar-27` Just As: 正如: 正如: Completing Sentences; 正如: The Right Sentence
+- `level-8-grammar-28` Not Only That: 不仅如此: 不仅如此: Completing Sentences; 不仅如此: The Right Sentence
 
 ### 8. Ethics
 
@@ -233,6 +261,10 @@ Level 8 is the second third of the advanced levels 7 to 9, the middle third by f
 - `level-8-words-126` Level 8 Words 126: Integrity: Finding the Word; Reading the Word; Using the Word
 - `level-8-words-127` Level 8 Words 127: Falling and Mending: Finding the Word; Reading the Word; Using the Word
 - `level-8-words-128` Level 8 Words 128: Ethics in Science and Medicine: Finding the Word; Reading the Word; Using the Word
+- `level-8-grammar-29` Worthy Of: 不愧: 不愧: Completing Sentences; 不愧: The Right Sentence
+- `level-8-grammar-30` Never, Firmly: 绝不 and 决不: 绝不 and 决不: Completing Sentences; 绝不 and 决不: The Right Sentence
+- `level-8-grammar-31` Precisely Because: 正因为……才……: 正因为……才……: Completing Sentences; 正因为……才……: The Right Sentence
+- `level-8-grammar-32` By Rights: 按理说 and 照理说: 按理说 and 照理说: Completing Sentences; 按理说 and 照理说: The Right Sentence
 
 ### 9. Poetry and Drama
 
@@ -259,6 +291,10 @@ Level 8 is the second third of the advanced levels 7 to 9, the middle third by f
 - `level-8-words-141` Level 8 Words 141: Regional Operas: Finding the Word; Reading the Word; Using the Word
 - `level-8-words-142` Level 8 Words 142: On the Stage: Finding the Word; Reading the Word; Using the Word
 - `level-8-words-143` Level 8 Words 143: Laughter and Fans: Finding the Word; Reading the Word; Using the Word
+- `level-8-grammar-33` Once: 一旦……就……: 一旦……就……: Completing Sentences; 一旦……就……: The Right Sentence
+- `level-8-grammar-34` Half … Half: 半……半……: 半……半……: Completing Sentences; 半……半……: The Right Sentence
+- `level-8-grammar-35` Neither Too Much Nor Too Little: 不……不……: 不……不……: Completing Sentences; 不……不……: The Right Sentence
+- `level-8-grammar-36` Here and There: 东……西……: 东……西……: Completing Sentences; 东……西……: The Right Sentence
 
 ### 10. Music and Film
 
@@ -285,6 +321,10 @@ Level 8 is the second third of the advanced levels 7 to 9, the middle third by f
 - `level-8-words-156` Level 8 Words 156: Shots: Finding the Word; Reading the Word; Using the Word
 - `level-8-words-157` Level 8 Words 157: At the Cinema: Finding the Word; Reading the Word; Using the Word
 - `level-8-words-158` Level 8 Words 158: Stars and Audiences: Finding the Word; Reading the Word; Using the Word
+- `level-8-grammar-37` Incredibly: 别提多……了: 别提多……了: Completing Sentences; 别提多……了: The Right Sentence
+- `level-8-grammar-38` Wish One Could: 恨不得 and 巴不得: 恨不得 and 巴不得: Completing Sentences; 恨不得 and 巴不得: The Right Sentence
+- `level-8-grammar-39` For Hours On End: 一……就是……: 一……就是……: Completing Sentences; 一……就是……: The Right Sentence
+- `level-8-grammar-40` And All: 连……带……: 连……带……: Completing Sentences; 连……带……: The Right Sentence
 
 ### 11. Institutions and Administration
 
@@ -311,6 +351,11 @@ Level 8 is the second third of the advanced levels 7 to 9, the middle third by f
 - `level-8-words-171` Level 8 Words 171: Hidden and Exposed: Finding the Word; Reading the Word; Using the Word
 - `level-8-words-172` Level 8 Words 172: Slack and Taut: Finding the Word; Reading the Word; Using the Word
 - `level-8-words-173` Level 8 Words 173: Local Government: Finding the Word; Reading the Word; Using the Word
+- `level-8-grammar-41` On a Topic: 就 + Topic: 就 + Topic: Completing Sentences; 就 + Topic: The Right Sentence
+- `level-8-grammar-42` For the Sake Of: 为……而……: 为……而……: Completing Sentences; 为……而……: The Right Sentence
+- `level-8-grammar-43` Can Hardly Be Called: 谈不上 and 算不上: 谈不上 and 算不上: Completing Sentences; 谈不上 and 算不上: The Right Sentence
+- `level-8-grammar-44` No Way To: 无法 and 无从: 无法 and 无从: Completing Sentences; 无法 and 无从: The Right Sentence
+- `level-8-grammar-45` Never Mind Whether: 什么A不A的: 什么A不A的: Completing Sentences; 什么A不A的: The Right Sentence
 
 ### 12. Finance and Markets
 
@@ -337,6 +382,12 @@ Level 8 is the second third of the advanced levels 7 to 9, the middle third by f
 - `level-8-words-186` Level 8 Words 186: Enforcement: Finding the Word; Reading the Word; Using the Word
 - `level-8-words-187` Level 8 Words 187: At the Bank: Finding the Word; Reading the Word; Using the Word
 - `level-8-words-188` Level 8 Words 188: The Economy: Finding the Word; Reading the Word; Using the Word
+- `level-8-grammar-46` At Worst: 大不了: 大不了: Completing Sentences; 大不了: The Right Sentence
+- `level-8-grammar-47` Tenths and Discounts: 成 and 折: 成 and 折: Completing Sentences; 成 and 折: The Right Sentence
+- `level-8-grammar-48` That Said: 话说回来: 话说回来: Completing Sentences; 话说回来: The Right Sentence
+- `level-8-grammar-49` In the Final Analysis: 说到底 and 归根到底: 说到底 and 归根到底: Completing Sentences; 说到底 and 归根到底: The Right Sentence
+- `level-8-grammar-50` Not More Than: A不比B: A不比B: Completing Sentences; A不比B: The Right Sentence
+- `level-8-grammar-51` I'd Be Surprised If Not: 不……才怪: 不……才怪: Completing Sentences; 不……才怪: The Right Sentence
 
 ## Simulated Students
 
@@ -344,8 +395,8 @@ Level 8 is the second third of the advanced levels 7 to 9, the middle third by f
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 2/20 | 357.45 | 638.65 | 5.25 | 2489.60 | 3.93 | 93.65 | 0.00 |
-| typical | 1/20 | 361.70 | 605.55 | 53.80 | 2375.85 | 4.31 | 73.40 | 0.00 |
-| struggling | 0/20 | 365.00 | 613.35 | 223.80 | 2413.20 | 6.20 | 50.80 | 0.00 |
-| placed | 20/20 | 148.05 | 249.95 | 23.55 | 971.60 | 4.29 | 29.75 | 0.00 |
-| struggling, placed | 20/20 | 211.15 | 356.45 | 130.05 | 1400.20 | 6.17 | 29.20 | 0.00 |
+| strong | 2/20 | 359.10 | 642.15 | 5.05 | 2503.55 | 3.93 | 94.10 | 0.00 |
+| typical | 1/20 | 363.10 | 607.10 | 55.15 | 2382.80 | 4.32 | 73.65 | 0.00 |
+| struggling | 0/20 | 365.00 | 615.65 | 226.50 | 2422.85 | 6.23 | 50.85 | 0.00 |
+| placed | 20/20 | 176.15 | 295.30 | 25.20 | 1153.55 | 4.27 | 35.45 | 0.00 |
+| struggling, placed | 20/20 | 245.65 | 410.30 | 140.20 | 1616.00 | 5.98 | 34.15 | 0.00 |

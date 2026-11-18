@@ -13,6 +13,7 @@ import { characterBatches1, wordBatches1 } from "./data-1.ts";
 import { characterBatches2, wordBatches2 } from "./data-2.ts";
 import { characterBatches3, wordBatches3 } from "./data-3.ts";
 import { characterBatches4, wordBatches4 } from "./data-4.ts";
+import { grammar } from "./grammar-data.ts";
 
 /** UNITS are the units of level 7. */
 const UNITS: readonly LevelUnit[] = [
@@ -36,6 +37,7 @@ const level = buildLevel({
   units: UNITS,
   characterBatches: [...characterBatches1, ...characterBatches2, ...characterBatches3, ...characterBatches4],
   wordBatches: [...wordBatches1, ...wordBatches2, ...wordBatches3, ...wordBatches4],
+  grammar,
   earlierCharacters: levelSixCharacters,
   earlierWords: levelSixWords,
   after: levelSixLast.words,
@@ -50,7 +52,7 @@ export const levelSevenWords: readonly string[] = level.words;
 /** levelSevenLast are the last character topic and the last word topic of level 7. */
 export const levelSevenLast: { readonly characters: string; readonly words: string } = level.last;
 
-/** levelSevenTopics are the 228 topics of level 7: 40 of characters and 188 of words. */
+/** levelSevenTopics are the 277 topics of level 7: 40 of characters, 188 of words and 49 of grammar. */
 export const levelSevenTopics: readonly TopicDef[] = level.topics;
 
 /** levelSevenCourse is the course of level 7 of Chinese as a foreign language. */

@@ -14,6 +14,7 @@ import { characterBatches1, wordBatches1 } from "./data-1.ts";
 import { characterBatches2, wordBatches2 } from "./data-2.ts";
 import { characterBatches3, wordBatches3 } from "./data-3.ts";
 import { characterBatches4, wordBatches4 } from "./data-4.ts";
+import { grammar } from "./grammar-data.ts";
 
 /** UNITS are the units of level 9. */
 const UNITS: readonly LevelUnit[] = [
@@ -37,6 +38,7 @@ const level = buildLevel({
   units: UNITS,
   characterBatches: [...characterBatches1, ...characterBatches2, ...characterBatches3, ...characterBatches4],
   wordBatches: [...wordBatches1, ...wordBatches2, ...wordBatches3, ...wordBatches4],
+  grammar,
   earlierCharacters: levelEightCharacters,
   earlierWords: levelEightWords,
   after: levelEightLast.words,
@@ -51,7 +53,7 @@ export const levelNineWords: readonly string[] = level.words;
 /** levelNineLast are the last character topic and the last word topic of level 9. */
 export const levelNineLast: { readonly characters: string; readonly words: string } = level.last;
 
-/** levelNineTopics are the 228 topics of level 9: 40 of characters and 188 of words. */
+/** levelNineTopics are the 279 topics of level 9: 40 of characters, 188 of words and 51 of grammar. */
 export const levelNineTopics: readonly TopicDef[] = level.topics;
 
 /** levelNineCourse is the course of level 9 of Chinese as a foreign language. */

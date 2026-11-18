@@ -14,6 +14,7 @@ import { characterBatches1, wordBatches1 } from "./data-1.ts";
 import { characterBatches2, wordBatches2 } from "./data-2.ts";
 import { characterBatches3, wordBatches3 } from "./data-3.ts";
 import { characterBatches4, wordBatches4 } from "./data-4.ts";
+import { grammar } from "./grammar-data.ts";
 
 /** UNITS are the units of level 8. */
 const UNITS: readonly LevelUnit[] = [
@@ -37,6 +38,7 @@ const level = buildLevel({
   units: UNITS,
   characterBatches: [...characterBatches1, ...characterBatches2, ...characterBatches3, ...characterBatches4],
   wordBatches: [...wordBatches1, ...wordBatches2, ...wordBatches3, ...wordBatches4],
+  grammar,
   earlierCharacters: levelSevenCharacters,
   earlierWords: levelSevenWords,
   after: levelSevenLast.words,
@@ -51,7 +53,7 @@ export const levelEightWords: readonly string[] = level.words;
 /** levelEightLast are the last character topic and the last word topic of level 8. */
 export const levelEightLast: { readonly characters: string; readonly words: string } = level.last;
 
-/** levelEightTopics are the 228 topics of level 8: 40 of characters and 188 of words. */
+/** levelEightTopics are the 279 topics of level 8: 40 of characters, 188 of words and 51 of grammar. */
 export const levelEightTopics: readonly TopicDef[] = level.topics;
 
 /** levelEightCourse is the course of level 8 of Chinese as a foreign language. */
