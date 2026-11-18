@@ -6,15 +6,15 @@
 - **Level:** The Chinese paper of China's university entrance examination, native speakers
 - **Prerequisite(s):** [Chinese, Grade 9](chinese-grade-9.md)
 - **Language of explanation:** Chinese
-- **Size:** 11 units · 111 topics (9 new, all practice-only) · 308 knowledge points
+- **Size:** 11 units · 113 topics (11 new, all practice-only) · 311 knowledge points
 
 ## The Test
 
-The paper's basis is level 4 of the academic quality of the senior standard. Its parts are the reading of modern texts, the reading of classical texts and poems with lines of recited texts written from memory, the use of language, and an essay; the papers of each year and region are to be checked before more exam topics are written. This course practises the parts judged by rules, idioms in context, lines of recited texts from their meaning, the words of classical Chinese, faulty sentences and rhetorical devices, and the choice questions on modern texts, and the parts judged by a model against yes-or-no criteria, the short answers on modern texts and the essay. Questions and texts of past papers are never copied: the recited texts are classical and in the public domain, and every passage, description, sentence and wrong answer is written for this subject.
+The paper's basis is level 4 of the academic quality of the senior standard. Its parts are the reading of modern texts, the reading of classical texts and poems with lines of recited texts written from memory, the use of language, and an essay; the papers of each year and region are to be checked before more exam topics are written. This course practises the parts judged by rules, idioms in context, lines of recited texts from their meaning, the words of classical Chinese, faulty sentences and rhetorical devices, and the choice questions on modern texts and classical poems, and the parts judged by a model against yes-or-no criteria, the short answers on modern texts and classical poems and the essay. Questions and texts of past papers are never copied: the recited texts are classical and in the public domain, and every passage, description, sentence and wrong answer is written for this subject.
 
 ## Aim
 
-The course turns the two senior courses into test practice. It holds the units of [Chinese, Senior Required](chinese-hs-required.md) and [Chinese, Senior Selective Required](chinese-hs-selective.md), and then nine exam topics that mix grades 7 to 11, as the paper does, rather than one set at a time. It teaches nothing new. Its own topics are practice-only: a lesson starts with practice, and the explanation appears only after a failed attempt. The topics it reuses keep their place in the graph, so a learner who has learned them in the grade courses is credited and moves on.
+The course turns the two senior courses into test practice. It holds the units of [Chinese, Senior Required](chinese-hs-required.md) and [Chinese, Senior Selective Required](chinese-hs-selective.md), and then eleven exam topics that mix grades 7 to 11, as the paper does, rather than one set at a time. It teaches nothing new. Its own topics are practice-only: a lesson starts with practice, and the explanation appears only after a failed attempt. The topics it reuses keep their place in the graph, so a learner who has learned them in the grade courses is credited and moves on.
 
 ## Units
 
@@ -30,9 +30,11 @@ The course turns the two senior courses into test practice. It holds the units o
 - `gaokao-informational-answers` Gaokao: Short Answers on Informational Texts (practice-only; after the topic before). Two questions a passage answered in a few sentences, judged by a model: the points asked for, each drawn from the passage, set out concisely.
 - `gaokao-literary-reading` Gaokao: Literary Texts (practice-only; after the last idiom set). Four short stories and two literary essays written for the subject, asked as the informational texts are: (1) content and feeling; (2) craft.
 - `gaokao-literary-answers` Gaokao: Short Answers on Literary Texts (practice-only; after the topic before). Two questions a passage answered in a few sentences, judged by a model: the technique named, its effect explained, and both tied to the words of the passage.
+- `gaokao-poetry-reading` Gaokao: Classical Poems (practice-only; after the last recited text). Eight poems and ci from the Southern Dynasties to the Song, none of them a recited text, asked as the modern texts are: (1) content and feeling; (2) craft.
+- `gaokao-poetry-answers` Gaokao: Short Answers on Classical Poems (practice-only; after the topic before). Two questions a poem answered in a few sentences, judged by a model with the criteria of the literary texts: the technique named, its effect explained, and both tied to the words of the poem.
 - `gaokao-essay` Gaokao: The Essay (practice-only). An essay of at least 800 characters on original material written in the manner of the paper, judged by a model: (1) an apt thesis and a well-organised whole; (2) an argument of substance.
 
-**Later, with judged answers:** the reading of classical poems, and the use of language in the paper's other forms, such as filling a gap in a passage and rewriting a sentence.
+**Later, with judged answers:** the use of language in the paper's other forms, such as filling a gap in a passage and rewriting a sentence.
 
 ## Simulated Students
 

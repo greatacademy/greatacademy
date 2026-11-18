@@ -65,6 +65,8 @@ topic gaokao-informational-reading gaokao-informational-reading-analysis gaokao-
 topic gaokao-language gaokao-language-rhetoric gaokao-language-sound
 topic gaokao-literary-answers gaokao-literary-answers
 topic gaokao-literary-reading gaokao-literary-reading-analysis gaokao-literary-reading-understanding
+topic gaokao-poetry-answers gaokao-poetry-answers
+topic gaokao-poetry-reading gaokao-poetry-reading-analysis gaokao-poetry-reading-understanding
 topic gaokao-recitation gaokao-recitation-choose gaokao-recitation-write
 topic heritage-de-and-pronouns heritage-de-and-pronouns-de heritage-de-and-pronouns-pronouns
 topic heritage-dialect-words heritage-dialect-words-dialect heritage-dialect-words-mandarin

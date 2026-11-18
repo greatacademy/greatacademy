@@ -22,6 +22,8 @@ export interface ModernAnswer {
 /** ModernPassage is a passage with its questions. */
 export interface ModernPassage {
   readonly title: string;
+  /** author is the writer of a classical poem, shown after its title with the dynasty, as in 〔唐〕杜甫. */
+  readonly author?: string;
   /** body is the passage, its paragraphs split by blank lines. */
   readonly body: string;
   /** understanding are two questions on what the passage says. */
@@ -54,6 +56,8 @@ export interface ModernSpec {
   /** criteria are the ids of the criteria that judge the answers. */
   readonly criteria: readonly string[];
   readonly passages: readonly ModernPassage[];
+  /** length is the fewest and most Han characters a passage may have; 800 to 2000 unless given. */
+  readonly length?: readonly [min: number, max: number];
 }
 
 /** MIN_PASSAGES is how many passages a kind needs: 12 items a choice point, and 12 tasks to answer. */
@@ -70,7 +74,7 @@ const PAIRS = [
 const ANSWER_LIMITS = { minWords: 30, maxChars: 600 };
 
 /** shownPassage is how a passage is shown before its question: its title, then its text as a quotation. */
-const shownPassage = (p: ModernPassage): string => `《${p.title}》\n\n${p.body.trim()}`;
+const shownPassage = (p: ModernPassage): string => `《${p.title}》${p.author ? `　${p.author}` : ""}\n\n${p.body.trim()}`;
 
 /** criterion finds a criterion by its id, failing when there is none. */
 const criterion = (id: string): CriterionSpec => {
@@ -129,7 +133,8 @@ export function modernTopics(spec: ModernSpec): readonly [TopicDef, TopicDef] {
   if (new Set(spec.passages.map((p) => p.title)).size !== spec.passages.length) throw new Error(`${reading}: a title is used twice`);
   for (const p of spec.passages) {
     const length = [...p.body].filter((ch) => /\p{Script=Han}/u.test(ch)).length;
-    if (length < 800 || length > 2000) throw new Error(`${reading}: 《${p.title}》 has ${length} characters, not 800 to 2000`);
+    const [min, max] = spec.length ?? [800, 2000];
+    if (length < min || length > max) throw new Error(`${reading}: 《${p.title}》 has ${length} characters, not ${min} to ${max}`);
     for (const a of p.answers) {
       const n = [...a.model].filter((ch) => /\p{Script=Han}/u.test(ch)).length;
       if (n < ANSWER_LIMITS.minWords || n > 200) throw new Error(`${answers}: the model of ${a.ask} has ${n} characters, not 30 to 200`);
@@ -261,5 +266,53 @@ export function literarySpec(prerequisites: readonly string[], passages: readonl
     },
     criteria: ["zhgk-lit-technique", "zhgk-lit-effect", "zhgk-lit-grounded"],
     passages,
+  };
+}
+
+/** poetrySpec is the classical poem of the paper: a poem outside the recited texts, read for its feeling and its craft. */
+export function poetrySpec(prerequisites: readonly string[], passages: readonly ModernPassage[]): ModernSpec {
+  return {
+    id: "poetry",
+    title: t("Gaokao: Classical Poems", "高考：古代诗歌阅读"),
+    summary: t(
+      "Read a classical poem not among the recited texts, as the paper sets it: what it shows and feels, then how it is written.",
+      "按试卷的要求读一首课外的古代诗词：先看写了什么、表达了什么情感，再看是怎样写的。",
+    ),
+    answersTitle: t("Gaokao: Short Answers on Classical Poems", "高考：古代诗歌简答"),
+    answersSummary: t(
+      "Answer a question on a classical poem in a few sentences, judged by a model: the technique, its effect, and the words of the poem that show it.",
+      "用几句话回答古代诗歌的问题，由 AI 评判：答出手法和作用，并联系诗句。",
+    ),
+    prerequisites,
+    understanding: {
+      title: t("Content and Feeling", "理解内容和情感"),
+      explanation: t(
+        "First read the title, the author and the period, and any note: they often name the occasion, a parting, a journey, a visit or a festival. Then find the **images** of each line and the **feeling** they carry. A wrong option often misreads a line, or gives the poet a feeling of the wrong kind, joy for grief or resentment for calm.",
+        "先读标题、作者和时代，以及注释：它们常常点明写作的缘由，送别、行旅、登临或节日。再找出每一句的**意象**和它们寄托的**情感**。错误选项常常把诗句理解错，或者把情感说反，把悲说成喜，把闲适说成怨愤。",
+      ),
+      question: CHOICE_QUESTION,
+    },
+    analysis: {
+      title: t("Craft", "鉴赏手法"),
+      explanation: t(
+        "Questions of craft ask how the poem is made: **description** (motion and stillness, sound and sight, near and far), **expression** (feeling through scene, the scene set against the feeling, allusion, reasoning through things), **rhetoric** (personification, metaphor, exaggeration, contrast), and **structure** (an opening that sets the tone, a turn, an ending that leaves the feeling open). Check both that the technique is used and that its effect is stated rightly.",
+        "鉴赏题问的是诗怎样写：**描写**（动静、声色、远近），**表达方式**（借景抒情、以乐景写哀情、用典、托物言志），**修辞**（拟人、比喻、夸张、对比），以及**结构**（起句定调、转折、以景结情）。既要核对诗中是否用了这种手法，也要核对作用是否说对。",
+      ),
+      question: CHOICE_QUESTION,
+    },
+    answers: {
+      title: t("Technique, Effect and Lines", "手法、作用和诗句"),
+      explanation: t(
+        "An answer on a poem has three parts: **name** the technique or feeling, **point** to the lines and images where it is found, and **explain** what it does: the scene it builds, the feeling it carries, or the way it closes the poem.",
+        "古代诗歌的简答一般有三部分：**说出**手法或情感，**指出**体现它的诗句和意象，**分析**它的作用：营造了怎样的画面，寄托了怎样的情感，或怎样收束全诗。",
+      ),
+      question: t(
+        "Read the poem, then answer the question below in Chinese, in a few sentences.",
+        "阅读下面的诗词，然后用中文回答问题，写几句话。",
+      ),
+    },
+    criteria: ["zhgk-lit-technique", "zhgk-lit-effect", "zhgk-lit-grounded"],
+    passages,
+    length: [20, 300],
   };
 }
