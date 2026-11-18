@@ -6,7 +6,7 @@
 - **Level:** Level 7–9 of the new HSK, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 6](chinese-level-6.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 37 units · 850 topics (3 new, all practice-only) · 2384 knowledge points
+- **Size:** 37 units · 856 topics (3 new, all practice-only) · 2396 knowledge points
 
 ## The Test
 

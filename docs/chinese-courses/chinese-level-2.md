@@ -6,11 +6,11 @@
 - **Level:** Level 2, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 1](chinese-level-1.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 181 topics (30 of characters, 77 of words, 70 of grammar, 4 of sentence building) · 469 knowledge points
+- **Size:** 12 units · 183 topics (30 of characters, 77 of words, 70 of grammar, 4 of sentence building, 2 of writing) · 473 knowledge points
 
 ## Aim
 
-Level 2 teaches 300 more characters and 770 words of daily life, in twelve themed units from the daily routine and the home to travel, feelings, nature and festivals. Characters and words are learned as in level 1, and every sentence is written only with characters already taught. The characters were chosen to be close to levels 2 and 3 of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains.
+Level 2 teaches 300 more characters and 770 words of daily life, in twelve themed units from the daily routine and the home to travel, feelings, nature and festivals. Characters and words are learned as in level 1, and every sentence is written only with characters already taught. The characters were chosen to be close to levels 2 and 3 of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains. The sixth and twelfth units end with a topic of paragraph writing as well, judged by a model against three yes-or-no criteria, at least 80 characters a piece, its tasks and model answers written with the characters taught by then; the criteria wait for texts scored by teachers of Chinese, and an admin routes them before they reach learners.
 
 ## Units
 
@@ -129,6 +129,7 @@ Level 2 teaches 300 more characters and 770 words of daily life, in twelve theme
 - `level-2-grammar-36` Should: 应该: 应该: Completing Sentences; 应该: The Right Sentence
 - `level-2-grammar-37` Advice with 最好: Completing Sentences; The Right Sentence
 - `level-2-sentences-02` Building Sentences 2: Food and Restaurants, Work and the Office, Health: Short Sentences; Longer Sentences
+- `level-2-writing-01` My Day: Telling It in Time Order; Saying What You Do
 
 ### 7. Travel
 
@@ -230,6 +231,7 @@ Level 2 teaches 300 more characters and 770 words of daily life, in twelve theme
 - `level-2-grammar-69` Good Wishes with 祝: Completing Sentences; The Right Sentence
 - `level-2-grammar-70` One More Thing: 还有: 还有: Completing Sentences; 还有: The Right Sentence
 - `level-2-sentences-04` Building Sentences 4: Sports, Media and Communication, Festivals: Short Sentences; Longer Sentences
+- `level-2-writing-02` A Message to a Friend: The Form of a Message; Making the Plan Clear
 
 ## Simulated Students
 

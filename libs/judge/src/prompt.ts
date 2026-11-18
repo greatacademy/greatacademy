@@ -76,8 +76,25 @@ const zh1: PromptBuilder = (task, criteria, text) => {
   };
 };
 
+/**
+ * zhL2 is v1 for writing in Chinese by learners of Chinese as a foreign language: length is counted in characters, the
+ * text is judged as the work of a learner at the level the task names, and the feedback is written in plain English that
+ * quotes the learner's Chinese, so that a learner who cannot yet read explanations in Chinese still understands it.
+ */
+const zhL2: PromptBuilder = (task, criteria, text) => {
+  const base = v1(task, criteria, text);
+  return {
+    system: [
+      base.system,
+      "The learner is learning Chinese as a foreign language and writes in Chinese. Count length in Chinese characters, judge the text as the writing of a learner at the level the task is set for, and copy quotations character for character, punctuation included.",
+      "Write every point of feedback in plain English, quoting the learner's Chinese words where they help.",
+    ].join("\n"),
+    user: base.user,
+  };
+};
+
 /** PROMPTS are the prompt versions by name; a route names one, and changing a version's text is forbidden once calibrated. */
-export const PROMPTS: Readonly<Record<string, PromptBuilder>> = { "writing-1": v1, "writing-zh-1": zh1 };
+export const PROMPTS: Readonly<Record<string, PromptBuilder>> = { "writing-1": v1, "writing-zh-1": zh1, "writing-zh-l2-1": zhL2 };
 
 /** promptFor finds a prompt version, throwing on an unknown name. */
 export function promptFor(version: string): PromptBuilder {

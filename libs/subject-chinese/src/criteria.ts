@@ -1,5 +1,8 @@
 import type { CriterionSpec } from "@ga/content";
 
+import { LEVEL_CRITERIA_A } from "./criteria-levels-a.ts";
+import { LEVEL_CRITERIA_B } from "./criteria-levels-b.ts";
+
 /**
  * WRITING_CRITERIA are the criteria of the judged writing of native grades 3 to 11 and the essay of the Gaokao (docs/chinese-curriculum.md §11): W4
  * paragraphs and W5 compositions, with starting questions to be calibrated against texts scored by teachers of Chinese.
@@ -401,7 +404,10 @@ export const WRITING_CRITERIA: readonly CriterionSpec[] = [
   },
 ];
 
-/** criterionById finds a criterion of WRITING_CRITERIA, or undefined. */
+/** LEVEL_WRITING_CRITERIA are the criteria of the paragraph writing of foreign-language levels 2 to 9. */
+export const LEVEL_WRITING_CRITERIA: readonly CriterionSpec[] = [...LEVEL_CRITERIA_A, ...LEVEL_CRITERIA_B];
+
+/** criterionById finds a criterion of WRITING_CRITERIA or LEVEL_WRITING_CRITERIA, or undefined. */
 export function criterionById(id: string): CriterionSpec | undefined {
-  return WRITING_CRITERIA.find((c) => c.id === id);
+  return WRITING_CRITERIA.find((c) => c.id === id) ?? LEVEL_WRITING_CRITERIA.find((c) => c.id === id);
 }

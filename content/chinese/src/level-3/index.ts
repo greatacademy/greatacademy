@@ -12,6 +12,7 @@ import { characterBatches } from "./character-data.ts";
 import { grammar } from "./grammar-data.ts";
 import { sentences } from "./sentence-data.ts";
 import { wordBatches } from "./word-data.ts";
+import { writing } from "./writing-data.ts";
 
 /** UNITS are the units of level 3. */
 const UNITS: readonly LevelUnit[] = [
@@ -37,6 +38,7 @@ const level = buildLevel({
   wordBatches,
   grammar,
   sentences,
+  writing,
   earlierCharacters: levelTwoCharacters,
   earlierWords: levelTwoWords,
   after: levelTwoLast.words,

@@ -6,7 +6,7 @@
 - **Level:** Level 4 of the new HSK, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 3](chinese-level-3.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 13 units · 210 topics (3 new, all practice-only) · 550 knowledge points
+- **Size:** 13 units · 212 topics (3 new, all practice-only) · 554 knowledge points
 
 ## The Test
 

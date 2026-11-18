@@ -6,11 +6,11 @@
 - **Level:** Level 9, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 8](chinese-level-8.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 283 topics (40 of characters, 188 of words, 51 of grammar, 4 of sentence building) · 794 knowledge points
+- **Size:** 12 units · 285 topics (40 of characters, 188 of words, 51 of grammar, 4 of sentence building, 2 of writing) · 798 knowledge points
 
 ## Aim
 
-Level 9 is the last third of the advanced levels 7 to 9, the rarest third by frequency: 400 more characters and 1,880 words, reaching 3,000 characters, in twelve themed units: language and rhetoric, idioms and allusions, philosophy, behaviour and character, the universe, the life sciences, international affairs, communication and the media, architecture and planning, crafts and folk customs, sport and competition, and formal writing. Characters and words are learned as in levels 1 to 8, and every sentence is written only with characters already taught. The characters come first from the 3,500 common characters that the earlier levels leave out, the commoner first, such as 齐, 弄, 横 and 添. They were chosen to be close to the advanced band of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains.
+Level 9 is the last third of the advanced levels 7 to 9, the rarest third by frequency: 400 more characters and 1,880 words, reaching 3,000 characters, in twelve themed units: language and rhetoric, idioms and allusions, philosophy, behaviour and character, the universe, the life sciences, international affairs, communication and the media, architecture and planning, crafts and folk customs, sport and competition, and formal writing. Characters and words are learned as in levels 1 to 8, and every sentence is written only with characters already taught. The characters come first from the 3,500 common characters that the earlier levels leave out, the commoner first, such as 齐, 弄, 横 and 添. They were chosen to be close to the advanced band of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains. The sixth and twelfth units end with a topic of paragraph writing as well, judged by a model against three yes-or-no criteria, at least 350 characters a piece, its tasks and model answers written with the characters taught by then; the criteria wait for texts scored by teachers of Chinese, and an admin routes them before they reach learners.
 
 ## Units
 
@@ -206,6 +206,7 @@ Level 9 is the last third of the advanced levels 7 to 9, the rarest third by fre
 - `level-9-grammar-24` Not Yet, in Writing: 尚未: 尚未: Completing Sentences; 尚未: The Right Sentence
 - `level-9-grammar-25` The Said, in Formal Writing: 该: 该: Completing Sentences; 该: The Right Sentence
 - `level-9-sentences-02` Building Sentences 2: Behaviour and Character, The Universe, Life Sciences: Short Sentences; Longer Sentences
+- `level-9-writing-01` An Essay on an Idea: Making the Idea Clear and Taking a Position; Developing the Argument in Stages
 
 ### 7. International Affairs
 
@@ -392,6 +393,7 @@ Level 9 is the last third of the advanced levels 7 to 9, the rarest third by fre
 - `level-9-grammar-50` When the Time Comes: 届时: 届时: Completing Sentences; 届时: The Right Sentence
 - `level-9-grammar-51` Starting From the Day: 自……之日起: 自……之日起: Completing Sentences; 自……之日起: The Right Sentence
 - `level-9-sentences-04` Building Sentences 4: Crafts and Folk Customs, Sport and Competition, Formal Writing: Short Sentences; Longer Sentences
+- `level-9-writing-02` Formal Applied Writing: The Form of Applied Writing; Complete, Ordered Content
 
 ## Simulated Students
 

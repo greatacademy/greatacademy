@@ -6,11 +6,11 @@
 - **Level:** Level 4, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 3](chinese-level-3.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 207 topics (30 of characters, 100 of words, 73 of grammar, 4 of sentence building) · 544 knowledge points
+- **Size:** 12 units · 209 topics (30 of characters, 100 of words, 73 of grammar, 4 of sentence building, 2 of writing) · 548 knowledge points
 
 ## Aim
 
-Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: health and medicine, travel and transport, the media and the internet, history, the arts, law and rights, the economy, feelings, nature and climate, sport, science and careers. Characters and words are learned as in levels 1 to 3, and every sentence is written only with characters already taught. Some very common characters that levels 1 to 3 leave out, such as 始, 主, 之 and 与, are taught where their unit's words need them. The characters were chosen to be close to level 4 of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains.
+Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: health and medicine, travel and transport, the media and the internet, history, the arts, law and rights, the economy, feelings, nature and climate, sport, science and careers. Characters and words are learned as in levels 1 to 3, and every sentence is written only with characters already taught. Some very common characters that levels 1 to 3 leave out, such as 始, 主, 之 and 与, are taught where their unit's words need them. The characters were chosen to be close to level 4 of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains. The sixth and twelfth units end with a topic of paragraph writing as well, judged by a model against three yes-or-no criteria, at least 120 characters a piece, its tasks and model answers written with the characters taught by then; the criteria wait for texts scored by teachers of Chinese, and an admin routes them before they reach learners.
 
 ## Units
 
@@ -178,6 +178,7 @@ Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: hea
 - `level-4-grammar-44` Let Alone: 何况: 何况: Completing Sentences; 何况: The Right Sentence
 - `level-4-grammar-45` How Could You: 怎么能……呢？: 怎么能……呢？: Completing Sentences; 怎么能……呢？: The Right Sentence
 - `level-4-sentences-02` Building Sentences 2: History, The Arts, Law and Rights: Short Sentences; Longer Sentences
+- `level-4-writing-01` An Account of a Trip: Following the Way; Showing How You Felt
 
 ### 7. The Economy
 
@@ -316,6 +317,7 @@ Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: hea
 - `level-4-grammar-72` To Become: 成为: 成为: Completing Sentences; 成为: The Right Sentence
 - `level-4-grammar-73` Not Only, in Speech: 不光……还 and 不光……也: 不光……还 and 不光……也: Completing Sentences; 不光……还 and 不光……也: The Right Sentence
 - `level-4-sentences-04` Building Sentences 4: Sport, Science, Careers: Short Sentences; Longer Sentences
+- `level-4-writing-02` Explaining Something: Step by Step; Clear and Correct
 
 ## Simulated Students
 

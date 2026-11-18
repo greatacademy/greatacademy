@@ -6,11 +6,11 @@
 - **Level:** Level 5, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 4](chinese-level-4.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 203 topics (30 of characters, 107 of words, 62 of grammar, 4 of sentence building) · 543 knowledge points
+- **Size:** 12 units · 205 topics (30 of characters, 107 of words, 62 of grammar, 4 of sentence building, 2 of writing) · 547 knowledge points
 
 ## Aim
 
-Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: society, education, the environment, technology, traditions and customs, government and public life, the world, business and management, the mind, literature, food and cooking, and values and ideas. Characters and words are learned as in levels 1 to 4, and every sentence is written only with characters already taught. Common characters that the earlier levels leave out, and those needed by words such as the names of countries and writers, are taught where their unit's words need them. The characters were chosen to be close to level 5 of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains.
+Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: society, education, the environment, technology, traditions and customs, government and public life, the world, business and management, the mind, literature, food and cooking, and values and ideas. Characters and words are learned as in levels 1 to 4, and every sentence is written only with characters already taught. Common characters that the earlier levels leave out, and those needed by words such as the names of countries and writers, are taught where their unit's words need them. The characters were chosen to be close to level 5 of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains. The sixth and twelfth units end with a topic of paragraph writing as well, judged by a model against three yes-or-no criteria, at least 150 characters a piece, its tasks and model answers written with the characters taught by then; the criteria wait for texts scored by teachers of Chinese, and an admin routes them before they reach learners.
 
 ## Units
 
@@ -164,6 +164,7 @@ Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: soc
 - `level-5-grammar-28` Without Exception: 一律: 一律: Completing Sentences; 一律: The Right Sentence
 - `level-5-grammar-29` Under: 在……下: 在……下: Completing Sentences; 在……下: The Right Sentence
 - `level-5-sentences-02` Building Sentences 2: Technology, Traditions and Customs, Government and Public Life: Short Sentences; Longer Sentences
+- `level-5-writing-01` A Letter or an Email: Opening and Closing; Making the Request Clear
 
 ### 7. The World
 
@@ -312,6 +313,7 @@ Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: soc
 - `level-5-grammar-61` Worth It: 值得: 值得: Completing Sentences; 值得: The Right Sentence
 - `level-5-grammar-62` While You Are At It: 顺便: 顺便: Completing Sentences; 顺便: The Right Sentence
 - `level-5-sentences-04` Building Sentences 4: Literature, Food and Cooking, Values and Ideas: Short Sentences; Longer Sentences
+- `level-5-writing-02` Introducing a Custom or a Dish: What It Is and How It Is Done; What It Means
 
 ## Simulated Students
 
