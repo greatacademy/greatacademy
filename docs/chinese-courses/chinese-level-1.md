@@ -6,11 +6,11 @@
 - **Level:** Level 1, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Pinyin](chinese-pinyin.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 80 topics (30 of characters, 50 of words) · 240 knowledge points
+- **Size:** 12 units · 128 topics (30 of characters, 50 of words, 48 of grammar) · 336 knowledge points
 
 ## Aim
 
-Level 1 teaches 300 basic characters and 500 words of daily life, in twelve themed units from greetings to health. A character is learned by its form, its reading in pinyin and its meaning in the learner's language; a word by its meaning, its reading and its use in a sentence. Every sentence is written only with characters already taught, so the learner can read each one. The characters were chosen as the commonest of daily life; they are still to be checked against level 1 of the standard (GF 0025-2021) and the lists counsel clears (C0.2).
+Level 1 teaches 300 basic characters and 500 words of daily life, in twelve themed units from greetings to health. A character is learned by its form, its reading in pinyin and its meaning in the learner's language; a word by its meaning, its reading and its use in a sentence. Every sentence is written only with characters already taught, so the learner can read each one. The characters were chosen as the commonest of daily life; they are still to be checked against level 1 of the standard (GF 0025-2021) and the lists counsel clears (C0.2). Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain.
 
 ## Units
 
@@ -23,6 +23,12 @@ Level 1 teaches 300 basic characters and 500 words of daily life, in twelve them
 - `level-1-words-01` Level 1 Words 01: Greetings: Finding the Word; Reading the Word; Using the Word
 - `level-1-words-02` Level 1 Words 02: People and Questions: Finding the Word; Reading the Word; Using the Word
 - `level-1-words-03` Level 1 Words 03: Little Words: Finding the Word; Reading the Word; Using the Word
+- `level-1-grammar-01` 是 Sentences: Completing Sentences; The Right Sentence
+- `level-1-grammar-02` Questions with 吗: Completing Sentences; The Right Sentence
+- `level-1-grammar-03` Questions with 谁, 什么 and 哪: Completing Sentences; The Right Sentence
+- `level-1-grammar-04` 的 for Whose: Completing Sentences; The Right Sentence
+- `level-1-grammar-05` 也 and 都: Completing Sentences; The Right Sentence
+- `level-1-grammar-06` 在 with 这里, 那里 and 哪里: Completing Sentences; The Right Sentence
 
 ### 2. Numbers and Age
 
@@ -30,6 +36,9 @@ Level 1 teaches 300 basic characters and 500 words of daily life, in twelve them
 - `level-1-characters-06` Level 1 Characters 06: 百千万零两几多少个岁: Finding the Character; Reading It; Knowing the Meaning
 - `level-1-words-04` Level 1 Words 04: How Many: Finding the Word; Reading the Word; Using the Word
 - `level-1-words-05` Level 1 Words 05: Counting People: Finding the Word; Reading the Word; Using the Word
+- `level-1-grammar-07` Numbers and 两: Completing Sentences; The Right Sentence
+- `level-1-grammar-08` Asking How Many: 几 and 多少: 几 and 多少: Completing Sentences; 几 and 多少: The Right Sentence
+- `level-1-grammar-09` 个 and Number Phrases: Completing Sentences; The Right Sentence
 
 ### 3. Family
 
@@ -38,6 +47,9 @@ Level 1 teaches 300 basic characters and 500 words of daily life, in twelve them
 - `level-1-words-06` Level 1 Words 06: Family Members: Finding the Word; Reading the Word; Using the Word
 - `level-1-words-07` Level 1 Words 07: Family and Home: Finding the Word; Reading the Word; Using the Word
 - `level-1-words-08` Level 1 Words 08: Who's in the Family: Finding the Word; Reading the Word; Using the Word
+- `level-1-grammar-10` 有 Sentences: Completing Sentences; The Right Sentence
+- `level-1-grammar-11` 和 Joining Nouns: Completing Sentences; The Right Sentence
+- `level-1-grammar-12` 去 and 来 with Places: Completing Sentences; The Right Sentence
 
 ### 4. Time and Dates
 
@@ -48,6 +60,10 @@ Level 1 teaches 300 basic characters and 500 words of daily life, in twelve them
 - `level-1-words-10` Level 1 Words 10: Clock Time: Finding the Word; Reading the Word; Using the Word
 - `level-1-words-11` Level 1 Words 11: Before and After: Finding the Word; Reading the Word; Using the Word
 - `level-1-words-12` Level 1 Words 12: Months and Years: Finding the Word; Reading the Word; Using the Word
+- `level-1-grammar-13` Telling the Time: Completing Sentences; The Right Sentence
+- `level-1-grammar-14` Dates and Days of the Week: Completing Sentences; The Right Sentence
+- `level-1-grammar-15` Where Time Words Go: Completing Sentences; The Right Sentence
+- `level-1-grammar-16` 会 and 要 for the Future: Completing Sentences; The Right Sentence
 
 ### 5. Food and Drink
 
@@ -58,6 +74,13 @@ Level 1 teaches 300 basic characters and 500 words of daily life, in twelve them
 - `level-1-words-14` Level 1 Words 14: Breakfast: Finding the Word; Reading the Word; Using the Word
 - `level-1-words-15` Level 1 Words 15: Meals: Finding the Word; Reading the Word; Using the Word
 - `level-1-words-16` Level 1 Words 16: Food Words: Finding the Word; Reading the Word; Using the Word
+- `level-1-grammar-17` 了 for a Completed Action: Completing Sentences; The Right Sentence
+- `level-1-grammar-18` 想 for Wanting: Completing Sentences; The Right Sentence
+- `level-1-grammar-19` Exclamations with 太……了 and 真: Completing Sentences; The Right Sentence
+- `level-1-grammar-20` 可以 for Permission: Completing Sentences; The Right Sentence
+- `level-1-grammar-21` 不 and 没: Completing Sentences; The Right Sentence
+- `level-1-grammar-22` Questions with 不 in the Middle: Completing Sentences; The Right Sentence
+- `level-1-grammar-23` 给 for Someone: Completing Sentences; The Right Sentence
 
 ### 6. Shopping and Money
 
@@ -68,6 +91,13 @@ Level 1 teaches 300 basic characters and 500 words of daily life, in twelve them
 - `level-1-words-18` Level 1 Words 18: Clothes: Finding the Word; Reading the Word; Using the Word
 - `level-1-words-19` Level 1 Words 19: In the Shop: Finding the Word; Reading the Word; Using the Word
 - `level-1-words-20` Level 1 Words 20: People and Things: Finding the Word; Reading the Word; Using the Word
+- `level-1-grammar-24` Adjectives as Predicates: Completing Sentences; The Right Sentence
+- `level-1-grammar-25` Measure Words 件, 杯, 块 and 些: Completing Sentences; The Right Sentence
+- `level-1-grammar-26` Saying Prices: Completing Sentences; The Right Sentence
+- `level-1-grammar-27` Choosing with 还是: Completing Sentences; The Right Sentence
+- `level-1-grammar-28` 吧 for Suggestions and Guesses: Completing Sentences; The Right Sentence
+- `level-1-grammar-29` Going Somewhere to Do Something: Completing Sentences; The Right Sentence
+- `level-1-grammar-30` Asking with 怎么样: Completing Sentences; The Right Sentence
 
 ### 7. School and Study
 
@@ -79,6 +109,9 @@ Level 1 teaches 300 basic characters and 500 words of daily life, in twelve them
 - `level-1-words-23` Level 1 Words 23: Learning: Finding the Word; Reading the Word; Using the Word
 - `level-1-words-24` Level 1 Words 24: Schools and Books: Finding the Word; Reading the Word; Using the Word
 - `level-1-words-25` Level 1 Words 25: School Life: Finding the Word; Reading the Word; Using the Word
+- `level-1-grammar-31` Ordinals with 第: Completing Sentences; The Right Sentence
+- `level-1-grammar-32` Asking How with 怎么: Completing Sentences; The Right Sentence
+- `level-1-grammar-33` 在 + Place + Verb: Completing Sentences; The Right Sentence
 
 ### 8. Places and Directions
 
@@ -91,6 +124,11 @@ Level 1 teaches 300 basic characters and 500 words of daily life, in twelve them
 - `level-1-words-29` Level 1 Words 29: Coming and Going: Finding the Word; Reading the Word; Using the Word
 - `level-1-words-30` Level 1 Words 30: Around Town: Finding the Word; Reading the Word; Using the Word
 - `level-1-words-31` Level 1 Words 31: Abroad: Finding the Word; Reading the Word; Using the Word
+- `level-1-grammar-34` Words of Position: Completing Sentences; The Right Sentence
+- `level-1-grammar-35` Saying Where Things Are: 在, 有 and 是: 在, 有 and 是: Completing Sentences; 在, 有 and 是: The Right Sentence
+- `level-1-grammar-36` Questions with 呢: Completing Sentences; The Right Sentence
+- `level-1-grammar-37` 从, 到 and 往: Completing Sentences; The Right Sentence
+- `level-1-grammar-38` 在……呢 for Actions in Progress: Completing Sentences; The Right Sentence
 
 ### 9. Transport and Travel
 
@@ -100,6 +138,10 @@ Level 1 teaches 300 basic characters and 500 words of daily life, in twelve them
 - `level-1-words-33` Level 1 Words 33: Travel: Finding the Word; Reading the Word; Using the Word
 - `level-1-words-34` Level 1 Words 34: On the Way: Finding the Word; Reading the Word; Using the Word
 - `level-1-words-35` Level 1 Words 35: Times and Trips: Finding the Word; Reading the Word; Using the Word
+- `level-1-grammar-39` 坐 + Vehicle + 去: Completing Sentences; The Right Sentence
+- `level-1-grammar-40` Together: 跟……一起: 跟……一起: Completing Sentences; 跟……一起: The Right Sentence
+- `level-1-grammar-41` Requests and Commands: 请, 别 and 不要: 请, 别 and 不要: Completing Sentences; 请, 别 and 不要: The Right Sentence
+- `level-1-grammar-42` 次 for How Many Times: Completing Sentences; The Right Sentence
 
 ### 10. Weather and Seasons
 
@@ -107,6 +149,8 @@ Level 1 teaches 300 basic characters and 500 words of daily life, in twelve them
 - `level-1-words-36` Level 1 Words 36: Weather: Finding the Word; Reading the Word; Using the Word
 - `level-1-words-37` Level 1 Words 37: Seasons: Finding the Word; Reading the Word; Using the Word
 - `level-1-words-38` Level 1 Words 38: Rain and Snow: Finding the Word; Reading the Word; Using the Word
+- `level-1-grammar-43` Comparing with 比: Completing Sentences; The Right Sentence
+- `level-1-grammar-44` 了 for a Change: Completing Sentences; The Right Sentence
 
 ### 11. Hobbies and Free Time
 
@@ -119,6 +163,8 @@ Level 1 teaches 300 basic characters and 500 words of daily life, in twelve them
 - `level-1-words-43` Level 1 Words 43: Talking and Doing: Finding the Word; Reading the Word; Using the Word
 - `level-1-words-44` Level 1 Words 44: Linking Words: Finding the Word; Reading the Word; Using the Word
 - `level-1-words-45` Level 1 Words 45: Hobbies: Finding the Word; Reading the Word; Using the Word
+- `level-1-grammar-45` Doubled Verbs and 一下: Completing Sentences; The Right Sentence
+- `level-1-grammar-46` 得 for How Well: Completing Sentences; The Right Sentence
 
 ### 12. Body and Health
 
@@ -129,6 +175,8 @@ Level 1 teaches 300 basic characters and 500 words of daily life, in twelve them
 - `level-1-words-48` Level 1 Words 48: Taking Care: Finding the Word; Reading the Word; Using the Word
 - `level-1-words-49` Level 1 Words 49: Reasons: Finding the Word; Reading the Word; Using the Word
 - `level-1-words-50` Level 1 Words 50: Growing Up: Finding the Word; Reading the Word; Using the Word
+- `level-1-grammar-47` Because: 因为……所以……: 因为……所以……: Completing Sentences; 因为……所以……: The Right Sentence
+- `level-1-grammar-48` 最 for the Most: Completing Sentences; The Right Sentence
 
 ## Simulated Students
 
@@ -136,8 +184,8 @@ Level 1 teaches 300 basic characters and 500 words of daily life, in twelve them
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 20/20 | 40.30 | 80.85 | 0.55 | 252.45 | 3.16 | 10.25 | 0.00 |
-| typical | 20/20 | 49.65 | 87.85 | 7.55 | 302.35 | 3.76 | 9.60 | 0.00 |
-| struggling | 20/20 | 71.15 | 123.70 | 43.40 | 450.75 | 5.59 | 9.60 | 0.00 |
-| placed | 20/20 | 46.85 | 82.50 | 6.75 | 290.90 | 3.83 | 9.20 | 0.00 |
-| struggling, placed | 20/20 | 68.75 | 118.30 | 42.55 | 443.50 | 5.82 | 9.20 | 0.00 |
+| strong | 20/20 | 66.30 | 126.05 | 0.95 | 433.85 | 3.48 | 16.90 | 0.00 |
+| typical | 20/20 | 78.70 | 135.90 | 10.80 | 494.25 | 3.95 | 15.65 | 0.00 |
+| struggling | 20/20 | 110.00 | 184.35 | 59.25 | 694.60 | 5.54 | 15.10 | 0.00 |
+| placed | 20/20 | 78.00 | 131.55 | 11.05 | 493.90 | 4.09 | 15.40 | 0.00 |
+| struggling, placed | 20/20 | 107.90 | 179.80 | 59.30 | 689.70 | 5.70 | 14.85 | 0.00 |

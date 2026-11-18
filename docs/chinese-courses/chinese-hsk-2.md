@@ -6,7 +6,7 @@
 - **Level:** Level 2 of the new HSK, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 1](chinese-level-1.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 13 units · 110 topics (3 new, all practice-only) · 327 knowledge points
+- **Size:** 13 units · 180 topics (3 new, all practice-only) · 467 knowledge points
 
 ## The Test
 
@@ -34,8 +34,8 @@ The course turns level 2 into test practice. It holds the units of [Chinese Leve
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 20/20 | 98.55 | 183.30 | 1.90 | 664.20 | 3.66 | 25.30 | 0.00 |
-| typical | 20/20 | 117.65 | 199.20 | 17.80 | 747.85 | 4.13 | 23.45 | 0.00 |
-| struggling | 20/20 | 169.25 | 286.75 | 105.35 | 1104.45 | 6.10 | 23.25 | 0.00 |
-| placed | 20/20 | 69.00 | 117.95 | 9.80 | 446.10 | 4.12 | 13.65 | 0.00 |
-| struggling, placed | 20/20 | 99.40 | 169.85 | 61.70 | 652.30 | 6.03 | 13.60 | 0.00 |
+| strong | 20/20 | 136.65 | 248.50 | 2.20 | 924.90 | 3.76 | 35.40 | 0.00 |
+| typical | 20/20 | 160.05 | 267.35 | 21.05 | 1020.25 | 4.14 | 32.35 | 0.00 |
+| struggling | 20/20 | 221.50 | 367.70 | 121.40 | 1427.40 | 5.78 | 31.00 | 0.00 |
+| placed | 20/20 | 113.45 | 188.15 | 14.20 | 727.70 | 4.18 | 22.70 | 0.00 |
+| struggling, placed | 20/20 | 156.80 | 258.90 | 84.95 | 1010.30 | 5.80 | 21.75 | 0.00 |

@@ -6,11 +6,11 @@
 - **Level:** Level 3, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 2](chinese-level-2.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 127 topics (30 of characters, 97 of words) · 381 knowledge points
+- **Size:** 12 units · 208 topics (30 of characters, 97 of words, 81 of grammar) · 543 knowledge points
 
 ## Aim
 
-Level 3 teaches 300 more characters and 970 words, in twelve themed units that move from daily life to opinions and reasons, personality, relationships, education, work, society, the environment, technology, culture, money, the news and ways of living. Characters and words are learned as in levels 1 and 2, and every sentence is written only with characters already taught. The characters were chosen to be close to level 3 of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences.
+Level 3 teaches 300 more characters and 970 words, in twelve themed units that move from daily life to opinions and reasons, personality, relationships, education, work, society, the environment, technology, culture, money, the news and ways of living. Characters and words are learned as in levels 1 and 2, and every sentence is written only with characters already taught. The characters were chosen to be close to level 3 of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Points that need characters level 3 does not teach, such as 连……都, 越……越 and 除了, wait for a later level.
 
 ## Units
 
@@ -33,6 +33,13 @@ Level 3 teaches 300 more characters and 970 words, in twelve themed units that m
 - `level-3-words-07` Level 3 Words 07: Again and Again: Finding the Word; Reading the Word; Using the Word
 - `level-3-words-08` Level 3 Words 08: That Is All: Finding the Word; Reading the Word; Using the Word
 - `level-3-words-09` Level 3 Words 09: Points of View: Finding the Word; Reading the Word; Using the Word
+- `level-3-grammar-01` Adding More with 不但……而且: Completing Sentences; The Right Sentence
+- `level-3-grammar-02` Unexpected Turns with 却: Completing Sentences; The Right Sentence
+- `level-3-grammar-03` Even: 甚至: 甚至: Completing Sentences; 甚至: The Right Sentence
+- `level-3-grammar-04` Because Of: 由于: 由于: Completing Sentences; 由于: The Right Sentence
+- `level-3-grammar-05` To One's Surprise: 竟然: 竟然: Completing Sentences; 竟然: The Right Sentence
+- `level-3-grammar-06` Must: 必须 and 不必: 必须 and 不必: Completing Sentences; 必须 and 不必: The Right Sentence
+- `level-3-grammar-07` The Opposite of What You Expect: 反而: 反而: Completing Sentences; 反而: The Right Sentence
 
 ### 2. Personality
 
@@ -52,6 +59,13 @@ Level 3 teaches 300 more characters and 970 words, in twelve themed units that m
 - `level-3-words-15` Level 3 Words 15: More Character Words: Finding the Word; Reading the Word; Using the Word
 - `level-3-words-16` Level 3 Words 16: Doing One's Part: Finding the Word; Reading the Word; Using the Word
 - `level-3-words-17` Level 3 Words 17: Being Honest: Finding the Word; Reading the Word; Using the Word
+- `level-3-grammar-08` Extremely: Adjective + 极了: Adjective + 极了: Completing Sentences; Adjective + 极了: The Right Sentence
+- `level-3-grammar-09` Especially: 特别 and 特别是: 特别 and 特别是: Completing Sentences; 特别 and 特别是: The Right Sentence
+- `level-3-grammar-10` Actually: 其实: 其实: Completing Sentences; 其实: The Right Sentence
+- `level-3-grammar-11` Daring: 敢 and 不敢: 敢 and 不敢: Completing Sentences; 敢 and 不敢: The Right Sentence
+- `level-3-grammar-12` The Others and Among Them: 其他 and 其中: 其他 and 其中: Completing Sentences; 其他 and 其中: The Right Sentence
+- `level-3-grammar-13` Simply: 简直: 简直: Completing Sentences; 简直: The Right Sentence
+- `level-3-grammar-14` Completely: 完全: 完全: Completing Sentences; 完全: The Right Sentence
 
 ### 3. Relationships
 
@@ -71,6 +85,13 @@ Level 3 teaches 300 more characters and 970 words, in twelve themed units that m
 - `level-3-words-23` Level 3 Words 23: Mistakes and Apologies: Finding the Word; Reading the Word; Using the Word
 - `level-3-words-24` Level 3 Words 24: Family Words: Finding the Word; Reading the Word; Using the Word
 - `level-3-words-25` Level 3 Words 25: Living Together: Finding the Word; Reading the Word; Using the Word
+- `level-3-grammar-15` Verbs That Split: 见面, 帮忙, 聊天: 见面, 帮忙, 聊天: Completing Sentences; 见面, 帮忙, 聊天: The Right Sentence
+- `level-3-grammar-16` Each Other: 互相: 互相: Completing Sentences; 互相: The Right Sentence
+- `level-3-grammar-17` It Turns Out: 原来: 原来: Completing Sentences; 原来: The Right Sentence
+- `level-3-grammar-18` At First: 本来: 本来: Completing Sentences; 本来: The Right Sentence
+- `level-3-grammar-19` As for: 对于: 对于: Completing Sentences; 对于: The Right Sentence
+- `level-3-grammar-20` Be Sure To: 千万: 千万: Completing Sentences; 千万: The Right Sentence
+- `level-3-grammar-21` At Last: 终于: 终于: Completing Sentences; 终于: The Right Sentence
 
 ### 4. Education
 
@@ -91,6 +112,13 @@ Level 3 teaches 300 more characters and 970 words, in twelve themed units that m
 - `level-3-words-32` Level 3 Words 32: Levels: Finding the Word; Reading the Word; Using the Word
 - `level-3-words-33` Level 3 Words 33: Explaining: Finding the Word; Reading the Word; Using the Word
 - `level-3-words-34` Level 3 Words 34: Growing Up: Finding the Word; Reading the Word; Using the Word
+- `level-3-grammar-22` About: 关于: 关于: Completing Sentences; 关于: The Right Sentence
+- `level-3-grammar-23` Through: 通过: 通过: Completing Sentences; 通过: The Right Sentence
+- `level-3-grammar-24` On Earth: 究竟: 究竟: Completing Sentences; 究竟: The Right Sentence
+- `level-3-grammar-25` Still: 仍然: 仍然: Completing Sentences; 仍然: The Right Sentence
+- `level-3-grammar-26` After All: 毕竟: 毕竟: Completing Sentences; 毕竟: The Right Sentence
+- `level-3-grammar-27` As a Result: 结果: 结果: Completing Sentences; 结果: The Right Sentence
+- `level-3-grammar-28` In Some Respect: 在……上: 在……上: Completing Sentences; 在……上: The Right Sentence
 
 ### 5. Work and Business
 
@@ -111,6 +139,13 @@ Level 3 teaches 300 more characters and 970 words, in twelve themed units that m
 - `level-3-words-41` Level 3 Words 41: Results: Finding the Word; Reading the Word; Using the Word
 - `level-3-words-42` Level 3 Words 42: Strength and Skill: Finding the Word; Reading the Word; Using the Word
 - `level-3-words-43` Level 3 Words 43: Doing Business: Finding the Word; Reading the Word; Using the Word
+- `level-3-grammar-29` By Someone: 由: 由: Completing Sentences; 由: The Right Sentence
+- `level-3-grammar-30` And So: 于是: 于是: Completing Sentences; 于是: The Right Sentence
+- `level-3-grammar-31` Suddenly: 突然: 突然: Completing Sentences; 突然: The Right Sentence
+- `level-3-grammar-32` Have No Choice: 只好: 只好: Completing Sentences; 只好: The Right Sentence
+- `level-3-grammar-33` Just Right: 正好: 正好: Completing Sentences; 正好: The Right Sentence
+- `level-3-grammar-34` For Someone: 对……来说: 对……来说: Completing Sentences; 对……来说: The Right Sentence
+- `level-3-grammar-35` Almost: 差点儿: 差点儿: Completing Sentences; 差点儿: The Right Sentence
 
 ### 6. Society and Rules
 
@@ -131,6 +166,12 @@ Level 3 teaches 300 more characters and 970 words, in twelve themed units that m
 - `level-3-words-50` Level 3 Words 50: Sharing: Finding the Word; Reading the Word; Using the Word
 - `level-3-words-51` Level 3 Words 51: Public Life: Finding the Word; Reading the Word; Using the Word
 - `level-3-words-52` Level 3 Words 52: Better Lives: Finding the Word; Reading the Word; Using the Word
+- `level-3-grammar-36` Otherwise: 否则: 否则: Completing Sentences; 否则: The Right Sentence
+- `level-3-grammar-37` As Much as Possible: 尽量: 尽量: Completing Sentences; 尽量: The Right Sentence
+- `level-3-grammar-38` Have To: 不得不: 不得不: Completing Sentences; 不得不: The Right Sentence
+- `level-3-grammar-39` Even Though: 尽管: 尽管: Completing Sentences; 尽管: The Right Sentence
+- `level-3-grammar-40` In Case: 万一: 万一: Completing Sentences; 万一: The Right Sentence
+- `level-3-grammar-41` No Wonder: 难怪: 难怪: Completing Sentences; 难怪: The Right Sentence
 
 ### 7. Environment
 
@@ -150,6 +191,13 @@ Level 3 teaches 300 more characters and 970 words, in twelve themed units that m
 - `level-3-words-58` Level 3 Words 58: Looking After the Earth: Finding the Word; Reading the Word; Using the Word
 - `level-3-words-59` Level 3 Words 59: After a Disaster: Finding the Word; Reading the Word; Using the Word
 - `level-3-words-60` Level 3 Words 60: Saving Lives: Finding the Word; Reading the Word; Using the Word
+- `level-3-grammar-42` Passives with 叫 and 让: Completing Sentences; The Right Sentence
+- `level-3-grammar-43` 被 Without the Doer, and 没被: Completing Sentences; The Right Sentence
+- `level-3-grammar-44` 把 with 到, 在, 成 and 给: Completing Sentences; The Right Sentence
+- `level-3-grammar-45` 没, 别 and 要 Before 把: Completing Sentences; The Right Sentence
+- `level-3-grammar-46` 只有……才…… for the Only Condition: Completing Sentences; The Right Sentence
+- `level-3-grammar-47` 并不 and 并没有: Completing Sentences; The Right Sentence
+- `level-3-grammar-48` Making Someone Do Something: 让 and 叫: 让 and 叫: Completing Sentences; 让 and 叫: The Right Sentence
 
 ### 8. Technology
 
@@ -170,6 +218,14 @@ Level 3 teaches 300 more characters and 970 words, in twelve themed units that m
 - `level-3-words-67` Level 3 Words 67: Software at Work: Finding the Word; Reading the Word; Using the Word
 - `level-3-words-68` Level 3 Words 68: Security: Finding the Word; Reading the Word; Using the Word
 - `level-3-words-69` Level 3 Words 69: Smart Living: Finding the Word; Reading the Word; Using the Word
+- `level-3-grammar-49` Can or Cannot: 得 and 不 Before a Result: 得 and 不 Before a Result: Completing Sentences; 得 and 不 Before a Result: The Right Sentence
+- `level-3-grammar-50` V得了 and V不了: Completing Sentences; The Right Sentence
+- `level-3-grammar-51` Compound Direction Complements and the Object: Completing Sentences; The Right Sentence
+- `level-3-grammar-52` 起来 for Starting and Remembering: Completing Sentences; The Right Sentence
+- `level-3-grammar-53` 下去 for Going On and 下来 for Stopping and Keeping: Completing Sentences; The Right Sentence
+- `level-3-grammar-54` 出来 for Telling and Making: Completing Sentences; The Right Sentence
+- `level-3-grammar-55` 只要……就…… for Enough of a Condition: Completing Sentences; The Right Sentence
+- `level-3-grammar-56` 无论 and 不管 with 都: Completing Sentences; The Right Sentence
 
 ### 9. Culture
 
@@ -188,6 +244,13 @@ Level 3 teaches 300 more characters and 970 words, in twelve themed units that m
 - `level-3-words-75` Level 3 Words 75: Shows and Ideas: Finding the Word; Reading the Word; Using the Word
 - `level-3-words-76` Level 3 Words 76: Festivals and Customs: Finding the Word; Reading the Word; Using the Word
 - `level-3-words-77` Level 3 Words 77: Poems and Stories: Finding the Word; Reading the Word; Using the Word
+- `level-3-grammar-57` Place + V着 + Thing: Completing Sentences; The Right Sentence
+- `level-3-grammar-58` Someone Arrives, Someone Leaves: Completing Sentences; The Right Sentence
+- `level-3-grammar-59` V着V着 for While Doing: Completing Sentences; The Right Sentence
+- `level-3-grammar-60` 一……也不 and 一……都没: Completing Sentences; The Right Sentence
+- `level-3-grammar-61` Question Words for Everyone and Everything: Completing Sentences; The Right Sentence
+- `level-3-grammar-62` Not This but That: 不是……而是……: 不是……而是……: Completing Sentences; 不是……而是……: The Right Sentence
+- `level-3-grammar-63` Question Words in Pairs: 谁……谁……: 谁……谁……: Completing Sentences; 谁……谁……: The Right Sentence
 
 ### 10. Money and Shopping
 
@@ -206,6 +269,12 @@ Level 3 teaches 300 more characters and 970 words, in twelve themed units that m
 - `level-3-words-83` Level 3 Words 83: Shops and Taxes: Finding the Word; Reading the Word; Using the Word
 - `level-3-words-84` Level 3 Words 84: Money Words: Finding the Word; Reading the Word; Using the Word
 - `level-3-words-85` Level 3 Words 85: Shopping Online: Finding the Word; Reading the Word; Using the Word
+- `level-3-grammar-64` A不如B: Completing Sentences; The Right Sentence
+- `level-3-grammar-65` 比 with 得: 他跑得比我快: 他跑得比我快: Completing Sentences; 他跑得比我快: The Right Sentence
+- `level-3-grammar-66` Comparing by How Much: Completing Sentences; The Right Sentence
+- `level-3-grammar-67` 哪怕……也…… for Even If: Completing Sentences; The Right Sentence
+- `level-3-grammar-68` 为了 for Purpose: Completing Sentences; The Right Sentence
+- `level-3-grammar-69` About How Much: 左右, 多 and 几: 左右, 多 and 几: Completing Sentences; 左右, 多 and 几: The Right Sentence
 
 ### 11. News
 
@@ -221,6 +290,12 @@ Level 3 teaches 300 more characters and 970 words, in twelve themed units that m
 - `level-3-words-89` Level 3 Words 89: Public Events: Finding the Word; Reading the Word; Using the Word
 - `level-3-words-90` Level 3 Words 90: Listeners and Readers: Finding the Word; Reading the Word; Using the Word
 - `level-3-words-91` Level 3 Words 91: Elections and Notices: Finding the Word; Reading the Word; Using the Word
+- `level-3-grammar-70` 不是……吗？ for Reminding: Completing Sentences; The Right Sentence
+- `level-3-grammar-71` 难道……吗？ and 谁不……？: Completing Sentences; The Right Sentence
+- `level-3-grammar-72` Double Negatives: 不得不 and 没有……不: 不得不 and 没有……不: Completing Sentences; 不得不 and 没有……不: The Right Sentence
+- `level-3-grammar-73` First, Next, Last: 首先……其次……最后: 首先……其次……最后: Completing Sentences; 首先……其次……最后: The Right Sentence
+- `level-3-grammar-74` How Long: V了……了 and V了……的: V了……了 and V了……的: Completing Sentences; V了……了 and V了……的: The Right Sentence
+- `level-3-grammar-75` Question Words for Something and Somewhere: Completing Sentences; The Right Sentence
 
 ### 12. Lifestyle
 
@@ -236,6 +311,12 @@ Level 3 teaches 300 more characters and 970 words, in twelve themed units that m
 - `level-3-words-95` Level 3 Words 95: Late Nights: Finding the Word; Reading the Word; Using the Word
 - `level-3-words-96` Level 3 Words 96: Ways of Living: Finding the Word; Reading the Word; Using the Word
 - `level-3-words-97` Level 3 Words 97: Looking After Ourselves: Finding the Word; Reading the Word; Using the Word
+- `level-3-grammar-76` 不是……就是…… for Either …… Or: Completing Sentences; The Right Sentence
+- `level-3-grammar-77` 再……也…… for No Matter How: Completing Sentences; The Right Sentence
+- `level-3-grammar-78` 非……不可 for Must: Completing Sentences; The Right Sentence
+- `level-3-grammar-79` 看起来 and 听起来 for Seeming: Completing Sentences; The Right Sentence
+- `level-3-grammar-80` 多 and 少 Before a Verb: Completing Sentences; The Right Sentence
+- `level-3-grammar-81` 从来不 and 从来没……过: Completing Sentences; The Right Sentence
 
 ## Simulated Students
 
@@ -243,8 +324,8 @@ Level 3 teaches 300 more characters and 970 words, in twelve themed units that m
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 20/20 | 163.55 | 298.65 | 2.95 | 1124.95 | 3.81 | 42.50 | 0.00 |
-| typical | 20/20 | 193.35 | 325.60 | 29.90 | 1254.65 | 4.24 | 38.90 | 0.00 |
-| struggling | 20/20 | 275.30 | 463.00 | 167.30 | 1809.90 | 6.12 | 38.35 | 0.00 |
-| placed | 20/20 | 81.20 | 136.70 | 11.65 | 519.90 | 4.16 | 16.05 | 0.00 |
-| struggling, placed | 20/20 | 116.10 | 197.65 | 72.60 | 766.05 | 6.12 | 15.80 | 0.00 |
+| strong | 20/20 | 208.90 | 374.20 | 3.20 | 1428.45 | 3.85 | 54.60 | 0.00 |
+| typical | 20/20 | 245.00 | 406.25 | 35.25 | 1576.50 | 4.24 | 49.60 | 0.00 |
+| struggling | 7/20 | 338.15 | 555.55 | 190.75 | 2178.65 | 5.96 | 47.10 | 0.00 |
+| placed | 20/20 | 135.90 | 224.30 | 17.70 | 869.70 | 4.21 | 27.45 | 0.00 |
+| struggling, placed | 20/20 | 187.80 | 304.30 | 97.70 | 1192.45 | 5.77 | 26.20 | 0.00 |

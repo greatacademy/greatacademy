@@ -6,7 +6,7 @@
 - **Level:** Level 1 of the new HSK, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Pinyin](chinese-pinyin.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 13 units · 83 topics (3 new, all practice-only) · 246 knowledge points
+- **Size:** 13 units · 131 topics (3 new, all practice-only) · 342 knowledge points
 
 ## The Test
 
@@ -34,8 +34,8 @@ The course turns level 1 into test practice. It holds the units of [Chinese Leve
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 20/20 | 41.75 | 83.35 | 0.55 | 261.60 | 3.18 | 10.50 | 0.00 |
-| typical | 20/20 | 51.40 | 90.70 | 7.90 | 313.40 | 3.78 | 10.00 | 0.00 |
-| struggling | 20/20 | 73.95 | 128.05 | 45.25 | 466.85 | 5.64 | 9.80 | 0.00 |
-| placed | 20/20 | 48.55 | 85.10 | 6.85 | 301.25 | 3.84 | 9.55 | 0.00 |
-| struggling, placed | 20/20 | 71.55 | 122.20 | 43.95 | 457.55 | 5.84 | 9.50 | 0.00 |
+| strong | 20/20 | 67.45 | 128.25 | 1.05 | 445.30 | 3.51 | 17.25 | 0.00 |
+| typical | 20/20 | 80.45 | 137.55 | 10.35 | 503.20 | 3.96 | 15.95 | 0.00 |
+| struggling | 20/20 | 111.90 | 186.90 | 59.70 | 703.65 | 5.51 | 15.30 | 0.00 |
+| placed | 20/20 | 79.50 | 132.85 | 9.80 | 495.85 | 4.02 | 15.75 | 0.00 |
+| struggling, placed | 20/20 | 108.30 | 179.20 | 56.15 | 687.55 | 5.56 | 14.95 | 0.00 |

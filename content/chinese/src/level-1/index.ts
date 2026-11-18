@@ -6,6 +6,8 @@ import { type CourseDef, type Text, type TopicDef, t } from "@ga/content";
 
 import { characterBatches } from "./character-data.ts";
 import { type LevelOneCharacter, levelOneCharacterTopic, parseLevelOneCharacters } from "./characters.ts";
+import { unitGrammarTopics } from "./grammar.ts";
+import { grammar } from "./grammar-data.ts";
 import { wordBatches } from "./word-data.ts";
 import { GAP, type LevelOneWord, levelOneWordTopic, parseLevelOneWords } from "./words.ts";
 
@@ -70,9 +72,11 @@ function build(): Built {
   const topics: TopicDef[] = [];
   const units: CourseDef["units"][number][] = [];
   const taught = new Set<string>();
+  if (grammar.some((x) => x.unit < 1 || x.unit > UNITS.length)) throw new Error("level 1: a grammar topic names no unit");
   let c = 0;
   let w = 0;
-  for (const unit of UNITS) {
+  let g = 1;
+  for (const [u, unit] of UNITS.entries()) {
     const characterIds: string[] = [];
     for (let k = 0; k < unit.characters; k++) {
       const batch = charBatches[c]!;
@@ -118,11 +122,21 @@ function build(): Built {
       );
       wordIds.push(id);
     }
+    const unitGrammar = unitGrammarTopics({
+      level: 1,
+      n: g,
+      grammar: grammar.filter((x) => x.unit === u + 1),
+      taught,
+      after: levelOneWordId(w),
+    });
+    g += unitGrammar.length;
+    topics.push(...unitGrammar);
     units.push({
       title: unit.title,
       modules: [
         { title: t("Characters", "汉字"), topics: characterIds },
         { title: t("Words", "词语"), topics: wordIds },
+        ...(unitGrammar.length > 0 ? [{ title: t("Grammar", "语法"), topics: unitGrammar.map((x) => x.id) }] : []),
       ],
     });
   }
@@ -131,7 +145,7 @@ function build(): Built {
 
 const built = build();
 
-/** levelOneTopics are the 80 topics of level 1: 30 of characters and 50 of words. */
+/** levelOneTopics are the 128 topics of level 1: 30 of characters, 50 of words and 48 of grammar. */
 export const levelOneTopics: readonly TopicDef[] = built.topics;
 
 /** levelOneCourse is the course of level 1 of Chinese as a foreign language. */

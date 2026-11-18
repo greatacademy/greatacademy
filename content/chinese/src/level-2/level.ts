@@ -6,6 +6,7 @@ import type { CourseDef, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 
 import { type LevelOneCharacter, levelOneCharacterTopic, parseLevelCharacters } from "../level-1/characters.ts";
+import { type LevelGrammar, unitGrammarTopics } from "../level-1/grammar.ts";
 import { GAP, type LevelOneWord, levelOneWordTopic, parseLevelWords } from "../level-1/words.ts";
 
 /** LevelUnit is a unit of a level: a theme, how many character batches and how many word batches it has. */
@@ -36,6 +37,8 @@ export interface LevelSpec {
   readonly earlierWords: readonly string[];
   /** after is the last word topic of the level before, which itself needs the rest of that level. */
   readonly after: string;
+  /** grammar are the level's grammar topics, each naming its unit. */
+  readonly grammar?: readonly LevelGrammar[];
 }
 
 /** Level is a built level: its characters and words, its topics, and the units of its course. */
@@ -84,9 +87,12 @@ export function buildLevel(spec: LevelSpec): Level {
   const topics: TopicDef[] = [];
   const units: CourseDef["units"][number][] = [];
   const taught = new Set(spec.earlierCharacters.keys());
+  const grammar = spec.grammar ?? [];
+  if (grammar.some((g) => g.unit < 1 || g.unit > spec.units.length)) throw new Error(`${where}: a grammar topic names no unit`);
   let c = 0;
   let w = 0;
-  for (const unit of spec.units) {
+  let g = 1;
+  for (const [u, unit] of spec.units.entries()) {
     const characterIds: string[] = [];
     for (let k = 0; k < unit.characters; k++) {
       const batch = charBatches[c]!;
@@ -135,11 +141,21 @@ export function buildLevel(spec: LevelSpec): Level {
       );
       wordIds.push(id);
     }
+    const unitGrammar = unitGrammarTopics({
+      level,
+      n: g,
+      grammar: grammar.filter((x) => x.unit === u + 1),
+      taught,
+      after: levelWordId(level, w),
+    });
+    g += unitGrammar.length;
+    topics.push(...unitGrammar);
     units.push({
       title: unit.title,
       modules: [
         { title: t("Characters", "汉字"), topics: characterIds },
         { title: t("Words", "词语"), topics: wordIds },
+        ...(unitGrammar.length > 0 ? [{ title: t("Grammar", "语法"), topics: unitGrammar.map((x) => x.id) }] : []),
       ],
     });
   }

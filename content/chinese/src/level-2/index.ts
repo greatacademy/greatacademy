@@ -7,6 +7,7 @@ import { type CourseDef, type TopicDef, t } from "@ga/content";
 import type { LevelOneCharacter } from "../level-1/characters.ts";
 import { levelOneCharacters, levelOneWordId, levelOneWords } from "../level-1/index.ts";
 import { characterBatches } from "./character-data.ts";
+import { grammar } from "./grammar-data.ts";
 import { buildLevel, type LevelUnit } from "./level.ts";
 import { wordBatches } from "./word-data.ts";
 
@@ -32,6 +33,7 @@ const level = buildLevel({
   units: UNITS,
   characterBatches,
   wordBatches,
+  grammar,
   earlierCharacters: levelOneCharacters,
   earlierWords: levelOneWords,
   after: levelOneWordId(50),
@@ -46,7 +48,7 @@ export const levelTwoWords: readonly string[] = level.words;
 /** levelTwoLast are the last character topic and the last word topic of level 2. */
 export const levelTwoLast: { readonly characters: string; readonly words: string } = level.last;
 
-/** levelTwoTopics are the 107 topics of level 2: 30 of characters and 77 of words. */
+/** levelTwoTopics are the 177 topics of level 2: 30 of characters, 77 of words and 70 of grammar. */
 export const levelTwoTopics: readonly TopicDef[] = level.topics;
 
 /** levelTwoCourse is the course of level 2 of Chinese as a foreign language. */
