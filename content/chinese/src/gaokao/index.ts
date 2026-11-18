@@ -13,6 +13,7 @@ import type { Idiom } from "../idioms/idioms.ts";
 import { idiomsByGrade } from "../idioms/index.ts";
 import { recitedPoems } from "../recitation/index.ts";
 import type { Poem } from "../recitation/poems.ts";
+import { gaokaoEssayTopic } from "../writing/later.ts";
 
 /** FROM is the first grade the paper draws on. */
 const FROM = 7;
@@ -248,6 +249,7 @@ export const gaokaoTopics: readonly TopicDef[] = [
       ),
     ],
   },
+  gaokaoEssayTopic,
 ];
 
 /** gaokaoCourse is the Gaokao course over the two senior courses. */
@@ -256,8 +258,8 @@ export function gaokaoCourse(required: CourseDef, selective: CourseDef): CourseD
     id: "chinese-gaokao",
     title: t("Gaokao Chinese", "高考语文"),
     description: t(
-      "Practice for the Chinese paper of China's university entrance examination, whose basis is level 4 of the senior standard's academic quality: the units of the required and selective required courses, then idioms in context, lines of recited texts from their meaning, and the words of classical Chinese, with grades 7 to 11 mixed as the paper mixes them. It teaches nothing new: its own topics start with practice. Reading of modern texts and the essay will follow with judged answers. In Chinese.",
-      "高考语文的练习，依据高中课标学业质量水平 4：必修和选择性必修课程的单元，然后是成语辨析、情景式默写和文言字词，七至十一年级的内容像试卷一样混在一起。本课程不教新知识：它自己的主题一开始就是练习。现代文阅读和作文将在有了评判之后加入。用中文讲解。",
+      "Practice for the Chinese paper of China's university entrance examination, whose basis is level 4 of the senior standard's academic quality: the units of the required and selective required courses, then idioms in context, lines of recited texts from their meaning, the words of classical Chinese, with grades 7 to 11 mixed as the paper mixes them, and the essay, judged by a model. It teaches nothing new: its own topics start with practice. Reading of modern texts will follow. In Chinese.",
+      "高考语文的练习，依据高中课标学业质量水平 4：必修和选择性必修课程的单元，然后是成语辨析、情景式默写和文言字词，七至十一年级的内容像试卷一样混在一起，以及由 AI 评判的作文。本课程不教新知识：它自己的主题一开始就是练习。现代文阅读以后加入。用中文讲解。",
     ),
     group: examGroup,
     buildsOn: [...(required.buildsOn ?? [])],

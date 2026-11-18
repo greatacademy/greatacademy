@@ -6,11 +6,11 @@
 - **Level:** Grade 8, native speakers
 - **Prerequisite(s):** Grade 7
 - **Language of explanation:** Chinese
-- **Size:** 5 units · 44 topics (14 of characters, 8 of words and idioms, 1 of grammar and punctuation, 12 of recitation, 9 of classical Chinese) · 116 knowledge points
+- **Size:** 6 units · 46 topics (14 of characters, 8 of words and idioms, 1 of grammar and punctuation, 2 of writing, 12 of recitation, 9 of classical Chinese) · 120 knowledge points
 
 ## Aim
 
-By the end of grade 8 a learner reads about 170 more characters of the second table in words, uses forty more words and thirty-two idioms, finds and corrects sentences whose structures are mixed up, recites twelve classical poems and eight passages of classical prose, and tells the usages of the function words 其 and 为.
+By the end of grade 8 a learner reads about 170 more characters of the second table in words, uses forty more words and thirty-two idioms, finds and corrects sentences whose structures are mixed up, recites twelve classical poems and eight passages of classical prose, and tells the usages of the function words 其 and 为. In writing judged by a model, they explain a thing by its features in a clear order and write a speech for an audience.
 
 ## Units
 
@@ -59,7 +59,14 @@ By the end of grade 8 a learner reads about 170 more characters of the second ta
 
 - `faulty-mixed-structures` Faulty Sentences: Mixed Structures: Finding the Fault; Correcting It
 
-### 4. Recitation
+### 4. Writing
+
+**Writing**
+
+- `writing-8-explain` Explaining in Order: Features in Order; Accurate Language
+- `writing-8-speech` Writing a Speech: Audience and View; Made to Be Heard
+
+### 5. Recitation
 
 - `recite-ye-wang` Gazing Over the Fields: Reciting the Lines; What the Lines Mean; Writing the Lines
 - `recite-huang-he-lou` Yellow Crane Tower: Reciting the Lines; What the Lines Mean; Writing the Lines
@@ -74,7 +81,7 @@ By the end of grade 8 a learner reads about 170 more characters of the second ta
 - `recite-yin-jiu-qi-wu` Drinking Wine (No. 5): Reciting the Lines; What the Lines Mean; Writing the Lines
 - `recite-bo-qin-huai` Mooring on the Qinhuai: Reciting the Lines; What the Lines Mean; Writing the Lines
 
-### 5. Classical Chinese
+### 6. Classical Chinese
 
 **Classical Passages**
 
@@ -99,12 +106,12 @@ By the end of grade 8 a learner reads about 170 more characters of the second ta
 
 ## Simulated Students
 
-`pnpm nx run simulate:simulate -- chinese-grade-8`, the mean of 20 runs of each student. A placed student already knows the course's foundations.
+`pnpm nx run simulate:simulate -- chinese-grade-8`, the mean of 20 runs of each student. A placed student already knows the course's foundations. A student who starts from nothing must also learn the grades before it, so a struggling one may run out of the simulation's time; placed, every run finishes.
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 20/20 | 211.65 | 323.70 | 1.60 | 1250.40 | 3.88 | 55.75 | 9.00 |
-| typical | 20/20 | 245.15 | 345.60 | 23.50 | 1350.30 | 4.19 | 50.40 | 9.00 |
-| struggling | 20/20 | 333.35 | 449.00 | 126.90 | 1767.55 | 5.49 | 46.70 | 9.00 |
-| placed | 20/20 | 35.40 | 56.55 | 4.00 | 202.00 | 3.80 | 6.75 | 9.00 |
-| struggling, placed | 20/20 | 49.10 | 76.25 | 23.70 | 282.30 | 5.34 | 6.60 | 9.00 |
+| strong | 20/20 | 226.75 | 339.90 | 1.80 | 1315.20 | 3.89 | 59.85 | 9.00 |
+| typical | 20/20 | 263.95 | 361.75 | 23.65 | 1414.95 | 4.19 | 54.35 | 9.00 |
+| struggling | 13/20 | 353.25 | 464.65 | 129.15 | 1830.70 | 5.46 | 50.15 | 9.00 |
+| placed | 20/20 | 37.45 | 54.85 | 4.00 | 194.30 | 3.82 | 7.40 | 9.00 |
+| struggling, placed | 20/20 | 50.25 | 76.20 | 25.35 | 282.65 | 5.54 | 6.75 | 9.00 |

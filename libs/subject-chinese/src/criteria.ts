@@ -1,7 +1,7 @@
 import type { CriterionSpec } from "@ga/content";
 
 /**
- * WRITING_CRITERIA are the criteria of the judged writing of native grades 3 to 6 (docs/chinese-curriculum.md §11): W4
+ * WRITING_CRITERIA are the criteria of the judged writing of native grades 3 to 11 and the essay of the Gaokao (docs/chinese-curriculum.md §11): W4
  * paragraphs and W5 compositions, with starting questions to be calibrated against texts scored by teachers of Chinese.
  * Their questions are in English, as the core asks; the texts they are asked of are in Chinese.
  */
@@ -174,6 +174,229 @@ export const WRITING_CRITERIA: readonly CriterionSpec[] = [
     version: "1",
     question:
       "Does the text carry a feeling through the scene, so that what is described shows the writer's mood, and does it say or make clear what that feeling is?",
+    quoteWhenMet: true,
+  },
+  // Grade 7: making the centre stand out.
+  {
+    id: "zh7-center-clear",
+    version: "1",
+    question:
+      "Does the text have one clear central idea, about a person, an event or a feeling, that a reader could state after reading it?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh7-center-material",
+    version: "1",
+    question: "Is the material chosen to serve that central idea, with nothing included that has no bearing on it?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "zh7-center-emphasis",
+    version: "1",
+    question: "Is the part that best shows the central idea told in detail, and the other parts told briefly?",
+    quoteWhenMet: true,
+  },
+  // Grade 7: details.
+  {
+    id: "zh7-detail-telling",
+    version: "1",
+    question:
+      "Does the text include at least one closely observed detail, of an action, an expression, a word said or an object, described precisely rather than in general terms?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh7-detail-meaning",
+    version: "1",
+    question:
+      "Does that detail reveal something about a person's character or feeling, or about the meaning of the event, rather than being decoration?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh7-detail-whole",
+    version: "1",
+    question: "Does the text tell one event or show one person completely and in a clear order, so that the detail sits inside a whole?",
+    quoteWhenMet: false,
+  },
+  // Grade 8: explaining in order.
+  {
+    id: "zh8-explain-feature",
+    version: "1",
+    question: "Does the explanation grasp the main features of the thing named in the task, the ones that make it what it is?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh8-explain-order",
+    version: "1",
+    question:
+      "Does the explanation follow a clear order, in space, in time or in logic, that the reader can follow from paragraph to paragraph?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "zh8-explain-accurate",
+    version: "1",
+    question:
+      "Is the language accurate, with qualifying words such as 大约 or 一般 where a statement is not always true, and with no statement that is clearly wrong?",
+    quoteWhenMet: false,
+  },
+  // Grade 8: a speech.
+  {
+    id: "zh8-speech-audience",
+    version: "1",
+    question:
+      "Is the text written as a speech to the audience of the task, with a form of address at the start and a closing such as thanks at the end?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "zh8-speech-view",
+    version: "1",
+    question: "Does the speech put forward one clear view or appeal and support it with reasons or examples?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh8-speech-spoken",
+    version: "1",
+    question:
+      "Does the speech suit being spoken: addressing the listeners directly, in sentences easy to follow by ear, with at least one device such as a question to the audience, repetition or a call to act?",
+    quoteWhenMet: true,
+  },
+  // Grade 9: an argument.
+  {
+    id: "zh9-argue-thesis",
+    version: "1",
+    question: "Does the essay state one clear and sound central claim on the question of the task, early in the text?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh9-argue-evidence",
+    version: "1",
+    question: "Does the essay support the claim with evidence, facts, examples or sound reasoning, that really bears on it?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh9-argue-methods",
+    version: "1",
+    question:
+      "Does the essay use at least two methods of argument, such as giving examples, reasoning, contrast or analogy, and explain how the evidence proves the claim?",
+    quoteWhenMet: true,
+  },
+  // Grade 9: a full narrative.
+  {
+    id: "zh9-story-thread",
+    version: "1",
+    question:
+      "Is the narrative held together by a clear thread or order, such as an object, a feeling or the passing of time, that links its parts?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "zh9-story-detail",
+    version: "1",
+    question: "Is the key scene described vividly, through actions, words, thoughts or the surroundings?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh9-story-theme",
+    version: "1",
+    question: "Does a theme emerge from the story itself, and does the ending bring it out without a moral simply tacked on?",
+    quoteWhenMet: true,
+  },
+  // Grade 10: writing on given material.
+  {
+    id: "zh10-task-material",
+    version: "1",
+    question: "Is the essay's view drawn from the material and the task given, rather than from a topic the material does not raise?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh10-task-depth",
+    version: "1",
+    question:
+      "Does the argument develop in stages, for example from what the matter is to why it matters and what to do, rather than repeating the same point?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "zh10-task-evidence",
+    version: "1",
+    question: "Is the evidence specific and relevant, and is each piece analysed to show how it supports the view?",
+    quoteWhenMet: true,
+  },
+  // Grade 10: a commentary.
+  {
+    id: "zh10-comment-event",
+    version: "1",
+    question:
+      "Does the commentary state the event or phenomenon of the task briefly and accurately, without inventing facts that change it?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "zh10-comment-view",
+    version: "1",
+    question: "Does the commentary take one clear, reasoned view of it, avoiding sweeping or extreme judgments?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh10-comment-analysis",
+    version: "1",
+    question: "Does the commentary analyse causes or consequences and end with a reasoned suggestion or conclusion?",
+    quoteWhenMet: true,
+  },
+  // Grade 11: weighing both sides.
+  {
+    id: "zh11-dialectic-sides",
+    version: "1",
+    question: "Does the essay consider more than one side of the question, or the conditions under which each holds?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh11-dialectic-position",
+    version: "1",
+    question:
+      "Does the essay reach a reasoned position of its own that takes account of both sides, rather than only saying that both have a point?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh11-dialectic-reasoning",
+    version: "1",
+    question: "Are the steps of reasoning clearly linked, with concessions, conditions or contrasts where the argument turns?",
+    quoteWhenMet: false,
+  },
+  // Grade 11: a proposal.
+  {
+    id: "zh11-proposal-form",
+    version: "1",
+    question:
+      "Does the text follow the form of a proposal (倡议书): a title, the people addressed, the body, then the proposer and the date at the end?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "zh11-proposal-reason",
+    version: "1",
+    question: "Does the proposal explain the background and the reasons for what it proposes?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh11-proposal-actions",
+    version: "1",
+    question: "Does the proposal give concrete, feasible actions, set out clearly, and end with a call to act?",
+    quoteWhenMet: true,
+  },
+  // The Gaokao essay.
+  {
+    id: "zhgk-essay-thesis",
+    version: "1",
+    question: "Does the essay answer the material and task of the prompt with a clear, apt thesis, without straying from them?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zhgk-essay-structure",
+    version: "1",
+    question:
+      "Is the essay complete and well organised, with paragraphs that each do one job and a progression from opening to conclusion?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "zhgk-essay-argument",
+    version: "1",
+    question: "Does the essay argue with substance: apt evidence, analysed, and reasoning that goes beyond the obvious?",
     quoteWhenMet: true,
   },
 ];

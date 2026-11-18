@@ -6,11 +6,11 @@
 - **Level:** Senior secondary school, selective required course, native speakers
 - **Prerequisite(s):** Senior Required
 - **Language of explanation:** Chinese
-- **Size:** 4 units · 49 topics (8 of words and idioms, 1 of grammar and rhetoric, 20 of recitation, 20 of classical Chinese) · 142 knowledge points
+- **Size:** 5 units · 51 topics (8 of words and idioms, 1 of grammar and rhetoric, 2 of writing, 20 of recitation, 20 of classical Chinese) · 146 knowledge points
 
 ## Aim
 
-By the end of the selective required course a learner uses forty more words, among them pairs easily confused, and thirty-two idioms often misused, finds and corrects sentences with two meanings, recites twenty classical poems and sixteen passages of classical prose, tells the usages of the function words 因, 与, 则, 所, 也 and 者, and reads words used as another part of speech and words whose meaning has changed since classical times.
+By the end of the selective required course a learner uses forty more words, among them pairs easily confused, and thirty-two idioms often misused, finds and corrects sentences with two meanings, recites twenty classical poems and sixteen passages of classical prose, tells the usages of the function words 因, 与, 则, 所, 也 and 者, and reads words used as another part of speech and words whose meaning has changed since classical times. In writing judged by a model, they weigh both sides of a question to a position of their own, and write proposals.
 
 ## Units
 
@@ -34,7 +34,14 @@ By the end of the selective required course a learner uses forty more words, amo
 
 - `faulty-ambiguous` Faulty Sentences: Two Meanings: Finding the Fault; Correcting It
 
-### 3. Recitation
+### 3. Writing
+
+**Writing**
+
+- `writing-11-dialectic` Weighing Both Sides: Both Sides and Their Conditions; A Position of Your Own
+- `writing-11-proposal` Writing a Proposal: Form and Reasons; Concrete Actions
+
+### 4. Recitation
 
 - `recite-wu-yi` No Clothes? (Excerpt): Reciting the Lines; What the Lines Mean; Writing the Lines
 - `recite-chun-jiang-hua-yue-ye` A Moonlit Night on the Spring River: Reciting the Lines; What the Lines Mean; Writing the Lines
@@ -57,7 +64,7 @@ By the end of the selective required course a learner uses forty more words, amo
 - `recite-ding-feng-bo` Calming the Waves: Reciting the Lines; What the Lines Mean; Writing the Lines
 - `recite-chang-ting-song-bie` Farewell at the Long Pavilion (Excerpt): Reciting the Lines; What the Lines Mean; Writing the Lines
 
-### 4. Classical Chinese
+### 5. Classical Chinese
 
 **Classical Passages**
 
@@ -93,12 +100,12 @@ By the end of the selective required course a learner uses forty more words, amo
 
 ## Simulated Students
 
-`pnpm nx run simulate:simulate -- chinese-hs-selective`, the mean of 20 runs of each student. A placed student already knows the course's foundations.
+`pnpm nx run simulate:simulate -- chinese-hs-selective`, the mean of 20 runs of each student. A placed student already knows the course's foundations. A student who starts from nothing must also learn the grades before it, so a struggling one may run out of the simulation's time; placed, every run finishes.
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 20/20 | 258.15 | 377.95 | 3.10 | 1468.75 | 3.92 | 68.75 | 9.00 |
-| typical | 20/20 | 300.50 | 403.15 | 28.30 | 1581.95 | 4.22 | 62.40 | 9.00 |
-| struggling | 2/20 | 363.95 | 479.15 | 142.95 | 1888.90 | 5.62 | 51.70 | 4.60 |
-| placed | 20/20 | 47.45 | 58.80 | 4.40 | 212.10 | 3.88 | 9.75 | 9.00 |
-| struggling, placed | 20/20 | 63.85 | 81.60 | 27.20 | 304.25 | 5.58 | 9.30 | 9.00 |
+| strong | 20/20 | 279.55 | 398.65 | 3.10 | 1553.90 | 3.93 | 74.50 | 9.00 |
+| typical | 20/20 | 322.45 | 425.15 | 29.60 | 1670.75 | 4.22 | 67.35 | 9.00 |
+| struggling | 0/20 | 365.00 | 471.60 | 137.65 | 1860.25 | 5.57 | 52.45 | 1.35 |
+| placed | 20/20 | 49.75 | 61.35 | 5.00 | 222.70 | 3.95 | 10.30 | 9.00 |
+| struggling, placed | 20/20 | 66.95 | 83.80 | 27.45 | 313.35 | 5.56 | 9.80 | 9.00 |

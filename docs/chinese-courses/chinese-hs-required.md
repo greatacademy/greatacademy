@@ -6,11 +6,11 @@
 - **Level:** Senior secondary school, required course, native speakers
 - **Prerequisite(s):** Grade 9
 - **Language of explanation:** Chinese
-- **Size:** 4 units · 49 topics (8 of words and idioms, 1 of grammar and rhetoric, 20 of recitation, 20 of classical Chinese) · 142 knowledge points
+- **Size:** 5 units · 51 topics (8 of words and idioms, 1 of grammar and rhetoric, 2 of writing, 20 of recitation, 20 of classical Chinese) · 146 knowledge points
 
 ## Aim
 
-By the end of the required course a learner uses forty more words common in essays and arguments and thirty-two idioms often misused, recognizes synaesthesia, paired phrasing, double meaning and irony, recites twenty classical poems and sixteen passages of classical prose, tells the usages of the function words 乃, 且, 若, 焉, 何 and 乎, and recognizes the special sentences of classical Chinese: judgments, passives, omissions and inversions.
+By the end of the required course a learner uses forty more words common in essays and arguments and thirty-two idioms often misused, recognizes synaesthesia, paired phrasing, double meaning and irony, recites twenty classical poems and sixteen passages of classical prose, tells the usages of the function words 乃, 且, 若, 焉, 何 and 乎, and recognizes the special sentences of classical Chinese: judgments, passives, omissions and inversions. In writing judged by a model, they write essays on given material that go deeper in stages, and commentaries on events.
 
 ## Units
 
@@ -34,7 +34,14 @@ By the end of the required course a learner uses forty more words common in essa
 
 - `rhetoric-4` Rhetoric: Synaesthesia, Paired Phrasing, Double Meaning, Irony: Naming the Device; Finding the Device
 
-### 3. Recitation
+### 3. Writing
+
+**Writing**
+
+- `writing-10-material` Writing on Given Material: A View from the Material; Going Deeper in Stages
+- `writing-10-commentary` Writing a Commentary: The Event and a View; Causes, Consequences and a Way Forward
+
+### 4. Recitation
 
 - `recite-duan-ge-xing` A Short Song: Reciting the Lines; What the Lines Mean; Writing the Lines
 - `recite-gui-yuan-tian-ju` Returning to Live in the Country (I): Reciting the Lines; What the Lines Mean; Writing the Lines
@@ -57,7 +64,7 @@ By the end of the required course a learner uses forty more words common in essa
 - `recite-su-mu-zhe` Su Mu Zhe: Burning Aloeswood: Reciting the Lines; What the Lines Mean; Writing the Lines
 - `recite-qing-yu-an-yuan-xi` Green Jade Table: The Lantern Festival: Reciting the Lines; What the Lines Mean; Writing the Lines
 
-### 4. Classical Chinese
+### 5. Classical Chinese
 
 **Classical Passages**
 
@@ -93,12 +100,12 @@ By the end of the required course a learner uses forty more words common in essa
 
 ## Simulated Students
 
-`pnpm nx run simulate:simulate -- chinese-hs-required`, the mean of 20 runs of each student. A placed student already knows the course's foundations.
+`pnpm nx run simulate:simulate -- chinese-hs-required`, the mean of 20 runs of each student. A placed student already knows the course's foundations. A student who starts from nothing must also learn the grades before it, so a struggling one may run out of the simulation's time; placed, every run finishes.
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 20/20 | 236.60 | 345.95 | 2.15 | 1342.20 | 3.91 | 62.75 | 9.00 |
-| typical | 20/20 | 275.00 | 368.05 | 24.25 | 1441.00 | 4.19 | 56.70 | 9.00 |
-| struggling | 3/20 | 361.15 | 468.25 | 137.80 | 1845.30 | 5.59 | 51.35 | 9.00 |
-| placed | 20/20 | 45.80 | 58.75 | 4.85 | 211.85 | 3.92 | 9.50 | 9.00 |
-| struggling, placed | 20/20 | 67.00 | 82.30 | 28.40 | 307.10 | 5.68 | 9.55 | 9.00 |
+| strong | 20/20 | 257.60 | 369.80 | 3.50 | 1436.90 | 3.92 | 68.65 | 9.00 |
+| typical | 20/20 | 298.20 | 394.00 | 27.70 | 1546.15 | 4.22 | 62.00 | 9.00 |
+| struggling | 2/20 | 362.35 | 463.10 | 131.05 | 1825.25 | 5.50 | 52.05 | 7.65 |
+| placed | 20/20 | 49.00 | 61.70 | 4.95 | 223.80 | 3.94 | 10.20 | 9.00 |
+| struggling, placed | 20/20 | 70.50 | 85.00 | 28.25 | 318.90 | 5.64 | 10.35 | 9.00 |

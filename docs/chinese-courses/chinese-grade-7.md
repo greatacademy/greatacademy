@@ -6,11 +6,11 @@
 - **Level:** Grade 7, native speakers
 - **Prerequisite(s):** Grade 6
 - **Language of explanation:** Chinese
-- **Size:** 5 units · 44 topics (14 of characters, 8 of words and idioms, 1 of grammar and punctuation, 12 of recitation, 9 of classical Chinese) · 116 knowledge points
+- **Size:** 6 units · 46 topics (14 of characters, 8 of words and idioms, 1 of grammar and punctuation, 2 of writing, 12 of recitation, 9 of classical Chinese) · 120 knowledge points
 
 ## Aim
 
-By the end of grade 7 a learner reads about 170 more characters of the second table in words, uses forty more words and thirty-two idioms, recognizes metonymy, contrast, quotation and anadiplosis, recites twelve classical poems and eight passages of classical prose, knows the content words of those passages and puts their sentences into modern Chinese.
+By the end of grade 7 a learner reads about 170 more characters of the second table in words, uses forty more words and thirty-two idioms, recognizes metonymy, contrast, quotation and anadiplosis, recites twelve classical poems and eight passages of classical prose, knows the content words of those passages and puts their sentences into modern Chinese. In writing judged by a model, they make the centre of a narrative stand out and catch the details that reveal a person.
 
 ## Units
 
@@ -59,7 +59,14 @@ By the end of grade 7 a learner reads about 170 more characters of the second ta
 
 - `rhetoric-3` Rhetoric: Metonymy, Contrast, Quotation, Anadiplosis: Naming the Device; Finding the Device
 
-### 4. Recitation
+### 4. Writing
+
+**Writing**
+
+- `writing-7-center` Making the Centre Stand Out: Material That Serves the Centre; Detail Where It Matters
+- `writing-7-detail` Catching the Telling Detail: Looking Closely; Details That Mean Something
+
+### 5. Recitation
 
 - `recite-guan-cang-hai` Viewing the Blue Sea: Reciting the Lines; What the Lines Mean; Writing the Lines
 - `recite-wen-wang-chang-ling` Hearing Wang Changling Was Demoted to Longbiao: Reciting the Lines; What the Lines Mean; Writing the Lines
@@ -74,7 +81,7 @@ By the end of grade 7 a learner reads about 170 more characters of the second ta
 - `recite-wan-chun` Late Spring: Reciting the Lines; What the Lines Mean; Writing the Lines
 - `recite-deng-you-zhou-tai-ge` Song on Climbing the Youzhou Terrace: Reciting the Lines; What the Lines Mean; Writing the Lines
 
-### 5. Classical Chinese
+### 6. Classical Chinese
 
 **Classical Passages**
 
@@ -99,12 +106,12 @@ By the end of grade 7 a learner reads about 170 more characters of the second ta
 
 ## Simulated Students
 
-`pnpm nx run simulate:simulate -- chinese-grade-7`, the mean of 20 runs of each student. A placed student already knows the course's foundations.
+`pnpm nx run simulate:simulate -- chinese-grade-7`, the mean of 20 runs of each student. A placed student already knows the course's foundations. A student who starts from nothing must also learn the grades before it, so a struggling one may run out of the simulation's time; placed, every run finishes.
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 20/20 | 204.70 | 312.90 | 1.55 | 1207.90 | 3.88 | 53.90 | 9.00 |
-| typical | 20/20 | 238.05 | 334.20 | 22.85 | 1304.30 | 4.19 | 48.85 | 9.00 |
-| struggling | 20/20 | 321.90 | 433.40 | 122.05 | 1705.30 | 5.48 | 45.15 | 9.00 |
-| placed | 20/20 | 33.50 | 54.35 | 2.70 | 193.75 | 3.72 | 6.40 | 9.00 |
-| struggling, placed | 20/20 | 47.90 | 76.45 | 24.80 | 283.75 | 5.43 | 6.35 | 9.00 |
+| strong | 20/20 | 214.60 | 323.85 | 1.55 | 1251.40 | 3.88 | 56.50 | 9.00 |
+| typical | 20/20 | 249.70 | 344.65 | 22.35 | 1346.50 | 4.18 | 51.35 | 9.00 |
+| struggling | 18/20 | 340.70 | 449.90 | 128.25 | 1771.20 | 5.51 | 48.05 | 9.00 |
+| placed | 20/20 | 36.00 | 54.90 | 4.05 | 196.65 | 3.86 | 6.95 | 9.00 |
+| struggling, placed | 20/20 | 51.75 | 76.20 | 25.35 | 283.05 | 5.58 | 7.00 | 9.00 |

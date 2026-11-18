@@ -6,11 +6,11 @@
 - **Level:** Grade 9, native speakers
 - **Prerequisite(s):** Grade 8
 - **Language of explanation:** Chinese
-- **Size:** 5 units · 44 topics (14 of characters, 8 of words and idioms, 1 of grammar and punctuation, 12 of recitation, 9 of classical Chinese) · 116 knowledge points
+- **Size:** 6 units · 46 topics (14 of characters, 8 of words and idioms, 1 of grammar and punctuation, 2 of writing, 12 of recitation, 9 of classical Chinese) · 120 knowledge points
 
 ## Aim
 
-By the end of grade 9 a learner has read all 3,500 common characters, the goal of junior secondary school, uses forty more words and thirty-two idioms, finds and corrects illogical sentences, recites twelve classical poems and eight passages of classical prose, and reads the borrowed characters of classical Chinese.
+By the end of grade 9 a learner has read all 3,500 common characters, the goal of junior secondary school, uses forty more words and thirty-two idioms, finds and corrects illogical sentences, recites twelve classical poems and eight passages of classical prose, and reads the borrowed characters of classical Chinese. In writing judged by a model, they argue a claim with evidence and two methods of argument, and write a whole narrative held by a thread.
 
 ## Units
 
@@ -59,7 +59,14 @@ By the end of grade 9 a learner has read all 3,500 common characters, the goal o
 
 - `faulty-illogical` Faulty Sentences: Against Logic: Finding the Fault; Correcting It
 
-### 4. Recitation
+### 4. Writing
+
+**Writing**
+
+- `writing-9-argue` Writing an Argument: A Claim and Its Evidence; Methods of Argument
+- `writing-9-story` A Whole Narrative: A Thread and a Scene; Letting the Theme Emerge
+
+### 5. Recitation
 
 - `recite-song-du-shao-fu` Seeing Off Prefect Du to Shuzhou: Reciting the Lines; What the Lines Mean; Writing the Lines
 - `recite-song-you-ren` Farewell to a Friend: Reciting the Lines; What the Lines Mean; Writing the Lines
@@ -74,7 +81,7 @@ By the end of grade 9 a learner has read all 3,500 common characters, the goal o
 - `recite-guo-ling-ding-yang` Crossing the Lonely Sea: Reciting the Lines; What the Lines Mean; Writing the Lines
 - `recite-bu-suan-zi-yong-mei` Song of Divination: Ode to the Plum Blossom: Reciting the Lines; What the Lines Mean; Writing the Lines
 
-### 5. Classical Chinese
+### 6. Classical Chinese
 
 **Classical Passages**
 
@@ -99,12 +106,12 @@ By the end of grade 9 a learner has read all 3,500 common characters, the goal o
 
 ## Simulated Students
 
-`pnpm nx run simulate:simulate -- chinese-grade-9`, the mean of 20 runs of each student. A placed student already knows the course's foundations.
+`pnpm nx run simulate:simulate -- chinese-grade-9`, the mean of 20 runs of each student. A placed student already knows the course's foundations. A student who starts from nothing must also learn the grades before it, so a struggling one may run out of the simulation's time; placed, every run finishes.
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 20/20 | 224.60 | 341.45 | 2.10 | 1322.50 | 3.90 | 59.40 | 9.00 |
-| typical | 20/20 | 260.60 | 364.85 | 25.50 | 1427.35 | 4.21 | 53.65 | 9.00 |
-| struggling | 14/20 | 350.95 | 469.80 | 132.75 | 1851.80 | 5.50 | 49.40 | 9.00 |
-| placed | 20/20 | 38.85 | 56.55 | 3.80 | 202.65 | 3.80 | 7.70 | 9.00 |
-| struggling, placed | 20/20 | 55.70 | 78.20 | 25.45 | 291.35 | 5.45 | 7.60 | 9.00 |
+| strong | 20/20 | 242.30 | 360.15 | 2.45 | 1397.10 | 3.91 | 64.25 | 9.00 |
+| typical | 20/20 | 281.90 | 383.15 | 25.45 | 1501.05 | 4.20 | 58.60 | 9.00 |
+| struggling | 2/20 | 361.95 | 474.75 | 136.45 | 1871.50 | 5.54 | 51.50 | 8.50 |
+| placed | 20/20 | 39.90 | 55.70 | 4.00 | 198.15 | 3.83 | 8.05 | 9.00 |
+| struggling, placed | 20/20 | 53.75 | 75.05 | 23.35 | 280.10 | 5.42 | 7.70 | 9.00 |

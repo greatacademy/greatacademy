@@ -58,6 +58,7 @@ topic faulty-mixed-structures faulty-mixed-structures-finding faulty-mixed-struc
 topic faulty-repetition faulty-repetition-finding faulty-repetition-fixing
 topic faulty-word-order faulty-word-order-finding faulty-word-order-fixing
 topic gaokao-classical-words gaokao-classical-words-junior gaokao-classical-words-senior
+topic gaokao-essay gaokao-essay-argument gaokao-essay-whole
 topic gaokao-idioms gaokao-idioms-meaning gaokao-idioms-sentence
 topic gaokao-recitation gaokao-recitation-choose gaokao-recitation-write
 topic heritage-de-and-pronouns heritage-de-and-pronouns-de heritage-de-and-pronouns-pronouns
@@ -2083,6 +2084,10 @@ topic words-9-01 words-9-01-meaning words-9-01-relations words-9-01-use
 topic words-9-02 words-9-02-meaning words-9-02-relations words-9-02-use
 topic words-9-03 words-9-03-meaning words-9-03-relations words-9-03-use
 topic words-9-04 words-9-04-meaning words-9-04-relations words-9-04-use
+topic writing-10-commentary writing-10-commentary-analysis writing-10-commentary-view
+topic writing-10-material writing-10-material-depth writing-10-material-view
+topic writing-11-dialectic writing-11-dialectic-position writing-11-dialectic-sides
+topic writing-11-proposal writing-11-proposal-actions writing-11-proposal-form
 topic writing-3-diary writing-3-diary-change writing-3-diary-observed
 topic writing-3-paragraph writing-3-paragraph-details writing-3-paragraph-idea
 topic writing-4-event writing-4-event-detail writing-4-event-parts
@@ -2091,6 +2096,12 @@ topic writing-5-explain writing-5-explain-features writing-5-explain-methods
 topic writing-5-person writing-5-person-description writing-5-person-example
 topic writing-6-argue writing-6-argue-evidence writing-6-argue-reasoning
 topic writing-6-scene writing-6-scene-feeling writing-6-scene-order
+topic writing-7-center writing-7-center-emphasis writing-7-center-material
+topic writing-7-detail writing-7-detail-meaning writing-7-detail-telling
+topic writing-8-explain writing-8-explain-accurate writing-8-explain-order
+topic writing-8-speech writing-8-speech-spoken writing-8-speech-view
+topic writing-9-argue writing-9-argue-methods writing-9-argue-thesis
+topic writing-9-story writing-9-story-theme writing-9-story-thread
 passage chinese-a-letter-from-grandpa
 passage chinese-a-letter-from-the-seaside
 passage chinese-a-letter-to-my-cousin

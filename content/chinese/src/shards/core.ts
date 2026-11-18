@@ -25,6 +25,7 @@ import { recitationTopics } from "../recitation/index.ts";
 import { componentTopics, strokeOrderTopics } from "../strokes/index.ts";
 import { wordTopics } from "../words/index.ts";
 import { writingTopics } from "../writing/index.ts";
+import { laterWritingTopics } from "../writing/later.ts";
 
 /** coreShardTopics are the topics of the core shard. */
 export const coreShardTopics: readonly TopicDef[] = [
@@ -36,6 +37,7 @@ export const coreShardTopics: readonly TopicDef[] = [
   ...idiomTopics,
   ...grammarTopics,
   ...writingTopics.map((x) => x.topic),
+  ...laterWritingTopics.map((x) => x.topic),
   ...recitationTopics,
   ...classicalTopics,
   ...heritageTopics,

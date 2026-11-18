@@ -23,6 +23,7 @@ import { recitedPoems } from "./recitation/index.ts";
 import { componentTopics, strokeOrderTopics } from "./strokes/index.ts";
 import { wordBatches } from "./words/index.ts";
 import { writingTopics } from "./writing/index.ts";
+import { laterWritingTopics } from "./writing/later.ts";
 
 const NUMERALS = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九"];
 
@@ -86,8 +87,8 @@ function grammarModules(grade: number): readonly ModuleDef[] {
 
 /** writingModules are a grade's modules of judged writing, those it has. */
 function writingModules(grade: number): readonly ModuleDef[] {
-  const topics = ofGrade(writingTopics, grade);
-  return topics.length > 0 ? [{ title: t("Writing", "习作"), topics }] : [];
+  const topics = ofGrade([...writingTopics, ...laterWritingTopics], grade);
+  return topics.length > 0 ? [{ title: t("Writing", grade >= 7 ? "写作" : "习作"), topics }] : [];
 }
 
 /** classicalModules are a grade's modules of classical language, those it has. */
@@ -111,6 +112,7 @@ function seniorCourse(grade: number, id: string, title: CourseDef["title"], desc
     units: [
       ...(wordModules(grade).length > 0 ? [{ title: t("Words", "词语"), modules: wordModules(grade) }] : []),
       ...(grammarModules(grade).length > 0 ? [{ title: t("Grammar and Rhetoric", "语法与修辞"), modules: grammarModules(grade) }] : []),
+      ...(writingModules(grade).length > 0 ? [{ title: t("Writing", "写作"), modules: writingModules(grade) }] : []),
       {
         title: t("Recitation", "积累与背诵"),
         modules: [
@@ -153,7 +155,7 @@ function gradeCourse(grade: number, description: CourseDef["description"]): Cour
       { title: t("Characters", "识字"), modules: recognitionModules(grade) },
       ...(wordModules(grade).length > 0 ? [{ title: t("Words", "词语"), modules: wordModules(grade) }] : []),
       ...(grammarModules(grade).length > 0 ? [{ title: t("Grammar and Punctuation", "语法与标点"), modules: grammarModules(grade) }] : []),
-      ...(writingModules(grade).length > 0 ? [{ title: t("Writing", "习作"), modules: writingModules(grade) }] : []),
+      ...(writingModules(grade).length > 0 ? [{ title: t("Writing", grade >= 7 ? "写作" : "习作"), modules: writingModules(grade) }] : []),
       {
         title: t("Recitation", "积累与背诵"),
         modules: [{ title: t("Classical Poems", "古诗词"), topics: recitedPoems.filter((p) => p.grade === grade).map((p) => p.topic.id) }],
