@@ -317,12 +317,12 @@ Level 5 teaches 300 more characters and 1,070 words, in twelve themed units: soc
 
 ## Simulated Students
 
-`pnpm nx run simulate:simulate -- chinese-level-5`, the mean of 20 runs of each student. A placed student already knows the course's foundations. A typical or struggling student who starts from nothing must also learn levels 1 to 4 and mostly runs out of the simulation's time; placed, every run finishes.
+`pnpm nx run simulate:simulate -- chinese-level-5`, the mean of 20 runs of each student. A placed student already knows the course's foundations. A student who starts from nothing, however strong, must also learn levels 1 to 4 and mostly runs out of the simulation's time; placed, every run finishes.
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 16/20 | 337.20 | 604.40 | 5.10 | 2350.85 | 3.92 | 88.40 | 0.00 |
-| typical | 3/20 | 344.15 | 573.55 | 49.65 | 2245.80 | 4.28 | 69.90 | 0.00 |
-| struggling | 2/20 | 353.30 | 596.25 | 218.40 | 2342.65 | 6.19 | 49.20 | 0.00 |
-| placed | 20/20 | 128.80 | 214.65 | 15.90 | 830.65 | 4.18 | 25.95 | 0.00 |
-| struggling, placed | 20/20 | 181.15 | 304.60 | 105.85 | 1190.20 | 5.99 | 25.25 | 0.00 |
+| strong | 7/20 | 339.40 | 606.45 | 5.00 | 2357.20 | 3.92 | 88.90 | 0.00 |
+| typical | 3/20 | 345.45 | 575.05 | 50.20 | 2252.40 | 4.29 | 70.10 | 0.00 |
+| struggling | 2/20 | 354.15 | 596.95 | 218.20 | 2345.35 | 6.18 | 49.35 | 0.00 |
+| placed | 20/20 | 133.60 | 221.30 | 16.65 | 857.10 | 4.19 | 26.80 | 0.00 |
+| struggling, placed | 20/20 | 186.05 | 306.10 | 101.45 | 1195.50 | 5.84 | 25.85 | 0.00 |
