@@ -4,8 +4,10 @@ import type { ReadingUnitDef, TopicDef } from "@ga/content";
 
 import { characterTopics } from "../characters/index.ts";
 import { classicalTopics } from "../classical/index.ts";
+import { gaokaoTopics } from "../gaokao/index.ts";
 import { grammarTopics } from "../grammar/index.ts";
 import { heritageTopics } from "../heritage/topics.ts";
+import { hskTopics } from "../hsk/index.ts";
 import { idiomTopics } from "../idioms/index.ts";
 import { levelOneTopics } from "../level-1/index.ts";
 import { levelTwoTopics } from "../level-2/index.ts";
@@ -44,6 +46,8 @@ export const coreShardTopics: readonly TopicDef[] = [
   ...levelSevenTopics,
   ...levelEightTopics,
   ...levelNineTopics,
+  ...hskTopics,
+  ...gaokaoTopics,
 ];
 
 /** coreShardReading are the reading units held by the `core` shard. */

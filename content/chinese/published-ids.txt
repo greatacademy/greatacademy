@@ -1,3 +1,4 @@
+course chinese-gaokao
 course chinese-grade-1
 course chinese-grade-2
 course chinese-grade-3
@@ -12,6 +13,13 @@ course chinese-heritage-2
 course chinese-heritage-3
 course chinese-hs-required
 course chinese-hs-selective
+course chinese-hsk-1
+course chinese-hsk-2
+course chinese-hsk-3
+course chinese-hsk-4
+course chinese-hsk-5
+course chinese-hsk-6
+course chinese-hsk-7-9
 course chinese-level-1
 course chinese-level-2
 course chinese-level-3
@@ -49,12 +57,36 @@ topic faulty-misused-connectives faulty-misused-connectives-finding faulty-misus
 topic faulty-mixed-structures faulty-mixed-structures-finding faulty-mixed-structures-fixing
 topic faulty-repetition faulty-repetition-finding faulty-repetition-fixing
 topic faulty-word-order faulty-word-order-finding faulty-word-order-fixing
+topic gaokao-classical-words gaokao-classical-words-junior gaokao-classical-words-senior
+topic gaokao-idioms gaokao-idioms-meaning gaokao-idioms-sentence
+topic gaokao-recitation gaokao-recitation-choose gaokao-recitation-write
 topic heritage-de-and-pronouns heritage-de-and-pronouns-de heritage-de-and-pronouns-pronouns
 topic heritage-dialect-words heritage-dialect-words-dialect heritage-dialect-words-mandarin
 topic heritage-register heritage-register-notice heritage-register-words
 topic heritage-sound-alike heritage-sound-alike-choose heritage-sound-alike-mistake
 topic heritage-traditional heritage-traditional-characters heritage-traditional-words
 topic heritage-written-forms heritage-written-forms-phrases heritage-written-forms-words
+topic hsk-1-characters hsk-1-characters-reading hsk-1-characters-word
+topic hsk-1-gaps hsk-1-gaps-five hsk-1-gaps-six
+topic hsk-1-meanings hsk-1-meanings-meaning hsk-1-meanings-word
+topic hsk-2-characters hsk-2-characters-reading hsk-2-characters-word
+topic hsk-2-gaps hsk-2-gaps-five hsk-2-gaps-six
+topic hsk-2-meanings hsk-2-meanings-meaning hsk-2-meanings-word
+topic hsk-3-characters hsk-3-characters-reading hsk-3-characters-word
+topic hsk-3-gaps hsk-3-gaps-five hsk-3-gaps-six
+topic hsk-3-meanings hsk-3-meanings-meaning hsk-3-meanings-word
+topic hsk-4-characters hsk-4-characters-reading hsk-4-characters-word
+topic hsk-4-gaps hsk-4-gaps-five hsk-4-gaps-six
+topic hsk-4-meanings hsk-4-meanings-meaning hsk-4-meanings-word
+topic hsk-5-characters hsk-5-characters-reading hsk-5-characters-word
+topic hsk-5-gaps hsk-5-gaps-five hsk-5-gaps-six
+topic hsk-5-meanings hsk-5-meanings-meaning hsk-5-meanings-word
+topic hsk-6-characters hsk-6-characters-reading hsk-6-characters-word
+topic hsk-6-gaps hsk-6-gaps-five hsk-6-gaps-six
+topic hsk-6-meanings hsk-6-meanings-meaning hsk-6-meanings-word
+topic hsk-7-9-characters hsk-7-9-characters-reading hsk-7-9-characters-word
+topic hsk-7-9-gaps hsk-7-9-gaps-five hsk-7-9-gaps-six
+topic hsk-7-9-meanings hsk-7-9-meanings-meaning hsk-7-9-meanings-word
 topic idioms-10-01 idioms-10-01-meaning idioms-10-01-use idioms-10-01-writing
 topic idioms-10-02 idioms-10-02-meaning idioms-10-02-use idioms-10-02-writing
 topic idioms-10-03 idioms-10-03-meaning idioms-10-03-use idioms-10-03-writing
