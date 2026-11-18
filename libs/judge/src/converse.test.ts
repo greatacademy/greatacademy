@@ -52,6 +52,15 @@ describe("converse", () => {
     expect(built.system).not.toContain("pirate");
   });
 
+  it("keeps the English prompt's words and speaks Mandarin in the Chinese one", () => {
+    const en = CONVERSATION_PROMPTS["conversation-1"]!(scene, lines, false).system;
+    const zh = CONVERSATION_PROMPTS["conversation-zh-1"]!(scene, lines, false).system;
+    expect(en).toContain("helps a learner practice English.");
+    expect(en).toContain("Say one to three short sentences in plain spoken English that the learner can follow");
+    expect(zh).toContain("helps a learner practice Chinese.");
+    expect(zh).toContain("plain spoken Mandarin, written in simplified Chinese characters");
+  });
+
   it("sends the learner's words with personal data replaced", async () => {
     const { faux, models, model } = setup();
     let seen = "";
