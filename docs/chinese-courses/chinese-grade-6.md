@@ -6,11 +6,11 @@
 - **Level:** Grade 6, native speakers
 - **Prerequisite(s):** Grade 5
 - **Language of explanation:** Chinese
-- **Size:** 4 units · 40 topics (21 of characters, 8 of words, 3 of grammar and punctuation, 8 of recitation) · 96 knowledge points · 9 passages in 3 reading units
+- **Size:** 6 units · 47 topics (21 of characters, 8 of words, 3 of grammar and punctuation, 2 of writing, 8 of recitation) · 113 knowledge points · 9 passages in 3 reading units
 
 ## Aim
 
-By the end of grade 6 a learner has read 3,000 characters, the goal of primary school, recognizes antithesis, hypophora, rhetorical questions and repetition, corrects sentences that contradict themselves or misuse connectives, and recites eight more poems. Passages tell of inventions and figures of history and ask the reader to weigh a choice.
+By the end of grade 6 a learner has read 3,000 characters, the goal of primary school, recognizes antithesis, hypophora, rhetorical questions and repetition, corrects sentences that contradict themselves or misuse connectives, and recites eight more poems. Passages tell of inventions and figures of history and ask the reader to weigh a choice. In writing judged by a model, they support a view with evidence and describe a scene that carries a feeling.
 
 ## Units
 
@@ -76,7 +76,14 @@ By the end of grade 6 a learner has read 3,000 characters, the goal of primary s
 - `faulty-contradictions` Faulty Sentences: Saying Opposite Things: Finding the Fault; Correcting It
 - `faulty-misused-connectives` Faulty Sentences: Mismatched Connectives: Finding the Fault; Correcting It
 
-### 4. Recitation
+### 4. Writing
+
+**Writing**
+
+- `writing-6-argue` A View and Its Evidence: A View with Evidence; Explaining the Evidence
+- `writing-6-scene` Describing a Scene: A Clear Order and Many Senses; A Feeling in the Scene
+
+### 5. Recitation
 
 **Classical Poems**
 
@@ -101,8 +108,8 @@ By the end of grade 6 a learner has read 3,000 characters, the goal of primary s
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 20/20 | 86.10 | 135.75 | 1.20 | 491.30 | 3.66 | 22.50 | 9.00 |
-| typical | 20/20 | 101.95 | 144.45 | 9.90 | 543.90 | 4.05 | 20.55 | 9.00 |
-| struggling | 20/20 | 136.10 | 186.00 | 51.45 | 715.95 | 5.32 | 18.90 | 9.00 |
-| placed | 20/20 | 28.00 | 44.35 | 2.90 | 156.75 | 3.77 | 5.35 | 9.00 |
-| struggling, placed | 20/20 | 37.55 | 58.75 | 17.30 | 216.70 | 5.22 | 4.75 | 9.00 |
+| strong | 20/20 | 195.45 | 291.20 | 1.45 | 1119.80 | 3.87 | 51.55 | 9.00 |
+| typical | 20/20 | 226.60 | 308.65 | 18.90 | 1202.85 | 4.15 | 46.65 | 9.00 |
+| struggling | 20/20 | 311.05 | 402.75 | 113.00 | 1584.10 | 5.47 | 43.80 | 9.00 |
+| placed | 20/20 | 37.30 | 53.60 | 3.30 | 192.75 | 3.82 | 7.25 | 9.00 |
+| struggling, placed | 20/20 | 52.90 | 75.00 | 24.70 | 280.45 | 5.59 | 7.20 | 9.00 |

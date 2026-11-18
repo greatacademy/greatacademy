@@ -2083,6 +2083,14 @@ topic words-9-01 words-9-01-meaning words-9-01-relations words-9-01-use
 topic words-9-02 words-9-02-meaning words-9-02-relations words-9-02-use
 topic words-9-03 words-9-03-meaning words-9-03-relations words-9-03-use
 topic words-9-04 words-9-04-meaning words-9-04-relations words-9-04-use
+topic writing-3-diary writing-3-diary-change writing-3-diary-observed
+topic writing-3-paragraph writing-3-paragraph-details writing-3-paragraph-idea
+topic writing-4-event writing-4-event-detail writing-4-event-parts
+topic writing-4-letter writing-4-letter-detail writing-4-letter-form
+topic writing-5-explain writing-5-explain-features writing-5-explain-methods
+topic writing-5-person writing-5-person-description writing-5-person-example
+topic writing-6-argue writing-6-argue-evidence writing-6-argue-reasoning
+topic writing-6-scene writing-6-scene-feeling writing-6-scene-order
 passage chinese-a-letter-from-grandpa
 passage chinese-a-letter-from-the-seaside
 passage chinese-a-letter-to-my-cousin

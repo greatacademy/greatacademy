@@ -6,11 +6,11 @@
 - **Level:** Grade 3, native speakers
 - **Prerequisite(s):** Grades 1 and 2, or reading their 1,600 characters
 - **Language of explanation:** Chinese
-- **Size:** 4 units · 58 topics (38 of characters, 8 of words, 4 of grammar and punctuation, 8 of recitation) · 132 knowledge points · 9 passages in 3 reading units
+- **Size:** 5 units · 60 topics (38 of characters, 8 of words, 4 of grammar and punctuation, 2 of writing, 8 of recitation) · 136 knowledge points · 9 passages in 3 reading units
 
 ## Aim
 
-By the end of grade 3 a learner reads about 450 more common characters in words, knows the words and idioms of four themes, ends sentences with the right mark, uses commas, enumeration commas and the marks of speech, joins clauses with 因为, 虽然, 如果 and 不但, and recites eight classical poems with their meaning. They read short narrative and expository passages and answer what they say.
+By the end of grade 3 a learner reads about 450 more common characters in words, knows the words and idioms of four themes, ends sentences with the right mark, uses commas, enumeration commas and the marks of speech, joins clauses with 因为, 虽然, 如果 and 不但, and recites eight classical poems with their meaning. They read short narrative and expository passages and answer what they say. In writing judged by a model, they write a paragraph about one idea and an observation diary.
 
 ## Units
 
@@ -103,7 +103,14 @@ By the end of grade 3 a learner reads about 450 more common characters in words,
 
 - `connectives-1` Connectives: Because, Although, If, Not Only: Choosing the Connectives; Naming the Relation
 
-### 4. Recitation
+### 4. Writing
+
+**Writing**
+
+- `writing-3-paragraph` A Paragraph about One Idea: Stating the Idea; Showing It with Examples
+- `writing-3-diary` An Observation Diary: Looking Closely; Noticing What Changes
+
+### 5. Recitation
 
 **Classical Poems**
 
@@ -128,8 +135,8 @@ By the end of grade 3 a learner reads about 450 more common characters in words,
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 20/20 | 29.90 | 54.50 | 0.40 | 151.90 | 2.83 | 7.55 | 9.00 |
-| typical | 20/20 | 38.20 | 58.10 | 4.00 | 192.95 | 3.58 | 7.50 | 9.00 |
-| struggling | 20/20 | 51.85 | 75.45 | 21.35 | 263.80 | 4.90 | 6.85 | 9.00 |
-| placed | 20/20 | 38.20 | 58.10 | 4.00 | 192.95 | 3.58 | 7.50 | 9.00 |
-| struggling, placed | 20/20 | 51.85 | 75.45 | 21.35 | 263.80 | 4.90 | 6.85 | 9.00 |
+| strong | 20/20 | 125.00 | 190.30 | 0.85 | 710.90 | 3.76 | 32.75 | 9.00 |
+| typical | 20/20 | 145.45 | 201.55 | 12.10 | 772.95 | 4.08 | 29.65 | 9.00 |
+| struggling | 20/20 | 195.25 | 260.30 | 70.85 | 1014.50 | 5.35 | 27.40 | 9.00 |
+| placed | 20/20 | 45.10 | 66.80 | 5.05 | 245.65 | 3.96 | 8.95 | 9.00 |
+| struggling, placed | 20/20 | 59.50 | 87.45 | 25.70 | 331.85 | 5.35 | 8.05 | 9.00 |

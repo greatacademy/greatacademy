@@ -6,11 +6,11 @@
 - **Level:** Grade 4, native speakers
 - **Prerequisite(s):** Grade 3
 - **Language of explanation:** Chinese
-- **Size:** 4 units · 59 topics (37 of characters, 8 of words, 6 of grammar and punctuation, 8 of recitation) · 134 knowledge points · 9 passages in 3 reading units
+- **Size:** 5 units · 61 topics (37 of characters, 8 of words, 6 of grammar and punctuation, 2 of writing, 8 of recitation) · 138 knowledge points · 9 passages in 3 reading units
 
 ## Aim
 
-By the end of grade 4 a learner has read the 2,500 characters of the first table, uses title marks and ellipses, matches the pairs of 只要, 只有, 即使, 无论 and 既然, changes 把 sentences into 被 sentences and back, finds and corrects sentences with a missing part or a mismatch, and recites eight more poems. Passages include fables, short biographies and letters.
+By the end of grade 4 a learner has read the 2,500 characters of the first table, uses title marks and ellipses, matches the pairs of 只要, 只有, 即使, 无论 and 既然, changes 把 sentences into 被 sentences and back, finds and corrects sentences with a missing part or a mismatch, and recites eight more poems. Passages include fables, short biographies and letters. In writing judged by a model, they tell an event with its beginning, course and end, and write a letter.
 
 ## Units
 
@@ -110,7 +110,14 @@ By the end of grade 4 a learner has read the 2,500 characters of the first table
 - `faulty-missing-parts` Faulty Sentences: Missing Parts: Finding the Fault; Correcting It
 - `faulty-mismatches` Faulty Sentences: Words That Do Not Go Together: Finding the Fault; Correcting It
 
-### 4. Recitation
+### 4. Writing
+
+**Writing**
+
+- `writing-4-event` Telling an Event: Beginning, Course and End; The Important Moment in Detail
+- `writing-4-letter` Writing a Letter: The Form of a Letter; What the Reader Wants to Know
+
+### 5. Recitation
 
 **Classical Poems**
 
@@ -135,8 +142,8 @@ By the end of grade 4 a learner has read the 2,500 characters of the first table
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 20/20 | 62.10 | 99.45 | 0.45 | 340.55 | 3.45 | 16.15 | 9.00 |
-| typical | 20/20 | 74.20 | 106.45 | 7.45 | 387.45 | 3.92 | 14.85 | 9.00 |
-| struggling | 20/20 | 100.60 | 138.15 | 39.15 | 522.75 | 5.28 | 13.95 | 9.00 |
-| placed | 20/20 | 42.40 | 61.25 | 4.10 | 224.65 | 3.93 | 8.20 | 9.00 |
-| struggling, placed | 20/20 | 55.75 | 80.05 | 22.90 | 300.00 | 5.25 | 7.55 | 9.00 |
+| strong | 20/20 | 157.65 | 237.15 | 1.40 | 900.05 | 3.82 | 41.45 | 9.00 |
+| typical | 20/20 | 183.70 | 251.90 | 16.15 | 974.15 | 4.13 | 37.60 | 9.00 |
+| struggling | 20/20 | 248.95 | 327.65 | 91.90 | 1282.10 | 5.44 | 34.95 | 9.00 |
+| placed | 20/20 | 45.55 | 67.00 | 3.90 | 246.05 | 3.89 | 8.95 | 9.00 |
+| struggling, placed | 20/20 | 63.30 | 89.80 | 26.70 | 342.15 | 5.42 | 8.55 | 9.00 |

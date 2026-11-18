@@ -70,3 +70,45 @@ export function typedGenerator(checker: "hanzi" | "pinyin", question: Text, bank
 export function point(id: string, title: Text, explanation: Text, generate: Generator): KnowledgePointDef {
   return { id, title, explanation, generate };
 }
+
+/** WritingItem is one task of a judged writing topic. */
+export interface WritingItem {
+  /** task is what to write, in Chinese; it follows the question. */
+  readonly task: string;
+  /** model is one good response, in Chinese: shown to the judge, and to the learner after a verdict that counts. */
+  readonly model: string;
+}
+
+/** WritingLimits are the length a writing task asks for; a Chinese character counts as a word. */
+export interface WritingLimits {
+  readonly minWords: number;
+  readonly maxChars: number;
+}
+
+/**
+ * writingGenerator picks an item of a bank by seed; the learner writes a text in Chinese that a model judges against
+ * criteria of the topic. The first few characters of the model, far too short, are a listed wrong response.
+ */
+export function writingGenerator(
+  question: Text,
+  bank: readonly WritingItem[],
+  criteria: readonly string[],
+  limits: WritingLimits,
+  why: (model: string) => Text,
+): Generator {
+  return (rng: Rng): Problem => {
+    const item = rng.cycle(bank);
+    return {
+      prompt: joinText([question, same(item.task)]),
+      answer: {
+        checker: "writing",
+        expected: { ...limits },
+        input: { kind: "writing", ...limits },
+        judged: { criteria: [...criteria] },
+      },
+      solution: why(item.model),
+      canonical: item.model,
+      wrong: [[...item.model].slice(0, 6).join("")],
+    };
+  };
+}

@@ -199,7 +199,7 @@ The levels of English apply, with character counts instead of word counts.
 | W4 Paragraphs | One move at a time | AI, against yes-or-no criteria |
 | W5 Compositions | 记叙文, 说明文, 议论文 and practical writing, from 300 characters in grade 3 to the 800-character essay of the Gaokao | AI, against a rubric |
 
-Judged writing needs calibration sets scored by teachers of Chinese, separate from those of English. Speaking follows S1 to S6 of English: listening to tones comes first for foreign-language learners; native learners practice reading aloud and presenting, not pronunciation, and a regional accent costs nothing.
+Judged writing needs calibration sets scored by teachers of Chinese, separate from those of English. Native grades 3 to 6 have two judged topics a grade, each with three yes-or-no criteria asked in English of a text in Chinese; the prompt `writing-zh-1` asks the judge to count characters and to answer in Simplified Chinese. Speaking follows S1 to S6 of English: listening to tones comes first for foreign-language learners; native learners practice reading aloud and presenting, not pronunciation, and a regional accent costs nothing.
 
 ## 12. Content Model and Core Changes
 

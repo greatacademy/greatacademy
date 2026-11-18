@@ -6,11 +6,11 @@
 - **Level:** Grade 5, native speakers
 - **Prerequisite(s):** Grade 4
 - **Language of explanation:** Chinese
-- **Size:** 4 units · 43 topics (21 of characters, 8 of words, 6 of grammar and punctuation, 8 of recitation) · 102 knowledge points · 9 passages in 3 reading units
+- **Size:** 6 units · 49 topics (21 of characters, 8 of words, 6 of grammar and punctuation, 2 of writing, 8 of recitation) · 117 knowledge points · 9 passages in 3 reading units
 
 ## Aim
 
-By the end of grade 5 a learner reads about 250 characters of the second table, uses semicolons, changes rhetorical questions into statements and direct speech into reported speech, names similes, personification, hyperbole and parallelism, corrects word order and repetition, and recites eight more poems. Passages explain everyday science and tell of people of character.
+By the end of grade 5 a learner reads about 250 characters of the second table, uses semicolons, changes rhetorical questions into statements and direct speech into reported speech, names similes, personification, hyperbole and parallelism, corrects word order and repetition, and recites eight more poems. Passages explain everyday science and tell of people of character. In writing judged by a model, they bring out a person's quality through an event and explain a thing by its features.
 
 ## Units
 
@@ -85,7 +85,14 @@ By the end of grade 5 a learner reads about 250 characters of the second table, 
 - `faulty-word-order` Faulty Sentences: Wrong Word Order: Finding the Fault; Correcting It
 - `faulty-repetition` Faulty Sentences: Saying It Twice: Finding the Fault; Correcting It
 
-### 4. Recitation
+### 4. Writing
+
+**Writing**
+
+- `writing-5-person` Writing about a Person: A Quality Shown by an Event; Actions, Words and Looks
+- `writing-5-explain` Explaining a Thing: Feature by Feature; Methods of Explaining
+
+### 5. Recitation
 
 **Classical Poems**
 
@@ -110,8 +117,8 @@ By the end of grade 5 a learner reads about 250 characters of the second table, 
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 20/20 | 81.25 | 128.10 | 1.00 | 460.00 | 3.63 | 21.25 | 9.00 |
-| typical | 20/20 | 96.30 | 135.70 | 8.60 | 507.80 | 3.99 | 19.40 | 9.00 |
-| struggling | 20/20 | 129.55 | 176.70 | 49.60 | 678.50 | 5.33 | 18.00 | 9.00 |
-| placed | 20/20 | 31.05 | 48.20 | 3.40 | 174.25 | 3.89 | 5.90 | 9.00 |
-| struggling, placed | 20/20 | 43.60 | 64.00 | 19.20 | 238.80 | 5.34 | 5.60 | 9.00 |
+| strong | 20/20 | 180.75 | 271.70 | 1.05 | 1038.50 | 3.84 | 47.70 | 9.00 |
+| typical | 20/20 | 211.65 | 289.90 | 19.25 | 1126.80 | 4.17 | 43.40 | 9.00 |
+| struggling | 20/20 | 286.65 | 376.15 | 105.50 | 1476.40 | 5.45 | 40.30 | 9.00 |
+| placed | 20/20 | 37.30 | 56.50 | 3.75 | 203.50 | 3.85 | 7.20 | 9.00 |
+| struggling, placed | 20/20 | 52.25 | 74.40 | 21.65 | 276.95 | 5.23 | 7.20 | 9.00 |
