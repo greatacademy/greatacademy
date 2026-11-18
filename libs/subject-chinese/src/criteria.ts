@@ -4,7 +4,7 @@ import { LEVEL_CRITERIA_A } from "./criteria-levels-a.ts";
 import { LEVEL_CRITERIA_B } from "./criteria-levels-b.ts";
 
 /**
- * WRITING_CRITERIA are the criteria of the judged writing of native grades 3 to 11 and the essay of the Gaokao (docs/chinese-curriculum.md §11): W4
+ * WRITING_CRITERIA are the criteria of the judged writing of native grades 3 to 11, the essay of the Gaokao and its short answers on modern texts (docs/chinese-curriculum.md §11): W4
  * paragraphs and W5 compositions, with starting questions to be calibrated against texts scored by teachers of Chinese.
  * Their questions are in English, as the core asks; the texts they are asked of are in Chinese.
  */
@@ -400,6 +400,45 @@ export const WRITING_CRITERIA: readonly CriterionSpec[] = [
     id: "zhgk-essay-argument",
     version: "1",
     question: "Does the essay argue with substance: apt evidence, analysed, and reasoning that goes beyond the obvious?",
+    quoteWhenMet: true,
+  },
+  // The short answers of the Gaokao's reading of modern texts.
+  {
+    id: "zhgk-info-points",
+    version: "1",
+    question: "Does the answer give the points the question asks for, each one that the passage supports, as many as the question needs?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zhgk-info-grounded",
+    version: "1",
+    question:
+      "Is every point drawn from the passage, its reasoning or its evidence, without adding what the passage does not say or misreading what it does?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zhgk-info-concise",
+    version: "1",
+    question: "Is the answer concise and orderly, its points set out one by one in the learner's own words rather than copied at length?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "zhgk-lit-technique",
+    version: "1",
+    question: "Does the answer name the technique, structure or feature of language the question asks about, correctly for the passage?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zhgk-lit-effect",
+    version: "1",
+    question:
+      "Does the answer explain the effect: what the feature does for the character, the feeling, the theme or the structure of the passage?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zhgk-lit-grounded",
+    version: "1",
+    question: "Does the answer tie what it says to particular words, details or sentences of the passage, without misreading them?",
     quoteWhenMet: true,
   },
 ];

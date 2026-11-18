@@ -60,6 +60,10 @@ topic faulty-word-order faulty-word-order-finding faulty-word-order-fixing
 topic gaokao-classical-words gaokao-classical-words-junior gaokao-classical-words-senior
 topic gaokao-essay gaokao-essay-argument gaokao-essay-whole
 topic gaokao-idioms gaokao-idioms-meaning gaokao-idioms-sentence
+topic gaokao-informational-answers gaokao-informational-answers
+topic gaokao-informational-reading gaokao-informational-reading-analysis gaokao-informational-reading-understanding
+topic gaokao-literary-answers gaokao-literary-answers
+topic gaokao-literary-reading gaokao-literary-reading-analysis gaokao-literary-reading-understanding
 topic gaokao-recitation gaokao-recitation-choose gaokao-recitation-write
 topic heritage-de-and-pronouns heritage-de-and-pronouns-de heritage-de-and-pronouns-pronouns
 topic heritage-dialect-words heritage-dialect-words-dialect heritage-dialect-words-mandarin

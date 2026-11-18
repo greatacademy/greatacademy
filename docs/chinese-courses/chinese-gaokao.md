@@ -6,15 +6,15 @@
 - **Level:** The Chinese paper of China's university entrance examination, native speakers
 - **Prerequisite(s):** [Chinese, Grade 9](chinese-grade-9.md)
 - **Language of explanation:** Chinese
-- **Size:** 11 units · 106 topics (4 new, all practice-only) · 300 knowledge points
+- **Size:** 11 units · 110 topics (8 new, all practice-only) · 306 knowledge points
 
 ## The Test
 
-The paper's basis is level 4 of the academic quality of the senior standard. Its parts are the reading of modern texts, the reading of classical texts and poems with lines of recited texts written from memory, the use of language, and an essay; the papers of each year and region are to be checked before more exam topics are written. This course practises the parts judged by rules, idioms in context, lines of recited texts from their meaning and the words of classical Chinese, and the essay, judged by a model against yes-or-no criteria. Questions and texts of past papers are never copied: the recited texts are classical and in the public domain, and every description, sentence and wrong answer is written for this subject.
+The paper's basis is level 4 of the academic quality of the senior standard. Its parts are the reading of modern texts, the reading of classical texts and poems with lines of recited texts written from memory, the use of language, and an essay; the papers of each year and region are to be checked before more exam topics are written. This course practises the parts judged by rules, idioms in context, lines of recited texts from their meaning, the words of classical Chinese and the choice questions on modern texts, and the parts judged by a model against yes-or-no criteria, the short answers on modern texts and the essay. Questions and texts of past papers are never copied: the recited texts are classical and in the public domain, and every passage, description, sentence and wrong answer is written for this subject.
 
 ## Aim
 
-The course turns the two senior courses into test practice. It holds the units of [Chinese, Senior Required](chinese-hs-required.md) and [Chinese, Senior Selective Required](chinese-hs-selective.md), and then four exam topics that mix grades 7 to 11, as the paper does, rather than one set at a time. It teaches nothing new. Its own topics are practice-only: a lesson starts with practice, and the explanation appears only after a failed attempt. The topics it reuses keep their place in the graph, so a learner who has learned them in the grade courses is credited and moves on.
+The course turns the two senior courses into test practice. It holds the units of [Chinese, Senior Required](chinese-hs-required.md) and [Chinese, Senior Selective Required](chinese-hs-selective.md), and then eight exam topics that mix grades 7 to 11, as the paper does, rather than one set at a time. It teaches nothing new. Its own topics are practice-only: a lesson starts with practice, and the explanation appears only after a failed attempt. The topics it reuses keep their place in the graph, so a learner who has learned them in the grade courses is credited and moves on.
 
 ## Units
 
@@ -25,9 +25,13 @@ The course turns the two senior courses into test practice. It holds the units o
 - `gaokao-idioms` Gaokao: Idioms in Context (practice-only; after the last idiom set). The idioms of grades 7 to 11: (1) the idiom of a meaning among four of its set; (2) the idiom a sentence needs among the same.
 - `gaokao-recitation` Gaokao: Lines from Their Meaning (practice-only; after the last recited text). The lines of the recited texts of grades 7 to 11: (1) the line of a description of meaning among four lines of other texts, without the title; (2) the line written in characters, given its author, title and meaning.
 - `gaokao-classical-words` Gaokao: Words of Classical Chinese (practice-only; after the last drill of classical Chinese). The meaning or use of a character in brackets in a classical sentence, among four: (1) from the texts of grade 5 to grade 9; (2) from those of senior school.
+- `gaokao-informational-reading` Gaokao: Informational Texts (practice-only; after the last idiom set). Six arguments and expositions of about a thousand characters, written for the subject, each with four choice questions asked with two of their three wrong options in turn: (1) what the passage says; (2) how it reasons.
+- `gaokao-informational-answers` Gaokao: Short Answers on Informational Texts (practice-only; after the topic before). Two questions a passage answered in a few sentences, judged by a model: the points asked for, each drawn from the passage, set out concisely.
+- `gaokao-literary-reading` Gaokao: Literary Texts (practice-only; after the last idiom set). Four short stories and two literary essays written for the subject, asked as the informational texts are: (1) content and feeling; (2) craft.
+- `gaokao-literary-answers` Gaokao: Short Answers on Literary Texts (practice-only; after the topic before). Two questions a passage answered in a few sentences, judged by a model: the technique named, its effect explained, and both tied to the words of the passage.
 - `gaokao-essay` Gaokao: The Essay (practice-only). An essay of at least 800 characters on original material written in the manner of the paper, judged by a model: (1) an apt thesis and a well-organised whole; (2) an argument of substance.
 
-**Later, with judged answers:** the reading of modern texts and of classical poems, and the use of language beyond idioms.
+**Later, with judged answers:** the reading of classical poems, and the use of language beyond idioms.
 
 ## Simulated Students
 

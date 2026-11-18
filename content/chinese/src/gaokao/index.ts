@@ -1,7 +1,7 @@
 // The Gaokao course (docs/chinese-curriculum.md §8.5): practice for the Chinese paper of the university entrance
-// examination over the two senior courses. It holds their units and three exam topics of its own, all practice-only,
+// examination over the two senior courses. It holds their units and exam topics of its own, all practice-only,
 // that mix what grades 7 to 11 teach, as the paper does: idioms in context, lines of recited texts from a description of
-// their meaning, and the words of classical Chinese.
+// their meaning, the words of classical Chinese, and the reading of modern texts, informational and literary.
 
 import { type CourseDef, same, type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typed, typedGenerator } from "@ga/subject-chinese";
@@ -14,6 +14,9 @@ import { idiomsByGrade } from "../idioms/index.ts";
 import { recitedPoems } from "../recitation/index.ts";
 import type { Poem } from "../recitation/poems.ts";
 import { gaokaoEssayTopic } from "../writing/later.ts";
+import { informationalPassages } from "./informational-data.ts";
+import { literaryPassages } from "./literary-data.ts";
+import { informationalSpec, literarySpec, modernTopics } from "./modern.ts";
 
 /** FROM is the first grade the paper draws on. */
 const FROM = 7;
@@ -139,7 +142,13 @@ const lastDrill = lastOf(seniorClassicalDrills.map((d) => d.id));
 const junior = classicalItems(5, 9);
 const senior = classicalItems(10, 11);
 
-/** gaokaoTopics are the three exam topics of the Gaokao course, all practice-only. */
+/** modernReading are the topics of the reading of modern texts: informational, then literary, each with its short answers. */
+const modernReading = [
+  ...modernTopics(informationalSpec([lastIdioms], informationalPassages)),
+  ...modernTopics(literarySpec([lastIdioms], literaryPassages)),
+];
+
+/** gaokaoTopics are the exam topics of the Gaokao course, all practice-only. */
 export const gaokaoTopics: readonly TopicDef[] = [
   {
     id: "gaokao-idioms",
@@ -249,6 +258,7 @@ export const gaokaoTopics: readonly TopicDef[] = [
       ),
     ],
   },
+  ...modernReading,
   gaokaoEssayTopic,
 ];
 
@@ -258,8 +268,8 @@ export function gaokaoCourse(required: CourseDef, selective: CourseDef): CourseD
     id: "chinese-gaokao",
     title: t("Gaokao Chinese", "高考语文"),
     description: t(
-      "Practice for the Chinese paper of China's university entrance examination, whose basis is level 4 of the senior standard's academic quality: the units of the required and selective required courses, then idioms in context, lines of recited texts from their meaning, the words of classical Chinese, with grades 7 to 11 mixed as the paper mixes them, and the essay, judged by a model. It teaches nothing new: its own topics start with practice. Reading of modern texts will follow. In Chinese.",
-      "高考语文的练习，依据高中课标学业质量水平 4：必修和选择性必修课程的单元，然后是成语辨析、情景式默写和文言字词，七至十一年级的内容像试卷一样混在一起，以及由 AI 评判的作文。本课程不教新知识：它自己的主题一开始就是练习。现代文阅读以后加入。用中文讲解。",
+      "Practice for the Chinese paper of China's university entrance examination, whose basis is level 4 of the senior standard's academic quality: the units of the required and selective required courses, then idioms in context, lines of recited texts from their meaning, the words of classical Chinese, with grades 7 to 11 mixed as the paper mixes them, the reading of informational and literary texts, with short answers judged by a model, and the essay, also judged. It teaches nothing new: its own topics start with practice. In Chinese.",
+      "高考语文的练习，依据高中课标学业质量水平 4：必修和选择性必修课程的单元，然后是成语辨析、情景式默写和文言字词，七至十一年级的内容像试卷一样混在一起，信息类和文学类文本阅读（简答由 AI 评判），以及同样由 AI 评判的作文。本课程不教新知识：它自己的主题一开始就是练习。用中文讲解。",
     ),
     group: examGroup,
     buildsOn: [...(required.buildsOn ?? [])],

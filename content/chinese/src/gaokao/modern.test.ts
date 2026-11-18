@@ -1,0 +1,66 @@
+import { createRng } from "@ga/content";
+import { describe, expect, it } from "vitest";
+
+import { informationalSpec, type ModernPassage, modernTopics } from "./modern.ts";
+
+/** passage makes a passage of 900 characters with questions whose options name it. */
+const passage = (k: number, length = 900): ModernPassage => {
+  const choice = (q: string) => ({
+    ask: `${q}${k}`,
+    right: `对${q}${k}`,
+    wrong: [`错甲${q}${k}`, `错乙${q}${k}`, `错丙${q}${k}`] as const,
+  });
+  return {
+    title: `文章${k}`,
+    body: "文".repeat(length),
+    understanding: [choice("理解一"), choice("理解二")],
+    analysis: [choice("分析一"), choice("分析二")],
+    answers: [
+      { ask: `问一${k}`, model: "答".repeat(40) },
+      { ask: `问二${k}`, model: "答".repeat(50) },
+    ],
+  };
+};
+
+const six = Array.from({ length: 6 }, (_, k) => passage(k));
+
+describe("the reading of modern texts", () => {
+  it("builds a topic checked by rules and a judged one that needs it", () => {
+    const [reading, answers] = modernTopics(informationalSpec(["before"], six));
+    expect(reading.id).toBe("gaokao-informational-reading");
+    expect(reading.criteria).toBeUndefined();
+    expect(reading.knowledgePoints.map((p) => p.id)).toEqual([
+      "gaokao-informational-reading-understanding",
+      "gaokao-informational-reading-analysis",
+    ]);
+    expect(answers.prerequisites).toEqual([reading.id]);
+    expect(answers.criteria?.map((c) => c.id)).toEqual(["zhgk-info-points", "zhgk-info-grounded", "zhgk-info-concise"]);
+  });
+
+  it("asks each question with every pair of its wrong options, and judges answers against the passage", () => {
+    const [reading, answers] = modernTopics(informationalSpec([], six));
+    const generate = reading.knowledgePoints[0]!.generate;
+    const offered = new Set<string>();
+    for (let seed = 0; seed < 36; seed++) {
+      const p = generate(createRng(seed));
+      if (p.answer.input.kind !== "choice") throw new Error("not a choice");
+      offered.add(
+        p.answer.input.options
+          .map((o) => o.en)
+          .sort()
+          .join(),
+      );
+    }
+    expect(offered.size).toBe(36);
+    const a = answers.knowledgePoints[0]!.generate(createRng(1));
+    expect(a.answer.judged?.source).toMatch(/^《文章\d》\n\n文+$/u);
+    expect(a.answer.judged?.criteria).toHaveLength(3);
+  });
+
+  it("rejects too few passages, passages of the wrong length and repeated options", () => {
+    expect(() => modernTopics(informationalSpec([], six.slice(1)))).toThrow(/6 passages/);
+    expect(() => modernTopics(informationalSpec([], [...six.slice(1), passage(9, 500)]))).toThrow(/not 800 to 2000/);
+    const twice = { ...passage(7), analysis: [{ ask: "问", right: "同", wrong: ["同", "乙", "丙"] }, passage(7).analysis[1]] } as const;
+    expect(() => modernTopics(informationalSpec([], [...six.slice(1), twice]))).toThrow(/options/);
+  });
+});
