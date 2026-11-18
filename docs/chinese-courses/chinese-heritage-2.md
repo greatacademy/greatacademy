@@ -6,7 +6,7 @@
 - **Level:** Literacy bridge 2, for learners who speak Chinese
 - **Prerequisite(s):** [Chinese for Heritage Learners 1](chinese-heritage-1.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 2 units · 85 topics (83 of characters, 2 of their own) · 170 knowledge points
+- **Size:** 3 units · 90 topics (83 of characters, 5 of sentence building, 2 of their own) · 180 knowledge points
 
 ## Aim
 
@@ -141,7 +141,17 @@ The second bridge adds the other 1,000 characters that grades 1 and 2 teach, 1,6
 - `recognizing-characters-2-65` Grade 2 Characters, Set 65: Reading Them; Telling Them Apart
 - `recognizing-characters-2-66` Grade 2 Characters, Set 66: Reading Them; Telling Them Apart
 
-### 2. Writing What You Say
+### 2. Building Sentences
+
+**Building Sentences**
+
+- `sentences-1-04` Building Sentences 4: Grade 1 Characters, Sets 51 to 67: Short Sentences; Longer Sentences
+- `sentences-2-01` Building Sentences 1: Grade 2 Characters, Sets 1 to 16: Short Sentences; Longer Sentences
+- `sentences-2-02` Building Sentences 2: Grade 2 Characters, Sets 17 to 33: Short Sentences; Longer Sentences
+- `sentences-2-03` Building Sentences 3: Grade 2 Characters, Sets 34 to 50: Short Sentences; Longer Sentences
+- `sentences-2-04` Building Sentences 4: Grade 2 Characters, Sets 51 to 66: Short Sentences; Longer Sentences
+
+### 3. Writing What You Say
 
 - `heritage-written-forms` Writing the Words You Say: Everyday Words; Set Phrases
 - `heritage-dialect-words` Dialect Words and Mandarin: The Mandarin Word; The Dialect Word

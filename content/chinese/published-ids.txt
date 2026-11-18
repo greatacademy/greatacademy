@@ -2637,6 +2637,14 @@ topic rhetoric-1 rhetoric-1-finding rhetoric-1-naming
 topic rhetoric-2 rhetoric-2-finding rhetoric-2-naming
 topic rhetoric-3 rhetoric-3-finding rhetoric-3-naming
 topic rhetoric-4 rhetoric-4-finding rhetoric-4-naming
+topic sentences-1-01 sentences-1-01-long sentences-1-01-short
+topic sentences-1-02 sentences-1-02-long sentences-1-02-short
+topic sentences-1-03 sentences-1-03-long sentences-1-03-short
+topic sentences-1-04 sentences-1-04-long sentences-1-04-short
+topic sentences-2-01 sentences-2-01-long sentences-2-01-short
+topic sentences-2-02 sentences-2-02-long sentences-2-02-short
+topic sentences-2-03 sentences-2-03-long sentences-2-03-short
+topic sentences-2-04 sentences-2-04-long sentences-2-04-short
 topic sentences-ba-and-bei sentences-ba-and-bei-to-ba sentences-ba-and-bei-to-bei
 topic sentences-reported-speech sentences-reported-speech-to-direct sentences-reported-speech-to-reported
 topic sentences-rhetorical-questions sentences-rhetorical-questions-to-question sentences-rhetorical-questions-to-statement

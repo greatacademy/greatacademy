@@ -6,7 +6,7 @@
 - **Level:** Grade 2, native speakers
 - **Prerequisite(s):** Grade 1, or reading its 800 characters
 - **Language of explanation:** Chinese
-- **Size:** 4 units · 83 topics (3 of components, 66 of characters, 4 of words, 10 of recitation) · 180 knowledge points
+- **Size:** 5 units · 87 topics (3 of components, 66 of characters, 4 of words, 4 of sentence building, 10 of recitation) · 188 knowledge points
 
 ## Aim
 
@@ -132,7 +132,16 @@ By the end of grade 2 a learner names the common components and what they sugges
 - `words-2-03` Grade 2 Words: Animals and Plants: What They Mean; Using Them; Near-Synonyms and Antonyms
 - `words-2-04` Grade 2 Words: Around Us: What They Mean; Using Them; Near-Synonyms and Antonyms
 
-### 4. Recitation
+### 4. Writing
+
+**Building Sentences**
+
+- `sentences-2-01` Building Sentences 1: Grade 2 Characters, Sets 1 to 16: Short Sentences; Longer Sentences
+- `sentences-2-02` Building Sentences 2: Grade 2 Characters, Sets 17 to 33: Short Sentences; Longer Sentences
+- `sentences-2-03` Building Sentences 3: Grade 2 Characters, Sets 34 to 50: Short Sentences; Longer Sentences
+- `sentences-2-04` Building Sentences 4: Grade 2 Characters, Sets 51 to 66: Short Sentences; Longer Sentences
+
+### 5. Recitation
 
 **Classical Poems**
 

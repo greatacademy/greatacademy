@@ -24,6 +24,7 @@ import { chineseReading } from "../reading/index.ts";
 import { recitationTopics } from "../recitation/index.ts";
 import { componentTopics, strokeOrderTopics } from "../strokes/index.ts";
 import { wordTopics } from "../words/index.ts";
+import { earlySentenceTopics } from "../writing/early-sentences.ts";
 import { writingTopics } from "../writing/index.ts";
 import { laterWritingTopics } from "../writing/later.ts";
 
@@ -36,6 +37,7 @@ export const coreShardTopics: readonly TopicDef[] = [
   ...wordTopics,
   ...idiomTopics,
   ...grammarTopics,
+  ...earlySentenceTopics.map((x) => x.topic),
   ...writingTopics.map((x) => x.topic),
   ...laterWritingTopics.map((x) => x.topic),
   ...recitationTopics,

@@ -159,11 +159,17 @@ export interface SentenceSpec {
   readonly taught: ReadonlySet<string>;
   /** after is the unit's last topic of words or grammar. */
   readonly after: string;
+  /** id names a topic outside the levels, such as one of a native grade; it then needs after and previous alone. */
+  readonly id?: string;
+  /** previous is the sentence topic before a topic named by id, if any. */
+  readonly previous?: string;
+  /** summary replaces the summary that names the units of a level. */
+  readonly summary?: Text;
 }
 
 /** sentenceTopic builds a sentence-building topic, which needs the unit's last topic and the sentence topic before it. */
 export function sentenceTopic(spec: SentenceSpec): TopicDef {
-  const id = levelSentencesId(spec.level, spec.n);
+  const id = spec.id ?? levelSentencesId(spec.level, spec.n);
   const short = parseSentences(`${id}-short`, spec.sentences.short, [3, 4], spec.taught);
   const long = parseSentences(`${id}-long`, spec.sentences.long, [5, 7], spec.taught);
   const en = spec.themes.map((x) => x.en).join(", ");
@@ -171,11 +177,13 @@ export function sentenceTopic(spec: SentenceSpec): TopicDef {
   return {
     id,
     title: t(`Building Sentences ${spec.n}: ${en}`, `连词成句 ${spec.n}：${zh}`),
-    summary: t(
-      `Putting the parts of sentences in order, with the words and grammar of ${en}.`,
-      `用${zh}这几个单元的词语和语法，把词语排成句子。`,
-    ),
-    prerequisites: [spec.after, ...(spec.n > 1 ? [levelSentencesId(spec.level, spec.n - 1)] : [])],
+    summary:
+      spec.summary ??
+      t(`Putting the parts of sentences in order, with the words and grammar of ${en}.`, `用${zh}这几个单元的词语和语法，把词语排成句子。`),
+    prerequisites: [
+      spec.after,
+      ...(spec.id ? (spec.previous ? [spec.previous] : []) : spec.n > 1 ? [levelSentencesId(spec.level, spec.n - 1)] : []),
+    ],
     encompasses: [],
     xp: 12,
     strand: "writing",

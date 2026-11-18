@@ -6,7 +6,7 @@
 - **Level:** Literacy bridge 1, for learners who speak Chinese
 - **Prerequisite(s):** Speaking Chinese at home
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 4 units · 66 topics (8 of pinyin, 6 of strokes and components, 50 of characters, 2 of their own) · 132 knowledge points
+- **Size:** 5 units · 69 topics (8 of pinyin, 6 of strokes and components, 50 of characters, 3 of sentence building, 2 of their own) · 138 knowledge points
 
 ## Aim
 
@@ -132,7 +132,15 @@ The first literacy bridge takes a learner who speaks Chinese but cannot yet read
 - `recognizing-characters-1-49` Grade 1 Characters, Set 49: Reading Them; Telling Them Apart
 - `recognizing-characters-1-50` Grade 1 Characters, Set 50: Reading Them; Telling Them Apart
 
-### 4. Writing What You Say
+### 4. Building Sentences
+
+**Building Sentences**
+
+- `sentences-1-01` Building Sentences 1: Grade 1 Characters, Sets 1 to 16: Short Sentences; Longer Sentences
+- `sentences-1-02` Building Sentences 2: Grade 1 Characters, Sets 17 to 33: Short Sentences; Longer Sentences
+- `sentences-1-03` Building Sentences 3: Grade 1 Characters, Sets 34 to 50: Short Sentences; Longer Sentences
+
+### 5. Writing What You Say
 
 - `heritage-sound-alike` Characters That Sound Alike: Choosing the Character; Finding the Wrong Character
 - `heritage-de-and-pronouns` 的, 地, 得 and 他, 她, 它: 的, 地 and 得; 他, 她 and 它

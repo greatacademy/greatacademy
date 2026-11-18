@@ -22,6 +22,7 @@ import { chineseReading } from "./reading/index.ts";
 import { recitedPoems } from "./recitation/index.ts";
 import { componentTopics, strokeOrderTopics } from "./strokes/index.ts";
 import { wordBatches } from "./words/index.ts";
+import { earlySentenceTopics } from "./writing/early-sentences.ts";
 import { writingTopics } from "./writing/index.ts";
 import { laterWritingTopics } from "./writing/later.ts";
 
@@ -87,6 +88,8 @@ function grammarModules(grade: number): readonly ModuleDef[] {
 
 /** writingModules are a grade's modules of judged writing, those it has. */
 function writingModules(grade: number): readonly ModuleDef[] {
+  const sentences = ofGrade(earlySentenceTopics, grade);
+  if (sentences.length > 0) return [{ title: t("Building Sentences", "连词成句"), topics: sentences }];
   const topics = ofGrade([...writingTopics, ...laterWritingTopics], grade);
   return topics.length > 0 ? [{ title: t("Writing", grade >= 7 ? "写作" : "习作"), topics }] : [];
 }
@@ -155,7 +158,9 @@ function gradeCourse(grade: number, description: CourseDef["description"]): Cour
       { title: t("Characters", "识字"), modules: recognitionModules(grade) },
       ...(wordModules(grade).length > 0 ? [{ title: t("Words", "词语"), modules: wordModules(grade) }] : []),
       ...(grammarModules(grade).length > 0 ? [{ title: t("Grammar and Punctuation", "语法与标点"), modules: grammarModules(grade) }] : []),
-      ...(writingModules(grade).length > 0 ? [{ title: t("Writing", grade >= 7 ? "写作" : "习作"), modules: writingModules(grade) }] : []),
+      ...(writingModules(grade).length > 0
+        ? [{ title: t("Writing", grade >= 7 ? "写作" : grade <= 2 ? "写话" : "习作"), modules: writingModules(grade) }]
+        : []),
       {
         title: t("Recitation", "积累与背诵"),
         modules: [{ title: t("Classical Poems", "古诗词"), topics: recitedPoems.filter((p) => p.grade === grade).map((p) => p.topic.id) }],
@@ -198,6 +203,10 @@ const heritageOwn = (...ids: readonly string[]): readonly string[] =>
     return id;
   });
 
+/** sentencesAfter are the sentence-building topics of grades 1 and 2 that follow one of the given recognition batches. */
+const sentencesAfter = (batches: readonly string[]): readonly string[] =>
+  earlySentenceTopics.filter((x) => x.topic.prerequisites.some((p) => batches.includes(p))).map((x) => x.topic.id);
+
 /** heritageCourse builds a heritage bridge: recognition batches of the native graph, with units before and after them. */
 function heritageCourse(
   n: number,
@@ -214,6 +223,14 @@ function heritageCourse(
     units: [
       ...before,
       { title: t("Characters", "识字"), modules: setModules(batches) },
+      ...(sentencesAfter(batches).length > 0
+        ? [
+            {
+              title: t("Building Sentences", "连词成句"),
+              modules: [{ title: t("Building Sentences", "连词成句"), topics: sentencesAfter(batches) }],
+            },
+          ]
+        : []),
       { title: t("Writing What You Say", "我手写我口"), modules: [{ title: t("Writing What You Say", "我手写我口"), topics: own }] },
     ],
     reading: heritageReading.filter((r) => r.bridge === n).map((r) => r.unit.id),

@@ -55,6 +55,20 @@ describe("chinese content", () => {
     }
   });
 
+  it("gives grades 1 and 2 four topics of sentence building each, which the first two heritage bridges take", () => {
+    const subject = compileChinese();
+    const sentencesOf = (id: string) =>
+      subject.courses
+        .get(id)
+        ?.def.units.flatMap((unit) => unit.modules.flatMap((m) => m.topics))
+        .filter((x) => /^sentences-\d-\d\d$/u.test(x));
+    expect(sentencesOf("chinese-grade-1")).toEqual(["sentences-1-01", "sentences-1-02", "sentences-1-03", "sentences-1-04"]);
+    expect(sentencesOf("chinese-grade-2")).toEqual(["sentences-2-01", "sentences-2-02", "sentences-2-03", "sentences-2-04"]);
+    expect([...(sentencesOf("chinese-heritage-1") ?? []), ...(sentencesOf("chinese-heritage-2") ?? [])].sort()).toEqual(
+      [...(sentencesOf("chinese-grade-1") ?? []), ...(sentencesOf("chinese-grade-2") ?? [])].sort(),
+    );
+  });
+
   it("holds every topic in a shard", () => {
     expect(new Set(coreShardTopics.map((topic) => topic.id)).size).toBe(chinese.topics.length);
   });

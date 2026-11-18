@@ -6,7 +6,7 @@
 - **Level:** Grade 1, native speakers
 - **Prerequisite(s):** None
 - **Language of explanation:** Chinese
-- **Size:** 5 units · 92 topics (8 of pinyin, 3 of strokes, 67 of characters, 4 of words, 10 of recitation) · 198 knowledge points
+- **Size:** 6 units · 96 topics (8 of pinyin, 3 of strokes, 67 of characters, 4 of words, 4 of sentence building, 10 of recitation) · 206 knowledge points
 
 ## Aim
 
@@ -161,7 +161,16 @@ By the end of grade 1 a learner reads and writes pinyin with its tones, hears an
 - `words-1-03` Grade 1 Words: At School: What They Mean; Using Them; Near-Synonyms and Antonyms
 - `words-1-04` Grade 1 Words: Nature and Seasons: What They Mean; Using Them; Near-Synonyms and Antonyms
 
-### 5. Recitation
+### 5. Writing
+
+**Building Sentences**
+
+- `sentences-1-01` Building Sentences 1: Grade 1 Characters, Sets 1 to 16: Short Sentences; Longer Sentences
+- `sentences-1-02` Building Sentences 2: Grade 1 Characters, Sets 17 to 33: Short Sentences; Longer Sentences
+- `sentences-1-03` Building Sentences 3: Grade 1 Characters, Sets 34 to 50: Short Sentences; Longer Sentences
+- `sentences-1-04` Building Sentences 4: Grade 1 Characters, Sets 51 to 67: Short Sentences; Longer Sentences
+
+### 6. Recitation
 
 **Classical Poems**
 
