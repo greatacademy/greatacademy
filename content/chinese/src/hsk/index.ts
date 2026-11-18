@@ -1,7 +1,8 @@
 // The HSK courses (docs/chinese-curriculum.md §8.5): practice for the new HSK over the levels already in the graph. HSK 1
 // to 6 each go with the level of the same number, and HSK 7–9 with levels 7 to 9. Each course holds its levels' units and
-// three exam topics of its own, all practice-only, that mix the whole level as a test does: choosing the word for a
-// gap among five or six, matching words and meanings, and telling a character from those that look like it.
+// four exam topics of its own, all practice-only, that mix the whole level as a test does: choosing the word for a
+// gap among five or six, matching words and meanings, telling a character from those that look like it, and putting
+// the parts of a sentence in order, as the writing paper asks.
 
 import { type CourseDef, type Generator, joinText, type Problem, type Rng, same, type Text, type TopicDef, t } from "@ga/content";
 import { point, quote } from "@ga/subject-chinese";
@@ -9,15 +10,32 @@ import { point, quote } from "@ga/subject-chinese";
 import type { LevelOneCharacter } from "../level-1/characters.ts";
 import { levelOneCourse, levelOneWordId } from "../level-1/index.ts";
 import { nearOf, spread } from "../level-1/kit.ts";
+import { sentences as levelOneSentences } from "../level-1/sentence-data.ts";
+import {
+  type LevelSentences,
+  LONG_EXPLANATION,
+  levelSentencesId,
+  parseSentences,
+  SHORT_EXPLANATION,
+  sentenceGenerator,
+} from "../level-1/sentences.ts";
 import { GAP, type LevelOneWord, pinyinOf } from "../level-1/words.ts";
 import { levelTwoCourse, levelTwoLast } from "../level-2/index.ts";
+import { sentences as levelTwoSentences } from "../level-2/sentence-data.ts";
 import { levelThreeCourse, levelThreeLast } from "../level-3/index.ts";
+import { sentences as levelThreeSentences } from "../level-3/sentence-data.ts";
 import { levelFourCourse, levelFourLast } from "../level-4/index.ts";
+import { sentences as levelFourSentences } from "../level-4/sentence-data.ts";
 import { levelFiveCourse, levelFiveLast } from "../level-5/index.ts";
+import { sentences as levelFiveSentences } from "../level-5/sentence-data.ts";
 import { levelSixCourse, levelSixLast } from "../level-6/index.ts";
+import { sentences as levelSixSentences } from "../level-6/sentence-data.ts";
 import { levelSevenCourse } from "../level-7/index.ts";
+import { sentences as levelSevenSentences } from "../level-7/sentence-data.ts";
 import { levelEightCourse } from "../level-8/index.ts";
+import { sentences as levelEightSentences } from "../level-8/sentence-data.ts";
 import { levelNineCourse, levelNineLast } from "../level-9/index.ts";
+import { sentences as levelNineSentences } from "../level-9/sentence-data.ts";
 import { type LevelData, levelData } from "./data.ts";
 
 /** examGroup is the shelf of the Chinese exam courses. */
@@ -187,6 +205,30 @@ function inWordItems(levels: readonly LevelData[]): readonly Ask[] {
   );
 }
 
+/** SENTENCES are the sentence-building topics of each level, level 1 first. */
+const SENTENCES: readonly (readonly LevelSentences[])[] = [
+  levelOneSentences,
+  levelTwoSentences,
+  levelThreeSentences,
+  levelFourSentences,
+  levelFiveSentences,
+  levelSixSentences,
+  levelSevenSentences,
+  levelEightSentences,
+  levelNineSentences,
+];
+
+/** sentenceBank mixes the sentences of the given levels, short or long, one of each topic in turn; the levels checked their characters. */
+function sentenceBank(levels: readonly number[], kind: "short" | "long") {
+  return interleave(
+    levels.flatMap((level) =>
+      (SENTENCES[level - 1] ?? []).map((s, k) =>
+        parseSentences(`hsk level ${level} sentences ${k + 1}`, s[kind], kind === "short" ? [3, 4] : [5, 7]),
+      ),
+    ),
+  );
+}
+
 /** HskSpec describes an HSK course. */
 interface HskSpec {
   /** key names the course in ids, as in 1 or 7-9. */
@@ -196,6 +238,8 @@ interface HskSpec {
   /** zh names the levels it tests in Chinese, as in 一级. */
   readonly zh: string;
   readonly levels: readonly LevelData[];
+  /** numbers are the numbers of the levels it tests. */
+  readonly numbers: readonly number[];
   /** after is the last topic of the levels it tests. */
   readonly after: string;
   readonly courses: readonly CourseDef[];
@@ -204,7 +248,7 @@ interface HskSpec {
   readonly characters: number;
 }
 
-/** examTopics builds the three exam topics of an HSK course. */
+/** examTopics builds the four exam topics of an HSK course. */
 function examTopics(spec: HskSpec): readonly TopicDef[] {
   const { key, name, levels } = spec;
   const id = (s: string): string => `hsk-${key}-${s}`;
@@ -300,6 +344,26 @@ function examTopics(spec: HskSpec): readonly TopicDef[] {
         ),
       ],
     },
+    {
+      ...base,
+      id: id("sentences"),
+      title: t(`HSK ${name}: Building Sentences`, `HSK ${name}：连词成句`),
+      summary: t(
+        `Putting the parts of sentences in order, as the writing paper asks, with sentences from every unit of the levels HSK ${name} tests.`,
+        `按写作试卷的要求把词语排成句子，句子来自 HSK ${name} 所考等级的各个单元。`,
+      ),
+      prerequisites: [levelSentencesId(spec.numbers.at(-1) ?? 1, SENTENCES[(spec.numbers.at(-1) ?? 1) - 1]?.length ?? 4)],
+      strand: "writing",
+      knowledgePoints: [
+        point(
+          id("sentences-short"),
+          t("Short Sentences", "短句"),
+          SHORT_EXPLANATION,
+          sentenceGenerator(sentenceBank(spec.numbers, "short")),
+        ),
+        point(id("sentences-long"), t("Longer Sentences", "长句"), LONG_EXPLANATION, sentenceGenerator(sentenceBank(spec.numbers, "long"))),
+      ],
+    },
   ];
 }
 
@@ -312,8 +376,8 @@ function hsk(spec: HskSpec): { readonly course: CourseDef; readonly topics: read
       id: `chinese-hsk-${spec.key}`,
       title: t(`HSK ${spec.name}`, `HSK ${spec.name}`),
       description: t(
-        `Practice for level ${spec.name} of the new HSK over the ${spec.characters.toLocaleString("en")} characters and ${spec.words.toLocaleString("en")} words of ${spec.levels.length > 1 ? `levels ${spec.name}` : `level ${spec.name}`}: their units, then words in sentences, words and meanings, and characters, with every theme mixed as a test mixes them. It teaches nothing new: its own topics start with practice. Listening, speaking and writing will follow with audio and judged answers.`,
-        `新 HSK ${spec.name} 级的练习，覆盖${spec.zh}的 ${spec.characters} 个汉字和 ${spec.words} 个词语：先是这些等级的单元，然后是选词填空、词语和意思、汉字，各个话题像考试一样混在一起。本课程不教新知识：它自己的主题一开始就是练习。听力、口语和写作将在有了音频和评判之后加入。`,
+        `Practice for level ${spec.name} of the new HSK over the ${spec.characters.toLocaleString("en")} characters and ${spec.words.toLocaleString("en")} words of ${spec.levels.length > 1 ? `levels ${spec.name}` : `level ${spec.name}`}: their units, then words in sentences, words and meanings, characters, and building sentences, with every theme mixed as a test mixes them. It teaches nothing new: its own topics start with practice. Listening, speaking and the rest of writing will follow with audio and judged answers.`,
+        `新 HSK ${spec.name} 级的练习，覆盖${spec.zh}的 ${spec.characters} 个汉字和 ${spec.words} 个词语：先是这些等级的单元，然后是选词填空、词语和意思、汉字和连词成句，各个话题像考试一样混在一起。本课程不教新知识：它自己的主题一开始就是练习。听力、口语和其余的写作将在有了音频和评判之后加入。`,
       ),
       group: examGroup,
       buildsOn: [...spec.buildsOn],
@@ -341,6 +405,7 @@ const built = [
       name: String(i + 1),
       zh: `${"一二三四五六"[i]}级`,
       levels,
+      numbers: [i + 1],
       after: LAST[i]!,
       courses: [course],
       buildsOn: course.buildsOn ?? [],
@@ -355,6 +420,7 @@ const built = [
       name: "7–9",
       zh: "七至九级",
       levels,
+      numbers: [7, 8, 9],
       after: levelNineLast.words,
       courses: [levelSevenCourse, levelEightCourse, levelNineCourse],
       buildsOn: ["chinese-level-6"],
@@ -364,7 +430,7 @@ const built = [
   })(),
 ];
 
-/** hskTopics are the 21 exam topics of the HSK courses, three a course. */
+/** hskTopics are the 28 exam topics of the HSK courses, four a course. */
 export const hskTopics: readonly TopicDef[] = built.flatMap((b) => b.topics);
 
 /** hskCourses are the seven HSK courses, HSK 1 to 6 and HSK 7–9. */

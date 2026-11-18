@@ -34,12 +34,12 @@ const two = (n: number): string => String(n).padStart(2, "0");
 /** levelSentencesId is the id of the nth sentence-building topic of a level, counting from 1. */
 export const levelSentencesId = (level: number, n: number): string => `level-${level}-sentences-${two(n)}`;
 
-/** parseSentences reads the sentences of a knowledge point, checking their parts, their orders and their characters. */
+/** parseSentences reads the sentences of a knowledge point, checking their parts, their orders and, when taught is given, their characters. */
 export function parseSentences(
   where: string,
   data: string,
   parts: readonly [min: number, max: number],
-  taught: ReadonlySet<string>,
+  taught?: ReadonlySet<string>,
 ): readonly SentenceItem[] {
   const items = data
     .split("\n")
@@ -53,7 +53,7 @@ export function parseSentences(
       if (split.some((p) => p === "") || new Set(split).size !== split.length)
         throw new Error(`${where}: ${sentence} has an empty or repeated part`);
       if (!/[。？！]$/u.test(split.at(-1) ?? "")) throw new Error(`${where}: ${sentence} must end its last part with 。？ or ！`);
-      const untaught = [...split.join("")].filter((ch) => !taught.has(ch) && !PUNCTUATION.has(ch));
+      const untaught = taught ? [...split.join("")].filter((ch) => !taught.has(ch) && !PUNCTUATION.has(ch)) : [];
       if (untaught.length > 0) throw new Error(`${where}: ${sentence} uses ${[...new Set(untaught)].join("")}, not yet taught`);
       const alsoRight = (orders ?? "")
         .split(";")
@@ -106,7 +106,7 @@ export function sentenceGenerator(bank: readonly SentenceItem[]): Generator {
 }
 
 /** SHORT_EXPLANATION teaches the order of a simple Chinese sentence. */
-const SHORT_EXPLANATION = t(
+export const SHORT_EXPLANATION = t(
   [
     "A Chinese sentence keeps a firm order: **who** (the subject) comes first, then **when** and **where**, then the **verb**, then **what** (the object).",
     "",
@@ -126,7 +126,7 @@ const SHORT_EXPLANATION = t(
 );
 
 /** LONG_EXPLANATION teaches how longer sentences add their parts in order. */
-const LONG_EXPLANATION = t(
+export const LONG_EXPLANATION = t(
   [
     "A longer sentence adds its parts in the same order, from what frames the action to the action itself:",
     "",

@@ -6,7 +6,7 @@
 - **Level:** Level 2 of the new HSK, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 1](chinese-level-1.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 13 units · 186 topics (3 new, all practice-only) · 479 knowledge points
+- **Size:** 13 units · 187 topics (4 new, all practice-only) · 481 knowledge points
 
 ## The Test
 
@@ -14,7 +14,7 @@ The new HSK has nine levels built on the *Chinese Proficiency Grading Standards 
 
 ## Aim
 
-The course turns level 2 into test practice. It holds the units of [Chinese Level 2](chinese-level-2.md), so a learner who has not taken it learns it here, and then three exam topics that mix the words and characters of every theme, as a test does, rather than one batch at a time. It teaches nothing new. Its own topics are practice-only: a lesson starts with practice, and the explanation appears only after a failed attempt. The topics it reuses keep their place in the graph, so a learner who has learned them in the level course is credited and moves on.
+The course turns level 2 into test practice. It holds the units of [Chinese Level 2](chinese-level-2.md), so a learner who has not taken it learns it here, and then four exam topics that mix the words and characters of every theme, as a test does, rather than one batch at a time. It teaches nothing new. Its own topics are practice-only: a lesson starts with practice, and the explanation appears only after a failed attempt. The topics it reuses keep their place in the graph, so a learner who has learned them in the level course is credited and moves on.
 
 ## Units
 
@@ -25,8 +25,9 @@ The course turns level 2 into test practice. It holds the units of [Chinese Leve
 - `hsk-2-gaps` HSK 2: Words in Sentences (practice-only; after the last word topic of level 2). Every sentence of level 2 with its gap: (1) five words to choose from, all of its batch, none of those kept apart from it; (2) six, or five where the batch has no more that could not also fit.
 - `hsk-2-meanings` HSK 2: Words and Meanings (practice-only). Every word of level 2: (1) the word of a meaning among four; (2) the meaning of a word among four, in the learner's language.
 - `hsk-2-characters` HSK 2: Characters (practice-only). Every character of level 2: (1) by its reading and meaning, among characters that look like it; (2) the character missing from a word of level 2, given the word's pinyin and meaning, among the same, leaving out a word whose meaning would give it away.
+- `hsk-2-sentences` HSK 2: Building Sentences (practice-only; after the last sentence-building topic of level 2). The sentences of the sentence-building topics of level 2, mixed, each topic in turn: (1) short ones of three or four parts; (2) longer ones of five to seven.
 
-**Later, with audio and judged answers:** listening, speaking and writing, once the papers' question types are confirmed.
+**Later, with audio and judged answers:** listening, speaking and the rest of writing, once the papers' question types are confirmed.
 
 ## Simulated Students
 
