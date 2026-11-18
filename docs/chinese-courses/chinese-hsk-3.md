@@ -6,7 +6,7 @@
 - **Level:** Level 3 of the new HSK, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 2](chinese-level-2.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 13 units · 218 topics (4 new, all practice-only) · 563 knowledge points
+- **Size:** 13 units · 219 topics (5 new, all practice-only) · 565 knowledge points
 
 ## The Test
 
@@ -14,7 +14,7 @@ The new HSK has nine levels built on the *Chinese Proficiency Grading Standards 
 
 ## Aim
 
-The course turns level 3 into test practice. It holds the units of [Chinese Level 3](chinese-level-3.md), so a learner who has not taken it learns it here, and then four exam topics that mix the words and characters of every theme, as a test does, rather than one batch at a time. It teaches nothing new. Its own topics are practice-only: a lesson starts with practice, and the explanation appears only after a failed attempt. The topics it reuses keep their place in the graph, so a learner who has learned them in the level course is credited and moves on.
+The course turns level 3 into test practice. It holds the units of [Chinese Level 3](chinese-level-3.md), so a learner who has not taken it learns it here, and then five exam topics that mix the words and characters of every theme, as a test does, rather than one batch at a time. It teaches nothing new. Its own topics are practice-only: a lesson starts with practice, and the explanation appears only after a failed attempt. The topics it reuses keep their place in the graph, so a learner who has learned them in the level course is credited and moves on.
 
 ## Units
 
@@ -26,8 +26,9 @@ The course turns level 3 into test practice. It holds the units of [Chinese Leve
 - `hsk-3-meanings` HSK 3: Words and Meanings (practice-only). Every word of level 3: (1) the word of a meaning among four; (2) the meaning of a word among four, in the learner's language.
 - `hsk-3-characters` HSK 3: Characters (practice-only). Every character of level 3: (1) by its reading and meaning, among characters that look like it; (2) the character missing from a word of level 3, given the word's pinyin and meaning, among the same, leaving out a word whose meaning would give it away.
 - `hsk-3-sentences` HSK 3: Building Sentences (practice-only; after the last sentence-building topic of level 3). The sentences of the sentence-building topics of level 3, mixed, each topic in turn: (1) short ones of three or four parts; (2) longer ones of five to seven.
+- `hsk-3-writing` HSK 3: Writing (practice-only; after the last writing topic of level 3). Short texts written as the writing paper asks, judged by a model: a knowledge point for each kind of paragraph writing of level 3, with its tasks, judged by its three criteria.
 
-**Later, with audio and judged answers:** listening, speaking and the rest of writing, once the papers' question types are confirmed.
+**Later, with audio:** listening and speaking, once the papers' question types are confirmed.
 
 ## Simulated Students
 

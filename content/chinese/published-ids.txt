@@ -83,22 +83,27 @@ topic hsk-3-characters hsk-3-characters-reading hsk-3-characters-word
 topic hsk-3-gaps hsk-3-gaps-five hsk-3-gaps-six
 topic hsk-3-meanings hsk-3-meanings-meaning hsk-3-meanings-word
 topic hsk-3-sentences hsk-3-sentences-long hsk-3-sentences-short
+topic hsk-3-writing hsk-3-writing-level-3-01 hsk-3-writing-level-3-02
 topic hsk-4-characters hsk-4-characters-reading hsk-4-characters-word
 topic hsk-4-gaps hsk-4-gaps-five hsk-4-gaps-six
 topic hsk-4-meanings hsk-4-meanings-meaning hsk-4-meanings-word
 topic hsk-4-sentences hsk-4-sentences-long hsk-4-sentences-short
+topic hsk-4-writing hsk-4-writing-level-4-01 hsk-4-writing-level-4-02
 topic hsk-5-characters hsk-5-characters-reading hsk-5-characters-word
 topic hsk-5-gaps hsk-5-gaps-five hsk-5-gaps-six
 topic hsk-5-meanings hsk-5-meanings-meaning hsk-5-meanings-word
 topic hsk-5-sentences hsk-5-sentences-long hsk-5-sentences-short
+topic hsk-5-writing hsk-5-writing-level-5-01 hsk-5-writing-level-5-02
 topic hsk-6-characters hsk-6-characters-reading hsk-6-characters-word
 topic hsk-6-gaps hsk-6-gaps-five hsk-6-gaps-six
 topic hsk-6-meanings hsk-6-meanings-meaning hsk-6-meanings-word
 topic hsk-6-sentences hsk-6-sentences-long hsk-6-sentences-short
+topic hsk-6-writing hsk-6-writing-level-6-01 hsk-6-writing-level-6-02
 topic hsk-7-9-characters hsk-7-9-characters-reading hsk-7-9-characters-word
 topic hsk-7-9-gaps hsk-7-9-gaps-five hsk-7-9-gaps-six
 topic hsk-7-9-meanings hsk-7-9-meanings-meaning hsk-7-9-meanings-word
 topic hsk-7-9-sentences hsk-7-9-sentences-long hsk-7-9-sentences-short
+topic hsk-7-9-writing hsk-7-9-writing-level-7-01 hsk-7-9-writing-level-7-02 hsk-7-9-writing-level-8-01 hsk-7-9-writing-level-8-02 hsk-7-9-writing-level-9-01 hsk-7-9-writing-level-9-02
 topic idioms-10-01 idioms-10-01-meaning idioms-10-01-use idioms-10-01-writing
 topic idioms-10-02 idioms-10-02-meaning idioms-10-02-use idioms-10-02-writing
 topic idioms-10-03 idioms-10-03-meaning idioms-10-03-use idioms-10-03-writing

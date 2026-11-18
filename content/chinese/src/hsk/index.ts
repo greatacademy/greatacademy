@@ -2,10 +2,22 @@
 // to 6 each go with the level of the same number, and HSK 7–9 with levels 7 to 9. Each course holds its levels' units and
 // four exam topics of its own, all practice-only, that mix the whole level as a test does: choosing the word for a
 // gap among five or six, matching words and meanings, telling a character from those that look like it, and putting
-// the parts of a sentence in order, as the writing paper asks.
+// the parts of a sentence in order, as the writing paper asks. From HSK 3 on, a fifth topic, judged by a model, writes the
+// kinds of text of its levels' paragraph writing.
 
-import { type CourseDef, type Generator, joinText, type Problem, type Rng, same, type Text, type TopicDef, t } from "@ga/content";
-import { point, quote } from "@ga/subject-chinese";
+import {
+  type CourseDef,
+  type CriterionSpec,
+  type Generator,
+  joinText,
+  type Problem,
+  type Rng,
+  same,
+  type Text,
+  type TopicDef,
+  t,
+} from "@ga/content";
+import { criterionById, point, quote, writingGenerator } from "@ga/subject-chinese";
 
 import type { LevelOneCharacter } from "../level-1/characters.ts";
 import { levelOneCourse, levelOneWordId } from "../level-1/index.ts";
@@ -20,22 +32,30 @@ import {
   sentenceGenerator,
 } from "../level-1/sentences.ts";
 import { GAP, type LevelOneWord, pinyinOf } from "../level-1/words.ts";
+import { type LevelWriting, levelWritingId } from "../level-1/writing.ts";
 import { levelTwoCourse, levelTwoLast } from "../level-2/index.ts";
 import { sentences as levelTwoSentences } from "../level-2/sentence-data.ts";
 import { levelThreeCourse, levelThreeLast } from "../level-3/index.ts";
 import { sentences as levelThreeSentences } from "../level-3/sentence-data.ts";
+import { writing as levelThreeWriting } from "../level-3/writing-data.ts";
 import { levelFourCourse, levelFourLast } from "../level-4/index.ts";
 import { sentences as levelFourSentences } from "../level-4/sentence-data.ts";
+import { writing as levelFourWriting } from "../level-4/writing-data.ts";
 import { levelFiveCourse, levelFiveLast } from "../level-5/index.ts";
 import { sentences as levelFiveSentences } from "../level-5/sentence-data.ts";
+import { writing as levelFiveWriting } from "../level-5/writing-data.ts";
 import { levelSixCourse, levelSixLast } from "../level-6/index.ts";
 import { sentences as levelSixSentences } from "../level-6/sentence-data.ts";
+import { writing as levelSixWriting } from "../level-6/writing-data.ts";
 import { levelSevenCourse } from "../level-7/index.ts";
 import { sentences as levelSevenSentences } from "../level-7/sentence-data.ts";
+import { writing as levelSevenWriting } from "../level-7/writing-data.ts";
 import { levelEightCourse } from "../level-8/index.ts";
 import { sentences as levelEightSentences } from "../level-8/sentence-data.ts";
+import { writing as levelEightWriting } from "../level-8/writing-data.ts";
 import { levelNineCourse, levelNineLast } from "../level-9/index.ts";
 import { sentences as levelNineSentences } from "../level-9/sentence-data.ts";
+import { writing as levelNineWriting } from "../level-9/writing-data.ts";
 import { type LevelData, levelData } from "./data.ts";
 
 /** examGroup is the shelf of the Chinese exam courses. */
@@ -229,6 +249,74 @@ function sentenceBank(levels: readonly number[], kind: "short" | "long") {
   );
 }
 
+/** WRITING are the paragraph-writing topics of levels 3 to 9, from which the HSK courses that have writing draw. */
+const WRITING: Readonly<Record<number, readonly LevelWriting[]>> = {
+  3: levelThreeWriting,
+  4: levelFourWriting,
+  5: levelFiveWriting,
+  6: levelSixWriting,
+  7: levelSevenWriting,
+  8: levelEightWriting,
+  9: levelNineWriting,
+};
+
+/** criterion finds a criterion by its id, failing when there is none. */
+const criterion = (id: string): CriterionSpec => {
+  const found = criterionById(id);
+  if (!found) throw new Error(`unknown criterion ${id}`);
+  return found;
+};
+
+/** onePiece shows a model answer as one quotation. */
+const onePiece = (model: string): Text => t(`One good answer:\n\n${quote(model)}`, `一篇好的答案：\n\n${quote(model)}`);
+
+/**
+ * writingExam builds the writing topic of an HSK course from level 3 on, judged by a model: a knowledge point for each
+ * paragraph-writing topic of its levels, asked with that topic's tasks and judged by all three of its criteria.
+ */
+function writingExam(spec: HskSpec): readonly TopicDef[] {
+  const kinds = spec.numbers.flatMap((level) => (WRITING[level] ?? []).map((w, k) => ({ level, n: k + 1, w })));
+  if (kinds.length === 0) return [];
+  const last = kinds.at(-1)!;
+  const id = `hsk-${spec.key}-writing`;
+  return [
+    {
+      id,
+      title: t(`HSK ${spec.name}: Writing`, `HSK ${spec.name}：写作`),
+      summary: t(
+        `Writing short texts in Chinese as the writing paper asks, judged by a model: every kind of writing of the levels HSK ${spec.name} tests.`,
+        `按写作试卷的要求用中文写短文，由 AI 评判：HSK ${spec.name} 所考等级的各种写作。`,
+      ),
+      prerequisites: [levelWritingId(last.level, last.n)],
+      encompasses: [],
+      xp: 18,
+      strand: "writing",
+      practiceOnly: true,
+      criteria: [...new Set(kinds.flatMap((k) => k.w.criteria))].map(criterion),
+      knowledgePoints: kinds.map(({ level, n, w }) =>
+        point(
+          `${id}-level-${level}-${String(n).padStart(2, "0")}`,
+          w.title,
+          t(
+            `In the paper, a text is marked on all of it at once: what it says, how it is put together, and its language. Plan before you write, keep to the task, and leave time to check your characters. ${w.summary.en}`,
+            `考试时，一篇短文的内容、结构和语言一起评分。先想好再写，紧扣题目，留出时间检查有没有写错字。${w.summary["zh-CN"]}`,
+          ),
+          writingGenerator(
+            t(
+              `Write the text below in Chinese, of at least ${w.minChars} characters.`,
+              `按下面的要求，用中文写一篇不少于 ${w.minChars} 字的短文。`,
+            ),
+            w.bank,
+            [...w.criteria],
+            { minWords: w.minChars, maxChars: w.minChars * 10 },
+            onePiece,
+          ),
+        ),
+      ),
+    },
+  ];
+}
+
 /** HskSpec describes an HSK course. */
 interface HskSpec {
   /** key names the course in ids, as in 1 or 7-9. */
@@ -369,15 +457,15 @@ function examTopics(spec: HskSpec): readonly TopicDef[] {
 
 /** hsk builds an HSK course and its exam topics. */
 function hsk(spec: HskSpec): { readonly course: CourseDef; readonly topics: readonly TopicDef[] } {
-  const topics = examTopics(spec);
+  const topics = [...examTopics(spec), ...writingExam(spec)];
   return {
     topics,
     course: {
       id: `chinese-hsk-${spec.key}`,
       title: t(`HSK ${spec.name}`, `HSK ${spec.name}`),
       description: t(
-        `Practice for level ${spec.name} of the new HSK over the ${spec.characters.toLocaleString("en")} characters and ${spec.words.toLocaleString("en")} words of ${spec.levels.length > 1 ? `levels ${spec.name}` : `level ${spec.name}`}: their units, then words in sentences, words and meanings, characters, and building sentences, with every theme mixed as a test mixes them. It teaches nothing new: its own topics start with practice. Listening, speaking and the rest of writing will follow with audio and judged answers.`,
-        `新 HSK ${spec.name} 级的练习，覆盖${spec.zh}的 ${spec.characters} 个汉字和 ${spec.words} 个词语：先是这些等级的单元，然后是选词填空、词语和意思、汉字和连词成句，各个话题像考试一样混在一起。本课程不教新知识：它自己的主题一开始就是练习。听力、口语和其余的写作将在有了音频和评判之后加入。`,
+        `Practice for level ${spec.name} of the new HSK over the ${spec.characters.toLocaleString("en")} characters and ${spec.words.toLocaleString("en")} words of ${spec.levels.length > 1 ? `levels ${spec.name}` : `level ${spec.name}`}: their units, then words in sentences, words and meanings, characters, and building sentences, with every theme mixed as a test mixes them${spec.numbers[0]! >= 3 ? ", and writing, judged by a model" : ""}. It teaches nothing new: its own topics start with practice. Listening and speaking will follow with audio.`,
+        `新 HSK ${spec.name} 级的练习，覆盖${spec.zh}的 ${spec.characters} 个汉字和 ${spec.words} 个词语：先是这些等级的单元，然后是选词填空、词语和意思、汉字和连词成句${spec.numbers[0]! >= 3 ? "，以及由 AI 评判的写作" : ""}，各个话题像考试一样混在一起。本课程不教新知识：它自己的主题一开始就是练习。听力和口语将在有了音频之后加入。`,
       ),
       group: examGroup,
       buildsOn: [...spec.buildsOn],
@@ -430,7 +518,7 @@ const built = [
   })(),
 ];
 
-/** hskTopics are the 28 exam topics of the HSK courses, four a course. */
+/** hskTopics are the 33 exam topics of the HSK courses: four a course, and writing from HSK 3 on. */
 export const hskTopics: readonly TopicDef[] = built.flatMap((b) => b.topics);
 
 /** hskCourses are the seven HSK courses, HSK 1 to 6 and HSK 7–9. */
