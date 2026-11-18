@@ -1,13 +1,15 @@
 // The Gaokao course (docs/chinese-curriculum.md §8.5): practice for the Chinese paper of the university entrance
 // examination over the two senior courses. It holds their units and exam topics of its own, all practice-only,
 // that mix what grades 7 to 11 teach, as the paper does: idioms in context, lines of recited texts from a description of
-// their meaning, the words of classical Chinese, and the reading of modern texts, informational and literary.
+// their meaning, the words of classical Chinese, the use of language, and the reading of modern texts, informational and literary.
 
 import { type CourseDef, same, type Text, type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point, type TypedItem, typed, typedGenerator } from "@ga/subject-chinese";
 import { classicalDrills } from "../classical/drills.ts";
 import { seniorClassicalDrills } from "../classical/senior-drills.ts";
 import type { DrillItem } from "../grammar/drill.ts";
+import { drillData } from "../grammar/drill-data.ts";
+import { faultyData } from "../grammar/faulty-data.ts";
 import { type Ask, examChoice, examGroup } from "../hsk/index.ts";
 import type { Idiom } from "../idioms/idioms.ts";
 import { idiomsByGrade } from "../idioms/index.ts";
@@ -142,6 +144,68 @@ const lastDrill = lastOf(seniorClassicalDrills.map((d) => d.id));
 const junior = classicalItems(5, 9);
 const senior = classicalItems(10, 11);
 
+/** soundItems are the corrected sentences of every faulty-sentence topic, each among three faulty sentences of its topic. */
+function soundItems(): readonly ChoiceItem[] {
+  return interleave(
+    faultyData.map((topic) =>
+      topic.items.map((item, i): ChoiceItem => {
+        const wrong = [1, 3, 5].map((d) => topic.items[(i + d) % topic.items.length]!.faulty);
+        if (new Set([item.corrected, ...wrong]).size !== 4) throw new Error(`gaokao: the sentences offered against ${item.corrected}`);
+        return ["", item.corrected, wrong];
+      }),
+    ),
+  );
+}
+
+/** deviceItems are the sentences of every rhetoric topic, each with its device among three others of its topic. */
+function deviceItems(): readonly ChoiceItem[] {
+  return interleave(
+    drillData.rhetoric.map((topic) => topic.points[0].items.map((item): ChoiceItem => [item.shown, item.right, [...item.wrong]])),
+  );
+}
+
+const lastFaulty = lastOf(faultyData.map((d) => d.id));
+const lastRhetoric = lastOf(drillData.rhetoric.map((d) => d.id));
+
+/** languageTopic is the use of language of the paper beyond idioms: faulty sentences and rhetoric, every kind mixed. */
+const languageTopic: TopicDef = {
+  id: "gaokao-language",
+  title: t("Gaokao: Use of Language", "高考：语言文字运用"),
+  summary: t(
+    "Faulty sentences and rhetorical devices of every grade mixed, as the paper asks them: the one sentence without a fault among four, then the device a sentence uses.",
+    "各年级的病句和修辞手法混在一起，按试卷的问法：先在四个句子中选出没有语病的一项，再判断句子用了什么修辞手法。",
+  ),
+  prerequisites: [lastFaulty, lastRhetoric],
+  encompasses: [],
+  xp: 12,
+  strand: "grammar",
+  practiceOnly: true,
+  knowledgePoints: [
+    point(
+      "gaokao-language-sound",
+      t("The Sentence Without a Fault", "没有语病的一项"),
+      t(
+        "Check each sentence in turn for the six kinds of fault: a wrong word order, a mismatch of parts, a part missing or extra, a mixed structure, a meaning unclear, or a lapse of logic. Find the main parts first, subject, verb and object, and see whether they fit together.",
+        "逐句检查六类语病：语序不当、搭配不当、成分残缺或赘余、结构混乱、表意不明、不合逻辑。先找出主干，即主语、谓语和宾语，看它们能不能搭配。",
+      ),
+      choiceGenerator(t("Which sentence has no fault?", "下列句子中，没有语病的一项是"), soundItems(), (right) =>
+        t(`The sentence without a fault is: ${right}`, `没有语病的是：${right}`),
+      ),
+    ),
+    point(
+      "gaokao-language-rhetoric",
+      t("Rhetorical Devices", "修辞手法"),
+      t(
+        "Name a device by what the sentence does, not by a word it contains: a 像 may compare without being a simile, and a question may be asked for its answer or for effect.",
+        "按句子实际的作用判断修辞手法，而不是只看某个词：有“像”字不一定是比喻，问句可能是设问，也可能是反问。",
+      ),
+      choiceGenerator(t("Which rhetorical device does this sentence use?", "这个句子用了什么修辞手法？"), deviceItems(), (right) =>
+        t(`It uses ${right}.`, `这个句子用了${right}。`),
+      ),
+    ),
+  ],
+};
+
 /** modernReading are the topics of the reading of modern texts: informational, then literary, each with its short answers. */
 const modernReading = [
   ...modernTopics(informationalSpec([lastIdioms], informationalPassages)),
@@ -258,6 +322,7 @@ export const gaokaoTopics: readonly TopicDef[] = [
       ),
     ],
   },
+  languageTopic,
   ...modernReading,
   gaokaoEssayTopic,
 ];
