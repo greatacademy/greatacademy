@@ -353,12 +353,12 @@ Level 4 teaches 300 more characters and 1,000 words, in twelve themed units: hea
 
 ## Simulated Students
 
-`pnpm nx run simulate:simulate -- chinese-level-4`, the mean of 20 runs of each student. A placed student already knows the course's foundations. A struggling student who starts from nothing must also learn levels 1 to 3 and mostly runs out of the simulation's time; placed, every run finishes.
+`pnpm nx run simulate:simulate -- chinese-level-4`, the mean of 20 runs of each student. A placed student already knows the course's foundations. A student who starts from nothing must also learn levels 1 to 3: a struggling one mostly runs out of the simulation's time, and a typical one sometimes does; placed, every run finishes.
 
 | Student | Finished | Days | Lessons | Failed lessons | Reviews | Reviews per topic | Quizzes | Passages |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| strong | 20/20 | 276.20 | 494.25 | 4.40 | 1907.30 | 3.89 | 72.30 | 0.00 |
-| typical | 20/20 | 324.20 | 536.70 | 46.85 | 2096.35 | 4.28 | 65.65 | 0.00 |
-| struggling | 3/20 | 349.35 | 582.40 | 206.90 | 2284.60 | 6.08 | 48.90 | 0.00 |
-| placed | 20/20 | 136.25 | 223.85 | 17.15 | 866.90 | 4.20 | 27.30 | 0.00 |
-| struggling, placed | 20/20 | 189.85 | 311.85 | 105.15 | 1220.75 | 5.90 | 26.50 | 0.00 |
+| strong | 20/20 | 289.60 | 516.50 | 3.90 | 1999.70 | 3.90 | 75.65 | 0.00 |
+| typical | 14/20 | 336.50 | 557.65 | 46.35 | 2182.60 | 4.26 | 68.40 | 0.00 |
+| struggling | 2/20 | 350.45 | 585.35 | 206.10 | 2299.65 | 6.05 | 49.00 | 0.00 |
+| placed | 20/20 | 149.55 | 246.20 | 16.95 | 956.95 | 4.17 | 30.15 | 0.00 |
+| struggling, placed | 20/20 | 206.65 | 336.10 | 106.85 | 1317.45 | 5.74 | 28.75 | 0.00 |
