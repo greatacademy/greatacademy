@@ -12,9 +12,15 @@ import { levelFourLast } from "../level-4/index.ts";
 import { wordBatchesA } from "../level-4/word-data-a.ts";
 import { wordBatchesB } from "../level-4/word-data-b.ts";
 import { type PaperItem, practicalTexts, sceneStories } from "./paper-data.ts";
+import { chartTasks, essayTasks, translationTasks } from "./paper-data-79.ts";
 
-/** PAPER_MINIMUMS are the fewest characters of each task: the paper sets those of the story and the practical text; a sentence of fewer than eight is too slight to show the word in use. */
-export const PAPER_MINIMUMS = { sentence: 8, story: 100, practical: 150 } as const;
+/**
+ * PAPER_MINIMUMS are the fewest characters of each task: the paper sets those of the story and the practical text, and
+ * about 200 and 600 for the chart and the essay of HSK 7–9, punctuation counted, of which some 150 and 420 Chinese
+ * characters are asked; a sentence of fewer than eight is too slight to show the word in use, and a translation of fewer
+ * than 100 leaves out much of its source.
+ */
+export const PAPER_MINIMUMS = { sentence: 8, story: 100, practical: 150, chart: 150, essay: 420, translation: 100 } as const;
 
 /** WORD_STEP takes every so many words of level 4 for the sentences, so that they spread over its units. */
 const WORD_STEP = 16;
@@ -81,7 +87,7 @@ function paperTopic(spec: {
   };
 }
 
-/** paperTopics are the paper's tasks of an HSK course, by its key: HSK 4, 5 and 6 have one each. */
+/** paperTopics are the paper's tasks of an HSK course, by its key: HSK 4, 5 and 6 have one each, HSK 7–9 three. */
 export function paperTopics(key: string): readonly TopicDef[] {
   if (key === "4") {
     checked("hsk-4-word-sentences", wordItems, PAPER_MINIMUMS.sentence);
@@ -153,6 +159,71 @@ export function paperTopics(key: string): readonly TopicDef[] {
         items: checked("hsk-6-practical-texts", practicalTexts, PAPER_MINIMUMS.practical),
         least: PAPER_MINIMUMS.practical,
         most: PAPER_MINIMUMS.practical * 10,
+      }),
+    ];
+  }
+  if (key === "7-9") {
+    const after = levelWritingId(9, 2);
+    return [
+      paperTopic({
+        id: "hsk-7-9-chart-writing",
+        title: t("HSK 7–9: Describing a Chart", "HSK 7–9：图表写作"),
+        summary: t(
+          `The first part of the writing paper: a chart's figures described and analysed in about 200 characters, at least ${PAPER_MINIMUMS.chart}, judged by a model.`,
+          `写作第一部分：描述并分析图表中的数据，200 字左右，不少于 ${PAPER_MINIMUMS.chart} 字，由 AI 评判。`,
+        ),
+        after,
+        criteria: ["hsk-chart-data", "hsk-chart-analysis", "hsk-chart-language"],
+        explanation: t(
+          "Say first what the chart shows: what is measured, where and over what time. Then give the overall trend or the largest difference with its figures, compare the parts that stand out, and close with a cause or a conclusion the figures support. Use words of quantity and change such as 占, 比例, 增长了, 下降到 and 约, and claim nothing the chart does not show.",
+          "先说明图表反映的是什么：统计的对象、范围和时间。再写出总的趋势或者最大的差别，并给出数字；比较其中突出的部分；最后写出数据能支持的原因或结论。用好“占”“比例”“增长了”“下降到”“约”这样表示数量和变化的词，不写图表里看不出的内容。",
+        ),
+        question: t(
+          `Describe and analyse the chart below in Chinese, in about 200 characters and at least ${PAPER_MINIMUMS.chart}.`,
+          `根据下面的图表，用中文写一段描述和分析，200 字左右，不少于 ${PAPER_MINIMUMS.chart} 字。`,
+        ),
+        items: checked("hsk-7-9-chart-writing", chartTasks, PAPER_MINIMUMS.chart),
+        least: PAPER_MINIMUMS.chart,
+        most: 1000,
+      }),
+      paperTopic({
+        id: "hsk-7-9-essays",
+        title: t("HSK 7–9: An Argumentative Essay", "HSK 7–9：议论文写作"),
+        summary: t(
+          `The second part of the writing paper: an essay of about 600 characters, at least ${PAPER_MINIMUMS.essay}, arguing a position of one's own on a given question, judged by a model.`,
+          `写作第二部分：就给出的问题提出并论证自己的观点，600 字左右，不少于 ${PAPER_MINIMUMS.essay} 字，由 AI 评判。`,
+        ),
+        after,
+        criteria: ["hsk-essay-position", "hsk-essay-support", "hsk-essay-language"],
+        explanation: t(
+          "Decide your position before you write and state it in the first paragraph. Give each reason a paragraph of its own, opening with the reason and developing it with an example, a fact or an explanation. Then take the strongest view against yours and answer it, and close by restating your position in the light of what you have shown. Join the paragraphs with words such as 首先, 其次, 诚然……但是 and 由此可见.",
+          "动笔前先想好自己的观点，在第一段明确提出。每个理由单独成段，开头写出理由，再用例子、事实或分析展开。然后举出和自己相反的最有力的看法并加以回应，最后结合前面的论证重申观点。段落之间用“首先”“其次”“诚然……但是”“由此可见”等词语连接。",
+        ),
+        question: t(
+          `Write an essay in Chinese on the question below, of about 600 characters and at least ${PAPER_MINIMUMS.essay}, stating and arguing your own position.`,
+          `就下面的问题，用中文写一篇 600 字左右、不少于 ${PAPER_MINIMUMS.essay} 字的议论文，提出并论证自己的观点。`,
+        ),
+        items: checked("hsk-7-9-essays", essayTasks, PAPER_MINIMUMS.essay),
+        least: PAPER_MINIMUMS.essay,
+        most: 2500,
+      }),
+      paperTopic({
+        id: "hsk-7-9-translation",
+        title: t("HSK 7–9: Translating into Chinese", "HSK 7–9：翻译成中文"),
+        summary: t(
+          "The written translation of the paper: a short English text put into natural Chinese, judged by a model on what it keeps, how accurately and how naturally.",
+          "试卷中的笔译：把一段英文短文译成自然的中文，由 AI 从信息是否完整、意思是否准确、中文是否自然三方面评判。",
+        ),
+        after,
+        criteria: ["hsk-translate-complete", "hsk-translate-accurate", "hsk-translate-natural"],
+        explanation: t(
+          "Read the whole text first and mark its pieces of information: names, numbers, times, causes and what happens. Translate sentence by sentence for meaning, not word by word: Chinese puts time and place before the verb, long modifiers before the noun, and often splits a long sentence in two. Read your Chinese back against the source to check that nothing is lost or added.",
+          "先通读全文，标出其中的信息：人名、数字、时间、原因和事件。按意思一句一句地译，不要逐词对译：中文把时间、地点放在动词前面，把长的修饰语放在名词前面，长句常常拆成两句。译完后对照原文再读一遍，检查有没有漏译或多译。",
+        ),
+        question: t("Translate the text below into Chinese.", "把下面的短文翻译成中文。"),
+        items: checked("hsk-7-9-translation", translationTasks, PAPER_MINIMUMS.translation),
+        least: PAPER_MINIMUMS.translation,
+        most: 1500,
       }),
     ];
   }

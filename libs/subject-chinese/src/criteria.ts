@@ -543,6 +543,69 @@ export const WRITING_CRITERIA: readonly CriterionSpec[] = [
       "Is the text written in correct, clear Chinese of an advanced learner, in a register that suits its reader, with few wrong characters?",
     quoteWhenMet: false,
   },
+  // HSK 7–9: a chart described and analysed, an essay arguing a position, and a text translated into Chinese.
+  {
+    id: "hsk-chart-data",
+    version: "1",
+    question:
+      "Does the text report the chart's main figures and its overall trend or largest differences correctly, without numbers or claims the chart does not support?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "hsk-chart-analysis",
+    version: "1",
+    question:
+      "Does the text go beyond listing figures, comparing them and offering at least one reasonable explanation, cause or conclusion drawn from the chart?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "hsk-chart-language",
+    version: "1",
+    question:
+      "Is the text written in correct, formal Chinese of an advanced learner, with words for numbers and change such as 增长, 下降, 占, 比例 or 约 used correctly, and few wrong characters?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "hsk-essay-position",
+    version: "1",
+    question: "Does the essay take a clear position on the question asked, stated near its start and kept to the end?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "hsk-essay-support",
+    version: "1",
+    question:
+      "Does the essay support its position with at least two distinct reasons, each developed with an example, evidence or explanation, and does it answer at least one opposing view?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "hsk-essay-language",
+    version: "1",
+    question:
+      "Is the essay organised in paragraphs with clear connections between them, in correct, varied Chinese of an advanced learner with few wrong characters?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "hsk-translate-complete",
+    version: "1",
+    question:
+      "Does the translation carry over every piece of information of the source text, leaving nothing out and adding nothing of its own?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "hsk-translate-accurate",
+    version: "1",
+    question:
+      "Does the translation render the meaning of each sentence of the source correctly, including its numbers, names, negations and the relations between its ideas?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "hsk-translate-natural",
+    version: "1",
+    question:
+      "Does the translation read as natural Chinese, in a register that suits the source, rather than following the source's word order word by word?",
+    quoteWhenMet: true,
+  },
 ];
 
 /** LEVEL_WRITING_CRITERIA are the criteria of the paragraph writing of foreign-language levels 2 to 9. */

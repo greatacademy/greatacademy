@@ -121,11 +121,14 @@ topic hsk-6-sentences hsk-6-sentences-long hsk-6-sentences-short
 topic hsk-6-speaking hsk-6-speaking-sentences hsk-6-speaking-words
 topic hsk-6-writing hsk-6-writing-level-6-01 hsk-6-writing-level-6-02
 topic hsk-7-9-characters hsk-7-9-characters-reading hsk-7-9-characters-word
+topic hsk-7-9-chart-writing hsk-7-9-chart-writing
+topic hsk-7-9-essays hsk-7-9-essays
 topic hsk-7-9-gaps hsk-7-9-gaps-five hsk-7-9-gaps-six
 topic hsk-7-9-listening hsk-7-9-listening-sentences hsk-7-9-listening-words
 topic hsk-7-9-meanings hsk-7-9-meanings-meaning hsk-7-9-meanings-word
 topic hsk-7-9-sentences hsk-7-9-sentences-long hsk-7-9-sentences-short
 topic hsk-7-9-speaking hsk-7-9-speaking-sentences hsk-7-9-speaking-words
+topic hsk-7-9-translation hsk-7-9-translation
 topic hsk-7-9-writing hsk-7-9-writing-level-7-01 hsk-7-9-writing-level-7-02 hsk-7-9-writing-level-8-01 hsk-7-9-writing-level-8-02 hsk-7-9-writing-level-9-01 hsk-7-9-writing-level-9-02
 topic idioms-10-01 idioms-10-01-meaning idioms-10-01-use idioms-10-01-writing
 topic idioms-10-02 idioms-10-02-meaning idioms-10-02-use idioms-10-02-writing
