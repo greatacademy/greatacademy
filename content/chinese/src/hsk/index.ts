@@ -67,6 +67,7 @@ import { writing as levelEightWriting } from "../level-8/writing-data.ts";
 import { levelNineCourse, levelNineLast } from "../level-9/index.ts";
 import { sentences as levelNineSentences } from "../level-9/sentence-data.ts";
 import { writing as levelNineWriting } from "../level-9/writing-data.ts";
+import { answeringOne, answeringThree, answeringTwo } from "./answering-data.ts";
 import { type ComprehensionData, comprehensionTopics } from "./comprehension.ts";
 import { comprehension as comprehensionOne } from "./comprehension-data/hsk-1.ts";
 import { comprehension as comprehensionTwo } from "./comprehension-data/hsk-2.ts";
@@ -76,6 +77,7 @@ import { comprehension as comprehensionFive } from "./comprehension-data/hsk-5.t
 import { comprehension as comprehensionSix } from "./comprehension-data/hsk-6.ts";
 import { comprehension as comprehensionSevenToNine } from "./comprehension-data/hsk-7-9.ts";
 import { type LevelData, levelData } from "./data.ts";
+import { oralTopics } from "./oral.ts";
 import { paperTopics } from "./paper.ts";
 import { writtenTopics } from "./written.ts";
 
@@ -586,12 +588,32 @@ function comprehensionExam(spec: HskSpec): readonly TopicDef[] {
   );
 }
 
+/** ANSWERING are the questions the HSK courses of the elementary speaking test answer, by key. */
+const ANSWERING: Readonly<Record<string, string>> = { "1": answeringOne, "2": answeringTwo, "3": answeringThree };
+
+/** oralExam builds the answering of questions of HSK 1 to 3, and the reading aloud of the courses after them. */
+function oralExam(spec: HskSpec): readonly TopicDef[] {
+  const top = Math.max(...spec.numbers);
+  const taught = new Set(levelData.filter((l) => l.level <= top).flatMap((l) => l.characters.flat().map((c) => c.char)));
+  const answering = ANSWERING[spec.key];
+  const passages = top >= 4 ? COMPREHENSION[spec.key]?.passages.short : undefined;
+  return oralTopics({
+    key: spec.key,
+    name: spec.name,
+    taught,
+    after: `hsk-${spec.key}-speaking`,
+    ...(answering && { answering }),
+    ...(passages && { passages }),
+  });
+}
+
 /** hsk builds an HSK course and its exam topics. */
 function hsk(spec: HskSpec): { readonly course: CourseDef; readonly topics: readonly TopicDef[] } {
   const topics = [
     ...examTopics(spec),
     ...speechExam(spec),
     ...comprehensionExam(spec),
+    ...oralExam(spec),
     ...writtenTopics(spec.key),
     ...writingExam(spec),
     ...paperTopics(spec.key),

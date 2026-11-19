@@ -75,6 +75,7 @@ topic heritage-register heritage-register-notice heritage-register-words
 topic heritage-sound-alike heritage-sound-alike-choose heritage-sound-alike-mistake
 topic heritage-traditional heritage-traditional-characters heritage-traditional-words
 topic heritage-written-forms heritage-written-forms-phrases heritage-written-forms-words
+topic hsk-1-answering hsk-1-answering-questions
 topic hsk-1-characters hsk-1-characters-reading hsk-1-characters-word
 topic hsk-1-dialogues hsk-1-dialogues-long hsk-1-dialogues-short
 topic hsk-1-gaps hsk-1-gaps-five hsk-1-gaps-six
@@ -83,6 +84,7 @@ topic hsk-1-meanings hsk-1-meanings-meaning hsk-1-meanings-word
 topic hsk-1-passages hsk-1-passages-long hsk-1-passages-short
 topic hsk-1-sentences hsk-1-sentences-long hsk-1-sentences-short
 topic hsk-1-speaking hsk-1-speaking-sentences hsk-1-speaking-words
+topic hsk-2-answering hsk-2-answering-questions
 topic hsk-2-characters hsk-2-characters-reading hsk-2-characters-word
 topic hsk-2-dialogues hsk-2-dialogues-long hsk-2-dialogues-short
 topic hsk-2-gaps hsk-2-gaps-five hsk-2-gaps-six
@@ -92,6 +94,7 @@ topic hsk-2-passages hsk-2-passages-long hsk-2-passages-short
 topic hsk-2-sentences hsk-2-sentences-long hsk-2-sentences-short
 topic hsk-2-speaking hsk-2-speaking-sentences hsk-2-speaking-words
 topic hsk-2-written-characters hsk-2-written-characters-sentences hsk-2-written-characters-words
+topic hsk-3-answering hsk-3-answering-questions
 topic hsk-3-characters hsk-3-characters-reading hsk-3-characters-word
 topic hsk-3-dialogues hsk-3-dialogues-long hsk-3-dialogues-short
 topic hsk-3-gaps hsk-3-gaps-five hsk-3-gaps-six
@@ -108,6 +111,7 @@ topic hsk-4-gaps hsk-4-gaps-five hsk-4-gaps-six
 topic hsk-4-listening hsk-4-listening-sentences hsk-4-listening-words
 topic hsk-4-meanings hsk-4-meanings-meaning hsk-4-meanings-word
 topic hsk-4-passages hsk-4-passages-long hsk-4-passages-short
+topic hsk-4-reading-aloud hsk-4-reading-aloud-texts
 topic hsk-4-sentences hsk-4-sentences-long hsk-4-sentences-short
 topic hsk-4-speaking hsk-4-speaking-sentences hsk-4-speaking-words
 topic hsk-4-word-sentences hsk-4-word-sentences
@@ -118,6 +122,7 @@ topic hsk-5-gaps hsk-5-gaps-five hsk-5-gaps-six
 topic hsk-5-listening hsk-5-listening-sentences hsk-5-listening-words
 topic hsk-5-meanings hsk-5-meanings-meaning hsk-5-meanings-word
 topic hsk-5-passages hsk-5-passages-long hsk-5-passages-short
+topic hsk-5-reading-aloud hsk-5-reading-aloud-texts
 topic hsk-5-scene-stories hsk-5-scene-stories
 topic hsk-5-sentences hsk-5-sentences-long hsk-5-sentences-short
 topic hsk-5-speaking hsk-5-speaking-sentences hsk-5-speaking-words
@@ -129,6 +134,7 @@ topic hsk-6-listening hsk-6-listening-sentences hsk-6-listening-words
 topic hsk-6-meanings hsk-6-meanings-meaning hsk-6-meanings-word
 topic hsk-6-passages hsk-6-passages-long hsk-6-passages-short
 topic hsk-6-practical-texts hsk-6-practical-texts
+topic hsk-6-reading-aloud hsk-6-reading-aloud-texts
 topic hsk-6-sentences hsk-6-sentences-long hsk-6-sentences-short
 topic hsk-6-speaking hsk-6-speaking-sentences hsk-6-speaking-words
 topic hsk-6-writing hsk-6-writing-level-6-01 hsk-6-writing-level-6-02
@@ -140,6 +146,7 @@ topic hsk-7-9-gaps hsk-7-9-gaps-five hsk-7-9-gaps-six
 topic hsk-7-9-listening hsk-7-9-listening-sentences hsk-7-9-listening-words
 topic hsk-7-9-meanings hsk-7-9-meanings-meaning hsk-7-9-meanings-word
 topic hsk-7-9-passages hsk-7-9-passages-long hsk-7-9-passages-short
+topic hsk-7-9-reading-aloud hsk-7-9-reading-aloud-texts
 topic hsk-7-9-sentences hsk-7-9-sentences-long hsk-7-9-sentences-short
 topic hsk-7-9-speaking hsk-7-9-speaking-sentences hsk-7-9-speaking-words
 topic hsk-7-9-translation hsk-7-9-translation
