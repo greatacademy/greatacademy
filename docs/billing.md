@@ -36,7 +36,7 @@ Payments go through one Stripe account, named Great Academy, in the Stripe organ
 | **Alipay or WeChat Pay** | None: the payment buys one month or one year, and paying again before it ends adds another |
 | **App Store**, in the iOS app | Automatic, by Apple, until turned off in the Apple account's subscriptions |
 
-Stripe's Checkout cannot renew Alipay or WeChat Pay, so they buy periods. Seven days before a period ends, the payer gets an email: for a card, that it will renew and how to cancel; for a wallet, that access ends unless they pay again.
+Stripe's Checkout cannot renew Alipay or WeChat Pay, so they buy periods. Seven days before a month ends, and 30 days before a year ends, the payer gets an email: for a card, that it will renew and how to cancel; for a wallet, that access ends unless they pay again. The month ahead for yearly plans follows California's rule for renewal notices, which every market gets.
 
 Apple charges and renews App Store plans and sends its own reminders; Stripe has no part in them.
 
@@ -50,7 +50,7 @@ Sign-up asks who will learn ([Minors' Data](minors-data.md) §6), then the age, 
 2. I authorize Great Academy to renew the plan and charge my card until I cancel, which I can do online at any time. A wallet payment shows instead that it does not renew.
 3. I ask for the plan to start now and understand that I lose any legal right to withdraw once it starts; only my first payment, if monthly, can be refunded within 30 days. When the payment cannot be refunded, the statement says so instead.
 
-The button stays off until all three are ticked. Above the plans the page says whether this account still has its refund; with yearly chosen, that yearly plans cannot be refunded and that a first month can be. A subject the learner already has, alone or in all subjects, shows as already theirs and cannot be chosen; choosing all subjects beside subject plans the payer pays for shows the upgrade: the price, the credit for their unused time, what is paid today, and that they end (§5). Settings offers the upgrade on each running subject plan. Checkout runs on Stripe's page and returns to the plans page, which waits for the payment to arrive.
+The button stays off until all three are ticked. Opening Checkout writes what the payer agreed to into the admin log as `billing.agreed`: the notice version, the statements, the scope, the interval, the method and the Checkout session; a purchase in the App Store records the same with the method `apple`. This keeps proof of the agreement that laws on automatic renewal ask for. Above the plans the page says whether this account still has its refund; with yearly chosen, that yearly plans cannot be refunded and that a first month can be. A subject the learner already has, alone or in all subjects, shows as already theirs and cannot be chosen; choosing all subjects beside subject plans the payer pays for shows the upgrade: the price, the credit for their unused time, what is paid today, and that they end (§5). Settings offers the upgrade on each running subject plan. Checkout runs on Stripe's page and returns to the plans page, which waits for the payment to arrive.
 
 ## 5. Cancelling and Refunds
 

@@ -10,6 +10,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { adminService } from "./admin.ts";
 import {
+  AGREED_ACTION,
   addInterval,
   applyBillingEvent,
   type BillingEvent,
@@ -168,6 +169,9 @@ describe("checkout", () => {
     expect(o?.req.meta).toEqual({ payer: "parent", learner: await learnerOf("parent"), scope: "all", interval: "year" });
     expect(o?.req.successUrl).toBe(`${ORIGIN}/plans?checkout={CHECKOUT_SESSION_ID}`);
     expect(o?.req.locale).toBe("zh");
+    const [agreed] = await db.select().from(schema.adminLog);
+    expect(agreed).toMatchObject({ actor: "parent", action: AGREED_ACTION });
+    expect(JSON.parse(agreed!.detail!)).toMatchObject({ version: "2026-11", statements: ["terms", "renewal", "refund"], interval: "year" });
     expect(o?.req.email).toBe("parent@example.com");
   });
 
@@ -512,6 +516,16 @@ describe("reminders", () => {
     now = addInterval(NOW, "month") - 3 * DAY;
     await runBillingReminders(db, now, remind);
     await runBillingReminders(db, now + DAY, remind);
+    expect(sent).toEqual(["parent@example.com renews-soon"]);
+  });
+
+  it("tell a payer of a yearly plan a month ahead", async () => {
+    await cardBought(meta({ learner: await learnerOf("parent"), interval: "year" }));
+    const sent: string[] = [];
+    const remind = async (to: string, kind: string) => void sent.push(`${to} ${kind}`);
+    const end = addInterval(NOW, "year");
+    expect(await runBillingReminders(db, end - 31 * DAY, remind)).toBe(0);
+    expect(await runBillingReminders(db, end - 29 * DAY, remind)).toBe(1);
     expect(sent).toEqual(["parent@example.com renews-soon"]);
   });
 });

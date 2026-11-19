@@ -17,6 +17,7 @@ import {
   isGuardian,
   learnerAge,
   learnerFor,
+  logChange,
   markPlanReminded,
   markRefunded,
   type PaymentAccount,
@@ -37,6 +38,7 @@ import { Account, type BillingService, Interval } from "@ga/proto/billing/v1/bil
 import { type AppStore, appleProduct, recordApple } from "./apple.ts";
 import { dbKey, userIdKey } from "./context.ts";
 import { text } from "./convert.ts";
+import { NOTICE_VERSION } from "./markets.ts";
 import type { Registry } from "./registry.ts";
 
 const DAY = 86_400_000;
@@ -53,8 +55,14 @@ export const PRICES = {
 /** REFUND_WINDOW is how long a plan's first payment can be refunded. */
 export const REFUND_WINDOW = 30 * DAY;
 
-/** REMIND_BEFORE is how long before a plan ends its payer is told. */
+/** REMIND_BEFORE is how long before a monthly plan ends its payer is told. */
 export const REMIND_BEFORE = 7 * DAY;
+
+/** REMIND_YEAR_BEFORE is how long before a yearly plan ends its payer is told, within the 15 to 45 days California asks. */
+export const REMIND_YEAR_BEFORE = 30 * DAY;
+
+/** AGREED_ACTION is the logged record of the statements a payer ticked, kept as proof of their consent to the plan's terms. */
+export const AGREED_ACTION = "billing.agreed";
 
 /** priceOf returns the price of a scope for an interval, in cents. */
 export function priceOf(scope: string, interval: PlanInterval): number {
@@ -342,17 +350,28 @@ export async function endPlansOf(db: Db, payments: Payments, payerId: string, no
   }
 }
 
+/** recordAgreement logs what a payer agreed to at checkout, with the version of the texts, for as long as the log is kept. */
+async function recordAgreement(db: Db, payer: string, now: number, what: Record<string, unknown>): Promise<void> {
+  await logChange(db, {
+    actor: payer,
+    action: AGREED_ACTION,
+    detail: JSON.stringify({ version: NOTICE_VERSION, ...what }),
+    at: new Date(now),
+  });
+}
+
 /** BillingReminder is a message to a payer about a plan that ends soon. */
 export type BillingReminder = "renews-soon" | "ends-soon";
 
-/** runBillingReminders tells payers, once a period, that a plan renews or ends within REMIND_BEFORE. */
+/** runBillingReminders tells payers, once a period, that a plan renews or ends: a monthly one within REMIND_BEFORE, a yearly one within REMIND_YEAR_BEFORE. */
 export async function runBillingReminders(
   db: Db,
   now: number,
   remind: (to: string, kind: BillingReminder) => Promise<void>,
 ): Promise<number> {
   let sent = 0;
-  for (const plan of await plansToRemind(db, new Date(now), new Date(now + REMIND_BEFORE))) {
+  for (const plan of await plansToRemind(db, new Date(now), new Date(now + REMIND_YEAR_BEFORE))) {
+    if (plan.interval !== "year" && plan.paidUntil.getTime() >= now + REMIND_BEFORE) continue;
     const to = await emailOf(db, plan.payerId);
     if (to) {
       await remind(to, plan.account === "card" && !plan.cancelledAt ? "renews-soon" : "ends-soon");
@@ -517,6 +536,13 @@ export function billingService(deps: BillingDeps): ServiceImpl<typeof BillingSer
         cancelUrl: back.toString(),
         locale: req.locale === "zh-CN" ? "zh" : "en",
       });
+      await recordAgreement(db, userId, deps.now(), {
+        statements: method === "card" ? ["terms", "renewal", "refund"] : ["terms", "refund"],
+        scope: req.scope,
+        interval,
+        method,
+        checkout: session.id,
+      });
       return { url: session.url };
     },
 
@@ -611,6 +637,12 @@ export function billingService(deps: BillingDeps): ServiceImpl<typeof BillingSer
         throw new ConnectError("an Apple account holds one App Store subscription", Code.FailedPrecondition);
       if (apple && req.scope !== ALL_SUBJECTS)
         throw new ConnectError("an App Store subject plan can only move to all subjects", Code.FailedPrecondition);
+      await recordAgreement(db, userId, deps.now(), {
+        statements: ["terms", "renewal", "refund"],
+        scope: req.scope,
+        interval,
+        method: "apple",
+      });
       return { productId: appleProduct(req.scope, interval), accountToken: await appleTokenOf(db, userId, learner) };
     },
 
