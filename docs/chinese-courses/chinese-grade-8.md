@@ -6,11 +6,11 @@
 - **Level:** Grade 8, native speakers
 - **Prerequisite(s):** Grade 7
 - **Language of explanation:** Chinese
-- **Size:** 7 units · 62 topics (14 of characters, 16 of writing characters, 8 of words and idioms, 1 of grammar and punctuation, 2 of writing, 12 of recitation, 9 of classical Chinese) · 152 knowledge points
+- **Size:** 8 units · 64 topics (14 of characters, 16 of writing characters, 8 of words and idioms, 1 of grammar and punctuation, 2 of writing, 1 of reading aloud, 1 whole book, 12 of recitation, 9 of classical Chinese) · 154 knowledge points
 
 ## Aim
 
-By the end of grade 8 a learner reads about 170 more characters of the second table in words, uses forty more words and thirty-two idioms, finds and corrects sentences whose structures are mixed up, recites twelve classical poems and eight passages of classical prose, and tells the usages of the function words 其 and 为. In writing judged by a model, they explain a thing by its features in a clear order and write a speech for an audience. They write 160 characters by hand, stroke by stroke in the standard order, 2,830 in all.
+By the end of grade 8 a learner reads about 170 more characters of the second table in words, uses forty more words and thirty-two idioms, finds and corrects sentences whose structures are mixed up, recites twelve classical poems and eight passages of classical prose, and tells the usages of the function words 其 and 为. In writing judged by a model, they explain a thing by its features in a clear order and write a speech for an audience. They read passages of their grade aloud, part by part, and the voice service checks the characters they say, not their accent. They read *Souvenirs Entomologiques* as a whole book, in print, and answer questions on its story, its people and what it means. They write 160 characters by hand, stroke by stroke in the standard order, 2,830 in all.
 
 ## Units
 
@@ -84,6 +84,8 @@ By the end of grade 8 a learner reads about 170 more characters of the second ta
 
 ### 4. Grammar and Punctuation
 
+**Faulty Sentences**
+
 - `faulty-mixed-structures` Faulty Sentences: Mixed Structures: Finding the Fault; Correcting It
 
 ### 5. Writing
@@ -93,7 +95,19 @@ By the end of grade 8 a learner reads about 170 more characters of the second ta
 - `writing-8-explain` Explaining in Order: Features in Order; Accurate Language
 - `writing-8-speech` Writing a Speech: Audience and View; Made to Be Heard
 
-### 6. Recitation
+### 6. Reading Aloud and Whole Books
+
+**Reading Aloud**
+
+- `reading-aloud-8` Reading Aloud, Grade 8: Reading Aloud
+
+**Whole Books**
+
+- `book-insect-world` Whole Book: Souvenirs Entomologiques (practice-only): Reading Souvenirs Entomologiques
+
+### 7. Recitation
+
+**Classical Poems**
 
 - `recite-ye-wang` Gazing Over the Fields: Reciting the Lines; What the Lines Mean; Writing the Lines
 - `recite-huang-he-lou` Yellow Crane Tower: Reciting the Lines; What the Lines Mean; Writing the Lines
@@ -108,7 +122,7 @@ By the end of grade 8 a learner reads about 170 more characters of the second ta
 - `recite-yin-jiu-qi-wu` Drinking Wine (No. 5): Reciting the Lines; What the Lines Mean; Writing the Lines
 - `recite-bo-qin-huai` Mooring on the Qinhuai: Reciting the Lines; What the Lines Mean; Writing the Lines
 
-### 7. Classical Chinese
+### 8. Classical Chinese
 
 **Classical Passages**
 

@@ -6,15 +6,15 @@
 - **Level:** Level 1 of the new HSK, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Pinyin](chinese-pinyin.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 14 units · 174 topics (8 new, all practice-only) · 428 knowledge points
+- **Size:** 14 units · 177 topics (9 new, all practice-only) · 431 knowledge points
 
 ## The Test
 
-The new HSK has nine levels built on the *Chinese Proficiency Grading Standards for International Chinese Language Education* (GF 0025-2021), which level 1 of this subject follows. In the structure of the papers the test owner published in December 2025, HSK 1 has 40 items: listening in four parts of five and reading in four parts of five; there is no writing paper. This course practises what each part asks in some form: the word that fills a sentence, the meaning of a word, the character of a word, building sentences, words and sentences heard, repeating and reading aloud. Questions, texts and word lists of the test are never copied: every item here comes from the data of level 1 or is written for this course.
+The new HSK has nine levels built on the *Chinese Proficiency Grading Standards for International Chinese Language Education* (GF 0025-2021), which level 1 of this subject follows. In the structure of the papers the test owner published in December 2025, HSK 1 has 40 items: listening in four parts of five and reading in four parts of five; there is no writing paper. This course practises what each part asks in some form: the word that fills a sentence, the meaning of a word, the character of a word, building sentences, words and sentences heard, repeating, reading aloud and answering a question heard. Questions, texts and word lists of the test are never copied: every item here comes from the data of level 1 or is written for this course.
 
 ## Aim
 
-The course turns level 1 into test practice. It holds the units of [Chinese Level 1](chinese-level-1.md), so a learner who has not taken it learns it here, and then eight exam topics that mix the words and characters of every theme, as a test does, rather than one batch at a time. It teaches nothing new. Its own topics are practice-only: a lesson starts with practice, and the explanation appears only after a failed attempt. The topics it reuses keep their place in the graph, so a learner who has learned them in the level course is credited and moves on.
+The course turns level 1 into test practice. It holds the units of [Chinese Level 1](chinese-level-1.md), so a learner who has not taken it learns it here, and then nine exam topics that mix the words and characters of every theme, as a test does, rather than one batch at a time. It teaches nothing new. Its own topics are practice-only: a lesson starts with practice, and the explanation appears only after a failed attempt. The topics it reuses keep their place in the graph, so a learner who has learned them in the level course is credited and moves on.
 
 ## Units
 
@@ -30,8 +30,9 @@ The course turns level 1 into test practice. It holds the units of [Chinese Leve
 - `hsk-1-speaking` HSK 1: Speaking (practice-only; after the last speaking topic of level 1). The same words and sentences, heard by a speech service: (1) a word said after its recording; (2) a sentence read aloud.
 - `hsk-1-dialogues` HSK 1: Dialogues and Talks (practice-only; after `hsk-1-listening`). Dialogues between a woman and a man, written for this course in the characters of the levels it tests and heard in two voices without being seen, each with a question of three answers, as the listening paper asks: (1) short dialogues of two lines; (2) longer ones with several questions.
 - `hsk-1-passages` HSK 1: Reading Texts (practice-only; after `hsk-1-gaps`). Texts in the same characters, each with a question of three answers, as the reading paper asks: (1) short texts; (2) longer passages with several questions.
+- `hsk-1-answering` HSK 1: Answering Questions (practice-only; after `hsk-1-speaking`). Questions written for this course in the characters of the levels it tests, each heard and answered aloud in a whole sentence that takes up the question's words, as a hint in the learner's language says, and heard by a speech service against the answers accepted.
 
-**Not yet practised:** the spoken tasks of the HSKK beyond repeating and reading aloud.
+**Not yet practised:** the spoken tasks that need a free answer, such as retelling, describing a picture and answering at length: they would be judged by a model, and a spoken topic is checked by rules.
 
 ## Simulated Students
 

@@ -6,15 +6,22 @@
 - **Level:** Grade 3, native speakers
 - **Prerequisite(s):** Grades 1 and 2, or reading their 1,600 characters
 - **Language of explanation:** Chinese
-- **Size:** 6 units · 100 topics (38 of characters, 40 of writing characters, 8 of words, 4 of grammar and punctuation, 2 of writing, 8 of recitation) · 216 knowledge points · 9 passages in 3 reading units
+- **Size:** 8 units · 104 topics (2 of the dictionary, 38 of characters, 40 of writing characters, 8 of words, 4 of grammar and punctuation, 2 of writing, 1 of reading aloud, 1 whole book, 8 of recitation) · 222 knowledge points · 9 passages in 3 reading units
 
 ## Aim
 
-By the end of grade 3 a learner reads about 450 more common characters in words, knows the words and idioms of four themes, ends sentences with the right mark, uses commas, enumeration commas and the marks of speech, joins clauses with 因为, 虽然, 如果 and 不但, and recites eight classical poems with their meaning. They read short narrative and expository passages and answer what they say. In writing judged by a model, they write a paragraph about one idea and an observation diary. They write 400 characters by hand, stroke by stroke in the standard order, 1,200 in all.
+By the end of grade 3 a learner reads about 450 more common characters in words, knows the words and idioms of four themes, ends sentences with the right mark, uses commas, enumeration commas and the marks of speech, joins clauses with 因为, 虽然, 如果 and 不但, and recites eight classical poems with their meaning. They read short narrative and expository passages and answer what they say. In writing judged by a model, they write a paragraph about one idea and an observation diary. They look characters up in a dictionary by the order of pinyin and by radical and the strokes left. They read passages of their grade aloud, part by part, and the voice service checks the characters they say, not their accent. They read *Andersen's Fairy Tales* as a whole book, in print, and answer questions on its story, its people and what it means. They write 400 characters by hand, stroke by stroke in the standard order, 1,200 in all.
 
 ## Units
 
-### 1. Characters
+### 1. Using a Dictionary
+
+**Using a Dictionary**
+
+- `dictionary-pinyin` Looking Up by Pinyin: Letter and Syllable; The Order of Syllables
+- `dictionary-radicals` Looking Up by Radical: Radical and Strokes Left; Counting Strokes
+
+### 2. Characters
 
 **Sets 1 to 6**
 
@@ -75,7 +82,7 @@ By the end of grade 3 a learner reads about 450 more common characters in words,
 - `recognizing-characters-3-37` Grade 3 Characters, Set 37: Reading Them; Telling Them Apart
 - `recognizing-characters-3-38` Grade 3 Characters, Set 38: Reading Them; Telling Them Apart
 
-### 2. Writing Characters
+### 3. Writing Characters
 
 **Sets 1 to 6**
 
@@ -138,7 +145,7 @@ By the end of grade 3 a learner reads about 450 more common characters in words,
 - `writing-characters-3-39` Grade 3 Writing, Set 39: Tracing Them; Writing Them
 - `writing-characters-3-40` Grade 3 Writing, Set 40: Tracing Them; Writing Them
 
-### 3. Words
+### 4. Words
 
 **Words**
 
@@ -154,7 +161,7 @@ By the end of grade 3 a learner reads about 450 more common characters in words,
 - `idioms-3-03` Grade 3 Idioms, Set 3: What They Mean; Using Them; Writing Them
 - `idioms-3-04` Grade 3 Idioms, Set 4: What They Mean; Using Them; Writing Them
 
-### 4. Grammar and Punctuation
+### 5. Grammar and Punctuation
 
 **Punctuation**
 
@@ -166,14 +173,24 @@ By the end of grade 3 a learner reads about 450 more common characters in words,
 
 - `connectives-1` Connectives: Because, Although, If, Not Only: Choosing the Connectives; Naming the Relation
 
-### 5. Writing
+### 6. Writing
 
 **Writing**
 
 - `writing-3-paragraph` A Paragraph about One Idea: Stating the Idea; Showing It with Examples
 - `writing-3-diary` An Observation Diary: Looking Closely; Noticing What Changes
 
-### 6. Recitation
+### 7. Reading Aloud and Whole Books
+
+**Reading Aloud**
+
+- `reading-aloud-3` Reading Aloud, Grade 3: Reading Aloud
+
+**Whole Books**
+
+- `book-andersen` Whole Book: Andersen's Fairy Tales (practice-only): Reading Andersen's Fairy Tales
+
+### 8. Recitation
 
 **Classical Poems**
 

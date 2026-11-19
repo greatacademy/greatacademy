@@ -6,11 +6,11 @@
 - **Level:** Senior secondary school, required course, native speakers
 - **Prerequisite(s):** Grade 9
 - **Language of explanation:** Chinese
-- **Size:** 5 units · 51 topics (8 of words and idioms, 1 of grammar and rhetoric, 2 of writing, 20 of recitation, 20 of classical Chinese) · 146 knowledge points
+- **Size:** 6 units · 53 topics (8 of words and idioms, 1 of grammar and rhetoric, 2 of writing, 1 of reading aloud, 1 whole book, 20 of recitation, 20 of classical Chinese) · 148 knowledge points
 
 ## Aim
 
-By the end of the required course a learner uses forty more words common in essays and arguments and thirty-two idioms often misused, recognizes synaesthesia, paired phrasing, double meaning and irony, recites twenty classical poems and sixteen passages of classical prose, tells the usages of the function words 乃, 且, 若, 焉, 何 and 乎, and recognizes the special sentences of classical Chinese: judgments, passives, omissions and inversions. In writing judged by a model, they write essays on given material that go deeper in stages, and commentaries on events.
+By the end of the required course a learner uses forty more words common in essays and arguments and thirty-two idioms often misused, recognizes synaesthesia, paired phrasing, double meaning and irony, recites twenty classical poems and sixteen passages of classical prose, tells the usages of the function words 乃, 且, 若, 焉, 何 and 乎, and recognizes the special sentences of classical Chinese: judgments, passives, omissions and inversions. In writing judged by a model, they write essays on given material that go deeper in stages, and commentaries on events. They read passages of the course aloud, part by part, and the voice service checks the characters they say, not their accent. They read *Dream of the Red Chamber* as a whole book, in print, and answer questions on its story, its people and what it means.
 
 ## Units
 
@@ -32,6 +32,8 @@ By the end of the required course a learner uses forty more words common in essa
 
 ### 2. Grammar and Rhetoric
 
+**Rhetorical Devices**
+
 - `rhetoric-4` Rhetoric: Synaesthesia, Paired Phrasing, Double Meaning, Irony: Naming the Device; Finding the Device
 
 ### 3. Writing
@@ -41,7 +43,19 @@ By the end of the required course a learner uses forty more words common in essa
 - `writing-10-material` Writing on Given Material: A View from the Material; Going Deeper in Stages
 - `writing-10-commentary` Writing a Commentary: The Event and a View; Causes, Consequences and a Way Forward
 
-### 4. Recitation
+### 4. Reading Aloud and Whole Books
+
+**Reading Aloud**
+
+- `reading-aloud-10` Reading Aloud, Grade 10: Reading Aloud
+
+**Whole Books**
+
+- `book-dream-of-red-chamber` Whole Book: Dream of the Red Chamber (practice-only): Reading Dream of the Red Chamber
+
+### 5. Recitation
+
+**Classical Poems**
 
 - `recite-duan-ge-xing` A Short Song: Reciting the Lines; What the Lines Mean; Writing the Lines
 - `recite-gui-yuan-tian-ju` Returning to Live in the Country (I): Reciting the Lines; What the Lines Mean; Writing the Lines
@@ -64,7 +78,7 @@ By the end of the required course a learner uses forty more words common in essa
 - `recite-su-mu-zhe` Su Mu Zhe: Burning Aloeswood: Reciting the Lines; What the Lines Mean; Writing the Lines
 - `recite-qing-yu-an-yuan-xi` Green Jade Table: The Lantern Festival: Reciting the Lines; What the Lines Mean; Writing the Lines
 
-### 5. Classical Chinese
+### 6. Classical Chinese
 
 **Classical Passages**
 

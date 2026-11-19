@@ -6,11 +6,11 @@
 - **Level:** Grade 6, native speakers
 - **Prerequisite(s):** Grade 5
 - **Language of explanation:** Chinese
-- **Size:** 7 units · 92 topics (21 of characters, 45 of writing characters, 8 of words, 3 of grammar and punctuation, 2 of writing, 8 of recitation) · 203 knowledge points · 9 passages in 3 reading units
+- **Size:** 8 units · 94 topics (21 of characters, 45 of writing characters, 8 of words, 4 of grammar and punctuation, 2 of writing, 1 of reading aloud, 1 whole book, 8 of recitation, 4 of classical Chinese) · 205 knowledge points · 9 passages in 3 reading units
 
 ## Aim
 
-By the end of grade 6 a learner has read 3,000 characters, the goal of primary school, recognizes antithesis, hypophora, rhetorical questions and repetition, corrects sentences that contradict themselves or misuse connectives, and recites eight more poems. Passages tell of inventions and figures of history and ask the reader to weigh a choice. In writing judged by a model, they support a view with evidence and describe a scene that carries a feeling. They write 450 characters by hand, stroke by stroke in the standard order, 2,500 in all.
+By the end of grade 6 a learner has read 3,000 characters, the goal of primary school, recognizes antithesis, hypophora, rhetorical questions and repetition, corrects sentences that contradict themselves or misuse connectives, and recites eight more poems. Passages tell of inventions and figures of history and ask the reader to weigh a choice. In writing judged by a model, they support a view with evidence and describe a scene that carries a feeling. They read passages of their grade aloud, part by part, and the voice service checks the characters they say, not their accent. They read *Robinson Crusoe* as a whole book, in print, and answer questions on its story, its people and what it means. They write 450 characters by hand, stroke by stroke in the standard order, 2,500 in all.
 
 ## Units
 
@@ -138,6 +138,10 @@ By the end of grade 6 a learner has read 3,000 characters, the goal of primary s
 
 ### 4. Grammar and Punctuation
 
+**Punctuation**
+
+- `punctuation-dashes` Dashes: Choosing the Mark; Checking a Sentence
+
 **Rhetorical Devices**
 
 - `rhetoric-2` Rhetoric: Antithesis, Hypophora, Rhetorical Question, Repetition: Naming the Device; Finding the Device
@@ -154,7 +158,17 @@ By the end of grade 6 a learner has read 3,000 characters, the goal of primary s
 - `writing-6-argue` A View and Its Evidence: A View with Evidence; Explaining the Evidence
 - `writing-6-scene` Describing a Scene: A Clear Order and Many Senses; A Feeling in the Scene
 
-### 6. Recitation
+### 6. Reading Aloud and Whole Books
+
+**Reading Aloud**
+
+- `reading-aloud-6` Reading Aloud, Grade 6: Reading Aloud
+
+**Whole Books**
+
+- `book-robinson-crusoe` Whole Book: Robinson Crusoe (practice-only): Reading Robinson Crusoe
+
+### 7. Recitation
 
 **Classical Poems**
 
@@ -166,6 +180,18 @@ By the end of grade 6 a learner has read 3,000 characters, the goal of primary s
 - `recite-zhu-shi` Bamboo and Rock: Reciting the Lines; What the Lines Mean; Writing the Lines
 - `recite-chun-ri-zhu-xi` A Spring Day: Reciting the Lines; What the Lines Mean; Writing the Lines
 - `recite-lang-tao-sha-jiu-qu` Waves Washing Sand: The Winding Yellow River: Reciting the Lines; What the Lines Mean; Writing the Lines
+
+### 8. Classical Chinese
+
+**Classical Passages**
+
+- `recite-xue-yi` Learning Weiqi: Reciting the Sentences; What the Sentences Mean; Writing the Lines
+- `recite-bo-ya-gu-qin` Boya Plays the Qin: Reciting the Sentences; What the Sentences Mean; Writing the Lines
+- `recite-tie-chu-cheng-zhen` The Iron Pestle and the Needle: Reciting the Sentences; What the Sentences Mean; Writing the Lines
+
+**Words of Classical Chinese**
+
+- `classical-function-words-6-01` Classical Chinese: Function Words: The Usages of 之; The Usages of 而, 以 and 于
 
 ## Reading
 

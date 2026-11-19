@@ -6,11 +6,11 @@
 - **Level:** Senior secondary school, selective required course, native speakers
 - **Prerequisite(s):** Senior Required
 - **Language of explanation:** Chinese
-- **Size:** 5 units · 51 topics (8 of words and idioms, 1 of grammar and rhetoric, 2 of writing, 20 of recitation, 20 of classical Chinese) · 146 knowledge points
+- **Size:** 6 units · 52 topics (8 of words and idioms, 1 of grammar and rhetoric, 2 of writing, 1 of reading aloud, 20 of recitation, 20 of classical Chinese) · 147 knowledge points
 
 ## Aim
 
-By the end of the selective required course a learner uses forty more words, among them pairs easily confused, and thirty-two idioms often misused, finds and corrects sentences with two meanings, recites twenty classical poems and sixteen passages of classical prose, tells the usages of the function words 因, 与, 则, 所, 也 and 者, and reads words used as another part of speech and words whose meaning has changed since classical times. In writing judged by a model, they weigh both sides of a question to a position of their own, and write proposals.
+By the end of the selective required course a learner uses forty more words, among them pairs easily confused, and thirty-two idioms often misused, finds and corrects sentences with two meanings, recites twenty classical poems and sixteen passages of classical prose, tells the usages of the function words 因, 与, 则, 所, 也 and 者, and reads words used as another part of speech and words whose meaning has changed since classical times. In writing judged by a model, they weigh both sides of a question to a position of their own, and write proposals. They read passages of the course aloud, part by part, and the voice service checks the characters they say, not their accent.
 
 ## Units
 
@@ -32,6 +32,8 @@ By the end of the selective required course a learner uses forty more words, amo
 
 ### 2. Grammar and Rhetoric
 
+**Faulty Sentences**
+
 - `faulty-ambiguous` Faulty Sentences: Two Meanings: Finding the Fault; Correcting It
 
 ### 3. Writing
@@ -41,7 +43,15 @@ By the end of the selective required course a learner uses forty more words, amo
 - `writing-11-dialectic` Weighing Both Sides: Both Sides and Their Conditions; A Position of Your Own
 - `writing-11-proposal` Writing a Proposal: Form and Reasons; Concrete Actions
 
-### 4. Recitation
+### 4. Reading Aloud and Whole Books
+
+**Reading Aloud**
+
+- `reading-aloud-11` Reading Aloud, Grade 11: Reading Aloud
+
+### 5. Recitation
+
+**Classical Poems**
 
 - `recite-wu-yi` No Clothes? (Excerpt): Reciting the Lines; What the Lines Mean; Writing the Lines
 - `recite-chun-jiang-hua-yue-ye` A Moonlit Night on the Spring River: Reciting the Lines; What the Lines Mean; Writing the Lines
@@ -64,7 +74,7 @@ By the end of the selective required course a learner uses forty more words, amo
 - `recite-ding-feng-bo` Calming the Waves: Reciting the Lines; What the Lines Mean; Writing the Lines
 - `recite-chang-ting-song-bie` Farewell at the Long Pavilion (Excerpt): Reciting the Lines; What the Lines Mean; Writing the Lines
 
-### 5. Classical Chinese
+### 6. Classical Chinese
 
 **Classical Passages**
 

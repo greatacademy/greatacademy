@@ -6,11 +6,11 @@
 - **Level:** Grade 1, native speakers
 - **Prerequisite(s):** None
 - **Language of explanation:** Chinese
-- **Size:** 7 units · 136 topics (8 of pinyin, 3 of strokes, 67 of characters, 40 of writing characters, 4 of words, 4 of sentence building, 10 of recitation) · 286 knowledge points
+- **Size:** 8 units · 137 topics (8 of pinyin, 3 of strokes, 67 of characters, 40 of writing characters, 4 of words, 4 of sentence building, 1 of reading aloud, 10 of recitation) · 287 knowledge points
 
 ## Aim
 
-By the end of grade 1 a learner reads and writes pinyin with its tones, hears and says syllables and words, names the basic strokes and follows the rules of stroke order, reads about 800 common characters in words and tells them from characters that look alike, knows forty everyday words, and recites ten short classical poems with their meaning. They write 400 characters by hand, stroke by stroke in the standard order.
+By the end of grade 1 a learner reads and writes pinyin with its tones, hears and says syllables and words, names the basic strokes and follows the rules of stroke order, reads about 800 common characters in words and tells them from characters that look alike, knows forty everyday words, and recites ten short classical poems with their meaning. They read passages of their grade aloud, part by part, and the voice service checks the characters they say, not their accent. They write 400 characters by hand, stroke by stroke in the standard order.
 
 ## Units
 
@@ -233,7 +233,13 @@ By the end of grade 1 a learner reads and writes pinyin with its tones, hears an
 - `sentences-1-03` Building Sentences 3: Grade 1 Characters, Sets 34 to 50: Short Sentences; Longer Sentences
 - `sentences-1-04` Building Sentences 4: Grade 1 Characters, Sets 51 to 67: Short Sentences; Longer Sentences
 
-### 7. Recitation
+### 7. Reading Aloud and Whole Books
+
+**Reading Aloud**
+
+- `reading-aloud-1` Reading Aloud, Grade 1: Reading Aloud
+
+### 8. Recitation
 
 **Classical Poems**
 

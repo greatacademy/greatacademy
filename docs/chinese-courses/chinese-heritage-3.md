@@ -6,11 +6,11 @@
 - **Level:** Literacy bridge 3, for learners who speak Chinese
 - **Prerequisite(s):** [Chinese for Heritage Learners 2](chinese-heritage-2.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 3 units · 167 topics (75 of characters, 90 of writing characters, 2 of their own) · 334 knowledge points
+- **Size:** 3 units · 169 topics (75 of characters, 90 of writing characters, 4 of their own) · 338 knowledge points
 
 ## Aim
 
-The third bridge completes the 2,500 characters of the first table with the 900 of grades 3 and 4, tells spoken from written Chinese, and reads traditional characters by their simplified forms. After it, the diagnostic places the learner in the grade course that matches their reading. Its characters are the recognition topics of the native courses; passages written for older learners are still to come. They write 900 of these characters by hand, stroke by stroke in the standard order, 2,500 in all.
+The third bridge completes the 2,500 characters of the first table with the 900 of grades 3 and 4, tells spoken from written Chinese, and reads traditional characters by their simplified forms, by the components they change in the same way, and where one simplified character stands for several traditional ones, in the forms shared by Hong Kong and Taiwan. After it, the diagnostic places the learner in the grade course that matches their reading. Its characters are the recognition topics of the native courses; passages written for older learners are still to come. They write 900 of these characters by hand, stroke by stroke in the standard order, 2,500 in all.
 
 ## Units
 
@@ -271,6 +271,8 @@ The third bridge completes the 2,500 characters of the first table with the 900 
 
 - `heritage-register` Spoken and Written Chinese: Words of Writing; The Wording of a Notice
 - `heritage-traditional` Traditional Characters: Single Characters; Words
+- `traditional-components` Traditional Characters: Components: Characters by Component; Words
+- `traditional-shared` Traditional Characters: One Form for Several: Which Traditional Character; Phrases
 
 ## Reading
 

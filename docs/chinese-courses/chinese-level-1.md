@@ -6,11 +6,11 @@
 - **Level:** Level 1, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Pinyin](chinese-pinyin.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 13 units · 166 topics (30 of characters, 50 of words, 48 of grammar, 24 of listening and speaking, 4 of sentence building, 10 of handwriting) · 412 knowledge points
+- **Size:** 13 units · 168 topics (30 of characters, 50 of words, 48 of grammar, 26 of listening and speaking, 4 of sentence building, 10 of handwriting) · 414 knowledge points
 
 ## Aim
 
-Level 1 teaches 300 basic characters and 500 words of daily life, in twelve themed units from greetings to health. A character is learned by its form, its reading in pinyin and its meaning in the learner's language; a word by its meaning, its reading and its use in a sentence. Every sentence is written only with characters already taught, so the learner can read each one. The characters were chosen as the commonest of daily life; they are still to be checked against level 1 of the standard (GF 0025-2021) and the lists counsel clears (C0.2). Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains. After its grammar, each unit has a topic of listening and one of speaking, made from its words and their sentences read by a synthetic voice: the meaning of a word heard, and the word heard in a sentence; then the words said after the recording and the sentences read aloud, heard by a speech service whose thresholds await recordings of real learners. A last unit, Writing Characters, has the learner write by hand 100 characters it already reads, ten a topic, stroke by stroke on the pad in the standard order, first traced and then from memory, judged by the stroke checker against the standard medians; by the end of the level it has written 100, which meets the bands of the handwriting list of GF 0025-2021: 300 by level 3, 700 by level 6 and 1,200 by level 9.
+Level 1 teaches 300 basic characters and 500 words of daily life, in twelve themed units from greetings to health. A character is learned by its form, its reading in pinyin and its meaning in the learner's language; a word by its meaning, its reading and its use in a sentence. Every sentence is written only with characters already taught, so the learner can read each one. The characters were chosen as the commonest of daily life; they are still to be checked against level 1 of the standard (GF 0025-2021) and the lists counsel clears (C0.2). Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains. After its grammar, each unit has a topic of listening and one of speaking, made from its words and their sentences read by a synthetic voice: the meaning of a word heard, and the word heard in a sentence; then the words said after the recording and the sentences read aloud, heard by a speech service whose thresholds await recordings of real learners. Units 6 and 12 end their listening with a topic of dialogues: short conversations between a woman and a man, written for the level in the characters taught by then and played in two voices without their text, each followed by one to three questions of three answers. A last unit, Writing Characters, has the learner write by hand 100 characters it already reads, ten a topic, stroke by stroke on the pad in the standard order, first traced and then from memory, judged by the stroke checker against the standard medians; by the end of the level it has written 100, which meets the bands of the handwriting list of GF 0025-2021: 300 by level 3, 700 by level 6 and 1,200 by level 9.
 
 ## Units
 
@@ -111,6 +111,7 @@ Level 1 teaches 300 basic characters and 500 words of daily life, in twelve them
 - `level-1-grammar-30` Asking with 怎么样: Completing Sentences; The Right Sentence
 - `level-1-listening-06` Level 1 Listening 06: Shopping and Money: Words You Hear; Words in Sentences
 - `level-1-speaking-06` Level 1 Speaking 06: Shopping and Money: Saying Words; Reading Sentences Aloud
+- `level-1-dialogues-01` Level 1 Dialogues 01: Dialogues
 - `level-1-sentences-02` Building Sentences 2: Time and Dates, Food and Drink, Shopping and Money: Short Sentences; Longer Sentences
 
 ### 7. School and Study
@@ -204,6 +205,7 @@ Level 1 teaches 300 basic characters and 500 words of daily life, in twelve them
 - `level-1-grammar-48` 最 for the Most: Completing Sentences; The Right Sentence
 - `level-1-listening-12` Level 1 Listening 12: Body and Health: Words You Hear; Words in Sentences
 - `level-1-speaking-12` Level 1 Speaking 12: Body and Health: Saying Words; Reading Sentences Aloud
+- `level-1-dialogues-02` Level 1 Dialogues 02: Dialogues
 - `level-1-sentences-04` Building Sentences 4: Weather and Seasons, Hobbies and Free Time, Body and Health: Short Sentences; Longer Sentences
 
 ### 13. Writing Characters

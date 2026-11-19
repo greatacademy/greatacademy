@@ -6,11 +6,11 @@
 - **Level:** Grade 2, native speakers
 - **Prerequisite(s):** Grade 1, or reading its 800 characters
 - **Language of explanation:** Chinese
-- **Size:** 6 units · 127 topics (3 of components, 66 of characters, 40 of writing characters, 4 of words, 4 of sentence building, 10 of recitation) · 268 knowledge points
+- **Size:** 7 units · 128 topics (3 of components, 66 of characters, 40 of writing characters, 4 of words, 4 of sentence building, 1 of reading aloud, 10 of recitation) · 269 knowledge points
 
 ## Aim
 
-By the end of grade 2 a learner names the common components and what they suggest of a character's meaning, reads about 800 more common characters in words, 1,600 in all, tells them from characters that look alike, knows forty more words, and recites ten more classical poems with their meaning. They write 400 characters by hand, stroke by stroke in the standard order, 800 in all.
+By the end of grade 2 a learner names the common components and what they suggest of a character's meaning, reads about 800 more common characters in words, 1,600 in all, tells them from characters that look alike, knows forty more words, and recites ten more classical poems with their meaning. They read passages of their grade aloud, part by part, and the voice service checks the characters they say, not their accent. They write 400 characters by hand, stroke by stroke in the standard order, 800 in all.
 
 ## Units
 
@@ -204,7 +204,13 @@ By the end of grade 2 a learner names the common components and what they sugges
 - `sentences-2-03` Building Sentences 3: Grade 2 Characters, Sets 34 to 50: Short Sentences; Longer Sentences
 - `sentences-2-04` Building Sentences 4: Grade 2 Characters, Sets 51 to 66: Short Sentences; Longer Sentences
 
-### 6. Recitation
+### 6. Reading Aloud and Whole Books
+
+**Reading Aloud**
+
+- `reading-aloud-2` Reading Aloud, Grade 2: Reading Aloud
+
+### 7. Recitation
 
 **Classical Poems**
 

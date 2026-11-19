@@ -6,11 +6,11 @@
 - **Level:** Grade 5, native speakers
 - **Prerequisite(s):** Grade 4
 - **Language of explanation:** Chinese
-- **Size:** 7 units · 94 topics (21 of characters, 45 of writing characters, 8 of words, 6 of grammar and punctuation, 2 of writing, 8 of recitation) · 207 knowledge points · 9 passages in 3 reading units
+- **Size:** 8 units · 96 topics (21 of characters, 45 of writing characters, 8 of words, 6 of grammar and punctuation, 2 of writing, 1 of reading aloud, 1 whole book, 8 of recitation, 4 of classical Chinese) · 209 knowledge points · 9 passages in 3 reading units
 
 ## Aim
 
-By the end of grade 5 a learner reads about 250 characters of the second table, uses semicolons, changes rhetorical questions into statements and direct speech into reported speech, names similes, personification, hyperbole and parallelism, corrects word order and repetition, and recites eight more poems. Passages explain everyday science and tell of people of character. In writing judged by a model, they bring out a person's quality through an event and explain a thing by its features. They write 450 characters by hand, stroke by stroke in the standard order, 2,050 in all.
+By the end of grade 5 a learner reads about 250 characters of the second table, uses semicolons, changes rhetorical questions into statements and direct speech into reported speech, names similes, personification, hyperbole and parallelism, corrects word order and repetition, and recites eight more poems. Passages explain everyday science and tell of people of character. In writing judged by a model, they bring out a person's quality through an event and explain a thing by its features. They read passages of their grade aloud, part by part, and the voice service checks the characters they say, not their accent. They read *Journey to the West* as a whole book, in print, and answer questions on its story, its people and what it means. They write 450 characters by hand, stroke by stroke in the standard order, 2,050 in all.
 
 ## Units
 
@@ -163,7 +163,17 @@ By the end of grade 5 a learner reads about 250 characters of the second table, 
 - `writing-5-person` Writing about a Person: A Quality Shown by an Event; Actions, Words and Looks
 - `writing-5-explain` Explaining a Thing: Feature by Feature; Methods of Explaining
 
-### 6. Recitation
+### 6. Reading Aloud and Whole Books
+
+**Reading Aloud**
+
+- `reading-aloud-5` Reading Aloud, Grade 5: Reading Aloud
+
+**Whole Books**
+
+- `book-journey-to-the-west` Whole Book: Journey to the West (practice-only): Reading Journey to the West
+
+### 7. Recitation
 
 **Classical Poems**
 
@@ -175,6 +185,18 @@ By the end of grade 5 a learner reads about 250 characters of the second table, 
 - `recite-si-shi-tian-yuan-zhou-chu` Country Life in the Four Seasons: Weeding by Day: Reciting the Lines; What the Lines Mean; Writing the Lines
 - `recite-qiu-ye-jiang-xiao` Going Out at Dawn on an Autumn Night: Reciting the Lines; What the Lines Mean; Writing the Lines
 - `recite-cong-jun-xing-qing-hai` Marching with the Army: Reciting the Lines; What the Lines Mean; Writing the Lines
+
+### 8. Classical Chinese
+
+**Classical Passages**
+
+- `recite-shou-zhu-dai-tu` Waiting by the Stump: Reciting the Sentences; What the Sentences Mean; Writing the Lines
+- `recite-yang-shi-zhi-zi` The Son of the Yang Family: Reciting the Sentences; What the Sentences Mean; Writing the Lines
+- `recite-nang-ying-ye-du` Reading by Fireflies: Reciting the Sentences; What the Sentences Mean; Writing the Lines
+
+**Words of Classical Chinese**
+
+- `classical-words-5-01` Classical Chinese: Words and Sentences: Content Words; Putting Sentences into Modern Chinese
 
 ## Reading
 

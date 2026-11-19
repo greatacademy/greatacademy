@@ -6,11 +6,11 @@
 - **Level:** Grade 7, native speakers
 - **Prerequisite(s):** Grade 6
 - **Language of explanation:** Chinese
-- **Size:** 7 units · 63 topics (14 of characters, 17 of writing characters, 8 of words and idioms, 1 of grammar and punctuation, 2 of writing, 12 of recitation, 9 of classical Chinese) · 154 knowledge points
+- **Size:** 8 units · 65 topics (14 of characters, 17 of writing characters, 8 of words and idioms, 1 of grammar and punctuation, 2 of writing, 1 of reading aloud, 1 whole book, 12 of recitation, 9 of classical Chinese) · 156 knowledge points
 
 ## Aim
 
-By the end of grade 7 a learner reads about 170 more characters of the second table in words, uses forty more words and thirty-two idioms, recognizes metonymy, contrast, quotation and anadiplosis, recites twelve classical poems and eight passages of classical prose, knows the content words of those passages and puts their sentences into modern Chinese. In writing judged by a model, they make the centre of a narrative stand out and catch the details that reveal a person. They write 170 characters by hand, stroke by stroke in the standard order, 2,670 in all.
+By the end of grade 7 a learner reads about 170 more characters of the second table in words, uses forty more words and thirty-two idioms, recognizes metonymy, contrast, quotation and anadiplosis, recites twelve classical poems and eight passages of classical prose, knows the content words of those passages and puts their sentences into modern Chinese. In writing judged by a model, they make the centre of a narrative stand out and catch the details that reveal a person. They read passages of their grade aloud, part by part, and the voice service checks the characters they say, not their accent. They read *Dawn Blossoms Plucked at Dusk* as a whole book, in print, and answer questions on its story, its people and what it means. They write 170 characters by hand, stroke by stroke in the standard order, 2,670 in all.
 
 ## Units
 
@@ -85,6 +85,8 @@ By the end of grade 7 a learner reads about 170 more characters of the second ta
 
 ### 4. Grammar and Punctuation
 
+**Rhetorical Devices**
+
 - `rhetoric-3` Rhetoric: Metonymy, Contrast, Quotation, Anadiplosis: Naming the Device; Finding the Device
 
 ### 5. Writing
@@ -94,7 +96,19 @@ By the end of grade 7 a learner reads about 170 more characters of the second ta
 - `writing-7-center` Making the Centre Stand Out: Material That Serves the Centre; Detail Where It Matters
 - `writing-7-detail` Catching the Telling Detail: Looking Closely; Details That Mean Something
 
-### 6. Recitation
+### 6. Reading Aloud and Whole Books
+
+**Reading Aloud**
+
+- `reading-aloud-7` Reading Aloud, Grade 7: Reading Aloud
+
+**Whole Books**
+
+- `book-dawn-blossoms` Whole Book: Dawn Blossoms Plucked at Dusk (practice-only): Reading Dawn Blossoms Plucked at Dusk
+
+### 7. Recitation
+
+**Classical Poems**
 
 - `recite-guan-cang-hai` Viewing the Blue Sea: Reciting the Lines; What the Lines Mean; Writing the Lines
 - `recite-wen-wang-chang-ling` Hearing Wang Changling Was Demoted to Longbiao: Reciting the Lines; What the Lines Mean; Writing the Lines
@@ -109,7 +123,7 @@ By the end of grade 7 a learner reads about 170 more characters of the second ta
 - `recite-wan-chun` Late Spring: Reciting the Lines; What the Lines Mean; Writing the Lines
 - `recite-deng-you-zhou-tai-ge` Song on Climbing the Youzhou Terrace: Reciting the Lines; What the Lines Mean; Writing the Lines
 
-### 7. Classical Chinese
+### 8. Classical Chinese
 
 **Classical Passages**
 

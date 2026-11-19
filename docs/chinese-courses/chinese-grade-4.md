@@ -6,11 +6,11 @@
 - **Level:** Grade 4, native speakers
 - **Prerequisite(s):** Grade 3
 - **Language of explanation:** Chinese
-- **Size:** 6 units · 101 topics (37 of characters, 40 of writing characters, 8 of words, 6 of grammar and punctuation, 2 of writing, 8 of recitation) · 218 knowledge points · 9 passages in 3 reading units
+- **Size:** 7 units · 103 topics (37 of characters, 40 of writing characters, 8 of words, 6 of grammar and punctuation, 2 of writing, 1 of reading aloud, 1 whole book, 8 of recitation) · 220 knowledge points · 9 passages in 3 reading units
 
 ## Aim
 
-By the end of grade 4 a learner has read the 2,500 characters of the first table, uses title marks and ellipses, matches the pairs of 只要, 只有, 即使, 无论 and 既然, changes 把 sentences into 被 sentences and back, finds and corrects sentences with a missing part or a mismatch, and recites eight more poems. Passages include fables, short biographies and letters. In writing judged by a model, they tell an event with its beginning, course and end, and write a letter. They write 400 characters by hand, stroke by stroke in the standard order, 1,600 in all.
+By the end of grade 4 a learner has read the 2,500 characters of the first table, uses title marks and ellipses, matches the pairs of 只要, 只有, 即使, 无论 and 既然, changes 把 sentences into 被 sentences and back, finds and corrects sentences with a missing part or a mismatch, and recites eight more poems. Passages include fables, short biographies and letters. In writing judged by a model, they tell an event with its beginning, course and end, and write a letter. They read passages of their grade aloud, part by part, and the voice service checks the characters they say, not their accent. They read *Ancient Chinese Myths* as a whole book, in print, and answer questions on its story, its people and what it means. They write 400 characters by hand, stroke by stroke in the standard order, 1,600 in all.
 
 ## Units
 
@@ -180,7 +180,17 @@ By the end of grade 4 a learner has read the 2,500 characters of the first table
 - `writing-4-event` Telling an Event: Beginning, Course and End; The Important Moment in Detail
 - `writing-4-letter` Writing a Letter: The Form of a Letter; What the Reader Wants to Know
 
-### 6. Recitation
+### 6. Reading Aloud and Whole Books
+
+**Reading Aloud**
+
+- `reading-aloud-4` Reading Aloud, Grade 4: Reading Aloud
+
+**Whole Books**
+
+- `book-chinese-myths` Whole Book: Ancient Chinese Myths (practice-only): Reading Ancient Chinese Myths
+
+### 7. Recitation
 
 **Classical Poems**
 

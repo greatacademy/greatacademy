@@ -6,11 +6,11 @@
 - **Level:** Grade 9, native speakers
 - **Prerequisite(s):** Grade 8
 - **Language of explanation:** Chinese
-- **Size:** 7 units · 63 topics (14 of characters, 17 of writing characters, 8 of words and idioms, 1 of grammar and punctuation, 2 of writing, 12 of recitation, 9 of classical Chinese) · 154 knowledge points
+- **Size:** 8 units · 65 topics (14 of characters, 17 of writing characters, 8 of words and idioms, 1 of grammar and punctuation, 2 of writing, 1 of reading aloud, 1 whole book, 12 of recitation, 9 of classical Chinese) · 156 knowledge points
 
 ## Aim
 
-By the end of grade 9 a learner has read all 3,500 common characters, the goal of junior secondary school, uses forty more words and thirty-two idioms, finds and corrects illogical sentences, recites twelve classical poems and eight passages of classical prose, and reads the borrowed characters of classical Chinese. In writing judged by a model, they argue a claim with evidence and two methods of argument, and write a whole narrative held by a thread. They write 170 characters by hand, stroke by stroke in the standard order, 3,000 in all.
+By the end of grade 9 a learner has read all 3,500 common characters, the goal of junior secondary school, uses forty more words and thirty-two idioms, finds and corrects illogical sentences, recites twelve classical poems and eight passages of classical prose, and reads the borrowed characters of classical Chinese. In writing judged by a model, they argue a claim with evidence and two methods of argument, and write a whole narrative held by a thread. They read passages of their grade aloud, part by part, and the voice service checks the characters they say, not their accent. They read *Water Margin* as a whole book, in print, and answer questions on its story, its people and what it means. They write 170 characters by hand, stroke by stroke in the standard order, 3,000 in all.
 
 ## Units
 
@@ -85,6 +85,8 @@ By the end of grade 9 a learner has read all 3,500 common characters, the goal o
 
 ### 4. Grammar and Punctuation
 
+**Faulty Sentences**
+
 - `faulty-illogical` Faulty Sentences: Against Logic: Finding the Fault; Correcting It
 
 ### 5. Writing
@@ -94,7 +96,19 @@ By the end of grade 9 a learner has read all 3,500 common characters, the goal o
 - `writing-9-argue` Writing an Argument: A Claim and Its Evidence; Methods of Argument
 - `writing-9-story` A Whole Narrative: A Thread and a Scene; Letting the Theme Emerge
 
-### 6. Recitation
+### 6. Reading Aloud and Whole Books
+
+**Reading Aloud**
+
+- `reading-aloud-9` Reading Aloud, Grade 9: Reading Aloud
+
+**Whole Books**
+
+- `book-water-margin` Whole Book: Water Margin (practice-only): Reading Water Margin
+
+### 7. Recitation
+
+**Classical Poems**
 
 - `recite-song-du-shao-fu` Seeing Off Prefect Du to Shuzhou: Reciting the Lines; What the Lines Mean; Writing the Lines
 - `recite-song-you-ren` Farewell to a Friend: Reciting the Lines; What the Lines Mean; Writing the Lines
@@ -109,7 +123,7 @@ By the end of grade 9 a learner has read all 3,500 common characters, the goal o
 - `recite-guo-ling-ding-yang` Crossing the Lonely Sea: Reciting the Lines; What the Lines Mean; Writing the Lines
 - `recite-bu-suan-zi-yong-mei` Song of Divination: Ode to the Plum Blossom: Reciting the Lines; What the Lines Mean; Writing the Lines
 
-### 7. Classical Chinese
+### 8. Classical Chinese
 
 **Classical Passages**
 

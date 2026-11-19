@@ -6,7 +6,7 @@
 - **Level:** The Chinese paper of China's university entrance examination, native speakers
 - **Prerequisite(s):** [Chinese, Grade 9](chinese-grade-9.md)
 - **Language of explanation:** Chinese
-- **Size:** 11 units · 114 topics (12 new, all practice-only) · 313 knowledge points
+- **Size:** 13 units · 117 topics (12 new, all practice-only) · 316 knowledge points
 
 ## The Test
 
@@ -18,9 +18,9 @@ The course turns the two senior courses into test practice. It holds the units o
 
 ## Units
 
-1 to 10. The units of [Chinese, Senior Required](chinese-hs-required.md) and [Chinese, Senior Selective Required](chinese-hs-selective.md), unchanged.
+1 to 12. The units of [Chinese, Senior Required](chinese-hs-required.md) and [Chinese, Senior Selective Required](chinese-hs-selective.md), unchanged.
 
-11. **Exam Practice**
+13. **Exam Practice**
 
 - `gaokao-idioms` Gaokao: Idioms in Context (practice-only; after the last idiom set). The idioms of grades 7 to 11: (1) the idiom of a meaning among four of its set; (2) the idiom a sentence needs among the same.
 - `gaokao-recitation` Gaokao: Lines from Their Meaning (practice-only; after the last recited text). The lines of the recited texts of grades 7 to 11: (1) the line of a description of meaning among four lines of other texts, without the title; (2) the line written in characters, given its author, title and meaning.
