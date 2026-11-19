@@ -34,8 +34,9 @@ apps/math-workers/gen/
 apps/english-workers/gen/
 apps/chinese-workers/gen/
 
-# Originals of the illustrations, kept on the machine that made them (docs/english-illustrations.md)
+# Originals of the illustrations, kept on the machine that made them (docs/english-illustrations.md, docs/chinese-illustrations.md)
 content/english/illustrations/originals/
+content/chinese/illustrations/originals/
 
 # Recordings of the passages, made by tools/audio and uploaded to R2 (docs/content.md)
 content/*/audio/files/

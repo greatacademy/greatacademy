@@ -18,6 +18,7 @@
 | [docs/english-illustrations.zh-CN.md](docs/english-illustrations.zh-CN.md) | 给生成英语彩色插图的智能体的说明：风格、角色、场景、审核与文件 |
 | [docs/chinese-curriculum.zh-CN.md](docs/chinese-curriculum.zh-CN.md) | 中文学科的设计：依据、母语华裔和外语课程、汉字与背诵、按主题知识点和题目计的规模；第一切片母语三至六年级已建成 |
 | [docs/chinese-development-plan.zh-CN.md](docs/chinese-development-plan.zh-CN.md) | 构建中文的里程碑、文件、验收标准和闸门 |
+| [docs/chinese-illustrations.zh-CN.md](docs/chinese-illustrations.zh-CN.md) | 给绘制 HSK 5 每个故事四幅图的智能体的说明：风格、布局、场景、审核与文件 |
 | [docs/minors-data.zh-CN.md](docs/minors-data.zh-CN.md) | 如何处理未成年人的文本和录音：首批市场、年龄段、同意、保存期限、供应商；等待法律审阅 |
 | [docs/impact-assessment.zh-CN.md](docs/impact-assessment.zh-CN.md) | 针对未成年人的数据保护影响评估，含市场附件；待批准的草稿 |
 | [docs/breach-response.zh-CN.md](docs/breach-response.zh-CN.md) | 个人数据泄露的应对计划：角色、最初几小时、评估、各市场时限、通知 |

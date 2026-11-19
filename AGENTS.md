@@ -18,6 +18,7 @@ This is the working guide for AI coding agents and contributors. It summarizes t
 | [docs/english-illustrations.md](docs/english-illustrations.md) | Instructions for the agent that generates the color illustrations of English: the style, the cast, the scenes, the review and the files |
 | [docs/chinese-curriculum.md](docs/chinese-curriculum.md) | Design of the Chinese subject: sources, native, heritage and foreign-language courses, characters and recitation, sizes in topics, knowledge points and problems; the first slice, native grades 3 to 6, is built |
 | [docs/chinese-development-plan.md](docs/chinese-development-plan.md) | Milestones, files, acceptance criteria and gates for building Chinese |
+| [docs/chinese-illustrations.md](docs/chinese-illustrations.md) | Instructions for the agent that draws the four pictures of each HSK 5 story: the style, the layout, the scenes, the review and the files |
 | [docs/minors-data.md](docs/minors-data.md) | How minors' text and recordings are handled: first markets, age bands, consent, retention, vendors; awaiting legal review |
 | [docs/impact-assessment.md](docs/impact-assessment.md) | The data protection impact assessment for minors, with market annexes; a draft awaiting approval |
 | [docs/breach-response.md](docs/breach-response.md) | The plan for a personal data breach: roles, the first hours, assessment, each market's deadlines, notices |
