@@ -19,6 +19,8 @@
 | [docs/chinese-curriculum.zh-CN.md](docs/chinese-curriculum.zh-CN.md) | 中文学科的设计：依据、母语华裔和外语课程、汉字与背诵、按主题知识点和题目计的规模；第一切片母语三至六年级已建成 |
 | [docs/chinese-development-plan.zh-CN.md](docs/chinese-development-plan.zh-CN.md) | 构建中文的里程碑、文件、验收标准和闸门 |
 | [docs/minors-data.zh-CN.md](docs/minors-data.zh-CN.md) | 如何处理未成年人的文本和录音：首批市场、年龄段、同意、保存期限、供应商；等待法律审阅 |
+| [docs/impact-assessment.zh-CN.md](docs/impact-assessment.zh-CN.md) | 针对未成年人的数据保护影响评估，含市场附件；待批准的草稿 |
+| [docs/breach-response.zh-CN.md](docs/breach-response.zh-CN.md) | 个人数据泄露的应对计划：角色、最初几小时、评估、各市场时限、通知 |
 | [docs/billing.zh-CN.md](docs/billing.zh-CN.md) | 方案与价格、谁来付款、Stripe 账户、退款、访问，以及通过付款验证监护人 |
 | [docs/admin.zh-CN.md](docs/admin.zh-CN.md) | `/admin` 管理后台：谁能进入、各页面、市场、AI 服务、供应商登记表和通知 |
 | [docs/the-math-academy-way.zh-CN.md](docs/the-math-academy-way.zh-CN.md)、[docs/math-academy-website.zh-CN.md](docs/math-academy-website.zh-CN.md) | 设计所依据的研究笔记 |

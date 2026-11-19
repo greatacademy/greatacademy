@@ -19,6 +19,8 @@ This is the working guide for AI coding agents and contributors. It summarizes t
 | [docs/chinese-curriculum.md](docs/chinese-curriculum.md) | Design of the Chinese subject: sources, native, heritage and foreign-language courses, characters and recitation, sizes in topics, knowledge points and problems; the first slice, native grades 3 to 6, is built |
 | [docs/chinese-development-plan.md](docs/chinese-development-plan.md) | Milestones, files, acceptance criteria and gates for building Chinese |
 | [docs/minors-data.md](docs/minors-data.md) | How minors' text and recordings are handled: first markets, age bands, consent, retention, vendors; awaiting legal review |
+| [docs/impact-assessment.md](docs/impact-assessment.md) | The data protection impact assessment for minors, with market annexes; a draft awaiting approval |
+| [docs/breach-response.md](docs/breach-response.md) | The plan for a personal data breach: roles, the first hours, assessment, each market's deadlines, notices |
 | [docs/billing.md](docs/billing.md) | Plans and prices, who pays, the Stripe account, refunds, access and guardian verification by payment |
 | [docs/admin.md](docs/admin.md) | The admin console at `/admin`: who gets in, its pages, markets, AI services, the vendor register and notices |
 | [docs/the-math-academy-way.md](docs/the-math-academy-way.md), [docs/math-academy-website.md](docs/math-academy-website.md) | Research notes the design is based on |
