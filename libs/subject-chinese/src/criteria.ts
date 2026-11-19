@@ -483,6 +483,66 @@ export const WRITING_CRITERIA: readonly CriterionSpec[] = [
     question: "Does the rewriting read as correct, natural Chinese, without faults of grammar, word order or wording?",
     quoteWhenMet: false,
   },
+  // The tasks of the new HSK's writing paper that the levels' paragraph writing lacks.
+  {
+    id: "hsk-word-use",
+    version: "1",
+    question: "Does the sentence use the given word, unchanged, in its right meaning, in a place and with words its part of speech allows?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "hsk-word-sense",
+    version: "1",
+    question:
+      "Does the sentence say something complete and meaningful about a situation, more than the word with filler around it, such as 这是 and the word alone?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "hsk-word-grammar",
+    version: "1",
+    question: "Is the sentence correct, natural Chinese, without faults of grammar, word order or wrong characters?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "hsk-scenes-all",
+    version: "1",
+    question: "Does the story tell what happens in every one of the four scenes, in their order, without contradicting any of them?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "hsk-scenes-linked",
+    version: "1",
+    question:
+      "Is it one story rather than four separate descriptions: are the scenes joined by time, cause and the reactions of the people, so that it has a beginning, a turn and an end?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "hsk-scenes-language",
+    version: "1",
+    question:
+      "Is the story written in correct Chinese of an intermediate learner, with varied sentences and connectives and few wrong characters?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "hsk-practical-points",
+    version: "1",
+    question: "Does the text include every point the task asks for, each with the details a reader would need?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "hsk-practical-form",
+    version: "1",
+    question:
+      "Does the text have the form and tone its purpose and reader call for, such as a title, a greeting, a signature, contact details or a polite request, as that kind of text usually has?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "hsk-practical-language",
+    version: "1",
+    question:
+      "Is the text written in correct, clear Chinese of an advanced learner, in a register that suits its reader, with few wrong characters?",
+    quoteWhenMet: false,
+  },
 ];
 
 /** LEVEL_WRITING_CRITERIA are the criteria of the paragraph writing of foreign-language levels 2 to 9. */
