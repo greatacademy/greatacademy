@@ -6,11 +6,11 @@
 - **Level:** Level 8, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 7](chinese-level-7.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 309 topics (40 of characters, 188 of words, 51 of grammar, 24 of listening and speaking, 4 of sentence building, 2 of writing) · 846 knowledge points · 4 conversations
+- **Size:** 13 units · 325 topics (40 of characters, 188 of words, 51 of grammar, 24 of listening and speaking, 4 of sentence building, 2 of writing, 16 of handwriting) · 878 knowledge points · 4 conversations
 
 ## Aim
 
-Level 8 is the second third of the advanced levels 7 to 9, the middle third by frequency: 400 more characters and 1,880 words, in twelve themed units: communities and social issues, research and academia, industry and farming, public health, energy and resources, engineering and inventions, civilizations, ethics, poetry and drama, music and film, institutions and administration, and finance and markets. Characters and words are learned as in levels 1 to 7, and every sentence is written only with characters already taught. Common characters that the earlier levels leave out, such as 详, 暂, 厚 and 泪, are taught where their unit's words need them. The characters were chosen to be close to the advanced band of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains. The sixth and twelfth units end with a topic of paragraph writing as well, judged by a model against three yes-or-no criteria, at least 300 characters a piece, its tasks and model answers written with the characters taught by then; the criteria wait for texts scored by teachers of Chinese, and an admin routes them before they reach learners. After its grammar, each unit has a topic of listening and one of speaking, made from its words and their sentences read by a synthetic voice: the meaning of a word heard, and the word heard in a sentence; then the words said after the recording and the sentences read aloud, heard by a speech service whose thresholds await recordings of real learners. Units 3, 6, 9 and 12 each close with a conversation on the themes of their stretch, spoken in Mandarin with an AI tutor that plays a part and keeps to the level, through the voice service and the prompt `conversation-zh-1`; an admin routes each before it is offered.
+Level 8 is the second third of the advanced levels 7 to 9, the middle third by frequency: 400 more characters and 1,880 words, in twelve themed units: communities and social issues, research and academia, industry and farming, public health, energy and resources, engineering and inventions, civilizations, ethics, poetry and drama, music and film, institutions and administration, and finance and markets. Characters and words are learned as in levels 1 to 7, and every sentence is written only with characters already taught. Common characters that the earlier levels leave out, such as 详, 暂, 厚 and 泪, are taught where their unit's words need them. The characters were chosen to be close to the advanced band of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains. The sixth and twelfth units end with a topic of paragraph writing as well, judged by a model against three yes-or-no criteria, at least 300 characters a piece, its tasks and model answers written with the characters taught by then; the criteria wait for texts scored by teachers of Chinese, and an admin routes them before they reach learners. After its grammar, each unit has a topic of listening and one of speaking, made from its words and their sentences read by a synthetic voice: the meaning of a word heard, and the word heard in a sentence; then the words said after the recording and the sentences read aloud, heard by a speech service whose thresholds await recordings of real learners. Units 3, 6, 9 and 12 each close with a conversation on the themes of their stretch, spoken in Mandarin with an AI tutor that plays a part and keeps to the level, through the voice service and the prompt `conversation-zh-1`; an admin routes each before it is offered. A last unit, Writing Characters, has the learner write by hand 160 characters it already reads, ten a topic, stroke by stroke on the pad in the standard order, first traced and then from memory, judged by the stroke checker against the standard medians; by the end of the level it has written 1030, which meets the bands of the handwriting list of GF 0025-2021: 300 by level 3, 700 by level 6 and 1,200 by level 9.
 
 ## Units
 
@@ -426,6 +426,33 @@ Level 8 is the second third of the advanced levels 7 to 9, the middle third by f
 - `level-8-writing-02` A Commentary: A Clear Thesis; Analysing, Not Retelling
 
 **Conversation:** `chinese-documentary-fund-pitch` Pitching a documentary to a film fund. Task: Pitch a short documentary to a young filmmakers' fund. Explain the story and why it matters, justify the budget, and answer the panel's question about risk.
+
+### 13. Writing Characters
+
+**Sets 1 to 6**
+
+- `level-8-handwriting-01` Level 8 Handwriting, Set 1: Tracing Them; Writing Them
+- `level-8-handwriting-02` Level 8 Handwriting, Set 2: Tracing Them; Writing Them
+- `level-8-handwriting-03` Level 8 Handwriting, Set 3: Tracing Them; Writing Them
+- `level-8-handwriting-04` Level 8 Handwriting, Set 4: Tracing Them; Writing Them
+- `level-8-handwriting-05` Level 8 Handwriting, Set 5: Tracing Them; Writing Them
+- `level-8-handwriting-06` Level 8 Handwriting, Set 6: Tracing Them; Writing Them
+
+**Sets 7 to 12**
+
+- `level-8-handwriting-07` Level 8 Handwriting, Set 7: Tracing Them; Writing Them
+- `level-8-handwriting-08` Level 8 Handwriting, Set 8: Tracing Them; Writing Them
+- `level-8-handwriting-09` Level 8 Handwriting, Set 9: Tracing Them; Writing Them
+- `level-8-handwriting-10` Level 8 Handwriting, Set 10: Tracing Them; Writing Them
+- `level-8-handwriting-11` Level 8 Handwriting, Set 11: Tracing Them; Writing Them
+- `level-8-handwriting-12` Level 8 Handwriting, Set 12: Tracing Them; Writing Them
+
+**Sets 13 to 16**
+
+- `level-8-handwriting-13` Level 8 Handwriting, Set 13: Tracing Them; Writing Them
+- `level-8-handwriting-14` Level 8 Handwriting, Set 14: Tracing Them; Writing Them
+- `level-8-handwriting-15` Level 8 Handwriting, Set 15: Tracing Them; Writing Them
+- `level-8-handwriting-16` Level 8 Handwriting, Set 16: Tracing Them; Writing Them
 
 ## Simulated Students
 

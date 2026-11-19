@@ -2,12 +2,18 @@ import { createRng, type Stroke } from "@ga/content";
 import { strokeFault } from "@ga/subject-chinese";
 import { describe, expect, it } from "vitest";
 
-import { handwritingTopics, medians, WRITTEN_BY_GRADE } from "./writing.ts";
+import { HAND_BATCH, handwritingByGrade, handwritingTopics, medians, WRITTEN_BY_GRADE } from "./writing.ts";
 
 describe("writing characters", () => {
   it("writes the curriculum's number of characters by grade 9, ten a batch", () => {
-    expect(medians.size).toBe(WRITTEN_BY_GRADE.at(-1));
-    expect(handwritingTopics.length * 10).toBe(medians.size);
+    const written = handwritingByGrade.flatMap((g) => g.batches.flatMap((b) => b.entries.map((e) => e.char)));
+    expect(written.length).toBe(WRITTEN_BY_GRADE.at(-1));
+    expect(new Set(written).size).toBe(written.length);
+    expect(handwritingTopics.length * HAND_BATCH).toBe(written.length);
+    expect(written.filter((c) => !medians.has(c))).toEqual([]);
+    expect(handwritingByGrade.map((g) => g.batches.length * HAND_BATCH)).toEqual(
+      WRITTEN_BY_GRADE.map((n, i) => n - (i === 0 ? 0 : WRITTEN_BY_GRADE[i - 1]!)),
+    );
   });
 
   it("accepts the medians drawn small, off centre and shaky, and catches two strokes written in each other's place", () => {

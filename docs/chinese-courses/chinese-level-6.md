@@ -6,11 +6,11 @@
 - **Level:** Level 6, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 5](chinese-level-5.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 12 units · 236 topics (30 of characters, 114 of words, 62 of grammar, 24 of listening and speaking, 4 of sentence building, 2 of writing) · 616 knowledge points · 4 conversations
+- **Size:** 13 units · 251 topics (30 of characters, 114 of words, 62 of grammar, 24 of listening and speaking, 4 of sentence building, 2 of writing, 15 of handwriting) · 646 knowledge points · 4 conversations
 
 ## Aim
 
-Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: language and communication, families and generations, cities and the countryside, health and ways of living, science and discovery, culture and heritage, news and opinion, money and spending, relationships, the performing arts, geography and travel, and thinking and arguing. Characters and words are learned as in levels 1 to 5, and every sentence is written only with characters already taught. A few very common characters that the earlier levels leave out, such as 或, 它, 青, 派, 令, 似 and 若, come first, in unit 1. The characters were chosen to be close to level 6 of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains. The sixth and twelfth units end with a topic of paragraph writing as well, judged by a model against three yes-or-no criteria, at least 200 characters a piece, its tasks and model answers written with the characters taught by then; the criteria wait for texts scored by teachers of Chinese, and an admin routes them before they reach learners. After its grammar, each unit has a topic of listening and one of speaking, made from its words and their sentences read by a synthetic voice: the meaning of a word heard, and the word heard in a sentence; then the words said after the recording and the sentences read aloud, heard by a speech service whose thresholds await recordings of real learners. Units 3, 6, 9 and 12 each close with a conversation on the themes of their stretch, spoken in Mandarin with an AI tutor that plays a part and keeps to the level, through the voice service and the prompt `conversation-zh-1`; an admin routes each before it is offered.
+Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: language and communication, families and generations, cities and the countryside, health and ways of living, science and discovery, culture and heritage, news and opinion, money and spending, relationships, the performing arts, geography and travel, and thinking and arguing. Characters and words are learned as in levels 1 to 5, and every sentence is written only with characters already taught. A few very common characters that the earlier levels leave out, such as 或, 它, 青, 派, 令, 似 and 若, come first, in unit 1. The characters were chosen to be close to level 6 of the standard (GF 0025-2021); they are still to be checked against its lists and those counsel clears (C0.2), and a teacher reads the sentences. Each unit ends with the grammar points its theme uses, after those of the standard: choosing the form that completes a sentence, and the one right sentence among four, every option written with the characters taught by then. Checking the points against the standard's list, and a teacher's reading of the sentences, remain. Every third unit ends with a topic of sentence building, the first writing: putting the parts of a sentence in order, thirty short sentences and thirty longer ones written with the words, grammar and characters of its three units; a teacher's reading of the sentences remains. The sixth and twelfth units end with a topic of paragraph writing as well, judged by a model against three yes-or-no criteria, at least 200 characters a piece, its tasks and model answers written with the characters taught by then; the criteria wait for texts scored by teachers of Chinese, and an admin routes them before they reach learners. After its grammar, each unit has a topic of listening and one of speaking, made from its words and their sentences read by a synthetic voice: the meaning of a word heard, and the word heard in a sentence; then the words said after the recording and the sentences read aloud, heard by a speech service whose thresholds await recordings of real learners. Units 3, 6, 9 and 12 each close with a conversation on the themes of their stretch, spoken in Mandarin with an AI tutor that plays a part and keeps to the level, through the voice service and the prompt `conversation-zh-1`; an admin routes each before it is offered. A last unit, Writing Characters, has the learner write by hand 150 characters it already reads, ten a topic, stroke by stroke on the pad in the standard order, first traced and then from memory, judged by the stroke checker against the standard medians; by the end of the level it has written 700, which meets the bands of the handwriting list of GF 0025-2021: 300 by level 3, 700 by level 6 and 1,200 by level 9.
 
 ## Units
 
@@ -353,6 +353,32 @@ Level 6 teaches 300 more characters and 1,140 words, in twelve themed units: lan
 - `level-6-writing-02` Arguing a View: A View with Reasons and an Example; Answering an Objection
 
 **Conversation:** `chinese-drama-club-tour-city` Choosing a city for the drama club tour. Task: The drama club can tour one city this summer. Persuade the club director to choose one of two cities, comparing them and answering the director's objection.
+
+### 13. Writing Characters
+
+**Sets 1 to 6**
+
+- `level-6-handwriting-01` Level 6 Handwriting, Set 1: Tracing Them; Writing Them
+- `level-6-handwriting-02` Level 6 Handwriting, Set 2: Tracing Them; Writing Them
+- `level-6-handwriting-03` Level 6 Handwriting, Set 3: Tracing Them; Writing Them
+- `level-6-handwriting-04` Level 6 Handwriting, Set 4: Tracing Them; Writing Them
+- `level-6-handwriting-05` Level 6 Handwriting, Set 5: Tracing Them; Writing Them
+- `level-6-handwriting-06` Level 6 Handwriting, Set 6: Tracing Them; Writing Them
+
+**Sets 7 to 12**
+
+- `level-6-handwriting-07` Level 6 Handwriting, Set 7: Tracing Them; Writing Them
+- `level-6-handwriting-08` Level 6 Handwriting, Set 8: Tracing Them; Writing Them
+- `level-6-handwriting-09` Level 6 Handwriting, Set 9: Tracing Them; Writing Them
+- `level-6-handwriting-10` Level 6 Handwriting, Set 10: Tracing Them; Writing Them
+- `level-6-handwriting-11` Level 6 Handwriting, Set 11: Tracing Them; Writing Them
+- `level-6-handwriting-12` Level 6 Handwriting, Set 12: Tracing Them; Writing Them
+
+**Sets 13 to 15**
+
+- `level-6-handwriting-13` Level 6 Handwriting, Set 13: Tracing Them; Writing Them
+- `level-6-handwriting-14` Level 6 Handwriting, Set 14: Tracing Them; Writing Them
+- `level-6-handwriting-15` Level 6 Handwriting, Set 15: Tracing Them; Writing Them
 
 ## Simulated Students
 

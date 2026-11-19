@@ -21,6 +21,7 @@ import { heritageReading } from "./reading/heritage.ts";
 import { chineseReading } from "./reading/index.ts";
 import { recitedPoems } from "./recitation/index.ts";
 import { componentTopics, strokeOrderTopics } from "./strokes/index.ts";
+import { levelHandwritingByLevel } from "./strokes/levels.ts";
 import { handwritingByGrade } from "./strokes/writing.ts";
 import { wordBatches } from "./words/index.ts";
 import { earlySentenceTopics } from "./writing/early-sentences.ts";
@@ -302,6 +303,25 @@ const heritageCourses: readonly CourseDef[] = [
   ),
 ];
 
+/** levelHandUnit is the unit of writing characters of the given levels, its batches in modules of six. */
+function levelHandUnit(levels: readonly number[]): CourseDef["units"][number] {
+  const ids = levelHandwritingByLevel.filter((l) => levels.includes(l.level)).flatMap((l) => l.batches.map((b) => b.topic.id));
+  if (ids.length === 0) throw new Error(`no writing batches of levels ${levels.join(", ")}`);
+  return { title: t("Writing Characters", "写汉字"), modules: setModules(ids) };
+}
+
+/** withLevelHand ends a level course with the unit of writing its characters. */
+const withLevelHand = (course: CourseDef, level: number): CourseDef => ({ ...course, units: [...course.units, levelHandUnit([level])] });
+
+/** withHskHand puts the writing units of an HSK course's levels just before its last unit, the exam practice. */
+function withHskHand(course: CourseDef): CourseDef {
+  const key = course.id.replace(/^chinese-hsk-/u, "");
+  const levels = key === "7-9" ? [7, 8, 9] : [Number(key)];
+  const last = course.units.at(-1);
+  if (last?.title.en !== "Exam Practice" || levels.some((l) => !(l >= 1 && l <= 9))) throw new Error(`HSK course ${course.id}`);
+  return { ...course, units: [...course.units.slice(0, -1), levelHandUnit(levels), last] };
+}
+
 /** baseCourses are the courses of Chinese but the Gaokao course, which is built from two of them. */
 const baseCourses: readonly CourseDef[] = [
   gradeCourse(
@@ -408,16 +428,18 @@ const baseCourses: readonly CourseDef[] = [
     ],
   },
   ...heritageCourses,
-  levelOneCourse,
-  levelTwoCourse,
-  levelThreeCourse,
-  levelFourCourse,
-  levelFiveCourse,
-  levelSixCourse,
-  levelSevenCourse,
-  levelEightCourse,
-  levelNineCourse,
-  ...hskCourses,
+  ...[
+    levelOneCourse,
+    levelTwoCourse,
+    levelThreeCourse,
+    levelFourCourse,
+    levelFiveCourse,
+    levelSixCourse,
+    levelSevenCourse,
+    levelEightCourse,
+    levelNineCourse,
+  ].map((course, i) => withLevelHand(course, i + 1)),
+  ...hskCourses.map(withHskHand),
 ];
 
 /** byId finds a course of baseCourses. */

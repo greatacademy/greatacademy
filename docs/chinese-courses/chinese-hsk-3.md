@@ -6,11 +6,11 @@
 - **Level:** Level 3 of the new HSK, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 2](chinese-level-2.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 13 units · 245 topics (7 new, all practice-only) · 617 knowledge points
+- **Size:** 14 units · 255 topics (7 new, all practice-only) · 637 knowledge points
 
 ## The Test
 
-The new HSK has nine levels built on the *Chinese Proficiency Grading Standards for International Chinese Language Education* (GF 0025-2021), which level 3 of this subject follow. The question types of each level's papers are still to be confirmed from the test owner's own syllabus and sample papers (C6, a person's step); until then this course practises what every level's reading paper asks in some form: the word that fills a sentence, the meaning of a word, and the character of a word. Questions, texts and word lists of the test are never copied: every item here comes from the data of level 3.
+The new HSK has nine levels built on the *Chinese Proficiency Grading Standards for International Chinese Language Education* (GF 0025-2021), which level 3 of this subject follows. In the structure of the papers the test owner published in December 2025, HSK 3 has 70 items: listening of 30 and reading of 30, each in three parts, and writing of 10: five characters from their pinyin and five sentences to complete. This course practises what each part asks in some form: the word that fills a sentence, the meaning of a word, the character of a word, building sentences, words and sentences heard, repeating and reading aloud, short texts. Questions, texts and word lists of the test are never copied: every item here comes from the data of level 3 or is written for this course.
 
 ## Aim
 
@@ -18,9 +18,9 @@ The course turns level 3 into test practice. It holds the units of [Chinese Leve
 
 ## Units
 
-1 to 12. The units of [Chinese Level 3](chinese-level-3.md), unchanged.
+1 to 13. The units of [Chinese Level 3](chinese-level-3.md), unchanged, its unit of writing characters by hand last.
 
-13. **Exam Practice**
+14. **Exam Practice**
 
 - `hsk-3-gaps` HSK 3: Words in Sentences (practice-only; after the last word topic of level 3). Every sentence of level 3 with its gap: (1) five words to choose from, all of its batch, none of those kept apart from it; (2) six, or five where the batch has no more that could not also fit.
 - `hsk-3-meanings` HSK 3: Words and Meanings (practice-only). Every word of level 3: (1) the word of a meaning among four; (2) the meaning of a word among four, in the learner's language.
@@ -30,7 +30,7 @@ The course turns level 3 into test practice. It holds the units of [Chinese Leve
 - `hsk-3-speaking` HSK 3: Speaking (practice-only; after the last speaking topic of level 3). The same words and sentences, heard by a speech service: (1) a word said after its recording; (2) a sentence read aloud.
 - `hsk-3-writing` HSK 3: Writing (practice-only; after the last writing topic of level 3). Short texts written as the writing paper asks, judged by a model: a knowledge point for each kind of paragraph writing of level 3, with its tasks, judged by its three criteria.
 
-**Later, once the papers' question types are confirmed:** the other kinds of listening, such as dialogues with questions, and the spoken tasks of the HSKK beyond repeating and reading aloud.
+**Not yet practised:** the paper's other kinds of listening and reading, such as dialogues, talks and passages with questions, and the spoken tasks of the HSKK beyond repeating and reading aloud.
 
 ## Simulated Students
 

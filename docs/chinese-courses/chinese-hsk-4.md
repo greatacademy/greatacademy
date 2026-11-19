@@ -6,21 +6,21 @@
 - **Level:** Level 4 of the new HSK, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 3](chinese-level-3.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 13 units · 240 topics (7 new, all practice-only) · 610 knowledge points · 4 conversations
+- **Size:** 14 units · 251 topics (8 new, all practice-only) · 631 knowledge points · 4 conversations
 
 ## The Test
 
-The new HSK has nine levels built on the *Chinese Proficiency Grading Standards for International Chinese Language Education* (GF 0025-2021), which level 4 of this subject follow. The question types of each level's papers are still to be confirmed from the test owner's own syllabus and sample papers (C6, a person's step); until then this course practises what every level's reading paper asks in some form: the word that fills a sentence, the meaning of a word, and the character of a word. Questions, texts and word lists of the test are never copied: every item here comes from the data of level 4.
+The new HSK has nine levels built on the *Chinese Proficiency Grading Standards for International Chinese Language Education* (GF 0025-2021), which level 4 of this subject follows. In the structure of the papers the test owner published in December 2025, HSK 4 has 70 items in about 85 minutes: listening of 32 in two parts, reading of 32 in three, and writing of 6: five sentences each written with a given word, and a short text of at least 80 characters. This course practises what each part asks in some form: the word that fills a sentence, the meaning of a word, the character of a word, building sentences, words and sentences heard, repeating and reading aloud, short texts, and the first part of the writing paper. Questions, texts and word lists of the test are never copied: every item here comes from the data of level 4 or is written for this course.
 
 ## Aim
 
-The course turns level 4 into test practice. It holds the units of [Chinese Level 4](chinese-level-4.md), so a learner who has not taken it learns it here, and then seven exam topics that mix the words and characters of every theme, as a test does, rather than one batch at a time. It teaches nothing new. Its own topics are practice-only: a lesson starts with practice, and the explanation appears only after a failed attempt. The topics it reuses keep their place in the graph, so a learner who has learned them in the level course is credited and moves on. The units' conversations come with them, 4 in all, spoken in Mandarin with an AI tutor and offered once an admin routes them.
+The course turns level 4 into test practice. It holds the units of [Chinese Level 4](chinese-level-4.md), so a learner who has not taken it learns it here, and then eight exam topics that mix the words and characters of every theme, as a test does, rather than one batch at a time. It teaches nothing new. Its own topics are practice-only: a lesson starts with practice, and the explanation appears only after a failed attempt. The topics it reuses keep their place in the graph, so a learner who has learned them in the level course is credited and moves on. The units' conversations come with them, 4 in all, spoken in Mandarin with an AI tutor and offered once an admin routes them.
 
 ## Units
 
-1 to 12. The units of [Chinese Level 4](chinese-level-4.md), unchanged.
+1 to 13. The units of [Chinese Level 4](chinese-level-4.md), unchanged, its unit of writing characters by hand last.
 
-13. **Exam Practice**
+14. **Exam Practice**
 
 - `hsk-4-gaps` HSK 4: Words in Sentences (practice-only; after the last word topic of level 4). Every sentence of level 4 with its gap: (1) five words to choose from, all of its batch, none of those kept apart from it; (2) six, or five where the batch has no more that could not also fit.
 - `hsk-4-meanings` HSK 4: Words and Meanings (practice-only). Every word of level 4: (1) the word of a meaning among four; (2) the meaning of a word among four, in the learner's language.
@@ -29,8 +29,9 @@ The course turns level 4 into test practice. It holds the units of [Chinese Leve
 - `hsk-4-listening` HSK 4: Listening (practice-only; after the last listening topic of level 4). The words and sentences of every unit of level 4, heard without being seen, the units taking turns: (1) the meaning of a word heard, among three; (2) the word heard in a sentence, among three.
 - `hsk-4-speaking` HSK 4: Speaking (practice-only; after the last speaking topic of level 4). The same words and sentences, heard by a speech service: (1) a word said after its recording; (2) a sentence read aloud.
 - `hsk-4-writing` HSK 4: Writing (practice-only; after the last writing topic of level 4). Short texts written as the writing paper asks, judged by a model: a knowledge point for each kind of paragraph writing of level 4, with its tasks, judged by its three criteria.
+- `hsk-4-word-sentences` HSK 4: A Sentence with a Given Word (practice-only; after the last word topic of level 4). The first part of the writing paper: a sentence of one's own, at least eight characters, with a word of level 4 of two characters or more, one word in sixteen across the level, judged by a model on three criteria: the word is used, in its sense, in a correct sentence.
 
-**Later, once the papers' question types are confirmed:** the other kinds of listening, such as dialogues with questions, and the spoken tasks of the HSKK beyond repeating and reading aloud.
+**Not yet practised:** the paper's other kinds of listening and reading, such as dialogues, talks and passages with questions, and the spoken tasks of the HSKK beyond repeating and reading aloud.
 
 ## Simulated Students
 

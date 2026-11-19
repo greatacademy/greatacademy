@@ -2,9 +2,10 @@
 // to 6 each go with the level of the same number, and HSK 7–9 with levels 7 to 9. Each course holds its levels' units and
 // four exam topics of its own, all practice-only, that mix the whole level as a test does: choosing the word for a
 // gap among five or six, matching words and meanings, telling a character from those that look like it, and putting
-// the parts of a sentence in order, as the writing paper asks. Two more mix the units' listening and speaking: words and
+// the parts of a sentence in order, practice in word order. Two more mix the units' listening and speaking: words and
 // sentences heard without being seen, words said after a recording and sentences read aloud. From HSK 3 on, a further
-// topic, judged by a model, writes the kinds of text of its levels' paragraph writing.
+// topic, judged by a model, writes the kinds of text of its levels' paragraph writing, and HSK 4 to 6 add the paper's own
+// tasks of paper.ts.
 
 import {
   type CourseDef,
@@ -67,6 +68,7 @@ import { levelNineCourse, levelNineLast } from "../level-9/index.ts";
 import { sentences as levelNineSentences } from "../level-9/sentence-data.ts";
 import { writing as levelNineWriting } from "../level-9/writing-data.ts";
 import { type LevelData, levelData } from "./data.ts";
+import { paperTopics } from "./paper.ts";
 
 /** examGroup is the shelf of the Chinese exam courses. */
 export const examGroup = t("Chinese Exams", "中文考试");
@@ -259,6 +261,9 @@ function sentenceBank(levels: readonly number[], kind: "short" | "long") {
   );
 }
 
+/** ESSAY_MINIMUMS are the fewest characters the paper's essay asks for, by HSK course, where more than its levels' writing asks; the explanations name them, and the tasks keep the levels' lengths. */
+const ESSAY_MINIMUMS: Readonly<Record<string, number>> = { "5": 200, "6": 300 };
+
 /** WRITING are the paragraph-writing topics of levels 3 to 9, from which the HSK courses that have writing draw. */
 const WRITING: Readonly<Record<number, readonly LevelWriting[]>> = {
   3: levelThreeWriting,
@@ -303,26 +308,31 @@ function writingExam(spec: HskSpec): readonly TopicDef[] {
       strand: "writing",
       practiceOnly: true,
       criteria: [...new Set(kinds.flatMap((k) => k.w.criteria))].map(criterion),
-      knowledgePoints: kinds.map(({ level, n, w }) =>
-        point(
+      knowledgePoints: kinds.map(({ level, n, w }) => {
+        const least = w.minChars;
+        const paper = ESSAY_MINIMUMS[spec.key];
+        const longer = paper
+          ? {
+              en: ` In the paper of HSK ${spec.name} the essay needs at least ${paper} characters: once this length comes easily, write that much.`,
+              zh: `HSK ${spec.name} 考试的作文要求不少于 ${paper} 字：这个长度写得顺手以后，就按考试的字数写。`,
+            }
+          : { en: "", zh: "" };
+        return point(
           `${id}-level-${level}-${String(n).padStart(2, "0")}`,
           w.title,
           t(
-            `In the paper, a text is marked on all of it at once: what it says, how it is put together, and its language. Plan before you write, keep to the task, and leave time to check your characters. ${w.summary.en}`,
-            `考试时，一篇短文的内容、结构和语言一起评分。先想好再写，紧扣题目，留出时间检查有没有写错字。${w.summary["zh-CN"]}`,
+            `In the paper, a text is marked on all of it at once: what it says, how it is put together, and its language. Plan before you write, keep to the task, and leave time to check your characters. ${w.summary.en}${longer.en}`,
+            `考试时，一篇短文的内容、结构和语言一起评分。先想好再写，紧扣题目，留出时间检查有没有写错字。${w.summary["zh-CN"]}${longer.zh}`,
           ),
           writingGenerator(
-            t(
-              `Write the text below in Chinese, of at least ${w.minChars} characters.`,
-              `按下面的要求，用中文写一篇不少于 ${w.minChars} 字的短文。`,
-            ),
+            t(`Write the text below in Chinese, of at least ${least} characters.`, `按下面的要求，用中文写一篇不少于 ${least} 字的短文。`),
             w.bank,
             [...w.criteria],
-            { minWords: w.minChars, maxChars: w.minChars * 10 },
+            { minWords: least, maxChars: least * 10 },
             onePiece,
           ),
-        ),
-      ),
+        );
+      }),
     },
   ];
 }
@@ -447,8 +457,8 @@ function examTopics(spec: HskSpec): readonly TopicDef[] {
       id: id("sentences"),
       title: t(`HSK ${name}: Building Sentences`, `HSK ${name}：连词成句`),
       summary: t(
-        `Putting the parts of sentences in order, as the writing paper asks, with sentences from every unit of the levels HSK ${name} tests.`,
-        `按写作试卷的要求把词语排成句子，句子来自 HSK ${name} 所考等级的各个单元。`,
+        `Putting the parts of sentences in order, to practise the word order every part of the paper needs, with sentences from every unit of the levels HSK ${name} tests.`,
+        `把词语排成句子，练习试卷各部分都要用到的语序，句子来自 HSK ${name} 所考等级的各个单元。`,
       ),
       prerequisites: [levelSentencesId(spec.numbers.at(-1) ?? 1, SENTENCES[(spec.numbers.at(-1) ?? 1) - 1]?.length ?? 4)],
       strand: "writing",
@@ -547,7 +557,7 @@ function speechExam(spec: HskSpec): readonly TopicDef[] {
 
 /** hsk builds an HSK course and its exam topics. */
 function hsk(spec: HskSpec): { readonly course: CourseDef; readonly topics: readonly TopicDef[] } {
-  const topics = [...examTopics(spec), ...speechExam(spec), ...writingExam(spec)];
+  const topics = [...examTopics(spec), ...speechExam(spec), ...writingExam(spec), ...paperTopics(spec.key)];
   const conversations = spec.courses.flatMap((c) => c.conversations ?? []);
   return {
     topics,

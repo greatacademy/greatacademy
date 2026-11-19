@@ -6,11 +6,11 @@
 - **Level:** Level 1 of the new HSK, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Pinyin](chinese-pinyin.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 13 units · 162 topics (6 new, all practice-only) · 404 knowledge points
+- **Size:** 14 units · 172 topics (6 new, all practice-only) · 424 knowledge points
 
 ## The Test
 
-The new HSK has nine levels built on the *Chinese Proficiency Grading Standards for International Chinese Language Education* (GF 0025-2021), which level 1 of this subject follow. The question types of each level's papers are still to be confirmed from the test owner's own syllabus and sample papers (C6, a person's step); until then this course practises what every level's reading paper asks in some form: the word that fills a sentence, the meaning of a word, and the character of a word. Questions, texts and word lists of the test are never copied: every item here comes from the data of level 1.
+The new HSK has nine levels built on the *Chinese Proficiency Grading Standards for International Chinese Language Education* (GF 0025-2021), which level 1 of this subject follows. In the structure of the papers the test owner published in December 2025, HSK 1 has 40 items: listening in four parts of five and reading in four parts of five; there is no writing paper. This course practises what each part asks in some form: the word that fills a sentence, the meaning of a word, the character of a word, building sentences, words and sentences heard, repeating and reading aloud. Questions, texts and word lists of the test are never copied: every item here comes from the data of level 1 or is written for this course.
 
 ## Aim
 
@@ -18,9 +18,9 @@ The course turns level 1 into test practice. It holds the units of [Chinese Leve
 
 ## Units
 
-1 to 12. The units of [Chinese Level 1](chinese-level-1.md), unchanged.
+1 to 13. The units of [Chinese Level 1](chinese-level-1.md), unchanged, its unit of writing characters by hand last.
 
-13. **Exam Practice**
+14. **Exam Practice**
 
 - `hsk-1-gaps` HSK 1: Words in Sentences (practice-only; after the last word topic of level 1). Every sentence of level 1 with its gap: (1) five words to choose from, all of its batch, none of those kept apart from it; (2) six, or five where the batch has no more that could not also fit.
 - `hsk-1-meanings` HSK 1: Words and Meanings (practice-only). Every word of level 1: (1) the word of a meaning among four; (2) the meaning of a word among four, in the learner's language.
@@ -29,7 +29,7 @@ The course turns level 1 into test practice. It holds the units of [Chinese Leve
 - `hsk-1-listening` HSK 1: Listening (practice-only; after the last listening topic of level 1). The words and sentences of every unit of level 1, heard without being seen, the units taking turns: (1) the meaning of a word heard, among three; (2) the word heard in a sentence, among three.
 - `hsk-1-speaking` HSK 1: Speaking (practice-only; after the last speaking topic of level 1). The same words and sentences, heard by a speech service: (1) a word said after its recording; (2) a sentence read aloud.
 
-**Later, once the papers' question types are confirmed:** the other kinds of listening, such as dialogues with questions, and the spoken tasks of the HSKK beyond repeating and reading aloud, and the rest of writing.
+**Not yet practised:** the paper's other kinds of listening and reading, such as dialogues, talks and passages with questions, and the spoken tasks of the HSKK beyond repeating and reading aloud.
 
 ## Simulated Students
 

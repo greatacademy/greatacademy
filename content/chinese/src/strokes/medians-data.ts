@@ -1,9 +1,10 @@
-// The stroke medians of the 3,000 characters the writing topics teach, one line each: the character, a space, then its
-// strokes in the standard order, each the points along its middle as "x,y" in the pad's box of 1,024 with y down, joined
-// by ";". Made by tools from graphics.txt of Make Me a Hanzi (https://github.com/skishore/makemeahanzi), which is derived
-// from the fonts Arphic PL KaitiM GB and Arphic PL UKai: y turned from up to down (900 − y), and each median thinned to
-// the points that stray more than 8 units from a straight line. This file is a modified version of graphics.txt and stays
-// under the Arphic Public License, in ARPHICPL.TXT beside it: it may be copied, changed and sold, and must be made freely
+// The stroke medians of the characters the writing topics teach, the 3,000 of the native grades first, then four only
+// the foreign-language levels write, one line each: the character, a space, then its strokes in the standard order,
+// each the points along its middle as "x,y" in the pad's box of 1,024 with y down, joined by ";". Made by tools from
+// graphics.txt of Make Me a Hanzi (https://github.com/skishore/makemeahanzi), which is derived from the fonts Arphic PL
+// KaitiM GB and Arphic PL UKai: y turned from up to down (900 − y), and each median thinned to the points that stray
+// more than 8 units from a straight line. This file is a modified version of graphics.txt and stays under the Arphic
+// Public License, in ARPHICPL.TXT beside it: it may be copied, changed and sold, and must be made freely
 // available to anyone under the same license (content/chinese/SOURCES.md).
 
 /** mediansData are the medians of the writing characters, a line each. */
@@ -3008,4 +3009,8 @@ export const mediansData = `
 揍 127,378 198,377 350,331 396,331;260,102 304,144 288,794 265,853 153,797;49,657 99,660 347,477;464,261 535,262 707,217 756,215;459,366 518,369 730,322;400,481 455,482 755,423 837,432;554,84 601,128 572,307 527,464 461,588 396,659 336,700;648,473 828,619 979,646;496,605 539,610 690,583;416,741 451,746 683,699 771,708;552,630 584,665 548,790 490,866 397,921;637,776 740,854 779,921
 卒 469,48 569,116;303,215 399,220 729,172;359,280 383,313 353,381 310,443 239,506;361,417 424,453 442,491;638,233 663,267 632,341 570,424 537,444;642,377 718,414 757,462;112,606 168,617 413,581 828,544 918,568;483,451 515,477 523,503 515,953
 佐 310,109 348,157 297,262 165,463 55,581;248,391 273,483 248,830 254,890;411,380 475,386 782,332 847,338;596,117 643,175 542,486 446,653 361,740 301,779;521,595 672,578 752,556 808,557;628,611 651,635 639,764 619,779;394,824 451,833 859,789 931,809
+浏 181,169 265,223 286,261;112,361 207,440;185,828 167,747 281,496;425,149 522,219;286,393 331,397 536,344 592,346;484,387 517,410 463,602 381,708 277,768;340,523 520,674 559,723 569,759;635,328 662,360 661,616;767,143 818,183 824,817 804,863 666,806
+诈 263,109 360,163 394,205;67,430 161,426 271,379 321,390 288,718 297,751 349,732 463,633;592,81 631,125 594,215 488,397 414,486;543,359 912,294;623,377 658,413 642,835 655,934;686,497 735,502 866,479;682,646 725,655 847,631 900,637
+讶 259,89 353,140 385,180;56,416 125,414 257,353 303,363 272,693 280,730 329,712 436,613;552,232 629,233 853,186;494,311 528,355 506,489 822,424 861,421 911,437;706,241 744,269 742,836 718,879 600,822;708,471 644,590 589,657 492,752 410,808
+寞 462,39 548,78 574,109;256,157 261,208 210,295 203,342;296,195 318,205 560,165 769,146 804,166 812,185 750,256;298,350 371,348 667,293 735,304;382,263 419,288 443,403;581,215 604,247 563,385;304,443 333,463 383,626;369,461 398,446 618,410 672,419 691,449 639,609;386,539 550,506 581,511;402,613 609,570;158,732 208,741 773,679 863,697;458,622 487,658 483,683 462,759 416,838 364,884 315,908 183,935;506,726 592,817 714,911 903,943
 `;

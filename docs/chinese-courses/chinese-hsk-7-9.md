@@ -6,7 +6,7 @@
 - **Level:** Level 7–9 of the new HSK, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 6](chinese-level-6.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 37 units · 932 topics (7 new, all practice-only) · 2552 knowledge points · 12 conversations
+- **Size:** 38 units · 982 topics (7 new, all practice-only) · 2652 knowledge points · 12 conversations
 
 ## The Test
 
@@ -20,7 +20,9 @@ The course turns levels 7 to 9 into test practice. It holds the units of [Chines
 
 1 to 36. The units of [Chinese Level 7](chinese-level-7.md), [Chinese Level 8](chinese-level-8.md), [Chinese Level 9](chinese-level-9.md), unchanged.
 
-37. **Exam Practice**
+37. **Writing Characters**: the three levels' units of writing characters by hand, as one unit.
+
+38. **Exam Practice**
 
 - `hsk-7-9-gaps` HSK 7–9: Words in Sentences (practice-only; after the last word topic of levels 7 to 9). Every sentence of levels 7 to 9 with its gap: (1) five words to choose from, all of its batch, none of those kept apart from it; (2) six, or five where the batch has no more that could not also fit.
 - `hsk-7-9-meanings` HSK 7–9: Words and Meanings (practice-only). Every word of levels 7 to 9: (1) the word of a meaning among four; (2) the meaning of a word among four, in the learner's language.
