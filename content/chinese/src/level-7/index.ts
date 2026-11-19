@@ -14,6 +14,7 @@ import { characterBatches1, wordBatches1 } from "./data-1.ts";
 import { characterBatches2, wordBatches2 } from "./data-2.ts";
 import { characterBatches3, wordBatches3 } from "./data-3.ts";
 import { characterBatches4, wordBatches4 } from "./data-4.ts";
+import { dialogues } from "./dialogue-data.ts";
 import { grammar } from "./grammar-data.ts";
 import { sentences } from "./sentence-data.ts";
 import { writing } from "./writing-data.ts";
@@ -43,6 +44,7 @@ const level = buildLevel({
   grammar,
   sentences,
   writing,
+  dialogues,
   earlierCharacters: levelSixCharacters,
   earlierWords: levelSixWords,
   after: levelSixLast.words,

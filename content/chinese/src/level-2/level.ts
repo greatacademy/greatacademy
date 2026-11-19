@@ -6,6 +6,7 @@ import type { CourseDef, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 
 import { type LevelOneCharacter, levelOneCharacterTopic, parseLevelCharacters } from "../level-1/characters.ts";
+import { type LevelDialogues, unitDialogueTopics } from "../level-1/dialogues.ts";
 import { type LevelGrammar, unitGrammarTopics } from "../level-1/grammar.ts";
 import { unitListeningTopic, unitSpeakingTopic } from "../level-1/listening.ts";
 import { type LevelSentences, unitSentenceTopics } from "../level-1/sentences.ts";
@@ -46,6 +47,8 @@ export interface LevelSpec {
   readonly sentences?: readonly LevelSentences[];
   /** writing are the level's paragraph writing topics, ending its sixth and twelfth units. */
   readonly writing?: readonly LevelWriting[];
+  /** dialogues are the level's dialogue listening topics, ending its sixth and twelfth units. */
+  readonly dialogues?: readonly LevelDialogues[];
 }
 
 /** Level is a built level: its characters and words, its topics, and the units of its course. */
@@ -160,7 +163,11 @@ export function buildLevel(spec: LevelSpec): Level {
     g += unitGrammar.length;
     topics.push(...unitGrammar);
     const speech = { level, numeral, unit: u + 1, theme: unit.title, words: unitWords, chars: characters, after: levelWordId(level, w) };
-    const listening = [unitListeningTopic(speech), unitSpeakingTopic(speech)];
+    const listening = [
+      unitListeningTopic(speech),
+      unitSpeakingTopic(speech),
+      ...unitDialogueTopics({ level, numeral, unit: u, dialogues: spec.dialogues ?? [], taught }),
+    ];
     topics.push(...listening);
     const unitSentences = unitSentenceTopics({
       level,

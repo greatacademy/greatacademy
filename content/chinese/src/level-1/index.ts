@@ -6,6 +6,8 @@ import { type CourseDef, type Text, type TopicDef, t } from "@ga/content";
 
 import { characterBatches } from "./character-data.ts";
 import { type LevelOneCharacter, levelOneCharacterTopic, parseLevelOneCharacters } from "./characters.ts";
+import { dialogues } from "./dialogue-data.ts";
+import { unitDialogueTopics } from "./dialogues.ts";
 import { unitGrammarTopics } from "./grammar.ts";
 import { grammar } from "./grammar-data.ts";
 import { unitListeningTopic, unitSpeakingTopic } from "./listening.ts";
@@ -145,7 +147,11 @@ function build(): Built {
       chars: levelOneCharacters,
       after: levelOneWordId(w),
     };
-    const listening = [unitListeningTopic(speech), unitSpeakingTopic(speech)];
+    const listening = [
+      unitListeningTopic(speech),
+      unitSpeakingTopic(speech),
+      ...unitDialogueTopics({ level: 1, numeral: "一", unit: u, dialogues, taught }),
+    ];
     topics.push(...listening);
     const unitSentences = unitSentenceTopics({
       level: 1,

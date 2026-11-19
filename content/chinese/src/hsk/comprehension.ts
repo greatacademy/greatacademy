@@ -80,7 +80,7 @@ export function parseBlocks(where: string, data: string): readonly Block[] {
 }
 
 /** CheckSpec says what a knowledge point's blocks must be. */
-interface CheckSpec {
+export interface CheckSpec {
   readonly where: string;
   readonly options: number;
   readonly taught: ReadonlySet<string>;
@@ -91,7 +91,7 @@ interface CheckSpec {
 }
 
 /** checkBlocks checks a knowledge point's blocks: their size, their answers, their characters and how many questions there are. */
-function checkBlocks(blocks: readonly Block[], spec: CheckSpec): void {
+export function checkBlocks(blocks: readonly Block[], spec: CheckSpec): void {
   const asked = new Set<string>();
   for (const b of blocks) {
     const head = `${spec.where}: ${b.lines[0]!.text.slice(0, 12)}`;
@@ -132,7 +132,7 @@ function items(blocks: readonly Block[]): readonly Item[] {
 }
 
 /** comprehensionGenerator asks each question in turn with its answers shuffled: heard, when listening, or read. */
-function comprehensionGenerator(blocks: readonly Block[], listening: boolean): Generator {
+export function comprehensionGenerator(blocks: readonly Block[], listening: boolean): Generator {
   const all = items(blocks);
   // The recordings are named here, not when a problem is asked, so the recording tool finds every one.
   const paths = new Map(listening ? blocks.map((b) => [b, b.talk ? heardTalk(b.lines[0]!.text) : heardDialogue(b.lines)] as const) : []);

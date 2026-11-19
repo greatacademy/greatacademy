@@ -7,6 +7,7 @@ import { type CourseDef, type TopicDef, t } from "@ga/content";
 import type { LevelOneCharacter } from "../level-1/characters.ts";
 import { levelOneCharacters, levelOneWordId, levelOneWords } from "../level-1/index.ts";
 import { characterBatches } from "./character-data.ts";
+import { dialogues } from "./dialogue-data.ts";
 import { grammar } from "./grammar-data.ts";
 import { buildLevel, type LevelUnit } from "./level.ts";
 import { sentences } from "./sentence-data.ts";
@@ -38,6 +39,7 @@ const level = buildLevel({
   grammar,
   sentences,
   writing,
+  dialogues,
   earlierCharacters: levelOneCharacters,
   earlierWords: levelOneWords,
   after: levelOneWordId(50),

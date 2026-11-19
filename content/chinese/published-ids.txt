@@ -210,6 +210,8 @@ topic level-1-characters-27 level-1-characters-27-form level-1-characters-27-mea
 topic level-1-characters-28 level-1-characters-28-form level-1-characters-28-meaning level-1-characters-28-reading
 topic level-1-characters-29 level-1-characters-29-form level-1-characters-29-meaning level-1-characters-29-reading
 topic level-1-characters-30 level-1-characters-30-form level-1-characters-30-meaning level-1-characters-30-reading
+topic level-1-dialogues-01 level-1-dialogues-01-dialogues
+topic level-1-dialogues-02 level-1-dialogues-02-dialogues
 topic level-1-grammar-01 level-1-grammar-01-form level-1-grammar-01-use
 topic level-1-grammar-02 level-1-grammar-02-form level-1-grammar-02-use
 topic level-1-grammar-03 level-1-grammar-03-form level-1-grammar-03-use
@@ -376,6 +378,8 @@ topic level-2-characters-27 level-2-characters-27-form level-2-characters-27-mea
 topic level-2-characters-28 level-2-characters-28-form level-2-characters-28-meaning level-2-characters-28-reading
 topic level-2-characters-29 level-2-characters-29-form level-2-characters-29-meaning level-2-characters-29-reading
 topic level-2-characters-30 level-2-characters-30-form level-2-characters-30-meaning level-2-characters-30-reading
+topic level-2-dialogues-01 level-2-dialogues-01-dialogues
+topic level-2-dialogues-02 level-2-dialogues-02-dialogues
 topic level-2-grammar-01 level-2-grammar-01-form level-2-grammar-01-use
 topic level-2-grammar-02 level-2-grammar-02-form level-2-grammar-02-use
 topic level-2-grammar-03 level-2-grammar-03-form level-2-grammar-03-use
@@ -593,6 +597,8 @@ topic level-3-characters-27 level-3-characters-27-form level-3-characters-27-mea
 topic level-3-characters-28 level-3-characters-28-form level-3-characters-28-meaning level-3-characters-28-reading
 topic level-3-characters-29 level-3-characters-29-form level-3-characters-29-meaning level-3-characters-29-reading
 topic level-3-characters-30 level-3-characters-30-form level-3-characters-30-meaning level-3-characters-30-reading
+topic level-3-dialogues-01 level-3-dialogues-01-dialogues
+topic level-3-dialogues-02 level-3-dialogues-02-dialogues
 topic level-3-grammar-01 level-3-grammar-01-form level-3-grammar-01-use
 topic level-3-grammar-02 level-3-grammar-02-form level-3-grammar-02-use
 topic level-3-grammar-03 level-3-grammar-03-form level-3-grammar-03-use
@@ -841,6 +847,8 @@ topic level-4-characters-27 level-4-characters-27-form level-4-characters-27-mea
 topic level-4-characters-28 level-4-characters-28-form level-4-characters-28-meaning level-4-characters-28-reading
 topic level-4-characters-29 level-4-characters-29-form level-4-characters-29-meaning level-4-characters-29-reading
 topic level-4-characters-30 level-4-characters-30-form level-4-characters-30-meaning level-4-characters-30-reading
+topic level-4-dialogues-01 level-4-dialogues-01-dialogues
+topic level-4-dialogues-02 level-4-dialogues-02-dialogues
 topic level-4-grammar-01 level-4-grammar-01-form level-4-grammar-01-use
 topic level-4-grammar-02 level-4-grammar-02-form level-4-grammar-02-use
 topic level-4-grammar-03 level-4-grammar-03-form level-4-grammar-03-use
@@ -1084,6 +1092,8 @@ topic level-5-characters-27 level-5-characters-27-form level-5-characters-27-mea
 topic level-5-characters-28 level-5-characters-28-form level-5-characters-28-meaning level-5-characters-28-reading
 topic level-5-characters-29 level-5-characters-29-form level-5-characters-29-meaning level-5-characters-29-reading
 topic level-5-characters-30 level-5-characters-30-form level-5-characters-30-meaning level-5-characters-30-reading
+topic level-5-dialogues-01 level-5-dialogues-01-dialogues
+topic level-5-dialogues-02 level-5-dialogues-02-dialogues
 topic level-5-grammar-01 level-5-grammar-01-form level-5-grammar-01-use
 topic level-5-grammar-02 level-5-grammar-02-form level-5-grammar-02-use
 topic level-5-grammar-03 level-5-grammar-03-form level-5-grammar-03-use
@@ -1328,6 +1338,8 @@ topic level-6-characters-27 level-6-characters-27-form level-6-characters-27-mea
 topic level-6-characters-28 level-6-characters-28-form level-6-characters-28-meaning level-6-characters-28-reading
 topic level-6-characters-29 level-6-characters-29-form level-6-characters-29-meaning level-6-characters-29-reading
 topic level-6-characters-30 level-6-characters-30-form level-6-characters-30-meaning level-6-characters-30-reading
+topic level-6-dialogues-01 level-6-dialogues-01-dialogues
+topic level-6-dialogues-02 level-6-dialogues-02-dialogues
 topic level-6-grammar-01 level-6-grammar-01-form level-6-grammar-01-use
 topic level-6-grammar-02 level-6-grammar-02-form level-6-grammar-02-use
 topic level-6-grammar-03 level-6-grammar-03-form level-6-grammar-03-use
@@ -1589,6 +1601,8 @@ topic level-7-characters-37 level-7-characters-37-form level-7-characters-37-mea
 topic level-7-characters-38 level-7-characters-38-form level-7-characters-38-meaning level-7-characters-38-reading
 topic level-7-characters-39 level-7-characters-39-form level-7-characters-39-meaning level-7-characters-39-reading
 topic level-7-characters-40 level-7-characters-40-form level-7-characters-40-meaning level-7-characters-40-reading
+topic level-7-dialogues-01 level-7-dialogues-01-dialogues
+topic level-7-dialogues-02 level-7-dialogues-02-dialogues
 topic level-7-grammar-01 level-7-grammar-01-form level-7-grammar-01-use
 topic level-7-grammar-02 level-7-grammar-02-form level-7-grammar-02-use
 topic level-7-grammar-03 level-7-grammar-03-form level-7-grammar-03-use
@@ -1913,6 +1927,8 @@ topic level-8-characters-37 level-8-characters-37-form level-8-characters-37-mea
 topic level-8-characters-38 level-8-characters-38-form level-8-characters-38-meaning level-8-characters-38-reading
 topic level-8-characters-39 level-8-characters-39-form level-8-characters-39-meaning level-8-characters-39-reading
 topic level-8-characters-40 level-8-characters-40-form level-8-characters-40-meaning level-8-characters-40-reading
+topic level-8-dialogues-01 level-8-dialogues-01-dialogues
+topic level-8-dialogues-02 level-8-dialogues-02-dialogues
 topic level-8-grammar-01 level-8-grammar-01-form level-8-grammar-01-use
 topic level-8-grammar-02 level-8-grammar-02-form level-8-grammar-02-use
 topic level-8-grammar-03 level-8-grammar-03-form level-8-grammar-03-use
@@ -2238,6 +2254,8 @@ topic level-9-characters-37 level-9-characters-37-form level-9-characters-37-mea
 topic level-9-characters-38 level-9-characters-38-form level-9-characters-38-meaning level-9-characters-38-reading
 topic level-9-characters-39 level-9-characters-39-form level-9-characters-39-meaning level-9-characters-39-reading
 topic level-9-characters-40 level-9-characters-40-form level-9-characters-40-meaning level-9-characters-40-reading
+topic level-9-dialogues-01 level-9-dialogues-01-dialogues
+topic level-9-dialogues-02 level-9-dialogues-02-dialogues
 topic level-9-grammar-01 level-9-grammar-01-form level-9-grammar-01-use
 topic level-9-grammar-02 level-9-grammar-02-form level-9-grammar-02-use
 topic level-9-grammar-03 level-9-grammar-03-form level-9-grammar-03-use
