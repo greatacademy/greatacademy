@@ -24,9 +24,35 @@ const speak = (inner: string) =>
   `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="${voice.lang}">` +
   `<voice name="${voice.name}"><prosody rate="${voice.rate}">${inner}</prosody></voice></speak>`;
 
+/**
+ * READ_AS are the words the voice reads in the wrong one of their readings, found by assessing the recordings of the
+ * words with characters of several readings against homophones of each: the reading to say, in the SAPI phone set, and
+ * whether it holds in any sentence or only when the word is said alone, since 同行 and 有空 read otherwise in some.
+ */
+const READ_AS: ReadonlyMap<string, { readonly ph: string; readonly anywhere: boolean }> = new Map([
+  ["查重", { ph: "cha 2 chong 2", anywhere: true }],
+  ["倒时差", { ph: "dao 3 shi 2 cha 1", anywhere: true }],
+  ["口角", { ph: "kou 3 jue 2", anywhere: true }],
+  ["丑角", { ph: "chou 3 jue 2", anywhere: true }],
+  ["好面子", { ph: "hao 4 mian 4 zi 5", anywhere: true }],
+  ["数不清", { ph: "shu 3 bu 4 qing 1", anywhere: true }],
+  ["同行", { ph: "tong 2 hang 2", anywhere: false }],
+  ["有空", { ph: "you 3 kong 4", anywhere: false }],
+]);
+
+/** readAs marks the words of a line the voice would misread with the reading to say. */
+function readAs(line: string): string {
+  const alone = READ_AS.get(line);
+  if (alone) return `<phoneme alphabet="sapi" ph="${alone.ph}">${escapeXml(line)}</phoneme>`;
+  let out = escapeXml(line);
+  for (const [word, { ph, anywhere }] of READ_AS)
+    if (anywhere) out = out.replaceAll(word, `<phoneme alphabet="sapi" ph="${ph}">${word}</phoneme>`);
+  return out;
+}
+
 /** textSsml is the SSML that reads one line aloud, a word or a sentence. */
 export function textSsml(text: string): string {
-  return speak(escapeXml(text.replace(/\s+/gu, " ").trim()));
+  return speak(readAs(text.replace(/\s+/gu, " ").trim()));
 }
 
 /**
