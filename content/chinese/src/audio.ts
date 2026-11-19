@@ -38,6 +38,15 @@ const READ_AS: ReadonlyMap<string, { readonly ph: string; readonly anywhere: boo
   ["数不清", { ph: "shu 3 bu 4 qing 1", anywhere: true }],
   ["同行", { ph: "tong 2 hang 2", anywhere: false }],
   ["有空", { ph: "you 3 kong 4", anywhere: false }],
+  ["血", { ph: "xue 4", anywhere: false }],
+  ["藏", { ph: "cang 2", anywhere: false }],
+  ["差", { ph: "cha 4", anywhere: false }],
+  ["了", { ph: "le 5", anywhere: false }],
+  ["着", { ph: "zhe 5", anywhere: false }],
+  ["抽血", { ph: "chou 1 xue 4", anywhere: true }],
+  ["排长队", { ph: "pai 2 chang 2 dui 4", anywhere: true }],
+  ["粘合", { ph: "zhan 1 he 2", anywhere: true }],
+  ["强词夺理", { ph: "qiang 3 ci 2 duo 2 li 3", anywhere: true }],
 ]);
 
 /** readAs marks the words of a line the voice would misread with the reading to say. */
