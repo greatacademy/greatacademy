@@ -3,7 +3,8 @@ import { dirname, resolve } from "node:path";
 import { parseArgs } from "node:util";
 
 import { connect, providers } from "@ga/db";
-import { criterionById } from "@ga/subject-english";
+import { criterionById as chineseCriterion } from "@ga/subject-chinese";
+import { criterionById as englishCriterion } from "@ga/subject-english";
 
 import { parseScoredSet } from "./agreement.ts";
 import { renderReport, runCalibration } from "./calibrate.ts";
@@ -68,7 +69,7 @@ if (!url || !secret || !id || !version || !values.provider || !values.model || !
   );
   process.exit(1);
 }
-const criterion = criterionById(id);
+const criterion = englishCriterion(id) ?? chineseCriterion(id);
 if (!criterion || criterion.version !== version) {
   console.error(`no criterion ${values.criterion}`);
   process.exit(1);

@@ -754,6 +754,9 @@ importers:
       '@ga/judge':
         specifier: workspace:*
         version: link:../../libs/judge
+      '@ga/subject-chinese':
+        specifier: workspace:*
+        version: link:../../libs/subject-chinese
       '@ga/subject-english':
         specifier: workspace:*
         version: link:../../libs/subject-english

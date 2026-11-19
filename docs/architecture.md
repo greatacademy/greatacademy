@@ -110,7 +110,7 @@ apps/nsh ──► libs/proto, libs/design
 tools/simulate ──► libs/engine, content/math, content/english
 tools/audit ──► libs/content, content/math, content/english, content/chinese
 tools/pilot ──► libs/db, libs/engine, content/math, content/english
-tools/calibrate ──► libs/judge, libs/db, libs/api, libs/subject-english
+tools/calibrate ──► libs/judge, libs/db, libs/api, libs/subject-english, libs/subject-chinese
 tools/audio ──► libs/content, content/english, content/chinese
 apps/voice ╌╌► apps/web over HTTP (no package dependency)
 ```

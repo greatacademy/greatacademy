@@ -19,6 +19,7 @@
     "@ga/content": "workspace:*",
     "@ga/db": "workspace:*",
     "@ga/judge": "workspace:*",
+    "@ga/subject-chinese": "workspace:*",
     "@ga/subject-english": "workspace:*"
   },
   "devDependencies": {
