@@ -112,7 +112,7 @@
 
 ### 8.1 母语课程
 
-每个年级一门，`chinese-grade-1` 到 `chinese-grade-9`；高中两门，`chinese-hs-required` 和 `chinese-hs-selective`，对应高中课标的必修和选择性必修。选修任务群和高考课程随后（§8.5）。
+每个年级一门，`chinese-grade-1` 到 `chinese-grade-9`；高中两门，`chinese-hs-required` 和 `chinese-hs-selective`，对应高中课标的必修和选择性必修。课标的选修课程不建成课程：课标把选修交给各校自主开设，高考不考，它的任务群是围绕整本书和专题的研讨与探究，掌握练习检查不了；这类作品在应用之外阅读，每本书配一个主题（§9）。高考课程见 §8.5。
 
 | 课程 | 最重的部分 |
 | :--- | :--- |

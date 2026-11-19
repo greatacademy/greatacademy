@@ -112,7 +112,7 @@ A course is a grade or a level. Its units are themes, each with characters, word
 
 ### 8.1 Native Courses
 
-One course per grade, `chinese-grade-1` to `chinese-grade-9`, and two for senior secondary school, `chinese-hs-required` and `chinese-hs-selective`, following the required and selective required courses of the senior standard. The elective task groups and a Gaokao course follow (§8.5).
+One course per grade, `chinese-grade-1` to `chinese-grade-9`, and two for senior secondary school, `chinese-hs-required` and `chinese-hs-selective`, following the required and selective required courses of the senior standard. The standard's electives are not built as courses: it leaves them to each school, the university entrance examination does not test them, and their task groups are seminars and research on whole works and themes, which mastery practice does not check; such works are read outside the app, with a topic per book (§9). The Gaokao course is in §8.5.
 
 | Course | What weighs most |
 | :--- | :--- |
