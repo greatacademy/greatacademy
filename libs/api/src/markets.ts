@@ -9,11 +9,13 @@ export interface Market {
   readonly status: MarketStatus;
   /** guardianBelow is the age under which a guardian must consent. */
   readonly guardianBelow: number;
+  /** adultAge is the age of majority, at which the adult band starts and a person can contract and pay alone. */
+  readonly adultAge: number;
   /** languages are those the notices and guardian pages must exist in. */
   readonly languages: readonly string[];
 }
 
-/** ADULT_AGE is when the adult band starts, in every market for now. */
+/** ADULT_AGE is when the adult band starts for an answer with no row. */
 export const ADULT_AGE = 18;
 
 /** OTHER_COUNTRY is the answer of someone from a market that has no row. */
@@ -21,16 +23,16 @@ export const OTHER_COUNTRY = "other";
 
 /** MARKETS is every market with a row. */
 export const MARKETS: readonly Market[] = [
-  { country: "US", status: "open", guardianBelow: 13, languages: ["en"] },
-  { country: "CA", status: "open", guardianBelow: 14, languages: ["en", "fr"] },
-  { country: "AU", status: "open", guardianBelow: 15, languages: ["en"] },
-  { country: "SG", status: "open", guardianBelow: 13, languages: ["en"] },
-  { country: "JP", status: "open", guardianBelow: 16, languages: ["ja"] },
-  { country: "KR", status: "open", guardianBelow: 14, languages: ["ko"] },
-  { country: "TW", status: "open", guardianBelow: 18, languages: ["zh-TW"] },
-  { country: "HK", status: "open-no-ai", guardianBelow: 18, languages: ["zh-TW"] },
-  { country: "BR", status: "open", guardianBelow: 16, languages: ["pt-BR"] },
-  { country: "CN", status: "closed", guardianBelow: 14, languages: ["zh-CN"] },
+  { country: "US", adultAge: 18, status: "open", guardianBelow: 13, languages: ["en"] },
+  { country: "CA", adultAge: 19, status: "open", guardianBelow: 14, languages: ["en", "fr"] },
+  { country: "AU", adultAge: 18, status: "open", guardianBelow: 15, languages: ["en"] },
+  { country: "SG", adultAge: 18, status: "open", guardianBelow: 13, languages: ["en"] },
+  { country: "JP", adultAge: 18, status: "open", guardianBelow: 16, languages: ["ja"] },
+  { country: "KR", adultAge: 19, status: "open", guardianBelow: 14, languages: ["ko"] },
+  { country: "TW", adultAge: 18, status: "open", guardianBelow: 18, languages: ["zh-TW"] },
+  { country: "HK", adultAge: 18, status: "open-no-ai", guardianBelow: 18, languages: ["zh-TW"] },
+  { country: "BR", adultAge: 18, status: "open", guardianBelow: 16, languages: ["pt-BR"] },
+  { country: "CN", adultAge: 18, status: "closed", guardianBelow: 14, languages: ["zh-CN"] },
 ];
 
 /** NOTICE_LANGUAGES are the languages the published notices exist in. */
@@ -84,11 +86,11 @@ export interface Band {
   readonly endsAt: number | null;
 }
 
-/** bandAt is the band of a person at a time, given when birthdays count from and the age of the guardian line. */
-export function bandAt(anchor: number, guardianBelow: number, now: number): Band {
+/** bandAt is the band of a person at a time, given when birthdays count from, the age of the guardian line and the age of majority. */
+export function bandAt(anchor: number, guardianBelow: number, now: number, adultAge = ADULT_AGE): Band {
   const line = addYears(anchor, guardianBelow);
   if (now < line) return { band: "child", endsAt: line };
-  const adult = addYears(anchor, ADULT_AGE);
+  const adult = addYears(anchor, adultAge);
   return now < adult ? { band: "teen", endsAt: adult } : { band: "adult", endsAt: null };
 }
 
@@ -97,30 +99,35 @@ export function guardianLine(country: string): number {
   return marketOf(country)?.guardianBelow ?? ADULT_AGE;
 }
 
+/** adultLine is the age of majority for an answer; with no row it is ADULT_AGE. */
+export function adultLine(country: string): number {
+  return marketOf(country)?.adultAge ?? ADULT_AGE;
+}
+
 /** ageBand answers the age question. A birth date that cannot be real is refused by returning undefined. */
 export function ageBand(country: string, year: number, month: number, now: number): Band | undefined {
   if (!Number.isInteger(year) || !Number.isInteger(month) || month < 1 || month > 12) return undefined;
   const anchor = birthAnchor(year, month);
   if (year < 1900 || anchor > now + 31 * 24 * 3600_000) return undefined;
-  return bandAt(anchor, guardianLine(country), now);
+  return bandAt(anchor, guardianLine(country), now, adultLine(country));
 }
 
 /** anchorFromBand recovers when birthdays count from out of a stored minor's band end, since the birth date is not stored. */
-export function anchorFromBand(band: AgeBand, endsAt: number, guardianBelow: number): number {
-  return addYears(endsAt, band === "teen" ? -ADULT_AGE : -guardianBelow);
+export function anchorFromBand(band: AgeBand, endsAt: number, guardianBelow: number, adultAge = ADULT_AGE): number {
+  return addYears(endsAt, band === "teen" ? -adultAge : -guardianBelow);
 }
 
 /** movedBand is a minor's band after moving country: the stricter of the two rows, never an older band than now. */
 export function movedBand(band: AgeBand, endsAt: number, from: string, to: string, now: number): Band {
-  const anchor = anchorFromBand(band, endsAt, guardianLine(from));
-  const next = bandAt(anchor, Math.max(guardianLine(from), guardianLine(to)), now);
+  const anchor = anchorFromBand(band, endsAt, guardianLine(from), adultLine(from));
+  const next = bandAt(anchor, Math.max(guardianLine(from), guardianLine(to)), now, Math.max(adultLine(from), adultLine(to)));
   return band === "child" && next.band !== "child" ? { band, endsAt } : next;
 }
 
 /** nextBand is the band a learner can confirm once theirs has ended; undefined while it lasts. */
 export function nextBand(band: AgeBand, endsAt: number | null, country: string, now: number): Band | undefined {
   if (band === "adult" || endsAt === null || now < endsAt) return undefined;
-  return bandAt(anchorFromBand(band, endsAt, guardianLine(country)), guardianLine(country), now);
+  return bandAt(anchorFromBand(band, endsAt, guardianLine(country), adultLine(country)), guardianLine(country), now, adultLine(country));
 }
 
 /** consentExpiry is when a consent granted at a time ends. */

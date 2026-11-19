@@ -42,6 +42,15 @@ describe("bands over time", () => {
     expect(nextBand("teen", later.endsAt, "US", later.endsAt!)?.band).toBe("adult");
   });
 
+  it("keeps a person a teen until the market's age of majority", () => {
+    const year = new Date(NOW).getUTCFullYear() - 19 + 1;
+    expect(ageBand("US", year, 1, NOW)?.band).toBe("adult");
+    const korean = ageBand("KR", year, 1, NOW)!;
+    expect(korean.band).toBe("teen");
+    expect(korean.endsAt).toBe(Date.UTC(year + 19, 1, 1));
+    expect(movedBand("teen", korean.endsAt!, "KR", "US", NOW).band).toBe("teen");
+  });
+
   it("takes the stricter row when moving, and never an older band", () => {
     const teen = bandAt(birthAnchor(2012, 1), 13, NOW);
     expect(teen.band).toBe("teen");
