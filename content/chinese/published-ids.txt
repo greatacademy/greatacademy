@@ -30,6 +30,14 @@ course chinese-level-7
 course chinese-level-8
 course chinese-level-9
 course chinese-pinyin
+topic book-andersen book-andersen-questions
+topic book-chinese-myths book-chinese-myths-questions
+topic book-dawn-blossoms book-dawn-blossoms-questions
+topic book-dream-of-red-chamber book-dream-of-red-chamber-questions
+topic book-insect-world book-insect-world-questions
+topic book-journey-to-the-west book-journey-to-the-west-questions
+topic book-robinson-crusoe book-robinson-crusoe-questions
+topic book-water-margin book-water-margin-questions
 topic classical-function-words-10-01 classical-function-words-10-01-nai classical-function-words-10-01-qie
 topic classical-function-words-10-02 classical-function-words-10-02-ruo classical-function-words-10-02-yan
 topic classical-function-words-10-03 classical-function-words-10-03-he classical-function-words-10-03-hu
@@ -48,6 +56,8 @@ topic components-2 components-2-find components-2-name
 topic components-meaning components-meaning-meaning components-meaning-shared
 topic connectives-1 connectives-1-choosing connectives-1-relations
 topic connectives-2 connectives-2-checking connectives-2-choosing
+topic dictionary-pinyin dictionary-pinyin-letter dictionary-pinyin-order
+topic dictionary-radicals dictionary-radicals-radical dictionary-radicals-strokes
 topic faulty-ambiguous faulty-ambiguous-finding faulty-ambiguous-fixing
 topic faulty-contradictions faulty-contradictions-finding faulty-contradictions-fixing
 topic faulty-illogical faulty-illogical-finding faulty-illogical-fixing
@@ -2564,6 +2574,17 @@ topic punctuation-semicolons punctuation-semicolons-checking punctuation-semicol
 topic punctuation-sentence-ends punctuation-sentence-ends-checking punctuation-sentence-ends-marks
 topic punctuation-speech punctuation-speech-checking punctuation-speech-marks
 topic punctuation-titles punctuation-titles-checking punctuation-titles-marks
+topic reading-aloud-1 reading-aloud-1-texts
+topic reading-aloud-10 reading-aloud-10-texts
+topic reading-aloud-11 reading-aloud-11-texts
+topic reading-aloud-2 reading-aloud-2-texts
+topic reading-aloud-3 reading-aloud-3-texts
+topic reading-aloud-4 reading-aloud-4-texts
+topic reading-aloud-5 reading-aloud-5-texts
+topic reading-aloud-6 reading-aloud-6-texts
+topic reading-aloud-7 reading-aloud-7-texts
+topic reading-aloud-8 reading-aloud-8-texts
+topic reading-aloud-9 reading-aloud-9-texts
 topic recite-ai-lian-shuo recite-ai-lian-shuo-lines recite-ai-lian-shuo-meaning recite-ai-lian-shuo-writing
 topic recite-bo-qin-huai recite-bo-qin-huai-lines recite-bo-qin-huai-meaning recite-bo-qin-huai-writing
 topic recite-bo-ya-gu-qin recite-bo-ya-gu-qin-lines recite-bo-ya-gu-qin-meaning recite-bo-ya-gu-qin-writing

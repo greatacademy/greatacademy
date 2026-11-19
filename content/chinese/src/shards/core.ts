@@ -2,6 +2,8 @@
 
 import type { ReadingUnitDef, TopicDef } from "@ga/content";
 
+import { bookTopics } from "../books/index.ts";
+import { dictionaryTopics } from "../characters/dictionary.ts";
 import { characterTopics } from "../characters/index.ts";
 import { classicalTopics } from "../classical/index.ts";
 import { gaokaoTopics } from "../gaokao/index.ts";
@@ -18,6 +20,7 @@ import { levelSixTopics } from "../level-6/index.ts";
 import { levelSevenTopics } from "../level-7/index.ts";
 import { levelEightTopics } from "../level-8/index.ts";
 import { levelNineTopics } from "../level-9/index.ts";
+import { readingAloudTopics } from "../oral/reading-aloud.ts";
 import { pinyinTopics } from "../pinyin/index.ts";
 import { heritageReading } from "../reading/heritage.ts";
 import { chineseReading } from "../reading/index.ts";
@@ -36,6 +39,7 @@ export const coreShardTopics: readonly TopicDef[] = [
   ...strokeOrderTopics,
   ...componentTopics,
   ...characterTopics,
+  ...dictionaryTopics,
   ...handwritingTopics,
   ...levelHandwritingTopics,
   ...wordTopics,
@@ -45,6 +49,8 @@ export const coreShardTopics: readonly TopicDef[] = [
   ...writingTopics.map((x) => x.topic),
   ...laterWritingTopics.map((x) => x.topic),
   ...recitationTopics,
+  ...readingAloudTopics.map((x) => x.topic),
+  ...bookTopics.map((x) => x.topic),
   ...classicalTopics,
   ...heritageTopics,
   ...levelOneTopics,

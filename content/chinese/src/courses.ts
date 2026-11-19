@@ -1,6 +1,8 @@
 import type { CourseDef, ModuleDef } from "@ga/content";
 import { t } from "@ga/content";
 
+import { bookTopics } from "./books/index.ts";
+import { dictionaryTopics } from "./characters/dictionary.ts";
 import { recognitionByGrade } from "./characters/index.ts";
 import { classicalDrillTopics, classicalPassages } from "./classical/index.ts";
 import { gaokaoCourse } from "./gaokao/index.ts";
@@ -17,6 +19,7 @@ import { levelSixCourse } from "./level-6/index.ts";
 import { levelSevenCourse } from "./level-7/index.ts";
 import { levelEightCourse } from "./level-8/index.ts";
 import { levelNineCourse } from "./level-9/index.ts";
+import { readingAloudTopics } from "./oral/reading-aloud.ts";
 import { heritageReading } from "./reading/heritage.ts";
 import { chineseReading } from "./reading/index.ts";
 import { recitedPoems } from "./recitation/index.ts";
@@ -110,6 +113,17 @@ function classicalModules(grade: number): readonly ModuleDef[] {
   ];
 }
 
+/** readingAloudUnits are a grade's unit of reading aloud and whole books, those it has. */
+function readingAloudUnits(grade: number): CourseDef["units"] {
+  const aloud = readingAloudTopics.filter((x) => x.grade === grade).map((x) => x.topic.id);
+  const books = bookTopics.filter((x) => x.grade === grade).map((x) => x.topic.id);
+  const modules: ModuleDef[] = [
+    ...(aloud.length > 0 ? [{ title: t("Reading Aloud", "朗读"), topics: aloud }] : []),
+    ...(books.length > 0 ? [{ title: t("Whole Books", "整本书阅读"), topics: books }] : []),
+  ];
+  return modules.length > 0 ? [{ title: t("Reading Aloud and Whole Books", "朗读与整本书阅读"), modules }] : [];
+}
+
 /** seniorCourse is a native course of senior secondary school; grade 10 is the required course and 11 the selective one. */
 function seniorCourse(grade: number, id: string, title: CourseDef["title"], description: CourseDef["description"]): CourseDef {
   return {
@@ -122,6 +136,7 @@ function seniorCourse(grade: number, id: string, title: CourseDef["title"], desc
       ...(wordModules(grade).length > 0 ? [{ title: t("Words", "词语"), modules: wordModules(grade) }] : []),
       ...(grammarModules(grade).length > 0 ? [{ title: t("Grammar and Rhetoric", "语法与修辞"), modules: grammarModules(grade) }] : []),
       ...(writingModules(grade).length > 0 ? [{ title: t("Writing", "写作"), modules: writingModules(grade) }] : []),
+      ...readingAloudUnits(grade),
       {
         title: t("Recitation", "积累与背诵"),
         modules: [
@@ -161,6 +176,14 @@ function gradeCourse(grade: number, description: CourseDef["description"]): Cour
             },
           ]
         : []),
+      ...(grade === 3
+        ? [
+            {
+              title: t("Using a Dictionary", "查字典"),
+              modules: [{ title: t("Using a Dictionary", "查字典"), topics: dictionaryTopics.map((x) => x.id) }],
+            },
+          ]
+        : []),
       { title: t("Characters", "识字"), modules: recognitionModules(grade) },
       ...(handOf(grade).length > 0 ? [{ title: t("Writing Characters", "写字"), modules: setModules(handOf(grade)) }] : []),
       ...(wordModules(grade).length > 0 ? [{ title: t("Words", "词语"), modules: wordModules(grade) }] : []),
@@ -168,6 +191,7 @@ function gradeCourse(grade: number, description: CourseDef["description"]): Cour
       ...(writingModules(grade).length > 0
         ? [{ title: t("Writing", grade >= 7 ? "写作" : grade <= 2 ? "写话" : "习作"), modules: writingModules(grade) }]
         : []),
+      ...readingAloudUnits(grade),
       {
         title: t("Recitation", "积累与背诵"),
         modules: [{ title: t("Classical Poems", "古诗词"), topics: recitedPoems.filter((p) => p.grade === grade).map((p) => p.topic.id) }],
