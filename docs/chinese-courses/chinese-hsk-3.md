@@ -6,7 +6,7 @@
 - **Level:** Level 3 of the new HSK, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 2](chinese-level-2.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 14 units · 256 topics (8 new, all practice-only) · 639 knowledge points
+- **Size:** 14 units · 258 topics (10 new, all practice-only) · 643 knowledge points
 
 ## The Test
 
@@ -14,7 +14,7 @@ The new HSK has nine levels built on the *Chinese Proficiency Grading Standards 
 
 ## Aim
 
-The course turns level 3 into test practice. It holds the units of [Chinese Level 3](chinese-level-3.md), so a learner who has not taken it learns it here, and then eight exam topics that mix the words and characters of every theme, as a test does, rather than one batch at a time. It teaches nothing new. Its own topics are practice-only: a lesson starts with practice, and the explanation appears only after a failed attempt. The topics it reuses keep their place in the graph, so a learner who has learned them in the level course is credited and moves on.
+The course turns level 3 into test practice. It holds the units of [Chinese Level 3](chinese-level-3.md), so a learner who has not taken it learns it here, and then ten exam topics that mix the words and characters of every theme, as a test does, rather than one batch at a time. It teaches nothing new. Its own topics are practice-only: a lesson starts with practice, and the explanation appears only after a failed attempt. The topics it reuses keep their place in the graph, so a learner who has learned them in the level course is credited and moves on.
 
 ## Units
 
@@ -29,9 +29,11 @@ The course turns level 3 into test practice. It holds the units of [Chinese Leve
 - `hsk-3-sentences` HSK 3: Building Sentences (practice-only; after the last sentence-building topic of level 3). The sentences of the sentence-building topics of level 3, mixed, each topic in turn: (1) short ones of three or four parts; (2) longer ones of five to seven.
 - `hsk-3-listening` HSK 3: Listening (practice-only; after the last listening topic of level 3). The words and sentences of every unit of level 3, heard without being seen, the units taking turns: (1) the meaning of a word heard, among three; (2) the word heard in a sentence, among three.
 - `hsk-3-speaking` HSK 3: Speaking (practice-only; after the last speaking topic of level 3). The same words and sentences, heard by a speech service: (1) a word said after its recording; (2) a sentence read aloud.
+- `hsk-3-dialogues` HSK 3: Dialogues and Talks (practice-only; after `hsk-3-listening`). Dialogues between a woman and a man, and talks by one speaker, written for this course in the characters of the levels it tests and heard in two voices without being seen, each with a question of three answers, as the listening paper asks: (1) short dialogues of two lines; (2) longer ones with several questions.
+- `hsk-3-passages` HSK 3: Reading Texts (practice-only; after `hsk-3-gaps`). Texts in the same characters, each with a question of three answers, as the reading paper asks: (1) short texts; (2) longer passages with several questions.
 - `hsk-3-writing` HSK 3: Writing (practice-only; after the last writing topic of level 3). Short texts written as the writing paper asks, judged by a model: a knowledge point for each kind of paragraph writing of level 3, with its tasks, judged by its three criteria.
 
-**Not yet practised:** the paper's other kinds of listening and reading, such as dialogues, talks and passages with questions, and the spoken tasks of the HSKK beyond repeating and reading aloud.
+**Not yet practised:** the spoken tasks of the HSKK beyond repeating and reading aloud.
 
 ## Simulated Students
 

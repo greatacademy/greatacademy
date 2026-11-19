@@ -6,7 +6,7 @@
 - **Level:** Level 4 of the new HSK, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 3](chinese-level-3.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 14 units · 251 topics (8 new, all practice-only) · 631 knowledge points · 4 conversations
+- **Size:** 14 units · 253 topics (10 new, all practice-only) · 635 knowledge points · 4 conversations
 
 ## The Test
 
@@ -14,7 +14,7 @@ The new HSK has nine levels built on the *Chinese Proficiency Grading Standards 
 
 ## Aim
 
-The course turns level 4 into test practice. It holds the units of [Chinese Level 4](chinese-level-4.md), so a learner who has not taken it learns it here, and then eight exam topics that mix the words and characters of every theme, as a test does, rather than one batch at a time. It teaches nothing new. Its own topics are practice-only: a lesson starts with practice, and the explanation appears only after a failed attempt. The topics it reuses keep their place in the graph, so a learner who has learned them in the level course is credited and moves on. The units' conversations come with them, 4 in all, spoken in Mandarin with an AI tutor and offered once an admin routes them.
+The course turns level 4 into test practice. It holds the units of [Chinese Level 4](chinese-level-4.md), so a learner who has not taken it learns it here, and then ten exam topics that mix the words and characters of every theme, as a test does, rather than one batch at a time. It teaches nothing new. Its own topics are practice-only: a lesson starts with practice, and the explanation appears only after a failed attempt. The topics it reuses keep their place in the graph, so a learner who has learned them in the level course is credited and moves on. The units' conversations come with them, 4 in all, spoken in Mandarin with an AI tutor and offered once an admin routes them.
 
 ## Units
 
@@ -28,10 +28,12 @@ The course turns level 4 into test practice. It holds the units of [Chinese Leve
 - `hsk-4-sentences` HSK 4: Building Sentences (practice-only; after the last sentence-building topic of level 4). The sentences of the sentence-building topics of level 4, mixed, each topic in turn: (1) short ones of three or four parts; (2) longer ones of five to seven.
 - `hsk-4-listening` HSK 4: Listening (practice-only; after the last listening topic of level 4). The words and sentences of every unit of level 4, heard without being seen, the units taking turns: (1) the meaning of a word heard, among three; (2) the word heard in a sentence, among three.
 - `hsk-4-speaking` HSK 4: Speaking (practice-only; after the last speaking topic of level 4). The same words and sentences, heard by a speech service: (1) a word said after its recording; (2) a sentence read aloud.
+- `hsk-4-dialogues` HSK 4: Dialogues and Talks (practice-only; after `hsk-4-listening`). Dialogues between a woman and a man, and talks by one speaker, written for this course in the characters of the levels it tests and heard in two voices without being seen, each with a question of four answers, as the listening paper asks: (1) short dialogues of two lines; (2) longer ones with several questions.
+- `hsk-4-passages` HSK 4: Reading Texts (practice-only; after `hsk-4-gaps`). Texts in the same characters, each with a question of four answers, as the reading paper asks: (1) short texts; (2) longer passages with several questions.
 - `hsk-4-writing` HSK 4: Writing (practice-only; after the last writing topic of level 4). Short texts written as the writing paper asks, judged by a model: a knowledge point for each kind of paragraph writing of level 4, with its tasks, judged by its three criteria.
 - `hsk-4-word-sentences` HSK 4: A Sentence with a Given Word (practice-only; after the last word topic of level 4). The first part of the writing paper: a sentence of one's own, at least eight characters, with a word of level 4 of two characters or more, one word in sixteen across the level, judged by a model on three criteria: the word is used, in its sense, in a correct sentence.
 
-**Not yet practised:** the paper's other kinds of listening and reading, such as dialogues, talks and passages with questions, and the spoken tasks of the HSKK beyond repeating and reading aloud.
+**Not yet practised:** the spoken tasks of the HSKK beyond repeating and reading aloud.
 
 ## Simulated Students
 

@@ -20,7 +20,7 @@ describe("listening", () => {
       });
     expect(played).toBeGreaterThan(0);
     expect([...missing]).toEqual([]);
-  });
+  }, 60_000);
 
   it("lists each recording the content asks for as it is now, so none is stale", () => {
     expect(recordings.filter((file) => !wantedRecordings().has(file))).toEqual([]);

@@ -67,6 +67,14 @@ import { writing as levelEightWriting } from "../level-8/writing-data.ts";
 import { levelNineCourse, levelNineLast } from "../level-9/index.ts";
 import { sentences as levelNineSentences } from "../level-9/sentence-data.ts";
 import { writing as levelNineWriting } from "../level-9/writing-data.ts";
+import { type ComprehensionData, comprehensionTopics } from "./comprehension.ts";
+import { comprehension as comprehensionOne } from "./comprehension-data/hsk-1.ts";
+import { comprehension as comprehensionTwo } from "./comprehension-data/hsk-2.ts";
+import { comprehension as comprehensionThree } from "./comprehension-data/hsk-3.ts";
+import { comprehension as comprehensionFour } from "./comprehension-data/hsk-4.ts";
+import { comprehension as comprehensionFive } from "./comprehension-data/hsk-5.ts";
+import { comprehension as comprehensionSix } from "./comprehension-data/hsk-6.ts";
+import { comprehension as comprehensionSevenToNine } from "./comprehension-data/hsk-7-9.ts";
 import { type LevelData, levelData } from "./data.ts";
 import { paperTopics } from "./paper.ts";
 import { writtenTopics } from "./written.ts";
@@ -556,9 +564,38 @@ function speechExam(spec: HskSpec): readonly TopicDef[] {
   ];
 }
 
+/** COMPREHENSION are the dialogues and passages of the HSK courses, by key. */
+const COMPREHENSION: Readonly<Record<string, ComprehensionData>> = {
+  "1": comprehensionOne,
+  "2": comprehensionTwo,
+  "3": comprehensionThree,
+  "4": comprehensionFour,
+  "5": comprehensionFive,
+  "6": comprehensionSix,
+  "7-9": comprehensionSevenToNine,
+};
+
+/** comprehensionExam builds the dialogues and passages of an HSK course, after its listening and its gaps. */
+function comprehensionExam(spec: HskSpec): readonly TopicDef[] {
+  const data = COMPREHENSION[spec.key];
+  if (!data) return [];
+  const id = (s: string): string => `hsk-${spec.key}-${s}`;
+  return comprehensionTopics(
+    { key: spec.key, name: spec.name, levels: spec.levels, listeningAfter: id("listening"), readingAfter: id("gaps") },
+    data,
+  );
+}
+
 /** hsk builds an HSK course and its exam topics. */
 function hsk(spec: HskSpec): { readonly course: CourseDef; readonly topics: readonly TopicDef[] } {
-  const topics = [...examTopics(spec), ...speechExam(spec), ...writtenTopics(spec.key), ...writingExam(spec), ...paperTopics(spec.key)];
+  const topics = [
+    ...examTopics(spec),
+    ...speechExam(spec),
+    ...comprehensionExam(spec),
+    ...writtenTopics(spec.key),
+    ...writingExam(spec),
+    ...paperTopics(spec.key),
+  ];
   const conversations = spec.courses.flatMap((c) => c.conversations ?? []);
   return {
     topics,

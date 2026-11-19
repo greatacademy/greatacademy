@@ -6,7 +6,7 @@
 - **Level:** Level 6 of the new HSK, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 5](chinese-level-5.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 14 units · 259 topics (8 new, all practice-only) · 661 knowledge points · 4 conversations
+- **Size:** 14 units · 261 topics (10 new, all practice-only) · 665 knowledge points · 4 conversations
 
 ## The Test
 
@@ -14,7 +14,7 @@ The new HSK has nine levels built on the *Chinese Proficiency Grading Standards 
 
 ## Aim
 
-The course turns level 6 into test practice. It holds the units of [Chinese Level 6](chinese-level-6.md), so a learner who has not taken it learns it here, and then eight exam topics that mix the words and characters of every theme, as a test does, rather than one batch at a time. It teaches nothing new. Its own topics are practice-only: a lesson starts with practice, and the explanation appears only after a failed attempt. The topics it reuses keep their place in the graph, so a learner who has learned them in the level course is credited and moves on. The units' conversations come with them, 4 in all, spoken in Mandarin with an AI tutor and offered once an admin routes them.
+The course turns level 6 into test practice. It holds the units of [Chinese Level 6](chinese-level-6.md), so a learner who has not taken it learns it here, and then ten exam topics that mix the words and characters of every theme, as a test does, rather than one batch at a time. It teaches nothing new. Its own topics are practice-only: a lesson starts with practice, and the explanation appears only after a failed attempt. The topics it reuses keep their place in the graph, so a learner who has learned them in the level course is credited and moves on. The units' conversations come with them, 4 in all, spoken in Mandarin with an AI tutor and offered once an admin routes them.
 
 ## Units
 
@@ -28,10 +28,12 @@ The course turns level 6 into test practice. It holds the units of [Chinese Leve
 - `hsk-6-sentences` HSK 6: Building Sentences (practice-only; after the last sentence-building topic of level 6). The sentences of the sentence-building topics of level 6, mixed, each topic in turn: (1) short ones of three or four parts; (2) longer ones of five to seven.
 - `hsk-6-listening` HSK 6: Listening (practice-only; after the last listening topic of level 6). The words and sentences of every unit of level 6, heard without being seen, the units taking turns: (1) the meaning of a word heard, among three; (2) the word heard in a sentence, among three.
 - `hsk-6-speaking` HSK 6: Speaking (practice-only; after the last speaking topic of level 6). The same words and sentences, heard by a speech service: (1) a word said after its recording; (2) a sentence read aloud.
+- `hsk-6-dialogues` HSK 6: Dialogues and Talks (practice-only; after `hsk-6-listening`). Dialogues between a woman and a man, and talks by one speaker, written for this course in the characters of the levels it tests and heard in two voices without being seen, each with a question of four answers, as the listening paper asks: (1) short dialogues of two lines; (2) longer ones with several questions.
+- `hsk-6-passages` HSK 6: Reading Texts (practice-only; after `hsk-6-gaps`). Texts in the same characters, each with a question of four answers, as the reading paper asks: (1) short texts; (2) longer passages with several questions.
 - `hsk-6-writing` HSK 6: Writing (practice-only; after the last writing topic of level 6). Short texts written as the writing paper asks, judged by a model: a knowledge point for each kind of paragraph writing of level 6, with its tasks, judged by its three criteria.
 - `hsk-6-practical-texts` HSK 6: A Practical Text (practice-only; after the last paragraph writing of level 6). The first part of the writing paper: a notice, post, letter or email of at least 150 characters for a stated purpose, sixteen tasks, judged by a model on three criteria: every point of the task is covered, the text has the form of its kind, and the language is clear and polite.
 
-**Not yet practised:** the paper's other kinds of listening and reading, such as dialogues, talks and passages with questions, and the spoken tasks of the HSKK beyond repeating and reading aloud.
+**Not yet practised:** the spoken tasks of the HSKK beyond repeating and reading aloud.
 
 ## Simulated Students
 

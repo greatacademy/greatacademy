@@ -6,7 +6,7 @@
 - **Level:** Level 2 of the new HSK, for learners of Chinese as a foreign language
 - **Prerequisite(s):** [Chinese Level 1](chinese-level-1.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 14 units · 224 topics (7 new, all practice-only) · 555 knowledge points
+- **Size:** 14 units · 226 topics (9 new, all practice-only) · 559 knowledge points
 
 ## The Test
 
@@ -14,7 +14,7 @@ The new HSK has nine levels built on the *Chinese Proficiency Grading Standards 
 
 ## Aim
 
-The course turns level 2 into test practice. It holds the units of [Chinese Level 2](chinese-level-2.md), so a learner who has not taken it learns it here, and then seven exam topics that mix the words and characters of every theme, as a test does, rather than one batch at a time. It teaches nothing new. Its own topics are practice-only: a lesson starts with practice, and the explanation appears only after a failed attempt. The topics it reuses keep their place in the graph, so a learner who has learned them in the level course is credited and moves on.
+The course turns level 2 into test practice. It holds the units of [Chinese Level 2](chinese-level-2.md), so a learner who has not taken it learns it here, and then nine exam topics that mix the words and characters of every theme, as a test does, rather than one batch at a time. It teaches nothing new. Its own topics are practice-only: a lesson starts with practice, and the explanation appears only after a failed attempt. The topics it reuses keep their place in the graph, so a learner who has learned them in the level course is credited and moves on.
 
 ## Units
 
@@ -29,8 +29,10 @@ The course turns level 2 into test practice. It holds the units of [Chinese Leve
 - `hsk-2-sentences` HSK 2: Building Sentences (practice-only; after the last sentence-building topic of level 2). The sentences of the sentence-building topics of level 2, mixed, each topic in turn: (1) short ones of three or four parts; (2) longer ones of five to seven.
 - `hsk-2-listening` HSK 2: Listening (practice-only; after the last listening topic of level 2). The words and sentences of every unit of level 2, heard without being seen, the units taking turns: (1) the meaning of a word heard, among three; (2) the word heard in a sentence, among three.
 - `hsk-2-speaking` HSK 2: Speaking (practice-only; after the last speaking topic of level 2). The same words and sentences, heard by a speech service: (1) a word said after its recording; (2) a sentence read aloud.
+- `hsk-2-dialogues` HSK 2: Dialogues and Talks (practice-only; after `hsk-2-listening`). Dialogues between a woman and a man, written for this course in the characters of the levels it tests and heard in two voices without being seen, each with a question of three answers, as the listening paper asks: (1) short dialogues of two lines; (2) longer ones with several questions.
+- `hsk-2-passages` HSK 2: Reading Texts (practice-only; after `hsk-2-gaps`). Texts in the same characters, each with a question of three answers, as the reading paper asks: (1) short texts; (2) longer passages with several questions.
 
-**Not yet practised:** the paper's other kinds of listening and reading, such as dialogues, talks and passages with questions, and the spoken tasks of the HSKK beyond repeating and reading aloud.
+**Not yet practised:** the spoken tasks of the HSKK beyond repeating and reading aloud.
 
 ## Simulated Students
 

@@ -1,5 +1,5 @@
 // The recordings of Chinese, read aloud by a synthetic voice and made by tools/audio: syllables with their tones,
-// words and sentences that listening problems play. A recording is named by a hash of the SSML it was made from, so
+// words, sentences, dialogues and talks that listening problems play. A recording is named by a hash of the SSML it was made from, so
 // that a text whose reading, voice or speed changes has no recording until it is made again. The web app serves them
 // at audio/chinese/; in development, from content/chinese/audio/files.
 
@@ -64,6 +64,30 @@ export function textSsml(text: string): string {
   return speak(readAs(text.replace(/\s+/gu, " ").trim()));
 }
 
+/** partner is the second speaker of a dialogue, a man's voice beside the usual one, at the same speed. */
+export const partner: Voice = { name: "zh-CN-YunxiNeural", lang: "zh-CN", rate: "-10%" };
+
+/** TURN_BREAK is the pause between the lines of a dialogue. */
+const TURN_BREAK = "600ms";
+
+/** Line is one line of a dialogue: who says it, the usual voice "a", a woman's, or its partner "b", a man's, and what is said. */
+export interface Line {
+  readonly speaker: "a" | "b";
+  readonly text: string;
+}
+
+/** dialogueSsml is the SSML that reads a dialogue aloud, each line in its speaker's voice with a pause between lines. */
+export function dialogueSsml(lines: readonly Line[]): string {
+  const inner = lines
+    .map((line, i) => {
+      const v = line.speaker === "a" ? voice : partner;
+      const pause = i < lines.length - 1 ? `<break time="${TURN_BREAK}"/>` : "";
+      return `<voice name="${v.name}"><prosody rate="${v.rate}">${readAs(line.text.replace(/\s+/gu, " ").trim())}${pause}</prosody></voice>`;
+    })
+    .join("");
+  return `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="${voice.lang}">${inner}</speak>`;
+}
+
 /**
  * syllableSsml is the SSML that says one syllable in a tone, written in the SAPI phone set of Azure AI Speech, where ü
  * is v: a character with that reading carries it, and the phoneme makes sure of the reading of one with several.
@@ -88,8 +112,8 @@ export interface Format {
 /** MP3 is 24 kHz mono MP3 at 48 kbit/s, ample for speech, which both apps play. */
 export const MP3: Format = { azure: "audio-24khz-48kbitrate-mono-mp3", ext: "mp3" };
 
-/** RecordingKind is what a recording reads: a syllable, a word or a sentence. */
-export type RecordingKind = "syllable" | "word" | "sentence";
+/** RecordingKind is what a recording reads: a syllable, a word, a sentence, a dialogue or a talk by one speaker. */
+export type RecordingKind = "syllable" | "word" | "sentence" | "dialogue" | "talk";
 
 /** Wanted is a recording the content asks for: what it reads, and the SSML and format it is made in. */
 export interface Wanted {
@@ -122,3 +146,9 @@ export const heard = (text: string): string => want([...text.trim()].length > 4 
 
 /** heardSyllable asks for the recording of a syllable in a tone, carried by a character with that reading, and gives its path. */
 export const heardSyllable = (char: string, plain: string, tone: number): string => want("syllable", syllableSsml(char, plain, tone));
+
+/** heardDialogue asks for the recording of a dialogue that a listening problem plays, and gives its path. */
+export const heardDialogue = (lines: readonly Line[]): string => want("dialogue", dialogueSsml(lines));
+
+/** heardTalk asks for the recording of a talk by one speaker, its sentences read in turn, and gives its path. */
+export const heardTalk = (text: string): string => want("talk", textSsml(text));
