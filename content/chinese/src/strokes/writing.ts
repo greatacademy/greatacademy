@@ -101,7 +101,7 @@ const listed = (entries: readonly CharacterEntry[]): string =>
     .join("\n");
 
 /** handGenerator writes each task of a batch in turn, tracing the character or not. */
-function handGenerator(tasks: readonly HandTask[], trace: boolean): Generator {
+export function handGenerator(tasks: readonly HandTask[], trace: boolean): Generator {
   return (rng: Rng): Problem => {
     const task = rng.cycle(tasks);
     const standard = medians.get(task.char)!;

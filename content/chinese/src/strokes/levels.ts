@@ -64,8 +64,8 @@ const LEVELS: readonly { readonly characters: ReadonlyMap<string, LevelOneCharac
   { characters: levelNineCharacters, topics: levelNineTopics },
 ];
 
-/** WORDS are each level's own words, from level 1, in teaching order. */
-const WORDS: readonly (readonly LevelOneWord[])[] = [
+/** levelWords are each level's own words, from level 1, in teaching order. */
+export const levelWords: readonly (readonly LevelOneWord[])[] = [
   wordBatches1,
   wordBatches2,
   wordBatches3,
@@ -152,7 +152,8 @@ function fillTask(c: LevelOneCharacter, k: number): HandTask {
 
 /** tasksOf are a character's tasks at a level: in its first words of the levels so far but itself, then by its reading and meaning. */
 function tasksOf(c: LevelOneCharacter, level: number): readonly HandTask[] {
-  const words = WORDS.slice(0, level)
+  const words = levelWords
+    .slice(0, level)
     .flat()
     .filter((w) => w.word !== c.char && w.word.includes(c.char))
     .slice(0, TASKS);

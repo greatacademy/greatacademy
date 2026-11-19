@@ -4,8 +4,8 @@
 // gap among five or six, matching words and meanings, telling a character from those that look like it, and putting
 // the parts of a sentence in order, practice in word order. Two more mix the units' listening and speaking: words and
 // sentences heard without being seen, words said after a recording and sentences read aloud. From HSK 3 on, a further
-// topic, judged by a model, writes the kinds of text of its levels' paragraph writing, and HSK 4 to 6 add the paper's own
-// tasks of paper.ts.
+// topic, judged by a model, writes the kinds of text of its levels' paragraph writing; HSK 2 and 3 add the paper's
+// characters from their pinyin of written.ts, and HSK 4 to 6 the paper's own tasks of paper.ts.
 
 import {
   type CourseDef,
@@ -69,6 +69,7 @@ import { sentences as levelNineSentences } from "../level-9/sentence-data.ts";
 import { writing as levelNineWriting } from "../level-9/writing-data.ts";
 import { type LevelData, levelData } from "./data.ts";
 import { paperTopics } from "./paper.ts";
+import { writtenTopics } from "./written.ts";
 
 /** examGroup is the shelf of the Chinese exam courses. */
 export const examGroup = t("Chinese Exams", "中文考试");
@@ -557,7 +558,7 @@ function speechExam(spec: HskSpec): readonly TopicDef[] {
 
 /** hsk builds an HSK course and its exam topics. */
 function hsk(spec: HskSpec): { readonly course: CourseDef; readonly topics: readonly TopicDef[] } {
-  const topics = [...examTopics(spec), ...speechExam(spec), ...writingExam(spec), ...paperTopics(spec.key)];
+  const topics = [...examTopics(spec), ...speechExam(spec), ...writtenTopics(spec.key), ...writingExam(spec), ...paperTopics(spec.key)];
   const conversations = spec.courses.flatMap((c) => c.conversations ?? []);
   return {
     topics,
@@ -620,7 +621,7 @@ const built = [
   })(),
 ];
 
-/** hskTopics are the 33 exam topics of the HSK courses: four a course, and writing from HSK 3 on. */
+/** hskTopics are the exam topics of the HSK courses: those every course has, and the writing of some. */
 export const hskTopics: readonly TopicDef[] = built.flatMap((b) => b.topics);
 
 /** hskCourses are the seven HSK courses, HSK 1 to 6 and HSK 7–9. */
