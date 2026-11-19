@@ -21,6 +21,7 @@ import { heritageReading } from "./reading/heritage.ts";
 import { chineseReading } from "./reading/index.ts";
 import { recitedPoems } from "./recitation/index.ts";
 import { componentTopics, strokeOrderTopics } from "./strokes/index.ts";
+import { handwritingByGrade } from "./strokes/writing.ts";
 import { wordBatches } from "./words/index.ts";
 import { earlySentenceTopics } from "./writing/early-sentences.ts";
 import { writingTopics } from "./writing/index.ts";
@@ -51,6 +52,10 @@ function recognitionModules(grade: number): readonly ModuleDef[] {
   }
   return modules;
 }
+
+/** handOf are the ids of a grade's writing batches. */
+const handOf = (grade: number): readonly string[] =>
+  (handwritingByGrade.find((g) => g.grade === grade)?.batches ?? []).map((b) => b.topic.id);
 
 /** idiomTopicsOf are the ids of a grade's idiom batches. */
 const idiomTopicsOf = (grade: number): readonly string[] =>
@@ -156,6 +161,7 @@ function gradeCourse(grade: number, description: CourseDef["description"]): Cour
           ]
         : []),
       { title: t("Characters", "识字"), modules: recognitionModules(grade) },
+      ...(handOf(grade).length > 0 ? [{ title: t("Writing Characters", "写字"), modules: setModules(handOf(grade)) }] : []),
       ...(wordModules(grade).length > 0 ? [{ title: t("Words", "词语"), modules: wordModules(grade) }] : []),
       ...(grammarModules(grade).length > 0 ? [{ title: t("Grammar and Punctuation", "语法与标点"), modules: grammarModules(grade) }] : []),
       ...(writingModules(grade).length > 0
@@ -207,14 +213,26 @@ const heritageOwn = (...ids: readonly string[]): readonly string[] =>
 const sentencesAfter = (batches: readonly string[]): readonly string[] =>
   earlySentenceTopics.filter((x) => x.topic.prerequisites.some((p) => batches.includes(p))).map((x) => x.topic.id);
 
-/** heritageCourse builds a heritage bridge: recognition batches of the native graph, with units before and after them. */
+/** handUpTo are the ids of the writing batches whose characters the given recognition batches, and those before, all teach. */
+function handUpTo(batches: readonly string[]): readonly string[] {
+  const taught = new Set(
+    recognitionByGrade.flatMap((g) => g.batches.filter((b) => batches.includes(b.topic.id)).flatMap((b) => b.entries.map((e) => e.char))),
+  );
+  const all = handwritingByGrade.flatMap((g) => g.batches);
+  const first = all.findIndex((b) => b.entries.some((e) => !taught.has(e.char)));
+  return all.slice(0, first === -1 ? all.length : first).map((b) => b.topic.id);
+}
+
+/** heritageCourse builds a heritage bridge: recognition batches of the native graph and writing those it can, with units before and after them. */
 function heritageCourse(
   n: number,
   description: CourseDef["description"],
   batches: readonly string[],
   own: readonly string[],
   before: CourseDef["units"] = [],
+  earlier: readonly string[] = [],
 ): CourseDef {
+  const hand = handUpTo([...earlier, ...batches]).filter((id) => !handUpTo(earlier).includes(id));
   return {
     id: `chinese-heritage-${n}`,
     title: t(`Chinese for Heritage Learners ${n}`, `华裔识字衔接 ${NUMERALS[n]}`),
@@ -223,6 +241,7 @@ function heritageCourse(
     units: [
       ...before,
       { title: t("Characters", "识字"), modules: setModules(batches) },
+      ...(hand.length > 0 ? [{ title: t("Writing Characters", "写字"), modules: setModules(hand) }] : []),
       ...(sentencesAfter(batches).length > 0
         ? [
             {
@@ -243,8 +262,8 @@ const heritageCourses: readonly CourseDef[] = [
   heritageCourse(
     1,
     t(
-      "For children and adults who speak Chinese but do not yet read it: pinyin, strokes and components, the first 600 common characters, characters that sound alike, and 的, 地, 得. Explanations are in the learner's language.",
-      "面向会说中文、还不识字的孩子和成人：拼音、笔画和偏旁，最常用的 600 个字，同音字，以及“的、地、得”。用学习者的语言讲解。",
+      "For children and adults who speak Chinese but do not yet read it: pinyin, strokes and components, the first 600 common characters, read and written by hand, characters that sound alike, and 的, 地, 得. Explanations are in the learner's language.",
+      "面向会说中文、还不识字的孩子和成人：拼音、笔画和偏旁，最常用的 600 个字，会认也会写，同音字，以及“的、地、得”。用学习者的语言讲解。",
     ),
     stageBatches(1).slice(0, HERITAGE_FIRST),
     heritageOwn("heritage-sound-alike", "heritage-de-and-pronouns"),
@@ -262,20 +281,24 @@ const heritageCourses: readonly CourseDef[] = [
   heritageCourse(
     2,
     t(
-      "The second literacy bridge: 1,000 more common characters, 1,600 in all, the written forms of everyday words and set phrases, and dialect words and their Mandarin. Explanations are in the learner's language.",
-      "第二门识字衔接课：再认识 1000 个常用字，累计 1600 字，学会常用词和成语的写法，分清方言词和普通话。用学习者的语言讲解。",
+      "The second literacy bridge: 1,000 more common characters, 1,600 in all, read and written by hand, the written forms of everyday words and set phrases, and dialect words and their Mandarin. Explanations are in the learner's language.",
+      "第二门识字衔接课：再认识并会写 1000 个常用字，累计 1600 字，学会常用词和成语的写法，分清方言词和普通话。用学习者的语言讲解。",
     ),
     stageBatches(1).slice(HERITAGE_FIRST),
     heritageOwn("heritage-written-forms", "heritage-dialect-words"),
+    [],
+    stageBatches(1).slice(0, HERITAGE_FIRST),
   ),
   heritageCourse(
     3,
     t(
-      "The third literacy bridge: 900 more common characters, the 2,500 of the first table, spoken and written Chinese, and reading traditional characters. Explanations are in the learner's language.",
-      "第三门识字衔接课：再认识 900 个常用字，读完常用字表一的 2500 字，分清口语和书面语，认识繁体字。用学习者的语言讲解。",
+      "The third literacy bridge: 900 more common characters, the 2,500 of the first table, read and written by hand, spoken and written Chinese, and reading traditional characters. Explanations are in the learner's language.",
+      "第三门识字衔接课：再认识并会写 900 个常用字，读完常用字表一的 2500 字，分清口语和书面语，认识繁体字。用学习者的语言讲解。",
     ),
     stageBatches(3),
     heritageOwn("heritage-register", "heritage-traditional"),
+    [],
+    stageBatches(1),
   ),
 ];
 
@@ -284,64 +307,64 @@ const baseCourses: readonly CourseDef[] = [
   gradeCourse(
     1,
     t(
-      "Chinese for native speakers in grade 1: pinyin, strokes and their order, reading about 800 common characters in words, and short poems to recite, in Chinese.",
-      "面向母语学习者的一年级语文：汉语拼音、笔画和笔顺，在词语中认读约 800 个常用字，背诵短诗，用中文讲解。",
+      "Chinese for native speakers in grade 1: pinyin, strokes and their order, reading about 800 common characters in words and writing 400 by hand, and short poems to recite, in Chinese.",
+      "面向母语学习者的一年级语文：汉语拼音、笔画和笔顺，在词语中认读约 800 个常用字，会写其中 400 个，背诵短诗，用中文讲解。",
     ),
   ),
   gradeCourse(
     2,
     t(
-      "Chinese for native speakers in grade 2: components, reading about 800 more common characters in words, and short poems to recite, in Chinese.",
-      "面向母语学习者的二年级语文：偏旁部首，在词语中再认读约 800 个常用字，背诵短诗，用中文讲解。",
+      "Chinese for native speakers in grade 2: components, reading about 800 more common characters in words and writing 400 more by hand, and short poems to recite, in Chinese.",
+      "面向母语学习者的二年级语文：偏旁部首，在词语中再认读约 800 个常用字，再会写 400 个，背诵短诗，用中文讲解。",
     ),
   ),
   gradeCourse(
     3,
     t(
-      "Chinese for native speakers in grade 3: reading the next 450 common characters in words, in Chinese.",
-      "面向母语学习者的三年级语文：在词语中认读常用字表中的约 450 个字，用中文讲解。",
+      "Chinese for native speakers in grade 3: reading the next 450 common characters in words and writing 400 more by hand, in Chinese.",
+      "面向母语学习者的三年级语文：在词语中认读常用字表中的约 450 个字，再会写 400 个，用中文讲解。",
     ),
   ),
   gradeCourse(
     4,
     t(
-      "Chinese for native speakers in grade 4: reading the 450 more common characters that complete the 2,500 of the first table, in Chinese.",
-      "面向母语学习者的四年级语文：再认读约 450 个常用字，读完常用字表一的 2500 字，用中文讲解。",
+      "Chinese for native speakers in grade 4: reading the 450 more common characters that complete the 2,500 of the first table, and writing 400 more by hand, 1,600 in all, in Chinese.",
+      "面向母语学习者的四年级语文：再认读约 450 个常用字，读完常用字表一的 2500 字，再会写 400 个，累计会写 1600 字，用中文讲解。",
     ),
   ),
   gradeCourse(
     5,
     t(
-      "Chinese for native speakers in grade 5: reading 250 characters of the second table of common characters in words, in Chinese.",
-      "面向母语学习者的五年级语文：在词语中认读常用字表二中的约 250 个字，用中文讲解。",
+      "Chinese for native speakers in grade 5: reading 250 characters of the second table of common characters in words and writing 450 more by hand, in Chinese.",
+      "面向母语学习者的五年级语文：在词语中认读常用字表二中的约 250 个字，再会写 450 个，用中文讲解。",
     ),
   ),
   gradeCourse(
     6,
     t(
-      "Chinese for native speakers in grade 6: reading 250 more characters of the second table, 3,000 characters in all by the end of primary school, in Chinese.",
-      "面向母语学习者的六年级语文：再认读常用字表二中的约 250 个字，小学阶段累计认识 3000 字，用中文讲解。",
+      "Chinese for native speakers in grade 6: reading 250 more characters of the second table, 3,000 characters in all by the end of primary school, and writing 450 more by hand, 2,500 in all, in Chinese.",
+      "面向母语学习者的六年级语文：再认读常用字表二中的约 250 个字，小学阶段累计认识 3000 字，再会写 450 个，累计会写 2500 字，用中文讲解。",
     ),
   ),
   gradeCourse(
     7,
     t(
-      "Chinese for native speakers in grade 7: reading about 170 more characters of the second table in words, forty words and thirty-two idioms, the rhetorical devices of metonymy, contrast, quotation and anadiplosis, twelve classical poems and eight passages of classical prose to recite, and the words of classical Chinese, in Chinese.",
-      "面向母语学习者的七年级语文：在词语中再认读常用字表二中的约 170 个字，积累四十个词语和三十二个成语，学习借代、对比、引用和顶真，背诵十二首古诗词和八篇文言文，学习文言字词，用中文讲解。",
+      "Chinese for native speakers in grade 7: reading about 170 more characters of the second table in words and writing 170 more by hand, forty words and thirty-two idioms, the rhetorical devices of metonymy, contrast, quotation and anadiplosis, twelve classical poems and eight passages of classical prose to recite, and the words of classical Chinese, in Chinese.",
+      "面向母语学习者的七年级语文：在词语中再认读常用字表二中的约 170 个字，再会写 170 个，积累四十个词语和三十二个成语，学习借代、对比、引用和顶真，背诵十二首古诗词和八篇文言文，学习文言字词，用中文讲解。",
     ),
   ),
   gradeCourse(
     8,
     t(
-      "Chinese for native speakers in grade 8: reading about 170 more characters of the second table in words, forty words and thirty-two idioms, mixed-up sentence structures, twelve classical poems and eight passages of classical prose to recite, and the usages of 其 and 为, in Chinese.",
-      "面向母语学习者的八年级语文：在词语中再认读常用字表二中的约 170 个字，积累四十个词语和三十二个成语，辨析句式杂糅的病句，背诵十二首古诗词和八篇文言文，学习“其”“为”的用法，用中文讲解。",
+      "Chinese for native speakers in grade 8: reading about 170 more characters of the second table in words and writing 160 more by hand, forty words and thirty-two idioms, mixed-up sentence structures, twelve classical poems and eight passages of classical prose to recite, and the usages of 其 and 为, in Chinese.",
+      "面向母语学习者的八年级语文：在词语中再认读常用字表二中的约 170 个字，再会写 160 个，积累四十个词语和三十二个成语，辨析句式杂糅的病句，背诵十二首古诗词和八篇文言文，学习“其”“为”的用法，用中文讲解。",
     ),
   ),
   gradeCourse(
     9,
     t(
-      "Chinese for native speakers in grade 9: reading the last characters of the second table, all 3,500 common characters by the end of junior secondary school, forty words and thirty-two idioms, illogical sentences, twelve classical poems and eight passages of classical prose to recite, and borrowed characters, in Chinese.",
-      "面向母语学习者的九年级语文：认读常用字表二中余下的字，初中阶段累计认识 3500 个常用字，积累四十个词语和三十二个成语，辨析不合逻辑的病句，背诵十二首古诗词和八篇文言文，学习通假字，用中文讲解。",
+      "Chinese for native speakers in grade 9: reading the last characters of the second table, all 3,500 common characters by the end of junior secondary school, writing 170 more by hand, 3,000 in all, forty words and thirty-two idioms, illogical sentences, twelve classical poems and eight passages of classical prose to recite, and borrowed characters, in Chinese.",
+      "面向母语学习者的九年级语文：认读常用字表二中余下的字，初中阶段累计认识 3500 个常用字，再会写 170 个，累计会写 3000 字，积累四十个词语和三十二个成语，辨析不合逻辑的病句，背诵十二首古诗词和八篇文言文，学习通假字，用中文讲解。",
     ),
   ),
   seniorCourse(

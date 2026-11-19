@@ -6,11 +6,11 @@
 - **Level:** Grade 2, native speakers
 - **Prerequisite(s):** Grade 1, or reading its 800 characters
 - **Language of explanation:** Chinese
-- **Size:** 5 units · 87 topics (3 of components, 66 of characters, 4 of words, 4 of sentence building, 10 of recitation) · 188 knowledge points
+- **Size:** 6 units · 127 topics (3 of components, 66 of characters, 40 of writing characters, 4 of words, 4 of sentence building, 10 of recitation) · 268 knowledge points
 
 ## Aim
 
-By the end of grade 2 a learner names the common components and what they suggest of a character's meaning, reads about 800 more common characters in words, 1,600 in all, tells them from characters that look alike, knows forty more words, and recites ten more classical poems with their meaning.
+By the end of grade 2 a learner names the common components and what they suggest of a character's meaning, reads about 800 more common characters in words, 1,600 in all, tells them from characters that look alike, knows forty more words, and recites ten more classical poems with their meaning. They write 400 characters by hand, stroke by stroke in the standard order, 800 in all.
 
 ## Units
 
@@ -123,7 +123,70 @@ By the end of grade 2 a learner names the common components and what they sugges
 - `recognizing-characters-2-65` Grade 2 Characters, Set 65: Reading Them; Telling Them Apart
 - `recognizing-characters-2-66` Grade 2 Characters, Set 66: Reading Them; Telling Them Apart
 
-### 3. Words
+### 3. Writing Characters
+
+**Sets 1 to 6**
+
+- `writing-characters-2-01` Grade 2 Writing, Set 1: Tracing Them; Writing Them
+- `writing-characters-2-02` Grade 2 Writing, Set 2: Tracing Them; Writing Them
+- `writing-characters-2-03` Grade 2 Writing, Set 3: Tracing Them; Writing Them
+- `writing-characters-2-04` Grade 2 Writing, Set 4: Tracing Them; Writing Them
+- `writing-characters-2-05` Grade 2 Writing, Set 5: Tracing Them; Writing Them
+- `writing-characters-2-06` Grade 2 Writing, Set 6: Tracing Them; Writing Them
+
+**Sets 7 to 12**
+
+- `writing-characters-2-07` Grade 2 Writing, Set 7: Tracing Them; Writing Them
+- `writing-characters-2-08` Grade 2 Writing, Set 8: Tracing Them; Writing Them
+- `writing-characters-2-09` Grade 2 Writing, Set 9: Tracing Them; Writing Them
+- `writing-characters-2-10` Grade 2 Writing, Set 10: Tracing Them; Writing Them
+- `writing-characters-2-11` Grade 2 Writing, Set 11: Tracing Them; Writing Them
+- `writing-characters-2-12` Grade 2 Writing, Set 12: Tracing Them; Writing Them
+
+**Sets 13 to 18**
+
+- `writing-characters-2-13` Grade 2 Writing, Set 13: Tracing Them; Writing Them
+- `writing-characters-2-14` Grade 2 Writing, Set 14: Tracing Them; Writing Them
+- `writing-characters-2-15` Grade 2 Writing, Set 15: Tracing Them; Writing Them
+- `writing-characters-2-16` Grade 2 Writing, Set 16: Tracing Them; Writing Them
+- `writing-characters-2-17` Grade 2 Writing, Set 17: Tracing Them; Writing Them
+- `writing-characters-2-18` Grade 2 Writing, Set 18: Tracing Them; Writing Them
+
+**Sets 19 to 24**
+
+- `writing-characters-2-19` Grade 2 Writing, Set 19: Tracing Them; Writing Them
+- `writing-characters-2-20` Grade 2 Writing, Set 20: Tracing Them; Writing Them
+- `writing-characters-2-21` Grade 2 Writing, Set 21: Tracing Them; Writing Them
+- `writing-characters-2-22` Grade 2 Writing, Set 22: Tracing Them; Writing Them
+- `writing-characters-2-23` Grade 2 Writing, Set 23: Tracing Them; Writing Them
+- `writing-characters-2-24` Grade 2 Writing, Set 24: Tracing Them; Writing Them
+
+**Sets 25 to 30**
+
+- `writing-characters-2-25` Grade 2 Writing, Set 25: Tracing Them; Writing Them
+- `writing-characters-2-26` Grade 2 Writing, Set 26: Tracing Them; Writing Them
+- `writing-characters-2-27` Grade 2 Writing, Set 27: Tracing Them; Writing Them
+- `writing-characters-2-28` Grade 2 Writing, Set 28: Tracing Them; Writing Them
+- `writing-characters-2-29` Grade 2 Writing, Set 29: Tracing Them; Writing Them
+- `writing-characters-2-30` Grade 2 Writing, Set 30: Tracing Them; Writing Them
+
+**Sets 31 to 36**
+
+- `writing-characters-2-31` Grade 2 Writing, Set 31: Tracing Them; Writing Them
+- `writing-characters-2-32` Grade 2 Writing, Set 32: Tracing Them; Writing Them
+- `writing-characters-2-33` Grade 2 Writing, Set 33: Tracing Them; Writing Them
+- `writing-characters-2-34` Grade 2 Writing, Set 34: Tracing Them; Writing Them
+- `writing-characters-2-35` Grade 2 Writing, Set 35: Tracing Them; Writing Them
+- `writing-characters-2-36` Grade 2 Writing, Set 36: Tracing Them; Writing Them
+
+**Sets 37 to 40**
+
+- `writing-characters-2-37` Grade 2 Writing, Set 37: Tracing Them; Writing Them
+- `writing-characters-2-38` Grade 2 Writing, Set 38: Tracing Them; Writing Them
+- `writing-characters-2-39` Grade 2 Writing, Set 39: Tracing Them; Writing Them
+- `writing-characters-2-40` Grade 2 Writing, Set 40: Tracing Them; Writing Them
+
+### 4. Words
 
 **Words**
 
@@ -132,7 +195,7 @@ By the end of grade 2 a learner names the common components and what they sugges
 - `words-2-03` Grade 2 Words: Animals and Plants: What They Mean; Using Them; Near-Synonyms and Antonyms
 - `words-2-04` Grade 2 Words: Around Us: What They Mean; Using Them; Near-Synonyms and Antonyms
 
-### 4. Writing
+### 5. Writing
 
 **Building Sentences**
 
@@ -141,7 +204,7 @@ By the end of grade 2 a learner names the common components and what they sugges
 - `sentences-2-03` Building Sentences 3: Grade 2 Characters, Sets 34 to 50: Short Sentences; Longer Sentences
 - `sentences-2-04` Building Sentences 4: Grade 2 Characters, Sets 51 to 66: Short Sentences; Longer Sentences
 
-### 5. Recitation
+### 6. Recitation
 
 **Classical Poems**
 

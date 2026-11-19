@@ -23,6 +23,7 @@ import { heritageReading } from "../reading/heritage.ts";
 import { chineseReading } from "../reading/index.ts";
 import { recitationTopics } from "../recitation/index.ts";
 import { componentTopics, strokeOrderTopics } from "../strokes/index.ts";
+import { handwritingTopics } from "../strokes/writing.ts";
 import { wordTopics } from "../words/index.ts";
 import { earlySentenceTopics } from "../writing/early-sentences.ts";
 import { writingTopics } from "../writing/index.ts";
@@ -34,6 +35,7 @@ export const coreShardTopics: readonly TopicDef[] = [
   ...strokeOrderTopics,
   ...componentTopics,
   ...characterTopics,
+  ...handwritingTopics,
   ...wordTopics,
   ...idiomTopics,
   ...grammarTopics,

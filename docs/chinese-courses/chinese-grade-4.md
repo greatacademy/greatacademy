@@ -6,11 +6,11 @@
 - **Level:** Grade 4, native speakers
 - **Prerequisite(s):** Grade 3
 - **Language of explanation:** Chinese
-- **Size:** 5 units · 61 topics (37 of characters, 8 of words, 6 of grammar and punctuation, 2 of writing, 8 of recitation) · 138 knowledge points · 9 passages in 3 reading units
+- **Size:** 6 units · 101 topics (37 of characters, 40 of writing characters, 8 of words, 6 of grammar and punctuation, 2 of writing, 8 of recitation) · 218 knowledge points · 9 passages in 3 reading units
 
 ## Aim
 
-By the end of grade 4 a learner has read the 2,500 characters of the first table, uses title marks and ellipses, matches the pairs of 只要, 只有, 即使, 无论 and 既然, changes 把 sentences into 被 sentences and back, finds and corrects sentences with a missing part or a mismatch, and recites eight more poems. Passages include fables, short biographies and letters. In writing judged by a model, they tell an event with its beginning, course and end, and write a letter.
+By the end of grade 4 a learner has read the 2,500 characters of the first table, uses title marks and ellipses, matches the pairs of 只要, 只有, 即使, 无论 and 既然, changes 把 sentences into 被 sentences and back, finds and corrects sentences with a missing part or a mismatch, and recites eight more poems. Passages include fables, short biographies and letters. In writing judged by a model, they tell an event with its beginning, course and end, and write a letter. They write 400 characters by hand, stroke by stroke in the standard order, 1,600 in all.
 
 ## Units
 
@@ -74,7 +74,70 @@ By the end of grade 4 a learner has read the 2,500 characters of the first table
 
 - `recognizing-characters-4-37` Grade 4 Characters, Set 37: Reading Them; Telling Them Apart
 
-### 2. Words
+### 2. Writing Characters
+
+**Sets 1 to 6**
+
+- `writing-characters-4-01` Grade 4 Writing, Set 1: Tracing Them; Writing Them
+- `writing-characters-4-02` Grade 4 Writing, Set 2: Tracing Them; Writing Them
+- `writing-characters-4-03` Grade 4 Writing, Set 3: Tracing Them; Writing Them
+- `writing-characters-4-04` Grade 4 Writing, Set 4: Tracing Them; Writing Them
+- `writing-characters-4-05` Grade 4 Writing, Set 5: Tracing Them; Writing Them
+- `writing-characters-4-06` Grade 4 Writing, Set 6: Tracing Them; Writing Them
+
+**Sets 7 to 12**
+
+- `writing-characters-4-07` Grade 4 Writing, Set 7: Tracing Them; Writing Them
+- `writing-characters-4-08` Grade 4 Writing, Set 8: Tracing Them; Writing Them
+- `writing-characters-4-09` Grade 4 Writing, Set 9: Tracing Them; Writing Them
+- `writing-characters-4-10` Grade 4 Writing, Set 10: Tracing Them; Writing Them
+- `writing-characters-4-11` Grade 4 Writing, Set 11: Tracing Them; Writing Them
+- `writing-characters-4-12` Grade 4 Writing, Set 12: Tracing Them; Writing Them
+
+**Sets 13 to 18**
+
+- `writing-characters-4-13` Grade 4 Writing, Set 13: Tracing Them; Writing Them
+- `writing-characters-4-14` Grade 4 Writing, Set 14: Tracing Them; Writing Them
+- `writing-characters-4-15` Grade 4 Writing, Set 15: Tracing Them; Writing Them
+- `writing-characters-4-16` Grade 4 Writing, Set 16: Tracing Them; Writing Them
+- `writing-characters-4-17` Grade 4 Writing, Set 17: Tracing Them; Writing Them
+- `writing-characters-4-18` Grade 4 Writing, Set 18: Tracing Them; Writing Them
+
+**Sets 19 to 24**
+
+- `writing-characters-4-19` Grade 4 Writing, Set 19: Tracing Them; Writing Them
+- `writing-characters-4-20` Grade 4 Writing, Set 20: Tracing Them; Writing Them
+- `writing-characters-4-21` Grade 4 Writing, Set 21: Tracing Them; Writing Them
+- `writing-characters-4-22` Grade 4 Writing, Set 22: Tracing Them; Writing Them
+- `writing-characters-4-23` Grade 4 Writing, Set 23: Tracing Them; Writing Them
+- `writing-characters-4-24` Grade 4 Writing, Set 24: Tracing Them; Writing Them
+
+**Sets 25 to 30**
+
+- `writing-characters-4-25` Grade 4 Writing, Set 25: Tracing Them; Writing Them
+- `writing-characters-4-26` Grade 4 Writing, Set 26: Tracing Them; Writing Them
+- `writing-characters-4-27` Grade 4 Writing, Set 27: Tracing Them; Writing Them
+- `writing-characters-4-28` Grade 4 Writing, Set 28: Tracing Them; Writing Them
+- `writing-characters-4-29` Grade 4 Writing, Set 29: Tracing Them; Writing Them
+- `writing-characters-4-30` Grade 4 Writing, Set 30: Tracing Them; Writing Them
+
+**Sets 31 to 36**
+
+- `writing-characters-4-31` Grade 4 Writing, Set 31: Tracing Them; Writing Them
+- `writing-characters-4-32` Grade 4 Writing, Set 32: Tracing Them; Writing Them
+- `writing-characters-4-33` Grade 4 Writing, Set 33: Tracing Them; Writing Them
+- `writing-characters-4-34` Grade 4 Writing, Set 34: Tracing Them; Writing Them
+- `writing-characters-4-35` Grade 4 Writing, Set 35: Tracing Them; Writing Them
+- `writing-characters-4-36` Grade 4 Writing, Set 36: Tracing Them; Writing Them
+
+**Sets 37 to 40**
+
+- `writing-characters-4-37` Grade 4 Writing, Set 37: Tracing Them; Writing Them
+- `writing-characters-4-38` Grade 4 Writing, Set 38: Tracing Them; Writing Them
+- `writing-characters-4-39` Grade 4 Writing, Set 39: Tracing Them; Writing Them
+- `writing-characters-4-40` Grade 4 Writing, Set 40: Tracing Them; Writing Them
+
+### 3. Words
 
 **Words**
 
@@ -90,7 +153,7 @@ By the end of grade 4 a learner has read the 2,500 characters of the first table
 - `idioms-4-03` Grade 4 Idioms, Set 3: What They Mean; Using Them; Writing Them
 - `idioms-4-04` Grade 4 Idioms, Set 4: What They Mean; Using Them; Writing Them
 
-### 3. Grammar and Punctuation
+### 4. Grammar and Punctuation
 
 **Punctuation**
 
@@ -110,14 +173,14 @@ By the end of grade 4 a learner has read the 2,500 characters of the first table
 - `faulty-missing-parts` Faulty Sentences: Missing Parts: Finding the Fault; Correcting It
 - `faulty-mismatches` Faulty Sentences: Words That Do Not Go Together: Finding the Fault; Correcting It
 
-### 4. Writing
+### 5. Writing
 
 **Writing**
 
 - `writing-4-event` Telling an Event: Beginning, Course and End; The Important Moment in Detail
 - `writing-4-letter` Writing a Letter: The Form of a Letter; What the Reader Wants to Know
 
-### 5. Recitation
+### 6. Recitation
 
 **Classical Poems**
 

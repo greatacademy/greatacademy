@@ -1,7 +1,7 @@
 // Strokes and components, the first topics of writing in grades 1 and 2 (docs/chinese-curriculum.md §5.2): the names
 // of strokes and how many a character has, the rules of stroke order, and the components that a character's meaning
 // often comes from. Every question is about simple characters a child meets first; the order of their strokes follows
-// the standard order of the general standard characters. Writing characters by hand waits for stroke data (C3.1).
+// the standard order of the general standard characters. Writing characters by hand is in writing.ts.
 
 import { type Text, type TopicDef, t } from "@ga/content";
 

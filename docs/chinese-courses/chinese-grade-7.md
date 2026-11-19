@@ -6,11 +6,11 @@
 - **Level:** Grade 7, native speakers
 - **Prerequisite(s):** Grade 6
 - **Language of explanation:** Chinese
-- **Size:** 6 units · 46 topics (14 of characters, 8 of words and idioms, 1 of grammar and punctuation, 2 of writing, 12 of recitation, 9 of classical Chinese) · 120 knowledge points
+- **Size:** 7 units · 63 topics (14 of characters, 17 of writing characters, 8 of words and idioms, 1 of grammar and punctuation, 2 of writing, 12 of recitation, 9 of classical Chinese) · 154 knowledge points
 
 ## Aim
 
-By the end of grade 7 a learner reads about 170 more characters of the second table in words, uses forty more words and thirty-two idioms, recognizes metonymy, contrast, quotation and anadiplosis, recites twelve classical poems and eight passages of classical prose, knows the content words of those passages and puts their sentences into modern Chinese. In writing judged by a model, they make the centre of a narrative stand out and catch the details that reveal a person.
+By the end of grade 7 a learner reads about 170 more characters of the second table in words, uses forty more words and thirty-two idioms, recognizes metonymy, contrast, quotation and anadiplosis, recites twelve classical poems and eight passages of classical prose, knows the content words of those passages and puts their sentences into modern Chinese. In writing judged by a model, they make the centre of a narrative stand out and catch the details that reveal a person. They write 170 characters by hand, stroke by stroke in the standard order, 2,670 in all.
 
 ## Units
 
@@ -39,7 +39,35 @@ By the end of grade 7 a learner reads about 170 more characters of the second ta
 - `recognizing-characters-7-13` Grade 7 Characters, Set 13: Reading Them; Telling Them Apart
 - `recognizing-characters-7-14` Grade 7 Characters, Set 14: Reading Them; Telling Them Apart
 
-### 2. Words
+### 2. Writing Characters
+
+**Sets 1 to 6**
+
+- `writing-characters-7-01` Grade 7 Writing, Set 1: Tracing Them; Writing Them
+- `writing-characters-7-02` Grade 7 Writing, Set 2: Tracing Them; Writing Them
+- `writing-characters-7-03` Grade 7 Writing, Set 3: Tracing Them; Writing Them
+- `writing-characters-7-04` Grade 7 Writing, Set 4: Tracing Them; Writing Them
+- `writing-characters-7-05` Grade 7 Writing, Set 5: Tracing Them; Writing Them
+- `writing-characters-7-06` Grade 7 Writing, Set 6: Tracing Them; Writing Them
+
+**Sets 7 to 12**
+
+- `writing-characters-7-07` Grade 7 Writing, Set 7: Tracing Them; Writing Them
+- `writing-characters-7-08` Grade 7 Writing, Set 8: Tracing Them; Writing Them
+- `writing-characters-7-09` Grade 7 Writing, Set 9: Tracing Them; Writing Them
+- `writing-characters-7-10` Grade 7 Writing, Set 10: Tracing Them; Writing Them
+- `writing-characters-7-11` Grade 7 Writing, Set 11: Tracing Them; Writing Them
+- `writing-characters-7-12` Grade 7 Writing, Set 12: Tracing Them; Writing Them
+
+**Sets 13 to 17**
+
+- `writing-characters-7-13` Grade 7 Writing, Set 13: Tracing Them; Writing Them
+- `writing-characters-7-14` Grade 7 Writing, Set 14: Tracing Them; Writing Them
+- `writing-characters-7-15` Grade 7 Writing, Set 15: Tracing Them; Writing Them
+- `writing-characters-7-16` Grade 7 Writing, Set 16: Tracing Them; Writing Them
+- `writing-characters-7-17` Grade 7 Writing, Set 17: Tracing Them; Writing Them
+
+### 3. Words
 
 **Words**
 
@@ -55,18 +83,18 @@ By the end of grade 7 a learner reads about 170 more characters of the second ta
 - `idioms-7-03` Grade 7 Idioms, Set 3: What They Mean; Using Them; Writing Them
 - `idioms-7-04` Grade 7 Idioms, Set 4: What They Mean; Using Them; Writing Them
 
-### 3. Grammar and Punctuation
+### 4. Grammar and Punctuation
 
 - `rhetoric-3` Rhetoric: Metonymy, Contrast, Quotation, Anadiplosis: Naming the Device; Finding the Device
 
-### 4. Writing
+### 5. Writing
 
 **Writing**
 
 - `writing-7-center` Making the Centre Stand Out: Material That Serves the Centre; Detail Where It Matters
 - `writing-7-detail` Catching the Telling Detail: Looking Closely; Details That Mean Something
 
-### 5. Recitation
+### 6. Recitation
 
 - `recite-guan-cang-hai` Viewing the Blue Sea: Reciting the Lines; What the Lines Mean; Writing the Lines
 - `recite-wen-wang-chang-ling` Hearing Wang Changling Was Demoted to Longbiao: Reciting the Lines; What the Lines Mean; Writing the Lines
@@ -81,7 +109,7 @@ By the end of grade 7 a learner reads about 170 more characters of the second ta
 - `recite-wan-chun` Late Spring: Reciting the Lines; What the Lines Mean; Writing the Lines
 - `recite-deng-you-zhou-tai-ge` Song on Climbing the Youzhou Terrace: Reciting the Lines; What the Lines Mean; Writing the Lines
 
-### 6. Classical Chinese
+### 7. Classical Chinese
 
 **Classical Passages**
 

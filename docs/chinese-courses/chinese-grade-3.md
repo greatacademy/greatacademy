@@ -6,11 +6,11 @@
 - **Level:** Grade 3, native speakers
 - **Prerequisite(s):** Grades 1 and 2, or reading their 1,600 characters
 - **Language of explanation:** Chinese
-- **Size:** 5 units · 60 topics (38 of characters, 8 of words, 4 of grammar and punctuation, 2 of writing, 8 of recitation) · 136 knowledge points · 9 passages in 3 reading units
+- **Size:** 6 units · 100 topics (38 of characters, 40 of writing characters, 8 of words, 4 of grammar and punctuation, 2 of writing, 8 of recitation) · 216 knowledge points · 9 passages in 3 reading units
 
 ## Aim
 
-By the end of grade 3 a learner reads about 450 more common characters in words, knows the words and idioms of four themes, ends sentences with the right mark, uses commas, enumeration commas and the marks of speech, joins clauses with 因为, 虽然, 如果 and 不但, and recites eight classical poems with their meaning. They read short narrative and expository passages and answer what they say. In writing judged by a model, they write a paragraph about one idea and an observation diary.
+By the end of grade 3 a learner reads about 450 more common characters in words, knows the words and idioms of four themes, ends sentences with the right mark, uses commas, enumeration commas and the marks of speech, joins clauses with 因为, 虽然, 如果 and 不但, and recites eight classical poems with their meaning. They read short narrative and expository passages and answer what they say. In writing judged by a model, they write a paragraph about one idea and an observation diary. They write 400 characters by hand, stroke by stroke in the standard order, 1,200 in all.
 
 ## Units
 
@@ -75,7 +75,70 @@ By the end of grade 3 a learner reads about 450 more common characters in words,
 - `recognizing-characters-3-37` Grade 3 Characters, Set 37: Reading Them; Telling Them Apart
 - `recognizing-characters-3-38` Grade 3 Characters, Set 38: Reading Them; Telling Them Apart
 
-### 2. Words
+### 2. Writing Characters
+
+**Sets 1 to 6**
+
+- `writing-characters-3-01` Grade 3 Writing, Set 1: Tracing Them; Writing Them
+- `writing-characters-3-02` Grade 3 Writing, Set 2: Tracing Them; Writing Them
+- `writing-characters-3-03` Grade 3 Writing, Set 3: Tracing Them; Writing Them
+- `writing-characters-3-04` Grade 3 Writing, Set 4: Tracing Them; Writing Them
+- `writing-characters-3-05` Grade 3 Writing, Set 5: Tracing Them; Writing Them
+- `writing-characters-3-06` Grade 3 Writing, Set 6: Tracing Them; Writing Them
+
+**Sets 7 to 12**
+
+- `writing-characters-3-07` Grade 3 Writing, Set 7: Tracing Them; Writing Them
+- `writing-characters-3-08` Grade 3 Writing, Set 8: Tracing Them; Writing Them
+- `writing-characters-3-09` Grade 3 Writing, Set 9: Tracing Them; Writing Them
+- `writing-characters-3-10` Grade 3 Writing, Set 10: Tracing Them; Writing Them
+- `writing-characters-3-11` Grade 3 Writing, Set 11: Tracing Them; Writing Them
+- `writing-characters-3-12` Grade 3 Writing, Set 12: Tracing Them; Writing Them
+
+**Sets 13 to 18**
+
+- `writing-characters-3-13` Grade 3 Writing, Set 13: Tracing Them; Writing Them
+- `writing-characters-3-14` Grade 3 Writing, Set 14: Tracing Them; Writing Them
+- `writing-characters-3-15` Grade 3 Writing, Set 15: Tracing Them; Writing Them
+- `writing-characters-3-16` Grade 3 Writing, Set 16: Tracing Them; Writing Them
+- `writing-characters-3-17` Grade 3 Writing, Set 17: Tracing Them; Writing Them
+- `writing-characters-3-18` Grade 3 Writing, Set 18: Tracing Them; Writing Them
+
+**Sets 19 to 24**
+
+- `writing-characters-3-19` Grade 3 Writing, Set 19: Tracing Them; Writing Them
+- `writing-characters-3-20` Grade 3 Writing, Set 20: Tracing Them; Writing Them
+- `writing-characters-3-21` Grade 3 Writing, Set 21: Tracing Them; Writing Them
+- `writing-characters-3-22` Grade 3 Writing, Set 22: Tracing Them; Writing Them
+- `writing-characters-3-23` Grade 3 Writing, Set 23: Tracing Them; Writing Them
+- `writing-characters-3-24` Grade 3 Writing, Set 24: Tracing Them; Writing Them
+
+**Sets 25 to 30**
+
+- `writing-characters-3-25` Grade 3 Writing, Set 25: Tracing Them; Writing Them
+- `writing-characters-3-26` Grade 3 Writing, Set 26: Tracing Them; Writing Them
+- `writing-characters-3-27` Grade 3 Writing, Set 27: Tracing Them; Writing Them
+- `writing-characters-3-28` Grade 3 Writing, Set 28: Tracing Them; Writing Them
+- `writing-characters-3-29` Grade 3 Writing, Set 29: Tracing Them; Writing Them
+- `writing-characters-3-30` Grade 3 Writing, Set 30: Tracing Them; Writing Them
+
+**Sets 31 to 36**
+
+- `writing-characters-3-31` Grade 3 Writing, Set 31: Tracing Them; Writing Them
+- `writing-characters-3-32` Grade 3 Writing, Set 32: Tracing Them; Writing Them
+- `writing-characters-3-33` Grade 3 Writing, Set 33: Tracing Them; Writing Them
+- `writing-characters-3-34` Grade 3 Writing, Set 34: Tracing Them; Writing Them
+- `writing-characters-3-35` Grade 3 Writing, Set 35: Tracing Them; Writing Them
+- `writing-characters-3-36` Grade 3 Writing, Set 36: Tracing Them; Writing Them
+
+**Sets 37 to 40**
+
+- `writing-characters-3-37` Grade 3 Writing, Set 37: Tracing Them; Writing Them
+- `writing-characters-3-38` Grade 3 Writing, Set 38: Tracing Them; Writing Them
+- `writing-characters-3-39` Grade 3 Writing, Set 39: Tracing Them; Writing Them
+- `writing-characters-3-40` Grade 3 Writing, Set 40: Tracing Them; Writing Them
+
+### 3. Words
 
 **Words**
 
@@ -91,7 +154,7 @@ By the end of grade 3 a learner reads about 450 more common characters in words,
 - `idioms-3-03` Grade 3 Idioms, Set 3: What They Mean; Using Them; Writing Them
 - `idioms-3-04` Grade 3 Idioms, Set 4: What They Mean; Using Them; Writing Them
 
-### 3. Grammar and Punctuation
+### 4. Grammar and Punctuation
 
 **Punctuation**
 
@@ -103,14 +166,14 @@ By the end of grade 3 a learner reads about 450 more common characters in words,
 
 - `connectives-1` Connectives: Because, Although, If, Not Only: Choosing the Connectives; Naming the Relation
 
-### 4. Writing
+### 5. Writing
 
 **Writing**
 
 - `writing-3-paragraph` A Paragraph about One Idea: Stating the Idea; Showing It with Examples
 - `writing-3-diary` An Observation Diary: Looking Closely; Noticing What Changes
 
-### 5. Recitation
+### 6. Recitation
 
 **Classical Poems**
 

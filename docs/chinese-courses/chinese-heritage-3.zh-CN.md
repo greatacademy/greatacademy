@@ -6,11 +6,11 @@
 - **程度：** 识字衔接 三，面向会说中文的学习者
 - **先修：** [华裔识字衔接 二](chinese-heritage-2.zh-CN.md)
 - **讲解语言：** 界面语言：中文或英文
-- **规模：** 2 个单元 · 77 个主题（识字 75，自有主题 2）· 154 个知识点
+- **规模：** 3 个单元 · 167 个主题（识字 75，写字 90，自有主题 2）· 334 个知识点
 
 ## 目标
 
-第三门衔接课用三、四年级的 900 个字读完字表一的 2500 字，分清口语和书面语，并能认读繁体字。学完后，诊断把学习者放进与其阅读水平相符的年级课程。其中的字就是母语课程的识字主题；为年龄更大的学习者写的文章尚待编写。
+第三门衔接课用三、四年级的 900 个字读完字表一的 2500 字，分清口语和书面语，并能认读繁体字。学完后，诊断把学习者放进与其阅读水平相符的年级课程。其中的字就是母语课程的识字主题；为年龄更大的学习者写的文章尚待编写。按笔顺手写其中 900 个字，累计 2500 个。
 
 ## 单元
 
@@ -130,7 +130,144 @@
 - `recognizing-characters-4-37` 四年级识字 第37组：读准字音；分清字形
 - `recognizing-characters-3-38` 三年级识字 第38组：读准字音；分清字形
 
-### 2. 我手写我口
+### 2. 写字
+
+**第1至6组**
+
+- `writing-characters-5-01` 五年级写字 第1组：描红；默写
+- `writing-characters-5-02` 五年级写字 第2组：描红；默写
+- `writing-characters-5-03` 五年级写字 第3组：描红；默写
+- `writing-characters-5-04` 五年级写字 第4组：描红；默写
+- `writing-characters-5-05` 五年级写字 第5组：描红；默写
+- `writing-characters-5-06` 五年级写字 第6组：描红；默写
+
+**第7至12组**
+
+- `writing-characters-5-07` 五年级写字 第7组：描红；默写
+- `writing-characters-5-08` 五年级写字 第8组：描红；默写
+- `writing-characters-5-09` 五年级写字 第9组：描红；默写
+- `writing-characters-5-10` 五年级写字 第10组：描红；默写
+- `writing-characters-5-11` 五年级写字 第11组：描红；默写
+- `writing-characters-5-12` 五年级写字 第12组：描红；默写
+
+**第13至18组**
+
+- `writing-characters-5-13` 五年级写字 第13组：描红；默写
+- `writing-characters-5-14` 五年级写字 第14组：描红；默写
+- `writing-characters-5-15` 五年级写字 第15组：描红；默写
+- `writing-characters-5-16` 五年级写字 第16组：描红；默写
+- `writing-characters-5-17` 五年级写字 第17组：描红；默写
+- `writing-characters-5-18` 五年级写字 第18组：描红；默写
+
+**第19至24组**
+
+- `writing-characters-5-19` 五年级写字 第19组：描红；默写
+- `writing-characters-5-20` 五年级写字 第20组：描红；默写
+- `writing-characters-5-21` 五年级写字 第21组：描红；默写
+- `writing-characters-5-22` 五年级写字 第22组：描红；默写
+- `writing-characters-5-23` 五年级写字 第23组：描红；默写
+- `writing-characters-5-24` 五年级写字 第24组：描红；默写
+
+**第25至30组**
+
+- `writing-characters-5-25` 五年级写字 第25组：描红；默写
+- `writing-characters-5-26` 五年级写字 第26组：描红；默写
+- `writing-characters-5-27` 五年级写字 第27组：描红；默写
+- `writing-characters-5-28` 五年级写字 第28组：描红；默写
+- `writing-characters-5-29` 五年级写字 第29组：描红；默写
+- `writing-characters-5-30` 五年级写字 第30组：描红；默写
+
+**第31至36组**
+
+- `writing-characters-5-31` 五年级写字 第31组：描红；默写
+- `writing-characters-5-32` 五年级写字 第32组：描红；默写
+- `writing-characters-5-33` 五年级写字 第33组：描红；默写
+- `writing-characters-5-34` 五年级写字 第34组：描红；默写
+- `writing-characters-5-35` 五年级写字 第35组：描红；默写
+- `writing-characters-5-36` 五年级写字 第36组：描红；默写
+
+**第37至42组**
+
+- `writing-characters-5-37` 五年级写字 第37组：描红；默写
+- `writing-characters-5-38` 五年级写字 第38组：描红；默写
+- `writing-characters-5-39` 五年级写字 第39组：描红；默写
+- `writing-characters-5-40` 五年级写字 第40组：描红；默写
+- `writing-characters-5-41` 五年级写字 第41组：描红；默写
+- `writing-characters-5-42` 五年级写字 第42组：描红；默写
+
+**第43至48组**
+
+- `writing-characters-5-43` 五年级写字 第43组：描红；默写
+- `writing-characters-5-44` 五年级写字 第44组：描红；默写
+- `writing-characters-5-45` 五年级写字 第45组：描红；默写
+- `writing-characters-6-01` 六年级写字 第1组：描红；默写
+- `writing-characters-6-02` 六年级写字 第2组：描红；默写
+- `writing-characters-6-03` 六年级写字 第3组：描红；默写
+
+**第49至54组**
+
+- `writing-characters-6-04` 六年级写字 第4组：描红；默写
+- `writing-characters-6-05` 六年级写字 第5组：描红；默写
+- `writing-characters-6-06` 六年级写字 第6组：描红；默写
+- `writing-characters-6-07` 六年级写字 第7组：描红；默写
+- `writing-characters-6-08` 六年级写字 第8组：描红；默写
+- `writing-characters-6-09` 六年级写字 第9组：描红；默写
+
+**第55至60组**
+
+- `writing-characters-6-10` 六年级写字 第10组：描红；默写
+- `writing-characters-6-11` 六年级写字 第11组：描红；默写
+- `writing-characters-6-12` 六年级写字 第12组：描红；默写
+- `writing-characters-6-13` 六年级写字 第13组：描红；默写
+- `writing-characters-6-14` 六年级写字 第14组：描红；默写
+- `writing-characters-6-15` 六年级写字 第15组：描红；默写
+
+**第61至66组**
+
+- `writing-characters-6-16` 六年级写字 第16组：描红；默写
+- `writing-characters-6-17` 六年级写字 第17组：描红；默写
+- `writing-characters-6-18` 六年级写字 第18组：描红；默写
+- `writing-characters-6-19` 六年级写字 第19组：描红；默写
+- `writing-characters-6-20` 六年级写字 第20组：描红；默写
+- `writing-characters-6-21` 六年级写字 第21组：描红；默写
+
+**第67至72组**
+
+- `writing-characters-6-22` 六年级写字 第22组：描红；默写
+- `writing-characters-6-23` 六年级写字 第23组：描红；默写
+- `writing-characters-6-24` 六年级写字 第24组：描红；默写
+- `writing-characters-6-25` 六年级写字 第25组：描红；默写
+- `writing-characters-6-26` 六年级写字 第26组：描红；默写
+- `writing-characters-6-27` 六年级写字 第27组：描红；默写
+
+**第73至78组**
+
+- `writing-characters-6-28` 六年级写字 第28组：描红；默写
+- `writing-characters-6-29` 六年级写字 第29组：描红；默写
+- `writing-characters-6-30` 六年级写字 第30组：描红；默写
+- `writing-characters-6-31` 六年级写字 第31组：描红；默写
+- `writing-characters-6-32` 六年级写字 第32组：描红；默写
+- `writing-characters-6-33` 六年级写字 第33组：描红；默写
+
+**第79至84组**
+
+- `writing-characters-6-34` 六年级写字 第34组：描红；默写
+- `writing-characters-6-35` 六年级写字 第35组：描红；默写
+- `writing-characters-6-36` 六年级写字 第36组：描红；默写
+- `writing-characters-6-37` 六年级写字 第37组：描红；默写
+- `writing-characters-6-38` 六年级写字 第38组：描红；默写
+- `writing-characters-6-39` 六年级写字 第39组：描红；默写
+
+**第85至90组**
+
+- `writing-characters-6-40` 六年级写字 第40组：描红；默写
+- `writing-characters-6-41` 六年级写字 第41组：描红；默写
+- `writing-characters-6-42` 六年级写字 第42组：描红；默写
+- `writing-characters-6-43` 六年级写字 第43组：描红；默写
+- `writing-characters-6-44` 六年级写字 第44组：描红；默写
+- `writing-characters-6-45` 六年级写字 第45组：描红；默写
+
+### 3. 我手写我口
 
 - `heritage-register` 口语和书面语：书面用词；通知的说法
 - `heritage-traditional` 繁体字：单字；词语

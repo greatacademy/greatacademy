@@ -6,11 +6,11 @@
 - **程度：** 识字衔接 二，面向会说中文的学习者
 - **先修：** [华裔识字衔接 一](chinese-heritage-1.zh-CN.md)
 - **讲解语言：** 界面语言：中文或英文
-- **规模：** 3 个单元 · 90 个主题（识字 83，连词成句 5，自有主题 2）· 180 个知识点
+- **规模：** 4 个单元 · 190 个主题（识字 83，写字 100，连词成句 5，自有主题 2）· 380 个知识点
 
 ## 目标
 
-第二门衔接课再认识一、二年级教的其余 1000 个字，累计 1600 字；学会已经会说的常用词和成语的写法，以及常见粤语、上海话词语的普通话说法。其中的字就是母语课程的识字主题；为年龄更大的学习者写的文章尚待编写。
+第二门衔接课再认识一、二年级教的其余 1000 个字，累计 1600 字；学会已经会说的常用词和成语的写法，以及常见粤语、上海话词语的普通话说法。其中的字就是母语课程的识字主题；为年龄更大的学习者写的文章尚待编写。按笔顺手写其中 1000 个字，累计 1600 个。
 
 ## 单元
 
@@ -141,7 +141,160 @@
 - `recognizing-characters-2-65` 二年级识字 第65组：读准字音；分清字形
 - `recognizing-characters-2-66` 二年级识字 第66组：读准字音；分清字形
 
-### 2. 连词成句
+### 2. 写字
+
+**第1至6组**
+
+- `writing-characters-2-21` 二年级写字 第21组：描红；默写
+- `writing-characters-2-22` 二年级写字 第22组：描红；默写
+- `writing-characters-2-23` 二年级写字 第23组：描红；默写
+- `writing-characters-2-24` 二年级写字 第24组：描红；默写
+- `writing-characters-2-25` 二年级写字 第25组：描红；默写
+- `writing-characters-2-26` 二年级写字 第26组：描红；默写
+
+**第7至12组**
+
+- `writing-characters-2-27` 二年级写字 第27组：描红；默写
+- `writing-characters-2-28` 二年级写字 第28组：描红；默写
+- `writing-characters-2-29` 二年级写字 第29组：描红；默写
+- `writing-characters-2-30` 二年级写字 第30组：描红；默写
+- `writing-characters-2-31` 二年级写字 第31组：描红；默写
+- `writing-characters-2-32` 二年级写字 第32组：描红；默写
+
+**第13至18组**
+
+- `writing-characters-2-33` 二年级写字 第33组：描红；默写
+- `writing-characters-2-34` 二年级写字 第34组：描红；默写
+- `writing-characters-2-35` 二年级写字 第35组：描红；默写
+- `writing-characters-2-36` 二年级写字 第36组：描红；默写
+- `writing-characters-2-37` 二年级写字 第37组：描红；默写
+- `writing-characters-2-38` 二年级写字 第38组：描红；默写
+
+**第19至24组**
+
+- `writing-characters-2-39` 二年级写字 第39组：描红；默写
+- `writing-characters-2-40` 二年级写字 第40组：描红；默写
+- `writing-characters-3-01` 三年级写字 第1组：描红；默写
+- `writing-characters-3-02` 三年级写字 第2组：描红；默写
+- `writing-characters-3-03` 三年级写字 第3组：描红；默写
+- `writing-characters-3-04` 三年级写字 第4组：描红；默写
+
+**第25至30组**
+
+- `writing-characters-3-05` 三年级写字 第5组：描红；默写
+- `writing-characters-3-06` 三年级写字 第6组：描红；默写
+- `writing-characters-3-07` 三年级写字 第7组：描红；默写
+- `writing-characters-3-08` 三年级写字 第8组：描红；默写
+- `writing-characters-3-09` 三年级写字 第9组：描红；默写
+- `writing-characters-3-10` 三年级写字 第10组：描红；默写
+
+**第31至36组**
+
+- `writing-characters-3-11` 三年级写字 第11组：描红；默写
+- `writing-characters-3-12` 三年级写字 第12组：描红；默写
+- `writing-characters-3-13` 三年级写字 第13组：描红；默写
+- `writing-characters-3-14` 三年级写字 第14组：描红；默写
+- `writing-characters-3-15` 三年级写字 第15组：描红；默写
+- `writing-characters-3-16` 三年级写字 第16组：描红；默写
+
+**第37至42组**
+
+- `writing-characters-3-17` 三年级写字 第17组：描红；默写
+- `writing-characters-3-18` 三年级写字 第18组：描红；默写
+- `writing-characters-3-19` 三年级写字 第19组：描红；默写
+- `writing-characters-3-20` 三年级写字 第20组：描红；默写
+- `writing-characters-3-21` 三年级写字 第21组：描红；默写
+- `writing-characters-3-22` 三年级写字 第22组：描红；默写
+
+**第43至48组**
+
+- `writing-characters-3-23` 三年级写字 第23组：描红；默写
+- `writing-characters-3-24` 三年级写字 第24组：描红；默写
+- `writing-characters-3-25` 三年级写字 第25组：描红；默写
+- `writing-characters-3-26` 三年级写字 第26组：描红；默写
+- `writing-characters-3-27` 三年级写字 第27组：描红；默写
+- `writing-characters-3-28` 三年级写字 第28组：描红；默写
+
+**第49至54组**
+
+- `writing-characters-3-29` 三年级写字 第29组：描红；默写
+- `writing-characters-3-30` 三年级写字 第30组：描红；默写
+- `writing-characters-3-31` 三年级写字 第31组：描红；默写
+- `writing-characters-3-32` 三年级写字 第32组：描红；默写
+- `writing-characters-3-33` 三年级写字 第33组：描红；默写
+- `writing-characters-3-34` 三年级写字 第34组：描红；默写
+
+**第55至60组**
+
+- `writing-characters-3-35` 三年级写字 第35组：描红；默写
+- `writing-characters-3-36` 三年级写字 第36组：描红；默写
+- `writing-characters-3-37` 三年级写字 第37组：描红；默写
+- `writing-characters-3-38` 三年级写字 第38组：描红；默写
+- `writing-characters-3-39` 三年级写字 第39组：描红；默写
+- `writing-characters-3-40` 三年级写字 第40组：描红；默写
+
+**第61至66组**
+
+- `writing-characters-4-01` 四年级写字 第1组：描红；默写
+- `writing-characters-4-02` 四年级写字 第2组：描红；默写
+- `writing-characters-4-03` 四年级写字 第3组：描红；默写
+- `writing-characters-4-04` 四年级写字 第4组：描红；默写
+- `writing-characters-4-05` 四年级写字 第5组：描红；默写
+- `writing-characters-4-06` 四年级写字 第6组：描红；默写
+
+**第67至72组**
+
+- `writing-characters-4-07` 四年级写字 第7组：描红；默写
+- `writing-characters-4-08` 四年级写字 第8组：描红；默写
+- `writing-characters-4-09` 四年级写字 第9组：描红；默写
+- `writing-characters-4-10` 四年级写字 第10组：描红；默写
+- `writing-characters-4-11` 四年级写字 第11组：描红；默写
+- `writing-characters-4-12` 四年级写字 第12组：描红；默写
+
+**第73至78组**
+
+- `writing-characters-4-13` 四年级写字 第13组：描红；默写
+- `writing-characters-4-14` 四年级写字 第14组：描红；默写
+- `writing-characters-4-15` 四年级写字 第15组：描红；默写
+- `writing-characters-4-16` 四年级写字 第16组：描红；默写
+- `writing-characters-4-17` 四年级写字 第17组：描红；默写
+- `writing-characters-4-18` 四年级写字 第18组：描红；默写
+
+**第79至84组**
+
+- `writing-characters-4-19` 四年级写字 第19组：描红；默写
+- `writing-characters-4-20` 四年级写字 第20组：描红；默写
+- `writing-characters-4-21` 四年级写字 第21组：描红；默写
+- `writing-characters-4-22` 四年级写字 第22组：描红；默写
+- `writing-characters-4-23` 四年级写字 第23组：描红；默写
+- `writing-characters-4-24` 四年级写字 第24组：描红；默写
+
+**第85至90组**
+
+- `writing-characters-4-25` 四年级写字 第25组：描红；默写
+- `writing-characters-4-26` 四年级写字 第26组：描红；默写
+- `writing-characters-4-27` 四年级写字 第27组：描红；默写
+- `writing-characters-4-28` 四年级写字 第28组：描红；默写
+- `writing-characters-4-29` 四年级写字 第29组：描红；默写
+- `writing-characters-4-30` 四年级写字 第30组：描红；默写
+
+**第91至96组**
+
+- `writing-characters-4-31` 四年级写字 第31组：描红；默写
+- `writing-characters-4-32` 四年级写字 第32组：描红；默写
+- `writing-characters-4-33` 四年级写字 第33组：描红；默写
+- `writing-characters-4-34` 四年级写字 第34组：描红；默写
+- `writing-characters-4-35` 四年级写字 第35组：描红；默写
+- `writing-characters-4-36` 四年级写字 第36组：描红；默写
+
+**第97至100组**
+
+- `writing-characters-4-37` 四年级写字 第37组：描红；默写
+- `writing-characters-4-38` 四年级写字 第38组：描红；默写
+- `writing-characters-4-39` 四年级写字 第39组：描红；默写
+- `writing-characters-4-40` 四年级写字 第40组：描红；默写
+
+### 3. 连词成句
 
 **连词成句**
 
@@ -151,7 +304,7 @@
 - `sentences-2-03` 连词成句 3：二年级识字第34至50组：短句；长句
 - `sentences-2-04` 连词成句 4：二年级识字第51至66组：短句；长句
 
-### 3. 我手写我口
+### 4. 我手写我口
 
 - `heritage-written-forms` 会说也会写：常用词；成语
 - `heritage-dialect-words` 方言词和普通话：普通话怎么说；方言怎么说

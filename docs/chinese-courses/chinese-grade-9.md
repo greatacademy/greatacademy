@@ -6,11 +6,11 @@
 - **Level:** Grade 9, native speakers
 - **Prerequisite(s):** Grade 8
 - **Language of explanation:** Chinese
-- **Size:** 6 units · 46 topics (14 of characters, 8 of words and idioms, 1 of grammar and punctuation, 2 of writing, 12 of recitation, 9 of classical Chinese) · 120 knowledge points
+- **Size:** 7 units · 63 topics (14 of characters, 17 of writing characters, 8 of words and idioms, 1 of grammar and punctuation, 2 of writing, 12 of recitation, 9 of classical Chinese) · 154 knowledge points
 
 ## Aim
 
-By the end of grade 9 a learner has read all 3,500 common characters, the goal of junior secondary school, uses forty more words and thirty-two idioms, finds and corrects illogical sentences, recites twelve classical poems and eight passages of classical prose, and reads the borrowed characters of classical Chinese. In writing judged by a model, they argue a claim with evidence and two methods of argument, and write a whole narrative held by a thread.
+By the end of grade 9 a learner has read all 3,500 common characters, the goal of junior secondary school, uses forty more words and thirty-two idioms, finds and corrects illogical sentences, recites twelve classical poems and eight passages of classical prose, and reads the borrowed characters of classical Chinese. In writing judged by a model, they argue a claim with evidence and two methods of argument, and write a whole narrative held by a thread. They write 170 characters by hand, stroke by stroke in the standard order, 3,000 in all.
 
 ## Units
 
@@ -39,7 +39,35 @@ By the end of grade 9 a learner has read all 3,500 common characters, the goal o
 - `recognizing-characters-9-13` Grade 9 Characters, Set 13: Reading Them; Telling Them Apart
 - `recognizing-characters-9-14` Grade 9 Characters, Set 14: Reading Them; Telling Them Apart
 
-### 2. Words
+### 2. Writing Characters
+
+**Sets 1 to 6**
+
+- `writing-characters-9-01` Grade 9 Writing, Set 1: Tracing Them; Writing Them
+- `writing-characters-9-02` Grade 9 Writing, Set 2: Tracing Them; Writing Them
+- `writing-characters-9-03` Grade 9 Writing, Set 3: Tracing Them; Writing Them
+- `writing-characters-9-04` Grade 9 Writing, Set 4: Tracing Them; Writing Them
+- `writing-characters-9-05` Grade 9 Writing, Set 5: Tracing Them; Writing Them
+- `writing-characters-9-06` Grade 9 Writing, Set 6: Tracing Them; Writing Them
+
+**Sets 7 to 12**
+
+- `writing-characters-9-07` Grade 9 Writing, Set 7: Tracing Them; Writing Them
+- `writing-characters-9-08` Grade 9 Writing, Set 8: Tracing Them; Writing Them
+- `writing-characters-9-09` Grade 9 Writing, Set 9: Tracing Them; Writing Them
+- `writing-characters-9-10` Grade 9 Writing, Set 10: Tracing Them; Writing Them
+- `writing-characters-9-11` Grade 9 Writing, Set 11: Tracing Them; Writing Them
+- `writing-characters-9-12` Grade 9 Writing, Set 12: Tracing Them; Writing Them
+
+**Sets 13 to 17**
+
+- `writing-characters-9-13` Grade 9 Writing, Set 13: Tracing Them; Writing Them
+- `writing-characters-9-14` Grade 9 Writing, Set 14: Tracing Them; Writing Them
+- `writing-characters-9-15` Grade 9 Writing, Set 15: Tracing Them; Writing Them
+- `writing-characters-9-16` Grade 9 Writing, Set 16: Tracing Them; Writing Them
+- `writing-characters-9-17` Grade 9 Writing, Set 17: Tracing Them; Writing Them
+
+### 3. Words
 
 **Words**
 
@@ -55,18 +83,18 @@ By the end of grade 9 a learner has read all 3,500 common characters, the goal o
 - `idioms-9-03` Grade 9 Idioms, Set 3: What They Mean; Using Them; Writing Them
 - `idioms-9-04` Grade 9 Idioms, Set 4: What They Mean; Using Them; Writing Them
 
-### 3. Grammar and Punctuation
+### 4. Grammar and Punctuation
 
 - `faulty-illogical` Faulty Sentences: Against Logic: Finding the Fault; Correcting It
 
-### 4. Writing
+### 5. Writing
 
 **Writing**
 
 - `writing-9-argue` Writing an Argument: A Claim and Its Evidence; Methods of Argument
 - `writing-9-story` A Whole Narrative: A Thread and a Scene; Letting the Theme Emerge
 
-### 5. Recitation
+### 6. Recitation
 
 - `recite-song-du-shao-fu` Seeing Off Prefect Du to Shuzhou: Reciting the Lines; What the Lines Mean; Writing the Lines
 - `recite-song-you-ren` Farewell to a Friend: Reciting the Lines; What the Lines Mean; Writing the Lines
@@ -81,7 +109,7 @@ By the end of grade 9 a learner has read all 3,500 common characters, the goal o
 - `recite-guo-ling-ding-yang` Crossing the Lonely Sea: Reciting the Lines; What the Lines Mean; Writing the Lines
 - `recite-bu-suan-zi-yong-mei` Song of Divination: Ode to the Plum Blossom: Reciting the Lines; What the Lines Mean; Writing the Lines
 
-### 6. Classical Chinese
+### 7. Classical Chinese
 
 **Classical Passages**
 

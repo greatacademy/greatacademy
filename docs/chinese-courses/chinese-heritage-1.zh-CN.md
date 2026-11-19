@@ -6,11 +6,11 @@
 - **程度：** 识字衔接 一，面向会说中文的学习者
 - **先修：** 在家里说中文
 - **讲解语言：** 界面语言：中文或英文
-- **规模：** 5 个单元 · 69 个主题（汉语拼音 8，笔画和偏旁 6，识字 50，连词成句 3，自有主题 2）· 138 个知识点
+- **规模：** 6 个单元 · 129 个主题（汉语拼音 8，笔画和偏旁 6，识字 50，写字 60，连词成句 3，自有主题 2）· 258 个知识点
 
 ## 目标
 
-第一门识字衔接课把一个会说中文、还不识字的学习者带到约 600 字：汉语拼音、笔画和笔顺、常见偏旁，在词语中认识字表一最前面的 600 个字，以及会说的人最常写错的两类：同音字，“的、地、得”和第三人称代词。其中的字就是母语课程的识字主题；为年龄更大的学习者写的文章尚待编写。
+第一门识字衔接课把一个会说中文、还不识字的学习者带到约 600 字：汉语拼音、笔画和笔顺、常见偏旁，在词语中认识字表一最前面的 600 个字，以及会说的人最常写错的两类：同音字，“的、地、得”和第三人称代词。其中的字就是母语课程的识字主题；为年龄更大的学习者写的文章尚待编写。按笔顺手写其中 600 个字。
 
 ## 单元
 
@@ -132,7 +132,99 @@
 - `recognizing-characters-1-49` 一年级识字 第49组：读准字音；分清字形
 - `recognizing-characters-1-50` 一年级识字 第50组：读准字音；分清字形
 
-### 4. 连词成句
+### 4. 写字
+
+**第1至6组**
+
+- `writing-characters-1-01` 一年级写字 第1组：描红；默写
+- `writing-characters-1-02` 一年级写字 第2组：描红；默写
+- `writing-characters-1-03` 一年级写字 第3组：描红；默写
+- `writing-characters-1-04` 一年级写字 第4组：描红；默写
+- `writing-characters-1-05` 一年级写字 第5组：描红；默写
+- `writing-characters-1-06` 一年级写字 第6组：描红；默写
+
+**第7至12组**
+
+- `writing-characters-1-07` 一年级写字 第7组：描红；默写
+- `writing-characters-1-08` 一年级写字 第8组：描红；默写
+- `writing-characters-1-09` 一年级写字 第9组：描红；默写
+- `writing-characters-1-10` 一年级写字 第10组：描红；默写
+- `writing-characters-1-11` 一年级写字 第11组：描红；默写
+- `writing-characters-1-12` 一年级写字 第12组：描红；默写
+
+**第13至18组**
+
+- `writing-characters-1-13` 一年级写字 第13组：描红；默写
+- `writing-characters-1-14` 一年级写字 第14组：描红；默写
+- `writing-characters-1-15` 一年级写字 第15组：描红；默写
+- `writing-characters-1-16` 一年级写字 第16组：描红；默写
+- `writing-characters-1-17` 一年级写字 第17组：描红；默写
+- `writing-characters-1-18` 一年级写字 第18组：描红；默写
+
+**第19至24组**
+
+- `writing-characters-1-19` 一年级写字 第19组：描红；默写
+- `writing-characters-1-20` 一年级写字 第20组：描红；默写
+- `writing-characters-1-21` 一年级写字 第21组：描红；默写
+- `writing-characters-1-22` 一年级写字 第22组：描红；默写
+- `writing-characters-1-23` 一年级写字 第23组：描红；默写
+- `writing-characters-1-24` 一年级写字 第24组：描红；默写
+
+**第25至30组**
+
+- `writing-characters-1-25` 一年级写字 第25组：描红；默写
+- `writing-characters-1-26` 一年级写字 第26组：描红；默写
+- `writing-characters-1-27` 一年级写字 第27组：描红；默写
+- `writing-characters-1-28` 一年级写字 第28组：描红；默写
+- `writing-characters-1-29` 一年级写字 第29组：描红；默写
+- `writing-characters-1-30` 一年级写字 第30组：描红；默写
+
+**第31至36组**
+
+- `writing-characters-1-31` 一年级写字 第31组：描红；默写
+- `writing-characters-1-32` 一年级写字 第32组：描红；默写
+- `writing-characters-1-33` 一年级写字 第33组：描红；默写
+- `writing-characters-1-34` 一年级写字 第34组：描红；默写
+- `writing-characters-1-35` 一年级写字 第35组：描红；默写
+- `writing-characters-1-36` 一年级写字 第36组：描红；默写
+
+**第37至42组**
+
+- `writing-characters-1-37` 一年级写字 第37组：描红；默写
+- `writing-characters-1-38` 一年级写字 第38组：描红；默写
+- `writing-characters-1-39` 一年级写字 第39组：描红；默写
+- `writing-characters-1-40` 一年级写字 第40组：描红；默写
+- `writing-characters-2-01` 二年级写字 第1组：描红；默写
+- `writing-characters-2-02` 二年级写字 第2组：描红；默写
+
+**第43至48组**
+
+- `writing-characters-2-03` 二年级写字 第3组：描红；默写
+- `writing-characters-2-04` 二年级写字 第4组：描红；默写
+- `writing-characters-2-05` 二年级写字 第5组：描红；默写
+- `writing-characters-2-06` 二年级写字 第6组：描红；默写
+- `writing-characters-2-07` 二年级写字 第7组：描红；默写
+- `writing-characters-2-08` 二年级写字 第8组：描红；默写
+
+**第49至54组**
+
+- `writing-characters-2-09` 二年级写字 第9组：描红；默写
+- `writing-characters-2-10` 二年级写字 第10组：描红；默写
+- `writing-characters-2-11` 二年级写字 第11组：描红；默写
+- `writing-characters-2-12` 二年级写字 第12组：描红；默写
+- `writing-characters-2-13` 二年级写字 第13组：描红；默写
+- `writing-characters-2-14` 二年级写字 第14组：描红；默写
+
+**第55至60组**
+
+- `writing-characters-2-15` 二年级写字 第15组：描红；默写
+- `writing-characters-2-16` 二年级写字 第16组：描红；默写
+- `writing-characters-2-17` 二年级写字 第17组：描红；默写
+- `writing-characters-2-18` 二年级写字 第18组：描红；默写
+- `writing-characters-2-19` 二年级写字 第19组：描红；默写
+- `writing-characters-2-20` 二年级写字 第20组：描红；默写
+
+### 5. 连词成句
 
 **连词成句**
 
@@ -140,7 +232,7 @@
 - `sentences-1-02` 连词成句 2：一年级识字第17至33组：短句；长句
 - `sentences-1-03` 连词成句 3：一年级识字第34至50组：短句；长句
 
-### 5. 我手写我口
+### 6. 我手写我口
 
 - `heritage-sound-alike` 同音字：选对字；找出错别字
 - `heritage-de-and-pronouns` 的、地、得和他、她、它：的、地、得；他、她、它

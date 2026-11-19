@@ -6,11 +6,11 @@
 - **Level:** Grade 8, native speakers
 - **Prerequisite(s):** Grade 7
 - **Language of explanation:** Chinese
-- **Size:** 6 units · 46 topics (14 of characters, 8 of words and idioms, 1 of grammar and punctuation, 2 of writing, 12 of recitation, 9 of classical Chinese) · 120 knowledge points
+- **Size:** 7 units · 62 topics (14 of characters, 16 of writing characters, 8 of words and idioms, 1 of grammar and punctuation, 2 of writing, 12 of recitation, 9 of classical Chinese) · 152 knowledge points
 
 ## Aim
 
-By the end of grade 8 a learner reads about 170 more characters of the second table in words, uses forty more words and thirty-two idioms, finds and corrects sentences whose structures are mixed up, recites twelve classical poems and eight passages of classical prose, and tells the usages of the function words 其 and 为. In writing judged by a model, they explain a thing by its features in a clear order and write a speech for an audience.
+By the end of grade 8 a learner reads about 170 more characters of the second table in words, uses forty more words and thirty-two idioms, finds and corrects sentences whose structures are mixed up, recites twelve classical poems and eight passages of classical prose, and tells the usages of the function words 其 and 为. In writing judged by a model, they explain a thing by its features in a clear order and write a speech for an audience. They write 160 characters by hand, stroke by stroke in the standard order, 2,830 in all.
 
 ## Units
 
@@ -39,7 +39,34 @@ By the end of grade 8 a learner reads about 170 more characters of the second ta
 - `recognizing-characters-8-13` Grade 8 Characters, Set 13: Reading Them; Telling Them Apart
 - `recognizing-characters-8-14` Grade 8 Characters, Set 14: Reading Them; Telling Them Apart
 
-### 2. Words
+### 2. Writing Characters
+
+**Sets 1 to 6**
+
+- `writing-characters-8-01` Grade 8 Writing, Set 1: Tracing Them; Writing Them
+- `writing-characters-8-02` Grade 8 Writing, Set 2: Tracing Them; Writing Them
+- `writing-characters-8-03` Grade 8 Writing, Set 3: Tracing Them; Writing Them
+- `writing-characters-8-04` Grade 8 Writing, Set 4: Tracing Them; Writing Them
+- `writing-characters-8-05` Grade 8 Writing, Set 5: Tracing Them; Writing Them
+- `writing-characters-8-06` Grade 8 Writing, Set 6: Tracing Them; Writing Them
+
+**Sets 7 to 12**
+
+- `writing-characters-8-07` Grade 8 Writing, Set 7: Tracing Them; Writing Them
+- `writing-characters-8-08` Grade 8 Writing, Set 8: Tracing Them; Writing Them
+- `writing-characters-8-09` Grade 8 Writing, Set 9: Tracing Them; Writing Them
+- `writing-characters-8-10` Grade 8 Writing, Set 10: Tracing Them; Writing Them
+- `writing-characters-8-11` Grade 8 Writing, Set 11: Tracing Them; Writing Them
+- `writing-characters-8-12` Grade 8 Writing, Set 12: Tracing Them; Writing Them
+
+**Sets 13 to 16**
+
+- `writing-characters-8-13` Grade 8 Writing, Set 13: Tracing Them; Writing Them
+- `writing-characters-8-14` Grade 8 Writing, Set 14: Tracing Them; Writing Them
+- `writing-characters-8-15` Grade 8 Writing, Set 15: Tracing Them; Writing Them
+- `writing-characters-8-16` Grade 8 Writing, Set 16: Tracing Them; Writing Them
+
+### 3. Words
 
 **Words**
 
@@ -55,18 +82,18 @@ By the end of grade 8 a learner reads about 170 more characters of the second ta
 - `idioms-8-03` Grade 8 Idioms, Set 3: What They Mean; Using Them; Writing Them
 - `idioms-8-04` Grade 8 Idioms, Set 4: What They Mean; Using Them; Writing Them
 
-### 3. Grammar and Punctuation
+### 4. Grammar and Punctuation
 
 - `faulty-mixed-structures` Faulty Sentences: Mixed Structures: Finding the Fault; Correcting It
 
-### 4. Writing
+### 5. Writing
 
 **Writing**
 
 - `writing-8-explain` Explaining in Order: Features in Order; Accurate Language
 - `writing-8-speech` Writing a Speech: Audience and View; Made to Be Heard
 
-### 5. Recitation
+### 6. Recitation
 
 - `recite-ye-wang` Gazing Over the Fields: Reciting the Lines; What the Lines Mean; Writing the Lines
 - `recite-huang-he-lou` Yellow Crane Tower: Reciting the Lines; What the Lines Mean; Writing the Lines
@@ -81,7 +108,7 @@ By the end of grade 8 a learner reads about 170 more characters of the second ta
 - `recite-yin-jiu-qi-wu` Drinking Wine (No. 5): Reciting the Lines; What the Lines Mean; Writing the Lines
 - `recite-bo-qin-huai` Mooring on the Qinhuai: Reciting the Lines; What the Lines Mean; Writing the Lines
 
-### 6. Classical Chinese
+### 7. Classical Chinese
 
 **Classical Passages**
 

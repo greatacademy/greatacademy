@@ -6,11 +6,11 @@
 - **Level:** Grade 5, native speakers
 - **Prerequisite(s):** Grade 4
 - **Language of explanation:** Chinese
-- **Size:** 6 units · 49 topics (21 of characters, 8 of words, 6 of grammar and punctuation, 2 of writing, 8 of recitation) · 117 knowledge points · 9 passages in 3 reading units
+- **Size:** 7 units · 94 topics (21 of characters, 45 of writing characters, 8 of words, 6 of grammar and punctuation, 2 of writing, 8 of recitation) · 207 knowledge points · 9 passages in 3 reading units
 
 ## Aim
 
-By the end of grade 5 a learner reads about 250 characters of the second table, uses semicolons, changes rhetorical questions into statements and direct speech into reported speech, names similes, personification, hyperbole and parallelism, corrects word order and repetition, and recites eight more poems. Passages explain everyday science and tell of people of character. In writing judged by a model, they bring out a person's quality through an event and explain a thing by its features.
+By the end of grade 5 a learner reads about 250 characters of the second table, uses semicolons, changes rhetorical questions into statements and direct speech into reported speech, names similes, personification, hyperbole and parallelism, corrects word order and repetition, and recites eight more poems. Passages explain everyday science and tell of people of character. In writing judged by a model, they bring out a person's quality through an event and explain a thing by its features. They write 450 characters by hand, stroke by stroke in the standard order, 2,050 in all.
 
 ## Units
 
@@ -49,7 +49,78 @@ By the end of grade 5 a learner reads about 250 characters of the second table, 
 - `recognizing-characters-5-20` Grade 5 Characters, Set 20: Reading Them; Telling Them Apart
 - `recognizing-characters-5-21` Grade 5 Characters, Set 21: Reading Them; Telling Them Apart
 
-### 2. Words
+### 2. Writing Characters
+
+**Sets 1 to 6**
+
+- `writing-characters-5-01` Grade 5 Writing, Set 1: Tracing Them; Writing Them
+- `writing-characters-5-02` Grade 5 Writing, Set 2: Tracing Them; Writing Them
+- `writing-characters-5-03` Grade 5 Writing, Set 3: Tracing Them; Writing Them
+- `writing-characters-5-04` Grade 5 Writing, Set 4: Tracing Them; Writing Them
+- `writing-characters-5-05` Grade 5 Writing, Set 5: Tracing Them; Writing Them
+- `writing-characters-5-06` Grade 5 Writing, Set 6: Tracing Them; Writing Them
+
+**Sets 7 to 12**
+
+- `writing-characters-5-07` Grade 5 Writing, Set 7: Tracing Them; Writing Them
+- `writing-characters-5-08` Grade 5 Writing, Set 8: Tracing Them; Writing Them
+- `writing-characters-5-09` Grade 5 Writing, Set 9: Tracing Them; Writing Them
+- `writing-characters-5-10` Grade 5 Writing, Set 10: Tracing Them; Writing Them
+- `writing-characters-5-11` Grade 5 Writing, Set 11: Tracing Them; Writing Them
+- `writing-characters-5-12` Grade 5 Writing, Set 12: Tracing Them; Writing Them
+
+**Sets 13 to 18**
+
+- `writing-characters-5-13` Grade 5 Writing, Set 13: Tracing Them; Writing Them
+- `writing-characters-5-14` Grade 5 Writing, Set 14: Tracing Them; Writing Them
+- `writing-characters-5-15` Grade 5 Writing, Set 15: Tracing Them; Writing Them
+- `writing-characters-5-16` Grade 5 Writing, Set 16: Tracing Them; Writing Them
+- `writing-characters-5-17` Grade 5 Writing, Set 17: Tracing Them; Writing Them
+- `writing-characters-5-18` Grade 5 Writing, Set 18: Tracing Them; Writing Them
+
+**Sets 19 to 24**
+
+- `writing-characters-5-19` Grade 5 Writing, Set 19: Tracing Them; Writing Them
+- `writing-characters-5-20` Grade 5 Writing, Set 20: Tracing Them; Writing Them
+- `writing-characters-5-21` Grade 5 Writing, Set 21: Tracing Them; Writing Them
+- `writing-characters-5-22` Grade 5 Writing, Set 22: Tracing Them; Writing Them
+- `writing-characters-5-23` Grade 5 Writing, Set 23: Tracing Them; Writing Them
+- `writing-characters-5-24` Grade 5 Writing, Set 24: Tracing Them; Writing Them
+
+**Sets 25 to 30**
+
+- `writing-characters-5-25` Grade 5 Writing, Set 25: Tracing Them; Writing Them
+- `writing-characters-5-26` Grade 5 Writing, Set 26: Tracing Them; Writing Them
+- `writing-characters-5-27` Grade 5 Writing, Set 27: Tracing Them; Writing Them
+- `writing-characters-5-28` Grade 5 Writing, Set 28: Tracing Them; Writing Them
+- `writing-characters-5-29` Grade 5 Writing, Set 29: Tracing Them; Writing Them
+- `writing-characters-5-30` Grade 5 Writing, Set 30: Tracing Them; Writing Them
+
+**Sets 31 to 36**
+
+- `writing-characters-5-31` Grade 5 Writing, Set 31: Tracing Them; Writing Them
+- `writing-characters-5-32` Grade 5 Writing, Set 32: Tracing Them; Writing Them
+- `writing-characters-5-33` Grade 5 Writing, Set 33: Tracing Them; Writing Them
+- `writing-characters-5-34` Grade 5 Writing, Set 34: Tracing Them; Writing Them
+- `writing-characters-5-35` Grade 5 Writing, Set 35: Tracing Them; Writing Them
+- `writing-characters-5-36` Grade 5 Writing, Set 36: Tracing Them; Writing Them
+
+**Sets 37 to 42**
+
+- `writing-characters-5-37` Grade 5 Writing, Set 37: Tracing Them; Writing Them
+- `writing-characters-5-38` Grade 5 Writing, Set 38: Tracing Them; Writing Them
+- `writing-characters-5-39` Grade 5 Writing, Set 39: Tracing Them; Writing Them
+- `writing-characters-5-40` Grade 5 Writing, Set 40: Tracing Them; Writing Them
+- `writing-characters-5-41` Grade 5 Writing, Set 41: Tracing Them; Writing Them
+- `writing-characters-5-42` Grade 5 Writing, Set 42: Tracing Them; Writing Them
+
+**Sets 43 to 45**
+
+- `writing-characters-5-43` Grade 5 Writing, Set 43: Tracing Them; Writing Them
+- `writing-characters-5-44` Grade 5 Writing, Set 44: Tracing Them; Writing Them
+- `writing-characters-5-45` Grade 5 Writing, Set 45: Tracing Them; Writing Them
+
+### 3. Words
 
 **Words**
 
@@ -65,7 +136,7 @@ By the end of grade 5 a learner reads about 250 characters of the second table, 
 - `idioms-5-03` Grade 5 Idioms, Set 3: What They Mean; Using Them; Writing Them
 - `idioms-5-04` Grade 5 Idioms, Set 4: What They Mean; Using Them; Writing Them
 
-### 3. Grammar and Punctuation
+### 4. Grammar and Punctuation
 
 **Punctuation**
 
@@ -85,14 +156,14 @@ By the end of grade 5 a learner reads about 250 characters of the second table, 
 - `faulty-word-order` Faulty Sentences: Wrong Word Order: Finding the Fault; Correcting It
 - `faulty-repetition` Faulty Sentences: Saying It Twice: Finding the Fault; Correcting It
 
-### 4. Writing
+### 5. Writing
 
 **Writing**
 
 - `writing-5-person` Writing about a Person: A Quality Shown by an Event; Actions, Words and Looks
 - `writing-5-explain` Explaining a Thing: Feature by Feature; Methods of Explaining
 
-### 5. Recitation
+### 6. Recitation
 
 **Classical Poems**
 

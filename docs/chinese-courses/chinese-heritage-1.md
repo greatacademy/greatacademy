@@ -6,11 +6,11 @@
 - **Level:** Literacy bridge 1, for learners who speak Chinese
 - **Prerequisite(s):** Speaking Chinese at home
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 5 units · 69 topics (8 of pinyin, 6 of strokes and components, 50 of characters, 3 of sentence building, 2 of their own) · 138 knowledge points
+- **Size:** 6 units · 129 topics (8 of pinyin, 6 of strokes and components, 50 of characters, 60 of writing characters, 3 of sentence building, 2 of their own) · 258 knowledge points
 
 ## Aim
 
-The first literacy bridge takes a learner who speaks Chinese but cannot yet read it to about 600 characters: pinyin, the strokes and their order, the common components, the first 600 characters of the first table in words, and the two things a speaker most often writes wrong, characters that sound alike and 的, 地, 得 with the pronouns of the third person. Its characters are the recognition topics of the native courses; passages written for older learners are still to come.
+The first literacy bridge takes a learner who speaks Chinese but cannot yet read it to about 600 characters: pinyin, the strokes and their order, the common components, the first 600 characters of the first table in words, and the two things a speaker most often writes wrong, characters that sound alike and 的, 地, 得 with the pronouns of the third person. Its characters are the recognition topics of the native courses; passages written for older learners are still to come. They write 600 of these characters by hand, stroke by stroke in the standard order.
 
 ## Units
 
@@ -132,7 +132,99 @@ The first literacy bridge takes a learner who speaks Chinese but cannot yet read
 - `recognizing-characters-1-49` Grade 1 Characters, Set 49: Reading Them; Telling Them Apart
 - `recognizing-characters-1-50` Grade 1 Characters, Set 50: Reading Them; Telling Them Apart
 
-### 4. Building Sentences
+### 4. Writing Characters
+
+**Sets 1 to 6**
+
+- `writing-characters-1-01` Grade 1 Writing, Set 1: Tracing Them; Writing Them
+- `writing-characters-1-02` Grade 1 Writing, Set 2: Tracing Them; Writing Them
+- `writing-characters-1-03` Grade 1 Writing, Set 3: Tracing Them; Writing Them
+- `writing-characters-1-04` Grade 1 Writing, Set 4: Tracing Them; Writing Them
+- `writing-characters-1-05` Grade 1 Writing, Set 5: Tracing Them; Writing Them
+- `writing-characters-1-06` Grade 1 Writing, Set 6: Tracing Them; Writing Them
+
+**Sets 7 to 12**
+
+- `writing-characters-1-07` Grade 1 Writing, Set 7: Tracing Them; Writing Them
+- `writing-characters-1-08` Grade 1 Writing, Set 8: Tracing Them; Writing Them
+- `writing-characters-1-09` Grade 1 Writing, Set 9: Tracing Them; Writing Them
+- `writing-characters-1-10` Grade 1 Writing, Set 10: Tracing Them; Writing Them
+- `writing-characters-1-11` Grade 1 Writing, Set 11: Tracing Them; Writing Them
+- `writing-characters-1-12` Grade 1 Writing, Set 12: Tracing Them; Writing Them
+
+**Sets 13 to 18**
+
+- `writing-characters-1-13` Grade 1 Writing, Set 13: Tracing Them; Writing Them
+- `writing-characters-1-14` Grade 1 Writing, Set 14: Tracing Them; Writing Them
+- `writing-characters-1-15` Grade 1 Writing, Set 15: Tracing Them; Writing Them
+- `writing-characters-1-16` Grade 1 Writing, Set 16: Tracing Them; Writing Them
+- `writing-characters-1-17` Grade 1 Writing, Set 17: Tracing Them; Writing Them
+- `writing-characters-1-18` Grade 1 Writing, Set 18: Tracing Them; Writing Them
+
+**Sets 19 to 24**
+
+- `writing-characters-1-19` Grade 1 Writing, Set 19: Tracing Them; Writing Them
+- `writing-characters-1-20` Grade 1 Writing, Set 20: Tracing Them; Writing Them
+- `writing-characters-1-21` Grade 1 Writing, Set 21: Tracing Them; Writing Them
+- `writing-characters-1-22` Grade 1 Writing, Set 22: Tracing Them; Writing Them
+- `writing-characters-1-23` Grade 1 Writing, Set 23: Tracing Them; Writing Them
+- `writing-characters-1-24` Grade 1 Writing, Set 24: Tracing Them; Writing Them
+
+**Sets 25 to 30**
+
+- `writing-characters-1-25` Grade 1 Writing, Set 25: Tracing Them; Writing Them
+- `writing-characters-1-26` Grade 1 Writing, Set 26: Tracing Them; Writing Them
+- `writing-characters-1-27` Grade 1 Writing, Set 27: Tracing Them; Writing Them
+- `writing-characters-1-28` Grade 1 Writing, Set 28: Tracing Them; Writing Them
+- `writing-characters-1-29` Grade 1 Writing, Set 29: Tracing Them; Writing Them
+- `writing-characters-1-30` Grade 1 Writing, Set 30: Tracing Them; Writing Them
+
+**Sets 31 to 36**
+
+- `writing-characters-1-31` Grade 1 Writing, Set 31: Tracing Them; Writing Them
+- `writing-characters-1-32` Grade 1 Writing, Set 32: Tracing Them; Writing Them
+- `writing-characters-1-33` Grade 1 Writing, Set 33: Tracing Them; Writing Them
+- `writing-characters-1-34` Grade 1 Writing, Set 34: Tracing Them; Writing Them
+- `writing-characters-1-35` Grade 1 Writing, Set 35: Tracing Them; Writing Them
+- `writing-characters-1-36` Grade 1 Writing, Set 36: Tracing Them; Writing Them
+
+**Sets 37 to 42**
+
+- `writing-characters-1-37` Grade 1 Writing, Set 37: Tracing Them; Writing Them
+- `writing-characters-1-38` Grade 1 Writing, Set 38: Tracing Them; Writing Them
+- `writing-characters-1-39` Grade 1 Writing, Set 39: Tracing Them; Writing Them
+- `writing-characters-1-40` Grade 1 Writing, Set 40: Tracing Them; Writing Them
+- `writing-characters-2-01` Grade 2 Writing, Set 1: Tracing Them; Writing Them
+- `writing-characters-2-02` Grade 2 Writing, Set 2: Tracing Them; Writing Them
+
+**Sets 43 to 48**
+
+- `writing-characters-2-03` Grade 2 Writing, Set 3: Tracing Them; Writing Them
+- `writing-characters-2-04` Grade 2 Writing, Set 4: Tracing Them; Writing Them
+- `writing-characters-2-05` Grade 2 Writing, Set 5: Tracing Them; Writing Them
+- `writing-characters-2-06` Grade 2 Writing, Set 6: Tracing Them; Writing Them
+- `writing-characters-2-07` Grade 2 Writing, Set 7: Tracing Them; Writing Them
+- `writing-characters-2-08` Grade 2 Writing, Set 8: Tracing Them; Writing Them
+
+**Sets 49 to 54**
+
+- `writing-characters-2-09` Grade 2 Writing, Set 9: Tracing Them; Writing Them
+- `writing-characters-2-10` Grade 2 Writing, Set 10: Tracing Them; Writing Them
+- `writing-characters-2-11` Grade 2 Writing, Set 11: Tracing Them; Writing Them
+- `writing-characters-2-12` Grade 2 Writing, Set 12: Tracing Them; Writing Them
+- `writing-characters-2-13` Grade 2 Writing, Set 13: Tracing Them; Writing Them
+- `writing-characters-2-14` Grade 2 Writing, Set 14: Tracing Them; Writing Them
+
+**Sets 55 to 60**
+
+- `writing-characters-2-15` Grade 2 Writing, Set 15: Tracing Them; Writing Them
+- `writing-characters-2-16` Grade 2 Writing, Set 16: Tracing Them; Writing Them
+- `writing-characters-2-17` Grade 2 Writing, Set 17: Tracing Them; Writing Them
+- `writing-characters-2-18` Grade 2 Writing, Set 18: Tracing Them; Writing Them
+- `writing-characters-2-19` Grade 2 Writing, Set 19: Tracing Them; Writing Them
+- `writing-characters-2-20` Grade 2 Writing, Set 20: Tracing Them; Writing Them
+
+### 5. Building Sentences
 
 **Building Sentences**
 
@@ -140,7 +232,7 @@ The first literacy bridge takes a learner who speaks Chinese but cannot yet read
 - `sentences-1-02` Building Sentences 2: Grade 1 Characters, Sets 17 to 33: Short Sentences; Longer Sentences
 - `sentences-1-03` Building Sentences 3: Grade 1 Characters, Sets 34 to 50: Short Sentences; Longer Sentences
 
-### 5. Writing What You Say
+### 6. Writing What You Say
 
 - `heritage-sound-alike` Characters That Sound Alike: Choosing the Character; Finding the Wrong Character
 - `heritage-de-and-pronouns` 的, 地, 得 and 他, 她, 它: 的, 地 and 得; 他, 她 and 它

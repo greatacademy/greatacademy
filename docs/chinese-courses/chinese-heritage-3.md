@@ -6,11 +6,11 @@
 - **Level:** Literacy bridge 3, for learners who speak Chinese
 - **Prerequisite(s):** [Chinese for Heritage Learners 2](chinese-heritage-2.md)
 - **Language of explanation:** The interface language: Chinese or English
-- **Size:** 2 units · 77 topics (75 of characters, 2 of their own) · 154 knowledge points
+- **Size:** 3 units · 167 topics (75 of characters, 90 of writing characters, 2 of their own) · 334 knowledge points
 
 ## Aim
 
-The third bridge completes the 2,500 characters of the first table with the 900 of grades 3 and 4, tells spoken from written Chinese, and reads traditional characters by their simplified forms. After it, the diagnostic places the learner in the grade course that matches their reading. Its characters are the recognition topics of the native courses; passages written for older learners are still to come.
+The third bridge completes the 2,500 characters of the first table with the 900 of grades 3 and 4, tells spoken from written Chinese, and reads traditional characters by their simplified forms. After it, the diagnostic places the learner in the grade course that matches their reading. Its characters are the recognition topics of the native courses; passages written for older learners are still to come. They write 900 of these characters by hand, stroke by stroke in the standard order, 2,500 in all.
 
 ## Units
 
@@ -130,7 +130,144 @@ The third bridge completes the 2,500 characters of the first table with the 900 
 - `recognizing-characters-4-37` Grade 4 Characters, Set 37: Reading Them; Telling Them Apart
 - `recognizing-characters-3-38` Grade 3 Characters, Set 38: Reading Them; Telling Them Apart
 
-### 2. Writing What You Say
+### 2. Writing Characters
+
+**Sets 1 to 6**
+
+- `writing-characters-5-01` Grade 5 Writing, Set 1: Tracing Them; Writing Them
+- `writing-characters-5-02` Grade 5 Writing, Set 2: Tracing Them; Writing Them
+- `writing-characters-5-03` Grade 5 Writing, Set 3: Tracing Them; Writing Them
+- `writing-characters-5-04` Grade 5 Writing, Set 4: Tracing Them; Writing Them
+- `writing-characters-5-05` Grade 5 Writing, Set 5: Tracing Them; Writing Them
+- `writing-characters-5-06` Grade 5 Writing, Set 6: Tracing Them; Writing Them
+
+**Sets 7 to 12**
+
+- `writing-characters-5-07` Grade 5 Writing, Set 7: Tracing Them; Writing Them
+- `writing-characters-5-08` Grade 5 Writing, Set 8: Tracing Them; Writing Them
+- `writing-characters-5-09` Grade 5 Writing, Set 9: Tracing Them; Writing Them
+- `writing-characters-5-10` Grade 5 Writing, Set 10: Tracing Them; Writing Them
+- `writing-characters-5-11` Grade 5 Writing, Set 11: Tracing Them; Writing Them
+- `writing-characters-5-12` Grade 5 Writing, Set 12: Tracing Them; Writing Them
+
+**Sets 13 to 18**
+
+- `writing-characters-5-13` Grade 5 Writing, Set 13: Tracing Them; Writing Them
+- `writing-characters-5-14` Grade 5 Writing, Set 14: Tracing Them; Writing Them
+- `writing-characters-5-15` Grade 5 Writing, Set 15: Tracing Them; Writing Them
+- `writing-characters-5-16` Grade 5 Writing, Set 16: Tracing Them; Writing Them
+- `writing-characters-5-17` Grade 5 Writing, Set 17: Tracing Them; Writing Them
+- `writing-characters-5-18` Grade 5 Writing, Set 18: Tracing Them; Writing Them
+
+**Sets 19 to 24**
+
+- `writing-characters-5-19` Grade 5 Writing, Set 19: Tracing Them; Writing Them
+- `writing-characters-5-20` Grade 5 Writing, Set 20: Tracing Them; Writing Them
+- `writing-characters-5-21` Grade 5 Writing, Set 21: Tracing Them; Writing Them
+- `writing-characters-5-22` Grade 5 Writing, Set 22: Tracing Them; Writing Them
+- `writing-characters-5-23` Grade 5 Writing, Set 23: Tracing Them; Writing Them
+- `writing-characters-5-24` Grade 5 Writing, Set 24: Tracing Them; Writing Them
+
+**Sets 25 to 30**
+
+- `writing-characters-5-25` Grade 5 Writing, Set 25: Tracing Them; Writing Them
+- `writing-characters-5-26` Grade 5 Writing, Set 26: Tracing Them; Writing Them
+- `writing-characters-5-27` Grade 5 Writing, Set 27: Tracing Them; Writing Them
+- `writing-characters-5-28` Grade 5 Writing, Set 28: Tracing Them; Writing Them
+- `writing-characters-5-29` Grade 5 Writing, Set 29: Tracing Them; Writing Them
+- `writing-characters-5-30` Grade 5 Writing, Set 30: Tracing Them; Writing Them
+
+**Sets 31 to 36**
+
+- `writing-characters-5-31` Grade 5 Writing, Set 31: Tracing Them; Writing Them
+- `writing-characters-5-32` Grade 5 Writing, Set 32: Tracing Them; Writing Them
+- `writing-characters-5-33` Grade 5 Writing, Set 33: Tracing Them; Writing Them
+- `writing-characters-5-34` Grade 5 Writing, Set 34: Tracing Them; Writing Them
+- `writing-characters-5-35` Grade 5 Writing, Set 35: Tracing Them; Writing Them
+- `writing-characters-5-36` Grade 5 Writing, Set 36: Tracing Them; Writing Them
+
+**Sets 37 to 42**
+
+- `writing-characters-5-37` Grade 5 Writing, Set 37: Tracing Them; Writing Them
+- `writing-characters-5-38` Grade 5 Writing, Set 38: Tracing Them; Writing Them
+- `writing-characters-5-39` Grade 5 Writing, Set 39: Tracing Them; Writing Them
+- `writing-characters-5-40` Grade 5 Writing, Set 40: Tracing Them; Writing Them
+- `writing-characters-5-41` Grade 5 Writing, Set 41: Tracing Them; Writing Them
+- `writing-characters-5-42` Grade 5 Writing, Set 42: Tracing Them; Writing Them
+
+**Sets 43 to 48**
+
+- `writing-characters-5-43` Grade 5 Writing, Set 43: Tracing Them; Writing Them
+- `writing-characters-5-44` Grade 5 Writing, Set 44: Tracing Them; Writing Them
+- `writing-characters-5-45` Grade 5 Writing, Set 45: Tracing Them; Writing Them
+- `writing-characters-6-01` Grade 6 Writing, Set 1: Tracing Them; Writing Them
+- `writing-characters-6-02` Grade 6 Writing, Set 2: Tracing Them; Writing Them
+- `writing-characters-6-03` Grade 6 Writing, Set 3: Tracing Them; Writing Them
+
+**Sets 49 to 54**
+
+- `writing-characters-6-04` Grade 6 Writing, Set 4: Tracing Them; Writing Them
+- `writing-characters-6-05` Grade 6 Writing, Set 5: Tracing Them; Writing Them
+- `writing-characters-6-06` Grade 6 Writing, Set 6: Tracing Them; Writing Them
+- `writing-characters-6-07` Grade 6 Writing, Set 7: Tracing Them; Writing Them
+- `writing-characters-6-08` Grade 6 Writing, Set 8: Tracing Them; Writing Them
+- `writing-characters-6-09` Grade 6 Writing, Set 9: Tracing Them; Writing Them
+
+**Sets 55 to 60**
+
+- `writing-characters-6-10` Grade 6 Writing, Set 10: Tracing Them; Writing Them
+- `writing-characters-6-11` Grade 6 Writing, Set 11: Tracing Them; Writing Them
+- `writing-characters-6-12` Grade 6 Writing, Set 12: Tracing Them; Writing Them
+- `writing-characters-6-13` Grade 6 Writing, Set 13: Tracing Them; Writing Them
+- `writing-characters-6-14` Grade 6 Writing, Set 14: Tracing Them; Writing Them
+- `writing-characters-6-15` Grade 6 Writing, Set 15: Tracing Them; Writing Them
+
+**Sets 61 to 66**
+
+- `writing-characters-6-16` Grade 6 Writing, Set 16: Tracing Them; Writing Them
+- `writing-characters-6-17` Grade 6 Writing, Set 17: Tracing Them; Writing Them
+- `writing-characters-6-18` Grade 6 Writing, Set 18: Tracing Them; Writing Them
+- `writing-characters-6-19` Grade 6 Writing, Set 19: Tracing Them; Writing Them
+- `writing-characters-6-20` Grade 6 Writing, Set 20: Tracing Them; Writing Them
+- `writing-characters-6-21` Grade 6 Writing, Set 21: Tracing Them; Writing Them
+
+**Sets 67 to 72**
+
+- `writing-characters-6-22` Grade 6 Writing, Set 22: Tracing Them; Writing Them
+- `writing-characters-6-23` Grade 6 Writing, Set 23: Tracing Them; Writing Them
+- `writing-characters-6-24` Grade 6 Writing, Set 24: Tracing Them; Writing Them
+- `writing-characters-6-25` Grade 6 Writing, Set 25: Tracing Them; Writing Them
+- `writing-characters-6-26` Grade 6 Writing, Set 26: Tracing Them; Writing Them
+- `writing-characters-6-27` Grade 6 Writing, Set 27: Tracing Them; Writing Them
+
+**Sets 73 to 78**
+
+- `writing-characters-6-28` Grade 6 Writing, Set 28: Tracing Them; Writing Them
+- `writing-characters-6-29` Grade 6 Writing, Set 29: Tracing Them; Writing Them
+- `writing-characters-6-30` Grade 6 Writing, Set 30: Tracing Them; Writing Them
+- `writing-characters-6-31` Grade 6 Writing, Set 31: Tracing Them; Writing Them
+- `writing-characters-6-32` Grade 6 Writing, Set 32: Tracing Them; Writing Them
+- `writing-characters-6-33` Grade 6 Writing, Set 33: Tracing Them; Writing Them
+
+**Sets 79 to 84**
+
+- `writing-characters-6-34` Grade 6 Writing, Set 34: Tracing Them; Writing Them
+- `writing-characters-6-35` Grade 6 Writing, Set 35: Tracing Them; Writing Them
+- `writing-characters-6-36` Grade 6 Writing, Set 36: Tracing Them; Writing Them
+- `writing-characters-6-37` Grade 6 Writing, Set 37: Tracing Them; Writing Them
+- `writing-characters-6-38` Grade 6 Writing, Set 38: Tracing Them; Writing Them
+- `writing-characters-6-39` Grade 6 Writing, Set 39: Tracing Them; Writing Them
+
+**Sets 85 to 90**
+
+- `writing-characters-6-40` Grade 6 Writing, Set 40: Tracing Them; Writing Them
+- `writing-characters-6-41` Grade 6 Writing, Set 41: Tracing Them; Writing Them
+- `writing-characters-6-42` Grade 6 Writing, Set 42: Tracing Them; Writing Them
+- `writing-characters-6-43` Grade 6 Writing, Set 43: Tracing Them; Writing Them
+- `writing-characters-6-44` Grade 6 Writing, Set 44: Tracing Them; Writing Them
+- `writing-characters-6-45` Grade 6 Writing, Set 45: Tracing Them; Writing Them
+
+### 3. Writing What You Say
 
 - `heritage-register` Spoken and Written Chinese: Words of Writing; The Wording of a Notice
 - `heritage-traditional` Traditional Characters: Single Characters; Words
