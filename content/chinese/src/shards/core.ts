@@ -5,6 +5,7 @@ import type { ReadingUnitDef, TopicDef } from "@ga/content";
 import { bookTopics } from "../books/index.ts";
 import { dictionaryTopics } from "../characters/dictionary.ts";
 import { characterTopics } from "../characters/index.ts";
+import { traditionalTopics } from "../characters/traditional.ts";
 import { classicalTopics } from "../classical/index.ts";
 import { gaokaoTopics } from "../gaokao/index.ts";
 import { grammarTopics } from "../grammar/index.ts";
@@ -53,6 +54,7 @@ export const coreShardTopics: readonly TopicDef[] = [
   ...bookTopics.map((x) => x.topic),
   ...classicalTopics,
   ...heritageTopics,
+  ...traditionalTopics,
   ...levelOneTopics,
   ...levelTwoTopics,
   ...levelThreeTopics,

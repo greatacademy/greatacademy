@@ -3085,6 +3085,8 @@ topic sentences-rhetorical-questions sentences-rhetorical-questions-to-question 
 topic strokes-basic strokes-basic-count strokes-basic-first
 topic strokes-order strokes-order-next strokes-order-rule
 topic strokes-turning strokes-turning-count strokes-turning-next
+topic traditional-components traditional-components-characters traditional-components-words
+topic traditional-shared traditional-shared-characters traditional-shared-phrases
 topic words-1-01 words-1-01-meaning words-1-01-relations words-1-01-use
 topic words-1-02 words-1-02-meaning words-1-02-relations words-1-02-use
 topic words-1-03 words-1-03-meaning words-1-03-relations words-1-03-use

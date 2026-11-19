@@ -4,6 +4,7 @@ import { t } from "@ga/content";
 import { bookTopics } from "./books/index.ts";
 import { dictionaryTopics } from "./characters/dictionary.ts";
 import { recognitionByGrade } from "./characters/index.ts";
+import { traditionalTopics } from "./characters/traditional.ts";
 import { classicalDrillTopics, classicalPassages } from "./classical/index.ts";
 import { gaokaoCourse } from "./gaokao/index.ts";
 import { connectiveTopics, faultyTopics, type GradeTopic, punctuationTopics, rhetoricTopics, sentenceTopics } from "./grammar/index.ts";
@@ -321,7 +322,7 @@ const heritageCourses: readonly CourseDef[] = [
       "第三门识字衔接课：再认识并会写 900 个常用字，读完常用字表一的 2500 字，分清口语和书面语，认识繁体字。用学习者的语言讲解。",
     ),
     stageBatches(3),
-    heritageOwn("heritage-register", "heritage-traditional"),
+    [...heritageOwn("heritage-register", "heritage-traditional"), ...traditionalTopics.map((x) => x.id)],
     [],
     stageBatches(1),
   ),
