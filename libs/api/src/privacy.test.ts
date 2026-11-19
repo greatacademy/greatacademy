@@ -481,6 +481,52 @@ describe("free text", () => {
     await judgmentsKeepOnlyMet();
     expect((await runRetention(db, now + RETENTION.teenResponses + 2 * DAY, deps)).responses).toBe(0);
   });
+  it("is emptied when the scope it was given under is withdrawn", async () => {
+    const { learnerId } = await studied();
+    await db.update(taskSession).set({ status: "abandoned" }).where(eq(taskSession.learnerId, learnerId));
+    await privacy("teen").withdrawConsent({ scope: "writing" });
+    expect(JSON.stringify(await db.select().from(answer))).not.toContain(MARK);
+    expect(JSON.stringify(await db.select().from(taskSession))).not.toContain(MARK);
+    await judgmentsKeepOnlyMet();
+  });
+
+  it("loses the words heard when speech is withdrawn, keeping whether the answer was right", async () => {
+    const { learnerId } = await studied();
+    await db
+      .update(answer)
+      .set({ response: JSON.stringify({ text: MARK, confidence: 0.9 }) })
+      .where(eq(answer.learnerId, learnerId));
+    await privacy("teen").withdrawConsent({ scope: "speech" });
+    const rows = await db.select().from(answer).where(eq(answer.learnerId, learnerId));
+    expect(rows.map((r) => r.response)).toEqual([""]);
+  });
+
+  it("is emptied once its consent runs out unrenewed, and kept while a renewal is in force", async () => {
+    const { learnerId } = await studied();
+    await db.update(taskSession).set({ status: "abandoned" }).where(eq(taskSession.learnerId, learnerId));
+    const grant = (expiresAt: number) => ({
+      learnerId,
+      scope: "writing" as const,
+      grantedBy: "teen",
+      role: "self" as const,
+      method: "self",
+      noticeVersion: "2026-11",
+      country: "US",
+      grantedAt: new Date(now),
+      expiresAt: new Date(expiresAt),
+    });
+    await db.insert(consent).values(grant(now + 10 * DAY));
+    const deps = { forms: store, notify };
+    expect((await runRetention(db, now + 9 * DAY, deps)).lapsed).toBe(0);
+    expect(JSON.stringify(await db.select().from(answer))).toContain(MARK);
+    await db.insert(consent).values(grant(now + 400 * DAY));
+    expect((await runRetention(db, now + 11 * DAY, deps)).lapsed).toBe(0);
+    expect(JSON.stringify(await db.select().from(answer))).toContain(MARK);
+    await db.delete(consent).where(eq(consent.expiresAt, new Date(now + 400 * DAY)));
+    expect((await runRetention(db, now + 12 * DAY, deps)).lapsed).toBe(1);
+    expect(JSON.stringify(await db.select().from(answer))).not.toContain(MARK);
+    await judgmentsKeepOnlyMet();
+  });
 });
 
 describe("the retention run", () => {

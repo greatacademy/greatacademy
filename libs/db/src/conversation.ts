@@ -83,3 +83,13 @@ export async function clearOldConversationLines(db: Db, before: Date): Promise<n
     .returning({ id: conversationSession.id });
   return rows.length;
 }
+
+/** clearConversationLines deletes the transcripts of a learner's conversations; their results remain. */
+export async function clearConversationLines(db: Db, learnerId: string): Promise<number> {
+  const rows = await db
+    .update(conversationSession)
+    .set({ lines: null })
+    .where(and(eq(conversationSession.learnerId, learnerId), isNotNull(conversationSession.lines)))
+    .returning({ id: conversationSession.id });
+  return rows.length;
+}

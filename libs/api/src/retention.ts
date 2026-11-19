@@ -9,6 +9,7 @@ import {
   deleteUserData,
   expiringConsents,
   inactiveMinors,
+  lapsedConsents,
   logChange,
   markConsentReminded,
   markInactiveNotice,
@@ -16,7 +17,7 @@ import {
 } from "@ga/db";
 import { DAY } from "@ga/engine";
 
-import type { FormStore, Notify } from "./privacy.ts";
+import { clearScope, type FormStore, type Notify } from "./privacy.ts";
 
 /** RETENTION holds the periods of docs/minors-data.md §10; the ones marked there as starting values are ours, not the law's. */
 export const RETENTION = {
@@ -29,6 +30,8 @@ export const RETENTION = {
   consentReminder: 30 * DAY,
   inactive: 365 * DAY,
   inactiveNotice: 30 * DAY,
+  /** lapseWindow is how far back a run looks for consents that ran out, so that runs missed for a while still clear them. */
+  lapseWindow: 30 * DAY,
 } as const;
 
 /** RETENTION_ACTION is the action a retention run logs, which the admin overview reads. */
@@ -42,6 +45,8 @@ export interface RetentionResult {
   /** heard counts the spoken answers whose heard words were emptied. */
   readonly heard: number;
   readonly reminders: number;
+  /** lapsed counts the scopes whose consent ran out unrenewed and whose data was cleared. */
+  readonly lapsed: number;
   readonly notices: number;
   readonly deleted: number;
 }
@@ -61,6 +66,9 @@ export async function runRetention(db: Db, at: number, deps: { forms: FormStore;
     await markConsentReminded(db, c.id, date);
   }
 
+  const lapsed = await lapsedConsents(db, new Date(at - RETENTION.lapseWindow), date);
+  for (const l of lapsed) await clearScope(db, l.learnerId, l.scope);
+
   await clearInactiveNotices(db);
   const due = await noticedBefore(db, new Date(at - RETENTION.inactiveNotice));
   for (const userId of due) {
@@ -79,6 +87,7 @@ export async function runRetention(db: Db, at: number, deps: { forms: FormStore;
     transcripts,
     heard,
     reminders: expiring.length,
+    lapsed: lapsed.length,
     notices: inactive.length,
     deleted: due.length,
   };

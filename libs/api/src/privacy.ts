@@ -6,6 +6,8 @@ import {
   assentConsent,
   assignPlan,
   type ConsentScope,
+  clearConversationLines,
+  clearHeard,
   clearResponses,
   consentsOf,
   contactsOf,
@@ -55,6 +57,19 @@ export interface PrivacyDeps {
   readonly notify: Notify;
   /** billing makes studying need a plan, and a child need a plan bought for them (docs/billing.md §2). */
   readonly billing?: boolean;
+}
+
+/**
+ * clearScope empties what a learner gave under a scope once it is withdrawn or
+ * has lapsed (docs/minors-data.md §10): free text and judgments for basic and
+ * writing, the words heard for speech, the transcripts for conversation. What
+ * was right, and the learner's state, remain. Research clips are kept under
+ * their own signed forms and destroyed by their dates.
+ */
+export async function clearScope(db: Db, learnerId: string, scope: ConsentScope): Promise<void> {
+  if (scope === "basic" || scope === "writing") await clearResponses(db, learnerId);
+  else if (scope === "speech") await clearHeard(db, learnerId);
+  else if (scope === "conversation") await clearConversationLines(db, learnerId);
 }
 
 /** MAX_FORM_BYTES bounds an uploaded signed form. */
@@ -303,7 +318,7 @@ export function privacyService(deps: PrivacyDeps): ServiceImpl<typeof PrivacySer
       const { db, userId, learnerId, self } = await subject(ctx, req.learnerId);
       const scope = checkScope(req.scope);
       await withdrawConsent(db, learnerId, scope, userId, new Date(deps.now()));
-      if (scope === "basic") await clearResponses(db, learnerId);
+      await clearScope(db, learnerId, scope);
       await tellGuardians(db, learnerId, self);
       return {};
     },

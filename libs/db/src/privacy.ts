@@ -1,4 +1,4 @@
-import { and, desc, eq, gt, inArray, isNull, lt, or, sql } from "drizzle-orm";
+import { and, desc, eq, gt, inArray, isNull, lt, lte, or, sql } from "drizzle-orm";
 
 import type { Db } from "./db.ts";
 import { session, user } from "./schema/auth.ts";
@@ -246,6 +246,56 @@ export async function clearOldHeard(db: Db, before: Date): Promise<number> {
       ),
     );
   return rows.length;
+}
+
+/** clearHeard empties what a speech service heard in a learner's spoken answers and finished runs; whether each was right remains. */
+export async function clearHeard(db: Db, learnerId: string): Promise<number> {
+  const rows = await db
+    .update(answer)
+    .set({ response: "" })
+    .where(and(eq(answer.learnerId, learnerId), heardLike))
+    .returning({ id: answer.id });
+  await db
+    .update(taskSession)
+    .set({ state: blankedRuns })
+    .where(
+      and(
+        eq(taskSession.learnerId, learnerId),
+        sql`${taskSession.status} <> 'active'`,
+        hasAsked,
+        sql`${taskSession.state}::text like '%confidence\\\\":%'`,
+      ),
+    );
+  return rows.length;
+}
+
+/** Lapsed is a scope whose consent ran out with no grant of it in force. */
+export interface Lapsed {
+  readonly learnerId: string;
+  readonly scope: ConsentScope;
+}
+
+/**
+ * lapsedConsents lists the scopes whose consent expired after since and by at,
+ * without a grant of the same scope in force at that time. Clearing what a
+ * lapsed scope held changes nothing the second time, so a window that overlaps
+ * an earlier run is harmless.
+ */
+export async function lapsedConsents(db: Db, since: Date, at: Date): Promise<Lapsed[]> {
+  const rows = await db
+    .selectDistinct({ learnerId: consent.learnerId, scope: consent.scope })
+    .from(consent)
+    .where(and(isNull(consent.withdrawnAt), gt(consent.expiresAt, since), lte(consent.expiresAt, at)));
+  const lapsed: Lapsed[] = [];
+  for (const r of rows) {
+    const [renewed] = await db
+      .select({ id: consent.id })
+      .from(consent)
+      .where(and(eq(consent.learnerId, r.learnerId), eq(consent.scope, r.scope), isNull(consent.withdrawnAt), gt(consent.expiresAt, at)))
+      .limit(1);
+    if (!renewed) lapsed.push(r);
+  }
+  return lapsed;
 }
 
 /** clearOldSessionTraces empties the addresses and browsers of sign-in sessions begun before a time. */
