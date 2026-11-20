@@ -752,7 +752,6 @@ test("switches subject, keeps the choice, and asks before changing course", asyn
   await app.waitFor("text:Not started");
   await app.press("label:English");
   await app.waitFor("text:Choose a course in English");
-  expect(app.storage()["ga.subject"]).toBe("english");
   await app.press("label:English, switch subject");
   await app.press("label:Mathematics");
   await app.keyboard.press("mod+3");

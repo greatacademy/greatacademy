@@ -7,6 +7,7 @@ import { authClient, useSession } from "../lib/auth.ts";
 import { nextPath } from "../lib/hooks.ts";
 import { useI18n } from "../lib/i18n.tsx";
 import { usePrivacyText } from "../lib/privacy-text.ts";
+import { forgetShownSubject } from "../lib/subject.tsx";
 import { Button, Card, ErrorNote } from "./ui.tsx";
 
 /** field styles a form input. */
@@ -168,6 +169,7 @@ export function AuthForm({
     // The page after this one knows the account only from the session: arriving before it is fetched would show the
     // landing page for a moment.
     await refetchSession();
+    forgetShownSubject();
     setBusy(false);
     await navigate({ to: nextPath(next) });
   }

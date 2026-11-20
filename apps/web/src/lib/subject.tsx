@@ -10,7 +10,7 @@ import { catalog, learning, timeZone } from "./rpc.ts";
 
 const STORAGE_KEY = "ga-subject";
 
-/** rememberedSubject is the subject this browser last opened, or "" (docs/experience.md §2). */
+/** rememberedSubject is the subject this browser last opened, or "", which the catalog opens on (docs/experience.md §2). */
 export function rememberedSubject(): string {
   try {
     return localStorage.getItem(STORAGE_KEY) ?? "";
@@ -19,7 +19,7 @@ export function rememberedSubject(): string {
   }
 }
 
-/** rememberSubject keeps the subject now open, for the next visit. */
+/** rememberSubject keeps the subject now open, for the catalog of the next visit. */
 export function rememberSubject(id: string) {
   try {
     localStorage.setItem(STORAGE_KEY, id);
@@ -87,6 +87,12 @@ export function useShowSubject(id: string | undefined) {
     shown = id;
     for (const listener of listeners) listener();
   }, [id]);
+}
+
+/** forgetShownSubject forgets the subject shown before signing in, so that home opens the subject last studied. */
+export function forgetShownSubject() {
+  shown = "";
+  for (const listener of listeners) listener();
 }
 
 /** useShownSubject is the subject the last subject page showed, or "" before any; the server renders none. */

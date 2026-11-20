@@ -32,7 +32,7 @@ XP is earned in a subject and counted there. The account's total is the sum, whi
 
 **Names.** Every account, a child's included, has a name and a username, both asked at sign-up or when a guardian adds a child, and both changed in Profile. The name is private: only the person and their guardians see it. The username signs in, as the email address does, and is the only name the league shows; a child's account, which has no email address, signs in with it alone. The league's settings hold only whether to take part.
 
-**The current subject.** Each client remembers the subject last opened. A signed-in learner opens on it, else on the subject most recently worked in.
+**The current subject.** A learner who signs in or opens the app starts in the subject last studied, on any device: the one whose course had the latest task or was chosen last. A subject opened after that stays current until the page is reloaded, the app is closed or the learner signs out; the web catalog opens on the subject last opened in that browser.
 
 ## 3. Pages of a subject
 

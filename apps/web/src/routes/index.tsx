@@ -9,7 +9,7 @@ import { useSession } from "../lib/auth.ts";
 import { useI18n } from "../lib/i18n.tsx";
 import { account, timeZone } from "../lib/rpc.ts";
 import { sessionHint } from "../lib/session-cookie.ts";
-import { rememberedSubject, useProfile } from "../lib/subject.tsx";
+import { useProfile, useShownSubject } from "../lib/subject.tsx";
 
 export const Route = createFileRoute("/")({
   // The cookie decides the server's first render. Later the session is known in the browser, so moving here asks the server nothing.
@@ -34,14 +34,17 @@ function Index() {
   return <Landing />;
 }
 
-/** Home opens the subject last opened in this browser, else the one most recently worked in, or a first step when there is none. */
+/**
+ * Home opens the subject the learner last studied, on any device, or a first step when there is none. Coming back home
+ * from a subject, as from the logo, it keeps to that subject.
+ */
 function Home() {
   const { m } = useI18n();
   const profile = useProfile();
   const guarded = useQuery({ queryKey: ["guarded"], queryFn: () => account.listGuardedLearners({ timeZone: timeZone() }) });
   const enrolled = profile.data?.enrollments ?? [];
-  const remembered = rememberedSubject();
-  const subject = enrolled.some((e) => e.subjectId === remembered) ? remembered : enrolled[0]?.subjectId;
+  const shown = useShownSubject();
+  const subject = enrolled.some((e) => e.subjectId === shown) ? shown : enrolled[0]?.subjectId;
   return (
     <div className="mx-auto max-w-5xl px-4 pt-8 pb-24">
       {profile.isPending || (!subject && guarded.isPending) ? (
