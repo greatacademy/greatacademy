@@ -8,14 +8,9 @@ import { ConversationService } from "@ga/proto/conversation/v1/conversation_pb";
 import { LearningService } from "@ga/proto/learning/v1/learning_pb";
 import { PrivacyService } from "@ga/proto/privacy/v1/privacy_pb";
 
-import { API_ORIGIN } from "./origin.ts";
-
-// Calls go to the API with the session cookie, which is set on the site's domain. They are made from the browser
-// only: pages fetch their data after hydration.
-const transport = createConnectTransport({
-  baseUrl: `${API_ORIGIN}/api/rpc`,
-  fetch: (input, init) => fetch(input, { ...init, credentials: "include" }),
-});
+// Calls go to the site's own /api with the session cookie. They are made from the browser only: pages fetch their data
+// after hydration.
+const transport = createConnectTransport({ baseUrl: "/api/rpc" });
 
 export const account = createClient(AccountService, transport);
 export const catalog = createClient(CatalogService, transport);

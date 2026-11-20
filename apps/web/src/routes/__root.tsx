@@ -10,7 +10,6 @@ import { useAccess } from "../lib/access.ts";
 import { keepAppearanceCurrent } from "../lib/appearance.ts";
 import { I18nProvider } from "../lib/i18n.tsx";
 import { getLocale } from "../lib/locale.ts";
-import { API_ORIGIN } from "../lib/origin.ts";
 import { shouldRetry } from "../lib/rpc.ts";
 import { SubjectStyles } from "../lib/subject.tsx";
 import css from "../styles.css?url";
@@ -36,9 +35,6 @@ export const Route = createRootRoute({
       { rel: "stylesheet", href: css },
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
       { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
-      // The pages' first calls go to the API's own host: its connection opens while the scripts load. The calls carry
-      // cookies, so the connection is not anonymous.
-      ...(API_ORIGIN ? [{ rel: "preconnect", href: API_ORIGIN }] : []),
     ],
     scripts: [{ children: appearanceScript() }],
   }),
