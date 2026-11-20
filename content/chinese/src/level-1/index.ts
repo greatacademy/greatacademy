@@ -2,67 +2,38 @@
 // words in 50 batches, in twelve units of daily life. Each unit teaches its characters first, then words and sentences
 // written only with the characters taught so far.
 
-import { type CourseDef, type Text, type TopicDef, t } from "@ga/content";
+import { type CourseDef, type TopicDef, t } from "@ga/content";
 
-import { characterBatches } from "./character-data.ts";
-import { type LevelOneCharacter, levelOneCharacterTopic, parseLevelOneCharacters } from "./characters.ts";
+import { levelOneCharacterTopic } from "./characters.ts";
 import { dialogues } from "./dialogue-data.ts";
 import { unitDialogueTopics } from "./dialogues.ts";
 import { unitGrammarTopics } from "./grammar.ts";
 import { grammar } from "./grammar-data.ts";
 import { unitListeningTopic, unitSpeakingTopic } from "./listening.ts";
+import {
+  LEVEL_ONE_UNITS,
+  levelOneCharacterBatches,
+  levelOneCharacterId,
+  levelOneCharacters,
+  levelOneSpeech,
+  levelOneWordBatches,
+  levelOneWordId,
+} from "./plan.ts";
 import { sentences } from "./sentence-data.ts";
 import { unitSentenceTopics } from "./sentences.ts";
 import { wordBatches } from "./word-data.ts";
-import { firstTwice, GAP, type LevelOneWord, levelOneWordTopic, parseLevelOneWords } from "./words.ts";
+import { GAP, levelOneWordTopic } from "./words.ts";
 
-/** UNITS are the units of level 1: a theme, how many character batches and how many word batches it has. */
-const UNITS: readonly { readonly title: Text; readonly characters: number; readonly words: number }[] = [
-  { title: t("Greetings and Introductions", "问候和介绍"), characters: 4, words: 3 },
-  { title: t("Numbers and Age", "数字和年龄"), characters: 2, words: 2 },
-  { title: t("Family", "家庭"), characters: 2, words: 3 },
-  { title: t("Time and Dates", "时间和日期"), characters: 3, words: 4 },
-  { title: t("Food and Drink", "吃的和喝的"), characters: 3, words: 4 },
-  { title: t("Shopping and Money", "购物和钱"), characters: 3, words: 4 },
-  { title: t("School and Study", "学校和学习"), characters: 3, words: 5 },
-  { title: t("Places and Directions", "地点和方向"), characters: 3, words: 6 },
-  { title: t("Transport and Travel", "交通和出行"), characters: 2, words: 4 },
-  { title: t("Weather and Seasons", "天气和季节"), characters: 1, words: 3 },
-  { title: t("Hobbies and Free Time", "爱好和空闲"), characters: 2, words: 7 },
-  { title: t("Body and Health", "身体和健康"), characters: 2, words: 5 },
-];
+export { levelOneCharacterId, levelOneCharacters, levelOneWordId, levelOneWords } from "./plan.ts";
 
 /** PUNCTUATION may appear in a sentence besides taught characters. */
 const PUNCTUATION = new Set([..."，。？！：“”、"]);
 
 const two = (n: number): string => String(n).padStart(2, "0");
 
-/** levelOneCharacterId is the id of the nth character topic of level 1, counting from 1. */
-export const levelOneCharacterId = (n: number): string => `level-1-characters-${two(n)}`;
-
-/** levelOneWordId is the id of the nth word topic of level 1, counting from 1. */
-export const levelOneWordId = (n: number): string => `level-1-words-${two(n)}`;
-
-const charBatches: readonly (readonly LevelOneCharacter[])[] = characterBatches.map(parseLevelOneCharacters);
-const words: readonly (readonly LevelOneWord[])[] = wordBatches.map((b) => parseLevelOneWords(b.data));
-
-/** levelOneCharacters are all the characters of level 1, by character. */
-export const levelOneCharacters: ReadonlyMap<string, LevelOneCharacter> = (() => {
-  const out = new Map<string, LevelOneCharacter>();
-  for (const c of charBatches.flat()) {
-    if (out.has(c.char)) throw new Error(`level 1: ${c.char} is taught twice`);
-    out.set(c.char, c);
-  }
-  return out;
-})();
-
-/** levelOneWords are all the words of level 1. */
-export const levelOneWords: readonly string[] = (() => {
-  const all = words.flat().map((w) => w.word);
-  const twice = firstTwice(all);
-  if (twice) throw new Error(`level 1: ${twice} is taught twice`);
-  return all;
-})();
+const UNITS = LEVEL_ONE_UNITS;
+const charBatches = levelOneCharacterBatches;
+const words = levelOneWordBatches;
 
 interface Built {
   readonly topics: readonly TopicDef[];
@@ -101,10 +72,8 @@ function build(): Built {
       characterIds.push(id);
     }
     const wordIds: string[] = [];
-    const unitWords: LevelOneWord[] = [];
     for (let k = 0; k < unit.words; k++) {
       const batch = words[w]!;
-      unitWords.push(...batch);
       const { theme } = wordBatches[w]!;
       w++;
       const id = levelOneWordId(w);
@@ -138,15 +107,7 @@ function build(): Built {
     });
     g += unitGrammar.length;
     topics.push(...unitGrammar);
-    const speech = {
-      level: 1,
-      numeral: "一",
-      unit: u + 1,
-      theme: unit.title,
-      words: unitWords,
-      chars: levelOneCharacters,
-      after: levelOneWordId(w),
-    };
+    const speech = levelOneSpeech[u]!;
     const listening = [
       unitListeningTopic(speech),
       unitSpeakingTopic(speech),

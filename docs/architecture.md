@@ -204,7 +204,7 @@ web Worker ──service binding──► subject gateway ──service bindings
 - **A shard** holds the definitions of some of a subject's topics and implements `SubjectSource` with `topicSource`. Its definitions are built on the first call, not at startup. Content whose modules build problem banks as they load, as Chinese does, takes longer than the second a Worker has to start, so its shard is made with `lazyShardWorker`, which imports the content dynamically on the first call; the bundler puts that content in a chunk of its own, and the call it first serves pays the time. The problem banks are built again when asked and not kept, so that a shard stays under the 128 MB an isolate has ([Content](content.md) §4); an isolate over it is recycled, and every call would load the content again.
 - **`Registry`** (`libs/api`) reads the listings once per isolate, which is enough to list courses, and loads a subject's manifest when one of its courses is first used. It keeps the two most recently used subjects, because mathematics takes about 45 MB of memory once indexed and an isolate has 128 MB. A course's scope is computed when first used.
 
-Mathematics has five shards, one for each stretch of the curriculum (`content/math/src/shards/`). `apps/math-workers/gen/` holds the generated manifest and the topics of each shard; it is not committed. English has one shard for now, `core`, and the same layout under `apps/english-workers`. Chinese has three under `apps/chinese-workers`: `core` (the native grades, heritage, the Gaokao and the reading units), `levels` (the nine levels of Chinese as a foreign language and their handwriting) and `hsk` (the HSK exam topics), each under 100 MB at its peak while loading.
+Mathematics has five shards, one for each stretch of the curriculum (`content/math/src/shards/`). `apps/math-workers/gen/` holds the generated manifest and the topics of each shard; it is not committed. English has one shard for now, `core`, and the same layout under `apps/english-workers`. Chinese has three under `apps/chinese-workers`: `core` (the native grades, heritage, the Gaokao and the reading units), `levels` (the nine levels of Chinese as a foreign language and their handwriting) and `hsk` (the HSK exam topics). The HSK topics need the levels' characters, words and units but not their topics, so `hsk` reads each level's plan (`level-N/plan.ts`, its batches read and checked) and only the courses import the levels' topics.
 
 | Worker | Uncompressed size | Module load under Node |
 | :--- | :--- | :--- |
@@ -219,7 +219,7 @@ Mathematics has five shards, one for each stretch of the curriculum (`content/ma
 | `ga-english-core` | 7.5 MB | 240 ms |
 | `ga-chinese-core` | 4.7 MB | 420 ms, on its first call |
 | `ga-chinese-levels` | 5.6 MB | 1,270 ms, on its first call |
-| `ga-chinese-hsk` | 6.0 MB | 1,690 ms, on its first call |
+| `ga-chinese-hsk` | 5.7 MB | 1,260 ms, on its first call |
 
 A shard is split in two when its startup time or memory nears the limits, which `startup_time_ms` in the deployment output and production metrics show: topics move to a new file under `shards/`, a new entry under `apps/math-workers/src/shards/`, and a new binding. Which shard holds a topic is not stored in learner state, so this is safe at any time.
 

@@ -7,46 +7,10 @@ import { type CourseDef, type TopicDef, t } from "@ga/content";
 
 import { withConversations } from "../conversations.ts";
 import type { LevelOneCharacter } from "../level-1/characters.ts";
-import { buildLevel, type LevelUnit } from "../level-2/level.ts";
-import { levelThreeCharacters, levelThreeLast, levelThreeWords } from "../level-3/index.ts";
-import { characterBatches } from "./character-data.ts";
-import { dialogues } from "./dialogue-data.ts";
-import { grammar } from "./grammar-data.ts";
-import { sentences } from "./sentence-data.ts";
-import { wordBatchesA } from "./word-data-a.ts";
-import { wordBatchesB } from "./word-data-b.ts";
-import { writing } from "./writing-data.ts";
+import { buildLevel } from "../level-2/level.ts";
+import { levelFourPlan } from "./plan.ts";
 
-/** UNITS are the units of level 4. */
-const UNITS: readonly LevelUnit[] = [
-  { title: t("Health and Medicine", "健康和医疗"), characters: 3, words: 9 },
-  { title: t("Travel and Transport", "旅行和交通"), characters: 3, words: 9 },
-  { title: t("Media and the Internet", "媒体和网络"), characters: 3, words: 9 },
-  { title: t("History", "历史"), characters: 3, words: 8 },
-  { title: t("The Arts", "艺术"), characters: 3, words: 8 },
-  { title: t("Law and Rights", "法律和权利"), characters: 3, words: 9 },
-  { title: t("The Economy", "经济"), characters: 3, words: 9 },
-  { title: t("Feelings", "情感"), characters: 2, words: 8 },
-  { title: t("Nature and Climate", "自然和气候"), characters: 2, words: 8 },
-  { title: t("Sport", "体育"), characters: 2, words: 8 },
-  { title: t("Science", "科学"), characters: 2, words: 8 },
-  { title: t("Careers", "职业"), characters: 1, words: 7 },
-];
-
-const level = buildLevel({
-  level: 4,
-  numeral: "四",
-  units: UNITS,
-  characterBatches,
-  wordBatches: [...wordBatchesA, ...wordBatchesB],
-  grammar,
-  sentences,
-  writing,
-  dialogues,
-  earlierCharacters: levelThreeCharacters,
-  earlierWords: levelThreeWords,
-  after: levelThreeLast.words,
-});
+const level = buildLevel(levelFourPlan);
 
 /** levelFourCharacters are the characters of levels 1 to 4, by character. */
 export const levelFourCharacters: ReadonlyMap<string, LevelOneCharacter> = level.characters;

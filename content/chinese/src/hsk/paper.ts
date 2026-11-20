@@ -8,7 +8,7 @@ import { criterionById, point, quote, type WritingItem, writingGenerator } from 
 import { withPictures } from "../illustrations.ts";
 import { GAP, parseLevelWords } from "../level-1/words.ts";
 import { levelWritingId } from "../level-1/writing.ts";
-import { levelFourLast } from "../level-4/index.ts";
+import { levelFourPlan } from "../level-4/plan.ts";
 import { wordBatchesA } from "../level-4/word-data-a.ts";
 import { wordBatchesB } from "../level-4/word-data-b.ts";
 import { type PaperItem, practicalTexts, sceneStories } from "./paper-data.ts";
@@ -99,7 +99,7 @@ export function paperTopics(key: string): readonly TopicDef[] {
           "The first part of the writing paper: a sentence of one's own with a given word of level 4, judged by a model.",
           "写作第一部分：用给出的四级词语自己写一个句子，由 AI 评判。",
         ),
-        after: levelFourLast.words,
+        after: levelFourPlan.last.words,
         criteria: ["hsk-word-use", "hsk-word-grammar", "hsk-word-sense"],
         explanation: t(
           "Think first what the word means and what kind of word it is: a verb takes an object or a complement, a noun a measure word or an adjective, a connective joins two clauses. Then put it in a short scene of daily life, with who, when or why, so that the sentence could only be true with that word.",

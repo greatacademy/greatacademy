@@ -8,7 +8,6 @@ import { type Generator, joinText, type Problem, type Rng, same, type TopicDef, 
 import { point, quote } from "@ga/subject-chinese";
 
 import { heardDialogue, heardTalk, type Line } from "../audio.ts";
-import { type LevelData, levelData } from "./data.ts";
 
 /** ComprehensionData is a course's dialogues and passages as written: short and long ones of each, in blocks. */
 export interface ComprehensionData {
@@ -161,7 +160,10 @@ export function comprehensionGenerator(blocks: readonly Block[], listening: bool
 export interface ComprehensionSpec {
   readonly key: string;
   readonly name: string;
-  readonly levels: readonly LevelData[];
+  /** top is the highest level it tests. */
+  readonly top: number;
+  /** taught are the characters of the levels up to top, which its texts are written with. */
+  readonly taught: ReadonlySet<string>;
   /** listeningAfter and readingAfter are the topics each follows. */
   readonly listeningAfter: string;
   readonly readingAfter: string;
@@ -170,9 +172,7 @@ export interface ComprehensionSpec {
 /** comprehensionTopics builds the listening of dialogues and talks and the reading of passages of an HSK course from its data. */
 export function comprehensionTopics(spec: ComprehensionSpec, data: ComprehensionData): readonly TopicDef[] {
   const id = (s: string): string => `hsk-${spec.key}-${s}`;
-  const top = Math.max(...spec.levels.map((l) => l.level));
-  // A course tests its own levels and every level before them.
-  const taught = new Set(levelData.filter((l) => l.level <= top).flatMap((l) => l.characters.flat().map((c) => c.char)));
+  const { top, taught } = spec;
   const options = top <= 3 ? 3 : 4;
   const parse = (s: string, d: string) => parseBlocks(id(s), d);
   const shortDialogues = parse("dialogues-short", data.dialogues.short);

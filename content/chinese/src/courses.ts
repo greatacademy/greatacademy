@@ -9,7 +9,7 @@ import { classicalDrillTopics, classicalPassages } from "./classical/index.ts";
 import { gaokaoCourse } from "./gaokao/index.ts";
 import { connectiveTopics, faultyTopics, type GradeTopic, punctuationTopics, rhetoricTopics, sentenceTopics } from "./grammar/index.ts";
 import { heritageTopics } from "./heritage/topics.ts";
-import { hskCourses } from "./hsk/index.ts";
+import { hskCourses } from "./hsk/courses.ts";
 import { idiomsByGrade } from "./idioms/index.ts";
 import { levelOneCourse } from "./level-1/index.ts";
 import { levelTwoCourse } from "./level-2/index.ts";

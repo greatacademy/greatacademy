@@ -9,47 +9,10 @@ import { type CourseDef, type TopicDef, t } from "@ga/content";
 
 import { withConversations } from "../conversations.ts";
 import type { LevelOneCharacter } from "../level-1/characters.ts";
-import { buildLevel, type LevelUnit } from "../level-2/level.ts";
-import { levelEightCharacters, levelEightLast, levelEightWords } from "../level-8/index.ts";
-import { characterBatches1, wordBatches1 } from "./data-1.ts";
-import { characterBatches2, wordBatches2 } from "./data-2.ts";
-import { characterBatches3, wordBatches3 } from "./data-3.ts";
-import { characterBatches4, wordBatches4 } from "./data-4.ts";
-import { dialogues } from "./dialogue-data.ts";
-import { grammar } from "./grammar-data.ts";
-import { sentences } from "./sentence-data.ts";
-import { writing } from "./writing-data.ts";
+import { buildLevel } from "../level-2/level.ts";
+import { levelNinePlan } from "./plan.ts";
 
-/** UNITS are the units of level 9. */
-const UNITS: readonly LevelUnit[] = [
-  { title: t("Language and Rhetoric", "语言和修辞"), characters: 4, words: 16 },
-  { title: t("Idioms and Allusions", "成语和典故"), characters: 4, words: 16 },
-  { title: t("Philosophy", "哲学"), characters: 4, words: 16 },
-  { title: t("Behaviour and Character", "行为和性格"), characters: 4, words: 16 },
-  { title: t("The Universe", "宇宙和天文"), characters: 3, words: 16 },
-  { title: t("Life Sciences", "生命科学"), characters: 3, words: 16 },
-  { title: t("International Affairs", "国际事务"), characters: 3, words: 16 },
-  { title: t("Communication and the Media", "传播和媒介"), characters: 3, words: 16 },
-  { title: t("Architecture and Planning", "建筑和规划"), characters: 3, words: 15 },
-  { title: t("Crafts and Folk Customs", "工艺和民俗"), characters: 3, words: 15 },
-  { title: t("Sport and Competition", "体育和竞技"), characters: 3, words: 15 },
-  { title: t("Formal Writing", "公文和应用文"), characters: 3, words: 15 },
-];
-
-const level = buildLevel({
-  level: 9,
-  numeral: "九",
-  units: UNITS,
-  characterBatches: [...characterBatches1, ...characterBatches2, ...characterBatches3, ...characterBatches4],
-  wordBatches: [...wordBatches1, ...wordBatches2, ...wordBatches3, ...wordBatches4],
-  grammar,
-  sentences,
-  writing,
-  dialogues,
-  earlierCharacters: levelEightCharacters,
-  earlierWords: levelEightWords,
-  after: levelEightLast.words,
-});
+const level = buildLevel(levelNinePlan);
 
 /** levelNineCharacters are the characters of levels 1 to 9, by character. */
 export const levelNineCharacters: ReadonlyMap<string, LevelOneCharacter> = level.characters;

@@ -7,47 +7,10 @@ import { type CourseDef, type TopicDef, t } from "@ga/content";
 
 import { withConversations } from "../conversations.ts";
 import type { LevelOneCharacter } from "../level-1/characters.ts";
-import { buildLevel, type LevelUnit } from "../level-2/level.ts";
-import { levelFiveCharacters, levelFiveLast, levelFiveWords } from "../level-5/index.ts";
-import { characterBatchesA } from "./character-data-a.ts";
-import { characterBatchesB } from "./character-data-b.ts";
-import { dialogues } from "./dialogue-data.ts";
-import { grammar } from "./grammar-data.ts";
-import { sentences } from "./sentence-data.ts";
-import { wordBatchesA } from "./word-data-a.ts";
-import { wordBatchesB } from "./word-data-b.ts";
-import { writing } from "./writing-data.ts";
+import { buildLevel } from "../level-2/level.ts";
+import { levelSixPlan } from "./plan.ts";
 
-/** UNITS are the units of level 6. */
-const UNITS: readonly LevelUnit[] = [
-  { title: t("Language and Communication", "语言和交流"), characters: 3, words: 10 },
-  { title: t("Families and Generations", "家庭和代际"), characters: 3, words: 10 },
-  { title: t("Cities and the Countryside", "城市和乡村"), characters: 3, words: 10 },
-  { title: t("Health and Ways of Living", "健康和生活方式"), characters: 3, words: 10 },
-  { title: t("Science and Discovery", "科学和发现"), characters: 3, words: 10 },
-  { title: t("Culture and Heritage", "文化和遗产"), characters: 3, words: 10 },
-  { title: t("News and Opinion", "新闻和舆论"), characters: 2, words: 9 },
-  { title: t("Money and Spending", "金融和消费"), characters: 2, words: 9 },
-  { title: t("Relationships", "人际关系"), characters: 2, words: 9 },
-  { title: t("The Performing Arts", "表演艺术"), characters: 2, words: 9 },
-  { title: t("Geography and Travel", "地理和旅行"), characters: 2, words: 9 },
-  { title: t("Thinking and Arguing", "思考和论证"), characters: 2, words: 9 },
-];
-
-const level = buildLevel({
-  level: 6,
-  numeral: "六",
-  units: UNITS,
-  characterBatches: [...characterBatchesA, ...characterBatchesB],
-  wordBatches: [...wordBatchesA, ...wordBatchesB],
-  grammar,
-  sentences,
-  writing,
-  dialogues,
-  earlierCharacters: levelFiveCharacters,
-  earlierWords: levelFiveWords,
-  after: levelFiveLast.words,
-});
+const level = buildLevel(levelSixPlan);
 
 /** levelSixCharacters are the characters of levels 1 to 6, by character. */
 export const levelSixCharacters: ReadonlyMap<string, LevelOneCharacter> = level.characters;

@@ -8,38 +8,17 @@
 import { type Text, type TopicDef, t } from "@ga/content";
 
 import type { LevelOneCharacter } from "../level-1/characters.ts";
-import { levelOneCharacters, levelOneTopics } from "../level-1/index.ts";
-import { wordBatches as wordBatches1 } from "../level-1/word-data.ts";
-import { type LevelOneWord, parseLevelWords } from "../level-1/words.ts";
-import { levelTwoCharacters, levelTwoTopics } from "../level-2/index.ts";
+import { levelOnePlan } from "../level-1/plan.ts";
+import type { LevelOneWord } from "../level-1/words.ts";
 import { levelCharacterId } from "../level-2/level.ts";
-import { wordBatches as wordBatches2 } from "../level-2/word-data.ts";
-import { levelThreeCharacters, levelThreeTopics } from "../level-3/index.ts";
-import { wordBatches as wordBatches3 } from "../level-3/word-data.ts";
-import { levelFourCharacters, levelFourTopics } from "../level-4/index.ts";
-import { wordBatchesA as wordBatches4a } from "../level-4/word-data-a.ts";
-import { wordBatchesB as wordBatches4b } from "../level-4/word-data-b.ts";
-import { levelFiveCharacters, levelFiveTopics } from "../level-5/index.ts";
-import { wordBatchesA as wordBatches5a } from "../level-5/word-data-a.ts";
-import { wordBatchesB as wordBatches5b } from "../level-5/word-data-b.ts";
-import { levelSixCharacters, levelSixTopics } from "../level-6/index.ts";
-import { wordBatchesA as wordBatches6a } from "../level-6/word-data-a.ts";
-import { wordBatchesB as wordBatches6b } from "../level-6/word-data-b.ts";
-import { wordBatches1 as wordBatches7a } from "../level-7/data-1.ts";
-import { wordBatches2 as wordBatches7b } from "../level-7/data-2.ts";
-import { wordBatches3 as wordBatches7c } from "../level-7/data-3.ts";
-import { wordBatches4 as wordBatches7d } from "../level-7/data-4.ts";
-import { levelSevenCharacters, levelSevenTopics } from "../level-7/index.ts";
-import { wordBatches1 as wordBatches8a } from "../level-8/data-1.ts";
-import { wordBatches2 as wordBatches8b } from "../level-8/data-2.ts";
-import { wordBatches3 as wordBatches8c } from "../level-8/data-3.ts";
-import { wordBatches4 as wordBatches8d } from "../level-8/data-4.ts";
-import { levelEightCharacters, levelEightTopics } from "../level-8/index.ts";
-import { wordBatches1 as wordBatches9a } from "../level-9/data-1.ts";
-import { wordBatches2 as wordBatches9b } from "../level-9/data-2.ts";
-import { wordBatches3 as wordBatches9c } from "../level-9/data-3.ts";
-import { wordBatches4 as wordBatches9d } from "../level-9/data-4.ts";
-import { levelNineCharacters, levelNineTopics } from "../level-9/index.ts";
+import { levelTwoPlan } from "../level-2/plan.ts";
+import { levelThreePlan } from "../level-3/plan.ts";
+import { levelFourPlan } from "../level-4/plan.ts";
+import { levelFivePlan } from "../level-5/plan.ts";
+import { levelSixPlan } from "../level-6/plan.ts";
+import { levelSevenPlan } from "../level-7/plan.ts";
+import { levelEightPlan } from "../level-8/plan.ts";
+import { levelNinePlan } from "../level-9/plan.ts";
 import { HAND_BATCH, type HandTask, handTopic, medians, wordTask } from "./writing.ts";
 
 /** WRITTEN_BY_LEVEL is how many characters a learner writes by the end of each level, from level 1. */
@@ -51,42 +30,32 @@ const TASKS = 3;
 /** levelHandwritingId is the id of a level's writing batch, counted from 1. */
 export const levelHandwritingId = (level: number, n: number): string => `level-${level}-handwriting-${String(n).padStart(2, "0")}`;
 
-/** LEVELS are each level's characters, its own and the earlier ones', and its topics, from level 1. */
-const LEVELS: readonly { readonly characters: ReadonlyMap<string, LevelOneCharacter>; readonly topics: readonly TopicDef[] }[] = [
-  { characters: levelOneCharacters, topics: levelOneTopics },
-  { characters: levelTwoCharacters, topics: levelTwoTopics },
-  { characters: levelThreeCharacters, topics: levelThreeTopics },
-  { characters: levelFourCharacters, topics: levelFourTopics },
-  { characters: levelFiveCharacters, topics: levelFiveTopics },
-  { characters: levelSixCharacters, topics: levelSixTopics },
-  { characters: levelSevenCharacters, topics: levelSevenTopics },
-  { characters: levelEightCharacters, topics: levelEightTopics },
-  { characters: levelNineCharacters, topics: levelNineTopics },
-];
+/** LEVELS are the plans of the levels, from level 1: each level's characters, its own and the earlier ones', and its batches. */
+const LEVELS = [
+  levelOnePlan,
+  levelTwoPlan,
+  levelThreePlan,
+  levelFourPlan,
+  levelFivePlan,
+  levelSixPlan,
+  levelSevenPlan,
+  levelEightPlan,
+  levelNinePlan,
+] as const;
 
 /** levelWords are each level's own words, from level 1, in teaching order. */
-export const levelWords: readonly (readonly LevelOneWord[])[] = [
-  wordBatches1,
-  wordBatches2,
-  wordBatches3,
-  [...wordBatches4a, ...wordBatches4b],
-  [...wordBatches5a, ...wordBatches5b],
-  [...wordBatches6a, ...wordBatches6b],
-  [...wordBatches7a, ...wordBatches7b, ...wordBatches7c, ...wordBatches7d],
-  [...wordBatches8a, ...wordBatches8b, ...wordBatches8c, ...wordBatches8d],
-  [...wordBatches9a, ...wordBatches9b, ...wordBatches9c, ...wordBatches9d],
-].map((batches, i) => batches.flatMap((b) => parseLevelWords(b.data, i + 1)));
+export const levelWords: readonly (readonly LevelOneWord[])[] = LEVELS.map((l) => l.wordBatches.flat());
 
 /** taughtIn maps each character to the level that teaches it and its character batch there, counted from 1. */
 const taughtIn: ReadonlyMap<string, { readonly level: number; readonly batch: number }> = (() => {
   const out = new Map<string, { level: number; batch: number }>();
   let from = 0;
-  for (const [i, { characters, topics }] of LEVELS.entries()) {
+  for (const [i, { characters, characterBatches }] of LEVELS.entries()) {
     const level = i + 1;
     const own = [...characters.keys()].slice(from);
     for (const [k, char] of own.entries()) {
       const batch = Math.floor(k / HAND_BATCH) + 1;
-      if (!topics.some((x) => x.id === levelCharacterId(level, batch))) throw new Error(`level ${level}: no character topic for ${char}`);
+      if (!characterBatches[batch - 1]?.some((c) => c.char === char)) throw new Error(`level ${level}: no character batch for ${char}`);
       out.set(char, { level, batch });
     }
     from = characters.size;
@@ -183,7 +152,8 @@ const listed = (chars: readonly LevelOneCharacter[]): Text =>
 
 /** levelHandwritingByLevel are each level's writing batches, in order; each follows the batch before it, across levels. */
 export const levelHandwritingByLevel: readonly { readonly level: number; readonly batches: readonly LevelHandBatch[] }[] = (() => {
-  const order = [...levelNineCharacters.keys()];
+  const all = levelNinePlan.characters;
+  const order = [...all.keys()];
   let previous: string | undefined;
   // The latest character batch of each level an earlier writing batch needs: those before it are implied.
   const needed = new Map<number, number>();
@@ -196,7 +166,7 @@ export const levelHandwritingByLevel: readonly { readonly level: number; readonl
         const taught = taughtIn.get(char);
         if (!taught || taught.level > level) throw new Error(`writing ${char} in level ${level}: it is not read by then`);
         if (!medians.has(char)) throw new Error(`writing ${char} in level ${level}: no medians`);
-        return levelNineCharacters.get(char)!;
+        return all.get(char)!;
       });
       if (chars.length !== HAND_BATCH) throw new Error(`writing level ${level}: a batch of ${chars.length}`);
       const id = levelHandwritingId(level, batches.length + 1);

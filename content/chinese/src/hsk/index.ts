@@ -10,7 +10,6 @@
 import { type CourseDef, type CriterionSpec, type Generator, same, slimTopics, type Text, type TopicDef, t } from "@ga/content";
 import { criterionById, point, quote, writingGenerator } from "@ga/subject-chinese";
 import type { LevelOneCharacter } from "../level-1/characters.ts";
-import { levelOneCourse, levelOneWordId } from "../level-1/index.ts";
 import { nearOf, spread } from "../level-1/kit.ts";
 import {
   type Asked,
@@ -21,6 +20,7 @@ import {
   speakingBanks,
   unitSpeechSpecs,
 } from "../level-1/listening.ts";
+import { levelOnePlan } from "../level-1/plan.ts";
 import { sentences as levelOneSentences } from "../level-1/sentence-data.ts";
 import {
   type LevelSentences,
@@ -32,27 +32,25 @@ import {
 } from "../level-1/sentences.ts";
 import { GAP, type LevelOneWord, pinyinOf } from "../level-1/words.ts";
 import { type LevelWriting, levelWritingId } from "../level-1/writing.ts";
-import { levelTwoCourse, levelTwoLast } from "../level-2/index.ts";
+import { levelTwoPlan } from "../level-2/plan.ts";
 import { sentences as levelTwoSentences } from "../level-2/sentence-data.ts";
-import { levelThreeCourse, levelThreeLast } from "../level-3/index.ts";
+import { levelThreePlan } from "../level-3/plan.ts";
 import { sentences as levelThreeSentences } from "../level-3/sentence-data.ts";
 import { writing as levelThreeWriting } from "../level-3/writing-data.ts";
-import { levelFourCourse, levelFourLast } from "../level-4/index.ts";
+import { levelFourPlan } from "../level-4/plan.ts";
 import { sentences as levelFourSentences } from "../level-4/sentence-data.ts";
 import { writing as levelFourWriting } from "../level-4/writing-data.ts";
-import { levelFiveCourse, levelFiveLast } from "../level-5/index.ts";
+import { levelFivePlan } from "../level-5/plan.ts";
 import { sentences as levelFiveSentences } from "../level-5/sentence-data.ts";
 import { writing as levelFiveWriting } from "../level-5/writing-data.ts";
-import { levelSixCourse, levelSixLast } from "../level-6/index.ts";
+import { levelSixPlan } from "../level-6/plan.ts";
 import { sentences as levelSixSentences } from "../level-6/sentence-data.ts";
 import { writing as levelSixWriting } from "../level-6/writing-data.ts";
-import { levelSevenCourse } from "../level-7/index.ts";
 import { sentences as levelSevenSentences } from "../level-7/sentence-data.ts";
 import { writing as levelSevenWriting } from "../level-7/writing-data.ts";
-import { levelEightCourse } from "../level-8/index.ts";
 import { sentences as levelEightSentences } from "../level-8/sentence-data.ts";
 import { writing as levelEightWriting } from "../level-8/writing-data.ts";
-import { levelNineCourse, levelNineLast } from "../level-9/index.ts";
+import { levelNinePlan } from "../level-9/plan.ts";
 import { sentences as levelNineSentences } from "../level-9/sentence-data.ts";
 import { writing as levelNineWriting } from "../level-9/writing-data.ts";
 import { answeringOne, answeringThree, answeringTwo } from "./answering-data.ts";
@@ -320,8 +318,6 @@ interface HskSpec {
   readonly numbers: readonly number[];
   /** after is the last topic of the levels it tests. */
   readonly after: string;
-  readonly courses: readonly CourseDef[];
-  readonly buildsOn: readonly string[];
   readonly words: number;
   readonly characters: number;
 }
@@ -541,8 +537,11 @@ function comprehensionExam(spec: HskSpec): readonly TopicDef[] {
   const data = COMPREHENSION[spec.key];
   if (!data) return [];
   const id = (s: string): string => `hsk-${spec.key}-${s}`;
+  const top = Math.max(...spec.levels.map((l) => l.level));
+  // A course tests its own levels and every level before them.
+  const taught = new Set(levelData.filter((l) => l.level <= top).flatMap((l) => l.characters.flat().map((c) => c.char)));
   return comprehensionTopics(
-    { key: spec.key, name: spec.name, levels: spec.levels, listeningAfter: id("listening"), readingAfter: id("gaps") },
+    { key: spec.key, name: spec.name, top, taught, listeningAfter: id("listening"), readingAfter: id("gaps") },
     data,
   );
 }
@@ -566,8 +565,15 @@ function oralExam(spec: HskSpec): readonly TopicDef[] {
   });
 }
 
-/** hsk builds an HSK course and its exam topics. */
-function hsk(spec: HskSpec): { readonly course: CourseDef; readonly topics: readonly TopicDef[] } {
+/** HskPart is an HSK course's exam topics and how its course is made from the courses of the levels it tests. */
+export interface HskPart {
+  readonly key: string;
+  readonly topics: readonly TopicDef[];
+  readonly course: (courses: readonly CourseDef[], buildsOn: readonly string[]) => CourseDef;
+}
+
+/** hsk builds the exam topics of an HSK course; its course is made in courses.ts, with the courses of its levels. */
+function hsk(spec: HskSpec): HskPart {
   // Each part apart, so that the banks of only one are built at a time.
   const topics = [
     ...slimTopics(() => examTopics(spec)),
@@ -578,37 +584,39 @@ function hsk(spec: HskSpec): { readonly course: CourseDef; readonly topics: read
     ...slimTopics(() => writingExam(spec)),
     ...slimTopics(() => paperTopics(spec.key)),
   ];
-  const conversations = spec.courses.flatMap((c) => c.conversations ?? []);
   return {
+    key: spec.key,
     topics,
-    course: {
-      id: `chinese-hsk-${spec.key}`,
-      title: t(`HSK ${spec.name}`, `HSK ${spec.name}`),
-      description: t(
-        `Practice for level ${spec.name} of the new HSK over the ${spec.characters.toLocaleString("en")} characters and ${spec.words.toLocaleString("en")} words of ${spec.levels.length > 1 ? `levels ${spec.name}` : `level ${spec.name}`}: their units, then words in sentences, words and meanings, characters, and building sentences, with every theme mixed as a test mixes them${spec.numbers[0]! >= 3 ? ", and writing, judged by a model" : ""}, and listening and speaking. It teaches nothing new: its own topics start with practice.`,
-        `新 HSK ${spec.name} 级的练习，覆盖${spec.zh}的 ${spec.characters} 个汉字和 ${spec.words} 个词语：先是这些等级的单元，然后是选词填空、词语和意思、汉字和连词成句${spec.numbers[0]! >= 3 ? "，以及由 AI 评判的写作" : ""}，还有听力和口语，各个话题像考试一样混在一起。本课程不教新知识：它自己的主题一开始就是练习。`,
-      ),
-      group: examGroup,
-      buildsOn: [...spec.buildsOn],
-      units: [
-        ...spec.courses.flatMap((c) => c.units),
-        {
-          title: t("Exam Practice", "考试练习"),
-          modules: [{ title: t(`HSK ${spec.name}`, `HSK ${spec.name}`), topics: topics.map((x) => x.id) }],
-        },
-      ],
-      ...(conversations.length > 0 ? { conversations } : {}),
+    course: (courses, buildsOn) => {
+      const conversations = courses.flatMap((c) => c.conversations ?? []);
+      return {
+        id: `chinese-hsk-${spec.key}`,
+        title: t(`HSK ${spec.name}`, `HSK ${spec.name}`),
+        description: t(
+          `Practice for level ${spec.name} of the new HSK over the ${spec.characters.toLocaleString("en")} characters and ${spec.words.toLocaleString("en")} words of ${spec.levels.length > 1 ? `levels ${spec.name}` : `level ${spec.name}`}: their units, then words in sentences, words and meanings, characters, and building sentences, with every theme mixed as a test mixes them${spec.numbers[0]! >= 3 ? ", and writing, judged by a model" : ""}, and listening and speaking. It teaches nothing new: its own topics start with practice.`,
+          `新 HSK ${spec.name} 级的练习，覆盖${spec.zh}的 ${spec.characters} 个汉字和 ${spec.words} 个词语：先是这些等级的单元，然后是选词填空、词语和意思、汉字和连词成句${spec.numbers[0]! >= 3 ? "，以及由 AI 评判的写作" : ""}，还有听力和口语，各个话题像考试一样混在一起。本课程不教新知识：它自己的主题一开始就是练习。`,
+        ),
+        group: examGroup,
+        buildsOn: [...buildsOn],
+        units: [
+          ...courses.flatMap((c) => c.units),
+          {
+            title: t("Exam Practice", "考试练习"),
+            modules: [{ title: t(`HSK ${spec.name}`, `HSK ${spec.name}`), topics: topics.map((x) => x.id) }],
+          },
+        ],
+        ...(conversations.length > 0 ? { conversations } : {}),
+      };
     },
   };
 }
 
 const count = (levels: readonly LevelData[], k: "characters" | "words"): number => levels.reduce((n, l) => n + l[k].flat().length, 0);
 
-const ONE = [levelOneCourse, levelTwoCourse, levelThreeCourse, levelFourCourse, levelFiveCourse, levelSixCourse] as const;
-const LAST = [levelOneWordId(50), levelTwoLast.words, levelThreeLast.words, levelFourLast.words, levelFiveLast.words, levelSixLast.words];
+const PLANS = [levelOnePlan, levelTwoPlan, levelThreePlan, levelFourPlan, levelFivePlan, levelSixPlan] as const;
 
 const built = [
-  ...ONE.map((course, i) => {
+  ...PLANS.map((plan, i) => {
     const levels = [levelData[i]!];
     return hsk({
       key: String(i + 1),
@@ -616,9 +624,7 @@ const built = [
       zh: `${"一二三四五六"[i]}级`,
       levels,
       numbers: [i + 1],
-      after: LAST[i]!,
-      courses: [course],
-      buildsOn: course.buildsOn ?? [],
+      after: plan.last.words,
       characters: count(levels, "characters"),
       words: count(levels, "words"),
     });
@@ -631,17 +637,15 @@ const built = [
       zh: "七至九级",
       levels,
       numbers: [7, 8, 9],
-      after: levelNineLast.words,
-      courses: [levelSevenCourse, levelEightCourse, levelNineCourse],
-      buildsOn: ["chinese-level-6"],
+      after: levelNinePlan.last.words,
       characters: count(levels, "characters"),
       words: count(levels, "words"),
     });
   })(),
 ];
 
+/** hskParts are the seven HSK courses' exam topics, HSK 1 to 6 and HSK 7–9. */
+export const hskParts: readonly HskPart[] = built;
+
 /** hskTopics are the exam topics of the HSK courses: those every course has, and the writing of some. */
 export const hskTopics: readonly TopicDef[] = built.flatMap((b) => b.topics);
-
-/** hskCourses are the seven HSK courses, HSK 1 to 6 and HSK 7–9. */
-export const hskCourses: readonly CourseDef[] = built.map((b) => b.course);

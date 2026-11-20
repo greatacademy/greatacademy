@@ -181,13 +181,18 @@ export function listeningBanks(spec: UnitSpeechSpec): { readonly hearWord: reado
   return { hearWord, hearSentence };
 }
 
-/** specs are the units built so far, by level, filled as the levels build their listening: the HSK courses mix them. */
-const specs = new Map<number, UnitSpeechSpec[]>();
+/** specs are the units of each level, by level, filled as the levels are planned: the HSK courses mix them. */
+const specs = new Map<number, readonly UnitSpeechSpec[]>();
 
-/** unitSpeechSpecs are the units of a level whose listening is built, in order; a level must be built before it is asked for. */
+/** registerUnitSpeech records the units of a level, in order, for its speaking and the HSK courses. */
+export function registerUnitSpeech(level: number, units: readonly UnitSpeechSpec[]): void {
+  specs.set(level, units);
+}
+
+/** unitSpeechSpecs are the units of a level, in order; a level must be planned before it is asked for. */
 export function unitSpeechSpecs(level: number): readonly UnitSpeechSpec[] {
   const units = specs.get(level);
-  if (!units) throw new Error(`level ${level}: its listening is not built yet`);
+  if (!units) throw new Error(`level ${level}: it is not planned yet`);
   return units;
 }
 
@@ -195,7 +200,6 @@ export function unitSpeechSpecs(level: number): readonly UnitSpeechSpec[] {
 function buildUnitListeningTopic(spec: UnitSpeechSpec): TopicDef {
   const id = levelListeningId(spec.level, spec.unit);
   const { hearWord, hearSentence } = listeningBanks(spec);
-  specs.set(spec.level, [...(specs.get(spec.level) ?? []).filter((x) => x.unit !== spec.unit), spec]);
 
   return {
     id,

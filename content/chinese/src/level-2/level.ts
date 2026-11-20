@@ -8,7 +8,7 @@ import { t } from "@ga/content";
 import { type LevelOneCharacter, levelOneCharacterTopic, parseLevelCharacters } from "../level-1/characters.ts";
 import { type LevelDialogues, unitDialogueTopics } from "../level-1/dialogues.ts";
 import { type LevelGrammar, unitGrammarTopics } from "../level-1/grammar.ts";
-import { unitListeningTopic, unitSpeakingTopic } from "../level-1/listening.ts";
+import { registerUnitSpeech, type UnitSpeechSpec, unitListeningTopic, unitSpeakingTopic } from "../level-1/listening.ts";
 import { type LevelSentences, unitSentenceTopics } from "../level-1/sentences.ts";
 import { firstTwice, GAP, type LevelOneWord, levelOneWordTopic, parseLevelWords } from "../level-1/words.ts";
 import { type LevelWriting, unitWritingTopics } from "../level-1/writing.ts";
@@ -74,26 +74,66 @@ export const levelCharacterId = (level: number, n: number): string => `level-${l
 /** levelWordId is the id of the nth word topic of a level, counting from 1. */
 export const levelWordId = (level: number, n: number): string => `level-${level}-words-${two(n)}`;
 
-/** buildLevel makes the topics and units of a level, checking that each word and sentence uses only characters taught by then. */
-export function buildLevel(spec: LevelSpec): Level {
+/** LevelPlan is a level read from its data and checked, without its topics: what the HSK courses and the writing need. */
+export interface LevelPlan {
+  readonly spec: LevelSpec;
+  /** characters are the characters of this level and the earlier ones, by character. */
+  readonly characters: ReadonlyMap<string, LevelOneCharacter>;
+  /** words are the words of this level and the earlier ones. */
+  readonly words: readonly string[];
+  /** characterBatches and wordBatches are this level's own batches, in order. */
+  readonly characterBatches: readonly (readonly LevelOneCharacter[])[];
+  readonly wordBatches: readonly (readonly LevelOneWord[])[];
+  /** speech are the listening and speaking of each unit. */
+  readonly speech: readonly UnitSpeechSpec[];
+  /** last are the last character topic and the last word topic of this level. */
+  readonly last: { readonly characters: string; readonly words: string };
+}
+
+/** planLevel reads a level's batches, checks that its units cover them and nothing is taught twice, and records its units' speech. */
+export function planLevel(spec: LevelSpec): LevelPlan {
   const { level, numeral } = spec;
   const where = `level ${level}`;
-  const charBatches = spec.characterBatches.map((b) => parseLevelCharacters(b, level));
-  const words: readonly (readonly LevelOneWord[])[] = spec.wordBatches.map((b) => parseLevelWords(b.data, level));
-
+  const characterBatches = spec.characterBatches.map((b) => parseLevelCharacters(b, level));
+  const wordBatches: readonly (readonly LevelOneWord[])[] = spec.wordBatches.map((b) => parseLevelWords(b.data, level));
   const characters = new Map(spec.earlierCharacters);
-  for (const c of charBatches.flat()) {
+  for (const c of characterBatches.flat()) {
     if (characters.has(c.char)) throw new Error(`${where}: ${c.char} is taught twice`);
     characters.set(c.char, c);
   }
-  const all = [...spec.earlierWords, ...words.flat().map((w) => w.word)];
-  const twice = firstTwice(all);
+  const words = [...spec.earlierWords, ...wordBatches.flat().map((w) => w.word)];
+  const twice = firstTwice(words);
   if (twice) throw new Error(`${where}: ${twice} is taught twice`);
-
   const characterCount = spec.units.reduce((n, u) => n + u.characters, 0);
   const wordCount = spec.units.reduce((n, u) => n + u.words, 0);
-  if (characterCount !== charBatches.length || wordCount !== words.length) throw new Error(`${where}: the units do not cover the batches`);
+  if (characterCount !== characterBatches.length || wordCount !== wordBatches.length)
+    throw new Error(`${where}: the units do not cover the batches`);
+  const speech: UnitSpeechSpec[] = [];
+  let w = 0;
+  for (const [u, unit] of spec.units.entries()) {
+    const unitWords = wordBatches.slice(w, w + unit.words).flat();
+    w += unit.words;
+    speech.push({ level, numeral, unit: u + 1, theme: unit.title, words: unitWords, chars: characters, after: levelWordId(level, w) });
+  }
+  registerUnitSpeech(level, speech);
+  return {
+    spec,
+    characters,
+    words,
+    characterBatches,
+    wordBatches,
+    speech,
+    last: { characters: levelCharacterId(level, characterBatches.length), words: levelWordId(level, wordBatches.length) },
+  };
+}
 
+/** buildLevel makes the topics and units of a planned level, checking that each word and sentence uses only characters taught by then. */
+export function buildLevel(plan: LevelPlan): Level {
+  const { spec, characters } = plan;
+  const { level, numeral } = spec;
+  const where = `level ${level}`;
+  const charBatches = plan.characterBatches;
+  const words = plan.wordBatches;
   const topics: TopicDef[] = [];
   const units: CourseDef["units"][number][] = [];
   const taught = new Set(spec.earlierCharacters.keys());
@@ -123,10 +163,8 @@ export function buildLevel(spec: LevelSpec): Level {
       characterIds.push(id);
     }
     const wordIds: string[] = [];
-    const unitWords: LevelOneWord[] = [];
     for (let k = 0; k < unit.words; k++) {
       const batch = words[w]!;
-      unitWords.push(...batch);
       const { theme } = spec.wordBatches[w]!;
       w++;
       const id = levelWordId(level, w);
@@ -162,7 +200,7 @@ export function buildLevel(spec: LevelSpec): Level {
     });
     g += unitGrammar.length;
     topics.push(...unitGrammar);
-    const speech = { level, numeral, unit: u + 1, theme: unit.title, words: unitWords, chars: characters, after: levelWordId(level, w) };
+    const speech = plan.speech[u]!;
     const listening = [
       unitListeningTopic(speech),
       unitSpeakingTopic(speech),
@@ -197,11 +235,5 @@ export function buildLevel(spec: LevelSpec): Level {
       ],
     });
   }
-  return {
-    characters,
-    words: all,
-    topics,
-    units,
-    last: { characters: levelCharacterId(level, c), words: levelWordId(level, w) },
-  };
+  return { characters, words: plan.words, topics, units, last: plan.last };
 }

@@ -5,45 +5,10 @@
 import { type CourseDef, type TopicDef, t } from "@ga/content";
 
 import type { LevelOneCharacter } from "../level-1/characters.ts";
-import { levelOneCharacters, levelOneWordId, levelOneWords } from "../level-1/index.ts";
-import { characterBatches } from "./character-data.ts";
-import { dialogues } from "./dialogue-data.ts";
-import { grammar } from "./grammar-data.ts";
-import { buildLevel, type LevelUnit } from "./level.ts";
-import { sentences } from "./sentence-data.ts";
-import { wordBatches } from "./word-data.ts";
-import { writing } from "./writing-data.ts";
+import { buildLevel } from "./level.ts";
+import { levelTwoPlan } from "./plan.ts";
 
-/** UNITS are the units of level 2. */
-const UNITS: readonly LevelUnit[] = [
-  { title: t("Daily Routine", "日常作息"), characters: 4, words: 10 },
-  { title: t("Home", "住房和家居"), characters: 3, words: 8 },
-  { title: t("Colours and Clothes", "颜色和衣服"), characters: 2, words: 5 },
-  { title: t("Food and Restaurants", "饮食和饭馆"), characters: 3, words: 6 },
-  { title: t("Work and the Office", "工作和办公室"), characters: 3, words: 8 },
-  { title: t("Health", "健康"), characters: 2, words: 5 },
-  { title: t("Travel", "旅行"), characters: 3, words: 7 },
-  { title: t("Feelings", "心情"), characters: 2, words: 6 },
-  { title: t("Nature", "自然"), characters: 3, words: 8 },
-  { title: t("Sports", "运动"), characters: 2, words: 5 },
-  { title: t("Media and Communication", "媒体和交流"), characters: 2, words: 5 },
-  { title: t("Festivals", "节日"), characters: 1, words: 4 },
-];
-
-const level = buildLevel({
-  level: 2,
-  numeral: "二",
-  units: UNITS,
-  characterBatches,
-  wordBatches,
-  grammar,
-  sentences,
-  writing,
-  dialogues,
-  earlierCharacters: levelOneCharacters,
-  earlierWords: levelOneWords,
-  after: levelOneWordId(50),
-});
+const level = buildLevel(levelTwoPlan);
 
 /** levelTwoCharacters are the characters of levels 1 and 2, by character. */
 export const levelTwoCharacters: ReadonlyMap<string, LevelOneCharacter> = level.characters;
