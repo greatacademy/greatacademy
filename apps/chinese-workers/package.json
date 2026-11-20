@@ -10,6 +10,7 @@
   "scripts": {
     "generate": "node scripts/generate.ts",
     "build": "cf build",
+    "test": "vitest run",
     "deploy": "cf build && for shard in core levels hsk; do cf deploy --prebuilt --worker ga-chinese-$shard || exit 1; done && cf deploy --prebuilt",
     "typecheck": "cf workers types && tsc -p tsconfig.json",
     "lint": "biome check ."
@@ -33,6 +34,12 @@
           "generate",
           "^build"
         ]
+      },
+      "test": {
+        "dependsOn": [
+          "generate",
+          "^generate"
+        ]
       }
     }
   },
@@ -47,6 +54,7 @@
     "@types/node": "26.6.3",
     "cf": "1.0.0-beta.25",
     "typescript": "7.0.2",
-    "vite": "8.3.5"
+    "vite": "8.3.5",
+    "vitest": "5.0.3"
   }
 }
