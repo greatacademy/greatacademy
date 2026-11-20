@@ -26,7 +26,7 @@ export interface CalibrationRun {
   readonly model: string;
   readonly promptVersion: string;
   readonly set: readonly ScoredText[];
-  /** aiKeysSecret opens the provider's key, as the web Worker does. */
+  /** aiKeysSecret opens the provider's key, as the API server does. */
   readonly aiKeysSecret: string;
   readonly concurrency?: number;
   readonly minTexts?: number;

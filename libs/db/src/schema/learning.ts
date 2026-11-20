@@ -318,7 +318,7 @@ export interface StoredLine {
 
 /**
  * conversationSession is one spoken conversation of S6, from the ticket the
- * web Worker signs to the result the voice service writes. lines is the
+ * API server signs to the result the voice service writes. lines is the
  * transcript, kept for 30 days and never for a child (docs/minors-data.md §10).
  */
 export const conversationSession = pgTable(

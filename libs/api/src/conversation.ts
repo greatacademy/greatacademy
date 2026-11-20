@@ -244,7 +244,7 @@ export function conversationService(deps: ConversationDeps): ServiceImpl<typeof 
   };
 }
 
-/** VOICE_PREFIX is where the voice service's calls to the web Worker arrive. */
+/** VOICE_PREFIX is where the voice service's calls to the API server arrive. */
 export const VOICE_PREFIX = "/voice/v1/";
 
 const json = (body: unknown, status = 200) =>
@@ -272,7 +272,7 @@ async function readSession(db: Db, body: Record<string, unknown>): Promise<Conve
 }
 
 /**
- * handleVoice answers the voice service's calls (apps/voice/src/ga_voice/worker_client.py):
+ * handleVoice answers the voice service's calls (apps/voice/src/ga_voice/api_client.py):
  * POST speech asks which speech services hear and speak a session (see
  * sessionSpeech), POST turn asks for the tutor's next line, with the path of its recording when
  * it has one, and PUT sessions/{id}/result writes
@@ -352,7 +352,7 @@ export async function handleVoice(request: Request, db: Db, deps: ConversationDe
   return json({ error: "not-found" }, 404);
 }
 
-/** SpeechService is one speech service a session uses, as apps/voice/src/ga_voice/worker_client.py reads it. */
+/** SpeechService is one speech service a session uses, as apps/voice/src/ga_voice/api_client.py reads it. */
 interface SpeechService {
   readonly vendor: "azure";
   readonly region: string;
