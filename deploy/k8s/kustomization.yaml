@@ -32,7 +32,7 @@ secretGenerator:
   options:
     disableNameSuffixHash: true
 images:
-- digest: sha256:b752b8afb5b30091ea666bb3986526eabcd68785336b80038e2550a5870b2bbe
+- digest: sha256:66a690de4f57c2f256a592f36254950110e71adb3fd63ebd06a4ec3489031ef8
   name: api
   newName: ghcr.io/greatacademy/api
 - digest: sha256:1f2554f5f3cf325998170ddb9c08146060ada8c31e1fb045d6aed06915ed3551
