@@ -1,3 +1,4 @@
+import { Code, ConnectError } from "@connectrpc/connect";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
@@ -30,11 +31,15 @@ function Age() {
           setError(undefined);
           try {
             await privacy.setAge(a);
-            await qc.invalidateQueries({ queryKey: ["access"] });
-            await navigate({ to: "/" });
           } catch (e) {
-            setError(errorText(e, locale, m.error));
+            // Answered already, as on another device or a page shown from stale access: carry on rather than fail.
+            if (!(e instanceof ConnectError && e.code === Code.FailedPrecondition)) {
+              setError(errorText(e, locale, m.error));
+              return;
+            }
           }
+          await qc.invalidateQueries({ queryKey: ["access"] });
+          await navigate({ to: "/" });
         }}
       />
     </Card>

@@ -1,4 +1,5 @@
 import { Eye, EyeSlash } from "@phosphor-icons/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { type ComponentProps, type FormEvent, type ReactNode, useEffect, useId, useRef, useState } from "react";
 
@@ -125,6 +126,7 @@ export function AuthForm({
   const { m } = useI18n();
   const t = usePrivacyText();
   const navigate = useNavigate();
+  const qc = useQueryClient();
   const [error, setError] = useState<string>();
   const [busy, setBusy] = useState(false);
 
@@ -148,7 +150,12 @@ export function AuthForm({
       setError(known ? m[known] : (res.error.message ?? m.error));
       return;
     }
-    if (mode === "sign-up") await afterSignUp?.().catch(() => undefined);
+    if (mode === "sign-up") {
+      await afterSignUp?.().catch(() => undefined);
+      // The new session already fetched the account's access, possibly before the age answer was stored; a study page
+      // would read that and send the account to /age.
+      await qc.invalidateQueries({ queryKey: ["access"] });
+    }
     setBusy(false);
     await navigate({ to: next?.startsWith("/") ? next : "/" });
   }
