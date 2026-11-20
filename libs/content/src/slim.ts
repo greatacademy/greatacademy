@@ -1,0 +1,40 @@
+// Topics whose problem banks are built when asked rather than kept: a subject with many large banks would otherwise hold
+// them all in memory, more than a Worker isolate has (docs/content.md §4).
+
+import type { Rng } from "./rng.ts";
+import type { Problem, TopicDef } from "./types.ts";
+
+/**
+ * slimTopics builds topics once, keeping each topic but its knowledge points' generators, which build the topics again
+ * on first use. The rebuilt topics are held weakly, so that memory can take them back; the build must be deterministic.
+ */
+export function slimTopics(build: () => readonly TopicDef[]): readonly TopicDef[] {
+  let held: WeakRef<readonly TopicDef[]> | undefined;
+  const full = (): readonly TopicDef[] => {
+    const kept = held?.deref();
+    if (kept) return kept;
+    const made = build();
+    held = new WeakRef(made);
+    return made;
+  };
+  return build().map((topic, j) => ({
+    ...topic,
+    knowledgePoints: topic.knowledgePoints.map(({ generate: _, ...kp }, i) => {
+      // Only the id is held, not the knowledge point first built, whose generator holds its bank.
+      const { id } = kp;
+      return {
+        ...kp,
+        generate: (rng: Rng): Problem => {
+          const again = full()[j]?.knowledgePoints[i];
+          if (again?.id !== id) throw new Error(`slimTopics: ${id} built differently`);
+          return again.generate(rng);
+        },
+      };
+    }),
+  }));
+}
+
+/** slimmed makes a builder of one topic build slim topics (see slimTopics). */
+export function slimmed<A extends readonly unknown[]>(build: (...args: A) => TopicDef): (...args: A) => TopicDef {
+  return (...args: A): TopicDef => slimTopics(() => [build(...args)])[0]!;
+}
