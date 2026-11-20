@@ -8,7 +8,8 @@ root="$(git rev-parse --show-toplevel)"
 cd "$root"
 images=("$@")
 [ ${#images[@]} -gt 0 ] || images=(api voice)
-if [ -n "$(git status --porcelain -- apps libs content)" ]; then
+# Documents go into neither image.
+if [ -n "$(git status --porcelain -- apps libs content ':!*.md')" ]; then
   echo "apps, libs or content have uncommitted changes; commit them so the images match a commit" >&2
   exit 1
 fi
