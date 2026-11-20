@@ -153,7 +153,7 @@ export function createApi(services: Services): Api {
     if (pathname.startsWith(VOICE_PREFIX)) return handleVoice(request, db, conversations);
     if (pathname === WEBHOOK) return webhook(services, request);
     if (pathname === APPLE_NOTIFICATIONS) return appleNotification(services, request);
-    if (pathname.startsWith("/api/auth/")) return withoutDomainCookies(await auth.handler(request), config.siteUrl);
+    if (pathname.startsWith("/api/auth/")) return auth.handler(request);
     if (!pathname.startsWith(`${RPC_PREFIX}/`)) return new Response("Not Found", { status: 404 });
     const handler = handlers.get(pathname.slice(RPC_PREFIX.length));
     if (!handler) return new Response("Not Found", { status: 404 });
@@ -165,26 +165,6 @@ export function createApi(services: Services): Api {
     req.contextValues = createContextValues().set(dbKey, db).set(userIdKey, session?.user.id).set(accountsKey, accounts);
     return universalServerResponseToFetch(await handler(req));
   };
-}
-
-/** AUTH_COOKIES are better-auth's cookies on an HTTPS site. */
-const AUTH_COOKIES = ["session_token", "session_data", "dont_remember"].map((c) => `__Secure-better-auth.${c}`);
-
-/**
- * withoutDomainCookies expires the cookies better-auth once set for the site's whole domain. A browser sends them
- * beside the site's own cookies of the same names, and a session read from them is one that ended. They lived at most
- * seven days, so this can go after 2026-11-27.
- */
-function withoutDomainCookies(response: Response, site: string): Response {
-  const { hostname, protocol } = new URL(site);
-  if (protocol !== "https:") return response;
-  // The expired ones come first, so that a browser that took both for one cookie keeps the response's own.
-  const headers = new Headers();
-  for (const name of AUTH_COOKIES)
-    headers.append("set-cookie", `${name}=; Domain=${hostname}; Path=/; Max-Age=0; Secure; HttpOnly; SameSite=Lax`);
-  for (const [name, value] of response.headers) if (name !== "set-cookie") headers.append(name, value);
-  for (const cookie of response.headers.getSetCookie()) headers.append("set-cookie", cookie);
-  return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
 }
 
 /** webhook records a Stripe event; a failure answers 500 so that Stripe sends it again. */
