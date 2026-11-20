@@ -1,0 +1,30 @@
+# Everything of Great Academy on the cluster, in the namespace greatacademy: the API server and its jobs, the voice
+# service of English, and their public hosts through the cluster's ingress-nginx. The database is the shared
+# pg-cluster in cnpg-system.
+# Secrets are made by keys.py, never committed; push.sh pins the images to pushed digests.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: greatacademy
+labels:
+  - pairs:
+      app.kubernetes.io/part-of: greatacademy
+resources:
+  - namespace.yaml
+  - api.yaml
+  - jobs.yaml
+  - voice.yaml
+  - scaling.yaml
+  - ingress.yaml
+  - network.yaml
+configMapGenerator:
+  - name: api
+    envs:
+      - api.env
+  - name: voice
+    envs:
+      - voice.env
+images:
+  - name: api
+    newName: ghcr.io/greatacademy/api
+  - name: voice
+    newName: ghcr.io/greatacademy/voice

@@ -1,16 +1,17 @@
-# The voice pods. Stateless: each runs at most VOICE_CAPACITY conversations, reports not ready when full, and on
-# SIGTERM refuses new sessions and waits up to 24 minutes for the running ones (the session limit), inside the
-# 25-minute grace period.
+# The API server (apps/server): better-auth, the Connect services and every subject, compiled in each pod before it
+# listens. Stateless; the database is the shared pg-cluster in cnpg-system. The site's pages and the apps reach it at
+# api.greatacademy.dev (ingress.yaml), and the voice service directly.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: voice
+  name: api
   labels:
-    app.kubernetes.io/name: voice
+    app.kubernetes.io/name: api
 spec:
+  replicas: 2
   selector:
     matchLabels:
-      app.kubernetes.io/name: voice
+      app.kubernetes.io/name: api
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -19,9 +20,9 @@ spec:
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: voice
+        app.kubernetes.io/name: api
     spec:
-      terminationGracePeriodSeconds: 1500
+      terminationGracePeriodSeconds: 30
       automountServiceAccountToken: false
       enableServiceLinks: false
       # GHCR packages start private; the Secret ghcr holds a token that may read packages.
@@ -39,30 +40,33 @@ spec:
           whenUnsatisfiable: ScheduleAnyway
           labelSelector:
             matchLabels:
-              app.kubernetes.io/name: voice
+              app.kubernetes.io/name: api
       containers:
-        - name: voice
-          image: ga-voice
+        - name: api
+          image: api
           ports:
             - name: http
               containerPort: 8080
           envFrom:
             - configMapRef:
-                name: voice
+                name: api
+            - secretRef:
+                name: api
           env:
-            - name: VOICE_PORT
-              value: "8080"
-            - name: VOICE_WORKER_CREDENTIAL
-              valueFrom:
-                secretKeyRef:
-                  name: voice-secrets
-                  key: VOICE_WORKER_CREDENTIAL
+            # The content's heap is about 600 MB; the rest is for requests.
+            - name: NODE_OPTIONS
+              value: --max-old-space-size=1536
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 2
+            failureThreshold: 60
           readinessProbe:
             httpGet:
-              path: /readyz
+              path: /healthz
               port: http
             periodSeconds: 5
-            failureThreshold: 1
           livenessProbe:
             httpGet:
               path: /healthz
@@ -71,39 +75,41 @@ spec:
             failureThreshold: 3
           lifecycle:
             preStop:
-              # Lets the Service and the Tunnel stop sending new sessions before the drain begins.
+              # Lets the Service stop sending requests before the server closes.
               sleep:
                 seconds: 5
           resources:
             requests:
-              cpu: 500m
-              memory: 512Mi
+              cpu: 250m
+              memory: 1280Mi
             limits:
-              memory: 1Gi
+              memory: 2Gi
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
             capabilities:
               drop: ["ALL"]
-          volumeMounts:
-            - name: tmp
-              mountPath: /tmp
-      volumes:
-        - name: tmp
-          emptyDir:
-            medium: Memory
-            sizeLimit: 64Mi
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: voice
+  name: api
   labels:
-    app.kubernetes.io/name: voice
+    app.kubernetes.io/name: api
 spec:
   selector:
-    app.kubernetes.io/name: voice
+    app.kubernetes.io/name: api
   ports:
     - name: http
       port: 8080
       targetPort: http
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: api
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: api

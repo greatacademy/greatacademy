@@ -18,7 +18,8 @@ services:
       timeout: 3s
       retries: 20
   # The voice service (apps/voice), built from the production image. It keeps no audio:
-  # no volume, a read-only filesystem, and /tmp in memory. It reaches `cf dev` on the host.
+  # no volume, a read-only filesystem, and /tmp in memory. It reaches the API server
+  # (`pnpm nx run server:dev`) and the site (`pnpm nx run web:dev`) on the host.
   voice:
     build:
       context: apps/voice
@@ -27,7 +28,8 @@ services:
       - path: apps/voice/.env.local
         required: false
     environment:
-      VOICE_WORKER_URL: ${VOICE_WORKER_URL:-http://host.docker.internal:5173}
+      VOICE_API_URL: ${VOICE_API_URL:-http://host.docker.internal:8080}
+      VOICE_AUDIO_URL: ${VOICE_AUDIO_URL:-http://host.docker.internal:5173}
       VOICE_SPEECH: ${VOICE_SPEECH:-fake}
     extra_hosts:
       - "host.docker.internal:host-gateway"

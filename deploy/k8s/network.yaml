@@ -1,0 +1,129 @@
+# What may talk to what in the namespace. Nothing reaches a pod but what is listed: ingress-nginx reaches the API and
+# the voice service, the voice service the API, Prometheus the metrics. Egress is DNS, the PostgreSQL primary for the
+# API and its jobs, and HTTPS on the public internet (the speech services, the AI vendors, Stripe,
+# Apple, Cloudflare's APIs and the site's recordings), nothing else inside the cluster or the private network.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: api
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: api
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: ingress-nginx
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: voice
+      ports:
+        - port: 8080
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: cnpg-system
+          podSelector:
+            matchLabels:
+              cnpg.io/cluster: pg-cluster
+      ports:
+        - port: 5432
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except: [10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 169.254.0.0/16, 100.64.0.0/10]
+      ports:
+        - port: 443
+---
+# The scheduled jobs and the migrations run the API's image with the same needs, minus ingress.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: jobs
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: job
+  policyTypes: [Ingress, Egress]
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: cnpg-system
+          podSelector:
+            matchLabels:
+              cnpg.io/cluster: pg-cluster
+      ports:
+        - port: 5432
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except: [10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 169.254.0.0/16, 100.64.0.0/10]
+      ports:
+        - port: 443
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: voice
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: voice
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: ingress-nginx
+      ports:
+        - port: 8080
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - port: 8080
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: api
+      ports:
+        - port: 8080
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except: [10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 169.254.0.0/16, 100.64.0.0/10]
+      ports:
+        - port: 443

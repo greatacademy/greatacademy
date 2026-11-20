@@ -39,8 +39,7 @@ spec:
     - type: prometheus
       metadata:
         serverAddress: http://kube-prometheus-stack-prometheus.monitoring.svc:9090
-        # NAMESPACE is replaced by each overlay.
-        query: sum(voice_sessions_active{namespace="NAMESPACE"})
+        query: sum(voice_sessions_active{namespace="greatacademy"})
         # Three sessions per pod leaves one free slot in each, so a new conversation rarely waits for a pod.
         threshold: "3"
 ---

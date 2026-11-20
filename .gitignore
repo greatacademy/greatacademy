@@ -10,11 +10,9 @@ dist/
 coverage/
 *.tsbuildinfo
 
-# Cloudflare Workers (apps/web)
+# Cloudflare Workers (apps/web) and local settings (apps/server, apps/voice)
 .cloudflare/
 .env.local
-.dev.vars*
-!.dev.vars.example
 .wrangler/
 .tanstack/
 
@@ -29,11 +27,6 @@ apps/web/public/audio/
 .vscode/*
 !.vscode/extensions.json
 
-# Generated at build time (the subject Workers)
-apps/math-workers/gen/
-apps/english-workers/gen/
-apps/chinese-workers/gen/
-
 # Originals of the illustrations, kept on the machine that made them (docs/english-illustrations.md, docs/chinese-illustrations.md)
 content/english/illustrations/originals/
 content/chinese/illustrations/originals/
@@ -43,3 +36,6 @@ content/*/audio/files/
 
 # The AI legal review lists compliance gaps; it stays on the owner's machine, out of this public repository.
 legal-review/
+
+# The vendors keys of deploy/k8s/secrets.py, kept on the machine that runs it
+deploy/k8s/secrets.local.env

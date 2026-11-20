@@ -1,0 +1,166 @@
+# The retention rules of docs/minors-data.md §10 and the plan reminders of docs/billing.md §3, once a day.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: daily
+spec:
+  schedule: "0 3 * * *"
+  timeZone: Etc/UTC
+  concurrencyPolicy: Forbid
+  suspend: false
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 600
+      ttlSecondsAfterFinished: 86400
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: daily
+            app.kubernetes.io/component: job
+        spec:
+          restartPolicy: Never
+          automountServiceAccountToken: false
+          enableServiceLinks: false
+          imagePullSecrets:
+            - name: ghcr
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 10001
+            runAsGroup: 10001
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: daily
+              image: api
+              args: [job, daily]
+              envFrom:
+                - configMapRef:
+                    name: api
+                - secretRef:
+                    name: api
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 1280Mi
+                limits:
+                  memory: 2Gi
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop: ["ALL"]
+
+---
+# The AI cost check of docs/admin.md §5 and the judgments of submitted essays, every quarter hour.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: quarter
+spec:
+  schedule: "*/15 * * * *"
+  timeZone: Etc/UTC
+  concurrencyPolicy: Forbid
+  suspend: false
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 840
+      ttlSecondsAfterFinished: 86400
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: quarter
+            app.kubernetes.io/component: job
+        spec:
+          restartPolicy: Never
+          automountServiceAccountToken: false
+          enableServiceLinks: false
+          imagePullSecrets:
+            - name: ghcr
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 10001
+            runAsGroup: 10001
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: quarter
+              image: api
+              args: [job, quarter]
+              envFrom:
+                - configMapRef:
+                    name: api
+                - secretRef:
+                    name: api
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 1280Mi
+                limits:
+                  memory: 2Gi
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop: ["ALL"]
+
+---
+# The migrations of libs/db/drizzle. Never scheduled: deploy.sh runs a Job from it before rolling the API.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: migrate
+spec:
+  schedule: "0 0 1 1 *"
+  timeZone: Etc/UTC
+  concurrencyPolicy: Forbid
+  suspend: true
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      activeDeadlineSeconds: 600
+      ttlSecondsAfterFinished: 86400
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: migrate
+            app.kubernetes.io/component: job
+        spec:
+          restartPolicy: Never
+          automountServiceAccountToken: false
+          enableServiceLinks: false
+          imagePullSecrets:
+            - name: ghcr
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 10001
+            runAsGroup: 10001
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: migrate
+              image: api
+              args: [migrate]
+              envFrom:
+                - configMapRef:
+                    name: api
+                - secretRef:
+                    name: api
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 1280Mi
+                limits:
+                  memory: 2Gi
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop: ["ALL"]
