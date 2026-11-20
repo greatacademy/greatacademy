@@ -30,7 +30,7 @@ import { judgedSentenceTopics } from "../topics/writing-sentences-judged.ts";
 /** writingByModel are the topics of reading files whose problems are writing judged by a model. */
 const writingByModel = new Set(["writing-a-literary-analysis-paragraph", "writing-a-rhetorical-analysis", "synthesizing-sources"]);
 
-/** skillTopics are the topics of the skill courses, each in its strand. */
+/** skillTopics are the topics of the first slice, by skill, each in its strand. */
 const skillTopics: readonly TopicDef[] = [
   ...inStrand("grammar", [...sentenceTopics, ...clauseTopics, ...usageTopics]),
   ...inStrand("writing", [

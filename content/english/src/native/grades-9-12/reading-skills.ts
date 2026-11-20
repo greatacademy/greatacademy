@@ -1,4 +1,4 @@
-// Grades 9 to 12: reading skills the skill courses lacked: how a play works on the page, how to question a
+// Grades 9 to 12: reading skills the first slice lacked: how a play works on the page, how to question a
 // historical document, the forms and meters of poems, and how a personal essay moves between story and reflection.
 
 import { type TopicDef, t } from "@ga/content";

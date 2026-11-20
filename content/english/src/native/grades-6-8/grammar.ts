@@ -1,4 +1,4 @@
-// Grades 6 to 8: grammar and punctuation the skill courses lacked: pronoun case, commas between adjectives, verb
+// Grades 6 to 8: grammar and punctuation the first slice lacked: pronoun case, commas between adjectives, verb
 // moods, gerund and infinitive phrases, the kinds of sentences, and dashes, parentheses and ellipses.
 
 import { type Text, type TopicDef, t } from "@ga/content";

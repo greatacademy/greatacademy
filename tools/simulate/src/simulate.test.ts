@@ -13,7 +13,7 @@ const mean = (xs: number[]) => xs.reduce((a, b) => a + b, 0) / xs.length;
 describe("simulated students of English", () => {
   const english = compileEnglish();
   const course = (ability: number, xpPerDay: number) =>
-    Array.from({ length: 5 }, (_, i) => simulate(english, "english-grammar-writing", { ability, xpPerDay }, i + 1));
+    Array.from({ length: 5 }, (_, i) => simulate(english, "english-grade-1", { ability, xpPerDay }, i + 1));
 
   it("finish the broad course with fewer explicit reviews than a math course of its breadth", { timeout: 120_000 }, () => {
     const typical = course(0.85, 30);
@@ -27,7 +27,7 @@ describe("simulated students of English", () => {
 });
 
 describe("simulated students with passages to read", () => {
-  const courseId = "english-grammar-writing";
+  const courseId = "english-grade-1";
   const passage = (i: number): PassageDef => ({
     id: `story-${i}`,
     title: t(`Story ${i}`, `故事 ${i}`),

@@ -1,4 +1,4 @@
-// Grades 6 to 8: reading skills the skill courses lacked: telling primary sources from secondary ones and choosing a
+// Grades 6 to 8: reading skills the first slice lacked: telling primary sources from secondary ones and choosing a
 // source for a question, and comparing two texts on one topic.
 
 import { type TopicDef, t } from "@ga/content";

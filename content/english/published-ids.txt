@@ -17,16 +17,9 @@ course english-grade-6
 course english-grade-7
 course english-grade-8
 course english-grade-9
-course english-grades-3-5
-course english-grades-6-8
-course english-grades-9-12
-course english-grammar-writing
 course english-ielts
-course english-literature-argument
 course english-phonics
 course english-pre-a1
-course english-reading-comprehension
-course english-rhetoric-composition
 course english-toefl
 topic a-and-an choose do-not-leave-out
 topic a-or-an a-or-an-before-a-word a-or-an-with-a-describing-word

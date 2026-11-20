@@ -1,5 +1,4 @@
-// The reading units of the first slice, which the skill courses and the native grades offer: those of the packs are
-// listed by the packs.
+// The reading units of the first slice, which the native grades offer: those of the packs are listed by the packs.
 
 import type { ReadingUnitDef } from "@ga/content";
 import { howAnimalsSurvive } from "./animals.ts";

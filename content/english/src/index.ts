@@ -4,7 +4,6 @@ import { englishCheckers } from "@ga/subject-english";
 
 import { withOpenings } from "./audio.ts";
 import { englishConversations } from "./conversations.ts";
-import { englishCourses } from "./courses.ts";
 import { withScenes } from "./illustrations.ts";
 import { englishPacks, packLexicon } from "./packs.ts";
 import { englishLexicon } from "./reading/lexicon.ts";
@@ -18,7 +17,7 @@ export const english: SubjectDef = {
   mark: "Aa",
   hue: 335,
   topics: coreShardTopics,
-  courses: [...englishPacks.flatMap((pack) => pack.courses), ...englishCourses],
+  courses: englishPacks.flatMap((pack) => pack.courses),
   checkers: englishCheckers,
   reading: coreShardReading,
   lexicon: withBritishForms(packLexicon(englishLexicon)),

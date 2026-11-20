@@ -1,4 +1,4 @@
-// Grades 6 to 8: the words the passages of the course use that the lexicon of the skill courses does not list. Each
+// Grades 6 to 8: the words the passages of the course use that the lexicon of the first slice does not list. Each
 // spelling is an entry of its own, so that a spelling another pack already lists does not hide the others.
 
 import type { LexiconEntry } from "@ga/content";

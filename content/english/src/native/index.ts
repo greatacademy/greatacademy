@@ -1,4 +1,4 @@
-// The native courses by grade band, built from the topics of the skill courses and new ones by theme.
+// The native courses by grade, with the content of the grade bands whose topics, reading units and conversations they share.
 
 import { emptyPack, type Pack } from "../pack.ts";
 import { baseReading } from "../reading/base.ts";
@@ -34,14 +34,12 @@ import { grade10 } from "./grade-10/index.ts";
 import { grade11 } from "./grade-11/index.ts";
 import { grade12 } from "./grade-12/index.ts";
 import { conversations35 } from "./grades-3-5/conversations.ts";
-import { course35 } from "./grades-3-5/course.ts";
 import { grammarTopics35 } from "./grades-3-5/grammar.ts";
 import { lexicon35 } from "./grades-3-5/lexicon.ts";
 import { ourSolarSystem } from "./grades-3-5/reading.ts";
 import { vocabulary35, wordTopics35 } from "./grades-3-5/words.ts";
 import { writingTopics35 } from "./grades-3-5/writing.ts";
 import { conversations68 } from "./grades-6-8/conversations.ts";
-import { course68 } from "./grades-6-8/course.ts";
 import { grammarTopics68 } from "./grades-6-8/grammar.ts";
 import { lexicon68 } from "./grades-6-8/lexicon.ts";
 import { explorersAndVoyages } from "./grades-6-8/reading-explorers.ts";
@@ -54,7 +52,6 @@ import { turningPoints } from "./grades-6-8/reading-turning-points.ts";
 import { vocabulary68, wordTopics68 } from "./grades-6-8/words.ts";
 import { writingTopics68 } from "./grades-6-8/writing.ts";
 import { conversations912 } from "./grades-9-12/conversations.ts";
-import { course912 } from "./grades-9-12/course.ts";
 import { grammarTopics912 } from "./grades-9-12/grammar.ts";
 import { lexicon912 } from "./grades-9-12/lexicon.ts";
 import { aCenturyOfChange } from "./grades-9-12/reading-century.ts";
@@ -68,10 +65,10 @@ import { vocabulary912, wordTopics912 } from "./grades-9-12/words.ts";
 import { writingTopics912 } from "./grades-9-12/writing.ts";
 import { phonics } from "./phonics/index.ts";
 
-/** grades35 is the content of the grades 3 to 5 course. */
+/** grades35 is the content of grades 3 to 5 that the courses of those grades share, with passages of 140 to 260 words. */
 const grades35: Pack = {
   topics: [...wordTopics35, ...grammarTopics35, ...writingTopics35],
-  courses: [course35],
+  courses: [],
   reading: [ourSolarSystem],
   conversations: conversations35,
   lexicon: lexicon35,
@@ -79,10 +76,10 @@ const grades35: Pack = {
   passageWords: [140, 260],
 };
 
-/** grades68 is the content of the grades 6 to 8 course, with passages of 200 to 400 words. */
+/** grades68 is the content of grades 6 to 8 that the courses of those grades share, with passages of 200 to 400 words. */
 const grades68: Pack = {
   topics: [...wordTopics68, ...grammarTopics68, ...readingSkillTopics68, ...writingTopics68],
-  courses: [course68],
+  courses: [],
   reading: [mythsAndLegends, ancientRome, lifeInTheOcean, turningPoints, machinesThatChangedTheWorld, explorersAndVoyages],
   conversations: conversations68,
   lexicon: lexicon68,
@@ -90,10 +87,10 @@ const grades68: Pack = {
   passageWords: [200, 400],
 };
 
-/** grades912 is the content of the grades 9 to 12 course, with passages of 300 to 600 words. */
+/** grades912 is the content of grades 9 to 12 that the courses of those grades share, with passages of 300 to 600 words. */
 const grades912: Pack = {
   topics: [...wordTopics912, ...grammarTopics912, ...readingSkillTopics912, ...writingTopics912],
-  courses: [course912],
+  courses: [],
   reading: [tragedyOnTheStage, essaysOfExperience, poemsAcrossTime, aCenturyOfChange, scienceAndSociety, rightsAndLaws],
   conversations: conversations912,
   lexicon: lexicon912,
@@ -156,7 +153,7 @@ const readingUnits = [
 const aural = new Map(grades.map(([grade, pack]) => [grade, withAural(pack, grade, readingUnits)]));
 const graded = (grade: string): Pack => aural.get(grade)!;
 
-/** nativePacks are the native courses by grade band, one pack each, so that each band has its own passage lengths. */
+/** nativePacks are the packs of the native courses and of the grade bands they share, so that each has its own passage lengths. */
 export const nativePacks: readonly Pack[] = [
   phonics,
   graded("grade-1"),

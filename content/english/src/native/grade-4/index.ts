@@ -1,4 +1,4 @@
-// Grade 4: the content new to the grade 4 course, which also gathers topics of the band course and the skill courses.
+// Grade 4: the content new to the grade 4 course, which also gathers topics of the grades 3 to 5 band and the first slice.
 
 import { emptyPack, type Pack } from "../../pack.ts";
 import { conversations4 } from "./conversations.ts";

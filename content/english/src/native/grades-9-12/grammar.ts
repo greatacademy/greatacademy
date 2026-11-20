@@ -1,4 +1,4 @@
-// Grades 9 to 12: grammar, punctuation and style the skill courses lacked: semicolons and colons, periodic and
+// Grades 9 to 12: grammar, punctuation and style the first slice lacked: semicolons and colons, periodic and
 // cumulative sentences, conditionals, absolute phrases, noun clauses, integrating quotations, word order for emphasis
 // and sentence variety for effect.
 

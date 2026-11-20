@@ -14,7 +14,7 @@ By the end of grade 6 a learner reads the myths, poems, memoirs, histories and s
 
 ## How to Read This Outline
 
-Every unit is a theme and teaches four things together: the words of the theme, grammar and mechanics, reading skills, and writing. It ends with a reading unit on the theme and a conversation, except the last, which studies words and has no reading unit. Topics marked *existing* are in the graph already, in the band course `english-grades-6-8`, and keep their ids and their own prerequisites; each new topic lists its prerequisites, which may lie in an earlier unit or an earlier grade. A new topic of words lists the words it teaches, none of which another batch of the native courses teaches; any other new topic says what it teaches and its knowledge points as steps. A judged writing topic names its task and the criteria of its rubric, marking the criteria that are new.
+Every unit is a theme and teaches four things together: the words of the theme, grammar and mechanics, reading skills, and writing. It ends with a reading unit on the theme and a conversation, except the last, which studies words and has no reading unit. Topics marked *existing* are in the graph already, shared by grades 6 to 8, and keep their ids and their own prerequisites; each new topic lists its prerequisites, which may lie in an earlier unit or an earlier grade. A new topic of words lists the words it teaches, none of which another batch of the native courses teaches; any other new topic says what it teaches and its knowledge points as steps. A judged writing topic names its task and the criteria of its rubric, marking the criteria that are new.
 
 Strands: of the 108 topics, 41 teach words (38%), 21 grammar and mechanics (19%), 22 reading (20%), 14 writing checked by rules (13%) and 10 writing judged by a model (9%).
 
@@ -22,7 +22,7 @@ Depth: each new grammar, reading or rule-checked writing knowledge point has 30 
 
 Listening, speaking and phonics wait for audio and recording: until then a unit lists its conversation but does not offer it, and each unit says what it will gain.
 
-The band course `english-grades-6-8` retires once `english-grade-6`, `english-grade-7` and `english-grade-8` hold all of its topics. Its 55 topics are divided among the three grades by its units, each in exactly one, with its id unchanged: 24 in grade 6 (myths, poetry and Rome), 16 in grade 7 (argument and oceans) and 15 in grade 8 (turning points, machines and exploration). Its reading units and conversations go with their units.
+The 55 topics shared by grades 6 to 8 are divided among the three grades by theme, each in exactly one: 24 in grade 6 (myths, poetry and Rome), 16 in grade 7 (argument and oceans) and 15 in grade 8 (turning points, machines and exploration). Their reading units and conversations go with them.
 
 ## Units
 
@@ -184,7 +184,7 @@ The band course `english-grades-6-8` retires once `english-grade-6`, `english-gr
 
 ## Added for Depth
 
-After this outline, 21 grammar and writing topics gained a third step, so that most of them teach three; some of these topics come from the band and skill courses. The step each adds:
+After this outline, 21 grammar and writing topics gained a third step, so that most of them teach three; some of these topics are shared with other grades. The step each adds:
 
 - `relative-clauses` Relative Clauses: The Noun the Clause Describes.
 - `pronoun-case` Pronoun Case: Pronouns After Than and As.

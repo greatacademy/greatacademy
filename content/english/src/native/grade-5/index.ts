@@ -1,4 +1,4 @@
-// Grade 5: the content new to the grade 5 course, which also gathers topics of the band course and the skill courses.
+// Grade 5: the content new to the grade 5 course, which also gathers topics of the grades 3 to 5 band and the first slice.
 
 import { emptyPack, type Pack } from "../../pack.ts";
 import { conversations5 } from "./conversations.ts";

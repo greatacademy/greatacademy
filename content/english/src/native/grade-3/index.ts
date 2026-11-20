@@ -1,4 +1,4 @@
-// Grade 3: the content new to the grade 3 course, which also gathers topics of the band course and the skill courses.
+// Grade 3: the content new to the grade 3 course, which also gathers topics of the grades 3 to 5 band and the first slice.
 
 import { inStrand, type Pack } from "../../pack.ts";
 import { batchesOf } from "./batches.ts";

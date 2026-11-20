@@ -1,4 +1,4 @@
-// College writing: the words the passages of the course use that the lexicon of the skill courses and the earlier
+// College writing: the words the passages of the course use that the lexicon of the first slice and the earlier
 // bands does not list. Each spelling is an entry of its own, so that a spelling another pack already lists does not
 // hide the others.
 

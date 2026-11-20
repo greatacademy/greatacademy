@@ -1,4 +1,4 @@
-// Grade 10: the content new to the grade 10 course, which also gathers topics of the band course of grades 9 to 12.
+// Grade 10: the content new to the grade 10 course, which also gathers topics of the band of grades 9 to 12.
 
 import { emptyPack, type Pack } from "../../pack.ts";
 import { conversations10 } from "./conversations.ts";

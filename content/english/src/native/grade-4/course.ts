@@ -1,5 +1,5 @@
 // Grade 4: the course. Each unit is a theme and teaches words, grammar, reading and writing together, with a reading
-// unit on the theme and a conversation that closes it. Topics of the band course keep their ids.
+// unit on the theme and a conversation that closes it. Topics of the grades 3 to 5 band keep their ids.
 
 import { type CourseDef, type Text, t, type UnitDef } from "@ga/content";
 

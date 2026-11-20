@@ -1,4 +1,4 @@
-// Grade 12: the content new to the grade 12 course, which also gathers the last topics of the band course of grades 9 to 12.
+// Grade 12: the content new to the grade 12 course, which also gathers the last topics of the band of grades 9 to 12.
 
 import { emptyPack, type Pack } from "../../pack.ts";
 import { conversations12 } from "./conversations.ts";

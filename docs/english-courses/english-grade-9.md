@@ -14,7 +14,7 @@ By the end of grade 9 a learner reads the epics, tragedies, stories of growing u
 
 ## How to Read This Outline
 
-Every unit is a theme and teaches four things together: the words of the theme, grammar and mechanics, reading skills, and writing. It ends with a reading unit on the theme and a conversation, except unit 9, which has a conversation but no reading unit. Units 10 to 16 teach words alone, ten to a batch, with no reading unit or conversation: the words of everyday life, of feelings and actions, of school and work and, in some, phrasal verbs or academic words. Topics marked *existing* are in the graph already, in the band course `english-grades-9-12`, and keep their ids and their own prerequisites; each new topic lists its prerequisites, which may lie in an earlier unit or an earlier grade. A new topic of words lists the words it teaches, none of which another batch of the native courses teaches; any other new topic says what it teaches and its knowledge points as steps. A judged writing topic names its task and the criteria of its rubric, marking the criteria that are new.
+Every unit is a theme and teaches four things together: the words of the theme, grammar and mechanics, reading skills, and writing. It ends with a reading unit on the theme and a conversation, except unit 9, which has a conversation but no reading unit. Units 10 to 16 teach words alone, ten to a batch, with no reading unit or conversation: the words of everyday life, of feelings and actions, of school and work and, in some, phrasal verbs or academic words. Topics marked *existing* are in the graph already, shared by grades 9 to 12, and keep their ids and their own prerequisites; each new topic lists its prerequisites, which may lie in an earlier unit or an earlier grade. A new topic of words lists the words it teaches, none of which another batch of the native courses teaches; any other new topic says what it teaches and its knowledge points as steps. A judged writing topic names its task and the criteria of its rubric, marking the criteria that are new.
 
 Strands: of the 100 topics, 55 teach words (55%), 11 grammar and mechanics (11%), 17 reading (17%), 9 writing checked by rules (9%) and 8 writing judged by a model (8%).
 
@@ -22,7 +22,7 @@ Depth: each new grammar, reading or rule-checked writing knowledge point has 30 
 
 Listening and speaking wait for audio and recording: until then a unit lists its conversation but does not offer it, and each unit says what it will gain.
 
-The band course `english-grades-9-12` retires once `english-grade-9` to `english-grade-12` hold all of its topics. Its 37 topics are divided among the four grades by its units, each in exactly one, with its id unchanged: 11 in grade 9 (the writer's craft, tragedy and the stage, and sentence variety for effect), 10 in grade 10 (voices of persuasion and poems across time), 12 in grade 11 (rights and laws, a century of change, and science and society) and 4 in grade 12 (essays of experience). Its reading units and conversations go with their units.
+The 37 topics shared by grades 9 to 12 are divided among the four grades by theme, each in exactly one: 11 in grade 9 (the writer's craft, tragedy and the stage, and sentence variety for effect), 10 in grade 10 (voices of persuasion and poems across time), 12 in grade 11 (rights and laws, a century of change, and science and society) and 4 in grade 12 (essays of experience). Their reading units and conversations go with them.
 
 ## Units
 

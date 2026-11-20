@@ -1,7 +1,7 @@
 import type { ReadingUnitDef } from "@ga/content";
 import { t } from "@ga/content";
 
-// The topics of the literature unit of the course english-literature-argument that the tales and poems practice.
+// The topics of literature that the tales and poems practice.
 const figures = { topic: "personification-and-hyperbole", weight: 0.3 } as const;
 const figuresSome = { topic: "personification-and-hyperbole", weight: 0.2 } as const;
 const sounds = { topic: "sound-devices", weight: 0.3 } as const;

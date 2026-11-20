@@ -1,5 +1,5 @@
 // Grade 12: the course. Each unit is a theme and teaches words, grammar, reading and writing together, with a reading
-// unit on the theme and a conversation that closes it. The first unit gathers the last topics of the band course of
+// unit on the theme and a conversation that closes it. The first unit gathers the last topics of the band of
 // grades 9 to 12, which keep their ids.
 
 import { type CourseDef, type Text, t, type UnitDef } from "@ga/content";

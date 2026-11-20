@@ -1,4 +1,4 @@
-// Grades 3 to 5: grammar and mechanics the skill courses lacked: plurals, the order of adjectives, progressive and
+// Grades 3 to 5: grammar and mechanics the first slice lacked: plurals, the order of adjectives, progressive and
 // perfect tenses, modal verbs, paired conjunctions, and capitals for names and titles.
 
 import { type TopicDef, t } from "@ga/content";

@@ -14,7 +14,7 @@ By the end of grade 4 a learner reads longer stories, plays, poems and informati
 
 ## How to Read This Outline
 
-Every unit is a theme and teaches four things together: the words of the theme, grammar and mechanics, reading skills, and writing. It ends with a reading unit on the theme and a conversation. Topics marked *existing* are in the graph already, in the band course `english-grades-3-5`, and keep their ids and their own prerequisites; each new topic lists its prerequisites, which may lie in an earlier unit or an earlier grade. A new topic of words lists the words it teaches, none of which another batch of the native courses teaches; any other new topic says what it teaches and its knowledge points as steps. A judged writing topic names its task and the criteria of its rubric, marking the criteria that are new.
+Every unit is a theme and teaches four things together: the words of the theme, grammar and mechanics, reading skills, and writing. It ends with a reading unit on the theme and a conversation. Topics marked *existing* are in the graph already, shared by grades 3 to 5, and keep their ids and their own prerequisites; each new topic lists its prerequisites, which may lie in an earlier unit or an earlier grade. A new topic of words lists the words it teaches, none of which another batch of the native courses teaches; any other new topic says what it teaches and its knowledge points as steps. A judged writing topic names its task and the criteria of its rubric, marking the criteria that are new.
 
 Strands: of the 114 topics, 44 teach words (39%), 22 grammar and mechanics (19%), 23 reading (20%), 15 writing checked by rules (13%) and 10 writing judged by a model (9%).
 
@@ -22,7 +22,7 @@ Depth: each new grammar, reading or rule-checked writing knowledge point has 30 
 
 Listening, speaking and phonics wait for audio and recording: until then a unit lists its conversation but does not offer it, and each unit says what it will gain.
 
-The band course `english-grades-3-5` retires once `english-grade-3`, `english-grade-4` and `english-grade-5` hold all of its topics. Its 78 topics are divided among the three grades, each in exactly one, with its id unchanged: 45 in grade 3, 21 in grade 4 and 12 in grade 5.
+The 78 topics shared by grades 3 to 5 are divided among the three grades, each in exactly one: 45 in grade 3, 21 in grade 4 and 12 in grade 5.
 
 ## Units
 

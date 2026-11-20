@@ -1,7 +1,7 @@
 import type { ReadingUnitDef } from "@ga/content";
 import { t } from "@ga/content";
 
-// The topics of the course english-reading-comprehension that the stories practice.
+// The topics of reading for meaning that the stories practice.
 const inferences = { topic: "making-inferences", weight: 0.3 } as const;
 const inferencesSome = { topic: "making-inferences", weight: 0.2 } as const;
 const characters = { topic: "characters", weight: 0.3 } as const;
