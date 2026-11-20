@@ -12,10 +12,11 @@ import type { StripeKeys } from "./stripe.ts";
 export interface Config {
   /** port is where the server listens. */
   readonly port: number;
-  /** siteUrl is the site's origin, such as https://greatacademy.dev: the one origin whose pages may call the API. */
+  /**
+   * siteUrl is the site's origin, such as https://greatacademy.dev, under whose /api the API is served: better-auth's
+   * base, every request's origin and the links of emails.
+   */
   readonly siteUrl: string;
-  /** apiUrl is the API's own origin, such as https://api.greatacademy.dev: better-auth's base and every request's origin. */
-  readonly apiUrl: string;
   /** databaseUrl is the PostgreSQL connection string. */
   readonly databaseUrl: string;
   /** authSecret signs better-auth sessions. */
@@ -62,7 +63,6 @@ export function readConfig(env: Env): Config {
   return {
     port: Number(value("PORT") ?? "8080"),
     siteUrl: new URL(required("SITE_URL")).origin,
-    apiUrl: new URL(value("API_URL") ?? required("SITE_URL")).origin,
     databaseUrl: required("DATABASE_URL"),
     authSecret: required("BETTER_AUTH_SECRET"),
     aiKeysSecret: value("AI_KEYS_SECRET"),

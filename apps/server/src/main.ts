@@ -117,7 +117,7 @@ if (command === "job") {
     await conn.close();
   }
 } else {
-  const server = createServer(serve(createApi(services), config.apiUrl));
+  const server = createServer(serve(createApi(services), config.siteUrl));
   // Longer than the load balancer's idle timeout, so that the server never closes a connection it is about to reuse.
   server.keepAliveTimeout = 65_000;
   server.listen(config.port, () => console.log(`listening on ${config.port}`));

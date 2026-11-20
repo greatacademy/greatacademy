@@ -28,26 +28,22 @@ const emailLocale = (request: Request | undefined, stored: unknown): Locale =>
  * deletion takes the accounts of the children only they guard. endPlans stops
  * what the person pays for from renewing before their plans' rows go.
  *
- * The API has its own origin, api, beside the site's: better-auth trusts the site's pages, and when the API's host is
- * a subdomain of the site's its cookies are set on the site's domain, so that the site's server sees the session too.
- * The learner's address is the one Cloudflare's edge saw.
+ * The API is served under the site's own /api, so its cookies are the site's. The learner's address is the one
+ * Cloudflare's edge saw.
  */
 export function createAuth(
   db: Db,
   secret: string,
-  origins: { readonly site: string; readonly api: string },
+  site: string,
   sendEmail: SendEmail,
   endPlans: (userId: string) => Promise<void> = async () => {},
 ) {
-  const site = new URL(origins.site).hostname;
-  const shared = new URL(origins.api).hostname.endsWith(`.${site}`);
   return betterAuth({
-    baseURL: origins.api,
+    baseURL: site,
     basePath: "/api/auth",
-    trustedOrigins: [origins.site],
+    trustedOrigins: [site],
     advanced: {
       ipAddress: { ipAddressHeaders: ["cf-connecting-ip"] },
-      ...(shared && { crossSubDomainCookies: { enabled: true, domain: site } }),
     },
     secret,
     database: drizzleAdapter(db, { provider: "pg", schema }),

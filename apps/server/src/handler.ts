@@ -145,10 +145,10 @@ export function createApi(services: Services): Api {
   const endPlans = async (userId: string) => {
     if (payments) await endPlansOf(db, payments, userId, Date.now());
   };
-  const auth = createAuth(db, config.authSecret, { site: config.siteUrl, api: config.apiUrl }, services.mail, endPlans);
+  const auth = createAuth(db, config.authSecret, config.siteUrl, services.mail, endPlans);
   const accounts = childAccounts(auth, db);
 
-  return withCors(config.siteUrl, async (request) => {
+  return async (request) => {
     const { pathname } = new URL(request.url);
     if (pathname.startsWith(VOICE_PREFIX)) return handleVoice(request, db, conversations);
     if (pathname === WEBHOOK) return webhook(services, request);
@@ -164,42 +164,6 @@ export function createApi(services: Services): Api {
     const req = universalServerRequestFromFetch(request, {});
     req.contextValues = createContextValues().set(dbKey, db).set(userIdKey, session?.user.id).set(accountsKey, accounts);
     return universalServerResponseToFetch(await handler(req));
-  });
-}
-
-/** CORS_HEADERS are the request headers the site's pages send: Connect's, better-auth's and the language. */
-const CORS_HEADERS = "content-type, connect-protocol-version, connect-timeout-ms, authorization, accept-language";
-
-/**
- * withCors lets the site's pages, and only them, call the API from their own origin with their cookies. A preflight
- * is answered here, and kept by the browser for two hours.
- */
-export function withCors(site: string, api: Api): Api {
-  return async (request) => {
-    const origin = request.headers.get("origin");
-    const allowed = origin === site;
-    if (request.method === "OPTIONS") {
-      if (!allowed) return new Response(null, { status: 403 });
-      return new Response(null, {
-        status: 204,
-        headers: {
-          "access-control-allow-origin": site,
-          "access-control-allow-credentials": "true",
-          "access-control-allow-methods": "GET, POST",
-          "access-control-allow-headers": CORS_HEADERS,
-          "access-control-max-age": "7200",
-          vary: "origin",
-        },
-      });
-    }
-    const response = await api(request);
-    if (!allowed) return response;
-    const headers = new Headers(response.headers);
-    headers.set("access-control-allow-origin", site);
-    headers.set("access-control-allow-credentials", "true");
-    headers.set("access-control-expose-headers", "set-auth-token");
-    headers.append("vary", "origin");
-    return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
   };
 }
 
