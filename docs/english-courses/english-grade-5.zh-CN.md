@@ -128,7 +128,7 @@
 
 **语法：** `correlative-conjunctions`（已有）。`hyphens` 连字符（先修 `compound-words`）：连字符用于连接在名词前作为一个形容词的几个词（*a well-built bridge*、*a ten-story tower*）、复合数词（*twenty-one*）以及某些前缀（*self-*、*ex-*）。步骤：选出需要连字符的地方；再区分 *a well-built bridge* 和 *the bridge is well built*。
 
-**阅读：** `fact-and-opinion`（已有）。`reading-a-news-article` 读新闻报道（先修 `main-idea`、`text-features`）：新闻报道回答谁、什么、何时、何地、为什么和怎样，最重要的事实放在导语中最先说出，并引用相关人士的话。步骤：在导语中找出五个 W；再判断报道为什么按这样的顺序排列事实。
+**阅读：** `reading-a-news-article` 读新闻报道（先修 `main-idea`、`text-features`）：新闻报道回答谁、什么、何时、何地、为什么和怎样，最重要的事实放在导语中最先说出，并引用相关人士的话。步骤：在导语中找出五个 W；再判断报道为什么按这样的顺序排列事实。
 
 **写作：** `formal-style` 正式文体（先修 `formal-and-informal-english`）：报告和新闻报道使用正式文体：用第三人称，用词准确，不用俚语和感叹。步骤：选出保持正式文体的句子；再把一个非正式的句子改写成正式的。`writing-a-news-article` 写新闻报道（由模型评判；先修 `reading-a-news-article`、`formal-style`）：根据给定的笔记，写一篇关于大桥通车或建筑测试的简短新闻报道：导语包含五个 W，事实按重要性排列，引用一位相关人士的话，不写作者自己的观点。评判标准：`g5-news-lead`（新增）、`g5-news-order`（新增）、`g5-news-quote`（新增）、`g5-news-objective`（新增）。
 

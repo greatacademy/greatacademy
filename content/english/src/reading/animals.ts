@@ -5,11 +5,7 @@ const mainIdea = { topic: "main-idea", weight: 0.3 } as const;
 const details = { topic: "supporting-details", weight: 0.2 } as const;
 const sequence = { topic: "sequence-in-texts", weight: 0.3 } as const;
 const causes = { topic: "cause-and-effect-in-texts", weight: 0.3 } as const;
-const contrast = { topic: "compare-and-contrast-in-texts", weight: 0.3 } as const;
-const structure = { topic: "text-structures", weight: 0.3 } as const;
 const inference = { topic: "making-inferences", weight: 0.3 } as const;
-const factOpinion = { topic: "fact-and-opinion", weight: 0.3 } as const;
-const purpose = { topic: "authors-purpose", weight: 0.3 } as const;
 
 /** howAnimalsSurvive is a reading unit of grades 3 to 5 on the ways animals stay alive, whose questions practice the skills of reading informational texts. */
 export const howAnimalsSurvive: ReadingUnitDef = {
@@ -309,7 +305,7 @@ The box turtle's armor is a hard shell made of bone. When danger comes, the turt
 The porcupine's armor is made of quills, thousands of sharp spines hidden in its fur. When a porcupine is in danger, it raises its quills and turns its back toward the enemy. If the enemy comes too close, the quills stick in its skin and come loose from the porcupine. Its armor hurts whoever attacks.
 
 Both animals are slow, and both would be easy to catch without their armor. But the turtle waits safely inside its shell, while the porcupine teaches its enemies a painful lesson they are not likely to forget.`,
-      topics: [contrast],
+      topics: [details],
       glossed: ["armor", "porcupine", "quills", "spines", "turtle", "turtle's", "porcupine's"],
       xp: 5,
       questions: [
@@ -340,12 +336,16 @@ Both animals are slow, and both would be easy to catch without their armor. But 
           ),
         },
         {
-          prompt: t("Which word in the last paragraph signals a contrast?", "最后一段中哪个词表示对比？"),
-          right: t("while", "while（而）"),
-          wrong: [t("both", "both（两者都）"), t("and", "and（和）"), t("inside", "inside（在里面）")],
+          prompt: t("What does the box turtle do when danger comes?", "危险来临时，箱龟会怎么做？"),
+          right: t("It pulls inside its shell and closes it like a door", "它缩进壳里，像关门一样把壳合上"),
+          wrong: [
+            t("It raises sharp quills", "它竖起尖刺"),
+            t("It runs and hides", "它逃跑并躲起来"),
+            t("It turns its back toward the enemy", "它背对敌人"),
+          ],
           solution: t(
-            "*While* sets the turtle waiting in its shell against the porcupine teaching its enemies a lesson. *Both* and *and* join things that are alike.",
-            "*while* 把在壳里等待的箱龟和教训敌人的豪猪对照起来。*both* 和 *and* 连接的是相同的东西。",
+            "The second paragraph says the turtle pulls its head, legs and tail inside, then closes the bottom of its shell like a door.",
+            "第二段说箱龟把头、腿和尾巴缩进去，然后像关门一样合上壳的底部。",
           ),
         },
       ],
@@ -362,18 +362,22 @@ Then a scientist noticed something surprising: elephants are afraid of bees. A b
 So she helped farmers build beehive fences. Every few steps along the edge of a field, a beehive hangs from a wire. When an elephant pushes against the wire, the hives swing, and the bees fly out buzzing.
 
 The fences work. Most elephants now turn back before they reach the crops. As a bonus, the bees make honey, which the farmers can sell, and the bees help the crops grow by carrying pollen from flower to flower.`,
-      topics: [structure],
+      topics: [causes],
       names: ["Kenya"],
       glossed: ["beehive", "hives", "sting", "trunk", "elephant's"],
       xp: 5,
       questions: [
         {
-          prompt: t("How is this passage organized?", "这篇文章是怎样组织的？"),
-          right: t("problem and solution", "问题与解决"),
-          wrong: [t("sequence", "顺序"), t("compare and contrast", "比较与对比"), t("description", "描述")],
+          prompt: t("What happened when the farmers shouted, banged pots and lit fires?", "农民大喊、敲锅、生火之后发生了什么？"),
+          right: t("The elephants kept coming back", "大象还是一次次回来"),
+          wrong: [
+            t("The elephants left for good", "大象再也不来了"),
+            t("The bees flew away", "蜜蜂飞走了"),
+            t("The crops grew faster", "庄稼长得更快了"),
+          ],
           solution: t(
-            "The first paragraph names a problem, elephants eating crops, and the later paragraphs tell how beehive fences solved it.",
-            "第一段提出一个问题，即大象吃庄稼，后面几段讲蜂箱围栏怎样解决了它。",
+            "The second paragraph says the farmers tried shouting, banging pots and lighting fires, but the elephants kept coming back.",
+            "第二段说农民试过大喊、敲锅和生火，可大象还是一次次回来。",
           ),
         },
         {
@@ -474,34 +478,37 @@ Sharks almost never attack people. Each year, fewer than one hundred people arou
 People are far more dangerous to sharks. Every year, fishing boats catch millions of them, and some kinds of sharks have become rare.
 
 Sharks have lived in the oceans for millions of years, longer than trees have grown on land. In my opinion, they deserve our respect, not our fear. We should protect them before it is too late.`,
-      topics: [factOpinion],
+      topics: [mainIdea, details],
       glossed: ["sharks", "shark", "misunderstood", "terrified", "lightning", "deserve"],
       xp: 5,
       questions: [
         {
-          prompt: t("Which sentence from the passage is a fact?", "文中哪个句子是事实？"),
-          right: t("There are more than five hundred kinds of sharks.", "鲨鱼有五百多种。"),
+          prompt: t("What is the main idea of the passage?", "这篇文章的主要意思是什么？"),
+          right: t(
+            "Sharks are much less dangerous than people think, and they need our protection",
+            "鲨鱼远没有人们想的那么危险，它们需要我们保护",
+          ),
           wrong: [
-            t("Sharks are the most misunderstood animals in the sea.", "鲨鱼是海里最被误解的动物。"),
-            t("They deserve our respect, not our fear.", "它们值得我们尊重，而不是害怕。"),
-            t("We should protect them before it is too late.", "我们应该在为时已晚之前保护它们。"),
+            t("Sharks are the biggest animals in the sea", "鲨鱼是海里最大的动物"),
+            t("Movies about sharks are exciting", "关于鲨鱼的电影很刺激"),
+            t("Lightning is more dangerous than the sea", "闪电比大海更危险"),
           ],
           solution: t(
-            "The number of kinds of sharks can be checked in a book. The other sentences tell what the writer thinks, with words such as *most misunderstood*, *deserve* and *should*.",
-            "鲨鱼的种类数可以查书核实。其他句子表达的是作者的想法，用了 *most misunderstood*、*deserve*、*should* 这样的词。",
+            "Most paragraphs show that sharks rarely hurt people while people catch millions of sharks, and the last one asks us to protect them.",
+            "大多数段落都说明鲨鱼很少伤人，人却每年捕捞数百万条鲨鱼；最后一段请我们保护它们。",
           ),
         },
         {
-          prompt: t("Which words tell you the writer is giving an opinion?", "哪些词告诉你作者在表达观点？"),
-          right: t("In my opinion", "In my opinion（在我看来）"),
+          prompt: t("What does the whale shark eat?", "鲸鲨吃什么？"),
+          right: t("Tiny plants and animals that float in the water", "漂浮在水中的微小植物和动物"),
           wrong: [
-            t("Here are the facts", "Here are the facts（以下是事实）"),
-            t("Each year", "Each year（每年）"),
-            t("more than", "more than（超过）"),
+            t("People who swim in the sea", "在海里游泳的人"),
+            t("Other sharks", "别的鲨鱼"),
+            t("Fish as big as a bus", "像公共汽车那么大的鱼"),
           ],
           solution: t(
-            "*In my opinion* and *I think* tell you a sentence is what the writer believes. *Here are the facts* introduces facts.",
-            "*In my opinion* 和 *I think* 表明句子是作者的看法。*Here are the facts* 引出的是事实。",
+            "The second paragraph says the whale shark is as long as a bus but eats only tiny plants and animals that float in the water.",
+            "第二段说鲸鲨和公共汽车一样长，却只吃漂浮在水中的微小植物和动物。",
           ),
         },
         {
@@ -532,21 +539,21 @@ Sadly, milkweed is disappearing. Fields where it once grew wild have become road
 You can help, and it is easy. Milkweed grows quickly from seed, and it needs little care. Plant some in a sunny corner of your yard, in a pot on a balcony, or in a corner of the school garden. Ask your neighbors to plant some too.
 
 Imagine stepping outside on a summer morning and finding a striped caterpillar munching on a leaf, or an orange and black butterfly drifting past your window. With a few seeds and a little water, you can give the monarchs a place to land. Please plant milkweed this spring!`,
-      topics: [purpose, inference],
+      topics: [mainIdea, inference],
       glossed: ["monarch", "monarchs", "milkweed", "caterpillars", "caterpillar", "lawns", "balcony", "munching", "striped"],
       xp: 5,
       questions: [
         {
-          prompt: t("What is the author's main purpose?", "作者的主要目的是什么？"),
-          right: t("To persuade readers to plant milkweed", "说服读者种植马利筋"),
+          prompt: t("What is the main idea of the passage?", "这篇文章的主要意思是什么？"),
+          right: t("Monarchs need milkweed, and you can help them by planting it", "帝王蝶离不开马利筋，你可以种马利筋来帮助它们"),
           wrong: [
-            t("To entertain readers with a story about a butterfly", "用蝴蝶的故事娱乐读者"),
-            t("To explain how roads are built", "解释道路是怎样修建的"),
-            t("To tell how fast caterpillars grow", "讲述毛毛虫长得有多快"),
+            t("Caterpillars eat many kinds of plants", "毛毛虫吃很多种植物"),
+            t("Roads and parking lots are useful", "道路和停车场很有用"),
+            t("Summer mornings are the best time to see butterflies", "夏天早晨是看蝴蝶的最好时候"),
           ],
           solution: t(
-            "The author gives facts about monarchs, but tells the reader *you can help*, gives steps to follow and ends with *Please plant milkweed this spring!*",
-            "作者虽然提供了关于帝王蝶的事实，但告诉读者 *you can help*，给出了做法，并以 *Please plant milkweed this spring!* 结尾。",
+            "The first paragraphs explain that monarchs need milkweed and that it is disappearing; the rest tells you how to plant it and asks you to.",
+            "前几段说明帝王蝶离不开马利筋，而马利筋正在消失；其余部分告诉你怎样种马利筋，并请你去种。",
           ),
         },
         {

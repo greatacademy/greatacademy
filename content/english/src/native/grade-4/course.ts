@@ -79,7 +79,7 @@ const units: readonly UnitDef[] = [
     {
       words: ["words-of-energy", "words-of-light-and-sound", "words-for-using-and-saving"],
       grammar: ["modal-verbs", "adverbs-that-compare"],
-      reading: ["combining-information-from-two-texts"],
+      reading: ["combining-information-from-two-texts", "fact-and-opinion"],
       writing: ["supporting-reasons-with-facts", "writing-a-persuasive-letter"],
     },
     "energy-all-around",

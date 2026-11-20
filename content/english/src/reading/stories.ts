@@ -9,9 +9,6 @@ const charactersSome = { topic: "characters", weight: 0.2 } as const;
 const pointOfView = { topic: "point-of-view", weight: 0.3 } as const;
 const lesson = { topic: "lesson-of-a-story", weight: 0.3 } as const;
 const lessonSome = { topic: "lesson-of-a-story", weight: 0.2 } as const;
-const figures = { topic: "similes-and-metaphors", weight: 0.3 } as const;
-const figuresSome = { topic: "similes-and-metaphors", weight: 0.2 } as const;
-const idioms = { topic: "idioms", weight: 0.3 } as const;
 
 /** storiesAndFables is a reading unit of grades 3 to 5 of short original stories and fables about characters, lessons and figurative language. */
 export const storiesAndFables: ReadingUnitDef = {
@@ -446,7 +443,7 @@ The clover pressed close to the ground and held on. When the storm passed, not o
 The next morning, the farmer's daughter came out to the field. She gently tied the sunflower to a stick so that she could stand again. Then she knelt by the clover and smiled. "Look," she said, "a four-leaf clover. This is my lucky day."
 
 The sunflower was quiet for a long time. "I am sorry for what I said," she told the clover at last. "From up here, I never really looked at you."`,
-      topics: [lesson, figuresSome],
+      topics: [lesson, inferencesSome],
       glossed: ["clover"],
       xp: 5,
       questions: [
@@ -465,8 +462,8 @@ The sunflower was quiet for a long time. "I am sorry for what I said," she told 
         },
         {
           prompt: t(
-            'What does the simile "as round and bright as a golden plate" tell you?',
-            "明喻“as round and bright as a golden plate”告诉了你什么？",
+            'What does "as round and bright as a golden plate" tell you about the sunflower?',
+            "“as round and bright as a golden plate”告诉了你向日葵的什么？",
           ),
           right: t("The sunflower's face was large, round and shining", "向日葵的花盘又大又圆，闪闪发亮"),
           wrong: [
@@ -475,8 +472,8 @@ The sunflower was quiet for a long time. "I am sorry for what I said," she told 
             t("The sunflower was heavy and hard", "向日葵又重又硬"),
           ],
           solution: t(
-            "A simile uses as or like to say two things are alike in some way. The first paragraph means the flower looked round and bright like a gold plate, not that it was one.",
-            "明喻用 as 或 like 说明两样东西在某方面相像。第一段的意思是花盘看起来像金盘子一样圆而亮，并不是说它真是盘子。",
+            "The first paragraph compares the flower to a gold plate: it looked round and bright like one, but it was not one.",
+            "第一段把花盘比作金盘子：它看起来像金盘子一样圆而亮，但并不真是盘子。",
           ),
         },
         {
@@ -491,8 +488,8 @@ The sunflower was quiet for a long time. "I am sorry for what I said," she told 
             t("The wind was warm", "风很暖和"),
           ],
           solution: t(
-            "A running horse is fast and powerful. In the fourth paragraph the wind is strong enough to crack the sunflower's stem, so the simile shows its speed and force.",
-            "奔跑的马又快又有力。第四段里风大到把向日葵的茎都折断了，所以这个明喻表现的是风的速度和力量。",
+            "A running horse is fast and powerful. In the fourth paragraph the wind is strong enough to crack the sunflower's stem, so the comparison shows its speed and force.",
+            "奔跑的马又快又有力。第四段里风大到把向日葵的茎都折断了，所以这个比较表现的是风的速度和力量。",
           ),
         },
       ],
@@ -511,14 +508,14 @@ Her little brother Max followed her. He was wrapped in so many sweaters that he 
 By lunch, their fingers were icicles, and they went inside. Mom gave them mugs of hot chocolate. The warm drink was a small sun in Ivy's hands.
 
 That night, Ivy looked out at the snowman. The moon was a silver coin above the roofs, and the snowman stood guard in the yard like a soldier who would not sleep.`,
-      topics: [figures],
+      topics: [inferences],
       names: ["Ivy", "Ivy's", "Max"],
       xp: 5,
       questions: [
         {
           prompt: t(
-            'What does the metaphor "the world outside her window was a blank page" mean?',
-            "隐喻“the world outside her window was a blank page”是什么意思？",
+            'What does "the world outside her window was a blank page" mean?',
+            "“the world outside her window was a blank page”是什么意思？",
           ),
           right: t("Everything was covered in smooth, plain white snow", "一切都被平整洁白的雪覆盖了"),
           wrong: [
@@ -532,16 +529,16 @@ That night, Ivy looked out at the snowman. The moon was a silver coin above the 
           ),
         },
         {
-          prompt: t("Which of these is a simile?", "下面哪一句是明喻？"),
-          right: t('"He moved like a walking pillow."', "“He moved like a walking pillow.”（他走起来像个会走路的枕头。）"),
+          prompt: t('Why does Max move "like a walking pillow"?', "麦克斯为什么走起来“like a walking pillow”？"),
+          right: t("He is wearing so many sweaters that he is round and soft", "他穿了太多毛衣，整个人又圆又软"),
           wrong: [
-            t('"Their fingers were icicles."', "“Their fingers were icicles.”（他们的手指成了冰柱。）"),
-            t('"The moon was a silver coin."', "“The moon was a silver coin.”（月亮是一枚银币。）"),
-            t('"School was closed."', "“School was closed.”（学校停课了。）"),
+            t("He is carrying a pillow outside", "他把枕头带到了外面"),
+            t("He is still half asleep", "他还没睡醒"),
+            t("He has hurt his leg", "他的腿受伤了"),
           ],
           solution: t(
-            "A simile says one thing is like another, using like or as. Only the pillow sentence uses like. The icicles and the coin are metaphors, and the last one is not a figure of speech.",
-            "明喻用 like 或 as 说明一样东西像另一样东西。只有枕头那句用了 like。冰柱和银币那两句是隐喻，最后一句不是比喻。",
+            "The third paragraph says he was wrapped in so many sweaters that he moved like a walking pillow: all the sweaters make him look round and soft.",
+            "第三段说他裹了那么多件毛衣，走起来像个会走路的枕头：一层层毛衣让他看起来又圆又软。",
           ),
         },
         {
@@ -553,8 +550,8 @@ That night, Ivy looked out at the snowman. The moon was a silver coin above the 
             t("They wore gloves made of ice", "他们戴着冰做的手套"),
           ],
           solution: t(
-            "The fifth paragraph says this after a whole morning in the snow, right before they go inside for hot chocolate. Icicles are frozen, so the metaphor means their fingers were freezing.",
-            "第五段在他们玩了一上午雪之后这样说，紧接着他们就进屋喝热巧克力。冰柱是冻住的，所以这个隐喻是说他们的手指冻僵了。",
+            "The fifth paragraph says this after a whole morning in the snow, right before they go inside for hot chocolate. Icicles are frozen, so the words mean their fingers were freezing.",
+            "第五段在他们玩了一上午雪之后这样说，紧接着他们就进屋喝热巧克力。冰柱是冻住的，所以这句话是说他们的手指冻僵了。",
           ),
         },
       ],
@@ -575,7 +572,7 @@ The curtain opened. For the first few lines, Theo's voice was small and shaky. T
 Afterward, Zoe found him by the door. "See?" she said. "That wasn't so hard."
 
 Theo grinned. "It was a piece of cake," he said. Then he paused. "Well, maybe a very big piece."`,
-      topics: [idioms, lessonSome],
+      topics: [inferences, lessonSome],
       names: ["Theo", "Theo's", "Zoe", "Park"],
       xp: 5,
       questions: [
@@ -588,8 +585,8 @@ Theo grinned. "It was a piece of cake," he said. Then he paused. "Well, maybe a 
             t("He wanted to go outside in the snow", "他想到外面雪地里去"),
           ],
           solution: t(
-            'Right after he gets cold feet, Theo crumples his lines and whispers, "I can\'t do it." The idiom means he was too scared to go on.',
-            "西奥“got cold feet”之后，把台词纸都攥皱了，还小声说“I can't do it.”。这个习语的意思是他害怕得不敢上台。",
+            'Right after he gets cold feet, Theo crumples his lines and whispers, "I can\'t do it." The words mean he was too scared to go on.',
+            "西奥“got cold feet”之后，把台词纸都攥皱了，还小声说“I can't do it.”。这句话的意思是他害怕得不敢上台。",
           ),
         },
         {

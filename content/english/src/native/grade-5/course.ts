@@ -103,7 +103,7 @@ const units: readonly UnitDef[] = [
         "words-of-calendars-and-counting",
       ],
       grammar: ["when-to-shift-tense", "spelling-ant-and-ent"],
-      reading: ["fact-and-opinion", "authors-purpose", "multiple-accounts-of-one-event"],
+      reading: ["authors-purpose", "multiple-accounts-of-one-event"],
       writing: ["linking-words-for-reasons-and-contrast", "writing-a-compare-and-contrast-paragraph", "writing-about-two-texts"],
     },
     "the-maya-aztec-and-inca",

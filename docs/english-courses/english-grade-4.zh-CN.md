@@ -80,7 +80,7 @@
 
 **语法：** `modal-verbs`（已有）。`adverbs-that-compare` 表示比较的副词（先修 `comparatives-and-superlatives`、`adjectives-and-adverbs`）：短副词用 *-er* 和 *-est* 表示比较（*faster*、*fastest*），以 *-ly* 结尾的用 *more* 和 *most*（*more brightly*、*most quietly*）；*well* 和 *badly* 是不规则的（*better*、*worse*）。步骤：选出比较两者或两者以上时的形式；再输入它。
 
-**阅读：** `combining-information-from-two-texts` 整合两篇文章的信息（先修 `two-texts-on-one-topic`）：为了写或说一个话题，读者要把两篇文章的内容合成一个整体。步骤：选出需要两篇文章才能得出的陈述；再判断某个陈述来自哪篇文章。
+**阅读：** `combining-information-from-two-texts` 整合两篇文章的信息（先修 `two-texts-on-one-topic`）：为了写或说一个话题，读者要把两篇文章的内容合成一个整体。步骤：选出需要两篇文章才能得出的陈述；再判断某个陈述来自哪篇文章。`fact-and-opinion`（已有），本单元的说服性写作建立在它之上。
 
 **写作：** `supporting-reasons-with-facts` 用事实支持理由（先修 `linking-reasons-to-an-opinion`）：观点的每个理由有了事实或细节作支撑会更有说服力。步骤：选出支持某个理由的事实；再区分起支持作用的事实和只是另一个观点的句子。`writing-a-persuasive-letter` 写说服性书信（由模型评判；先修 `writing-a-friendly-letter`、`writing-an-opinion-paragraph`、`supporting-reasons-with-facts`）：给校长或镇议会写一封信，请求做出一项节约能源的改变：请求明确，理由有事实支持，语气适合收信人。评判标准：`g4-letter-request`（新增）、`w4-gives-reasons`、`g4-letter-facts`（新增）、`g4-letter-audience`（新增）。
 

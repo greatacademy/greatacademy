@@ -1,7 +1,7 @@
 import type { ReadingUnitDef } from "@ga/content";
 import { t } from "@ga/content";
 
-import { academic2, clues } from "./topics.ts";
+import { clues } from "./topics.ts";
 
 /** weatherAndClimate is a reading unit of grades 3 to 5 on the air, the weather it makes, and climate. */
 export const weatherAndClimate: ReadingUnitDef = {
@@ -442,7 +442,7 @@ A single cold week does not change a place's climate, in the same way that one b
     {
       id: "climate-zones",
       title: t("Hot, Cold and In Between", "热的、冷的和介于其间的"),
-      body: `Scientists divide the world into large areas that have similar climates. Each is called a climate zone. A region's climate zone depends mostly on how far it is from the equator, but mountains and oceans matter too.
+      body: `Scientists divide the world into large areas that have similar climates. Each is called a climate zone. A place's climate zone depends mostly on how far it is from the equator, but mountains and oceans matter too.
 
 The tropical zone lies near the equator. It is warm all year, and many tropical places get heavy rain almost every day. Rain forests, full of tall trees and more kinds of plants and animals than anywhere else, grow there.
 
@@ -451,12 +451,12 @@ The polar zones lie near the North Pole and the South Pole. They are cold all ye
 Between them are the temperate zones. Most places there have four seasons: a warm summer, a cold winter, and spring and autumn in between.
 
 Within each zone, other things make a difference. A city by the ocean has milder winters and cooler summers than a city far inland, because water warms and cools slowly. A town high in the mountains is colder than a town in the valley below. Deserts can be found in several zones, wherever little rain falls.`,
-      topics: [clues, academic2],
+      topics: [clues],
       glossed: ["temperate", "inland"],
       xp: 5,
       questions: [
         {
-          prompt: t("What does a region's climate zone depend on most?", "一个地区的气候带主要取决于什么？"),
+          prompt: t("What does a place's climate zone depend on most?", "一个地方的气候带主要取决于什么？"),
           right: t("How far it is from the equator", "它离赤道有多远"),
           wrong: [
             t("How many people live there", "那里住着多少人"),
@@ -497,12 +497,12 @@ Within each zone, other things make a difference. A city by the ocean has milder
       title: t("A Changing Climate", "变化中的气候"),
       body: `Earth's climate has changed many times over its long history. There were ice ages, when great sheets of ice covered much of the land, and warm periods in between. Those changes usually took thousands of years.
 
-Today, scientists have measured a faster change. Over the last one hundred and fifty years, the average temperature of Earth has risen. The main cause is the burning of coal, oil and gas in cars, factories and power plants. Burning them adds carbon dioxide to the air. Carbon dioxide traps heat near the ground, a little like a blanket on a bed.
+Today, scientists have measured a faster change. Over the last one hundred and fifty years, the average temperature of Earth has risen. The main reason is the burning of coal, oil and gas in cars, factories and power plants. Burning them adds carbon dioxide to the air. Carbon dioxide traps heat near the ground, a little like a blanket on a bed.
 
-A warmer climate has many effects. Glaciers and polar ice are melting, and as the ice melts and ocean water warms, the level of the sea slowly rises. In some regions, heat waves and dry spells are becoming more common. In others, the heaviest rains are getting heavier.
+A warmer climate changes many things. Glaciers and polar ice are melting, and as the ice melts and ocean water warms, the level of the sea slowly rises. In some places, heat waves and dry spells are becoming more common. In others, the heaviest rains are getting heavier.
 
 People around the world are working on ways to slow this change. They are building power plants that use sunlight and wind, making cars that run on electricity, and planting trees, which take in carbon dioxide as they grow.`,
-      topics: [clues, academic2],
+      topics: [clues],
       xp: 5,
       questions: [
         {
@@ -519,11 +519,14 @@ People around the world are working on ways to slow this change. They are buildi
           ),
         },
         {
-          prompt: t("What is the main cause of the rise in temperature, according to the passage?", "根据文章，气温上升的主要原因是什么？"),
+          prompt: t(
+            "What is the main reason for the rise in temperature, according to the passage?",
+            "根据文章，气温上升的主要原因是什么？",
+          ),
           right: t("Burning coal, oil and gas", "燃烧煤、石油和天然气"),
           wrong: [t("Planting too many trees", "种了太多树"), t("Ice ages", "冰期"), t("The sea level rising", "海平面上升")],
           solution: t(
-            "The second paragraph says the main cause is the burning of coal, oil and gas.",
+            "The second paragraph says the main reason is the burning of coal, oil and gas.",
             "第二段说主要原因是燃烧煤、石油和天然气。",
           ),
         },
