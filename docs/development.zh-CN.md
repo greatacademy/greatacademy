@@ -81,8 +81,8 @@ pnpm nx run server:dev                # API 服务器，http://localhost:8080
 pnpm nx run web:dev                   # http://localhost:5173
 ```
 
-- `apps/server/src/config.ts` 从环境变量读取服务器的设置，`server:dev` 从 `apps/server/.env.local`（已被 git 忽略）加载它们：`PORT`；`SITE_URL`，即唯一允许其页面调用 API 的源；指向容器的 `DATABASE_URL`；`BETTER_AUTH_SECRET` 和 `AI_KEYS_SECRET`；`EMAIL_PROVIDER`、`RESEND_API_KEY`、`CLOUDFLARE_ACCOUNT_ID`、`CLOUDFLARE_EMAIL_TOKEN` 和 `EMAIL_FROM`；签字表格存储桶的 `R2_ACCESS_KEY_ID` 和 `R2_SECRET_ACCESS_KEY`，没有它们时表格保存在内存中；Stripe 和 App Store 的密钥；以及语音服务的设置（§7）。文件改动时 `server:dev` 会重启服务器。
-- 开发时网站和 API 共用一个源：`apps/web/vite.config.ts` 把 `/api` 代理到 API 服务器（`API_URL`，否则为 `http://localhost:8080`），所以服务器自己的 `API_URL` 可以不设。构建后的页面调用 `https://api.greatacademy.dev`（`apps/web/src/lib/origin.ts` 中的 `API_ORIGIN`）。
+- `apps/server/src/config.ts` 从环境变量读取服务器的设置，`server:dev` 从 `apps/server/.env.local`（已被 git 忽略）加载它们：`PORT`；`SITE_URL`，即网站，它是 better-auth 的基础 URL，也是邮件中链接指向的地方；指向容器的 `DATABASE_URL`；`BETTER_AUTH_SECRET` 和 `AI_KEYS_SECRET`；`EMAIL_PROVIDER`、`RESEND_API_KEY`、`CLOUDFLARE_ACCOUNT_ID`、`CLOUDFLARE_EMAIL_TOKEN` 和 `EMAIL_FROM`；签字表格存储桶的 `R2_ACCESS_KEY_ID` 和 `R2_SECRET_ACCESS_KEY`，没有它们时表格保存在内存中；Stripe 和 App Store 的密钥；以及语音服务的设置（§7）。文件改动时 `server:dev` 会重启服务器。
+- 网站和 API 共用一个源。开发时 `apps/web/vite.config.ts` 把 `/api` 代理到 API 服务器（`API_URL`，即代理的目标，否则为 `http://localhost:8080`）。构建后由 Web Worker 把 `/api/` 转发到 API 服务器的源站主机 `https://api.greatacademy.dev`（`apps/web/src/server.ts`）。
 - 没有 `STRIPE_SECRET_KEY` 时计费关闭，所有人都可以学习；要试用计费，把 Stripe 测试账户的密钥放进 `apps/server/.env.local`，并用 `stripe listen --forward-to localhost:8080/api/stripe` 转发事件，它给出的签名密钥就是 `STRIPE_WEBHOOK_SECRET`（[计费](billing.zh-CN.md) §10）。
 - `EMAIL_PROVIDER` 取 `resend`、`cloudflare` 或 `cloudflare,resend`；它和 `RESEND_API_KEY` 都留空时，密码重置和验证邮件不会发出，而是写到服务器输出中，可以从那里打开其中的链接。取 `cloudflare` 时本地服务器会通过 Cloudflare Email Service 的 REST API 真实发信；发信子域 `mail.greatacademy.dev` 已用 `cf email-sending subdomains create` 接入，它写入了退信 MX、SPF、DKIM 和 DMARC 记录，可用 `cf email-sending subdomains dns status` 检查。`EMAIL_FROM` 用该域名下已被 `EMAIL_PROVIDER` 所列每个服务验证的地址：用 `cloudflare` 时把域名接入 Cloudflare Email Service，用 `resend` 时在 Resend 验证域名；两者都用时，保留一条同时包含两家服务的 SPF 记录。
 - `apps/web/cloudflare.config.ts` 声明 Web Worker：唯一的绑定是公开文件的 R2 存储桶 `BUCKET`，开发时在本地；没有 secret。`pnpm nx run web:typecheck` 会先运行 `cf workers types`，把 `Env` 类型声明写入 `.cloudflare/types`。
@@ -123,7 +123,7 @@ pnpm nx run nsh:ios                   # iOS 模拟器；需要 Xcode
 pnpm nx run nsh:android               # 模拟器或真机；需要 Android SDK 和 JDK
 ```
 
-- `apps/nsh/lib/rpc.ts` 中的 `SITE_URL` 在 `nsh run` 下是 `http://localhost:5173`，桌面端和 iOS 模拟器可以直接访问。`API_URL` 由它得出：网站使用 HTTPS 时是网站的 `api.` 子域名，使用明文 HTTP 时就是网站本身，它的 Vite 服务器把 `/api` 代理到 API 服务器。Android 需要先运行 `adb reverse tcp:5173 tcp:5173`。如果要给 iPhone 打包，用 `DEV_HOST=0.0.0.0` 启动 Web 应用，并传入 `--site-url http://<本机地址>:5173`。Android 也一样：Native Shell 只在开发构建中允许明文 HTTP，所以当 `--site-url` 以 `http://` 开头时，打包脚本会允许它。
+- `apps/nsh/lib/rpc.ts` 中的 `SITE_URL` 在 `nsh run` 下是 `http://localhost:5173`，桌面端和 iOS 模拟器可以直接访问。应用也在网站的 `/api` 下调用 API：使用 HTTPS 时由 Web Worker 转发，使用明文 HTTP 时由 Vite 服务器代理到 API 服务器。Android 需要先运行 `adb reverse tcp:5173 tcp:5173`。如果要给 iPhone 打包，用 `DEV_HOST=0.0.0.0` 启动 Web 应用，并传入 `--site-url http://<本机地址>:5173`。Android 也一样：Native Shell 只在开发构建中允许明文 HTTP，所以当 `--site-url` 以 `http://` 开头时，打包脚本会允许它。
 - 页面位于 `apps/nsh/screens`。`nsh:test` 以无头方式运行应用，不需要模拟器；`nsh:typecheck` 运行 `nsh check`，它也会生成 `.nsh/types`。
 - 应用用 bearer token 登录，并把它保存在 `Storage` 中。
 - 应用启动时显示标志（`screens/Launch.tsx`），直到第一页能完整画出（已登录时是「学习」标签页的第一次应答），最多两秒，然后标志放大并淡出到页面；系统标签栏在它离开时出现。
@@ -141,7 +141,7 @@ pnpm nx run nsh:android               # 模拟器或真机；需要 Android SDK 
 - `nsh test` 不运行 Web 视图，所以作图题和数学输入框没有无头测试。
 - Web 视图中的页面如果加载不到 KaTeX 样式表，就改为显示每个公式的 MathML。在 `--target web` 下，页面是没有来源的沙箱框架，所以 `/embed` 允许任意来源。有些内嵌浏览器（例如 Claude 桌面应用的浏览器面板）会拒绝沙箱框架的所有请求，所以要在普通浏览器或原生目标上检查公式。
 - 桌面窗口不能缩小到 420×600 点以下（`lib/window.ts`）。
-- `pnpm nx run nsh:package -- --target <target>` 构建安装包，应用标识符是 `dev.greatacademy.app`，图标来自 `assets/`。它默认使用网站 `https://greatacademy.dev`，因而使用 API 服务器 `https://api.greatacademy.dev`，可用 `--site-url` 指定其他网站；其他参数（如 `--sign` 和 `--profile`）会传给 `nsh package`。Nx 通过 shell 传递参数，所以当参数值含有括号时（签名身份就是这样），请在 `apps/nsh` 下通过 `mise exec` 用同样的参数运行 `node scripts/package.ts`。
+- `pnpm nx run nsh:package -- --target <target>` 构建安装包，应用标识符是 `dev.greatacademy.app`，图标来自 `assets/`。它默认使用网站 `https://greatacademy.dev`，网站也在 `/api` 下提供 API，可用 `--site-url` 指定其他网站；其他参数（如 `--sign` 和 `--profile`）会传给 `nsh package`。Nx 通过 shell 传递参数，所以当参数值含有括号时（签名身份就是这样），请在 `apps/nsh` 下通过 `mise exec` 用同样的参数运行 `node scripts/package.ts`。
 - 图标跟随系统的浅色或深色外观：背景是白色或深色的 surface 令牌。`nsh package` 只接受一个图标，所以脚本随后用 `actool` 为 iOS 和 macOS 编译 `assets/AppIcon.icon`（macOS 保留 `.icns` 给旧系统），把 `assets/icon-dark.png` 作为 Android 夜间模式的启动器图标，然后重新签名。Windows 和 Linux 仍用浅色图标。如果 iOS 宿主链接的 SDK 早于 iOS 26（Native Shell 0.4.0 发布版就是这样），脚本会在签名前让它报告 iOS 26，因为 UIKit 只给这样的应用绘制 Liquid Glass。
 
 ## 7. 运行语音服务

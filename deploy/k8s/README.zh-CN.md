@@ -2,7 +2,7 @@
 
 > [English](README.md) | 简体中文
 
-Great Academy 在 Hetzner Cloud 希尔斯伯勒区域 Talos 集群上运行的全部内容的清单，都在一个命名空间 `greatacademy` 里：API 服务器（`apps/server`），在进程内提供 Connect API、better-auth 和所有学科；它的迁移和定时任务；以及英语的语音服务（`apps/voice`，[英语课程 §13.3](../../docs/english-curriculum.zh-CN.md#133-语音服务)）。站点本身仍是 Cloudflare Worker（`apps/web`），渲染页面并调用 `https://api.greatacademy.dev` 上的 API（[架构 §6](../../docs/architecture.zh-CN.md)）。
+Great Academy 在 Hetzner Cloud 希尔斯伯勒区域 Talos 集群上运行的全部内容的清单，都在一个命名空间 `greatacademy` 里：API 服务器（`apps/server`），在进程内提供 Connect API、better-auth 和所有学科；它的迁移和定时任务；以及英语的语音服务（`apps/voice`，[英语课程 §13.3](../../docs/english-curriculum.zh-CN.md#133-语音服务)）。站点本身仍是 Cloudflare Worker（`apps/web`），渲染页面，并把 `https://greatacademy.dev/api/` 下的每个请求转发到 API 服务器的源站主机 `https://api.greatacademy.dev`（[架构 §6](../../docs/architecture.zh-CN.md)）。
 
 | 文件 | 内容 |
 | :--- | :--- |
@@ -11,7 +11,7 @@ Great Academy 在 Hetzner Cloud 希尔斯伯勒区域 Talos 集群上运行的�
 | `jobs.yaml` | 运行 API 镜像的 CronJob：引擎定时工作 `daily` 和 `quarter` |
 | `voice.yaml` | 语音服务的 Deployment 和 Service：`/readyz` 与 `/healthz` 探针，排空用的 25 分钟宽限期 |
 | `scaling.yaml` | 语音服务 `/metrics` 上的 PodMonitor、按 `voice_sessions_active` 之和伸缩的 KEDA ScaledObject、它的 PodDisruptionBudget，以及 API 按 CPU 在二到六个 Pod 之间伸缩的 HorizontalPodAutoscaler |
-| `ingress.yaml` | 经 ingress-nginx 的 `api.greatacademy.dev/api/` 和 `voice.greatacademy.dev/v1/conversation`，证书来自 cert-manager |
+| `ingress.yaml` | 经 ingress-nginx 的 `api.greatacademy.dev/api/`（只有 Web Worker 使用的 API 服务器源站主机）和 `voice.greatacademy.dev/v1/conversation`，证书来自 cert-manager |
 | `network.yaml` | NetworkPolicy：ingress-nginx 可达 API 和语音服务，语音服务可达 API，Prometheus 可达指标；出站只有 DNS、PostgreSQL 和公网 HTTPS |
 | `api.env`、`voice.env` | 非机密的设置，生成为 ConfigMap |
 | `keys.py` | 生成 Secret `api`、`voice` 和 `ghcr`，不打印任何值 |
@@ -59,7 +59,7 @@ python3 deploy/k8s/keys.py --ghcr-from <含 Secret ghcr 的命名空间>
 - 签署的表单：一个只对存储桶 `ga-guardian-forms` 授予 Workers R2 Storage Bucket Item 读和写的账号令牌，在 `cf auth login` 授予 `account_api_tokens:create` 范围后用 `cf accounts tokens create` 创建。按 R2 的 S3 API 要求，令牌 id 是 `R2_ACCESS_KEY_ID`，其值的 SHA-256 十六进制是 `R2_SECRET_ACCESS_KEY`。缺少它们时 API 把表单留在内存里，重启即丢失，且分散在各副本之间。
 - 邮件：CLI 的 OAuth 客户端不能授予 Email Sending，所以由账号管理员在控制台创建：管理账户 → 账户 API 令牌 → 创建令牌，只给一项权限 Email Sending → 编辑，填为 `CLOUDFLARE_EMAIL_TOKEN`。在此之前邮件只记录到日志，不发送。
 
-Stripe 的 webhook 是 `https://api.greatacademy.dev/api/stripe`，App Store 服务器通知发往 `https://api.greatacademy.dev/api/apple`（[计费](../../docs/billing.zh-CN.md)）。
+Stripe 的 webhook 是 `https://greatacademy.dev/api/stripe`，App Store 服务器通知发往 `https://greatacademy.dev/api/apple`，由 Web Worker 转发到 API 服务器（[计费](../../docs/billing.zh-CN.md)）。
 
 ## 推送镜像
 

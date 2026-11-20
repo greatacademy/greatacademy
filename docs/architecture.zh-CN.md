@@ -51,7 +51,7 @@ Great Academy 是一个自适应学习平台，基于 [The Math Academy Way](the
 | API 服务器 | **Node.js 26**、`node:http`，由 **rolldown** 打包成一个文件；镜像 `ghcr.io/greatacademy/api` | 提供 Connect API、better-auth、Stripe 和 Apple 的通知以及语音服务的调用，所有学科都在进程内编译（§6.1） |
 | UI | **Base UI**、**Tailwind CSS v4**、Phosphor 图标 | 设计 token 来自 `libs/design` |
 | 数学渲染 / 输入 | **KaTeX**（渲染）、**MathLive**（输入）、**Compute Engine**（解析学生答案） | 组件在 `apps/web`；原生应用由应用自身渲染，再显示在 Native Shell 的 `WebView` 中，样式表、字体和 MathLive 从 Web Worker 的 `/embed` 加载 |
-| 账户 | **better-auth**（邮箱 + 密码，之后加 passkey），运行在 API 服务器中，地址为 `https://api.greatacademy.dev` | Web（cookie，设在 `.greatacademy.dev` 上，Web Worker 也能看到）与原生应用（bearer token）共享会话 |
+| 账户 | **better-auth**（邮箱 + 密码，之后加 passkey），运行在 API 服务器中，地址为 `https://greatacademy.dev/api/auth`，以网站（`SITE_URL`）为基础 URL | Web（`greatacademy.dev` 的仅限主机的 cookie，Web Worker 也能看到）与原生应用（bearer token）共享会话 |
 | 邮件 | **Cloudflare Email Service**，通过它的 REST API，使用 `CLOUDFLARE_ACCOUNT_ID` 和 `CLOUDFLARE_EMAIL_TOKEN`；或 **Resend**，通过 HTTP 调用，使用 `RESEND_API_KEY`。设置 `EMAIL_PROVIDER` 按顺序列出要用的服务，`EMAIL_FROM` 是发件人 | 密码重置、邮箱验证、通知、提醒和告警，每封都有 HTML 和纯文本两部分，且只用一种语言：本人请求的邮件使用请求的语言（网页的 `ga-locale` cookie，否则为 `Accept-Language`，原生应用会把它设为应用自己的语言），定时发送的邮件使用 `user.locale`，即此人最近使用的语言，每次 API 请求都会更新它；都不知道时用英语（`apps/server/src/templates.ts`）。两者都是 HTTP 调用，所以服务器不需要 SMTP 客户端。两者都列出时，只有第一个因暂时性原因（限流、每日上限、投递失败或故障）失败时才由第二个发送，配置或邮件本身有误时不切换（`apps/server/src/email.ts`） |
 | 支付 | **Stripe**，美国公司的一个账户，在 API 服务器中使用 `stripe`（其 fetch 客户端和 Web Crypto） | 自动续费的银行卡方案，以及不续费的支付宝和微信支付方案（[计费](billing.zh-CN.md)）；Checkout 和客户门户都是 Stripe 的页面，银行卡信息不会经过我们 |
 | 数据库 | **PostgreSQL 18**，运行在 **CloudNativePG** 上，API 服务器通过 **postgres.js** 访问；**Drizzle ORM** + drizzle-kit 迁移 | 测试中用 **PGlite**；开发时用 OrbStack 中的 `postgres:18-alpine` 容器 |
@@ -154,7 +154,7 @@ apps/voice ╌╌► apps/server，经 HTTP（没有包依赖）
 
 题目实例在服务端由种子生成，也在服务端判分，都在编译了所有学科的 API 服务器中进行（§6.1）。答案在提交之前绝不发送给客户端。
 
-API 服务器（`apps/server`）用 `src/handler.ts` 应答 `/api` 和 `/voice/v1` 下的一切请求，地址是它自己的源 `https://api.greatacademy.dev`。Web 应用的页面在服务端渲染时不含学习者数据，在浏览器中通过 Connect 客户端和 TanStack Query 带凭据从这个源获取（`apps/web/src/lib/origin.ts` 中的 `API_ORIGIN`），因此页面在服务端从不需要会话。服务器只允许这一个源，即网站的源，带凭据访问（CORS），并拒绝其他源的预检请求。页面语言在服务端决定（`ga-locale` cookie，否则看 `Accept-Language`），所以首屏即为该语言。
+API 服务器（`apps/server`）用 `src/handler.ts` 应答 `/api` 和 `/voice/v1` 下的一切请求。浏览器、原生应用和 webhook 在网站自己的源上访问 `/api`，即 `https://greatacademy.dev/api/...`：Web Worker（`apps/web/src/server.ts`）把 `/api/` 下的每个请求原样转发到 API 服务器的源站主机 `https://api.greatacademy.dev`，请求体以流传递，重定向原样返回。这个主机在同一个 Cloudflare 区域中，所以 Worker 的子请求在 `CF-Connecting-IP` 中保留学习者的地址。Web 应用的页面在服务端渲染时不含学习者数据，在浏览器中通过 Connect 客户端和 TanStack Query 从自己源上的 `/api` 获取，因此页面在服务端从不需要会话。没有跨源的调用，所以没有 CORS，也没有预检请求。页面语言在服务端决定（`ga-locale` cookie，否则看 `Accept-Language`），所以首屏即为该语言。
 
 `/` 取决于访问者。未登录时是落地页，落地页也可通过 `/landing` 供所有人访问，并在服务端渲染。登录后，打开最近学习的课程的下一个任务；没有课程但有监护学习者的账号转到 `/guardian`，其他没有课程的账号会被问到谁来学习。服务端只凭会话 cookie 就能在两者之间选择，所以已登录的学习者不会看到落地页闪现。课程目录是单独的公开页面 `/courses`。
 
@@ -165,11 +165,11 @@ API 服务器（`apps/server`）用 `src/handler.ts` 应答 `/api` 和 `/voice/v
 ## 6. 部署
 
 - **生产：**
-  - Web Worker（`apps/web`，`ga-web`），对外地址为 `greatacademy.dev`，用 `cf deploy` 部署。它渲染页面、提供静态文件，并通过它唯一的绑定，即公开文件的 R2 存储桶（`BUCKET`），提供录音。它没有 secret，也不访问数据库；页面在浏览器中调用 API 服务器。
-  - API 服务器（`apps/server`），对外地址为 `api.greatacademy.dev`。`pnpm nx run server:build` 用 rolldown 把它打包成 `dist/server.mjs` 以及命令需要时才导入的分块，使 `migrate` 和 daily 任务从不加载学科；镜像 `ghcr.io/greatacademy/api` 只含 Node、这些文件和迁移。镜像的命令有：`node server.mjs` 提供 HTTP 服务，`job daily` 和 `job quarter` 是定时任务，`migrate` 执行迁移，以及 `grant-admin <email>`。它在集群中以 Deployment `api` 运行：按 CPU 在二到六个副本之间伸缩，有 PodDisruptionBudget，每个 Pod 在服务器启动前于 init 容器中、持 PostgreSQL 咨询锁执行迁移，以无特权用户在只读文件系统上运行，所有学科编译完成后 `/healthz` 才就绪（§6.1）。
+  - Web Worker（`apps/web`，`ga-web`），对外地址为 `greatacademy.dev`，用 `cf deploy` 部署。它渲染页面、提供静态文件，通过它唯一的绑定，即公开文件的 R2 存储桶（`BUCKET`），提供录音，并把 `/api/` 下的每个请求转发到 API 服务器。它没有 secret，也不访问数据库；页面在浏览器中从自己的源调用 API。
+  - API 服务器（`apps/server`），它的源站主机 `api.greatacademy.dev` 只有 Web Worker 使用。`pnpm nx run server:build` 用 rolldown 把它打包成 `dist/server.mjs` 以及命令需要时才导入的分块，使 `migrate` 和 daily 任务从不加载学科；镜像 `ghcr.io/greatacademy/api` 只含 Node、这些文件和迁移。镜像的命令有：`node server.mjs` 提供 HTTP 服务，`job daily` 和 `job quarter` 是定时任务，`migrate` 执行迁移，以及 `grant-admin <email>`。它在集群中以 Deployment `api` 运行：按 CPU 在二到六个副本之间伸缩，有 PodDisruptionBudget，每个 Pod 在服务器启动前于 init 容器中、持 PostgreSQL 咨询锁执行迁移，以无特权用户在只读文件系统上运行，所有学科编译完成后 `/healthz` 才就绪（§6.1）。
   - 服务器从环境变量读取设置（`apps/server/src/config.ts`）：由 `deploy/k8s/api.env` 生成的 ConfigMap，以及由 `deploy/k8s/keys.py` 写入、不打印任何值的 Secret `api`。Secret 中有 `DATABASE_URL`、`BETTER_AUTH_SECRET`、加密 AI 供应商 API 密钥的 `AI_KEYS_SECRET`、语音服务的密钥，以及各供应商的密钥，其中包括[计费](billing.zh-CN.md) §10 中的 Stripe 密钥。
   - CronJob `daily`（UTC 03:00）和 `quarter`（每 15 分钟）运行同一个镜像。daily 任务，以及没有 `AI_KEYS_SECRET` 时的 quarter 任务，不编译任何学科。
-  - ingress-nginx 把 `api.greatacademy.dev/api/` 路由到 API 服务器，把 `voice.greatacademy.dev/v1/conversation` 路由到语音服务，证书来自 cert-manager。external-dns 把两条记录写为经 Cloudflare 代理。Cloudflare 向源站出示我们的客户端证书，nginx 只接受出示了它的连接（回源认证，区域为 Full (strict)），所以每个请求都经过 Cloudflare，服务器从 `CF-Connecting-IP` 取得客户端地址。语音服务在 `/voice/v1` 下的调用只在命名空间内部进行。NetworkPolicy 允许 ingress-nginx 访问 API 服务器和语音服务、语音服务访问 API 服务器、Prometheus 访问指标，出站只允许 DNS、PostgreSQL 和公网 HTTPS。
+  - ingress-nginx 把 API 服务器的源站主机 `api.greatacademy.dev/api/` 路由到 API 服务器，把 `voice.greatacademy.dev/v1/conversation` 路由到语音服务，证书来自 cert-manager。external-dns 把两条记录写为经 Cloudflare 代理。Cloudflare 向源站出示我们的客户端证书，nginx 只接受出示了它的连接（回源认证，区域为 Full (strict)），所以每个请求都经过 Cloudflare，服务器从 `CF-Connecting-IP` 取得客户端地址。语音服务在 `/voice/v1` 下的调用只在命名空间内部进行。NetworkPolicy 允许 ingress-nginx 访问 API 服务器和语音服务、语音服务访问 API 服务器、Prometheus 访问指标，出站只允许 DNS、PostgreSQL 和公网 HTTPS。
   - `mise run k8s:push` 打包服务器，构建并推送两个镜像，再把 `deploy/k8s` 固定到它们的 digest；`mise run k8s:check` 校验清单，不接触集群。[deploy/k8s](../deploy/k8s/README.zh-CN.md) 说明集群、Secret 和每一步。
   - 监护人的签字表格存放在 R2 存储桶 `ga-guardian-forms` 中，服务器通过 R2 的 S3 API（aws4fetch）、用只限于该存储桶的账户令牌访问。邮件经 Cloudflare Email Service 的 REST API 或 Resend 发送。
 - **区域。** 无论学习者在哪个市场，数据都留在美国西部：
@@ -180,9 +180,9 @@ API 服务器（`apps/server`）用 `src/handler.ts` 应答 `/api` 和 `/voice/v
   - 数据只存放在一个国家，对其他每个市场都构成跨境传输，所以 `/legal/privacy` 的隐私声明写明数据存放在美国（[未成年人数据 §12](minors-data.zh-CN.md#12-供应商)）。
 - **开发：**
   - `pnpm nx run server:dev` 在 Node 下运行 API 服务器，改动后自动重启，地址为 `http://localhost:8080`。它读取从 `.env.example` 复制而来的 `apps/server/.env.local`，连接 OrbStack 中 `postgres:18-alpine` 容器里的 PostgreSQL。
-  - `cf dev` 通过 Vite 在 workerd 中运行 Web Worker，Vite 把 `/api` 代理到 API 服务器（`API_URL`，否则为 `http://localhost:8080`），所以页面调用自己的源。详见[开发指南](development.zh-CN.md)。
+  - `cf dev` 通过 Vite 在 workerd 中运行 Web Worker，Vite 把 `/api` 代理到 API 服务器（`apps/web/vite.config.ts` 中的 `API_URL`，否则为 `http://localhost:8080`），所以页面和生产环境一样调用自己的源。详见[开发指南](development.zh-CN.md)。
   - 语音服务用它的生产镜像在 PostgreSQL 旁边的容器中运行，访问主机上的 API 服务器和网站（[开发指南](development.zh-CN.md) §7）。
-- **移动端和桌面端：** 用 `nsh package` 构建各平台的安装包，调用同一个 API 服务器，即网站的 `api.` 子域名。
+- **移动端和桌面端：** 用 `nsh package` 构建各平台的安装包，在网站自己的 `/api` 上调用同一个 API（`apps/nsh/lib/rpc.ts` 中的 `SITE_URL`）。
 - **英语**增加了通过 pi-ai 使用、由平台管理员配置供应商的 AI 模型，以及运行在同一集群上的语音服务（[英语课程体系 §13](english-curriculum.zh-CN.md#13-技术与部署)）。
 
 ### 6.1 API 服务器中的学科

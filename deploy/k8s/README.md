@@ -2,7 +2,7 @@
 
 > English | [简体中文](README.zh-CN.md)
 
-The manifests of everything Great Academy runs on the Talos cluster in Hetzner Cloud's Hillsboro region, in one namespace, `greatacademy`: the API server (`apps/server`), which serves the Connect API, better-auth and every subject in-process, its migrations and scheduled jobs, and the voice service of English (`apps/voice`, [English curriculum §13.3](../../docs/english-curriculum.md#133-the-voice-service)). The site itself stays a Cloudflare Worker (`apps/web`), which renders pages and calls the API at `https://api.greatacademy.dev` ([architecture §6](../../docs/architecture.md)).
+The manifests of everything Great Academy runs on the Talos cluster in Hetzner Cloud's Hillsboro region, in one namespace, `greatacademy`: the API server (`apps/server`), which serves the Connect API, better-auth and every subject in-process, its migrations and scheduled jobs, and the voice service of English (`apps/voice`, [English curriculum §13.3](../../docs/english-curriculum.md#133-the-voice-service)). The site itself stays a Cloudflare Worker (`apps/web`), which renders pages and forwards every request under `https://greatacademy.dev/api/` to the API server at its origin host `https://api.greatacademy.dev` ([architecture §6](../../docs/architecture.md)).
 
 | File | Contents |
 | :--- | :--- |
@@ -11,7 +11,7 @@ The manifests of everything Great Academy runs on the Talos cluster in Hetzner C
 | `jobs.yaml` | CronJobs running the API's image: `daily` and `quarter`, the engine's scheduled work |
 | `voice.yaml` | The voice service's Deployment and Service: probes on `/readyz` and `/healthz`, a 25-minute grace period for draining |
 | `scaling.yaml` | A PodMonitor on the voice service's `/metrics`, a KEDA ScaledObject on the sum of `voice_sessions_active`, its PodDisruptionBudget, and the API's HorizontalPodAutoscaler on CPU, two to six pods |
-| `ingress.yaml` | `api.greatacademy.dev/api/` and `voice.greatacademy.dev/v1/conversation` through ingress-nginx, with certificates from cert-manager |
+| `ingress.yaml` | `api.greatacademy.dev/api/`, the API server's origin host that only the web Worker uses, and `voice.greatacademy.dev/v1/conversation` through ingress-nginx, with certificates from cert-manager |
 | `network.yaml` | NetworkPolicies: ingress-nginx reaches the API and the voice service, the voice service the API, Prometheus the metrics; egress is DNS, PostgreSQL and public HTTPS |
 | `api.env`, `voice.env` | The settings that are not secret, made into ConfigMaps |
 | `keys.py` | Makes the Secrets `api`, `voice` and `ghcr`, printing no value |
@@ -59,7 +59,7 @@ The vendors' keys go in `deploy/k8s/secrets.local.env`, copied from `secrets.loc
 - Signed forms: an account token with Workers R2 Storage Bucket Item Read and Write on the bucket `ga-guardian-forms` alone, made with `cf accounts tokens create` after `cf auth login` grants the scope `account_api_tokens:create`. Its id is `R2_ACCESS_KEY_ID` and the SHA-256 of its value, in hex, `R2_SECRET_ACCESS_KEY`, as R2's S3 API expects. Without them the API keeps forms in memory, which loses them on a restart and splits them between replicas.
 - Email: the CLI's OAuth client may not grant Email Sending, so an account administrator makes it in the dashboard: Manage Account → Account API Tokens → Create Token, with the one permission Email Sending → Edit, as `CLOUDFLARE_EMAIL_TOKEN`. Until then emails are logged, not sent.
 
-Stripe's webhook is `https://api.greatacademy.dev/api/stripe` and App Store Server Notifications go to `https://api.greatacademy.dev/api/apple` ([billing](../../docs/billing.md)).
+Stripe's webhook is `https://greatacademy.dev/api/stripe` and App Store Server Notifications go to `https://greatacademy.dev/api/apple`, which the web Worker forwards to the API server ([billing](../../docs/billing.md)).
 
 ## Pushing Images
 

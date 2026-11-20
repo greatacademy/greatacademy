@@ -100,7 +100,7 @@ The API server reads these from its environment (`apps/server/src/config.ts`); i
 | Secret | What it is |
 | :--- | :--- |
 | `STRIPE_SECRET_KEY` | The account's secret key. Billing is on only when it and the webhook secret are set |
-| `STRIPE_WEBHOOK_SECRET` | The signing secret of the endpoint `https://api.greatacademy.dev/api/stripe` |
+| `STRIPE_WEBHOOK_SECRET` | The signing secret of the endpoint `https://greatacademy.dev/api/stripe` |
 | `STRIPE_WALLET` | `on` once Alipay and WeChat Pay are turned on in the account; until then the plans page offers cards only |
 | `STRIPE_TAX` | `on` turns on Stripe Tax for card plans |
 | `APPLE_IAP_KEY_ID` | The id of the App Store Connect in-app purchase key. The app sells only once the three Apple secrets are set |
@@ -109,4 +109,4 @@ The API server reads these from its environment (`apps/server/src/config.ts`); i
 
 The endpoint listens for `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `invoice.paid`, `customer.subscription.updated` and `customer.subscription.deleted`. The customer portal allows updating the card and viewing invoices; cancelling and refunds go through Settings, which keeps the 30-day rule. Turn on Alipay and WeChat Pay in the account's payment methods before setting `STRIPE_WALLET`. The Terms of Service are at `/legal/terms`. Deleting an account ends the card plans it pays for at once.
 
-In App Store Connect: sign the Paid Applications agreement with banking and tax; make the app record for `dev.greatacademy.app`; make the subscription group and its six products at the prices of §1; make the in-app purchase key; and set the App Store Server Notifications V2 URL, for production and the sandbox, to `https://api.greatacademy.dev/api/apple`. Sandbox testers buy on a device signed in to a sandbox account.
+In App Store Connect: sign the Paid Applications agreement with banking and tax; make the app record for `dev.greatacademy.app`; make the subscription group and its six products at the prices of §1; make the in-app purchase key; and set the App Store Server Notifications V2 URL, for production and the sandbox, to `https://greatacademy.dev/api/apple`. Sandbox testers buy on a device signed in to a sandbox account.
