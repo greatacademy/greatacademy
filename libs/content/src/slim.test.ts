@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { createRng } from "./rng.ts";
-import { slimmed, slimTopics } from "./slim.ts";
+import { KEPT, slimmed, slimTopics } from "./slim.ts";
 import { t } from "./text.ts";
 import type { TopicDef } from "./types.ts";
 
@@ -52,6 +52,20 @@ describe("slimTopics", () => {
       expect(slim[0]!.knowledgePoints[0]!.generate(createRng(seed))).toEqual(full.knowledgePoints[0]!.generate(createRng(seed)));
     }
     expect(builds()).toBe(3);
+  });
+
+  it("keeps the builds used last instead of rebuilding them, and lets go of older ones", () => {
+    const groups = Array.from({ length: KEPT + 1 }, (_, i) => {
+      const { build, builds } = counted(10);
+      return { slim: slimTopics(() => [build(`g${i}`)]), builds };
+    });
+    const ask = (i: number) => groups[i]!.slim[0]!.knowledgePoints[0]!.generate(createRng(1));
+    for (let i = 0; i < KEPT; i++) ask(i);
+    for (let round = 0; round < 3; round++) for (let i = 0; i < KEPT; i++) ask(i);
+    // Built once to be kept and once on first use, whatever memory does: held strongly while among the latest.
+    for (let i = 0; i < KEPT; i++) expect(groups[i]!.builds()).toBe(2);
+    ask(KEPT);
+    expect(groups[KEPT]!.builds()).toBe(2);
   });
 
   it("refuses a build that changes", () => {
