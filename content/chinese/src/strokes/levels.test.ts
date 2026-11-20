@@ -1,8 +1,8 @@
 import { createRng } from "@ga/content";
 import { describe, expect, it } from "vitest";
-
+import { HAND_BATCH, medians } from "./hand.ts";
 import { levelHandwritingByLevel, levelHandwritingTopics, WRITTEN_BY_LEVEL } from "./levels.ts";
-import { HAND_BATCH, handwritingTopics, medians } from "./writing.ts";
+import { handwritingTopics } from "./writing.ts";
 
 describe("writing characters in the levels", () => {
   it("writes GF 0025-2021's number of characters by the end of each level, ten a batch", () => {

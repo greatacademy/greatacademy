@@ -96,18 +96,33 @@ export function syllableSsml(char: string, plain: string, tone: number): string 
   return speak(`<phoneme alphabet="sapi" ph="${plain.replaceAll("ü", "v")} ${tone}">${escapeXml(char)}</phoneme>`);
 }
 
-/** recordingName names the recording made from some SSML: 16 hex digits of its 64-bit FNV-1a hash. */
-export function recordingName(ssml: string): string {
-  // The hash is kept in two 32-bit halves, as BigInt is slow at a Worker's startup. The prime is 2^40 + 0x1b3, so a
-  // product is the halves times 0x1b3, with the low half shifted 8 bits into the high one.
-  let hi = 0xcbf29ce4;
-  let lo = 0x84222325;
-  for (const byte of new TextEncoder().encode(ssml)) {
-    const x = (lo ^ byte) >>> 0;
+/** bytes is where a string is encoded to be hashed, grown as needed, so that hashing does not allocate. */
+let bytes = new Uint8Array(4096);
+const encoder = new TextEncoder();
+
+/** fnv carries a 64-bit FNV-1a hash, kept in two 32-bit halves, over the UTF-8 bytes of a string from a position. */
+function fnv(hi: number, lo: number, text: string, from: number): readonly [number, number] {
+  const rest = from === 0 ? text : text.slice(from);
+  if (bytes.length < rest.length * 3) bytes = new Uint8Array(rest.length * 3);
+  const n = encoder.encodeInto(rest, bytes).written;
+  // BigInt is slow at a Worker's startup. The prime is 2^40 + 0x1b3, so a product is the halves times 0x1b3, with the
+  // low half shifted 8 bits into the high one.
+  for (let i = 0; i < n; i++) {
+    const x = (lo ^ bytes[i]!) >>> 0;
     const low = x * 0x1b3;
-    hi = (Math.imul(hi, 0x1b3) + (x << 8) + Math.floor(low / 0x100000000)) >>> 0;
+    hi = (Math.imul(hi, 0x1b3) + (x << 8) + ((low / 0x100000000) | 0)) >>> 0;
     lo = low >>> 0;
   }
+  return [hi, lo];
+}
+
+/** HEAD is how the SSML of every recording begins, hashed once: most of what a recording's name is hashed over. */
+const HEAD = `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="${voice.lang}">`;
+const HEAD_HASH = fnv(0xcbf29ce4, 0x84222325, HEAD, 0);
+
+/** recordingName names the recording made from some SSML: 16 hex digits of its 64-bit FNV-1a hash. */
+export function recordingName(ssml: string): string {
+  const [hi, lo] = ssml.startsWith(HEAD) ? fnv(...HEAD_HASH, ssml, HEAD.length) : fnv(0xcbf29ce4, 0x84222325, ssml, 0);
   return hi.toString(16).padStart(8, "0") + lo.toString(16).padStart(8, "0");
 }
 

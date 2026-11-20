@@ -8,8 +8,8 @@ import { type TopicDef, t } from "@ga/content";
 import { point } from "@ga/subject-chinese";
 
 import { GAP, type LevelOneWord } from "../level-1/words.ts";
+import { gap, type HandTask, handGenerator, strokeCount, wordTask } from "../strokes/hand.ts";
 import { levelHandwritingByLevel, levelWords } from "../strokes/levels.ts";
-import { gap, type HandTask, handGenerator, medians, wordTask } from "../strokes/writing.ts";
 
 /** PINYIN_LEVELS are the HSK levels whose writing paper asks for characters from their pinyin. */
 export const PINYIN_LEVELS: readonly number[] = [2, 3];
@@ -37,8 +37,8 @@ function sentenceTask(char: string, w: LevelOneWord): HandTask {
     trace: ask,
     write: ask,
     solution: t(
-      `The sentence is **${whole}**, with ${char} (${reading}), of ${medians.get(char)!.length} strokes.`,
-      `这个句子是“**${whole}**”，括号里是“${char}”（${reading}），共 ${medians.get(char)!.length} 画。`,
+      `The sentence is **${whole}**, with ${char} (${reading}), of ${strokeCount(char)!} strokes.`,
+      `这个句子是“**${whole}**”，括号里是“${char}”（${reading}），共 ${strokeCount(char)!} 画。`,
     ),
   };
 }

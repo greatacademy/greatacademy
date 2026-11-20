@@ -2,7 +2,8 @@ import { createRng, type Stroke } from "@ga/content";
 import { strokeFault } from "@ga/subject-chinese";
 import { describe, expect, it } from "vitest";
 
-import { HAND_BATCH, handwritingByGrade, handwritingTopics, medians, WRITTEN_BY_GRADE } from "./writing.ts";
+import { HAND_BATCH, medians } from "./hand.ts";
+import { handwritingByGrade, handwritingTopics, WRITTEN_BY_GRADE } from "./writing.ts";
 
 describe("writing characters", () => {
   it("writes the curriculum's number of characters by grade 9, ten a batch", () => {

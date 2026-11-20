@@ -19,7 +19,7 @@ import { levelSixPlan } from "../level-6/plan.ts";
 import { levelSevenPlan } from "../level-7/plan.ts";
 import { levelEightPlan } from "../level-8/plan.ts";
 import { levelNinePlan } from "../level-9/plan.ts";
-import { HAND_BATCH, type HandTask, handTopic, medians, wordTask } from "./writing.ts";
+import { HAND_BATCH, type HandTask, handTopic, medians, strokeCount, wordTask } from "./hand.ts";
 
 /** WRITTEN_BY_LEVEL is how many characters a learner writes by the end of each level, from level 1. */
 export const WRITTEN_BY_LEVEL = [100, 200, 300, 400, 550, 700, 870, 1030, 1200] as const;
@@ -75,7 +75,7 @@ const readingIn = (w: LevelOneWord, char: string): string => w.syllables[[...w.w
 
 /** fillTask asks for a character by its reading and meaning, in the kth way, for one with too few words. */
 function fillTask(c: LevelOneCharacter, k: number): HandTask {
-  const n = medians.get(c.char)!.length;
+  const n = strokeCount(c.char)!;
   const [en, zh] = [c.meaning.en, c.meaning["zh-CN"]];
   const looks = c.looks.join("、");
   const ways: readonly (readonly [Text, Text])[] = [
@@ -119,24 +119,26 @@ function fillTask(c: LevelOneCharacter, k: number): HandTask {
   };
 }
 
-/** upTo holds the words of the levels up to each one, flattened once. */
-const upTo = new Map<number, readonly LevelOneWord[]>();
-
-/** wordsUpTo are the words of the levels up to a level, in order. */
-function wordsUpTo(level: number): readonly LevelOneWord[] {
-  let words = upTo.get(level);
-  if (!words) {
-    words = levelWords.slice(0, level).flat();
-    upTo.set(level, words);
-  }
-  return words;
-}
+/** wordsWith are, for each character, the words of every level it is in but itself, in order, with the level of each. */
+const wordsWith: ReadonlyMap<string, readonly { readonly level: number; readonly word: LevelOneWord }[]> = (() => {
+  const out = new Map<string, { level: number; word: LevelOneWord }[]>();
+  for (const [i, words] of levelWords.entries())
+    for (const word of words)
+      for (const char of new Set(word.word)) {
+        if (word.word === char) continue;
+        const list = out.get(char) ?? [];
+        if (list.length === 0) out.set(char, list);
+        list.push({ level: i + 1, word });
+      }
+  return out;
+})();
 
 /** tasksOf are a character's tasks at a level: in its first words of the levels so far but itself, then by its reading and meaning. */
 function tasksOf(c: LevelOneCharacter, level: number): readonly HandTask[] {
-  const words = wordsUpTo(level)
-    .filter((w) => w.word !== c.char && w.word.includes(c.char))
-    .slice(0, TASKS);
+  const words = (wordsWith.get(c.char) ?? [])
+    .filter((w) => w.level <= level)
+    .slice(0, TASKS)
+    .map((w) => w.word);
   return [
     ...words.map((w) => wordTask(c.char, readingIn(w, c.char), { text: w.word, reading: readingIn(w, c.char) })),
     ...Array.from({ length: TASKS - words.length }, (_, k) => fillTask(c, k)),
@@ -146,8 +148,8 @@ function tasksOf(c: LevelOneCharacter, level: number): readonly HandTask[] {
 /** listed is a batch's characters with their reading, strokes and meaning, for an explanation. */
 const listed = (chars: readonly LevelOneCharacter[]): Text =>
   t(
-    chars.map((c) => `- **${c.char}** (${c.reading}, ${medians.get(c.char)?.length} strokes) ${c.meaning.en}`).join("\n"),
-    chars.map((c) => `- **${c.char}**（${c.reading}，${medians.get(c.char)?.length} 画）${c.meaning["zh-CN"]}`).join("\n"),
+    chars.map((c) => `- **${c.char}** (${c.reading}, ${strokeCount(c.char)} strokes) ${c.meaning.en}`).join("\n"),
+    chars.map((c) => `- **${c.char}**（${c.reading}，${strokeCount(c.char)} 画）${c.meaning["zh-CN"]}`).join("\n"),
   );
 
 /** levelHandwritingByLevel are each level's writing batches, in order; each follows the batch before it, across levels. */

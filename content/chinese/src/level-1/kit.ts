@@ -52,9 +52,12 @@ export function askedGenerator(question: Text, asked: readonly Asked[]): Generat
 
 /** threeOf is the first three distinct candidates that differ from the right one; it throws, naming `where`, if there are fewer. */
 export function threeOf(what: string, right: string, candidates: readonly string[], where = "level 1"): [string, string, string] {
-  const out = [...new Set(candidates.filter((c) => c !== right))];
-  if (out.length < 3) throw new Error(`${where}: too few wrong answers for ${what}`);
-  return [out[0]!, out[1]!, out[2]!];
+  const out: string[] = [];
+  for (const c of candidates) {
+    if (c !== right && !out.includes(c)) out.push(c);
+    if (out.length === 3) return [out[0]!, out[1]!, out[2]!];
+  }
+  throw new Error(`${where}: too few wrong answers for ${what}`);
 }
 
 /** three makes three texts the same in every locale. */

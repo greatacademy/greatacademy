@@ -7,8 +7,8 @@ import { type Text, type TopicDef, t } from "@ga/content";
 import { toneless } from "@ga/subject-chinese";
 
 import { type DrillItem, drillItem, drillTopic } from "../grammar/drill.ts";
+import { strokeCount } from "../strokes/hand.ts";
 import { componentTopics } from "../strokes/index.ts";
-import { medians } from "../strokes/writing.ts";
 import { recognitionByGrade } from "./index.ts";
 
 /** Radical is a radical of the dictionary: its form, its strokes, the radicals taken for it, and characters looked up under it. */
@@ -57,7 +57,7 @@ const RADICALS: readonly Radical[] = [
 const radicalName = (form: string): string => (form === "竹" ? "⺮" : form === "足" ? "⻊" : form);
 
 /** strokesOf is the strokes of a character in the standard medians, if the writing topics have it. */
-const strokesOf = (char: string): number | undefined => medians.get(char)?.length;
+const strokesOf = strokeCount;
 
 /** radicalItems ask, for each character, its radical and the strokes left, among radicals taken for it and counts one off. */
 const radicalItems: readonly DrillItem[] = RADICALS.flatMap((r) =>
