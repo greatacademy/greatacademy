@@ -30,15 +30,6 @@ function subject(id: string, loads: string[]): SubjectGateway {
     lesson: none,
     judge: none,
     passage: none,
-    listing: async () => ({
-      id,
-      title: manifest.title,
-      mark: "T",
-      hue: 200,
-      courses: [{ id: `${id}-course`, title: manifest.title, description: manifest.title, buildsOn: [], topicCount: 0, xp: 0 }],
-      criteria: [],
-      conversations: [],
-    }),
     manifest: async () => {
       loads.push(id);
       return manifest;
@@ -65,29 +56,15 @@ describe("Registry", () => {
     });
   });
 
-  it("lists courses without loading any subject", async () => {
+  it("indexes every subject once, when opened", async () => {
     const loads: string[] = [];
     const registry = await Registry.open([subject("a", loads), subject("b", loads)]);
     expect(registry.listings.flatMap((s) => s.courses.map((c) => c.id))).toEqual(["a-course", "b-course"]);
-    expect(loads).toEqual([]);
-    expect(await registry.course("nope")).toBeUndefined();
-    expect(loads).toEqual([]);
-  });
-
-  it("loads a subject once and keeps only the most recently used", async () => {
-    const loads: string[] = [];
-    const registry = await Registry.open([subject("a", loads), subject("b", loads), subject("c", loads)]);
-    expect((await registry.course("a-course"))?.id).toBe("a-course");
-    await registry.course("a-course");
-    await registry.course("b-course");
     expect(loads).toEqual(["a", "b"]);
-    await registry.course("a-course");
-    await registry.course("c-course");
-    expect(loads).toEqual(["a", "b", "c"]);
-    await registry.course("a-course");
-    expect(loads).toEqual(["a", "b", "c"]);
-    await registry.course("b-course");
-    expect(loads).toEqual(["a", "b", "c", "b"]);
+    expect((await registry.course("a-course"))?.id).toBe("a-course");
+    expect((await registry.course("b-course"))?.id).toBe("b-course");
+    expect(await registry.course("nope")).toBeUndefined();
+    expect(loads).toEqual(["a", "b"]);
   });
 
   it("rejects duplicate subjects and courses", async () => {

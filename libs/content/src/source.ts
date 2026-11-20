@@ -1,6 +1,6 @@
 import { CheckerRegistry } from "./checkers.ts";
 import type { Figure } from "./figure.ts";
-import type { SubjectListing, SubjectManifest } from "./manifest.ts";
+import type { SubjectManifest } from "./manifest.ts";
 import { type PassageView, passageProblem, passagesOf } from "./passages.ts";
 import type { ProblemRef } from "./problems.ts";
 import { createRng } from "./rng.ts";
@@ -38,8 +38,6 @@ export interface SubjectSource {
 
 /** SubjectGateway is the service of a subject: its manifest and its source. */
 export interface SubjectGateway extends SubjectSource {
-  /** listing gives what a list of courses needs, without loading the subject. */
-  listing(): Promise<SubjectListing>;
   /** manifest gives the subject without its code. */
   manifest(): Promise<SubjectManifest>;
 }
