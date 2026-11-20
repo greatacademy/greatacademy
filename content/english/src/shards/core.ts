@@ -1,4 +1,4 @@
-// The topics of the `core` shard: for now, all of English. See docs/architecture.md on why content is split.
+// The topics of the `core` shard: for now, all of English. Its folder groups the subject's topics (docs/architecture.md §6.1).
 
 import type { ReadingUnitDef, TopicDef } from "@ga/content";
 import { withRecordings } from "../audio.ts";

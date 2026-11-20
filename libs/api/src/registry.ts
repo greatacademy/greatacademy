@@ -66,13 +66,13 @@ export interface CourseEntry {
   readonly index: CourseIndex;
 }
 
-/** loadedSubjects is how many subjects a Registry keeps in memory: a large subject takes tens of megabytes, and a Worker isolate has 128. */
+/** loadedSubjects is how many subjects a Registry keeps indexed: a large subject's indexes take tens of megabytes. */
 const loadedSubjects = 2;
 
 /**
  * Registry indexes the subjects served by the API. Course ids are unique across
  * subjects, so that clients name a course by its id alone. It is built once per
- * process (per isolate in a Worker). It reads every subject's listing when
+ * process. It reads every subject's listing when
  * opened and loads a subject only when one of its courses is used.
  */
 export class Registry {
@@ -103,8 +103,8 @@ export class Registry {
 
   /**
    * subject gives a subject by id, loading it if needed. Concurrent first calls
-   * each load for themselves: in a Worker, one request must not await a promise
-   * of another, which fails if that request is cancelled.
+   * each load for themselves, so that a request never awaits another's promise,
+   * which fails if that request is cancelled.
    */
   async subject(id: string): Promise<SubjectEntry | undefined> {
     const kept = this.#loaded.get(id);
@@ -141,7 +141,7 @@ export class Registry {
       return index;
     };
     for (const [id, course] of subject.courses) {
-      // A course's scope is computed when first used: most isolates serve few courses.
+      // A course's scope is computed when first used: most processes serve few courses at a time.
       let planner: Planner | undefined;
       const { explanationLocale } = course.def;
       courses.set(id, {

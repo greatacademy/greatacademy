@@ -1,4 +1,4 @@
-// The topics of the `algebra` shard: Prealgebra, Algebra I, Geometry and Algebra II. See docs/architecture.md on why content is split.
+// The topics of the `algebra` shard: Prealgebra, Algebra I, Geometry and Algebra II. Its folder groups the subject's topics (docs/architecture.md §6.1).
 
 import type { TopicDef } from "@ga/content";
 import { remainingDrawings3 } from "../explanation-drawings-remaining-3.ts";

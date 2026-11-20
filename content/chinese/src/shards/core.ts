@@ -1,5 +1,5 @@
 // The topics of the `core` shard: the native grades, heritage, the Gaokao and the reading units. The levels of Chinese as
-// a foreign language are in levels.ts and the HSK in hsk.ts. See docs/architecture.md on why content is split.
+// a foreign language are in levels.ts and the HSK in hsk.ts. Its folder groups the subject's topics (docs/architecture.md §6.1).
 
 import type { ReadingUnitDef, TopicDef } from "@ga/content";
 

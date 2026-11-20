@@ -1,4 +1,4 @@
-// The topics of the `school` shard: 1st to 8th Grade Math. See docs/architecture.md on why content is split.
+// The topics of the `school` shard: 1st to 8th Grade Math. Its folder groups the subject's topics (docs/architecture.md §6.1).
 
 import type { TopicDef } from "@ga/content";
 import { remainingDrawings2 } from "../explanation-drawings-remaining-2.ts";

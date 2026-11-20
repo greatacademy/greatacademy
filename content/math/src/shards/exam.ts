@@ -1,4 +1,4 @@
-// The topics of the `exam` shard: SAT and ACT preparation. See docs/architecture.md on why content is split.
+// The topics of the `exam` shard: SAT and ACT preparation. Its folder groups the subject's topics (docs/architecture.md §6.1).
 
 import type { TopicDef } from "@ga/content";
 

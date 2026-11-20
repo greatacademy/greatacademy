@@ -1,4 +1,4 @@
-// The topics of the `college` shard: linear algebra, proof, discrete mathematics, abstract algebra, number theory, linear programming, probability and statistics, and mathematics for machine learning. See docs/architecture.md on why content is split.
+// The topics of the `college` shard: linear algebra, proof, discrete mathematics, abstract algebra, number theory, linear programming, probability and statistics, and mathematics for machine learning. Its folder groups the subject's topics (docs/architecture.md §6.1).
 
 import type { TopicDef } from "@ga/content";
 import { remainingDrawings9 } from "../explanation-drawings-remaining-9.ts";
