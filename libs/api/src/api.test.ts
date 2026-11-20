@@ -212,7 +212,7 @@ describe("LearningService", () => {
     const due = await learning.getDashboard({ courseId: "prealgebra" });
     const c = (await registry.course("prealgebra"))!;
     expect(due.foundations).toBeGreaterThan(c.course.topics.length);
-    expect(due.startEarlier).toBe("5th-grade-math");
+    expect(due.startEarlier).toBe("6th-grade-math");
     await learning.skipDiagnostic({ courseId: "prealgebra" });
     expect((await learning.getDashboard({ courseId: "prealgebra" })).startEarlier).toBe("");
 

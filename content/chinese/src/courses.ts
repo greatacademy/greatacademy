@@ -200,7 +200,7 @@ function gradeCourse(grade: number, description: CourseDef["description"]): Cour
       ...(classicalModules(grade).length > 0 ? [{ title: t("Classical Chinese", "文言"), modules: classicalModules(grade) }] : []),
     ],
     reading: chineseReading.filter((r) => r.grade === grade).map((r) => r.unit.id),
-    ...(grade > 1 && { buildsOn: [`chinese-grade-${grade - 1}`] }),
+    ...(grade > 1 && { buildsOn: [`chinese-grade-${grade - 1}`, ...(grade === 5 ? ["chinese-heritage-3"] : [])] }),
   };
 }
 

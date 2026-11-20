@@ -128,7 +128,7 @@ Every native course has a unit of reading aloud and whole books after its writin
 
 ### 8.2 Heritage Courses
 
-Three literacy bridges, `chinese-heritage-1` to `chinese-heritage-3`, take a learner who speaks Chinese from no reading to about 600, 1,500 and 2,500 characters. They are views over the native graph: the same recognition and writing topics, ordered for an older learner, with explanations in Chinese or English and passages written for their age. Their own topics are few: written forms of words used only in speech, the differences between a dialect and Mandarin, register, and traditional characters (§5.4). After a bridge, the diagnostic places the learner in the grade course that matches their reading, or in levels 5 to 9.
+Three literacy bridges, `chinese-heritage-1` to `chinese-heritage-3`, take a learner who speaks Chinese from no reading to about 600, 1,500 and 2,500 characters. They are views over the native graph: the same recognition and writing topics, ordered for an older learner, with explanations in Chinese or English and passages written for their age. Their own topics are few: written forms of words used only in speech, the differences between a dialect and Mandarin, register, and traditional characters (§5.4). After a bridge, the diagnostic places the learner in the grade course that matches their reading, or in levels 5 to 9. The third bridge covers the recognition of grades 1 to 4, so the grade 5 course builds on it as well as on grade 4.
 
 ### 8.3 Foreign-Language Courses
 

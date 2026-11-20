@@ -173,6 +173,7 @@ export const courseGrade3: CourseDef = {
     "面向三年级读者和写作者的英语课程，共十个主题单元，从寓言和植物到黄河、磁铁、音乐和四季的诗。每个单元同时教授该主题的词汇、语法和书写规范、阅读技能和一种写作，并提供一组围绕主题的阅读文章。课程中写的书信、段落、寓言、回答和诗由模型评判。",
   ),
   group: t("English", "英语"),
+  buildsOn: ["english-grade-2"],
   explanationLocale: "en",
   units,
   reading: units.flatMap((u) => u.reading ?? []),
