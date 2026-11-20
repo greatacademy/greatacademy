@@ -3,7 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { type ComponentProps, type FormEvent, type ReactNode, useEffect, useId, useRef, useState } from "react";
 
-import { authClient } from "../lib/auth.ts";
+import { authClient, useSession } from "../lib/auth.ts";
 import { useI18n } from "../lib/i18n.tsx";
 import { usePrivacyText } from "../lib/privacy-text.ts";
 import { Button, Card, ErrorNote } from "./ui.tsx";
@@ -127,6 +127,7 @@ export function AuthForm({
   const t = usePrivacyText();
   const navigate = useNavigate();
   const qc = useQueryClient();
+  const { refetch: refetchSession } = useSession();
   const [error, setError] = useState<string>();
   const [busy, setBusy] = useState(false);
 
@@ -163,6 +164,9 @@ export function AuthForm({
       // would read that and send the account to /age.
       await qc.invalidateQueries({ queryKey: ["access"] });
     }
+    // The page after this one knows the account only from the session: arriving before it is fetched would show the
+    // landing page for a moment.
+    await refetchSession();
     setBusy(false);
     await navigate({ to: next?.startsWith("/") ? next : "/" });
   }
