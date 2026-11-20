@@ -2311,7 +2311,7 @@ export const systemsWithNoSolutionOrInfinitelyManySolutions: TopicDef = {
     "Recognize systems of linear equations with no solution or infinitely many solutions.",
     "识别无解或有无穷多个解的线性方程组。",
   ),
-  prerequisites: ["elimination-with-one-transformation", "parallel-lines-in-the-coordinate-plane"],
+  prerequisites: ["elimination-with-one-transformation", "properties-of-lines-in-slope-intercept-form"],
   encompasses: [],
   xp: 15,
   standards: ["CCSS.8.EE.C.8.B"],
@@ -2364,7 +2364,7 @@ export const systemsWithNoSolutionOrInfinitelyManySolutions: TopicDef = {
         "The solutions of a system are the common points of two lines, so compare the lines in slope-intercept form:\n\n- different slopes: the lines cross once, **one solution**;\n- equal slopes, different $y$-intercepts: parallel lines, **no solution**;\n- equal slopes and equal $y$-intercepts: the same line, **infinitely many solutions**.",
         "方程组的解就是两条直线的公共点，所以把两条直线化为斜截式比较：\n\n- 斜率不同：两直线相交于一点，**恰有一个解**；\n- 斜率相同、$y$ 轴截距不同：两直线平行，**无解**；\n- 斜率和 $y$ 轴截距都相同：同一条直线，**有无穷多个解**。",
       ),
-      keyPrerequisites: ["parallel-lines-in-the-coordinate-plane"],
+      keyPrerequisites: ["properties-of-lines-in-slope-intercept-form"],
       generate(rng) {
         const kind = rng.int(0, 2);
         const m = pickSlope(rng, 0.3);

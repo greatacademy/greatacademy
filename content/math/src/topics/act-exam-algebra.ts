@@ -185,7 +185,7 @@ export const actExamAlgebra: ExamSpec[] = [
       ),
     );
   }),
-  spec("Solving Three-Variable Systems", "解三元方程组", ["solving-3x3-systems-of-equations-using-gaussian-elimination"], (rng, hard) => {
+  spec("Solving Three-Variable Systems", "解三元方程组", ["elimination-with-two-transformations"], (rng, hard) => {
     const [x, y, z] = [rng.int(1, 9), rng.int(1, 9), rng.int(1, 9)];
     const [a, b] = [rng.int(2, 4), rng.int(2, 4)];
     if (!hard)

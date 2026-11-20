@@ -1202,7 +1202,7 @@ export const findingTermsAndInfiniteSumsOfGeometricSequences = topic(
     "Find a later term of a geometric sequence with a fractional ratio, and find or use the sum of all its terms.",
     "求公比为分数的等比数列的后面某一项，并求出或运用它所有项的和。",
   ),
-  ["finding-the-sum-of-an-infinite-geometric-series"],
+  ["the-sum-of-a-finite-geometric-series"],
   ["HSF.BF.A.2", "HSA.SSE.B.4"],
   [
     kp(

@@ -495,7 +495,7 @@ export const secondAndHigherOrderDerivatives: TopicDef = {
     "Differentiate repeatedly to find second and higher derivatives, including acceleration.",
     "反复求导得到二阶及更高阶导数，包括加速度。",
   ),
-  prerequisites: ["differentiating-trigonometric-functions", "differentiating-hyperbolic-functions"],
+  prerequisites: ["differentiating-trigonometric-functions"],
   encompasses: [
     { topic: "the-sum-and-constant-multiple-rules-for-differentiation", weight: 0.4 },
     { topic: "differentiating-trigonometric-functions", weight: 0.2 },
@@ -528,8 +528,8 @@ export const secondAndHigherOrderDerivatives: TopicDef = {
       id: "higher-order-derivatives-that-repeat",
       title: t("Higher-order derivatives that repeat", "循环出现的高阶导数"),
       explanation: t(
-        "Some derivatives repeat in a cycle. For sine:\n\n$$\\sin x \\to \\cos x \\to -\\sin x \\to -\\cos x \\to \\sin x,$$\n\nwith period $4$, so $f^{(n)}$ depends only on the remainder of $n$ divided by $4$. $\\sinh x$ and $\\cosh x$ alternate with period $2$, and $e^{x}$ never changes. A polynomial of degree $n$ has $(n + 1)$th derivative $0$.",
-        "有些导数会循环出现。对正弦：\n\n$$\\sin x \\to \\cos x \\to -\\sin x \\to -\\cos x \\to \\sin x,$$\n\n周期为 $4$，所以 $f^{(n)}$ 只取决于 $n$ 除以 $4$ 的余数。$\\sinh x$ 与 $\\cosh x$ 以周期 $2$ 交替出现，$e^{x}$ 则始终不变。$n$ 次多项式的 $n + 1$ 阶导数为 $0$。",
+        "Some derivatives repeat in a cycle. For sine:\n\n$$\\sin x \\to \\cos x \\to -\\sin x \\to -\\cos x \\to \\sin x,$$\n\nwith period $4$, so $f^{(n)}$ depends only on the remainder of $n$ divided by $4$. A polynomial of degree $n$ has $(n + 1)$th derivative $0$.",
+        "有些导数会循环出现。对正弦：\n\n$$\\sin x \\to \\cos x \\to -\\sin x \\to -\\cos x \\to \\sin x,$$\n\n周期为 $4$，所以 $f^{(n)}$ 只取决于 $n$ 除以 $4$ 的余数。$n$ 次多项式的 $n + 1$ 阶导数为 $0$。",
       ),
       generate(rng) {
         const cycle = rng.pick(cycles);

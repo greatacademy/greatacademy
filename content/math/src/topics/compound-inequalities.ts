@@ -1252,7 +1252,7 @@ export const introductionToModelingWithInequalities: TopicDef = {
     "Translate limits stated in words, such as “at least” or “between”, into inequalities.",
     "把“至少”“介于……之间”等文字表述的限制翻译成不等式。",
   ),
-  prerequisites: ["solving-compound-inequalities"],
+  prerequisites: ["solving-multi-step-inequalities", "compound-inequalities"],
   encompasses: [],
   xp: 12,
   standards: ["CCSS.HSA.CED.A.1", "CCSS.HSA.CED.A.3"],
@@ -1735,7 +1735,7 @@ export const modelingWithCompoundInequalities: TopicDef = {
     "Model quantities that must stay within a range, and solve the double inequalities that result.",
     "为必须保持在某个范围内的量建模，并解所得的连不等式。",
   ),
-  prerequisites: ["modeling-with-two-step-inequalities"],
+  prerequisites: ["modeling-with-two-step-inequalities", "solving-compound-inequalities"],
   encompasses: [
     { topic: "modeling-with-two-step-inequalities", weight: 0.5 },
     { topic: "solving-compound-inequalities", weight: 0.7 },

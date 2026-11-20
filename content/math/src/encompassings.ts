@@ -852,7 +852,7 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
     { topic: "slope-of-a-line", weight: 0.2 },
     { topic: "understanding-proportional-relationships-using-graphs", weight: 0.2 },
   ],
-  "describing-the-functional-relationship-between-two-quantities-from-a-graph": [{ topic: "increasing-and-decreasing", weight: 0.2 }],
+  "describing-the-functional-relationship-between-two-quantities-from-a-graph": [{ topic: "graphs-of-functions", weight: 0.2 }],
   "interpreting-rate-of-change-and-initial-value-in-context": [{ topic: "modeling-with-linear-functions", weight: 0.3 }],
   "comparing-properties-of-two-functions-represented-differently": [{ topic: "representations-of-functions", weight: 0.2 }],
   "non-adjacent-complementary-angles": [{ topic: "complementary-angles", weight: 0.5 }],

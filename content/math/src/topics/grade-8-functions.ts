@@ -146,7 +146,7 @@ export const describingTheFunctionalRelationshipBetweenTwoQuantitiesFromAGraph =
     "A graph shows how one quantity changes as another does. Where the graph rises the quantity increases, where it is horizontal the quantity stays the same, and where it falls the quantity decreases; the steeper the graph, the faster the change.",
     "图像显示一个量如何随另一个量变化。图像上升的部分表示这个量在增加，水平的部分表示保持不变，下降的部分表示在减少；图像越陡，变化越快。",
   ),
-  ["increasing-and-decreasing"],
+  ["graphs-of-functions", "slope-of-a-line"],
   ["8.F.B.5"],
   [
     {

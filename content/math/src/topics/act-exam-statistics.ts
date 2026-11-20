@@ -204,7 +204,7 @@ export const actExamStatistics: ExamSpec[] = [
       `$A$ 或 $B$ 发生的概率是 $${p + q}\\%$，其余就是都不发生。`,
     );
   }),
-  spec("Finding a Union With Overlap", "求有重叠的并集", ["the-inclusion-exclusion-principle"], (rng, hard) => {
+  spec("Finding a Union With Overlap", "求有重叠的并集", ["the-union-of-sets"], (rng, hard) => {
     const [a, b, o, n] = [rng.int(10, 30), rng.int(10, 30), rng.int(2, 9), rng.int(70, 100)];
     if (!hard)
       return ask(
@@ -461,7 +461,7 @@ export const actExamStatistics: ExamSpec[] = [
       `从期望支付 $\\frac{${prize * w}}{${n}}$ 中减去成本。`,
     );
   }),
-  spec("Counting Independent Choices", "计算独立选择数", ["counting-trees"], (rng, hard) => {
+  spec("Counting Independent Choices", "计算独立选择数", ["the-rules-of-sum-and-product"], (rng, hard) => {
     const [a, b, c, d] = [rng.int(2, 9), rng.int(2, 9), rng.int(2, 9), rng.int(2, 5)];
     const out = Math.min(d, a - 1);
     if (!hard)
@@ -559,7 +559,7 @@ export const actExamStatistics: ExamSpec[] = [
       `$\\binom{${n}}{2}\\binom{${m}}{2} = ${c2(n)} \\cdot ${c2(m)}$。`,
     );
   }),
-  spec("Counting Overlapping Sets", "计算重叠的集合", ["the-union-of-sets", "the-inclusion-exclusion-principle"], (rng, hard) => {
+  spec("Counting Overlapping Sets", "计算重叠的集合", ["the-union-of-sets", "counting-members-from-venn-data"], (rng, hard) => {
     const [a, b, o, n] = [rng.int(12, 30), rng.int(12, 30), rng.int(2, 10), rng.int(5, 20)];
     if (!hard)
       return ask(

@@ -1128,7 +1128,7 @@ export const surfaceAreasOfTriangularPrisms = topic(
     "A triangular prism has five faces: two congruent triangles and three rectangles. The rectangles are as long as the prism and as wide as the three sides of the triangle, so together they make a rectangle whose width is the perimeter of the triangle.",
     "三棱柱有五个面：两个全等的三角形和三个长方形。三个长方形的长都等于棱柱的长，宽分别等于三角形的三条边，所以合起来是一个宽为三角形周长的长方形。",
   ),
-  ["surface-areas-of-rectangular-solids", "areas-of-triangles"],
+  ["surface-areas-of-rectangular-solids"],
   ["7.G.B.6"],
   [
     {

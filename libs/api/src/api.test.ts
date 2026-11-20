@@ -208,13 +208,13 @@ describe("LearningService", () => {
   });
 
   it("suggests the course a course builds on while its diagnostic is due and it needs more earlier topics than its own", async () => {
-    await learning.chooseCourse({ courseId: "prealgebra" });
-    const due = await learning.getDashboard({ courseId: "prealgebra" });
-    const c = (await registry.course("prealgebra"))!;
+    await learning.chooseCourse({ courseId: "7th-grade-math" });
+    const due = await learning.getDashboard({ courseId: "7th-grade-math" });
+    const c = (await registry.course("7th-grade-math"))!;
     expect(due.foundations).toBeGreaterThan(c.course.topics.length);
     expect(due.startEarlier).toBe("6th-grade-math");
-    await learning.skipDiagnostic({ courseId: "prealgebra" });
-    expect((await learning.getDashboard({ courseId: "prealgebra" })).startEarlier).toBe("");
+    await learning.skipDiagnostic({ courseId: "7th-grade-math" });
+    expect((await learning.getDashboard({ courseId: "7th-grade-math" })).startEarlier).toBe("");
 
     // A course that needs fewer earlier topics than its own suggests none.
     await learning.chooseCourse({ courseId: COURSE });

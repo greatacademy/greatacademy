@@ -185,7 +185,7 @@ export const identifyingMaximumAndMinimumValuesOfAFunction = topic(
     "Read a function's maximum and minimum values from its graph, and tell the value of a function apart from the input where it occurs.",
     "由图象读出函数的最大值和最小值，并区分函数值与取得该值的输入。",
   ),
-  ["increasing-and-decreasing"],
+  ["graphs-of-functions"],
   ["8.F.B.5", "HSF.IF.B.4"],
   [
     {
