@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
 import { CourseCatalog } from "../../components/CourseCatalog.tsx";
+import { CourseRoadmap } from "../../components/CourseRoadmap.tsx";
 import { useI18n } from "../../lib/i18n.tsx";
 import { rememberedSubject, SubjectMark, useSubjects } from "../../lib/subject.tsx";
 
@@ -46,8 +47,9 @@ function Courses() {
         </nav>
       )}
       {shown && (
-        <div data-subject={shown.id}>
+        <div data-subject={shown.id} className="space-y-12">
           <CourseCatalog key={shown.id} subject={shown.id} />
+          <CourseRoadmap subject={shown.id} />
         </div>
       )}
     </div>
