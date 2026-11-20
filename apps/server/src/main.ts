@@ -91,7 +91,9 @@ if (command !== undefined && command !== "job")
   throw new Error(`unknown command ${command}; the commands are job, migrate and grant-admin`);
 
 const started = performance.now();
-const subjects = [compileMath(), compileEnglish(), compileChinese()];
+// The daily job, and the quarter-hourly one without AI keys to judge essays, use no subject.
+const usesSubjects = command !== "job" || (name === "quarter" && config.aiKeysSecret !== undefined);
+const subjects = usesSubjects ? [compileMath(), compileEnglish(), compileChinese()] : [];
 const conn = connect(config.databaseUrl, command === "job" ? 2 : 10);
 const services = await openServices(config, conn.db, subjects);
 console.log(`subjects ready in ${Math.round(performance.now() - started)} ms`);

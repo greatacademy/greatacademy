@@ -1,5 +1,5 @@
-# Scaling on running conversations: KEDA reads the pods' voice_sessions_active from Prometheus, which scrapes them
-# through the PodMonitor. A pod KEDA removes drains like any other.
+# Scaling: the voice service on running conversations, the API server on CPU (below). KEDA reads the voice pods'
+# voice_sessions_active from Prometheus, which scrapes them through the PodMonitor. A pod KEDA removes drains like any other.
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
@@ -52,3 +52,26 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: voice
+---
+# The API server scales with its CPU: each pod holds every subject, so a new one is ready in a few seconds.
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: api
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: api
+  minReplicas: 2
+  maxReplicas: 6
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300

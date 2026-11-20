@@ -8,7 +8,6 @@ metadata:
   labels:
     app.kubernetes.io/name: api
 spec:
-  replicas: 2
   selector:
     matchLabels:
       app.kubernetes.io/name: api
@@ -41,6 +40,28 @@ spec:
           labelSelector:
             matchLabels:
               app.kubernetes.io/name: api
+      # The migrations of libs/db/drizzle run before the server starts: a new image's schema is in place before any pod
+      # of it serves. They must keep working for the pods of the previous image until those stop.
+      initContainers:
+        - name: migrate
+          image: api
+          args: [migrate]
+          envFrom:
+            - configMapRef:
+                name: api
+            - secretRef:
+                name: api
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
       containers:
         - name: api
           image: api

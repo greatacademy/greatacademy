@@ -2,15 +2,15 @@
 
 > [English](README.md) | 简体中文
 
-Great Academy 在 Hetzner Cloud 希尔斯伯勒区域 Talos 集群上运行的全部内容的清单，都在一个命名空间 `greatacademy` 里：API 服务器（`apps/server`），在进程内提供 Connect API、better-auth 和所有学科；它的定时任务和迁移；以及英语的语音服务（`apps/voice`，[英语课程 §13.3](../../docs/english-curriculum.zh-CN.md#133-语音服务)）。站点本身仍是 Cloudflare Worker（`apps/web`），渲染页面并调用 `https://api.greatacademy.dev` 上的 API（[架构 §6](../../docs/architecture.zh-CN.md)）。
+Great Academy 在 Hetzner Cloud 希尔斯伯勒区域 Talos 集群上运行的全部内容的清单，都在一个命名空间 `greatacademy` 里：API 服务器（`apps/server`），在进程内提供 Connect API、better-auth 和所有学科；它的迁移和定时任务；以及英语的语音服务（`apps/voice`，[英语课程 §13.3](../../docs/english-curriculum.zh-CN.md#133-语音服务)）。站点本身仍是 Cloudflare Worker（`apps/web`），渲染页面并调用 `https://api.greatacademy.dev` 上的 API（[架构 §6](../../docs/architecture.zh-CN.md)）。
 
 | 文件 | 内容 |
 | :--- | :--- |
 | `namespace.yaml` | 命名空间，采用 restricted Pod 安全标准 |
-| `api.yaml` | API 服务器的 Deployment、Service 和 PodDisruptionBudget：两个副本，`/healthz` 探针，以用户 10001 运行的只读文件系统 |
-| `jobs.yaml` | 运行 API 镜像的 CronJob：引擎定时工作 `daily` 和 `quarter`，以及挂起、手动运行的 `migrate` |
+| `api.yaml` | API 服务器的 Deployment、Service 和 PodDisruptionBudget：迁移作为 init 容器运行，`/healthz` 探针，以用户 10001 运行的只读文件系统 |
+| `jobs.yaml` | 运行 API 镜像的 CronJob：引擎定时工作 `daily` 和 `quarter` |
 | `voice.yaml` | 语音服务的 Deployment 和 Service：`/readyz` 与 `/healthz` 探针，排空用的 25 分钟宽限期 |
-| `scaling.yaml` | 语音服务 `/metrics` 上的 PodMonitor、按 `voice_sessions_active` 之和伸缩的 KEDA ScaledObject，以及它的 PodDisruptionBudget |
+| `scaling.yaml` | 语音服务 `/metrics` 上的 PodMonitor、按 `voice_sessions_active` 之和伸缩的 KEDA ScaledObject、它的 PodDisruptionBudget，以及 API 按 CPU 在二到六个 Pod 之间伸缩的 HorizontalPodAutoscaler |
 | `ingress.yaml` | 经 ingress-nginx 的 `api.greatacademy.dev/api/` 和 `voice.greatacademy.dev/v1/conversation`，证书来自 cert-manager |
 | `network.yaml` | NetworkPolicy：ingress-nginx 可达 API 和语音服务，语音服务可达 API，Prometheus 可达指标；出站只有 DNS、PostgreSQL 和公网 HTTPS |
 | `api.env`、`voice.env` | 非机密的设置，生成为 ConfigMap |
@@ -81,11 +81,10 @@ mise run k8s:push
 
 ```bash
 kubectl apply -k deploy/k8s
-kubectl -n greatacademy create job --from=cronjob/migrate migrate-$(date +%s)
 kubectl -n greatacademy rollout status deploy/api deploy/voice
 ```
 
-先应用，让新镜像的迁移从该镜像运行，再在 API 需要新结构之前迁移。ConfigMap 的名字带有内容的哈希，所以修改 `api.env` 或 `voice.env` 会滚动更新 Pod。语音 Pod 会排空最多 25 分钟，让进行中的会话结束。
+每个 API Pod 在服务器启动前于 init 容器中运行迁移，并持有 PostgreSQL 咨询锁，使同时启动的 Pod 依次迁移；新镜像的 schema 在它的任何 Pod 提供服务之前就已就位。迁移在滚动更新结束前必须仍适用于上一个镜像的 Pod：先增加，下一个版本再删除。ConfigMap 的名字带有内容的哈希，所以修改 `api.env` 或 `voice.env` 会滚动更新 Pod。语音 Pod 会排空最多 25 分钟，让进行中的会话结束。
 
 把成年人的账号设为管理员：
 

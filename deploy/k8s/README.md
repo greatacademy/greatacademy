@@ -2,15 +2,15 @@
 
 > English | [简体中文](README.zh-CN.md)
 
-The manifests of everything Great Academy runs on the Talos cluster in Hetzner Cloud's Hillsboro region, in one namespace, `greatacademy`: the API server (`apps/server`), which serves the Connect API, better-auth and every subject in-process, its scheduled jobs and migrations, and the voice service of English (`apps/voice`, [English curriculum §13.3](../../docs/english-curriculum.md#133-the-voice-service)). The site itself stays a Cloudflare Worker (`apps/web`), which renders pages and calls the API at `https://api.greatacademy.dev` ([architecture §6](../../docs/architecture.md)).
+The manifests of everything Great Academy runs on the Talos cluster in Hetzner Cloud's Hillsboro region, in one namespace, `greatacademy`: the API server (`apps/server`), which serves the Connect API, better-auth and every subject in-process, its migrations and scheduled jobs, and the voice service of English (`apps/voice`, [English curriculum §13.3](../../docs/english-curriculum.md#133-the-voice-service)). The site itself stays a Cloudflare Worker (`apps/web`), which renders pages and calls the API at `https://api.greatacademy.dev` ([architecture §6](../../docs/architecture.md)).
 
 | File | Contents |
 | :--- | :--- |
 | `namespace.yaml` | The namespace, under the restricted Pod Security Standard |
-| `api.yaml` | The API server's Deployment, Service and PodDisruptionBudget: two replicas, probes on `/healthz`, a read-only filesystem as user 10001 |
-| `jobs.yaml` | CronJobs running the API's image: `daily` and `quarter`, the engine's scheduled work, and `migrate`, suspended, run by hand |
+| `api.yaml` | The API server's Deployment, Service and PodDisruptionBudget: the migrations as an init container, probes on `/healthz`, a read-only filesystem as user 10001 |
+| `jobs.yaml` | CronJobs running the API's image: `daily` and `quarter`, the engine's scheduled work |
 | `voice.yaml` | The voice service's Deployment and Service: probes on `/readyz` and `/healthz`, a 25-minute grace period for draining |
-| `scaling.yaml` | A PodMonitor on the voice service's `/metrics`, a KEDA ScaledObject on the sum of `voice_sessions_active`, and its PodDisruptionBudget |
+| `scaling.yaml` | A PodMonitor on the voice service's `/metrics`, a KEDA ScaledObject on the sum of `voice_sessions_active`, its PodDisruptionBudget, and the API's HorizontalPodAutoscaler on CPU, two to six pods |
 | `ingress.yaml` | `api.greatacademy.dev/api/` and `voice.greatacademy.dev/v1/conversation` through ingress-nginx, with certificates from cert-manager |
 | `network.yaml` | NetworkPolicies: ingress-nginx reaches the API and the voice service, the voice service the API, Prometheus the metrics; egress is DNS, PostgreSQL and public HTTPS |
 | `api.env`, `voice.env` | The settings that are not secret, made into ConfigMaps |
@@ -81,11 +81,10 @@ It bundles the server (`pnpm nx run server:build`), builds both images for `linu
 
 ```bash
 kubectl apply -k deploy/k8s
-kubectl -n greatacademy create job --from=cronjob/migrate migrate-$(date +%s)
 kubectl -n greatacademy rollout status deploy/api deploy/voice
 ```
 
-Apply first, so that a new image's migrations run from that image, then migrate before the API needs the new schema. The ConfigMaps' names carry a hash of their contents, so changing `api.env` or `voice.env` rolls the pods. A voice pod drains for up to 25 minutes, finishing its running sessions.
+Each API pod runs the migrations in its init container before the server starts, holding a PostgreSQL advisory lock so that pods starting together migrate one at a time; a new image's schema is in place before any pod of it serves. A migration must keep working for the previous image's pods until the rollout ends: add first, remove in a later release. The ConfigMaps' names carry a hash of their contents, so changing `api.env` or `voice.env` rolls the pods. A voice pod drains for up to 25 minutes, finishing its running sessions.
 
 An adult's account becomes an administrator with:
 

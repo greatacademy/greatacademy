@@ -22,10 +22,15 @@ export function connect(url: string, max = 5): Connection {
   return { db: drizzle(client, { schema }), close: () => client.end() };
 }
 
-/** migrate applies the migrations of folder (libs/db/drizzle) that the database lacks, on one connection of its own. */
+/** MIGRATION_LOCK is the PostgreSQL advisory lock a migration holds. */
+const MIGRATION_LOCK = 0x6761_6462;
+
+/** migrate applies the migrations of folder (libs/db/drizzle) that the database lacks, on one connection of its own, one process at a time. */
 export async function migrate(url: string, folder: string): Promise<void> {
   const client = postgres(url, { max: 1, fetch_types: false, onnotice: () => {} });
   try {
+    // Pods that start together migrate one after another; the lock ends with the session.
+    await client`select pg_advisory_lock(${MIGRATION_LOCK})`;
     await applyMigrations(drizzle(client), { migrationsFolder: folder });
   } finally {
     await client.end();
