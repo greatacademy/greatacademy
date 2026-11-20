@@ -70,8 +70,16 @@ export function pinyinKey(s: string): string {
 
 /** toneless is pinyin without its tones, to tell a wrong tone from a wrong syllable. */
 export function toneless(s: string): string {
-  return pinyinKey(s).replace(/\d/g, "");
+  let plain = toneless_.get(s);
+  if (plain === undefined) {
+    plain = pinyinKey(s).replace(/\d/g, "");
+    toneless_.set(s, plain);
+  }
+  return plain;
 }
+
+/** toneless_ remembers the syllables already made toneless: content asks for the same ones many times as it builds. */
+const toneless_ = new Map<string, string>();
 
 /** withMarks writes pinyin typed with tone numbers, "lü4 se4", in tone marks, "lǜ sè". */
 export function withMarks(s: string): string {

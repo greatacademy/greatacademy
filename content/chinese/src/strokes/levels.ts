@@ -150,11 +150,22 @@ function fillTask(c: LevelOneCharacter, k: number): HandTask {
   };
 }
 
+/** upTo holds the words of the levels up to each one, flattened once. */
+const upTo = new Map<number, readonly LevelOneWord[]>();
+
+/** wordsUpTo are the words of the levels up to a level, in order. */
+function wordsUpTo(level: number): readonly LevelOneWord[] {
+  let words = upTo.get(level);
+  if (!words) {
+    words = levelWords.slice(0, level).flat();
+    upTo.set(level, words);
+  }
+  return words;
+}
+
 /** tasksOf are a character's tasks at a level: in its first words of the levels so far but itself, then by its reading and meaning. */
 function tasksOf(c: LevelOneCharacter, level: number): readonly HandTask[] {
-  const words = levelWords
-    .slice(0, level)
-    .flat()
+  const words = wordsUpTo(level)
     .filter((w) => w.word !== c.char && w.word.includes(c.char))
     .slice(0, TASKS);
   return [

@@ -10,7 +10,7 @@ import { type LevelDialogues, unitDialogueTopics } from "../level-1/dialogues.ts
 import { type LevelGrammar, unitGrammarTopics } from "../level-1/grammar.ts";
 import { unitListeningTopic, unitSpeakingTopic } from "../level-1/listening.ts";
 import { type LevelSentences, unitSentenceTopics } from "../level-1/sentences.ts";
-import { GAP, type LevelOneWord, levelOneWordTopic, parseLevelWords } from "../level-1/words.ts";
+import { firstTwice, GAP, type LevelOneWord, levelOneWordTopic, parseLevelWords } from "../level-1/words.ts";
 import { type LevelWriting, unitWritingTopics } from "../level-1/writing.ts";
 
 /** LevelUnit is a unit of a level: a theme, how many character batches and how many word batches it has. */
@@ -87,7 +87,7 @@ export function buildLevel(spec: LevelSpec): Level {
     characters.set(c.char, c);
   }
   const all = [...spec.earlierWords, ...words.flat().map((w) => w.word)];
-  const twice = all.find((w, i) => all.indexOf(w) !== i);
+  const twice = firstTwice(all);
   if (twice) throw new Error(`${where}: ${twice} is taught twice`);
 
   const characterCount = spec.units.reduce((n, u) => n + u.characters, 0);

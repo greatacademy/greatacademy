@@ -14,7 +14,7 @@ import { unitListeningTopic, unitSpeakingTopic } from "./listening.ts";
 import { sentences } from "./sentence-data.ts";
 import { unitSentenceTopics } from "./sentences.ts";
 import { wordBatches } from "./word-data.ts";
-import { GAP, type LevelOneWord, levelOneWordTopic, parseLevelOneWords } from "./words.ts";
+import { firstTwice, GAP, type LevelOneWord, levelOneWordTopic, parseLevelOneWords } from "./words.ts";
 
 /** UNITS are the units of level 1: a theme, how many character batches and how many word batches it has. */
 const UNITS: readonly { readonly title: Text; readonly characters: number; readonly words: number }[] = [
@@ -59,7 +59,7 @@ export const levelOneCharacters: ReadonlyMap<string, LevelOneCharacter> = (() =>
 /** levelOneWords are all the words of level 1. */
 export const levelOneWords: readonly string[] = (() => {
   const all = words.flat().map((w) => w.word);
-  const twice = all.find((w, i) => all.indexOf(w) !== i);
+  const twice = firstTwice(all);
   if (twice) throw new Error(`level 1: ${twice} is taught twice`);
   return all;
 })();

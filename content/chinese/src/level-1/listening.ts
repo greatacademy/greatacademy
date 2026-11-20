@@ -79,15 +79,22 @@ interface Item {
  * taken in turn so that a word's turns differ in their options too; a word with fewer than four such words has fewer turns.
  */
 function items(words: readonly LevelOneWord[], allowed: (w: LevelOneWord, o: LevelOneWord) => boolean): readonly Item[] {
-  const rounds = [0, 1].map((k) =>
+  // The first four words after each one, going round, that may stand against it: no more are looked at.
+  const others = words.map((w, i) => {
+    const found: LevelOneWord[] = [];
+    for (let j = 1; j < words.length && found.length < 4; j++) {
+      const o = words[(i + j) % words.length]!;
+      if (allowed(w, o)) found.push(o);
+    }
+    return found;
+  });
+  return [0, 1].flatMap((k) =>
     words.flatMap((w, i): Item[] => {
-      const others = [...words.slice(i + 1), ...words.slice(0, i)].filter((o) => allowed(w, o));
-      const a = others[2 * k];
-      const b = others[2 * k + 1];
+      const a = others[i]![2 * k];
+      const b = others[i]![2 * k + 1];
       return a && b ? [{ word: w, wrong: [a, b] }] : [];
     }),
   );
-  return rounds.flat();
 }
 
 const ensure = (id: string, name: string, n: number) => {
@@ -111,7 +118,17 @@ export function listeningBanks(spec: UnitSpeechSpec): { readonly hearWord: reado
   const id = levelListeningId(spec.level, spec.unit);
   const { words, chars } = spec;
   const pinyin = (w: LevelOneWord) => pinyinOf(w.syllables);
-  const sameSound = (a: LevelOneWord, b: LevelOneWord) => sound(a.word, chars).join(" ") === sound(b.word, chars).join(" ");
+  // Every pair of words is compared, so each text's sound is worked out once: at a Worker's startup this is most of the cost.
+  const sounds = new Map<string, readonly string[]>();
+  const soundOf = (text: string): readonly string[] => {
+    let s = sounds.get(text);
+    if (!s) {
+      s = sound(text, chars);
+      sounds.set(text, s);
+    }
+    return s;
+  };
+  const sameSound = (a: LevelOneWord, b: LevelOneWord) => soundOf(a.word).join(" ") === soundOf(b.word).join(" ");
 
   const byWord = items(words, (w, o) => !sameSound(w, o) && o.meaning.en !== w.meaning.en && o.meaning["zh-CN"] !== w.meaning["zh-CN"]);
   ensure(id, "words", byWord.length);
@@ -136,10 +153,10 @@ export function listeningBanks(spec: UnitSpeechSpec): { readonly hearWord: reado
 
   const inSentence = items(words, (w, o) => {
     const s = filled(w);
-    const heardSounds = sound(s, chars);
+    const heardSounds = soundOf(s);
     return (
       ![...o.word].some((c) => s.includes(c)) &&
-      !soundsIn(sound(o.word, chars), heardSounds) &&
+      !soundsIn(soundOf(o.word), heardSounds) &&
       !w.word.includes(o.word) &&
       !o.word.includes(w.word) &&
       !w.near.includes(o.word) &&

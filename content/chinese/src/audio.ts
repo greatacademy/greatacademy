@@ -98,9 +98,17 @@ export function syllableSsml(char: string, plain: string, tone: number): string 
 
 /** recordingName names the recording made from some SSML: 16 hex digits of its 64-bit FNV-1a hash. */
 export function recordingName(ssml: string): string {
-  let h = 0xcbf29ce484222325n;
-  for (const byte of new TextEncoder().encode(ssml)) h = BigInt.asUintN(64, (h ^ BigInt(byte)) * 0x100000001b3n);
-  return h.toString(16).padStart(16, "0");
+  // The hash is kept in two 32-bit halves, as BigInt is slow at a Worker's startup. The prime is 2^40 + 0x1b3, so a
+  // product is the halves times 0x1b3, with the low half shifted 8 bits into the high one.
+  let hi = 0xcbf29ce4;
+  let lo = 0x84222325;
+  for (const byte of new TextEncoder().encode(ssml)) {
+    const x = (lo ^ byte) >>> 0;
+    const low = x * 0x1b3;
+    hi = (Math.imul(hi, 0x1b3) + (x << 8) + Math.floor(low / 0x100000000)) >>> 0;
+    lo = low >>> 0;
+  }
+  return hi.toString(16).padStart(8, "0") + lo.toString(16).padStart(8, "0");
 }
 
 /** Format is how a recording is encoded: Azure AI Speech's name for it and the file's extension. */
@@ -131,11 +139,19 @@ const wanted = new Map<string, Wanted>();
 /** wantedRecordings are the recordings the content asks for, made or not, by file name. */
 export const wantedRecordings = (): ReadonlyMap<string, Wanted> => wanted;
 
+/** names remembers the name of each SSML already asked for: the content asks for many recordings more than once. */
+const names = new Map<string, string>();
+
 /** want asks for a recording and gives its path, made or not. */
 function want(kind: RecordingKind, ssml: string): string {
-  const file = fileName(ssml, MP3);
+  let name = names.get(ssml);
+  if (name === undefined) {
+    name = recordingName(ssml);
+    names.set(ssml, name);
+  }
+  const file = `${name}.${MP3.ext}`;
   if (!wanted.has(file)) wanted.set(file, { kind, ssml, format: MP3 });
-  return `audio/chinese/${recordingName(ssml)}`;
+  return `audio/chinese/${name}`;
 }
 
 /**

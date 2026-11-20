@@ -198,3 +198,13 @@ function why(w: LevelOneWord): Text {
     `**${w.word}**（${pinyinOf(w.syllables)}）的意思是：${w.meaning["zh-CN"]}。`,
   );
 }
+
+/** firstTwice is the first item that appears a second time in a list, or undefined when each appears once. */
+export function firstTwice(items: readonly string[]): string | undefined {
+  const seen = new Set<string>();
+  for (const x of items) {
+    if (seen.has(x)) return x;
+    seen.add(x);
+  }
+  return undefined;
+}
