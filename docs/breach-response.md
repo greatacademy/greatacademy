@@ -4,7 +4,7 @@
 
 This is the plan for a personal data breach at Great Academy, the playbook that [Minors' Data](minors-data.md) §11 asks for. It says who acts, what they do in the first hours, how to decide whom to notify, and by when in each market.
 
-**Status.** Draft of November 19, 2026. The deadlines in §6 come from the [AI legal review](../legal-review/opinion.md) and published guidance; those marked *to confirm* are not yet checked, and counsel in each market must confirm all of them. Text in square brackets is filled in by the owner. It is rehearsed once before any market opens to minors (§9).
+**Status.** Draft of November 19, 2026. The deadlines in §6 come from the AI legal review (kept outside the repository) and published guidance; those marked *to confirm* are not yet checked, and counsel in each market must confirm all of them. Text in square brackets is filled in by the owner. It is rehearsed once before any market opens to minors (§9).
 
 ## 1. What Counts
 

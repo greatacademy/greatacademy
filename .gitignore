@@ -40,3 +40,6 @@ content/chinese/illustrations/originals/
 
 # Recordings of the passages, made by tools/audio and uploaded to R2 (docs/content.md)
 content/*/audio/files/
+
+# The AI legal review lists compliance gaps; it stays on the owner's machine, out of this public repository.
+legal-review/

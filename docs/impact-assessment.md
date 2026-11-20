@@ -4,7 +4,7 @@
 
 This is the data protection impact assessment of Great Academy for learners under 18, the one document that [Minors' Data](minors-data.md) §11 asks for. One body covers every market; §9 adds what each market's law asks of an assessment. It assesses the design of [Minors' Data](minors-data.md) as built, at the state recorded in its §13.
 
-**Status.** Draft of November 19, 2026, written from the repository and the [AI legal review](../legal-review/opinion.md). Nobody has approved it, and counsel in each market has not read it. Text in square brackets is filled in by the owner. It must be approved (§10) before any market opens to minors.
+**Status.** Draft of November 19, 2026, written from the repository and the AI legal review (kept outside the repository). Nobody has approved it, and counsel in each market has not read it. Text in square brackets is filled in by the owner. It must be approved (§10) before any market opens to minors.
 
 ## 1. Scope
 
