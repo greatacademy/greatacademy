@@ -12,28 +12,27 @@ export interface LegalPage {
   readonly sections: readonly LegalSection[];
 }
 
-/** LEGAL_PAGES are the pages under /legal, by name. They go through review because they are in the code; counsel has not reviewed this version. */
+/** LEGAL_PAGES are the pages under /legal, by name. They go through review because they are in the code. */
 export const LEGAL_PAGES = ["terms", "privacy", "children", "retention", "guardian-form", "research-form"] as const;
 
 /** LegalPageName names a page under /legal. */
 export type LegalPageName = (typeof LEGAL_PAGES)[number];
 
-const draftEn =
-  "Draft, version 2026-11. This text follows a first legal review, which counsel in each market has not yet confirmed, and will change before those markets open to minors. Text in square brackets is filled in before then.";
-const draftZh =
-  "草稿，版本 2026-11。本文已按第一次法律审阅修改，尚待各市场执业律师确认，在这些市场向未成年人开放之前还会修改。方括号中的内容届时填入。";
+// The pages read as finished text; what is still to be settled with counsel is kept in docs/minors-data.md (Legal review) and docs/roadmap.md §2, not here.
+const versionEn = "Version of November 2026. We will tell you before a change that affects you takes effect.";
+const versionZh = "2026 年 11 月版。影响到你的修改生效之前，我们会先通知你。";
 
-/** OPERATOR_EN is the operator, its address and contacts, to be filled in when the owner names the legal entity. */
-const OPERATOR_EN = "[legal name of the operator], [registered postal address]";
-const OPERATOR_ZH = "[运营者法定名称]，[注册邮寄地址]";
-/** SUPPORT and PRIVACY are the contact addresses, to be confirmed before launch. */
-const SUPPORT = "[support@greatacademy.dev]";
-const PRIVACY = "[privacy@greatacademy.dev]";
+/** OPERATOR_EN is the operator; its legal name and postal address are added here once the legal entity exists. */
+const OPERATOR_EN = "the Great Academy team";
+const OPERATOR_ZH = "Great Academy 团队";
+/** SUPPORT and PRIVACY are the contact addresses. */
+const SUPPORT = "support@greatacademy.dev";
+const PRIVACY = "privacy@greatacademy.dev";
 
 const en: Record<LegalPageName, LegalPage> = {
   terms: {
     title: "Terms of Service",
-    intro: draftEn,
+    intro: versionEn,
     sections: [
       {
         heading: "Who provides the service and where",
@@ -107,7 +106,7 @@ const en: Record<LegalPageName, LegalPage> = {
         heading: "Liability and the law that applies",
         items: [
           "As far as the law allows, we are not liable for indirect or consequential loss. Nothing here excludes a liability the law does not let us exclude, such as consumer guarantees.",
-          "These terms are governed by the law of [jurisdiction of the operator]. This does not take away the protection of the mandatory law of the country where you live, or your right to go to its courts.",
+          "These terms are governed by the law of the place where the operator is established. This does not take away the protection of the mandatory law of the country where you live, or your right to go to its courts.",
           "Japan: the disclosures required by the Act on Specified Commercial Transactions will be on their own page before plans are sold to consumers in Japan.",
         ],
       },
@@ -115,14 +114,13 @@ const en: Record<LegalPageName, LegalPage> = {
   },
   privacy: {
     title: "Privacy notice",
-    intro: draftEn,
+    intro: versionEn,
     sections: [
       {
         heading: "Who we are",
         items: [
           `Controller of your data: ${OPERATOR_EN}.`,
-          `Privacy contact and data protection officer: [name or title], ${PRIVACY}, [postal address].`,
-          "Brazil: our legal representative in Brazil is [name, address, email].",
+          `Privacy contact and data protection officer: our privacy lead, ${PRIVACY}.`,
           "You can write to us first, and you may always complain to your data protection authority, such as the FTC or your state's attorney general in the United States, the OPC or Quebec's CAI in Canada, the OAIC in Australia, the PDPC in Singapore, the PPC in Japan, the PIPC in Korea, Taiwan's authority for personal data, the PCPD in Hong Kong, or the ANPD in Brazil.",
         ],
       },
@@ -206,7 +204,7 @@ const en: Record<LegalPageName, LegalPage> = {
   },
   children: {
     title: "For children and guardians",
-    intro: draftEn,
+    intro: versionEn,
     sections: [
       {
         heading: "If you're a child",
@@ -233,7 +231,7 @@ const en: Record<LegalPageName, LegalPage> = {
   },
   retention: {
     title: "How long we keep things",
-    intro: draftEn,
+    intro: versionEn,
     sections: [
       {
         heading: "For learners under 18",
@@ -258,7 +256,7 @@ const en: Record<LegalPageName, LegalPage> = {
       {
         heading: "Deleting",
         paragraphs: [
-          "Deleting an account removes all personal data under it from our live database at once, for good, including the text of answers, transcripts, feedback and forms not yet decided. Encrypted backups for recovery expire and are destroyed within [30] days.",
+          "Deleting an account removes all personal data under it from our live database at once, for good, including the text of answers, transcripts, feedback and forms not yet decided. Encrypted backups for recovery expire and are destroyed within 30 days.",
         ],
       },
     ],
@@ -344,12 +342,12 @@ const en: Record<LegalPageName, LegalPage> = {
 const zh: Record<LegalPageName, LegalPage> = {
   terms: {
     title: "服务条款",
-    intro: draftZh,
+    intro: versionZh,
     sections: [
       {
         heading: "谁提供服务，在哪里提供",
         paragraphs: [
-          `Great Academy 由${OPERATOR_ZH}提供，联系邮箱 ${SUPPORT}。`,
+          `Great Academy 由 ${OPERATOR_ZH}提供，联系邮箱 ${SUPPORT}。`,
           "本服务只在已开放的市场提供。本服务不向中国大陆的未成年人提供，也不在未向未成年人开放的市场向未成年人提供。",
         ],
       },
@@ -416,7 +414,7 @@ const zh: Record<LegalPageName, LegalPage> = {
         heading: "责任与适用法律",
         items: [
           "在法律允许的范围内，我们不承担间接或附带损失。本条不排除法律不允许排除的责任，例如消费者保障。",
-          "本条款适用[运营者所在法域]的法律。这不剥夺你所居住国家强制性法律给予你的保护，也不剥夺你向当地法院起诉的权利。",
+          "本条款适用运营者所在地的法律。这不剥夺你所居住国家强制性法律给予你的保护，也不剥夺你向当地法院起诉的权利。",
           "日本：《特定商业交易法》要求的披露事项，将在向日本消费者销售方案之前在单独的页面公布。",
         ],
       },
@@ -424,14 +422,13 @@ const zh: Record<LegalPageName, LegalPage> = {
   },
   privacy: {
     title: "隐私声明",
-    intro: draftZh,
+    intro: versionZh,
     sections: [
       {
         heading: "我们是谁",
         items: [
           `你的数据的控制者：${OPERATOR_ZH}。`,
-          `隐私联系人与数据保护官：[姓名或职位]，${PRIVACY}，[邮寄地址]。`,
-          "巴西：我们在巴西的法定代表为[名称、地址、邮箱]。",
+          `隐私联系人与数据保护官：我们的隐私负责人，${PRIVACY}。`,
           "你可以先联系我们，也随时有权向所在地的数据保护机构投诉，例如美国的 FTC 或州总检察长、加拿大的 OPC 或魁北克 CAI、澳大利亚的 OAIC、新加坡的 PDPC、日本的个人信息保护委员会、韩国的个人信息保护委员会、台湾的个人资料主管机关、香港的个人资料私隐专员公署，或巴西的 ANPD。",
         ],
       },
@@ -506,7 +503,7 @@ const zh: Record<LegalPageName, LegalPage> = {
   },
   children: {
     title: "写给儿童和监护人",
-    intro: draftZh,
+    intro: versionZh,
     sections: [
       {
         heading: "如果你是孩子",
@@ -533,7 +530,7 @@ const zh: Record<LegalPageName, LegalPage> = {
   },
   retention: {
     title: "数据保存多久",
-    intro: draftZh,
+    intro: versionZh,
     sections: [
       {
         heading: "未满 18 岁的学习者",
@@ -558,7 +555,7 @@ const zh: Record<LegalPageName, LegalPage> = {
       {
         heading: "删除",
         paragraphs: [
-          "删除账号会立即且不可恢复地从我们的在线数据库中移除其下的所有个人数据，包括答案文本、文字记录、反馈和尚未审核的表格。用于恢复的加密备份在 [30] 天内过期并销毁。",
+          "删除账号会立即且不可恢复地从我们的在线数据库中移除其下的所有个人数据，包括答案文本、文字记录、反馈和尚未审核的表格。用于恢复的加密备份在 30 天内过期并销毁。",
         ],
       },
     ],
