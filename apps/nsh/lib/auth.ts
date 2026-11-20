@@ -3,7 +3,7 @@ import { resource, signal } from "nsh";
 
 import { language } from "./i18n.ts";
 import { netFetch } from "./net.ts";
-import { API_URL, privacy, SITE_URL } from "./rpc.ts";
+import { privacy, SITE_URL } from "./rpc.ts";
 import { setToken, token } from "./session.ts";
 
 /** AgeAnswer is what the age question collects; it is sent to the server, which keeps only the band. */
@@ -29,7 +29,7 @@ async function post(path: string, body: unknown): Promise<Response> {
   const headers: Record<string, string> = { "Content-Type": "application/json", Origin: SITE_URL, "Accept-Language": language() };
   const current = token();
   if (current) headers.Authorization = `Bearer ${current}`;
-  return netFetch(`${API_URL}/api/auth${path}`, { method: "POST", headers, body: JSON.stringify(body) });
+  return netFetch(`${SITE_URL}/api/auth${path}`, { method: "POST", headers, body: JSON.stringify(body) });
 }
 
 async function startSession(path: string, body: unknown): Promise<void> {
@@ -115,7 +115,7 @@ export interface SessionUser {
 export const sessionUser = resource(
   () => token(),
   async (current, { signal }): Promise<SessionUser | null> => {
-    const response = await netFetch(`${API_URL}/api/auth/get-session`, {
+    const response = await netFetch(`${SITE_URL}/api/auth/get-session`, {
       headers: { Authorization: `Bearer ${current}`, Origin: SITE_URL },
       signal,
     });

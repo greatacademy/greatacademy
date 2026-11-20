@@ -13,18 +13,12 @@ import { markChanged } from "./query.ts";
 import { token } from "./session.ts";
 
 /**
- * SITE_URL is the web app, which serves the pages the app links to, the illustrations, the recordings and the files
- * its web views load. In development that is the Vite dev server: the desktops and the iOS simulator reach it at
+ * SITE_URL is the web app, which serves the API under /api, the pages the app links to, the illustrations, the
+ * recordings and the files its web views load. In development that is the Vite dev server: the desktops and the iOS simulator reach it at
  * localhost, and Android after `adb reverse tcp:5173 tcp:5173`. `scripts/package.ts` replaces this line while it
  * packages the app.
  */
 export const SITE_URL = "http://localhost:5173";
-
-/**
- * API_URL is the API server (apps/server): the site's api subdomain over HTTPS, as https://api.greatacademy.dev; in
- * development the site itself, whose dev server proxies /api to the local server.
- */
-export const API_URL = SITE_URL.startsWith("https://") ? SITE_URL.replace("https://", "https://api.") : SITE_URL;
 
 const withToken: Interceptor = (next) => (request) => {
   const current = token();
@@ -47,7 +41,7 @@ const marksChanges: Interceptor = (next) => async (request) => {
 };
 
 const transport = createConnectTransport({
-  baseUrl: `${API_URL}/api/rpc`,
+  baseUrl: `${SITE_URL}/api/rpc`,
   fetch: netFetch,
   interceptors: [withToken, withLanguage, marksChanges],
 });
