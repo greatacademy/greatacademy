@@ -5,13 +5,10 @@
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
-import { compileChinese } from "@ga/content-chinese";
-import { compileEnglish } from "@ga/content-english";
-import { compileMath } from "@ga/content-math";
 import { connect, grantAdminByEmail, migrate } from "@ga/db";
 
 import { readConfig } from "./config.ts";
-import { type Api, createApi, isJob, openServices, runJob } from "./handler.ts";
+import type { Api } from "./handler.ts";
 
 /** HEALTH answers the probes of deploy/k8s. */
 const HEALTH = "/healthz";
@@ -68,6 +65,19 @@ function serve(api: Api, origin: string) {
   };
 }
 
+/**
+ * compileSubjects compiles every subject. Their packages, like the API's, are imported only by the commands that use them,
+ * so that `migrate` starts in little memory: building the subjects' topics takes most of a pod's.
+ */
+async function compileSubjects() {
+  const [math, english, chinese] = await Promise.all([
+    import("@ga/content-math"),
+    import("@ga/content-english"),
+    import("@ga/content-chinese"),
+  ]);
+  return [math.compileMath(), english.compileEnglish(), chinese.compileChinese()];
+}
+
 const config = readConfig(process.env);
 const [command, name] = process.argv.slice(2);
 
@@ -93,7 +103,8 @@ if (command !== undefined && command !== "job")
 const started = performance.now();
 // The daily job, and the quarter-hourly one without AI keys to judge essays, use no subject.
 const usesSubjects = command !== "job" || (name === "quarter" && config.aiKeysSecret !== undefined);
-const subjects = usesSubjects ? [compileMath(), compileEnglish(), compileChinese()] : [];
+const subjects = usesSubjects ? await compileSubjects() : [];
+const { createApi, isJob, openServices, runJob } = await import("./handler.ts");
 const conn = connect(config.databaseUrl, command === "job" ? 2 : 10);
 const services = await openServices(config, conn.db, subjects);
 console.log(`subjects ready in ${Math.round(performance.now() - started)} ms`);

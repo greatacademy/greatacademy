@@ -1,8 +1,7 @@
-# The API server: the bundle of `pnpm nx run server:build` and the migrations it applies, on Node alone.
+# The API server: the bundle of `pnpm nx run server:build`, its chunks and the migrations it applies, on Node alone.
 FROM node:26.11.1-trixie-slim
 WORKDIR /app
-COPY dist/server.mjs ./
-COPY dist/drizzle ./drizzle
+COPY dist ./
 ENV NODE_ENV=production MIGRATIONS=/app/drizzle
 USER 10001
 EXPOSE 8080

@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "node --env-file-if-exists=.env.local --watch src/main.ts",
-    "build": "rolldown -c rolldown.config.ts && rm -rf dist/drizzle && cp -R ../../libs/db/drizzle dist/drizzle",
+    "build": "rm -rf dist && rolldown -c rolldown.config.ts && cp -R ../../libs/db/drizzle dist/drizzle",
     "typecheck": "tsc -p tsconfig.json",
     "test": "vitest run",
     "lint": "biome check ."
