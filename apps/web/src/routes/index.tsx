@@ -8,12 +8,12 @@ import { Welcome } from "../components/Welcome.tsx";
 import { useSession } from "../lib/auth.ts";
 import { useI18n } from "../lib/i18n.tsx";
 import { account, timeZone } from "../lib/rpc.ts";
-import { hasSessionCookie } from "../lib/session-cookie.ts";
+import { sessionHint } from "../lib/session-cookie.ts";
 import { rememberedSubject, useProfile } from "../lib/subject.tsx";
 
 export const Route = createFileRoute("/")({
   // The cookie decides the server's first render. Later the session is known in the browser, so moving here asks the server nothing.
-  loader: () => (typeof document === "undefined" ? hasSessionCookie() : true),
+  loader: sessionHint,
   staleTime: Number.POSITIVE_INFINITY,
   component: Index,
 });

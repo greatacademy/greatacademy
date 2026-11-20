@@ -4,6 +4,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { type ComponentProps, type FormEvent, type ReactNode, useEffect, useId, useRef, useState } from "react";
 
 import { authClient, useSession } from "../lib/auth.ts";
+import { nextPath } from "../lib/hooks.ts";
 import { useI18n } from "../lib/i18n.tsx";
 import { usePrivacyText } from "../lib/privacy-text.ts";
 import { Button, Card, ErrorNote } from "./ui.tsx";
@@ -168,7 +169,7 @@ export function AuthForm({
     // landing page for a moment.
     await refetchSession();
     setBusy(false);
-    await navigate({ to: next?.startsWith("/") ? next : "/" });
+    await navigate({ to: nextPath(next) });
   }
 
   const title = mode === "sign-up" ? m.signUp : m.signIn;

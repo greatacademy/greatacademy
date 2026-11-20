@@ -6,13 +6,17 @@ import { useEffect, useState } from "react";
 import { type AgeAnswer, AgeQuestion } from "../components/AgeQuestion.tsx";
 import { AuthForm } from "../components/AuthForm.tsx";
 import { Button, Card } from "../components/ui.tsx";
+import { useSignedOutOnly } from "../lib/hooks.ts";
 import { useI18n } from "../lib/i18n.tsx";
 import { errorText, usePrivacyText } from "../lib/privacy-text.ts";
 import { privacy } from "../lib/rpc.ts";
+import { sessionHint } from "../lib/session-cookie.ts";
 import { rememberStop, stoppedBefore } from "../lib/sign-up-stop.ts";
 
 export const Route = createFileRoute("/sign-up")({
   validateSearch: (s: Record<string, unknown>): { next?: string } => (typeof s.next === "string" ? { next: s.next } : {}),
+  loader: sessionHint,
+  staleTime: Number.POSITIVE_INFINITY,
   component: SignUp,
 });
 
@@ -96,6 +100,7 @@ function SignUp() {
   const [answer, setAnswer] = useState<{ age: AgeAnswer; teen: boolean }>();
   const [error, setError] = useState<string>();
   const parent = who === "children" || who === "both";
+  const show = useSignedOutOnly(Route.useLoaderData(), next);
 
   useEffect(() => {
     if (who === "self") setStopped(stoppedBefore(Date.now()));
@@ -108,6 +113,7 @@ function SignUp() {
     setError(undefined);
   };
 
+  if (!show) return null;
   if (!who) return <WhoQuestion onChoose={choose} />;
   if (stopped) return <Stop onParent={() => choose("children")} />;
   if (answer)

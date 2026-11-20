@@ -4,13 +4,20 @@ import { type FormEvent, useState } from "react";
 import { field } from "../components/AuthForm.tsx";
 import { Button, Card, ErrorNote } from "../components/ui.tsx";
 import { authClient } from "../lib/auth.ts";
+import { useSignedOutOnly } from "../lib/hooks.ts";
 import { useI18n } from "../lib/i18n.tsx";
+import { sessionHint } from "../lib/session-cookie.ts";
 
-export const Route = createFileRoute("/forgot-password")({ component: ForgotPassword });
+export const Route = createFileRoute("/forgot-password")({
+  loader: sessionHint,
+  staleTime: Number.POSITIVE_INFINITY,
+  component: ForgotPassword,
+});
 
 function ForgotPassword() {
   const { m } = useI18n();
   const [state, setState] = useState<"idle" | "busy" | "sent" | "failed">("idle");
+  const show = useSignedOutOnly(Route.useLoaderData());
 
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -20,6 +27,7 @@ function ForgotPassword() {
     setState(res.error ? "failed" : "sent");
   }
 
+  if (!show) return null;
   return (
     <Card className="mx-auto mt-6 max-w-sm space-y-4">
       <h1 className="text-2xl font-semibold">{m.forgotTitle}</h1>
