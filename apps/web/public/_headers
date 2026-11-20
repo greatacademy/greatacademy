@@ -1,2 +1,6 @@
+# The built scripts and styles are named by their contents, so a browser keeps them for a year without asking again.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
 /embed/*
   Access-Control-Allow-Origin: *
