@@ -1,4 +1,4 @@
-import { and, asc, count, desc, eq, gte, isNotNull, sql, sum } from "drizzle-orm";
+import { and, asc, count, desc, eq, gte, isNotNull, lt, sql, sum } from "drizzle-orm";
 
 import type { Db } from "./db.ts";
 import { user } from "./schema/auth.ts";
@@ -64,7 +64,7 @@ export async function callsByModel(db: Db, since: Date, until: Date): Promise<Mo
       cost: sum(aiCall.cost),
     })
     .from(aiCall)
-    .where(and(gte(aiCall.at, since), sql`${aiCall.at} < ${until}`))
+    .where(and(gte(aiCall.at, since), lt(aiCall.at, until)))
     .groupBy(aiCall.providerId, aiCall.model);
   return rows.map((r) => ({ ...r, failed: Number(r.failed), cost: Number(r.cost ?? 0) }));
 }
