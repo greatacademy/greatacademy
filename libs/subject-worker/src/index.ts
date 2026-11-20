@@ -41,7 +41,13 @@ export function lazyShardWorker(load: () => Promise<ShardContent>, checkers: rea
   // Built on the first call, so that the topics do not count against the Worker's startup time.
   let source: Promise<SubjectSource> | undefined;
   const held = () => {
-    source ??= load().then((c) => topicSource(c.topics, checkers, c.reading ?? []));
+    source ??= load()
+      .then((c) => topicSource(c.topics, checkers, c.reading ?? []))
+      .catch((e: unknown) => {
+        // A failed load is tried again by the next call rather than failing every call of the isolate.
+        source = undefined;
+        throw e;
+      });
     return source;
   };
   return class extends WorkerEntrypoint {
