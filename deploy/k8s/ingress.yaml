@@ -1,7 +1,5 @@
-# The public hosts, through the cluster's ingress-nginx, whose Hetzner load balancer passes the client's address by
-# the PROXY protocol. Both hosts are proxied by Cloudflare, and only Cloudflare's addresses
-# (https://www.cloudflare.com/ips) are let through, so no one reaches the pods around Cloudflare's WAF and rate limits
-# and CF-Connecting-IP is the learner's. cert-manager's letsencrypt-prod-issuer makes each host's certificate with a
+# The public hosts, through the cluster's ingress-nginx. Both hosts are proxied by Cloudflare, which sets
+# CF-Connecting-IP to the learner's address. cert-manager's letsencrypt-prod-issuer makes each host's certificate with a
 # DNS-01 challenge, and external-dns writes each host's proxied record; both are set up for greatacademy.dev in the
 # cluster's own repository. Only the API's /api reaches the API: the voice service's calls under /voice/v1, the
 # probes and the metrics stay inside the cluster.
@@ -12,7 +10,6 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod-issuer
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/whitelist-source-range: "173.245.48.0/20,103.21.244.0/22,103.22.200.0/22,103.31.4.0/22,141.101.64.0/18,108.162.192.0/18,190.93.240.0/20,188.114.96.0/20,197.234.240.0/22,198.41.128.0/17,162.158.0.0/15,104.16.0.0/13,104.24.0.0/14,172.64.0.0/13,131.0.72.0/22,2400:cb00::/32,2606:4700::/32,2803:f800::/32,2405:b500::/32,2405:8100::/32,2a06:98c0::/29,2c0f:f248::/32"
     # Guardians' signed forms are the largest requests.
     nginx.ingress.kubernetes.io/proxy-body-size: 12m
 spec:
@@ -41,7 +38,6 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod-issuer
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/whitelist-source-range: "173.245.48.0/20,103.21.244.0/22,103.22.200.0/22,103.31.4.0/22,141.101.64.0/18,108.162.192.0/18,190.93.240.0/20,188.114.96.0/20,197.234.240.0/22,198.41.128.0/17,162.158.0.0/15,104.16.0.0/13,104.24.0.0/14,172.64.0.0/13,131.0.72.0/22,2400:cb00::/32,2606:4700::/32,2803:f800::/32,2405:b500::/32,2405:8100::/32,2a06:98c0::/29,2c0f:f248::/32"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "1800"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "1800"
 spec:

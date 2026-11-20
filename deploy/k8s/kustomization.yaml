@@ -6,25 +6,27 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: greatacademy
 labels:
-  - pairs:
-      app.kubernetes.io/part-of: greatacademy
+- pairs:
+    app.kubernetes.io/part-of: greatacademy
 resources:
-  - namespace.yaml
-  - api.yaml
-  - jobs.yaml
-  - voice.yaml
-  - scaling.yaml
-  - ingress.yaml
-  - network.yaml
+- namespace.yaml
+- api.yaml
+- jobs.yaml
+- voice.yaml
+- scaling.yaml
+- ingress.yaml
+- network.yaml
 configMapGenerator:
-  - name: api
-    envs:
-      - api.env
-  - name: voice
-    envs:
-      - voice.env
+- envs:
+  - api.env
+  name: api
+- envs:
+  - voice.env
+  name: voice
 images:
-  - name: api
-    newName: ghcr.io/greatacademy/api
-  - name: voice
-    newName: ghcr.io/greatacademy/voice
+- digest: sha256:2bd161f4cc73b0c552381c008914f34c843240166b86527db05430374a35c111
+  name: api
+  newName: ghcr.io/greatacademy/api
+- digest: sha256:1f2554f5f3cf325998170ddb9c08146060ada8c31e1fb045d6aed06915ed3551
+  name: voice
+  newName: ghcr.io/greatacademy/voice
