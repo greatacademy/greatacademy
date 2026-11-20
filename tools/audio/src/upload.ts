@@ -49,6 +49,22 @@ async function stored(): Promise<Set<string>> {
   }
 }
 
+/** TRIES is how many times a file is put before the upload stops: a request now and then fails on the network. */
+const TRIES = 4;
+
+/** put runs a put, trying again after a failure, a second longer each time. */
+async function put(args: string[]): Promise<void> {
+  for (let i = 1; ; i++) {
+    try {
+      await run(cf, args);
+      return;
+    } catch (e) {
+      if (i === TRIES) throw e;
+      await new Promise((r) => setTimeout(r, 1000 * i));
+    }
+  }
+}
+
 const names = toUpload(recordings, await stored());
 console.log(`${names.length} recordings to upload`);
 let next = 0;
@@ -59,7 +75,7 @@ await Promise.all(
       const name = names[next++]!;
       const file = fileURLToPath(new URL(name, folder));
       const type = name.endsWith(".wav") ? "audio/wav" : "audio/mpeg";
-      await run(cf, ["r2", "objects", "put", `${PREFIX}${name}`, "--bucket-name", BUCKET, "--file", file, "--content-type", type, "-q"]);
+      await put(["r2", "objects", "put", `${PREFIX}${name}`, "--bucket-name", BUCKET, "--file", file, "--content-type", type, "-q"]);
       done++;
       if (done % 25 === 0 || done === names.length) console.log(`${done}/${names.length}`);
     }
