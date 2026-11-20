@@ -85,6 +85,7 @@ export function problemView(p: Problem): MessageInitShape<typeof ProblemViewSche
     input: input(p.answer.input),
     ...(p.figure && { figure: figure(p.figure) }),
     listen: [...(p.listen ?? [])],
+    picture: p.picture ?? "",
   };
 }
 

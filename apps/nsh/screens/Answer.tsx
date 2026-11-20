@@ -4,6 +4,7 @@ import { Input } from "nsh/base";
 
 import { m, tx } from "../lib/i18n.ts";
 import { colors, fieldStyle, Muted } from "../lib/ui.tsx";
+import { Illustration } from "./Illustration.tsx";
 import { MathField } from "./MathField.tsx";
 import { PlotField } from "./PlotField.tsx";
 import { FigureView, Rich, Tex } from "./Rich.tsx";
@@ -15,12 +16,13 @@ import { StrokesField } from "./StrokesField.tsx";
 const listenTo = (paths: readonly string[]) =>
   paths.map((audio, i) => ({ audio, text: paths.length > 1 ? `${m().listen} ${i + 1}` : m().listen }));
 
-/** Prompt shows a problem's prompt, the recordings it plays and its drawing; while a plot is answered, the drawing is the input itself. */
+/** Prompt shows a problem's picture, prompt, the recordings it plays and its drawing; while a plot is answered, the drawing is the input itself. */
 export function Prompt(props: { problem: ProblemView; answering?: boolean }) {
   const input = props.problem.input?.kind;
   const figure = props.answering && input?.case === "plot" ? undefined : props.problem.figure;
   return (
     <View style={{ gap: 12 }}>
+      <Illustration path={props.problem.picture} />
       <Rich source={tx(props.problem.prompt)} fontSize={18} />
       <Sounds sounds={listenTo(props.problem.listen)} />
       <If when={figure}>{(drawn) => <FigureView figure={drawn()} />}</If>

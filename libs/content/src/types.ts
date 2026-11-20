@@ -105,6 +105,12 @@ export interface Problem {
   /** figure is a drawing the prompt refers to. */
   readonly figure?: Figure;
   /**
+   * picture is an illustration the prompt refers to, such as the four pictures of a story to write, by its path from the
+   * site's root without an extension, such as "illustrations/<subject>/<name>": the file is <picture>.webp, 3:2. The
+   * prompt still says in words what the picture shows, so that the problem can be answered, and judged, without it.
+   */
+  readonly picture?: string;
+  /**
    * listen are the recordings played to answer, such as a dialogue a question asks about, by path as in Sound: the
    * learner hears them but does not see what they say, which the solution may show.
    */

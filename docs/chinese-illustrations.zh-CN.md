@@ -4,7 +4,7 @@
 
 ## 1. 任务
 
-HSK 5 写作第一部分给出四幅图，要求写一个把它们连起来的故事。主题 `hsk-5-scene-stories`（`content/chinese/src/hsk/paper.ts`）有十六道这样的题，在 `content/chinese/src/hsk/paper-data.ts` 的 `sceneStories` 里；在有图之前，每道题用文字描述它的四个场景。你的任务是：§7 列出的每道题，只要 `content/chinese/illustrations/` 里还没有它的网页文件，就画出它的四个场景，检查，做出网页文件并提交。
+HSK 5 写作第一部分给出四幅图，要求写一个把它们连起来的故事。主题 `hsk-5-scene-stories`（`content/chinese/src/hsk/paper.ts`）有十六道这样的题，在 `content/chinese/src/hsk/paper-data.ts` 的 `sceneStories` 里；每道题也用文字描述它的四个场景，有了图以后这些文字仍显示在图下方，这样没有图也能作答和评判。你的任务是：§7 列出的每道题，只要 `content/chinese/illustrations/` 里还没有它的网页文件，就画出它的四个场景，检查，做出网页文件并提交。
 
 每道题是一张图，分成两行两列的四格，从左到右、从上到下读，和试卷印的一样。一张图能让人物、衣服和地点在各格之间保持一致，分开的四张图做不到。
 
@@ -71,7 +71,7 @@ One landscape image, 3:2, divided into four equal panels in a grid of two by two
 
 | 文件 | 尺寸 | 上限 | 显示位置 |
 | :--- | :--- | :--- | :--- |
-| `<name>.webp` | 1200 × 800 | 120 KB | 题目上方，和页面一样宽 |
+| `<name>.webp` | 1200 × 800 | 120 KB | 题目文字上方，和页面一样宽，网页和 App 都显示 |
 
 1. 把生成的原图保存为 `content/chinese/illustrations/originals/<name>.png`。Git 忽略这个文件夹；原图留在这台机器上。
 2. 在仓库根目录做出网页文件，把 `<name>` 换成图的名字：
@@ -93,7 +93,8 @@ One landscape image, 3:2, divided into four equal panels in a grid of two by two
    ```
 
 3. 打开网页文件和原图比较。如果脸或手势模糊了，说明格子太繁杂：用更简单的背景重新生成，并在报告里说明。
-4. 一批的网页文件在一个提交里提交，遵循 [AGENTS.md](../AGENTS.md)：`feat(content-chinese): pictures of the HSK 5 stories, 1 to 8`。不要提交原图。删除 `content/chinese/illustrations/` 里 `originals/` 以外留下的 PNG。
+4. 把每张新图的名字加进 `content/chinese/src/illustrations.ts` 的 `illustrations`，它的测试会把名单和文件对照。这样内容就会把图交给 `sceneStories` 里对应位置的那道题，网页应用在 `/illustrations/chinese/` 下提供这个文件。
+5. 一批的网页文件连同这份名单在一个提交里提交，遵循 [AGENTS.md](../AGENTS.md)：`feat(content-chinese): pictures of the HSK 5 stories, 1 to 8`。不要提交原图。删除 `content/chinese/illustrations/` 里 `originals/` 以外留下的 PNG。
 
 ## 7. 场景
 

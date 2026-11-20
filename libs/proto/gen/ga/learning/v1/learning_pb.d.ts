@@ -1549,6 +1549,14 @@ export declare type ProblemView = Message<"ga.learning.v1.ProblemView"> & {
    * @generated from field: repeated string listen = 4;
    */
   listen: string[];
+
+  /**
+   * picture is the path of an illustration the prompt refers to, from the site's root without an extension: the file
+   * is <picture>.webp, 3:2. It is empty when there is none; the prompt says in words what it shows.
+   *
+   * @generated from field: string picture = 5;
+   */
+  picture: string;
 };
 
 /**

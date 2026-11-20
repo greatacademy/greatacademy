@@ -2,6 +2,7 @@ import type { ProblemView } from "@ga/proto/learning/v1/learning_pb";
 
 import { useI18n } from "../lib/i18n.tsx";
 import { FigureView } from "./Figure.tsx";
+import { Illustration } from "./Illustration.tsx";
 import { Markdown, Tex } from "./Markdown.tsx";
 import { Sounds } from "./Sounds.tsx";
 import { heardText } from "./SpeechFlow.tsx";
@@ -11,7 +12,7 @@ import { StrokesDrawing } from "./StrokesField.tsx";
 export const listenTo = (paths: readonly string[], label: string) =>
   paths.map((audio, i) => ({ audio, text: paths.length > 1 ? `${label} ${i + 1}` : label }));
 
-/** ProblemPrompt shows a problem's prompt, the recordings it plays and its drawing. */
+/** ProblemPrompt shows a problem's picture, its prompt, the recordings it plays and its drawing. */
 export function ProblemPrompt({ problem, answering }: { problem?: ProblemView; answering?: boolean }) {
   const { tx, m } = useI18n();
   // While a plot is being answered, its drawing is the input itself.
@@ -21,6 +22,7 @@ export function ProblemPrompt({ problem, answering }: { problem?: ProblemView; a
   const items = !answering && input?.case === "order" ? input.value.items : [];
   return (
     <div className="space-y-4">
+      <Illustration path={problem?.picture ?? ""} className="w-full" />
       <Markdown source={tx(problem?.prompt)} className="text-lg" />
       <Sounds sounds={listenTo(problem?.listen ?? [], m.listen)} />
       <FigureView figure={figure} />

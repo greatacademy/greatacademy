@@ -5,7 +5,7 @@
 
 import { type CriterionSpec, type TopicDef, t } from "@ga/content";
 import { criterionById, point, quote, type WritingItem, writingGenerator } from "@ga/subject-chinese";
-
+import { withPictures } from "../illustrations.ts";
 import { GAP, parseLevelWords } from "../level-1/words.ts";
 import { levelWritingId } from "../level-1/writing.ts";
 import { levelFourLast } from "../level-4/index.ts";
@@ -131,7 +131,7 @@ export function paperTopics(key: string): readonly TopicDef[] {
           `Tell the four scenes below as one story in Chinese, of at least ${PAPER_MINIMUMS.story} characters.`,
           `根据下面四个场景，用中文写一个不少于 ${PAPER_MINIMUMS.story} 字的故事。`,
         ),
-        items: checked("hsk-5-scene-stories", sceneStories, PAPER_MINIMUMS.story),
+        items: withPictures(checked("hsk-5-scene-stories", sceneStories, PAPER_MINIMUMS.story)),
         least: PAPER_MINIMUMS.story,
         most: PAPER_MINIMUMS.story * 10,
       }),

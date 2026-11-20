@@ -77,6 +77,8 @@ export interface WritingItem {
   readonly task: string;
   /** model is one good response, in Chinese: shown to the judge, and to the learner after a verdict that counts. */
   readonly model: string;
+  /** picture is the path of an illustration of the task, shown with it, as in Problem: the task says in words what it shows. */
+  readonly picture?: string;
 }
 
 /** WritingLimits are the length a writing task asks for; a Chinese character counts as a word. */
@@ -100,6 +102,7 @@ export function writingGenerator(
     const item = rng.cycle(bank);
     return {
       prompt: joinText([question, same(item.task)]),
+      ...(item.picture && { picture: item.picture }),
       answer: {
         checker: "writing",
         expected: { ...limits },

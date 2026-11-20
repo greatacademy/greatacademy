@@ -4,7 +4,7 @@
 
 ## 1. The Task
 
-The first part of the HSK 5 writing paper shows four pictures and asks for a story that links them. The topic `hsk-5-scene-stories` (`content/chinese/src/hsk/paper.ts`) has sixteen such tasks, in `sceneStories` of `content/chinese/src/hsk/paper-data.ts`; until it has pictures, each task describes its four scenes in words. Your task is to draw the four scenes of every task listed in §7 whose web file does not exist yet in `content/chinese/illustrations/`, check it, make its web file and commit it.
+The first part of the HSK 5 writing paper shows four pictures and asks for a story that links them. The topic `hsk-5-scene-stories` (`content/chinese/src/hsk/paper.ts`) has sixteen such tasks, in `sceneStories` of `content/chinese/src/hsk/paper-data.ts`; each task also describes its four scenes in words, which stay below the picture once it exists, so that the task can be answered and judged without it. Your task is to draw the four scenes of every task listed in §7 whose web file does not exist yet in `content/chinese/illustrations/`, check it, make its web file and commit it.
 
 Each task is one image of four panels in a grid of two by two, read left to right and top to bottom, as the paper prints them. One image keeps the people, their clothes and the place the same from panel to panel, which four separate images would not.
 
@@ -71,7 +71,7 @@ The picture is shown at the size of the task, never as a thumbnail, so each imag
 
 | File | Size | Limit | Shown |
 | :--- | :--- | :--- | :--- |
-| `<name>.webp` | 1200 × 800 | 120 KB | Above the task, as wide as the page |
+| `<name>.webp` | 1200 × 800 | 120 KB | Above the task's words, as wide as the page, in the web app and the apps |
 
 1. Save the image as generated to `content/chinese/illustrations/originals/<name>.png`. Git ignores that folder; the originals stay on this machine.
 2. Make the web file from the root of the repository, with `<name>` replaced by the image's name:
@@ -93,7 +93,8 @@ The picture is shown at the size of the task, never as a thumbnail, so each imag
    ```
 
 3. Open the web file and compare it with the original. If the faces or gestures blur, the panels are too busy: generate it again with simpler backgrounds, and say so in the report.
-4. Commit the web files of a batch in one commit, following [AGENTS.md](../AGENTS.md): `feat(content-chinese): pictures of the HSK 5 stories, 1 to 8`. Do not commit the originals. Delete any PNG left in `content/chinese/illustrations/` outside `originals/`.
+4. Add the name of each new image to `illustrations` in `content/chinese/src/illustrations.ts`, whose test checks the list against the files. The content then gives the task at that place in `sceneStories` its picture, and the web app serves the file at `/illustrations/chinese/`.
+5. Commit the web files of a batch with that list in one commit, following [AGENTS.md](../AGENTS.md): `feat(content-chinese): pictures of the HSK 5 stories, 1 to 8`. Do not commit the originals. Delete any PNG left in `content/chinese/illustrations/` outside `originals/`.
 
 ## 7. Scenes
 

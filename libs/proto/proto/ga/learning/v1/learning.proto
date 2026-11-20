@@ -481,6 +481,9 @@ message ProblemView {
   // listen are the recordings played to answer, by path from the site's root without an extension, as in Sound:
   // what they say stays hidden until the solution.
   repeated string listen = 4;
+  // picture is the path of an illustration the prompt refers to, from the site's root without an extension: the file
+  // is <picture>.webp, 3:2. It is empty when there is none; the prompt says in words what it shows.
+  string picture = 5;
 }
 
 message Input {
