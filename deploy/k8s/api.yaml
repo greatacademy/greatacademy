@@ -56,10 +56,12 @@ spec:
             # The content's heap is about 600 MB; the rest is for requests.
             - name: NODE_OPTIONS
               value: --max-old-space-size=1536
+          # Every subject is compiled before the server listens, about two seconds.
           startupProbe:
             httpGet:
               path: /healthz
               port: http
+            initialDelaySeconds: 3
             periodSeconds: 2
             failureThreshold: 60
           readinessProbe:
