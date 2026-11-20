@@ -11,7 +11,7 @@ This is the plan for a personal data breach at Great Academy, the playbook that 
 A breach is any event that destroys, loses, changes, discloses or gives access to personal data without authority, whether by attack, mistake or a processor's failure. Examples:
 
 - Someone reads the database, a backup, R2 or the logs who should not.
-- A secret leaks: `BETTER_AUTH_SECRET`, `AI_KEYS_SECRET`, `STRIPE_SECRET_KEY`, `RESEND_API_KEY`, the Tunnel's token, a database password, an AI or speech vendor's key.
+- A secret leaks: `BETTER_AUTH_SECRET`, `AI_KEYS_SECRET`, `STRIPE_SECRET_KEY`, `RESEND_API_KEY`, a token of the Cloudflare account (R2, email or DNS), the voice service's credential, a database password, an AI or speech vendor's key.
 - A bug shows one learner's data to another, or a guardian sees a child who is not theirs.
 - An email goes to the wrong person with someone's data.
 - A processor (Hetzner, Cloudflare, Resend, Stripe, Microsoft, an AI vendor) tells us of a breach affecting our data.
@@ -37,9 +37,9 @@ The clock of most deadlines starts when we become aware, so the time of the firs
 
 1. **Record.** Open an entry in the incident register (§8): time, who reported, what is known.
 2. **Contain**, by what the breach touched:
-   - **A leaked secret:** rotate it with `wrangler secret put` and redeploy. Rotating `BETTER_AUTH_SECRET` signs everyone out; rotating `AI_KEYS_SECRET` needs the vendor keys entered again in the admin console; rotate the vendor's key at the vendor too.
+   - **A leaked secret:** a generated one (`BETTER_AUTH_SECRET`, `AI_KEYS_SECRET`, the ticket key, the voice service's credential) is replaced by `python3 deploy/k8s/keys.py --rotate`, which makes all of them new; a vendor's key is rotated at the vendor, written into `deploy/k8s/secrets.local.env` and applied with `keys.py`. Then restart the pods with `kubectl -n greatacademy rollout restart deploy/api deploy/voice` ([deploy/k8s](../deploy/k8s/README.md)). Rotating `BETTER_AUTH_SECRET` signs everyone out; rotating `AI_KEYS_SECRET` needs the vendor keys entered again in the admin console.
    - **Sessions:** delete rows from `session` for the accounts affected, or all of them.
-   - **The database:** change the passwords of the CloudNativePG roles; stop the Tunnel if access goes through it.
+   - **The database:** change the passwords of the CloudNativePG roles, run `keys.py` so that `DATABASE_URL` in the Secret `api` follows, and restart the API. The database has no public port; it is reached only inside the cluster.
    - **A feature leaking data:** turn the market's switch off in the admin console, or the vendor's route, or deploy the previous version.
    - **An administrator's account:** remove the role on the Administrators page and reset the password.
 3. **Preserve.** Keep logs, the `admin_log`, database snapshots and the vendor's messages. Do not delete evidence while containing.
@@ -82,7 +82,7 @@ The shortest deadline among the markets affected governs. As a house rule: **reg
 - **An adult or payer** by email.
 - **Language:** the person's language (`user.locale`), and the market's notice language where it has one. Templates exist in English and Simplified Chinese; the others are translated with the legal pages.
 - **What a notice says:** what happened and when; what data; what we have done; what they can do (change a password, watch for suspicious email); whom to contact, [privacy@greatacademy.dev]; their right to complain to the regulator.
-- Emails go through the usual providers (`apps/web/src/server/email.ts`). If an email provider is the one breached, use the other.
+- Emails go through the usual providers (`apps/server/src/email.ts`). If an email provider is the one breached, use the other.
 
 ## 8. Register
 

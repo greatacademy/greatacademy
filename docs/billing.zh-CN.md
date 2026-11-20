@@ -95,12 +95,12 @@ iOS 应用以自动续订的 App Store 订阅出售方案，这是 App Store 对
 
 ## 10. 配置
 
-Worker 读取以下密钥（`apps/web/cloudflare.config.ts`）：
+API 服务器从环境变量读取以下密钥（`apps/server/src/config.ts`）；在集群中它们位于 Secret `api`，由 `deploy/k8s/keys.py` 根据 `deploy/k8s/secrets.local.env` 写入：
 
 | 密钥 | 内容 |
 | :--- | :--- |
 | `STRIPE_SECRET_KEY` | 账户的密钥。只有它和 webhook 密钥都设置后计费才开启 |
-| `STRIPE_WEBHOOK_SECRET` | 端点 `https://greatacademy.dev/api/stripe` 的签名密钥 |
+| `STRIPE_WEBHOOK_SECRET` | 端点 `https://api.greatacademy.dev/api/stripe` 的签名密钥 |
 | `STRIPE_WALLET` | 账户开通支付宝和微信支付后设为 `on`；在此之前方案页面只提供银行卡 |
 | `STRIPE_TAX` | 为 `on` 时为银行卡方案开启 Stripe Tax |
 | `APPLE_IAP_KEY_ID` | App Store Connect 内购密钥的 id。三个 Apple 密钥都设置后应用才出售 |
@@ -109,4 +109,4 @@ Worker 读取以下密钥（`apps/web/cloudflare.config.ts`）：
 
 端点监听 `checkout.session.completed`、`checkout.session.async_payment_succeeded`、`invoice.paid`、`customer.subscription.updated` 和 `customer.subscription.deleted`。客户门户允许更换银行卡和查看发票；取消和退款通过“设置”进行，以保证 30 天规则。设置 `STRIPE_WALLET` 之前，先在账户的支付方式中开通支付宝和微信支付。服务条款在 `/legal/terms`。删除账号会立即结束其付费的银行卡方案。
 
-在 App Store Connect 中：签署付费应用协议并填写银行和税务信息；为 `dev.greatacademy.app` 创建应用记录；按 §1 的价格创建订阅群组及其六个产品；创建内购密钥；并把生产和沙盒环境的 App Store 服务器通知 V2 地址设为 `https://greatacademy.dev/api/apple`。沙盒测试员在登录沙盒账号的设备上购买。
+在 App Store Connect 中：签署付费应用协议并填写银行和税务信息；为 `dev.greatacademy.app` 创建应用记录；按 §1 的价格创建订阅群组及其六个产品；创建内购密钥；并把生产和沙盒环境的 App Store 服务器通知 V2 地址设为 `https://api.greatacademy.dev/api/apple`。沙盒测试员在登录沙盒账号的设备上购买。

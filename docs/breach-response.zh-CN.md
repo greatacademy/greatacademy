@@ -11,7 +11,7 @@
 泄露是指个人数据在未经授权的情况下被销毁、丢失、篡改、披露或访问，无论起因是攻击、失误还是处理方的故障。例如：
 
 - 不该看的人读取了数据库、备份、R2 或日志。
-- 密钥泄露：`BETTER_AUTH_SECRET`、`AI_KEYS_SECRET`、`STRIPE_SECRET_KEY`、`RESEND_API_KEY`、Tunnel 的 token、数据库密码、AI 或语音供应商的密钥。
+- 密钥泄露：`BETTER_AUTH_SECRET`、`AI_KEYS_SECRET`、`STRIPE_SECRET_KEY`、`RESEND_API_KEY`、Cloudflare 账户的令牌（R2、邮件或 DNS）、语音服务的凭据、数据库密码、AI 或语音供应商的密钥。
 - 程序错误把一位学习者的数据显示给另一位，或监护人看到了不是自己的孩子。
 - 一封含有他人数据的邮件发错了人。
 - 处理方（Hetzner、Cloudflare、Resend、Stripe、Microsoft、AI 供应商）告知我们，其泄露涉及我们的数据。
@@ -37,9 +37,9 @@
 
 1. **记录。** 在事件登记（第 8 节）中新建一条：时间、报告人、已知情况。
 2. **控制**，按泄露涉及的部分处理：
-   - **密钥泄露：** 用 `wrangler secret put` 轮换并重新部署。轮换 `BETTER_AUTH_SECRET` 会让所有人退出登录；轮换 `AI_KEYS_SECRET` 后需要在管理后台重新输入供应商密钥；同时在供应商处轮换其密钥。
+   - **密钥泄露：** 生成的密钥（`BETTER_AUTH_SECRET`、`AI_KEYS_SECRET`、票据密钥、语音服务的凭据）用 `python3 deploy/k8s/keys.py --rotate` 替换，它会把它们全部换新；供应商的密钥在供应商处轮换，写入 `deploy/k8s/secrets.local.env`，再用 `keys.py` 应用。然后用 `kubectl -n greatacademy rollout restart deploy/api deploy/voice` 重启 pod（[deploy/k8s](../deploy/k8s/README.zh-CN.md)）。轮换 `BETTER_AUTH_SECRET` 会让所有人退出登录；轮换 `AI_KEYS_SECRET` 后需要在管理后台重新输入供应商密钥。
    - **会话：** 删除受影响账号在 `session` 中的行，或全部删除。
-   - **数据库：** 修改 CloudNativePG 角色的密码；如果访问经由 Tunnel，就停掉 Tunnel。
+   - **数据库：** 修改 CloudNativePG 角色的密码，运行 `keys.py` 让 Secret `api` 中的 `DATABASE_URL` 随之更新，再重启 API。数据库没有公网端口，只能在集群内部访问。
    - **某个功能泄露数据：** 在管理后台关闭该市场的开关或该供应商的路由，或部署上一个版本。
    - **管理员账号：** 在管理员页面移除其角色并重置密码。
 3. **保全。** 保留日志、`admin_log`、数据库快照和供应商的通知。控制过程中不要删除证据。
@@ -82,7 +82,7 @@
 - **成年人或付款人**通过邮件。
 - **语言：** 使用本人的语言（`user.locale`），并在市场有通知语言时使用该语言。模板有英语和简体中文；其他语言随法律页面一起翻译。
 - **通知内容：** 发生了什么、什么时候；涉及哪些数据；我们做了什么；他们可以做什么（修改密码、留意可疑邮件）；联系谁，[privacy@greatacademy.dev]；他们向监管机构投诉的权利。
-- 邮件通过平常的服务商发送（`apps/web/src/server/email.ts`）。如果泄露的正是某个邮件服务商，就用另一个。
+- 邮件通过平常的服务商发送（`apps/server/src/email.ts`）。如果泄露的正是某个邮件服务商，就用另一个。
 
 ## 8. 登记
 

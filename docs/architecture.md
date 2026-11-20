@@ -33,7 +33,7 @@ This document describes the system as built: technology choices, repository stru
    - Changing a parameter of the engine is therefore a replay, not a data migration.
 5. **One language, shared everywhere.**
    - All code is TypeScript. The one exception is the Python voice service of English, `apps/voice` ([English Curriculum §13.3](english-curriculum.md#133-the-voice-service)).
-   - The engine and the content runtime are pure functions with no I/O. The same code runs in the Worker, the browser, the native apps, tests and offline simulations.
+   - The engine and the content runtime are pure functions with no I/O. The same code runs in the API server, the browser, the native apps, tests and offline simulations.
 6. **Content is code.**
    - Topics, knowledge points and problem generators are TypeScript modules reviewed through git.
    - A compiler validates the graph before anything is published.
@@ -47,24 +47,24 @@ This document describes the system as built: technology choices, repository stru
 | Lint / format | **Biome** | One tool, one config at the root |
 | Tests | **Vitest** | Unit tests in every library; integration tests against PGlite |
 | Contracts / RPC | **Protobuf + buf + Connect** (`protobuf-es` v2, `connect-es` v2), `protovalidate` | One contract for the web and native clients; JSON on the wire for native |
-| Web app | **TanStack Start** (Router, Query, Form) on **Cloudflare Workers**; **React 19** | Built, run and deployed with Cloudflare's **`cf`** command line, not wrangler |
+| Web app | **TanStack Start** (Router, Query, Form) on **Cloudflare Workers**; **React 19** | Built, run and deployed with Cloudflare's **`cf`** command line, not wrangler; it renders pages and serves static files and recordings, and holds no secrets |
+| API server | **Node.js 26**, `node:http`, bundled by **rolldown** into one file; image `ghcr.io/greatacademy/api` | Serves the Connect API, better-auth, Stripe's and Apple's notifications and the voice service's calls, with every subject compiled in the process (§6.1) |
 | UI | **Base UI**, **Tailwind CSS v4**, Phosphor icons | Design tokens from `libs/design` |
-| Math rendering / input | **KaTeX** (rendering), **MathLive** (input), **Compute Engine** (parsing student answers) | Components in `apps/web`; in the native apps, rendered by the app and shown in Native Shell's `WebView`, which loads the stylesheet, fonts and MathLive from the Worker under `/embed` |
-| Accounts | **better-auth** (email + password, passkeys later), in the Worker | Sessions shared by the web app and the native apps (bearer tokens) |
-| Email | **Cloudflare Email Service** through the Worker's `send_email` binding `EMAIL`, or **Resend** over HTTP with `RESEND_API_KEY`; the secret `EMAIL_PROVIDER` lists the ones to use in order, and `EMAIL_FROM` is the sender | Password resets, address verification, notices, reminders and alarms, each as HTML with a plain-text part and in one language only: an email a person asks for is in the language of the request (the web's `ga-locale` cookie, else `Accept-Language`, which the native apps set to their own language), and a scheduled one is in `user.locale`, the language the person last used, which every API request keeps current; English when nothing is known (`apps/web/src/server/templates.ts`). A Worker needs no SMTP client. With both listed, the second sends only when the first fails for a passing reason (a rate limit, a daily limit, a failed delivery or an outage), never for a mistake of setup or of the message (`apps/web/src/server/email.ts`) |
-| Payments | **Stripe**, one account of the US company, through `stripe` in the Worker (its fetch client and Web Crypto) | Plans by card that renew, and by Alipay and WeChat Pay that do not ([Billing](billing.md)); Checkout and the customer portal are Stripe's pages, so no card data reaches us |
-| Database | **PostgreSQL 18**, reached from the Worker through **Hyperdrive**; **Drizzle ORM** + drizzle-kit migrations | **PGlite** in tests; a `postgres:18-alpine` container (OrbStack) in development |
+| Math rendering / input | **KaTeX** (rendering), **MathLive** (input), **Compute Engine** (parsing student answers) | Components in `apps/web`; in the native apps, rendered by the app and shown in Native Shell's `WebView`, which loads the stylesheet, fonts and MathLive from the web Worker under `/embed` |
+| Accounts | **better-auth** (email + password, passkeys later), in the API server at `https://api.greatacademy.dev` | Sessions shared by the web app (cookies, set for `.greatacademy.dev` so that the web Worker sees them too) and the native apps (bearer tokens) |
+| Email | **Cloudflare Email Service** through its REST API with `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_EMAIL_TOKEN`, or **Resend** over HTTP with `RESEND_API_KEY`; the setting `EMAIL_PROVIDER` lists the ones to use in order, and `EMAIL_FROM` is the sender | Password resets, address verification, notices, reminders and alarms, each as HTML with a plain-text part and in one language only: an email a person asks for is in the language of the request (the web's `ga-locale` cookie, else `Accept-Language`, which the native apps set to their own language), and a scheduled one is in `user.locale`, the language the person last used, which every API request keeps current; English when nothing is known (`apps/server/src/templates.ts`). Both are HTTP calls, so the server needs no SMTP client. With both listed, the second sends only when the first fails for a passing reason (a rate limit, a daily limit, a failed delivery or an outage), never for a mistake of setup or of the message (`apps/server/src/email.ts`) |
+| Payments | **Stripe**, one account of the US company, through `stripe` in the API server (its fetch client and Web Crypto) | Plans by card that renew, and by Alipay and WeChat Pay that do not ([Billing](billing.md)); Checkout and the customer portal are Stripe's pages, so no card data reaches us |
+| Database | **PostgreSQL 18** on **CloudNativePG**, reached from the API server with **postgres.js**; **Drizzle ORM** + drizzle-kit migrations | **PGlite** in tests; a `postgres:18-alpine` container (OrbStack) in development |
 | Mobile and desktop | **[Native Shell](https://nsh.dev)** (`nsh`, from the `greatacademy` branch of the project's fork), with StoreKit for in-app purchases in the app's own Rust crate, with the app in TSX on its QuickJS runtime | One app with each platform's own views on iOS, Android, macOS, Windows and Linux; same contracts and tokens as the web app |
-| Voice service | **Python 3.14** managed by **uv**, **Pipecat** 1.15.0 with its FastAPI WebSocket transport on **uvicorn**; **pytest**, **ruff**, **pyright** | Live conversation in English, a long-lived process that Workers cannot run; no LLM service inside, since the tutor's turns come from the web Worker over HTTP; tickets verified with Ed25519 (`cryptography`) |
-| Object storage | **R2** | Images of content, generated figures being inline SVG ([Content §4](content.md#4-knowledge-points-and-generators)); recordings read aloud, in the bucket `greatacademy` of the site's public files under `audio/<subject>/<name>.mp3`, or `.wav` for the voice service, served by the web Worker at the same path with ranges and cached for a year, since a name never changes what it holds ([Content §11](content.md#11-english)); guardians' signed forms, in their own bucket, until decided ([Minors' Data §6](minors-data.md#6-accounts-and-consent)) |
+| Voice service | **Python 3.14** managed by **uv**, **Pipecat** 1.15.0 with its FastAPI WebSocket transport on **uvicorn**; **pytest**, **ruff**, **pyright** | Live conversation in English, a long-lived process; no LLM service inside, since the tutor's turns come from the API server over HTTP; tickets verified with Ed25519 (`cryptography`) |
+| Cluster | **Kubernetes** 1.33 on Talos in Hetzner Cloud, **ingress-nginx**, **cert-manager**, **external-dns**, **CloudNativePG**, **KEDA** | The API server, its jobs, the voice service and PostgreSQL, in one namespace, `greatacademy`; manifests in `deploy/k8s` (§6) |
+| Object storage | **R2** | Images of content, generated figures being inline SVG ([Content §4](content.md#4-knowledge-points-and-generators)); recordings read aloud, in the bucket `greatacademy` of the site's public files under `audio/<subject>/<name>.mp3`, or `.wav` for the voice service, served by the web Worker at the same path with ranges and cached for a year, since a name never changes what it holds ([Content §11](content.md#11-english)); guardians' signed forms, in their own bucket, `ga-guardian-forms`, which the API server reaches through R2's S3 API, until decided ([Minors' Data §6](minors-data.md#6-accounts-and-consent)) |
 
 ## 3. Repository Structure
 
 ```text
-apps/web/             TanStack Start on Workers: pages, better-auth, and libs/api mounted under /api
-apps/math-workers/    The Workers serving mathematics: a gateway and its shards (§6.1)
-apps/english-workers/ The Workers serving English: a gateway and its shard
-apps/chinese-workers/ The Workers serving Chinese: a gateway and its shards
+apps/web/             TanStack Start on Workers: pages, static files and recordings; calls the API server
+apps/server/          The API server on Node: libs/api, better-auth, notifications, every subject compiled in-process (§6.1)
 apps/nsh/             Native Shell app in TSX (iOS, Android, macOS, Windows, Linux)
 apps/voice/           The voice service of English in Python on Pipecat: turn taking, barge-in, tickets, drain
 libs/proto/           Contracts: proto/ga/<domain>/v1/*.proto, buf config, gen/ (generated, committed)
@@ -75,7 +75,6 @@ libs/subject-math/    The mathematics subject: math answer checkers and helpers 
 libs/subject-english/ The English subject: sentence and word checkers and the kit for item banks
 libs/subject-chinese/ The Chinese subject: character and pinyin checkers, pinyin conversion, word segmentation and the kit for item banks
 libs/judge/           AI judgment of writing: the prompt, the respond tool, verdicts whose quotations are checked against the text, providers through pi-ai
-libs/subject-worker/  Worker entrypoints that any subject's gateway and shards are made from
 libs/db/              Drizzle schema, migrations and repositories (PostgreSQL)
 libs/design/          Color tokens, palettes and the appearance model (§8), with their generated forms for web and native
 content/math/         Authored mathematics content: topics, courses
@@ -86,33 +85,28 @@ tools/audit/          Content audit: outline coverage and heuristic quality chec
 tools/pilot/          Pilot report: where real learners fail, from the answer and event logs
 tools/calibrate/      Calibration: runs a route on texts scored by two people and records its agreement
 tools/audio/          Recordings: reads passages, words, sentences, sounds, syllables and openings aloud ahead of time, lists what it made and uploads it
-deploy/voice/         The voice service on Kubernetes: a Kustomize base and overlays, with mise tasks to push and check
-deploy/postgres/      The Cloudflare Tunnel through which Hyperdrive reaches PostgreSQL
+deploy/k8s/           The cluster's manifests: the API server, its jobs, the voice service, ingress and network policies, with mise tasks to push and check
 docs/                 Documents (English + Simplified Chinese)
 ```
 
 ### 3.1 Dependency Direction
 
 ```text
-apps/web ──► libs/api ──► libs/db ──► libs/engine ──► libs/content
-   │            │                                       ▲
-   │            ├──► libs/judge ──► libs/content         │
-   │            └──► libs/proto                         │
-   ├──► libs/design
-   │                                             libs/subject-math ◄── content/math
-   └╌╌► apps/math-workers, apps/english-workers, apps/chinese-workers (development only, to run them alongside)
-apps/math-workers ──► libs/subject-worker ──► libs/content
-   └──► content/math, libs/subject-math
-apps/english-workers ──► libs/subject-worker ──► libs/content
-apps/chinese-workers ──► libs/subject-worker ──► libs/content
-   └──► content/english, libs/subject-english
+apps/server ──► libs/api ──► libs/db ──► libs/engine ──► libs/content
+   │              │                                       ▲
+   │              ├──► libs/judge ──► libs/content         │
+   │              └──► libs/proto                         │
+   │                                               libs/subject-math ◄── content/math
+   └──► content/math, content/english, content/chinese
+apps/web ──► libs/proto, libs/design
+apps/web ╌╌► apps/server over HTTP (no package dependency)
 apps/nsh ──► libs/proto, libs/design
 tools/simulate ──► libs/engine, content/math, content/english
 tools/audit ──► libs/content, content/math, content/english, content/chinese
 tools/pilot ──► libs/db, libs/engine, content/math, content/english
 tools/calibrate ──► libs/judge, libs/db, libs/api, libs/subject-english, libs/subject-chinese
 tools/audio ──► libs/content, content/english, content/chinese
-apps/voice ╌╌► apps/web over HTTP (no package dependency)
+apps/voice ╌╌► apps/server over HTTP (no package dependency)
 ```
 
 - `libs/content` depends on nothing in the repository. It defines the types every subject implements.
@@ -122,9 +116,8 @@ apps/voice ╌╌► apps/web over HTTP (no package dependency)
 - `content/<subject>` depends on `libs/content` and its subject library.
 - `libs/api` implements the services against `libs/db` and the engine, but knows no host: the request's user and database client arrive as Connect context values, and the clock and seeds are injected. Its tests run the services end to end over PGlite.
 - `libs/judge` depends on `libs/content`'s types and on pi-ai. It knows no subject and no database: `libs/api` hands it the criteria, the text and a model client, and stores what it returns.
-- `libs/subject-worker` is the one library that imports the Workers runtime; it knows no subject.
-- `apps/voice` is Python and imports nothing from the repository. It reaches the web Worker over HTTP with its own credential, for each session's speech services, the tutor's turns and to write results; the WebSocket it shares with clients carries PCM as binary messages and JSON text messages defined in `apps/voice`.
-- Only `apps/*` wire storage, transport, authentication and content together. The web Worker does not import content: it reaches subjects through service bindings.
+- `apps/voice` is Python and imports nothing from the repository. It reaches the API server over HTTP inside the cluster with its own credential, for each session's speech services, the tutor's turns and to write results; the WebSocket it shares with clients carries PCM as binary messages and JSON text messages defined in `apps/voice`.
+- Only `apps/*` wire storage, transport, authentication and content together. `apps/server` is the one app that imports content and the database; the web Worker imports neither and reaches the API over HTTP.
 
 ## 4. Domain Model
 
@@ -150,80 +143,62 @@ The full model of content is in [Content](content.md). The derived learner state
 ## 5. Request Flow
 
 1. The client calls a Connect service under `/api/rpc/ga.<domain>.v1.*` with the session cookie on the web, or a signed bearer token in the native apps, which better-auth's `bearer` plugin issues in the `set-auth-token` header at sign-in. better-auth itself is served under `/api/auth/*`.
-2. The Worker authenticates with better-auth and loads the learner's state from PostgreSQL through Hyperdrive. Each request gets its own database client.
+2. The API server authenticates with better-auth and loads the learner's state from PostgreSQL, through a pool of connections that the process's requests share.
 3. The service calls the engine with:
-   - the subject graph, read from the subject's manifest and cached per isolate;
+   - the subject graph, read from the subject's manifest and cached in the process;
    - the learner state;
    - the current time.
 4. The engine returns new state and the events to record. The service writes both in one transaction and returns the response.
 
 A task is carried out as a **session**, one question per request (`StartTask`, then `SubmitAnswer` until a result). The session runner (`libs/api/src/runner.ts`) is a pure state machine over the engine's lesson, review, reading, quiz and diagnostic rules. Its state holds problem references (topic, knowledge point, seed), never problems. A finished session stays readable: `ListSessions` lists a learner's finished sessions for a course, and `GetSession` reopens one with its questions, answers and solutions. `GetTopic` returns any topic of a course with its lesson, fresh examples from a seed, and the topics it builds on and leads to, so a learner can reread a lesson at any time; reading changes no learner state.
 
-Problem instances are generated on the server from a seed and graded on the server, in the subject's shard Worker (§6.1). The answer is never sent to the client before submission.
+Problem instances are generated on the server from a seed and graded on the server, in the API server, where every subject is compiled (§6.1). The answer is never sent to the client before submission.
 
-The web app (`apps/web`) has one catch-all server route, `/api/$`, that hands requests to `src/server/handler.ts`. Pages are rendered on the server without learner data and fetch it in the browser with the Connect client and TanStack Query, so a page never needs the session on the server. The page language is decided on the server (the `ga-locale` cookie, else `Accept-Language`), so the first render is already in it.
+The API server (`apps/server`) answers everything under `/api` and `/voice/v1` with `src/handler.ts`, at its own origin, `https://api.greatacademy.dev`. The web app's pages are rendered on the server without learner data and fetch it in the browser with the Connect client and TanStack Query from that origin (`API_ORIGIN` in `apps/web/src/lib/origin.ts`), with credentials, so a page never needs the session on the server. The server allows that one origin, the site's, with credentials (CORS), and refuses the preflight of any other. The page language is decided on the server (the `ga-locale` cookie, else `Accept-Language`), so the first render is already in it.
 
 `/` depends on who is asking. Signed out, it is the landing page, also at `/landing` for everyone, and rendered on the server. Signed in, it opens on the next task of the course most recently worked on; an account with no course and a guarded learner goes to `/guardian`, and any other account with no course is asked who will be learning. A session cookie is enough to choose between the two on the server, so a signed-in learner never sees the landing page flash. The catalog is its own public page, `/courses`.
 
-`src/server.ts` is the Worker's entry: TanStack Start serves requests, a daily Cron Trigger runs the retention rules of `libs/api/src/retention.ts`, and another, every 15 minutes, runs the cost check of `libs/api/src/costs.ts`, which emails alarms to administrators. `PrivacyService` carries the age question, consent, verification and deletion ([Minors' Data](minors-data.md)), and `requireStudy` in `libs/api/src/capabilities.ts` is the gate in front of `StartTask`. `AdminService` serves the console at `/admin` ([Admin Console](admin.md)) and refuses anyone without the role. `BillingService` sells plans and manages them ([Billing](billing.md)); while billing is on, `requirePlan` in `libs/api/src/billing.ts` refuses to choose a course or start a session in a subject no plan covers. Stripe's events arrive at `/api/stripe`; the handler checks each signature, reads the event into a `BillingEvent` (`apps/web/src/server/stripe.ts`), and `applyBillingEvent` records it, so that a repeated or late event changes nothing.
+`apps/web/src/server.ts` is the Worker's entry, where TanStack Start serves pages, static files and recordings. `apps/server/src/main.ts` is the API server's: `job daily` runs the retention rules of `libs/api/src/retention.ts` and the plans' reminders, and `job quarter`, every 15 minutes, runs the cost check of `libs/api/src/costs.ts`, which emails alarms to administrators, and judges submitted essays (§6). `PrivacyService` carries the age question, consent, verification and deletion ([Minors' Data](minors-data.md)), and `requireStudy` in `libs/api/src/capabilities.ts` is the gate in front of `StartTask`. `AdminService` serves the console at `/admin` ([Admin Console](admin.md)) and refuses anyone without the role. `BillingService` sells plans and manages them ([Billing](billing.md)); while billing is on, `requirePlan` in `libs/api/src/billing.ts` refuses to choose a course or start a session in a subject no plan covers. Stripe's events arrive at `/api/stripe`; the handler checks each signature, reads the event into a `BillingEvent` (`apps/server/src/stripe.ts`), and `applyBillingEvent` records it, so that a repeated or late event changes nothing. App Store Server Notifications arrive at `/api/apple` ([Billing](billing.md) §8).
 
 A guardian reads a learner through the same read-only calls a learner uses: `GetDashboard`, `GetCourseProgress` and `ListSessions` take an optional `learner_id`, which is honored only for a learner the caller follows. The supervisor's decisions, `ChooseCourse`, `KeepCourse`, `SetGoals` and `SetEndDate`, take one too, and are refused to a learner whom a guardian supervises ([Experience §5](experience.md#5-supervision)). Other calls that change anything take no `learner_id`, and a guardian cannot open a session, so a learner's answers stay their own.
 
 ## 6. Deployment
 
 - **Production:**
-  - The web Worker (`apps/web`), served at `greatacademy.dev` and deployed with `cf deploy`, with a Hyperdrive binding to PostgreSQL, an R2 binding for public files such as recordings (`BUCKET`) and another for signed forms (`GUARDIAN_FORMS`), a service binding to each subject's gateway Worker, a daily Cron Trigger and one every 15 minutes, the secret `AI_KEYS_SECRET`, which encrypts AI vendors' API keys, and the Stripe secrets of [Billing](billing.md) §10.
-  - The Workers of each subject (§6.1), deployed before the web Worker, shards before their gateway, because a service binding must name a Worker that exists.
-  - Migrations are applied with drizzle-kit before a deployment.
-  - The subjects' Workers have no `workers.dev` address, since only service bindings reach them, and each has a `fetch` handler that answers 404, because Cloudflare refuses a Worker without an event handler.
-  - A Worker's secrets can be set only once it exists, so the web Worker's first deployment passed them with `cf deploy --secrets-file`.
+  - The web Worker (`apps/web`, `ga-web`), served at `greatacademy.dev` and deployed with `cf deploy`. It renders pages, serves the static files, and serves the recordings from its one binding, the R2 bucket of public files (`BUCKET`). It has no secrets and reaches no database; pages call the API server in the browser.
+  - The API server (`apps/server`), served at `api.greatacademy.dev`. `pnpm nx run server:build` bundles it with rolldown into `dist/server.mjs`, and the image `ghcr.io/greatacademy/api` holds that file and the migrations on Node alone. The image's commands are `node server.mjs`, which serves HTTP, `job daily` and `job quarter`, the scheduled jobs, `migrate`, which applies the migrations, and `grant-admin <email>`. In the cluster it runs as the Deployment `api`: two replicas behind a PodDisruptionBudget, as an unprivileged user on a read-only filesystem, ready on `/healthz` once every subject is compiled (§6.1).
+  - The server reads its settings from its environment (`apps/server/src/config.ts`): a ConfigMap made from `deploy/k8s/api.env`, and the Secret `api`, which `deploy/k8s/keys.py` writes without printing a value. The Secret holds `DATABASE_URL`, `BETTER_AUTH_SECRET`, `AI_KEYS_SECRET`, which encrypts AI vendors' API keys, the voice service's keys, and the vendors' keys, among them the Stripe secrets of [Billing](billing.md) §10.
+  - The CronJobs `daily`, at 03:00 UTC, and `quarter`, every 15 minutes, run the same image. The CronJob `migrate` is suspended and run by hand with `kubectl create job --from=cronjob/migrate`, after `kubectl apply -k deploy/k8s` and before the API needs the new schema.
+  - ingress-nginx routes `api.greatacademy.dev/api/` to the API server and `voice.greatacademy.dev/v1/conversation` to the voice service, with certificates from cert-manager. external-dns writes both records proxied by Cloudflare, and the server takes the client's address from `CF-Connecting-IP`. The voice service's calls under `/voice/v1` stay inside the namespace. NetworkPolicies admit ingress-nginx to the API server and the voice service, the voice service to the API server, and Prometheus to the metrics, and limit egress to DNS, PostgreSQL and public HTTPS.
+  - `mise run k8s:push` bundles the server, builds and pushes both images and pins `deploy/k8s` to their digests; `mise run k8s:check` validates the manifests without touching the cluster. [deploy/k8s](../deploy/k8s/README.md) describes the cluster, the Secrets and each step.
+  - Guardians' signed forms are kept in the R2 bucket `ga-guardian-forms`, which the server reaches through R2's S3 API (aws4fetch) with an account token limited to that bucket. Emails go through Cloudflare Email Service's REST API or Resend.
 - **Region.** Every learner's data stays in the western United States, whatever their market:
-  - PostgreSQL and the voice service's Kubernetes cluster run on Hetzner Cloud in Hillsboro, Oregon (`hil`), and their backups stay in the United States.
-  - Hyperdrive reaches PostgreSQL through Cloudflare Tunnel, so the database has no public port. PostgreSQL is the database `greatacademy` on the shared CloudNativePG cluster `pg-cluster`; the Hyperdrive configuration `greatacademy` connects to `db.greatacademy.dev`, which the Tunnel `greatacademy-postgres` of `deploy/postgres` routes to the cluster's primary, behind a Cloudflare Access application that admits only Hyperdrive's service token. Its query cache is off, since a learner reads what they have just written, and it opens at most 20 connections to the cluster, which other projects share.
-  - The web Worker is placed near the database, in `aws:us-west-2`, since a request makes several queries and each would otherwise cross an ocean. The subjects' Workers query nothing and run at the edge.
-  - R2 buckets are created by hand with the location hint `wnam` before their first deployment, since a bucket's location cannot change.
+  - PostgreSQL, the API server and the voice service run on one Kubernetes cluster on Hetzner Cloud in Hillsboro, Oregon (`hil`), and their backups stay in the United States.
+  - PostgreSQL is the database `greatacademy` on the shared CloudNativePG cluster `pg-cluster` in `cnpg-system`. The API server reaches it directly inside the cluster with postgres.js, so the database has no public port. Each API pod keeps a pool of at most 10 connections, shared by its requests, and each job at most 2, since other projects share the cluster.
+  - The web Worker queries nothing and runs at the edge.
+  - R2 buckets are created by hand with the location hint `wnam` before their first use, since a bucket's location cannot change.
   - Holding data in one country is a transfer for every other market, so the privacy notice at `/legal/privacy` says the data is kept in the United States ([Minors' Data §12](minors-data.md#12-vendors)).
 - **Development:**
-  - `cf dev` runs the Worker in workerd through Vite.
-  - It connects to PostgreSQL in a `postgres:18-alpine` container under OrbStack. See [Development](development.md).
-  - The voice service runs in a container from its production image beside PostgreSQL, reaching `cf dev` on the host ([Development](development.md) §7).
-- **Mobile and desktop:** `nsh package` builds each platform's installable app. The app talks to the same API.
-- **Planned for English:** further Cloudflare services, AI models through pi-ai with providers configured by platform administrators, and a voice service on Kubernetes beside PostgreSQL ([English Curriculum §13](english-curriculum.md#13-technology-and-deployment)).
+  - `pnpm nx run server:dev` runs the API server under Node, restarting on changes, on `http://localhost:8080`. It reads `apps/server/.env.local`, copied from `.env.example`, and connects to PostgreSQL in a `postgres:18-alpine` container under OrbStack.
+  - `cf dev` runs the web Worker in workerd through Vite, which proxies `/api` to the API server (`API_URL`, else `http://localhost:8080`), so pages call their own origin. See [Development](development.md).
+  - The voice service runs in a container from its production image beside PostgreSQL, reaching the API server and the site on the host ([Development](development.md) §7).
+- **Mobile and desktop:** `nsh package` builds each platform's installable app. The app talks to the same API server, at the site's `api.` subdomain.
+- **English** adds AI models through pi-ai, with providers configured by platform administrators, and the voice service on the same cluster ([English Curriculum §13](english-curriculum.md#13-technology-and-deployment)).
 
-### 6.1 Subjects as Workers
+### 6.1 Subjects in the API Server
 
-Generators are code, so content cannot be loaded as data. A Worker has limits on both plans: 64 MiB uncompressed, 1 second to execute its global scope, and 128 MB of memory per isolate. All of mathematics is about 29 MB uncompressed and its shards load in about 460 ms under Node when added up, and more subjects are planned, so one Worker would reach these limits. So subjects run in Workers of their own:
+Generators are code, so content cannot be loaded as data. The API server imports every subject's content package and compiles it in the process when it starts (`compileMath`, `compileEnglish` and `compileChinese` in `apps/server/src/main.ts`), which takes about a second for all three, and listens only then, so that a pod is ready only once the content is in memory. A pod holds about 1.2 GB; `deploy/k8s/api.yaml` requests 1280 MiB for it and limits it to 2 GiB.
 
 ```text
-web Worker ──service binding──► subject gateway ──service bindings──► subject shards
- Registry                        manifest, routing                     generators, checkers
+client ──► API server: Registry ──► a local gateway per subject ──► topic definitions
+                       listing, manifest                            generators, checkers
 ```
 
-- **The web Worker** holds no content. It binds one gateway per subject (`SUBJECT_MATH`), and `apps/web/src/server/handler.ts` lists the bindings. Adding a subject deploys its Workers and adds one binding.
-- **The gateway** implements `SubjectGateway` (`libs/content`): `listing` (the courses, small), `manifest` (the subject without its code, generated at build time by `subjectManifest`) and the `SubjectSource` methods `problems`, `lesson` and `judge`, which `routeSource` passes to the shard holding the topic.
-- **A shard** holds the definitions of some of a subject's topics and implements `SubjectSource` with `topicSource`. Its definitions are built on the first call, not at startup. Content whose modules build problem banks as they load, as Chinese does, takes longer than the second a Worker has to start, so its shard is made with `lazyShardWorker`, which imports the content dynamically on the first call; the bundler puts that content in a chunk of its own, and the call it first serves pays the time. The problem banks are built again when asked and not kept, so that a shard stays under the 128 MB an isolate has ([Content](content.md) §4); an isolate over it is recycled, and every call would load the content again.
-- **`Registry`** (`libs/api`) reads the listings once per isolate, which is enough to list courses, and loads a subject's manifest when one of its courses is first used. It keeps the two most recently used subjects, because mathematics takes about 45 MB of memory once indexed and an isolate has 128 MB. A course's scope is computed when first used.
+- **`localGateway`** (`libs/api`) makes a compiled subject a `SubjectGateway` (`libs/content`): `listing` (the courses, small) and `manifest` (the subject without its code), both made once by `subjectManifest`, and the `SubjectSource` methods `problems`, `lesson`, `judge` and `passage`, served by `topicSource` over the subject's topic definitions. `SubjectSource` is asynchronous, so that a subject could be served from another process. Adding a subject adds its content package to `apps/server` and one compiled subject to the list.
+- **`Registry`** (`libs/api`) reads the listings once, which is enough to list courses, and indexes a subject's manifest when one of its courses is first used. It keeps the indexes of the two most recently used subjects. A course's scope is computed when first used.
+- Topics whose problem banks are large are built through `slimmed` or `slimTopics` and kept without their generators, which build the banks again on first use ([Content](content.md) §4), so that the process does not hold every bank at once.
 
-Mathematics has five shards, one for each stretch of the curriculum (`content/math/src/shards/`). `apps/math-workers/gen/` holds the generated manifest and the topics of each shard; it is not committed. English has one shard for now, `core`, and the same layout under `apps/english-workers`. Chinese has three under `apps/chinese-workers`: `core` (the native grades, heritage, the Gaokao and the reading units), `levels` (the nine levels of Chinese as a foreign language and their handwriting) and `hsk` (the HSK exam topics). The HSK topics need the levels' characters, words and units but not their topics, so `hsk` reads each level's plan (`level-N/plan.ts`, its batches read and checked) and only the courses import the levels' topics. Likewise the kit of writing by hand (`strokes/hand.ts`) is apart from the native grades' writing topics, so that `levels` and `hsk` do not build the native recognition batches. The tests of `apps/chinese-workers` build the shards and load each built content chunk in Node, asking each of its knowledge points for a problem, under a heap of 104 MB for every space together and a young generation as small as an isolate's (`scripts/check-shard.test.ts`): `core` needs 64 MB, `levels` 68 MB and `hsk` 80 MB. Testing the bundle and not the sources also catches what only the bundle does, such as modules run in another order.
-
-| Worker | Uncompressed size | Module load under Node |
-| :--- | :--- | :--- |
-| `ga-web` | 6.8 MB | |
-| `ga-math` (gateway) | 5.9 MB | 51 ms |
-| `ga-math-school` | 4.7 MB | 62 ms |
-| `ga-math-algebra` | 5.8 MB | 108 ms |
-| `ga-math-calculus` | 8.7 MB | 133 ms |
-| `ga-math-college` | 6.8 MB | 112 ms |
-| `ga-math-exam` | 2.6 MB | 49 ms |
-| `ga-english` (gateway) | 2.8 MB | 30 ms |
-| `ga-english-core` | 7.5 MB | 240 ms |
-| `ga-chinese-core` | 4.7 MB | 230 ms, on its first call |
-| `ga-chinese-levels` | 5.6 MB | 780 ms, on its first call |
-| `ga-chinese-hsk` | 5.7 MB | 600 ms, on its first call |
-
-A shard is split in two when its startup time or memory nears the limits, which `startup_time_ms` in the deployment output and production metrics show: topics move to a new file under `shards/`, a new entry under `apps/math-workers/src/shards/`, and a new binding. Which shard holds a topic is not stored in learner state, so this is safe at any time.
-
-Service binding calls add no request fee and no charge for duration; the CPU time of every Worker in a call is billed, and the hops add little. Each Worker writes its own logs, so one request could write three log events. The gateway and shards therefore log 1% of their invocations (`headSamplingRate`). The web Worker logs every request, and errors from the gateway and shards reach it through RPC.
+Each content package groups its topics in `content/<id>/src/shards/`, and `index.ts` puts the groups together: mathematics has five, one for each stretch of the curriculum, English one, `core`, and Chinese three, `core` (the native grades, heritage, the Gaokao and the reading units), `levels` (the nine levels of Chinese as a foreign language and their handwriting) and `hsk` (the HSK exam topics). The groups only organize the content; tests check that every topic is in exactly one. Which group holds a topic is not stored in learner state.
 
 ## 7. Storage
 
@@ -250,11 +225,11 @@ Service binding calls add no request fee and no charge for duration; the CPU tim
 - Completing a session appends the event, replaces the snapshot and closes the session in one transaction.
 - The snapshot row and the session row are locked (`SELECT … FOR UPDATE`) while they are read for writing. The unique `(learner, subject, seq)` index rejects any writer that slips past.
 - `SubmitAnswer` carries the index of the question it answers, so a repeated request is rejected instead of being judged twice.
-- **Answers judged by a model.** `SubmitAnswer` checks only the length, stores a pending `judgment`, keeps it in the runner state and returns `pending`. The client polls `GetJudgment`, which runs a judgment that is due inside the request, since a Worker's database connection closes with the response. One caller at a time holds a judgment by a lease of 30 seconds; a failed try waits 10 seconds, doubling up to 2 minutes, moves to the backup route after two tries, and fails for good after 10 minutes, when the learner may skip the question and the session ends with no event. A verdict of at least 0.75 of the criteria met counts as correct; a lower one sends the text back once for a rewrite with no model answer shown, and the second verdict counts either way. Only then is the event appended, so replay never calls a model.
+- **Answers judged by a model.** `SubmitAnswer` checks only the length, stores a pending `judgment`, keeps it in the runner state and returns `pending`. The client polls `GetJudgment`, which runs a judgment that is due inside the request. One caller at a time holds a judgment by a lease of 30 seconds; a failed try waits 10 seconds, doubling up to 2 minutes, moves to the backup route after two tries, and fails for good after 10 minutes, when the learner may skip the question and the session ends with no event. A verdict of at least 0.75 of the criteria met counts as correct; a lower one sends the text back once for a rewrite with no model answer shown, and the second verdict counts either way. Only then is the event appended, so replay never calls a model.
 - **Essays.** A whole essay ([Content §5](content.md#5-answers-and-checkers)) ends its session when handed in: `SubmitAnswer` stores the session as `submitted` with the judgment pending, and the learner may leave. The judgment runs when `GetJudgment` is polled from the essay's page, and otherwise in the quarter-hour scheduled run (`runEssays`), with up to 6 hours to succeed. Once it ends, the next request to the dashboard, the session or the judgment settles it: a verdict appends the lesson's event and completes the session with the verdict as its feedback, with no rewrite; a judgment that failed abandons the session with no event, and the lesson comes again. The dashboard lists essays still being judged and those judged in the last 7 days.
 - **A judged topic needs a route.** A course leaves out, for each learner, every topic judged by a model whose criteria do not all have a live route that may receive that learner's text ([Admin §5](admin.md#5-ai-services)); the compiler keeps any topic judged by rules from depending on or encompassing one.
 
-**Migrations** are generated by drizzle-kit from `libs/db/src/schema` into `libs/db/drizzle` and committed. Tests apply them to PGlite; deployments apply them with `pnpm nx run db:migrate`.
+**Migrations** are generated by drizzle-kit from `libs/db/src/schema` into `libs/db/drizzle` and committed. Tests apply them to PGlite; deployments apply them with the API image's `migrate` command, from the CronJob `migrate` (§6), and development with `pnpm nx run db:migrate`.
 
 ## 8. Appearance
 

@@ -28,15 +28,13 @@ This is the working guide for AI coding agents and contributors. It summarizes t
 
 ## Project Overview
 
-Great Academy is an adaptive learning platform for many subjects, starting with mathematics. Everything is TypeScript: a web app on Cloudflare Workers, native apps in TSX on Native Shell, and pure libraries for content and the learning engine. The one exception is the Python voice service of English, `apps/voice` ([docs/english-curriculum.md](docs/english-curriculum.md) §13.3).
+Great Academy is an adaptive learning platform for many subjects, starting with mathematics. Everything is TypeScript: a web app on Cloudflare Workers, an API server on Node in Kubernetes that serves every subject, native apps in TSX on Native Shell, and pure libraries for content and the learning engine. The one exception is the Python voice service of English, `apps/voice` ([docs/english-curriculum.md](docs/english-curriculum.md) §13.3).
 
 ## Directory Structure
 
 ```text
-apps/web/            TanStack Start on Cloudflare Workers: pages, Connect API, better-auth
-apps/math-workers/   The gateway and shard Workers of mathematics
-apps/english-workers/ The gateway and shard Workers of English
-apps/chinese-workers/ The gateway and shard Workers of Chinese
+apps/web/            TanStack Start on Cloudflare Workers: pages, static files, recordings
+apps/server/         The API server on Node: Connect API, better-auth, webhooks, every subject in-process
 apps/nsh/            Native Shell app in TSX: iOS, Android, macOS, Windows, Linux
 apps/voice/          The voice service of English: Python on Pipecat, managed by uv
 libs/content/        Content model, compiler, problem runtime, checkers (subject-agnostic)
@@ -45,7 +43,6 @@ libs/subject-math/   Mathematics checkers and generator helpers
 libs/subject-english/ English checkers and the content kit
 libs/subject-chinese/ Chinese checkers, pinyin, segmentation and the content kit
 libs/judge/          AI judgment of writing: prompts, the respond tool, checked verdicts, providers on pi-ai
-libs/subject-worker/ Worker entrypoints for any subject's gateway and shards
 libs/proto/          Protobuf contracts and generated TypeScript
 libs/api/            Connect services and the session runner
 libs/db/             Drizzle schema, migrations, repositories
@@ -58,8 +55,7 @@ tools/audit/         Content audit
 tools/pilot/         Pilot report from real answers
 tools/calibrate/     Calibration of AI routes against texts scored by people
 tools/audio/         Recordings of passages read aloud, made ahead of time
-deploy/voice/        Kustomize manifests of the voice service on Kubernetes
-deploy/postgres/     The Cloudflare Tunnel through which Hyperdrive reaches PostgreSQL
+deploy/k8s/          Kustomize manifests of the API server, its jobs and the voice service on Kubernetes
 ```
 
 ## Commands
@@ -100,7 +96,7 @@ Every package declares its targets as `package.json` scripts (`typecheck`, `test
 - Vitest everywhere; tests sit next to the code as `*.test.ts`.
 - Engine rules are tested with explicit times and seeds; no test depends on the wall clock.
 - Database tests run on PGlite; no test needs a running server.
-- `apps/voice` uses pytest, pyright and ruff through `uv run`, with exact versions in `pyproject.toml` and `uv.lock`; its tests fake the speech services and the web Worker and need no network ([docs/development.md](docs/development.md) §7).
+- `apps/voice` uses pytest, pyright and ruff through `uv run`, with exact versions in `pyproject.toml` and `uv.lock`; its tests fake the speech services and the API server and need no network ([docs/development.md](docs/development.md) §7).
 
 ## Documentation
 

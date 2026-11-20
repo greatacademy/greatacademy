@@ -10,11 +10,11 @@
 | :--- | :--- |
 | `levels.py` | 按 CEFR 等级或年级确定学习者回合内最长的停顿 |
 | `turns.py` | 回合结束、打断和会话时长上限（20 分钟），是带显式时间的普通状态 |
-| `conversation.py` | Pipecat 处理器：轮流说话，向 Web Worker 询问导师要说的话，并结束会话 |
+| `conversation.py` | Pipecat 处理器：轮流说话，向 API 询问导师要说的话，并结束会话 |
 | `session.py` | 管道（传输、语音活动检测、语音转文字、对话、文字转语音）和结果写入 |
 | `speech.py` | `SpeechServices` 接口，以及用于测试和本地开发的模拟实现；代码中不选定服务商 |
-| `worker_client.py` | `WorkerClient` 接口：导师的下一回合，以及按会话 id 幂等写入的结果 |
-| `tickets.py` | Web Worker 签发的 Ed25519 票据：约 60 秒有效，只能使用一次 |
+| `api_client.py` | `ApiClient` 接口：导师的下一回合，以及按会话 id 幂等写入的结果 |
+| `tickets.py` | API 签发的 Ed25519 票据：约 60 秒有效，只能使用一次 |
 | `messages.py`、`serializer.py` | WebSocket 消息及其 Pipecat 序列化器 |
 | `drain.py`、`server.py`、`main.py` | 容量、就绪状态、`SIGTERM` 排空、FastAPI 服务器及其配置 |
 
@@ -40,4 +40,4 @@
 
 ## 隐私
 
-音频和转写文本只保存在内存中，只发给语音服务和 Web Worker。日志中两者都没有：服务只记录事件名和错误类型，Pipecat 的日志只保留警告及以上级别。
+音频和转写文本只保存在内存中，只发给语音服务和 API。日志中两者都没有：服务只记录事件名和错误类型，Pipecat 的日志只保留警告及以上级别。

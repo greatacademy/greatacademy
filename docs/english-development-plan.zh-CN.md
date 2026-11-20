@@ -25,7 +25,7 @@ G0 ─► E1 首个切片 ─► G1 ─┬─► E2 阅读 ───────
 
 **每个里程碑都遵守的规则。**
 
-- 每个阶段都不影响数学：数学的测试、Worker 和学习者状态与之前一样。
+- 每个阶段都不影响数学：数学的测试、内容和学习者状态与之前一样。
 - 阶段不需要的东西不提前构建。首个切片没有 AI、音频或新的 Cloudflare 产品。
 - 标为*初始值*的阈值是有待数据确认的第一版数值，和引擎参数一样。
 - 工作只估规模，不定日期，因为最长的等待来自人：**S** 是一个包内的几次提交，**M** 跨多个包，**L** 是新服务或大量内容。
@@ -35,7 +35,7 @@ G0 ─► E1 首个切片 ─► G1 ─┬─► E2 阅读 ───────
 
 | 编号 | 工作 | 规模 | 完成标准 |
 | :--- | :--- | :--- | :--- |
-| E0.1 | 把 Web 和数学 Worker 部署到 Cloudflare；已于 2026-11-10 部署，课程和测量尚待完成 | M | 测试账号在生产环境完成一节课，并测得启动时间、内存和 Worker 之间的延迟（[路线图 §2](roadmap.zh-CN.md#2-风险与待定事项)） |
+| E0.1 | 把网站 Worker 部署到 Cloudflare，用 `deploy/k8s` 把 API 服务器部署到集群；课程和测量尚待完成 | M | 测试账号在生产环境完成一节课，并测得 API 服务器的启动时间、内存和延迟（[路线图 §2](roadmap.zh-CN.md#2-风险与待定事项)） |
 | E0.2 | 找一位 3 到 8 年级的英语教师审核内容，以及一位中文讲解的审核者 | S | 具体人员已同意 |
 | E0.3 | 就每个[首批市场](minors-data.zh-CN.md#4-市场的行)中未成年人的文本和录音征求法律意见 | S | 拿到关于同意、保留期限和供应商的书面意见，回答[未成年人数据](minors-data.zh-CN.md#13-代码中的执行以及各项何时具备)中的问题；语音和 AI 阶段依赖它 |
 | E0.4 | 确定第一门课程的 ID 和名称。课程 ID 跨学科唯一，且永不改变 | S | ID（建议 `english-grammar-writing`）已写入本文 |
@@ -56,11 +56,10 @@ G0 ─► E1 首个切片 ─► G1 ─┬─► E2 阅读 ───────
 | 学科的检查器和辅助函数 | 新建 `libs/subject-english` |
 | 内容包，包含 `compileEnglish()`、分片和测试 | 新建 `content/english`，参照 `content/math` |
 | 认领和交接课程 | 新建 `content/english/PROGRESS.md` |
-| 网关和一个分片，即 `ga-english` 和 `ga-english-core`；`generate` 写入清单 | 新建 `apps/english-workers`，参照 `apps/math-workers` |
-| 绑定 `SUBJECT_ENGLISH` 及其网关 | `apps/web/cloudflare.config.ts`、`apps/web/src/server/handler.ts`、`apps/web/vite.config.ts`、`apps/web/package.json` |
+| 在 API 服务器中与数学一起编译该学科 | `apps/server/src/main.ts`、`apps/server/package.json` |
 | 只认识数学的工具改为接受学科参数 | `tools/simulate`、`tools/audit`（`compileMath`、`docs/math-courses`），大纲放在新建的 `docs/english-courses` |
 
-**完成标准：** 含两个占位主题的课程与数学一起出现在目录中，能在 `cf dev` 中完成一节课，并且两个学科同时加载在一个 isolate 中时不超内存限制（`Registry` 在内存中保留两个学科）。
+**完成标准：** 含两个占位主题的课程与数学一起出现在目录中，在开发环境中对着 API 服务器能完成一节课，两个学科编译在它的同一个进程中（`Registry` 保留最近使用的两个学科的索引）。
 
 ### E1.2 核心改动（M）
 
@@ -128,7 +127,7 @@ E2 和 E3 彼此独立，可以同时进行。先用一次简短的技术验证�
 | 技术验证 | 完成标准 |
 | :--- | :--- |
 | `cf` 能否声明 AI 绑定和 Rate Limiting | 已部署到测试 Worker，或选定并记录替代方案 |
-| pi-ai 在 Workers 上通过 AI Gateway 和 AI 绑定对接真实供应商 | 用真实模型检查工具调用、无效参数、取消和流式传输；测得包体积和启动时间 |
+| pi-ai 在 API 服务器中通过 AI Gateway 对接真实供应商 | 用真实模型检查工具调用、无效参数、取消和流式传输；测得包体积和启动时间 |
 
 ### E2. 分级阅读与知识（L）
 
@@ -150,7 +149,7 @@ E2 和 E3 彼此独立，可以同时进行。先用一次简短的技术验证�
 | 编号 | 工作 | 文件 |
 | :--- | :--- | :--- |
 | E3.1 | 标准、路由、提示词和 `respond` 工具；每条引用都必须能在学习者文本中找到，否则结果被拒绝；用 `faux` 测试 | 新建 `libs/judge` |
-| E3.2 | 学习者轮询时在 Web Worker 中判定：每次判定一个租约、重试、已校准的备用路由、时间上限 | `libs/api` |
+| E3.2 | 学习者轮询时在 API 服务器中判定：每次判定一个租约、重试、已校准的备用路由、时间上限 | `libs/api` |
 | E3.3 | 表 `judgment`：回答、状态、标准和引用、标准版本、模型、提示词版本、token、成本。`answer` 增加待判定状态和分数 | `libs/db` |
 | E3.4 | AI 判定题的 `SubmitAnswer` 返回待判定，`GetSession` 显示判定结果。会话等待结果。事件只在有结果时追加，因此回放不会调用模型 | `libs/proto`、`libs/api` |
 | E3.5 | 没有 `canonical` 答案但有范文的题型；按级别设长度上限，取代 `CheckerRegistry` 中的 2000 字符 | `libs/content` |
@@ -212,7 +211,7 @@ W6 属于 E7。
 
 E4.3 和 E4.11 的听力部分：两个应用中，题目都能在作答之前播放录音，录音的内容到解答时才显示。A1 前五个单元各有一个音对主题，分辨说汉语的人容易混淆的音：*ship* 和 *sheep*、*bad* 和 *bed*、*light* 和 *right*、*think* 和 *sink*、*win* 和 *wing*。A1 到 B2 的每个单元都有一个听力主题：句子里说到了本单元的哪个词，以及就本单元主题的简短对话和通知回答问题，共 1,838 段，由一个女声和一个男声朗读。母语 1 到 12 年级中，98 个带阅读单元的单元各有一个听力主题，不显示原文，播放本单元篇章的朗读并提出篇章的问题。只要题目播放的录音有一条缺失，测试就失败。
 
-E4.4 到 E4.7 和 E4.11 的口语部分：口语题的答案是一段录音，即随 `SubmitAnswer` 发送的不超过 30 秒的 16 kHz 单声道 WAV；Worker 在请求之内让该学习者的语音路由听取它，不在任何地方保存；听到的文字作为答案的回答，30 天后清空，调用按秒数记录（[内容 §5](content.zh-CN.md#5-答案与判定器)）。短于 0.2 秒、服务未能听取、没有听出词、或置信度低于 0.5 且听到的词会被判错的录音会请学习者重录，不计任何结果（服务对说得清楚的单个词也常常没有把握，所以听对了就算数，无论置信度如何）；学习者每分钟最多发送 12 段，每天 300 段。两个应用都能录音、回放并发送；学习者可以表示现在不方便说话，当天关闭或关闭到再次打开，正在等待口语题的会话随之结束，不计任何结果。A1 到 B2 的每个单元在听力之后有两个口语主题：跟着录音说出本单元的词、大声朗读本单元的句子（S2、S3），然后用给定的词、以完整句子开口回答本单元主题的问题（S4），共 92 个主题。母语各年级中，每个单元的听力之后是一个朗读主题（S3）：先是 6 到 24 个词的句子，再是取自篇章、25 到 45 个词的段落，用说话的语速朗读；不练发音。语音路由只有在校准、供应商登记表和学习者的 `speech` 同意都允许时才生效。E4.5 在 `tools/calibrate` 中完成，用的是 200 个带有学习者错误的合成句子及其改正句，每句都按听到的内容对照本想说的句子判题，与判口语答案相同：Azure AI Speech 保留了 98.5% 的错误（79% 逐字听对；“The boy want” 和 “We buyed” 两句被听成了正确的句子），正确的句子 98.5% 被判对，因此它通过了测试，属于 `verbatim` 的开口回答可以通过它提供；学习者的录音仍待收集。E4.6 的比较已能运行，标准是 `pronunciation:<语言>`，但还缺由人评分的片段，这些片段需要 `research` 同意及其表单；在某个供应商通过之前，跟读以识别目标词来检查，即计划允许的替代办法。口语相关的文本已写入隐私声明、儿童声明、保存期限表和研究表单，作为草稿等待律师审阅（[未成年人数据](minors-data.zh-CN.md#9-文本与语音)）。
+E4.4 到 E4.7 和 E4.11 的口语部分：口语题的答案是一段录音，即随 `SubmitAnswer` 发送的不超过 30 秒的 16 kHz 单声道 WAV；API 服务器在请求之内让该学习者的语音路由听取它，不在任何地方保存；听到的文字作为答案的回答，30 天后清空，调用按秒数记录（[内容 §5](content.zh-CN.md#5-答案与判定器)）。短于 0.2 秒、服务未能听取、没有听出词、或置信度低于 0.5 且听到的词会被判错的录音会请学习者重录，不计任何结果（服务对说得清楚的单个词也常常没有把握，所以听对了就算数，无论置信度如何）；学习者每分钟最多发送 12 段，每天 300 段。两个应用都能录音、回放并发送；学习者可以表示现在不方便说话，当天关闭或关闭到再次打开，正在等待口语题的会话随之结束，不计任何结果。A1 到 B2 的每个单元在听力之后有两个口语主题：跟着录音说出本单元的词、大声朗读本单元的句子（S2、S3），然后用给定的词、以完整句子开口回答本单元主题的问题（S4），共 92 个主题。母语各年级中，每个单元的听力之后是一个朗读主题（S3）：先是 6 到 24 个词的句子，再是取自篇章、25 到 45 个词的段落，用说话的语速朗读；不练发音。语音路由只有在校准、供应商登记表和学习者的 `speech` 同意都允许时才生效。E4.5 在 `tools/calibrate` 中完成，用的是 200 个带有学习者错误的合成句子及其改正句，每句都按听到的内容对照本想说的句子判题，与判口语答案相同：Azure AI Speech 保留了 98.5% 的错误（79% 逐字听对；“The boy want” 和 “We buyed” 两句被听成了正确的句子），正确的句子 98.5% 被判对，因此它通过了测试，属于 `verbatim` 的开口回答可以通过它提供；学习者的录音仍待收集。E4.6 的比较已能运行，标准是 `pronunciation:<语言>`，但还缺由人评分的片段，这些片段需要 `research` 同意及其表单；在某个供应商通过之前，跟读以识别目标词来检查，即计划允许的替代办法。口语相关的文本已写入隐私声明、儿童声明、保存期限表和研究表单，作为草稿等待律师审阅（[未成年人数据](minors-data.zh-CN.md#9-文本与语音)）。
 
 **关卡 G3。** 学习者在外部测试中有进步，有口音但听得懂的语音很少被拒绝（低于 5%，*初始值*），所服务的每个市场都已完成录音的法律审查。之后 C1 和 C2 按设计并入母语课程。
 
@@ -229,20 +228,20 @@ E4.4 到 E4.7 和 E4.11 的口语部分：口语题的答案是一段录音，�
 | E5.3 | `apps/voice`，使用 uv 和固定版本的 Python；`package.json` 脚本运行 pytest、ruff 和 pyright，让 Nx 像对待其他项目一样识别它 | `apps/voice`、`mise.toml` | `pnpm nx run-many -t typecheck test lint` 包含它 |
 | E5.4 | 使用伪造语音服务的流水线：语音活动、一轮结束、打断、按级别设置的最长停顿、会话时长限制 | `apps/voice` | 不联网也能通过测试 |
 | E5.5 | 票据、服务凭据和会话的消息；结果写入幂等 | `libs/proto`、`libs/api`、`apps/voice` | 过期、伪造和重复使用的票据都被拒绝 |
-| E5.6 | `compose.yaml` 中的 `voice`；会话期间的 `SIGTERM` 测试；连接 `cf dev` 和真实服务的对话，**只用容器** | `compose.yaml` | 停止容器时拒绝新会话，并让当前会话结束 |
+| E5.6 | `compose.yaml` 中的 `voice`；会话期间的 `SIGTERM` 测试；连接本地运行的 API 服务器、网站和真实服务的对话，**只用容器** | `compose.yaml` | 停止容器时拒绝新会话，并让当前会话结束 |
 | E5.7 | Web 上的对话播放器，包括麦克风检查、字幕和会话结束总结 | `apps/web` | 本地能端到端完成一次会话 |
 | E5.8 | 内含权重的镜像；按摘要构建和推送的脚本。仓库目前没有 CI，所以先用 `mise` 任务 | `apps/voice`、`mise.toml` | 镜像启动时不下载任何东西 |
-| E5.9 | `deploy/voice`：base 和 overlay，包含 Deployment、KEDA、PodDisruptionBudget、NetworkPolicy 和 `cloudflared`；本地只渲染和校验 | `deploy/voice` | `kubectl kustomize` 和结构校验通过 |
-| E5.10 | 集群的测试命名空间：Tunnel、密钥、会话期间发布、排空时缩容 | 集群 | 发布不丢失运行中的会话 |
-| E5.11 | 压测每个 Pod 的会话数；WebSocket 经 Tunnel 保持 20 分钟的稳定性；移动网络测量；决定是否需要 WebRTC | 集群 | 记录容量，把传输决定写入设计 |
+| E5.9 | `deploy/k8s`：与 API 服务器并列的语音服务 Deployment、KEDA、PodDisruptionBudget、NetworkPolicy 和 Ingress；本地只渲染和校验 | `deploy/k8s` | `kubectl kustomize` 和结构校验通过 |
+| E5.10 | 集群上的命名空间 `greatacademy`：密钥、会话期间发布、排空时缩容 | 集群 | 发布不丢失运行中的会话 |
+| E5.11 | 压测每个 Pod 的会话数；WebSocket 经 Cloudflare 和 ingress-nginx 保持 20 分钟的稳定性；移动网络测量；决定是否需要 WebRTC | 集群 | 记录容量，把传输决定写入设计 |
 | E5.12 | 用录制的测试对话校准 S6 的评分标准；增加限额和成本 | `tools/calibrate` | 路由通过校准 |
-| E5.13 | 生产 overlay，先小范围学习者，再扩大；对会话、延迟、错误和成本设告警 | `deploy/voice` | 在选定时间内保持稳定，并测得每分钟成本 |
+| E5.13 | 生产环境，先小范围学习者，再扩大；对会话、延迟、错误和成本设告警 | `deploy/k8s` | 在选定时间内保持稳定，并测得每分钟成本 |
 
-**集群。** Hetzner Cloud 希尔斯伯勒区域 Talos 上的 Kubernetes 1.33，用 Terraform 搭建，带有 Cilium、kube-prometheus-stack 和 KEDA 2.20；镜像放在 GHCR 的 `ghcr.io/greatacademy/voice`；Secret 用 `kubectl` 手动创建（[deploy/voice](../deploy/voice/README.zh-CN.md)）。
+**集群。** Hetzner Cloud 希尔斯伯勒区域 Talos 上的 Kubernetes 1.33，用 Terraform 搭建，带有 Cilium、kube-prometheus-stack 和 KEDA 2.20；镜像放在 GHCR 的 `ghcr.io/greatacademy/api` 和 `ghcr.io/greatacademy/voice`；Secret 由 `deploy/k8s/keys.py` 创建（[deploy/k8s](../deploy/k8s/README.zh-CN.md)）。
 
-**已完成。** E5.8 和 E5.9：`mise run voice:push <overlay>` 从已提交的代码为 `linux/amd64` 构建镜像、推送，并把 overlay 固定到它的 digest，镜像在无网络时也能启动；`mise run voice:check` 渲染 `test` 和 `production` 两个 overlay，并用 kubeconform 校验，包括 KEDA 和 Prometheus Operator 的资源。KEDA 按 `voice_sessions_active` 扩缩，每个 pod 在 `/metrics` 报告它。E5.10 中，测试命名空间 `ga-voice-test` 在它的 Tunnel 后运行一个使用脚本化语音的 pod，Tunnel 只放行 `/v1/conversation`；不是由 Web Worker 的密钥签发的票据在那里被拒绝。会话期间的滚动更新要等 E5.5 和 E5.7 部署之后。
+**已完成。** E5.8 和 E5.9：`mise run k8s:push` 从已提交的代码为 `linux/amd64` 构建镜像、推送，并把 `deploy/k8s/kustomization.yaml` 固定到它们的 digest，语音镜像在无网络时也能启动；`mise run k8s:check` 渲染命名空间，并用 kubeconform 校验，包括 KEDA 和 Prometheus Operator 的资源。KEDA 按 `voice_sessions_active` 扩缩，每个 pod 在 `/metrics` 报告它。Ingress 在 `voice.greatacademy.dev` 上只放行 `/v1/conversation`，不是由 API 服务器的密钥签发的票据会被服务拒绝。会话期间的滚动更新要等 E5.5 和 E5.7 部署之后。
 
-E5.5 和 E5.7：内容模型有了对话（`ConversationDef`），英语在“语法与句子写作”中提供一段测试对话 `library-help-desk`。`ConversationService` 列出课程的对话以及每段当前能否进行，用 Worker 的 Ed25519 密钥签发票据（原始 32 字节，即 `ga_voice.devkeys` 打印的格式，或 PKCS #8），并展示会话结果；语音服务带着凭据调用 `POST /voice/v1/turn` 和 `PUT /voice/v1/sessions/{id}/result`。导师的台词来自 `libs/judge` 的 `converse`，提示词为 `conversation-1`，学习者的话经过脱敏并作为数据围起来。只有成年人能使用对话，并且需要用途为 `conversation` 的、已上线、已校准、有价格的路由；未成年人不会被询问 `conversation` 授权。Web 播放器在 `/$subject/talk/$conversationId`，用音量条检查麦克风，实时显示字幕，结束时显示原因、学习者说话的次数和对话记录。一次对话已在本地端到端跑通：无头 Chrome 播放录好的麦克风声音，compose 中的语音服务使用脚本化语音，`cf dev`，以及一个替身模型。应用中有同样的播放器（`apps/nsh/screens/Talk.tsx`），麦克风和扬声器在应用自己的 crate `apps/nsh/native/voice` 中：iOS 用开启语音处理的 AVAudioEngine，Android 用同一会话上的 AudioRecord 和 AudioTrack 并开启回声消除。
+E5.5 和 E5.7：内容模型有了对话（`ConversationDef`），英语在“语法与句子写作”中提供一段测试对话 `library-help-desk`。`ConversationService` 列出课程的对话以及每段当前能否进行，用 API 服务器的 Ed25519 密钥签发票据（原始 32 字节，即 `ga_voice.devkeys` 打印的格式，或 PKCS #8），并展示会话结果；语音服务带着凭据调用 `POST /voice/v1/turn` 和 `PUT /voice/v1/sessions/{id}/result`。导师的台词来自 `libs/judge` 的 `converse`，提示词为 `conversation-1`，学习者的话经过脱敏并作为数据围起来。只有成年人能使用对话，并且需要用途为 `conversation` 的、已上线、已校准、有价格的路由；未成年人不会被询问 `conversation` 授权。Web 播放器在 `/$subject/talk/$conversationId`，用音量条检查麦克风，实时显示字幕，结束时显示原因、学习者说话的次数和对话记录。一次对话已在本地端到端跑通：无头 Chrome 播放录好的麦克风声音，compose 中的语音服务使用脚本化语音，开发环境中的 API 服务器和网站，以及一个替身模型。应用中有同样的播放器（`apps/nsh/screens/Talk.tsx`），麦克风和扬声器在应用自己的 crate `apps/nsh/native/voice` 中：iOS 用开启语音处理的 AVAudioEngine，Android 用同一会话上的 AudioRecord 和 AudioTrack 并开启回声消除。
 
 ### E6. 自然拼读（L）
 

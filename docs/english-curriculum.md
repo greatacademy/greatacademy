@@ -142,7 +142,7 @@ A unit's last task is a conversation with the AI tutor that needs the unit's wor
 
 ## 7. Content Model
 
-The core stays subject-agnostic. `libs/subject-english` holds the checkers and `content/english` the content, with Workers of their own as for mathematics. English needs these additions:
+The core stays subject-agnostic. `libs/subject-english` holds the checkers and `content/english` the content, compiled into the API server beside mathematics. English needs these additions:
 
 - **Language of explanation.** A course chooses it. Native courses explain in English whatever the interface language; foreign-language courses may explain in Chinese. Every explanation still exists in both locales, and English being learned is written with `same`.
 - **Audience.** A knowledge point can hold examples for different audiences, so that an adult beginner does not read sentences written for an eight-year-old.
@@ -314,7 +314,7 @@ A model answers by calling a `respond` tool whose schema holds the criteria and 
 
 **What the administrator sets:**
 
-- **Providers:** a named vendor from pi-ai's catalog, or an API and base URL given by hand, with the API key. Keys are encrypted with a key held in Worker secrets and can be replaced but never read back.
+- **Providers:** a named vendor from pi-ai's catalog, or an API and base URL given by hand, with the API key. Keys are encrypted with a key held in the API server's Secret (`AI_KEYS_SECRET`) and can be replaced but never read back.
 - **Routes:** for each use, the model and a backup: per criterion for judgment and per conversation for S6, with a prompt version, and per language for speech-to-text, text-to-speech and pronunciation scoring.
 - **The vendor register** of [Minors' Data](minors-data.md#12-vendors): for each provider, the markets it serves, its terms for minors, its retention, and the date checked.
 
@@ -337,24 +337,24 @@ Speech-to-text may silently correct a learner's grammar, which would hide the er
 
 ### 13.3 The Voice Service
 
-Conversation in S6 runs on **Pipecat** in `apps/voice`, the one part of the platform that is not TypeScript: it is a long-lived Python process, which Workers cannot run. It follows the voice plugin of the Mavio project.
+Conversation in S6 runs on **Pipecat** in `apps/voice`, the one part of the platform that is not TypeScript: it is a long-lived Python process beside the API server on the cluster. It follows the voice plugin of the Mavio project.
 
 ```text
-client ──wss with a short-lived ticket──► Cloudflare ──Tunnel──► apps/voice on Kubernetes
-   │                                                                │
-   └──asks the web Worker for a ticket                              ├─► speech-to-text, text-to-speech
-                                                                    └─► web Worker: model answers, results
+client ──wss with a short-lived ticket──► Cloudflare ──ingress-nginx──► apps/voice on Kubernetes
+   │                                                                     │
+   └──asks the API server for a ticket                                   ├─► speech-to-text, text-to-speech
+                                                                         └─► API server: model answers, results
 ```
 
-- **Pipeline.** Pipecat handles voice activity (Silero), the end of a turn, interruption and the speech services. The services are not configured in the service: at the start of each session it asks the Worker which speech-to-text and text-to-speech its routes name, with the key, and refuses the session when none qualifies (`VOICE_SPEECH=worker`); Azure AI Speech is the one vendor it speaks to so far. It has no LLM service: answers come from the Worker through pi-ai, so that every model call is in one place. Learners pause longer than native speakers, so the longest pause in a turn is set by level.
+- **Pipeline.** Pipecat handles voice activity (Silero), the end of a turn, interruption and the speech services. The services are not configured in the service: at the start of each session it asks the API server which speech-to-text and text-to-speech its routes name, with the key, and refuses the session when none qualifies (`VOICE_SPEECH=api`); Azure AI Speech is the one vendor it speaks to so far. It has no LLM service: answers come from the API server through pi-ai, so that every model call is in one place. Learners pause longer than native speakers, so the longest pause in a turn is set by level.
 - **Project.** Python and uv are pinned in `mise.toml`, with pytest, ruff and pyright. Pipecat is pinned exactly (1.15.0 is current). The image holds the model weights, so that a first session downloads nothing.
-- **Tickets.** The Worker signs a ticket valid for about 60 seconds that names the learner, course and session; the service checks it with a public key. The service calls the Worker with its own credential, and writing a result is idempotent by session id.
-- **Turns.** The service sends the Worker the conversation so far and gets the tutor's next line and whether it ends; the first line is the conversation's opening, with no model call, which the service plays from its recording made ahead of time ([Content §11](content.md#11-english)) and speaks only when the recording cannot be fetched. The Worker plays the conversation's scenario through the route of use `conversation`, primary then backup, and ends it after 40 turns or once its minutes have passed. A learner has at most 10 conversations a day.
+- **Tickets.** The API server signs a ticket valid for about 60 seconds that names the learner, course and session; the service checks it with a public key. The service calls the API server inside the cluster (`VOICE_API_URL`) with its own credential, and writing a result is idempotent by session id.
+- **Turns.** The service sends the API server the conversation so far and gets the tutor's next line and whether it ends; the first line is the conversation's opening, with no model call, which the service plays from its recording made ahead of time, fetched from the site (`VOICE_AUDIO_URL`, [Content §11](content.md#11-english)), and speaks only when the recording cannot be fetched. The API server plays the conversation's scenario through the route of use `conversation`, primary then backup, and ends it after 40 turns or once its minutes have passed. A learner has at most 10 conversations a day.
 - **Transport.** A WebSocket, which needs no UDP on the pods: 16-bit mono PCM at 16 kHz as binary messages both ways, and JSON text messages for the rest (`apps/voice/src/ga_voice/messages.py`). If measurements on real mobile networks across regions fall short, the transport changes to WebRTC through Cloudflare's TURN; the pipeline does not depend on it.
-- **Privacy.** Pods have no persistent volume and keep no audio, and logs hold no transcripts. The Worker keeps a session's transcript for 30 days, and never a child's.
+- **Privacy.** Pods have no persistent volume and keep no audio, and logs hold no transcripts. The API server keeps a session's transcript for 30 days, and never a child's.
 - **Clients.** The web client follows Mavio's: an AudioContext at the device's rate made in the learner's press, a worklet that averages down to 16 kHz in 20 ms frames, the tutor played through the same context so that the browser's echo cancellation removes it, a silent microphone replaced by another, and what is said before the socket opens held and sent once it does. The apps take 16 kHz PCM from their own crate, `apps/nsh/native/voice`, which JavaScript polls every 40 ms: on iOS an AVAudioEngine in a voice-chat session with voice processing on, the input averaged down to 16 kHz and the tutor played by a player node on the same engine; on Android an AudioRecord from the voice-communication source with the device's echo canceler and noise suppressor, and an AudioTrack for voice communication on the record's session, routed to the speaker while no headset is on. An interruption drops what was queued, and the microphone closes only once the tutor's last words have played.
 
-Production runs on a Kubernetes cluster on Hetzner Cloud in Hillsboro, beside PostgreSQL ([Architecture §6](architecture.md#6-deployment)), with manifests in `deploy/voice` as a Kustomize base and overlays:
+Production runs on a Kubernetes cluster on Hetzner Cloud in Hillsboro, beside PostgreSQL ([Architecture §6](architecture.md#6-deployment)), with manifests in `deploy/k8s` beside the API server's, in the namespace `greatacademy` ([deploy/k8s](../deploy/k8s/README.md)). The hostname `voice.greatacademy.dev` is proxied by Cloudflare and reaches the pods through ingress-nginx, which admits only `/v1/conversation`:
 
 | Concern | Design |
 | :--- | :--- |
@@ -363,20 +363,20 @@ Production runs on a Kubernetes cluster on Hetzner Cloud in Hillsboro, beside Po
 | Scaling | KEDA on the number of active sessions, not on CPU: each pod reports `voice_sessions_active` at `/metrics`, and Prometheus sums it |
 | Session length | Limited by the product, starting at 20 minutes |
 | Rollout and scale-down | On `SIGTERM` a pod refuses new sessions and waits for the running ones, after a short `preStop` pause that lets traffic move away; `terminationGracePeriodSeconds` is 25 minutes |
-| Safety | A PodDisruptionBudget, a NetworkPolicy admitting only the Tunnel and limiting egress to DNS and public HTTPS, keys in Secrets, a read-only filesystem as a user without privileges |
+| Safety | A PodDisruptionBudget, a NetworkPolicy admitting only ingress-nginx and Prometheus and limiting egress to DNS, the API server and public HTTPS, keys in Secrets, a read-only filesystem as a user without privileges |
 | Resources | CPU only, since the speech services are in the cloud |
 
 ### 13.4 Cloudflare Services
 
 | Stage | Service | Use |
 | :--- | :--- | :--- |
-| First slice | Workers | The gateway and shards of English; no new product |
-| Writing | Workers | Judgment in the web Worker while the learner waits, with retries, leases and progress kept in the `judgment` table, so no Workflow is needed |
+| First slice | Workers | The site's pages; English itself is served by the API server, so no new product |
+| Writing | None | Judgment in the API server while the learner waits, with retries, leases and progress kept in the `judgment` table, so no Workflow is needed |
 | Writing | AI Gateway | Logs, cost and limits for model calls; no caching of judgments, and no logging of text by minors |
 | Writing | Rate Limiting | Limits on abuse and cost |
 | Speech | R2 | Audio of prompts, and recordings kept briefly and deleted by a lifecycle rule |
 | Speech | Workers AI | Speech-to-text, if it does as well as the provider's own API |
-| Conversation | Tunnel | Reaches the cluster with no inbound port |
+| Conversation | Proxied DNS | `voice.greatacademy.dev` reaches the cluster only through Cloudflare |
 | Conversation | WAF and rate limiting rules | Protect the voice hostname |
 | Conversation | Realtime TURN | Only if the transport becomes WebRTC |
 
@@ -384,16 +384,16 @@ Production runs on a Kubernetes cluster on Hetzner Cloud in Hillsboro, beside Po
 
 Local tests use **containers only, not Kubernetes**.
 
-- `compose.yaml` gains a `voice` service beside PostgreSQL, built from the production image, and it reaches `cf dev` on the host.
+- `compose.yaml` gains a `voice` service beside PostgreSQL, built from the production image, and it reaches the API server (`pnpm nx run server:dev`) and the site on the host.
 - Tests run the pipeline with faked speech services, and real services are used with development keys from an ignored file.
 - Draining is tested by stopping the container during a session: `SIGTERM` must refuse new sessions and let the running one finish.
-- Manifests are only rendered and validated locally. They first run in a test namespace on the cluster.
+- Manifests are only rendered and validated locally (`mise run k8s:check`). They first run on the cluster.
 
 ### 13.6 To Confirm Before Building
 
 - That the `cf` command line can declare R2 lifecycle rules and the AI binding.
-- That pi-ai works against real providers on Workers. It has so far passed in workerd only against mocked responses, including streaming tool calls for Anthropic, OpenAI and Google.
-- That a WebSocket stays stable through Tunnel for the length of a session.
+- That pi-ai works against real providers in the API server. It has so far passed only against mocked responses, including streaming tool calls for Anthropic, OpenAI and Google.
+- That a WebSocket stays stable through Cloudflare's proxy and ingress-nginx for the length of a session.
 - The latency for learners far from Hillsboro, the cluster's one region, which the measurements above must cover.
 
 ## 14. Risks

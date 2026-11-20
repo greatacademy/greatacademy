@@ -29,7 +29,7 @@ Renders the namespace and validates it with kubeconform against the Kubernetes s
 
 The cluster runs Kubernetes 1.33 on Talos in `hil` and is managed from the workstation's cluster folder. These come with it:
 
-- ingress-nginx, class `nginx`, behind a Hetzner load balancer with the PROXY protocol, so that nginx sees the address that connected: Cloudflare's edge, since both hostnames are proxied. Each Ingress allows only Cloudflare's address ranges, so nothing reaches the cluster around Cloudflare, and the API trusts `CF-Connecting-IP` for the client's address.
+- ingress-nginx, class `nginx`, behind a Hetzner load balancer. Both hostnames are proxied by Cloudflare, and the API takes the client's address from `CF-Connecting-IP`. nginx sees every request as coming from 127.0.0.1, so an Ingress cannot allow addresses by source.
 - cert-manager with the ClusterIssuer `letsencrypt-prod-issuer`, which solves DNS-01 in Cloudflare, and external-dns, which writes a proxied record for each Ingress host. Both list `greatacademy.dev` among their zones.
 - The PostgreSQL cluster `pg-cluster` of CloudNativePG in `cnpg-system`, with the database `greatacademy` and its role in the Secret `pg-cluster-greatacademy`.
 - KEDA 2.20 in `keda`, kube-prometheus-stack in `monitoring` (its Prometheus selects PodMonitors labeled `release: kube-prometheus-stack`), and Cilium, which enforces NetworkPolicies.

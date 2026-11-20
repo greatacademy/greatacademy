@@ -142,7 +142,7 @@
 
 ## 7. 内容模型
 
-核心仍然不涉及具体学科。`libs/subject-english` 存放判定器，`content/english` 存放内容，并像数学一样有自己的 Worker。英语需要增加：
+核心仍然不涉及具体学科。`libs/subject-english` 存放判定器，`content/english` 存放内容，与数学一起编译进 API 服务器。英语需要增加：
 
 - **讲解语言。** 由课程选择。母语课程不论界面语言都用英语讲解，外语课程可以用中文讲解。每段讲解仍然具备两种语言，正在学习的英语用 `same` 书写。
 - **面向人群。** 一个 knowledge point 可以为不同人群准备不同的例子，成人初学者不必读写给八岁孩子的句子。
@@ -314,7 +314,7 @@
 
 **管理员设置的内容：**
 
-- **供应商：** pi-ai 目录中的具名供应商，或手动填写的 API 和基础 URL，以及 API 密钥。密钥用保存在 Worker secrets 中的密钥加密，可以替换，但不能读回。
+- **供应商：** pi-ai 目录中的具名供应商，或手动填写的 API 和基础 URL，以及 API 密钥。密钥用保存在 API 服务器 Secret 中的密钥（`AI_KEYS_SECRET`）加密，可以替换，但不能读回。
 - **路由：** 为每项用途设置模型和备用路由：写作批改按标准、S6 按对话，并带提示词版本；语音转文字、文字转语音和发音评分按语言。
 - **[未成年人数据](minors-data.zh-CN.md#12-供应商)的供应商登记表：** 每家供应商服务的市场、关于未成年人的条款、保留期限和核查日期。
 
@@ -337,24 +337,24 @@ S2 到 S5 录音后用普通请求提交：录音最长 30 秒，为 16 kHz 单�
 
 ### 13.3 语音服务
 
-S6 的对话运行在 `apps/voice` 的 **Pipecat** 上。它是平台中唯一不用 TypeScript 的部分：这是长期运行的 Python 进程，Workers 无法运行。它参照 Mavio 项目的语音插件。
+S6 的对话运行在 `apps/voice` 的 **Pipecat** 上。它是平台中唯一不用 TypeScript 的部分：这是长期运行的 Python 进程，与 API 服务器一起运行在集群上。它参照 Mavio 项目的语音插件。
 
 ```text
-客户端 ──wss + 短期票据──► Cloudflare ──Tunnel──► Kubernetes 上的 apps/voice
-   │                                                │
-   └──向 Web Worker 申请票据                         ├─► 语音转文字、语音合成
-                                                    └─► Web Worker：模型回答、结果
+客户端 ──wss + 短期票据──► Cloudflare ──ingress-nginx──► Kubernetes 上的 apps/voice
+   │                                                       │
+   └──向 API 服务器申请票据                                ├─► 语音转文字、语音合成
+                                                          └─► API 服务器：模型回答、结果
 ```
 
-- **流水线。** Pipecat 负责语音活动检测（Silero）、判断一轮结束、打断和语音服务。语音服务不在服务里配置：每个会话开始时，它向 Worker 询问路由所指定的语音识别与语音合成及其密钥，没有符合条件的服务时拒绝会话（`VOICE_SPEECH=worker`）；目前它只对接 Azure AI Speech。它不用 LLM 服务：回答由 Worker 通过 pi-ai 生成，让所有模型调用都在一处。学习者的停顿比母语者长，所以一轮中最长的停顿按级别设置。
+- **流水线。** Pipecat 负责语音活动检测（Silero）、判断一轮结束、打断和语音服务。语音服务不在服务里配置：每个会话开始时，它向 API 服务器询问路由所指定的语音识别与语音合成及其密钥，没有符合条件的服务时拒绝会话（`VOICE_SPEECH=api`）；目前它只对接 Azure AI Speech。它不用 LLM 服务：回答由 API 服务器通过 pi-ai 生成，让所有模型调用都在一处。学习者的停顿比母语者长，所以一轮中最长的停顿按级别设置。
 - **项目。** Python 和 uv 在 `mise.toml` 中固定，使用 pytest、ruff 和 pyright。Pipecat 精确固定版本（当前为 1.15.0）。镜像包含模型权重，首次会话无需下载。
-- **票据。** Worker 签发有效期约 60 秒的票据，写明学习者、课程和会话；服务用公钥验证。服务用自己的凭据调用 Worker，写入结果时按会话 ID 保证幂等。
-- **回合。** 服务把到目前为止的对话发给 Worker，得到导师的下一句以及是否结束；第一句是对话的开场白，不调用模型；服务播放提前录好的开场白（[内容 §11](content.zh-CN.md#11-英语)），只在取不到录音时才朗读。Worker 通过用途为 `conversation` 的路由（先主路由，再备用路由）扮演对话的情景，并在 40 个回合后或对话时长用完时结束。每位学习者每天最多 10 次对话。
+- **票据。** API 服务器签发有效期约 60 秒的票据，写明学习者、课程和会话；服务用公钥验证。服务在集群内（`VOICE_API_URL`）用自己的凭据调用 API 服务器，写入结果时按会话 ID 保证幂等。
+- **回合。** 服务把到目前为止的对话发给 API 服务器，得到导师的下一句以及是否结束；第一句是对话的开场白，不调用模型；服务播放提前录好、从网站（`VOICE_AUDIO_URL`）取得的开场白（[内容 §11](content.zh-CN.md#11-英语)），只在取不到录音时才朗读。API 服务器通过用途为 `conversation` 的路由（先主路由，再备用路由）扮演对话的情景，并在 40 个回合后或对话时长用完时结束。每位学习者每天最多 10 次对话。
 - **传输。** WebSocket，Pod 不需要 UDP：双向以二进制消息传输 16 kHz 单声道 16 位 PCM，其余为 JSON 文本消息（`apps/voice/src/ga_voice/messages.py`）。如果在各地区真实移动网络上的测量不达标，就改用经 Cloudflare TURN 的 WebRTC；流水线不依赖传输方式。
-- **隐私。** Pod 没有持久卷，不保存音频，日志不含转写内容。Worker 保存会话转写 30 天，从不保存儿童的。
+- **隐私。** Pod 没有持久卷，不保存音频，日志不含转写内容。API 服务器保存会话转写 30 天，从不保存儿童的。
 - **客户端。** Web 客户端沿用 Mavio 的做法：在学习者点击时按设备采样率创建 AudioContext；worklet 以平均的方式降采样到 16 kHz，每帧 20 ms；导师的声音经同一个上下文播放，让浏览器的回声消除能去掉它；没有声音的麦克风会被换成另一个；套接字打开前说的话先保存，打开后再发送。应用从自己的 crate `apps/nsh/native/voice` 取 16 kHz PCM，JavaScript 每 40 ms 取一次：iOS 上是语音聊天会话中开启语音处理的 AVAudioEngine，输入以平均的方式降到 16 kHz，导师的声音由同一引擎上的播放节点播放；Android 上是来自语音通话音源的 AudioRecord，开启设备的回声消除和降噪，以及在同一会话上用于语音通话的 AudioTrack，未戴耳机时声音走扬声器。打断会丢掉排队的声音，麦克风要等导师最后的话播完才关闭。
 
-生产环境运行在 Hetzner Cloud 位于 Hillsboro 的 Kubernetes 集群上，与 PostgreSQL 同处一地（[架构 §6](architecture.zh-CN.md#6-部署)），配置放在 `deploy/voice`，使用 Kustomize 的 base 和 overlay：
+生产环境运行在 Hetzner Cloud 位于 Hillsboro 的 Kubernetes 集群上，与 PostgreSQL 同处一地（[架构 §6](architecture.zh-CN.md#6-部署)），配置与 API 服务器的一起放在 `deploy/k8s`，位于命名空间 `greatacademy`（[deploy/k8s](../deploy/k8s/README.zh-CN.md)）。域名 `voice.greatacademy.dev` 由 Cloudflare 代理，经 ingress-nginx 到达 pod；ingress-nginx 只放行 `/v1/conversation`：
 
 | 问题 | 设计 |
 | :--- | :--- |
@@ -363,20 +363,20 @@ S6 的对话运行在 `apps/voice` 的 **Pipecat** 上。它是平台中唯一�
 | 扩缩容 | KEDA 按活跃会话数扩缩，不按 CPU：每个 pod 在 `/metrics` 报告 `voice_sessions_active`，由 Prometheus 求和 |
 | 会话时长 | 由产品限制，初始为 20 分钟 |
 | 发布与缩容 | 收到 `SIGTERM` 后，pod 拒绝新会话并等待运行中的会话；在此之前 `preStop` 短暂停顿，让流量先移走；`terminationGracePeriodSeconds` 为 25 分钟 |
-| 安全 | PodDisruptionBudget、只允许 Tunnel 进入并把出站限制为 DNS 和公网 HTTPS 的 NetworkPolicy、密钥放在 Secret、以无特权用户运行在只读文件系统上 |
+| 安全 | PodDisruptionBudget、只允许 ingress-nginx 和 Prometheus 进入、并把出站限制为 DNS、API 服务器和公网 HTTPS 的 NetworkPolicy、密钥放在 Secret、以无特权用户运行在只读文件系统上 |
 | 资源 | 只用 CPU，因为语音服务在云端 |
 
 ### 13.4 Cloudflare 服务
 
 | 阶段 | 服务 | 用途 |
 | :--- | :--- | :--- |
-| 首个切片 | Workers | 英语的网关和分片，不增加新产品 |
-| 写作 | Workers | 学习者等待时在 Web Worker 中判定，重试、租约和进度都保存在 `judgment` 表中，因此不需要 Workflow |
+| 首个切片 | Workers | 网站的页面；英语本身由 API 服务器提供，不增加新产品 |
+| 写作 | 无 | 学习者等待时在 API 服务器中判定，重试、租约和进度都保存在 `judgment` 表中，因此不需要 Workflow |
 | 写作 | AI Gateway | 模型调用的日志、成本和限制；判定不缓存，未成年人的文本不写入日志 |
 | 写作 | Rate Limiting | 限制滥用和成本 |
 | 语音 | R2 | 题目音频，以及短期保存、由生命周期规则删除的录音 |
 | 语音 | Workers AI | 语音转文字，前提是效果不差于供应商自己的 API |
-| 对话 | Tunnel | 无需开放入站端口即可连到集群 |
+| 对话 | 代理的 DNS | `voice.greatacademy.dev` 只经 Cloudflare 到达集群 |
 | 对话 | WAF 和限流规则 | 保护语音域名 |
 | 对话 | Realtime TURN | 仅在传输改为 WebRTC 时使用 |
 
@@ -384,16 +384,16 @@ S6 的对话运行在 `apps/voice` 的 **Pipecat** 上。它是平台中唯一�
 
 本地测试**只用容器，不用 Kubernetes**。
 
-- `compose.yaml` 在 PostgreSQL 旁增加 `voice` 服务，由生产镜像构建，并连接宿主机上的 `cf dev`。
+- `compose.yaml` 在 PostgreSQL 旁增加 `voice` 服务，由生产镜像构建，并连接宿主机上的 API 服务器（`pnpm nx run server:dev`）和网站。
 - 测试用伪造的语音服务运行流水线；真实服务使用被忽略文件中的开发密钥。
 - 排空的测试方式是在会话进行时停止容器：`SIGTERM` 必须拒绝新会话，并让运行中的会话结束。
-- 配置在本地只渲染和校验，首次运行在集群的测试命名空间中。
+- 配置在本地只渲染和校验（`mise run k8s:check`），首次运行在集群上。
 
 ### 13.6 构建前要确认
 
 - `cf` 命令行能否声明 R2 生命周期规则和 AI 绑定。
-- pi-ai 能否在 Workers 上对接真实供应商。目前它只在 workerd 中通过了模拟响应的测试，包括 Anthropic、OpenAI 和 Google 的流式工具调用。
-- WebSocket 经 Tunnel 能否在整个会话期间保持稳定。
+- pi-ai 能否在 API 服务器中对接真实供应商。目前它只通过了模拟响应的测试，包括 Anthropic、OpenAI 和 Google 的流式工具调用。
+- WebSocket 经 Cloudflare 代理和 ingress-nginx 能否在整个会话期间保持稳定。
 - 距离希尔斯伯勒（集群唯一的区域）较远的学习者的延迟，上述测量必须覆盖这种情况。
 
 ## 14. 风险

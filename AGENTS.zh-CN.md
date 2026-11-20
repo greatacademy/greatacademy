@@ -28,15 +28,13 @@
 
 ## 项目概述
 
-Great Academy 是面向多学科的自适应学习平台，从数学开始。全部代码使用 TypeScript：运行在 Cloudflare Workers 上的 Web 应用、基于 Native Shell 的 TSX 原生应用，以及内容和学习引擎的纯函数库。唯一的例外是英语的 Python 语音服务 `apps/voice`（[docs/english-curriculum.zh-CN.md](docs/english-curriculum.zh-CN.md) §13.3）。
+Great Academy 是面向多学科的自适应学习平台，从数学开始。全部代码使用 TypeScript：运行在 Cloudflare Workers 上的 Web 应用、在 Kubernetes 中运行于 Node 并承载所有学科的 API 服务器、基于 Native Shell 的 TSX 原生应用，以及内容和学习引擎的纯函数库。唯一的例外是英语的 Python 语音服务 `apps/voice`（[docs/english-curriculum.zh-CN.md](docs/english-curriculum.zh-CN.md) §13.3）。
 
 ## 目录结构
 
 ```text
-apps/web/            TanStack Start on Cloudflare Workers：页面、Connect API、better-auth
-apps/math-workers/   数学的网关和分片 Worker
-apps/english-workers/ 英语的网关和分片 Worker
-apps/chinese-workers/ 语文的网关和分片 Worker
+apps/web/            TanStack Start on Cloudflare Workers：页面、静态文件、录音
+apps/server/         Node 上的 API 服务器：Connect API、better-auth、webhook，在进程内承载所有学科
 apps/nsh/            Native Shell 的 TSX 应用：iOS、Android、macOS、Windows、Linux
 apps/voice/          英语的语音服务：基于 Pipecat 的 Python，由 uv 管理
 libs/content/        内容模型、编译器、题目运行时、判定器（与学科无关）
@@ -45,7 +43,6 @@ libs/subject-math/   数学判定器和生成器辅助函数
 libs/subject-english/ 英语判定器和内容工具
 libs/subject-chinese/ 语文判定器、拼音、分词和内容工具
 libs/judge/          写作的 AI 判定：提示词、respond 工具、经过检查的判定结果、基于 pi-ai 的供应商
-libs/subject-worker/ 任何学科的网关和分片所用的 Worker 入口
 libs/proto/          Protobuf 契约与生成的 TypeScript
 libs/api/            Connect 服务和会话运行器
 libs/db/             Drizzle schema、迁移、仓储
@@ -58,8 +55,7 @@ tools/audit/         内容审计
 tools/pilot/         根据真实作答生成试点报告
 tools/calibrate/     用人工评分的文本校准 AI 路由
 tools/audio/         提前生成的文章朗读录音
-deploy/voice/        语音服务在 Kubernetes 上的 Kustomize 清单
-deploy/postgres/     Hyperdrive 访问 PostgreSQL 所经的 Cloudflare Tunnel
+deploy/k8s/          API 服务器、其定时任务和语音服务在 Kubernetes 上的 Kustomize 清单
 ```
 
 ## 命令
@@ -100,7 +96,7 @@ pnpm format                                # 用 Biome 格式化并修复
 - 全部使用 Vitest，测试文件以 `*.test.ts` 放在代码旁边。
 - 引擎规则用显式的时间和种子测试，没有测试依赖真实时钟。
 - 数据库测试运行在 PGlite 上，不需要启动任何服务器。
-- `apps/voice` 通过 `uv run` 使用 pytest、pyright 和 ruff，确切版本写在 `pyproject.toml` 和 `uv.lock` 中；它的测试模拟语音服务和 Web Worker，不需要网络（[docs/development.zh-CN.md](docs/development.zh-CN.md) §7）。
+- `apps/voice` 通过 `uv run` 使用 pytest、pyright 和 ruff，确切版本写在 `pyproject.toml` 和 `uv.lock` 中；它的测试模拟语音服务和 API 服务器，不需要网络（[docs/development.zh-CN.md](docs/development.zh-CN.md) §7）。
 
 ## 文档
 

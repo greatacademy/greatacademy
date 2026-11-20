@@ -29,7 +29,7 @@ mise run k8s:check
 
 集群在 `hil` 的 Talos 上运行 Kubernetes 1.33，从工作站的集群目录管理。它自带：
 
-- ingress-nginx，类 `nginx`，位于启用 PROXY 协议的 Hetzner 负载均衡器之后，所以 nginx 看到的是发起连接的地址：Cloudflare 边缘，因为两个主机名都经代理。每个 Ingress 只允许 Cloudflare 的地址段，所以绕过 Cloudflare 无法到达集群，API 也因此信任 `CF-Connecting-IP` 作为客户端地址。
+- ingress-nginx，类 `nginx`，位于 Hetzner 负载均衡器之后。两个主机名都经 Cloudflare 代理，API 从 `CF-Connecting-IP` 取得客户端地址。nginx 看到的每个请求都来自 127.0.0.1，所以 Ingress 无法按来源地址放行。
 - cert-manager 及在 Cloudflare 中完成 DNS-01 的 ClusterIssuer `letsencrypt-prod-issuer`，以及为每个 Ingress 主机写入代理记录的 external-dns。两者的区域都包含 `greatacademy.dev`。
 - `cnpg-system` 中 CloudNativePG 的 PostgreSQL 集群 `pg-cluster`，数据库 `greatacademy` 的角色在 Secret `pg-cluster-greatacademy` 里。
 - `keda` 中的 KEDA 2.20、`monitoring` 中的 kube-prometheus-stack（其 Prometheus 选择带 `release: kube-prometheus-stack` 标签的 PodMonitor），以及执行 NetworkPolicy 的 Cilium。

@@ -10,7 +10,7 @@ This document turns the design in [Chinese Curriculum](chinese-curriculum.md) in
 
 | Stage | Delivers | Needs from outside | Ends at |
 | :--- | :--- | :--- | :--- |
-| 0 Preparation | Sources recorded, Workers deployed, legal and vendor questions answered | Counsel, reviewers | Gate CG0 |
+| 0 Preparation | Sources recorded, the API server deployed, legal and vendor questions answered | Counsel, reviewers | Gate CG0 |
 | 1 First slice | Native grades 3 to 6 without new input: characters, words, idioms, grammar, recitation and reading, checked by choices and typed Chinese | Pilot learners | Gate CG1 |
 | 2 Foreign-language levels 1 to 3 | Pinyin and tones, characters with meaning, words, grammar points, listening from recordings and speaking judged by pronunciation assessment | Speech vendor accounts | Gate CG2 |
 | 3 Handwriting | The stroke input, its pad in the web and the apps, the stroke checker and the writing topics | A licensed stroke data set | Gate CG3 |
@@ -26,7 +26,7 @@ CG0 ─► C1 first slice ─► CG1 ─┬─► C2 levels 1–3 ─► CG2 ─
 
 **Rules for every milestone.**
 
-- Each stage leaves mathematics and English untouched: their tests, their Workers and their learners' state behave as before.
+- Each stage leaves mathematics and English untouched: their tests, their content and their learners' state behave as before.
 - The core stays subject-agnostic. What only Chinese needs lives in `libs/subject-chinese` and `content/chinese`.
 - Content is written for the subject. Textbook texts and exercises are never copied; classical texts are in the public domain ([§13 of the design](chinese-curriculum.md#13-sources-of-content-and-rights)).
 - **Work that needs people does not hold up work that does not.** Content is written, checked by its tests and the audit, and wired in; review by teachers, legal advice, accounts and pilots follow when people are available (§9.3). Nothing reaches learners before the review its stage requires.
@@ -40,10 +40,10 @@ CG0 ─► C1 first slice ─► CG1 ─┬─► C2 levels 1–3 ─► CG2 ─
 | C0.1 | Record the sources of content and their status in `content/chinese/SOURCES.md`: the standards, the character lists, the poems and their editions, what was read and not taken | S | The file lists each source, its license or status, and what the subject takes from it |
 | C0.2 | Counsel on the character lists, the word lists of GF 0025-2021, the appendices of the standards and the stroke data ([§13](chinese-curriculum.md#13-sources-of-content-and-rights)) | S | Written advice; if a list may not be used, the content built from it is replaced |
 | C0.3 | A reviewer who teaches Chinese in primary school, and one who teaches it as a foreign language | S | Named people have agreed |
-| C0.4 | Deploy `chinese-workers` before the web Worker, which binds it | S | `pnpm nx run chinese-workers:deploy`, then the web Worker; a test account completes a lesson in production |
+| C0.4 | Deploy the API server, which compiles Chinese beside the other subjects, with `deploy/k8s` | S | `mise run k8s:push`, then `kubectl apply -k deploy/k8s`; a test account completes a lesson in production |
 | C0.5 | The speech vendors: Azure for recordings and recognition, iFlytek for pronunciation assessment, checked against [Minors' Data](minors-data.md) in each first market | S | Each vendor's data region and terms for minors are recorded in the vendor register ([Admin](admin.md)) |
 
-**Gate CG0.** Counsel has answered on the lists, a primary reviewer has agreed, and the Workers run in production. Stage 1 is written before CG0, but its pilot waits for it.
+**Gate CG0.** Counsel has answered on the lists, a primary reviewer has agreed, and the API server serves Chinese in production. Stage 1 is written before CG0, but its pilot waits for it.
 
 ## 3. Stage 1: First Slice
 
@@ -57,8 +57,8 @@ Native grades 3 to 6 without new input, testing whether mastery learning and spa
 | :--- | :--- |
 | Checkers `hanzi` and `pinyin`, pinyin keys, segmentation and the content kit | `libs/subject-chinese` |
 | Content package with `compileChinese()`, the `core` shard and tests | `content/chinese` |
-| Gateway `ga-chinese` and shards `ga-chinese-core`, `ga-chinese-levels` and `ga-chinese-hsk` | `apps/chinese-workers` |
-| Binding `SUBJECT_CHINESE` | `apps/web` |
+| Topics grouped as `core`, `levels` and `hsk` | `content/chinese/src/shards` |
+| The subject compiled in the API server | `apps/server` |
 | The subject's tokenizer for passages: characters and words segmented by the lexicon | `SubjectDef.words` in `libs/content`, used by `content/chinese` |
 
 ### C1.2 Content of the First Slice (L)
@@ -195,7 +195,7 @@ Levels 4 to 9 continue C2. Judged writing reuses `libs/judge` with calibration s
 
 | Phase | Needed by | Why |
 | :--- | :--- | :--- |
-| Deployment of the Workers (C0.4) | C1.4 | A pilot needs a real service |
+| Deployment of the API server (C0.4) | C1.4 | A pilot needs a real service |
 | P6 Mobile app task players | C2.4, C3.4 | Speech and strokes need players in the apps |
 | P9 Billing | Before opening C2.4 widely | Pronunciation assessment costs money per use |
 

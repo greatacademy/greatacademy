@@ -30,7 +30,7 @@ This is the data protection impact assessment of Great Academy for learners unde
 | Words heard | Learner | Checking, showing what was heard | `speech` | PostgreSQL | Hosting | 30 days |
 | Conversation transcripts | Teen | The conversation feature | `conversation` | PostgreSQL | Hosting; AI and speech vendors named in the notice | Child: not offered; teen 30 days |
 | Research recordings | Speaker, with a signed form | Testing speech services | `research` form | Apart from accounts, under a number | The raters and speech service on the form | Date on the form, at most 12 months |
-| Signed guardian form | Guardian | Verifying the guardian | Legal duty | R2 (`GUARDIAN_FORMS`) | Staff who decide | Until decided |
+| Signed guardian form | Guardian | Verifying the guardian | Legal duty | R2 (`ga-guardian-forms`) | Staff who decide | Until decided |
 | Card payment | Guardian or adult | Payment, verifying a guardian | Contract | Stripe; we keep no card number | Stripe | Stripe's terms |
 | Sign-in address and browser | Everyone | Security | Legitimate interest, legal duty | PostgreSQL | Hosting | 30 days |
 | Consent records, what a payer agreed to | Guardian, teen, payer | Proof of consent | Legal duty | PostgreSQL (`consent`, `admin_log`) | Hosting | Life of the account, plus what the market requires |
@@ -56,7 +56,7 @@ Likelihood and severity are rated low, medium or high, before and after the meas
 | An AI vendor keeps or trains on text | Medium, high | Vendor register: zero or short retention, no training, contract, region, market; consent names the vendor; stale entries switch the feature off | Low, high |
 | Audio used as biometric data | Low, high | Audio never stored; no voiceprint or speaker recognition; written `speech` consent naming the vendor | Low, medium |
 | An AI grade is wrong or biased and holds a learner back | Medium, medium | Reasons in words; a person's review on request [in-app entry to build]; calibration against texts scored by people; rule-checked items can establish mastery | Low, medium |
-| Unauthorised access to the database | Low, high | No public database port (Cloudflare Tunnel to Hyperdrive); vendor keys encrypted; the admin role checked on the server; append-only admin log; [encryption at rest of volumes and backups to confirm] | Low, high |
+| Unauthorised access to the database | Low, high | No public database port (reached only by the API server inside the cluster); the cluster's ingress exposes only the API's `/api` and the voice service's `/v1/conversation`; vendor keys encrypted; the admin role checked on the server; append-only admin log; [encryption at rest of volumes and backups to confirm] | Low, high |
 | A staff member reads minors' text | Low, medium | No production SQL by hand; an audited tool [to build]; least privilege | Low, medium |
 | Data kept after it should be gone | Medium, medium | Daily retention run, tested with explicit times; deletion of an account at once; backups expire within [30] days | Low, low |
 | Engagement features push a minor to overuse | Medium, medium | Leagues, streaks and nudges off by default; guardian time limit; no random rewards; no nudges at night | Low, low |
@@ -81,8 +81,8 @@ AI grades writing and speech only with `writing` or `speech`. South Korea's AI B
 
 | Processor | Role | Agreement | Region |
 | :--- | :--- | :--- | :--- |
-| Hetzner | Database, voice service | DPA concluded November 10, 2026 | Oregon |
-| Cloudflare | Pages, Workers, R2, Tunnel, email | Customer DPA in its terms [copy to file] | Global edge; storage in [region to confirm] |
+| Hetzner | Database, API server, voice service | DPA concluded November 10, 2026 | Oregon |
+| Cloudflare | Site (Workers), proxy of the API and the voice service, R2, email | Customer DPA in its terms [copy to file] | Global edge; storage in [region to confirm] |
 | Resend | Email | [DPA to accept and file] | [to confirm] |
 | Stripe | Payments, card verification | DPA in its services agreement [copy to file] | [to confirm] |
 | Microsoft Azure AI Speech | Speech, only with `speech` | Products and Services DPA [copy to file] | [region of the resource] |

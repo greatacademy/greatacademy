@@ -33,7 +33,7 @@ Great Academy 是一个自适应学习平台，基于 [The Math Academy Way](the
    - 因此修改引擎参数只需重放，不需要数据迁移。
 5. **一种语言，处处共享。**
    - 全部代码使用 TypeScript。唯一的例外是英语的 Python 语音服务 `apps/voice`（[英语课程体系 §13.3](english-curriculum.zh-CN.md#133-语音服务)）。
-   - 引擎和内容运行时都是没有 I/O 的纯函数，同一份代码运行在 Worker、浏览器、原生应用、测试和离线模拟中。
+   - 引擎和内容运行时都是没有 I/O 的纯函数，同一份代码运行在 API 服务器、浏览器、原生应用、测试和离线模拟中。
 6. **内容即代码。**
    - 知识点、knowledge point 和题目生成器都是 TypeScript 模块，通过 git 评审。
    - 发布前由编译器校验图谱。
@@ -47,24 +47,24 @@ Great Academy 是一个自适应学习平台，基于 [The Math Academy Way](the
 | Lint / 格式化 | **Biome** | 一个工具，根目录一份配置 |
 | 测试 | **Vitest** | 每个库都有单元测试；集成测试使用 PGlite |
 | 契约 / RPC | **Protobuf + buf + Connect**（`protobuf-es` v2、`connect-es` v2）、`protovalidate` | Web 与原生应用共用一份契约；原生应用走 JSON 传输 |
-| Web 应用 | **TanStack Start**（Router、Query、Form），运行于 **Cloudflare Workers**；**React 19** | 用 Cloudflare 的 **`cf`** 命令行构建、运行和部署，不用 wrangler |
+| Web 应用 | **TanStack Start**（Router、Query、Form），运行于 **Cloudflare Workers**；**React 19** | 用 Cloudflare 的 **`cf`** 命令行构建、运行和部署，不用 wrangler；它渲染页面、提供静态文件和录音，不持有 secret |
+| API 服务器 | **Node.js 26**、`node:http`，由 **rolldown** 打包成一个文件；镜像 `ghcr.io/greatacademy/api` | 提供 Connect API、better-auth、Stripe 和 Apple 的通知以及语音服务的调用，所有学科都在进程内编译（§6.1） |
 | UI | **Base UI**、**Tailwind CSS v4**、Phosphor 图标 | 设计 token 来自 `libs/design` |
-| 数学渲染 / 输入 | **KaTeX**（渲染）、**MathLive**（输入）、**Compute Engine**（解析学生答案） | 组件在 `apps/web`；原生应用由应用自身渲染，再显示在 Native Shell 的 `WebView` 中，样式表、字体和 MathLive 从 Worker 的 `/embed` 加载 |
-| 账户 | **better-auth**（邮箱 + 密码，之后加 passkey），运行在 Worker 中 | Web 与原生应用共享会话（bearer token） |
-| 邮件 | **Cloudflare Email Service**，通过 Worker 的 `send_email` 绑定 `EMAIL`；或 **Resend**，通过 HTTP 调用，使用 `RESEND_API_KEY`。密钥 `EMAIL_PROVIDER` 按顺序列出要用的服务，`EMAIL_FROM` 是发件人 | 密码重置、邮箱验证、通知、提醒和告警，每封都有 HTML 和纯文本两部分，且只用一种语言：本人请求的邮件使用请求的语言（网页的 `ga-locale` cookie，否则为 `Accept-Language`，原生应用会把它设为应用自己的语言），定时发送的邮件使用 `user.locale`，即此人最近使用的语言，每次 API 请求都会更新它；都不知道时用英语（`apps/web/src/server/templates.ts`）。Worker 不需要 SMTP 客户端。两者都列出时，只有第一个因暂时性原因（限流、每日上限、投递失败或故障）失败时才由第二个发送，配置或邮件本身有误时不切换（`apps/web/src/server/email.ts`） |
-| 支付 | **Stripe**，美国公司的一个账户，在 Worker 中使用 `stripe`（其 fetch 客户端和 Web Crypto） | 自动续费的银行卡方案，以及不续费的支付宝和微信支付方案（[计费](billing.zh-CN.md)）；Checkout 和客户门户都是 Stripe 的页面，银行卡信息不会经过我们 |
-| 数据库 | **PostgreSQL 18**，Worker 通过 **Hyperdrive** 访问；**Drizzle ORM** + drizzle-kit 迁移 | 测试中用 **PGlite**；开发时用 OrbStack 中的 `postgres:18-alpine` 容器 |
+| 数学渲染 / 输入 | **KaTeX**（渲染）、**MathLive**（输入）、**Compute Engine**（解析学生答案） | 组件在 `apps/web`；原生应用由应用自身渲染，再显示在 Native Shell 的 `WebView` 中，样式表、字体和 MathLive 从 Web Worker 的 `/embed` 加载 |
+| 账户 | **better-auth**（邮箱 + 密码，之后加 passkey），运行在 API 服务器中，地址为 `https://api.greatacademy.dev` | Web（cookie，设在 `.greatacademy.dev` 上，Web Worker 也能看到）与原生应用（bearer token）共享会话 |
+| 邮件 | **Cloudflare Email Service**，通过它的 REST API，使用 `CLOUDFLARE_ACCOUNT_ID` 和 `CLOUDFLARE_EMAIL_TOKEN`；或 **Resend**，通过 HTTP 调用，使用 `RESEND_API_KEY`。设置 `EMAIL_PROVIDER` 按顺序列出要用的服务，`EMAIL_FROM` 是发件人 | 密码重置、邮箱验证、通知、提醒和告警，每封都有 HTML 和纯文本两部分，且只用一种语言：本人请求的邮件使用请求的语言（网页的 `ga-locale` cookie，否则为 `Accept-Language`，原生应用会把它设为应用自己的语言），定时发送的邮件使用 `user.locale`，即此人最近使用的语言，每次 API 请求都会更新它；都不知道时用英语（`apps/server/src/templates.ts`）。两者都是 HTTP 调用，所以服务器不需要 SMTP 客户端。两者都列出时，只有第一个因暂时性原因（限流、每日上限、投递失败或故障）失败时才由第二个发送，配置或邮件本身有误时不切换（`apps/server/src/email.ts`） |
+| 支付 | **Stripe**，美国公司的一个账户，在 API 服务器中使用 `stripe`（其 fetch 客户端和 Web Crypto） | 自动续费的银行卡方案，以及不续费的支付宝和微信支付方案（[计费](billing.zh-CN.md)）；Checkout 和客户门户都是 Stripe 的页面，银行卡信息不会经过我们 |
+| 数据库 | **PostgreSQL 18**，运行在 **CloudNativePG** 上，API 服务器通过 **postgres.js** 访问；**Drizzle ORM** + drizzle-kit 迁移 | 测试中用 **PGlite**；开发时用 OrbStack 中的 `postgres:18-alpine` 容器 |
 | 移动端和桌面端 | **[Native Shell](https://nsh.dev)**（`nsh`，来自项目 fork 的 `greatacademy` 分支），内购用的 StoreKit 在应用自己的 Rust crate 中，应用用 TSX 编写，运行在它的 QuickJS 运行时上 | 一个应用，在 iOS、Android、macOS、Windows 和 Linux 上使用各平台自己的视图；与 Web 共用契约和 token |
-| 语音服务 | 由 **uv** 管理的 **Python 3.14**，**Pipecat** 1.15.0 及其 FastAPI WebSocket 传输，运行在 **uvicorn** 上；**pytest**、**ruff**、**pyright** | 英语实时对话，是 Worker 无法运行的长驻进程；内部没有 LLM 服务，导师的回合由 Web Worker 通过 HTTP 给出；票据用 Ed25519 校验（`cryptography`） |
-| 对象存储 | **R2** | 内容中的图片，生成的图形是内嵌 SVG（[内容 §4](content.zh-CN.md#4-knowledge-point-与生成器)）；朗读录音，存放在网站公开文件的存储桶 `greatacademy` 中的 `audio/<subject>/<name>.mp3`，供语音服务用的为 `.wav`，由 Web Worker 在同一路径提供，支持范围请求并缓存一年，因为一个名字所指的内容从不改变（[内容 §11](content.zh-CN.md#11-英语)）；监护人的签字表格，存放在单独的存储桶中，决定后删除（[未成年人数据 §6](minors-data.zh-CN.md#6-账号与同意)） |
+| 语音服务 | 由 **uv** 管理的 **Python 3.14**，**Pipecat** 1.15.0 及其 FastAPI WebSocket 传输，运行在 **uvicorn** 上；**pytest**、**ruff**、**pyright** | 英语实时对话，是长驻进程；内部没有 LLM 服务，导师的回合由 API 服务器通过 HTTP 给出；票据用 Ed25519 校验（`cryptography`） |
+| 集群 | **Kubernetes** 1.33，运行在 Hetzner Cloud 的 Talos 上，**ingress-nginx**、**cert-manager**、**external-dns**、**CloudNativePG**、**KEDA** | API 服务器、其定时任务、语音服务和 PostgreSQL，在同一个命名空间 `greatacademy` 中；清单在 `deploy/k8s`（§6） |
+| 对象存储 | **R2** | 内容中的图片，生成的图形是内嵌 SVG（[内容 §4](content.zh-CN.md#4-knowledge-point-与生成器)）；朗读录音，存放在网站公开文件的存储桶 `greatacademy` 中的 `audio/<subject>/<name>.mp3`，供语音服务用的为 `.wav`，由 Web Worker 在同一路径提供，支持范围请求并缓存一年，因为一个名字所指的内容从不改变（[内容 §11](content.zh-CN.md#11-英语)）；监护人的签字表格，存放在单独的存储桶 `ga-guardian-forms` 中，API 服务器通过 R2 的 S3 API 访问，决定后删除（[未成年人数据 §6](minors-data.zh-CN.md#6-账号与同意)） |
 
 ## 3. 仓库结构
 
 ```text
-apps/web/             TanStack Start on Workers：页面、better-auth，并把 libs/api 挂载在 /api 下
-apps/math-workers/    提供数学内容的 Worker：一个网关和它的分片（§6.1）
-apps/english-workers/ 提供英语内容的 Worker：一个网关和它的分片
-apps/chinese-workers/ 提供语文内容的 Worker：一个网关和它的几个分片
+apps/web/             TanStack Start on Workers：页面、静态文件和录音；调用 API 服务器
+apps/server/          Node 上的 API 服务器：libs/api、better-auth、通知，所有学科在进程内编译（§6.1）
 apps/nsh/             Native Shell 的 TSX 应用（iOS、Android、macOS、Windows、Linux）
 apps/voice/           英语的语音服务，用 Python 基于 Pipecat 编写：轮流说话、打断、票据、排空
 libs/proto/           契约：proto/ga/<domain>/v1/*.proto、buf 配置、gen/（生成代码，提交入库）
@@ -75,7 +75,6 @@ libs/subject-math/    数学学科：数学答案判定器、数学题目生成�
 libs/subject-english/ 英语学科：句子和单词判定器、题库工具
 libs/subject-chinese/ 语文学科：汉字和拼音判定器、拼音转换、分词、题库工具
 libs/judge/           写作的 AI 判定：提示词、respond 工具、引用经过原文核对的判定结果、经 pi-ai 连接的供应商
-libs/subject-worker/  任何学科的网关和分片都由它的 Worker 入口构成
 libs/db/              Drizzle schema、迁移和仓储（PostgreSQL）
 libs/design/          颜色 token、配色和外观模型（§8），以及为 Web 和原生应用生成的形式
 content/math/         编写的数学内容：知识点、课程
@@ -86,33 +85,28 @@ tools/audit/          内容审计：大纲覆盖和启发式质量检查
 tools/pilot/          试点报告：根据作答和事件日志，找出真实学习者卡住的地方
 tools/calibrate/      校准：在两人评分的文本上运行一条路由，并记录它的一致性
 tools/audio/          录音：提前朗读文章、单词、句子、发音、音节和开场白，列出已生成的录音并上传
-deploy/voice/         语音服务在 Kubernetes 上的部署：Kustomize base 和 overlay，以及推送和校验的 mise 任务
-deploy/postgres/      Hyperdrive 访问 PostgreSQL 所经的 Cloudflare Tunnel
+deploy/k8s/           集群的清单：API 服务器、其定时任务、语音服务、ingress 和网络策略，以及推送和校验的 mise 任务
 docs/                 文档（英文 + 简体中文）
 ```
 
 ### 3.1 依赖方向
 
 ```text
-apps/web ──► libs/api ──► libs/db ──► libs/engine ──► libs/content
-   │            │                                       ▲
-   │            ├──► libs/judge ──► libs/content         │
-   │            └──► libs/proto                         │
-   ├──► libs/design
-   │                                             libs/subject-math ◄── content/math
-   └╌╌► apps/math-workers, apps/english-workers, apps/chinese-workers（仅开发时，用来一起运行）
-apps/math-workers ──► libs/subject-worker ──► libs/content
-   └──► content/math, libs/subject-math
-apps/english-workers ──► libs/subject-worker ──► libs/content
-apps/chinese-workers ──► libs/subject-worker ──► libs/content
-   └──► content/english, libs/subject-english
+apps/server ──► libs/api ──► libs/db ──► libs/engine ──► libs/content
+   │              │                                       ▲
+   │              ├──► libs/judge ──► libs/content         │
+   │              └──► libs/proto                         │
+   │                                               libs/subject-math ◄── content/math
+   └──► content/math, content/english, content/chinese
+apps/web ──► libs/proto, libs/design
+apps/web ╌╌► apps/server，经 HTTP（没有包依赖）
 apps/nsh ──► libs/proto, libs/design
 tools/simulate ──► libs/engine, content/math, content/english
 tools/audit ──► libs/content, content/math, content/english, content/chinese
 tools/pilot ──► libs/db, libs/engine, content/math, content/english
 tools/calibrate ──► libs/judge, libs/db, libs/api, libs/subject-english, libs/subject-chinese
 tools/audio ──► libs/content, content/english, content/chinese
-apps/voice ╌╌► apps/web，经 HTTP（没有包依赖）
+apps/voice ╌╌► apps/server，经 HTTP（没有包依赖）
 ```
 
 - `libs/content` 不依赖仓库内任何库，它定义所有学科都要实现的类型。
@@ -122,9 +116,8 @@ apps/voice ╌╌► apps/web，经 HTTP（没有包依赖）
 - `content/<subject>` 依赖 `libs/content` 和对应的学科库。
 - `libs/api` 基于 `libs/db` 和引擎实现服务，但不知道宿主：请求的用户和数据库客户端以 Connect context value 传入，时钟和种子通过注入提供。它的测试在 PGlite 上端到端地运行服务。
 - `libs/judge` 依赖 `libs/content` 的类型和 pi-ai。它不知道任何学科，也不接触数据库：`libs/api` 把标准、文本和模型客户端交给它，再保存它返回的结果。
-- `libs/subject-worker` 是唯一引入 Workers 运行时的库，它不知道任何具体学科。
-- `apps/voice` 用 Python 编写，不引入仓库内任何代码。它用自己的凭据经 HTTP 访问 Web Worker，获取每个会话的语音服务和导师的回合，并写入结果；它与客户端共用的 WebSocket 以二进制消息传输 PCM，其余是在 `apps/voice` 中定义的 JSON 文本消息。
-- 只有 `apps/*` 负责把存储、传输、认证和内容装配到一起。Web Worker 不引入内容，而是通过服务绑定访问学科。
+- `apps/voice` 用 Python 编写，不引入仓库内任何代码。它用自己的凭据在集群内经 HTTP 访问 API 服务器，获取每个会话的语音服务和导师的回合，并写入结果；它与客户端共用的 WebSocket 以二进制消息传输 PCM，其余是在 `apps/voice` 中定义的 JSON 文本消息。
+- 只有 `apps/*` 负责把存储、传输、认证和内容装配到一起。`apps/server` 是唯一引入内容和数据库的应用；Web Worker 两者都不引入，经 HTTP 访问 API。
 
 ## 4. 领域模型
 
@@ -150,80 +143,62 @@ apps/voice ╌╌► apps/web，经 HTTP（没有包依赖）
 ## 5. 请求流程
 
 1. 客户端调用 `/api/rpc/ga.<domain>.v1.*` 下的 Connect 服务。Web 端携带会话 cookie，原生应用携带签名的 bearer token，由 better-auth 的 `bearer` 插件在登录时通过 `set-auth-token` 响应头签发。better-auth 本身位于 `/api/auth/*`。
-2. Worker 用 better-auth 完成认证，再通过 Hyperdrive 从 PostgreSQL 读取学习者状态。每个请求使用独立的数据库客户端。
+2. API 服务器用 better-auth 完成认证，再从 PostgreSQL 读取学习者状态，所用的连接池由进程内的请求共用。
 3. 服务调用引擎，传入：
-   - 学科图谱（从学科的 manifest 读取，并按 isolate 缓存）；
+   - 学科图谱（从学科的 manifest 读取，并在进程内缓存）；
    - 学习者状态；
    - 当前时间。
 4. 引擎返回新状态和需要记录的事件。服务在同一个事务中写入两者，然后返回响应。
 
 任务以**会话**的方式进行，每个请求一道题（先 `StartTask`，再反复 `SubmitAnswer` 直到得出结果）。会话执行器（`libs/api/src/runner.ts`）是建立在引擎的课程、复习、测验和诊断规则之上的纯状态机。它的状态只保存题目引用（知识点、学习点、种子），从不保存题目本身。 已结束的会话仍可阅读：`ListSessions` 列出学习者在一门课程中已结束的会话，`GetSession` 重新打开其中一个，显示题目、作答和解答。`GetTopic` 返回课程中任一主题的课文、由种子生成的新例题，以及它依赖和通向的主题，学习者可以随时重读课文；阅读不改变学习者状态。
 
-题目实例在服务端由种子生成，也在服务端判分，都在学科的分片 Worker 中进行（§6.1）。答案在提交之前绝不发送给客户端。
+题目实例在服务端由种子生成，也在服务端判分，都在编译了所有学科的 API 服务器中进行（§6.1）。答案在提交之前绝不发送给客户端。
 
-Web 应用（`apps/web`）只有一个兜底的服务端路由 `/api/$`，把请求交给 `src/server/handler.ts`。页面在服务端渲染时不含学习者数据，在浏览器中通过 Connect 客户端和 TanStack Query 获取，因此页面在服务端从不需要会话。页面语言在服务端决定（`ga-locale` cookie，否则看 `Accept-Language`），所以首屏即为该语言。
+API 服务器（`apps/server`）用 `src/handler.ts` 应答 `/api` 和 `/voice/v1` 下的一切请求，地址是它自己的源 `https://api.greatacademy.dev`。Web 应用的页面在服务端渲染时不含学习者数据，在浏览器中通过 Connect 客户端和 TanStack Query 带凭据从这个源获取（`apps/web/src/lib/origin.ts` 中的 `API_ORIGIN`），因此页面在服务端从不需要会话。服务器只允许这一个源，即网站的源，带凭据访问（CORS），并拒绝其他源的预检请求。页面语言在服务端决定（`ga-locale` cookie，否则看 `Accept-Language`），所以首屏即为该语言。
 
 `/` 取决于访问者。未登录时是落地页，落地页也可通过 `/landing` 供所有人访问，并在服务端渲染。登录后，打开最近学习的课程的下一个任务；没有课程但有监护学习者的账号转到 `/guardian`，其他没有课程的账号会被问到谁来学习。服务端只凭会话 cookie 就能在两者之间选择，所以已登录的学习者不会看到落地页闪现。课程目录是单独的公开页面 `/courses`。
 
-`src/server.ts` 是 Worker 的入口：TanStack Start 处理请求，每日的 Cron Trigger 运行 `libs/api/src/retention.ts` 中的保存期限规则，另一个每 15 分钟运行一次 `libs/api/src/costs.ts` 中的费用检查，并把告警用电子邮件发给管理员。`PrivacyService` 负责年龄问题、同意、验证和删除（[未成年人数据](minors-data.zh-CN.md)），`libs/api/src/capabilities.ts` 中的 `requireStudy` 是 `StartTask` 之前的关口。`AdminService` 为 `/admin` 的后台提供服务（[管理后台](admin.zh-CN.md)），并拒绝没有该角色的人。`BillingService` 出售并管理方案（[计费](billing.zh-CN.md)）；计费开启时，`libs/api/src/billing.ts` 中的 `requirePlan` 拒绝在没有方案覆盖的学科中选择课程或开始学习。Stripe 的事件到达 `/api/stripe`；处理程序校验每个签名，把事件读成 `BillingEvent`（`apps/web/src/server/stripe.ts`），再由 `applyBillingEvent` 记录，重复或迟到的事件不会造成改变。
+`apps/web/src/server.ts` 是 Worker 的入口，TanStack Start 在这里提供页面、静态文件和录音。`apps/server/src/main.ts` 是 API 服务器的入口：`job daily` 运行 `libs/api/src/retention.ts` 中的保存期限规则和方案提醒，`job quarter` 每 15 分钟运行一次 `libs/api/src/costs.ts` 中的费用检查，把告警用电子邮件发给管理员，并判定已交上的文章（§6）。`PrivacyService` 负责年龄问题、同意、验证和删除（[未成年人数据](minors-data.zh-CN.md)），`libs/api/src/capabilities.ts` 中的 `requireStudy` 是 `StartTask` 之前的关口。`AdminService` 为 `/admin` 的后台提供服务（[管理后台](admin.zh-CN.md)），并拒绝没有该角色的人。`BillingService` 出售并管理方案（[计费](billing.zh-CN.md)）；计费开启时，`libs/api/src/billing.ts` 中的 `requirePlan` 拒绝在没有方案覆盖的学科中选择课程或开始学习。Stripe 的事件到达 `/api/stripe`；处理程序校验每个签名，把事件读成 `BillingEvent`（`apps/server/src/stripe.ts`），再由 `applyBillingEvent` 记录，重复或迟到的事件不会造成改变。App Store Server Notifications 到达 `/api/apple`（[计费](billing.zh-CN.md) §8）。
 
 监护人读取学习者数据时，使用与学习者相同的只读调用：`GetDashboard`、`GetCourseProgress` 和 `ListSessions` 接受可选的 `learner_id`，只有调用者关注了该学习者才生效。监督人的决定 `ChooseCourse`、`KeepCourse`、`SetGoals` 和 `SetEndDate` 也接受它；由监护人监督的学习者自己调用这些会被拒绝（[体验 §5](experience.zh-CN.md#5-监督)）。其他会改变数据的调用不接受 `learner_id`，监护人也不能打开会话，所以学习者的答案只属于学习者自己。
 
 ## 6. 部署
 
 - **生产：**
-  - Web Worker（`apps/web`），对外地址为 `greatacademy.dev`，用 `cf deploy` 部署，通过 Hyperdrive 绑定 PostgreSQL，通过 R2 绑定存放录音等公开文件（`BUCKET`）和签字表格（`GUARDIAN_FORMS`），通过服务绑定连接每个学科的网关 Worker，并配有每日和每 15 分钟的 Cron Trigger、加密 AI 供应商 API 密钥的 secret `AI_KEYS_SECRET`，以及[计费](billing.zh-CN.md) §10 中的 Stripe 密钥。
-  - 每个学科的 Worker（§6.1）先于 Web Worker 部署，分片先于网关，因为服务绑定指向的 Worker 必须已经存在。
-  - 部署前用 drizzle-kit 执行迁移。
-  - 学科的 Worker 没有 `workers.dev` 地址，因为只有服务绑定访问它们；每个都有一个返回 404 的 `fetch` 处理器，因为 Cloudflare 拒绝部署没有事件处理器的 Worker。
-  - Worker 存在之后才能设置它的 secret，所以 Web Worker 首次部署时用 `cf deploy --secrets-file` 一并传入。
+  - Web Worker（`apps/web`，`ga-web`），对外地址为 `greatacademy.dev`，用 `cf deploy` 部署。它渲染页面、提供静态文件，并通过它唯一的绑定，即公开文件的 R2 存储桶（`BUCKET`），提供录音。它没有 secret，也不访问数据库；页面在浏览器中调用 API 服务器。
+  - API 服务器（`apps/server`），对外地址为 `api.greatacademy.dev`。`pnpm nx run server:build` 用 rolldown 把它打包成 `dist/server.mjs`，镜像 `ghcr.io/greatacademy/api` 只含 Node、这个文件和迁移。镜像的命令有：`node server.mjs` 提供 HTTP 服务，`job daily` 和 `job quarter` 是定时任务，`migrate` 执行迁移，以及 `grant-admin <email>`。它在集群中以 Deployment `api` 运行：两个副本，有 PodDisruptionBudget，以无特权用户在只读文件系统上运行，所有学科编译完成后 `/healthz` 才就绪（§6.1）。
+  - 服务器从环境变量读取设置（`apps/server/src/config.ts`）：由 `deploy/k8s/api.env` 生成的 ConfigMap，以及由 `deploy/k8s/keys.py` 写入、不打印任何值的 Secret `api`。Secret 中有 `DATABASE_URL`、`BETTER_AUTH_SECRET`、加密 AI 供应商 API 密钥的 `AI_KEYS_SECRET`、语音服务的密钥，以及各供应商的密钥，其中包括[计费](billing.zh-CN.md) §10 中的 Stripe 密钥。
+  - CronJob `daily`（UTC 03:00）和 `quarter`（每 15 分钟）运行同一个镜像。CronJob `migrate` 处于暂停状态，在 `kubectl apply -k deploy/k8s` 之后、API 需要新 schema 之前，用 `kubectl create job --from=cronjob/migrate` 手动运行。
+  - ingress-nginx 把 `api.greatacademy.dev/api/` 路由到 API 服务器，把 `voice.greatacademy.dev/v1/conversation` 路由到语音服务，证书来自 cert-manager。external-dns 把两条记录写为经 Cloudflare 代理，服务器从 `CF-Connecting-IP` 取得客户端地址。语音服务在 `/voice/v1` 下的调用只在命名空间内部进行。NetworkPolicy 允许 ingress-nginx 访问 API 服务器和语音服务、语音服务访问 API 服务器、Prometheus 访问指标，出站只允许 DNS、PostgreSQL 和公网 HTTPS。
+  - `mise run k8s:push` 打包服务器，构建并推送两个镜像，再把 `deploy/k8s` 固定到它们的 digest；`mise run k8s:check` 校验清单，不接触集群。[deploy/k8s](../deploy/k8s/README.zh-CN.md) 说明集群、Secret 和每一步。
+  - 监护人的签字表格存放在 R2 存储桶 `ga-guardian-forms` 中，服务器通过 R2 的 S3 API（aws4fetch）、用只限于该存储桶的账户令牌访问。邮件经 Cloudflare Email Service 的 REST API 或 Resend 发送。
 - **区域。** 无论学习者在哪个市场，数据都留在美国西部：
-  - PostgreSQL 和语音服务的 Kubernetes 集群运行在 Hetzner Cloud 位于俄勒冈州 Hillsboro 的机房（`hil`），备份也留在美国。
-  - Hyperdrive 经 Cloudflare Tunnel 连接 PostgreSQL，数据库没有公网端口。PostgreSQL 是共享的 CloudNativePG 集群 `pg-cluster` 中的数据库 `greatacademy`；Hyperdrive 配置 `greatacademy` 连接 `db.greatacademy.dev`，`deploy/postgres` 中的 Tunnel `greatacademy-postgres` 把它路由到集群的主库，前面有一个只放行 Hyperdrive 服务令牌的 Cloudflare Access 应用。它的查询缓存关闭，因为学习者会读取自己刚写入的内容；它对集群最多打开 20 个连接，因为集群由其他项目共用。
-  - Web Worker 放在靠近数据库的 `aws:us-west-2` 运行，因为一个请求要查询数据库多次，否则每次查询都要跨洋。学科的 Worker 不查数据库，在边缘运行。
-  - R2 存储桶在首次部署前手动创建，位置提示设为 `wnam`，因为存储桶的位置之后不能更改。
+  - PostgreSQL、API 服务器和语音服务运行在 Hetzner Cloud 位于俄勒冈州 Hillsboro 的机房（`hil`）的同一个 Kubernetes 集群上，备份也留在美国。
+  - PostgreSQL 是 `cnpg-system` 中共享的 CloudNativePG 集群 `pg-cluster` 里的数据库 `greatacademy`。API 服务器在集群内部用 postgres.js 直接连接它，因此数据库没有公网端口。每个 API pod 维持一个最多 10 个连接、由其请求共用的连接池，每个任务最多 2 个，因为集群由其他项目共用。
+  - Web Worker 不查询数据库，在边缘运行。
+  - R2 存储桶在首次使用前手动创建，位置提示设为 `wnam`，因为存储桶的位置之后不能更改。
   - 数据只存放在一个国家，对其他每个市场都构成跨境传输，所以 `/legal/privacy` 的隐私声明写明数据存放在美国（[未成年人数据 §12](minors-data.zh-CN.md#12-供应商)）。
 - **开发：**
-  - `cf dev` 通过 Vite 在 workerd 中运行 Worker。
-  - 它连接 OrbStack 中 `postgres:18-alpine` 容器里的 PostgreSQL，详见[开发指南](development.zh-CN.md)。
-  - 语音服务用它的生产镜像在 PostgreSQL 旁边的容器中运行，访问主机上的 `cf dev`（[开发指南](development.zh-CN.md) §7）。
-- **移动端和桌面端：** 用 `nsh package` 构建各平台的安装包，调用同一套 API。
-- **为英语计划：** 更多 Cloudflare 服务、通过 pi-ai 使用由平台管理员配置供应商的 AI 模型，以及与 PostgreSQL 同处一地、运行在 Kubernetes 上的语音服务（[英语课程体系 §13](english-curriculum.zh-CN.md#13-技术与部署)）。
+  - `pnpm nx run server:dev` 在 Node 下运行 API 服务器，改动后自动重启，地址为 `http://localhost:8080`。它读取从 `.env.example` 复制而来的 `apps/server/.env.local`，连接 OrbStack 中 `postgres:18-alpine` 容器里的 PostgreSQL。
+  - `cf dev` 通过 Vite 在 workerd 中运行 Web Worker，Vite 把 `/api` 代理到 API 服务器（`API_URL`，否则为 `http://localhost:8080`），所以页面调用自己的源。详见[开发指南](development.zh-CN.md)。
+  - 语音服务用它的生产镜像在 PostgreSQL 旁边的容器中运行，访问主机上的 API 服务器和网站（[开发指南](development.zh-CN.md) §7）。
+- **移动端和桌面端：** 用 `nsh package` 构建各平台的安装包，调用同一个 API 服务器，即网站的 `api.` 子域名。
+- **英语**增加了通过 pi-ai 使用、由平台管理员配置供应商的 AI 模型，以及运行在同一集群上的语音服务（[英语课程体系 §13](english-curriculum.zh-CN.md#13-技术与部署)）。
 
-### 6.1 学科作为 Worker
+### 6.1 API 服务器中的学科
 
-生成器是代码，所以内容不能当作数据加载。Worker 在两种计划下都有限制：未压缩体积 64 MiB，全局作用域须在 1 秒内执行完，每个 isolate 内存 128 MB。全部数学未压缩约 29 MB，各分片在 Node 下的加载时间相加约 460 毫秒，后续还要增加更多学科，放在一个 Worker 里会触及这些限制。因此学科运行在各自的 Worker 中：
+生成器是代码，所以内容不能当作数据加载。API 服务器导入每个学科的内容包，在启动时于进程内编译（`apps/server/src/main.ts` 中的 `compileMath`、`compileEnglish` 和 `compileChinese`），三个学科共约一秒，之后才开始监听，因此 pod 只有在内容进入内存后才就绪。一个 pod 约占 1.2 GB；`deploy/k8s/api.yaml` 为它申请 1280 MiB，上限为 2 GiB。
 
 ```text
-Web Worker ──服务绑定──► 学科网关 ──服务绑定──► 学科分片
- Registry                manifest、路由          生成器、判定器
+客户端 ──► API 服务器：Registry ──► 每个学科一个本地网关 ──► topic 定义
+                       listing、manifest                     生成器、判定器
 ```
 
-- **Web Worker** 不含内容。它为每个学科绑定一个网关（`SUBJECT_MATH`），绑定列表在 `apps/web/src/server/handler.ts` 中。新增学科只需部署它的 Worker 并增加一个绑定。
-- **网关**实现 `libs/content` 的 `SubjectGateway`：`listing`（课程列表，很小）、`manifest`（不含代码的学科，构建时由 `subjectManifest` 生成），以及 `SubjectSource` 的 `problems`、`lesson`、`judge`，由 `routeSource` 转给持有该 topic 的分片。
-- **分片**持有学科中一部分 topic 的定义，用 `topicSource` 实现 `SubjectSource`。这些定义在第一次调用时才构建，不在启动时构建。如果内容的模块在加载时就构建题库（语文就是这样），所需时间会超过 Worker 启动的一秒上限，这时分片用 `lazyShardWorker` 构造：它在第一次调用时动态导入内容，打包工具把这些内容放进单独的 chunk，由第一次调用承担这段时间。题库在需要时重新构建，不常驻内存，使分片保持在 isolate 的 128 MB 以内（[内容](content.zh-CN.md) §4）；超出的 isolate 会被回收，每次调用都要重新加载内容。
-- **`Registry`**（`libs/api`）每个 isolate 读取一次课程列表，这足以列出课程；某门课程第一次被使用时才加载该学科的 manifest。它只保留最近使用的两个学科，因为数学建好索引后约占 45 MB 内存，而一个 isolate 只有 128 MB。课程的 scope 在第一次使用时才计算。
+- **`localGateway`**（`libs/api`）把编译好的学科包装成 `libs/content` 的 `SubjectGateway`：`listing`（课程列表，很小）和 `manifest`（不含代码的学科），都由 `subjectManifest` 一次生成；以及 `SubjectSource` 的 `problems`、`lesson`、`judge` 和 `passage`，由 `topicSource` 基于学科的 topic 定义提供。`SubjectSource` 是异步的，以便学科也可以由另一个进程提供。新增学科只需把它的内容包加入 `apps/server`，并在列表中增加一个编译好的学科。
+- **`Registry`**（`libs/api`）读取一次课程列表，这足以列出课程；某门课程第一次被使用时才为该学科的 manifest 建立索引。它保留最近使用的两个学科的索引。课程的 scope 在第一次使用时才计算。
+- 题库很大的 topic 通过 `slimmed` 或 `slimTopics` 构建，保存时不带生成器，生成器在第一次使用时重新构建题库（[内容](content.zh-CN.md) §4），使进程不必同时持有所有题库。
 
-数学有五个分片，各对应课程体系的一段（`content/math/src/shards/`）。`apps/math-workers/gen/` 存放生成的 manifest 和每个分片的 topic 列表，不提交到仓库。英语目前只有一个分片 `core`，`apps/english-workers` 下的结构相同。语文在 `apps/chinese-workers` 下有三个分片：`core`（母语年级、华裔课程、高考和阅读单元）、`levels`（国际中文的九个等级及其书写）和 `hsk`（HSK 考试 topic）。HSK 的 topic 需要各等级的汉字、词语和单元，但不需要它们的 topic，所以 `hsk` 只读取各等级的计划（`level-N/plan.ts`，读入并校验各批数据），只有课程才导入各等级的 topic。同样，手写的公共工具（`strokes/hand.ts`）与母语年级的写字 topic 分开，`levels` 和 `hsk` 因此不会构建母语识字批次。`apps/chinese-workers` 的测试会构建各分片，在 Node 中加载每个打包后的内容 chunk，并为它的每个知识点出一道题；整个堆（所有空间合计）限制为 104 MB，新生代限制得和 isolate 一样小（`scripts/check-shard.test.ts`）：`core` 需要 64 MB，`levels` 68 MB，`hsk` 80 MB。测试打包产物而不是源码，也能发现只有打包后才出现的问题，比如模块执行顺序不同。
-
-| Worker | 未压缩体积 | Node 下的模块加载时间 |
-| :--- | :--- | :--- |
-| `ga-web` | 6.8 MB | |
-| `ga-math`（网关） | 5.9 MB | 51 毫秒 |
-| `ga-math-school` | 4.7 MB | 62 毫秒 |
-| `ga-math-algebra` | 5.8 MB | 108 毫秒 |
-| `ga-math-calculus` | 8.7 MB | 133 毫秒 |
-| `ga-math-college` | 6.8 MB | 112 毫秒 |
-| `ga-math-exam` | 2.6 MB | 49 毫秒 |
-| `ga-english`（网关） | 2.8 MB | 30 毫秒 |
-| `ga-english-core` | 7.5 MB | 240 毫秒 |
-| `ga-chinese-core` | 4.7 MB | 230 毫秒，在第一次调用时 |
-| `ga-chinese-levels` | 5.6 MB | 780 毫秒，在第一次调用时 |
-| `ga-chinese-hsk` | 5.7 MB | 600 毫秒，在第一次调用时 |
-
-当分片的启动时间或内存接近上限时（部署输出中的 `startup_time_ms` 和线上指标可以反映）就一分为二：把 topic 移到 `shards/` 下的新文件，在 `apps/math-workers/src/shards/` 下新增入口，并增加一个绑定。学习者状态不记录 topic 属于哪个分片，所以随时都可以这样做。
-
-服务绑定调用不另收请求费，也不按时长收费；调用链上每个 Worker 的 CPU 时间都计费，多出的跳转开销很小。每个 Worker 各写各的日志，一次请求可能写三条日志事件。因此网关和分片只记录 1% 的调用（`headSamplingRate`）。Web Worker 记录每个请求，网关和分片的错误通过 RPC 传到它那里。
+每个内容包把它的 topic 分组放在 `content/<id>/src/shards/` 中，由 `index.ts` 合在一起：数学有五组，各对应课程体系的一段；英语一组，`core`；语文三组，`core`（母语年级、华裔课程、高考和阅读单元）、`levels`（国际中文的九个等级及其书写）和 `hsk`（HSK 考试 topic）。这些分组只用来组织内容；测试检查每个 topic 恰好属于一组。学习者状态不记录 topic 属于哪一组。
 
 ## 7. 存储
 
@@ -250,11 +225,11 @@ Web Worker ──服务绑定──► 学科网关 ──服务绑定──► 
 - 完成一个会话时，追加事件、替换快照、关闭会话在同一个事务中完成。
 - 为写入而读取快照行和会话行时会加锁（`SELECT … FOR UPDATE`）；`(learner, subject, seq)` 唯一索引拒绝任何漏网的写入者。
 - `SubmitAnswer` 携带所回答题目的序号，重复的请求会被拒绝，而不是被判两次。
-- **由模型判定的作答。** `SubmitAnswer` 只检查长度，保存一条待判定的 `judgment`，把它记在执行器状态里，并返回 `pending`。客户端轮询 `GetJudgment`，它在请求内运行到期的判定，因为 Worker 的数据库连接随响应关闭。同一时间只有一个调用方通过 30 秒的租约持有一次判定；一次失败的尝试等待 10 秒，每次加倍，最多 2 分钟，尝试两次后改用备用路由，10 分钟后彻底失败，这时学习者可以跳过这道题，会话结束且不追加事件。达到标准的比例至少为 0.75 时算答对；低于此值时文本退回一次让学习者重写，不显示范文，第二次的结果无论如何都计入。只有这时才追加事件，因此回放不会调用模型。
+- **由模型判定的作答。** `SubmitAnswer` 只检查长度，保存一条待判定的 `judgment`，把它记在执行器状态里，并返回 `pending`。客户端轮询 `GetJudgment`，它在请求内运行到期的判定。同一时间只有一个调用方通过 30 秒的租约持有一次判定；一次失败的尝试等待 10 秒，每次加倍，最多 2 分钟，尝试两次后改用备用路由，10 分钟后彻底失败，这时学习者可以跳过这道题，会话结束且不追加事件。达到标准的比例至少为 0.75 时算答对；低于此值时文本退回一次让学习者重写，不显示范文，第二次的结果无论如何都计入。只有这时才追加事件，因此回放不会调用模型。
 - **整篇文章。** 整篇文章（[内容 §5](content.zh-CN.md#5-答案与判定器)）交上即结束会话：`SubmitAnswer` 把会话存为 `submitted`，判定待运行，学习者可以离开。学习者停在文章页面上轮询 `GetJudgment` 时运行判定，否则由每刻钟一次的定时任务（`runEssays`）运行，最长有 6 小时完成。判定结束后，下一次对学习主页、会话或判定的请求会结算它：得到判定结果时追加课程的事件，以结果作为反馈完成会话，不能重写；判定失败时放弃会话且不追加事件，这节课以后还会再来。学习主页列出仍在评判中以及 7 天内评判完的文章。
 - **由模型判定的主题需要路由。** 对每位学习者，课程会去掉这样的主题：它由模型判定，而它的标准并非都有可以接收该学习者文本的线上路由（[管理后台 §5](admin.zh-CN.md#5-ai-服务)）；编译器不允许由规则判定的主题依赖或包含这样的主题。
 
-**迁移**由 drizzle-kit 从 `libs/db/src/schema` 生成到 `libs/db/drizzle` 并提交入库。测试把迁移应用到 PGlite；部署时用 `pnpm nx run db:migrate` 应用。
+**迁移**由 drizzle-kit 从 `libs/db/src/schema` 生成到 `libs/db/drizzle` 并提交入库。测试把迁移应用到 PGlite；部署时由 CronJob `migrate` 运行 API 镜像的 `migrate` 命令应用（§6），开发时用 `pnpm nx run db:migrate`。
 
 ## 8. 外观
 
