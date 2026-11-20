@@ -4,6 +4,9 @@
 
 import type { GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
+import type { Text } from "../../common/v1/text_pb.js";
+import type { Course, Topic } from "../../catalog/v1/catalog_pb.js";
+import type { Feedback, KnowledgePointIntro, Passage, ProblemView } from "../../learning/v1/learning_pb.js";
 
 /**
  * Describes the file ga/admin/v1/admin.proto.
@@ -1843,6 +1846,357 @@ export declare type ListDriftResponse = Message<"ga.admin.v1.ListDriftResponse">
 export declare const ListDriftResponseSchema: GenMessage<ListDriftResponse>;
 
 /**
+ * @generated from message ga.admin.v1.GetCourseContentRequest
+ */
+export declare type GetCourseContentRequest = Message<"ga.admin.v1.GetCourseContentRequest"> & {
+  /**
+   * @generated from field: string course_id = 1;
+   */
+  courseId: string;
+};
+
+/**
+ * Describes the message ga.admin.v1.GetCourseContentRequest.
+ * Use `create(GetCourseContentRequestSchema)` to create a new message.
+ */
+export declare const GetCourseContentRequestSchema: GenMessage<GetCourseContentRequest>;
+
+/**
+ * ContentPassage is a reading passage of a course.
+ *
+ * @generated from message ga.admin.v1.ContentPassage
+ */
+export declare type ContentPassage = Message<"ga.admin.v1.ContentPassage"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * @generated from field: ga.common.v1.Text title = 2;
+   */
+  title?: Text | undefined;
+
+  /**
+   * @generated from field: int32 questions = 3;
+   */
+  questions: number;
+
+  /**
+   * @generated from field: int32 words = 4;
+   */
+  words: number;
+};
+
+/**
+ * Describes the message ga.admin.v1.ContentPassage.
+ * Use `create(ContentPassageSchema)` to create a new message.
+ */
+export declare const ContentPassageSchema: GenMessage<ContentPassage>;
+
+/**
+ * @generated from message ga.admin.v1.GetCourseContentResponse
+ */
+export declare type GetCourseContentResponse = Message<"ga.admin.v1.GetCourseContentResponse"> & {
+  /**
+   * course is the course with its outline.
+   *
+   * @generated from field: ga.catalog.v1.Course course = 1;
+   */
+  course?: Course | undefined;
+
+  /**
+   * foundations are the topics of earlier courses the course relies on, in the order they are learned.
+   *
+   * @generated from field: repeated ga.catalog.v1.Topic foundations = 2;
+   */
+  foundations: Topic[];
+
+  /**
+   * @generated from field: repeated ga.admin.v1.ContentPassage passages = 3;
+   */
+  passages: ContentPassage[];
+};
+
+/**
+ * Describes the message ga.admin.v1.GetCourseContentResponse.
+ * Use `create(GetCourseContentResponseSchema)` to create a new message.
+ */
+export declare const GetCourseContentResponseSchema: GenMessage<GetCourseContentResponse>;
+
+/**
+ * @generated from message ga.admin.v1.PreviewTopicRequest
+ */
+export declare type PreviewTopicRequest = Message<"ga.admin.v1.PreviewTopicRequest"> & {
+  /**
+   * @generated from field: string course_id = 1;
+   */
+  courseId: string;
+
+  /**
+   * @generated from field: string topic_id = 2;
+   */
+  topicId: string;
+
+  /**
+   * example_seed picks the worked examples.
+   *
+   * @generated from field: int32 example_seed = 3;
+   */
+  exampleSeed: number;
+};
+
+/**
+ * Describes the message ga.admin.v1.PreviewTopicRequest.
+ * Use `create(PreviewTopicRequestSchema)` to create a new message.
+ */
+export declare const PreviewTopicRequestSchema: GenMessage<PreviewTopicRequest>;
+
+/**
+ * ContentLink names another topic.
+ *
+ * @generated from message ga.admin.v1.ContentLink
+ */
+export declare type ContentLink = Message<"ga.admin.v1.ContentLink"> & {
+  /**
+   * @generated from field: string topic_id = 1;
+   */
+  topicId: string;
+
+  /**
+   * @generated from field: ga.common.v1.Text title = 2;
+   */
+  title?: Text | undefined;
+};
+
+/**
+ * Describes the message ga.admin.v1.ContentLink.
+ * Use `create(ContentLinkSchema)` to create a new message.
+ */
+export declare const ContentLinkSchema: GenMessage<ContentLink>;
+
+/**
+ * @generated from message ga.admin.v1.PreviewTopicResponse
+ */
+export declare type PreviewTopicResponse = Message<"ga.admin.v1.PreviewTopicResponse"> & {
+  /**
+   * @generated from field: string topic_id = 1;
+   */
+  topicId: string;
+
+  /**
+   * @generated from field: ga.common.v1.Text title = 2;
+   */
+  title?: Text | undefined;
+
+  /**
+   * @generated from field: ga.common.v1.Text summary = 3;
+   */
+  summary?: Text | undefined;
+
+  /**
+   * @generated from field: int32 xp = 4;
+   */
+  xp: number;
+
+  /**
+   * practice_only is true for a topic practised but never quizzed.
+   *
+   * @generated from field: bool practice_only = 5;
+   */
+  practiceOnly: boolean;
+
+  /**
+   * @generated from field: repeated ga.learning.v1.KnowledgePointIntro knowledge_points = 6;
+   */
+  knowledgePoints: KnowledgePointIntro[];
+
+  /**
+   * @generated from field: repeated ga.admin.v1.ContentLink prerequisites = 7;
+   */
+  prerequisites: ContentLink[];
+
+  /**
+   * dependents are the topics of the course that build on this one.
+   *
+   * @generated from field: repeated ga.admin.v1.ContentLink dependents = 8;
+   */
+  dependents: ContentLink[];
+};
+
+/**
+ * Describes the message ga.admin.v1.PreviewTopicResponse.
+ * Use `create(PreviewTopicResponseSchema)` to create a new message.
+ */
+export declare const PreviewTopicResponseSchema: GenMessage<PreviewTopicResponse>;
+
+/**
+ * @generated from message ga.admin.v1.PreviewPassageRequest
+ */
+export declare type PreviewPassageRequest = Message<"ga.admin.v1.PreviewPassageRequest"> & {
+  /**
+   * @generated from field: string course_id = 1;
+   */
+  courseId: string;
+
+  /**
+   * @generated from field: string passage_id = 2;
+   */
+  passageId: string;
+};
+
+/**
+ * Describes the message ga.admin.v1.PreviewPassageRequest.
+ * Use `create(PreviewPassageRequestSchema)` to create a new message.
+ */
+export declare const PreviewPassageRequestSchema: GenMessage<PreviewPassageRequest>;
+
+/**
+ * @generated from message ga.admin.v1.PreviewPassageResponse
+ */
+export declare type PreviewPassageResponse = Message<"ga.admin.v1.PreviewPassageResponse"> & {
+  /**
+   * @generated from field: ga.learning.v1.Passage passage = 1;
+   */
+  passage?: Passage | undefined;
+
+  /**
+   * @generated from field: int32 questions = 2;
+   */
+  questions: number;
+
+  /**
+   * topics are the topics a reader must know first.
+   *
+   * @generated from field: repeated ga.admin.v1.ContentLink topics = 3;
+   */
+  topics: ContentLink[];
+};
+
+/**
+ * Describes the message ga.admin.v1.PreviewPassageResponse.
+ * Use `create(PreviewPassageResponseSchema)` to create a new message.
+ */
+export declare const PreviewPassageResponseSchema: GenMessage<PreviewPassageResponse>;
+
+/**
+ * TryRef names a problem to try: a knowledge point of a topic and a seed, or, for a passage, the passage as the topic
+ * and the question as the knowledge point.
+ *
+ * @generated from message ga.admin.v1.TryRef
+ */
+export declare type TryRef = Message<"ga.admin.v1.TryRef"> & {
+  /**
+   * @generated from field: string course_id = 1;
+   */
+  courseId: string;
+
+  /**
+   * @generated from field: string topic_id = 2;
+   */
+  topicId: string;
+
+  /**
+   * @generated from field: int32 kp = 3;
+   */
+  kp: number;
+
+  /**
+   * @generated from field: int32 seed = 4;
+   */
+  seed: number;
+};
+
+/**
+ * Describes the message ga.admin.v1.TryRef.
+ * Use `create(TryRefSchema)` to create a new message.
+ */
+export declare const TryRefSchema: GenMessage<TryRef>;
+
+/**
+ * @generated from message ga.admin.v1.TryProblemRequest
+ */
+export declare type TryProblemRequest = Message<"ga.admin.v1.TryProblemRequest"> & {
+  /**
+   * @generated from field: ga.admin.v1.TryRef ref = 1;
+   */
+  ref?: TryRef | undefined;
+};
+
+/**
+ * Describes the message ga.admin.v1.TryProblemRequest.
+ * Use `create(TryProblemRequestSchema)` to create a new message.
+ */
+export declare const TryProblemRequestSchema: GenMessage<TryProblemRequest>;
+
+/**
+ * @generated from message ga.admin.v1.TryProblemResponse
+ */
+export declare type TryProblemResponse = Message<"ga.admin.v1.TryProblemResponse"> & {
+  /**
+   * @generated from field: ga.learning.v1.ProblemView problem = 1;
+   */
+  problem?: ProblemView | undefined;
+
+  /**
+   * answer is the canonical response with the solution, for the administrator to reveal.
+   *
+   * @generated from field: ga.learning.v1.Feedback answer = 2;
+   */
+  answer?: Feedback | undefined;
+
+  /**
+   * checkable is false when the answer is judged by a model or heard by a speech service.
+   *
+   * @generated from field: bool checkable = 3;
+   */
+  checkable: boolean;
+};
+
+/**
+ * Describes the message ga.admin.v1.TryProblemResponse.
+ * Use `create(TryProblemResponseSchema)` to create a new message.
+ */
+export declare const TryProblemResponseSchema: GenMessage<TryProblemResponse>;
+
+/**
+ * @generated from message ga.admin.v1.CheckTryRequest
+ */
+export declare type CheckTryRequest = Message<"ga.admin.v1.CheckTryRequest"> & {
+  /**
+   * @generated from field: ga.admin.v1.TryRef ref = 1;
+   */
+  ref?: TryRef | undefined;
+
+  /**
+   * @generated from field: string response = 2;
+   */
+  response: string;
+};
+
+/**
+ * Describes the message ga.admin.v1.CheckTryRequest.
+ * Use `create(CheckTryRequestSchema)` to create a new message.
+ */
+export declare const CheckTryRequestSchema: GenMessage<CheckTryRequest>;
+
+/**
+ * @generated from message ga.admin.v1.CheckTryResponse
+ */
+export declare type CheckTryResponse = Message<"ga.admin.v1.CheckTryResponse"> & {
+  /**
+   * @generated from field: ga.learning.v1.Feedback feedback = 1;
+   */
+  feedback?: Feedback | undefined;
+};
+
+/**
+ * Describes the message ga.admin.v1.CheckTryResponse.
+ * Use `create(CheckTryResponseSchema)` to create a new message.
+ */
+export declare const CheckTryResponseSchema: GenMessage<CheckTryResponse>;
+
+/**
  * AdminService runs the admin console; every call checks the role on the
  * server and answers not found to anyone else.
  *
@@ -2148,6 +2502,59 @@ export declare const AdminService: GenService<{
     methodKind: "unary";
     input: typeof ListDriftRequestSchema;
     output: typeof ListDriftResponseSchema;
+  },
+  /**
+   * GetCourseContent returns all of a course to check, whatever anyone has learned: its outline, the foundations it
+   * relies on from earlier courses, and its reading passages. Retired courses are included.
+   *
+   * @generated from rpc ga.admin.v1.AdminService.GetCourseContent
+   */
+  getCourseContent: {
+    methodKind: "unary";
+    input: typeof GetCourseContentRequestSchema;
+    output: typeof GetCourseContentResponseSchema;
+  },
+  /**
+   * PreviewTopic returns a topic's lesson as a learner meets it, every knowledge point with a worked example.
+   *
+   * @generated from rpc ga.admin.v1.AdminService.PreviewTopic
+   */
+  previewTopic: {
+    methodKind: "unary";
+    input: typeof PreviewTopicRequestSchema;
+    output: typeof PreviewTopicResponseSchema;
+  },
+  /**
+   * PreviewPassage returns a reading passage with how many questions it has.
+   *
+   * @generated from rpc ga.admin.v1.AdminService.PreviewPassage
+   */
+  previewPassage: {
+    methodKind: "unary";
+    input: typeof PreviewPassageRequestSchema;
+    output: typeof PreviewPassageResponseSchema;
+  },
+  /**
+   * TryProblem generates a problem of a knowledge point, or a question of a passage, with its answer for the
+   * administrator to reveal. Trying records nothing about anyone.
+   *
+   * @generated from rpc ga.admin.v1.AdminService.TryProblem
+   */
+  tryProblem: {
+    methodKind: "unary";
+    input: typeof TryProblemRequestSchema;
+    output: typeof TryProblemResponseSchema;
+  },
+  /**
+   * CheckTry checks a response to a problem of TryProblem by the subject's rules, as a learner's answer is checked.
+   * Answers judged by a model or heard by a speech service are not checked here.
+   *
+   * @generated from rpc ga.admin.v1.AdminService.CheckTry
+   */
+  checkTry: {
+    methodKind: "unary";
+    input: typeof CheckTryRequestSchema;
+    output: typeof CheckTryResponseSchema;
   },
 }>;
 

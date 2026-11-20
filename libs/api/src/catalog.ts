@@ -6,7 +6,8 @@ import type { CatalogService, CourseSchema } from "@ga/proto/catalog/v1/catalog_
 import { text } from "./convert.ts";
 import type { CourseEntry, Registry } from "./registry.ts";
 
-function listed(
+/** courseMessage describes a course of a subject for a client, with its outline when given. */
+export function courseMessage(
   subject: SubjectListing,
   c: CourseListing,
   outline?: MessageInitShape<typeof CourseSchema>["units"],
@@ -26,7 +27,8 @@ function listed(
   };
 }
 
-function units(c: CourseEntry): MessageInitShape<typeof CourseSchema>["units"] {
+/** courseUnits is the outline of a course: its units, modules and topics. */
+export function courseUnits(c: CourseEntry): MessageInitShape<typeof CourseSchema>["units"] {
   return c.course.def.units.map((u) => ({
     title: text(u.title),
     modules: u.modules.map((m) => ({
@@ -44,7 +46,7 @@ export function catalogService(registry: Registry): ServiceImpl<typeof CatalogSe
   return {
     listCourses() {
       return {
-        courses: registry.listings.flatMap((s) => s.courses.map((c) => listed(s, c))),
+        courses: registry.listings.flatMap((s) => s.courses.map((c) => courseMessage(s, c))),
         subjects: registry.listings.map((s) => ({ id: s.id, title: text(s.title), mark: s.mark, hue: s.hue })),
       };
     },
@@ -52,7 +54,7 @@ export function catalogService(registry: Registry): ServiceImpl<typeof CatalogSe
       const c = await registry.course(req.courseId);
       if (!c) throw new ConnectError(`unknown course ${req.courseId}`, Code.NotFound);
       const listing = registry.listings.find((s) => s.id === c.subject.def.id)!;
-      return { course: listed(listing, listing.courses.find((l) => l.id === c.id)!, units(c)) };
+      return { course: courseMessage(listing, listing.courses.find((l) => l.id === c.id)!, courseUnits(c)) };
     },
   };
 }

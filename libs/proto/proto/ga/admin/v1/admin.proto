@@ -2,6 +2,10 @@ syntax = "proto3";
 
 package ga.admin.v1;
 
+import "ga/catalog/v1/catalog.proto";
+import "ga/common/v1/text.proto";
+import "ga/learning/v1/learning.proto";
+
 // AdminService runs the admin console; every call checks the role on the
 // server and answers not found to anyone else.
 service AdminService {
@@ -65,6 +69,19 @@ service AdminService {
   rpc SaveCheck(SaveCheckRequest) returns (SaveCheckResponse);
   // ListDrift compares each route's live verdicts with people's checks.
   rpc ListDrift(ListDriftRequest) returns (ListDriftResponse);
+  // GetCourseContent returns all of a course to check, whatever anyone has learned: its outline, the foundations it
+  // relies on from earlier courses, and its reading passages. Retired courses are included.
+  rpc GetCourseContent(GetCourseContentRequest) returns (GetCourseContentResponse);
+  // PreviewTopic returns a topic's lesson as a learner meets it, every knowledge point with a worked example.
+  rpc PreviewTopic(PreviewTopicRequest) returns (PreviewTopicResponse);
+  // PreviewPassage returns a reading passage with how many questions it has.
+  rpc PreviewPassage(PreviewPassageRequest) returns (PreviewPassageResponse);
+  // TryProblem generates a problem of a knowledge point, or a question of a passage, with its answer for the
+  // administrator to reveal. Trying records nothing about anyone.
+  rpc TryProblem(TryProblemRequest) returns (TryProblemResponse);
+  // CheckTry checks a response to a problem of TryProblem by the subject's rules, as a learner's answer is checked.
+  // Answers judged by a model or heard by a speech service are not checked here.
+  rpc CheckTry(CheckTryRequest) returns (CheckTryResponse);
 }
 
 message GetOverviewRequest {}
@@ -501,4 +518,92 @@ message ListDriftResponse {
   int32 waiting = 2;
   // min_checks is how many checks a route needs before its drift is judged.
   int32 min_checks = 3;
+}
+
+message GetCourseContentRequest {
+  string course_id = 1;
+}
+
+// ContentPassage is a reading passage of a course.
+message ContentPassage {
+  string id = 1;
+  ga.common.v1.Text title = 2;
+  int32 questions = 3;
+  int32 words = 4;
+}
+
+message GetCourseContentResponse {
+  // course is the course with its outline.
+  ga.catalog.v1.Course course = 1;
+  // foundations are the topics of earlier courses the course relies on, in the order they are learned.
+  repeated ga.catalog.v1.Topic foundations = 2;
+  repeated ContentPassage passages = 3;
+}
+
+message PreviewTopicRequest {
+  string course_id = 1;
+  string topic_id = 2;
+  // example_seed picks the worked examples.
+  int32 example_seed = 3;
+}
+
+// ContentLink names another topic.
+message ContentLink {
+  string topic_id = 1;
+  ga.common.v1.Text title = 2;
+}
+
+message PreviewTopicResponse {
+  string topic_id = 1;
+  ga.common.v1.Text title = 2;
+  ga.common.v1.Text summary = 3;
+  int32 xp = 4;
+  // practice_only is true for a topic practised but never quizzed.
+  bool practice_only = 5;
+  repeated ga.learning.v1.KnowledgePointIntro knowledge_points = 6;
+  repeated ContentLink prerequisites = 7;
+  // dependents are the topics of the course that build on this one.
+  repeated ContentLink dependents = 8;
+}
+
+message PreviewPassageRequest {
+  string course_id = 1;
+  string passage_id = 2;
+}
+
+message PreviewPassageResponse {
+  ga.learning.v1.Passage passage = 1;
+  int32 questions = 2;
+  // topics are the topics a reader must know first.
+  repeated ContentLink topics = 3;
+}
+
+// TryRef names a problem to try: a knowledge point of a topic and a seed, or, for a passage, the passage as the topic
+// and the question as the knowledge point.
+message TryRef {
+  string course_id = 1;
+  string topic_id = 2;
+  int32 kp = 3;
+  int32 seed = 4;
+}
+
+message TryProblemRequest {
+  TryRef ref = 1;
+}
+
+message TryProblemResponse {
+  ga.learning.v1.ProblemView problem = 1;
+  // answer is the canonical response with the solution, for the administrator to reveal.
+  ga.learning.v1.Feedback answer = 2;
+  // checkable is false when the answer is judged by a model or heard by a speech service.
+  bool checkable = 3;
+}
+
+message CheckTryRequest {
+  TryRef ref = 1;
+  string response = 2;
+}
+
+message CheckTryResponse {
+  ga.learning.v1.Feedback feedback = 1;
 }

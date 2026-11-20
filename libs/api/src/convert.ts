@@ -30,7 +30,7 @@ export function audioPath(subject: string, name: string | undefined): string {
 }
 
 /** passageMessage converts what a reader sees of a passage. */
-function passageMessage(subject: string, passage: PassageView): MessageInitShape<typeof PassageSchema> {
+export function passageMessage(subject: string, passage: PassageView): MessageInitShape<typeof PassageSchema> {
   return {
     title: text(passage.title),
     body: passage.body,

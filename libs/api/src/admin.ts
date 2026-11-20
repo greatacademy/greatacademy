@@ -54,9 +54,9 @@ import {
   speechProtocol,
 } from "@ga/judge";
 import type { AdminService } from "@ga/proto/admin/v1/admin_pb";
-
 import { CHECK_VALID_MS, checkValid, scopeOffered } from "./capabilities.ts";
 import { CHECK_READ_ACTION, CHECK_SAVE_ACTION, driftOf, MIN_DRIFT_CHECKS } from "./checks.ts";
+import { contentMethods } from "./content-admin.ts";
 import { dbKey, userIdKey } from "./context.ts";
 import { ALARM_ACTION, monthStart, providerSpend } from "./costs.ts";
 import { AI_SCOPES, MARKETS, marketOf, missingLanguages } from "./markets.ts";
@@ -140,6 +140,7 @@ export function adminService(deps: AdminDeps): ServiceImpl<typeof AdminService> 
   };
 
   return {
+    ...contentMethods(deps.registry, admin),
     async getOverview(_req, ctx) {
       const { db, at } = await admin(ctx);
       const [waiting, checks, list, all, last, bands, priceList, alarms] = await Promise.all([
