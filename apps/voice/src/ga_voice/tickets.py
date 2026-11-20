@@ -1,4 +1,4 @@
-"""Session tickets: signed by the web Worker, verified here with its public key.
+"""Session tickets: signed by the API, verified here with its public key.
 
 A ticket is ``<payload>.<signature>``, both base64url without padding. The
 payload is UTF-8 JSON::
@@ -30,7 +30,7 @@ MAX_LIFETIME_SECS = 120
 """MAX_LIFETIME_SECS refuses tickets issued for longer than this, whatever their signature."""
 
 CLOCK_LEEWAY_SECS = 5
-"""CLOCK_LEEWAY_SECS allows for clock skew between the Worker and this service."""
+"""CLOCK_LEEWAY_SECS allows for clock skew between the API and this service."""
 
 
 class TicketError(Exception):
@@ -46,7 +46,7 @@ class MalformedTicketError(TicketError):
 
 
 class ForgedTicketError(TicketError):
-    """ForgedTicketError is raised when the signature does not match the Worker's key."""
+    """ForgedTicketError is raised when the signature does not match the API's key."""
 
     code = "ticket_forged"
 
@@ -186,7 +186,7 @@ class TicketVerifier:
 
 
 def sign_ticket(private_key: Ed25519PrivateKey, payload: dict[str, object]) -> str:
-    """sign_ticket makes a ticket the way the web Worker does; used by tests and local development."""
+    """sign_ticket makes a ticket the way the API does; used by tests and local development."""
     payload_b64 = _b64encode(json.dumps(payload, separators=(",", ":")).encode("utf-8"))
     signature = private_key.sign(payload_b64.encode("ascii"))
     return f"{payload_b64}.{_b64encode(signature)}"

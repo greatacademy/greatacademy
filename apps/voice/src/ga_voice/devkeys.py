@@ -1,7 +1,8 @@
 """Development keys: ``uv run python -m ga_voice.devkeys`` prints a new ticket key pair.
 
-The private key goes to the web Worker's ``.dev.vars``, which signs tickets;
-the public key goes to ``apps/voice/.env.local``. Never use these in production.
+The private key goes to the API server's local settings (``apps/server/.env.local``),
+which signs tickets; the public key goes to ``apps/voice/.env.local``. Never use
+these in production.
 """
 
 import base64

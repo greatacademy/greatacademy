@@ -9,13 +9,13 @@ from dataclasses import dataclass
 
 from loguru import logger
 
+from ga_voice.api_client import ApiClient, HttpApiClient
 from ga_voice.drain import Admission
 from ga_voice.server import VoiceApp, make_server
 from ga_voice.session import SessionSettings
-from ga_voice.speech import FakeSpeechServices, FixedSpeech, SpeechSource, UnconfiguredSpeechServices, WorkerSpeech
+from ga_voice.speech import ApiSpeech, FakeSpeechServices, FixedSpeech, SpeechSource, UnconfiguredSpeechServices
 from ga_voice.tickets import TicketVerifier, load_public_key
 from ga_voice.turns import SESSION_LIMIT_SECS
-from ga_voice.worker_client import HttpWorkerClient, WorkerClient
 
 
 @dataclass(frozen=True, slots=True)
@@ -23,14 +23,15 @@ class Config:
     """Config is the service's configuration, read from ``VOICE_*`` environment variables."""
 
     ticket_public_key: str
-    worker_url: str
-    worker_credential: str
+    api_url: str
+    api_credential: str
+    audio_url: str
     host: str = "0.0.0.0"  # noqa: S104 - the container listens on all interfaces
     port: int = 8080
     capacity: int = 4
     session_limit_secs: float = SESSION_LIMIT_SECS
     drain_timeout_secs: float = 24 * 60
-    speech: str = "worker"
+    speech: str = "api"
     log_level: str = "INFO"
 
 
@@ -39,7 +40,7 @@ class ConfigError(Exception):
 
 
 def load_config(env: Mapping[str, str]) -> Config:
-    """load_config reads the configuration; the key, Worker URL and credential are required."""
+    """load_config reads the configuration; the key, API URL, credential and audio URL are required."""
 
     def required(name: str) -> str:
         value = env.get(name, "").strip()
@@ -47,14 +48,15 @@ def load_config(env: Mapping[str, str]) -> Config:
             raise ConfigError(f"{name} is not set")
         return value
 
-    speech = env.get("VOICE_SPEECH", "worker")
-    if speech not in ("worker", "unconfigured", "fake"):
-        raise ConfigError("VOICE_SPEECH must be 'worker', 'unconfigured' or 'fake'")
+    speech = env.get("VOICE_SPEECH", "api")
+    if speech not in ("api", "unconfigured", "fake"):
+        raise ConfigError("VOICE_SPEECH must be 'api', 'unconfigured' or 'fake'")
     try:
         return Config(
             ticket_public_key=required("VOICE_TICKET_PUBLIC_KEY"),
-            worker_url=required("VOICE_WORKER_URL"),
-            worker_credential=required("VOICE_WORKER_CREDENTIAL"),
+            api_url=required("VOICE_API_URL"),
+            api_credential=required("VOICE_API_CREDENTIAL"),
+            audio_url=required("VOICE_AUDIO_URL"),
             host=env.get("VOICE_HOST", "0.0.0.0"),  # noqa: S104
             port=int(env.get("VOICE_PORT", "8080")),
             capacity=int(env.get("VOICE_CAPACITY", "4")),
@@ -87,10 +89,10 @@ def configure_logging(level: str) -> None:
     logger.add(sys.stderr, level=effective, filter=keep, backtrace=False, diagnose=False)
 
 
-def speech_source(kind: str, worker: WorkerClient) -> SpeechSource:
-    """speech_source returns where sessions get their speech: the Worker's routes, fake services, or none."""
-    if kind == "worker":
-        return WorkerSpeech(worker)
+def speech_source(kind: str, api: ApiClient) -> SpeechSource:
+    """speech_source returns where sessions get their speech: the API's routes, fake services, or none."""
+    if kind == "api":
+        return ApiSpeech(api)
     if kind == "fake":
         logger.warning("voice: fake speech services are on; for local development only")
         # Someone trying the apps by voice says a scripted line each turn, as long as they talk.
@@ -101,12 +103,12 @@ def speech_source(kind: str, worker: WorkerClient) -> SpeechSource:
 
 async def serve(config: Config) -> None:
     """serve runs the server until it has drained."""
-    worker = HttpWorkerClient(config.worker_url, config.worker_credential)
+    api = HttpApiClient(config.api_url, config.api_credential, config.audio_url)
     voice = VoiceApp(
         admission=Admission(config.capacity),
         verifier=TicketVerifier(load_public_key(config.ticket_public_key), clock=time.time),
-        speech=speech_source(config.speech, worker),
-        worker=worker,
+        speech=speech_source(config.speech, api),
+        api=api,
         settings=SessionSettings(limit_secs=config.session_limit_secs),
     )
     server = make_server(voice, host=config.host, port=config.port, drain_timeout_secs=config.drain_timeout_secs)
@@ -114,7 +116,7 @@ async def serve(config: Config) -> None:
     try:
         await server.serve()
     finally:
-        await worker.aclose()
+        await api.aclose()
 
 
 def main() -> None:

@@ -13,9 +13,9 @@ from pipecat.frames.frames import (
     VADUserStoppedSpeakingFrame,
 )
 
+from ga_voice.api_client import FakeApiClient, TutorTurn
 from ga_voice.conversation import Conversation, LearnerEndedFrame
 from ga_voice.speech import FakeAudioOutput, FakeTextToSpeech
-from ga_voice.worker_client import FakeWorkerClient, TutorTurn
 from tests.harness import Harness, make_ticket
 from tests.test_recordings import wav
 
@@ -34,17 +34,17 @@ def build(
     secs_per_char: float = 0.005,
     delay: float = 0.0,
     recordings: dict[str, bytes] | None = None,
-) -> tuple[Harness, Conversation, FakeWorkerClient]:
-    worker = FakeWorkerClient(turns, delay_secs=delay, recordings=recordings)
+) -> tuple[Harness, Conversation, FakeApiClient]:
+    api = FakeApiClient(turns, delay_secs=delay, recordings=recordings)
     conversation = Conversation(
         ticket=make_ticket(),
-        worker=worker,
+        api=api,
         longest_pause=PAUSE,
         vad_stop_secs=VAD_STOP,
         limit_secs=limit,
     )
     harness = Harness([conversation, FakeTextToSpeech(secs_per_char=secs_per_char), FakeAudioOutput()])
-    return harness, conversation, worker
+    return harness, conversation, api
 
 
 def messages(harness: Harness) -> list[dict[str, object]]:
@@ -56,52 +56,52 @@ def messages(harness: Harness) -> list[dict[str, object]]:
 
 
 async def test_tutor_speaks_first_and_ready_is_sent() -> None:
-    harness, conversation, worker = build([TutorTurn("Hello! How are you?")])
+    harness, conversation, api = build([TutorTurn("Hello! How are you?")])
     await harness.start()
     await harness.wait_for(lambda: bool(harness.collector.of(TTSAudioRawFrame)))
     await harness.stop()
-    assert worker.requests[0].lines == ()
+    assert api.requests[0].lines == ()
     assert messages(harness)[0] == {"session": "session-1", "limit_secs": 60, "type": "ready"}
     assert [line.text for line in conversation.transcript.lines] == ["Hello! How are you?"]
 
 
 async def test_turn_ends_only_after_the_longest_pause() -> None:
-    harness, conversation, worker = build([TutorTurn("Hi."), TutorTurn("Nice.")])
+    harness, conversation, api = build([TutorTurn("Hi."), TutorTurn("Nice.")])
     await harness.start()
-    await harness.wait_for(lambda: len(worker.requests) == 1 and not conversation.transcript.lines[-1].interrupted)
+    await harness.wait_for(lambda: len(api.requests) == 1 and not conversation.transcript.lines[-1].interrupted)
     await asyncio.sleep(0.1)
     await harness.send(VADUserStartedSpeakingFrame(), said("I like"), VADUserStoppedSpeakingFrame())
     stopped_at = time.monotonic()
     # A pause shorter than the longest one: the learner goes on, in the same turn.
     await asyncio.sleep((PAUSE - VAD_STOP) * 0.6)
-    assert len(worker.requests) == 1
+    assert len(api.requests) == 1
     await harness.send(VADUserStartedSpeakingFrame(), said("green tea"), VADUserStoppedSpeakingFrame())
     stopped_at = time.monotonic()
-    await harness.wait_for(lambda: len(worker.requests) == 2)
+    await harness.wait_for(lambda: len(api.requests) == 2)
     waited = time.monotonic() - stopped_at
     await harness.stop()
     assert waited >= PAUSE - VAD_STOP - 0.02
-    learner_lines = [line.text for line in worker.requests[1].lines if line.speaker == "learner"]
+    learner_lines = [line.text for line in api.requests[1].lines if line.speaker == "learner"]
     assert learner_lines == ["I like green tea"]
 
 
 async def test_late_transcript_still_ends_the_turn() -> None:
-    harness, _conversation, worker = build([TutorTurn("Hi."), TutorTurn("Nice.")])
+    harness, _conversation, api = build([TutorTurn("Hi."), TutorTurn("Nice.")])
     await harness.start()
-    await harness.wait_for(lambda: len(worker.requests) == 1)
+    await harness.wait_for(lambda: len(api.requests) == 1)
     await asyncio.sleep(0.1)
     await harness.send(VADUserStartedSpeakingFrame(), VADUserStoppedSpeakingFrame())
     await asyncio.sleep(PAUSE + 0.1)
-    assert len(worker.requests) == 1  # nothing heard yet, so the turn has not ended
+    assert len(api.requests) == 1  # nothing heard yet, so the turn has not ended
     await harness.send(said("Yes"))
-    await harness.wait_for(lambda: len(worker.requests) == 2)
+    await harness.wait_for(lambda: len(api.requests) == 2)
     await harness.stop()
-    assert worker.requests[1].lines[-1].text == "Yes"
+    assert api.requests[1].lines[-1].text == "Yes"
 
 
 async def test_barge_in_stops_the_tutor() -> None:
     long_text = "Let me tell you a long story about a cat who lived by the sea. " * 3
-    harness, conversation, worker = build([TutorTurn(long_text), TutorTurn("Sorry, go on.")], secs_per_char=0.01)
+    harness, conversation, api = build([TutorTurn(long_text), TutorTurn("Sorry, go on.")], secs_per_char=0.01)
     await harness.start()
     await harness.wait_for(lambda: bool(harness.collector.of(TTSAudioRawFrame)))
     await asyncio.sleep(0.15)
@@ -111,7 +111,7 @@ async def test_barge_in_stops_the_tutor() -> None:
     await asyncio.sleep(0.2)
     spoken_after = len(harness.collector.of(TTSAudioRawFrame))
     await harness.send(said("Wait"), VADUserStoppedSpeakingFrame())
-    await harness.wait_for(lambda: len(worker.requests) == 2)
+    await harness.wait_for(lambda: len(api.requests) == 2)
     await harness.stop()
     full = round(len(long_text) * 0.01 / 0.02)
     assert spoken_at_interruption < full
@@ -121,23 +121,23 @@ async def test_barge_in_stops_the_tutor() -> None:
 
 
 async def test_learner_speaking_drops_a_pending_reply() -> None:
-    harness, conversation, worker = build([TutorTurn("Hi."), TutorTurn("Stale."), TutorTurn("Fresh.")], delay=0.3)
+    harness, conversation, api = build([TutorTurn("Hi."), TutorTurn("Stale."), TutorTurn("Fresh.")], delay=0.3)
     await harness.start()
     await harness.wait_for(lambda: len(conversation.transcript.lines) == 1)
     await asyncio.sleep(0.1)
     await harness.send(VADUserStartedSpeakingFrame(), said("I"), VADUserStoppedSpeakingFrame())
-    await harness.wait_for(lambda: len(worker.requests) == 2)
+    await harness.wait_for(lambda: len(api.requests) == 2)
     await harness.send(VADUserStartedSpeakingFrame(), said("mean"), VADUserStoppedSpeakingFrame())
-    await harness.wait_for(lambda: len(worker.requests) == 3)
+    await harness.wait_for(lambda: len(api.requests) == 3)
     await harness.wait_for(lambda: conversation.transcript.lines[-1].speaker == "tutor")
     await harness.stop()
     assert [line.text for line in conversation.transcript.lines] == ["Hi.", "I", "mean", "Stale."]
 
 
 async def test_tutor_ends_the_conversation() -> None:
-    harness, conversation, worker = build([TutorTurn("Hi."), TutorTurn("Bye!", end=True)])
+    harness, conversation, api = build([TutorTurn("Hi."), TutorTurn("Bye!", end=True)])
     await harness.start()
-    await harness.wait_for(lambda: len(worker.requests) == 1)
+    await harness.wait_for(lambda: len(api.requests) == 1)
     await asyncio.sleep(0.05)
     await harness.send(VADUserStartedSpeakingFrame(), said("Bye"), VADUserStoppedSpeakingFrame())
     await harness.finished()
@@ -149,7 +149,7 @@ async def test_tutor_ends_the_conversation() -> None:
 
 
 async def test_learner_ends_the_conversation() -> None:
-    harness, conversation, _worker = build([TutorTurn("Hi.")])
+    harness, conversation, _api = build([TutorTurn("Hi.")])
     await harness.start()
     await harness.wait_for(lambda: len(conversation.transcript.lines) == 1)
     await harness.send(LearnerEndedFrame())
@@ -158,7 +158,7 @@ async def test_learner_ends_the_conversation() -> None:
 
 
 async def test_session_limit_ends_the_conversation() -> None:
-    harness, conversation, _worker = build([TutorTurn("Hi.")], limit=0.5)
+    harness, conversation, _api = build([TutorTurn("Hi.")], limit=0.5)
     started = time.monotonic()
     await harness.start()
     await harness.finished()
@@ -169,7 +169,7 @@ async def test_session_limit_ends_the_conversation() -> None:
 
 async def test_a_recorded_opening_is_played_instead_of_spoken() -> None:
     path = "audio/english/0123456789abcdef.wav"
-    harness, conversation, _worker = build([TutorTurn("Hello!", audio=path)], recordings={path: wav(frames=800)})
+    harness, conversation, _api = build([TutorTurn("Hello!", audio=path)], recordings={path: wav(frames=800)})
     await harness.start()
     await harness.wait_for(lambda: bool(harness.collector.of(TTSAudioRawFrame)))
     await harness.stop()
@@ -181,7 +181,7 @@ async def test_a_recorded_opening_is_played_instead_of_spoken() -> None:
 
 
 async def test_a_missing_recording_is_spoken_instead() -> None:
-    harness, conversation, _worker = build([TutorTurn("Hello!", audio="audio/english/0123456789abcdef.wav")])
+    harness, conversation, _api = build([TutorTurn("Hello!", audio="audio/english/0123456789abcdef.wav")])
     await harness.start()
     await harness.wait_for(lambda: bool(harness.collector.of(TTSAudioRawFrame)))
     await harness.stop()

@@ -14,13 +14,13 @@ from loguru import logger
 from pipecat.pipeline.worker import PipelineWorker
 from pipecat.transports.websocket.fastapi import FastAPIWebsocketParams, FastAPIWebsocketTransport
 
+from ga_voice.api_client import ApiClient
 from ga_voice.drain import Admission
 from ga_voice.messages import SAMPLE_RATE, ErrorMessage, MessageError, StartMessage, decode_client, encode
 from ga_voice.serializer import VoiceSerializer
 from ga_voice.session import SessionSettings, run_session
 from ga_voice.speech import SpeechSource, SpeechUnavailableError
 from ga_voice.tickets import TicketError, TicketVerifier
-from ga_voice.worker_client import WorkerClient
 
 CONVERSATION_PATH = "/v1/conversation"
 """CONVERSATION_PATH is the WebSocket path of a conversation."""
@@ -42,7 +42,7 @@ class VoiceApp:
     admission: Admission
     verifier: TicketVerifier
     speech: SpeechSource
-    worker: WorkerClient
+    api: ApiClient
     settings: SessionSettings = field(default_factory=SessionSettings)
 
 
@@ -111,7 +111,7 @@ async def handle_conversation(app: VoiceApp, websocket: WebSocket) -> None:
         await run_session(
             ticket=ticket,
             services=services,
-            worker=app.worker,
+            api=app.api,
             settings=app.settings,
             source=transport.input(),
             sink=transport.output(),

@@ -7,8 +7,9 @@ from ga_voice.main import ConfigError, configure_logging, load_config
 
 ENV = {
     "VOICE_TICKET_PUBLIC_KEY": "a2V5",
-    "VOICE_WORKER_URL": "http://host.docker.internal:8787",
-    "VOICE_WORKER_CREDENTIAL": "c",
+    "VOICE_API_URL": "http://host.docker.internal:8787",
+    "VOICE_API_CREDENTIAL": "c",
+    "VOICE_AUDIO_URL": "https://greatacademy.dev",
 }
 
 
@@ -17,7 +18,7 @@ def test_load_config_defaults() -> None:
     assert config.port == 8080
     assert config.capacity == 4
     assert config.session_limit_secs == 1200
-    assert config.speech == "worker"
+    assert config.speech == "api"
 
 
 def test_load_config_errors() -> None:

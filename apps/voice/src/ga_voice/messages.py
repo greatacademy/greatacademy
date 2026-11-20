@@ -22,7 +22,7 @@ EndReason = Literal["tutor_ended", "learner_ended", "time_limit", "disconnected"
 
 @dataclass(frozen=True, slots=True)
 class StartMessage:
-    """StartMessage is the client's first message: the ticket from the web Worker."""
+    """StartMessage is the client's first message: the ticket from the API."""
 
     ticket: str
     type: Literal["start"] = "start"
@@ -121,7 +121,7 @@ def decode_client(text: str) -> ClientMessage:
 
 @dataclass(frozen=True, slots=True)
 class Line:
-    """Line is one turn of the conversation as sent to the web Worker."""
+    """Line is one turn of the conversation as sent to the API."""
 
     speaker: Speaker
     text: str

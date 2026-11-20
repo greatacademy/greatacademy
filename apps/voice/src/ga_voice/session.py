@@ -12,13 +12,13 @@ from pipecat.processors.audio.vad_processor import VADProcessor
 from pipecat.processors.frame_processor import FrameProcessor
 from pipecat.workers.runner import WorkerRunner
 
+from ga_voice.api_client import ApiClient, SessionResult
 from ga_voice.conversation import Conversation
 from ga_voice.levels import longest_pause
 from ga_voice.messages import SAMPLE_RATE, EndReason
 from ga_voice.speech import SpeechServices
 from ga_voice.tickets import Ticket
 from ga_voice.turns import CLOSING_GRACE_SECS, SESSION_LIMIT_SECS
-from ga_voice.worker_client import SessionResult, WorkerClient
 
 RESULT_ATTEMPTS = 3
 """RESULT_ATTEMPTS is how many times a result write is tried; the write is idempotent, so retrying is safe."""
@@ -37,7 +37,7 @@ def build_pipeline(
     *,
     ticket: Ticket,
     services: SpeechServices,
-    worker: WorkerClient,
+    api: ApiClient,
     settings: SessionSettings,
     source: FrameProcessor | None,
     sink: FrameProcessor | None,
@@ -49,7 +49,7 @@ def build_pipeline(
     """
     conversation = Conversation(
         ticket=ticket,
-        worker=worker,
+        api=api,
         longest_pause=longest_pause(ticket.level),
         vad_stop_secs=services.vad_params().stop_secs,
         limit_secs=settings.limit_secs,
@@ -72,20 +72,20 @@ async def run_session(
     *,
     ticket: Ticket,
     services: SpeechServices,
-    worker: WorkerClient,
+    api: ApiClient,
     settings: SessionSettings,
     source: FrameProcessor,
     sink: FrameProcessor,
     on_worker: Callable[[PipelineWorker], None] | None = None,
 ) -> SessionResult:
-    """run_session runs one conversation to its end and writes its result to the web Worker.
+    """run_session runs one conversation to its end and writes its result to the API.
 
     The session ends when the tutor or learner ends it, at the limit, or when
     the client disconnects (``on_worker`` lets the caller cancel the worker then).
     Past the limit plus a grace period it is cancelled whatever it is doing.
     """
     pipeline, conversation = build_pipeline(
-        ticket=ticket, services=services, worker=worker, settings=settings, source=source, sink=sink
+        ticket=ticket, services=services, api=api, settings=settings, source=source, sink=sink
     )
     pipeline_worker = PipelineWorker(
         pipeline,
@@ -108,15 +108,15 @@ async def run_session(
         fallback = "error"
         logger.warning("voice: session failed: {}", type(error).__name__)
     result = conversation.result(fallback)
-    await write_result(worker, result, settings)
+    await write_result(api, result, settings)
     return result
 
 
-async def write_result(worker: WorkerClient, result: SessionResult, settings: SessionSettings) -> None:
+async def write_result(api: ApiClient, result: SessionResult, settings: SessionSettings) -> None:
     """write_result writes a session's result, retrying a few times; a lost result is logged without content."""
     for attempt in range(1, RESULT_ATTEMPTS + 1):
         try:
-            await worker.write_result(result)
+            await api.write_result(result)
         except Exception as error:  # noqa: BLE001 - retried, then reported
             logger.warning("voice: result write {} failed: {}", attempt, type(error).__name__)
             if attempt < RESULT_ATTEMPTS:

@@ -1,7 +1,7 @@
 """The speech services a session needs, behind one interface.
 
 No provider or model is chosen in code: administrators configure routes, and
-for each session the Worker names the services that may serve its learner,
+for each session the API names the services that may serve its learner,
 which an adapter implements (Azure AI Speech so far). Without them the service
 refuses the session with ``speech_unavailable``; fake services can be switched
 on for local development.
@@ -32,9 +32,9 @@ from pipecat.services.azure.stt import AzureSTTService
 from pipecat.services.azure.tts import AzureTTSService
 from pipecat.transcriptions.language import Language
 
+from ga_voice.api_client import ApiClient, ApiError, SessionRef, SessionSpeech
 from ga_voice.messages import SAMPLE_RATE
 from ga_voice.tickets import Ticket
-from ga_voice.worker_client import SessionRef, SessionSpeech, WorkerClient, WorkerError
 
 
 class SpeechServices(Protocol):
@@ -292,19 +292,19 @@ class FixedSpeech:
         return self._services
 
 
-class WorkerSpeech:
-    """WorkerSpeech asks the Worker which speech services may serve a session's learner, as administrators set them."""
+class ApiSpeech:
+    """ApiSpeech asks the API which speech services may serve a session's learner, as administrators set them."""
 
-    def __init__(self, worker: WorkerClient) -> None:
-        self._worker = worker
+    def __init__(self, api: ApiClient) -> None:
+        self._api = api
 
     async def for_session(self, ticket: Ticket) -> SpeechServices:
         """for_session builds the session's services, or raises SpeechUnavailableError when no route serves it."""
         try:
-            speech = await self._worker.speech(
+            speech = await self._api.speech(
                 SessionRef(session=ticket.session, learner=ticket.learner, course=ticket.course)
             )
-        except WorkerError as error:
+        except ApiError as error:
             raise SpeechUnavailableError from error
         if speech is None:
             raise SpeechUnavailableError

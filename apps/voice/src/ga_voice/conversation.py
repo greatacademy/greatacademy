@@ -1,7 +1,7 @@
 """The conversation processor: turn taking, barge-in and the session limit, in a Pipecat pipeline.
 
 It sits between speech-to-text and text-to-speech. It never logs what anyone
-said: the transcript lives in memory and goes only to the web Worker.
+said: the transcript lives in memory and goes only to the API.
 """
 
 import asyncio
@@ -32,6 +32,7 @@ from pipecat.frames.frames import (
 )
 from pipecat.processors.frame_processor import FrameDirection, FrameProcessor
 
+from ga_voice.api_client import ApiClient, SessionResult, TurnRequest
 from ga_voice.messages import (
     SAMPLE_RATE,
     CaptionMessage,
@@ -45,7 +46,6 @@ from ga_voice.messages import (
 from ga_voice.recordings import chunks, pcm_of_wav
 from ga_voice.tickets import Ticket
 from ga_voice.turns import SessionClock, TurnState, should_barge_in
-from ga_voice.worker_client import SessionResult, TurnRequest, WorkerClient
 
 
 @dataclass
@@ -54,7 +54,7 @@ class LearnerEndedFrame(SystemFrame):
 
 
 class Conversation(FrameProcessor):
-    """Conversation takes turns with the learner, asking the web Worker what the tutor says.
+    """Conversation takes turns with the learner, asking the API what the tutor says.
 
     - The tutor speaks first.
     - The learner's turn ends after ``longest_pause`` seconds of silence (see ``levels.py``).
@@ -67,7 +67,7 @@ class Conversation(FrameProcessor):
         self,
         *,
         ticket: Ticket,
-        worker: WorkerClient,
+        api: ApiClient,
         longest_pause: float,
         vad_stop_secs: float,
         limit_secs: float,
@@ -75,7 +75,7 @@ class Conversation(FrameProcessor):
     ) -> None:
         super().__init__()
         self._ticket = ticket
-        self._worker = worker
+        self._api = api
         self._clock_fn = clock
         self._turns = TurnState(longest_pause=longest_pause, vad_stop_secs=vad_stop_secs)
         self._limit_secs = limit_secs
@@ -94,7 +94,7 @@ class Conversation(FrameProcessor):
         return self.reason is not None
 
     def result(self, fallback: EndReason) -> SessionResult:
-        """result returns what is written to the Worker; ``fallback`` is the reason if none was recorded."""
+        """result returns what is written to the API; ``fallback`` is the reason if none was recorded."""
         now = self._ended_at if self._ended_at is not None else self._clock_fn()
         elapsed = self._session_clock.elapsed(now) if self._session_clock else 0.0
         return SessionResult(
@@ -120,7 +120,7 @@ class Conversation(FrameProcessor):
             await self.push_frame(frame, direction)
             self._learner_stopped()
         elif isinstance(frame, TranscriptionFrame):
-            # Transcripts stop here: they reach the client as captions and the Worker as lines.
+            # Transcripts stop here: they reach the client as captions and the API as lines.
             await self._heard(frame.text)
         elif isinstance(frame, BotStartedSpeakingFrame):
             self._tutor_speaking = True
@@ -194,10 +194,10 @@ class Conversation(FrameProcessor):
             lines=tuple(self.transcript.lines),
         )
         try:
-            turn = await self._worker.next_turn(request)
+            turn = await self._api.next_turn(request)
         except asyncio.CancelledError:
             raise
-        except Exception as error:  # noqa: BLE001 - any failure of the Worker ends the session
+        except Exception as error:  # noqa: BLE001 - any failure of the API ends the session
             logger.warning("voice: tutor turn failed: {}", type(error).__name__)
             await self._end("error")
             return
@@ -220,7 +220,7 @@ class Conversation(FrameProcessor):
     async def _recorded(self, path: str) -> bytes | None:
         """_recorded returns the samples of a turn's recording, or None to speak the line instead."""
         try:
-            return pcm_of_wav(await self._worker.recording(path))
+            return pcm_of_wav(await self._api.recording(path))
         except asyncio.CancelledError:
             raise
         except Exception as error:  # noqa: BLE001 - a missing or broken recording is spoken instead
