@@ -1,7 +1,7 @@
 # Everything of Great Academy on the cluster, in the namespace greatacademy: the API server and its jobs, the voice
 # service of English, and their public hosts through the cluster's ingress-nginx. The database is the shared
 # pg-cluster in cnpg-system.
-# Secrets are made by keys.py, never committed; push.sh pins the images to pushed digests.
+# Secrets are made by keys.py, never committed, except the public CA of origin pulls; push.sh pins the images to pushed digests.
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: greatacademy
@@ -23,6 +23,14 @@ configMapGenerator:
 - envs:
   - voice.env
   name: voice
+# The CA of the client certificate Cloudflare presents to the origin (README: Authenticated Origin Pulls). Its name
+# stays fixed because the Ingresses name it in an annotation.
+secretGenerator:
+- files:
+  - ca.crt=origin-pull-ca.crt
+  name: origin-pull-ca
+  options:
+    disableNameSuffixHash: true
 images:
 - digest: sha256:e3d31a7b51a02d0386ccb191fa826b45c84f37e75d497d26d8be9df9338905c0
   name: api

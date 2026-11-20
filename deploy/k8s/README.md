@@ -29,10 +29,16 @@ Renders the namespace and validates it with kubeconform against the Kubernetes s
 
 The cluster runs Kubernetes 1.33 on Talos in `hil` and is managed from the workstation's cluster folder. These come with it:
 
-- ingress-nginx, class `nginx`, behind a Hetzner load balancer. Both hostnames are proxied by Cloudflare, and the API takes the client's address from `CF-Connecting-IP`. nginx sees every request as coming from 127.0.0.1, so an Ingress cannot allow addresses by source.
+- ingress-nginx, class `nginx`, behind a Hetzner load balancer. Both hostnames are proxied by Cloudflare, and the API takes the client's address from `CF-Connecting-IP`. nginx sees every request as coming from 127.0.0.1, so an Ingress cannot allow addresses by source; it admits Cloudflare by its client certificate instead (below).
 - cert-manager with the ClusterIssuer `letsencrypt-prod-issuer`, which solves DNS-01 in Cloudflare, and external-dns, which writes a proxied record for each Ingress host. Both list `greatacademy.dev` among their zones.
 - The PostgreSQL cluster `pg-cluster` of CloudNativePG in `cnpg-system`, with the database `greatacademy` and its role in the Secret `pg-cluster-greatacademy`.
 - KEDA 2.20 in `keda`, kube-prometheus-stack in `monitoring` (its Prometheus selects PodMonitors labeled `release: kube-prometheus-stack`), and Cilium, which enforces NetworkPolicies.
+
+## Authenticated Origin Pulls
+
+Cloudflare presents a client certificate of our own when it connects to `api.greatacademy.dev` and `voice.greatacademy.dev` (per-hostname authenticated origin pulls), and both Ingresses accept only a connection that presents a certificate signed by `origin-pull-ca.crt`. A request that goes around Cloudflare to the load balancer gets 400, so `CF-Connecting-IP` always comes from Cloudflare. The zone's SSL mode is Full (strict): Cloudflare checks the origins' certificates from cert-manager.
+
+`origin-pull-ca.crt` is public and committed; kustomize makes the Secret `origin-pull-ca` from it. The CA's key was discarded after signing, and the client certificate's key lives only in Cloudflare. Both certificates expire in November 2036. To replace them, make a new CA and client certificate with openssl, upload the client certificate and key with `cf origin-tls-client-auth hostname-certificates create`, point both hostnames at it with `cf origin-tls-client-auth hostnames update`, and once their status is `active`, commit the new `origin-pull-ca.crt` and apply. Removing the three `auth-tls-*` annotations turns the check off.
 
 ## Secrets
 

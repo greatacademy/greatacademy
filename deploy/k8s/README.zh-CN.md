@@ -29,10 +29,16 @@ mise run k8s:check
 
 集群在 `hil` 的 Talos 上运行 Kubernetes 1.33，从工作站的集群目录管理。它自带：
 
-- ingress-nginx，类 `nginx`，位于 Hetzner 负载均衡器之后。两个主机名都经 Cloudflare 代理，API 从 `CF-Connecting-IP` 取得客户端地址。nginx 看到的每个请求都来自 127.0.0.1，所以 Ingress 无法按来源地址放行。
+- ingress-nginx，类 `nginx`，位于 Hetzner 负载均衡器之后。两个主机名都经 Cloudflare 代理，API 从 `CF-Connecting-IP` 取得客户端地址。nginx 看到的每个请求都来自 127.0.0.1，所以 Ingress 无法按来源地址放行，改为凭 Cloudflare 的客户端证书放行（见下节）。
 - cert-manager 及在 Cloudflare 中完成 DNS-01 的 ClusterIssuer `letsencrypt-prod-issuer`，以及为每个 Ingress 主机写入代理记录的 external-dns。两者的区域都包含 `greatacademy.dev`。
 - `cnpg-system` 中 CloudNativePG 的 PostgreSQL 集群 `pg-cluster`，数据库 `greatacademy` 的角色在 Secret `pg-cluster-greatacademy` 里。
 - `keda` 中的 KEDA 2.20、`monitoring` 中的 kube-prometheus-stack（其 Prometheus 选择带 `release: kube-prometheus-stack` 标签的 PodMonitor），以及执行 NetworkPolicy 的 Cilium。
+
+## 回源认证
+
+Cloudflare 连接 `api.greatacademy.dev` 和 `voice.greatacademy.dev` 时出示我们自己的客户端证书（按主机名的回源认证，authenticated origin pulls），两个 Ingress 只接受出示了由 `origin-pull-ca.crt` 签发的证书的连接。绕过 Cloudflare 直连负载均衡器的请求得到 400，所以 `CF-Connecting-IP` 一定来自 Cloudflare。区域的 SSL 模式为 Full (strict)：Cloudflare 会校验源站由 cert-manager 签发的证书。
+
+`origin-pull-ca.crt` 是公开的，已提交；kustomize 用它生成 Secret `origin-pull-ca`。CA 的私钥在签发后已丢弃，客户端证书的私钥只存在于 Cloudflare。两张证书都在 2036 年 11 月到期。更换时，用 openssl 生成新的 CA 和客户端证书，用 `cf origin-tls-client-auth hostname-certificates create` 上传客户端证书和私钥，用 `cf origin-tls-client-auth hostnames update` 让两个主机名改用它，待其状态为 `active` 后提交新的 `origin-pull-ca.crt` 并应用。去掉三条 `auth-tls-*` 注解即关闭校验。
 
 ## 机密
 

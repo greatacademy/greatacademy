@@ -1,5 +1,7 @@
 # The public hosts, through the cluster's ingress-nginx. Both hosts are proxied by Cloudflare, which sets
-# CF-Connecting-IP to the learner's address. cert-manager's letsencrypt-prod-issuer makes each host's certificate with a
+# CF-Connecting-IP to the learner's address. Cloudflare presents our client certificate to the origin (authenticated
+# origin pulls, README) and nginx accepts only a connection that presents it, so every request comes through Cloudflare and
+# its CF-Connecting-IP can be trusted. cert-manager's letsencrypt-prod-issuer makes each host's certificate with a
 # DNS-01 challenge, and external-dns writes each host's proxied record; both are set up for greatacademy.dev in the
 # cluster's own repository. Only the API's /api reaches the API: the voice service's calls under /voice/v1, the
 # probes and the metrics stay inside the cluster.
@@ -10,6 +12,9 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod-issuer
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/auth-tls-secret: greatacademy/origin-pull-ca
+    nginx.ingress.kubernetes.io/auth-tls-verify-client: "on"
+    nginx.ingress.kubernetes.io/auth-tls-verify-depth: "1"
     # Guardians' signed forms are the largest requests.
     nginx.ingress.kubernetes.io/proxy-body-size: 12m
 spec:
@@ -38,6 +43,9 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod-issuer
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/auth-tls-secret: greatacademy/origin-pull-ca
+    nginx.ingress.kubernetes.io/auth-tls-verify-client: "on"
+    nginx.ingress.kubernetes.io/auth-tls-verify-depth: "1"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "1800"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "1800"
 spec:
