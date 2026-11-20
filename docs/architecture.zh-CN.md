@@ -166,9 +166,9 @@ API 服务器（`apps/server`）用 `src/handler.ts` 应答 `/api` 和 `/voice/v
 
 - **生产：**
   - Web Worker（`apps/web`，`ga-web`），对外地址为 `greatacademy.dev`，用 `cf deploy` 部署。它渲染页面、提供静态文件，并通过它唯一的绑定，即公开文件的 R2 存储桶（`BUCKET`），提供录音。它没有 secret，也不访问数据库；页面在浏览器中调用 API 服务器。
-  - API 服务器（`apps/server`），对外地址为 `api.greatacademy.dev`。`pnpm nx run server:build` 用 rolldown 把它打包成 `dist/server.mjs`，镜像 `ghcr.io/greatacademy/api` 只含 Node、这个文件和迁移。镜像的命令有：`node server.mjs` 提供 HTTP 服务，`job daily` 和 `job quarter` 是定时任务，`migrate` 执行迁移，以及 `grant-admin <email>`。它在集群中以 Deployment `api` 运行：两个副本，有 PodDisruptionBudget，以无特权用户在只读文件系统上运行，所有学科编译完成后 `/healthz` 才就绪（§6.1）。
+  - API 服务器（`apps/server`），对外地址为 `api.greatacademy.dev`。`pnpm nx run server:build` 用 rolldown 把它打包成 `dist/server.mjs`，镜像 `ghcr.io/greatacademy/api` 只含 Node、这个文件和迁移。镜像的命令有：`node server.mjs` 提供 HTTP 服务，`job daily` 和 `job quarter` 是定时任务，`migrate` 执行迁移，以及 `grant-admin <email>`。它在集群中以 Deployment `api` 运行：按 CPU 在二到六个副本之间伸缩，有 PodDisruptionBudget，每个 Pod 在服务器启动前于 init 容器中、持 PostgreSQL 咨询锁执行迁移，以无特权用户在只读文件系统上运行，所有学科编译完成后 `/healthz` 才就绪（§6.1）。
   - 服务器从环境变量读取设置（`apps/server/src/config.ts`）：由 `deploy/k8s/api.env` 生成的 ConfigMap，以及由 `deploy/k8s/keys.py` 写入、不打印任何值的 Secret `api`。Secret 中有 `DATABASE_URL`、`BETTER_AUTH_SECRET`、加密 AI 供应商 API 密钥的 `AI_KEYS_SECRET`、语音服务的密钥，以及各供应商的密钥，其中包括[计费](billing.zh-CN.md) §10 中的 Stripe 密钥。
-  - CronJob `daily`（UTC 03:00）和 `quarter`（每 15 分钟）运行同一个镜像。CronJob `migrate` 处于暂停状态，在 `kubectl apply -k deploy/k8s` 之后、API 需要新 schema 之前，用 `kubectl create job --from=cronjob/migrate` 手动运行。
+  - CronJob `daily`（UTC 03:00）和 `quarter`（每 15 分钟）运行同一个镜像。daily 任务，以及没有 `AI_KEYS_SECRET` 时的 quarter 任务，不编译任何学科。
   - ingress-nginx 把 `api.greatacademy.dev/api/` 路由到 API 服务器，把 `voice.greatacademy.dev/v1/conversation` 路由到语音服务，证书来自 cert-manager。external-dns 把两条记录写为经 Cloudflare 代理。Cloudflare 向源站出示我们的客户端证书，nginx 只接受出示了它的连接（回源认证，区域为 Full (strict)），所以每个请求都经过 Cloudflare，服务器从 `CF-Connecting-IP` 取得客户端地址。语音服务在 `/voice/v1` 下的调用只在命名空间内部进行。NetworkPolicy 允许 ingress-nginx 访问 API 服务器和语音服务、语音服务访问 API 服务器、Prometheus 访问指标，出站只允许 DNS、PostgreSQL 和公网 HTTPS。
   - `mise run k8s:push` 打包服务器，构建并推送两个镜像，再把 `deploy/k8s` 固定到它们的 digest；`mise run k8s:check` 校验清单，不接触集群。[deploy/k8s](../deploy/k8s/README.zh-CN.md) 说明集群、Secret 和每一步。
   - 监护人的签字表格存放在 R2 存储桶 `ga-guardian-forms` 中，服务器通过 R2 的 S3 API（aws4fetch）、用只限于该存储桶的账户令牌访问。邮件经 Cloudflare Email Service 的 REST API 或 Resend 发送。
@@ -194,8 +194,8 @@ API 服务器（`apps/server`）用 `src/handler.ts` 应答 `/api` 和 `/voice/v
                        listing、manifest                     生成器、判定器
 ```
 
-- **`localGateway`**（`libs/api`）把编译好的学科包装成 `libs/content` 的 `SubjectGateway`：`listing`（课程列表，很小）和 `manifest`（不含代码的学科），都由 `subjectManifest` 一次生成；以及 `SubjectSource` 的 `problems`、`lesson`、`judge` 和 `passage`，由 `topicSource` 基于学科的 topic 定义提供。`SubjectSource` 是异步的，以便学科也可以由另一个进程提供。新增学科只需把它的内容包加入 `apps/server`，并在列表中增加一个编译好的学科。
-- **`Registry`**（`libs/api`）读取一次课程列表，这足以列出课程；某门课程第一次被使用时才为该学科的 manifest 建立索引。它保留最近使用的两个学科的索引。课程的 scope 在第一次使用时才计算。
+- **`localGateway`**（`libs/api`）把编译好的学科包装成 `libs/content` 的 `SubjectGateway`：`manifest`（不含代码的学科），由 `subjectManifest` 一次生成；以及 `SubjectSource` 的 `problems`、`lesson`、`judge` 和 `passage`，由 `topicSource` 基于学科的 topic 定义提供。`SubjectSource` 是异步的，以便学科也可以由另一个进程提供。新增学科只需把它的内容包加入 `apps/server`，并在列表中增加一个编译好的学科。
+- **`Registry`**（`libs/api`）在服务器启动时为每个学科的 manifest 建立索引：引擎图、每门课程的 scope 以及课程之间的关系，三个学科约 100 MB、半秒，使任何请求都不必等待索引。学科多到一个 Pod 装不下时，同一镜像可以在各自的 Deployment 中只提供其中一部分学科，接在异步的 `SubjectSource` 之后。
 - 题库很大的 topic 通过 `slimmed` 或 `slimTopics` 构建，保存时不带生成器，生成器在第一次使用时重新构建题库（[内容](content.zh-CN.md) §4），使进程不必同时持有所有题库。
 
 每个内容包把它的 topic 分组放在 `content/<id>/src/shards/` 中，由 `index.ts` 合在一起：数学有五组，各对应课程体系的一段；英语一组，`core`；语文三组，`core`（母语年级、华裔课程、高考和阅读单元）、`levels`（国际中文的九个等级及其书写）和 `hsk`（HSK 考试 topic）。这些分组只用来组织内容；测试检查每个 topic 恰好属于一组。学习者状态不记录 topic 属于哪一组。
