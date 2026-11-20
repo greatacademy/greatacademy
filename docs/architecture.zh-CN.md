@@ -204,7 +204,7 @@ Web Worker ──服务绑定──► 学科网关 ──服务绑定──► 
 - **分片**持有学科中一部分 topic 的定义，用 `topicSource` 实现 `SubjectSource`。这些定义在第一次调用时才构建，不在启动时构建。如果内容的模块在加载时就构建题库（语文就是这样），所需时间会超过 Worker 启动的一秒上限，这时分片用 `lazyShardWorker` 构造：它在第一次调用时动态导入内容，打包工具把这些内容放进单独的 chunk，由第一次调用承担这段时间。题库在需要时重新构建，不常驻内存，使分片保持在 isolate 的 128 MB 以内（[内容](content.zh-CN.md) §4）；超出的 isolate 会被回收，每次调用都要重新加载内容。
 - **`Registry`**（`libs/api`）每个 isolate 读取一次课程列表，这足以列出课程；某门课程第一次被使用时才加载该学科的 manifest。它只保留最近使用的两个学科，因为数学建好索引后约占 45 MB 内存，而一个 isolate 只有 128 MB。课程的 scope 在第一次使用时才计算。
 
-数学有五个分片，各对应课程体系的一段（`content/math/src/shards/`）。`apps/math-workers/gen/` 存放生成的 manifest 和每个分片的 topic 列表，不提交到仓库。英语目前只有一个分片 `core`，`apps/english-workers` 下的结构相同。语文在 `apps/chinese-workers` 下有三个分片：`core`（母语年级、华裔课程、高考和阅读单元）、`levels`（国际中文的九个等级及其书写）和 `hsk`（HSK 考试 topic）。HSK 的 topic 需要各等级的汉字、词语和单元，但不需要它们的 topic，所以 `hsk` 只读取各等级的计划（`level-N/plan.ts`，读入并校验各批数据），只有课程才导入各等级的 topic。
+数学有五个分片，各对应课程体系的一段（`content/math/src/shards/`）。`apps/math-workers/gen/` 存放生成的 manifest 和每个分片的 topic 列表，不提交到仓库。英语目前只有一个分片 `core`，`apps/english-workers` 下的结构相同。语文在 `apps/chinese-workers` 下有三个分片：`core`（母语年级、华裔课程、高考和阅读单元）、`levels`（国际中文的九个等级及其书写）和 `hsk`（HSK 考试 topic）。HSK 的 topic 需要各等级的汉字、词语和单元，但不需要它们的 topic，所以 `hsk` 只读取各等级的计划（`level-N/plan.ts`，读入并校验各批数据），只有课程才导入各等级的 topic。打包后的每个分片在 80 MB 堆内存以内就能加载并为它的每个知识点出题；`content/chinese` 的测试从源码运行，多占约 25 MB，因此把每个分片限制在 112 MB（`src/shards/budget.test.ts`）。
 
 | Worker | 未压缩体积 | Node 下的模块加载时间 |
 | :--- | :--- | :--- |
