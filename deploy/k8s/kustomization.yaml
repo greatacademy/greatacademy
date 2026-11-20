@@ -24,7 +24,7 @@ configMapGenerator:
   - voice.env
   name: voice
 images:
-- digest: sha256:2bd161f4cc73b0c552381c008914f34c843240166b86527db05430374a35c111
+- digest: sha256:e3d31a7b51a02d0386ccb191fa826b45c84f37e75d497d26d8be9df9338905c0
   name: api
   newName: ghcr.io/greatacademy/api
 - digest: sha256:1f2554f5f3cf325998170ddb9c08146060ada8c31e1fb045d6aed06915ed3551
