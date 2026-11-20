@@ -139,18 +139,35 @@ const wanted = new Map<string, Wanted>();
 /** wantedRecordings are the recordings the content asks for, made or not, by file name. */
 export const wantedRecordings = (): ReadonlyMap<string, Wanted> => wanted;
 
-/** names remembers the name of each SSML already asked for: the content asks for many recordings more than once. */
+/** Asked is a recording asked for, whose SSML is made when read; its getter is shared, which a plain object's is not. */
+class Asked implements Wanted {
+  readonly kind: RecordingKind;
+  readonly format = MP3;
+  readonly #make: () => string;
+  constructor(kind: RecordingKind, make: () => string) {
+    this.kind = kind;
+    this.#make = make;
+  }
+  get ssml(): string {
+    return this.#make();
+  }
+}
+
+/**
+ * names remembers the name of each recording already asked for, by what it reads: the content asks for many recordings
+ * more than once. Neither it nor wanted holds the SSML, which is made again when asked for: a Worker has little memory.
+ */
 const names = new Map<string, string>();
 
-/** want asks for a recording and gives its path, made or not. */
-function want(kind: RecordingKind, ssml: string): string {
-  let name = names.get(ssml);
+/** want asks for a recording of what `key` names, its SSML made by `make`, and gives its path, made or not. */
+function want(kind: RecordingKind, key: string, make: () => string): string {
+  let name = names.get(key);
   if (name === undefined) {
-    name = recordingName(ssml);
-    names.set(ssml, name);
+    name = recordingName(make());
+    names.set(key, name);
   }
   const file = `${name}.${MP3.ext}`;
-  if (!wanted.has(file)) wanted.set(file, { kind, ssml, format: MP3 });
+  if (!wanted.has(file)) wanted.set(file, new Asked(kind, make));
   return `audio/chinese/${name}`;
 }
 
@@ -158,13 +175,18 @@ function want(kind: RecordingKind, ssml: string): string {
  * heard asks for the recording of a word or sentence that a listening problem plays, and gives its path whether it is
  * made or not: a test fails while one is missing, since the problem cannot be answered without it.
  */
-export const heard = (text: string): string => want([...text.trim()].length > 4 ? "sentence" : "word", textSsml(text));
+export const heard = (text: string): string =>
+  want([...text.trim()].length > 4 ? "sentence" : "word", `text ${text}`, () => textSsml(text));
 
 /** heardSyllable asks for the recording of a syllable in a tone, carried by a character with that reading, and gives its path. */
-export const heardSyllable = (char: string, plain: string, tone: number): string => want("syllable", syllableSsml(char, plain, tone));
+export const heardSyllable = (char: string, plain: string, tone: number): string =>
+  want("syllable", `syllable ${char} ${plain} ${tone}`, () => syllableSsml(char, plain, tone));
 
 /** heardDialogue asks for the recording of a dialogue that a listening problem plays, and gives its path. */
-export const heardDialogue = (lines: readonly Line[]): string => want("dialogue", dialogueSsml(lines));
+export const heardDialogue = (lines: readonly Line[]): string => {
+  const ssml = dialogueSsml(lines);
+  return want("dialogue", `dialogue ${ssml}`, () => dialogueSsml(lines));
+};
 
 /** heardTalk asks for the recording of a talk by one speaker, its sentences read in turn, and gives its path. */
-export const heardTalk = (text: string): string => want("talk", textSsml(text));
+export const heardTalk = (text: string): string => want("talk", `text ${text}`, () => textSsml(text));

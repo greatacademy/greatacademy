@@ -5,7 +5,7 @@
 // what it has read a while before; by the end of a grade the cumulative count follows the curriculum standard: 800 by
 // grade 2, 1,600 by grade 4, 2,500 by grade 6 and 3,000 by grade 9.
 
-import { formatStrokes, type Generator, type Problem, type Rng, type Stroke, type Text, type TopicDef, t } from "@ga/content";
+import { formatStrokes, type Generator, type Problem, type Rng, type Stroke, slimmed, type Text, type TopicDef, t } from "@ga/content";
 import { point } from "@ga/subject-chinese";
 
 import { recognitionByGrade, recognitionId } from "../characters/index.ts";
@@ -26,8 +26,8 @@ const NUMERALS = ["零", "一", "二", "三", "四", "五", "六", "七", "八",
 /** handwritingId is the id of a grade's writing batch, counted from 1. */
 export const handwritingId = (grade: number, n: number): string => `writing-characters-${grade}-${String(n).padStart(2, "0")}`;
 
-/** medians are the standard medians of each writing character, native or of the levels, in the order of mediansData. */
-export const medians: ReadonlyMap<string, readonly Stroke[]> = new Map(
+/** rawMedians are the strokes of each writing character as written in mediansData, read into points only when asked. */
+const rawMedians: ReadonlyMap<string, string> = new Map(
   mediansData
     .trim()
     .split("\n")
@@ -35,15 +35,31 @@ export const medians: ReadonlyMap<string, readonly Stroke[]> = new Map(
       const space = line.indexOf(" ");
       const [char, strokes] = [line.slice(0, space), line.slice(space + 1)];
       if (space < 1 || !strokes) throw new Error(`medians: ${line.slice(0, 20)}`);
-      const parsed = strokes.split(";").map((s) =>
-        s.split(" ").map((p): readonly [number, number] => {
-          const [x, y] = p.split(",").map(Number);
-          return [x!, y!];
-        }),
-      );
-      return [char, parsed] as const;
+      return [char, strokes] as const;
     }),
 );
+
+/** readStrokes reads the strokes of a line of mediansData into points. */
+const readStrokes = (strokes: string): readonly Stroke[] =>
+  strokes.split(";").map((s) =>
+    s.split(" ").map((p): readonly [number, number] => {
+      const [x, y] = p.split(",").map(Number);
+      return [x!, y!];
+    }),
+  );
+
+/**
+ * medians are the standard medians of each writing character, native or of the levels, in the order of mediansData; each
+ * is read when asked, since the points of 3,000 characters held at once take more memory than a Worker has to spare.
+ */
+export const medians: Pick<ReadonlyMap<string, readonly Stroke[]>, "get" | "has" | "keys"> = {
+  get: (char) => {
+    const strokes = rawMedians.get(char);
+    return strokes === undefined ? undefined : readStrokes(strokes);
+  },
+  has: (char) => rawMedians.has(char),
+  keys: () => rawMedians.keys(),
+};
 
 /** HandBatch is a writing topic and its characters. */
 export interface HandBatch {
@@ -121,10 +137,10 @@ export function handGenerator(tasks: readonly HandTask[], trace: boolean): Gener
 }
 
 /**
- * handTopic builds the writing topic of a batch of characters from its tasks, ordered so that consecutive seeds never
+ * buildHandTopic builds the writing topic of a batch of characters from its tasks, ordered so that consecutive seeds never
  * show the same character, and the list of its characters each explanation ends with, in English and in Chinese.
  */
-export function handTopic(
+function buildHandTopic(
   id: string,
   title: TopicDef["title"],
   chars: readonly string[],
@@ -163,6 +179,9 @@ export function handTopic(
     ],
   };
 }
+
+/** handTopic builds a writing topic, keeping its problem banks only while they are used (see slimmed). */
+export const handTopic = slimmed(buildHandTopic);
 
 /** nativeTopic builds the writing topic of a batch of native characters, each written in each of its three words. */
 function nativeTopic(id: string, title: TopicDef["title"], entries: readonly CharacterEntry[], prerequisites: readonly string[]): TopicDef {

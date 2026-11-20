@@ -13,7 +13,7 @@ const common = {
 const entry = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 
 /** shardWorkers are the configurations of the Workers holding the generators of Chinese. */
-export const shardWorkers = ["core"].map((shard) => ({
+export const shardWorkers = ["core", "levels", "hsk"].map((shard) => ({
   ...common,
   name: `ga-chinese-${shard}`,
   entrypoint: entry(`./src/shards/${shard}.ts`),
@@ -26,5 +26,7 @@ export const gatewayWorker = {
   entrypoint: entry("./src/gateway.ts"),
   env: {
     SHARD_CORE: bindings.worker({ worker: "ga-chinese-core" }),
+    SHARD_LEVELS: bindings.worker({ worker: "ga-chinese-levels" }),
+    SHARD_HSK: bindings.worker({ worker: "ga-chinese-hsk" }),
   },
 };

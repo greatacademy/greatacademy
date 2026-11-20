@@ -6,6 +6,8 @@ import { chinese, compileChinese } from "./index.ts";
 import { heritageReading } from "./reading/heritage.ts";
 import { chineseReading } from "./reading/index.ts";
 import { coreShardTopics } from "./shards/core.ts";
+import { hskShardTopics } from "./shards/hsk.ts";
+import { levelsShardTopics } from "./shards/levels.ts";
 
 describe("chinese content", () => {
   it("compiles without warnings", () => {
@@ -69,8 +71,10 @@ describe("chinese content", () => {
     );
   });
 
-  it("holds every topic in a shard", () => {
-    expect(new Set(coreShardTopics.map((topic) => topic.id)).size).toBe(chinese.topics.length);
+  it("holds every topic in a shard, and none in two", () => {
+    const held = [...coreShardTopics, ...levelsShardTopics, ...hskShardTopics].map((topic) => topic.id);
+    expect(new Set(held).size).toBe(held.length);
+    expect(held.toSorted()).toEqual(chinese.topics.map((topic) => topic.id).toSorted());
   });
 
   it("writes every question for Chinese readers in Chinese", () => {

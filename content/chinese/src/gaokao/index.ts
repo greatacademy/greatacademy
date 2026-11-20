@@ -10,7 +10,7 @@ import { seniorClassicalDrills } from "../classical/senior-drills.ts";
 import type { DrillItem } from "../grammar/drill.ts";
 import { drillData } from "../grammar/drill-data.ts";
 import { faultyData } from "../grammar/faulty-data.ts";
-import { type Ask, examChoice, examGroup } from "../hsk/index.ts";
+import { type Ask, examChoice, examGroup } from "../hsk/exam.ts";
 import type { Idiom } from "../idioms/idioms.ts";
 import { idiomsByGrade } from "../idioms/index.ts";
 import { recitedPoems } from "../recitation/index.ts";

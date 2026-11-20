@@ -7,20 +7,8 @@
 // topic, judged by a model, writes the kinds of text of its levels' paragraph writing; HSK 2 and 3 add the paper's
 // characters from their pinyin of written.ts, and HSK 4 to 6 the paper's own tasks of paper.ts.
 
-import {
-  type CourseDef,
-  type CriterionSpec,
-  type Generator,
-  joinText,
-  type Problem,
-  type Rng,
-  same,
-  type Text,
-  type TopicDef,
-  t,
-} from "@ga/content";
+import { type CourseDef, type CriterionSpec, type Generator, same, slimTopics, type Text, type TopicDef, t } from "@ga/content";
 import { criterionById, point, quote, writingGenerator } from "@ga/subject-chinese";
-
 import type { LevelOneCharacter } from "../level-1/characters.ts";
 import { levelOneCourse, levelOneWordId } from "../level-1/index.ts";
 import { nearOf, spread } from "../level-1/kit.ts";
@@ -77,39 +65,10 @@ import { comprehension as comprehensionFive } from "./comprehension-data/hsk-5.t
 import { comprehension as comprehensionSix } from "./comprehension-data/hsk-6.ts";
 import { comprehension as comprehensionSevenToNine } from "./comprehension-data/hsk-7-9.ts";
 import { type LevelData, levelData } from "./data.ts";
+import { type Ask, examChoice, examGroup } from "./exam.ts";
 import { oralTopics } from "./oral.ts";
 import { paperTopics } from "./paper.ts";
 import { writtenTopics } from "./written.ts";
-
-/** examGroup is the shelf of the Chinese exam courses. */
-export const examGroup = t("Chinese Exams", "中文考试");
-
-/** Ask is one item of an exam choice: what is shown, the right option, the wrong ones and the solution. */
-export interface Ask {
-  readonly shown: Text;
-  readonly right: Text;
-  readonly wrong: readonly Text[];
-  readonly solution: Text;
-}
-
-/** quoted sets a text as a block quote in each locale. */
-const quoted = (s: Text): Text => t(quote(s.en), quote(s["zh-CN"]));
-
-/** examChoice asks the items in turn, one a seed, with all their wrong options, shuffled by seed. */
-export function examChoice(question: Text, items: readonly Ask[]): Generator {
-  return (rng: Rng): Problem => {
-    const item = rng.cycle(items);
-    const options = rng.shuffle([item.right, ...item.wrong]);
-    const answer = options.indexOf(item.right);
-    return {
-      prompt: joinText([question, quoted(item.shown)]),
-      answer: { checker: "choice", expected: answer, input: { kind: "choice", options } },
-      solution: item.solution,
-      canonical: String(answer),
-      wrong: options.map((_, i) => String(i)).filter((i) => i !== String(answer)),
-    };
-  };
-}
 
 /** interleave takes one item of each batch in turn, so that consecutive seeds come from different batches, as a test mixes them. */
 function interleave<T>(batches: readonly (readonly T[])[]): readonly T[] {
@@ -609,14 +568,15 @@ function oralExam(spec: HskSpec): readonly TopicDef[] {
 
 /** hsk builds an HSK course and its exam topics. */
 function hsk(spec: HskSpec): { readonly course: CourseDef; readonly topics: readonly TopicDef[] } {
+  // Each part apart, so that the banks of only one are built at a time.
   const topics = [
-    ...examTopics(spec),
-    ...speechExam(spec),
-    ...comprehensionExam(spec),
-    ...oralExam(spec),
-    ...writtenTopics(spec.key),
-    ...writingExam(spec),
-    ...paperTopics(spec.key),
+    ...slimTopics(() => examTopics(spec)),
+    ...slimTopics(() => speechExam(spec)),
+    ...slimTopics(() => comprehensionExam(spec)),
+    ...slimTopics(() => oralExam(spec)),
+    ...slimTopics(() => writtenTopics(spec.key)),
+    ...slimTopics(() => writingExam(spec)),
+    ...slimTopics(() => paperTopics(spec.key)),
   ];
   const conversations = spec.courses.flatMap((c) => c.conversations ?? []);
   return {

@@ -1,7 +1,7 @@
 // The word topics of level 1 (docs/chinese-curriculum.md §8.3): a batch of ten words of one theme, each found by its
 // meaning, read in pinyin and put into a short sentence written with the characters taught so far.
 
-import { same, type Text, type TopicDef, t } from "@ga/content";
+import { same, slimmed, type Text, type TopicDef, t } from "@ga/content";
 import { point, toneless } from "@ga/subject-chinese";
 
 import type { LevelOneCharacter } from "./characters.ts";
@@ -77,8 +77,8 @@ export interface LevelOneWordSpec {
   readonly level?: number;
 }
 
-/** levelOneWordTopic builds a level 1 word topic with its three knowledge points. */
-export function levelOneWordTopic(spec: LevelOneWordSpec): TopicDef {
+/** buildLevelOneWordTopic builds a level 1 word topic with its three knowledge points. */
+function buildLevelOneWordTopic(spec: LevelOneWordSpec): TopicDef {
   const { batch, id } = spec;
   const level = spec.level ?? 1;
   const near = nearOf(
@@ -190,6 +190,9 @@ export function levelOneWordTopic(spec: LevelOneWordSpec): TopicDef {
     ],
   };
 }
+
+/** levelOneWordTopic builds a level 1 word topic, keeping its problem banks only while they are used (see slimmed). */
+export const levelOneWordTopic = slimmed(buildLevelOneWordTopic);
 
 /** why explains a word: its reading and its meaning. */
 function why(w: LevelOneWord): Text {

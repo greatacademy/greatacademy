@@ -1,7 +1,7 @@
 // The character topics of level 1 (docs/chinese-curriculum.md §8.3): a batch of ten characters, each found by its
 // meaning, read in pinyin and given its meaning, the meaning in the learner's language.
 
-import { same, type Text, type TopicDef, t } from "@ga/content";
+import { same, slimmed, type Text, type TopicDef, t } from "@ga/content";
 import { point } from "@ga/subject-chinese";
 
 import { type Asked, askedGenerator, dataLines, fields, nearOf, spread, three, threeOf, toneOf, withTone } from "./kit.ts";
@@ -68,8 +68,8 @@ export interface LevelOneCharacterSpec {
   readonly level?: number;
 }
 
-/** levelOneCharacterTopic builds a level 1 character topic with its three knowledge points. */
-export function levelOneCharacterTopic(spec: LevelOneCharacterSpec): TopicDef {
+/** buildLevelOneCharacterTopic builds a level 1 character topic with its three knowledge points. */
+function buildLevelOneCharacterTopic(spec: LevelOneCharacterSpec): TopicDef {
   const { batch, all, id } = spec;
   const level = spec.level ?? 1;
   const near = nearOf(
@@ -170,6 +170,9 @@ export function levelOneCharacterTopic(spec: LevelOneCharacterSpec): TopicDef {
     ],
   };
 }
+
+/** levelOneCharacterTopic builds a level 1 character topic, keeping its problem banks only while they are used (see slimmed). */
+export const levelOneCharacterTopic = slimmed(buildLevelOneCharacterTopic);
 
 /** why explains a character: its reading and its meaning. */
 function why(c: LevelOneCharacter): Text {

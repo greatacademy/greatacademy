@@ -57,7 +57,7 @@ CG0 ─► C1 第一切片 ─► CG1 ─┬─► C2 一至三级 ─► CG2 �
 | :--- | :--- |
 | 判定器 `hanzi` 和 `pinyin`、拼音规范化、分词和内容工具 | `libs/subject-chinese` |
 | 内容包：`compileChinese()`、`core` 分片和测试 | `content/chinese` |
-| 网关和分片 `ga-chinese`、`ga-chinese-core` | `apps/chinese-workers` |
+| 网关 `ga-chinese`，分片 `ga-chinese-core`、`ga-chinese-levels` 和 `ga-chinese-hsk` | `apps/chinese-workers` |
 | 绑定 `SUBJECT_CHINESE` | `apps/web` |
 | 学科自己的文章分词：按字和按词表切分的词 | `libs/content` 中的 `SubjectDef.words`，由 `content/chinese` 使用 |
 

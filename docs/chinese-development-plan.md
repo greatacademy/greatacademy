@@ -57,7 +57,7 @@ Native grades 3 to 6 without new input, testing whether mastery learning and spa
 | :--- | :--- |
 | Checkers `hanzi` and `pinyin`, pinyin keys, segmentation and the content kit | `libs/subject-chinese` |
 | Content package with `compileChinese()`, the `core` shard and tests | `content/chinese` |
-| Gateway and shard `ga-chinese` and `ga-chinese-core` | `apps/chinese-workers` |
+| Gateway `ga-chinese` and shards `ga-chinese-core`, `ga-chinese-levels` and `ga-chinese-hsk` | `apps/chinese-workers` |
 | Binding `SUBJECT_CHINESE` | `apps/web` |
 | The subject's tokenizer for passages: characters and words segmented by the lexicon | `SubjectDef.words` in `libs/content`, used by `content/chinese` |
 

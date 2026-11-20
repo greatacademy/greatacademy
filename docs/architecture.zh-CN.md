@@ -64,7 +64,7 @@ Great Academy 是一个自适应学习平台，基于 [The Math Academy Way](the
 apps/web/             TanStack Start on Workers：页面、better-auth，并把 libs/api 挂载在 /api 下
 apps/math-workers/    提供数学内容的 Worker：一个网关和它的分片（§6.1）
 apps/english-workers/ 提供英语内容的 Worker：一个网关和它的分片
-apps/chinese-workers/ 提供语文内容的 Worker：一个网关和它的分片
+apps/chinese-workers/ 提供语文内容的 Worker：一个网关和它的几个分片
 apps/nsh/             Native Shell 的 TSX 应用（iOS、Android、macOS、Windows、Linux）
 apps/voice/           英语的语音服务，用 Python 基于 Pipecat 编写：轮流说话、打断、票据、排空
 libs/proto/           契约：proto/ga/<domain>/v1/*.proto、buf 配置、gen/（生成代码，提交入库）
@@ -201,10 +201,10 @@ Web Worker ──服务绑定──► 学科网关 ──服务绑定──► 
 
 - **Web Worker** 不含内容。它为每个学科绑定一个网关（`SUBJECT_MATH`），绑定列表在 `apps/web/src/server/handler.ts` 中。新增学科只需部署它的 Worker 并增加一个绑定。
 - **网关**实现 `libs/content` 的 `SubjectGateway`：`listing`（课程列表，很小）、`manifest`（不含代码的学科，构建时由 `subjectManifest` 生成），以及 `SubjectSource` 的 `problems`、`lesson`、`judge`，由 `routeSource` 转给持有该 topic 的分片。
-- **分片**持有学科中一部分 topic 的定义，用 `topicSource` 实现 `SubjectSource`。这些定义在第一次调用时才构建，不在启动时构建。如果内容的模块在加载时就构建题库（语文就是这样），所需时间会超过 Worker 启动的一秒上限，这时分片用 `lazyShardWorker` 构造：它在第一次调用时动态导入内容，打包工具把这些内容放进单独的 chunk，由第一次调用承担这段时间。
+- **分片**持有学科中一部分 topic 的定义，用 `topicSource` 实现 `SubjectSource`。这些定义在第一次调用时才构建，不在启动时构建。如果内容的模块在加载时就构建题库（语文就是这样），所需时间会超过 Worker 启动的一秒上限，这时分片用 `lazyShardWorker` 构造：它在第一次调用时动态导入内容，打包工具把这些内容放进单独的 chunk，由第一次调用承担这段时间。题库在需要时重新构建，不常驻内存，使分片保持在 isolate 的 128 MB 以内（[内容](content.zh-CN.md) §4）；超出的 isolate 会被回收，每次调用都要重新加载内容。
 - **`Registry`**（`libs/api`）每个 isolate 读取一次课程列表，这足以列出课程；某门课程第一次被使用时才加载该学科的 manifest。它只保留最近使用的两个学科，因为数学建好索引后约占 45 MB 内存，而一个 isolate 只有 128 MB。课程的 scope 在第一次使用时才计算。
 
-数学有五个分片，各对应课程体系的一段（`content/math/src/shards/`）。`apps/math-workers/gen/` 存放生成的 manifest 和每个分片的 topic 列表，不提交到仓库。英语和语文目前各只有一个分片 `core`，`apps/english-workers` 和 `apps/chinese-workers` 下的结构相同。
+数学有五个分片，各对应课程体系的一段（`content/math/src/shards/`）。`apps/math-workers/gen/` 存放生成的 manifest 和每个分片的 topic 列表，不提交到仓库。英语目前只有一个分片 `core`，`apps/english-workers` 下的结构相同。语文在 `apps/chinese-workers` 下有三个分片：`core`（母语年级、华裔课程、高考和阅读单元）、`levels`（国际中文的九个等级及其书写）和 `hsk`（HSK 考试 topic），加载时的峰值都在 100 MB 以下。
 
 | Worker | 未压缩体积 | Node 下的模块加载时间 |
 | :--- | :--- | :--- |
@@ -217,6 +217,9 @@ Web Worker ──服务绑定──► 学科网关 ──服务绑定──► 
 | `ga-math-exam` | 2.6 MB | 49 毫秒 |
 | `ga-english`（网关） | 2.8 MB | 30 毫秒 |
 | `ga-english-core` | 7.5 MB | 240 毫秒 |
+| `ga-chinese-core` | 4.7 MB | 420 毫秒，在第一次调用时 |
+| `ga-chinese-levels` | 5.6 MB | 1,270 毫秒，在第一次调用时 |
+| `ga-chinese-hsk` | 6.0 MB | 1,690 毫秒，在第一次调用时 |
 
 当分片的启动时间或内存接近上限时（部署输出中的 `startup_time_ms` 和线上指标可以反映）就一分为二：把 topic 移到 `shards/` 下的新文件，在 `apps/math-workers/src/shards/` 下新增入口，并增加一个绑定。学习者状态不记录 topic 属于哪个分片，所以随时都可以这样做。
 

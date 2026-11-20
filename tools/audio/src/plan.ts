@@ -29,7 +29,8 @@ export function plan(wanted: ReadonlyMap<string, Wanted>, choice: Choice, made: 
     const chosen = all || choice.kinds?.has(w.kind) || (w.unit !== undefined && choice.units?.has(w.unit));
     if (!chosen) continue;
     if (jobs.length >= limit) break;
-    jobs.push({ file, ...w });
+    // Field by field: a subject may make its SSML in a getter, which spreading would leave out.
+    jobs.push({ file, kind: w.kind, ssml: w.ssml, format: w.format, ...(w.unit !== undefined && { unit: w.unit }) });
   }
   return jobs;
 }

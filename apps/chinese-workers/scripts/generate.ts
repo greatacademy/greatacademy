@@ -6,9 +6,13 @@ import { URL } from "node:url";
 import { passagesOf, type ReadingUnitDef, subjectManifest, type TopicDef } from "@ga/content";
 import { compileChinese } from "@ga/content-chinese";
 import { coreShardReading, coreShardTopics } from "@ga/content-chinese/shards/core";
+import { hskShardTopics } from "@ga/content-chinese/shards/hsk";
+import { levelsShardTopics } from "@ga/content-chinese/shards/levels";
 
 const held: Record<string, { topics: readonly TopicDef[]; reading: readonly ReadingUnitDef[] }> = {
   SHARD_CORE: { topics: coreShardTopics, reading: coreShardReading },
+  SHARD_LEVELS: { topics: levelsShardTopics, reading: [] },
+  SHARD_HSK: { topics: hskShardTopics, reading: [] },
 };
 
 const dir = new URL("../gen/", import.meta.url);

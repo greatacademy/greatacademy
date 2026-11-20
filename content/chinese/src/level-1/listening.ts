@@ -3,7 +3,7 @@
 // where the words are said after a recording and the sentences read aloud, heard by a speech service. The recordings
 // are made by tools/audio from the words and sentences of the unit, so the topics need no data of their own.
 
-import { type Generator, heardResponse, type Problem, type Rng, same, type Text, type TopicDef, t } from "@ga/content";
+import { type Generator, heardResponse, type Problem, type Rng, same, slimmed, type Text, type TopicDef, t } from "@ga/content";
 import { point, toneless } from "@ga/subject-chinese";
 
 import { heard } from "../audio.ts";
@@ -191,8 +191,8 @@ export function unitSpeechSpecs(level: number): readonly UnitSpeechSpec[] {
   return units;
 }
 
-/** unitListeningTopic builds the listening topic of a unit: a word heard by its meaning, then a word heard in a sentence. */
-export function unitListeningTopic(spec: UnitSpeechSpec): TopicDef {
+/** buildUnitListeningTopic builds the listening topic of a unit: a word heard by its meaning, then a word heard in a sentence. */
+function buildUnitListeningTopic(spec: UnitSpeechSpec): TopicDef {
   const id = levelListeningId(spec.level, spec.unit);
   const { hearWord, hearSentence } = listeningBanks(spec);
   specs.set(spec.level, [...(specs.get(spec.level) ?? []).filter((x) => x.unit !== spec.unit), spec]);
@@ -233,6 +233,9 @@ export function unitListeningTopic(spec: UnitSpeechSpec): TopicDef {
     ],
   };
 }
+
+/** unitListeningTopic builds a unit's listening topic, keeping its problem banks only while they are used (see slimmed). */
+export const unitListeningTopic = slimmed(buildUnitListeningTopic);
 
 /** heardAs is the response of a text heard clearly. */
 const heardAs = (text: string) => heardResponse({ text, confidence: 0.95, seconds: [...text].length * 0.4 + 0.5 });
@@ -324,8 +327,8 @@ export function speakingBanks(spec: UnitSpeechSpec): { readonly sayWord: readonl
   return { sayWord, readSentence };
 }
 
-/** unitSpeakingTopic builds the speaking topic of a unit: its words said after a recording, then its sentences read aloud. */
-export function unitSpeakingTopic(spec: UnitSpeechSpec): TopicDef {
+/** buildUnitSpeakingTopic builds the speaking topic of a unit: its words said after a recording, then its sentences read aloud. */
+function buildUnitSpeakingTopic(spec: UnitSpeechSpec): TopicDef {
   const id = levelSpeakingId(spec.level, spec.unit);
   const { sayWord, readSentence } = speakingBanks(spec);
   return {
@@ -365,3 +368,6 @@ export function unitSpeakingTopic(spec: UnitSpeechSpec): TopicDef {
     ],
   };
 }
+
+/** unitSpeakingTopic builds a unit's speaking topic, keeping its problem banks only while they are used (see slimmed). */
+export const unitSpeakingTopic = slimmed(buildUnitSpeakingTopic);
