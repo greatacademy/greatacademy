@@ -1,9 +1,6 @@
 import { cpSync, existsSync, mkdirSync, readdirSync, rmSync, symlinkSync } from "node:fs";
 import { resolve } from "node:path";
 import { cloudflare } from "@cloudflare/vite-plugin";
-import { gatewayWorker as chineseGateway, shardWorkers as chineseShards } from "@ga/chinese-workers/workers";
-import { gatewayWorker as englishGateway, shardWorkers as englishShards } from "@ga/english-workers/workers";
-import { gatewayWorker as mathGateway, shardWorkers as mathShards } from "@ga/math-workers/workers";
 import tailwindcss from "@tailwindcss/vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import react from "@vitejs/plugin-react";
@@ -77,21 +74,18 @@ function audioFiles(): Plugin {
 }
 
 export default defineConfig({
-  // DEV_HOST=0.0.0.0 lets a phone on the same network reach the dev server; the voice service in
-  // compose reaches it as host.docker.internal.
-  server: { port: 5173, host: process.env.DEV_HOST, allowedHosts: ["host.docker.internal"] },
+  // DEV_HOST=0.0.0.0 lets a phone on the same network reach the dev server. /api goes to the API server of
+  // `pnpm nx run server:dev` (API_URL), which in production has its own host (src/lib/origin.ts).
+  server: {
+    port: 5173,
+    host: process.env.DEV_HOST,
+    proxy: { "/api": { target: process.env.API_URL ?? "http://localhost:8080", xfwd: true } },
+  },
   plugins: [
     embedAssets(),
     illustrationAssets(),
     audioFiles(),
-    cloudflare({
-      viteEnvironment: { name: "ssr" },
-      // In development the subject Workers run alongside the web Worker; in production they are deployed on their own.
-      auxiliaryWorkers: [mathGateway, ...mathShards, englishGateway, ...englishShards, chineseGateway, ...chineseShards].map((config) => ({
-        config,
-        devOnly: true,
-      })),
-    }),
+    cloudflare({ viteEnvironment: { name: "ssr" } }),
     tailwindcss(),
     tanstackStart(),
     react(),

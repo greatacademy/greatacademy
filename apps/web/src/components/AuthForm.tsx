@@ -140,7 +140,14 @@ export function AuthForm({
     const username = String(form.get("username") ?? "").trim();
     const res =
       mode === "sign-up"
-        ? await authClient.signUp.email({ email, password, name: String(form.get("name")).trim(), username, displayUsername: username })
+        ? await authClient.signUp.email({
+            email,
+            password,
+            name: String(form.get("name")).trim(),
+            username,
+            displayUsername: username,
+            callbackURL: `${window.location.origin}/`,
+          })
         : email.includes("@")
           ? await authClient.signIn.email({ email, password })
           : await authClient.signIn.username({ username: email.trim(), password });

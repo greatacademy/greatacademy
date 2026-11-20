@@ -4,7 +4,7 @@ import { Marked } from "marked";
 import markedKatex from "marked-katex-extension";
 
 import { tx } from "./i18n.ts";
-import { API_URL } from "./rpc.ts";
+import { SITE_URL } from "./rpc.ts";
 
 // Content is Markdown with TeX between $…$ and $$…$$ (docs/content.md §2), set up as on the web.
 const marked = new Marked(markedKatex({ throwOnError: false, nonStandard: true }));
@@ -70,7 +70,7 @@ export interface Palette {
  */
 export function pageHtml(body: string, palette: Palette, options: { fontSize?: number; script?: string; head?: string } = {}): string {
   return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="stylesheet" href="${API_URL}/embed/katex.min.css" onerror="document.documentElement.className='no-katex'">
+<link rel="stylesheet" href="${SITE_URL}/embed/katex.min.css" onerror="document.documentElement.className='no-katex'">
 <style>
 .no-katex .katex-html{display:none}
 html,body{margin:0;padding:0;background:transparent;color:${palette.ink};font:${options.fontSize ?? 16}px/1.6 -apple-system,system-ui,Roboto,"Segoe UI","Noto Sans SC",sans-serif;overflow-wrap:anywhere}

@@ -174,7 +174,10 @@ function Settings() {
                     type="button"
                     className="font-medium text-accent"
                     onClick={async () => {
-                      const res = await authClient.sendVerificationEmail({ email: session.user.email, callbackURL: "/settings" });
+                      const res = await authClient.sendVerificationEmail({
+                        email: session.user.email,
+                        callbackURL: `${window.location.origin}/settings`,
+                      });
                       if (!res.error) setVerification(true);
                     }}
                   >

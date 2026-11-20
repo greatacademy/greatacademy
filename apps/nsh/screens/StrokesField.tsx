@@ -3,7 +3,7 @@ import { computed, signal, untracked, View, WebView, type WebViewRef } from "nsh
 
 import { pageHtml, scriptValue } from "../lib/content.ts";
 import { m } from "../lib/i18n.ts";
-import { API_URL } from "../lib/rpc.ts";
+import { SITE_URL } from "../lib/rpc.ts";
 import { colors, Muted } from "../lib/ui.tsx";
 
 type Point = readonly [number, number];
@@ -82,7 +82,7 @@ export function StrokesField(props: {
           view = node;
         }}
         html={html()}
-        baseUrl={`${API_URL}/`}
+        baseUrl={`${SITE_URL}/`}
         scrollable={false}
         accessibilityLabel={m().strokesPad}
         style={{ backgroundColor: "transparent", height: height() }}

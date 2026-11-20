@@ -9,7 +9,7 @@ import self from "../assets/who/self.svg";
 import { type AgeAnswer, signUp } from "../lib/auth.ts";
 import { errorText, m } from "../lib/i18n.ts";
 import { afterSignUp, nav } from "../lib/nav.ts";
-import { API_URL, privacy } from "../lib/rpc.ts";
+import { privacy, SITE_URL } from "../lib/rpc.ts";
 import { Action, ConfirmField, colors, ErrorNote, Field, FormPage, headerStyle, Muted, Quiet, Title } from "../lib/ui.tsx";
 import { AgeForm } from "./AgeForm.tsx";
 import { Header } from "./Header.tsx";
@@ -159,7 +159,7 @@ function AccountForm(props: { age: AgeAnswer; parent: boolean; onBack: () => voi
       <Action label={m().signUp} disabled={busy() || !complete()} onPress={submit} />
       <View style={{ alignItems: "center", flexDirection: "row", flexWrap: "wrap", gap: 6, justifyContent: "center" }}>
         <Muted>{m().signUpNotice}</Muted>
-        <Link href={`${API_URL}/legal/privacy`}>
+        <Link href={`${SITE_URL}/legal/privacy`}>
           <Text style={{ color: colors().accent, fontSize: 14 }}>{m().legalPrivacy}</Text>
         </Link>
       </View>

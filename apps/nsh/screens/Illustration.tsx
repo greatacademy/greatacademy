@@ -1,5 +1,5 @@
 import { Image, signal } from "nsh";
-import { API_URL } from "../lib/rpc.ts";
+import { SITE_URL } from "../lib/rpc.ts";
 import { colors } from "../lib/ui.tsx";
 
 /**
@@ -12,7 +12,7 @@ export function Illustration(props: { path: string; width?: number; thumb?: bool
   return (
     <If when={props.path !== "" && !failed()}>
       <Image
-        src={`${API_URL}/${props.path}${props.thumb ? ".thumb" : ""}.webp`}
+        src={`${SITE_URL}/${props.path}${props.thumb ? ".thumb" : ""}.webp`}
         onError={() => failed.set(true)}
         style={{
           alignSelf: props.width ? "auto" : "stretch",

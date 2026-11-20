@@ -52,7 +52,7 @@ export const MAX_TURNS = 40;
 /** END_REASONS are the reasons the voice service gives for the end of a session. */
 export const END_REASONS = ["tutor_ended", "learner_ended", "time_limit", "disconnected", "error"] as const;
 
-/** VoiceConfig is how the web Worker reaches the voice service and is reached by it (deploy/voice). */
+/** VoiceConfig is how the API server reaches the voice service and is reached by it (deploy/k8s). */
 export interface VoiceConfig {
   /** url is the voice service's WebSocket, such as wss://voice.greatacademy.dev/v1/conversation. */
   readonly url: string;

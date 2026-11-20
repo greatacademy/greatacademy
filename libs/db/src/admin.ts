@@ -253,3 +253,15 @@ export async function notices(db: Db): Promise<NoticeRow[]> {
 export async function publishNotice(db: Db, row: typeof notice.$inferInsert): Promise<void> {
   await db.insert(notice).values(row);
 }
+
+/**
+ * grantAdminByEmail grants the administrator role to the adult account with email, the only way to create the first
+ * administrator; it throws when there is no such account or it is not an adult's.
+ */
+export async function grantAdminByEmail(db: Db, email: string, at: Date): Promise<void> {
+  const found = await userByEmail(db, email);
+  if (!found) throw new Error("no account with that email");
+  if (found.band !== "adult") throw new Error("only an account in the adult band can be an administrator; answer the age question first");
+  await grantAdmin(db, found.id, null, at);
+  await logChange(db, { actor: "system", action: "admin.grant", target: found.id, detail: "command line", at });
+}

@@ -16,7 +16,7 @@ function ForgotPassword() {
     e.preventDefault();
     setState("busy");
     const email = String(new FormData(e.currentTarget).get("email"));
-    const res = await authClient.requestPasswordReset({ email, redirectTo: "/reset-password" });
+    const res = await authClient.requestPasswordReset({ email, redirectTo: `${window.location.origin}/reset-password` });
     setState(res.error ? "failed" : "sent");
   }
 

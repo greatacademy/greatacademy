@@ -1,0 +1,45 @@
+{
+  "name": "@ga/server",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "node --env-file-if-exists=.env.local --watch src/main.ts",
+    "build": "rolldown -c rolldown.config.ts && rm -rf dist/drizzle && cp -R ../../libs/db/drizzle dist/drizzle",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "lint": "biome check ."
+  },
+  "nx": {
+    "name": "server",
+    "targets": {
+      "build": {
+        "outputs": [
+          "{projectRoot}/dist"
+        ]
+      }
+    }
+  },
+  "dependencies": {
+    "@bufbuild/protobuf": "2.16.0",
+    "@connectrpc/connect": "2.3.0",
+    "@ga/api": "workspace:*",
+    "@ga/content": "workspace:*",
+    "@ga/content-chinese": "workspace:*",
+    "@ga/content-english": "workspace:*",
+    "@ga/content-math": "workspace:*",
+    "@ga/db": "workspace:*",
+    "@ga/proto": "workspace:*",
+    "aws4fetch": "1.0.20",
+    "better-auth": "1.7.14",
+    "drizzle-orm": "0.45.4",
+    "stripe": "23.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.3",
+    "rolldown": "1.2.15",
+    "typescript": "7.0.2",
+    "vitest": "5.0.3"
+  }
+}

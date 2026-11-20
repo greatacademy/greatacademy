@@ -2,7 +2,7 @@ import type { Sound } from "@ga/proto/learning/v1/learning_pb";
 import { AudioPlayer, cleanup, signal, Text, View } from "nsh";
 
 import { m } from "../lib/i18n.ts";
-import { API_URL } from "../lib/rpc.ts";
+import { SITE_URL } from "../lib/rpc.ts";
 import { colors, Quiet } from "../lib/ui.tsx";
 
 /**
@@ -20,7 +20,7 @@ export function Sounds(props: { sounds: readonly Pick<Sound, "text" | "audio">[]
   cleanup(stop);
   const play = (i: number, sound: Pick<Sound, "text" | "audio">) => {
     stop();
-    const p = new AudioPlayer(`${API_URL}/${sound.audio}.mp3`);
+    const p = new AudioPlayer(`${SITE_URL}/${sound.audio}.mp3`);
     player = p;
     failed.set(false);
     playing.set(i);

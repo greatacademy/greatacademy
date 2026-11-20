@@ -8,15 +8,10 @@ export type SendEmail = (email: Email) => Promise<void>;
 /** hasInbox tells a real address from the placeholder of a child's account, which must never be mailed. */
 const hasInbox = (to: string) => !to.endsWith(".invalid");
 
-/** CloudflareMail is the part of Cloudflare Email Service's send_email binding that the sender uses. */
-export interface CloudflareMail {
-  send(message: {
-    from: string | { email: string; name: string };
-    to: string;
-    subject: string;
-    text: string;
-    html: string;
-  }): Promise<unknown>;
+/** CloudflareEmail is what sending through Cloudflare Email Service's REST API needs: the account and an account API token that may send. */
+export interface CloudflareEmail {
+  readonly accountId: string;
+  readonly token: string;
 }
 
 /** EmailSettings holds EMAIL_PROVIDER, the credentials of each service and the sender address. */
@@ -24,7 +19,7 @@ export interface EmailSettings {
   /** provider lists "cloudflare" and "resend" in the order to try them, separated by commas; empty means Resend when a key is set. */
   readonly provider: string | undefined;
   readonly resendApiKey: string | undefined;
-  readonly cloudflare: CloudflareMail | undefined;
+  readonly cloudflare: CloudflareEmail | undefined;
   readonly from: string;
 }
 
@@ -47,18 +42,19 @@ export function emailProviders(settings: EmailSettings): EmailProvider[] {
     if (p !== "resend" && p !== "cloudflare") throw new Error(`EMAIL_PROVIDER lists ${p}; only resend and cloudflare are known`);
     if (providers.includes(p)) throw new Error(`EMAIL_PROVIDER lists ${p} twice`);
     if (p === "resend" && !settings.resendApiKey) throw new Error("EMAIL_PROVIDER lists resend but RESEND_API_KEY is empty");
-    if (p === "cloudflare" && !settings.cloudflare) throw new Error("EMAIL_PROVIDER lists cloudflare but the EMAIL binding is missing");
+    if (p === "cloudflare" && !settings.cloudflare)
+      throw new Error("EMAIL_PROVIDER lists cloudflare but CLOUDFLARE_ACCOUNT_ID or CLOUDFLARE_EMAIL_TOKEN is empty");
     providers.push(p);
   }
   return providers;
 }
 
-/** senderAddress splits "Name <address>" into the named address of Cloudflare's binding; a bare address stays as it is. */
-export function senderAddress(from: string): string | { email: string; name: string } {
+/** senderAddress splits "Name <address>" into the named address of Cloudflare's API; a bare address stays as it is. */
+export function senderAddress(from: string): string | { address: string; name: string } {
   const named = /^\s*(.*?)\s*<([^<>\s]+)>\s*$/.exec(from);
   if (!named?.[2]) return from.trim();
   const name = named[1]?.replace(/^"(.*)"$/, "$1") ?? "";
-  return name === "" ? named[2] : { email: named[2], name };
+  return name === "" ? named[2] : { address: named[2], name };
 }
 
 /** SendFailure is a failed delivery; a passing one, such as a rate limit or an outage, lets the next service try. */
@@ -71,25 +67,31 @@ export class SendFailure extends Error {
   }
 }
 
-/** PASSING_CLOUDFLARE_CODES are the codes of Cloudflare Email Service after which another service may try; the rest are mistakes of setup or of the message. */
-const PASSING_CLOUDFLARE_CODES = new Set([
-  "E_RATE_LIMIT_EXCEEDED",
-  "E_DAILY_LIMIT_EXCEEDED",
-  "E_DELIVERY_FAILED",
-  "E_INTERNAL_SERVER_ERROR",
-]);
-
+/** viaCloudflare sends through Cloudflare Email Service's REST API; a rate limit or an outage passes, any other refusal does not. */
 const viaCloudflare =
-  (mail: CloudflareMail, from: string): SendEmail =>
+  (mail: CloudflareEmail, from: string, fetcher: typeof fetch): SendEmail =>
   async (email) => {
+    let res: Response;
     try {
-      await mail.send({ from: senderAddress(from), to: email.to, subject: email.subject, text: email.text, html: email.html });
-    } catch (e) {
-      const code = e instanceof Error && "code" in e && typeof e.code === "string" ? e.code : undefined;
-      throw new SendFailure(`Cloudflare failed with ${code ?? "no code"}`, code === undefined || PASSING_CLOUDFLARE_CODES.has(code));
+      res = await fetcher(`https://api.cloudflare.com/client/v4/accounts/${mail.accountId}/email/sending/send`, {
+        method: "POST",
+        headers: { authorization: `Bearer ${mail.token}`, "content-type": "application/json" },
+        body: JSON.stringify({ from: senderAddress(from), to: email.to, subject: email.subject, text: email.text, html: email.html }),
+      });
+    } catch {
+      throw new SendFailure("Cloudflare could not be reached", true);
+    }
+    if (!res.ok) {
+      const body = (await res.json().catch(() => undefined)) as { errors?: { code?: number }[] } | undefined;
+      const code = body?.errors?.[0]?.code;
+      throw new SendFailure(
+        `Cloudflare failed with status ${res.status}${code ? ` (${code})` : ""}`,
+        res.status === 429 || res.status >= 500,
+      );
     }
   };
 
+/** viaResend sends through Resend; a rate limit or an outage passes, any other refusal does not. */
 const viaResend =
   (apiKey: string, from: string, fetcher: typeof fetch): SendEmail =>
   async (email) => {
@@ -116,7 +118,7 @@ const viaResend =
 export function emailSender(settings: EmailSettings, fetcher: typeof fetch = fetch): SendEmail {
   const services = emailProviders(settings).map((p) =>
     p === "cloudflare"
-      ? { p, send: viaCloudflare(settings.cloudflare as CloudflareMail, settings.from) }
+      ? { p, send: viaCloudflare(settings.cloudflare as CloudflareEmail, settings.from, fetcher) }
       : { p, send: viaResend(settings.resendApiKey as string, settings.from, fetcher) },
   );
   if (services.length === 0) {

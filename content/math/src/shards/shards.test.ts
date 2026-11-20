@@ -1,4 +1,4 @@
-import { createRng, readManifest, subjectManifest, type TopicDef } from "@ga/content";
+import { readManifest, subjectManifest, type TopicDef } from "@ga/content";
 import { describe, expect, it } from "vitest";
 
 import { compileMath } from "../index.ts";
@@ -7,9 +7,6 @@ import { calculusShardTopics } from "./calculus.ts";
 import { collegeShardTopics } from "./college.ts";
 import { examShardTopics } from "./exam.ts";
 import { schoolShardTopics } from "./school.ts";
-
-// Content packages compile without runtime types.
-declare const structuredClone: <T>(value: T) => T;
 
 const shards: readonly (readonly TopicDef[])[] = [
   schoolShardTopics,
@@ -31,16 +28,6 @@ describe("the shards of mathematics", () => {
     for (const topic of shards.flat()) {
       const titles = (t: TopicDef) => t.knowledgePoints.map((k) => k.id);
       expect(titles(topic), topic.id).toEqual(titles(compiled.topics.get(topic.id)!));
-    }
-  });
-
-  it("generate problems that survive a Worker call unchanged", () => {
-    for (const topic of shards.flat()) {
-      for (const kp of topic.knowledgePoints) {
-        const problem = kp.generate(createRng(11));
-        // A Worker RPC passes values by structured clone: functions would throw and class instances would lose their methods.
-        expect(structuredClone(problem), `${topic.id}/${kp.id}`).toEqual(problem);
-      }
     }
   });
 });

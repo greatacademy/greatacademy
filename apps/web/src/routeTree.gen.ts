@@ -48,7 +48,6 @@ import { Route as SettingsIndexRouteImport } from './routes/settings/index'
 import { Route as SettingsAppearanceRouteImport } from './routes/settings/appearance'
 import { Route as SettingsDeleteRouteImport } from './routes/settings/delete'
 import { Route as SettingsPasswordRouteImport } from './routes/settings/password'
-import { Route as VoiceSplatRouteImport } from './routes/voice/$'
 import { Route as SubjectTalkConversationIdRouteImport } from './routes/$subject/talk/$conversationId'
 import { Route as SubjectTopicsTopicIdRouteImport } from './routes/$subject/topics/$topicId'
 import { Route as AdminContentIndexRouteImport } from './routes/admin/content/index'
@@ -251,11 +250,6 @@ const SettingsPasswordRoute = SettingsPasswordRouteImport.update({
   path: '/password',
   getParentRoute: () => SettingsRouteRoute,
 } as any)
-const VoiceSplatRoute = VoiceSplatRouteImport.update({
-  id: '/voice/$',
-  path: '/voice/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SubjectTalkConversationIdRoute =
   SubjectTalkConversationIdRouteImport.update({
     id: '/talk/$conversationId',
@@ -326,7 +320,6 @@ export interface FileRoutesByFullPath {
   '/settings/appearance': typeof SettingsAppearanceRoute
   '/settings/delete': typeof SettingsDeleteRoute
   '/settings/password': typeof SettingsPasswordRoute
-  '/voice/$': typeof VoiceSplatRoute
   '/$subject/': typeof SubjectIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/courses/': typeof CoursesIndexRoute
@@ -371,7 +364,6 @@ export interface FileRoutesByTo {
   '/settings/appearance': typeof SettingsAppearanceRoute
   '/settings/delete': typeof SettingsDeleteRoute
   '/settings/password': typeof SettingsPasswordRoute
-  '/voice/$': typeof VoiceSplatRoute
   '/$subject': typeof SubjectIndexRoute
   '/admin': typeof AdminIndexRoute
   '/courses': typeof CoursesIndexRoute
@@ -420,7 +412,6 @@ export interface FileRoutesById {
   '/settings/appearance': typeof SettingsAppearanceRoute
   '/settings/delete': typeof SettingsDeleteRoute
   '/settings/password': typeof SettingsPasswordRoute
-  '/voice/$': typeof VoiceSplatRoute
   '/$subject/': typeof SubjectIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/courses/': typeof CoursesIndexRoute
@@ -470,7 +461,6 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/settings/delete'
     | '/settings/password'
-    | '/voice/$'
     | '/$subject/'
     | '/admin/'
     | '/courses/'
@@ -515,7 +505,6 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/settings/delete'
     | '/settings/password'
-    | '/voice/$'
     | '/$subject'
     | '/admin'
     | '/courses'
@@ -563,7 +552,6 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/settings/delete'
     | '/settings/password'
-    | '/voice/$'
     | '/$subject/'
     | '/admin/'
     | '/courses/'
@@ -597,7 +585,6 @@ export interface RootRouteChildren {
   GuardianLearnerIdRoute: typeof GuardianLearnerIdRoute
   LegalPageRoute: typeof LegalPageRoute
   SessionSessionIdRoute: typeof SessionSessionIdRoute
-  VoiceSplatRoute: typeof VoiceSplatRoute
   CoursesIndexRoute: typeof CoursesIndexRoute
   GuardianIndexRoute: typeof GuardianIndexRoute
 }
@@ -877,13 +864,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsPasswordRouteImport
       parentRoute: typeof SettingsRouteRoute
     }
-    '/voice/$': {
-      id: '/voice/$'
-      path: '/voice/$'
-      fullPath: '/voice/$'
-      preLoaderRoute: typeof VoiceSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/$subject/talk/$conversationId': {
       id: '/$subject/talk/$conversationId'
       path: '/talk/$conversationId'
@@ -1028,7 +1008,6 @@ const rootRouteChildren: RootRouteChildren = {
   GuardianLearnerIdRoute: GuardianLearnerIdRoute,
   LegalPageRoute: LegalPageRoute,
   SessionSessionIdRoute: SessionSessionIdRoute,
-  VoiceSplatRoute: VoiceSplatRoute,
   CoursesIndexRoute: CoursesIndexRoute,
   GuardianIndexRoute: GuardianIndexRoute,
 }

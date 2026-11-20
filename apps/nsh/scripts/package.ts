@@ -5,12 +5,12 @@ import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 // Packages the app for a server chosen at build time, since Native Shell has no
-// build-time values: `pnpm nx run nsh:package -- --target macos [--api-url <url>] [nsh package flags]`.
+// build-time values: `pnpm nx run nsh:package -- --target macos [--site-url <url>] [nsh package flags]`.
 // `nsh package` takes one icon, so the steps after it add the dark icon that the
 // platforms choose by the system's appearance, then sign the app again.
 
 const PRODUCTION = "https://greatacademy.dev";
-const DEVELOPMENT = 'export const API_URL = "http://localhost:5173";';
+const DEVELOPMENT = 'export const SITE_URL = "http://localhost:5173";';
 const DESKTOPS = new Set(["macos", "windows", "linux"]);
 const APP = fileURLToPath(new URL("..", import.meta.url));
 const APPLE_ICON = join(APP, "assets/AppIcon.icon");
@@ -26,7 +26,7 @@ const take = (name: string): string | undefined => {
   const at = args.indexOf(name);
   return at < 0 ? undefined : args.splice(at, 2)[1];
 };
-const apiUrl = take("--api-url") ?? PRODUCTION;
+const siteUrl = take("--site-url") ?? PRODUCTION;
 const target = peek("--target") ?? "";
 if (!target) throw new Error("--target is required");
 
@@ -150,7 +150,7 @@ function finishAndroid(): void {
   const tools = join(ANDROID_SDK, "build-tools", versions.at(-1) ?? "");
   const apk = join(out, `${name}.apk`);
   const work = mkdtempSync(join(tmpdir(), "ga-apk-"));
-  const cleartext = apiUrl.startsWith("http://");
+  const cleartext = siteUrl.startsWith("http://");
   const light = join(work, "light");
   run("unzip", "-q", apk, "res/*", "-d", light);
   mkdirSync(join(work, "res/mipmap-xxxhdpi"), { recursive: true });
@@ -215,7 +215,7 @@ const rpc = join(APP, "lib/rpc.ts");
 const source = readFileSync(rpc, "utf8");
 if (!source.includes(DEVELOPMENT)) throw new Error("lib/rpc.ts no longer has the line this script replaces");
 
-writeFileSync(rpc, source.replace(DEVELOPMENT, `export const API_URL = ${JSON.stringify(apiUrl)};`));
+writeFileSync(rpc, source.replace(DEVELOPMENT, `export const SITE_URL = ${JSON.stringify(siteUrl)};`));
 let status: number | null = 1;
 try {
   status = spawnSync("nsh", ["package", ".", ...icon, ...args], { cwd: APP, stdio: "inherit" }).status;

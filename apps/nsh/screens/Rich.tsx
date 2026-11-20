@@ -3,7 +3,7 @@ import { computed, signal, Text, View, WebView } from "nsh";
 
 import { contentHtml, figureHtml, isPlain, pageHtml, texHtml } from "../lib/content.ts";
 import { tx } from "../lib/i18n.ts";
-import { API_URL } from "../lib/rpc.ts";
+import { SITE_URL } from "../lib/rpc.ts";
 import { colors } from "../lib/ui.tsx";
 
 /** Page shows HTML in a web view as tall as its content; a press anywhere on it calls onPress. */
@@ -19,7 +19,7 @@ function Page(props: { label: string; body: () => string; fontSize?: number; onP
     <View accessibilityLabel={props.label} onPress={props.onPress} style={{ alignSelf: "stretch" }}>
       <WebView
         html={html()}
-        baseUrl={`${API_URL}/`}
+        baseUrl={`${SITE_URL}/`}
         scrollable={false}
         style={{ backgroundColor: "transparent", height: height() }}
         onMessage={({ data }) => {

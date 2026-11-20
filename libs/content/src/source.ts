@@ -23,8 +23,7 @@ export interface Judged {
 
 /**
  * SubjectSource serves what only a subject's code can produce. It is
- * asynchronous because that code may run in another Worker: a Worker RPC stub
- * for a subject satisfies this interface.
+ * asynchronous so that a subject could be served from another process.
  */
 export interface SubjectSource {
   /** problems generates the problems of refs, in order. A question of a passage is the ref with the passage as its topic and the question as its knowledge point. */
@@ -43,45 +42,6 @@ export interface SubjectGateway extends SubjectSource {
   listing(): Promise<SubjectListing>;
   /** manifest gives the subject without its code. */
   manifest(): Promise<SubjectManifest>;
-}
-
-/**
- * routeSource serves a source from shards that each hold some of the topics.
- * shards maps the name of each shard to the ids of its topics; shard gives the
- * source of a shard by that name.
- */
-export function routeSource(shards: Readonly<Record<string, readonly string[]>>, shard: (name: string) => SubjectSource): SubjectSource {
-  const owner = new Map<string, string>();
-  for (const [name, topics] of Object.entries(shards)) for (const topic of topics) owner.set(topic, name);
-  const of = (topic: string) => {
-    const name = owner.get(topic);
-    if (!name) throw new Error(`unknown topic ${topic}`);
-    return name;
-  };
-  return {
-    problems: async (refs) => {
-      const byShard = new Map<string, number[]>();
-      refs.forEach((ref, i) => {
-        const name = of(ref.topic);
-        const at = byShard.get(name);
-        if (at) at.push(i);
-        else byShard.set(name, [i]);
-      });
-      const out = new Array<Problem>(refs.length);
-      await Promise.all(
-        [...byShard].map(async ([name, at]) => {
-          const problems = await shard(name).problems(at.map((i) => refs[i]!));
-          at.forEach((i, j) => {
-            out[i] = problems[j]!;
-          });
-        }),
-      );
-      return out;
-    },
-    lesson: (topic, kp) => shard(of(topic)).lesson(topic, kp),
-    judge: (ref, response) => shard(of(ref.topic)).judge(ref, response),
-    passage: (id) => shard(of(id)).passage(id),
-  };
 }
 
 /** topicSource serves a source from topic and passage definitions held in this process. */

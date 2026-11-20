@@ -1,7 +1,7 @@
 import { AudioPlayer, signal, Text, View } from "nsh";
 
 import { m } from "../lib/i18n.ts";
-import { API_URL } from "../lib/rpc.ts";
+import { SITE_URL } from "../lib/rpc.ts";
 import { colors, Quiet } from "../lib/ui.tsx";
 
 /** clock shows seconds as m:ss. */
@@ -17,7 +17,7 @@ const clock = (seconds: number) => {
  * when it is not the usual one, shown beside the time; "" for none.
  */
 export function Listen(props: { path: string; accent?: string }) {
-  const player = new AudioPlayer(`${API_URL}/${props.path}.mp3`);
+  const player = new AudioPlayer(`${SITE_URL}/${props.path}.mp3`);
   const state = signal(player.state);
   const at = signal(0);
   const length = signal(Number.NaN);

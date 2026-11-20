@@ -38,7 +38,7 @@ export interface SubjectManifest {
   /** passages are in reading order. */
   readonly passages: readonly ManifestPassage[];
   readonly courses: readonly ManifestCourse[];
-  /** conversations are the subject's spoken conversations, whole: they are small, and the web Worker plays them. */
+  /** conversations are the subject's spoken conversations, whole: small enough to keep whole. */
   readonly conversations?: readonly ConversationDef[];
 }
 

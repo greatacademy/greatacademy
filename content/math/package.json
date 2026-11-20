@@ -5,8 +5,7 @@
   "license": "MIT",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts",
-    "./shards/*": "./src/shards/*.ts"
+    ".": "./src/index.ts"
   },
   "scripts": {
     "typecheck": "tsc -p tsconfig.json",

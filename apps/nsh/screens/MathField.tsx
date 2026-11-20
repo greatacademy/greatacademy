@@ -3,7 +3,7 @@ import { Input } from "nsh/base";
 
 import { pageHtml, scriptValue } from "../lib/content.ts";
 import { m } from "../lib/i18n.ts";
-import { API_URL } from "../lib/rpc.ts";
+import { SITE_URL } from "../lib/rpc.ts";
 import { colors, fieldStyle, Muted } from "../lib/ui.tsx";
 
 // MathLive's own fonts and sounds are off: KaTeX's stylesheet already provides the fonts.
@@ -43,7 +43,7 @@ export function MathField(props: {
       `<math-field id="f" aria-label="${m().yourAnswer}" math-virtual-keyboard-policy="auto" smart-fence="on" style="display:block;box-sizing:border-box;width:100%;min-height:48px;padding:8px 12px;font-size:20px;border:1px solid ${palette.ink}33;border-radius:8px;background:transparent;color:inherit"></math-field>`,
       palette,
       {
-        head: `<style>math-field{--caret-color:${palette.accent};--primary-color:${palette.accent}}math-field:focus,math-field:focus-visible{outline:none}math-field::part(menu-toggle){display:none}math-field::part(virtual-keyboard-toggle){min-width:44px;min-height:44px}</style><script src="${API_URL}/embed/mathlive.min.js"></script>`,
+        head: `<style>math-field{--caret-color:${palette.accent};--primary-color:${palette.accent}}math-field:focus,math-field:focus-visible{outline:none}math-field::part(menu-toggle){display:none}math-field::part(virtual-keyboard-toggle){min-width:44px;min-height:44px}</style><script src="${SITE_URL}/embed/mathlive.min.js"></script>`,
         script: script(
           untracked(() => props.value),
           disabled,
@@ -58,7 +58,7 @@ export function MathField(props: {
         else={
           <WebView
             html={html()}
-            baseUrl={`${API_URL}/`}
+            baseUrl={`${SITE_URL}/`}
             scrollable={false}
             style={{ backgroundColor: "transparent", height: field() + (props.disabled ? 0 : keyboard()) }}
             onError={() => asText.set(true)}

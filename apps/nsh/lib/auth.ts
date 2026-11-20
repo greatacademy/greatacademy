@@ -3,7 +3,7 @@ import { resource, signal } from "nsh";
 
 import { language } from "./i18n.ts";
 import { netFetch } from "./net.ts";
-import { API_URL, privacy } from "./rpc.ts";
+import { API_URL, privacy, SITE_URL } from "./rpc.ts";
 import { setToken, token } from "./session.ts";
 
 /** AgeAnswer is what the age question collects; it is sent to the server, which keeps only the band. */
@@ -26,7 +26,7 @@ export class AuthError extends Error {
 async function post(path: string, body: unknown): Promise<Response> {
   // better-auth checks Origin once a request carries a cookie, which the platform's network stack may add.
   // Accept-Language picks the language of the email better-auth sends, such as the link to reset a password.
-  const headers: Record<string, string> = { "Content-Type": "application/json", Origin: API_URL, "Accept-Language": language() };
+  const headers: Record<string, string> = { "Content-Type": "application/json", Origin: SITE_URL, "Accept-Language": language() };
   const current = token();
   if (current) headers.Authorization = `Bearer ${current}`;
   return netFetch(`${API_URL}/api/auth${path}`, { method: "POST", headers, body: JSON.stringify(body) });
@@ -68,7 +68,7 @@ export async function signUp(name: string, username: string, email: string, pass
 
 /** requestPasswordReset asks for an email with a link to choose a new password, which opens on the web. */
 export async function requestPasswordReset(email: string): Promise<void> {
-  const response = await post("/request-password-reset", { email: email.trim(), redirectTo: `${API_URL}/reset-password` });
+  const response = await post("/request-password-reset", { email: email.trim(), redirectTo: `${SITE_URL}/reset-password` });
   if (!response.ok) {
     const data = (await response.json().catch(() => ({}))) as { code?: string; message?: string };
     throw new AuthError(data.code ?? "", data.message ?? "");
@@ -116,7 +116,7 @@ export const sessionUser = resource(
   () => token(),
   async (current, { signal }): Promise<SessionUser | null> => {
     const response = await netFetch(`${API_URL}/api/auth/get-session`, {
-      headers: { Authorization: `Bearer ${current}`, Origin: API_URL },
+      headers: { Authorization: `Bearer ${current}`, Origin: SITE_URL },
       signal,
     });
     if (!response.ok) throw new AuthError("", `get-session ${response.status}`);
@@ -150,5 +150,5 @@ export async function changePassword(currentPassword: string, newPassword: strin
 
 /** sendVerification sends the email that verifies the signed-in person's address again. */
 export async function sendVerification(email: string): Promise<void> {
-  await call("/send-verification-email", { email, callbackURL: `${API_URL}/settings` });
+  await call("/send-verification-email", { email, callbackURL: `${SITE_URL}/settings` });
 }

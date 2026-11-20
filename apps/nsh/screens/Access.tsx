@@ -4,7 +4,7 @@ import { Link, NavPage } from "nsh/base";
 
 import { access, signOut } from "../lib/auth.ts";
 import { m } from "../lib/i18n.ts";
-import { API_URL } from "../lib/rpc.ts";
+import { SITE_URL } from "../lib/rpc.ts";
 import { Action, colors, FormPage, headerStyle, Muted, Title } from "../lib/ui.tsx";
 import { Header } from "./Header.tsx";
 import { InviteGuardian } from "./Settings.tsx";
@@ -21,7 +21,7 @@ export function Access() {
         <If when={!closed()}>
           <InviteGuardian />
         </If>
-        <Link href={`${API_URL}/settings`}>
+        <Link href={`${SITE_URL}/settings`}>
           <Text style={{ color: colors().accent }}>{m().settingsOnWeb}</Text>
         </Link>
         <Action label={m().signOut} onPress={signOut} />

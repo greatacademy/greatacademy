@@ -1,5 +1,5 @@
 // Topics whose problem banks are built when asked rather than kept: a subject with many large banks would otherwise hold
-// them all in memory, more than a Worker isolate has (docs/content.md §4).
+// them all in memory, more than the API server's heap holds (docs/content.md §4).
 
 import type { Rng } from "./rng.ts";
 import type { Problem, TopicDef } from "./types.ts";

@@ -9,7 +9,7 @@ import { errorText, m } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { appearance, chooseAppearance, chooseLanguage, type LanguageChoice, languageChoice } from "../lib/prefs.ts";
 import { dateOf, p } from "../lib/privacy-text.ts";
-import { API_URL, account } from "../lib/rpc.ts";
+import { account, SITE_URL } from "../lib/rpc.ts";
 import { canBuy } from "../lib/store.ts";
 import { barSpace, colors, ErrorNote, followScroll, Muted, Quiet, Row, Section, Segmented, topSpace } from "../lib/ui.tsx";
 import { LeagueSettings, openAccountPage, settingsQuery } from "./Account.tsx";
@@ -262,5 +262,5 @@ export function SettingsBody(props: {
 
 /** openWeb opens a page of the web app in the browser, for what the app does not do itself. */
 export async function openWeb(path: string): Promise<void> {
-  await openUrl(`${API_URL}${path}`).catch(() => undefined);
+  await openUrl(`${SITE_URL}${path}`).catch(() => undefined);
 }
