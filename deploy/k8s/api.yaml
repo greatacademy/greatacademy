@@ -1,6 +1,7 @@
 # The API server (apps/server): better-auth, the Connect services and every subject, compiled in each pod before it
-# listens. Stateless; the database is the shared pg-cluster in cnpg-system. The site's pages and the apps reach it at
-# api.greatacademy.dev (ingress.yaml), and the voice service directly.
+# listens. Stateless; the database is the shared pg-cluster in cnpg-system. The site's pages and the apps reach it under
+# greatacademy.dev/api, which the web Worker forwards to api.greatacademy.dev (ingress.yaml), and the voice service
+# directly.
 apiVersion: apps/v1
 kind: Deployment
 metadata:

@@ -1,7 +1,8 @@
-# The public hosts, through the cluster's ingress-nginx. Both hosts are proxied by Cloudflare, which sets
-# CF-Connecting-IP to the learner's address. Cloudflare presents our client certificate to the origin (authenticated
-# origin pulls, README) and nginx accepts only a connection that presents it, so every request comes through Cloudflare and
-# its CF-Connecting-IP can be trusted. cert-manager's letsencrypt-prod-issuer makes each host's certificate with a
+# The origin hosts, through the cluster's ingress-nginx. Both are proxied by Cloudflare, which sets CF-Connecting-IP to
+# the learner's address. api.greatacademy.dev is where the web Worker forwards the site's /api: pages, apps and
+# webhooks use greatacademy.dev/api, and a Worker's call within its zone keeps the learner's address. Cloudflare presents our client certificate to the origin (authenticated
+# origin pulls, README) and nginx accepts only a connection that presents it, so every request comes through
+# Cloudflare and its CF-Connecting-IP can be trusted. cert-manager's letsencrypt-prod-issuer makes each host's certificate with a
 # DNS-01 challenge, and external-dns writes each host's proxied record; both are set up for greatacademy.dev in the
 # cluster's own repository. Only the API's /api reaches the API: the voice service's calls under /voice/v1, the
 # probes and the metrics stay inside the cluster.
