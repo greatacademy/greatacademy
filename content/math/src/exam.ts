@@ -61,7 +61,6 @@ export const unpracticedBases: Readonly<Record<string, readonly string[]>> = {
   "act-exam-identifying-a-necessary-conclusion": ["necessary-and-sufficient-conditions"],
   "act-exam-counting-character-codes": ["permutations-with-repetition"],
   "act-exam-solving-logarithmic-equations": ["solving-exponential-equations-using-logarithms"],
-  "act-exam-working-with-a-rate-of-change": ["rates-of-change-in-applied-contexts"],
   "act-exam-finding-a-median-from-frequencies": ["calculating-means-from-frequency-tables"],
   "act-exam-finding-lengths-in-figures-with-the-pythagorean-theorem": ["solving-problems-with-embedded-right-triangles"],
   "act-exam-identifying-features-of-exponential-functions": ["extrema-of-exponential-functions"],

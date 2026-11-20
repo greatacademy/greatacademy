@@ -57,7 +57,7 @@ export const parity: TopicDef = {
     "Every integer is either even or odd; parity of sums and products follows simple rules.",
     "每个整数要么是偶数，要么是奇数；和与积的奇偶性遵循简单的规则。",
   ),
-  prerequisites: ["proving-parity"],
+  prerequisites: ["even-and-odd-numbers"],
   encompasses: [],
   xp: 10,
   standards: [],

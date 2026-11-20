@@ -4909,8 +4909,8 @@ export const integratedMathI: CourseDef = {
   id: "integrated-math-i",
   title: t("Integrated Math I", "综合数学一"),
   description: t(
-    "Linear equations and inequalities, linear modeling, systems of equations and two-variable inequalities; units and variation; polynomials, operations and factoring; rational and radical expressions and equations; function concepts, domain, range, and behavior; absolute value equations, inequalities, and graphs; exponent rules, exponential equations, and exponential growth and decay; geometric transformations in the coordinate plane, right triangles and the Pythagorean theorem, circles, arcs and sectors, and coordinate geometry.",
-    "一元一次方程与不等式、线性建模、方程组与二元一次不等式；单位换算与比例关系；多项式运算与因式分解；分式与根式及方程；函数概念、定义域、值域与性质；绝对值方程、不等式与图像；指数法则、指数方程与指数增长和衰减；坐标平面上的几何变换、直角三角形与勾股定理、圆与扇形及坐标几何。",
+    "Linear equations and inequalities, linear modeling, systems of equations and two-variable inequalities; units and variation; polynomials, operations and factoring; radical expressions; function concepts, domain, range, and behavior; absolute value equations, inequalities, and graphs; exponent rules, exponential equations, and exponential growth and decay; geometric transformations in the coordinate plane, right triangles and the Pythagorean theorem, circles, arcs and sectors, and coordinate geometry.",
+    "一元一次方程与不等式、线性建模、方程组与二元一次不等式；单位换算与比例关系；多项式运算与因式分解；根式；函数概念、定义域、值域与性质；绝对值方程、不等式与图像；指数法则、指数方程与指数增长和衰减；坐标平面上的几何变换、直角三角形与勾股定理、圆与扇形及坐标几何。",
   ),
   units: [
     {
@@ -5001,10 +5001,6 @@ export const integratedMathI: CourseDef = {
             "modeling-with-systems",
             "coin-problems",
             "approximating-solutions-to-systems-of-linear-equations",
-            "solving-systems-of-nonlinear-equations",
-            "finding-intersections-of-lines-and-quadratic-functions",
-            "solving-systems-of-nonlinear-equations-using-graphs",
-            "approximating-solutions-to-systems-of-nonlinear-equations",
           ],
         },
         {
@@ -5083,26 +5079,8 @@ export const integratedMathI: CourseDef = {
       ],
     },
     {
-      title: t("Rationals & Radicals", "分式与根式"),
+      title: t("Radicals", "根式"),
       modules: [
-        {
-          title: t("Rational Expressions", "分式"),
-          topics: [
-            "equivalent-expressions-with-fractions",
-            "simplifying-rational-expressions",
-            "simplifying-rational-expressions-by-factoring",
-            "splitting-rational-expressions-into-terms",
-          ],
-        },
-        {
-          title: t("Rational Equations", "分式方程"),
-          topics: [
-            "rational-equations-with-one-fractional-term",
-            "rational-equations-using-cross-multiplication",
-            "rational-equations-containing-binomials",
-            "rational-equations-using-the-flip-method",
-          ],
-        },
         {
           title: t("Radical Expressions", "根式"),
           topics: [
@@ -5282,8 +5260,8 @@ export const integratedMathII: CourseDef = {
   id: "integrated-math-ii",
   title: t("Integrated Math II", "综合数学二"),
   description: t(
-    "Quadratic equations, quadratic functions, parabolas and quadratic modeling; function features, compositions, inverses, and graph transformations; sequences; graphs of exponential functions, introduction to logarithms and the laws of logarithms; proofs, congruence, and similarity criteria; circles, circular sectors, and circle theorems; solid geometry of prisms, pyramids, cylinders, cones, and spheres; right-triangle trigonometry, radians, the unit circle, and special trigonometric ratios; and introductory probability, compound events, and bivariate correlation.",
-    "一元二次方程、二次函数、抛物线与二次建模；函数性质、复合、反函数与图像变换；数列入门；指数函数图像、对数概念与对数运算法则；几何证明、全等与相似判定；圆、扇形与圆的几何定理；柱体、锥体、球等立体几何；直角三角形中的三角比、弧度制、单位圆与特殊角三角比；以及概率基础、复合事件与双变量相关性。",
+    "Quadratic equations, quadratic functions, parabolas and quadratic modeling; rational expressions and equations; function features, compositions, inverses, and graph transformations; sequences; graphs of exponential functions, introduction to logarithms and the laws of logarithms; proofs, congruence, and similarity criteria; circles, circular sectors, and circle theorems; solid geometry of prisms, pyramids, cylinders, cones, and spheres; right-triangle trigonometry, radians, the unit circle, and special trigonometric ratios; and introductory probability, compound events, and bivariate correlation.",
+    "一元二次方程、二次函数、抛物线与二次建模；分式与分式方程；函数性质、复合、反函数与图像变换；数列入门；指数函数图像、对数概念与对数运算法则；几何证明、全等与相似判定；圆、扇形与圆的几何定理；柱体、锥体、球等立体几何；直角三角形中的三角比、弧度制、单位圆与特殊角三角比；以及概率基础、复合事件与双变量相关性。",
   ),
   units: [
     {
@@ -5329,6 +5307,26 @@ export const integratedMathII: CourseDef = {
             "domain-and-range-of-quadratic-functions",
             "solving-systems-of-nonlinear-equations",
             "finding-intersections-of-lines-and-quadratic-functions",
+            "solving-systems-of-nonlinear-equations-using-graphs",
+            "approximating-solutions-to-systems-of-nonlinear-equations",
+          ],
+        },
+        {
+          title: t("Rational Expressions", "分式"),
+          topics: [
+            "equivalent-expressions-with-fractions",
+            "simplifying-rational-expressions",
+            "simplifying-rational-expressions-by-factoring",
+            "splitting-rational-expressions-into-terms",
+          ],
+        },
+        {
+          title: t("Rational Equations", "分式方程"),
+          topics: [
+            "rational-equations-with-one-fractional-term",
+            "rational-equations-using-cross-multiplication",
+            "rational-equations-containing-binomials",
+            "rational-equations-using-the-flip-method",
           ],
         },
       ],
@@ -6006,8 +6004,8 @@ export const integratedMathIHonors: CourseDef = {
   id: "integrated-math-i-honors",
   title: t("Integrated Math I (Honors)", "综合数学一（荣誉）"),
   description: t(
-    "Linear equations and inequalities, linear modeling, systems of equations and two-variable inequalities; units and variation; polynomials, operations and factoring; rational and radical expressions and equations; function concepts, domain, range, and behavior; absolute value equations, inequalities, and graphs; exponent rules, exponential equations, and exponential growth and decay; arithmetic sequences; geometric transformations in the coordinate plane, right triangles and the Pythagorean theorem, congruence, circles, arcs and sectors, and coordinate geometry; and univariate statistics.",
-    "一元一次方程与不等式、线性建模、方程组与二元一次不等式；单位换算与比例关系；多项式运算与因式分解；分式与根式及方程；函数概念、定义域、值域与性质；绝对值方程、不等式与图像；指数法则、指数方程与指数增长和衰减；等差数列；坐标平面上的几何变换、直角三角形与勾股定理、全等、圆与扇形及坐标几何；以及单变量统计。",
+    "Linear equations and inequalities, linear modeling, systems of equations and two-variable inequalities; units and variation; polynomials, operations and factoring; radical expressions; function concepts, domain, range, and behavior; absolute value equations, inequalities, and graphs; exponent rules, exponential equations, and exponential growth and decay; arithmetic sequences; geometric transformations in the coordinate plane, right triangles and the Pythagorean theorem, congruence, circles, arcs and sectors, and coordinate geometry; and univariate statistics.",
+    "一元一次方程与不等式、线性建模、方程组与二元一次不等式；单位换算与比例关系；多项式运算与因式分解；根式；函数概念、定义域、值域与性质；绝对值方程、不等式与图像；指数法则、指数方程与指数增长和衰减；等差数列；坐标平面上的几何变换、直角三角形与勾股定理、全等、圆与扇形及坐标几何；以及单变量统计。",
   ),
   units: [
     {
@@ -6098,10 +6096,6 @@ export const integratedMathIHonors: CourseDef = {
             "modeling-with-systems",
             "coin-problems",
             "approximating-solutions-to-systems-of-linear-equations",
-            "solving-systems-of-nonlinear-equations",
-            "finding-intersections-of-lines-and-quadratic-functions",
-            "solving-systems-of-nonlinear-equations-using-graphs",
-            "approximating-solutions-to-systems-of-nonlinear-equations",
           ],
         },
         {
@@ -6180,7 +6174,7 @@ export const integratedMathIHonors: CourseDef = {
       ],
     },
     {
-      title: t("Radicals and Rationals", "根式与分式"),
+      title: t("Radicals", "根式"),
       modules: [
         {
           title: t("Radical Expressions", "根式"),
@@ -6194,24 +6188,6 @@ export const integratedMathIHonors: CourseDef = {
             "quotient-rule-for-square-roots",
             "evaluating-radical-expressions",
             "adding-and-subtracting-radical-expressions",
-          ],
-        },
-        {
-          title: t("Rational Expressions", "分式"),
-          topics: [
-            "equivalent-expressions-with-fractions",
-            "simplifying-rational-expressions",
-            "simplifying-rational-expressions-by-factoring",
-            "splitting-rational-expressions-into-terms",
-          ],
-        },
-        {
-          title: t("Rational Equations", "分式方程"),
-          topics: [
-            "rational-equations-with-one-fractional-term",
-            "rational-equations-using-cross-multiplication",
-            "rational-equations-containing-binomials",
-            "rational-equations-using-the-flip-method",
           ],
         },
       ],
@@ -6540,6 +6516,26 @@ export const integratedMathIIHonors: CourseDef = {
             "domain-and-range-of-quadratic-functions",
             "solving-systems-of-nonlinear-equations",
             "finding-intersections-of-lines-and-quadratic-functions",
+            "solving-systems-of-nonlinear-equations-using-graphs",
+            "approximating-solutions-to-systems-of-nonlinear-equations",
+          ],
+        },
+        {
+          title: t("Rational Expressions", "分式"),
+          topics: [
+            "equivalent-expressions-with-fractions",
+            "simplifying-rational-expressions",
+            "simplifying-rational-expressions-by-factoring",
+            "splitting-rational-expressions-into-terms",
+          ],
+        },
+        {
+          title: t("Rational Equations", "分式方程"),
+          topics: [
+            "rational-equations-with-one-fractional-term",
+            "rational-equations-using-cross-multiplication",
+            "rational-equations-containing-binomials",
+            "rational-equations-using-the-flip-method",
           ],
         },
       ],
@@ -12984,8 +12980,8 @@ export const seventhGradeMath: CourseDef = {
   id: "7th-grade-math",
   title: t("7th Grade Math", "七年级数学"),
   description: t(
-    "Unit prices and unit rates with ratios of fractions, proportional relationships, percentage change, commerce and finance percentages and simple interest; operations on rational numbers and exponents; linear expressions, one-step and multi-step linear equations, two-variable equations, systems, linear inequalities, modeling and rational expressions; segments, angles, polygons, area and perimeter, scale drawings, circles and prisms; and sampling, frequency tables and histograms, comparing data sets, probability models and compound events.",
-    "分数之比的单价与单位率、比例关系、百分比变化、商业与金融中的百分数和单利；有理数运算与乘方；一次式、一步与多步一次方程、二元方程、方程组、一次不等式、建模与分式；线段、角、多边形、面积与周长、比例图、圆与棱柱；以及抽样、频数表与直方图、比较数据集、概率模型与复合事件。",
+    "Unit prices and unit rates with ratios of fractions, proportional relationships, percentage change, commerce and finance percentages and simple interest; operations on integers and rational numbers and exponents; linear expressions, one-step and multi-step linear equations, two-variable equations, linear inequalities and modeling; segments, angles, polygons, area and perimeter, scale drawings, circles and prisms; and sampling, frequency tables and histograms, comparing data sets, probability models and compound events.",
+    "分数之比的单价与单位率、比例关系、百分比变化、商业与金融中的百分数和单利；整数与有理数运算及乘方；一次式、一步与多步一次方程、二元方程、一次不等式与建模；线段、角、多边形、面积与周长、比例图、圆与棱柱；以及抽样、频数表与直方图、比较数据集、概率模型与复合事件。",
   ),
   units: [
     {
@@ -13039,6 +13035,17 @@ export const seventhGradeMath: CourseDef = {
       title: t("The Number System", "数系"),
       modules: [
         {
+          title: t("Integers", "整数"),
+          topics: [
+            "adding-integers",
+            "subtracting-integers",
+            "multiplying-integers",
+            "dividing-integers",
+            "powers-of-integers",
+            "order-of-operations-with-integers",
+          ],
+        },
+        {
           title: t("Addition and Subtraction of Rational Numbers", "有理数的加减"),
           topics: [
             "subtracting-a-positive-number-from-a-smaller-positive-number",
@@ -13089,9 +13096,12 @@ export const seventhGradeMath: CourseDef = {
         {
           title: t("Algebraic Expressions", "代数式"),
           topics: [
+            "evaluating-expressions",
             "evaluating-linear-expressions",
             "identifying-like-terms-in-linear-expressions",
             "combining-like-terms",
+            "distributive-property",
+            "simplifying-expressions",
             "applying-the-distributive-law-to-linear-expressions",
             "the-distributive-law-with-three-terms",
             "distributing-the-negative-sign-in-a-linear-expression",
@@ -13114,6 +13124,7 @@ export const seventhGradeMath: CourseDef = {
             "solving-linear-equations-with-fractional-coefficients",
             "solving-linear-equations-with-decimal-coefficients",
             "equations-with-variables-on-both-sides",
+            "equations-with-parentheses",
             "solving-linear-equations-by-clearing-a-rational-expression",
             "solving-linear-equations-using-cross-multiplication",
           ],
@@ -13127,10 +13138,6 @@ export const seventhGradeMath: CourseDef = {
             "solving-two-variable-equations",
             "graphing-linear-equations",
           ],
-        },
-        {
-          title: t("Systems of Equations", "方程组"),
-          topics: ["systems-of-linear-equations", "solving-systems-by-substitution"],
         },
         {
           title: t("Solving Linear Inequalities", "解一次不等式"),
@@ -13152,16 +13159,6 @@ export const seventhGradeMath: CourseDef = {
             "introduction-to-modeling-with-inequalities",
             "modeling-with-one-step-inequalities",
             "modeling-with-two-step-inequalities",
-          ],
-        },
-        {
-          title: t("Rational Expressions and Equations", "分式与分式方程"),
-          topics: [
-            "evaluating-rational-expressions",
-            "equivalent-expressions-with-fractions",
-            "simplifying-rational-expressions",
-            "simplifying-rational-expressions-by-factoring",
-            "rational-equations-with-one-fractional-term",
           ],
         },
       ],
@@ -15384,9 +15381,14 @@ export const actMathFundamentals: CourseDef = {
         {
           title: t("Conditional Statements", "条件语句"),
           topics: [
+            "special-sets",
+            "statements-and-predicates",
+            "the-and-and-or-connectives",
+            "the-not-connective",
             "conditional-statements",
             "converse-inverse-and-contrapositive",
             "forming-related-conditional-statements",
+            "biconditional-statements",
             "necessary-and-sufficient-conditions",
           ],
         },

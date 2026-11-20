@@ -1862,7 +1862,7 @@ export const modelingWithRectangles = topic(
     "The area of a rectangle is length × width and its perimeter is $2$ × (length + width). These formulas solve real problems, including finding a missing side: a rug of area $48$ square feet that is $6$ feet wide is $48 \\div 6 = 8$ feet long.",
     "长方形的面积是长 × 宽，周长是 $2$ × (长 + 宽)。这些公式可以解决实际问题，包括求未知的边长：面积是 $48$ 平方英尺、宽 $6$ 英尺的地毯长 $48 \\div 6 = 8$ 英尺。",
   ),
-  ["area-of-rectangles-and-squares", "two-digit-by-two-digit-multiplication-using-place-value", "division-with-remainders"],
+  ["area-of-a-rectangle-by-multiplying", "two-digit-by-two-digit-multiplication-using-place-value", "division-with-remainders"],
   ["4.MD.A.3"],
   [
     {

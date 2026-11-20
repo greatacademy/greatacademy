@@ -1095,7 +1095,7 @@ export const understandingVolumeUsingUnitCubes = topic(
     "Volume is the amount of space a solid takes up. A unit cube, with edges 1 unit long, has a volume of 1 cubic unit. The volume of a box is the number of unit cubes that fill it with no gaps or overlaps. A box 4 cubes long, 3 cubes wide and 2 cubes tall has 2 layers of 4 × 3 = 12 cubes, so its volume is 24 cubic units.",
     "体积是物体所占空间的大小。棱长为 1 个单位的单位立方体，体积是 1 立方单位。长方体的体积就是把它填满（没有空隙、没有重叠）所需的单位立方体的个数。一个长 4 个、宽 3 个、高 2 个立方体的长方体有 2 层，每层 4 × 3 = 12 个，所以体积是 24 立方单位。",
   ),
-  ["area-of-rectangles-and-squares", "two-digit-by-one-digit-multiplication"],
+  ["area-of-a-rectangle-by-multiplying", "two-digit-by-one-digit-multiplication"],
   ["5.MD.C.3", "5.MD.C.4"],
   [
     {
@@ -1797,7 +1797,7 @@ export const rectanglesRhombusesAndSquares = topic(
     "A rectangle has two pairs of equal opposite sides, so its perimeter is 2 × (length + width). A rhombus and a square have four equal sides, so the perimeter is 4 × side, and the side is the perimeter ÷ 4. A rectangle with perimeter 30 cm and length 9 cm has width 30 ÷ 2 − 9 = 6 cm.",
     "长方形的两组对边分别相等，所以周长是 2 ×（长 + 宽）。菱形和正方形的四条边都相等，周长是 4 × 边长，边长是周长 ÷ 4。周长 30 厘米、长 9 厘米的长方形，宽是 30 ÷ 2 − 9 = 6 厘米。",
   ),
-  ["quadrilaterals", "perimeter"],
+  ["quadrilaterals", "perimeter-of-polygons"],
   ["5.G.B.3"],
   [
     {
@@ -1898,7 +1898,7 @@ export const perimetersOfShapes = topic(
     "The perimeter of a polygon is the sum of the lengths of all its sides. Side lengths can be decimals or fractions: a triangle with sides 2.5 m, 3.4 m and 4 m has perimeter 9.9 m. If the perimeter and all but one side are known, subtract the known sides from the perimeter to find the missing one.",
     "多边形的周长是所有边长的和。边长可以是小数或分数：边长为 2.5 米、3.4 米、4 米的三角形，周长是 9.9 米。如果已知周长和除一条边以外的所有边，用周长减去已知各边就得到未知的边长。",
   ),
-  ["polygons", "perimeter", "addition-with-unequal-numbers-of-decimals"],
+  ["polygons", "perimeter-of-polygons", "addition-with-unequal-numbers-of-decimals"],
   ["5.NBT.B.7"],
   [
     {

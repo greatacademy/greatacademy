@@ -1131,7 +1131,7 @@ export const converseInverseAndContrapositive: TopicDef = {
     "For p ⇒ q: the converse is q ⇒ p, the inverse ¬p ⇒ ¬q, and the contrapositive ¬q ⇒ ¬p, which alone is equivalent to the original.",
     "对 p ⇒ q：逆命题为 q ⇒ p，否命题为 ¬p ⇒ ¬q，逆否命题为 ¬q ⇒ ¬p；只有逆否命题与原命题等价。",
   ),
-  prerequisites: ["logical-equivalence-with-conditional-statements"],
+  prerequisites: ["conditional-statements"],
   encompasses: [],
   xp: 10,
   standards: [],

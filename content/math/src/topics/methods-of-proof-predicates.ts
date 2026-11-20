@@ -394,7 +394,7 @@ export const necessaryAndSufficientConditions: TopicDef = {
     "p is sufficient for q when p ⇒ q, necessary for q when q ⇒ p, and both when p ⇔ q.",
     "若 p ⇒ q，则 p 是 q 的充分条件；若 q ⇒ p，则 p 是 q 的必要条件；若 p ⇔ q，则二者兼具。",
   ),
-  prerequisites: ["conditional-statements-with-predicates", "biconditional-statements"],
+  prerequisites: ["biconditional-statements"],
   encompasses: [],
   xp: 10,
   standards: [],

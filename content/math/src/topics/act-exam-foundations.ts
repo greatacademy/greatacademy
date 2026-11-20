@@ -478,7 +478,7 @@ export const actExamFoundations: ExamSpec[] = [
       `这次行程用 $${g * k}$ 加仑。`,
     );
   }),
-  spec("Working With a Rate of Change", "变化率", ["rates-of-change-in-applied-contexts"], (rng, hard) => {
+  spec("Working With a Rate of Change", "变化率", ["modeling-with-linear-functions"], (rng, hard) => {
     const [s, r, h, k] = [rng.int(20, 200), rng.int(2, 15), rng.int(2, 12), rng.int(2, 9)];
     if (!hard)
       return ask(

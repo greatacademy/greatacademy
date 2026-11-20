@@ -135,7 +135,7 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   ],
   "parallel-and-perpendicular-lines": [{ topic: "points-lines-rays-and-segments", weight: 0.2 }],
   "modeling-with-rectangles": [
-    { topic: "area-of-rectangles-and-squares", weight: 0.5 },
+    { topic: "area-of-a-rectangle-by-multiplying", weight: 0.5 },
     { topic: "division-with-remainders", weight: 0.2 },
   ],
   "evaluating-whole-number-expressions": [{ topic: "evaluating-expressions-containing-multiplication-and-division", weight: 0.3 }],
@@ -229,7 +229,7 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   ],
   "connecting-fraction-multiplication-and-area": [
     { topic: "multiplying-fractions-using-models", weight: 0.4 },
-    { topic: "area-of-rectangles-and-squares", weight: 0.3 },
+    { topic: "area-of-a-rectangle-by-multiplying", weight: 0.3 },
   ],
   "finding-areas-using-fraction-multiplication": [
     { topic: "connecting-fraction-multiplication-and-area", weight: 0.2 },
@@ -389,11 +389,11 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   ],
   "rectangles-rhombuses-and-squares": [
     { topic: "quadrilaterals", weight: 0.2 },
-    { topic: "perimeter", weight: 0.5 },
+    { topic: "perimeter-of-polygons", weight: 0.5 },
   ],
   "perimeters-of-shapes": [
     { topic: "polygons", weight: 0.2 },
-    { topic: "perimeter", weight: 0.4 },
+    { topic: "perimeter-of-polygons", weight: 0.4 },
   ],
   "equivalent-ratios": [{ topic: "ratios", weight: 0.2 }],
   "writing-ratios-using-fractions": [
@@ -1078,7 +1078,7 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   "qualitative-analysis-of-first-order-odes": [{ topic: "implicit-differentiation", weight: 0.2 }],
   "logical-associative-and-commutative-laws": [{ topic: "logical-equivalence", weight: 0.4 }],
   "biconditional-statements": [{ topic: "conditional-statements", weight: 0.4 }],
-  "converse-inverse-and-contrapositive": [{ topic: "logical-equivalence-with-conditional-statements", weight: 0.2 }],
+  "converse-inverse-and-contrapositive": [{ topic: "conditional-statements", weight: 0.2 }],
   "truth-sets-of-predicates": [{ topic: "statements-and-predicates", weight: 0.2 }],
   "the-not-connective-with-predicates": [{ topic: "set-complements", weight: 0.3 }],
   "conditional-statements-with-predicates": [

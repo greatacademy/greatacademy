@@ -1721,7 +1721,7 @@ export const connectingFractionMultiplicationAndArea = topic(
     "Cut a unit square into b equal rows and d equal columns: each small rectangle is 1/b by 1/d and has area 1/(b × d). A rectangle that is a/b by c/d is covered by a × c of them, so its area is (a × c)/(b × d) = a/b × c/d.",
     "把单位正方形平均分成 b 行、d 列：每个小长方形的长和宽是 1/b 和 1/d，面积是 1/(b × d)。长和宽是 a/b 和 c/d 的长方形正好由 a × c 个这样的小长方形铺满，所以它的面积是 (a × c)/(b × d) = a/b × c/d。",
   ),
-  ["multiplying-fractions-using-models", "area-of-rectangles-and-squares"],
+  ["multiplying-fractions-using-models", "area-of-a-rectangle-by-multiplying"],
   ["5.NF.B.4b"],
   [
     {
