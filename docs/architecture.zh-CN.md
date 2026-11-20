@@ -201,7 +201,7 @@ Web Worker ──服务绑定──► 学科网关 ──服务绑定──► 
 
 - **Web Worker** 不含内容。它为每个学科绑定一个网关（`SUBJECT_MATH`），绑定列表在 `apps/web/src/server/handler.ts` 中。新增学科只需部署它的 Worker 并增加一个绑定。
 - **网关**实现 `libs/content` 的 `SubjectGateway`：`listing`（课程列表，很小）、`manifest`（不含代码的学科，构建时由 `subjectManifest` 生成），以及 `SubjectSource` 的 `problems`、`lesson`、`judge`，由 `routeSource` 转给持有该 topic 的分片。
-- **分片**持有学科中一部分 topic 的定义，用 `topicSource` 实现 `SubjectSource`。这些定义在第一次调用时才构建，不在启动时构建。
+- **分片**持有学科中一部分 topic 的定义，用 `topicSource` 实现 `SubjectSource`。这些定义在第一次调用时才构建，不在启动时构建。如果内容的模块在加载时就构建题库（语文就是这样），所需时间会超过 Worker 启动的一秒上限，这时分片用 `lazyShardWorker` 构造：它在第一次调用时动态导入内容，打包工具把这些内容放进单独的 chunk，由第一次调用承担这段时间。
 - **`Registry`**（`libs/api`）每个 isolate 读取一次课程列表，这足以列出课程；某门课程第一次被使用时才加载该学科的 manifest。它只保留最近使用的两个学科，因为数学建好索引后约占 45 MB 内存，而一个 isolate 只有 128 MB。课程的 scope 在第一次使用时才计算。
 
 数学有五个分片，各对应课程体系的一段（`content/math/src/shards/`）。`apps/math-workers/gen/` 存放生成的 manifest 和每个分片的 topic 列表，不提交到仓库。英语和语文目前各只有一个分片 `core`，`apps/english-workers` 和 `apps/chinese-workers` 下的结构相同。

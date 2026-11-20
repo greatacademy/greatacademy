@@ -23,27 +23,42 @@ const unreachable = () => new Response(null, { status: 404 });
  * Worker cannot hold the generators of a large subject.
  */
 export function shardWorker(topics: readonly TopicDef[], checkers: readonly Checker[], reading: readonly ReadingUnitDef[] = []) {
+  return lazyShardWorker(async () => ({ topics, reading }), checkers);
+}
+
+/** ShardContent is what a shard holds: its topics and the reading units of its passages. */
+export interface ShardContent {
+  readonly topics: readonly TopicDef[];
+  readonly reading?: readonly ReadingUnitDef[];
+}
+
+/**
+ * lazyShardWorker is the entrypoint of a shard whose content is loaded on the first call, by a dynamic import, rather
+ * than when the Worker starts: content that builds its problem banks as its modules load would otherwise exceed
+ * Cloudflare's limit on a Worker's startup time.
+ */
+export function lazyShardWorker(load: () => Promise<ShardContent>, checkers: readonly Checker[]) {
   // Built on the first call, so that the topics do not count against the Worker's startup time.
-  let source: SubjectSource | undefined;
+  let source: Promise<SubjectSource> | undefined;
   const held = () => {
-    source ??= topicSource(topics, checkers, reading);
+    source ??= load().then((c) => topicSource(c.topics, checkers, c.reading ?? []));
     return source;
   };
   return class extends WorkerEntrypoint {
     override fetch() {
       return unreachable();
     }
-    problems(refs: readonly ProblemRef[]) {
-      return held().problems(refs);
+    async problems(refs: readonly ProblemRef[]) {
+      return (await held()).problems(refs);
     }
-    lesson(topic: string, kp: number) {
-      return held().lesson(topic, kp);
+    async lesson(topic: string, kp: number) {
+      return (await held()).lesson(topic, kp);
     }
-    judge(ref: ProblemRef, response: string) {
-      return held().judge(ref, response);
+    async judge(ref: ProblemRef, response: string) {
+      return (await held()).judge(ref, response);
     }
-    passage(id: string) {
-      return held().passage(id);
+    async passage(id: string) {
+      return (await held()).passage(id);
     }
   };
 }
