@@ -51,6 +51,10 @@ import { Route as SettingsPasswordRouteImport } from './routes/settings/password
 import { Route as VoiceSplatRouteImport } from './routes/voice/$'
 import { Route as SubjectTalkConversationIdRouteImport } from './routes/$subject/talk/$conversationId'
 import { Route as SubjectTopicsTopicIdRouteImport } from './routes/$subject/topics/$topicId'
+import { Route as AdminContentIndexRouteImport } from './routes/admin/content/index'
+import { Route as AdminContentCourseIdIndexRouteImport } from './routes/admin/content/$courseId/index'
+import { Route as AdminContentCourseIdTopicIdRouteImport } from './routes/admin/content/$courseId/$topicId'
+import { Route as AdminContentCourseIdPassagesPassageIdRouteImport } from './routes/admin/content/$courseId/passages/$passageId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -263,6 +267,29 @@ const SubjectTopicsTopicIdRoute = SubjectTopicsTopicIdRouteImport.update({
   path: '/topics/$topicId',
   getParentRoute: () => SubjectRouteRoute,
 } as any)
+const AdminContentIndexRoute = AdminContentIndexRouteImport.update({
+  id: '/content/',
+  path: '/content/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminContentCourseIdIndexRoute =
+  AdminContentCourseIdIndexRouteImport.update({
+    id: '/content/$courseId/',
+    path: '/content/$courseId/',
+    getParentRoute: () => AdminRouteRoute,
+  } as any)
+const AdminContentCourseIdTopicIdRoute =
+  AdminContentCourseIdTopicIdRouteImport.update({
+    id: '/content/$courseId/$topicId',
+    path: '/content/$courseId/$topicId',
+    getParentRoute: () => AdminRouteRoute,
+  } as any)
+const AdminContentCourseIdPassagesPassageIdRoute =
+  AdminContentCourseIdPassagesPassageIdRouteImport.update({
+    id: '/content/$courseId/passages/$passageId',
+    path: '/content/$courseId/passages/$passageId',
+    getParentRoute: () => AdminRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -307,6 +334,10 @@ export interface FileRoutesByFullPath {
   '/settings/': typeof SettingsIndexRoute
   '/$subject/talk/$conversationId': typeof SubjectTalkConversationIdRoute
   '/$subject/topics/$topicId': typeof SubjectTopicsTopicIdRoute
+  '/admin/content/': typeof AdminContentIndexRoute
+  '/admin/content/$courseId/$topicId': typeof AdminContentCourseIdTopicIdRoute
+  '/admin/content/$courseId/': typeof AdminContentCourseIdIndexRoute
+  '/admin/content/$courseId/passages/$passageId': typeof AdminContentCourseIdPassagesPassageIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -348,6 +379,10 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsIndexRoute
   '/$subject/talk/$conversationId': typeof SubjectTalkConversationIdRoute
   '/$subject/topics/$topicId': typeof SubjectTopicsTopicIdRoute
+  '/admin/content': typeof AdminContentIndexRoute
+  '/admin/content/$courseId/$topicId': typeof AdminContentCourseIdTopicIdRoute
+  '/admin/content/$courseId': typeof AdminContentCourseIdIndexRoute
+  '/admin/content/$courseId/passages/$passageId': typeof AdminContentCourseIdPassagesPassageIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -393,6 +428,10 @@ export interface FileRoutesById {
   '/settings/': typeof SettingsIndexRoute
   '/$subject/talk/$conversationId': typeof SubjectTalkConversationIdRoute
   '/$subject/topics/$topicId': typeof SubjectTopicsTopicIdRoute
+  '/admin/content/': typeof AdminContentIndexRoute
+  '/admin/content/$courseId/$topicId': typeof AdminContentCourseIdTopicIdRoute
+  '/admin/content/$courseId/': typeof AdminContentCourseIdIndexRoute
+  '/admin/content/$courseId/passages/$passageId': typeof AdminContentCourseIdPassagesPassageIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -439,6 +478,10 @@ export interface FileRouteTypes {
     | '/settings/'
     | '/$subject/talk/$conversationId'
     | '/$subject/topics/$topicId'
+    | '/admin/content/'
+    | '/admin/content/$courseId/$topicId'
+    | '/admin/content/$courseId/'
+    | '/admin/content/$courseId/passages/$passageId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -480,6 +523,10 @@ export interface FileRouteTypes {
     | '/settings'
     | '/$subject/talk/$conversationId'
     | '/$subject/topics/$topicId'
+    | '/admin/content'
+    | '/admin/content/$courseId/$topicId'
+    | '/admin/content/$courseId'
+    | '/admin/content/$courseId/passages/$passageId'
   id:
     | '__root__'
     | '/'
@@ -524,6 +571,10 @@ export interface FileRouteTypes {
     | '/settings/'
     | '/$subject/talk/$conversationId'
     | '/$subject/topics/$topicId'
+    | '/admin/content/'
+    | '/admin/content/$courseId/$topicId'
+    | '/admin/content/$courseId/'
+    | '/admin/content/$courseId/passages/$passageId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -847,6 +898,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SubjectTopicsTopicIdRouteImport
       parentRoute: typeof SubjectRouteRoute
     }
+    '/admin/content/': {
+      id: '/admin/content/'
+      path: '/content'
+      fullPath: '/admin/content/'
+      preLoaderRoute: typeof AdminContentIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/content/$courseId/': {
+      id: '/admin/content/$courseId/'
+      path: '/content/$courseId'
+      fullPath: '/admin/content/$courseId/'
+      preLoaderRoute: typeof AdminContentCourseIdIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/content/$courseId/$topicId': {
+      id: '/admin/content/$courseId/$topicId'
+      path: '/content/$courseId/$topicId'
+      fullPath: '/admin/content/$courseId/$topicId'
+      preLoaderRoute: typeof AdminContentCourseIdTopicIdRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/content/$courseId/passages/$passageId': {
+      id: '/admin/content/$courseId/passages/$passageId'
+      path: '/content/$courseId/passages/$passageId'
+      fullPath: '/admin/content/$courseId/passages/$passageId'
+      preLoaderRoute: typeof AdminContentCourseIdPassagesPassageIdRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
   }
 }
 
@@ -883,6 +962,10 @@ interface AdminRouteRouteChildren {
   AdminRegisterRoute: typeof AdminRegisterRoute
   AdminVerificationsRoute: typeof AdminVerificationsRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminContentIndexRoute: typeof AdminContentIndexRoute
+  AdminContentCourseIdTopicIdRoute: typeof AdminContentCourseIdTopicIdRoute
+  AdminContentCourseIdIndexRoute: typeof AdminContentCourseIdIndexRoute
+  AdminContentCourseIdPassagesPassageIdRoute: typeof AdminContentCourseIdPassagesPassageIdRoute
 }
 
 const AdminRouteRouteChildren: AdminRouteRouteChildren = {
@@ -896,6 +979,11 @@ const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminRegisterRoute: AdminRegisterRoute,
   AdminVerificationsRoute: AdminVerificationsRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AdminContentIndexRoute: AdminContentIndexRoute,
+  AdminContentCourseIdTopicIdRoute: AdminContentCourseIdTopicIdRoute,
+  AdminContentCourseIdIndexRoute: AdminContentCourseIdIndexRoute,
+  AdminContentCourseIdPassagesPassageIdRoute:
+    AdminContentCourseIdPassagesPassageIdRoute,
 }
 
 const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(

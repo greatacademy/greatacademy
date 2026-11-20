@@ -1,21 +1,18 @@
 import type { Subject } from "@ga/proto/catalog/v1/catalog_pb";
-import type { Feedback, Passage, ProblemView, Question, Result, Session, Submitted } from "@ga/proto/learning/v1/learning_pb";
+import type { Feedback, ProblemView, Question, Result, Session, Submitted } from "@ga/proto/learning/v1/learning_pb";
 import { ArrowLeft, ArrowRight, CheckCircle, Lightbulb, PaperPlaneTilt, XCircle } from "@phosphor-icons/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { type ReactNode, useEffect, useState } from "react";
 
+import { AnswerInput } from "../../components/AnswerInput.tsx";
 import { CaptionedFigure, Explanation, FigureView } from "../../components/Figure.tsx";
-import { Illustration } from "../../components/Illustration.tsx";
 import { LoadError } from "../../components/LoadError.tsx";
-import { Markdown, Tex } from "../../components/Markdown.tsx";
-import { MathField } from "../../components/MathField.tsx";
-import { OrderField } from "../../components/OrderField.tsx";
-import { PlotField } from "../../components/PlotField.tsx";
+import { Markdown } from "../../components/Markdown.tsx";
+import { PassageCard } from "../../components/PassageCard.tsx";
 import { AnswerText, ProblemPrompt } from "../../components/Problem.tsx";
 import { Sounds } from "../../components/Sounds.tsx";
 import { SpeechFlow } from "../../components/SpeechFlow.tsx";
-import { StrokesField } from "../../components/StrokesField.tsx";
 import { Bar, Button, buttonClass, Card, ErrorNote, Spinner } from "../../components/ui.tsx";
 import { JudgedFeedback, WritingFlow } from "../../components/WritingFlow.tsx";
 import { useRequireSession } from "../../lib/hooks.ts";
@@ -306,168 +303,6 @@ function IntroView({ intro, onDone }: { intro: NonNullable<Question["intro"]>; o
 }
 
 /** PassageCard shows a text to read, under its reading unit's cover; it stays in view while its questions are answered. */
-function PassageCard({ passage }: { passage: Passage }) {
-  const { m, tx } = useI18n();
-  return (
-    <Card className="space-y-4">
-      <Illustration path={passage.illustration} className="mx-auto w-full max-w-md" />
-      {passage.audio && (
-        <div className="space-y-1">
-          {/* biome-ignore lint/a11y/useMediaCaption: the passage's text, shown below, is the recording's transcript */}
-          <audio controls preload="none" src={`/${passage.audio}.mp3`} aria-label={m.listen} className="w-full" />
-          {passage.accent && <p className="text-sm text-muted">{tx(passage.accent)}</p>}
-        </div>
-      )}
-      {passage.body.split(/\n\s*\n/).map((paragraph) => (
-        <p key={paragraph} className="text-lg leading-relaxed">
-          {paragraph}
-        </p>
-      ))}
-    </Card>
-  );
-}
-
-function AnswerInput({
-  problem,
-  value,
-  onChange,
-  onSubmit,
-  disabled,
-  feedback,
-}: {
-  problem?: ProblemView;
-  value: string;
-  onChange(v: string): void;
-  onSubmit(): void;
-  disabled: boolean;
-  feedback?: Feedback;
-}) {
-  const { m, tx } = useI18n();
-  const input = problem?.input?.kind;
-  const options = input?.case === "choice" ? input.value.options.length : 0;
-
-  // Choices are keyboard-friendly too: A, B, C… or 1, 2, 3… select, Enter checks.
-  useEffect(() => {
-    if (options === 0 || disabled) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.metaKey || e.ctrlKey || e.altKey) return;
-      const k = e.key.toLowerCase();
-      const i = /^[1-9]$/.test(k) ? Number(k) - 1 : /^[a-z]$/.test(k) ? k.charCodeAt(0) - 97 : -1;
-      if (i >= 0 && i < options) onChange(String(i));
-      else if (e.key === "Enter") {
-        e.preventDefault();
-        onSubmit();
-      }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [options, disabled, onChange, onSubmit]);
-
-  switch (input?.case) {
-    case "choice":
-      return (
-        <div className="space-y-2">
-          <div role="radiogroup" className={`grid gap-2 ${input.value.figures.length > 0 ? "sm:grid-cols-2" : ""}`}>
-            {input.value.options.map((o, i) => {
-              const selected = value === String(i);
-              const verdict =
-                feedback && selected ? (feedback.correct ? "good" : "bad") : feedback && feedback.answer === String(i) ? "good" : undefined;
-              const tone =
-                verdict === "good"
-                  ? "border-good bg-good-soft"
-                  : verdict === "bad"
-                    ? "border-bad bg-bad-soft"
-                    : selected
-                      ? "border-accent bg-accent-soft"
-                      : "border-line hover:border-accent/50";
-              return (
-                // biome-ignore lint/a11y/useSemanticElements: a styled option card with radio semantics; the keyboard handler above selects
-                <button
-                  // biome-ignore lint/suspicious/noArrayIndexKey: options are positional
-                  key={i}
-                  type="button"
-                  role="radio"
-                  aria-checked={selected}
-                  disabled={disabled}
-                  onClick={() => onChange(String(i))}
-                  onDoubleClick={() => {
-                    onChange(String(i));
-                    onSubmit();
-                  }}
-                  className={`flex gap-3 rounded-xl border-2 px-4 py-3 text-left transition disabled:cursor-default ${input.value.figures[i] ? "items-start" : "items-center"} ${tone}`}
-                >
-                  <span className="flex size-7 shrink-0 items-center justify-center rounded-full border border-line bg-surface text-sm font-medium">
-                    {String.fromCharCode(65 + i)}
-                  </span>
-                  {input.value.figures[i] ? (
-                    <FigureView figure={input.value.figures[i]} className="min-w-0 flex-1" />
-                  ) : (
-                    <Markdown source={tx(o)} inline />
-                  )}
-                </button>
-              );
-            })}
-          </div>
-          {!disabled && <p className="text-xs text-muted">{m.choiceHint}</p>}
-        </div>
-      );
-    case "order":
-      return (
-        <OrderField key={tx(problem?.prompt)} items={input.value.items.map((item) => tx(item))} onChange={onChange} disabled={disabled} />
-      );
-    case "plot":
-      return (
-        <PlotField
-          key={tx(problem?.prompt)}
-          input={input.value}
-          figure={problem?.figure}
-          value={value}
-          onChange={onChange}
-          onSubmit={onSubmit}
-          disabled={disabled}
-          answer={feedback && !feedback.correct ? feedback.answer : undefined}
-        />
-      );
-    case "strokes":
-      return (
-        <StrokesField
-          key={tx(problem?.prompt)}
-          input={input.value}
-          value={value}
-          onChange={onChange}
-          disabled={disabled}
-          answer={feedback && !feedback.correct ? feedback.answer : undefined}
-        />
-      );
-    case "math":
-      return (
-        <div className="space-y-2">
-          <div className="flex items-center gap-3">
-            {input.value.prefix && <Tex tex={input.value.prefix} className="shrink-0 text-xl" />}
-            <div className="flex-1">
-              <MathField value={value} onChange={onChange} onSubmit={onSubmit} disabled={disabled} label={m.yourAnswer} autoFocus />
-            </div>
-            {input.value.suffix && <Tex tex={input.value.suffix} className="shrink-0 text-xl" />}
-          </div>
-          {!disabled && <p className="text-xs text-muted">{m.mathHint}</p>}
-        </div>
-      );
-    default:
-      return (
-        <input
-          aria-label={m.yourAnswer}
-          value={value}
-          disabled={disabled}
-          // biome-ignore lint/a11y/noAutofocus: the answer field is the point of the page
-          autoFocus
-          onChange={(e) => onChange(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && onSubmit()}
-          className="w-full rounded-lg border border-line bg-surface px-3 py-2 text-lg outline-none focus:border-accent focus:ring-2 focus:ring-accent/25"
-        />
-      );
-  }
-}
-
 function FeedbackView({
   feedback,
   problem,

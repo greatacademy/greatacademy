@@ -33,6 +33,7 @@ A platform administrator is a row in `platform_admin`. It is separate from guard
 | `/admin/checks` | Checks | Sampled live verdicts to check blind, one criterion at a time, and each route's agreement with people against its calibration |
 | `/admin/register` | Vendor register | For each vendor and market, what was checked and when |
 | `/admin/notices` | Notices | Notice versions and the vendors each one names |
+| `/admin/content` | Content | Every course whole, retired ones too, whatever anyone has learned: its outline, the foundations it relies on and its passages. A topic shows its lessons with worked examples and its links; each knowledge point and passage question can be tried as a learner meets it, checked by the subject's rules, with its solution. Nothing is recorded, and answers a model judges or a speech service hears are shown but not checked |
 | `/admin/admins` | Administrators | Who holds the role; granting a plan without payment for a number of days, for testers, reviewers and the pilot ([Billing](billing.md) §6) |
 | `/admin/log` | Change log | Every change, newest first, filterable by kind |
 

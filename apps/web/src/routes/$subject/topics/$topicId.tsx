@@ -1,14 +1,12 @@
-import type { KnowledgePointIntro, TopicLink } from "@ga/proto/learning/v1/learning_pb";
-import { ArrowLeft, Lightbulb } from "@phosphor-icons/react";
+import type { TopicLink } from "@ga/proto/learning/v1/learning_pb";
+import { ArrowLeft } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 
-import { CaptionedFigure, Explanation, FigureView } from "../../../components/Figure.tsx";
+import { LessonStep } from "../../../components/LessonStep.tsx";
 import { LoadError } from "../../../components/LoadError.tsx";
 import { Markdown } from "../../../components/Markdown.tsx";
-import { AnswerText, ProblemPrompt } from "../../../components/Problem.tsx";
-import { Sounds } from "../../../components/Sounds.tsx";
 import { Button, buttonClass, Card, Spinner } from "../../../components/ui.tsx";
 import { useI18n } from "../../../lib/i18n.tsx";
 import { learning } from "../../../lib/rpc.ts";
@@ -16,46 +14,6 @@ import { useSubjectPlace } from "../../../lib/subject.tsx";
 import { statusStyle } from "../../../lib/topic-status.ts";
 
 export const Route = createFileRoute("/$subject/topics/$topicId")({ component: Topic });
-
-function Step({ step }: { step: KnowledgePointIntro }) {
-  const { m, tx } = useI18n();
-  const [shown, setShown] = useState(false);
-  const ex = step.example;
-  return (
-    <div className="space-y-4">
-      <Card className="space-y-4">
-        <h2 className="text-lg font-semibold">
-          <Markdown source={tx(step.title)} inline />
-        </h2>
-        <Explanation text={tx(step.explanation)} figures={step.figures} />
-        <CaptionedFigure figure={step.figure} />
-      </Card>
-      {ex && (
-        <Card className="space-y-4 border-accent/25 bg-accent-soft/40">
-          <div className="flex items-center gap-2 text-sm font-semibold text-accent">
-            <Lightbulb size={18} weight="duotone" /> {m.workedExample}
-          </div>
-          <ProblemPrompt problem={ex.problem} />
-          {shown ? (
-            <div className="space-y-3 border-t border-accent/20 pt-4">
-              <Markdown source={tx(ex.solution)} />
-              <FigureView figure={ex.solutionFigure} />
-              <Sounds sounds={ex.solutionSounds} />
-              <div className="text-sm">
-                <span className="mr-2 text-muted">{m.answer}:</span>
-                <AnswerText problem={ex.problem} answer={ex.answer} />
-              </div>
-            </div>
-          ) : (
-            <Button variant="secondary" onClick={() => setShown(true)}>
-              {m.showSolution}
-            </Button>
-          )}
-        </Card>
-      )}
-    </div>
-  );
-}
 
 function Links({ title, subject, topics }: { title: string; subject: string; topics: readonly TopicLink[] }) {
   const { m, tx } = useI18n();
@@ -116,7 +74,7 @@ function Topic() {
       </div>
       <Links title={m.buildsOn} subject={subject} topics={topic.data.prerequisites} />
       {topic.data.knowledgePoints.map((step) => (
-        <Step key={`${exampleSeed}-${step.index}`} step={step} />
+        <LessonStep key={`${exampleSeed}-${step.index}`} step={step} />
       ))}
       <div className="flex justify-end">
         <Button variant="secondary" onClick={() => setExampleSeed((n) => n + 1)}>

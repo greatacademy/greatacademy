@@ -18,6 +18,7 @@ const pages = [
   ["checks", "/admin/checks"],
   ["register", "/admin/register"],
   ["notices", "/admin/notices"],
+  ["content", "/admin/content"],
   ["admins", "/admin/admins"],
   ["log", "/admin/log"],
 ] as const;
