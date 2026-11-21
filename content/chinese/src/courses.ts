@@ -228,6 +228,16 @@ function setModules(ids: readonly string[], from = 1): readonly ModuleDef[] {
 /** HERITAGE_FIRST is how many batches of grades 1 and 2 the first heritage bridge teaches: 600 characters. */
 const HERITAGE_FIRST = 50;
 
+/**
+ * HERITAGE_WORDS are, for each bridge, the word batches of the native grades whose words its passages use and the
+ * bridges before it do not teach, with the batches each needs before it.
+ */
+const HERITAGE_WORDS: readonly (readonly string[])[] = [
+  ["words-1-01", "words-1-02", "words-1-03", "words-1-04", "words-2-01", "words-2-02", "words-3-01"],
+  ["words-2-03", "words-2-04", "words-3-02", "words-3-03", "idioms-3-01"],
+  ["words-5-01", "words-5-02", "words-5-03", "words-6-01", "words-6-02"],
+];
+
 /** heritageOwn are the ids of the heritage topics a bridge teaches. */
 const heritageOwn = (...ids: readonly string[]): readonly string[] =>
   ids.map((id) => {
@@ -258,6 +268,7 @@ function heritageCourse(
   before: CourseDef["units"] = [],
   earlier: readonly string[] = [],
 ): CourseDef {
+  const words = HERITAGE_WORDS[n - 1] ?? [];
   const hand = handUpTo([...earlier, ...batches]).filter((id) => !handUpTo(earlier).includes(id));
   return {
     id: `chinese-heritage-${n}`,
@@ -268,6 +279,9 @@ function heritageCourse(
       ...before,
       { title: t("Characters", "识字"), modules: setModules(batches) },
       ...(hand.length > 0 ? [{ title: t("Writing Characters", "写字"), modules: setModules(hand) }] : []),
+      ...(words.length > 0
+        ? [{ title: t("Words", "词语"), modules: [{ title: t("Words in the Passages", "短文里的词语"), topics: words }] }]
+        : []),
       ...(sentencesAfter(batches).length > 0
         ? [
             {
