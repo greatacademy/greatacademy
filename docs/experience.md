@@ -10,6 +10,7 @@ This document describes how Great Academy presents itself to learners and guardi
 2. **The account is shared.** Profile, plan, privacy, appearance, language, guardians and the league are the same in every subject.
 3. **Learners study; supervisors decide.** Which course to take, when to retake the diagnostic, whether to reset the knowledge profile, the weekly goals and the end date are decisions of the learner's supervisor (§5). A learner who is not their own supervisor sees them and who makes them, and does not change them.
 4. **A decision says when it is the right one.** Each decision explains what it changes and when it helps. One that cannot be undone asks again.
+5. **A page opens at its top.** Arriving on a page neither focuses a field nor scrolls: the learner first sees its title and what it asks. Focus moves, and the page scrolls, only in answer to what the learner does, such as a new caption in a conversation or a question asked about a choice they made.
 
 ## 2. Subjects
 

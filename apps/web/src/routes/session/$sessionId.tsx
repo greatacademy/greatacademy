@@ -381,7 +381,7 @@ function IntroView({ intro, onDone }: { intro: NonNullable<Question["intro"]>; o
         </Card>
       )}
       <div className="flex justify-end">
-        <Button onClick={onDone} className="px-6" autoFocus={shown}>
+        <Button onClick={onDone} className="px-6">
           {m.gotIt} <ArrowRight size={16} />
         </Button>
       </div>

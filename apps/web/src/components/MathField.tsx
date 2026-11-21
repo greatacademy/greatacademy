@@ -36,14 +36,12 @@ export function MathField({
   onSubmit,
   disabled,
   label,
-  autoFocus,
 }: {
   value: string;
   onChange(latex: string): void;
   onSubmit(): void;
   disabled?: boolean;
   label: string;
-  autoFocus?: boolean;
 }) {
   const ref = useRef<MathfieldElement>(null);
   const [ready, setReady] = useState(false);
@@ -72,12 +70,11 @@ export function MathField({
     };
     mf.addEventListener("input", onInput);
     mf.addEventListener("keydown", onKey, { capture: true });
-    if (autoFocus) mf.focus();
     return () => {
       mf.removeEventListener("input", onInput);
       mf.removeEventListener("keydown", onKey, { capture: true });
     };
-  }, [ready, autoFocus]);
+  }, [ready]);
 
   useEffect(() => {
     const mf = ref.current;

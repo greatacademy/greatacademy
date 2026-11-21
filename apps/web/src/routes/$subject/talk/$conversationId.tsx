@@ -57,8 +57,9 @@ function Talk() {
   const count = captions.length;
   // biome-ignore lint/correctness/useExhaustiveDependencies: a new caption scrolls the list.
   useEffect(() => {
-    // Recent browsers' scrollIntoView returns a promise, which an effect must not.
-    void end.current?.scrollIntoView({ block: "nearest" });
+    // Only a caption moves the page: on arrival the page stays at its top. Recent browsers' scrollIntoView returns a
+    // promise, which an effect must not.
+    if (count > 0) void end.current?.scrollIntoView({ block: "nearest" });
   }, [count]);
 
   const result = useQuery({

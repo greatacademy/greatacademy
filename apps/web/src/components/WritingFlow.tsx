@@ -235,8 +235,6 @@ export function WritingFlow({
         <textarea
           aria-label={m.yourAnswer}
           value={text}
-          // biome-ignore lint/a11y/noAutofocus: the text field is the point of the page
-          autoFocus
           maxLength={limits.maxChars}
           rows={question.essay ? 18 : 8}
           onChange={(e) => setText(e.target.value)}
