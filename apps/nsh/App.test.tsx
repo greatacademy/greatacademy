@@ -722,7 +722,7 @@ test("shows the progress map and the history of a course from Progress", async (
   expect(app.texts()).toContain("10 XP");
 });
 
-test("lists the courses by shelf as the web does, the learner's with how far they are, and searches them", async () => {
+test("lists the courses by shelf as the web does, the learner's with how far they are, searches them, and draws their roadmap", async () => {
   const course = (id: string, title: string, group?: string) => ({
     id,
     subjectId: "math",
@@ -745,16 +745,20 @@ test("lists the courses by shelf as the web does, the learner's with how far the
   await app.press("label:Mathematics, switch subject");
   await app.press("text:Course catalog");
   await app.waitFor("text:Learned 1 / 2");
-  const shown = app.texts();
+  // The shelves come first; the roadmap of the subject's courses follows them.
+  const all = app.texts();
+  const shown = all.slice(0, all.indexOf("Course roadmap"));
+  for (const title of ["Algebra", "Geometry", "Logic"]) expect(all.slice(all.indexOf("Course roadmap"))).toContain(title);
   expect(shown).not.toContain("My courses");
   expect(shown.indexOf("School")).toBeLessThan(shown.indexOf("Algebra"));
   expect(shown.indexOf("Algebra")).toBeLessThan(shown.indexOf("Geometry"));
   expect(shown.indexOf("Geometry")).toBeLessThan(shown.lastIndexOf("Other courses"));
   expect(shown.filter((t) => t === "Algebra")).toHaveLength(1);
   await app.type("label:Search courses", "geo");
-  await app.waitUntil(() => !app.texts().includes("Algebra"));
-  expect(app.texts()).toContain("Geometry");
-  expect(app.texts()).not.toContain("Logic");
+  const shelved = () => app.texts().slice(0, app.texts().indexOf("Course roadmap"));
+  await app.waitUntil(() => !shelved().includes("Algebra"));
+  expect(shelved()).toContain("Geometry");
+  expect(shelved()).not.toContain("Logic");
 });
 
 test("switches subject, keeps the choice, and asks before changing course", async () => {

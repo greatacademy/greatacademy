@@ -11,6 +11,7 @@ import { catalog, learning, timeZone } from "../lib/rpc.ts";
 import { token } from "../lib/session.ts";
 import { subjectsOf, tint } from "../lib/subject.tsx";
 import { Action, cellStyle, colors, ErrorNote, fieldStyle, Grid, headerStyle, Loaded, Muted, PullScroll, Segmented } from "../lib/ui.tsx";
+import { CourseRoadmap } from "./CourseRoadmap.tsx";
 import { Header } from "./Header.tsx";
 
 function SignInButton() {
@@ -294,6 +295,14 @@ export function CourseList(props: { visible: () => boolean; choose?: Choosing; i
                   </If>
                 )}
               </List>
+              <If when={!props.choose}>
+                <CourseRoadmap
+                  courses={(rpc()?.courses ?? []).filter((course) => course.subjectId === shown() && !course.retired)}
+                  subject={subjects().find((s) => s.id === shown())}
+                  mine={new Set(stats().keys())}
+                  open={open}
+                />
+              </If>
             </View>
           </PullScroll>
         )}

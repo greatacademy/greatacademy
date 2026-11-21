@@ -75,7 +75,7 @@ The header holds the logo, the subject chip with the switcher, the subject's thr
 
 **Catalog.** The catalog shows one subject at a time, chosen by tabs at its top; its shelves (grades, exams, university) are the subject's own. Every course in it opens its course page, the learner's current ones too. A course page names its subject with the chip.
 
-**Course roadmap.** Below the shelves on the web, the catalog draws the subject's courses as a map: the first courses at the bottom, each course one row above the highest course it builds on, and a line from each course to the courses that build on it directly. A course is joined to one it reaches through another only through that one. Each box opens the course's page; pointing at a box lights the courses it builds on, and the learner's current courses are filled in. A map wider than the screen scrolls sideways inside its frame.
+**Course roadmap.** Below the shelves, on the web and in the apps, the catalog draws the subject's courses as a map: the first courses at the bottom, each course one row above the highest course it builds on, and a line from each course to the courses that build on it directly. A course is joined to one it reaches through another only through that one. Each box opens the course's page; pointing at a box lights the courses it builds on, and the learner's current courses are filled in. On a phone, which has no pointer, the first tap on a box lights it and a second opens the course. A map wider than the screen scrolls sideways inside its frame.
 
 ## 5. Supervision
 
