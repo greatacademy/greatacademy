@@ -145,7 +145,7 @@ export function createApi(services: Services): Api {
   const endPlans = async (userId: string) => {
     if (payments) await endPlansOf(db, payments, userId, Date.now());
   };
-  const auth = createAuth(db, config.authSecret, config.siteUrl, services.mail, endPlans);
+  const auth = createAuth(db, config.authSecret, config.siteUrl, services.mail, endPlans, config.otherOrigins);
   const accounts = childAccounts(auth, db);
 
   return async (request) => {

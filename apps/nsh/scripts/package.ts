@@ -10,7 +10,7 @@ import { fileURLToPath } from "node:url";
 // platforms choose by the system's appearance, then sign the app again.
 
 const PRODUCTION = "https://greatacademy.dev";
-const DEVELOPMENT = 'export const SITE_URL = "http://localhost:5173";';
+const DEVELOPMENT = 'export const SITE_URL = "http://localhost:4700";';
 const DESKTOPS = new Set(["macos", "windows", "linux"]);
 const APP = fileURLToPath(new URL("..", import.meta.url));
 const APPLE_ICON = join(APP, "assets/AppIcon.icon");

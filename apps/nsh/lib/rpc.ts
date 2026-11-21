@@ -15,10 +15,10 @@ import { token } from "./session.ts";
 /**
  * SITE_URL is the web app, which serves the API under /api, the pages the app links to, the illustrations, the
  * recordings and the files its web views load. In development that is the Vite dev server: the desktops and the iOS simulator reach it at
- * localhost, and Android after `adb reverse tcp:5173 tcp:5173`. `scripts/package.ts` replaces this line while it
+ * localhost, and Android after `adb reverse tcp:4700 tcp:4700`. `scripts/package.ts` replaces this line while it
  * packages the app.
  */
-export const SITE_URL = "http://localhost:5173";
+export const SITE_URL = "http://localhost:4700";
 
 const withToken: Interceptor = (next) => (request) => {
   const current = token();

@@ -1,6 +1,6 @@
 import { expect, open, test } from "nsh/test";
 
-const url = "http://localhost:5173/api/rpc/ga.catalog.v1.CatalogService";
+const url = "http://localhost:4700/api/rpc/ga.catalog.v1.CatalogService";
 const json = (body: unknown) => ({ status: 200, headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
 const text = (en: string, zh: string) => ({ values: { en, "zh-CN": zh } });
 
@@ -101,8 +101,8 @@ test("says when there is no connection, and loads once it is back", async () => 
   expect(app.texts()).not.toContain("Offline. Trying again when the connection is back.");
 });
 
-const privacyUrl = "http://localhost:5173/api/rpc/ga.privacy.v1.PrivacyService";
-const authUrl = "http://localhost:5173/api/auth";
+const privacyUrl = "http://localhost:4700/api/rpc/ga.privacy.v1.PrivacyService";
+const authUrl = "http://localhost:4700/api/auth";
 const countries = { [`POST ${privacyUrl}/ListCountries`]: json({ countries: ["US", "CN"] }) };
 const accessIs = (status: string) => ({ [`POST ${privacyUrl}/GetAccess`]: json({ status }) });
 
@@ -344,7 +344,7 @@ test("signs up and goes straight to the courses once the answer is stored", asyn
   expect(app.shows("Before you start")).toBe(false);
 });
 
-const learningUrl = "http://localhost:5173/api/rpc/ga.learning.v1.LearningService";
+const learningUrl = "http://localhost:4700/api/rpc/ga.learning.v1.LearningService";
 const lessonTask = { lesson: { topicId: "linear", title: text("Linear equations", "一次方程"), xp: 10, knowledgePoints: 1 } };
 const choiceProblem = {
   prompt: text("Pick the even number", "选出偶数"),
@@ -530,7 +530,7 @@ test("sends a link to reset a forgotten password", async () => {
   expect(JSON.parse(call?.body ?? "{}").email).toBe("a@example.test");
 });
 
-const accountUrl = "http://localhost:5173/api/rpc/ga.account.v1.AccountService";
+const accountUrl = "http://localhost:4700/api/rpc/ga.account.v1.AccountService";
 const settingsNetwork = {
   ...network,
   ...accessIs("ACCESS_STATUS_OK"),

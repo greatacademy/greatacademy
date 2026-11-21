@@ -77,13 +77,15 @@ Web 应用通过 Vite 在 workerd 中运行（`cf dev`），它调用的 API 服
 docker compose up -d                  # PostgreSQL 18，localhost:54329（compose.yaml）
 pnpm nx run db:migrate                # 执行 libs/db/drizzle 中的迁移
 cp apps/server/.env.example apps/server/.env.local
-pnpm nx run server:dev                # API 服务器，http://localhost:8080
-pnpm nx run web:dev                   # http://localhost:5173
+pnpm nx run server:dev                # API 服务器，http://localhost:4701
+pnpm nx run web:dev                   # http://localhost:4700
 ```
 
-- `apps/server/src/config.ts` 从环境变量读取服务器的设置，`server:dev` 从 `apps/server/.env.local`（已被 git 忽略）加载它们：`PORT`；`SITE_URL`，即网站，它是 better-auth 的基础 URL，也是邮件中链接指向的地方；指向容器的 `DATABASE_URL`；`BETTER_AUTH_SECRET` 和 `AI_KEYS_SECRET`；`EMAIL_PROVIDER`、`RESEND_API_KEY`、`CLOUDFLARE_ACCOUNT_ID`、`CLOUDFLARE_EMAIL_TOKEN` 和 `EMAIL_FROM`；签字表格存储桶的 `R2_ACCESS_KEY_ID` 和 `R2_SECRET_ACCESS_KEY`，没有它们时表格保存在内存中；Stripe 和 App Store 的密钥；以及语音服务的设置（§7）。文件改动时 `server:dev` 会重启服务器。
-- 网站和 API 共用一个源。开发时 `apps/web/vite.config.ts` 把 `/api` 代理到 API 服务器（`API_URL`，即代理的目标，否则为 `http://localhost:8080`）。构建后由 Web Worker 把 `/api/` 转发到 API 服务器的源站主机 `https://api.greatacademy.dev`（`apps/web/src/server.ts`）。
-- 没有 `STRIPE_SECRET_KEY` 时计费关闭，所有人都可以学习；要试用计费，把 Stripe 测试账户的密钥放进 `apps/server/.env.local`，并用 `stripe listen --forward-to localhost:8080/api/stripe` 转发事件，它给出的签名密钥就是 `STRIPE_WEBHOOK_SECRET`（[计费](billing.zh-CN.md) §10）。
+- 本地开发使用四个端口，选得避开其他项目的默认端口：网站在 4700，是浏览器、桌面应用和手机唯一调用的源；API 服务器在 4701，经由网站访问；语音服务在 4702；PostgreSQL 在 54329。网站的端口是严格的，第二个开发服务器会直接失败，而不是换到别的端口。
+
+- `apps/server/src/config.ts` 从环境变量读取服务器的设置，`server:dev` 从 `apps/server/.env.local`（已被 git 忽略）加载它们：`PORT`；`SITE_URL`，即网站，它是 better-auth 的基础 URL，也是邮件中链接指向的地方；`OTHER_ORIGINS`，除它之外也信任的源，用逗号分隔，例如给手机打包的应用所用的本机地址；指向容器的 `DATABASE_URL`；`BETTER_AUTH_SECRET` 和 `AI_KEYS_SECRET`；`EMAIL_PROVIDER`、`RESEND_API_KEY`、`CLOUDFLARE_ACCOUNT_ID`、`CLOUDFLARE_EMAIL_TOKEN` 和 `EMAIL_FROM`；签字表格存储桶的 `R2_ACCESS_KEY_ID` 和 `R2_SECRET_ACCESS_KEY`，没有它们时表格保存在内存中；Stripe 和 App Store 的密钥；以及语音服务的设置（§7）。文件改动时 `server:dev` 会重启服务器。
+- 网站和 API 共用一个源。开发时 `apps/web/vite.config.ts` 把 `/api` 代理到 API 服务器（`API_URL`，即代理的目标，否则为 `http://localhost:4701`）。构建后由 Web Worker 把 `/api/` 转发到 API 服务器的源站主机 `https://api.greatacademy.dev`（`apps/web/src/server.ts`）。
+- 没有 `STRIPE_SECRET_KEY` 时计费关闭，所有人都可以学习；要试用计费，把 Stripe 测试账户的密钥放进 `apps/server/.env.local`，并用 `stripe listen --forward-to localhost:4701/api/stripe` 转发事件，它给出的签名密钥就是 `STRIPE_WEBHOOK_SECRET`（[计费](billing.zh-CN.md) §10）。
 - `EMAIL_PROVIDER` 取 `resend`、`cloudflare` 或 `cloudflare,resend`；它和 `RESEND_API_KEY` 都留空时，密码重置和验证邮件不会发出，而是写到服务器输出中，可以从那里打开其中的链接。取 `cloudflare` 时本地服务器会通过 Cloudflare Email Service 的 REST API 真实发信；发信子域 `mail.greatacademy.dev` 已用 `cf email-sending subdomains create` 接入，它写入了退信 MX、SPF、DKIM 和 DMARC 记录，可用 `cf email-sending subdomains dns status` 检查。`EMAIL_FROM` 用该域名下已被 `EMAIL_PROVIDER` 所列每个服务验证的地址：用 `cloudflare` 时把域名接入 Cloudflare Email Service，用 `resend` 时在 Resend 验证域名；两者都用时，保留一条同时包含两家服务的 SPF 记录。
 - `apps/web/cloudflare.config.ts` 声明 Web Worker：唯一的绑定是公开文件的 R2 存储桶 `BUCKET`，开发时在本地；没有 secret。`pnpm nx run web:typecheck` 会先运行 `cf workers types`，把 `Env` 类型声明写入 `.cloudflare/types`。
 - `pnpm nx run web:build` 把 Worker 构建到 `.cloudflare/output`；`cf deploy` 负责部署。Worker 对外提供 `greatacademy.dev`，同样声明在这个文件里。首次部署前需把该域名作为 zone 加入 Cloudflare 账号，并创建 R2 存储桶 `ga-guardian-forms` 和 `greatacademy`。
@@ -123,7 +125,7 @@ pnpm nx run nsh:ios                   # iOS 模拟器；需要 Xcode
 pnpm nx run nsh:android               # 模拟器或真机；需要 Android SDK 和 JDK
 ```
 
-- `apps/nsh/lib/rpc.ts` 中的 `SITE_URL` 在 `nsh run` 下是 `http://localhost:5173`，桌面端和 iOS 模拟器可以直接访问。应用也在网站的 `/api` 下调用 API：使用 HTTPS 时由 Web Worker 转发，使用明文 HTTP 时由 Vite 服务器代理到 API 服务器。Android 需要先运行 `adb reverse tcp:5173 tcp:5173`。如果要给 iPhone 打包，用 `DEV_HOST=0.0.0.0` 启动 Web 应用，并传入 `--site-url http://<本机地址>:5173`。Android 也一样：Native Shell 只在开发构建中允许明文 HTTP，所以当 `--site-url` 以 `http://` 开头时，打包脚本会允许它。
+- `apps/nsh/lib/rpc.ts` 中的 `SITE_URL` 在 `nsh run` 下是 `http://localhost:4700`，桌面端和 iOS 模拟器可以直接访问。应用也在网站的 `/api` 下调用 API：使用 HTTPS 时由 Web Worker 转发，使用明文 HTTP 时由 Vite 服务器代理到 API 服务器。Android 需要先运行 `adb reverse tcp:4700 tcp:4700`。如果要给 iPhone 打包，用 `DEV_HOST=0.0.0.0` 启动 Web 应用，传入 `--site-url http://<本机地址>:4700`，并把这个源加入 `OTHER_ORIGINS`，API 服务器才会接受它的登录。Android 也一样：Native Shell 只在开发构建中允许明文 HTTP，所以当 `--site-url` 以 `http://` 开头时，打包脚本会允许它。
 - 页面位于 `apps/nsh/screens`。`nsh:test` 以无头方式运行应用，不需要模拟器；`nsh:typecheck` 运行 `nsh check`，它也会生成 `.nsh/types`。
 - 应用用 bearer token 登录，并把它保存在 `Storage` 中。
 - 应用启动时显示标志（`screens/Launch.tsx`），直到第一页能完整画出（已登录时是「学习」标签页的第一次应答），最多两秒，然后标志放大并淡出到页面；系统标签栏在它离开时出现。
@@ -159,12 +161,12 @@ cd apps/voice && uv run python -m ga_voice.devkeys # 生成用于票据的开发
 
 ```bash
 docker compose build voice
-docker compose up -d voice          # ws://localhost:8089/v1/conversation；/healthz 和 /readyz
+docker compose up -d voice          # ws://localhost:4702/v1/conversation；/healthz 和 /readyz
 docker compose stop voice           # SIGTERM：拒绝新会话，等待进行中的会话结束（最长 25 分钟）
 ```
 
-- `voice` 服务属于 `voice` profile，所以普通的 `docker compose up -d` 仍然只启动 PostgreSQL。它通过 `http://host.docker.internal:8080` 访问主机上的 API 服务器，通过 `http://host.docker.internal:5173` 访问网站；要指向别处，设置 `VOICE_API_URL` 或 `VOICE_AUDIO_URL`。如果容器访问不到 Web 应用，用 `DEV_HOST=0.0.0.0` 启动 Web 应用。
-- 要端到端运行一次对话，把密钥对的私钥写入 `apps/server/.env.local` 的 `VOICE_TICKET_PRIVATE_KEY`，并设置 `VOICE_URL=ws://localhost:8089/v1/conversation`，以及与容器的 `VOICE_API_CREDENTIAL` 相同的 `VOICE_SERVICE_CREDENTIAL`。只有当某段对话有用途为 `conversation` 的、已上线、已校准、有价格的路由时，学习者才能使用它；在本地数据库中，在管理后台添加供应商、价格和路由，再手动插入一行该对话 id 的通过的校准记录。
+- `voice` 服务属于 `voice` profile，所以普通的 `docker compose up -d` 仍然只启动 PostgreSQL。它通过 `http://host.docker.internal:4701` 访问主机上的 API 服务器，通过 `http://host.docker.internal:4700` 访问网站；要指向别处，设置 `VOICE_API_URL` 或 `VOICE_AUDIO_URL`。如果容器访问不到 Web 应用，用 `DEV_HOST=0.0.0.0` 启动 Web 应用。
+- 要端到端运行一次对话，把密钥对的私钥写入 `apps/server/.env.local` 的 `VOICE_TICKET_PRIVATE_KEY`，并设置 `VOICE_URL=ws://localhost:4702/v1/conversation`，以及与容器的 `VOICE_API_CREDENTIAL` 相同的 `VOICE_SERVICE_CREDENTIAL`。只有当某段对话有用途为 `conversation` 的、已上线、已校准、有价格的路由时，学习者才能使用它；在本地数据库中，在管理后台添加供应商、价格和路由，再手动插入一行该对话 id 的通过的校准记录。
 - 在 `VOICE_SPEECH=fake` 下，学习者每一轮中的第一段声音被识别为四句脚本台词中的下一句，台词用完后从头开始，导师的话则是一段提示音。无头 Chrome 可以用 `--use-fake-ui-for-media-stream`、`--use-fake-device-for-media-stream` 和 `--use-file-for-fake-audio-capture=<file.wav>` 播放录音；在 macOS 上还需要 `--disable-features=AudioServiceSandbox`，否则假麦克风只有静音。
 - 在 `VOICE_SPEECH=api` 下，会话只通过这样的路由获得语音服务：对话所用语言的一条生效的语音识别路由，且其服务商还通过了 `stt-verbatim:<语言>`（对话要按原样听出错误），以及一条带有音色的生效语音合成路由；否则 API 服务器回答 503 `no-route`。服务随后以 Silero 检测说话，用 Azure AI Speech 的识别与合成，所用密钥由 API 服务器为该会话解密；结果送达时，API 服务器把听取的秒数和说出的字符数记为用途为 `speech` 的调用。
 - 容器没有卷，文件系统只读，`/tmp` 在内存中。日志中没有音频或转写文本：Pipecat 自己的日志只保留警告及以上级别，调试输出从不打开。

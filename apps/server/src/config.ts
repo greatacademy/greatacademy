@@ -17,6 +17,11 @@ export interface Config {
    * base, every request's origin and the links of emails.
    */
   readonly siteUrl: string;
+  /**
+   * otherOrigins are origins trusted besides the site's, such as a phone's http://192.168.1.20:4700 in development,
+   * where an app packaged for the phone calls the site by this machine's address.
+   */
+  readonly otherOrigins: readonly string[];
   /** databaseUrl is the PostgreSQL connection string. */
   readonly databaseUrl: string;
   /** authSecret signs better-auth sessions. */
@@ -63,6 +68,11 @@ export function readConfig(env: Env): Config {
   return {
     port: Number(value("PORT") ?? "8080"),
     siteUrl: new URL(required("SITE_URL")).origin,
+    otherOrigins: (value("OTHER_ORIGINS") ?? "")
+      .split(",")
+      .map((o) => o.trim())
+      .filter((o) => o !== "")
+      .map((o) => new URL(o).origin),
     databaseUrl: required("DATABASE_URL"),
     authSecret: required("BETTER_AUTH_SECRET"),
     aiKeysSecret: value("AI_KEYS_SECRET"),

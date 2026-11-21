@@ -77,9 +77,10 @@ export default defineConfig({
   // DEV_HOST=0.0.0.0 lets a phone on the same network reach the dev server. /api goes to the API server of
   // `pnpm nx run server:dev` (API_URL), as the Worker forwards it to the API server in production (src/server.ts).
   server: {
-    port: 5173,
+    port: 4700,
+    strictPort: true,
     host: process.env.DEV_HOST,
-    proxy: { "/api": { target: process.env.API_URL ?? "http://localhost:8080", xfwd: true } },
+    proxy: { "/api": { target: process.env.API_URL ?? "http://localhost:4701", xfwd: true } },
   },
   plugins: [
     embedAssets(),

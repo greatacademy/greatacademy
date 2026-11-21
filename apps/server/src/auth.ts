@@ -37,11 +37,12 @@ export function createAuth(
   site: string,
   sendEmail: SendEmail,
   endPlans: (userId: string) => Promise<void> = async () => {},
+  otherOrigins: readonly string[] = [],
 ) {
   return betterAuth({
     baseURL: site,
     basePath: "/api/auth",
-    trustedOrigins: [site],
+    trustedOrigins: [site, ...otherOrigins],
     advanced: {
       ipAddress: { ipAddressHeaders: ["cf-connecting-ip"] },
     },

@@ -179,8 +179,8 @@ A guardian reads a learner through the same read-only calls a learner uses: `Get
   - R2 buckets are created by hand with the location hint `wnam` before their first use, since a bucket's location cannot change.
   - Holding data in one country is a transfer for every other market, so the privacy notice at `/legal/privacy` says the data is kept in the United States ([Minors' Data §12](minors-data.md#12-vendors)).
 - **Development:**
-  - `pnpm nx run server:dev` runs the API server under Node, restarting on changes, on `http://localhost:8080`. It reads `apps/server/.env.local`, copied from `.env.example`, and connects to PostgreSQL in a `postgres:18-alpine` container under OrbStack.
-  - `cf dev` runs the web Worker in workerd through Vite, which proxies `/api` to the API server (`API_URL` in `apps/web/vite.config.ts`, else `http://localhost:8080`), so pages call their own origin as in production. See [Development](development.md).
+  - `pnpm nx run server:dev` runs the API server under Node, restarting on changes, on `http://localhost:4701`. It reads `apps/server/.env.local`, copied from `.env.example`, and connects to PostgreSQL in a `postgres:18-alpine` container under OrbStack.
+  - `cf dev` runs the web Worker in workerd through Vite, which proxies `/api` to the API server (`API_URL` in `apps/web/vite.config.ts`, else `http://localhost:4701`), so pages call their own origin as in production. See [Development](development.md).
   - The voice service runs in a container from its production image beside PostgreSQL, reaching the API server and the site on the host ([Development](development.md) §7).
 - **Mobile and desktop:** `nsh package` builds each platform's installable app. The app calls the same API at the site's own `/api` (`SITE_URL` in `apps/nsh/lib/rpc.ts`).
 - **English** adds AI models through pi-ai, with providers configured by platform administrators, and the voice service on the same cluster ([English Curriculum §13](english-curriculum.md#13-technology-and-deployment)).

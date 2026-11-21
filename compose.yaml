@@ -28,13 +28,13 @@ services:
       - path: apps/voice/.env.local
         required: false
     environment:
-      VOICE_API_URL: ${VOICE_API_URL:-http://host.docker.internal:8080}
-      VOICE_AUDIO_URL: ${VOICE_AUDIO_URL:-http://host.docker.internal:5173}
+      VOICE_API_URL: ${VOICE_API_URL:-http://host.docker.internal:4701}
+      VOICE_AUDIO_URL: ${VOICE_AUDIO_URL:-http://host.docker.internal:4700}
       VOICE_SPEECH: ${VOICE_SPEECH:-fake}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:
-      - "8089:8080"
+      - "4702:8080"
     read_only: true
     tmpfs:
       - /tmp

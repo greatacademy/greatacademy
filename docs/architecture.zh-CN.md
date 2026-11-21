@@ -179,8 +179,8 @@ API 服务器（`apps/server`）用 `src/handler.ts` 应答 `/api` 和 `/voice/v
   - R2 存储桶在首次使用前手动创建，位置提示设为 `wnam`，因为存储桶的位置之后不能更改。
   - 数据只存放在一个国家，对其他每个市场都构成跨境传输，所以 `/legal/privacy` 的隐私声明写明数据存放在美国（[未成年人数据 §12](minors-data.zh-CN.md#12-供应商)）。
 - **开发：**
-  - `pnpm nx run server:dev` 在 Node 下运行 API 服务器，改动后自动重启，地址为 `http://localhost:8080`。它读取从 `.env.example` 复制而来的 `apps/server/.env.local`，连接 OrbStack 中 `postgres:18-alpine` 容器里的 PostgreSQL。
-  - `cf dev` 通过 Vite 在 workerd 中运行 Web Worker，Vite 把 `/api` 代理到 API 服务器（`apps/web/vite.config.ts` 中的 `API_URL`，否则为 `http://localhost:8080`），所以页面和生产环境一样调用自己的源。详见[开发指南](development.zh-CN.md)。
+  - `pnpm nx run server:dev` 在 Node 下运行 API 服务器，改动后自动重启，地址为 `http://localhost:4701`。它读取从 `.env.example` 复制而来的 `apps/server/.env.local`，连接 OrbStack 中 `postgres:18-alpine` 容器里的 PostgreSQL。
+  - `cf dev` 通过 Vite 在 workerd 中运行 Web Worker，Vite 把 `/api` 代理到 API 服务器（`apps/web/vite.config.ts` 中的 `API_URL`，否则为 `http://localhost:4701`），所以页面和生产环境一样调用自己的源。详见[开发指南](development.zh-CN.md)。
   - 语音服务用它的生产镜像在 PostgreSQL 旁边的容器中运行，访问主机上的 API 服务器和网站（[开发指南](development.zh-CN.md) §7）。
 - **移动端和桌面端：** 用 `nsh package` 构建各平台的安装包，在网站自己的 `/api` 上调用同一个 API（`apps/nsh/lib/rpc.ts` 中的 `SITE_URL`）。
 - **英语**增加了通过 pi-ai 使用、由平台管理员配置供应商的 AI 模型，以及运行在同一集群上的语音服务（[英语课程体系 §13](english-curriculum.zh-CN.md#13-技术与部署)）。
