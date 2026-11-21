@@ -55,16 +55,16 @@ function Progress() {
           <ClockCounterClockwise size={18} /> {m.history}
         </Link>
       </div>
-      {(sequence.data?.courses.length ?? 0) > 1 && (
-        <section className="space-y-2">
-          <h2 className="text-sm text-muted" title={m.sequence.note}>
-            {m.sequence.label}
-          </h2>
-          <CourseSequence courses={sequence.data?.courses ?? []} currentId={courseId} selected={viewed} onSelect={setPicked} />
-        </section>
-      )}
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
         <section className="min-w-0 space-y-3">
+          {(sequence.data?.courses.length ?? 0) > 1 && (
+            <section className="space-y-2 pb-3">
+              <h2 className="text-sm text-muted" title={m.sequence.note}>
+                {m.sequence.label}
+              </h2>
+              <CourseSequence courses={sequence.data?.courses ?? []} currentId={courseId} selected={viewed} onSelect={setPicked} />
+            </section>
+          )}
           <TopicLegend counts={legendCounts(progress.data.topics)} />
           {/* A topic's page speaks of the current course, so only its map links to them. */}
           <TopicMap course={course.data.course} topics={progress.data.topics} subject={viewed === courseId ? subject : undefined} />

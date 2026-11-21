@@ -67,7 +67,9 @@ export function UnitList({ course }: { course: CourseUnits }) {
             <span className="min-w-0 flex-1 truncate">{tx(u.title)}</span>
             <span className="shrink-0 text-xs tabular-nums text-muted">{percentLearned(u)}%</span>
           </div>
-          <ShadedBar stats={u} className="ml-7 w-[calc(100%-1.75rem)]" />
+          <div className="pl-7">
+            <ShadedBar stats={u} />
+          </div>
         </li>
       ))}
     </ol>

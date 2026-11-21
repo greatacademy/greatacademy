@@ -80,22 +80,22 @@ export function Progress(props: { visible: () => boolean }) {
                             {m().history}
                           </Text>
                         </View>
-                        <If when={(sequence()?.courses.length ?? 0) > 1}>
-                          <View style={{ gap: 8 }}>
-                            <Muted>{m().sequence.label}</Muted>
-                            <CourseSequence
-                              courses={sequence()?.courses ?? []}
-                              currentId={d().courseId}
-                              selected={viewed() ?? d().courseId}
-                              onSelect={(id) => picked.set(id)}
-                            />
-                          </View>
-                        </If>
                         <If when={!wide()}>
                           <Cards place={here()} dash={d()} onChanged={changed} />
                         </If>
                         <View style={{ alignItems: "flex-start", flexDirection: "row", gap: 24 }}>
                           <View style={{ flex: 1, gap: 12, minWidth: 0 }}>
+                            <If when={(sequence()?.courses.length ?? 0) > 1}>
+                              <View style={{ gap: 8 }}>
+                                <Muted>{m().sequence.label}</Muted>
+                                <CourseSequence
+                                  courses={sequence()?.courses ?? []}
+                                  currentId={d().courseId}
+                                  selected={viewed() ?? d().courseId}
+                                  onSelect={(id) => picked.set(id)}
+                                />
+                              </View>
+                            </If>
                             <Text style={{ color: colors().ink, fontSize: 18, fontWeight: "600" }}>{m().progressMap}</Text>
                             <Loaded rpc={map} skeleton={<Skeleton rows={4} />}>
                               {(loaded) => <MapBody map={loaded()} />}
