@@ -419,6 +419,14 @@ function QuestionFlow(props: {
           <If when={error()}>
             <ErrorNote message={error()} />
           </If>
+          {/* The answer's actions sit under the answer, as on the web, and scroll with it. */}
+          <If when={!props.answered()}>
+            <Buttons
+              quiet={question.canSkip ? { label: m().dontKnow, onPress: () => void send(true) } : undefined}
+              main={{ label: m().submit, onPress: () => void send(false) }}
+              disabled={busy()}
+            />
+          </If>
           <If when={question.canReference && !reference() && !props.answered()}>
             <View style={{ gap: 4 }}>
               <Quiet label={m().reference} disabled={busy()} onPress={() => void look()} />
@@ -427,20 +435,7 @@ function QuestionFlow(props: {
           </If>
           <If when={props.answered()}>{(answered) => <Solution answered={answered()} question={question} />}</If>
         </Body>
-        <If
-          when={props.answered()}
-          else={
-            <BottomBar>
-              <Buttons
-                quiet={question.canSkip ? { label: m().dontKnow, onPress: () => void send(true) } : undefined}
-                main={{ label: m().submit, onPress: () => void send(false) }}
-                disabled={busy()}
-              />
-            </BottomBar>
-          }
-        >
-          {(answered) => <Verdict answered={answered()} onContinue={props.onContinue} />}
-        </If>
+        <If when={props.answered()}>{(answered) => <Verdict answered={answered()} onContinue={props.onContinue} />}</If>
       </If>
     </If>
   );
