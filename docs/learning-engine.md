@@ -135,6 +135,8 @@ After every 150 XP, once at least four topics are learned, the learner is offere
 
 **Time limit.** A quiz has `quizSecondsPerQuestion` seconds per question, two minutes, shown counting down. An answer that arrives more than `quizGraceSeconds` after the limit counts wrong; once the time is up the quiz ends, and the questions not answered count wrong and are marked late. Being slow is a miss as being wrong is: a topic that takes too long to recall has not been learned to fluency.
 
+**As an exam.** The questions may be opened in any order, and each answer is saved, not judged, so it may be changed until the quiz is handed in. A multistep problem's parts are asked in order, and once one is saved its answers are final; so is an answer a model judged. Handing in, or the time running out, judges every answer saved; a question without one counts wrong.
+
 Each correct answer is an explicit repetition with result 0.5, and each wrong answer is a failure (§4). The quiz is a retrieval test: it catches what reviews scheduled by the model would miss.
 
 **Follow-up reviews.** The topics missed on a quiz are kept in the state (`lastQuiz.followUps`) and offered at once as remedial reviews, first among the reviews, due or not. A review of such a topic, passed or not, is its follow-up.
