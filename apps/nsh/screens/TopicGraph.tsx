@@ -89,26 +89,32 @@ function Graph(props: { map: MapData }) {
   let scroll!: ScrollRef;
   const zoomBy = (factor: number) => scroll.zoomTo({ scale: clamp(now().k * factor) });
 
+  // The part of the graph the lines are drawn for: what the screen shows and a margin around it, in the graph's
+  // points, with the zoom it was drawn at. It changes only when the view leaves it or the zoom moves on.
+  const sheet = signal<Sheet | undefined>(undefined);
+  const covered = (): Sheet => sheet() ?? sheetFor(visibleOf(now(), layout()));
+  const follow = (v: Shown) => {
+    shown.set(v);
+    const seen = visibleOf(v, layout());
+    const s = sheet();
+    if (!s || !serves(s, seen)) sheet.set(sheetFor(seen));
+  };
+
   const draw = (cx: CanvasRenderingContext, _size: { width: number; height: number }) => {
-    const v = now();
-    const { width: w, height: h } = layout();
-    // Content narrower or shorter than the viewport is centered, as the scroll view centers it.
-    const dx = Math.max(0, v.width - w * v.k) / 2 - v.x;
-    const dy = Math.max(0, v.height - h * v.k) / 2 - v.y;
+    const s = covered();
     const lighted = path();
-    cx.setTransform(v.k, 0, 0, v.k, dx, dy);
+    cx.setTransform(s.k, 0, 0, s.k, -s.x * s.k, -s.y * s.k);
     for (const e of paths()) {
       const on = !!lighted && lighted.has(e.from) && lighted.has(e.to);
       cx.strokeStyle = on ? colors().accent : colors().muted;
       cx.globalAlpha = on ? 1 : lighted ? 0.1 : 0.4;
-      cx.lineWidth = (on ? 2.5 : 1.25) / v.k;
+      cx.lineWidth = (on ? 2.5 : 1.25) / s.k;
       cx.stroke(e.path);
     }
   };
 
   return (
     <View style={{ flex: 1 }} onLayout={(e) => frame.set({ width: e.bounds.size.width, height: e.bounds.size.height })}>
-      <Canvas draw={draw} style={{ bottom: 0, pointerEvents: "none", left: 0, position: "absolute", right: 0, top: 0 }} />
       <If when={frame().width > 0}>
         <Scroll
           ref={scroll}
@@ -117,10 +123,26 @@ function Graph(props: { map: MapData }) {
           zoomScale={fit()}
           centerContent
           scrollEventThrottle={16}
-          onScroll={(e) => shown.set({ x: e.offset.x, y: e.offset.y, k: e.zoomScale, width: e.size.width, height: e.size.height })}
+          onScroll={(e) => follow({ x: e.offset.x, y: e.offset.y, k: e.zoomScale, width: e.size.width, height: e.size.height })}
           style={{ bottom: 0, left: 0, position: "absolute", right: 0, top: 0 }}
         >
           <View onPress={() => lit.set(undefined)} style={{ height: layout().height, width: layout().width }}>
+            {/* The lines move with the topics, inside the scroll view; scaled back by the zoom, the canvas keeps
+                about the screen's size and resolution however far the graph is zoomed out. */}
+            <View
+              style={{
+                height: covered().height,
+                left: covered().x,
+                pointerEvents: "none",
+                position: "absolute",
+                top: covered().y,
+                transform: `scale(${1 / covered().k})`,
+                transformOrigin: "top left",
+                width: covered().width,
+              }}
+            >
+              <Canvas draw={draw} style={{ flex: 1 }} />
+            </View>
             <Each of={layout().boxes} key={(b) => b.id}>
               {(b) => (
                 <TopicNode
@@ -155,6 +177,62 @@ function Graph(props: { map: MapData }) {
         <ZoomButton label={m().graph.fit} icon={arrowsIn} onPress={() => scroll.zoomTo({ scale: fit() })} last />
       </View>
     </View>
+  );
+}
+
+/**
+ * Sheet is the part of the graph the lines are drawn for: its top left corner in the graph's points, its size in the
+ * screen's points and the zoom it is drawn at.
+ */
+interface Sheet {
+  readonly x: number;
+  readonly y: number;
+  readonly width: number;
+  readonly height: number;
+  readonly k: number;
+}
+
+/** MARGIN is the share of the screen drawn beyond each of its edges, so that a pan shows lines already drawn. */
+const MARGIN = 0.35;
+/** REZOOM is how far the zoom may move before the lines are drawn again at the new zoom. */
+const REZOOM = 1.2;
+
+/** Seen is the part of the graph the screen shows, in the graph's points, and the zoom. */
+interface Seen {
+  readonly left: number;
+  readonly top: number;
+  readonly width: number;
+  readonly height: number;
+  readonly k: number;
+}
+
+/** visibleOf is what the scroll view shows of the graph; content smaller than the screen is centered, as it centers it. */
+function visibleOf(v: Shown, graph: { width: number; height: number }): Seen {
+  return {
+    left: (v.x - Math.max(0, v.width - graph.width * v.k) / 2) / v.k,
+    top: (v.y - Math.max(0, v.height - graph.height * v.k) / 2) / v.k,
+    width: v.width / v.k,
+    height: v.height / v.k,
+    k: v.k,
+  };
+}
+
+/** sheetFor is the sheet for what the screen shows: it and a margin around it, at its zoom. */
+function sheetFor(seen: Seen): Sheet {
+  return {
+    x: seen.left - MARGIN * seen.width,
+    y: seen.top - MARGIN * seen.height,
+    width: (1 + 2 * MARGIN) * seen.width * seen.k,
+    height: (1 + 2 * MARGIN) * seen.height * seen.k,
+    k: seen.k,
+  };
+}
+
+/** serves tells whether a sheet still serves what the screen shows: the screen inside it, at a zoom near its own. */
+function serves(s: Sheet, seen: Seen): boolean {
+  if (seen.k > s.k * REZOOM || seen.k < s.k / REZOOM) return false;
+  return (
+    seen.left >= s.x && seen.top >= s.y && seen.left + seen.width <= s.x + s.width / s.k && seen.top + seen.height <= s.y + s.height / s.k
   );
 }
 
