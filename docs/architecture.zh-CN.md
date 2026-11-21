@@ -76,7 +76,7 @@ libs/subject-english/ 英语学科：句子和单词判定器、题库工具
 libs/subject-chinese/ 语文学科：汉字和拼音判定器、拼音转换、分词、题库工具
 libs/judge/           写作的 AI 判定：提示词、respond 工具、引用经过原文核对的判定结果、经 pi-ai 连接的供应商
 libs/db/              Drizzle schema、迁移和仓储（PostgreSQL）
-libs/design/          颜色 token、配色和外观模型（§8），以及为 Web 和原生应用生成的形式
+libs/design/          颜色 token、配色和外观模型（§8），以及为 Web 和原生应用生成的形式，还有课程图和知识点图的布局
 content/math/         编写的数学内容：知识点、课程
 content/english/      编写的英语内容：知识点、课程
 content/chinese/      编写的语文内容：知识点、课程

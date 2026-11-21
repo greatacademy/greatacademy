@@ -46,7 +46,7 @@ libs/judge/          写作的 AI 判定：提示词、respond 工具、经过�
 libs/proto/          Protobuf 契约与生成的 TypeScript
 libs/api/            Connect 服务和会话运行器
 libs/db/             Drizzle schema、迁移、仓储
-libs/design/         颜色 token、配色和外观模型
+libs/design/         颜色 token、配色、外观模型，以及课程图和知识点图的布局
 content/math/        数学内容
 content/english/     英语内容
 content/chinese/     语文内容

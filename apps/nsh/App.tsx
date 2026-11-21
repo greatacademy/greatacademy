@@ -34,6 +34,7 @@ import { SignIn } from "./screens/SignIn.tsx";
 import { SignUp } from "./screens/SignUp.tsx";
 import { Standings } from "./screens/Standings.tsx";
 import { Talk } from "./screens/Talk.tsx";
+import { TopicGraph } from "./screens/TopicGraph.tsx";
 import { Welcome } from "./screens/Welcome.tsx";
 
 void restorePrefs();
@@ -136,6 +137,8 @@ function App() {
               );
             case "map":
               return <CourseMap courseId={route.courseId} />;
+            case "graph":
+              return <TopicGraph courseId={route.courseId} />;
             case "history":
               return <History courseId={route.courseId} />;
             case "session":

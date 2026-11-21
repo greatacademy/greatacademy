@@ -1,10 +1,9 @@
+import { layoutRoadmap, prerequisitesOf, ROADMAP_SIZE } from "@ga/design";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-
 import { useSession } from "../lib/auth.ts";
 import { useI18n } from "../lib/i18n.tsx";
-import { layoutRoadmap, prerequisitesOf, ROADMAP_SIZE } from "../lib/roadmap.ts";
 import { catalog, learning, timeZone } from "../lib/rpc.ts";
 
 /**

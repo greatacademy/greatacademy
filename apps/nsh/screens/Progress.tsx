@@ -1,10 +1,10 @@
 import type { GetDashboardResponse } from "@ga/proto/learning/v1/learning_pb";
 import { computed, signal, Text, View, windowSize } from "nsh";
-import { m, tx } from "../lib/i18n.ts";
+import { m } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { markChanged, query } from "../lib/query.ts";
 import { courseTitle, type Place, usePlace } from "../lib/subject.tsx";
-import { colors, Loaded, Muted, PullScroll, Skeleton } from "../lib/ui.tsx";
+import { colors, Loaded, Muted, PullScroll, Quiet, Skeleton } from "../lib/ui.tsx";
 import { CourseSequence, loadMap, MapBody, useCourseSequence } from "./CourseMap.tsx";
 import { SubjectStart } from "./CourseTab.tsx";
 import { ForecastCard, useDashboard, WeeklyGoals } from "./SubjectCards.tsx";
@@ -96,7 +96,13 @@ export function Progress(props: { visible: () => boolean }) {
                                 />
                               </View>
                             </If>
-                            <Text style={{ color: colors().ink, fontSize: 18, fontWeight: "600" }}>{m().progressMap}</Text>
+                            <View style={{ alignItems: "center", flexDirection: "row", gap: 12 }}>
+                              <Text style={{ color: colors().ink, flex: 1, fontSize: 18, fontWeight: "600" }}>{m().progressMap}</Text>
+                              <Quiet
+                                label={m().graph.open}
+                                onPress={() => nav.push({ name: "graph", courseId: viewed() ?? d().courseId })}
+                              />
+                            </View>
                             <Loaded rpc={map} skeleton={<Skeleton rows={4} />}>
                               {(loaded) => <MapBody map={loaded()} />}
                             </Loaded>

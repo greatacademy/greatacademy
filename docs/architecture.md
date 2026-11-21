@@ -76,7 +76,7 @@ libs/subject-english/ The English subject: sentence and word checkers and the ki
 libs/subject-chinese/ The Chinese subject: character and pinyin checkers, pinyin conversion, word segmentation and the kit for item banks
 libs/judge/           AI judgment of writing: the prompt, the respond tool, verdicts whose quotations are checked against the text, providers through pi-ai
 libs/db/              Drizzle schema, migrations and repositories (PostgreSQL)
-libs/design/          Color tokens, palettes and the appearance model (§8), with their generated forms for web and native
+libs/design/          Color tokens, palettes and the appearance model (§8), with their generated forms for web and native, and the layout of course and topic graphs
 content/math/         Authored mathematics content: topics, courses
 content/english/      Authored English content: topics, courses
 content/chinese/      Authored Chinese content: topics, courses

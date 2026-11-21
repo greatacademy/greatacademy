@@ -1,4 +1,5 @@
 import { Dialog } from "@base-ui/react/dialog";
+import { layoutRoadmap, prerequisitesOf, type RoadmapSize } from "@ga/design";
 import type { Course } from "@ga/proto/catalog/v1/catalog_pb";
 import { type TopicProgress, TopicStatus } from "@ga/proto/learning/v1/learning_pb";
 import { ArrowsIn, Graph, Minus, Plus, X } from "@phosphor-icons/react";
@@ -14,9 +15,7 @@ import {
   useRef,
   useState,
 } from "react";
-
 import { useI18n } from "../lib/i18n.tsx";
-import { layoutRoadmap, prerequisitesOf, type RoadmapSize } from "../lib/roadmap.ts";
 import { catalog, learning } from "../lib/rpc.ts";
 import { useSubjectPlace } from "../lib/subject.tsx";
 import { shade, statusStyle } from "../lib/topic-status.ts";

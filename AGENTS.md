@@ -46,7 +46,7 @@ libs/judge/          AI judgment of writing: prompts, the respond tool, checked 
 libs/proto/          Protobuf contracts and generated TypeScript
 libs/api/            Connect services and the session runner
 libs/db/             Drizzle schema, migrations, repositories
-libs/design/         Color tokens, palettes and the appearance model
+libs/design/         Color tokens, palettes, the appearance model and the layout of course and topic graphs
 content/math/        Mathematics content
 content/english/     English content
 content/chinese/     Chinese content

@@ -41,7 +41,7 @@ export interface RoadmapSize {
  */
 export type Placement = "lean" | "balance";
 
-/** ROADMAP_SIZE is the size the web draws the roadmap at. */
+/** ROADMAP_SIZE is the size the web draws the course roadmap at. */
 export const ROADMAP_SIZE: RoadmapSize = { boxWidth: 120, boxHeight: 40, gap: 16, rowGap: 40 };
 
 /** A slot in a row: a course's box, or a point a line passes through on its way to a row further up. */

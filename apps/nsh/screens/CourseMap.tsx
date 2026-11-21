@@ -10,14 +10,17 @@ import {
 import { computed, List, platform, Scroll, safeAreaInsets, signal, Text, View, windowSize } from "nsh";
 import { NavPage, Popover, Sheet } from "nsh/base";
 import { m, tx } from "../lib/i18n.ts";
+import { nav } from "../lib/nav.ts";
 import { query } from "../lib/query.ts";
 import { catalog, learning } from "../lib/rpc.ts";
-import { Card, colors, headerStyle, Loaded, Muted, PullScroll, Skeleton } from "../lib/ui.tsx";
+import { Card, colors, headerStyle, Loaded, Muted, PullScroll, Quiet, Skeleton } from "../lib/ui.tsx";
 import { Header } from "./Header.tsx";
 
-type StatusKey = "locked" | "available" | "failed" | "learned" | "due" | "assumed";
+/** StatusKey names a topic's status in the messages and the map's colors. */
+export type StatusKey = "locked" | "available" | "failed" | "learned" | "due" | "assumed";
 
-const statusKeys: Partial<Record<TopicStatus, StatusKey>> = {
+/** statusKeys names each status a topic can have. */
+export const statusKeys: Partial<Record<TopicStatus, StatusKey>> = {
   [TopicStatus.LOCKED]: "locked",
   [TopicStatus.AVAILABLE]: "available",
   [TopicStatus.FAILED]: "failed",
@@ -30,12 +33,12 @@ const statusKeys: Partial<Record<TopicStatus, StatusKey>> = {
 const shades = computed(() => strengthShades(colors().accent, colors().surface));
 
 /** shadeOf is the color of a learned topic of the given strength. */
-const shadeOf = (strength: number) => shades()[Math.min(shades().length - 1, Math.max(0, strength))] ?? colors().accent;
+export const shadeOf = (strength: number) => shades()[Math.min(shades().length - 1, Math.max(0, strength))] ?? colors().accent;
 
 const isLearned = (key: StatusKey) => key === "learned" || key === "due";
 
 /** edgeColor is the edge of a hollow dot, for a topic not learned, so the map reads at a glance. */
-function edgeColor(key: StatusKey): string {
+export function edgeColor(key: StatusKey): string {
   const c = colors();
   return key === "available" ? c.accent : key === "failed" ? c.bad : c.muted;
 }
@@ -488,6 +491,15 @@ export function CourseBar(props: { stats: CourseStats | undefined; courseId: str
               <View style={{ gap: 12 }}>
                 <ShadeCounts stats={c().stats} />
                 <UnitList course={c()} />
+                <View style={{ alignSelf: "flex-start" }}>
+                  <Quiet
+                    label={m().graph.open}
+                    onPress={() => {
+                      open.set(false);
+                      nav.push({ name: "graph", courseId: c().courseId });
+                    }}
+                  />
+                </View>
               </View>
             )}
           </If>
