@@ -6,8 +6,10 @@ import { m } from "../lib/i18n.ts";
 import { SITE_URL } from "../lib/rpc.ts";
 import { colors, fieldStyle, Muted } from "../lib/ui.tsx";
 
-// MathLive's own fonts and sounds are off: KaTeX's stylesheet already provides the fonts.
+// MathLive's own fonts and sounds are off: KaTeX's stylesheet already provides the fonts. Without MathLive, which the
+// page loads from the site before this runs, the page says so and the learner types plain text instead.
 const script = (value: string, disabled: boolean) => `
+if(typeof MathfieldElement==="undefined"){post({failed:true})}else{
 MathfieldElement.fontsDirectory=null;MathfieldElement.soundsDirectory=null;
 var f=document.getElementById("f");
 f.value=${scriptValue(value)};f.disabled=${disabled};
@@ -19,7 +21,8 @@ f.addEventListener("input",function(){post({value:f.value})});
 f.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();post({submit:true})}},{capture:true});
 window.mathVirtualKeyboard.addEventListener("geometrychange",function(){
   post({keyboard:window.mathVirtualKeyboard.boundingRect.height});
-});`;
+});
+}`;
 
 /**
  * MathField asks for math as LaTeX through MathLive, in a web view that grows to
@@ -63,7 +66,14 @@ export function MathField(props: {
             style={{ backgroundColor: "transparent", height: field() + (props.disabled ? 0 : keyboard()) }}
             onError={() => asText.set(true)}
             onMessage={({ data }) => {
-              const message = JSON.parse(data) as { height?: number; value?: string; submit?: boolean; keyboard?: number };
+              const message = JSON.parse(data) as {
+                height?: number;
+                value?: string;
+                submit?: boolean;
+                keyboard?: number;
+                failed?: boolean;
+              };
+              if (message.failed) asText.set(true);
               if (message.height) field.set(message.height);
               if (message.value !== undefined) props.onChange(message.value);
               if (message.submit) props.onSubmit();
