@@ -3,14 +3,13 @@ import { signal, Text, View } from "nsh";
 import { AlertDialog } from "nsh/base";
 import arrowCounterClockwise from "../assets/icons/arrow-counter-clockwise.svg";
 import bookOpen from "../assets/icons/book-open.svg";
-import listBullets from "../assets/icons/list-bullets.svg";
 import swap from "../assets/icons/swap.svg";
 import { errorText, m, tx } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { markChanged } from "../lib/query.ts";
 import { learning } from "../lib/rpc.ts";
 import { courseTitle, type Place, usePlace } from "../lib/subject.tsx";
-import { Action, Card, colors, ErrorNote, Icon, Loaded, Muted, PullScroll, Quiet, Skeleton } from "../lib/ui.tsx";
+import { Action, Card, colors, ErrorNote, Loaded, Muted, PullScroll, Quiet, Skeleton } from "../lib/ui.tsx";
 import { CourseBar } from "./CourseMap.tsx";
 import { CardTitle, useDashboard } from "./SubjectCards.tsx";
 
@@ -45,13 +44,8 @@ function CurrentCourse(props: { place: Place; courseId: string }) {
         <Text style={{ color: colors().muted, fontSize: 14, lineHeight: 20 }}>{tx(course()?.description)}</Text>
       </If>
       <CourseBar stats={stats()} courseId={props.courseId} maxWidth={448} />
-      <View
-        role="button"
-        onPress={() => nav.push({ name: "course", courseId: props.courseId })}
-        style={{ alignItems: "center", alignSelf: "flex-start", flexDirection: "row", gap: 6 }}
-      >
-        <Icon src={listBullets} size={16} color={colors().accent} />
-        <Text style={{ color: colors().accent, fontSize: 14 }}>{m().courseOutline}</Text>
+      <View style={{ alignSelf: "flex-start" }}>
+        <Quiet label={m().courseOutline} onPress={() => nav.push({ name: "course", courseId: props.courseId })} />
       </View>
     </Card>
   );

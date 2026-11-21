@@ -1,4 +1,4 @@
-import { BookOpen, ListBullets, Swap } from "@phosphor-icons/react";
+import { BookOpen, Swap } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
@@ -8,7 +8,7 @@ import { CourseBar } from "../../components/CourseBar.tsx";
 import { Markdown } from "../../components/Markdown.tsx";
 import { usePromotion } from "../../components/PlacementReport.tsx";
 import { DecidedBy, StartOverCard } from "../../components/SubjectDecisions.tsx";
-import { Button, Card } from "../../components/ui.tsx";
+import { Button, buttonClass, Card } from "../../components/ui.tsx";
 import { useI18n } from "../../lib/i18n.tsx";
 import { learning, timeZone } from "../../lib/rpc.ts";
 import { useCatalog, useProfile, useSubjectPlace } from "../../lib/subject.tsx";
@@ -51,9 +51,11 @@ function CoursePage() {
         </div>
         <Markdown source={tx(course.description)} className="text-sm text-muted" />
         {stats && <CourseBar stats={stats} courseId={course.id} className="max-w-md" />}
-        <Link to="/courses/$courseId" params={{ courseId: course.id }} className="inline-flex items-center gap-1.5 text-sm text-accent">
-          <ListBullets size={16} /> {m.courseOutline}
-        </Link>
+        <div>
+          <Link to="/courses/$courseId" params={{ courseId: course.id }} className={buttonClass("secondary")}>
+            {m.courseOutline}
+          </Link>
+        </div>
       </Card>
 
       <Card className="space-y-3">
@@ -65,7 +67,7 @@ function CoursePage() {
           <DecidedBy />
         ) : changing ? (
           <div className="space-y-3">
-            <Button variant="ghost" className="-ml-4" onClick={() => setChanging(false)}>
+            <Button variant="secondary" onClick={() => setChanging(false)}>
               {m.cancel}
             </Button>
             <ChooseCourse
