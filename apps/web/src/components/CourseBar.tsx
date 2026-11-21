@@ -42,7 +42,7 @@ export const percentLearned = (s: Shaded) => (s.total > 0 ? Math.floor((s.learne
  * and for the course picked, how many topics have each shade and its units numbered with their own bars.
  */
 export function CourseBar({ stats, courseId, className = "" }: { stats: CourseStats; courseId: string; className?: string }) {
-  const { m } = useI18n();
+  const { m, tx } = useI18n();
   const [open, setOpen] = useState(false);
   const [picked, setPicked] = useState<string>();
   const sequence = useCourseSequence(courseId, open);
@@ -66,6 +66,7 @@ export function CourseBar({ stats, courseId, className = "" }: { stats: CourseSt
         <div role="status" className="space-y-3 rounded-xl border border-line bg-surface px-3 py-3 text-xs text-muted">
           {sequence.isPending && <p>{m.loading}</p>}
           {sequence.isError && <p className="text-bad">{m.error}</p>}
+          {sequence.data?.sequenceTitle && <p>{m.sequence.route(tx(sequence.data.sequenceTitle))}</p>}
           {courses.length > 1 && (
             <CourseSequence courses={courses} currentId={courseId} selected={shown?.courseId ?? courseId} onSelect={setPicked} />
           )}

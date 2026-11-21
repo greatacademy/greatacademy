@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import { CourseSequence, useCourseSequence } from "../../components/CourseSequence.tsx";
 import { LoadError, NotFoundNote } from "../../components/LoadError.tsx";
+import { usePromotion } from "../../components/PlacementReport.tsx";
 import { ForecastCard, GoalsCard } from "../../components/SubjectDecisions.tsx";
 import { legendCounts, TopicLegend, TopicMap } from "../../components/TopicMap.tsx";
 import { buttonClass, Spinner } from "../../components/ui.tsx";
@@ -40,8 +41,9 @@ function Progress() {
     enabled: !!courseId,
     staleTime: 0,
   });
+  const moved = usePromotion(dash.data, courseId);
 
-  if (course.isPending || progress.isPending || dash.isPending) return <Spinner label={m.loading} />;
+  if (course.isPending || progress.isPending || dash.isPending || moved) return <Spinner label={m.loading} />;
   if (course.isError) return <LoadError error={course.error} onRetry={() => course.refetch()} />;
   if (progress.isError) return <LoadError error={progress.error} onRetry={() => progress.refetch()} />;
   if (dash.isError) return <LoadError error={dash.error} onRetry={() => dash.refetch()} />;
@@ -61,6 +63,7 @@ function Progress() {
             <section className="space-y-2 pb-3">
               <h2 className="text-sm text-muted" title={m.sequence.note}>
                 {m.sequence.label}
+                {sequence.data?.sequenceTitle && ` · ${m.sequence.route(tx(sequence.data.sequenceTitle))}`}
               </h2>
               <CourseSequence courses={sequence.data?.courses ?? []} currentId={courseId} selected={viewed} onSelect={setPicked} />
             </section>

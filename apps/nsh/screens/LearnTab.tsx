@@ -11,7 +11,7 @@ import { colors, ErrorNote, Icon, Loaded, Muted, PullScroll, Skeleton } from "..
 import { CourseBar } from "./CourseMap.tsx";
 import { SubjectStart } from "./CourseTab.tsx";
 import { firstPageReady } from "./Launch.tsx";
-import { CourseDone, PlacementReport, StartEarlier } from "./PlacementReport.tsx";
+import { CourseDone, PlacementReport, Promoted, StartEarlier } from "./PlacementReport.tsx";
 import { EarnedCard, ForecastCard, LeagueCard, useDashboard, WeeklyGoals } from "./SubjectCards.tsx";
 import { Conversations } from "./Talk.tsx";
 import { describeTask, TaskCard } from "./TaskCard.tsx";
@@ -193,9 +193,10 @@ function Today(props: {
           <View style={{ alignItems: wide() ? "flex-start" : "stretch", flexDirection: wide() ? "row" : "column", gap: wide() ? 24 : 12 }}>
             <View style={{ flexBasis: wide() ? 0 : "auto", flexGrow: 1, flexShrink: 1, gap: 12, minWidth: 0 }}>
               <CourseHead place={props.place} dash={d()} />
+              <Promoted dash={d()} />
               <PlacementReport dash={d()} onAnswered={props.onAnswered} />
               <StartEarlier dash={d()} onChosen={props.onAnswered} />
-              <CourseDone dash={d()} onChosen={props.onAnswered} />
+              <CourseDone dash={d()} />
               <View style={{ alignItems: "baseline", flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 4 }}>
                 <Text style={{ color: colors().ink, flex: 1, fontSize: 18, fontWeight: "600" }}>{m().nextUp}</Text>
                 <If when={(d().xp?.goalToday ?? 0) > 0}>

@@ -544,18 +544,12 @@ export declare type GetDashboardResponse = Message<"ga.learning.v1.GetDashboardR
   report?: PlacementReport | undefined;
 
   /**
-   * finished tells that every topic of the course is learned.
+   * finished tells that every topic of the course is learned and no course follows it:
+   * a learner who finishes a course is otherwise promoted into the next on their route.
    *
    * @generated from field: bool finished = 11;
    */
   finished: boolean;
-
-  /**
-   * next_courses are the courses that build on this one, in catalog order.
-   *
-   * @generated from field: repeated string next_courses = 12;
-   */
-  nextCourses: string[];
 
   /**
    * can_decide tells whether the caller is the learner's supervisor, who
@@ -605,6 +599,14 @@ export declare type GetDashboardResponse = Message<"ga.learning.v1.GetDashboardR
    * @generated from field: repeated ga.learning.v1.Essay essays = 19;
    */
   essays: Essay[];
+
+  /**
+   * promoted_from is the course whose end promoted the learner into this one, until they
+   * start a task in it; empty otherwise.
+   *
+   * @generated from field: string promoted_from = 20;
+   */
+  promotedFrom: string;
 };
 
 /**
@@ -995,6 +997,13 @@ export declare type ListCourseProgressResponse = Message<"ga.learning.v1.ListCou
    * @generated from field: string current_course_id = 2;
    */
   currentCourseId: string;
+
+  /**
+   * sequence_title names the route the learner follows through the courses; unset off every route.
+   *
+   * @generated from field: optional ga.common.v1.Text sequence_title = 3;
+   */
+  sequenceTitle?: Text | undefined;
 };
 
 /**
@@ -2973,7 +2982,8 @@ export declare const LearningService: GenService<{
     output: typeof KeepCourseResponseSchema;
   },
   /**
-   * GetDashboard returns the tasks offered in a course now.
+   * GetDashboard returns the tasks offered in a course now. A learner who finished the course is first promoted
+   * into the course that follows on their route, and the dashboard is that course's.
    *
    * @generated from rpc ga.learning.v1.LearningService.GetDashboard
    */
@@ -2994,7 +3004,7 @@ export declare const LearningService: GenService<{
   },
   /**
    * ListCourseProgress returns the course sequence of the current course, unit by unit: up to three courses the learner
-   * took before it, oldest first, the current course, then up to three that follow it.
+   * took before it, oldest first, the current course, then up to three that follow it on their route.
    *
    * @generated from rpc ga.learning.v1.LearningService.ListCourseProgress
    */

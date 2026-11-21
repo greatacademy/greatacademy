@@ -2,6 +2,7 @@ import type { SubjectDef, TopicDef } from "@ga/content";
 import { compileSubject, t } from "@ga/content";
 import { mathCheckers } from "@ga/subject-math";
 
+import { mathSequences } from "./course-shelves.ts";
 import { mathCourses } from "./courses.ts";
 import { inferredEncompassings } from "./encompassings.ts";
 import { algebraShardTopics } from "./shards/algebra.ts";
@@ -25,6 +26,7 @@ export const math: SubjectDef = {
     withEncompassings,
   ),
   courses: mathCourses,
+  sequences: mathSequences,
   checkers: mathCheckers,
 };
 

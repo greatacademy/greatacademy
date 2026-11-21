@@ -1,7 +1,16 @@
 import { compileSubject, same, type TopicDef, t } from "@ga/content";
 import { describe, expect, it } from "vitest";
 
-import { courseFinished, courseIndex, homeCourse, placementAdvice } from "./courses.ts";
+import {
+  courseFinished,
+  courseIndex,
+  courseRoute,
+  coursesAfter,
+  followingCourse,
+  homeCourse,
+  nextCourse,
+  placementAdvice,
+} from "./courses.ts";
 import type { Placement } from "./diagnostic.ts";
 import { applyEvent } from "./events.ts";
 import { courseScope, engineGraph } from "./graph.ts";
@@ -120,5 +129,95 @@ describe("courseFinished", () => {
     expect(courseFinished(planner("mid"), placed("mid", most))).toBe(false);
     const all = { known: ids("q", 1, 10), tested: [], missed: [] };
     expect(courseFinished(planner("mid"), placed("mid", all))).toBe(true);
+  });
+});
+
+/** Two routes from one start: low, a, a2 and low, b, b2, with c after both a2 and b2 and on no route. */
+const branching = compileSubject({
+  id: "branching",
+  title: same("Branching"),
+  topics: [
+    ...chain("p", 2),
+    ...chain("a", 2, "p2"),
+    ...chain("b", 2, "p2"),
+    ...chain("x", 2, "a2"),
+    ...chain("y", 2, "b2"),
+    ...chain("z", 1, "y2"),
+  ],
+  courses: [
+    course("low", ids("p", 1, 2)),
+    course("a", ids("a", 1, 2), ["low"]),
+    course("b", ids("b", 1, 2), ["low"]),
+    course("a2", ids("x", 1, 2), ["a"]),
+    course("b2", ids("y", 1, 2), ["b"]),
+    course("c", ["z1"], ["b2", "a2"]),
+  ],
+  sequences: [
+    { id: "first", title: same("First"), courses: ["low", "a", "a2"] },
+    { id: "second", title: same("Second"), courses: ["low", "b", "b2"] },
+  ],
+  mark: "B",
+  hue: 100,
+  checkers: [],
+});
+const routes = courseIndex(branching.courses, branching.def.sequences);
+const route = (course: string, taken: string[], target?: string) => courseRoute(routes, course, taken, target)?.id;
+
+describe("courseRoute", () => {
+  it("follows the route that leads to the course set out for", () => {
+    expect(route("low", [], "b2")).toBe("second");
+    expect(route("low", [], "a")).toBe("first");
+  });
+
+  it("follows the route of the courses taken, else the first", () => {
+    expect(route("low", [])).toBe("first");
+    expect(route("b", ["low"])).toBe("second");
+    expect(route("low", ["b", "b2"])).toBe("second");
+  });
+
+  it("ignores a target the route does not lead to", () => {
+    expect(route("a", [], "b2")).toBe("first");
+  });
+
+  it("has no route for a course on none", () => {
+    expect(route("c", ["a2"])).toBeUndefined();
+  });
+});
+
+describe("followingCourse", () => {
+  it("moves on along the route, then to what builds on its last course", () => {
+    const second = routes.sequences[1];
+    expect(followingCourse(routes, second, "low")).toBe("b");
+    expect(followingCourse(routes, second, "b2")).toBe("c");
+    expect(followingCourse(routes, undefined, "low")).toBe("a");
+    expect(followingCourse(routes, second, "c")).toBeUndefined();
+  });
+
+  it("lists the courses after, leaving out those taken", () => {
+    const second = routes.sequences[1];
+    expect(coursesAfter(routes, second, "low", 3)).toEqual(["b", "b2", "c"]);
+    expect(coursesAfter(routes, second, "low", 2)).toEqual(["b", "b2"]);
+    expect(coursesAfter(routes, second, "low", 3, ["b2"])).toEqual(["b", "c"]);
+  });
+
+  it("leads back to the course set out for", () => {
+    const first = routes.sequences[0];
+    expect(nextCourse(routes, first, "low", "b2")).toBe("b2");
+    expect(nextCourse(routes, routes.sequences[1], "low", "b2")).toBe("b");
+    expect(nextCourse(routes, first, "a", "a2")).toBe("a2");
+    expect(nextCourse(routes, first, "a2", "a2")).toBe("c");
+    expect(coursesAfter(routes, first, "low", 3, [], "b2")).toEqual(["b2", "c"]);
+  });
+
+  it("recommends the course after on the route", () => {
+    const pl: Planner = {
+      params: defaultParams,
+      graph: engineGraph(branching.graph),
+      scope: courseScope(engineGraph(branching.graph), branching.courses.get("low")!),
+    };
+    const p = { known: ["p1", "p2"], tested: ["p2"], missed: [] };
+    const s = applyEvent({ params: defaultParams, graph: pl.graph }, initialState, { type: "placed", at: 0, course: "low", ...p });
+    expect(placementAdvice(pl, routes, s, p)).toEqual({ kind: "later", course: "a" });
+    expect(placementAdvice(pl, routes, s, p, routes.sequences[1])).toEqual({ kind: "later", course: "b" });
   });
 });

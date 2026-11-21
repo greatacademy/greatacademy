@@ -6,6 +6,7 @@ import { useState } from "react";
 import { ChooseCourse } from "../../components/ChooseCourse.tsx";
 import { CourseBar } from "../../components/CourseBar.tsx";
 import { Markdown } from "../../components/Markdown.tsx";
+import { usePromotion } from "../../components/PlacementReport.tsx";
 import { DecidedBy, StartOverCard } from "../../components/SubjectDecisions.tsx";
 import { Button, Card } from "../../components/ui.tsx";
 import { useI18n } from "../../lib/i18n.tsx";
@@ -33,6 +34,7 @@ function CoursePage() {
     enabled: !!enrollment,
     staleTime: 0,
   });
+  usePromotion(dash.data, enrollment?.courseId ?? "");
   const course = list.data?.courses.find((c) => c.id === enrollment?.courseId);
   const canDecide = profile.data?.canDecide ?? false;
   const stats = enrollment?.stats;

@@ -116,7 +116,7 @@ export class Registry {
 function read(subject: SubjectCatalog, source: SubjectGateway, params: Params): SubjectEntry {
   const graph: EngineGraph = engineGraph(subject.graph);
   const ctx = { params, graph };
-  const index = courseIndex(subject.courses);
+  const index = courseIndex(subject.courses, subject.sequences);
   const courses = new Map<string, CourseEntry>();
   for (const [id, course] of subject.courses) {
     const { explanationLocale } = course.def;

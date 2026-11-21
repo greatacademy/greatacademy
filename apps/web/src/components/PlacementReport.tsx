@@ -1,11 +1,13 @@
 import type { GetDashboardResponse } from "@ga/proto/learning/v1/learning_pb";
 import { Compass, GraduationCap } from "@phosphor-icons/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 import { useI18n } from "../lib/i18n.tsx";
 import { catalog, learning } from "../lib/rpc.ts";
 import { comparePaces, finishDate } from "./Forecast.tsx";
-import { Button, Card, ErrorNote } from "./ui.tsx";
+import { Button, buttonClass, Card, ErrorNote } from "./ui.tsx";
 
 /** useCourseTitle names a course by id from the catalog. */
 function useCourseTitle() {
@@ -112,31 +114,57 @@ export function StartEarlier({ d, learnerId }: { d: GetDashboardResponse; learne
   );
 }
 
-/** CourseDone congratulates on a finished course and offers the courses that follow it. */
-export function CourseDone({ d, learnerId }: { d: GetDashboardResponse; learnerId?: string }) {
+/**
+ * CourseDone congratulates on a finished course that no course follows on the learner's route, and points to the
+ * catalog for another (docs/experience.md §3).
+ */
+export function CourseDone({ d }: { d: GetDashboardResponse }) {
   const { m } = useI18n();
-  const title = useCourseTitle();
-  const { choose, busy, failed } = useCourseChoice(learnerId);
   if (!d.finished) return null;
   return (
     <Card className="space-y-3 border-good/40 bg-good-soft">
       <h2 className="flex items-center gap-2 text-lg font-semibold">
         <GraduationCap size={22} weight="duotone" className="text-good" /> {m.courseDone}
       </h2>
-      {d.nextCourses.length > 0 && <p className="text-sm">{m.courseDoneBody}</p>}
-      {failed && <ErrorNote message={m.error} />}
-      {d.nextCourses.length > 0 &&
-        (d.canDecide ? (
-          <div className="flex flex-wrap gap-3">
-            {d.nextCourses.map((id, i) => (
-              <Button key={id} variant={i === 0 ? "primary" : "secondary"} onClick={() => choose.mutate(id)} disabled={busy}>
-                {title(id)}
-              </Button>
-            ))}
-          </div>
-        ) : (
-          <p className="text-sm text-muted">{m.courseDoneAsk}</p>
-        ))}
+      <p className="text-sm">{m.courseDoneBody}</p>
+      {d.canDecide ? (
+        <Link to="/courses" className={buttonClass("secondary")}>
+          {m.courseDoneBrowse}
+        </Link>
+      ) : (
+        <p className="text-sm text-muted">{m.courseDoneAsk}</p>
+      )}
     </Card>
   );
+}
+
+/**
+ * Promoted tells a learner who finished a course that they moved on to the next on their route, until they start work
+ * in it (docs/experience.md §3).
+ */
+export function Promoted({ d }: { d: GetDashboardResponse }) {
+  const { m } = useI18n();
+  const title = useCourseTitle();
+  if (!d.promotedFrom) return null;
+  return (
+    <Card className="space-y-2 border-good/40 bg-good-soft">
+      <h2 className="flex items-center gap-2 text-lg font-semibold">
+        <GraduationCap size={22} weight="duotone" className="text-good" /> {m.promotedTitle(title(d.courseId))}
+      </h2>
+      <p className="text-sm">{m.promotedBody(title(d.promotedFrom))}</p>
+    </Card>
+  );
+}
+
+/**
+ * usePromotion refreshes what names the current course once a dashboard asked for one course answers for another: the
+ * learner finished it and was promoted.
+ */
+export function usePromotion(d: GetDashboardResponse | undefined, courseId: string) {
+  const qc = useQueryClient();
+  const moved = !!d && !!courseId && d.courseId !== courseId;
+  useEffect(() => {
+    if (moved) qc.invalidateQueries();
+  }, [moved, qc]);
+  return moved;
 }

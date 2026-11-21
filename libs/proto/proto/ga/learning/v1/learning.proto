@@ -25,12 +25,13 @@ service LearningService {
   rpc SetEndDate(SetEndDateRequest) returns (SetEndDateResponse);
   // KeepCourse answers the diagnostic report by keeping the current course.
   rpc KeepCourse(KeepCourseRequest) returns (KeepCourseResponse);
-  // GetDashboard returns the tasks offered in a course now.
+  // GetDashboard returns the tasks offered in a course now. A learner who finished the course is first promoted
+  // into the course that follows on their route, and the dashboard is that course's.
   rpc GetDashboard(GetDashboardRequest) returns (GetDashboardResponse);
   // GetCourseProgress returns the learner's status on every topic of a course.
   rpc GetCourseProgress(GetCourseProgressRequest) returns (GetCourseProgressResponse);
   // ListCourseProgress returns the course sequence of the current course, unit by unit: up to three courses the learner
-  // took before it, oldest first, the current course, then up to three that follow it.
+  // took before it, oldest first, the current course, then up to three that follow it on their route.
   rpc ListCourseProgress(ListCourseProgressRequest) returns (ListCourseProgressResponse);
   // StartTask starts one of the offered tasks, or resumes the active session.
   rpc StartTask(StartTaskRequest) returns (StartTaskResponse);
@@ -200,10 +201,10 @@ message GetDashboardResponse {
   double pace = 9;
   // report is the diagnostic report, until it is answered; unset after a skipped diagnostic.
   optional PlacementReport report = 10;
-  // finished tells that every topic of the course is learned.
+  // finished tells that every topic of the course is learned and no course follows it:
+  // a learner who finishes a course is otherwise promoted into the next on their route.
   bool finished = 11;
-  // next_courses are the courses that build on this one, in catalog order.
-  repeated string next_courses = 12;
+  reserved 12;
   // can_decide tells whether the caller is the learner's supervisor, who
   // changes the course and sets the goals and the end date.
   bool can_decide = 13;
@@ -220,6 +221,9 @@ message GetDashboardResponse {
   string start_earlier = 18;
   // essays are the learner's essays being judged, then those judged in the last week, newest first.
   repeated Essay essays = 19;
+  // promoted_from is the course whose end promoted the learner into this one, until they
+  // start a task in it; empty otherwise.
+  string promoted_from = 20;
 }
 
 // Essay is an essay the learner submitted, with its verdict once a model has judged it.
@@ -320,6 +324,8 @@ message ListCourseProgressRequest {
 message ListCourseProgressResponse {
   repeated CourseUnits courses = 1;
   string current_course_id = 2;
+  // sequence_title names the route the learner follows through the courses; unset off every route.
+  optional ga.common.v1.Text sequence_title = 3;
 }
 
 // CourseUnits is how far a learner is in a course and in each of its units.

@@ -156,7 +156,7 @@ export function Learner(props: { learnerId: string }) {
                                       <>
                                         <PlacementReport dash={d()} learnerId={props.learnerId} onAnswered={() => data.refetch()} />
                                         <StartEarlier dash={d()} learnerId={props.learnerId} onChosen={() => data.refetch()} />
-                                        <CourseDone dash={d()} learnerId={props.learnerId} onChosen={() => data.refetch()} />
+                                        <CourseDone dash={d()} />
                                       </>
                                     )}
                                   </If>

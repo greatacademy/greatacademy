@@ -474,6 +474,7 @@ export function CourseBar(props: { stats: CourseStats | undefined; courseId: str
           <Loaded rpc={sequence} skeleton={<Skeleton rows={2} />}>
             {(data) => (
               <View style={{ gap: 12 }}>
+                <If when={data().sequenceTitle}>{(title) => <Muted>{m().sequence.route(tx(title()))}</Muted>}</If>
                 <If when={data().courses.length > 1}>
                   <CourseSequence
                     courses={data().courses}

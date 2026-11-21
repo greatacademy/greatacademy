@@ -1,4 +1,4 @@
-import type { CourseDef, Text } from "@ga/content";
+import type { CourseDef, SequenceDef, Text } from "@ga/content";
 import { t } from "@ga/content";
 
 /** shelves group the courses by who they are for, from the youngest learner to the most advanced. */
@@ -62,6 +62,7 @@ const shelves: readonly { readonly title: Text; readonly courses: readonly strin
  * buildsOn names, for each course, the courses it follows on from, nearest
  * first ([Content §6](../../../docs/content.md#6-courses)). Alternatives such
  * as the traditional and the integrated sequence are listed side by side.
+ * Where Math Academy offers the course, these are its prerequisites.
  */
 const buildsOn: Readonly<Record<string, readonly string[]>> = {
   "2nd-grade-math": ["1st-grade-math"],
@@ -72,44 +73,106 @@ const buildsOn: Readonly<Record<string, readonly string[]>> = {
   "7th-grade-math": ["6th-grade-math"],
   "8th-grade-math": ["7th-grade-math"],
   "algebra-foundations": ["6th-grade-math"],
-  prealgebra: ["6th-grade-math", "algebra-foundations"],
-  "algebra-i": ["prealgebra", "8th-grade-math"],
+  prealgebra: ["5th-grade-math"],
+  "algebra-i": ["prealgebra", "8th-grade-math", "algebra-foundations"],
   geometry: ["algebra-i"],
-  "algebra-ii": ["geometry", "algebra-i"],
-  precalculus: ["algebra-ii", "integrated-math-iii", "integrated-math-iii-honors"],
+  "algebra-ii": ["geometry"],
+  precalculus: ["algebra-ii", "integrated-math-iii"],
   "integrated-math-i": ["prealgebra", "8th-grade-math"],
   "integrated-math-ii": ["integrated-math-i"],
   "integrated-math-iii": ["integrated-math-ii"],
   "integrated-math-i-honors": ["prealgebra", "8th-grade-math"],
   "integrated-math-ii-honors": ["integrated-math-i-honors"],
   "integrated-math-iii-honors": ["integrated-math-ii-honors"],
-  "sat-math-fundamentals": ["algebra-i", "integrated-math-i"],
-  "sat-math-prep": ["sat-math-fundamentals", "algebra-ii"],
-  "act-math-fundamentals": ["algebra-i", "integrated-math-i"],
-  "act-math-prep": ["act-math-fundamentals", "algebra-ii"],
-  "ap-calculus-ab": ["precalculus"],
-  "ap-calculus-bc": ["precalculus"],
-  "mathematical-foundations-i": ["6th-grade-math"],
+  "sat-math-fundamentals": ["algebra-ii", "integrated-math-ii", "integrated-math-ii-honors"],
+  "sat-math-prep": ["sat-math-fundamentals"],
+  "act-math-fundamentals": ["precalculus", "integrated-math-iii-honors"],
+  "act-math-prep": ["act-math-fundamentals"],
+  "ap-calculus-ab": ["precalculus", "integrated-math-iii-honors"],
+  "ap-calculus-bc": ["precalculus", "integrated-math-iii-honors"],
   "mathematical-foundations-ii": ["mathematical-foundations-i"],
   "mathematical-foundations-iii": ["mathematical-foundations-ii"],
-  "calculus-i": ["precalculus", "mathematical-foundations-ii"],
+  "calculus-i": ["precalculus", "integrated-math-iii-honors"],
   "calculus-ii": ["calculus-i", "ap-calculus-ab"],
-  "multivariable-calculus": ["calculus-ii", "ap-calculus-bc", "mathematical-foundations-iii"],
-  "linear-algebra": ["precalculus", "mathematical-foundations-iii"],
-  "differential-equations": ["calculus-ii", "ap-calculus-bc", "mathematical-foundations-iii"],
-  "methods-of-proof": ["precalculus", "mathematical-foundations-iii"],
+  "linear-algebra": ["calculus-i", "ap-calculus-bc", "mathematical-foundations-iii"],
+  "multivariable-calculus": ["linear-algebra"],
+  "methods-of-proof": ["calculus-i", "ap-calculus-bc", "mathematical-foundations-iii"],
+  "differential-equations": ["multivariable-calculus"],
   "discrete-mathematics": ["methods-of-proof"],
-  "probability-and-statistics": ["multivariable-calculus", "linear-algebra"],
-  "mathematics-for-machine-learning": ["linear-algebra", "multivariable-calculus"],
+  "probability-and-statistics": ["multivariable-calculus"],
+  "mathematics-for-machine-learning": ["calculus-ii", "ap-calculus-bc", "mathematical-foundations-iii"],
+  "mathematical-methods-for-the-physical-sciences-i": ["calculus-ii", "ap-calculus-bc", "mathematical-foundations-iii"],
+  "mathematical-methods-for-the-physical-sciences-ii": ["mathematical-methods-for-the-physical-sciences-i"],
   "abstract-algebra": ["methods-of-proof", "linear-algebra"],
   "number-theory": ["methods-of-proof"],
   "real-analysis": ["methods-of-proof", "calculus-ii"],
   "complex-analysis": ["real-analysis", "multivariable-calculus"],
   "linear-programming": ["linear-algebra"],
   "partial-differential-equations": ["differential-equations", "multivariable-calculus"],
-  "mathematical-methods-for-the-physical-sciences-i": ["calculus-ii", "ap-calculus-bc", "mathematical-foundations-iii"],
-  "mathematical-methods-for-the-physical-sciences-ii": ["mathematical-methods-for-the-physical-sciences-i"],
 };
+
+/** university continues every route that reaches calculus, as Math Academy's do. */
+const university = ["linear-algebra", "multivariable-calculus", "differential-equations"];
+
+/**
+ * mathSequences are the routes through the courses
+ * ([Content §6](../../../docs/content.md#6-courses)): the three high-school
+ * sequences, each from the first grade, the grade-by-grade middle school, the
+ * foundations for adults and the two exams. A learner follows the one their
+ * courses lie on and moves on along it on finishing a course.
+ */
+export const mathSequences: readonly SequenceDef[] = [
+  {
+    id: "integrated-honors",
+    title: t("Integrated Math (Honors)", "综合数学（荣誉）"),
+    courses: [
+      ...grades(1, 5),
+      "prealgebra",
+      "integrated-math-i-honors",
+      "integrated-math-ii-honors",
+      "integrated-math-iii-honors",
+      "ap-calculus-bc",
+      ...university,
+    ],
+  },
+  {
+    id: "integrated",
+    title: t("Integrated Math", "综合数学"),
+    courses: [
+      ...grades(1, 5),
+      "prealgebra",
+      "integrated-math-i",
+      "integrated-math-ii",
+      "integrated-math-iii",
+      "precalculus",
+      "ap-calculus-bc",
+      ...university,
+    ],
+  },
+  {
+    id: "traditional",
+    title: t("Traditional Math", "传统数学"),
+    courses: [...grades(1, 5), "prealgebra", "algebra-i", "geometry", "algebra-ii", "precalculus", "ap-calculus-bc", ...university],
+  },
+  {
+    id: "grade-by-grade",
+    title: t("Grade by Grade", "按年级"),
+    courses: [...grades(1, 8), "algebra-i", "geometry", "algebra-ii", "precalculus", "ap-calculus-bc", ...university],
+  },
+  {
+    id: "mathematical-foundations",
+    title: t("Mathematical Foundations", "数学基础"),
+    courses: ["mathematical-foundations-i", "mathematical-foundations-ii", "mathematical-foundations-iii", ...university],
+  },
+  { id: "sat", title: t("SAT", "SAT"), courses: ["sat-math-fundamentals", "sat-math-prep"] },
+  { id: "act", title: t("ACT", "ACT"), courses: ["act-math-fundamentals", "act-math-prep"] },
+];
+
+/** grades lists the grade courses from `from` to `to`. */
+function grades(from: number, to: number): string[] {
+  const ordinal = (n: number) => `${n}${n === 1 ? "st" : n === 2 ? "nd" : n === 3 ? "rd" : "th"}`;
+  return Array.from({ length: to - from + 1 }, (_, i) => `${ordinal(from + i)}-grade-math`);
+}
 
 /**
  * onShelves puts each course on its shelf, with the courses it builds on, and

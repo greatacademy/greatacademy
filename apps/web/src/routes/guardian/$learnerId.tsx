@@ -10,7 +10,7 @@ import { LearnerPrivacy } from "../../components/LearnerPrivacy.tsx";
 import { ActiveLine, signText } from "../../components/LearnerStatus.tsx";
 import { LoadError } from "../../components/LoadError.tsx";
 import { Markdown } from "../../components/Markdown.tsx";
-import { CourseDone, PlacementReport, StartEarlier } from "../../components/PlacementReport.tsx";
+import { CourseDone, PlacementReport, StartEarlier, usePromotion } from "../../components/PlacementReport.tsx";
 import { ForecastCard, GoalsCard, StartOverCard } from "../../components/SubjectDecisions.tsx";
 import { legendCounts, TopicLegend, TopicMap } from "../../components/TopicMap.tsx";
 import { Button, buttonClass, Card, Spinner } from "../../components/ui.tsx";
@@ -174,12 +174,13 @@ function useGuardedDashboard(learnerId: string, courseId: string) {
 /** GuardedReport shows the learner's diagnostic report or finished course, for the guardian to answer. */
 function GuardedReport({ learnerId, courseId }: { learnerId: string; courseId: string }) {
   const dash = useGuardedDashboard(learnerId, courseId);
-  if (!dash.data) return null;
+  const moved = usePromotion(dash.data, courseId);
+  if (!dash.data || moved) return null;
   return (
     <>
       <PlacementReport d={dash.data} learnerId={learnerId} />
       <StartEarlier d={dash.data} learnerId={learnerId} />
-      <CourseDone d={dash.data} learnerId={learnerId} />
+      <CourseDone d={dash.data} />
     </>
   );
 }

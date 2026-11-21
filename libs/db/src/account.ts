@@ -38,14 +38,21 @@ export interface SubjectSettings {
   readonly goalsPaused: boolean;
   /** endDate is the day the current course should be finished by, "YYYY-MM-DD", or null. */
   readonly endDate: string | null;
+  /** targetCourseId is the course the learner set out to take before moving back to an earlier one, or null. */
+  readonly targetCourseId: string | null;
 }
 
-const noSubjectSettings: SubjectSettings = { goals: null, goalsPaused: false, endDate: null };
+const noSubjectSettings: SubjectSettings = { goals: null, goalsPaused: false, endDate: null, targetCourseId: null };
 
 /** subjectSettings reads a learner's settings of a subject. */
 export async function subjectSettings(db: Db, learnerId: string, subjectId: string): Promise<SubjectSettings> {
   const [row] = await db
-    .select({ goals: learnerSubject.goals, goalsPaused: learnerSubject.goalsPaused, endDate: learnerSubject.endDate })
+    .select({
+      goals: learnerSubject.goals,
+      goalsPaused: learnerSubject.goalsPaused,
+      endDate: learnerSubject.endDate,
+      targetCourseId: learnerSubject.targetCourseId,
+    })
     .from(learnerSubject)
     .where(and(eq(learnerSubject.learnerId, learnerId), eq(learnerSubject.subjectId, subjectId)));
   return row ?? noSubjectSettings;
@@ -59,6 +66,7 @@ export async function allSubjectSettings(db: Db, learnerId: string): Promise<Map
       goals: learnerSubject.goals,
       goalsPaused: learnerSubject.goalsPaused,
       endDate: learnerSubject.endDate,
+      targetCourseId: learnerSubject.targetCourseId,
     })
     .from(learnerSubject)
     .where(eq(learnerSubject.learnerId, learnerId));

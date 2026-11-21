@@ -10,7 +10,7 @@ import { ConversationsCard } from "./Conversations.tsx";
 import { CourseBar } from "./CourseBar.tsx";
 import { LoadError } from "./LoadError.tsx";
 import { Markdown } from "./Markdown.tsx";
-import { CourseDone, PlacementReport, StartEarlier } from "./PlacementReport.tsx";
+import { CourseDone, PlacementReport, Promoted, StartEarlier, usePromotion } from "./PlacementReport.tsx";
 import { ForecastCard, GoalsCard } from "./SubjectDecisions.tsx";
 import { TaskCard } from "./TaskCard.tsx";
 import { Button, Card, ErrorNote, Spinner } from "./ui.tsx";
@@ -187,8 +187,9 @@ export function LearnDashboard({ courseId, subjectId }: { courseId: string; subj
     mutationFn: () => learning.skipDiagnostic({ courseId }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["dashboard", courseId] }),
   });
+  const moved = usePromotion(dash.data, courseId);
 
-  if (!session || dash.isPending) return <Spinner label={m.loading} />;
+  if (!session || dash.isPending || moved) return <Spinner label={m.loading} />;
   if (dash.isError) return <LoadError error={dash.error} onRetry={() => dash.refetch()} />;
   const d = dash.data;
   const stats = d.stats!;
@@ -210,6 +211,7 @@ export function LearnDashboard({ courseId, subjectId }: { courseId: string; subj
 
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
         <div className="min-w-0 space-y-6">
+          <Promoted d={d} />
           <PlacementReport d={d} />
           <StartEarlier d={d} />
           <CourseDone d={d} />

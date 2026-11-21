@@ -1,5 +1,5 @@
 import type { EngineEvent, LearnerState } from "@ga/engine";
-import { and, asc, desc, eq, gte, inArray, isNull, ne, or, sql, sum } from "drizzle-orm";
+import { and, asc, desc, eq, gte, inArray, isNotNull, isNull, ne, or, sql, sum } from "drizzle-orm";
 
 import type { Db } from "./db.ts";
 import { answer, enrollment, event, learner, learnerState, type SessionStatus, taskSession } from "./schema/learning.ts";
@@ -17,8 +17,17 @@ export async function learnerFor(db: Db, userId: string): Promise<string> {
  * chooseCourse makes a course the learner's current course of its subject at
  * `at`: the one it replaces ends, and a course taken before becomes current
  * again with its history. Choosing the current course changes nothing.
+ * `promotedFrom` names the course whose end made it current, when finishing
+ * that course did.
  */
-export async function chooseCourse(db: Db, learnerId: string, subjectId: string, courseId: string, at: Date): Promise<void> {
+export async function chooseCourse(
+  db: Db,
+  learnerId: string,
+  subjectId: string,
+  courseId: string,
+  at: Date,
+  promotedFrom?: string,
+): Promise<void> {
   await db.transaction(async (tx) => {
     await tx
       .update(enrollment)
@@ -33,11 +42,12 @@ export async function chooseCourse(db: Db, learnerId: string, subjectId: string,
       );
     await tx
       .insert(enrollment)
-      .values({ learnerId, subjectId, courseId, createdAt: at, chosenAt: at })
+      .values({ learnerId, subjectId, courseId, createdAt: at, chosenAt: at, promotedFrom: promotedFrom ?? null })
       .onConflictDoUpdate({
         target: [enrollment.learnerId, enrollment.courseId],
         set: {
           chosenAt: sql`case when ${enrollment.endedAt} is null then ${enrollment.chosenAt} else excluded.chosen_at end`,
+          promotedFrom: sql`case when ${enrollment.endedAt} is null then ${enrollment.promotedFrom} else excluded.promoted_from end`,
           endedAt: null,
         },
       });
@@ -50,12 +60,19 @@ export interface CurrentCourse {
   readonly courseId: string;
   /** decided tells that its diagnostic report was answered: the course kept or another taken. */
   readonly decided: boolean;
+  /** promotedFrom is the course finishing which made this one current, until the learner starts a task in it; else empty. */
+  readonly promotedFrom: string;
 }
 
 /** currentCourses lists a learner's current courses, one per subject, the one most recently chosen or worked on first. */
 export async function currentCourses(db: Db, learnerId: string): Promise<CurrentCourse[]> {
   const rows = await db
-    .select({ subjectId: enrollment.subjectId, courseId: enrollment.courseId, decidedAt: enrollment.decidedAt })
+    .select({
+      subjectId: enrollment.subjectId,
+      courseId: enrollment.courseId,
+      decidedAt: enrollment.decidedAt,
+      promotedFrom: enrollment.promotedFrom,
+    })
     .from(enrollment)
     .where(and(eq(enrollment.learnerId, learnerId), isNull(enrollment.endedAt)))
     .orderBy(
@@ -67,7 +84,12 @@ export async function currentCourses(db: Db, learnerId: string): Promise<Current
       ),
       asc(enrollment.courseId),
     );
-  return rows.map((r) => ({ subjectId: r.subjectId, courseId: r.courseId, decided: r.decidedAt !== null }));
+  return rows.map((r) => ({
+    subjectId: r.subjectId,
+    courseId: r.courseId,
+    decided: r.decidedAt !== null,
+    promotedFrom: r.promotedFrom ?? "",
+  }));
 }
 
 /** subjectCourses lists the courses a learner has taken in a subject: the current one first, then the others, the one left last first. */
@@ -83,6 +105,14 @@ export async function subjectCourses(db: Db, learnerId: string, subjectId: strin
 /** currentCourse gives a learner's current course if it is `courseId`. */
 export async function currentCourse(db: Db, learnerId: string, courseId: string): Promise<CurrentCourse | undefined> {
   return (await currentCourses(db, learnerId)).find((c) => c.courseId === courseId);
+}
+
+/** settlePromotion forgets which course a learner's course was promoted from, once they start working in it. */
+export async function settlePromotion(db: Db, learnerId: string, courseId: string): Promise<void> {
+  await db
+    .update(enrollment)
+    .set({ promotedFrom: null })
+    .where(and(eq(enrollment.learnerId, learnerId), eq(enrollment.courseId, courseId), isNotNull(enrollment.promotedFrom)));
 }
 
 /** decidePlacement records that the diagnostic report of a learner's course was answered. */

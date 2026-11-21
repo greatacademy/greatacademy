@@ -134,6 +134,13 @@
       "when": 1794809925162,
       "tag": "0018_speaking",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1795248252660,
+      "tag": "0019_course-sequences",
+      "breakpoints": true
     }
   ]
 }

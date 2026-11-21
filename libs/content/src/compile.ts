@@ -448,6 +448,23 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
   const cycle = courseCycle(def.courses);
   if (cycle) error(`subject ${def.id}`, `courses build on each other: ${cycle.join(" → ")}`);
 
+  const sequenceIds = new Set<string>();
+  for (const sequence of def.sequences ?? []) {
+    const path = `sequence ${sequence.id}`;
+    if (!idPattern.test(sequence.id)) error(path, "id must be kebab case");
+    if (sequenceIds.has(sequence.id)) error(path, "duplicate sequence id");
+    sequenceIds.add(sequence.id);
+    text(`${path} › title`, sequence.title);
+    if (sequence.courses.length < 2) error(path, "a sequence has at least two courses");
+    if (new Set(sequence.courses).size !== sequence.courses.length) error(path, "a sequence lists a course twice");
+    sequence.courses.forEach((id, i) => {
+      const c = def.courses.find((d) => d.id === id);
+      const before = sequence.courses[i - 1];
+      if (!c) error(path, `unknown course ${id}`);
+      else if (before !== undefined && !(c.buildsOn ?? []).includes(before)) error(path, `course ${id} does not build on ${before}`);
+    });
+  }
+
   if (issues.some((i) => i.severity === "error")) throw new CompileError(issues);
 
   const dependents = new Map<string, string[]>(order.order.map((id) => [id, []]));

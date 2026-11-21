@@ -65,6 +65,12 @@ export const learnerSubject = pgTable(
     goalsPaused: boolean("goals_paused").notNull().default(false),
     /** endDate is the day the current course should be finished by, "YYYY-MM-DD"; null for none. Changing course clears it. */
     endDate: date("end_date", { mode: "string" }),
+    /**
+     * targetCourseId is the course the learner set out to take when they moved
+     * back to an earlier one to fill gaps; finishing the courses before it
+     * leads back to it. Null for none.
+     */
+    targetCourseId: text("target_course_id"),
   },
   (t) => [primaryKey({ columns: [t.learnerId, t.subjectId] })],
 );
@@ -89,6 +95,8 @@ export const enrollment = pgTable(
     endedAt: at("ended_at"),
     /** decidedAt is when whoever chooses the course kept it or took another after its diagnostic report; null before. */
     decidedAt: at("decided_at"),
+    /** promotedFrom is the course whose end made this one current, when finishing it did; null when the course was chosen. */
+    promotedFrom: text("promoted_from"),
   },
   (t) => [
     primaryKey({ columns: [t.learnerId, t.courseId] }),

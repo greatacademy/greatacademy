@@ -128,6 +128,24 @@ describe("compileSubject", () => {
       subject([topic("a")], [course(["a"], { buildsOn: ["d"] }), course(["a"], { id: "d", buildsOn: ["c"] })]),
       "courses build on each other",
     ],
+    [
+      "sequences of unknown courses",
+      { ...subject([topic("a")], [course(["a"])]), sequences: [{ id: "s", title: same("S"), courses: ["c", "z"] }] },
+      "unknown course z",
+    ],
+    [
+      "sequences against what courses build on",
+      {
+        ...subject([topic("a")], [course(["a"]), course(["a"], { id: "d" })]),
+        sequences: [{ id: "s", title: same("S"), courses: ["c", "d"] }],
+      },
+      "course d does not build on c",
+    ],
+    [
+      "sequences of one course",
+      { ...subject([topic("a")], [course(["a"])]), sequences: [{ id: "s", title: same("S"), courses: ["c"] }] },
+      "at least two courses",
+    ],
   ])("rejects %s", (_, def, message) => {
     expect(errors(def).join("\n")).toContain(message);
   });

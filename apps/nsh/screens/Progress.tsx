@@ -1,6 +1,6 @@
 import type { GetDashboardResponse } from "@ga/proto/learning/v1/learning_pb";
 import { computed, signal, Text, View, windowSize } from "nsh";
-import { m } from "../lib/i18n.ts";
+import { m, tx } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { markChanged, query } from "../lib/query.ts";
 import { courseTitle, type Place, usePlace } from "../lib/subject.tsx";
@@ -87,7 +87,11 @@ export function Progress(props: { visible: () => boolean }) {
                           <View style={{ flex: 1, gap: 12, minWidth: 0 }}>
                             <If when={(sequence()?.courses.length ?? 0) > 1}>
                               <View style={{ gap: 8 }}>
-                                <Muted>{m().sequence.label}</Muted>
+                                <Muted>
+                                  {sequence()?.sequenceTitle
+                                    ? `${m().sequence.label} · ${m().sequence.route(tx(sequence()?.sequenceTitle))}`
+                                    : m().sequence.label}
+                                </Muted>
                                 <CourseSequence
                                   courses={sequence()?.courses ?? []}
                                   currentId={d().courseId}

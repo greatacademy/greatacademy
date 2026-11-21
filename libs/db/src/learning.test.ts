@@ -16,6 +16,7 @@ import {
   learnerFor,
   loadState,
   recordAnswer,
+  settlePromotion,
   subjectCourses,
   totalXp,
   updateSession,
@@ -90,21 +91,36 @@ describe("learners and enrollments", () => {
     const at = (days: number) => new Date(Date.UTC(2100, 0, days));
     await chooseCourse(db, l, "test", "c1", at(1));
     await chooseCourse(db, l, "test", "c1", at(2));
-    expect(await currentCourses(db, l)).toEqual([{ subjectId: "test", courseId: "c1", decided: false }]);
+    expect(await currentCourses(db, l)).toEqual([{ subjectId: "test", courseId: "c1", decided: false, promotedFrom: "" }]);
     await decidePlacement(db, l, "c1", at(3));
     await chooseCourse(db, l, "test", "c2", at(4));
     await chooseCourse(db, l, "other", "o1", at(5));
     expect(await currentCourses(db, l)).toEqual([
-      { subjectId: "other", courseId: "o1", decided: false },
-      { subjectId: "test", courseId: "c2", decided: false },
+      { subjectId: "other", courseId: "o1", decided: false, promotedFrom: "" },
+      { subjectId: "test", courseId: "c2", decided: false, promotedFrom: "" },
     ]);
     expect(await currentCourse(db, l, "c1")).toBeUndefined();
     await chooseCourse(db, l, "test", "c1", at(6));
-    expect(await currentCourse(db, l, "c1")).toEqual({ subjectId: "test", courseId: "c1", decided: true });
+    expect(await currentCourse(db, l, "c1")).toEqual({ subjectId: "test", courseId: "c1", decided: true, promotedFrom: "" });
     expect(await currentCourse(db, l, "c2")).toBeUndefined();
     expect(await subjectCourses(db, l, "test")).toEqual(["c1", "c2"]);
     await chooseCourse(db, l, "test", "c3", at(7));
     expect(await subjectCourses(db, l, "test")).toEqual(["c3", "c1", "c2"]);
+  });
+
+  it("remembers the course a promotion came from until work starts", async () => {
+    const l = await learnerFor(db, "u1");
+    const at = (days: number) => new Date(Date.UTC(2100, 0, days));
+    await chooseCourse(db, l, "test", "c1", at(1));
+    await chooseCourse(db, l, "test", "c2", at(2), "c1");
+    expect((await currentCourse(db, l, "c2"))?.promotedFrom).toBe("c1");
+    await chooseCourse(db, l, "test", "c2", at(3));
+    expect((await currentCourse(db, l, "c2"))?.promotedFrom).toBe("c1");
+    await settlePromotion(db, l, "c2");
+    expect((await currentCourse(db, l, "c2"))?.promotedFrom).toBe("");
+    await chooseCourse(db, l, "test", "c1", at(4));
+    await chooseCourse(db, l, "test", "c2", at(5));
+    expect((await currentCourse(db, l, "c2"))?.promotedFrom).toBe("");
   });
 
   it("lists first the course most recently worked on", async () => {

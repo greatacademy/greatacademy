@@ -2,6 +2,7 @@ import type { GetDashboardResponse } from "@ga/proto/learning/v1/learning_pb";
 import { signal, Text, View } from "nsh";
 import { dayText } from "../lib/dates.ts";
 import { errorText, language, m, tx } from "../lib/i18n.ts";
+import { nav } from "../lib/nav.ts";
 import { markChanged, query } from "../lib/query.ts";
 import { catalog, learning } from "../lib/rpc.ts";
 import { Action, Card, colors, ErrorNote, Muted, Quiet } from "../lib/ui.tsx";
@@ -119,25 +120,32 @@ export function StartEarlier(props: { dash: GetDashboardResponse; learnerId?: st
   );
 }
 
-/** CourseDone congratulates on a finished course and offers the courses that follow it. */
-export function CourseDone(props: { dash: GetDashboardResponse; learnerId?: string; onChosen: () => void }) {
-  const title = useCourseTitle();
-  const choice = useCourseChoice(props.learnerId, props.onChosen);
+/**
+ * CourseDone congratulates on a finished course that no course follows on the learner's route, and points to the
+ * catalog for another, as on the web.
+ */
+export function CourseDone(props: { dash: GetDashboardResponse }) {
   return (
     <If when={props.dash.finished}>
       <Card>
         <Text style={{ color: colors().good, fontSize: 17, fontWeight: "600" }}>{m().courseDone}</Text>
-        <If when={props.dash.nextCourses.length > 0}>
-          <Muted>{m().courseDoneBody}</Muted>
-          <If when={choice.error()}>
-            <ErrorNote message={choice.error()} />
-          </If>
-          <If when={props.dash.canDecide} else={<Muted>{m().courseDoneAsk}</Muted>}>
-            <Each of={props.dash.nextCourses}>
-              {(id) => <Action label={title(id())} disabled={choice.busy()} onPress={() => void choice.choose(id())} />}
-            </Each>
-          </If>
+        <Muted>{m().courseDoneBody}</Muted>
+        <If when={props.dash.canDecide} else={<Muted>{m().courseDoneAsk}</Muted>}>
+          <Quiet label={m().courseDoneBrowse} onPress={() => nav.push({ name: "courses" })} />
         </If>
+      </Card>
+    </If>
+  );
+}
+
+/** Promoted tells a learner who finished a course that they moved on to the next on their route, until they start work in it. */
+export function Promoted(props: { dash: GetDashboardResponse }) {
+  const title = useCourseTitle();
+  return (
+    <If when={props.dash.promotedFrom}>
+      <Card>
+        <Text style={{ color: colors().good, fontSize: 17, fontWeight: "600" }}>{m().promotedTitle(title(props.dash.courseId))}</Text>
+        <Text style={{ color: colors().ink, fontSize: 15 }}>{m().promotedBody(title(props.dash.promotedFrom))}</Text>
       </Card>
     </If>
   );

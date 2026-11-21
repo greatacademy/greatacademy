@@ -1,4 +1,4 @@
-import type { CompiledCourse } from "@ga/content";
+import type { CompiledCourse, SequenceDef } from "@ga/content";
 
 import type { Placement } from "./diagnostic.ts";
 import type { LearnerState } from "./state.ts";
@@ -19,10 +19,12 @@ export interface CourseIndex {
   /** teaching maps a topic to the courses that list it, in catalog order. */
   readonly teaching: ReadonlyMap<string, readonly string[]>;
   readonly courses: ReadonlyMap<string, CompiledCourse>;
+  /** sequences are the routes through the courses, in the order the subject lists them. */
+  readonly sequences: readonly SequenceDef[];
 }
 
-/** courseIndex indexes a subject's courses, given in catalog order. */
-export function courseIndex(courses: ReadonlyMap<string, CompiledCourse>): CourseIndex {
+/** courseIndex indexes a subject's courses, given in catalog order, and the routes through them. */
+export function courseIndex(courses: ReadonlyMap<string, CompiledCourse>, sequences: readonly SequenceDef[] = []): CourseIndex {
   const order = [...courses.keys()];
   const earlier = new Map<string, string[]>();
   for (const id of order) {
@@ -48,7 +50,77 @@ export function courseIndex(courses: ReadonlyMap<string, CompiledCourse>): Cours
       else teaching.set(topic, [id]);
     }
   }
-  return { order, earlier, next, teaching, courses };
+  return { order, earlier, next, teaching, courses, sequences };
+}
+
+/**
+ * courseRoute picks the sequence a learner of `course` follows
+ * (docs/learning-engine.md §9): among the sequences through the course, the
+ * one that leads on to the course they set out to take, `target`, if any;
+ * else the one that lists most of the courses they took, `taken`; else the
+ * first. A course on no sequence has none.
+ */
+export function courseRoute(index: CourseIndex, course: string, taken: readonly string[], target?: string): SequenceDef | undefined {
+  const through = index.sequences.filter((s) => s.courses.includes(course));
+  if (target) {
+    const leading = through.find((s) => s.courses.indexOf(target) > s.courses.indexOf(course));
+    if (leading) return leading;
+  }
+  let best: SequenceDef | undefined;
+  let most = -1;
+  for (const s of through) {
+    const count = taken.filter((id) => s.courses.includes(id)).length;
+    if (count > most) {
+      best = s;
+      most = count;
+    }
+  }
+  return best;
+}
+
+/**
+ * followingCourse names the course a learner moves on to from `course`: the
+ * next on their route, else the first course that builds on it.
+ */
+export function followingCourse(index: CourseIndex, route: SequenceDef | undefined, course: string): string | undefined {
+  const at = route?.courses.indexOf(course) ?? -1;
+  if (route && at >= 0 && at + 1 < route.courses.length) return route.courses[at + 1];
+  return index.next.get(course)?.[0];
+}
+
+/**
+ * nextCourse names the course a learner who finishes `course` is promoted
+ * into (docs/learning-engine.md §9): the course that follows on their route,
+ * unless they moved back from `target` to fill gaps and that course does not
+ * lead back to it, when it is `target` itself.
+ */
+export function nextCourse(index: CourseIndex, route: SequenceDef | undefined, course: string, target?: string): string | undefined {
+  const following = followingCourse(index, route, course);
+  const before = target && target !== course ? index.earlier.get(target) : undefined;
+  if (!before?.includes(course)) return following;
+  return following && (following === target || before.includes(following)) ? following : target;
+}
+
+/**
+ * coursesAfter lists up to `count` courses a learner takes after `course`,
+ * each the one they are promoted into from the one before, leaving out those
+ * in `skip`. Each course builds on the one before it, so the walk ends.
+ */
+export function coursesAfter(
+  index: CourseIndex,
+  route: SequenceDef | undefined,
+  course: string,
+  count: number,
+  skip: readonly string[] = [],
+  target?: string,
+): string[] {
+  const after: string[] = [];
+  let aim = target;
+  for (let id = nextCourse(index, route, course, aim); id && after.length < count; id = nextCourse(index, route, id, aim)) {
+    if (id === aim) aim = undefined;
+    if (id !== course && !skip.includes(id) && !after.includes(id)) after.push(id);
+  }
+  return after;
 }
 
 /**
@@ -74,13 +146,20 @@ export type PlacementAdvice =
 
 /**
  * placementAdvice recommends where a learner placed by a course's diagnostic
- * should start (docs/learning-engine.md §9). A diagnostic that asked nothing
+ * should start (docs/learning-engine.md §9); the course after is the one that
+ * follows on their route. A diagnostic that asked nothing
  * (one skipped) recommends nothing. Gaps count only where the answers showed
  * them: a topic answered wrongly and everything that depends on it, since
  * placement counts unresolved topics as not known to err on the side of
  * teaching, which says nothing about where the learner stands.
  */
-export function placementAdvice(pl: Planner, index: CourseIndex, state: LearnerState, placement: Placement): PlacementAdvice {
+export function placementAdvice(
+  pl: Planner,
+  index: CourseIndex,
+  state: LearnerState,
+  placement: Placement,
+  route?: SequenceDef,
+): PlacementAdvice {
   if (placement.tested.length === 0 && placement.missed.length === 0) return { kind: "stay" };
   const g = pl.graph;
   const xp = (id: string) => g.graph.topics.get(id)?.xp ?? 0;
@@ -89,7 +168,7 @@ export function placementAdvice(pl: Planner, index: CourseIndex, state: LearnerS
 
   const total = course.topics.reduce((sum, id) => sum + xp(id), 0);
   const known = course.topics.reduce((sum, id) => sum + (isKnown(pl, state, id) ? xp(id) : 0), 0);
-  const after = index.next.get(course.def.id)?.[0];
+  const after = followingCourse(index, route, course.def.id);
   if (after && total > 0 && known >= pl.params.adviceAheadShare * total) return { kind: "later", course: after };
 
   const knownNow = new Set(placement.known);

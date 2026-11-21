@@ -426,4 +426,21 @@ export interface SubjectDef {
   readonly conversations?: readonly ConversationDef[];
   /** strands are the kinds of topic the subject has; when given, every topic names one. */
   readonly strands?: readonly StrandDef[];
+  /**
+   * sequences are the routes through the subject's courses, such as the
+   * traditional and the integrated high-school sequence; a learner follows the
+   * one their courses lie on, and moves on along it on finishing a course.
+   */
+  readonly sequences?: readonly SequenceDef[];
+}
+
+/**
+ * SequenceDef is a route through a subject's courses, in the order they are
+ * taken; each course builds on the one before it.
+ */
+export interface SequenceDef {
+  /** id is unique among the subject's sequences, in kebab case. */
+  readonly id: string;
+  readonly title: Text;
+  readonly courses: readonly string[];
 }

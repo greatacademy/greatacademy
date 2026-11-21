@@ -1,5 +1,5 @@
 import { Code, ConnectError, type HandlerContext, type ServiceImpl } from "@connectrpc/connect";
-import { createRng, type Heard, type Judged, type Problem, type Rng, type Verdict } from "@ga/content";
+import { createRng, type Heard, type Judged, type Problem, type Rng, type SequenceDef, type Verdict } from "@ga/content";
 import {
   activeSession,
   chooseCourse,
@@ -20,6 +20,7 @@ import {
   placedEvent,
   reopenPlacement,
   type SessionRow,
+  settlePromotion,
   speakingOffUntil,
   subjectCourses,
   subjectSettings,
@@ -28,13 +29,15 @@ import {
 } from "@ga/db";
 import {
   courseFinished,
+  courseRoute,
+  coursesAfter,
   diagnosticCandidates,
   diagnosticDue,
   frontier,
-  isDue,
   isKnown,
   type LearnerState,
   memory,
+  nextCourse,
   nextTasks,
   placementAdvice,
   remainingXp,
@@ -44,7 +47,7 @@ import {
   type Task,
 } from "@ga/engine";
 import { criterionKey } from "@ga/judge";
-import { type LearningService, type Task as TaskMessage, TopicStatus } from "@ga/proto/learning/v1/learning_pb";
+import type { LearningService, Task as TaskMessage } from "@ga/proto/learning/v1/learning_pb";
 
 import { requirePlan } from "./billing.ts";
 import { accessOf, requireStudy, speechRoute, studiedToday } from "./capabilities.ts";
@@ -92,10 +95,11 @@ function placementReport(
   c: CourseEntry,
   s: LearnerState,
   placed: { known: readonly string[]; tested: readonly string[]; missed?: readonly string[] },
+  route: SequenceDef | undefined,
 ) {
   const own = c.course.topics;
   const known = new Set(placed.known);
-  const advice = placementAdvice(c.planner, c.index, s, { known: placed.known, tested: placed.tested, missed: placed.missed ?? [] });
+  const advice = placementAdvice(c.planner, c.index, s, { known: placed.known, tested: placed.tested, missed: placed.missed ?? [] }, route);
   return {
     placed: own.filter((id) => known.has(id)).length,
     total: own.length,
@@ -113,11 +117,13 @@ function foundationsLeft(c: CourseEntry, s: LearnerState): number {
 
 /**
  * startEarlier is the course a learner new to the subject may start with instead: while the diagnostic is due and the
- * course needs more topics of earlier courses than it has of its own, the course it builds on; empty otherwise.
+ * course needs more topics of earlier courses than it has of its own, the course before it on their route, else the
+ * first it builds on; empty otherwise.
  */
-function startEarlier(c: CourseEntry, diagnosed: boolean, foundations: number): string {
+function startEarlier(c: CourseEntry, diagnosed: boolean, foundations: number, route: SequenceDef | undefined): string {
   if (diagnosed || foundations <= c.planner.scope.inCourse.size) return "";
-  return c.course.def.buildsOn?.[0] ?? "";
+  const at = route?.courses.indexOf(c.id) ?? -1;
+  return (at > 0 ? route?.courses[at - 1] : undefined) ?? c.course.def.buildsOn?.[0] ?? "";
 }
 
 /** LearningDeps are the learning service's dependencies besides the request context. */
@@ -245,7 +251,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
     }
     const chosen = await currentCourse(db, learnerId, courseId);
     if (!chosen) throw new ConnectError(`${courseId} is not the current course`, Code.FailedPrecondition);
-    return { db, c, learnerId, guardian, decided: chosen.decided };
+    return { db, c, learnerId, guardian, decided: chosen.decided, promotedFrom: chosen.promotedFrom };
   };
 
   /**
@@ -337,6 +343,99 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
 
   const rng = (): Rng => createRng(deps.seed());
 
+  /**
+   * routeOf finds the route a learner follows from their current course of a subject (docs/learning-engine.md §9),
+   * with the courses they took before it and the course they set out to take, if they moved back from one.
+   */
+  const routeOf = async (db: Db, learnerId: string, c: CourseEntry) => {
+    const taken = (await subjectCourses(db, learnerId, c.subject.def.id)).filter((id) => id !== c.id);
+    const aim = (await subjectSettings(db, learnerId, c.subject.def.id)).targetCourseId;
+    const target = aim && aim !== c.id && c.index.courses.has(aim) ? aim : undefined;
+    return { taken, target, route: courseRoute(c.index, c.id, taken, target) };
+  };
+
+  /** placedReport gives the diagnostic report of a learner's current course while it waits for an answer. */
+  const placedReport = async (db: Db, learnerId: string, c: CourseEntry, s: LearnerState, decided: boolean) => {
+    if (decided || diagnosticDue(c.planner, s)) return undefined;
+    const placed = await placedEvent(db, learnerId, c.subject.def.id, c.id);
+    return placed && (placed.tested.length > 0 || (placed.missed?.length ?? 0) > 0) ? placed : undefined;
+  };
+
+  /**
+   * promote moves a learner who finished their current course on to the course they are promoted into
+   * (docs/learning-engine.md §9) and returns it; it returns undefined when they stay: when no course follows, or while
+   * the course's diagnostic report, which may recommend the next course itself, waits for an answer.
+   */
+  const promote = async (
+    db: Db,
+    learnerId: string,
+    c: CourseEntry,
+    s: LearnerState,
+    now: number,
+    decided: boolean,
+  ): Promise<string | undefined> => {
+    if (!courseFinished(c.planner, s) || (await speakingWaits(db, await course(c.id), learnerId, s, now))) return undefined;
+    if (await placedReport(db, learnerId, c, s, decided)) return undefined;
+    const { route, target } = await routeOf(db, learnerId, c);
+    const next = nextCourse(c.index, route, c.id, target);
+    const entry = next ? await registry.course(next) : undefined;
+    if (!next || !entry || entry.course.def.retired) return undefined;
+    const at = new Date(now);
+    const subjectId = c.subject.def.id;
+    await db.transaction(async (tx) => {
+      await decidePlacement(tx, learnerId, c.id, at);
+      await updateSubjectSettings(tx, learnerId, subjectId, { endDate: null, ...(next === target && { targetCourseId: null }) });
+      await chooseCourse(tx, learnerId, subjectId, next, at, c.id);
+    });
+    return next;
+  };
+
+  /** dashboard is GetDashboard: a learner who finished the course is promoted first, and the dashboard is the next course's. */
+  const dashboard = async (req: { courseId: string; learnerId: string; timeZone: string }, ctx: HandlerContext) => {
+    const { db, c, learnerId, guardian, decided, promotedFrom } = await current(ctx, req.courseId, req.learnerId);
+    const now = deps.now();
+    const waiting = await settleEssays(db, c, learnerId, now);
+    const { state: s } = await state(db, learnerId, c);
+    const promoted = await promote(db, learnerId, c, s, now, decided);
+    if (promoted) return dashboard({ ...req, courseId: promoted }, ctx);
+    const active = await activeSession(db, learnerId, c.id);
+    const essays = await essaySessions(db, learnerId, c.id, essayTopics(c), new Date(now - ESSAY_NOTICE_MS));
+    const run = active?.state as RunState | undefined;
+    const xp = await xpSummary(db, learnerId, now, req.timeZone, c.subject.def.id);
+    const settings = await subjectSettings(db, learnerId, c.subject.def.id);
+    const { route } = await routeOf(db, learnerId, c);
+    const diagnosed = !diagnosticDue(c.planner, s);
+    const placed = await placedReport(db, learnerId, c, s, decided);
+    const report = placed && placementReport(c, s, placed, route);
+    const foundations = foundationsLeft(c, s);
+    return {
+      courseId: c.id,
+      diagnosed,
+      ...(report && { report }),
+      finished: courseFinished(c.planner, s) && !(await speakingWaits(db, await course(c.id), learnerId, s, now)),
+      promotedFrom,
+      canDecide: await canDecide(db, learnerId, guardian),
+      subjectId: c.subject.def.id,
+      goals: { weekdays: [...(settings.goals ?? [])], paused: settings.goalsPaused },
+      endDate: settings.endDate ?? "",
+      foundations,
+      startEarlier: startEarlier(c, diagnosed, foundations, route),
+      tasks: offered(c, s, now, waiting).map((t) => taskMessage(c, t, s)),
+      essays: essays.map((row) => ({
+        sessionId: row.id,
+        title: text(c.subject.topics.get(row.topicId ?? "")?.title ?? { en: "", "zh-CN": "" }),
+        judged: row.status === "completed",
+        passed: (row.state as RunState).result?.passed ?? false,
+      })),
+      ...(active && run && { active: { id: active.id, task: taskMessage(c, runTask(run), s) } }),
+      stats: courseStats(c.planner, c.ctx.params, s, now),
+      xp,
+      xpToQuiz: Math.max(0, c.ctx.params.quizEveryXp - (s.xp - s.xpAtLastQuiz)),
+      remainingXp: remainingXp(c.planner, s),
+      pace: (xp.days ?? []).reduce((a, b) => a + b, 0) / 14,
+    };
+  };
+
   return {
     async getProfile(req, ctx) {
       const { db, userId } = auth(ctx);
@@ -347,8 +446,15 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
         const entry = await registry.course(e.courseId);
         if (!entry) continue;
         // The learner's own view, as on the dashboard: without the topics no route may judge for them.
-        const c = await forLearner(db, entry, learnerId, now);
-        const { state: s } = await state(db, learnerId, c);
+        let c = await forLearner(db, entry, learnerId, now);
+        let { state: s } = await state(db, learnerId, c);
+        // A learner who finished the course is promoted, as the dashboard would, so that the profile names the course.
+        let decided = e.decided;
+        for (let next = await promote(db, learnerId, c, s, now, decided); next; next = await promote(db, learnerId, c, s, now, decided)) {
+          c = await forLearner(db, await course(next), learnerId, now);
+          ({ state: s } = await state(db, learnerId, c));
+          decided = (await currentCourse(db, learnerId, next))?.decided ?? false;
+        }
         list.push({
           courseId: c.id,
           subjectId: e.subjectId,
@@ -371,14 +477,20 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
         throw new ConnectError(`course ${c.id} is retired`, Code.FailedPrecondition);
       if (deps.billing) await requirePlan(db, learnerId, c.subject.def.id, deps.now());
       const at = new Date(deps.now());
+      const subjectId = c.subject.def.id;
       await db.transaction(async (tx) => {
         // Taking another course answers the report of the one replaced, and drops its end date.
-        const replaced = (await currentCourses(tx, learnerId)).find((e) => e.subjectId === c.subject.def.id && e.courseId !== c.id);
+        const replaced = (await currentCourses(tx, learnerId)).find((e) => e.subjectId === subjectId && e.courseId !== c.id);
         if (replaced) {
           await decidePlacement(tx, learnerId, replaced.courseId, at);
-          await updateSubjectSettings(tx, learnerId, c.subject.def.id, { endDate: null });
+          // Moving back to an earlier course keeps the course set out for, to be promoted back into
+          // (docs/learning-engine.md §9): the one set out for before, if still ahead, else the one replaced.
+          const before = (id: string | null) => (id ? c.index.earlier.get(id)?.includes(c.id) : false);
+          const aim = (await subjectSettings(tx, learnerId, subjectId)).targetCourseId;
+          const targetCourseId = before(aim) ? aim : before(replaced.courseId) ? replaced.courseId : null;
+          await updateSubjectSettings(tx, learnerId, subjectId, { endDate: null, targetCourseId });
         }
-        await chooseCourse(tx, learnerId, c.subject.def.id, c.id, at);
+        await chooseCourse(tx, learnerId, subjectId, c.id, at);
       });
       return {};
     },
@@ -404,57 +516,20 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
     },
 
     async getDashboard(req, ctx) {
-      const { db, c, learnerId, guardian, decided } = await current(ctx, req.courseId, req.learnerId);
-      const now = deps.now();
-      const waiting = await settleEssays(db, c, learnerId, now);
-      const { state: s } = await state(db, learnerId, c);
-      const active = await activeSession(db, learnerId, c.id);
-      const essays = await essaySessions(db, learnerId, c.id, essayTopics(c), new Date(now - ESSAY_NOTICE_MS));
-      const run = active?.state as RunState | undefined;
-      const xp = await xpSummary(db, learnerId, now, req.timeZone, c.subject.def.id);
-      const settings = await subjectSettings(db, learnerId, c.subject.def.id);
-      const diagnosed = !diagnosticDue(c.planner, s);
-      const placed = diagnosed && !decided ? await placedEvent(db, learnerId, c.subject.def.id, c.id) : undefined;
-      const report = placed && (placed.tested.length > 0 || (placed.missed?.length ?? 0) > 0) ? placementReport(c, s, placed) : undefined;
-      const foundations = foundationsLeft(c, s);
-      return {
-        courseId: c.id,
-        diagnosed,
-        ...(report && { report }),
-        finished: courseFinished(c.planner, s) && !(await speakingWaits(db, await course(c.id), learnerId, s, now)),
-        nextCourses: [...(c.index.next.get(c.id) ?? [])],
-        canDecide: await canDecide(db, learnerId, guardian),
-        subjectId: c.subject.def.id,
-        goals: { weekdays: [...(settings.goals ?? [])], paused: settings.goalsPaused },
-        endDate: settings.endDate ?? "",
-        foundations,
-        startEarlier: startEarlier(c, diagnosed, foundations),
-        tasks: offered(c, s, now, waiting).map((t) => taskMessage(c, t, s)),
-        essays: essays.map((row) => ({
-          sessionId: row.id,
-          title: text(c.subject.topics.get(row.topicId ?? "")?.title ?? { en: "", "zh-CN": "" }),
-          judged: row.status === "completed",
-          passed: (row.state as RunState).result?.passed ?? false,
-        })),
-        ...(active && run && { active: { id: active.id, task: taskMessage(c, runTask(run), s) } }),
-        stats: courseStats(c.planner, c.ctx.params, s, now),
-        xp,
-        xpToQuiz: Math.max(0, c.ctx.params.quizEveryXp - (s.xp - s.xpAtLastQuiz)),
-        remainingXp: remainingXp(c.planner, s),
-        pace: (xp.days ?? []).reduce((a, b) => a + b, 0) / 14,
-      };
+      return dashboard(req, ctx);
     },
 
     async listCourseProgress(req, ctx) {
       const { db, c, learnerId } = await current(ctx, req.courseId, req.learnerId);
       const now = deps.now();
       const { state: s } = await state(db, learnerId, c);
-      const taken = (await subjectCourses(db, learnerId, c.subject.def.id)).filter((id) => id !== c.id);
-      const before = taken.slice(0, sequenceSide).reverse();
-      const after: string[] = [];
-      for (let id = c.index.next.get(c.id)?.[0]; id && after.length < sequenceSide; id = c.index.next.get(id)?.[0]) {
-        if (!before.includes(id)) after.push(id);
-      }
+      const { taken, target, route } = await routeOf(db, learnerId, c);
+      // The course set out for lies ahead, even when taken before.
+      const before = taken
+        .filter((id) => id !== target)
+        .slice(0, sequenceSide)
+        .reverse();
+      const after = coursesAfter(c.index, route, c.id, sequenceSide, before, target);
       const courses = [];
       for (const id of [...before, c.id, ...after]) {
         // A course taken before may have left the catalog; the current one is read for the learner, as the map is.
@@ -468,7 +543,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
           units: e.course.def.units.map((u, i) => ({ title: text(u.title), ...units[i] })),
         });
       }
-      return { courses, currentCourseId: c.id };
+      return { courses, currentCourseId: c.id, ...(route && { sequenceTitle: text(route.title) }) };
     },
 
     async getCourseProgress(req, ctx) {
@@ -549,8 +624,9 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
     },
 
     async startTask(req, ctx) {
-      const { db, c, learnerId } = await current(ctx, req.courseId);
+      const { db, c, learnerId, promotedFrom } = await current(ctx, req.courseId);
       const now = deps.now();
+      if (promotedFrom) await settlePromotion(db, learnerId, c.id);
       const { age } = await requireStudy(db, learnerId, now);
       const timeLimit = age.dailyMinutes;
       const row = await db.transaction(async (tx) => {

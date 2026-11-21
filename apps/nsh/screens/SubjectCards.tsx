@@ -9,7 +9,7 @@ import trophy from "../assets/icons/trophy.svg";
 import { dayText, grouped } from "../lib/dates.ts";
 import { errorText, language, m } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
-import { query } from "../lib/query.ts";
+import { markMoved, query } from "../lib/query.ts";
 import { account, learning, timeZone } from "../lib/rpc.ts";
 import { type Place, tint } from "../lib/subject.tsx";
 import { Card, colors, ErrorNote, Icon, MonthField, Muted, Quiet } from "../lib/ui.tsx";
@@ -22,7 +22,12 @@ export function useDashboard(visible: () => boolean, place: () => Place | undefi
   return query(
     course,
     (courseId) => ["dashboard", courseId],
-    (courseId, { signal: abort }) => learning.getDashboard({ courseId, timeZone: timeZone() }, { signal: abort }),
+    async (courseId, { signal: abort }) => {
+      const dash = await learning.getDashboard({ courseId, timeZone: timeZone() }, { signal: abort });
+      // A learner who finished the course was promoted: what names the current course is read again.
+      if (dash.courseId !== courseId) markMoved();
+      return dash;
+    },
   );
 }
 

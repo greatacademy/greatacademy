@@ -245,6 +245,59 @@ describe("LearningService", () => {
     expect(own.startEarlier).toBe("");
   });
 
+  it("promotes a learner who finishes a course into the next on their route, back toward the course set out for", async () => {
+    await learning.chooseCourse({ courseId: "algebra-ii" });
+    // Moving back to an earlier course keeps algebra-ii as the course set out for.
+    await learning.chooseCourse({ courseId: COURSE });
+    const back = await learning.listCourseProgress({ courseId: COURSE });
+    expect(back.courses.map((c) => c.courseId)).toEqual([COURSE, "algebra-i", "geometry", "algebra-ii"]);
+    expect(back.sequenceTitle).toBeUndefined();
+
+    // Knowing everything, the learner is placed in the whole course; the report waits for an answer first.
+    const dash = await learning.getDashboard({ courseId: COURSE });
+    const { session } = await learning.startTask({ courseId: COURSE, task: dash.tasks[0] });
+    await finish(session!);
+    const placed = await learning.getDashboard({ courseId: COURSE });
+    expect(placed.courseId).toBe(COURSE);
+    expect(placed.report?.recommended).toBe("algebra-i");
+    await learning.keepCourse({ courseId: COURSE });
+
+    const promoted = await learning.getDashboard({ courseId: COURSE });
+    expect(promoted.courseId).toBe("algebra-i");
+    expect(promoted.promotedFrom).toBe(COURSE);
+    expect(promoted.finished).toBe(false);
+    expect((await learning.getProfile({ timeZone: "UTC" })).enrollments.map((e) => e.courseId)).toEqual(["algebra-i"]);
+    await expectCode(learning.getDashboard({ courseId: COURSE }), Code.FailedPrecondition);
+    const on = await learning.listCourseProgress({ courseId: "algebra-i" });
+    expect(on.sequenceTitle?.values.en).toBe("Traditional Math");
+    expect(on.courses.map((c) => c.courseId)).toEqual([COURSE, "algebra-i", "geometry", "algebra-ii", "precalculus"]);
+
+    // Starting work in the new course settles the promotion.
+    await learning.startTask({ courseId: "algebra-i", task: promoted.tasks[0] });
+    expect((await learning.getDashboard({ courseId: "algebra-i" })).promotedFrom).toBe("");
+  });
+
+  it("follows the route of the course chosen, and offers the course before on it", async () => {
+    await learning.chooseCourse({ courseId: "integrated-math-i-honors" });
+    const honors = await learning.listCourseProgress({ courseId: "integrated-math-i-honors" });
+    expect(honors.sequenceTitle?.values.en).toBe("Integrated Math (Honors)");
+    expect(honors.courses.map((c) => c.courseId)).toEqual([
+      "integrated-math-i-honors",
+      "integrated-math-ii-honors",
+      "integrated-math-iii-honors",
+      "ap-calculus-bc",
+    ]);
+    await learning.chooseCourse({ courseId: "integrated-math-i" });
+    const plain = await learning.listCourseProgress({ courseId: "integrated-math-i" });
+    expect(plain.sequenceTitle?.values.en).toBe("Integrated Math");
+    expect(plain.courses.map((c) => c.courseId).slice(1)).toEqual([
+      "integrated-math-i",
+      "integrated-math-ii",
+      "integrated-math-iii",
+      "precalculus",
+    ]);
+  });
+
   it("retakes a diagnostic and resets a subject, keeping lessons' topics, XP and history as each says", async () => {
     await skipToLessons();
     const dash = await learning.getDashboard({ courseId: COURSE });

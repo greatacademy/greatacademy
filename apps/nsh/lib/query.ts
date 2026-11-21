@@ -95,6 +95,11 @@ export function markChanged(): void {
   void queryClient.invalidateQueries({ refetchType: "none" });
 }
 
+/** markMoved reads again every answer the pages show, after the server moved the learner on to another course. */
+export function markMoved(): void {
+  void queryClient.invalidateQueries();
+}
+
 /**
  * watchQueries drops every answer when the account changes, and reads again what the pages on the stack show once
  * the learner leaves a task or a page where something changed; nothing is read during a task.

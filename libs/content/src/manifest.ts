@@ -1,6 +1,6 @@
 import type { CompiledCourse, CompiledSubject, Graph, GraphPassage, GraphTopic, WeightedEdge } from "./compile.ts";
 import type { Text } from "./text.ts";
-import type { ConversationDef, CourseDef, CriterionSpec } from "./types.ts";
+import type { ConversationDef, CourseDef, CriterionSpec, SequenceDef } from "./types.ts";
 
 /** ManifestTopic is what serving a subject needs of a topic without its generators. */
 export interface ManifestTopic extends GraphTopic {
@@ -40,6 +40,8 @@ export interface SubjectManifest {
   readonly courses: readonly ManifestCourse[];
   /** conversations are the subject's spoken conversations, whole: small enough to keep whole. */
   readonly conversations?: readonly ConversationDef[];
+  /** sequences are the routes through the subject's courses. */
+  readonly sequences?: readonly SequenceDef[];
 }
 
 /** CourseListing is what a list of courses shows of a course. */
@@ -77,6 +79,8 @@ export interface SubjectCatalog {
   readonly passages: ReadonlyMap<string, ManifestPassage>;
   readonly courses: ReadonlyMap<string, CompiledCourse>;
   readonly conversations: ReadonlyMap<string, ConversationDef>;
+  /** sequences are the routes through the subject's courses. */
+  readonly sequences: readonly SequenceDef[];
 }
 
 /** subjectManifest writes a compiled subject as a manifest. */
@@ -106,6 +110,7 @@ export function subjectManifest(subject: CompiledSubject): SubjectManifest {
       foundations: c.foundations,
     })),
     ...(subject.def.conversations?.length && { conversations: subject.def.conversations }),
+    ...(subject.def.sequences?.length && { sequences: subject.def.sequences }),
   };
 }
 
@@ -157,5 +162,6 @@ export function readManifest(manifest: SubjectManifest): SubjectCatalog {
     passages,
     courses: new Map(manifest.courses.map((c) => [c.def.id, { ...c, masteryFloor: new Set(c.masteryFloor) }])),
     conversations: new Map((manifest.conversations ?? []).map((c) => [c.id, c])),
+    sequences: manifest.sequences ?? [],
   };
 }
