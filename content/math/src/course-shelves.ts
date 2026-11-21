@@ -149,8 +149,10 @@ export const mathSequences: readonly SequenceDef[] = [
   {
     id: "integrated-honors",
     title: t("Integrated Math (Honors)", "综合数学（荣誉）"),
-    // Honors covers four years in three: a learner keeps to it while getting most answers right.
+    // Honors covers four years in three: a learner keeps to it while getting most answers right, and below that moves to
+    // the integrated sequence, which orders the topics as honors does.
     minStanding: HONORS_STANDING,
+    fallback: "integrated",
     courses: [
       ...grades(1, 5),
       "prealgebra",

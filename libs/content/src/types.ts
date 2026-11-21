@@ -448,4 +448,9 @@ export interface SequenceDef {
    * sequence where another one also goes through the course, such as an honors sequence; absent for none.
    */
   readonly minStanding?: number;
+  /**
+   * fallback is the id of the sequence a learner below minStanding moves to, the one closest to this; it takes the
+   * place of this sequence in choosing the route, such as the integrated sequence for the integrated honors one.
+   */
+  readonly fallback?: string;
 }

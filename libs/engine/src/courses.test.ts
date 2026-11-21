@@ -195,6 +195,22 @@ describe("courseRoute", () => {
   });
 });
 
+describe("courseRoute with a fallback", () => {
+  const [first, second] = branching.def.sequences ?? [];
+  const index = courseIndex(branching.courses, [
+    { id: "plain", title: same("Plain"), courses: ["low", "a"] },
+    first!,
+    { ...second!, fallback: "first" },
+  ]);
+  const pick = (taken: string[], target?: string) => courseRoute(index, "low", taken, target, 0.6)?.id;
+
+  it("moves a learner below the bar to the fallback of the sequence they were on", () => {
+    expect(pick(["b"])).toBe("first");
+    expect(pick([], "b2")).toBe("first");
+    expect(pick([])).toBe("plain");
+  });
+});
+
 describe("routeTarget", () => {
   it("drops the course set out for when the route no longer leads to it", () => {
     const [first, second] = routes.sequences;

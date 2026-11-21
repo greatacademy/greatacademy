@@ -85,7 +85,8 @@ export function courseStanding(p: Params, events: readonly EngineEvent[]): numbe
  * courseRoute picks the sequence a learner of `course` follows
  * (docs/learning-engine.md §9). Among the sequences through the course, those
  * whose `minStanding` is above the learner's `standing` are left out, unless
- * none would remain. Of the rest it takes the one that leads on to the course
+ * none would remain; one left out counts toward its `fallback`, as if the
+ * fallback led where it does and listed the courses it does. Of the rest it takes the one that leads on to the course
  * they set out to take, `target`, if any; else the one that lists most of the
  * courses they took, `taken`; on a tie, a demanding sequence when the standing
  * reaches its bar, and one that is not while the standing is unknown; else the
@@ -101,11 +102,14 @@ export function courseRoute(
   const through = index.sequences.filter((s) => s.courses.includes(course));
   const fit = standing === undefined ? through : through.filter((s) => (s.minStanding ?? 0) <= standing);
   const pool = fit.length > 0 ? fit : through;
-  const rank = (s: SequenceDef): readonly number[] => [
-    target && s.courses.indexOf(target) > s.courses.indexOf(course) ? 1 : 0,
-    taken.filter((id) => s.courses.includes(id)).length,
-    s.minStanding === undefined ? 0 : standing === undefined ? -1 : 1,
-  ];
+  const leads = (s: SequenceDef) => (target && s.courses.indexOf(target) > s.courses.indexOf(course) ? 1 : 0);
+  const count = (s: SequenceDef) => taken.filter((id) => s.courses.includes(id)).length;
+  // A sequence left out for its bar hands what it holds to its fallback.
+  const left = through.filter((s) => !pool.includes(s));
+  const rank = (s: SequenceDef): readonly number[] => {
+    const from = [s, ...left.filter((l) => l.fallback === s.id)];
+    return [Math.max(...from.map(leads)), Math.max(...from.map(count)), s.minStanding === undefined ? 0 : standing === undefined ? -1 : 1];
+  };
   let best: SequenceDef | undefined;
   let bestRank: readonly number[] = [];
   for (const s of pool) {

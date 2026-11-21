@@ -290,9 +290,15 @@ describe("LearningService", () => {
         at: now,
         results: Array.from({ length: 40 }, (_, i) => ({ topic: "composite-shapes", correct: i < right })),
       });
-    // Half the answers right: the traditional route, which no longer leads to the honors course.
+    // Half the answers right: the integrated route, closest to honors, which no longer leads to the honors course.
     await quiz(20);
-    expect(await route()).toEqual(["integrated-math-i-honors", "prealgebra", "algebra-i", "geometry", "algebra-ii"]);
+    expect(await route()).toEqual([
+      "integrated-math-i-honors",
+      "prealgebra",
+      "integrated-math-i",
+      "integrated-math-ii",
+      "integrated-math-iii",
+    ]);
     // Doing well again leads back to the honors course.
     await quiz(40);
     await quiz(40);

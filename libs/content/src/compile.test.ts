@@ -146,6 +146,19 @@ describe("compileSubject", () => {
       { ...subject([topic("a")], [course(["a"])]), sequences: [{ id: "s", title: same("S"), courses: ["c"] }] },
       "at least two courses",
     ],
+    [
+      "an unknown fallback",
+      {
+        ...subject([topic("a")], [course(["a"])]),
+        sequences: [{ id: "s", title: same("S"), courses: ["c"], minStanding: 0.8, fallback: "t" }],
+      },
+      "unknown fallback t",
+    ],
+    [
+      "a fallback without a bar",
+      { ...subject([topic("a")], [course(["a"])]), sequences: [{ id: "s", title: same("S"), courses: ["c"], fallback: "s" }] },
+      "a fallback needs minStanding",
+    ],
   ])("rejects %s", (_, def, message) => {
     expect(errors(def).join("\n")).toContain(message);
   });
