@@ -102,14 +102,14 @@ To try it: create an account, answer the age question, choose "I'm learning myse
 The Native Shell app calls the same Connect services as the web app, so start the API server and the web app first (§5). It uses Native Shell from the `greatacademy` branch of the project's fork, [greatacademy/nsh](https://github.com/greatacademy/nsh): upstream's main and the app's own fixes. The app's Rust crate, `apps/nsh/native/store` (StoreKit for in-app purchases, imported as `ga/store`), pins a commit of that branch, and `nsh` builds each platform's host from it, which needs Git, Rust and Xcode. Build the `nsh` command from the same commit:
 
 ```bash
-git clone --branch greatacademy https://github.com/greatacademy/nsh.git ~/.nsh/source
+git clone --branch greatacademy https://github.com/greatacademy/nsh.git ~/Code/frameworks/nsh
 ```
 
 ```bash
-cd ~/.nsh/source && cargo build --release --locked -p nsh-cli && mkdir -p ~/.nsh/bin ~/.local/bin && ln -sf ~/.nsh/source/target/release/nsh ~/.nsh/bin/nsh && ln -sf ~/.nsh/bin/nsh ~/.local/bin/nsh
+cd ~/Code/frameworks/nsh && cargo build --release --locked -p nsh-cli && mkdir -p ~/.nsh/bin ~/.local/bin && ln -sf ~/Code/frameworks/nsh/target/release/nsh ~/.nsh/bin/nsh && ln -sf ~/.nsh/bin/nsh ~/.local/bin/nsh
 ```
 
-To update, pull the branch there, build again, and move `rev` in the app's crates, `apps/nsh/native/store/Cargo.toml` and `apps/nsh/native/voice/Cargo.toml`, to the same commit. The first run or package for each platform compiles that host with the app's crates, which takes several minutes; later ones reuse it. Build one platform at a time, since the builds share one directory and wait for each other.
+The branch keeps the project's own commits on top of upstream's main. To update, rebase them there onto upstream's main, dropping those upstream has taken over, push the branch with `--force-with-lease`, build again, and move `rev` in the app's crates, `apps/nsh/native/store/Cargo.toml` and `apps/nsh/native/voice/Cargo.toml`, to the same commit. The first run or package for each platform compiles that host with the app's crates, which takes several minutes; later ones reuse it. Build one platform at a time, since the builds share one directory and wait for each other.
 
 ```bash
 pnpm nx run nsh:dev                   # A window on this machine

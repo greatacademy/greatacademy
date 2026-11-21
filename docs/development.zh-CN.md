@@ -102,14 +102,14 @@ cd apps/server && mise exec -- node --env-file=.env.local src/main.ts job daily 
 Native Shell 应用调用与 Web 应用相同的 Connect 服务，因此先启动 API 服务器和 Web 应用（§5）。它使用项目 fork [greatacademy/nsh](https://github.com/greatacademy/nsh) 的 `greatacademy` 分支上的 Native Shell：上游的 main 加上应用自己的修复。应用的 Rust crate `apps/nsh/native/store`（内购用的 StoreKit，以 `ga/store` 导入）固定了这个分支的一个提交，`nsh` 用它构建各平台的宿主，需要 Git、Rust 和 Xcode。用同一个提交构建 `nsh` 命令：
 
 ```bash
-git clone --branch greatacademy https://github.com/greatacademy/nsh.git ~/.nsh/source
+git clone --branch greatacademy https://github.com/greatacademy/nsh.git ~/Code/frameworks/nsh
 ```
 
 ```bash
-cd ~/.nsh/source && cargo build --release --locked -p nsh-cli && mkdir -p ~/.nsh/bin ~/.local/bin && ln -sf ~/.nsh/source/target/release/nsh ~/.nsh/bin/nsh && ln -sf ~/.nsh/bin/nsh ~/.local/bin/nsh
+cd ~/Code/frameworks/nsh && cargo build --release --locked -p nsh-cli && mkdir -p ~/.nsh/bin ~/.local/bin && ln -sf ~/Code/frameworks/nsh/target/release/nsh ~/.nsh/bin/nsh && ln -sf ~/.nsh/bin/nsh ~/.local/bin/nsh
 ```
 
-更新时在那里拉取分支、重新构建，并把应用的 crate（`apps/nsh/native/store/Cargo.toml` 和 `apps/nsh/native/voice/Cargo.toml`）中的 `rev` 改为同一个提交。每个平台第一次运行或打包时都要连同应用的 crate 编译宿主，需要几分钟；之后会复用。一次只构建一个平台，因为这些构建共用一个目录，会互相等待。
+这个分支始终把项目自己的提交放在上游 main 之上。更新时在那里把它们变基到上游 main 上，去掉上游已经取代的提交，用 `--force-with-lease` 推送分支，重新构建，并把应用的 crate（`apps/nsh/native/store/Cargo.toml` 和 `apps/nsh/native/voice/Cargo.toml`）中的 `rev` 改为同一个提交。每个平台第一次运行或打包时都要连同应用的 crate 编译宿主，需要几分钟；之后会复用。一次只构建一个平台，因为这些构建共用一个目录，会互相等待。
 
 ```bash
 pnpm nx run nsh:dev                   # 在本机打开窗口

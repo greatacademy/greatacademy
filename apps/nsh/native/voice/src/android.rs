@@ -11,8 +11,8 @@
 //!   on the audio goes to its speaker (`setCommunicationDevice`, Android 12
 //!   and later), and the mode it had comes back at the end.
 //!
-//! The permission is `RECORD_AUDIO`, asked for through Native Shell's
-//! `Permissions` (nsh::permissions).
+//! The permission is `RECORD_AUDIO`, which `nsh.json` declares, asked for
+//! through Native Shell's `nsh::permissions`.
 
 use std::{
     sync::{
@@ -27,12 +27,11 @@ use std::{
 use nsh_core::prelude::blocking;
 use nsh::{
     jni::{
-        JNIEnv,
+        JNIEnv, JavaVM,
         objects::{GlobalRef, JObject, JValue},
     },
-    permissions,
+    permissions::{self, Permission},
 };
-use tokio::sync::oneshot;
 
 use crate::{SAMPLE_RATE, SHARED, loudness};
 
@@ -83,18 +82,33 @@ fn session() -> std::sync::MutexGuard<'static, Option<Session>> {
 /// Runs `f` with this thread's JNI env in a local frame, clearing a Java
 /// exception it left.
 fn with_env<R>(f: impl FnOnce(&mut JNIEnv<'_>) -> Result<R, String>) -> Result<R, String> {
-    let mut env = permissions::java_vm().attach_current_thread_permanently().map_err(jni)?;
-    let mut out = None;
-    let framed = env.with_local_frame(64, |env| -> Result<(), nsh::jni::errors::Error> {
-        out = Some(f(env));
-        Ok(())
-    });
-    if env.exception_check().unwrap_or(false) {
-        let _ = env.exception_describe();
-        let _ = env.exception_clear();
+    nsh::with_env(|env| {
+        let out = f(env);
+        if env.exception_check().unwrap_or(false) {
+            let _ = env.exception_describe();
+            let _ = env.exception_clear();
+        }
+        Ok(out)
+    })
+    .map_err(jni)?
+}
+
+/// java_vm is the VM, for the threads that read and play audio, which stay
+/// attached to it for the whole conversation.
+fn java_vm() -> Result<JavaVM, String> {
+    with_env(|env| env.get_java_vm().map_err(jni))
+}
+
+/// app_context is the application's `Context`, from `ActivityThread`.
+fn app_context(env: &mut JNIEnv<'_>) -> Result<Option<GlobalRef>, String> {
+    let app = env
+        .call_static_method("android/app/ActivityThread", "currentApplication", "()Landroid/app/Application;", &[])
+        .and_then(|v| v.l())
+        .map_err(jni)?;
+    if app.is_null() {
+        return Ok(None);
     }
-    framed.map_err(jni)?;
-    out.unwrap_or_else(|| Err("no result".into()))
+    env.new_global_ref(app).map(Some).map_err(jni)
 }
 
 /// jni turns a JNI error into the message the voice module reports.
@@ -105,11 +119,8 @@ fn jni(e: nsh::jni::errors::Error) -> String {
 /// Asks for the microphone, then opens it and the speaker.
 pub(crate) async fn open() -> Result<(), String> {
     close();
-    let (sender, receiver) = oneshot::channel();
-    permissions::request_permission(RECORD_AUDIO, move |granted| {
-        let _ = sender.send(granted);
-    });
-    if !receiver.await.unwrap_or(false) {
+    let answers = permissions::request(&[RECORD_AUDIO]).await.map_err(|e| e.to_string())?;
+    if answers.first() != Some(&Permission::Granted) {
         return Err("denied".into());
     }
     blocking(start).await.map_err(|e| e.to_string())?
@@ -211,7 +222,7 @@ fn release_record(env: &mut JNIEnv<'_>, record: &GlobalRef, effects: &[GlobalRef
 
 /// Sends a phone's call audio to its speaker while no headset is on.
 fn route(env: &mut JNIEnv<'_>) -> Result<(Option<GlobalRef>, i32, bool), String> {
-    let Some(context) = permissions::context() else { return Ok((None, 0, false)) };
+    let Some(context) = app_context(env)? else { return Ok((None, 0, false)) };
     let name = env.new_string("audio").map_err(jni)?;
     let audio = env
         .call_method(context.as_obj(), "getSystemService", "(Ljava/lang/String;)Ljava/lang/Object;", &[JValue::Object(&name)])
@@ -284,7 +295,8 @@ fn make_track(env: &mut JNIEnv<'_>, record: &GlobalRef) -> Result<GlobalRef, Str
 
 /// Reads the microphone's 20 ms frames until the session ends.
 fn capture(record: GlobalRef, running: Arc<AtomicBool>) {
-    let Ok(mut env) = permissions::java_vm().attach_current_thread_permanently() else { return };
+    let Ok(vm) = java_vm() else { return };
+    let Ok(mut env) = vm.attach_current_thread_permanently() else { return };
     let Ok(array) = env.new_short_array(FRAME) else { return };
     let mut frame = vec![0i16; FRAME as usize];
     let mut bytes = Vec::with_capacity(FRAME as usize * 2);
@@ -316,7 +328,8 @@ fn capture(record: GlobalRef, running: Arc<AtomicBool>) {
 /// Writes the tutor's speech to the track until the session ends, counting
 /// what it played into `SHARED.played`.
 fn speak(track: GlobalRef, running: Arc<AtomicBool>, base: Arc<AtomicU64>, chunks: mpsc::Receiver<(u64, Vec<i16>)>) {
-    let Ok(mut env) = permissions::java_vm().attach_current_thread_permanently() else { return };
+    let Ok(vm) = java_vm() else { return };
+    let Ok(mut env) = vm.attach_current_thread_permanently() else { return };
     while running.load(Ordering::SeqCst) {
         let head = env.call_method(track.as_obj(), "getPlaybackHeadPosition", "()I", &[]).and_then(|v| v.i());
         let _ = env.exception_clear();

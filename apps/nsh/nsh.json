@@ -5,6 +5,9 @@
   "build": 1,
   "icon": "assets/icon.png",
   "rust": ["native/store", "native/voice"],
+  "android": {
+    "permissions": ["RECORD_AUDIO", "MODIFY_AUDIO_SETTINGS"]
+  },
   "theme": {
     "cssVars": {
       "light": {
