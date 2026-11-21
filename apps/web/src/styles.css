@@ -65,6 +65,13 @@
   }
 }
 
+/* MathLive's keyboard slides back down as it hides (lib/keyboard.ts), as fast as it slides up. Outside a layer, since
+   MathLive's own unlayered styles would win over any layered rule. */
+body > .ML__keyboard.is-visible.ga-hiding > .MLK__backdrop {
+  transform: translate(0, 0);
+  transition: transform 0.28s cubic-bezier(0.4, 0, 1, 1);
+}
+
 /* Rendered content: explanations, prompts and solutions. */
 .prose-ga {
   line-height: 1.7;

@@ -1,5 +1,6 @@
 import type { MathfieldElement } from "mathlive";
 import { useEffect, useRef, useState } from "react";
+import { slideKeyboardAway } from "../lib/keyboard.ts";
 
 declare module "react" {
   namespace JSX {
@@ -16,12 +17,14 @@ let loading: Promise<unknown> | undefined;
 
 /**
  * loadMathLive registers <math-field> in the browser, once. MathLive's own
- * fonts and sounds are off: KaTeX's stylesheet already provides the fonts.
+ * fonts and sounds are off: KaTeX's stylesheet already provides the fonts. Its
+ * virtual keyboard slides away as it hides, as it slides in as it shows.
  */
 function loadMathLive() {
   loading ??= import("mathlive").then(({ MathfieldElement }) => {
     MathfieldElement.fontsDirectory = null;
     MathfieldElement.soundsDirectory = null;
+    slideKeyboardAway(window.mathVirtualKeyboard as unknown as Parameters<typeof slideKeyboardAway>[0]);
   });
   return loading;
 }
