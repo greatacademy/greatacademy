@@ -238,8 +238,8 @@ function readingAloudTopic(id: string, unit: Text, reading: ReadingUnitDef, list
         "sentences",
         t("Sentences", "句子"),
         t(
-          "Read the whole sentence through once in your head, then aloud. Keep the words of a phrase together, and let your voice fall at the full stop. A small word missed is all right; the important words must be clear.",
-          "先在心里把整句读一遍，再大声读出来。一个意群里的词要连着读，句号处语调下降。漏掉一个小词没关系，重要的词要读清楚。",
+          "Read the whole sentence through once in your head, then aloud. Keep the words of a phrase together, and let your voice fall at the full stop. Read every word as it is written, small words too, and say each one clearly.",
+          "先在心里把整句读一遍，再大声读出来。一个意群里的词要连着读，句号处语调下降。每个词都要照原文读出来，小词也不能漏，每个词都要读清楚。",
         ),
         sentence,
       ),

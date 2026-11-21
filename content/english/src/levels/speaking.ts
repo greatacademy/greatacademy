@@ -195,8 +195,8 @@ export function unitSpeaking(spec: UnitSpeakingSpec): readonly [TopicDef, TopicD
         "read",
         t("Read aloud", "朗读"),
         t(
-          "Read the sentence aloud at a calm speed, as if you were telling someone. A small word missed is all right; the important words must be clear. If a word is new, listen to it in the solution and read again.",
-          "用平稳的语速大声朗读，就像在对别人说话。漏掉一个小词没关系，但重要的词要读清楚。遇到生词，可以在解答里听它的读音再读一遍。",
+          "Read the sentence aloud at a calm speed, as if you were telling someone. Read every word as it is written, small words too, and say each one clearly. If a word is new, listen to it in the solution and read again.",
+          "用平稳的语速大声朗读，就像在对别人说话。每个词都要照原文读出来，小词也不能漏，每个词都要读清楚。遇到生词，可以在解答里听它的读音再读一遍。",
         ),
         read,
       ),
