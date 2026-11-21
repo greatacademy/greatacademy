@@ -85,7 +85,8 @@ export function AnswerText(props: { problem: ProblemView; answer: string }) {
     case "strokes":
       return <Muted>{`${m().strokesDrawn}: ${props.answer.split(";").length}`}</Muted>;
     case "speech":
-      return <Text style={{ color: colors().ink }}>{`${m().weHeard}: “${heardText(props.answer)}”`}</Text>;
+      // As on the web: the words in quotes, since an answer shown may be the text to say as well as what was heard.
+      return <Text style={{ color: colors().ink }}>{`“${heardText(props.answer)}”`}</Text>;
     default:
       return <Text style={{ color: colors().ink }}>{props.answer}</Text>;
   }
