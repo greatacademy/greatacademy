@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useI18n } from "../lib/i18n.tsx";
 import { shade } from "../lib/topic-status.ts";
 import { CourseSequence, UnitList, useCourseSequence } from "./CourseSequence.tsx";
+import { TopicGraphButton } from "./TopicGraph.tsx";
 
 /** Shaded is what a shaded bar shows: topics learned, in all, and the learned ones by strength, of a course or a unit. */
 export type Shaded = Pick<CourseStats, "learned" | "total" | "strengths">;
@@ -41,7 +42,7 @@ export const percentLearned = (s: Shaded) => (s.total > 0 ? Math.floor((s.learne
  * CourseBar is a course's progress on the Learn and Course pages: the shaded bar with the share of the course learned.
  * It explains itself on hover, and opens on a tap or click, which works on a phone too, a popover over the page that
  * leaves the layout as it is: the course sequence as tabs, and for the course picked, how many topics have each shade
- * and its units numbered with their own bars.
+ * and its units numbered with their own bars, with the way to its knowledge graph.
  */
 export function CourseBar({ stats, courseId, className = "" }: { stats: CourseStats; courseId: string; className?: string }) {
   const { m } = useI18n();
@@ -73,6 +74,7 @@ export function CourseBar({ stats, courseId, className = "" }: { stats: CourseSt
               )}
               {shown?.stats && <ShadeCounts stats={shown.stats} />}
               {shown && <UnitList course={shown} />}
+              {shown && <TopicGraphButton courseId={shown.courseId} />}
             </Popover.Popup>
           </Popover.Positioner>
         </Popover.Portal>

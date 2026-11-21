@@ -219,6 +219,15 @@ const messages = {
     },
     /** statusNote says what each status means, shown when its name is hovered or tapped. */
     /** shades names the progress map's shading of learned topics, its ends and what it means. */
+    graph: {
+      open: "Knowledge graph",
+      title: (course: string) => `Knowledge graph of ${course}`,
+      note: "Each topic sits above the topics it builds on, shaded as on the progress map. Drag to move; scroll or pinch to zoom.",
+      zoomIn: "Zoom in",
+      zoomOut: "Zoom out",
+      fit: "Fit to screen",
+      close: "Close",
+    },
     sequence: {
       label: "Course sequence",
       before: "Taken",
@@ -838,6 +847,15 @@ const messages = {
       learned: "无需复习",
       due: "待复习",
       assumed: "视为已知",
+    },
+    graph: {
+      open: "知识点图",
+      title: (course: string) => `${course}的知识点图`,
+      note: "每个知识点位于它所依赖的知识点上方，按进度地图的深浅着色。拖动可移动，滚动或双指缩放可放大缩小。",
+      zoomIn: "放大",
+      zoomOut: "缩小",
+      fit: "适合屏幕",
+      close: "关闭",
     },
     sequence: {
       label: "课程序列",

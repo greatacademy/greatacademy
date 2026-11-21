@@ -145,7 +145,12 @@ describe("CatalogService", () => {
     const { course } = await catalog.getCourse({ courseId: COURSE });
     expect(course?.topicCount).toBe(20);
     expect(course?.title?.values["zh-CN"]).toBe("代数基础");
-    expect(course?.units.flatMap((u) => u.modules.flatMap((m) => m.topics))).toHaveLength(20);
+    const topics = course?.units.flatMap((u) => u.modules.flatMap((m) => m.topics)) ?? [];
+    expect(topics).toHaveLength(20);
+    // Each topic names the topics of the course it builds on, and only those.
+    const ids = new Set(topics.map((t) => t.id));
+    expect(topics.some((t) => t.prerequisites.length > 0)).toBe(true);
+    for (const t of topics) for (const p of t.prerequisites) expect(ids.has(p)).toBe(true);
     await expectCode(catalog.getCourse({ courseId: "nope" }), Code.NotFound);
   });
 });

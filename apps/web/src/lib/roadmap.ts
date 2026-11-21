@@ -34,6 +34,13 @@ export interface RoadmapSize {
   readonly rowGap: number;
 }
 
+/**
+ * Placement is how boxes are set along their rows: "lean" stands each box straight over one neighbor, as the course
+ * roadmap does; "balance" sets each row as near the middle of its neighbors as the space between boxes allows, which
+ * keeps a large graph such as a course's topics narrow.
+ */
+export type Placement = "lean" | "balance";
+
 /** ROADMAP_SIZE is the size the web draws the roadmap at. */
 export const ROADMAP_SIZE: RoadmapSize = { boxWidth: 120, boxHeight: 40, gap: 16, rowGap: 40 };
 
@@ -51,6 +58,7 @@ interface Slot {
 const SWEEPS = 24;
 // An odd number, so the last pass goes up and stands every course over what it builds on.
 const ROUNDS = 7;
+const BALANCE_ROUNDS = 24;
 
 /**
  * layoutRoadmap places courses in rows, each one row above the highest course it builds on and pulled up beside the
@@ -58,7 +66,7 @@ const ROUNDS = 7;
  * A course reached from another through a third is joined to it only through the third. It is deterministic: the same
  * courses in the same order give the same roadmap. Courses it builds on outside `courses` are left out.
  */
-export function layoutRoadmap(courses: readonly RoadmapCourse[], size: RoadmapSize = ROADMAP_SIZE): Roadmap {
+export function layoutRoadmap(courses: readonly RoadmapCourse[], size: RoadmapSize = ROADMAP_SIZE, placement: Placement = "lean"): Roadmap {
   const ids = courses.map((c) => c.id);
   const known = new Set(ids);
   const direct = new Map(courses.map((c) => [c.id, [...new Set(c.buildsOn)].filter((id) => id !== c.id && known.has(id))]));
@@ -100,7 +108,8 @@ export function layoutRoadmap(courses: readonly RoadmapCourse[], size: RoadmapSi
   }
   for (const row of grid) number(row);
   order(grid);
-  spread(grid, size);
+  if (placement === "balance") balance(grid, size);
+  else spread(grid, size);
 
   const all = grid.flat();
   const half = (s: Slot) => (s.id ? size.boxWidth / 2 : 0);
@@ -281,6 +290,52 @@ function spread(grid: Slot[][], size: RoadmapSize) {
   };
   const placed = lean(1);
   for (const s of grid.flat()) s.x = placed.get(s) ?? 0;
+}
+
+/**
+ * balance sets each row, in turn up and down, as near the middle of each slot's neighbors as the space between boxes
+ * allows: the nearest placement in order, found by pooling adjacent slots that would overlap.
+ */
+function balance(grid: Slot[][], size: RoadmapSize) {
+  const width = (s: Slot) => (s.id ? size.boxWidth : 0);
+  const space = (a: Slot, b: Slot) => (width(a) + width(b)) / 2 + (a.id && b.id ? size.gap : size.gap / 2);
+  for (const row of grid) {
+    let at = 0;
+    row.forEach((s, i) => {
+      if (i > 0) at += space(row[i - 1] as Slot, s);
+      s.x = at;
+    });
+  }
+  const settle = (row: Slot[]) => {
+    // Each slot's offset from the first when packed tight; wanted places less these must not decrease along the row.
+    const offset: number[] = [];
+    row.forEach((s, i) => {
+      offset.push(i === 0 ? 0 : (offset[i - 1] as number) + space(row[i - 1] as Slot, s));
+    });
+    const want = row.map((s, i) => {
+      const near = [...s.below, ...s.above];
+      return (near.length > 0 ? near.reduce((sum, n) => sum + n.x, 0) / near.length : s.x) - (offset[i] as number);
+    });
+    const pools: { sum: number; n: number }[] = [];
+    for (const w of want) {
+      pools.push({ sum: w, n: 1 });
+      while (pools.length > 1) {
+        const last = pools[pools.length - 1] as { sum: number; n: number };
+        const prev = pools[pools.length - 2] as { sum: number; n: number };
+        if (prev.sum / prev.n <= last.sum / last.n) break;
+        pools.pop();
+        prev.sum += last.sum;
+        prev.n += last.n;
+      }
+    }
+    let i = 0;
+    for (const pool of pools) {
+      for (let k = 0; k < pool.n; k++, i++) (row[i] as Slot).x = pool.sum / pool.n + (offset[i] as number);
+    }
+  };
+  for (let round = 0; round < BALANCE_ROUNDS; round++) {
+    for (const row of round % 2 === 0 ? grid : [...grid].reverse()) settle(row);
+  }
 }
 
 /** number sets each slot's order to its place in its row. */

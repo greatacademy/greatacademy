@@ -263,6 +263,14 @@ export declare type Topic = Message<"ga.catalog.v1.Topic"> & {
    * @generated from field: int32 knowledge_points = 5;
    */
   knowledgePoints: number;
+
+  /**
+   * prerequisites are the topics of the same course to be learned before this one: its direct prerequisites in the
+   * course, and for one outside it, the nearest topics of the course it builds on in turn.
+   *
+   * @generated from field: repeated string prerequisites = 6;
+   */
+  prerequisites: string[];
 };
 
 /**

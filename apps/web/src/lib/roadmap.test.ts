@@ -46,6 +46,22 @@ describe("layoutRoadmap", () => {
     expect(d?.x).toBeCloseTo(bottom[1]?.x ?? 0, 0);
   });
 
+  it("keeps a wide graph narrow when it balances the rows", () => {
+    // Ten topics each built on one of ten others, and one long chain beside them that leaning would push aside.
+    const pairs = Array.from({ length: 10 }, (_, i) => [course(`p${i}`), course(`q${i}`, `p${i}`)]).flat();
+    const chain = Array.from({ length: 6 }, (_, i) => course(`c${i}`, ...(i > 0 ? [`c${i - 1}`] : [])));
+    const all = [...pairs, ...chain, course("top", "c5", "q0", "q9")];
+    const balanced = layoutRoadmap(all, ROADMAP_SIZE, "balance");
+    const widest = 11 * ROADMAP_SIZE.boxWidth + 10 * ROADMAP_SIZE.gap;
+    expect(balanced.width).toBeLessThanOrEqual(layoutRoadmap(all).width);
+    expect(balanced.width).toBeLessThan(widest * 1.5);
+    const y = new Map(balanced.boxes.map((b) => [b.id, b.y]));
+    for (const b of balanced.boxes) {
+      const others = balanced.boxes.filter((o) => o !== b && o.y === y.get(b.id));
+      for (const o of others) expect(Math.abs(o.x - b.x)).toBeGreaterThanOrEqual(ROADMAP_SIZE.boxWidth + ROADMAP_SIZE.gap - 0.1);
+    }
+  });
+
   it("routes a line that skips rows through a point in each row between", () => {
     const map = layoutRoadmap([course("a"), course("b", "a"), course("c", "b"), course("x"), course("y", "x"), course("d", "c", "x")]);
     const long = map.edges.find((e) => e.from === "x" && e.to === "d");

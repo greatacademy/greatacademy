@@ -7,6 +7,7 @@ import { CourseSequence, useCourseSequence } from "../../components/CourseSequen
 import { LoadError, NotFoundNote } from "../../components/LoadError.tsx";
 import { usePromotion } from "../../components/PlacementReport.tsx";
 import { ForecastCard, GoalsCard } from "../../components/SubjectDecisions.tsx";
+import { TopicGraphButton } from "../../components/TopicGraph.tsx";
 import { legendCounts, TopicLegend, TopicMap } from "../../components/TopicMap.tsx";
 import { buttonClass, Spinner } from "../../components/ui.tsx";
 import { useI18n } from "../../lib/i18n.tsx";
@@ -68,6 +69,7 @@ function Progress() {
             </section>
           )}
           <TopicLegend counts={legendCounts(progress.data.topics)} />
+          <TopicGraphButton courseId={viewed} />
           {/* A topic's page speaks of the current course, so only its map links to them. */}
           <TopicMap course={course.data.course} topics={progress.data.topics} subject={viewed === courseId ? subject : undefined} />
         </section>
