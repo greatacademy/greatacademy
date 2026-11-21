@@ -33,6 +33,7 @@ import { Action, Card, colors, ErrorNote, headerStyle, Loaded, Muted, Quiet } fr
 import { AnswerInput, AnswerText, Prompt } from "./Answer.tsx";
 import { Illustration } from "./Illustration.tsx";
 import { Listen } from "./Listen.tsx";
+import { MathKeyboard, mathKeyboardHeight } from "./MathKeyboard.tsx";
 import { FigureView, Rich } from "./Rich.tsx";
 import { Sounds } from "./Sounds.tsx";
 import { SpeechFlow } from "./Speech.tsx";
@@ -161,7 +162,7 @@ function BottomBar(props: { children: JSX.Element; tone?: "good" | "bad" }) {
         borderTopWidth: 1,
         paddingHorizontal: 16,
         paddingTop: 12,
-        paddingBottom: 12 + (keyboardFrame().height > 0 ? 0 : insets().bottom),
+        paddingBottom: 12 + (keyboardFrame().height > 0 || mathKeyboardHeight() > 0 ? 0 : insets().bottom),
       }}
     >
       <View style={{ alignSelf: "center", gap: 10, maxWidth: 720, width: "100%" }}>{props.children}</View>
@@ -765,7 +766,14 @@ export function Player(props: { sessionId: string }) {
       onBackPress={() => void leave()}
       statusBar={{ foreground: "auto" }}
     >
-      <View style={{ flex: 1, backgroundColor: colors().page, paddingBottom: "env(keyboard-inset-height)" }}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: colors().page,
+          // The math keyboard, like the system's, keeps the step's actions in sight above it.
+          paddingBottom: mathKeyboardHeight() > 0 ? mathKeyboardHeight() : "env(keyboard-inset-height)",
+        }}
+      >
         <FocusBar share={progress().share} label={progress().label} onClose={() => void leave()} />
         <Loaded rpc={loaded}>
           {() => (
@@ -803,6 +811,7 @@ export function Player(props: { sessionId: string }) {
             </View>
           )}
         </Loaded>
+        <MathKeyboard />
       </View>
     </NavPage>
   );
