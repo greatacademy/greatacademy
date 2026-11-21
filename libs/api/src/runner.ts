@@ -582,7 +582,8 @@ function saveToQuiz(
     ...(late && { late }),
     ...(parts && { parts }),
     ...(given?.score !== undefined && { score: given.score }),
-    ...((parts || given) && { locked: true }),
+    // Begun parts and an answer a model judged are final; an answer judged at once may still change.
+    ...((parts || given?.score !== undefined) && { locked: true }),
   };
   const slots = leaveSlot(run, now);
   const { partial: _, ...rest } = slots[run.at]!;

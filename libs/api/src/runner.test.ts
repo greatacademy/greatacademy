@@ -3,7 +3,7 @@ import { defaultParams } from "@ga/engine";
 import { describe, expect, it } from "vitest";
 
 import type { CourseEntry } from "./registry.ts";
-import { answerRun, finishQuiz, openQuizQuestion, questionIndex, quizRun, type RunState, startRun } from "./runner.ts";
+import { answerRun, finishQuiz, type Given, openQuizQuestion, questionIndex, quizRun, type RunState, startRun } from "./runner.ts";
 
 const course = {
   ctx: { params: defaultParams, graph: { graph: { topics: new Map([["t", { knowledgePoints: [{}, {}] }]]) } } },
@@ -105,6 +105,15 @@ describe("a quiz run", () => {
     at: 0,
   });
   const slots = (run: RunState) => (run.kind === "quiz" ? (run.slots ?? []) : []);
+
+  it("keeps an answer judged at once changeable, as the server passes it judged, and an answer a model judged final", async () => {
+    const rng = createRng(1);
+    const given = { problem: {}, verdict: { correct: true } } as unknown as Given;
+    const saved = await answerRun(judged, quiz(600_000), state, "right", false, 10_000, rng, given);
+    expect(slots(saved.run)[0]?.answer).not.toHaveProperty("locked");
+    const scored = await answerRun(judged, quiz(600_000), state, "right", false, 10_000, rng, { ...given, score: 1 });
+    expect(slots(scored.run)[0]?.answer).toMatchObject({ locked: true, score: 1 });
+  });
 
   it("saves answers to its questions in any order, keeps them changeable, and counts them only when handed in", async () => {
     const rng = createRng(1);

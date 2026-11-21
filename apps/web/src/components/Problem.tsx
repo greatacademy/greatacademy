@@ -12,8 +12,11 @@ import { StrokesDrawing } from "./StrokesField.tsx";
 export const listenTo = (paths: readonly string[], label: string) =>
   paths.map((audio, i) => ({ audio, text: paths.length > 1 ? `${label} ${i + 1}` : label }));
 
-/** ProblemPrompt shows a problem's picture, its prompt, the recordings it plays and its drawing. */
-export function ProblemPrompt({ problem, answering }: { problem?: ProblemView; answering?: boolean }) {
+/**
+ * ProblemPrompt shows a problem's picture, its prompt, the recordings it plays and its drawing. With apart, a part of a
+ * multistep problem shows only its own question, its scenario and the parts before it being shown apart.
+ */
+export function ProblemPrompt({ problem, answering, apart }: { problem?: ProblemView; answering?: boolean; apart?: boolean }) {
   const { tx, m } = useI18n();
   // While a plot is being answered, its drawing is the input itself.
   const figure = answering && problem?.input?.kind.case === "plot" ? undefined : problem?.figure;
@@ -33,7 +36,7 @@ export function ProblemPrompt({ problem, answering }: { problem?: ProblemView; a
         <DifficultyBadge difficulty={problem?.difficulty ?? ""} />
       </div>
       <Illustration path={problem?.picture ?? ""} className="w-full" />
-      <Markdown source={tx(problem?.prompt)} className="text-lg" />
+      <Markdown source={tx(apart && problem?.ask ? problem.ask : problem?.prompt)} className="text-lg" />
       <Sounds sounds={listenTo(problem?.listen ?? [], m.listen)} />
       <FigureView figure={figure} />
       {items.length > 0 && (
