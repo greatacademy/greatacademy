@@ -7,7 +7,7 @@ import { applyRepetition, credited, earlyFactor } from "./fire.ts";
 import { ctx, graph, planner } from "./fixture.test-util.ts";
 import { answerLesson, type LessonProgress, lessonSpeed, startLesson } from "./lesson.ts";
 import { DAY, defaultParams as p } from "./params.ts";
-import { reviewPlan, reviewResult } from "./review.ts";
+import { reviewOutcome, reviewPlan, reviewResult } from "./review.ts";
 import { dueAt, initialState, isDue, type LearnerState, memory, newTopicState } from "./state.ts";
 import {
   compressReviews,
@@ -109,15 +109,23 @@ describe("FIRe credit", () => {
 
 describe("lessons", () => {
   const run = (answers: boolean[], kps = 2) => answers.reduce<LessonProgress>((l, a) => answerLesson(p, l, a), startLesson("t", kps));
-  it("passes a knowledge point after two correct answers in a row", () => {
+  it("passes a knowledge point with two correct answers that outnumber the wrong ones", () => {
     expect(run([true, true]).kp).toBe(1);
-    expect(run([true, false, true, true]).kp).toBe(1);
+    expect(run([true, false, true]).kp).toBe(1);
+    expect(run([false, true, true]).kp).toBe(1);
+    expect(run([false, false, true, true]).kp).toBe(0);
+    expect(run([false, false, true, true, true]).kp).toBe(1);
     expect(run([true, true, true, true]).outcome).toBe("passed");
   });
-  it("fails as soon as a knowledge point cannot be passed within five questions", () => {
-    expect(run([false, false, false]).outcome).toBeUndefined();
-    expect(run([false, false, false, true, true]).kp).toBe(1);
-    expect(run([false, true, false, false]).outcome).toBe("failed");
+  it("fails at the third wrong answer on a knowledge point", () => {
+    expect(run([false, false]).outcome).toBeUndefined();
+    expect(run([false, false, false]).outcome).toBe("failed");
+    expect(run([false, true, false, true, false]).outcome).toBe("failed");
+    expect(run([true, true, false, false, false]).outcome).toBe("failed");
+  });
+  it("continues a lesson begun before the answers of a knowledge point were counted", () => {
+    const old: LessonProgress = { topic: "t", kpCount: 2, kp: 0, streak: 1, kpAsked: 2, asked: 2, correct: 1 };
+    expect(answerLesson(p, old, true).kp).toBe(1);
   });
   it("estimates speed from the questions needed", () => {
     expect(lessonSpeed(p, 2, 4)).toBe(1.5);
@@ -126,15 +134,25 @@ describe("lessons", () => {
 });
 
 describe("reviews", () => {
-  it("asks every knowledge point, the last ones most", () => {
-    expect(reviewPlan(p, 2, createRng(1)).sort()).toEqual([0, 1, 1]);
-    expect(reviewPlan(p, 5, createRng(1)).sort()).toEqual([2, 3, 4]);
-    expect(reviewPlan(p, 1, createRng(1))).toEqual([0, 0, 0]);
+  it("asks every knowledge point, the last ones most, then more after wrong answers", () => {
+    expect(reviewPlan(p, 2, createRng(1)).slice(0, 3).sort()).toEqual([0, 1, 1]);
+    expect(reviewPlan(p, 5, createRng(1)).slice(0, 3).sort()).toEqual([2, 3, 4]);
+    expect(reviewPlan(p, 5, createRng(1)).slice(3)).toEqual([4, 3]);
+    expect(reviewPlan(p, 1, createRng(1))).toEqual([0, 0, 0, 0, 0]);
   });
-  it("passes with two of three", () => {
-    expect(reviewResult(p, 1, 3)).toBe(0);
-    expect(reviewResult(p, 2, 3)).toBeCloseTo(2 / 3);
-    expect(reviewResult(p, 3, 3)).toBe(1);
+  it("passes with three correct, adding a question for each wrong answer up to five", () => {
+    expect(reviewOutcome(p, 3, 3)).toBe("passed");
+    expect(reviewOutcome(p, 2, 3)).toBeUndefined();
+    expect(reviewOutcome(p, 3, 5)).toBe("passed");
+    expect(reviewOutcome(p, 1, 4)).toBe("failed");
+    expect(reviewOutcome(p, 0, 3)).toBe("failed");
+    expect(reviewOutcome(p, 2, 4)).toBeUndefined();
+    expect(reviewResult({ correct: 3, total: 5, passed: true })).toBeCloseTo(0.6);
+    expect(reviewResult({ correct: 2, total: 5, passed: false })).toBe(0);
+  });
+  it("reads reviews recorded without a verdict as passed with two of three", () => {
+    expect(reviewResult({ correct: 1, total: 3 })).toBe(0);
+    expect(reviewResult({ correct: 2, total: 3 })).toBeCloseTo(2 / 3);
   });
 });
 

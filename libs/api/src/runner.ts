@@ -14,8 +14,8 @@ import {
   nextDiagnosticTopic,
   quizPlan,
   readingPassed,
+  reviewOutcome,
   reviewPlan,
-  reviewResult,
   startDiagnostic,
   startLesson,
   type Task,
@@ -265,12 +265,16 @@ async function advance(
     }
     case "review": {
       const next = { ...run, asked };
-      if (asked.length >= run.plan.length) {
-        const event: TaskEvent = { type: "review", at: now, topic: run.topic, correct, total: asked.length };
-        return finish(next, event, reviewResult(c.ctx.params, correct, asked.length) > 0);
+      const outcome = reviewOutcome(c.ctx.params, correct, asked.length);
+      if (outcome) {
+        const passed = outcome === "passed";
+        const event: TaskEvent = { type: "review", at: now, topic: run.topic, correct, total: asked.length, passed };
+        return finish(next, event, passed);
       }
+      // A review begun before plans held the questions after wrong answers asks its plan again.
+      const kp = run.plan[asked.length % run.plan.length]!;
       return {
-        run: { ...next, servedAt: now, current: { topic: run.topic, kp: run.plan[asked.length]!, seed: run.current.seed + 1 } },
+        run: { ...next, servedAt: now, current: { topic: run.topic, kp, seed: run.current.seed + 1 } },
         problem,
         verdict,
         skipped,

@@ -35,13 +35,15 @@ export interface Params {
   readonly adviceWeakShare: number;
   /** adviceAheadShare is the share of a course's XP placed as known that makes the course after it the better start. */
   readonly adviceAheadShare: number;
-  /** kpStreak is the number of consecutive correct answers that passes a knowledge point. */
-  readonly kpStreak: number;
-  /** kpMaxQuestions is the number of questions after which an unpassed knowledge point fails the lesson. */
-  readonly kpMaxQuestions: number;
-  /** reviewQuestions and reviewPass: a review asks reviewQuestions questions and passes with reviewPass correct. */
+  /** kpPass is the fewest correct answers that pass a knowledge point; they must also outnumber the wrong ones. */
+  readonly kpPass: number;
+  /** kpMaxWrong is the number of wrong answers on one knowledge point that fails the lesson. */
+  readonly kpMaxWrong: number;
+  /** reviewQuestions is how many questions a review asks when every answer is right. */
   readonly reviewQuestions: number;
+  /** reviewPass is how many correct answers pass a review; each wrong answer adds a question, up to reviewMaxQuestions. */
   readonly reviewPass: number;
+  readonly reviewMaxQuestions: number;
   /** quizEveryXp is the XP earned between quizzes. */
   readonly quizEveryXp: number;
   /** quizQuestions is the number of questions of a quiz; quizMinTopics the learned topics needed before the first. */
@@ -103,10 +105,11 @@ export const defaultParams: Params = {
   adviceMinTopics: 5,
   adviceWeakShare: 0.3,
   adviceAheadShare: 0.8,
-  kpStreak: 2,
-  kpMaxQuestions: 5,
+  kpPass: 2,
+  kpMaxWrong: 3,
   reviewQuestions: 3,
-  reviewPass: 2,
+  reviewPass: 3,
+  reviewMaxQuestions: 5,
   quizEveryXp: 150,
   quizQuestions: 8,
   quizMinTopics: 4,

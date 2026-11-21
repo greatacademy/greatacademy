@@ -1,6 +1,6 @@
 import type { EngineContext, EngineEvent, TaskEvent } from "./events.ts";
 import type { Params } from "./params.ts";
-import { reviewResult } from "./review.ts";
+import { reviewPassed } from "./review.ts";
 import type { LearnerState } from "./state.ts";
 
 /** reviewXp is the full XP of a review of a topic: a third of its lesson, at least 3. */
@@ -45,7 +45,7 @@ function earnedXp(ctx: EngineContext, e: TaskEvent): number {
     case "lesson":
       return lessonXp(p, full, e.passed, e.asked, e.correct);
     case "review":
-      if (reviewResult(p, e.correct, e.total) <= 0) return 0;
+      if (!reviewPassed(e)) return 0;
       return e.correct === e.total ? full + p.xpPerfectBonus : Math.round((full * e.correct) / e.total);
     case "reading":
       return readingPassed(e) ? full : Math.round(full * p.readingFailedXpShare);
@@ -80,15 +80,15 @@ export function nextBlowOffs(p: Params, state: LearnerState, e: EngineEvent): nu
   if (e.type === "reset") return 0;
   if (e.type === "placed" || e.type === "retake") return state.blowOffs;
   if (e.blownOff) return state.blowOffs + 1;
-  return taskPassed(p, e) ? Math.max(0, state.blowOffs - p.blowOffDecay) : state.blowOffs;
+  return taskPassed(e) ? Math.max(0, state.blowOffs - p.blowOffDecay) : state.blowOffs;
 }
 
-function taskPassed(p: Params, e: Exclude<TaskEvent, { type: "placed" }>): boolean {
+function taskPassed(e: Exclude<TaskEvent, { type: "placed" }>): boolean {
   switch (e.type) {
     case "lesson":
       return e.passed;
     case "review":
-      return reviewResult(p, e.correct, e.total) > 0;
+      return reviewPassed(e);
     case "quiz":
       return e.results.filter((r) => r.correct).length * 2 >= e.results.length;
     case "reading":

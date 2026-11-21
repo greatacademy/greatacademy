@@ -20,7 +20,7 @@ state = replay(ctx, events, initialState);   // applyEvent, one event at a time
 | :--- | :--- | :--- |
 | `placed` | A course's diagnostic ends (or is skipped) | The course; topics placed as known; which of them were asked directly |
 | `lesson` | A lesson ends | Topic, passed or failed, questions asked and answered correctly, whether it was blown off (§10) |
-| `review` | A review ends | Topic, correct answers, questions, whether it was blown off |
+| `review` | A review ends | Topic, correct answers, questions, whether it passed, whether it was blown off |
 | `quiz` | A quiz ends | One result per question, by topic, whether it was blown off |
 | `reading` | A passage's check ends | Passage, correct answers, questions, whether it was blown off |
 | `retake` | The supervisor retakes a course's diagnostic (§9) | The course; the topics forgotten |
@@ -103,12 +103,12 @@ One review of an advanced topic thereby replaces several reviews of the simpler 
 
 **Lessons.** A lesson walks through the topic's knowledge points in order. For each, the learner reads the explanation and a worked example, then answers practice problems from the knowledge point's generator:
 
-- two correct answers **in a row** pass the knowledge point;
-- the lesson **fails** as soon as passing the knowledge point within five questions has become impossible.
+- the knowledge point **passes** once at least two answers on it are correct and the correct ones outnumber the wrong ones: two right in a row, or three after two slips;
+- the lesson **fails** at the third wrong answer on one knowledge point.
 
 A **practice-only** topic ([Content §3](content.md#3-topics)) starts directly with the practice problems. A learner who failed its lesson gets the explanations and worked examples when they come back to it.
 
-Requiring a streak rather than a count means a lucky guess is not enough, and stopping at five keeps a struggling learner from grinding: the engine reroutes them to the prerequisites instead (§3).
+Requiring more correct answers after each slip means a lucky guess is not enough, and stopping at the third slip, after at most five questions, keeps a struggling learner from grinding: the engine reroutes them to the prerequisites instead (§3). While a knowledge point is practiced, the session shows how many correct answers it has and how many it needs.
 
 A passed lesson:
 
@@ -118,7 +118,7 @@ A passed lesson:
 
 **Essays.** The lesson of an essay ([Content §5](content.md#5-answers-and-checkers)) asks once and passes or fails on that one text's verdict. A passed essay learns the topic with `speed` 1, since one text says nothing about pace, and counts as a repetition of the topics it encompasses. An essay is never reviewed, quizzed or asked by the diagnostic, so it never falls due: the topics it encompasses carry its practice on. While its verdict is awaited, its lesson is not offered again.
 
-**Reviews.** A review asks three questions, starting from the topic's last (most complete) knowledge points and shuffled. Two or more correct is a pass with result `correct / 3`; fewer is a failure (result 0). Each review also moves the topic's speed: `speed ← 0.8 · speed + 0.2 · (0.5 + correct / total)`.
+**Reviews.** A review needs three correct answers and asks up to five questions: three when every answer is right, one more after each wrong one. It starts from the topic's last (most complete) knowledge points, shuffled, and asks the further questions from the last ones again. It passes at the third correct answer, with result `correct / asked`, and fails (result 0) as soon as three correct within five has become impossible. The event records whether it passed. Each review also moves the topic's speed: `speed ← 0.8 · speed + 0.2 · (0.5 + correct / total)`.
 
 ## 7. Quizzes
 
@@ -144,9 +144,9 @@ Each correct answer is an explicit repetition with result 0.5, and each wrong an
 | `adviceMinTopics` | 5 | Fewer topics of an earlier course say too little to send a learner back to it |
 | `adviceWeakShare` | 0.3 | Missing almost a third of an earlier course's part in the foundations is more than lessons on the way can fill comfortably |
 | `adviceAheadShare` | 0.8 | A learner who knows four fifths of a course learns more in the next one |
-| `kpStreak` | 2 | Two in a row is unlikely by chance yet quick for a learner who understands |
-| `kpMaxQuestions` | 5 | Enough room for one or two slips; beyond that, a prerequisite is the likelier problem |
-| `reviewQuestions`, `reviewPass` | 3, 2 | A short review that tolerates one slip |
+| `kpPass` | 2 | Two right is unlikely by chance yet quick for a learner who understands; each slip asks for one more |
+| `kpMaxWrong` | 3 | Enough room for two slips; beyond that, a prerequisite is the likelier problem |
+| `reviewQuestions`, `reviewPass`, `reviewMaxQuestions` | 3, 3, 5 | A short review when it goes well; a slip costs a question, not the review, and two slips still pass |
 | `quizEveryXp` | 150 | About every three to four days of 40 XP |
 | `readingKnownShare` | 0.98 | The starting target for known running words; to be tuned by the pilot |
 | `readingXpShare` | 0.2 | Volume matters, but must not crowd out the frontier; to be tuned by the pilot |

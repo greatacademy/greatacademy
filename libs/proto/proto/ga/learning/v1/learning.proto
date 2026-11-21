@@ -466,9 +466,9 @@ message LessonProgress {
   // knowledge_point is the index of the current knowledge point.
   int32 knowledge_point = 1;
   int32 knowledge_points = 2;
-  // streak is the current run of correct answers on this knowledge point.
+  // streak is the number of correct answers on this knowledge point.
   int32 streak = 3;
-  // needed is the run that passes a knowledge point.
+  // needed is the number of correct answers that passes this knowledge point: more after wrong answers.
   int32 needed = 4;
 }
 

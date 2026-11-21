@@ -1499,14 +1499,14 @@ export declare type LessonProgress = Message<"ga.learning.v1.LessonProgress"> & 
   knowledgePoints: number;
 
   /**
-   * streak is the current run of correct answers on this knowledge point.
+   * streak is the number of correct answers on this knowledge point.
    *
    * @generated from field: int32 streak = 3;
    */
   streak: number;
 
   /**
-   * needed is the run that passes a knowledge point.
+   * needed is the number of correct answers that passes this knowledge point: more after wrong answers.
    *
    * @generated from field: int32 needed = 4;
    */

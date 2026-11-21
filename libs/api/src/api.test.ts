@@ -329,7 +329,7 @@ describe("LearningService", () => {
     const topicId = next.kind.case === "lesson" ? next.kind.value.topicId : "";
     const { session } = await learning.startTask({ courseId: COURSE, task: next });
     const done = await finish(session!, () => false);
-    expect(done.step.case === "result" && done.step.value).toMatchObject({ passed: false, xp: 0, asked: 4 });
+    expect(done.step.case === "result" && done.step.value).toMatchObject({ passed: false, xp: 0, asked: 3 });
     const status = async () => (await learning.getCourseProgress({ courseId: COURSE })).topics.find((t) => t.topicId === topicId)?.status;
     expect(await status()).toBe(TopicStatus.FAILED);
     expect(
@@ -350,9 +350,10 @@ describe("LearningService", () => {
     expect(review.kind.case === "review" && review.kind.value.covers).toEqual(["integers-and-opposites"]);
     const started = await learning.startTask({ courseId: COURSE, task: review });
     expect(question(started.session).total).toBe(3);
+    // A wrong answer adds a question.
     const done = await finish(started.session!, (i) => i !== 1);
-    expect(done.step.case === "result" && done.step.value).toMatchObject({ passed: true, correct: 2, asked: 3 });
-    expect(done.step.case === "result" && done.step.value.items.map((i) => i.correct)).toEqual([true, false, true]);
+    expect(done.step.case === "result" && done.step.value).toMatchObject({ passed: true, correct: 3, asked: 4 });
+    expect(done.step.case === "result" && done.step.value.items.map((i) => i.correct)).toEqual([true, false, true, true]);
     expect((await learning.getDashboard({ courseId: COURSE })).stats?.due).toBe(0);
 
     const learnerId = await learnerFor(db, "u1");

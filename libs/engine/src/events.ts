@@ -36,6 +36,8 @@ export type TaskEvent =
       readonly topic: string;
       readonly correct: number;
       readonly total: number;
+      /** passed tells whether the review passed; see reviewOutcome and reviewPassed. */
+      readonly passed?: boolean;
       /** blownOff marks a task rushed through rather than attempted; see isBlownOff. */
       readonly blownOff?: boolean;
     }
@@ -137,7 +139,7 @@ function applyTask(ctx: EngineContext, state: LearnerState, e: TaskEvent): Learn
     case "review": {
       const prev = state.topics[e.topic];
       if (!prev?.learned) return state;
-      const result = reviewResult(p, e.correct, e.total);
+      const result = reviewResult(e);
       const after = applyRepetition(p, g, state, e.topic, result, e.at);
       const s = after.topics[e.topic]!;
       const speed = clampSpeed(p, 0.8 * s.speed + 0.2 * (0.5 + e.correct / e.total));

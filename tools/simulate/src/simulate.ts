@@ -18,7 +18,7 @@ import {
   type Params,
   type Planner,
   quizPlan,
-  reviewPlan,
+  reviewOutcome,
   startDiagnostic,
   startLesson,
 } from "@ga/engine";
@@ -104,10 +104,16 @@ export function simulate(
         if (l.outcome === "failed") failedLessons++;
         record({ type: "lesson", at: now, topic: task.topic, passed: l.outcome === "passed", asked: l.asked, correct: l.correct });
       } else if (task.kind === "review") {
-        const kps = reviewPlan(params, graph.graph.topics.get(task.topic)!.knowledgePoints.length, rng);
-        const correct = kps.filter(() => rng.bool(chance(task.topic, now))).length;
+        let correct = 0;
+        let total = 0;
+        let outcome: "passed" | "failed" | undefined;
+        while (!outcome) {
+          if (rng.bool(chance(task.topic, now))) correct++;
+          total++;
+          outcome = reviewOutcome(params, correct, total);
+        }
         reviews++;
-        record({ type: "review", at: now, topic: task.topic, correct, total: kps.length });
+        record({ type: "review", at: now, topic: task.topic, correct, total, passed: outcome === "passed" });
       } else if (task.kind === "reading") {
         // Reading comprehension follows ability; the student has met the words, so memory does not lower it.
         const total = graph.graph.passages.get(task.passage)!.questions;

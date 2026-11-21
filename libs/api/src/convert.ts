@@ -1,6 +1,15 @@
 import type { MessageInitShape } from "@bufbuild/protobuf";
 import type { Figure, InputSpec, KnowledgePointLesson, PassageView, Problem, Sound, Text } from "@ga/content";
-import { diagnosticCandidates, diagnosticLength, homeCourse, type LearnerState, reviewXp, type Task } from "@ga/engine";
+import {
+  diagnosticCandidates,
+  diagnosticLength,
+  homeCourse,
+  kpAnswers,
+  kpNeeded,
+  type LearnerState,
+  reviewXp,
+  type Task,
+} from "@ga/engine";
 import type { FigureSchema } from "@ga/proto/common/v1/figure_pb";
 import type { TextSchema } from "@ga/proto/common/v1/text_pb";
 import type {
@@ -162,6 +171,12 @@ export function knowledgePointIntro(
   };
 }
 
+/** reviewTotal is how many questions a review asks if every answer from now on is right: one more for each wrong answer so far. */
+function reviewTotal(c: CourseEntry, run: RunState): number {
+  const correct = run.asked.filter((a) => a.correct).length;
+  return run.asked.length + Math.max(1, c.ctx.params.reviewPass - correct);
+}
+
 async function question(
   c: CourseEntry,
   run: RunState,
@@ -176,7 +191,8 @@ async function question(
     problem: problemView(problem!),
     feedback: run.kind === "lesson" || run.kind === "review" || run.kind === "reading",
     canSkip: canSkip(run),
-    total: run.kind === "review" ? run.plan.length : run.kind === "quiz" ? run.topics.length : run.kind === "reading" ? run.questions : 0,
+    total:
+      run.kind === "review" ? reviewTotal(c, run) : run.kind === "quiz" ? run.topics.length : run.kind === "reading" ? run.questions : 0,
     attempt: run.attempt ?? 0,
     essay: run.kind === "lesson" && run.lesson.essay === true,
     ...(run.pending && {
@@ -192,7 +208,7 @@ async function question(
   }
   if (run.kind !== "lesson") return q;
   const l = run.lesson;
-  const lesson = { knowledgePoint: l.kp, knowledgePoints: l.kpCount, streak: l.streak, needed: l.essay ? 1 : c.ctx.params.kpStreak };
+  const lesson = { knowledgePoint: l.kp, knowledgePoints: l.kpCount, streak: kpAnswers(l).correct, needed: kpNeeded(c.ctx.params, l) };
   if (!intro) return { ...q, lesson };
   const kp = await c.source.lesson(run.topic, l.kp);
   return {
