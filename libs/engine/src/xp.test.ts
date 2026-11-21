@@ -48,6 +48,8 @@ describe("the XP of a task", () => {
     expect(xpOf(review(3, 3, true))).toBe(worth + p.xpPerfectBonus);
     expect(xpOf(review(3, 5, true))).toBe(Math.round((worth * 3) / 5));
     expect(xpOf(review(2, 5, false))).toBe(0);
+    // An answer looked up in the reference earns half, and the review no perfect bonus.
+    expect(xpOf({ ...review(3, 3, true), referenced: 1 } as EngineEvent)).toBe(Math.round((worth * 2.5) / 3));
     const quiz = (flags: boolean[]): EngineEvent => ({ type: "quiz", at: T0, results: flags.map((correct) => ({ topic, correct })) });
     expect(xpOf(quiz([true, true]))).toBe(p.quizXp);
     expect(xpOf(quiz([true, false]))).toBe(Math.round(p.quizXp / 2));

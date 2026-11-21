@@ -20,7 +20,7 @@ state = replay(ctx, events, initialState);   // applyEvent, one event at a time
 | :--- | :--- | :--- |
 | `placed` | A course's diagnostic ends (or is skipped) | The course; topics placed as known; which of them were asked directly; the topics it was about; whether it was supplemental |
 | `lesson` | A lesson ends | Topic, passed or failed, questions asked and answered correctly, the knowledge point a failed lesson stopped at, whether it was blown off (§10) |
-| `review` | A review ends | Topic, correct answers, questions, whether it passed, whether it was blown off |
+| `review` | A review ends | Topic, correct answers, questions, whether it passed, the correct answers given after the reference, whether it was blown off |
 | `quiz` | A quiz ends | One result per question, by topic, and whether it was late; whether it was a retake, whether it was blown off |
 | `reading` | A passage's check ends | Passage, correct answers, questions, whether it was blown off |
 | `retake` | The supervisor retakes a course's diagnostic (§9) | The course; the topics forgotten |
@@ -127,6 +127,8 @@ A passed lesson:
 
 **Reviews.** A review needs three correct answers and asks up to five questions: three when every answer is right, one more after each wrong one. It starts from the topic's last (most complete) knowledge points, shuffled, and asks the further questions from the last ones again. It passes at the third correct answer, with result `correct / asked`, and fails (result 0) as soon as three correct within five has become impossible. The event records whether it passed. Each review also moves the topic's speed: `speed ← 0.8 · speed + 0.2 · (0.5 + correct / total)`.
 
+**Reference.** Before answering a review question, the learner may look at the lesson of the knowledge point it asks. The server marks the question when the reference is opened, so the mark does not depend on the client. A correct answer after it counts fully toward passing, but earns `referenceCredit` of a correct answer's share of the repetition's result and of the XP, and the review earns no perfect bonus; the event counts these answers as `referenced`. Looking something up is better than guessing, and costs less than a failed review.
+
 ## 7. Quizzes
 
 After every 150 XP, once at least four topics are learned, the learner is offered a quiz: eight questions, one per topic, with no hints and no feedback until the end. Three quarters of the topics are the most recently learned, and the rest are sampled from older topics. Topics the last quiz asked are left out while there are enough others, and so is a topic that another chosen topic encompasses with weight at least `minCoverWeight`, since that question already tests it.
@@ -162,6 +164,7 @@ Each correct answer is an explicit repetition with result 0.5, and each wrong an
 | `kpMaxWrong` | 3 | Enough room for two slips; beyond that, a prerequisite is the likelier problem |
 | `reteachAfterFailures` | 2 | One failure may be a bad day; two at the same step show its prerequisites need more than a review |
 | `reviewQuestions`, `reviewPass`, `reviewMaxQuestions` | 3, 3, 5 | A short review when it goes well; a slip costs a question, not the review, and two slips still pass |
+| `referenceCredit` | 0.5 | A correct review answer after the reference shows the step is partly held: half the credit of one without it |
 | `quizEveryXp` | 150 | About every three to four days of 40 XP |
 | `readingKnownShare` | 0.98 | The starting target for known running words; to be tuned by the pilot |
 | `readingXpShare` | 0.2 | Volume matters, but must not crowd out the frontier; to be tuned by the pilot |
@@ -266,7 +269,7 @@ So XP rewards results and still credits honest effort: a poor lesson earns nothi
 
 A reading task counts as blown off when its check failed and the passage's words went by faster than `readingRushWpm`, since a learner reads before answering and the answers alone say little about the time spent.
 
-The state counts recent blown-off tasks in `blowOffs`. The penalty for one is floor(blowOffs / 3) XP before counting it, capped at 10 and at the task's full XP: the first three cost nothing and serve as warnings, the next three cost 1 XP, and so on. Each passed task lowers the count by 0.2. A subject's XP total never falls below zero. A learner sees the warning on the result page, with what it means.
+The state counts recent blown-off tasks in `blowOffs`. The penalty for one is floor(blowOffs / 3) XP before counting it, capped at 10 and at the task's full XP: the first three cost nothing and serve as warnings, the next three cost 1 XP, and so on. Each passed task lowers the count by 0.2. A subject's XP total never falls below zero. A learner sees the warning on the result page, with what it means. The penalty's shape is set by `blowOffStep`, `blowOffMaxPenalty` and `blowOffDecay`, and calibrated on real learners: the pilot report (`tools/pilot`) counts the blown-off tasks and their share of all tasks, the learners with any and with three or more, and the XP the penalties took.
 
 ## 11. Goals and Forecast
 

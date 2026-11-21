@@ -1324,6 +1324,26 @@ export declare type Question = Message<"ga.learning.v1.Question"> & {
    * @generated from field: int64 deadline = 12;
    */
   deadline: bigint;
+
+  /**
+   * can_reference is true where the question's lesson may be looked at before answering (reviews); reference_credit is
+   * the share of the credit a correct answer then earns.
+   *
+   * @generated from field: bool can_reference = 13;
+   */
+  canReference: boolean;
+
+  /**
+   * @generated from field: float reference_credit = 14;
+   */
+  referenceCredit: number;
+
+  /**
+   * reference is the lesson of the knowledge point asked, once it was looked at for this question.
+   *
+   * @generated from field: optional ga.learning.v1.KnowledgePointIntro reference = 15;
+   */
+  reference?: KnowledgePointIntro | undefined;
 };
 
 /**
@@ -1331,6 +1351,45 @@ export declare type Question = Message<"ga.learning.v1.Question"> & {
  * Use `create(QuestionSchema)` to create a new message.
  */
 export declare const QuestionSchema: GenMessage<Question>;
+
+/**
+ * @generated from message ga.learning.v1.OpenReferenceRequest
+ */
+export declare type OpenReferenceRequest = Message<"ga.learning.v1.OpenReferenceRequest"> & {
+  /**
+   * @generated from field: string session_id = 1;
+   */
+  sessionId: string;
+
+  /**
+   * index is the index of the question being answered; a stale index is rejected.
+   *
+   * @generated from field: int32 index = 2;
+   */
+  index: number;
+};
+
+/**
+ * Describes the message ga.learning.v1.OpenReferenceRequest.
+ * Use `create(OpenReferenceRequestSchema)` to create a new message.
+ */
+export declare const OpenReferenceRequestSchema: GenMessage<OpenReferenceRequest>;
+
+/**
+ * @generated from message ga.learning.v1.OpenReferenceResponse
+ */
+export declare type OpenReferenceResponse = Message<"ga.learning.v1.OpenReferenceResponse"> & {
+  /**
+   * @generated from field: ga.learning.v1.Session session = 1;
+   */
+  session?: Session | undefined;
+};
+
+/**
+ * Describes the message ga.learning.v1.OpenReferenceResponse.
+ * Use `create(OpenReferenceResponseSchema)` to create a new message.
+ */
+export declare const OpenReferenceResponseSchema: GenMessage<OpenReferenceResponse>;
 
 /**
  * Judging is an answer waiting for a model's verdict.
@@ -2845,6 +2904,17 @@ export declare const LearningService: GenService<{
     methodKind: "unary";
     input: typeof SubmitAnswerRequestSchema;
     output: typeof SubmitAnswerResponseSchema;
+  },
+  /**
+   * OpenReference shows, during a review, the lesson of the knowledge point asked; a correct answer after it earns
+   * part of the credit.
+   *
+   * @generated from rpc ga.learning.v1.LearningService.OpenReference
+   */
+  openReference: {
+    methodKind: "unary";
+    input: typeof OpenReferenceRequestSchema;
+    output: typeof OpenReferenceResponseSchema;
   },
   /**
    * SetSpeaking turns spoken topics on or off, or off for the rest of the day; turning them off leaves a session

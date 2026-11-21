@@ -160,3 +160,30 @@ describe("a multistep problem", () => {
     expect(second.run.current?.part).toBeUndefined();
   });
 });
+
+describe("a review run", () => {
+  const review: RunState = {
+    kind: "review",
+    topic: "t",
+    covers: [],
+    plan: [0, 1, 0, 1, 0],
+    asked: [],
+    servedAt: 0,
+    current: { topic: "t", kp: 0, seed: 1 },
+  };
+  const reviewing = {
+    ...course,
+    ctx: { ...course.ctx, graph: { graph: { topics: new Map([["t", { knowledgePoints: [{}, {}], xp: 10 }]]), passages: new Map() } } },
+  } as unknown as CourseEntry;
+
+  it("marks an answer given after the reference and counts it in the review's event", async () => {
+    const rng = createRng(1);
+    const first = await answerRun(reviewing, { ...review, referenced: true }, state, "1", false, 10_000, rng);
+    expect(first.run.asked[0]).toMatchObject({ correct: true, referenced: true });
+    expect(first.run.referenced).toBeUndefined();
+    const second = await answerRun(reviewing, first.run, state, "1", false, 20_000, rng);
+    const third = await answerRun(reviewing, second.run, state, "1", false, 30_000, rng);
+    expect(second.run.asked[1]).not.toHaveProperty("referenced");
+    expect(third.event).toMatchObject({ type: "review", correct: 3, total: 3, referenced: 1 });
+  });
+});

@@ -2,7 +2,7 @@ import { applyRepetition, credited } from "./fire.ts";
 import { type EngineGraph, remedialSet } from "./graph.ts";
 import { lessonSpeed } from "./lesson.ts";
 import type { Params } from "./params.ts";
-import { reviewPassed, reviewResult } from "./review.ts";
+import { creditedCorrect, reviewPassed, reviewResult } from "./review.ts";
 import { clampSpeed, type LearnerState, newTopicState, type TopicState } from "./state.ts";
 import { eventXp, nextBlowOffs, readingPassed } from "./xp.ts";
 
@@ -44,6 +44,8 @@ export type TaskEvent =
       readonly total: number;
       /** passed tells whether the review passed; see reviewOutcome and reviewPassed. */
       readonly passed?: boolean;
+      /** referenced counts the correct answers given after looking at the reference; each earns referenceCredit of a correct answer's credit. */
+      readonly referenced?: number;
       /** blownOff marks a task rushed through rather than attempted; see isBlownOff. */
       readonly blownOff?: boolean;
     }
@@ -170,7 +172,7 @@ function applyTask(ctx: EngineContext, state: LearnerState, e: TaskEvent): Learn
     case "review": {
       const prev = state.topics[e.topic];
       if (!prev?.learned) return state;
-      const result = reviewResult(e);
+      const result = reviewResult({ ...e, correct: creditedCorrect(p, e) });
       const after = applyRepetition(p, g, state, e.topic, result, e.at);
       const s = after.topics[e.topic]!;
       const speed = clampSpeed(p, 0.8 * s.speed + 0.2 * (0.5 + e.correct / e.total));

@@ -42,6 +42,8 @@ export interface Asked extends ProblemRef {
   readonly late?: boolean;
   /** parts are the answers to the parts of a multistep problem, in order; the question is correct when all of them are. */
   readonly parts?: readonly PartAnswer[];
+  /** referenced marks a review question answered after looking at the reference. */
+  readonly referenced?: boolean;
 }
 
 /** PartAnswer is the answer to one part of a multistep problem. */
@@ -79,6 +81,8 @@ interface RunBase {
   readonly pending?: { readonly judgment: string; readonly response: string };
   /** partial are the answers to the parts of the current multistep problem before the part asked now. */
   readonly partial?: readonly PartAnswer[];
+  /** referenced marks that the reference was looked at for the current question. */
+  readonly referenced?: boolean;
 }
 
 /**
@@ -221,7 +225,10 @@ export async function answerRun(
   delete next.attempt;
   delete next.pending;
   // The answers to earlier parts are kept only while a further part of the same problem is asked.
-  if (!answered.run.current?.part) delete next.partial;
+  if (!answered.run.current?.part) {
+    delete next.partial;
+    delete next.referenced;
+  }
   return { ...answered, run: next as unknown as RunState };
 }
 
@@ -270,6 +277,7 @@ async function advance(
       ...(given?.score !== undefined && { score: given.score }),
       ...(late && { late }),
       ...(parts && { parts }),
+      ...(run.referenced && { referenced: true }),
     },
   ];
   const correct = asked.filter((a) => a.correct).length;
@@ -338,7 +346,16 @@ async function advance(
       const outcome = reviewOutcome(c.ctx.params, correct, asked.length);
       if (outcome) {
         const passed = outcome === "passed";
-        const event: TaskEvent = { type: "review", at: now, topic: run.topic, correct, total: asked.length, passed };
+        const referenced = asked.filter((a) => a.correct && a.referenced).length;
+        const event: TaskEvent = {
+          type: "review",
+          at: now,
+          topic: run.topic,
+          correct,
+          total: asked.length,
+          passed,
+          ...(referenced > 0 && { referenced }),
+        };
         return finish(next, event, passed);
       }
       // A review begun before plans held the questions after wrong answers asks its plan again.

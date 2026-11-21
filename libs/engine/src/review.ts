@@ -36,6 +36,11 @@ export function reviewPassed(e: { readonly correct: number; readonly total: numb
   return e.passed ?? e.correct >= Math.min(2, e.total);
 }
 
+/** creditedCorrect is a review's correct answers as they count toward its credit and XP: one looked up in the reference counts referenceCredit of one. */
+export function creditedCorrect(p: Params, e: { readonly correct: number; readonly referenced?: number }): number {
+  return e.correct - (1 - p.referenceCredit) * Math.min(e.correct, e.referenced ?? 0);
+}
+
 /** reviewResult turns a finished review into a repetition result in [0, 1]: 0 when failed, otherwise the fraction correct. */
 export function reviewResult(e: { readonly correct: number; readonly total: number; readonly passed?: boolean }): number {
   return reviewPassed(e) && e.total > 0 ? e.correct / e.total : 0;

@@ -45,6 +45,9 @@ service LearningService {
   rpc GetSession(GetSessionRequest) returns (GetSessionResponse);
   // SubmitAnswer answers the current question of a session.
   rpc SubmitAnswer(SubmitAnswerRequest) returns (SubmitAnswerResponse);
+  // OpenReference shows, during a review, the lesson of the knowledge point asked; a correct answer after it earns
+  // part of the credit.
+  rpc OpenReference(OpenReferenceRequest) returns (OpenReferenceResponse);
   // SetSpeaking turns spoken topics on or off, or off for the rest of the day; turning them off leaves a session
   // waiting on a spoken question, with nothing counted.
   rpc SetSpeaking(SetSpeakingRequest) returns (SetSpeakingResponse);
@@ -419,6 +422,22 @@ message Question {
   // deadline is when a quiz's time runs out, in milliseconds since the epoch; 0 when the session has no time limit.
   // An answer after it counts wrong, and the quiz ends with the questions left unanswered counted wrong.
   int64 deadline = 12;
+  // can_reference is true where the question's lesson may be looked at before answering (reviews); reference_credit is
+  // the share of the credit a correct answer then earns.
+  bool can_reference = 13;
+  float reference_credit = 14;
+  // reference is the lesson of the knowledge point asked, once it was looked at for this question.
+  optional KnowledgePointIntro reference = 15;
+}
+
+message OpenReferenceRequest {
+  string session_id = 1;
+  // index is the index of the question being answered; a stale index is rejected.
+  int32 index = 2;
+}
+
+message OpenReferenceResponse {
+  Session session = 1;
 }
 
 // Judging is an answer waiting for a model's verdict.

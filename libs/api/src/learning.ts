@@ -700,6 +700,26 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
       };
     },
 
+    async openReference(req, ctx) {
+      const { db, userId } = auth(ctx);
+      const learnerId = await learnerFor(db, userId);
+      const now = deps.now();
+      await requireStudy(db, learnerId, now);
+      const row = await db.transaction(async (tx) => {
+        const row = await getSession(tx, learnerId, req.sessionId, true);
+        if (!row) throw new ConnectError("no such session", Code.NotFound);
+        const run = row.state as RunState;
+        if (row.status !== "active" || !run.current) throw new ConnectError("the session is over", Code.FailedPrecondition);
+        if (req.index !== run.asked.length) throw new ConnectError("that question was already answered", Code.FailedPrecondition);
+        if (run.kind !== "review") throw new ConnectError("only a review shows the reference", Code.FailedPrecondition);
+        if (run.referenced) return row;
+        const next = { ...run, referenced: true } as RunState;
+        await updateSession(tx, row.id, next, "active", new Date(now));
+        return { ...row, state: next };
+      });
+      return { session: await view(db, learnerId, row) };
+    },
+
     async setSpeaking(req, ctx) {
       const { db, userId } = auth(ctx);
       const learnerId = await learnerFor(db, userId);

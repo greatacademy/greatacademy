@@ -289,6 +289,22 @@ function QuestionFlow(props: {
   const response = signal("");
   const busy = signal(false);
   const error = signal("");
+  // A review may show the lesson of the step asked; the server marks the question, which then earns part of the credit.
+  const reference = signal(question.reference);
+  const look = async () => {
+    if (busy()) return;
+    busy.set(true);
+    error.set("");
+    try {
+      const result = await learning.openReference({ sessionId: props.session.id, index: question.index });
+      const step = result.session?.step;
+      if (step?.case === "question") reference.set(step.value.reference);
+    } catch (e) {
+      error.set(errorText(e));
+    } finally {
+      busy.set(false);
+    }
+  };
   let scroll: ScrollRef | undefined;
   // Far enough down to show what was added below, the solution or the math keyboard; the view stops at the end.
   const toEnd = () => setTimeout(() => scroll?.scrollTo({ y: 100_000, animated: true }), 50);
@@ -370,6 +386,16 @@ function QuestionFlow(props: {
               </Card>
             )}
           </If>
+          <If when={reference()}>
+            {(shown) => (
+              <Card>
+                <Text style={{ color: colors().warn, fontSize: 13, fontWeight: "600" }}>{m().reference}</Text>
+                <Rich source={tx(shown().title)} inline bold />
+                <Rich source={tx(shown().explanation)} figures={shown().figures} />
+                <If when={shown().figure}>{(drawn) => <FigureView figure={drawn()} />}</If>
+              </Card>
+            )}
+          </If>
           <If when={question.lesson}>
             <Muted>{m().practice}</Muted>
           </If>
@@ -391,6 +417,12 @@ function QuestionFlow(props: {
           </If>
           <If when={error()}>
             <ErrorNote message={error()} />
+          </If>
+          <If when={question.canReference && !reference() && !props.answered()}>
+            <View style={{ gap: 4 }}>
+              <Quiet label={m().reference} disabled={busy()} onPress={() => void look()} />
+              <Muted>{m().referenceNote(question.referenceCredit)}</Muted>
+            </View>
           </If>
           <If when={props.answered()}>{(answered) => <Solution answered={answered()} question={question} />}</If>
         </Body>
@@ -738,7 +770,12 @@ export function Player(props: { sessionId: string }) {
         <Loaded rpc={loaded}>
           {() => (
             <View style={{ flex: 1 }}>
-              <Each of={steps()} key={(current) => (current.step.case === "question" ? current.step.value.index : -1)}>
+              <Each
+                of={steps()}
+                key={(current) =>
+                  current.step.case === "question" ? `${current.step.value.index}:${current.step.value.problem?.part ?? 0}` : "-"
+                }
+              >
                 {(current) => (
                   <QuestionFlow
                     session={current()}

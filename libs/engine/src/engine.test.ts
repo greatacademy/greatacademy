@@ -7,7 +7,7 @@ import { applyRepetition, credited, earlyFactor } from "./fire.ts";
 import { ctx, graph, planner } from "./fixture.test-util.ts";
 import { answerLesson, type LessonProgress, lessonSpeed, startLesson } from "./lesson.ts";
 import { DAY, defaultParams as p } from "./params.ts";
-import { reviewOutcome, reviewPlan, reviewResult } from "./review.ts";
+import { creditedCorrect, reviewOutcome, reviewPlan, reviewResult } from "./review.ts";
 import { dueAt, initialState, isDue, type LearnerState, memory, newTopicState } from "./state.ts";
 import {
   compressReviews,
@@ -151,6 +151,8 @@ describe("reviews", () => {
     expect(reviewOutcome(p, 2, 4)).toBeUndefined();
     expect(reviewResult({ correct: 3, total: 5, passed: true })).toBeCloseTo(0.6);
     expect(reviewResult({ correct: 2, total: 5, passed: false })).toBe(0);
+    expect(creditedCorrect(p, { correct: 3, referenced: 2 })).toBeCloseTo(2);
+    expect(creditedCorrect(p, { correct: 1, referenced: 3 })).toBeCloseTo(0.5);
   });
   it("reads reviews recorded without a verdict as passed with two of three", () => {
     expect(reviewResult({ correct: 1, total: 3 })).toBe(0);

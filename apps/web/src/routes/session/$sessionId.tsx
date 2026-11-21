@@ -9,7 +9,7 @@ import {
   type TopicLink,
   TopicStatus,
 } from "@ga/proto/learning/v1/learning_pb";
-import { ArrowLeft, ArrowRight, CheckCircle, Circle, Clock, Lightbulb, PaperPlaneTilt, XCircle } from "@phosphor-icons/react";
+import { ArrowLeft, ArrowRight, BookOpen, CheckCircle, Circle, Clock, Lightbulb, PaperPlaneTilt, XCircle } from "@phosphor-icons/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { type ReactNode, useEffect, useState } from "react";
@@ -97,7 +97,7 @@ function Player() {
         <SubmittedView session={session} submitted={session.step.value} onJudged={setSession} />
       ) : session.step.case === "question" ? (
         <QuestionFlow
-          key={`${session.id}:${session.step.value.index}`}
+          key={`${session.id}:${session.step.value.index}:${session.step.value.problem?.part ?? 0}`}
           session={session}
           question={session.step.value}
           pending={pending}
@@ -204,6 +204,15 @@ function QuestionFlow({
   const qc = useQueryClient();
   const [practicing, setPracticing] = useState(!question.intro);
   const [response, setResponse] = useState("");
+  // A review may show the lesson of the step asked; the server marks the question, which then earns part of the credit.
+  const [reference, setReference] = useState(question.reference);
+  const look = useMutation({
+    mutationFn: () => learning.openReference({ sessionId: session.id, index: question.index }),
+    onSuccess: (res) => {
+      const step = res.session?.step;
+      if (step?.case === "question") setReference(step.value.reference);
+    },
+  });
   const submit = useMutation({
     mutationFn: (skip: boolean) =>
       learning.submitAnswer({ sessionId: session.id, index: question.index, response: skip ? "" : response, skip }),
@@ -275,6 +284,7 @@ function QuestionFlow({
   return (
     <div className="space-y-4">
       {question.passage && <PassageCard passage={question.passage} />}
+      {reference && <ReferenceCard reference={reference} />}
       <Card className="space-y-6">
         {question.lesson && <div className="text-xs font-medium tracking-wide text-muted uppercase">{m.practice}</div>}
         <ProblemPrompt problem={question.problem} answering />
@@ -297,11 +307,40 @@ function QuestionFlow({
                 {m.dontKnow}
               </Button>
             )}
+            {question.canReference && !reference && (
+              <Button
+                variant="ghost"
+                onClick={() => look.mutate()}
+                disabled={look.isPending}
+                title={m.referenceNote(question.referenceCredit)}
+              >
+                <BookOpen size={16} /> {m.reference}
+              </Button>
+            )}
           </div>
+        )}
+        {question.canReference && !reference && !answered && (
+          <p className="text-xs text-muted">{m.referenceNote(question.referenceCredit)}</p>
         )}
       </Card>
       {pending && <FeedbackView feedback={pending.feedback} problem={question.problem} session={session} onContinue={onContinue} />}
     </div>
+  );
+}
+
+/** ReferenceCard is the lesson of the step a review asks, once looked at: its explanation and drawings, folded away on request. */
+function ReferenceCard({ reference }: { reference: NonNullable<Question["reference"]> }) {
+  const { m, tx } = useI18n();
+  return (
+    <details open className="group rounded-2xl border border-warn/30 bg-warn-soft/30 p-4 sm:p-5">
+      <summary className="flex cursor-pointer items-center gap-2 text-sm font-semibold text-warn">
+        <BookOpen size={18} weight="duotone" /> {m.reference}: <Markdown source={tx(reference.title)} inline />
+      </summary>
+      <div className="mt-4 space-y-4">
+        <Explanation text={tx(reference.explanation)} figures={reference.figures} />
+        <CaptionedFigure figure={reference.figure} />
+      </div>
+    </details>
   );
 }
 

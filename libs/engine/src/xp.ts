@@ -1,6 +1,6 @@
 import type { EngineContext, EngineEvent, TaskEvent } from "./events.ts";
 import type { Params } from "./params.ts";
-import { reviewPassed } from "./review.ts";
+import { creditedCorrect, reviewPassed } from "./review.ts";
 import type { LearnerState } from "./state.ts";
 
 /** reviewXp is the full XP of a review of a topic: a third of its lesson, at least 3. */
@@ -49,7 +49,8 @@ function earnedXp(ctx: EngineContext, state: LearnerState, e: TaskEvent): number
       return lessonXp(p, full, e.passed, e.asked, e.correct);
     case "review":
       if (!reviewPassed(e)) return 0;
-      return e.correct === e.total ? full + p.xpPerfectBonus : Math.round((full * e.correct) / e.total);
+      // An answer looked up in the reference earns part of its XP, and the review no perfect bonus.
+      return e.correct === e.total && !e.referenced ? full + p.xpPerfectBonus : Math.round((full * creditedCorrect(p, e)) / e.total);
     case "reading":
       return readingPassed(e) ? full : Math.round(full * p.readingFailedXpShare);
     case "quiz": {

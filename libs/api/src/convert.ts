@@ -196,6 +196,20 @@ export function knowledgePointIntro(
   };
 }
 
+/** reference is the lesson of a question's knowledge point, as a review shows it when it is looked at. */
+async function reference(c: CourseEntry, ref: { readonly topic: string; readonly kp: number }) {
+  const kp = await c.source.lesson(ref.topic, ref.kp);
+  const count = c.subject.topics.get(ref.topic)?.knowledgePoints.length ?? 1;
+  return {
+    index: ref.kp,
+    count,
+    title: text(kp.title),
+    explanation: text(kp.explanation),
+    ...(kp.figure && { figure: figure(kp.figure) }),
+    figures: (kp.figures ?? []).map(figure),
+  };
+}
+
 /** reviewTotal is how many questions a review asks if every answer from now on is right: one more for each wrong answer so far. */
 function reviewTotal(c: CourseEntry, run: RunState): number {
   const correct = run.asked.filter((a) => a.correct).length;
@@ -221,6 +235,9 @@ async function question(
     attempt: run.attempt ?? 0,
     deadline: BigInt(run.kind === "quiz" ? (run.deadline ?? 0) : 0),
     essay: run.kind === "lesson" && run.lesson.essay === true,
+    canReference: run.kind === "review",
+    referenceCredit: run.kind === "review" ? c.ctx.params.referenceCredit : 0,
+    ...(run.kind === "review" && run.referenced && { reference: await reference(c, ref) }),
     ...(run.pending && {
       judging: { response: run.pending.response, delayed: judging?.delayed ?? false, failed: judging?.failed ?? false },
     }),

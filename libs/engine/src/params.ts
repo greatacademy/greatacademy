@@ -48,6 +48,8 @@ export interface Params {
   readonly reteachAfterFailures: number;
   /** reviewQuestions is how many questions a review asks when every answer is right. */
   readonly reviewQuestions: number;
+  /** referenceCredit is the share of a correct review answer's credit and XP that one given after looking at the reference earns. */
+  readonly referenceCredit: number;
   /** reviewPass is how many correct answers pass a review; each wrong answer adds a question, up to reviewMaxQuestions. */
   readonly reviewPass: number;
   readonly reviewMaxQuestions: number;
@@ -123,6 +125,7 @@ export const defaultParams: Params = {
   kpMaxWrong: 3,
   reteachAfterFailures: 2,
   reviewQuestions: 3,
+  referenceCredit: 0.5,
   reviewPass: 3,
   reviewMaxQuestions: 5,
   quizEveryXp: 150,
