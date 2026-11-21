@@ -48,7 +48,7 @@ export const theAntiderivative: TopicDef = {
     "Recognize antiderivatives, integrate powers of x, and fix the constant of integration from a known value.",
     "识别原函数，求 x 的幂的不定积分，并由已知值确定积分常数。",
   ),
-  prerequisites: ["the-mean-value-theorem"],
+  prerequisites: ["differentiating-trigonometric-functions"],
   encompasses: [],
   xp: 10,
   standards: [],
@@ -57,8 +57,8 @@ export const theAntiderivative: TopicDef = {
       id: "recognizing-antiderivatives",
       title: t("Recognizing antiderivatives", "识别原函数"),
       explanation: t(
-        "$F$ is an antiderivative of $f$ if $F'(x) = f(x)$. To check a candidate, differentiate it. Antiderivatives are not unique: $F(x) + C$ works for every constant $C$, and by the mean value theorem these are all of them on an interval. The family is written $\\int f(x) \\, dx = F(x) + C$.",
-        "若 $F'(x) = f(x)$，则 $F$ 是 $f$ 的一个原函数。检验候选函数时，对它求导即可。原函数不唯一：对任意常数 $C$，$F(x) + C$ 都是；由中值定理，在一个区间上原函数只有这些。这一族函数记作 $\\int f(x) \\, dx = F(x) + C$。",
+        "$F$ is an antiderivative of $f$ if $F'(x) = f(x)$. To check a candidate, differentiate it. Antiderivatives are not unique: $F(x) + C$ works for every constant $C$, and and on an interval these are all of them, since a function whose derivative is $0$ everywhere on an interval is constant there. The family is written $\\int f(x) \\, dx = F(x) + C$.",
+        "若 $F'(x) = f(x)$，则 $F$ 是 $f$ 的一个原函数。检验候选函数时，对它求导即可。原函数不唯一：对任意常数 $C$，$F(x) + C$ 都是；在一个区间上原函数只有这些，因为在区间上导数处处为 $0$ 的函数在该区间上是常数。这一族函数记作 $\\int f(x) \\, dx = F(x) + C$。",
       ),
       generate(rng) {
         const a = rng.nonZero(-5, 5);

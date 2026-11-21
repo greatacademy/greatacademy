@@ -60,7 +60,7 @@ export const expressingRationalFunctionsAsSumsOfPartialFractions: TopicDef = {
     "Split a fraction whose denominator has distinct linear factors into a sum of simpler fractions.",
     "把分母含不同一次因式的分式拆成若干简单分式之和。",
   ),
-  prerequisites: ["adding-rational-expressions-with-unlike-denominators", "integrating-linear-rational-functions-using-substitution"],
+  prerequisites: ["adding-rational-expressions-with-unlike-denominators"],
   encompasses: [],
   xp: 10,
   standards: [],
