@@ -143,6 +143,14 @@ const messages = {
     unanswered: (n: number) =>
       n === 1 ? "One question was left when the time ran out." : `${n} questions were left when the time ran out.`,
     quizFollowUps: "The topics you missed come first among your next tasks, as reviews. After them you may retake the quiz.",
+    remedialTitle: "Review these first",
+    remedialBody: "Each comes first among your next tasks, as a review; after them this lesson comes back.",
+    buildsOn: "Builds on",
+    elapsed: (ms: number) => {
+      const s = Math.round(ms / 1000);
+      return s < 60 ? `${s} s` : `${Math.floor(s / 60)} min ${s % 60} s`;
+    },
+    late: "Late",
     reading: "Reading",
     readingBody: (words: number, questions: number) =>
       `${words} words, then ${questions} question${questions === 1 ? "" : "s"} on what you read.`,
@@ -619,6 +627,14 @@ const messages = {
     timeUp: "时间到",
     unanswered: (n: number) => `时间到时还有 ${n} 道题未作答。`,
     quizFollowUps: "答错的知识点会作为复习排在接下来任务的最前面。复习之后可以重测。",
+    remedialTitle: "先复习这些",
+    remedialBody: "它们会作为复习排在接下来任务的最前面，复习之后这节课会再出现。",
+    buildsOn: "先修知识点",
+    elapsed: (ms: number) => {
+      const s = Math.round(ms / 1000);
+      return s < 60 ? `${s} 秒` : `${Math.floor(s / 60)} 分 ${s % 60} 秒`;
+    },
+    late: "超时",
     reading: "阅读",
     readingBody: (words: number, questions: number) => `${words} 个词的文章，读后回答 ${questions} 道题。`,
     resume: "继续",

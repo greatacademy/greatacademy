@@ -44,6 +44,8 @@ Each subject has three pages, the same on the web and in the apps:
 
 A topic's page and a session belong to the subject of their course and show its chip.
 
+**A task's result** shows the score and the XP earned against the task's full XP, then each question: its topic, its knowledge point (a lesson's questions stand under their knowledge points' titles), the time taken, whether it was late on a quiz, the answer given and, when wrong, the correct one and the solution. A lesson's result lists the topics it builds on, each marked known or not; a failed lesson's result names, as links, the key prerequisites to be reviewed before it comes back. The history opens the same results.
+
 **The subject switcher** opens from the chip in the header. It lists the learner's subjects, each with its current course and today's XP against its goal, and offers the subjects not yet started, which lead to their catalog. Its last entry is the **Course catalog**, so named to tell it apart from a subject's Course page.
 
 ## 4. Arrangement

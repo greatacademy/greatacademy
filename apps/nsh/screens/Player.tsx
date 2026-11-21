@@ -1,4 +1,13 @@
-import type { Feedback, Question, Result, ResultItem, Session, Submitted } from "@ga/proto/learning/v1/learning_pb";
+import {
+  type Feedback,
+  type Question,
+  type Result,
+  type ResultItem,
+  type Session,
+  type Submitted,
+  type TopicLink,
+  TopicStatus,
+} from "@ga/proto/learning/v1/learning_pb";
 import {
   cleanup,
   computed,
@@ -411,7 +420,14 @@ function ResultItemCard(props: { item: ResultItem; at: number }) {
       <View role="button" onPress={() => open.set(!open())} style={{ flexDirection: "row", gap: 8, justifyContent: "space-between" }}>
         <View style={{ flex: 1 }}>
           <Muted>{`${props.at + 1}. ${tx(props.item.title)}`}</Muted>
+          <If when={props.item.knowledgePointTitle}>{(kp) => <Muted>{`${props.item.knowledgePoint + 1}. ${tx(kp())}`}</Muted>}</If>
         </View>
+        <If when={props.item.late}>
+          <Text style={{ color: colors().warn, fontSize: 13, fontWeight: "600" }}>{m().late}</Text>
+        </If>
+        <If when={props.item.elapsedMs > 0n}>
+          <Muted>{m().elapsed(Number(props.item.elapsedMs))}</Muted>
+        </If>
         <Text style={{ color: props.item.correct ? colors().good : colors().bad, fontWeight: "700" }}>
           {props.item.correct ? "✓" : "✗"}
         </Text>
@@ -434,6 +450,23 @@ function ResultItemCard(props: { item: ResultItem; at: number }) {
         )}
       </If>
     </Card>
+  );
+}
+
+/** TopicLinks lists topics, each marked known (learned or assumed) or not. */
+function TopicLinks(props: { links: readonly TopicLink[] }) {
+  const known = (l: TopicLink) => l.status === TopicStatus.LEARNED || l.status === TopicStatus.ASSUMED || l.status === TopicStatus.DUE;
+  return (
+    <View style={{ gap: 4 }}>
+      <Each of={[...props.links]}>
+        {(l) => (
+          <View style={{ flexDirection: "row", gap: 8 }}>
+            <Text style={{ color: known(l()) ? colors().good : colors().muted, fontWeight: "700" }}>{known(l()) ? "✓" : "○"}</Text>
+            <Text style={{ color: colors().ink, flex: 1 }}>{tx(l().title)}</Text>
+          </View>
+        )}
+      </Each>
+    </View>
   );
 }
 
@@ -596,6 +629,19 @@ function ResultView(props: { session: Session; result: Result }) {
             <Muted>{m().quizFollowUps}</Muted>
           </If>
         </Card>
+        <If when={result.remedial.length > 0}>
+          <Card>
+            <Text style={{ color: colors().ink, fontSize: 17, fontWeight: "700" }}>{m().remedialTitle}</Text>
+            <Muted>{m().remedialBody}</Muted>
+            <TopicLinks links={result.remedial} />
+          </Card>
+        </If>
+        <If when={result.prerequisites.length > 0}>
+          <Card>
+            <Muted>{m().buildsOn}</Muted>
+            <TopicLinks links={result.prerequisites} />
+          </Card>
+        </If>
         <If when={result.passage}>
           {(passage) => (
             <Card>

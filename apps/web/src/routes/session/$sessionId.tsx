@@ -1,6 +1,15 @@
 import type { Subject } from "@ga/proto/catalog/v1/catalog_pb";
-import type { Feedback, ProblemView, Question, Result, Session, Submitted } from "@ga/proto/learning/v1/learning_pb";
-import { ArrowLeft, ArrowRight, CheckCircle, Lightbulb, PaperPlaneTilt, XCircle } from "@phosphor-icons/react";
+import {
+  type Feedback,
+  type ProblemView,
+  type Question,
+  type Result,
+  type Session,
+  type Submitted,
+  type TopicLink,
+  TopicStatus,
+} from "@ga/proto/learning/v1/learning_pb";
+import { ArrowLeft, ArrowRight, CheckCircle, Circle, Clock, Lightbulb, PaperPlaneTilt, XCircle } from "@phosphor-icons/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { type ReactNode, useEffect, useState } from "react";
@@ -536,6 +545,19 @@ function ResultView({ session, result }: { session: Session; result: Result }) {
           </Link>
         </div>
       </Card>
+      {result.remedial.length > 0 && (
+        <Card className="space-y-2 border-warn/40">
+          <h3 className="font-semibold">{m.remedialTitle}</h3>
+          <p className="text-sm text-muted">{m.remedialBody}</p>
+          <TopicLinks subject={subjectId} links={result.remedial} />
+        </Card>
+      )}
+      {result.prerequisites.length > 0 && (
+        <Card className="space-y-2">
+          <h3 className="text-sm font-medium text-muted">{m.buildsOn}</h3>
+          <TopicLinks subject={subjectId} links={result.prerequisites} />
+        </Card>
+      )}
       {result.passage && <PassageCard passage={result.passage} />}
       {result.feedback && result.items[0] && (
         <>
@@ -547,51 +569,83 @@ function ResultView({ session, result }: { session: Session; result: Result }) {
       )}
       {!result.feedback &&
         result.items.map((item, i) => (
-          <Card
-            // biome-ignore lint/suspicious/noArrayIndexKey: items are positional
-            key={i}
-            className="space-y-3"
-          >
-            <div className="flex items-center justify-between gap-3">
-              <div className="text-sm font-medium text-muted">
-                {i + 1}.{" "}
-                {kind === "reading" ? (
-                  <Markdown source={tx(item.title)} inline />
-                ) : (
-                  <Link to="/$subject/topics/$topicId" params={{ subject: subjectId, topicId: item.topicId }} className="hover:underline">
+          // biome-ignore lint/suspicious/noArrayIndexKey: items are positional
+          <div key={i} className="space-y-2">
+            {item.knowledgePointTitle && result.items[i - 1]?.knowledgePoint !== item.knowledgePoint && (
+              <h3 className="px-1 pt-2 text-sm font-semibold">
+                {item.knowledgePoint + 1}. <Markdown source={tx(item.knowledgePointTitle)} inline />
+              </h3>
+            )}
+            <Card className="space-y-3">
+              <div className="flex items-center justify-between gap-3">
+                <div className="text-sm font-medium text-muted">
+                  {i + 1}.{" "}
+                  {kind === "reading" ? (
                     <Markdown source={tx(item.title)} inline />
-                  </Link>
+                  ) : (
+                    <Link to="/$subject/topics/$topicId" params={{ subject: subjectId, topicId: item.topicId }} className="hover:underline">
+                      <Markdown source={tx(item.title)} inline />
+                    </Link>
+                  )}
+                </div>
+                <div className="flex shrink-0 items-center gap-2">
+                  {item.late && <span className="rounded-full bg-warn-soft px-2 py-0.5 text-xs font-medium text-warn">{m.late}</span>}
+                  {item.elapsedMs > 0n && (
+                    <span className="flex items-center gap-1 text-xs text-muted tabular-nums">
+                      <Clock size={14} /> {m.elapsed(Number(item.elapsedMs))}
+                    </span>
+                  )}
+                  {item.correct ? (
+                    <CheckCircle size={22} weight="fill" className="text-good" />
+                  ) : (
+                    <XCircle size={22} weight="fill" className="text-bad" />
+                  )}
+                </div>
+              </div>
+              <ProblemPrompt problem={item.problem} />
+              <div className="grid gap-1 text-sm sm:grid-cols-2">
+                <div>
+                  <span className="mr-2 text-muted">{m.yourAnswer}:</span>
+                  <AnswerText problem={item.problem} answer={item.response} />
+                </div>
+                {!item.correct && (
+                  <div>
+                    <span className="mr-2 text-muted">{m.correctAnswer}:</span>
+                    <AnswerText problem={item.problem} answer={item.answer} />
+                  </div>
                 )}
               </div>
-              {item.correct ? (
-                <CheckCircle size={22} weight="fill" className="text-good" />
-              ) : (
-                <XCircle size={22} weight="fill" className="text-bad" />
-              )}
-            </div>
-            <ProblemPrompt problem={item.problem} />
-            <div className="grid gap-1 text-sm sm:grid-cols-2">
-              <div>
-                <span className="mr-2 text-muted">{m.yourAnswer}:</span>
-                <AnswerText problem={item.problem} answer={item.response} />
-              </div>
               {!item.correct && (
-                <div>
-                  <span className="mr-2 text-muted">{m.correctAnswer}:</span>
-                  <AnswerText problem={item.problem} answer={item.answer} />
-                </div>
+                <details>
+                  <summary className="cursor-pointer text-sm font-medium text-muted select-none">{m.solution}</summary>
+                  <Markdown source={tx(item.solution)} className="mt-2" />
+                  <FigureView figure={item.solutionFigure} className="mt-3" />
+                  <Sounds sounds={item.solutionSounds} className="mt-3" />
+                </details>
               )}
-            </div>
-            {!item.correct && (
-              <details>
-                <summary className="cursor-pointer text-sm font-medium text-muted select-none">{m.solution}</summary>
-                <Markdown source={tx(item.solution)} className="mt-2" />
-                <FigureView figure={item.solutionFigure} className="mt-3" />
-                <Sounds sounds={item.solutionSounds} className="mt-3" />
-              </details>
-            )}
-          </Card>
+            </Card>
+          </div>
         ))}
     </div>
+  );
+}
+
+/** TopicLinks lists topics as links, each marked known (learned or assumed) or not. */
+function TopicLinks({ subject, links }: { subject: string; links: readonly TopicLink[] }) {
+  const { tx } = useI18n();
+  return (
+    <ul className="space-y-1">
+      {links.map((l) => {
+        const known = l.status === TopicStatus.LEARNED || l.status === TopicStatus.ASSUMED || l.status === TopicStatus.DUE;
+        return (
+          <li key={l.topicId} className="flex items-center gap-2 text-sm">
+            {known ? <CheckCircle size={18} weight="fill" className="text-good" /> : <Circle size={18} className="text-muted" />}
+            <Link to="/$subject/topics/$topicId" params={{ subject, topicId: l.topicId }} className="hover:underline">
+              <Markdown source={tx(l.title)} inline />
+            </Link>
+          </li>
+        );
+      })}
+    </ul>
   );
 }

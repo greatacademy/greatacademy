@@ -2457,6 +2457,20 @@ export declare type Result = Message<"ga.learning.v1.Result"> & {
    * @generated from field: int32 unanswered = 11;
    */
   unanswered: number;
+
+  /**
+   * prerequisites are the direct prerequisites of a lesson's topic, with the learner's standing on each.
+   *
+   * @generated from field: repeated ga.learning.v1.TopicLink prerequisites = 12;
+   */
+  prerequisites: TopicLink[];
+
+  /**
+   * remedial are the key prerequisites a failed lesson waits for: reviewed first, then the lesson comes back.
+   *
+   * @generated from field: repeated ga.learning.v1.TopicLink remedial = 13;
+   */
+  remedial: TopicLink[];
 };
 
 /**

@@ -722,6 +722,10 @@ message Result {
   optional Feedback feedback = 10;
   // unanswered counts the quiz questions left when the time ran out, counted wrong.
   int32 unanswered = 11;
+  // prerequisites are the direct prerequisites of a lesson's topic, with the learner's standing on each.
+  repeated TopicLink prerequisites = 12;
+  // remedial are the key prerequisites a failed lesson waits for: reviewed first, then the lesson comes back.
+  repeated TopicLink remedial = 13;
 }
 
 message ResultItem {

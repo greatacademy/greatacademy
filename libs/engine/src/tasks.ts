@@ -39,7 +39,7 @@ function unlocked(pl: Planner, state: LearnerState, t: string): boolean {
  * waits for: those learned (and not assumed) without a repetition since the
  * failure.
  */
-function pendingRemedial(pl: Planner, state: LearnerState, t: string): string[] {
+export function pendingRemedial(pl: Planner, state: LearnerState, t: string): string[] {
   const failedAt = state.topics[t]?.failedAt;
   if (failedAt === undefined) return [];
   return (pl.graph.keyPrerequisites.get(t) ?? []).filter((k) => {

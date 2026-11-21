@@ -7,6 +7,7 @@ import {
   kpAnswers,
   kpNeeded,
   type LearnerState,
+  pendingRemedial,
   quizTimeLimitMs,
   reviewXp,
   supplementalCandidates,
@@ -26,6 +27,7 @@ import type {
   SoundSchema,
   TaskSchema,
 } from "@ga/proto/learning/v1/learning_pb";
+import { TopicStatus } from "@ga/proto/learning/v1/learning_pb";
 
 import type { CourseEntry } from "./registry.ts";
 import { canSkip, type RunState, runTask } from "./runner.ts";
@@ -228,12 +230,28 @@ async function question(
   };
 }
 
+/** standing is a learner's standing on a topic as a result shows it: known or not, without the frontier. */
+function standing(c: CourseEntry, state: LearnerState, id: string): TopicStatus {
+  const t = state.topics[id];
+  if (c.planner.scope.assumed.has(id)) return TopicStatus.ASSUMED;
+  if (t?.learned) return TopicStatus.LEARNED;
+  return t?.failedAt !== undefined ? TopicStatus.FAILED : TopicStatus.LOCKED;
+}
+
 async function result(
   c: CourseEntry,
   run: RunState,
+  state: LearnerState,
   feedback: MessageInitShape<typeof FeedbackSchema> | undefined,
 ): Promise<MessageInitShape<typeof ResultSchema>> {
   const r = run.result!;
+  const link = (id: string) => {
+    const t = c.subject.topics.get(id);
+    return t ? [{ topicId: id, title: text(t.title), status: standing(c, state, id) }] : [];
+  };
+  const lessonTopic = run.kind === "lesson" ? c.subject.topics.get(run.topic) : undefined;
+  const prerequisites = lessonTopic ? lessonTopic.prerequisites.flatMap(link) : [];
+  const remedial = lessonTopic && !r.passed ? pendingRemedial(c.planner, state, lessonTopic.id).flatMap(link) : [];
   const listed = run.kind !== "diagnostic";
   const problems = listed ? await c.source.problems(run.asked.map(({ topic, kp, seed }) => ({ topic, kp, seed }))) : [];
   // A lesson's questions are grouped by knowledge point, under its title.
@@ -272,6 +290,8 @@ async function result(
     placed: r.placed,
     items,
     unanswered,
+    prerequisites,
+    remedial,
     ...(feedback && { feedback }),
     ...(passage && {
       passage: passageMessage(c.subject.def.id, passage),
@@ -296,6 +316,6 @@ export async function sessionMessage(
 ): Promise<MessageInitShape<typeof SessionSchema>> {
   const base = { id, courseId: c.id, task: taskMessage(c, runTask(run), state), answered: run.asked.length };
   if (essay?.submitted) return { ...base, step: { case: "submitted", value: essay.submitted } };
-  if (run.result) return { ...base, step: { case: "result", value: await result(c, run, essay?.feedback) } };
+  if (run.result) return { ...base, step: { case: "result", value: await result(c, run, state, essay?.feedback) } };
   return { ...base, step: { case: "question", value: await question(c, run, judging) } };
 }
