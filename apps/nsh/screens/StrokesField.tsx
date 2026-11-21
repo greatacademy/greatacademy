@@ -95,16 +95,20 @@ export function StrokesField(props: {
           }
         }}
       />
-      <View style={{ alignItems: "center", flexDirection: "row", gap: 16 }}>
+      <View style={{ alignItems: "center", flexDirection: "row", gap: 4, minHeight: 44 }}>
         <Muted>
           {m().strokesDrawn}: {strokes().length} / {props.input.strokes}
         </Muted>
         <View style={{ flex: 1 }} />
         <If when={!props.disabled && strokes().length > 0}>
-          <View role="button" onPress={() => view?.injectJavaScript("undoStroke()")}>
+          <View role="button" onPress={() => view?.injectJavaScript("undoStroke()")} style={{ paddingHorizontal: 10, paddingVertical: 12 }}>
             <Muted>{m().strokesUndo}</Muted>
           </View>
-          <View role="button" onPress={() => view?.injectJavaScript("clearStrokes()")}>
+          <View
+            role="button"
+            onPress={() => view?.injectJavaScript("clearStrokes()")}
+            style={{ paddingHorizontal: 10, paddingVertical: 12 }}
+          >
             <Muted>{m().plotClear}</Muted>
           </View>
         </If>

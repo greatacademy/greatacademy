@@ -111,12 +111,12 @@ function OrderField(props: { items: readonly string[]; onChange: (value: string)
               <Rich source={props.items[item()] ?? ""} />
             </View>
             <If when={!props.disabled}>
-              <View style={{ flexDirection: "row", gap: 12 }}>
+              <View style={{ flexDirection: "row", gap: 4, marginVertical: -8 }}>
                 <Text
                   role="button"
                   accessibilityLabel={m().moveUp}
                   onPress={() => at() > 0 && move(at(), -1)}
-                  style={{ color: at() > 0 ? colors().accent : colors().line, fontSize: 18, padding: 4 }}
+                  style={{ color: at() > 0 ? colors().accent : colors().line, fontSize: 18, paddingHorizontal: 12, paddingVertical: 10 }}
                 >
                   ↑
                 </Text>
@@ -124,7 +124,12 @@ function OrderField(props: { items: readonly string[]; onChange: (value: string)
                   role="button"
                   accessibilityLabel={m().moveDown}
                   onPress={() => at() < order().length - 1 && move(at(), 1)}
-                  style={{ color: at() < order().length - 1 ? colors().accent : colors().line, fontSize: 18, padding: 4 }}
+                  style={{
+                    color: at() < order().length - 1 ? colors().accent : colors().line,
+                    fontSize: 18,
+                    paddingHorizontal: 12,
+                    paddingVertical: 10,
+                  }}
                 >
                   ↓
                 </Text>
