@@ -22,6 +22,35 @@ import { SubjectChip, useShowSubject, useSubjectOfCourse } from "../../lib/subje
 
 export const Route = createFileRoute("/session/$sessionId")({ component: Player });
 
+/** useNow is the time, updated every second while ticking. */
+function useNow(ticking: boolean): number {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    if (!ticking) return;
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, [ticking]);
+  return now;
+}
+
+/** clock formats a number of milliseconds as minutes and seconds. */
+function clock(ms: number): string {
+  const seconds = Math.max(0, Math.ceil(ms / 1000));
+  return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
+}
+
+/** Countdown shows the time left before a quiz's deadline, warning in its last minute. */
+function Countdown({ deadline }: { deadline: number }) {
+  const { m } = useI18n();
+  const now = useNow(true);
+  const left = deadline - now;
+  return (
+    <span role="timer" className={`tabular-nums ${left <= 60_000 ? "font-medium text-bad" : ""}`}>
+      {left > 0 ? m.timeLeft(clock(left)) : m.timeUp}
+    </span>
+  );
+}
+
 /**
  * Player runs a session: lessons step through knowledge points (explanation,
  * worked example, practice with feedback); reviews give feedback per answer;
@@ -92,7 +121,7 @@ function taskTitle(
     case "reading":
       return { label: m.reading, title: <Markdown source={tx(k.value.title)} inline /> };
     case "quiz":
-      return { label: m.quiz, title: m.quiz };
+      return { label: m.quiz, title: k.value.retake ? m.quizRetake : m.quiz };
     default:
       return { label: m.diagnostic, title: m.diagnostic };
   }
@@ -114,10 +143,13 @@ function PlayerHeader({ session, subject }: { session: Session; subject: Subject
           <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
         </div>
         {q && !lesson && (
-          <div className="text-sm text-muted">
-            {session.task?.kind.case === "diagnostic"
-              ? m.questionUpTo(q.index + 1, session.task.kind.value.maxQuestions)
-              : m.question(q.index + 1, q.total)}
+          <div className="flex items-center gap-3 text-sm text-muted">
+            <span>
+              {session.task?.kind.case === "diagnostic"
+                ? m.questionUpTo(q.index + 1, session.task.kind.value.maxQuestions)
+                : m.question(q.index + 1, q.total)}
+            </span>
+            {q.deadline > 0n && <Countdown deadline={Number(q.deadline)} />}
           </div>
         )}
       </div>
@@ -179,6 +211,13 @@ function QuestionFlow({
   const answered = !!pending;
   const canSubmit = response.trim() !== "" && !submit.isPending && !answered;
   const send = () => canSubmit && submit.mutate(false);
+  // When a quiz's time runs out, what is written so far is sent, and the quiz ends.
+  const deadline = Number(question.deadline);
+  const now = useNow(deadline > 0);
+  const timeUp = deadline > 0 && now >= deadline;
+  useEffect(() => {
+    if (timeUp && !submit.isPending && !submit.isSuccess && !answered) submit.mutate(false);
+  }, [timeUp, submit, answered]);
 
   if (question.intro && !practicing) {
     const intro = question.intro;
@@ -468,7 +507,7 @@ function ResultView({ session, result }: { session: Session; result: Result }) {
           {result.passed ? <CheckCircle size={32} weight="fill" /> : <Lightbulb size={32} weight="fill" />}
         </div>
         <h2 className="text-xl font-semibold">{headline}</h2>
-        {kind !== "diagnostic" && <p className="text-muted">{m.score(result.correct, result.asked)}</p>}
+        {kind !== "diagnostic" && <p className="text-muted">{m.score(result.correct, result.asked + result.unanswered)}</p>}
         {result.xp > 0 && (
           <div>
             <p className="text-2xl font-semibold text-accent">{m.earned(result.xp)}</p>
@@ -486,6 +525,11 @@ function ResultView({ session, result }: { session: Session; result: Result }) {
         )}
         {kind === "lesson" && !result.passed && !result.blownOff && <p className="mx-auto max-w-lg text-sm text-muted">{m.lessonFailed}</p>}
         {kind === "review" && !result.passed && !result.blownOff && <p className="mx-auto max-w-lg text-sm text-muted">{m.reviewFailed}</p>}
+        {result.unanswered > 0 && <p className="mx-auto max-w-lg text-sm text-muted">{m.unanswered(result.unanswered)}</p>}
+        {kind === "quiz" &&
+          session.task?.kind.case === "quiz" &&
+          !session.task.kind.value.retake &&
+          result.correct < result.asked + result.unanswered && <p className="mx-auto max-w-lg text-sm text-muted">{m.quizFollowUps}</p>}
         <div className="pt-2">
           <Link to="/$subject" params={{ subject: subjectId }} className={buttonClass("primary", "px-6")}>
             {m.backToDashboard} <ArrowRight size={16} />

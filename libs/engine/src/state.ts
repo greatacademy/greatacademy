@@ -20,6 +20,18 @@ export interface TopicState {
   readonly explicitReviews: number;
 }
 
+/** LastQuiz is what the engine keeps of the last quiz: what it asked, how it went and what it still asks for. */
+export interface LastQuiz {
+  readonly at: number;
+  /** topics are the topics the quiz asked, one question each. */
+  readonly topics: readonly string[];
+  readonly correct: number;
+  /** followUps are the topics missed on the quiz that are still to be reviewed. */
+  readonly followUps: readonly string[];
+  /** retaken tells that the quiz was taken again. */
+  readonly retaken?: boolean;
+}
+
 /** LearnerState is everything the engine knows about a learner in one subject. */
 export interface LearnerState {
   readonly topics: Readonly<Record<string, TopicState>>;
@@ -37,6 +49,8 @@ export interface LearnerState {
   readonly read?: readonly string[];
   /** readingXp is the XP earned by reading; absent until the first passage. */
   readonly readingXp?: number;
+  /** lastQuiz is the last quiz taken; absent until the first. */
+  readonly lastQuiz?: LastQuiz;
 }
 
 /** initialState is the state of a new learner. */

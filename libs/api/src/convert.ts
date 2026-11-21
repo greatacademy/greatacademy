@@ -7,6 +7,7 @@ import {
   kpAnswers,
   kpNeeded,
   type LearnerState,
+  quizTimeLimitMs,
   reviewXp,
   type Task,
 } from "@ga/engine";
@@ -142,7 +143,9 @@ export function taskMessage(c: CourseEntry, task: Task, state: LearnerState): Me
     case "quiz": {
       const learned = c.planner.scope.topics.filter((id) => state.topics[id]?.learned).length;
       const p = c.ctx.params;
-      return { kind: { case: "quiz", value: { questions: Math.min(p.quizQuestions, learned), xp: p.quizXp } } };
+      const questions = task.retake ? (state.lastQuiz?.topics.length ?? 0) : Math.min(p.quizQuestions, learned);
+      const minutes = Math.round(quizTimeLimitMs(p, questions) / 60_000);
+      return { kind: { case: "quiz", value: { questions, xp: p.quizXp, retake: task.retake === true, minutes } } };
     }
   }
 }
@@ -194,6 +197,7 @@ async function question(
     total:
       run.kind === "review" ? reviewTotal(c, run) : run.kind === "quiz" ? run.topics.length : run.kind === "reading" ? run.questions : 0,
     attempt: run.attempt ?? 0,
+    deadline: BigInt(run.kind === "quiz" ? (run.deadline ?? 0) : 0),
     essay: run.kind === "lesson" && run.lesson.essay === true,
     ...(run.pending && {
       judging: { response: run.pending.response, delayed: judging?.delayed ?? false, failed: judging?.failed ?? false },
@@ -226,6 +230,11 @@ async function result(
   const r = run.result!;
   const listed = run.kind !== "diagnostic";
   const problems = listed ? await c.source.problems(run.asked.map(({ topic, kp, seed }) => ({ topic, kp, seed }))) : [];
+  // A lesson's questions are grouped by knowledge point, under its title.
+  const topic = run.kind === "lesson" ? run.topic : undefined;
+  const kps = topic ? [...new Set(run.asked.map((a) => a.kp))] : [];
+  const kpTitles = new Map(await Promise.all(kps.map(async (kp) => [kp, text((await c.source.lesson(topic!, kp)).title)] as const)));
+  const unanswered = run.kind === "quiz" ? Math.max(0, run.topics.length - run.asked.length) : 0;
   const items = listed
     ? run.asked.map((a, i) => {
         const p = problems[i]!;
@@ -239,6 +248,10 @@ async function result(
           response: a.response,
           ...(p.solutionFigure && { solutionFigure: figure(p.solutionFigure) }),
           solutionSounds: sounds(p.solutionSounds),
+          elapsedMs: BigInt(Math.max(0, Math.round(a.elapsedMs))),
+          late: a.late === true,
+          knowledgePoint: a.kp,
+          ...(kpTitles.has(a.kp) && { knowledgePointTitle: kpTitles.get(a.kp) }),
         };
       })
     : [];
@@ -252,6 +265,7 @@ async function result(
     blownOff: r.blownOff ?? false,
     placed: r.placed,
     items,
+    unanswered,
     ...(feedback && { feedback }),
     ...(passage && {
       passage: passageMessage(c.subject.def.id, passage),

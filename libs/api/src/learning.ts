@@ -204,7 +204,8 @@ function sameTask(req: TaskMessage | undefined, task: Task): boolean {
   const k = req?.kind;
   if (!k?.case || k.case !== task.kind) return false;
   if (k.case === "reading") return task.kind === "reading" && k.value.passageId === task.passage;
-  return k.case === "diagnostic" || k.case === "quiz" || ("topic" in task && k.value.topicId === task.topic);
+  if (k.case === "quiz") return task.kind === "quiz" && k.value.retake === (task.retake === true);
+  return k.case === "diagnostic" || ("topic" in task && k.value.topicId === task.topic);
 }
 
 /** learningService implements LearningService over the event log. */

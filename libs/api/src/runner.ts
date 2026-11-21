@@ -13,6 +13,7 @@ import {
   type LessonProgress,
   nextDiagnosticTopic,
   quizPlan,
+  quizTimeLimitMs,
   readingPassed,
   reviewOutcome,
   reviewPlan,
@@ -33,6 +34,8 @@ export interface Asked extends ProblemRef {
   readonly elapsedMs: number;
   /** score is the fraction of criteria a model found met, for an answer it judged. */
   readonly score?: number;
+  /** late marks a quiz answer that arrived after the time limit and so counts wrong. */
+  readonly late?: boolean;
 }
 
 /** RunResult is the outcome of a finished run. */
@@ -79,7 +82,14 @@ export type RunState =
       readonly practice?: boolean;
     })
   | (RunBase & { readonly kind: "review"; readonly topic: string; readonly covers: readonly string[]; readonly plan: readonly number[] })
-  | (RunBase & { readonly kind: "quiz"; readonly topics: readonly string[] })
+  | (RunBase & {
+      readonly kind: "quiz";
+      readonly topics: readonly string[];
+      /** deadline is when the quiz's time runs out; absent in quizzes begun before quizzes were timed. */
+      readonly deadline?: number;
+      /** retake marks the last quiz taken again. */
+      readonly retake?: boolean;
+    })
   | (RunBase & { readonly kind: "reading"; readonly passage: string; readonly questions: number })
   | (RunBase & { readonly kind: "diagnostic"; readonly diagnostic: DiagnosticProgress });
 
@@ -128,8 +138,10 @@ export function startRun(c: CourseEntry, task: Task, state: LearnerState, now: n
       };
     }
     case "quiz": {
-      const topics = quizPlan(c.planner, state, rng);
-      return { kind: "quiz", topics, ...served, current: diagnosticRef(c, topics[0]!, rng) };
+      const retake = task.retake === true;
+      const topics = quizPlan(c.planner, state, rng, retake);
+      const deadline = now + quizTimeLimitMs(c.ctx.params, topics.length);
+      return { kind: "quiz", topics, deadline, ...(retake && { retake }), ...served, current: diagnosticRef(c, topics[0]!, rng) };
     }
     case "reading": {
       const questions = c.ctx.graph.graph.passages.get(task.passage)!.questions;
@@ -205,15 +217,18 @@ async function advance(
       ? { problem: (await c.source.problems([ref]))[0]!, verdict: { correct: false } }
       : await c.source.judge(ref, response);
   const elapsedMs = now - (run.servedAt ?? 0);
+  // A quiz answer that arrives after the time limit, beyond the time an answer takes to arrive, counts wrong.
+  const late = run.kind === "quiz" && run.deadline !== undefined && now > run.deadline + c.ctx.params.quizGraceSeconds * 1000;
   const asked = [
     ...run.asked,
     {
       ...ref,
       response: skipped ? "" : response,
-      correct: verdict.correct,
+      correct: verdict.correct && !late,
       skipped,
       elapsedMs,
       ...(given?.score !== undefined && { score: given.score }),
+      ...(late && { late }),
     },
   ];
   const correct = asked.filter((a) => a.correct).length;
@@ -282,9 +297,14 @@ async function advance(
     }
     case "quiz": {
       const next = { ...run, asked };
-      if (asked.length >= run.topics.length) {
-        const event: TaskEvent = { type: "quiz", at: now, results: asked.map((a) => ({ topic: a.topic, correct: a.correct })) };
-        return finish(next, event, correct * 2 >= asked.length);
+      // Once the time is up the quiz ends, and the questions not answered count wrong.
+      const timeUp = run.deadline !== undefined && now >= run.deadline;
+      if (asked.length >= run.topics.length || timeUp) {
+        const answered = asked.map((a) => ({ topic: a.topic, correct: a.correct, ...(a.late && { late: true }) }));
+        const unanswered = run.topics.slice(asked.length).map((topic) => ({ topic, correct: false, late: true }));
+        const results = [...answered, ...unanswered];
+        const event: TaskEvent = { type: "quiz", at: now, results, ...(run.retake && { retake: true }) };
+        return finish(next, event, correct * 2 >= results.length);
       }
       return { run: { ...next, servedAt: now, current: diagnosticRef(c, run.topics[asked.length]!, rng) }, problem, verdict, skipped };
     }
@@ -322,7 +342,7 @@ export function runTask(run: RunState): Task {
     case "review":
       return { kind: "review", topic: run.topic, covers: run.covers };
     case "quiz":
-      return { kind: "quiz" };
+      return { kind: "quiz", ...(run.retake && { retake: true }) };
     case "reading":
       return { kind: "reading", passage: run.passage };
     case "diagnostic":

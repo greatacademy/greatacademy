@@ -11,7 +11,8 @@ export type Task =
   | { readonly kind: "lesson"; readonly topic: string }
   /** covers are the due topics this review is expected to repair, itself included when due. */
   | { readonly kind: "review"; readonly topic: string; readonly covers: readonly string[] }
-  | { readonly kind: "quiz" }
+  /** retake marks the last quiz taken again with new questions, once its follow-up reviews are done. */
+  | { readonly kind: "quiz"; readonly retake?: true }
   | { readonly kind: "reading"; readonly passage: string };
 
 /** Planner bundles what task selection needs. */
@@ -65,6 +66,27 @@ export function remedialTopics(pl: Planner, state: LearnerState): string[] {
   const out = new Set<string>();
   for (const t of pl.scope.topics) if (unlocked(pl, state, t)) for (const k of pendingRemedial(pl, state, t)) out.add(k);
   return [...out];
+}
+
+/**
+ * quizFollowUps lists the topics missed on the last quiz that are still to be
+ * reviewed. They are reviewed at once, due or not: a quiz shows what has
+ * slipped, and the review repairs it while the miss is fresh.
+ */
+export function quizFollowUps(pl: Planner, state: LearnerState): string[] {
+  const missed = new Set(state.lastQuiz?.followUps ?? []);
+  return pl.scope.topics.filter((t) => missed.has(t) && !pl.scope.assumed.has(t) && state.topics[t]?.learned);
+}
+
+/**
+ * quizRetakeDue tells whether the last quiz may be taken again: it was not
+ * perfect, not yet retaken, its follow-up reviews are done and no new quiz is
+ * due. The retake is optional and asks the same topics with new questions.
+ */
+export function quizRetakeDue(pl: Planner, state: LearnerState): boolean {
+  const q = state.lastQuiz;
+  if (!q || q.retaken || q.correct >= q.topics.length || quizDue(pl, state)) return false;
+  return quizFollowUps(pl, state).length === 0;
 }
 
 /** essayTopic tells whether a topic is an essay, which is never reviewed explicitly, quizzed or asked by the diagnostic. */
@@ -189,11 +211,13 @@ export function readingDue(pl: Planner, state: LearnerState): boolean {
  * 2. a quiz when one is due;
  * 3. a passage to read when reading is below its share of the XP, so that a
  *    learner who always takes the first task reads too;
- * 4. remedial reviews of the key prerequisites that failed lessons wait
- *    for, then reviews of the other due topics, compressed, after removing
- *    the due topics the offered lessons and remedial reviews will repair;
+ * 4. remedial reviews: of the topics missed on the last quiz, and of the key
+ *    prerequisites that failed lessons wait for; then reviews of the other
+ *    due topics, compressed, after removing the due topics the offered
+ *    lessons and remedial reviews will repair;
  * 5. lessons from the frontier, at least minLessonShare of the tasks when
- *    any are available, so that reviews never crowd out new learning.
+ *    any are available, so that reviews never crowd out new learning;
+ * 6. last, the optional retake of the last quiz, once it is due.
  * Reviews and lessons alternate, reviews first, unless the learner has
  * taken maxReviewStreak reviews since the last lesson: then a lesson comes
  * first, so that a learner who always takes the first task is not held in
@@ -205,13 +229,14 @@ export function nextTasks(pl: Planner, state: LearnerState, now: number, limit =
   if (quizDue(pl, state)) tasks.push({ kind: "quiz" });
   const passage = readingDue(pl, state) ? nextPassage(pl, state) : undefined;
   if (passage) tasks.push({ kind: "reading", passage });
-  const room = limit - tasks.length;
+  const retake = quizRetakeDue(pl, state);
+  const room = limit - tasks.length - (retake ? 1 : 0);
   const due = dueTopics(pl, state, now);
   const lessonsAvailable = frontier(pl, state);
   const minLessons = Math.min(lessonsAvailable.length, Math.ceil(room * pl.params.minLessonShare));
   const lessonsFirst = lessonsAvailable.slice(0, Math.max(minLessons, room));
   const dueSet = new Set(due);
-  const remedial = remedialTopics(pl, state);
+  const remedial = [...new Set([...quizFollowUps(pl, state), ...remedialTopics(pl, state)])];
   const covered = new Set([...lessonsFirst.slice(0, minLessons), ...remedial].flatMap((t) => coverage(pl, t, dueSet)));
   const remedialReviews = remedial.map((topic): Task => ({ kind: "review", topic, covers: coverage(pl, topic, dueSet) }));
   const reviews = [...remedialReviews, ...compressReviews(pl, state, due, covered)].slice(0, room - minLessons);
@@ -222,22 +247,41 @@ export function nextTasks(pl: Planner, state: LearnerState, now: number, limit =
     if (first[i]) tasks.push(first[i]!);
     if (second[i]) tasks.push(second[i]!);
   }
+  if (retake) tasks.push({ kind: "quiz", retake: true });
   return tasks;
 }
 
 /**
- * quizPlan chooses the topics a quiz asks, one question each: the most
- * recently learned topics first (the quiz checks what was learned since the
- * last one), then a random sample of older ones.
+ * quizPlan chooses the topics a quiz asks, one question each. A retake asks
+ * the topics of the last quiz again. Otherwise the most recently learned
+ * topics come first (the quiz checks what was learned since the last one),
+ * then a random sample of older ones; topics the last quiz asked, and topics
+ * another chosen topic encompasses and so already tests, are left for later
+ * unless there are too few others.
  */
-export function quizPlan(pl: Planner, state: LearnerState, rng: Rng): string[] {
+export function quizPlan(pl: Planner, state: LearnerState, rng: Rng, retake = false): string[] {
+  if (retake && state.lastQuiz) return rng.shuffle([...state.lastQuiz.topics]);
+  const lastAsked = new Set(state.lastQuiz?.topics ?? []);
   const learned = pl.scope.topics
     .filter((t) => state.topics[t]?.learned && !essayTopic(pl, t) && !spokenTopic(pl, t))
     .sort((a, b) => (state.topics[b]!.learnedAt ?? 0) - (state.topics[a]!.learnedAt ?? 0));
   const n = Math.min(pl.params.quizQuestions, learned.length);
-  const recent = learned.slice(0, Math.ceil(n * 0.75));
-  const older = rng.sample(learned.slice(recent.length), n - recent.length);
-  return rng.shuffle([...recent, ...older]);
+  const fresh = learned.filter((t) => !lastAsked.has(t));
+  const pool = fresh.length >= n ? fresh : [...fresh, ...learned.filter((t) => lastAsked.has(t))];
+  const tested = (chosen: readonly string[], t: string) =>
+    chosen.some((c) => (pl.graph.encompassed.get(c)?.get(t) ?? 0) >= pl.params.minCoverWeight);
+  const recent: string[] = [];
+  for (const t of pool) if (recent.length < Math.ceil(n * 0.75) && !tested(recent, t)) recent.push(t);
+  const rest = pool.filter((t) => !recent.includes(t));
+  const untested = rest.filter((t) => !tested(recent, t));
+  const older = rng.sample(untested, Math.min(untested.length, n - recent.length));
+  const filler = rest.filter((t) => !older.includes(t)).slice(0, n - recent.length - older.length);
+  return rng.shuffle([...recent, ...older, ...filler]);
+}
+
+/** quizTimeLimitMs is how long a quiz of n questions may take. */
+export function quizTimeLimitMs(p: Params, n: number): number {
+  return n * p.quizSecondsPerQuestion * 1000;
 }
 
 /** CourseProgress summarizes a learner's progress in a course. */

@@ -369,4 +369,42 @@ describe("tasks", () => {
     expect(plan).toHaveLength(5);
     expect(plan).toContain("e");
   });
+  it("leaves the topics of the last quiz and the topics a chosen one tests for later", () => {
+    const s = learnedState(["a", "b", "c", "d", "e", "f", "g"]);
+    const recent = (t: string, days: number) => ({ ...s.topics[t]!, learnedAt: T0 + days * DAY });
+    const topics = { ...s.topics, g: recent("g", 3), f: recent("f", 2) };
+    // g encompasses f fully, so a quiz of four asks g but not f.
+    const four = { ...planner, params: { ...p, quizQuestions: 4 } };
+    const plan = quizPlan(four, { ...s, topics }, createRng(1));
+    expect(plan).toContain("g");
+    expect(plan).not.toContain("f");
+    const lastQuiz = { at: T0, topics: ["g", "a"], correct: 2, followUps: [] };
+    const next = quizPlan(four, { ...s, topics, lastQuiz }, createRng(1));
+    expect(next).not.toContain("g");
+    expect(next).not.toContain("a");
+  });
+  it("reviews the topics missed on a quiz at once, then offers a retake that pays for what it improves", () => {
+    const s = learnedState(["a", "b", "c", "d"]);
+    const results = ["a", "b", "c", "d"].map((topic) => ({ topic, correct: topic !== "b" }));
+    const quizzed = applyEvent(ctx, { ...s, xp: 150 }, { type: "quiz", at: T0, results });
+    expect(quizzed.lastQuiz).toMatchObject({ topics: ["a", "b", "c", "d"], correct: 3, followUps: ["b"] });
+    const tasks = nextTasks(planner, quizzed, T0);
+    expect(tasks[0]).toMatchObject({ kind: "review", topic: "b" });
+    expect(tasks.some((t) => t.kind === "quiz")).toBe(false);
+    const reviewed = applyEvent(ctx, quizzed, { type: "review", at: T0, topic: "b", correct: 3, total: 3, passed: true });
+    expect(reviewed.lastQuiz?.followUps).toEqual([]);
+    const offered = nextTasks(planner, reviewed, T0);
+    expect(offered.at(-1)).toEqual({ kind: "quiz", retake: true });
+    expect([...quizPlan(planner, reviewed, createRng(2), true)].sort()).toEqual(["a", "b", "c", "d"]);
+    const retaken = applyEvent(ctx, reviewed, {
+      type: "quiz",
+      at: T0,
+      results: results.map((r) => ({ ...r, correct: true })),
+      retake: true,
+    });
+    expect(retaken.lastQuiz?.retaken).toBe(true);
+    expect(retaken.quizzes).toBe(quizzed.quizzes);
+    expect(retaken.xpAtLastQuiz).toBe(quizzed.xpAtLastQuiz);
+    expect(nextTasks(planner, retaken, T0).some((t) => t.kind === "quiz")).toBe(false);
+  });
 });

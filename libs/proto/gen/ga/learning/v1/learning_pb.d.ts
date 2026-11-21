@@ -778,6 +778,21 @@ export declare type QuizTask = Message<"ga.learning.v1.QuizTask"> & {
    * @generated from field: int32 xp = 2;
    */
   xp: number;
+
+  /**
+   * retake is true for the last quiz taken again with new questions after its follow-up reviews; it earns the XP of
+   * the answers it improves on.
+   *
+   * @generated from field: bool retake = 3;
+   */
+  retake: boolean;
+
+  /**
+   * minutes is the quiz's time limit.
+   *
+   * @generated from field: int32 minutes = 4;
+   */
+  minutes: number;
 };
 
 /**
@@ -1274,6 +1289,14 @@ export declare type Question = Message<"ga.learning.v1.Question"> & {
    * @generated from field: bool essay = 11;
    */
   essay: boolean;
+
+  /**
+   * deadline is when a quiz's time runs out, in milliseconds since the epoch; 0 when the session has no time limit.
+   * An answer after it counts wrong, and the quiz ends with the questions left unanswered counted wrong.
+   *
+   * @generated from field: int64 deadline = 12;
+   */
+  deadline: bigint;
 };
 
 /**
@@ -2414,6 +2437,13 @@ export declare type Result = Message<"ga.learning.v1.Result"> & {
    * @generated from field: optional ga.learning.v1.Feedback feedback = 10;
    */
   feedback?: Feedback | undefined;
+
+  /**
+   * unanswered counts the quiz questions left when the time ran out, counted wrong.
+   *
+   * @generated from field: int32 unanswered = 11;
+   */
+  unanswered: number;
 };
 
 /**
@@ -2474,6 +2504,33 @@ export declare type ResultItem = Message<"ga.learning.v1.ResultItem"> & {
    * @generated from field: repeated ga.learning.v1.Sound solution_sounds = 9;
    */
   solutionSounds: Sound[];
+
+  /**
+   * elapsed_ms is the time from showing the question to receiving the answer.
+   *
+   * @generated from field: int64 elapsed_ms = 10;
+   */
+  elapsedMs: bigint;
+
+  /**
+   * late is true for a quiz answer that arrived after the time limit and so counts wrong.
+   *
+   * @generated from field: bool late = 11;
+   */
+  late: boolean;
+
+  /**
+   * knowledge_point is the index of the question's knowledge point in its topic, and knowledge_point_title its title,
+   * so that a lesson's questions can be grouped by knowledge point.
+   *
+   * @generated from field: int32 knowledge_point = 12;
+   */
+  knowledgePoint: number;
+
+  /**
+   * @generated from field: optional ga.common.v1.Text knowledge_point_title = 13;
+   */
+  knowledgePointTitle?: Text | undefined;
 };
 
 /**

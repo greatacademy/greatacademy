@@ -47,7 +47,16 @@ const messages = {
     readingBody: (words: number, questions: number) =>
       `${words} words, then ${questions} question${questions === 1 ? "" : "s"} on what you read.`,
     quiz: "Quiz",
-    quizBody: (n: number) => `${n} questions on recent and older topics, with no hints until the end.`,
+    quizBody: (n: number, minutes: number) =>
+      `${n} questions on recent and older topics in ${minutes} minutes, with no hints until the end.`,
+    quizRetake: "Quiz retake",
+    quizRetakeBody: (n: number) =>
+      `The same ${n} topics with new questions, now that you have reviewed what you missed. Earns XP for each answer you improve on.`,
+    timeLeft: (time: string) => `${time} left`,
+    timeUp: "Time is up",
+    unanswered: (n: number) =>
+      n === 1 ? "One question was left when the time ran out." : `${n} questions were left when the time ran out.`,
+    quizFollowUps: "The topics you missed come first among your next tasks, as reviews. After them you may retake the quiz.",
     reviewCovers: (n: number) => `Also refreshes ${n} related topic${n === 1 ? "" : "s"}`,
     kps: (n: number) => `${n} step${n === 1 ? "" : "s"}`,
     progress: "Progress map",
@@ -491,7 +500,7 @@ const messages = {
         },
         {
           title: "Find out what really stuck",
-          body: "About every 150 XP, a quiz of eight questions mixes recent and older topics, with no hints or feedback until the end. Anything you miss comes back in review.",
+          body: "About every 150 XP, a quiz of eight questions mixes recent and older topics, with no hints or feedback until the end. Anything you miss is reviewed right away, and then you may retake the quiz.",
         },
       ],
       audienceTitle: "Who it is for",
@@ -620,7 +629,13 @@ const messages = {
     reading: "阅读",
     readingBody: (words: number, questions: number) => `${words} 个词的文章，读后回答 ${questions} 道题。`,
     quiz: "测验",
-    quizBody: (n: number) => `${n} 道题，涵盖近期和较早的知识点，结束前没有提示。`,
+    quizBody: (n: number, minutes: number) => `${n} 道题，涵盖近期和较早的知识点，限时 ${minutes} 分钟，结束前没有提示。`,
+    quizRetake: "重测",
+    quizRetakeBody: (n: number) => `复习过答错的内容后，用新题再测同样的 ${n} 个知识点。每多答对一题都有 XP。`,
+    timeLeft: (time: string) => `剩余 ${time}`,
+    timeUp: "时间到",
+    unanswered: (n: number) => `时间到时还有 ${n} 道题未作答。`,
+    quizFollowUps: "答错的知识点会作为复习排在接下来任务的最前面。复习之后可以重测。",
     reviewCovers: (n: number) => `同时巩固 ${n} 个相关知识点`,
     kps: (n: number) => `${n} 步`,
     progress: "进度图",
@@ -1050,7 +1065,7 @@ const messages = {
         },
         {
           title: "检验真正记住了什么",
-          body: "大约每 150 XP 有一次测验，共八题，混合新旧知识点，结束前没有提示和反馈。答错的内容会回到复习中。",
+          body: "大约每 150 XP 有一次测验，共八题，混合新旧知识点，结束前没有提示和反馈。答错的内容会马上复习，之后可以重测。",
         },
       ],
       audienceTitle: "适合谁",

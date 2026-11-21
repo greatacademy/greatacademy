@@ -49,6 +49,10 @@ export interface Params {
   /** quizQuestions is the number of questions of a quiz; quizMinTopics the learned topics needed before the first. */
   readonly quizQuestions: number;
   readonly quizMinTopics: number;
+  /** quizSecondsPerQuestion sets a quiz's time limit: this many seconds per question. */
+  readonly quizSecondsPerQuestion: number;
+  /** quizGraceSeconds is how late after the time limit an answer still counts, for the time it takes to arrive. */
+  readonly quizGraceSeconds: number;
   /** quizCredit is the explicit credit of one correct quiz answer, as a fraction of a full review. */
   readonly quizCredit: number;
   /** quizXp is the XP of a perfect quiz. */
@@ -113,6 +117,8 @@ export const defaultParams: Params = {
   quizEveryXp: 150,
   quizQuestions: 8,
   quizMinTopics: 4,
+  quizSecondsPerQuestion: 120,
+  quizGraceSeconds: 5,
   quizCredit: 0.5,
   quizXp: 15,
   minLessonShare: 0.25,

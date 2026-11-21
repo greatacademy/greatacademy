@@ -87,3 +87,36 @@ describe("a reading run", () => {
     expect((await run(["right", "right"], 5_000)).event).not.toHaveProperty("blownOff");
   });
 });
+
+describe("a quiz run", () => {
+  const quiz = (deadline: number): RunState => ({
+    kind: "quiz",
+    topics: ["t", "t", "t"],
+    deadline,
+    asked: [],
+    servedAt: 0,
+    current: { topic: "t", kp: 0, seed: 1 },
+  });
+
+  it("judges answers until the time is up, then ends with the questions left counted wrong", async () => {
+    const rng = createRng(1);
+    const first = await answerRun(course, quiz(60_000), state, "1", false, 30_000, rng);
+    expect(first.event).toBeUndefined();
+    const second = await answerRun(course, first.run, state, "1", false, 61_000, rng);
+    expect(second.event).toMatchObject({
+      type: "quiz",
+      results: [
+        { topic: "t", correct: true },
+        { topic: "t", correct: true },
+        { topic: "t", correct: false, late: true },
+      ],
+    });
+  });
+
+  it("counts an answer that arrives well after the time limit wrong", async () => {
+    const rng = createRng(1);
+    const { run, event } = await answerRun(course, quiz(60_000), state, "1", false, 90_000, rng);
+    expect(run.asked[0]).toMatchObject({ correct: false, late: true });
+    expect(event?.type === "quiz" && event.results.filter((r) => r.late)).toHaveLength(3);
+  });
+});

@@ -40,13 +40,19 @@ function taskLabel(session: Session): string {
     case "reading":
       return m().reading;
     case "quiz":
-      return m().quiz;
+      return session.task.kind.value.retake ? m().quizRetake : m().quiz;
     default:
       return m().diagnostic;
   }
 }
 
-function progressOf(session: Session, question: Question): { label: string; share: number } {
+/** clock formats a number of milliseconds as minutes and seconds. */
+function clock(ms: number): string {
+  const seconds = Math.max(0, Math.ceil(ms / 1000));
+  return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
+}
+
+function progressOf(session: Session, question: Question, now: number): { label: string; share: number } {
   const lesson = question.lesson;
   const task = session.task?.kind;
   const label = lesson
@@ -54,6 +60,8 @@ function progressOf(session: Session, question: Question): { label: string; shar
     : task?.case === "diagnostic"
       ? m().questionUpTo(question.index + 1, task.value.maxQuestions)
       : m().question(question.index + 1, question.total);
+  const deadline = Number(question.deadline);
+  const timed = deadline > 0 ? ` · ${deadline > now ? m().timeLeft(clock(deadline - now)) : m().timeUp}` : "";
   const share = lesson
     ? (lesson.knowledgePoint + lesson.streak / lesson.needed) / lesson.knowledgePoints
     : question.total > 0
@@ -61,7 +69,7 @@ function progressOf(session: Session, question: Question): { label: string; shar
       : task?.case === "diagnostic" && task.value.maxQuestions > 0
         ? question.index / task.value.maxQuestions
         : 0;
-  return { label, share: Math.max(0, Math.min(1, share)) };
+  return { label: label + timed, share: Math.max(0, Math.min(1, share)) };
 }
 
 /**
@@ -273,8 +281,9 @@ function QuestionFlow(props: {
   let scroll: ScrollRef | undefined;
   // Far enough down to show what was added below, the solution or the math keyboard; the view stops at the end.
   const toEnd = () => setTimeout(() => scroll?.scrollTo({ y: 100_000, animated: true }), 50);
-  const send = async (skip: boolean) => {
-    if (writing || speech || busy() || props.answered() || (!skip && response().trim() === "")) return;
+  // timeUp sends what is written when a quiz's time runs out, even nothing, and the quiz ends.
+  const send = async (skip: boolean, timeUp = false) => {
+    if (writing || speech || busy() || props.answered() || (!skip && !timeUp && response().trim() === "")) return;
     busy.set(true);
     error.set("");
     try {
@@ -292,6 +301,11 @@ function QuestionFlow(props: {
       busy.set(false);
     }
   };
+  const deadline = Number(question.deadline);
+  if (deadline > 0) {
+    const timer = setTimeout(() => void send(false, true), Math.max(0, deadline - Date.now()));
+    cleanup(() => clearTimeout(timer));
+  }
   // Return moves on on a keyboard, as the main button does: an input in focus submits by itself.
   keymap.bind(
     "enter",
@@ -507,6 +521,9 @@ function EssayVerdict(props: { feedback: Feedback; item: ResultItem }) {
 function ResultView(props: { session: Session; result: Result }) {
   const { result } = props;
   const kind = props.session.task?.kind.case;
+  const task = props.session.task?.kind;
+  // A quiz with misses, not a retake, is followed by their reviews.
+  const quizMissed = task?.case === "quiz" && !task.value.retake && result.correct < result.asked + result.unanswered;
   const busy = signal(false);
   const error = signal("");
   const headline =
@@ -549,7 +566,7 @@ function ResultView(props: { session: Session; result: Result }) {
         <Card>
           <Text style={{ color: colors().ink, fontSize: 22, fontWeight: "700" }}>{headline}</Text>
           <If when={kind !== "diagnostic"}>
-            <Text style={{ color: colors().muted, fontSize: 16 }}>{m().score(result.correct, result.asked)}</Text>
+            <Text style={{ color: colors().muted, fontSize: 16 }}>{m().score(result.correct, result.asked + result.unanswered)}</Text>
           </If>
           <If when={result.xp > 0}>
             <Text style={{ color: colors().accent, fontSize: 28, fontWeight: "700" }}>{m().earned(result.xp)}</Text>
@@ -569,6 +586,12 @@ function ResultView(props: { session: Session; result: Result }) {
           </If>
           <If when={kind === "review" && !result.passed && !result.blownOff}>
             <Muted>{m().reviewFailed}</Muted>
+          </If>
+          <If when={result.unanswered > 0}>
+            <Muted>{m().unanswered(result.unanswered)}</Muted>
+          </If>
+          <If when={quizMissed}>
+            <Muted>{m().quizFollowUps}</Muted>
           </If>
         </Card>
         <If when={result.passage}>
@@ -622,11 +645,15 @@ export function Player(props: { sessionId: string }) {
     const current = session();
     return current?.step.case === "question" ? [current] : [];
   });
+  // The clock of a timed quiz ticks every second.
+  const now = signal(Date.now());
+  const ticker = setInterval(() => now.set(Date.now()), 1000);
+  cleanup(() => clearInterval(ticker));
   const progress = computed(() => {
     const current = session();
     if (current?.step.case === "result" || current?.step.case === "submitted") return { label: title(), share: 1 };
     if (current?.step.case === "question") {
-      const { label, share } = progressOf(current, current.step.value);
+      const { label, share } = progressOf(current, current.step.value, now());
       return { label: `${title()} · ${label}`, share };
     }
     return { label: title(), share: 0 };

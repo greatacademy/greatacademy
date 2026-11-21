@@ -74,8 +74,8 @@ export function TaskCard({
     case "quiz":
       icon = <Exam size={22} weight="duotone" />;
       label = m.quiz;
-      title = m.quiz;
-      detail = m.quizBody(k.value.questions);
+      title = k.value.retake ? m.quizRetake : m.quiz;
+      detail = k.value.retake ? m.quizRetakeBody(k.value.questions) : m.quizBody(k.value.questions, k.value.minutes);
       xp = k.value.xp;
       break;
   }

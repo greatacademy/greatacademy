@@ -21,7 +21,7 @@ state = replay(ctx, events, initialState);   // applyEvent, one event at a time
 | `placed` | A course's diagnostic ends (or is skipped) | The course; topics placed as known; which of them were asked directly |
 | `lesson` | A lesson ends | Topic, passed or failed, questions asked and answered correctly, whether it was blown off (§10) |
 | `review` | A review ends | Topic, correct answers, questions, whether it passed, whether it was blown off |
-| `quiz` | A quiz ends | One result per question, by topic, whether it was blown off |
+| `quiz` | A quiz ends | One result per question, by topic, and whether it was late; whether it was a retake, whether it was blown off |
 | `reading` | A passage's check ends | Passage, correct answers, questions, whether it was blown off |
 | `retake` | The supervisor retakes a course's diagnostic (§9) | The course; the topics forgotten |
 | `reset` | The supervisor resets the subject's knowledge profile (§9) | — |
@@ -82,7 +82,8 @@ Topics on which the learner is **slow** (speed < 1) receive **no implicit credit
 1. Until the learner is placed in the course, the **diagnostic**, alone (§9).
 2. A **quiz**, when one is due (§7).
 3. A **passage to read**, when reading is below its share of the XP (below).
-4. **Reviews** and **lessons** from the frontier, alternating, reviews first; after four reviews in a row, a lesson first. The reviews are the remedial reviews that failed lessons wait for (§3), then the compressed reviews of the other due topics.
+4. **Reviews** and **lessons** from the frontier, alternating, reviews first; after four reviews in a row, a lesson first. The reviews are the remedial reviews, of the topics missed on the last quiz (§7) and of the key prerequisites that failed lessons wait for (§3), then the compressed reviews of the other due topics.
+5. Last, the optional **retake** of the last quiz, when one is offered (§7).
 
 **Reading.** A course offers reading only if it lists reading units. The next passage is the first of the course that the learner has not read, whose predecessor in its unit has been read, whose topics are all known, and whose known running words reach `readingKnownShare`. A word counts as unknown only when a topic not yet known teaches it. A passage is offered while `readingXp` is below `readingXpShare` of all XP, so that a learner who always takes the first task reads too. A passage read once is never offered again, passed or not, because it no longer tests comprehension. Frontier, reviews and quizzes do not depend on reading.
 
@@ -122,9 +123,15 @@ A passed lesson:
 
 ## 7. Quizzes
 
-After every 150 XP, once at least four topics are learned, the learner is offered a quiz: eight questions, one per topic, with no hints and no feedback until the end. Three quarters of the topics are the most recently learned, and the rest are sampled from older topics.
+After every 150 XP, once at least four topics are learned, the learner is offered a quiz: eight questions, one per topic, with no hints and no feedback until the end. Three quarters of the topics are the most recently learned, and the rest are sampled from older topics. Topics the last quiz asked are left out while there are enough others, and so is a topic that another chosen topic encompasses with weight at least `minCoverWeight`, since that question already tests it.
+
+**Time limit.** A quiz has `quizSecondsPerQuestion` seconds per question, two minutes, shown counting down. An answer that arrives more than `quizGraceSeconds` after the limit counts wrong; once the time is up the quiz ends, and the questions not answered count wrong and are marked late. Being slow is a miss as being wrong is: a topic that takes too long to recall has not been learned to fluency.
 
 Each correct answer is an explicit repetition with result 0.5, and each wrong answer is a failure (§4). The quiz is a retrieval test: it catches what reviews scheduled by the model would miss.
+
+**Follow-up reviews.** The topics missed on a quiz are kept in the state (`lastQuiz.followUps`) and offered at once as remedial reviews, first among the reviews, due or not. A review of such a topic, passed or not, is its follow-up.
+
+**Retake.** Once the follow-up reviews are done, a quiz that was not perfect may be taken once more, as an optional last task: the same topics with new questions. A retake earns the quiz's XP for each answer it improves on, (correct − correct the first time) / questions, and nothing for doing worse. Its answers are repetitions as a quiz's are, but it does not count as a quiz: the next one still comes 150 XP after the first, and a new quiz due replaces the offer.
 
 ## 8. Parameters
 
@@ -155,6 +162,7 @@ Each correct answer is an explicit repetition with result 0.5, and each wrong an
 | `readingRushWpm` | 600 | Faster than anyone reads with understanding |
 | `quizQuestions`, `quizMinTopics` | 8, 4 | Long enough to sample broadly, short enough for one sitting |
 | `quizCredit`, `quizXp` | 0.5, 15 | One question is half a review |
+| `quizSecondsPerQuestion`, `quizGraceSeconds` | 120, 5 | Enough to work a problem that is known; the grace covers the answer's way to the server |
 | `minLessonShare` | 0.25 | At least one task in four is new learning |
 | `maxReviewStreak` | 4 | About half a study day; no day passes on reviews alone. Three slowed typical learners by putting lessons before the reviews of their prerequisites |
 | `xpPerfectBonus` | 2 | A small reward for all correct, as in Math Academy |
@@ -232,10 +240,11 @@ XP approximates minutes of focused work and is computed from events. A task has 
 | Passed lesson, under 80% correct | Full × fraction correct |
 | Failed lesson, at least 50% correct | max(1, round(full × 0.15)) |
 | Failed lesson, under 50% correct | 0 |
-| Passed review or quiz, every answer correct | Full + 2 |
+| Passed review, every answer correct | Full + 2 |
 | Passed review, some wrong | Full × fraction correct |
 | Failed review | 0 |
-| Quiz, some wrong | Full × fraction correct |
+| Quiz | Full × fraction correct, with no bonus |
+| Quiz retake | Full × (correct − correct the first time) / questions, at least 0 |
 | Reading, at least half right | Full |
 | Reading, under half right | Full × 0.5 |
 | Blown-off task | 0, or less after repeated ones (below) |

@@ -35,15 +35,29 @@ describe("the XP of a task", () => {
     expect(xpOf(lesson(false, 6, 2))).toBe(0);
   });
 
-  it("rewards a perfect review or quiz and pays the others by their share correct", () => {
+  it("rewards a perfect review and pays passed reviews and quizzes by their share correct", () => {
     const worth = reviewXp(full);
-    const review = (correct: number): EngineEvent => ({ type: "review", at: T0, topic, correct, total: 3 });
-    expect(xpOf(review(3))).toBe(worth + p.xpPerfectBonus);
-    expect(xpOf(review(2))).toBe(Math.round((worth * 2) / 3));
-    expect(xpOf(review(1))).toBe(0);
+    const review = (correct: number, total: number, passed: boolean): EngineEvent => ({
+      type: "review",
+      at: T0,
+      topic,
+      correct,
+      total,
+      passed,
+    });
+    expect(xpOf(review(3, 3, true))).toBe(worth + p.xpPerfectBonus);
+    expect(xpOf(review(3, 5, true))).toBe(Math.round((worth * 3) / 5));
+    expect(xpOf(review(2, 5, false))).toBe(0);
     const quiz = (flags: boolean[]): EngineEvent => ({ type: "quiz", at: T0, results: flags.map((correct) => ({ topic, correct })) });
-    expect(xpOf(quiz([true, true]))).toBe(p.quizXp + p.xpPerfectBonus);
+    expect(xpOf(quiz([true, true]))).toBe(p.quizXp);
     expect(xpOf(quiz([true, false]))).toBe(Math.round(p.quizXp / 2));
+  });
+
+  it("pays a quiz retake for the answers it improves on", () => {
+    const results = [true, true, false, false].map((correct) => ({ topic, correct }));
+    const state: LearnerState = { ...initialState, lastQuiz: { at: T0, topics: results.map(() => topic), correct: 1, followUps: [] } };
+    expect(xpOf({ type: "quiz", at: T0, results, retake: true }, state)).toBe(Math.round(p.quizXp / 4));
+    expect(xpOf({ type: "quiz", at: T0, results: results.map((r) => ({ ...r, correct: false })), retake: true }, state)).toBe(0);
   });
 
   it("reports what a task is worth, before any bonus", () => {

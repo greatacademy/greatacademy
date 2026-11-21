@@ -55,7 +55,10 @@ export type TaskEvent =
   | {
       readonly type: "quiz";
       readonly at: number;
-      readonly results: readonly { readonly topic: string; readonly correct: boolean }[];
+      /** results are the answers by topic; late marks a question answered or left unanswered after the time limit, counted wrong. */
+      readonly results: readonly { readonly topic: string; readonly correct: boolean; readonly late?: boolean }[];
+      /** retake marks the last quiz taken again after its follow-up reviews. */
+      readonly retake?: boolean;
       /** blownOff marks a task rushed through rather than attempted; see isBlownOff. */
       readonly blownOff?: boolean;
     };
@@ -100,7 +103,10 @@ export function applyEvent(ctx: EngineContext, state: LearnerState, e: EngineEve
  * reset forgets every topic. Either way the next task of the course is its diagnostic again.
  */
 function startOver(state: LearnerState, e: StartOverEvent): LearnerState {
-  if (e.type === "reset") return { ...state, topics: {}, diagnosed: [], reviewsSinceLesson: 0, blowOffs: 0 };
+  if (e.type === "reset") {
+    const { lastQuiz: _, ...rest } = state;
+    return { ...rest, topics: {}, diagnosed: [], reviewsSinceLesson: 0, blowOffs: 0 };
+  }
   const forgotten = new Set(e.forgotten);
   const topics = Object.fromEntries(Object.entries(state.topics).filter(([id]) => !forgotten.has(id)));
   return { ...state, topics, diagnosed: state.diagnosed.filter((c) => c !== e.course) };
@@ -144,7 +150,12 @@ function applyTask(ctx: EngineContext, state: LearnerState, e: TaskEvent): Learn
       const s = after.topics[e.topic]!;
       const speed = clampSpeed(p, 0.8 * s.speed + 0.2 * (0.5 + e.correct / e.total));
       const reviewsSinceLesson = state.reviewsSinceLesson + 1;
-      return { ...setTopic(after, e.topic, { ...s, speed, explicitReviews: s.explicitReviews + 1 }), xp, reviewsSinceLesson };
+      const reviewed = { ...setTopic(after, e.topic, { ...s, speed, explicitReviews: s.explicitReviews + 1 }), xp, reviewsSinceLesson };
+      // A review of a topic missed on the last quiz is its follow-up, passed or not.
+      const quiz = state.lastQuiz;
+      return quiz?.followUps.includes(e.topic)
+        ? { ...reviewed, lastQuiz: { ...quiz, followUps: quiz.followUps.filter((t) => t !== e.topic) } }
+        : reviewed;
     }
     case "reading": {
       const read = state.read?.includes(e.passage) ? state.read : [...(state.read ?? []), e.passage];
@@ -163,7 +174,13 @@ function applyTask(ctx: EngineContext, state: LearnerState, e: TaskEvent): Learn
     case "quiz": {
       let next = state;
       for (const r of e.results) next = applyRepetition(p, g, next, r.topic, r.correct ? p.quizCredit : 0, e.at);
-      return { ...next, xp, xpAtLastQuiz: xp, quizzes: state.quizzes + 1 };
+      // A retake leaves the schedule of quizzes alone and asks for no further reviews.
+      if (e.retake) return { ...next, xp, ...(state.lastQuiz && { lastQuiz: { ...state.lastQuiz, retaken: true } }) };
+      const topics = e.results.map((r) => r.topic);
+      const missed = e.results.filter((r) => !r.correct && next.topics[r.topic]?.learned).map((r) => r.topic);
+      const correct = e.results.filter((r) => r.correct).length;
+      const lastQuiz = { at: e.at, topics, correct, followUps: [...new Set(missed)] };
+      return { ...next, xp, xpAtLastQuiz: xp, quizzes: state.quizzes + 1, lastQuiz };
     }
   }
 }

@@ -19,7 +19,12 @@ export function describeTask(task: Task): { label: string; title: string; detail
     case "reading":
       return { label: m().reading, title: tx(k.value.title), detail: m().readingBody(k.value.words, k.value.questions), xp: k.value.xp };
     case "quiz":
-      return { label: m().quiz, title: m().quiz, detail: m().quizBody(k.value.questions), xp: k.value.xp };
+      return {
+        label: m().quiz,
+        title: k.value.retake ? m().quizRetake : m().quiz,
+        detail: k.value.retake ? m().quizRetakeBody(k.value.questions) : m().quizBody(k.value.questions, k.value.minutes),
+        xp: k.value.xp,
+      };
     default:
       return undefined;
   }

@@ -35,8 +35,11 @@ function lessonXp(p: Params, full: number, passed: boolean, asked: number, corre
   return accuracy >= p.xpNearlyPassable ? Math.max(1, Math.round(full * p.xpNearlyPassableShare)) : 0;
 }
 
-/** earnedXp is the XP a task done in good faith earns; it is what a blown-off task forgoes. */
-function earnedXp(ctx: EngineContext, e: TaskEvent): number {
+/**
+ * earnedXp is the XP a task done in good faith earns; it is what a blown-off task forgoes. A quiz earns its share of
+ * correct answers, with no bonus for a perfect one; a retake earns the share of the answers it improved on.
+ */
+function earnedXp(ctx: EngineContext, state: LearnerState, e: TaskEvent): number {
   const { params: p } = ctx;
   const full = fullXp(ctx, e);
   switch (e.type) {
@@ -53,7 +56,8 @@ function earnedXp(ctx: EngineContext, e: TaskEvent): number {
       const n = e.results.length;
       const correct = e.results.filter((r) => r.correct).length;
       if (n === 0) return 0;
-      return correct === n ? full + p.xpPerfectBonus : Math.round((full * correct) / n);
+      const before = e.retake ? (state.lastQuiz?.correct ?? 0) : 0;
+      return Math.round((full * Math.max(0, correct - before)) / n);
     }
   }
 }
@@ -72,7 +76,7 @@ export function blowOffPenalty(p: Params, count: number, full: number): number {
 export function eventXp(ctx: EngineContext, state: LearnerState, e: EngineEvent): number {
   if (e.type === "retake" || e.type === "reset") return 0;
   if (e.type !== "placed" && e.blownOff) return 0 - Math.min(state.xp, blowOffPenalty(ctx.params, state.blowOffs, fullXp(ctx, e)));
-  return earnedXp(ctx, e);
+  return earnedXp(ctx, state, e);
 }
 
 /** nextBlowOffs is the count of recent blown-off tasks after an event: one more after a blown-off task, a little less after a passed one. */

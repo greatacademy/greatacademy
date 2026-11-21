@@ -257,6 +257,11 @@ message ReviewTask {
 message QuizTask {
   int32 questions = 1;
   int32 xp = 2;
+  // retake is true for the last quiz taken again with new questions after its follow-up reviews; it earns the XP of
+  // the answers it improves on.
+  bool retake = 3;
+  // minutes is the quiz's time limit.
+  int32 minutes = 4;
 }
 
 message ReadingTask {
@@ -403,6 +408,9 @@ message Question {
   int32 attempt = 10;
   // essay is true when the answer is an essay: submitting it ends the session, and its verdict comes later.
   bool essay = 11;
+  // deadline is when a quiz's time runs out, in milliseconds since the epoch; 0 when the session has no time limit.
+  // An answer after it counts wrong, and the quiz ends with the questions left unanswered counted wrong.
+  int64 deadline = 12;
 }
 
 // Judging is an answer waiting for a model's verdict.
@@ -708,6 +716,8 @@ message Result {
   optional Passage passage = 9;
   // feedback is a model's verdict on the essay of an essay's lesson.
   optional Feedback feedback = 10;
+  // unanswered counts the quiz questions left when the time ran out, counted wrong.
+  int32 unanswered = 11;
 }
 
 message ResultItem {
@@ -722,6 +732,14 @@ message ResultItem {
   optional ga.common.v1.Figure solution_figure = 8;
   // solution_sounds are recordings shown with the solution.
   repeated Sound solution_sounds = 9;
+  // elapsed_ms is the time from showing the question to receiving the answer.
+  int64 elapsed_ms = 10;
+  // late is true for a quiz answer that arrived after the time limit and so counts wrong.
+  bool late = 11;
+  // knowledge_point is the index of the question's knowledge point in its topic, and knowledge_point_title its title,
+  // so that a lesson's questions can be grouped by knowledge point.
+  int32 knowledge_point = 12;
+  optional ga.common.v1.Text knowledge_point_title = 13;
 }
 
 message SetSpeakingRequest {
