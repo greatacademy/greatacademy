@@ -223,6 +223,8 @@ const messages = {
       label: "Learned",
       weak: "Just learned",
       strong: "Solid",
+      notLearned: "Not learned",
+      summary: (learned: number, total: number) => `${learned} of ${total} topics learned, shaded by how firmly they are held`,
       note: "Learned topics are shaded by how firmly they are held: the darker, the more spaced reviews they have passed.",
     },
     statusNote: {
@@ -829,6 +831,8 @@ const messages = {
       label: "已学会",
       weak: "刚学会",
       strong: "牢固",
+      notLearned: "未学",
+      summary: (learned: number, total: number) => `已学会 ${total} 个知识点中的 ${learned} 个，按掌握的牢固程度着色`,
       note: "已学会的知识点按掌握的牢固程度着色：颜色越深，通过的间隔复习越多。",
     },
     statusNote: {

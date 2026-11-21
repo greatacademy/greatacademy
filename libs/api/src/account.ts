@@ -22,12 +22,13 @@ import {
   takeGuardianInvite,
   usernameTaken,
 } from "@ga/db";
-import { courseProgress, DAY, initialState, leagueZones, type LeagueOutcome as Outcome, rankMembers, WEEK, weekStart } from "@ga/engine";
+import { DAY, initialState, leagueZones, type LeagueOutcome as Outcome, rankMembers, WEEK, weekStart } from "@ga/engine";
 import { type AccountService, type GuardedLearnerSchema, LeagueOutcome } from "@ga/proto/account/v1/account_pb";
 
 import { dbKey, userIdKey } from "./context.ts";
 import { joinLeague, leaguePlace } from "./league.ts";
 import type { Registry } from "./registry.ts";
+import { courseStats } from "./strength.ts";
 import { xpSummary } from "./summary.ts";
 
 /** inviteDays is how long a guardian invitation stays valid. */
@@ -100,8 +101,7 @@ export function accountService(deps: AccountDeps): ServiceImpl<typeof AccountSer
       const c = await registry.course(e.courseId);
       if (!c) continue;
       const { state } = await loadState(db, learnerId, c.subject.def.id, initialState);
-      const p = courseProgress(c.planner, state, now);
-      list.push({ courseId: c.id, subjectId: e.subjectId, stats: { learned: p.learned, total: p.total, due: p.due } });
+      list.push({ courseId: c.id, subjectId: e.subjectId, stats: courseStats(c.planner, state, now) });
     }
     return list;
   };

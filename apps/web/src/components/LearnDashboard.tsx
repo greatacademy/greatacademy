@@ -7,12 +7,13 @@ import { useRequireSession } from "../lib/hooks.ts";
 import { useI18n } from "../lib/i18n.tsx";
 import { account, catalog, learning, timeZone } from "../lib/rpc.ts";
 import { ConversationsCard } from "./Conversations.tsx";
+import { CourseBar } from "./CourseBar.tsx";
 import { LoadError } from "./LoadError.tsx";
 import { Markdown } from "./Markdown.tsx";
 import { CourseDone, PlacementReport, StartEarlier } from "./PlacementReport.tsx";
 import { ForecastCard, GoalsCard } from "./SubjectDecisions.tsx";
 import { TaskCard } from "./TaskCard.tsx";
-import { Bar, Button, Card, ErrorNote, Spinner } from "./ui.tsx";
+import { Button, Card, ErrorNote, Spinner } from "./ui.tsx";
 
 const DAY = 86_400_000;
 
@@ -192,7 +193,6 @@ export function LearnDashboard({ courseId, subjectId }: { courseId: string; subj
   const d = dash.data;
   const stats = d.stats!;
   const xp = d.xp!;
-  const share = stats.total ? stats.learned / stats.total : 0;
   const goalNote = xp.goalToday <= 0 ? "" : xp.today >= xp.goalToday ? m.goalMetToday : m.goalLeftToday(xp.goalToday - xp.today);
 
   return (
@@ -205,17 +205,7 @@ export function LearnDashboard({ courseId, subjectId }: { courseId: string; subj
         >
           {tx(course.data?.course?.title)}
         </Link>
-        <div className="flex items-center gap-3 text-sm text-muted">
-          <Bar value={share} className="bg-subject" />
-          <span className="shrink-0">
-            {stats.learned} / {stats.total} {m.topics}
-          </span>
-        </div>
-        {stats.due > 0 && (
-          <div className="text-sm text-warn">
-            {m.due}: {stats.due}
-          </div>
-        )}
+        <CourseBar stats={stats} />
       </div>
 
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">

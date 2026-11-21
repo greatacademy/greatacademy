@@ -246,6 +246,13 @@ export declare type CourseStats = Message<"ga.learning.v1.CourseStats"> & {
    * @generated from field: int32 due = 3;
    */
   due: number;
+
+  /**
+   * strengths counts the learned topics by strength, from 0 to 5 as TopicProgress has it, for the course's shaded bar.
+   *
+   * @generated from field: repeated int32 strengths = 4;
+   */
+  strengths: number[];
 };
 
 /**

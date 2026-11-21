@@ -27,7 +27,6 @@ import {
 } from "@ga/db";
 import {
   courseFinished,
-  courseProgress,
   diagnosticCandidates,
   diagnosticDue,
   frontier,
@@ -57,6 +56,7 @@ import type { CourseEntry, Registry } from "./registry.ts";
 import { answerRun, canSkip, type Given, type RunState, runTask, startRun } from "./runner.ts";
 import { appendTo, learnerState, settleAnswer } from "./sessions.ts";
 import { hearRecording, SPEAKING_OFF_FOREVER, setSpeaking, speakingAvailable, speakingOff, speakingUntil, spokenTopics } from "./speech.ts";
+import { courseStats, strengthOf } from "./strength.ts";
 import { xpSummary } from "./summary.ts";
 
 /** maxDailyGoal bounds a weekday's goal, far above what anyone studies in a day. */
@@ -213,11 +213,6 @@ function sameTask(req: TaskMessage | undefined, task: Task): boolean {
 }
 
 /** learningService implements LearningService over the event log. */
-/** STRENGTHS is how many shades the progress map gives learned topics. */
-export const STRENGTHS = 6;
-
-/** strengthOf is a learned topic's shade on the map: its whole spaced repetitions, capped at the darkest shade. */
-export const strengthOf = (repNum: number) => Math.min(STRENGTHS - 1, Math.max(0, Math.floor(repNum)));
 
 export function learningService(deps: LearningDeps): ServiceImpl<typeof LearningService> {
   const { registry } = deps;
@@ -341,11 +336,10 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
         // The learner's own view, as on the dashboard: without the topics no route may judge for them.
         const c = await forLearner(db, entry, learnerId, now);
         const { state: s } = await state(db, learnerId, c);
-        const p = courseProgress(c.planner, s, now);
         list.push({
           courseId: c.id,
           subjectId: e.subjectId,
-          stats: { learned: p.learned, total: p.total, due: p.due },
+          stats: courseStats(c.planner, s, now),
           xp: await xpSummary(db, learnerId, now, req.timeZone, e.subjectId),
         });
       }
@@ -403,7 +397,6 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
       const { state: s } = await state(db, learnerId, c);
       const active = await activeSession(db, learnerId, c.id);
       const essays = await essaySessions(db, learnerId, c.id, essayTopics(c), new Date(now - ESSAY_NOTICE_MS));
-      const p = courseProgress(c.planner, s, now);
       const run = active?.state as RunState | undefined;
       const xp = await xpSummary(db, learnerId, now, req.timeZone, c.subject.def.id);
       const settings = await subjectSettings(db, learnerId, c.subject.def.id);
@@ -431,7 +424,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
           passed: (row.state as RunState).result?.passed ?? false,
         })),
         ...(active && run && { active: { id: active.id, task: taskMessage(c, runTask(run), s) } }),
-        stats: { learned: p.learned, total: p.total, due: p.due },
+        stats: courseStats(c.planner, s, now),
         xp,
         xpToQuiz: Math.max(0, c.ctx.params.quizEveryXp - (s.xp - s.xpAtLastQuiz)),
         remainingXp: remainingXp(c.planner, s),

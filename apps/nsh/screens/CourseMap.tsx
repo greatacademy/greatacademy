@@ -1,6 +1,6 @@
 import { strengthShades } from "@ga/design";
 import type { GetCourseResponse } from "@ga/proto/catalog/v1/catalog_pb";
-import { type GetCourseProgressResponse, type TopicProgress, TopicStatus } from "@ga/proto/learning/v1/learning_pb";
+import { type CourseStats, type GetCourseProgressResponse, type TopicProgress, TopicStatus } from "@ga/proto/learning/v1/learning_pb";
 import { computed, List, signal, Text, View, windowSize } from "nsh";
 import { NavPage } from "nsh/base";
 import { m, tx } from "../lib/i18n.ts";
@@ -302,5 +302,80 @@ export function CourseMap(props: { courseId: string }) {
         </Loaded>
       </View>
     </NavPage>
+  );
+}
+
+/**
+ * CourseBar is a course's progress on the Learn and Course tabs, as on the web: its learned topics in one bar, the
+ * firmest first, in the map's shades, with how many are learned and the reviews due. It explains itself on hover on a
+ * desktop and when pressed, which works on a phone too: how many topics have each shade, and what a review due means.
+ */
+export function CourseBar(props: { stats: CourseStats | undefined; maxWidth?: number }) {
+  const open = signal(false);
+  const learned = () => props.stats?.learned ?? 0;
+  const total = () => Math.max(1, props.stats?.total ?? 0);
+  const due = () => props.stats?.due ?? 0;
+  const strengths = () => props.stats?.strengths ?? [];
+  const hint = () =>
+    [m().shades.summary(learned(), props.stats?.total ?? 0), ...(due() > 0 ? [`${m().statuses.due}: ${m().statusNotes.due}`] : [])].join(
+      " · ",
+    );
+  return (
+    <View style={{ gap: 8, maxWidth: props.maxWidth }}>
+      <View
+        role="button"
+        accessibilityLabel={m().topicsLearned(learned(), props.stats?.total ?? 0)}
+        accessibilityHint={hint()}
+        tooltip={hint()}
+        onPress={() => open.set(!open())}
+        hoverStyle={{ backgroundColor: colors().page }}
+        style={{ borderRadius: 8, gap: 8, marginHorizontal: -6, paddingHorizontal: 6, paddingVertical: 4 }}
+      >
+        <View style={{ alignItems: "center", flexDirection: "row", gap: 12 }}>
+          <View style={{ backgroundColor: colors().line, borderRadius: 4, flex: 1, flexDirection: "row", height: 8, overflow: "hidden" }}>
+            <Each of={[...strengths().keys()].reverse()}>
+              {(level) => (
+                <View
+                  style={{ backgroundColor: shadeOf(level()), height: 8, width: `${((strengths()[level()] ?? 0) / total()) * 100}%` }}
+                />
+              )}
+            </Each>
+          </View>
+          <Muted>{m().topicsLearned(learned(), props.stats?.total ?? 0)}</Muted>
+        </View>
+        <If when={due() > 0}>
+          <View style={{ alignItems: "center", flexDirection: "row", gap: 6 }}>
+            <Dot status="due" strength={2} />
+            <Text style={{ color: colors().warn, fontSize: 14 }}>{m().dueReviews(due())}</Text>
+          </View>
+        </If>
+      </View>
+      <If when={open()}>
+        <View style={{ borderColor: colors().line, borderRadius: 12, borderWidth: 1, gap: 8, padding: 12 }}>
+          <Muted>{m().shades.note}</Muted>
+          <View style={{ alignItems: "center", flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
+            <Text style={{ color: colors().muted, fontSize: 12 }}>{m().shades.weak}</Text>
+            <Each of={[...strengths().keys()]}>
+              {(level) => (
+                <View style={{ alignItems: "center", flexDirection: "row", gap: 4 }}>
+                  <View style={{ backgroundColor: shadeOf(level()), borderRadius: 2, height: 10, width: 10 }} />
+                  <Text style={{ color: colors().muted, fontSize: 12 }}>{`${strengths()[level()] ?? 0}`}</Text>
+                </View>
+              )}
+            </Each>
+            <Text style={{ color: colors().muted, fontSize: 12 }}>{m().shades.strong}</Text>
+            <View style={{ alignItems: "center", flexDirection: "row", gap: 4 }}>
+              <View style={{ backgroundColor: colors().line, borderRadius: 2, height: 10, width: 10 }} />
+              <Text style={{ color: colors().muted, fontSize: 12 }}>
+                {`${m().shades.notLearned} ${Math.max(0, (props.stats?.total ?? 0) - learned())}`}
+              </Text>
+            </View>
+          </View>
+          <If when={due() > 0}>
+            <Muted>{m().statusNotes.due}</Muted>
+          </If>
+        </View>
+      </If>
+    </View>
   );
 }

@@ -5,6 +5,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { ChooseCourse } from "../../components/ChooseCourse.tsx";
+import { ShadedBar } from "../../components/CourseBar.tsx";
 import { LearnerPrivacy } from "../../components/LearnerPrivacy.tsx";
 import { ActiveLine, signText } from "../../components/LearnerStatus.tsx";
 import { LoadError } from "../../components/LoadError.tsx";
@@ -12,7 +13,7 @@ import { Markdown } from "../../components/Markdown.tsx";
 import { CourseDone, PlacementReport, StartEarlier } from "../../components/PlacementReport.tsx";
 import { ForecastCard, GoalsCard, StartOverCard } from "../../components/SubjectDecisions.tsx";
 import { TopicLegend, TopicMap } from "../../components/TopicMap.tsx";
-import { Bar, Button, buttonClass, Card, Spinner } from "../../components/ui.tsx";
+import { Button, buttonClass, Card, Spinner } from "../../components/ui.tsx";
 import { useAccess } from "../../lib/access.ts";
 import { useBillingText } from "../../lib/billing-text.ts";
 import { signsOf, stuckLessons } from "../../lib/guardian.ts";
@@ -342,7 +343,7 @@ function GuardedLearner() {
                 <span className="min-w-0">{titleOf(current.courseId)}</span>
                 <span className="shrink-0 text-muted">{Math.round(share * 100)}%</span>
               </div>
-              <Bar value={share} className="bg-subject" />
+              {current.stats && <ShadedBar stats={current.stats} />}
               <div className="text-xs text-muted">
                 {current.stats?.learned ?? 0} / {current.stats?.total ?? 0} {m.topics}
               </div>

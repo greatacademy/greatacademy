@@ -6,12 +6,13 @@ import { errorText, m, tx } from "../lib/i18n.ts";
 import { nav, openTab } from "../lib/nav.ts";
 import { markChanged, query } from "../lib/query.ts";
 import { learning, timeZone } from "../lib/rpc.ts";
-import { courseTitle, type Place, tint, usePlace } from "../lib/subject.tsx";
+import { courseTitle, type Place, usePlace } from "../lib/subject.tsx";
 import { colors, ErrorNote, Icon, Loaded, Muted, PullScroll, Skeleton } from "../lib/ui.tsx";
+import { CourseBar } from "./CourseMap.tsx";
 import { SubjectStart } from "./CourseTab.tsx";
 import { firstPageReady } from "./Launch.tsx";
 import { CourseDone, PlacementReport, StartEarlier } from "./PlacementReport.tsx";
-import { Bar, EarnedCard, ForecastCard, LeagueCard, useDashboard, WeeklyGoals } from "./SubjectCards.tsx";
+import { EarnedCard, ForecastCard, LeagueCard, useDashboard, WeeklyGoals } from "./SubjectCards.tsx";
 import { Conversations } from "./Talk.tsx";
 import { describeTask, TaskCard } from "./TaskCard.tsx";
 
@@ -27,15 +28,7 @@ function CourseHead(props: { place: Place; dash: GetDashboardResponse }) {
       <Text role="button" onPress={() => openTab("course")} style={{ color: colors().ink, fontSize: 24, fontWeight: "700" }}>
         {courseTitle(props.place.data.list, props.dash.courseId)}
       </Text>
-      <View style={{ alignItems: "center", flexDirection: "row", gap: 12 }}>
-        <View style={{ flex: 1 }}>
-          <Bar share={(stats()?.learned ?? 0) / Math.max(1, stats()?.total ?? 0)} color={tint(props.place.subject).strong} />
-        </View>
-        <Muted>{m().topicsLearned(stats()?.learned ?? 0, stats()?.total ?? 0)}</Muted>
-      </View>
-      <If when={(stats()?.due ?? 0) > 0}>
-        <Text style={{ color: colors().warn, fontSize: 14 }}>{m().dueReviews(stats()?.due ?? 0)}</Text>
-      </If>
+      <CourseBar stats={stats()} />
     </View>
   );
 }

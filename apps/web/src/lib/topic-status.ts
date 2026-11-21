@@ -1,3 +1,4 @@
+import { STRENGTH_MIX } from "@ga/design";
 import { TopicStatus } from "@ga/proto/learning/v1/learning_pb";
 
 import type { Messages } from "./i18n.tsx";
@@ -12,3 +13,7 @@ export const statusStyle: Record<TopicStatus, { key: keyof Messages["status"]; d
   [TopicStatus.DUE]: { key: "due", dot: "bg-warn", chip: "bg-warn-soft text-warn" },
   [TopicStatus.ASSUMED]: { key: "assumed", dot: "bg-muted", chip: "bg-page text-muted" },
 };
+
+/** shade is the color of a learned topic of the given strength: the accent mixed over the surface, as in the apps. */
+export const shade = (strength: number) =>
+  `color-mix(in oklab, var(--color-accent) ${Math.round((STRENGTH_MIX[Math.min(STRENGTH_MIX.length - 1, Math.max(0, strength))] ?? 1) * 100)}%, var(--color-surface))`;

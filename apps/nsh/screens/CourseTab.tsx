@@ -9,9 +9,10 @@ import { errorText, m, tx } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { markChanged } from "../lib/query.ts";
 import { learning } from "../lib/rpc.ts";
-import { courseTitle, type Place, tint, usePlace } from "../lib/subject.tsx";
+import { courseTitle, type Place, usePlace } from "../lib/subject.tsx";
 import { Action, Card, colors, ErrorNote, Icon, Loaded, Muted, PullScroll, Quiet, Skeleton } from "../lib/ui.tsx";
-import { Bar, CardTitle, useDashboard } from "./SubjectCards.tsx";
+import { CourseBar } from "./CourseMap.tsx";
+import { CardTitle, useDashboard } from "./SubjectCards.tsx";
 
 /**
  * SubjectStart is a subject the learner has no course in yet: the way to choose one, or, for the learner of a
@@ -43,12 +44,7 @@ function CurrentCourse(props: { place: Place; courseId: string }) {
       <If when={tx(course()?.description)}>
         <Text style={{ color: colors().muted, fontSize: 14, lineHeight: 20 }}>{tx(course()?.description)}</Text>
       </If>
-      <View style={{ alignItems: "center", flexDirection: "row", gap: 12, maxWidth: 448 }}>
-        <View style={{ flex: 1 }}>
-          <Bar share={(stats()?.learned ?? 0) / Math.max(1, stats()?.total ?? 0)} color={tint(props.place.subject).strong} />
-        </View>
-        <Muted>{m().topicsLearned(stats()?.learned ?? 0, stats()?.total ?? 0)}</Muted>
-      </View>
+      <CourseBar stats={stats()} maxWidth={448} />
       <View
         role="button"
         onPress={() => nav.push({ name: "course", courseId: props.courseId })}

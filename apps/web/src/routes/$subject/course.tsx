@@ -4,9 +4,10 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { ChooseCourse } from "../../components/ChooseCourse.tsx";
+import { CourseBar } from "../../components/CourseBar.tsx";
 import { Markdown } from "../../components/Markdown.tsx";
 import { DecidedBy, StartOverCard } from "../../components/SubjectDecisions.tsx";
-import { Bar, Button, Card } from "../../components/ui.tsx";
+import { Button, Card } from "../../components/ui.tsx";
 import { useI18n } from "../../lib/i18n.tsx";
 import { learning, timeZone } from "../../lib/rpc.ts";
 import { useCatalog, useProfile, useSubjectPlace } from "../../lib/subject.tsx";
@@ -35,7 +36,6 @@ function CoursePage() {
   const course = list.data?.courses.find((c) => c.id === enrollment?.courseId);
   const canDecide = profile.data?.canDecide ?? false;
   const stats = enrollment?.stats;
-  const share = stats?.total ? stats.learned / stats.total : 0;
   if (!enrollment || !course) return null;
 
   return (
@@ -48,12 +48,7 @@ function CoursePage() {
           <h1 className="text-2xl font-semibold tracking-tight">{tx(course.title)}</h1>
         </div>
         <Markdown source={tx(course.description)} className="text-sm text-muted" />
-        <div className="flex max-w-md items-center gap-3 text-sm text-muted">
-          <Bar value={share} className="bg-subject" />
-          <span className="shrink-0">
-            {stats?.learned ?? 0} / {stats?.total ?? 0} {m.topics}
-          </span>
-        </div>
+        {stats && <CourseBar stats={stats} className="max-w-md" />}
         <Link to="/courses/$courseId" params={{ courseId: course.id }} className="inline-flex items-center gap-1.5 text-sm text-accent">
           <ListBullets size={16} /> {m.courseOutline}
         </Link>

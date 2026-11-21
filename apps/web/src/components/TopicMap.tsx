@@ -5,13 +5,9 @@ import { Link } from "@tanstack/react-router";
 import { type ReactNode, useState } from "react";
 
 import { useI18n } from "../lib/i18n.tsx";
-import { statusStyle } from "../lib/topic-status.ts";
+import { shade, statusStyle } from "../lib/topic-status.ts";
 import { Markdown } from "./Markdown.tsx";
 import { Card } from "./ui.tsx";
-
-/** shade is the color of a learned topic of the given strength: the accent mixed over the surface, as in the apps. */
-const shade = (strength: number) =>
-  `color-mix(in oklab, var(--color-accent) ${Math.round((STRENGTH_MIX[Math.min(STRENGTH_MIX.length - 1, Math.max(0, strength))] ?? 1) * 100)}%, var(--color-surface))`;
 
 const isLearned = (s: TopicStatus | undefined) => s === TopicStatus.LEARNED || s === TopicStatus.DUE;
 

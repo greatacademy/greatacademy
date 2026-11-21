@@ -121,6 +121,8 @@ message CourseStats {
   int32 learned = 1;
   int32 total = 2;
   int32 due = 3;
+  // strengths counts the learned topics by strength, from 0 to 5 as TopicProgress has it, for the course's shaded bar.
+  repeated int32 strengths = 4;
 }
 
 message XpSummary {
