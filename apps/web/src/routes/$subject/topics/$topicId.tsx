@@ -35,7 +35,9 @@ function Links({ title, subject, topics }: { title: string; subject: string; top
               <span className="min-w-0 flex-1 truncate text-sm font-medium">
                 <Markdown source={tx(t.title)} inline />
               </span>
-              <span className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium ${s.chip}`}>{m.status[s.key]}</span>
+              <span title={m.statusNote[s.key]} className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium ${s.chip}`}>
+                {m.status[s.key]}
+              </span>
             </Link>
           );
         })}
@@ -69,6 +71,8 @@ function Topic() {
             <Markdown source={tx(topic.data.title)} inline />
           </h1>
           <span className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${s.chip}`}>{m.status[s.key]}</span>
+          {/* The topic's own page says what its status means, for a phone that cannot hover. */}
+          <span className="text-xs text-muted">{m.statusNote[s.key]}</span>
         </div>
         <Markdown source={tx(topic.data.summary)} className="text-muted" />
       </div>

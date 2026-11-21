@@ -685,6 +685,12 @@ test("shows the progress map and the history of a course from Progress", async (
   expect(app.texts()).toContain("Progress map");
   expect(app.texts()).toContain("Linear equations");
   expect(app.texts()).toContain("Up to date 1");
+  // A status's name explains itself when pressed, as a phone cannot hover, and hides the note on a second press.
+  const note = "Learned, and still well remembered: no review is needed yet.";
+  await app.press("label:Up to date 1");
+  await app.waitFor(`text:${note}`);
+  await app.press("label:Up to date 1");
+  expect(app.texts()).not.toContain(note);
   await app.press("text:History");
   await app.waitFor("text:10 of 10 XP");
   expect(app.texts()).toContain("3 of 3 correct");

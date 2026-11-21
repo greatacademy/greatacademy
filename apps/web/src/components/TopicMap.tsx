@@ -1,7 +1,7 @@
 import type { Course } from "@ga/proto/catalog/v1/catalog_pb";
 import { type TopicProgress, TopicStatus } from "@ga/proto/learning/v1/learning_pb";
 import { Link } from "@tanstack/react-router";
-import type { ReactNode } from "react";
+import { type ReactNode, useState } from "react";
 
 import { useI18n } from "../lib/i18n.tsx";
 import { statusStyle } from "../lib/topic-status.ts";
@@ -10,22 +10,40 @@ import { Card } from "./ui.tsx";
 
 const legend = [TopicStatus.LEARNED, TopicStatus.DUE, TopicStatus.AVAILABLE, TopicStatus.FAILED, TopicStatus.ASSUMED, TopicStatus.LOCKED];
 
-/** TopicLegend names the colors of TopicMap with how many of the course's own topics have each. */
+/**
+ * TopicLegend names the colors of TopicMap with how many of the course's own topics have each. Each name explains
+ * itself: on hover where there is a pointer, and on a tap or click, which works on a phone too.
+ */
 export function TopicLegend({ topics }: { topics: TopicProgress[] }) {
   const { m } = useI18n();
+  const [explained, setExplained] = useState<TopicStatus>();
   const counts = new Map<TopicStatus, number>();
   for (const t of topics) if (!t.foundation) counts.set(t.status, (counts.get(t.status) ?? 0) + 1);
+  const shown = legend.filter((s) => (counts.get(s) ?? 0) > 0);
+  const note = explained !== undefined && shown.includes(explained) ? explained : undefined;
   return (
-    <div className="flex flex-wrap gap-x-4 gap-y-2 rounded-2xl border border-line bg-surface px-4 py-3 text-sm">
-      {legend
-        .filter((s) => (counts.get(s) ?? 0) > 0)
-        .map((s) => (
-          <span key={s} className="flex items-center gap-1.5">
+    <div className="space-y-2 rounded-2xl border border-line bg-surface px-4 py-3 text-sm">
+      <div className="flex flex-wrap gap-x-4 gap-y-2">
+        {shown.map((s) => (
+          <button
+            key={s}
+            type="button"
+            title={m.statusNote[statusStyle[s].key]}
+            aria-expanded={note === s}
+            onClick={() => setExplained(note === s ? undefined : s)}
+            className={`-mx-1.5 flex items-center gap-1.5 rounded-lg px-1.5 py-0.5 hover:bg-page ${note === s ? "bg-page" : ""}`}
+          >
             <span className={`size-2.5 rounded-full ${statusStyle[s].dot}`} />
-            {m.status[statusStyle[s].key]}
+            <span className="underline decoration-line decoration-dotted underline-offset-4">{m.status[statusStyle[s].key]}</span>
             <span className="tabular-nums text-muted">{counts.get(s)}</span>
-          </span>
+          </button>
         ))}
+      </div>
+      {note !== undefined && (
+        <p role="status" className="text-xs text-muted">
+          {m.statusNote[statusStyle[note].key]}
+        </p>
+      )}
     </div>
   );
 }
@@ -93,7 +111,9 @@ export function TopicMap({ course, topics, subject }: { course: Course; topics: 
                       </div>
                     )}
                   </div>
-                  <span className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium ${s.chip}`}>{m.status[s.key]}</span>
+                  <span title={m.statusNote[s.key]} className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium ${s.chip}`}>
+                    {m.status[s.key]}
+                  </span>
                 </>
               );
               const box = "flex min-w-0 items-center gap-3 rounded-xl border border-line px-3 py-2.5";

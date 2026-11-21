@@ -1,6 +1,6 @@
 import type { GetCourseResponse } from "@ga/proto/catalog/v1/catalog_pb";
 import { type GetCourseProgressResponse, type TopicProgress, TopicStatus } from "@ga/proto/learning/v1/learning_pb";
-import { computed, List, Text, View, windowSize } from "nsh";
+import { computed, List, signal, Text, View, windowSize } from "nsh";
 import { NavPage } from "nsh/base";
 import { m, tx } from "../lib/i18n.ts";
 import { query } from "../lib/query.ts";
@@ -90,7 +90,10 @@ function TopicBox(props: { title: string; progress: TopicProgress | undefined; w
           </View>
         </If>
       </View>
-      <View style={{ backgroundColor: chipColors(key()).bg, borderRadius: 999, paddingHorizontal: 8, paddingVertical: 2 }}>
+      <View
+        tooltip={m().statusNotes[key()]}
+        style={{ backgroundColor: chipColors(key()).bg, borderRadius: 999, paddingHorizontal: 8, paddingVertical: 2 }}
+      >
         <Text style={{ color: chipColors(key()).fg, fontSize: 11, fontWeight: "500" }}>{m().statuses[key()]}</Text>
       </View>
     </View>
@@ -142,6 +145,12 @@ export function MapBody(props: { map: MapData }) {
     return found;
   });
   const legend: StatusKey[] = ["learned", "due", "available", "failed", "assumed", "locked"];
+  // A status's name explains itself: on hover on a desktop, and when pressed, which works on a phone too.
+  const explained = signal<StatusKey | undefined>(undefined);
+  const note = () => {
+    const key = explained();
+    return key && (counts()[key] ?? 0) > 0 ? key : undefined;
+  };
   // Topics sit two to a row where the map is wide enough, as on the web: a tablet's window, or a desktop's once the
   // cards beside the map leave it room.
   const columns = () => {
@@ -154,13 +163,31 @@ export function MapBody(props: { map: MapData }) {
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12 }}>
           <Each of={legend.filter((key) => (counts()[key] ?? 0) > 0)}>
             {(key) => (
-              <View style={{ alignItems: "center", flexDirection: "row", gap: 6 }}>
+              <View
+                role="button"
+                accessibilityLabel={`${m().statuses[key()]} ${counts()[key()] ?? 0}`}
+                accessibilityHint={m().statusNotes[key()]}
+                tooltip={m().statusNotes[key()]}
+                onPress={() => explained.set(note() === key() ? undefined : key())}
+                hoverStyle={{ backgroundColor: colors().page }}
+                style={{
+                  alignItems: "center",
+                  backgroundColor: note() === key() ? colors().page : undefined,
+                  borderRadius: 8,
+                  flexDirection: "row",
+                  gap: 6,
+                  marginHorizontal: -6,
+                  paddingHorizontal: 6,
+                  paddingVertical: 2,
+                }}
+              >
                 <Dot status={key()} />
                 <Text style={{ color: colors().ink, fontSize: 14 }}>{`${m().statuses[key()]} ${counts()[key()] ?? 0}`}</Text>
               </View>
             )}
           </Each>
         </View>
+        <If when={note()}>{(key) => <Muted>{m().statusNotes[key()]}</Muted>}</If>
       </Card>
       <List viewport="parent" each={props.map.course.course?.units ?? []} estimatedItemSize={600} contentStyle={{ gap: 12 }}>
         {(unit) => (
