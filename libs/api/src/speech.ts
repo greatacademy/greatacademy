@@ -105,6 +105,8 @@ export async function hearRecording(
     heard = await provider.hear({ wav: audio, language: spec.language, seconds, ...(assessing && reference && { reference }) });
   } catch (e) {
     if (!(e instanceof SpeechFailed)) throw e;
+    // The reason, such as unreachable or status-401, is what tells a passing failure from a broken route.
+    console.warn(`speech failed: ${route.providerId} ${e.message}`);
     await recordCalls(db, [call(route, false)]);
     return { again: RECORD_FAILED };
   }
