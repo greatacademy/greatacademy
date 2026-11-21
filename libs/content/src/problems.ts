@@ -72,7 +72,7 @@ export function partOf(problem: Problem, index: number): Problem {
   return {
     ...rest,
     prompt: { en: join("en", "Answer: "), "zh-CN": join("zh-CN", "答案：") },
-    part: { index, count: parts.length, ...(part.topic && { topic: part.topic }) },
+    part: { index, count: parts.length, ...(part.topic && { topic: part.topic }), scenario: problem.prompt, ask: part.prompt },
   };
 }
 

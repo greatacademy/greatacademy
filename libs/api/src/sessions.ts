@@ -1,4 +1,3 @@
-import type { ProblemRef } from "@ga/content";
 import { appendEvent, type Db, loadState, recordAnswer, type SessionRow, updateSession } from "@ga/db";
 import { applyEvent, type EngineEvent, initialState } from "@ga/engine";
 
@@ -29,33 +28,35 @@ export async function appendTo(db: Db, learnerId: string, c: CourseEntry, e: Eng
 }
 
 /**
- * settleAnswer records an answer that moved a run on, appending the run's event when it ended. A part of a multistep
- * problem before its last records nothing: the problem is one question, recorded with its last part.
+ * settleAnswer records the answers that moved a run on, appending the run's event when it ended. A part of a multistep
+ * problem before its last records nothing: the problem is one question, recorded with its last part. A quiz records its
+ * answers when it is handed in.
  */
 export async function settleAnswer(
   db: Db,
   learnerId: string,
   c: CourseEntry,
   row: SessionRow,
-  ref: ProblemRef,
-  answered: Answered,
+  answered: Pick<Answered, "run" | "event"> & { readonly verdict?: Answered["verdict"] },
   at: number,
 ): Promise<SessionRow> {
   const asked = answered.run.asked;
-  const last = asked[asked.length - 1];
-  if (last && asked.length > (row.state as RunState).asked.length) {
+  const before = (row.state as RunState).asked.length;
+  for (let index = before; index < asked.length; index++) {
+    const a = asked[index]!;
+    // A single answer records the checker's verdict; a multistep problem is correct only when every part is.
+    const single = asked.length - before === 1 && answered.verdict && !a.parts && answered.run.kind !== "quiz";
     await recordAnswer(db, {
       sessionId: row.id,
       learnerId,
-      index: asked.length - 1,
-      topicId: ref.topic,
-      kp: ref.kp,
-      seed: ref.seed,
-      response: last.response,
-      skipped: answered.skipped,
-      // A multistep problem is correct only when every part is.
-      correct: last.parts ? last.correct : answered.verdict.correct,
-      ...(last.score !== undefined && { score: last.score }),
+      index,
+      topicId: a.topic,
+      kp: a.kp,
+      seed: a.seed,
+      response: a.response,
+      skipped: a.skipped,
+      correct: single ? answered.verdict!.correct : a.correct,
+      ...(a.score !== undefined && { score: a.score }),
       at: new Date(at),
     });
   }

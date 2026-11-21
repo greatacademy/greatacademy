@@ -56,13 +56,25 @@ import type { LearningService, Task as TaskMessage } from "@ga/proto/learning/v1
 import { requirePlan } from "./billing.ts";
 import { accessOf, requireStudy, speechRoute, studiedToday } from "./capabilities.ts";
 import { dbKey, userIdKey } from "./context.ts";
-import { figure, knowledgePointIntro, sessionMessage, sounds, taskMessage, text } from "./convert.ts";
+import { answersAtOnce, figure, knowledgePointIntro, sessionMessage, sounds, taskMessage, text } from "./convert.ts";
 import { requireJudgingQuota } from "./costs.ts";
 import { ESSAY_NOTICE_MS, essayRun, essayTopics, finishEssay, judgeEssay } from "./essays.ts";
 import { forLearner, type JudgingDeps, judgedCriteria, runJudgment, viewJudgment } from "./judging.ts";
 import { courseStats, strengthOf, topicStatus, unitStats } from "./progress.ts";
 import type { CourseEntry, Registry } from "./registry.ts";
-import { answerRun, canSkip, type Given, type RunState, runTask, startRun } from "./runner.ts";
+import {
+  answerRun,
+  canSkip,
+  finishQuiz,
+  type Given,
+  openQuizQuestion,
+  questionIndex,
+  quizRun,
+  quizTimeUp,
+  type RunState,
+  runTask,
+  startRun,
+} from "./runner.ts";
 import { appendTo, learnerState, settleAnswer } from "./sessions.ts";
 import { hearRecording, SPEAKING_OFF_FOREVER, setSpeaking, speakingAvailable, speakingOff, speakingUntil, spokenTopics } from "./speech.ts";
 import { xpSummary } from "./summary.ts";
@@ -194,11 +206,6 @@ function feedbackOf(problem: Problem, verdict: Verdict, judged?: { readonly row:
   };
 }
 
-/** withFeedback tells whether a run's answers get feedback at once. */
-function withFeedback(run: RunState): boolean {
-  return run.kind === "lesson" || run.kind === "review" || run.kind === "reading";
-}
-
 function auth(ctx: HandlerContext): { db: Db; userId: string } {
   const db = ctx.values.get(dbKey);
   if (!db) throw new ConnectError("no database", Code.Internal);
@@ -296,6 +303,20 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
   const append = appendTo;
   const settle = settleAnswer;
 
+  /** handIn ends a quiz with the answers saved, records them and appends its event. */
+  const handIn = async (
+    tx: Db,
+    learnerId: string,
+    c: CourseEntry,
+    row: SessionRow,
+    run: Extract<RunState, { kind: "quiz" }>,
+    now: number,
+  ) => {
+    const { state: before } = await state(tx, learnerId, c, true);
+    const { pending: _, ...rest } = run;
+    return settle(tx, learnerId, c, row, finishQuiz(c, rest, before, now), now);
+  };
+
   /** view describes a session; an essay shows as submitted until it is judged, then its result carries the verdict. */
   const view = async (db: Db, learnerId: string, row: SessionRow) => {
     const c = await course(row.courseId);
@@ -313,7 +334,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
         return sessionMessage(c, row.id, run, s, undefined, { feedback });
       }
     }
-    const j = run.pending ? await latestJudgment(db, row.id, run.asked.length) : undefined;
+    const j = run.pending ? await latestJudgment(db, row.id, questionIndex(run)) : undefined;
     return sessionMessage(c, row.id, run, s, j && { delayed: j.status === "pending" && j.error !== null, failed: j.status === "failed" });
   };
 
@@ -751,7 +772,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
         const row = await getSession(db, learnerId, req.sessionId);
         if (!row) throw new ConnectError("no such session", Code.NotFound);
         const run = row.state as RunState;
-        if (row.status !== "active" || req.index !== run.asked.length || !run.current)
+        if (row.status !== "active" || req.index !== questionIndex(run) || !run.current)
           throw new ConnectError("that question was already answered", Code.FailedPrecondition);
         if (!deps.judging) throw new ConnectError("speaking is not available", Code.FailedPrecondition);
         const entry = await course(row.courseId);
@@ -766,7 +787,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
         if (!row) throw new ConnectError("no such session", Code.NotFound);
         if (row.status !== "active") throw new ConnectError("the session is over", Code.FailedPrecondition);
         const run = row.state as RunState;
-        if (req.index !== run.asked.length) throw new ConnectError("that question was already answered", Code.FailedPrecondition);
+        if (req.index !== questionIndex(run)) throw new ConnectError("that question was already answered", Code.FailedPrecondition);
         const c = await course(row.courseId);
         const ref = run.current!;
         if (run.pending) {
@@ -805,9 +826,14 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
           await updateSession(tx, row.id, next, status, new Date(now));
           return { kind: "pending" as const, row: { ...row, status, state: next }, c, judgment: j.id };
         }
+        if (run.kind === "quiz" && quizRun(run).slots[questionIndex(run)]?.answer?.locked)
+          throw new ConnectError("that answer is final", Code.FailedPrecondition);
         const { state: before } = await state(tx, learnerId, c, true);
-        const answered = await answerRun(c, run, before, response, req.skip, now, rng(), judged as Given | undefined);
-        return { kind: "answered" as const, row: await settle(tx, learnerId, c, row, ref, answered, now), answered };
+        let answered = await answerRun(c, run, before, response, req.skip, now, rng(), judged as Given | undefined);
+        // A quiz turns to the question asked for once the answer is saved, unless a multistep problem goes on.
+        if (req.open !== undefined && answered.run.kind === "quiz" && !answered.event && !answered.run.partial?.length)
+          answered = { ...answered, run: openQuizQuestion(c, answered.run, req.open, now, rng()) };
+        return { kind: "answered" as const, row: await settle(tx, learnerId, c, row, answered, now), answered };
       });
       if (out.kind === "pending" && out.row.status === "submitted") {
         const { judging, defer } = deps;
@@ -820,7 +846,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
       if (out.kind === "abandoned") return { session };
       const run = out.row.state as RunState;
       return {
-        ...(withFeedback(run) && {
+        ...(answersAtOnce(run) && {
           feedback: { ...feedbackOf(out.answered.problem, out.answered.verdict), ...(heard && { heard: heard.text }) },
         }),
         session,
@@ -837,12 +863,52 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
         if (!row) throw new ConnectError("no such session", Code.NotFound);
         const run = row.state as RunState;
         if (row.status !== "active" || !run.current) throw new ConnectError("the session is over", Code.FailedPrecondition);
-        if (req.index !== run.asked.length) throw new ConnectError("that question was already answered", Code.FailedPrecondition);
+        if (req.index !== questionIndex(run)) throw new ConnectError("that question was already answered", Code.FailedPrecondition);
         if (run.kind !== "review") throw new ConnectError("only a review shows the reference", Code.FailedPrecondition);
         if (run.referenced) return row;
         const next = { ...run, referenced: true } as RunState;
         await updateSession(tx, row.id, next, "active", new Date(now));
         return { ...row, state: next };
+      });
+      return { session: await view(db, learnerId, row) };
+    },
+
+    async openQuestion(req, ctx) {
+      const { db, userId } = auth(ctx);
+      const learnerId = await learnerFor(db, userId);
+      const now = deps.now();
+      await requireStudy(db, learnerId, now);
+      const row = await db.transaction(async (tx) => {
+        const row = await getSession(tx, learnerId, req.sessionId, true);
+        if (!row) throw new ConnectError("no such session", Code.NotFound);
+        const run = row.state as RunState;
+        if (row.status !== "active" || !run.current) throw new ConnectError("the session is over", Code.FailedPrecondition);
+        if (run.kind !== "quiz") throw new ConnectError("only a quiz opens its questions in any order", Code.FailedPrecondition);
+        if (run.pending) throw new ConnectError("the answer is still being judged", Code.FailedPrecondition);
+        if (req.index < 0 || req.index >= run.topics.length) throw new ConnectError("the quiz has no such question", Code.InvalidArgument);
+        const c = await course(row.courseId);
+        // A quiz whose time is up is handed in as it stands.
+        if (quizTimeUp(run, now)) return handIn(tx, learnerId, c, row, run, now);
+        const next = openQuizQuestion(c, run, req.index, now, rng());
+        await updateSession(tx, row.id, next, "active", new Date(now));
+        return { ...row, state: next };
+      });
+      return { session: await view(db, learnerId, row) };
+    },
+
+    async finishQuiz(req, ctx) {
+      const { db, userId } = auth(ctx);
+      const learnerId = await learnerFor(db, userId);
+      const now = deps.now();
+      await requireStudy(db, learnerId, now);
+      const row = await db.transaction(async (tx) => {
+        const row = await getSession(tx, learnerId, req.sessionId, true);
+        if (!row) throw new ConnectError("no such session", Code.NotFound);
+        const run = row.state as RunState;
+        if (row.status !== "active" || !run.current) throw new ConnectError("the session is over", Code.FailedPrecondition);
+        if (run.kind !== "quiz") throw new ConnectError("only a quiz is handed in", Code.FailedPrecondition);
+        if (run.pending && !quizTimeUp(run, now)) throw new ConnectError("the answer is still being judged", Code.FailedPrecondition);
+        return handIn(tx, learnerId, await course(row.courseId), row, run, now);
       });
       return { session: await view(db, learnerId, row) };
     },
@@ -901,10 +967,10 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
         const { state: before } = await state(tx, learnerId, c, true);
         const given = { problem: problem!, verdict: { correct: verdict.passed }, score: done.score ?? 0 };
         const answered = await answerRun(c, run, before, done.response, false, now, rng(), given);
-        return settle(tx, learnerId, c, r, run.current!, answered, now);
+        return settle(tx, learnerId, c, r, answered, now);
       });
       return {
-        ...(withFeedback(row.state as RunState) && { feedback: feedbackOf(problem!, { correct: verdict.passed }, verdict) }),
+        ...(answersAtOnce(row.state as RunState) && { feedback: feedbackOf(problem!, { correct: verdict.passed }, verdict) }),
         session: await view(db, learnerId, row),
       };
     },

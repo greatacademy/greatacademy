@@ -1354,6 +1354,13 @@ export declare type Session = Message<"ga.learning.v1.Session"> & {
     value: Submitted;
     case: "submitted";
   } | { case: undefined; value?: undefined };
+
+  /**
+   * trail is what the session went through before its current question, for the steps bar and to look back at.
+   *
+   * @generated from field: optional ga.learning.v1.Trail trail = 8;
+   */
+  trail?: Trail | undefined;
 };
 
 /**
@@ -1361,6 +1368,104 @@ export declare type Session = Message<"ga.learning.v1.Session"> & {
  * Use `create(SessionSchema)` to create a new message.
  */
 export declare const SessionSchema: GenMessage<Session>;
+
+/**
+ * Trail is the part of a session behind its current question.
+ *
+ * @generated from message ga.learning.v1.Trail
+ */
+export declare type Trail = Message<"ga.learning.v1.Trail"> & {
+  /**
+   * intros are the lessons of the knowledge points a lesson has reached, the current one last; empty in a lesson that
+   * starts with practice, and elsewhere.
+   *
+   * @generated from field: repeated ga.learning.v1.KnowledgePointIntro intros = 1;
+   */
+  intros: KnowledgePointIntro[];
+
+  /**
+   * answered are the questions answered, with their feedback, where each answer is judged at once (lessons, reviews,
+   * reading); empty where results come at the end.
+   *
+   * @generated from field: repeated ga.learning.v1.AnsweredQuestion answered = 2;
+   */
+  answered: AnsweredQuestion[];
+};
+
+/**
+ * Describes the message ga.learning.v1.Trail.
+ * Use `create(TrailSchema)` to create a new message.
+ */
+export declare const TrailSchema: GenMessage<Trail>;
+
+/**
+ * AnsweredQuestion is a question answered earlier in a session, to look back at.
+ *
+ * @generated from message ga.learning.v1.AnsweredQuestion
+ */
+export declare type AnsweredQuestion = Message<"ga.learning.v1.AnsweredQuestion"> & {
+  /**
+   * @generated from field: int32 index = 1;
+   */
+  index: number;
+
+  /**
+   * knowledge_point is the index of the knowledge point it asked, in its topic.
+   *
+   * @generated from field: int32 knowledge_point = 2;
+   */
+  knowledgePoint: number;
+
+  /**
+   * parts are the problem's parts as answered, in order: one for a problem not asked in parts.
+   *
+   * @generated from field: repeated ga.learning.v1.AnsweredPart parts = 3;
+   */
+  parts: AnsweredPart[];
+
+  /**
+   * referenced marks a review question answered after looking at its lesson.
+   *
+   * @generated from field: bool referenced = 4;
+   */
+  referenced: boolean;
+};
+
+/**
+ * Describes the message ga.learning.v1.AnsweredQuestion.
+ * Use `create(AnsweredQuestionSchema)` to create a new message.
+ */
+export declare const AnsweredQuestionSchema: GenMessage<AnsweredQuestion>;
+
+/**
+ * AnsweredPart is a problem, or a part of a multistep problem, with the response given and its feedback.
+ *
+ * @generated from message ga.learning.v1.AnsweredPart
+ */
+export declare type AnsweredPart = Message<"ga.learning.v1.AnsweredPart"> & {
+  /**
+   * @generated from field: ga.learning.v1.ProblemView problem = 1;
+   */
+  problem?: ProblemView | undefined;
+
+  /**
+   * @generated from field: string response = 2;
+   */
+  response: string;
+
+  /**
+   * feedback is unset where results come at the end.
+   *
+   * @generated from field: optional ga.learning.v1.Feedback feedback = 3;
+   */
+  feedback?: Feedback | undefined;
+};
+
+/**
+ * Describes the message ga.learning.v1.AnsweredPart.
+ * Use `create(AnsweredPartSchema)` to create a new message.
+ */
+export declare const AnsweredPartSchema: GenMessage<AnsweredPart>;
 
 /**
  * Submitted is an essay waiting for a model's verdict after its session ended.
@@ -1497,6 +1602,28 @@ export declare type Question = Message<"ga.learning.v1.Question"> & {
    * @generated from field: optional ga.learning.v1.KnowledgePointIntro reference = 15;
    */
   reference?: KnowledgePointIntro | undefined;
+
+  /**
+   * earlier are the parts of a multistep problem answered before the part asked now, with their feedback where answers
+   * are judged at once.
+   *
+   * @generated from field: repeated ga.learning.v1.AnsweredPart earlier = 16;
+   */
+  earlier: AnsweredPart[];
+
+  /**
+   * sheet is set in a quiz: its questions, which may be answered in any order; index is the question open now.
+   *
+   * @generated from field: optional ga.learning.v1.QuizSheet sheet = 17;
+   */
+  sheet?: QuizSheet | undefined;
+
+  /**
+   * saved is the response saved to the open question of a quiz, which may still be changed; empty when none was.
+   *
+   * @generated from field: string saved = 18;
+   */
+  saved: string;
 };
 
 /**
@@ -1504,6 +1631,123 @@ export declare type Question = Message<"ga.learning.v1.Question"> & {
  * Use `create(QuestionSchema)` to create a new message.
  */
 export declare const QuestionSchema: GenMessage<Question>;
+
+/**
+ * QuizSheet is the questions of a quiz, as the learner moves among them.
+ *
+ * @generated from message ga.learning.v1.QuizSheet
+ */
+export declare type QuizSheet = Message<"ga.learning.v1.QuizSheet"> & {
+  /**
+   * @generated from field: repeated ga.learning.v1.QuizSlot slots = 1;
+   */
+  slots: QuizSlot[];
+};
+
+/**
+ * Describes the message ga.learning.v1.QuizSheet.
+ * Use `create(QuizSheetSchema)` to create a new message.
+ */
+export declare const QuizSheetSchema: GenMessage<QuizSheet>;
+
+/**
+ * QuizSlot is a question of a quiz.
+ *
+ * @generated from message ga.learning.v1.QuizSlot
+ */
+export declare type QuizSlot = Message<"ga.learning.v1.QuizSlot"> & {
+  /**
+   * answered is true once a response is saved to it.
+   *
+   * @generated from field: bool answered = 1;
+   */
+  answered: boolean;
+
+  /**
+   * locked is true when its answer may no longer change: a multistep problem whose parts were begun, or an answer a
+   * model judged.
+   *
+   * @generated from field: bool locked = 2;
+   */
+  locked: boolean;
+};
+
+/**
+ * Describes the message ga.learning.v1.QuizSlot.
+ * Use `create(QuizSlotSchema)` to create a new message.
+ */
+export declare const QuizSlotSchema: GenMessage<QuizSlot>;
+
+/**
+ * @generated from message ga.learning.v1.OpenQuestionRequest
+ */
+export declare type OpenQuestionRequest = Message<"ga.learning.v1.OpenQuestionRequest"> & {
+  /**
+   * @generated from field: string session_id = 1;
+   */
+  sessionId: string;
+
+  /**
+   * index is the question of the quiz to open.
+   *
+   * @generated from field: int32 index = 2;
+   */
+  index: number;
+};
+
+/**
+ * Describes the message ga.learning.v1.OpenQuestionRequest.
+ * Use `create(OpenQuestionRequestSchema)` to create a new message.
+ */
+export declare const OpenQuestionRequestSchema: GenMessage<OpenQuestionRequest>;
+
+/**
+ * @generated from message ga.learning.v1.OpenQuestionResponse
+ */
+export declare type OpenQuestionResponse = Message<"ga.learning.v1.OpenQuestionResponse"> & {
+  /**
+   * @generated from field: ga.learning.v1.Session session = 1;
+   */
+  session?: Session | undefined;
+};
+
+/**
+ * Describes the message ga.learning.v1.OpenQuestionResponse.
+ * Use `create(OpenQuestionResponseSchema)` to create a new message.
+ */
+export declare const OpenQuestionResponseSchema: GenMessage<OpenQuestionResponse>;
+
+/**
+ * @generated from message ga.learning.v1.FinishQuizRequest
+ */
+export declare type FinishQuizRequest = Message<"ga.learning.v1.FinishQuizRequest"> & {
+  /**
+   * @generated from field: string session_id = 1;
+   */
+  sessionId: string;
+};
+
+/**
+ * Describes the message ga.learning.v1.FinishQuizRequest.
+ * Use `create(FinishQuizRequestSchema)` to create a new message.
+ */
+export declare const FinishQuizRequestSchema: GenMessage<FinishQuizRequest>;
+
+/**
+ * @generated from message ga.learning.v1.FinishQuizResponse
+ */
+export declare type FinishQuizResponse = Message<"ga.learning.v1.FinishQuizResponse"> & {
+  /**
+   * @generated from field: ga.learning.v1.Session session = 1;
+   */
+  session?: Session | undefined;
+};
+
+/**
+ * Describes the message ga.learning.v1.FinishQuizResponse.
+ * Use `create(FinishQuizResponseSchema)` to create a new message.
+ */
+export declare const FinishQuizResponseSchema: GenMessage<FinishQuizResponse>;
 
 /**
  * @generated from message ga.learning.v1.OpenReferenceRequest
@@ -1773,6 +2017,20 @@ export declare type LessonProgress = Message<"ga.learning.v1.LessonProgress"> & 
    * @generated from field: int32 needed = 4;
    */
   needed: number;
+
+  /**
+   * practice is true in a lesson that starts with practice, with no explanations or worked examples.
+   *
+   * @generated from field: bool practice = 5;
+   */
+  practice: boolean;
+
+  /**
+   * pass is the number of correct answers that passes a knowledge point with no wrong answer.
+   *
+   * @generated from field: int32 pass = 6;
+   */
+  pass: number;
 };
 
 /**
@@ -1838,6 +2096,19 @@ export declare type ProblemView = Message<"ga.learning.v1.ProblemView"> & {
    * @generated from field: int32 parts = 8;
    */
   parts: number;
+
+  /**
+   * scenario is a multistep problem's scenario, and ask the part's own question; prompt joins them with the parts
+   * before it.
+   *
+   * @generated from field: optional ga.common.v1.Text scenario = 9;
+   */
+  scenario?: Text | undefined;
+
+  /**
+   * @generated from field: optional ga.common.v1.Text ask = 10;
+   */
+  ask?: Text | undefined;
 };
 
 /**
@@ -2194,6 +2465,13 @@ export declare type SubmitAnswerRequest = Message<"ga.learning.v1.SubmitAnswerRe
    * @generated from field: bytes audio = 5;
    */
   audio: Uint8Array;
+
+  /**
+   * open is, in a quiz, the question to turn to once the answer is saved; the quiz stays on the question when unset.
+   *
+   * @generated from field: optional int32 open = 6;
+   */
+  open?: number | undefined;
 };
 
 /**
@@ -3088,6 +3366,27 @@ export declare const LearningService: GenService<{
     methodKind: "unary";
     input: typeof OpenReferenceRequestSchema;
     output: typeof OpenReferenceResponseSchema;
+  },
+  /**
+   * OpenQuestion turns a quiz to one of its questions, which may be answered in any order and changed until the quiz is
+   * handed in.
+   *
+   * @generated from rpc ga.learning.v1.LearningService.OpenQuestion
+   */
+  openQuestion: {
+    methodKind: "unary";
+    input: typeof OpenQuestionRequestSchema;
+    output: typeof OpenQuestionResponseSchema;
+  },
+  /**
+   * FinishQuiz hands a quiz in: its answers are counted, and the questions left unanswered count wrong.
+   *
+   * @generated from rpc ga.learning.v1.LearningService.FinishQuiz
+   */
+  finishQuiz: {
+    methodKind: "unary";
+    input: typeof FinishQuizRequestSchema;
+    output: typeof FinishQuizResponseSchema;
   },
   /**
    * SetSpeaking turns spoken topics on or off, or off for the rest of the day; turning them off leaves a session

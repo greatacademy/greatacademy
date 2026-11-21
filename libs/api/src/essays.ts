@@ -54,7 +54,7 @@ export async function finishEssay(
     const { state: before } = await learnerState(tx, learnerId, c, true);
     const given = { problem: problem!, verdict: { correct: viewJudgment(j).passed }, score: j.score ?? 0 };
     const answered = await answerRun(c, run, before, j.response, false, now, createRng(seed), given);
-    return settleAnswer(tx, learnerId, c, row, run.current!, answered, now);
+    return settleAnswer(tx, learnerId, c, row, answered, now);
   });
 }
 

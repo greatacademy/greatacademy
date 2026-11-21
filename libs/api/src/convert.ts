@@ -1,5 +1,5 @@
 import type { MessageInitShape } from "@bufbuild/protobuf";
-import type { Figure, InputSpec, KnowledgePointLesson, PassageView, Problem, Sound, Text } from "@ga/content";
+import type { Figure, InputSpec, KnowledgePointLesson, PassageView, Problem, ProblemRef, Sound, Text } from "@ga/content";
 import {
   diagnosticCandidates,
   diagnosticLength,
@@ -16,6 +16,7 @@ import {
 import type { FigureSchema } from "@ga/proto/common/v1/figure_pb";
 import type { TextSchema } from "@ga/proto/common/v1/text_pb";
 import type {
+  AnsweredPartSchema,
   FeedbackSchema,
   InputSchema,
   KnowledgePointIntroSchema,
@@ -26,11 +27,12 @@ import type {
   SessionSchema,
   SoundSchema,
   TaskSchema,
+  TrailSchema,
 } from "@ga/proto/learning/v1/learning_pb";
 import { TopicStatus } from "@ga/proto/learning/v1/learning_pb";
 
 import type { CourseEntry } from "./registry.ts";
-import { canSkip, type RunState, runTask } from "./runner.ts";
+import { type Asked, canSkip, type PartAnswer, questionIndex, quizRun, type RunState, runTask } from "./runner.ts";
 
 /** illustrationPath is the path, from the site's root and without an extension, of a subject's illustration; "" for none. */
 export function illustrationPath(subject: string, name: string | undefined): string {
@@ -102,6 +104,8 @@ export function problemView(p: Problem): MessageInitShape<typeof ProblemViewSche
     difficulty: p.difficulty ?? "",
     part: p.part ? p.part.index + 1 : 0,
     parts: p.part?.count ?? 0,
+    ...(p.part?.scenario && { scenario: text(p.part.scenario) }),
+    ...(p.part?.ask && { ask: text(p.part.ask) }),
   };
 }
 
@@ -216,6 +220,88 @@ function reviewTotal(c: CourseEntry, run: RunState): number {
   return run.asked.length + Math.max(1, c.ctx.params.reviewPass - correct);
 }
 
+/** answersAtOnce tells whether a run's answers get feedback at once: lessons, reviews and reading. */
+export function answersAtOnce(run: RunState): boolean {
+  return run.kind === "lesson" || run.kind === "review" || run.kind === "reading";
+}
+
+/**
+ * answeredPart is a problem, or a part of one, with the response given and, where answers get feedback at once, the
+ * feedback on it again: the checker's message is asked for anew, and an answer a model judged keeps its verdict.
+ */
+async function answeredPart(
+  c: CourseEntry,
+  ref: ProblemRef,
+  answer: PartAnswer,
+  feedback: boolean,
+): Promise<MessageInitShape<typeof AnsweredPartSchema>> {
+  const [problem] = await c.source.problems([ref]);
+  const p = problem!;
+  const view = { problem: problemView(p), response: answer.response };
+  if (!feedback) return view;
+  // A response a model judged, or none, is not checked again: the verdict kept is the one shown.
+  const again = !p.answer.judged && answer.response !== "" ? (await c.source.judge(ref, answer.response)).verdict : undefined;
+  const message = again && again.correct === answer.correct ? again.feedback : undefined;
+  return {
+    ...view,
+    feedback: {
+      correct: answer.correct,
+      ...(message && { message: text(message) }),
+      solution: text(p.solution),
+      ...(p.solutionFigure && { solutionFigure: figure(p.solutionFigure) }),
+      solutionSounds: sounds(p.solutionSounds),
+      answer: p.canonical,
+    },
+  };
+}
+
+/** answeredParts are the parts of an asked question, or the question itself when it was not asked in parts. */
+function answeredParts(c: CourseEntry, a: Asked, feedback: boolean) {
+  const { topic, kp, seed, difficulty } = a;
+  const ref = { topic, kp, seed, ...(difficulty && { difficulty }) };
+  const parts: readonly PartAnswer[] = a.parts ?? [a];
+  return Promise.all(parts.map((p, i) => answeredPart(c, a.parts ? { ...ref, part: i } : ref, p, feedback)));
+}
+
+/** workedExample is the worked example of a lesson's knowledge point: a multistep one shows its last part, whose prompt carries the earlier parts with their answers. */
+async function workedExample(c: CourseEntry, topic: string, kp: number, seed: number): Promise<Problem> {
+  const [first] = await c.source.problems([{ topic, kp, seed }]);
+  const steps = first!.part;
+  if (!steps || steps.index + 1 >= steps.count) return first!;
+  return (await c.source.problems([{ topic, kp, seed, part: steps.count - 1 }]))[0]!;
+}
+
+/**
+ * trail is what a run went through before its current question: the lessons of the knowledge points a lesson reached,
+ * and the questions answered with their feedback, where answers get it at once. The worked example of a knowledge
+ * point takes the seed before its first question.
+ */
+async function trail(c: CourseEntry, run: RunState): Promise<MessageInitShape<typeof TrailSchema>> {
+  const feedback = answersAtOnce(run);
+  const answered = feedback
+    ? await Promise.all(
+        run.asked.map(async (a, index) => ({
+          index,
+          knowledgePoint: a.kp,
+          parts: await answeredParts(c, a, true),
+          referenced: a.referenced === true,
+        })),
+      )
+    : [];
+  if (run.kind !== "lesson" || run.practice || run.lesson.essay) return { answered };
+  const count = run.lesson.kpCount;
+  const intros = await Promise.all(
+    Array.from({ length: run.lesson.kp + 1 }, async (_, kp) => {
+      const first = run.asked.find((a) => a.kp === kp);
+      const seed = kp === run.lesson.kp ? run.example : first ? first.seed - 1 : undefined;
+      if (seed === undefined) return undefined;
+      const [lesson, example] = await Promise.all([c.source.lesson(run.topic, kp), workedExample(c, run.topic, kp, seed)]);
+      return knowledgePointIntro(lesson, example, kp, count);
+    }),
+  );
+  return { intros: intros.filter((i) => i !== undefined), answered };
+}
+
 async function question(
   c: CourseEntry,
   run: RunState,
@@ -224,18 +310,18 @@ async function question(
   const ref = run.current!;
   // A multistep problem's later parts are the same question, so only its first part comes after the intro.
   const intro = run.kind === "lesson" && run.lesson.kpAsked === 0 && !run.practice && !ref.part;
-  // The question and, when a knowledge point starts, its worked example come in one call.
-  const [problem, first] = await c.source.problems(intro ? [ref, { topic: run.topic, kp: run.lesson.kp, seed: run.example }] : [ref]);
-  // A multistep worked example shows its last part, whose prompt carries the earlier parts with their answers.
-  const steps = first?.part;
-  const example =
-    run.kind === "lesson" && steps && steps.index + 1 < steps.count
-      ? (await c.source.problems([{ topic: run.topic, kp: run.lesson.kp, seed: run.example, part: steps.count - 1 }]))[0]
-      : first;
+  const [[problem], example] = await Promise.all([
+    c.source.problems([ref]),
+    intro ? workedExample(c, run.topic, run.lesson.kp, run.example) : undefined,
+  ]);
+  // The parts of a multistep problem answered before the part asked now.
+  const { part: _, ...whole } = ref;
+  const earlier = await Promise.all((run.partial ?? []).map((p, i) => answeredPart(c, { ...whole, part: i }, p, answersAtOnce(run))));
   const q: MessageInitShape<typeof QuestionSchema> = {
-    index: run.asked.length,
+    index: questionIndex(run),
     problem: problemView(problem!),
-    feedback: run.kind === "lesson" || run.kind === "review" || run.kind === "reading",
+    feedback: answersAtOnce(run),
+    earlier,
     canSkip: canSkip(run),
     total:
       run.kind === "review" ? reviewTotal(c, run) : run.kind === "quiz" ? run.topics.length : run.kind === "reading" ? run.questions : 0,
@@ -256,9 +342,28 @@ async function question(
       passage: passageMessage(c.subject.def.id, passage),
     };
   }
+  if (run.kind === "quiz") {
+    // A quiz's questions are answered in any order: the sheet shows which have answers, and the open one its own.
+    const { slots, at } = quizRun(run);
+    const sheet = {
+      slots: slots.map((s, i) => ({
+        answered: s.answer !== undefined,
+        locked: s.answer?.locked === true || (i === at && (run.partial?.length ?? 0) > 0),
+      })),
+    };
+    const open = slots[at]?.answer;
+    return { ...q, sheet, saved: open && !open.parts ? open.response : "" };
+  }
   if (run.kind !== "lesson") return q;
   const l = run.lesson;
-  const lesson = { knowledgePoint: l.kp, knowledgePoints: l.kpCount, streak: kpAnswers(l).correct, needed: kpNeeded(c.ctx.params, l) };
+  const lesson = {
+    knowledgePoint: l.kp,
+    knowledgePoints: l.kpCount,
+    streak: kpAnswers(l).correct,
+    needed: kpNeeded(c.ctx.params, l),
+    practice: run.practice === true,
+    pass: l.essay ? 1 : c.ctx.params.kpPass,
+  };
   if (!intro) return { ...q, lesson };
   const kp = await c.source.lesson(run.topic, l.kp);
   return {
@@ -374,8 +479,10 @@ export async function sessionMessage(
   judging?: { readonly delayed: boolean; readonly failed: boolean },
   essay?: EssayView,
 ): Promise<MessageInitShape<typeof SessionSchema>> {
-  const base = { id, courseId: c.id, task: taskMessage(c, runTask(run), state), answered: run.asked.length };
+  const answered = run.kind === "quiz" && !run.result ? quizRun(run).slots.filter((s) => s.answer).length : run.asked.length;
+  const base = { id, courseId: c.id, task: taskMessage(c, runTask(run), state), answered };
   if (essay?.submitted) return { ...base, step: { case: "submitted", value: essay.submitted } };
   if (run.result) return { ...base, step: { case: "result", value: await result(c, run, state, essay?.feedback) } };
-  return { ...base, step: { case: "question", value: await question(c, run, judging) } };
+  const [q, behind] = await Promise.all([question(c, run, judging), trail(c, run)]);
+  return { ...base, step: { case: "question", value: q }, trail: behind };
 }

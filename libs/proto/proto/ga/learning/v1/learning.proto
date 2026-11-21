@@ -52,6 +52,11 @@ service LearningService {
   // OpenReference shows, during a review, the lesson of the knowledge point asked; a correct answer after it earns
   // part of the credit.
   rpc OpenReference(OpenReferenceRequest) returns (OpenReferenceResponse);
+  // OpenQuestion turns a quiz to one of its questions, which may be answered in any order and changed until the quiz is
+  // handed in.
+  rpc OpenQuestion(OpenQuestionRequest) returns (OpenQuestionResponse);
+  // FinishQuiz hands a quiz in: its answers are counted, and the questions left unanswered count wrong.
+  rpc FinishQuiz(FinishQuizRequest) returns (FinishQuizResponse);
   // SetSpeaking turns spoken topics on or off, or off for the rest of the day; turning them off leaves a session
   // waiting on a spoken question, with nothing counted.
   rpc SetSpeaking(SetSpeakingRequest) returns (SetSpeakingResponse);
@@ -432,6 +437,37 @@ message Session {
     // judged the essay.
     Submitted submitted = 7;
   }
+  // trail is what the session went through before its current question, for the steps bar and to look back at.
+  optional Trail trail = 8;
+}
+
+// Trail is the part of a session behind its current question.
+message Trail {
+  // intros are the lessons of the knowledge points a lesson has reached, the current one last; empty in a lesson that
+  // starts with practice, and elsewhere.
+  repeated KnowledgePointIntro intros = 1;
+  // answered are the questions answered, with their feedback, where each answer is judged at once (lessons, reviews,
+  // reading); empty where results come at the end.
+  repeated AnsweredQuestion answered = 2;
+}
+
+// AnsweredQuestion is a question answered earlier in a session, to look back at.
+message AnsweredQuestion {
+  int32 index = 1;
+  // knowledge_point is the index of the knowledge point it asked, in its topic.
+  int32 knowledge_point = 2;
+  // parts are the problem's parts as answered, in order: one for a problem not asked in parts.
+  repeated AnsweredPart parts = 3;
+  // referenced marks a review question answered after looking at its lesson.
+  bool referenced = 4;
+}
+
+// AnsweredPart is a problem, or a part of a multistep problem, with the response given and its feedback.
+message AnsweredPart {
+  ProblemView problem = 1;
+  string response = 2;
+  // feedback is unset where results come at the end.
+  optional Feedback feedback = 3;
 }
 
 // Submitted is an essay waiting for a model's verdict after its session ended.
@@ -475,6 +511,45 @@ message Question {
   float reference_credit = 14;
   // reference is the lesson of the knowledge point asked, once it was looked at for this question.
   optional KnowledgePointIntro reference = 15;
+  // earlier are the parts of a multistep problem answered before the part asked now, with their feedback where answers
+  // are judged at once.
+  repeated AnsweredPart earlier = 16;
+  // sheet is set in a quiz: its questions, which may be answered in any order; index is the question open now.
+  optional QuizSheet sheet = 17;
+  // saved is the response saved to the open question of a quiz, which may still be changed; empty when none was.
+  string saved = 18;
+}
+
+// QuizSheet is the questions of a quiz, as the learner moves among them.
+message QuizSheet {
+  repeated QuizSlot slots = 1;
+}
+
+// QuizSlot is a question of a quiz.
+message QuizSlot {
+  // answered is true once a response is saved to it.
+  bool answered = 1;
+  // locked is true when its answer may no longer change: a multistep problem whose parts were begun, or an answer a
+  // model judged.
+  bool locked = 2;
+}
+
+message OpenQuestionRequest {
+  string session_id = 1;
+  // index is the question of the quiz to open.
+  int32 index = 2;
+}
+
+message OpenQuestionResponse {
+  Session session = 1;
+}
+
+message FinishQuizRequest {
+  string session_id = 1;
+}
+
+message FinishQuizResponse {
+  Session session = 1;
 }
 
 message OpenReferenceRequest {
@@ -552,6 +627,10 @@ message LessonProgress {
   int32 streak = 3;
   // needed is the number of correct answers that passes this knowledge point: more after wrong answers.
   int32 needed = 4;
+  // practice is true in a lesson that starts with practice, with no explanations or worked examples.
+  bool practice = 5;
+  // pass is the number of correct answers that passes a knowledge point with no wrong answer.
+  int32 pass = 6;
 }
 
 // ProblemView is what a client may see of a problem before answering.
@@ -571,6 +650,10 @@ message ProblemView {
   // part is the position, from 1, of the part asked of a multistep problem among its parts; both are 0 for a problem of one step.
   int32 part = 7;
   int32 parts = 8;
+  // scenario is a multistep problem's scenario, and ask the part's own question; prompt joins them with the parts
+  // before it.
+  optional ga.common.v1.Text scenario = 9;
+  optional ga.common.v1.Text ask = 10;
 }
 
 message Input {
@@ -668,6 +751,8 @@ message SubmitAnswerRequest {
   // audio answers a spoken question: a WAV file of 16 kHz mono 16-bit PCM, at most the question's max_seconds long.
   // It is sent to a speech service and never stored.
   bytes audio = 5;
+  // open is, in a quiz, the question to turn to once the answer is saved; the quiz stays on the question when unset.
+  optional int32 open = 6;
 }
 
 message SubmitAnswerResponse {

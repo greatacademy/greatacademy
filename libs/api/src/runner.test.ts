@@ -3,7 +3,7 @@ import { defaultParams } from "@ga/engine";
 import { describe, expect, it } from "vitest";
 
 import type { CourseEntry } from "./registry.ts";
-import { answerRun, type RunState, startRun } from "./runner.ts";
+import { answerRun, finishQuiz, openQuizQuestion, questionIndex, quizRun, type RunState, startRun } from "./runner.ts";
 
 const course = {
   ctx: { params: defaultParams, graph: { graph: { topics: new Map([["t", { knowledgePoints: [{}, {}] }]]) } } },
@@ -89,35 +89,74 @@ describe("a reading run", () => {
 });
 
 describe("a quiz run", () => {
+  const judged = {
+    ...course,
+    ctx: { ...course.ctx, graph: { graph: { topics: new Map([["t", { knowledgePoints: [{}, {}], diagnosticKp: 1 }]]) } } },
+    source: { judge: async (_: unknown, response: string) => ({ problem: {}, verdict: { correct: response === "right" } }) },
+  } as unknown as CourseEntry;
   const quiz = (deadline: number): RunState => ({
     kind: "quiz",
     topics: ["t", "t", "t"],
     deadline,
     asked: [],
     servedAt: 0,
-    current: { topic: "t", kp: 0, seed: 1 },
+    current: { topic: "t", kp: 1, seed: 1 },
+    slots: [{ ref: { topic: "t", kp: 1, seed: 1 }, spentMs: 0 }, { spentMs: 0 }, { spentMs: 0 }],
+    at: 0,
   });
+  const slots = (run: RunState) => (run.kind === "quiz" ? (run.slots ?? []) : []);
 
-  it("judges answers until the time is up, then ends with the questions left counted wrong", async () => {
+  it("saves answers to its questions in any order, keeps them changeable, and counts them only when handed in", async () => {
     const rng = createRng(1);
-    const first = await answerRun(course, quiz(60_000), state, "1", false, 30_000, rng);
+    const first = await answerRun(judged, quiz(600_000), state, "wrong", false, 10_000, rng);
     expect(first.event).toBeUndefined();
-    const second = await answerRun(course, first.run, state, "1", false, 61_000, rng);
-    expect(second.event).toMatchObject({
+    expect(first.run.asked).toHaveLength(0);
+    expect(slots(first.run)[0]).toMatchObject({ spentMs: 10_000, answer: { response: "wrong", correct: false } });
+    // The last question is opened, drawn when first opened, then the first again, where the answer is changed.
+    const third = openQuizQuestion(judged, first.run as never, 2, 15_000, rng);
+    expect(questionIndex(third)).toBe(2);
+    expect(slots(third)[2]?.ref).toMatchObject({ topic: "t", kp: 1 });
+    expect(slots(third)[1]?.ref).toBeUndefined();
+    const back = openQuizQuestion(judged, third as never, 0, 20_000, rng);
+    expect(slots(back)[2]).toMatchObject({ spentMs: 5_000 });
+    const changed = await answerRun(judged, back, state, "right", false, 26_000, rng);
+    expect(slots(changed.run)[0]).toMatchObject({ spentMs: 21_000, answer: { response: "right", correct: true } });
+    const { run, event } = finishQuiz(judged, changed.run as never, state, 30_000);
+    expect(event).toMatchObject({
       type: "quiz",
       results: [
         { topic: "t", correct: true },
-        { topic: "t", correct: true },
-        { topic: "t", correct: false, late: true },
+        { topic: "t", correct: false },
+        { topic: "t", correct: false },
       ],
     });
+    expect(event.type === "quiz" && event.results.some((r) => r.late)).toBe(false);
+    expect(run.asked).toHaveLength(1);
+    expect(run.asked[0]).toMatchObject({ response: "right", correct: true, elapsedMs: 25_000 });
+    expect(run.result).toMatchObject({ correct: 1, asked: 1, passed: false });
   });
 
-  it("counts an answer that arrives well after the time limit wrong", async () => {
+  it("ends when an answer comes after the time is up, counting it and the questions left wrong and late", async () => {
     const rng = createRng(1);
-    const { run, event } = await answerRun(course, quiz(60_000), state, "1", false, 90_000, rng);
+    const { run, event } = await answerRun(judged, quiz(60_000), state, "right", false, 90_000, rng);
     expect(run.asked[0]).toMatchObject({ correct: false, late: true });
     expect(event?.type === "quiz" && event.results.filter((r) => r.late)).toHaveLength(3);
+  });
+
+  it("moves the answers of a quiz begun one question after another to its slots, final as they were", () => {
+    const legacy: RunState = {
+      kind: "quiz",
+      topics: ["t", "t"],
+      deadline: 600_000,
+      asked: [{ topic: "t", kp: 1, seed: 1, response: "x", correct: true, skipped: false, elapsedMs: 9_000 }],
+      servedAt: 9_000,
+      current: { topic: "t", kp: 1, seed: 2 },
+    };
+    if (legacy.kind !== "quiz") throw new Error("not a quiz");
+    const run = quizRun(legacy);
+    expect(run.at).toBe(1);
+    expect(run.slots[0]).toMatchObject({ spentMs: 9_000, answer: { response: "x", correct: true, locked: true } });
+    expect(run.slots[1]).toMatchObject({ ref: { seed: 2 }, spentMs: 0 });
   });
 });
 
@@ -131,10 +170,11 @@ describe("a multistep problem", () => {
       }),
     },
   } as unknown as CourseEntry;
-  const quiz: RunState = {
-    kind: "quiz",
-    topics: ["t", "t"],
-    deadline: 600_000,
+  const review: RunState = {
+    kind: "review",
+    topic: "t",
+    covers: [],
+    plan: [0, 1, 0, 1, 0],
     asked: [],
     servedAt: 0,
     current: { topic: "t", kp: 0, seed: 1 },
@@ -142,7 +182,7 @@ describe("a multistep problem", () => {
 
   it("asks its parts in turn and counts as one question, right only when every part is", async () => {
     const rng = createRng(1);
-    const first = await answerRun(parted, quiz, state, "right", false, 10_000, rng);
+    const first = await answerRun(parted, review, state, "right", false, 10_000, rng);
     expect(first.run.asked).toHaveLength(0);
     expect(first.run.current).toMatchObject({ topic: "t", kp: 0, seed: 1, part: 1 });
     const second = await answerRun(parted, first.run, state, "wrong", false, 25_000, rng);
@@ -158,6 +198,25 @@ describe("a multistep problem", () => {
     expect(second.run.asked[0]).not.toHaveProperty("part");
     expect(second.run.partial).toBeUndefined();
     expect(second.run.current?.part).toBeUndefined();
+  });
+
+  it("locks a quiz's answer once its parts are begun", async () => {
+    const rng = createRng(1);
+    const quiz: RunState = {
+      kind: "quiz",
+      topics: ["t"],
+      deadline: 600_000,
+      asked: [],
+      servedAt: 0,
+      current: { topic: "t", kp: 0, seed: 1 },
+      slots: [{ ref: { topic: "t", kp: 0, seed: 1 }, spentMs: 0 }],
+      at: 0,
+    };
+    const first = await answerRun(parted, quiz, state, "right", false, 10_000, rng);
+    expect(first.run.partial).toHaveLength(1);
+    const second = await answerRun(parted, first.run, state, "right", false, 20_000, rng);
+    expect(second.run.kind === "quiz" && second.run.slots?.[0]?.answer).toMatchObject({ correct: true, locked: true });
+    await expect(answerRun(parted, second.run, state, "wrong", false, 30_000, rng)).rejects.toThrow("final");
   });
 });
 

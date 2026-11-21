@@ -53,6 +53,31 @@ export interface PartAnswer {
   readonly elapsedMs: number;
 }
 
+/** QuizAnswer is the answer saved to a question of a quiz. */
+export interface QuizAnswer {
+  readonly response: string;
+  readonly correct: boolean;
+  /** late marks an answer saved after the time limit, which counts wrong. */
+  readonly late?: boolean;
+  /** parts are the answers to the parts of a multistep problem. */
+  readonly parts?: readonly PartAnswer[];
+  /** score is the fraction of criteria a model found met, for an answer it judged. */
+  readonly score?: number;
+  /** locked marks an answer that may not change: a multistep problem's, whose later parts show the earlier answers, or a model's verdict. */
+  readonly locked?: boolean;
+}
+
+/** QuizSlot is a question of a quiz, which may be opened, answered and changed in any order until the quiz is handed in. */
+export interface QuizSlot {
+  /** ref is the problem asked, drawn when the question is first opened. */
+  readonly ref?: ProblemRef;
+  /** spentMs is how long the question was open. */
+  readonly spentMs: number;
+  /** partial are the answers to the parts of a multistep problem begun and not finished. */
+  readonly partial?: readonly PartAnswer[];
+  readonly answer?: QuizAnswer;
+}
+
 /** RunResult is the outcome of a finished run. */
 export interface RunResult {
   readonly passed: boolean;
@@ -108,6 +133,12 @@ export type RunState =
       readonly deadline?: number;
       /** retake marks the last quiz taken again. */
       readonly retake?: boolean;
+      /**
+       * slots are the quiz's questions, one per topic, and at the one open; absent in quizzes begun before questions
+       * could be answered in any order, whose answers are in asked. Their answers move to asked when the quiz ends.
+       */
+      readonly slots?: readonly QuizSlot[];
+      readonly at?: number;
     })
   | (RunBase & { readonly kind: "reading"; readonly passage: string; readonly questions: number })
   | (RunBase & {
@@ -169,7 +200,8 @@ export function startRun(c: CourseEntry, task: Task, state: LearnerState, now: n
       const topics = quizPlan(c.planner, state, rng, retake);
       const deadline = now + quizTimeLimitMs(c.ctx.params, topics.length);
       const current = { ...diagnosticRef(c, topics[0]!, rng), difficulty: quizDifficulty(c.ctx.params, 0, 0) };
-      return { kind: "quiz", topics, deadline, ...(retake && { retake }), ...served, current };
+      const slots = topics.map((_, i) => (i === 0 ? { ref: current, spentMs: 0 } : { spentMs: 0 }));
+      return { kind: "quiz", topics, deadline, ...(retake && { retake }), ...served, current, slots, at: 0 };
     }
     case "reading": {
       const questions = c.ctx.graph.graph.passages.get(task.passage)!.questions;
@@ -257,6 +289,7 @@ async function advance(
   // A part of a multistep problem before its last is kept, and the next part asked; the problem is one question.
   const answer: PartAnswer = { response: skipped ? "" : response, correct: verdict.correct && !late, elapsedMs: elapsed };
   const part = problem.part;
+  if (run.kind === "quiz") return saveToQuiz(c, quizRun(run), state, problem, verdict, answer, given, late, timeUp, now);
   if (part && part.index + 1 < part.count && !skipped && !timeUp) {
     const current = { ...ref, part: part.index + 1 };
     return { run: { ...run, partial: [...(run.partial ?? []), answer], servedAt: now, current }, problem, verdict, skipped };
@@ -281,29 +314,12 @@ async function advance(
     },
   ];
   const correct = asked.filter((a) => a.correct).length;
-  const finish = (next: RunState, finished: TaskEvent, passed: boolean, placed = 0): Answered => {
-    const blownOff =
-      finished.type === "reading"
-        ? isReadingBlownOff(
-            c.ctx.params,
-            passed,
-            c.ctx.graph.graph.passages.get(finished.passage)!.words,
-            asked.reduce((total, a) => total + a.elapsedMs, 0),
-          )
-        : finished.type !== "placed" && isBlownOff(c.ctx.params, passed, asked);
-    const event = blownOff ? { ...finished, blownOff } : finished;
-    const result: RunResult = {
-      passed,
-      correct,
-      asked: asked.length,
-      xp: eventXp(c.ctx, state, event),
-      full: fullXp(c.ctx, event),
-      blownOff,
-      placed,
-    };
-    const { current: _, servedAt: __, ...rest } = next;
-    return { run: { ...rest, result } as RunState, problem, verdict, skipped, event };
-  };
+  const finish = (next: RunState, finished: TaskEvent, passed: boolean, placed = 0): Answered => ({
+    ...closeRun(c, state, next, finished, passed, placed),
+    problem,
+    verdict,
+    skipped,
+  });
 
   switch (run.kind) {
     case "lesson": {
@@ -371,22 +387,6 @@ async function advance(
         skipped,
       };
     }
-    case "quiz": {
-      const next = { ...run, asked };
-      // Once the time is up the quiz ends, and the questions not answered count wrong.
-      if (asked.length >= run.topics.length || timeUp) {
-        const answered = asked.map((a) => ({ topic: a.topic, correct: a.correct, ...(a.late && { late: true }) }));
-        const unanswered = run.topics.slice(asked.length).map((topic) => ({ topic, correct: false, late: true }));
-        const results = [...answered, ...unanswered];
-        const event: TaskEvent = { type: "quiz", at: now, results, ...(run.retake && { retake: true }) };
-        return finish(next, event, correct * 2 >= results.length);
-      }
-      const current = {
-        ...diagnosticRef(c, run.topics[asked.length]!, rng),
-        difficulty: quizDifficulty(c.ctx.params, correct, asked.length),
-      };
-      return { run: { ...next, servedAt: now, current }, problem, verdict, skipped };
-    }
     case "reading": {
       const next = { ...run, asked };
       if (asked.length >= run.questions) {
@@ -421,6 +421,11 @@ async function advance(
   }
 }
 
+/** questionIndex is the index of the question a run asks now: the question open in a quiz, the next one elsewhere. */
+export function questionIndex(run: RunState): number {
+  return run.kind === "quiz" && run.slots && run.at !== undefined ? run.at : run.asked.length;
+}
+
 /** runTask is the engine task a run carries out. */
 export function runTask(run: RunState): Task {
   switch (run.kind) {
@@ -435,4 +440,196 @@ export function runTask(run: RunState): Task {
     case "diagnostic":
       return { kind: "diagnostic", ...(run.supplemental && { supplemental: true }) };
   }
+}
+
+/** closeRun ends a run with its event, whose asked answers are in it, and its result. */
+function closeRun(
+  c: CourseEntry,
+  state: LearnerState,
+  next: RunState,
+  finished: TaskEvent,
+  passed: boolean,
+  placed = 0,
+): { readonly run: RunState; readonly event: TaskEvent } {
+  const { asked } = next;
+  const blownOff =
+    finished.type === "reading"
+      ? isReadingBlownOff(
+          c.ctx.params,
+          passed,
+          c.ctx.graph.graph.passages.get(finished.passage)!.words,
+          asked.reduce((total, a) => total + a.elapsedMs, 0),
+        )
+      : finished.type !== "placed" && isBlownOff(c.ctx.params, passed, asked);
+  const event = blownOff ? { ...finished, blownOff } : finished;
+  const result: RunResult = {
+    passed,
+    correct: asked.filter((a) => a.correct).length,
+    asked: asked.length,
+    xp: eventXp(c.ctx, state, event),
+    full: fullXp(c.ctx, event),
+    blownOff,
+    placed,
+  };
+  const { current: _current, servedAt: _servedAt, partial: _partial, ...rest } = next;
+  return { run: { ...rest, result } as RunState, event };
+}
+
+type QuizRun = Extract<RunState, { kind: "quiz" }> & { readonly slots: readonly QuizSlot[]; readonly at: number };
+
+/**
+ * quizRun is a quiz with its questions as slots: a quiz begun before questions could be answered in any order has its
+ * answers moved from asked, final as they were.
+ */
+export function quizRun(run: Extract<RunState, { kind: "quiz" }>): QuizRun {
+  if (run.slots && run.at !== undefined) return run as QuizRun;
+  const slots = run.topics.map((_, i): QuizSlot => {
+    const a = run.asked[i];
+    if (a) {
+      const { response, correct, late, parts, score, elapsedMs, topic, kp, seed, difficulty } = a;
+      const answer = {
+        response,
+        correct,
+        locked: true,
+        ...(late && { late }),
+        ...(parts && { parts }),
+        ...(score !== undefined && { score }),
+      };
+      return { ref: { topic, kp, seed, ...(difficulty && { difficulty }) }, spentMs: elapsedMs, answer };
+    }
+    if (i !== run.asked.length || !run.current) return { spentMs: 0 };
+    const { part: _part, ...ref } = run.current;
+    return { ref, spentMs: 0, ...(run.partial && { partial: run.partial }) };
+  });
+  return { ...run, slots, at: Math.min(run.asked.length, run.topics.length - 1) };
+}
+
+/** quizTimeUp tells whether a quiz's time has run out. */
+export function quizTimeUp(run: Extract<RunState, { kind: "quiz" }>, now: number): boolean {
+  return run.deadline !== undefined && now >= run.deadline;
+}
+
+/** leaveSlot keeps the time the open question of a quiz was open, and the parts of it begun. */
+function leaveSlot(run: QuizRun, now: number): QuizSlot[] {
+  const slots = [...run.slots];
+  const here = slots[run.at];
+  if (!here) return slots;
+  const spentMs = here.spentMs + Math.max(0, now - (run.servedAt ?? now));
+  const { partial: _, ...rest } = here;
+  slots[run.at] = { ...rest, spentMs, ...(run.partial?.length && !here.answer && { partial: run.partial }) };
+  return slots;
+}
+
+/**
+ * openQuizQuestion turns a quiz to one of its questions. A question opened for the first time is drawn at the tier the
+ * answers saved so far steer to; a multistep problem opens at the part reached, and one answered shows its last part.
+ */
+export function openQuizQuestion(
+  c: CourseEntry,
+  quiz: Extract<RunState, { kind: "quiz" }>,
+  index: number,
+  now: number,
+  rng: Rng,
+): RunState {
+  const run = quizRun(quiz);
+  if (index < 0 || index >= run.slots.length) throw new Error("the quiz has no such question");
+  const slots = leaveSlot(run, now);
+  let target = slots[index]!;
+  if (!target.ref) {
+    const saved = slots.filter((s) => s.answer);
+    const correct = saved.filter((s) => s.answer!.correct).length;
+    const ref = { ...diagnosticRef(c, run.topics[index]!, rng), difficulty: quizDifficulty(c.ctx.params, correct, saved.length) };
+    target = { ...target, ref };
+    slots[index] = target;
+  }
+  const parts = target.answer?.parts;
+  const partial = parts ? parts.slice(0, -1) : target.partial;
+  const at = parts ? parts.length - 1 : (partial?.length ?? 0);
+  const current = at > 0 ? { ...target.ref!, part: at } : target.ref!;
+  const next: Record<string, unknown> = { ...run, slots, at: index, current, servedAt: now };
+  delete next.partial;
+  if (partial?.length) next.partial = partial;
+  return next as unknown as RunState;
+}
+
+/** saveToQuiz keeps an answer to the open question of a quiz, which says nothing of it until the quiz is handed in. */
+function saveToQuiz(
+  c: CourseEntry,
+  run: QuizRun,
+  state: LearnerState,
+  problem: Problem,
+  verdict: Verdict,
+  answer: PartAnswer,
+  given: Given | undefined,
+  late: boolean,
+  timeUp: boolean,
+  now: number,
+): Answered {
+  const slot = run.slots[run.at]!;
+  if (slot.answer?.locked) throw new Error("that answer is final");
+  const part = problem.part;
+  const done = { problem, verdict, skipped: false };
+  // A part before the last is kept, and the next part asked.
+  if (part && part.index + 1 < part.count && !timeUp) {
+    const current = { ...run.current!, part: part.index + 1 };
+    return { ...done, run: { ...run, partial: [...(run.partial ?? []), answer], current } };
+  }
+  const parts = part ? [...(run.partial ?? []), answer] : undefined;
+  const correct = parts ? parts.length === part!.count && parts.every((p) => p.correct) : answer.correct;
+  const saved: QuizAnswer = {
+    response: answer.response,
+    correct,
+    ...(late && { late }),
+    ...(parts && { parts }),
+    ...(given?.score !== undefined && { score: given.score }),
+    ...((parts || given) && { locked: true }),
+  };
+  const slots = leaveSlot(run, now);
+  const { partial: _, ...rest } = slots[run.at]!;
+  slots[run.at] = { ...rest, answer: saved };
+  const next: Record<string, unknown> = { ...run, slots, servedAt: now, current: run.slots[run.at]!.ref };
+  delete next.partial;
+  // Once the time is up the quiz ends with what was saved.
+  if (timeUp) return { ...done, ...finishQuiz(c, next as unknown as QuizRun, state, now) };
+  return { ...done, run: next as unknown as RunState };
+}
+
+/**
+ * finishQuiz hands a quiz in: the answers saved become its asked questions, in order, and the questions without one
+ * count wrong, marked late when the time ran out.
+ */
+export function finishQuiz(
+  c: CourseEntry,
+  quiz: Extract<RunState, { kind: "quiz" }>,
+  state: LearnerState,
+  now: number,
+): { readonly run: RunState; readonly event: TaskEvent } {
+  const run = quizRun(quiz);
+  const slots = leaveSlot(run, now);
+  const timeUp = quizTimeUp(run, now);
+  // A quiz begun before its questions were slots keeps the answers recorded then first, in the same order.
+  const asked: Asked[] = slots.flatMap((s) =>
+    s.answer && s.ref
+      ? [
+          {
+            ...s.ref,
+            response: s.answer.response,
+            correct: s.answer.correct,
+            skipped: false,
+            elapsedMs: s.spentMs,
+            ...(s.answer.late && { late: true }),
+            ...(s.answer.parts && { parts: s.answer.parts }),
+            ...(s.answer.score !== undefined && { score: s.answer.score }),
+          },
+        ]
+      : [],
+  );
+  const results = slots.map((s, i) =>
+    s.answer
+      ? { topic: run.topics[i]!, correct: s.answer.correct, ...(s.answer.late && { late: true }) }
+      : { topic: run.topics[i]!, correct: false, ...(timeUp && { late: true }) },
+  );
+  const correct = results.filter((r) => r.correct).length;
+  const event: TaskEvent = { type: "quiz", at: now, results, ...(run.retake && { retake: true }) };
+  return closeRun(c, state, { ...run, slots, asked }, event, correct * 2 >= results.length);
 }

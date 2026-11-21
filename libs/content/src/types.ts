@@ -136,8 +136,17 @@ export interface Problem {
    * problem where parts are not asked; multistep builds it. Each part is asked as partOf makes it.
    */
   readonly parts?: readonly ProblemPart[];
-  /** part is the position of a part made by partOf among its problem's parts, with the topic it practices when another. */
-  readonly part?: { readonly index: number; readonly count: number; readonly topic?: string };
+  /**
+   * part is the position of a part made by partOf among its problem's parts, with the topic it practices when another,
+   * the problem's scenario and the part's own question, which the prompt joins with the parts before it.
+   */
+  readonly part?: {
+    readonly index: number;
+    readonly count: number;
+    readonly topic?: string;
+    readonly scenario?: Text;
+    readonly ask?: Text;
+  };
 }
 
 /** ProblemPart is one step of a multistep problem: a question about the problem's scenario and its answer. */

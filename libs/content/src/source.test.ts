@@ -101,11 +101,11 @@ describe("multistep", () => {
       { topic: "shop", kp: 0, seed: 1, part: 1 },
     ]);
     expect(first?.prompt.en).toBe("Pens cost 2 each.\n\n**1.** Two pens?");
-    expect(first?.part).toEqual({ index: 0, count: 2 });
+    expect(first?.part).toMatchObject({ index: 0, count: 2, scenario: { en: "Pens cost 2 each." }, ask: { en: "Two pens?" } });
     expect(first?.parts).toBeUndefined();
     expect(second?.prompt.en).toBe("Pens cost 2 each.\n\n**1.** Two pens? Answer: 4\n\n**2.** Three pens?");
     expect(second?.prompt["zh-CN"]).toContain("答案：4");
-    expect(second?.part).toEqual({ index: 1, count: 2, topic: "other" });
+    expect(second?.part).toMatchObject({ index: 1, count: 2, topic: "other", ask: { en: "Three pens?" } });
     expect((await source.judge({ topic: "shop", kp: 0, seed: 1, part: 1 }, "6")).verdict.correct).toBe(true);
     expect((await source.judge({ topic: "shop", kp: 0, seed: 1, part: 1 }, "4")).verdict.correct).toBe(false);
   });
