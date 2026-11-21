@@ -121,6 +121,12 @@ function androidManifest(cleartext: boolean): string {
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.PROCESS_TEXT" />
+            <data android:mimeType="text/plain" />
+        </intent>
+    </queries>
     <application android:label="${name}" android:icon="@mipmap/ic_launcher"${cleartext ? ' android:usesCleartextTraffic="true"' : ""}
         android:extractNativeLibs="false" android:enableOnBackInvokedCallback="true" android:supportsRtl="true"
         android:theme="@android:style/Theme.Material.Light.NoActionBar">
@@ -169,7 +175,7 @@ function finishAndroid(): void {
     "--manifest",
     join(work, "AndroidManifest.xml"),
     "--min-sdk-version",
-    "28",
+    "26",
     "--target-sdk-version",
     String(ANDROID_TARGET),
     "--version-code",
