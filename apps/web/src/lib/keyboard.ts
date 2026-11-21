@@ -52,3 +52,14 @@ export function slideKeyboardAway(keyboard: SlidingKeyboard) {
     else show(options);
   };
 }
+
+/**
+ * pasteThroughClipboardApi makes the paste key of MathLive's keyboard paste. MathLive pastes with
+ * `document.execCommand("paste")` wherever the browser says it supports the command, and browsers say so but refuse it
+ * to pages; only where the command is unsupported does MathLive read the clipboard through the Clipboard API, which
+ * browsers allow on a key's press (after asking, where they ask).
+ */
+export function pasteThroughClipboardApi(doc: Document) {
+  const supported = doc.queryCommandSupported.bind(doc);
+  doc.queryCommandSupported = (command) => command.toLowerCase() !== "paste" && supported(command);
+}
