@@ -64,7 +64,7 @@ export const introductionToRecurrenceRelations: TopicDef = {
     "A recurrence relation defines each term from earlier ones; its order is how far back it reaches. With enough initial terms, it determines the whole sequence.",
     "递推关系由前面的项确定每一项；它的阶是向前追溯的最远距离。给定足够的初始项，它就确定了整个数列。",
   ),
-  prerequisites: ["strong-induction-and-recurrence-relations"],
+  prerequisites: ["recursive-sequences"],
   encompasses: [],
   xp: 10,
   standards: [],

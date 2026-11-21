@@ -99,7 +99,7 @@ const buildsOn: Readonly<Record<string, readonly string[]>> = {
   "differential-equations": ["calculus-ii", "ap-calculus-bc", "mathematical-foundations-iii"],
   "methods-of-proof": ["precalculus", "mathematical-foundations-iii"],
   "discrete-mathematics": ["methods-of-proof"],
-  "probability-and-statistics": ["calculus-ii", "ap-calculus-bc", "mathematical-foundations-iii", "linear-algebra"],
+  "probability-and-statistics": ["multivariable-calculus", "linear-algebra"],
   "mathematics-for-machine-learning": ["linear-algebra", "multivariable-calculus"],
   "abstract-algebra": ["methods-of-proof", "linear-algebra"],
   "number-theory": ["methods-of-proof"],

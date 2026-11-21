@@ -429,7 +429,7 @@ export const differentialEquationsBvpTopics: TopicDef[] = [
       "A periodic function can be expanded into an infinite series of trigonometric basis functions: f(x) = a0/2 + sum [an cos(nx) + bn sin(nx)].",
       "周期函数可展开为三角基函数的无穷级数：f(x) = a0/2 + sum [an cos(nx) + bn sin(nx)]。",
     ),
-    prerequisites: ["eigenvalues-and-eigenfunctions-of-homogeneous-bvps"],
+    prerequisites: ["introduction-to-integration-by-parts"],
     encompasses: [],
     xp: 10,
     knowledgePoints: [

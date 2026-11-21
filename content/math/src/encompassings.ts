@@ -1119,7 +1119,6 @@ export const inferredEncompassings: Readonly<Record<string, readonly Encompassin
   "infinite-limits-of-sequences": [{ topic: "the-limit-of-a-null-sequence", weight: 0.2 }],
   surjections: [{ topic: "sets-and-functions", weight: 0.2 }],
   "into-functions": [{ topic: "surjections", weight: 0.3 }],
-  "the-floor-and-ceiling-functions": [{ topic: "the-division-algorithm", weight: 0.4 }],
   "discrete-infinite-sets-with-equal-cardinality": [{ topic: "bijections", weight: 0.2 }],
   "continuous-infinite-sets-with-equal-cardinality": [{ topic: "bijections", weight: 0.2 }],
   "the-cantor-bernstein-schroder-theorem": [{ topic: "continuous-infinite-sets-with-equal-cardinality", weight: 0.4 }],

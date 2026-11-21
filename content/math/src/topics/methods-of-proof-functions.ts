@@ -1127,7 +1127,7 @@ export const theFloorAndCeilingFunctions: TopicDef = {
   id: "the-floor-and-ceiling-functions",
   title: t("The Floor and Ceiling Functions", "取整函数"),
   summary: t("⌊x⌋ is the greatest integer ≤ x and ⌈x⌉ the least integer ≥ x.", "⌊x⌋ 是不超过 x 的最大整数，⌈x⌉ 是不小于 x 的最小整数。"),
-  prerequisites: ["sets-and-functions", "the-division-algorithm"],
+  prerequisites: ["introduction-to-functions"],
   encompasses: [],
   xp: 10,
   standards: [],
