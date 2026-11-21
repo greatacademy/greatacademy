@@ -16,6 +16,7 @@ const MESSAGE = "mathlive#virtual-keyboard-message";
  * script's focus or blur in one web view while another has just been clicked mixes up the next click's press and
  * release on macOS. So the field's policy is manual (MathLive would blur and refocus it as the keyboard toggles), its
  * toggle acts on a whole click, and on a touch screen focusing the field shows the keyboard, as the auto policy does.
+ * The toggle's tooltip is the system's (`title`): MathLive draws its own inside the page, which the small web view cuts.
  */
 export const KEYBOARD_STAND_IN = `<script>(function(){
 var rect={x:0,y:0,width:0,height:0,top:0,right:0,bottom:0,left:0},shifted=false,listeners={};
@@ -34,6 +35,9 @@ connect:function(){send("connect")},disconnect:function(){send("disconnect")},
 addEventListener:function(type,l){(listeners[type]=listeners[type]||new Set).add(l)},
 removeEventListener:function(type,l){if(listeners[type])listeners[type].delete(l)},dispatchEvent:emit};
 Object.defineProperty(window,"mathVirtualKeyboard",{get:function(){return keyboard},configurable:true});
+function untip(){var f=document.querySelector("math-field"),r=f&&f.shadowRoot;if(!r)return;r.querySelectorAll("[data-tooltip]").forEach(function(el){el.title=el.getAttribute("data-tooltip");el.removeAttribute("data-tooltip")});
+if(!r.gaTips){r.gaTips=new MutationObserver(untip);r.gaTips.observe(r,{subtree:true,childList:true,attributes:true,attributeFilter:["data-tooltip"]})}}
+addEventListener("load",untip);
 function onToggle(e){var t=e.composedPath()[0];return !!(t&&t.closest&&t.closest("[part~=virtual-keyboard-toggle]"))}
 ["pointerdown","pointerup","mousedown","mouseup","touchstart","touchend"].forEach(function(t){addEventListener(t,function(e){if(onToggle(e))e.stopPropagation()},true)});
 addEventListener("click",function(e){if(!onToggle(e))return;e.stopPropagation();e.preventDefault();keyboard.visible?keyboard.hide():keyboard.show({animate:true})},true);
@@ -72,6 +76,18 @@ k.connectedMathfieldWindow=field;k.handleMessage(d,d.action==="execute-command"?
 k.addEventListener("geometrychange",function(){post({keypad:k.boundingRect.height})});
 k.addEventListener("virtual-keyboard-toggle",function(){post({open:k.visible})});
 }`;
+
+// The keyboard's look: the app's colors, as the web gives them (apps/web/src/styles.css), since MathLive's own follow
+// only the device's scheme; room for the screen's bottom inset; and the slide back down as it hides.
+function keyboardStyle(c: Record<string, string>, bottom: number): string {
+  return `html{--keyboard-accent-color:${c.accent};--keyboard-background:${c.page};--keyboard-border:${c.line};\
+--keyboard-toolbar-text:${c.ink};--keyboard-horizontal-rule:1px solid ${c.line};--keycap-background:${c.surface};\
+--keycap-background-hover:${c["accent-soft"]};--keycap-border:${c.line};--keycap-border-bottom:${c.line};--keycap-text:${c.ink};\
+--keycap-secondary-background:${c.line};--keycap-secondary-background-hover:${c["accent-soft"]};--keycap-secondary-text:${c.ink};\
+--variant-panel-background:${c.surface};--variant-keycap-text-active:${c["on-accent"]}}\
+.ML__keyboard{--keyboard-padding-bottom:${bottom}px}\
+body>.ML__keyboard.is-visible.ga-hiding>.MLK__backdrop{transform:translate(0,0);transition:transform .28s cubic-bezier(.4,0,1,1)}`;
+}
 
 // The web view of the keyboard, the field that last used it, and what a field is told when the keyboard moves.
 let keyboardView: WebViewRef | undefined;
@@ -119,7 +135,7 @@ export function MathKeyboard() {
   const insets = safeAreaInsets();
   const html = computed(() =>
     pageHtml("", colors(), {
-      head: `<style>.ML__keyboard{--keyboard-padding-bottom:${insets().bottom}px}</style><script src="${SITE_URL}/embed/mathlive.min.js"></script>`,
+      head: `<style>${keyboardStyle(colors(), insets().bottom)}</style><script src="${SITE_URL}/embed/mathlive.min.js"></script>`,
       script: keyboardScript,
     }),
   );
