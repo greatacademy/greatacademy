@@ -123,6 +123,11 @@ message CourseStats {
   int32 due = 3;
   // strengths counts the learned topics by strength, from 0 to 5 as TopicProgress has it, for the course's shaded bar.
   repeated int32 strengths = 4;
+  // available, failed, assumed and locked count the course's other topics by the status TopicProgress gives them.
+  int32 available = 5;
+  int32 failed = 6;
+  int32 assumed = 7;
+  int32 locked = 8;
 }
 
 message XpSummary {

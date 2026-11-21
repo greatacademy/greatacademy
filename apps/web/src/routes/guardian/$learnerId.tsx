@@ -5,14 +5,14 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { ChooseCourse } from "../../components/ChooseCourse.tsx";
-import { ShadedBar } from "../../components/CourseBar.tsx";
+import { percentLearned, ShadedBar } from "../../components/CourseBar.tsx";
 import { LearnerPrivacy } from "../../components/LearnerPrivacy.tsx";
 import { ActiveLine, signText } from "../../components/LearnerStatus.tsx";
 import { LoadError } from "../../components/LoadError.tsx";
 import { Markdown } from "../../components/Markdown.tsx";
 import { CourseDone, PlacementReport, StartEarlier } from "../../components/PlacementReport.tsx";
 import { ForecastCard, GoalsCard, StartOverCard } from "../../components/SubjectDecisions.tsx";
-import { TopicLegend, TopicMap } from "../../components/TopicMap.tsx";
+import { legendCounts, TopicLegend, TopicMap } from "../../components/TopicMap.tsx";
 import { Button, buttonClass, Card, Spinner } from "../../components/ui.tsx";
 import { useAccess } from "../../lib/access.ts";
 import { useBillingText } from "../../lib/billing-text.ts";
@@ -156,7 +156,7 @@ function CourseProgress({ learnerId, courseId }: { learnerId: string; courseId: 
   if (!course.data.course) return null;
   return (
     <div className="space-y-4">
-      <TopicLegend topics={progress.data.topics} />
+      <TopicLegend counts={legendCounts(progress.data.topics)} />
       <TopicMap course={course.data.course} topics={progress.data.topics} />
     </div>
   );
@@ -236,7 +236,6 @@ function GuardedLearner() {
   const current = learner.enrollments.find((e) => e.subjectId === subject?.id);
   const courseId = current?.courseId;
   const titleOf = (id: string) => tx(list.data.courses.find((c) => c.id === id)?.title);
-  const share = current?.stats?.total ? current.stats.learned / current.stats.total : 0;
   const signs = signsOf(learner, Date.now());
   const segment = (active: boolean) =>
     `rounded-lg px-3 py-1.5 text-sm font-medium transition ${active ? "bg-subject-soft text-on-subject-soft" : "text-muted hover:text-ink"}`;
@@ -341,7 +340,7 @@ function GuardedLearner() {
               <div className="text-sm text-muted">{m.currentCourse}</div>
               <div className="flex justify-between gap-3 font-medium">
                 <span className="min-w-0">{titleOf(current.courseId)}</span>
-                <span className="shrink-0 text-muted">{Math.round(share * 100)}%</span>
+                <span className="shrink-0 text-muted">{current?.stats ? percentLearned(current.stats) : 0}%</span>
               </div>
               {current.stats && <ShadedBar stats={current.stats} />}
               <div className="text-xs text-muted">

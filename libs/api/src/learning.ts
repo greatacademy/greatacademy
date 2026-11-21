@@ -52,11 +52,11 @@ import { figure, knowledgePointIntro, sessionMessage, sounds, taskMessage, text 
 import { requireJudgingQuota } from "./costs.ts";
 import { ESSAY_NOTICE_MS, essayRun, essayTopics, finishEssay, judgeEssay } from "./essays.ts";
 import { forLearner, type JudgingDeps, judgedCriteria, runJudgment, viewJudgment } from "./judging.ts";
+import { courseStats, strengthOf, topicStatus } from "./progress.ts";
 import type { CourseEntry, Registry } from "./registry.ts";
 import { answerRun, canSkip, type Given, type RunState, runTask, startRun } from "./runner.ts";
 import { appendTo, learnerState, settleAnswer } from "./sessions.ts";
 import { hearRecording, SPEAKING_OFF_FOREVER, setSpeaking, speakingAvailable, speakingOff, speakingUntil, spokenTopics } from "./speech.ts";
-import { courseStats, strengthOf } from "./strength.ts";
 import { xpSummary } from "./summary.ts";
 
 /** maxDailyGoal bounds a weekday's goal, far above what anyone studies in a day. */
@@ -82,15 +82,6 @@ function checkDate(day: string): string | null {
 
 /** historyLength bounds the finished sessions a learner's history lists. */
 const historyLength = 100;
-
-/** topicStatus is a learner's standing on a topic; open is the learner's frontier. */
-function topicStatus(c: CourseEntry, s: LearnerState, open: ReadonlySet<string>, id: string, now: number): TopicStatus {
-  const t = s.topics[id];
-  if (c.planner.scope.assumed.has(id)) return TopicStatus.ASSUMED;
-  if (t?.learned) return isDue(c.ctx.params, t, now) ? TopicStatus.DUE : TopicStatus.LEARNED;
-  if (open.has(id)) return TopicStatus.AVAILABLE;
-  return t?.failedAt !== undefined ? TopicStatus.FAILED : TopicStatus.LOCKED;
-}
 
 /** placementReport sums up what a course's diagnostic found, with the course it recommends (docs/learning-engine.md §9). */
 function placementReport(
@@ -339,7 +330,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
         list.push({
           courseId: c.id,
           subjectId: e.subjectId,
-          stats: courseStats(c.planner, s, now),
+          stats: courseStats(c.planner, c.ctx.params, s, now),
           xp: await xpSummary(db, learnerId, now, req.timeZone, e.subjectId),
         });
       }
@@ -424,7 +415,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
           passed: (row.state as RunState).result?.passed ?? false,
         })),
         ...(active && run && { active: { id: active.id, task: taskMessage(c, runTask(run), s) } }),
-        stats: courseStats(c.planner, s, now),
+        stats: courseStats(c.planner, c.ctx.params, s, now),
         xp,
         xpToQuiz: Math.max(0, c.ctx.params.quizEveryXp - (s.xp - s.xpAtLastQuiz)),
         remainingXp: remainingXp(c.planner, s),
@@ -443,7 +434,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
           const t = s.topics[id];
           return {
             topicId: id,
-            status: topicStatus(c, s, open, id, now),
+            status: topicStatus(c.planner, c.ctx.params, s, open, id, now),
             placed: t?.placed === true,
             memory: t?.learned ? memory(p, t, now) : 0,
             foundation: !c.planner.scope.inCourse.has(id),
@@ -469,14 +460,14 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
       const link = (id: string) => ({
         topicId: id,
         title: text(c.subject.topics.get(id)!.title),
-        status: topicStatus(c, s, open, id, now),
+        status: topicStatus(c.planner, c.ctx.params, s, open, id, now),
       });
       const dependents = c.planner.scope.topics.filter((id) => c.subject.topics.get(id)?.prerequisites.includes(topic.id));
       return {
         topicId: topic.id,
         title: text(topic.title),
         summary: text(topic.summary),
-        status: topicStatus(c, s, open, topic.id, now),
+        status: topicStatus(c.planner, c.ctx.params, s, open, topic.id, now),
         knowledgePoints: indexes.map((kp) => knowledgePointIntro(lessons[kp]!, examples[kp]!, kp, count)),
         prerequisites: topic.prerequisites.map(link),
         dependents: dependents.map(link),

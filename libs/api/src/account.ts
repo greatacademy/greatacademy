@@ -27,8 +27,8 @@ import { type AccountService, type GuardedLearnerSchema, LeagueOutcome } from "@
 
 import { dbKey, userIdKey } from "./context.ts";
 import { joinLeague, leaguePlace } from "./league.ts";
+import { courseStats } from "./progress.ts";
 import type { Registry } from "./registry.ts";
-import { courseStats } from "./strength.ts";
 import { xpSummary } from "./summary.ts";
 
 /** inviteDays is how long a guardian invitation stays valid. */
@@ -101,7 +101,7 @@ export function accountService(deps: AccountDeps): ServiceImpl<typeof AccountSer
       const c = await registry.course(e.courseId);
       if (!c) continue;
       const { state } = await loadState(db, learnerId, c.subject.def.id, initialState);
-      list.push({ courseId: c.id, subjectId: e.subjectId, stats: courseStats(c.planner, state, now) });
+      list.push({ courseId: c.id, subjectId: e.subjectId, stats: courseStats(c.planner, c.ctx.params, state, now) });
     }
     return list;
   };

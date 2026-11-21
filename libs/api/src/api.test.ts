@@ -12,10 +12,10 @@ import { catalogService } from "./catalog.ts";
 import { dbKey, userIdKey } from "./context.ts";
 import { sessionMessage } from "./convert.ts";
 import { learningService } from "./learning.ts";
+import { STRENGTHS, strengthOf } from "./progress.ts";
 import { localGateway, Registry } from "./registry.ts";
 import { type RunState, startRun } from "./runner.ts";
 import { appendTo } from "./sessions.ts";
-import { STRENGTHS, strengthOf } from "./strength.ts";
 
 const compiled = compileMath();
 const registry = await Registry.open([localGateway(compiled)]);

@@ -445,7 +445,9 @@ test("studies a lesson from the course list to its result", async () => {
   await app.waitFor("text:Lesson complete");
   await app.waitFor("text:+10 XP");
   await app.press("text:Back to dashboard");
-  await app.waitFor("text:2 / 2 topics");
+  await app.waitFor("text:100%");
+  // Below the bar, the counts of the progress map's legend.
+  expect(app.texts()).toContain("Learned 2");
   expect(app.shows("Nothing to do right now: every topic is learned and no review is due. Come back tomorrow.")).toBe(true);
 });
 
@@ -634,7 +636,7 @@ test("switches tabs and opens the settings from the sidebar and its shortcuts on
   await app.waitFor("text:The last 14 days");
   await app.press("label:Course");
   await app.waitFor("text:Outline of the course");
-  expect(app.texts()).toContain("1 / 2 topics");
+  expect(app.texts()).toContain("50%");
   await app.keyboard.press("mod+,");
   await app.waitFor("text:Language");
   // Goals belong to a subject, on its pages, not to the settings.

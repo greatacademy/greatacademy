@@ -1,6 +1,6 @@
 import { STRENGTH_MIX } from "@ga/design";
 import type { Course } from "@ga/proto/catalog/v1/catalog_pb";
-import { type TopicProgress, TopicStatus } from "@ga/proto/learning/v1/learning_pb";
+import { type CourseStats, type TopicProgress, TopicStatus } from "@ga/proto/learning/v1/learning_pb";
 import { Link } from "@tanstack/react-router";
 import { type ReactNode, useState } from "react";
 
@@ -32,21 +32,42 @@ export function TopicDot({ progress, className = "size-2.5" }: { progress: Topic
 type LegendKey = "shades" | TopicStatus;
 const legend: LegendKey[] = ["shades", TopicStatus.DUE, TopicStatus.AVAILABLE, TopicStatus.FAILED, TopicStatus.ASSUMED, TopicStatus.LOCKED];
 
+/** LegendCounts is how many of a course's own topics each entry of TopicLegend has. */
+export type LegendCounts = Partial<Record<LegendKey, number>>;
+
+/** legendCounts counts the course's own topics of a progress map, leaving out the foundations. */
+export function legendCounts(topics: readonly TopicProgress[]): LegendCounts {
+  const own = topics.filter((t) => !t.foundation);
+  return Object.fromEntries(
+    legend.map((k) => [k, own.filter((t) => (k === "shades" ? isLearned(t.status) : t.status === k)).length]),
+  ) as LegendCounts;
+}
+
+/** statsCounts takes the counts of TopicLegend from a course's stats. */
+export const statsCounts = (s: CourseStats): LegendCounts => ({
+  shades: s.learned,
+  [TopicStatus.DUE]: s.due,
+  [TopicStatus.AVAILABLE]: s.available,
+  [TopicStatus.FAILED]: s.failed,
+  [TopicStatus.ASSUMED]: s.assumed,
+  [TopicStatus.LOCKED]: s.locked,
+});
+
 /**
  * TopicLegend explains the marks of TopicMap with how many of the course's own topics have each: the shades of
  * learned topics, from just learned to solid, then the other statuses. Each entry explains itself: on hover where
- * there is a pointer, and on a tap or click, which works on a phone too.
+ * there is a pointer, and on a tap or click, which works on a phone too. Bare drops the card around it, for the
+ * course's bar.
  */
-export function TopicLegend({ topics }: { topics: TopicProgress[] }) {
+export function TopicLegend({ counts, bare = false }: { counts: LegendCounts; bare?: boolean }) {
   const { m } = useI18n();
   const [explained, setExplained] = useState<LegendKey>();
-  const own = topics.filter((t) => !t.foundation);
-  const count = (k: LegendKey) => own.filter((t) => (k === "shades" ? isLearned(t.status) : t.status === k)).length;
+  const count = (k: LegendKey) => counts[k] ?? 0;
   const shown = legend.filter((k) => count(k) > 0);
   const note = explained !== undefined && shown.includes(explained) ? explained : undefined;
   const noteOf = (k: LegendKey) => (k === "shades" ? m.shades.note : m.statusNote[statusStyle[k].key]);
   return (
-    <div className="space-y-2 rounded-2xl border border-line bg-surface px-4 py-3 text-sm">
+    <div className={`space-y-2 text-sm ${bare ? "" : "rounded-2xl border border-line bg-surface px-4 py-3"}`}>
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
         {shown.map((k) => (
           <button

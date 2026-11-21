@@ -4,7 +4,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { LoadError, NotFoundNote } from "../../components/LoadError.tsx";
 import { ForecastCard, GoalsCard } from "../../components/SubjectDecisions.tsx";
-import { TopicLegend, TopicMap } from "../../components/TopicMap.tsx";
+import { legendCounts, TopicLegend, TopicMap } from "../../components/TopicMap.tsx";
 import { buttonClass, Spinner } from "../../components/ui.tsx";
 import { useI18n } from "../../lib/i18n.tsx";
 import { catalog, learning, timeZone } from "../../lib/rpc.ts";
@@ -48,7 +48,7 @@ function Progress() {
       </div>
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
         <section className="min-w-0 space-y-3">
-          <TopicLegend topics={progress.data.topics} />
+          <TopicLegend counts={legendCounts(progress.data.topics)} />
           <TopicMap course={course.data.course} topics={progress.data.topics} subject={subject} />
         </section>
         <aside className="grid gap-4 max-lg:order-first sm:grid-cols-2 lg:grid-cols-1">

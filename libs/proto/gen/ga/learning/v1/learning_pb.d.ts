@@ -253,6 +253,28 @@ export declare type CourseStats = Message<"ga.learning.v1.CourseStats"> & {
    * @generated from field: repeated int32 strengths = 4;
    */
   strengths: number[];
+
+  /**
+   * available, failed, assumed and locked count the course's other topics by the status TopicProgress gives them.
+   *
+   * @generated from field: int32 available = 5;
+   */
+  available: number;
+
+  /**
+   * @generated from field: int32 failed = 6;
+   */
+  failed: number;
+
+  /**
+   * @generated from field: int32 assumed = 7;
+   */
+  assumed: number;
+
+  /**
+   * @generated from field: int32 locked = 8;
+   */
+  locked: number;
 };
 
 /**

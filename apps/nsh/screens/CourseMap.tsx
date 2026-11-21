@@ -153,18 +153,7 @@ export function MapBody(props: { map: MapData }) {
     }
     return found;
   });
-  // The legend's first entry is every learned topic, with the scale of shades; the others are statuses.
-  const legend: LegendKey[] = ["shades", "due", "available", "failed", "assumed", "locked"];
-  const countOf = (key: LegendKey) => (key === "shades" ? (counts().learned ?? 0) + (counts().due ?? 0) : (counts()[key] ?? 0));
-  const labelOf = (key: LegendKey) => (key === "shades" ? m().shades.label : m().statuses[key]);
-  const noteOf = (key: LegendKey) => (key === "shades" ? m().shades.note : m().statusNotes[key]);
   const widest = computed(() => Math.max(1, ...(props.map.course.course?.units ?? []).map((u) => unitIds(u).length)));
-  // A status's name explains itself: on hover on a desktop, and when pressed, which works on a phone too.
-  const explained = signal<LegendKey | undefined>(undefined);
-  const note = () => {
-    const key = explained();
-    return key && countOf(key) > 0 ? key : undefined;
-  };
   // Topics sit two to a row where the map is wide enough, as on the web: a tablet's window, or a desktop's once the
   // cards beside the map leave it room.
   const columns = () => {
@@ -174,45 +163,7 @@ export function MapBody(props: { map: MapData }) {
   return (
     <View style={{ gap: 12 }}>
       <Card>
-        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12 }}>
-          <Each of={legend.filter((key) => countOf(key) > 0)}>
-            {(key) => (
-              <View
-                role="button"
-                accessibilityLabel={`${labelOf(key())} ${countOf(key())}`}
-                accessibilityHint={noteOf(key())}
-                tooltip={noteOf(key())}
-                onPress={() => explained.set(note() === key() ? undefined : key())}
-                hoverStyle={{ backgroundColor: colors().page }}
-                style={{
-                  alignItems: "center",
-                  backgroundColor: note() === key() ? colors().page : undefined,
-                  borderRadius: 8,
-                  flexDirection: "row",
-                  gap: 6,
-                  marginHorizontal: -6,
-                  paddingHorizontal: 6,
-                  paddingVertical: 2,
-                }}
-              >
-                <If when={key() !== "shades"}>
-                  <Dot status={key() as StatusKey} strength={2} />
-                </If>
-                <Text style={{ color: colors().ink, fontSize: 14 }}>{`${labelOf(key())} ${countOf(key())}`}</Text>
-                <If when={key() === "shades"}>
-                  <View style={{ alignItems: "center", flexDirection: "row", gap: 6, marginLeft: 4 }}>
-                    <Text style={{ color: colors().muted, fontSize: 12 }}>{m().shades.weak}</Text>
-                    <View style={{ borderRadius: 2, flexDirection: "row", overflow: "hidden" }}>
-                      <Each of={shades()}>{(color) => <View style={{ backgroundColor: color(), height: 10, width: 12 }} />}</Each>
-                    </View>
-                    <Text style={{ color: colors().muted, fontSize: 12 }}>{m().shades.strong}</Text>
-                  </View>
-                </If>
-              </View>
-            )}
-          </Each>
-        </View>
-        <If when={note()}>{(key) => <Muted>{noteOf(key())}</Muted>}</If>
+        <TopicLegend counts={{ ...counts(), shades: (counts().learned ?? 0) + (counts().due ?? 0) }} />
       </Card>
       <List viewport="parent" each={props.map.course.course?.units ?? []} estimatedItemSize={600} contentStyle={{ gap: 12 }}>
         {(unit) => (
@@ -305,54 +256,125 @@ export function CourseMap(props: { courseId: string }) {
   );
 }
 
+/** LegendCounts is how many of a course's own topics each entry of TopicLegend has. */
+export type LegendCounts = Partial<Record<LegendKey, number>>;
+
+/** statsCounts takes the counts of TopicLegend from a course's stats. */
+const statsCounts = (s: CourseStats | undefined): LegendCounts => ({
+  shades: s?.learned ?? 0,
+  due: s?.due ?? 0,
+  available: s?.available ?? 0,
+  failed: s?.failed ?? 0,
+  assumed: s?.assumed ?? 0,
+  locked: s?.locked ?? 0,
+});
+
+/**
+ * TopicLegend explains the marks of the progress map with how many of the course's own topics have each: every learned
+ * topic with the scale of shades, then the other statuses. A status's name explains itself: on hover on a desktop, and
+ * when pressed, which works on a phone too.
+ */
+export function TopicLegend(props: { counts: LegendCounts }) {
+  const legend: LegendKey[] = ["shades", "due", "available", "failed", "assumed", "locked"];
+  const countOf = (key: LegendKey) => props.counts[key] ?? 0;
+  const labelOf = (key: LegendKey) => (key === "shades" ? m().shades.label : m().statuses[key]);
+  const noteOf = (key: LegendKey) => (key === "shades" ? m().shades.note : m().statusNotes[key]);
+  const explained = signal<LegendKey | undefined>(undefined);
+  const note = () => {
+    const key = explained();
+    return key && countOf(key) > 0 ? key : undefined;
+  };
+  return (
+    <View style={{ gap: 8 }}>
+      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12 }}>
+        <Each of={legend.filter((key) => countOf(key) > 0)}>
+          {(key) => (
+            <View
+              role="button"
+              accessibilityLabel={`${labelOf(key())} ${countOf(key())}`}
+              accessibilityHint={noteOf(key())}
+              tooltip={noteOf(key())}
+              onPress={() => explained.set(note() === key() ? undefined : key())}
+              hoverStyle={{ backgroundColor: colors().page }}
+              style={{
+                alignItems: "center",
+                backgroundColor: note() === key() ? colors().page : undefined,
+                borderRadius: 8,
+                flexDirection: "row",
+                gap: 6,
+                marginHorizontal: -6,
+                paddingHorizontal: 6,
+                paddingVertical: 2,
+              }}
+            >
+              <If when={key() !== "shades"}>
+                <Dot status={key() as StatusKey} strength={2} />
+              </If>
+              <Text style={{ color: colors().ink, fontSize: 14 }}>{`${labelOf(key())} ${countOf(key())}`}</Text>
+              <If when={key() === "shades"}>
+                <View style={{ alignItems: "center", flexDirection: "row", gap: 6, marginLeft: 4 }}>
+                  <Text style={{ color: colors().muted, fontSize: 12 }}>{m().shades.weak}</Text>
+                  <View style={{ borderRadius: 2, flexDirection: "row", overflow: "hidden" }}>
+                    <Each of={shades()}>{(color) => <View style={{ backgroundColor: color(), height: 10, width: 12 }} />}</Each>
+                  </View>
+                  <Text style={{ color: colors().muted, fontSize: 12 }}>{m().shades.strong}</Text>
+                </View>
+              </If>
+            </View>
+          )}
+        </Each>
+      </View>
+      <If when={note()}>{(key) => <Muted>{noteOf(key())}</Muted>}</If>
+    </View>
+  );
+}
+
+/** percentLearned is how much of a course is learned, rounded down, so that 100% means every topic, as on the web. */
+export const percentLearned = (s: CourseStats | undefined) => (s && s.total > 0 ? Math.floor((s.learned / s.total) * 100) : 0);
+
 /**
  * CourseBar is a course's progress on the Learn and Course tabs, as on the web: its learned topics in one bar, the
- * firmest first, in the map's shades, with how many are learned and the reviews due. It explains itself on hover on a
- * desktop and when pressed, which works on a phone too: how many topics have each shade, and what a review due means.
+ * firmest first, in the map's shades, with the share of the course learned, and below it the counts of the map's
+ * legend. The bar explains itself on hover on a desktop and when pressed, which works on a phone too: how many topics
+ * have each shade; each count explains its status the same way.
  */
 export function CourseBar(props: { stats: CourseStats | undefined; maxWidth?: number }) {
   const open = signal(false);
   const learned = () => props.stats?.learned ?? 0;
   const total = () => Math.max(1, props.stats?.total ?? 0);
-  const due = () => props.stats?.due ?? 0;
   const strengths = () => props.stats?.strengths ?? [];
-  const hint = () =>
-    [m().shades.summary(learned(), props.stats?.total ?? 0), ...(due() > 0 ? [`${m().statuses.due}: ${m().statusNotes.due}`] : [])].join(
-      " · ",
-    );
+  const summary = () => m().shades.summary(learned(), props.stats?.total ?? 0);
   return (
     <View style={{ gap: 8, maxWidth: props.maxWidth }}>
       <View
         role="button"
-        accessibilityLabel={m().topicsLearned(learned(), props.stats?.total ?? 0)}
-        accessibilityHint={hint()}
-        tooltip={hint()}
+        accessibilityLabel={`${percentLearned(props.stats)}%`}
+        accessibilityHint={summary()}
+        tooltip={summary()}
         onPress={() => open.set(!open())}
         hoverStyle={{ backgroundColor: colors().page }}
-        style={{ borderRadius: 8, gap: 8, marginHorizontal: -6, paddingHorizontal: 6, paddingVertical: 4 }}
+        style={{
+          alignItems: "center",
+          borderRadius: 8,
+          flexDirection: "row",
+          gap: 12,
+          marginHorizontal: -6,
+          paddingHorizontal: 6,
+          paddingVertical: 4,
+        }}
       >
-        <View style={{ alignItems: "center", flexDirection: "row", gap: 12 }}>
-          <View style={{ backgroundColor: colors().line, borderRadius: 4, flex: 1, flexDirection: "row", height: 8, overflow: "hidden" }}>
-            <Each of={[...strengths().keys()].reverse()}>
-              {(level) => (
-                <View
-                  style={{ backgroundColor: shadeOf(level()), height: 8, width: `${((strengths()[level()] ?? 0) / total()) * 100}%` }}
-                />
-              )}
-            </Each>
-          </View>
-          <Muted>{m().topicsLearned(learned(), props.stats?.total ?? 0)}</Muted>
+        <View style={{ backgroundColor: colors().line, borderRadius: 4, flex: 1, flexDirection: "row", height: 8, overflow: "hidden" }}>
+          <Each of={[...strengths().keys()].reverse()}>
+            {(level) => (
+              <View style={{ backgroundColor: shadeOf(level()), height: 8, width: `${((strengths()[level()] ?? 0) / total()) * 100}%` }} />
+            )}
+          </Each>
         </View>
-        <If when={due() > 0}>
-          <View style={{ alignItems: "center", flexDirection: "row", gap: 6 }}>
-            <Dot status="due" strength={2} />
-            <Text style={{ color: colors().warn, fontSize: 14 }}>{m().dueReviews(due())}</Text>
-          </View>
-        </If>
+        <Text style={{ color: colors().ink, fontSize: 14, fontWeight: "600" }}>{`${percentLearned(props.stats)}%`}</Text>
       </View>
       <If when={open()}>
         <View style={{ borderColor: colors().line, borderRadius: 12, borderWidth: 1, gap: 8, padding: 12 }}>
-          <Muted>{m().shades.note}</Muted>
+          <Muted>{summary()}</Muted>
           <View style={{ alignItems: "center", flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
             <Text style={{ color: colors().muted, fontSize: 12 }}>{m().shades.weak}</Text>
             <Each of={[...strengths().keys()]}>
@@ -371,11 +393,9 @@ export function CourseBar(props: { stats: CourseStats | undefined; maxWidth?: nu
               </Text>
             </View>
           </View>
-          <If when={due() > 0}>
-            <Muted>{m().statusNotes.due}</Muted>
-          </If>
         </View>
       </If>
+      <TopicLegend counts={statsCounts(props.stats)} />
     </View>
   );
 }

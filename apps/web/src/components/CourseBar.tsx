@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import { useI18n } from "../lib/i18n.tsx";
 import { shade } from "../lib/topic-status.ts";
+import { statsCounts, TopicLegend } from "./TopicMap.tsx";
 
 /** ShadedBar is a course's progress as one bar: its learned topics, the firmest first, in the progress map's shades. */
 export function ShadedBar({ stats, className = "" }: { stats: CourseStats; className?: string }) {
@@ -29,43 +30,34 @@ export function ShadedBar({ stats, className = "" }: { stats: CourseStats; class
   );
 }
 
+/** percentLearned is how much of a course is learned, rounded down, so that 100% means every topic. */
+export const percentLearned = (s: CourseStats) => (s.total > 0 ? Math.floor((s.learned / s.total) * 100) : 0);
+
 /**
- * CourseBar is a course's progress on the Learn and Course pages: the shaded bar, the topics learned and the reviews
- * due. It explains itself on hover, and on a tap or click, which works on a phone too: how many topics have each
- * shade, and what a review due means.
+ * CourseBar is a course's progress on the Learn and Course pages: the shaded bar with the share of the course learned,
+ * and below it the counts of the progress map's legend. The bar explains itself on hover, and on a tap or click, which
+ * works on a phone too: how many topics have each shade; each count explains its status the same way.
  */
 export function CourseBar({ stats, className = "" }: { stats: CourseStats; className?: string }) {
   const { m } = useI18n();
   const [open, setOpen] = useState(false);
-  const hint = [m.shades.summary(stats.learned, stats.total), ...(stats.due > 0 ? [`${m.due}: ${m.statusNote.due}`] : [])].join(" · ");
   return (
     <div className={`space-y-2 ${className}`}>
       <button
         type="button"
-        title={hint}
+        title={m.shades.summary(stats.learned, stats.total)}
         aria-expanded={open}
         onClick={() => setOpen(!open)}
-        className="-mx-1.5 block w-[calc(100%+0.75rem)] space-y-2 rounded-lg px-1.5 py-1 text-left hover:bg-page"
+        className="-mx-1.5 flex w-[calc(100%+0.75rem)] items-center gap-3 rounded-lg px-1.5 py-1 text-left hover:bg-page"
       >
-        <span className="flex items-center gap-3 text-sm text-muted">
-          <ShadedBar stats={stats} />
-          <span className="shrink-0 underline decoration-line decoration-dotted underline-offset-4">
-            {stats.learned} / {stats.total} {m.topics}
-          </span>
+        <ShadedBar stats={stats} />
+        <span className="shrink-0 text-sm font-semibold tabular-nums underline decoration-line decoration-dotted underline-offset-4">
+          {percentLearned(stats)}%
         </span>
-        {stats.due > 0 && (
-          <span className="flex items-center gap-2 text-sm text-warn">
-            <span
-              className="size-2.5 rounded-full ring-[1.5px] ring-warn ring-offset-2 ring-offset-surface"
-              style={{ background: shade(2) }}
-            />
-            {m.due}: {stats.due}
-          </span>
-        )}
       </button>
       {open && (
         <div role="status" className="space-y-2 rounded-xl border border-line bg-surface px-3 py-2.5 text-xs text-muted">
-          <p>{m.shades.note}</p>
+          <p>{m.shades.summary(stats.learned, stats.total)}</p>
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
             <span className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
               <span>{m.shades.weak}</span>
@@ -83,9 +75,9 @@ export function CourseBar({ stats, className = "" }: { stats: CourseStats; class
               {m.shades.notLearned} {Math.max(0, stats.total - stats.learned)}
             </span>
           </div>
-          {stats.due > 0 && <p>{m.statusNote.due}</p>}
         </div>
       )}
+      <TopicLegend counts={statsCounts(stats)} bare />
     </div>
   );
 }
