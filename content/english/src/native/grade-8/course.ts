@@ -70,7 +70,7 @@ const units: readonly UnitDef[] = [
     t("The Age of Revolutions", "革命时代"),
     {
       words: ["words-of-revolution", "words-of-founding-documents", "words-of-slavery-and-abolition", "latin-roots-6"],
-      grammar: ["the-subjunctive-in-wishes-and-conditions"],
+      grammar: ["integrating-quotations", "the-subjunctive-in-wishes-and-conditions"],
       reading: ["reading-a-founding-document", "acknowledging-conflicting-viewpoints"],
       writing: ["quoting-a-primary-source", "writing-an-argument-about-history"],
     },

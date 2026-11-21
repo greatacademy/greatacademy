@@ -151,6 +151,7 @@ const units: readonly UnitDef[] = [
     {
       words: [
         "academic-words-2",
+        "academic-words-3",
         "suffixes-that-change-word-class",
         "suffixes-for-people",
         "words-for-courage-and-achievement",

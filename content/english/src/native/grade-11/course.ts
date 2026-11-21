@@ -33,7 +33,7 @@ const units: readonly UnitDef[] = [
     {
       words: ["words-of-government-and-law"],
       grammar: ["absolute-phrases"],
-      reading: ["logical-fallacies"],
+      reading: [],
       writing: ["writing-an-argumentative-essay"],
     },
     "rights-and-laws",
@@ -43,7 +43,7 @@ const units: readonly UnitDef[] = [
     t("A Century of Change", "百年变迁"),
     {
       words: ["words-of-modern-history"],
-      grammar: ["integrating-quotations"],
+      grammar: [],
       reading: ["analyzing-historical-documents"],
       writing: ["writing-an-explanatory-essay"],
     },
@@ -55,7 +55,7 @@ const units: readonly UnitDef[] = [
     {
       words: ["words-of-scientific-inquiry"],
       grammar: ["noun-clauses"],
-      reading: ["evaluating-sources"],
+      reading: [],
       writing: ["synthesizing-sources"],
     },
     "science-and-society",

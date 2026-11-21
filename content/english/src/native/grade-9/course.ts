@@ -114,7 +114,7 @@ const units: readonly UnitDef[] = [
     t("Art and Its Subjects", "艺术及其题材"),
     {
       words: ["words-of-art-and-criticism", "words-of-music-and-performance", "words-of-film", "greek-roots-6"],
-      grammar: ["sentence-variety-for-effect"],
+      grammar: ["periodic-and-cumulative-sentences", "sentence-variety-for-effect"],
       reading: ["a-subject-in-two-mediums"],
       writing: [],
     },

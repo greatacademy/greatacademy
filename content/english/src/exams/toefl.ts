@@ -41,7 +41,14 @@ export const course: CourseDef = {
       modules: [
         {
           title: t("Reading Skills", "阅读技能"),
-          topics: ["main-idea", "supporting-details", "making-inferences", "authors-purpose", "reading-workplace-documents"],
+          topics: [
+            "main-idea",
+            "supporting-details",
+            "making-inferences",
+            "authors-purpose",
+            "text-features",
+            "reading-workplace-documents",
+          ],
         },
         { title: t("Read in Daily Life", "日常生活阅读"), topics: ["toefl-daily-life-reading"] },
         {

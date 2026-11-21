@@ -44,6 +44,7 @@ export const course: CourseDef = {
           title: t("Words in Context: Parts 1 and 3", "语境中的词汇：第 1 和第 3 部分"),
           topics: [
             "phrasal-verbs",
+            "similes-and-metaphors",
             "idioms",
             "more-idioms",
             "b2-words-linking-1",
@@ -51,6 +52,8 @@ export const course: CourseDef = {
             "b2-words-personality-3",
             "b2-words-strong-feelings",
             "fce-multiple-choice-cloze",
+            "base-words-and-affixes",
+            "common-suffixes",
             "common-prefixes",
             "suffixes-that-change-word-class",
             "fce-word-formation",
@@ -61,6 +64,9 @@ export const course: CourseDef = {
           topics: [
             "articles-in-general-and-specific",
             "relative-clauses",
+            "pronoun-case",
+            "who-and-whom",
+            "who-which-and-that",
             "prepositions-before-relative-pronouns",
             "gerunds-and-infinitives",
             "used-to",
@@ -93,6 +99,7 @@ export const course: CourseDef = {
           topics: [
             "making-inferences",
             "authors-purpose",
+            "characters",
             "tone-and-mood",
             "b2-words-tone",
             "fce-reading-closely",

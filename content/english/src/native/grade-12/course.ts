@@ -44,8 +44,8 @@ const units: readonly UnitDef[] = [
     {
       words: ["words-of-power-and-corruption", "words-of-conscience-and-duty"],
       grammar: ["ambiguous-pronoun-reference"],
-      reading: ["reading-an-investigative-report"],
-      writing: ["choosing-precise-diction", "writing-a-profile-of-a-person-of-conscience"],
+      reading: ["tracing-claims-to-sources", "reading-an-investigative-report"],
+      writing: ["writing-a-profile-of-a-person-of-conscience"],
     },
     "power-and-corruption",
     "reporting-wrongdoing",
@@ -88,7 +88,7 @@ const units: readonly UnitDef[] = [
     {
       words: ["words-of-risk-and-uncertainty", "words-of-crisis-and-response"],
       grammar: ["jargon-and-plain-language"],
-      reading: ["reading-risk-and-probability"],
+      reading: ["reading-charts-and-statistics", "reading-risk-and-probability"],
       writing: ["explaining-a-risk-clearly", "writing-a-proposal-to-reduce-a-risk"],
     },
     "risk-and-responsibility",

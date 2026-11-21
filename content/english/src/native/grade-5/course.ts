@@ -157,7 +157,6 @@ const units: readonly UnitDef[] = [
     t("Letters and Diaries from the Past", "往昔的书信与日记"),
     {
       words: [
-        "academic-words-3",
         "prefixes-of-number-and-position",
         "words-of-letters-and-diaries",
         "words-of-life-long-ago",

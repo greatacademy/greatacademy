@@ -45,7 +45,19 @@ export const course: CourseDef = {
       modules: [
         {
           title: t("Reading Skills", "阅读技能"),
-          topics: ["main-idea", "supporting-details", "making-inferences", "fact-and-opinion", "claims", "reading-charts-and-statistics"],
+          topics: [
+            "main-idea",
+            "supporting-details",
+            "making-inferences",
+            "fact-and-opinion",
+            "claims",
+            "authors-purpose",
+            "rhetorical-situation",
+            "rhetorical-appeals",
+            "logical-fallacies",
+            "evaluating-sources",
+            "reading-charts-and-statistics",
+          ],
         },
         {
           title: t("IELTS Question Types", "雅思题型"),
@@ -86,6 +98,12 @@ export const course: CourseDef = {
             "b2-words-change-verbs",
             "comparatives-and-superlatives",
             "numbers-in-writing",
+            "cause-and-effect-in-texts",
+            "reading-a-table",
+            "comparing-data-in-a-table",
+            "reading-graphs-in-science",
+            "correlation-or-cause",
+            "reporting-numbers-from-a-graph",
             "how-numbers-can-mislead",
             "passive-with-modals-and-perfect-forms",
             "ielts-describing-data",
@@ -105,6 +123,7 @@ export const course: CourseDef = {
             "b2-words-linking-3",
             "b2-words-cause-and-effect",
             "b2-words-opinion-verbs",
+            "noun-clauses",
             "hedging-and-qualification",
             "writing-a-thesis-statement",
             "introductions-and-conclusions",
@@ -112,7 +131,13 @@ export const course: CourseDef = {
         },
         {
           title: t("Clear Sentences", "清楚的句子"),
-          topics: ["cohesion-old-before-new", "parallel-structure", "cutting-wordiness"],
+          topics: [
+            "simple-compound-and-complex-sentences",
+            "word-order-for-emphasis",
+            "cohesion-old-before-new",
+            "parallel-structure",
+            "cutting-wordiness",
+          ],
         },
         {
           title: t("The Essay", "议论文"),

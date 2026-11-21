@@ -44,6 +44,7 @@ export const course: CourseDef = {
             "main-idea",
             "supporting-details",
             "making-inferences",
+            "fact-and-opinion",
             "authors-purpose",
             "identifying-topic-sentences",
             "summarizing-a-text",

@@ -32,7 +32,7 @@ const units: readonly UnitDef[] = [
     {
       words: ["words-of-academic-discourse", "b2-words-academic-adjectives", "b2-words-logic"],
       style: ["hedging-and-qualification"],
-      reading: ["reading-academic-arguments", "logical-fallacies"],
+      reading: ["reading-academic-arguments"],
       writing: ["writing-a-critical-summary"],
     },
     "academic-prose",
@@ -54,7 +54,7 @@ const units: readonly UnitDef[] = [
     {
       words: ["words-of-evidence-and-inference", "b2-words-reporting-verbs"],
       style: ["reporting-verbs", "quoting-and-paraphrasing", "citing-in-mla-and-apa"],
-      reading: ["tracing-claims-to-sources"],
+      reading: [],
       writing: ["writing-a-paraphrase"],
     },
     "the-ethics-of-knowledge",
@@ -87,7 +87,7 @@ const units: readonly UnitDef[] = [
     {
       words: ["words-of-statistics", "b2-words-quantity"],
       style: ["numbers-in-writing"],
-      reading: ["reading-charts-and-statistics", "how-numbers-can-mislead"],
+      reading: ["how-numbers-can-mislead"],
       writing: ["writing-about-data"],
     },
     "numbers-in-the-news",
