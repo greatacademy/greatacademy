@@ -214,6 +214,24 @@ export async function events(db: Db, learnerId: string, subjectId: string): Prom
   return rows.map((r) => r.data);
 }
 
+/** courseTasks reads a learner's latest lessons, reviews and quizzes in a course, at most `limit`, in order. */
+export async function courseTasks(db: Db, learnerId: string, subjectId: string, courseId: string, limit: number): Promise<EngineEvent[]> {
+  const rows = await db
+    .select({ data: event.data })
+    .from(event)
+    .where(
+      and(
+        eq(event.learnerId, learnerId),
+        eq(event.subjectId, subjectId),
+        eq(event.courseId, courseId),
+        inArray(event.type, ["lesson", "review", "quiz"]),
+      ),
+    )
+    .orderBy(desc(event.seq))
+    .limit(limit);
+  return rows.map((r) => r.data).reverse();
+}
+
 /** totalXp sums the XP of a learner's events in a subject, or across subjects when subjectId is omitted. */
 export async function totalXp(db: Db, learnerId: string, subjectId?: string): Promise<number> {
   const [row] = await db

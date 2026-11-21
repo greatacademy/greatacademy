@@ -4,6 +4,7 @@ import {
   activeSession,
   chooseCourse,
   completedSessions,
+  courseTasks,
   createJudgment,
   createSession,
   currentCourse,
@@ -30,6 +31,7 @@ import {
 import {
   courseFinished,
   courseRoute,
+  courseStanding,
   coursesAfter,
   diagnosticCandidates,
   diagnosticDue,
@@ -42,6 +44,7 @@ import {
   placementAdvice,
   remainingXp,
   retakeEvent,
+  routeTarget,
   supplementalCandidates,
   supplementalDue,
   type Task,
@@ -344,14 +347,18 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
   const rng = (): Rng => createRng(deps.seed());
 
   /**
-   * routeOf finds the route a learner follows from their current course of a subject (docs/learning-engine.md §9),
-   * with the courses they took before it and the course they set out to take, if they moved back from one.
+   * routeOf finds the route a learner follows from their current course of a subject and how well they are doing in
+   * it (docs/learning-engine.md §9), with the courses they took before it and the course they set out to take, if
+   * they moved back from one and the route still leads to it.
    */
   const routeOf = async (db: Db, learnerId: string, c: CourseEntry) => {
     const taken = (await subjectCourses(db, learnerId, c.subject.def.id)).filter((id) => id !== c.id);
     const aim = (await subjectSettings(db, learnerId, c.subject.def.id)).targetCourseId;
-    const target = aim && aim !== c.id && c.index.courses.has(aim) ? aim : undefined;
-    return { taken, target, route: courseRoute(c.index, c.id, taken, target) };
+    const aimed = aim && aim !== c.id && c.index.courses.has(aim) ? aim : undefined;
+    const p = c.ctx.params;
+    const standing = courseStanding(p, await courseTasks(db, learnerId, c.subject.def.id, c.id, p.standingTasks));
+    const route = courseRoute(c.index, c.id, taken, aimed, standing);
+    return { taken, target: routeTarget(c.index, route, aimed), route };
   };
 
   /** placedReport gives the diagnostic report of a learner's current course while it waits for an answer. */
@@ -384,7 +391,10 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
     const subjectId = c.subject.def.id;
     await db.transaction(async (tx) => {
       await decidePlacement(tx, learnerId, c.id, at);
-      await updateSubjectSettings(tx, learnerId, subjectId, { endDate: null, ...(next === target && { targetCourseId: null }) });
+      await updateSubjectSettings(tx, learnerId, subjectId, {
+        endDate: null,
+        ...((next === target || !target) && { targetCourseId: null }),
+      });
       await chooseCourse(tx, learnerId, subjectId, next, at, c.id);
     });
     return next;
@@ -543,7 +553,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
           units: e.course.def.units.map((u, i) => ({ title: text(u.title), ...units[i] })),
         });
       }
-      return { courses, currentCourseId: c.id, ...(route && { sequenceTitle: text(route.title) }) };
+      return { courses, currentCourseId: c.id };
     },
 
     async getCourseProgress(req, ctx) {

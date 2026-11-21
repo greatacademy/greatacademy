@@ -37,6 +37,10 @@ export interface Params {
   readonly adviceWeakShare: number;
   /** adviceAheadShare is the share of a course's XP placed as known that makes the course after it the better start. */
   readonly adviceAheadShare: number;
+  /** standingTasks is how many of the latest lessons, reviews and quizzes of the current course its standing reads. */
+  readonly standingTasks: number;
+  /** standingMinAnswers is the fewest answers in those tasks from which the standing is known. */
+  readonly standingMinAnswers: number;
   /** kpPass is the fewest correct answers that pass a knowledge point; they must also outnumber the wrong ones. */
   readonly kpPass: number;
   /** kpMaxWrong is the number of wrong answers on one knowledge point that fails the lesson. */
@@ -121,6 +125,8 @@ export const defaultParams: Params = {
   adviceMinTopics: 5,
   adviceWeakShare: 0.3,
   adviceAheadShare: 0.8,
+  standingTasks: 20,
+  standingMinAnswers: 40,
   kpPass: 2,
   kpMaxWrong: 3,
   reteachAfterFailures: 2,

@@ -114,26 +114,23 @@ const buildsOn: Readonly<Record<string, readonly string[]>> = {
 /** university continues every route that reaches calculus, as Math Academy's do. */
 const university = ["linear-algebra", "multivariable-calculus", "differential-equations"];
 
+/** HONORS_STANDING is the share of recent answers right that the honors sequence asks of a learner. */
+const HONORS_STANDING = 0.8;
+
 /**
  * mathSequences are the routes through the courses
  * ([Content §6](../../../docs/content.md#6-courses)): the three high-school
- * sequences, each from the first grade, the grade-by-grade middle school, the
- * foundations for adults and the two exams. A learner follows the one their
- * courses lie on and moves on along it on finishing a course.
+ * sequences, each from the first grade, the traditional one first and the
+ * honors one only for a learner doing well, the grade-by-grade middle school,
+ * the foundations for adults and the two exams. A learner follows the one
+ * their courses and their answers point to and moves on along it on finishing
+ * a course.
  */
 export const mathSequences: readonly SequenceDef[] = [
   {
-    id: "integrated-honors",
-    title: t("Integrated Math (Honors)", "综合数学（荣誉）"),
-    courses: [
-      ...grades(1, 5),
-      "prealgebra",
-      "integrated-math-i-honors",
-      "integrated-math-ii-honors",
-      "integrated-math-iii-honors",
-      "ap-calculus-bc",
-      ...university,
-    ],
+    id: "traditional",
+    title: t("Traditional Math", "传统数学"),
+    courses: [...grades(1, 5), "prealgebra", "algebra-i", "geometry", "algebra-ii", "precalculus", "ap-calculus-bc", ...university],
   },
   {
     id: "integrated",
@@ -150,9 +147,19 @@ export const mathSequences: readonly SequenceDef[] = [
     ],
   },
   {
-    id: "traditional",
-    title: t("Traditional Math", "传统数学"),
-    courses: [...grades(1, 5), "prealgebra", "algebra-i", "geometry", "algebra-ii", "precalculus", "ap-calculus-bc", ...university],
+    id: "integrated-honors",
+    title: t("Integrated Math (Honors)", "综合数学（荣誉）"),
+    // Honors covers four years in three: a learner keeps to it while getting most answers right.
+    minStanding: HONORS_STANDING,
+    courses: [
+      ...grades(1, 5),
+      "prealgebra",
+      "integrated-math-i-honors",
+      "integrated-math-ii-honors",
+      "integrated-math-iii-honors",
+      "ap-calculus-bc",
+      ...university,
+    ],
   },
   {
     id: "grade-by-grade",

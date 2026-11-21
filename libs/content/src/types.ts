@@ -443,4 +443,9 @@ export interface SequenceDef {
   readonly id: string;
   readonly title: Text;
   readonly courses: readonly string[];
+  /**
+   * minStanding is the share of recent answers in the current course a learner must get right to follow this
+   * sequence where another one also goes through the course, such as an honors sequence; absent for none.
+   */
+  readonly minStanding?: number;
 }

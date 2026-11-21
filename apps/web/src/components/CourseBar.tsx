@@ -1,3 +1,4 @@
+import { Popover } from "@base-ui/react/popover";
 import type { CourseStats } from "@ga/proto/learning/v1/learning_pb";
 import { useState } from "react";
 
@@ -38,42 +39,44 @@ export const percentLearned = (s: Shaded) => (s.total > 0 ? Math.floor((s.learne
 
 /**
  * CourseBar is a course's progress on the Learn and Course pages: the shaded bar with the share of the course learned.
- * It explains itself on hover, and opens on a tap or click, which works on a phone too: the course sequence as tabs,
- * and for the course picked, how many topics have each shade and its units numbered with their own bars.
+ * It explains itself on hover, and opens on a tap or click, which works on a phone too, a popover over the page that
+ * leaves the layout as it is: the course sequence as tabs, and for the course picked, how many topics have each shade
+ * and its units numbered with their own bars.
  */
 export function CourseBar({ stats, courseId, className = "" }: { stats: CourseStats; courseId: string; className?: string }) {
-  const { m, tx } = useI18n();
+  const { m } = useI18n();
   const [open, setOpen] = useState(false);
   const [picked, setPicked] = useState<string>();
   const sequence = useCourseSequence(courseId, open);
   const courses = sequence.data?.courses ?? [];
   const shown = courses.find((c) => c.courseId === (picked ?? courseId)) ?? courses.find((c) => c.courseId === courseId);
   return (
-    <div className={`space-y-2 ${className}`}>
-      <button
-        type="button"
-        title={m.shades.summary(stats.learned, stats.total)}
-        aria-expanded={open}
-        onClick={() => setOpen(!open)}
-        className="-mx-1.5 flex w-[calc(100%+0.75rem)] items-center gap-3 rounded-lg px-1.5 py-1 text-left hover:bg-page"
-      >
-        <ShadedBar stats={stats} />
-        <span className="shrink-0 text-sm font-semibold tabular-nums underline decoration-line decoration-dotted underline-offset-4">
-          {percentLearned(stats)}%
-        </span>
-      </button>
-      {open && (
-        <div role="status" className="space-y-3 rounded-xl border border-line bg-surface px-3 py-3 text-xs text-muted">
-          {sequence.isPending && <p>{m.loading}</p>}
-          {sequence.isError && <p className="text-bad">{m.error}</p>}
-          {sequence.data?.sequenceTitle && <p>{m.sequence.route(tx(sequence.data.sequenceTitle))}</p>}
-          {courses.length > 1 && (
-            <CourseSequence courses={courses} currentId={courseId} selected={shown?.courseId ?? courseId} onSelect={setPicked} />
-          )}
-          {shown?.stats && <ShadeCounts stats={shown.stats} />}
-          {shown && <UnitList course={shown} />}
-        </div>
-      )}
+    <div className={className}>
+      <Popover.Root open={open} onOpenChange={setOpen}>
+        <Popover.Trigger
+          title={m.shades.summary(stats.learned, stats.total)}
+          className="-mx-1.5 flex w-[calc(100%+0.75rem)] items-center gap-3 rounded-lg px-1.5 py-1 text-left outline-none hover:bg-page focus-visible:ring-2 focus-visible:ring-accent/25"
+        >
+          <ShadedBar stats={stats} />
+          <span className="shrink-0 text-sm font-semibold tabular-nums underline decoration-line decoration-dotted underline-offset-4">
+            {percentLearned(stats)}%
+          </span>
+        </Popover.Trigger>
+        <Popover.Portal>
+          <Popover.Positioner sideOffset={6} align="start" collisionPadding={16} className="z-30">
+            <Popover.Popup className="max-h-[min(70vh,var(--available-height))] w-[max(var(--anchor-width),min(36rem,calc(100vw-2rem)))] max-w-[calc(100vw-2rem)] space-y-3 overflow-y-auto rounded-xl border border-line bg-surface px-3 py-3 text-xs text-muted shadow-lg outline-none">
+              <Popover.Title className="sr-only">{m.sequence.label}</Popover.Title>
+              {sequence.isPending && <p>{m.loading}</p>}
+              {sequence.isError && <p className="text-bad">{m.error}</p>}
+              {courses.length > 1 && (
+                <CourseSequence courses={courses} currentId={courseId} selected={shown?.courseId ?? courseId} onSelect={setPicked} />
+              )}
+              {shown?.stats && <ShadeCounts stats={shown.stats} />}
+              {shown && <UnitList course={shown} />}
+            </Popover.Popup>
+          </Popover.Positioner>
+        </Popover.Portal>
+      </Popover.Root>
     </div>
   );
 }

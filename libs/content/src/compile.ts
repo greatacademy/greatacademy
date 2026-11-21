@@ -457,6 +457,8 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
     text(`${path} › title`, sequence.title);
     if (sequence.courses.length < 2) error(path, "a sequence has at least two courses");
     if (new Set(sequence.courses).size !== sequence.courses.length) error(path, "a sequence lists a course twice");
+    const bar = sequence.minStanding;
+    if (bar !== undefined && !(bar > 0 && bar <= 1)) error(path, "minStanding must be in (0, 1]");
     sequence.courses.forEach((id, i) => {
       const c = def.courses.find((d) => d.id === id);
       const before = sequence.courses[i - 1];

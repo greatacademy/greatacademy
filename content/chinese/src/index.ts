@@ -6,6 +6,7 @@ import { characterLexicon } from "./characters/index.ts";
 import { chineseConversations } from "./conversations.ts";
 import { chineseCourses } from "./courses.ts";
 import { idiomLexicon } from "./idioms/index.ts";
+import { chineseSequences } from "./sequences.ts";
 import { coreShardReading, coreShardTopics } from "./shards/core.ts";
 import { hskShardTopics } from "./shards/hsk.ts";
 import { levelsShardTopics } from "./shards/levels.ts";
@@ -21,6 +22,7 @@ export const chinese: SubjectDef = {
   hue: 25,
   topics: [...coreShardTopics, ...levelsShardTopics, ...hskShardTopics],
   courses: chineseCourses,
+  sequences: chineseSequences,
   checkers: chineseCheckers,
   lexicon,
   reading: coreShardReading,

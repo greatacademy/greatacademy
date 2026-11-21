@@ -63,7 +63,6 @@ function Progress() {
             <section className="space-y-2 pb-3">
               <h2 className="text-sm text-muted" title={m.sequence.note}>
                 {m.sequence.label}
-                {sequence.data?.sequenceTitle && ` · ${m.sequence.route(tx(sequence.data.sequenceTitle))}`}
               </h2>
               <CourseSequence courses={sequence.data?.courses ?? []} currentId={courseId} selected={viewed} onSelect={setPicked} />
             </section>

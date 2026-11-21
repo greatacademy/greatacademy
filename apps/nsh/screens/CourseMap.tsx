@@ -7,8 +7,8 @@ import {
   type TopicProgress,
   TopicStatus,
 } from "@ga/proto/learning/v1/learning_pb";
-import { computed, List, Scroll, signal, Text, View, windowSize } from "nsh";
-import { NavPage } from "nsh/base";
+import { computed, List, platform, Scroll, safeAreaInsets, signal, Text, View, windowSize } from "nsh";
+import { NavPage, Popover, Sheet } from "nsh/base";
 import { m, tx } from "../lib/i18n.ts";
 import { query } from "../lib/query.ts";
 import { catalog, learning } from "../lib/rpc.ts";
@@ -437,64 +437,110 @@ export function useCourseSequence(courseId: () => string | undefined) {
 /**
  * CourseBar is a course's progress on the Learn and Course tabs, as on the web: its learned topics in one bar, the
  * firmest first, in the map's shades, with the share of the course learned. It explains itself on hover on a desktop
- * and opens when pressed, which works on a phone too: the course sequence as tabs, and for the course picked, how many
- * topics have each shade and its units numbered with their own bars.
+ * and opens when pressed, over the page so that the layout stays as it is, a popover on a desktop and a sheet on a phone:
+ * the course sequence as tabs, and for the course picked, how many topics have each shade and its units numbered with
+ * their own bars.
  */
 export function CourseBar(props: { stats: CourseStats | undefined; courseId: string; maxWidth?: number }) {
   const open = signal(false);
   const picked = signal<string | undefined>(undefined);
+  const insets = safeAreaInsets();
   const sequence = useCourseSequence(() => (open() ? props.courseId : undefined));
   const summary = () => m().shades.summary(props.stats?.learned ?? 0, props.stats?.total ?? 0);
   const shown = (courses: readonly CourseUnits[]) =>
     courses.find((c) => c.courseId === (picked() ?? props.courseId)) ?? courses.find((c) => c.courseId === props.courseId);
-  return (
-    <View style={{ gap: 8, maxWidth: props.maxWidth }}>
-      <View
-        role="button"
-        accessibilityLabel={`${percentLearned(props.stats)}%`}
-        accessibilityHint={summary()}
-        tooltip={summary()}
-        onPress={() => open.set(!open())}
-        hoverStyle={{ backgroundColor: colors().page }}
-        style={{
-          alignItems: "center",
-          borderRadius: 8,
-          flexDirection: "row",
-          gap: 12,
-          marginHorizontal: -6,
-          paddingHorizontal: 6,
-          paddingVertical: 4,
-        }}
-      >
-        <ShadedBar stats={props.stats} />
-        <Text style={{ color: colors().ink, fontSize: 14, fontWeight: "600" }}>{`${percentLearned(props.stats)}%`}</Text>
-      </View>
-      <If when={open()}>
-        <View style={{ borderColor: colors().line, borderRadius: 12, borderWidth: 1, gap: 12, padding: 12 }}>
-          <Loaded rpc={sequence} skeleton={<Skeleton rows={2} />}>
-            {(data) => (
+  const trigger = () => (
+    <View
+      role="button"
+      accessibilityLabel={`${percentLearned(props.stats)}%`}
+      accessibilityHint={summary()}
+      tooltip={summary()}
+      onPress={platform.desktop ? undefined : () => open.set(true)}
+      hoverStyle={{ backgroundColor: colors().page }}
+      style={{
+        alignItems: "center",
+        borderRadius: 8,
+        flexDirection: "row",
+        gap: 12,
+        marginHorizontal: -6,
+        paddingHorizontal: 6,
+        paddingVertical: 4,
+      }}
+    >
+      <ShadedBar stats={props.stats} />
+      <Text style={{ color: colors().ink, fontSize: 14, fontWeight: "600" }}>{`${percentLearned(props.stats)}%`}</Text>
+    </View>
+  );
+  const panel = () => (
+    <Loaded rpc={sequence} skeleton={<Skeleton rows={2} />}>
+      {(data) => (
+        <View style={{ gap: 12 }}>
+          <If when={data().courses.length > 1}>
+            <CourseSequence
+              courses={data().courses}
+              currentId={props.courseId}
+              selected={shown(data().courses)?.courseId ?? props.courseId}
+              onSelect={(id) => picked.set(id)}
+            />
+          </If>
+          <If when={shown(data().courses)}>
+            {(c) => (
               <View style={{ gap: 12 }}>
-                <If when={data().sequenceTitle}>{(title) => <Muted>{m().sequence.route(tx(title()))}</Muted>}</If>
-                <If when={data().courses.length > 1}>
-                  <CourseSequence
-                    courses={data().courses}
-                    currentId={props.courseId}
-                    selected={shown(data().courses)?.courseId ?? props.courseId}
-                    onSelect={(id) => picked.set(id)}
-                  />
-                </If>
-                <If when={shown(data().courses)}>
-                  {(c) => (
-                    <View style={{ gap: 12 }}>
-                      <ShadeCounts stats={c().stats} />
-                      <UnitList course={c()} />
-                    </View>
-                  )}
-                </If>
+                <ShadeCounts stats={c().stats} />
+                <UnitList course={c()} />
               </View>
             )}
-          </Loaded>
+          </If>
         </View>
+      )}
+    </Loaded>
+  );
+  return (
+    <View style={{ maxWidth: props.maxWidth }}>
+      <If
+        when={platform.desktop}
+        else={
+          <>
+            {trigger()}
+            <Sheet
+              open={open()}
+              onOpenChange={({ open: next }) => open.set(next)}
+              closeOnSwipe
+              popupStyle={{
+                backgroundColor: colors().page,
+                borderTopLeftRadius: 16,
+                borderTopRightRadius: 16,
+                maxHeight: "80%",
+                padding: 16,
+                paddingBottom: 16 + insets().bottom,
+              }}
+              backdropStyle={{ backgroundColor: "#00000066" }}
+            >
+              <Scroll style={{ flexShrink: 1 }}>{panel()}</Scroll>
+            </Sheet>
+          </>
+        }
+      >
+        <Popover
+          open={open()}
+          onOpenChange={({ open: next }) => open.set(next)}
+          placement="bottom"
+          align="start"
+          offset={6}
+          margin={16}
+          popupStyle={{
+            backgroundColor: colors().surface,
+            borderColor: colors().line,
+            borderRadius: 12,
+            borderWidth: 1,
+            maxHeight: Math.round(windowSize().height * 0.7),
+            padding: 12,
+            width: Math.min(576, windowSize().width - 32),
+          }}
+          trigger={trigger()}
+        >
+          <Scroll style={{ flexShrink: 1 }}>{panel()}</Scroll>
+        </Popover>
       </If>
     </View>
   );

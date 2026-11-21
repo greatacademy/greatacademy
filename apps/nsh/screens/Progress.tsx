@@ -87,11 +87,7 @@ export function Progress(props: { visible: () => boolean }) {
                           <View style={{ flex: 1, gap: 12, minWidth: 0 }}>
                             <If when={(sequence()?.courses.length ?? 0) > 1}>
                               <View style={{ gap: 8 }}>
-                                <Muted>
-                                  {sequence()?.sequenceTitle
-                                    ? `${m().sequence.label} · ${m().sequence.route(tx(sequence()?.sequenceTitle))}`
-                                    : m().sequence.label}
-                                </Muted>
+                                <Muted>{m().sequence.label}</Muted>
                                 <CourseSequence
                                   courses={sequence()?.courses ?? []}
                                   currentId={d().courseId}

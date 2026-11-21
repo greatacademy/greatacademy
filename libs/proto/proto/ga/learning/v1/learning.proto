@@ -324,8 +324,7 @@ message ListCourseProgressRequest {
 message ListCourseProgressResponse {
   repeated CourseUnits courses = 1;
   string current_course_id = 2;
-  // sequence_title names the route the learner follows through the courses; unset off every route.
-  optional ga.common.v1.Text sequence_title = 3;
+  reserved 3;
 }
 
 // CourseUnits is how far a learner is in a course and in each of its units.

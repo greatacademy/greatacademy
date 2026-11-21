@@ -251,7 +251,6 @@ describe("LearningService", () => {
     await learning.chooseCourse({ courseId: COURSE });
     const back = await learning.listCourseProgress({ courseId: COURSE });
     expect(back.courses.map((c) => c.courseId)).toEqual([COURSE, "algebra-i", "geometry", "algebra-ii"]);
-    expect(back.sequenceTitle).toBeUndefined();
 
     // Knowing everything, the learner is placed in the whole course; the report waits for an answer first.
     const dash = await learning.getDashboard({ courseId: COURSE });
@@ -269,7 +268,6 @@ describe("LearningService", () => {
     expect((await learning.getProfile({ timeZone: "UTC" })).enrollments.map((e) => e.courseId)).toEqual(["algebra-i"]);
     await expectCode(learning.getDashboard({ courseId: COURSE }), Code.FailedPrecondition);
     const on = await learning.listCourseProgress({ courseId: "algebra-i" });
-    expect(on.sequenceTitle?.values.en).toBe("Traditional Math");
     expect(on.courses.map((c) => c.courseId)).toEqual([COURSE, "algebra-i", "geometry", "algebra-ii", "precalculus"]);
 
     // Starting work in the new course settles the promotion.
@@ -277,10 +275,34 @@ describe("LearningService", () => {
     expect((await learning.getDashboard({ courseId: "algebra-i" })).promotedFrom).toBe("");
   });
 
+  it("keeps a learner on the honors route only while they get most answers right", async () => {
+    await learning.chooseCourse({ courseId: "integrated-math-i-honors" });
+    await learning.chooseCourse({ courseId: "prealgebra" });
+    const route = async () => (await learning.listCourseProgress({ courseId: "prealgebra" })).courses.map((c) => c.courseId);
+    const honors = ["prealgebra", "integrated-math-i-honors", "integrated-math-ii-honors", "integrated-math-iii-honors"];
+    expect(await route()).toEqual(honors);
+
+    const c = (await registry.course("prealgebra"))!;
+    const learnerId = await learnerFor(db, "u1");
+    const quiz = (right: number) =>
+      appendTo(db, learnerId, c, {
+        type: "quiz",
+        at: now,
+        results: Array.from({ length: 40 }, (_, i) => ({ topic: "composite-shapes", correct: i < right })),
+      });
+    // Half the answers right: the traditional route, which no longer leads to the honors course.
+    await quiz(20);
+    expect(await route()).toEqual(["integrated-math-i-honors", "prealgebra", "algebra-i", "geometry", "algebra-ii"]);
+    // Doing well again leads back to the honors course.
+    await quiz(40);
+    await quiz(40);
+    await quiz(40);
+    expect(await route()).toEqual(honors);
+  });
+
   it("follows the route of the course chosen, and offers the course before on it", async () => {
     await learning.chooseCourse({ courseId: "integrated-math-i-honors" });
     const honors = await learning.listCourseProgress({ courseId: "integrated-math-i-honors" });
-    expect(honors.sequenceTitle?.values.en).toBe("Integrated Math (Honors)");
     expect(honors.courses.map((c) => c.courseId)).toEqual([
       "integrated-math-i-honors",
       "integrated-math-ii-honors",
@@ -289,7 +311,6 @@ describe("LearningService", () => {
     ]);
     await learning.chooseCourse({ courseId: "integrated-math-i" });
     const plain = await learning.listCourseProgress({ courseId: "integrated-math-i" });
-    expect(plain.sequenceTitle?.values.en).toBe("Integrated Math");
     expect(plain.courses.map((c) => c.courseId).slice(1)).toEqual([
       "integrated-math-i",
       "integrated-math-ii",

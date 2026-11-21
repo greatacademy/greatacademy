@@ -997,13 +997,6 @@ export declare type ListCourseProgressResponse = Message<"ga.learning.v1.ListCou
    * @generated from field: string current_course_id = 2;
    */
   currentCourseId: string;
-
-  /**
-   * sequence_title names the route the learner follows through the courses; unset off every route.
-   *
-   * @generated from field: optional ga.common.v1.Text sequence_title = 3;
-   */
-  sequenceTitle?: Text | undefined;
 };
 
 /**

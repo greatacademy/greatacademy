@@ -1,6 +1,8 @@
 import type { CompiledCourse, SequenceDef } from "@ga/content";
 
 import type { Placement } from "./diagnostic.ts";
+import type { EngineEvent } from "./events.ts";
+import type { Params } from "./params.ts";
 import type { LearnerState } from "./state.ts";
 import { isKnown, type Planner } from "./tasks.ts";
 
@@ -54,28 +56,76 @@ export function courseIndex(courses: ReadonlyMap<string, CompiledCourse>, sequen
 }
 
 /**
+ * courseStanding is how well a learner is doing in their current course (docs/learning-engine.md §9): the share of
+ * answers right in the course's latest `standingTasks` lessons, reviews and quizzes, retakes left out, given its events
+ * in order. It is undefined below `standingMinAnswers` answers, when too little is known to judge.
+ */
+export function courseStanding(p: Params, events: readonly EngineEvent[]): number | undefined {
+  let asked = 0;
+  let right = 0;
+  let tasks = 0;
+  for (let i = events.length - 1; i >= 0 && tasks < p.standingTasks; i--) {
+    const e = events[i]!;
+    if (e.type === "lesson") {
+      asked += e.asked;
+      right += e.correct;
+    } else if (e.type === "review") {
+      asked += e.total;
+      right += e.correct;
+    } else if (e.type === "quiz" && !e.retake) {
+      asked += e.results.length;
+      right += e.results.filter((r) => r.correct).length;
+    } else continue;
+    tasks++;
+  }
+  return asked >= p.standingMinAnswers ? right / asked : undefined;
+}
+
+/**
  * courseRoute picks the sequence a learner of `course` follows
- * (docs/learning-engine.md §9): among the sequences through the course, the
- * one that leads on to the course they set out to take, `target`, if any;
- * else the one that lists most of the courses they took, `taken`; else the
+ * (docs/learning-engine.md §9). Among the sequences through the course, those
+ * whose `minStanding` is above the learner's `standing` are left out, unless
+ * none would remain. Of the rest it takes the one that leads on to the course
+ * they set out to take, `target`, if any; else the one that lists most of the
+ * courses they took, `taken`; on a tie, a demanding sequence when the standing
+ * reaches its bar, and one that is not while the standing is unknown; else the
  * first. A course on no sequence has none.
  */
-export function courseRoute(index: CourseIndex, course: string, taken: readonly string[], target?: string): SequenceDef | undefined {
+export function courseRoute(
+  index: CourseIndex,
+  course: string,
+  taken: readonly string[],
+  target?: string,
+  standing?: number,
+): SequenceDef | undefined {
   const through = index.sequences.filter((s) => s.courses.includes(course));
-  if (target) {
-    const leading = through.find((s) => s.courses.indexOf(target) > s.courses.indexOf(course));
-    if (leading) return leading;
-  }
+  const fit = standing === undefined ? through : through.filter((s) => (s.minStanding ?? 0) <= standing);
+  const pool = fit.length > 0 ? fit : through;
+  const rank = (s: SequenceDef): readonly number[] => [
+    target && s.courses.indexOf(target) > s.courses.indexOf(course) ? 1 : 0,
+    taken.filter((id) => s.courses.includes(id)).length,
+    s.minStanding === undefined ? 0 : standing === undefined ? -1 : 1,
+  ];
   let best: SequenceDef | undefined;
-  let most = -1;
-  for (const s of through) {
-    const count = taken.filter((id) => s.courses.includes(id)).length;
-    if (count > most) {
+  let bestRank: readonly number[] = [];
+  for (const s of pool) {
+    const r = rank(s);
+    const i = r.findIndex((v, k) => v !== bestRank[k]);
+    if (!best || (i >= 0 && r[i]! > bestRank[i]!)) {
       best = s;
-      most = count;
+      bestRank = r;
     }
   }
   return best;
+}
+
+/**
+ * routeTarget is the course set out for that a learner still heads to on `route`: `target`, unless the route leaves
+ * it out while another sequence holds it, as when the learner fell below the bar of the sequence that leads to it.
+ */
+export function routeTarget(index: CourseIndex, route: SequenceDef | undefined, target: string | undefined): string | undefined {
+  if (!target || !route || route.courses.includes(target)) return target;
+  return index.sequences.some((s) => s.courses.includes(target)) ? undefined : target;
 }
 
 /**

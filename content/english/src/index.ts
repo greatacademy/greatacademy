@@ -7,6 +7,7 @@ import { englishConversations } from "./conversations.ts";
 import { withScenes } from "./illustrations.ts";
 import { englishPacks, packLexicon } from "./packs.ts";
 import { englishLexicon } from "./reading/lexicon.ts";
+import { englishSequences } from "./sequences.ts";
 import { coreShardReading, coreShardTopics } from "./shards/core.ts";
 import { withBritishForms } from "./spelling.ts";
 
@@ -18,6 +19,7 @@ export const english: SubjectDef = {
   hue: 335,
   topics: coreShardTopics,
   courses: englishPacks.flatMap((pack) => pack.courses),
+  sequences: englishSequences,
   checkers: englishCheckers,
   reading: coreShardReading,
   lexicon: withBritishForms(packLexicon(englishLexicon)),

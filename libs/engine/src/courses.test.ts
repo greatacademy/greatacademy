@@ -5,11 +5,13 @@ import {
   courseFinished,
   courseIndex,
   courseRoute,
+  courseStanding,
   coursesAfter,
   followingCourse,
   homeCourse,
   nextCourse,
   placementAdvice,
+  routeTarget,
 } from "./courses.ts";
 import type { Placement } from "./diagnostic.ts";
 import { applyEvent } from "./events.ts";
@@ -154,14 +156,15 @@ const branching = compileSubject({
   ],
   sequences: [
     { id: "first", title: same("First"), courses: ["low", "a", "a2"] },
-    { id: "second", title: same("Second"), courses: ["low", "b", "b2"] },
+    { id: "second", title: same("Second"), courses: ["low", "b", "b2"], minStanding: 0.8 },
   ],
   mark: "B",
   hue: 100,
   checkers: [],
 });
 const routes = courseIndex(branching.courses, branching.def.sequences);
-const route = (course: string, taken: string[], target?: string) => courseRoute(routes, course, taken, target)?.id;
+const route = (course: string, taken: string[], target?: string, standing?: number) =>
+  courseRoute(routes, course, taken, target, standing)?.id;
 
 describe("courseRoute", () => {
   it("follows the route that leads to the course set out for", () => {
@@ -181,6 +184,36 @@ describe("courseRoute", () => {
 
   it("has no route for a course on none", () => {
     expect(route("c", ["a2"])).toBeUndefined();
+  });
+
+  it("follows a demanding route only while the standing reaches its bar", () => {
+    expect(route("low", [], undefined, 0.9)).toBe("second");
+    expect(route("low", [], "b2", 0.6)).toBe("first");
+    expect(route("low", ["b"], undefined, 0.6)).toBe("first");
+    expect(route("low", ["b"])).toBe("second");
+    expect(route("b", ["low"], undefined, 0.6)).toBe("second");
+  });
+});
+
+describe("routeTarget", () => {
+  it("drops the course set out for when the route no longer leads to it", () => {
+    const [first, second] = routes.sequences;
+    expect(routeTarget(routes, first, "b2")).toBeUndefined();
+    expect(routeTarget(routes, second, "b2")).toBe("b2");
+    expect(routeTarget(routes, first, "c")).toBe("c");
+    expect(routeTarget(routes, undefined, "b2")).toBe("b2");
+  });
+});
+
+describe("courseStanding", () => {
+  const lesson = (asked: number, correct: number) => ({ type: "lesson" as const, at: 0, topic: "p1", passed: true, asked, correct });
+  it("reads the share right of the latest tasks once enough answers are in", () => {
+    expect(courseStanding(defaultParams, [lesson(10, 9)])).toBeUndefined();
+    const many = Array.from({ length: 30 }, (_, i) => lesson(10, i < 10 ? 10 : 5));
+    expect(courseStanding(defaultParams, many)).toBe(0.5);
+    const quiz = { type: "quiz" as const, at: 0, results: Array.from({ length: 40 }, (_, i) => ({ topic: "p1", correct: i % 4 > 0 })) };
+    expect(courseStanding(defaultParams, [quiz])).toBe(0.75);
+    expect(courseStanding(defaultParams, [{ ...quiz, retake: true }])).toBeUndefined();
   });
 });
 

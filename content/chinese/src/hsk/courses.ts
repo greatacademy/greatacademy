@@ -23,9 +23,14 @@ const LEVELS: readonly { readonly courses: readonly CourseDef[]; readonly builds
   { courses: [levelSevenCourse, levelEightCourse, levelNineCourse], buildsOn: ["chinese-level-6"] },
 ];
 
-/** hskCourses are the seven HSK courses, HSK 1 to 6 and HSK 7–9. */
-export const hskCourses: readonly CourseDef[] = hskParts.map((part, i) => {
+/**
+ * hskCourses are the seven HSK courses, HSK 1 to 6 and HSK 7–9. Each builds on the HSK course before it too, which
+ * holds the level it builds on, so that the HSK courses make a sequence of their own.
+ */
+export const hskCourses: readonly CourseDef[] = hskParts.reduce<CourseDef[]>((courses, part, i) => {
   const levels = LEVELS[i];
   if (!levels) throw new Error(`hsk ${part.key}: no levels`);
-  return part.course(levels.courses, levels.buildsOn);
-});
+  const before = courses[i - 1];
+  courses.push(part.course(levels.courses, [...levels.buildsOn, ...(before ? [before.id] : [])]));
+  return courses;
+}, []);

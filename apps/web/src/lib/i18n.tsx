@@ -224,8 +224,7 @@ const messages = {
       before: "Taken",
       current: "Current",
       after: "Next",
-      note: "Your courses in order: those taken before, the current one, then those that follow on your route. Topics learned in one count in the others.",
-      route: (name: string) => `Route: ${name}`,
+      note: "Your courses in order: those taken before, the current one, then those to take next. Topics learned in one count in the others.",
     },
     shades: {
       label: "Learned",
@@ -502,12 +501,12 @@ const messages = {
     earlierAskGuardian: "Your guardian may change your course.",
     courseDone: "Course complete",
     courseDoneBody:
-      "Every topic of this course is learned, and no course follows it on your route; reviews keep it fresh. Another course can be chosen from the catalog.",
+      "Every topic of this course is learned, and no course follows it; reviews keep it fresh. Another course can be chosen from the catalog.",
     courseDoneBrowse: "Browse courses",
     courseDoneAsk: "Ask your guardian to choose another course.",
     promotedTitle: (course: string) => `On to ${course}`,
     promotedBody: (from: string) =>
-      `You finished ${from}, so you moved on to the next course on your route. Topics learned there count here too.`,
+      `You finished ${from}, so you moved on to the course that follows it. Topics learned there count here too.`,
     landing: {
       eyebrow: "Adaptive mathematics, from first grade to university",
       title: "Learn what you are ready for. Keep what you learn.",
@@ -845,8 +844,7 @@ const messages = {
       before: "学过",
       current: "当前",
       after: "接下来",
-      note: "按顺序排列的课程：以往学过的、当前的和路线上接下来的。在一门课中学会的知识点，在其他课中同样计为已学会。",
-      route: (name: string) => `路线：${name}`,
+      note: "按顺序排列的课程：以往学过的、当前的和接下来要学的。在一门课中学会的知识点，在其他课中同样计为已学会。",
     },
     shades: {
       label: "已学会",
@@ -1116,11 +1114,11 @@ const messages = {
     earlierSwitch: (title: string) => `从「${title}」开始`,
     earlierAskGuardian: "监护人可以为你换课。",
     courseDone: "课程完成",
-    courseDoneBody: "这门课的所有知识点都已学会，你的路线上也没有后续课程；复习会帮你保持记忆。可以从课程目录中另选一门课。",
+    courseDoneBody: "这门课的所有知识点都已学会，也没有后续课程；复习会帮你保持记忆。可以从课程目录中另选一门课。",
     courseDoneBrowse: "浏览课程",
     courseDoneAsk: "请监护人另选一门课。",
     promotedTitle: (course: string) => `进入${course}`,
-    promotedBody: (from: string) => `你学完了${from}，已进入路线上的下一门课。在那门课中学会的知识点，在这里同样计为已学会。`,
+    promotedBody: (from: string) => `你学完了${from}，已进入接下来的课程。在那门课中学会的知识点，在这里同样计为已学会。`,
     landing: {
       eyebrow: "自适应数学课程，从小学到大学",
       title: "学你正好能学的，记住你学过的。",
