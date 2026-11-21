@@ -22,6 +22,9 @@ export function heardText(response: string): string {
 /** FRAME_SECONDS is the length of one frame of the microphone. */
 const FRAME_SECONDS = 0.02;
 
+/** NO_FRAMES_MS is how long a recording waits for the microphone's first frame before it counts the microphone as stopped. */
+const NO_FRAMES_MS = 1500;
+
 type Phase = { kind: "idle" } | { kind: "recording"; started: number } | { kind: "recorded"; pcm: Uint8Array };
 
 /**
@@ -49,19 +52,33 @@ export function SpeechFlow(props: {
   let frames: Uint8Array[] = [];
   let recording = false;
   let gone = false;
+  // A microphone that went silent or stopped giving frames, as when another device took it or a call interrupted it,
+  // is opened afresh for the next recording instead of being kept.
+  let stale = false;
+
+  const drop = () => {
+    voice?.close();
+    voice = undefined;
+    stale = false;
+  };
 
   const stop = () => {
     recording = false;
     const pcm = pcmOf(frames);
     frames = [];
-    phase.set(pcm.byteLength === 0 ? { kind: "idle" } : { kind: "recorded", pcm });
+    if (pcm.byteLength > 0) return phase.set({ kind: "recorded", pcm });
+    drop();
+    phase.set({ kind: "idle" });
+    if (!problem()) problem.set(m().micFailed);
   };
 
   const timer = setInterval(() => {
     if (!recording) return;
     level.set(voice?.inputLevel() ?? 0);
     now.set(Date.now());
+    const p = phase();
     if (frames.length * FRAME_SECONDS >= max) stop();
+    else if (frames.length === 0 && p.kind === "recording" && Date.now() - p.started > NO_FRAMES_MS) stop();
   }, 50);
   // Leaving the screen closes the microphone and drops the recording.
   cleanup(() => {
@@ -75,6 +92,7 @@ export function SpeechFlow(props: {
     again.set("");
     error.set("");
     if (!voiceAvailable()) return problem.set(m().micUnsupported);
+    if (stale) drop();
     try {
       // The microphone stays open while the question is shown, so a recording can be played back through it.
       voice ??= await VoiceSession.capture({
@@ -83,7 +101,10 @@ export function SpeechFlow(props: {
         frame(pcm) {
           if (recording) frames.push(pcm);
         },
-        silent: (device) => problem.set(m().micSilent(device)),
+        silent: (device) => {
+          stale = true;
+          problem.set(m().micSilent(device));
+        },
       });
       if (gone) return voice.close();
       frames = [];
