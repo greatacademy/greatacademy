@@ -14,6 +14,7 @@ import { sessionMessage } from "./convert.ts";
 import { learningService } from "./learning.ts";
 import { localGateway, Registry } from "./registry.ts";
 import { type RunState, startRun } from "./runner.ts";
+import { appendTo } from "./sessions.ts";
 
 const compiled = compileMath();
 const registry = await Registry.open([localGateway(compiled)]);
@@ -360,6 +361,31 @@ describe("LearningService", () => {
     const stored = await loadState(db, learnerId, "math", initialState);
     expect(stored.seq).toBe(3);
     expect(replay((await registry.subject("math"))!.ctx, await events(db, learnerId, "math"), initialState)).toEqual(stored.state);
+  });
+
+  it("asks a multistep problem of a lesson part by part, as one question", async () => {
+    // Placed knowing everything but one topic, whose second knowledge point is a multistep problem in three parts.
+    const course = "prealgebra";
+    await learning.chooseCourse({ courseId: course });
+    const known = [...compiled.topics.keys()].filter((id) => id !== "composite-shapes");
+    const c = (await registry.course(course))!;
+    await appendTo(db, await learnerFor(db, "u1"), c, { type: "placed", at: now, course, known, tested: known });
+    const dash = await learning.getDashboard({ courseId: course });
+    const lesson = dash.tasks.find((t) => t.kind.case === "lesson" && t.kind.value.topicId === "composite-shapes")!;
+    let s = (await learning.startTask({ courseId: course, task: lesson })).session!;
+    const parts: { part: number; intro: boolean; example?: number }[] = [];
+    while (s.step.case === "question") {
+      const q = s.step.value;
+      if (q.problem?.parts) parts.push({ part: q.problem.part, intro: q.intro !== undefined, example: q.intro?.example?.problem?.part });
+      s = (await learning.submitAnswer({ sessionId: s.id, index: q.index, response: await correctAnswer(s) })).session!;
+    }
+    // The knowledge point's intro comes before the first part only, and its worked example is shown through its last part.
+    expect(parts.slice(0, 3)).toEqual([
+      { part: 1, intro: true, example: 3 },
+      { part: 2, intro: false },
+      { part: 3, intro: false },
+    ]);
+    expect(s.step.case === "result" && s.step.value).toMatchObject({ passed: true });
   });
 
   it("summarizes the profile", async () => {

@@ -222,9 +222,16 @@ async function question(
   judging: { readonly delayed: boolean; readonly failed: boolean } | undefined,
 ): Promise<MessageInitShape<typeof QuestionSchema>> {
   const ref = run.current!;
-  const intro = run.kind === "lesson" && run.lesson.kpAsked === 0 && !run.practice;
+  // A multistep problem's later parts are the same question, so only its first part comes after the intro.
+  const intro = run.kind === "lesson" && run.lesson.kpAsked === 0 && !run.practice && !ref.part;
   // The question and, when a knowledge point starts, its worked example come in one call.
-  const [problem, example] = await c.source.problems(intro ? [ref, { topic: run.topic, kp: run.lesson.kp, seed: run.example }] : [ref]);
+  const [problem, first] = await c.source.problems(intro ? [ref, { topic: run.topic, kp: run.lesson.kp, seed: run.example }] : [ref]);
+  // A multistep worked example shows its last part, whose prompt carries the earlier parts with their answers.
+  const steps = first?.part;
+  const example =
+    run.kind === "lesson" && steps && steps.index + 1 < steps.count
+      ? (await c.source.problems([{ topic: run.topic, kp: run.lesson.kp, seed: run.example, part: steps.count - 1 }]))[0]
+      : first;
   const q: MessageInitShape<typeof QuestionSchema> = {
     index: run.asked.length,
     problem: problemView(problem!),
