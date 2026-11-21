@@ -19,7 +19,8 @@ export interface Config {
   readonly siteUrl: string;
   /**
    * otherOrigins are origins trusted besides the site's, such as a phone's http://192.168.1.20:4700 in development,
-   * where an app packaged for the phone calls the site by this machine's address.
+   * where an app packaged for the phone calls the site by this machine's address; a site on this machine trusts its
+   * other name too (loopbackTwin).
    */
   readonly otherOrigins: readonly string[];
   /** databaseUrl is the PostgreSQL connection string. */
@@ -41,6 +42,18 @@ export interface Config {
 
 /** Env is an environment of strings, as process.env is. */
 export type Env = Readonly<Record<string, string | undefined>>;
+
+/**
+ * loopbackTwin is the other name of a site on this machine: http://127.0.0.1:4700 for http://localhost:4700 and the
+ * reverse, which a browser treats as another origin; none for a site elsewhere.
+ */
+export function loopbackTwin(site: string): string[] {
+  const url = new URL(site);
+  const twin = url.hostname === "localhost" ? "127.0.0.1" : url.hostname === "127.0.0.1" ? "localhost" : undefined;
+  if (!twin) return [];
+  url.hostname = twin;
+  return [url.origin];
+}
 
 /** readConfig reads the configuration from env; it throws on a missing required setting. */
 export function readConfig(env: Env): Config {
@@ -68,11 +81,14 @@ export function readConfig(env: Env): Config {
   return {
     port: Number(value("PORT") ?? "8080"),
     siteUrl: new URL(required("SITE_URL")).origin,
-    otherOrigins: (value("OTHER_ORIGINS") ?? "")
-      .split(",")
-      .map((o) => o.trim())
-      .filter((o) => o !== "")
-      .map((o) => new URL(o).origin),
+    otherOrigins: [
+      ...loopbackTwin(required("SITE_URL")),
+      ...(value("OTHER_ORIGINS") ?? "")
+        .split(",")
+        .map((o) => o.trim())
+        .filter((o) => o !== "")
+        .map((o) => new URL(o).origin),
+    ],
     databaseUrl: required("DATABASE_URL"),
     authSecret: required("BETTER_AUTH_SECRET"),
     aiKeysSecret: value("AI_KEYS_SECRET"),
