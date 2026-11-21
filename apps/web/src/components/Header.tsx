@@ -300,7 +300,12 @@ export function Header() {
                     <Menu.Item
                       className={menuItem}
                       onClick={async () => {
-                        await authClient.signOut();
+                        // A refused sign-out leaves the session; saying so beats a page that only looks signed out.
+                        const { error } = await authClient.signOut();
+                        if (error) {
+                          window.alert(m.signOutFailed);
+                          return;
+                        }
                         qc.clear();
                         await navigate({ to: "/" });
                       }}
