@@ -135,6 +135,10 @@ export function taskMessage(c: CourseEntry, task: Task, state: LearnerState): Me
             xp: t.xp,
             knowledgePoints: t.knowledgePoints.length,
             again: state.topics[t.id]?.reteach === true,
+            prerequisites: t.prerequisites.flatMap((id) => {
+              const p = c.subject.topics.get(id);
+              return p ? [{ topicId: id, title: text(p.title), status: standing(c, state, id) }] : [];
+            }),
             ...fromCourse(c, t.id),
           },
         },

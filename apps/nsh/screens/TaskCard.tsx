@@ -1,4 +1,4 @@
-import type { Task } from "@ga/proto/learning/v1/learning_pb";
+import { type Task, TopicStatus } from "@ga/proto/learning/v1/learning_pb";
 
 import { m, tx } from "../lib/i18n.ts";
 import { Action, Card, Muted, Quiet } from "../lib/ui.tsx";
@@ -37,6 +37,14 @@ export function describeTask(task: Task): { label: string; title: string; detail
   }
 }
 
+/** buildsOn lists the topics a lesson builds on, each known one checked, or nothing for another task. */
+export function buildsOn(task: Task): string {
+  const k = task.kind;
+  if (k.case !== "lesson" || k.value.prerequisites.length === 0) return "";
+  const known = (s: TopicStatus) => s === TopicStatus.LEARNED || s === TopicStatus.DUE || s === TopicStatus.ASSUMED;
+  return `${m().buildsOn}: ${k.value.prerequisites.map((p) => `${known(p.status) ? "✓" : "○"} ${tx(p.title)}`).join(" · ")}`;
+}
+
 /** fromCourse names the earlier course a foundation task comes from, as Math Academy labels such tasks. */
 export function fromCourse(task: Task): string {
   const k = task.kind;
@@ -56,6 +64,7 @@ export function TaskCard(props: { task: Task; action: string; busy?: boolean; on
           <If when={a().detail}>
             <Muted>{a().detail}</Muted>
           </If>
+          <If when={buildsOn(props.task)}>{(line) => <Rich source={line()} inline fontSize={13} />}</If>
           <Action label={props.action} disabled={props.busy} onPress={props.onStart} />
           <If when={props.extra}>
             <Quiet

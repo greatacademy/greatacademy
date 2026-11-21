@@ -30,13 +30,42 @@ export function TopicLegend({ topics }: { topics: TopicProgress[] }) {
   );
 }
 
+const known = (s: TopicStatus | undefined) => s === TopicStatus.LEARNED || s === TopicStatus.DUE || s === TopicStatus.ASSUMED;
+
+/** UnitCount says how many of a unit's topics are known. */
+function UnitCount({ ids, byTopic }: { ids: readonly string[]; byTopic: ReadonlyMap<string, TopicProgress> }) {
+  const { m } = useI18n();
+  return (
+    <span className="shrink-0 text-xs tabular-nums text-muted">
+      {m.unitLearned(ids.filter((id) => known(byTopic.get(id)?.status)).length, ids.length)}
+    </span>
+  );
+}
+
+/** UnitBar is a unit's progress at a glance: one segment per topic, in the course's order, in its status's color. */
+function UnitBar({ ids, byTopic }: { ids: readonly string[]; byTopic: ReadonlyMap<string, TopicProgress> }) {
+  return (
+    <div className="flex h-2 gap-px overflow-hidden rounded-full" aria-hidden>
+      {ids.map((id) => (
+        <span key={id} className={`h-full flex-1 ${statusStyle[byTopic.get(id)?.status ?? TopicStatus.LOCKED].dot}`} />
+      ))}
+    </div>
+  );
+}
+
 /** TopicMap shows every topic of a course with its status and estimated memory; with subject, topics link to their pages in it. */
 export function TopicMap({ course, topics, subject }: { course: Course; topics: TopicProgress[]; subject?: string }) {
   const { m, tx } = useI18n();
   const byTopic = new Map(topics.map((t) => [t.topicId, t]));
   return course.units.map((u) => (
     <Card key={tx(u.title)} className="space-y-4">
-      <h2 className="font-semibold">{tx(u.title)}</h2>
+      <div className="space-y-2">
+        <div className="flex items-baseline justify-between gap-3">
+          <h2 className="font-semibold">{tx(u.title)}</h2>
+          <UnitCount ids={u.modules.flatMap((mod) => mod.topics.map((t) => t.id))} byTopic={byTopic} />
+        </div>
+        <UnitBar ids={u.modules.flatMap((mod) => mod.topics.map((t) => t.id))} byTopic={byTopic} />
+      </div>
       {u.modules.map((mod) => (
         <div key={tx(mod.title)} className="space-y-2">
           <h3 className="text-sm text-muted">{tx(mod.title)}</h3>

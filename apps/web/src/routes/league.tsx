@@ -39,7 +39,10 @@ function League() {
             <Trophy size={26} weight="duotone" className="text-accent" /> {tierName(l.tier)}
           </h1>
         </div>
-        <div className="text-sm text-muted">{m.leagueEnds(ends)}</div>
+        <div className="text-right text-sm text-muted">
+          <div>{m.leagueEnds(ends)}</div>
+          <div className="font-medium text-ink">{m.daysLeft(Math.max(1, Math.ceil((Number(l.endsAt) - Date.now()) / 86_400_000)))}</div>
+        </div>
       </div>
 
       {!l.enabled && (
@@ -85,7 +88,25 @@ function League() {
               {l.rows.map((r) => {
                 const up = r.rank <= l.promote;
                 const down = r.rank > size - l.demote;
-                return (
+                // A line marks where the promotion zone ends and the demotion zone starts.
+                const line = (text: string, tone: string) => (
+                  <tr key={`${r.username}-line`} aria-hidden>
+                    <td colSpan={3} className="px-4 py-1">
+                      <div className={`flex items-center gap-2 text-[11px] font-medium ${tone}`}>
+                        <span className="h-px flex-1 border-t border-dashed border-current" />
+                        {text}
+                        <span className="h-px flex-1 border-t border-dashed border-current" />
+                      </div>
+                    </td>
+                  </tr>
+                );
+                const demoteStart = size - l.demote + 1;
+                return [
+                  l.demote > 0 &&
+                    r.rank === demoteStart &&
+                    demoteStart > l.promote &&
+                    demoteStart > 1 &&
+                    line(m.leagueDemoteZone, "text-warn"),
                   <tr key={r.username} className={`border-t border-line ${r.me ? "bg-accent-soft font-medium" : ""}`}>
                     <td className="px-4 py-2.5">{r.rank}</td>
                     <td className="px-2 py-2.5">
@@ -95,8 +116,9 @@ function League() {
                       {down && <span className="ml-2 text-xs font-normal text-warn">{m.leagueDemote}</span>}
                     </td>
                     <td className="px-4 py-2.5 text-right">{r.xp}</td>
-                  </tr>
-                );
+                  </tr>,
+                  l.promote > 0 && r.rank === l.promote && l.promote < size && line(m.leaguePromoteZone, "text-good"),
+                ];
               })}
             </tbody>
           </table>

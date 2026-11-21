@@ -47,7 +47,12 @@ export function Standings() {
                         <Text style={{ color: colors().ink, fontSize: 24, fontWeight: "600" }}>{tierName(l().tier)}</Text>
                       </View>
                     </View>
-                    <Muted>{m().leagueEnds(ends())}</Muted>
+                    <View style={{ alignItems: "flex-end", gap: 2 }}>
+                      <Muted>{m().leagueEnds(ends())}</Muted>
+                      <Text style={{ color: colors().ink, fontSize: 14, fontWeight: "500" }}>
+                        {m().daysLeft(Math.max(1, Math.ceil((Number(l().endsAt) - Date.now()) / 86_400_000)))}
+                      </Text>
+                    </View>
                   </View>
                   <If when={!l().enabled}>
                     <Card>
@@ -86,31 +91,46 @@ export function Standings() {
                           const up = () => r().rank <= l().promote;
                           const down = () => r().rank > size() - l().demote;
                           const weight = () => (r().me ? "500" : "400");
+                          // A line marks where the promotion zone ends and the demotion zone starts.
+                          const demoteStart = () => size() - l().demote + 1;
+                          const lineBefore = () =>
+                            l().demote > 0 && r().rank === demoteStart() && demoteStart() > l().promote && demoteStart() > 1;
+                          const lineAfter = () => l().promote > 0 && r().rank === l().promote && l().promote < size();
                           return (
-                            <View
-                              style={{
-                                alignItems: "center",
-                                backgroundColor: r().me ? colors()["accent-soft"] : "transparent",
-                                borderColor: colors().line,
-                                borderTopWidth: 1,
-                                flexDirection: "row",
-                                paddingHorizontal: 16,
-                                paddingVertical: 10,
-                              }}
-                            >
-                              <Text style={{ color: colors().ink, fontSize: 14, fontWeight: weight(), width: 56 }}>{String(r().rank)}</Text>
-                              <View style={{ alignItems: "baseline", flex: 1, flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
-                                <Text style={{ color: colors().ink, fontSize: 14, fontWeight: weight() }}>{r().username}</Text>
-                                <If when={r().me}>
-                                  <Text style={{ color: colors().muted, fontSize: 14, marginLeft: -4 }}>{`(${m().leagueYou})`}</Text>
-                                </If>
-                                <If when={up() || down()}>
-                                  <Text style={{ color: up() ? colors().good : colors().warn, fontSize: 12 }}>
-                                    {up() ? m().leaguePromote : m().leagueDemote}
-                                  </Text>
-                                </If>
+                            <View>
+                              <If when={lineBefore()}>
+                                <ZoneLine text={m().leagueDemoteZone} color={colors().warn} />
+                              </If>
+                              <View
+                                style={{
+                                  alignItems: "center",
+                                  backgroundColor: r().me ? colors()["accent-soft"] : "transparent",
+                                  borderColor: colors().line,
+                                  borderTopWidth: 1,
+                                  flexDirection: "row",
+                                  paddingHorizontal: 16,
+                                  paddingVertical: 10,
+                                }}
+                              >
+                                <Text style={{ color: colors().ink, fontSize: 14, fontWeight: weight(), width: 56 }}>
+                                  {String(r().rank)}
+                                </Text>
+                                <View style={{ alignItems: "baseline", flex: 1, flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+                                  <Text style={{ color: colors().ink, fontSize: 14, fontWeight: weight() }}>{r().username}</Text>
+                                  <If when={r().me}>
+                                    <Text style={{ color: colors().muted, fontSize: 14, marginLeft: -4 }}>{`(${m().leagueYou})`}</Text>
+                                  </If>
+                                  <If when={up() || down()}>
+                                    <Text style={{ color: up() ? colors().good : colors().warn, fontSize: 12 }}>
+                                      {up() ? m().leaguePromote : m().leagueDemote}
+                                    </Text>
+                                  </If>
+                                </View>
+                                <Text style={{ color: colors().ink, fontSize: 14, fontWeight: weight() }}>{String(r().xp)}</Text>
                               </View>
-                              <Text style={{ color: colors().ink, fontSize: 14, fontWeight: weight() }}>{String(r().xp)}</Text>
+                              <If when={lineAfter()}>
+                                <ZoneLine text={m().leaguePromoteZone} color={colors().good} />
+                              </If>
                             </View>
                           );
                         }}
@@ -124,5 +144,16 @@ export function Standings() {
         </Loaded>
       </View>
     </NavPage>
+  );
+}
+
+/** ZoneLine is the dashed line in the standings where the promotion zone ends or the demotion zone starts. */
+function ZoneLine(props: { text: string; color: string }) {
+  return (
+    <View style={{ alignItems: "center", flexDirection: "row", gap: 8, paddingHorizontal: 16, paddingVertical: 4 }}>
+      <View style={{ backgroundColor: props.color, flex: 1, height: 1, opacity: 0.6 }} />
+      <Text style={{ color: props.color, fontSize: 11, fontWeight: "500" }}>{props.text}</Text>
+      <View style={{ backgroundColor: props.color, flex: 1, height: 1, opacity: 0.6 }} />
+    </View>
   );
 }

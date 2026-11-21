@@ -248,6 +248,8 @@ message LessonTask {
   optional ga.common.v1.Text from_course = 5;
   // again marks a learned topic taught again, because a lesson that builds on it showed it is not held.
   bool again = 6;
+  // prerequisites are the topics the lesson builds on directly, with the learner's standing on each.
+  repeated TopicLink prerequisites = 7;
 }
 
 message ReviewTask {

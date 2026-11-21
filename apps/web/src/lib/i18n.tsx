@@ -359,6 +359,9 @@ const messages = {
     leagueYou: "you",
     leaguePromote: "Move up",
     leagueDemote: "Move down",
+    leaguePromoteZone: "Promotion zone",
+    leagueDemoteZone: "Demotion zone",
+    unitLearned: (learned: number, total: number) => `${learned} / ${total} learned`,
     leagueLast: {
       promoted: (rank: number, tier: string) => `Last week you came ${rank} and moved up from ${tier}.`,
       stayed: (rank: number, tier: string) => `Last week you came ${rank} and stayed in ${tier}.`,
@@ -944,6 +947,9 @@ const messages = {
     leagueYou: "你",
     leaguePromote: "升段",
     leagueDemote: "降段",
+    leaguePromoteZone: "升段区",
+    leagueDemoteZone: "降段区",
+    unitLearned: (learned: number, total: number) => `已学会 ${learned} / ${total}`,
     leagueLast: {
       promoted: (rank: number, tier: string) => `上周你排第 ${rank} 名，从${tier}升段。`,
       stayed: (rank: number, tier: string) => `上周你排第 ${rank} 名，留在${tier}。`,

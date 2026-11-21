@@ -686,8 +686,9 @@ test("shows the progress map and the history of a course from Progress", async (
   expect(app.texts()).toContain("Linear equations");
   expect(app.texts()).toContain("Learned 1");
   await app.press("text:History");
-  await app.waitFor("text:+10 XP");
+  await app.waitFor("text:10 of 10 XP");
   expect(app.texts()).toContain("3 of 3 correct");
+  expect(app.texts()).toContain("10 XP");
 });
 
 test("lists the courses by shelf as the web does, the learner's with how far they are, and searches them", async () => {

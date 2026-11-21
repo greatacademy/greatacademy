@@ -1,5 +1,5 @@
-import type { Task } from "@ga/proto/learning/v1/learning_pb";
-import { ArrowsClockwise, Article, BookOpen, Compass, Exam } from "@phosphor-icons/react";
+import { type Task, type TopicLink, TopicStatus } from "@ga/proto/learning/v1/learning_pb";
+import { ArrowsClockwise, Article, BookOpen, CheckCircle, Circle, Compass, Exam } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
 
 import { useI18n } from "../lib/i18n.tsx";
@@ -38,6 +38,7 @@ export function TaskCard({
   let title: ReactNode;
   let detail: string;
   let xp = 0;
+  let builds: readonly TopicLink[] = [];
   // A foundation names the earlier course it comes from.
   const from = k.case === "lesson" || k.case === "review" ? tx(k.value.fromCourse) : "";
   switch (k.case) {
@@ -52,6 +53,7 @@ export function TaskCard({
       label = k.value.again ? m.lessonAgain : m.lesson;
       title = <Markdown source={tx(k.value.title)} inline />;
       detail = k.value.again ? m.lessonAgainBody : m.kps(k.value.knowledgePoints);
+      builds = k.value.prerequisites;
       xp = k.value.xp;
       break;
     case "review":
@@ -92,6 +94,24 @@ export function TaskCard({
         </div>
         <div className="font-semibold">{title}</div>
         {detail && <p className="text-sm text-muted">{detail}</p>}
+        {builds.length > 0 && (
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted">
+            <span>{m.buildsOn}:</span>
+            {builds.map((b) => {
+              const known = b.status === TopicStatus.LEARNED || b.status === TopicStatus.DUE || b.status === TopicStatus.ASSUMED;
+              return (
+                <span key={b.topicId} className="inline-flex min-w-0 items-center gap-1">
+                  {known ? (
+                    <CheckCircle size={14} weight="fill" className="shrink-0 text-good" />
+                  ) : (
+                    <Circle size={14} className="shrink-0" />
+                  )}
+                  <Markdown source={tx(b.title)} inline />
+                </span>
+              );
+            })}
+          </div>
+        )}
         {extra}
       </div>
       <Button

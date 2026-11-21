@@ -737,6 +737,13 @@ export declare type LessonTask = Message<"ga.learning.v1.LessonTask"> & {
    * @generated from field: bool again = 6;
    */
   again: boolean;
+
+  /**
+   * prerequisites are the topics the lesson builds on directly, with the learner's standing on each.
+   *
+   * @generated from field: repeated ga.learning.v1.TopicLink prerequisites = 7;
+   */
+  prerequisites: TopicLink[];
 };
 
 /**

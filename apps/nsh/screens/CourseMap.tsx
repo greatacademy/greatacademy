@@ -47,6 +47,10 @@ function chipColors(key: StatusKey): { bg: string; fg: string } {
   return by[key];
 }
 
+/** unitIds are a unit's topics in the course's order. */
+const unitIds = (unit: { modules: readonly { topics: readonly { id: string }[] }[] }) =>
+  unit.modules.flatMap((mod) => mod.topics.map((t) => t.id));
+
 /** TopicBox is one topic of the map, as on the web: its status dot, its title, the memory of a learned topic and a chip. */
 function TopicBox(props: { title: string; progress: TopicProgress | undefined; width: "49%" | "100%" }) {
   const key = (): StatusKey => statusKeys[props.progress?.status ?? TopicStatus.LOCKED] ?? "locked";
@@ -161,7 +165,30 @@ export function MapBody(props: { map: MapData }) {
       <List viewport="parent" each={props.map.course.course?.units ?? []} estimatedItemSize={600} contentStyle={{ gap: 12 }}>
         {(unit) => (
           <Card>
-            <Text style={{ color: colors().ink, fontSize: 17, fontWeight: "600" }}>{tx(unit().title)}</Text>
+            <View style={{ alignItems: "baseline", flexDirection: "row", gap: 12, justifyContent: "space-between" }}>
+              <Text style={{ color: colors().ink, flex: 1, fontSize: 17, fontWeight: "600" }}>{tx(unit().title)}</Text>
+              <Muted>
+                {m().unitLearned(
+                  unitIds(unit()).filter((id) => {
+                    const s = byTopic().get(id)?.status;
+                    return s === TopicStatus.LEARNED || s === TopicStatus.DUE || s === TopicStatus.ASSUMED;
+                  }).length,
+                  unitIds(unit()).length,
+                )}
+              </Muted>
+            </View>
+            <View style={{ borderRadius: 4, flexDirection: "row", gap: 1, height: 8, marginTop: 6, overflow: "hidden" }}>
+              <Each of={unitIds(unit())}>
+                {(id) => (
+                  <View
+                    style={{
+                      backgroundColor: statusColor(statusKeys[byTopic().get(id())?.status ?? TopicStatus.LOCKED] ?? "locked"),
+                      flex: 1,
+                    }}
+                  />
+                )}
+              </Each>
+            </View>
             <Each of={unit().modules}>
               {(module) => (
                 <View style={{ gap: 8, marginTop: 8 }}>

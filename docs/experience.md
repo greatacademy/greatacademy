@@ -28,7 +28,7 @@ This document describes how Great Academy presents itself to learners and guardi
 | Weekly goals, pace and forecast | Guardians |
 | End date | League, on the XP of all subjects |
 
-XP is earned in a subject and counted there. The account's total is the sum, which the league and the account page show.
+XP is earned in a subject and counted there. The account's total is the sum, which the league and the account page show. The league page ranks the week's learners of the tier, with a line where the promotion zone ends and one where the demotion zone starts, and says how many days the week has left.
 
 **Names.** Every account, a child's included, has a name and a username, both asked at sign-up or when a guardian adds a child, and both changed in Profile. The name is private: only the person and their guardians see it. The username signs in, as the email address does, and is the only name the league shows; a child's account, which has no email address, signs in with it alone. The league's settings hold only whether to take part.
 
@@ -45,6 +45,8 @@ Each subject has three pages, the same on the web and in the apps:
 A topic's page and a session belong to the subject of their course and show its chip.
 
 **A task's result** shows the score and the XP earned against the task's full XP, then each question: its topic, its knowledge point (a lesson's questions stand under their knowledge points' titles), the time taken, whether it was late on a quiz, the answer given and, when wrong, the correct one and the solution. A multistep problem shows "Part 2 of 3" while it is asked and is listed part by part, each part under the topic it practices. A lesson's result lists the topics it builds on, each marked known or not; a failed lesson's result names, as links, the key prerequisites to be reviewed before it comes back. The history opens the same results.
+
+**The history** groups finished tasks by day, newest first, each day with the XP it earned, and shows each task's XP against its full XP, a negative one in red. **A lesson's card** lists the topics it builds on, each marked known or not. **The topic map** heads each unit with how many of its topics are learned and a bar of one segment per topic, in the course's order and its status's color.
 
 **The subject switcher** opens from the chip in the header. It lists the learner's subjects, each with its current course and today's XP against its goal, and offers the subjects not yet started, which lead to their catalog. Its last entry is the **Course catalog**, so named to tell it apart from a subject's Course page.
 
