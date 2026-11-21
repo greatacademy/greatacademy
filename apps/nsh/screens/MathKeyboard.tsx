@@ -110,6 +110,20 @@ const open = signal(false);
 const height = signal(0);
 // The keyboard's web view keeps its last height while it slides away, so that the slide stays in sight.
 const tall = signal(300);
+// The keyboard's web view is seen only while the keyboard is up or sliding away: a web view is opaque on some
+// platforms, and would otherwise hide the step's actions under it while the keyboard is down.
+const seen = signal(false);
+let hiding: ReturnType<typeof setTimeout> | undefined;
+
+/** HIDE_MS is how long the keyboard takes to slide away, as its style says, with a little to spare. */
+const HIDE_MS = 320;
+
+function setOpen(on: boolean) {
+  open.set(on);
+  clearTimeout(hiding);
+  if (on) seen.set(true);
+  else hiding = setTimeout(() => seen.set(false), HIDE_MS);
+}
 
 /** mathKeyboardHeight is how much of the bottom of the screen the math keyboard covers, 0 while it is hidden. */
 export const mathKeyboardHeight = computed(() => (open() ? height() : 0));
@@ -172,6 +186,7 @@ export function MathKeyboard() {
         bottom: 0,
         height: tall(),
         left: 0,
+        opacity: seen() ? 1 : 0,
         pointerEvents: open() ? "auto" : "none",
         position: "absolute",
         right: 0,
@@ -188,7 +203,7 @@ export function MathKeyboard() {
         onMessage={({ data }) => {
           const message = JSON.parse(data) as { kb?: unknown; keypad?: number; open?: boolean };
           if (message.kb) fieldView?.postMessage(JSON.stringify(message.kb));
-          if (message.open !== undefined) open.set(message.open);
+          if (message.open !== undefined) setOpen(message.open);
           if (message.keypad !== undefined) {
             if (message.keypad > 0) tall.set(message.keypad);
             height.set(message.keypad);
