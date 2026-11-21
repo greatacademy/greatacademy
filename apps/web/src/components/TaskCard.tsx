@@ -44,8 +44,8 @@ export function TaskCard({
     case "diagnostic":
       icon = <Compass size={22} weight="duotone" />;
       label = m.diagnostic;
-      title = m.diagnostic;
-      detail = m.diagnosticBody(k.value.maxQuestions);
+      title = k.value.supplemental ? m.supplemental : m.diagnostic;
+      detail = k.value.supplemental ? m.supplementalBody(k.value.topics, k.value.maxQuestions) : m.diagnosticBody(k.value.maxQuestions);
       break;
     case "lesson":
       icon = <BookOpen size={22} weight="duotone" />;

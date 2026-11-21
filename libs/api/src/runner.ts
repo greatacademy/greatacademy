@@ -19,6 +19,7 @@ import {
   reviewPlan,
   startDiagnostic,
   startLesson,
+  supplementalCandidates,
   type Task,
   type TaskEvent,
 } from "@ga/engine";
@@ -91,7 +92,12 @@ export type RunState =
       readonly retake?: boolean;
     })
   | (RunBase & { readonly kind: "reading"; readonly passage: string; readonly questions: number })
-  | (RunBase & { readonly kind: "diagnostic"; readonly diagnostic: DiagnosticProgress });
+  | (RunBase & {
+      readonly kind: "diagnostic";
+      readonly diagnostic: DiagnosticProgress;
+      /** supplemental marks a diagnostic of the gaps below what the learner knows. */
+      readonly supplemental?: boolean;
+    });
 
 /**
  * newSeed draws a seed for a problem instance. Further questions of the same
@@ -148,10 +154,11 @@ export function startRun(c: CourseEntry, task: Task, state: LearnerState, now: n
       return { kind: "reading", passage: task.passage, questions, ...served, current: { topic: task.passage, kp: 0, seed: newSeed(rng) } };
     }
     case "diagnostic": {
-      const diagnostic = startDiagnostic(diagnosticCandidates(c.planner, state));
+      const supplemental = task.supplemental === true;
+      const diagnostic = startDiagnostic(supplemental ? supplementalCandidates(c.planner, state) : diagnosticCandidates(c.planner, state));
       const first = nextDiagnosticTopic(c.ctx.graph, diagnostic);
       if (!first) throw new Error("the course has nothing to diagnose");
-      return { kind: "diagnostic", diagnostic, ...served, current: diagnosticRef(c, first, rng) };
+      return { kind: "diagnostic", diagnostic, ...(supplemental && { supplemental }), ...served, current: diagnosticRef(c, first, rng) };
     }
   }
 }
@@ -327,7 +334,15 @@ async function advance(
       const topic = nextDiagnosticTopic(c.ctx.graph, diagnostic);
       if (!topic) {
         const placement = finishDiagnostic(c.planner, diagnostic);
-        return finish(next, { type: "placed", at: now, course: c.id, ...placement }, true, placement.known.length);
+        const event: TaskEvent = {
+          type: "placed",
+          at: now,
+          course: c.id,
+          ...placement,
+          ...(run.supplemental && { supplemental: true }),
+          checked: diagnostic.candidates,
+        };
+        return finish(next, event, true, placement.known.length);
       }
       return { run: { ...next, servedAt: now, current: diagnosticRef(c, topic, rng) }, problem, verdict, skipped };
     }
@@ -346,6 +361,6 @@ export function runTask(run: RunState): Task {
     case "reading":
       return { kind: "reading", passage: run.passage };
     case "diagnostic":
-      return { kind: "diagnostic" };
+      return { kind: "diagnostic", ...(run.supplemental && { supplemental: true }) };
   }
 }

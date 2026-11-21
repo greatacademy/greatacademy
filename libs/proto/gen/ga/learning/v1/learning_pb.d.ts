@@ -679,6 +679,19 @@ export declare type DiagnosticTask = Message<"ga.learning.v1.DiagnosticTask"> & 
    * @generated from field: int32 max_questions = 1;
    */
   maxQuestions: number;
+
+  /**
+   * supplemental is true for a diagnostic of the topics a placed learner has not been asked about, which a change of
+   * the course added below what they know; topics counts them.
+   *
+   * @generated from field: bool supplemental = 2;
+   */
+  supplemental: boolean;
+
+  /**
+   * @generated from field: int32 topics = 3;
+   */
+  topics: number;
 };
 
 /**

@@ -92,6 +92,10 @@ const messages = {
     correct: "Correct!",
     correctAnswer: "Correct answer",
     diagnostic: "Placement diagnostic",
+    supplemental: "Check new foundations",
+    supplementalBody: (n: number, q: number) =>
+      `The course now builds on ${n} topics below what you know that you have not been asked about. Up to ${q} questions find which you know, so you are not taught them again.`,
+    skipSupplemental: "Skip and learn these topics",
     diagnosticBody: (n: number) =>
       `Up to ${n} questions find which topics you already know, so the course starts where you are. Answer "I don't know" rather than guess.`,
     dontKnow: "I don't know",
@@ -569,6 +573,10 @@ const messages = {
     correct: "正确！",
     correctAnswer: "正确答案",
     diagnostic: "入学诊断",
+    supplemental: "补充诊断",
+    supplementalBody: (n: number, q: number) =>
+      `课程现在建立在 ${n} 个你已掌握内容之下、尚未问过你的知识点之上。最多 ${q} 道题弄清你会哪些，免得重学。`,
+    skipSupplemental: "跳过，学习这些知识点",
     diagnosticBody: (n: number) => `最多 ${n} 道题，找出你已经掌握的知识点，让课程从合适的地方开始。不会就选"我不会"，不要猜。`,
     dontKnow: "我不会",
     due: "待复习",

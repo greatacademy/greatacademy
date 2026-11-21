@@ -233,6 +233,10 @@ message Task {
 message DiagnosticTask {
   // max_questions is the most questions the diagnostic asks.
   int32 max_questions = 1;
+  // supplemental is true for a diagnostic of the topics a placed learner has not been asked about, which a change of
+  // the course added below what they know; topics counts them.
+  bool supplemental = 2;
+  int32 topics = 3;
 }
 
 message LessonTask {

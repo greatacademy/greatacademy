@@ -41,6 +41,8 @@ function taskLabel(session: Session): string {
       return m().reading;
     case "quiz":
       return session.task.kind.value.retake ? m().quizRetake : m().quiz;
+    case "diagnostic":
+      return session.task.kind.value.supplemental ? m().supplemental : m().diagnostic;
     default:
       return m().diagnostic;
   }

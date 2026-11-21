@@ -91,7 +91,7 @@ export async function reopenPlacement(db: Db, learnerId: string, courseId: strin
     .where(and(eq(enrollment.learnerId, learnerId), eq(enrollment.courseId, courseId)));
 }
 
-/** placedEvent gives the event that ended a course's diagnostic for a learner, if it ended. */
+/** placedEvent gives the event that ended a course's diagnostic for a learner, if it ended; a supplemental diagnostic is not that. */
 export async function placedEvent(
   db: Db,
   learnerId: string,
@@ -101,7 +101,15 @@ export async function placedEvent(
   const [row] = await db
     .select({ data: event.data })
     .from(event)
-    .where(and(eq(event.learnerId, learnerId), eq(event.subjectId, subjectId), eq(event.type, "placed"), eq(event.courseId, courseId)))
+    .where(
+      and(
+        eq(event.learnerId, learnerId),
+        eq(event.subjectId, subjectId),
+        eq(event.type, "placed"),
+        eq(event.courseId, courseId),
+        sql`not coalesce((${event.data}->>'supplemental')::boolean, false)`,
+      ),
+    )
     .orderBy(desc(event.seq))
     .limit(1);
   return row?.data.type === "placed" ? row.data : undefined;

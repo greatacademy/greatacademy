@@ -20,6 +20,8 @@ import {
   quizPlan,
   remedialTopics,
   retakeEvent,
+  supplementalCandidates,
+  supplementalDue,
 } from "./tasks.ts";
 
 const T0 = Date.UTC(2026, 0, 1);
@@ -153,6 +155,34 @@ describe("reviews", () => {
   it("reads reviews recorded without a verdict as passed with two of three", () => {
     expect(reviewResult({ correct: 1, total: 3 })).toBe(0);
     expect(reviewResult({ correct: 2, total: 3 })).toBeCloseTo(2 / 3);
+  });
+});
+
+describe("supplemental diagnostic", () => {
+  it("asks about the gaps below what a diagnosed learner knows, once", () => {
+    // The course gained a and b below c and d, which the learner was placed in.
+    const s = learnedState(["c", "d"]);
+    expect(supplementalCandidates(planner, s)).toEqual(["a", "b"]);
+    expect(nextTasks(planner, s, T0)[0]).toEqual({ kind: "diagnostic", supplemental: true });
+    const placed = applyEvent(ctx, s, {
+      type: "placed",
+      at: T0,
+      course: "course",
+      known: ["a"],
+      tested: ["a"],
+      missed: ["b"],
+      supplemental: true,
+      checked: ["a", "b"],
+    });
+    expect(placed.topics.a?.learned).toBe(true);
+    expect(placed.topics.b).toBeUndefined();
+    expect(supplementalCandidates(planner, placed)).toEqual([]);
+    expect(nextTasks(planner, placed, T0)[0]).toMatchObject({ kind: "lesson", topic: "b" });
+  });
+  it("leaves alone the topics a diagnostic was about, a single gap and learners not yet diagnosed", () => {
+    expect(supplementalCandidates(planner, { ...learnedState(["c", "d"]), supplemented: ["a", "b"] })).toEqual([]);
+    expect(supplementalDue(planner, learnedState(["b"]))).toBe(false);
+    expect(supplementalCandidates(planner, { ...learnedState(["c"]), diagnosed: [] })).toEqual([]);
   });
 });
 

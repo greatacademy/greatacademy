@@ -123,7 +123,7 @@ function taskTitle(
     case "quiz":
       return { label: m.quiz, title: k.value.retake ? m.quizRetake : m.quiz };
     default:
-      return { label: m.diagnostic, title: m.diagnostic };
+      return { label: m.diagnostic, title: k?.case === "diagnostic" && k.value.supplemental ? m.supplemental : m.diagnostic };
   }
 }
 

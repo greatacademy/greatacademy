@@ -9,6 +9,7 @@ import {
   type LearnerState,
   quizTimeLimitMs,
   reviewXp,
+  supplementalCandidates,
   type Task,
 } from "@ga/engine";
 import type { FigureSchema } from "@ga/proto/common/v1/figure_pb";
@@ -111,8 +112,13 @@ function fromCourse(c: CourseEntry, topic: string): { fromCourse?: ReturnType<ty
 export function taskMessage(c: CourseEntry, task: Task, state: LearnerState): MessageInitShape<typeof TaskSchema> {
   const topic = (id: string) => c.subject.topics.get(id)!;
   switch (task.kind) {
-    case "diagnostic":
-      return { kind: { case: "diagnostic", value: { maxQuestions: diagnosticLength(diagnosticCandidates(c.planner, state).length) } } };
+    case "diagnostic": {
+      const supplemental = task.supplemental === true;
+      const candidates = supplemental ? supplementalCandidates(c.planner, state) : diagnosticCandidates(c.planner, state);
+      return {
+        kind: { case: "diagnostic", value: { maxQuestions: diagnosticLength(candidates.length), supplemental, topics: candidates.length } },
+      };
+    }
     case "lesson": {
       const t = topic(task.topic);
       return {

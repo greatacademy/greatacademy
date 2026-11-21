@@ -9,7 +9,9 @@ export function describeTask(task: Task): { label: string; title: string; detail
   const k = task.kind;
   switch (k.case) {
     case "diagnostic":
-      return { label: m().diagnostic, title: m().diagnostic, detail: m().diagnosticBody(k.value.maxQuestions), xp: 0 };
+      return k.value.supplemental
+        ? { label: m().diagnostic, title: m().supplemental, detail: m().supplementalBody(k.value.topics, k.value.maxQuestions), xp: 0 }
+        : { label: m().diagnostic, title: m().diagnostic, detail: m().diagnosticBody(k.value.maxQuestions), xp: 0 };
     case "lesson":
       return { label: m().lesson, title: tx(k.value.title), detail: m().kps(k.value.knowledgePoints), xp: k.value.xp };
     case "review": {
@@ -51,7 +53,13 @@ export function TaskCard(props: { task: Task; action: string; busy?: boolean; on
           </If>
           <Action label={props.action} disabled={props.busy} onPress={props.onStart} />
           <If when={props.extra}>
-            <Quiet label={m().skipDiagnostic} disabled={props.busy} onPress={() => props.extra?.()} />
+            <Quiet
+              label={
+                props.task.kind.case === "diagnostic" && props.task.kind.value.supplemental ? m().skipSupplemental : m().skipDiagnostic
+              }
+              disabled={props.busy}
+              onPress={() => props.extra?.()}
+            />
           </If>
         </Card>
       )}

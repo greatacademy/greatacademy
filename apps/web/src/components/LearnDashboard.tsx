@@ -250,7 +250,7 @@ export function LearnDashboard({ courseId, subjectId }: { courseId: string; subj
                   extra={
                     task.kind.case === "diagnostic" ? (
                       <Button variant="ghost" className="-ml-4 mt-1" onClick={() => skip.mutate()} disabled={skip.isPending}>
-                        {m.skipDiagnostic}
+                        {task.kind.value.supplemental ? m.skipSupplemental : m.skipDiagnostic}
                       </Button>
                     ) : undefined
                   }

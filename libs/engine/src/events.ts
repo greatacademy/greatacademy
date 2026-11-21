@@ -17,6 +17,10 @@ export type TaskEvent =
       readonly tested: readonly string[];
       /** missed are the topics answered wrongly; absent when none were. */
       readonly missed?: readonly string[];
+      /** supplemental marks a supplemental diagnostic (supplementalCandidates). */
+      readonly supplemental?: boolean;
+      /** checked lists the topics the diagnostic was about, placed or not, which no supplemental diagnostic asks again. */
+      readonly checked?: readonly string[];
     }
   /** lesson ends a lesson, passed or failed. */
   | {
@@ -104,7 +108,7 @@ export function applyEvent(ctx: EngineContext, state: LearnerState, e: EngineEve
  */
 function startOver(state: LearnerState, e: StartOverEvent): LearnerState {
   if (e.type === "reset") {
-    const { lastQuiz: _, ...rest } = state;
+    const { lastQuiz: _, supplemented: __, ...rest } = state;
     return { ...rest, topics: {}, diagnosed: [], reviewsSinceLesson: 0, blowOffs: 0 };
   }
   const forgotten = new Set(e.forgotten);
@@ -119,7 +123,8 @@ function applyTask(ctx: EngineContext, state: LearnerState, e: TaskEvent): Learn
     case "placed": {
       const tested = new Set(e.tested);
       const diagnosed = state.diagnosed.includes(e.course) ? state.diagnosed : [...state.diagnosed, e.course];
-      let next: LearnerState = { ...state, diagnosed };
+      const supplemented = e.checked ? [...new Set([...(state.supplemented ?? []), ...e.checked])] : state.supplemented;
+      let next: LearnerState = { ...state, diagnosed, ...(supplemented && { supplemented }) };
       for (const t of e.known) {
         if (next.topics[t]?.learned || !g.graph.topics.has(t)) continue;
         next = setTopic(next, t, newTopicState(e.at, p.placedRepNum + (tested.has(t) ? 0.5 : 0), 1, true));

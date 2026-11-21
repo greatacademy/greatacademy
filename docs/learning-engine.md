@@ -18,7 +18,7 @@ state = replay(ctx, events, initialState);   // applyEvent, one event at a time
 
 | Event | Recorded when | Data |
 | :--- | :--- | :--- |
-| `placed` | A course's diagnostic ends (or is skipped) | The course; topics placed as known; which of them were asked directly |
+| `placed` | A course's diagnostic ends (or is skipped) | The course; topics placed as known; which of them were asked directly; the topics it was about; whether it was supplemental |
 | `lesson` | A lesson ends | Topic, passed or failed, questions asked and answered correctly, whether it was blown off (§10) |
 | `review` | A review ends | Topic, correct answers, questions, whether it passed, whether it was blown off |
 | `quiz` | A quiz ends | One result per question, by topic, and whether it was late; whether it was a retake, whether it was blown off |
@@ -79,7 +79,7 @@ Topics on which the learner is **slow** (speed < 1) receive **no implicit credit
 
 `nextTasks` offers up to six tasks:
 
-1. Until the learner is placed in the course, the **diagnostic**, alone (§9).
+1. Until the learner is placed in the course, the **diagnostic**, alone (§9); after that, first, a **supplemental diagnostic** when one is due (§9).
 2. A **quiz**, when one is due (§7).
 3. A **passage to read**, when reading is below its share of the XP (below).
 4. **Reviews** and **lessons** from the frontier, alternating, reviews first; after four reviews in a row, a lesson first. The reviews are the remedial reviews, of the topics missed on the last quiz (§7) and of the key prerequisites that failed lessons wait for (§3), then the compressed reviews of the other due topics.
@@ -147,6 +147,7 @@ Each correct answer is an explicit repetition with result 0.5, and each wrong an
 | `minSpeed`, `maxSpeed` | 0.5, 1.5 | Speed scales credit; the bounds keep one lesson from dominating |
 | `placedRepNum` | 1 (+0.5 if asked) | Placed topics are known but not recently practiced; a direct correct answer is stronger evidence |
 | `inferFoundationsMinAnswers` | 8 | Fewer answers say too little about the foundations as a whole |
+| `supplementalMinTopics` | 2 | One gap is cheaper to teach than to ask about |
 | `inferFoundationsRate` | 0.85 | Admits a learner who knows the foundations and slips now and then; a learner missing half of them scores about 0.5 |
 | `adviceMinTopics` | 5 | Fewer topics of an earlier course say too little to send a learner back to it |
 | `adviceWeakShare` | 0.3 | Missing almost a third of an earlier course's part in the foundations is more than lessons on the way can fill comfortably |
@@ -207,6 +208,8 @@ The next question is the unresolved topic that maximizes min(topics resolved if 
 Course topics left unresolved count as **not known**: placement errs on the side of teaching, since a lesson on something already known costs minutes, while a gap costs much more later. Foundations are different: a broad course has hundreds, and no affordable number of questions resolves them, so a learner who knows them all would sit through hundreds of lessons they do not need. Foundations left unresolved are therefore placed as known when the answers on foundations show the learner has them: at least `inferFoundationsMinAnswers` answers, of which at least `inferFoundationsRate` are correct. Otherwise they count as not known, and a foundation an answer showed is not known is never placed.
 
 Placed topics start at `placedRepNum`, so they come back for review soon and a lucky placement is corrected by the first review.
+
+**Supplemental diagnostic.** A course or the graph can change under a placed learner: a course gains foundations, or a topic gains a prerequisite. The learner then has gaps: topics in scope not known and never attempted, below a topic they know. Each `placed` event lists the topics its diagnostic was about (`checked`), and the state keeps them (`supplemented`). When at least `supplementalMinTopics` gaps were never part of a diagnostic, the first task is a **supplemental diagnostic** over just them, with the same questions and rules; its `placed` event is marked `supplemental`. Skipping it places nothing and marks the gaps as asked, so they are taught. It does not replace the course's diagnostic report.
 
 **Starting over.** The supervisor can start a subject over in two ways ([Experience §5](experience.md#5-supervision)), each recorded as an event so that replaying gives the same state:
 

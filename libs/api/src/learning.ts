@@ -28,6 +28,7 @@ import {
 import {
   courseFinished,
   courseProgress,
+  diagnosticCandidates,
   diagnosticDue,
   frontier,
   isDue,
@@ -38,6 +39,8 @@ import {
   placementAdvice,
   remainingXp,
   retakeEvent,
+  supplementalCandidates,
+  supplementalDue,
   type Task,
 } from "@ga/engine";
 import { criterionKey } from "@ga/judge";
@@ -205,7 +208,8 @@ function sameTask(req: TaskMessage | undefined, task: Task): boolean {
   if (!k?.case || k.case !== task.kind) return false;
   if (k.case === "reading") return task.kind === "reading" && k.value.passageId === task.passage;
   if (k.case === "quiz") return task.kind === "quiz" && k.value.retake === (task.retake === true);
-  return k.case === "diagnostic" || ("topic" in task && k.value.topicId === task.topic);
+  if (k.case === "diagnostic") return task.kind === "diagnostic" && k.value.supplemental === (task.supplemental === true);
+  return "topic" in task && k.value.topicId === task.topic;
 }
 
 /** learningService implements LearningService over the event log. */
@@ -542,10 +546,21 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
       const now = deps.now();
       await db.transaction(async (tx) => {
         const { state: s } = await state(tx, learnerId, c, true);
-        if (!diagnosticDue(c.planner, s)) return;
+        // Skipping places nothing; the topics it was about are taught, and no supplemental diagnostic asks them again.
+        const due = diagnosticDue(c.planner, s);
+        if (!due && !supplementalDue(c.planner, s)) return;
         const active = await activeSession(tx, learnerId, c.id);
         if (active) await updateSession(tx, active.id, active.state, "abandoned", new Date(now));
-        await append(tx, learnerId, c, { type: "placed", at: now, course: c.id, known: [], tested: [] });
+        const checked = due ? diagnosticCandidates(c.planner, s) : supplementalCandidates(c.planner, s);
+        await append(tx, learnerId, c, {
+          type: "placed",
+          at: now,
+          course: c.id,
+          known: [],
+          tested: [],
+          ...(!due && { supplemental: true }),
+          checked,
+        });
       });
       return {};
     },

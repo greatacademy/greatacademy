@@ -7,7 +7,8 @@ import { isDue, type LearnerState, memory } from "./state.ts";
 
 /** Task is a unit of work offered to the learner. */
 export type Task =
-  | { readonly kind: "diagnostic" }
+  /** supplemental marks a diagnostic of the gaps left below what a diagnosed learner knows; see supplementalCandidates. */
+  | { readonly kind: "diagnostic"; readonly supplemental?: true }
   | { readonly kind: "lesson"; readonly topic: string }
   /** covers are the due topics this review is expected to repair, itself included when due. */
   | { readonly kind: "review"; readonly topic: string; readonly covers: readonly string[] }
@@ -170,6 +171,31 @@ export function diagnosticDue(pl: Planner, state: LearnerState): boolean {
 }
 
 /**
+ * supplementalCandidates are the gaps a supplemental diagnostic would place:
+ * once the course's diagnostic is taken, the topics in scope not known and
+ * never attempted, of which the learner knows a topic that builds on them,
+ * but for essays, spoken topics and topics asked about before. They appear
+ * when the graph or the course changes under a placed learner, as when a
+ * course gains foundations: without asking, the learner would sit through
+ * lessons on what their later topics show they probably know.
+ */
+export function supplementalCandidates(pl: Planner, state: LearnerState): string[] {
+  if (!state.diagnosed.includes(pl.scope.course)) return [];
+  const asked = new Set(state.supplemented ?? []);
+  const inScope = new Set(pl.scope.topics);
+  return pl.scope.topics.filter((t) => {
+    if (isKnown(pl, state, t) || state.topics[t] || asked.has(t) || essayTopic(pl, t) || spokenTopic(pl, t)) return false;
+    for (const d of pl.graph.descendants.get(t) ?? []) if (inScope.has(d) && state.topics[d]?.learned) return true;
+    return false;
+  });
+}
+
+/** supplementalDue tells whether a supplemental diagnostic is to be offered: at least supplementalMinTopics gaps. */
+export function supplementalDue(pl: Planner, state: LearnerState): boolean {
+  return supplementalCandidates(pl, state).length >= pl.params.supplementalMinTopics;
+}
+
+/**
  * retakeEvent is the event that starts a course's diagnostic over at time at: it forgets the course's topics that a
  * diagnostic placed, so they are asked again, and keeps those taught in lessons.
  */
@@ -208,7 +234,7 @@ export function readingDue(pl: Planner, state: LearnerState): boolean {
 /**
  * nextTasks offers the learner's next tasks, at most `limit`:
  * 1. the diagnostic, alone, until the learner is placed in the course;
- * 2. a quiz when one is due;
+ * 2. a supplemental diagnostic when one is due, then a quiz when one is due;
  * 3. a passage to read when reading is below its share of the XP, so that a
  *    learner who always takes the first task reads too;
  * 4. remedial reviews: of the topics missed on the last quiz, and of the key
@@ -226,6 +252,7 @@ export function readingDue(pl: Planner, state: LearnerState): boolean {
 export function nextTasks(pl: Planner, state: LearnerState, now: number, limit = 6): Task[] {
   if (diagnosticDue(pl, state)) return [{ kind: "diagnostic" }];
   const tasks: Task[] = [];
+  if (supplementalDue(pl, state)) tasks.push({ kind: "diagnostic", supplemental: true });
   if (quizDue(pl, state)) tasks.push({ kind: "quiz" });
   const passage = readingDue(pl, state) ? nextPassage(pl, state) : undefined;
   if (passage) tasks.push({ kind: "reading", passage });

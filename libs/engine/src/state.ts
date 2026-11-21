@@ -51,6 +51,8 @@ export interface LearnerState {
   readonly readingXp?: number;
   /** lastQuiz is the last quiz taken; absent until the first. */
   readonly lastQuiz?: LastQuiz;
+  /** supplemented lists the topics a diagnostic was about since they were recorded, which no supplemental diagnostic asks again. */
+  readonly supplemented?: readonly string[];
 }
 
 /** initialState is the state of a new learner. */
