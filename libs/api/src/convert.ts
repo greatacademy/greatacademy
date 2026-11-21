@@ -75,7 +75,7 @@ function input(spec: InputSpec): MessageInitShape<typeof InputSchema> {
     case "math":
       return { kind: { case: "math", value: { prefix: spec.prefix ?? "", suffix: spec.suffix ?? "" } } };
     case "text":
-      return { kind: { case: "text", value: {} } };
+      return { kind: { case: "text", value: spec.hint ? { hint: text(spec.hint) } : {} } };
     case "order":
       return { kind: { case: "order", value: { items: spec.items.map(text) } } };
     case "plot":

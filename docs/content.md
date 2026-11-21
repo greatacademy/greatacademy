@@ -116,7 +116,7 @@ A generator is a function from a seeded `Rng` to a `Problem`:
 | `choice` | The `options`, in order | The index of the chosen option |
 | `plot` | The problem's figure, its `grid` (the window, the distance between markable points, and where the window lies in the figure's view box) and how many `points` to mark | The points as `(x, y)`, joined by `; `, once all are marked |
 | `math` | A math field, with optional `prefix` and `suffix` (such as `x =` or `\text{cm}`) | The LaTeX the learner entered |
-| `text` | A plain text field | The text |
+| `text` | A plain text field, with an optional `hint` under it that says how to type the answer, such as the tones of pinyin | The text |
 | `order` | The `items`, each with buttons to move it | The indexes of the items in the chosen order, joined by commas |
 | `writing` | A long text field that counts words against `minWords`, limited to `maxChars` | The text |
 | `speech` | A recorder of at most `maxSeconds`, with the `text` to repeat or read aloud above it (none for `say`), and the `mode`: `repeat`, `read` or `say` | A 16 kHz mono 16-bit WAV, sent in the request; the server has a speech service of the `language` hear it and checks what was heard |

@@ -12,8 +12,8 @@ export type InputSpec =
   | { readonly kind: "choice"; readonly options: readonly Text[]; readonly figures?: readonly Figure[] }
   /** A math field; the response is the LaTeX the learner entered. */
   | { readonly kind: "math"; readonly prefix?: string; readonly suffix?: string }
-  /** A plain text field. */
-  | { readonly kind: "text" }
+  /** A plain text field; hint, when given, says how to type the answer, such as tones in pinyin, and shows under it. */
+  | { readonly kind: "text"; readonly hint?: Text }
   /** A list to put in order; the response is the indexes of the items in the chosen order, such as "2,0,1". */
   | { readonly kind: "order"; readonly items: readonly Text[] }
   /**

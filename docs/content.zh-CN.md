@@ -116,7 +116,7 @@ const sameSign: KnowledgePointDef = {
 | `choice` | 按顺序显示 `options` | 所选选项的下标 |
 | `plot` | 题目的图、它的 `grid`（窗口、可标记的点之间的距离、窗口在图的 viewBox 中的位置）以及要标出的 `points` 个数 | 这些点写成 `(x, y)`，用 `; ` 连接，全部标出后才算作答 |
 | `math` | 数学输入框，可带 `prefix` 和 `suffix`（例如 `x =` 或 `\text{cm}`） | 学习者输入的 LaTeX |
-| `text` | 普通文本框 | 文本 |
+| `text` | 普通文本框，下方可带一条 `hint`，说明怎样输入答案，例如拼音的声调 | 文本 |
 | `order` | `items`，每项带移动按钮 | 所选顺序中各项的下标，用逗号连接 |
 | `writing` | 长文本框，按 `minWords` 计数单词，长度上限为 `maxChars` | 文本 |
 | `speech` | 至多 `maxSeconds` 秒的录音器，上方显示要跟读或朗读的 `text`（`say` 没有），以及 `mode`：`repeat`、`read` 或 `say` | 一段 16 kHz 单声道 16 位 WAV，随请求发送；服务端让 `language` 的语音服务听取，再检查听到的内容 |

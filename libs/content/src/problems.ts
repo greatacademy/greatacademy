@@ -276,6 +276,8 @@ function checkSample(
 function problemIssue(subject: CompiledSubject, topic: TopicDef, a: Problem, textIssue: SampleOptions["textIssue"]): string | undefined {
   if (!isText(a.prompt)) return "prompt must be non-empty in every locale";
   if (!isText(a.solution)) return "solution must be non-empty in every locale";
+  if (a.answer.input.kind === "text" && a.answer.input.hint && !isText(a.answer.input.hint))
+    return "an input's hint must be non-empty in every locale";
   for (const locale of ["en", "zh-CN"] as const) {
     for (const s of [a.prompt[locale], a.solution[locale]]) {
       if (/NaN|undefined|Infinity|\[object Object\]/.test(s))
@@ -288,6 +290,7 @@ function problemIssue(subject: CompiledSubject, topic: TopicDef, a: Problem, tex
       a.solution,
       ...(a.answer.input.kind === "choice" ? a.answer.input.options : []),
       ...(a.answer.input.kind === "order" ? a.answer.input.items : []),
+      ...(a.answer.input.kind === "text" && a.answer.input.hint ? [a.answer.input.hint] : []),
       ...(a.mistakes ?? []).map((m) => m.feedback),
     ];
     for (const locale of locales) {

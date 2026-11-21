@@ -2056,9 +2056,17 @@ export declare type MathInput = Message<"ga.learning.v1.MathInput"> & {
 export declare const MathInputSchema: GenMessage<MathInput>;
 
 /**
+ * TextInput: a plain text field. The response is the text typed.
+ *
  * @generated from message ga.learning.v1.TextInput
  */
 export declare type TextInput = Message<"ga.learning.v1.TextInput"> & {
+  /**
+   * hint, when present, says how to type the answer, such as tones in pinyin; it shows under the field.
+   *
+   * @generated from field: ga.common.v1.Text hint = 1;
+   */
+  hint?: Text | undefined;
 };
 
 /**

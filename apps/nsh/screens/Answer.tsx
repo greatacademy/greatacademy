@@ -262,18 +262,23 @@ export function AnswerInput(props: {
       return (
         <Input accessibilityLabel={m().yourAnswer} value={props.value} multiline readonly style={{ ...fieldStyle(), minHeight: 120 }} />
       );
-    default:
+    default: {
+      const hint = input?.case === "text" ? input.value.hint : undefined;
       return (
-        <Input
-          accessibilityLabel={m().yourAnswer}
-          value={props.value}
-          disabled={props.disabled}
-          autoCorrect={false}
-          onChange={({ value }) => props.onChange(value)}
-          onSubmit={props.onSubmit}
-          returnKeyType="done"
-          style={fieldStyle()}
-        />
+        <View style={{ gap: 6 }}>
+          <Input
+            accessibilityLabel={m().yourAnswer}
+            value={props.value}
+            disabled={props.disabled}
+            autoCorrect={false}
+            onChange={({ value }) => props.onChange(value)}
+            onSubmit={props.onSubmit}
+            returnKeyType="done"
+            style={fieldStyle()}
+          />
+          <If when={hint && !props.disabled}>{() => <Muted>{tx(hint)}</Muted>}</If>
+        </View>
       );
+    }
   }
 }

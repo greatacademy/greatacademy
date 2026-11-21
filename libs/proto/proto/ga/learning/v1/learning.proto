@@ -630,7 +630,11 @@ message MathInput {
   string suffix = 2;
 }
 
-message TextInput {}
+// TextInput: a plain text field. The response is the text typed.
+message TextInput {
+  // hint, when present, says how to type the answer, such as tones in pinyin; it shows under the field.
+  ga.common.v1.Text hint = 1;
+}
 
 // OrderInput: a list to put in order. The response lists the indexes of the items in the chosen order, such as "2,0,1".
 message OrderInput {

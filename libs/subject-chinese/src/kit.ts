@@ -1,4 +1,4 @@
-import { type Generator, joinText, type KnowledgePointDef, type Problem, type Rng, same, type Text } from "@ga/content";
+import { type Generator, joinText, type KnowledgePointDef, type Problem, type Rng, same, type Text, t } from "@ga/content";
 
 /** quote sets text as a block quote, every line of it. */
 export const quote = (s: string): string =>
@@ -51,6 +51,12 @@ export function typed(shown: string, accepted: string | readonly string[], wrong
   return { shown, accepted: typeof accepted === "string" ? [accepted] : accepted, wrong };
 }
 
+/** PINYIN_HINT says how pinyin is typed: tones as marks or numbers, ü as v, as pinyinChecker accepts. */
+export const PINYIN_HINT = t(
+  "Type tones as marks (lǜ sè) or as numbers after each syllable (lv4 se4); type ü as v, and the light tone as 5 or nothing.",
+  "声调可以标在字母上（lǜ sè），也可以在每个音节后写数字（lv4 se4）；ü 打成 v，轻声写 5 或不写。",
+);
+
 /** typedGenerator picks an item of a bank by seed; the learner types the answer in characters or in pinyin. */
 export function typedGenerator(checker: "hanzi" | "pinyin", question: Text, bank: readonly TypedItem[], why: Why): Generator {
   return (rng: Rng): Problem => {
@@ -58,7 +64,11 @@ export function typedGenerator(checker: "hanzi" | "pinyin", question: Text, bank
     const canonical = item.accepted[0] ?? "";
     return {
       prompt: item.shown === "" ? question : joinText([question, same(quote(item.shown))]),
-      answer: { checker, expected: [...item.accepted], input: { kind: "text" } },
+      answer: {
+        checker,
+        expected: [...item.accepted],
+        input: checker === "pinyin" ? { kind: "text", hint: PINYIN_HINT } : { kind: "text" },
+      },
       solution: why(canonical, item.shown),
       canonical,
       wrong: [...item.wrong],
