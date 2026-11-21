@@ -1,3 +1,4 @@
+import { strengthShades } from "@ga/design";
 import type { GetCourseResponse } from "@ga/proto/catalog/v1/catalog_pb";
 import { type GetCourseProgressResponse, type TopicProgress, TopicStatus } from "@ga/proto/learning/v1/learning_pb";
 import { computed, List, signal, Text, View, windowSize } from "nsh";
@@ -19,18 +20,18 @@ const statusKeys: Partial<Record<TopicStatus, StatusKey>> = {
   [TopicStatus.ASSUMED]: "assumed",
 };
 
-/** statusColor is the color a status shows in, so the map reads at a glance. */
-function statusColor(key: StatusKey): string {
+/** shades are the map's colors for learned topics, by strength: the accent mixed over the surface, as on the web. */
+const shades = computed(() => strengthShades(colors().accent, colors().surface));
+
+/** shadeOf is the color of a learned topic of the given strength. */
+const shadeOf = (strength: number) => shades()[Math.min(shades().length - 1, Math.max(0, strength))] ?? colors().accent;
+
+const isLearned = (key: StatusKey) => key === "learned" || key === "due";
+
+/** edgeColor is the edge of a hollow dot, for a topic not learned, so the map reads at a glance. */
+function edgeColor(key: StatusKey): string {
   const c = colors();
-  const by: Record<StatusKey, string> = {
-    locked: c.line,
-    available: c.accent,
-    failed: c.bad,
-    learned: c.good,
-    due: c.warn,
-    assumed: c.muted,
-  };
-  return by[key];
+  return key === "available" ? c.accent : key === "failed" ? c.bad : c.muted;
 }
 
 /** chipColors are the background and text of a status's chip, as on the web. */
@@ -47,18 +48,32 @@ function chipColors(key: StatusKey): { bg: string; fg: string } {
   return by[key];
 }
 
+type LegendKey = "shades" | StatusKey;
+
+const learnedStatus = (s: TopicStatus | undefined) => s === TopicStatus.LEARNED || s === TopicStatus.DUE;
+
+/** rank orders a unit's bar: the firmest learned topics first, then those assumed, then the rest. */
+const rank = (p: TopicProgress | undefined) =>
+  learnedStatus(p?.status) ? 10 + (p?.strength ?? 0) : p?.status === TopicStatus.ASSUMED ? 1 : 0;
+
 /** unitIds are a unit's topics in the course's order. */
 const unitIds = (unit: { modules: readonly { topics: readonly { id: string }[] }[] }) =>
   unit.modules.flatMap((mod) => mod.topics.map((t) => t.id));
 
-/** TopicBox is one topic of the map, as on the web: its status dot, its title, the memory of a learned topic and a chip. */
+/**
+ * TopicBox is one topic of the map, as on the web: its dot, shaded by strength once learned, its title, and a chip for
+ * what asks for action: a review due, a topic to learn next, one waiting on its prerequisites.
+ */
 function TopicBox(props: { title: string; progress: TopicProgress | undefined; width: "49%" | "100%" }) {
   const key = (): StatusKey => statusKeys[props.progress?.status ?? TopicStatus.LOCKED] ?? "locked";
-  const learned = () => key() === "learned" || key() === "due";
+  const chip = () => key() === "due" || key() === "available" || key() === "failed";
   const memory = () => Math.round((props.progress?.memory ?? 0) * 100);
+  const hint = () => [m().statuses[key()], m().statusNotes[key()], ...(isLearned(key()) ? [m().memoryOf(memory())] : [])].join(" · ");
   return (
     <View
       accessibilityLabel={`${props.title}, ${m().statuses[key()]}`}
+      accessibilityHint={hint()}
+      tooltip={hint()}
       style={{
         alignItems: "center",
         borderColor: colors().line,
@@ -71,46 +86,40 @@ function TopicBox(props: { title: string; progress: TopicProgress | undefined; w
         width: props.width,
       }}
     >
-      <Dot status={key()} />
-      <View style={{ flex: 1, gap: 4, minWidth: 0 }}>
-        <Text style={{ color: colors().ink, fontSize: 14, fontWeight: "500", numberOfLines: 1 }}>{props.title}</Text>
-        <If when={learned()}>
-          <View accessibilityLabel={m().memoryOf(memory())} style={{ alignItems: "center", flexDirection: "row", gap: 8 }}>
-            <View style={{ backgroundColor: colors().line, borderRadius: 2, flex: 1, height: 4, overflow: "hidden" }}>
-              <View
-                style={{
-                  backgroundColor: key() === "due" ? colors().warn : colors().good,
-                  borderRadius: 2,
-                  height: 4,
-                  width: `${memory()}%`,
-                }}
-              />
-            </View>
-            <Text style={{ color: colors().muted, fontSize: 10, textAlign: "right", width: 32 }}>{`${memory()}%`}</Text>
-          </View>
-        </If>
-      </View>
-      <View
-        tooltip={m().statusNotes[key()]}
-        style={{ backgroundColor: chipColors(key()).bg, borderRadius: 999, paddingHorizontal: 8, paddingVertical: 2 }}
-      >
-        <Text style={{ color: chipColors(key()).fg, fontSize: 11, fontWeight: "500" }}>{m().statuses[key()]}</Text>
-      </View>
+      <Dot status={key()} strength={props.progress?.strength ?? 0} />
+      <Text style={{ color: colors().ink, flex: 1, fontSize: 14, fontWeight: "500", minWidth: 0, numberOfLines: 1 }}>{props.title}</Text>
+      <If when={chip()}>
+        <View style={{ backgroundColor: chipColors(key()).bg, borderRadius: 999, paddingHorizontal: 8, paddingVertical: 2 }}>
+          <Text style={{ color: chipColors(key()).fg, fontSize: 11, fontWeight: "500" }}>{m().statuses[key()]}</Text>
+        </View>
+      </If>
     </View>
   );
 }
 
-function Dot(props: { status: StatusKey }) {
+/** Dot marks a topic: filled in its shade once learned, ringed when its review is due; hollow and edged otherwise. */
+function Dot(props: { status: StatusKey; strength: number }) {
+  const inner = () =>
+    isLearned(props.status)
+      ? { backgroundColor: shadeOf(props.strength) }
+      : props.status === "assumed"
+        ? { backgroundColor: colors().line }
+        : { borderColor: edgeColor(props.status), borderWidth: 1.5 };
   return (
     <View
       style={{
-        backgroundColor: statusColor(props.status),
-        borderRadius: 5,
+        alignItems: "center",
+        borderColor: props.status === "due" ? colors().warn : "transparent",
+        borderRadius: 8,
+        borderWidth: 1.5,
         flexShrink: 0,
-        height: 10,
-        width: 10,
+        height: 16,
+        justifyContent: "center",
+        width: 16,
       }}
-    />
+    >
+      <View style={{ ...inner(), borderRadius: 5, height: 10, width: 10 }} />
+    </View>
   );
 }
 
@@ -144,12 +153,17 @@ export function MapBody(props: { map: MapData }) {
     }
     return found;
   });
-  const legend: StatusKey[] = ["learned", "due", "available", "failed", "assumed", "locked"];
+  // The legend's first entry is every learned topic, with the scale of shades; the others are statuses.
+  const legend: LegendKey[] = ["shades", "due", "available", "failed", "assumed", "locked"];
+  const countOf = (key: LegendKey) => (key === "shades" ? (counts().learned ?? 0) + (counts().due ?? 0) : (counts()[key] ?? 0));
+  const labelOf = (key: LegendKey) => (key === "shades" ? m().shades.label : m().statuses[key]);
+  const noteOf = (key: LegendKey) => (key === "shades" ? m().shades.note : m().statusNotes[key]);
+  const widest = computed(() => Math.max(1, ...(props.map.course.course?.units ?? []).map((u) => unitIds(u).length)));
   // A status's name explains itself: on hover on a desktop, and when pressed, which works on a phone too.
-  const explained = signal<StatusKey | undefined>(undefined);
+  const explained = signal<LegendKey | undefined>(undefined);
   const note = () => {
     const key = explained();
-    return key && (counts()[key] ?? 0) > 0 ? key : undefined;
+    return key && countOf(key) > 0 ? key : undefined;
   };
   // Topics sit two to a row where the map is wide enough, as on the web: a tablet's window, or a desktop's once the
   // cards beside the map leave it room.
@@ -161,13 +175,13 @@ export function MapBody(props: { map: MapData }) {
     <View style={{ gap: 12 }}>
       <Card>
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12 }}>
-          <Each of={legend.filter((key) => (counts()[key] ?? 0) > 0)}>
+          <Each of={legend.filter((key) => countOf(key) > 0)}>
             {(key) => (
               <View
                 role="button"
-                accessibilityLabel={`${m().statuses[key()]} ${counts()[key()] ?? 0}`}
-                accessibilityHint={m().statusNotes[key()]}
-                tooltip={m().statusNotes[key()]}
+                accessibilityLabel={`${labelOf(key())} ${countOf(key())}`}
+                accessibilityHint={noteOf(key())}
+                tooltip={noteOf(key())}
                 onPress={() => explained.set(note() === key() ? undefined : key())}
                 hoverStyle={{ backgroundColor: colors().page }}
                 style={{
@@ -181,13 +195,24 @@ export function MapBody(props: { map: MapData }) {
                   paddingVertical: 2,
                 }}
               >
-                <Dot status={key()} />
-                <Text style={{ color: colors().ink, fontSize: 14 }}>{`${m().statuses[key()]} ${counts()[key()] ?? 0}`}</Text>
+                <If when={key() !== "shades"}>
+                  <Dot status={key() as StatusKey} strength={2} />
+                </If>
+                <Text style={{ color: colors().ink, fontSize: 14 }}>{`${labelOf(key())} ${countOf(key())}`}</Text>
+                <If when={key() === "shades"}>
+                  <View style={{ alignItems: "center", flexDirection: "row", gap: 6, marginLeft: 4 }}>
+                    <Text style={{ color: colors().muted, fontSize: 12 }}>{m().shades.weak}</Text>
+                    <View style={{ borderRadius: 2, flexDirection: "row", overflow: "hidden" }}>
+                      <Each of={shades()}>{(color) => <View style={{ backgroundColor: color(), height: 10, width: 12 }} />}</Each>
+                    </View>
+                    <Text style={{ color: colors().muted, fontSize: 12 }}>{m().shades.strong}</Text>
+                  </View>
+                </If>
               </View>
             )}
           </Each>
         </View>
-        <If when={note()}>{(key) => <Muted>{m().statusNotes[key()]}</Muted>}</If>
+        <If when={note()}>{(key) => <Muted>{noteOf(key())}</Muted>}</If>
       </Card>
       <List viewport="parent" each={props.map.course.course?.units ?? []} estimatedItemSize={600} contentStyle={{ gap: 12 }}>
         {(unit) => (
@@ -204,12 +229,33 @@ export function MapBody(props: { map: MapData }) {
                 )}
               </Muted>
             </View>
-            <View style={{ borderRadius: 4, flexDirection: "row", gap: 1, height: 8, marginTop: 6, overflow: "hidden" }}>
-              <Each of={unitIds(unit())}>
-                {(id) => (
+            {/* The firmest topics first, then those assumed, the rest left empty; as long as the unit is next to the
+                course's largest, as on the web. */}
+            <View
+              style={{
+                borderColor: colors().line,
+                borderRadius: 4,
+                borderWidth: 1,
+                flexDirection: "row",
+                height: 8,
+                marginTop: 6,
+                overflow: "hidden",
+                width: `${Math.max(8, (unitIds(unit()).length / widest()) * 100)}%`,
+              }}
+            >
+              <Each
+                of={unitIds(unit())
+                  .map((id) => byTopic().get(id))
+                  .sort((a, b) => rank(b) - rank(a))}
+              >
+                {(p) => (
                   <View
                     style={{
-                      backgroundColor: statusColor(statusKeys[byTopic().get(id())?.status ?? TopicStatus.LOCKED] ?? "locked"),
+                      backgroundColor: learnedStatus(p()?.status)
+                        ? shadeOf(p()?.strength ?? 0)
+                        : p()?.status === TopicStatus.ASSUMED
+                          ? colors().line
+                          : "transparent",
                       flex: 1,
                     }}
                   />

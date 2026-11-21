@@ -11,7 +11,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { catalogService } from "./catalog.ts";
 import { dbKey, userIdKey } from "./context.ts";
 import { sessionMessage } from "./convert.ts";
-import { learningService } from "./learning.ts";
+import { learningService, STRENGTHS, strengthOf } from "./learning.ts";
 import { localGateway, Registry } from "./registry.ts";
 import { type RunState, startRun } from "./runner.ts";
 import { appendTo } from "./sessions.ts";
@@ -98,6 +98,12 @@ async function skipToLessons() {
   await learning.chooseCourse({ courseId: COURSE });
   await learning.skipDiagnostic({ courseId: COURSE });
 }
+
+describe("strengthOf", () => {
+  it("shades a learned topic by its whole repetitions, from 0 to the darkest", () => {
+    expect([0, 0.9, 1.5, 3, 4.99, 12, -1].map(strengthOf)).toEqual([0, 0, 1, 3, 4, STRENGTHS - 1, 0]);
+  });
+});
 
 describe("rereading", () => {
   it("returns a topic's lesson with its links, and worked examples chosen by a seed", async () => {

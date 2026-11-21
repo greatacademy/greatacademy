@@ -14,6 +14,7 @@ import {
   oklchToHex,
   PALETTES,
   seedsOf,
+  strengthShades,
   subjectColors,
 } from "./tokens.ts";
 
@@ -120,5 +121,20 @@ describe("subjectColors", () => {
     expect(awayFromVerdicts(235)).toBe(235);
     expect(awayFromVerdicts(-10)).toBe(350);
     expect(awayFromVerdicts(30)).toBe(45);
+  });
+});
+
+describe("strengthShades", () => {
+  it("steps from near the surface to the accent itself, darker each step on a light surface", () => {
+    const shades = strengthShades("#1d6fb8", "#ffffff");
+    expect(shades).toHaveLength(6);
+    expect(shades[5]).toBe("#1d6fb8");
+    const contrasts = shades.map((c) => contrastRatio(c, "#ffffff"));
+    for (let i = 1; i < contrasts.length; i++) expect(contrasts[i]).toBeGreaterThan(contrasts[i - 1] ?? 0);
+  });
+
+  it("works in dark schemes too, brighter each step on a dark surface", () => {
+    const contrasts = strengthShades("#6aa8ff", "#16181d").map((c) => contrastRatio(c, "#16181d"));
+    for (let i = 1; i < contrasts.length; i++) expect(contrasts[i]).toBeGreaterThan(contrasts[i - 1] ?? 0);
   });
 });

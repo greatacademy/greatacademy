@@ -218,6 +218,13 @@ const messages = {
       assumed: "Assumed",
     },
     /** statusNote says what each status means, shown when its name is hovered or tapped. */
+    /** shades names the progress map's shading of learned topics, its ends and what it means. */
+    shades: {
+      label: "Learned",
+      weak: "Just learned",
+      strong: "Solid",
+      note: "Learned topics are shaded by how firmly they are held: the darker, the more spaced reviews they have passed.",
+    },
     statusNote: {
       locked: "Not learned yet: some topic it builds on comes first.",
       available: "Everything it builds on is known: it can be your next lesson.",
@@ -817,6 +824,12 @@ const messages = {
       learned: "无需复习",
       due: "待复习",
       assumed: "视为已知",
+    },
+    shades: {
+      label: "已学会",
+      weak: "刚学会",
+      strong: "牢固",
+      note: "已学会的知识点按掌握的牢固程度着色：颜色越深，通过的间隔复习越多。",
     },
     statusNote: {
       locked: "还没学：它依赖的知识点要先学。",

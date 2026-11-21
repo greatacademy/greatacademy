@@ -356,3 +356,22 @@ export function subjectColors(hue: number, scheme: ColorScheme, contrast: Contra
   const onSoft = readable(light ? [0.45, 0.13, h] : [0.85, 0.08, h], grounds, target, light ? -0.005 : 0.005);
   return { strong: oklchToHex(strong), onStrong: oklchToHex(onStrong), soft: oklchToHex(soft), onSoft: oklchToHex(onSoft) };
 }
+
+/**
+ * STRENGTH_MIX is how much of the accent each shade of the progress map takes, over the surface, from a topic just
+ * learned to one held through many spaced repetitions. The web mixes them in CSS; the apps through strengthShades.
+ */
+export const STRENGTH_MIX = [0.2, 0.34, 0.5, 0.66, 0.83, 1] as const;
+
+/** strengthShades are the progress map's shades as hex: the accent mixed over the surface in Oklab by STRENGTH_MIX. */
+export function strengthShades(accent: string, surface: string): string[] {
+  const lab = (hex: string) => {
+    const [l, c, h] = hexToOklch(hex);
+    return [l, c * Math.cos((h * Math.PI) / 180), c * Math.sin((h * Math.PI) / 180)] as const;
+  };
+  const [a, s] = [lab(accent), lab(surface)];
+  return STRENGTH_MIX.map((share) => {
+    const [l, x, y] = a.map((v, i) => (s[i] ?? 0) + share * (v - (s[i] ?? 0)));
+    return oklchToHex([l ?? 0, Math.hypot(x ?? 0, y ?? 0), ((Math.atan2(y ?? 0, x ?? 0) * 180) / Math.PI + 360) % 360]);
+  });
+}

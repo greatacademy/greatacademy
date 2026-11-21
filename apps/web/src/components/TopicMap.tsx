@@ -1,3 +1,4 @@
+import { STRENGTH_MIX } from "@ga/design";
 import type { Course } from "@ga/proto/catalog/v1/catalog_pb";
 import { type TopicProgress, TopicStatus } from "@ga/proto/learning/v1/learning_pb";
 import { Link } from "@tanstack/react-router";
@@ -8,40 +9,81 @@ import { statusStyle } from "../lib/topic-status.ts";
 import { Markdown } from "./Markdown.tsx";
 import { Card } from "./ui.tsx";
 
-const legend = [TopicStatus.LEARNED, TopicStatus.DUE, TopicStatus.AVAILABLE, TopicStatus.FAILED, TopicStatus.ASSUMED, TopicStatus.LOCKED];
+/** shade is the color of a learned topic of the given strength: the accent mixed over the surface, as in the apps. */
+const shade = (strength: number) =>
+  `color-mix(in oklab, var(--color-accent) ${Math.round((STRENGTH_MIX[Math.min(STRENGTH_MIX.length - 1, Math.max(0, strength))] ?? 1) * 100)}%, var(--color-surface))`;
+
+const isLearned = (s: TopicStatus | undefined) => s === TopicStatus.LEARNED || s === TopicStatus.DUE;
 
 /**
- * TopicLegend names the colors of TopicMap with how many of the course's own topics have each. Each name explains
- * itself: on hover where there is a pointer, and on a tap or click, which works on a phone too.
+ * TopicDot marks a topic on the map: a learned one filled in its shade, ringed when its review is due; one not learned
+ * hollow, edged in its status's color.
+ */
+export function TopicDot({ progress, className = "size-2.5" }: { progress: TopicProgress | undefined; className?: string }) {
+  const status = progress?.status ?? TopicStatus.LOCKED;
+  if (isLearned(status))
+    return (
+      <span
+        className={`shrink-0 rounded-full ${status === TopicStatus.DUE ? "ring-[1.5px] ring-warn ring-offset-2 ring-offset-surface" : ""} ${className}`}
+        style={{ background: shade(progress?.strength ?? 0) }}
+      />
+    );
+  if (status === TopicStatus.ASSUMED) return <span className={`shrink-0 rounded-full bg-muted/50 ${className}`} />;
+  const edge = status === TopicStatus.AVAILABLE ? "border-accent" : status === TopicStatus.FAILED ? "border-bad" : "border-muted/60";
+  return <span className={`shrink-0 rounded-full border-[1.5px] ${edge} ${className}`} />;
+}
+
+type LegendKey = "shades" | TopicStatus;
+const legend: LegendKey[] = ["shades", TopicStatus.DUE, TopicStatus.AVAILABLE, TopicStatus.FAILED, TopicStatus.ASSUMED, TopicStatus.LOCKED];
+
+/**
+ * TopicLegend explains the marks of TopicMap with how many of the course's own topics have each: the shades of
+ * learned topics, from just learned to solid, then the other statuses. Each entry explains itself: on hover where
+ * there is a pointer, and on a tap or click, which works on a phone too.
  */
 export function TopicLegend({ topics }: { topics: TopicProgress[] }) {
   const { m } = useI18n();
-  const [explained, setExplained] = useState<TopicStatus>();
-  const counts = new Map<TopicStatus, number>();
-  for (const t of topics) if (!t.foundation) counts.set(t.status, (counts.get(t.status) ?? 0) + 1);
-  const shown = legend.filter((s) => (counts.get(s) ?? 0) > 0);
+  const [explained, setExplained] = useState<LegendKey>();
+  const own = topics.filter((t) => !t.foundation);
+  const count = (k: LegendKey) => own.filter((t) => (k === "shades" ? isLearned(t.status) : t.status === k)).length;
+  const shown = legend.filter((k) => count(k) > 0);
   const note = explained !== undefined && shown.includes(explained) ? explained : undefined;
+  const noteOf = (k: LegendKey) => (k === "shades" ? m.shades.note : m.statusNote[statusStyle[k].key]);
   return (
     <div className="space-y-2 rounded-2xl border border-line bg-surface px-4 py-3 text-sm">
-      <div className="flex flex-wrap gap-x-4 gap-y-2">
-        {shown.map((s) => (
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+        {shown.map((k) => (
           <button
-            key={s}
+            key={k}
             type="button"
-            title={m.statusNote[statusStyle[s].key]}
-            aria-expanded={note === s}
-            onClick={() => setExplained(note === s ? undefined : s)}
-            className={`-mx-1.5 flex items-center gap-1.5 rounded-lg px-1.5 py-0.5 hover:bg-page ${note === s ? "bg-page" : ""}`}
+            title={noteOf(k)}
+            aria-expanded={note === k}
+            onClick={() => setExplained(note === k ? undefined : k)}
+            className={`-mx-1.5 flex items-center gap-1.5 rounded-lg px-1.5 py-0.5 hover:bg-page ${note === k ? "bg-page" : ""}`}
           >
-            <span className={`size-2.5 rounded-full ${statusStyle[s].dot}`} />
-            <span className="underline decoration-line decoration-dotted underline-offset-4">{m.status[statusStyle[s].key]}</span>
-            <span className="tabular-nums text-muted">{counts.get(s)}</span>
+            {k !== "shades" && <TopicDot progress={{ status: k, strength: 2 } as TopicProgress} />}
+            <span className="underline decoration-line decoration-dotted underline-offset-4">
+              {k === "shades" ? m.shades.label : m.status[statusStyle[k].key]}
+            </span>
+            <span className="tabular-nums text-muted">{count(k)}</span>
+            {k === "shades" && (
+              <span className="ml-1 flex items-center gap-1.5 text-xs text-muted">
+                {m.shades.weak}
+                <span className="flex overflow-hidden rounded-sm" aria-hidden>
+                  {STRENGTH_MIX.map((_, i) => (
+                    // biome-ignore lint/suspicious/noArrayIndexKey: the shades are a fixed scale.
+                    <span key={i} className="h-2.5 w-3" style={{ background: shade(i) }} />
+                  ))}
+                </span>
+                {m.shades.strong}
+              </span>
+            )}
           </button>
         ))}
       </div>
       {note !== undefined && (
         <p role="status" className="text-xs text-muted">
-          {m.statusNote[statusStyle[note].key]}
+          {noteOf(note)}
         </p>
       )}
     </div>
@@ -60,12 +102,28 @@ function UnitCount({ ids, byTopic }: { ids: readonly string[]; byTopic: Readonly
   );
 }
 
-/** UnitBar is a unit's progress at a glance: one segment per topic, in the course's order, in its status's color. */
-function UnitBar({ ids, byTopic }: { ids: readonly string[]; byTopic: ReadonlyMap<string, TopicProgress> }) {
+/** rank orders a unit's bar: the firmest learned topics first, then those assumed, then the rest, left empty. */
+const rank = (p: TopicProgress | undefined) => (isLearned(p?.status) ? 10 + (p?.strength ?? 0) : p?.status === TopicStatus.ASSUMED ? 1 : 0);
+
+/**
+ * UnitBar is a unit's progress at a glance: one segment per topic, the firmest first and the ones not learned left
+ * empty, as long as the unit is next to the course's largest.
+ */
+function UnitBar({ ids, byTopic, widest }: { ids: readonly string[]; byTopic: ReadonlyMap<string, TopicProgress>; widest: number }) {
+  const sorted = ids.map((id) => byTopic.get(id)).sort((a, b) => rank(b) - rank(a));
   return (
-    <div className="flex h-2 gap-px overflow-hidden rounded-full" aria-hidden>
-      {ids.map((id) => (
-        <span key={id} className={`h-full flex-1 ${statusStyle[byTopic.get(id)?.status ?? TopicStatus.LOCKED].dot}`} />
+    <div
+      className="flex h-2 overflow-hidden rounded-full border border-line"
+      style={{ width: `${Math.max(8, (ids.length / widest) * 100)}%` }}
+      aria-hidden
+    >
+      {sorted.map((p, i) => (
+        <span
+          // biome-ignore lint/suspicious/noArrayIndexKey: segments are positions in a sorted bar, not topics.
+          key={i}
+          className={`h-full flex-1 ${p?.status === TopicStatus.ASSUMED ? "bg-muted/50" : ""}`}
+          style={isLearned(p?.status) ? { background: shade(p?.strength ?? 0) } : undefined}
+        />
       ))}
     </div>
   );
@@ -75,14 +133,16 @@ function UnitBar({ ids, byTopic }: { ids: readonly string[]; byTopic: ReadonlyMa
 export function TopicMap({ course, topics, subject }: { course: Course; topics: TopicProgress[]; subject?: string }) {
   const { m, tx } = useI18n();
   const byTopic = new Map(topics.map((t) => [t.topicId, t]));
+  const unitIds = (u: Course["units"][number]) => u.modules.flatMap((mod) => mod.topics.map((t) => t.id));
+  const widest = Math.max(1, ...course.units.map((u) => unitIds(u).length));
   return course.units.map((u) => (
     <Card key={tx(u.title)} className="space-y-4">
       <div className="space-y-2">
         <div className="flex items-baseline justify-between gap-3">
           <h2 className="font-semibold">{tx(u.title)}</h2>
-          <UnitCount ids={u.modules.flatMap((mod) => mod.topics.map((t) => t.id))} byTopic={byTopic} />
+          <UnitCount ids={unitIds(u)} byTopic={byTopic} />
         </div>
-        <UnitBar ids={u.modules.flatMap((mod) => mod.topics.map((t) => t.id))} byTopic={byTopic} />
+        <UnitBar ids={unitIds(u)} byTopic={byTopic} widest={widest} />
       </div>
       {u.modules.map((mod) => (
         <div key={tx(mod.title)} className="space-y-2">
@@ -91,35 +151,28 @@ export function TopicMap({ course, topics, subject }: { course: Course; topics: 
             {mod.topics.map((t) => {
               const p = byTopic.get(t.id);
               const s = statusStyle[p?.status ?? TopicStatus.LOCKED];
-              const learned = p?.status === TopicStatus.LEARNED || p?.status === TopicStatus.DUE;
+              // Shading says how firm a learned topic is; a chip names only what asks for action: a review due, a
+              // topic to learn next, one waiting on its prerequisites.
+              const chip = p?.status === TopicStatus.DUE || p?.status === TopicStatus.AVAILABLE || p?.status === TopicStatus.FAILED;
+              const hint = [
+                m.status[s.key],
+                m.statusNote[s.key],
+                ...(isLearned(p?.status) && p ? [`${m.memory} ${Math.round(p.memory * 100)}%`] : []),
+              ].join(" · ");
               const row: ReactNode = (
                 <>
-                  <span className={`size-2.5 shrink-0 rounded-full ${s.dot}`} />
-                  <div className="min-w-0 flex-1">
-                    <div className="truncate text-sm font-medium">
-                      <Markdown source={tx(t.title)} inline />
-                    </div>
-                    {learned && (
-                      <div className="mt-1 flex items-center gap-2" title={`${m.memory} ${Math.round(p.memory * 100)}%`}>
-                        <div className="h-1 flex-1 overflow-hidden rounded-full bg-line">
-                          <div
-                            className={`h-full rounded-full ${p.status === TopicStatus.DUE ? "bg-warn" : "bg-good"}`}
-                            style={{ width: `${Math.round(p.memory * 100)}%` }}
-                          />
-                        </div>
-                        <span className="w-8 text-right text-[10px] text-muted">{Math.round(p.memory * 100)}%</span>
-                      </div>
-                    )}
+                  <TopicDot progress={p} />
+                  <div className="min-w-0 flex-1 truncate text-sm font-medium">
+                    <Markdown source={tx(t.title)} inline />
                   </div>
-                  <span title={m.statusNote[s.key]} className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium ${s.chip}`}>
-                    {m.status[s.key]}
-                  </span>
+                  {chip && <span className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium ${s.chip}`}>{m.status[s.key]}</span>}
                 </>
               );
               const box = "flex min-w-0 items-center gap-3 rounded-xl border border-line px-3 py-2.5";
               return subject ? (
                 <Link
                   key={t.id}
+                  title={hint}
                   to="/$subject/topics/$topicId"
                   params={{ subject, topicId: t.id }}
                   className={`${box} transition hover:border-accent/50`}
@@ -127,7 +180,7 @@ export function TopicMap({ course, topics, subject }: { course: Course; topics: 
                   {row}
                 </Link>
               ) : (
-                <div key={t.id} className={box}>
+                <div key={t.id} title={hint} className={box}>
                   {row}
                 </div>
               );

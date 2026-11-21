@@ -325,6 +325,9 @@ message TopicProgress {
   double memory = 4;
   // foundation is true for a topic outside the course that the course builds on.
   bool foundation = 5;
+  // strength is how firmly a learned topic is held, from 0 (just learned) to 5 (many spaced repetitions held): the
+  // whole repetitions it has, capped. 0 when not learned; the map shades a topic by it.
+  int32 strength = 6;
 }
 
 message StartTaskRequest {

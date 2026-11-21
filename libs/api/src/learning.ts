@@ -213,6 +213,12 @@ function sameTask(req: TaskMessage | undefined, task: Task): boolean {
 }
 
 /** learningService implements LearningService over the event log. */
+/** STRENGTHS is how many shades the progress map gives learned topics. */
+export const STRENGTHS = 6;
+
+/** strengthOf is a learned topic's shade on the map: its whole spaced repetitions, capped at the darkest shade. */
+export const strengthOf = (repNum: number) => Math.min(STRENGTHS - 1, Math.max(0, Math.floor(repNum)));
+
 export function learningService(deps: LearningDeps): ServiceImpl<typeof LearningService> {
   const { registry } = deps;
 
@@ -448,6 +454,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
             placed: t?.placed === true,
             memory: t?.learned ? memory(p, t, now) : 0,
             foundation: !c.planner.scope.inCourse.has(id),
+            strength: t?.learned ? strengthOf(t.repNum) : 0,
           };
         }),
       };

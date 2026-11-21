@@ -960,6 +960,14 @@ export declare type TopicProgress = Message<"ga.learning.v1.TopicProgress"> & {
    * @generated from field: bool foundation = 5;
    */
   foundation: boolean;
+
+  /**
+   * strength is how firmly a learned topic is held, from 0 (just learned) to 5 (many spaced repetitions held): the
+   * whole repetitions it has, capped. 0 when not learned; the map shades a topic by it.
+   *
+   * @generated from field: int32 strength = 6;
+   */
+  strength: number;
 };
 
 /**
