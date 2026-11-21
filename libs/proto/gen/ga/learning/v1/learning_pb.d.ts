@@ -921,6 +921,8 @@ export declare const SessionSummarySchema: GenMessage<SessionSummary>;
  */
 export declare type GetCourseProgressRequest = Message<"ga.learning.v1.GetCourseProgressRequest"> & {
   /**
+   * course_id is the current course or another course of its subject, read from the same learner state.
+   *
    * @generated from field: string course_id = 1;
    */
   courseId: string;
@@ -954,6 +956,118 @@ export declare type GetCourseProgressResponse = Message<"ga.learning.v1.GetCours
  * Use `create(GetCourseProgressResponseSchema)` to create a new message.
  */
 export declare const GetCourseProgressResponseSchema: GenMessage<GetCourseProgressResponse>;
+
+/**
+ * @generated from message ga.learning.v1.ListCourseProgressRequest
+ */
+export declare type ListCourseProgressRequest = Message<"ga.learning.v1.ListCourseProgressRequest"> & {
+  /**
+   * course_id is the current course, whose subject's courses are listed.
+   *
+   * @generated from field: string course_id = 1;
+   */
+  courseId: string;
+
+  /**
+   * learner_id, when set, reads a learner the caller is a guardian of instead of the caller.
+   *
+   * @generated from field: string learner_id = 2;
+   */
+  learnerId: string;
+};
+
+/**
+ * Describes the message ga.learning.v1.ListCourseProgressRequest.
+ * Use `create(ListCourseProgressRequestSchema)` to create a new message.
+ */
+export declare const ListCourseProgressRequestSchema: GenMessage<ListCourseProgressRequest>;
+
+/**
+ * @generated from message ga.learning.v1.ListCourseProgressResponse
+ */
+export declare type ListCourseProgressResponse = Message<"ga.learning.v1.ListCourseProgressResponse"> & {
+  /**
+   * @generated from field: repeated ga.learning.v1.CourseUnits courses = 1;
+   */
+  courses: CourseUnits[];
+
+  /**
+   * @generated from field: string current_course_id = 2;
+   */
+  currentCourseId: string;
+};
+
+/**
+ * Describes the message ga.learning.v1.ListCourseProgressResponse.
+ * Use `create(ListCourseProgressResponseSchema)` to create a new message.
+ */
+export declare const ListCourseProgressResponseSchema: GenMessage<ListCourseProgressResponse>;
+
+/**
+ * CourseUnits is how far a learner is in a course and in each of its units.
+ *
+ * @generated from message ga.learning.v1.CourseUnits
+ */
+export declare type CourseUnits = Message<"ga.learning.v1.CourseUnits"> & {
+  /**
+   * @generated from field: string course_id = 1;
+   */
+  courseId: string;
+
+  /**
+   * @generated from field: ga.common.v1.Text title = 2;
+   */
+  title?: Text | undefined;
+
+  /**
+   * @generated from field: ga.learning.v1.CourseStats stats = 3;
+   */
+  stats?: CourseStats | undefined;
+
+  /**
+   * @generated from field: repeated ga.learning.v1.UnitStats units = 4;
+   */
+  units: UnitStats[];
+};
+
+/**
+ * Describes the message ga.learning.v1.CourseUnits.
+ * Use `create(CourseUnitsSchema)` to create a new message.
+ */
+export declare const CourseUnitsSchema: GenMessage<CourseUnits>;
+
+/**
+ * UnitStats is how far a learner is in a unit: its topics learned, in all, and the learned ones by strength.
+ *
+ * @generated from message ga.learning.v1.UnitStats
+ */
+export declare type UnitStats = Message<"ga.learning.v1.UnitStats"> & {
+  /**
+   * @generated from field: ga.common.v1.Text title = 1;
+   */
+  title?: Text | undefined;
+
+  /**
+   * @generated from field: int32 learned = 2;
+   */
+  learned: number;
+
+  /**
+   * @generated from field: int32 total = 3;
+   */
+  total: number;
+
+  /**
+   * @generated from field: repeated int32 strengths = 4;
+   */
+  strengths: number[];
+};
+
+/**
+ * Describes the message ga.learning.v1.UnitStats.
+ * Use `create(UnitStatsSchema)` to create a new message.
+ */
+export declare const UnitStatsSchema: GenMessage<UnitStats>;
 
 /**
  * @generated from message ga.learning.v1.TopicProgress
@@ -2877,6 +2991,17 @@ export declare const LearningService: GenService<{
     methodKind: "unary";
     input: typeof GetCourseProgressRequestSchema;
     output: typeof GetCourseProgressResponseSchema;
+  },
+  /**
+   * ListCourseProgress returns the course sequence of the current course, unit by unit: up to three courses the learner
+   * took before it, oldest first, the current course, then up to three that follow it.
+   *
+   * @generated from rpc ga.learning.v1.LearningService.ListCourseProgress
+   */
+  listCourseProgress: {
+    methodKind: "unary";
+    input: typeof ListCourseProgressRequestSchema;
+    output: typeof ListCourseProgressResponseSchema;
   },
   /**
    * StartTask starts one of the offered tasks, or resumes the active session.

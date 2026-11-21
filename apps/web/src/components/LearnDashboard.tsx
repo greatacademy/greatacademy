@@ -199,13 +199,13 @@ export function LearnDashboard({ courseId, subjectId }: { courseId: string; subj
     <div className="space-y-6">
       <div className="max-w-xl space-y-2">
         <Link
-          to="/$subject/course"
+          to="/$subject/progress"
           params={{ subject: subjectId }}
           className="block text-2xl font-semibold tracking-tight hover:text-accent"
         >
           {tx(course.data?.course?.title)}
         </Link>
-        <CourseBar stats={stats} />
+        <CourseBar stats={stats} courseId={d.courseId} />
       </div>
 
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">

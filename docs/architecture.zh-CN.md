@@ -160,7 +160,7 @@ API 服务器（`apps/server`）用 `src/handler.ts` 应答 `/api` 和 `/voice/v
 
 `apps/web/src/server.ts` 是 Worker 的入口，TanStack Start 在这里提供页面、静态文件和录音。`apps/server/src/main.ts` 是 API 服务器的入口：`job daily` 运行 `libs/api/src/retention.ts` 中的保存期限规则和方案提醒，`job quarter` 每 15 分钟运行一次 `libs/api/src/costs.ts` 中的费用检查，把告警用电子邮件发给管理员，并判定已交上的文章（§6）。`PrivacyService` 负责年龄问题、同意、验证和删除（[未成年人数据](minors-data.zh-CN.md)），`libs/api/src/capabilities.ts` 中的 `requireStudy` 是 `StartTask` 之前的关口。`AdminService` 为 `/admin` 的后台提供服务（[管理后台](admin.zh-CN.md)），并拒绝没有该角色的人。`BillingService` 出售并管理方案（[计费](billing.zh-CN.md)）；计费开启时，`libs/api/src/billing.ts` 中的 `requirePlan` 拒绝在没有方案覆盖的学科中选择课程或开始学习。Stripe 的事件到达 `/api/stripe`；处理程序校验每个签名，把事件读成 `BillingEvent`（`apps/server/src/stripe.ts`），再由 `applyBillingEvent` 记录，重复或迟到的事件不会造成改变。App Store Server Notifications 到达 `/api/apple`（[计费](billing.zh-CN.md) §8）。
 
-监护人读取学习者数据时，使用与学习者相同的只读调用：`GetDashboard`、`GetCourseProgress` 和 `ListSessions` 接受可选的 `learner_id`，只有调用者关注了该学习者才生效。监督人的决定 `ChooseCourse`、`KeepCourse`、`SetGoals` 和 `SetEndDate` 也接受它；由监护人监督的学习者自己调用这些会被拒绝（[体验 §5](experience.zh-CN.md#5-监督)）。其他会改变数据的调用不接受 `learner_id`，监护人也不能打开会话，所以学习者的答案只属于学习者自己。
+监护人读取学习者数据时，使用与学习者相同的只读调用：`GetDashboard`、`GetCourseProgress`、`ListCourseProgress` 和 `ListSessions` 接受可选的 `learner_id`，只有调用者关注了该学习者才生效。监督人的决定 `ChooseCourse`、`KeepCourse`、`SetGoals` 和 `SetEndDate` 也接受它；由监护人监督的学习者自己调用这些会被拒绝（[体验 §5](experience.zh-CN.md#5-监督)）。其他会改变数据的调用不接受 `learner_id`，监护人也不能打开会话，所以学习者的答案只属于学习者自己。
 
 ## 6. 部署
 

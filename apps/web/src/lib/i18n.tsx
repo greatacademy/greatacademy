@@ -219,6 +219,13 @@ const messages = {
     },
     /** statusNote says what each status means, shown when its name is hovered or tapped. */
     /** shades names the progress map's shading of learned topics, its ends and what it means. */
+    sequence: {
+      label: "Course sequence",
+      before: "Taken",
+      current: "Current",
+      after: "Next",
+      note: "Your courses in order: those taken before, the current one, then those that follow. Topics learned in one count in the others.",
+    },
     shades: {
       label: "Learned",
       weak: "Just learned",
@@ -826,6 +833,13 @@ const messages = {
       learned: "无需复习",
       due: "待复习",
       assumed: "视为已知",
+    },
+    sequence: {
+      label: "课程序列",
+      before: "学过",
+      current: "当前",
+      after: "接下来",
+      note: "按顺序排列的课程：以往学过的、当前的和接下来的。在一门课中学会的知识点，在其他课中同样计为已学会。",
     },
     shades: {
       label: "已学会",

@@ -44,7 +44,7 @@ function CurrentCourse(props: { place: Place; courseId: string }) {
       <If when={tx(course()?.description)}>
         <Text style={{ color: colors().muted, fontSize: 14, lineHeight: 20 }}>{tx(course()?.description)}</Text>
       </If>
-      <CourseBar stats={stats()} maxWidth={448} />
+      <CourseBar stats={stats()} courseId={props.courseId} maxWidth={448} />
       <View
         role="button"
         onPress={() => nav.push({ name: "course", courseId: props.courseId })}

@@ -22,10 +22,37 @@ export function topicStatus(pl: Planner, p: Params, s: LearnerState, open: Reado
  * reviews still come as tasks. Learned counts the topics up to date and those due.
  */
 export function courseStats(pl: Planner, p: Params, s: LearnerState, now: number) {
+  return topicStats(pl, p, s, now, pl.scope.inCourse);
+}
+
+/** unitStats counts each unit of a course as courseStats counts the course, for the course's units with their bars. */
+export function unitStats(
+  pl: Planner,
+  p: Params,
+  s: LearnerState,
+  now: number,
+  units: readonly { modules: readonly { topics: readonly string[] }[] }[],
+) {
+  return units.map((u) => {
+    const { learned, total, strengths } = topicStats(
+      pl,
+      p,
+      s,
+      now,
+      u.modules.flatMap((m) => m.topics),
+    );
+    return { learned, total, strengths };
+  });
+}
+
+/** topicStats counts the given topics as courseStats describes. */
+function topicStats(pl: Planner, p: Params, s: LearnerState, now: number, ids: Iterable<string>) {
   const open = new Set(frontier(pl, s));
   const strengths = Array.from({ length: STRENGTHS }, () => 0);
   const by = new Map<TopicStatus, number>();
-  for (const id of pl.scope.inCourse) {
+  let total = 0;
+  for (const id of ids) {
+    total++;
     const status = topicStatus(pl, p, s, open, id, now);
     by.set(status, (by.get(status) ?? 0) + 1);
     const t = s.topics[id];
@@ -35,7 +62,7 @@ export function courseStats(pl: Planner, p: Params, s: LearnerState, now: number
   const n = (k: TopicStatus) => by.get(k) ?? 0;
   return {
     learned: n(TopicStatus.LEARNED) + n(TopicStatus.DUE),
-    total: pl.scope.inCourse.size,
+    total,
     due: n(TopicStatus.DUE),
     strengths,
     available: n(TopicStatus.AVAILABLE),

@@ -21,6 +21,7 @@ import {
   reopenPlacement,
   type SessionRow,
   speakingOffUntil,
+  subjectCourses,
   subjectSettings,
   updateSession,
   updateSubjectSettings,
@@ -52,7 +53,7 @@ import { figure, knowledgePointIntro, sessionMessage, sounds, taskMessage, text 
 import { requireJudgingQuota } from "./costs.ts";
 import { ESSAY_NOTICE_MS, essayRun, essayTopics, finishEssay, judgeEssay } from "./essays.ts";
 import { forLearner, type JudgingDeps, judgedCriteria, runJudgment, viewJudgment } from "./judging.ts";
-import { courseStats, strengthOf, topicStatus } from "./progress.ts";
+import { courseStats, strengthOf, topicStatus, unitStats } from "./progress.ts";
 import type { CourseEntry, Registry } from "./registry.ts";
 import { answerRun, canSkip, type Given, type RunState, runTask, startRun } from "./runner.ts";
 import { appendTo, learnerState, settleAnswer } from "./sessions.ts";
@@ -79,6 +80,9 @@ function checkDate(day: string): string | null {
     throw new ConnectError("a date is YYYY-MM-DD", Code.InvalidArgument);
   return day;
 }
+
+/** sequenceSide is how many courses the course sequence lists on each side of the current one: taken before, and next. */
+const sequenceSide = 3;
 
 /** historyLength bounds the finished sessions a learner's history lists. */
 const historyLength = 100;
@@ -242,6 +246,24 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
     const chosen = await currentCourse(db, learnerId, courseId);
     if (!chosen) throw new ConnectError(`${courseId} is not the current course`, Code.FailedPrecondition);
     return { db, c, learnerId, guardian, decided: chosen.decided };
+  };
+
+  /**
+   * inSubject resolves a course a learner may look at: the current course of its subject, read for the learner, or
+   * another course of that subject, which the learner's state of the subject answers for as well.
+   */
+  const inSubject = async (ctx: HandlerContext, courseId: string, guardedId = "") => {
+    const { db, learnerId, guardian } = await learner(ctx, guardedId);
+    const viewed = await course(courseId);
+    const now = deps.now();
+    if (!guardian) {
+      await requireStudy(db, learnerId, now);
+      if (deps.billing) await requirePlan(db, learnerId, viewed.subject.def.id, now);
+    }
+    const chosen = (await currentCourses(db, learnerId)).find((e) => e.subjectId === viewed.subject.def.id);
+    if (!chosen) throw new ConnectError(`no current course in ${viewed.subject.def.id}`, Code.FailedPrecondition);
+    const c = chosen.courseId === courseId ? await forLearner(db, viewed, learnerId, now) : viewed;
+    return { db, c, learnerId, currentId: chosen.courseId };
   };
 
   /** decider resolves a learner whose course, goals or end date the caller is changing, refusing anyone but their supervisor. */
@@ -423,8 +445,34 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
       };
     },
 
-    async getCourseProgress(req, ctx) {
+    async listCourseProgress(req, ctx) {
       const { db, c, learnerId } = await current(ctx, req.courseId, req.learnerId);
+      const now = deps.now();
+      const { state: s } = await state(db, learnerId, c);
+      const taken = (await subjectCourses(db, learnerId, c.subject.def.id)).filter((id) => id !== c.id);
+      const before = taken.slice(0, sequenceSide).reverse();
+      const after: string[] = [];
+      for (let id = c.index.next.get(c.id)?.[0]; id && after.length < sequenceSide; id = c.index.next.get(id)?.[0]) {
+        if (!before.includes(id)) after.push(id);
+      }
+      const courses = [];
+      for (const id of [...before, c.id, ...after]) {
+        // A course taken before may have left the catalog; the current one is read for the learner, as the map is.
+        const e = id === c.id ? c : await registry.course(id);
+        if (!e) continue;
+        const units = unitStats(e.planner, e.ctx.params, s, now, e.course.def.units);
+        courses.push({
+          courseId: e.id,
+          title: text(e.course.def.title),
+          stats: courseStats(e.planner, e.ctx.params, s, now),
+          units: e.course.def.units.map((u, i) => ({ title: text(u.title), ...units[i] })),
+        });
+      }
+      return { courses, currentCourseId: c.id };
+    },
+
+    async getCourseProgress(req, ctx) {
+      const { db, c, learnerId } = await inSubject(ctx, req.courseId, req.learnerId);
       const now = deps.now();
       const { state: s } = await state(db, learnerId, c);
       const p = c.ctx.params;

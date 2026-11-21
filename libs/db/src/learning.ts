@@ -70,6 +70,16 @@ export async function currentCourses(db: Db, learnerId: string): Promise<Current
   return rows.map((r) => ({ subjectId: r.subjectId, courseId: r.courseId, decided: r.decidedAt !== null }));
 }
 
+/** subjectCourses lists the courses a learner has taken in a subject: the current one first, then the others, the one left last first. */
+export async function subjectCourses(db: Db, learnerId: string, subjectId: string): Promise<string[]> {
+  const rows = await db
+    .select({ courseId: enrollment.courseId })
+    .from(enrollment)
+    .where(and(eq(enrollment.learnerId, learnerId), eq(enrollment.subjectId, subjectId)))
+    .orderBy(sql`${enrollment.endedAt} desc nulls first`, asc(enrollment.courseId));
+  return rows.map((r) => r.courseId);
+}
+
 /** currentCourse gives a learner's current course if it is `courseId`. */
 export async function currentCourse(db: Db, learnerId: string, courseId: string): Promise<CurrentCourse | undefined> {
   return (await currentCourses(db, learnerId)).find((c) => c.courseId === courseId);

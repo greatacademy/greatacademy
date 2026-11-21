@@ -16,6 +16,7 @@ import {
   learnerFor,
   loadState,
   recordAnswer,
+  subjectCourses,
   totalXp,
   updateSession,
   xpByDay,
@@ -101,6 +102,9 @@ describe("learners and enrollments", () => {
     await chooseCourse(db, l, "test", "c1", at(6));
     expect(await currentCourse(db, l, "c1")).toEqual({ subjectId: "test", courseId: "c1", decided: true });
     expect(await currentCourse(db, l, "c2")).toBeUndefined();
+    expect(await subjectCourses(db, l, "test")).toEqual(["c1", "c2"]);
+    await chooseCourse(db, l, "test", "c3", at(7));
+    expect(await subjectCourses(db, l, "test")).toEqual(["c3", "c1", "c2"]);
   });
 
   it("lists first the course most recently worked on", async () => {

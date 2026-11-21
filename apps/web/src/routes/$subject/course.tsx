@@ -48,7 +48,7 @@ function CoursePage() {
           <h1 className="text-2xl font-semibold tracking-tight">{tx(course.title)}</h1>
         </div>
         <Markdown source={tx(course.description)} className="text-sm text-muted" />
-        {stats && <CourseBar stats={stats} className="max-w-md" />}
+        {stats && <CourseBar stats={stats} courseId={course.id} className="max-w-md" />}
         <Link to="/courses/$courseId" params={{ courseId: course.id }} className="inline-flex items-center gap-1.5 text-sm text-accent">
           <ListBullets size={16} /> {m.courseOutline}
         </Link>

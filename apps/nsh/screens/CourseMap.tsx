@@ -1,7 +1,13 @@
 import { strengthShades } from "@ga/design";
 import type { GetCourseResponse } from "@ga/proto/catalog/v1/catalog_pb";
-import { type CourseStats, type GetCourseProgressResponse, type TopicProgress, TopicStatus } from "@ga/proto/learning/v1/learning_pb";
-import { computed, List, signal, Text, View, windowSize } from "nsh";
+import {
+  type CourseStats,
+  type CourseUnits,
+  type GetCourseProgressResponse,
+  type TopicProgress,
+  TopicStatus,
+} from "@ga/proto/learning/v1/learning_pb";
+import { computed, List, Scroll, signal, Text, View, windowSize } from "nsh";
 import { NavPage } from "nsh/base";
 import { m, tx } from "../lib/i18n.ts";
 import { query } from "../lib/query.ts";
@@ -144,6 +150,8 @@ export async function loadMap(courseId: string, signal: AbortSignal): Promise<Ma
  */
 export function MapBody(props: { map: MapData }) {
   const byTopic = computed(() => new Map(props.map.progress.topics.map((topic) => [topic.topicId, topic])));
+  // Units are numbered 1, 2, 3 and their modules 1.1, 1.2, as on the web.
+  const unitNumber = (unit: object) => (props.map.course.course?.units ?? []).indexOf(unit as never) + 1;
   const counts = computed(() => {
     const found: Partial<Record<StatusKey, number>> = {};
     for (const topic of props.map.progress.topics) {
@@ -169,7 +177,9 @@ export function MapBody(props: { map: MapData }) {
         {(unit) => (
           <Card>
             <View style={{ alignItems: "baseline", flexDirection: "row", gap: 12, justifyContent: "space-between" }}>
-              <Text style={{ color: colors().ink, flex: 1, fontSize: 17, fontWeight: "600" }}>{tx(unit().title)}</Text>
+              <Text style={{ color: colors().ink, flex: 1, fontSize: 17, fontWeight: "600" }}>
+                {`${unitNumber(unit())}  ${tx(unit().title)}`}
+              </Text>
               <Muted>
                 {m().unitLearned(
                   unitIds(unit()).filter((id) => {
@@ -216,7 +226,7 @@ export function MapBody(props: { map: MapData }) {
             <Each of={unit().modules}>
               {(module) => (
                 <View style={{ gap: 8, marginTop: 8 }}>
-                  <Muted>{tx(module().title)}</Muted>
+                  <Muted>{`${unitNumber(unit())}.${unit().modules.indexOf(module()) + 1}  ${tx(module().title)}`}</Muted>
                   <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
                     <Each of={module().topics} key={(topic) => topic.id}>
                       {(topic) => (
@@ -258,16 +268,6 @@ export function CourseMap(props: { courseId: string }) {
 
 /** LegendCounts is how many of a course's own topics each entry of TopicLegend has. */
 export type LegendCounts = Partial<Record<LegendKey, number>>;
-
-/** statsCounts takes the counts of TopicLegend from a course's stats. */
-const statsCounts = (s: CourseStats | undefined): LegendCounts => ({
-  shades: s?.learned ?? 0,
-  due: s?.due ?? 0,
-  available: s?.available ?? 0,
-  failed: s?.failed ?? 0,
-  assumed: s?.assumed ?? 0,
-  locked: s?.locked ?? 0,
-});
 
 /**
  * TopicLegend explains the marks of the progress map with how many of the course's own topics have each: every learned
@@ -329,21 +329,124 @@ export function TopicLegend(props: { counts: LegendCounts }) {
   );
 }
 
-/** percentLearned is how much of a course is learned, rounded down, so that 100% means every topic, as on the web. */
-export const percentLearned = (s: CourseStats | undefined) => (s && s.total > 0 ? Math.floor((s.learned / s.total) * 100) : 0);
+/** Shaded is what a shaded bar shows: topics learned, in all, and the learned ones by strength, of a course or a unit. */
+type Shaded = Pick<CourseStats, "learned" | "total" | "strengths">;
+
+/** percentLearned is how much of a course or unit is learned, rounded down, so that 100% means every topic, as on the web. */
+export const percentLearned = (s: Shaded | undefined) => (s && s.total > 0 ? Math.floor((s.learned / s.total) * 100) : 0);
+
+/** ShadedBar is a course's or a unit's learned topics in one bar, the firmest first, in the map's shades. */
+function ShadedBar(props: { stats: Shaded | undefined }) {
+  const total = () => Math.max(1, props.stats?.total ?? 0);
+  const strengths = () => props.stats?.strengths ?? [];
+  return (
+    <View style={{ backgroundColor: colors().line, borderRadius: 4, flex: 1, flexDirection: "row", height: 8, overflow: "hidden" }}>
+      <Each of={[...strengths().keys()].reverse()}>
+        {(level) => (
+          <View style={{ backgroundColor: shadeOf(level()), height: 8, width: `${((strengths()[level()] ?? 0) / total()) * 100}%` }} />
+        )}
+      </Each>
+    </View>
+  );
+}
+
+/**
+ * CourseSequence picks a course of the sequence as tabs, as on the web: the courses taken before, the current one, then
+ * those that follow, each with its place in the sequence and how much of it is learned.
+ */
+export function CourseSequence(props: {
+  courses: readonly CourseUnits[];
+  currentId: string;
+  selected: string;
+  onSelect: (id: string) => void;
+}) {
+  const at = () => props.courses.findIndex((c) => c.courseId === props.currentId);
+  const place = (i: number) => (i < at() ? m().sequence.before : i === at() ? m().sequence.current : m().sequence.after);
+  return (
+    <Scroll horizontal scrollbar={false}>
+      <View style={{ flexDirection: "row", gap: 8 }}>
+        <Each of={props.courses} key={(c) => c.courseId}>
+          {(c) => (
+            <View
+              role="tab"
+              accessibilityLabel={`${place(props.courses.indexOf(c()))}: ${tx(c().title)} ${percentLearned(c().stats)}%`}
+              accessibilityHint={m().sequence.note}
+              tooltip={m().sequence.note}
+              onPress={() => props.onSelect(c().courseId)}
+              style={{
+                backgroundColor: c().courseId === props.selected ? colors()["accent-soft"] : colors().surface,
+                borderColor: c().courseId === props.selected ? colors().accent : colors().line,
+                borderRadius: 12,
+                borderWidth: 1,
+                gap: 2,
+                paddingHorizontal: 12,
+                paddingVertical: 8,
+                width: 140,
+              }}
+            >
+              <Text
+                style={{
+                  color: props.courses.indexOf(c()) === at() ? colors().accent : colors().muted,
+                  fontSize: 11,
+                  fontWeight: props.courses.indexOf(c()) === at() ? "600" : "400",
+                }}
+              >
+                {place(props.courses.indexOf(c()))}
+              </Text>
+              <Text style={{ color: colors().ink, fontSize: 14, fontWeight: "500", numberOfLines: 1 }}>{tx(c().title)}</Text>
+              <Text style={{ color: colors().muted, fontSize: 12 }}>{`${percentLearned(c().stats)}%`}</Text>
+            </View>
+          )}
+        </Each>
+      </View>
+    </Scroll>
+  );
+}
+
+/** UnitList is a course's units numbered in order, each with its shaded bar and how much of it is learned, as on the web. */
+function UnitList(props: { course: CourseUnits }) {
+  return (
+    <View style={{ gap: 10 }}>
+      <Each of={props.course.units}>
+        {(u) => (
+          <View style={{ gap: 4 }}>
+            <View style={{ flexDirection: "row", gap: 8 }}>
+              <Text style={{ color: colors().muted, fontSize: 13, width: 20 }}>{`${props.course.units.indexOf(u()) + 1}`}</Text>
+              <Text style={{ color: colors().ink, flex: 1, fontSize: 13, numberOfLines: 1 }}>{tx(u().title)}</Text>
+              <Text style={{ color: colors().muted, fontSize: 12 }}>{`${percentLearned(u())}%`}</Text>
+            </View>
+            <View style={{ flexDirection: "row", paddingLeft: 28 }}>
+              <ShadedBar stats={u()} />
+            </View>
+          </View>
+        )}
+      </Each>
+    </View>
+  );
+}
+
+/** useCourseSequence reads the course sequence of the current course, unit by unit, while on() holds. */
+export function useCourseSequence(courseId: () => string | undefined) {
+  return query(
+    courseId,
+    (id) => ["sequence", id],
+    (id, { signal }) => learning.listCourseProgress({ courseId: id }, { signal }),
+  );
+}
 
 /**
  * CourseBar is a course's progress on the Learn and Course tabs, as on the web: its learned topics in one bar, the
- * firmest first, in the map's shades, with the share of the course learned, and below it the counts of the map's
- * legend. The bar explains itself on hover on a desktop and when pressed, which works on a phone too: how many topics
- * have each shade; each count explains its status the same way.
+ * firmest first, in the map's shades, with the share of the course learned. It explains itself on hover on a desktop
+ * and opens when pressed, which works on a phone too: the course sequence as tabs, and for the course picked, how many
+ * topics have each shade and its units numbered with their own bars.
  */
-export function CourseBar(props: { stats: CourseStats | undefined; maxWidth?: number }) {
+export function CourseBar(props: { stats: CourseStats | undefined; courseId: string; maxWidth?: number }) {
   const open = signal(false);
-  const learned = () => props.stats?.learned ?? 0;
-  const total = () => Math.max(1, props.stats?.total ?? 0);
-  const strengths = () => props.stats?.strengths ?? [];
-  const summary = () => m().shades.summary(learned(), props.stats?.total ?? 0);
+  const picked = signal<string | undefined>(undefined);
+  const sequence = useCourseSequence(() => (open() ? props.courseId : undefined));
+  const summary = () => m().shades.summary(props.stats?.learned ?? 0, props.stats?.total ?? 0);
+  const shown = (courses: readonly CourseUnits[]) =>
+    courses.find((c) => c.courseId === (picked() ?? props.courseId)) ?? courses.find((c) => c.courseId === props.courseId);
   return (
     <View style={{ gap: 8, maxWidth: props.maxWidth }}>
       <View
@@ -363,39 +466,64 @@ export function CourseBar(props: { stats: CourseStats | undefined; maxWidth?: nu
           paddingVertical: 4,
         }}
       >
-        <View style={{ backgroundColor: colors().line, borderRadius: 4, flex: 1, flexDirection: "row", height: 8, overflow: "hidden" }}>
-          <Each of={[...strengths().keys()].reverse()}>
-            {(level) => (
-              <View style={{ backgroundColor: shadeOf(level()), height: 8, width: `${((strengths()[level()] ?? 0) / total()) * 100}%` }} />
-            )}
-          </Each>
-        </View>
+        <ShadedBar stats={props.stats} />
         <Text style={{ color: colors().ink, fontSize: 14, fontWeight: "600" }}>{`${percentLearned(props.stats)}%`}</Text>
       </View>
       <If when={open()}>
-        <View style={{ borderColor: colors().line, borderRadius: 12, borderWidth: 1, gap: 8, padding: 12 }}>
-          <Muted>{summary()}</Muted>
-          <View style={{ alignItems: "center", flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
-            <Text style={{ color: colors().muted, fontSize: 12 }}>{m().shades.weak}</Text>
-            <Each of={[...strengths().keys()]}>
-              {(level) => (
-                <View style={{ alignItems: "center", flexDirection: "row", gap: 4 }}>
-                  <View style={{ backgroundColor: shadeOf(level()), borderRadius: 2, height: 10, width: 10 }} />
-                  <Text style={{ color: colors().muted, fontSize: 12 }}>{`${strengths()[level()] ?? 0}`}</Text>
-                </View>
-              )}
-            </Each>
-            <Text style={{ color: colors().muted, fontSize: 12 }}>{m().shades.strong}</Text>
-            <View style={{ alignItems: "center", flexDirection: "row", gap: 4 }}>
-              <View style={{ backgroundColor: colors().line, borderRadius: 2, height: 10, width: 10 }} />
-              <Text style={{ color: colors().muted, fontSize: 12 }}>
-                {`${m().shades.notLearned} ${Math.max(0, (props.stats?.total ?? 0) - learned())}`}
-              </Text>
-            </View>
-          </View>
+        <View style={{ borderColor: colors().line, borderRadius: 12, borderWidth: 1, gap: 12, padding: 12 }}>
+          <Loaded rpc={sequence} skeleton={<Skeleton rows={2} />}>
+            {(data) => (
+              <View style={{ gap: 12 }}>
+                <If when={data().courses.length > 1}>
+                  <CourseSequence
+                    courses={data().courses}
+                    currentId={props.courseId}
+                    selected={shown(data().courses)?.courseId ?? props.courseId}
+                    onSelect={(id) => picked.set(id)}
+                  />
+                </If>
+                <If when={shown(data().courses)}>
+                  {(c) => (
+                    <View style={{ gap: 12 }}>
+                      <ShadeCounts stats={c().stats} />
+                      <UnitList course={c()} />
+                    </View>
+                  )}
+                </If>
+              </View>
+            )}
+          </Loaded>
         </View>
       </If>
-      <TopicLegend counts={statsCounts(props.stats)} />
+    </View>
+  );
+}
+
+/** ShadeCounts is how many of a course's topics have each shade, and how many are not learned, under its summary. */
+function ShadeCounts(props: { stats: CourseStats | undefined }) {
+  const learned = () => props.stats?.learned ?? 0;
+  const strengths = () => props.stats?.strengths ?? [];
+  return (
+    <View style={{ gap: 6 }}>
+      <Muted>{m().shades.summary(learned(), props.stats?.total ?? 0)}</Muted>
+      <View style={{ alignItems: "center", flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
+        <Text style={{ color: colors().muted, fontSize: 12 }}>{m().shades.weak}</Text>
+        <Each of={[...strengths().keys()]}>
+          {(level) => (
+            <View style={{ alignItems: "center", flexDirection: "row", gap: 4 }}>
+              <View style={{ backgroundColor: shadeOf(level()), borderRadius: 2, height: 10, width: 10 }} />
+              <Text style={{ color: colors().muted, fontSize: 12 }}>{`${strengths()[level()] ?? 0}`}</Text>
+            </View>
+          )}
+        </Each>
+        <Text style={{ color: colors().muted, fontSize: 12 }}>{m().shades.strong}</Text>
+        <View style={{ alignItems: "center", flexDirection: "row", gap: 4 }}>
+          <View style={{ backgroundColor: colors().line, borderRadius: 2, height: 10, width: 10 }} />
+          <Text style={{ color: colors().muted, fontSize: 12 }}>
+            {`${m().shades.notLearned} ${Math.max(0, (props.stats?.total ?? 0) - learned())}`}
+          </Text>
+        </View>
+      </View>
     </View>
   );
 }

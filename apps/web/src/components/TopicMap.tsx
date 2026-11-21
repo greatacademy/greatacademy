@@ -1,6 +1,6 @@
 import { STRENGTH_MIX } from "@ga/design";
 import type { Course } from "@ga/proto/catalog/v1/catalog_pb";
-import { type CourseStats, type TopicProgress, TopicStatus } from "@ga/proto/learning/v1/learning_pb";
+import { type TopicProgress, TopicStatus } from "@ga/proto/learning/v1/learning_pb";
 import { Link } from "@tanstack/react-router";
 import { type ReactNode, useState } from "react";
 
@@ -43,23 +43,12 @@ export function legendCounts(topics: readonly TopicProgress[]): LegendCounts {
   ) as LegendCounts;
 }
 
-/** statsCounts takes the counts of TopicLegend from a course's stats. */
-export const statsCounts = (s: CourseStats): LegendCounts => ({
-  shades: s.learned,
-  [TopicStatus.DUE]: s.due,
-  [TopicStatus.AVAILABLE]: s.available,
-  [TopicStatus.FAILED]: s.failed,
-  [TopicStatus.ASSUMED]: s.assumed,
-  [TopicStatus.LOCKED]: s.locked,
-});
-
 /**
  * TopicLegend explains the marks of TopicMap with how many of the course's own topics have each: the shades of
  * learned topics, from just learned to solid, then the other statuses. Each entry explains itself: on hover where
- * there is a pointer, and on a tap or click, which works on a phone too. Bare drops the card around it, for the
- * course's bar.
+ * there is a pointer, and on a tap or click, which works on a phone too.
  */
-export function TopicLegend({ counts, bare = false }: { counts: LegendCounts; bare?: boolean }) {
+export function TopicLegend({ counts }: { counts: LegendCounts }) {
   const { m } = useI18n();
   const [explained, setExplained] = useState<LegendKey>();
   const count = (k: LegendKey) => counts[k] ?? 0;
@@ -67,7 +56,7 @@ export function TopicLegend({ counts, bare = false }: { counts: LegendCounts; ba
   const note = explained !== undefined && shown.includes(explained) ? explained : undefined;
   const noteOf = (k: LegendKey) => (k === "shades" ? m.shades.note : m.statusNote[statusStyle[k].key]);
   return (
-    <div className={`space-y-2 text-sm ${bare ? "" : "rounded-2xl border border-line bg-surface px-4 py-3"}`}>
+    <div className="space-y-2 rounded-2xl border border-line bg-surface px-4 py-3 text-sm">
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
         {shown.map((k) => (
           <button
@@ -146,24 +135,35 @@ function UnitBar({ ids, byTopic, widest }: { ids: readonly string[]; byTopic: Re
   );
 }
 
-/** TopicMap shows every topic of a course with its status and estimated memory; with subject, topics link to their pages in it. */
+/**
+ * TopicMap shows every topic of a course with its status and estimated memory, its units numbered 1, 2, 3 and their
+ * modules 1.1, 1.2; with subject, topics link to their pages in it.
+ */
 export function TopicMap({ course, topics, subject }: { course: Course; topics: TopicProgress[]; subject?: string }) {
   const { m, tx } = useI18n();
   const byTopic = new Map(topics.map((t) => [t.topicId, t]));
   const unitIds = (u: Course["units"][number]) => u.modules.flatMap((mod) => mod.topics.map((t) => t.id));
   const widest = Math.max(1, ...course.units.map((u) => unitIds(u).length));
-  return course.units.map((u) => (
+  return course.units.map((u, i) => (
     <Card key={tx(u.title)} className="space-y-4">
       <div className="space-y-2">
         <div className="flex items-baseline justify-between gap-3">
-          <h2 className="font-semibold">{tx(u.title)}</h2>
+          <h2 className="font-semibold">
+            <span className="mr-2 tabular-nums text-muted">{i + 1}</span>
+            {tx(u.title)}
+          </h2>
           <UnitCount ids={unitIds(u)} byTopic={byTopic} />
         </div>
         <UnitBar ids={unitIds(u)} byTopic={byTopic} widest={widest} />
       </div>
-      {u.modules.map((mod) => (
+      {u.modules.map((mod, j) => (
         <div key={tx(mod.title)} className="space-y-2">
-          <h3 className="text-sm text-muted">{tx(mod.title)}</h3>
+          <h3 className="text-sm text-muted">
+            <span className="mr-2 tabular-nums">
+              {i + 1}.{j + 1}
+            </span>
+            {tx(mod.title)}
+          </h3>
           <div className="grid gap-2 sm:grid-cols-2">
             {mod.topics.map((t) => {
               const p = byTopic.get(t.id);

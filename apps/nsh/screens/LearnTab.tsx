@@ -20,15 +20,15 @@ import { describeTask, TaskCard } from "./TaskCard.tsx";
 const ASIDE_FROM = 1024;
 const ASIDE_WIDTH = 320;
 
-/** CourseHead heads the Learn tab, as on the web: the course, which opens the Course tab, how far it is and what is due. */
+/** CourseHead heads the Learn tab, as on the web: the course, which opens the Progress tab, how far it is and what is due. */
 function CourseHead(props: { place: Place; dash: GetDashboardResponse }) {
   const stats = () => props.dash.stats;
   return (
     <View style={{ gap: 8, maxWidth: 560 }}>
-      <Text role="button" onPress={() => openTab("course")} style={{ color: colors().ink, fontSize: 24, fontWeight: "700" }}>
+      <Text role="button" onPress={() => openTab("progress")} style={{ color: colors().ink, fontSize: 24, fontWeight: "700" }}>
         {courseTitle(props.place.data.list, props.dash.courseId)}
       </Text>
-      <CourseBar stats={stats()} />
+      <CourseBar stats={stats()} courseId={props.dash.courseId} />
     </View>
   );
 }

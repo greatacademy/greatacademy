@@ -376,6 +376,23 @@ test("studies a lesson from the course list to its result", async () => {
     signedIn({
       [`POST ${learningUrl}/GetDashboard`]: () =>
         json({ courseId: "algebra", diagnosed: true, tasks: done ? [] : [lessonTask], stats: { learned: done ? 2 : 1, total: 2 }, xp: {} }),
+      [`POST ${learningUrl}/ListCourseProgress`]: json({
+        currentCourseId: "algebra",
+        courses: [
+          {
+            courseId: "algebra",
+            title: text("Algebra", "代数"),
+            stats: { learned: 2, total: 2, strengths: [2, 0, 0, 0, 0, 0] },
+            units: [{ title: text("Linear equations", "一次方程"), learned: 2, total: 2, strengths: [2, 0, 0, 0, 0, 0] }],
+          },
+          {
+            courseId: "algebra-ii",
+            title: text("Algebra II", "代数 II"),
+            stats: { learned: 0, total: 3 },
+            units: [{ title: text("Quadratics", "二次方程"), learned: 0, total: 3 }],
+          },
+        ],
+      }),
       [`POST ${learningUrl}/StartTask`]: json({
         session: {
           ...session,
@@ -446,9 +463,15 @@ test("studies a lesson from the course list to its result", async () => {
   await app.waitFor("text:+10 XP");
   await app.press("text:Back to dashboard");
   await app.waitFor("text:100%");
-  // Below the bar, the counts of the progress map's legend.
-  expect(app.texts()).toContain("Learned 2");
   expect(app.shows("Nothing to do right now: every topic is learned and no review is due. Come back tomorrow.")).toBe(true);
+  // The bar opens the course sequence, the current course's units numbered with their own bars.
+  await app.press("label:100%");
+  await app.waitFor("text:Linear equations");
+  expect(app.texts()).toContain("Current");
+  expect(app.texts()).toContain("Algebra II");
+  expect(app.texts()).toContain("1");
+  await app.press("label:Next: Algebra II 0%");
+  await app.waitFor("text:Quadratics");
 });
 
 test("takes math as plain text and skips in the diagnostic without feedback", async () => {

@@ -213,6 +213,20 @@ describe("LearningService", () => {
     expect((await learning.getProfile({ timeZone: "UTC" })).enrollments.map((e) => e.courseId)).toEqual(["prealgebra"]);
     await learning.chooseCourse({ courseId: COURSE });
     expect((await learning.getDashboard({ courseId: COURSE })).stats?.learned).toBe(knows.size);
+    // The course sequence: the courses taken before, the current one, then those that follow, each unit by unit.
+    const { courses, currentCourseId } = await learning.listCourseProgress({ courseId: COURSE });
+    const ids = courses.map((c) => c.courseId);
+    expect(currentCourseId).toBe(COURSE);
+    expect(ids.slice(0, 2)).toEqual(["prealgebra", COURSE]);
+    expect(ids.length).toBeGreaterThan(2);
+    expect(ids.length).toBeLessThanOrEqual(5);
+    // Another course of the subject reads from the same state.
+    expect((await learning.getCourseProgress({ courseId: "prealgebra" })).topics.length).toBeGreaterThan(0);
+    const units = courses[1]?.units ?? [];
+    expect(units.length).toBe((await registry.course(COURSE))!.course.def.units.length);
+    expect(units.reduce((n, u) => n + u.total, 0)).toBe(courses[1]?.stats?.total);
+    expect(units.reduce((n, u) => n + u.learned, 0)).toBe(courses[1]?.stats?.learned);
+    expect(units[0]?.title?.values.en).toBeTruthy();
   });
 
   it("suggests the course a course builds on while its diagnostic is due and it needs more earlier topics than its own", async () => {

@@ -1,7 +1,9 @@
 import { ClockCounterClockwise } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 
+import { CourseSequence, useCourseSequence } from "../../components/CourseSequence.tsx";
 import { LoadError, NotFoundNote } from "../../components/LoadError.tsx";
 import { ForecastCard, GoalsCard } from "../../components/SubjectDecisions.tsx";
 import { legendCounts, TopicLegend, TopicMap } from "../../components/TopicMap.tsx";
@@ -12,17 +14,24 @@ import { useSubjectPlace } from "../../lib/subject.tsx";
 
 export const Route = createFileRoute("/$subject/progress")({ component: Progress });
 
-/** Progress is how far the learner is in the subject's current course: its map, goals, forecast and end date. */
+/**
+ * Progress is how far the learner is in the subject's current course: its map, goals, forecast and end date, with the
+ * course sequence to look at the courses taken before and those that follow on the same map.
+ */
 function Progress() {
   const place = useSubjectPlace();
   const courseId = place?.enrollment?.courseId ?? "";
   const subject = place?.subject.id ?? "";
   const { m, tx } = useI18n();
-  const course = useQuery({ queryKey: ["course", courseId], queryFn: () => catalog.getCourse({ courseId }), enabled: !!courseId });
+  // The map shows the current course, or another of the course sequence the learner picks.
+  const [picked, setPicked] = useState<string>();
+  const sequence = useCourseSequence(courseId);
+  const viewed = picked && sequence.data?.courses.some((c) => c.courseId === picked) ? picked : courseId;
+  const course = useQuery({ queryKey: ["course", viewed], queryFn: () => catalog.getCourse({ courseId: viewed }), enabled: !!viewed });
   const progress = useQuery({
-    queryKey: ["progress", courseId],
-    queryFn: () => learning.getCourseProgress({ courseId }),
-    enabled: !!courseId,
+    queryKey: ["progress", viewed],
+    queryFn: () => learning.getCourseProgress({ courseId: viewed }),
+    enabled: !!viewed,
     staleTime: 0,
   });
   const dash = useQuery({
@@ -46,10 +55,19 @@ function Progress() {
           <ClockCounterClockwise size={18} /> {m.history}
         </Link>
       </div>
+      {(sequence.data?.courses.length ?? 0) > 1 && (
+        <section className="space-y-2">
+          <h2 className="text-sm text-muted" title={m.sequence.note}>
+            {m.sequence.label}
+          </h2>
+          <CourseSequence courses={sequence.data?.courses ?? []} currentId={courseId} selected={viewed} onSelect={setPicked} />
+        </section>
+      )}
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
         <section className="min-w-0 space-y-3">
           <TopicLegend counts={legendCounts(progress.data.topics)} />
-          <TopicMap course={course.data.course} topics={progress.data.topics} subject={subject} />
+          {/* A topic's page speaks of the current course, so only its map links to them. */}
+          <TopicMap course={course.data.course} topics={progress.data.topics} subject={viewed === courseId ? subject : undefined} />
         </section>
         <aside className="grid gap-4 max-lg:order-first sm:grid-cols-2 lg:grid-cols-1">
           <GoalsCard d={dash.data} />

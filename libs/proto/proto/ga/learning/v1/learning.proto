@@ -29,6 +29,9 @@ service LearningService {
   rpc GetDashboard(GetDashboardRequest) returns (GetDashboardResponse);
   // GetCourseProgress returns the learner's status on every topic of a course.
   rpc GetCourseProgress(GetCourseProgressRequest) returns (GetCourseProgressResponse);
+  // ListCourseProgress returns the course sequence of the current course, unit by unit: up to three courses the learner
+  // took before it, oldest first, the current course, then up to three that follow it.
+  rpc ListCourseProgress(ListCourseProgressRequest) returns (ListCourseProgressResponse);
   // StartTask starts one of the offered tasks, or resumes the active session.
   rpc StartTask(StartTaskRequest) returns (StartTaskResponse);
   // SkipDiagnostic places the learner at the beginning of the course.
@@ -297,6 +300,7 @@ message SessionSummary {
 }
 
 message GetCourseProgressRequest {
+  // course_id is the current course or another course of its subject, read from the same learner state.
   string course_id = 1;
   // learner_id, when set, reads a learner the caller is a guardian of instead of the caller.
   string learner_id = 2;
@@ -304,6 +308,34 @@ message GetCourseProgressRequest {
 
 message GetCourseProgressResponse {
   repeated TopicProgress topics = 1;
+}
+
+message ListCourseProgressRequest {
+  // course_id is the current course, whose subject's courses are listed.
+  string course_id = 1;
+  // learner_id, when set, reads a learner the caller is a guardian of instead of the caller.
+  string learner_id = 2;
+}
+
+message ListCourseProgressResponse {
+  repeated CourseUnits courses = 1;
+  string current_course_id = 2;
+}
+
+// CourseUnits is how far a learner is in a course and in each of its units.
+message CourseUnits {
+  string course_id = 1;
+  ga.common.v1.Text title = 2;
+  CourseStats stats = 3;
+  repeated UnitStats units = 4;
+}
+
+// UnitStats is how far a learner is in a unit: its topics learned, in all, and the learned ones by strength.
+message UnitStats {
+  ga.common.v1.Text title = 1;
+  int32 learned = 2;
+  int32 total = 3;
+  repeated int32 strengths = 4;
 }
 
 // TopicStatus is a learner's standing on a topic.

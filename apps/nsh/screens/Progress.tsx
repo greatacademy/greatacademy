@@ -1,11 +1,11 @@
 import type { GetDashboardResponse } from "@ga/proto/learning/v1/learning_pb";
-import { computed, Text, View, windowSize } from "nsh";
+import { computed, signal, Text, View, windowSize } from "nsh";
 import { m } from "../lib/i18n.ts";
 import { nav } from "../lib/nav.ts";
 import { markChanged, query } from "../lib/query.ts";
 import { courseTitle, type Place, usePlace } from "../lib/subject.tsx";
-import { colors, Loaded, PullScroll, Skeleton } from "../lib/ui.tsx";
-import { loadMap, MapBody } from "./CourseMap.tsx";
+import { colors, Loaded, Muted, PullScroll, Skeleton } from "../lib/ui.tsx";
+import { CourseSequence, loadMap, MapBody, useCourseSequence } from "./CourseMap.tsx";
 import { SubjectStart } from "./CourseTab.tsx";
 import { ForecastCard, useDashboard, WeeklyGoals } from "./SubjectCards.tsx";
 
@@ -25,15 +25,22 @@ function Cards(props: { place: Place; dash: GetDashboardResponse; onChanged: () 
 
 /**
  * Progress is the Progress page of the subject shown (docs/experience.md §3), laid out as the web's: the course with
- * the way to its history, the progress map, and beside it the weekly goals and when the course may be finished; a
+ * the way to its history, the course sequence to look at the courses taken before and those that follow, the progress map, and beside it the weekly goals and when the course may be finished; a
  * narrow window shows the goals first.
  */
 export function Progress(props: { visible: () => boolean }) {
   const { rpc, place } = usePlace(props.visible);
   const dash = useDashboard(props.visible, place);
   const course = computed(() => (props.visible() && place()?.enrollment?.courseId) || undefined);
+  // The map shows the current course, or another of the course sequence the learner picks.
+  const picked = signal<string | undefined>(undefined);
+  const sequence = useCourseSequence(course);
+  const viewed = computed(() => {
+    const id = picked();
+    return id && sequence()?.courses.some((c) => c.courseId === id) ? id : course();
+  });
   const map = query(
-    course,
+    viewed,
     (courseId) => ["map", courseId],
     (courseId, { signal }) => loadMap(courseId, signal),
   );
@@ -44,6 +51,7 @@ export function Progress(props: { visible: () => boolean }) {
   };
   const refresh = () => {
     dash.refetch();
+    sequence.refetch();
     map.refetch();
   };
   return (
@@ -62,7 +70,7 @@ export function Progress(props: { visible: () => boolean }) {
                       <View style={{ gap: 16 }}>
                         <View style={{ alignItems: "center", flexDirection: "row", gap: 12 }}>
                           <Text style={{ color: colors().ink, flex: 1, fontSize: 24, fontWeight: "700" }}>
-                            {courseTitle(here().data.list, d().courseId)}
+                            {courseTitle(here().data.list, viewed() ?? d().courseId)}
                           </Text>
                           <Text
                             role="button"
@@ -72,6 +80,17 @@ export function Progress(props: { visible: () => boolean }) {
                             {m().history}
                           </Text>
                         </View>
+                        <If when={(sequence()?.courses.length ?? 0) > 1}>
+                          <View style={{ gap: 8 }}>
+                            <Muted>{m().sequence.label}</Muted>
+                            <CourseSequence
+                              courses={sequence()?.courses ?? []}
+                              currentId={d().courseId}
+                              selected={viewed() ?? d().courseId}
+                              onSelect={(id) => picked.set(id)}
+                            />
+                          </View>
+                        </If>
                         <If when={!wide()}>
                           <Cards place={here()} dash={d()} onChanged={changed} />
                         </If>
