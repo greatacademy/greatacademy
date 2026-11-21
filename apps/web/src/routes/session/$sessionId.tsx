@@ -230,6 +230,13 @@ function PlayerHeader({ session, subject }: { session: Session; subject: Subject
   );
 }
 
+/** reachedIntros lists the lessons of the knowledge points reached: the trail's, and the one asked now where the trail has not it yet. */
+function reachedIntros(session: Session, question: Question): KnowledgePointIntro[] {
+  const intros = session.trail?.intros ?? [];
+  const now = question.intro;
+  return now && !intros.some((i) => i.index === now.index) ? [...intros, now] : intros;
+}
+
 /** introOf finds the lesson of a knowledge point reached, from the trail or the question asked now. */
 function introOf(session: Session, question: Question, knowledgePoint: number): KnowledgePointIntro | undefined {
   return (
@@ -276,7 +283,7 @@ function StepsFlow({
         pass: lesson.pass || 2,
       },
     }),
-    intros: (session.trail?.intros ?? []).map((i) => ({ knowledgePoint: i.index, example: !!i.example })),
+    intros: reachedIntros(session, question).map((i) => ({ knowledgePoint: i.index, example: !!i.example })),
     stage,
     answered: (session.trail?.answered ?? []).map((a) => ({
       index: a.index,
