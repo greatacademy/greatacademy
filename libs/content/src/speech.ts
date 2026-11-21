@@ -166,13 +166,18 @@ function numberWords(w: string): string {
 
 /**
  * spokenWords turns a text into the words a listener hears: lower case, no
- * punctuation, contractions said in full, "OK" as "okay" and numbers below 100 in
+ * punctuation, a clitic written apart joined to its word, contractions said in full, "OK" as "okay" and numbers below 100 in
  * words, since a speech service may write either form of what was said. A
  * Chinese character is a word of its own, one syllable, since Chinese is written
  * without spaces.
  */
 export function spokenWords(text: string): string[] {
-  let s = text.normalize("NFKC").toLowerCase().replace(/[‘’]/g, "'");
+  let s = text
+    .normalize("NFKC")
+    .toLowerCase()
+    .replace(/[‘’]/g, "'")
+    // A service may write a clitic apart, as "grandmother 's" or "do n't"; it is one word with the one before.
+    .replace(/(\p{L})\s+('(?:s|re|ve|ll|d|m)|n't)(?![\p{L}'])/gu, "$1$2");
   for (const [re, by] of CONTRACTIONS) s = s.replace(re, by);
   return s
     .replace(/[^\p{L}\p{N}'\s-]/gu, " ")

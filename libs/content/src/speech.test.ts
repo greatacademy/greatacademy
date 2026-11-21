@@ -80,6 +80,18 @@ describe("speechChecker", () => {
     expect(wrong.feedback?.en).toContain("ten");
   });
 
+  it("joins a clitic a service wrote apart to its word", () => {
+    expect(spokenWords("his grandmother 's careful writing")).toEqual(["his", "grandmother's", "careful", "writing"]);
+    expect(spokenWords("i do n't know")).toEqual(spokenWords("I don't know"));
+    expect(spokenWords("we 're here")).toEqual(spokenWords("We're here"));
+    const read = {
+      mode: "read",
+      reference: 'Inside there was one apple, a napkin, and a small note in his grandmother\'s careful writing: "Sorry!"',
+    };
+    const lexical = "inside there was one apple a napkin and a small note in his grandmother 's careful writing sorry";
+    expect(speechChecker.check(read, heard("Inside there was 1 apple.", { lexical })).correct).toBe(true);
+  });
+
   it("needs every word of a sentence of fewer than twenty words", () => {
     const read = { mode: "read", reference: "On Monday morning I walk to school with my little sister." };
     expect(speechChecker.check(read, heard("on monday morning i walk to school with my little sister")).correct).toBe(true);
