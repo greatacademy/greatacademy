@@ -16,7 +16,10 @@ const MESSAGE = "mathlive#virtual-keyboard-message";
  * script's focus or blur in one web view while another has just been clicked mixes up the next click's press and
  * release on macOS. So the field's policy is manual (MathLive would blur and refocus it as the keyboard toggles), its
  * toggle acts on a whole click, and on a touch screen focusing the field shows the keyboard, as the auto policy does.
- * The toggle's tooltip is the system's (`title`): MathLive draws its own inside the page, which the small web view cuts.
+ * The field keeps its caret while the keyboard is used: a blur that only comes from the page losing the focus to the
+ * keyboard's web view, while the keyboard is open, is one MathLive's field does not take (as while it moves the focus
+ * itself). The toggle's tooltip is the system's (`title`): MathLive draws its own inside the page, which the small web
+ * view cuts; the keyboard's tabs do the same.
  */
 export const KEYBOARD_STAND_IN = `<script>(function(){
 var rect={x:0,y:0,width:0,height:0,top:0,right:0,bottom:0,left:0},shifted=false,listeners={};
@@ -38,6 +41,8 @@ Object.defineProperty(window,"mathVirtualKeyboard",{get:function(){return keyboa
 function untip(){var f=document.querySelector("math-field"),r=f&&f.shadowRoot;if(!r)return;r.querySelectorAll("[data-tooltip]").forEach(function(el){el.title=el.getAttribute("data-tooltip");el.removeAttribute("data-tooltip")});
 if(!r.gaTips){r.gaTips=new MutationObserver(untip);r.gaTips.observe(r,{subtree:true,childList:true,attributes:true,attributeFilter:["data-tooltip"]})}}
 addEventListener("load",untip);
+addEventListener("blur",function(){var f=document.querySelector("math-field"),mf=f&&f._mathfield;if(!mf||!keyboard.visible||document.hasFocus())return;
+mf.focusBlurInProgress=true;setTimeout(function(){mf.focusBlurInProgress=false},0)},true);
 function onToggle(e){var t=e.composedPath()[0];return !!(t&&t.closest&&t.closest("[part~=virtual-keyboard-toggle]"))}
 ["pointerdown","pointerup","mousedown","mouseup","touchstart","touchend"].forEach(function(t){addEventListener(t,function(e){if(onToggle(e))e.stopPropagation()},true)});
 addEventListener("click",function(e){if(!onToggle(e))return;e.stopPropagation();e.preventDefault();keyboard.visible?keyboard.hide():keyboard.show({animate:true})},true);
@@ -59,7 +64,9 @@ const keyboardScript = `
 if(typeof MathfieldElement==="undefined"){post({failed:true})}else{
 MathfieldElement.fontsDirectory=null;MathfieldElement.soundsDirectory=null;
 var k=window.mathVirtualKeyboard,field={postMessage:function(d){post({kb:d})}};
-k.targetOrigin="*";k.container=document.body;k.connectedMathfieldWindow=field;
+k.targetOrigin="*";
+function untip(){document.querySelectorAll(".ML__keyboard [data-tooltip]").forEach(function(el){el.title=el.getAttribute("data-tooltip");el.removeAttribute("data-tooltip")})}
+new MutationObserver(untip).observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:["data-tooltip"]});k.container=document.body;k.connectedMathfieldWindow=field;
 var hide=k.hide.bind(k),show=k.show.bind(k);
 function sliding(){return !!(k._element&&k._element.classList.contains("ga-hiding"))}
 Object.defineProperty(k,"visible",{configurable:true,get:function(){return !!k._visible&&!sliding()},set:function(on){on?k.show():k.hide()}});
