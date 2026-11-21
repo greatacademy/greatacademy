@@ -1,5 +1,10 @@
+import { type Stage, type StepTarget, sameTarget, sessionSteps, stepTargets } from "@ga/design";
 import {
+  type AnsweredPart,
+  type AnsweredQuestion,
   type Feedback,
+  type KnowledgePointIntro,
+  type ProblemView,
   type Question,
   type Result,
   type ResultItem,
@@ -37,9 +42,11 @@ import { MathKeyboard, mathKeyboardHeight } from "./MathKeyboard.tsx";
 import { FigureView, Rich } from "./Rich.tsx";
 import { Sounds } from "./Sounds.tsx";
 import { SpeechFlow } from "./Speech.tsx";
+import { StepArrow, StepsBar } from "./Steps.tsx";
 import { JudgedFeedback, WritingFlow } from "./Writing.tsx";
 
 type Answered = { feedback: Feedback; next: Session; response: string };
+type OnAnswered = (feedback: Feedback | undefined, next: Session, response: string) => void;
 
 function taskLabel(session: Session): string {
   switch (session.task?.kind.case) {
@@ -64,32 +71,24 @@ function clock(ms: number): string {
   return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
 }
 
-function progressOf(session: Session, question: Question, now: number): { label: string; share: number } {
+/** stepLabel names the task and where in it the question asked now is. */
+function stepLabel(session: Session, question: Question): string {
   const lesson = question.lesson;
   const task = session.task?.kind;
-  const label = lesson
-    ? `${m().step(lesson.knowledgePoint + 1, lesson.knowledgePoints)} · ${m().streak(lesson.streak, lesson.needed)}`
+  const at = lesson
+    ? m().step(lesson.knowledgePoint + 1, lesson.knowledgePoints)
     : task?.case === "diagnostic"
       ? m().questionUpTo(question.index + 1, task.value.maxQuestions)
       : m().question(question.index + 1, question.total);
-  const deadline = Number(question.deadline);
-  const timed = deadline > 0 ? ` · ${deadline > now ? m().timeLeft(clock(deadline - now)) : m().timeUp}` : "";
-  const share = lesson
-    ? (lesson.knowledgePoint + lesson.streak / lesson.needed) / lesson.knowledgePoints
-    : question.total > 0
-      ? question.index / question.total
-      : task?.case === "diagnostic" && task.value.maxQuestions > 0
-        ? question.index / task.value.maxQuestions
-        : 0;
-  return { label: label + timed, share: Math.max(0, Math.min(1, share)) };
+  return `${taskLabel(session)} · ${at}`;
 }
 
 /**
- * FocusBar is the player's only chrome: a way out, and how far the task has come. On a desktop it is the window's
+ * FocusBar is the player's only chrome: a way out, and the task's steps under it. On a desktop it is the window's
  * title bar's row too, as a page's header is: as tall, dragging the window, and clear of macOS's traffic lights, with
  * the way out at its right and a button as large as the sidebar's, which a pointer needs rather than a finger.
  */
-function FocusBar(props: { share: number; label: string; onClose: () => void }) {
+function FocusBar(props: { label: string; onClose: () => void; children?: JSX.Element }) {
   return (
     <View
       desktop={{ windowDrag: true }}
@@ -97,38 +96,29 @@ function FocusBar(props: { share: number; label: string; onClose: () => void }) 
         alignItems: "center",
         backgroundColor: colors().page,
         flexDirection: "row",
-        gap: 12,
+        gap: 8,
         paddingHorizontal: 12,
         ...(platform.desktop
           ? { height: HEADER_HEIGHT, paddingLeft: 12 + headerInset() }
-          : { paddingBottom: 8, paddingTop: "calc(env(safe-area-inset-top) + 8)" }),
+          : { paddingBottom: 6, paddingTop: "calc(env(safe-area-inset-top) + 6)" }),
       }}
     >
       <If when={!platform.desktop}>
         <CloseButton size={44} onPress={props.onClose} />
       </If>
-      {/* On a desktop the bar's middle is the row's, level with the traffic lights, and the words hang below it. */}
-      <View style={platform.desktop ? { alignSelf: "stretch", flex: 1, justifyContent: "center" } : { flex: 1, gap: 4 }}>
-        <View
-          role="progressbar"
-          accessibilityLabel={props.label}
-          accessibilityValue={{ min: 0, max: 100, now: Math.round(props.share * 100) }}
-          style={{ backgroundColor: colors().line, borderRadius: 4, height: 8, overflow: "hidden" }}
-        >
-          <View style={{ backgroundColor: colors().accent, borderRadius: 4, height: 8, width: `${Math.round(props.share * 100)}%` }} />
-        </View>
-        <Text
-          style={{
-            color: colors().muted,
-            fontSize: 12,
-            ...(platform.desktop ? { left: 0, position: "absolute", top: HEADER_HEIGHT / 2 + 7 } : {}),
-          }}
-        >
-          {props.label}
-        </Text>
+      {/* On a desktop the steps and the words share the row, level with the traffic lights; on a phone the words go under. */}
+      <View
+        style={
+          platform.desktop
+            ? { alignItems: "center", alignSelf: "stretch", flex: 1, flexDirection: "row", gap: 12 }
+            : { flex: 1, gap: 0, justifyContent: "center" }
+        }
+      >
+        <View style={{ flex: platform.desktop ? 1 : 0 }}>{props.children}</View>
+        <Text style={{ color: colors().muted, fontSize: 12, textAlign: platform.desktop ? "right" : "center" }}>{props.label}</Text>
       </View>
       {/* A phone keeps the bar centered; a desktop's button is at the right, away from the window's own close button. */}
-      <If when={platform.desktop} else={<View style={{ width: 44 }} />}>
+      <If when={platform.desktop} else={<View style={{ width: 8 }} />}>
         <CloseButton size={36} onPress={props.onClose} />
       </If>
     </View>
@@ -151,7 +141,7 @@ function CloseButton(props: { size: number; onPress: () => void }) {
 }
 
 /** BottomBar holds a step's actions at the bottom of the screen, above the keyboard and the home indicator. */
-function BottomBar(props: { children: JSX.Element; tone?: "good" | "bad" }) {
+function BottomBar(props: { children: JSX.Element; tone?: "good" | "bad" | undefined }) {
   const insets = safeAreaInsets();
   const background = () => (props.tone === "good" ? colors()["good-soft"] : props.tone === "bad" ? colors()["bad-soft"] : colors().surface);
   return (
@@ -173,7 +163,7 @@ function BottomBar(props: { children: JSX.Element; tone?: "good" | "bad" }) {
 /** AnswerActions are the actions under an answer, as on the web: as wide as their labels, the main one first. */
 function AnswerActions(props: {
   main: { label: string; onPress: () => void };
-  quiet?: { label: string; onPress: () => void };
+  quiet?: { label: string; onPress: () => void } | undefined;
   disabled?: boolean;
 }) {
   return (
@@ -191,6 +181,7 @@ function Buttons(props: {
   quiet?: { label: string; onPress: () => void };
   main: { label: string; onPress: () => void };
   disabled?: boolean;
+  mainDisabled?: boolean;
 }) {
   return (
     <View style={{ flexDirection: "row", gap: 10 }}>
@@ -202,7 +193,7 @@ function Buttons(props: {
         )}
       </If>
       <View style={{ flex: 2 }}>
-        <Action label={props.main.label} disabled={props.disabled} onPress={props.main.onPress} />
+        <Action label={props.main.label} disabled={props.disabled || props.mainDisabled} onPress={props.main.onPress} />
       </View>
     </View>
   );
@@ -217,77 +208,408 @@ function Body(props: { children: JSX.Element; ref?: (scroll: ScrollRef) => void 
   );
 }
 
-function Intro(props: { intro: NonNullable<Question["intro"]> }) {
-  const shown = signal(false);
-  const example = props.intro.example;
+/** reachedIntros lists the lessons of the knowledge points reached: the trail's, and the one asked now where the trail has not it yet. */
+function reachedIntros(session: Session, question: Question): KnowledgePointIntro[] {
+  const intros = session.trail?.intros ?? [];
+  const now = question.intro;
+  return now && !intros.some((i) => i.index === now.index) ? [...intros, now] : intros;
+}
+
+/** introOf finds the lesson of a knowledge point reached, from the trail or the question asked now. */
+function introOf(session: Session, question: Question, knowledgePoint: number): KnowledgePointIntro | undefined {
   return (
-    <View style={{ gap: 12 }}>
-      <Card>
-        <Rich source={tx(props.intro.title)} inline fontSize={18} bold />
-        <Rich source={tx(props.intro.explanation)} figures={props.intro.figures} />
-        <If when={props.intro.figure}>{(figure) => <FigureView figure={figure()} caption />}</If>
-      </Card>
-      <If when={example}>
-        {(worked) => (
-          <Card>
-            <Text style={{ color: colors().accent, fontSize: 14, fontWeight: "600" }}>{m().workedExample}</Text>
-            <If when={worked().problem}>{(problem) => <Prompt problem={problem()} />}</If>
-            <If when={shown()} else={<Quiet label={m().showSolution} onPress={() => shown.set(true)} />}>
-              <View style={{ gap: 8 }}>
-                <Rich source={tx(worked().solution)} />
-                <If when={worked().solutionFigure}>{(figure) => <FigureView figure={figure()} />}</If>
-                <Sounds sounds={worked().solutionSounds} />
-                <Muted>{m().answer}</Muted>
-                <If when={worked().problem}>{(problem) => <AnswerText problem={problem()} answer={worked().answer} />}</If>
-              </View>
-            </If>
-          </Card>
-        )}
-      </If>
+    session.trail?.intros.find((i) => i.index === knowledgePoint) ?? (question.intro?.index === knowledgePoint ? question.intro : undefined)
+  );
+}
+
+/** IntroCard is a knowledge point's explanation and its drawings. */
+function IntroCard(props: { intro: KnowledgePointIntro }) {
+  return (
+    <Card>
+      <Rich source={tx(props.intro.title)} inline fontSize={18} bold />
+      <Rich source={tx(props.intro.explanation)} figures={props.intro.figures} />
+      <If when={props.intro.figure}>{(figure) => <FigureView figure={figure()} caption />}</If>
+    </Card>
+  );
+}
+
+/** ExampleCard is a knowledge point's worked example, its solution shown in full. */
+function ExampleCard(props: { intro: KnowledgePointIntro }) {
+  return (
+    <If when={props.intro.example}>
+      {(worked) => (
+        <Card tone="accent">
+          <Text style={{ color: colors().accent, fontSize: 14, fontWeight: "600" }}>{m().workedExample}</Text>
+          <If when={worked().problem?.scenario}>{(scenario) => <Rich source={tx(scenario())} />}</If>
+          <If when={worked().problem}>{(problem) => <Prompt problem={problem()} apart={!!problem().scenario} />}</If>
+          <View style={{ borderColor: colors().line, borderTopWidth: 1, gap: 8, paddingTop: 12 }}>
+            <Muted>{m().solution}</Muted>
+            <Rich source={tx(worked().solution)} />
+            <If when={worked().solutionFigure}>{(figure) => <FigureView figure={figure()} />}</If>
+            <Sounds sounds={worked().solutionSounds} />
+            <Muted>{m().answer}</Muted>
+            <If when={worked().problem}>{(problem) => <AnswerText problem={problem()} answer={worked().answer} />}</If>
+          </View>
+        </Card>
+      )}
+    </If>
+  );
+}
+
+/** ScenarioCard keeps a multistep problem's scenario in view above its parts, folded away on a tap. */
+function ScenarioCard(props: { scenario: NonNullable<ProblemView["scenario"]> }) {
+  const open = signal(true);
+  return (
+    <View style={{ alignSelf: "center", maxWidth: 720, paddingHorizontal: 16, paddingTop: 4, width: "100%" }}>
+      <View
+        style={{ backgroundColor: colors().surface, borderColor: colors().line, borderRadius: 12, borderWidth: 1, gap: 6, padding: 12 }}
+      >
+        <View
+          role="button"
+          accessibilityLabel={m().scenario}
+          accessibilityState={{ expanded: open() }}
+          onPress={() => open.set(!open())}
+          style={{ alignItems: "center", flexDirection: "row", justifyContent: "space-between" }}
+        >
+          <Text style={{ color: colors().muted, fontSize: 13, fontWeight: "600" }}>{m().scenario}</Text>
+          <Text style={{ color: colors().muted, fontSize: 14 }}>{open() ? "▾" : "▸"}</Text>
+        </View>
+        <If when={open()}>
+          <Scroll style={{ maxHeight: 220 }}>
+            <Rich source={tx(props.scenario)} />
+          </Scroll>
+        </If>
+      </View>
     </View>
   );
 }
 
-/** Solution shows how a problem is solved after an answer: open after a wrong one, a tap away after a right one. */
-function Solution(props: { answered: Answered; question: Question }) {
-  const { feedback } = props.answered;
-  const problem = props.question.problem;
-  const judged = feedback.criteria.length > 0;
-  const open = signal(!feedback.correct || judged);
+/** Mark is the ✓ or ✗ of a verdict. */
+function Mark(props: { correct: boolean; size?: number }) {
+  const size = props.size ?? 22;
   return (
-    <If when={open()} else={<Quiet label={m().showSolution} onPress={() => open.set(true)} />}>
+    <View
+      style={{
+        alignItems: "center",
+        backgroundColor: props.correct ? colors().good : colors().bad,
+        borderRadius: size / 2,
+        height: size,
+        justifyContent: "center",
+        width: size,
+      }}
+    >
+      <Text style={{ color: colors().page, fontSize: size * 0.55, fontWeight: "700" }}>{props.correct ? "✓" : "✗"}</Text>
+    </View>
+  );
+}
+
+/** EarlierParts lists the parts of a multistep problem answered before the one asked now, each with its answer. */
+function EarlierParts(props: { parts: readonly AnsweredPart[] }) {
+  return (
+    <If when={props.parts.length > 0}>
       <Card>
-        <If when={judged}>
-          <JudgedFeedback feedback={feedback} />
-        </If>
-        <If when={!feedback.correct && problem && !judged}>
-          <Muted>{m().correctAnswer}</Muted>
-          {problem ? <AnswerText problem={problem} answer={feedback.answer} /> : null}
-        </If>
-        <Muted>{judged ? m().modelAnswer : m().solution}</Muted>
-        <Rich source={tx(feedback.solution)} />
-        <If when={feedback.solutionFigure}>{(figure) => <FigureView figure={figure()} />}</If>
-        <Sounds sounds={feedback.solutionSounds} />
+        <Muted>{m().answeredParts}</Muted>
+        <Each of={[...props.parts.entries()]}>
+          {(entry) => {
+            const [i, part] = entry();
+            return (
+              <View style={{ alignItems: "flex-start", flexDirection: "row", gap: 10 }}>
+                <Text style={{ color: colors().muted, fontWeight: "600" }}>{`${i + 1}.`}</Text>
+                <View style={{ flex: 1, gap: 4 }}>
+                  <Rich source={tx(part.problem?.ask ?? part.problem?.prompt)} />
+                  <If when={part.problem}>
+                    {(problem) => (
+                      <View style={{ alignItems: "center", flexDirection: "row", flexWrap: "wrap", gap: 6 }}>
+                        <Muted>{`${m().yourAnswer}:`}</Muted>
+                        <AnswerText problem={problem()} answer={part.response} />
+                      </View>
+                    )}
+                  </If>
+                </View>
+                <If when={part.feedback}>{(feedback) => <Mark correct={feedback().correct} size={20} />}</If>
+              </View>
+            );
+          }}
+        </Each>
       </Card>
     </If>
   );
 }
 
-/** Verdict is the colored sheet that says how an answer went, with the way on. */
-function Verdict(props: { answered: Answered; onContinue: () => void }) {
-  const { feedback } = props.answered;
-  const tone = () => (feedback.correct ? colors().good : colors().bad);
+/** VerdictBody is the verdict on an answer: right or wrong, the message, the right answer and the solution, open after a wrong answer. */
+function VerdictBody(props: { feedback: Feedback; problem?: ProblemView | undefined }) {
+  const feedback = props.feedback;
+  const judged = feedback.criteria.length > 0;
+  const open = signal(!feedback.correct || judged);
+  const solved = !!tx(feedback.solution) || !!feedback.solutionFigure || feedback.solutionSounds.length > 0;
   return (
-    <BottomBar tone={feedback.correct ? "good" : "bad"}>
-      <View role="alert" style={{ alignItems: "center", flexDirection: "row", gap: 12 }}>
-        <View style={{ alignItems: "center", backgroundColor: tone(), borderRadius: 16, height: 32, justifyContent: "center", width: 32 }}>
-          <Text style={{ color: colors().page, fontSize: 18, fontWeight: "700" }}>{feedback.correct ? "✓" : "✗"}</Text>
-        </View>
-        <Text style={{ color: tone(), flex: 1, fontSize: 18, fontWeight: "700" }}>{feedback.correct ? m().correct : m().incorrect}</Text>
+    <View style={{ gap: 10 }}>
+      <View role="alert" style={{ alignItems: "center", flexDirection: "row", gap: 10 }}>
+        <Mark correct={feedback.correct} size={28} />
+        <Text style={{ color: feedback.correct ? colors().good : colors().bad, flex: 1, fontSize: 18, fontWeight: "700" }}>
+          {feedback.correct ? m().correct : m().incorrect}
+        </Text>
       </View>
       <If when={feedback.message}>{(message) => <Rich source={tx(message())} />}</If>
-      <Action label={m().next} onPress={props.onContinue} />
-    </BottomBar>
+      <If when={judged}>
+        <JudgedFeedback feedback={feedback} />
+      </If>
+      <If when={!feedback.correct && !judged ? props.problem : undefined}>
+        {(problem) => (
+          <View style={{ gap: 4 }}>
+            <Muted>{m().correctAnswer}</Muted>
+            <AnswerText problem={problem()} answer={feedback.answer} />
+          </View>
+        )}
+      </If>
+      <If when={solved}>
+        <If when={open()} else={<Quiet label={m().showSolution} onPress={() => open.set(true)} />}>
+          <View style={{ gap: 8 }}>
+            <Muted>{judged ? m().modelAnswer : m().solution}</Muted>
+            <Rich source={tx(feedback.solution)} />
+            <If when={feedback.solutionFigure}>{(figure) => <FigureView figure={figure()} />}</If>
+            <Sounds sounds={feedback.solutionSounds} />
+          </View>
+        </If>
+      </If>
+    </View>
+  );
+}
+
+const toneOf = (feedback: Feedback | undefined) => (!feedback ? undefined : feedback.correct ? ("good" as const) : ("bad" as const));
+
+/** AnsweredView shows a question answered earlier, read only: each part with the answer given and its verdict. */
+function AnsweredView(props: { answered: AnsweredQuestion }) {
+  const parts = props.answered.parts;
+  const first = parts[0]?.problem;
+  const multistep = parts.length > 1 || (first?.parts ?? 0) > 1;
+  return (
+    <Card tone={toneOf(parts.at(-1)?.feedback)}>
+      <If when={props.answered.referenced}>
+        <Text style={{ color: colors().warn, fontSize: 13, fontWeight: "600" }}>{m().reference}</Text>
+      </If>
+      <If when={multistep ? first?.scenario : undefined}>{(scenario) => <Rich source={tx(scenario())} />}</If>
+      <Each of={[...parts.entries()]}>
+        {(entry) => {
+          const [i, part] = entry();
+          return (
+            <View style={{ borderColor: colors().line, borderTopWidth: i > 0 ? 1 : 0, gap: 12, paddingTop: i > 0 ? 12 : 0 }}>
+              <If when={part.problem}>
+                {(problem) => (
+                  <View style={{ gap: 12 }}>
+                    <Prompt problem={problem()} apart={multistep} />
+                    <If
+                      when={problem().input?.kind.case === "choice"}
+                      else={
+                        <View style={{ gap: 4 }}>
+                          <Muted>{m().yourAnswer}</Muted>
+                          <AnswerText problem={problem()} answer={part.response} />
+                        </View>
+                      }
+                    >
+                      <AnswerInput
+                        problem={problem()}
+                        value={part.response}
+                        onChange={() => {}}
+                        onSubmit={() => {}}
+                        disabled
+                        feedback={part.feedback}
+                      />
+                    </If>
+                  </View>
+                )}
+              </If>
+              <If when={part.feedback}>{(feedback) => <VerdictBody feedback={feedback()} problem={part.problem} />}</If>
+            </View>
+          );
+        }}
+      </Each>
+    </Card>
+  );
+}
+
+/** LookBack shows a step gone through, read only, with the way back to the step now. */
+function LookBack(props: { session: Session; question: Question; target: StepTarget; onBack: () => void }) {
+  const target = props.target;
+  const seen =
+    target.kind === "intro" || target.kind === "example" ? introOf(props.session, props.question, target.knowledgePoint) : undefined;
+  const answered = target.kind === "answered" ? props.session.trail?.answered.find((a) => a.index === target.index) : undefined;
+  return (
+    <>
+      <Body>
+        <View style={{ backgroundColor: colors().surface, borderColor: colors().line, borderRadius: 10, borderWidth: 1, padding: 10 }}>
+          <Muted>{target.kind === "answered" ? m().lookingBack : target.kind === "example" ? m().workedExample : m().stepIntro}</Muted>
+        </View>
+        <If when={seen}>{(intro) => (target.kind === "intro" ? <IntroCard intro={intro()} /> : <ExampleCard intro={intro()} />)}</If>
+        <If when={answered}>{(shown) => <AnsweredView answered={shown()} />}</If>
+      </Body>
+      <BottomBar>
+        <Action label={m().backToCurrent} onPress={props.onBack} />
+      </BottomBar>
+    </>
+  );
+}
+
+/**
+ * StepsFlow is a session answered a question at a time, under its bar of steps, as on the web: a lesson's knowledge
+ * point opens with its explanation and worked example, one step each, and the steps gone through may be looked at
+ * again, read only, with the bar, its arrows or ← and →, while the step now keeps what was written.
+ */
+function StepsFlow(props: {
+  session: Session;
+  question: Question;
+  answered: () => Answered | undefined;
+  onAnswered: OnAnswered;
+  onContinue: () => void;
+  onClose: () => void;
+}) {
+  const { session, question } = props;
+  const lesson = question.lesson;
+  const intro = question.intro && question.earlier.length === 0 && !question.judging ? question.intro : undefined;
+  const stage = signal<Stage>(intro ? "intro" : "question");
+  const viewing = signal<StepTarget | undefined>(undefined);
+  const task = session.task?.kind;
+  const parts = (question.problem?.parts ?? 0) > 1 ? (question.problem?.parts ?? 1) : 1;
+  const groups = computed(() => {
+    const pending = props.answered();
+    return sessionSteps({
+      kind: task?.case ?? "diagnostic",
+      index: question.index,
+      total: task?.case === "diagnostic" ? task.value.maxQuestions : question.total,
+      ...(lesson && {
+        lesson: {
+          knowledgePoint: lesson.knowledgePoint,
+          knowledgePoints: lesson.knowledgePoints,
+          streak: lesson.streak,
+          needed: lesson.needed,
+          practice: lesson.practice,
+          pass: lesson.pass || 2,
+        },
+      }),
+      intros: reachedIntros(session, question).map((i) => ({ knowledgePoint: i.index, example: !!i.example })),
+      stage: stage(),
+      answered: (session.trail?.answered ?? []).map((a) => ({
+        index: a.index,
+        knowledgePoint: a.knowledgePoint,
+        parts: a.parts.map((p) => p.feedback?.correct),
+      })),
+      current: {
+        parts,
+        earlier: question.earlier.map((p) => p.feedback?.correct),
+        ...(pending && { verdict: pending.feedback.correct }),
+      },
+    });
+  });
+  const live = computed((): StepTarget => {
+    const now = stage();
+    return now === "question" || !lesson ? { kind: "current" } : { kind: now, knowledgePoint: lesson.knowledgePoint };
+  });
+  const looking = computed(() => viewing() ?? live());
+  const targets = computed(() => stepTargets(groups()));
+  const at = computed(() => targets().findIndex((t) => sameTarget(t, looking())));
+  const open = (t: StepTarget | undefined) => {
+    if (t) viewing.set(sameTarget(t, live()) ? undefined : t);
+  };
+  const previous = () => (at() > 0 ? open(targets()[at() - 1]) : undefined);
+  const next = () => (at() >= 0 && at() < targets().length - 1 ? open(targets()[at() + 1]) : undefined);
+  keymap.bind("left", previous, { when: "notEditing" });
+  keymap.bind("right", next, { when: "notEditing" });
+  const advance = () => {
+    const now = stage();
+    if (now === "intro") stage.set(intro?.example ? "example" : "question");
+    else if (now === "example") stage.set("question");
+  };
+  // Return moves on on a keyboard, as the main button does: an input in focus submits by itself.
+  let answer: (() => void) | undefined;
+  keymap.bind(
+    "enter",
+    () => {
+      if (viewing()) viewing.set(undefined);
+      else if (stage() !== "question") advance();
+      else answer?.();
+    },
+    { when: "notEditing" },
+  );
+  return (
+    <>
+      <FocusBar label={stepLabel(session, question)} onClose={props.onClose}>
+        <StepsBar
+          groups={groups()}
+          looking={looking()}
+          onOpen={open}
+          onPrevious={at() > 0 ? previous : undefined}
+          onNext={at() >= 0 && at() < targets().length - 1 ? next : undefined}
+        />
+      </FocusBar>
+      {/* A step looked back at replaces the view, keyed so that each opens afresh. */}
+      <Each of={viewing() ? [viewing() as StepTarget] : []} key={(t) => JSON.stringify(t)}>
+        {(target) => <LookBack session={session} question={question} target={target()} onBack={() => viewing.set(undefined)} />}
+      </Each>
+      {/* The step now stays as it was, hidden, while another is looked at. */}
+      <View style={{ display: viewing() ? "none" : "flex", flex: 1 }}>
+        <If when={intro && stage() === "intro" ? intro : undefined}>
+          {(shown) => (
+            <>
+              <Body>
+                <IntroCard intro={shown()} />
+              </Body>
+              <BottomBar>
+                <Action label={shown().example ? m().next : m().gotIt} onPress={advance} />
+              </BottomBar>
+            </>
+          )}
+        </If>
+        <If when={intro?.example && stage() === "example" ? intro : undefined}>
+          {(shown) => (
+            <>
+              <Body>
+                <ExampleCard intro={shown()} />
+              </Body>
+              <BottomBar>
+                <Action label={m().gotIt} onPress={advance} />
+              </BottomBar>
+            </>
+          )}
+        </If>
+        <If when={stage() === "question"}>
+          <QuestionFlow
+            session={session}
+            question={question}
+            answered={props.answered}
+            onAnswered={props.onAnswered}
+            onContinue={props.onContinue}
+            paused={() => !!viewing()}
+            onEnter={(run) => {
+              answer = run;
+            }}
+          />
+        </If>
+      </View>
+    </>
+  );
+}
+
+/** ReferenceAsk is the "?" of a review question: it says what looking at the lesson costs, and opens it on request. */
+function ReferenceAsk(props: { asking: boolean; onToggle: () => void }) {
+  return (
+    <View
+      role="button"
+      accessibilityLabel={m().reference}
+      accessibilityState={{ expanded: props.asking }}
+      onPress={props.onToggle}
+      hoverStyle={{ borderColor: colors().warn }}
+      style={{
+        alignItems: "center",
+        borderColor: props.asking ? colors().warn : colors().line,
+        borderRadius: 16,
+        borderWidth: 1,
+        height: 32,
+        justifyContent: "center",
+        width: 32,
+      }}
+    >
+      <Text style={{ color: props.asking ? colors().warn : colors().muted, fontSize: 16, fontWeight: "700" }}>?</Text>
+    </View>
   );
 }
 
@@ -295,17 +617,23 @@ function QuestionFlow(props: {
   session: Session;
   question: Question;
   answered: () => Answered | undefined;
-  onAnswered: (feedback: Feedback | undefined, next: Session, response: string) => void;
+  onAnswered: OnAnswered;
   onContinue: () => void;
+  /** paused is true while another step is looked at: the answer then takes no keys. */
+  paused: () => boolean;
+  /** onEnter hands the flow's way on by Return, to the flow of steps, which binds the key. */
+  onEnter: (run: () => void) => void;
 }) {
   const question = props.question;
-  const kind = question.problem?.input?.kind;
+  const problem = question.problem;
+  const kind = problem?.input?.kind;
   const writing = kind?.case === "writing";
   const speech = kind?.case === "speech" ? kind.value : undefined;
-  const practicing = signal(!question.intro || !!question.judging);
+  const scenario = (problem?.parts ?? 0) > 1 ? problem?.scenario : undefined;
   const response = signal("");
   const busy = signal(false);
   const error = signal("");
+  const asking = signal(false);
   // A review may show the lesson of the step asked; the server marks the question, which then earns part of the credit.
   const reference = signal(question.reference);
   const look = async () => {
@@ -323,8 +651,12 @@ function QuestionFlow(props: {
     }
   };
   let scroll: ScrollRef | undefined;
-  // Far enough down to show what was added below, the solution or the math keyboard; the view stops at the end.
+  // Far enough down to show what was added below, the verdict or the math keyboard; the view stops at the end.
   const toEnd = () => setTimeout(() => scroll?.scrollTo({ y: 100_000, animated: true }), 50);
+  const answered: OnAnswered = (feedback, next, given) => {
+    props.onAnswered(feedback, next, given);
+    if (feedback) toEnd();
+  };
   // timeUp sends what is written when a quiz's time runs out, even nothing, and the quiz ends.
   const send = async (skip: boolean, timeUp = false) => {
     if (writing || speech || busy() || props.answered() || (!skip && !timeUp && response().trim() === "")) return;
@@ -337,8 +669,7 @@ function QuestionFlow(props: {
         response: skip ? "" : response(),
         skip,
       });
-      if (result.session) props.onAnswered(result.feedback, result.session, skip ? "" : response());
-      if (result.feedback && !result.feedback.correct) toEnd();
+      if (result.session) answered(result.feedback, result.session, skip ? "" : response());
     } catch (e) {
       error.set(errorText(e));
     } finally {
@@ -350,110 +681,301 @@ function QuestionFlow(props: {
     const timer = setTimeout(() => void send(false, true), Math.max(0, deadline - Date.now()));
     cleanup(() => clearTimeout(timer));
   }
-  // Return moves on on a keyboard, as the main button does: an input in focus submits by itself.
-  keymap.bind(
-    "enter",
-    () => {
-      if (!practicing()) practicing.set(true);
-      else if (props.answered()) props.onContinue();
-      else void send(false);
-    },
-    { when: "notEditing" },
-  );
+  props.onEnter(() => {
+    if (props.answered()) props.onContinue();
+    else void send(false);
+  });
   return (
-    <If
-      when={practicing()}
-      else={
-        <>
-          <Body>{question.intro ? <Intro intro={question.intro} /> : null}</Body>
-          <BottomBar>
-            <Action label={m().gotIt} onPress={() => practicing.set(true)} />
-          </BottomBar>
-        </>
-      }
-    >
-      <If when={speech && !props.answered() ? speech : undefined}>
-        {(input) => (
-          <Body>
-            <If when={question.lesson}>
-              <Muted>{m().practice}</Muted>
+    <>
+      <If when={scenario}>{(shown) => <ScenarioCard scenario={shown()} />}</If>
+      <Body ref={(node) => (scroll = node)}>
+        <If when={question.passage}>
+          {(passage) => (
+            <Card>
+              <Illustration path={passage().illustration} />
+              <If when={passage().audio}>{(path) => <Listen path={path()} accent={tx(passage().accent)} />}</If>
+              <Text style={{ color: colors().ink, fontSize: 18, lineHeight: 28 }}>{passage().body}</Text>
+            </Card>
+          )}
+        </If>
+        <EarlierParts parts={question.earlier} />
+        <If when={reference()}>
+          {(shown) => (
+            <Card tone="warn">
+              <Text style={{ color: colors().warn, fontSize: 13, fontWeight: "600" }}>{m().reference}</Text>
+              <Rich source={tx(shown().title)} inline bold />
+              <Rich source={tx(shown().explanation)} figures={shown().figures} />
+              <If when={shown().figure}>{(drawn) => <FigureView figure={drawn()} />}</If>
+            </Card>
+          )}
+        </If>
+        {/* The question's card holds the answer and, once given, its verdict, as on the web. */}
+        <Card tone={toneOf(props.answered()?.feedback)}>
+          <View style={{ alignItems: "flex-start", flexDirection: "row", gap: 12 }}>
+            <View style={{ flex: 1, gap: 8 }}>
+              <If when={question.lesson}>
+                <Muted>{m().practice}</Muted>
+              </If>
+              <If when={problem}>{(shown) => <Prompt problem={shown()} answering apart={!!scenario} />}</If>
+            </View>
+            <If when={question.canReference && !reference() && !props.answered()}>
+              <ReferenceAsk asking={asking()} onToggle={() => asking.set(!asking())} />
             </If>
-            <If when={question.problem}>{(problem) => <Prompt problem={problem()} answering />}</If>
-            <SpeechFlow session={props.session} question={question} input={input()} onAnswered={props.onAnswered} />
-          </Body>
-        )}
-      </If>
-      <If when={writing && !props.answered()}>
-        <Body>
-          <If when={question.lesson}>
-            <Muted>{m().practice}</Muted>
+          </View>
+          <If when={asking() && question.canReference && !reference() && !props.answered()}>
+            <View style={{ backgroundColor: colors()["warn-soft"], borderRadius: 8, gap: 8, padding: 12 }}>
+              <Muted>{m().referenceNote(question.referenceCredit)}</Muted>
+              <Quiet label={m().reference} disabled={busy()} onPress={() => void look()} />
+            </View>
           </If>
-          <If when={question.problem}>{(problem) => <Prompt problem={problem()} answering />}</If>
-          <WritingFlow session={props.session} question={question} onAnswered={props.onAnswered} />
-        </Body>
-      </If>
-      <If when={(!writing && !speech) || props.answered()}>
-        <Body ref={(node) => (scroll = node)}>
-          <If when={question.passage}>
-            {(passage) => (
-              <Card>
-                <Illustration path={passage().illustration} />
-                <If when={passage().audio}>{(path) => <Listen path={path()} accent={tx(passage().accent)} />}</If>
-                <Text style={{ color: colors().ink, fontSize: 18, lineHeight: 28 }}>{passage().body}</Text>
-              </Card>
-            )}
+          <If when={speech && !props.answered() ? speech : undefined}>
+            {(input) => <SpeechFlow session={props.session} question={question} input={input()} onAnswered={answered} />}
           </If>
-          <If when={reference()}>
+          <If when={problem && ((!writing && !speech) || props.answered()) ? problem : undefined}>
             {(shown) => (
-              <Card>
-                <Text style={{ color: colors().warn, fontSize: 13, fontWeight: "600" }}>{m().reference}</Text>
-                <Rich source={tx(shown().title)} inline bold />
-                <Rich source={tx(shown().explanation)} figures={shown().figures} />
-                <If when={shown().figure}>{(drawn) => <FigureView figure={drawn()} />}</If>
-              </Card>
-            )}
-          </If>
-          <If when={question.lesson}>
-            <Muted>{m().practice}</Muted>
-          </If>
-          <If when={question.problem}>
-            {(problem) => (
-              <View style={{ gap: 16 }}>
-                <Prompt problem={problem()} answering />
-                <AnswerInput
-                  problem={problem()}
-                  value={props.answered()?.response ?? response()}
-                  onChange={(value) => response.set(value)}
-                  onSubmit={() => void send(false)}
-                  onKeyboard={(height) => height > 0 && toEnd()}
-                  disabled={busy() || !!props.answered()}
-                  feedback={props.answered()?.feedback}
-                />
-              </View>
+              <AnswerInput
+                problem={shown()}
+                value={props.answered()?.response ?? response()}
+                onChange={(value) => response.set(value)}
+                onSubmit={() => void send(false)}
+                onKeyboard={(height) => height > 0 && toEnd()}
+                disabled={busy() || !!props.answered() || props.paused()}
+                feedback={props.answered()?.feedback}
+              />
             )}
           </If>
           <If when={error()}>
             <ErrorNote message={error()} />
           </If>
-          {/* The answer's actions sit under the answer, as on the web, and scroll with it. */}
-          <If when={!props.answered()}>
+          <If when={!props.answered() && !writing && !speech}>
             <AnswerActions
               main={{ label: m().submit, onPress: () => void send(false) }}
               quiet={question.canSkip ? { label: m().dontKnow, onPress: () => void send(true) } : undefined}
               disabled={busy()}
             />
           </If>
-          <If when={question.canReference && !reference() && !props.answered()}>
-            <View style={{ gap: 4 }}>
-              <Quiet label={m().reference} disabled={busy()} onPress={() => void look()} />
-              <Muted>{m().referenceNote(question.referenceCredit)}</Muted>
-            </View>
+          <If when={props.answered()}>
+            {(shown) => (
+              <View style={{ borderColor: colors().line, borderTopWidth: 1, paddingTop: 12 }}>
+                <VerdictBody feedback={shown().feedback} problem={problem} />
+              </View>
+            )}
           </If>
-          <If when={props.answered()}>{(answered) => <Solution answered={answered()} question={question} />}</If>
-        </Body>
-        <If when={props.answered()}>{(answered) => <Verdict answered={answered()} onContinue={props.onContinue} />}</If>
+        </Card>
+        <If when={writing && !props.answered()}>
+          <WritingFlow session={props.session} question={question} onAnswered={answered} />
+        </If>
+      </Body>
+      {/* The way on stays at the bottom, in the verdict's color, where a thumb finds it. */}
+      <If when={props.answered()}>
+        {(shown) => (
+          <BottomBar tone={toneOf(shown().feedback)}>
+            <Action label={m().next} onPress={props.onContinue} />
+          </BottomBar>
+        )}
       </If>
-    </If>
+    </>
+  );
+}
+
+/**
+ * QuizFlow is a quiz as an exam, as on the web: a numbered sheet of its questions, any of which may be opened and
+ * answered or its answer changed, the time left and the count answered; nothing is judged until it is handed in, or
+ * the time runs out.
+ */
+function QuizFlow(props: { session: Session; question: Question; onSession: (next: Session) => void; onClose: () => void }) {
+  const { session, question } = props;
+  const slots = question.sheet?.slots ?? [];
+  const here = slots[question.index];
+  const final = !!here?.locked && !!here.answered;
+  const response = signal(question.saved);
+  const busy = signal(false);
+  const error = signal("");
+  let handedIn = false;
+  const problem = question.problem;
+  const parts = problem?.parts ?? 0;
+  const partBefore = parts > 1 && (problem?.part ?? 0) < parts;
+  const scenario = parts > 1 ? problem?.scenario : undefined;
+  const dirty = () => !final && response().trim() !== "" && response() !== question.saved;
+  const go = async (to: number | "stay" | "finish") => {
+    if (busy() || handedIn) return;
+    busy.set(true);
+    error.set("");
+    try {
+      let next: Session | undefined = session;
+      if (dirty()) {
+        const open = typeof to === "number" && !partBefore ? to : undefined;
+        next = (await learning.submitAnswer({ sessionId: session.id, index: question.index, response: response(), skip: false, open }))
+          .session;
+      }
+      const step = next?.step;
+      if (step?.case === "question" && typeof to === "number" && step.value.index !== to)
+        next = (await learning.openQuestion({ sessionId: session.id, index: to })).session;
+      if (to === "finish" && next?.step.case === "question") next = (await learning.finishQuiz({ sessionId: session.id })).session;
+      if (to === "finish") handedIn = true;
+      if (next) props.onSession(next);
+    } catch (e) {
+      error.set(errorText(e));
+    } finally {
+      busy.set(false);
+    }
+  };
+  const count = slots.length;
+  const answeredCount = () => slots.filter((s) => s.answered).length + (dirty() && !here?.answered ? 1 : 0);
+  const onward = (() => {
+    if (question.index + 1 < count) return question.index + 1;
+    const open = slots.findIndex((s, i) => !s.answered && i !== question.index);
+    return open >= 0 ? open : undefined;
+  })();
+  const save = () => void (partBefore ? go("stay") : onward !== undefined ? go(onward) : go("stay"));
+  const previous = question.index > 0 ? () => void go(question.index - 1) : undefined;
+  const next = question.index + 1 < count ? () => void go(question.index + 1) : undefined;
+  keymap.bind("left", () => previous?.(), { when: "notEditing" });
+  keymap.bind("right", () => next?.(), { when: "notEditing" });
+  keymap.bind("enter", save, { when: "notEditing" });
+  // The clock ticks every second; when the time runs out, what is written is saved and the quiz handed in.
+  const deadline = Number(question.deadline);
+  const now = signal(Date.now());
+  if (deadline > 0) {
+    const ticker = setInterval(() => now.set(Date.now()), 1000);
+    const timer = setTimeout(() => void go("finish"), Math.max(0, deadline - Date.now()));
+    cleanup(() => {
+      clearInterval(ticker);
+      clearTimeout(timer);
+    });
+  }
+  const timeUp = () => deadline > 0 && now() >= deadline;
+  const handIn = async () => {
+    const unanswered = count - answeredCount();
+    const left = deadline > 0 ? deadline - Date.now() : 0;
+    const { action } = await AlertDialog.show({
+      title: m().handInTitle,
+      description: [
+        unanswered > 0 ? m().handInUnanswered(unanswered) : m().handInAllAnswered,
+        left > 0 ? m().handInTimeLeft(clock(left)) : "",
+      ]
+        .filter(Boolean)
+        .join("\n"),
+      actions: [
+        { id: "stay", label: m().keepWorking, role: "cancel" },
+        { id: "hand-in", label: m().handIn },
+      ],
+    });
+    if (action === "hand-in") void go("finish");
+  };
+  return (
+    <>
+      <FocusBar label={taskLabel(session)} onClose={props.onClose}>
+        <View
+          role="progressbar"
+          accessibilityLabel={m().quizAnswered(answeredCount(), count)}
+          accessibilityValue={{ min: 0, max: count, now: answeredCount() }}
+          style={{ backgroundColor: colors().line, borderRadius: 4, height: 8, marginVertical: 6, overflow: "hidden" }}
+        >
+          <View
+            style={{
+              backgroundColor: colors().accent,
+              borderRadius: 4,
+              height: 8,
+              width: `${count > 0 ? Math.round((answeredCount() / count) * 100) : 0}%`,
+            }}
+          />
+        </View>
+      </FocusBar>
+      <If when={scenario}>{(shown) => <ScenarioCard scenario={shown()} />}</If>
+      <Body>
+        <View style={{ alignItems: "center", flexDirection: "row", justifyContent: "space-between" }}>
+          <Text style={{ color: colors().ink, fontSize: 15, fontWeight: "600" }}>{m().quizAnswered(answeredCount(), count)}</Text>
+          <If when={deadline > 0}>
+            <Text
+              role="timer"
+              style={{
+                color: deadline - now() < 60_000 ? colors().bad : colors().muted,
+                fontSize: 15,
+                fontVariant: ["tabular-nums"],
+                fontWeight: "600",
+              }}
+            >
+              {deadline > now() ? m().timeLeft(clock(deadline - now())) : m().timeUp}
+            </Text>
+          </If>
+        </View>
+        <View role="navigation" accessibilityLabel={m().quizNavigator} style={{ alignItems: "center", flexDirection: "row", gap: 4 }}>
+          <StepArrow glyph="‹" label={m().previousStep} onPress={busy() ? undefined : previous} />
+          <View style={{ flex: 1, flexDirection: "row", flexWrap: "wrap", gap: 8, justifyContent: "center" }}>
+            <Each of={[...slots.entries()]}>
+              {(entry) => {
+                const [i, slot] = entry();
+                const current = i === question.index;
+                const done = () => slot.answered || (current && dirty());
+                return (
+                  <View
+                    role="button"
+                    accessibilityLabel={m().quizSlot(i + 1, done())}
+                    accessibilityState={{ current: current ? "step" : false, disabled: busy() }}
+                    onPress={() => !current && void go(i)}
+                    style={{
+                      alignItems: "center",
+                      backgroundColor: current ? colors().accent : done() ? colors()["accent-soft"] : colors().surface,
+                      borderColor: current || done() ? colors().accent : colors().line,
+                      borderRadius: 10,
+                      borderWidth: 2,
+                      height: 40,
+                      justifyContent: "center",
+                      width: 40,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: current ? colors()["on-accent"] : done() ? colors().accent : colors().muted,
+                        fontSize: 15,
+                        fontWeight: "600",
+                      }}
+                    >
+                      {String(i + 1)}
+                    </Text>
+                  </View>
+                );
+              }}
+            </Each>
+          </View>
+          <StepArrow glyph="›" label={m().nextStep} onPress={busy() ? undefined : next} />
+        </View>
+        <Text style={{ color: colors().muted, fontSize: 13, textAlign: "center" }}>{m().quizNoFeedback}</Text>
+        <EarlierParts parts={question.earlier} />
+        <Card>
+          <Muted>{m().stepQuestion(question.index + 1)}</Muted>
+          <If when={problem}>
+            {(shown) => (
+              <View style={{ gap: 16 }}>
+                <Prompt problem={shown()} answering apart={!!scenario} />
+                <AnswerInput
+                  problem={shown()}
+                  value={response()}
+                  onChange={(value) => response.set(value)}
+                  onSubmit={save}
+                  disabled={final || busy() || timeUp()}
+                />
+              </View>
+            )}
+          </If>
+          <If when={final}>
+            <Muted>{m().answerFinal}</Muted>
+          </If>
+          <If when={error()}>
+            <ErrorNote message={error()} />
+          </If>
+        </Card>
+      </Body>
+      <BottomBar>
+        <Buttons
+          quiet={{ label: m().handIn, onPress: () => void handIn() }}
+          main={{ label: partBefore || onward === undefined ? m().saveAnswer : m().saveAndNext, onPress: save }}
+          disabled={busy() || timeUp()}
+          mainDisabled={!dirty() && (partBefore || onward === undefined)}
+        />
+      </BottomBar>
+    </>
   );
 }
 
@@ -718,9 +1240,10 @@ function ResultView(props: { session: Session; result: Result }) {
 
 /**
  * Player runs a session in focus: no navigation, a bar with the way out and the
- * progress, and the step's actions at the bottom. Lessons step through knowledge
+ * steps, and the step's actions at the bottom. Lessons step through knowledge
  * points (explanation, worked example, practice with feedback); reviews give
- * feedback per answer; the diagnostic and quizzes give none until the end.
+ * feedback per answer; the diagnostic gives none until the end, and a quiz is
+ * answered as an exam, in any order, and judged once handed in.
  */
 export function Player(props: { sessionId: string }) {
   const loaded = resource(({ signal: abort }) => learning.getSession({ id: props.sessionId }, { signal: abort }));
@@ -732,23 +1255,10 @@ export function Player(props: { sessionId: string }) {
     const current = session();
     return current ? taskLabel(current) : "";
   });
-  // A new question replaces the whole flow, so that nothing of the last answer stays.
+  // A new question replaces the whole flow, so that nothing of the last answer stays; a quiz's question also when its answer is saved.
   const steps = computed(() => {
     const current = session();
     return current?.step.case === "question" ? [current] : [];
-  });
-  // The clock of a timed quiz ticks every second.
-  const now = signal(Date.now());
-  const ticker = setInterval(() => now.set(Date.now()), 1000);
-  cleanup(() => clearInterval(ticker));
-  const progress = computed(() => {
-    const current = session();
-    if (current?.step.case === "result" || current?.step.case === "submitted") return { label: title(), share: 1 };
-    if (current?.step.case === "question") {
-      const { label, share } = progressOf(current, current.step.value, now());
-      return { label: `${title()} · ${label}`, share };
-    }
-    return { label: title(), share: 0 };
   });
   // Work is kept on the server after every answer, so leaving loses nothing; it is asked only to catch a slip.
   const leave = async () => {
@@ -785,31 +1295,51 @@ export function Player(props: { sessionId: string }) {
           paddingBottom: mathKeyboardHeight() > 0 ? mathKeyboardHeight() : "env(keyboard-inset-height)",
         }}
       >
-        <FocusBar share={progress().share} label={progress().label} onClose={() => void leave()} />
+        {/* A question's flow draws its own bar, with its steps; the rest have the way out and the task's name. */}
+        <If when={session()?.step.case !== "question"}>
+          <FocusBar label={title()} onClose={() => void leave()} />
+        </If>
         <Loaded rpc={loaded}>
           {() => (
             <View style={{ flex: 1 }}>
               <Each
                 of={steps()}
-                key={(current) =>
-                  current.step.case === "question" ? `${current.step.value.index}:${current.step.value.problem?.part ?? 0}` : "-"
-                }
+                key={(current) => {
+                  const q = current.step.case === "question" ? current.step.value : undefined;
+                  return q ? `${q.index}:${q.problem?.part ?? 0}:${q.sheet ? q.saved : ""}` : "-";
+                }}
               >
-                {(current) => (
-                  <QuestionFlow
-                    session={current()}
-                    question={current().step.value as Question}
-                    answered={answered}
-                    onAnswered={(feedback, next, response) => {
-                      if (feedback) answered.set({ feedback, next, response });
-                      else latest.set(next);
-                    }}
-                    onContinue={() => {
-                      latest.set(answered()?.next);
-                      answered.set(undefined);
-                    }}
-                  />
-                )}
+                {(current) => {
+                  const question = current().step.value as Question;
+                  return (
+                    <If
+                      when={question.sheet}
+                      else={
+                        <StepsFlow
+                          session={current()}
+                          question={question}
+                          answered={answered}
+                          onAnswered={(feedback, next, response) => {
+                            if (feedback) answered.set({ feedback, next, response });
+                            else latest.set(next);
+                          }}
+                          onContinue={() => {
+                            latest.set(answered()?.next);
+                            answered.set(undefined);
+                          }}
+                          onClose={() => void leave()}
+                        />
+                      }
+                    >
+                      <QuizFlow
+                        session={current()}
+                        question={question}
+                        onSession={(next) => latest.set(next)}
+                        onClose={() => void leave()}
+                      />
+                    </If>
+                  );
+                }}
               </Each>
               <If when={session()?.step.case === "submitted" ? (session()?.step.value as Submitted) : undefined}>
                 {(submitted) => (

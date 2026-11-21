@@ -224,10 +224,19 @@ export function Quiet(props: { label: string; disabled?: boolean; onPress: () =>
   );
 }
 
-/** Card is a raised group of content. */
-export function Card(props: { children: JSX.Element }) {
+/** Card is a raised group of content; a tone colors its border, as a verdict or a worked example does. */
+export function Card(props: { children: JSX.Element; tone?: "good" | "bad" | "accent" | "warn" }) {
   return (
-    <View style={{ backgroundColor: colors().surface, borderColor: colors().line, borderRadius: 12, borderWidth: 1, gap: 10, padding: 16 }}>
+    <View
+      style={{
+        backgroundColor: props.tone === "accent" ? colors()["accent-soft"] : colors().surface,
+        borderColor: props.tone ? colors()[props.tone] : colors().line,
+        borderRadius: 12,
+        borderWidth: 1,
+        gap: 10,
+        padding: 16,
+      }}
+    >
       {props.children}
     </View>
   );

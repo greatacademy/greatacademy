@@ -441,7 +441,13 @@ test("studies a lesson from the course list to its result", async () => {
   await app.waitFor("text:Next up");
   await app.press("role:button[Start]");
   await app.waitFor("text:Even numbers split in two.");
-  await app.press("text:Show solution");
+  // The explanation and the worked example are steps of their own; the example shows its solution at once.
+  await app.press("role:button[Continue]");
+  await app.waitFor("text:Four splits in two.");
+  // A step gone through opens again from the bar, read only, and the way back returns to the step now.
+  await app.press("role:button[Previous step]");
+  await app.waitFor("text:Even numbers split in two.");
+  await app.press("role:button[Back to where you are]");
   await app.waitFor("text:Four splits in two.");
   await app.press("text:Start practicing");
   // B picks the second option on a keyboard, and Return checks it.
@@ -472,6 +478,78 @@ test("studies a lesson from the course list to its result", async () => {
   expect(app.texts()).toContain("1");
   await app.press("label:Next: Algebra II 0%");
   await app.waitFor("text:Quadratics");
+});
+
+test("answers a quiz as an exam: in any order, changing answers, and hands it in after asking", async () => {
+  const quizTask = { quiz: { questions: 2, minutes: 4 } };
+  const session = { id: "q1", courseId: "algebra", task: quizTask };
+  const slot = (index: number, answered: boolean[], saved = "") => ({
+    ...session,
+    question: { index, total: 2, problem: choiceProblem, sheet: { slots: answered.map((a) => ({ answered: a })) }, saved },
+  });
+  const saves: { index?: number; response?: string; open?: number }[] = [];
+  const opened: number[] = [];
+  let finished = 0;
+  const app = await open(
+    "./App.tsx",
+    signedIn({
+      [`POST ${learningUrl}/GetDashboard`]: json({
+        courseId: "algebra",
+        diagnosed: true,
+        tasks: [quizTask],
+        stats: { learned: 1, total: 2 },
+        xp: {},
+      }),
+      [`POST ${learningUrl}/StartTask`]: json({ session: slot(0, [false, false]) }),
+      [`POST ${learningUrl}/GetSession`]: json({ session: slot(0, [false, false]) }),
+      [`POST ${learningUrl}/SubmitAnswer`]: (request: { body?: string | null }) => {
+        const body = JSON.parse(request.body ?? "{}") as { index?: number; response?: string; open?: number };
+        saves.push(body);
+        return json({ session: body.open === 1 ? slot(1, [true, false]) : slot(body.index ?? 0, [true, false], body.response) });
+      },
+      [`POST ${learningUrl}/OpenQuestion`]: (request: { body?: string | null }) => {
+        const index = (JSON.parse(request.body ?? "{}") as { index?: number }).index ?? 0;
+        opened.push(index);
+        return json({ session: slot(index, [true, false], index === 0 ? "1" : "") });
+      },
+      [`POST ${learningUrl}/FinishQuiz`]: () => {
+        finished += 1;
+        return json({
+          session: { ...session, answered: 1, result: { passed: false, correct: 1, asked: 1, unanswered: 1, xp: 2, fullXp: 4 } },
+        });
+      },
+    }),
+  );
+  await app.waitFor("text:Next up");
+  await app.press("role:button[Start]");
+  await app.waitFor("text:0 of 2 answered");
+  expect(app.shows("Answers are checked when you hand the quiz in; until then you may change them.")).toBe(true);
+  // An answer is saved, not judged, and the next question opens.
+  await app.keyboard.press("b");
+  await app.waitFor("text:1 of 2 answered");
+  await app.press("role:button[Save and next]");
+  await app.waitFor("label:Question 2, not answered");
+  expect(saves.map((s) => [s.index ?? 0, s.response, s.open])).toEqual([[0, "1", 1]]);
+  expect(app.shows("Correct!")).toBe(false);
+  // ← goes back to the first question, its answer as saved.
+  await app.keyboard.press("left");
+  await app.waitFor("label:Question 1, answered");
+  expect(opened).toEqual([0]);
+  // Handing in asks first, naming the question with no answer; keeping on works stays.
+  const asked: string[] = [];
+  let answer = "Keep working";
+  app.onDialog((dialog) => {
+    asked.push(`${dialog.title ?? ""} ${dialog.message ?? ""}`);
+    return answer;
+  });
+  await app.press("role:button[Hand in]");
+  expect(asked[0]).toContain("Hand in the quiz?");
+  expect(asked[0]).toContain("1 question has no answer; it counts wrong.");
+  expect(finished).toBe(0);
+  answer = "Hand in";
+  await app.press("role:button[Hand in]");
+  await app.waitFor("text:One question had no answer; it counts wrong.");
+  expect(finished).toBe(1);
 });
 
 test("takes math as plain text and skips in the diagnostic without feedback", async () => {

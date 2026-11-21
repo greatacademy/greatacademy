@@ -17,7 +17,7 @@ const listenTo = (paths: readonly string[]) =>
   paths.map((audio, i) => ({ audio, text: paths.length > 1 ? `${m().listen} ${i + 1}` : m().listen }));
 
 /** Prompt shows a problem's picture, prompt, the recordings it plays and its drawing; while a plot is answered, the drawing is the input itself. */
-export function Prompt(props: { problem: ProblemView; answering?: boolean }) {
+export function Prompt(props: { problem: ProblemView; answering?: boolean; apart?: boolean }) {
   const input = props.problem.input?.kind;
   const figure = props.answering && input?.case === "plot" ? undefined : props.problem.figure;
   return (
@@ -42,7 +42,8 @@ export function Prompt(props: { problem: ProblemView; answering?: boolean }) {
         )}
       </If>
       <Illustration path={props.problem.picture} />
-      <Rich source={tx(props.problem.prompt)} fontSize={18} />
+      {/* A multistep part whose scenario shows apart asks only its own question. */}
+      <Rich source={tx(props.apart && props.problem.ask ? props.problem.ask : props.problem.prompt)} fontSize={18} />
       <Sounds sounds={listenTo(props.problem.listen)} />
       <If when={figure}>{(drawn) => <FigureView figure={drawn()} />}</If>
       <If when={!props.answering && input?.case === "order"}>
