@@ -684,7 +684,7 @@ test("shows the progress map and the history of a course from Progress", async (
   await app.waitFor("text:80%");
   expect(app.texts()).toContain("Progress map");
   expect(app.texts()).toContain("Linear equations");
-  expect(app.texts()).toContain("Learned 1");
+  expect(app.texts()).toContain("Up to date 1");
   await app.press("text:History");
   await app.waitFor("text:10 of 10 XP");
   expect(app.texts()).toContain("3 of 3 correct");
