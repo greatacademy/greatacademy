@@ -58,8 +58,12 @@ export const MIN_CONFIDENCE = 0.5;
 /** MIN_ACCURACY is the pronunciation accuracy a word or text needs when assessed (*starting*): low enough that an accent that is understood passes. */
 export const MIN_ACCURACY = 60;
 
-/** READ_SHARE is the share of a reference's words that must be heard in order (*starting*). */
-export const READ_SHARE = 0.8;
+/**
+ * READ_SHARE is the share of a reference's words that must be heard in order (*starting*): 95%, the accuracy at which a
+ * text is read independently, so that a word read wrong fails a sentence of fewer than twenty words and a speech service's
+ * slip in a longer text does not.
+ */
+export const READ_SHARE = 0.95;
 
 /** MAX_HEARD_CHARS is the longest response a spoken problem takes. */
 export const MAX_HEARD_CHARS = 8000;
@@ -244,7 +248,7 @@ export const speechChecker: Checker = {
     }
     const reference = spokenWords(e.reference ?? "");
     const got = heardInOrder(reference, said);
-    const need = reference.length <= 4 ? reference.length : Math.ceil(reference.length * READ_SHARE);
+    const need = reference.length <= 4 ? reference.length : Math.ceil(reference.length * READ_SHARE - 1e-9);
     if (got < need) {
       const missed = missedWords(reference, said).join(", ");
       return {
