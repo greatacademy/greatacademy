@@ -170,6 +170,22 @@ function BottomBar(props: { children: JSX.Element; tone?: "good" | "bad" }) {
   );
 }
 
+/** AnswerActions are the actions under an answer, as on the web: as wide as their labels, the main one first. */
+function AnswerActions(props: {
+  main: { label: string; onPress: () => void };
+  quiet?: { label: string; onPress: () => void };
+  disabled?: boolean;
+}) {
+  return (
+    <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12 }}>
+      <View style={{ minWidth: 96 }}>
+        <Action label={props.main.label} disabled={props.disabled} onPress={props.main.onPress} />
+      </View>
+      <If when={props.quiet}>{(quiet) => <Quiet label={quiet().label} disabled={props.disabled} onPress={quiet().onPress} />}</If>
+    </View>
+  );
+}
+
 /** Buttons lays a secondary and a main action side by side, the main one wider. */
 function Buttons(props: {
   quiet?: { label: string; onPress: () => void };
@@ -421,9 +437,9 @@ function QuestionFlow(props: {
           </If>
           {/* The answer's actions sit under the answer, as on the web, and scroll with it. */}
           <If when={!props.answered()}>
-            <Buttons
-              quiet={question.canSkip ? { label: m().dontKnow, onPress: () => void send(true) } : undefined}
+            <AnswerActions
               main={{ label: m().submit, onPress: () => void send(false) }}
+              quiet={question.canSkip ? { label: m().dontKnow, onPress: () => void send(true) } : undefined}
               disabled={busy()}
             />
           </If>
