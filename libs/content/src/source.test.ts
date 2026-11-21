@@ -1,6 +1,16 @@
 import { describe, expect, it } from "vitest";
 
-import { generateAt, type KnowledgePointDef, t, tierRange, topicSource } from "./index.ts";
+import {
+  coreCheckers,
+  generateAt,
+  type KnowledgePointDef,
+  multistep,
+  type ProblemPart,
+  type TopicDef,
+  t,
+  tierRange,
+  topicSource,
+} from "./index.ts";
 
 describe("topicSource", () => {
   const passage = {
@@ -55,5 +65,55 @@ describe("tiers", () => {
     expect(Number(generateAt(kp(true), 1, "hard").canonical)).toBeGreaterThanOrEqual(5);
     expect(generateAt(kp(false), 1, "hard")).toEqual(generateAt(kp(false), 1, undefined));
     expect(generateAt(kp(true), 1, undefined).difficulty).toBeUndefined();
+  });
+});
+
+describe("multistep", () => {
+  const step = (q: string, a: string, topic?: string): ProblemPart => ({
+    prompt: t(q, q),
+    answer: { input: { kind: "text" }, checker: "text", expected: a },
+    solution: t(`It is ${a}.`, `是 ${a}。`),
+    canonical: a,
+    ...(topic && { topic }),
+  });
+  const topic: TopicDef = {
+    id: "shop",
+    title: t("Shop", "商店"),
+    summary: t("Shop", "商店"),
+    prerequisites: [],
+    encompasses: [],
+    xp: 5,
+    knowledgePoints: [
+      {
+        id: "k",
+        title: t("K", "K"),
+        explanation: t("K", "K"),
+        generate: () =>
+          multistep({ prompt: t("Pens cost 2 each.", "笔每支 2 元。") }, [step("Two pens?", "4"), step("Three pens?", "6", "other")]),
+      },
+    ],
+  };
+  const source = topicSource([topic], []);
+
+  it("asks each part after the scenario and the parts before it, answered", async () => {
+    const [first, second] = await source.problems([
+      { topic: "shop", kp: 0, seed: 1 },
+      { topic: "shop", kp: 0, seed: 1, part: 1 },
+    ]);
+    expect(first?.prompt.en).toBe("Pens cost 2 each.\n\n**1.** Two pens?");
+    expect(first?.part).toEqual({ index: 0, count: 2 });
+    expect(first?.parts).toBeUndefined();
+    expect(second?.prompt.en).toBe("Pens cost 2 each.\n\n**1.** Two pens? Answer: 4\n\n**2.** Three pens?");
+    expect(second?.prompt["zh-CN"]).toContain("答案：4");
+    expect(second?.part).toEqual({ index: 1, count: 2, topic: "other" });
+    expect((await source.judge({ topic: "shop", kp: 0, seed: 1, part: 1 }, "6")).verdict.correct).toBe(true);
+    expect((await source.judge({ topic: "shop", kp: 0, seed: 1, part: 1 }, "4")).verdict.correct).toBe(false);
+  });
+
+  it("stands as its last part where parts are not asked, and needs two parts", () => {
+    const whole = generateAt(topic.knowledgePoints[0]!, 1, undefined);
+    expect(whole.canonical).toBe("6");
+    expect(whole.parts).toHaveLength(2);
+    expect(() => multistep({ prompt: t("x", "x") }, [step("Only?", "1")])).toThrow();
   });
 });

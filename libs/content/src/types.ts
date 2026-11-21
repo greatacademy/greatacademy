@@ -130,6 +130,26 @@ export interface Problem {
   readonly mistakes?: readonly Mistake[];
   /** difficulty is the tier a tiered knowledge point's problem was made at; the source sets it, not the generator. */
   readonly difficulty?: Difficulty;
+  /**
+   * parts make a multistep problem: one scenario, the prompt with its figure, asked in steps, each its own question and
+   * answer. The problem's own answer, solution and responses are those of its last part, so that it stands as one
+   * problem where parts are not asked; multistep builds it. Each part is asked as partOf makes it.
+   */
+  readonly parts?: readonly ProblemPart[];
+  /** part is the position of a part made by partOf among its problem's parts, with the topic it practices when another. */
+  readonly part?: { readonly index: number; readonly count: number; readonly topic?: string };
+}
+
+/** ProblemPart is one step of a multistep problem: a question about the problem's scenario and its answer. */
+export interface ProblemPart {
+  readonly prompt: Text;
+  readonly answer: AnswerSpec;
+  readonly solution: Text;
+  readonly canonical: string;
+  readonly wrong?: readonly string[];
+  readonly mistakes?: readonly Mistake[];
+  /** topic is the topic the part practices, when it is another than the problem's; the result names it. */
+  readonly topic?: string;
 }
 
 /** Sound is a recording: a word, a sentence or the sounds of a word, read aloud. */

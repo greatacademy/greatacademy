@@ -100,6 +100,8 @@ export function problemView(p: Problem): MessageInitShape<typeof ProblemViewSche
     listen: [...(p.listen ?? [])],
     picture: p.picture ?? "",
     difficulty: p.difficulty ?? "",
+    part: p.part ? p.part.index + 1 : 0,
+    parts: p.part?.count ?? 0,
   };
 }
 
@@ -261,34 +263,54 @@ async function result(
   const prerequisites = lessonTopic ? lessonTopic.prerequisites.flatMap(link) : [];
   const remedial = lessonTopic && !r.passed ? pendingRemedial(c.planner, state, lessonTopic.id).flatMap(link) : [];
   const listed = run.kind !== "diagnostic";
-  const problems = listed
-    ? await c.source.problems(run.asked.map(({ topic, kp, seed, difficulty }) => ({ topic, kp, seed, ...(difficulty && { difficulty }) })))
+  // A multistep problem is listed part by part.
+  const rows = listed
+    ? run.asked.flatMap((a) =>
+        a.parts
+          ? a.parts.map((p, part) => ({
+              a,
+              part: part as number | undefined,
+              response: p.response,
+              correct: p.correct,
+              elapsedMs: p.elapsedMs,
+            }))
+          : [{ a, part: undefined as number | undefined, response: a.response, correct: a.correct, elapsedMs: a.elapsedMs }],
+      )
     : [];
+  const problems = await c.source.problems(
+    rows.map(({ a: { topic, kp, seed, difficulty }, part }) => ({
+      topic,
+      kp,
+      seed,
+      ...(difficulty && { difficulty }),
+      ...(part !== undefined && { part }),
+    })),
+  );
   // A lesson's questions are grouped by knowledge point, under its title.
   const topic = run.kind === "lesson" ? run.topic : undefined;
   const kps = topic ? [...new Set(run.asked.map((a) => a.kp))] : [];
   const kpTitles = new Map(await Promise.all(kps.map(async (kp) => [kp, text((await c.source.lesson(topic!, kp)).title)] as const)));
   const unanswered = run.kind === "quiz" ? Math.max(0, run.topics.length - run.asked.length) : 0;
-  const items = listed
-    ? run.asked.map((a, i) => {
-        const p = problems[i]!;
-        return {
-          topicId: a.topic,
-          title: text((c.subject.topics.get(a.topic) ?? c.subject.passages.get(a.topic)!).title),
-          correct: a.correct,
-          problem: problemView(p),
-          solution: text(p.solution),
-          answer: p.canonical,
-          response: a.response,
-          ...(p.solutionFigure && { solutionFigure: figure(p.solutionFigure) }),
-          solutionSounds: sounds(p.solutionSounds),
-          elapsedMs: BigInt(Math.max(0, Math.round(a.elapsedMs))),
-          late: a.late === true,
-          knowledgePoint: a.kp,
-          ...(kpTitles.has(a.kp) && { knowledgePointTitle: kpTitles.get(a.kp) }),
-        };
-      })
-    : [];
+  const items = rows.map(({ a, response, correct, elapsedMs }, i) => {
+    const p = problems[i]!;
+    // A part that practices another topic is listed under that topic.
+    const topicId = p.part?.topic && c.subject.topics.has(p.part.topic) ? p.part.topic : a.topic;
+    return {
+      topicId,
+      title: text((c.subject.topics.get(topicId) ?? c.subject.passages.get(topicId)!).title),
+      correct,
+      problem: problemView(p),
+      solution: text(p.solution),
+      answer: p.canonical,
+      response,
+      ...(p.solutionFigure && { solutionFigure: figure(p.solutionFigure) }),
+      solutionSounds: sounds(p.solutionSounds),
+      elapsedMs: BigInt(Math.max(0, Math.round(elapsedMs))),
+      late: a.late === true,
+      knowledgePoint: a.kp,
+      ...(kpTitles.has(a.kp) && { knowledgePointTitle: kpTitles.get(a.kp) }),
+    };
+  });
   const passage = run.kind === "reading" ? await c.source.passage(run.passage) : undefined;
   return {
     passed: r.passed,

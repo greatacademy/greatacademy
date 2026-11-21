@@ -154,6 +154,7 @@ const messages = {
     },
     late: "Late",
     difficulty: (d: string) => ({ easy: "Easy", medium: "Medium", hard: "Hard" })[d] ?? "",
+    partOf: (i: number, n: number) => `Part ${i} of ${n}`,
     reading: "Reading",
     readingBody: (words: number, questions: number) =>
       `${words} words, then ${questions} question${questions === 1 ? "" : "s"} on what you read.`,
@@ -641,6 +642,7 @@ const messages = {
     },
     late: "超时",
     difficulty: (d: string) => ({ easy: "简单", medium: "中等", hard: "困难" })[d] ?? "",
+    partOf: (i: number, n: number) => `第 ${i} 问，共 ${n} 问`,
     reading: "阅读",
     readingBody: (words: number, questions: number) => `${words} 个词的文章，读后回答 ${questions} 道题。`,
     resume: "继续",

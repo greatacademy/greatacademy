@@ -1607,6 +1607,18 @@ export declare type ProblemView = Message<"ga.learning.v1.ProblemView"> & {
    * @generated from field: string difficulty = 6;
    */
   difficulty: string;
+
+  /**
+   * part is the position, from 1, of the part asked of a multistep problem among its parts; both are 0 for a problem of one step.
+   *
+   * @generated from field: int32 part = 7;
+   */
+  part: number;
+
+  /**
+   * @generated from field: int32 parts = 8;
+   */
+  parts: number;
 };
 
 /**

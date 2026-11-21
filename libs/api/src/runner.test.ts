@@ -120,3 +120,43 @@ describe("a quiz run", () => {
     expect(event?.type === "quiz" && event.results.filter((r) => r.late)).toHaveLength(3);
   });
 });
+
+describe("a multistep problem", () => {
+  const parted = {
+    ...course,
+    source: {
+      judge: async (ref: { part?: number }, response: string) => ({
+        problem: { part: { index: ref.part ?? 0, count: 2 } },
+        verdict: { correct: response === "right" },
+      }),
+    },
+  } as unknown as CourseEntry;
+  const quiz: RunState = {
+    kind: "quiz",
+    topics: ["t", "t"],
+    deadline: 600_000,
+    asked: [],
+    servedAt: 0,
+    current: { topic: "t", kp: 0, seed: 1 },
+  };
+
+  it("asks its parts in turn and counts as one question, right only when every part is", async () => {
+    const rng = createRng(1);
+    const first = await answerRun(parted, quiz, state, "right", false, 10_000, rng);
+    expect(first.run.asked).toHaveLength(0);
+    expect(first.run.current).toMatchObject({ topic: "t", kp: 0, seed: 1, part: 1 });
+    const second = await answerRun(parted, first.run, state, "wrong", false, 25_000, rng);
+    expect(second.run.asked).toHaveLength(1);
+    expect(second.run.asked[0]).toMatchObject({
+      correct: false,
+      elapsedMs: 25_000,
+      parts: [
+        { response: "right", correct: true },
+        { response: "wrong", correct: false },
+      ],
+    });
+    expect(second.run.asked[0]).not.toHaveProperty("part");
+    expect(second.run.partial).toBeUndefined();
+    expect(second.run.current?.part).toBeUndefined();
+  });
+});

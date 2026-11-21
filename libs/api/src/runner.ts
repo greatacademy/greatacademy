@@ -40,6 +40,15 @@ export interface Asked extends ProblemRef {
   readonly score?: number;
   /** late marks a quiz answer that arrived after the time limit and so counts wrong. */
   readonly late?: boolean;
+  /** parts are the answers to the parts of a multistep problem, in order; the question is correct when all of them are. */
+  readonly parts?: readonly PartAnswer[];
+}
+
+/** PartAnswer is the answer to one part of a multistep problem. */
+export interface PartAnswer {
+  readonly response: string;
+  readonly correct: boolean;
+  readonly elapsedMs: number;
 }
 
 /** RunResult is the outcome of a finished run. */
@@ -68,6 +77,8 @@ interface RunBase {
   readonly attempt?: number;
   /** pending is the answer to the current question a model is judging; the run waits for its verdict. */
   readonly pending?: { readonly judgment: string; readonly response: string };
+  /** partial are the answers to the parts of the current multistep problem before the part asked now. */
+  readonly partial?: readonly PartAnswer[];
 }
 
 /**
@@ -209,6 +220,8 @@ export async function answerRun(
   const next: Record<string, unknown> = { ...answered.run };
   delete next.attempt;
   delete next.pending;
+  // The answers to earlier parts are kept only while a further part of the same problem is asked.
+  if (!answered.run.current?.part) delete next.partial;
   return { ...answered, run: next as unknown as RunState };
 }
 
@@ -230,19 +243,33 @@ async function advance(
     : skipped
       ? { problem: (await c.source.problems([ref]))[0]!, verdict: { correct: false } }
       : await c.source.judge(ref, response);
-  const elapsedMs = now - (run.servedAt ?? 0);
+  const elapsed = now - (run.servedAt ?? 0);
   // A quiz answer that arrives after the time limit, beyond the time an answer takes to arrive, counts wrong.
   const late = run.kind === "quiz" && run.deadline !== undefined && now > run.deadline + c.ctx.params.quizGraceSeconds * 1000;
+  const timeUp = run.kind === "quiz" && run.deadline !== undefined && now >= run.deadline;
+  // A part of a multistep problem before its last is kept, and the next part asked; the problem is one question.
+  const answer: PartAnswer = { response: skipped ? "" : response, correct: verdict.correct && !late, elapsedMs: elapsed };
+  const part = problem.part;
+  if (part && part.index + 1 < part.count && !skipped && !timeUp) {
+    const current = { ...ref, part: part.index + 1 };
+    return { run: { ...run, partial: [...(run.partial ?? []), answer], servedAt: now, current }, problem, verdict, skipped };
+  }
+  const parts = part ? [...(run.partial ?? []), answer] : undefined;
+  // A multistep problem left when the time ran out counts its parts not reached as wrong.
+  const ok = parts ? parts.length === part!.count && parts.every((p) => p.correct) : answer.correct;
+  const elapsedMs = parts ? parts.reduce((total, p) => total + p.elapsedMs, 0) : elapsed;
+  const { part: _, ...asked0 } = ref;
   const asked = [
     ...run.asked,
     {
-      ...ref,
-      response: skipped ? "" : response,
-      correct: verdict.correct && !late,
+      ...asked0,
+      response: answer.response,
+      correct: ok,
       skipped,
       elapsedMs,
       ...(given?.score !== undefined && { score: given.score }),
       ...(late && { late }),
+      ...(parts && { parts }),
     },
   ];
   const correct = asked.filter((a) => a.correct).length;
@@ -272,7 +299,7 @@ async function advance(
 
   switch (run.kind) {
     case "lesson": {
-      const lesson = answerLesson(c.ctx.params, run.lesson, verdict.correct);
+      const lesson = answerLesson(c.ctx.params, run.lesson, ok);
       const next = { ...run, lesson, asked };
       if (lesson.outcome) {
         const passed = lesson.outcome === "passed";
@@ -330,7 +357,6 @@ async function advance(
     case "quiz": {
       const next = { ...run, asked };
       // Once the time is up the quiz ends, and the questions not answered count wrong.
-      const timeUp = run.deadline !== undefined && now >= run.deadline;
       if (asked.length >= run.topics.length || timeUp) {
         const answered = asked.map((a) => ({ topic: a.topic, correct: a.correct, ...(a.late && { late: true }) }));
         const unanswered = run.topics.slice(asked.length).map((topic) => ({ topic, correct: false, late: true }));
@@ -358,7 +384,7 @@ async function advance(
       };
     }
     case "diagnostic": {
-      const diagnostic = answerDiagnostic(c.ctx.graph, run.diagnostic, ref.topic, verdict.correct);
+      const diagnostic = answerDiagnostic(c.ctx.graph, run.diagnostic, ref.topic, ok);
       const next = { ...run, diagnostic, asked };
       const topic = nextDiagnosticTopic(c.ctx.graph, diagnostic);
       if (!topic) {

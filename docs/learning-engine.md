@@ -113,6 +113,8 @@ A **practice-only** topic ([Content §3](content.md#3-topics)) starts directly w
 
 **Difficulty.** A tiered knowledge point ([Content §4](content.md#4-knowledge-points-and-generators)) is practiced at three tiers. In a lesson its first question is easy and the last correct answer it needs is hard, with medium between; a wrong answer asks the same tier again. A review asks its first question at medium and the other planned ones hard, since it checks that the whole step holds, and the extra questions after slips at medium. A quiz starts at medium and steers toward `quizTargetAccuracy` correct: hard while the share of correct answers is above it, easy once it is more than 0.2 below. The problem shows its tier. A knowledge point that is not tiered ignores the tier.
 
+**Multistep problems.** A multistep problem ([Content §4](content.md#4-knowledge-points-and-generators)) is asked part by part, each part after the answers to the ones before it, and counts as one question wherever questions are counted: it is correct only when every part is, and its time is the time of all its parts. Skipping a part, or a quiz's time running out during the problem, ends it with the parts answered, and it counts wrong.
+
 Requiring more correct answers after each slip means a lucky guess is not enough, and stopping at the third slip, after at most five questions, keeps a struggling learner from grinding: the engine reroutes them to the prerequisites instead (§3). While a knowledge point is practiced, the session shows how many correct answers it has and how many it needs.
 
 A passed lesson:

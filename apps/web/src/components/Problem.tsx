@@ -22,7 +22,14 @@ export function ProblemPrompt({ problem, answering }: { problem?: ProblemView; a
   const items = !answering && input?.case === "order" ? input.value.items : [];
   return (
     <div className="space-y-4">
-      <DifficultyBadge difficulty={problem?.difficulty ?? ""} />
+      <div className="flex flex-wrap items-center gap-2">
+        {(problem?.parts ?? 0) > 1 && (
+          <span className="inline-block rounded-full bg-accent-soft px-2 py-0.5 text-xs font-medium text-accent">
+            {m.partOf(problem?.part ?? 0, problem?.parts ?? 0)}
+          </span>
+        )}
+        <DifficultyBadge difficulty={problem?.difficulty ?? ""} />
+      </div>
       <Illustration path={problem?.picture ?? ""} className="w-full" />
       <Markdown source={tx(problem?.prompt)} className="text-lg" />
       <Sounds sounds={listenTo(problem?.listen ?? [], m.listen)} />

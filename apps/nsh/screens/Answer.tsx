@@ -22,6 +22,11 @@ export function Prompt(props: { problem: ProblemView; answering?: boolean }) {
   const figure = props.answering && input?.case === "plot" ? undefined : props.problem.figure;
   return (
     <View style={{ gap: 12 }}>
+      <If when={props.problem.parts > 1}>
+        <Text style={{ color: colors().accent, fontSize: 13, fontWeight: "600" }}>
+          {m().partOf(props.problem.part, props.problem.parts)}
+        </Text>
+      </If>
       <If when={m().difficulty(props.problem.difficulty)}>
         {(label) => (
           <Text

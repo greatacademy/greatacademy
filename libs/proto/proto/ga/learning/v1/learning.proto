@@ -500,6 +500,9 @@ message ProblemView {
   string picture = 5;
   // difficulty is the tier of a tiered knowledge point's problem: "easy", "medium" or "hard"; empty when untiered.
   string difficulty = 6;
+  // part is the position, from 1, of the part asked of a multistep problem among its parts; both are 0 for a problem of one step.
+  int32 part = 7;
+  int32 parts = 8;
 }
 
 message Input {

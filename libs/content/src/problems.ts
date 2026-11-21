@@ -6,7 +6,15 @@ import { speechExpected } from "./speech.ts";
 import { MAX_STROKES, parseStrokes } from "./strokes.ts";
 import type { Locale, Text } from "./text.ts";
 import { isText, locales } from "./text.ts";
-import { DIFFICULTIES, type Difficulty, type KnowledgePointDef, type PlotGrid, type Problem, type TopicDef } from "./types.ts";
+import {
+  DIFFICULTIES,
+  type Difficulty,
+  type KnowledgePointDef,
+  type PlotGrid,
+  type Problem,
+  type ProblemPart,
+  type TopicDef,
+} from "./types.ts";
 
 /** RECORDING matches the path of a recording from the site's root, without its extension. */
 const RECORDING = /^audio\/[a-z][a-z0-9-]*\/[0-9a-f]{16}$/u;
@@ -18,6 +26,8 @@ export interface ProblemRef {
   readonly seed: number;
   /** difficulty is the tier asked for; a knowledge point that is not tiered ignores it. */
   readonly difficulty?: Difficulty;
+  /** part is the part asked of a multistep problem (partOf); the first when absent. */
+  readonly part?: number;
 }
 
 /**
@@ -29,6 +39,49 @@ export function tierRange(difficulty: Difficulty | undefined, lo: number, hi: nu
   if (difficulty === "easy") return [lo, Math.max(lo + 4, Math.ceil(hi / 5))];
   if (difficulty === "hard") return [Math.max(lo, Math.ceil(hi / 2)), hi * 5];
   return [lo, hi];
+}
+
+/** multistep builds a multistep problem from its scenario, the prompt with any figure, and its parts. */
+export function multistep(
+  scenario: Omit<Problem, "answer" | "solution" | "canonical" | "wrong" | "mistakes" | "parts" | "part">,
+  parts: readonly ProblemPart[],
+): Problem {
+  const last = parts[parts.length - 1];
+  if (!last || parts.length < 2) throw new Error("a multistep problem needs at least two parts");
+  const { prompt: _, topic: __, ...answer } = last;
+  return { ...scenario, ...answer, parts };
+}
+
+/**
+ * partOf makes part index of a multistep problem into a problem of its own: the
+ * scenario, the parts before it with their answers, then its question. A
+ * problem without parts is its own part.
+ */
+export function partOf(problem: Problem, index: number): Problem {
+  const { parts } = problem;
+  if (!parts) return problem;
+  const part = parts[index];
+  if (!part) throw new Error(`the problem has no part ${index}`);
+  const join = (locale: Locale, answered: string) =>
+    [
+      problem.prompt[locale],
+      ...parts.slice(0, index).map((p, i) => `**${i + 1}.** ${p.prompt[locale]} ${answered}${answerShown(p, locale)}`),
+      `**${index + 1}.** ${part.prompt[locale]}`,
+    ].join("\n\n");
+  const { parts: _, topic: __, ...rest } = { ...problem, ...part };
+  return {
+    ...rest,
+    prompt: { en: join("en", "Answer: "), "zh-CN": join("zh-CN", "答案：") },
+    part: { index, count: parts.length, ...(part.topic && { topic: part.topic }) },
+  };
+}
+
+/** answerShown is how an earlier part's answer is shown under it: the option chosen, or its canonical response, as math for a math input. */
+function answerShown(p: ProblemPart, locale: Locale): string {
+  const { input } = p.answer;
+  if (input.kind === "choice") return input.options[p.answer.expected as number]?.[locale] ?? p.canonical;
+  if (input.kind === "math") return `$${input.prefix ?? ""}${p.canonical}${input.suffix ?? ""}$`;
+  return p.canonical;
 }
 
 /** generateAt runs a knowledge point's generator at a tier, marking the problem with it when the knowledge point is tiered. */
@@ -43,7 +96,8 @@ export function generateProblem(subject: CompiledSubject, ref: ProblemRef): Prob
   if (!topic) throw new Error(`unknown topic ${ref.topic}`);
   const kp = topic.knowledgePoints[ref.kp];
   if (!kp) throw new Error(`topic ${ref.topic} has no knowledge point ${ref.kp}`);
-  return generateAt(kp, ref.seed, ref.difficulty);
+  const problem = generateAt(kp, ref.seed, ref.difficulty);
+  return problem.parts ? partOf(problem, ref.part ?? 0) : problem;
 }
 
 /** ProblemView is what a client may see of a problem before answering: no answer, no solution. */
@@ -205,6 +259,21 @@ function checkSample(
     return `generator threw: ${(e as Error).message}`;
   }
   if (JSON.stringify(a) !== JSON.stringify(b)) return "generator is not deterministic";
+  const whole = generateAt(topic.knowledgePoints[kp]!, seed, difficulty);
+  if (!whole.parts) return problemIssue(subject, topic, a, textIssue);
+  if (whole.parts.length < 2) return "a multistep problem needs at least two parts";
+  for (let i = 0; i < whole.parts.length; i++) {
+    const part = partOf(whole, i);
+    if (part.answer.judged || part.answer.input.kind === "writing" || part.answer.input.kind === "speech")
+      return `part ${i + 1}: a part is checked by rules, not judged or spoken`;
+    const issue = problemIssue(subject, topic, part, textIssue);
+    if (issue) return `part ${i + 1}: ${issue}`;
+  }
+  return undefined;
+}
+
+/** problemIssue tells what is wrong with one generated problem, or one part of a multistep problem. */
+function problemIssue(subject: CompiledSubject, topic: TopicDef, a: Problem, textIssue: SampleOptions["textIssue"]): string | undefined {
   if (!isText(a.prompt)) return "prompt must be non-empty in every locale";
   if (!isText(a.solution)) return "solution must be non-empty in every locale";
   for (const locale of ["en", "zh-CN"] as const) {

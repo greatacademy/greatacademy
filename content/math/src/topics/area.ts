@@ -1,5 +1,5 @@
-import type { Figure, Rng, TopicDef } from "@ga/content";
-import { t } from "@ga/content";
+import type { Figure, Problem, ProblemPart, Rng, TopicDef } from "@ga/content";
+import { multistep, t } from "@ga/content";
 import { type Mark, type Point, sketch } from "@ga/subject-math";
 import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
 import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
@@ -776,24 +776,65 @@ export const compositeShapes: TopicDef = {
         const p = 2 * (w + h);
         const shown = w + (h - ch) + (w - cw) + h;
         const points = lShape(w, h, cw, ch);
-        return {
-          ...numberProblem({
-            prompt: t("Find the perimeter of the shape. All corners are right angles.", "求这个图形的周长。所有的角都是直角。"),
-            answer: p,
-            form: "integer",
-            unit: u,
-            wrong: [shown, w * h - cw * ch, p - cw - ch],
-            solution: t(
-              `The two unlabeled sides are $${w} - ${w - cw} = ${cw}$ and $${h} - ${h - ch} = ${ch}$. Add all six sides:${steps(`P = ${w} + ${h - ch} + ${cw} + ${ch} + ${w - cw} + ${h} = ${tex(p, u)}`)}`,
-              `两条未标出的边是 $${w} - ${w - cw} = ${cw}$ 和 $${h} - ${h - ch} = ${ch}$。六条边相加：${steps(`P = ${w} + ${h - ch} + ${cw} + ${ch} + ${w - cw} + ${h} = ${tex(p, u)}`)}`,
-            ),
-          }),
-          figure: figure(
-            [{ kind: "polygon", points }, ...sides(points, [len(w, u), len(h - ch, u), null, null, len(w - cw, u), len(h, u)])],
-            `An L-shape: ${w} ${u} wide at the bottom, ${h} ${u} tall on the left, ${w - cw} ${u} wide at the top and ${h - ch} ${u} tall on the right; the two sides of the notch are unlabeled.`,
-            `一个 L 形：底边宽 ${w} ${u}，左边高 ${h} ${u}，顶边宽 ${w - cw} ${u}，右边高 ${h - ch} ${u}；缺口的两条边未标出。`,
-          ),
+        // Asked in three parts about one figure: the two sides of the notch, then the perimeter.
+        const part = (q: Problem): ProblemPart => {
+          const { prompt, answer, solution, canonical, wrong, mistakes } = q;
+          return { prompt, answer, solution, canonical, ...(wrong && { wrong }), ...(mistakes && { mistakes }) };
         };
+        return multistep(
+          {
+            prompt: t(
+              "All corners of the shape are right angles; the two sides of its notch are marked $a$ and $b$.",
+              "这个图形的所有角都是直角；缺口的两条边标为 $a$ 和 $b$。",
+            ),
+            figure: figure(
+              [{ kind: "polygon", points }, ...sides(points, [len(w, u), len(h - ch, u), "a", "b", len(w - cw, u), len(h, u)])],
+              `An L-shape: ${w} ${u} wide at the bottom, ${h} ${u} tall on the left, ${w - cw} ${u} wide at the top and ${h - ch} ${u} tall on the right; the sides of the notch are marked a, across, and b, up.`,
+              `一个 L 形：底边宽 ${w} ${u}，左边高 ${h} ${u}，顶边宽 ${w - cw} ${u}，右边高 ${h - ch} ${u}；缺口的横边标为 a，竖边标为 b。`,
+            ),
+          },
+          [
+            part(
+              numberProblem({
+                prompt: t("Find $a$.", "求 $a$。"),
+                answer: cw,
+                form: "integer",
+                unit: u,
+                wrong: [w, w - cw, w + (w - cw)],
+                solution: t(
+                  `The top sides add up to the bottom, so${steps(`a = ${w} - ${w - cw} = ${tex(cw, u)}`)}`,
+                  `上方的水平边之和等于底边，所以${steps(`a = ${w} - ${w - cw} = ${tex(cw, u)}`)}`,
+                ),
+              }),
+            ),
+            part(
+              numberProblem({
+                prompt: t("Find $b$.", "求 $b$。"),
+                answer: ch,
+                form: "integer",
+                unit: u,
+                wrong: [h, h - ch, h + (h - ch)],
+                solution: t(
+                  `The right sides add up to the left, so${steps(`b = ${h} - ${h - ch} = ${tex(ch, u)}`)}`,
+                  `右侧的竖直边之和等于左侧，所以${steps(`b = ${h} - ${h - ch} = ${tex(ch, u)}`)}`,
+                ),
+              }),
+            ),
+            part(
+              numberProblem({
+                prompt: t("Find the perimeter of the shape.", "求这个图形的周长。"),
+                answer: p,
+                form: "integer",
+                unit: u,
+                wrong: [shown, w * h - cw * ch, p - cw - ch],
+                solution: t(
+                  `Add all six sides, $a = ${cw}$ and $b = ${ch}$ among them:${steps(`P = ${w} + ${h - ch} + ${cw} + ${ch} + ${w - cw} + ${h} = ${tex(p, u)}`)}`,
+                  `六条边相加，其中 $a = ${cw}$，$b = ${ch}$：${steps(`P = ${w} + ${h - ch} + ${cw} + ${ch} + ${w - cw} + ${h} = ${tex(p, u)}`)}`,
+                ),
+              }),
+            ),
+          ],
+        );
       },
     },
   ],
