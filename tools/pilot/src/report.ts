@@ -32,6 +32,8 @@ export interface ActivityRow {
   readonly xp: number;
   /** day is the calendar day of the event, "YYYY-MM-DD" in UTC. */
   readonly day: string;
+  /** blownOff marks a task the engine judged rushed through. */
+  readonly blownOff?: boolean;
 }
 
 /** PilotData is what a report is computed from. */
@@ -50,6 +52,18 @@ export interface PaceStats {
   readonly activeDays: number;
   /** reviewsPerLearnedTopic is the reviews ended per lesson passed, over all learners. */
   readonly reviewsPerLearnedTopic: number;
+}
+
+/** BlowOffStats sums up the tasks rushed through, for calibrating their penalty (Learning Engine §10). */
+export interface BlowOffStats {
+  /** tasks counts the blown-off tasks, and share is their part of all tasks ended. */
+  readonly tasks: number;
+  readonly share: number;
+  /** learners counts the learners with any, and repeated those with at least three, past the warnings. */
+  readonly learners: number;
+  readonly repeated: number;
+  /** xpLost is the XP their penalties took, over all learners. */
+  readonly xpLost: number;
 }
 
 /** KpStats sums up the answers to one knowledge point. */
@@ -91,6 +105,7 @@ export interface PilotReport {
   readonly lessonsEnded: number;
   readonly lessonsPassed: number;
   readonly pace: PaceStats;
+  readonly blowOffs: BlowOffStats;
   /** responses counts every answer given, skipped ones excluded. */
   readonly responses: number;
   /** rejected counts the wrong answers of several words, which a person reads for valid sentences. */
@@ -196,6 +211,7 @@ export function summarize(data: PilotData, options: ReportOptions = defaultRepor
     lessonsEnded: data.lessons.length,
     lessonsPassed: data.lessons.filter((l) => l.passed).length,
     pace: paceOf(data),
+    blowOffs: blowOffsOf(data),
     responses: data.answers.filter((a) => !a.skipped).length,
     rejected: data.answers.filter((a) => !a.correct && !a.skipped && isSentence(a.response)).length,
     kps,
@@ -209,6 +225,20 @@ function median(values: readonly number[]): number {
   const middle = sorted.length / 2;
   if (sorted.length === 0) return 0;
   return Number.isInteger(middle) ? (sorted[middle - 1]! + sorted[middle]!) / 2 : sorted[Math.floor(middle)]!;
+}
+
+const taskTypes = new Set(["lesson", "review", "quiz", "reading"]);
+
+function blowOffsOf(data: PilotData): BlowOffStats {
+  const blown = data.activity.filter((a) => a.blownOff);
+  const byLearner = groupBy(blown, (a) => a.learnerId);
+  return {
+    tasks: blown.length,
+    share: share(blown.length, data.activity.filter((a) => taskTypes.has(a.type)).length),
+    learners: byLearner.length,
+    repeated: byLearner.filter((rows) => rows.length >= 3).length,
+    xpLost: -blown.reduce((total, a) => total + Math.min(0, a.xp), 0),
+  };
 }
 
 function paceOf(data: PilotData): PaceStats {
@@ -252,10 +282,14 @@ export async function loadPilotData(db: Db, courseId: string, since: Date = new 
     data.type === "lesson" ? [{ learnerId, topicId: data.topic, passed: data.passed }] : [],
   );
   const logged = await db
-    .select({ learnerId: event.learnerId, type: event.type, xp: event.xp, at: event.at })
+    .select({ learnerId: event.learnerId, type: event.type, xp: event.xp, at: event.at, data: event.data })
     .from(event)
     .where(and(eq(event.courseId, courseId), gte(event.at, since)));
-  const activity = logged.map(({ at, ...e }) => ({ ...e, day: at.toISOString().slice(0, 10) }));
+  const activity = logged.map(({ at, data, ...e }) => ({
+    ...e,
+    day: at.toISOString().slice(0, 10),
+    ...("blownOff" in data && data.blownOff && { blownOff: true }),
+  }));
   return { answers, sessions, lessons, activity };
 }
 
@@ -279,6 +313,7 @@ export function renderPilotReport(course: string, report: PilotReport, names: Pi
     `- Responses: ${report.responses}, rejected sentences to read: ${report.rejected}`,
     `- Pace, median per learner: ${report.pace.xpPerActiveDay.toFixed(1)} XP on each of ${report.pace.activeDays} days studied`,
     `- Reviews per learned topic: ${report.pace.reviewsPerLearnedTopic.toFixed(2)}`,
+    `- Blown-off tasks: ${report.blowOffs.tasks} (${percent(report.blowOffs.share)} of tasks), by ${report.blowOffs.learners} learners, ${report.blowOffs.repeated} of them three times or more; XP lost: ${report.blowOffs.xpLost}`,
     "",
     "## Sessions",
     "",

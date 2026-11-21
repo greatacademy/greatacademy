@@ -81,11 +81,13 @@ describe("summarize", () => {
           { learnerId: "x", type: "lesson", xp: 10, day: "2026-12-01" },
           { learnerId: "x", type: "review", xp: 20, day: "2026-12-02" },
           { learnerId: "y", type: "lesson", xp: 50, day: "2026-12-01" },
+          { learnerId: "y", type: "review", xp: -1, day: "2026-12-01", blownOff: true },
         ],
       },
       options,
     );
-    expect(report.pace).toEqual({ xpPerActiveDay: 32.5, activeDays: 1.5, reviewsPerLearnedTopic: 1 });
+    expect(report.pace).toEqual({ xpPerActiveDay: 32, activeDays: 1.5, reviewsPerLearnedTopic: 2 });
+    expect(report.blowOffs).toEqual({ tasks: 1, share: 0.25, learners: 1, repeated: 0, xpLost: 1 });
     expect(report).toMatchObject({ responses: 3, rejected: 1 });
   });
 
