@@ -46,6 +46,8 @@ const messages = {
       `Up to ${n} questions find which topics you already know, so the course starts where you are. Answer "I don't know" instead of guessing.`,
     skipDiagnostic: "Skip and start from the beginning",
     lesson: "Lesson",
+    lessonAgain: "Lesson again",
+    lessonAgainBody: "A lesson that builds on this topic showed it needs teaching again.",
     review: "Review",
     reading: "Reading",
     readingBody: (words: number, questions: number) =>
@@ -68,6 +70,7 @@ const messages = {
       return s < 60 ? `${s} s` : `${Math.floor(s / 60)} min ${s % 60} s`;
     },
     late: "Late",
+    difficulty: (d: string) => ({ easy: "Easy", medium: "Medium", hard: "Hard" })[d] ?? "",
     reviewCovers: (n: number) => `Also refreshes ${n} related topic${n === 1 ? "" : "s"}`,
     kps: (n: number) => `${n} step${n === 1 ? "" : "s"}`,
     progress: "Progress map",
@@ -640,6 +643,8 @@ const messages = {
     diagnosticBody: (n: number) => `最多 ${n} 道题，找出你已经掌握的知识点，让课程从合适的地方开始。不会就选"我不会"，不要猜。`,
     skipDiagnostic: "跳过，从头开始",
     lesson: "新课",
+    lessonAgain: "重新学习",
+    lessonAgainBody: "依赖这个知识点的课程显示它需要重新讲授。",
     review: "复习",
     reading: "阅读",
     readingBody: (words: number, questions: number) => `${words} 个词的文章，读后回答 ${questions} 道题。`,
@@ -658,6 +663,7 @@ const messages = {
       return s < 60 ? `${s} 秒` : `${Math.floor(s / 60)} 分 ${s % 60} 秒`;
     },
     late: "超时",
+    difficulty: (d: string) => ({ easy: "简单", medium: "中等", hard: "困难" })[d] ?? "",
     reviewCovers: (n: number) => `同时巩固 ${n} 个相关知识点`,
     kps: (n: number) => `${n} 步`,
     progress: "进度图",

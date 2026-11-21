@@ -269,6 +269,49 @@ describe("events", () => {
     expect(frontier(planner, reviewed)).toEqual(["c", "s"]);
     expect(remedialTopics(planner, reviewed)).toEqual([]);
   });
+  it("teaches a key prerequisite again when its remedial reviews fail twice in a row", () => {
+    const s0 = learnedState(["a", "b"]);
+    const failed = applyEvent(ctx, s0, { type: "lesson", at: T0 + DAY, topic: "c", passed: false, asked: 4, correct: 1, kp: 1 });
+    expect(failed.topics.c).toMatchObject({ failedKp: 1, failures: 1 });
+    const review = (at: number): EngineEvent => ({ type: "review", at, topic: "b", correct: 1, total: 3, passed: false });
+    const once = applyEvent(ctx, failed, review(T0 + 2 * DAY));
+    expect(once.topics.b).toMatchObject({ remedialMisses: 1 });
+    expect(once.topics.b!.reteach).toBeUndefined();
+    // The failed review was a repetition, so c is tried again; it fails elsewhere and b's review fails again.
+    expect(frontier(planner, once)).toEqual(["c", "s"]);
+    const failedAgain = applyEvent(ctx, once, { type: "lesson", at: T0 + 3 * DAY, topic: "c", passed: false, asked: 4, correct: 1, kp: 0 });
+    const missed = applyEvent(ctx, failedAgain, review(T0 + 4 * DAY));
+    expect(missed.topics.b).toMatchObject({ learned: true, reteach: true, remedialMisses: 2 });
+    // b is taught again first; c waits for it, and b is no longer offered as a review.
+    expect(frontier(planner, missed)).toEqual(["b", "s"]);
+    expect(remedialTopics(planner, missed)).toEqual([]);
+    expect(nextTasks(planner, missed, T0 + 2 * DAY).find((x) => x.kind === "lesson")).toEqual({ kind: "lesson", topic: "b" });
+    // Failing it again is a failed repetition; c is then tried again.
+    const again = applyEvent(ctx, missed, { type: "lesson", at: T0 + 5 * DAY, topic: "b", passed: false, asked: 5, correct: 2, kp: 0 });
+    expect(again.topics.b).toMatchObject({ learned: true, repNum: 0, last: T0 + 5 * DAY });
+    expect(again.topics.b!.reteach).toBeUndefined();
+    expect(frontier(planner, again)).toEqual(["c", "s"]);
+    const taught = applyEvent(ctx, missed, { type: "lesson", at: T0 + 5 * DAY, topic: "b", passed: true, asked: 4, correct: 4 });
+    expect(taught.topics.b!.reteach).toBeUndefined();
+    expect(taught.topics.b!.remedialMisses).toBeUndefined();
+    expect(frontier(planner, taught)).toEqual(["c", "s"]);
+  });
+  it("teaches key prerequisites again after a second failure at the same knowledge point", () => {
+    const s0 = learnedState(["a", "b"]);
+    const lesson = (at: number, kp: number): EngineEvent => ({ type: "lesson", at, topic: "c", passed: false, asked: 4, correct: 1, kp });
+    const once = applyEvent(ctx, s0, lesson(T0 + DAY, 0));
+    const reviewed = applyEvent(ctx, once, { type: "review", at: T0 + 2 * DAY, topic: "b", correct: 3, total: 3, passed: true });
+    expect(reviewed.topics.b!.reteach).toBeUndefined();
+    // Failing at another knowledge point starts the count again.
+    const elsewhere = applyEvent(ctx, reviewed, lesson(T0 + 3 * DAY, 1));
+    expect(elsewhere.topics.c!.failures).toBe(1);
+    expect(elsewhere.topics.b!.reteach).toBeUndefined();
+    const reviewedAgain = applyEvent(ctx, elsewhere, { type: "review", at: T0 + 4 * DAY, topic: "b", correct: 3, total: 3, passed: true });
+    const twice = applyEvent(ctx, reviewedAgain, lesson(T0 + 5 * DAY, 1));
+    expect(twice.topics.c!.failures).toBe(2);
+    expect(twice.topics.b!.reteach).toBe(true);
+    expect(frontier(planner, twice)[0]).toBe("b");
+  });
   it("updates speed and counts reviews", () => {
     const s = applyEvent(ctx, learnedState(["a"]), { type: "review", at: T0 + DAY, topic: "a", correct: 1, total: 3 });
     expect(s.topics.a!.explicitReviews).toBe(1);

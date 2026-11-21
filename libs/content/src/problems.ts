@@ -6,16 +6,35 @@ import { speechExpected } from "./speech.ts";
 import { MAX_STROKES, parseStrokes } from "./strokes.ts";
 import type { Locale, Text } from "./text.ts";
 import { isText, locales } from "./text.ts";
-import type { PlotGrid, Problem, TopicDef } from "./types.ts";
+import { DIFFICULTIES, type Difficulty, type KnowledgePointDef, type PlotGrid, type Problem, type TopicDef } from "./types.ts";
 
 /** RECORDING matches the path of a recording from the site's root, without its extension. */
 const RECORDING = /^audio\/[a-z][a-z0-9-]*\/[0-9a-f]{16}$/u;
 
-/** ProblemRef identifies a problem instance: the knowledge point that generates it and its seed. */
+/** ProblemRef identifies a problem instance: the knowledge point that generates it, its seed and the tier asked for. */
 export interface ProblemRef {
   readonly topic: string;
   readonly kp: number;
   readonly seed: number;
+  /** difficulty is the tier asked for; a knowledge point that is not tiered ignores it. */
+  readonly difficulty?: Difficulty;
+}
+
+/**
+ * tierRange scales the range lo..hi that a generator draws its numbers from
+ * to a tier: easy keeps to the bottom fifth, hard reaches from the middle to
+ * five times as far, and medium, or no tier, is the range itself.
+ */
+export function tierRange(difficulty: Difficulty | undefined, lo: number, hi: number): readonly [number, number] {
+  if (difficulty === "easy") return [lo, Math.max(lo + 4, Math.ceil(hi / 5))];
+  if (difficulty === "hard") return [Math.max(lo, Math.ceil(hi / 2)), hi * 5];
+  return [lo, hi];
+}
+
+/** generateAt runs a knowledge point's generator at a tier, marking the problem with it when the knowledge point is tiered. */
+export function generateAt(kp: KnowledgePointDef, seed: number, difficulty: Difficulty | undefined): Problem {
+  if (!kp.tiered || !difficulty) return kp.generate(createRng(seed));
+  return { ...kp.generate(createRng(seed), difficulty), difficulty };
 }
 
 /** generateProblem generates the problem of ref. */
@@ -24,7 +43,7 @@ export function generateProblem(subject: CompiledSubject, ref: ProblemRef): Prob
   if (!topic) throw new Error(`unknown topic ${ref.topic}`);
   const kp = topic.knowledgePoints[ref.kp];
   if (!kp) throw new Error(`topic ${ref.topic} has no knowledge point ${ref.kp}`);
-  return kp.generate(createRng(ref.seed));
+  return generateAt(kp, ref.seed, ref.difficulty);
 }
 
 /** ProblemView is what a client may see of a problem before answering: no answer, no solution. */
@@ -85,6 +104,16 @@ export function sampleGenerators(subject: CompiledSubject, options: SampleOption
       const path = `topic ${topic.id} › kp ${kp.id}`;
       const prompts = new Set<string>();
       const positions = new Map<number, number>();
+      // A tiered knowledge point is also sampled at each tier, on a quarter of the seeds each.
+      const tiers = kp.tiered ? DIFFICULTIES : [];
+      for (const difficulty of tiers)
+        for (let seed = 1; seed <= Math.ceil(samples / 4); seed++) {
+          const found = checkSample(subject, topic, index, seed, options.textIssue, difficulty);
+          if (found) {
+            issues.push({ severity: "error", path: `${path} › ${difficulty} › seed ${seed}`, message: found });
+            return;
+          }
+        }
       for (let seed = 1; seed <= samples; seed++) {
         const found = checkSample(subject, topic, index, seed, options.textIssue);
         if (found) {
@@ -165,12 +194,13 @@ function checkSample(
   kp: number,
   seed: number,
   textIssue: SampleOptions["textIssue"],
+  difficulty?: Difficulty,
 ): string | undefined {
   let a: Problem;
   let b: Problem;
   try {
-    a = generateProblem(subject, { topic: topic.id, kp, seed });
-    b = generateProblem(subject, { topic: topic.id, kp, seed });
+    a = generateProblem(subject, { topic: topic.id, kp, seed, ...(difficulty && { difficulty }) });
+    b = generateProblem(subject, { topic: topic.id, kp, seed, ...(difficulty && { difficulty }) });
   } catch (e) {
     return `generator threw: ${(e as Error).message}`;
   }

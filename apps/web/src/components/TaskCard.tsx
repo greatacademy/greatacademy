@@ -49,9 +49,9 @@ export function TaskCard({
       break;
     case "lesson":
       icon = <BookOpen size={22} weight="duotone" />;
-      label = m.lesson;
+      label = k.value.again ? m.lessonAgain : m.lesson;
       title = <Markdown source={tx(k.value.title)} inline />;
-      detail = m.kps(k.value.knowledgePoints);
+      detail = k.value.again ? m.lessonAgainBody : m.kps(k.value.knowledgePoints);
       xp = k.value.xp;
       break;
     case "review":

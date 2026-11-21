@@ -99,6 +99,7 @@ export function problemView(p: Problem): MessageInitShape<typeof ProblemViewSche
     ...(p.figure && { figure: figure(p.figure) }),
     listen: [...(p.listen ?? [])],
     picture: p.picture ?? "",
+    difficulty: p.difficulty ?? "",
   };
 }
 
@@ -126,7 +127,14 @@ export function taskMessage(c: CourseEntry, task: Task, state: LearnerState): Me
       return {
         kind: {
           case: "lesson",
-          value: { topicId: t.id, title: text(t.title), xp: t.xp, knowledgePoints: t.knowledgePoints.length, ...fromCourse(c, t.id) },
+          value: {
+            topicId: t.id,
+            title: text(t.title),
+            xp: t.xp,
+            knowledgePoints: t.knowledgePoints.length,
+            again: state.topics[t.id]?.reteach === true,
+            ...fromCourse(c, t.id),
+          },
         },
       };
     }
@@ -253,7 +261,9 @@ async function result(
   const prerequisites = lessonTopic ? lessonTopic.prerequisites.flatMap(link) : [];
   const remedial = lessonTopic && !r.passed ? pendingRemedial(c.planner, state, lessonTopic.id).flatMap(link) : [];
   const listed = run.kind !== "diagnostic";
-  const problems = listed ? await c.source.problems(run.asked.map(({ topic, kp, seed }) => ({ topic, kp, seed }))) : [];
+  const problems = listed
+    ? await c.source.problems(run.asked.map(({ topic, kp, seed, difficulty }) => ({ topic, kp, seed, ...(difficulty && { difficulty }) })))
+    : [];
   // A lesson's questions are grouped by knowledge point, under its title.
   const topic = run.kind === "lesson" ? run.topic : undefined;
   const kps = topic ? [...new Set(run.asked.map((a) => a.kp))] : [];

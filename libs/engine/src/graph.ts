@@ -16,6 +16,16 @@ export interface EngineGraph {
   readonly keyPrerequisites: ReadonlyMap<string, readonly string[]>;
 }
 
+/**
+ * remedialSet lists the key prerequisites a failed lesson on topic t is
+ * remedied through: those of the knowledge point it failed at when that one
+ * names any, else the topic's.
+ */
+export function remedialSet(g: EngineGraph, t: string, kp: number | undefined): readonly string[] {
+  const own = kp === undefined ? undefined : g.graph.topics.get(t)?.knowledgePoints[kp]?.keyPrerequisites;
+  return own && own.length > 0 ? own : (g.keyPrerequisites.get(t) ?? []);
+}
+
 /** engineGraph computes the closures of a compiled graph. */
 export function engineGraph(graph: Graph): EngineGraph {
   const encompassed = new Map<string, Map<string, number>>();

@@ -2,7 +2,7 @@
 // them all in memory, more than the API server's heap holds (docs/content.md §4).
 
 import type { Rng } from "./rng.ts";
-import type { Problem, TopicDef } from "./types.ts";
+import type { Difficulty, Problem, TopicDef } from "./types.ts";
 
 /** KEPT is how many rebuilt builds are held strongly, the most recently used, across every slim topic. */
 export const KEPT = 2;
@@ -39,10 +39,10 @@ export function slimTopics(build: () => readonly TopicDef[]): readonly TopicDef[
       const { id } = kp;
       return {
         ...kp,
-        generate: (rng: Rng): Problem => {
+        generate: (rng: Rng, difficulty?: Difficulty): Problem => {
           const again = full()[j]?.knowledgePoints[i];
           if (again?.id !== id) throw new Error(`slimTopics: ${id} built differently`);
-          return again.generate(rng);
+          return again.generate(rng, difficulty);
         },
       };
     }),

@@ -2,7 +2,7 @@ import { CheckerRegistry } from "./checkers.ts";
 import type { Figure } from "./figure.ts";
 import type { SubjectManifest } from "./manifest.ts";
 import { type PassageView, passageProblem, passagesOf } from "./passages.ts";
-import type { ProblemRef } from "./problems.ts";
+import { generateAt, type ProblemRef } from "./problems.ts";
 import { createRng } from "./rng.ts";
 import type { Text } from "./text.ts";
 import type { Checker, Problem, ReadingUnitDef, TopicDef, Verdict } from "./types.ts";
@@ -67,7 +67,7 @@ export function topicSource(
   );
   const generate = (ref: ProblemRef) => {
     const passage = passages.get(ref.topic);
-    return passage ? passageProblem(passage, ref.kp, createRng(ref.seed)) : point(ref.topic, ref.kp).generate(createRng(ref.seed));
+    return passage ? passageProblem(passage, ref.kp, createRng(ref.seed)) : generateAt(point(ref.topic, ref.kp), ref.seed, ref.difficulty);
   };
   return {
     problems: async (refs) => refs.map(generate),

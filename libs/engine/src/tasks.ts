@@ -1,7 +1,7 @@
 import type { GraphPassage, Rng } from "@ga/content";
 
 import type { EngineEvent } from "./events.ts";
-import type { CourseScope, EngineGraph } from "./graph.ts";
+import { type CourseScope, type EngineGraph, remedialSet } from "./graph.ts";
 import type { Params } from "./params.ts";
 import { isDue, type LearnerState, memory } from "./state.ts";
 
@@ -36,25 +36,34 @@ function unlocked(pl: Planner, state: LearnerState, t: string): boolean {
 
 /**
  * pendingRemedial lists the key prerequisites that a failed lesson on topic t
- * waits for: those learned (and not assumed) without a repetition since the
- * failure.
+ * waits for: of the knowledge point it failed at (remedialSet), those learned
+ * (and not assumed) without a repetition since the failure, and those to be
+ * taught again.
  */
 export function pendingRemedial(pl: Planner, state: LearnerState, t: string): string[] {
-  const failedAt = state.topics[t]?.failedAt;
-  if (failedAt === undefined) return [];
-  return (pl.graph.keyPrerequisites.get(t) ?? []).filter((k) => {
-    const s = state.topics[k];
-    return !pl.scope.assumed.has(k) && s?.learned === true && s.last <= failedAt;
+  const s = state.topics[t];
+  if (s?.failedAt === undefined || s.learned) return [];
+  const failedAt = s.failedAt;
+  return remedialSet(pl.graph, t, s.failedKp).filter((k) => {
+    const p = state.topics[k];
+    return !pl.scope.assumed.has(k) && p?.learned === true && (p.last <= failedAt || reteaching(pl, state, k));
   });
+}
+
+/** reteaching tells whether a learned topic is to be taught again: marked so, in the course and not assumed. */
+function reteaching(pl: Planner, state: LearnerState, t: string): boolean {
+  return state.topics[t]?.reteach === true && !pl.scope.assumed.has(t) && pl.scope.topics.includes(t);
 }
 
 /**
  * frontier lists the topics the learner can learn next, in teaching order:
- * not yet learned, with every prerequisite known. A topic whose lesson was
- * failed waits until each of its key prerequisites has been reviewed since.
+ * first the learned topics to be taught again, then those not yet learned
+ * with every prerequisite known. A topic whose lesson was failed waits until
+ * each of its key prerequisites has been reviewed, or taught again, since.
  */
 export function frontier(pl: Planner, state: LearnerState): string[] {
-  return pl.scope.topics.filter((t) => unlocked(pl, state, t) && pendingRemedial(pl, state, t).length === 0);
+  const again = pl.scope.topics.filter((t) => reteaching(pl, state, t));
+  return [...again, ...pl.scope.topics.filter((t) => unlocked(pl, state, t) && pendingRemedial(pl, state, t).length === 0)];
 }
 
 /**
@@ -65,7 +74,8 @@ export function frontier(pl: Planner, state: LearnerState): string[] {
  */
 export function remedialTopics(pl: Planner, state: LearnerState): string[] {
   const out = new Set<string>();
-  for (const t of pl.scope.topics) if (unlocked(pl, state, t)) for (const k of pendingRemedial(pl, state, t)) out.add(k);
+  for (const t of pl.scope.topics)
+    if (unlocked(pl, state, t)) for (const k of pendingRemedial(pl, state, t)) if (!reteaching(pl, state, k)) out.add(k);
   return [...out];
 }
 

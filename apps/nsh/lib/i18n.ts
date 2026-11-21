@@ -107,6 +107,8 @@ const messages = {
     incorrect: "Not quite.",
     kps: (n: number) => `${n} step${n === 1 ? "" : "s"}`,
     lesson: "Lesson",
+    lessonAgain: "Lesson again",
+    lessonAgainBody: "A lesson that builds on this topic showed it needs teaching again.",
     lessonFailed:
       "This lesson was hard going. That usually means an earlier topic needs a refresh: you will review it first, and the lesson will come back.",
     lessonPassed: "Lesson complete",
@@ -151,6 +153,7 @@ const messages = {
       return s < 60 ? `${s} s` : `${Math.floor(s / 60)} min ${s % 60} s`;
     },
     late: "Late",
+    difficulty: (d: string) => ({ easy: "Easy", medium: "Medium", hard: "Hard" })[d] ?? "",
     reading: "Reading",
     readingBody: (words: number, questions: number) =>
       `${words} words, then ${questions} question${questions === 1 ? "" : "s"} on what you read.`,
@@ -595,6 +598,8 @@ const messages = {
     incorrect: "不太对。",
     kps: (n: number) => `${n} 步`,
     lesson: "新课",
+    lessonAgain: "重新学习",
+    lessonAgainBody: "依赖这个知识点的课程显示它需要重新讲授。",
     lessonFailed: "这节课有些吃力，通常说明某个先修知识点需要巩固：你会先复习它，之后这节课会再出现。",
     lessonPassed: "新课完成",
     lostXp: (xp: number) => `${xp} XP`,
@@ -635,6 +640,7 @@ const messages = {
       return s < 60 ? `${s} 秒` : `${Math.floor(s / 60)} 分 ${s % 60} 秒`;
     },
     late: "超时",
+    difficulty: (d: string) => ({ easy: "简单", medium: "中等", hard: "困难" })[d] ?? "",
     reading: "阅读",
     readingBody: (words: number, questions: number) => `${words} 个词的文章，读后回答 ${questions} 道题。`,
     resume: "继续",

@@ -128,6 +128,8 @@ export interface Problem {
   readonly wrong?: readonly string[];
   /** mistakes are wrong responses that get feedback of their own; the compiler checks that they are rejected. */
   readonly mistakes?: readonly Mistake[];
+  /** difficulty is the tier a tiered knowledge point's problem was made at; the source sets it, not the generator. */
+  readonly difficulty?: Difficulty;
 }
 
 /** Sound is a recording: a word, a sentence or the sounds of a word, read aloud. */
@@ -138,8 +140,21 @@ export interface Sound {
   readonly audio: string;
 }
 
-/** Generator produces a problem from a seeded Rng; it must be deterministic. */
-export type Generator = (rng: Rng) => Problem;
+/**
+ * Difficulty is a tier of a knowledge point's problems: easy ones practice the
+ * step on its plainest cases, hard ones on the cases that take the most care.
+ */
+export type Difficulty = "easy" | "medium" | "hard";
+
+/** DIFFICULTIES lists the tiers from easiest to hardest. */
+export const DIFFICULTIES: readonly Difficulty[] = ["easy", "medium", "hard"];
+
+/**
+ * Generator produces a problem from a seeded Rng; it must be deterministic. A
+ * tiered knowledge point's generator also honors the difficulty it is given;
+ * without one it produces the mix it would produce anyway.
+ */
+export type Generator = (rng: Rng, difficulty?: Difficulty) => Problem;
 
 /** KnowledgePointDef is one step of a topic: an explanation, a worked example and practice. */
 export interface KnowledgePointDef {
@@ -156,6 +171,8 @@ export interface KnowledgePointDef {
   readonly keyPrerequisites?: readonly string[];
   /** generate produces the worked example and the practice problems of this step. */
   readonly generate: Generator;
+  /** tiered says that generate honors the difficulty it is given (Difficulty). */
+  readonly tiered?: boolean;
 }
 
 /** EncompassingDef says a topic practices a fraction of a simpler topic. */

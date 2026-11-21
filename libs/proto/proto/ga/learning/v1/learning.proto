@@ -246,6 +246,8 @@ message LessonTask {
   int32 knowledge_points = 4;
   // from_course is the earlier course a foundation comes from; unset for the course's own topics.
   optional ga.common.v1.Text from_course = 5;
+  // again marks a learned topic taught again, because a lesson that builds on it showed it is not held.
+  bool again = 6;
 }
 
 message ReviewTask {
@@ -496,6 +498,8 @@ message ProblemView {
   // picture is the path of an illustration the prompt refers to, from the site's root without an extension: the file
   // is <picture>.webp, 3:2. It is empty when there is none; the prompt says in words what it shows.
   string picture = 5;
+  // difficulty is the tier of a tiered knowledge point's problem: "easy", "medium" or "hard"; empty when untiered.
+  string difficulty = 6;
 }
 
 message Input {

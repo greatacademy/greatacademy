@@ -13,7 +13,12 @@ export function describeTask(task: Task): { label: string; title: string; detail
         ? { label: m().diagnostic, title: m().supplemental, detail: m().supplementalBody(k.value.topics, k.value.maxQuestions), xp: 0 }
         : { label: m().diagnostic, title: m().diagnostic, detail: m().diagnosticBody(k.value.maxQuestions), xp: 0 };
     case "lesson":
-      return { label: m().lesson, title: tx(k.value.title), detail: m().kps(k.value.knowledgePoints), xp: k.value.xp };
+      return {
+        label: k.value.again ? m().lessonAgain : m().lesson,
+        title: tx(k.value.title),
+        detail: k.value.again ? m().lessonAgainBody : m().kps(k.value.knowledgePoints),
+        xp: k.value.xp,
+      };
     case "review": {
       const others = k.value.covers.filter((c) => c !== k.value.topicId).length;
       return { label: m().review, title: tx(k.value.title), detail: others > 0 ? m().reviewCovers(others) : "", xp: k.value.xp };

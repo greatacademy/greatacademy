@@ -99,10 +99,15 @@ export function simulate(
       } else if (task.kind === "lesson") {
         const kpCount = graph.graph.topics.get(task.topic)!.knowledgePoints.length;
         let l = startLesson(task.topic, kpCount);
-        while (!l.outcome) l = answerLesson(params, l, rng.bool(student.ability));
+        let kp = 0;
+        while (!l.outcome) {
+          kp = l.kp;
+          l = answerLesson(params, l, rng.bool(student.ability));
+        }
         lessons++;
-        if (l.outcome === "failed") failedLessons++;
-        record({ type: "lesson", at: now, topic: task.topic, passed: l.outcome === "passed", asked: l.asked, correct: l.correct });
+        const passed = l.outcome === "passed";
+        if (!passed) failedLessons++;
+        record({ type: "lesson", at: now, topic: task.topic, passed, asked: l.asked, correct: l.correct, ...(!passed && { kp }) });
       } else if (task.kind === "review") {
         let correct = 0;
         let total = 0;

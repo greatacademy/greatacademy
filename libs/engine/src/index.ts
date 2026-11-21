@@ -1,5 +1,6 @@
 export * from "./courses.ts";
 export * from "./diagnostic.ts";
+export * from "./difficulty.ts";
 export * from "./events.ts";
 export * from "./fire.ts";
 export * from "./forecast.ts";

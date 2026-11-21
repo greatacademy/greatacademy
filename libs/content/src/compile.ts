@@ -187,6 +187,7 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
           error(kpPath, `explanation must place each of its ${expected.length} figures once in ${locale}`);
       }
       if (typeof kp.generate !== "function") error(kpPath, "generate must be a function");
+      if (kp.tiered !== undefined && typeof kp.tiered !== "boolean") error(kpPath, "tiered must be true or false");
     }
     if (topic.diagnostic !== undefined && !kpIds.has(topic.diagnostic))
       error(path, `diagnostic knowledge point ${topic.diagnostic} does not exist`);

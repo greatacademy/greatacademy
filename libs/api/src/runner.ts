@@ -11,10 +11,13 @@ import {
   isReadingBlownOff,
   type LearnerState,
   type LessonProgress,
+  lessonDifficulty,
   nextDiagnosticTopic,
+  quizDifficulty,
   quizPlan,
   quizTimeLimitMs,
   readingPassed,
+  reviewDifficulty,
   reviewOutcome,
   reviewPlan,
   startDiagnostic,
@@ -122,14 +125,17 @@ export function startRun(c: CourseEntry, task: Task, state: LearnerState, now: n
   switch (task.kind) {
     case "lesson": {
       const example = newSeed(rng);
+      const lesson = startLesson(task.topic, kpCount(c, task.topic), c.ctx.graph.graph.topics.get(task.topic)?.essay === true);
       return {
         kind: "lesson",
         topic: task.topic,
-        lesson: startLesson(task.topic, kpCount(c, task.topic), c.ctx.graph.graph.topics.get(task.topic)?.essay === true),
+        lesson,
         example,
-        ...(c.subject.topics.get(task.topic)?.practiceOnly && state.topics[task.topic]?.failedAt === undefined && { practice: true }),
+        ...(c.subject.topics.get(task.topic)?.practiceOnly &&
+          state.topics[task.topic]?.failedAt === undefined &&
+          !state.topics[task.topic]?.reteach && { practice: true }),
         ...served,
-        current: { topic: task.topic, kp: 0, seed: example + 1 },
+        current: { topic: task.topic, kp: 0, seed: example + 1, difficulty: lessonDifficulty(c.ctx.params, lesson) },
       };
     }
     case "review": {
@@ -140,14 +146,15 @@ export function startRun(c: CourseEntry, task: Task, state: LearnerState, now: n
         covers: task.covers,
         plan,
         ...served,
-        current: { topic: task.topic, kp: plan[0]!, seed: newSeed(rng) },
+        current: { topic: task.topic, kp: plan[0]!, seed: newSeed(rng), difficulty: reviewDifficulty(c.ctx.params, 0) },
       };
     }
     case "quiz": {
       const retake = task.retake === true;
       const topics = quizPlan(c.planner, state, rng, retake);
       const deadline = now + quizTimeLimitMs(c.ctx.params, topics.length);
-      return { kind: "quiz", topics, deadline, ...(retake && { retake }), ...served, current: diagnosticRef(c, topics[0]!, rng) };
+      const current = { ...diagnosticRef(c, topics[0]!, rng), difficulty: quizDifficulty(c.ctx.params, 0, 0) };
+      return { kind: "quiz", topics, deadline, ...(retake && { retake }), ...served, current };
     }
     case "reading": {
       const questions = c.ctx.graph.graph.passages.get(task.passage)!.questions;
@@ -269,7 +276,16 @@ async function advance(
       const next = { ...run, lesson, asked };
       if (lesson.outcome) {
         const passed = lesson.outcome === "passed";
-        return finish(next, { type: "lesson", at: now, topic: run.topic, passed, asked: lesson.asked, correct: lesson.correct }, passed);
+        const event: TaskEvent = {
+          type: "lesson",
+          at: now,
+          topic: run.topic,
+          passed,
+          asked: lesson.asked,
+          correct: lesson.correct,
+          ...(!passed && { kp: run.lesson.kp }),
+        };
+        return finish(next, event, passed);
       }
       const example = lesson.kp !== run.lesson.kp ? newSeed(rng) : run.example;
       return {
@@ -278,7 +294,12 @@ async function advance(
           servedAt: now,
           example,
           // The worked example takes the seed before the first question of a knowledge point.
-          current: { topic: run.topic, kp: lesson.kp, seed: example === run.example ? run.current.seed + 1 : example + 1 },
+          current: {
+            topic: run.topic,
+            kp: lesson.kp,
+            seed: example === run.example ? run.current.seed + 1 : example + 1,
+            difficulty: lessonDifficulty(c.ctx.params, lesson),
+          },
         },
         problem,
         verdict,
@@ -296,7 +317,11 @@ async function advance(
       // A review begun before plans held the questions after wrong answers asks its plan again.
       const kp = run.plan[asked.length % run.plan.length]!;
       return {
-        run: { ...next, servedAt: now, current: { topic: run.topic, kp, seed: run.current.seed + 1 } },
+        run: {
+          ...next,
+          servedAt: now,
+          current: { topic: run.topic, kp, seed: run.current.seed + 1, difficulty: reviewDifficulty(c.ctx.params, asked.length) },
+        },
         problem,
         verdict,
         skipped,
@@ -313,7 +338,11 @@ async function advance(
         const event: TaskEvent = { type: "quiz", at: now, results, ...(run.retake && { retake: true }) };
         return finish(next, event, correct * 2 >= results.length);
       }
-      return { run: { ...next, servedAt: now, current: diagnosticRef(c, run.topics[asked.length]!, rng) }, problem, verdict, skipped };
+      const current = {
+        ...diagnosticRef(c, run.topics[asked.length]!, rng),
+        difficulty: quizDifficulty(c.ctx.params, correct, asked.length),
+      };
+      return { run: { ...next, servedAt: now, current }, problem, verdict, skipped };
     }
     case "reading": {
       const next = { ...run, asked };

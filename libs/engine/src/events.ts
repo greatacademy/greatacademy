@@ -1,8 +1,8 @@
 import { applyRepetition, credited } from "./fire.ts";
-import type { EngineGraph } from "./graph.ts";
+import { type EngineGraph, remedialSet } from "./graph.ts";
 import { lessonSpeed } from "./lesson.ts";
 import type { Params } from "./params.ts";
-import { reviewResult } from "./review.ts";
+import { reviewPassed, reviewResult } from "./review.ts";
 import { clampSpeed, type LearnerState, newTopicState, type TopicState } from "./state.ts";
 import { eventXp, nextBlowOffs, readingPassed } from "./xp.ts";
 
@@ -30,6 +30,8 @@ export type TaskEvent =
       readonly passed: boolean;
       readonly asked: number;
       readonly correct: number;
+      /** kp is the knowledge point a failed lesson stopped at; absent in lessons failed before it was recorded. */
+      readonly kp?: number;
       /** blownOff marks a task rushed through rather than attempted; see isBlownOff. */
       readonly blownOff?: boolean;
     }
@@ -137,9 +139,27 @@ function applyTask(ctx: EngineContext, state: LearnerState, e: TaskEvent): Learn
       if (!topic) return state;
       if (!e.passed) {
         const failed: TopicState = prev ?? { learned: false, repNum: 0, last: e.at, speed: 1, explicitReviews: 0 };
-        return { ...setTopic(state, e.topic, { ...failed, failedAt: e.at }), xp, reviewsSinceLesson: 0 };
+        if (failed.learned) {
+          // A topic taught again and failed stays learned: the failure is a failed repetition, and it is not taught a
+          // third time, so that the lesson waiting for it is tried again rather than the learner held here.
+          const after = applyRepetition(p, g, state, e.topic, 0, e.at);
+          const { reteach: _, remedialMisses: __, ...kept } = after.topics[e.topic]!;
+          return { ...setTopic(after, e.topic, kept), xp, reviewsSinceLesson: 0 };
+        }
+        const again = e.kp !== undefined && failed.failedKp === e.kp;
+        const failures = again ? (failed.failures ?? 1) + 1 : 1;
+        const at = e.kp === undefined ? {} : { failedKp: e.kp, failures };
+        let next = setTopic(state, e.topic, { ...failed, failedAt: e.at, ...at });
+        // Failing at the same knowledge point again shows its key prerequisites are not held: they are taught again, once;
+        // later failures there go back to remedial reviews.
+        if (failures === p.reteachAfterFailures) next = reteach(next, remedialSet(g, e.topic, e.kp));
+        return { ...next, xp, reviewsSinceLesson: 0 };
       }
-      if (prev?.learned) return { ...applyRepetition(p, g, state, e.topic, 1, e.at), xp, reviewsSinceLesson: 0 };
+      if (prev?.learned) {
+        const after = applyRepetition(p, g, state, e.topic, 1, e.at);
+        const { reteach: _, failedAt: __, remedialMisses: ___, ...taught } = after.topics[e.topic]!;
+        return { ...setTopic(after, e.topic, taught), xp, reviewsSinceLesson: 0 };
+      }
       // One essay says nothing about how fast its writer learns.
       const speed = topic.essay ? 1 : clampSpeed(p, lessonSpeed(p, topic.knowledgePoints.length, e.asked));
       const learned = setTopic(state, e.topic, newTopicState(e.at, 0, speed, false));
@@ -155,7 +175,20 @@ function applyTask(ctx: EngineContext, state: LearnerState, e: TaskEvent): Learn
       const s = after.topics[e.topic]!;
       const speed = clampSpeed(p, 0.8 * s.speed + 0.2 * (0.5 + e.correct / e.total));
       const reviewsSinceLesson = state.reviewsSinceLesson + 1;
-      const reviewed = { ...setTopic(after, e.topic, { ...s, speed, explicitReviews: s.explicitReviews + 1 }), xp, reviewsSinceLesson };
+      let reviewed: LearnerState = {
+        ...setTopic(after, e.topic, { ...s, speed, explicitReviews: s.explicitReviews + 1 }),
+        xp,
+        reviewsSinceLesson,
+      };
+      // Remedial reviews of a key prerequisite a failed lesson waits for that fail twice in a row show it is not held:
+      // it is taught again.
+      if (remedialFor(g, state, e.topic)) {
+        const r = reviewed.topics[e.topic]!;
+        const misses = reviewPassed(e) ? 0 : (r.remedialMisses ?? 0) + 1;
+        const { remedialMisses: _, ...rest } = r;
+        reviewed = setTopic(reviewed, e.topic, misses > 0 ? { ...rest, remedialMisses: misses } : rest);
+        if (misses >= p.reteachAfterFailures) reviewed = reteach(reviewed, [e.topic]);
+      }
       // A review of a topic missed on the last quiz is its follow-up, passed or not.
       const quiz = state.lastQuiz;
       return quiz?.followUps.includes(e.topic)
@@ -188,6 +221,24 @@ function applyTask(ctx: EngineContext, state: LearnerState, e: TaskEvent): Learn
       return { ...next, xp, xpAtLastQuiz: xp, quizzes: state.quizzes + 1, lastQuiz };
     }
   }
+}
+
+/** remedialFor tells whether a review of topic k is a remedial one: k is a key prerequisite a failed lesson waits for. */
+function remedialFor(g: EngineGraph, state: LearnerState, k: string): boolean {
+  const last = state.topics[k]?.last ?? 0;
+  return Object.entries(state.topics).some(
+    ([t, s]) => !s.learned && s.failedAt !== undefined && last <= s.failedAt && remedialSet(g, t, s.failedKp).includes(k),
+  );
+}
+
+/** reteach marks the learned topics among ids to be taught again. */
+function reteach(state: LearnerState, ids: readonly string[]): LearnerState {
+  let next = state;
+  for (const k of ids) {
+    const s = next.topics[k];
+    if (s?.learned) next = setTopic(next, k, { ...s, reteach: true });
+  }
+  return next;
 }
 
 /** replay rebuilds the learner state from the event log. */

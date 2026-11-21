@@ -22,6 +22,20 @@ export function Prompt(props: { problem: ProblemView; answering?: boolean }) {
   const figure = props.answering && input?.case === "plot" ? undefined : props.problem.figure;
   return (
     <View style={{ gap: 12 }}>
+      <If when={m().difficulty(props.problem.difficulty)}>
+        {(label) => (
+          <Text
+            style={{
+              color:
+                props.problem.difficulty === "hard" ? colors().bad : props.problem.difficulty === "easy" ? colors().good : colors().warn,
+              fontSize: 13,
+              fontWeight: "600",
+            }}
+          >
+            {label()}
+          </Text>
+        )}
+      </If>
       <Illustration path={props.problem.picture} />
       <Rich source={tx(props.problem.prompt)} fontSize={18} />
       <Sounds sounds={listenTo(props.problem.listen)} />

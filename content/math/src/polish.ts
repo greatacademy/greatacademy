@@ -242,6 +242,9 @@ export function polishProblem(problem: Problem, topicId = ""): Problem {
 export function polishTopic(topic: TopicDef): TopicDef {
   return {
     ...topic,
-    knowledgePoints: topic.knowledgePoints.map((kp) => ({ ...kp, generate: (rng) => polishProblem(kp.generate(rng), topic.id) })),
+    knowledgePoints: topic.knowledgePoints.map((kp) => ({
+      ...kp,
+      generate: (rng, difficulty) => polishProblem(kp.generate(rng, difficulty), topic.id),
+    })),
   };
 }

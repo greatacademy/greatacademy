@@ -22,6 +22,7 @@ export function ProblemPrompt({ problem, answering }: { problem?: ProblemView; a
   const items = !answering && input?.case === "order" ? input.value.items : [];
   return (
     <div className="space-y-4">
+      <DifficultyBadge difficulty={problem?.difficulty ?? ""} />
       <Illustration path={problem?.picture ?? ""} className="w-full" />
       <Markdown source={tx(problem?.prompt)} className="text-lg" />
       <Sounds sounds={listenTo(problem?.listen ?? [], m.listen)} />
@@ -37,6 +38,15 @@ export function ProblemPrompt({ problem, answering }: { problem?: ProblemView; a
       )}
     </div>
   );
+}
+
+/** DifficultyBadge names the tier of a tiered problem: easy, medium or hard. */
+export function DifficultyBadge({ difficulty }: { difficulty: string }) {
+  const { m } = useI18n();
+  const label = m.difficulty(difficulty);
+  if (!label) return null;
+  const tone = difficulty === "hard" ? "bg-bad-soft text-bad" : difficulty === "easy" ? "bg-good-soft text-good" : "bg-warn-soft text-warn";
+  return <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${tone}`}>{label}</span>;
 }
 
 /** AnswerText shows an answer as the learner would have given it: an option, math or text. */

@@ -16,6 +16,13 @@ export interface TopicState {
   readonly speed: number;
   /** failedAt is when the learner last failed the topic's lesson; the lesson waits for its key prerequisites to be reviewed. */
   readonly failedAt?: number;
+  /** failedKp is the knowledge point the last failed lesson stopped at, and failures how many lessons in a row failed there. */
+  readonly failedKp?: number;
+  readonly failures?: number;
+  /** reteach marks a learned topic to be taught again: a failed lesson's key prerequisite that a review or a second failure showed is not held. */
+  readonly reteach?: boolean;
+  /** remedialMisses counts the remedial reviews of this topic failed in a row (pendingRemedial). */
+  readonly remedialMisses?: number;
   /** explicitReviews counts the reviews done on this topic, for analysis. */
   readonly explicitReviews: number;
 }

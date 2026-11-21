@@ -1,5 +1,5 @@
 import type { TopicDef } from "@ga/content";
-import { t } from "@ga/content";
+import { t, tierRange } from "@ga/content";
 import { num, paren } from "@ga/subject-math";
 import { gradeDrawings } from "../explanation-drawings-grades.ts";
 import { remainingDrawings4 } from "../explanation-drawings-remaining-4.ts";
@@ -174,10 +174,12 @@ export const addingIntegers: TopicDef = {
         "**同号**两数相加，把它们的绝对值相加，并保留共同的符号。例如 $(-6) + (-9)$：绝对值之和为 $6 + 9 = 15$，两个数都是负数，所以和为 $-15$。\n\n在数轴上看：从 $-6$ 出发再向左移动 $9$ 个单位，到达 $-15$。",
       ),
       keyPrerequisites: ["absolute-value"],
-      generate(rng) {
+      tiered: true,
+      generate(rng, difficulty) {
+        const [lo, hi] = tierRange(difficulty, 2, 60);
         const s = rng.bool(0.8) ? -1 : 1;
-        const a = s * rng.int(2, 60);
-        const b = s * rng.int(2, 60);
+        const a = s * rng.int(lo, hi);
+        const b = s * rng.int(lo, hi);
         const sum = a + b;
         return numberProblem({
           prompt: t(`Evaluate $${num(a)} + ${paren(b)}$.`, `计算 $${num(a)} + ${paren(b)}$。`),
@@ -206,10 +208,12 @@ export const addingIntegers: TopicDef = {
         "**异号**两数相加，用较大的绝对值减去较小的绝对值，结果取绝对值较大的那个数的符号。例如 $(-11) + 4$：$11 - 4 = 7$，$-11$ 的绝对值较大，所以和为 $-7$。\n\n在数轴上看：从 $-11$ 出发向右移动 $4$ 个单位，到达 $-7$。一个数与它的相反数相加得 $0$。",
       ),
       keyPrerequisites: ["absolute-value"],
-      generate(rng) {
-        let a = rng.int(1, 60);
-        let b = rng.int(1, 60);
-        while (a === b) b = rng.int(1, 60);
+      tiered: true,
+      generate(rng, difficulty) {
+        const [lo, hi] = tierRange(difficulty, 1, 60);
+        let a = rng.int(lo, hi);
+        let b = rng.int(lo, hi);
+        while (a === b) b = rng.int(lo, hi);
         if (rng.bool()) a = -a;
         else b = -b;
         const sum = a + b;
@@ -258,9 +262,11 @@ export const subtractingIntegers: TopicDef = {
         "在数轴上，减去一个正数就是向左移动。把减法改写成加上相反数，就可以用整数加法的法则来计算。\n\n减去一个数，等于加上这个数的相反数：$a - b = a + (-b)$。例如 $3 - 8 = 3 + (-8) = -5$，$-4 - 6 = -4 + (-6) = -10$。",
       ),
       keyPrerequisites: ["adding-integers"],
-      generate(rng) {
-        const b = rng.int(2, 50);
-        const a = rng.bool(0.5) ? rng.int(0, b - 1) : -rng.int(1, 50);
+      tiered: true,
+      generate(rng, difficulty) {
+        const [lo, hi] = tierRange(difficulty, 2, 50);
+        const b = rng.int(lo, hi);
+        const a = rng.bool(0.5) ? rng.int(0, b - 1) : -rng.int(1, hi);
         const d = a - b;
         return numberProblem({
           prompt: t(`Evaluate $${num(a)} - ${b}$.`, `计算 $${num(a)} - ${b}$。`),
@@ -289,9 +295,11 @@ export const subtractingIntegers: TopicDef = {
         "拿走一个负的量，比如免除一笔欠款，会使总量变大。所以减去一个负数在数轴上是向右移动。\n\n减去一个负数，等于加上它的相反数（一个正数）：$a - (-b) = a + b$。例如 $-9 - (-4) = -9 + 4 = -5$。",
       ),
       keyPrerequisites: ["adding-integers"],
-      generate(rng) {
-        const a = rng.nonZero(-50, 50);
-        const b = rng.int(2, 50);
+      tiered: true,
+      generate(rng, difficulty) {
+        const [lo, hi] = tierRange(difficulty, 2, 50);
+        const a = rng.nonZero(-hi, hi);
+        const b = rng.int(lo, hi);
         const d = a + b;
         return numberProblem({
           prompt: t(`Evaluate $${num(a)} - (-${b})$.`, `计算 $${num(a)} - (-${b})$。`),

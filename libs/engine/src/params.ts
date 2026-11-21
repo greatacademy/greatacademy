@@ -41,6 +41,11 @@ export interface Params {
   readonly kpPass: number;
   /** kpMaxWrong is the number of wrong answers on one knowledge point that fails the lesson. */
   readonly kpMaxWrong: number;
+  /**
+   * reteachAfterFailures is the number of lessons in a row failed at one knowledge point after which its key
+   * prerequisites are taught again, and of remedial reviews of one prerequisite failed in a row after which it is.
+   */
+  readonly reteachAfterFailures: number;
   /** reviewQuestions is how many questions a review asks when every answer is right. */
   readonly reviewQuestions: number;
   /** reviewPass is how many correct answers pass a review; each wrong answer adds a question, up to reviewMaxQuestions. */
@@ -55,6 +60,8 @@ export interface Params {
   readonly quizSecondsPerQuestion: number;
   /** quizGraceSeconds is how late after the time limit an answer still counts, for the time it takes to arrive. */
   readonly quizGraceSeconds: number;
+  /** quizTargetAccuracy is the share of correct answers a quiz's difficulty steers toward. */
+  readonly quizTargetAccuracy: number;
   /** quizCredit is the explicit credit of one correct quiz answer, as a fraction of a full review. */
   readonly quizCredit: number;
   /** quizXp is the XP of a perfect quiz. */
@@ -114,6 +121,7 @@ export const defaultParams: Params = {
   adviceAheadShare: 0.8,
   kpPass: 2,
   kpMaxWrong: 3,
+  reteachAfterFailures: 2,
   reviewQuestions: 3,
   reviewPass: 3,
   reviewMaxQuestions: 5,
@@ -122,6 +130,7 @@ export const defaultParams: Params = {
   quizMinTopics: 4,
   quizSecondsPerQuestion: 120,
   quizGraceSeconds: 5,
+  quizTargetAccuracy: 0.8,
   quizCredit: 0.5,
   quizXp: 15,
   minLessonShare: 0.25,

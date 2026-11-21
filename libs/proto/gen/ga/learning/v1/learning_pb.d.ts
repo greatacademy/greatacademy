@@ -730,6 +730,13 @@ export declare type LessonTask = Message<"ga.learning.v1.LessonTask"> & {
    * @generated from field: optional ga.common.v1.Text from_course = 5;
    */
   fromCourse?: Text | undefined;
+
+  /**
+   * again marks a learned topic taught again, because a lesson that builds on it showed it is not held.
+   *
+   * @generated from field: bool again = 6;
+   */
+  again: boolean;
 };
 
 /**
@@ -1593,6 +1600,13 @@ export declare type ProblemView = Message<"ga.learning.v1.ProblemView"> & {
    * @generated from field: string picture = 5;
    */
   picture: string;
+
+  /**
+   * difficulty is the tier of a tiered knowledge point's problem: "easy", "medium" or "hard"; empty when untiered.
+   *
+   * @generated from field: string difficulty = 6;
+   */
+  difficulty: string;
 };
 
 /**

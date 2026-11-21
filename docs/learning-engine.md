@@ -19,7 +19,7 @@ state = replay(ctx, events, initialState);   // applyEvent, one event at a time
 | Event | Recorded when | Data |
 | :--- | :--- | :--- |
 | `placed` | A course's diagnostic ends (or is skipped) | The course; topics placed as known; which of them were asked directly; the topics it was about; whether it was supplemental |
-| `lesson` | A lesson ends | Topic, passed or failed, questions asked and answered correctly, whether it was blown off (§10) |
+| `lesson` | A lesson ends | Topic, passed or failed, questions asked and answered correctly, the knowledge point a failed lesson stopped at, whether it was blown off (§10) |
 | `review` | A review ends | Topic, correct answers, questions, whether it passed, whether it was blown off |
 | `quiz` | A quiz ends | One result per question, by topic, and whether it was late; whether it was a retake, whether it was blown off |
 | `reading` | A passage's check ends | Passage, correct answers, questions, whether it was blown off |
@@ -56,7 +56,9 @@ A course is a view over the subject's graph ([Content §6](content.md#6-courses)
 
 The **frontier** is the set of topics the learner can learn next: in scope, not learned, and with every prerequisite known. It is listed in teaching order (foundations first, then the course order).
 
-**Failed lessons.** A topic whose lesson was failed leaves the frontier until each of its key prerequisites has had a repetition (explicit or implicit) after the failure. A failure usually means a weak prerequisite, so the engine repairs it first instead of retrying the same lesson immediately. Key prerequisites are the union of the knowledge points' `keyPrerequisites`, or the direct prerequisites when none are declared. The engine offers these **remedial reviews** itself, first among the reviews, whether the prerequisites are due or not (§5). Otherwise a learner whose remaining lessons had all failed would have nothing to learn until those prerequisites happened to come due: one simulated struggling learner spent months on due reviews alone.
+**Failed lessons.** A topic whose lesson was failed leaves the frontier until each of its key prerequisites has had a repetition (explicit or implicit) after the failure. A failure usually means a weak prerequisite, so the engine repairs it first instead of retrying the same lesson immediately. Key prerequisites are those of the knowledge point the lesson failed at; when it declares none, the union of the knowledge points' `keyPrerequisites`, or the direct prerequisites when none are declared at all. The engine offers these **remedial reviews** itself, first among the reviews, whether the prerequisites are due or not (§5). Otherwise a learner whose remaining lessons had all failed would have nothing to learn until those prerequisites happened to come due: one simulated struggling learner spent months on due reviews alone.
+
+**Teaching again.** Remediation escalates when reviews are not enough. Two remedial reviews of a prerequisite that fail in a row show that it is not held, and so do two lessons in a row that fail at the same knowledge point, its key prerequisites reviewed in between (`reteachAfterFailures`): the prerequisite, or the knowledge point's key prerequisites, are then marked `reteach`, once per run of failures. A single miss is not enough: in simulation, teaching again after every failed remedial review cost struggling learners a third more days. Such a topic stays learned, so what builds on it keeps its place, but its lesson is offered again, first on the frontier, with its explanations and worked examples, and the failed lesson waits for it. Passing it is a full repetition and clears the mark; failing it is a failed repetition and clears the mark too, so that the waiting lesson is tried again rather than the learner held on the prerequisite. Only topics of the course that are not assumed are taught again.
 
 ## 4. Repetitions and FIRe
 
@@ -109,6 +111,8 @@ One review of an advanced topic thereby replaces several reviews of the simpler 
 
 A **practice-only** topic ([Content §3](content.md#3-topics)) starts directly with the practice problems. A learner who failed its lesson gets the explanations and worked examples when they come back to it.
 
+**Difficulty.** A tiered knowledge point ([Content §4](content.md#4-knowledge-points-and-generators)) is practiced at three tiers. In a lesson its first question is easy and the last correct answer it needs is hard, with medium between; a wrong answer asks the same tier again. A review asks its first question at medium and the other planned ones hard, since it checks that the whole step holds, and the extra questions after slips at medium. A quiz starts at medium and steers toward `quizTargetAccuracy` correct: hard while the share of correct answers is above it, easy once it is more than 0.2 below. The problem shows its tier. A knowledge point that is not tiered ignores the tier.
+
 Requiring more correct answers after each slip means a lucky guess is not enough, and stopping at the third slip, after at most five questions, keeps a struggling learner from grinding: the engine reroutes them to the prerequisites instead (§3). While a knowledge point is practiced, the session shows how many correct answers it has and how many it needs.
 
 A passed lesson:
@@ -154,6 +158,7 @@ Each correct answer is an explicit repetition with result 0.5, and each wrong an
 | `adviceAheadShare` | 0.8 | A learner who knows four fifths of a course learns more in the next one |
 | `kpPass` | 2 | Two right is unlikely by chance yet quick for a learner who understands; each slip asks for one more |
 | `kpMaxWrong` | 3 | Enough room for two slips; beyond that, a prerequisite is the likelier problem |
+| `reteachAfterFailures` | 2 | One failure may be a bad day; two at the same step show its prerequisites need more than a review |
 | `reviewQuestions`, `reviewPass`, `reviewMaxQuestions` | 3, 3, 5 | A short review when it goes well; a slip costs a question, not the review, and two slips still pass |
 | `quizEveryXp` | 150 | About every three to four days of 40 XP |
 | `readingKnownShare` | 0.98 | The starting target for known running words; to be tuned by the pilot |
@@ -164,6 +169,7 @@ Each correct answer is an explicit repetition with result 0.5, and each wrong an
 | `quizQuestions`, `quizMinTopics` | 8, 4 | Long enough to sample broadly, short enough for one sitting |
 | `quizCredit`, `quizXp` | 0.5, 15 | One question is half a review |
 | `quizSecondsPerQuestion`, `quizGraceSeconds` | 120, 5 | Enough to work a problem that is known; the grace covers the answer's way to the server |
+| `quizTargetAccuracy` | 0.8 | Hard enough to find the edge of what is known, easy enough not to discourage, as in Math Academy |
 | `minLessonShare` | 0.25 | At least one task in four is new learning |
 | `maxReviewStreak` | 4 | About half a study day; no day passes on reviews alone. Three slowed typical learners by putting lessons before the reviews of their prerequisites |
 | `xpPerfectBonus` | 2 | A small reward for all correct, as in Math Academy |

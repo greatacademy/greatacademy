@@ -50,15 +50,15 @@ function settled(problem: Problem, answer: Text): Text {
  * with a figure, or one whose options name its own things and so differ from question to question, is returned as it is.
  */
 export function oneOfFour(generate: Generator): Generator {
-  return (rng) => {
-    const first = generate(rng);
+  return (rng, difficulty) => {
+    const first = generate(rng, difficulty);
     const shape = twoOptions(first);
     if (!shape) return first;
     const label = shape.options[shape.correct] as Text;
     const others: Problem[] = [];
     const seen = new Set([first.prompt.en]);
     for (let i = 0; i < draws && others.length < 3; i++) {
-      const next = generate(rng);
+      const next = generate(rng, difficulty);
       const nextShape = twoOptions(next);
       if (!nextShape || seen.has(next.prompt.en)) continue;
       if (!sameWords(nextShape.options, shape.options) || nextShape.options[nextShape.correct]?.en === label.en) continue;
@@ -90,5 +90,8 @@ export function oneOfFour(generate: Generator): Generator {
 
 /** oneOfFourTopic applies oneOfFour to every knowledge point of a topic. */
 export function oneOfFourTopic(topic: TopicDef): TopicDef {
-  return { ...topic, knowledgePoints: topic.knowledgePoints.map((kp) => ({ ...kp, generate: oneOfFour((rng) => kp.generate(rng)) })) };
+  return {
+    ...topic,
+    knowledgePoints: topic.knowledgePoints.map((kp) => ({ ...kp, generate: oneOfFour((rng, difficulty) => kp.generate(rng, difficulty)) })),
+  };
 }
