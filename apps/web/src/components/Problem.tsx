@@ -20,6 +20,8 @@ export function ProblemPrompt({ problem, answering }: { problem?: ProblemView; a
   // While an order is being answered, its sentences are the input itself.
   const input = problem?.input?.kind;
   const items = !answering && input?.case === "order" ? input.value.items : [];
+  // While a spoken problem is answered, the recorder shows what to say; elsewhere, as in a worked example, it shows here.
+  const spoken = !answering && input?.case === "speech" ? input.value : undefined;
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-2">
@@ -42,6 +44,14 @@ export function ProblemPrompt({ problem, answering }: { problem?: ProblemView; a
             </li>
           ))}
         </ul>
+      )}
+      {spoken?.text && (
+        <div className="rounded-xl border border-line bg-surface px-4 py-3">
+          <div className="text-xs font-medium tracking-wide text-muted uppercase">
+            {spoken.mode === "read" ? m.readAloudThis : m.repeatThis}
+          </div>
+          <p className="mt-1 text-xl leading-relaxed">{spoken.text}</p>
+        </div>
       )}
     </div>
   );

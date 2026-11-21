@@ -3,7 +3,7 @@ import { effect, keymap, signal, Text, View } from "nsh";
 import { Input } from "nsh/base";
 
 import { m, tx } from "../lib/i18n.ts";
-import { colors, fieldStyle, Muted } from "../lib/ui.tsx";
+import { Card, colors, fieldStyle, Muted } from "../lib/ui.tsx";
 import { Illustration } from "./Illustration.tsx";
 import { MathField } from "./MathField.tsx";
 import { PlotField } from "./PlotField.tsx";
@@ -49,6 +49,15 @@ export function Prompt(props: { problem: ProblemView; answering?: boolean }) {
         <View style={{ gap: 4 }}>
           <Each of={input?.case === "order" ? input.value.items : []}>{(item) => <Rich source={`· ${tx(item())}`} />}</Each>
         </View>
+      </If>
+      {/* While a spoken problem is answered, the recorder shows what to say; elsewhere, as in a worked example, it shows here. */}
+      <If when={!props.answering && input?.case === "speech" && input.value.text ? input.value : undefined}>
+        {(spoken) => (
+          <Card>
+            <Muted>{spoken().mode === "read" ? m().readAloudThis : m().repeatThis}</Muted>
+            <Text style={{ color: colors().ink, fontSize: 22, lineHeight: 32 }}>{spoken().text}</Text>
+          </Card>
+        )}
       </If>
     </View>
   );
