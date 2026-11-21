@@ -1,4 +1,4 @@
-import { computed, safeAreaInsets, signal, View, WebView, type WebViewRef } from "nsh";
+import { Clipboard, computed, safeAreaInsets, signal, View, WebView, type WebViewRef } from "nsh";
 
 import { pageHtml } from "../lib/content.ts";
 import { SITE_URL } from "../lib/rpc.ts";
@@ -19,7 +19,9 @@ const MESSAGE = "mathlive#virtual-keyboard-message";
  * The field keeps its caret while the keyboard is used: a blur that only comes from the page losing the focus to the
  * keyboard's web view, while the keyboard is open, is one MathLive's field does not take (as while it moves the focus
  * itself). The toggle's tooltip is the system's (`title`): MathLive draws its own inside the page, which the small web
- * view cuts; the keyboard's tabs do the same.
+ * view cuts; the keyboard's tabs do the same. MathLive's keyboard draws its edit toolbar (undo, redo, cut, copy,
+ * paste) only from a field in its own page, so the field's state is passed on to it; and since a page reaches the
+ * clipboard only on its own user's press, cut, copy and paste go through the app's clipboard.
  */
 export const KEYBOARD_STAND_IN = `<script>(function(){
 var rect={x:0,y:0,width:0,height:0,top:0,right:0,bottom:0,left:0},shifted=false,listeners={};
@@ -33,7 +35,7 @@ get normalizedLayouts(){return[]},set editToolbar(v){send("update-setting",{edit
 show:function(o){toggle(true,o)},hide:function(o){toggle(false,o)},get visible(){return rect.height>0},set visible(on){toggle(on)},
 get isShifted(){return shifted},get boundingRect(){return rect},
 executeCommand:function(command){send("execute-command",{command:command});return true},
-updateToolbar:function(state){send("update-toolbar",state)},update:function(state){send("update-setting",state)},
+updateToolbar:function(state){send("update-toolbar",state)},update:function(state){send("update-toolbar",state)},
 connect:function(){send("connect")},disconnect:function(){send("disconnect")},
 addEventListener:function(type,l){(listeners[type]=listeners[type]||new Set).add(l)},
 removeEventListener:function(type,l){if(listeners[type])listeners[type].delete(l)},dispatchEvent:emit};
@@ -52,7 +54,10 @@ if(typeof e.data!=="string")return;var d;try{d=JSON.parse(e.data)}catch(_){retur
 if(!d||d.type!=="${MESSAGE}")return;
 if(d.action==="synchronize-proxy"||d.action==="geometry-changed"){rect=d.boundingRect||rect;shifted=!!d.isShifted;if(d.action==="geometry-changed")emit(new Event("geometrychange"));return}
 var f=document.querySelector("math-field");if(!f)return;
-if(d.action==="execute-command"){
+if(d.action==="paste-text"){f.insert(d.text);return}
+if(d.action==="execute-command"){var name=Array.isArray(d.command)?d.command[0]:d.command;
+if(name==="copyToClipboard"||name==="cutToClipboard"){send("copy",{text:f.getValue(f.selection,"latex")});if(name==="cutToClipboard")f.executeCommand("deleteBackward");return}
+if(name==="pasteFromClipboard"){send("paste");return}
 if(Array.isArray(d.command))d.command.forEach(function(o){if(o&&typeof o==="object"&&"focus" in o)o.focus=false});
 f.executeCommand(d.command)}
 });
@@ -78,6 +83,7 @@ k.show=function(o){if(sliding())k._element.classList.remove("ga-hiding");else sh
 addEventListener("message",function(e){
 if(typeof e.data!=="string")return;var d;try{d=JSON.parse(e.data)}catch(_){return}
 if(!d||d.type!=="${MESSAGE}"||d.action==="disconnect")return;
+if(d.action==="update-toolbar"){k.update(d);return}
 k.connectedMathfieldWindow=field;k.handleMessage(d,d.action==="execute-command"?window:field);
 });
 k.addEventListener("geometrychange",function(){post({keypad:k.boundingRect.height})});
@@ -110,8 +116,8 @@ export const mathKeyboardHeight = computed(() => (open() ? height() : 0));
 
 /**
  * connectMathKeyboard connects a math field to the keyboard; `moved` hears the keyboard's height while the field has it.
- * The field gives `attach` its web view and `relay` what its page sends for the keyboard, and calls `release` as it goes,
- * which hides the keyboard if the field still has it.
+ * The field gives `attach` its web view and `relay` what its page sends for the keyboard (its copies and pastes go to
+ * the app's clipboard), and calls `release` as it goes, which hides the keyboard if the field still has it.
  */
 export function connectMathKeyboard(moved?: (height: number) => void) {
   let view: WebViewRef | undefined;
@@ -120,6 +126,20 @@ export function connectMathKeyboard(moved?: (height: number) => void) {
       view = ref;
     },
     relay(message: unknown) {
+      const { action, text } = message as { action?: string; text?: string };
+      if (action === "copy") {
+        void Clipboard.writeText(text ?? "");
+        return;
+      }
+      if (action === "paste") {
+        Clipboard.readText().then(
+          (pasted) => {
+            if (pasted) view?.postMessage(JSON.stringify({ type: MESSAGE, action: "paste-text", text: pasted }));
+          },
+          () => {},
+        );
+        return;
+      }
       fieldView = view;
       onMove = moved;
       keyboardView?.postMessage(JSON.stringify(message));
