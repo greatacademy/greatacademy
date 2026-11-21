@@ -55,60 +55,76 @@ export function courseIndex(courses: ReadonlyMap<string, CompiledCourse>, sequen
   return { order, earlier, next, teaching, courses, sequences };
 }
 
-/**
- * courseStanding is how well a learner is doing in their current course (docs/learning-engine.md §9): the share of
- * answers right in the course's latest `standingTasks` lessons, reviews and quizzes, retakes left out, given its events
- * in order. It is undefined below `standingMinAnswers` answers, when too little is known to judge.
- */
-export function courseStanding(p: Params, events: readonly EngineEvent[]): number | undefined {
-  let asked = 0;
-  let right = 0;
-  let tasks = 0;
-  for (let i = events.length - 1; i >= 0 && tasks < p.standingTasks; i--) {
-    const e = events[i]!;
-    if (e.type === "lesson") {
-      asked += e.asked;
-      right += e.correct;
-    } else if (e.type === "review") {
-      asked += e.total;
-      right += e.correct;
-    } else if (e.type === "quiz" && !e.retake) {
-      asked += e.results.length;
-      right += e.results.filter((r) => r.correct).length;
-    } else continue;
-    tasks++;
-  }
-  return asked >= p.standingMinAnswers ? right / asked : undefined;
+/** Standing is how well a learner is doing in their current course (docs/learning-engine.md §9). */
+export interface Standing {
+  /** speed is the mean learning speed of the topics learned in the course's recent lessons, 1 typical; absent for none. */
+  readonly speed?: number;
+  /** failRate is the share of those lessons failed. */
+  readonly failRate: number;
 }
 
 /**
- * courseRoute picks the sequence a learner of `course` follows
- * (docs/learning-engine.md §9). Among the sequences through the course, those
- * whose `minStanding` is above the learner's `standing` are left out, unless
- * none would remain; one left out counts toward its `fallback`, as if the
- * fallback led where it does and listed the courses it does. Of the rest it takes the one that leads on to the course
- * they set out to take, `target`, if any; else the one that lists most of the
- * courses they took, `taken`; on a tie, a demanding sequence when the standing
- * reaches its bar, and one that is not while the standing is unknown; else the
- * first. A course on no sequence has none.
+ * courseStanding reads a learner's standing in their current course from its latest `standingLessons` lessons, given
+ * in order, and the learner's state, which holds the learning speed of each topic. It is undefined below
+ * `standingMinLessons` lessons, when too little is known to judge.
+ */
+export function courseStanding(p: Params, state: LearnerState, lessons: readonly EngineEvent[]): Standing | undefined {
+  const recent = lessons.filter((e) => e.type === "lesson").slice(-p.standingLessons);
+  if (recent.length < p.standingMinLessons) return undefined;
+  const speeds = [...new Set(recent.filter((e) => e.passed).map((e) => e.topic))].flatMap((t) => {
+    const topic = state.topics[t];
+    return topic?.learned ? [topic.speed] : [];
+  });
+  const failRate = recent.filter((e) => !e.passed).length / recent.length;
+  return speeds.length > 0 ? { speed: speeds.reduce((a, b) => a + b, 0) / speeds.length, failRate } : { failRate };
+}
+
+/**
+ * keepsPace tells whether a learner's standing keeps them on a fast sequence: true when the topics are learned at
+ * `fastMinSpeed` or faster and at most `fastMaxFailRate` of the lessons are failed, false when they fall clearly
+ * short of either, below `slowSpeed` or above `slowFailRate`, and undefined in between or when the standing is unknown.
+ */
+export function keepsPace(p: Params, standing: Standing | undefined): boolean | undefined {
+  if (!standing) return undefined;
+  const { speed, failRate } = standing;
+  if (failRate > p.slowFailRate || (speed !== undefined && speed < p.slowSpeed)) return false;
+  return speed !== undefined && speed >= p.fastMinSpeed && failRate <= p.fastMaxFailRate ? true : undefined;
+}
+
+/**
+ * courseRoute picks the sequence a learner of `course` follows (docs/learning-engine.md §9). A fast sequence is left
+ * out when the learner does not keep pace with it, `pace` false, and its fallback, or the fallback's own where that is
+ * left out too, goes through the course; what it holds counts toward that fallback, as if the fallback led where it
+ * does and listed the courses it does. Of the rest it takes the one that leads on to the course they set out to take,
+ * `target`, if any; else the one that lists most of the courses they took, `taken`; on a tie, the fastest sequence
+ * when they keep pace, else one that is not fast, else the first. A course on no sequence has none.
  */
 export function courseRoute(
   index: CourseIndex,
   course: string,
   taken: readonly string[],
   target?: string,
-  standing?: number,
+  pace?: boolean,
 ): SequenceDef | undefined {
   const through = index.sequences.filter((s) => s.courses.includes(course));
-  const fit = standing === undefined ? through : through.filter((s) => (s.minStanding ?? 0) <= standing);
-  const pool = fit.length > 0 ? fit : through;
+  const byId = new Map(index.sequences.map((s) => [s.id, s]));
+  // resolve is where a sequence's learner goes: itself, unless it is left out for its pace.
+  const resolve = (s: SequenceDef, seen: readonly string[] = []): SequenceDef => {
+    const next = s.fast && pace === false && s.fallback ? byId.get(s.fallback) : undefined;
+    if (!next || !through.includes(next) || seen.includes(next.id)) return s;
+    return resolve(next, [...seen, s.id]);
+  };
+  // depth is how many fallbacks lie below a fast sequence: the further, the faster.
+  const depth = (s: SequenceDef, seen: readonly string[] = []): number => {
+    const next = s.fast && s.fallback ? byId.get(s.fallback) : undefined;
+    return next && !seen.includes(next.id) ? 1 + depth(next, [...seen, s.id]) : s.fast ? 1 : 0;
+  };
   const leads = (s: SequenceDef) => (target && s.courses.indexOf(target) > s.courses.indexOf(course) ? 1 : 0);
   const count = (s: SequenceDef) => taken.filter((id) => s.courses.includes(id)).length;
-  // A sequence left out for its bar hands what it holds to its fallback.
-  const left = through.filter((s) => !pool.includes(s));
+  const pool = through.filter((s) => resolve(s) === s);
   const rank = (s: SequenceDef): readonly number[] => {
-    const from = [s, ...left.filter((l) => l.fallback === s.id)];
-    return [Math.max(...from.map(leads)), Math.max(...from.map(count)), s.minStanding === undefined ? 0 : standing === undefined ? -1 : 1];
+    const from = through.filter((o) => resolve(o) === s);
+    return [Math.max(...from.map(leads)), Math.max(...from.map(count)), pace ? depth(s) : -depth(s)];
   };
   let best: SequenceDef | undefined;
   let bestRank: readonly number[] = [];

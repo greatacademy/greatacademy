@@ -150,14 +150,25 @@ describe("compileSubject", () => {
       "an unknown fallback",
       {
         ...subject([topic("a")], [course(["a"])]),
-        sequences: [{ id: "s", title: same("S"), courses: ["c"], minStanding: 0.8, fallback: "t" }],
+        sequences: [{ id: "s", title: same("S"), courses: ["c"], fast: true, fallback: "t" }],
       },
       "unknown fallback t",
     ],
     [
-      "a fallback without a bar",
+      "a fallback of a sequence that is not fast",
       { ...subject([topic("a")], [course(["a"])]), sequences: [{ id: "s", title: same("S"), courses: ["c"], fallback: "s" }] },
-      "a fallback needs minStanding",
+      "a fallback needs a fast sequence",
+    ],
+    [
+      "fallbacks that go round",
+      {
+        ...subject([topic("a")], [course(["a"])]),
+        sequences: [
+          { id: "s", title: same("S"), courses: ["c"], fast: true, fallback: "t" },
+          { id: "t", title: same("T"), courses: ["c"], fast: true, fallback: "s" },
+        ],
+      },
+      "fallbacks go round: s → t → s",
     ],
   ])("rejects %s", (_, def, message) => {
     expect(errors(def).join("\n")).toContain(message);

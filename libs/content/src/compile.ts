@@ -3,7 +3,7 @@ import { explanationParts, figureIssue } from "./figure.ts";
 import { bodyWords, lexiconIndex } from "./passages.ts";
 import type { Text } from "./text.ts";
 import { isText, locales } from "./text.ts";
-import type { CourseDef, CriterionSpec, KnowledgePointDef, SubjectDef, TopicDef } from "./types.ts";
+import type { CourseDef, CriterionSpec, KnowledgePointDef, SequenceDef, SubjectDef, TopicDef } from "./types.ts";
 
 /** Issue is a problem the compiler found in a subject's content. */
 export interface Issue {
@@ -457,14 +457,25 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
     text(`${path} › title`, sequence.title);
     if (sequence.courses.length < 2) error(path, "a sequence has at least two courses");
     if (new Set(sequence.courses).size !== sequence.courses.length) error(path, "a sequence lists a course twice");
-    const bar = sequence.minStanding;
-    if (bar !== undefined && !(bar > 0 && bar <= 1)) error(path, "minStanding must be in (0, 1]");
     const fallback = sequence.fallback;
     if (fallback !== undefined) {
-      if (bar === undefined) error(path, "a fallback needs minStanding");
+      if (!sequence.fast) error(path, "a fallback needs a fast sequence");
       const other = (def.sequences ?? []).find((s) => s.id === fallback);
       if (!other || other.id === sequence.id) error(path, `unknown fallback ${fallback}`);
-      else if (other.minStanding !== undefined) error(path, `fallback ${fallback} has a bar of its own`);
+      else {
+        // Fallbacks may chain, from the fastest sequence down, but never back to one passed on the way.
+        const seen = [sequence.id];
+        let at: SequenceDef | undefined = other;
+        while (at) {
+          if (seen.includes(at.id)) {
+            error(path, `fallbacks go round: ${[...seen, at.id].join(" → ")}`);
+            break;
+          }
+          seen.push(at.id);
+          const below: string | undefined = at.fallback;
+          at = (def.sequences ?? []).find((d) => d.id === below);
+        }
+      }
     }
     sequence.courses.forEach((id, i) => {
       const c = def.courses.find((d) => d.id === id);

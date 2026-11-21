@@ -4,7 +4,7 @@ import {
   activeSession,
   chooseCourse,
   completedSessions,
-  courseTasks,
+  courseLessons,
   createJudgment,
   createSession,
   currentCourse,
@@ -37,6 +37,7 @@ import {
   diagnosticDue,
   frontier,
   isKnown,
+  keepsPace,
   type LearnerState,
   memory,
   nextCourse,
@@ -356,8 +357,9 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
     const aim = (await subjectSettings(db, learnerId, c.subject.def.id)).targetCourseId;
     const aimed = aim && aim !== c.id && c.index.courses.has(aim) ? aim : undefined;
     const p = c.ctx.params;
-    const standing = courseStanding(p, await courseTasks(db, learnerId, c.subject.def.id, c.id, p.standingTasks));
-    const route = courseRoute(c.index, c.id, taken, aimed, standing);
+    const { state: s } = await state(db, learnerId, c);
+    const standing = courseStanding(p, s, await courseLessons(db, learnerId, c.subject.def.id, c.id, p.standingLessons));
+    const route = courseRoute(c.index, c.id, taken, aimed, keepsPace(p, standing));
     return { taken, target: routeTarget(c.index, route, aimed), route };
   };
 

@@ -37,10 +37,18 @@ export interface Params {
   readonly adviceWeakShare: number;
   /** adviceAheadShare is the share of a course's XP placed as known that makes the course after it the better start. */
   readonly adviceAheadShare: number;
-  /** standingTasks is how many of the latest lessons, reviews and quizzes of the current course its standing reads. */
-  readonly standingTasks: number;
-  /** standingMinAnswers is the fewest answers in those tasks from which the standing is known. */
-  readonly standingMinAnswers: number;
+  /** standingLessons is how many of the latest lessons of the current course a learner's standing in it reads. */
+  readonly standingLessons: number;
+  /** standingMinLessons is the fewest of those lessons from which the standing is known. */
+  readonly standingMinLessons: number;
+  /** fastMinSpeed is the mean learning speed of the topics recently learned that keeps a learner on a fast sequence. */
+  readonly fastMinSpeed: number;
+  /** fastMaxFailRate is the largest share of recent lessons failed that keeps a learner on a fast sequence. */
+  readonly fastMaxFailRate: number;
+  /** slowSpeed is the mean learning speed below which a learner falls clearly short of a fast sequence. */
+  readonly slowSpeed: number;
+  /** slowFailRate is the share of recent lessons failed above which a learner falls clearly short of a fast sequence. */
+  readonly slowFailRate: number;
   /** kpPass is the fewest correct answers that pass a knowledge point; they must also outnumber the wrong ones. */
   readonly kpPass: number;
   /** kpMaxWrong is the number of wrong answers on one knowledge point that fails the lesson. */
@@ -125,8 +133,12 @@ export const defaultParams: Params = {
   adviceMinTopics: 5,
   adviceWeakShare: 0.3,
   adviceAheadShare: 0.8,
-  standingTasks: 20,
-  standingMinAnswers: 40,
+  standingLessons: 20,
+  standingMinLessons: 10,
+  fastMinSpeed: 1.1,
+  fastMaxFailRate: 0.1,
+  slowSpeed: 1,
+  slowFailRate: 0.2,
   kpPass: 2,
   kpMaxWrong: 3,
   reteachAfterFailures: 2,

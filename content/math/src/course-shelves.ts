@@ -114,27 +114,34 @@ const buildsOn: Readonly<Record<string, readonly string[]>> = {
 /** university continues every route that reaches calculus, as Math Academy's do. */
 const university = ["linear-algebra", "multivariable-calculus", "differential-equations"];
 
-/** HONORS_STANDING is the share of recent answers right that the honors sequence asks of a learner. */
-const HONORS_STANDING = 0.8;
-
 /**
  * mathSequences are the routes through the courses
  * ([Content §6](../../../docs/content.md#6-courses)): the three high-school
- * sequences, each from the first grade, the traditional one first and the
- * honors one only for a learner doing well, the grade-by-grade middle school,
- * the foundations for adults and the two exams. A learner follows the one
- * their courses and their answers point to and moves on along it on finishing
- * a course.
+ * sequences, each from the first grade, the traditional one first; the
+ * grade-by-grade middle school; the foundations for adults; the university
+ * directions, following Math Academy's prerequisites; and the two exams. A
+ * learner follows the one their courses and their pace point to and moves on
+ * along it on finishing a course.
+ *
+ * Prealgebra covers grades 6 to 8 in one course, for a learner who takes in new
+ * material quickly, so the sequences through it are fast and fall back to the
+ * grade-by-grade one; integrated honors covers four years in three and falls
+ * back to the integrated sequence, which orders the topics as honors does. The
+ * university directions are a learner's choice, never a matter of pace.
  */
 export const mathSequences: readonly SequenceDef[] = [
   {
     id: "traditional",
     title: t("Traditional Math", "传统数学"),
+    fast: true,
+    fallback: "grade-by-grade",
     courses: [...grades(1, 5), "prealgebra", "algebra-i", "geometry", "algebra-ii", "precalculus", "ap-calculus-bc", ...university],
   },
   {
     id: "integrated",
     title: t("Integrated Math", "综合数学"),
+    fast: true,
+    fallback: "grade-by-grade",
     courses: [
       ...grades(1, 5),
       "prealgebra",
@@ -149,9 +156,7 @@ export const mathSequences: readonly SequenceDef[] = [
   {
     id: "integrated-honors",
     title: t("Integrated Math (Honors)", "综合数学（荣誉）"),
-    // Honors covers four years in three: a learner keeps to it while getting most answers right, and below that moves to
-    // the integrated sequence, which orders the topics as honors does.
-    minStanding: HONORS_STANDING,
+    fast: true,
     fallback: "integrated",
     courses: [
       ...grades(1, 5),
@@ -173,6 +178,40 @@ export const mathSequences: readonly SequenceDef[] = [
     title: t("Mathematical Foundations", "数学基础"),
     courses: ["mathematical-foundations-i", "mathematical-foundations-ii", "mathematical-foundations-iii", ...university],
   },
+  {
+    id: "statistics",
+    title: t("Probability and Statistics", "概率与统计"),
+    courses: ["linear-algebra", "multivariable-calculus", "probability-and-statistics"],
+  },
+  {
+    id: "physical-sciences",
+    title: t("Physical Sciences", "物理科学"),
+    courses: [
+      "calculus-i",
+      "calculus-ii",
+      "mathematical-methods-for-the-physical-sciences-i",
+      "mathematical-methods-for-the-physical-sciences-ii",
+    ],
+  },
+  {
+    id: "machine-learning",
+    title: t("Machine Learning", "机器学习"),
+    courses: ["calculus-i", "calculus-ii", "mathematics-for-machine-learning"],
+  },
+  {
+    id: "partial-differential-equations",
+    title: t("Partial Differential Equations", "偏微分方程"),
+    courses: ["differential-equations", "partial-differential-equations"],
+  },
+  { id: "optimization", title: t("Linear Programming", "线性规划"), courses: ["linear-algebra", "linear-programming"] },
+  { id: "proofs", title: t("Discrete Mathematics", "离散数学"), courses: ["methods-of-proof", "discrete-mathematics"] },
+  {
+    id: "analysis",
+    title: t("Analysis", "分析"),
+    courses: ["methods-of-proof", "real-analysis", "complex-analysis"],
+  },
+  { id: "algebra", title: t("Abstract Algebra", "抽象代数"), courses: ["methods-of-proof", "abstract-algebra"] },
+  { id: "number-theory", title: t("Number Theory", "数论"), courses: ["methods-of-proof", "number-theory"] },
   { id: "sat", title: t("SAT", "SAT"), courses: ["sat-math-fundamentals", "sat-math-prep"] },
   { id: "act", title: t("ACT", "ACT"), courses: ["act-math-fundamentals", "act-math-prep"] },
 ];

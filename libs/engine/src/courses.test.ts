@@ -9,6 +9,7 @@ import {
   coursesAfter,
   followingCourse,
   homeCourse,
+  keepsPace,
   nextCourse,
   placementAdvice,
   routeTarget,
@@ -17,7 +18,7 @@ import type { Placement } from "./diagnostic.ts";
 import { applyEvent } from "./events.ts";
 import { courseScope, engineGraph } from "./graph.ts";
 import { defaultParams } from "./params.ts";
-import { initialState, type LearnerState } from "./state.ts";
+import { initialState, type LearnerState, newTopicState } from "./state.ts";
 import type { Planner } from "./tasks.ts";
 
 function topic(id: string, prerequisites: string[]): TopicDef {
@@ -156,15 +157,14 @@ const branching = compileSubject({
   ],
   sequences: [
     { id: "first", title: same("First"), courses: ["low", "a", "a2"] },
-    { id: "second", title: same("Second"), courses: ["low", "b", "b2"], minStanding: 0.8 },
+    { id: "second", title: same("Second"), courses: ["low", "b", "b2"], fast: true, fallback: "first" },
   ],
   mark: "B",
   hue: 100,
   checkers: [],
 });
 const routes = courseIndex(branching.courses, branching.def.sequences);
-const route = (course: string, taken: string[], target?: string, standing?: number) =>
-  courseRoute(routes, course, taken, target, standing)?.id;
+const route = (course: string, taken: string[], target?: string, pace?: boolean) => courseRoute(routes, course, taken, target, pace)?.id;
 
 describe("courseRoute", () => {
   it("follows the route that leads to the course set out for", () => {
@@ -172,7 +172,7 @@ describe("courseRoute", () => {
     expect(route("low", [], "a")).toBe("first");
   });
 
-  it("follows the route of the courses taken, else the first", () => {
+  it("follows the route of the courses taken, else one that is not fast", () => {
     expect(route("low", [])).toBe("first");
     expect(route("b", ["low"])).toBe("second");
     expect(route("low", ["b", "b2"])).toBe("second");
@@ -186,28 +186,37 @@ describe("courseRoute", () => {
     expect(route("c", ["a2"])).toBeUndefined();
   });
 
-  it("follows a demanding route only while the standing reaches its bar", () => {
-    expect(route("low", [], undefined, 0.9)).toBe("second");
-    expect(route("low", [], "b2", 0.6)).toBe("first");
-    expect(route("low", ["b"], undefined, 0.6)).toBe("first");
+  it("follows a fast route while the learner keeps pace, and its fallback when they fall short", () => {
+    expect(route("low", [], undefined, true)).toBe("second");
+    expect(route("low", [], "b2", false)).toBe("first");
+    expect(route("low", ["b"], undefined, false)).toBe("first");
     expect(route("low", ["b"])).toBe("second");
-    expect(route("b", ["low"], undefined, 0.6)).toBe("second");
+  });
+
+  it("keeps a learner on a fast route where its fallback does not go", () => {
+    expect(route("b", ["low"], undefined, false)).toBe("second");
   });
 });
 
-describe("courseRoute with a fallback", () => {
+describe("courseRoute with fallbacks in a chain", () => {
   const [first, second] = branching.def.sequences ?? [];
   const index = courseIndex(branching.courses, [
     { id: "plain", title: same("Plain"), courses: ["low", "a"] },
-    first!,
-    { ...second!, fallback: "first" },
+    { ...first!, fast: true, fallback: "plain" },
+    second!,
   ]);
-  const pick = (taken: string[], target?: string) => courseRoute(index, "low", taken, target, 0.6)?.id;
+  const pick = (course: string, taken: string[], target?: string, pace?: boolean) => courseRoute(index, course, taken, target, pace)?.id;
 
-  it("moves a learner below the bar to the fallback of the sequence they were on", () => {
-    expect(pick(["b"])).toBe("first");
-    expect(pick([], "b2")).toBe("first");
-    expect(pick([])).toBe("plain");
+  it("moves a learner who falls short down the chain as far as it goes through the course", () => {
+    expect(pick("low", ["b"], undefined, false)).toBe("plain");
+    expect(pick("low", [], "b2", false)).toBe("plain");
+    expect(pick("a", ["low"], undefined, false)).toBe("plain");
+    expect(pick("b", ["low"], undefined, false)).toBe("second");
+  });
+
+  it("prefers the fastest route for a learner who keeps pace, and the slowest while the pace is unknown", () => {
+    expect(pick("low", [], undefined, true)).toBe("second");
+    expect(pick("low", [])).toBe("plain");
   });
 });
 
@@ -222,14 +231,36 @@ describe("routeTarget", () => {
 });
 
 describe("courseStanding", () => {
-  const lesson = (asked: number, correct: number) => ({ type: "lesson" as const, at: 0, topic: "p1", passed: true, asked, correct });
-  it("reads the share right of the latest tasks once enough answers are in", () => {
-    expect(courseStanding(defaultParams, [lesson(10, 9)])).toBeUndefined();
-    const many = Array.from({ length: 30 }, (_, i) => lesson(10, i < 10 ? 10 : 5));
-    expect(courseStanding(defaultParams, many)).toBe(0.5);
-    const quiz = { type: "quiz" as const, at: 0, results: Array.from({ length: 40 }, (_, i) => ({ topic: "p1", correct: i % 4 > 0 })) };
-    expect(courseStanding(defaultParams, [quiz])).toBe(0.75);
-    expect(courseStanding(defaultParams, [{ ...quiz, retake: true }])).toBeUndefined();
+  const lesson = (topic: string, passed = true) => ({ type: "lesson" as const, at: 0, topic, passed, asked: 6, correct: 4 });
+  const state: LearnerState = {
+    ...initialState,
+    topics: { p1: newTopicState(0, 1, 1.4, false), p2: newTopicState(0, 1, 1, false) },
+  };
+
+  it("reads the learning speed of the topics learned and the share of lessons failed once enough lessons are in", () => {
+    expect(courseStanding(defaultParams, state, [lesson("p1")])).toBeUndefined();
+    const ten = [...Array.from({ length: 8 }, () => lesson("p1")), lesson("p2"), lesson("p2", false)];
+    expect(courseStanding(defaultParams, state, ten)).toEqual({ speed: 1.2, failRate: 0.1 });
+    const many = [...Array.from({ length: 20 }, () => lesson("p2", false)), ...ten];
+    expect(courseStanding(defaultParams, state, many)?.failRate).toBe(0.55);
+    expect(
+      courseStanding(
+        defaultParams,
+        state,
+        Array.from({ length: 10 }, () => lesson("p1", false)),
+      ),
+    ).toEqual({ failRate: 1 });
+  });
+
+  it("keeps a learner on a fast route only on both counts, and moves them off it when clearly short on either", () => {
+    expect(keepsPace(defaultParams, { speed: 1.2, failRate: 0.1 })).toBe(true);
+    expect(keepsPace(defaultParams, { speed: 1.05, failRate: 0 })).toBeUndefined();
+    expect(keepsPace(defaultParams, { speed: 1.3, failRate: 0.15 })).toBeUndefined();
+    expect(keepsPace(defaultParams, { speed: 0.9, failRate: 0 })).toBe(false);
+    expect(keepsPace(defaultParams, { speed: 1.5, failRate: 0.3 })).toBe(false);
+    expect(keepsPace(defaultParams, { failRate: 0 })).toBeUndefined();
+    expect(keepsPace(defaultParams, { failRate: 1 })).toBe(false);
+    expect(keepsPace(defaultParams, undefined)).toBeUndefined();
   });
 });
 

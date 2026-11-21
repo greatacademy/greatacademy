@@ -444,13 +444,14 @@ export interface SequenceDef {
   readonly title: Text;
   readonly courses: readonly string[];
   /**
-   * minStanding is the share of recent answers in the current course a learner must get right to follow this
-   * sequence where another one also goes through the course, such as an honors sequence; absent for none.
+   * fast marks a sequence that covers the courses in less time than another through them, such as an honors
+   * sequence: a learner keeps to it only while learning quickly and passing nearly every lesson.
    */
-  readonly minStanding?: number;
+  readonly fast?: boolean;
   /**
-   * fallback is the id of the sequence a learner below minStanding moves to, the one closest to this; it takes the
-   * place of this sequence in choosing the route, such as the integrated sequence for the integrated honors one.
+   * fallback is the id of the sequence a learner of this fast one moves to on falling short of its pace, the one
+   * closest to it; it takes the place of this sequence in choosing the route. A fallback may be fast and have a
+   * fallback of its own, such as the integrated sequence below the integrated honors one.
    */
   readonly fallback?: string;
 }

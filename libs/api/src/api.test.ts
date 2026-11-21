@@ -275,7 +275,7 @@ describe("LearningService", () => {
     expect((await learning.getDashboard({ courseId: "algebra-i" })).promotedFrom).toBe("");
   });
 
-  it("keeps a learner on the honors route only while they get most answers right", async () => {
+  it("keeps a learner on the honors route only while they keep its pace", async () => {
     await learning.chooseCourse({ courseId: "integrated-math-i-honors" });
     await learning.chooseCourse({ courseId: "prealgebra" });
     const route = async () => (await learning.listCourseProgress({ courseId: "prealgebra" })).courses.map((c) => c.courseId);
@@ -284,14 +284,13 @@ describe("LearningService", () => {
 
     const c = (await registry.course("prealgebra"))!;
     const learnerId = await learnerFor(db, "u1");
-    const quiz = (right: number) =>
-      appendTo(db, learnerId, c, {
-        type: "quiz",
-        at: now,
-        results: Array.from({ length: 40 }, (_, i) => ({ topic: "composite-shapes", correct: i < right })),
-      });
-    // Half the answers right: the integrated route, closest to honors, which no longer leads to the honors course.
-    await quiz(20);
+    const lessons = async (n: number, passed: boolean) => {
+      for (let i = 0; i < n; i++) {
+        await appendTo(db, learnerId, c, { type: "lesson", at: now, topic: "composite-shapes", passed, asked: 2, correct: passed ? 2 : 0 });
+      }
+    };
+    // Failing most lessons: the integrated route, the fallback of honors, which no longer leads to the honors course.
+    await lessons(10, false);
     expect(await route()).toEqual([
       "integrated-math-i-honors",
       "prealgebra",
@@ -299,11 +298,22 @@ describe("LearningService", () => {
       "integrated-math-ii",
       "integrated-math-iii",
     ]);
-    // Doing well again leads back to the honors course.
-    await quiz(40);
-    await quiz(40);
-    await quiz(40);
+    // Learning quickly and passing every lesson leads back to the honors course.
+    await lessons(20, true);
     expect(await route()).toEqual(honors);
+  });
+
+  it("starts middle school with Prealgebra only for a learner who keeps its pace", async () => {
+    await learning.chooseCourse({ courseId: "5th-grade-math" });
+    const next = async () => (await learning.listCourseProgress({ courseId: "5th-grade-math" })).courses.map((c) => c.courseId)[1];
+    expect(await next()).toBe("6th-grade-math");
+    const c = (await registry.course("5th-grade-math"))!;
+    const learnerId = await learnerFor(db, "u1");
+    const topic = c.course.topics.at(-1)!;
+    for (let i = 0; i < 20; i++) {
+      await appendTo(db, learnerId, c, { type: "lesson", at: now, topic, passed: true, asked: 2, correct: 2 });
+    }
+    expect(await next()).toBe("prealgebra");
   });
 
   it("follows the route of the course chosen, and offers the course before on it", async () => {
