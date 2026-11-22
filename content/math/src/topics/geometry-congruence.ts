@@ -3319,14 +3319,18 @@ interface Proof {
 }
 
 /** highlighted draws a mark in the result color: a tick or arrow mark over its segment drawn in that color. */
-function highlighted(k: Mark): Mark[] {
+export function highlighted(k: Mark): Mark[] {
   if (k.kind === "ticks" || k.kind === "arrows") return [{ kind: "segment", a: k.a, b: k.b, tone: "result" }, k];
   if (k.kind === "arc") return [{ ...k, tone: "result" }];
   return [k];
 }
 
 /** proofFigures draws a proof: the problem's figure with the given facts, and one figure for each step that adds marks, with them highlighted; at maps a step to its figure. */
-function proofFigures(proof: Proof): { figure: Figure; steps: Figure[]; at: Map<number, number> } {
+export function proofFigures(proof: {
+  readonly steps: readonly Pick<ProofStep, "marks" | "drawn">[];
+  readonly base: readonly Mark[];
+  readonly alt: readonly [string, string];
+}): { figure: Figure; steps: Figure[]; at: Map<number, number> } {
   const drawn = proof.steps.filter((s) => s.drawn).flatMap((s) => s.marks ?? []);
   const [en, zh] = proof.alt;
   const steps: Figure[] = [];
