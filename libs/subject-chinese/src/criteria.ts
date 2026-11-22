@@ -539,6 +539,93 @@ export const WRITING_CRITERIA: readonly CriterionSpec[] = [
     question: "Does the text tell one event or show one person completely and in a clear order, so that the detail sits inside a whole?",
     quoteWhenMet: false,
   },
+  // Grade 7: writing with feeling.
+  {
+    id: "zh7-feeling-source",
+    version: "1",
+    question:
+      "Does the feeling grow out of a real experience, person, thing or scene of the writer's life that the text tells concretely, as the task asks?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh7-feeling-carry",
+    version: "1",
+    question:
+      "Is the feeling carried by what is told and described, such as a scene, an object, an action or a detail, rather than only named, with at least one passage in which a description itself conveys it?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh7-feeling-express",
+    version: "1",
+    question:
+      "Is the feeling also said outright at a fitting point, such as the climax or the end, in the writer's own sincere words that agree with what came before, rather than in a borrowed slogan?",
+    quoteWhenMet: true,
+  },
+  // Grade 7: expanding and condensing.
+  {
+    id: "zh7-rewrite-faithful",
+    version: "1",
+    question:
+      "Does the text keep to the original the task gives: its people, events, order and ending, all of them when expanding and the main ones when condensing, without changing or contradicting them?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh7-expand-detail",
+    version: "1",
+    question:
+      "Does the expansion add concrete, fitting detail the original only implies, such as the scene, actions, words, looks and thoughts of the people, so that the key moments can be seen, reaching the length the task asks?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh7-condense-brief",
+    version: "1",
+    question:
+      "Is the condensed text within the length the task asks, dropping description and minor detail, and joined into a smooth whole in plain words rather than a string of copied fragments?",
+    quoteWhenMet: false,
+  },
+  // Grade 7: association and imagination.
+  {
+    id: "zh7-imagine-link",
+    version: "1",
+    question:
+      "Does the text start from the thing, picture, word or situation the task gives, and lead from it by association or imagination along links a reader can follow?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh7-imagine-vivid",
+    version: "1",
+    question: "Are the imagined or associated scenes described concretely, with what is seen, heard or felt, rather than only listed?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh7-imagine-meaning",
+    version: "1",
+    question:
+      "Does the imagining carry a feeling or thought and come back to real life by the end, rather than drifting from one fancy to the next?",
+    quoteWhenMet: true,
+  },
+  // Grade 7: applications and suggestions.
+  {
+    id: "zh7-practical-form",
+    version: "1",
+    question:
+      "Is the text set out as a Chinese application or letter of suggestion: a title such as 申请书 or 建议书, the addressee at the margin with a colon, the body, a closing such as 此致 and 敬礼, and the writer's name and the date at the bottom right?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "zh7-practical-reason",
+    version: "1",
+    question:
+      "Does the text say plainly what is asked for or suggested, and give real reasons for it, such as the facts of the situation or the problem it would solve?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh7-practical-concrete",
+    version: "1",
+    question:
+      "Does the text give concrete, workable steps, for a suggestion the measures proposed and for an application what the writer will do, set out one by one, in a respectful tone that suits its reader?",
+    quoteWhenMet: true,
+  },
   // Grade 8: explaining in order.
   {
     id: "zh8-explain-feature",

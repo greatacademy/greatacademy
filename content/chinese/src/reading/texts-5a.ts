@@ -352,7 +352,8 @@ export const POEMS_5 = `
 - 河水里 ~unsaid
 - 朋友的画里 ~unsaid
 ?1 诗中的“秋霜”指的是什么？ | What does 秋霜 stand for in the poem?
-= 白发 | 秋霜，指白发
+≈ 白发 | 不知明镜里，何处得秋霜 | 白发三千丈，缘愁似个长
+% 诗人是在照镜子，镜子里照出的是他自己，不会有真的霜落在里面。开头一句说的正是“白发三千丈”，白发和霜一样白，所以“秋霜”是拿秋天的霜比他满头的白发。 | The poet is looking in a mirror, which shows only himself; no real frost could settle there. The opening line speaks of “white hair three thousand zhang”, and white hair is as white as frost, so 秋霜 likens his white hair to autumn frost.
 - 秋天早上的霜 ~literal
 - 镜子上的灰 ~unsaid
 ?2 这首诗表达了诗人怎样的心情？ | What feeling does the poem express?
@@ -411,7 +412,8 @@ export const POEMS_5 = `
 - 把信撕掉了 ~unsaid
 - 自己跟着回家了 ~unsaid
 ?1 “意万重”是什么意思？ | What does 意万重 mean?
-= 想说的话很多很多 | 意万重，要说的话很多
+≈ 想说的话很多很多 | 欲作家书意万重 | 复恐匆匆说不尽
+% “意万重”是诗人要写家书时心里的意思，“万重”是一层又一层，多得数不清。下一句说他又怕匆匆忙忙“说不尽”，正因为想说的话太多才怕说不完，所以“意万重”是想说的话很多很多。 | 意万重 is what fills the poet's mind as he sets out to write home, and 万重 is layer on layer, past counting. The next line says he fears that in his haste he has not said it all: he fears it because he has so much to say. So 意万重 is a great many things to say.
 - 信写了一万张纸 ~literal
 - 信非常重 ~literal
 ?2 这首诗表达了诗人怎样的感情？ | What feeling does the poem express?
@@ -480,10 +482,11 @@ export const POEMS_5 = `
 ≈ 把春风当作人来写，连春风都不忍心看人分别 | 春风知别苦，不遣柳条青 | 古人送别时常折柳相送
 - 说明那年春天特别冷 ~literal
 - 说明柳树生病了 ~literal
-?2 诗中提到柳条，和送别有什么关系？ | What have willow twigs to do with parting?
-= 古人送别时常折柳相送 | 古人送别时常折柳相送
-- 柳条可以用来编篮子 ~life
-- 柳树长在每家门口 ~unsaid
+?2 诗的第一句“天下伤心处”，一开头就写出了什么？ | What does the opening line, “the saddest place under heaven”, set down at once?
+≈ 一开头就点出离别的伤心 | 天下伤心处 | 劳劳送客亭
+% “天下伤心处”说这里是天下最让人伤心的地方，下一句就说这里是“劳劳送客亭”，是送别客人的亭子。两句连起来，诗一开头就点明了：让人伤心的是离别。 | The opening line calls this the saddest place under heaven, and the next names it the pavilion of seeing guests off. Taken together, the poem says from its first words that what grieves here is parting.
+- 一开头就写出亭子里风景的美 ~never
+- 一开头就写出春天来了的欢喜 ~opposite
 
 # 秋词（唐·刘禹锡）
 自古逢秋悲寂寥，我言秋日胜春朝。
@@ -577,7 +580,8 @@ export const POEMS_5 = `
 马上相逢无纸笔，凭君传语报平安。
 注：故园，家乡。龙钟，这里是沾湿的样子。凭，请。君，你，指去京城的使者。
 ?1 诗人遇见了谁？ | Whom does the poet meet?
-= 去京城的使者 | 凭君传语报平安 | 君，你，指去京城的使者
+≈ 去京城的使者 | 马上相逢无纸笔 | 凭君传语报平安
+% 题目“逢入京使”就是遇见去京城的使者。诗里说两人“马上相逢”，诗人又请“君”替他带话回家报平安，能替他带话回家乡的，正是题目里这位往京城去的使者。 | The title, 逢入京使, means meeting an envoy bound for the capital. In the poem the two meet on horseback and the poet asks “you” to carry word home that all is well; the one who can carry it home is that envoy of the title, bound for the capital.
 - 家里的亲人 ~unsaid
 - 一起打仗的朋友 ~unsaid
 ?1 诗人为什么请使者带口信，而不写信？ | Why a spoken message and no letter?

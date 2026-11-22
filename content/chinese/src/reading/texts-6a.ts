@@ -1080,10 +1080,10 @@ export const POEMS_6 = `
 % 韵脚是押韵的句子末尾的字。把“月黑雁飞高”“单于夜遁逃”“大雪满弓刀”这几句末尾的字连起来读：高、逃、刀，它们的韵相同或相近，读起来和谐，所以韵脚就是这几个字。 | Rhyme words are the characters that end the rhyming lines. Read the last characters of these lines together, 高、逃、刀: they share a rhyme or near rhyme and sound in harmony, so they are the rhyme words.
 - 黑、骑、雪 ~notend
 - 月、于、将 ~notend
-?1 “单于”应该怎样读？ | How is 单于 read?
-= chán yú | 单于（chán yú）
-- dān yú ~changed
-- shàn yú ~changed
+?1 敌人是在什么时候逃走的？ | When does the enemy flee?
+= 在没有月亮的黑夜里 | 单于夜遁逃 | 月黑雁飞高
+- 在大雪纷飞的白天 ~opposite
+- 在大雁南飞的清晨 ~unsaid
 ?2 “月黑雁飞高，单于夜遁逃”写出了什么？ | What do the first two lines show?
 ≈ 敌人趁着黑夜悄悄逃走 | 单于夜遁逃 | 月黑雁飞高 | 遁逃，逃走
 - 雁群在夜里飞向南方 ~part

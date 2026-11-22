@@ -134,6 +134,51 @@ export const REASONS = {
   attack: ["this goes at the person, not at the view.", "针对的是人，不是观点。"],
   dull: ["this is said flatly, with nothing to hold the listeners.", "平平地说，没有用事例或问题吸引听众。"],
   noopening: ["this plunges into a detail before saying what the talk is about.", "一开口就讲细节，没有先说清要讲什么。"],
+  // Grades 7 to 9: the thread, order and weight of a narrative.
+  notthread: [
+    "this comes up in the text, but it does not run through it and join its parts.",
+    "文中写到了它，可它没有贯穿全文，没有把各部分串起来。",
+  ],
+  notflashback: [
+    "the text does not open with a later moment and then go back to tell how it came about.",
+    "文章没有先写后来的事，再回过头去写事情的经过。",
+  ],
+  notchrono: [
+    "the text does not simply go from first to last; it turns back in time to tell something earlier.",
+    "文章不是从头到尾按先后写下来的，中间有回过头去写的地方。",
+  ],
+  notinsert: [
+    "the telling does not break off to recall something earlier and then take up its thread again.",
+    "叙述中间没有停下来插进以前的事，再接着往下写。",
+  ],
+  role: ["this is not what this part does in the text.", "这不是这一部分在文中的作用。"],
+  notdetailed: ["this part is passed over in a sentence or two, not told in detail.", "这部分只用一两句带过，不是详写。"],
+  // Ways of describing a person or a place.
+  noaction: ["the sentence pictures no movement of the person: “{s}”", "句中没有具体写人物的动作：“{s}”"],
+  nospeech: ["the sentence gives no words the person says: “{s}”", "句中没有写人物说的话：“{s}”"],
+  nothought: ["the sentence does not show what goes on in the person's mind: “{s}”", "句中没有写人物心里怎么想：“{s}”"],
+  nolooks: ["the sentence does not picture the person's face, build or clothes: “{s}”", "句中没有写人物的外貌、神情或穿着：“{s}”"],
+  nosetting: ["the sentence pictures no place, weather or scene around the people: “{s}”", "句中没有写人物周围的景物、天气或场面：“{s}”"],
+  nosense: ["the sentence does not write from this sense: “{s}”", "句中没有从这个感官来写：“{s}”"],
+  // Exposition and news.
+  nocite: ["the sentence quotes no saying, record or source: “{s}”", "句中没有引用诗文、资料或别人的话：“{s}”"],
+  noshape: ["the sentence does not picture the thing's look: “{s}”", "句中没有具体描摹事物的样子：“{s}”"],
+  fact: ["this is a fact the report gives, not a view on it.", "这是报道的事实，不是对它的看法。"],
+  view: ["this is a view on what happened, not a fact the report gives.", "这是对事情的看法，不是报道的事实。"],
+  // Classical Chinese.
+  modern: [
+    "this is what the word means today, but not in this classical sentence: “{s}”",
+    "这是这个词今天的意思，放在这句文言里讲不通：“{s}”",
+  ],
+  // Speaking in grades 7 to 9.
+  surface: ["this takes the words only at their face and misses what is meant.", "只听懂了字面意思，没听出话里真正的意思。"],
+  overread: ["this reads into the words what they do not mean.", "想得太多了，话里并没有这个意思。"],
+  added: ["this adds what was never said.", "加进了原话里没有的内容。"],
+  casual: ["this is too casual for the listener or the occasion.", "说得太随便，不合对方的身份或这个场合。"],
+  stiff: ["this is too stiff and formal for the listener or the occasion.", "说得太生硬、太正式，不合对方或这个场合。"],
+  unlinked: ["this does not start from the moment and the people at hand.", "没有从眼前的场合、眼前的人和事说起。"],
+  // Grades 7 to 9: a reading the text does not bear out.
+  misread: ["the text does not show this; read it again where it says: “{s}”", "文中表现的不是这个意思，再读读这一句：“{s}”"],
 } as const;
 
 /** Context is what a reason may quote: the sentence that answers the question, and the sentence the text ends with. */
@@ -146,10 +191,53 @@ interface Context {
 const sentencesOf = (text: string): readonly string[] =>
   (text.match(/[^。！？\n]+(?:[。！？]+[”’」]?)?/gu) ?? []).map((x) => x.trim()).filter((x) => x !== "");
 
-/** contextOf finds, in a piece, the sentence that holds the clue (or the clue itself, if it spans sentences) and the last sentence. */
+/** NOTES opens the line of notes that follows a classical text or a poem, the notes separated by full stops. */
+const NOTES = "注：";
+
+/** textOf is a body without its line of notes: the text itself. */
+const textOf = (body: string): string =>
+  body
+    .split("\n")
+    .filter((line) => !line.startsWith(NOTES))
+    .join("\n");
+
+/** askedWord is the word whose meaning a question asks, as the question quotes it, or undefined for any other question. */
+const askedWord = (ask: Text): string | undefined => /“([^“”]{1,4})”[^“”]{0,8}?(?:是什么意思|指什么|指的是什么)/u.exec(ask["zh-CN"])?.[1];
+
+/** Asked is what a note is judged against: a question's ask, its answer and the places of the text it rests on. */
+type Asked = Pick<Question, "ask" | "right" | "evidence">;
+
+/**
+ * givesAway tells a note that would answer a question for the learner: one that states its answer, or, when the
+ * question asks what a word means, one that glosses that word or that the question cites.
+ */
+function givesAway(note: string, q: Asked): boolean {
+  const word = askedWord(q.ask);
+  const head = note.split("，")[0] ?? note;
+  if (word !== undefined && (head.includes(word) || note.includes(`“${word}”`) || q.evidence.some((e) => note.includes(e)))) return true;
+  return note.includes(q.right);
+}
+
+/** bodyFor is a body as shown with a question: every note that would give its answer away is left out, the rest kept. */
+export function bodyFor(body: string, q: Asked): string {
+  return body
+    .split("\n")
+    .flatMap((line) => {
+      if (!line.startsWith(NOTES)) return [line];
+      const kept = line
+        .slice(NOTES.length)
+        .split("。")
+        .map((n) => n.trim())
+        .filter((n) => n !== "" && !givesAway(n, q));
+      return kept.length === 0 ? [] : [`${NOTES}${kept.join("。")}。`];
+    })
+    .join("\n");
+}
+
+/** contextOf finds, in a piece, the sentence that holds the clue (or the clue itself, if it spans sentences) and the last sentence of its text. */
 function contextOf(piece: Piece, clue: string): Context {
-  const all = sentencesOf(`${piece.title}\n${piece.body}`);
-  const body = sentencesOf(piece.body);
+  const all = sentencesOf(`${piece.title}\n${textOf(piece.body)}`);
+  const body = sentencesOf(textOf(piece.body));
   return { sentence: all.find((x) => x.includes(clue)) ?? clue, ending: body.at(-1) ?? piece.body };
 }
 
@@ -161,11 +249,14 @@ export const isHan = (c: string): boolean => /\p{Script=Han}/u.test(c);
 
 /**
  * quoted quotes a text as the last thing a sentence says: a whole sentence keeps its own closing mark inside the
- * quotation marks, and a part of one is followed by a full stop after them.
+ * quotation marks, and a part of one is followed by a full stop after them. A closing quotation mark left over from a
+ * speech the sentence ends is dropped.
  */
 export function quoted(text: string, locale: "en" | "zh-CN"): string {
-  const inner = text.replaceAll("“", "‘").replaceAll("”", "’");
-  return /[。！？.!?][”’」]?$/u.test(text) ? `“${inner}”` : `“${inner}”${locale === "en" ? "." : "。"}`;
+  const count = (mark: string): number => text.split(mark).length - 1;
+  const whole = count("”") > count("“") && text.endsWith("”") ? text.slice(0, -1) : text;
+  const inner = whole.replaceAll("“", "‘").replaceAll("”", "’");
+  return /[。！？.!?][”’」]?$/u.test(whole) ? `“${inner}”` : `“${inner}”${locale === "en" ? "." : "。"}`;
 }
 
 /** readableAfter is the first recognition batch of the grade or earlier after which KNOWN of the characters of the texts are taught. */
@@ -238,7 +329,8 @@ export interface Piece {
  * two places or more.
  */
 export function parsePieces(data: string, points: number): readonly Piece[] {
-  return data
+  const given: string[] = [];
+  const pieces = data
     .trim()
     .split(/^# /mu)
     .filter((block) => block.trim() !== "")
@@ -264,6 +356,11 @@ export function parsePieces(data: string, points: number): readonly Piece[] {
           throw new Error(`piece ${title}: ${ask["zh-CN"]} repeats an option`);
         for (const e of evidence)
           if (e === "" || !`${title}\n${body}`.includes(e)) throw new Error(`piece ${title}: the clue ${e} is not in the text`);
+        const shown = `${title}\n${bodyFor(body, { ask, right, evidence })}`;
+        for (const e of evidence)
+          if (!shown.includes(e)) given.push(`piece ${title}: ${ask["zh-CN"]} rests on ${e}, a note that gives the answer away`);
+        if (!inferred && askedWord(ask) !== undefined && body.includes(NOTES))
+          given.push(`piece ${title}: ${ask["zh-CN"]} asks a word its notes leave out, so its meaning is inferred`);
         if (inferred && new Set(evidence).size < 2 && !reasoning)
           throw new Error(`piece ${title}: ${ask["zh-CN"]} infers from one place but says not how`);
         if (reasoning && !inferred) throw new Error(`piece ${title}: ${ask["zh-CN"]} has reasoning but is not inferred`);
@@ -304,6 +401,8 @@ export function parsePieces(data: string, points: number): readonly Piece[] {
       close();
       return { title, body, questions };
     });
+  if (given.length > 0) throw new Error(given.join("\n"));
+  return pieces;
 }
 
 /** Kind words the steps of a solution by what the text is: a passage read, a sign, a verse or something heard. */
@@ -323,8 +422,11 @@ export const POEM: Kind = { text: ["the poem", "诗"] };
 /** TALK is what someone says, which the learner reads until it is recorded. */
 export const TALK: Kind = { text: ["what is said", "说的话"] };
 
-/** shownOf is a text as a problem shows it: its title on a line of its own, then the text. */
-const shownOf = (p: Piece): string => (p.title === "" ? p.body : `${p.title}\n\n${p.body}`);
+/** shownOf is a text as a problem shows it with a question: its title on a line of its own, then the text and the notes that do not give the answer away. */
+const shownOf = (p: Piece, q: Question): string => {
+  const body = bodyFor(p.body, q);
+  return p.title === "" ? body : `${p.title}\n\n${body}`;
+};
 
 /** asked are the questions of one knowledge point across pieces, each with its piece, in turn. */
 function asked(pieces: readonly Piece[], k: number): readonly (readonly [Piece, Question])[] {
@@ -393,7 +495,7 @@ export const evidenceOf = (q: Question, locale: "en" | "zh-CN"): string =>
   q.evidence.length === 1 ? quoted(q.clue, locale) : `${marksOf(q, locale)}${locale === "en" ? "." : "。"}`;
 
 /** endingOf is the last sentence of a piece's text. */
-export const endingOf = (piece: Piece): string => sentencesOf(piece.body).at(-1) ?? piece.body;
+export const endingOf = (piece: Piece): string => sentencesOf(textOf(piece.body)).at(-1) ?? piece.body;
 
 /** INFERENCE_HEADINGS are the bold headings of the first two steps of a question whose answer is inferred. */
 const INFERENCE_HEADINGS = {
@@ -457,7 +559,7 @@ export function pieceGenerator(
       `${heads.find["zh-CN"]}${steps.find["zh-CN"]}\n\n${heads.choose["zh-CN"]}${steps.choose["zh-CN"]}\n\n**检验。** ${steps.check["zh-CN"]}\n\n其他选项：\n\n${list("zh-CN")}`,
     );
     return {
-      prompt: joinText([q.ask, same(quote(shownOf(piece)))]),
+      prompt: joinText([q.ask, same(quote(shownOf(piece, q)))]),
       answer: { checker: "choice", expected: answer, input: { kind: "choice", options: options.map((o) => same(o)) } },
       solution,
       canonical: String(answer),
@@ -467,16 +569,21 @@ export function pieceGenerator(
   };
 }
 
-/** RuleItem is a situation of speaking: the scene, the reply that suits it and the replies that do not, with why. */
+/**
+ * RuleItem is a situation of speaking: the scene, the reply that suits it and the replies that do not, with why, and
+ * the check of this scene, when it has its own: the clues of the scene that make only the right reply fit.
+ */
 export interface RuleItem {
   readonly scene: string;
   readonly right: string;
   readonly wrong: readonly (readonly [option: string, reason: Reason])[];
+  readonly check?: Text;
 }
 
 /**
- * parseRules reads situations separated by blank lines: the scene on its first line or lines, then `= right` and
- * `- wrong ~reason` once for each wrong option.
+ * parseRules reads situations separated by blank lines: the scene on its first line or lines, then `= right`,
+ * `- wrong ~reason` once for each wrong option, and optionally `% check | English`, the check of this scene, which
+ * takes the place of the check of the rule.
  */
 export function parseRules(data: string): readonly RuleItem[] {
   return data
@@ -491,14 +598,25 @@ export function parseRules(data: string): readonly RuleItem[] {
       if (at < 1) throw new Error(`situation: ${rows[0]}`);
       const scene = rows.slice(0, at).join("\n");
       const right = rows[at]!.slice(1).trim();
-      const wrong = rows.slice(at + 1).map((row): [string, Reason] => {
-        const m = /^-\s*(.+?)\s*~(\w+)$/u.exec(row);
-        if (!m || !(m[2]! in REASONS)) throw new Error(`situation ${scene}: wrong option ${row}`);
-        return [m[1]!, m[2] as Reason];
-      });
+      const checks = rows.slice(at + 1).filter((r) => r.startsWith("%"));
+      if (checks.length > 1) throw new Error(`situation ${rows[0]}: more than one check`);
+      const wrong = rows
+        .slice(at + 1)
+        .filter((r) => !r.startsWith("%"))
+        .map((row): [string, Reason] => {
+          const m = /^-\s*(.+?)\s*~(\w+)$/u.exec(row);
+          if (!m || !(m[2]! in REASONS)) throw new Error(`situation ${scene}: wrong option ${row}`);
+          return [m[1]!, m[2] as Reason];
+        });
       if (wrong.length < 2) throw new Error(`situation ${scene}: needs two wrong options`);
       if (new Set([right, ...wrong.map((w) => w[0])]).size !== wrong.length + 1) throw new Error(`situation ${scene}: repeats an option`);
-      return { scene, right, wrong };
+      if (checks[0] === undefined) return { scene, right, wrong };
+      const [zh, en] = checks[0]
+        .slice(1)
+        .split(" | ")
+        .map((x) => x.trim());
+      if (!zh || !en) throw new Error(`situation ${scene}: a check needs Chinese and English`);
+      return { scene, right, wrong, check: t(en, zh) };
     });
 }
 
@@ -529,9 +647,10 @@ export function ruleGenerator(question: Text, items: readonly RuleItem[], rule: 
     const context = { sentence: item.scene, ending: item.scene };
     const reasons = options.filter((o) => o !== item.right).map((o) => reasonOf(o, item.wrong.find((w) => w[0] === o)![1], context));
     const list = (locale: "en" | "zh-CN") => reasons.map((r) => `- ${r[locale]}`).join("\n");
+    const check = item.check ?? rule.check;
     const solution = t(
-      `**${heads.find.en}** ${rule.step.en}\n\n**${heads.choose.en}** “${item.right}”\n\n**Check.** ${rule.check.en}\n\nThe other options:\n\n${list("en")}`,
-      `**${heads.find["zh-CN"]}**${rule.step["zh-CN"]}\n\n**${heads.choose["zh-CN"]}**“${item.right}”\n\n**检验。** ${rule.check["zh-CN"]}\n\n其他选项：\n\n${list("zh-CN")}`,
+      `**${heads.find.en}** ${rule.step.en}\n\n**${heads.choose.en}** “${item.right}”\n\n**Check.** ${check.en}\n\nThe other options:\n\n${list("en")}`,
+      `**${heads.find["zh-CN"]}**${rule.step["zh-CN"]}\n\n**${heads.choose["zh-CN"]}**“${item.right}”\n\n**检验。** ${check["zh-CN"]}\n\n其他选项：\n\n${list("zh-CN")}`,
     );
     return {
       prompt: joinText([question, same(quote(item.scene))]),

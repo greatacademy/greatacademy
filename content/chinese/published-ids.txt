@@ -37,6 +37,7 @@ topic book-dream-of-red-chamber book-dream-of-red-chamber-questions
 topic book-insect-world book-insect-world-questions
 topic book-journey-to-the-west book-journey-to-the-west-questions
 topic book-robinson-crusoe book-robinson-crusoe-questions
+topic book-twenty-thousand-leagues book-twenty-thousand-leagues-questions
 topic book-water-margin book-water-margin-questions
 topic classical-function-words-10-01 classical-function-words-10-01-nai classical-function-words-10-01-qie
 topic classical-function-words-10-02 classical-function-words-10-02-ruo classical-function-words-10-02-yan
@@ -2574,6 +2575,7 @@ topic pinyin-spelling pinyin-spelling-reading pinyin-spelling-writing
 topic pinyin-third-tones pinyin-third-tones-saying pinyin-third-tones-writing
 topic pinyin-tones pinyin-tones-naming pinyin-tones-placing
 topic pinyin-yi-and-bu pinyin-yi-and-bu-bu pinyin-yi-and-bu-yi
+topic planning-7-outline planning-7-outline-centre planning-7-outline-order
 topic punctuation-commas punctuation-commas-checking punctuation-commas-marks
 topic punctuation-dashes punctuation-dashes-checking punctuation-dashes-marks
 topic punctuation-ellipses punctuation-ellipses-checking punctuation-ellipses-marks
@@ -2612,6 +2614,13 @@ topic reading-6-fiction reading-6-fiction-people reading-6-fiction-setting
 topic reading-6-non-continuous reading-6-non-continuous-read reading-6-non-continuous-use
 topic reading-6-poems reading-6-poems-feeling reading-6-poems-rhythm
 topic reading-6-prose reading-6-prose-expression reading-6-prose-feeling
+topic reading-7-classical reading-7-classical-meaning reading-7-classical-words
+topic reading-7-description reading-7-description-effect reading-7-description-method
+topic reading-7-expository reading-7-expository-method reading-7-expository-object
+topic reading-7-narrative reading-7-narrative-detail reading-7-narrative-thread
+topic reading-7-news reading-7-news-elements reading-7-news-fact
+topic reading-7-poems reading-7-poems-feeling reading-7-poems-scene
+topic reading-7-prose reading-7-prose-feeling reading-7-prose-language
 topic reading-aloud-1 reading-aloud-1-texts
 topic reading-aloud-10 reading-aloud-10-texts
 topic reading-aloud-11 reading-aloud-11-texts
@@ -3146,6 +3155,10 @@ topic speaking-6-interview speaking-6-interview-follow speaking-6-interview-ques
 topic speaking-6-presenting speaking-6-presenting-engage speaking-6-presenting-structure
 topic speaking-6-responding speaking-6-responding-grasp speaking-6-responding-respond
 topic speaking-6-short-speech speaking-6-short-speech-fit speaking-6-short-speech-point
+topic speaking-7-impromptu speaking-7-impromptu-moment speaking-7-impromptu-point
+topic speaking-7-intent speaking-7-intent-meaning speaking-7-intent-reply
+topic speaking-7-proper speaking-7-proper-listener speaking-7-proper-occasion
+topic speaking-7-retelling speaking-7-retelling-relay speaking-7-retelling-retell
 topic strokes-basic strokes-basic-count strokes-basic-first
 topic strokes-order strokes-order-next strokes-order-rule
 topic strokes-turning strokes-turning-count strokes-turning-next
@@ -3224,6 +3237,10 @@ topic writing-6-reflection writing-6-reflection-link writing-6-reflection-point
 topic writing-6-scene writing-6-scene-feeling writing-6-scene-order
 topic writing-7-center writing-7-center-emphasis writing-7-center-material
 topic writing-7-detail writing-7-detail-meaning writing-7-detail-telling
+topic writing-7-expand-condense writing-7-expand-condense-condense writing-7-expand-condense-expand
+topic writing-7-feeling writing-7-feeling-carry writing-7-feeling-express
+topic writing-7-imagination writing-7-imagination-link writing-7-imagination-meaning
+topic writing-7-practical writing-7-practical-application writing-7-practical-suggestion
 topic writing-8-explain writing-8-explain-accurate writing-8-explain-order
 topic writing-8-speech writing-8-speech-spoken writing-8-speech-view
 topic writing-9-argue writing-9-argue-methods writing-9-argue-thesis
