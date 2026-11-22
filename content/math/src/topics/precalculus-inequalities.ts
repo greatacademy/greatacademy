@@ -18,9 +18,9 @@ import {
   union,
 } from "@ga/subject-math";
 import { precalculusDrawings } from "../explanation-drawings-precalculus.ts";
-import { type Reason, reasoned } from "../wrong-reasons.ts";
 import { choiceProblem, intervalProblem, numberProblem, steps, withMistakes, yesNo } from "../problems.ts";
 import { listed, stepLabel } from "../solution-kit.ts";
+import { type Reason, reasoned } from "../wrong-reasons.ts";
 
 // Precalculus unit 3: inequalities (modules 3.6 to 3.8).
 

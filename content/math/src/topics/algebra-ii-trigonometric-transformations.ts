@@ -3117,7 +3117,7 @@ $$\\frac{2\\pi}{\\pi} = 2 \\text{ 秒},$$
             ),
             answer: ans,
             solution: join(
-              label(1, "Say when the depth is " + (high ? "greatest" : "least"), high ? "说明何时水深最大" : "说明何时水深最小"),
+              label(1, `Say when the depth is ${high ? "greatest" : "least"}`, high ? "说明何时水深最大" : "说明何时水深最小"),
               high
                 ? t(
                     `The cosine term is added with a positive coefficient, so the depth is greatest when the cosine is $1$. The cosine is $1$ at the angles $0, \\pm 2\\pi, \\ldots$`,
@@ -3164,7 +3164,7 @@ $$\\frac{2\\pi}{\\pi} = 2 \\text{ 秒},$$
           answer: ans,
           solveFor: "t",
           solution: join(
-            label(1, "Say when the sine is " + (high ? "1" : "-1"), high ? "说明何时正弦为 1" : "说明何时正弦为 -1"),
+            label(1, `Say when the sine is ${high ? "1" : "-1"}`, high ? "说明何时正弦为 1" : "说明何时正弦为 -1"),
             t(
               `The sine term is added with the positive coefficient $${A}$, so the temperature is ${high ? "highest when the sine is $1$" : "lowest when the sine is $-1$"}. The sine is ${high ? "$1$ at $\\frac{\\pi}{2}$" : "$-1$ at $-\\frac{\\pi}{2}$"} plus whole turns of $2\\pi$.`,
               `正弦项以正系数 $${A}$ 加上，所以${high ? "正弦为 $1$ 时气温最高" : "正弦为 $-1$ 时气温最低"}。正弦在 ${high ? "$\\frac{\\pi}{2}$" : "$-\\frac{\\pi}{2}$"} 加上 $2\\pi$ 的整数倍处为 ${high ? "$1$" : "$-1$"}。`,

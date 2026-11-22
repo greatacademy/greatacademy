@@ -4,8 +4,8 @@ import { type Compass, linear, type Mark, type PlaneMark, type Point, plane, Q, 
 import { motionDrawings } from "../explanation-drawings-angles.ts";
 import { geometryDrawings2 } from "../explanation-drawings-geometry-2.ts";
 import { congruenceDrawings } from "../explanation-drawings-triangles.ts";
-import { choiceProblem, numberProblem, reasonChoice, steps, verdictChoice, yesNo } from "../problems.ts";
 import { movedPolygon } from "../motion-figures.ts";
+import { choiceProblem, numberProblem, reasonChoice, steps, verdictChoice, yesNo } from "../problems.ts";
 import { stepLabel } from "../solution-kit.ts";
 import { reasoned } from "../wrong-reasons.ts";
 
