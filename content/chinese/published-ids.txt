@@ -58,6 +58,7 @@ topic connectives-1 connectives-1-choosing connectives-1-relations
 topic connectives-2 connectives-2-checking connectives-2-choosing
 topic dictionary-pinyin dictionary-pinyin-letter dictionary-pinyin-order
 topic dictionary-radicals dictionary-radicals-radical dictionary-radicals-strokes
+topic dictionary-words dictionary-words-character dictionary-words-word
 topic faulty-ambiguous faulty-ambiguous-finding faulty-ambiguous-fixing
 topic faulty-contradictions faulty-contradictions-finding faulty-contradictions-fixing
 topic faulty-illogical faulty-illogical-finding faulty-illogical-fixing
@@ -197,6 +198,8 @@ topic idioms-9-01 idioms-9-01-meaning idioms-9-01-use idioms-9-01-writing
 topic idioms-9-02 idioms-9-02-meaning idioms-9-02-use idioms-9-02-writing
 topic idioms-9-03 idioms-9-03-meaning idioms-9-03-use idioms-9-03-writing
 topic idioms-9-04 idioms-9-04-meaning idioms-9-04-use idioms-9-04-writing
+topic language-3-similar-characters language-3-similar-characters-form language-3-similar-characters-sound
+topic language-4-polyphones language-4-polyphones-meaning language-4-polyphones-word
 topic level-1-characters-01 level-1-characters-01-form level-1-characters-01-meaning level-1-characters-01-reading
 topic level-1-characters-02 level-1-characters-02-form level-1-characters-02-meaning level-1-characters-02-reading
 topic level-1-characters-03 level-1-characters-03-form level-1-characters-03-meaning level-1-characters-03-reading
@@ -2581,6 +2584,18 @@ topic reading-1-stories reading-1-stories-happens reading-1-stories-word
 topic reading-2-fables reading-2-fables-happened reading-2-fables-teaches
 topic reading-2-fairy-tales reading-2-fairy-tales-imagined reading-2-fairy-tales-wants
 topic reading-2-science reading-2-science-facts reading-2-science-reasons
+topic reading-3-fables reading-3-fables-happened reading-3-fables-lesson
+topic reading-3-fairy-tales reading-3-fairy-tales-feelings reading-3-fairy-tales-gist
+topic reading-3-key-sentences reading-3-key-sentences-context reading-3-key-sentences-key
+topic reading-3-main-idea reading-3-main-idea-paragraph reading-3-main-idea-text
+topic reading-3-poems reading-3-poems-meaning reading-3-poems-picture
+topic reading-3-science reading-3-science-facts reading-3-science-reasons
+topic reading-4-everyday-texts reading-4-everyday-texts-do reading-4-everyday-texts-facts
+topic reading-4-feelings reading-4-feelings-feeling reading-4-feelings-words
+topic reading-4-folk-tales reading-4-folk-tales-people reading-4-folk-tales-story
+topic reading-4-myths reading-4-myths-happened reading-4-myths-imagined
+topic reading-4-narrative reading-4-narrative-gist reading-4-narrative-people
+topic reading-4-skimming reading-4-skimming-gist reading-4-skimming-where
 topic reading-aloud-1 reading-aloud-1-texts
 topic reading-aloud-10 reading-aloud-10-texts
 topic reading-aloud-11 reading-aloud-11-texts
@@ -3074,6 +3089,8 @@ topic recognizing-characters-9-11 recognizing-characters-9-11-reading recognizin
 topic recognizing-characters-9-12 recognizing-characters-9-12-reading recognizing-characters-9-12-writing
 topic recognizing-characters-9-13 recognizing-characters-9-13-reading recognizing-characters-9-13-writing
 topic recognizing-characters-9-14 recognizing-characters-9-14-reading recognizing-characters-9-14-writing
+topic revising-3 revising-3-characters revising-3-words
+topic revising-4 revising-4-sentences revising-4-words
 topic rhetoric-1 rhetoric-1-finding rhetoric-1-naming
 topic rhetoric-2 rhetoric-2-finding rhetoric-2-naming
 topic rhetoric-3 rhetoric-3-finding rhetoric-3-naming
@@ -3095,6 +3112,14 @@ topic speaking-1-telling speaking-1-telling-missing speaking-1-telling-order
 topic speaking-2-asking speaking-2-asking-address speaking-2-asking-clear
 topic speaking-2-discussing speaking-2-discussing-answering speaking-2-discussing-suggesting
 topic speaking-2-messages speaking-2-messages-who-when speaking-2-messages-whole
+topic speaking-3-discussing speaking-3-discussing-other-view speaking-3-discussing-reason
+topic speaking-3-listening speaking-3-listening-asking speaking-3-listening-main
+topic speaking-3-relaying speaking-3-relaying-main speaking-3-relaying-who
+topic speaking-3-telling speaking-3-telling-feeling speaking-3-telling-order
+topic speaking-4-introducing speaking-4-introducing-needs speaking-4-introducing-order
+topic speaking-4-occasions speaking-4-occasions-phone speaking-4-occasions-visit
+topic speaking-4-persuading speaking-4-persuading-gentle speaking-4-persuading-reason
+topic speaking-4-storytelling speaking-4-storytelling-detail speaking-4-storytelling-livelier
 topic strokes-basic strokes-basic-count strokes-basic-first
 topic strokes-order strokes-order-next strokes-order-rule
 topic strokes-turning strokes-turning-count strokes-turning-next
@@ -3152,9 +3177,15 @@ topic writing-11-proposal writing-11-proposal-actions writing-11-proposal-form
 topic writing-2-imagination writing-2-imagination-happens writing-2-imagination-like
 topic writing-2-picture writing-2-picture-order writing-2-picture-who
 topic writing-3-diary writing-3-diary-change writing-3-diary-observed
+topic writing-3-favourite-thing writing-3-favourite-thing-look writing-3-favourite-thing-why
+topic writing-3-imagination writing-3-imagination-story writing-3-imagination-vivid
+topic writing-3-note writing-3-note-form writing-3-note-polite
 topic writing-3-paragraph writing-3-paragraph-details writing-3-paragraph-idea
 topic writing-4-event writing-4-event-detail writing-4-event-parts
+topic writing-4-imagination writing-4-imagination-follows writing-4-imagination-vivid
 topic writing-4-letter writing-4-letter-detail writing-4-letter-form
+topic writing-4-observation writing-4-observation-change writing-4-observation-detail
+topic writing-4-place writing-4-place-look writing-4-place-why
 topic writing-5-explain writing-5-explain-features writing-5-explain-methods
 topic writing-5-person writing-5-person-description writing-5-person-example
 topic writing-6-argue writing-6-argue-evidence writing-6-argue-reasoning

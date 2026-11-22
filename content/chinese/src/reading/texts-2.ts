@@ -20,16 +20,16 @@ export const FABLES = `
 - 田里的苗长得很好 ~opposite
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
 = 不能把碰巧遇到的事，当成天天都会有的事 | 兔子再也没有来
-- 兔子跑得很快 ~lesson
-- 种田很累，要多休息 ~lesson
+- 兔子跑得很快 ~detail
+- 种田很累，要多休息 ~reversed
 ?2 种田的人错在哪里？ | Where did the farmer go wrong?
 = 以为兔子还会撞上来，就不干活了 | 等着兔子再撞上来
-- 他把兔子拿了回去 ~lesson
-- 他在田里干活 ~lesson
+- 他把兔子拿了回去 ~detail
+- 他在田里干活 ~reversed
 ?2 种田的人应该怎么做？ | What should the farmer have done?
 = 接着好好种田 | 从此，他不再种田
 - 天天坐着等兔子 ~opposite
-- 把树桩搬回家 ~lesson
+- 把树桩搬回家 ~never
 
 # 拔苗助长
 古时候有个人，他觉得田里的小苗长得太慢了。一天，他跑到田里，把小苗一棵一棵往上拔高了一点。回到家，他说：“今天累坏了，我帮小苗长高了！”他的儿子跑到田里一看，小苗都死了。
@@ -47,16 +47,16 @@ export const FABLES = `
 - 被儿子拔走了 ~unsaid
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
 = 做事不能太急，急了反而做坏 | 小苗都死了
-- 小苗长得很慢 ~lesson
-- 种田要早早回家 ~lesson
+- 小苗长得很慢 ~detail
+- 种田要早早回家 ~never
 ?2 这个人错在哪里？ | Where did the man go wrong?
 = 他想让小苗快快长高，就去拔它们 | 把小苗一棵一棵往上拔高了一点
-- 他回家太晚了 ~lesson
-- 他告诉了儿子 ~lesson
+- 他回家太晚了 ~never
+- 他告诉了儿子 ~detail
 ?2 小苗应该怎么长？ | How should the seedlings grow?
 = 让它们自己慢慢长 | 他觉得田里的小苗长得太慢了
 - 每天拔高一点 ~opposite
-- 一天就长大 ~lesson
+- 一天就长大 ~reversed
 
 # 亡羊补牢
 从前，有个人养了很多羊。一天早上，他发现少了一只羊，原来羊圈破了一个洞，狼从洞里进来，把羊拉走了。邻居叫他快把洞补上，他说：“羊已经没了，还补洞干什么？”第二天，羊又少了一只。他这才明白过来，赶快把洞补好了。从此，他的羊再也没有少过。
@@ -74,11 +74,11 @@ export const FABLES = `
 - 狼天天都来 ~opposite
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
 = 出了错，赶快改正，还来得及 | 他的羊再也没有少过
-- 狼是很坏的动物 ~lesson
-- 养羊一定会少羊 ~lesson
+- 狼是很坏的动物 ~onepart
+- 养羊一定会少羊 ~reversed
 ?2 他一开始错在哪里？ | Where did he go wrong at first?
 = 羊没了，他觉得补洞也没用 | 羊已经没了，还补洞干什么
-- 他养了很多羊 ~lesson
+- 他养了很多羊 ~detail
 - 他听了邻居的话 ~opposite
 ?2 他后来做对了什么？ | What did he do right later?
 = 明白过来，赶快把洞补好 | 赶快把洞补好了
@@ -101,16 +101,16 @@ export const FABLES = `
 - 别人帮他找到了 ~unsaid
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
 = 事情变了，办法也要跟着变 | 可是怎么也找不到
-- 坐船要小心 ~lesson
-- 剑不要带在身边 ~lesson
+- 坐船要小心 ~never
+- 剑不要带在身边 ~never
 ?2 这个人为什么找不到剑？ | Why could he not find his sword?
 = 船一直在走，剑没有跟着船走 | 船到江中间
-- 他刻的记号不清楚 ~lesson
+- 他刻的记号不清楚 ~never
 - 江水太冷了 ~unsaid
 ?2 他错在哪里？ | Where did he go wrong?
 = 以为剑还在记号下面 | 我的剑是从这里掉下去的
-- 他坐船过江 ~lesson
-- 他跳下了水 ~lesson
+- 他坐船过江 ~detail
+- 他跳下了水 ~detail
 
 # 狐假虎威
 老虎在山里找吃的，捉住了一只狐狸。狐狸说：“我是天上派来管山里动物的，你敢吃我？不信，你跟在我后面走一走。”老虎跟着狐狸往前走。野兔、小羊看见了，都吓得跑开了。老虎以为大家怕的是狐狸，就放了它。其实，大家怕的是老虎。
@@ -132,8 +132,8 @@ export const FABLES = `
 - 野兔 ~who
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
 = 不要被借着别人的力量吓人的人骗了 | 其实，大家怕的是老虎
-- 老虎跑得很快 ~lesson
-- 狐狸很可爱 ~lesson
+- 老虎跑得很快 ~never
+- 狐狸很可爱 ~never
 ?2 狐狸是靠什么让大家害怕的？ | What made the animals afraid of the fox?
 = 走在它后面的老虎 | 你跟在我后面走一走
 - 它自己很厉害 ~opposite
@@ -159,12 +159,12 @@ export const FABLES = `
 - 小鸟告诉它的 ~opposite
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
 = 看得少，就不要以为自己什么都知道 | 别说大话了，天不过井口那么大
-- 青蛙会跳得很高 ~lesson
-- 井里的水很好喝 ~lesson
+- 青蛙会跳得很高 ~never
+- 井里的水很好喝 ~never
 ?2 青蛙怎样才能知道天有多大？ | How could the frog learn how big the sky is?
 = 跳出井口去看一看 | 你跳出井口来看一看吧
-- 听小鸟说大话 ~lesson
-- 在井底多看几天 ~lesson
+- 听小鸟说大话 ~reversed
+- 在井底多看几天 ~reversed
 
 # 画蛇添足
 古时候，几个人分一壶酒。大家说：“谁先在地上画好一条蛇，酒就给谁喝。”一个人很快画好了，他拿起酒壶，看别人还没画完，就说：“我还能给蛇画上脚呢！”他正画着脚，另一个人画好了蛇，拿过酒壶说：“蛇没有脚，你画的不是蛇。”说完，就把酒喝了。
@@ -182,8 +182,8 @@ export const FABLES = `
 - 大家一起喝了 ~unsaid
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
 = 做多余的事，反而会把事情做坏 | 蛇没有脚，你画的不是蛇
-- 画画要画得快 ~lesson
-- 酒不要给别人喝 ~lesson
+- 画画要画得快 ~onepart
+- 酒不要给别人喝 ~never
 ?2 先画好的人为什么没有喝到酒？ | Why did the first to finish not get the wine?
 = 他给蛇画了脚，画的不是蛇了 | 蛇没有脚，你画的不是蛇
 - 他画得太慢了 ~opposite
@@ -209,8 +209,8 @@ export const FABLES = `
 - 一起到的 ~unsaid
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
 = 不能骄傲，一步一步不停地做，就能成功 | 乌龟一步一步往前爬，一刻也没有停
-- 乌龟比兔子跑得快 ~opposite
-- 跑步以前要睡觉 ~lesson
+- 乌龟比兔子跑得快 ~reversed
+- 跑步以前要睡觉 ~reversed
 ?2 兔子为什么输了？ | Why did the hare lose?
 = 它觉得自己跑得快，就停下来睡觉 | 我先睡一会儿吧
 - 它跑得太慢了 ~opposite
@@ -236,16 +236,16 @@ export const FABLES = `
 - 孩子把狼打跑了 ~unsaid
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
 = 要说真话，说假话的人，别人就不再相信他 | 可是谁也不信他了
-- 放羊很没意思 ~lesson
-- 狼很可怕，不要上山 ~lesson
+- 放羊很没意思 ~onepart
+- 狼很可怕，不要上山 ~never
 ?2 为什么第三天谁也不信孩子了？ | Why did no one believe the boy on the third day?
 = 他前两次说的都是假话 | 第二天，他又这样喊，农民们又跑来了，还是没有狼
 - 他喊得太小声了 ~unsaid
 - 农民们都不在家 ~unsaid
 ?2 孩子错在哪里？ | Where did the boy go wrong?
 = 拿说假话来开玩笑 | 孩子哈哈大笑
-- 他上山放羊 ~lesson
-- 他大喊救命 ~lesson
+- 他上山放羊 ~detail
+- 他大喊救命 ~detail
 
 # 狐狸和葡萄
 秋天，一只狐狸走过葡萄架下，看见架上挂着一串串紫色的葡萄。它很想吃，就跳起来去摘，可是葡萄太高了，跳了几次也够不着。狐狸只好走开了，一边走一边说：“这些葡萄一定是酸的，不好吃。”
@@ -267,8 +267,8 @@ export const FABLES = `
 - 是甜的，狐狸吃过了 ~unsaid
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
 = 自己做不到，不要说那件事不好 | 这些葡萄一定是酸的，不好吃
-- 葡萄很好吃 ~lesson
-- 狐狸跳得不高 ~lesson
+- 葡萄很好吃 ~never
+- 狐狸跳得不高 ~detail
 ?2 狐狸为什么说葡萄是酸的？ | Why did the fox say the grapes were sour?
 = 它吃不到，就说葡萄不好 | 狐狸只好走开了
 - 它尝了一个 ~unsaid

@@ -3,21 +3,18 @@
 // its ten or more texts, three questions a text, and each comes after the recognition batch by which nearly every
 // character of its texts has been taught.
 
-import { type Text, type TopicDef, t } from "@ga/content";
-import { point } from "@ga/subject-chinese";
+import { t } from "@ga/content";
 
 import type { GradeTopic } from "../grammar/index.ts";
 import { RHYMES, SIGNS, STORIES } from "./texts-1.ts";
 import { FABLES, FAIRY_TALES, NATURE } from "./texts-2.ts";
 import {
   isHan,
-  type Kind,
   PASSAGE,
   type Piece,
-  parsePieces,
-  pieceGenerator,
-  readableAfter,
+  quoted,
   SIGN,
+  readingTopicOf as topicOf,
   VERSE,
   type Wording,
 } from "./topic-kit.ts";
@@ -54,14 +51,14 @@ const byRhyme: Wording = (q, piece) => {
 };
 
 /** byLesson words a question on what a fable teaches: find how it ends, ask why, and tell it back with the lesson. */
-const byLesson: Wording = (q) => ({
+export const byLesson: Wording = (q) => ({
   heads: {
     find: t("**Step 1: find how it turns out.**", "**第一步：找到故事的结果。**"),
     choose: t("**Step 2: ask why.**", "**第二步：想想为什么。**"),
   },
   find: t(
-    `A fable teaches by what happens and how it ends. The question asks: ${q.ask.en} The words that show it are: “${q.clue}”`,
-    `寓言用发生的事和故事的结果讲道理。题目问的是：${q.ask["zh-CN"]}说明这一点的话是：“${q.clue}”`,
+    `A fable teaches by what happens and how it ends. The question asks: ${q.ask.en} The words that show it are: ${quoted(q.clue, "en")}`,
+    `寓言用发生的事和故事的结果讲道理。题目问的是：${q.ask["zh-CN"]}说明这一点的话是：${quoted(q.clue, "zh-CN")}`,
   ),
   choose: t(
     `Ask what these words show about what the character did and why it turned out so: “${q.right}”.`,
@@ -80,8 +77,8 @@ const byImagining: Wording = (q) => ({
     choose: t("**Step 2: ask whether it could really happen.**", "**第二步：问问它会不会真的发生。**"),
   },
   find: t(
-    `What is imagined cannot happen in real life, such as things and animals that talk and feel like people. The question asks: ${q.ask.en} Look at the words: “${q.clue}”`,
-    `想象出来的事，生活中不会真的有，比如东西和动物像人一样说话、有心情。题目问的是：${q.ask["zh-CN"]}看这句话：“${q.clue}”`,
+    `What is imagined cannot happen in real life, such as things and animals that talk and feel like people. The question asks: ${q.ask.en} Look at the words: ${quoted(q.clue, "en")}`,
+    `想象出来的事，生活中不会真的有，比如东西和动物像人一样说话、有心情。题目问的是：${q.ask["zh-CN"]}看这句话：${quoted(q.clue, "zh-CN")}`,
   ),
   choose: t(
     `Ask of each option: could this happen in real life? By what the question asks, the answer is “${q.right}”.`,
@@ -92,45 +89,6 @@ const byImagining: Wording = (q) => ({
     `再问一遍答案“${q.right}”：生活中会真的这样吗？题目问想象的事，答案就应该是不会；题目问真的事，答案就应该是会。答案和题目问的一致。`,
   ),
 });
-
-/** Spec is a reading topic of the stage: its texts, two knowledge points and how each is worded. */
-interface Spec {
-  readonly grade: number;
-  readonly id: string;
-  readonly title: Text;
-  readonly summary: Text;
-  readonly intro: Text;
-  readonly data: string;
-  readonly kind: Kind;
-  readonly after?: string;
-  readonly points: readonly (readonly [suffix: string, title: Text, explanation: Text, wording?: Wording])[];
-}
-
-/** topicOf builds a reading topic from its spec. */
-function topicOf(spec: Spec): GradeTopic {
-  const pieces = parsePieces(spec.data, spec.points.length);
-  if (pieces.length < 10) throw new Error(`${spec.id}: ${pieces.length} texts, at least 10 needed`);
-  const topic: TopicDef = {
-    id: spec.id,
-    title: spec.title,
-    summary: spec.summary,
-    intro: spec.intro,
-    prerequisites: [
-      readableAfter(
-        pieces.map((p) => p.title + p.body),
-        spec.grade,
-      ),
-      ...(spec.after ? [spec.after] : []),
-    ],
-    encompasses: [],
-    xp: 15,
-    strand: "reading",
-    knowledgePoints: spec.points.map(([suffix, title, explanation, wording], k) =>
-      point(`${spec.id}-${suffix}`, title, explanation, pieceGenerator(pieces, k, spec.kind, wording)),
-    ),
-  };
-  return { grade: spec.grade, topic };
-}
 
 /** stageReadingTopics are the reading topics of grades 1 and 2, in order. */
 export const stageReadingTopics: readonly GradeTopic[] = [

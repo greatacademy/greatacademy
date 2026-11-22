@@ -689,7 +689,7 @@ const ANSWERING = parseRules(`
 `);
 
 /** rule builds the rule of a knowledge point of speaking, with the headings of its steps where the default ones do not fit. */
-const rule = (step: Text, check: Text, heads?: Rule["heads"]): Rule => (heads ? { heads, step, check } : { step, check });
+export const rule = (step: Text, check: Text, heads?: Rule["heads"]): Rule => (heads ? { heads, step, check } : { step, check });
 
 /** ORDER_HEADS are the headings of the steps that put a telling in order. */
 const ORDER_HEADS = {
@@ -704,10 +704,11 @@ const GAP_HEADS = {
 };
 
 /** ruleTexts are the texts of situations, to find the batch by which they can be read. */
-const ruleTexts = (items: readonly RuleItem[]): readonly string[] => items.flatMap((i) => [i.scene, i.right, ...i.wrong.map((w) => w[0])]);
+export const ruleTexts = (items: readonly RuleItem[]): readonly string[] =>
+  items.flatMap((i) => [i.scene, i.right, ...i.wrong.map((w) => w[0])]);
 
 /** Spec is a speaking topic of the stage. */
-interface Spec {
+export interface Spec {
   readonly grade: number;
   readonly id: string;
   readonly title: Text;
@@ -719,7 +720,7 @@ interface Spec {
 }
 
 /** topicOf builds a speaking topic from its spec, after the topics known before it. */
-function topicOf(spec: Spec, known: readonly TopicDef[]): GradeTopic {
+export function topicOf(spec: Spec, known: readonly TopicDef[]): GradeTopic {
   return {
     grade: spec.grade,
     topic: {
@@ -739,7 +740,7 @@ function topicOf(spec: Spec, known: readonly TopicDef[]): GradeTopic {
 }
 
 /** pieceTexts are the texts of talks, to find the batch by which they can be read. */
-const pieceTexts = (pieces: readonly Piece[]): readonly string[] =>
+export const pieceTexts = (pieces: readonly Piece[]): readonly string[] =>
   pieces.flatMap((p) => [p.title, p.body, ...p.questions.flat().flatMap((q) => [q.right, ...q.wrong.map((w) => w[0])])]);
 
 /** SPECS are the speaking topics of grades 1 and 2, in order. */

@@ -11,6 +11,7 @@ import { connectiveTopics, faultyTopics, type GradeTopic, punctuationTopics, rhe
 import { heritageTopics } from "./heritage/topics.ts";
 import { hskCourses } from "./hsk/courses.ts";
 import { idiomsByGrade } from "./idioms/index.ts";
+import { revisingTopics, stageThreeFourLanguage } from "./language/index.ts";
 import { levelOneCourse } from "./level-1/index.ts";
 import { levelTwoCourse } from "./level-2/index.ts";
 import { levelThreeCourse } from "./level-3/index.ts";
@@ -22,9 +23,11 @@ import { levelEightCourse } from "./level-8/index.ts";
 import { levelNineCourse } from "./level-9/index.ts";
 import { readingAloudTopics } from "./oral/reading-aloud.ts";
 import { stageSpeakingTopics } from "./oral/speaking-1-2.ts";
+import { stageThreeFourSpeaking } from "./oral/speaking-3-4.ts";
 import { heritageReading } from "./reading/heritage.ts";
 import { chineseReading } from "./reading/index.ts";
 import { stageReadingTopics } from "./reading/stage-1-2.ts";
+import { stageThreeFourReading } from "./reading/stage-3-4.ts";
 import { recitedPoems } from "./recitation/index.ts";
 import { componentTopics, strokeOrderTopics } from "./strokes/index.ts";
 import { levelHandwritingByLevel } from "./strokes/levels.ts";
@@ -34,6 +37,7 @@ import { earlyJudgedTopics } from "./writing/early-judged.ts";
 import { earlySentenceTopics } from "./writing/early-sentences.ts";
 import { writingTopics } from "./writing/index.ts";
 import { laterWritingTopics } from "./writing/later.ts";
+import { stageThreeFourJudged } from "./writing/stage-3-4.ts";
 
 const NUMERALS = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九"];
 
@@ -110,14 +114,14 @@ function writingModules(grade: number): readonly ModuleDef[] {
       ...(judged.length > 0 ? [{ title: t("Writing Sentences", "写话"), topics: judged }] : []),
     ];
   }
-  const topics = ofGrade([...writingTopics, ...laterWritingTopics], grade);
+  const topics = ofGrade([...writingTopics, ...laterWritingTopics, ...stageThreeFourJudged, ...revisingTopics], grade);
   return topics.length > 0 ? [{ title: t("Writing", grade >= 7 ? "写作" : "习作"), topics }] : [];
 }
 
 /** stageUnits are a grade's units of reading and of speaking, those it has. */
 function stageUnits(grade: number): CourseDef["units"] {
-  const reading = ofGrade(stageReadingTopics, grade);
-  const speaking = ofGrade(stageSpeakingTopics, grade);
+  const reading = ofGrade([...stageReadingTopics, ...stageThreeFourReading], grade);
+  const speaking = ofGrade([...stageSpeakingTopics, ...stageThreeFourSpeaking], grade);
   return [
     ...(reading.length > 0 ? [{ title: t("Reading", "阅读"), modules: [{ title: t("Reading", "阅读"), topics: reading }] }] : []),
     ...(speaking.length > 0
@@ -211,6 +215,14 @@ function gradeCourse(grade: number, description: CourseDef["description"]): Cour
       { title: t("Characters", "识字"), modules: recognitionModules(grade) },
       ...(handOf(grade).length > 0 ? [{ title: t("Writing Characters", "写字"), modules: setModules(handOf(grade)) }] : []),
       ...(wordModules(grade).length > 0 ? [{ title: t("Words", "词语"), modules: wordModules(grade) }] : []),
+      ...(ofGrade(stageThreeFourLanguage, grade).length > 0
+        ? [
+            {
+              title: t("Using Characters and Words", "字词运用"),
+              modules: [{ title: t("Using Characters and Words", "字词运用"), topics: ofGrade(stageThreeFourLanguage, grade) }],
+            },
+          ]
+        : []),
       ...(grammarModules(grade).length > 0 ? [{ title: t("Grammar and Punctuation", "语法与标点"), modules: grammarModules(grade) }] : []),
       ...(writingModules(grade).length > 0
         ? [{ title: t("Writing", grade >= 7 ? "写作" : grade <= 2 ? "写话" : "习作"), modules: writingModules(grade) }]

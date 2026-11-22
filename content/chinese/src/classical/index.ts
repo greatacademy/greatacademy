@@ -1,4 +1,4 @@
-// Classical language (文言) of grades 5 to 9 and senior secondary school (docs/chinese-curriculum.md §7): recited
+// Classical language (文言) of grades 3 to 9 and senior secondary school (docs/chinese-curriculum.md §7): recited
 // passages of classical prose, each following the one before in its grade, and the drills of content and function words
 // that read them.
 
@@ -9,25 +9,34 @@ import type { GradeTopic } from "../grammar/index.ts";
 import { type Poem, poemTopic } from "../recitation/poems.ts";
 import { classicalDrills } from "./drills.ts";
 import { gradeEightPassages, gradeNinePassages, gradeSevenPassages } from "./junior.ts";
-import { gradeFivePassages, gradeSixPassages } from "./passages.ts";
+import { gradeFivePassages, gradeFourPassages, gradeSixPassages, gradeThreePassages } from "./passages.ts";
 import { seniorRequiredPassages, seniorSelectivePassages } from "./senior.ts";
 import { seniorClassicalDrills } from "./senior-drills.ts";
 
-function grade(n: number, passages: readonly Poem[]): readonly GradeTopic[] {
+/**
+ * grade chains a grade's passages; pool holds the passages whose lines are offered against each one's, by default those
+ * of its grade, and for primary school all of its few passages, since a grade may have only one.
+ */
+function grade(n: number, passages: readonly Poem[], pool: readonly Poem[] = passages): readonly GradeTopic[] {
   return passages.map((passage, i) => ({
     grade: n,
     topic: poemTopic(
       passage,
       i === 0 ? [] : [passages[i - 1]!.id],
-      passages.filter((p) => p !== passage),
+      pool.filter((p) => p !== passage),
     ),
   }));
 }
 
-/** classicalPassages are the recited classical passages of grades 5 to 9 and senior secondary school, in order. */
+/** PRIMARY are the recited classical passages of grades 3 to 6. */
+const PRIMARY = [...gradeThreePassages, ...gradeFourPassages, ...gradeFivePassages, ...gradeSixPassages];
+
+/** classicalPassages are the recited classical passages of grades 3 to 9 and senior secondary school, in order. */
 export const classicalPassages: readonly GradeTopic[] = [
-  ...grade(5, gradeFivePassages),
-  ...grade(6, gradeSixPassages),
+  ...grade(3, gradeThreePassages, PRIMARY),
+  ...grade(4, gradeFourPassages, PRIMARY),
+  ...grade(5, gradeFivePassages, PRIMARY),
+  ...grade(6, gradeSixPassages, PRIMARY),
   ...grade(7, gradeSevenPassages),
   ...grade(8, gradeEightPassages),
   ...grade(9, gradeNinePassages),

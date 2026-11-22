@@ -115,6 +115,69 @@ export const WRITING_CRITERIA: readonly CriterionSpec[] = [
       "Does the entry tell how the thing observed has changed or what the writer noticed for the first time, and how the writer felt or what they wondered about it?",
     quoteWhenMet: true,
   },
+  // Grade 3: an imagined story.
+  {
+    id: "zh3-story-imagined",
+    version: "1",
+    question:
+      "Does the text tell a story that is imagined, such as one in which animals or things talk or something impossible happens, with a beginning, what happens and an ending?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh3-story-vivid",
+    version: "1",
+    question:
+      "Does the story show what its characters do, say or feel at its main moment, in at least a few sentences, rather than only naming what happened?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh3-story-stays",
+    version: "1",
+    question: "Does the story keep to the subject and the characters that the task gives, without wandering to something else?",
+    quoteWhenMet: false,
+  },
+  // Grade 3: a note left for someone.
+  {
+    id: "zh3-note-form",
+    version: "1",
+    question:
+      "Is the text set out as a Chinese note: the person it is for on the first line followed by a colon, the message, and the writer's name and the date or time at the end?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "zh3-note-clear",
+    version: "1",
+    question:
+      "Does the note say clearly what the reader needs to know or do, with the time, the place or the thing that matters, as the task asks?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh3-note-polite",
+    version: "1",
+    question: "Is the note polite and does it suit the person it is for, for example with 请, 谢谢 or 您 where they fit?",
+    quoteWhenMet: true,
+  },
+  // Grade 3: something one likes.
+  {
+    id: "zh3-thing-look",
+    version: "1",
+    question:
+      "Does the text describe what the thing looks like with at least two concrete details, such as its colour, shape, size or parts?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh3-thing-why",
+    version: "1",
+    question:
+      "Does the text make clear why the writer likes the thing, through what it can do, how the writer uses it or something that happened with it?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh3-thing-stays",
+    version: "1",
+    question: "Does every part of the text keep to the one thing of the task, without wandering to something else?",
+    quoteWhenMet: false,
+  },
   // Grade 4: telling an event.
   {
     id: "zh4-event-parts",
@@ -156,6 +219,70 @@ export const WRITING_CRITERIA: readonly CriterionSpec[] = [
     version: "1",
     question: "Does the body give concrete news, reasons or questions that the reader would want to know, rather than only general words?",
     quoteWhenMet: true,
+  },
+  // Grade 4: an observation.
+  {
+    id: "zh4-observe-detail",
+    version: "1",
+    question:
+      "Does the text give concrete details of what was observed, seen, heard, touched or smelt, such as its colour, shape, size or movements, rather than only saying it is nice?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh4-observe-change",
+    version: "1",
+    question:
+      "Does the text tell how the thing changed or what it did over time, in a clear order, such as day by day, from morning to night or season by season?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh4-observe-stays",
+    version: "1",
+    question: "Does every part of the text keep to the one thing observed in the task, without wandering to something else?",
+    quoteWhenMet: false,
+  },
+  // Grade 4: continuing a story.
+  {
+    id: "zh4-continue-follows",
+    version: "1",
+    question:
+      "Does the story go on from the beginning given in the task, with the same characters and what has already happened, without contradicting it?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh4-continue-ends",
+    version: "1",
+    question: "Does the story come to an ending in which what began in the given beginning is resolved?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh4-continue-vivid",
+    version: "1",
+    question:
+      "At the main moment of the story, does the text show what the characters do, say or feel, rather than telling it in a single sentence?",
+    quoteWhenMet: true,
+  },
+  // Grade 4: a place.
+  {
+    id: "zh4-place-look",
+    version: "1",
+    question:
+      "Does the text show what the place is like with at least two concrete details, such as its sights, sounds or what is found there?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh4-place-why",
+    version: "1",
+    question:
+      "Does the text make clear why the place is good or dear to the writer, through what one can do there or something that happened there?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh4-place-order",
+    version: "1",
+    question:
+      "Does the text describe the place in a clear order, such as part by part, from near to far or by the way one walks through it?",
+    quoteWhenMet: false,
   },
   // Grade 5: writing about a person.
   {

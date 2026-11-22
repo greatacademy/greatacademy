@@ -5,20 +5,30 @@
 // a clue that is not in the text, an option given twice, a reason it does not know.
 
 import { type Generator, joinText, type Problem, type Rng, same, type Text, type TopicDef, t } from "@ga/content";
-import { quote } from "@ga/subject-chinese";
+import { point, quote } from "@ga/subject-chinese";
 
 import { recognitionByGrade } from "../characters/index.ts";
+import type { GradeTopic } from "../grammar/index.ts";
 
-/** REASONS are why a wrong option is wrong, by tag: each says it of the option, in English and in Chinese. */
+/**
+ * REASONS are why a wrong option is wrong, by tag: each says it of the option, in English and in Chinese. In them, {s}
+ * stands for the sentence of the text that rules the option out, the one that answers the question, and {e} for the
+ * sentence the text ends with, which shows how a story turns out.
+ */
 export const REASONS = {
-  // Reading.
-  unsaid: ["the text does not say this.", "原文没有说到这一点。"],
-  other: ["this is in the text, but it answers another question.", "原文里有这个内容，可它回答的是别的问题。"],
-  opposite: ["this says the opposite of the text.", "这和原文说的正好相反。"],
-  part: ["this is only part of the answer.", "这只说到了一部分，不完整。"],
-  life: ["this may be so in life, but the text does not say it.", "生活中也许是这样，可原文并没有这样说。"],
-  who: ["this names the wrong one.", "说错了是谁（或是什么）。"],
-  sense: ["this does not fit the meaning of the sentence.", "放进句子里，意思讲不通。"],
+  // Details of a text: each quotes the sentence that rules the option out.
+  unsaid: ["the text never says this. What it says on this is: “{s}”", "原文没有说到这一点。说到这件事的是：“{s}”"],
+  other: [
+    "this is in the text, but it answers another question. This one is answered by: “{s}”",
+    "原文里有这个内容，可它回答的是别的问题。回答这个问题的是：“{s}”",
+  ],
+  opposite: ["the text says the opposite: “{s}”", "原文说的正好相反：“{s}”"],
+  part: ["this is only part of the answer. The text says all of it: “{s}”", "这只说到了一部分。原文说的是：“{s}”"],
+  life: ["this may be so in life, but the text says: “{s}”", "生活中也许是这样，可原文说的是：“{s}”"],
+  who: ["this names the wrong one. The text says: “{s}”", "说错了是谁（或是什么）。原文说的是：“{s}”"],
+  sense: ["put into its sentence, it does not make sense: “{s}”", "放进这句话里，意思讲不通：“{s}”"],
+  changed: ["this is not what was said. The words were: “{s}”", "和原来说的话不一样。原话是：“{s}”"],
+  // Verse.
   rhyme: ["it ends in a different sound, so it does not rhyme.", "它末尾的音不同，读起来不押韵。"],
   mixed: ["some of these characters end in a different sound, so they do not all rhyme.", "这几个字里有的韵母不同，读起来不都押韵。"],
   notend: [
@@ -27,30 +37,93 @@ export const REASONS = {
   ],
   rhymes: ["this line does end in the rhyme.", "这一句末尾的字是押韵的。"],
   final: ["the characters that end the lines do not end in this sound.", "句末的字读起来末尾不是这个音。"],
+  // What is imagined.
   real: ["this really happens; it is not imagined.", "这在生活中真的有，不是想象出来的。"],
   imagined: ["this is imagined; it does not happen in real life.", "这是想象出来的，生活中不会真的有。"],
-  lesson: ["the story does not teach this.", "故事讲的不是这个道理。"],
+  // The lesson or the main idea of a whole text.
+  detail: [
+    "this repeats something that happens in the text; it is not what the whole text shows or teaches.",
+    "这只是重复了文中的一件事，不是全文说明的意思或讲的道理。",
+  ],
+  reversed: ["this is the opposite of what the ending shows: “{e}”", "这和结尾说明的正好相反。结尾是：“{e}”"],
+  never: ["the text never mentions anything like this.", "文中根本没有说到这样的事。"],
+  narrow: ["this takes in only one part of what the text tells, not the whole of it.", "这只说到了文中的一部分内容，没有概括全部。"],
+  broad: ["this says more than the text does; it is too wide.", "说得太宽了，超出了文中说的内容。"],
+  // Key words and sentences.
+  literal: ["this is what the word often means, but not what it means here: “{s}”", "这是这个词平常的意思，可在这里讲不通：“{s}”"],
+  example: [
+    "this is one of the things the paragraph tells; the sentence that sums them all up is: “{s}”",
+    "这只是这一段讲到的一个方面。概括全段的是：“{s}”",
+  ],
+  place: ["the sentence that sums it up is not there. It is: “{s}”", "概括全段的句子不在这里，而是：“{s}”"],
+  onepart: ["this fits only one part of the text, not how it turns out: “{e}”", "这只符合文中的一部分，不符合最后的结果：“{e}”"],
   // Speaking.
   rude: ["this is not polite.", "这样说不礼貌。"],
   harsh: ["this is too sharp and would hurt the other person.", "语气太冲，别人听了会不高兴。"],
   off: ["this does not say what the moment needs.", "答非所问，没有说到这时该说的话。"],
   unclear: ["this is not clear: the listener cannot tell what is meant.", "说得不清楚，听的人不明白是什么意思。"],
-  missing: ["this leaves out something the listener needs.", "漏了要紧的内容。"],
-  told: ["the telling does say this.", "这一点已经讲了。"],
+  missing: ["this leaves out something the listener needs. The whole of it is: “{s}”", "漏了要紧的内容。完整的话是：“{s}”"],
+  told: ["the telling does say this: “{s}”", "这一点已经讲了：“{s}”"],
   order: ["this tells things out of order.", "先后顺序乱了。"],
   address: ["this calls the person in a way that does not suit them.", "称呼不合适。"],
   cutin: ["this cuts in before the other person has finished.", "抢着说，没有等别人把话说完。"],
   queue: ["this pushes in instead of waiting one's turn.", "插队，没有按顺序等。"],
   blame: ["this puts the blame elsewhere instead of saying sorry.", "把错推给别的，没有向别人道歉。"],
-  changed: ["this is not what was said.", "和原来说的话不一样。"],
   pushy: ["this only insists on one's own idea and does not talk it over.", "只坚持自己的想法，没有和别人商量。"],
+  said: ["this was said already: “{s}”", "这一点对方已经说清楚了：“{s}”"],
+  person: [
+    "this keeps “I” and “you” as the speaker said them; relayed, they must be turned round. The words were: “{s}”",
+    "没有把“我”“你”“他”按听的人换过来。原话是：“{s}”",
+  ],
+  noreason: ["this gives a view but not the reason for it.", "只说了自己的想法，没有说为什么。"],
+  weak: ["the reason given has nothing to do with the matter.", "说的理由和商讨的事没有关系。"],
+  dismiss: ["this brushes the other view aside without answering it.", "没有回应别人的意见，只是不听。"],
+  nofeeling: ["this tells what was seen but not how one felt.", "只讲了见到的事，没有说出自己的感受。"],
+  mismatch: ["this feeling does not follow from what happened: “{s}”", "这个感受和讲的事对不上：“{s}”"],
+  flat: ["this is told without the detail that makes it come alive.", "讲得太简单，没有让人听了像看见一样的细节。"],
+  noend: ["this stops before the story ends.", "故事还没讲完就停下了。"],
+  retold: ["this changes what happens in the story.", "把故事里发生的事讲错了。"],
+  aside: ["this detail has nothing to do with this moment of the story.", "这个细节和故事里这个时候的事没有关系。"],
+  needless: ["this tells what this listener does not need, and leaves out what they do.", "说的不是这个听的人需要的，他要知道的反倒没说。"],
+  noname: ["this does not say who is calling or whom one wants.", "没有说清自己是谁、要找谁。"],
+  abrupt: ["this ends the talk without a goodbye or thanks.", "没有道谢或道别，就把话断了。"],
+  unsuited: ["this does not suit being a guest in someone's home.", "做客时这样说、这样做不合适。"],
+  unmoved: ["this reason does not matter to the one being persuaded.", "这个理由和被劝的人关心的事没有关系，打动不了他。"],
+  plain: ["these words tell what is there or what happened; they do not show the feeling.", "这些话只写了景物或事情，没有表现出这种感情。"],
+  elsewhere: ["that part is about something else. The answer is here: “{s}”", "那一段讲的是别的内容，答案在这里：“{s}”"],
 } as const;
+
+/** Context is what a reason may quote: the sentence that answers the question, and the sentence the text ends with. */
+interface Context {
+  readonly sentence: string;
+  readonly ending: string;
+}
+
+/** sentencesOf splits a text into its sentences, each with its closing mark and any closing quotation mark. */
+const sentencesOf = (text: string): readonly string[] =>
+  (text.match(/[^。！？\n]+(?:[。！？]+[”’」]?)?/gu) ?? []).map((x) => x.trim()).filter((x) => x !== "");
+
+/** contextOf finds, in a piece, the sentence that holds the clue (or the clue itself, if it spans sentences) and the last sentence. */
+function contextOf(piece: Piece, clue: string): Context {
+  const all = sentencesOf(`${piece.title}\n${piece.body}`);
+  const body = sentencesOf(piece.body);
+  return { sentence: all.find((x) => x.includes(clue)) ?? clue, ending: body.at(-1) ?? piece.body };
+}
 
 /** KNOWN is the share of a topic's characters that must have been taught before it. */
 const KNOWN = 0.97;
 
 /** isHan tells a Chinese character. */
 export const isHan = (c: string): boolean => /\p{Script=Han}/u.test(c);
+
+/**
+ * quoted quotes a text as the last thing a sentence says: a whole sentence keeps its own closing mark inside the
+ * quotation marks, and a part of one is followed by a full stop after them.
+ */
+export function quoted(text: string, locale: "en" | "zh-CN"): string {
+  const inner = text.replaceAll("“", "‘").replaceAll("”", "’");
+  return /[。！？.!?][”’」]?$/u.test(text) ? `“${inner}”` : `“${inner}”${locale === "en" ? "." : "。"}`;
+}
 
 /** readableAfter is the first recognition batch of the grade or earlier after which KNOWN of the characters of the texts are taught. */
 export function readableAfter(texts: readonly string[], grade: number): string {
@@ -178,6 +251,8 @@ export const PASSAGE: Kind = { text: ["the passage", "短文"] };
 export const SIGN: Kind = { text: ["the text", "上面的文字"] };
 /** VERSE is a nursery rhyme or a children's verse. */
 export const VERSE: Kind = { text: ["the verse", "儿歌"] };
+/** POEM is a poem of the later grades, modern or classical. */
+export const POEM: Kind = { text: ["the poem", "诗"] };
 /** TALK is what someone says, which the learner reads until it is recorded. */
 export const TALK: Kind = { text: ["what is said", "说的话"] };
 
@@ -191,10 +266,12 @@ function asked(pieces: readonly Piece[], k: number): readonly (readonly [Piece, 
   return out;
 }
 
-/** reasonOf says why a wrong option is wrong. */
-const reasonOf = (option: string, reason: Reason): Text => {
+/** reasonOf says why a wrong option is wrong, quoting the text where the reason does. */
+const reasonOf = (option: string, reason: Reason, context: Context): Text => {
   const [en, zh] = REASONS[reason];
-  return t(`${option}: ${en}`, `“${option}”：${zh}`);
+  const fill = (text: string, locale: "en" | "zh-CN") =>
+    text.replace("“{s}”", quoted(context.sentence, locale)).replace("“{e}”", quoted(context.ending, locale));
+  return t(`${option}: ${fill(en, "en")}`, `“${option}”：${fill(zh, "zh-CN")}`);
 };
 
 /** Steps are the three steps of a solution on a text, each in English and in Chinese, with the headings of the first two. */
@@ -221,12 +298,12 @@ const byClue =
     const [textEn, textZh] = kind.text;
     return {
       find: t(
-        `The question asks: ${q.ask.en} In ${textEn}, look for the words about this: “${q.clue}”`,
-        `题目问的是：${q.ask["zh-CN"]}在${textZh}里找写这件事的话：“${q.clue}”`,
+        `The question asks: ${q.ask.en} In ${textEn}, look for the words about this: ${quoted(q.clue, "en")}`,
+        `题目问的是：${q.ask["zh-CN"]}在${textZh}里找写这件事的话：${quoted(q.clue, "zh-CN")}`,
       ),
       choose: t(`Of the options, only “${q.right}” says what these words say.`, `几个选项里，只有“${q.right}”和这句话说的一致。`),
       check: t(
-        `Read the question again with the answer, “${q.right}”, and then the words of ${textEn}: “${q.clue}” They agree.`,
+        `Read the question again with the answer, “${q.right}”, and then the words of ${textEn}: ${quoted(q.clue, "en")} They agree.`,
         `带着答案“${q.right}”再读一遍问题，然后对照${textZh}里的“${q.clue}”，两者说的是一回事。`,
       ),
     };
@@ -243,7 +320,8 @@ export function pieceGenerator(pieces: readonly Piece[], k: number, kind: Kind, 
     const [piece, q] = rng.cycle(bank);
     const options = rng.shuffle([q.right, ...q.wrong.map((w) => w[0])]);
     const answer = options.indexOf(q.right);
-    const reasons = options.filter((o) => o !== q.right).map((o) => reasonOf(o, q.wrong.find((w) => w[0] === o)![1]));
+    const context = contextOf(piece, q.clue);
+    const reasons = options.filter((o) => o !== q.right).map((o) => reasonOf(o, q.wrong.find((w) => w[0] === o)![1], context));
     const list = (locale: "en" | "zh-CN") => reasons.map((r) => `- ${r[locale]}`).join("\n");
     const steps = wording(q, piece);
     const heads = steps.heads ?? HEADINGS;
@@ -257,7 +335,7 @@ export function pieceGenerator(pieces: readonly Piece[], k: number, kind: Kind, 
       solution,
       canonical: String(answer),
       wrong: options.map((_, i) => String(i)).filter((i) => i !== String(answer)),
-      mistakes: q.wrong.map(([o, r]) => ({ response: String(options.indexOf(o)), feedback: reasonOf(o, r) })),
+      mistakes: q.wrong.map(([o, r]) => ({ response: String(options.indexOf(o)), feedback: reasonOf(o, r, context) })),
     };
   };
 }
@@ -321,7 +399,8 @@ export function ruleGenerator(question: Text, items: readonly RuleItem[], rule: 
     const item = rng.cycle(items);
     const options = rng.shuffle([item.right, ...item.wrong.map((w) => w[0])]);
     const answer = options.indexOf(item.right);
-    const reasons = options.filter((o) => o !== item.right).map((o) => reasonOf(o, item.wrong.find((w) => w[0] === o)![1]));
+    const context = { sentence: item.scene, ending: item.scene };
+    const reasons = options.filter((o) => o !== item.right).map((o) => reasonOf(o, item.wrong.find((w) => w[0] === o)![1], context));
     const list = (locale: "en" | "zh-CN") => reasons.map((r) => `- ${r[locale]}`).join("\n");
     const solution = t(
       `**${heads.find.en}** ${rule.step.en}\n\n**${heads.choose.en}** “${item.right}”\n\n**Check.** ${rule.check.en}\n\nThe other options:\n\n${list("en")}`,
@@ -333,7 +412,54 @@ export function ruleGenerator(question: Text, items: readonly RuleItem[], rule: 
       solution,
       canonical: String(answer),
       wrong: options.map((_, i) => String(i)).filter((i) => i !== String(answer)),
-      mistakes: item.wrong.map(([o, r]) => ({ response: String(options.indexOf(o)), feedback: reasonOf(o, r) })),
+      mistakes: item.wrong.map(([o, r]) => ({ response: String(options.indexOf(o)), feedback: reasonOf(o, r, context) })),
     };
   };
+}
+
+/** ReadingSpec is a reading topic of the stages: its texts, two knowledge points and how each is worded. */
+export interface ReadingSpec {
+  readonly grade: number;
+  readonly id: string;
+  readonly title: Text;
+  readonly summary: Text;
+  readonly intro: Text;
+  readonly data: string;
+  readonly kind: Kind;
+  readonly after?: string;
+  readonly points: readonly (readonly [suffix: string, title: Text, explanation: Text, wording?: Wording])[];
+}
+
+/**
+ * readingTopicOf builds a reading topic from its spec, after the batch by which its texts can be read, unless a topic it
+ * follows, as given in known, already comes after that batch.
+ */
+export function readingTopicOf(spec: ReadingSpec, known: readonly TopicDef[] = []): GradeTopic {
+  const pieces = parsePieces(spec.data, spec.points.length);
+  if (pieces.length < 10) throw new Error(`${spec.id}: ${pieces.length} texts, at least 10 needed`);
+  for (let k = 0; k < spec.points.length; k++) {
+    const n = pieces.flatMap((p) => p.questions[k] ?? []).length;
+    if (n < 30) throw new Error(`${spec.id}: knowledge point ${k + 1} has ${n} questions, at least 30 needed`);
+  }
+  const topic: TopicDef = {
+    id: spec.id,
+    title: spec.title,
+    summary: spec.summary,
+    intro: spec.intro,
+    prerequisites: prerequisitesOf(
+      readableAfter(
+        pieces.map((p) => p.title + p.body),
+        spec.grade,
+      ),
+      spec.after ? [spec.after] : [],
+      known,
+    ),
+    encompasses: [],
+    xp: 15,
+    strand: "reading",
+    knowledgePoints: spec.points.map(([suffix, title, explanation, wording], k) =>
+      point(`${spec.id}-${suffix}`, title, explanation, pieceGenerator(pieces, k, spec.kind, wording)),
+    ),
+  };
+  return { grade: spec.grade, topic };
 }
