@@ -214,8 +214,8 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
         "asymptotes-of-a-hyperbola",
         ["Asymptotes of a hyperbola", "双曲线的渐近线"],
         [
-          "Far from the center, the 1 in the equation hardly matters, so the curve approaches the lines found by replacing 1 with 0. For $\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 1$ these are $y = \\pm\\frac{b}{a}x$.",
-          "离中心很远时，方程中的 1 几乎不起作用，所以曲线趋近于把 1 换成 0 得到的直线。对 $\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 1$，它们是 $y = \\pm\\frac{b}{a}x$。",
+          "Far from the center, the 1 in the equation hardly matters, so the curve approaches the lines found by replacing 1 with 0. For $\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 1$ these are $y = \\pm\\frac{b}{a}x$.\n\nFor $\\frac{y^{2}}{9} - \\frac{x^{2}}{4} = 1$: replacing $1$ with $0$ gives $y^{2} = \\frac{9}{4}x^{2}$, so $y = \\pm\\frac{3}{2}x$. Check: at $x = 2$ the lines are at $y = \\pm 3$, the corners of the box with half-width $2$ and half-height $3$.\n\n> **Watch out.** Take square roots of the denominators before dividing: the slope is $\\frac{3}{2}$, not $\\frac{9}{4}$. And when $y^{2}$ is the positive term, its root goes on top.",
+          "离中心很远时，方程中的 1 几乎不起作用，所以曲线趋近于把 1 换成 0 得到的直线。对 $\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 1$，它们是 $y = \\pm\\frac{b}{a}x$。\n\n对 $\\frac{y^{2}}{9} - \\frac{x^{2}}{4} = 1$：把 $1$ 换成 $0$ 得 $y^{2} = \\frac{9}{4}x^{2}$，所以 $y = \\pm\\frac{3}{2}x$。检验：在 $x = 2$ 处两条直线的值是 $y = \\pm 3$，正是半宽 $2$、半高 $3$ 的矩形的角。\n\n> **注意。** 要先对分母开平方再相除：斜率是 $\\frac{3}{2}$，不是 $\\frac{9}{4}$。$y^{2}$ 是正项时，它的平方根在上面。",
         ],
         (rng) => {
           const a = rng.int(2, 12);
@@ -227,18 +227,35 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
           const equation = across
             ? `\\frac{x^{2}}{${a * a}} - \\frac{y^{2}}{${b * b}} = 1`
             : `\\frac{y^{2}}{${a * a}} - \\frac{x^{2}}{${b * b}} = 1`;
-          return chooseFilled(
-            rng,
-            [`Find the asymptotes of $${equation}$.`, `求 $${equation}$ 的渐近线。`],
-            `y = \\pm ${slope.toLatex()}x`,
+          const squares = (across ? Q.of(b * b, a * a) : Q.of(a * a, b * b)).toLatex();
+          const wrong = [`y = \\pm ${other.toLatex()}x`, `y = \\pm ${squares}x`, `y = ${slope.toLatex()}x`];
+          const zero = across
+            ? `\\frac{x^{2}}{${a * a}} - \\frac{y^{2}}{${b * b}} = 0`
+            : `\\frac{y^{2}}{${a * a}} - \\frac{x^{2}}{${b * b}} = 0`;
+          const [X, Y] = across ? [a, b] : [b, a];
+          return reasoned(
+            chooseFilled(
+              rng,
+              [`Find the asymptotes of $${equation}$.`, `求 $${equation}$ 的渐近线。`],
+              `y = \\pm ${slope.toLatex()}x`,
+              wrong,
+              [
+                `**Step 1: Replace 1 with 0.** Far from the center the $1$ hardly matters:\n\n$$${zero}$$\n\n**Step 2: Solve for y.** Move the $x$ term across and take both square roots:\n\n$$y^{2} = ${squares}x^{2}, \\quad y = \\pm ${slope.toLatex()}x$$\n\n**Check.** At $x = ${X}$ the line $y = ${slope.toLatex()}x$ is at $y = ${Y}$: it passes through $(${X}, ${Y})$, the corner of the box whose half-width and half-height are the square roots of the denominators under $x^{2}$ and $y^{2}$.`,
+                `**第一步：把 1 换成 0。**离中心很远时 $1$ 几乎不起作用：\n\n$$${zero}$$\n\n**第二步：解出 y。**把 $x$ 项移过去，再取两个平方根：\n\n$$y^{2} = ${squares}x^{2}, \\quad y = \\pm ${slope.toLatex()}x$$\n\n**检验。**在 $x = ${X}$ 处，直线 $y = ${slope.toLatex()}x$ 的值是 $y = ${Y}$：它经过 $(${X}, ${Y})$，即以 $x^{2}$、$y^{2}$ 下分母的平方根为半宽、半高的矩形的角。`,
+              ],
+            ),
             [
-              `y = \\pm ${other.toLatex()}x`,
-              `y = \\pm ${(across ? Q.of(b * b, a * a) : Q.of(a * a, b * b)).toLatex()}x`,
-              `y = ${slope.toLatex()}x`,
-            ],
-            [
-              `Replacing 1 with 0 and solving for $y$ gives slopes of $\\pm ${slope.toLatex()}$.`,
-              `把 1 换成 0 再解出 $y$，得斜率 $\\pm ${slope.toLatex()}$。`,
+              [
+                `$${wrong[0]}$`,
+                `The ratio is upside down: the slope is the root under $y^{2}$, $${Y}$, over the root under $x^{2}$, $${X}$.`,
+                `比颠倒了：斜率是 $y^{2}$ 下的平方根 $${Y}$ 比 $x^{2}$ 下的平方根 $${X}$。`,
+              ],
+              [`$${wrong[1]}$`, "This divides the denominators; take their square roots first.", "这是分母之比；要先对它们开平方。"],
+              [
+                `$${wrong[2]}$`,
+                "A hyperbola has two asymptotes, with opposite slopes: keep the $\\pm$.",
+                "双曲线有两条斜率相反的渐近线：要保留 $\\pm$。",
+              ],
             ],
           );
         },
@@ -251,24 +268,44 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
       "foci-of-a-shifted-hyperbola",
       ["Foci of a shifted hyperbola", "平移后双曲线的焦点"],
       [
-        "For a hyperbola the distance to the foci satisfies $c^{2} = a^{2} + b^{2}$, with a plus sign, unlike an ellipse. The foci lie along the transverse axis, on either side of the center.",
-        "双曲线到焦点的距离满足 $c^{2} = a^{2} + b^{2}$，是加号，与椭圆不同。焦点在实轴上，位于中心两侧。",
+        "For a hyperbola the distance to the foci satisfies $c^{2} = a^{2} + b^{2}$, with a plus sign, unlike an ellipse. The foci lie along the transverse axis, on either side of the center.\n\nFor $\\frac{(x + 1)^{2}}{9} - \\frac{(y - 2)^{2}}{16} = 1$: $c^{2} = 9 + 16 = 25$, so $c = 5$, and the $x$ term is positive, so the foci are $(-6, 2)$ and $(4, 2)$. Check: their midpoint is $(-1, 2)$, the center, and $c = 5$ is more than $a = 3$, so the foci lie beyond the vertices.\n\n> **Watch out.** Add the denominators, do not subtract them as for an ellipse, and move $c$ from the center, not $a$ or $b$.",
+        "双曲线到焦点的距离满足 $c^{2} = a^{2} + b^{2}$，是加号，与椭圆不同。焦点在实轴上，位于中心两侧。\n\n对 $\\frac{(x + 1)^{2}}{9} - \\frac{(y - 2)^{2}}{16} = 1$：$c^{2} = 9 + 16 = 25$，所以 $c = 5$；$x$ 项为正，所以焦点是 $(-6, 2)$ 和 $(4, 2)$。检验：它们的中点是 $(-1, 2)$，正是中心，且 $c = 5$ 大于 $a = 3$，所以焦点在顶点之外。\n\n> **注意。** 分母要相加，不要像椭圆那样相减；从中心移动的是 $c$，不是 $a$ 或 $b$。",
       ],
       (rng) => {
         const [a, b, c] = rng.pick(triples);
         const h = rng.int(-9, 9);
         const k = rng.int(-9, 9);
-        return chooseFilled(
-          rng,
+        const wrong = [`(${h - a}, ${k}), (${h + a}, ${k})`, `(${h}, ${k - c}), (${h}, ${k + c})`, `(${h - b}, ${k}), (${h + b}, ${k})`];
+        return reasoned(
+          chooseFilled(
+            rng,
+            [
+              `Find the foci of the hyperbola $\\frac{${shift("x", h)}^{2}}{${a * a}} - \\frac{${shift("y", k)}^{2}}{${b * b}} = 1$.`,
+              `求双曲线 $\\frac{${shift("x", h)}^{2}}{${a * a}} - \\frac{${shift("y", k)}^{2}}{${b * b}} = 1$ 的焦点。`,
+            ],
+            `(${h - c}, ${k}), (${h + c}, ${k})`,
+            wrong,
+            [
+              `**Step 1: Find c.** Add the denominators:\n\n$$c^{2} = ${a * a} + ${b * b} = ${c * c}, \\quad c = ${c}$$\n\n**Step 2: Find the transverse axis.** The center is $(${h}, ${k})$, and the positive term is the $x$ term, so the transverse axis is horizontal.\n\n**Step 3: Move c from the center.** Move $${c}$ left and right of $(${h}, ${k})$: the foci are $(${h - c}, ${k})$ and $(${h + c}, ${k})$.\n\n**Check.** Their midpoint is $\\left(\\frac{${h - c} + ${paren(h + c)}}{2}, ${k}\\right) = (${h}, ${k})$, the center, and $c = ${c}$ is more than $a = ${a}$, so the foci lie beyond the vertices.`,
+              `**第一步：求 c。**分母相加：\n\n$$c^{2} = ${a * a} + ${b * b} = ${c * c}, \\quad c = ${c}$$\n\n**第二步：找实轴。**中心是 $(${h}, ${k})$，正项是 $x$ 项，所以实轴水平。\n\n**第三步：从中心移动 c。**从 $(${h}, ${k})$ 向左右各移 $${c}$：焦点是 $(${h - c}, ${k})$ 和 $(${h + c}, ${k})$。\n\n**检验。**它们的中点是 $\\left(\\frac{${h - c} + ${paren(h + c)}}{2}, ${k}\\right) = (${h}, ${k})$，正是中心，且 $c = ${c}$ 大于 $a = ${a}$，所以焦点在顶点之外。`,
+            ],
+          ),
           [
-            `Find the foci of the hyperbola $\\frac{${shift("x", h)}^{2}}{${a * a}} - \\frac{${shift("y", k)}^{2}}{${b * b}} = 1$.`,
-            `求双曲线 $\\frac{${shift("x", h)}^{2}}{${a * a}} - \\frac{${shift("y", k)}^{2}}{${b * b}} = 1$ 的焦点。`,
-          ],
-          `(${h - c}, ${k}), (${h + c}, ${k})`,
-          [`(${h - a}, ${k}), (${h + a}, ${k})`, `(${h}, ${k - c}), (${h}, ${k + c})`, `(${h - b}, ${k}), (${h + b}, ${k})`],
-          [
-            `$c^{2} = ${a * a} + ${b * b}$, so $c = ${c}$, and the foci are $${c}$ left and right of $(${h}, ${k})$.`,
-            `$c^{2} = ${a * a} + ${b * b}$，所以 $c = ${c}$，焦点在 $(${h}, ${k})$ 左右各 $${c}$ 处。`,
+            [
+              `$${wrong[0]}$`,
+              `These are the vertices, $a = ${a}$ from the center; the foci are $c = ${c}$ from it.`,
+              `这是顶点，距中心 $a = ${a}$；焦点距中心 $c = ${c}$。`,
+            ],
+            [
+              `$${wrong[1]}$`,
+              "These move up and down, but the positive term is the $x$ term, so the transverse axis is horizontal.",
+              "这是上下移动，但正项是 $x$ 项，所以实轴水平。",
+            ],
+            [
+              `$${wrong[2]}$`,
+              `These move $b = ${b}$; the foci are $c = \\sqrt{a^{2} + b^{2}} = ${c}$ from the center.`,
+              `这是移动 $b = ${b}$；焦点距中心 $c = \\sqrt{a^{2} + b^{2}} = ${c}$。`,
+            ],
           ],
         );
       },
@@ -280,8 +317,8 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
         "a-vertical-line-and-a-hyperbola",
         ["A vertical line and a hyperbola", "竖直线与双曲线"],
         [
-          "A horizontal hyperbola has no points strictly between its two vertices. So a vertical line misses it inside that gap, touches it at a vertex, and crosses it twice beyond.",
-          "开口向左右的双曲线，在两个顶点之间没有点。所以竖直线在这个间隙内与它不相交，在顶点处相切，在外面相交两次。",
+          "A horizontal hyperbola has no points strictly between its two vertices. So a vertical line misses it inside that gap, touches it at a vertex, and crosses it twice beyond.\n\nFor $\\frac{x^{2}}{9} - \\frac{y^{2}}{4} = 1$ and $x = 5$: $\\frac{y^{2}}{4} = \\frac{25}{9} - 1 = \\frac{16}{9}$, which is positive, so $y = \\pm \\frac{4}{3}$ and there are $2$ points. Check: $5 > 3$, so the line is beyond the vertex $(3, 0)$.\n\n> **Watch out.** Compare the line with $a$, the root under $x^{2}$, not with $b$. The sign does not matter: $x = -5$ also gives $2$ points.",
+          "开口向左右的双曲线，在两个顶点之间没有点。所以竖直线在这个间隙内与它不相交，在顶点处相切，在外面相交两次。\n\n对 $\\frac{x^{2}}{9} - \\frac{y^{2}}{4} = 1$ 和 $x = 5$：$\\frac{y^{2}}{4} = \\frac{25}{9} - 1 = \\frac{16}{9}$，为正，所以 $y = \\pm \\frac{4}{3}$，有 $2$ 个公共点。检验：$5 > 3$，所以直线在顶点 $(3, 0)$ 之外。\n\n> **注意。** 要把直线与 $x^{2}$ 下的平方根 $a$ 比较，不是与 $b$ 比较。正负号无关：$x = -5$ 也有 $2$ 个公共点。",
         ],
         (rng) => {
           const a = rng.int(3, 15);
@@ -296,10 +333,20 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
             ],
             count,
             [0, 1, 2, 4].filter((n) => n !== count),
-            [
-              `The vertices are at $x = \\pm ${a}$, and the line is $${distance}$ from the center, which gives $${count}$.`,
-              `顶点在 $x = \\pm ${a}$，直线到中心的距离是 $${distance}$，所以有 $${count}$ 个。`,
-            ],
+            (() => {
+              const rest = Q.of(d * d - a * a, a * a).toLatex();
+              const line = `$$\\frac{y^{2}}{${b * b}} = \\frac{${d * d}}{${a * a}} - 1 = ${rest}$$`;
+              const [en, zh] =
+                count === 2
+                  ? ["positive, so there are two values of $y$: $2$ points", "为正，所以 $y$ 有两个值：$2$ 个公共点"]
+                  : count === 1
+                    ? ["zero, so $y = 0$ is the only value: $1$ point", "为零，所以只有 $y = 0$：$1$ 个公共点"]
+                    : ["negative, and a square cannot be negative: $0$ points", "为负，而平方不能是负数：$0$ 个公共点"];
+              return [
+                `**Step 1: Substitute the line.** Put $x = ${d}$ into the equation and move the $1$ across:\n\n${line}\n\n**Step 2: Look at the sign.** The right side is ${en}.\n\n**Check.** The vertices are at $x = \\pm ${a}$, and the line is $${distance}$ from the center, ${count === 2 ? "beyond a vertex" : count === 1 ? "exactly at a vertex" : "between the vertices"}, which gives $${count}$.`,
+                `**第一步：代入直线。**把 $x = ${d}$ 代入方程，并把 $1$ 移过去：\n\n${line}\n\n**第二步：看符号。**右边${zh}。\n\n**检验。**顶点在 $x = \\pm ${a}$，直线到中心的距离是 $${distance}$，${count === 2 ? "在顶点之外" : count === 1 ? "恰好在顶点处" : "在两顶点之间"}，所以有 $${count}$ 个。`,
+              ] as const;
+            })(),
           );
         },
       ),
@@ -311,8 +358,8 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
       "the-transverse-axis-from-the-foci",
       ["The transverse axis from the foci", "由焦点求实轴"],
       [
-        "The relation $c^{2} = a^{2} + b^{2}$ links the foci to both axes. So the foci and the value of $b$ give $a$, and the transverse axis has length $2a$.",
-        "关系 $c^{2} = a^{2} + b^{2}$ 把焦点与两条轴联系起来。所以由焦点和 $b$ 可以求出 $a$，实轴长是 $2a$。",
+        "The relation $c^{2} = a^{2} + b^{2}$ links the foci to both axes. So the foci and the value of $b$ give $a$, and the transverse axis has length $2a$.\n\nFor foci $(\\pm 5, 0)$ and a conjugate axis of $8$: $b = 4$ and $c = 5$, so $a^{2} = 25 - 16 = 9$, $a = 3$, and the transverse axis is $6$. Check: $3^{2} + 4^{2} = 5^{2}$.\n\n> **Watch out.** Halve the conjugate axis to get $b$ before squaring, and subtract: $a^{2} = c^{2} - b^{2}$. The answer is $2a$, not $a$.",
+        "关系 $c^{2} = a^{2} + b^{2}$ 把焦点与两条轴联系起来。所以由焦点和 $b$ 可以求出 $a$，实轴长是 $2a$。\n\n对焦点 $(\\pm 5, 0)$ 且虚轴长 $8$：$b = 4$，$c = 5$，所以 $a^{2} = 25 - 16 = 9$，$a = 3$，实轴长 $6$。检验：$3^{2} + 4^{2} = 5^{2}$。\n\n> **注意。** 先把虚轴长减半得到 $b$，再平方，然后相减：$a^{2} = c^{2} - b^{2}$。答案是 $2a$，不是 $a$。",
       ],
       (rng) => {
         const [p, q, r] = rng.pick(triples);
@@ -326,8 +373,8 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
           2 * a,
           [a, 2 * c, 2 * b],
           [
-            `$b = ${b}$ and $c = ${c}$, so $a^{2} = ${c * c} - ${b * b}$ and $a = ${a}$, and the axis is ${2 * a}.`,
-            `$b = ${b}$，$c = ${c}$，所以 $a^{2} = ${c * c} - ${b * b}$，$a = ${a}$，实轴长 ${2 * a}。`,
+            `**Step 1: Read b and c.** The conjugate axis is $2b = ${2 * b}$, so $b = ${b}$, and the foci give $c = ${c}$.\n\n**Step 2: Find a.** Subtract the squares:\n\n$$a^{2} = c^{2} - b^{2} = ${c * c} - ${b * b} = ${a * a}, \\quad a = ${a}$$\n\n**Step 3: Double a.** The transverse axis is $2a = ${2 * a}$.\n\n**Check.** $a^{2} + b^{2} = ${a * a} + ${b * b} = ${c * c} = c^{2}$.`,
+            `**第一步：读出 b 和 c。**虚轴长 $2b = ${2 * b}$，所以 $b = ${b}$；焦点给出 $c = ${c}$。\n\n**第二步：求 a。**平方相减：\n\n$$a^{2} = c^{2} - b^{2} = ${c * c} - ${b * b} = ${a * a}, \\quad a = ${a}$$\n\n**第三步：把 a 乘以 2。**实轴长 $2a = ${2 * a}$。\n\n**检验。**$a^{2} + b^{2} = ${a * a} + ${b * b} = ${c * c} = c^{2}$。`,
           ],
         );
       },
@@ -338,8 +385,8 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
       "the-conjugate-axis-from-foci-and-vertices",
       ["The conjugate axis from foci and vertices", "由焦点和顶点求虚轴"],
       [
-        "The vertices give $a$ and the foci give $c$, so $b^{2} = c^{2} - a^{2}$. The conjugate axis has length $2b$, even though no point of the curve lies on it.",
-        "顶点给出 $a$，焦点给出 $c$，所以 $b^{2} = c^{2} - a^{2}$。虚轴长是 $2b$，尽管曲线上没有点在它上面。",
+        "The vertices give $a$ and the foci give $c$, so $b^{2} = c^{2} - a^{2}$. The conjugate axis has length $2b$, even though no point of the curve lies on it.\n\nFor vertices $(0, \\pm 6)$ and foci $(0, \\pm 10)$: $b^{2} = 100 - 36 = 64$, so $b = 8$ and the conjugate axis is $16$. Check: $6^{2} + 8^{2} = 10^{2}$.\n\n> **Watch out.** For a hyperbola $c$ is the largest of the three, so subtract $a^{2}$ from $c^{2}$; and give $2b$, not $b$.",
+        "顶点给出 $a$，焦点给出 $c$，所以 $b^{2} = c^{2} - a^{2}$。虚轴长是 $2b$，尽管曲线上没有点在它上面。\n\n对顶点 $(0, \\pm 6)$ 和焦点 $(0, \\pm 10)$：$b^{2} = 100 - 36 = 64$，所以 $b = 8$，虚轴长 $16$。检验：$6^{2} + 8^{2} = 10^{2}$。\n\n> **注意。** 双曲线中 $c$ 是三者中最大的，所以用 $c^{2}$ 减去 $a^{2}$；答案是 $2b$，不是 $b$。",
       ],
       (rng) => {
         const [a, b, c] = rng.pick(triples);
@@ -354,8 +401,8 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
           2 * b,
           [b, 2 * a, 2 * c],
           [
-            `$b^{2} = ${c * c} - ${a * a}$, so $b = ${b}$, and the axis is ${2 * b}.`,
-            `$b^{2} = ${c * c} - ${a * a}$，所以 $b = ${b}$，虚轴长 ${2 * b}。`,
+            `**Step 1: Read a and c.** The vertices give $a = ${a}$ and the foci give $c = ${c}$.\n\n**Step 2: Find b.** Subtract the squares:\n\n$$b^{2} = c^{2} - a^{2} = ${c * c} - ${a * a} = ${b * b}, \\quad b = ${b}$$\n\n**Step 3: Double b.** The conjugate axis is $2b = ${2 * b}$.\n\n**Check.** $a^{2} + b^{2} = ${a * a} + ${b * b} = ${c * c} = c^{2}$.`,
+            `**第一步：读出 a 和 c。**顶点给出 $a = ${a}$，焦点给出 $c = ${c}$。\n\n**第二步：求 b。**平方相减：\n\n$$b^{2} = c^{2} - a^{2} = ${c * c} - ${a * a} = ${b * b}, \\quad b = ${b}$$\n\n**第三步：把 b 乘以 2。**虚轴长 $2b = ${2 * b}$。\n\n**检验。**$a^{2} + b^{2} = ${a * a} + ${b * b} = ${c * c} = c^{2}$。`,
           ],
         );
       },

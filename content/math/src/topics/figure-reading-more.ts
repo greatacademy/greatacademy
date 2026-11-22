@@ -519,8 +519,8 @@ const asymptotesFromDrawing: KnowledgePointDef = {
   figure: precalculusDrawings3["asymptotes-of-hyperbolas-centered-at-the-origin#asymptote-slopes-from-a-drawn-hyperbola"],
   title: t("Asymptote slopes from a drawn hyperbola", "由图中的双曲线求渐近线斜率"),
   explanation: t(
-    "For a hyperbola opening left and right, the vertices are at distance $a$ from the center along the $x$-axis, and the asymptotes pass through the corners of a box with half-width $a$ and half-height $b$. So the slopes are $\\pm\\frac{b}{a}$. Reading the numbers from the grid, then checking against the dashed lines, avoids turning the fraction upside down.",
-    "对向左右张开的双曲线，顶点在 $x$ 轴上到中心距离为 $a$ 的地方，渐近线经过半宽为 $a$、半高为 $b$ 的矩形的角。所以斜率是 $\\pm\\frac{b}{a}$。从网格读出数字，再和虚线对照，就不会把分数颠倒。",
+    "For a hyperbola opening left and right, the vertices are at distance $a$ from the center along the $x$-axis, and the asymptotes pass through the corners of a box with half-width $a$ and half-height $b$. So the slopes are $\\pm\\frac{b}{a}$. Reading the numbers from the grid, then checking against the dashed lines, avoids turning the fraction upside down.\n\nIf the vertices are at $x = \\pm 3$ and a dashed line passes through $(3, 2)$, the box has half-width $3$ and half-height $2$, so the slope is $\\frac{2}{3}$. Check: going $3$ across from the center and $2$ up lands on the dashed line.\n\n> **Watch out.** Slope is rise over run, the height of the box over its width: $\\frac{2}{3}$, not $\\frac{3}{2}$. Read both numbers from the marked point, whichever way the hyperbola opens.",
+    "对向左右张开的双曲线，顶点在 $x$ 轴上到中心距离为 $a$ 的地方，渐近线经过半宽为 $a$、半高为 $b$ 的矩形的角。所以斜率是 $\\pm\\frac{b}{a}$。从网格读出数字，再和虚线对照，就不会把分数颠倒。\n\n若顶点在 $x = \\pm 3$，一条虚线经过 $(3, 2)$，则矩形半宽 $3$、半高 $2$，斜率是 $\\frac{2}{3}$。检验：从中心横向走 $3$、向上走 $2$，正好落在虚线上。\n\n> **注意。** 斜率是竖直变化比水平变化，即矩形的高比宽：$\\frac{2}{3}$，不是 $\\frac{3}{2}$。不管双曲线朝哪个方向张开，两个数都从标出的点读。",
   ),
   generate(rng) {
     const a = rng.int(1, 5);
@@ -535,8 +535,8 @@ const asymptotesFromDrawing: KnowledgePointDef = {
       slope,
       [Q.of(a, b), Q.of(a + b, a), Q.of(b, a + b), Q.of(b * b, a * a)],
       t(
-        `The vertices are at $${sideways ? "x" : "y"} = \\pm ${sideways ? a : b}$, and the marked point $(${a}, ${b})$ lies on an asymptote through the origin, so the slope is $${slope.toLatex()}$.`,
-        `顶点在 $${sideways ? "x" : "y"} = \\pm ${sideways ? a : b}$，标出的点 $(${a}, ${b})$ 在过原点的渐近线上，所以斜率是 $${slope.toLatex()}$。`,
+        `${stepLabel(1, "Read the marked point", "读出标出的点").en} The vertices are at $${sideways ? "x" : "y"} = \\pm ${sideways ? a : b}$, and the dashed asymptote through the center $(0, 0)$ passes through the marked point $(${a}, ${b})$.\n\n${stepLabel(2, "Divide rise by run", "竖直变化除以水平变化").en} From $(0, 0)$ to $(${a}, ${b})$ the line rises $${b}$ over a run of $${a}$:\n\n$$m = \\frac{${b}}{${a}} = ${slope.toLatex()}$$\n\n**Check.** On the line $y = mx$, the marked point gives\n\n$$${slope.toLatex()} \\cdot ${a} = ${b}$$`,
+        `${stepLabel(1, "Read the marked point", "读出标出的点")["zh-CN"]}顶点在 $${sideways ? "x" : "y"} = \\pm ${sideways ? a : b}$，过中心 $(0, 0)$ 的虚线渐近线经过标出的点 $(${a}, ${b})$。\n\n${stepLabel(2, "Divide rise by run", "竖直变化除以水平变化")["zh-CN"]}从 $(0, 0)$ 到 $(${a}, ${b})$，直线上升 $${b}$，水平走了 $${a}$：\n\n$$m = \\frac{${b}}{${a}} = ${slope.toLatex()}$$\n\n**检验。**在直线 $y = mx$ 上，标出的点给出\n\n$$${slope.toLatex()} \\cdot ${a} = ${b}$$`,
       ),
       drawn(
         square(7),

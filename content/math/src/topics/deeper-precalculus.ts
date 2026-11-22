@@ -1357,8 +1357,8 @@ const centerFromAsymptotes: KnowledgePointDef = {
   figure: precalculusDrawings3["asymptotes-of-hyperbolas-centered-at-a-general-point#the-center-of-a-hyperbola-from-its-asymptotes"],
   title: t("The center of a hyperbola from its asymptotes", "由渐近线求双曲线的中心"),
   explanation: t(
-    "The two asymptotes of a hyperbola cross at its center, and this gives a way to locate the center from their equations alone. Setting the two right sides equal finds the first coordinate of the crossing point, and substituting back gives the second. Since the asymptotes have opposite slopes, adding the two equations removes the term with $x$ at once, which makes the second coordinate the average of the two intercepts.",
-    "双曲线的两条渐近线相交于它的中心，这样只用它们的方程就能确定中心。令两个右边相等，求出交点的第一个坐标，再代回去得到第二个坐标。由于两条渐近线的斜率相反，把两个方程相加可以立刻消去含 $x$ 的项，所以第二个坐标是两个截距的平均值。",
+    "The two asymptotes of a hyperbola cross at its center, and this gives a way to locate the center from their equations alone. Setting the two right sides equal finds the first coordinate of the crossing point, and substituting back gives the second. Since the asymptotes have opposite slopes, adding the two equations removes the term with $x$ at once, which makes the second coordinate the average of the two intercepts.\n\nFor $y = 2x + 1$ and $y = -2x + 9$: $2x + 1 = -2x + 9$ gives $x = 2$, and adding the equations gives $2y = 10$, so $y = 5$: the center is $(2, 5)$. Check: $2 \\cdot 2 + 1 = 5$ and $-2 \\cdot 2 + 9 = 5$.\n\n> **Watch out.** The second coordinate is the average of the intercepts, $\\frac{1 + 9}{2}$, not their sum or difference; and the first coordinate comes from setting the lines equal, not from either intercept.",
+    "双曲线的两条渐近线相交于它的中心，这样只用它们的方程就能确定中心。令两个右边相等，求出交点的第一个坐标，再代回去得到第二个坐标。由于两条渐近线的斜率相反，把两个方程相加可以立刻消去含 $x$ 的项，所以第二个坐标是两个截距的平均值。\n\n对 $y = 2x + 1$ 和 $y = -2x + 9$：由 $2x + 1 = -2x + 9$ 得 $x = 2$，两个方程相加得 $2y = 10$，所以 $y = 5$：中心是 $(2, 5)$。检验：$2 \\cdot 2 + 1 = 5$，$-2 \\cdot 2 + 9 = 5$。\n\n> **注意。** 第二个坐标是两个截距的平均值 $\\frac{1 + 9}{2}$，不是它们的和或差；第一个坐标要令两条直线相等求出，不是任一个截距。",
   ),
   generate(rng) {
     const [h, k] = [nonzero(rng, 7), nonzero(rng, 7)];
@@ -1376,10 +1376,14 @@ const centerFromAsymptotes: KnowledgePointDef = {
       answer: askH ? h : k,
       form: "integer",
       wrong: askH ? [k, -h, c2 - c1, 2 * h] : [h, -k, c1 + c2, c2 - c1],
-      solution: t(
-        `The center is where the asymptotes cross. Setting the right sides equal gives $${2 * m}x = ${c2 - c1}$, so $x = ${h}$. Substituting gives $y = ${k}$. So the center is $(${h}, ${k})$, and the coordinate asked for is $${askH ? h : k}$.`,
-        `中心是渐近线的交点。令右边相等得 $${2 * m}x = ${c2 - c1}$，所以 $x = ${h}$。代入得 $y = ${k}$。所以中心是 $(${h}, ${k})$，所求的坐标是 $${askH ? h : k}$。`,
-      ),
+      solution: (() => {
+        const equal = `$$${poly([m, "x"], [c1, ""])} = ${poly([-m, "x"], [c2, ""])}, \\quad ${2 * m}x = ${c2 - c1}, \\quad x = ${h}$$`;
+        const back = `$$y = ${m} \\cdot ${inParens(h)}${c1 < 0 ? ` - ${-c1}` : ` + ${c1}`} = ${k}$$`;
+        return t(
+          `${stepLabel(1, "Set the lines equal", "令两条直线相等").en} The center is where the asymptotes cross:\n\n${equal}\n\n${stepLabel(2, "Substitute back", "代回").en} Put $x = ${h}$ into the first line:\n\n${back}\n\nSo the center is $(${h}, ${k})$, and the coordinate asked for is $${askH ? h : k}$.\n\n**Check.** Adding the two equations removes $x$: $2y = ${c1} + ${inParens(c2)} = ${c1 + c2}$, so $y = ${k}$ again.`,
+          `${stepLabel(1, "Set the lines equal", "令两条直线相等")["zh-CN"]}中心是渐近线的交点：\n\n${equal}\n\n${stepLabel(2, "Substitute back", "代回")["zh-CN"]}把 $x = ${h}$ 代入第一条直线：\n\n${back}\n\n所以中心是 $(${h}, ${k})$，所求的坐标是 $${askH ? h : k}$。\n\n**检验。**两个方程相加消去 $x$：$2y = ${c1} + ${inParens(c2)} = ${c1 + c2}$，所以仍得 $y = ${k}$。`,
+        );
+      })(),
     });
   },
 };
@@ -1388,8 +1392,8 @@ const secondFocalDistance: KnowledgePointDef = {
   id: "the-distance-to-the-farther-focus-of-a-hyperbola",
   title: t("The distance to the farther focus of a hyperbola", "到双曲线较远焦点的距离"),
   explanation: t(
-    "A hyperbola is the set of points whose distances to the two foci differ by a fixed amount, equal to the length of the transverse axis. So a known distance to one focus gives the distance to the other, as long as we know which one is nearer. The difference is taken between the two, not added as in an ellipse. The farther distance is the nearer distance plus the transverse axis, and the point's exact position is not needed.",
-    "双曲线是到两个焦点距离之差为定值的点的集合，这个定值等于实轴的长。所以只要知道哪个焦点较近，由到一个焦点的距离就能得到到另一个焦点的距离。这里取的是两者的差，而不是像椭圆那样取和。较远的距离等于较近的距离加上实轴长，不需要知道点的确切位置。",
+    "A hyperbola is the set of points whose distances to the two foci differ by a fixed amount, equal to the length of the transverse axis. So a known distance to one focus gives the distance to the other, as long as we know which one is nearer. The difference is taken between the two, not added as in an ellipse. The farther distance is the nearer distance plus the transverse axis, and the point's exact position is not needed.\n\nFor $\\frac{x^{2}}{9} - \\frac{y^{2}}{16} = 1$, $2a = 6$, so a point $7$ from its nearer focus is $7 + 6 = 13$ from the farther one. Check: $13 - 7 = 6 = 2a$.\n\n> **Watch out.** Add $2a$, not $2c$, $2b$ or $a$: the difference of the distances is the length of the transverse axis. Subtracting $2a$ would treat the given distance as the farther one.",
+    "双曲线是到两个焦点距离之差为定值的点的集合，这个定值等于实轴的长。所以只要知道哪个焦点较近，由到一个焦点的距离就能得到到另一个焦点的距离。这里取的是两者的差，而不是像椭圆那样取和。较远的距离等于较近的距离加上实轴长，不需要知道点的确切位置。\n\n对 $\\frac{x^{2}}{9} - \\frac{y^{2}}{16} = 1$，$2a = 6$，所以到较近焦点距离为 $7$ 的点，到较远焦点的距离是 $7 + 6 = 13$。检验：$13 - 7 = 6 = 2a$。\n\n> **注意。** 要加 $2a$，不是 $2c$、$2b$ 或 $a$：两段距离之差是实轴的长。减去 $2a$ 就把已知距离当成了较远的那个。",
   ),
   generate(rng) {
     const [a, b, c] = legsAndHypotenuse(rng, 3) as [number, number, number];
@@ -1408,8 +1412,8 @@ const secondFocalDistance: KnowledgePointDef = {
       form: "integer",
       wrong: [Math.abs(d - 2 * a), d + a, d + 2 * c, d + 2 * b, 2 * a],
       solution: t(
-        `The distances to the foci differ by $2a$, and here $a = ${a}$, so they differ by $${2 * a}$. The farther distance is the larger one, $${d} + ${2 * a} = ${answer}$.`,
-        `到两个焦点的距离相差 $2a$，这里 $a = ${a}$，所以相差 $${2 * a}$。较远的距离是较大的那个，即 $${d} + ${2 * a} = ${answer}$。`,
+        `${stepLabel(1, "Find 2a", "求 2a").en} The positive term has $a^{2} = ${a * a}$, so $a = ${a}$, and the distances to the foci differ by $2a = ${2 * a}$.\n\n${stepLabel(2, "Add to the nearer distance", "加到较近的距离上").en} The farther distance is the larger one:\n\n$$${d} + ${2 * a} = ${answer}$$\n\n**Check.** $${answer} - ${d} = ${2 * a} = 2a$, and the nearer distance $${d}$ is at least $c - a = ${c} - ${a} = ${c - a}$, the distance from a vertex to its focus, so such a point exists.`,
+        `${stepLabel(1, "Find 2a", "求 2a")["zh-CN"]}正项的 $a^{2} = ${a * a}$，所以 $a = ${a}$，到两个焦点的距离相差 $2a = ${2 * a}$。\n\n${stepLabel(2, "Add to the nearer distance", "加到较近的距离上")["zh-CN"]}较远的距离是较大的那个：\n\n$$${d} + ${2 * a} = ${answer}$$\n\n**检验。**$${answer} - ${d} = ${2 * a} = 2a$，且较近的距离 $${d}$ 不小于 $c - a = ${c} - ${a} = ${c - a}$（顶点到它的焦点的距离），所以这样的点存在。`,
       ),
     });
   },
@@ -1419,8 +1423,8 @@ const eccentricityFromAsymptotes: KnowledgePointDef = {
   id: "the-eccentricity-of-a-hyperbola-from-its-asymptotes",
   title: t("The eccentricity of a hyperbola from its asymptotes", "由渐近线求双曲线的离心率"),
   explanation: t(
-    "The asymptotes describe the ratio of the two semi-axes, and this ratio alone decides the eccentricity, whatever the actual size of the hyperbola. But which ratio the slope gives depends on the direction of the transverse axis. When the axis is horizontal, the slope is the conjugate over the transverse semi-axis, and when it is vertical, the slope is the transverse over the conjugate. So the same asymptotes can belong to two hyperbolas with different eccentricities.",
-    "渐近线描述两条半轴的比，而只凭这个比就能决定离心率，与双曲线的实际大小无关。但斜率给出的是哪个比，取决于实轴的方向。实轴水平时，斜率是虚半轴比实半轴；实轴竖直时，斜率是实半轴比虚半轴。所以同样的渐近线可以属于离心率不同的两条双曲线。",
+    "The asymptotes describe the ratio of the two semi-axes, and this ratio alone decides the eccentricity, whatever the actual size of the hyperbola. But which ratio the slope gives depends on the direction of the transverse axis. When the axis is horizontal, the slope is the conjugate over the transverse semi-axis, and when it is vertical, the slope is the transverse over the conjugate. So the same asymptotes can belong to two hyperbolas with different eccentricities.\n\nFor asymptotes $y = \\pm \\frac{3}{4}x$ and a horizontal transverse axis: $\\frac{b}{a} = \\frac{3}{4}$, so $e^{2} = 1 + \\frac{9}{16} = \\frac{25}{16}$. With a vertical axis, $\\frac{a}{b} = \\frac{3}{4}$, so $\\frac{b}{a} = \\frac{4}{3}$ and $e^{2} = 1 + \\frac{16}{9} = \\frac{25}{9}$. Check: $\\frac{25}{16} = \\left(\\frac{5}{4}\\right)^{2}$, from the hyperbola with $a = 4$, $b = 3$ and $c = 5$.\n\n> **Watch out.** Use $e^{2} = 1 + \\frac{b^{2}}{a^{2}}$, with a plus sign, and turn the slope over first when the transverse axis is vertical.",
+    "渐近线描述两条半轴的比，而只凭这个比就能决定离心率，与双曲线的实际大小无关。但斜率给出的是哪个比，取决于实轴的方向。实轴水平时，斜率是虚半轴比实半轴；实轴竖直时，斜率是实半轴比虚半轴。所以同样的渐近线可以属于离心率不同的两条双曲线。\n\n对渐近线 $y = \\pm \\frac{3}{4}x$、实轴水平：$\\frac{b}{a} = \\frac{3}{4}$，所以 $e^{2} = 1 + \\frac{9}{16} = \\frac{25}{16}$。实轴竖直时 $\\frac{a}{b} = \\frac{3}{4}$，所以 $\\frac{b}{a} = \\frac{4}{3}$，$e^{2} = 1 + \\frac{16}{9} = \\frac{25}{9}$。检验：$\\frac{25}{16} = \\left(\\frac{5}{4}\\right)^{2}$，对应 $a = 4$、$b = 3$、$c = 5$ 的双曲线。\n\n> **注意。** 用 $e^{2} = 1 + \\frac{b^{2}}{a^{2}}$，是加号；实轴竖直时要先把斜率倒过来。",
   ),
   generate(rng) {
     const [p0, q0] = rng.pick(properFractions(7));
@@ -1438,10 +1442,15 @@ const eccentricityFromAsymptotes: KnowledgePointDef = {
       ),
       answer,
       wrong: [other, Q.of(q * q - p * p, q * q), Q.of(p * p, q * q), Q.of(p + q, q)],
-      solution: t(
-        `For a ${horizontal ? "horizontal" : "vertical"} transverse axis, the slope equals $${horizontal ? "\\frac{b}{a}" : "\\frac{a}{b}"}$, so $\\frac{b^{2}}{a^{2}} = ${horizontal ? frac(p * p, q * q) : frac(q * q, p * p)}$. Since $e^{2} = 1 + \\frac{b^{2}}{a^{2}}$, the answer is $${answer.toLatex()}$.`,
-        `实轴${horizontal ? "水平" : "竖直"}时，斜率等于 $${horizontal ? "\\frac{b}{a}" : "\\frac{a}{b}"}$，所以 $\\frac{b^{2}}{a^{2}} = ${horizontal ? frac(p * p, q * q) : frac(q * q, p * p)}$。因为 $e^{2} = 1 + \\frac{b^{2}}{a^{2}}$，答案是 $${answer.toLatex()}$。`,
-      ),
+      solution: (() => {
+        const ratio = horizontal ? `$$\\frac{b}{a} = ${slope}$$` : `$$\\frac{a}{b} = ${slope}, \\quad \\frac{b}{a} = ${frac(q, p)}$$`;
+        const square = `$$e^{2} = 1 + \\frac{b^{2}}{a^{2}} = 1 + ${horizontal ? frac(p * p, q * q) : frac(q * q, p * p)} = ${answer.toLatex()}$$`;
+        const [A, B] = horizontal ? [q, p] : [p, q];
+        return t(
+          `${stepLabel(1, "Read b over a", "读出 b 与 a 之比").en} For a ${horizontal ? "horizontal" : "vertical"} transverse axis the slope of an asymptote is ${horizontal ? "$b / a$" : "$a / b$"}, so\n\n${ratio}\n\n${stepLabel(2, "Use the relation for e", "利用 e 的关系式").en} Dividing $c^{2} = a^{2} + b^{2}$ by $a^{2}$ gives\n\n${square}\n\n**Check.** The hyperbola with $a = ${A}$ and $b = ${B}$ has these asymptotes and $c^{2} = ${A * A} + ${B * B} = ${sum}$, so $e^{2} = ${sum} \\div ${A * A}$ again.`,
+          `${stepLabel(1, "Read b over a", "读出 b 与 a 之比")["zh-CN"]}实轴${horizontal ? "水平" : "竖直"}时，渐近线的斜率是 ${horizontal ? "$b / a$" : "$a / b$"}，所以\n\n${ratio}\n\n${stepLabel(2, "Use the relation for e", "利用 e 的关系式")["zh-CN"]}把 $c^{2} = a^{2} + b^{2}$ 两边除以 $a^{2}$ 得\n\n${square}\n\n**检验。**$a = ${A}$、$b = ${B}$ 的双曲线有这样的渐近线，且 $c^{2} = ${A * A} + ${B * B} = ${sum}$，所以仍得 $e^{2} = ${sum} \\div ${A * A}$。`,
+        );
+      })(),
     });
   },
 };
@@ -1450,8 +1459,8 @@ const hyperbolaFromDirectrix: KnowledgePointDef = {
   id: "a-hyperbola-from-a-focus-and-its-directrix",
   title: t("A hyperbola from a focus and its directrix", "由焦点和准线确定双曲线"),
   explanation: t(
-    "The focus and the directrix of a hyperbola centered at the origin together determine its equation. The directrix lies at the square of the transverse semi-axis divided by the focal distance, so multiplying the two given distances from the center gives the square of the transverse semi-axis. For a hyperbola, the focal distance is the largest of the three lengths, so subtracting that square from the square of the focal distance gives the last value.",
-    "中心在原点的双曲线，其焦点和准线一起确定了它的方程。准线到中心的距离是实半轴的平方除以焦距，所以把这两个到中心的已知距离相乘，就得到实半轴的平方。对于双曲线，焦距是三个长度中最大的，所以从焦距的平方中减去这个平方，就得到最后一个值。",
+    "The focus and the directrix of a hyperbola centered at the origin together determine its equation. The directrix lies at the square of the transverse semi-axis divided by the focal distance, so multiplying the two given distances from the center gives the square of the transverse semi-axis. For a hyperbola, the focal distance is the largest of the three lengths, so subtracting that square from the square of the focal distance gives the last value.\n\nFor the focus $(6, 0)$ and the directrix $x = 2$: $a^{2} = 6 \\cdot 2 = 12$ and $b^{2} = 36 - 12 = 24$. Check: $\\frac{a^{2}}{c} = \\frac{12}{6} = 2$, the directrix.\n\n> **Watch out.** For a hyperbola $b^{2} = c^{2} - a^{2}$: adding gives the wrong value, and so does squaring the distance between the focus and the directrix.",
+    "中心在原点的双曲线，其焦点和准线一起确定了它的方程。准线到中心的距离是实半轴的平方除以焦距，所以把这两个到中心的已知距离相乘，就得到实半轴的平方。对于双曲线，焦距是三个长度中最大的，所以从焦距的平方中减去这个平方，就得到最后一个值。\n\n对焦点 $(6, 0)$ 和准线 $x = 2$：$a^{2} = 6 \\cdot 2 = 12$，$b^{2} = 36 - 12 = 24$。检验：$\\frac{a^{2}}{c} = \\frac{12}{6} = 2$，正是准线。\n\n> **注意。** 双曲线中 $b^{2} = c^{2} - a^{2}$：相加不对，把焦点到准线的距离平方也不对。",
   ),
   generate(rng) {
     const c = rng.int(3, 14);
@@ -1471,8 +1480,8 @@ const hyperbolaFromDirectrix: KnowledgePointDef = {
       form: "integer",
       wrong: [aSquared, c * c + aSquared, (c - d) ** 2, c * c - d * d],
       solution: t(
-        `The directrix is at distance $\\frac{a^{2}}{c}$ from the center, so $a^{2} = ${c} \\cdot ${d} = ${aSquared}$. For a hyperbola, $b^{2} = c^{2} - a^{2} = ${c * c} - ${aSquared} = ${answer}$.`,
-        `准线到中心的距离是 $\\frac{a^{2}}{c}$，所以 $a^{2} = ${c} \\cdot ${d} = ${aSquared}$。对于双曲线，$b^{2} = c^{2} - a^{2} = ${c * c} - ${aSquared} = ${answer}$。`,
+        `${stepLabel(1, "Find a squared", "求 a 的平方").en} The focus gives $c = ${c}$, and the directrix is $a^{2} / c$ from the center:\n\n$$\\frac{a^{2}}{${c}} = ${d}, \\quad a^{2} = ${c} \\cdot ${d} = ${aSquared}$$\n\n${stepLabel(2, "Subtract from c squared", "用 c 的平方减去它").en} For a hyperbola,\n\n$$b^{2} = c^{2} - a^{2} = ${c * c} - ${aSquared} = ${answer}$$\n\n**Check.** $a^{2} + b^{2} = ${aSquared} + ${answer} = ${c * c} = c^{2}$, and the directrix lies between the center and the vertex, since $${d} < \\sqrt{${aSquared}} < ${c}$.`,
+        `${stepLabel(1, "Find a squared", "求 a 的平方")["zh-CN"]}焦点给出 $c = ${c}$，准线到中心的距离是 $a^{2} / c$：\n\n$$\\frac{a^{2}}{${c}} = ${d}, \\quad a^{2} = ${c} \\cdot ${d} = ${aSquared}$$\n\n${stepLabel(2, "Subtract from c squared", "用 c 的平方减去它")["zh-CN"]}对于双曲线，\n\n$$b^{2} = c^{2} - a^{2} = ${c * c} - ${aSquared} = ${answer}$$\n\n**检验。**$a^{2} + b^{2} = ${aSquared} + ${answer} = ${c * c} = c^{2}$，且准线在中心与顶点之间，因为 $${d} < \\sqrt{${aSquared}} < ${c}$。`,
       ),
     });
   },

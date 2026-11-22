@@ -1891,13 +1891,25 @@ export const equationsOfHyperbolasCenteredAtTheOrigin: TopicDef = {
   encompasses: [],
   xp: 12,
   standards: ["CCSS.HSG.GPE.A.3"],
+  intro: t(
+    `Take the foci $F_{1} = (-5, 0)$ and $F_{2} = (5, 0)$ and look for the points $P$ with $|PF_{1} - PF_{2}| = 6$. The point $(3, 0)$ is $8$ from $F_{1}$ and $2$ from $F_{2}$, and $8 - 2 = 6$, so it is one of them; so is $\\left(5, \\frac{16}{3}\\right)$, which is $\\frac{34}{3}$ from $F_{1}$ and $\\frac{16}{3}$ from $F_{2}$. All such points form the hyperbola $\\frac{x^{2}}{9} - \\frac{y^{2}}{16} = 1$, with $a = 3$ and $b^{2} = 5^{2} - 3^{2} = 16$.
+
+Check: $\\left(5, \\frac{16}{3}\\right)$ gives $\\frac{25}{9} - \\frac{256}{9 \\cdot 16} = \\frac{25 - 16}{9} = 1$.
+
+In this lesson we use the constant difference of distances to find a missing distance, write the standard equation of a hyperbola centered at the origin, and find its asymptotes.`,
+    `取焦点 $F_{1} = (-5, 0)$ 和 $F_{2} = (5, 0)$，找满足 $|PF_{1} - PF_{2}| = 6$ 的点 $P$。点 $(3, 0)$ 到 $F_{1}$ 的距离是 $8$，到 $F_{2}$ 的距离是 $2$，而 $8 - 2 = 6$，所以它是其中之一；点 $\\left(5, \\frac{16}{3}\\right)$ 也是，它到 $F_{1}$ 的距离是 $\\frac{34}{3}$，到 $F_{2}$ 的距离是 $\\frac{16}{3}$。所有这样的点构成双曲线 $\\frac{x^{2}}{9} - \\frac{y^{2}}{16} = 1$，其中 $a = 3$，$b^{2} = 5^{2} - 3^{2} = 16$。
+
+检验：$\\left(5, \\frac{16}{3}\\right)$ 代入得 $\\frac{25}{9} - \\frac{256}{9 \\cdot 16} = \\frac{25 - 16}{9} = 1$。
+
+这节课我们用距离之差为定值求未知距离，写出中心在原点的双曲线的标准方程，并求它的渐近线。`,
+  ),
   knowledgePoints: [
     {
       id: "geometric-definition-of-a-hyperbola",
       title: t("Geometric definition of a hyperbola", "双曲线的几何定义"),
       explanation: t(
-        "A hyperbola is the set of all points $P$ in a plane such that the absolute difference of the distances from $P$ to two fixed foci $F_{1}$ and $F_{2}$ is constant and equal to $2a$:\n\n$$|PF_{1} - PF_{2}| = 2a \\quad (0 < 2a < F_{1}F_{2})$$\n\nIf $PF_{1} = d_{1}$, then $PF_{2} = d_{1} + 2a$ or $PF_{2} = d_{1} - 2a$, and the second is possible only when it is positive.",
-        "双曲线是平面内到两定点（焦点 $F_{1}, F_{2}$）的距离差的绝对值为定值 $2a$ 的点的集合：\n\n$$|PF_{1} - PF_{2}| = 2a \\quad (0 < 2a < F_{1}F_{2})$$\n\n若点 $P$ 到一个焦点的距离为 $d_{1}$，则到另一个焦点的距离为 $d_{1} + 2a$ 或 $d_{1} - 2a$，后者只有为正时才可能。",
+        "A hyperbola is the set of all points $P$ in a plane such that the absolute difference of the distances from $P$ to two fixed foci $F_{1}$ and $F_{2}$ is constant and equal to $2a$:\n\n$$|PF_{1} - PF_{2}| = 2a \\quad (0 < 2a < F_{1}F_{2})$$\n\nIf $PF_{1} = d_{1}$, then $PF_{2} = d_{1} + 2a$ or $PF_{2} = d_{1} - 2a$, and the second is possible only when it is positive.\n\nFor $|PF_{1} - PF_{2}| = 8$ and $PF_{1} = 3$: $PF_{2}$ is $3 + 8 = 11$ or $3 - 8 = -5$, and a distance cannot be negative, so $PF_{2} = 11$. Check: $|3 - 11| = 8$.\n\n> **Watch out.** The difference is fixed, not the sum: $PF_{2}$ is not $8 - 3 = 5$, which would give $|3 - 5| = 2$. Add $2a$ whenever subtracting it would leave zero or less.",
+        "双曲线是平面内到两定点（焦点 $F_{1}, F_{2}$）的距离差的绝对值为定值 $2a$ 的点的集合：\n\n$$|PF_{1} - PF_{2}| = 2a \\quad (0 < 2a < F_{1}F_{2})$$\n\n若点 $P$ 到一个焦点的距离为 $d_{1}$，则到另一个焦点的距离为 $d_{1} + 2a$ 或 $d_{1} - 2a$，后者只有为正时才可能。\n\n对 $|PF_{1} - PF_{2}| = 8$ 且 $PF_{1} = 3$：$PF_{2}$ 是 $3 + 8 = 11$ 或 $3 - 8 = -5$，距离不能为负，所以 $PF_{2} = 11$。检验：$|3 - 11| = 8$。\n\n> **注意。** 固定的是差，不是和：$PF_{2}$ 不是 $8 - 3 = 5$，那样 $|3 - 5| = 2$。只要减去 $2a$ 后不是正数，就要加上 $2a$。",
       ),
       generate(rng) {
         const a = rng.int(3, 10);
@@ -1911,9 +1923,28 @@ export const equationsOfHyperbolasCenteredAtTheOrigin: TopicDef = {
           ),
           answer: d2,
           wrong: [d1, Math.abs(d1 - a) || d1 + a + 1, twoA, d1 + a],
-          solution: t(
-            `By the definition $|PF_{1} - PF_{2}| = ${twoA}$ and $PF_{2} > 0$ (since $PF_{1} - ${twoA} = ${d1 - twoA} \\le 0$), we have $PF_{2} = PF_{1} + ${twoA} = ${d1} + ${twoA} = ${d2}$.`,
-            `根据定义 $|PF_{1} - PF_{2}| = ${twoA}$ 且 $PF_{2} > 0$（因为 $PF_{1} - ${twoA} = ${d1 - twoA} \\le 0$），可知 $PF_{2} = PF_{1} + ${twoA} = ${d1} + ${twoA} = ${d2}$。`,
+          solution: walked(
+            [
+              [
+                ["Write both possibilities", "写出两种可能"],
+                t(
+                  `The definition says $|PF_{1} - PF_{2}| = ${twoA}$, so $PF_{2}$ is $${twoA}$ more or $${twoA}$ less than $PF_{1} = ${d1}$:`,
+                  `由定义 $|PF_{1} - PF_{2}| = ${twoA}$，所以 $PF_{2}$ 比 $PF_{1} = ${d1}$ 大 $${twoA}$ 或小 $${twoA}$：`,
+                ),
+                [`PF_{2} = ${d1} + ${twoA} = ${d2}`, `PF_{2} = ${d1} - ${twoA} = ${d1 - twoA}`],
+              ],
+              [
+                ["Keep the positive distance", "保留正的距离"],
+                t(
+                  `A distance must be positive, and $${d1 - twoA} \\le 0$, so $PF_{2} = ${d2}$.`,
+                  `距离必须为正，而 $${d1 - twoA} \\le 0$，所以 $PF_{2} = ${d2}$。`,
+                ),
+              ],
+            ],
+            t(
+              `$|PF_{1} - PF_{2}| = |${d1} - ${d2}| = ${twoA}$, the fixed difference.`,
+              `$|PF_{1} - PF_{2}| = |${d1} - ${d2}| = ${twoA}$，正是那个定值。`,
+            ),
           ),
         });
       },
@@ -1922,8 +1953,8 @@ export const equationsOfHyperbolasCenteredAtTheOrigin: TopicDef = {
       id: "standard-equations-of-hyperbolas-at-origin",
       title: t("Standard equations of hyperbolas centered at the origin", "中心在原点的双曲线标准方程"),
       explanation: t(
-        "For a hyperbola centered at the origin:\n\n- Horizontal (opens left/right, vertices at $(\\pm a, 0)$):\n$$\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 1$$\n\n- Vertical (opens up/down, vertices at $(0, \\pm a)$):\n$$\\frac{y^{2}}{a^{2}} - \\frac{x^{2}}{b^{2}} = 1$$\n\nThe positive term indicates the axis containing the vertices.",
-        "中心在原点的双曲线标准方程：\n\n- 水平方向（开口朝左右，顶点为 $(\\pm a, 0)$）：\n$$\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 1$$\n\n- 竖直方向（开口朝上下，顶点为 $(0, \\pm a)$）：\n$$\\frac{y^{2}}{a^{2}} - \\frac{x^{2}}{b^{2}} = 1$$\n\n符号为正的项决定了顶点所在的坐标轴。",
+        "For a hyperbola centered at the origin:\n\n- Horizontal (opens left/right, vertices at $(\\pm a, 0)$):\n$$\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 1$$\n\n- Vertical (opens up/down, vertices at $(0, \\pm a)$):\n$$\\frac{y^{2}}{a^{2}} - \\frac{x^{2}}{b^{2}} = 1$$\n\nThe positive term indicates the axis containing the vertices.\n\nThe minus sign is what makes the curve a hyperbola: a fixed difference of distances to the foci leads to a difference of squares. For vertices $(0, \\pm 4)$ and $b = 3$: the vertices are on the $y$-axis, so the $y^{2}$ term is positive with $a^{2} = 16$, giving $\\frac{y^{2}}{16} - \\frac{x^{2}}{9} = 1$. Check: the vertex $(0, 4)$ gives $\\frac{16}{16} - 0 = 1$.\n\n> **Watch out.** $a^{2}$ goes under the positive term even when it is the smaller denominator, since in a hyperbola $b$ may be larger than $a$. A plus sign would give an ellipse.",
+        "中心在原点的双曲线标准方程：\n\n- 水平方向（开口朝左右，顶点为 $(\\pm a, 0)$）：\n$$\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 1$$\n\n- 竖直方向（开口朝上下，顶点为 $(0, \\pm a)$）：\n$$\\frac{y^{2}}{a^{2}} - \\frac{x^{2}}{b^{2}} = 1$$\n\n符号为正的项决定了顶点所在的坐标轴。\n\n正是这个减号让曲线成为双曲线：到两焦点的距离之差为定值，化简后得到平方差。对顶点 $(0, \\pm 4)$ 且 $b = 3$：顶点在 $y$ 轴上，所以 $y^{2}$ 项为正，$a^{2} = 16$，得 $\\frac{y^{2}}{16} - \\frac{x^{2}}{9} = 1$。检验：顶点 $(0, 4)$ 代入得 $\\frac{16}{16} - 0 = 1$。\n\n> **注意。** 即使 $a^{2}$ 是较小的分母，也要放在正项下面，因为双曲线中 $b$ 可以比 $a$ 大。写成加号就成了椭圆。",
       ),
       generate(rng) {
         const a = rng.int(2, 10);
@@ -1949,13 +1980,25 @@ export const equationsOfHyperbolasCenteredAtTheOrigin: TopicDef = {
             `\\frac{x^{2}}{${a2}} + \\frac{y^{2}}{${b2}} = 1`,
             horizontal ? `\\frac{x^{2}}{${b2}} - \\frac{y^{2}}{${a2}} = 1` : `\\frac{y^{2}}{${b2}} - \\frac{x^{2}}{${a2}} = 1`,
           ],
-          solution: t(
-            `Since the vertices are on the $${horizontal ? "x" : "y"}$-axis, the positive term is $${horizontal ? "x^{2}" : "y^{2}"}$ with denominator $a^{2} = ${a2}$:${steps(
-              correct,
-            )}`,
-            `因为顶点在 $${horizontal ? "x" : "y"}$ 轴上，所以正项是 $${horizontal ? "x^{2}" : "y^{2}"}$，分母为 $a^{2} = ${a2}$：${steps(
-              correct,
-            )}`,
+          solution: walked(
+            [
+              [
+                ["Choose the positive term", "确定正项"],
+                t(
+                  `The vertices $${horizontal ? `(\\pm ${a}, 0)` : `(0, \\pm ${a})`}$ are on the $${horizontal ? "x" : "y"}$-axis, so the $${horizontal ? "x" : "y"}^{2}$ term is positive and $a^{2} = ${a}^{2} = ${a2}$ goes under it.`,
+                  `顶点 $${horizontal ? `(\\pm ${a}, 0)` : `(0, \\pm ${a})`}$ 在 $${horizontal ? "x" : "y"}$ 轴上，所以 $${horizontal ? "x" : "y"}^{2}$ 项为正，$a^{2} = ${a}^{2} = ${a2}$ 放在它下面。`,
+                ),
+              ],
+              [
+                ["Put b squared under the other term", "把 b 的平方放在另一项下"],
+                t(`Here $b^{2} = ${b}^{2} = ${b2}$, and that term is subtracted:`, `这里 $b^{2} = ${b}^{2} = ${b2}$，这一项相减：`),
+                [correct],
+              ],
+            ],
+            t(
+              `The vertex $${horizontal ? `(${a}, 0)` : `(0, ${a})`}$ makes the positive term $${a2} \\div ${a2} = 1$ and the other term $0$, so the left side is $1 - 0 = 1$.`,
+              `顶点 $${horizontal ? `(${a}, 0)` : `(0, ${a})`}$ 使正项为 $${a2} \\div ${a2} = 1$，另一项为 $0$，所以左边是 $1 - 0 = 1$。`,
+            ),
           ),
         });
       },
@@ -1974,14 +2017,26 @@ export const equationsOfHyperbolasCenteredAtAGeneralPoint: TopicDef = {
   encompasses: [{ topic: "equations-of-hyperbolas-centered-at-the-origin", weight: 0.6 }],
   xp: 12,
   standards: ["CCSS.HSG.GPE.A.3"],
+  intro: t(
+    `Move the hyperbola $\\frac{x^{2}}{9} - \\frac{y^{2}}{16} = 1$ so that its center is $(2, -1)$: replace $x$ by $x - 2$ and $y$ by $y + 1$, which gives $\\frac{(x - 2)^{2}}{9} - \\frac{(y + 1)^{2}}{16} = 1$. Everything moves with the center: the vertices $(\\pm 3, 0)$ become $(-1, -1)$ and $(5, -1)$, and the foci $(\\pm 5, 0)$ become $(-3, -1)$ and $(7, -1)$.
+
+Check: the vertex $(5, -1)$ gives $\\frac{3^{2}}{9} - \\frac{0^{2}}{16} = 1$.
+
+In this lesson we write the equation of a hyperbola from its center, vertices and $b$, read the center and the vertices back from an equation, and find the foci of a shifted hyperbola.`,
+    `把双曲线 $\\frac{x^{2}}{9} - \\frac{y^{2}}{16} = 1$ 平移，使中心到 $(2, -1)$：把 $x$ 换成 $x - 2$，把 $y$ 换成 $y + 1$，得 $\\frac{(x - 2)^{2}}{9} - \\frac{(y + 1)^{2}}{16} = 1$。一切都随中心移动：顶点 $(\\pm 3, 0)$ 变成 $(-1, -1)$ 和 $(5, -1)$，焦点 $(\\pm 5, 0)$ 变成 $(-3, -1)$ 和 $(7, -1)$。
+
+检验：顶点 $(5, -1)$ 代入得 $\\frac{3^{2}}{9} - \\frac{0^{2}}{16} = 1$。
+
+这节课我们由中心、顶点和 $b$ 写出双曲线的方程，从方程读出中心和顶点，并求平移后双曲线的焦点。`,
+  ),
   knowledgePoints: [
     {
       id: "standard-form-with-center-h-k-hyperbola",
       figure: precalculusDrawings4["equations-of-hyperbolas-centered-at-a-general-point#standard-form-with-center-h-k-hyperbola"],
       title: t("Standard form of a translated hyperbola", "平移双曲线的标准方程"),
       explanation: t(
-        "Moving the center from the origin to $(h, k)$ replaces $x$ by $x - h$ and $y$ by $y - k$. The positive term tells which way the hyperbola opens, and $a$ always goes with it.\n\nFor a hyperbola centered at $(h, k)$:\n\n- Horizontal transverse axis:\n$$\\frac{(x-h)^{2}}{a^{2}} - \\frac{(y-k)^{2}}{b^{2}} = 1$$\n\n- Vertical transverse axis:\n$$\\frac{(y-k)^{2}}{a^{2}} - \\frac{(x-h)^{2}}{b^{2}} = 1$$",
-        "把中心从原点移到 $(h, k)$，就是把 $x$ 换成 $x - h$，把 $y$ 换成 $y - k$。正的那一项决定双曲线的开口方向，$a$ 总是与它对应。\n\n中心在 $(h, k)$ 的双曲线标准方程：\n\n- 实轴水平：\n$$\\frac{(x-h)^{2}}{a^{2}} - \\frac{(y-k)^{2}}{b^{2}} = 1$$\n\n- 实轴竖直：\n$$\\frac{(y-k)^{2}}{a^{2}} - \\frac{(x-h)^{2}}{b^{2}} = 1$$",
+        "Moving the center from the origin to $(h, k)$ replaces $x$ by $x - h$ and $y$ by $y - k$. The positive term tells which way the hyperbola opens, and $a$ always goes with it.\n\nFor a hyperbola centered at $(h, k)$:\n\n- Horizontal transverse axis:\n$$\\frac{(x-h)^{2}}{a^{2}} - \\frac{(y-k)^{2}}{b^{2}} = 1$$\n\n- Vertical transverse axis:\n$$\\frac{(y-k)^{2}}{a^{2}} - \\frac{(x-h)^{2}}{b^{2}} = 1$$\n\nFor center $(-1, 2)$, vertices $(-1, 2 \\pm 3)$ and $b = 2$: the vertices are above and below the center, so the $y$ term is positive with $a^{2} = 9$, giving $\\frac{(y - 2)^{2}}{9} - \\frac{(x + 1)^{2}}{4} = 1$. Check: the vertex $(-1, 5)$ gives $\\frac{9}{9} - 0 = 1$.\n\n> **Watch out.** Subtract the center: with $h = -1$, $x - h$ is $x + 1$, not $x - 1$. The positive term is the one along which the vertices are moved from the center.",
+        "把中心从原点移到 $(h, k)$，就是把 $x$ 换成 $x - h$，把 $y$ 换成 $y - k$。正的那一项决定双曲线的开口方向，$a$ 总是与它对应。\n\n中心在 $(h, k)$ 的双曲线标准方程：\n\n- 实轴水平：\n$$\\frac{(x-h)^{2}}{a^{2}} - \\frac{(y-k)^{2}}{b^{2}} = 1$$\n\n- 实轴竖直：\n$$\\frac{(y-k)^{2}}{a^{2}} - \\frac{(x-h)^{2}}{b^{2}} = 1$$\n\n对中心 $(-1, 2)$、顶点 $(-1, 2 \\pm 3)$ 且 $b = 2$：顶点在中心的上下方，所以 $y$ 项为正，$a^{2} = 9$，得 $\\frac{(y - 2)^{2}}{9} - \\frac{(x + 1)^{2}}{4} = 1$。检验：顶点 $(-1, 5)$ 代入得 $\\frac{9}{9} - 0 = 1$。\n\n> **注意。** 要减去中心：$h = -1$ 时 $x - h$ 是 $x + 1$，不是 $x - 1$。顶点从中心沿哪个方向移动，哪一项就为正。",
       ),
       generate(rng) {
         const h = rng.nonZero(-6, 6);
@@ -2004,13 +2059,28 @@ export const equationsOfHyperbolasCenteredAtAGeneralPoint: TopicDef = {
             ellipseEq(h, k, a2, b2, horizontal),
             hyperbolaEq(k, h, a2, b2, horizontal),
           ],
-          solution: t(
-            `Center is $(${h}, ${k})$, $a = ${a}$ ($a^{2} = ${a2}$), and $b = ${b}$ ($b^{2} = ${b2}$). Transverse axis is ${horizontal ? "horizontal" : "vertical"}:${steps(
-              correct,
-            )}`,
-            `中心为 $(${h}, ${k})$，$a = ${a}$（$a^{2} = ${a2}$），$b = ${b}$（$b^{2} = ${b2}$）。实轴为${horizontal ? "水平" : "竖直"}方向：${steps(
-              correct,
-            )}`,
+          solution: walked(
+            [
+              [
+                ["Read a and b", "读出 a 和 b"],
+                t(
+                  `The vertices are $${a}$ ${horizontal ? "left and right of" : "above and below"} the center $(${h}, ${k})$, so $a = ${a}$ and $a^{2} = ${a2}$; also $b^{2} = ${b}^{2} = ${b2}$.`,
+                  `顶点在中心 $(${h}, ${k})$ 的${horizontal ? "左右" : "上下"}各 $${a}$ 处，所以 $a = ${a}$，$a^{2} = ${a2}$；又 $b^{2} = ${b}^{2} = ${b2}$。`,
+                ),
+              ],
+              [
+                ["Write the equation", "写出方程"],
+                t(
+                  `The vertices lie on a ${horizontal ? "horizontal" : "vertical"} line through the center, so the ${horizontal ? "$x$" : "$y$"} term is positive; subtracting the center gives`,
+                  `顶点在过中心的${horizontal ? "水平" : "竖直"}直线上，所以 ${horizontal ? "$x$" : "$y$"} 项为正；减去中心得`,
+                ),
+                [correct],
+              ],
+            ],
+            t(
+              `The vertex $${horizontal ? `(${h + a}, ${k})` : `(${h}, ${k + a})`}$ makes the numerator of the positive term $${a}^{2} = ${a2}$, equal to its denominator, and the other numerator $0$, so the left side is $1 - 0 = 1$.`,
+              `顶点 $${horizontal ? `(${h + a}, ${k})` : `(${h}, ${k + a})`}$ 使正项的分子为 $${a}^{2} = ${a2}$，等于分母，另一项的分子为 $0$，所以左边是 $1 - 0 = 1$。`,
+            ),
           ),
         });
       },
@@ -2019,8 +2089,8 @@ export const equationsOfHyperbolasCenteredAtAGeneralPoint: TopicDef = {
       id: "identifying-center-and-vertices-of-hyperbola",
       title: t("Identifying center and vertices of a hyperbola", "识别双曲线的中心与顶点"),
       explanation: t(
-        "From the standard form of a hyperbola:\n\n- The center is $(h, k)$.\n- For a horizontal hyperbola, vertices are $(h \\pm a, k)$.\n- For a vertical hyperbola, vertices are $(h, k \\pm a)$.",
-        "由双曲线的标准方程：\n\n- 中心为 $(h, k)$。\n- 水平双曲线的顶点为 $(h \\pm a, k)$。\n- 竖直双曲线的顶点为 $(h, k \\pm a)$。",
+        "From the standard form of a hyperbola:\n\n- The center is $(h, k)$.\n- For a horizontal hyperbola, vertices are $(h \\pm a, k)$.\n- For a vertical hyperbola, vertices are $(h, k \\pm a)$.\n\nThe vertices are the points of the curve nearest the center, on the transverse axis, and the positive term tells which axis that is. For $\\frac{(y + 1)^{2}}{16} - \\frac{(x - 3)^{2}}{4} = 1$: the center is $(3, -1)$, the $y$ term is positive and $a = 4$, so the vertices are $(3, -5)$ and $(3, 3)$. Check: $(3, 3)$ gives $\\frac{16}{16} - 0 = 1$.\n\n> **Watch out.** The signs in the brackets are opposite to the center's: $y + 1$ means $k = -1$. Move by $a$, the square root under the positive term, not by $b$.",
+        "由双曲线的标准方程：\n\n- 中心为 $(h, k)$。\n- 水平双曲线的顶点为 $(h \\pm a, k)$。\n- 竖直双曲线的顶点为 $(h, k \\pm a)$。\n\n顶点是曲线上离中心最近的点，在实轴上，而正项说明实轴是哪条。对 $\\frac{(y + 1)^{2}}{16} - \\frac{(x - 3)^{2}}{4} = 1$：中心是 $(3, -1)$，$y$ 项为正，$a = 4$，所以顶点是 $(3, -5)$ 和 $(3, 3)$。检验：$(3, 3)$ 代入得 $\\frac{16}{16} - 0 = 1$。\n\n> **注意。** 括号里的符号与中心坐标相反：$y + 1$ 表示 $k = -1$。移动的是正项分母的平方根 $a$，不是 $b$。",
       ),
       generate(rng) {
         const h = rng.nonZero(-6, 6);
@@ -2042,11 +2112,53 @@ export const equationsOfHyperbolasCenteredAtAGeneralPoint: TopicDef = {
             : `\\text{Center: } (${h}, ${k}), \\; \\text{Vertices: } (${h - a}, ${k}), (${h + a}, ${k})`,
           `\\text{Center: } (${h}, ${k}), \\; \\text{Vertices: } (${h - b}, ${k}), (${h + b}, ${k})`,
         ];
-        const solution = t(
-          `The center is $(${h}, ${k})$. The positive term has denominator $a^{2} = ${a2} \\implies a = ${a}$. Moving $a$ units along the ${horizontal ? "horizontal" : "vertical"} axis gives vertices $${v1}$ and $${v2}$.`,
-          `中心为 $(${h}, ${k})$。正项的分母为 $a^{2} = ${a2} \\implies a = ${a}$。沿${horizontal ? "水平" : "竖直"}轴方向移动 $a$ 个单位得到顶点 $${v1}$ 和 $${v2}$。`,
+        const solution = walked(
+          [
+            [
+              ["Read the center", "读出中心"],
+              t(
+                `Written as $(x - h)^{2}$ and $(y - k)^{2}$, the squares give the center $(${h}, ${k})$.`,
+                `把两个平方写成 $(x - h)^{2}$ 和 $(y - k)^{2}$ 的形式，得中心 $(${h}, ${k})$。`,
+              ),
+            ],
+            [
+              ["Find a", "求 a"],
+              t(
+                `The positive term is the ${horizontal ? "$x$" : "$y$"} term, with denominator $a^{2} = ${a2}$, so $a = ${a}$.`,
+                `正项是 ${horizontal ? "$x$" : "$y$"} 项，分母 $a^{2} = ${a2}$，所以 $a = ${a}$。`,
+              ),
+            ],
+            [
+              ["Move a along the transverse axis", "沿实轴移动 a"],
+              t(
+                `Move $${a}$ ${horizontal ? "left and right" : "down and up"} from the center:`,
+                `从中心向${horizontal ? "左右" : "下上"}各移 $${a}$：`,
+              ),
+              [`${v1}, \\quad ${v2}`],
+            ],
+          ],
+          t(
+            `The vertices are $${2 * a} = 2a$ apart, and their midpoint is $(${h}, ${k})$, the center.`,
+            `两顶点相距 $${2 * a} = 2a$，中点是 $(${h}, ${k})$，正是中心。`,
+          ),
         );
-        return makeChoice(rng, prompt, correct, distractors, solution);
+        return makeChoice(rng, prompt, correct, distractors, solution, [
+          why(
+            distractors[0]!,
+            `The signs are flipped: $(x - h)^{2}$ has center $h$, so the center is $(${h}, ${k})$, not $(${-h}, ${-k})$.`,
+            `符号反了：$(x - h)^{2}$ 对应的中心是 $h$，所以中心是 $(${h}, ${k})$，不是 $(${-h}, ${-k})$。`,
+          ),
+          why(
+            distractors[1]!,
+            `These move ${horizontal ? "up and down" : "left and right"}, but the positive ${horizontal ? "$x$" : "$y$"} term puts the vertices on a ${horizontal ? "horizontal" : "vertical"} line.`,
+            `这是${horizontal ? "上下" : "左右"}移动，但正的 ${horizontal ? "$x$" : "$y$"} 项说明顶点在${horizontal ? "水平" : "竖直"}直线上。`,
+          ),
+          why(
+            distractors[2]!,
+            `These move $b = ${b}$ sideways; the vertices are $a = ${a}$ from the center along the transverse axis.`,
+            `这是横向移动 $b = ${b}$；顶点沿实轴距中心 $a = ${a}$。`,
+          ),
+        ]);
       },
     },
   ],
@@ -2063,14 +2175,26 @@ export const asymptotesOfHyperbolasCenteredAtTheOrigin: TopicDef = {
   encompasses: [{ topic: "equations-of-hyperbolas-centered-at-the-origin", weight: 0.6 }],
   xp: 12,
   standards: ["CCSS.HSG.GPE.A.3"],
+  intro: t(
+    `Solve $\\frac{x^{2}}{16} - \\frac{y^{2}}{9} = 1$ for $y$ at $x = 20$: $y^{2} = 9\\left(\\frac{400}{16} - 1\\right) = 216$, so $y \\approx 14.70$, while the line $y = \\frac{3}{4}x$ is at $15$. At $x = 40$, $y^{2} = 9(100 - 1) = 891$, so $y \\approx 29.85$, against $30$ on the line. The gap shrinks from about $0.30$ to about $0.15$: far out, the curve hugs the lines $y = \\pm \\frac{3}{4}x$, its asymptotes.
+
+Check: replacing the $1$ by $0$ gives $\\frac{x^{2}}{16} = \\frac{y^{2}}{9}$, so $y = \\pm \\frac{3}{4}x$, the same lines.
+
+In this lesson we find the asymptotes of hyperbolas centered at the origin that open left and right or up and down, and read their slopes from a drawing.`,
+    `在 $x = 20$ 处由 $\\frac{x^{2}}{16} - \\frac{y^{2}}{9} = 1$ 解出 $y$：$y^{2} = 9\\left(\\frac{400}{16} - 1\\right) = 216$，所以 $y \\approx 14.70$，而直线 $y = \\frac{3}{4}x$ 在这里是 $15$。在 $x = 40$ 处，$y^{2} = 9(100 - 1) = 891$，所以 $y \\approx 29.85$，直线上是 $30$。差距从约 $0.30$ 缩小到约 $0.15$：越往外，曲线越贴近直线 $y = \\pm \\frac{3}{4}x$，这就是它的渐近线。
+
+检验：把 $1$ 换成 $0$ 得 $\\frac{x^{2}}{16} = \\frac{y^{2}}{9}$，所以 $y = \\pm \\frac{3}{4}x$，正是这两条直线。
+
+这节课我们求中心在原点、向左右或向上下张开的双曲线的渐近线，并从图中读出渐近线的斜率。`,
+  ),
   knowledgePoints: [
     {
       id: "asymptotes-of-horizontal-hyperbolas",
       figure: precalculusDrawings3["asymptotes-of-hyperbolas-centered-at-the-origin#asymptotes-of-horizontal-hyperbolas"],
       title: t("Asymptotes of horizontal hyperbolas", "水平双曲线的渐近线方程"),
       explanation: t(
-        "Far from the center, a hyperbola gets closer and closer to two lines through its center, and these asymptotes come from replacing the constant one by zero. For the horizontal hyperbola $\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 1$, setting the right side to $0$ gives:\n\n$$\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 0 \\implies y = \\pm \\frac{b}{a}x$$",
-        "离中心越远，双曲线越接近两条过中心的直线；把方程中的常数 1 换成 0 就得到这两条渐近线。对于水平双曲线 $\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 1$，将等式右边置为 $0$：\n\n$$\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 0 \\implies y = \\pm \\frac{b}{a}x$$",
+        "Far from the center, a hyperbola gets closer and closer to two lines through its center, and these asymptotes come from replacing the constant one by zero. For the horizontal hyperbola $\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 1$, setting the right side to $0$ gives:\n\n$$\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 0 \\implies y = \\pm \\frac{b}{a}x$$\n\nFor $\\frac{x^{2}}{36} - \\frac{y^{2}}{16} = 1$: $a = 6$ and $b = 4$, so $y = \\pm \\frac{4}{6}x = \\pm \\frac{2}{3}x$. Check: the line $y = \\frac{2}{3}x$ passes through $(6, 4)$, the corner of the box with half-width $a$ and half-height $b$.\n\n> **Watch out.** For a horizontal hyperbola the slope is $\\frac{b}{a}$, the root under $y^{2}$ over the root under $x^{2}$. Use the roots, not the denominators $\\frac{16}{36}$.",
+        "离中心越远，双曲线越接近两条过中心的直线；把方程中的常数 1 换成 0 就得到这两条渐近线。对于水平双曲线 $\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 1$，将等式右边置为 $0$：\n\n$$\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 0 \\implies y = \\pm \\frac{b}{a}x$$\n\n对 $\\frac{x^{2}}{36} - \\frac{y^{2}}{16} = 1$：$a = 6$，$b = 4$，所以 $y = \\pm \\frac{4}{6}x = \\pm \\frac{2}{3}x$。检验：直线 $y = \\frac{2}{3}x$ 经过 $(6, 4)$，即半宽为 $a$、半高为 $b$ 的矩形的角。\n\n> **注意。** 水平双曲线的斜率是 $\\frac{b}{a}$，即 $y^{2}$ 下的平方根比 $x^{2}$ 下的平方根。要用平方根，不是分母之比 $\\frac{16}{36}$。",
       ),
       generate(rng) {
         const a = rng.int(2, 12);
@@ -2090,15 +2214,46 @@ export const asymptotesOfHyperbolasCenteredAtTheOrigin: TopicDef = {
           `y = \\pm ${co(Q.of(a2, b2).toLatex())}x`,
           `x = \\pm ${co(slopeLatex)}y`,
         ];
-        const solution = t(
-          `For a horizontal hyperbola, the asymptotes are $y = \\pm \\frac{b}{a}x$. Here $a = ${a}$ and $b = ${b}$:${steps(
-            `y = \\pm \\frac{${b}}{${a}}x = \\pm ${co(slopeLatex)}x`,
-          )}`,
-          `对于水平双曲线，渐近线为 $y = \\pm \\frac{b}{a}x$。此处 $a = ${a}, b = ${b}$：${steps(
-            `y = \\pm \\frac{${b}}{${a}}x = \\pm ${co(slopeLatex)}x`,
-          )}`,
+        const solution = walked(
+          [
+            [
+              ["Replace 1 with 0", "把 1 换成 0"],
+              t(`Far from the center the $1$ hardly matters:`, `离中心很远时 $1$ 几乎不起作用：`),
+              [`\\frac{x^{2}}{${a2}} - \\frac{y^{2}}{${b2}} = 0`, `y^{2} = \\frac{${b2}}{${a2}}x^{2}`],
+            ],
+            [
+              ["Take square roots", "开平方"],
+              t(`Here $a = ${a}$ and $b = ${b}$:`, `这里 $a = ${a}$，$b = ${b}$：`),
+              [`y = \\pm \\frac{${b}}{${a}}x = \\pm ${co(slopeLatex)}x`],
+            ],
+          ],
+          t(
+            `At $x = ${a}$ the line $y = ${co(slopeLatex)}x$ is at $y = ${b}$, so it passes through $(${a}, ${b})$, the corner of the box with half-width $a = ${a}$ and half-height $b = ${b}$.`,
+            `在 $x = ${a}$ 处，直线 $y = ${co(slopeLatex)}x$ 的值是 $y = ${b}$，所以它经过 $(${a}, ${b})$，即半宽 $a = ${a}$、半高 $b = ${b}$ 的矩形的角。`,
+          ),
         );
-        return makeChoice(rng, prompt, correct, distractors, solution);
+        return makeChoice(rng, prompt, correct, distractors, solution, [
+          why(
+            distractors[0]!,
+            `The ratio is upside down: for a horizontal hyperbola the slope is $b / a$, with $b = ${b}$ from the $y^{2}$ term on top.`,
+            `比颠倒了：水平双曲线的斜率是 $b / a$，来自 $y^{2}$ 项的 $b = ${b}$ 在上面。`,
+          ),
+          why(
+            distractors[1]!,
+            `This divides the denominators $${b2}$ and $${a2}$; the slope is the ratio of their square roots.`,
+            `这是分母 $${b2}$ 与 $${a2}$ 之比；斜率是它们的平方根之比。`,
+          ),
+          why(
+            distractors[2]!,
+            "This is upside down and uses the denominators instead of their square roots.",
+            "这个比既颠倒了，又用了分母而不是它们的平方根。",
+          ),
+          why(
+            distractors[3]!,
+            "This solves for $x$ instead of $y$, which turns the slope upside down.",
+            "这是解出 $x$ 而不是 $y$，斜率因此颠倒了。",
+          ),
+        ]);
       },
     },
     {
@@ -2106,8 +2261,8 @@ export const asymptotesOfHyperbolasCenteredAtTheOrigin: TopicDef = {
       figure: precalculusDrawings3["asymptotes-of-hyperbolas-centered-at-the-origin#asymptotes-of-vertical-hyperbolas"],
       title: t("Asymptotes of vertical hyperbolas", "竖直双曲线的渐近线方程"),
       explanation: t(
-        "When the term with the vertical variable is positive, the hyperbola opens up and down, and its asymptotes still come from replacing the constant one by zero. For the vertical hyperbola $\\frac{y^{2}}{a^{2}} - \\frac{x^{2}}{b^{2}} = 1$, setting the right side to $0$ gives:\n\n$$\\frac{y^{2}}{a^{2}} - \\frac{x^{2}}{b^{2}} = 0 \\implies y = \\pm \\frac{a}{b}x$$",
-        "当含纵坐标变量的项为正时，双曲线向上下开口，它的渐近线仍由把常数 1 换成 0 得到。对于竖直双曲线 $\\frac{y^{2}}{a^{2}} - \\frac{x^{2}}{b^{2}} = 1$，将等式右边置为 $0$：\n\n$$\\frac{y^{2}}{a^{2}} - \\frac{x^{2}}{b^{2}} = 0 \\implies y = \\pm \\frac{a}{b}x$$",
+        "When the term with the vertical variable is positive, the hyperbola opens up and down, and its asymptotes still come from replacing the constant one by zero. For the vertical hyperbola $\\frac{y^{2}}{a^{2}} - \\frac{x^{2}}{b^{2}} = 1$, setting the right side to $0$ gives:\n\n$$\\frac{y^{2}}{a^{2}} - \\frac{x^{2}}{b^{2}} = 0 \\implies y = \\pm \\frac{a}{b}x$$\n\nFor $\\frac{y^{2}}{25} - \\frac{x^{2}}{4} = 1$: $a = 5$ and $b = 2$, so $y = \\pm \\frac{5}{2}x$. Check: the line $y = \\frac{5}{2}x$ passes through $(2, 5)$, the corner of the box with half-width $b$ and half-height $a$.\n\n> **Watch out.** Here $a$ goes with $y$, so the slope is $\\frac{a}{b}$, not $\\frac{b}{a}$: the root under $y^{2}$ is always on top.",
+        "当含纵坐标变量的项为正时，双曲线向上下开口，它的渐近线仍由把常数 1 换成 0 得到。对于竖直双曲线 $\\frac{y^{2}}{a^{2}} - \\frac{x^{2}}{b^{2}} = 1$，将等式右边置为 $0$：\n\n$$\\frac{y^{2}}{a^{2}} - \\frac{x^{2}}{b^{2}} = 0 \\implies y = \\pm \\frac{a}{b}x$$\n\n对 $\\frac{y^{2}}{25} - \\frac{x^{2}}{4} = 1$：$a = 5$，$b = 2$，所以 $y = \\pm \\frac{5}{2}x$。检验：直线 $y = \\frac{5}{2}x$ 经过 $(2, 5)$，即半宽为 $b$、半高为 $a$ 的矩形的角。\n\n> **注意。** 这里 $a$ 与 $y$ 对应，所以斜率是 $\\frac{a}{b}$，不是 $\\frac{b}{a}$：$y^{2}$ 下的平方根总在上面。",
       ),
       generate(rng) {
         const a = rng.int(2, 12);
@@ -2127,15 +2282,46 @@ export const asymptotesOfHyperbolasCenteredAtTheOrigin: TopicDef = {
           `y = \\pm ${co(Q.of(b2, a2).toLatex())}x`,
           `x = \\pm ${co(slopeLatex)}y`,
         ];
-        const solution = t(
-          `For a vertical hyperbola, the asymptotes are $y = \\pm \\frac{a}{b}x$. Here $a = ${a}$ and $b = ${b}$:${steps(
-            `y = \\pm \\frac{${a}}{${b}}x = \\pm ${co(slopeLatex)}x`,
-          )}`,
-          `对于竖直双曲线，渐近线为 $y = \\pm \\frac{a}{b}x$。此处 $a = ${a}, b = ${b}$：${steps(
-            `y = \\pm \\frac{${a}}{${b}}x = \\pm ${co(slopeLatex)}x`,
-          )}`,
+        const solution = walked(
+          [
+            [
+              ["Replace 1 with 0", "把 1 换成 0"],
+              t(`Far from the center the $1$ hardly matters:`, `离中心很远时 $1$ 几乎不起作用：`),
+              [`\\frac{y^{2}}{${a2}} - \\frac{x^{2}}{${b2}} = 0`, `y^{2} = \\frac{${a2}}{${b2}}x^{2}`],
+            ],
+            [
+              ["Take square roots", "开平方"],
+              t(`Here $a = ${a}$ and $b = ${b}$:`, `这里 $a = ${a}$，$b = ${b}$：`),
+              [`y = \\pm \\frac{${a}}{${b}}x = \\pm ${co(slopeLatex)}x`],
+            ],
+          ],
+          t(
+            `At $x = ${b}$ the line $y = ${co(slopeLatex)}x$ is at $y = ${a}$, so it passes through $(${b}, ${a})$, the corner of the box with half-width $b = ${b}$ and half-height $a = ${a}$.`,
+            `在 $x = ${b}$ 处，直线 $y = ${co(slopeLatex)}x$ 的值是 $y = ${a}$，所以它经过 $(${b}, ${a})$，即半宽 $b = ${b}$、半高 $a = ${a}$ 的矩形的角。`,
+          ),
         );
-        return makeChoice(rng, prompt, correct, distractors, solution);
+        return makeChoice(rng, prompt, correct, distractors, solution, [
+          why(
+            distractors[0]!,
+            `The ratio is upside down: for a vertical hyperbola the slope is $a / b$, with $a = ${a}$ from the positive $y^{2}$ term on top.`,
+            `比颠倒了：竖直双曲线的斜率是 $a / b$，来自正的 $y^{2}$ 项的 $a = ${a}$ 在上面。`,
+          ),
+          why(
+            distractors[1]!,
+            `This divides the denominators $${a2}$ and $${b2}$; the slope is the ratio of their square roots.`,
+            `这是分母 $${a2}$ 与 $${b2}$ 之比；斜率是它们的平方根之比。`,
+          ),
+          why(
+            distractors[2]!,
+            "This is upside down and uses the denominators instead of their square roots.",
+            "这个比既颠倒了，又用了分母而不是它们的平方根。",
+          ),
+          why(
+            distractors[3]!,
+            "This solves for $x$ instead of $y$, which turns the slope upside down.",
+            "这是解出 $x$ 而不是 $y$，斜率因此颠倒了。",
+          ),
+        ]);
       },
     },
   ],
@@ -2152,14 +2338,26 @@ export const asymptotesOfHyperbolasCenteredAtAGeneralPoint: TopicDef = {
   encompasses: [{ topic: "asymptotes-of-hyperbolas-centered-at-the-origin", weight: 0.5 }],
   xp: 12,
   standards: ["CCSS.HSG.GPE.A.3"],
+  intro: t(
+    `The hyperbola $\\frac{(x - 2)^{2}}{9} - \\frac{(y + 1)^{2}}{4} = 1$ is $\\frac{x^{2}}{9} - \\frac{y^{2}}{4} = 1$ moved to the center $(2, -1)$, and its asymptotes move with it. They keep the slopes $\\pm \\frac{2}{3}$ and now pass through $(2, -1)$: $y + 1 = \\pm \\frac{2}{3}(x - 2)$.
+
+Check: at $x = 5$ the lines give $y + 1 = \\pm 2$, that is $y = 1$ and $y = -3$, the corners $(5, 1)$ and $(5, -3)$ of the box that reaches $3$ across and $2$ up and down from the center.
+
+In this lesson we find the asymptotes of shifted hyperbolas that open left and right or up and down, and find the center of a hyperbola from its asymptotes.`,
+    `双曲线 $\\frac{(x - 2)^{2}}{9} - \\frac{(y + 1)^{2}}{4} = 1$ 是 $\\frac{x^{2}}{9} - \\frac{y^{2}}{4} = 1$ 平移到中心 $(2, -1)$ 得到的，它的渐近线也一起平移。斜率仍是 $\\pm \\frac{2}{3}$，但现在经过 $(2, -1)$：$y + 1 = \\pm \\frac{2}{3}(x - 2)$。
+
+检验：在 $x = 5$ 处，两条直线给出 $y + 1 = \\pm 2$，即 $y = 1$ 和 $y = -3$，正是从中心横向伸 $3$、上下伸 $2$ 的矩形的角 $(5, 1)$ 和 $(5, -3)$。
+
+这节课我们求向左右或向上下张开的平移双曲线的渐近线，并由渐近线求双曲线的中心。`,
+  ),
   knowledgePoints: [
     {
       id: "asymptotes-of-translated-horizontal-hyperbolas",
       figure: precalculusDrawings3["asymptotes-of-hyperbolas-centered-at-a-general-point#asymptotes-of-translated-horizontal-hyperbolas"],
       title: t("Asymptotes of translated horizontal hyperbolas", "平移水平双曲线的渐近线"),
       explanation: t(
-        "Translating a hyperbola moves its asymptotes with it, so they become lines through the new center with the same slopes as before. For $\\frac{(x-h)^{2}}{a^{2}} - \\frac{(y-k)^{2}}{b^{2}} = 1$, the asymptotes pass through the center $(h, k)$ with slopes $\\pm \\frac{b}{a}$:\n\n$$y - k = \\pm \\frac{b}{a}(x - h)$$",
-        "平移双曲线时，它的渐近线也随之移动，变成经过新中心、斜率不变的直线。对于 $\\frac{(x-h)^{2}}{a^{2}} - \\frac{(y-k)^{2}}{b^{2}} = 1$，渐近线穿过中心 $(h, k)$，斜率为 $\\pm \\frac{b}{a}$：\n\n$$y - k = \\pm \\frac{b}{a}(x - h)$$",
+        "Translating a hyperbola moves its asymptotes with it, so they become lines through the new center with the same slopes as before. For $\\frac{(x-h)^{2}}{a^{2}} - \\frac{(y-k)^{2}}{b^{2}} = 1$, the asymptotes pass through the center $(h, k)$ with slopes $\\pm \\frac{b}{a}$:\n\n$$y - k = \\pm \\frac{b}{a}(x - h)$$\n\nFor $\\frac{(x - 1)^{2}}{16} - \\frac{(y + 3)^{2}}{4} = 1$: the center is $(1, -3)$, $a = 4$ and $b = 2$, so $y + 3 = \\pm \\frac{1}{2}(x - 1)$. Check: at $x = 5$, $y + 3 = \\pm 2$, giving the corners $(5, -1)$ and $(5, -5)$ of the box around the center.\n\n> **Watch out.** Write the center inside the brackets with its signs flipped, just as in the hyperbola's equation: $y + 3$, not $y - 3$.",
+        "平移双曲线时，它的渐近线也随之移动，变成经过新中心、斜率不变的直线。对于 $\\frac{(x-h)^{2}}{a^{2}} - \\frac{(y-k)^{2}}{b^{2}} = 1$，渐近线穿过中心 $(h, k)$，斜率为 $\\pm \\frac{b}{a}$：\n\n$$y - k = \\pm \\frac{b}{a}(x - h)$$\n\n对 $\\frac{(x - 1)^{2}}{16} - \\frac{(y + 3)^{2}}{4} = 1$：中心是 $(1, -3)$，$a = 4$，$b = 2$，所以 $y + 3 = \\pm \\frac{1}{2}(x - 1)$。检验：在 $x = 5$ 处 $y + 3 = \\pm 2$，得到中心周围矩形的角 $(5, -1)$ 和 $(5, -5)$。\n\n> **注意。** 括号里中心坐标的符号要反过来，和双曲线方程里一样：是 $y + 3$，不是 $y - 3$。",
       ),
       generate(rng) {
         const h = rng.nonZero(-6, 6);
@@ -2179,15 +2377,48 @@ export const asymptotesOfHyperbolasCenteredAtAGeneralPoint: TopicDef = {
           `${yPart} = \\pm ${Q.of(a, b).toLatex()}${xPart}`,
           `${xPart} = \\pm ${slope}${yPart}`,
         ];
-        const solution = t(
-          `The center is $(${h}, ${k})$. For a horizontal hyperbola, the asymptotes have slope $\\pm \\frac{b}{a} = \\pm \\frac{${b}}{${a}} = \\pm ${slope}$:${steps(
-            correct,
-          )}`,
-          `中心为 $(${h}, ${k})$。水平双曲线的渐近线斜率为 $\\pm \\frac{b}{a} = \\pm \\frac{${b}}{${a}} = \\pm ${slope}$：${steps(
-            correct,
-          )}`,
+        const solution = walked(
+          [
+            [
+              ["Read the center, a and b", "读出中心、a 和 b"],
+              t(
+                `The center is $(${h}, ${k})$, the $x$ term is positive, $a = ${a}$ and $b = ${b}$.`,
+                `中心是 $(${h}, ${k})$，$x$ 项为正，$a = ${a}$，$b = ${b}$。`,
+              ),
+            ],
+            [
+              ["Find the slopes", "求斜率"],
+              t(`For a horizontal hyperbola the slopes are`, `水平双曲线的斜率是`),
+              [`\\pm \\frac{b}{a} = \\pm \\frac{${b}}{${a}} = \\pm ${slope}`],
+            ],
+            [
+              ["Write the lines through the center", "写出过中心的直线"],
+              t(`Use the point-slope form at $(${h}, ${k})$:`, `在 $(${h}, ${k})$ 处用点斜式：`),
+              [correct],
+            ],
+          ],
+          t(
+            `At $x = ${h + a}$ the lines give $${yPart} = \\pm ${b}$, which are the corners $(${h + a}, ${k + b})$ and $(${h + a}, ${k - b})$ of the box of half-width $a$ and half-height $b$ around the center.`,
+            `在 $x = ${h + a}$ 处，两条直线给出 $${yPart} = \\pm ${b}$，正是中心周围半宽 $a$、半高 $b$ 的矩形的角 $(${h + a}, ${k + b})$ 和 $(${h + a}, ${k - b})$。`,
+          ),
         );
-        return makeChoice(rng, prompt, correct, distractors, solution);
+        return makeChoice(rng, prompt, correct, distractors, solution, [
+          why(
+            distractors[0]!,
+            `These lines pass through $(${-h}, ${-k})$; the center is $(${h}, ${k})$, so the brackets are $${yPart}$ and $${xPart}$.`,
+            `这两条直线经过 $(${-h}, ${-k})$；中心是 $(${h}, ${k})$，所以括号是 $${yPart}$ 和 $${xPart}$。`,
+          ),
+          why(
+            distractors[1]!,
+            `The slope is upside down: for a horizontal hyperbola it is $b / a = ${b} / ${a}$.`,
+            `斜率颠倒了：水平双曲线的斜率是 $b / a = ${b} / ${a}$。`,
+          ),
+          why(
+            distractors[2]!,
+            "This swaps $x$ and $y$; solved for $y$, it has the reciprocal slope.",
+            "这把 $x$ 和 $y$ 对调了；解出 $y$ 后斜率是倒数。",
+          ),
+        ]);
       },
     },
     {
@@ -2195,8 +2426,8 @@ export const asymptotesOfHyperbolasCenteredAtAGeneralPoint: TopicDef = {
       figure: precalculusDrawings4["asymptotes-of-hyperbolas-centered-at-a-general-point#asymptotes-of-translated-vertical-hyperbolas"],
       title: t("Asymptotes of translated vertical hyperbolas", "平移竖直双曲线的渐近线"),
       explanation: t(
-        "For a hyperbola that opens up and down, the slopes of the asymptotes are the square root under the positive term divided by the other one. For $\\frac{(y-k)^{2}}{a^{2}} - \\frac{(x-h)^{2}}{b^{2}} = 1$, the asymptotes pass through the center $(h, k)$ with slopes $\\pm \\frac{a}{b}$:\n\n$$y - k = \\pm \\frac{a}{b}(x - h)$$",
-        "对于开口向上下的双曲线，渐近线的斜率等于正项下的平方根除以另一项下的平方根。对于 $\\frac{(y-k)^{2}}{a^{2}} - \\frac{(x-h)^{2}}{b^{2}} = 1$，渐近线穿过中心 $(h, k)$，斜率为 $\\pm \\frac{a}{b}$：\n\n$$y - k = \\pm \\frac{a}{b}(x - h)$$",
+        "For a hyperbola that opens up and down, the slopes of the asymptotes are the square root under the positive term divided by the other one. For $\\frac{(y-k)^{2}}{a^{2}} - \\frac{(x-h)^{2}}{b^{2}} = 1$, the asymptotes pass through the center $(h, k)$ with slopes $\\pm \\frac{a}{b}$:\n\n$$y - k = \\pm \\frac{a}{b}(x - h)$$\n\nFor $\\frac{(y - 2)^{2}}{9} - \\frac{(x + 4)^{2}}{16} = 1$: the center is $(-4, 2)$, $a = 3$ and $b = 4$, so $y - 2 = \\pm \\frac{3}{4}(x + 4)$. Check: at $x = 0$, $y - 2 = \\pm 3$, giving the corners $(0, 5)$ and $(0, -1)$ of the box around the center.\n\n> **Watch out.** When the $y$ term is positive, $a$ goes on top: the slope is $\\frac{a}{b} = \\frac{3}{4}$, not $\\frac{4}{3}$.",
+        "对于开口向上下的双曲线，渐近线的斜率等于正项下的平方根除以另一项下的平方根。对于 $\\frac{(y-k)^{2}}{a^{2}} - \\frac{(x-h)^{2}}{b^{2}} = 1$，渐近线穿过中心 $(h, k)$，斜率为 $\\pm \\frac{a}{b}$：\n\n$$y - k = \\pm \\frac{a}{b}(x - h)$$\n\n对 $\\frac{(y - 2)^{2}}{9} - \\frac{(x + 4)^{2}}{16} = 1$：中心是 $(-4, 2)$，$a = 3$，$b = 4$，所以 $y - 2 = \\pm \\frac{3}{4}(x + 4)$。检验：在 $x = 0$ 处 $y - 2 = \\pm 3$，得到中心周围矩形的角 $(0, 5)$ 和 $(0, -1)$。\n\n> **注意。** $y$ 项为正时 $a$ 在上面：斜率是 $\\frac{a}{b} = \\frac{3}{4}$，不是 $\\frac{4}{3}$。",
       ),
       generate(rng) {
         const h = rng.nonZero(-6, 6);
@@ -2216,15 +2447,48 @@ export const asymptotesOfHyperbolasCenteredAtAGeneralPoint: TopicDef = {
           `${yPart} = \\pm ${Q.of(b, a).toLatex()}${xPart}`,
           `${xPart} = \\pm ${slope}${yPart}`,
         ];
-        const solution = t(
-          `The center is $(${h}, ${k})$. For a vertical hyperbola, the asymptotes have slope $\\pm \\frac{a}{b} = \\pm \\frac{${a}}{${b}} = \\pm ${slope}$:${steps(
-            correct,
-          )}`,
-          `中心为 $(${h}, ${k})$。竖直双曲线的渐近线斜率为 $\\pm \\frac{a}{b} = \\pm \\frac{${a}}{${b}} = \\pm ${slope}$：${steps(
-            correct,
-          )}`,
+        const solution = walked(
+          [
+            [
+              ["Read the center, a and b", "读出中心、a 和 b"],
+              t(
+                `The center is $(${h}, ${k})$, the $y$ term is positive, $a = ${a}$ and $b = ${b}$.`,
+                `中心是 $(${h}, ${k})$，$y$ 项为正，$a = ${a}$，$b = ${b}$。`,
+              ),
+            ],
+            [
+              ["Find the slopes", "求斜率"],
+              t(`For a vertical hyperbola the slopes are`, `竖直双曲线的斜率是`),
+              [`\\pm \\frac{a}{b} = \\pm \\frac{${a}}{${b}} = \\pm ${slope}`],
+            ],
+            [
+              ["Write the lines through the center", "写出过中心的直线"],
+              t(`Use the point-slope form at $(${h}, ${k})$:`, `在 $(${h}, ${k})$ 处用点斜式：`),
+              [correct],
+            ],
+          ],
+          t(
+            `At $x = ${h + b}$ the lines give $${yPart} = \\pm ${a}$, which are the corners $(${h + b}, ${k + a})$ and $(${h + b}, ${k - a})$ of the box of half-width $b$ and half-height $a$ around the center.`,
+            `在 $x = ${h + b}$ 处，两条直线给出 $${yPart} = \\pm ${a}$，正是中心周围半宽 $b$、半高 $a$ 的矩形的角 $(${h + b}, ${k + a})$ 和 $(${h + b}, ${k - a})$。`,
+          ),
         );
-        return makeChoice(rng, prompt, correct, distractors, solution);
+        return makeChoice(rng, prompt, correct, distractors, solution, [
+          why(
+            distractors[0]!,
+            `These lines pass through $(${-h}, ${-k})$; the center is $(${h}, ${k})$, so the brackets are $${yPart}$ and $${xPart}$.`,
+            `这两条直线经过 $(${-h}, ${-k})$；中心是 $(${h}, ${k})$，所以括号是 $${yPart}$ 和 $${xPart}$。`,
+          ),
+          why(
+            distractors[1]!,
+            `The slope is upside down: for a vertical hyperbola it is $a / b = ${a} / ${b}$.`,
+            `斜率颠倒了：竖直双曲线的斜率是 $a / b = ${a} / ${b}$。`,
+          ),
+          why(
+            distractors[2]!,
+            "This swaps $x$ and $y$; solved for $y$, it has the reciprocal slope.",
+            "这把 $x$ 和 $y$ 对调了；解出 $y$ 后斜率是倒数。",
+          ),
+        ]);
       },
     },
   ],
@@ -2241,13 +2505,25 @@ export const findingInterceptsAndIntersectionsOfHyperbolas: TopicDef = {
   encompasses: [],
   xp: 12,
   standards: ["CCSS.HSG.GPE.A.3"],
+  intro: t(
+    `For $\\frac{x^{2}}{64} - \\frac{y^{2}}{16} = 1$, setting $y = 0$ gives $x^{2} = 64$, so the curve crosses the $x$-axis at $(\\pm 8, 0)$, while setting $x = 0$ gives $y^{2} = -16$, which has no solution. Setting $y = 3$ gives $\\frac{x^{2}}{64} = 1 + \\frac{9}{16} = \\frac{25}{16}$, so $x^{2} = 100$, and the line $y = 3$ meets the curve at $(\\pm 10, 3)$.
+
+Check: $\\frac{100}{64} - \\frac{9}{16} = \\frac{100 - 36}{64} = 1$.
+
+In this lesson we find where a hyperbola crosses the axes and where it meets horizontal and vertical lines, by substituting and solving.`,
+    `对 $\\frac{x^{2}}{64} - \\frac{y^{2}}{16} = 1$，令 $y = 0$ 得 $x^{2} = 64$，所以曲线与 $x$ 轴交于 $(\\pm 8, 0)$；令 $x = 0$ 得 $y^{2} = -16$，无解。令 $y = 3$ 得 $\\frac{x^{2}}{64} = 1 + \\frac{9}{16} = \\frac{25}{16}$，所以 $x^{2} = 100$，直线 $y = 3$ 与曲线交于 $(\\pm 10, 3)$。
+
+检验：$\\frac{100}{64} - \\frac{9}{16} = \\frac{100 - 36}{64} = 1$。
+
+这节课我们通过代入求解，找出双曲线与坐标轴的交点，以及它与水平线、竖直线的交点。`,
+  ),
   knowledgePoints: [
     {
       id: "intercepts-of-a-hyperbola",
       title: t("Intercepts of a hyperbola with the coordinate axes", "双曲线与坐标轴的截距"),
       explanation: t(
-        "For $\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 1$:\n- Setting $y = 0$ gives $x^{2} = a^{2} \\implies x = \\pm a$ ($x$-intercepts at $(\\pm a, 0)$).\n- Setting $x = 0$ gives $-\\frac{y^{2}}{b^{2}} = 1$, which has no real solutions (no $y$-intercepts).\n\nSimilarly, a vertical hyperbola $\\frac{y^{2}}{a^{2}} - \\frac{x^{2}}{b^{2}} = 1$ has $y$-intercepts at $(0, \\pm a)$ and no $x$-intercepts.",
-        "对于水平双曲线 $\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 1$：\n- 令 $y = 0$ 得 $x^{2} = a^{2} \\implies x = \\pm a$（$x$ 轴截距为 $(\\pm a, 0)$）。\n- 令 $x = 0$ 得 $-\\frac{y^{2}}{b^{2}} = 1$，无实数解（无 $y$ 轴截距）。\n\n同理，竖直双曲线有 $y$ 轴截距 $(0, \\pm a)$，无 $x$ 轴截距。",
+        "For $\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 1$:\n- Setting $y = 0$ gives $x^{2} = a^{2} \\implies x = \\pm a$ ($x$-intercepts at $(\\pm a, 0)$).\n- Setting $x = 0$ gives $-\\frac{y^{2}}{b^{2}} = 1$, which has no real solutions (no $y$-intercepts).\n\nSimilarly, a vertical hyperbola $\\frac{y^{2}}{a^{2}} - \\frac{x^{2}}{b^{2}} = 1$ has $y$-intercepts at $(0, \\pm a)$ and no $x$-intercepts.\n\nFor $\\frac{y^{2}}{25} - \\frac{x^{2}}{9} = 1$: $x = 0$ gives $y = \\pm 5$, and $y = 0$ gives $x^{2} = -9$, so the only intercepts are $(0, \\pm 5)$. Check: $\\frac{25}{25} - 0 = 1$.\n\n> **Watch out.** Only the positive term gives intercepts. The value under the negative term, here $9$, gives no points of the curve: $(\\pm 3, 0)$ are not intercepts.",
+        "对于水平双曲线 $\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 1$：\n- 令 $y = 0$ 得 $x^{2} = a^{2} \\implies x = \\pm a$（$x$ 轴截距为 $(\\pm a, 0)$）。\n- 令 $x = 0$ 得 $-\\frac{y^{2}}{b^{2}} = 1$，无实数解（无 $y$ 轴截距）。\n\n同理，竖直双曲线有 $y$ 轴截距 $(0, \\pm a)$，无 $x$ 轴截距。\n\n对 $\\frac{y^{2}}{25} - \\frac{x^{2}}{9} = 1$：$x = 0$ 得 $y = \\pm 5$，$y = 0$ 得 $x^{2} = -9$，所以截距点只有 $(0, \\pm 5)$。检验：$\\frac{25}{25} - 0 = 1$。\n\n> **注意。** 只有正项给出截距点。负项下的数（这里是 $9$）不给出曲线上的点：$(\\pm 3, 0)$ 不是截距点。",
       ),
       generate(rng) {
         const a = rng.int(2, 12);
@@ -2278,19 +2554,56 @@ export const findingInterceptsAndIntersectionsOfHyperbolas: TopicDef = {
               ),
           t("No intercepts on either axis", "与两条坐标轴均无交点"),
         ];
-        const solution = t(
-          `For $${eqStr}$, the positive term yields real intercepts on the $${horizontal ? "x" : "y"}$-axis at $${horizontal ? `(\\pm ${a}, 0)` : `(0, \\pm ${a})`}$. Setting the other variable to $0$ gives no real solutions.`,
-          `对于 $${eqStr}$，正项变量在 $${horizontal ? "x" : "y"}$ 轴上产生实数截距 $${horizontal ? `(\\pm ${a}, 0)` : `(0, \\pm ${a})`}$，而令另一变量为 $0$ 时无实数解。`,
-        );
-        return makeChoiceTexts(rng, prompt, correct, distractors, solution);
+        const solution = (() => {
+          const [P, N] = horizontal ? ["x", "y"] : ["y", "x"];
+          return walked(
+            [
+              [
+                [`Set ${N} = 0`, `令 ${N} = 0`],
+                t(`On the $${P}$-axis $${N} = 0$:`, `在 $${P}$ 轴上 $${N} = 0$：`),
+                [`\\frac{${P}^{2}}{${a2}} = 1`, `${P}^{2} = ${a2}, \\quad ${P} = \\pm ${a}`],
+              ],
+              [
+                [`Set ${P} = 0`, `令 ${P} = 0`],
+                t(
+                  `On the $${N}$-axis $${P} = 0$, and a square cannot be negative, so there is no solution:`,
+                  `在 $${N}$ 轴上 $${P} = 0$，而平方不能是负数，所以无解：`,
+                ),
+                [`-\\frac{${N}^{2}}{${b2}} = 1`, `${N}^{2} = -${b2}`],
+              ],
+            ],
+            t(
+              `Substituting $${horizontal ? `(${a}, 0)` : `(0, ${a})`}$ gives $${a2} \\div ${a2} - 0 = 1$; the branches lie where $|${P}| \\ge ${a}$, so neither reaches the $${N}$-axis.`,
+              `代入 $${horizontal ? `(${a}, 0)` : `(0, ${a})`}$ 得 $${a2} \\div ${a2} - 0 = 1$；两支都在 $|${P}| \\ge ${a}$ 的范围内，所以都不与 $${N}$ 轴相交。`,
+            ),
+          );
+        })();
+        const [P, N] = horizontal ? ["x", "y"] : ["y", "x"];
+        return makeChoiceTexts(rng, prompt, correct, distractors, solution, [
+          [
+            distractors[0]!.en,
+            `This puts $b$ on the $${N}$-axis, but setting $${P} = 0$ gives $${N}^{2} = -${b2}$, which has no solution.`,
+            `这把 $b$ 放在 $${N}$ 轴上，但令 $${P} = 0$ 得 $${N}^{2} = -${b2}$，无解。`,
+          ],
+          [
+            distractors[1]!.en,
+            `The $${N}$-axis gives $${N}^{2} = -${b2}$, which has no real solution, so there are no intercepts there.`,
+            `在 $${N}$ 轴上得 $${N}^{2} = -${b2}$，没有实数解，所以那里没有截距点。`,
+          ],
+          [
+            distractors[2]!.en,
+            `Setting $${N} = 0$ gives $${P}^{2} = ${a2}$, so the curve does cross the $${P}$-axis.`,
+            `令 $${N} = 0$ 得 $${P}^{2} = ${a2}$，所以曲线与 $${P}$ 轴确实相交。`,
+          ],
+        ]);
       },
     },
     {
       id: "intersections-with-lines",
       title: t("Intersections of a hyperbola with lines", "双曲线与直线的交点"),
       explanation: t(
-        "To find the intersection points of a hyperbola with a line, substitute the linear relationship into the hyperbola equation and solve the resulting quadratic equation.",
-        "求解双曲线与直线的交点，将直线的代数式代入双曲线方程，解所得的一元二次方程。",
+        "To find the intersection points of a hyperbola with a line, substitute the linear relationship into the hyperbola equation and solve the resulting quadratic equation.\n\nFor $\\frac{x^{2}}{16} - \\frac{y^{2}}{9} = 1$ and $y = 4$: $\\frac{x^{2}}{16} = 1 + \\frac{16}{9} = \\frac{25}{9}$, so $x^{2} = \\frac{400}{9}$ and $x = \\pm \\frac{20}{3}$; the points are $\\left(\\pm \\frac{20}{3}, 4\\right)$. Check: $\\frac{400}{144} - \\frac{16}{9} = \\frac{400 - 256}{144} = 1$.\n\n> **Watch out.** A horizontal line meets a horizontal hyperbola at two points with the same $y$: keep both signs of $x$, and keep $y$ equal to the line's value.",
+        "求解双曲线与直线的交点，将直线的代数式代入双曲线方程，解所得的一元二次方程。\n\n对 $\\frac{x^{2}}{16} - \\frac{y^{2}}{9} = 1$ 和 $y = 4$：$\\frac{x^{2}}{16} = 1 + \\frac{16}{9} = \\frac{25}{9}$，所以 $x^{2} = \\frac{400}{9}$，$x = \\pm \\frac{20}{3}$；交点是 $\\left(\\pm \\frac{20}{3}, 4\\right)$。检验：$\\frac{400}{144} - \\frac{16}{9} = \\frac{400 - 256}{144} = 1$。\n\n> **注意。** 水平线与左右张开的双曲线交于两个 $y$ 相同的点：$x$ 的正负两个值都要保留，$y$ 就是直线的值。",
       ),
       generate(rng) {
         // Horizontal hyperbola x^2/a^2 - y^2/b^2 = 1 with line y = d
@@ -2308,19 +2621,52 @@ export const findingInterceptsAndIntersectionsOfHyperbolas: TopicDef = {
         );
         const correct = `(\\pm ${xVal}, ${d})`;
         const distractors = [`(${d}, \\pm ${xVal})`, `(\\pm ${a}, ${d})`, `(\\pm ${xVal}, 0)`, `(\\pm ${m}, ${d})`];
-        const solution = t(
-          `Substitute $y = ${d}$ into the hyperbola equation:${steps(
-            `\\frac{x^{2}}{${a2}} - \\frac{${d * d}}{${b2}} = 1 \\implies \\frac{x^{2}}{${a2}} = 1 + \\frac{${d * d}}{${b2}} = \\frac{${m * m}}{${b2}}`,
-            `x^{2} = ${a2} \\times \\frac{${m * m}}{${b2}} = ${xVal * xVal} \\implies x = \\pm ${xVal}`,
-            `\\text{Points: } (\\pm ${xVal}, ${d})`,
-          )}`,
-          `将 $y = ${d}$ 代入双曲线方程：${steps(
-            `\\frac{x^{2}}{${a2}} - \\frac{${d * d}}{${b2}} = 1 \\implies \\frac{x^{2}}{${a2}} = 1 + \\frac{${d * d}}{${b2}} = \\frac{${m * m}}{${b2}}`,
-            `x^{2} = ${a2} \\times \\frac{${m * m}}{${b2}} = ${xVal * xVal} \\implies x = \\pm ${xVal}`,
-            `\\text{交点坐标：} (\\pm ${xVal}, ${d})`,
-          )}`,
+        const solution = walked(
+          [
+            [
+              ["Substitute the line", "代入直线"],
+              t(
+                `Put $y = ${d}$ into the equation and move the constant term to the right:`,
+                `把 $y = ${d}$ 代入方程，并把常数项移到右边：`,
+              ),
+              [
+                `\\frac{x^{2}}{${a2}} - \\frac{${d * d}}{${b2}} = 1`,
+                `\\frac{x^{2}}{${a2}} = 1 + \\frac{${d * d}}{${b2}} = \\frac{${m * m}}{${b2}}`,
+              ],
+            ],
+            [
+              ["Solve for x", "解出 x"],
+              t(`Multiply by $${a2}$ and take both roots:`, `乘以 $${a2}$，再取两个平方根：`),
+              [`x^{2} = ${a2} \\cdot \\frac{${m * m}}{${b2}} = ${xVal * xVal}`, `x = \\pm ${xVal}`],
+            ],
+            [
+              ["Write the points", "写出交点"],
+              t(`Both points lie on the line $y = ${d}$: $${correct}$.`, `两个交点都在直线 $y = ${d}$ 上：$${correct}$。`),
+            ],
+          ],
+          t(
+            `$${xVal * xVal} \\div ${a2} = ${m * m} \\div ${b2}$, and $${m * m} \\div ${b2} - ${d * d} \\div ${b2} = ${b2} \\div ${b2} = 1$, so $(${xVal}, ${d})$ is on the hyperbola.`,
+            `$${xVal * xVal} \\div ${a2} = ${m * m} \\div ${b2}$，且 $${m * m} \\div ${b2} - ${d * d} \\div ${b2} = ${b2} \\div ${b2} = 1$，所以 $(${xVal}, ${d})$ 在双曲线上。`,
+          ),
         );
-        return makeChoice(rng, prompt, correct, distractors, solution);
+        return makeChoice(rng, prompt, correct, distractors, solution, [
+          why(
+            distractors[0]!,
+            `The coordinates are swapped: the line is $y = ${d}$, so $${d}$ is the $y$-coordinate.`,
+            `坐标对调了：直线是 $y = ${d}$，所以 $${d}$ 是纵坐标。`,
+          ),
+          why(
+            distractors[1]!,
+            `$x = \\pm ${a}$ gives the vertices, on $y = 0$; on the line $y = ${d}$ the curve is farther out.`,
+            `$x = \\pm ${a}$ 是顶点，在 $y = 0$ 上；在直线 $y = ${d}$ 上曲线更靠外。`,
+          ),
+          why(distractors[2]!, `The points lie on the line $y = ${d}$, not on the $x$-axis.`, `交点在直线 $y = ${d}$ 上，不在 $x$ 轴上。`),
+          why(
+            distractors[3]!,
+            `This takes the square root of $${m * m}$ but forgets to multiply by $a^{2} = ${a2}$ and divide by $b^{2} = ${b2}$ first.`,
+            `这是对 $${m * m}$ 开平方，但忘了先乘以 $a^{2} = ${a2}$、再除以 $b^{2} = ${b2}$。`,
+          ),
+        ]);
       },
     },
   ],
@@ -2337,13 +2683,25 @@ export const transverseAxesOfHyperbolas: TopicDef = {
   encompasses: [{ topic: "equations-of-hyperbolas-centered-at-the-origin", weight: 0.3 }],
   xp: 10,
   standards: ["CCSS.HSG.GPE.A.3"],
+  intro: t(
+    `In $\\frac{y^{2}}{25} - \\frac{x^{2}}{144} = 1$ the positive term is the $y$ term, so the hyperbola opens up and down, with $a^{2} = 25$ and $a = 5$. Its vertices are $(0, -5)$ and $(0, 5)$, and the segment joining them, the transverse axis, is vertical and has length $2a = 10$, even though $144$ is the larger denominator.
+
+Check: the vertex $(0, 5)$ gives $\\frac{25}{25} - 0 = 1$, and $5 - (-5) = 10$.
+
+In this lesson we find the length and the endpoints of the transverse axis from an equation, and find its length from the foci and the conjugate axis.`,
+    `在 $\\frac{y^{2}}{25} - \\frac{x^{2}}{144} = 1$ 中，正项是 $y$ 项，所以双曲线向上下张开，$a^{2} = 25$，$a = 5$。顶点是 $(0, -5)$ 和 $(0, 5)$，连接它们的线段就是实轴，它是竖直的，长 $2a = 10$，尽管 $144$ 是较大的分母。
+
+检验：顶点 $(0, 5)$ 代入得 $\\frac{25}{25} - 0 = 1$，且 $5 - (-5) = 10$。
+
+这节课我们从方程求实轴的长和端点，并由焦点和虚轴求实轴的长。`,
+  ),
   knowledgePoints: [
     {
       id: "length-of-the-transverse-axis",
       title: t("Length of the transverse axis", "实轴的长度"),
       explanation: t(
-        "The segment joining the two vertices is the transverse axis of the hyperbola. Its length is $2a$, where $a$ is the semi-transverse axis:\n\n$$\\text{Transverse axis length} = 2a$$",
-        "连接双曲线两个顶点的线段称为实轴。其实轴长度为 $2a$，其中 $a$ 为半实轴长：\n\n$$\\text{实轴长} = 2a$$",
+        "The segment joining the two vertices is the transverse axis of the hyperbola. Its length is $2a$, where $a$ is the semi-transverse axis:\n\n$$\\text{Transverse axis length} = 2a$$\n\nFor $\\frac{x^{2}}{9} - \\frac{y^{2}}{49} = 1$: the positive term has $a^{2} = 9$, so $a = 3$ and the transverse axis is $6$, even though $49$ is the larger denominator. Check: the vertices $(\\pm 3, 0)$ are $6$ apart.\n\n> **Watch out.** Take $a$ from the positive term, not from the larger denominator, and double it: $a$ alone is half the axis, and $a^{2}$ is not a length of the curve at all.",
+        "连接双曲线两个顶点的线段称为实轴。其实轴长度为 $2a$，其中 $a$ 为半实轴长：\n\n$$\\text{实轴长} = 2a$$\n\n对 $\\frac{x^{2}}{9} - \\frac{y^{2}}{49} = 1$：正项的 $a^{2} = 9$，所以 $a = 3$，实轴长 $6$，尽管 $49$ 是较大的分母。检验：顶点 $(\\pm 3, 0)$ 相距 $6$。\n\n> **注意。** $a$ 要从正项取，不是从较大的分母取，而且要乘以 2：$a$ 只是实轴的一半，$a^{2}$ 根本不是曲线上的长度。",
       ),
       generate(rng) {
         const a = rng.int(2, 14);
@@ -2356,9 +2714,25 @@ export const transverseAxesOfHyperbolas: TopicDef = {
           prompt: t(`What is the length of the transverse axis of the hyperbola $${eqStr}$?`, `双曲线 $${eqStr}$ 的实轴长度是多少？`),
           answer: 2 * a,
           wrong: [a, 2 * b, b, a2],
-          solution: t(
-            `The positive term denominator is $a^{2} = ${a2} \\implies a = ${a}$. The length of the transverse axis is $2a = 2(${a}) = ${2 * a}$.`,
-            `正项的分母为 $a^{2} = ${a2} \\implies a = ${a}$。实轴长度为 $2a = 2(${a}) = ${2 * a}$。`,
+          solution: walked(
+            [
+              [
+                ["Find a", "求 a"],
+                t(
+                  `The positive term is the ${horizontal ? "$x$" : "$y$"} term, with denominator $a^{2} = ${a2}$, so $a = ${a}$.`,
+                  `正项是 ${horizontal ? "$x$" : "$y$"} 项，分母 $a^{2} = ${a2}$，所以 $a = ${a}$。`,
+                ),
+              ],
+              [
+                ["Double a", "把 a 乘以 2"],
+                t(`The transverse axis joins the two vertices, each $a$ from the center:`, `实轴连接两个顶点，每个顶点距中心 $a$：`),
+                [`2a = 2 \\cdot ${a} = ${2 * a}`],
+              ],
+            ],
+            t(
+              `The vertices $${horizontal ? `(\\pm ${a}, 0)` : `(0, \\pm ${a})`}$ are $${a} - (-${a}) = ${2 * a}$ apart.`,
+              `顶点 $${horizontal ? `(\\pm ${a}, 0)` : `(0, \\pm ${a})`}$ 相距 $${a} - (-${a}) = ${2 * a}$。`,
+            ),
           ),
         });
       },
@@ -2367,8 +2741,8 @@ export const transverseAxesOfHyperbolas: TopicDef = {
       id: "endpoints-of-the-transverse-axis",
       title: t("Endpoints of the transverse axis", "实轴的端点坐标"),
       explanation: t(
-        "The endpoints of the transverse axis are the vertices of the hyperbola:\n\n- Horizontal hyperbola centered at $(h, k)$: $(h \\pm a, k)$\n- Vertical hyperbola centered at $(h, k)$: $(h, k \\pm a)$",
-        "实轴的端点即为双曲线的顶点：\n\n- 中心在 $(h, k)$ 的水平双曲线：$(h \\pm a, k)$\n- 中心在 $(h, k)$ 的竖直双曲线：$(h, k \\pm a)$",
+        "The endpoints of the transverse axis are the vertices of the hyperbola:\n\n- Horizontal hyperbola centered at $(h, k)$: $(h \\pm a, k)$\n- Vertical hyperbola centered at $(h, k)$: $(h, k \\pm a)$\n\nFor $\\frac{(y + 2)^{2}}{16} - \\frac{(x - 1)^{2}}{9} = 1$: the center is $(1, -2)$, the $y$ term is positive and $a = 4$, so the endpoints are $(1, -6)$ and $(1, 2)$. Check: they are $8 = 2a$ apart, and their midpoint is $(1, -2)$.\n\n> **Watch out.** Move along the axis of the positive term, by $a$, not by $b$: the points $(1 \\pm 3, -2)$ are the ends of the conjugate axis.",
+        "实轴的端点即为双曲线的顶点：\n\n- 中心在 $(h, k)$ 的水平双曲线：$(h \\pm a, k)$\n- 中心在 $(h, k)$ 的竖直双曲线：$(h, k \\pm a)$\n\n对 $\\frac{(y + 2)^{2}}{16} - \\frac{(x - 1)^{2}}{9} = 1$：中心是 $(1, -2)$，$y$ 项为正，$a = 4$，所以端点是 $(1, -6)$ 和 $(1, 2)$。检验：它们相距 $8 = 2a$，中点是 $(1, -2)$。\n\n> **注意。** 要沿正项对应的轴移动 $a$，不是移动 $b$：点 $(1 \\pm 3, -2)$ 是虚轴的端点。",
       ),
       generate(rng) {
         const h = rng.int(-5, 5);
@@ -2391,15 +2765,46 @@ export const transverseAxesOfHyperbolas: TopicDef = {
           horizontal ? `(${h - b}, ${k}) \\text{ and } (${h + b}, ${k})` : `(${h}, ${k - b}) \\text{ and } (${h}, ${k + b})`,
           `(${h}, ${k})`,
         ];
-        const solution = t(
-          `The transverse axis connects the vertices. Center is $(${h}, ${k})$ and $a = \\sqrt{${a2}} = ${a}$. Along the ${horizontal ? "horizontal" : "vertical"} axis:${steps(
-            correct,
-          )}`,
-          `实轴连接两顶点。中心为 $(${h}, ${k})$，半实轴长 $a = \\sqrt{${a2}} = ${a}$。沿${horizontal ? "水平" : "竖直"}方向移动得：${steps(
-            correct,
-          )}`,
+        const solution = walked(
+          [
+            [
+              ["Read the center and a", "读出中心和 a"],
+              t(
+                `The center is $(${h}, ${k})$, and the positive ${horizontal ? "$x$" : "$y$"} term has $a^{2} = ${a2}$, so $a = ${a}$.`,
+                `中心是 $(${h}, ${k})$，正的 ${horizontal ? "$x$" : "$y$"} 项有 $a^{2} = ${a2}$，所以 $a = ${a}$。`,
+              ),
+            ],
+            [
+              ["Move a along the transverse axis", "沿实轴移动 a"],
+              t(
+                `The transverse axis is ${horizontal ? "horizontal" : "vertical"}; move $${a}$ both ways from the center:`,
+                `实轴${horizontal ? "水平" : "竖直"}；从中心向两边各移 $${a}$：`,
+              ),
+              [`${v1}, \\quad ${v2}`],
+            ],
+          ],
+          t(
+            `The endpoints are $${2 * a} = 2a$ apart, and their midpoint is $(${h}, ${k})$, the center.`,
+            `两端点相距 $${2 * a} = 2a$，中点是 $(${h}, ${k})$，正是中心。`,
+          ),
         );
-        return makeChoice(rng, prompt, correct, distractors, solution);
+        return makeChoice(rng, prompt, correct, distractors, solution, [
+          why(
+            distractors[0]!,
+            `These move ${horizontal ? "up and down" : "left and right"}, but the positive ${horizontal ? "$x$" : "$y$"} term makes the transverse axis ${horizontal ? "horizontal" : "vertical"}.`,
+            `这是${horizontal ? "上下" : "左右"}移动，但正的 ${horizontal ? "$x$" : "$y$"} 项说明实轴${horizontal ? "水平" : "竖直"}。`,
+          ),
+          why(
+            distractors[1]!,
+            `These move $b = ${b}$; the endpoints are $a = ${a}$ from the center.`,
+            `这是移动 $b = ${b}$；端点距中心 $a = ${a}$。`,
+          ),
+          why(
+            distractors[2]!,
+            "That is the center, the midpoint of the transverse axis, not an endpoint.",
+            "这是中心，即实轴的中点，不是端点。",
+          ),
+        ]);
       },
     },
   ],
@@ -2416,14 +2821,26 @@ export const conjugateAxesOfHyperbolas: TopicDef = {
   encompasses: [],
   xp: 10,
   standards: ["CCSS.HSG.GPE.A.3"],
+  intro: t(
+    `For $\\frac{x^{2}}{16} - \\frac{y^{2}}{9} = 1$, the negative term has $b^{2} = 9$, so $b = 3$, and the conjugate axis runs from $(0, -3)$ to $(0, 3)$, across the transverse axis, with length $6$. No point of the curve lies on it, but together with the transverse axis it frames the central rectangle, $8$ wide and $6$ tall, with area $48$.
+
+Check: the diagonal of the rectangle through $(4, 3)$ has slope $\\frac{3}{4}$, the slope of the asymptote $y = \\frac{3}{4}x$.
+
+In this lesson we find the length of the conjugate axis and the central rectangle, and find the conjugate axis from the vertices and the foci.`,
+    `对 $\\frac{x^{2}}{16} - \\frac{y^{2}}{9} = 1$，负项的 $b^{2} = 9$，所以 $b = 3$，虚轴从 $(0, -3)$ 到 $(0, 3)$，与实轴垂直，长 $6$。曲线上没有点在它上面，但它和实轴一起围出中心矩形，宽 $8$、高 $6$，面积 $48$。
+
+检验：矩形经过 $(4, 3)$ 的对角线斜率是 $\\frac{3}{4}$，正是渐近线 $y = \\frac{3}{4}x$ 的斜率。
+
+这节课我们求虚轴的长和中心矩形，并由顶点和焦点求虚轴。`,
+  ),
   knowledgePoints: [
     {
       id: "length-of-the-conjugate-axis",
       figure: precalculusDrawings4["conjugate-axes-of-hyperbolas#length-of-the-conjugate-axis"],
       title: t("Length of the conjugate axis", "虚轴的长度"),
       explanation: t(
-        "The segment perpendicular to the transverse axis at the center of length $2b$ is called the conjugate axis of the hyperbola:\n\n$$\\text{Conjugate axis length} = 2b$$",
-        "在中心处垂直于实轴、长度为 $2b$ 的线段称为双曲线的虚轴：\n\n$$\\text{虚轴长} = 2b$$",
+        "The segment perpendicular to the transverse axis at the center of length $2b$ is called the conjugate axis of the hyperbola:\n\n$$\\text{Conjugate axis length} = 2b$$\n\nThe conjugate axis is not part of the curve, since setting the positive variable to $0$ gives no real points, but its half $b$ fixes the slopes of the asymptotes. For $\\frac{y^{2}}{36} - \\frac{x^{2}}{4} = 1$: the negative term has $b^{2} = 4$, so $b = 2$ and the conjugate axis is $4$. Check: it runs from $(-2, 0)$ to $(2, 0)$, which are $4$ apart.\n\n> **Watch out.** Take $b$ from the negative term, whichever denominator is larger, and double it: $b$ alone is half the axis.",
+        "在中心处垂直于实轴、长度为 $2b$ 的线段称为双曲线的虚轴：\n\n$$\\text{虚轴长} = 2b$$\n\n虚轴不在曲线上，因为令正项的变量为 $0$ 得不到实数点，但它的一半 $b$ 决定了渐近线的斜率。对 $\\frac{y^{2}}{36} - \\frac{x^{2}}{4} = 1$：负项的 $b^{2} = 4$，所以 $b = 2$，虚轴长 $4$。检验：它从 $(-2, 0)$ 到 $(2, 0)$，相距 $4$。\n\n> **注意。** $b$ 要从负项取，不管哪个分母较大，而且要乘以 2：$b$ 只是虚轴的一半。",
       ),
       generate(rng) {
         const a = rng.int(2, 14);
@@ -2436,9 +2853,25 @@ export const conjugateAxesOfHyperbolas: TopicDef = {
           prompt: t(`What is the length of the conjugate axis of the hyperbola $${eqStr}$?`, `双曲线 $${eqStr}$ 的虚轴长度是多少？`),
           answer: 2 * b,
           wrong: [b, 2 * a, a, b2],
-          solution: t(
-            `The negative term denominator is $b^{2} = ${b2} \\implies b = ${b}$. The length of the conjugate axis is $2b = 2(${b}) = ${2 * b}$.`,
-            `负项的分母为 $b^{2} = ${b2} \\implies b = ${b}$。虚轴长为 $2b = 2(${b}) = ${2 * b}$。`,
+          solution: walked(
+            [
+              [
+                ["Find b", "求 b"],
+                t(
+                  `The negative term is the ${horizontal ? "$y$" : "$x$"} term, with denominator $b^{2} = ${b2}$, so $b = ${b}$.`,
+                  `负项是 ${horizontal ? "$y$" : "$x$"} 项，分母 $b^{2} = ${b2}$，所以 $b = ${b}$。`,
+                ),
+              ],
+              [
+                ["Double b", "把 b 乘以 2"],
+                t(`The conjugate axis reaches $b$ on each side of the center:`, `虚轴在中心两侧各伸 $b$：`),
+                [`2b = 2 \\cdot ${b} = ${2 * b}`],
+              ],
+            ],
+            t(
+              `The ends $${horizontal ? `(0, \\pm ${b})` : `(\\pm ${b}, 0)`}$ of the conjugate axis are $${b} - (-${b}) = ${2 * b}$ apart.`,
+              `虚轴的端点 $${horizontal ? `(0, \\pm ${b})` : `(\\pm ${b}, 0)`}$ 相距 $${b} - (-${b}) = ${2 * b}$。`,
+            ),
           ),
         });
       },
@@ -2448,8 +2881,8 @@ export const conjugateAxesOfHyperbolas: TopicDef = {
       figure: precalculusDrawings3["conjugate-axes-of-hyperbolas#central-fundamental-rectangle"],
       title: t("The central fundamental rectangle", "双曲线的中心基本矩形"),
       explanation: t(
-        "The central rectangle of a hyperbola has side lengths $2a$ (along the transverse axis) and $2b$ (along the conjugate axis). Its diagonals extended are the asymptotes of the hyperbola, and its area is $(2a)(2b) = 4ab$.",
-        "双曲线的中心基本矩形边长分别为 $2a$（沿实轴方向）和 $2b$（沿虚轴方向）。其对角线延伸即为双曲线的渐近线，其面积为 $(2a)(2b) = 4ab$。",
+        "The central rectangle of a hyperbola has side lengths $2a$ (along the transverse axis) and $2b$ (along the conjugate axis). Its diagonals extended are the asymptotes of the hyperbola, and its area is $(2a)(2b) = 4ab$.\n\nFor $\\frac{x^{2}}{9} - \\frac{y^{2}}{16} = 1$: the rectangle is $6$ wide and $8$ tall, with corners $(\\pm 3, \\pm 4)$, and its area is $48$. Check: the diagonal through $(3, 4)$ has slope $\\frac{4}{3} = \\frac{b}{a}$, the slope of an asymptote.\n\n> **Watch out.** The sides are $2a$ and $2b$, not $a$ and $b$: $ab = 12$ is the area of only one quarter of the rectangle.",
+        "双曲线的中心基本矩形边长分别为 $2a$（沿实轴方向）和 $2b$（沿虚轴方向）。其对角线延伸即为双曲线的渐近线，其面积为 $(2a)(2b) = 4ab$。\n\n对 $\\frac{x^{2}}{9} - \\frac{y^{2}}{16} = 1$：矩形宽 $6$、高 $8$，四个角是 $(\\pm 3, \\pm 4)$，面积 $48$。检验：经过 $(3, 4)$ 的对角线斜率是 $\\frac{4}{3} = \\frac{b}{a}$，正是渐近线的斜率。\n\n> **注意。** 两边是 $2a$ 和 $2b$，不是 $a$ 和 $b$：$ab = 12$ 只是矩形四分之一的面积。",
       ),
       generate(rng) {
         const a = rng.int(2, 12);
@@ -2464,13 +2897,26 @@ export const conjugateAxesOfHyperbolas: TopicDef = {
           ),
           answer: areaRect,
           wrong: [a * b, 2 * a * b, 2 * (a + b), 4 * (a + b)],
-          solution: t(
-            `The dimensions of the central rectangle are $2a = 2(${a}) = ${2 * a}$ and $2b = 2(${b}) = ${2 * b}$. Its area is:${steps(
-              `\\text{Area} = (2a)(2b) = (${2 * a})(${2 * b}) = ${areaRect}`,
-            )}`,
-            `中心矩形的两边长分别为 $2a = 2(${a}) = ${2 * a}$ 和 $2b = 2(${b}) = ${2 * b}$。其面积为：${steps(
-              `\\text{面积} = (2a)(2b) = (${2 * a})(${2 * b}) = ${areaRect}`,
-            )}`,
+          solution: walked(
+            [
+              [
+                ["Find the sides", "求边长"],
+                t(
+                  `Here $a = ${a}$ and $b = ${b}$, and the rectangle reaches $a$ across and $b$ up and down from the center:`,
+                  `这里 $a = ${a}$，$b = ${b}$，矩形从中心横向伸 $a$、上下伸 $b$：`,
+                ),
+                [`2a = ${2 * a}, \\quad 2b = ${2 * b}`],
+              ],
+              [
+                ["Multiply", "相乘"],
+                t(`The area is the product of the sides:`, `面积是两边之积：`),
+                [`(2a)(2b) = ${2 * a} \\cdot ${2 * b} = ${areaRect}`],
+              ],
+            ],
+            t(
+              `The rectangle is made of four $${a} \\times ${b}$ quarters around the center, and $4 \\cdot ${a} \\cdot ${b} = ${areaRect}$.`,
+              `矩形由中心周围四个 $${a} \\times ${b}$ 的小矩形组成，而 $4 \\cdot ${a} \\cdot ${b} = ${areaRect}$。`,
+            ),
           ),
         });
       },
@@ -2489,13 +2935,25 @@ export const fociOfHyperbolas: TopicDef = {
   encompasses: [{ topic: "transverse-axes-of-hyperbolas", weight: 0.3 }],
   xp: 12,
   standards: ["CCSS.HSG.GPE.A.3"],
+  intro: t(
+    `For $\\frac{x^{2}}{9} - \\frac{y^{2}}{16} = 1$, the foci are at $(\\pm c, 0)$ with $c^{2} = a^{2} + b^{2} = 9 + 16 = 25$, so $c = 5$: the corner $(3, 4)$ of the central rectangle is $\\sqrt{3^{2} + 4^{2}} = 5$ from the center, and the foci are that far out along the transverse axis, beyond the vertices $(\\pm 3, 0)$.
+
+Check: the vertex $(3, 0)$ is $5 - 3 = 2$ from $(5, 0)$ and $5 + 3 = 8$ from $(-5, 0)$, and $8 - 2 = 6 = 2a$.
+
+In this lesson we find the foci of hyperbolas centered at the origin and of shifted ones, and use them to find the distance from a point of the curve to the farther focus.`,
+    `对 $\\frac{x^{2}}{9} - \\frac{y^{2}}{16} = 1$，焦点在 $(\\pm c, 0)$，其中 $c^{2} = a^{2} + b^{2} = 9 + 16 = 25$，所以 $c = 5$：中心矩形的角 $(3, 4)$ 到中心的距离是 $\\sqrt{3^{2} + 4^{2}} = 5$，焦点就沿实轴在这么远的地方，在顶点 $(\\pm 3, 0)$ 之外。
+
+检验：顶点 $(3, 0)$ 到 $(5, 0)$ 的距离是 $5 - 3 = 2$，到 $(-5, 0)$ 的距离是 $5 + 3 = 8$，而 $8 - 2 = 6 = 2a$。
+
+这节课我们求中心在原点和平移后的双曲线的焦点，并用焦点求曲线上一点到较远焦点的距离。`,
+  ),
   knowledgePoints: [
     {
       id: "foci-of-hyperbolas-at-origin",
       title: t("Foci of a hyperbola centered at the origin", "中心在原点的双曲线焦点"),
       explanation: t(
-        "For any hyperbola, the focal distance $c$ from the center to each focus satisfies:\n\n$$c^{2} = a^{2} + b^{2} \\implies c = \\sqrt{a^{2} + b^{2}}$$\n\n- Horizontal hyperbola: foci at $(\\pm c, 0)$\n- Vertical hyperbola: foci at $(0, \\pm c)$",
-        "对任意双曲线，中心到各焦点的半焦距 $c$ 满足：\n\n$$c^{2} = a^{2} + b^{2} \\implies c = \\sqrt{a^{2} + b^{2}}$$\n\n- 水平双曲线：焦点为 $(\\pm c, 0)$\n- 竖直双曲线：焦点为 $(0, \\pm c)$",
+        "For any hyperbola, the focal distance $c$ from the center to each focus satisfies:\n\n$$c^{2} = a^{2} + b^{2} \\implies c = \\sqrt{a^{2} + b^{2}}$$\n\n- Horizontal hyperbola: foci at $(\\pm c, 0)$\n- Vertical hyperbola: foci at $(0, \\pm c)$\n\nThe foci lie beyond the vertices, so $c$ is larger than $a$, and $c$ is the distance from the center to a corner $(a, b)$ of the central rectangle. For $\\frac{y^{2}}{36} - \\frac{x^{2}}{64} = 1$: $c^{2} = 36 + 64 = 100$, so $c = 10$, and the $y$ term is positive, so the foci are $(0, \\pm 10)$. Check: $10 > 6$, so the foci lie beyond the vertices $(0, \\pm 6)$.\n\n> **Watch out.** Add the squares for a hyperbola; subtracting is the rule for an ellipse. The foci lie on the axis of the positive term, even when the other denominator is larger.",
+        "对任意双曲线，中心到各焦点的半焦距 $c$ 满足：\n\n$$c^{2} = a^{2} + b^{2} \\implies c = \\sqrt{a^{2} + b^{2}}$$\n\n- 水平双曲线：焦点为 $(\\pm c, 0)$\n- 竖直双曲线：焦点为 $(0, \\pm c)$\n\n焦点在顶点之外，所以 $c$ 比 $a$ 大，而 $c$ 正是中心到中心矩形的角 $(a, b)$ 的距离。对 $\\frac{y^{2}}{36} - \\frac{x^{2}}{64} = 1$：$c^{2} = 36 + 64 = 100$，所以 $c = 10$；$y$ 项为正，所以焦点是 $(0, \\pm 10)$。检验：$10 > 6$，所以焦点在顶点 $(0, \\pm 6)$ 之外。\n\n> **注意。** 双曲线要把平方相加；相减是椭圆的规则。焦点在正项对应的轴上，即使另一个分母更大。",
       ),
       generate(rng) {
         const triple = rng.pick(pythTriples);
@@ -2512,11 +2970,48 @@ export const fociOfHyperbolas: TopicDef = {
           horizontal ? `(0, \\pm ${b})` : `(\\pm ${b}, 0)`,
           `(\\pm ${a + b}, 0)`,
         ];
-        const solution = t(
-          `Using $c^{2} = a^{2} + b^{2} = ${a2} + ${b2} = ${c * c} \\implies c = ${c}$. Since the hyperbola is ${horizontal ? "horizontal" : "vertical"}, the foci are $${correct}$.`,
-          `根据 $c^{2} = a^{2} + b^{2} = ${a2} + ${b2} = ${c * c} \\implies c = ${c}$。因为双曲线为${horizontal ? "水平" : "竖直"}方向，所以焦点坐标为 $${correct}$。`,
+        const solution = walked(
+          [
+            [
+              ["Find c", "求 c"],
+              t(`Add the denominators:`, `分母相加：`),
+              [`c^{2} = a^{2} + b^{2} = ${a2} + ${b2} = ${c * c}`, `c = ${c}`],
+            ],
+            [
+              ["Place the foci on the transverse axis", "把焦点放在实轴上"],
+              t(
+                `The positive term is the ${horizontal ? "$x$" : "$y$"} term, so the foci are $${correct}$.`,
+                `正项是 ${horizontal ? "$x$" : "$y$"} 项，所以焦点是 $${correct}$。`,
+              ),
+            ],
+          ],
+          t(
+            `$c = ${c}$ is more than $a = ${a}$, so the foci lie beyond the vertices, and $${c}^{2} - ${a}^{2} = ${b2} = b^{2}$.`,
+            `$c = ${c}$ 大于 $a = ${a}$，所以焦点在顶点之外，且 $${c}^{2} - ${a}^{2} = ${b2} = b^{2}$。`,
+          ),
         );
-        return makeChoice(rng, prompt, correct, distractors, solution);
+        return makeChoice(rng, prompt, correct, distractors, solution, [
+          why(
+            distractors[0]!,
+            `The foci lie on the axis of the positive term, the ${horizontal ? "$x$" : "$y$"}-axis, and this is the other axis.`,
+            `焦点在正项对应的 ${horizontal ? "$x$" : "$y$"} 轴上，而这是另一条轴。`,
+          ),
+          why(
+            distractors[1]!,
+            `These are the vertices, $a = ${a}$ from the center; the foci are $c = ${c}$ from it.`,
+            `这是顶点，距中心 $a = ${a}$；焦点距中心 $c = ${c}$。`,
+          ),
+          why(
+            distractors[2]!,
+            `These are the ends of the conjugate axis, $b = ${b}$ from the center, and no point of the curve is there.`,
+            `这是虚轴的端点，距中心 $b = ${b}$，曲线上没有点在那里。`,
+          ),
+          why(
+            distractors[3]!,
+            `$c$ is $\\sqrt{a^{2} + b^{2}} = ${c}$, not $a + b = ${a + b}$.`,
+            `$c$ 是 $\\sqrt{a^{2} + b^{2}} = ${c}$，不是 $a + b = ${a + b}$。`,
+          ),
+        ]);
       },
     },
     {
@@ -2524,8 +3019,8 @@ export const fociOfHyperbolas: TopicDef = {
       figure: precalculusDrawings4["foci-of-hyperbolas#foci-of-translated-hyperbolas"],
       title: t("Foci of a translated hyperbola", "平移双曲线的焦点坐标"),
       explanation: t(
-        "For a hyperbola with center $(h, k)$ and focal distance $c = \\sqrt{a^{2} + b^{2}}$:\n\n- Horizontal hyperbola: foci at $(h \\pm c, k)$\n- Vertical hyperbola: foci at $(h, k \\pm c)$",
-        "对于中心在 $(h, k)$、半焦距为 $c = \\sqrt{a^{2} + b^{2}}$ 的双曲线：\n\n- 水平双曲线：焦点为 $(h \\pm c, k)$\n- 竖直双曲线：焦点为 $(h, k \\pm c)$",
+        "For a hyperbola with center $(h, k)$ and focal distance $c = \\sqrt{a^{2} + b^{2}}$:\n\n- Horizontal hyperbola: foci at $(h \\pm c, k)$\n- Vertical hyperbola: foci at $(h, k \\pm c)$\n\nShifting the hyperbola carries the foci along, so measure $c$ from the center. For $\\frac{(x - 2)^{2}}{9} - \\frac{(y + 1)^{2}}{16} = 1$: the center is $(2, -1)$, $c = \\sqrt{9 + 16} = 5$, and the $x$ term is positive, so the foci are $(-3, -1)$ and $(7, -1)$. Check: their midpoint is $(2, -1)$, the center.\n\n> **Watch out.** Add $\\pm c$ to the center, not to the origin, and only along the transverse axis: $(\\pm 5, 0)$ are the foci before the shift.",
+        "对于中心在 $(h, k)$、半焦距为 $c = \\sqrt{a^{2} + b^{2}}$ 的双曲线：\n\n- 水平双曲线：焦点为 $(h \\pm c, k)$\n- 竖直双曲线：焦点为 $(h, k \\pm c)$\n\n双曲线平移时焦点一起移动，所以从中心量 $c$。对 $\\frac{(x - 2)^{2}}{9} - \\frac{(y + 1)^{2}}{16} = 1$：中心是 $(2, -1)$，$c = \\sqrt{9 + 16} = 5$，$x$ 项为正，所以焦点是 $(-3, -1)$ 和 $(7, -1)$。检验：它们的中点是 $(2, -1)$，正是中心。\n\n> **注意。** 要在中心上加 $\\pm c$，不是在原点上加，而且只沿实轴移动：$(\\pm 5, 0)$ 是平移前的焦点。",
       ),
       generate(rng) {
         const triple = rng.pick(pythTriples);
@@ -2545,15 +3040,40 @@ export const fociOfHyperbolas: TopicDef = {
           horizontal ? `(${h - a}, ${k}) \\text{ and } (${h + a}, ${k})` : `(${h}, ${k - a}) \\text{ and } (${h}, ${k + a})`,
           `(${h}, ${k})`,
         ];
-        const solution = t(
-          `The center is $(${h}, ${k})$ and $c = \\sqrt{${a2} + ${b2}} = ${c}$. Adding $\\pm ${c}$ along the ${horizontal ? "x" : "y"}-coordinate gives:${steps(
-            correct,
-          )}`,
-          `中心为 $(${h}, ${k})$，半焦距 $c = \\sqrt{${a2} + ${b2}} = ${c}$。沿 ${horizontal ? "x" : "y"} 轴方向偏移 $\\pm ${c}$ 得：${steps(
-            correct,
-          )}`,
+        const solution = walked(
+          [
+            [
+              ["Read the center and the transverse axis", "读出中心和实轴"],
+              t(
+                `The center is $(${h}, ${k})$, and the positive term is the ${horizontal ? "$x$" : "$y$"} term, so the transverse axis is ${horizontal ? "horizontal" : "vertical"}.`,
+                `中心是 $(${h}, ${k})$，正项是 ${horizontal ? "$x$" : "$y$"} 项，所以实轴${horizontal ? "水平" : "竖直"}。`,
+              ),
+            ],
+            [["Find c", "求 c"], t(`Add the denominators:`, `分母相加：`), [`c = \\sqrt{${a2} + ${b2}} = \\sqrt{${c * c}} = ${c}`]],
+            [
+              ["Move c from the center", "从中心移动 c"],
+              t(`Move $${c}$ both ways along the transverse axis:`, `沿实轴向两边各移 $${c}$：`),
+              [correct],
+            ],
+          ],
+          t(
+            `The midpoint of the foci is $(${h}, ${k})$, the center, and they are $${2 * c} = 2c$ apart.`,
+            `两焦点的中点是 $(${h}, ${k})$，正是中心，它们相距 $${2 * c} = 2c$。`,
+          ),
         );
-        return makeChoice(rng, prompt, correct, distractors, solution);
+        return makeChoice(rng, prompt, correct, distractors, solution, [
+          why(
+            distractors[0]!,
+            `These move ${horizontal ? "up and down" : "left and right"}, but the transverse axis, of the positive term, is ${horizontal ? "horizontal" : "vertical"}.`,
+            `这是${horizontal ? "上下" : "左右"}移动，但正项对应的实轴是${horizontal ? "水平" : "竖直"}的。`,
+          ),
+          why(
+            distractors[1]!,
+            `These are the vertices, $a = ${a}$ from the center; the foci are $c = ${c}$ from it.`,
+            `这是顶点，距中心 $a = ${a}$；焦点距中心 $c = ${c}$。`,
+          ),
+          why(distractors[2]!, "That is the center: the foci are $c$ away from it on either side.", "这是中心：焦点在它两侧，各距 $c$。"),
+        ]);
       },
     },
   ],
@@ -2570,13 +3090,25 @@ export const eccentricityAndVerticesOfHyperbolas: TopicDef = {
   encompasses: [{ topic: "foci-of-hyperbolas", weight: 0.6 }],
   xp: 12,
   standards: ["CCSS.HSG.GPE.A.3"],
+  intro: t(
+    `For $\\frac{x^{2}}{16} - \\frac{y^{2}}{9} = 1$, $c = \\sqrt{16 + 9} = 5$ and the eccentricity is $e = \\frac{c}{a} = \\frac{5}{4}$. For $\\frac{x^{2}}{16} - \\frac{y^{2}}{84} = 1$, $c = \\sqrt{100} = 10$ and $e = \\frac{10}{4} = \\frac{5}{2}$: the larger $b$ makes the asymptotes steeper, the branches open wider, and the eccentricity grows.
+
+Check: both values are more than $1$, as they must be, since $c^{2} = a^{2} + b^{2}$ is more than $a^{2}$.
+
+In this lesson we find the eccentricity of a hyperbola, see why it is $\\sqrt{2}$ for every rectangular hyperbola, and find it from the asymptotes.`,
+    `对 $\\frac{x^{2}}{16} - \\frac{y^{2}}{9} = 1$，$c = \\sqrt{16 + 9} = 5$，离心率 $e = \\frac{c}{a} = \\frac{5}{4}$。对 $\\frac{x^{2}}{16} - \\frac{y^{2}}{84} = 1$，$c = \\sqrt{100} = 10$，$e = \\frac{10}{4} = \\frac{5}{2}$：$b$ 越大，渐近线越陡，两支张得越开，离心率也越大。
+
+检验：两个值都大于 $1$，这是必然的，因为 $c^{2} = a^{2} + b^{2}$ 大于 $a^{2}$。
+
+这节课我们求双曲线的离心率，看看为什么所有等轴双曲线的离心率都是 $\\sqrt{2}$，并由渐近线求离心率。`,
+  ),
   knowledgePoints: [
     {
       id: "calculating-hyperbola-eccentricity",
       title: t("Calculating the eccentricity of a hyperbola", "计算双曲线的离心率"),
       explanation: t(
-        "The eccentricity $e$ of a hyperbola is defined as:\n\n$$e = \\frac{c}{a} = \\frac{\\sqrt{a^{2} + b^{2}}}{a}$$\n\nBecause $c > a > 0$, the eccentricity of every hyperbola is strictly greater than $1$ ($e > 1$).",
-        "双曲线的离心率 $e$ 定义为：\n\n$$e = \\frac{c}{a} = \\frac{\\sqrt{a^{2} + b^{2}}}{a}$$\n\n因为 $c > a > 0$，所以任意双曲线的离心率恒严格大于 $1$（$e > 1$）。",
+        "The eccentricity $e$ of a hyperbola is defined as:\n\n$$e = \\frac{c}{a} = \\frac{\\sqrt{a^{2} + b^{2}}}{a}$$\n\nBecause $c > a > 0$, the eccentricity of every hyperbola is strictly greater than $1$ ($e > 1$).\n\nThe eccentricity measures how widely the branches open: a value just above $1$ gives narrow branches, and a large value gives nearly flat ones. For $\\frac{y^{2}}{9} - \\frac{x^{2}}{16} = 1$: $c = \\sqrt{9 + 16} = 5$ and $a = 3$, so $e = \\frac{5}{3}$. Check: $\\frac{5}{3} > 1$.\n\n> **Watch out.** Divide by $a$, the root of the positive term's denominator, not by $b$; and $e = \\frac{c}{a}$, not $\\frac{a}{c}$, which is less than $1$.",
+        "双曲线的离心率 $e$ 定义为：\n\n$$e = \\frac{c}{a} = \\frac{\\sqrt{a^{2} + b^{2}}}{a}$$\n\n因为 $c > a > 0$，所以任意双曲线的离心率恒严格大于 $1$（$e > 1$）。\n\n离心率衡量两支张开的程度：略大于 $1$ 时两支很窄，很大时两支几乎是平的。对 $\\frac{y^{2}}{9} - \\frac{x^{2}}{16} = 1$：$c = \\sqrt{9 + 16} = 5$，$a = 3$，所以 $e = \\frac{5}{3}$。检验：$\\frac{5}{3} > 1$。\n\n> **注意。** 要除以正项分母的平方根 $a$，不是 $b$；而且 $e = \\frac{c}{a}$，不是小于 $1$ 的 $\\frac{a}{c}$。",
       ),
       generate(rng) {
         const triple = rng.pick(pythTriples);
@@ -2594,13 +3126,26 @@ export const eccentricityAndVerticesOfHyperbolas: TopicDef = {
           prompt: t(`Calculate the eccentricity of the hyperbola $${eqStr}$.`, `计算双曲线 $${eqStr}$ 的离心率。`),
           answer: eFrac,
           wrong: [Q.of(A, C), Q.of(B, A), Q.of(C, B), 1],
-          solution: t(
-            `Here $a = ${A}, b = ${B}$. First find $c = \\sqrt{${a2} + ${b2}} = ${C}$. Then:${steps(
-              `e = \\frac{c}{a} = \\frac{${C}}{${A}} = ${eFrac.toLatex()}`,
-            )}`,
-            `此处 $a = ${A}, b = ${B}$。先求半焦距 $c = \\sqrt{${a2} + ${b2}} = ${C}$。然后求离心率：${steps(
-              `e = \\frac{c}{a} = \\frac{${C}}{${A}} = ${eFrac.toLatex()}`,
-            )}`,
+          solution: walked(
+            [
+              [
+                ["Read a and b", "读出 a 和 b"],
+                t(
+                  `The positive term has $a^{2} = ${a2}$ and the other $b^{2} = ${b2}$, so $a = ${A}$ and $b = ${B}$.`,
+                  `正项的 $a^{2} = ${a2}$，另一项的 $b^{2} = ${b2}$，所以 $a = ${A}$，$b = ${B}$。`,
+                ),
+              ],
+              [["Find c", "求 c"], t(`Add the squares:`, `平方相加：`), [`c = \\sqrt{${a2} + ${b2}} = \\sqrt{${C * C}} = ${C}`]],
+              [
+                ["Divide by a", "除以 a"],
+                t(`The eccentricity is`, `离心率是`),
+                [`e = \\frac{c}{a} = \\frac{${C}}{${A}} = ${eFrac.toLatex()}`],
+              ],
+            ],
+            t(
+              `$${C}^{2} = ${A}^{2} + ${B}^{2}$, that is $${C * C} = ${a2} + ${b2}$, and $e$ is more than $1$ because $c = ${C}$ is more than $a = ${A}$.`,
+              `$${C}^{2} = ${A}^{2} + ${B}^{2}$，即 $${C * C} = ${a2} + ${b2}$；$e$ 大于 $1$，因为 $c = ${C}$ 大于 $a = ${A}$。`,
+            ),
           ),
         });
       },
@@ -2610,8 +3155,8 @@ export const eccentricityAndVerticesOfHyperbolas: TopicDef = {
       figure: precalculusDrawings3["eccentricity-and-vertices-of-hyperbolas#equilateral-rectangular-hyperbolas"],
       title: t("Rectangular (equilateral) hyperbolas", "等轴双曲线"),
       explanation: t(
-        "When $a = b$, the hyperbola is called rectangular (or equilateral):\n\n- The asymptotes $y = \\pm \\frac{a}{a}x = \\pm x$ are perpendicular ($90^{\\circ}$ angle).\n- The eccentricity is constant for all rectangular hyperbolas:\n$$e = \\frac{\\sqrt{a^{2} + a^{2}}}{a} = \\frac{a\\sqrt{2}}{a} = \\sqrt{2}$$",
-        "当 $a = b$ 时，双曲线被称为等轴双曲线（或直角双曲线）：\n\n- 渐近线 $y = \\pm \\frac{a}{a}x = \\pm x$ 互相垂直（夹角为 $90^{\\circ}$）。\n- 所有等轴双曲线的离心率均为常数：\n$$e = \\frac{\\sqrt{a^{2} + a^{2}}}{a} = \\frac{a\\sqrt{2}}{a} = \\sqrt{2}$$",
+        "When $a = b$, the hyperbola is called rectangular (or equilateral):\n\n- The asymptotes $y = \\pm \\frac{a}{a}x = \\pm x$ are perpendicular ($90^{\\circ}$ angle).\n- The eccentricity is constant for all rectangular hyperbolas:\n$$e = \\frac{\\sqrt{a^{2} + a^{2}}}{a} = \\frac{a\\sqrt{2}}{a} = \\sqrt{2}$$\n\nFor $x^{2} - y^{2} = 49$: dividing by $49$ gives $\\frac{x^{2}}{49} - \\frac{y^{2}}{49} = 1$, so $a = b = 7$, $c = 7\\sqrt{2}$ and $e = \\sqrt{2}$. Check: $c^{2} = 98 = 49 + 49$.\n\n> **Watch out.** The answer does not depend on the size: $e$ is $\\sqrt{2}$, not $2$ or $\\frac{\\sqrt{2}}{2}$, whatever the number on the right.",
+        "当 $a = b$ 时，双曲线被称为等轴双曲线（或直角双曲线）：\n\n- 渐近线 $y = \\pm \\frac{a}{a}x = \\pm x$ 互相垂直（夹角为 $90^{\\circ}$）。\n- 所有等轴双曲线的离心率均为常数：\n$$e = \\frac{\\sqrt{a^{2} + a^{2}}}{a} = \\frac{a\\sqrt{2}}{a} = \\sqrt{2}$$\n\n对 $x^{2} - y^{2} = 49$：除以 $49$ 得 $\\frac{x^{2}}{49} - \\frac{y^{2}}{49} = 1$，所以 $a = b = 7$，$c = 7\\sqrt{2}$，$e = \\sqrt{2}$。检验：$c^{2} = 98 = 49 + 49$。\n\n> **注意。** 答案与大小无关：不管右边是多少，$e$ 都是 $\\sqrt{2}$，不是 $2$，也不是 $\\frac{\\sqrt{2}}{2}$。",
       ),
       generate(rng) {
         const a = rng.int(2, 25);
@@ -2627,14 +3172,39 @@ export const eccentricityAndVerticesOfHyperbolas: TopicDef = {
           prompt: t(`What is the eccentricity of the equilateral hyperbola $${eqStr}$?`, `等轴双曲线 $${eqStr}$ 的离心率是多少？`),
           answer: [1, 2],
           wrong: ["2", "\\frac{\\sqrt{2}}{2}", "1", "\\sqrt{3}"],
-          solution: t(
-            `For an equilateral hyperbola, $a = b = ${a}$. The focal distance is $c = \\sqrt{${a2} + ${a2}} = ${a}\\sqrt{2}$. The eccentricity is always:${steps(
-              `e = \\frac{c}{a} = \\frac{${a}\\sqrt{2}}{${a}} = \\sqrt{2}`,
-            )}`,
-            `对于等轴双曲线，$a = b = ${a}$。焦距 $c = \\sqrt{${a2} + ${a2}} = ${a}\\sqrt{2}$。离心率恒为：${steps(
-              `e = \\frac{c}{a} = \\frac{${a}\\sqrt{2}}{${a}} = \\sqrt{2}`,
-            )}`,
-          ),
+          solution: (() => {
+            const cleared = form === "cleared-x" || form === "cleared-y";
+            const across = form === "standard-x" || form === "cleared-x";
+            const standard = across ? `\\frac{x^{2}}{${a2}} - \\frac{y^{2}}{${a2}} = 1` : `\\frac{y^{2}}{${a2}} - \\frac{x^{2}}{${a2}} = 1`;
+            return walked(
+              [
+                [
+                  ["Read a and b", "读出 a 和 b"],
+                  cleared
+                    ? t(
+                        `Divide by $${a2}$ to get the standard form; both denominators are $${a2}$, so $a = b = ${a}$:`,
+                        `除以 $${a2}$ 化成标准形式；两个分母都是 $${a2}$，所以 $a = b = ${a}$：`,
+                      )
+                    : t(`Both denominators are $${a2}$, so $a = b = ${a}$:`, `两个分母都是 $${a2}$，所以 $a = b = ${a}$：`),
+                  [standard],
+                ],
+                [
+                  ["Find c", "求 c"],
+                  t(`Add the squares:`, `平方相加：`),
+                  [`c = \\sqrt{${a2} + ${a2}} = \\sqrt{${2 * a2}} = ${a}\\sqrt{2}`],
+                ],
+                [
+                  ["Divide by a", "除以 a"],
+                  t(`The $${a}$ cancels:`, `$${a}$ 约掉了：`),
+                  [`e = \\frac{c}{a} = \\frac{${a}\\sqrt{2}}{${a}} = \\sqrt{2}`],
+                ],
+              ],
+              t(
+                `$e^{2} = 2$, and indeed $c^{2} = ${2 * a2} = 2 \\cdot ${a2} = 2a^{2}$.`,
+                `$e^{2} = 2$，而确实 $c^{2} = ${2 * a2} = 2 \\cdot ${a2} = 2a^{2}$。`,
+              ),
+            );
+          })(),
         });
       },
     },
@@ -2652,13 +3222,25 @@ export const directricesOfHyperbolas: TopicDef = {
   encompasses: [{ topic: "eccentricity-and-vertices-of-hyperbolas", weight: 0.6 }],
   xp: 12,
   standards: ["CCSS.HSG.GPE.A.3"],
+  intro: t(
+    `For $\\frac{x^{2}}{16} - \\frac{y^{2}}{9} = 1$, $c = 5$ and the directrices are $x = \\pm \\frac{a^{2}}{c} = \\pm \\frac{16}{5}$, between the center and the vertices. The vertex $(4, 0)$ is $1$ from the focus $(5, 0)$ and $4 - \\frac{16}{5} = \\frac{4}{5}$ from the directrix $x = \\frac{16}{5}$, and the ratio of the two distances is $1 \\div \\frac{4}{5} = \\frac{5}{4}$.
+
+Check: the eccentricity is $e = \\frac{c}{a} = \\frac{5}{4}$, the same ratio.
+
+In this lesson we find the directrices of a hyperbola, use the ratio of the distances to a focus and to its directrix, and find a hyperbola from a focus and its directrix.`,
+    `对 $\\frac{x^{2}}{16} - \\frac{y^{2}}{9} = 1$，$c = 5$，准线是 $x = \\pm \\frac{a^{2}}{c} = \\pm \\frac{16}{5}$，位于中心与顶点之间。顶点 $(4, 0)$ 到焦点 $(5, 0)$ 的距离是 $1$，到准线 $x = \\frac{16}{5}$ 的距离是 $4 - \\frac{16}{5} = \\frac{4}{5}$，两段距离之比是 $1 \\div \\frac{4}{5} = \\frac{5}{4}$。
+
+检验：离心率 $e = \\frac{c}{a} = \\frac{5}{4}$，正是这个比。
+
+这节课我们求双曲线的准线，利用到焦点与到对应准线的距离之比，并由焦点和准线确定双曲线。`,
+  ),
   knowledgePoints: [
     {
       id: "equations-of-hyperbola-directrices",
       title: t("Equations of hyperbola directrices", "双曲线的准线方程"),
       explanation: t(
-        "A hyperbola centered at the origin has two directrices between the center and the vertices:\n\n- Horizontal hyperbola: $x = \\pm \\frac{a^{2}}{c} = \\pm \\frac{a}{e}$\n- Vertical hyperbola: $y = \\pm \\frac{a^{2}}{c} = \\pm \\frac{a}{e}$",
-        "中心在原点的双曲线有两条位于中心与顶点之间的准线：\n\n- 水平双曲线：$x = \\pm \\frac{a^{2}}{c} = \\pm \\frac{a}{e}$\n- 竖直双曲线：$y = \\pm \\frac{a^{2}}{c} = \\pm \\frac{a}{e}$",
+        "A hyperbola centered at the origin has two directrices between the center and the vertices:\n\n- Horizontal hyperbola: $x = \\pm \\frac{a^{2}}{c} = \\pm \\frac{a}{e}$\n- Vertical hyperbola: $y = \\pm \\frac{a^{2}}{c} = \\pm \\frac{a}{e}$\n\nEvery point of the curve is $e$ times as far from a focus as from the corresponding directrix, and since $e > 1$, the directrix lies closer to the center than the vertex. For $\\frac{y^{2}}{9} - \\frac{x^{2}}{16} = 1$: $c = 5$, so the directrices are $y = \\pm \\frac{9}{5}$. Check: $\\frac{9}{5} < 3$, so they lie between the center and the vertices $(0, \\pm 3)$.\n\n> **Watch out.** Use $a^{2}$ from the positive term over $c$, not $b^{2}$ over $c$ or $c^{2}$ over $a$, and write the lines across the transverse axis: $y = \\dots$ when the $y$ term is positive.",
+        "中心在原点的双曲线有两条位于中心与顶点之间的准线：\n\n- 水平双曲线：$x = \\pm \\frac{a^{2}}{c} = \\pm \\frac{a}{e}$\n- 竖直双曲线：$y = \\pm \\frac{a^{2}}{c} = \\pm \\frac{a}{e}$\n\n曲线上每一点到焦点的距离都是它到对应准线距离的 $e$ 倍；因为 $e > 1$，准线比顶点更靠近中心。对 $\\frac{y^{2}}{9} - \\frac{x^{2}}{16} = 1$：$c = 5$，所以准线是 $y = \\pm \\frac{9}{5}$。检验：$\\frac{9}{5} < 3$，所以它们在中心与顶点 $(0, \\pm 3)$ 之间。\n\n> **注意。** 要用正项的 $a^{2}$ 除以 $c$，不是 $b^{2}$ 除以 $c$，也不是 $c^{2}$ 除以 $a$；准线与实轴垂直：$y$ 项为正时写成 $y = \\dots$。",
       ),
       generate(rng) {
         const triple = rng.pick(pythTriples);
@@ -2675,23 +3257,52 @@ export const directricesOfHyperbolas: TopicDef = {
           `${horizontal ? "x" : "y"} = ${pmFrac(b2, c)}`,
           `${horizontal ? "x" : "y"} = ${pmFrac(c * c, a)}`,
         ];
-        const solution = t(
-          `Here $a = ${a}, a^{2} = ${a2}, c = \\sqrt{${a2} + ${b2}} = ${c}$. The directrices are:${steps(
-            `${horizontal ? "x" : "y"} = \\pm \\frac{a^{2}}{c} = ${valStr}`,
-          )}`,
-          `此处 $a = ${a}, a^{2} = ${a2}, c = \\sqrt{${a2} + ${b2}} = ${c}$。准线方程为：${steps(
-            `${horizontal ? "x" : "y"} = \\pm \\frac{a^{2}}{c} = ${valStr}`,
-          )}`,
-        );
-        return makeChoice(rng, prompt, correct, distractors, solution);
+        const solution = (() => {
+          const v = horizontal ? "x" : "y";
+          const raw = `\\pm \\frac{${a2}}{${c}}`;
+          return walked(
+            [
+              [["Find c", "求 c"], t(`Add the denominators:`, `分母相加：`), [`c = \\sqrt{${a2} + ${b2}} = \\sqrt{${c * c}} = ${c}`]],
+              [
+                ["Divide a squared by c", "用 a 的平方除以 c"],
+                t(
+                  `The directrices cross the transverse axis, the $${v}$-axis, on both sides of the center:`,
+                  `准线与实轴 $${v}$ 轴垂直相交，在中心两侧：`,
+                ),
+                [raw === valStr ? `${v} = \\pm \\frac{a^{2}}{c} = ${valStr}` : `${v} = \\pm \\frac{a^{2}}{c} = ${raw} = ${valStr}`],
+              ],
+            ],
+            t(
+              `$${a2} \\div ${c}$ is less than $a = ${a}$, because $c = ${c}$ is more than $a$, so the directrices lie between the center and the vertices.`,
+              `$${a2} \\div ${c}$ 小于 $a = ${a}$，因为 $c = ${c}$ 大于 $a$，所以准线在中心与顶点之间。`,
+            ),
+          );
+        })();
+        return makeChoice(rng, prompt, correct, distractors, solution, [
+          why(
+            distractors[0]!,
+            `These lines cross the ${horizontal ? "$y$" : "$x$"}-axis, but the directrices cross the transverse axis, the ${horizontal ? "$x$" : "$y$"}-axis.`,
+            `这两条直线与 ${horizontal ? "$y$" : "$x$"} 轴相交，但准线与实轴 ${horizontal ? "$x$" : "$y$"} 轴相交。`,
+          ),
+          why(
+            distractors[1]!,
+            `This uses $b^{2} = ${b2}$; the directrices are at $a^{2} / c$.`,
+            `这用了 $b^{2} = ${b2}$；准线在 $a^{2} / c$ 处。`,
+          ),
+          why(
+            distractors[2]!,
+            `This is $c^{2} / a$, which is beyond the foci; the directrices are at $a^{2} / c$, inside the vertices.`,
+            `这是 $c^{2} / a$，在焦点之外；准线在 $a^{2} / c$ 处，在顶点之内。`,
+          ),
+        ]);
       },
     },
     {
       id: "focus-directrix-ratio-hyperbola",
       title: t("The focus-directrix property of a hyperbola", "双曲线的焦点-准线性质"),
       explanation: t(
-        "For any point $P$ on a hyperbola, the ratio of its distance to a focus $F$ to its distance to the corresponding directrix $\\ell$ is constant and equals the eccentricity $e > 1$:\n\n$$\\frac{PF}{d(P, \\ell)} = e > 1 \\implies PF = e \\cdot d(P, \\ell)$$",
-        "对于双曲线上任意一点 $P$，其到焦点 $F$ 的距离与到对应准线 $\\ell$ 的距离之比为常数，且等于离心率 $e > 1$：\n\n$$\\frac{PF}{d(P, \\ell)} = e > 1 \\implies PF = e \\cdot d(P, \\ell)$$",
+        "For any point $P$ on a hyperbola, the ratio of its distance to a focus $F$ to its distance to the corresponding directrix $\\ell$ is constant and equals the eccentricity $e > 1$:\n\n$$\\frac{PF}{d(P, \\ell)} = e > 1 \\implies PF = e \\cdot d(P, \\ell)$$\n\nFor $e = \\frac{5}{3}$ and a point $6$ from the directrix: $PF = \\frac{5}{3} \\cdot 6 = 10$. Check: $\\frac{10}{6} = \\frac{5}{3}$, and $10 > 6$, as it must be when $e > 1$.\n\n> **Watch out.** Multiply the distance to the directrix by $e$. Dividing by $e$ gives a smaller number, but for a hyperbola the distance to the focus is the larger one.",
+        "对于双曲线上任意一点 $P$，其到焦点 $F$ 的距离与到对应准线 $\\ell$ 的距离之比为常数，且等于离心率 $e > 1$：\n\n$$\\frac{PF}{d(P, \\ell)} = e > 1 \\implies PF = e \\cdot d(P, \\ell)$$\n\n对 $e = \\frac{5}{3}$ 且点到准线的距离为 $6$：$PF = \\frac{5}{3} \\cdot 6 = 10$。检验：$\\frac{10}{6} = \\frac{5}{3}$，且 $10 > 6$，$e > 1$ 时必然如此。\n\n> **注意。** 要用到准线的距离乘以 $e$。除以 $e$ 会得到较小的数，但对双曲线来说，到焦点的距离是较大的那个。",
       ),
       generate(rng) {
         const eNumerator = rng.pick([5, 13, 17, 25]);
@@ -2714,11 +3325,23 @@ export const directricesOfHyperbolas: TopicDef = {
           ),
           answer: distFocus,
           wrong: [distDirectrix, Math.round((distDirectrix * eDenominator) / eNumerator), distFocus + 2, distFocus - 2],
-          solution: t(
-            `Using the focus-directrix property $PF = e \\cdot d(P, \\ell)$:${steps(
-              `PF = ${e.toLatex()} \\times ${distDirectrix} = ${distFocus}`,
-            )}`,
-            `利用焦点-准线性质 $PF = e \\cdot d(P, \\ell)$：${steps(`PF = ${e.toLatex()} \\times ${distDirectrix} = ${distFocus}`)}`,
+          solution: walked(
+            [
+              [
+                ["Write the ratio", "写出比"],
+                t(`The distance to the focus over the distance to the directrix is $e$:`, `到焦点的距离与到准线的距离之比是 $e$：`),
+                [`\\frac{PF}{${distDirectrix}} = ${e.toLatex()}`],
+              ],
+              [
+                ["Multiply", "相乘"],
+                t(`Multiply both sides by $${distDirectrix}$:`, `两边乘以 $${distDirectrix}$：`),
+                [`PF = ${e.toLatex()} \\times ${distDirectrix} = ${distFocus}`],
+              ],
+            ],
+            t(
+              `$${distFocus} \\div ${distDirectrix}$ reduces to $e$, since $${distFocus} = ${eNumerator} \\cdot ${mult}$ and $${distDirectrix} = ${eDenominator} \\cdot ${mult}$; and $${distFocus} > ${distDirectrix}$, as $e > 1$ requires.`,
+              `$${distFocus} \\div ${distDirectrix}$ 约分后是 $e$，因为 $${distFocus} = ${eNumerator} \\cdot ${mult}$，$${distDirectrix} = ${eDenominator} \\cdot ${mult}$；且 $${distFocus} > ${distDirectrix}$，符合 $e > 1$。`,
+            ),
           ),
         });
       },
