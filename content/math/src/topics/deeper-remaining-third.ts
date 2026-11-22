@@ -245,23 +245,33 @@ For $f(x) = -2(x - 1)^{3}(x + 4)^{2}$: the factor $(x - 1)^{3}$ contributes $x^{
       "a-far-term-from-a-recursive-rule",
       ["A far term from a recursive rule", "由递推式求很远的项"],
       [
-        "A recursive rule would need every earlier term, one at a time. Converting it to an explicit formula reaches a far term in one step, with $n - 1$ differences added to the first term.",
-        "递推式要一项一项地算出前面所有的项。把它化成通项公式，一步就能得到很远的项：首项加上 $n - 1$ 个公差。",
+        `A recursive rule would need every earlier term, one at a time. Converting it to an explicit formula reaches a far term in one step: from $a_1$ to $a_n$ the rule is used $n - 1$ times, so $n - 1$ differences are added to the first term. With $a_1 = 4$ and $a_n = a_{n-1} + 3$:
+
+$$a_{100} = 4 + 99 \\cdot 3 = 4 + 297 = 301.$$
+
+> **Watch out.** Multiply the difference by $n - 1$, not by $n$: the first term takes no step, and $4 + 100 \\cdot 3 = 304$ is $a_{101}$. Do not drop the first term either: $99 \\cdot 3 = 297$ is only the total change.`,
+        `递推式要一项一项地算出前面所有的项。把它化成通项公式，一步就能得到很远的项：从 $a_1$ 到 $a_n$ 规则用了 $n - 1$ 次，所以首项加上 $n - 1$ 个公差。当 $a_1 = 4$，$a_n = a_{n-1} + 3$ 时：
+
+$$a_{100} = 4 + 99 \\cdot 3 = 4 + 297 = 301.$$
+
+> **注意。** 公差要乘以 $n - 1$ 而不是 $n$：首项不用走，$4 + 100 \\cdot 3 = 304$ 是 $a_{101}$。也不要丢掉首项：$99 \\cdot 3 = 297$ 只是总的变化量。`,
       ],
       (rng) => {
         const first = rng.int(-20, 20);
         const d = nz(rng, 9);
         const n = rng.int(20, 200);
+        const value = first + (n - 1) * d;
+        const step = d < 0 ? [`subtracting $${-d}$`, `减去 $${-d}$`] : [`adding $${d}$`, `加上 $${d}$`];
         return integer(
           [
             `A sequence has $a_1 = ${first}$ and $a_n = a_{n-1}${signed(d)}$. Find $a_{${n}}$.`,
             `数列满足 $a_1 = ${first}$，$a_n = a_{n-1}${signed(d)}$。求 $a_{${n}}$。`,
           ],
-          first + (n - 1) * d,
+          value,
           [first + n * d, (n - 1) * d, first * n + d],
           [
-            `$a_{${n}} = ${first} + ${n - 1} \\cdot ${paren(d)} = ${first + (n - 1) * d}$.`,
-            `$a_{${n}} = ${first} + ${n - 1} \\cdot ${paren(d)} = ${first + (n - 1) * d}$。`,
+            `The rule is arithmetic, each step ${step[0]}, so $d = ${d}$. From $a_1$ to $a_{${n}}$ the rule is used $${n} - 1 = ${n - 1}$ times, which the explicit formula $a_n = a_1 + (n - 1)d$ adds up at once:\n\n$$a_{${n}} = ${first} + ${n - 1} \\cdot ${paren(d)} = ${first}${signed((n - 1) * d)} = ${value}$$\n\n**Check.** The change from $a_1$ is $${value} - ${paren(first)} = ${value - first}$, and $${value - first} \\div ${paren(d)} = ${n - 1}$ steps, one for each term after the first.`,
+            `这是等差的规则，每一步${step[1]}，所以 $d = ${d}$。从 $a_1$ 到 $a_{${n}}$ 规则用了 $${n} - 1 = ${n - 1}$ 次，通项公式 $a_n = a_1 + (n - 1)d$ 一次就把它们加起来：\n\n$$a_{${n}} = ${first} + ${n - 1} \\cdot ${paren(d)} = ${first}${signed((n - 1) * d)} = ${value}$$\n\n**检验。** 相对 $a_1$ 的变化量是 $${value} - ${paren(first)} = ${value - first}$，而 $${value - first} \\div ${paren(d)} = ${n - 1}$ 步，首项之后的每一项各一步。`,
           ],
         );
       },
@@ -548,24 +558,33 @@ So $f(x) = \\frac{6}{x - 2} + 1$ takes every value except $0 + 1 = 1$: its range
       "the-difference-from-two-distant-terms",
       ["The difference from two distant terms", "由相隔的两项求公差"],
       [
-        "Between two terms of an arithmetic sequence, the difference is added once for every step. So divide the change in value by the number of steps between them to find the rule.",
-        "在等差数列的两项之间，每走一步加一次公差。所以用数值的变化除以它们之间的步数，就得到递推规则。",
+        `Between two terms of an arithmetic sequence, the rule adds $d$ once for every step, and from $a_m$ to $a_{m+s}$ there are $s$ steps. So the change in value is $s$ times $d$, and dividing the change by the number of steps gives the rule. If $a_2 = 5$ and $a_7 = 30$, there are $7 - 2 = 5$ steps:
+
+$$5d = 30 - 5 = 25, \\qquad d = 5.$$
+
+> **Watch out.** The change, $25$, is not $d$: it is $d$ added five times. Count the steps as the difference of the indexes, and subtract the earlier term from the later one, so that a decrease gives a negative $d$.`,
+        `在等差数列的两项之间，规则每走一步加一次 $d$，从 $a_m$ 到 $a_{m+s}$ 共 $s$ 步。所以数值的变化是 $s$ 个 $d$，用变化量除以步数就得到递推规则。若 $a_2 = 5$，$a_7 = 30$，共 $7 - 2 = 5$ 步：
+
+$$5d = 30 - 5 = 25, \\qquad d = 5.$$
+
+> **注意。** 变化量 $25$ 不是 $d$：它是 $d$ 加了五次。步数是两个下标之差；要用较后的项减去较前的项，这样数值减少时 $d$ 为负。`,
       ],
       (rng) => {
         const m = rng.int(1, 12);
         const steps = rng.int(2, 12);
         const d = nz(rng, 9);
         const first = rng.int(-30, 30);
+        const last = first + steps * d;
         return integer(
           [
-            `A sequence follows $a_n = a_{n-1} + d$, with $a_{${m}} = ${first}$ and $a_{${m + steps}} = ${first + steps * d}$. Find $d$.`,
-            `数列满足 $a_n = a_{n-1} + d$，$a_{${m}} = ${first}$，$a_{${m + steps}} = ${first + steps * d}$。求 $d$。`,
+            `A sequence follows $a_n = a_{n-1} + d$, with $a_{${m}} = ${first}$ and $a_{${m + steps}} = ${last}$. Find $d$.`,
+            `数列满足 $a_n = a_{n-1} + d$，$a_{${m}} = ${first}$，$a_{${m + steps}} = ${last}$。求 $d$。`,
           ],
           d,
           [steps * d, -d, d + steps],
           [
-            `The change is $${steps * d}$ over $${steps}$ steps, so $d = ${d}$.`,
-            `变化量是 $${steps * d}$，经过 $${steps}$ 步，所以 $d = ${d}$。`,
+            `From $a_{${m}}$ to $a_{${m + steps}}$ there are $${m + steps} - ${m} = ${steps}$ steps, and each adds $d$, so the change is $${steps}d$:\n\n$$${steps}d = ${last} - ${paren(first)} = ${steps * d}$$\n\nDividing by the number of steps, $d = ${steps * d} \\div ${steps} = ${d}$.\n\n**Check.** Adding $${steps}$ steps of $${d}$ to $a_{${m}}$: $${first} + ${steps} \\cdot ${paren(d)} = ${last}$, the given $a_{${m + steps}}$.`,
+            `从 $a_{${m}}$ 到 $a_{${m + steps}}$ 共 $${m + steps} - ${m} = ${steps}$ 步，每步加 $d$，所以变化量是 $${steps}d$：\n\n$$${steps}d = ${last} - ${paren(first)} = ${steps * d}$$\n\n除以步数，$d = ${steps * d} \\div ${steps} = ${d}$。\n\n**检验。** 在 $a_{${m}}$ 上加 $${steps}$ 步、每步 $${d}$：$${first} + ${steps} \\cdot ${paren(d)} = ${last}$，正是所给的 $a_{${m + steps}}$。`,
           ],
         );
       },
@@ -576,12 +595,14 @@ So $f(x) = \\frac{6}{x - 2} + 1$ takes every value except $0 + 1 = 1$: its range
       "three-terms-with-a-known-sum",
       ["Three terms with a known sum", "和已知的三项"],
       [
-        "Writing three consecutive terms as $m - d$, $m$ and $m + d$ makes the differences cancel in the sum. So the middle term is one third of the sum, and the others follow from it.",
-        "把连续三项写成 $m - d$、$m$、$m + d$，求和时公差就抵消了。所以中间一项是和的三分之一，其他两项由它得出。",
+        "Writing three consecutive terms as $m - d$, $m$ and $m + d$ makes the differences cancel in the sum: $(m - d) + m + (m + d) = 3m$. So the middle term is one third of the sum, and the others follow from it. If three terms add up to $36$ with common difference $5$, the middle term is $36 \\div 3 = 12$ and the terms are $7, 12, 17$.\n\n> **Watch out.** One third of the sum is the middle term, not the smallest: the smallest is one common difference below it, $12 - 5 = 7$. And subtracting $d$ from the whole sum, $36 - 5$, skips the division by $3$.",
+        "把连续三项写成 $m - d$、$m$、$m + d$，求和时公差就抵消了：$(m - d) + m + (m + d) = 3m$。所以中间一项是和的三分之一，其他两项由它得出。若三项之和是 $36$，公差是 $5$，中间一项是 $36 \\div 3 = 12$，三项是 $7, 12, 17$。\n\n> **注意。** 和的三分之一是中间一项，不是最小的一项：最小的一项比它小一个公差，$12 - 5 = 7$。用整个和减去 $d$，即 $36 - 5$，漏掉了除以 $3$ 这一步。",
       ],
       (rng) => {
         const m = rng.int(-20, 30);
         const d = rng.int(1, 12);
+        const [lead, ...rest] = [m - d, m, m + d].filter((v) => v !== 0);
+        const sum = `${lead}${rest.map((v) => signed(v)).join("")}`;
         return integer(
           [
             `Three consecutive terms of an arithmetic sequence add up to $${3 * m}$, and the common difference is $${d}$. Find the smallest term.`,
@@ -590,8 +611,8 @@ So $f(x) = \\frac{6}{x - 2} + 1$ takes every value except $0 + 1 = 1$: its range
           m - d,
           [m, m + d, 3 * m - d],
           [
-            `The middle term is $${3 * m} \\div 3 = ${m}$, so the smallest is $${m} - ${d} = ${m - d}$.`,
-            `中间一项是 $${3 * m} \\div 3 = ${m}$，所以最小的是 $${m} - ${d} = ${m - d}$。`,
+            `**Step 1: the middle term.** Write the terms as $m - d$, $m$ and $m + d$. Their sum is $3m$, so the middle term is $${3 * m} \\div 3 = ${m}$.\n\n**Step 2: the smallest term.** The smallest is one common difference below the middle: $${m} - ${d} = ${m - d}$.\n\n**Check.** The terms are $${m - d}, ${m}, ${m + d}$, and $${sum} = ${3 * m}$.`,
+            `**第一步：中间一项。** 把三项写成 $m - d$、$m$、$m + d$。它们的和是 $3m$，所以中间一项是 $${3 * m} \\div 3 = ${m}$。\n\n**第二步：最小的一项。** 最小的一项比中间一项小一个公差：$${m} - ${d} = ${m - d}$。\n\n**检验。** 三项是 $${m - d}, ${m}, ${m + d}$，且 $${sum} = ${3 * m}$。`,
           ],
         );
       },
