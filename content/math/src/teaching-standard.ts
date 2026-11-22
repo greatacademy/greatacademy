@@ -164,4 +164,11 @@ export const taughtTopics: readonly string[] = [
   "graphs-of-inverse-functions",
   "domain-and-range-of-inverse-functions",
   "invertible-functions",
+  "simplifying-rational-expressions-using-polynomial-factorization",
+  "splitting-rational-expressions-into-terms",
+  "adding-and-subtracting-rational-expressions",
+  "adding-rational-expressions-with-unlike-denominators",
+  "multiplying-rational-expressions",
+  "dividing-rational-expressions",
+  "simplifying-complex-fractions",
 ];
