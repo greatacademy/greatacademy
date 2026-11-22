@@ -132,4 +132,13 @@ export const taughtTopics: readonly string[] = [
   "products-of-even-and-odd-functions",
   "unbounded-behavior-of-functions-near-a-point",
   "the-average-rate-of-change-of-a-function",
+  "upward-and-downward-opening-parabolas",
+  "left-and-right-opening-parabolas",
+  "the-vertex-of-a-parabola",
+  "calculating-the-vertex-of-a-parabola-by-completing-the-square",
+  "the-focus-directrix-property-of-a-parabola",
+  "calculating-the-focus-of-a-parabola",
+  "calculating-the-directrix-of-a-parabola",
+  "calculating-intercepts-of-parabolas",
+  "intersections-of-parabolas-with-lines",
 ];
