@@ -138,7 +138,7 @@ Stage 0 is done. Walking its lessons against Math Academy's on the same topics f
 | `algebra-ii-polynomials.ts` | 10 | done | |  |
 | `algebra-ii-factoring.ts` | 8 | done | |  |
 | `algebra-ii-rational-radical.ts` | 7 | open | |  |
-| `algebra-ii-functions.ts` | 5 | open | |  |
+| `algebra-ii-functions.ts` | 5 | done | |  |
 | `algebra-ii-polynomial-graphs.ts` | 5 | open | |  |
 | `algebra-ii-reciprocal-functions.ts` | 5 | open | |  |
 | `algebra-ii-general-triangles.ts` | 5 | open | |  |

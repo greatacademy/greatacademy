@@ -159,4 +159,9 @@ export const taughtTopics: readonly string[] = [
   "factoring-cubic-expressions-by-grouping",
   "factoring-sums-and-differences-of-cubes",
   "factoring-biquadratic-expressions",
+  "local-extrema",
+  "one-to-one-functions",
+  "graphs-of-inverse-functions",
+  "domain-and-range-of-inverse-functions",
+  "invertible-functions",
 ];

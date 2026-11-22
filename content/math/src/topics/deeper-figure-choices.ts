@@ -1013,8 +1013,8 @@ Take $y = 2\\sin x - 1$. The middle line is $y = -1$, and the wave runs from $-3
       "choosing-the-graph-of-an-inverse",
       ["Choosing the graph of an inverse", "选出反函数的图像"],
       [
-        "If $(a, b)$ is on the graph of $f$, then $(b, a)$ is on the graph of $f^{-1}$. Swapping the coordinates of every point reflects the graph across the line $y = x$. To check a drawing, swap the coordinates of two points of $f$ and see whether both land on it.",
-        "如果 $(a, b)$ 在 $f$ 的图像上，那么 $(b, a)$ 就在 $f^{-1}$ 的图像上。把每个点的坐标交换，就是把图像关于直线 $y = x$ 翻折。检查图时，把 $f$ 上两个点的坐标交换，看它们是否都落在图上。",
+        "If $(a, b)$ is on the graph of $f$, then $(b, a)$ is on the graph of $f^{-1}$. Swapping the coordinates of every point reflects the graph across the line $y = x$. To check a drawing, swap the coordinates of two points of $f$ and see whether both land on it.\n\n> **Watch out.** The inverse of a line with slope $m$ does not have slope $-m$. Rise and run swap, so its slope is $\\frac{1}{m}$.",
+        "如果 $(a, b)$ 在 $f$ 的图像上，那么 $(b, a)$ 就在 $f^{-1}$ 的图像上。把每个点的坐标交换，就是把图像关于直线 $y = x$ 翻折。检查图时，把 $f$ 上两个点的坐标交换，看它们是否都落在图上。\n\n> **注意。** 斜率为 $m$ 的直线，其反函数的斜率不是 $-m$。竖直变化量与水平变化量互换，所以斜率是 $\\frac{1}{m}$。",
       ],
       (rng) => {
         const m = rng.pick([2, 3, -2, -3, 0.5, -0.5]);
@@ -1047,8 +1047,8 @@ Take $y = 2\\sin x - 1$. The middle line is $y = -1$, and the wave runs from $-3
             ),
           ],
           solution: t(
-            `The graph of $f$ passes through $${tex(p)}$ and $${tex(r)}$. Swapping the coordinates gives $${tex([p[1], p[0]])}$ and $${tex([r[1], r[0]])}$, which lie on the graph of $f^{-1}$. The two graphs are mirror images across $y = x$.`,
-            `$f$ 的图像经过 $${tex(p)}$ 和 $${tex(r)}$。交换坐标得到 $${tex([p[1], p[0]])}$ 和 $${tex([r[1], r[0]])}$，它们都在 $f^{-1}$ 的图像上。这两个图像关于 $y = x$ 对称。`,
+            `${stepLabel(1, "Read two points of f", "读出 f 上的两个点").en} The graph of $f$ passes through $${tex(p)}$ and $${tex(r)}$.\n\n${stepLabel(2, "Swap the coordinates", "交换坐标").en} Swapping gives $${tex([p[1], p[0]])}$ and $${tex([r[1], r[0]])}$, which lie on the graph of $f^{-1}$. Only one drawing passes through both, and it is the mirror image of $f$ across $y = x$.\n\n**Check.** Going from the first swapped point to the second, the height rises by $1$ while $x$ changes by $${num(coef(m))}$. So the line through them has slope\n\n$$\\frac{1}{${num(coef(m))}} = ${num(Q.one.div(Q.of(Math.round(m * 4), 4)))}$$\n\nThat is the reciprocal of the slope of $f$, as it must be when rise and run swap.`,
+            `${stepLabel(1, "Read two points of f", "读出 f 上的两个点")["zh-CN"]}$f$ 的图像经过 $${tex(p)}$ 和 $${tex(r)}$。\n\n${stepLabel(2, "Swap the coordinates", "交换坐标")["zh-CN"]}交换坐标得到 $${tex([p[1], p[0]])}$ 和 $${tex([r[1], r[0]])}$，它们都在 $f^{-1}$ 的图像上。只有一张图同时经过这两点，它就是 $f$ 关于 $y = x$ 的镜像。\n\n**检验。** 从交换后的第一个点到第二个点，高度增加 $1$，$x$ 变化 $${num(coef(m))}$。所以过它们的直线斜率是\n\n$$\\frac{1}{${num(coef(m))}} = ${num(Q.one.div(Q.of(Math.round(m * 4), 4)))}$$\n\n这正是 $f$ 斜率的倒数，符合竖直变化量与水平变化量互换的要求。`,
           ),
           solutionFigure: draw(
             wide,

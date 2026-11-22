@@ -754,12 +754,14 @@ To find it from a drawing, follow the two lines to where they meet and read the 
       "marking-a-point-of-the-inverse",
       ["Marking a point of the inverse", "标出反函数图像上的点"],
       [
-        "If $f(a) = b$, then $f^{-1}(b) = a$. So each point $(a, b)$ on the graph of $f$ gives the point $(b, a)$ on the graph of $f^{-1}$. Swapping coordinates is a reflection across the line $y = x$, so the two graphs are mirror images of each other.",
-        "如果 $f(a) = b$，那么 $f^{-1}(b) = a$。所以 $f$ 的图像上每个点 $(a, b)$ 都对应 $f^{-1}$ 的图像上的点 $(b, a)$。对调坐标就是关于直线 $y = x$ 的反射，所以两个图像互为镜像。",
+        "If $f(a) = b$, then $f^{-1}(b) = a$. So each point $(a, b)$ on the graph of $f$ gives the point $(b, a)$ on the graph of $f^{-1}$. Swapping coordinates is a reflection across the line $y = x$, so the two graphs are mirror images of each other.\n\n> **Watch out.** Swapping the coordinates is not changing their signs: $(a, b)$ goes to $(b, a)$, not to $(-a, -b)$ or $(a, -b)$.",
+        "如果 $f(a) = b$，那么 $f^{-1}(b) = a$。所以 $f$ 的图像上每个点 $(a, b)$ 都对应 $f^{-1}$ 的图像上的点 $(b, a)$。对调坐标就是关于直线 $y = x$ 的反射，所以两个图像互为镜像。\n\n> **注意。** 对调坐标不是改变符号：$(a, b)$ 变成 $(b, a)$，而不是 $(-a, -b)$ 或 $(a, -b)$。",
       ],
       (rng) => {
         const p = apart(rng, 5);
         const image: Pt = [p[1], p[0]];
+        const sum = p[0] + p[1];
+        const mid = sum % 2 === 0 ? String(sum / 2) : `${sum < 0 ? "-" : ""}\\frac{${Math.abs(sum)}}{2}`;
         return plotProblem({
           prompt: t(
             "The point $P$ lies on the graph of a one-to-one function $f$. Mark the matching point on the graph of $f^{-1}$.",
@@ -787,8 +789,8 @@ To find it from a drawing, follow the two lines to where they meet and read the 
             },
           ],
           solution: t(
-            `Here $f(${p[0]}) = ${p[1]}$, so $f^{-1}(${p[1]}) = ${p[0]}$. Swapping the coordinates of $${tex(p)}$ gives $${tex(image)}$, the mirror image across $y = x$.`,
-            `这里 $f(${p[0]}) = ${p[1]}$，所以 $f^{-1}(${p[1]}) = ${p[0]}$。对调 $${tex(p)}$ 的坐标得到 $${tex(image)}$，也就是关于 $y = x$ 的镜像。`,
+            `${stepLabel(1, "Read the point", "读懂这个点").en} The point $P${tex(p)}$ on the graph of $f$ means $f(${p[0]}) = ${p[1]}$.\n\n${stepLabel(2, "Swap the coordinates", "对调坐标").en} Then $f^{-1}(${p[1]}) = ${p[0]}$, so the matching point is $${tex(image)}$, the mirror image of $P$ across $y = x$.\n\n**Check.** The midpoint of $P$ and $${tex(image)}$ is\n\n$$\\left(${mid}, ${mid}\\right)$$\n\nIt lies on $y = x$, and the segment joining the two points has slope $-1$, so it is perpendicular to $y = x$.`,
+            `${stepLabel(1, "Read the point", "读懂这个点")["zh-CN"]}点 $P${tex(p)}$ 在 $f$ 的图像上，意思是 $f(${p[0]}) = ${p[1]}$。\n\n${stepLabel(2, "Swap the coordinates", "对调坐标")["zh-CN"]}于是 $f^{-1}(${p[1]}) = ${p[0]}$，对应的点是 $${tex(image)}$，也就是 $P$ 关于 $y = x$ 的镜像。\n\n**检验。** $P$ 与 $${tex(image)}$ 的中点是\n\n$$\\left(${mid}, ${mid}\\right)$$\n\n它在 $y = x$ 上，连接两点的线段斜率为 $-1$，与 $y = x$ 垂直。`,
           ),
           solutionAlt: t(`P and its mirror image ${tex(image)} across y = x.`, `P 和它关于 y = x 的镜像 ${tex(image)}。`),
           solutionMarks: [{ kind: "segment", a: p, b: image, dashed: true, tone: "action" }],
