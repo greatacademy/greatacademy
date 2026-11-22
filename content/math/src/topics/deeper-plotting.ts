@@ -690,8 +690,8 @@ To find it from a drawing, follow the two lines to where they meet and read the 
       "marking-the-corner-of-an-absolute-value-graph",
       ["Marking the corner of an absolute value graph", "标出绝对值图像的拐点"],
       [
-        "The graph of $y = |x - h| + k$ has the shape of a V. An absolute value is never negative, so the lowest point comes where the inside is $0$, at $x = h$, and there $y = k$. The corner is therefore $(h, k)$, read in the same way as the vertex of a parabola.",
-        "$y = |x - h| + k$ 的图像是 V 形。绝对值不会是负数，所以最低点出现在里面为 $0$ 的地方，即 $x = h$，此时 $y = k$。因此拐点是 $(h, k)$，读法和抛物线的顶点一样。",
+        "The graph of $y = |x - h| + k$ has the shape of a V. An absolute value is never negative, so the lowest point comes where the inside is $0$, at $x = h$, and there $y = k$. The corner is therefore $(h, k)$, read in the same way as the vertex of a parabola. For $y = |x + 3| - 2$ the inside is $0$ at $x = -3$, so the corner is $(-3, -2)$.\n\n> **Watch out.** The inside is $0$ at the opposite of the number you see: $|x + 3|$ is $0$ at $x = -3$, not $3$. The number outside keeps its own sign, and the corner is written $(x, y)$, with the number from inside the bars first.",
+        "$y = |x - h| + k$ 的图像是 V 形。绝对值不会是负数，所以最低点出现在里面为 $0$ 的地方，即 $x = h$，此时 $y = k$。因此拐点是 $(h, k)$，读法和抛物线的顶点一样。对 $y = |x + 3| - 2$，里面在 $x = -3$ 时为 $0$，所以拐点是 $(-3, -2)$。\n\n> **注意。** 里面为 $0$ 的位置是看到的数的相反数：$|x + 3|$ 在 $x = -3$ 处为 $0$，不是 $3$。外面的数保持自己的符号；拐点写成 $(x, y)$，绝对值里面得出的数在前。",
       ],
       (rng) => {
         const [h, k] = apart(rng, 5);
@@ -717,8 +717,8 @@ To find it from a drawing, follow the two lines to where they meet and read the 
             { at: [[k, h]], why: t("You swapped the coordinates of the corner.", "你把拐点的坐标对调了。") },
           ],
           solution: t(
-            `The inside is $0$ when $x = ${h}$, and then $y = ${k}$. The corner is $${tex(p)}$.`,
-            `当 $x = ${h}$ 时里面为 $0$，此时 $y = ${k}$。拐点是 $${tex(p)}$。`,
+            `**Step 1: where the inside is $0$.** $x ${h < 0 ? `+ ${-h}` : `- ${h}`} = 0$ when $x = ${h}$. There the absolute value is $0$, its least value, so the graph is lowest.\n\n**Step 2: the height there.** $y = 0 ${k < 0 ? `- ${-k}` : `+ ${k}`} = ${k}$. The corner is $${tex(p)}$.\n\n**Check.** One step to either side the graph is higher: at $x = ${h - 1}$ and at $x = ${h + 1}$ the absolute value is $1$, so $y = ${k + 1}$ at both, more than $${k}$.`,
+            `**第一步：里面为 $0$ 的位置。** 当 $x = ${h}$ 时 $x ${h < 0 ? `+ ${-h}` : `- ${h}`} = 0$。这时绝对值取最小值 $0$，图像最低。\n\n**第二步：这里的高度。** $y = 0 ${k < 0 ? `- ${-k}` : `+ ${k}`} = ${k}$。拐点是 $${tex(p)}$。\n\n**检验。** 向任意一侧走一步，图像都更高：在 $x = ${h - 1}$ 和 $x = ${h + 1}$ 处绝对值都是 $1$，所以两处都有 $y = ${k + 1}$，比 $${k}$ 大。`,
           ),
           solutionAlt: t(`The V-shaped graph with its corner at ${tex(p)}.`, `拐点在 ${tex(p)} 的 V 形图像。`),
           solutionMarks: [{ kind: "curve", f: (x) => Math.abs(x - h) + k, accent: true }],

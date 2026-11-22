@@ -664,18 +664,26 @@ Check each line by its $y$-intercept and its slope. For $y = 2x - 1$ and $y = -x
       "choosing-the-drawing-of-an-absolute-value",
       ["Choosing the drawing of an absolute value", "选出绝对值函数的图像"],
       [
-        "The graph of $y = |x - h| + k$ is a V with its tip at $(h, k)$. Inside the bars, $x - h$ moves the V right by $h$; outside, $+ k$ moves it up by $k$. A minus sign in front of the bars turns the V upside down.",
-        "$y = |x - h| + k$ 的图像是一个 V 形，尖点在 $(h, k)$。绝对值符号内的 $x - h$ 把 V 形向右移动 $h$；符号外的 $+ k$ 把它向上移动 $k$。绝对值前面的负号把 V 形上下翻转。",
+        "The graph of $y = |x - h| + k$ is a V with its tip at $(h, k)$. Inside the bars, $x - h$ moves the V right by $h$; outside, $+ k$ moves it up by $k$. A minus sign in front of the bars turns the V upside down. So $y = |x + 1| + 2$ is the V of $y = |x|$ moved $1$ left and $2$ up, with its tip at $(-1, 2)$, opening upward.\n\n> **Watch out.** Inside the bars the sign looks opposite to the move: $x + 1$ moves the V **left**, because the inside is $0$ at $x = -1$. Outside, the sign means what it says. And without a minus sign in front, the V opens upward.",
+        "$y = |x - h| + k$ 的图像是一个 V 形，尖点在 $(h, k)$。绝对值符号内的 $x - h$ 把 V 形向右移动 $h$；符号外的 $+ k$ 把它向上移动 $k$。绝对值前面的负号把 V 形上下翻转。所以 $y = |x + 1| + 2$ 是把 $y = |x|$ 的 V 形向左移 $1$、向上移 $2$，尖点在 $(-1, 2)$，开口向上。\n\n> **注意。** 绝对值符号里面的符号看起来与移动方向相反：$x + 1$ 使 V 形向**左**移，因为 $x = -1$ 时里面为 $0$。外面的符号就是它表示的方向。前面没有负号时，V 形开口向上。",
       ],
-      (rng) =>
-        shiftChoice(
+      (rng) => {
+        const p = shiftChoice(
           rng,
           Math.abs,
           (inner) => `|${inner}|`,
           ({ h }) => [h, h + 1],
           ["A V-shaped graph", "一个 V 形图像"],
           ["the tip", "尖点"],
-        ),
+        );
+        return {
+          ...p,
+          solution: t(
+            `${p.solution.en}\n\n**Check.** In the chosen drawing the tip is the lowest point, and one unit to the right of the tip the graph is one unit higher, just as $y = |x|$ rises from $(0, 0)$ to $(1, 1)$.`,
+            `${p.solution["zh-CN"]}\n\n**检验。** 所选的图中尖点是最低点，在尖点右边一个单位处图像高一个单位，正如 $y = |x|$ 从 $(0, 0)$ 升到 $(1, 1)$。`,
+          ),
+        };
+      },
     ),
   ],
   "graphing-elementary-quadratic-functions": [
