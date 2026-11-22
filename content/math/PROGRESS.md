@@ -130,7 +130,7 @@ Stage 0 is done. Walking its lessons against Math Academy's on the same topics f
 | `algebra-ii-trigonometric-graphs.ts` | 14 | done | |  |
 | `algebra-ii-trigonometric-transformations.ts` | 16 | done | |  |
 | `algebra-ii-transformations.ts` | 12 | done | |  |
-| `algebra-ii-logarithms.ts` | 11 | open | |  |
+| `algebra-ii-logarithms.ts` | 14 | done | |  |
 | `algebra-ii-radical-functions.ts` | 11 | done | |  |
 | `algebra-ii-unit-circle.ts` | 11 | open | |  |
 | `algebra-ii-inverses.ts` | 9 | open | |  |
