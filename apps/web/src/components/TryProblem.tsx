@@ -7,7 +7,7 @@ import { useAdminText } from "../lib/admin-text.ts";
 import { useI18n } from "../lib/i18n.tsx";
 import { admin } from "../lib/rpc.ts";
 import { AnswerInput } from "./AnswerInput.tsx";
-import { FigureView } from "./Figure.tsx";
+import { Explanation, FigureView } from "./Figure.tsx";
 import { LoadError } from "./LoadError.tsx";
 import { Markdown } from "./Markdown.tsx";
 import { AnswerText, ProblemPrompt } from "./Problem.tsx";
@@ -23,7 +23,7 @@ function Solution({ feedback, problem }: { feedback: Feedback; problem: Paramete
         <span className="mr-2 text-muted">{m.correctAnswer}:</span>
         <AnswerText problem={problem} answer={feedback.answer} />
       </div>
-      <Markdown source={tx(feedback.solution)} />
+      <Explanation text={tx(feedback.solution)} figures={feedback.solutionFigures} />
       <FigureView figure={feedback.solutionFigure} />
       <Sounds sounds={feedback.solutionSounds} />
     </div>

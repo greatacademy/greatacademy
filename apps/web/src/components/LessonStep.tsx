@@ -1,5 +1,5 @@
 import type { KnowledgePointIntro } from "@ga/proto/learning/v1/learning_pb";
-import { Lightbulb } from "@phosphor-icons/react";
+import { BookOpen, Lightbulb } from "@phosphor-icons/react";
 import { useState } from "react";
 
 import { useI18n } from "../lib/i18n.tsx";
@@ -9,6 +9,20 @@ import { AnswerText, ProblemPrompt } from "./Problem.tsx";
 import { Sounds } from "./Sounds.tsx";
 import { Button, Card } from "./ui.tsx";
 
+/** TopicIntro shows the introduction of a topic, which comes before its first knowledge point, or nothing. */
+export function TopicIntro({ step }: { step: KnowledgePointIntro }) {
+  const { m, tx } = useI18n();
+  if (!step.topicIntro) return null;
+  return (
+    <Card className="space-y-4">
+      <div className="flex items-center gap-2 text-sm font-semibold text-muted">
+        <BookOpen size={18} weight="duotone" /> {m.topicIntro}
+      </div>
+      <Explanation text={tx(step.topicIntro)} figures={step.topicIntroFigures} />
+    </Card>
+  );
+}
+
 /** LessonStep shows a knowledge point of a lesson to reread: its explanation, then a worked example whose solution is shown on request. */
 export function LessonStep({ step }: { step: KnowledgePointIntro }) {
   const { m, tx } = useI18n();
@@ -16,6 +30,7 @@ export function LessonStep({ step }: { step: KnowledgePointIntro }) {
   const ex = step.example;
   return (
     <div className="space-y-4">
+      <TopicIntro step={step} />
       <Card className="space-y-4">
         <h2 className="text-lg font-semibold">
           <Markdown source={tx(step.title)} inline />
@@ -31,7 +46,7 @@ export function LessonStep({ step }: { step: KnowledgePointIntro }) {
           <ProblemPrompt problem={ex.problem} />
           {shown ? (
             <div className="space-y-3 border-t border-accent/20 pt-4">
-              <Markdown source={tx(ex.solution)} />
+              <Explanation text={tx(ex.solution)} figures={ex.solutionFigures} />
               <FigureView figure={ex.solutionFigure} />
               <Sounds sounds={ex.solutionSounds} />
               <div className="text-sm">

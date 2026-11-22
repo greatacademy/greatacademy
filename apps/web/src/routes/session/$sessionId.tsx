@@ -35,6 +35,7 @@ import { type ReactNode, useEffect, useRef, useState } from "react";
 
 import { AnswerInput } from "../../components/AnswerInput.tsx";
 import { CaptionedFigure, Explanation, FigureView } from "../../components/Figure.tsx";
+import { TopicIntro } from "../../components/LessonStep.tsx";
 import { LoadError } from "../../components/LoadError.tsx";
 import { Markdown } from "../../components/Markdown.tsx";
 import { PassageCard } from "../../components/PassageCard.tsx";
@@ -361,17 +362,20 @@ function StepsFlow({
   );
 }
 
-/** IntroCard is a knowledge point's explanation and its drawings. */
+/** IntroCard is a knowledge point's explanation and its drawings, after the topic's introduction for the first. */
 function IntroCard({ intro }: { intro: KnowledgePointIntro }) {
   const { tx } = useI18n();
   return (
-    <Card className="space-y-4">
-      <h2 className="text-lg font-semibold">
-        <Markdown source={tx(intro.title)} inline />
-      </h2>
-      <Explanation text={tx(intro.explanation)} figures={intro.figures} />
-      <CaptionedFigure figure={intro.figure} />
-    </Card>
+    <div className="space-y-4">
+      <TopicIntro step={intro} />
+      <Card className="space-y-4">
+        <h2 className="text-lg font-semibold">
+          <Markdown source={tx(intro.title)} inline />
+        </h2>
+        <Explanation text={tx(intro.explanation)} figures={intro.figures} />
+        <CaptionedFigure figure={intro.figure} />
+      </Card>
+    </div>
   );
 }
 
@@ -393,7 +397,7 @@ function ExampleCard({ intro }: { intro: KnowledgePointIntro }) {
       <ProblemPrompt problem={ex.problem} apart={!!ex.problem?.scenario} />
       <div className="space-y-3 border-t border-accent/20 pt-4">
         <div className="text-sm font-semibold text-muted">{m.solution}</div>
-        <Markdown source={tx(ex.solution)} />
+        <Explanation text={tx(ex.solution)} figures={ex.solutionFigures} />
         <FigureView figure={ex.solutionFigure} />
         <Sounds sounds={ex.solutionSounds} />
         <div className="text-sm">
@@ -470,7 +474,9 @@ function VerdictBody({ feedback, problem }: { feedback: Feedback; problem?: Prob
       {(tx(feedback.solution) || feedback.solutionFigure || feedback.solutionSounds.length > 0) && (
         <details open={!feedback.correct} className="group">
           <summary className="cursor-pointer text-sm font-medium text-muted select-none">{m.solution}</summary>
-          <Markdown source={tx(feedback.solution)} className="mt-2" />
+          <div className="mt-2 space-y-3">
+            <Explanation text={tx(feedback.solution)} figures={feedback.solutionFigures} />
+          </div>
           <FigureView figure={feedback.solutionFigure} className="mt-3" />
           <Sounds sounds={feedback.solutionSounds} className="mt-3" />
         </details>
@@ -1131,7 +1137,9 @@ function ResultView({ session, result }: { session: Session; result: Result }) {
               {!item.correct && (
                 <details>
                   <summary className="cursor-pointer text-sm font-medium text-muted select-none">{m.solution}</summary>
-                  <Markdown source={tx(item.solution)} className="mt-2" />
+                  <div className="mt-2 space-y-3">
+                    <Explanation text={tx(item.solution)} figures={item.solutionFigures} />
+                  </div>
                   <FigureView figure={item.solutionFigure} className="mt-3" />
                   <Sounds sounds={item.solutionSounds} className="mt-3" />
                 </details>
