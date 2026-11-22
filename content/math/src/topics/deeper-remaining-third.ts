@@ -62,8 +62,8 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
         "the-perimeter-of-a-right-triangle",
         ["The perimeter of a right triangle", "直角三角形的周长"],
         [
-          "When two sides of a triangle lie along grid lines, their lengths come from subtracting coordinates. The third side then comes from the Pythagorean theorem, and the perimeter adds all three.",
-          "三角形有两条边沿着网格线时，它们的长度由坐标相减得到。第三条边用勾股定理求，周长是三条边的和。",
+          "When two sides of a triangle lie along grid lines, their lengths come from subtracting coordinates. One is horizontal and one vertical, so they meet at a right angle, and the third side is the hypotenuse: the Pythagorean theorem gives it. The perimeter adds all three.\n\nFor $(1, 1)$, $(5, 1)$ and $(5, 4)$ the sides along the grid are $5 - 1 = 4$ and $4 - 1 = 3$, the hypotenuse is $\\sqrt{4^2 + 3^2} = 5$, and the perimeter is $4 + 3 + 5 = 12$.\n\n> **Watch out.** Do not stop at the two legs, $4 + 3$: the perimeter goes all the way around, through the hypotenuse. Doubling the legs, $2(4 + 3)$, goes around a rectangle, not a triangle. And $\\frac{1}{2} \\cdot 4 \\cdot 3 = 6$ is the area, not the perimeter.",
+          "三角形有两条边沿着网格线时，它们的长度由坐标相减得到。一条水平、一条竖直，所以它们成直角，第三条边是斜边，用勾股定理求出。周长是三条边的和。\n\n对 $(1, 1)$、$(5, 1)$、$(5, 4)$，沿网格的两条边是 $5 - 1 = 4$ 和 $4 - 1 = 3$，斜边是 $\\sqrt{4^2 + 3^2} = 5$，周长是 $4 + 3 + 5 = 12$。\n\n> **注意。** 不要只加两条直角边 $4 + 3$：周长要绕一整圈，包括斜边。把直角边加倍 $2(4 + 3)$ 是绕矩形一圈，不是三角形。$\\frac{1}{2} \\cdot 4 \\cdot 3 = 6$ 是面积，不是周长。",
         ],
         (rng) => {
           const [p, q, r] = rng.pick<[number, number, number]>([
@@ -78,6 +78,8 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
           const y = rng.int(-9, 9);
           const left = rng.bool() ? 1 : -1;
           const down = rng.bool() ? 1 : -1;
+          const [bx, cy] = [x + left * p, y + down * q];
+          const slanted = `\\sqrt{(${x} - ${paren(bx)})^2 + (${cy} - ${paren(y)})^2} = \\sqrt{${(left * p) ** 2} + ${q * q}} = \\sqrt{${r * r}} = ${r}`;
           return whole(
             [
               `Find the perimeter of the triangle with vertices $(${x}, ${y})$, $(${x + left * p}, ${y})$ and $(${x}, ${y + down * q})$.`,
@@ -86,8 +88,16 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
             p + q + r,
             [p + q, 2 * (p + q), (p * q) / 2],
             [
-              `The legs are $${p}$ and $${q}$, read off the coordinates. The third side is $\\sqrt{${p}^2 + ${q}^2} = ${r}$, so the perimeter is $${p} + ${q} + ${r} = ${p + q + r}$.`,
-              `由坐标读出两条直角边是 $${p}$ 和 $${q}$。第三边是 $\\sqrt{${p}^2 + ${q}^2} = ${r}$，所以周长是 $${p} + ${q} + ${r} = ${p + q + r}$。`,
+              `**Step 1: The legs.** From $(${x}, ${y})$ to $(${bx}, ${y})$ only $x$ changes, so that side is horizontal with length $|${bx} - ${paren(x)}| = ${p}$. From $(${x}, ${y})$ to $(${x}, ${cy})$ only $y$ changes, so that side is vertical with length $|${cy} - ${paren(y)}| = ${q}$. They meet at a right angle at $(${x}, ${y})$.
+
+**Step 2: The hypotenuse and the perimeter.** The third side is the hypotenuse, $\\sqrt{${p}^2 + ${q}^2} = \\sqrt{${p * p + q * q}} = ${r}$, so the perimeter is $${p} + ${q} + ${r} = ${p + q + r}$.
+
+**Check.** The distance formula on the slanted side, from $(${bx}, ${y})$ to $(${x}, ${cy})$, gives the same length: $${slanted}$. It is longer than each leg and shorter than both together, $${Math.max(p, q)} < ${r} < ${p + q}$, as a hypotenuse must be.`,
+              `**第一步：直角边。** 从 $(${x}, ${y})$ 到 $(${bx}, ${y})$ 只有 $x$ 变化，所以这条边是水平的，长 $|${bx} - ${paren(x)}| = ${p}$。从 $(${x}, ${y})$ 到 $(${x}, ${cy})$ 只有 $y$ 变化，所以这条边是竖直的，长 $|${cy} - ${paren(y)}| = ${q}$。两条边在 $(${x}, ${y})$ 处成直角。
+
+**第二步：斜边和周长。** 第三条边是斜边，$\\sqrt{${p}^2 + ${q}^2} = \\sqrt{${p * p + q * q}} = ${r}$，所以周长是 $${p} + ${q} + ${r} = ${p + q + r}$。
+
+**检验。** 对斜着的那条边，从 $(${bx}, ${y})$ 到 $(${x}, ${cy})$ 用距离公式，得到同样的长度：$${slanted}$。它比每条直角边都长，又比两条直角边之和短，$${Math.max(p, q)} < ${r} < ${p + q}$，斜边正应如此。`,
             ],
           );
         },
