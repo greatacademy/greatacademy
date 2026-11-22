@@ -1,11 +1,11 @@
 import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
-import { type Coefficient, dec, linear, num, type PlaneMark, type PlaneView, paren, plane, poly, Q } from "@ga/subject-math";
+import { type Coefficient, dec, linear, num, type PlaneMark, type PlaneView, type Point, paren, plane, poly, Q } from "@ga/subject-math";
 import { algebraDrawings } from "../explanation-drawings-algebra.ts";
 import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
 import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
-import { annotate, at, graphFigure, guides, plain, riseOf, riseRun, slopeFigure, walkTo } from "../graph-figures.ts";
+import { annotate, at, away, graphFigure, guides, plain, riseOf, riseRun, slopeFigure, walkTo } from "../graph-figures.ts";
 import { viewAround } from "../motion-figures.ts";
 import { choiceProblem, equationProblem, numberProblem, pointLatex, pointProblem, steps, verdictChoice, why, yesNo } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
@@ -965,6 +965,45 @@ export const propertiesOfLinesInSlopeInterceptForm: TopicDef = {
 
 // ─── Point-slope and standard form ──────────────────────────────────────────
 
+/** snugView is a window of the plane around the points and the origin, with a margin of two units, at most twice as tall as wide or as wide as tall, so that a short rise or run is not lost in a square view. */
+function snugView(points: readonly Point[]): PlaneView {
+  const xs = [0, ...points.map((p) => p[0])];
+  const ys = [0, ...points.map((p) => p[1])];
+  let [xMin, xMax, yMin, yMax] = [Math.min(...xs) - 2, Math.max(...xs) + 2, Math.min(...ys) - 2, Math.max(...ys) + 2];
+  const widen = (lo: number, hi: number, span: number): [number, number] => {
+    const more = Math.ceil((span - (hi - lo)) / 2);
+    return more > 0 ? [lo - more, hi + more] : [lo, hi];
+  };
+  [xMin, xMax] = widen(xMin, xMax, (yMax - yMin) / 2);
+  [yMin, yMax] = widen(yMin, yMax, (xMax - xMin) / 2);
+  const span = Math.max(xMax - xMin, yMax - yMin);
+  return { xMin, xMax, yMin, yMax, labelEvery: span > 14 ? 2 : 1 };
+}
+
+/** pointSlopeIntro draws the line through (3, 1) with slope 2 and a point (x, y) on it, with the run x − 3 and the rise y − 1. */
+const pointSlopeIntro: Figure = graphFigure(
+  viewAround([
+    [3, 1],
+    [6, 7],
+  ]),
+  [
+    { kind: "line", a: [3, 1], b: [6, 7], accent: true },
+    ...riseRun([3, 1], [6, 7], ["x - 3", "y - 1"]),
+    { kind: "point", at: [3, 1], label: "(3, 1)", dir: "se" },
+    { kind: "point", at: [6, 7], label: "(x, y)", dir: "nw", tone: "result" },
+  ],
+  "The line through (3, 1) with slope 2. From (3, 1) to any other point (x, y) of the line, the run is x − 3 and the rise is y − 1.",
+  "过 (3, 1)、斜率为 2 的直线。从 (3, 1) 到直线上任意另一点 (x, y)，水平变化是 x − 3，竖直变化是 y − 1。",
+);
+
+/** pointSlopeCheck writes the check that the point (h, k) satisfies y − k = m(x − h): both sides are 0. */
+function pointSlopeCheck(m: Q, h: number, k: number): Text {
+  return t(
+    `**Check.** The line must pass through $${pointLatex([h, k])}$. Put $x = ${h}$ and $y = ${k}$ in: the left side is $${k} - ${paren(k)} = 0$ and the right side is $${num(m)}(${h} - ${paren(h)}) = 0$. Both sides agree.`,
+    `**检验。** 直线必须经过 $${pointLatex([h, k])}$。代入 $x = ${h}$，$y = ${k}$：左边 $${k} - ${paren(k)} = 0$，右边 $${num(m)}(${h} - ${paren(h)}) = 0$，两边相等。`,
+  );
+}
+
 export const pointSlopeForm: TopicDef = {
   id: "point-slope-form",
   title: t("Equations of Lines in Point-Slope Form", "点斜式直线方程"),
@@ -979,18 +1018,84 @@ export const pointSlopeForm: TopicDef = {
   ],
   xp: 18,
   standards: ["CCSS.HSA.CED.A.2", "CCSS.8.F.B.4"],
+  intro: t(
+    `In slope-intercept form, $y = mx + b$, a line is written from its slope $m$ and the point where it crosses the $y$-axis. Often, though, what we know is a different point. Suppose a line passes through $(3, 1)$ and rises $2$ for every $1$ it moves right. Its $y$-intercept is not given, yet the line is completely determined: one point and a direction fix it.
+
+The key fact is that a line has the **same slope between any two of its points**. Take any other point $(x, y)$ on the line. From $(3, 1)$ to $(x, y)$, the run is $x - 3$ and the rise is $y - 1$:
+
+{{figure 0}}
+
+Since the slope is $2$,
+
+$$\\frac{y - 1}{x - 3} = 2, \\qquad\\text{so}\\qquad y - 1 = 2(x - 3).$$
+
+Every point of the line satisfies this equation, and no other point does: it is an equation of the line. Doing the same with any point $(x_1, y_1)$ and any slope $m$ gives the **point-slope form**
+
+$$y - y_1 = m(x - x_1).$$
+
+In this lesson we write lines in this form from a point and a slope, then from two points, and finally turn point-slope form into slope-intercept form, to read the $y$-intercept.`,
+    `在斜截式 $y = mx + b$ 中，直线由斜率 $m$ 和它与 $y$ 轴的交点写出。但很多时候，我们知道的是另外某个点。假设一条直线经过 $(3, 1)$，并且每向右移动 $1$ 就上升 $2$。题目没有给出 $y$ 轴截距，但这条直线已经完全确定了：一个点加一个方向就能确定一条直线。
+
+关键在于，**直线上任意两点之间的斜率都相同**。在直线上任取另一点 $(x, y)$。从 $(3, 1)$ 到 $(x, y)$，水平变化是 $x - 3$，竖直变化是 $y - 1$：
+
+{{figure 0}}
+
+因为斜率是 $2$，
+
+$$\\frac{y - 1}{x - 3} = 2, \\qquad\\text{所以}\\qquad y - 1 = 2(x - 3).$$
+
+直线上的每个点都满足这个方程，其他点都不满足：它就是这条直线的方程。对任意一点 $(x_1, y_1)$ 和任意斜率 $m$ 做同样的推导，就得到**点斜式**
+
+$$y - y_1 = m(x - x_1).$$
+
+这节课先由一点和斜率写出点斜式，再由两点写出，最后把点斜式化为斜截式，以便读出 $y$ 轴截距。`,
+  ),
+  introFigures: [pointSlopeIntro],
   knowledgePoints: [
     {
       id: "writing-from-a-point-and-slope",
       title: t("A point and the slope", "一点和斜率"),
       explanation: t(
-        "If $(x, y)$ is any point other than $(x_1, y_1)$ on the line with slope $m$ through $(x_1, y_1)$, the slope formula gives $\\frac{y - y_1}{x - x_1} = m$, that is\n\n$$y - y_1 = m(x - x_1),$$\n\nthe **point-slope form**. Through $(-4, 2)$ with slope $3$: $y - 2 = 3(x - (-4))$, written $y - 2 = 3(x + 4)$. Watch the signs: a negative coordinate turns the subtraction into an addition.",
-        "设 $(x, y)$ 是过 $(x_1, y_1)$、斜率为 $m$ 的直线上异于 $(x_1, y_1)$ 的任意一点，由斜率公式 $\\frac{y - y_1}{x - x_1} = m$，即\n\n$$y - y_1 = m(x - x_1),$$\n\n这叫做**点斜式**。过 $(-4, 2)$、斜率为 $3$：$y - 2 = 3(x - (-4))$，写作 $y - 2 = 3(x + 4)$。注意符号：坐标为负数时，减号变成加号。",
+        `To write the line through $(x_1, y_1)$ with slope $m$, put the three numbers into
+
+$$y - y_1 = m(x - x_1).$$
+
+The coordinates of the point are **subtracted**: $y_1$ from $y$ on the left, $x_1$ from $x$ inside the parentheses. The slope multiplies the parentheses.
+
+For the line through $(-4, 2)$ with slope $3$: here $x_1 = -4$, $y_1 = 2$ and $m = 3$, so
+
+$$y - 2 = 3(x - (-4)).$$
+
+Subtracting $-4$ is adding $4$, so the equation is written $y - 2 = 3(x + 4)$.
+
+> **Watch out.** The signs in the equation are the opposite of the signs of the point: $y - 2$ comes from $y_1 = 2$, and $x + 4$ from $x_1 = -4$. Writing $y + 2 = 3(x - 4)$ describes a line through $(4, -2)$ instead. Also keep each coordinate with its own variable: $x_1$ goes with $x$, $y_1$ with $y$.`,
+        `要写出过 $(x_1, y_1)$、斜率为 $m$ 的直线，把这三个数代入
+
+$$y - y_1 = m(x - x_1).$$
+
+点的坐标是被**减去**的：左边从 $y$ 中减去 $y_1$，括号里从 $x$ 中减去 $x_1$。斜率乘在括号前面。
+
+求过 $(-4, 2)$、斜率为 $3$ 的直线：这里 $x_1 = -4$，$y_1 = 2$，$m = 3$，所以
+
+$$y - 2 = 3(x - (-4)).$$
+
+减去 $-4$ 就是加上 $4$，所以方程写作 $y - 2 = 3(x + 4)$。
+
+> **注意。** 方程里的符号与点的坐标符号相反：$y - 2$ 来自 $y_1 = 2$，$x + 4$ 来自 $x_1 = -4$。写成 $y + 2 = 3(x - 4)$，表示的就成了过 $(4, -2)$ 的直线。另外，每个坐标要跟着自己的变量：$x_1$ 配 $x$，$y_1$ 配 $y$。`,
       ),
       generate(rng) {
         const m = pickSlopeNotOne(rng);
         const [h, k] = [rng.nonZero(-9, 9), rng.nonZero(-9, 9)];
         const answer = ps(m, h, k);
+        const raw = `y - ${paren(k)} = ${num(m)}(x - ${paren(h)})`;
+        const check = pointSlopeCheck(m, h, k);
+        const flip = h < 0 || k < 0;
+        const work = flip
+          ? [
+              `${steps(raw)}Subtracting a negative number is adding its opposite, so the signs flip:${steps(answer)}`,
+              `${steps(raw)}减去一个负数等于加上它的相反数，所以符号改变：${steps(answer)}`,
+            ]
+          : [steps(answer), steps(answer)];
         return {
           ...equationProblem({
             prompt: t(
@@ -1001,17 +1106,27 @@ export const pointSlopeForm: TopicDef = {
             form: "point-slope",
             wrong: [ps(m, -h, -k), ps(m, k, h), ps(m.neg(), h, k)],
             solution: t(
-              `Substitute $x_1 = ${h}$, $y_1 = ${k}$ and $m = ${num(m)}$ into $y - y_1 = m(x - x_1)$: ${steps(answer)}`,
-              `把 $x_1 = ${h}$，$y_1 = ${k}$，$m = ${num(m)}$ 代入 $y - y_1 = m(x - x_1)$：${steps(answer)}`,
+              `The point gives $x_1 = ${h}$ and $y_1 = ${k}$, and the slope is $m = ${num(m)}$. Substitute them into $y - y_1 = m(x - x_1)$:${work[0]}The line drawn with this slope through the point:
+
+{{figure 0}}
+
+${check.en}`,
+              `由点得 $x_1 = ${h}$，$y_1 = ${k}$，斜率 $m = ${num(m)}$。代入 $y - y_1 = m(x - x_1)$：${work[1]}过该点、以此斜率画出的直线：
+
+{{figure 0}}
+
+${check["zh-CN"]}`,
             ),
           }),
-          solutionFigure: slopeFigure(
-            [h, k],
-            riseOf([h, k], m),
-            `The line through ${at([h, k])} with slope ${plain(m)}.`,
-            `经过 ${at([h, k])}、斜率为 ${plain(m)} 的直线。`,
-            true,
-          ),
+          solutionFigures: [
+            slopeFigure(
+              [h, k],
+              riseOf([h, k], m),
+              `The line through ${at([h, k])} with slope ${plain(m)}.`,
+              `经过 ${at([h, k])}、斜率为 ${plain(m)} 的直线。`,
+              true,
+            ),
+          ],
         };
       },
     },
@@ -1019,8 +1134,34 @@ export const pointSlopeForm: TopicDef = {
       id: "through-two-points",
       title: t("A line through two points", "过两点的直线"),
       explanation: t(
-        "To write the equation of the line through two points, first find the slope, then use either point in point-slope form. Through $(1, 5)$ and $(3, -1)$: $m = \\frac{-1 - 5}{3 - 1} = -3$, so $y - 5 = -3(x - 1)$. Using the other point gives $y + 1 = -3(x - 3)$, an equation of the same line.",
-        "要写出过两点的直线方程，先求斜率，再用其中任一点写出点斜式。过 $(1, 5)$ 和 $(3, -1)$：$m = \\frac{-1 - 5}{3 - 1} = -3$，所以 $y - 5 = -3(x - 1)$。用另一点得到 $y + 1 = -3(x - 3)$，表示的是同一条直线。",
+        `Two points also fix a line, but point-slope form needs the slope. So the work has two steps:
+
+1. Find the slope from the two points: $m = \\dfrac{y_2 - y_1}{x_2 - x_1}$.
+2. Use **either** point with that slope in $y - y_1 = m(x - x_1)$.
+
+For the line through $(1, 5)$ and $(3, -1)$: the run from the first point to the second is $3 - 1 = 2$ and the rise is $-1 - 5 = -6$, so
+
+$$m = \\frac{-6}{2} = -3.$$
+
+With the point $(1, 5)$: $y - 5 = -3(x - 1)$.
+
+Starting from the other point gives $y + 1 = -3(x - 3)$. The two equations look different, but they describe the same line: expanding either one gives $y = -3x + 8$.
+
+> **Watch out.** Subtract in the same order on top and at the bottom of the slope: $\\frac{y_2 - y_1}{x_2 - x_1}$, never $\\frac{y_2 - y_1}{x_1 - x_2}$, which flips the sign. And the slope is rise over run, not run over rise.`,
+        `两点也能确定一条直线，但点斜式需要斜率。所以分两步：
+
+1. 由两点求斜率：$m = \\dfrac{y_2 - y_1}{x_2 - x_1}$。
+2. 用其中**任意**一点和这个斜率代入 $y - y_1 = m(x - x_1)$。
+
+求过 $(1, 5)$ 和 $(3, -1)$ 的直线：从第一个点到第二个点，水平变化 $3 - 1 = 2$，竖直变化 $-1 - 5 = -6$，所以
+
+$$m = \\frac{-6}{2} = -3.$$
+
+用点 $(1, 5)$：$y - 5 = -3(x - 1)$。
+
+用另一个点则得到 $y + 1 = -3(x - 3)$。两个方程看起来不同，表示的却是同一条直线：把任何一个展开，都得到 $y = -3x + 8$。
+
+> **注意。** 斜率的分子和分母要按同样的顺序相减：$\\frac{y_2 - y_1}{x_2 - x_1}$，不能写成 $\\frac{y_2 - y_1}{x_1 - x_2}$，那样符号会反。斜率是竖直变化除以水平变化，不是反过来。`,
       ),
       keyPrerequisites: ["slope-of-a-line"],
       generate(rng) {
@@ -1034,6 +1175,8 @@ export const pointSlopeForm: TopicDef = {
         const [x2, y2] = [x1 + dx, y1 + dy];
         const m = Q.of(dy, dx);
         const answer = ps(m, x1, y1);
+        const slope = `m = \\frac{${num(y2)} - ${paren(y1)}}{${num(x2)} - ${paren(x1)}} = \\frac{${dy}}{${dx}} = ${num(m)}`;
+        const check = `${num(y2)} - ${paren(y1)} = ${num(m)}(${num(x2)} - ${paren(x1)})`;
         return {
           ...equationProblem({
             prompt: t(
@@ -1044,17 +1187,44 @@ export const pointSlopeForm: TopicDef = {
             form: "point-slope",
             wrong: [ps(Q.of(dx, dy), x1, y1), ps(m.neg(), x1, y1), ps(m, -x1, -y1)],
             solution: t(
-              `The slope is $m = \\frac{${num(y2)} - ${paren(y1)}}{${num(x2)} - ${paren(x1)}} = ${num(m)}$. Using the point $${pointLatex([x1, y1])}$: ${steps(answer)}`,
-              `斜率 $m = \\frac{${num(y2)} - ${paren(y1)}}{${num(x2)} - ${paren(x1)}} = ${num(m)}$。用点 $${pointLatex([x1, y1])}$：${steps(answer)}`,
+              `**Step 1: the slope.** From $${pointLatex([x1, y1])}$ to $${pointLatex([x2, y2])}$, the run is $${dx}$ and the rise is $${dy}$:
+
+{{figure 0}}
+
+${steps(slope)}**Step 2: the equation.** Use the point $${pointLatex([x1, y1])}$, so $x_1 = ${x1}$ and $y_1 = ${y1}$, in $y - y_1 = m(x - x_1)$:${steps(answer)}{{figure 1}}
+
+**Check.** The other point must satisfy the equation too. With $x = ${x2}$ and $y = ${y2}$: $${check}$, that is $${dy} = ${dy}$.`,
+              `**第一步：求斜率。** 从 $${pointLatex([x1, y1])}$ 到 $${pointLatex([x2, y2])}$，水平变化 $${dx}$，竖直变化 $${dy}$：
+
+{{figure 0}}
+
+${steps(slope)}**第二步：写方程。** 用点 $${pointLatex([x1, y1])}$，即 $x_1 = ${x1}$，$y_1 = ${y1}$，代入 $y - y_1 = m(x - x_1)$：${steps(answer)}{{figure 1}}
+
+**检验。** 另一个点也必须满足方程。代入 $x = ${x2}$，$y = ${y2}$：$${check}$，即 $${dy} = ${dy}$。`,
             ),
           }),
-          solutionFigure: slopeFigure(
-            [x1, y1],
-            [x2, y2],
-            `The run is ${dx} and the rise is ${dy}, so the slope is ${plain(m)}.`,
-            `水平变化 ${dx}，竖直变化 ${dy}，所以斜率是 ${plain(m)}。`,
-            true,
-          ),
+          solutionFigures: [
+            graphFigure(
+              snugView([
+                [x1, y1],
+                [x2, y2],
+              ]),
+              [
+                ...riseRun([x1, y1], [x2, y2]),
+                { kind: "point", at: [x1, y1], label: at([x1, y1]), dir: away([x1, y1], [x2, y2]), accent: true },
+                { kind: "point", at: [x2, y2], label: at([x2, y2]), dir: away([x2, y2], [x1, y1]) },
+              ],
+              `From ${at([x1, y1])} to ${at([x2, y2])}: a run of ${dx} and a rise of ${dy}.`,
+              `从 ${at([x1, y1])} 到 ${at([x2, y2])}：水平变化 ${dx}，竖直变化 ${dy}。`,
+            ),
+            slopeFigure(
+              [x1, y1],
+              [x2, y2],
+              `The line through both points, with slope ${plain(m)}.`,
+              `经过两点、斜率为 ${plain(m)} 的直线。`,
+              true,
+            ),
+          ],
         };
       },
     },
@@ -1062,8 +1232,34 @@ export const pointSlopeForm: TopicDef = {
       id: "converting-to-slope-intercept",
       title: t("From point-slope to slope-intercept form", "由点斜式化为斜截式"),
       explanation: t(
-        "To rewrite a point-slope equation in slope-intercept form, distribute the slope, then move the constant to the right side:\n\n$$y + 4 = -2(x - 3) \\;\\Rightarrow\\; y + 4 = -2x + 6 \\;\\Rightarrow\\; y = -2x + 2.$$",
-        "要把点斜式化为斜截式，先用分配律展开，再把常数移到右边：\n\n$$y + 4 = -2(x - 3) \\;\\Rightarrow\\; y + 4 = -2x + 6 \\;\\Rightarrow\\; y = -2x + 2.$$",
+        `Point-slope form is quick to write, but slope-intercept form shows more at a glance: the $y$-intercept, where the line crosses the $y$-axis. To convert, solve the equation for $y$ in two steps:
+
+1. **Distribute** the slope over the parentheses.
+2. **Move the constant** from the left side to the right, by doing the opposite operation on both sides.
+
+For $y + 4 = -2(x - 3)$:
+
+$$y + 4 = -2x + 6 \\qquad (\\text{distribute: } -2 \\cdot x = -2x, -2 \\cdot (-3) = 6)$$
+
+$$y = -2x + 2 \\qquad (\\text{subtract } 4 \\text{ from both sides})$$
+
+The slope $-2$ is unchanged, and now the $y$-intercept, $2$, can be read off.
+
+> **Watch out.** The slope multiplies **both** terms in the parentheses: $-2(x - 3)$ is $-2x + 6$, not $-2x - 3$. And the constant on the left moves with the opposite sign: $+4$ on the left becomes $-4$ on the right.`,
+        `点斜式写起来快，但斜截式能一眼看出更多信息：$y$ 轴截距，也就是直线与 $y$ 轴的交点。转化时分两步解出 $y$：
+
+1. 用分配律**展开**括号。
+2. 在两边做相反的运算，把左边的常数**移到**右边。
+
+对 $y + 4 = -2(x - 3)$：
+
+$$y + 4 = -2x + 6 \\qquad (\\text{展开：} -2 \\cdot x = -2x, -2 \\cdot (-3) = 6)$$
+
+$$y = -2x + 2 \\qquad (\\text{两边同时减去 } 4)$$
+
+斜率 $-2$ 不变，现在可以读出 $y$ 轴截距 $2$。
+
+> **注意。** 斜率要乘括号里的**每一项**：$-2(x - 3)$ 是 $-2x + 6$，不是 $-2x - 3$。左边的常数移到右边要变号：左边的 $+4$ 到右边成为 $-4$。`,
       ),
       keyPrerequisites: ["distributive-property"],
       generate(rng) {
@@ -1073,15 +1269,21 @@ export const pointSlopeForm: TopicDef = {
         const mh = m.mul(Q.of(h));
         const b = Q.of(k).sub(mh);
         const answer = si(m, b);
-        const work = steps(`${linear(1, -k, "y")} = ${linear(m, mh.neg())}`, answer);
+        const distributed = `${linear(1, -k, "y")} = ${linear(m, mh.neg())}`;
+        const move =
+          k > 0 ? [`add $${k}$ to both sides`, `两边同时加上 $${k}$`] : [`subtract $${-k}$ from both sides`, `两边同时减去 $${-k}$`];
         return equationProblem({
           prompt: t(`Write $${ps(m, h, k)}$ in slope-intercept form.`, `把 $${ps(m, h, k)}$ 化为斜截式。`),
           answer,
           form: "slope-intercept",
           wrong: [si(m, mh.neg().sub(Q.of(k))), si(m, k - h), si(m, mh.add(Q.of(k)))],
           solution: t(
-            `Distribute, then ${k > 0 ? `subtract $${k}$ from` : `add $${-k}$ to`} both sides: ${work}`,
-            `先展开，再两边同时${k > 0 ? `减去 $${k}$` : `加上 $${-k}$`}：${work}`,
+            `**Step 1: distribute.** The slope $${num(m)}$ multiplies both terms in the parentheses: $${num(m)} \\cdot x = ${linear(m, 0)}$ and $${num(m)} \\cdot ${paren(-h)} = ${num(mh.neg())}$.${steps(distributed)}**Step 2: isolate $y$.** To move $${num(-k)}$ off the left side, ${move[0]}:${steps(answer)}The slope is $${num(m)}$ and the $y$-intercept is $${num(b)}$.
+
+**Check.** The point $${pointLatex([h, k])}$ of the original equation must lie on the new one: $${num(m)} \\cdot ${paren(h)} + ${paren(b)} = ${k}$.`,
+            `**第一步：展开。** 斜率 $${num(m)}$ 乘括号里的每一项：$${num(m)} \\cdot x = ${linear(m, 0)}$，$${num(m)} \\cdot ${paren(-h)} = ${num(mh.neg())}$。${steps(distributed)}**第二步：解出 $y$。** 为了把左边的 $${num(-k)}$ 移走，${move[1]}：${steps(answer)}斜率是 $${num(m)}$，$y$ 轴截距是 $${num(b)}$。
+
+**检验。** 原方程中的点 $${pointLatex([h, k])}$ 必须在新方程上：$${num(m)} \\cdot ${paren(h)} + ${paren(b)} = ${k}$。`,
           ),
         });
       },

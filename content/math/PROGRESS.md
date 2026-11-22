@@ -54,6 +54,31 @@ The report lists outline topics missing from each course and the findings of heu
   - *topic in no course*: older topics whose ids must stay. Most are computed foundations, because course topics list them as prerequisites.
   - *duplicate topic titles*: an exam topic shares its outline title with the Fundamentals topic it builds on (about 60 findings). Also `units-of-time` and `units-of-time-and-elapsed-time`, and `mean-of-a-data-set` and `the-mean-of-a-data-set`, are different topics with one outline title, and no course contains both.
 
+## Teaching Standard: Algebra I
+
+Algebra I is rewritten first to the teaching standard of [docs/content.md §4](../../docs/content.md#4-knowledge-points-and-generators): a topic introduction, explanations that teach why and end with a callout on the typical mistake, and solutions worked step by step, with figures where the picture changes and a check. Its 234 topics are claimed by file below, with the same rules as the board. A topic is done when its id is in `taughtTopics` (`src/teaching-standard.ts`), whose test holds it to the standard; add the ids of a file's topics there as they are rewritten.
+
+| File | Algebra I topics | Status | Owner | Notes |
+| :--- | :--- | :--- | :--- | :--- |
+| `lines.ts` | 20 | in progress | | `point-slope-form` is the model |
+| `exponential-functions.ts` | 22 | open | |  |
+| `quadratic-functions.ts` | 18 | open | |  |
+| `functions.ts` | 18 | open | |  |
+| `quadratic-equations.ts` | 17 | open | |  |
+| `sequences.ts` | 16 | open | |  |
+| `compound-inequalities.ts` | 14 | open | |  |
+| `absolute-value.ts` | 14 | open | |  |
+| `units.ts` | 13 | open | |  |
+| `two-variable-models.ts` | 13 | open | |  |
+| `radical-expressions.ts` | 12 | open | |  |
+| `polynomials.ts` | 12 | open | |  |
+| `linear-equations.ts` | 12 | open | |  |
+| `factoring.ts` | 8 | open | |  |
+| `rational-expressions.ts` | 7 | open | |  |
+| `bivariate-statistics.ts` | 7 | open | |  |
+| `algebra-i-approximating-systems.ts` | 2 | open | |  |
+| `algebra-ii-polynomials.ts` | 1 | open | |  |
+
 ## Open Gaps
 
 The board tracks whether a course exists, not whether it is finished. Measured on 2026-11-05:
