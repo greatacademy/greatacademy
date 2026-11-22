@@ -3,16 +3,8 @@ import { same, t } from "@ga/content";
 import { type Coefficient, linear, num, paren, poly, Q } from "@ga/subject-math";
 
 import { choiceProblem, type ExpressionProblem, expressionProblem, numberProblem, steps, yesNo } from "../problems.ts";
+import { tail } from "../solution-kit.ts";
 import { reasoned } from "../wrong-reasons.ts";
-
-const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
-
-/** plus writes a constant added to a term: " + 3", " - 3", or "" for 0. */
-function plus(c: Coefficient): string {
-  const v = toQ(c);
-  if (v.isZero()) return "";
-  return v.sign() < 0 ? ` - ${v.neg().toLatex()}` : ` + ${v.toLatex()}`;
-}
 
 /** ordinal writes an English ordinal: "1st", "22nd", "13th". */
 function ordinal(k: number): string {
@@ -41,7 +33,7 @@ const geometric = (a1: Q, r: Q, count: number) => Array.from({ length: count }, 
 const base = (r: Q) => (r.sign() < 0 || !r.isInteger() ? `\\left(${r.toLatex()}\\right)` : r.toLatex());
 
 /** exponent writes n - 1, n or n + 1. */
-const exponent = (shift: number) => `n${plus(shift)}`;
+const exponent = (shift: number) => `n${tail(shift)}`;
 
 /** times writes c times a power: "3 \cdot 2^{n-1}", "2^{n}", "-\left(\frac{1}{2}\right)^{n}". */
 function times(c: Q, power: string): string {
@@ -236,17 +228,17 @@ $$a_5 = 2 \\cdot 5^{2} - 3 = 2 \\cdot 25 - 3 = 50 - 3 = 47.$$
         const k = rng.int(2, 12);
         const [expr, f, sub, alt] =
           kind === 0
-            ? [poly([p, "n"], [c, ""]), (n: number) => p * n + c, `${scaled(p, String(k))}${plus(c)}`, p + k + c]
+            ? [poly([p, "n"], [c, ""]), (n: number) => p * n + c, `${scaled(p, String(k))}${tail(c)}`, p + k + c]
             : kind === 1
-              ? [poly([p, "n^{2}"], [c, ""]), (n: number) => p * n * n + c, `${scaled(p, `${k}^{2}`)}${plus(c)}`, (p * k) ** 2 + c]
+              ? [poly([p, "n^{2}"], [c, ""]), (n: number) => p * n * n + c, `${scaled(p, `${k}^{2}`)}${tail(c)}`, (p * k) ** 2 + c]
               : [poly([1, "n^{2}"], [p, "n"]), (n: number) => n * n + p * n, `${k}^{2}${added(p, String(k))}`, 2 * k + p * k];
         const value = f(k);
         const work =
           kind === 0
-            ? chainEq(sub, `${num(p * k)}${plus(c)}`, num(value))
+            ? chainEq(sub, `${num(p * k)}${tail(c)}`, num(value))
             : kind === 1
-              ? chainEq(sub, `${scaled(p, String(k * k))}${plus(c)}`, `${num(p * k * k)}${plus(c)}`, num(value))
-              : chainEq(sub, `${k * k}${plus(p * k)}`, num(value));
+              ? chainEq(sub, `${scaled(p, String(k * k))}${tail(c)}`, `${num(p * k * k)}${tail(c)}`, num(value))
+              : chainEq(sub, `${k * k}${tail(p * k)}`, num(value));
         const order = [
           [
             "Multiplication comes before addition and subtraction",
@@ -258,12 +250,12 @@ $$a_5 = 2 \\cdot 5^{2} - 3 = 2 \\cdot 25 - 3 = 50 - 3 = 47.$$
         const check =
           kind === 0
             ? t(
-                `Each time $n$ grows by $1$, the term changes by the coefficient of $n$, $${p}$. The term before is $a_{${k - 1}} = ${num(f(k - 1))}$, and $${num(f(k - 1))}${plus(p)} = ${num(value)}$.`,
-                `$n$ 每增加 $1$，项就变化 $n$ 的系数 $${p}$。前一项是 $a_{${k - 1}} = ${num(f(k - 1))}$，而 $${num(f(k - 1))}${plus(p)} = ${num(value)}$。`,
+                `Each time $n$ grows by $1$, the term changes by the coefficient of $n$, $${p}$. The term before is $a_{${k - 1}} = ${num(f(k - 1))}$, and $${num(f(k - 1))}${tail(p)} = ${num(value)}$.`,
+                `$n$ 每增加 $1$，项就变化 $n$ 的系数 $${p}$。前一项是 $a_{${k - 1}} = ${num(f(k - 1))}$，而 $${num(f(k - 1))}${tail(p)} = ${num(value)}$。`,
               )
             : kind === 1
               ? (() => {
-                  const back = `${num(value)}${plus(-c)} = ${num(p * k * k)}`;
+                  const back = `${num(value)}${tail(-c)} = ${num(p * k * k)}`;
                   const rest =
                     Math.abs(p) === 1 ? ` = ${scaled(p, `${k}^{2}`)}` : `$, and $${num(p * k * k)} \\div ${paren(p)} = ${k * k} = ${k}^{2}`;
                   return t(
@@ -272,8 +264,8 @@ $$a_5 = 2 \\cdot 5^{2} - 3 = 2 \\cdot 25 - 3 = 50 - 3 = 47.$$
                   );
                 })()
               : t(
-                  `Factor out $n$: $${expr} = n(${poly([1, "n"], [p, ""])})$, and $${k}(${k}${plus(p)}) = ${k} \\cdot ${paren(k + p)} = ${num(value)}$.`,
-                  `提取 $n$：$${expr} = n(${poly([1, "n"], [p, ""])})$，而 $${k}(${k}${plus(p)}) = ${k} \\cdot ${paren(k + p)} = ${num(value)}$。`,
+                  `Factor out $n$: $${expr} = n(${poly([1, "n"], [p, ""])})$, and $${k}(${k}${tail(p)}) = ${k} \\cdot ${paren(k + p)} = ${num(value)}$.`,
+                  `提取 $n$：$${expr} = n(${poly([1, "n"], [p, ""])})$，而 $${k}(${k}${tail(p)}) = ${k} \\cdot ${paren(k + p)} = ${num(value)}$。`,
                 );
         return numberProblem({
           prompt: t(`Given $a_n = ${expr}$, find $a_{${k}}$.`, `已知 $a_n = ${expr}$，求 $a_{${k}}$。`),
@@ -319,12 +311,12 @@ $$a_n = 3^{n} - 4: \\quad a_4 = 3^{4} - 4 = 81 - 4 = 77, \\qquad a_n = \\frac{n}
               ? t(`$${b}$ times $${b}$`, `$${b}$ 乘 $${b}$`)
               : t(`$${b}$ times $${b}^{${k - 1}} = ${b ** (k - 1)}$`, `$${b}$ 乘 $${b}^{${k - 1}} = ${b ** (k - 1)}$`);
           return numberProblem({
-            prompt: t(`Given $a_n = ${b}^{n}${plus(c)}$, find $a_{${k}}$.`, `已知 $a_n = ${b}^{n}${plus(c)}$，求 $a_{${k}}$。`),
+            prompt: t(`Given $a_n = ${b}^{n}${tail(c)}$, find $a_{${k}}$.`, `已知 $a_n = ${b}^{n}${tail(c)}$，求 $a_{${k}}$。`),
             answer: value,
             wrong: [b * k + c, b ** (k - 1) + c],
             solution: t(
-              `**Step 1: substitute.** Replace $n$ by $${k}$:${steps(`a_{${k}} = ${b}^{${k}}${plus(c)}`)}**Step 2: the power.** The exponent counts factors of $${b}$:${steps(`${b}^{${k}} = ${factors} = ${b ** k}`)}**Step 3: the constant.** ${c < 0 ? "Subtract" : "Add"} it last:${steps(`a_{${k}} = ${b ** k}${plus(c)} = ${num(value)}`)}**Check.** The power is ${previous.en}: $${b} \\cdot ${b ** (k - 1)} = ${b ** k}$, and $${b ** k}${plus(c)} = ${num(value)}$.`,
-              `**第一步：代入。** 把 $n$ 换成 $${k}$：${steps(`a_{${k}} = ${b}^{${k}}${plus(c)}`)}**第二步：乘方。** 指数表示 $${b}$ 作为因数的个数：${steps(`${b}^{${k}} = ${factors} = ${b ** k}`)}**第三步：常数。** 最后${c < 0 ? "减去" : "加上"}常数：${steps(`a_{${k}} = ${b ** k}${plus(c)} = ${num(value)}`)}**检验。** 这个幂等于${previous["zh-CN"]}：$${b} \\cdot ${b ** (k - 1)} = ${b ** k}$，而 $${b ** k}${plus(c)} = ${num(value)}$。`,
+              `**Step 1: substitute.** Replace $n$ by $${k}$:${steps(`a_{${k}} = ${b}^{${k}}${tail(c)}`)}**Step 2: the power.** The exponent counts factors of $${b}$:${steps(`${b}^{${k}} = ${factors} = ${b ** k}`)}**Step 3: the constant.** ${c < 0 ? "Subtract" : "Add"} it last:${steps(`a_{${k}} = ${b ** k}${tail(c)} = ${num(value)}`)}**Check.** The power is ${previous.en}: $${b} \\cdot ${b ** (k - 1)} = ${b ** k}$, and $${b ** k}${tail(c)} = ${num(value)}$.`,
+              `**第一步：代入。** 把 $n$ 换成 $${k}$：${steps(`a_{${k}} = ${b}^{${k}}${tail(c)}`)}**第二步：乘方。** 指数表示 $${b}$ 作为因数的个数：${steps(`${b}^{${k}} = ${factors} = ${b ** k}`)}**第三步：常数。** 最后${c < 0 ? "减去" : "加上"}常数：${steps(`a_{${k}} = ${b ** k}${tail(c)} = ${num(value)}`)}**检验。** 这个幂等于${previous["zh-CN"]}：$${b} \\cdot ${b ** (k - 1)} = ${b ** k}$，而 $${b ** k}${tail(c)} = ${num(value)}$。`,
             ),
           });
         }
@@ -342,8 +334,8 @@ $$a_n = 3^{n} - 4: \\quad a_4 = 3^{4} - 4 = 81 - 4 = 77, \\qquad a_n = \\frac{n}
             answer: value,
             wrong: [-value, sign * m * k + c],
             solution: t(
-              `**Step 1: the sign.** Since $${k}$ is ${k % 2 === 0 ? "even" : "odd"}, $(-1)^{n} = ${sign}$ at $n = ${k}$.\n\n**Step 2: the bracket.** Substitute $n = ${k}$ inside it:${steps(chainEq(`${scaled(m, String(k))}${plus(c)}`, num(inner)))}**Step 3: multiply.** The sign multiplies the whole bracket${sign === 1 ? ", and multiplying by $1$ changes nothing" : ""}:${steps(product)}**Check.** Multiplying each part of the bracket by $${sign}$ gives the same: $${num(sign * m * k)}${plus(sign * c)} = ${num(value)}$.`,
-              `**第一步：符号。** 因为 $${k}$ 是${k % 2 === 0 ? "偶数" : "奇数"}，$n = ${k}$ 时 $(-1)^{n} = ${sign}$。\n\n**第二步：括号。** 在括号里代入 $n = ${k}$：${steps(chainEq(`${scaled(m, String(k))}${plus(c)}`, num(inner)))}**第三步：相乘。** 符号乘以整个括号${sign === 1 ? "，乘以 $1$ 不改变它" : ""}：${steps(product)}**检验。** 用 $${sign}$ 分别乘括号里的每一部分，结果相同：$${num(sign * m * k)}${plus(sign * c)} = ${num(value)}$。`,
+              `**Step 1: the sign.** Since $${k}$ is ${k % 2 === 0 ? "even" : "odd"}, $(-1)^{n} = ${sign}$ at $n = ${k}$.\n\n**Step 2: the bracket.** Substitute $n = ${k}$ inside it:${steps(chainEq(`${scaled(m, String(k))}${tail(c)}`, num(inner)))}**Step 3: multiply.** The sign multiplies the whole bracket${sign === 1 ? ", and multiplying by $1$ changes nothing" : ""}:${steps(product)}**Check.** Multiplying each part of the bracket by $${sign}$ gives the same: $${num(sign * m * k)}${tail(sign * c)} = ${num(value)}$.`,
+              `**第一步：符号。** 因为 $${k}$ 是${k % 2 === 0 ? "偶数" : "奇数"}，$n = ${k}$ 时 $(-1)^{n} = ${sign}$。\n\n**第二步：括号。** 在括号里代入 $n = ${k}$：${steps(chainEq(`${scaled(m, String(k))}${tail(c)}`, num(inner)))}**第三步：相乘。** 符号乘以整个括号${sign === 1 ? "，乘以 $1$ 不改变它" : ""}：${steps(product)}**检验。** 用 $${sign}$ 分别乘括号里的每一部分，结果相同：$${num(sign * m * k)}${tail(sign * c)} = ${num(value)}$。`,
             ),
           });
         }
@@ -450,8 +442,8 @@ $$a_2 = 2 \\cdot 4 - 3 = 5, \\quad a_3 = 2 \\cdot 5 - 3 = 7, \\quad a_4 = 2 \\cd
         const prev = terms[k - 2]!;
         const undo =
           p === 1
-            ? `${num(ak)}${plus(-q)} = ${num(prev)}`
-            : `(${num(ak)}${plus(-q)}) \\div ${paren(p)} = ${num(ak - q)} \\div ${paren(p)} = ${num(prev)}`;
+            ? `${num(ak)}${tail(-q)} = ${num(prev)}`
+            : `(${num(ak)}${tail(-q)}) \\div ${paren(p)} = ${num(ak - q)} \\div ${paren(p)} = ${num(prev)}`;
         const how = [
           p === 1 ? `subtract $${q}$` : `${q < 0 ? "add" : "subtract"} $${Math.abs(q)}$ and divide by $${p}$`,
           p === 1 ? `减去 $${q}$` : `${q < 0 ? "加上" : "减去"} $${Math.abs(q)}$，再除以 $${p}$`,
@@ -464,8 +456,8 @@ $$a_2 = 2 \\cdot 4 - 3 = 5, \\quad a_3 = 2 \\cdot 5 - 3 = 7, \\quad a_4 = 2 \\cd
           answer: ak,
           wrong: [terms[k - 2]!, terms[k]!, swapped[k - 1]!],
           solution: t(
-            `The first term $a_1 = ${a1}$ is given, and each use of the rule gives the next term, so reaching $a_{${k}}$ takes $${k - 1}$ uses. Apply the rule to each term in turn${Math.abs(p) === 1 ? "" : ", multiplying before adding"}:${chain(terms, k, (n) => `${p === 1 ? "" : p === -1 ? "-" : `${p} \\cdot `}${paren(terms[n - 2]!)}${plus(q)}`)}So $a_{${k}} = ${num(ak)}$.\n\n**Check.** Undo the last step: to go back from $a_{${k}}$, ${how[0]}. This gives $${undo}$, which is $a_{${k - 1}}$.`,
-            `第一项 $a_1 = ${a1}$ 是给定的，每用一次规则得到下一项，所以得到 $a_{${k}}$ 要用 $${k - 1}$ 次。依次对每一项应用规则${Math.abs(p) === 1 ? "" : "，先乘后加"}：${chain(terms, k, (n) => `${p === 1 ? "" : p === -1 ? "-" : `${p} \\cdot `}${paren(terms[n - 2]!)}${plus(q)}`)}所以 $a_{${k}} = ${num(ak)}$。\n\n**检验。** 撤销最后一步：从 $a_{${k}}$ 往回，要${how[1]}。得 $${undo}$，正是 $a_{${k - 1}}$。`,
+            `The first term $a_1 = ${a1}$ is given, and each use of the rule gives the next term, so reaching $a_{${k}}$ takes $${k - 1}$ uses. Apply the rule to each term in turn${Math.abs(p) === 1 ? "" : ", multiplying before adding"}:${chain(terms, k, (n) => `${p === 1 ? "" : p === -1 ? "-" : `${p} \\cdot `}${paren(terms[n - 2]!)}${tail(q)}`)}So $a_{${k}} = ${num(ak)}$.\n\n**Check.** Undo the last step: to go back from $a_{${k}}$, ${how[0]}. This gives $${undo}$, which is $a_{${k - 1}}$.`,
+            `第一项 $a_1 = ${a1}$ 是给定的，每用一次规则得到下一项，所以得到 $a_{${k}}$ 要用 $${k - 1}$ 次。依次对每一项应用规则${Math.abs(p) === 1 ? "" : "，先乘后加"}：${chain(terms, k, (n) => `${p === 1 ? "" : p === -1 ? "-" : `${p} \\cdot `}${paren(terms[n - 2]!)}${tail(q)}`)}所以 $a_{${k}} = ${num(ak)}$。\n\n**检验。** 撤销最后一步：从 $a_{${k}}$ 往回，要${how[1]}。得 $${undo}$，正是 $a_{${k - 1}}$。`,
           ),
         });
       },
@@ -875,8 +867,8 @@ $$2, 7, 12, 17: \\quad 5, 5, 5 \\quad \\text{等差}; \\qquad 1, 4, 9, 16: \\qua
               `从 $${num(first)}$ 开始${d0 < 0 ? "减" : "加"} $4$ 次 $${Math.abs(d0)}$，得 $${num(first)} + 4 \\cdot ${paren(d0)} = ${num(terms[4]!)}$，正是列出的最后一项。`,
             )
           : t(
-              `If the step were always $${num(d0)}$, the term after $${num(terms[i - 1]!)}$ would be $${num(terms[i - 1]!)}${plus(d0)} = ${num(terms[i - 1]! + d0)}$, but it is $${num(terms[i]!)}$.`,
-              `如果每一步都是 $${num(d0)}$，$${num(terms[i - 1]!)}$ 后面的一项应是 $${num(terms[i - 1]!)}${plus(d0)} = ${num(terms[i - 1]! + d0)}$，但实际是 $${num(terms[i]!)}$。`,
+              `If the step were always $${num(d0)}$, the term after $${num(terms[i - 1]!)}$ would be $${num(terms[i - 1]!)}${tail(d0)} = ${num(terms[i - 1]! + d0)}$, but it is $${num(terms[i]!)}$.`,
+              `如果每一步都是 $${num(d0)}$，$${num(terms[i - 1]!)}$ 后面的一项应是 $${num(terms[i - 1]!)}${tail(d0)} = ${num(terms[i - 1]! + d0)}$，但实际是 $${num(terms[i]!)}$。`,
             );
         return choiceProblem({
           prompt: t(`Is the sequence $${list(terms)}$ arithmetic?`, `数列 $${list(terms)}$ 是等差数列吗？`),
@@ -918,8 +910,8 @@ $$d = 14 - 20 = -6.$$
           answer: d,
           wrong: [-d, 2 * d],
           solution: t(
-            `The common difference is what is added to a term to get the next one, so subtract the first term from the second, later minus earlier:${steps(`d = ${num(terms[1]!)} - ${paren(a1)} = ${num(d)}`)}The terms ${d < 0 ? "decrease" : "increase"}, and $d$ is ${d < 0 ? "negative" : "positive"}, as it should be.\n\n**Check.** Adding $${num(d)}$ to the next terms continues the list: $${num(terms[1]!)}${plus(d)} = ${num(terms[2]!)}$ and $${num(terms[2]!)}${plus(d)} = ${num(terms[3]!)}$.`,
-            `公差是一项加上后得到下一项的数，所以用第二项减去第一项，即后一项减前一项：${steps(`d = ${num(terms[1]!)} - ${paren(a1)} = ${num(d)}`)}各项${d < 0 ? "递减" : "递增"}，$d$ 为${d < 0 ? "负" : "正"}，正与此相符。\n\n**检验。** 对后面的项加上 $${num(d)}$，正好接上列表：$${num(terms[1]!)}${plus(d)} = ${num(terms[2]!)}$，$${num(terms[2]!)}${plus(d)} = ${num(terms[3]!)}$。`,
+            `The common difference is what is added to a term to get the next one, so subtract the first term from the second, later minus earlier:${steps(`d = ${num(terms[1]!)} - ${paren(a1)} = ${num(d)}`)}The terms ${d < 0 ? "decrease" : "increase"}, and $d$ is ${d < 0 ? "negative" : "positive"}, as it should be.\n\n**Check.** Adding $${num(d)}$ to the next terms continues the list: $${num(terms[1]!)}${tail(d)} = ${num(terms[2]!)}$ and $${num(terms[2]!)}${tail(d)} = ${num(terms[3]!)}$.`,
+            `公差是一项加上后得到下一项的数，所以用第二项减去第一项，即后一项减前一项：${steps(`d = ${num(terms[1]!)} - ${paren(a1)} = ${num(d)}`)}各项${d < 0 ? "递减" : "递增"}，$d$ 为${d < 0 ? "负" : "正"}，正与此相符。\n\n**检验。** 对后面的项加上 $${num(d)}$，正好接上列表：$${num(terms[1]!)}${tail(d)} = ${num(terms[2]!)}$，$${num(terms[2]!)}${tail(d)} = ${num(terms[3]!)}$。`,
           ),
         });
       },
@@ -953,7 +945,7 @@ $$3d = 23 - 5 = 18, \\quad d = 6,$$
         const shown = [num(a1), ...Array(blanks).fill("\\square"), num(last)].join(", ");
         const ord = (i: number) => (i === 1 ? ["first", "第一"] : i === 2 ? ["second", "第二"] : ["third", "第三"]);
         const [en, zh] = ord(j);
-        const term = `${num(a1)}${j === 1 ? "" : ` + ${j}`}${j === 1 ? plus(d) : ` \\cdot ${paren(d)}`} = ${num(terms[j]!)}`;
+        const term = `${num(a1)}${j === 1 ? "" : ` + ${j}`}${j === 1 ? tail(d) : ` \\cdot ${paren(d)}`} = ${num(terms[j]!)}`;
         const row = terms.map(num).join(", ");
         return numberProblem({
           prompt: t(
@@ -1086,8 +1078,8 @@ $$a_6 = 3 + 5 \\cdot 4 = 23.$$
         const k = rng.int(4, 9);
         const ak = a1 + (k - 1) * d;
         const rule = poly([1, "a_{n-1}"], [d, ""]);
-        const forward = chainEq(`a_{${k}} = ${a1} + ${k - 1} \\cdot ${paren(d)}`, `${a1}${plus((k - 1) * d)}`, `${ak}`);
-        const backward = chainEq(`a_1 = ${ak} - ${k - 1} \\cdot ${paren(d)}`, `${ak}${plus(-(k - 1) * d)}`, `${a1}`);
+        const forward = chainEq(`a_{${k}} = ${a1} + ${k - 1} \\cdot ${paren(d)}`, `${a1}${tail((k - 1) * d)}`, `${ak}`);
+        const backward = chainEq(`a_1 = ${ak} - ${k - 1} \\cdot ${paren(d)}`, `${ak}${tail(-(k - 1) * d)}`, `${a1}`);
         if (rng.bool()) {
           return numberProblem({
             prompt: t(
@@ -1128,7 +1120,7 @@ const explicitSteps = (a1: number, d: number) =>
   );
 
 /** atIndex writes dn + c evaluated at n = k: "3 \cdot 2 - 1", "2 - 1", "-2 + 4". */
-const atIndex = (d: number, c: number, k: number) => `${scaled(d, String(k))}${plus(c)}`;
+const atIndex = (d: number, c: number, k: number) => `${scaled(d, String(k))}${tail(c)}`;
 
 /** explicitCheck checks a_n = dn + (a1 - d) at n = 1 and n = 2 against a_1 and a_2 = a_1 + d. */
 function explicitCheck(a1: number, d: number): Text {
@@ -1209,7 +1201,7 @@ $$a_{40} = 7 + 39 \\cdot 3 = 7 + 117 = 124.$$
         const work = chainEq(
           `a_{${k}} = ${a1} + (${k} - 1) \\cdot ${paren(d)}`,
           `${a1} + ${k - 1} \\cdot ${paren(d)}`,
-          `${a1}${plus((k - 1) * d)}`,
+          `${a1}${tail((k - 1) * d)}`,
           `${ak}`,
         );
         return numberProblem({
@@ -1314,8 +1306,8 @@ $a_n = 7 - 2(n - 1)$ 已经写成 $a_1 + (n - 1)d$ 的形式：$n = 1$ 时括号
           answer: askFirst ? a1 : d,
           wrong: askFirst ? [a1 - d, a1 + d] : [a1, -d],
           solution: t(
-            `The formula has the form $a_1 + (n - 1)d$. At $n = 1$ the bracket $n - 1$ is $0$, so the first term is the number in front, $a_1 = ${a1}$. Each time $n$ grows by $1$ the bracket grows by $1$, so the term changes by the number multiplying it, sign included: $d = ${d}$.\n\nThe ${what} is $${askFirst ? a1 : d}$.\n\n**Check.** The second term is $${second}$, which is $${a1}${plus(d)}$: one step of $${d}$ after $a_1 = ${a1}$.`,
-            `公式形如 $a_1 + (n - 1)d$。$n = 1$ 时括号 $n - 1$ 为 $0$，所以首项就是前面的数 $a_1 = ${a1}$。$n$ 每增加 $1$，括号就增加 $1$，所以项的变化量是括号前的乘数，连同符号：$d = ${d}$。\n\n${whatZh}是 $${askFirst ? a1 : d}$。\n\n**检验。** 第二项是 $${second}$，即 $${a1}${plus(d)}$：在 $a_1 = ${a1}$ 之后走了一步 $${d}$。`,
+            `The formula has the form $a_1 + (n - 1)d$. At $n = 1$ the bracket $n - 1$ is $0$, so the first term is the number in front, $a_1 = ${a1}$. Each time $n$ grows by $1$ the bracket grows by $1$, so the term changes by the number multiplying it, sign included: $d = ${d}$.\n\nThe ${what} is $${askFirst ? a1 : d}$.\n\n**Check.** The second term is $${second}$, which is $${a1}${tail(d)}$: one step of $${d}$ after $a_1 = ${a1}$.`,
+            `公式形如 $a_1 + (n - 1)d$。$n = 1$ 时括号 $n - 1$ 为 $0$，所以首项就是前面的数 $a_1 = ${a1}$。$n$ 每增加 $1$，括号就增加 $1$，所以项的变化量是括号前的乘数，连同符号：$d = ${d}$。\n\n${whatZh}是 $${askFirst ? a1 : d}$。\n\n**检验。** 第二项是 $${second}$，即 $${a1}${tail(d)}$：在 $a_1 = ${a1}$ 之后走了一步 $${d}$。`,
           ),
         });
       },
@@ -1431,8 +1423,8 @@ $$a_n = 6n - 10: \\quad a_1 = 6 \\cdot 1 - 10 = -4, \\quad d = 6 \\quad\\Longrig
             correct,
             [arithmeticRecursive(c, p), arithmeticRecursive(a1, c), arithmeticRecursive(a1.add(p), p), geometricRecursive(a1, p)],
             t(
-              `**Step 1: the step.** Each time $n$ grows by $1$, the term changes by the coefficient of $n$, so $d = ${p.toLatex()}$.\n\n**Step 2: the first term.** Substitute $n = 1$: $a_1 = ${p.toLatex()} \\cdot 1${plus(c)} = ${a1.toLatex()}$. So $${correct.latex}$.\n\n**Check.** Both formulas give the same second term: $${p.toLatex()} \\cdot 2${plus(c)} = ${a2.toLatex()}$ and $${a1.toLatex()}${plus(p)} = ${a2.toLatex()}$.`,
-              `**第一步：每一步的量。** $n$ 每增加 $1$，项就变化 $n$ 的系数，所以 $d = ${p.toLatex()}$。\n\n**第二步：首项。** 代入 $n = 1$：$a_1 = ${p.toLatex()} \\cdot 1${plus(c)} = ${a1.toLatex()}$。所以 $${correct.latex}$。\n\n**检验。** 两个公式给出相同的第二项：$${p.toLatex()} \\cdot 2${plus(c)} = ${a2.toLatex()}$，$${a1.toLatex()}${plus(p)} = ${a2.toLatex()}$。`,
+              `**Step 1: the step.** Each time $n$ grows by $1$, the term changes by the coefficient of $n$, so $d = ${p.toLatex()}$.\n\n**Step 2: the first term.** Substitute $n = 1$: $a_1 = ${p.toLatex()} \\cdot 1${tail(c)} = ${a1.toLatex()}$. So $${correct.latex}$.\n\n**Check.** Both formulas give the same second term: $${p.toLatex()} \\cdot 2${tail(c)} = ${a2.toLatex()}$ and $${a1.toLatex()}${tail(p)} = ${a2.toLatex()}$.`,
+              `**第一步：每一步的量。** $n$ 每增加 $1$，项就变化 $n$ 的系数，所以 $d = ${p.toLatex()}$。\n\n**第二步：首项。** 代入 $n = 1$：$a_1 = ${p.toLatex()} \\cdot 1${tail(c)} = ${a1.toLatex()}$。所以 $${correct.latex}$。\n\n**检验。** 两个公式给出相同的第二项：$${p.toLatex()} \\cdot 2${tail(c)} = ${a2.toLatex()}$，$${a1.toLatex()}${tail(p)} = ${a2.toLatex()}$。`,
             ),
           ),
           [
@@ -1572,7 +1564,7 @@ $$a_1 = a_p - (p - 1)d.$$
       ),
       generate(rng) {
         const { a1, d, p, q, x, y } = twoTerms(rng);
-        const back = chainEq(`a_1 = ${x} - ${scaled(p - 1, paren(d))}`, `${x}${plus(-(p - 1) * d)}`, `${a1}`);
+        const back = chainEq(`a_1 = ${x} - ${scaled(p - 1, paren(d))}`, `${x}${tail(-(p - 1) * d)}`, `${a1}`);
         return numberProblem({
           prompt: t(`An arithmetic sequence has ${givenTwo(p, x, q, y)}. Find $a_1$.`, `等差数列中 ${givenTwoZh(p, x, q, y)}。求 $a_1$。`),
           answer: a1,
@@ -1647,7 +1639,7 @@ $$a_{20} = 11 + 17 \\cdot 4 = 79.$$
         const { a1, d, p, q, x, y } = twoTerms(rng);
         const k = q + rng.int(5, 40);
         const ak = a1 + (k - 1) * d;
-        const forward = chainEq(`a_{${k}} = ${y} + ${k - q} \\cdot ${paren(d)}`, `${y}${plus((k - q) * d)}`, `${ak}`);
+        const forward = chainEq(`a_{${k}} = ${y} + ${k - q} \\cdot ${paren(d)}`, `${y}${tail((k - q) * d)}`, `${ak}`);
         return numberProblem({
           prompt: t(
             `An arithmetic sequence has ${givenTwo(p, x, q, y)}. Find $a_{${k}}$.`,
@@ -1732,8 +1724,8 @@ $$3n + 4 = 154 \\;\\Rightarrow\\; 3n = 150 \\;\\Rightarrow\\; n = 50,$$
           solveFor: "n",
           wrong: [Q.of(v + q, p), Q.of(v, p), k + 1],
           solution: t(
-            `**Step 1: set up the equation.** The term in position $n$ is $${expr}$, so the position of $${v}$ solves $${expr} = ${v}$.\n\n**Step 2: undo the constant.** ${q < 0 ? `Add $${-q}$ to` : `Subtract $${q}$ from`} both sides:${steps(`${poly([p, "n"])} = ${v}${plus(-q)} = ${v - q}`)}**Step 3: undo the coefficient.** Divide both sides by $${p}$:${steps(`n = ${v - q} \\div ${paren(p)} = ${k}`)}**Check.** $${atIndex(p, q, k)} = ${v}$, so $a_{${k}} = ${v}$.`,
-            `**第一步：列方程。** 位置 $n$ 上的项是 $${expr}$，所以 $${v}$ 的位置满足 $${expr} = ${v}$。\n\n**第二步：撤销常数。** 两边同时${q < 0 ? `加上 $${-q}$` : `减去 $${q}$`}：${steps(`${poly([p, "n"])} = ${v}${plus(-q)} = ${v - q}`)}**第三步：撤销系数。** 两边同时除以 $${p}$：${steps(`n = ${v - q} \\div ${paren(p)} = ${k}`)}**检验。** $${atIndex(p, q, k)} = ${v}$，所以 $a_{${k}} = ${v}$。`,
+            `**Step 1: set up the equation.** The term in position $n$ is $${expr}$, so the position of $${v}$ solves $${expr} = ${v}$.\n\n**Step 2: undo the constant.** ${q < 0 ? `Add $${-q}$ to` : `Subtract $${q}$ from`} both sides:${steps(`${poly([p, "n"])} = ${v}${tail(-q)} = ${v - q}`)}**Step 3: undo the coefficient.** Divide both sides by $${p}$:${steps(`n = ${v - q} \\div ${paren(p)} = ${k}`)}**Check.** $${atIndex(p, q, k)} = ${v}$, so $a_{${k}} = ${v}$.`,
+            `**第一步：列方程。** 位置 $n$ 上的项是 $${expr}$，所以 $${v}$ 的位置满足 $${expr} = ${v}$。\n\n**第二步：撤销常数。** 两边同时${q < 0 ? `加上 $${-q}$` : `减去 $${q}$`}：${steps(`${poly([p, "n"])} = ${v}${tail(-q)} = ${v - q}`)}**第三步：撤销系数。** 两边同时除以 $${p}$：${steps(`n = ${v - q} \\div ${paren(p)} = ${k}`)}**检验。** $${atIndex(p, q, k)} = ${v}$，所以 $a_{${k}} = ${v}$。`,
           ),
         });
       },
@@ -1945,8 +1937,8 @@ $$(2x + 3) - (x + 1) = (4x - 1) - (2x + 3) \\;\\Rightarrow\\; x + 2 = 2x - 4 \\;
           answer: askNext ? next : s.d,
           wrong: askNext ? [v3, s.x, v3 - s.d] : [s.x, -s.d, v2],
           solution: t(
-            `**Step 1: find $x$.** The differences between consecutive terms are equal:${s.work.en}**Step 2: the terms.** Substituting $x = ${s.x}$ gives $${values}$, so the common difference is $d = ${v2} - ${paren(v1)} = ${s.d}$.${askNext ? `\n\n**Step 3: the next term.** Add $d$ to the third term: $${v3}${plus(s.d)} = ${next}$.` : ""}\n\n**Check.** ${askNext ? `The four terms $${values}, ${next}$ change by $${s.d}$ at every step.` : `The other difference agrees: $${v3} - ${paren(v2)} = ${v3 - v2}$.`}`,
-            `**第一步：求 $x$。** 相邻两项的差相等：${s.work["zh-CN"]}**第二步：求各项。** 代入 $x = ${s.x}$ 得 $${values}$，所以公差 $d = ${v2} - ${paren(v1)} = ${s.d}$。${askNext ? `\n\n**第三步：下一项。** 在第三项上加 $d$：$${v3}${plus(s.d)} = ${next}$。` : ""}\n\n**检验。** ${askNext ? `四项 $${values}, ${next}$ 每一步都变化 $${s.d}$。` : `另一个差也一致：$${v3} - ${paren(v2)} = ${v3 - v2}$。`}`,
+            `**Step 1: find $x$.** The differences between consecutive terms are equal:${s.work.en}**Step 2: the terms.** Substituting $x = ${s.x}$ gives $${values}$, so the common difference is $d = ${v2} - ${paren(v1)} = ${s.d}$.${askNext ? `\n\n**Step 3: the next term.** Add $d$ to the third term: $${v3}${tail(s.d)} = ${next}$.` : ""}\n\n**Check.** ${askNext ? `The four terms $${values}, ${next}$ change by $${s.d}$ at every step.` : `The other difference agrees: $${v3} - ${paren(v2)} = ${v3 - v2}$.`}`,
+            `**第一步：求 $x$。** 相邻两项的差相等：${s.work["zh-CN"]}**第二步：求各项。** 代入 $x = ${s.x}$ 得 $${values}$，所以公差 $d = ${v2} - ${paren(v1)} = ${s.d}$。${askNext ? `\n\n**第三步：下一项。** 在第三项上加 $d$：$${v3}${tail(s.d)} = ${next}$。` : ""}\n\n**检验。** ${askNext ? `四项 $${values}, ${next}$ 每一步都变化 $${s.d}$。` : `另一个差也一致：$${v3} - ${paren(v2)} = ${v3 - v2}$。`}`,
           ),
         });
       },
@@ -2082,15 +2074,15 @@ $$20 + 14 \\cdot 3 = 62 \\text{ 个座位}.$$
         const { a1, d, kMax } = story.draw(rng);
         const k = rng.int(8, kMax);
         const ak = a1 + (k - 1) * d;
-        const work = chainEq(`a_{${k}} = ${a1} + ${k - 1} \\cdot ${paren(d)}`, `${a1}${plus((k - 1) * d)}`, `${ak}`);
+        const work = chainEq(`a_{${k}} = ${a1} + ${k - 1} \\cdot ${paren(d)}`, `${a1}${tail((k - 1) * d)}`, `${ak}`);
         const each = moves(d);
         return numberProblem({
           prompt: sentences(story.intro(a1, d), story.ask(k)),
           answer: ak,
           wrong: [a1 + k * d, (k - 1) * d, a1 - (k - 1) * d],
           solution: t(
-            `**Step 1: the sequence.** Let $a_n$ be the value at step $n$. The values form an arithmetic sequence: the first is $a_1 = ${a1}$, and each step ${each.en}, so $d = ${d}$.\n\n**Step 2: the term.** Step $${k}$ comes $${k - 1}$ steps after step $1$:${steps(work)}**Check.** Going back $${k - 1}$ steps from $${ak}$ returns to the first value: $${ak}${plus(-(k - 1) * d)} = ${a1}$.`,
-            `**第一步：数列。** 设 $a_n$ 为第 $n$ 步的值。这些值构成等差数列：首项 $a_1 = ${a1}$，每一步${each["zh-CN"]}，所以 $d = ${d}$。\n\n**第二步：求这一项。** 第 $${k}$ 步在第 $1$ 步之后 $${k - 1}$ 步：${steps(work)}**检验。** 从 $${ak}$ 往回退 $${k - 1}$ 步回到首项：$${ak}${plus(-(k - 1) * d)} = ${a1}$。`,
+            `**Step 1: the sequence.** Let $a_n$ be the value at step $n$. The values form an arithmetic sequence: the first is $a_1 = ${a1}$, and each step ${each.en}, so $d = ${d}$.\n\n**Step 2: the term.** Step $${k}$ comes $${k - 1}$ steps after step $1$:${steps(work)}**Check.** Going back $${k - 1}$ steps from $${ak}$ returns to the first value: $${ak}${tail(-(k - 1) * d)} = ${a1}$.`,
+            `**第一步：数列。** 设 $a_n$ 为第 $n$ 步的值。这些值构成等差数列：首项 $a_1 = ${a1}$，每一步${each["zh-CN"]}，所以 $d = ${d}$。\n\n**第二步：求这一项。** 第 $${k}$ 步在第 $1$ 步之后 $${k - 1}$ 步：${steps(work)}**检验。** 从 $${ak}$ 往回退 $${k - 1}$ 步回到首项：$${ak}${tail(-(k - 1) * d)} = ${a1}$。`,
           ),
         });
       },
@@ -2165,7 +2157,7 @@ $$48 + 15 \\cdot 3 = 93 \\text{ 个座位}.$$
         const x = a1 + (p - 1) * d;
         const y = a1 + (q - 1) * d;
         const ak = a1 + (k - 1) * d;
-        const work = chainEq(`a_{${k}} = ${y} + ${k - q} \\cdot ${paren(d)}`, `${y}${plus((k - q) * d)}`, `${ak}`);
+        const work = chainEq(`a_{${k}} = ${y} + ${k - q} \\cdot ${paren(d)}`, `${y}${tail((k - q) * d)}`, `${ak}`);
         return numberProblem({
           prompt: sentences(story.data(p, x, q, y), story.ask(k)),
           answer: ak,
@@ -2563,10 +2555,10 @@ $$a_4 = 3 \\cdot 2^{4} = 3 \\cdot 16 = 48.$$
         const power = t(
           shift === 0
             ? `The exponent is $n$ itself, so it is $${kk}$.`
-            : `The exponent is $${exponent(shift)}$, so at $n = ${kk}$ it is $${kk}${plus(shift)} = ${e}$.`,
+            : `The exponent is $${exponent(shift)}$, so at $n = ${kk}$ it is $${kk}${tail(shift)} = ${e}$.`,
           shift === 0
             ? `指数就是 $n$，所以是 $${kk}$。`
-            : `指数是 $${exponent(shift)}$，所以当 $n = ${kk}$ 时为 $${kk}${plus(shift)} = ${e}$。`,
+            : `指数是 $${exponent(shift)}$，所以当 $n = ${kk}$ 时为 $${kk}${tail(shift)} = ${e}$。`,
         );
         return numberProblem({
           prompt: t(`Given $a_n = ${expr}$, find $a_{${kk}}$.`, `已知 $a_n = ${expr}$，求 $a_{${kk}}$。`),
@@ -2839,8 +2831,8 @@ $$a_n = 5 \\cdot 3^{n}: \\quad a_1 = 5 \\cdot 3 = 15 \\quad\\Longrightarrow\\qua
         const power = t(
           shift === 0
             ? "at $n = 1$ the exponent $n$ is $1$"
-            : `at $n = 1$ the exponent $${exponent(shift)}$ is $1${plus(shift)} = ${1 + shift}$`,
-          shift === 0 ? "当 $n = 1$ 时指数 $n$ 为 $1$" : `当 $n = 1$ 时指数 $${exponent(shift)}$ 为 $1${plus(shift)} = ${1 + shift}$`,
+            : `at $n = 1$ the exponent $${exponent(shift)}$ is $1${tail(shift)} = ${1 + shift}$`,
+          shift === 0 ? "当 $n = 1$ 时指数 $n$ 为 $1$" : `当 $n = 1$ 时指数 $${exponent(shift)}$ 为 $1${tail(shift)} = ${1 + shift}$`,
         );
         return reasoned(
           formulaChoice(
@@ -3218,8 +3210,8 @@ $$2 \\cdot 3^{n} = 486 \\;\\Rightarrow\\; 3^{n} = 243 = 3^{5} \\;\\Rightarrow\\;
           ...[`${exponent(shift)} = ${e}`, `n = ${k}`].filter((line, i, all) => line !== all[i - 1]),
         );
         const at = t(
-          shift === 0 ? `At $n = ${k}$ the exponent is $${e}$` : `At $n = ${k}$ the exponent is $${k}${plus(shift)} = ${e}$`,
-          shift === 0 ? `当 $n = ${k}$ 时指数为 $${e}$` : `当 $n = ${k}$ 时指数为 $${k}${plus(shift)} = ${e}$`,
+          shift === 0 ? `At $n = ${k}$ the exponent is $${e}$` : `At $n = ${k}$ the exponent is $${k}${tail(shift)} = ${e}$`,
+          shift === 0 ? `当 $n = ${k}$ 时指数为 $${e}$` : `当 $n = ${k}$ 时指数为 $${k}${tail(shift)} = ${e}$`,
         );
         return numberProblem({
           prompt: t(

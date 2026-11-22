@@ -5,12 +5,12 @@ import { algebraDrawings } from "../explanation-drawings-algebra.ts";
 import { remainingDrawings3 } from "../explanation-drawings-remaining-3.ts";
 import { annotate, at } from "../graph-figures.ts";
 import { numberProblem, pointLatex, steps } from "../problems.ts";
+import { valueRows, view } from "../solution-kit.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
 
 // Algebra I, systems of equations: approximating the solutions of systems of linear and nonlinear equations from
 // graphs and tables of values, and refining an estimate to tenths.
 
-const view: PlaneView = { xMin: -6, xMax: 6, yMin: -6, yMax: 6 };
 const tallView: PlaneView = { xMin: -6, xMax: 6, yMin: -6, yMax: 12, labelEvery: 2 };
 
 /** halfSlopes are the slopes of lines that are easy to draw through grid points. */
@@ -37,12 +37,6 @@ const lineMark = (m: Q, b: Q, accent: boolean): PlaneMark => ({
   b: [1, m.add(b).toNumber()],
   accent,
 });
-
-/** table writes rows of values over a row of x-values as a display array. */
-function table(xs: readonly number[], rows: readonly (readonly [string, readonly number[]])[]): string {
-  const row = (head: string, values: readonly number[]) => `${head} & ${values.join(" & ")}`;
-  return `$$\\begin{array}{c|${"c".repeat(xs.length)}} ${row("x", xs)} \\\\ \\hline ${rows.map(([h, v]) => row(h, v)).join(" \\\\ ")} \\end{array}$$`;
-}
 
 /** between is the choice "between x = a and x = b". */
 const between = (a: string, b: string): Text => t(`Between $x = ${a}$ and $x = ${b}$`, `在 $x = ${a}$ 与 $x = ${b}$ 之间`);
@@ -219,11 +213,11 @@ For $f(x) = 2x - 1$ and $g(x) = -x + 3$: at $x = 1$, $f(1) = 1$ is below $g(1) =
         return pickChoice(
           rng,
           t(
-            `The table gives values of $f(x) = ${l1}$ and $g(x) = ${l2}$. ${table(xs, [
+            `The table gives values of $f(x) = ${l1}$ and $g(x) = ${l2}$. ${valueRows(xs, [
               ["f(x)", xs.map(f)],
               ["g(x)", xs.map(g)],
             ])}Between which two consecutive $x$-values in the table does the $x$-coordinate of the solution of the system $y = f(x)$, $y = g(x)$ lie?`,
-            `下表给出了 $f(x) = ${l1}$ 与 $g(x) = ${l2}$ 的值。${table(xs, [
+            `下表给出了 $f(x) = ${l1}$ 与 $g(x) = ${l2}$ 的值。${valueRows(xs, [
               ["f(x)", xs.map(f)],
               ["g(x)", xs.map(g)],
             ])}方程组 $y = f(x)$，$y = g(x)$ 的解的 $x$ 坐标位于表中哪两个相邻的 $x$ 值之间？`,
@@ -464,8 +458,8 @@ For $f(x) = x^{2} - 2$ and $g(x) = x + 1$: at $x = 2$, $f(2) = 2$ is below $g(2)
         return pickChoice(
           rng,
           t(
-            `The table gives values of $f(x) = ${parabola}$ and $g(x) = ${line}$. ${table(xs, rows)}Between which two consecutive $x$-values in the table does a solution of the system $y = f(x)$, $y = g(x)$ lie?`,
-            `下表给出了 $f(x) = ${parabola}$ 与 $g(x) = ${line}$ 的值。${table(xs, rows)}方程组 $y = f(x)$，$y = g(x)$ 的一个解位于表中哪两个相邻的 $x$ 值之间？`,
+            `The table gives values of $f(x) = ${parabola}$ and $g(x) = ${line}$. ${valueRows(xs, rows)}Between which two consecutive $x$-values in the table does a solution of the system $y = f(x)$, $y = g(x)$ lie?`,
+            `下表给出了 $f(x) = ${parabola}$ 与 $g(x) = ${line}$ 的值。${valueRows(xs, rows)}方程组 $y = f(x)$，$y = g(x)$ 的一个解位于表中哪两个相邻的 $x$ 值之间？`,
           ),
           between(String(lo), String(lo + 1)),
           neighborIntervals(xs, lo - start),

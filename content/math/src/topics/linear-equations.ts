@@ -14,6 +14,7 @@ import {
   steps,
   why,
 } from "../problems.ts";
+import { flip, signed } from "../solution-kit.ts";
 
 /** frac is the exact quotient a / b, for the values that mistakes produce. */
 const frac = (a: number, b: number) => Q.of(a, b);
@@ -23,9 +24,6 @@ const over = (n: string | number, d: string | number) => `\\frac{${n}}{${d}}`;
 
 /** signedOver writes k / d for an integer k with the sign in front: "-\frac{7}{a}". */
 const signedOver = (k: number, d: string) => (k < 0 ? `-${over(-k, d)}` : over(k, d));
-
-/** signed writes an integer as a term after another: "+ 5", "- 3". */
-const signed = (n: number) => (n < 0 ? `- ${-n}` : `+ ${n}`);
 
 /** paren writes an integer, in parentheses when it is negative: "5", "(-3)". */
 const paren = (n: number) => (n < 0 ? `(${n})` : `${n}`);
@@ -70,7 +68,6 @@ const letterPool = ["a", "b", "c", "d", "h", "k", "m", "n", "p", "q", "r", "s", 
 const letters = (rng: Rng, n: number, pool: readonly string[] = letterPool) => rng.sample(pool, n) as [string, string, string, string];
 
 const ops: readonly InequalityOp[] = ["<", "<=", ">", ">="];
-const flip: Record<InequalityOp, InequalityOp> = { "<": ">", ">": "<", "<=": ">=", ">=": "<=" };
 
 const solveText = (eq: string, assumption?: Text): Text =>
   assumption

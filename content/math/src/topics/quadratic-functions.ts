@@ -34,34 +34,11 @@ import {
   why,
   yesNo,
 } from "../problems.ts";
+import { binomialSquare, chain, front, isSquare, quad, sqrtSurd, tail, toQ, view } from "../solution-kit.ts";
 import { reasoned } from "../wrong-reasons.ts";
 
-const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
-
-/** quad writes ax² + bx + c in the variable v. */
-const quad = (a: Coefficient, b: Coefficient, c: Coefficient, v = "x") => poly([a, `${v}^{2}`], [b, v], [c, ""]);
-
-/** front writes a constant factor before a power or parentheses: "", "-", "3" or "\frac{1}{2}". */
-function front(k: Coefficient): string {
-  const v = toQ(k);
-  if (v.eq(Q.one)) return "";
-  if (v.eq(Q.of(-1))) return "-";
-  return num(v);
-}
-
-/** tail writes a constant added after an expression: "", " + 3" or " - \frac{1}{2}". */
-function tail(c: Coefficient): string {
-  const v = toQ(c);
-  return v.isZero() ? "" : v.sign() < 0 ? ` - ${num(v.neg())}` : ` + ${num(v)}`;
-}
-
 /** sq writes (x − h)², or x² when h = 0. */
-const sq = (h: Coefficient, v = "x") =>
-  toQ(h).isZero()
-    ? `${v}^{2}`
-    : toQ(h).isInteger()
-      ? `(${linear(1, toQ(h).neg(), v)})^{2}`
-      : `\\left(${linear(1, toQ(h).neg(), v)}\\right)^{2}`;
+const sq = (h: Coefficient, v = "x") => binomialSquare(toQ(h).neg(), v);
 
 /** vertexForm writes a(x − h)² + k. */
 const vertexForm = (a: Coefficient, h: Coefficient, k: Coefficient, v = "x") => `${front(a)}${sq(h, v)}${tail(k)}`;
@@ -91,16 +68,6 @@ function plugIn(a: Coefficient, b: Coefficient, c: Coefficient, x: Coefficient):
   const A = toQ(a);
   const B = toQ(b);
   return `${term(A, `${p}^{2}`, true)}${term(B, p, A.isZero())}${tail(c)}`;
-}
-
-/** isSquare tells whether n is the square of an integer. */
-const isSquare = (n: number) => n >= 0 && Math.round(Math.sqrt(n)) ** 2 === n;
-
-/** sqrtSurd is √k for a rational k ≥ 0, in simplest form. */
-function sqrtSurd(k: Q): Surd {
-  if (k.isZero()) return surd(Q.zero);
-  const [c, m] = simplifyRadical(Number(k.n * k.d));
-  return surd(Q.zero, Q.of(c, k.d), BigInt(m));
 }
 
 /** pm lists center + root and center − root in simplest form; one value when the root is 0. */
@@ -154,8 +121,6 @@ function ray(k: Coefficient, up: boolean, closed = true): RealSet {
   const i: Interval = up ? { lo: end, loClosed: closed, hiClosed: false } : { hi: end, loClosed: false, hiClosed: closed };
   return union(i);
 }
-
-const view: PlaneView = { xMin: -6, xMax: 6, yMin: -6, yMax: 6 };
 
 /** parabolaFigure draws y = a(x − h)² + k with extra marks. */
 function parabolaFigure(a: Coefficient, h: number, k: number, marks: readonly PlaneMark[] = [], v: PlaneView = view, note?: Text): Figure {
@@ -2213,9 +2178,6 @@ $$y = 2(x - 3)^{2} + 1 = 2(x^{2} - 6x + 9) + 1 = 2x^{2} - 12x + 18 + 1 = 2x^{2} 
     },
   ],
 };
-
-/** chain joins the steps of a computation with "=", leaving out a step that repeats the one before it. */
-const chain = (...lines: string[]) => lines.filter((l, i) => i === 0 || l !== lines[i - 1]).join(" = ");
 
 export const writingTheEquationOfAParabolaInVertexForm: TopicDef = {
   id: "writing-the-equation-of-a-parabola-in-vertex-form",

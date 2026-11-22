@@ -3,27 +3,10 @@ import { t } from "@ga/content";
 import { gcd, linear, poly } from "@ga/subject-math";
 
 import { choiceProblem, factoredProblem, say, steps, withMistakes, yesNo } from "../problems.ts";
-
-/** pw writes a power of a variable: "", "x" or "x^{3}". */
-const pw = (v: string, e: number) => (e === 0 ? "" : e === 1 ? v : `${v}^{${e}}`);
-
-/** mono writes the monomial c·xᵃ·yᵇ. */
-const mono = (c: number, x = 0, y = 0) => poly([c, `${pw("x", x)}${pw("y", y)}`]);
-
-/** front writes a monomial factor before parentheses: "", "-", "3" or "-2x^{2}". */
-const front = (c: number, x = 0, y = 0) => (x === 0 && y === 0 ? (c === 1 ? "" : c === -1 ? "-" : String(c)) : mono(c, x, y));
-
-/** quad writes ax² + bx + c in the variable v. */
-const quad = (a: number, b: number, c: number, v = "x") => poly([a, pw(v, 2)], [b, v], [c, ""]);
-
-/** lf writes the factor (px + q). */
-const lf = (p: number, q: number, v = "x") => `(${linear(p, q, v)})`;
+import { front, isSquare, lf, listed, mono, pw, quad } from "../solution-kit.ts";
 
 /** lf2 writes the factor (px + qy). */
 const lf2 = (p: number, q: number) => `(${poly([p, "x"], [q, "y"])})`;
-
-/** isSquare tells whether n is the square of an integer. */
-const isSquare = (n: number) => n >= 0 && Math.round(Math.sqrt(n)) ** 2 === n;
 
 /** gcd3 is the greatest common divisor of three integers. */
 const gcd3 = (a: number, b: number, c: number) => gcd(gcd(a, b), c);
@@ -1002,12 +985,6 @@ $$x^{4} - 16 = (x^{2} + 4)(x^{2} - 4) = (x^{2} + 4)(x + 2)(x - 2)$$
     },
   ],
 };
-
-/** listed joins items as a list in each locale: "a, b and c" and "a、b、c". */
-function listed(items: readonly string[]): Text {
-  const en = items.length === 1 ? items[0]! : `${items.slice(0, -1).join(", ")} and ${items[items.length - 1]}`;
-  return t(en, items.join("、"));
-}
 
 /** signed writes a number for a sum, in brackets when negative: "3", "(-4)". */
 const signedNum = (n: number) => (n < 0 ? `(${n})` : String(n));

@@ -1,6 +1,19 @@
 import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
-import { type Coefficient, dec, linear, num, type PlaneMark, type PlaneView, type Point, paren, plane, poly, Q } from "@ga/subject-math";
+import {
+  type Coefficient,
+  dec,
+  gcd,
+  linear,
+  num,
+  type PlaneMark,
+  type PlaneView,
+  type Point,
+  paren,
+  plane,
+  poly,
+  Q,
+} from "@ga/subject-math";
 import { algebraDrawings } from "../explanation-drawings-algebra.ts";
 import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
 import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
@@ -8,15 +21,8 @@ import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 import { annotate, at, away, graphFigure, guides, plain, riseOf, riseRun, slopeFigure, walkTo } from "../graph-figures.ts";
 import { viewAround } from "../motion-figures.ts";
 import { choiceProblem, equationProblem, numberProblem, pointLatex, pointProblem, steps, verdictChoice, why, yesNo } from "../problems.ts";
+import { evalAt, toQ, view } from "../solution-kit.ts";
 import { reasoned } from "../wrong-reasons.ts";
-
-const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
-
-function gcd(a: number, b: number): number {
-  let [m, n] = [Math.abs(a), Math.abs(b)];
-  while (n !== 0) [m, n] = [n, m % n];
-  return m;
-}
 
 /** fracSlopes are the slopes p/q in lowest terms with 0 < |p| ≤ 5 and q from 2 to 4. */
 const fracSlopes: readonly Q[] = [2, 3, 4].flatMap((q) =>
@@ -86,8 +92,6 @@ function solve2(a1: Coefficient, b1: Coefficient, c1: Coefficient, a2: Coefficie
 /** pairs keeps the defined pairs, for the wrong responses of a point problem. */
 const pairs = (...ps: readonly (readonly Coefficient[] | undefined)[]) => ps.filter((p): p is readonly Coefficient[] => p !== undefined);
 
-const view: PlaneView = { xMin: -6, xMax: 6, yMin: -6, yMax: 6 };
-
 /** graph draws marks in the coordinate plane as a figure. */
 const graph = (marks: readonly PlaneMark[], en: string, zh: string, v: PlaneView = view): Figure => ({
   svg: plane(v, marks),
@@ -105,14 +109,6 @@ const lineMark = (m: Q, b: Coefficient, accent = true, dashed = false): PlaneMar
 
 /** plainLine writes y = mx + b for alt text. */
 const plainLine = (m: Q, b: Coefficient) => `y = ${linear(m, b).replace(/\\frac\{(\d+)\}\{(\d+)\}/g, "$1/$2")}`;
-
-/** evalAt writes m · x + b for substituting x into y = mx + b, leaving out a zero b. */
-function evalAt(m: Coefficient, x: Coefficient, b: Coefficient): string {
-  const B = toQ(b);
-  const M = toQ(m);
-  const head = M.eq(Q.of(1)) ? paren(x) : M.eq(Q.of(-1)) ? `-${paren(x)}` : `${num(m)} \\cdot ${paren(x)}`;
-  return B.isZero() ? head : `${head} ${B.sign() < 0 ? "-" : "+"} ${num(B.abs())}`;
-}
 
 /** Lin is a linear equation ax + by = c with integer coefficients. */
 type Lin = readonly [number, number, number];

@@ -16,6 +16,7 @@ import {
   unitLatex,
   yesNo,
 } from "../problems.ts";
+import { range } from "../solution-kit.ts";
 
 /** qty writes a quantity in LaTeX: "4.5\text{ kg}", "12\text{ cm}^{2}". */
 const qty = (v: Coefficient, unit: string) => `${dec(v)}${unitLatex(unit)}`;
@@ -799,8 +800,6 @@ interface Mixed {
 
 /** mixedOne is the singular English name of the large unit of a mixed pair: "foot", "hour". */
 const mixedOne = (m: Mixed) => (m.bigName.en === "feet" ? "foot" : m.bigName.en.slice(0, -1));
-
-const range = (from: number, to: number, by = 1) => Array.from({ length: Math.floor((to - from) / by) + 1 }, (_, i) => from + i * by);
 
 const mixedPairs: readonly Mixed[] = [
   { big: "h", small: "min", f: 60, bigName: t("hours", "小时"), smallName: t("minutes", "分钟"), given: false, steps: range(3, 57, 3) },

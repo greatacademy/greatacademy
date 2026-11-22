@@ -7,7 +7,6 @@ import {
   linear,
   num,
   type PlaneMark,
-  type PlaneView,
   type Point,
   paren,
   plane,
@@ -32,19 +31,8 @@ import {
   verdictChoice,
   yesNo,
 } from "../problems.ts";
+import { range, tail, valueTable, view } from "../solution-kit.ts";
 import { reasoned } from "../wrong-reasons.ts";
-
-const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
-
-/** range lists the integers from lo to hi. */
-const range = (lo: number, hi: number) => Array.from({ length: hi - lo + 1 }, (_, i) => lo + i);
-
-/** plus writes a constant added to a term: " + 3", " - 3", or "" for 0. */
-function plus(c: Coefficient): string {
-  const v = toQ(c);
-  if (v.isZero()) return "";
-  return v.sign() < 0 ? ` - ${v.neg().toLatex()}` : ` + ${v.toLatex()}`;
-}
 
 /** withPrefix shows a prefix such as "f(x) =" before the answer field. */
 function withPrefix(p: Problem, prefix: string): Problem {
@@ -114,11 +102,6 @@ const pairs = (ps: readonly Point[]) => `\\{${ps.map(([x, y]) => `(${num(x)}, ${
 /** setOf writes a finite set in increasing order: "\{-1, 2, 5\}". */
 const setOf = (xs: readonly number[]) => `\\{${[...new Set(xs)].sort((a, b) => a - b).join(", ")}\\}`;
 
-/** valueTable writes a table of values as display math. */
-function valueTable(name: string, xs: readonly number[], ys: readonly number[]): string {
-  return `$$\\begin{array}{c|${"c".repeat(xs.length)}} x & ${xs.map(num).join(" & ")} \\\\ \\hline ${name}(x) & ${ys.map(num).join(" & ")} \\end{array}$$`;
-}
-
 /** iv is the interval between lo and hi (infinite when undefined), closed at the ends as given. */
 function iv(lo: number | undefined, hi: number | undefined, loClosed = true, hiClosed = true): Interval {
   return {
@@ -139,8 +122,6 @@ const hull = (set: RealSet): RealSet => union({ lo: set[0]!.lo, hi: set[set.leng
 const setText = (set: RealSet) => `$${intervalLatex(set)}$`;
 
 // Graphs made of line segments.
-
-const view: PlaneView = { xMin: -6, xMax: 6, yMin: -6, yMax: 6 };
 
 /** Piece is a connected part of a graph: line segments through its vertices, with a filled or open dot at each end. */
 interface Piece {
@@ -540,8 +521,8 @@ $$3x - 4 = 11 \\;\\Rightarrow\\; 3x = 15 \\;\\Rightarrow\\; x = 5.$$
           solveFor: "x",
           wrong: [a * c + b, Q.of(c + b, a), -x],
           solution: t(
-            `**Step 1: write the equation.** The output is $${num(c)}$, so the formula must equal $${num(c)}$:${steps(`${linear(a, b)} = ${num(c)}`)}**Step 2: undo the constant.** To leave the $x$ term alone, ${undo.en}:${steps(`${poly([a, "x"])} = ${num(c - b)}`)}**Step 3: undo the multiplication.** Divide both sides by $${a}$:${steps(`x = ${num(x)}`)}**Check.** $${name}(${x}) = ${a}(${x})${plus(b)} = ${num(a * x)}${plus(b)} = ${num(c)}$, the output we wanted.`,
-            `**第一步：列方程。** 输出是 $${num(c)}$，所以公式等于 $${num(c)}$：${steps(`${linear(a, b)} = ${num(c)}`)}**第二步：还原常数项。** 为了只留下含 $x$ 的项，${undo["zh-CN"]}：${steps(`${poly([a, "x"])} = ${num(c - b)}`)}**第三步：还原乘法。** 两边同时除以 $${a}$：${steps(`x = ${num(x)}`)}**检验。** $${name}(${x}) = ${a}(${x})${plus(b)} = ${num(a * x)}${plus(b)} = ${num(c)}$，正是要求的输出。`,
+            `**Step 1: write the equation.** The output is $${num(c)}$, so the formula must equal $${num(c)}$:${steps(`${linear(a, b)} = ${num(c)}`)}**Step 2: undo the constant.** To leave the $x$ term alone, ${undo.en}:${steps(`${poly([a, "x"])} = ${num(c - b)}`)}**Step 3: undo the multiplication.** Divide both sides by $${a}$:${steps(`x = ${num(x)}`)}**Check.** $${name}(${x}) = ${a}(${x})${tail(b)} = ${num(a * x)}${tail(b)} = ${num(c)}$, the output we wanted.`,
+            `**第一步：列方程。** 输出是 $${num(c)}$，所以公式等于 $${num(c)}$：${steps(`${linear(a, b)} = ${num(c)}`)}**第二步：还原常数项。** 为了只留下含 $x$ 的项，${undo["zh-CN"]}：${steps(`${poly([a, "x"])} = ${num(c - b)}`)}**第三步：还原乘法。** 两边同时除以 $${a}$：${steps(`x = ${num(x)}`)}**检验。** $${name}(${x}) = ${a}(${x})${tail(b)} = ${num(a * x)}${tail(b)} = ${num(c)}$，正是要求的输出。`,
           ),
         });
       },
@@ -1404,10 +1385,10 @@ A polynomial such as $x^{2} - 4x$ uses only multiplication and addition, so its 
             t(
               `**Step 1: find where the denominator is zero.** Division by $0$ is impossible, so solve $${den2} = 0$:${steps(`${b}x = ${num(b * a)}`, `x = ${a}`)}**Step 2: leave that number out.** Every other number gives a nonzero denominator, so the domain is all real numbers except $${a}$: ${setText(punctured)}.
 
-**Check.** At $x = ${a}$ the denominator is $${b}(${a})${plus(-b * a)} = ${num(b * a)}${plus(-b * a)} = 0$, so $${name}(${a})$ cannot be computed.`,
+**Check.** At $x = ${a}$ the denominator is $${b}(${a})${tail(-b * a)} = ${num(b * a)}${tail(-b * a)} = 0$, so $${name}(${a})$ cannot be computed.`,
               `**第一步：找出分母为零的点。** 不能除以 $0$，所以解 $${den2} = 0$：${steps(`${b}x = ${num(b * a)}`, `x = ${a}`)}**第二步：去掉这个数。** 其他数都使分母不为零，所以定义域是除 $${a}$ 以外的全体实数：${setText(punctured)}。
 
-**检验。** 当 $x = ${a}$ 时，分母为 $${b}(${a})${plus(-b * a)} = ${num(b * a)}${plus(-b * a)} = 0$，所以 $${name}(${a})$ 无定义。`,
+**检验。** 当 $x = ${a}$ 时，分母为 $${b}(${a})${tail(-b * a)} = ${num(b * a)}${tail(-b * a)} = 0$，所以 $${name}(${a})$ 无定义。`,
             ),
           ],
           [
@@ -1453,12 +1434,12 @@ A polynomial such as $x^{2} - 4x$ uses only multiplication and addition, so its 
 
 **Step 2: include the endpoint.** At $x = ${a}$ the inside is $0$, and $\\sqrt{0} = 0$ is fine, so the domain is ${setText(union(iv(a, undefined)))}.
 
-**Check.** At $x = ${a}$ the inside is $${b}(${a})${plus(-b * a)} = 0$, so $${name}(${a}) = 0$; at $x = ${a - 1}$ it is $-${b}$, which has no real square root.`,
+**Check.** At $x = ${a}$ the inside is $${b}(${a})${tail(-b * a)} = 0$, so $${name}(${a}) = 0$; at $x = ${a - 1}$ it is $-${b}$, which has no real square root.`,
               `**第一步：让根号下非负。** 实数范围内开平方要求 $${den2} \\ge 0$：${steps(`${b}x \\ge ${num(b * a)}`, `x \\ge ${a}`)}两边除以正数 $${b}$，不等号方向不变。
 
 **第二步：包含端点。** 当 $x = ${a}$ 时根号下为 $0$，$\\sqrt{0} = 0$ 没有问题，所以定义域是 ${setText(union(iv(a, undefined)))}。
 
-**检验。** 当 $x = ${a}$ 时根号下为 $${b}(${a})${plus(-b * a)} = 0$，所以 $${name}(${a}) = 0$；当 $x = ${a - 1}$ 时根号下为 $-${b}$，在实数范围内不能开平方。`,
+**检验。** 当 $x = ${a}$ 时根号下为 $${b}(${a})${tail(-b * a)} = 0$，所以 $${name}(${a}) = 0$；当 $x = ${a - 1}$ 时根号下为 $-${b}$，在实数范围内不能开平方。`,
             ),
           ],
         ];
@@ -2574,7 +2555,7 @@ ${atEnds}
 function squareLatex(a: number, h: number, k: number): string {
   const inner = h === 0 ? "x" : `(${linear(1, -h)})`;
   const coef = a === 1 ? "" : a === -1 ? "-" : String(a);
-  return `${coef}${inner}^{2}${plus(k)}`;
+  return `${coef}${inner}^{2}${tail(k)}`;
 }
 
 export const rangeAdvancedCases: TopicDef = {
@@ -2737,7 +2718,7 @@ A square root works the same way: $\\sqrt{x - 4}$ takes every value $\\ge 0$, so
         const root = rng.bool(0.4);
         const s = a > 0 ? 1 : -1;
         const inner = linear(1, -h);
-        const expr = root ? `${a < 0 ? "-" : ""}${Math.abs(a) === 1 ? "" : Math.abs(a)}\\sqrt{${inner}}${plus(k)}` : squareLatex(a, h, k);
+        const expr = root ? `${a < 0 ? "-" : ""}${Math.abs(a) === 1 ? "" : Math.abs(a)}\\sqrt{${inner}}${tail(k)}` : squareLatex(a, h, k);
         const set = s > 0 ? union(iv(k, undefined)) : union(iv(undefined, k));
         const base = root ? `\\sqrt{${inner}}` : h === 0 ? "x^{2}" : `(${inner})^{2}`;
         const scaled = `${a === 1 ? "" : a === -1 ? "-" : a}${base}`;
@@ -2932,7 +2913,7 @@ For $f(x) = 4x + 6$: set $4x + 6 = 0$. Subtracting $6$ from both sides gives $4x
         const b = rng.nonZero(-15, 15);
         const root = Q.of(-b, a);
         const undo = undoConstant(b);
-        const check = `${a}\\left(${root.toLatex()}\\right)${plus(b)} = ${num(-b)}${plus(b)} = 0`;
+        const check = `${a}\\left(${root.toLatex()}\\right)${tail(b)} = ${num(-b)}${tail(b)} = 0`;
         return numberProblem({
           prompt: t(`Find the root of $${name}(x) = ${linear(a, b)}$.`, `求 $${name}(x) = ${linear(a, b)}$ 的零点。`),
           answer: root,
@@ -3014,14 +2995,14 @@ For $f(x) = 2x - 8$:
 
 **Step 3: write the point.** The $x$-coordinate is $${root.toLatex()}$ and the $y$-coordinate is $0$: the point is $(${root.toLatex()}, 0)$.
 
-**Check.** $${lead}\\left(${root.toLatex()}\\right)${plus(b)} = ${num(-b)}${plus(b)} = 0$, so the point is on the graph and on the $x$-axis.`,
+**Check.** $${lead}\\left(${root.toLatex()}\\right)${tail(b)} = ${num(-b)}${tail(b)} = 0$, so the point is on the graph and on the $x$-axis.`,
                 `**第一步：令 $y = 0$。** $x$ 轴上每个点的高度都是 $0$，所以令 $${linear(a, b)} = 0$。
 
 **第二步：求解。** ${undo["zh-CN"]}${a === 1 ? "" : `，再除以 $${a}$`}：$$${solved}x = ${root.toLatex()}.$$
 
 **第三步：写出交点。** 横坐标是 $${root.toLatex()}$，纵坐标是 $0$：交点是 $(${root.toLatex()}, 0)$。
 
-**检验。** $${lead}\\left(${root.toLatex()}\\right)${plus(b)} = ${num(-b)}${plus(b)} = 0$，所以这个点既在图象上，又在 $x$ 轴上。`,
+**检验。** $${lead}\\left(${root.toLatex()}\\right)${tail(b)} = ${num(-b)}${tail(b)} = 0$，所以这个点既在图象上，又在 $x$ 轴上。`,
               )
             : t(
                 `**Step 1: use $x = 0$.** Every point of the $y$-axis has $x$-coordinate $0$, so evaluate at $0$:$$${name}(0) = ${substitution(p, 0)} = ${num(b)}.$$
@@ -3830,7 +3811,7 @@ function constantFrom(name: string, m: number, x: number, y: number): Text {
   const lines = steps(
     `${num(y)} = ${substitution([0, m], x)} + b`,
     `${num(y)} = ${num(m * x)} + b`,
-    `b = ${num(y)}${plus(-m * x)} = ${num(b)}`,
+    `b = ${num(y)}${tail(-m * x)} = ${num(b)}`,
   );
   return t(
     `Substitute the value $${valueLatex(name, x, y)}$ into $${name}(x) = ${poly([m, "x"])} + b$:${lines}`,
@@ -4359,7 +4340,7 @@ function composeSteps(lhs: string, on: Poly, ii: Poly): string {
     const sq = mulPoly(ii, ii);
     let s = `${coef(on[2]!)}(${polyLatex(sq)})`;
     if (on[1]) s += `${on[1] < 0 ? " - " : " + "}${coef(Math.abs(on[1]))}(${inner})`;
-    if (on[0]) s += plus(on[0]);
+    if (on[0]) s += tail(on[0]);
     lines.push(`= ${s}`);
   }
   let power: Poly = [1];
@@ -4603,7 +4584,7 @@ const stepText = (s: Step): Text =>
 /** applyStep writes the step applied to an expression; atomic tells whether the expression needs no parentheses after a factor. */
 function applyStep(s: Step, inner: string): string {
   const atomic = inner === "x" || /^-?\d*x(\^\{\d\})?$/.test(inner);
-  if (s.kind === "shift") return `${inner}${plus(s.c)}`;
+  if (s.kind === "shift") return `${inner}${tail(s.c)}`;
   if (s.kind === "scale") return atomic ? `${s.c}${inner}` : `${s.c}(${inner})`;
   return inner === "x" ? "x^{2}" : `(${inner})^{2}`;
 }
@@ -4628,7 +4609,7 @@ const applyNum = (s: Step, n: number): number => (s.kind === "shift" ? n + s.c :
 /** stepOn writes a step applied to a number: "4 - 3", "-2 \cdot 5", "(-1)^{2}". */
 function stepOn(s: Step, n: number): string {
   const p = n < 0 ? `(${n})` : `${n}`;
-  if (s.kind === "shift") return `${n}${plus(s.c)}`;
+  if (s.kind === "shift") return `${n}${tail(s.c)}`;
   if (s.kind === "scale") return `${s.c} \\cdot ${p}`;
   return `${p}^{2}`;
 }
@@ -4811,12 +4792,12 @@ $$g(x) = 2x - 5, \\qquad f(x) = x^{3}.$$
         const L = linear(a, b);
         const outer = rng.pick(outers);
         const does = outerWords[outers.indexOf(outer)]!;
-        const swapped = `${outer.f === "\\frac{1}{x}" ? (a < 0 ? `-\\frac{${-a}}{x}` : `\\frac{${a}}{x}`) : `${a}${outer.f}`}${plus(b)}`;
+        const swapped = `${outer.f === "\\frac{1}{x}" ? (a < 0 ? `-\\frac{${-a}}{x}` : `\\frac{${a}}{x}`) : `${a}${outer.f}`}${tail(b)}`;
         const h = outer.of(L);
         const candidates = [
           `f(x) = ${outer.f}, \\; g(x) = ${L}`,
           `f(x) = ${L}, \\; g(x) = ${outer.f}`,
-          `f(x) = ${outer.f}${plus(b)}, \\; g(x) = ${a}x`,
+          `f(x) = ${outer.f}${tail(b)}, \\; g(x) = ${a}x`,
           `f(x) = ${outer.f}, \\; g(x) = ${a}x`,
         ];
         const options = rng.shuffle(candidates);
@@ -4882,7 +4863,7 @@ $$g(x) = 2x - 5, \\qquad f(x) = x^{3}.$$
           const c = rng.pick([1, 2, 3, -1, -2]);
           const n = rng.pick([2, 3]);
           const coef = c === 1 ? "" : c === -1 ? "-" : String(c);
-          const h = `${coef}(${L})^{${n}}${plus(d)}`;
+          const h = `${coef}(${L})^{${n}}${tail(d)}`;
           const answer = poly([c, `x^{${n}}`], [d, ""]);
           return withPrefix(
             expressionProblem({
@@ -4894,12 +4875,12 @@ $$g(x) = 2x - 5, \\qquad f(x) = x^{3}.$$
 
 **Step 2: put $x$ in its place.** $f$ does to $x$ what $f(g(x))$ does to the block, so replace $(${L})$ by $x$: $f(x) = ${answer}$.
 
-**Check.** Putting $g(x)$ into this $f$: $f(g(x)) = ${coef}(g(x))^{${n}}${plus(d)} = ${h}$, as given.`,
+**Check.** Putting $g(x)$ into this $f$: $f(g(x)) = ${coef}(g(x))^{${n}}${tail(d)} = ${h}$, as given.`,
                 `**第一步：找出整块。** 在 $f(g(x)) = ${h}$ 中，式子 $g(x) = ${L}$ 作为一整块 $(${L})$ 出现。
 
 **第二步：用 $x$ 代替它。** $f$ 对 $x$ 所做的就是 $f(g(x))$ 对这一块所做的，所以把 $(${L})$ 换成 $x$：$f(x) = ${answer}$。
 
-**检验。** 把 $g(x)$ 代入这个 $f$：$f(g(x)) = ${coef}(g(x))^{${n}}${plus(d)} = ${h}$，与已知相同。`,
+**检验。** 把 $g(x)$ 代入这个 $f$：$f(g(x)) = ${coef}(g(x))^{${n}}${tail(d)} = ${h}$，与已知相同。`,
               ),
             }),
             "f(x) =",
@@ -4907,8 +4888,8 @@ $$g(x) = 2x - 5, \\qquad f(x) = x^{3}.$$
         }
         const k = rng.sign() * rng.int(2, 5);
         const cube = rng.bool();
-        const fLatex = cube ? `x^{3}${plus(d)}` : linear(k, d);
-        const h = cube ? `(${L})^{3}${plus(d)}` : linear(k * a, k * b + d);
+        const fLatex = cube ? `x^{3}${tail(d)}` : linear(k, d);
+        const h = cube ? `(${L})^{3}${tail(d)}` : linear(k * a, k * b + d);
         const undo = d > 0 ? t(`Subtract $${d}$ from`, `两边同时减去 $${d}$`) : t(`Add $${-d}$ to`, `两边同时加上 $${-d}$`);
         return withPrefix(
           expressionProblem({
@@ -4920,28 +4901,28 @@ $$g(x) = 2x - 5, \\qquad f(x) = x^{3}.$$
             wrong: cube ? [`(${L})^{3}`, linear(a, b + d), linear(a, -b)] : [h, linear(k * a, k * b), linear(a, b + d)],
             solution: cube
               ? t(
-                  `**Step 1: what $f$ does.** $f(x) = ${fLatex}$ cubes its input and then ${d > 0 ? `adds $${d}$` : `subtracts $${-d}$`}, so $f(g(x)) = (g(x))^{3}${plus(d)}$.
+                  `**Step 1: what $f$ does.** $f(x) = ${fLatex}$ cubes its input and then ${d > 0 ? `adds $${d}$` : `subtracts $${-d}$`}, so $f(g(x)) = (g(x))^{3}${tail(d)}$.
 
 **Step 2: match the block.** In $f(g(x)) = ${h}$ the cube acts on $${L}$, and the same constant term follows it. So $g(x) = ${L}$.
 
-**Check.** $f(${L}) = (${L})^{3}${plus(d)}$, which is the given $f(g(x))$.`,
-                  `**第一步：$f$ 做了什么。** $f(x) = ${fLatex}$ 先把输入立方，再${d > 0 ? `加上 $${d}$` : `减去 $${-d}$`}，所以 $f(g(x)) = (g(x))^{3}${plus(d)}$。
+**Check.** $f(${L}) = (${L})^{3}${tail(d)}$, which is the given $f(g(x))$.`,
+                  `**第一步：$f$ 做了什么。** $f(x) = ${fLatex}$ 先把输入立方，再${d > 0 ? `加上 $${d}$` : `减去 $${-d}$`}，所以 $f(g(x)) = (g(x))^{3}${tail(d)}$。
 
 **第二步：对上整块。** 在 $f(g(x)) = ${h}$ 中，立方作用在 $${L}$ 上，后面跟着同样的常数项。所以 $g(x) = ${L}$。
 
-**检验。** $f(${L}) = (${L})^{3}${plus(d)}$，正是已知的 $f(g(x))$。`,
+**检验。** $f(${L}) = (${L})^{3}${tail(d)}$，正是已知的 $f(g(x))$。`,
                 )
               : t(
-                  `**Step 1: write $f(g(x))$ with $f$.** $f$ multiplies its input by $${k}$ and then ${d > 0 ? `adds $${d}$` : `subtracts $${-d}$`}, so$$${k}g(x)${plus(d)} = ${h}.$$
+                  `**Step 1: write $f(g(x))$ with $f$.** $f$ multiplies its input by $${k}$ and then ${d > 0 ? `adds $${d}$` : `subtracts $${-d}$`}, so$$${k}g(x)${tail(d)} = ${h}.$$
 
 **Step 2: solve for $g(x)$.** ${undo.en} both sides, then divide by $${k}$:${steps(`${k}g(x) = ${linear(k * a, k * b)}`, `g(x) = ${L}`)}
 
-**Check.**${steps(`f(${L}) = ${k}(${L})${plus(d)}`, `= ${linear(k * a, k * b)}${plus(d)}`, `= ${h}`)}`,
-                  `**第一步：用 $f$ 写出 $f(g(x))$。** $f$ 把输入乘以 $${k}$，再${d > 0 ? `加上 $${d}$` : `减去 $${-d}$`}，所以$$${k}g(x)${plus(d)} = ${h}.$$
+**Check.**${steps(`f(${L}) = ${k}(${L})${tail(d)}`, `= ${linear(k * a, k * b)}${tail(d)}`, `= ${h}`)}`,
+                  `**第一步：用 $f$ 写出 $f(g(x))$。** $f$ 把输入乘以 $${k}$，再${d > 0 ? `加上 $${d}$` : `减去 $${-d}$`}，所以$$${k}g(x)${tail(d)} = ${h}.$$
 
 **第二步：解出 $g(x)$。** ${undo["zh-CN"]}，再除以 $${k}$：${steps(`${k}g(x) = ${linear(k * a, k * b)}`, `g(x) = ${L}`)}
 
-**检验。**${steps(`f(${L}) = ${k}(${L})${plus(d)}`, `= ${linear(k * a, k * b)}${plus(d)}`, `= ${h}`)}`,
+**检验。**${steps(`f(${L}) = ${k}(${L})${tail(d)}`, `= ${linear(k * a, k * b)}${tail(d)}`, `= ${h}`)}`,
                 ),
           }),
           "g(x) =",
@@ -5075,20 +5056,20 @@ $$f^{-1}(x) = \\frac{x - 3}{2}.$$
               poly([a, "x"], [Q.of(-b, a), ""]),
             ].filter((w) => w !== canonical),
             solution: t(
-              `**Step 1: swap inputs and outputs.** Write $y = ${linear(a, b)}$ and swap $x$ and $y$: $x = ${ay}${plus(b)}$.
+              `**Step 1: swap inputs and outputs.** Write $y = ${linear(a, b)}$ and swap $x$ and $y$: $x = ${ay}${tail(b)}$.
 
 **Step 2: solve for $y$.** This undoes $f$ in reverse order: ${undo.en} both sides${divide.en}:${solve}
 
 So $f^{-1}(x) = ${answer}$.
 
-**Check.** Composing should give back $x$:${steps(`f(f^{-1}(x)) = ${af}\\left(${answer}\\right)${plus(b)}`, `= ${linear(1, -b)}${plus(b)}`, "= x")}`,
-              `**第一步：交换输入与输出。** 写成 $y = ${linear(a, b)}$，再交换 $x$ 与 $y$：$x = ${ay}${plus(b)}$。
+**Check.** Composing should give back $x$:${steps(`f(f^{-1}(x)) = ${af}\\left(${answer}\\right)${tail(b)}`, `= ${linear(1, -b)}${tail(b)}`, "= x")}`,
+              `**第一步：交换输入与输出。** 写成 $y = ${linear(a, b)}$，再交换 $x$ 与 $y$：$x = ${ay}${tail(b)}$。
 
 **第二步：解出 $y$。** 这就是按相反顺序撤销 $f$：两边同时${undo["zh-CN"]}${divide["zh-CN"]}：${solve}
 
 所以 $f^{-1}(x) = ${answer}$。
 
-**检验。** 复合后应当回到 $x$：${steps(`f(f^{-1}(x)) = ${af}\\left(${answer}\\right)${plus(b)}`, `= ${linear(1, -b)}${plus(b)}`, "= x")}`,
+**检验。** 复合后应当回到 $x$：${steps(`f(f^{-1}(x)) = ${af}\\left(${answer}\\right)${tail(b)}`, `= ${linear(1, -b)}${tail(b)}`, "= x")}`,
             ),
           }),
           "f^{-1}(x) =",
@@ -5134,7 +5115,7 @@ $$f(g(x)) = 3\\left(\\frac{1}{3}x + 2\\right) - 6 = x + 6 - 6 = x,$$
         const c0 = Q.of(a).mul(v).add(Q.of(b));
         const composed = poly([cx, "x"], [c0, ""]);
         const inverse = cx.eq(Q.one) && c0.isZero();
-        const distributed = `${poly([cx, "x"], [Q.of(a).mul(v), ""])}${plus(b)}`;
+        const distributed = `${poly([cx, "x"], [Q.of(a).mul(v), ""])}${tail(b)}`;
         const x0 = !inverse && cx.add(c0).eq(Q.one) ? 0 : 1;
         const g1 = u.mul(Q.of(x0)).add(v);
         const f1 = Q.of(a).mul(g1).add(Q.of(b));
@@ -5147,16 +5128,16 @@ $$f(g(x)) = 3\\left(\\frac{1}{3}x + 2\\right) - 6 = x + 6 - 6 = x,$$
           options: yesNo,
           correct: inverse ? 0 : 1,
           solution: t(
-            `**Step 1: compose.** Put $g(x)$ in for $x$ in $f$:$$f(g(x)) = ${a}\\left(${g}\\right)${plus(b)}.$$
+            `**Step 1: compose.** Put $g(x)$ in for $x$ in $f$:$$f(g(x)) = ${a}\\left(${g}\\right)${tail(b)}.$$
 
 **Step 2: simplify.**${steps(`f(g(x)) = ${distributed}`, `= ${composed}`)}${inverse ? "This is exactly $x$, so $f$ and $g$ undo each other: **yes**, they are inverses." : `This is not $x$, so $g$ does not undo $f$: **no**, they are not inverses.`}
 
-**Check.** Try $x = ${x0}$: $g(${x0}) = ${num(g1)}$ and $f(${num(g1)}) = ${a} \\cdot ${g1Text}${plus(b)} = ${num(f1)}$, ${f1.eq(Q.of(x0)) ? `which is $${x0}$ again, as an inverse requires` : `not $${x0}$, so $f$ does not bring $${x0}$ back`}.`,
-            `**第一步：复合。** 把 $g(x)$ 代入 $f$ 中的 $x$：$$f(g(x)) = ${a}\\left(${g}\\right)${plus(b)}.$$
+**Check.** Try $x = ${x0}$: $g(${x0}) = ${num(g1)}$ and $f(${num(g1)}) = ${a} \\cdot ${g1Text}${tail(b)} = ${num(f1)}$, ${f1.eq(Q.of(x0)) ? `which is $${x0}$ again, as an inverse requires` : `not $${x0}$, so $f$ does not bring $${x0}$ back`}.`,
+            `**第一步：复合。** 把 $g(x)$ 代入 $f$ 中的 $x$：$$f(g(x)) = ${a}\\left(${g}\\right)${tail(b)}.$$
 
 **第二步：化简。**${steps(`f(g(x)) = ${distributed}`, `= ${composed}`)}${inverse ? "结果恰好是 $x$，所以 $f$ 与 $g$ 互相撤销：**是**，它们互为反函数。" : "结果不是 $x$，所以 $g$ 没有撤销 $f$：**不是**，它们不互为反函数。"}
 
-**检验。** 取 $x = ${x0}$：$g(${x0}) = ${num(g1)}$，$f(${num(g1)}) = ${a} \\cdot ${g1Text}${plus(b)} = ${num(f1)}$，${f1.eq(Q.of(x0)) ? `又回到了 $${x0}$，正符合反函数的要求` : `不是 $${x0}$，所以 $f$ 没有把 $${x0}$ 送回来`}。`,
+**检验。** 取 $x = ${x0}$：$g(${x0}) = ${num(g1)}$，$f(${num(g1)}) = ${a} \\cdot ${g1Text}${tail(b)} = ${num(f1)}$，${f1.eq(Q.of(x0)) ? `又回到了 $${x0}$，正符合反函数的要求` : `不是 $${x0}$，所以 $f$ 没有把 $${x0}$ 送回来`}。`,
           ),
         });
       },

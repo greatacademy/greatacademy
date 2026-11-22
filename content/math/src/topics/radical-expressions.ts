@@ -4,21 +4,10 @@ import { gcd, linear, num, paren, poly, Q, simplifyRadical, surd, surdLatex } fr
 
 import { graphFigure } from "../graph-figures.ts";
 import { choiceProblem, expressionProblem, numberProblem, radicalProblem, solutionsProblem, steps, why } from "../problems.ts";
-
-/** squareFree are the square-free radicands used in generated problems. */
-const squareFree = [2, 3, 5, 6, 7, 10, 11, 13, 14, 15];
-
-/** pw writes a power of a variable: "", "x" or "x^{3}". */
-const pw = (v: string, e: number) => (e === 0 ? "" : e === 1 ? v : `${v}^{${e}}`);
+import { front, mono, pw, solvePrompt, squareFree } from "../solution-kit.ts";
 
 /** vp writes the variable part xᵃyᵇ of a monomial. */
 const vp = (x: number, y = 0) => `${pw("x", x)}${pw("y", y)}`;
-
-/** mono writes the monomial c·xᵃ·yᵇ: "3x^{2}y", "-x", "7". */
-const mono = (c: number, x = 0, y = 0) => poly([c, vp(x, y)]);
-
-/** front writes a factor in front of a root: "", "-", "3" or "2x^{2}". */
-const front = (c: number, x = 0, y = 0) => (x === 0 && y === 0 ? (c === 1 ? "" : c === -1 ? "-" : String(c)) : mono(c, x, y));
 
 /** radTerm writes c·xᵃyᵇ·√(m·xⁱyʲ), or the monomial alone when nothing is left under the root. */
 function radTerm(c: number, ox: number, oy: number, m: number, ix: number, iy: number): string {
@@ -2529,15 +2518,6 @@ $$\\frac{6}{\\sqrt[3]{2x}} = \\frac{6\\sqrt[3]{4x^{2}}}{\\sqrt[3]{8x^{3}}} = \\f
   ],
 };
 
-/** listSolutions tells the learner how to enter a solution set. */
-const listSolutions = t(
-  "Enter all real solutions separated by commas, or type none if there are none.",
-  "请用逗号分隔写出所有实数解；如果没有实数解，请输入 none。",
-);
-
-/** solve asks to solve an equation. */
-const solve = (eq: string) => t(`Solve $${eq}$. ${listSolutions.en}`, `解方程 $${eq}$。${listSolutions["zh-CN"]}`);
-
 /** rootCheck writes the Check of a candidate x: the substitution, then whether the two sides agree. */
 function rootCheck(x: number | Q, valid: boolean, work: Text): Text {
   return valid
@@ -2643,7 +2623,7 @@ $$\\sqrt{2x + 3} = 5 \\;\\Rightarrow\\; 2x + 3 = 25 \\;\\Rightarrow\\; x = 11.$$
           ? t(`the left side is $${work}$, but the right side is $${rhs}$.`, `左边是 $${work}$，而右边是 $${rhs}$。`)
           : t(`the left side is $${work}$, the same as the right side.`, `左边是 $${work}$，和右边相同。`);
         return solutionsProblem({
-          prompt: solve(eq),
+          prompt: solvePrompt(eq),
           values: negative ? [] : [num(x0)],
           wrong: negative ? [[num(x0)]] : [[num(Q.of(rhs - b, a))], []],
           solution: t(
@@ -2705,7 +2685,7 @@ $$3\\sqrt{x - 2} + 1 = 13 \\;\\Rightarrow\\; 3\\sqrt{x - 2} = 12 \\;\\Rightarrow
           ? t(`the left side is $${work}$, but the right side is $${e}$.`, `左边是 $${work}$，而右边是 $${e}$。`)
           : t(`the left side is $${work}$, the same as the right side.`, `左边是 $${work}$，和右边相同。`);
         return solutionsProblem({
-          prompt: solve(eq),
+          prompt: solvePrompt(eq),
           values: negative ? [] : [num(x0)],
           wrong: negative ? [[num(x0)]] : [...(k > 1 ? [[num(skipDivide)]] : []), [num(Q.of(r - b, a))]],
           solution: t(
@@ -2757,7 +2737,7 @@ $$\\sqrt{3x - 1} = \\sqrt{x + 7} \\;\\Rightarrow\\; 3x - 1 = x + 7 \\;\\Rightarr
               `两个被开方式是 $${substituted(a, x0, b)} = ${v}$ 和 $${substituted(c, x0, d)} = ${v}$。负数的平方根不是实数，所以两边都没有意义。`,
             );
         return solutionsProblem({
-          prompt: solve(eq),
+          prompt: solvePrompt(eq),
           values: valid ? [num(x0)] : [],
           wrong: valid ? [[], [num(Q.of(b + d, c - a))]] : [[num(x0)]],
           solution: t(
@@ -2810,7 +2790,7 @@ $$\\sqrt{x^{2} + 7} = x + 1 \\;\\Rightarrow\\; x^{2} + 7 = x^{2} + 2x + 1 \\;\\R
                 `左边是 $${left}$，而右边是 $${right}$，平方根不可能是负数。`,
               );
           return solutionsProblem({
-            prompt: solve(eq),
+            prompt: solvePrompt(eq),
             values: valid ? [num(x0)] : [],
             wrong: valid ? [[]] : [[num(x0)]],
             solution: t(
@@ -2839,7 +2819,7 @@ $$\\sqrt{x^{2} + 7} = x + 1 \\;\\Rightarrow\\; x^{2} + 7 = x^{2} + 2x + 1 \\;\\R
         const leftAt = (x: number) => (s < 0 ? `-(${x}) = ${-x}` : `${x}`);
         const rightAt = (x: number) => `\\sqrt{${a}(${x})^{2} - ${-b}} = \\sqrt{${r * r}} = ${r}`;
         return solutionsProblem({
-          prompt: solve(eq),
+          prompt: solvePrompt(eq),
           values: [num(x0)],
           wrong: [[num(r), num(-r)], [num(-x0)]],
           solution: t(

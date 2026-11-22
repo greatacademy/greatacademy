@@ -2,12 +2,12 @@ import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import {
   type Coefficient,
+  gcd,
   type Interval,
   intervalLatex,
   linear,
   num,
   type PlaneMark,
-  type PlaneView,
   type Point,
   paren,
   plane,
@@ -35,26 +35,14 @@ import {
   steps,
   yesNo,
 } from "../problems.ts";
+import { chain, flip, range, tail, toggleEnds, toQ, view } from "../solution-kit.ts";
 import { type Reason, reasoned } from "../wrong-reasons.ts";
 import { numberLineFigure } from "./compound-inequalities.ts";
 
-const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
-
-/** range lists the integers from lo to hi. */
-const range = (lo: number, hi: number) => Array.from({ length: hi - lo + 1 }, (_, i) => lo + i);
-
-const gcd = (a: number, b: number): number => (b === 0 ? Math.abs(a) : gcd(b, a % b));
 const lcm = (a: number, b: number) => Math.abs(a * b) / gcd(a, b);
 
 /** bars writes an absolute value: "|x - 3|". */
 const bars = (inner: string) => `|${inner}|`;
-
-/** plusNum writes a constant added to what comes before: " + 3", " - 3", or "" for 0. */
-function plusNum(c: Coefficient): string {
-  const v = toQ(c);
-  if (v.isZero()) return "";
-  return v.sign() < 0 ? ` - ${v.neg().toLatex()}` : ` + ${v.toLatex()}`;
-}
 
 /** times writes a coefficient times a number in parentheses: "3(-2)", "-(-2)", "(4)". */
 const times = (a: number, v: number) => `${a === 1 ? "" : a === -1 ? "-" : a}(${v})`;
@@ -107,9 +95,6 @@ function solsText(xs: readonly Q[]): { en: string; zh: string } {
   return { en: parts.join(" and "), zh: parts.join("、") };
 }
 
-/** chain joins the stages of a calculation with equals signs, leaving out a stage that repeats the one before it. */
-const chain = (...parts: readonly string[]) => parts.filter((p, i) => p !== parts[i - 1]).join(" = ");
-
 /** subst writes A·x for a number x put into Ax: "-2", "3(-2)", "-(4)". */
 function subst(A: number, x: Q): string {
   if (A === 1) return x.toLatex();
@@ -123,8 +108,8 @@ function absCheck(A: number, B: number, x: Q): string {
   const v = Q.of(A).mul(x).add(Q.of(B));
   const Ax = Q.of(A).mul(x);
   return chain(
-    bars(`${subst(A, x)}${plusNum(B)}`),
-    ...(A === 1 || B === 0 ? [] : [bars(`${Ax.toLatex()}${plusNum(B)}`)]),
+    bars(`${subst(A, x)}${tail(B)}`),
+    ...(A === 1 || B === 0 ? [] : [bars(`${Ax.toLatex()}${tail(B)}`)]),
     bars(v.toLatex()),
     v.abs().toLatex(),
   );
@@ -133,7 +118,7 @@ function absCheck(A: number, B: number, x: Q): string {
 /** lineAt works out cx + d at a number x. */
 function lineAt(c: number, d: number, x: Q): string {
   const v = Q.of(c).mul(x).add(Q.of(d));
-  return chain(`${subst(c, x)}${plusNum(d)}`, v.toLatex());
+  return chain(`${subst(c, x)}${tail(d)}`, v.toLatex());
 }
 
 /** coef writes a factor in front of an absolute value: "" for 1, "-" for −1. */
@@ -145,9 +130,9 @@ function absEval(a: Q, h: number, k: Q, x: Q): string {
   const D = d.abs().toLatex();
   const product = a.eq(Q.one) ? D : a.eq(Q.of(-1)) ? `-${D}` : `${a.toLatex()} \\cdot ${D}`;
   return chain(
-    `${coef(a)}|${x.toLatex()}${plusNum(-h)}|${plusNum(k)}`,
-    `${coef(a)}|${d.toLatex()}|${plusNum(k)}`,
-    ...(d.isZero() ? [] : [`${product}${plusNum(k)}`]),
+    `${coef(a)}|${x.toLatex()}${tail(-h)}|${tail(k)}`,
+    `${coef(a)}|${d.toLatex()}|${tail(k)}`,
+    ...(d.isZero() ? [] : [`${product}${tail(k)}`]),
     absAt(a, h, k, x).toLatex(),
   );
 }
@@ -218,11 +203,6 @@ function ray(op: InequalityOp, v: Coefficient): Interval {
     : { lo: toQ(v), loClosed: op === ">=", hiClosed: false };
 }
 
-/** toggleEnds includes every finite endpoint that is excluded and excludes every one that is included. */
-const toggleEnds = (s: RealSet): RealSet =>
-  union(...s.map((i) => ({ ...i, loClosed: i.lo !== undefined && !i.loClosed, hiClosed: i.hi !== undefined && !i.hiClosed })));
-
-const flip: Record<InequalityOp, InequalityOp> = { "<": ">", ">": "<", "<=": ">=", ">=": "<=" };
 const isLess = (op: InequalityOp) => op === "<" || op === "<=";
 
 /** inside is the set where |Ax + B| < c (or ≤ c when closed), for c > 0. */
@@ -242,8 +222,6 @@ const absSet = (A: number, B: number, op: InequalityOp, c: number) =>
   isLess(op) ? inside(A, B, c, op === "<=") : outside(A, B, c, op === ">=");
 
 // Graphs.
-
-const view: PlaneView = { xMin: -6, xMax: 6, yMin: -6, yMax: 6 };
 
 const pt = (x: Coefficient, y: Coefficient) => `(${num(x)}, ${num(y)})`;
 
@@ -403,15 +381,15 @@ $$|2 - |-7|| = |2 - 7| = |-5| = 5.$$
           const a = rng.bool(0.7) ? -rng.int(1, 15) : rng.int(1, 15);
           const b = rng.bool(0.7) ? -rng.int(1, 15) : rng.int(1, 15);
           const c = rng.nonZero(-9, 9);
-          const expr = `|${a}| - |${b}|${plusNum(c)}`;
+          const expr = `|${a}| - |${b}|${tail(c)}`;
           const value = Math.abs(a) - Math.abs(b) + c;
           return numberProblem({
             prompt: evalPrompt(expr),
             answer: value,
             wrong: [a - b + c, Math.abs(a - b) + c, Math.abs(a) + Math.abs(b) + c],
             solution: t(
-              `**Step 1: the absolute values.** Each pair of bars holds a single number, so replace it by that number's distance from $0$:${steps(`|${a}| = ${Math.abs(a)} \\qquad |${b}| = ${Math.abs(b)}`)}**Step 2: add and subtract from left to right.** The minus sign between the bars belongs to the expression, not to the numbers inside, so it stays:${steps(`${Math.abs(a)} - ${Math.abs(b)}${plusNum(c)} = ${value}`)}`,
-              `**第一步：求绝对值。** 每对绝对值符号里只有一个数，把它换成这个数到 $0$ 的距离：${steps(`|${a}| = ${Math.abs(a)} \\qquad |${b}| = ${Math.abs(b)}`)}**第二步：从左到右加减。** 两个绝对值之间的减号属于整个式子，不属于符号里面的数，所以保留：${steps(`${Math.abs(a)} - ${Math.abs(b)}${plusNum(c)} = ${value}`)}`,
+              `**Step 1: the absolute values.** Each pair of bars holds a single number, so replace it by that number's distance from $0$:${steps(`|${a}| = ${Math.abs(a)} \\qquad |${b}| = ${Math.abs(b)}`)}**Step 2: add and subtract from left to right.** The minus sign between the bars belongs to the expression, not to the numbers inside, so it stays:${steps(`${Math.abs(a)} - ${Math.abs(b)}${tail(c)} = ${value}`)}`,
+              `**第一步：求绝对值。** 每对绝对值符号里只有一个数，把它换成这个数到 $0$ 的距离：${steps(`|${a}| = ${Math.abs(a)} \\qquad |${b}| = ${Math.abs(b)}`)}**第二步：从左到右加减。** 两个绝对值之间的减号属于整个式子，不属于符号里面的数，所以保留：${steps(`${Math.abs(a)} - ${Math.abs(b)}${tail(c)} = ${value}`)}`,
             ),
           });
         }
@@ -487,7 +465,7 @@ $$3|2x + 1| - 4 = 3|2(-2) + 1| - 4 = 3|-3| - 4 = 3 \\cdot 3 - 4 = 5.$$
         const expr = poly([k, bars(linear(a, b))], [d, ""]);
         const value = k * Math.abs(inner) + d;
         const av = a === 1 ? paren(v) : times(a, v);
-        const put = poly([k, bars(`${av}${plusNum(b)}`)], [d, ""]);
+        const put = poly([k, bars(`${av}${tail(b)}`)], [d, ""]);
         const outside =
           k === 1
             ? d === 0
@@ -500,8 +478,8 @@ $$3|2x + 1| - 4 = 3|2(-2) + 1| - 4 = 3|-3| - 4 = 3 \\cdot 3 - 4 = 5.$$
           answer: value,
           wrong: [k * inner + d, Math.abs(k * inner + d), k * Math.abs(inner) - d],
           solution: t(
-            `**Step 1: substitute** $x = ${v}$, in parentheses:${steps(`${expr} = ${put}`)}**Step 2: inside the bars.** $${av}${plusNum(b)} = ${inner}$:${steps(poly([k, bars(String(inner))], [d, ""]))}**Step 3: the absolute value, then the rest.** $|${inner}| = ${Math.abs(inner)}$.${outside}${steps(chain(`${kTimes(k, Math.abs(inner))}${plusNum(d)}`, String(value)))}`,
-            `**第一步：代入** $x = ${v}$，加上括号：${steps(`${expr} = ${put}`)}**第二步：算绝对值里面。** $${av}${plusNum(b)} = ${inner}$：${steps(poly([k, bars(String(inner))], [d, ""]))}**第三步：先求绝对值，再算其余部分。** $|${inner}| = ${Math.abs(inner)}$。${outsideZh}${steps(chain(`${kTimes(k, Math.abs(inner))}${plusNum(d)}`, String(value)))}`,
+            `**Step 1: substitute** $x = ${v}$, in parentheses:${steps(`${expr} = ${put}`)}**Step 2: inside the bars.** $${av}${tail(b)} = ${inner}$:${steps(poly([k, bars(String(inner))], [d, ""]))}**Step 3: the absolute value, then the rest.** $|${inner}| = ${Math.abs(inner)}$.${outside}${steps(chain(`${kTimes(k, Math.abs(inner))}${tail(d)}`, String(value)))}`,
+            `**第一步：代入** $x = ${v}$，加上括号：${steps(`${expr} = ${put}`)}**第二步：算绝对值里面。** $${av}${tail(b)} = ${inner}$：${steps(poly([k, bars(String(inner))], [d, ""]))}**第三步：先求绝对值，再算其余部分。** $|${inner}| = ${Math.abs(inner)}$。${outsideZh}${steps(chain(`${kTimes(k, Math.abs(inner))}${tail(d)}`, String(value)))}`,
           ),
         });
       },
@@ -545,10 +523,10 @@ $$|a - b|.$$
             solution: t(
               `The distance between two numbers is the absolute value of their difference, so the distance between $x$ and $${c}$ is $|x - ${paren(c)}|$.${c < 0 ? ` Subtracting $${c}$ is adding $${-c}$, so this is $${options[0]}$.` : ""}
 
-**Check.** The number $x = ${c + 2}$ lies $2$ to the right of $${c}$, so its distance from $${c}$ is $2$, and indeed $|${c + 2}${plusNum(-c)}| = |2| = 2$.`,
+**Check.** The number $x = ${c + 2}$ lies $2$ to the right of $${c}$, so its distance from $${c}$ is $2$, and indeed $|${c + 2}${tail(-c)}| = |2| = 2$.`,
               `两个数之间的距离是它们差的绝对值，所以 $x$ 与 $${c}$ 之间的距离是 $|x - ${paren(c)}|$。${c < 0 ? `减去 $${c}$ 就是加上 $${-c}$，所以它就是 $${options[0]}$。` : ""}
 
-**检验。** $x = ${c + 2}$ 在 $${c}$ 右边 $2$ 处，所以它到 $${c}$ 的距离是 $2$；确实 $|${c + 2}${plusNum(-c)}| = |2| = 2$。`,
+**检验。** $x = ${c + 2}$ 在 $${c}$ 右边 $2$ 处，所以它到 $${c}$ 的距离是 $2$；确实 $|${c + 2}${tail(-c)}| = |2| = 2$。`,
             ),
           });
         }
@@ -1044,8 +1022,8 @@ $$|x - 3| + 2x = 3 - x + 2x = x + 3.$$
         const tq = Q.of(test);
         const innerAt = m * test + b;
         const original = absAt(Q.one, 0, Q.of(k * test + d), Q.of(innerAt)).toNumber();
-        const rest = `${plusNum(k * test)}${plusNum(d)}`;
-        const leftAt = chain(`${bars(`${subst(m, tq)}${plusNum(b)}`)}${rest}`, `${Math.abs(innerAt)}${rest}`);
+        const rest = `${tail(k * test)}${tail(d)}`;
+        const leftAt = chain(`${bars(`${subst(m, tq)}${tail(b)}`)}${rest}`, `${Math.abs(innerAt)}${rest}`);
         const work = steps(`${expr} = ${poly([1, `(${removed})`], [k, "x"], [d, ""])}`, `= ${answer}`);
         return expressionProblem({
           prompt: t(
@@ -1333,9 +1311,9 @@ function isoCheck(p: { readonly a: number; readonly b: number; readonly k: numbe
   const v = Q.of(p.a).mul(x).add(Q.of(p.b));
   const V = v.abs();
   return chain(
-    `${p.k}${bars(`${subst(p.a, x)}${plusNum(p.b)}`)}${plusNum(p.d)}`,
-    `${p.k}${bars(v.toLatex())}${plusNum(p.d)}`,
-    ...(V.isZero() ? [] : [`${p.k} \\cdot ${V.toLatex()}${plusNum(p.d)}`]),
+    `${p.k}${bars(`${subst(p.a, x)}${tail(p.b)}`)}${tail(p.d)}`,
+    `${p.k}${bars(v.toLatex())}${tail(p.d)}`,
+    ...(V.isZero() ? [] : [`${p.k} \\cdot ${V.toLatex()}${tail(p.d)}`]),
     Q.of(p.k).mul(V).add(Q.of(p.d)).toLatex(),
   );
 }
@@ -2887,7 +2865,7 @@ Adding $k$ moves the graph up or down without changing the slopes. For $y = 3|x|
         const k = rng.int(-9, 9);
         const right = rng.bool();
         const answer = right ? a : a.neg();
-        const arm = right ? `y = ${linear(a, k)}` : chain(`y = ${a.toLatex()}\\left(-x\\right)${plusNum(k)}`, linear(answer, k));
+        const arm = right ? `y = ${linear(a, k)}` : chain(`y = ${a.toLatex()}\\left(-x\\right)${tail(k)}`, linear(answer, k));
         const [x1, x2] = right ? [1, 2] : [-2, -1];
         const [y1, y2] = [absAt(a, 0, Q.of(k), Q.of(x1)), absAt(a, 0, Q.of(k), Q.of(x2))];
         const change = y2.sub(y1).toLatex();
@@ -3305,10 +3283,10 @@ $$f(0) = -3|0 + 2| + 5 = -3|2| + 5 = -3 \\cdot 2 + 5 = -1$$
             a.mul(Q.of(Math.abs(inner) + k)),
           ],
           solution: t(
-            `**Step 1: substitute and simplify.** Put $x = ${x}$ into $f$. Work out the inside, $${x}${plusNum(-h)} = ${inner}$, and take its absolute value, $${Math.abs(inner)}$, before multiplying by $${a.toLatex()}$${addEn}:${work}**Step 2: state the answer.** ${x === 0 ? "The $y$-intercept is" : `$f(${x})$ is`} $${answer.toLatex()}$.${endEn}
+            `**Step 1: substitute and simplify.** Put $x = ${x}$ into $f$. Work out the inside, $${x}${tail(-h)} = ${inner}$, and take its absolute value, $${Math.abs(inner)}$, before multiplying by $${a.toLatex()}$${addEn}:${work}**Step 2: state the answer.** ${x === 0 ? "The $y$-intercept is" : `$f(${x})$ is`} $${answer.toLatex()}$.${endEn}
 
 **Check.** The graph is symmetric about $x = ${h}$, and $x = ${mirror}$ is as far from $${h}$ as $${x}$ is, on the other side. It should give the same value: $f(${mirror}) = ${absEval(a, h, Q.of(k), Q.of(mirror))}$`,
-            `**第一步：代入并化简。** 把 $x = ${x}$ 代入 $f$。先算里面 $${x}${plusNum(-h)} = ${inner}$，取绝对值得 $${Math.abs(inner)}$，再乘以 $${a.toLatex()}$${addZh}：${work}**第二步：写出答案。** ${x === 0 ? "$y$ 轴截距是" : `$f(${x})$ 等于`} $${answer.toLatex()}$。${endZh}
+            `**第一步：代入并化简。** 把 $x = ${x}$ 代入 $f$。先算里面 $${x}${tail(-h)} = ${inner}$，取绝对值得 $${Math.abs(inner)}$，再乘以 $${a.toLatex()}$${addZh}：${work}**第二步：写出答案。** ${x === 0 ? "$y$ 轴截距是" : `$f(${x})$ 等于`} $${answer.toLatex()}$。${endZh}
 
 **检验。** 图象关于 $x = ${h}$ 对称，$x = ${mirror}$ 与 $${x}$ 到 $${h}$ 的距离相同，在另一侧。它应给出同样的值：$f(${mirror}) = ${absEval(a, h, Q.of(k), Q.of(mirror))}$`,
           ),
@@ -3671,9 +3649,9 @@ function rootCheck(a: number, m: number, n: number, k: number, x: Q): string {
   const V = v.abs().toLatex();
   const product = a === 1 ? V : a === -1 ? `-${V}` : `${a} \\cdot ${V}`;
   return chain(
-    `${coef(A)}|${subst(m, x)}${plusNum(n)}|${plusNum(k)}`,
-    `${coef(A)}|${v.toLatex()}|${plusNum(k)}`,
-    `${product}${plusNum(k)}`,
+    `${coef(A)}|${subst(m, x)}${tail(n)}|${tail(k)}`,
+    `${coef(A)}|${v.toLatex()}|${tail(k)}`,
+    `${product}${tail(k)}`,
     A.mul(v.abs()).add(Q.of(k)).toLatex(),
   );
 }

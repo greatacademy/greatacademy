@@ -3,6 +3,7 @@ import { same, t } from "@ga/content";
 import { gcd, lcm, linear, num, paren, poly, Q } from "@ga/subject-math";
 
 import { choiceProblem, expressionProblem, numberProblem, solutionsProblem, steps } from "../problems.ts";
+import { solvePrompt } from "../solution-kit.ts";
 
 /** frac writes a fraction of two LaTeX expressions. */
 const frac = (top: string, bottom: string) => `\\frac{${top}}{${bottom}}`;
@@ -48,7 +49,7 @@ const listSolutions = t(
 );
 
 /** solve asks to solve an equation and to enter its solution set. */
-const solve = (eq: string): Text => t(`Solve $${eq}$. ${listSolutions.en}`, `解方程 $${eq}$。${listSolutions["zh-CN"]}`);
+const solve = (eq: string): Text => solvePrompt(eq, listSolutions);
 
 /** simplifyPrompt asks to simplify an expression, stating the values of x it assumes excluded. */
 function simplifyPrompt(expr: string, excluded: readonly string[]): Text {

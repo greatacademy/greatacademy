@@ -5,24 +5,8 @@ import { algebraDrawings } from "../explanation-drawings-algebra.ts";
 import { graphFigure } from "../graph-figures.ts";
 
 import { choiceProblem, equationProblem, numberProblem, pointProblem, solutionsProblem, steps, whySet, yesNo } from "../problems.ts";
+import { binomialSquare, chain, front, isSquare, lf, quad, sqrtSurd, stepLabel, tail, toQ } from "../solution-kit.ts";
 import { reasoned } from "../wrong-reasons.ts";
-
-const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
-
-/** quad writes ax² + bx + c in the variable v. */
-const quad = (a: Coefficient, b: Coefficient, c: Coefficient, v = "x") => poly([a, `${v}^{2}`], [b, v], [c, ""]);
-
-/** lf writes the factor (px + q). */
-const lf = (p: Coefficient, q: Coefficient, v = "x") => `(${linear(p, q, v)})`;
-
-/** front writes a constant factor before parentheses: "", "-" or "3". */
-const front = (k: number) => (k === 1 ? "" : k === -1 ? "-" : String(k));
-
-/** tail writes a constant added after an expression: "", " + 3" or " - \frac{1}{2}". */
-function tail(c: Coefficient): string {
-  const v = toQ(c);
-  return v.isZero() ? "" : v.sign() < 0 ? ` - ${num(v.neg())}` : ` + ${num(v)}`;
-}
 
 /** rootSlips are the two classic mistakes in reading the solutions off $(x - r)(x - s) = 0$. */
 const rootSlips = (r: number, s: number) => [
@@ -33,16 +17,6 @@ const rootSlips = (r: number, s: number) => [
   ),
   whySet([num(r)], "There is a second solution: the product is zero when either factor is zero.", "还有一个解：任一因式为零时，积都为零。"),
 ];
-
-/** isSquare tells whether n is the square of an integer. */
-const isSquare = (n: number) => n >= 0 && Math.round(Math.sqrt(n)) ** 2 === n;
-
-/** sqrtSurd is √k for a rational k ≥ 0, in simplest form. */
-function sqrtSurd(k: Q): Surd {
-  if (k.isZero()) return surd(Q.zero);
-  const [c, m] = simplifyRadical(Number(k.n * k.d));
-  return surd(Q.zero, Q.of(c, k.d), BigInt(m));
-}
 
 /** pm lists center ± root in simplest form; one value when the root is 0. */
 function pm(center: Q, root: Surd): string[] {
@@ -1560,11 +1534,6 @@ $$4x^{2} = 10x \\Rightarrow 4x^{2} - 10x = 0 \\Rightarrow 2x(2x - 5) = 0 \\Right
   ],
 };
 
-/** stepLabel writes the bold start of step i with its title in each locale: "**Step 2: Factor.**" / "**第二步：分解。**". */
-function stepLabel(i: number, en: string, zh: string): Text {
-  return t(`**Step ${i}: ${en}.**`, `**第${["一", "二", "三", "四", "五"][i - 1]}步：${zh}。**`);
-}
-
 /** pairLine shows two numbers with their product and their sum: "3 \cdot (-5) = -15, \quad 3 + (-5) = -2". */
 function pairLine(m: number, n: number): string {
   return `${m} \\cdot ${bare(Q.of(n))} = ${m * n}, \\quad ${m} + ${bare(Q.of(n))} = ${m + n}`;
@@ -2071,17 +2040,8 @@ function pqPrompt(expr: string, a = 1): Text {
   return t(`Write $${expr}$ in the form $${form}$. Give $p$ and $q$.`, `把 $${expr}$ 写成 $${form}$ 的形式，求 $p$ 和 $q$。`);
 }
 
-/** squareOf writes (x + p)², with tall parentheses when p is a fraction. */
-const squareOf = (p: Q, v = "x") =>
-  p.isZero() ? `${v}^{2}` : p.isInteger() ? `(${linear(1, p, v)})^{2}` : `\\left(${linear(1, p, v)}\\right)^{2}`;
-
 /** completedForm writes a(x + p)² + q. */
-const completedForm = (a: number, p: Q, q: Q) => `${front(a)}${squareOf(p)}${tail(q)}`;
-
-/** chain joins the forms of one expression with equals signs, leaving out a form that repeats the one before it. */
-function chain(parts: readonly string[]): string {
-  return parts.filter((part, i) => i === 0 || part !== parts[i - 1]).join(" = ");
-}
+const completedForm = (a: number, p: Q, q: Q) => `${front(a)}${binomialSquare(p)}${tail(q)}`;
 
 /** expansionCheck checks a(x + p)² + q by squaring it out back to ax² + bx + c. */
 function expansionCheck(a: number, p: Q, q: Q): Text {
@@ -2099,8 +2059,8 @@ function expansionCheck(a: number, p: Q, q: Q): Text {
           quad(a, b, c),
         ];
   return t(
-    `**Check.** Square out the result and combine the constants:${steps(chain(parts))}This is the expression we started with.`,
-    `**检验。** 把结果展开，再合并常数：${steps(chain(parts))}这正是原来的式子。`,
+    `**Check.** Square out the result and combine the constants:${steps(chain(...parts))}This is the expression we started with.`,
+    `**检验。** 把结果展开，再合并常数：${steps(chain(...parts))}这正是原来的式子。`,
   );
 }
 
@@ -2129,10 +2089,10 @@ function monicCompletion(b: number, c: number): Text {
   return t(
     `**Step 1: Find the number that completes the square.** Since $(x + p)^{2} = x^{2} + 2px + p^{2}$, the number is the square of half the coefficient of $x$: ${half.en}.
 
-**Step 2: Add it and take it away again.** Adding $${num(p2)}$ and subtracting it leaves the value unchanged:${steps(added)}**Step 3: Write the square and combine the constants.** The parentheses hold $${quad(1, b, p2)} = ${squareOf(p)}$.${constants.en}${steps(...combine, `${expr} = ${completedForm(1, p, q)}`)}So $p = ${num(p)}$ and $q = ${num(q)}$.`,
+**Step 2: Add it and take it away again.** Adding $${num(p2)}$ and subtracting it leaves the value unchanged:${steps(added)}**Step 3: Write the square and combine the constants.** The parentheses hold $${quad(1, b, p2)} = ${binomialSquare(p)}$.${constants.en}${steps(...combine, `${expr} = ${completedForm(1, p, q)}`)}So $p = ${num(p)}$ and $q = ${num(q)}$.`,
     `**第一步：找出配方所需的数。** 因为 $(x + p)^{2} = x^{2} + 2px + p^{2}$，这个数是 $x$ 的系数一半的平方：${half["zh-CN"]}。
 
-**第二步：加上它，再减去它。** 加上 $${num(p2)}$ 再减去它，式子的值不变：${steps(added)}**第三步：写成平方，合并常数。** 括号内 $${quad(1, b, p2)} = ${squareOf(p)}$。${constants["zh-CN"]}${steps(...combine, `${expr} = ${completedForm(1, p, q)}`)}所以 $p = ${num(p)}$，$q = ${num(q)}$。`,
+**第二步：加上它，再减去它。** 加上 $${num(p2)}$ 再减去它，式子的值不变：${steps(added)}**第三步：写成平方，合并常数。** 括号内 $${quad(1, b, p2)} = ${binomialSquare(p)}$。${constants["zh-CN"]}${steps(...combine, `${expr} = ${completedForm(1, p, q)}`)}所以 $p = ${num(p)}$，$q = ${num(q)}$。`,
   );
 }
 
@@ -2207,8 +2167,8 @@ $$x^{2} + 10x + \\left(\\frac{10}{2}\\right)^{2} = x^{2} + 10x + 25 = (x + 5)^{2
         const v = rng.pick(["x", "x", "y"]);
         const half = Q.of(b, 2);
         const answer = half.mul(half);
-        const square = `${quad(1, b, answer, v)} = ${squareOf(half, v)}`;
-        const expand = `${squareOf(half, v)} = ${v}^{2} + 2 \\cdot ${bare(half)} \\cdot ${v} + ${bare(half)}^{2} = ${quad(1, b, answer, v)}`;
+        const square = `${quad(1, b, answer, v)} = ${binomialSquare(half, v)}`;
+        const expand = `${binomialSquare(half, v)} = ${v}^{2} + 2 \\cdot ${bare(half)} \\cdot ${v} + ${bare(half)}^{2} = ${quad(1, b, answer, v)}`;
         return numberProblem({
           prompt: t(
             `What number must be added to $${quad(1, b, 0, v)}$ to make a perfect square trinomial?`,
@@ -2320,7 +2280,7 @@ function leadingCompletion(a: number, b: number, c: number): { p: Q; q: Q; text:
   const ba = Q.of(b, a);
   const take = `${quad(a, b, c)} = ${front(a)}\\left(${quad(1, ba, 0)}\\right)${tail(c)}`;
   const inside = `${quad(a, b, c)} = ${front(a)}\\left(${quad(1, ba, p2)} - ${num(p2)}\\right)${tail(c)}`;
-  const outside = chain([`${quad(a, b, c)}`, `${front(a)}${squareOf(p)}${tail(out)}${tail(c)}`, completedForm(a, p, q)]);
+  const outside = chain(`${quad(a, b, c)}`, `${front(a)}${binomialSquare(p)}${tail(out)}${tail(c)}`, completedForm(a, p, q));
   const half = halfSquared(ba);
   const work = [
     t(
@@ -2332,8 +2292,8 @@ function leadingCompletion(a: number, b: number, c: number): { p: Q; q: Q; text:
       `**第二步：在括号内配方。** 括号内，${half["zh-CN"]}。加上它，再减去它：${steps(inside)}`,
     ),
     t(
-      `**Step 3: Bring the subtracted number out.** The parentheses hold $${squareOf(p)} - ${num(p2)}$. Multiplying by $${a}$, the $-${num(p2)}$ inside becomes $${num(out)}$ outside${c === 0 ? "" : ", and it combines with the constant"}:${steps(outside)}So $p = ${num(p)}$ and $q = ${num(q)}$.`,
-      `**第三步：把减去的数移出括号。** 括号内是 $${squareOf(p)} - ${num(p2)}$。乘以 $${a}$ 后，括号内的 $-${num(p2)}$ 在括号外变成 $${num(out)}$${c === 0 ? "" : "，再与常数项合并"}：${steps(outside)}所以 $p = ${num(p)}$，$q = ${num(q)}$。`,
+      `**Step 3: Bring the subtracted number out.** The parentheses hold $${binomialSquare(p)} - ${num(p2)}$. Multiplying by $${a}$, the $-${num(p2)}$ inside becomes $${num(out)}$ outside${c === 0 ? "" : ", and it combines with the constant"}:${steps(outside)}So $p = ${num(p)}$ and $q = ${num(q)}$.`,
+      `**第三步：把减去的数移出括号。** 括号内是 $${binomialSquare(p)} - ${num(p2)}$。乘以 $${a}$ 后，括号内的 $-${num(p2)}$ 在括号外变成 $${num(out)}$${c === 0 ? "" : "，再与常数项合并"}：${steps(outside)}所以 $p = ${num(p)}$，$q = ${num(q)}$。`,
     ),
     expansionCheck(a, p, q),
   ];
@@ -2519,7 +2479,7 @@ function completingSteps(B: Q, C: Q, moved = false): { list: Step[]; values: str
     });
   }
   const half = halfSquared(B);
-  const lines = [`${quad(1, B, P)} = ${signed([C.neg(), P])}`, `${squareOf(h)} = ${num(k)}`];
+  const lines = [`${quad(1, B, P)} = ${signed([C.neg(), P])}`, `${binomialSquare(h)} = ${num(k)}`];
   list.push({
     title: t("Complete the square", "配方"),
     body: t(
@@ -3158,7 +3118,7 @@ function discriminantCheck(a: number, b: number, c: number, count: boolean): Tex
   const k = Q.of(d, 4 * a * a);
   const paren = (n: number) => (n < 0 ? `(${n})` : String(n));
   const lines = [
-    `${squareOf(p)} = ${num(k)}`,
+    `${binomialSquare(p)} = ${num(k)}`,
     `4 \\cdot ${paren(a)}^{2} \\cdot ${k.sign() < 0 ? `\\left(${num(k)}\\right)` : num(k)} = ${d}`,
   ];
   const agree = count
@@ -3405,7 +3365,7 @@ function zeroDiscriminantStep(read: Text, lines: readonly string[]): Step {
 function perfectSquareCheck(k: Q, a: number, b: number, c: Q): Text {
   const p = Q.of(b, 2 * a);
   const inner = quad(1, p.mul(Q.of(2)), p.mul(p));
-  const line = `${front(a)}${squareOf(p)}${a === 1 ? "" : ` = ${front(a)}\\left(${inner}\\right)`} = ${quad(a, b, c)}`;
+  const line = `${front(a)}${binomialSquare(p)}${a === 1 ? "" : ` = ${front(a)}\\left(${inner}\\right)`} = ${quad(a, b, c)}`;
   const x = num(p.neg());
   return t(
     `**Check.** With $k = ${num(k)}$ the equation is $${quad(a, b, c)} = 0$, and its left side is ${a === 1 ? "" : a === -1 ? "the negative of " : `$${a}$ times `}a perfect square:${steps(line)}So the equation holds only when $${linear(1, p)} = 0$, that is, at the single solution $x = ${x}$.`,

@@ -33,14 +33,12 @@ import {
   steps,
   yesNo,
 } from "../problems.ts";
+import { flip, holds, listRealSolutions, sqrtSurd, squareFree, toggleEnds, toQ } from "../solution-kit.ts";
 
-const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
-const flip: Record<InequalityOp, InequalityOp> = { "<": ">", ">": "<", "<=": ">=", ">=": "<=" };
 const strictness: Record<InequalityOp, InequalityOp> = { "<": "<=", "<=": "<", ">": ">=", ">=": ">" };
 const lessOps: readonly InequalityOp[] = ["<", "<="];
 const greaterOps: readonly InequalityOp[] = [">", ">="];
 const allOps: readonly InequalityOp[] = ["<", "<=", ">", ">="];
-const holds = (l: number, op: InequalityOp, r: number) => ({ "<": l < r, "<=": l <= r, ">": l > r, ">=": l >= r })[op];
 
 /** span is the set of numbers from lo to hi, with each end included when it is closed. */
 function span(lo: Coefficient, loClosed: boolean, hi: Coefficient, hiClosed: boolean): Interval {
@@ -56,10 +54,6 @@ export function ray(op: InequalityOp, v: Coefficient): Interval {
 
 /** hasPoint tells whether a set contains an isolated point, which interval notation cannot write. */
 const hasPoint = (s: RealSet) => s.some((i) => i.lo !== undefined && i.hi !== undefined && i.lo.eq(i.hi));
-
-/** toggleEnds includes every finite endpoint that is excluded and excludes every one that is included. */
-const toggleEnds = (s: RealSet): RealSet =>
-  union(...s.map((i) => ({ ...i, loClosed: i.lo !== undefined && !i.loClosed, hiClosed: i.hi !== undefined && !i.hiClosed })));
 
 /** mirror reflects an interval through 0. */
 const mirror = (i: Interval): Interval => ({ lo: i.hi?.neg(), hi: i.lo?.neg(), loClosed: i.hiClosed, hiClosed: i.loClosed });
@@ -79,10 +73,6 @@ function randomInterval(rng: Rng, kind: Kind): Interval {
 
 const asInterval = t("Write the answer in interval notation.", "用区间记号写出答案。");
 const asInequality = (v: string) => t(`Write the answer as an inequality in $${v}$.`, `用关于 $${v}$ 的不等式写出答案。`);
-const listSolutions = t(
-  "Enter all real solutions separated by commas, or type none if there are none.",
-  "请用逗号分隔写出所有实数解；如果没有实数解，请输入 none。",
-);
 
 /** ask builds a prompt from a question and an instruction about the form of the answer. */
 const ask = (en: string, zh: string, form: Text): Text => t(`${en} ${form.en}`, `${zh}${form["zh-CN"]}`);
@@ -3312,13 +3302,6 @@ function rangeEnds(variable: string, ends: readonly { x: number; expr: string; v
   return t(`**Check.** ${en.join("; ").replace(/^at/, "At")}.`, `**检验。** ${zh.join("；")}。`);
 }
 
-/** sqrtSurd is √k for a rational k ≥ 0, in simplest form. */
-function sqrtSurd(k: Q): Surd {
-  if (k.isZero()) return surd(Q.zero);
-  const [c, m] = simplifyRadical(Number(k.n * k.d));
-  return surd(Q.zero, Q.of(c, k.d), BigInt(m));
-}
-
 /** plusMinus lists (center ± root) / scale in simplest form; one value when root is 0. */
 function plusMinus(center: Q, root: Surd, scale: Q = Q.one): string[] {
   if (root.m === 1n) {
@@ -3334,8 +3317,6 @@ function coprimeFraction(rng: Rng, maxP: number, maxQ: number): Q {
   const candidates = Array.from({ length: maxP }, (_, i) => i + 1).filter((p) => Q.of(p, q).d === BigInt(q));
   return Q.of(rng.pick(candidates), q);
 }
-
-const squareFree = [2, 3, 5, 6, 7, 10, 11, 13, 14, 15];
 
 /** isolated writes a·u + b = c for an expression u, with a and b omitted when they are 1 and 0. */
 function isolated(a: number, u: string, b: number, c: Coefficient): string {
@@ -3408,7 +3389,7 @@ How many solutions there are depends on the sign of $k$:
         const k = kind === "negative" ? r.mul(r).neg() : r.mul(r);
         const values = kind === "negative" ? [] : plusMinus(Q.zero, surd(r));
         return solutionsProblem({
-          prompt: ask(`Solve $x^{2} = ${num(k)}$.`, `解方程 $x^{2} = ${num(k)}$。`, listSolutions),
+          prompt: ask(`Solve $x^{2} = ${num(k)}$.`, `解方程 $x^{2} = ${num(k)}$。`, listRealSolutions),
           values,
           wrong:
             kind === "negative" ? [[num(r), num(r.neg())], [num(r.neg())]] : kind === "zero" ? [[]] : [[num(r)], [num(k.div(Q.of(2)))]],
@@ -3474,7 +3455,7 @@ $$3x^{2} - 7 = 41 \\;\\Rightarrow\\; 3x^{2} = 48 \\;\\Rightarrow\\; x^{2} = 16 \
         const how = isolateWords(a, b) ?? t("", "");
         const work = steps(...isolatingWork(a, "x^{2}", b, c));
         return solutionsProblem({
-          prompt: ask(`Solve $${isolated(a, "x^{2}", b, c)}$.`, `解方程 $${isolated(a, "x^{2}", b, c)}$。`, listSolutions),
+          prompt: ask(`Solve $${isolated(a, "x^{2}", b, c)}$.`, `解方程 $${isolated(a, "x^{2}", b, c)}$。`, listRealSolutions),
           values,
           wrong: [
             negative ? [String(r), String(-r)] : [String(r)],
@@ -3550,7 +3531,7 @@ $$2x^{2} + 1 = 25 \\;\\Rightarrow\\; x^{2} = 12 \\;\\Rightarrow\\; x = \\pm\\sqr
         const square =
           s === 1 ? `\\left(\\sqrt{${m}}\\right)^{2} = ${m}` : `\\left(${surdLatex(root)}\\right)^{2} = ${s}^{2} \\cdot ${m} = ${k}`;
         return solutionsProblem({
-          prompt: ask(`Solve $${isolated(a, "x^{2}", b, c)}$.`, `解方程 $${isolated(a, "x^{2}", b, c)}$。`, listSolutions),
+          prompt: ask(`Solve $${isolated(a, "x^{2}", b, c)}$.`, `解方程 $${isolated(a, "x^{2}", b, c)}$。`, listRealSolutions),
           values,
           wrong: [
             [surdLatex(root)],
@@ -3674,7 +3655,7 @@ $$(2x + 1)^{2} = 9 \\;\\Rightarrow\\; 2x + 1 = \\pm 3 \\;\\Rightarrow\\; x = 1 \
           );
         }
         return solutionsProblem({
-          prompt: ask(`Solve $${isolated(outer, u, d, e)}$.`, `解方程 $${isolated(outer, u, d, e)}$。`, listSolutions),
+          prompt: ask(`Solve $${isolated(outer, u, d, e)}$.`, `解方程 $${isolated(outer, u, d, e)}$。`, listRealSolutions),
           values,
           wrong:
             kind === "negative"
@@ -3787,7 +3768,7 @@ $$2x^{3} + 5 = -11 \\;\\Rightarrow\\; 2x^{3} = -16 \\;\\Rightarrow\\; x^{3} = -8
         const b = fraction || rng.bool(0.4) ? 0 : rng.nonZero(-30, 30);
         const c = k.mul(Q.of(a)).add(Q.of(b));
         return solutionsProblem({
-          prompt: ask(`Solve $${isolated(a, "x^{3}", b, c)}$.`, `解方程 $${isolated(a, "x^{3}", b, c)}$。`, listSolutions),
+          prompt: ask(`Solve $${isolated(a, "x^{3}", b, c)}$.`, `解方程 $${isolated(a, "x^{3}", b, c)}$。`, listRealSolutions),
           values: [num(r)],
           wrong: [[num(r), num(r.neg())], [num(r.neg())], [num(k.div(Q.of(3)))]],
           solution: oddPowerSolution(a, b, c, 3, k, r),
@@ -3828,7 +3809,7 @@ $$x^{5} = -32 \\;\\Rightarrow\\; x = \\sqrt[5]{-32} = -2 \\qquad x^{7} = \\frac{
         const c = k.mul(Q.of(a)).add(Q.of(b));
         const u = powerOf("x", n);
         return solutionsProblem({
-          prompt: ask(`Solve $${isolated(a, u, b, c)}$.`, `解方程 $${isolated(a, u, b, c)}$。`, listSolutions),
+          prompt: ask(`Solve $${isolated(a, u, b, c)}$.`, `解方程 $${isolated(a, u, b, c)}$。`, listRealSolutions),
           values: [num(r)],
           wrong: [[num(r), num(r.neg())], [num(r.neg())], [num(k.div(Q.of(n)))]],
           solution: oddPowerSolution(a, b, c, n, k, r),
@@ -3884,7 +3865,7 @@ $$(2x - 1)^{3} = -27 \\;\\Rightarrow\\; 2x - 1 = -3 \\;\\Rightarrow\\; 2x = -2 \
         const left = how ? `, so the left side is $${scaledPower(outer, powerOfValue(rq, n), k, d)} = ${num(e)}$` : "";
         const leftZh = how ? `，所以左边是 $${scaledPower(outer, powerOfValue(rq, n), k, d)} = ${num(e)}$` : "";
         return solutionsProblem({
-          prompt: ask(`Solve $${isolated(outer, u, d, e)}$.`, `解方程 $${isolated(outer, u, d, e)}$。`, listSolutions),
+          prompt: ask(`Solve $${isolated(outer, u, d, e)}$.`, `解方程 $${isolated(outer, u, d, e)}$。`, listRealSolutions),
           values: [num(x)],
           wrong: [[num(Q.of(r + c, b))], [num(Q.of(-r - c, b)), num(x)], ...(b === 1 ? [] : [[num(Q.of(r - c))]])],
           solution: t(
@@ -3995,7 +3976,7 @@ To find $\\sqrt[4]{k}$, ask which positive number multiplied by itself four time
         const c = k.mul(Q.of(a)).add(Q.of(b));
         const values = kind === "negative" ? [] : plusMinus(Q.zero, surd(r));
         return solutionsProblem({
-          prompt: ask(`Solve $${isolated(a, "x^{4}", b, c)}$.`, `解方程 $${isolated(a, "x^{4}", b, c)}$。`, listSolutions),
+          prompt: ask(`Solve $${isolated(a, "x^{4}", b, c)}$.`, `解方程 $${isolated(a, "x^{4}", b, c)}$。`, listRealSolutions),
           values,
           wrong:
             kind === "negative" ? [[num(r), num(r.neg())], [num(r.neg())]] : kind === "zero" ? [[]] : [[num(r)], [num(k.div(Q.of(4)))]],
@@ -4033,7 +4014,7 @@ $$x^{6} = 64 \\;\\Rightarrow\\; x = \\pm\\sqrt[6]{64} = \\pm 2 \\qquad x^{8} = \
         const c = k.mul(Q.of(a)).add(Q.of(b));
         const u = powerOf("x", n);
         return solutionsProblem({
-          prompt: ask(`Solve $${isolated(a, u, b, c)}$.`, `解方程 $${isolated(a, u, b, c)}$。`, listSolutions),
+          prompt: ask(`Solve $${isolated(a, u, b, c)}$.`, `解方程 $${isolated(a, u, b, c)}$。`, listRealSolutions),
           values: negative ? [] : plusMinus(Q.zero, surd(r)),
           wrong: negative ? [[num(r), num(r.neg())], [num(r.neg())]] : [[num(r)], [num(k.div(Q.of(n)))]],
           solution: evenPowerSolution(a, b, c, n, k, r),
@@ -4114,7 +4095,7 @@ $$(x + 2)^{4} = 16 \\;\\Rightarrow\\; x + 2 = \\pm 2 \\;\\Rightarrow\\; x = 0 \\
           );
         }
         return solutionsProblem({
-          prompt: ask(`Solve $${isolated(outer, u, d, e)}$.`, `解方程 $${isolated(outer, u, d, e)}$。`, listSolutions),
+          prompt: ask(`Solve $${isolated(outer, u, d, e)}$.`, `解方程 $${isolated(outer, u, d, e)}$。`, listRealSolutions),
           values,
           wrong:
             kind === "negative"

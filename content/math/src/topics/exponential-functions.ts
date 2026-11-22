@@ -19,8 +19,7 @@ import {
 import { algebraDrawings } from "../explanation-drawings-algebra.ts";
 import { annotate, onAxis, plain, setText as setAlt } from "../graph-figures.ts";
 import { choiceProblem, expressionProblem, intervalProblem, numberProblem, steps, why } from "../problems.ts";
-
-const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
+import { toQ, valueTable } from "../solution-kit.ts";
 
 /** Factors are variables with integer exponents, such as [["x", 3], ["y", -2]]. */
 type Factors = readonly (readonly [string, number])[];
@@ -2616,11 +2615,6 @@ $$10000(0.8)^{t}$$
 /** bracket writes a base for a power, in parentheses when it is a fraction or negative. */
 const bracket = (b: Q) => (b.isInteger() && b.sign() > 0 ? b.toLatex() : `\\left(${b.toLatex()}\\right)`);
 
-/** table writes a table of values of a function. */
-function table(name: string, xs: readonly number[], ys: readonly Q[]): string {
-  return `$$\\begin{array}{c|${"c".repeat(xs.length)}} x & ${xs.join(" & ")} \\\\ \\hline ${name}(x) & ${ys.map((y) => y.toLatex()).join(" & ")} \\end{array}$$`;
-}
-
 /** modelText states that the function name(t) = expr models the quantity of a context. */
 function modelText(c: Change, expr: string): Text {
   return t(
@@ -3149,8 +3143,8 @@ $$f(0) = 3,\\quad f(1) = 6,\\quad f(2) = 12,\\quad f(3) = 24.$$
         const y1 = ys[1]!;
         return expressionProblem({
           prompt: t(
-            `The table shows values of an exponential function $f(x) = a \\cdot b^{x}$. Find $f(x)$.${table("f", xs, ys)}`,
-            `下表给出指数函数 $f(x) = a \\cdot b^{x}$ 的一些值。求 $f(x)$。${table("f", xs, ys)}`,
+            `The table shows values of an exponential function $f(x) = a \\cdot b^{x}$. Find $f(x)$.${valueTable("f", xs, ys)}`,
+            `下表给出指数函数 $f(x) = a \\cdot b^{x}$ 的一些值。求 $f(x)$。${valueTable("f", xs, ys)}`,
           ),
           answer,
           prefix: "f(x) =",
@@ -3778,8 +3772,8 @@ In this lesson we tell linear from exponential change in tables and descriptions
         const options = [t("Linear", "一次函数"), t("Exponential", "指数函数"), t("Neither", "都不是")];
         return choiceProblem({
           prompt: t(
-            `Is the function in the table linear, exponential, or neither?${table("f", xs, ys)}`,
-            `下表中的函数是一次函数、指数函数，还是都不是？${table("f", xs, ys)}`,
+            `Is the function in the table linear, exponential, or neither?${valueTable("f", xs, ys)}`,
+            `下表中的函数是一次函数、指数函数，还是都不是？${valueTable("f", xs, ys)}`,
           ),
           options,
           correct: kind,

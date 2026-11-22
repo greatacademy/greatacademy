@@ -3,6 +3,7 @@ import { same, t } from "@ga/content";
 import { gcd, num, poly, svgDocument } from "@ga/subject-math";
 
 import { choiceProblem, type ExpressionProblem, expressionProblem, numberProblem, say, steps, why, yesNo } from "../problems.ts";
+import { chain, listed, pw, signed, stepLabel } from "../solution-kit.ts";
 import { reasoned } from "../wrong-reasons.ts";
 
 /** Term is a monomial c·xᵃ·yᵇ with an integer coefficient. */
@@ -13,9 +14,6 @@ interface Term {
 }
 
 const term = (c: number, x = 0, y = 0): Term => ({ c, x, y });
-
-/** pw writes a power of a variable: "", "x" or "x^{3}". */
-const pw = (v: string, e: number) => (e === 0 ? "" : e === 1 ? v : `${v}^{${e}}`);
 
 /** vars writes the variable part of a term: "x^{2}y". */
 const vars = (m: Term) => `${pw("x", m.x)}${pw("y", m.y)}`;
@@ -58,9 +56,6 @@ const products = (a: readonly Term[], b: readonly Term[]) => a.flatMap((p) => b.
 
 /** times multiplies two polynomials and writes the result in standard form. */
 const times = (a: readonly Term[], b: readonly Term[]) => collect(products(a, b));
-
-/** signed writes a term after another, with its sign as the operator: "- 3x", "+ 5". */
-const signed = (s: string) => (s.startsWith("-") ? `- ${s.slice(1)}` : `+ ${s}`);
 
 /** scramble shuffles terms so that the term of highest degree does not come first. */
 function scramble(rng: Rng, ts: readonly Term[]): Term[] {
@@ -137,11 +132,6 @@ function coefficientNote(m: Term): Text {
     : t(", where the minus sign alone stands for the coefficient $-1$", "，单独的负号表示系数 $-1$");
 }
 
-/** stepLabel writes the bold start of step i with its title in each locale: "**Step 2: Combine.**" / "**第二步：合并。**". */
-function stepLabel(i: number, en: string, zh: string): Text {
-  return t(`**Step ${i}: ${en}.**`, `**第${["一", "二", "三", "四", "五"][i - 1]}步：${zh}。**`);
-}
-
 /** paragraphs joins texts into the paragraphs of a solution, leaving out empty ones. */
 function paragraphs(...parts: readonly Text[]): Text {
   const join = (key: "en" | "zh-CN") =>
@@ -154,9 +144,6 @@ function paragraphs(...parts: readonly Text[]): Text {
 
 /** evalAt evaluates a polynomial at x = v and y = w. */
 const evalAt = (ts: readonly Term[], v: number, w = 1) => ts.reduce((s, m) => s + m.c * v ** m.x * w ** m.y, 0);
-
-/** chain writes a = b = c, leaving out a step equal to the one before it. */
-const chain = (...xs: readonly string[]) => xs.filter((x, i) => i === 0 || x !== xs[i - 1]).join(" = ");
 
 /** Part is a signed product of polynomials, one part of an expression such as m(p) − k(q). */
 interface Part {
@@ -2793,12 +2780,6 @@ function gcfOf(ms: readonly Term[]): Term {
     Math.min(...ms.map((m) => m.x)),
     Math.min(...ms.map((m) => m.y)),
   );
-}
-
-/** listed joins items as a list in each locale: "a, b and c" and "a、b、c". */
-function listed(items: readonly string[]): Text {
-  const en = items.length === 1 ? items[0]! : `${items.slice(0, -1).join(", ")} and ${items[items.length - 1]}`;
-  return t(en, items.join("、"));
 }
 
 /** gcfSolution writes the steps of finding the greatest common factor of monomials, and checks it by dividing it out. */

@@ -1,6 +1,6 @@
 import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
-import { type Coefficient, linear, num, type PlaneMark, type PlaneView, paren, plane, poly, Q, relSymbol } from "@ga/subject-math";
+import { type Coefficient, gcd, linear, num, type PlaneMark, type PlaneView, paren, plane, poly, Q, relSymbol } from "@ga/subject-math";
 import { algebraDrawings } from "../explanation-drawings-algebra.ts";
 import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 import { guides, plain, riseRun } from "../graph-figures.ts";
@@ -16,15 +16,8 @@ import {
   steps,
   yesNo,
 } from "../problems.ts";
+import { evalAt, flip, holds } from "../solution-kit.ts";
 import { type Reason, reasoned } from "../wrong-reasons.ts";
-
-const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
-
-function gcd(a: number, b: number): number {
-  let [m, n] = [Math.abs(a), Math.abs(b)];
-  while (n !== 0) [m, n] = [n, m % n];
-  return m;
-}
 
 /** Range is [min, max, step]: the multiples of step from min to max. */
 type Range = readonly [number, number, number];
@@ -2617,18 +2610,11 @@ A trip that speeds up to $10$ m/s in $4$ s, holds it for $10$ s and stops in $6$
 
 // ─── Two-variable linear inequalities ─────────────────────────────────────────
 
-const flip: Record<InequalityOp, InequalityOp> = { "<": ">", ">": "<", "<=": ">=", ">=": "<=" };
 const toggle: Record<InequalityOp, InequalityOp> = { "<": "<=", "<=": "<", ">": ">=", ">=": ">" };
 const strictOps: readonly InequalityOp[] = ["<", ">"];
 const allOps: readonly InequalityOp[] = ["<", "<=", ">", ">="];
 const isStrict = (op: InequalityOp) => op.length === 1;
 const isAbove = (op: InequalityOp) => op[0] === ">";
-
-/** holds tells whether lhs op rhs is true. */
-function holds(lhs: Coefficient, op: InequalityOp, rhs: Coefficient): boolean {
-  const c = toQ(lhs).cmp(toQ(rhs));
-  return { "<": c < 0, "<=": c <= 0, ">": c > 0, ">=": c >= 0 }[op];
-}
 
 /** slopes are the slopes of boundary lines: small integers and simple fractions. */
 const slopes: readonly Q[] = [1, 2, 3, -1, -2, -3]
@@ -2684,14 +2670,6 @@ function inequalityGraph(ineqs: readonly Ineq[]): Figure {
 /** randomIneq draws an inequality whose boundary crosses the view. */
 function randomIneq(rng: Rng, ops: readonly InequalityOp[]): Ineq {
   return { m: rng.pick(slopes), b: rng.int(-4, 4), op: rng.pick(ops) };
-}
-
-/** evalAt writes m · x + b, leaving out a zero b. */
-function evalAt(m: Coefficient, x: Coefficient, b: Coefficient): string {
-  const B = toQ(b);
-  const M = toQ(m);
-  const head = M.eq(Q.of(1)) ? paren(x) : M.eq(Q.of(-1)) ? `-${paren(x)}` : `${num(m)} \\cdot ${paren(x)}`;
-  return B.isZero() ? head : `${head} ${B.sign() < 0 ? "-" : "+"} ${num(B.abs())}`;
 }
 
 /** testPoint draws a point with an integer x where mx + b is an integer, at most 3 above or below the boundary. */
