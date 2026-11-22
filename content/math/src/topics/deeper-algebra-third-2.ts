@@ -257,7 +257,7 @@ Say $(2, 3)$ solves $x + y = 5$ and $kx - y = 7$. Putting $x = 2$ and $y = 3$ in
             `点 $(${x}, ${y})$ 是 $${a}x + y = ${c}$ 和 $kx - y = ${d}$ 的解。$k$ 是多少？`,
           ],
           k,
-          [-k, a, k + 1],
+          [-k, a, k + 1].filter((v) => v !== k),
           [
             `**Substitute.** The unknown $k$ is in the second equation, so put $x = ${x}$ and $y = ${y}$ into $kx - y = ${d}$: $$${kx} - ${y < 0 ? `(${y})` : y} = ${d}.$$
 

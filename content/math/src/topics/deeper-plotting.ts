@@ -433,7 +433,8 @@ For a line through $(1, -2)$ with slope $-\\frac{3}{2}$: go $2$ to the right and
       (rng) => {
         const a: Pt = [rng.int(-4, 0), rng.int(-2, 2)];
         const run = rng.int(1, 3);
-        const rise = nonzero(rng, 3);
+        // A rise that shares a factor with the run would show a slope not in lowest terms, such as 2/2.
+        const rise = rng.pick(run === 1 ? [-3, -2, -1, 1, 2, 3] : run === 2 ? [-3, -1, 1, 3] : [-2, -1, 1, 2]);
         const next: Pt = [a[0] + run, a[1] + rise];
         const slope = run === 1 ? `${rise}` : `${rise < 0 ? "-" : ""}\\frac{${Math.abs(rise)}}{${run}}`;
         return plotProblem({
