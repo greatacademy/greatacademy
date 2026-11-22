@@ -802,18 +802,26 @@ For $y \\le -x + 3$: the boundary $y = -x + 3$ is solid. Testing the origin give
       "choosing-the-drawing-of-a-cubic",
       ["Choosing the drawing of a cubic", "选出三次函数的图像"],
       [
-        "The graph of $y = (x - h)^3 + k$ is the S-shaped curve $y = x^3$ with its center moved to $(h, k)$. It rises from left to right; a minus sign in front makes it fall instead.",
-        "$y = (x - h)^3 + k$ 的图像是把 S 形曲线 $y = x^3$ 的中心移到 $(h, k)$。它从左到右上升；前面的负号让它改为下降。",
+        "The graph of $y = (x - h)^3 + k$ is the S-shaped curve $y = x^3$ with its center moved to $(h, k)$. It rises from left to right; a minus sign in front makes it fall instead.\n\n> **Watch out.** The number inside the parentheses moves the center the opposite way to its sign: $(x + 2)^3$ has its center at $x = -2$, since that makes the inside zero. The number added outside keeps its sign and moves the center up or down.",
+        "$y = (x - h)^3 + k$ 的图像是把 S 形曲线 $y = x^3$ 的中心移到 $(h, k)$。它从左到右上升；前面的负号让它改为下降。\n\n> **注意。** 括号里的数使中心向与它的符号相反的方向移动：$(x + 2)^3$ 的中心在 $x = -2$ 处，因为这时括号里为零。外面加的数保持自己的符号，使中心上下移动。",
       ],
-      (rng) =>
-        shiftChoice(
+      (rng) => {
+        const p = shiftChoice(
           rng,
           (x) => x ** 3,
           (inner) => `(${inner})^3`,
           ({ h }) => [h, h + 1],
           ["An S-shaped curve", "一条 S 形曲线"],
           ["the center", "中心"],
-        ),
+        );
+        return {
+          ...p,
+          solution: t(
+            `${p.solution.en}\n\n**Check.** In the chosen drawing the curve flattens out at its center and rises from left to right, and one unit to the right of the center it is one unit higher, just as $y = x^3$ rises from $(0, 0)$ to $(1, 1)$.`,
+            `${p.solution["zh-CN"]}\n\n**检验。** 所选的图中曲线在中心处变平，从左到右上升，在中心右边一个单位处高一个单位，正如 $y = x^3$ 从 $(0, 0)$ 升到 $(1, 1)$。`,
+          ),
+        };
+      },
     ),
   ],
   "graphing-the-square-root-function": [

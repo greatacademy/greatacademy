@@ -171,4 +171,9 @@ export const taughtTopics: readonly string[] = [
   "multiplying-rational-expressions",
   "dividing-rational-expressions",
   "simplifying-complex-fractions",
+  "graphing-elementary-cubic-functions",
+  "graphing-cubic-curves-containing-three-distinct-real-roots",
+  "graphing-cubic-curves-containing-a-double-root",
+  "graphing-cubic-curves-containing-one-distinct-real-root",
+  "graphing-general-polynomials",
 ];
