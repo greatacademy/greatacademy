@@ -4,6 +4,8 @@ import { paren, poly, Q } from "@ga/subject-math";
 
 import { table } from "../exam.ts";
 import { numberProblem, steps } from "../problems.ts";
+import { stepLabel } from "../solution-kit.ts";
+import { type Reason, reasoned } from "../wrong-reasons.ts";
 import { numberLineFigure } from "./compound-inequalities.ts";
 import { pickChoice } from "./grade-4-fractions.ts";
 
@@ -1313,117 +1315,230 @@ const allEnds = (right: 1 | -1, left: 1 | -1): readonly Text[] =>
     .filter(([r, l]) => r !== right || l !== left)
     .map(([r, l]) => endsText(r, l));
 
-/** endBehaviorOfPolynomials reads the end behavior of a polynomial from its leading term. */
-export const endBehaviorOfPolynomials = topic(
-  "end-behavior-of-polynomials",
-  t("End Behavior of Polynomials", "多项式的端点行为"),
+/** big writes a whole number with its digits grouped in threes. */
+const big = (v: number) => {
+  const s = String(Math.abs(v)).replace(/\B(?=(\d{3})+(?!\d))/g, "{,}");
+  return v < 0 ? `-${s}` : s;
+};
+
+/** inParens writes a number in parentheses when it is negative, for use in a product. */
+const inParens = (v: number) => (v < 0 ? `(${v})` : `${v}`);
+
+/** signWord says whether a nonzero number is positive or negative, in both locales. */
+const signWord = (v: number): Text => (v > 0 ? t("positive", "正") : t("negative", "负"));
+
+/** endsReasons explains each wrong end behavior: a wrong right end by the leading coefficient, a wrong left end by the degree. */
+const endsReasons = (right: 1 | -1, left: 1 | -1, n: number): Reason[] =>
+  (
+    [
+      [1, 1],
+      [1, -1],
+      [-1, 1],
+      [-1, -1],
+    ] as const
+  )
+    .filter(([r, l]) => r !== right || l !== left)
+    .map(([r, l]) => {
+      const option = endsText(r, l).en;
+      if (r !== right) {
+        return [
+          option,
+          `The right end follows the sign of the leading coefficient, which is ${right > 0 ? "positive, so it goes up" : "negative, so it goes down"}.`,
+          `右端由首项系数的符号决定，这里系数为${right > 0 ? "正，所以向上" : "负，所以向下"}。`,
+        ] as const;
+      }
+      return [
+        option,
+        `The degree $${n}$ is ${n % 2 === 0 ? "even, so the left end goes the same way as the right end" : "odd, so the left end goes the opposite way to the right end"}.`,
+        `次数 $${n}$ 是${n % 2 === 0 ? "偶数，所以左端与右端方向相同" : "奇数，所以左端与右端方向相反"}。`,
+      ] as const;
+    });
+
+/** endsStep says how the degree and the sign of the leading coefficient give the two ends. */
+const endsStep = (n: number, lead: number, right: 1 | -1, left: 1 | -1): Text => {
+  const ends = endsText(right, left);
+  return t(
+    `${stepLabel(2, "Read the ends", "读出两端").en} The degree $${n}$ is ${n % 2 === 0 ? "even, so both ends go the same way" : "odd, so the ends go opposite ways"}. The coefficient is ${signWord(lead).en}, so the right end goes ${lead > 0 ? "up" : "down"}, and the left end goes ${left > 0 ? "up" : "down"}. ${ends.en}.`,
+    `${stepLabel(2, "Read the ends", "读出两端")["zh-CN"]}次数 $${n}$ 是${n % 2 === 0 ? "偶数，所以两端方向相同" : "奇数，所以两端方向相反"}。系数为${signWord(lead)["zh-CN"]}，所以右端向${lead > 0 ? "上" : "下"}，左端向${left > 0 ? "上" : "下"}。${ends["zh-CN"]}。`,
+  );
+};
+
+/** largeCheck checks the ends by the signs of f at a large positive and a large negative number, given the work for each. */
+const largeCheck = (x: number, atRight: string, atLeft: string, vRight: number, vLeft: number): Text =>
   t(
-    "Decide what a polynomial does at both ends from the degree and sign of its leading term, in expanded or factored form, and recognize a polynomial from its end behavior.",
-    "由首项的次数和符号判断多项式（展开式或因式分解式）在两端的走向，并由端点行为辨认多项式。",
+    `**Check.** Substitute numbers far from $0$. $f(${x}) = ${atRight}$. This is ${signWord(vRight).en}. $f(${-x}) = ${atLeft}$. This is ${signWord(vLeft).en}. So the graph is ${vRight > 0 ? "high" : "low"} on the right and ${vLeft > 0 ? "high" : "low"} on the left, as found.`,
+    `**检验。**代入离 $0$ 很远的数。$f(${x}) = ${atRight}$，为${signWord(vRight)["zh-CN"]}。$f(${-x}) = ${atLeft}$，为${signWord(vLeft)["zh-CN"]}。所以图象右边${vRight > 0 ? "高" : "低"}、左边${vLeft > 0 ? "高" : "低"}，与上面的结论一致。`,
+  );
+
+/** endBehaviorOfPolynomials reads the end behavior of a polynomial from its leading term. */
+export const endBehaviorOfPolynomials: TopicDef = {
+  ...topic(
+    "end-behavior-of-polynomials",
+    t("End Behavior of Polynomials", "多项式的端点行为"),
+    t(
+      "Decide what a polynomial does at both ends from the degree and sign of its leading term, in expanded or factored form, and recognize a polynomial from its end behavior.",
+      "由首项的次数和符号判断多项式（展开式或因式分解式）在两端的走向，并由端点行为辨认多项式。",
+    ),
+    ["end-behavior"],
+    ["HSF.IF.C.7c"],
+    [
+      kp(
+        "end-behavior-from-the-leading-term",
+        t("End behavior from the leading term", "由首项判断端点行为"),
+        t(
+          "For large $|x|$ the term of highest degree outweighs the others, so it alone decides the ends. An even degree makes both ends agree: up when the coefficient is positive, down when negative. An odd degree makes them opposite: a positive coefficient falls on the left and rises on the right, and a negative one does the reverse.\n\n> **Watch out.** The leading term is the term of highest degree, wherever it is written. In $5x^{2} - 2x^{3} + 1$ it is $-2x^{3}$, not the first term $5x^{2}$.",
+          "当 $|x|$ 很大时，次数最高的项比其他各项大得多，所以两端的走向只由它决定。次数为偶数时两端方向相同：系数为正时都向上，系数为负时都向下。次数为奇数时两端方向相反：系数为正时左低右高，系数为负时相反。\n\n> **注意。** 首项是次数最高的项，不管它写在哪里。在 $5x^{2} - 2x^{3} + 1$ 中，首项是 $-2x^{3}$，而不是写在最前面的 $5x^{2}$。",
+        ),
+        (rng) => {
+          const n = rng.int(2, 7);
+          const a = rng.pick([1, 2, 3, 4, 5, -1, -2, -3, -4, -5]);
+          const lower = rng.int(1, n - 1);
+          const b = rng.pick([2, 3, 5, 7, 9, -2, -3, -6, -8]);
+          const c = rng.int(1, 12);
+          // Written with a lower term first in half of the problems, so that the leading term must be picked out.
+          const terms = poly([b, lower === 1 ? "x" : `x^{${lower}}`], [a, `x^{${n}}`], [c, ""]);
+          const ordered = poly([a, `x^{${n}}`], [b, lower === 1 ? "x" : `x^{${lower}}`], [c, ""]);
+          const shown = rng.bool() ? terms : ordered;
+          const right: 1 | -1 = a > 0 ? 1 : -1;
+          const left: 1 | -1 = n % 2 === 0 ? right : right === 1 ? -1 : 1;
+          const f = (x: number) => a * x ** n + b * x ** lower + c;
+          // 10 is far enough out for the leading term to win in almost every draw, and 20 in every one.
+          const x = Math.sign(f(10)) === right && Math.sign(f(-10)) === left ? 10 : 20;
+          const work = (v: number) =>
+            `${a} \\cdot ${inParens(v)}^{${n}} ${b < 0 ? "-" : "+"} ${Math.abs(b)} \\cdot ${inParens(v)}${lower === 1 ? "" : `^{${lower}}`} + ${c} = ${big(f(v))}`;
+          const lead = poly([a, `x^{${n}}`]);
+          return reasoned(
+            pickChoice(
+              rng,
+              t(`Which describes the end behavior of $f(x) = ${shown}$?`, `哪一项描述了 $f(x) = ${shown}$ 的端点行为？`),
+              endsText(right, left),
+              allEnds(right, left),
+              t(
+                `${stepLabel(1, "Find the leading term", "找出首项").en} The term of highest degree is $${lead}$. For large $|x|$ it outweighs the other terms, so it decides the ends.\n\n${endsStep(n, a, right, left).en}\n\n${largeCheck(x, work(x), work(-x), f(x), f(-x)).en}`,
+                `${stepLabel(1, "Find the leading term", "找出首项")["zh-CN"]}次数最高的项是 $${lead}$。当 $|x|$ 很大时，它比其他各项大得多，所以由它决定两端的走向。\n\n${endsStep(n, a, right, left)["zh-CN"]}\n\n${largeCheck(x, work(x), work(-x), f(x), f(-x))["zh-CN"]}`,
+              ),
+            ),
+            endsReasons(right, left, n),
+          );
+        },
+      ),
+      kp(
+        "end-behavior-of-a-factored-polynomial",
+        t("End behavior of a factored polynomial", "因式分解式的端点行为"),
+        t(
+          "A factored polynomial does not need expanding. Multiply only the leading terms of the factors, each raised to its power, and the constant in front. For $-2(x - 1)^{2}(3 - x)$ that gives $-2 \\cdot x^{2} \\cdot (-x) = 2x^{3}$, so the leading term has odd degree and a positive coefficient.\n\n> **Watch out.** In a factor such as $3 - x$ the leading term is $-x$, so it brings a minus sign. Raised to an even power that sign disappears, and raised to an odd power it stays.",
+          "因式分解式不必展开。只需把前面的常数和各因式的最高次项（连同它的乘方）相乘。对 $-2(x - 1)^{2}(3 - x)$，得 $-2 \\cdot x^{2} \\cdot (-x) = 2x^{3}$，所以首项次数为奇数，系数为正。\n\n> **注意。** 像 $3 - x$ 这样的因式，最高次项是 $-x$，会带来一个负号。它的偶次幂把负号消去，奇次幂则保留负号。",
+        ),
+        (rng) => {
+          const a = rng.pick([1, 2, 3, -1, -2, -3]);
+          const r = rng.int(1, 6);
+          const s = rng.int(1, 6);
+          const p = rng.int(1, 3);
+          const flip = rng.bool();
+          const q = rng.int(1, 2);
+          const n = p + q;
+          const lead = a * (flip ? (-1) ** q : 1);
+          const front = a === 1 ? "" : a === -1 ? "-" : `${a}`;
+          const pow = (v: number) => (v === 1 ? "" : `^{${v}}`);
+          const second = flip ? `(${s} - x)` : `(x + ${s})`;
+          const shown = `${front}(x - ${r})${pow(p)}${second}${pow(q)}`;
+          const right: 1 | -1 = lead > 0 ? 1 : -1;
+          const left: 1 | -1 = n % 2 === 0 ? right : right === 1 ? -1 : 1;
+          const secondAt = (x: number) => (flip ? s - x : x + s);
+          const f = (x: number) => a * (x - r) ** p * secondAt(x) ** q;
+          const work = (x: number) => `${a} \\cdot ${inParens(x - r)}${pow(p)} \\cdot ${inParens(secondAt(x))}${pow(q)} = ${big(f(x))}`;
+          const leads = `${a} \\cdot x${pow(p)} \\cdot ${flip ? "(-x)" : "x"}${pow(q)} = ${poly([lead, `x^{${n}}`])}`;
+          return reasoned(
+            pickChoice(
+              rng,
+              t(`Which describes the end behavior of $f(x) = ${shown}$?`, `哪一项描述了 $f(x) = ${shown}$ 的端点行为？`),
+              endsText(right, left),
+              allEnds(right, left),
+              t(
+                `${stepLabel(1, "Multiply the leading terms", "把最高次项相乘").en} Only the constant in front and the leading terms of the factors matter at the ends. The leading term of $${second}$ is $${flip ? "-x" : "x"}$.${steps(leads)}\n\n${endsStep(n, lead, right, left).en}\n\n${largeCheck(10, work(10), work(-10), f(10), f(-10)).en}`,
+                `${stepLabel(1, "Multiply the leading terms", "把最高次项相乘")["zh-CN"]}在两端只有前面的常数和各因式的最高次项起作用。$${second}$ 的最高次项是 $${flip ? "-x" : "x"}$。${steps(leads)}\n\n${endsStep(n, lead, right, left)["zh-CN"]}\n\n${largeCheck(10, work(10), work(-10), f(10), f(-10))["zh-CN"]}`,
+              ),
+            ),
+            endsReasons(right, left, n),
+          );
+        },
+      ),
+      kp(
+        "a-polynomial-from-its-end-behavior",
+        t("A polynomial from its end behavior", "由端点行为辨认多项式"),
+        t(
+          "To go from the behavior back to a formula, read the two facts separately. If the ends agree the degree is even, and if they differ it is odd. The right end then gives the sign of the leading coefficient: up means positive and down means negative. Ignore all the lower terms, since they cannot change the ends.\n\n> **Watch out.** Read the sign of the leading coefficient from the right end, not the left. With an odd degree the left end goes the other way, so a left end going down means a positive coefficient.",
+          "由走向反推解析式时，把两个事实分开来读。两端方向相同则次数为偶数，不同则为奇数。再由右端确定首项系数的符号：向上为正，向下为负。较低次的项可以不管，因为它们改变不了两端的走向。\n\n> **注意。** 首项系数的符号要看右端，而不是左端。次数为奇数时左端方向相反，所以左端向下意味着系数为正。",
+        ),
+        (rng) => {
+          const right: 1 | -1 = rng.pick([1, -1]);
+          const left: 1 | -1 = rng.pick([1, -1]);
+          const even = rng.pick([2, 4, 6]);
+          const odd = rng.pick([3, 5, 7]);
+          const a = rng.int(1, 5);
+          const b = rng.pick([2, 3, -4, -5, 6, -7]);
+          const c = rng.int(1, 9);
+          const expr = (sign: number, n: number) => poly([sign * a, `x^{${n}}`], [b, "x"], [c, ""]);
+          const make = (sign: number, n: number) => math(expr(sign, n));
+          const n = right === left ? even : odd;
+          const other = right === left ? odd : even;
+          const f = (x: number) => right * a * x ** n + b * x + c;
+          const work = (x: number) =>
+            `${right * a} \\cdot ${inParens(x)}^{${n}} ${b < 0 ? "-" : "+"} ${Math.abs(b)} \\cdot ${inParens(x)} + ${c} = ${big(f(x))}`;
+          const parity = (m: number) => (m % 2 === 0 ? t("even", "偶数") : t("odd", "奇数"));
+          return reasoned(
+            pickChoice(
+              rng,
+              t(
+                `A polynomial function has $f(0) = ${c}$ and this end behavior: ${endsText(right, left).en}. Which could be the function?`,
+                `一个多项式函数满足 $f(0) = ${c}$，端点行为是：${endsText(right, left)["zh-CN"]}。它可能是下面哪个函数？`,
+              ),
+              make(right, n),
+              [make(-right, n), make(right, other), make(-right, other)],
+              t(
+                `${stepLabel(1, "Get the degree from the ends", "由两端定次数").en} The ends ${right === left ? "agree, so the degree is even" : "differ, so the degree is odd"}.\n\n${stepLabel(2, "Get the sign from the right end", "由右端定符号").en} The right end goes ${right > 0 ? "up" : "down"}, so the leading coefficient is ${right > 0 ? "positive" : "negative"}. The only option with an ${parity(n).en} degree and a ${right > 0 ? "positive" : "negative"} leading coefficient is $f(x) = ${expr(right, n)}$.\n\n${largeCheck(10, work(10), work(-10), f(10), f(-10)).en}`,
+                `${stepLabel(1, "Get the degree from the ends", "由两端定次数")["zh-CN"]}两端方向${right === left ? "相同，所以次数为偶数" : "不同，所以次数为奇数"}。\n\n${stepLabel(2, "Get the sign from the right end", "由右端定符号")["zh-CN"]}右端向${right > 0 ? "上" : "下"}，所以首项系数为${right > 0 ? "正" : "负"}。次数为${parity(n)["zh-CN"]}且首项系数为${right > 0 ? "正" : "负"}的选项只有 $f(x) = ${expr(right, n)}$。\n\n${largeCheck(10, work(10), work(-10), f(10), f(-10))["zh-CN"]}`,
+              ),
+            ),
+            [
+              [
+                `$${expr(-right, n)}$`,
+                `Its leading coefficient is ${right > 0 ? "negative, so its right end goes down" : "positive, so its right end goes up"}.`,
+                `它的首项系数为${right > 0 ? "负，所以右端向下" : "正，所以右端向上"}。`,
+              ],
+              [
+                `$${expr(right, other)}$`,
+                `Its degree $${other}$ is ${other % 2 === 0 ? "even, so its two ends would agree" : "odd, so its two ends would differ"}.`,
+                `它的次数 $${other}$ 是${other % 2 === 0 ? "偶数，两端方向会相同" : "奇数，两端方向会不同"}。`,
+              ],
+              [
+                `$${expr(-right, other)}$`,
+                `Both facts are wrong: its degree $${other}$ is ${parity(other).en} and its leading coefficient is ${right > 0 ? "negative" : "positive"}.`,
+                `两条都不对：它的次数 $${other}$ 是${parity(other)["zh-CN"]}，首项系数为${right > 0 ? "负" : "正"}。`,
+              ],
+            ],
+          );
+        },
+      ),
+    ],
   ),
-  ["end-behavior"],
-  ["HSF.IF.C.7c"],
-  [
-    kp(
-      "end-behavior-from-the-leading-term",
-      t("End behavior from the leading term", "由首项判断端点行为"),
-      t(
-        "For large $|x|$ the term of highest degree outweighs the others, so it alone decides the ends. An even degree makes both ends agree: up when the coefficient is positive, down when negative. An odd degree makes them opposite: a positive coefficient falls on the left and rises on the right, and a negative one does the reverse.",
-        "当 $|x|$ 很大时，次数最高的项比其他各项大得多，所以两端的走向只由它决定。次数为偶数时两端方向相同：系数为正时都向上，系数为负时都向下。次数为奇数时两端方向相反：系数为正时左低右高，系数为负时相反。",
-      ),
-      (rng) => {
-        const n = rng.int(2, 7);
-        const a = rng.pick([1, 2, 3, 4, 5, -1, -2, -3, -4, -5]);
-        const lower = rng.int(1, n - 1);
-        const b = rng.pick([2, 3, 5, 7, 9, -2, -3, -6, -8]);
-        const c = rng.int(1, 12);
-        // Written with a lower term first in half of the problems, so that the leading term must be picked out.
-        const terms = poly([b, lower === 1 ? "x" : `x^{${lower}}`], [a, `x^{${n}}`], [c, ""]);
-        const ordered = poly([a, `x^{${n}}`], [b, lower === 1 ? "x" : `x^{${lower}}`], [c, ""]);
-        const shown = rng.bool() ? terms : ordered;
-        const right: 1 | -1 = a > 0 ? 1 : -1;
-        const left: 1 | -1 = n % 2 === 0 ? right : right === 1 ? -1 : 1;
-        return pickChoice(
-          rng,
-          t(`Which describes the end behavior of $f(x) = ${shown}$?`, `哪一项描述了 $f(x) = ${shown}$ 的端点行为？`),
-          endsText(right, left),
-          allEnds(right, left),
-          t(
-            `The term of highest degree decides the ends, and here it is $${poly([a, `x^{${n}}`])}$. Its degree $${n}$ is ${n % 2 === 0 ? "even, so both ends go the same way" : "odd, so the ends go opposite ways"}, and its coefficient is ${a > 0 ? "positive" : "negative"}, so the right end goes ${a > 0 ? "up" : "down"}.`,
-            `次数最高的项决定两端走向，这里是 $${poly([a, `x^{${n}}`])}$。它的次数 $${n}$ 是${n % 2 === 0 ? "偶数，所以两端方向相同" : "奇数，所以两端方向相反"}，系数为${a > 0 ? "正" : "负"}，所以右端向${a > 0 ? "上" : "下"}。`,
-          ),
-        );
-      },
-    ),
-    kp(
-      "end-behavior-of-a-factored-polynomial",
-      t("End behavior of a factored polynomial", "因式分解式的端点行为"),
-      t(
-        "A factored polynomial does not need expanding. Multiply only the leading terms of the factors, each raised to its power, and the constant in front. For $-2(x - 1)^{2}(3 - x)$ that gives $-2 \\cdot x^{2} \\cdot (-x) = 2x^{3}$, so the leading term has odd degree and a positive coefficient. Watch for factors such as $3 - x$, where $x$ is negative.",
-        "因式分解式不必展开。只需把前面的常数和各因式的最高次项（连同它的乘方）相乘。对 $-2(x - 1)^{2}(3 - x)$，得 $-2 \\cdot x^{2} \\cdot (-x) = 2x^{3}$，所以首项次数为奇数，系数为正。要留意 $3 - x$ 这样的因式，其中 $x$ 的系数是负的。",
-      ),
-      (rng) => {
-        const a = rng.pick([1, 2, 3, -1, -2, -3]);
-        const r = rng.int(1, 6);
-        const s = rng.int(1, 6);
-        const p = rng.int(1, 3);
-        const flip = rng.bool();
-        const q = rng.int(1, 2);
-        const n = p + q;
-        const lead = a * (flip ? (-1) ** q : 1);
-        const front = a === 1 ? "" : a === -1 ? "-" : `${a}`;
-        const pow = (v: number) => (v === 1 ? "" : `^{${v}}`);
-        const second = flip ? `(${s} - x)` : `(x + ${s})`;
-        const shown = `${front}(x - ${r})${pow(p)}${second}${pow(q)}`;
-        const right: 1 | -1 = lead > 0 ? 1 : -1;
-        const left: 1 | -1 = n % 2 === 0 ? right : right === 1 ? -1 : 1;
-        return pickChoice(
-          rng,
-          t(`Which describes the end behavior of $f(x) = ${shown}$?`, `哪一项描述了 $f(x) = ${shown}$ 的端点行为？`),
-          endsText(right, left),
-          allEnds(right, left),
-          t(
-            `Only the leading terms of the factors matter at the ends. Multiplying them gives a leading term with a ${lead > 0 ? "positive" : "negative"} coefficient and degree $${n}$, which is ${n % 2 === 0 ? "even, so both ends match" : "odd, so the ends are opposite"}.${steps(`\\text{leading term: } ${poly([lead, n === 1 ? "x" : `x^{${n}}`])}`)}`,
-            `在两端只有各因式的最高次项起作用。把它们相乘，得到系数为${lead > 0 ? "正" : "负"}、次数为 $${n}$ 的首项，次数是${n % 2 === 0 ? "偶数，所以两端方向相同" : "奇数，所以两端方向相反"}。${steps(`\\text{leading term: } ${poly([lead, n === 1 ? "x" : `x^{${n}}`])}`)}`,
-          ),
-        );
-      },
-    ),
-    kp(
-      "a-polynomial-from-its-end-behavior",
-      t("A polynomial from its end behavior", "由端点行为辨认多项式"),
-      t(
-        "To go from the behavior back to a formula, read the two facts separately. If the ends agree the degree is even, and if they differ it is odd. The right end then gives the sign of the leading coefficient: up means positive and down means negative. Ignore all the lower terms, since they cannot change the ends.",
-        "由走向反推解析式时，把两个事实分开来读。两端方向相同则次数为偶数，不同则为奇数。再由右端确定首项系数的符号：向上为正，向下为负。较低次的项可以不管，因为它们改变不了两端的走向。",
-      ),
-      (rng) => {
-        const right: 1 | -1 = rng.pick([1, -1]);
-        const left: 1 | -1 = rng.pick([1, -1]);
-        const even = rng.pick([2, 4, 6]);
-        const odd = rng.pick([3, 5, 7]);
-        const a = rng.int(1, 5);
-        const b = rng.pick([2, 3, -4, -5, 6, -7]);
-        const c = rng.int(1, 9);
-        const make = (sign: number, n: number) => math(poly([sign * a, `x^{${n}}`], [b, "x"], [c, ""]));
-        const n = right === left ? even : odd;
-        const other = right === left ? odd : even;
-        return pickChoice(
-          rng,
-          t(
-            `A polynomial function has $f(0) = ${c}$ and this end behavior: ${endsText(right, left).en}. Which could be the function?`,
-            `一个多项式函数满足 $f(0) = ${c}$，端点行为是：${endsText(right, left)["zh-CN"]}。它可能是下面哪个函数？`,
-          ),
-          make(right, n),
-          [make(-right, n), make(right, other), make(-right, other)],
-          t(
-            `The ends ${right === left ? "agree, so the degree is even" : "differ, so the degree is odd"}. The right end goes ${right > 0 ? "up" : "down"}, so the leading coefficient is ${right > 0 ? "positive" : "negative"}.`,
-            `两端方向${right === left ? "相同，所以次数为偶数" : "不同，所以次数为奇数"}。右端向${right > 0 ? "上" : "下"}，所以首项系数为${right > 0 ? "正" : "负"}。`,
-          ),
-        );
-      },
-    ),
-  ],
-);
+  intro: t(
+    `You can read end behavior from a graph: whether the curve rises or falls as $x$ moves far to the right and far to the left. A polynomial's formula tells you the same thing without a graph, because for large $|x|$ its term of highest degree is far bigger than all the others together. The degree says whether the two ends agree, and the sign of the leading coefficient says where the right end goes.
+
+Take
+
+$$f(x) = 3x^{2} - x^{5} + 4$$
+
+The term of highest degree is $-x^{5}$. Its degree $5$ is odd, so the ends go opposite ways, and its coefficient is negative, so the right end goes down and the left end goes up. As $x \\to \\infty$, $f(x) \\to -\\infty$; as $x \\to -\\infty$, $f(x) \\to \\infty$. At $x = 10$, $f(10) = 300 - 100{,}000 + 4 = -99{,}696$. That is far below the axis, as the right end says.`,
+    `你会从图象读端点行为：$x$ 向右、向左走得很远时，曲线是上升还是下降。多项式的解析式不用画图也能说明这一点，因为当 $|x|$ 很大时，次数最高的项比其余各项加起来还大得多。次数决定两端方向是否相同，首项系数的符号决定右端的走向。
+
+看
+
+$$f(x) = 3x^{2} - x^{5} + 4$$
+
+次数最高的项是 $-x^{5}$。它的次数 $5$ 是奇数，所以两端方向相反；系数为负，所以右端向下、左端向上。当 $x \\to \\infty$ 时，$f(x) \\to -\\infty$；当 $x \\to -\\infty$ 时，$f(x) \\to \\infty$。在 $x = 10$ 处，$f(10) = 300 - 100{,}000 + 4 = -99{,}696$，远在 $x$ 轴下方，与右端向下一致。`,
+  ),
+};
 
 /** findingTheCommonDifferenceOfAnArithmeticSequence finds the common difference from terms, formulas and two far-apart terms. */
 export const findingTheCommonDifferenceOfAnArithmeticSequence: TopicDef = {

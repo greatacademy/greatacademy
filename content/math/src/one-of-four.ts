@@ -25,6 +25,9 @@ const sameWords = (a: readonly Text[], b: readonly Text[]) => a.every((x) => b.s
 /** bare drops the stop at the end of an answer, so that it can be quoted or followed by another stop. */
 const bare = (text: string) => text.replace(/[.。]$/, "");
 
+/** afterAnswer is what comes between an answer and its solution: a new paragraph when the solution opens with a bold step label, else a space. */
+const afterAnswer = (solution: string) => (solution.startsWith("**") ? "\n\n" : " ");
+
 /** verdict writes a question's answer and solution, leaving out a solution's own repeat of the answer. */
 function verdict(problem: Problem, answer: Text): Text {
   const rest = (locale: Locale, stops: readonly string[]) => {
@@ -32,10 +35,9 @@ function verdict(problem: Problem, answer: Text): Text {
     const lead = stops.map((stop) => `${bare(answer[locale])}${stop}`).find((l) => solution.startsWith(l));
     return lead ? solution.slice(lead.length).trimStart() : solution;
   };
-  return t(
-    `**${bare(answer.en)}.** ${rest("en", [".", ":"]).replace(/^[a-z](?=[a-z])/, (c) => c.toUpperCase())}`,
-    `**${bare(answer["zh-CN"])}。** ${rest("zh-CN", ["。", "："])}`,
-  );
+  const en = rest("en", [".", ":"]).replace(/^[a-z](?=[a-z])/, (c) => c.toUpperCase());
+  const zh = rest("zh-CN", ["。", "："]);
+  return t(`**${bare(answer.en)}.**${afterAnswer(en)}${en}`, `**${bare(answer["zh-CN"])}。**${afterAnswer(zh)}${zh}`);
 }
 
 /** settled writes a question with its answer and solution. */

@@ -210,4 +210,5 @@ export const taughtTopics: readonly string[] = [
   "simplifying-trigonometric-expressions-using-the-cotangent-cosecant-identity",
   "simplifying-trigonometric-expressions-using-cofunction-identities",
   "the-sum-and-difference-formulas-for-sine",
+  "end-behavior-of-polynomials",
 ];

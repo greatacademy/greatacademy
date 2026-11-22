@@ -18,9 +18,8 @@ import {
   union,
 } from "@ga/subject-math";
 import { precalculusDrawings } from "../explanation-drawings-precalculus.ts";
-import { choiceProblem, intervalProblem, numberProblem, steps, yesNo } from "../problems.ts";
-import { stepLabel } from "../solution-kit.ts";
-import { type Reason, reasoned } from "../wrong-reasons.ts";
+import { choiceProblem, intervalProblem, numberProblem, steps, withMistakes, yesNo } from "../problems.ts";
+import { listed, stepLabel } from "../solution-kit.ts";
 
 // Precalculus unit 3: inequalities (modules 3.6 to 3.8).
 
@@ -141,9 +140,6 @@ const checked = (c: Text) => t(`\n\n**Check.** ${c.en}`, `\n\n**检验。**${c["
 
 /** disp is displayed work that closes a paragraph. */
 const disp = (...lines: readonly string[]) => steps(...lines).trimEnd();
-
-/** why pairs an option with the reason it is wrong, in both locales. */
-const why = (option: string, r: Text): Reason => [option, r.en, r["zh-CN"]];
 
 /** holds says whether l op r. */
 function holds(l: Q, op: Op, r: Q): boolean {
@@ -317,15 +313,18 @@ function chartTable(k: Coefficient, fs: readonly Factor[], name: string): string
   return `$$\\begin{array}{c|${"c".repeat(heads.length)}} & ${heads.join(" & ")} \\\\ \\hline ${lines.join(" \\\\ ")} \\\\ \\hline ${name} & ${signs.map(sym).join(" & ")} \\end{array}$$`;
 }
 
-/** zerosWords names the critical points of a chart. */
+/** critWords names the critical points of a chart: the zeros and, for a quotient, the points where it is not defined. */
 function critWords(fs: readonly Factor[]): Text {
   const zeros = fs.filter((f) => f.root && !f.pole).map((f) => `$${f.root!.toLatex()}$`);
   const poles = fs.filter((f) => f.root && f.pole).map((f) => `$${f.root!.toLatex()}$`);
-  const z = [...new Set(zeros)];
-  const p = [...new Set(poles)];
+  const z = listed([...new Set(zeros)]);
+  const p = listed([...new Set(poles)]);
+  if (zeros.length === 0) {
+    return t(`The expression is never zero, and it is not defined at ${p.en}.`, `表达式不会为零，在 ${p["zh-CN"]} 处无定义。`);
+  }
   return t(
-    `The expression is zero at ${z.join(", ")}${p.length > 0 ? ` and not defined at ${p.join(", ")}` : ""}.`,
-    `表达式在 ${z.join("、")} 处为零${p.length > 0 ? `，在 ${p.join("、")} 处无定义` : ""}。`,
+    `The expression is zero at ${z.en}${poles.length > 0 ? ` and not defined at ${p.en}` : ""}.`,
+    `表达式在 ${z["zh-CN"]} 处为零${poles.length > 0 ? `，在 ${p["zh-CN"]} 处无定义` : ""}。`,
   );
 }
 
@@ -1080,7 +1079,7 @@ ${chartTable(1, [lin(1, 1), lin(1, -4)], "(x + 1)(x - 4)")}
         const value = productAt(k, ds, x0);
         const work = `${k === 1 ? "" : `${paren(k)} \\cdot `}${values.join(" \\cdot ")} = ${value.toLatex()}`;
         const sign = positive ? t("positive", "正") : t("negative", "负");
-        return reasoned(
+        return withMistakes(
           choiceProblem({
             prompt: t(
               `Is $f(x) = ${name}$ positive or negative on the interval $${span}$?`,
@@ -1112,13 +1111,13 @@ ${chartTable(1, [lin(1, 1), lin(1, -4)], "(x + 1)(x - 4)")}
             ),
           }),
           [
-            why(
-              positive ? "Negative" : "Positive",
-              t(
+            {
+              response: positive ? "Negative" : "Positive",
+              why: t(
                 `The product is negative only when an odd number of its signs are negative; here $${neg}$ ${neg === 1 ? "is" : "are"}, so it is ${sign.en}.`,
                 `只有负号个数为奇数时乘积才为负；这里有 $${neg}$ 个负号，所以乘积为${sign["zh-CN"]}。`,
               ),
-            ),
+            },
           ],
         );
       },
@@ -1460,8 +1459,8 @@ $$(-2)^{2} - 4 \\cdot 1 \\cdot k < 0 \\implies 4 - 4k < 0 \\implies k > 1$$
             para,
             label(2, "Solve for $k$", "解出 $k$"),
             t(
-              `Here $b^{2} - 4ac = ${paren(b)}^{2} - 4 \\cdot ${paren(a)} \\cdot k$, and${disp(`${D} ${opL[dOp]} 0`, `k ${opL[op]} ${v.toLatex()}`)}\n\nThe solution is $${setL(set)}$.`,
-              `这里 $b^{2} - 4ac = ${paren(b)}^{2} - 4 \\cdot ${paren(a)} \\cdot k$，于是${disp(`${D} ${opL[dOp]} 0`, `k ${opL[op]} ${v.toLatex()}`)}\n\n解集是 $${setL(set)}$。`,
+              `The discriminant is $b^{2} - 4ac = ${paren(b)}^{2} - 4 \\cdot ${paren(a)} \\cdot k$. It must satisfy${disp(`${D} ${opL[dOp]} 0`, `k ${opL[op]} ${v.toLatex()}`)}\n\nThe solution is $${setL(set)}$.`,
+              `判别式为 $b^{2} - 4ac = ${paren(b)}^{2} - 4 \\cdot ${paren(a)} \\cdot k$。它必须满足${disp(`${D} ${opL[dOp]} 0`, `k ${opL[op]} ${v.toLatex()}`)}\n\n解集是 $${setL(set)}$。`,
             ),
             discriminantCheck(set, D, qx(-4 * a, b * b), dOp),
           ),
