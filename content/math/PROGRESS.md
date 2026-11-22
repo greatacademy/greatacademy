@@ -141,7 +141,7 @@ Stage 0 is done. Walking its lessons against Math Academy's on the same topics f
 | `algebra-ii-functions.ts` | 5 | done | |  |
 | `algebra-ii-polynomial-graphs.ts` | 5 | done | |  |
 | `algebra-ii-reciprocal-functions.ts` | 6 | done | |  |
-| `algebra-ii-general-triangles.ts` | 5 | open | |  |
+| `algebra-ii-general-triangles.ts` | 5 | done | |  |
 | other files | 10 | open | | `act-exam-functions.ts` (5), `act-fundamentals-number.ts` (1), `act-exam-numbers.ts` (1), `act-number-algebra.ts` (1), `functions.ts` (1), `act-fundamentals-reasoning-algebra.ts` (1) |
 
 ### Precalculus

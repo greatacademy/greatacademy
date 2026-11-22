@@ -182,4 +182,9 @@ export const taughtTopics: readonly string[] = [
   "domain-and-range-of-transformed-reciprocal-functions",
   "inverses-of-reciprocal-functions",
   "finding-intersections-of-lines-and-reciprocal-functions",
+  "the-law-of-sines",
+  "the-law-of-cosines",
+  "the-area-of-a-general-triangle",
+  "modeling-using-the-law-of-sines",
+  "modeling-using-the-law-of-cosines",
 ];

@@ -429,8 +429,8 @@ Twelve apples of $150\\text{ g}$ weigh $12 \\cdot 150 = 1800\\text{ g}$ together
         "how-many-triangles-fit",
         ["How many triangles fit", "能构成几个三角形"],
         [
-          "Given two sides and an angle opposite one of them, the law of sines may give no triangle, one or two. Compare the side opposite with the height $b\\sin A$ and with the other side $b$.",
-          "已知两边和其中一边的对角时，由正弦定理可能得到零个、一个或两个三角形。把这个对边与高 $b\\sin A$ 和另一条边 $b$ 比较。",
+          "Given two sides and an angle opposite one of them, the law of sines may give no triangle, one or two. Compare the side opposite with the height $b\\sin A$ and with the other side $b$.\n\n> **Watch out.** When $b\\sin A < a < b$ there are two triangles, not one. The inverse sine gives only the acute angle, and its supplement fits as well, so decide the case before you solve.",
+          "已知两边和其中一边的对角时，由正弦定理可能得到零个、一个或两个三角形。把这个对边与高 $b\\sin A$ 和另一条边 $b$ 比较。\n\n> **注意。** 当 $b\\sin A < a < b$ 时有两个三角形，而不是一个。反正弦只给出锐角，它的补角也符合，所以要先判断属于哪种情况再求解。",
         ],
         (rng) => {
           const b = 2 * rng.int(3, 30);
@@ -444,25 +444,41 @@ Twelve apples of $150\\text{ g}$ weigh $12 \\cdot 150 = 1800\\text{ g}$ together
             ],
             count,
             [0, 1, 2].filter((n) => n !== count),
-            a < height
-              ? [
-                  `The height is $${b} \\sin 30^{\\circ} = ${height}$. Since $a = ${a} < ${height}$, the side is too short to reach the base line, so there are $0$ triangles.`,
-                  `高是 $${b} \\sin 30^{\\circ} = ${height}$。因为 $a = ${a} < ${height}$，这条边够不到底边所在直线，所以有 $0$ 个三角形。`,
-                ]
-              : a === height
-                ? [
-                    `The height is $${b} \\sin 30^{\\circ} = ${height}$. Since $a$ equals the height, the side just reaches the base line at a right angle, so there is $1$ triangle.`,
-                    `高是 $${b} \\sin 30^{\\circ} = ${height}$。因为 $a$ 等于高，这条边恰好垂直地碰到底边所在直线，所以有 $1$ 个三角形。`,
-                  ]
-                : a < b
+            (() => {
+              const sine = `$$\\sin B = \\frac{${b} \\sin 30^{\\circ}}{${a}} = \\frac{${b}}{${2 * a}}$$`;
+              const [compareEn, compareZh, checkEn, checkZh] =
+                a < height
                   ? [
-                      `The height is $${b} \\sin 30^{\\circ} = ${height}$. Since $${height} < ${a} < ${b}$, the side meets the base line at two points on the same side of $A$, so there are $2$ triangles.`,
-                      `高是 $${b} \\sin 30^{\\circ} = ${height}$。因为 $${height} < ${a} < ${b}$，这条边与底边所在直线在 $A$ 的同一侧有两个交点，所以有 $2$ 个三角形。`,
+                      `Since $a = ${a} < ${height}$, the side is too short to reach the base line, so there are $0$ triangles.`,
+                      `因为 $a = ${a} < ${height}$，这条边够不到底边所在直线，所以有 $0$ 个三角形。`,
+                      "This is more than $1$, and no angle has such a sine, so no triangle fits.",
+                      "它大于 $1$，没有角的正弦是这个值，所以没有三角形符合。",
                     ]
-                  : [
-                      `The height is $${b} \\sin 30^{\\circ} = ${height}$. Since $a = ${a} > ${b}$, the side meets the base line at two points, but only one is on the correct side of $A$, so there is $1$ triangle.`,
-                      `高是 $${b} \\sin 30^{\\circ} = ${height}$。因为 $a = ${a} > ${b}$，这条边与底边所在直线有两个交点，但只有一个在 $A$ 的正确一侧，所以有 $1$ 个三角形。`,
-                    ],
+                  : a === height
+                    ? [
+                        "Since $a$ equals the height, the side just reaches the base line at a right angle, so there is $1$ triangle.",
+                        "因为 $a$ 等于高，这条边恰好垂直地碰到底边所在直线，所以有 $1$ 个三角形。",
+                        "This is $1$, so $B = 90^{\\circ}$, and the one triangle is a right triangle.",
+                        "它等于 $1$，所以 $B = 90^{\\circ}$，唯一的三角形是直角三角形。",
+                      ]
+                    : a < b
+                      ? [
+                          `Since $${height} < ${a} < ${b}$, the side meets the base line at two points on the same side of $A$, so there are $2$ triangles.`,
+                          `因为 $${height} < ${a} < ${b}$，这条边与底边所在直线在 $A$ 的同一侧有两个交点，所以有 $2$ 个三角形。`,
+                          "This is less than $1$, so an acute $B$ and the obtuse $180^{\\circ} - B$ both have this sine. Since $b > a$, the acute $B$ is more than $30^{\\circ}$, so even the obtuse value leaves room for a third angle beside $30^{\\circ}$. That makes two triangles.",
+                          "它小于 $1$，所以锐角 $B$ 和钝角 $180^{\\circ} - B$ 的正弦都是这个值。因为 $b > a$，锐角 $B$ 大于 $30^{\\circ}$，所以连钝角解加上 $30^{\\circ}$ 也给第三个角留有余地。所以有两个三角形。",
+                        ]
+                      : [
+                          `Since $a = ${a} > ${b}$, the side meets the base line at two points, but only one is on the correct side of $A$, so there is $1$ triangle.`,
+                          `因为 $a = ${a} > ${b}$，这条边与底边所在直线有两个交点，但只有一个在 $A$ 的正确一侧，所以有 $1$ 个三角形。`,
+                          "Since $a > b$, this is less than $\\sin 30^{\\circ}$, so the acute $B$ is less than $30^{\\circ}$. The obtuse value $180^{\\circ} - B$ is then more than $150^{\\circ}$, and together with $30^{\\circ}$ it leaves no room for a third angle. That leaves one triangle.",
+                          "因为 $a > b$，它小于 $\\sin 30^{\\circ}$，所以锐角 $B$ 小于 $30^{\\circ}$。钝角解 $180^{\\circ} - B$ 就大于 $150^{\\circ}$，再加上 $30^{\\circ}$ 就没有第三个角的余地了。所以只有一个三角形。",
+                        ];
+              return [
+                `**Step 1: Find the height.** The height is $${b} \\sin 30^{\\circ} = ${height}$.\n\n**Step 2: Compare.** ${compareEn}\n\n**Check.** By the law of sines,\n\n${sine}\n\n${checkEn}`,
+                `**第一步：求高。**高是 $${b} \\sin 30^{\\circ} = ${height}$。\n\n**第二步：比较。**${compareZh}\n\n**检验。**由正弦定理，\n\n${sine}\n\n${checkZh}`,
+              ] as const;
+            })(),
           );
         },
       ),
