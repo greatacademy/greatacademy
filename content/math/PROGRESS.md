@@ -126,7 +126,7 @@ Stage 0 is done. Walking its lessons against Math Academy's on the same topics f
 | File | Algebra II topics | Status | Owner | Notes |
 | :--- | ---: | :--- | :--- | :--- |
 | `algebra-ii-log-equations.ts` | 19 | in progress | |  |
-| `algebra-ii-polynomial-theorems.ts` | 16 | open | |  |
+| `algebra-ii-polynomial-theorems.ts` | 16 | done | |  |
 | `algebra-ii-trigonometric-graphs.ts` | 14 | open | |  |
 | `algebra-ii-trigonometric-transformations.ts` | 14 | open | |  |
 | `algebra-ii-transformations.ts` | 12 | open | |  |
