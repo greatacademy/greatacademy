@@ -1,5 +1,5 @@
 import { CheckerRegistry } from "./checkers.ts";
-import { explanationParts, figureIssue } from "./figure.ts";
+import { figureIssue, placementIssue } from "./figure.ts";
 import { bodyWords, lexiconIndex } from "./passages.ts";
 import type { Text } from "./text.ts";
 import { isText, locales } from "./text.ts";
@@ -166,6 +166,15 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
     else if (!strands.has(topic.strand)) error(path, `strand ${topic.strand} does not exist`);
     if (!(Number.isFinite(topic.xp) && topic.xp > 0)) error(path, `xp must be positive, got ${topic.xp}`);
     if (topic.knowledgePoints.length === 0) error(path, "a topic needs at least one knowledge point");
+    if (topic.intro !== undefined) {
+      text(`${path} › intro`, topic.intro);
+      for (const drawn of topic.introFigures ?? []) {
+        const issue = figureIssue(drawn);
+        if (issue) error(path, issue);
+      }
+      const placed = placementIssue("intro", topic.intro, topic.introFigures ?? []);
+      if (placed) error(path, placed);
+    } else if (topic.introFigures !== undefined) error(path, "introFigures need an intro");
     const kpIds = new Set<string>();
     for (const kp of topic.knowledgePoints) {
       const kpPath = `${path} › kp ${kp.id}`;
@@ -180,12 +189,8 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
         const issue = figureIssue(drawn);
         if (issue) error(kpPath, issue);
       }
-      for (const locale of locales) {
-        const placed = explanationParts(kp.explanation[locale] ?? "").filter((part) => typeof part === "number");
-        const expected = (kp.figures ?? []).map((_, i) => i);
-        if (JSON.stringify([...placed].sort((a, b) => a - b)) !== JSON.stringify(expected))
-          error(kpPath, `explanation must place each of its ${expected.length} figures once in ${locale}`);
-      }
+      const placed = placementIssue("explanation", kp.explanation, kp.figures ?? []);
+      if (placed) error(kpPath, placed);
       if (typeof kp.generate !== "function") error(kpPath, "generate must be a function");
       if (kp.tiered !== undefined && typeof kp.tiered !== "boolean") error(kpPath, "tiered must be true or false");
     }

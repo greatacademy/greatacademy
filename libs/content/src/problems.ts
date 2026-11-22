@@ -1,6 +1,6 @@
 import { MAX_WRITING_CHARS, orderIndexes } from "./checkers.ts";
 import type { CompiledSubject, Issue } from "./compile.ts";
-import { type Figure, figureIssue, plottedPoints } from "./figure.ts";
+import { type Figure, figureIssue, placementIssue, plottedPoints } from "./figure.ts";
 import { createRng } from "./rng.ts";
 import { speechExpected } from "./speech.ts";
 import { MAX_STROKES, parseStrokes } from "./strokes.ts";
@@ -300,10 +300,12 @@ function problemIssue(subject: CompiledSubject, topic: TopicDef, a: Problem, tex
       }
     }
   }
-  for (const drawn of [a.figure, a.solutionFigure]) {
+  for (const drawn of [a.figure, a.solutionFigure, ...(a.solutionFigures ?? [])]) {
     const figure = drawn && figureIssue(drawn);
     if (figure) return figure;
   }
+  const placedIssue = placementIssue("solution", a.solution, a.solutionFigures ?? []);
+  if (placedIssue) return placedIssue;
   for (const sound of a.solutionSounds ?? []) {
     if (sound.text.trim() === "") return "a sound needs its text";
     if (!RECORDING.test(sound.audio)) return `a sound's path is not a recording's: ${sound.audio}`;

@@ -4,6 +4,7 @@ import { CompileError, compileSubject } from "./compile.ts";
 import { explanationParts, type Figure, figureIssue, plottedPoints } from "./figure.ts";
 import { readManifest, subjectListing, subjectManifest } from "./manifest.ts";
 import { sampleGenerators } from "./problems.ts";
+import { topicSource } from "./source.ts";
 import { same, t } from "./text.ts";
 import type { CourseDef, Problem, SubjectDef, TopicDef, UnitDef } from "./types.ts";
 
@@ -221,6 +222,11 @@ describe("sampleGenerators", () => {
       () => ({ ...problem(1), solutionFigure: { svg: '<svg viewBox="0 0 1 1"><script/></svg>', alt: same("x") } }),
       "<script>",
     ],
+    [
+      "solution figures not placed",
+      () => ({ ...problem(1), solutionFigures: [{ svg: '<svg viewBox="0 0 1 1"><line/></svg>', alt: same("x") }] }),
+      "solution must place each of its 1 figures once",
+    ],
   ] as const)("reports %s", (_, generate, message) => {
     const issues = sampleGenerators(withGenerator(generate as TopicDef["knowledgePoints"][number]["generate"]), { samples: 5 });
     expect(issues.map((i) => i.message).join("\n")).toContain(message);
@@ -370,6 +376,26 @@ describe("figures in an explanation", () => {
     ["out of range", same("{{figure 1}}")],
   ])("rejects a figure %s", (_, explanation) => {
     expect(() => compileSubject(withPoint(explanation, [drawn]))).toThrow("must place each");
+  });
+});
+
+describe("a topic's introduction", () => {
+  const drawn = { svg: '<svg viewBox="0 0 1 1"><line/></svg>', alt: same("x") };
+
+  it("accepts an introduction with its figures placed", () => {
+    expect(() => compileSubject(subject([topic("a", { intro: same("Why\n\n{{figure 0}}"), introFigures: [drawn] })]))).not.toThrow();
+  });
+
+  it("rejects figures it does not place, and figures without an introduction", () => {
+    expect(errors(subject([topic("a", { intro: same("Why"), introFigures: [drawn] })])).join("\n")).toContain("intro must place each");
+    expect(errors(subject([topic("a", { introFigures: [drawn] })])).join("\n")).toContain("introFigures need an intro");
+  });
+
+  it("is given with the first knowledge point only", async () => {
+    const step = topic("a").knowledgePoints[0]!;
+    const source = topicSource([topic("a", { intro: same("Why"), knowledgePoints: [step, { ...step, id: "kp-2" }] })], []);
+    expect((await source.lesson("a", 0)).topicIntro?.text.en).toBe("Why");
+    expect((await source.lesson("a", 1)).topicIntro).toBeUndefined();
   });
 });
 

@@ -1,4 +1,4 @@
-import { isText, type Text } from "./text.ts";
+import { isText, locales, type Text } from "./text.ts";
 
 /**
  * plottedPoints reads a response to a plot: points written "(x, y)", joined by ";". It returns undefined when the response
@@ -79,5 +79,16 @@ export function figureIssue(f: Figure): string | undefined {
     }
   }
   if (/url\(|<!|<\?/.test(svg)) return "figure must not contain url(), comments, CDATA or processing instructions";
+  return undefined;
+}
+
+/** placementIssue tells whether a text places each of its figures once by a line `{{figure N}}` in every locale, or undefined. */
+export function placementIssue(name: string, text: Text, figures: readonly Figure[]): string | undefined {
+  const expected = JSON.stringify(figures.map((_, i) => i));
+  for (const locale of locales) {
+    const placed = explanationParts(text[locale] ?? "").filter((part) => typeof part === "number");
+    if (JSON.stringify([...placed].sort((x, y) => x - y)) !== expected)
+      return `${name} must place each of its ${figures.length} figures once in ${locale}`;
+  }
   return undefined;
 }

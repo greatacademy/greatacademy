@@ -13,6 +13,8 @@ export interface KnowledgePointLesson {
   readonly explanation: Text;
   readonly figure?: Figure;
   readonly figures?: readonly Figure[];
+  /** topicIntro is the topic's introduction, given with its first knowledge point only. */
+  readonly topicIntro?: { readonly text: Text; readonly figures: readonly Figure[] };
 }
 
 /** Judged is a generated problem and the verdict on a response to it. */
@@ -75,7 +77,14 @@ export function topicSource(
     problems: async (refs) => refs.map(generate),
     lesson: async (topic, kp) => {
       const { title, explanation, figure, figures } = point(topic, kp);
-      return { title, explanation, ...(figure && { figure }), ...(figures && { figures }) };
+      const intro = kp === 0 ? topics.get(topic)?.intro : undefined;
+      return {
+        title,
+        explanation,
+        ...(figure && { figure }),
+        ...(figures && { figures }),
+        ...(intro && { topicIntro: { text: intro, figures: topics.get(topic)?.introFigures ?? [] } }),
+      };
     },
     judge: async (ref, response) => {
       const problem = generate(ref);

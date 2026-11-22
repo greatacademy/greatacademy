@@ -120,6 +120,8 @@ export interface Problem {
   readonly solution: Text;
   /** solutionFigure is a drawing that shows the solution, such as the prompt's figure with the answer worked out on it; it stays hidden until the solution is shown. */
   readonly solutionFigure?: Figure;
+  /** solutionFigures are drawings placed inside the solution, each by a line `{{figure N}}` in every locale, so that a walkthrough shows each step drawn. */
+  readonly solutionFigures?: readonly Figure[];
   /** solutionSounds are recordings that stay hidden, like the solution, until it is shown: never ones that would give the answer away before. */
   readonly solutionSounds?: readonly Sound[];
   /** canonical is a response the checker must accept; it is also the answer shown after a wrong attempt. */
@@ -226,6 +228,13 @@ export interface TopicDef {
   /** xp is the expected minutes of the lesson for a serious learner. */
   readonly xp: number;
   readonly knowledgePoints: readonly KnowledgePointDef[];
+  /**
+   * intro introduces the topic before its first knowledge point, as a tutorial would: what the idea is for, how it
+   * grows from the prerequisites, and the words it needs, with drawings placed by lines `{{figure N}}`.
+   */
+  readonly intro?: Text;
+  /** introFigures are the drawings the intro places. */
+  readonly introFigures?: readonly Figure[];
   /** practiceOnly starts the lesson with practice, for topics that teach nothing new; a learner who failed it gets the explanations and worked examples. */
   readonly practiceOnly?: boolean;
   /** diagnostic is the id of the knowledge point the diagnostic asks; the last one by default. */
