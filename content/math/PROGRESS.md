@@ -113,9 +113,9 @@ Stage 0 is done. Walking its lessons against Math Academy's on the same topics f
 | `combinatorics.ts` | 13 | done | |  |
 | `geometry-similarity.ts` | 12 | done | |  |
 | `geometry-circles.ts` | 10 | done | |  |
-| `geometry-triangles-trigonometry.ts` | 9 | in progress | |  |
-| `geometry-coordinate.ts` | 9 | open | |  |
-| `geometry-coordinate-circles.ts` | 9 | open | |  |
+| `geometry-triangles-trigonometry.ts` | 9 | done | |  |
+| `geometry-coordinate.ts` | 9 | in progress | |  |
+| `geometry-coordinate-circles.ts` | 9 | in progress | |  |
 | `geometry-congruence.ts` | 8 | done | |  |
 | `geometry-transformations.ts` | 7 | open | |  |
 | `geometry-radians.ts` | 4 | open | |  |
