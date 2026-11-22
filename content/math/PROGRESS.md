@@ -142,14 +142,14 @@ Stage 0 is done. Walking its lessons against Math Academy's on the same topics f
 | `algebra-ii-polynomial-graphs.ts` | 5 | done | |  |
 | `algebra-ii-reciprocal-functions.ts` | 6 | done | |  |
 | `algebra-ii-general-triangles.ts` | 5 | done | |  |
-| other files | 10 | open | | `act-exam-functions.ts` (5), `act-fundamentals-number.ts` (1), `act-exam-numbers.ts` (1), `act-number-algebra.ts` (1), `functions.ts` (1), `act-fundamentals-reasoning-algebra.ts` (1) |
+| other files | 1 | in progress | | `functions.ts` (1); the other 9 counted here were already taught |
 
 ### Precalculus
 
 | File | Precalculus topics | Status | Owner | Notes |
 | :--- | ---: | :--- | :--- | :--- |
-| `precalculus-trigonometric-identities.ts` | 23 | open | |  |
-| `precalculus-inequalities.ts` | 20 | open | |  |
+| `precalculus-trigonometric-identities.ts` | 23 | in progress | |  |
+| `precalculus-inequalities.ts` | 20 | in progress | |  |
 | `precalculus-matrices.ts` | 18 | open | |  |
 | `precalculus-conic-sections.ts` | 18 | open | |  |
 | `precalculus-series.ts` | 17 | open | |  |

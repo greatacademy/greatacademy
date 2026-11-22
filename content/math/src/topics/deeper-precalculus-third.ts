@@ -13,6 +13,9 @@ type Rng = Parameters<KnowledgePointDef["generate"]>[0];
 /** factor writes a factor such as x - 3 or x + 3. */
 const factor = (a: number) => (a === 0 ? "x" : a < 0 ? `(x + ${-a})` : `(x - ${a})`);
 
+/** bare writes the factor x - a without parentheses. */
+const bare = (a: number) => (a === 0 ? "x" : a < 0 ? `x + ${-a}` : `x - ${a}`);
+
 /** triple picks a Pythagorean triple. */
 const triple = (rng: Rng) =>
   rng.pick<[number, number, number]>([
@@ -191,8 +194,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
         "counting-integers-below-the-axis",
         ["Counting integers below the axis", "数轴下方的整数"],
         [
-          "An upward parabola lies below the axis only between its intercepts. The integers strictly between the two intercepts therefore number one fewer than the distance between them.",
-          "开口向上的抛物线只在两个截距之间位于轴下方。所以严格位于两个截距之间的整数，比它们的距离少一个。",
+          "An upward parabola lies below the axis only between its intercepts. The integers strictly between the two intercepts therefore number one fewer than the distance between them.\n\n> **Watch out.** At the intercepts themselves $y = 0$, which is not below the axis. Counting them as well gives one more than the distance instead of one fewer.",
+          "开口向上的抛物线只在两个截距之间位于轴下方。所以严格位于两个截距之间的整数，比它们的距离少一个。\n\n> **注意。** 在截距处 $y = 0$，并不在轴下方。把截距也数进去，得到的就比距离多一个，而不是少一个。",
         ],
         (rng) => {
           const a = rng.int(-12, 6);
@@ -205,8 +208,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
             w - 1,
             [w, w + 1, w - 2 < 0 ? 3 : w - 2],
             [
-              `The intercepts are $x = ${a}$ and $x = ${a + w}$, so $y < 0$ for $${a} < x < ${a + w}$. These are the integers from $${a + 1}$ to $${a + w - 1}$, which is $${w - 1}$ in all.`,
-              `截距是 $x = ${a}$ 和 $x = ${a + w}$，所以 $${a} < x < ${a + w}$ 时 $y < 0$。这些整数从 $${a + 1}$ 到 $${a + w - 1}$，共 $${w - 1}$ 个。`,
+              `**Step 1: Find where $y < 0$.** The intercepts are $x = ${a}$ and $x = ${a + w}$. An upward parabola is below the axis between them, so $y < 0$ for $${a} < x < ${a + w}$; at the intercepts $y = 0$, so they do not count.\n\n**Step 2: Count the integers.** They run from $${a + 1}$ to $${a + w - 1}$, which is $${w - 1}$ in all.\n\n**Check.** From $${a}$ to $${a + w}$ there are $${w}$ unit steps, so $${w + 1}$ integers counting both intercepts. Leaving out the two intercepts leaves $${w + 1} - 2 = ${w - 1}$.`,
+              `**第一步：找出 $y < 0$ 的范围。**截距是 $x = ${a}$ 和 $x = ${a + w}$。开口向上的抛物线在两者之间位于轴下方，所以 $${a} < x < ${a + w}$ 时 $y < 0$；截距处 $y = 0$，不算在内。\n\n**第二步：数整数。**这些整数从 $${a + 1}$ 到 $${a + w - 1}$，共 $${w - 1}$ 个。\n\n**检验。**从 $${a}$ 到 $${a + w}$ 有 $${w}$ 个单位长度，连同两个截距共有 $${w + 1}$ 个整数。去掉两个截距，剩下 $${w + 1} - 2 = ${w - 1}$ 个。`,
             ],
           );
         },
@@ -220,8 +223,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
         "a-repeated-root-does-not-change-the-sign",
         ["A repeated root does not change the sign", "重根不改变符号"],
         [
-          "A squared factor is never negative, so the graph touches the axis there and turns back. It adds its root to a solution set that includes equality, without flipping the sign beyond it.",
-          "平方因子不会是负数，所以图像在那里碰到轴后折回。它把自己的根加入含等号的解集，但不会改变符号。",
+          "A squared factor is never negative, so the graph touches the axis there and turns back. It adds its root to a solution set that includes equality, without flipping the sign beyond it.\n\n> **Watch out.** With $\\le$ or $\\ge$, the root of the squared factor belongs to the solution even when the product has the wrong sign on both sides of it, so the answer can contain a lone point.",
+          "平方因子不会是负数，所以图像在那里碰到轴后折回。它把自己的根加入含等号的解集，但不会改变符号。\n\n> **注意。** 对 $\\le$ 或 $\\ge$，即使乘积在平方因子的根两侧符号都不对，这个根仍属于解集，所以答案里可能有一个孤立的点。",
         ],
         (rng) => {
           const b = rng.int(-9, 6);
@@ -233,8 +236,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
               `(-\\infty, ${b}] \\cup \\{${a}\\}`,
               [`(-\\infty, ${b}]`, `[${b}, ${a}]`, `(-\\infty, ${b}] \\cup [${a}, \\infty)`],
               [
-                `The squared factor is positive except at $x = ${a}$, where the product is $0$, so $x \\le ${b}$ or $x = ${a}$.`,
-                `平方因子除 $x = ${a}$ 外都为正，那里积为 $0$，所以 $x \\le ${b}$ 或 $x = ${a}$。`,
+                `**Step 1: Look at the squared factor.** $${factor(a)}^{2}$ is positive except at $x = ${a}$, where it is $0$, so the product is $0$ there.\n\n**Step 2: Use the other factor.** Elsewhere the product has the sign of $${bare(b)}$, which is at most $0$ for $x \\le ${b}$. So $x \\le ${b}$ or $x = ${a}$.\n\n**Check.** At $x = ${b - 1}$ the product is $${-((a - b + 1) ** 2)}$, at $x = ${a}$ it is $0$, and at $x = ${a + 1}$ it is $${a + 1 - b}$. The first two satisfy $\\le 0$ and the last does not, as the answer says.`,
+                `**第一步：看平方因子。**$${factor(a)}^{2}$ 除 $x = ${a}$ 外都为正，在那里为 $0$，所以乘积在那里为 $0$。\n\n**第二步：看另一个因子。**在其他地方，乘积与 $${bare(b)}$ 同号，而它在 $x \\le ${b}$ 时不大于 $0$。所以 $x \\le ${b}$ 或 $x = ${a}$。\n\n**检验。**$x = ${b - 1}$ 时乘积为 $${-((a - b + 1) ** 2)}$，$x = ${a}$ 时为 $0$，$x = ${a + 1}$ 时为 $${a + 1 - b}$。前两个满足 $\\le 0$，最后一个不满足，与答案一致。`,
               ],
             ),
             [

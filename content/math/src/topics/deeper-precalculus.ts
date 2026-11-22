@@ -93,8 +93,8 @@ const leadingParameter: KnowledgePointDef = {
   id: "a-parameter-in-the-leading-coefficient-for-one-solution",
   title: t("A parameter in the leading coefficient for one solution", "首项系数中的参数与唯一解"),
   explanation: t(
-    "The discriminant does not care which coefficient holds the parameter. When a quadratic equation has exactly one real solution, its discriminant is zero, and this gives one equation that can be solved for the unknown. If the parameter stands in front of the square, the discriminant is linear in it, so there is a single answer rather than a pair of values. The requirement that the equation stays quadratic keeps the parameter from being zero.",
-    "判别式并不在意参数出现在哪个系数上。一元二次方程恰有一个实数解时，判别式为零，这就给出一个可以解出未知数的方程。如果参数在平方项前面，判别式关于它是一次的，所以只有一个答案，而不是一对值。方程必须仍是二次方程，这一要求保证参数不为零。",
+    "The discriminant does not care which coefficient holds the parameter. When a quadratic equation has exactly one real solution, its discriminant is zero, and this gives one equation that can be solved for the unknown. If the parameter stands in front of the square, the discriminant is linear in it, so there is a single answer rather than a pair of values. The requirement that the equation stays quadratic keeps the parameter from being zero.\n\n> **Watch out.** Exactly one real solution means the discriminant equals $0$, not that it is positive, and the value found must not be $0$, or the equation is no longer quadratic.",
+    "判别式并不在意参数出现在哪个系数上。一元二次方程恰有一个实数解时，判别式为零，这就给出一个可以解出未知数的方程。如果参数在平方项前面，判别式关于它是一次的，所以只有一个答案，而不是一对值。方程必须仍是二次方程，这一要求保证参数不为零。\n\n> **注意。** 恰有一个实数解意味着判别式等于 $0$，而不是大于 $0$；求出的值也不能是 $0$，否则方程就不再是二次方程。",
   ),
   generate(rng) {
     const c = signedIn(rng, 2, 6);
@@ -111,8 +111,8 @@ const leadingParameter: KnowledgePointDef = {
       form: "integer",
       wrong: [-answer, 4 * answer, 2 * answer, m],
       solution: t(
-        `Exactly one solution means the discriminant is zero: $${inParens(b)}^{2} - 4k \\cdot ${inParens(c)} = 0$. This gives $${b * b} = ${4 * c}k$, so $k = ${answer}$.`,
-        `恰有一个解说明判别式为零：$${inParens(b)}^{2} - 4k \\cdot ${inParens(c)} = 0$。于是 $${b * b} = ${4 * c}k$，所以 $k = ${answer}$。`,
+        `${stepLabel(1, "Set the discriminant to zero", "令判别式为零").en} Exactly one solution means the discriminant is zero: $${inParens(b)}^{2} - 4k \\cdot ${inParens(c)} = 0$.\n\n${stepLabel(2, "Solve for k", "解出 k").en} This gives $${b * b} = ${4 * c}k$, so $k = ${answer}$, which is not $0$.\n\n**Check.** With $k = ${answer}$ the equation is $${poly([answer, "x^{2}"], [b, "x"], [c, ""])} = ${c === 1 ? "" : c === -1 ? "-" : c}(${poly([m, "x"], [1, ""])})^{2} = 0$. Its only solution is $x = ${frac(-1, m)}$.`,
+        `${stepLabel(1, "Set the discriminant to zero", "令判别式为零")["zh-CN"]}恰有一个解说明判别式为零：$${inParens(b)}^{2} - 4k \\cdot ${inParens(c)} = 0$。\n\n${stepLabel(2, "Solve for k", "解出 k")["zh-CN"]}于是 $${b * b} = ${4 * c}k$，所以 $k = ${answer}$，它不为 $0$。\n\n**检验。**$k = ${answer}$ 时方程为 $${poly([answer, "x^{2}"], [b, "x"], [c, ""])} = ${c === 1 ? "" : c === -1 ? "-" : c}(${poly([m, "x"], [1, ""])})^{2} = 0$。它唯一的解是 $x = ${frac(-1, m)}$。`,
       ),
     });
   },

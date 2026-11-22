@@ -2162,28 +2162,50 @@ So read the two ends separately. For $y = x^{2}$, follow the graph to the right:
         const left = leftSign > 0 ? "up" : "down";
         const zh = (d: string) => (d === "up" ? "上升" : "下降");
         const g = (x: number) => f(x) + shift;
+        const ends = (i: number) => [i < 2 ? 1 : -1, i % 2 === 0 ? 1 : -1] as const;
+        const reasons = endOptions.map((o, i): [string, string, string] => {
+          const [r] = ends(i);
+          return r !== sign
+            ? [
+                o.en,
+                `At the far right the graph goes ${right}, so $f(x) \\to ${arrowWord(sign)}$ as $x \\to \\infty$.`,
+                `图象在最右边${zh(right)}，所以当 $x \\to \\infty$ 时 $f(x) \\to ${arrowWord(sign)}$。`,
+              ]
+            : [
+                o.en,
+                `At the far left the graph goes ${left}, so $f(x) \\to ${arrowWord(leftSign)}$ as $x \\to -\\infty$.`,
+                `图象在最左边${zh(left)}，所以当 $x \\to -\\infty$ 时 $f(x) \\to ${arrowWord(leftSign)}$。`,
+              ];
+        });
         return annotate(
           {
-            ...choiceProblem({
-              prompt: t(
-                "The graph of the polynomial function $f$ is shown; it keeps going in the same direction beyond the window. Describe its end behavior.",
-                "如图是多项式函数 $f$ 的图象，在窗口之外它保持原来的趋势。描述它的端点行为。",
-              ),
-              options: endOptions,
-              correct,
-              solution: t(
-                `**Step 1: the right end.** Follow the graph to the far right: it goes ${right}. So as $x \\to \\infty$, $f(x) \\to ${arrowWord(sign)}$.
+            ...reasoned(
+              choiceProblem({
+                prompt: t(
+                  "The graph of the polynomial function $f$ is shown; it keeps going in the same direction beyond the window. Describe its end behavior.",
+                  "如图是多项式函数 $f$ 的图象，在窗口之外它保持原来的趋势。描述它的端点行为。",
+                ),
+                options: endOptions,
+                correct,
+                solution: t(
+                  `**Step 1: the right end.** Follow the graph to the far right: it goes ${right}. So as $x \\to \\infty$, $f(x) \\to ${arrowWord(sign)}$.
 
 **Step 2: the left end.** Follow it to the far left: it goes ${left}. The left end is where $x \\to -\\infty$, so there $f(x) \\to ${arrowWord(leftSign)}$.
 
-**Step 3: put them together.** As $x \\to \\infty$, $f(x) \\to ${arrowWord(sign)}$; as $x \\to -\\infty$, $f(x) \\to ${arrowWord(leftSign)}$. ${sign === leftSign ? "Both ends go the same way." : "The two ends go opposite ways."}`,
-                `**第一步：右端。** 沿图象看到最右边：它${zh(right)}。所以当 $x \\to \\infty$ 时 $f(x) \\to ${arrowWord(sign)}$。
+**Step 3: put them together.** As $x \\to \\infty$, $f(x) \\to ${arrowWord(sign)}$; as $x \\to -\\infty$, $f(x) \\to ${arrowWord(leftSign)}$. ${sign === leftSign ? "Both ends go the same way." : "The two ends go opposite ways."}
+
+**Check.** In the marked graph the arrows at the ends point ${right} on the right and ${left} on the left, as the two statements say. ${sign === leftSign ? "Ends that go the same way fit a polynomial of even degree, whose graph comes back the way it went." : "Ends that go opposite ways fit a polynomial of odd degree, whose graph passes from one side of the window to the other."}`,
+                  `**第一步：右端。** 沿图象看到最右边：它${zh(right)}。所以当 $x \\to \\infty$ 时 $f(x) \\to ${arrowWord(sign)}$。
 
 **第二步：左端。** 沿图象看到最左边：它${zh(left)}。左端对应 $x \\to -\\infty$，所以那里 $f(x) \\to ${arrowWord(leftSign)}$。
 
-**第三步：合起来。** 当 $x \\to \\infty$ 时 $f(x) \\to ${arrowWord(sign)}$；当 $x \\to -\\infty$ 时 $f(x) \\to ${arrowWord(leftSign)}$。${sign === leftSign ? "两端走向相同。" : "两端走向相反。"}`,
-              ),
-            }),
+**第三步：合起来。** 当 $x \\to \\infty$ 时 $f(x) \\to ${arrowWord(sign)}$；当 $x \\to -\\infty$ 时 $f(x) \\to ${arrowWord(leftSign)}$。${sign === leftSign ? "两端走向相同。" : "两端走向相反。"}
+
+**检验。** 标注后的图象两端的箭头：右端${zh(right)}，左端${zh(left)}，与两个式子一致。${sign === leftSign ? "两端走向相同，符合偶数次多项式：它的图象朝来时的方向折回。" : "两端走向相反，符合奇数次多项式：它的图象从窗口的一侧穿到另一侧。"}`,
+                ),
+              }),
+              reasons,
+            ),
             figure: curveFigure(
               [{ kind: "curve", f: g, accent: true }],
               `The graph of a polynomial function of degree ${degree}. At the right end it goes ${right}; at the left end it goes ${left}.`,
@@ -2240,27 +2262,43 @@ For $f(x) = 4x^{2} - 2x^{5} + 1$ the leading term is $-2x^{5}$. At the right $-2
         const leftSign = even ? Math.sign(a) : -Math.sign(a);
         const at = (x: number) => terms.reduce((acc, [c, d]) => acc + c * x ** d, 0);
         const big = (v: number) => num(v).replace(/(\d)(?=(\d{3})+$)/g, "$1\\,");
-        return choiceProblem({
-          prompt: t(`Describe the end behavior of $f(x) = ${latex}$.`, `描述 $f(x) = ${latex}$ 的端点行为。`),
-          options: endOptions,
-          correct: endIndex(Math.sign(a), n),
-          solution: t(
-            `**Step 1: find the leading term.** The term of highest degree is $${lead}$, of degree $${n}$. Far from $0$ it outweighs the other terms, so it decides the end behavior.
+        const reasons = endOptions.map((o, i): [string, string, string] =>
+          (i < 2 ? 1 : -1) !== Math.sign(a)
+            ? [
+                o.en,
+                `The right end follows the leading coefficient $${a}$: for a large positive $x$ the leading term is ${a > 0 ? "positive" : "negative"}, so $f(x) \\to ${arrowWord(a)}$ as $x \\to \\infty$.`,
+                `右端由首项系数 $${a}$ 决定：当 $x$ 是很大的正数时首项为${a > 0 ? "正" : "负"}，所以当 $x \\to \\infty$ 时 $f(x) \\to ${arrowWord(a)}$。`,
+              ]
+            : [
+                o.en,
+                `The degree $${n}$ is ${even ? "even, so the left end goes the same way as the right end" : "odd, so the left end goes the opposite way to the right end"}: $f(x) \\to ${arrowWord(leftSign)}$ as $x \\to -\\infty$.`,
+                `次数 $${n}$ 是${even ? "偶数，所以左端与右端走向相同" : "奇数，所以左端与右端走向相反"}：当 $x \\to -\\infty$ 时 $f(x) \\to ${arrowWord(leftSign)}$。`,
+              ],
+        );
+        return reasoned(
+          choiceProblem({
+            prompt: t(`Describe the end behavior of $f(x) = ${latex}$.`, `描述 $f(x) = ${latex}$ 的端点行为。`),
+            options: endOptions,
+            correct: endIndex(Math.sign(a), n),
+            solution: t(
+              `**Step 1: find the leading term.** The term of highest degree is $${lead}$, of degree $${n}$. Far from $0$ it outweighs the other terms, so it decides the end behavior.
 
 **Step 2: the right end.** For a large positive $x$, $x^{${n}}$ is positive, so $${lead}$ has the same sign as its coefficient $${a}$: it is ${a > 0 ? "positive" : "negative"}. As $x \\to \\infty$, $f(x) \\to ${arrowWord(a)}$.
 
 **Step 3: the left end.** For a large negative $x$, $x^{${n}}$ is ${even ? "positive, since the degree is even" : "negative, since the degree is odd"}, so $${lead}$ is ${leftSign > 0 ? "positive" : "negative"}. As $x \\to -\\infty$, $f(x) \\to ${arrowWord(leftSign)}$.
 
-**Check.** $f(10) = ${big(at(10))}$ and $f(-10) = ${big(at(-10))}$, already ${a > 0 ? "large and positive" : "large and negative"} on the right and ${leftSign > 0 ? "large and positive" : "large and negative"} on the left.`,
-            `**第一步：找首项。** 次数最高的项是 $${lead}$，次数为 $${n}$。离 $0$ 很远时，它比其他各项大得多，所以由它决定端点行为。
+**Check.** $f(10) = ${big(at(10))}$ and $f(-10) = ${big(at(-10))}$, ${a > 0 ? "positive" : "negative"} on the right and ${leftSign > 0 ? "positive" : "negative"} on the left, as the leading term predicts.`,
+              `**第一步：找首项。** 次数最高的项是 $${lead}$，次数为 $${n}$。离 $0$ 很远时，它比其他各项大得多，所以由它决定端点行为。
 
 **第二步：右端。** 当 $x$ 是很大的正数时，$x^{${n}}$ 为正，所以 $${lead}$ 与它的系数 $${a}$ 同号，为${a > 0 ? "正" : "负"}。当 $x \\to \\infty$ 时 $f(x) \\to ${arrowWord(a)}$。
 
 **第三步：左端。** 当 $x$ 是绝对值很大的负数时，${even ? `次数为偶数，$x^{${n}}$ 为正` : `次数为奇数，$x^{${n}}$ 为负`}，所以 $${lead}$ 为${leftSign > 0 ? "正" : "负"}。当 $x \\to -\\infty$ 时 $f(x) \\to ${arrowWord(leftSign)}$。
 
-**检验。** $f(10) = ${big(at(10))}$，$f(-10) = ${big(at(-10))}$：右端已经是绝对值很大的${a > 0 ? "正数" : "负数"}，左端是绝对值很大的${leftSign > 0 ? "正数" : "负数"}。`,
-          ),
-        });
+**检验。** $f(10) = ${big(at(10))}$，$f(-10) = ${big(at(-10))}$：右端为${a > 0 ? "正数" : "负数"}，左端为${leftSign > 0 ? "正数" : "负数"}，与首项的预测一致。`,
+            ),
+          }),
+          reasons,
+        );
       },
     },
   ],
