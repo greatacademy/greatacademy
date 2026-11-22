@@ -54,25 +54,44 @@ The report lists outline topics missing from each course and the findings of heu
   - *topic in no course*: older topics whose ids must stay. Most are computed foundations, because course topics list them as prerequisites.
   - *duplicate topic titles*: an exam topic shares its outline title with the Fundamentals topic it builds on (about 60 findings). Also `units-of-time` and `units-of-time-and-elapsed-time`, and `mean-of-a-data-set` and `the-mean-of-a-data-set`, are different topics with one outline title, and no course contains both.
 
-## Teaching Standard: Algebra I
+## Teaching Standard
 
-Algebra I is rewritten first to the teaching standard of [docs/content.md §4](../../docs/content.md#4-knowledge-points-and-generators): a topic introduction, explanations that teach why and end with a callout on the typical mistake, and solutions worked step by step, with figures where the picture changes and a check. Its 234 topics are claimed by file below, with the same rules as the board. A topic is done when its id is in `taughtTopics` (`src/teaching-standard.ts`), whose test holds it to the standard; add the ids of a file's topics there as they are rewritten.
+Every topic of the subject is rewritten to the teaching standard of [docs/content.md §4](../../docs/content.md#4-knowledge-points-and-generators): a topic introduction, explanations that teach why and end with a callout on the typical mistake, and solutions worked step by step, with figures where the picture changes and a check. A topic is done when its id is in `taughtTopics` (`src/teaching-standard.ts`), whose test holds it to the standard, together with the knowledge points other files add to it; add the ids of a file's topics there as they are rewritten.
+
+Work is claimed by file, with the same rules as the board. Helpers do not commit: whoever coordinates reads each file's work, redoes the mathematics of sampled solutions, and commits a file's topics together with only their ids, so that every commit passes the gate.
+
+### Stages
+
+Counts are topics not already counted in an earlier course of the same row; courses made only of other courses' topics (Integrated Math, Mathematical Foundations, Mathematical Methods for the Physical Sciences) are done when those are.
+
+| Stage | Courses | Topics | Standard adapted |
+| :--- | :--- | ---: | :--- |
+| 0 | Algebra I | 234 | Pilot. Before stage 1: merge the helpers written along the way (`signed`, `paren`, checks of equations and the like) into one shared module; make the gate hold whole courses; walk a few lessons on the web and the phones against Math Academy, and revise the standard |
+| 1 | Geometry, Algebra II, Precalculus | 573 | Geometry draws every step of an argument |
+| 2 | AP Calculus AB and BC, Calculus I and II | 341 | A check differentiates an antiderivative, puts a derivative back on the graph, or estimates a limit numerically |
+| 3 | 1st to 8th Grade, Prealgebra | 887 | The introduction is a small scene, sentences are short, every knowledge point has a picture (number line, area or bar model), and a callout names one mistake |
+| 4 | University courses | 1,283 | A solution gives the reason for each step (definition, theorem); a check tries a special case or that every hypothesis was used |
+| 5 | SAT and ACT | 813 | The 597 practice-only topics get no introduction; solutions are worked in steps with a check, and callouts give strategy, such as when trying the options is faster; the gate has a variant for them |
+
+Two helpers work at a time through stage 1; stage 4, whose courses share few files, may take more.
+
+### Algebra I
 
 | File | Algebra I topics | Status | Owner | Notes |
 | :--- | :--- | :--- | :--- | :--- |
-| `lines.ts` | 20 | in progress | | `point-slope-form` is the model |
+| `lines.ts` | 20 | done | | `point-slope-form` is the model |
 | `exponential-functions.ts` | 22 | open | |  |
 | `quadratic-functions.ts` | 18 | open | |  |
-| `functions.ts` | 18 | open | |  |
-| `quadratic-equations.ts` | 17 | open | |  |
+| `functions.ts` | 18 | in progress | |  |
+| `quadratic-equations.ts` | 17 | in progress | |  |
 | `sequences.ts` | 16 | open | |  |
-| `compound-inequalities.ts` | 14 | open | |  |
-| `absolute-value.ts` | 14 | open | |  |
+| `compound-inequalities.ts` | 14 | done | |  |
+| `absolute-value.ts` | 14 | done | |  |
 | `units.ts` | 13 | open | |  |
 | `two-variable-models.ts` | 13 | open | |  |
 | `radical-expressions.ts` | 12 | open | |  |
 | `polynomials.ts` | 12 | open | |  |
-| `linear-equations.ts` | 12 | open | |  |
+| `linear-equations.ts` | 12 | done | |  |
 | `factoring.ts` | 8 | open | |  |
 | `rational-expressions.ts` | 7 | open | |  |
 | `bivariate-statistics.ts` | 7 | open | |  |
