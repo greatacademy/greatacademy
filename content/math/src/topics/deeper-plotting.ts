@@ -6,6 +6,7 @@ import { t } from "@ga/content";
 import { type PlaneMark, type PlaneView, poly } from "@ga/subject-math";
 
 import { plotProblem } from "../problems.ts";
+import { stepLabel } from "../solution-kit.ts";
 
 type Pair = readonly [string, string];
 type Pt = readonly [number, number];
@@ -800,8 +801,8 @@ To find it from a drawing, follow the two lines to where they meet and read the 
       "marking-the-image-of-a-vertex",
       ["Marking the image of a vertex", "标出顶点的像"],
       [
-        "A translation moves every point by the same amount. To find the image of a vertex, count the move across from the vertex, then the move up or down. Every other vertex would move in the same way, so the image has the same size, shape and direction as the figure.",
-        "平移使每个点移动相同的量。要找顶点的像，从顶点开始数水平移动，再数上下移动。其他顶点也同样移动，所以像和原图形的大小、形状、方向都相同。",
+        "A translation moves every point by the same amount. To find the image of a vertex, count the move across from the vertex, then the move up or down. Every other vertex would move in the same way, so the image has the same size, shape and direction as the figure.\n\n> **Watch out.** The move across changes only the first coordinate and the move up or down only the second: do not count the vertical move along the $x$-axis. Left and down go toward smaller numbers.",
+        "平移使每个点移动相同的量。要找顶点的像，从顶点开始数水平移动，再数上下移动。其他顶点也同样移动，所以像和原图形的大小、形状、方向都相同。\n\n> **注意。** 水平移动只改变第一个坐标，上下移动只改变第二个坐标：不要把上下移动的格数沿 $x$ 轴去数。向左、向下是朝较小的数移动。",
       ],
       (rng) => {
         const a: Pt = [rng.int(-3, 0), rng.int(-3, 0)];
@@ -840,8 +841,8 @@ To find it from a drawing, follow the two lines to where they meet and read the 
             { at: [[a[0] + p, a[1] - q]], why: t("You moved the wrong way up or down.", "你竖直方向移反了。") },
           ],
           solution: t(
-            `Add the moves to $A${tex(a)}$: $${a[0]} ${p < 0 ? "-" : "+"} ${Math.abs(p)} = ${image[0]}$ and $${a[1]} ${q < 0 ? "-" : "+"} ${Math.abs(q)} = ${image[1]}$. The image is $${tex(image)}$.`,
-            `把移动量加到 $A${tex(a)}$ 上：$${a[0]} ${p < 0 ? "-" : "+"} ${Math.abs(p)} = ${image[0]}$，$${a[1]} ${q < 0 ? "-" : "+"} ${Math.abs(q)} = ${image[1]}$。像是 $${tex(image)}$。`,
+            `${stepLabel(1, "move across", "水平移动").en} From $A${tex(a)}$, moving $${Math.abs(p)}$ ${across[0]} changes the first coordinate: $${a[0]} ${p < 0 ? "-" : "+"} ${Math.abs(p)} = ${image[0]}$.\n\n${stepLabel(2, "move up or down", "上下移动").en} Moving $${Math.abs(q)}$ ${up[0]} changes the second coordinate: $${a[1]} ${q < 0 ? "-" : "+"} ${Math.abs(q)} = ${image[1]}$. Mark the image at $${tex(image)}$.\n\n**Check.** Move the image back, $${Math.abs(p)}$ ${p > 0 ? "left" : "right"} and $${Math.abs(q)}$ ${q > 0 ? "down" : "up"}: $(${image[0]} ${p > 0 ? "-" : "+"} ${Math.abs(p)}, ${image[1]} ${q > 0 ? "-" : "+"} ${Math.abs(q)}) = ${tex(a)}$, which is $A$.`,
+            `${stepLabel(1, "move across", "水平移动")["zh-CN"]}从 $A${tex(a)}$ 出发，向${across[1]}移 $${Math.abs(p)}$ 改变第一个坐标：$${a[0]} ${p < 0 ? "-" : "+"} ${Math.abs(p)} = ${image[0]}$。\n\n${stepLabel(2, "move up or down", "上下移动")["zh-CN"]}向${up[1]}移 $${Math.abs(q)}$ 改变第二个坐标：$${a[1]} ${q < 0 ? "-" : "+"} ${Math.abs(q)} = ${image[1]}$。在 $${tex(image)}$ 处标出像。\n\n**检验。** 把像移回去，向${p > 0 ? "左" : "右"}移 $${Math.abs(p)}$，向${q > 0 ? "下" : "上"}移 $${Math.abs(q)}$：$(${image[0]} ${p > 0 ? "-" : "+"} ${Math.abs(p)}, ${image[1]} ${q > 0 ? "-" : "+"} ${Math.abs(q)}) = ${tex(a)}$，正是 $A$。`,
           ),
           solutionAlt: t(`The image of A at ${tex(image)}.`, `A 的像在 ${tex(image)}。`),
           solutionMarks: [{ kind: "segment", a, b: image, dashed: true, tone: "action" }],
@@ -854,13 +855,15 @@ To find it from a drawing, follow the two lines to where they meet and read the 
       "marking-a-rotated-point",
       ["Marking a rotated point", "标出旋转后的点"],
       [
-        "A turn about the origin follows a rule. A quarter turn counterclockwise sends $(x, y)$ to $(-y, x)$, a quarter turn clockwise sends it to $(y, -x)$, and a half turn sends it to $(-x, -y)$. You can check a result on the grid: the point stays at the same distance from the origin, and it lands in the quadrant the turn leads to.",
-        "绕原点的旋转遵循规则。逆时针转四分之一圈把 $(x, y)$ 变成 $(-y, x)$，顺时针转四分之一圈把它变成 $(y, -x)$，转半圈把它变成 $(-x, -y)$。可以在网格上检验：点到原点的距离不变，并落在旋转后对应的象限。",
+        "A turn about the origin follows a rule. A quarter turn counterclockwise sends $(x, y)$ to $(-y, x)$, a quarter turn clockwise sends it to $(y, -x)$, and a half turn sends it to $(-x, -y)$. You can check a result on the grid: the point stays at the same distance from the origin, and it lands in the quadrant the turn leads to.\n\n> **Watch out.** Swapping the coordinates alone, $(x, y) \\to (y, x)$, is a reflection across $y = x$, not a turn: a quarter turn swaps them *and* changes one sign, the first for counterclockwise and the second for clockwise.",
+        "绕原点的旋转遵循规则。逆时针转四分之一圈把 $(x, y)$ 变成 $(-y, x)$，顺时针转四分之一圈把它变成 $(y, -x)$，转半圈把它变成 $(-x, -y)$。可以在网格上检验：点到原点的距离不变，并落在旋转后对应的象限。\n\n> **注意。** 只对调坐标，$(x, y) \\to (y, x)$，是关于 $y = x$ 的反射，不是旋转：转四分之一圈要对调坐标，*并且*改变一个符号，逆时针改第一个，顺时针改第二个。",
       ],
       (rng) => {
         const p = apart(rng, 5);
         const turn = rng.pick(rotations);
         const image = turn.move(p);
+        const back = rotations[[1, 0, 2][rotations.indexOf(turn)]!]!;
+        const sq = (n: number) => (n < 0 ? `(${n})^2` : `${n}^2`);
         const others = rotations.filter((r) => r !== turn);
         return plotProblem({
           prompt: t(`Mark the image of $P$ after a rotation of ${turn.en} about the origin.`, `标出 $P$ 绕原点旋转${turn.zh}后的像。`),
@@ -882,8 +885,8 @@ To find it from a drawing, follow the two lines to where they meet and read the 
             },
           ],
           solution: t(
-            `The rule is $${turn.rule}$, so $${tex(p)} \\to ${tex(image)}$.`,
-            `规则是 $${turn.rule}$，所以 $${tex(p)} \\to ${tex(image)}$。`,
+            `${stepLabel(1, "find the rule", "找出规则").en} A rotation of ${turn.en} about the origin follows the rule $${turn.rule}$.\n\n${stepLabel(2, "apply it", "代入").en} With $x = ${p[0]}$ and $y = ${p[1]}$, the rule gives $${tex(p)} \\to ${tex(image)}$. Mark the image there.\n\n**Check.** Turn the image back, ${back.en}, by the rule $${back.rule}$: $${tex(image)} \\to ${tex(back.move(image))}$, which is $P$. Both points are also the same distance from the origin: $${sq(p[0])} + ${sq(p[1])} = ${sq(image[0])} + ${sq(image[1])} = ${p[0] ** 2 + p[1] ** 2}$.`,
+            `${stepLabel(1, "find the rule", "找出规则")["zh-CN"]}绕原点旋转${turn.zh}的规则是 $${turn.rule}$。\n\n${stepLabel(2, "apply it", "代入")["zh-CN"]}把 $x = ${p[0]}$，$y = ${p[1]}$ 代入，得 $${tex(p)} \\to ${tex(image)}$。在那里标出像。\n\n**检验。** 把像转回去，${back.zh}，规则是 $${back.rule}$：$${tex(image)} \\to ${tex(back.move(image))}$，正是 $P$。两点到原点的距离也相同：$${sq(p[0])} + ${sq(p[1])} = ${sq(image[0])} + ${sq(image[1])} = ${p[0] ** 2 + p[1] ** 2}$。`,
           ),
           solutionAlt: t(`P and its image ${tex(image)}, joined to the origin.`, `P 和它的像 ${tex(image)}，都与原点相连。`),
           solutionMarks: [
@@ -899,8 +902,8 @@ To find it from a drawing, follow the two lines to where they meet and read the 
       "marking-a-point-reflected-in-a-line",
       ["Marking a point reflected in a line", "标出关于直线反射后的点"],
       [
-        "The rule depends on the mirror. Across the $x$-axis, $(x, y)$ goes to $(x, -y)$; across the $y$-axis, to $(-x, y)$; across $y = x$, to $(y, x)$; and across $y = -x$, to $(-y, -x)$. In every case the mirror is halfway between the point and its image, and the segment joining them is perpendicular to the mirror.",
-        "规则取决于镜面。关于 $x$ 轴，$(x, y)$ 变成 $(x, -y)$；关于 $y$ 轴，变成 $(-x, y)$；关于 $y = x$，变成 $(y, x)$；关于 $y = -x$，变成 $(-y, -x)$。无论哪种情况，镜面都在点和像的正中间，连接它们的线段与镜面垂直。",
+        "The rule depends on the mirror. Across the $x$-axis, $(x, y)$ goes to $(x, -y)$; across the $y$-axis, to $(-x, y)$; across $y = x$, to $(y, x)$; and across $y = -x$, to $(-y, -x)$. In every case the mirror is halfway between the point and its image, and the segment joining them is perpendicular to the mirror.\n\n> **Watch out.** Match the rule to the mirror. The axes change one sign without swapping; $y = x$ swaps without changing signs; $y = -x$ swaps *and* changes both signs.",
+        "规则取决于镜面。关于 $x$ 轴，$(x, y)$ 变成 $(x, -y)$；关于 $y$ 轴，变成 $(-x, y)$；关于 $y = x$，变成 $(y, x)$；关于 $y = -x$，变成 $(-y, -x)$。无论哪种情况，镜面都在点和像的正中间，连接它们的线段与镜面垂直。\n\n> **注意。** 规则要与镜面对应。关于坐标轴：改变一个符号，不对调；关于 $y = x$：对调，不变号；关于 $y = -x$：对调，*并且*两个都变号。",
       ],
       (rng) => {
         const p = apart(rng, 5);
@@ -921,8 +924,8 @@ To find it from a drawing, follow the two lines to where they meet and read the 
             ),
           })),
           solution: t(
-            `The rule is $${mirror.rule}$, so $${tex(p)} \\to ${tex(image)}$.`,
-            `规则是 $${mirror.rule}$，所以 $${tex(p)} \\to ${tex(image)}$。`,
+            `${stepLabel(1, "find the rule", "找出规则").en} A reflection across ${mirror.en} follows the rule $${mirror.rule}$.\n\n${stepLabel(2, "apply it", "代入").en} With $x = ${p[0]}$ and $y = ${p[1]}$, the rule gives $${tex(p)} \\to ${tex(image)}$. Mark the image there.\n\n**Check.** Reflect the image across the same mirror: $${tex(image)} \\to ${tex(mirror.move(image))}$, which is $P$ again, as a reflection done twice undoes itself.`,
+            `${stepLabel(1, "find the rule", "找出规则")["zh-CN"]}关于${mirror.zh}的反射规则是 $${mirror.rule}$。\n\n${stepLabel(2, "apply it", "代入")["zh-CN"]}把 $x = ${p[0]}$，$y = ${p[1]}$ 代入，得 $${tex(p)} \\to ${tex(image)}$。在那里标出像。\n\n**检验。** 把像关于同一镜面再反射一次：$${tex(image)} \\to ${tex(mirror.move(image))}$，又回到 $P$，因为反射两次就还原了。`,
           ),
           solutionAlt: t(`P and its image ${tex(image)}, joined across the mirror.`, `P 和它的像 ${tex(image)}，隔着镜面相连。`),
           solutionMarks: [{ kind: "segment", a: p, b: image, dashed: true, tone: "action" }],

@@ -106,7 +106,7 @@ Stage 0 is done. Walking its lessons against Math Academy's on the same topics f
 | File | Geometry topics | Status | Owner | Notes |
 | :--- | ---: | :--- | :--- | :--- |
 | `geometry-solids.ts` | 23 | done | |  |
-| `geometry-proof-congruence-similarity.ts` | 13 | in progress | |  |
+| `geometry-proof-congruence-similarity.ts` | 13 | done | |  |
 | `geometry-circle-theorems.ts` | 13 | in progress | |  |
 | `geometry-trigonometry.ts` | 13 | open | |  |
 | `probability.ts` | 13 | open | |  |
@@ -116,7 +116,7 @@ Stage 0 is done. Walking its lessons against Math Academy's on the same topics f
 | `geometry-triangles-trigonometry.ts` | 9 | open | |  |
 | `geometry-coordinate.ts` | 9 | open | |  |
 | `geometry-coordinate-circles.ts` | 9 | open | |  |
-| `geometry-congruence.ts` | 8 | in progress | |  |
+| `geometry-congruence.ts` | 8 | done | |  |
 | `geometry-transformations.ts` | 7 | open | |  |
 | `geometry-radians.ts` | 4 | open | |  |
 | other files | 21 | open | | `act-fundamentals-reasoning-geometry.ts` (6), `act-geometry-data.ts` (4), `act-exam-geometry.ts` (3), `grade-7-probability.ts` (2), `act-exam-statistics.ts` (2), `act-fundamentals-reasoning-data.ts` (2), `angles.ts` (1), `act-fundamentals-modeling.ts` (1) |

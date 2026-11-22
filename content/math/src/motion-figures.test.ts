@@ -36,8 +36,9 @@ describe("motion figures", () => {
     const { knowledgePoints } = compileMath().topics.get("rotations-of-geometric-figures")!;
     for (const kp of knowledgePoints) {
       const problem = kp.generate(createRng(5));
-      expect(problem.solutionFigure, kp.id).toBeDefined();
+      expect(problem.solutionFigures?.[0] ?? problem.solutionFigure, kp.id).toBeDefined();
       expect(viewOf(problem)).not.toHaveProperty("solutionFigure");
+      expect(viewOf(problem)).not.toHaveProperty("solutionFigures");
     }
   });
 });

@@ -19,6 +19,7 @@ import {
 } from "@ga/subject-math";
 
 import { figureChoice } from "../problems.ts";
+import { stepLabel } from "../solution-kit.ts";
 import { numberLineFigure } from "./compound-inequalities.ts";
 
 type Pair = readonly [string, string];
@@ -224,6 +225,9 @@ function motionChoice(rng: Rng, verb: Pair, right: string, others: readonly stri
     .map((p, i) => `${names[i]}${tex(pts[i] as Pt)} \\to ${names[i]}'${tex(p)}`)
     .map((s) => `$${s}$`)
     .join(", ");
+  const undo = undoing[right] ?? right;
+  const back = motions[undo] as (typeof motions)[string];
+  const a1 = images[0] as Pt;
   return figureChoice(rng, {
     prompt: t(
       `Triangle $ABC$ is ${verb[0]} ${motion.en}. Which drawing shows its image?`,
@@ -240,11 +244,14 @@ function motionChoice(rng: Rng, verb: Pair, right: string, others: readonly stri
       );
     }),
     solution: t(
-      `This motion sends every point by the rule $${motion.rule}$. Apply it to each vertex: ${vertex}. The other drawings use a different rule, so at least one of their vertices lands elsewhere.`,
-      `这个变换按规则 $${motion.rule}$ 移动每个点。把它用到每个顶点上：${vertex.replaceAll("$, $", "$，$")}。其余的图用了别的规则，至少有一个顶点落在别处。`,
+      `${stepLabel(1, "find the rule", "找出规则").en} Moving a point ${motion.en} sends $(x, y)$ by the rule $${motion.rule}$.\n\n${stepLabel(2, "apply it to the vertices", "作用在顶点上").en} ${vertex}. Only one drawing has its image vertices at all three points; the others follow a different rule, so at least one of their vertices lands elsewhere.\n\n**Check.** Map $A'$ back. ${undo === right ? "Doing the same motion again undoes it" : `Moving it ${back.en} undoes the motion`}, by the rule $${back.rule}$: $A'${tex(a1)} \\to ${tex(back.move(a1))}$, which is $A$ again.`,
+      `${stepLabel(1, "find the rule", "找出规则")["zh-CN"]}把点${motion.zh}，就是按规则 $${motion.rule}$ 移动 $(x, y)$。\n\n${stepLabel(2, "apply it to the vertices", "作用在顶点上")["zh-CN"]}${vertex.replaceAll("$, $", "$，$")}。只有一张图的像的三个顶点都在这些位置；其余的图用了别的规则，至少有一个顶点落在别处。\n\n**检验。** 把 $A'$ 移回去。${undo === right ? "再做一次同样的变换就还原了" : `把它${back.zh}就还原了`}，规则是 $${back.rule}$：$A'${tex(a1)} \\to ${tex(back.move(a1))}$，正是 $A$。`,
     ),
   });
 }
+
+/** undoing names, for each motion, the motion that undoes it. */
+const undoing: Readonly<Record<string, string>> = { ccw90: "cw90", cw90: "ccw90", ccw270: "ccw90" };
 
 /** halfPlaneFigure draws the boundary of y = mx + b and shades one side. */
 function halfPlaneFigure(m: number, b: number, above: boolean, dashed: boolean): Figure {
@@ -1037,8 +1044,8 @@ For $y \\le -x + 3$: the boundary $y = -x + 3$ is solid. Testing the origin give
       "choosing-the-drawing-of-a-translation",
       ["Choosing the drawing of a translation", "选出平移后的图形"],
       [
-        "A translation moves every point by the same amount in the same direction. Pick one vertex and count the move on the grid; if the image of that vertex is right, check that the other vertices moved by the same amount. The image has the same size and faces the same way.",
-        "平移把每个点沿同一方向移动相同的距离。选一个顶点，在网格上数出移动量；如果这个顶点的像对了，再检查其他顶点是否移动了相同的量。像的大小和朝向都不变。",
+        "A translation moves every point by the same amount in the same direction. Pick one vertex and count the move on the grid; if the image of that vertex is right, check that the other vertices moved by the same amount. The image has the same size and faces the same way.\n\n> **Watch out.** Keep the two distances apart and keep their directions: a drawing that moves $3$ up and $2$ across instead of $2$ up and $3$ across, or the right distance the wrong way, is also a slide, but of a different translation.",
+        "平移把每个点沿同一方向移动相同的距离。选一个顶点，在网格上数出移动量；如果这个顶点的像对了，再检查其他顶点是否移动了相同的量。像的大小和朝向都不变。\n\n> **注意。** 两个距离不要对调，方向也不要弄反：把“横移 $3$、竖移 $2$”画成“横移 $2$、竖移 $3$”，或者距离对但方向反了，画出来也是平移，只是另一个平移。",
       ],
       (rng) => {
         const pts = rng.pick(bases);
@@ -1063,8 +1070,8 @@ For $y \\le -x + 3$: the boundary $y = -x + 3$ is solid. Testing the origin give
             t("This image moves the wrong way up or down.", "这个像竖直方向移反了。"),
           ],
           solution: t(
-            `Every point moves by $${num(p)}$ across and $${num(q)}$ up. So $A${tex(first)}$ goes to $A'${tex([first[0] + p, first[1] + q])}$, and the other vertices move by the same amount.`,
-            `每个点横向移动 $${num(p)}$，纵向移动 $${num(q)}$。所以 $A${tex(first)}$ 移到 $A'${tex([first[0] + p, first[1] + q])}$，其他顶点移动相同的量。`,
+            `${stepLabel(1, "write the move", "写出移动量").en} Moving $${Math.abs(p)}$ units ${across} and $${Math.abs(q)}$ units ${up} adds $${num(p)}$ to every $x$-coordinate and $${num(q)}$ to every $y$-coordinate.\n\n${stepLabel(2, "move the vertices", "移动顶点").en} ${pts.map((v, i) => `$${names[i]}${tex(v)} \\to ${names[i]}'${tex([v[0] + p, v[1] + q])}$`).join(", ")}. The right drawing has its image at these three points, the same size and facing the same way.\n\n**Check.** Move $A'${tex([first[0] + p, first[1] + q])}$ back, $${Math.abs(p)}$ units ${p > 0 ? "left" : "right"} and $${Math.abs(q)}$ units ${q > 0 ? "down" : "up"}: it lands on $${tex(first)}$, which is $A$.`,
+            `${stepLabel(1, "write the move", "写出移动量")["zh-CN"]}向${acrossZh}平移 $${Math.abs(p)}$ 个单位、向${upZh}平移 $${Math.abs(q)}$ 个单位，就是每个 $x$ 坐标加 $${num(p)}$，每个 $y$ 坐标加 $${num(q)}$。\n\n${stepLabel(2, "move the vertices", "移动顶点")["zh-CN"]}${pts.map((v, i) => `$${names[i]}${tex(v)} \\to ${names[i]}'${tex([v[0] + p, v[1] + q])}$`).join("，")}。正确的图中，像的顶点就在这三处，大小和朝向都不变。\n\n**检验。** 把 $A'${tex([first[0] + p, first[1] + q])}$ 移回去，向${p > 0 ? "左" : "右"}移 $${Math.abs(p)}$ 个单位、向${q > 0 ? "下" : "上"}移 $${Math.abs(q)}$ 个单位：落在 $${tex(first)}$，正是 $A$。`,
           ),
         });
       },
@@ -1075,8 +1082,8 @@ For $y \\le -x + 3$: the boundary $y = -x + 3$ is solid. Testing the origin give
       "choosing-the-drawing-of-a-rotation",
       ["Choosing the drawing of a rotation", "选出旋转后的图形"],
       [
-        "A rotation about the origin keeps every point at the same distance from the origin and turns it through the same angle. A quarter turn counterclockwise carries the first quadrant into the second, and a quarter turn clockwise carries it into the fourth. So first check which quadrant the image lies in, then check the vertices.",
-        "绕原点旋转时，每个点到原点的距离不变，并转过相同的角。逆时针转四分之一圈把第一象限转到第二象限，顺时针转四分之一圈把它转到第四象限。所以先看像在哪个象限，再检查顶点。",
+        "A rotation about the origin keeps every point at the same distance from the origin and turns it through the same angle. A quarter turn counterclockwise carries the first quadrant into the second, and a quarter turn clockwise carries it into the fourth. So first check which quadrant the image lies in, then check the vertices.\n\n> **Watch out.** Counterclockwise turns from the positive $x$-axis toward the positive $y$-axis. A quarter turn the other way, or a reflection, lands next door; a reflection also reverses the order of the vertices around the triangle, while a rotation keeps it.",
+        "绕原点旋转时，每个点到原点的距离不变，并转过相同的角。逆时针转四分之一圈把第一象限转到第二象限，顺时针转四分之一圈把它转到第四象限。所以先看像在哪个象限，再检查顶点。\n\n> **注意。** 逆时针是从 $x$ 轴正方向转向 $y$ 轴正方向。反方向转四分之一圈，或者做一次翻折，像会落到相邻的象限；翻折还会让三角形顶点的环绕顺序反过来，旋转则不会。",
       ],
       (rng) => {
         const right = rng.pick(["ccw90", "cw90"]);
@@ -1089,8 +1096,8 @@ For $y \\le -x + 3$: the boundary $y = -x + 3$ is solid. Testing the origin give
       "choosing-a-rotation-by-its-rule",
       ["Choosing a rotation by its rule", "用规则选出旋转后的图形"],
       [
-        "A half turn about the origin sends $(x, y)$ to $(-x, -y)$. A turn of $270^\\circ$ counterclockwise is the same as a quarter turn clockwise, and sends $(x, y)$ to $(y, -x)$. A drawing is right when every vertex of the image follows the rule.",
-        "绕原点转半圈把 $(x, y)$ 变成 $(-x, -y)$。逆时针转 $270^\\circ$ 等于顺时针转四分之一圈，把 $(x, y)$ 变成 $(y, -x)$。只有像的每个顶点都符合规则，图才是对的。",
+        "A half turn about the origin sends $(x, y)$ to $(-x, -y)$. A turn of $270^\\circ$ counterclockwise is the same as a quarter turn clockwise, and sends $(x, y)$ to $(y, -x)$. A drawing is right when every vertex of the image follows the rule.\n\n> **Watch out.** $270^\\circ$ counterclockwise is not $(x, y) \\to (-y, x)$: that is $90^\\circ$ counterclockwise. Test one vertex: a $270^\\circ$ turn sends $(1, 2)$ to $(2, -1)$, a $90^\\circ$ turn to $(-2, 1)$.",
+        "绕原点转半圈把 $(x, y)$ 变成 $(-x, -y)$。逆时针转 $270^\\circ$ 等于顺时针转四分之一圈，把 $(x, y)$ 变成 $(y, -x)$。只有像的每个顶点都符合规则，图才是对的。\n\n> **注意。** 逆时针 $270^\\circ$ 不是 $(x, y) \\to (-y, x)$，那是逆时针 $90^\\circ$。用一个顶点试一试：转 $270^\\circ$ 把 $(1, 2)$ 变成 $(2, -1)$，转 $90^\\circ$ 则变成 $(-2, 1)$。",
       ],
       (rng) => {
         const right = rng.pick(["half", "ccw270"]);
@@ -1107,8 +1114,8 @@ For $y \\le -x + 3$: the boundary $y = -x + 3$ is solid. Testing the origin give
       "choosing-the-drawing-of-a-reflection",
       ["Choosing the drawing of a reflection", "选出翻折后的图形"],
       [
-        "A reflection flips a figure over a line: each point and its image are the same distance from the line, on opposite sides, and the figure's direction around its vertices reverses. Across the $x$-axis $y$ changes sign, across the $y$-axis $x$ changes sign, and across $y = x$ the coordinates swap.",
-        "翻折把图形沿一条直线翻过去：每个点和它的像到这条线的距离相等，分在两侧，而且顶点的环绕方向会反过来。关于 $x$ 轴翻折时 $y$ 变号，关于 $y$ 轴翻折时 $x$ 变号，关于 $y = x$ 翻折时两个坐标交换。",
+        "A reflection flips a figure over a line: each point and its image are the same distance from the line, on opposite sides, and the figure's direction around its vertices reverses. Across the $x$-axis $y$ changes sign, across the $y$-axis $x$ changes sign, and across $y = x$ the coordinates swap.\n\n> **Watch out.** Across the $x$-axis it is $y$ that changes sign, not $x$: the image stays straight above or below the point. Across $y = -x$ the coordinates swap *and* both change sign.",
+        "翻折把图形沿一条直线翻过去：每个点和它的像到这条线的距离相等，分在两侧，而且顶点的环绕方向会反过来。关于 $x$ 轴翻折时 $y$ 变号，关于 $y$ 轴翻折时 $x$ 变号，关于 $y = x$ 翻折时两个坐标交换。\n\n> **注意。** 关于 $x$ 轴翻折时变号的是 $y$，不是 $x$：像在原来那个点的正上方或正下方。关于 $y = -x$ 翻折时，两个坐标交换，*并且*都变号。",
       ],
       (rng) => {
         const right = rng.pick(["overX", "overY", "overDiagonal", "overOtherDiagonal"]);
