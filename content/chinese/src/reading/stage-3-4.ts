@@ -11,7 +11,18 @@ import { FABLES_3, FAIRY_TALES_3, POEMS_3 } from "./texts-3a.ts";
 import { KEY_SENTENCES_3, MAIN_IDEA_3, SCIENCE_3 } from "./texts-3b.ts";
 import { FOLK_TALES_4, MYTHS_4, NARRATIVES_4 } from "./texts-4a.ts";
 import { EVERYDAY_4, FEELINGS_4, SKIMMING_4 } from "./texts-4b.ts";
-import { PASSAGE, POEM, quoted, type ReadingSpec, SIGN, readingTopicOf as topicOf, type Wording } from "./topic-kit.ts";
+import {
+  endingOf,
+  evidenceOf,
+  marksOf,
+  PASSAGE,
+  POEM,
+  quoted,
+  type ReadingSpec,
+  SIGN,
+  readingTopicOf as topicOf,
+  type Wording,
+} from "./topic-kit.ts";
 
 /** bare is a sentence without its closing mark, to be quoted inside another sentence. */
 const bare = (text: string): string => text.replace(/[。！？]+$/u, "");
@@ -23,34 +34,46 @@ export const byGist: Wording = (q) => ({
     choose: t("**Step 2: choose what covers all of it.**", "**第二步：选出能概括全部的一项。**"),
   },
   find: t(
-    `The question asks: ${q.ask.en} Do not stop at the first sentence; read to the end of the part asked about, where it says ${quoted(q.clue, "en")}`,
-    `题目问的是：${q.ask["zh-CN"]}不要只看第一句，要把问到的部分读完，那里说：${quoted(q.clue, "zh-CN")}`,
+    `The question asks: ${q.ask.en} Do not stop at the first sentence; read to the end of the part asked about, where it says ${evidenceOf(q, "en")}`,
+    `题目问的是：${q.ask["zh-CN"]}不要只看第一句，要把问到的部分读完，那里说：${evidenceOf(q, "zh-CN")}`,
   ),
-  choose: t(
-    `The answer must take in every part, not one detail, and must agree with these words: “${q.right}”.`,
-    `答案要说到每一部分，而不是其中一件事，还要和这句话一致：“${q.right}”。`,
-  ),
+  choose:
+    q.reasoning ??
+    t(
+      `The answer must take in every part, not one detail, and fit what the text says: “${q.right}”.`,
+      `答案要说到每一部分，而不是其中一件事，还要和文中的话相合：“${q.right}”。`,
+    ),
   check: t(
     `Read the part again with the answer, “${q.right}”, in mind: each sentence fits under it, and it says nothing the text does not.`,
     `心里想着答案“${q.right}”，再读一遍：每一句都能放进这个意思里，答案也没有说文中没有的内容。`,
   ),
 });
 
-/** byFeeling words a question on how a character feels: find what the character says and does, and say what it shows. */
-export const byFeeling: Wording = (q) => ({
+/**
+ * byFeeling words a question on how a character feels: find what the character says and does, and say what it shows;
+ * a feeling the text does not name is checked against the rest of the story, not against words it does not have.
+ */
+export const byFeeling: Wording = (q, piece) => ({
   heads: {
     find: t("**Step 1: find the words that show the feeling.**", "**第一步：找到表现心情的话。**"),
     choose: t("**Step 2: say what those words show.**", "**第二步：想想这些话说明了什么。**"),
   },
   find: t(
-    `A feeling is shown by what a character says, does and looks like. The question asks: ${q.ask.en} Look at the words: ${quoted(q.clue, "en")}`,
-    `人物的心情，从他说的话、做的事和样子里看得出来。题目问的是：${q.ask["zh-CN"]}看这句话：${quoted(q.clue, "zh-CN")}`,
+    `A feeling is shown by what a character says, does and looks like. The question asks: ${q.ask.en} Look at the words: ${evidenceOf(q, "en")}`,
+    `人物的心情，从他说的话、做的事和样子里看得出来。题目问的是：${q.ask["zh-CN"]}看${q.evidence.length === 1 ? "这句话" : "这几处"}：${evidenceOf(q, "zh-CN")}`,
   ),
-  choose: t(`Ask what someone who says or does this feels: “${q.right}”.`, `想一想，这样说、这样做的人心里是什么感受：“${q.right}”。`),
-  check: t(
-    `Put yourself in the character's place at that moment and read “${bare(q.clue)}” again: “${q.right}” is just how one would feel.`,
-    `把自己当成那时的人物，再读一遍“${bare(q.clue)}”：心里正是“${q.right}”。`,
-  ),
+  choose:
+    q.reasoning ??
+    t(`Ask what someone who says or does this feels: “${q.right}”.`, `想一想，这样说、这样做的人心里是什么感受：“${q.right}”。`),
+  check: q.inferred
+    ? t(
+        `The text does not name the feeling; it is felt from what the character says and does. Put yourself in the character's place, read ${marksOf(q, "en")} again, and go on to the end, ${quoted(endingOf(piece), "en")} “${q.right}” is just how one would feel, and nothing after it goes against it.`,
+        `短文没有直接写出这种心情，它是从人物的言行里体会出来的。把自己当成那时的人物，再读一遍${marksOf(q, "zh-CN")}，接着读到结尾${quoted(endingOf(piece), "zh-CN")}心里正是“${q.right}”，后面也没有一处和它相反。`,
+      )
+    : t(
+        `Put yourself in the character's place at that moment and read “${bare(q.clue)}” again: “${q.right}” is just how one would feel.`,
+        `把自己当成那时的人物，再读一遍“${bare(q.clue)}”：心里正是“${q.right}”。`,
+      ),
 });
 
 /** byContext words a question on a word: read its sentence, and try the meaning in its place. */

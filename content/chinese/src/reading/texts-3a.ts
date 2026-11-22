@@ -23,11 +23,11 @@ export const FAIRY_TALES_3 = `
 - 很伤心 ~opposite
 - 很害怕 ~unsaid
 ?2 小松鼠收到果子以后，心情有什么变化？ | How did the squirrel's feelings change once it had the fruit?
-= 从伤心变得高兴了 | 小松鼠擦干眼泪，笑了
+= 从伤心变得高兴了 | 小松鼠擦干眼泪，笑了 | 小松鼠坐在树下哭
 - 从高兴变得伤心了 ~opposite
 - 一直很伤心 ~opposite
 ?2 “背上空空的，心里却满满的”，说明小刺猬心里怎么样？ | What does "his back empty, his heart full" show about the hedgehog?
-= 帮助了别人，心里很快乐 | 他觉得这是最快乐的一天
+≈ 帮助了别人，心里很快乐 | 他觉得这是最快乐的一天 | 把背上的果子一个一个摘下来，送给了小松鼠 | 小刺猬背上空空的，心里却满满的
 - 果子没有了，心里很难过 ~opposite
 - 背着果子太累了 ~unsaid
 
@@ -46,15 +46,15 @@ export const FAIRY_TALES_3 = `
 - 小树还是不想长大 ~opposite
 - 小树搬到了山下 ~unsaid
 ?2 开头小树说“多麻烦呀”，说明他觉得长大怎么样？ | When the tree says "what a bother", how does it feel about growing up?
-= 不愿意，觉得长大很麻烦 | 我才不要长大呢
+≈ 不愿意，觉得长大很麻烦 | 我才不要长大呢 | 长大了要挡风，还要被鸟儿踩，多麻烦呀
 - 很想快点长大 ~opposite
 - 长大了很好玩 ~opposite
 ?2 看到大树护住小屋，小树的心情怎么样？ | How did the little tree feel watching the big tree save the house?
-= 很吃惊，也很佩服 | 小树看呆了
+≈ 很吃惊，也很佩服 | 小树看呆了 | 原来长大了能做这么多事
 - 很生气 ~unsaid
 - 一点儿也不在意 ~opposite
 ?2 “小树天天喝足雨水，晒足太阳”，表现了小树怎样的心情？ | What does "drinking its fill of rain and sun every day" show?
-= 他盼着快点长大 | 努力地往上长
+≈ 他盼着快点长大 | 努力地往上长 | 原来长大了能做这么多事
 - 他怕长大 ~opposite
 - 他觉得太阳太热 ~unsaid
 
@@ -73,7 +73,7 @@ export const FAIRY_TALES_3 = `
 - 又大又厚 ~opposite
 - 变成了黑云 ~unsaid
 ?2 小草求白云给点雨时，心里怎么想？ | What was on the grass's mind when it asked for rain?
-= 盼着能下雨 | 白云姐姐，给我们一点雨吧
+≈ 盼着能下雨 | 白云姐姐，给我们一点雨吧 | 白云下了一阵小雨，草儿绿了
 - 怕下雨 ~opposite
 - 想去看大海 ~who
 ?2 变小以后，白云后悔吗？ | Did the cloud regret growing smaller?
@@ -108,7 +108,7 @@ export const FAIRY_TALES_3 = `
 - 很高兴 ~opposite
 - 吃得太饱了 ~life
 ?2 朋友越来越多的时候，小青蛙会是什么心情？ | How would the frog feel with more and more friends?
-= 不再孤单，很快乐 | 后来他的朋友越来越多
+≈ 不再孤单，很快乐 | 后来他的朋友越来越多 | 觉得好孤单
 - 更孤单了 ~reversed
 - 还是爱生气 ~opposite
 
@@ -127,15 +127,15 @@ export const FAIRY_TALES_3 = `
 - 有人在上面点了灯 ~opposite
 - 它自己会发光 ~opposite
 ?2 小兔子问妈妈时，心里怎么样？ | How did the rabbit feel when he asked his mother?
-= 很好奇，想知道答案 | 是谁在上面点了一盏灯吗
+≈ 很好奇，想知道答案 | 是谁在上面点了一盏灯吗 | 小兔子晚上睡不着
 - 很害怕月亮 ~unsaid
 - 很生气 ~unsaid
 ?2 小兔子在山上“大声喊”，说明他怎么样？ | What does his shouting on the mountain show?
-= 他很想弄明白 | 大声喊
+≈ 他很想弄明白 | 大声喊 | 小兔子跳上最高的山 | 月亮，你的灯是谁点的
 - 他很生月亮的气 ~unsaid
 - 他迷路了 ~unsaid
 ?2 最后小兔子为什么能放心地睡着？ | Why could the rabbit fall asleep at ease?
-= 他弄明白了月亮为什么亮 | 小兔子明白了
+≈ 他弄明白了月亮为什么亮 | 小兔子明白了 | 原来月亮是借了太阳的光呀 | 说完，他放心地睡着了
 - 妈妈给他点了一盏灯 ~unsaid
 - 他跑累了 ~life
 
@@ -158,11 +158,11 @@ export const FAIRY_TALES_3 = `
 - 很得意 ~opposite
 - 很生气 ~unsaid
 ?2 “新水桶红了脸”，说明它心里怎么样？ | What does "the new bucket blushed" show?
-= 觉得不好意思了 | 新水桶红了脸
+≈ 觉得不好意思了 | 新水桶红了脸 | 你每次打水，走到家就漏掉一半，真没用 | 这一边的花，都是旧水桶漏下的水浇大的
 - 被太阳晒红了 ~life
 - 很高兴 ~unsaid
 ?2 最后，旧水桶的心情有什么变化？ | How did the old bucket's feelings change in the end?
-= 从难过变成觉得自己有用 | 旧水桶第一次觉得自己也很有用
+= 从难过变成觉得自己有用 | 旧水桶第一次觉得自己也很有用 | 旧水桶听了，难过地低下头
 - 从高兴变得难过 ~opposite
 - 一直觉得自己没用 ~opposite
 
@@ -208,15 +208,15 @@ export const FAIRY_TALES_3 = `
 - 小鸟 ~who
 - 河水 ~who
 ?2 开头，石头为什么常常叹气？ | Why did the stone often sigh at first?
-= 他羡慕别人，觉得自己什么也不会 | 我又笨又重，什么也不会
+= 他羡慕别人，觉得自己什么也不会 | 我又笨又重，什么也不会 | 他很羡慕河里的小鱼会唱歌
 - 他被河水冲走了 ~unsaid
 - 他不喜欢小鱼 ~unsaid
 ?2 “石头愣住了”，说明他心里怎么样？ | What does "the stone was stunned" show?
-= 很吃惊，没想到自己能唱歌 | 石头愣住了，原来他也能唱歌
+≈ 很吃惊，没想到自己能唱歌 | 石头愣住了，原来他也能唱歌 | 我又笨又重，什么也不会
 - 很生气 ~unsaid
 - 很伤心 ~opposite
 ?2 从那以后，石头的心情怎么样？ | How did the stone feel from then on?
-= 很快乐，不再叹气 | 再也不叹气了
+≈ 很快乐，不再叹气 | 再也不叹气了 | 他天天和河水一起唱
 - 还是常常叹气 ~opposite
 - 更羡慕小鸟了 ~opposite
 
@@ -243,7 +243,7 @@ export const FAIRY_TALES_3 = `
 - 很高兴 ~opposite
 - 很好奇 ~unsaid
 ?2 小蜗牛“长长地出了一口气”，说明他怎么样？ | What does his long sigh show?
-= 回到壳里，他放心了 | 长长地出了一口气
+≈ 回到壳里，他放心了 | 长长地出了一口气 | 他吓得不知往哪儿躲 | 还是有壳好
 - 他累得喘不过气 ~life
 - 他很生妈妈的气 ~unsaid
 
@@ -262,7 +262,7 @@ export const FAIRY_TALES_3 = `
 - 长出了星星 ~opposite
 - 长出了一棵大树 ~unsaid
 ?2 小熊天天浇水、天天等，说明他心里怎么样？ | What does his daily watering and waiting show?
-= 他盼着种出星星 | 长出来的一定是星星
+≈ 他盼着种出星星 | 长出来的一定是星星 | 他天天浇水，天天等
 - 他不想种了 ~opposite
 - 他很害怕 ~unsaid
 ?2 什么也没长出来，小熊心情怎么样？ | How did the bear feel when nothing grew?
@@ -270,7 +270,7 @@ export const FAIRY_TALES_3 = `
 - 高兴极了 ~opposite
 - 一点也不在意 ~opposite
 ?2 最后小熊为什么拍着手笑了？ | Why did the bear clap and laugh at the end?
-= 他看到了像星星一样的露水 | 真像满地的星星
+≈ 他看到了像星星一样的露水 | 真像满地的星星 | 小熊拍着手笑了 | 长出来的一定是星星
 - 他又得到了一颗糖 ~unsaid
 - 妈妈给他摘了一颗星星 ~unsaid
 `;
@@ -292,15 +292,16 @@ export const FABLES_3 = `
 - 你的矛卖多少钱 ~unsaid
 - 你的盾是从哪里来的 ~unsaid
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
-= 说话做事要前后一致，不能自己打自己的嘴巴 | 那个人张着嘴，一句话也答不上来
+≈ 说话做事要前后一致，不能自己打自己的嘴巴 | 那个人张着嘴，一句话也答不上来 | 我的盾最坚固，什么东西都刺不穿它 | 我的矛最快，什么东西都能刺穿
 - 盾要做得很坚固 ~detail
 - 买东西要买最便宜的 ~never
 ?2 这个人错在哪里？ | Where did the man go wrong?
-= 他前后说的话互相抵触 | 我的矛最快，什么东西都能刺穿
+≈ 他前后说的话互相抵触 | 我的矛最快，什么东西都能刺穿 | 我的盾最坚固，什么东西都刺不穿它
 - 他的矛不够快 ~never
 - 他卖东西时声音太小 ~never
 ?2 他为什么答不上来？ | Why could he not answer?
-= 不管怎么回答，他总有一句话是错的 | 一句话也答不上来
+≈ 不管怎么回答，他总有一句话是错的 | 一句话也答不上来 | 用你的矛去刺你的盾，会怎么样呢 | 我的盾最坚固，什么东西都刺不穿它
+% 两句夸口放在一起就出了问题：如果矛刺穿了盾，“什么东西都刺不穿”的盾就说错了；如果矛刺不穿盾，“什么东西都能刺穿”的矛就说错了。不管怎么答，总有一句是错的，所以他答不上来。 | Put his two boasts together and the trouble shows: if the spear pierces the shield, the shield “nothing can pierce” was a lie; if it does not, the spear that “pierces anything” was. Either way one of his words is wrong, so he has no answer.
 - 他没听清别人的话 ~never
 - 他的盾被刺穿了 ~never
 
@@ -319,15 +320,15 @@ export const FABLES_3 = `
 - 他偷走了铃 ~opposite
 - 铃一点声音也没有 ~opposite
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
-= 自己骗自己，事实不会因此改变 | 铃“丁零零”响了起来
+≈ 自己骗自己，事实不会因此改变 | 铃“丁零零”响了起来 | 用手按住自己的耳朵，听不见响声，别人也就听不见了 | 一下子就把他抓住了
 - 铃一碰就会响 ~detail
 - 想要什么就要想办法拿到 ~reversed
 ?2 这个人错在哪里？ | Where did the man go wrong?
-= 以为自己听不见，别人也就听不见 | 听不见响声，别人也就听不见了
+≈ 以为自己听不见，别人也就听不见 | 听不见响声，别人也就听不见了 | 主人跑出来，一下子就把他抓住了
 - 他的耳朵不好 ~never
 - 他去偷的时候天太亮 ~never
 ?2 他的办法为什么没有用？ | Why did his trick fail?
-= 他按住的是自己的耳朵，铃声还是会被别人听见 | 主人跑出来
+≈ 他按住的是自己的耳朵，铃声还是会被别人听见 | 主人跑出来 | 用手按住自己的耳朵 | 铃“丁零零”响了起来
 - 铃太大了，拿不动 ~never
 - 主人一直站在门口 ~never
 
@@ -338,7 +339,7 @@ export const FABLES_3 = `
 - 北方的一个国家 ~opposite
 - 他自己的家 ~unsaid
 ?1 他说了自己的哪些好条件？ | What advantages did he say he had?
-= 马快，钱多，车夫本领高 | 我带的钱很多，我的车夫赶车的本领也很高
+= 马快，钱多，车夫本领高 | 我带的钱很多，我的车夫赶车的本领也很高 | 我的马跑得快
 - 只有马跑得快 ~part
 - 他认识去楚国的路 ~unsaid
 ?1 听了路人的提醒，他怎么做的？ | What did he do after the passer-by warned him?
@@ -346,15 +347,15 @@ export const FABLES_3 = `
 - 掉头往南走 ~opposite
 - 停下来问路 ~unsaid
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
-= 做事先要看准方向，方向错了，条件越好离目标越远 | 他的条件越好，离楚国就越远
+≈ 做事先要看准方向，方向错了，条件越好离目标越远 | 他的条件越好，离楚国就越远 | 赶着马车一直往北走 | 马再快，方向错了也到不了
 - 赶路要有一匹快马 ~detail
 - 出门要多带一些钱 ~onepart
 ?2 这个人错在哪里？ | Where did the man go wrong?
-= 方向错了还不肯改 | 他催着马车继续往北跑
+≈ 方向错了还不肯改 | 他催着马车继续往北跑 | 楚国在南边，你怎么往北走呢
 - 他的马跑得太慢 ~never
 - 他带的钱不够 ~reversed
 ?2 路人的话说明了什么？ | What do the passer-by's words show?
-= 方向错了，跑得再快也到不了 | 马再快，方向错了也到不了
+≈ 方向错了，跑得再快也到不了 | 马再快，方向错了也到不了 | 他的条件越好，离楚国就越远
 - 马快就能早点到 ~reversed
 - 楚国离得很近 ~never
 
@@ -373,15 +374,15 @@ export const FABLES_3 = `
 - 当上了国王 ~unsaid
 - 学会了吹竽 ~unsaid
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
-= 没有真本领，靠装是混不长久的 | 南郭先生知道混不下去了，只好偷偷地逃走了
+≈ 没有真本领，靠装是混不长久的 | 南郭先生知道混不下去了，只好偷偷地逃走了 | 根本不会吹竽 | 装出很会吹的样子
 - 国王都喜欢听吹竽 ~detail
 - 只要装得像，就能一直混下去 ~reversed
 ?2 南郭先生为什么混不下去了？ | Why could Mr Nanguo not get by any longer?
-= 新国王一个一个地听，他不会吹就会被发现 | 可他喜欢一个一个地听
+≈ 新国王一个一个地听，他不会吹就会被发现 | 可他喜欢一个一个地听 | 根本不会吹竽 | 别人吹的时候，他就捧着竽
 - 新国王不喜欢听吹竽 ~never
 - 他的竽坏了 ~never
 ?2 南郭先生应该怎么做？ | What should Mr Nanguo have done?
-= 认真学好真本领 | 根本不会吹竽
+≈ 认真学好真本领 | 根本不会吹竽 | 只好偷偷地逃走了
 - 找一个更大的队伍混进去 ~reversed
 - 吹得更响一点 ~never
 
@@ -396,19 +397,19 @@ export const FABLES_3 = `
 - 天天出去玩 ~opposite
 - 只是有一点担心 ~part
 ?1 朋友是怎样开导他的？ | How did his friend reason with him?
-= 天是一团气，地是一块块土，不会掉下来，也不会陷下去 | 天是一团气，到处都有，怎么会掉下来呢
+= 天是一团气，地是一块块土，不会掉下来，也不会陷下去 | 天是一团气，到处都有，怎么会掉下来呢 | 地是一块块土，四面八方都是，怎么会陷呢
 - 叫他搬到别的地方去 ~unsaid
 - 送给他一间房子 ~unsaid
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
-= 不要为没有根据的事白白担心 | 这个人听了，放下心来，高兴地笑了
+≈ 不要为没有根据的事白白担心 | 这个人听了，放下心来，高兴地笑了 | 整天担心天会掉下来，地会陷下去 | 天是一团气，到处都有，怎么会掉下来呢
 - 杞国有个人 ~detail
 - 天真的会塌下来 ~reversed
 ?2 这个人错在哪里？ | Where did the man go wrong?
-= 他为不会发生的事整天发愁 | 整天担心天会掉下来
+≈ 他为不会发生的事整天发愁 | 整天担心天会掉下来 | 他愁得吃不下饭，睡不着觉 | 怎么会掉下来呢
 - 他吃得太少 ~never
 - 他不愿意交朋友 ~never
 ?2 朋友的话起了什么作用？ | What did the friend's words do?
-= 让他明白担心是多余的，放下心来 | 这个人听了，放下心来
+≈ 让他明白担心是多余的，放下心来 | 这个人听了，放下心来 | 天是一团气，到处都有，怎么会掉下来呢
 - 让他更担心了 ~reversed
 - 让他搬了家 ~never
 
@@ -427,7 +428,7 @@ export const FABLES_3 = `
 - 买到了一双新鞋 ~opposite
 - 买到了一双旧鞋 ~unsaid
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
-= 做事要看实际，不能死守老办法 | 我宁可相信量好的尺码，也不相信自己的脚
+≈ 做事要看实际，不能死守老办法 | 我宁可相信量好的尺码，也不相信自己的脚 | 等他再赶回来，集市已经散了，鞋子没有买成
 - 买鞋要先量好脚 ~onepart
 - 出门不能忘带东西 ~detail
 ?2 这个人错在哪里？ | Where did the man go wrong?
@@ -446,7 +447,7 @@ export const FABLES_3 = `
 - 只有墙上 ~part
 - 院子里养着一条龙 ~unsaid
 ?1 真龙为什么来叶公家？ | Why did the real dragon come?
-= 它听说叶公喜欢龙，很受感动 | 天上的真龙知道了，很受感动
+≈ 它听说叶公喜欢龙，很受感动 | 天上的真龙知道了，很受感动 | 说自己最喜欢龙
 - 它迷路了 ~unsaid
 - 叶公请它来的 ~unsaid
 ?1 叶公看见真龙后怎么做？ | What did Lord Ye do when he saw the real dragon?
@@ -454,15 +455,15 @@ export const FABLES_3 = `
 - 高兴地请它进屋 ~opposite
 - 给它画了一张像 ~unsaid
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
-= 不能只是嘴上说喜欢，心里并不是真的喜欢 | 叶公喜欢的只是画上的龙，并不是真的龙
+≈ 不能只是嘴上说喜欢，心里并不是真的喜欢 | 叶公喜欢的只是画上的龙，并不是真的龙 | 说自己最喜欢龙 | 吓得脸色发白，转身就跑
 - 龙会飞到人家里来 ~detail
 - 叶公是真心喜欢龙的 ~reversed
 ?2 叶公错在哪里？ | Where did Lord Ye go wrong?
-= 他说喜欢龙，其实只是喜欢龙的样子 | 原来，叶公喜欢的只是画上的龙
+≈ 他说喜欢龙，其实只是喜欢龙的样子 | 原来，叶公喜欢的只是画上的龙 | 说自己最喜欢龙 | 他家的墙上画着龙
 - 他画的龙不好看 ~never
 - 他家的窗户太小 ~never
 ?2 叶公“转身就跑”说明了什么？ | What does his running away show?
-= 他并不是真的喜欢龙 | 并不是真的龙
+≈ 他并不是真的喜欢龙 | 并不是真的龙 | 吓得脸色发白，转身就跑 | 说自己最喜欢龙
 - 他想去找更多的画 ~never
 - 他跑去请朋友来看龙 ~never
 
@@ -477,11 +478,11 @@ export const FABLES_3 = `
 - 不放我，我就会饿死 ~who
 - 我们一起回家吧 ~unsaid
 ?1 最后谁得到了好处？ | Who gained in the end?
-= 渔夫 | 一个渔夫走过来，毫不费力地把它们一起捉走了
+≈ 渔夫 | 一个渔夫走过来，毫不费力地把它们一起捉走了 | 它们谁也不让谁
 - 鹬 ~opposite
 - 河蚌 ~opposite
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
-= 双方互不相让，结果让别人得了好处 | 毫不费力地把它们一起捉走了
+≈ 双方互不相让，结果让别人得了好处 | 毫不费力地把它们一起捉走了 | 它们谁也不让谁
 - 河蚌喜欢晒太阳 ~detail
 - 只要坚持到底就能赢 ~reversed
 ?2 鹬和河蚌错在哪里？ | Where did the snipe and the clam go wrong?
@@ -489,18 +490,18 @@ export const FABLES_3 = `
 - 它们说话的声音太大 ~never
 - 河蚌的壳不够硬 ~never
 ?2 渔夫为什么能“毫不费力”？ | Why was it so easy for the fisherman?
-= 鹬和河蚌争个不停，谁也走不了 | 它们谁也不让谁
+≈ 鹬和河蚌争个不停，谁也走不了 | 它们谁也不让谁 | 紧紧夹住了鹬的嘴
 - 渔夫带了很大的网 ~never
 - 鹬和河蚌自己跳进了篮子 ~never
 
 # 惊弓之鸟
-古时候，有个叫更羸的射箭能手。一天，一只大雁从天上飞过，更羸对魏王说：“我不用箭，只拉一下弓，就能让它掉下来。”他拉开弓，大雁果然掉了下来。魏王很奇怪。更羸说：“这只大雁受过箭伤，伤口还没好，叫声也很悲惨。它一听见弓弦响，就害怕得拼命往高处飞，伤口裂开，就掉下来了。”
+古时候，有个叫更羸的射箭能手。一天，一只大雁从天上飞过，更羸对魏王说：“我不用箭，只拉一下弓，就能让它掉下来。”他拉开弓，大雁果然掉了下来。魏王很奇怪。更羸说：“它飞得很慢，叫声也很悲惨，可见这只大雁受过箭伤，伤口还没好。它一听见弓弦响，就害怕得拼命往高处飞，伤口裂开，就掉下来了。”
 ?1 更羸是怎样让大雁掉下来的？ | How did Geng Lei bring the goose down?
 = 不用箭，只拉了一下弓 | 我不用箭，只拉一下弓
 - 射了一支箭 ~opposite
 - 扔了一块石头 ~unsaid
 ?1 更羸从哪里看出大雁受过伤？ | How did Geng Lei tell the goose was hurt?
-= 它飞得慢，叫声悲惨 | 叫声也很悲惨
+= 它飞得慢，叫声悲惨 | 它飞得很慢，叫声也很悲惨
 - 它的羽毛是红的 ~unsaid
 - 魏王告诉他的 ~who
 ?1 大雁为什么会掉下来？ | Why did the goose fall?
@@ -508,15 +509,15 @@ export const FABLES_3 = `
 - 被箭射中了 ~opposite
 - 飞得太累了 ~life
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
-= 仔细观察、认真分析，才能看清事情的原因 | 这只大雁受过箭伤，伤口还没好
+≈ 仔细观察、认真分析，才能看清事情的原因 | 这只大雁受过箭伤，伤口还没好 | 它飞得很慢，叫声也很悲惨 | 它一听见弓弦响
 - 大雁会从天上飞过 ~detail
 - 射箭一定要用很多箭 ~never
 ?2 更羸为什么能做到这件事？ | Why could Geng Lei do it?
-= 他仔细观察了大雁，知道它受过伤 | 这只大雁受过箭伤
+≈ 他仔细观察了大雁，知道它受过伤 | 这只大雁受过箭伤 | 它飞得很慢，叫声也很悲惨
 - 他的弓特别大 ~never
 - 他运气好 ~reversed
 ?2 魏王“很奇怪”，是因为什么？ | Why was the King of Wei puzzled?
-= 没有用箭，大雁却掉了下来 | 大雁果然掉了下来
+≈ 没有用箭，大雁却掉了下来 | 大雁果然掉了下来 | 我不用箭，只拉一下弓
 - 更羸不会射箭 ~never
 - 大雁会说话 ~never
 
@@ -535,15 +536,15 @@ export const FABLES_3 = `
 - 他年纪太小 ~unsaid
 - 他骑马跑走了 ~unsaid
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
-= 好事和坏事在一定条件下会互相转变 | 他的儿子因为腿伤留在了家里，保住了性命
+≈ 好事和坏事在一定条件下会互相转变 | 他的儿子因为腿伤留在了家里，保住了性命 | 还带回了一匹好马 | 摔断了腿
 - 骑马一定会摔断腿 ~never
 - 丢了东西一定是坏事 ~reversed
 ?2 老人为什么总说“不一定”？ | Why did the old man always say "not necessarily"?
-= 他明白事情还会变化，不能只看眼前 | 这不一定是坏事
+≈ 他明白事情还会变化，不能只看眼前 | 这不一定是坏事 | 这不一定是好事 | 保住了性命
 - 他听不清邻居说的话 ~never
 - 他不喜欢邻居 ~never
 ?2 儿子摔断腿后，结果怎么样？ | How did the son's broken leg turn out?
-= 反而让他保住了性命 | 保住了性命
+= 反而让他保住了性命 | 保住了性命 | 他的儿子因为腿伤留在了家里
 - 让他再也不能回家 ~reversed
 - 让他去当了兵 ~reversed
 `;
@@ -562,11 +563,11 @@ export const POEMS_3 = `
 - 柳枝绿了 ~other
 - 小苗长高了 ~other
 ?1 诗里写了春雨落在哪些地方？ | Where does the rain fall in the poem?
-= 柳树上、桃树上和田野里 | 落在田野里，小苗长高了
+= 柳树上、桃树上和田野里 | 落在柳树上，柳枝绿了 | 落在桃树上，桃花红了 | 落在田野里，小苗长高了
 - 只落在柳树上 ~part
 - 落在屋顶上和小河里 ~unsaid
 ?1 读这首诗，眼前是一幅怎样的画面？ | What picture does the poem bring to mind?
-= 春雨中，柳绿花红，小苗长高 | 落在柳树上，柳枝绿了
+≈ 春雨中，柳绿花红，小苗长高 | 落在柳树上，柳枝绿了 | 落在桃树上，桃花红了 | 落在田野里，小苗长高了 | 春雨轻轻地下
 - 大雪纷飞，到处白茫茫 ~unsaid
 - 秋风吹落了满地黄叶 ~unsaid
 ?2 这首诗主要写了什么？ | What is the poem mainly about?
@@ -592,7 +593,8 @@ export const POEMS_3 = `
 信上写着：“冬天要来了，
 大家快快准备好！”
 ?1 诗里“黄色的信”指的是什么？ | What are the "yellow letters" of the poem?
-= 秋天的落叶 | 送来一封封黄色的信
+≈ 秋天的落叶 | 送来一封封黄色的信 | 秋风是邮递员 | 冬天要来了
+% 诗题是“秋天的信”，送信的是秋风，信是黄色的，一封封飞来飞去。秋天里，被秋风吹得一片片飞的黄色东西是落叶，所以“黄色的信”指的是秋天的落叶；信上写着“冬天要来了”，正是落叶告诉大家的事。 | The poem is “Autumn's Letters”; the autumn wind brings them, they are yellow, and they fly about one by one. What is yellow and blown about by the autumn wind is fallen leaves, so the “yellow letters” are the leaves of autumn; and what they say, “winter is coming”, is what falling leaves tell everyone.
 - 邮递员送的真信 ~life
 - 小松鼠的松果 ~other
 ?1 收到信后，小松鼠做了什么？ | What did the squirrel do once it had a letter?
@@ -626,7 +628,7 @@ export const POEMS_3 = `
 因为大海
 在远方等着它。
 ?1 小河流过了哪些地方？ | Where does the stream flow?
-= 山脚、稻田和小桥 | 流过村口的小桥
+= 山脚、稻田和小桥 | 走过青青的山脚 | 穿过金黄的稻田 | 流过村口的小桥
 - 只流过了稻田 ~part
 - 城市和高楼 ~unsaid
 ?1 诗里的稻田是什么颜色？ | What colour are the rice fields?
@@ -634,7 +636,7 @@ export const POEMS_3 = `
 - 青青 ~other
 - 雪白 ~unsaid
 ?1 小河一路上在做什么？ | What does the stream do along the way?
-= 唱着歌，不停地流 | 它一路唱着歌
+= 唱着歌，不停地流 | 它一路唱着歌 | 从不停下脚步
 - 停下来休息 ~opposite
 - 往山上流 ~unsaid
 ?2 这首诗主要写了什么？ | What is the poem mainly about?
@@ -660,11 +662,11 @@ export const POEMS_3 = `
 一直站到天亮，
 才悄悄地闭上眼睛。
 ?1 路灯什么时候“睁开眼睛”？ | When do the street lamps "open their eyes"?
-= 天黑了 | 路灯睁开了眼睛
+= 天黑了 | 天黑了 | 路灯睁开了眼睛
 - 天亮了 ~other
 - 中午 ~unsaid
 ?1 路灯照着谁？ | What do the lamps shine on?
-= 回家的人和晚归的小猫 | 照着晚归的小猫
+= 回家的人和晚归的小猫 | 它们照着回家的人 | 照着晚归的小猫
 - 天上的星星 ~unsaid
 - 只照着回家的人 ~part
 ?1 诗里的路灯是怎样排的？ | How do the lamps stand?
@@ -698,11 +700,11 @@ export const POEMS_3 = `
 - 穿上了白棉衣 ~other
 - 盖上了白被子 ~other
 ?1 “小路盖上了白被子”，写的是什么？ | What does "the path has a white carpet" describe?
-= 小路上积满了雪 | 小路盖上了白被子
+≈ 小路上积满了雪 | 小路盖上了白被子 | 世界变白了 | 下雪的早晨
 - 有人在路上放了被子 ~life
 - 小路上开满了白花 ~unsaid
 ?1 “我”跑出门后做了什么？ | What did "I" do on running out?
-= 在雪地上留下一串脚印 | 在雪地上留下
+= 在雪地上留下一串脚印 | 在雪地上留下 | 一串小小的脚印
 - 堆了一个雪人 ~unsaid
 - 回到屋里睡觉 ~unsaid
 ?2 这首诗主要写了什么？ | What is the poem mainly about?
@@ -766,11 +768,11 @@ export const POEMS_3 = `
 - 风在拉它 ~other
 - 有人在用手转 ~unsaid
 ?1 “湖水起了波纹”，写的是什么？ | What does "wrinkles on the lake" describe?
-= 风吹过，湖面起了小波纹 | 湖水起了波纹
+≈ 风吹过，湖面起了小波纹 | 湖水起了波纹 | 那是风在跟它玩
 - 湖水变老了 ~life
 - 有人往湖里扔石头 ~unsaid
 ?1 诗里写了风让哪些东西动了起来？ | What does the wind set moving in the poem?
-= 风车、小旗和湖水 | 小旗飘起来了
+= 风车、小旗和湖水 | 风车转起来了 | 小旗飘起来了 | 湖水起了波纹
 - 只有风车 ~part
 - 大树和小草 ~unsaid
 ?2 这首诗主要写了什么？ | What is the poem mainly about?
@@ -800,7 +802,7 @@ export const POEMS_3 = `
 - 冬天的早上 ~unsaid
 - 秋天的中午 ~unsaid
 ?1 诗里说扇子摇来了什么？ | What does the fan bring, the poem says?
-= 凉风、星星和故事 | 也摇来一个个
+= 凉风、星星和故事 | 摇来一阵阵凉风 | 摇来满天的星星 | 好听的故事
 - 只有凉风 ~part
 - 蚊子和雨点 ~unsaid
 ?1 “我”睡着以后，扇子怎么样？ | What does the fan do once "I" am asleep?

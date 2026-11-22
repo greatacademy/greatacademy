@@ -329,7 +329,7 @@ export const STORIES = `
 - 哭着说 ~opposite
 - 大声地喊 ~sense
 ?2 “两个好朋友”说的是谁？ | Who are the two good friends?
-= 小兔和小熊 | 两个好朋友
+≈ 小兔和小熊 | 两个好朋友 | 小兔没有带伞 | 小熊看见了
 - 小兔和小猫 ~who
 - 小熊和妈妈 ~who
 
@@ -383,7 +383,7 @@ export const STORIES = `
 - 一起去玩 ~sense
 - 来看一看 ~sense
 ?2 “大家一起把苹果搬回了家”，“大家”是谁？ | Who are 大家 in this sentence?
-= 小熊、小猴和小兔 | 大家一起把苹果搬回了家
+≈ 小熊、小猴和小兔 | 大家一起把苹果搬回了家 | 小熊搬不动 | 小猴、小兔都跑来帮忙
 - 小猴和小兔 ~part
 - 小熊和妈妈 ~who
 
@@ -406,7 +406,7 @@ export const STORIES = `
 - 游过来就不动了 ~sense
 - 只往前面游 ~sense
 ?2 “它们都很喜欢自己的家”，“它们”是谁？ | Who are 它们 in this sentence?
-= 小鱼和小鸟 | 它们都很喜欢自己的家
+≈ 小鱼和小鸟 | 它们都很喜欢自己的家 | 小鱼住在河里，小鸟住在树上
 - 只有小鱼 ~part
 - 小鸟和小猫 ~who
 ?2 “河里真好”，“真好”是什么意思？ | What does 真好 mean here?
@@ -766,7 +766,8 @@ export const SIGNS = `
 - 体育 ~other
 - 美术 ~other
 ?2 星期一有几节语文课？ | How many Chinese lessons are there on Monday?
-= 两节 | 下午第二节　语文
+≈ 两节 | 下午第二节　语文 | 第一节　语文
+% 课程表上没有直接写语文课有几节，要自己数。第一节写着“语文”，下午第二节也写着“语文”，别的几节是数学、音乐、体育和美术。写着语文的有两处，所以星期一有两节语文课。 | The timetable does not say how many Chinese lessons there are; you count them. The first lesson is Chinese, and so is the second lesson of the afternoon; the others are maths, music, PE and art. Chinese stands in two places, so there are two Chinese lessons on Monday.
 - 一节 ~part
 - 三节 ~unsaid
 ?2 体育课是第几节？ | Which lesson is PE?
@@ -879,7 +880,8 @@ export const SIGNS = `
 - 一个小时 ~unsaid
 - 六分钟 ~unsaid
 ?2 晚上十点还能坐上这路车吗？ | Can one still catch this bus at ten in the evening?
-= 不能，最后一班车是晚上九点 | 最后一班车　晚上九点
+≈ 不能，最后一班车是晚上九点 | 最后一班车　晚上九点
+% 时刻表上没有写晚上十点，要自己推。最后一班车是晚上九点，九点以后就没有车了；晚上十点比九点晚，所以坐不上这路车。 | The timetable says nothing about ten in the evening; you work it out. The last bus is at nine, and after it there is none; ten is later than nine, so there is no bus to catch.
 - 能 ~opposite
 - 能，每十分钟一班 ~part
 

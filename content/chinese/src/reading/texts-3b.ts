@@ -585,7 +585,7 @@ export const SCIENCE_3 = `
 - 冬天的早上 ~unsaid
 - 春天的中午 ~unsaid
 ?2 萤火虫为什么发光？ | Why do fireflies glow?
-= 用光和同伴联系 | 而是在跟同伴说话
+= 用光和同伴联系 | 而是在跟同伴说话 | 它们用光的亮和暗、快和慢来互相联系
 - 为了照路 ~opposite
 - 为了取暖 ~unsaid
 ?2 萤火虫是怎样用光“说话”的？ | How do fireflies "talk" with light?
@@ -620,7 +620,7 @@ export const SCIENCE_3 = `
 - 尾巴会去咬敌人 ~unsaid
 - 没了尾巴，壁虎跑得更快 ~unsaid
 ?2 敌人为什么没有抓住壁虎？ | Why did the enemy not catch the gecko?
-= 敌人在看尾巴，壁虎趁机逃走了 | 壁虎就趁机逃走了
+= 敌人在看尾巴，壁虎趁机逃走了 | 敌人的注意力被尾巴吸引住 | 壁虎就趁机逃走了
 - 壁虎躲进了洞里 ~unsaid
 - 敌人不喜欢吃壁虎 ~unsaid
 
@@ -639,7 +639,7 @@ export const SCIENCE_3 = `
 - 秋天刚到时 ~unsaid
 - 冬天最冷时 ~opposite
 ?2 青蛙为什么要冬眠？ | Why do frogs sleep through the winter?
-= 天冷虫子少，找不到吃的，睡觉节省力气 | 这是因为天冷了，虫子少了，青蛙找不到吃的
+= 天冷虫子少，找不到吃的，睡觉节省力气 | 这是因为天冷了，虫子少了，青蛙找不到吃的 | 只能睡觉来节省力气
 - 青蛙喜欢睡懒觉 ~unsaid
 - 泥土里有很多吃的 ~opposite
 ?2 青蛙为什么到春天才醒来？ | Why do frogs wake only in spring?
@@ -666,7 +666,8 @@ export const SCIENCE_3 = `
 - 一只 ~opposite
 - 一只也不吃 ~opposite
 ?2 为什么把啄木鸟叫作“森林医生”？ | Why is the woodpecker called the "forest doctor"?
-= 它吃掉树里的害虫，保护了树木 | 保护了大片的树木
+≈ 它吃掉树里的害虫，保护了树木 | 保护了大片的树木 | 把藏在树里的害虫钩出来吃掉 | 啄木鸟被人们叫作“森林医生”
+% 医生给人治病，啄木鸟给树“治病”：它把藏在树里的害虫钩出来吃掉，一天能吃很多，保护了大片的树木。它为树木做的，就像医生为病人做的，所以人们叫它“森林医生”。 | A doctor cures people, and the woodpecker “cures” trees: it pulls out the pests hidden in them and eats them, many a day, and so keeps whole stretches of trees safe. What it does for trees is what a doctor does for the sick, so it is called the “forest doctor”.
 - 它会给人看病 ~life
 - 它住在森林里 ~unsaid
 ?2 啄木鸟为什么啄很多次也不会头痛？ | Why does pecking not hurt its head?
@@ -697,7 +698,7 @@ export const SCIENCE_3 = `
 - 被绿颜料染过 ~unsaid
 - 天天下雨 ~unsaid
 ?2 秋天叶子为什么会变黄？ | Why do leaves turn yellow in autumn?
-= 叶绿素减少，本来就有的黄色露了出来 | 叶子里本来就有的黄色就露了出来
+= 叶绿素减少，本来就有的黄色露了出来 | 叶绿素慢慢减少 | 叶子里本来就有的黄色就露了出来
 - 太阳把叶子晒黄了 ~life
 - 秋天的雨是黄色的 ~unsaid
 ?2 有的叶子为什么会变红？ | Why do some leaves turn red?
@@ -728,7 +729,8 @@ export const SCIENCE_3 = `
 - 雷声很小 ~unsaid
 - 雷声被雨挡住了 ~unsaid
 ?2 短文说“所以，打雷时不要站在大树下”，这是在告诉我们什么？ | What does the closing advice tell us?
-= 雷雨天要注意安全 | 所以，打雷时不要站在大树下，要躲进屋里
+≈ 雷雨天要注意安全 | 所以，打雷时不要站在大树下，要躲进屋里 | 下雷雨的时候
+% 短文没有直接说“要注意安全”。可是“不要站在大树下，要躲进屋里”，都是在告诉我们打雷时怎样做才不会出危险，所以这句话是在提醒我们：雷雨天要注意安全。 | The passage does not say “be careful” in so many words. But “do not stand under a tall tree; go indoors” both tell us how to keep out of danger when it thunders, so the sentence is a reminder to stay safe in a thunderstorm.
 - 大树下最好躲雨 ~opposite
 - 打雷时要大声说话 ~unsaid
 
@@ -747,7 +749,7 @@ export const SCIENCE_3 = `
 - 有水的地方 ~unsaid
 - 黑的地方 ~opposite
 ?2 豆苗为什么向着窗外长？ | Why do the shoots lean to the window?
-= 植物生长需要阳光，窗外有光 | 这是因为植物生长需要阳光
+= 植物生长需要阳光，窗外有光 | 这是因为植物生长需要阳光 | 豆苗都向着窗外弯过去
 - 窗外有风吹着它 ~unsaid
 - 屋里太吵了 ~unsaid
 ?2 植物朝着有光的地方长，是为了什么？ | Why do plants grow towards light?
@@ -755,7 +757,7 @@ export const SCIENCE_3 = `
 - 好躲开雨水 ~unsaid
 - 好让人看见 ~unsaid
 ?2 转了花盆，豆苗为什么又转向窗外？ | Why do the shoots turn back after the pot is turned?
-= 它们还是朝着有光的地方长 | 它们会朝着有光的地方长
+= 它们还是朝着有光的地方长 | 它们会朝着有光的地方长 | 如果把花盆转个方向，过几天，豆苗又会慢慢转向窗外
 - 有人把它们扳了回去 ~unsaid
 - 它们不喜欢新方向的风 ~unsaid
 
@@ -801,7 +803,7 @@ export const SCIENCE_3 = `
 - 躲进山洞 ~unsaid
 - 飞到暖和的地方 ~unsaid
 ?2 企鹅为什么不怕冷？ | Why do penguins not mind the cold?
-= 身上有厚厚的脂肪，羽毛又短又密 | 企鹅不怕冷，是因为它的身上有厚厚的脂肪
+= 身上有厚厚的脂肪，羽毛又短又密 | 企鹅不怕冷，是因为它的身上有厚厚的脂肪 | 它的羽毛又短又密
 - 它们穿着真的棉衣 ~life
 - 南极其实不冷 ~opposite
 ?2 短又密的羽毛有什么用？ | What are the short dense feathers for?
@@ -832,7 +834,7 @@ export const SCIENCE_3 = `
 - 为了长得更好看 ~unsaid
 - 为了让鸟儿来做窝 ~unsaid
 ?2 仙人掌为什么能在少雨的地方活下来？ | Why can cacti live where rain is rare?
-= 刺让水不容易跑掉，茎里还能存水 | 里面能存很多水
+= 刺让水不容易跑掉，茎里还能存水 | 里面能存很多水 | 这样，身体里的水就不容易跑掉 | 那里很少下雨
 - 沙漠里天天下雨 ~opposite
 - 它不需要水 ~unsaid
 ?2 仙人掌的刺还有什么用？ | What else are the spines for?

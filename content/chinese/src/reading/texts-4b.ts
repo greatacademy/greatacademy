@@ -7,15 +7,15 @@ export const FEELINGS_4 = `
 # 外婆的小院
 外婆家有一个小院。院子里种着丝瓜和葡萄，夏天，绿绿的叶子把院子遮得严严实实。小时候，我常常坐在葡萄架下，听外婆讲故事，一边听，一边等着葡萄变紫。后来我们搬到了城里，好几年没有回去了。前些天，妈妈说外婆家的老房子要拆了。我心里一下子空了一块。夜里，我梦见自己又坐在葡萄架下，外婆摇着扇子，故事还没有讲完。
 ?1 作者对外婆的小院怀着怎样的感情？ | What does the writer feel for Grandma's yard?
-= 非常怀念，舍不得 | 我心里一下子空了一块
+≈ 非常怀念，舍不得 | 我心里一下子空了一块 | 小时候，我常常坐在葡萄架下，听外婆讲故事 | 夜里，我梦见自己又坐在葡萄架下
 - 很讨厌那个小院 ~opposite
 - 一点也不在乎 ~opposite
 ?1 听说老房子要拆了，作者的心情怎样？ | How did the writer feel hearing the house would go?
-= 很失落 | 我心里一下子空了一块
+≈ 很失落 | 我心里一下子空了一块 | 前些天，妈妈说外婆家的老房子要拆了
 - 很高兴 ~opposite
 - 很害怕 ~unsaid
 ?1 作者梦见自己又坐在葡萄架下，说明了什么？ | What does the dream of the trellis show?
-= 作者一直想念小院和外婆 | 我梦见自己又坐在葡萄架下
+≈ 作者一直想念小院和外婆 | 我梦见自己又坐在葡萄架下 | 好几年没有回去了 | 外婆摇着扇子，故事还没有讲完
 - 作者想吃葡萄了 ~literal
 - 作者晚上睡得不好 ~unsaid
 ?2 哪句话最能表现作者听到消息时的心情？ | Which words best show how the writer took the news?
@@ -23,7 +23,7 @@ export const FEELINGS_4 = `
 - 院子里种着丝瓜和葡萄 ~plain
 - 后来我们搬到了城里 ~plain
 ?2 “故事还没有讲完”，表达了作者怎样的心情？ | What does "the story was not finished" show?
-= 舍不得过去的日子结束 | 故事还没有讲完
+≈ 舍不得过去的日子结束 | 故事还没有讲完 | 外婆家的老房子要拆了 | 我心里一下子空了一块
 - 外婆讲故事太慢了 ~literal
 - 作者不爱听故事 ~opposite
 ?2 哪句话写出了小时候在小院里的快乐？ | Which words show the happy days in the yard?
@@ -34,15 +34,15 @@ export const FEELINGS_4 = `
 # 第一场雪
 早上拉开窗帘，我一下子愣住了：外面白茫茫的一片，下雪了！这是我来到南方以后，第一次看见雪。我顾不上吃早饭，穿上外套就冲下了楼。雪花落在我的脸上，凉凉的，痒痒的。我张开双手，在雪地里转了一圈又一圈，脚下“咯吱咯吱”地响。邻居家的小妹妹也跑出来了，我们一起堆了一个歪歪的雪人，给它戴上了我的帽子。我笑得停不下来，连手冻红了都没有发觉。
 ?1 看到下雪，作者是什么心情？ | How did the writer feel seeing the snow?
-= 又惊又喜 | 我一下子愣住了
+≈ 又惊又喜 | 我一下子愣住了 | 外面白茫茫的一片，下雪了 | 这是我来到南方以后，第一次看见雪
 - 有点难过 ~opposite
 - 很生气 ~opposite
 ?1 作者为什么“顾不上吃早饭”？ | Why did the writer skip breakfast?
-= 急着到雪地里去玩 | 穿上外套就冲下了楼
+≈ 急着到雪地里去玩 | 穿上外套就冲下了楼 | 我顾不上吃早饭
 - 早饭不好吃 ~unsaid
 - 上学要迟到了 ~unsaid
 ?1 “连手冻红了都没有发觉”，说明作者怎样？ | What does "not noticing my hands were red with cold" show?
-= 玩得太开心了 | 我笑得停不下来，连手冻红了都没有发觉
+≈ 玩得太开心了 | 我笑得停不下来，连手冻红了都没有发觉 | 在雪地里转了一圈又一圈
 - 作者的手不怕冷 ~literal
 - 作者不想玩了 ~opposite
 ?2 哪句话最能表现作者的快乐？ | Which words best show the writer's joy?
@@ -50,26 +50,26 @@ export const FEELINGS_4 = `
 - 这是我来到南方以后，第一次看见雪 ~plain
 - 给它戴上了我的帽子 ~plain
 ?2 “一下子愣住了”写出了作者怎样的感受？ | What does "stopped dead" show?
-= 没想到会下雪，很吃惊 | 我一下子愣住了
+≈ 没想到会下雪，很吃惊 | 我一下子愣住了 | 这是我来到南方以后，第一次看见雪
 - 害怕得不敢动 ~unsaid
 - 什么也没看见 ~opposite
 ?2 “凉凉的，痒痒的”写出了什么？ | What do "cool and tickly" show?
-= 雪花落在脸上的新奇感觉 | 雪花落在我的脸上，凉凉的，痒痒的
+≈ 雪花落在脸上的新奇感觉 | 雪花落在我的脸上，凉凉的，痒痒的 | 第一次看见雪
 - 作者生病了 ~unsaid
 - 作者讨厌下雪 ~opposite
 
 # 等爸爸回家
 爸爸是一名海员，一出海就是大半年。每天晚上，我都要在日历上画一个圈。圈画得越多，离爸爸回家的日子就越近。妈妈说，爸爸的船过几天就要靠岸了。这几天，我放学就往家跑，一听见楼道里有脚步声，就跑过去开门。门开了，常常只是邻居阿姨。今天傍晚，门铃响了，我打开门，是爸爸！他晒黑了，也瘦了。我一下子扑进他怀里，眼泪不知怎么就流了下来。
 ?1 文中的“我”对爸爸怀着怎样的感情？ | What does the child feel for Father?
-= 非常想念爸爸 | 每天晚上，我都要在日历上画一个圈
+≈ 非常想念爸爸 | 每天晚上，我都要在日历上画一个圈 | 圈画得越多，离爸爸回家的日子就越近 | 一听见楼道里有脚步声，就跑过去开门
 - 有点怕爸爸 ~unsaid
 - 不想爸爸回来 ~opposite
 ?1 见到爸爸时，“我”为什么流下了眼泪？ | Why did the child cry on seeing Father?
-= 盼了很久，终于见到了，太激动了 | 我一下子扑进他怀里，眼泪不知怎么就流了下来
+≈ 盼了很久，终于见到了，太激动了 | 我一下子扑进他怀里，眼泪不知怎么就流了下来 | 一出海就是大半年 | 每天晚上，我都要在日历上画一个圈
 - 爸爸批评了“我” ~unsaid
 - “我”摔倒了 ~unsaid
 ?1 门开了常常只是邻居阿姨，“我”心里会怎样？ | How would the child feel finding only the neighbour?
-= 有些失望 | 门开了，常常只是邻居阿姨
+≈ 有些失望 | 门开了，常常只是邻居阿姨 | 一听见楼道里有脚步声，就跑过去开门
 - 很开心 ~opposite
 - 很生阿姨的气 ~unsaid
 ?2 哪句话最能看出“我”盼着爸爸回家？ | Which words show most that the child longed for Father?
@@ -77,22 +77,22 @@ export const FEELINGS_4 = `
 - 爸爸是一名海员 ~plain
 - 他晒黑了，也瘦了 ~plain
 ?2 “圈画得越多，离爸爸回家的日子就越近”，表达了什么？ | What does "the more circles, the nearer his return" show?
-= 一天一天地数着，盼爸爸回来 | 圈画得越多，离爸爸回家的日子就越近
+≈ 一天一天地数着，盼爸爸回来 | 圈画得越多，离爸爸回家的日子就越近 | 每天晚上，我都要在日历上画一个圈
 - “我”喜欢画画 ~literal
 - 日历快用完了 ~literal
 ?2 “我一下子扑进他怀里”表现了什么？ | What does "threw myself into his arms" show?
-= 见到爸爸的激动和亲热 | 我一下子扑进他怀里
+≈ 见到爸爸的激动和亲热 | 我一下子扑进他怀里 | 一出海就是大半年 | 眼泪不知怎么就流了下来
 - “我”跑得太快停不下来 ~literal
 - “我”被吓了一跳 ~unsaid
 
 # 我的小书桌
 我有一张小书桌，是爷爷亲手给我做的。桌面不大，却很平很光，摸上去滑滑的。桌子的一角，爷爷还刻了一朵小花，他说那是我的名字里的“花”。我在这张书桌上学会了写字，画了第一张画，也写完了一本又一本作业。去年，我长高了，膝盖碰到了桌子。妈妈说给我换一张新的，我说什么也不肯。我把小书桌搬到窗前，在上面放了一盆花。每次看到它，我就像看到爷爷笑眯眯的样子。
 ?1 作者对小书桌怀着怎样的感情？ | What does the writer feel for the little desk?
-= 非常喜爱，珍惜它 | 我说什么也不肯
+≈ 非常喜爱，珍惜它 | 我说什么也不肯 | 是爷爷亲手给我做的 | 我把小书桌搬到窗前，在上面放了一盆花
 - 嫌它太小了 ~opposite
 - 觉得它没有用了 ~opposite
 ?1 作者为什么不肯换新书桌？ | Why would the writer not take a new desk?
-= 书桌是爷爷亲手做的，有很多回忆 | 是爷爷亲手给我做的
+≈ 书桌是爷爷亲手做的，有很多回忆 | 是爷爷亲手给我做的 | 我说什么也不肯 | 我就像看到爷爷笑眯眯的样子
 - 新书桌太贵了 ~unsaid
 - 新书桌不好看 ~unsaid
 ?1 小书桌后来被放在哪里？ | Where did the desk go in the end?
@@ -104,22 +104,22 @@ export const FEELINGS_4 = `
 - 桌面不大，却很平很光 ~plain
 - 去年，我长高了 ~plain
 ?2 “我就像看到爷爷笑眯眯的样子”，说明了什么？ | What does "as if I saw Grandpa smiling" show?
-= 小书桌让作者想起爷爷的爱 | 每次看到它，我就像看到爷爷笑眯眯的样子
+≈ 小书桌让作者想起爷爷的爱 | 每次看到它，我就像看到爷爷笑眯眯的样子 | 是爷爷亲手给我做的
 - 爷爷就站在书桌旁边 ~literal
 - 作者不喜欢爷爷 ~opposite
 ?2 “爷爷还刻了一朵小花”，写出了什么？ | What does the carved flower show?
-= 爷爷做书桌时的用心 | 爷爷还刻了一朵小花
+≈ 爷爷做书桌时的用心 | 爷爷还刻了一朵小花 | 他说那是我的名字里的“花”
 - 书桌上的花是买来的 ~unsaid
 - 爷爷不会做书桌 ~opposite
 
 # 走夜路
 那天补完课，天已经全黑了。我一个人走回家，路上的灯坏了好几盏。风吹着树叶“沙沙”地响，我总觉得后面有人跟着，走一步，回一下头。路边草丛里“扑”地蹿出一只猫，吓得我差点叫出来，心“怦怦”直跳。我一边小声唱歌给自己壮胆，一边加快了脚步。拐过一个弯，我看见了楼下那盏熟悉的灯，灯下站着一个人，是妈妈。我一下子不怕了，跑过去拉住了她的手，手心里全是汗。
 ?1 走夜路时，作者是什么心情？ | How did the writer feel on the dark walk?
-= 很害怕 | 我总觉得后面有人跟着，走一步，回一下头
+≈ 很害怕 | 我总觉得后面有人跟着，走一步，回一下头 | 吓得我差点叫出来，心“怦怦”直跳
 - 很开心 ~opposite
 - 很平静 ~opposite
 ?1 看到妈妈以后，作者的心情有什么变化？ | How did the writer's feelings change on seeing Mother?
-= 从害怕变得安心了 | 我一下子不怕了
+= 从害怕变得安心了 | 我一下子不怕了 | 吓得我差点叫出来
 - 从开心变得害怕了 ~opposite
 - 一直很害怕 ~opposite
 ?1 作者为什么小声唱歌？ | Why did the writer sing softly?
@@ -131,22 +131,22 @@ export const FEELINGS_4 = `
 - 那天补完课，天已经全黑了 ~plain
 - 拐过一个弯 ~plain
 ?2 “手心里全是汗”说明了什么？ | What does "palms wet with sweat" show?
-= 刚才一路都很紧张 | 手心里全是汗
+≈ 刚才一路都很紧张 | 手心里全是汗 | 吓得我差点叫出来，心“怦怦”直跳 | 我一下子不怕了
 - 天气很热 ~literal
 - 作者跑得太累了 ~unsaid
 ?2 “走一步，回一下头”写出了作者怎样的心理？ | What does "looking back at every step" show?
-= 怕有人跟着，心里不安 | 我总觉得后面有人跟着，走一步，回一下头
+≈ 怕有人跟着，心里不安 | 我总觉得后面有人跟着，走一步，回一下头 | 路上的灯坏了好几盏
 - 在找掉的东西 ~unsaid
 - 想等同学一起走 ~unsaid
 
 # 小花猫走了
 小花猫在我家住了八年，比我的年纪还大。它最喜欢趴在阳台上晒太阳，我写作业的时候，它就蹲在桌边，用尾巴轻轻扫我的手。这个春天，它老了，不爱吃东西，也不爱动了。一天早上，我叫它，它没有像往常那样跑过来。爸爸说，小花猫走了。我抱着它的小垫子，哭了很久。现在，阳台上空空的，太阳照在那里，好像还是暖暖的。我常常站在那儿，觉得它就在脚边。
 ?1 作者对小花猫怀着怎样的感情？ | What does the writer feel for the cat?
-= 非常喜爱，深深地怀念 | 我常常站在那儿，觉得它就在脚边
+≈ 非常喜爱，深深地怀念 | 我常常站在那儿，觉得它就在脚边 | 我抱着它的小垫子，哭了很久 | 用尾巴轻轻扫我的手
 - 一点也不喜欢它 ~opposite
 - 很怕它 ~unsaid
 ?1 小花猫走了，作者是什么心情？ | How did the writer feel when the cat died?
-= 非常难过 | 我抱着它的小垫子，哭了很久
+≈ 非常难过 | 我抱着它的小垫子，哭了很久 | 爸爸说，小花猫走了
 - 很轻松 ~opposite
 - 很生爸爸的气 ~unsaid
 ?1 小花猫在作者家住了多少年？ | How long had the cat lived with the family?
@@ -158,26 +158,26 @@ export const FEELINGS_4 = `
 - 它最喜欢趴在阳台上晒太阳 ~plain
 - 这个春天，它老了 ~plain
 ?2 “用尾巴轻轻扫我的手”写出了什么？ | What does "brushing my hand with its tail" show?
-= 小花猫和“我”很亲 | 用尾巴轻轻扫我的手
+≈ 小花猫和“我”很亲 | 用尾巴轻轻扫我的手 | 我写作业的时候，它就蹲在桌边
 - 小花猫不让“我”写作业 ~literal
 - 小花猫很凶 ~opposite
 ?2 “阳台上空空的”表达了作者怎样的感受？ | What does "the balcony is empty" show?
-= 失去小花猫后心里也空了 | 现在，阳台上空空的
+≈ 失去小花猫后心里也空了 | 现在，阳台上空空的 | 它最喜欢趴在阳台上晒太阳 | 觉得它就在脚边
 - 阳台刚打扫过 ~literal
 - 作者很高兴有了地方 ~opposite
 
 # 上台以前
 学校的艺术节上，我要第一个上台唱歌。还没轮到我，我的腿就开始发软了。我站在幕布后面，偷偷往外看，台下坐满了人，黑压压的一片。我的手心冒汗，嗓子也干干的，早就背熟的歌词，一下子全想不起来了。老师走过来，拍拍我的肩膀，说：“别怕，就像平时在班里唱一样。”我深深地吸了一口气，走上了台。音乐响起来，我一开口，声音竟然很稳。唱完了，台下响起了掌声，我的脸热热的，心里像开了花。
 ?1 上台以前，作者是什么心情？ | How did the writer feel before going on?
-= 非常紧张 | 我的腿就开始发软了
+≈ 非常紧张 | 我的腿就开始发软了 | 我的手心冒汗，嗓子也干干的
 - 很轻松 ~opposite
 - 很生气 ~unsaid
 ?1 唱完以后，作者的心情怎样？ | How did the writer feel after singing?
-= 非常高兴 | 心里像开了花
+≈ 非常高兴 | 心里像开了花 | 台下响起了掌声
 - 很失望 ~opposite
 - 还是很紧张 ~opposite
 ?1 是什么让作者走上了台？ | What helped the writer go on stage?
-= 老师的鼓励 | 别怕，就像平时在班里唱一样
+≈ 老师的鼓励 | 别怕，就像平时在班里唱一样 | 我深深地吸了一口气，走上了台
 - 台下的掌声 ~order
 - 同学推了一把 ~unsaid
 ?2 哪句话最能表现作者的紧张？ | Which words best show the writer's nerves?
@@ -185,18 +185,18 @@ export const FEELINGS_4 = `
 - 学校的艺术节上，我要第一个上台唱歌 ~plain
 - 音乐响起来 ~plain
 ?2 “心里像开了花”是什么意思？ | What does "a flower opened in my heart" mean?
-= 心里高兴极了 | 心里像开了花
+≈ 心里高兴极了 | 心里像开了花 | 唱完了，台下响起了掌声
 - 心里种了一朵花 ~literal
 - 有人送了花 ~unsaid
 ?2 “我深深地吸了一口气”说明了什么？ | What does "I took a deep breath" show?
-= 作者在给自己鼓劲 | 我深深地吸了一口气，走上了台
+≈ 作者在给自己鼓劲 | 我深深地吸了一口气，走上了台 | 别怕，就像平时在班里唱一样
 - 作者跑得喘不过气 ~unsaid
 - 作者不想上台了 ~opposite
 
 # 老槐树
 村口有一棵老槐树，听爷爷说，它比村里年纪最大的人还老。它的树干很粗，三个孩子手拉手才能抱住。夏天，大人们在树下乘凉，孩子们在树下捉迷藏。每当有人出远门，家里人都会把他送到老槐树下；每当有人回来，远远地看见老槐树，就知道到家了。我也离开村子好多年了。每次回去，车还没停，我就先找那棵老槐树。看见它还在那里，枝叶还是那么茂盛，我的心就踏实了。
 ?1 作者对老槐树怀着怎样的感情？ | What does the writer feel for the old tree?
-= 很亲切，把它当作家乡的标志 | 远远地看见老槐树，就知道到家了
+≈ 很亲切，把它当作家乡的标志 | 远远地看见老槐树，就知道到家了 | 家里人都会把他送到老槐树下 | 车还没停，我就先找那棵老槐树
 - 很害怕它 ~unsaid
 - 嫌它太老了 ~opposite
 ?1 看见老槐树还在，作者的心情怎样？ | How does the writer feel seeing the tree still there?
@@ -204,7 +204,7 @@ export const FEELINGS_4 = `
 - 很失望 ~opposite
 - 很紧张 ~opposite
 ?1 为什么人们看见老槐树就知道到家了？ | Why does seeing the tree mean being home?
-= 它就在村口，大家都认得它 | 村口有一棵老槐树
+≈ 它就在村口，大家都认得它 | 村口有一棵老槐树 | 它比村里年纪最大的人还老 | 远远地看见老槐树，就知道到家了
 - 树上写着村子的名字 ~unsaid
 - 家里人在树上挂了灯 ~unsaid
 ?2 哪句话最能表现作者对老槐树的牵挂？ | Which words best show the writer's care for the tree?
@@ -212,26 +212,26 @@ export const FEELINGS_4 = `
 - 它的树干很粗 ~plain
 - 夏天，大人们在树下乘凉 ~plain
 ?2 “三个孩子手拉手才能抱住”写出了什么？ | What does "three children hand in hand" show?
-= 老槐树的树干很粗 | 三个孩子手拉手才能抱住
+= 老槐树的树干很粗 | 三个孩子手拉手才能抱住 | 它的树干很粗
 - 孩子们很喜欢做游戏 ~literal
 - 老槐树快倒了 ~unsaid
 ?2 写人们在树下送别和回家，是想说明什么？ | Why tell of farewells and homecomings under the tree?
-= 老槐树和村里人的感情很深 | 家里人都会把他送到老槐树下
+≈ 老槐树和村里人的感情很深 | 家里人都会把他送到老槐树下 | 每当有人回来，远远地看见老槐树，就知道到家了 | 我的心就踏实了
 - 村里人都喜欢出远门 ~literal
 - 树下很凉快 ~other
 
 # 被冤枉的那天
 那天下课，同桌的新钢笔不见了。有人说，刚才只有我在座位上。同学们的眼睛都看着我，我的脸一下子涨得通红，想说话，却一句也说不出来。回家的路上，我踢着路边的小石子，越想越委屈，眼泪在眼眶里打转。第二天一早，同桌跑过来对我说：“对不起，钢笔掉在我的书包夹层里了，我错怪你了。”我愣了一下，心里那块大石头一下子落了地。我说：“没关系，找到了就好。”
 ?1 被人怀疑的时候，作者是什么心情？ | How did the writer feel when suspected?
-= 很委屈 | 越想越委屈，眼泪在眼眶里打转
+= 很委屈 | 越想越委屈，眼泪在眼眶里打转 | 同学们的眼睛都看着我
 - 很高兴 ~opposite
 - 无所谓 ~opposite
 ?1 第二天听了同桌的话，作者心情怎样？ | How did the writer feel at the deskmate's words?
-= 一下子轻松了 | 心里那块大石头一下子落了地
+≈ 一下子轻松了 | 心里那块大石头一下子落了地 | 我错怪你了
 - 更加委屈了 ~opposite
 - 很生气，不想理他 ~opposite
 ?1 钢笔是在哪里找到的？ | Where was the pen found?
-= 同桌书包的夹层里 | 钢笔掉在我的书包夹层里了
+= 同桌书包的夹层里 | 钢笔掉在我的书包夹层里了 | 同桌跑过来对我说
 - 作者的桌子里 ~unsaid
 - 教室的地上 ~unsaid
 ?2 哪句话最能表现作者当时说不清的着急？ | Which words show the writer's tongue-tied distress?
@@ -239,11 +239,11 @@ export const FEELINGS_4 = `
 - 那天下课，同桌的新钢笔不见了 ~plain
 - 第二天一早 ~plain
 ?2 “心里那块大石头一下子落了地”是什么意思？ | What does "the stone in my heart fell to the ground" mean?
-= 放下心来，不再难受了 | 心里那块大石头一下子落了地
+≈ 放下心来，不再难受了 | 心里那块大石头一下子落了地 | 越想越委屈 | 没关系，找到了就好
 - 真的有一块石头掉了 ~literal
 - 作者摔了一跤 ~unsaid
 ?2 “我踢着路边的小石子”表现了什么？ | What does kicking stones along the road show?
-= 心里委屈，闷闷不乐 | 我踢着路边的小石子，越想越委屈
+≈ 心里委屈，闷闷不乐 | 我踢着路边的小石子，越想越委屈 | 想说话，却一句也说不出来
 - 作者在玩踢石子的游戏 ~literal
 - 作者很开心 ~opposite
 
@@ -254,11 +254,11 @@ export const FEELINGS_4 = `
 - 觉得它太小，不好看 ~opposite
 - 嫌它太香了 ~opposite
 ?1 桂花有什么特点？ | What is the osmanthus like?
-= 花很小，却很香 | 可就是这么小的花，让整个校园都香了
+= 花很小，却很香 | 可就是这么小的花，让整个校园都香了 | 桂花很小
 - 花很大，颜色很红 ~opposite
 - 花很多，却不香 ~opposite
 ?1 作者为什么把桂花夹在书里？ | Why did the writer keep flowers in a book?
-= 想把桂花的香留得久一点 | 直到冬天，翻开书，还能闻到一点点香
+≈ 想把桂花的香留得久一点 | 直到冬天，翻开书，还能闻到一点点香 | 我捡起几朵，夹在书里 | 我真喜欢这些小小的桂花
 - 老师让大家做标本 ~unsaid
 - 书里的字看不清了 ~unsaid
 ?2 哪句话直接说出了作者的喜爱？ | Which words say the writer's love outright?
@@ -266,11 +266,11 @@ export const FEELINGS_4 = `
 - 十月，校园里的桂花开了 ~plain
 - 一簇一簇地藏在叶子中间 ~plain
 ?2 “一直钻到心里去”写出了什么？ | What does "seeping right into the heart" show?
-= 桂花的香让人觉得很舒服 | 一直钻到心里去
+≈ 桂花的香让人觉得很舒服 | 一直钻到心里去 | 甜甜的，淡淡的
 - 桂花飞进了衣服里 ~literal
 - 香味让人难受 ~opposite
 ?2 同学们“深深地吸一口气”，说明了什么？ | What does everyone taking a deep breath show?
-= 大家都喜欢桂花的香 | 同学们都爱到桂花树下站一站，深深地吸一口气
+≈ 大家都喜欢桂花的香 | 同学们都爱到桂花树下站一站，深深地吸一口气 | 一走进校门，就闻到一阵阵香味
 - 大家跑累了 ~unsaid
 - 树下的空气不好 ~opposite
 `;
@@ -304,7 +304,8 @@ export const EVERYDAY_4 = `
 - 一个月 ~changed
 - 三天 ~changed
 ?2 星期六下午能去借书吗？ | Can one borrow on Saturday afternoon?
-= 不能，只有星期一到星期五开放 | 星期一到星期五，下午四点到六点
+≈ 不能，只有星期一到星期五开放 | 星期一到星期五，下午四点到六点
+% 须知写着开放时间是“星期一到星期五”，星期六不在里面，那天图书馆不开门，所以不能去借书。 | The notice gives the opening days as “Monday to Friday”; Saturday is not among them, so the library is shut and there is no borrowing.
 - 能，每天都开放 ~opposite
 - 能，下午四点到六点 ~part
 
@@ -414,7 +415,7 @@ export const EVERYDAY_4 = `
 - 不能带宠物 ~changed
 - 让它自己跑 ~opposite
 ?1 公园里的花草可以摘吗？ | May one pick the flowers?
-= 不可以 | 请不要采摘花草
+= 不可以 | 请不要采摘花草 | 欢迎来到人民公园
 - 可以摘一点 ~opposite
 - 可以摘不开花的 ~unsaid
 ?2 公园早上几点开门？ | When does the park open?
@@ -422,11 +423,13 @@ export const EVERYDAY_4 = `
 - 九点 ~other
 - 八点 ~unsaid
 ?2 这份须知是写给谁看的？ | Whom is the notice for?
-= 来公园游玩的人 | 欢迎来到人民公园
+≈ 来公园游玩的人 | 欢迎来到人民公园 | 请不要采摘花草，不要爬树 | 宠物要用绳子牵好
+% 须知开头说“欢迎来到人民公园”，下面讲的都是在公园里玩的时候要注意的事：不摘花草、不爬树、宠物要牵好。欢迎的人、要注意这些事的人，都是来公园游玩的人。 | The notice begins “Welcome to People's Park”, and all that follows is what to mind while in the park: no picking flowers, no climbing trees, pets on a lead. Those welcomed and those who must mind these things are the people who come to visit the park.
 - 公园的工人 ~unsaid
 - 卖东西的人 ~unsaid
 ?2 晚上十点还能进公园吗？ | Can one go in at ten at night?
-= 不能，九点就关门了 | 早上六点到晚上九点
+≈ 不能，九点就关门了 | 早上六点到晚上九点
+% 开放时间到“晚上九点”为止，晚上十点比九点晚，公园已经关门了，所以进不去。 | The park is open until “nine in the evening”; ten is later than nine, when the park is already shut, so no one can go in.
 - 能，公园一直开着 ~opposite
 - 能，十点才关门 ~changed
 
@@ -466,7 +469,7 @@ export const EVERYDAY_4 = `
 下个星期六（6月8日）是我十岁的生日。我想请你到我家来，一起吃蛋糕，做游戏。时间是下午两点到五点。我家在花园小区8号楼3单元502。不用带礼物，你来了我就很高兴！
 你的好朋友 林林
 ?1 林林请小雨来做什么？ | What is Xiaoyu invited for?
-= 一起过生日，吃蛋糕，做游戏 | 一起吃蛋糕，做游戏
+= 一起过生日，吃蛋糕，做游戏 | 我想请你到我家来，一起吃蛋糕，做游戏 | 是我十岁的生日
 - 一起写作业 ~unsaid
 - 一起去公园 ~unsaid
 ?1 小雨需要带礼物吗？ | Must Xiaoyu bring a present?
@@ -478,7 +481,7 @@ export const EVERYDAY_4 = `
 - 下午五点 ~other
 - 上午十点 ~unsaid
 ?2 这张卡是谁写给谁的？ | Who wrote to whom?
-= 林林写给小雨 | 亲爱的小雨
+= 林林写给小雨 | 亲爱的小雨 | 你的好朋友 林林
 - 小雨写给林林 ~who
 - 老师写给小雨 ~unsaid
 ?2 生日会在哪里？ | Where is the party?
@@ -549,7 +552,8 @@ export const EVERYDAY_4 = `
 - 新华书店 ~other
 - 火车站 ~other
 ?2 早上5:30能坐上5路车吗？ | Can one take it at 5:30 a.m.?
-= 不能，第一班车是6:00 | 首班车：早上6:00
+≈ 不能，第一班车是6:00 | 首班车：早上6:00
+% 站牌上写着首班车是早上6:00，在它之前没有车。早上5:30比6:00早，所以坐不上5路车。 | The sign says the first bus is at 6:00; before it there is none. 5:30 is earlier than 6:00, so there is no number 5 bus to catch.
 - 能，车一直有 ~opposite
 - 能，每10分钟一班 ~part
 
@@ -573,11 +577,12 @@ export const EVERYDAY_4 = `
 - 王芳 ~other
 - 李华 ~other
 ?2 张小明哪几天值日？ | On which days is Zhang Xiaoming on duty?
-= 星期一和星期四 | 星期四：扫地 张小明
+= 星期一和星期四 | 星期一：扫地 李华　擦黑板 张小明 | 星期四：扫地 张小明　擦黑板 李华
 - 星期二和星期五 ~other
 - 只有星期一 ~part
 ?2 星期二李华要值日吗？ | Is Li Hua on duty on Tuesday?
-= 不要 | 星期二：扫地 王芳　擦黑板 刘强
+≈ 不要 | 星期二：扫地 王芳　擦黑板 刘强
+% 值日表上，星期二扫地的是王芳，擦黑板的是刘强，里面没有李华的名字，所以星期二李华不用值日。 | On the rota, Tuesday's sweeping is Wang Fang's and the blackboard Liu Qiang's; Li Hua's name is not there, so he has no duty on Tuesday.
 - 要扫地 ~who
 - 要擦黑板 ~who
 ?2 星期四李华做什么？ | What does Li Hua do on Thursday?

@@ -211,8 +211,14 @@ export interface Question {
   readonly ask: Text;
   readonly right: string;
   readonly wrong: readonly (readonly [option: string, reason: Reason])[];
-  /** clue is the words of the text that answer the question, as they stand in it. */
+  /** clue is the words of the text that answer the question, as they stand in it, or the first words an inference starts from. */
   readonly clue: string;
+  /** inferred tells a question whose answer the text does not state but lets the reader infer, as against one it states. */
+  readonly inferred: boolean;
+  /** evidence are the words of the text the answer rests on, the clue first. */
+  readonly evidence: readonly string[];
+  /** reasoning, when given, says how the evidence leads to the answer, in place of the default wording of the second step. */
+  readonly reasoning?: Text;
 }
 
 /** Piece is a text with its questions for each knowledge point of its topic: a passage, a sign, a verse or a scene. */
@@ -226,7 +232,10 @@ export interface Piece {
 /**
  * parsePieces reads texts separated by lines `#` with a title. The lines after a title are the text until the first
  * question. A question is `?k ask in Chinese | ask in English`, k its knowledge point counted from 1, then
- * `= right | clue` and `- wrong ~reason` once for each wrong option.
+ * `= right | clue` and `- wrong ~reason` once for each wrong option. A question whose answer is inferred, not stated,
+ * has `≈ right | clue | more evidence…` instead, with the places of the text it rests on, and
+ * `% reasoning in Chinese | reasoning in English`, how they lead to the answer, which it may leave out when it rests on
+ * two places or more.
  */
 export function parsePieces(data: string, points: number): readonly Piece[] {
   return data
@@ -242,16 +251,23 @@ export function parsePieces(data: string, points: number): readonly Piece[] {
         .filter((r) => r !== "")
         .join("\n");
       const questions: Question[][] = Array.from({ length: points }, () => []);
-      let current: { k: number; ask: Text; right?: string; clue?: string; wrong: [string, Reason][] } | undefined;
+      let current:
+        | { k: number; ask: Text; right?: string; evidence?: string[]; inferred?: boolean; reasoning?: Text; wrong: [string, Reason][] }
+        | undefined;
       const close = () => {
         if (!current) return;
-        const { k, ask, right, clue, wrong } = current;
+        const { k, ask, right, evidence = [], inferred = false, reasoning, wrong } = current;
+        const clue = evidence[0];
         if (right === undefined || clue === undefined) throw new Error(`piece ${title}: ${ask["zh-CN"]} has no answer`);
         if (wrong.length < 2) throw new Error(`piece ${title}: ${ask["zh-CN"]} needs two wrong options`);
         if (new Set([right, ...wrong.map((w) => w[0])]).size !== wrong.length + 1)
           throw new Error(`piece ${title}: ${ask["zh-CN"]} repeats an option`);
-        if (!`${title}\n${body}`.includes(clue)) throw new Error(`piece ${title}: the clue ${clue} is not in the text`);
-        questions[k]!.push({ ask, right, wrong, clue });
+        for (const e of evidence)
+          if (e === "" || !`${title}\n${body}`.includes(e)) throw new Error(`piece ${title}: the clue ${e} is not in the text`);
+        if (inferred && new Set(evidence).size < 2 && !reasoning)
+          throw new Error(`piece ${title}: ${ask["zh-CN"]} infers from one place but says not how`);
+        if (reasoning && !inferred) throw new Error(`piece ${title}: ${ask["zh-CN"]} has reasoning but is not inferred`);
+        questions[k]!.push({ ask, right, wrong, clue, inferred, evidence, ...(reasoning ? { reasoning } : {}) });
         current = undefined;
       };
       for (const row of rows.slice(firstQuestion).filter((r) => r !== "")) {
@@ -264,13 +280,21 @@ export function parsePieces(data: string, points: number): readonly Piece[] {
             .map((s) => s.trim());
           if (!(k >= 0 && k < points) || zh === "" || en === "") throw new Error(`piece ${title}: question ${row}`);
           current = { k, ask: t(en, zh), wrong: [] };
-        } else if (row.startsWith("=") && current) {
-          const [right = "", clue = ""] = row
+        } else if ((row.startsWith("=") || row.startsWith("≈")) && current) {
+          const [right = "", ...evidence] = row
             .slice(1)
             .split(" | ")
             .map((s) => s.trim());
           current.right = right;
-          current.clue = clue;
+          current.evidence = evidence;
+          current.inferred = row.startsWith("≈");
+        } else if (row.startsWith("%") && current) {
+          const [zh = "", en = ""] = row
+            .slice(1)
+            .split(" | ")
+            .map((s) => s.trim());
+          if (zh === "" || en === "") throw new Error(`piece ${title}: reasoning ${row}`);
+          current.reasoning = t(en, zh);
         } else if (row.startsWith("-") && current) {
           const m = /^-\s*(.+?)\s*~(\w+)$/u.exec(row);
           if (!m || !(m[2]! in REASONS)) throw new Error(`piece ${title}: wrong option ${row}`);
@@ -339,25 +363,85 @@ const byClue =
   (kind: Kind): Wording =>
   (q) => {
     const [textEn, textZh] = kind.text;
+    const one = q.evidence.length === 1;
     return {
       find: t(
-        `The question asks: ${q.ask.en} In ${textEn}, look for the words about this: ${quoted(q.clue, "en")}`,
-        `题目问的是：${q.ask["zh-CN"]}在${textZh}里找写这件事的话：${quoted(q.clue, "zh-CN")}`,
+        `The question asks: ${q.ask.en} In ${textEn}, look for the words about this: ${evidenceOf(q, "en")}`,
+        `题目问的是：${q.ask["zh-CN"]}在${textZh}里找写这件事的话：${evidenceOf(q, "zh-CN")}`,
       ),
-      choose: t(`Of the options, only “${q.right}” says what these words say.`, `几个选项里，只有“${q.right}”和这句话说的一致。`),
+      choose: t(
+        `Of the options, only “${q.right}” says what ${one ? "these words say" : "these places say together"}.`,
+        `几个选项里，只有“${q.right}”和${one ? "这句话" : "这几处合起来"}说的一致。`,
+      ),
       check: t(
-        `Read the question again with the answer, “${q.right}”, and then the words of ${textEn}: ${quoted(q.clue, "en")} They agree.`,
-        `带着答案“${q.right}”再读一遍问题，然后对照${textZh}里的“${q.clue}”，两者说的是一回事。`,
+        `Read the question again with the answer, “${q.right}”, and then the words of ${textEn}: ${evidenceOf(q, "en")} They agree.`,
+        `带着答案“${q.right}”再读一遍问题，然后对照${textZh}里的${marksOf(q, "zh-CN")}，${one ? "两者" : "答案和这几处"}说的是一回事。`,
+      ),
+    };
+  };
+
+/** marksOf quotes the places of the text an answer rests on, joined into a phrase without a closing mark. */
+export function marksOf(q: Question, locale: "en" | "zh-CN"): string {
+  const marks = q.evidence.map((e) => `“${e.replaceAll("“", "‘").replaceAll("”", "’")}”`);
+  const last = marks.pop() ?? "";
+  if (marks.length === 0) return last;
+  return locale === "en" ? `${marks.join(", ")} and ${last}` : `${marks.join("，")}，还有${last}`;
+}
+
+/** evidenceOf quotes the places of the text an answer rests on as the last thing a sentence says. */
+export const evidenceOf = (q: Question, locale: "en" | "zh-CN"): string =>
+  q.evidence.length === 1 ? quoted(q.clue, locale) : `${marksOf(q, locale)}${locale === "en" ? "." : "。"}`;
+
+/** endingOf is the last sentence of a piece's text. */
+export const endingOf = (piece: Piece): string => sentencesOf(piece.body).at(-1) ?? piece.body;
+
+/** INFERENCE_HEADINGS are the bold headings of the first two steps of a question whose answer is inferred. */
+const INFERENCE_HEADINGS = {
+  find: t("**Step 1: find the words the answer can be inferred from.**", "**第一步：找到能推出答案的话。**"),
+  choose: t("**Step 2: reason from those words.**", "**第二步：从这些话推出答案。**"),
+} as const;
+
+/**
+ * byInference words a question whose answer the text does not state: find the places it rests on, reason from them
+ * together, and check the answer against the whole text and its ending, not against words it does not have.
+ */
+const byInference =
+  (kind: Kind): Wording =>
+  (q, piece) => {
+    const [textEn, textZh] = kind.text;
+    const ending = endingOf(piece);
+    const felt = kind !== SIGN && kind !== TALK;
+    return {
+      heads: INFERENCE_HEADINGS,
+      find: t(
+        `The question asks: ${q.ask.en} The answer is not said in so many words in ${textEn}; it has to be inferred. Look for the words it rests on: ${evidenceOf(q, "en")}`,
+        `题目问的是：${q.ask["zh-CN"]}${textZh}没有直接写出答案，要从上下文推出来。先找到相关的话：${evidenceOf(q, "zh-CN")}`,
+      ),
+      choose:
+        q.reasoning ??
+        t(
+          `Read these places side by side and ask what they show together: they point to “${q.right}”. None of the other options squares with all of them.`,
+          `把这几处放在一起想：它们合起来透露出的，是“${q.right}”。其他选项和这几处话对不上。`,
+        ),
+      check: t(
+        `The answer was inferred: no sentence of ${textEn} answers the question in so many words, so the check is not to look for them. Read the whole of it again with “${q.right}” in mind, through to the end, which is ${quoted(ending, "en")} Nothing in it goes against the answer, and the answer fits what the whole ${felt ? "says and feels" : "says"}, so the inference holds.`,
+        `这个答案是推出来的，${textZh}里没有哪一句直接这样回答问题，所以不能靠找原话来检验。换个办法：心里想着答案“${q.right}”，把${textZh}从头读到结尾，结尾是${quoted(ending, "zh-CN")}通读下来，没有一处和答案相反，答案也和全文的${felt ? "意思、感情" : "意思"}相合，这个推断站得住。`,
       ),
     };
   };
 
 /**
  * pieceGenerator asks the questions of a knowledge point in turn, with the text and the options shuffled. The solution
- * finds the clue, chooses by it and checks the choice against the question, or follows the wording given; then each
+ * finds the clue, chooses by it and checks the choice against the question, or, for an inferred answer, reasons from
+ * its evidence and checks it against the whole text; or it follows the wording given; then each
  * other option is answered.
  */
-export function pieceGenerator(pieces: readonly Piece[], k: number, kind: Kind, wording: Wording = byClue(kind)): Generator {
+export function pieceGenerator(
+  pieces: readonly Piece[],
+  k: number,
+  kind: Kind,
+  wording: Wording = (q, piece) => (q.inferred ? byInference(kind) : byClue(kind))(q, piece),
+): Generator {
   const bank = asked(pieces, k);
   return (rng: Rng): Problem => {
     const [piece, q] = rng.cycle(bank);

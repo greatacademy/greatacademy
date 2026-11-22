@@ -8,7 +8,18 @@ import { t } from "@ga/content";
 import type { GradeTopic } from "../grammar/index.ts";
 import { RHYMES, SIGNS, STORIES } from "./texts-1.ts";
 import { FABLES, FAIRY_TALES, NATURE } from "./texts-2.ts";
-import { isHan, PASSAGE, type Piece, quoted, SIGN, readingTopicOf as topicOf, VERSE, type Wording } from "./topic-kit.ts";
+import {
+  endingOf,
+  evidenceOf,
+  isHan,
+  PASSAGE,
+  type Piece,
+  quoted,
+  SIGN,
+  readingTopicOf as topicOf,
+  VERSE,
+  type Wording,
+} from "./topic-kit.ts";
 
 /** endsOf are the last characters of the lines of a verse. */
 const endsOf = (piece: Piece): string =>
@@ -41,24 +52,34 @@ const byRhyme: Wording = (q, piece) => {
   };
 };
 
-/** byLesson words a question on what a fable teaches: find how it ends, ask why, and tell it back with the lesson. */
-export const byLesson: Wording = (q) => ({
+/**
+ * byLesson words a question on what a fable teaches: find how it ends, ask why, and tell it back with the lesson; a
+ * lesson the fable leaves unsaid is checked against the whole story, not against words it does not have.
+ */
+export const byLesson: Wording = (q, piece) => ({
   heads: {
     find: t("**Step 1: find how it turns out.**", "**第一步：找到故事的结果。**"),
     choose: t("**Step 2: ask why.**", "**第二步：想想为什么。**"),
   },
   find: t(
-    `A fable teaches by what happens and how it ends. The question asks: ${q.ask.en} The words that show it are: ${quoted(q.clue, "en")}`,
-    `寓言用发生的事和故事的结果讲道理。题目问的是：${q.ask["zh-CN"]}说明这一点的话是：${quoted(q.clue, "zh-CN")}`,
+    `A fable teaches by what happens and how it ends. The question asks: ${q.ask.en} The words that show it are: ${evidenceOf(q, "en")}`,
+    `寓言用发生的事和故事的结果讲道理。题目问的是：${q.ask["zh-CN"]}说明这一点的话是：${evidenceOf(q, "zh-CN")}`,
   ),
-  choose: t(
-    `Ask what these words show about what the character did and why it turned out so: “${q.right}”.`,
-    `想一想：这句话说明人物做了什么，为什么会有这样的结果？答案是“${q.right}”。`,
-  ),
-  check: t(
-    `Put the answer, “${q.right}”, beside the words “${q.clue}”: it is what they show, and it explains how the fable turns out.`,
-    `把答案“${q.right}”和“${q.clue}”放在一起读：答案正是这句话说明的，也说清了故事为什么是这样的结果。`,
-  ),
+  choose:
+    q.reasoning ??
+    t(
+      `Ask what ${q.evidence.length === 1 ? "these words show" : "these places show together"} about what the character did and why it turned out so: “${q.right}”.`,
+      `想一想：${q.evidence.length === 1 ? "这句话" : "这几处合起来"}说明人物做了什么，为什么会有这样的结果？答案是“${q.right}”。`,
+    ),
+  check: q.inferred
+    ? t(
+        `The fable does not state its lesson; it is drawn from the story. Take “${q.right}” back to the story and read it to the end, ${quoted(endingOf(piece), "en")} What the character does and how it turns out are both explained by it, so the answer holds.`,
+        `寓言没有把道理直接写出来，道理是从故事里悟出来的。把“${q.right}”带回故事里，一直读到结尾${quoted(endingOf(piece), "zh-CN")}人物怎么做、结果怎样，都能用它说清楚，答案站得住。`,
+      )
+    : t(
+        `Put the answer, “${q.right}”, beside the words “${q.clue}”: it is what they show, and it explains how the fable turns out.`,
+        `把答案“${q.right}”和“${q.clue}”放在一起读：答案正是这句话说明的，也说清了故事为什么是这样的结果。`,
+      ),
 });
 
 /** byImagining words a question on what a fairy tale imagines: ask of each option whether it could happen in real life. */

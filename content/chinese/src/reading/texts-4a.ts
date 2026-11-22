@@ -7,7 +7,7 @@ export const MYTHS_4 = `
 # 盘古开天地
 古书《三五历纪》里说，最早的时候，天和地是连在一起的，混混沌沌，像一只鸡蛋。盘古就在这只“鸡蛋”里慢慢长大。过了一万八千年，天和地分开了：明亮清轻的部分成了天，昏暗重浊的部分成了地。盘古站在天地中间，一天之中要变化九次，比天还神，比地还圣。从这以后，天每天高一丈，地每天厚一丈，盘古每天也长一丈。又过了一万八千年，天变得极高，地变得极深，盘古也长得极高大。另一本古书《五运历年纪》接着说：盘古临死的时候，呼出的气成了风和云，声音成了雷，左眼成了太阳，右眼成了月亮，血成了江河，头发和胡子成了满天的星星，汗水成了雨。
 ?1 盘古最早是在哪里长大的？ | Where did Pangu first grow?
-= 在像鸡蛋一样的混沌里 | 盘古就在这只“鸡蛋”里慢慢长大
+= 在像鸡蛋一样的混沌里 | 盘古就在这只“鸡蛋”里慢慢长大 | 混混沌沌，像一只鸡蛋
 - 在高高的山顶上 ~unsaid
 - 在大河边 ~unsaid
 ?1 天和地分开以后，哪部分成了天？ | When sky and earth parted, which part became the sky?
@@ -19,15 +19,17 @@ export const MYTHS_4 = `
 - 天高一丈，地和盘古不变 ~part
 - 天每天变化九次 ~changed
 ?2 下面哪一件事是神话里想象出来的？ | Which of these is imagined by the myth?
-= 盘古的左眼成了太阳，右眼成了月亮 | 左眼成了太阳，右眼成了月亮
+≈ 盘古的左眼成了太阳，右眼成了月亮 | 左眼成了太阳，右眼成了月亮
+% 判断是不是想象，要问一问：生活中真的会这样吗？人的眼睛不会变成太阳和月亮，太阳和月亮也不是谁的眼睛变的，所以这是神话想象出来的。 | To tell what is imagined, ask: could this really happen? No one's eyes turn into the sun and the moon, and the sun and the moon came from no one's eyes, so this the myth imagines.
 - 天在上面，地在下面 ~real
 - 下雨的时候天上有云 ~real
 ?2 “一天之中要变化九次，比天还神，比地还圣”，想象的是盘古怎样？ | What does the myth imagine of Pangu in “changing nine times a day”?
-= 他神奇得超过了天和地 | 一天之中要变化九次，比天还神，比地还圣
+≈ 他神奇得超过了天和地 | 一天之中要变化九次，比天还神，比地还圣 | 天和地分开了
 - 他每天要换九次衣服 ~unsaid
 - 他睡了一万八千年 ~unsaid
 ?2 古人借这个神话想说明什么？ | What did people of old use this myth to explain?
-= 天地和风云、日月、江河是怎样来的 | 汗水成了雨
+≈ 天地和风云、日月、江河是怎样来的 | 汗水成了雨 | 呼出的气成了风和云，声音成了雷 | 血成了江河
+% 神话的最后一段一样一样地说：风和云、雷、太阳、月亮、江河、星星、雨，都是盘古的身体变的。古人用这个想象回答一个问题：天地和世上这些东西是怎样来的。 | The end of the myth goes through them one by one: wind and cloud, thunder, sun, moon, rivers, stars and rain all came from Pangu's body. With it the ancients answered a question: how did heaven and earth and all these things come to be.
 - 鸡蛋是怎样来的 ~never
 - 人为什么要长高 ~never
 
@@ -54,14 +56,14 @@ export const MYTHS_4 = `
 - 是太阳照在云上 ~life
 - 是大火烧红的 ~unsaid
 ?2 这个神话里，女娲是一个怎样的人？ | What kind of person is Nüwa in the myth?
-= 爱护人们，不怕辛苦 | 她决心把天补好
+≈ 爱护人们，不怕辛苦 | 她决心把天补好 | 女娲看到这样的情景，心里非常难过 | 她跑遍了大山
 - 只想着自己 ~opposite
 - 胆子很小 ~opposite
 
 # 精卫填海
 炎帝有一个小女儿，名叫女娃。一天，女娃到东海去游玩，忽然起了大风浪，把她的小船打翻了，她再也没有回来。女娃死后，变成了一只小鸟，头上有花纹，嘴是白的，脚是红的，常常发出“精卫、精卫”的叫声，人们就叫她精卫。精卫恨大海夺去了自己的生命，决心把大海填平。她每天从西山上衔来小石子和小树枝，飞到东海，把它们投进海里。大海笑她：“小鸟儿，你就是干上一百万年，也别想把我填平！”精卫回答：“就是干上一千万年，我也要把你填平！”她就这样飞来飞去，一天也不停。
 ?1 女娃是怎样死去的？ | How did Nüwa the girl die?
-= 在东海游玩时被风浪打翻了小船 | 忽然起了大风浪，把她的小船打翻了
+= 在东海游玩时被风浪打翻了小船 | 女娃到东海去游玩 | 忽然起了大风浪，把她的小船打翻了
 - 在西山上摔了下来 ~unsaid
 - 生了一场大病 ~unsaid
 ?1 精卫每天做什么？ | What did Jingwei do every day?
@@ -73,15 +75,16 @@ export const MYTHS_4 = `
 - 它的嘴是白的 ~other
 - 它是炎帝的女儿 ~other
 ?2 下面哪一件事是神话里想象出来的？ | Which of these is imagined by the myth?
-= 大海开口笑话精卫 | 大海笑她
+≈ 大海开口笑话精卫 | 大海笑她
+% 判断是不是想象，要问一问：生活中真的会这样吗？大海不会开口说话，更不会笑话一只小鸟，所以这是神话想象出来的。 | To tell what is imagined, ask: could this really happen? The sea cannot speak, still less laugh at a bird, so this the myth imagines.
 - 海上会起大风浪 ~real
 - 小鸟会衔小树枝 ~real
 ?2 精卫说“就是干上一千万年”，想象中表现了她怎样的决心？ | What resolve does "even if it takes ten million years" show?
-= 不管多难，一定要把大海填平 | 就是干上一千万年，我也要把你填平
+≈ 不管多难，一定要把大海填平 | 就是干上一千万年，我也要把你填平 | 你就是干上一百万年，也别想把我填平 | 一天也不停
 - 填不平就算了 ~opposite
 - 一千万年以后再填 ~changed
 ?2 女娃变成小鸟，这个想象有什么用？ | Why does the myth have the girl become a bird?
-= 让她能飞到东海去填海 | 女娃死后，变成了一只小鸟
+≈ 让她能飞到东海去填海 | 女娃死后，变成了一只小鸟 | 她每天从西山上衔来小石子和小树枝，飞到东海
 - 说明人死后都会变成鸟 ~broad
 - 说明小鸟的脚都是红的 ~detail
 
@@ -100,7 +103,8 @@ export const MYTHS_4 = `
 - 追上了太阳 ~opposite
 - 回家休息了 ~unsaid
 ?2 下面哪一件事是神话里想象出来的？ | Which of these is imagined by the myth?
-= 一口气喝干两条大河 | 一口气喝干了黄河和渭河的水
+≈ 一口气喝干两条大河 | 一口气喝干了黄河和渭河的水
+% 判断是不是想象，要问一问：生活中真的会这样吗？黄河和渭河是两条大河，没有人能一口气把它们喝干，所以这是神话想象出来的。 | To tell what is imagined, ask: could this really happen? The Yellow River and the Wei are two great rivers, and no one could drink them dry at a gulp, so this the myth imagines.
 - 跑得太久会口渴 ~real
 - 太阳从东边升起 ~real
 ?2 夸父的手杖变成了什么？ | What did Kuafu's staff become?
@@ -108,7 +112,7 @@ export const MYTHS_4 = `
 - 一条大河 ~unsaid
 - 一座高山 ~unsaid
 ?2 “跑起来像风一样快”，想象出夸父是一个怎样的人？ | What does "ran as fast as the wind" make Kuafu out to be?
-= 力气大、跑得快的巨人 | 他长得又高又大，跑起来像风一样快
+≈ 力气大、跑得快的巨人 | 他长得又高又大，跑起来像风一样快 | 北方的大山里住着一个巨人
 - 胆子很小的人 ~unsaid
 - 跑得很慢的老人 ~opposite
 
@@ -123,19 +127,21 @@ export const MYTHS_4 = `
 - 十个 ~changed
 - 一个 ~changed
 ?1 后羿为什么要射太阳？ | Why did Houyi shoot the suns?
-= 看到人们被晒得受苦 | 他看到人们这样受苦
+= 看到人们被晒得受苦 | 他看到人们这样受苦 | 人们热得喘不过气来
 - 想试一试新弓 ~unsaid
 - 太阳把他的箭晒坏了 ~unsaid
 ?2 下面哪一件事是神话里想象出来的？ | Which of these is imagined by the myth?
-= 天上有十个太阳 | 天上有十个太阳
+≈ 天上有十个太阳 | 天上有十个太阳
+% 判断是不是想象，要问一问：生活中真的会这样吗？天上只有一个太阳，从来没有过十个，所以“十个太阳”是神话想象出来的。 | To tell what is imagined, ask: could this really happen? There is one sun in the sky and there have never been ten, so the ten suns the myth imagines.
 - 天太热了庄稼会枯死 ~real
 - 人可以拉弓射箭 ~real
 ?2 为什么后羿要留下一个太阳？ | Why does the myth have Houyi leave one sun?
-= 人们和庄稼离不开太阳 | 不冷也不热，庄稼长起来了
+≈ 人们和庄稼离不开太阳 | 不冷也不热，庄稼长起来了 | 庄稼都枯死了，河水也干了
+% 十个太阳一起出来，庄稼枯死，河水干了；可是只留下一个太阳以后，“不冷也不热，庄稼长起来了”。太阳多了会晒死庄稼，一个也没有又不行，庄稼和人们都离不开它，所以后羿留下了一个。 | With ten suns out at once the crops died and the rivers dried; with one left, it was “neither cold nor hot, and the crops grew”. Too many suns burn the crops, and none at all will not do either: crops and people cannot live without it, so Houyi kept one.
 - 他的箭用完了 ~unsaid
 - 他射不到最后一个 ~unsaid
 ?2 古人借这个神话表达了什么愿望？ | What wish did people of old put into this myth?
-= 希望能战胜大旱，过上好日子 | 人们又过上了好日子
+≈ 希望能战胜大旱，过上好日子 | 人们又过上了好日子 | 大地被晒得裂开了口子，庄稼都枯死了 | 他一连射下了九个太阳
 - 希望天上的太阳越多越好 ~opposite
 - 希望人人都会射箭 ~broad
 
@@ -154,22 +160,24 @@ export const MYTHS_4 = `
 - 九年 ~other
 - 三年 ~changed
 ?2 下面哪一件事是神话里想象出来的？ | Which of these is imagined by the story?
-= 神龙用尾巴划出了一条河道 | 龙用尾巴在地上一划，就划出了一条河道
+≈ 神龙用尾巴划出了一条河道 | 龙用尾巴在地上一划，就划出了一条河道
+% 判断是不是想象，要问一问：生活中真的会这样吗？世上没有神龙，尾巴一划也划不出一条河道，所以这是神话想象出来的。 | To tell what is imagined, ask: could this really happen? There are no dragons, and no tail could cut a riverbed at a stroke, so this the myth imagines.
 - 洪水会淹没田地和房屋 ~real
 - 挖河道能把水引走 ~real
 ?2 “三次经过自己的家门，都没有进去”，说明禹是一个怎样的人？ | What does "passing his own door three times without going in" show?
-= 一心为大家治水，顾不上自己的家 | 这些年里，他三次经过自己的家门，都没有进去看一看
+≈ 一心为大家治水，顾不上自己的家 | 这些年里，他三次经过自己的家门，都没有进去看一看 | 他听见刚出生的儿子在哭，也只是在门外停了一下，就又走了
 - 不喜欢自己的家 ~opposite
 - 忘了自己的家在哪里 ~unsaid
 ?2 这个故事里哪一部分最像真事？ | Which part of the story is most like what really happens?
-= 疏通河道把洪水引走 | 想出了疏通河道的办法
+≈ 疏通河道把洪水引走 | 想出了疏通河道的办法 | 禹带着人们挖河开山
+% 问问每件事生活中会不会真的有：神龙划出河道，生活中没有；人们挖开河道，把洪水引到大海里去，却是真的能做到的事，今天人们治水也这样做。所以最像真事的是疏通河道把洪水引走。 | Ask of each whether it could really happen: a dragon cutting a riverbed could not; but people digging channels to lead a flood to the sea can, and floods are still fought this way. So the likeliest to be true is clearing channels to lead the water off.
 - 神龙帮禹划河道 ~imagined
 - 禹一个人挖开了大山 ~changed
 
 # 神农尝百草
 远古的时候，人们靠打猎和采野果过日子，常常吃了有毒的东西生病，生了病也不知道用什么来治。神农看到人们这样痛苦，心里很着急。他决心尝遍山上的草木，弄清楚哪些能吃，哪些能治病。传说神农的肚子是透明的，吃下去的东西在肚子里是什么样子，看得清清楚楚。他走遍了大山，每看到一种草，就放进嘴里尝一尝。有一天，他一连中了七十次毒，都靠找到的解毒的草救了自己。他把尝过的草木一样一样记下来，教人们种庄稼，又教人们用草药治病。
 ?1 神农为什么要尝百草？ | Why did Shennong taste the plants?
-= 想弄清楚哪些能吃，哪些能治病 | 弄清楚哪些能吃，哪些能治病
+= 想弄清楚哪些能吃，哪些能治病 | 他决心尝遍山上的草木，弄清楚哪些能吃，哪些能治病 | 常常吃了有毒的东西生病
 - 他肚子饿了 ~unsaid
 - 想找最好吃的野果 ~unsaid
 ?1 神农中了毒，是怎样救自己的？ | How did Shennong save himself from the poisons?
@@ -185,11 +193,11 @@ export const MYTHS_4 = `
 - 有的草有毒 ~real
 - 有的草能治病 ~real
 ?2 想象“肚子是透明的”，在故事里有什么用？ | What use is the see-through stomach to the story?
-= 能看清吃下的草在肚子里怎么样 | 吃下去的东西在肚子里是什么样子，看得清清楚楚
+≈ 能看清吃下的草在肚子里怎么样 | 吃下去的东西在肚子里是什么样子，看得清清楚楚 | 弄清楚哪些能吃，哪些能治病
 - 让神农吃得更多 ~unsaid
 - 让神农不会中毒 ~opposite
 ?2 “一连中了七十次毒”，表现了神农怎样的品质？ | What does "poisoned seventy times in a row" show of Shennong?
-= 不怕危险，为大家吃苦 | 有一天，他一连中了七十次毒
+≈ 不怕危险，为大家吃苦 | 有一天，他一连中了七十次毒 | 神农看到人们这样痛苦，心里很着急 | 每看到一种草，就放进嘴里尝一尝
 - 做事很粗心 ~opposite
 - 只想着自己 ~opposite
 
@@ -208,22 +216,24 @@ export const MYTHS_4 = `
 - 绳结的样子 ~unsaid
 - 猎人的样子 ~unsaid
 ?2 下面哪一件事是神话里想象出来的？ | Which of these is imagined by the story?
-= 字造成那天天上下起了粮食 | 天上下起了粮食
+≈ 字造成那天天上下起了粮食 | 天上下起了粮食
+% 判断是不是想象，要问一问：生活中真的会这样吗？天上只会下雨下雪，不会下粮食，所以这是神话想象出来的。 | To tell what is imagined, ask: could this really happen? Rain and snow fall from the sky, but grain never does, so this the myth imagines.
 - 雪地上会留下脚印 ~real
 - 猎人认得动物的脚印 ~real
 ?2 “夜里鬼都吓得哭了起来”，想象的意思是什么？ | What does "even the ghosts wept in fear that night" mean?
-= 造字是一件惊天动地的大事 | 夜里鬼都吓得哭了起来
+≈ 造字是一件惊天动地的大事 | 夜里鬼都吓得哭了起来 | 天上下起了粮食
 - 那天夜里下了大雨 ~unsaid
 - 鬼不认识字 ~literal
 ?2 这个故事里哪一部分最像真事？ | Which part of the story is most like what really happens?
-= 照着东西的样子造出字来 | 照着日月山川、鸟兽草木的样子
+≈ 照着东西的样子造出字来 | 照着日月山川、鸟兽草木的样子 | 一种脚印能代表一种动物
+% 问问每件事生活中会不会真的有：天上下粮食、鬼吓得哭，生活中都没有；可是照着太阳、月亮、山、水、鸟兽和草木的样子画出符号，慢慢变成字，是真的能做到的事。所以最像真事的是照着东西的样子造字。 | Ask of each whether it could really happen: grain from the sky and ghosts weeping could not; but drawing signs after the shapes of the sun, moon, hills, rivers, birds, beasts and plants, which slowly became characters, can. So the likeliest to be true is making characters after the shapes of things.
 - 天上下粮食 ~imagined
 - 鬼在夜里哭 ~imagined
 
 # 燧人取火
 远古的时候，人们还不会用火。天一黑，到处黑乎乎的，野兽常常跑来伤人；冬天，人们冷得发抖；吃的东西都是生的。有时候打雷，树林着了火，人们才见到火，可是火很快就灭了。有一个年轻人，决心找到火种。传说他梦见一位神人对他说：“西边有一个国家，那里有火。”他走了很远很远，来到一片大树林。他看见一只大鸟用嘴啄着树干，每啄一下，就闪出一点火光。他受到启发，折下树枝，在大树上用力地钻，钻啊钻，终于钻出了火。人们有了火，夜里不怕野兽了，冬天不冷了，还吃上了熟的东西。大家都叫他燧人。
 ?1 没有火的时候，人们过着怎样的日子？ | How did people live before they had fire?
-= 夜里怕野兽，冬天冷，吃生的东西 | 野兽常常跑来伤人
+= 夜里怕野兽，冬天冷，吃生的东西 | 野兽常常跑来伤人 | 冬天，人们冷得发抖 | 吃的东西都是生的
 - 每天都住在山洞里 ~unsaid
 - 天天打雷下雨 ~unsaid
 ?1 年轻人是怎样取到火的？ | How did the young man get fire?
@@ -235,7 +245,8 @@ export const MYTHS_4 = `
 - 不用再打猎了 ~unsaid
 - 天不再黑了 ~broad
 ?2 下面哪一件事是神话里想象出来的？ | Which of these is imagined by the story?
-= 大鸟啄树干，闪出火光 | 每啄一下，就闪出一点火光
+≈ 大鸟啄树干，闪出火光 | 每啄一下，就闪出一点火光
+% 判断是不是想象，要问一问：生活中真的会这样吗？鸟用嘴啄树干，只会啄出小洞，不会闪出火光，所以这是神话想象出来的。 | To tell what is imagined, ask: could this really happen? A bird pecking a trunk makes holes, never sparks, so this the myth imagines.
 - 打雷会让树林着火 ~real
 - 有了火，冬天就不冷了 ~real
 ?2 神话里谁告诉年轻人哪里有火？ | Who in the myth told the young man where fire was?
@@ -243,7 +254,8 @@ export const MYTHS_4 = `
 - 一只大鸟 ~other
 - 一个猎人 ~unsaid
 ?2 这个故事里哪一部分最像真事？ | Which part of the story is most like what really happens?
-= 用木头钻出火 | 折下树枝，在大树上用力地钻
+≈ 用木头钻出火 | 折下树枝，在大树上用力地钻 | 终于钻出了火
+% 问问每件事生活中会不会真的有：神人托梦、鸟啄出火光，生活中都没有；可是用树枝在木头上使劲地钻，钻得发热，真的能钻出火来。所以最像真事的是用木头钻出火。 | Ask of each whether it could really happen: a god in a dream and a bird pecking out sparks could not; but drilling hard into wood with a stick until it grows hot really does make fire. So the likeliest to be true is drilling fire from wood.
 - 梦里的神人指路 ~imagined
 - 大鸟啄出火光 ~imagined
 
@@ -262,15 +274,16 @@ export const MYTHS_4 = `
 - 去追逢蒙 ~unsaid
 - 也飞到了月亮上 ~unsaid
 ?2 下面哪一件事是神话里想象出来的？ | Which of these is imagined by the myth?
-= 吃了仙药就能飞上月亮 | 一直飞到了月亮上
+≈ 吃了仙药就能飞上月亮 | 一直飞到了月亮上 | 吃了这包仙药，人就能飞上天去
+% 判断是不是想象，要问一问：生活中真的会这样吗？没有什么药吃下去能让人飞起来，人也不能自己飘到月亮上去，所以这是神话想象出来的。 | To tell what is imagined, ask: could this really happen? No medicine makes a person fly, and no one can float up to the moon, so this the myth imagines.
 - 人会想念亲人 ~real
 - 中秋节人们会看月亮 ~real
 ?2 古人借这个神话说明了什么风俗的来历？ | What custom did people of old use this myth to explain?
-= 中秋节摆上果子望月亮 | 人们听说了，也在中秋这天摆上果子，望着月亮
+= 中秋节摆上果子望月亮 | 人们听说了，也在中秋这天摆上果子，望着月亮 | 他在院子里摆上嫦娥爱吃的果子，望着月亮想念她
 - 春节放鞭炮 ~never
 - 端午节赛龙舟 ~never
 ?2 从这个神话可以看出，嫦娥是一个怎样的人？ | What kind of person does the myth make Chang'e?
-= 不让坏人得逞，很勇敢 | 嫦娥知道仙药不能落到坏人手里，就一口把它吞了下去
+≈ 不让坏人得逞，很勇敢 | 嫦娥知道仙药不能落到坏人手里，就一口把它吞了下去 | 逢蒙拿着剑闯进家里，逼嫦娥交出仙药
 - 一心想长生不老 ~unsaid
 - 胆子很小，什么也不敢做 ~opposite
 `;
@@ -284,7 +297,7 @@ export const FOLK_TALES_4 = `
 - 山里有好吃的东西 ~unsaid
 - 村里要发大水 ~unsaid
 ?1 白头发的老人是用什么办法赶走年的？ | How did the white-haired old man drive Nian away?
-= 贴红纸，点亮灯，烧竹子发出响声 | 门上贴着大红纸，屋里灯火通明
+= 贴红纸，点亮灯，烧竹子发出响声 | 门上贴着大红纸，屋里灯火通明 | “噼噼啪啪”地响着竹子烧着的声音
 - 拿着刀和它打 ~unsaid
 - 把它关进深海里 ~unsaid
 ?1 这个故事讲了哪个风俗的来历？ | Which custom does the tale explain?
@@ -292,7 +305,8 @@ export const FOLK_TALES_4 = `
 - 中秋吃月饼 ~never
 - 清明去扫墓 ~never
 ?2 白头发的老人是一个怎样的人？ | What kind of man is the old man?
-= 有智慧，又很勇敢 | 我有办法把年赶走
+≈ 有智慧，又很勇敢 | 我有办法把年赶走 | 这一年除夕，村里来了一位白头发的老人 | 原来，年最怕红色、火光和响声
+% 别人都逃进深山，老人却留在村里，说“我有办法把年赶走”，这要胆量；他知道年最怕红色、火光和响声，就用红纸、灯火和烧竹子的响声把它吓跑，这要智慧。所以老人有智慧，又很勇敢。 | Everyone else fled to the hills, but the old man stayed and said “I know how to drive Nian away”: that takes courage. He knew Nian most feared red, firelight and noise, and scared it off with red paper, lamps and the crack of burning bamboo: that takes wisdom. So he is wise and brave.
 - 胆小怕事 ~opposite
 - 爱说大话，没有本事 ~opposite
 ?2 听了老人的话，村里人一开始是什么态度？ | How did the villagers first take the old man's words?
@@ -300,18 +314,18 @@ export const FOLK_TALES_4 = `
 - 马上跟着他干 ~opposite
 - 一起把他赶走了 ~unsaid
 ?2 年是一个怎样的怪兽？ | What kind of beast is Nian?
-= 很凶猛，却怕红色、火光和响声 | 原来，年最怕红色、火光和响声
+= 很凶猛，却怕红色、火光和响声 | 原来，年最怕红色、火光和响声 | 头上长着尖角，非常凶猛
 - 很胆小，什么都怕 ~broad
 - 很善良，喜欢帮人 ~opposite
 
 # 鲁班造锯
 鲁班是古时候一位有名的工匠。有一次，他要造一座很大的宫殿，需要很多木头。他和徒弟们上山砍树，用斧头砍，砍一天也砍不了几棵，大家累得腰酸背痛。鲁班心里很着急。一天，他上山的时候，手被一种野草划破了，流出了血。他很奇怪：一根小草怎么这么厉害？他摘下一片草叶仔细看，发现叶子的两边长着许多小细齿。他又看见一只蝗虫在吃草，蝗虫的大牙上也排着一排小齿。鲁班想：要是做一件带齿的工具，来回地拉，不就能很快地把树锯断了吗？他请铁匠打了一根带小齿的铁条，到山上一试，果然又快又省力。这就是锯子。
 ?1 鲁班遇到了什么难题？ | What problem did Lu Ban face?
-= 用斧头砍树太慢，大家很累 | 用斧头砍，砍一天也砍不了几棵
+= 用斧头砍树太慢，大家很累 | 用斧头砍，砍一天也砍不了几棵 | 大家累得腰酸背痛
 - 找不到要用的木头 ~unsaid
 - 他的徒弟不肯干活 ~unsaid
 ?1 鲁班是从哪里得到启发的？ | Where did Lu Ban find his idea?
-= 草叶边上的小细齿和蝗虫的大牙 | 发现叶子的两边长着许多小细齿
+= 草叶边上的小细齿和蝗虫的大牙 | 发现叶子的两边长着许多小细齿 | 蝗虫的大牙上也排着一排小齿
 - 铁匠打铁 ~other
 - 一棵倒下的大树 ~unsaid
 ?1 锯子是怎样做出来的？ | How was the first saw made?
@@ -323,7 +337,7 @@ export const FOLK_TALES_4 = `
 - 生气地把草拔了 ~unsaid
 - 马上下山去包手 ~unsaid
 ?2 从这个故事可以看出，鲁班是一个怎样的人？ | What kind of man does the tale show Lu Ban to be?
-= 善于观察，爱动脑筋 | 他很奇怪：一根小草怎么这么厉害
+≈ 善于观察，爱动脑筋 | 他很奇怪：一根小草怎么这么厉害 | 他摘下一片草叶仔细看 | 鲁班想：要是做一件带齿的工具
 - 做事很粗心 ~opposite
 - 怕吃苦，不想干活 ~opposite
 ?2 看到大家累得腰酸背痛，鲁班的心情怎么样？ | How did Lu Ban feel seeing everyone worn out?
@@ -334,7 +348,7 @@ export const FOLK_TALES_4 = `
 # 田螺姑娘
 从前，有一个年轻的农夫，家里很穷，一个人住在小屋里，每天早出晚归地种田。一天，他在田边捡到一只大田螺，就带回家，养在水缸里。从那以后，怪事发生了：每天他从田里回来，桌上都摆着热腾腾的饭菜，屋子也打扫得干干净净。农夫心里很奇怪。有一天，他假装出门，悄悄躲在门外往里看。只见水缸里走出一位姑娘，忙着生火做饭。农夫推门进去，姑娘想回到水缸里去，可是田螺壳已经被农夫拿在手里了。姑娘只好告诉他：“我是天上的田螺仙子，看你勤劳又善良，就来帮你。”后来，两个人结成了夫妻，一起勤勤恳恳地过日子。
 ?1 农夫捡到田螺以后，家里发生了什么怪事？ | What strange thing happened after the farmer found the snail?
-= 回家时饭菜做好了，屋子也打扫干净了 | 桌上都摆着热腾腾的饭菜，屋子也打扫得干干净净
+= 回家时饭菜做好了，屋子也打扫干净了 | 桌上都摆着热腾腾的饭菜 | 屋子也打扫得干干净净
 - 田里的庄稼长得特别好 ~unsaid
 - 水缸里的水变多了 ~unsaid
 ?1 农夫是怎样知道真相的？ | How did the farmer learn the truth?
@@ -350,7 +364,7 @@ export const FOLK_TALES_4 = `
 - 农夫给了她很多钱 ~unsaid
 - 她想住在农夫家的水缸里 ~unsaid
 ?2 农夫是一个怎样的人？ | What kind of man is the farmer?
-= 勤劳、善良 | 每天早出晚归地种田
+≈ 勤劳、善良 | 每天早出晚归地种田 | 看你勤劳又善良，就来帮你
 - 很懒，不爱干活 ~opposite
 - 很有钱 ~opposite
 ?2 发现饭菜做好了，农夫的心情怎么样？ | How did the farmer feel finding the meals made?
@@ -365,7 +379,7 @@ export const FOLK_TALES_4 = `
 - 最有钱的 ~changed
 - 住得最近的 ~unsaid
 ?1 老鼠爸爸是按什么顺序去找的？ | In what order did he call on them?
-= 太阳、乌云、风、墙 | 他去找太阳
+= 太阳、乌云、风、墙 | 他去找太阳 | 他去找乌云 | 他去找风 | 他去找墙
 - 墙、风、乌云、太阳 ~order
 - 风、太阳、墙、乌云 ~order
 ?1 最后，老鼠爸爸把女儿嫁给了谁？ | Whom did he marry his daughter to in the end?
@@ -377,38 +391,39 @@ export const FOLK_TALES_4 = `
 - 风能把它吹倒 ~changed
 - 太阳能把它晒裂 ~unsaid
 ?2 太阳、乌云、风、墙都说自己不行，说明了什么？ | What does each saying it would not do show?
-= 谁都有比不过别人的地方 | 我不行
+≈ 谁都有比不过别人的地方 | 我不行，乌云一来就能把我遮住 | 我不行，风一吹我就散了 | 我不行，一堵墙就能把我挡住 | 我最怕老鼠了
+% 太阳怕乌云，乌云怕风，风怕墙，墙又怕老鼠：每一个都觉得自己“不行”，因为总有一样东西比得过它。故事一个接一个地这样写，说明谁都有比不过别人的地方。 | The sun fears the cloud, the cloud the wind, the wind the wall, and the wall the mouse: each says it “will not do”, because something always beats it. One after another, the tale shows that everyone has something that beats them.
 - 太阳是最了不起的 ~reversed
 - 墙是最了不起的 ~narrow
 ?2 老鼠爸爸是一个怎样的爸爸？ | What kind of father is Father Mouse?
-= 很爱女儿，一心想为她找个好女婿 | 他想给女儿找一个世界上最了不起的女婿
+≈ 很爱女儿，一心想为她找个好女婿 | 他想给女儿找一个世界上最了不起的女婿 | 他去找太阳 | 他去找墙
 - 不关心女儿 ~opposite
 - 什么都不想就做决定 ~opposite
 
 # 九色鹿
 从前，在一座大山里，住着一只美丽的鹿。它身上有九种颜色，头上的角像雪一样白，人们叫它九色鹿。一天，九色鹿在河边散步，听见有人喊救命。原来是一个叫调达的人掉进了河里。九色鹿跳进水里，把他救了上来。调达跪在地上说：“谢谢你救了我，我一辈子给你做事。”九色鹿说：“不用了，只要你不告诉别人我住在这里就行。”调达发誓答应了。后来，国王的王后想要九色鹿的皮做衣服，国王就贴出告示，谁找到九色鹿就给他很多金子。调达见了，就把九色鹿住的地方告诉了国王。国王带着军队包围了九色鹿。九色鹿把调达落水、自己救他的事说了出来。国王听了，非常生气，下令全国的人都不许伤害九色鹿。调达呢，被人人看不起。
 ?1 九色鹿和调达之间发生了什么事？ | What happened between the deer and Diaoda?
-= 九色鹿救了调达，调达却出卖了它 | 调达见了，就把九色鹿住的地方告诉了国王
+= 九色鹿救了调达，调达却出卖了它 | 九色鹿跳进水里，把他救了上来 | 调达见了，就把九色鹿住的地方告诉了国王
 - 调达救了九色鹿 ~who
 - 九色鹿和调达成了好朋友 ~unsaid
 ?1 国王为什么要找九色鹿？ | Why did the king look for the deer?
-= 王后想要九色鹿的皮做衣服 | 国王的王后想要九色鹿的皮做衣服
+= 王后想要九色鹿的皮做衣服 | 国王的王后想要九色鹿的皮做衣服 | 国王就贴出告示
 - 国王想和它做朋友 ~unsaid
 - 九色鹿偷了国王的金子 ~unsaid
 ?1 故事的结局是什么？ | How does the tale end?
-= 国王下令不许伤害九色鹿，调达被人看不起 | 国王听了，非常生气，下令全国的人都不许伤害九色鹿
+= 国王下令不许伤害九色鹿，调达被人看不起 | 下令全国的人都不许伤害九色鹿 | 调达呢，被人人看不起
 - 九色鹿被国王抓走了 ~opposite
 - 调达得到了很多金子 ~unsaid
 ?2 九色鹿是一个怎样的形象？ | What kind of figure is the nine-coloured deer?
-= 美丽善良，见人有难就救 | 九色鹿跳进水里，把他救了上来
+≈ 美丽善良，见人有难就救 | 九色鹿跳进水里，把他救了上来 | 住着一只美丽的鹿 | 不用了，只要你不告诉别人我住在这里就行
 - 胆小，见死不救 ~opposite
 - 爱要别人报答 ~opposite
 ?2 调达是一个怎样的人？ | What kind of man is Diaoda?
-= 说话不算数，见利忘义 | 调达发誓答应了
+≈ 说话不算数，见利忘义 | 调达发誓答应了 | 调达见了，就把九色鹿住的地方告诉了国王 | 谁找到九色鹿就给他很多金子
 - 知恩图报 ~opposite
 - 很勇敢 ~unsaid
 ?2 国王听了九色鹿的话为什么生气？ | Why was the king angry at the deer's words?
-= 调达忘恩负义，出卖了救命的恩人 | 九色鹿把调达落水、自己救他的事说了出来
+≈ 调达忘恩负义，出卖了救命的恩人 | 九色鹿把调达落水、自己救他的事说了出来 | 调达见了，就把九色鹿住的地方告诉了国王 | 国王听了，非常生气
 - 九色鹿不愿意给王后做衣服 ~unsaid
 - 九色鹿跑得太快，抓不到 ~unsaid
 
@@ -419,7 +434,7 @@ export const FOLK_TALES_4 = `
 - 只还了一口小锅 ~changed
 - 把锅弄坏了 ~unsaid
 ?1 第二次借锅后发生了什么？ | What happened after the second loan?
-= 阿凡提说锅死了，不还了 | 真不幸，你的锅死了
+= 阿凡提说锅死了，不还了 | 可是过了好多天，阿凡提也不来还 | 真不幸，你的锅死了
 - 阿凡提还了两口锅 ~other
 - 财主不肯借锅 ~opposite
 ?1 故事的结果是什么？ | How does the tale end?
@@ -427,22 +442,23 @@ export const FOLK_TALES_4 = `
 - 财主打了阿凡提 ~unsaid
 - 阿凡提又还了一口新锅 ~unsaid
 ?2 财主为什么收下了两口锅？ | Why did the rich man take both pots?
-= 他很贪心 | 财主心里高兴极了，收下了两口锅
+≈ 他很贪心 | 财主心里高兴极了，收下了两口锅 | 有一个财主，又贪心又小气 | 你的大锅生了一个孩子，当然也是你的
 - 他相信锅真的会生孩子 ~unsaid
 - 他想帮助阿凡提 ~unsaid
 ?2 阿凡提是一个怎样的人？ | What kind of man is Afanti?
-= 聪明机智，敢教训贪心的人 | 阿凡提想教训教训他
+≈ 聪明机智，敢教训贪心的人 | 阿凡提想教训教训他 | 你的大锅生了一个孩子 | 锅会生孩子，为什么不会死呢
 - 爱占别人便宜 ~opposite
 - 糊里糊涂，连锅都分不清 ~opposite
 ?2 “锅会生孩子，为什么不会死呢？”这句话妙在哪里？ | What is clever in "If a pot can have a child, why can it not die?"
-= 用财主自己认的道理让他无话可说 | 锅会生孩子，为什么不会死呢
+≈ 用财主自己认的道理让他无话可说 | 锅会生孩子，为什么不会死呢 | 你的大锅生了一个孩子，当然也是你的 | 财主心里高兴极了，收下了两口锅
+% 第一次，财主为了多得一口锅，认下了“锅会生孩子”这句话；第二次，阿凡提就拿这句话来回他：锅能生孩子，当然也能死。财主要是说锅不会死，就得承认锅也不会生孩子，那口小锅就不该收。他自己认过的话堵住了他的嘴，所以一句话也说不出来。 | The first time, to gain a pot, the rich man accepted that “pots have babies”; the second time Afanti turns those words on him: if pots have babies, they can die. Were he to say pots cannot die, he would have to own that they cannot have babies either, and the small pot was never his. His own words stop his mouth, and he has nothing to say.
 - 说明锅真的会死 ~literal
 - 说明阿凡提不会说话 ~opposite
 
 # 牛郎织女
 从前，有个放牛的孩子，大家都叫他牛郎。他从小没了爹娘，跟着哥哥嫂子过日子，嫂子对他很不好。后来，哥哥嫂子分给他一头老牛，就让他走了。牛郎和老牛相依为命，老牛其实是天上的金牛星。一天，老牛开口说话，告诉牛郎，天上的仙女要到湖里洗澡。牛郎在湖边遇见了织女，两个人结成了夫妻。牛郎种地，织女织布，后来还有了一儿一女，日子过得很美满。王母娘娘知道了，派人把织女抓回了天上。牛郎披上老牛留下的牛皮，挑着孩子追到天上。眼看就要追上了，王母娘娘拔下头上的金簪一划，划出了一条天河，把他们隔开了。从此，他们只能每年七月初七在鹊桥上见一面。
 ?1 牛郎和织女是怎样成为夫妻的？ | How did the Cowherd and the Weaver come to marry?
-= 老牛告诉牛郎仙女要到湖里洗澡，他们在湖边相遇 | 牛郎在湖边遇见了织女，两个人结成了夫妻
+= 老牛告诉牛郎仙女要到湖里洗澡，他们在湖边相遇 | 牛郎在湖边遇见了织女，两个人结成了夫妻 | 告诉牛郎，天上的仙女要到湖里洗澡
 - 哥哥嫂子给牛郎说的媒 ~unsaid
 - 王母娘娘让他们结婚 ~opposite
 ?1 牛郎织女为什么被分开了？ | Why were they parted?
@@ -454,7 +470,7 @@ export const FOLK_TALES_4 = `
 - 每年的除夕 ~changed
 - 每个月的十五 ~changed
 ?2 嫂子是一个怎样的人？ | What kind of woman is the sister-in-law?
-= 对牛郎很不好 | 嫂子对他很不好
+= 对牛郎很不好 | 嫂子对他很不好 | 哥哥嫂子分给他一头老牛，就让他走了
 - 很疼爱牛郎 ~opposite
 - 帮牛郎找到了织女 ~unsaid
 ?2 牛郎和织女在一起时，日子过得怎么样？ | How was their life together?
@@ -462,14 +478,14 @@ export const FOLK_TALES_4 = `
 - 很苦，常常吵架 ~opposite
 - 很孤单 ~unsaid
 ?2 老牛在故事里是一个怎样的角色？ | What part does the old ox play?
-= 一直帮着牛郎 | 牛郎和老牛相依为命
+≈ 一直帮着牛郎 | 牛郎和老牛相依为命 | 老牛开口说话，告诉牛郎 | 牛郎披上老牛留下的牛皮
 - 害牛郎的坏人 ~opposite
 - 只是一头普通的牛 ~opposite
 
 # 猎人海力布
 从前，有个猎人叫海力布，他热心帮助别人，每次打猎回来，都把打到的东西分给大家。一天，他救了一条被老鹰抓住的小白蛇。小白蛇原来是龙王的女儿，龙王送给他一颗宝石，含在嘴里，就能听懂鸟兽说的话。可是，听到的话不能对别人说，说了，他就会变成石头。有一天，海力布听见一群鸟说：“明天这里的大山要崩塌，大水要淹没这一带，快逃吧！”他急忙跑回家，叫大家搬走。大家不相信，不肯走。海力布急得没有办法，只好把宝石的事和鸟说的话全都讲了出来。他刚说完，就变成了一块石头。大家这才相信，赶快搬走了。第二天，大山果然崩塌了，大水淹没了村子。人们得救了，世世代代都记着海力布。
 ?1 海力布是怎样得到宝石的？ | How did Hailibu get the jewel?
-= 救了龙王的女儿小白蛇，龙王送给他的 | 龙王送给他一颗宝石
+= 救了龙王的女儿小白蛇，龙王送给他的 | 他救了一条被老鹰抓住的小白蛇 | 小白蛇原来是龙王的女儿，龙王送给他一颗宝石
 - 打猎时在山上捡到的 ~unsaid
 - 鸟儿送给他的 ~unsaid
 ?1 海力布听到鸟说了什么？ | What did Hailibu hear the birds say?
@@ -481,11 +497,11 @@ export const FOLK_TALES_4 = `
 - 带着宝石离开了 ~unsaid
 - 被大水冲走了 ~unsaid
 ?2 海力布明知会变成石头，为什么还要说出真相？ | Why did he tell the truth, knowing he would turn to stone?
-= 为了让大家相信，赶快逃走 | 海力布急得没有办法，只好把宝石的事和鸟说的话全都讲了出来
+≈ 为了让大家相信，赶快逃走 | 海力布急得没有办法，只好把宝石的事和鸟说的话全都讲了出来 | 大家不相信，不肯走 | 大家这才相信，赶快搬走了
 - 他忘了龙王的话 ~unsaid
 - 他想变成石头 ~unsaid
 ?2 海力布是一个怎样的人？ | What kind of man is Hailibu?
-= 热心助人，为了大家不顾自己 | 他热心帮助别人
+≈ 热心助人，为了大家不顾自己 | 他热心帮助别人 | 只好把宝石的事和鸟说的话全都讲了出来 | 说了，他就会变成石头
 - 只顾自己 ~opposite
 - 爱说大话 ~unsaid
 ?2 大家听了海力布一开始的话，是什么态度？ | How did the villagers first take his warning?
@@ -496,11 +512,11 @@ export const FOLK_TALES_4 = `
 # 十二生肖的故事
 传说很久以前，天帝要选十二种动物做生肖，定下日子，谁先到就排在前面。猫和老鼠是好朋友，猫爱睡觉，就请老鼠到时候叫它。那天一早，老鼠起来了，却没有叫猫，自己偷偷地出发了。路上有一条大河，老鼠过不去，看见老牛要过河，就跳上了牛背。快到岸边的时候，老鼠一下子从牛背上跳了下来，抢先跑到了天帝面前，排了第一。老牛排第二，后面跟着老虎、兔子、龙、蛇、马、羊、猴、鸡、狗、猪。等猫醒来跑去，十二生肖早就排好了。猫气坏了，从此一见老鼠就要抓它。
 ?1 老鼠是怎样排到第一的？ | How did the rat come first?
-= 跳上牛背过河，快到岸时跳下来抢先跑到 | 老鼠一下子从牛背上跳了下来，抢先跑到了天帝面前，排了第一
+= 跳上牛背过河，快到岸时跳下来抢先跑到 | 就跳上了牛背 | 老鼠一下子从牛背上跳了下来，抢先跑到了天帝面前，排了第一
 - 它跑得比谁都快 ~unsaid
 - 天帝最喜欢它 ~unsaid
 ?1 猫为什么没有排上生肖？ | Why did the cat get no place?
-= 老鼠没有叫它，它醒来时已经排好了 | 等猫醒来跑去，十二生肖早就排好了
+= 老鼠没有叫它，它醒来时已经排好了 | 老鼠起来了，却没有叫猫 | 等猫醒来跑去，十二生肖早就排好了
 - 它不想当生肖 ~unsaid
 - 它过不了河 ~unsaid
 ?1 排在第二的是谁？ | Who came second?
@@ -508,7 +524,7 @@ export const FOLK_TALES_4 = `
 - 老虎 ~other
 - 猫 ~unsaid
 ?2 老鼠是一个怎样的角色？ | What kind of figure is the rat?
-= 机灵，却不讲信用 | 老鼠起来了，却没有叫猫，自己偷偷地出发了
+≈ 机灵，却不讲信用 | 老鼠起来了，却没有叫猫，自己偷偷地出发了 | 猫爱睡觉，就请老鼠到时候叫它 | 老鼠一下子从牛背上跳了下来，抢先跑到了天帝面前
 - 诚实守信 ~opposite
 - 胆小怕事 ~unsaid
 ?2 猫醒来以后的心情怎么样？ | How did the cat feel on waking?
@@ -516,14 +532,14 @@ export const FOLK_TALES_4 = `
 - 很高兴 ~opposite
 - 一点也不在乎 ~opposite
 ?2 这个故事想说明什么？ | What does the tale set out to explain?
-= 猫为什么一见老鼠就要抓 | 从此一见老鼠就要抓它
+≈ 猫为什么一见老鼠就要抓 | 从此一见老鼠就要抓它 | 猫气坏了 | 老鼠起来了，却没有叫猫
 - 老鼠为什么会游泳 ~never
 - 牛为什么跑得慢 ~never
 
 # 孟姜女
 传说秦朝的时候，有个姑娘叫孟姜女，她和丈夫范喜良刚成亲没几天，范喜良就被抓去修长城了。从那以后，一点消息也没有。转眼到了冬天，孟姜女想：丈夫在北方，一定很冷。她连夜缝好了一身棉衣，背上包袱，一个人上了路。她走了很远很远的路，翻过一座座大山，脚都磨破了，终于来到了长城脚下。可是，修长城的人告诉她，范喜良早就累死了，被埋在长城里。孟姜女听了，伤心得大哭起来，哭了三天三夜。忽然“轰隆”一声，一段长城倒塌了，露出了范喜良的尸骨。人们都说，是她的哭声感动了天地。
 ?1 孟姜女为什么要去长城？ | Why did Mengjiang go to the Great Wall?
-= 给修长城的丈夫送棉衣 | 她连夜缝好了一身棉衣，背上包袱，一个人上了路
+= 给修长城的丈夫送棉衣 | 她连夜缝好了一身棉衣，背上包袱，一个人上了路 | 丈夫在北方，一定很冷
 - 去看看长城有多长 ~unsaid
 - 也被抓去修长城 ~unsaid
 ?1 孟姜女到了长城，得到了什么消息？ | What news met her at the Wall?
@@ -535,7 +551,7 @@ export const FOLK_TALES_4 = `
 - 丈夫活了过来 ~unsaid
 - 天下起了大雪 ~unsaid
 ?2 “脚都磨破了”，表现了孟姜女怎样的心情？ | What does "her feet worn raw" show of her feelings?
-= 一心想早点见到丈夫，不怕苦 | 她走了很远很远的路，翻过一座座大山，脚都磨破了
+≈ 一心想早点见到丈夫，不怕苦 | 她走了很远很远的路，翻过一座座大山，脚都磨破了 | 她连夜缝好了一身棉衣
 - 走路很不小心 ~literal
 - 不想去长城 ~opposite
 ?2 听说丈夫死了，孟姜女的心情怎么样？ | How did she feel hearing her husband was dead?
@@ -543,7 +559,7 @@ export const FOLK_TALES_4 = `
 - 很生气，转身就走 ~unsaid
 - 很平静 ~opposite
 ?2 孟姜女是一个怎样的人？ | What kind of woman is Mengjiang?
-= 对丈夫情深，不怕千难万险 | 一个人上了路
+≈ 对丈夫情深，不怕千难万险 | 一个人上了路 | 她连夜缝好了一身棉衣 | 翻过一座座大山，脚都磨破了 | 伤心得大哭起来，哭了三天三夜
 - 胆小，不敢出门 ~opposite
 - 不关心丈夫 ~opposite
 `;
@@ -565,15 +581,15 @@ export const NARRATIVES_4 = `
 - 在城里开了一家医院 ~unsaid
 - 再也没有回过村里 ~opposite
 ?2 上车时，太奶奶“一句话也说不出来，只是抹眼泪”，她的心情怎样？ | How did Great-grandma feel, wordless and wiping her eyes?
-= 舍不得爷爷离开 | 一句话也说不出来，只是抹眼泪
+≈ 舍不得爷爷离开 | 一句话也说不出来，只是抹眼泪 | 爷爷上车的时候
 - 生爷爷的气 ~unsaid
 - 很高兴 ~opposite
 ?2 爷爷为什么一直留着这张旧车票？ | Why did Grandpa keep the old ticket?
-= 记着乡亲们的恩情 | 我得记一辈子
+≈ 记着乡亲们的恩情 | 我得记一辈子 | 这张车票，是乡亲们送我的 | 给他凑够了钱
 - 车票很值钱 ~unsaid
 - 他忘了扔 ~opposite
 ?2 爷爷后来的命运怎样？ | How did Grandpa's life turn out?
-= 上学成了医生，回报了乡亲 | 后来，爷爷成了一名医生
+= 上学成了医生，回报了乡亲 | 后来，爷爷成了一名医生 | 每年都回村里给乡亲们看病，一分钱也不收
 - 一直在村里种地 ~opposite
 - 没有考上学 ~opposite
 
@@ -592,15 +608,15 @@ export const NARRATIVES_4 = `
 - 第一名 ~changed
 - 第三名 ~changed
 ?2 小东回来时“低着头，眼泪在眼眶里打转”，他心里怎么想？ | What was Xiaodong feeling, head down, tears welling?
-= 很难过，觉得是自己害班级输了 | 都怪我
+≈ 很难过，觉得是自己害班级输了 | 都怪我 | 低着头，眼泪在眼眶里打转 | 我们班得了第四名
 - 生别人的气 ~unsaid
 - 一点也不在乎 ~opposite
 ?2 听了班长和老师的话，小东的心情有什么变化？ | How did Xiaodong's feelings change after their words?
-= 从难过变得开心了 | 小东擦干眼泪，笑了
+= 从难过变得开心了 | 小东擦干眼泪，笑了 | 眼泪在眼眶里打转
 - 从开心变得难过了 ~opposite
 - 一直很难过 ~opposite
 ?2 班长扶着小东说的话，表现了班长怎样的品质？ | What does the monitor's speech show of him?
-= 关心同学，会安慰人 | 你摔倒了还爬起来跑完，真棒
+≈ 关心同学，会安慰人 | 你摔倒了还爬起来跑完，真棒 | 班长扶着他说 | 大家没有一个人怪他
 - 爱批评别人 ~opposite
 - 只想着名次 ~opposite
 
@@ -619,15 +635,15 @@ export const NARRATIVES_4 = `
 - 给自己看病 ~unsaid
 - 买新的菜种 ~unsaid
 ?2 “每天天不亮就从乡下挑着菜来”，说明王奶奶是一个怎样的人？ | What does "carrying vegetables in before dawn every day" show?
-= 勤劳，不怕辛苦 | 每天天不亮就从乡下挑着菜来
+≈ 勤劳，不怕辛苦 | 每天天不亮就从乡下挑着菜来 | 她七十多岁了，头发全白了
 - 喜欢早起散步 ~unsaid
 - 很有钱 ~unsaid
 ?2 王奶奶为什么送我一把小葱？ | Why did Granny Wang give me spring onions?
-= 感谢我诚实还钱 | 好孩子，谢谢你
+≈ 感谢我诚实还钱 | 好孩子，谢谢你 | 我跑回去还给她 | 第二天，她送了我一把小葱
 - 小葱卖不掉了 ~unsaid
 - 我向她要的 ~unsaid
 ?2 听到我喊“王奶奶好”，她的心情怎样？ | How did she feel when I greeted her?
-= 很高兴 | 总是笑得眯起了眼睛
+≈ 很高兴 | 总是笑得眯起了眼睛 | 我每次路过菜摊，都要喊一声“王奶奶好”
 - 很烦 ~opposite
 - 很害羞 ~unsaid
 
@@ -650,11 +666,11 @@ export const NARRATIVES_4 = `
 - 很高兴 ~opposite
 - 觉得无所谓 ~opposite
 ?2 “在镜子前照了又照”，表现了妈妈怎样的心情？ | What does "looking in the mirror again and again" show of Mother?
-= 非常喜欢这份礼物，很感动 | 她围上围巾，在镜子前照了又照
+≈ 非常喜欢这份礼物，很感动 | 她围上围巾，在镜子前照了又照 | 这是我收到的最好的礼物 | 接着一把抱住了我
 - 觉得围巾颜色不好 ~opposite
 - 想看看自己老了没有 ~unsaid
 ?2 我递围巾时为什么“红着脸”？ | Why did I blush handing over the scarf?
-= 礼物送晚了，有点不好意思 | 妈妈，对不起，这是迟到的生日礼物
+≈ 礼物送晚了，有点不好意思 | 妈妈，对不起，这是迟到的生日礼物 | 红着脸递给妈妈
 - 走得太急，累的 ~unsaid
 - 怕妈妈批评我乱花钱 ~unsaid
 
@@ -673,7 +689,7 @@ export const NARRATIVES_4 = `
 - 十分钟 ~changed
 - 半个小时 ~changed
 ?2 “铅笔只剩下手指那么长了”，说明小芳怎么样？ | What does "a pencil as short as a finger" show?
-= 家里不富裕，很爱惜东西 | 铅笔只剩下手指那么长了
+≈ 家里不富裕，很爱惜东西 | 铅笔只剩下手指那么长了 | 教室的墙皮掉了，桌子也是旧的
 - 她不爱写字 ~opposite
 - 她的手指很长 ~literal
 ?2 小芳长大后想做什么？ | What does Xiaofang want to be?
@@ -681,7 +697,7 @@ export const NARRATIVES_4 = `
 - 去城里当医生 ~unsaid
 - 离开大山不回来 ~opposite
 ?2 我为什么给小芳寄铅笔和书？ | Why did I send her pencils and books?
-= 被她的努力打动，想帮助她 | 我见到小芳的时候，她正趴在桌上写作业
+≈ 被她的努力打动，想帮助她 | 我见到小芳的时候，她正趴在桌上写作业 | 每天要走两个小时的山路来上学，从来没有迟到过 | 我把自己的新铅笔和几本书都寄给了她
 - 表哥让我寄的 ~unsaid
 - 我的铅笔用不完 ~unsaid
 
@@ -700,15 +716,15 @@ export const NARRATIVES_4 = `
 - 去给李爷爷还伞 ~unsaid
 - 送李爷爷去医院 ~unsaid
 ?2 “把伞全撑在我头上，自己的半边身子都淋在雨里”，表现了李爷爷什么？ | What does holding the whole umbrella over me show?
-= 关心我，宁愿自己淋雨 | 自己的半边身子都淋在雨里
+≈ 关心我，宁愿自己淋雨 | 自己的半边身子都淋在雨里 | 李爷爷把伞全撑在我头上 | 没事，我身子骨硬朗
 - 不会打伞 ~unsaid
 - 伞太小了，他不在乎 ~unsaid
 ?2 看见李爷爷跑来之前，我的心情怎样？ | How did I feel before Grandpa Li appeared?
-= 有些失落，以为没人来接 | 妈妈今天加班，肯定不会来了
+≈ 有些失落，以为没人来接 | 妈妈今天加班，肯定不会来了 | 教室里的人越来越少
 - 很高兴 ~opposite
 - 很生气 ~unsaid
 ?2 李爷爷说“我身子骨硬朗”，是想让我怎么样？ | Why did Grandpa Li say he was hardy?
-= 不要担心他 | 没事，我身子骨硬朗
+≈ 不要担心他 | 没事，我身子骨硬朗 | 爷爷，您往里点
 - 夸自己力气大 ~literal
 - 让我自己打伞 ~opposite
 
@@ -731,11 +747,11 @@ export const NARRATIVES_4 = `
 - 觉得很好玩 ~opposite
 - 很生爸爸的气 ~unsaid
 ?2 妈妈说“我们家的小管家长大了”，心情怎样？ | How did Mother feel saying the little housekeeper had grown up?
-= 又惊讶又高兴 | 惊讶地说
+= 又惊讶又高兴 | 惊讶地说 | 我们家的小管家长大了
 - 很生气 ~opposite
 - 很担心 ~opposite
 ?2 从这件事可以看出“我”是一个怎样的孩子？ | What kind of child do these days show me to be?
-= 做错了不放弃，肯动脑筋改正 | 我先问了妈妈怎样煮面
+≈ 做错了不放弃，肯动脑筋改正 | 我先问了妈妈怎样煮面 | 我难过得想哭 | 又把要买的菜写在纸上，还把衣服分开来洗 | 我做了一桌简单的饭菜
 - 一遇到困难就放弃 ~opposite
 - 什么事都做得很好 ~opposite
 
@@ -754,11 +770,11 @@ export const NARRATIVES_4 = `
 - 一个月 ~changed
 - 三天 ~changed
 ?2 “我急得团团转”，说明我当时怎样？ | What does "running round in circles with worry" show?
-= 非常着急，担心小鸟 | 我急得团团转
+≈ 非常着急，担心小鸟 | 我急得团团转 | 我给它喂小米，它不吃；喂水，它也不喝
 - 在玩转圈的游戏 ~literal
 - 不想管小鸟了 ~opposite
 ?2 小鸟飞走前“回头看了看我，叫了几声”，好像在做什么？ | What does the bird seem to do, looking back and calling?
-= 向我道谢、告别 | 回头看了看我，叫了几声，飞走了
+≈ 向我道谢、告别 | 回头看了看我，叫了几声，飞走了 | 张叔叔教我用小勺把水送到它嘴边
 - 叫我不要走 ~unsaid
 - 生我的气 ~opposite
 ?2 放飞小鸟时，我的心情怎样？ | How did I feel setting it free?
@@ -785,11 +801,11 @@ export const NARRATIVES_4 = `
 - 怕爸爸走得太快 ~unsaid
 - 爸爸不喜欢我 ~unsaid
 ?2 我给爸爸涂护手霜，表现了我怎样的心情？ | What does putting cream on his hands show?
-= 心疼爸爸，敬佩爸爸 | 那天晚上，我给爸爸的手涂上了护手霜
+≈ 心疼爸爸，敬佩爸爸 | 那天晚上，我给爸爸的手涂上了护手霜 | 摸着上面的老茧，问他疼不疼 | 这座图书馆，是建筑工人一砖一瓦盖起来的
 - 还是嫌爸爸的手粗 ~reversed
 - 想玩护手霜 ~unsaid
 ?2 爸爸说“心里高兴着呢”，说明爸爸怎样看自己的工作？ | What does Father's "glad at heart" show of how he sees his work?
-= 为自己的工作感到自豪 | 看着楼一层一层盖起来，心里高兴着呢
+≈ 为自己的工作感到自豪 | 看着楼一层一层盖起来，心里高兴着呢 | 不疼
 - 不喜欢自己的工作 ~opposite
 - 觉得工作很轻松 ~unsaid
 
@@ -808,15 +824,15 @@ export const NARRATIVES_4 = `
 - 在商店里买的 ~unsaid
 - 从树上取下来的 ~unsaid
 ?2 被我大喊以后，小军“红着脸，一句话也没说就走了”，他心里怎样？ | How did Xiaojun feel, red-faced and silent?
-= 很难过，也觉得对不起我 | 小军红着脸，一句话也没说就走了
+≈ 很难过，也觉得对不起我 | 小军红着脸，一句话也没说就走了 | 都怪你 | 这是我自己做的，赔给你
 - 很高兴 ~opposite
 - 一点也不在意 ~opposite
 ?2 看到小军做的风筝，我为什么脸红了？ | Why did I blush at the kite he made?
-= 觉得自己错怪了小军，很惭愧 | 对不起，那天是风太大，不怪你
+≈ 觉得自己错怪了小军，很惭愧 | 对不起，那天是风太大，不怪你 | 我的脸一下子红了 | 这是我自己做的，赔给你
 - 风筝画得不像，替他害羞 ~unsaid
 - 跑得太累了 ~unsaid
 ?2 从故事里看，小军是一个怎样的人？ | What kind of boy does the story show Xiaojun to be?
-= 重视友谊，有担当 | 这是我自己做的，赔给你
+≈ 重视友谊，有担当 | 这是我自己做的，赔给你 | 小军拿着一只新风筝等在我家门口 | 虽然画得不太像
 - 小气，不讲理 ~opposite
 - 爱发脾气 ~who
 `;

@@ -499,6 +499,8 @@ AI 评判的写作需要由中文教师评分的校准集，和英语的分开�
 
 每个主题两个知识点；标题给出英文和中文，标题没有说清的，写出知识点问什么。没有写出知识点的：阅读主题第一个知识点问文章说了什么，第二个问它怎么说，即标题所说的方法；评判主题两个知识点各按三条标准中的两条评判，和 §11 一样；口语交际主题第一个知识点在读到的情境中选择合适的回应，第二个在听到的情境中选择，一、二年级两个都是听到的。
 
+阅读和口语交际的题目标明是事实题还是推断题。事实题（数据里写 `=`）的答案就在原文的话里，解答找到那句话或那几处，照着选。推断题（`≈`）问文章表现、说明或表达了什么，为什么这样写，或者从表格、规则里能推出什么：解答写出答案依据的几处原文，讲清从这些话怎样推出答案（只依据一处时，题目自带推理，写在 `%` 里），再拿答案对照全文和结尾来检验，绝不说原文字面上就这样写着。只依据一处又没有推理的推断题，解析时报错。
+
 **一年级**（8 个）：`pinyin-alphabet` The Pinyin Alphabet / 汉语拼音字母表——字母的顺序；大写和小写。`reading-1-rhymes` Rhymes and Children's Verse / 读儿歌和儿童诗——儿歌说了什么；哪些字押韵。`reading-1-stories` Short Stories / 读小故事——谁、在哪里、发生了什么；从句子里知道词的意思。`reading-1-signs` The Words Around Us / 读身边的文字——标牌和标签；课程表和日历。`writing-1-want-to-say` Writing What I Want to Say / 写自己想说的话——写自己的一句话；写喜欢的东西的两句话（评判）。`speaking-1-listening` Listening Carefully / 认真听——一段话讲了什么；说话的人请你做什么。`speaking-1-manners` Talking Politely / 有礼貌地交谈——问好、道谢和道歉；借东西和排队等候。`speaking-1-telling` Telling It Clearly / 把事情说清楚——按顺序排好讲述的各部分；讲述漏了什么。
 
 **二年级**（8 个；`punctuation-sentence-ends`、`dictionary-pinyin` 和 `dictionary-radicals` 从三年级移来）：`reading-2-fables` Fables / 读寓言——发生了什么；讲了什么道理。`reading-2-fairy-tales` Fairy Tales / 读童话——谁想要什么；哪些是想象的。`reading-2-science` Nature and Things / 读浅近的科普短文——文中的事实；文中给出的原因。`writing-2-picture` Writing About a Picture / 看图写话——图上有谁、在做什么；按顺序写几句话（评判；图画按 [汉语插图](chinese-illustrations.zh-CN.md) 的做法绘制）。`writing-2-imagination` Writing What I Imagine / 写想象中的事物——它是什么样的；发生了什么（评判）。`speaking-2-asking` Asking for Help and the Way / 请教和问路——问得清楚；称呼得当。`speaking-2-messages` Passing On a Message / 转告——完整的口信；给谁、什么时候。`speaking-2-discussing` Talking It Over / 商量——提出建议；友好地回应别人的想法。

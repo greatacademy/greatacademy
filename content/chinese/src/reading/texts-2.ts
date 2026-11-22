@@ -19,15 +19,15 @@ export const FABLES = `
 - 他又拿到了很多兔子 ~opposite
 - 田里的苗长得很好 ~opposite
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
-= 不能把碰巧遇到的事，当成天天都会有的事 | 兔子再也没有来
+≈ 不能把碰巧遇到的事，当成天天都会有的事 | 兔子再也没有来 | 一头撞在树桩上，死了 | 天天坐在树桩旁边，等着兔子再撞上来
 - 兔子跑得很快 ~detail
 - 种田很累，要多休息 ~reversed
 ?2 种田的人错在哪里？ | Where did the farmer go wrong?
-= 以为兔子还会撞上来，就不干活了 | 等着兔子再撞上来
+≈ 以为兔子还会撞上来，就不干活了 | 等着兔子再撞上来 | 他不再种田 | 他的田里长满了野草
 - 他把兔子拿了回去 ~detail
 - 他在田里干活 ~reversed
 ?2 种田的人应该怎么做？ | What should the farmer have done?
-= 接着好好种田 | 从此，他不再种田
+≈ 接着好好种田 | 从此，他不再种田 | 他的田里长满了野草
 - 天天坐着等兔子 ~opposite
 - 把树桩搬回家 ~never
 
@@ -46,15 +46,15 @@ export const FABLES = `
 - 长高了 ~opposite
 - 被儿子拔走了 ~unsaid
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
-= 做事不能太急，急了反而做坏 | 小苗都死了
+≈ 做事不能太急，急了反而做坏 | 小苗都死了 | 他觉得田里的小苗长得太慢了 | 把小苗一棵一棵往上拔高了一点
 - 小苗长得很慢 ~detail
 - 种田要早早回家 ~never
 ?2 这个人错在哪里？ | Where did the man go wrong?
-= 他想让小苗快快长高，就去拔它们 | 把小苗一棵一棵往上拔高了一点
+≈ 他想让小苗快快长高，就去拔它们 | 把小苗一棵一棵往上拔高了一点 | 他觉得田里的小苗长得太慢了 | 我帮小苗长高了
 - 他回家太晚了 ~never
 - 他告诉了儿子 ~detail
 ?2 小苗应该怎么长？ | How should the seedlings grow?
-= 让它们自己慢慢长 | 他觉得田里的小苗长得太慢了
+≈ 让它们自己慢慢长 | 他觉得田里的小苗长得太慢了 | 小苗都死了
 - 每天拔高一点 ~opposite
 - 一天就长大 ~reversed
 
@@ -73,15 +73,15 @@ export const FABLES = `
 - 羊又少了一只 ~other
 - 狼天天都来 ~opposite
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
-= 出了错，赶快改正，还来得及 | 他的羊再也没有少过
+≈ 出了错，赶快改正，还来得及 | 他的羊再也没有少过 | 第二天，羊又少了一只 | 赶快把洞补好了
 - 狼是很坏的动物 ~onepart
 - 养羊一定会少羊 ~reversed
 ?2 他一开始错在哪里？ | Where did he go wrong at first?
-= 羊没了，他觉得补洞也没用 | 羊已经没了，还补洞干什么
+≈ 羊没了，他觉得补洞也没用 | 羊已经没了，还补洞干什么 | 第二天，羊又少了一只
 - 他养了很多羊 ~detail
 - 他听了邻居的话 ~opposite
 ?2 他后来做对了什么？ | What did he do right later?
-= 明白过来，赶快把洞补好 | 赶快把洞补好了
+= 明白过来，赶快把洞补好 | 他这才明白过来 | 赶快把洞补好了
 - 又养了更多的羊 ~unsaid
 - 天天守着羊圈不睡觉 ~unsaid
 
@@ -100,15 +100,15 @@ export const FABLES = `
 - 找到了 ~opposite
 - 别人帮他找到了 ~unsaid
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
-= 事情变了，办法也要跟着变 | 可是怎么也找不到
+≈ 事情变了，办法也要跟着变 | 可是怎么也找不到 | 船到江中间 | 他马上在船边刻了一个记号
 - 坐船要小心 ~never
 - 剑不要带在身边 ~never
 ?2 这个人为什么找不到剑？ | Why could he not find his sword?
-= 船一直在走，剑没有跟着船走 | 船到江中间
+≈ 船一直在走，剑没有跟着船走 | 船到江中间 | 船停了，他从刻记号的地方跳下水去找剑
 - 他刻的记号不清楚 ~never
 - 江水太冷了 ~unsaid
 ?2 他错在哪里？ | Where did he go wrong?
-= 以为剑还在记号下面 | 我的剑是从这里掉下去的
+≈ 以为剑还在记号下面 | 我的剑是从这里掉下去的 | 船停了，他从刻记号的地方跳下水去找剑 | 可是怎么也找不到
 - 他坐船过江 ~detail
 - 他跳下了水 ~detail
 
@@ -131,11 +131,11 @@ export const FABLES = `
 - 狐狸 ~opposite
 - 野兔 ~who
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
-= 不要被借着别人的力量吓人的人骗了 | 其实，大家怕的是老虎
+≈ 不要被借着别人的力量吓人的人骗了 | 其实，大家怕的是老虎 | 你跟在我后面走一走 | 老虎以为大家怕的是狐狸，就放了它
 - 老虎跑得很快 ~never
 - 狐狸很可爱 ~never
 ?2 狐狸是靠什么让大家害怕的？ | What made the animals afraid of the fox?
-= 走在它后面的老虎 | 你跟在我后面走一走
+≈ 走在它后面的老虎 | 你跟在我后面走一走 | 其实，大家怕的是老虎
 - 它自己很厉害 ~opposite
 - 它是天上派来的 ~unsaid
 
@@ -154,11 +154,11 @@ export const FABLES = `
 - 待在井底 ~opposite
 - 一起飞上天 ~unsaid
 ?2 青蛙为什么觉得天只有井口那么大？ | Why did the frog think the sky was as big as the well's mouth?
-= 它在井底，只能看到井口那么大的天 | 它抬头看天，天只有井口那么大
+≈ 它在井底，只能看到井口那么大的天 | 它抬头看天，天只有井口那么大 | 一只青蛙住在井底
 - 天真的很小 ~opposite
 - 小鸟告诉它的 ~opposite
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
-= 看得少，就不要以为自己什么都知道 | 别说大话了，天不过井口那么大
+≈ 看得少，就不要以为自己什么都知道 | 别说大话了，天不过井口那么大 | 一只青蛙住在井底 | 天很大，大得没有边
 - 青蛙会跳得很高 ~never
 - 井里的水很好喝 ~never
 ?2 青蛙怎样才能知道天有多大？ | How could the frog learn how big the sky is?
@@ -181,11 +181,11 @@ export const FABLES = `
 - 先画好蛇的人 ~opposite
 - 大家一起喝了 ~unsaid
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
-= 做多余的事，反而会把事情做坏 | 蛇没有脚，你画的不是蛇
+≈ 做多余的事，反而会把事情做坏 | 蛇没有脚，你画的不是蛇 | 我还能给蛇画上脚呢 | 就把酒喝了
 - 画画要画得快 ~onepart
 - 酒不要给别人喝 ~never
 ?2 先画好的人为什么没有喝到酒？ | Why did the first to finish not get the wine?
-= 他给蛇画了脚，画的不是蛇了 | 蛇没有脚，你画的不是蛇
+≈ 他给蛇画了脚，画的不是蛇了 | 蛇没有脚，你画的不是蛇 | 我还能给蛇画上脚呢
 - 他画得太慢了 ~opposite
 - 他不喜欢喝酒 ~unsaid
 ?2 “画蛇添足”的“添足”是什么意思？ | What does 添足 mean in 画蛇添足?
@@ -208,15 +208,15 @@ export const FABLES = `
 - 兔子 ~opposite
 - 一起到的 ~unsaid
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
-= 不能骄傲，一步一步不停地做，就能成功 | 乌龟一步一步往前爬，一刻也没有停
+≈ 不能骄傲，一步一步不停地做，就能成功 | 乌龟一步一步往前爬，一刻也没有停 | 我先睡一会儿吧 | 乌龟已经到了终点
 - 乌龟比兔子跑得快 ~reversed
 - 跑步以前要睡觉 ~reversed
 ?2 兔子为什么输了？ | Why did the hare lose?
-= 它觉得自己跑得快，就停下来睡觉 | 我先睡一会儿吧
+≈ 它觉得自己跑得快，就停下来睡觉 | 我先睡一会儿吧 | 兔子跑得快，一下子就跑出很远 | 等兔子醒来，乌龟已经到了终点
 - 它跑得太慢了 ~opposite
 - 它生病了 ~unsaid
 ?2 乌龟为什么赢了？ | Why did the tortoise win?
-= 它一刻也没有停 | 一刻也没有停
+≈ 它一刻也没有停 | 一刻也没有停 | 我先睡一会儿吧
 - 它跑得比兔子快 ~opposite
 - 兔子让着它 ~unsaid
 
@@ -235,15 +235,15 @@ export const FABLES = `
 - 农民们马上跑来帮他 ~opposite
 - 孩子把狼打跑了 ~unsaid
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
-= 要说真话，说假话的人，别人就不再相信他 | 可是谁也不信他了
+≈ 要说真话，说假话的人，别人就不再相信他 | 可是谁也不信他了 | 可是没看见狼 | 还是没有狼
 - 放羊很没意思 ~onepart
 - 狼很可怕，不要上山 ~never
 ?2 为什么第三天谁也不信孩子了？ | Why did no one believe the boy on the third day?
-= 他前两次说的都是假话 | 第二天，他又这样喊，农民们又跑来了，还是没有狼
+≈ 他前两次说的都是假话 | 第二天，他又这样喊，农民们又跑来了，还是没有狼 | 可是没看见狼
 - 他喊得太小声了 ~unsaid
 - 农民们都不在家 ~unsaid
 ?2 孩子错在哪里？ | Where did the boy go wrong?
-= 拿说假话来开玩笑 | 孩子哈哈大笑
+≈ 拿说假话来开玩笑 | 孩子哈哈大笑 | 他觉得没意思，就大喊 | 可是谁也不信他了
 - 他上山放羊 ~detail
 - 他大喊救命 ~detail
 
@@ -262,15 +262,16 @@ export const FABLES = `
 - 这些葡萄真甜 ~opposite
 - 明天再来摘 ~unsaid
 ?2 葡萄真的是酸的吗？ | Were the grapes really sour?
-= 不知道，是狐狸吃不到才这样说 | 跳了几次也够不着
+≈ 不知道，是狐狸吃不到才这样说 | 跳了几次也够不着 | 这些葡萄一定是酸的，不好吃
+% 狐狸一颗葡萄也没有吃到，它怎么会知道葡萄是什么味道？它是够不着，只好走开，才说葡萄“一定是酸的”。所以葡萄酸不酸，故事里看不出来，这只是狐狸吃不到时给自己找的说法。 | The fox never tasted a single grape, so how could it know the taste? It could not reach them and had to walk away, and only then said they “must be sour”. So the story does not show whether they are sour; it is only what the fox tells itself when it cannot have them.
 - 是酸的，狐狸尝过了 ~unsaid
 - 是甜的，狐狸吃过了 ~unsaid
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
-= 自己做不到，不要说那件事不好 | 这些葡萄一定是酸的，不好吃
+≈ 自己做不到，不要说那件事不好 | 这些葡萄一定是酸的，不好吃 | 跳了几次也够不着
 - 葡萄很好吃 ~never
 - 狐狸跳得不高 ~detail
 ?2 狐狸为什么说葡萄是酸的？ | Why did the fox say the grapes were sour?
-= 它吃不到，就说葡萄不好 | 狐狸只好走开了
+≈ 它吃不到，就说葡萄不好 | 狐狸只好走开了 | 跳了几次也够不着 | 这些葡萄一定是酸的，不好吃
 - 它尝了一个 ~unsaid
 - 别人告诉它的 ~unsaid
 `;
@@ -450,7 +451,7 @@ export const FAIRY_TALES = `
 - 青菜 ~other
 - 一首歌 ~other
 ?1 小熊觉得什么是最好的生日？ | What does the bear think makes the best birthday?
-= 有好朋友在一起 | 有你们这些好朋友
+≈ 有好朋友在一起 | 有你们这些好朋友 | 小熊没有蛋糕 | 这就是最好的生日
 - 有一个大蛋糕 ~opposite
 - 有很多礼物 ~unsaid
 ?2 哪件事是想象出来的？ | Which of these is imagined?
@@ -527,7 +528,7 @@ export const FAIRY_TALES = `
 - 作业本放进来了吗 ~other
 - 我也要干干净净的 ~other
 ?1 书包为什么不高兴？ | Why is the schoolbag unhappy?
-= 被放在了地上 | 我把它放在地上
+≈ 被放在了地上 | 我把它放在地上 | 我也要干干净净的
 - 没有带水杯 ~unsaid
 - 作业太多了 ~unsaid
 ?1 从此，我把书包放在哪里？ | Where do I put the schoolbag from then on?
@@ -627,7 +628,7 @@ export const NATURE = `
 - 山洞里的水 ~unsaid
 - 别的熊送来的东西 ~unsaid
 ?2 熊为什么秋天要吃得饱饱的？ | Why does a bear eat its fill in autumn?
-= 冬天要靠身上的肥肉过冬 | 靠身上的肥肉过冬
+≈ 冬天要靠身上的肥肉过冬 | 靠身上的肥肉过冬 | 熊在秋天吃得饱饱的，长得胖胖的 | 熊冬眠的时候不吃东西
 - 秋天的东西好吃 ~life
 - 秋天要长高 ~unsaid
 
@@ -654,7 +655,8 @@ export const NATURE = `
 - 雨后天很蓝 ~unsaid
 - 雨后太阳很热 ~unsaid
 ?2 没有太阳的时候，为什么看不到彩虹？ | Why is there no rainbow without the sun?
-= 彩虹是太阳光照在小水珠上分成的颜色 | 太阳光照在小水珠上
+≈ 彩虹是太阳光照在小水珠上分成的颜色 | 太阳光照在小水珠上 | 雨停了，太阳出来了
+% 短文说，彩虹是太阳光照在小水珠上分出来的颜色，它在“雨停了，太阳出来了”的时候出现。没有太阳，就没有太阳光照在小水珠上，颜色也就分不出来，所以看不到彩虹。 | The passage says a rainbow is the colours sunlight splits into on the drops, and that it comes when “the rain stops and the sun comes out”. Without the sun no sunlight falls on the drops and no colours split off, so there is no rainbow to see.
 - 因为没有下雨 ~unsaid
 - 因为小水珠都飞走了 ~unsaid
 
@@ -708,7 +710,7 @@ export const NATURE = `
 - 它们很重 ~opposite
 - 有人把它们带走 ~unsaid
 ?2 为什么很多地方都长着蒲公英？ | Why do dandelions grow in so many places?
-= 种子被风吹到了很多地方 | 飞到很远的地方
+≈ 种子被风吹到了很多地方 | 飞到很远的地方 | 风一吹，小伞就飞起来 | 小伞落在哪里，就在哪里安家
 - 都是人种的 ~unsaid
 - 蒲公英会走路 ~unsaid
 
@@ -758,7 +760,7 @@ export const NATURE = `
 - 月亮被吃掉了一块 ~unsaid
 - 月亮自己长大又变小 ~unsaid
 ?2 我们为什么能看见月亮？ | Why can we see the moon?
-= 太阳照亮了它 | 我们看到的是太阳照亮的那一部分
+≈ 太阳照亮了它 | 我们看到的是太阳照亮的那一部分 | 其实月亮自己不会发光
 - 月亮自己会发光 ~opposite
 - 月亮离我们很近 ~unsaid
 ?2 月亮自己不会发光，它的光是从哪里来的？ | The moon makes no light; where does its light come from?
