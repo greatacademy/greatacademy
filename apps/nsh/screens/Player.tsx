@@ -222,14 +222,31 @@ function introOf(session: Session, question: Question, knowledgePoint: number): 
   );
 }
 
-/** IntroCard is a knowledge point's explanation and its drawings. */
+/** IntroCard, after the topic's introduction for the first knowledge point, is a knowledge point's explanation and its drawings. */
 function IntroCard(props: { intro: KnowledgePointIntro }) {
   return (
-    <Card>
-      <Rich source={tx(props.intro.title)} inline fontSize={18} bold />
-      <Rich source={tx(props.intro.explanation)} figures={props.intro.figures} />
-      <If when={props.intro.figure}>{(figure) => <FigureView figure={figure()} caption />}</If>
-    </Card>
+    <View style={{ gap: 16 }}>
+      <TopicIntro intro={props.intro} />
+      <Card>
+        <Rich source={tx(props.intro.title)} inline fontSize={18} bold />
+        <Rich source={tx(props.intro.explanation)} figures={props.intro.figures} />
+        <If when={props.intro.figure}>{(figure) => <FigureView figure={figure()} caption />}</If>
+      </Card>
+    </View>
+  );
+}
+
+/** TopicIntro is the introduction of a topic, which comes before its first knowledge point, or nothing. */
+function TopicIntro(props: { intro: KnowledgePointIntro }) {
+  return (
+    <If when={props.intro.topicIntro}>
+      {(intro) => (
+        <Card>
+          <Text style={{ color: colors().muted, fontSize: 14, fontWeight: "600" }}>{m().topicIntro}</Text>
+          <Rich source={tx(intro())} figures={props.intro.topicIntroFigures} />
+        </Card>
+      )}
+    </If>
   );
 }
 
@@ -244,7 +261,7 @@ function ExampleCard(props: { intro: KnowledgePointIntro }) {
           <If when={worked().problem}>{(problem) => <Prompt problem={problem()} apart={!!problem().scenario} />}</If>
           <View style={{ borderColor: colors().line, borderTopWidth: 1, gap: 8, paddingTop: 12 }}>
             <Muted>{m().solution}</Muted>
-            <Rich source={tx(worked().solution)} />
+            <Rich source={tx(worked().solution)} figures={worked().solutionFigures} />
             <If when={worked().solutionFigure}>{(figure) => <FigureView figure={figure()} />}</If>
             <Sounds sounds={worked().solutionSounds} />
             <Muted>{m().answer}</Muted>
@@ -366,7 +383,7 @@ function VerdictBody(props: { feedback: Feedback; problem?: ProblemView | undefi
         <If when={open()} else={<Quiet label={m().showSolution} onPress={() => open.set(true)} />}>
           <View style={{ gap: 8 }}>
             <Muted>{judged ? m().modelAnswer : m().solution}</Muted>
-            <Rich source={tx(feedback.solution)} />
+            <Rich source={tx(feedback.solution)} figures={feedback.solutionFigures} />
             <If when={feedback.solutionFigure}>{(figure) => <FigureView figure={figure()} />}</If>
             <Sounds sounds={feedback.solutionSounds} />
           </View>
@@ -1008,7 +1025,7 @@ function ResultItemCard(props: { item: ResultItem; at: number }) {
               <Muted>{m().correctAnswer}</Muted>
               <AnswerText problem={problem()} answer={props.item.answer} />
               <Muted>{m().solution}</Muted>
-              <Rich source={tx(props.item.solution)} />
+              <Rich source={tx(props.item.solution)} figures={props.item.solutionFigures} />
               <If when={props.item.solutionFigure}>{(figure) => <FigureView figure={figure()} />}</If>
               <Sounds sounds={props.item.solutionSounds} />
             </If>
