@@ -10,6 +10,20 @@ export const taughtCourses: readonly string[] = ["algebra-i", "geometry"];
  * course is listed in taughtCourses, its topics leave this list.
  */
 export const taughtTopics: readonly string[] = [
+  "solving-logarithmic-equations",
+  "solving-logarithmic-equations-containing-the-natural-logarithm",
+  "solving-logarithmic-equations-using-the-laws-of-logarithms",
+  "solving-logarithmic-equations-by-combining-the-laws-of-logarithms",
+  "solving-logarithmic-equations-with-logarithms-on-both-sides",
+  "solving-logarithmic-equations-using-the-zero-product-property",
+  "vertical-translations-of-exponential-growth-functions",
+  "vertical-translations-of-exponential-decay-functions",
+  "interpreting-graphs-of-exponential-functions",
+  "vertical-reflections-of-exponential-functions",
+  "combining-graph-transformations-of-exponential-functions",
+  "properties-of-transformed-exponential-functions",
+  "combining-graph-transformations-of-logarithmic-functions",
+  "properties-of-transformed-logarithmic-functions",
   "dividing-polynomials-using-synthetic-division",
   "dividing-polynomials-by-linear-binomials-using-long-division",
   "dividing-polynomials-using-long-division",
@@ -26,4 +40,8 @@ export const taughtTopics: readonly string[] = [
   "finding-multiplicities-of-the-roots-of-quartic-polynomials-by-factoring",
   "the-remainder-theorem",
   "the-rational-roots-theorem",
+  "inverses-of-exponential-and-logarithmic-functions",
+  "modeling-with-compound-interest",
+  "continuously-compounded-interest",
+  "converting-between-exponents",
 ];

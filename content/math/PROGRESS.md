@@ -125,11 +125,11 @@ Stage 0 is done. Walking its lessons against Math Academy's on the same topics f
 
 | File | Algebra II topics | Status | Owner | Notes |
 | :--- | ---: | :--- | :--- | :--- |
-| `algebra-ii-log-equations.ts` | 19 | in progress | |  |
+| `algebra-ii-log-equations.ts` | 19 | done | | `graphing-logarithmic-functions` waits on its knowledge point in `deeper-figure-choices.ts` |
 | `algebra-ii-polynomial-theorems.ts` | 16 | done | |  |
-| `algebra-ii-trigonometric-graphs.ts` | 14 | open | |  |
+| `algebra-ii-trigonometric-graphs.ts` | 14 | in progress | |  |
 | `algebra-ii-trigonometric-transformations.ts` | 14 | open | |  |
-| `algebra-ii-transformations.ts` | 12 | open | |  |
+| `algebra-ii-transformations.ts` | 12 | in progress | |  |
 | `algebra-ii-logarithms.ts` | 11 | open | |  |
 | `algebra-ii-radical-functions.ts` | 11 | open | |  |
 | `algebra-ii-unit-circle.ts` | 11 | open | |  |
