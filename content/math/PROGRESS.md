@@ -119,13 +119,13 @@ Stage 0 is done. Walking its lessons against Math Academy's on the same topics f
 | `geometry-congruence.ts` | 8 | done | |  |
 | `geometry-transformations.ts` | 7 | in progress | |  |
 | `geometry-radians.ts` | 4 | in progress | |  |
-| other files | 21 | open | | `act-fundamentals-reasoning-geometry.ts` (6), `act-geometry-data.ts` (4), `act-exam-geometry.ts` (3), `grade-7-probability.ts` (2), `act-exam-statistics.ts` (2), `act-fundamentals-reasoning-data.ts` (2), `angles.ts` (1), `act-fundamentals-modeling.ts` (1) |
+| other files | 21 | done | | Counted here by mistake: all 21 are defined in the geometry-*.ts files, `probability.ts` and `combinatorics.ts`, and were written with them |
 
 ### Algebra II
 
 | File | Algebra II topics | Status | Owner | Notes |
 | :--- | ---: | :--- | :--- | :--- |
-| `algebra-ii-log-equations.ts` | 19 | open | |  |
+| `algebra-ii-log-equations.ts` | 19 | in progress | |  |
 | `algebra-ii-polynomial-theorems.ts` | 16 | open | |  |
 | `algebra-ii-trigonometric-graphs.ts` | 14 | open | |  |
 | `algebra-ii-trigonometric-transformations.ts` | 14 | open | |  |
