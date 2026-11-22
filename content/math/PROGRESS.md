@@ -87,16 +87,17 @@ Two helpers work at a time through stage 1; stage 4, whose courses share few fil
 | `sequences.ts` | 16 | done | |  |
 | `compound-inequalities.ts` | 14 | done | |  |
 | `absolute-value.ts` | 14 | done | |  |
-| `units.ts` | 13 | in progress | |  |
-| `two-variable-models.ts` | 13 | in progress | |  |
+| `units.ts` | 13 | done | |  |
+| `two-variable-models.ts` | 13 | done | |  |
 | `radical-expressions.ts` | 12 | done | |  |
 | `polynomials.ts` | 12 | done | |  |
 | `linear-equations.ts` | 12 | done | |  |
 | `factoring.ts` | 8 | done | |  |
 | `rational-expressions.ts` | 7 | done | |  |
-| `bivariate-statistics.ts` | 7 | in progress | |  |
-| `algebra-i-approximating-systems.ts` | 2 | in progress | |  |
-| `algebra-ii-polynomials.ts` | 1 | open | |  |
+| `bivariate-statistics.ts` | 7 | done | |  |
+| `algebra-i-approximating-systems.ts` | 2 | done | |  |
+| `algebra-ii-polynomials.ts` | 1 | done | |  |
+| SAT and ACT files | 8 | done | | Algebra I topics defined with the exam topics; their factories are unchanged |
 
 ## Open Gaps
 
