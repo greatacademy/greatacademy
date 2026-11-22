@@ -173,6 +173,198 @@ function agreeAtSixth(v: string, from: string, to: string, f: Value, g: Value): 
   );
 }
 
+/** Ratio names sine, cosine or tangent. */
+type Ratio = "sin" | "cos" | "tan";
+
+/** ratioName names a ratio in English and Chinese. */
+const ratioName: Readonly<Record<Ratio, readonly [en: string, zh: string]>> = {
+  sin: ["sine", "正弦"],
+  cos: ["cosine", "余弦"],
+  tan: ["tangent", "正切"],
+};
+
+/** ratioAt evaluates a ratio at an angle in radians. */
+const ratioAt: Readonly<Record<Ratio, Value>> = { sin: Math.sin, cos: Math.cos, tan: Math.tan };
+
+/** quadrantNames names the four quadrants in English and Chinese. */
+const quadrantNames = [
+  ["I", "一"],
+  ["II", "二"],
+  ["III", "三"],
+  ["IV", "四"],
+] as const;
+
+/** quadrantOf gives the index of the quadrant an angle in degrees ends in, for angles that are not multiples of 90°. */
+const quadrantOf = (deg: number): number => Math.floor((((deg % 360) + 360) % 360) / 90);
+
+/** fifteenSizes holds the sizes of the values that the exact-value problems at multiples of 15° offer. */
+const fifteenSizes: Readonly<Record<string, number>> = {
+  "\\frac{\\sqrt{6} + \\sqrt{2}}{4}": (Math.sqrt(6) + Math.SQRT2) / 4,
+  "\\frac{\\sqrt{6} - \\sqrt{2}}{4}": (Math.sqrt(6) - Math.SQRT2) / 4,
+  "-\\frac{\\sqrt{6} + \\sqrt{2}}{4}": -(Math.sqrt(6) + Math.SQRT2) / 4,
+  "-\\frac{\\sqrt{6} - \\sqrt{2}}{4}": -(Math.sqrt(6) - Math.SQRT2) / 4,
+  "2 + \\sqrt{3}": 2 + Math.sqrt(3),
+  "2 - \\sqrt{3}": 2 - Math.sqrt(3),
+  "-2 - \\sqrt{3}": -2 - Math.sqrt(3),
+  "-2 + \\sqrt{3}": -2 + Math.sqrt(3),
+};
+
+/** Fifteen is a ratio of a multiple of 15° worked out through its reference angle, 15° or 75°. */
+type Fifteen = {
+  call: (x: string) => string;
+  u: (deg: number) => string;
+  d0: number;
+  r: 15 | 75;
+  sign: number;
+  op: "+" | "-";
+  line: string;
+  exact: string;
+  signed: string;
+  scale: (tex: string, mult: number) => string;
+};
+
+/** fifteen finds the reference angle, the sign and the sum or difference of 45° and 30° behind a ratio of a multiple of 15°. */
+function fifteen(fn: Ratio, deg: number, radians: boolean): Fifteen {
+  const f = `\\${fn}`;
+  const call = (x: string) => (radians ? `${f}\\left(${x}\\right)` : `${f}(${x})`);
+  const u = (d: number) => (radians ? _piTex(Q.of(d, 180)) : `${d}^{\\circ}`);
+  const period = fn === "tan" ? 180 : 360;
+  const d0 = ((deg % period) + period) % period;
+  const r = (d0 < 90 ? d0 : d0 < 180 ? 180 - d0 : d0 < 270 ? d0 - 180 : 360 - d0) as 15 | 75;
+  const sign = ratioAt[fn](rad(deg)) < 0 ? -1 : 1;
+  const op = r === 75 ? "+" : "-";
+  const flip = r === 75 ? "-" : "+";
+  const [a, b] = [u(45), u(30)];
+  const pair = radians ? `\\left(${a} ${op} ${b}\\right)` : `(${a} ${op} ${b})`;
+  const halves = (s: string) =>
+    `\\frac{\\sqrt{2}}{2}\\cdot\\frac{\\sqrt{3}}{2} ${s} \\frac{\\sqrt{2}}{2}\\cdot\\frac{1}{2} = \\frac{\\sqrt{6} ${s} \\sqrt{2}}{4}`;
+  const [line, exact] =
+    fn === "sin"
+      ? [`\\sin${pair} = \\sin ${a}\\cos ${b} ${op} \\cos ${a}\\sin ${b} = ${halves(op)}`, `\\frac{\\sqrt{6} ${op} \\sqrt{2}}{4}`]
+      : fn === "cos"
+        ? [`\\cos${pair} = \\cos ${a}\\cos ${b} ${flip} \\sin ${a}\\sin ${b} = ${halves(flip)}`, `\\frac{\\sqrt{6} ${flip} \\sqrt{2}}{4}`]
+        : [
+            `\\tan${pair} = \\frac{\\tan ${a} ${op} \\tan ${b}}{1 ${flip} \\tan ${a}\\tan ${b}} = \\frac{1 ${op} \\frac{\\sqrt{3}}{3}}{1 ${flip} \\frac{\\sqrt{3}}{3}} = \\frac{3 ${op} \\sqrt{3}}{3 ${flip} \\sqrt{3}} = \\frac{(3 ${op} \\sqrt{3})^{2}}{9 - 3} = \\frac{12 ${op} 6\\sqrt{3}}{6} = 2 ${op} \\sqrt{3}`,
+            `2 ${op} \\sqrt{3}`,
+          ];
+  const signed = sign > 0 ? exact : fn === "tan" ? `-2 ${flip} \\sqrt{3}` : `-${exact}`;
+  return { call, u, d0, r, sign, op, line, exact, signed, scale: fn === "tan" ? scaleTangent : scaleSurd };
+}
+
+/** fifteenWalk works out mult times a ratio of a multiple of 15° (or of π/12) through its reference angle and 45° ± 30°. */
+function fifteenWalk(fn: Ratio, deg: number, angle: string, mult: number, given: string, radians = false): Text {
+  const w = fifteen(fn, deg, radians);
+  if (w.signed !== given) throw new Error(`fifteenWalk: ${fn} ${deg} gives ${w.signed}, not ${given}`);
+  const [name, nameZh] = ratioName[fn];
+  const head = w.call(angle);
+  const factor = mult === 1 ? "" : `${mult}`;
+  const ans = w.scale(given, mult);
+  const parts: Step[] = [];
+  if (deg !== w.r) {
+    const [q, qZh] = quadrantNames[Math.floor(w.d0 / 90)]!;
+    const turn =
+      deg === w.d0
+        ? ["", ""]
+        : fn === "tan"
+          ? [
+              `The tangent repeats every $${w.u(180)}$, so $${head}$ is the tangent of $${w.u(w.d0)}$. `,
+              `正切以 $${w.u(180)}$ 为周期，所以 $${head}$ 等于 $${w.u(w.d0)}$ 的正切。`,
+            ]
+          : [
+              `Angles that differ by a multiple of $${w.u(360)}$ share a terminal side, so $${head}$ is the ${name} of $${w.u(w.d0)}$. `,
+              `相差 $${w.u(360)}$ 的整数倍的角终边相同，所以 $${head}$ 等于 $${w.u(w.d0)}$ 的${nameZh}。`,
+            ];
+    const side =
+      w.d0 === w.r
+        ? ["", ""]
+        : [
+            `The angle $${w.u(w.d0)}$ lies in quadrant ${q}, where the ${name} is ${w.sign > 0 ? "positive" : "negative"}, and its reference angle is $${w.u(w.r)}$.`,
+            `$${w.u(w.d0)}$ 在第${qZh}象限，那里${nameZh}为${w.sign > 0 ? "正" : "负"}，它的参考角是 $${w.u(w.r)}$。`,
+          ];
+    parts.push([
+      ["Reduce to the reference angle", "化为参考角"],
+      t(`${turn[0]}${side[0]}`.trim(), `${turn[1]}${side[1]}`),
+      [`${head}${deg === w.d0 ? "" : ` = ${w.call(w.u(w.d0))}`}${w.d0 === w.r ? "" : ` = ${w.sign < 0 ? "-" : ""}${w.call(w.u(w.r))}`}`],
+    ]);
+  }
+  const sum = w.op === "+";
+  parts.push(
+    [
+      ["Split the reference angle", "拆分参考角"],
+      t(`$${w.u(w.r)}$ is the ${sum ? "sum" : "difference"} of two special angles:`, `$${w.u(w.r)}$ 是两个特殊角的${sum ? "和" : "差"}：`),
+      [`${w.u(w.r)} = ${w.u(45)} ${w.op} ${w.u(30)}`],
+    ],
+    [
+      [`Use the ${sum ? "sum" : "difference"} formula`, `用${sum ? "和角" : "差角"}公式`],
+      t(
+        `The ${name} ${sum ? "sum" : "difference"} formula and the values at $${w.u(45)}$ and $${w.u(30)}$ give`,
+        `${nameZh}的${sum ? "和角" : "差角"}公式与 $${w.u(45)}$、$${w.u(30)}$ 处的值给出`,
+      ),
+      [w.line],
+    ],
+  );
+  if (w.sign < 0 || mult !== 1) {
+    parts.push([
+      ["Put the pieces together", "合起来"],
+      t(
+        `${w.sign < 0 ? "Put in the minus sign" : ""}${w.sign < 0 && mult !== 1 ? " and m" : mult !== 1 ? "M" : ""}${mult !== 1 ? `ultiply by $${mult}$` : ""}:`,
+        `${w.sign < 0 ? "添上负号" : ""}${w.sign < 0 && mult !== 1 ? "，再" : ""}${mult !== 1 ? `乘以 $${mult}$` : ""}：`,
+      ),
+      [mult === 1 ? `${head} = ${ans}` : `${factor}${head} = ${mult}\\cdot\\left(${w.signed}\\right) = ${ans}`],
+    ]);
+  }
+  const roots =
+    fn === "tan"
+      ? ["$\\sqrt{3} \\approx 1.7321$", "$\\sqrt{3} \\approx 1.7321$"]
+      : ["$\\sqrt{6} \\approx 2.4495$ and $\\sqrt{2} \\approx 1.4142$", "$\\sqrt{6} \\approx 2.4495$，$\\sqrt{2} \\approx 1.4142$"];
+  const size = dec4(mult * (fifteenSizes[given] ?? Number.NaN));
+  return walked(
+    parts,
+    t(
+      `A calculator gives $${factor}${head} \\approx ${dec4(mult * ratioAt[fn](rad(deg)))}$, and with ${roots[0]} the answer is $${ans} \\approx ${size}$.`,
+      `计算器给出 $${factor}${head} \\approx ${dec4(mult * ratioAt[fn](rad(deg)))}$；取 ${roots[1]}，答案 $${ans} \\approx ${size}$。`,
+    ),
+  );
+}
+
+/** fifteenReasons says what is wrong with each offered value of mult times a ratio of a multiple of 15° (or of π/12). */
+function fifteenReasons(fn: Ratio, deg: number, given: string, wrong: readonly string[], mult: number, radians = false): Reason[] {
+  const w = fifteen(fn, deg, radians);
+  const [name, nameZh] = ratioName[fn];
+  const [q, qZh] = quadrantNames[quadrantOf(deg)]!;
+  const other = w.u(w.r === 15 ? 75 : 15);
+  const split = `$${w.u(w.r)} = ${w.u(45)} ${w.op} ${w.u(30)}$`;
+  const right = fifteenSizes[given] ?? 0;
+  const [times, timesZh] = mult === 1 ? ["", ""] : [`${mult} times `, `的 ${mult} 倍`];
+  return wrong.map((x): Reason => {
+    const option = `$${w.scale(x, mult)}$`;
+    const size = fifteenSizes[x];
+    if (size === undefined)
+      return [
+        option,
+        `This is a value at a special angle such as $${w.u(30)}$, $${w.u(45)}$ or $${w.u(60)}$; the reference angle $${w.u(w.r)}$ is not special, so split it: ${split}.`,
+        `这是 $${w.u(30)}$、$${w.u(45)}$ 或 $${w.u(60)}$ 等特殊角的值；参考角 $${w.u(w.r)}$ 不是特殊角，要先拆开：${split}。`,
+      ];
+    if (Math.abs(size + right) < 1e-9)
+      return [
+        option,
+        `The size is right but the sign is wrong: in quadrant ${q} the ${name} is ${w.sign > 0 ? "positive" : "negative"}.`,
+        `大小对了，符号错了：在第${qZh}象限${nameZh}为${w.sign > 0 ? "正" : "负"}。`,
+      ];
+    if (size * right > 0)
+      return [
+        option,
+        `This is ${times}the size of the ${name} of $${other}$, not of $${w.u(w.r)}$: with ${split} the formula gives $${w.exact}$.`,
+        `这是 $${other}$ 的${nameZh}的大小${timesZh}，不是 $${w.u(w.r)}$ 的：由 ${split}，公式给出 $${w.exact}$。`,
+      ];
+    return [
+      option,
+      `Both the size and the sign are wrong: the size is ${times}that of the ${name} of $${other}$, and in quadrant ${q} the ${name} is ${w.sign > 0 ? "positive" : "negative"}.`,
+      `大小和符号都错了：大小是 $${other}$ 的${nameZh}的大小${timesZh}，而在第${qZh}象限${nameZh}为${w.sign > 0 ? "正" : "负"}。`,
+    ];
+  });
+}
+
 /** inputBound writes the solution of finding where arcsine or arccosine of an expression is defined: bound the input, then solve. */
 function inputBound(fn: "arcsin" | "arccos", input: string, solve: Text, solved: string, check: Text): Text {
   const name = fn === "arcsin" ? t("Arcsine", "反正弦") : t("Arccosine", "反余弦");
@@ -246,6 +438,20 @@ function rewritten(r: Rewrite, v: string, mult: number, say: Text): Text {
       ],
     ],
     agreeAt(v, mult, r.expr, r.ans, r.f, r.g),
+  );
+}
+
+/** whyEach pairs each wrong option of a choice with what is wrong with it, given in the same order. */
+const whyEach = (wrong: readonly Text[], why: readonly (readonly string[])[]): Reason[] =>
+  wrong.map((w, i) => [w.en, why[i]?.[0] ?? "", why[i]?.[1] ?? ""]);
+
+/** angleCheck checks an exact value of a double angle: it finds the angle from its sine and cosine and evaluates there. */
+function angleCheck(v: string, s: number, c: number, what: string, at: Value, ans: string, value: number): Text {
+  const deg = ((((Math.atan2(s, c) * 180) / Math.PI) % 360) + 360) % 360;
+  const shown = deg.toFixed(2);
+  return t(
+    `The angle with these values is $${v} \\approx ${shown}^{\\circ}$, and there $${what} \\approx ${dec4(at(rad(deg)))}$, while $${ans} \\approx ${dec4(value)}$.`,
+    `具有这些值的角是 $${v} \\approx ${shown}^{\\circ}$，在那里 $${what} \\approx ${dec4(at(rad(deg)))}$，而 $${ans} \\approx ${dec4(value)}$。`,
   );
 }
 
@@ -3726,7 +3932,9 @@ $$\\cos 20^{\\circ} = \\cos(90^{\\circ} - 70^{\\circ}) = \\sin 70^{\\circ}, \\qu
 > **注意。** 余角恒等式要求两角之和为 $90^{\\circ}$：$\\sin 70^{\\circ}$ 等于 $\\cos 20^{\\circ}$，而不是 $\\cos 70^{\\circ}$。对正切，余角给出倒数，$\\tan(90^{\\circ} - x) = \\frac{1}{\\tan x}$，所以两者之积是 $1$。`,
       ),
       generate(rng) {
-        const deg = rng.int(10, 80);
+        // 45° is left out: there tan 45° and tan² 45° both equal the answer 1, so they cannot serve as wrong options.
+        const drawn = rng.int(10, 79);
+        const deg = drawn >= 45 ? drawn + 1 : drawn;
         const comp = 90 - deg;
         const kind = rng.pick(["sinCos", "tanCot", "diff"] as const);
         const sinD = (d: number) => dec4(Math.sin(rad(d)));
@@ -4060,13 +4268,41 @@ export const theSumAndDifferenceFormulasForCosine: TopicDef = {
   encompasses: [],
   xp: 15,
   standards: ["CCSS.HSF.TF.C.9"],
+  intro: t(
+    `The cosine of a sum is not the sum of the cosines: $\\cos 90^{\\circ} = 0$, but $\\cos 60^{\\circ} + \\cos 30^{\\circ} = \\frac{1}{2} + \\frac{\\sqrt{3}}{2} \\approx 1.366$. The correct rule multiplies cosine with cosine and sine with sine, and flips the sign:
+
+$$\\cos(\\alpha + \\beta) = \\cos\\alpha\\cos\\beta - \\sin\\alpha\\sin\\beta$$
+
+Check: with $\\alpha = 60^{\\circ}$ and $\\beta = 30^{\\circ}$, $\\frac{1}{2} \\cdot \\frac{\\sqrt{3}}{2} - \\frac{\\sqrt{3}}{2} \\cdot \\frac{1}{2} = 0 = \\cos 90^{\\circ}$.
+
+In this lesson we recognise the expansions of $\\cos(\\alpha \\pm \\beta)$, keep track of the sign flip, collapse them to special values, and find the cosine of a sum from two triangles.`,
+    `和的余弦不等于余弦的和：$\\cos 90^{\\circ} = 0$，但 $\\cos 60^{\\circ} + \\cos 30^{\\circ} = \\frac{1}{2} + \\frac{\\sqrt{3}}{2} \\approx 1.366$。正确的法则是余弦乘余弦、正弦乘正弦，并且符号反过来：
+
+$$\\cos(\\alpha + \\beta) = \\cos\\alpha\\cos\\beta - \\sin\\alpha\\sin\\beta$$
+
+检验：取 $\\alpha = 60^{\\circ}$，$\\beta = 30^{\\circ}$，$\\frac{1}{2} \\cdot \\frac{\\sqrt{3}}{2} - \\frac{\\sqrt{3}}{2} \\cdot \\frac{1}{2} = 0 = \\cos 90^{\\circ}$。
+
+这节课我们认出 $\\cos(\\alpha \\pm \\beta)$ 的展开式，留意符号的反转，把它们合并成特殊值，并由两个三角形求和角的余弦。`,
+  ),
   knowledgePoints: [
     {
       id: "cosine-sum-difference-formulas",
       title: t("Cosine sum and difference identities", "余弦和差公式形式"),
       explanation: t(
-        "The cosine formulas multiply cosine with cosine and sine with sine. The sign in the middle is the opposite of the sign between the angles.\n\nNote the sign flip in cosine formulas:\n\n$$\\cos(\\alpha + \\beta) = \\cos \\alpha \\cos \\beta - \\sin \\alpha \\sin \\beta, \\quad \\cos(\\alpha - \\beta) = \\cos \\alpha \\cos \\beta + \\sin \\alpha \\sin \\beta$$",
-        "余弦公式是余弦乘余弦、正弦乘正弦。中间的符号与两角之间的符号相反。\n\n注意余弦和差公式中的正负号反转：\n\n$$\\cos(\\alpha + \\beta) = \\cos \\alpha \\cos \\beta - \\sin \\alpha \\sin \\beta, \\quad \\cos(\\alpha - \\beta) = \\cos \\alpha \\cos \\beta + \\sin \\alpha \\sin \\beta$$",
+        `The cosine formulas multiply cosine with cosine and sine with sine, and the sign in the middle is the opposite of the sign between the angles:
+
+$$\\cos(\\alpha + \\beta) = \\cos\\alpha\\cos\\beta - \\sin\\alpha\\sin\\beta, \\quad \\cos(\\alpha - \\beta) = \\cos\\alpha\\cos\\beta + \\sin\\alpha\\sin\\beta$$
+
+The flip makes sense: making $\\beta$ larger turns the angle further, and the cosine of an acute angle shrinks as the angle grows, so $\\cos(\\alpha + \\beta)$ must take something away. Read backwards, the formulas collapse an expansion: $\\cos 50^{\\circ}\\cos 20^{\\circ} + \\sin 50^{\\circ}\\sin 20^{\\circ} = \\cos(50^{\\circ} - 20^{\\circ}) = \\cos 30^{\\circ}$. Check: $\\cos 50^{\\circ}\\cos 20^{\\circ} \\approx 0.6040$ and $\\sin 50^{\\circ}\\sin 20^{\\circ} \\approx 0.2620$, and $0.6040 + 0.2620 = 0.8660 \\approx \\cos 30^{\\circ}$.
+
+> **Watch out.** A plus sign between the products means a difference of the angles, and a minus sign means a sum. And cosine times cosine with sine times sine gives a cosine; the mixed products give a sine.`,
+        `余弦公式是余弦乘余弦、正弦乘正弦，中间的符号与两角之间的符号相反：
+
+$$\\cos(\\alpha + \\beta) = \\cos\\alpha\\cos\\beta - \\sin\\alpha\\sin\\beta, \\quad \\cos(\\alpha - \\beta) = \\cos\\alpha\\cos\\beta + \\sin\\alpha\\sin\\beta$$
+
+符号反转是合理的：$\\beta$ 变大，角就转得更远，而锐角的余弦随角增大而变小，所以 $\\cos(\\alpha + \\beta)$ 必须减去一部分。反过来读，公式把展开式合并：$\\cos 50^{\\circ}\\cos 20^{\\circ} + \\sin 50^{\\circ}\\sin 20^{\\circ} = \\cos(50^{\\circ} - 20^{\\circ}) = \\cos 30^{\\circ}$。检验：$\\cos 50^{\\circ}\\cos 20^{\\circ} \\approx 0.6040$，$\\sin 50^{\\circ}\\sin 20^{\\circ} \\approx 0.2620$，而 $0.6040 + 0.2620 = 0.8660 \\approx \\cos 30^{\\circ}$。
+
+> **注意。** 两个乘积之间是加号，对应两角之差；是减号，对应两角之和。余弦乘余弦与正弦乘正弦得到余弦；交叉的乘积得到正弦。`,
       ),
       generate(rng) {
         const isSum = rng.bool();
@@ -4086,10 +4322,49 @@ export const theSumAndDifferenceFormulasForCosine: TopicDef = {
             mathOption(`\\cos(${isSum ? a - b : a + b}^{\\circ})`),
             mathOption(`\\sin(${isSum ? a - b : a + b}^{\\circ})`),
           ],
-          t(
-            `By the cosine ${isSum ? "sum" : "difference"} formula (remembering the sign flip), this equals $\\cos(${resAngle}^\\circ)$.`,
-            `由余弦${isSum ? "和角" : "差角"}公式（注意符号反转），该式等于 $\\cos(${resAngle}^\\circ)$。`,
+          walked(
+            [
+              [
+                ["Match the formula", "对照公式"],
+                t(
+                  `The expression is cosine times cosine ${isSum ? "minus" : "plus"} sine times sine, the ${isSum ? "sum" : "difference"} formula for cosine, with the sign flipped:`,
+                  `式子是余弦乘余弦${isSum ? "减" : "加"}正弦乘正弦，正是符号反转的余弦${isSum ? "和角" : "差角"}公式：`,
+                ),
+                [`\\cos(\\alpha ${isSum ? "+" : "-"} \\beta) = \\cos \\alpha \\cos \\beta ${signStr} \\sin \\alpha \\sin \\beta`],
+              ],
+              [
+                ["Read off the angles", "读出两个角"],
+                t(
+                  `Here $\\alpha = ${a}^{\\circ}$ and $\\beta = ${b}^{\\circ}$, so`,
+                  `这里 $\\alpha = ${a}^{\\circ}$，$\\beta = ${b}^{\\circ}$，所以`,
+                ),
+                [
+                  `\\cos(${a}^{\\circ})\\cos(${b}^{\\circ}) ${signStr} \\sin(${a}^{\\circ})\\sin(${b}^{\\circ}) = \\cos(${a}^{\\circ} ${isSum ? "+" : "-"} ${b}^{\\circ}) = \\cos(${resAngle}^{\\circ})`,
+                ],
+              ],
+            ],
+            t(
+              `The expression is about $${dec4(Math.cos(rad(a)) * Math.cos(rad(b)) + (isSum ? -1 : 1) * Math.sin(rad(a)) * Math.sin(rad(b)))}$, and $\\cos(${resAngle}^{\\circ}) \\approx ${dec4(Math.cos(rad(resAngle)))}$.`,
+              `原式约为 $${dec4(Math.cos(rad(a)) * Math.cos(rad(b)) + (isSum ? -1 : 1) * Math.sin(rad(a)) * Math.sin(rad(b)))}$，而 $\\cos(${resAngle}^{\\circ}) \\approx ${dec4(Math.cos(rad(resAngle)))}$。`,
+            ),
           ),
+          [
+            [
+              `$\\sin(${resAngle}^{\\circ})$`,
+              "Cosine times cosine and sine times sine collapse to a cosine; a sine comes from the mixed products.",
+              "余弦乘余弦与正弦乘正弦合并成余弦；正弦来自交叉的乘积。",
+            ],
+            [
+              mathOption(`\\cos(${isSum ? a - b : a + b}^{\\circ})`).en,
+              `The sign is the wrong way: in a cosine formula the sign between the terms is the opposite of the sign between the angles, so $${signStr}$ means a ${isSum ? "sum" : "difference"}.`,
+              `符号反了：余弦公式中两项之间的符号与两角之间的符号相反，所以 $${signStr}$ 对应两角之${isSum ? "和" : "差"}。`,
+            ],
+            [
+              mathOption(`\\sin(${isSum ? a - b : a + b}^{\\circ})`).en,
+              "Both the function and the sign are wrong: this pattern gives a cosine, with the opposite sign between the angles.",
+              "函数和符号都错了：这个形式得到余弦，两角之间的符号与中间的符号相反。",
+            ],
+          ],
         );
       },
     },
@@ -4097,8 +4372,20 @@ export const theSumAndDifferenceFormulasForCosine: TopicDef = {
       id: "collapsing-cosine-to-special-values",
       title: t("Evaluating collapsed cosine formulas", "余弦和差公式计算特殊角"),
       explanation: t(
-        "An expression of the form $\\cos\\alpha\\cos\\beta \\mp \\sin\\alpha\\sin\\beta$ can be read backwards as the cosine of a sum or difference, which is often a special angle.\n\nCollapsing terms with the cosine formula:\n\n$$\\cos(70^{\\circ})\\cos(10^{\\circ}) + \\sin(70^{\\circ})\\sin(10^{\\circ}) = \\cos(60^{\\circ}) = \\frac{1}{2}$$",
-        "形如 $\\cos\\alpha\\cos\\beta \\mp \\sin\\alpha\\sin\\beta$ 的式子可以反过来看成两角和或差的余弦，这个角往往是特殊角。\n\n利用余弦和差公式合并求特殊角：\n\n$$\\cos(70^{\\circ})\\cos(10^{\\circ}) + \\sin(70^{\\circ})\\sin(10^{\\circ}) = \\cos(60^{\\circ}) = \\frac{1}{2}$$",
+        `An expression of the form $\\cos\\alpha\\cos\\beta \\mp \\sin\\alpha\\sin\\beta$ is the cosine of the single angle $\\alpha \\pm \\beta$, and when that angle is special its exact value is known. For example,
+
+$$\\cos 100^{\\circ}\\cos 40^{\\circ} + \\sin 100^{\\circ}\\sin 40^{\\circ} = \\cos(100^{\\circ} - 40^{\\circ}) = \\cos 60^{\\circ} = \\frac{1}{2}$$
+
+Check: $\\cos 100^{\\circ}\\cos 40^{\\circ} \\approx -0.1330$ and $\\sin 100^{\\circ}\\sin 40^{\\circ} \\approx 0.6330$, and $-0.1330 + 0.6330 = 0.5000$.
+
+> **Watch out.** The plus sign between the products belongs to the difference of the angles, so read the angle with the opposite sign. Then read the value of the cosine, not the sine: cosine is negative between $90^{\\circ}$ and $180^{\\circ}$, so $\\cos 120^{\\circ} = -\\frac{1}{2}$.`,
+        `形如 $\\cos\\alpha\\cos\\beta \\mp \\sin\\alpha\\sin\\beta$ 的式子是单个角 $\\alpha \\pm \\beta$ 的余弦；当这个角是特殊角时，它的精确值是已知的。例如
+
+$$\\cos 100^{\\circ}\\cos 40^{\\circ} + \\sin 100^{\\circ}\\sin 40^{\\circ} = \\cos(100^{\\circ} - 40^{\\circ}) = \\cos 60^{\\circ} = \\frac{1}{2}$$
+
+检验：$\\cos 100^{\\circ}\\cos 40^{\\circ} \\approx -0.1330$，$\\sin 100^{\\circ}\\sin 40^{\\circ} \\approx 0.6330$，而 $-0.1330 + 0.6330 = 0.5000$。
+
+> **注意。** 两个乘积之间的加号对应两角之差，所以读角时符号要反过来。然后读出的是余弦的值，不是正弦的值：在 $90^{\\circ}$ 到 $180^{\\circ}$ 之间余弦为负，所以 $\\cos 120^{\\circ} = -\\frac{1}{2}$。`,
       ),
       generate(rng) {
         const { a, b, isSum, target } = splitAngle(rng, [30, 45, 60, 90, 120, 135, 150]);
@@ -4110,10 +4397,57 @@ export const theSumAndDifferenceFormulasForCosine: TopicDef = {
           t(`Find the exact value of $${expr}$.`, `求 $${expr}$ 的精确值。`),
           mathOption(ans),
           [specialSin[target]!, negated(ans), "\\frac{1}{2}", "\\frac{\\sqrt{2}}{2}", "\\frac{\\sqrt{3}}{2}", "0"].map(mathOption),
-          t(
-            `The sign in the middle is the opposite of the sign between the angles, so this is $\\cos(${a}^\\circ ${isSum ? "+" : "-"} ${b}^\\circ) = \\cos(${target}^\\circ) = ${ans}$.`,
-            `中间的符号与两角之间的符号相反，所以原式是 $\\cos(${a}^\\circ ${isSum ? "+" : "-"} ${b}^\\circ) = \\cos(${target}^\\circ) = ${ans}$。`,
+          walked(
+            [
+              [
+                ["Collapse the expression", "合并式子"],
+                t(
+                  `This is the ${isSum ? "sum" : "difference"} formula for cosine read backwards; the $${signStr}$ in the middle means a ${isSum ? "sum" : "difference"} of the angles:`,
+                  `这是反过来读的余弦${isSum ? "和角" : "差角"}公式；中间的 $${signStr}$ 对应两角之${isSum ? "和" : "差"}：`,
+                ),
+                [`${expr} = \\cos(${a}^{\\circ} ${isSum ? "+" : "-"} ${b}^{\\circ}) = \\cos(${target}^{\\circ})`],
+              ],
+              [
+                ["Use the special value", "用特殊角的值"],
+                t(`The angle $${target}^{\\circ}$ is special:`, `$${target}^{\\circ}$ 是特殊角：`),
+                [`\\cos(${target}^{\\circ}) = ${ans}`],
+              ],
+            ],
+            t(
+              `$\\cos(${a}^{\\circ})\\cos(${b}^{\\circ}) \\approx ${dec4(Math.cos(rad(a)) * Math.cos(rad(b)))}$ and $\\sin(${a}^{\\circ})\\sin(${b}^{\\circ}) \\approx ${dec4(Math.sin(rad(a)) * Math.sin(rad(b)))}$, so the expression is about $${dec4(Math.cos(rad(a)) * Math.cos(rad(b)) + (isSum ? -1 : 1) * Math.sin(rad(a)) * Math.sin(rad(b)))}$, and $${ans} \\approx ${dec4(Math.cos(rad(target)))}$.`,
+              `$\\cos(${a}^{\\circ})\\cos(${b}^{\\circ}) \\approx ${dec4(Math.cos(rad(a)) * Math.cos(rad(b)))}$，$\\sin(${a}^{\\circ})\\sin(${b}^{\\circ}) \\approx ${dec4(Math.sin(rad(a)) * Math.sin(rad(b)))}$，所以原式约为 $${dec4(Math.cos(rad(a)) * Math.cos(rad(b)) + (isSum ? -1 : 1) * Math.sin(rad(a)) * Math.sin(rad(b)))}$，而 $${ans} \\approx ${dec4(Math.cos(rad(target)))}$。`,
+            ),
           ),
+          [
+            why(
+              specialSin[target]!,
+              `This is $\\sin(${target}^{\\circ})$; cosine times cosine and sine times sine collapse to a cosine.`,
+              `这是 $\\sin(${target}^{\\circ})$；余弦乘余弦与正弦乘正弦合并成余弦。`,
+            ),
+            ...(target === 90
+              ? []
+              : [
+                  why(
+                    negated(ans),
+                    `The sign is wrong: the cosine of $${target}^{\\circ}$ is ${target < 90 ? "positive, since the angle is acute" : "negative, since the angle lies between $90^{\\circ}$ and $180^{\\circ}$"}.`,
+                    `符号错了：$${target}^{\\circ}$ 的余弦${target < 90 ? "为正，因为它是锐角" : "为负，因为它在 $90^{\\circ}$ 到 $180^{\\circ}$ 之间"}。`,
+                  ),
+                ]),
+            ...(
+              [
+                ["\\frac{1}{2}", "60"],
+                ["\\frac{\\sqrt{2}}{2}", "45"],
+                ["\\frac{\\sqrt{3}}{2}", "30"],
+                ["0", "90"],
+              ] as const
+            ).map(([w, p]) =>
+              why(
+                w,
+                `$${w}$ is the cosine of $${p}^{\\circ}$, but the collapsed angle is $${target}^{\\circ}$.`,
+                `$${w}$ 是 $${p}^{\\circ}$ 的余弦，而合并后的角是 $${target}^{\\circ}$。`,
+              ),
+            ),
+          ],
         );
       },
     },
@@ -4134,13 +4468,41 @@ export const theSumAndDifferenceFormulasForTangent: TopicDef = {
   encompasses: [],
   xp: 15,
   standards: ["CCSS.HSF.TF.C.9"],
+  intro: t(
+    `Dividing the sine of a sum by the cosine of the sum, and then dividing every term by $\\cos\\alpha\\cos\\beta$, gives a formula in tangents alone:
+
+$$\\tan(\\alpha + \\beta) = \\frac{\\tan\\alpha + \\tan\\beta}{1 - \\tan\\alpha\\tan\\beta}$$
+
+Check: with $\\alpha = \\beta = 30^{\\circ}$, $\\tan 30^{\\circ} = \\frac{\\sqrt{3}}{3}$, so the right side is $\\frac{2\\sqrt{3}/3}{1 - 1/3} = \\frac{2\\sqrt{3}/3}{2/3} = \\sqrt{3} = \\tan 60^{\\circ}$.
+
+In this lesson we recognise the tangent sum and difference formulas, collapse them to special values, and use them with given tangents.`,
+    `把和角的正弦除以和角的余弦，再把每一项都除以 $\\cos\\alpha\\cos\\beta$，就得到只含正切的公式：
+
+$$\\tan(\\alpha + \\beta) = \\frac{\\tan\\alpha + \\tan\\beta}{1 - \\tan\\alpha\\tan\\beta}$$
+
+检验：取 $\\alpha = \\beta = 30^{\\circ}$，$\\tan 30^{\\circ} = \\frac{\\sqrt{3}}{3}$，右边为 $\\frac{2\\sqrt{3}/3}{1 - 1/3} = \\frac{2\\sqrt{3}/3}{2/3} = \\sqrt{3} = \\tan 60^{\\circ}$。
+
+这节课我们认出正切的和角与差角公式，把它们合并成特殊值，并在已知正切值时使用它们。`,
+  ),
   knowledgePoints: [
     {
       id: "tangent-sum-difference-formulas",
       title: t("Tangent sum and difference identities", "正切和差公式形式"),
       explanation: t(
-        "Dividing the sine formula by the cosine formula and then dividing every term by the product of the cosines gives formulas that use tangents alone. The angle addition and subtraction formulas for tangent are:\n\n$$\\tan(\\alpha + \\beta) = \\frac{\\tan\\alpha + \\tan\\beta}{1 - \\tan\\alpha\\tan\\beta}, \\quad \\tan(\\alpha - \\beta) = \\frac{\\tan\\alpha - \\tan\\beta}{1 + \\tan\\alpha\\tan\\beta}$$",
-        "把正弦公式除以余弦公式，再把每一项都除以两个余弦的积，就得到只含正切的公式。正切的和差角公式为：\n\n$$\\tan(\\alpha + \\beta) = \\frac{\\tan\\alpha + \\tan\\beta}{1 - \\tan\\alpha\\tan\\beta}, \\quad \\tan(\\alpha - \\beta) = \\frac{\\tan\\alpha - \\tan\\beta}{1 + \\tan\\alpha\\tan\\beta}$$",
+        `Dividing the sine formula by the cosine formula and then dividing every term by $\\cos\\alpha\\cos\\beta$ gives formulas that use tangents alone:
+
+$$\\tan(\\alpha + \\beta) = \\frac{\\tan\\alpha + \\tan\\beta}{1 - \\tan\\alpha\\tan\\beta}, \\quad \\tan(\\alpha - \\beta) = \\frac{\\tan\\alpha - \\tan\\beta}{1 + \\tan\\alpha\\tan\\beta}$$
+
+The sign on top is the sign between the angles; the sign below comes from the cosine formula, so it is the opposite. Read backwards: $\\frac{\\tan 35^{\\circ} + \\tan 25^{\\circ}}{1 - \\tan 35^{\\circ}\\tan 25^{\\circ}} = \\tan 60^{\\circ}$. Check: $\\tan 35^{\\circ} \\approx 0.7002$ and $\\tan 25^{\\circ} \\approx 0.4663$, so the fraction is about $\\frac{1.1665}{0.6735} \\approx 1.7320 \\approx \\sqrt{3}$.
+
+> **Watch out.** The two signs in the formula are opposite: a plus on top goes with a minus below. And the fraction collapses to a tangent, not to a cotangent, which would be the reciprocal.`,
+        `把正弦公式除以余弦公式，再把每一项都除以 $\\cos\\alpha\\cos\\beta$，就得到只含正切的公式：
+
+$$\\tan(\\alpha + \\beta) = \\frac{\\tan\\alpha + \\tan\\beta}{1 - \\tan\\alpha\\tan\\beta}, \\quad \\tan(\\alpha - \\beta) = \\frac{\\tan\\alpha - \\tan\\beta}{1 + \\tan\\alpha\\tan\\beta}$$
+
+分子的符号就是两角之间的符号；分母的符号来自余弦公式，所以相反。反过来读：$\\frac{\\tan 35^{\\circ} + \\tan 25^{\\circ}}{1 - \\tan 35^{\\circ}\\tan 25^{\\circ}} = \\tan 60^{\\circ}$。检验：$\\tan 35^{\\circ} \\approx 0.7002$，$\\tan 25^{\\circ} \\approx 0.4663$，分式约为 $\\frac{1.1665}{0.6735} \\approx 1.7320 \\approx \\sqrt{3}$。
+
+> **注意。** 公式中的两个符号相反：分子是加号，分母就是减号。分式合并成正切，而不是余切（余切是它的倒数）。`,
       ),
       generate(rng) {
         const isSum = rng.bool();
@@ -4161,10 +4523,47 @@ export const theSumAndDifferenceFormulasForTangent: TopicDef = {
             mathOption(`\\tan(${isSum ? a - b : a + b}^{\\circ})`),
             mathOption(`\\cot(${isSum ? a - b : a + b}^{\\circ})`),
           ],
-          t(
-            `By the tangent ${isSum ? "sum" : "difference"} formula, the expression equals $\\tan(${resAngle}^\\circ)$.`,
-            `由正切${isSum ? "和角" : "差角"}公式，该式等于 $\\tan(${resAngle}^\\circ)$。`,
+          walked(
+            [
+              [
+                ["Match the formula", "对照公式"],
+                t(
+                  `The top has $${topSign}$ and the bottom has $${botSign}$, the ${isSum ? "sum" : "difference"} formula for tangent:`,
+                  `分子是 $${topSign}$，分母是 $${botSign}$，正是正切的${isSum ? "和角" : "差角"}公式：`,
+                ),
+                [`\\tan(\\alpha ${topSign} \\beta) = \\frac{\\tan\\alpha ${topSign} \\tan\\beta}{1 ${botSign} \\tan\\alpha\\tan\\beta}`],
+              ],
+              [
+                ["Read off the angles", "读出两个角"],
+                t(
+                  `Here $\\alpha = ${a}^{\\circ}$ and $\\beta = ${b}^{\\circ}$, so the fraction is`,
+                  `这里 $\\alpha = ${a}^{\\circ}$，$\\beta = ${b}^{\\circ}$，所以分式等于`,
+                ),
+                [`\\tan(${a}^{\\circ} ${topSign} ${b}^{\\circ}) = \\tan(${resAngle}^{\\circ})`],
+              ],
+            ],
+            t(
+              `$\\tan(${a}^{\\circ}) \\approx ${dec4(Math.tan(rad(a)))}$ and $\\tan(${b}^{\\circ}) \\approx ${dec4(Math.tan(rad(b)))}$, so the fraction is about $${dec4((Math.tan(rad(a)) + (isSum ? 1 : -1) * Math.tan(rad(b))) / (1 - (isSum ? 1 : -1) * Math.tan(rad(a)) * Math.tan(rad(b))))}$, and $\\tan(${resAngle}^{\\circ}) \\approx ${dec4(Math.tan(rad(resAngle)))}$.`,
+              `$\\tan(${a}^{\\circ}) \\approx ${dec4(Math.tan(rad(a)))}$，$\\tan(${b}^{\\circ}) \\approx ${dec4(Math.tan(rad(b)))}$，所以分式约为 $${dec4((Math.tan(rad(a)) + (isSum ? 1 : -1) * Math.tan(rad(b))) / (1 - (isSum ? 1 : -1) * Math.tan(rad(a)) * Math.tan(rad(b))))}$，而 $\\tan(${resAngle}^{\\circ}) \\approx ${dec4(Math.tan(rad(resAngle)))}$。`,
+            ),
           ),
+          [
+            [
+              `$\\cot(${resAngle}^{\\circ})$`,
+              "The fraction collapses to a tangent; the cotangent is its reciprocal.",
+              "分式合并成正切；余切是它的倒数。",
+            ],
+            [
+              mathOption(`\\tan(${isSum ? a - b : a + b}^{\\circ})`).en,
+              `The angle is the wrong way: the sign on top, $${topSign}$, is the sign between the angles.`,
+              `角算反了：分子的符号 $${topSign}$ 就是两角之间的符号。`,
+            ],
+            [
+              mathOption(`\\cot(${isSum ? a - b : a + b}^{\\circ})`).en,
+              "Both the function and the angle are wrong: the fraction is the tangent of the angle formed with the sign on top.",
+              "函数和角都错了：分式是按分子符号组成的角的正切。",
+            ],
+          ],
         );
       },
     },
@@ -4172,8 +4571,20 @@ export const theSumAndDifferenceFormulasForTangent: TopicDef = {
       id: "collapsing-tangent-to-special-values",
       title: t("Evaluating collapsed tangent formulas", "正切和差公式计算特殊角"),
       explanation: t(
-        "When an expression has exactly the shape of the tangent sum or difference formula, read off the two angles and replace the whole fraction by the tangent of their sum or difference. Collapsing tangent expressions to special angles:\n\n$$\\frac{\\tan(50^{\\circ}) - \\tan(20^{\\circ})}{1 + \\tan(50^{\\circ})\\tan(20^{\\circ})} = \\tan(30^{\\circ}) = \\frac{\\sqrt{3}}{3}$$",
-        "当一个式子恰好具有正切和角或差角公式的形式时，读出两个角，把整个分式换成它们的和或差的正切。利用正切公式合并求特殊角：\n\n$$\\frac{\\tan(50^{\\circ}) - \\tan(20^{\\circ})}{1 + \\tan(50^{\\circ})\\tan(20^{\\circ})} = \\tan(30^{\\circ}) = \\frac{\\sqrt{3}}{3}$$",
+        `When an expression has exactly the shape of the tangent sum or difference formula, read off the two angles and replace the whole fraction by the tangent of their sum or difference. For example,
+
+$$\\frac{\\tan(50^{\\circ}) - \\tan(20^{\\circ})}{1 + \\tan(50^{\\circ})\\tan(20^{\\circ})} = \\tan(30^{\\circ}) = \\frac{\\sqrt{3}}{3}$$
+
+Check: $\\tan 50^{\\circ} \\approx 1.1918$ and $\\tan 20^{\\circ} \\approx 0.3640$, so the fraction is about $\\frac{0.8278}{1.4338} \\approx 0.5774$, and $\\frac{\\sqrt{3}}{3} \\approx 0.5774$.
+
+> **Watch out.** Collapse first; $50^{\\circ}$ and $20^{\\circ}$ are not special, but their difference is. And tangent is negative between $90^{\\circ}$ and $180^{\\circ}$, so $\\tan 135^{\\circ} = -1$.`,
+        `当一个式子恰好具有正切和角或差角公式的形式时，读出两个角，把整个分式换成它们的和或差的正切。例如
+
+$$\\frac{\\tan(50^{\\circ}) - \\tan(20^{\\circ})}{1 + \\tan(50^{\\circ})\\tan(20^{\\circ})} = \\tan(30^{\\circ}) = \\frac{\\sqrt{3}}{3}$$
+
+检验：$\\tan 50^{\\circ} \\approx 1.1918$，$\\tan 20^{\\circ} \\approx 0.3640$，分式约为 $\\frac{0.8278}{1.4338} \\approx 0.5774$，而 $\\frac{\\sqrt{3}}{3} \\approx 0.5774$。
+
+> **注意。** 先合并；$50^{\\circ}$ 与 $20^{\\circ}$ 不是特殊角，但它们的差是。在 $90^{\\circ}$ 到 $180^{\\circ}$ 之间正切为负，所以 $\\tan 135^{\\circ} = -1$。`,
       ),
       generate(rng) {
         const { a, b, isSum, target } = splitAngle(rng, [30, 45, 60, 120, 135, 150]);
@@ -4187,9 +4598,26 @@ export const theSumAndDifferenceFormulasForTangent: TopicDef = {
             t(`Find the exact value of $${expr}$.`, `求 $${expr}$ 的精确值。`),
             mathOption(ans),
             [negated(ans), "1", "\\sqrt{3}", "\\frac{\\sqrt{3}}{3}", "0"].map(mathOption),
-            t(
-              `Collapse using the tangent ${isSum ? "sum" : "difference"} formula: $\\tan(${a}^\\circ ${topSign} ${b}^\\circ) = \\tan(${target}^\\circ) = ${ans}$.`,
-              `利用正切${isSum ? "和角" : "差角"}公式合并：$\\tan(${a}^\\circ ${topSign} ${b}^\\circ) = \\tan(${target}^\\circ) = ${ans}$。`,
+            walked(
+              [
+                [
+                  ["Collapse the expression", "合并式子"],
+                  t(
+                    `This is the ${isSum ? "sum" : "difference"} formula for tangent read backwards, with $\\alpha = ${a}^{\\circ}$ and $\\beta = ${b}^{\\circ}$:`,
+                    `这是反过来读的正切${isSum ? "和角" : "差角"}公式，$\\alpha = ${a}^{\\circ}$，$\\beta = ${b}^{\\circ}$：`,
+                  ),
+                  [`${expr} = \\tan(${a}^{\\circ} ${topSign} ${b}^{\\circ}) = \\tan(${target}^{\\circ})`],
+                ],
+                [
+                  ["Use the special value", "用特殊角的值"],
+                  t(`The angle $${target}^{\\circ}$ is special:`, `$${target}^{\\circ}$ 是特殊角：`),
+                  [`\\tan(${target}^{\\circ}) = ${ans}`],
+                ],
+              ],
+              t(
+                `$\\tan(${a}^{\\circ}) \\approx ${dec4(Math.tan(rad(a)))}$ and $\\tan(${b}^{\\circ}) \\approx ${dec4(Math.tan(rad(b)))}$, so the fraction is about $${dec4((Math.tan(rad(a)) + (isSum ? 1 : -1) * Math.tan(rad(b))) / (1 - (isSum ? 1 : -1) * Math.tan(rad(a)) * Math.tan(rad(b))))}$, and $${ans} \\approx ${dec4(Math.tan(rad(target)))}$.`,
+                `$\\tan(${a}^{\\circ}) \\approx ${dec4(Math.tan(rad(a)))}$，$\\tan(${b}^{\\circ}) \\approx ${dec4(Math.tan(rad(b)))}$，所以分式约为 $${dec4((Math.tan(rad(a)) + (isSum ? 1 : -1) * Math.tan(rad(b))) / (1 - (isSum ? 1 : -1) * Math.tan(rad(a)) * Math.tan(rad(b))))}$，而 $${ans} \\approx ${dec4(Math.tan(rad(target)))}$。`,
+              ),
             ),
           ),
           [
@@ -4227,13 +4655,41 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForSine: TopicDef =
   encompasses: [{ topic: "the-sum-and-difference-formulas-for-sine", weight: 0.4 }],
   xp: 15,
   standards: ["CCSS.HSF.TF.C.9"],
+  intro: t(
+    `The table of special angles stops at $30^{\\circ}$, $45^{\\circ}$ and $60^{\\circ}$, but $75^{\\circ} = 45^{\\circ} + 30^{\\circ}$, so the sum formula reaches it:
+
+$$\\sin 75^{\\circ} = \\sin 45^{\\circ}\\cos 30^{\\circ} + \\cos 45^{\\circ}\\sin 30^{\\circ} = \\frac{\\sqrt{2}}{2}\\cdot\\frac{\\sqrt{3}}{2} + \\frac{\\sqrt{2}}{2}\\cdot\\frac{1}{2} = \\frac{\\sqrt{6} + \\sqrt{2}}{4}$$
+
+Check: $\\frac{2.4495 + 1.4142}{4} \\approx 0.9659$, and a calculator gives $\\sin 75^{\\circ} \\approx 0.9659$.
+
+In this lesson we find exact sines of multiples of $15^{\\circ}$, in degrees and in radians, reduce larger angles to $15^{\\circ}$ or $75^{\\circ}$, and see what a quarter or half turn does to a sine.`,
+    `特殊角的表只到 $30^{\\circ}$、$45^{\\circ}$ 和 $60^{\\circ}$，但 $75^{\\circ} = 45^{\\circ} + 30^{\\circ}$，所以用和角公式可以求出它：
+
+$$\\sin 75^{\\circ} = \\sin 45^{\\circ}\\cos 30^{\\circ} + \\cos 45^{\\circ}\\sin 30^{\\circ} = \\frac{\\sqrt{2}}{2}\\cdot\\frac{\\sqrt{3}}{2} + \\frac{\\sqrt{2}}{2}\\cdot\\frac{1}{2} = \\frac{\\sqrt{6} + \\sqrt{2}}{4}$$
+
+检验：$\\frac{2.4495 + 1.4142}{4} \\approx 0.9659$，计算器给出 $\\sin 75^{\\circ} \\approx 0.9659$。
+
+这节课我们求 $15^{\\circ}$ 的倍数的正弦精确值（角度制和弧度制），把较大的角化为 $15^{\\circ}$ 或 $75^{\\circ}$，并看转过四分之一圈或半圈对正弦有什么影响。`,
+  ),
   knowledgePoints: [
     {
       id: "exact-sine-of-fifteen-and-seventy-five",
       title: t("Exact sine of 15° and 75°", "15° 与 75° 的正弦精确值"),
       explanation: t(
-        "Angles such as $15^{\\circ}$ and $75^{\\circ}$ are sums or differences of familiar special angles, so the sum and difference formulas give their exact values. Using $75^{\\circ} = 45^{\\circ} + 30^{\\circ}$ and $15^{\\circ} = 45^{\\circ} - 30^{\\circ}$:\n\n$$\\sin(75^{\\circ}) = \\sin(45^{\\circ})\\cos(30^{\\circ}) + \\cos(45^{\\circ})\\sin(30^{\\circ}) = \\frac{\\sqrt{2}}{2}\\frac{\\sqrt{3}}{2} + \\frac{\\sqrt{2}}{2}\\frac{1}{2} = \\frac{\\sqrt{6} + \\sqrt{2}}{4}$$\n\n$$\\sin(15^{\\circ}) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$$",
-        "像 $15^{\\circ}$ 和 $75^{\\circ}$ 这样的角是熟悉的特殊角的和或差，所以用和角与差角公式可以求出它们的精确值。由 $75^{\\circ} = 45^{\\circ} + 30^{\\circ}$ 以及 $15^{\\circ} = 45^{\\circ} - 30^{\\circ}$：\n\n$$\\sin(75^{\\circ}) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}, \\quad \\sin(15^{\\circ}) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$$",
+        `Angles such as $15^{\\circ}$ and $75^{\\circ}$ are differences or sums of special angles, $45^{\\circ} - 30^{\\circ}$ and $45^{\\circ} + 30^{\\circ}$, so the sum and difference formulas give their exact values:
+
+$$\\sin 15^{\\circ} = \\frac{\\sqrt{6} - \\sqrt{2}}{4}, \\quad \\sin 75^{\\circ} = \\frac{\\sqrt{6} + \\sqrt{2}}{4}$$
+
+Any other multiple of $15^{\\circ}$ that is not special comes back to one of these through its reference angle, with the sign of its quadrant. For $\\sin 195^{\\circ}$: the angle lies in quadrant III, where sine is negative, and its reference angle is $15^{\\circ}$, so $\\sin 195^{\\circ} = -\\sin 15^{\\circ} = -\\frac{\\sqrt{6} - \\sqrt{2}}{4}$. Check: $-\\frac{2.4495 - 1.4142}{4} \\approx -0.2588$, and a calculator gives $\\sin 195^{\\circ} \\approx -0.2588$.
+
+> **Watch out.** The minus inside $\\sqrt{6} - \\sqrt{2}$ belongs to $15^{\\circ}$, a difference of angles; it says nothing about the sign of the answer, which comes from the quadrant alone.`,
+        `$15^{\\circ}$ 和 $75^{\\circ}$ 这样的角是特殊角的差或和，即 $45^{\\circ} - 30^{\\circ}$ 和 $45^{\\circ} + 30^{\\circ}$，所以用和角与差角公式可以求出它们的精确值：
+
+$$\\sin 15^{\\circ} = \\frac{\\sqrt{6} - \\sqrt{2}}{4}, \\quad \\sin 75^{\\circ} = \\frac{\\sqrt{6} + \\sqrt{2}}{4}$$
+
+$15^{\\circ}$ 的其他非特殊倍数，都可以通过参考角化为这两个值之一，再带上所在象限的符号。对 $\\sin 195^{\\circ}$：这个角在第三象限，那里正弦为负，参考角是 $15^{\\circ}$，所以 $\\sin 195^{\\circ} = -\\sin 15^{\\circ} = -\\frac{\\sqrt{6} - \\sqrt{2}}{4}$。检验：$-\\frac{2.4495 - 1.4142}{4} \\approx -0.2588$，计算器给出 $\\sin 195^{\\circ} \\approx -0.2588$。
+
+> **注意。** $\\sqrt{6} - \\sqrt{2}$ 中的减号属于 $15^{\\circ}$ 这个角的差，与答案的符号无关；答案的符号只由象限决定。`,
       ),
       generate(rng) {
         const item = rng.pick([
@@ -4269,10 +4725,8 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForSine: TopicDef =
           t(`Find the exact value of $\\displaystyle ${promptStr}$.`, `求 $\\displaystyle ${promptStr}$ 的精确值。`),
           t(`$${ansStr}$`, `$${ansStr}$`),
           wrongStr.map((w) => t(w, w)),
-          t(
-            `Decompose using $${item.decomp}$ and apply the sine formula to get $${item.ans}$${mult === 1 ? "" : `, and multiplying by $${mult}$ gives $${ansStr}$`}.`,
-            `利用 $${item.decomp}$ 分解并应用正弦和差公式，得 $${item.ans}$${mult === 1 ? "" : `，乘以 $${mult}$ 得 $${ansStr}$`}。`,
-          ),
+          fifteenWalk("sin", item.deg, `${item.deg}^{\\circ}`, mult, item.ans),
+          fifteenReasons("sin", item.deg, item.ans, wrongList, mult),
         );
       },
     },
@@ -4280,8 +4734,20 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForSine: TopicDef =
       id: "exact-sine-in-radians-twelfths",
       title: t("Exact sine for radian multiples of π/12", "π/12 弧度倍角处的正弦精确值"),
       explanation: t(
-        "Radian multiples of $\\frac{\\pi}{12}$ are sums or differences of the special angles with denominators $3$, $4$ and $6$, so write the angle that way first. In radians, $\\frac{5\\pi}{12} = 75^{\\circ}$ and $\\frac{\\pi}{12} = 15^{\\circ}$:\n\n$$\\sin\\left(\\frac{5\\pi}{12}\\right) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}, \\quad \\sin\\left(\\frac{\\pi}{12}\\right) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$$",
-        "$\\frac{\\pi}{12}$ 的倍数可以写成分母为 $3$、$4$、$6$ 的特殊角的和或差，所以先把角写成这样的形式。在弧度制下，$\\frac{5\\pi}{12} = 75^{\\circ}$，$\\frac{\\pi}{12} = 15^{\\circ}$：\n\n$$\\sin\\left(\\frac{5\\pi}{12}\\right) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}, \\quad \\sin\\left(\\frac{\\pi}{12}\\right) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$$",
+        `Radian multiples of $\\frac{\\pi}{12}$ work the same way: $\\frac{\\pi}{12} = \\frac{\\pi}{4} - \\frac{\\pi}{6}$ is $15^{\\circ}$ and $\\frac{5\\pi}{12} = \\frac{\\pi}{4} + \\frac{\\pi}{6}$ is $75^{\\circ}$, so
+
+$$\\sin\\left(\\frac{\\pi}{12}\\right) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}, \\quad \\sin\\left(\\frac{5\\pi}{12}\\right) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}$$
+
+For $\\sin\\left(\\frac{7\\pi}{12}\\right)$: the angle lies in quadrant II, where sine is positive, and its reference angle is $\\pi - \\frac{7\\pi}{12} = \\frac{5\\pi}{12}$, so the value is $\\frac{\\sqrt{6} + \\sqrt{2}}{4}$. Check: $\\frac{7\\pi}{12}$ is $105^{\\circ}$, and a calculator gives $\\sin 105^{\\circ} \\approx 0.9659 \\approx \\frac{2.4495 + 1.4142}{4}$.
+
+> **Watch out.** Subtract the fractions over a common denominator: $\\frac{\\pi}{4} - \\frac{\\pi}{6} = \\frac{3\\pi}{12} - \\frac{2\\pi}{12} = \\frac{\\pi}{12}$. And the reference angle is measured to the nearer half of the $x$-axis, $\\pi$ or $2\\pi$.`,
+        `$\\frac{\\pi}{12}$ 的弧度倍数也一样：$\\frac{\\pi}{12} = \\frac{\\pi}{4} - \\frac{\\pi}{6}$ 就是 $15^{\\circ}$，$\\frac{5\\pi}{12} = \\frac{\\pi}{4} + \\frac{\\pi}{6}$ 就是 $75^{\\circ}$，所以
+
+$$\\sin\\left(\\frac{\\pi}{12}\\right) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}, \\quad \\sin\\left(\\frac{5\\pi}{12}\\right) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}$$
+
+对 $\\sin\\left(\\frac{7\\pi}{12}\\right)$：这个角在第二象限，那里正弦为正，参考角是 $\\pi - \\frac{7\\pi}{12} = \\frac{5\\pi}{12}$，所以值为 $\\frac{\\sqrt{6} + \\sqrt{2}}{4}$。检验：$\\frac{7\\pi}{12}$ 就是 $105^{\\circ}$，计算器给出 $\\sin 105^{\\circ} \\approx 0.9659 \\approx \\frac{2.4495 + 1.4142}{4}$。
+
+> **注意。** 分数相减要先通分：$\\frac{\\pi}{4} - \\frac{\\pi}{6} = \\frac{3\\pi}{12} - \\frac{2\\pi}{12} = \\frac{\\pi}{12}$。参考角要量到 $x$ 轴较近的一侧，即 $\\pi$ 或 $2\\pi$。`,
       ),
       generate(rng) {
         const item = rng.pick([
@@ -4313,10 +4779,8 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForSine: TopicDef =
           t(`Find the exact value of $\\displaystyle ${promptStr}$.`, `求 $\\displaystyle ${promptStr}$ 的精确值。`),
           t(`$${ansStr}$`, `$${ansStr}$`),
           wrongStr.slice(0, 3).map((w) => t(w, w)),
-          t(
-            `Write $${item.frac} = ${item.decomp}$ and apply the sine formula to get $${item.ans}$${mult === 1 ? "" : `, and multiplying by $${mult}$ gives $${ansStr}$`}.`,
-            `将角写成 $${item.frac} = ${item.decomp}$，应用正弦公式，得 $${item.ans}$${mult === 1 ? "" : `，乘以 $${mult}$ 得 $${ansStr}$`}。`,
-          ),
+          fifteenWalk("sin", Math.round((piValue(item.frac) * 180) / Math.PI), item.frac, mult, item.ans, true),
+          fifteenReasons("sin", Math.round((piValue(item.frac) * 180) / Math.PI), item.ans, wrongList, mult, true),
         );
       },
     },
@@ -4337,13 +4801,41 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForCosine: TopicDef
   encompasses: [{ topic: "the-sum-and-difference-formulas-for-cosine", weight: 0.4 }],
   xp: 15,
   standards: ["CCSS.HSF.TF.C.9"],
+  intro: t(
+    `The cosine formulas reach the same angles: $15^{\\circ} = 45^{\\circ} - 30^{\\circ}$, and the cosine difference formula has a plus in the middle:
+
+$$\\cos 15^{\\circ} = \\cos 45^{\\circ}\\cos 30^{\\circ} + \\sin 45^{\\circ}\\sin 30^{\\circ} = \\frac{\\sqrt{2}}{2}\\cdot\\frac{\\sqrt{3}}{2} + \\frac{\\sqrt{2}}{2}\\cdot\\frac{1}{2} = \\frac{\\sqrt{6} + \\sqrt{2}}{4}$$
+
+Check: $\\frac{2.4495 + 1.4142}{4} \\approx 0.9659$, and a calculator gives $\\cos 15^{\\circ} \\approx 0.9659$.
+
+In this lesson we find exact cosines of multiples of $15^{\\circ}$, in degrees and in radians, keep track of the sign flip and the quadrant, and see what a quarter or half turn does to a cosine.`,
+    `余弦公式也能求出这些角：$15^{\\circ} = 45^{\\circ} - 30^{\\circ}$，而余弦差角公式中间是加号：
+
+$$\\cos 15^{\\circ} = \\cos 45^{\\circ}\\cos 30^{\\circ} + \\sin 45^{\\circ}\\sin 30^{\\circ} = \\frac{\\sqrt{2}}{2}\\cdot\\frac{\\sqrt{3}}{2} + \\frac{\\sqrt{2}}{2}\\cdot\\frac{1}{2} = \\frac{\\sqrt{6} + \\sqrt{2}}{4}$$
+
+检验：$\\frac{2.4495 + 1.4142}{4} \\approx 0.9659$，计算器给出 $\\cos 15^{\\circ} \\approx 0.9659$。
+
+这节课我们求 $15^{\\circ}$ 的倍数的余弦精确值（角度制和弧度制），留意符号的反转和象限，并看转过四分之一圈或半圈对余弦有什么影响。`,
+  ),
   knowledgePoints: [
     {
       id: "exact-cosine-of-fifteen-and-seventy-five",
       title: t("Exact cosine of 15° and 75°", "15° 与 75° 的余弦精确值"),
       explanation: t(
-        "The cosine formulas keep the products of matching functions together and flip the sign in the middle, so take care with the sign before simplifying. Using $75^{\\circ} = 45^{\\circ} + 30^{\\circ}$ and $15^{\\circ} = 45^{\\circ} - 30^{\\circ}$:\n\n$$\\cos(75^{\\circ}) = \\cos(45^{\\circ})\\cos(30^{\\circ}) - \\sin(45^{\\circ})\\sin(30^{\\circ}) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$$\n\n$$\\cos(15^{\\circ}) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}$$",
-        "余弦公式把同名函数的积放在一起，并且中间的符号与角之间的符号相反，所以化简前要注意符号。由 $75^{\\circ} = 45^{\\circ} + 30^{\\circ}$ 与 $15^{\\circ} = 45^{\\circ} - 30^{\\circ}$：\n\n$$\\cos(75^{\\circ}) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}, \\quad \\cos(15^{\\circ}) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}$$",
+        `The cosine formulas keep the products of matching functions together and flip the sign in the middle, so with $15^{\\circ} = 45^{\\circ} - 30^{\\circ}$ and $75^{\\circ} = 45^{\\circ} + 30^{\\circ}$:
+
+$$\\cos 15^{\\circ} = \\frac{\\sqrt{6} + \\sqrt{2}}{4}, \\quad \\cos 75^{\\circ} = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$$
+
+Other multiples of $15^{\\circ}$ come back to these through the reference angle. For $\\cos 105^{\\circ}$: the angle lies in quadrant II, where cosine is negative, and its reference angle is $75^{\\circ}$, so $\\cos 105^{\\circ} = -\\cos 75^{\\circ} = -\\frac{\\sqrt{6} - \\sqrt{2}}{4}$. Check: $-\\frac{2.4495 - 1.4142}{4} \\approx -0.2588$, and a calculator gives $\\cos 105^{\\circ} \\approx -0.2588$.
+
+> **Watch out.** For cosine the plus goes with $15^{\\circ}$, the difference, because the cosine formula flips the sign: the smaller angle has the larger cosine. So $\\cos 15^{\\circ} = \\sin 75^{\\circ}$, not $\\sin 15^{\\circ}$.`,
+        `余弦公式把同名函数的积放在一起，并且中间的符号反转，所以由 $15^{\\circ} = 45^{\\circ} - 30^{\\circ}$ 与 $75^{\\circ} = 45^{\\circ} + 30^{\\circ}$：
+
+$$\\cos 15^{\\circ} = \\frac{\\sqrt{6} + \\sqrt{2}}{4}, \\quad \\cos 75^{\\circ} = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$$
+
+$15^{\\circ}$ 的其他倍数通过参考角化为这两个值。对 $\\cos 105^{\\circ}$：这个角在第二象限，那里余弦为负，参考角是 $75^{\\circ}$，所以 $\\cos 105^{\\circ} = -\\cos 75^{\\circ} = -\\frac{\\sqrt{6} - \\sqrt{2}}{4}$。检验：$-\\frac{2.4495 - 1.4142}{4} \\approx -0.2588$，计算器给出 $\\cos 105^{\\circ} \\approx -0.2588$。
+
+> **注意。** 对余弦来说，加号对应 $15^{\\circ}$（角的差），因为余弦公式把符号反过来：较小的角余弦较大。所以 $\\cos 15^{\\circ} = \\sin 75^{\\circ}$，而不是 $\\sin 15^{\\circ}$。`,
       ),
       generate(rng) {
         const item = rng.pick([
@@ -4381,10 +4873,8 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForCosine: TopicDef
           t(`Find the exact value of $\\displaystyle ${promptStr}$.`, `求 $\\displaystyle ${promptStr}$ 的精确值。`),
           t(`$${ansStr}$`, `$${ansStr}$`),
           wrongStr.map((w) => t(w, w)),
-          t(
-            `Expand using the cosine formula with $${item.decomp}$ to get $${item.ans}$${mult === 1 ? "" : `, and multiplying by $${mult}$ gives $${ansStr}$`}.`,
-            `用 $${item.decomp}$ 和余弦公式展开，得 $${item.ans}$${mult === 1 ? "" : `，乘以 $${mult}$ 得 $${ansStr}$`}。`,
-          ),
+          fifteenWalk("cos", item.deg, `${item.deg}^{\\circ}`, mult, item.ans),
+          fifteenReasons("cos", item.deg, item.ans, wrongList, mult),
         );
       },
     },
@@ -4392,8 +4882,20 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForCosine: TopicDef
       id: "exact-cosine-in-radians-twelfths",
       title: t("Exact cosine for radian multiples of π/12", "π/12 弧度倍角处的余弦精确值"),
       explanation: t(
-        "To find these values, split the radian angle into two special angles, apply the cosine sum or difference formula, and simplify the products of the radicals. For angles in radians:\n\n$$\\cos\\left(\\frac{5\\pi}{12}\\right) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}, \\quad \\cos\\left(\\frac{\\pi}{12}\\right) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}$$",
-        "求这些值时，把弧度角拆成两个特殊角，用余弦的和角或差角公式，再化简根式的乘积。对于弧度制下的角：\n\n$$\\cos\\left(\\frac{5\\pi}{12}\\right) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}, \\quad \\cos\\left(\\frac{\\pi}{12}\\right) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}$$",
+        `In radians the same values sit at $\\frac{\\pi}{12}$ and $\\frac{5\\pi}{12}$:
+
+$$\\cos\\left(\\frac{\\pi}{12}\\right) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}, \\quad \\cos\\left(\\frac{5\\pi}{12}\\right) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$$
+
+For $\\cos\\left(\\frac{11\\pi}{12}\\right)$: the angle lies in quadrant II, where cosine is negative, and its reference angle is $\\pi - \\frac{11\\pi}{12} = \\frac{\\pi}{12}$, so the value is $-\\frac{\\sqrt{6} + \\sqrt{2}}{4}$. Check: $\\frac{11\\pi}{12}$ is $165^{\\circ}$, and a calculator gives $\\cos 165^{\\circ} \\approx -0.9659 \\approx -\\frac{2.4495 + 1.4142}{4}$.
+
+> **Watch out.** Cosine is even, so a negative angle has the same cosine as the positive one: $\\cos\\left(-\\frac{\\pi}{12}\\right) = \\cos\\frac{\\pi}{12}$. Sine is odd and changes sign instead.`,
+        `在弧度制下，这些值出现在 $\\frac{\\pi}{12}$ 与 $\\frac{5\\pi}{12}$：
+
+$$\\cos\\left(\\frac{\\pi}{12}\\right) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}, \\quad \\cos\\left(\\frac{5\\pi}{12}\\right) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$$
+
+对 $\\cos\\left(\\frac{11\\pi}{12}\\right)$：这个角在第二象限，那里余弦为负，参考角是 $\\pi - \\frac{11\\pi}{12} = \\frac{\\pi}{12}$，所以值为 $-\\frac{\\sqrt{6} + \\sqrt{2}}{4}$。检验：$\\frac{11\\pi}{12}$ 就是 $165^{\\circ}$，计算器给出 $\\cos 165^{\\circ} \\approx -0.9659 \\approx -\\frac{2.4495 + 1.4142}{4}$。
+
+> **注意。** 余弦是偶函数，负角与正角的余弦相同：$\\cos\\left(-\\frac{\\pi}{12}\\right) = \\cos\\frac{\\pi}{12}$。正弦是奇函数，符号会改变。`,
       ),
       generate(rng) {
         const item = rng.pick([
@@ -4425,10 +4927,8 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForCosine: TopicDef
           t(`Find the exact value of $\\displaystyle ${promptStr}$.`, `求 $\\displaystyle ${promptStr}$ 的精确值。`),
           t(`$${ansStr}$`, `$${ansStr}$`),
           wrongStr.slice(0, 3).map((w) => t(w, w)),
-          t(
-            `Apply the cosine formula with $${item.decomp}$ to get $\\cos(${item.frac}) = ${item.ans}$${mult === 1 ? "" : `, and multiplying by $${mult}$ gives $${ansStr}$`}.`,
-            `用 $${item.decomp}$ 和余弦公式计算，得 $\\cos(${item.frac}) = ${item.ans}$${mult === 1 ? "" : `，乘以 $${mult}$ 得 $${ansStr}$`}。`,
-          ),
+          fifteenWalk("cos", Math.round((piValue(item.frac) * 180) / Math.PI), item.frac, mult, item.ans, true),
+          fifteenReasons("cos", Math.round((piValue(item.frac) * 180) / Math.PI), item.ans, wrongList, mult, true),
         );
       },
     },
@@ -4449,13 +4949,41 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForTangent: TopicDe
   encompasses: [{ topic: "the-sum-and-difference-formulas-for-tangent", weight: 0.4 }],
   xp: 15,
   standards: ["CCSS.HSF.TF.C.9"],
+  intro: t(
+    `The tangent sum formula needs only the tangents $\\tan 45^{\\circ} = 1$ and $\\tan 30^{\\circ} = \\frac{\\sqrt{3}}{3}$, and multiplying top and bottom by the conjugate clears the radical below:
+
+$$\\tan 75^{\\circ} = \\frac{1 + \\frac{\\sqrt{3}}{3}}{1 - \\frac{\\sqrt{3}}{3}} = \\frac{3 + \\sqrt{3}}{3 - \\sqrt{3}} = \\frac{(3 + \\sqrt{3})^{2}}{9 - 3} = \\frac{12 + 6\\sqrt{3}}{6} = 2 + \\sqrt{3}$$
+
+Check: $2 + 1.7321 = 3.7321$, and a calculator gives $\\tan 75^{\\circ} \\approx 3.7321$.
+
+In this lesson we find exact tangents of multiples of $15^{\\circ}$, in degrees and in radians, use that tangent repeats every $180^{\\circ}$, and find the tangent of a sum from two given tangents.`,
+    `正切和角公式只需要正切值 $\\tan 45^{\\circ} = 1$ 和 $\\tan 30^{\\circ} = \\frac{\\sqrt{3}}{3}$，分子分母同乘共轭式就能消去分母中的根式：
+
+$$\\tan 75^{\\circ} = \\frac{1 + \\frac{\\sqrt{3}}{3}}{1 - \\frac{\\sqrt{3}}{3}} = \\frac{3 + \\sqrt{3}}{3 - \\sqrt{3}} = \\frac{(3 + \\sqrt{3})^{2}}{9 - 3} = \\frac{12 + 6\\sqrt{3}}{6} = 2 + \\sqrt{3}$$
+
+检验：$2 + 1.7321 = 3.7321$，计算器给出 $\\tan 75^{\\circ} \\approx 3.7321$。
+
+这节课我们求 $15^{\\circ}$ 的倍数的正切精确值（角度制和弧度制），利用正切以 $180^{\\circ}$ 为周期，并由两个已知正切求和角的正切。`,
+  ),
   knowledgePoints: [
     {
       id: "exact-tangent-fifteen-seventy-five",
       title: t("Exact tangent of 15° and 75°", "15° 与 75° 的正切精确值"),
       explanation: t(
-        "After substituting the known tangents, the result is a fraction with radicals in the denominator, which you rationalize by multiplying by the conjugate. Using $75^{\\circ} = 45^{\\circ} + 30^{\\circ}$:\n\n$$\\tan(75^{\\circ}) = \\frac{\\tan 45^{\\circ} + \\tan 30^{\\circ}}{1 - \\tan 45^{\\circ}\\tan 30^{\\circ}} = \\frac{1 + 1/\\sqrt{3}}{1 - 1/\\sqrt{3}} = \\frac{\\sqrt{3} + 1}{\\sqrt{3} - 1} = 2 + \\sqrt{3}$$\n\nSimilarly, $\\tan(15^{\\circ}) = 2 - \\sqrt{3}$.",
-        "代入已知的正切值后，得到分母含根式的分式，要乘以共轭式把分母有理化。由 $75^{\\circ} = 45^{\\circ} + 30^{\\circ}$：\n\n$$\\tan(75^{\\circ}) = 2 + \\sqrt{3}, \\quad \\tan(15^{\\circ}) = 2 - \\sqrt{3}$$",
+        `After substituting the known tangents, the result is a fraction with a radical in the denominator; multiplying by the conjugate rationalizes it. With $15^{\\circ} = 45^{\\circ} - 30^{\\circ}$:
+
+$$\\tan 15^{\\circ} = \\frac{1 - \\frac{\\sqrt{3}}{3}}{1 + \\frac{\\sqrt{3}}{3}} = \\frac{3 - \\sqrt{3}}{3 + \\sqrt{3}} = \\frac{(3 - \\sqrt{3})^{2}}{9 - 3} = \\frac{12 - 6\\sqrt{3}}{6} = 2 - \\sqrt{3}$$
+
+and in the same way $\\tan 75^{\\circ} = 2 + \\sqrt{3}$. Check: $2 - 1.7321 = 0.2679$, and a calculator gives $\\tan 15^{\\circ} \\approx 0.2679$. Other multiples come back to these: tangent repeats every $180^{\\circ}$, so $\\tan 195^{\\circ} = \\tan 15^{\\circ}$, and it is negative in quadrants II and IV, so $\\tan 165^{\\circ} = -\\tan 15^{\\circ} = -2 + \\sqrt{3}$.
+
+> **Watch out.** The period of tangent is $180^{\\circ}$, not $360^{\\circ}$, so $\\tan 255^{\\circ} = \\tan 75^{\\circ}$ is positive. And $2 + \\sqrt{3}$ belongs to $75^{\\circ}$, the larger angle, since tangent grows towards $90^{\\circ}$.`,
+        `代入已知的正切值后，得到分母含根式的分式；乘以共轭式就能把分母有理化。由 $15^{\\circ} = 45^{\\circ} - 30^{\\circ}$：
+
+$$\\tan 15^{\\circ} = \\frac{1 - \\frac{\\sqrt{3}}{3}}{1 + \\frac{\\sqrt{3}}{3}} = \\frac{3 - \\sqrt{3}}{3 + \\sqrt{3}} = \\frac{(3 - \\sqrt{3})^{2}}{9 - 3} = \\frac{12 - 6\\sqrt{3}}{6} = 2 - \\sqrt{3}$$
+
+同理 $\\tan 75^{\\circ} = 2 + \\sqrt{3}$。检验：$2 - 1.7321 = 0.2679$，计算器给出 $\\tan 15^{\\circ} \\approx 0.2679$。其他倍数都化为这两个值：正切以 $180^{\\circ}$ 为周期，所以 $\\tan 195^{\\circ} = \\tan 15^{\\circ}$；它在第二、四象限为负，所以 $\\tan 165^{\\circ} = -\\tan 15^{\\circ} = -2 + \\sqrt{3}$。
+
+> **注意。** 正切的周期是 $180^{\\circ}$，不是 $360^{\\circ}$，所以 $\\tan 255^{\\circ} = \\tan 75^{\\circ}$ 是正的。$2 + \\sqrt{3}$ 属于较大的角 $75^{\\circ}$，因为正切在接近 $90^{\\circ}$ 时变大。`,
       ),
       generate(rng) {
         const item = rng.pick([
@@ -4484,10 +5012,8 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForTangent: TopicDe
           t(`Find the exact value of $\\displaystyle ${promptStr}$.`, `求 $\\displaystyle ${promptStr}$ 的精确值。`),
           t(`$${ansStr}$`, `$${ansStr}$`),
           wrongStr.map((w) => t(w, w)),
-          t(
-            `The tangent repeats every $180^\\circ$ and is an odd function, and the sum and difference formulas give $\\tan 15^\\circ = 2 - \\sqrt{3}$ and $\\tan 75^\\circ = 2 + \\sqrt{3}$. Here $\\tan(${item.deg}^\\circ) = ${item.via} = ${item.ans}$${mult === 1 ? "" : `, and multiplying by $${mult}$ gives $${ansStr}$`}.`,
-            `正切以 $180^\\circ$ 为周期且是奇函数，由和差公式得 $\\tan 15^\\circ = 2 - \\sqrt{3}$，$\\tan 75^\\circ = 2 + \\sqrt{3}$。这里 $\\tan(${item.deg}^\\circ) = ${item.via} = ${item.ans}$${mult === 1 ? "" : `，乘以 $${mult}$ 得 $${ansStr}$`}。`,
-          ),
+          fifteenWalk("tan", item.deg, `${item.deg}^{\\circ}`, mult, item.ans),
+          fifteenReasons("tan", item.deg, item.ans, wrongList, mult),
         );
       },
     },
@@ -4495,8 +5021,20 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForTangent: TopicDe
       id: "exact-tangent-in-radians",
       title: t("Exact tangent in radians", "弧度制下的正切精确值"),
       explanation: t(
-        "These values come from the same sum and difference formulas, with the radian angles written as sums or differences of $\\frac{\\pi}{4}$ and $\\frac{\\pi}{6}$. In radians:\n\n$$\\tan\\left(\\frac{5\\pi}{12}\\right) = 2 + \\sqrt{3}, \\quad \\tan\\left(\\frac{\\pi}{12}\\right) = 2 - \\sqrt{3}$$",
-        "这些值来自同样的和角与差角公式，把弧度角写成 $\\frac{\\pi}{4}$ 与 $\\frac{\\pi}{6}$ 的和或差即可。在弧度制下：\n\n$$\\tan\\left(\\frac{5\\pi}{12}\\right) = 2 + \\sqrt{3}, \\quad \\tan\\left(\\frac{\\pi}{12}\\right) = 2 - \\sqrt{3}$$",
+        `In radians, $\\frac{\\pi}{12} = \\frac{\\pi}{4} - \\frac{\\pi}{6}$ and $\\frac{5\\pi}{12} = \\frac{\\pi}{4} + \\frac{\\pi}{6}$, and the same formulas give
+
+$$\\tan\\left(\\frac{\\pi}{12}\\right) = 2 - \\sqrt{3}, \\quad \\tan\\left(\\frac{5\\pi}{12}\\right) = 2 + \\sqrt{3}$$
+
+Tangent repeats every $\\pi$, so for $\\tan\\left(\\frac{17\\pi}{12}\\right)$ subtract $\\pi$: $\\tan\\left(\\frac{17\\pi}{12}\\right) = \\tan\\left(\\frac{5\\pi}{12}\\right) = 2 + \\sqrt{3}$. Check: $\\frac{17\\pi}{12}$ is $255^{\\circ}$, and a calculator gives $\\tan 255^{\\circ} \\approx 3.7321 \\approx 2 + 1.7321$.
+
+> **Watch out.** The two values are reciprocals, since $(2 + \\sqrt{3})(2 - \\sqrt{3}) = 4 - 3 = 1$, so they are easy to swap: the smaller angle $\\frac{\\pi}{12}$ has the smaller tangent, $2 - \\sqrt{3}$.`,
+        `在弧度制下，$\\frac{\\pi}{12} = \\frac{\\pi}{4} - \\frac{\\pi}{6}$，$\\frac{5\\pi}{12} = \\frac{\\pi}{4} + \\frac{\\pi}{6}$，同样的公式给出
+
+$$\\tan\\left(\\frac{\\pi}{12}\\right) = 2 - \\sqrt{3}, \\quad \\tan\\left(\\frac{5\\pi}{12}\\right) = 2 + \\sqrt{3}$$
+
+正切以 $\\pi$ 为周期，所以对 $\\tan\\left(\\frac{17\\pi}{12}\\right)$ 减去 $\\pi$：$\\tan\\left(\\frac{17\\pi}{12}\\right) = \\tan\\left(\\frac{5\\pi}{12}\\right) = 2 + \\sqrt{3}$。检验：$\\frac{17\\pi}{12}$ 就是 $255^{\\circ}$，计算器给出 $\\tan 255^{\\circ} \\approx 3.7321 \\approx 2 + 1.7321$。
+
+> **注意。** 这两个值互为倒数，因为 $(2 + \\sqrt{3})(2 - \\sqrt{3}) = 4 - 3 = 1$，所以很容易弄反：较小的角 $\\frac{\\pi}{12}$ 的正切也较小，是 $2 - \\sqrt{3}$。`,
       ),
       generate(rng) {
         const item = rng.pick([
@@ -4523,10 +5061,8 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForTangent: TopicDe
           t(`Find the exact value of $\\displaystyle ${promptStr}$.`, `求 $\\displaystyle ${promptStr}$ 的精确值。`),
           t(`$${ansStr}$`, `$${ansStr}$`),
           wrongStr.slice(0, 3).map((w) => t(w, w)),
-          t(
-            `The tangent repeats every $\\pi$ and is an odd function, and the sum and difference formulas give $\\tan\\frac{\\pi}{12} = 2 - \\sqrt{3}$ and $\\tan\\frac{5\\pi}{12} = 2 + \\sqrt{3}$. Here $\\tan\\left(${item.frac}\\right) = ${item.via} = ${item.ans}$${mult === 1 ? "" : `, and multiplying by $${mult}$ gives $${ansStr}$`}.`,
-            `正切以 $\\pi$ 为周期且是奇函数，由和差公式得 $\\tan\\frac{\\pi}{12} = 2 - \\sqrt{3}$，$\\tan\\frac{5\\pi}{12} = 2 + \\sqrt{3}$。这里 $\\tan\\left(${item.frac}\\right) = ${item.via} = ${item.ans}$${mult === 1 ? "" : `，乘以 $${mult}$ 得 $${ansStr}$`}。`,
-          ),
+          fifteenWalk("tan", Math.round((piValue(item.frac) * 180) / Math.PI), item.frac, mult, item.ans, true),
+          fifteenReasons("tan", Math.round((piValue(item.frac) * 180) / Math.PI), item.ans, wrongList, mult, true),
         );
       },
     },
@@ -4547,13 +5083,41 @@ export const writingSumsOfTrigonometricFunctionsInAmplitudePhaseForm: TopicDef =
   encompasses: [],
   xp: 16,
   standards: ["CCSS.HSF.TF.C.9"],
+  intro: t(
+    `Expanding $R\\sin(x + \\phi) = R\\cos\\phi\\sin x + R\\sin\\phi\\cos x$ shows that a sum $A\\sin x + B\\cos x$ is a single sine wave when $A = R\\cos\\phi$ and $B = R\\sin\\phi$. Then $A^{2} + B^{2} = R^{2}(\\cos^{2}\\phi + \\sin^{2}\\phi) = R^{2}$, so
+
+$$A\\sin x + B\\cos x = R\\sin(x + \\phi), \\qquad R = \\sqrt{A^{2} + B^{2}}$$
+
+For $3\\sin x + 4\\cos x$: $R = \\sqrt{9 + 16} = 5$, with $\\cos\\phi = \\frac{3}{5}$ and $\\sin\\phi = \\frac{4}{5}$. Check: at $x = 0$ the sum is $4$, and $5\\sin\\phi = 5 \\cdot \\frac{4}{5} = 4$.
+
+In this lesson we find the amplitude of a sum of a sine and a cosine, write sums in exact amplitude-phase form, find a missing coefficient from the amplitude, and read the amplitude from a graph.`,
+    `展开 $R\\sin(x + \\phi) = R\\cos\\phi\\sin x + R\\sin\\phi\\cos x$ 可以看出：当 $A = R\\cos\\phi$，$B = R\\sin\\phi$ 时，和 $A\\sin x + B\\cos x$ 就是一条正弦曲线。于是 $A^{2} + B^{2} = R^{2}(\\cos^{2}\\phi + \\sin^{2}\\phi) = R^{2}$，所以
+
+$$A\\sin x + B\\cos x = R\\sin(x + \\phi), \\qquad R = \\sqrt{A^{2} + B^{2}}$$
+
+对 $3\\sin x + 4\\cos x$：$R = \\sqrt{9 + 16} = 5$，$\\cos\\phi = \\frac{3}{5}$，$\\sin\\phi = \\frac{4}{5}$。检验：$x = 0$ 时和为 $4$，而 $5\\sin\\phi = 5 \\cdot \\frac{4}{5} = 4$。
+
+这节课我们求正弦与余弦之和的振幅，把和写成精确的振幅-初相形式，由振幅求缺失的系数，并从图上读出振幅。`,
+  ),
   knowledgePoints: [
     {
       id: "amplitude-of-linear-combination",
       title: t("Amplitude of a sum of sine and cosine", "正弦与余弦线性组合的振幅"),
       explanation: t(
-        "A sum of a sine and a cosine with the same input is a single shifted sine wave, and its amplitude is the length of the vector made from the two coefficients. For $f(x) = A \\sin x + B \\cos x$, the maximum value (amplitude) is $R = \\sqrt{A^{2} + B^{2}}$. For $3\\sin x + 4\\cos x$:\n\n$$R = \\sqrt{3^{2} + 4^{2}} = 5$$",
-        "同一自变量的正弦与余弦之和是一条平移后的正弦曲线，它的振幅等于由两个系数构成的向量的长度。对于 $f(x) = A \\sin x + B \\cos x$，其最大值（振幅）为 $R = \\sqrt{A^{2} + B^{2}}$。以 $3\\sin x + 4\\cos x$ 为例：\n\n$$R = \\sqrt{3^{2} + 4^{2}} = 5$$",
+        `A sum of a sine and a cosine with the same input is one shifted sine wave, $A\\sin x + B\\cos x = R\\sin(x + \\phi)$, and matching coefficients gives $A = R\\cos\\phi$ and $B = R\\sin\\phi$. Squaring and adding removes $\\phi$:
+
+$$R = \\sqrt{A^{2} + B^{2}}$$
+
+For $5\\sin x - 12\\cos x$: $R = \\sqrt{25 + 144} = 13$. Check: at the $x$ with $\\sin x = \\frac{5}{13}$ and $\\cos x = -\\frac{12}{13}$, the sum is $5 \\cdot \\frac{5}{13} - 12 \\cdot \\left(-\\frac{12}{13}\\right) = \\frac{169}{13} = 13$.
+
+> **Watch out.** The amplitude is not $A + B$: the sine and the cosine reach their peaks at different inputs, so their peaks do not add. And the sign of a coefficient does not change the amplitude, since it is squared.`,
+        `同一自变量的正弦与余弦之和是一条平移后的正弦曲线，$A\\sin x + B\\cos x = R\\sin(x + \\phi)$，比较系数得 $A = R\\cos\\phi$，$B = R\\sin\\phi$。平方后相加就消去了 $\\phi$：
+
+$$R = \\sqrt{A^{2} + B^{2}}$$
+
+对 $5\\sin x - 12\\cos x$：$R = \\sqrt{25 + 144} = 13$。检验：取 $\\sin x = \\frac{5}{13}$，$\\cos x = -\\frac{12}{13}$ 的 $x$，和为 $5 \\cdot \\frac{5}{13} - 12 \\cdot \\left(-\\frac{12}{13}\\right) = \\frac{169}{13} = 13$。
+
+> **注意。** 振幅不是 $A + B$：正弦和余弦在不同的自变量处达到峰值，所以峰值不能相加。系数的符号也不影响振幅，因为它要平方。`,
       ),
       generate(rng) {
         const allTriples = [
@@ -4586,9 +5150,29 @@ export const writingSumsOfTrigonometricFunctionsInAmplitudePhaseForm: TopicDef =
           ),
           answer: c,
           wrong: [a + b, Math.abs(a - b), c + k],
-          solution: t(
-            `The amplitude is $R = \\sqrt{A^{2} + B^{2}} = \\sqrt{${a}^{2} + ${b}^{2}} = ${c}$.`,
-            `振幅为 $R = \\sqrt{A^{2} + B^{2}} = \\sqrt{${a}^{2} + ${b}^{2}} = ${c}$。`,
+          solution: walked(
+            [
+              [
+                ["Write the sum as one wave", "写成一条波"],
+                t(
+                  `A sum $A\\sin ${v} + B\\cos ${v}$ equals $R\\sin(${v} + \\phi)$ with $A = R\\cos\\phi$ and $B = R\\sin\\phi$, so its largest value is`,
+                  `和 $A\\sin ${v} + B\\cos ${v}$ 等于 $R\\sin(${v} + \\phi)$，其中 $A = R\\cos\\phi$，$B = R\\sin\\phi$，所以它的最大值是`,
+                ),
+                ["R = \\sqrt{A^{2} + B^{2}}"],
+              ],
+              [
+                ["Substitute the coefficients", "代入系数"],
+                t(
+                  `Here $A = ${a}$ and $B = ${sign === "+" ? b : -b}$; the sign does not matter once it is squared:`,
+                  `这里 $A = ${a}$，$B = ${sign === "+" ? b : -b}$；平方之后符号就不影响了：`,
+                ),
+                [`R = \\sqrt{${a}^{2} + ${b}^{2}} = \\sqrt{${a * a} + ${b * b}} = \\sqrt{${c * c}} = ${c}`],
+              ],
+            ],
+            t(
+              `At the $${v}$ with $\\sin ${v} = ${Q.of(a, c).toLatex()}$ and $\\cos ${v} = ${Q.of(sign === "+" ? b : -b, c).toLatex()}$, which fit since $${a * a} + ${b * b} = ${c * c}$, the value is $\\frac{${a}^{2} + ${b}^{2}}{${c}} = \\frac{${c * c}}{${c}} = ${c}$.`,
+              `取 $\\sin ${v} = ${Q.of(a, c).toLatex()}$，$\\cos ${v} = ${Q.of(sign === "+" ? b : -b, c).toLatex()}$ 的 $${v}$（因为 $${a * a} + ${b * b} = ${c * c}$，这样的 $${v}$ 存在），函数值是 $\\frac{${a}^{2} + ${b}^{2}}{${c}} = \\frac{${c * c}}{${c}} = ${c}$。`,
+            ),
           ),
         });
       },
@@ -4597,13 +5181,46 @@ export const writingSumsOfTrigonometricFunctionsInAmplitudePhaseForm: TopicDef =
       id: "amplitude-phase-form-exact",
       title: t("Complete amplitude-phase form", "完整的振幅-初相表达式"),
       explanation: t(
-        "Factor out the amplitude so that the remaining coefficients are the cosine and sine of one angle, then recognize the sum formula for sine. Rewrite using the auxiliary angle:\n\n$$\\sqrt{3}\\sin x + \\cos x = 2\\left(\\frac{\\sqrt{3}}{2}\\sin x + \\frac{1}{2}\\cos x\\right) = 2\\sin\\left(x + \\frac{\\pi}{6}\\right)$$",
-        "先提出振幅，使剩下的系数分别是同一个角的余弦和正弦，再认出这是正弦的和角公式。利用辅助角改写：\n\n$$\\sqrt{3}\\sin x + \\cos x = 2\\left(\\frac{\\sqrt{3}}{2}\\sin x + \\frac{1}{2}\\cos x\\right) = 2\\sin\\left(x + \\frac{\\pi}{6}\\right)$$",
+        `To write $A\\sin x + B\\cos x$ as $R\\sin(x + \\phi)$, factor out $R = \\sqrt{A^{2} + B^{2}}$; what is left in front of $\\sin x$ and $\\cos x$ are $\\cos\\phi$ and $\\sin\\phi$, and the sum formula for sine closes it up. For $\\sqrt{3}\\sin x + \\cos x$, $R = \\sqrt{3 + 1} = 2$:
+
+$$\\sqrt{3}\\sin x + \\cos x = 2\\left(\\frac{\\sqrt{3}}{2}\\sin x + \\frac{1}{2}\\cos x\\right) = 2\\left(\\cos\\frac{\\pi}{6}\\sin x + \\sin\\frac{\\pi}{6}\\cos x\\right) = 2\\sin\\left(x + \\frac{\\pi}{6}\\right)$$
+
+Check: at $x = 0$ the left side is $1$, and $2\\sin\\frac{\\pi}{6} = 1$; at $x = \\frac{\\pi}{2}$ it is $\\sqrt{3}$, and $2\\sin\\frac{2\\pi}{3} = \\sqrt{3}$.
+
+> **Watch out.** The coefficient of $\\sin x$ is $\\cos\\phi$ and the coefficient of $\\cos x$ is $\\sin\\phi$, not the other way round. A negative cosine coefficient makes $\\sin\\phi$ negative, so the phase is subtracted.`,
+        `要把 $A\\sin x + B\\cos x$ 写成 $R\\sin(x + \\phi)$，先提出 $R = \\sqrt{A^{2} + B^{2}}$；$\\sin x$ 和 $\\cos x$ 前面剩下的就是 $\\cos\\phi$ 和 $\\sin\\phi$，再用正弦和角公式合起来。对 $\\sqrt{3}\\sin x + \\cos x$，$R = \\sqrt{3 + 1} = 2$：
+
+$$\\sqrt{3}\\sin x + \\cos x = 2\\left(\\frac{\\sqrt{3}}{2}\\sin x + \\frac{1}{2}\\cos x\\right) = 2\\left(\\cos\\frac{\\pi}{6}\\sin x + \\sin\\frac{\\pi}{6}\\cos x\\right) = 2\\sin\\left(x + \\frac{\\pi}{6}\\right)$$
+
+检验：$x = 0$ 时左边是 $1$，而 $2\\sin\\frac{\\pi}{6} = 1$；$x = \\frac{\\pi}{2}$ 时左边是 $\\sqrt{3}$，而 $2\\sin\\frac{2\\pi}{3} = \\sqrt{3}$。
+
+> **注意。** $\\sin x$ 的系数是 $\\cos\\phi$，$\\cos x$ 的系数是 $\\sin\\phi$，不要弄反。余弦的系数为负时 $\\sin\\phi$ 为负，所以初相要减去。`,
       ),
       generate(rng) {
         const k = rng.pick([1, 2, 3, 4, 5, 6]);
         const v = rng.pick(["x", "\\theta", "t"]);
         const p = k === 1 ? "" : `${k}`;
+        const r3 = Math.sqrt(3);
+        const amp = (big: string, r: string) => [
+          `The amplitude is $\\sqrt{A^2 + B^2} = ${r}$, not $${big}$, the size of one coefficient.`,
+          `振幅是 $\\sqrt{A^2 + B^2} = ${r}$，不是其中一个系数的大小 $${big}$。`,
+        ];
+        const sum = (r: string) => [
+          `The amplitude is $\\sqrt{A^2 + B^2} = ${r}$; the coefficients do not simply add, as the two waves peak at different inputs.`,
+          `振幅是 $\\sqrt{A^2 + B^2} = ${r}$；两个系数不能简单相加，因为两条波在不同的自变量处达到峰值。`,
+        ];
+        const cosine = (shape: string) => [
+          `The form asked for is $R\\sin(${v} + \\phi)$, and a cosine wave expands differently: this one is $${shape}$.`,
+          `题目要的是 $R\\sin(${v} + \\phi)$ 的形式，余弦波展开后不同：它等于 $${shape}$。`,
+        ];
+        const swapped = (shape: string) => [
+          `The phase is wrong: this expands to $${shape}$, with the coefficients of sine and cosine swapped. The coefficient of $\\sin ${v}$ is $R\\cos\\phi$.`,
+          `初相错了：它展开后是 $${shape}$，正弦与余弦的系数对调了。$\\sin ${v}$ 的系数是 $R\\cos\\phi$。`,
+        ];
+        const flipped = (shape: string) => [
+          `The sign of the phase is wrong: this expands to $${shape}$. A negative cosine coefficient means $\\sin\\phi < 0$.`,
+          `初相的符号错了：它展开后是 $${shape}$。余弦的系数为负意味着 $\\sin\\phi < 0$。`,
+        ];
         const item = rng.pick([
           {
             expr: `${p}\\sqrt{3}\\sin ${v} + ${p}\\cos ${v}`,
@@ -4612,6 +5229,16 @@ export const writingSumsOfTrigonometricFunctionsInAmplitudePhaseForm: TopicDef =
               `${2 * k}\\sin\\left(${v} + \\frac{\\pi}{3}\\right)`,
               `${2 * k}\\cos\\left(${v} + \\frac{\\pi}{6}\\right)`,
               `${p}\\sqrt{3}\\sin\\left(${v} + \\frac{\\pi}{6}\\right)`,
+            ],
+            sq: [3 * k * k, k * k],
+            r: `${2 * k}`,
+            cs: ["\\frac{\\sqrt{3}}{2}", "\\frac{1}{2}"],
+            phi: "\\frac{\\pi}{6}",
+            n: [r3, 1, 2, Math.PI / 6],
+            why: [
+              swapped(`${p}\\sin ${v} + ${p}\\sqrt{3}\\cos ${v}`),
+              cosine(`${p}\\sqrt{3}\\cos ${v} - ${p}\\sin ${v}`),
+              amp(`${p}\\sqrt{3}`, `${2 * k}`),
             ],
           },
           {
@@ -4622,6 +5249,16 @@ export const writingSumsOfTrigonometricFunctionsInAmplitudePhaseForm: TopicDef =
               `${2 * k}\\cos\\left(${v} + \\frac{\\pi}{3}\\right)`,
               `${p}\\sqrt{3}\\sin\\left(${v} + \\frac{\\pi}{3}\\right)`,
             ],
+            sq: [k * k, 3 * k * k],
+            r: `${2 * k}`,
+            cs: ["\\frac{1}{2}", "\\frac{\\sqrt{3}}{2}"],
+            phi: "\\frac{\\pi}{3}",
+            n: [1, r3, 2, Math.PI / 3],
+            why: [
+              swapped(`${p}\\sqrt{3}\\sin ${v} + ${p}\\cos ${v}`),
+              cosine(`${p}\\cos ${v} - ${p}\\sqrt{3}\\sin ${v}`),
+              amp(`${p}\\sqrt{3}`, `${2 * k}`),
+            ],
           },
           {
             expr: `${p}\\sin ${v} + ${p}\\cos ${v}`,
@@ -4630,6 +5267,22 @@ export const writingSumsOfTrigonometricFunctionsInAmplitudePhaseForm: TopicDef =
               `${2 * k}\\sin\\left(${v} + \\frac{\\pi}{4}\\right)`,
               `${p}\\sqrt{2}\\sin\\left(${v} + \\frac{\\pi}{2}\\right)`,
               `${p}\\cos\\left(${v} + \\frac{\\pi}{4}\\right)`,
+            ],
+            sq: [k * k, k * k],
+            r: `${p}\\sqrt{2}`,
+            cs: ["\\frac{\\sqrt{2}}{2}", "\\frac{\\sqrt{2}}{2}"],
+            phi: "\\frac{\\pi}{4}",
+            n: [1, 1, Math.SQRT2, Math.PI / 4],
+            why: [
+              sum(`${p}\\sqrt{2}`),
+              [
+                `The phase is wrong: with $\\phi = \\frac{\\pi}{2}$ the sine coefficient $\\cos\\phi$ is $0$, so this is $${p}\\sqrt{2}\\cos ${v}$.`,
+                `初相错了：$\\phi = \\frac{\\pi}{2}$ 时正弦的系数 $\\cos\\phi$ 为 $0$，所以它等于 $${p}\\sqrt{2}\\cos ${v}$。`,
+              ],
+              [
+                `The form asked for is $R\\sin(${v} + \\phi)$, and the amplitude is $${p}\\sqrt{2}$, not $${k}$.`,
+                `题目要的是 $R\\sin(${v} + \\phi)$ 的形式，而且振幅是 $${p}\\sqrt{2}$，不是 $${k}$。`,
+              ],
             ],
           },
           {
@@ -4640,6 +5293,16 @@ export const writingSumsOfTrigonometricFunctionsInAmplitudePhaseForm: TopicDef =
               `${2 * k}\\cos\\left(${v} - \\frac{\\pi}{6}\\right)`,
               `${p}\\sqrt{3}\\sin\\left(${v} - \\frac{\\pi}{6}\\right)`,
             ],
+            sq: [3 * k * k, k * k],
+            r: `${2 * k}`,
+            cs: ["\\frac{\\sqrt{3}}{2}", "-\\frac{1}{2}"],
+            phi: "-\\frac{\\pi}{6}",
+            n: [r3, -1, 2, -Math.PI / 6],
+            why: [
+              flipped(`${p}\\sqrt{3}\\sin ${v} + ${p}\\cos ${v}`),
+              cosine(`${p}\\sqrt{3}\\cos ${v} + ${p}\\sin ${v}`),
+              amp(`${p}\\sqrt{3}`, `${2 * k}`),
+            ],
           },
           {
             expr: `${p}\\sin ${v} - ${p}\\sqrt{3}\\cos ${v}`,
@@ -4648,6 +5311,16 @@ export const writingSumsOfTrigonometricFunctionsInAmplitudePhaseForm: TopicDef =
               `${2 * k}\\sin\\left(${v} + \\frac{\\pi}{3}\\right)`,
               `${2 * k}\\cos\\left(${v} - \\frac{\\pi}{3}\\right)`,
               `${p}\\sqrt{3}\\sin\\left(${v} - \\frac{\\pi}{3}\\right)`,
+            ],
+            sq: [k * k, 3 * k * k],
+            r: `${2 * k}`,
+            cs: ["\\frac{1}{2}", "-\\frac{\\sqrt{3}}{2}"],
+            phi: "-\\frac{\\pi}{3}",
+            n: [1, -r3, 2, -Math.PI / 3],
+            why: [
+              flipped(`${p}\\sin ${v} + ${p}\\sqrt{3}\\cos ${v}`),
+              cosine(`${p}\\cos ${v} + ${p}\\sqrt{3}\\sin ${v}`),
+              amp(`${p}\\sqrt{3}`, `${2 * k}`),
             ],
           },
           {
@@ -4658,17 +5331,62 @@ export const writingSumsOfTrigonometricFunctionsInAmplitudePhaseForm: TopicDef =
               `${p}\\sqrt{2}\\sin\\left(${v} + \\frac{\\pi}{4}\\right)`,
               `${p}\\cos\\left(${v} - \\frac{\\pi}{4}\\right)`,
             ],
+            sq: [k * k, k * k],
+            r: `${p}\\sqrt{2}`,
+            cs: ["\\frac{\\sqrt{2}}{2}", "-\\frac{\\sqrt{2}}{2}"],
+            phi: "-\\frac{\\pi}{4}",
+            n: [1, -1, Math.SQRT2, -Math.PI / 4],
+            why: [
+              sum(`${p}\\sqrt{2}`),
+              flipped(`${p}\\sin ${v} + ${p}\\cos ${v}`),
+              [
+                `The form asked for is $R\\sin(${v} + \\phi)$, and the amplitude is $${p}\\sqrt{2}$, not $${k}$.`,
+                `题目要的是 $R\\sin(${v} + \\phi)$ 的形式，而且振幅是 $${p}\\sqrt{2}$，不是 $${k}$。`,
+              ],
+            ],
           },
         ]);
+        const [c0, s0] = item.cs as [string, string];
+        const [an, bn, rn, ph] = item.n as [number, number, number, number];
+        const inner = `${c0}\\sin ${v} ${s0.startsWith("-") ? `- ${s0.slice(1)}` : `+ ${s0}`}\\cos ${v}`;
         return oneOf(
           rng,
           t(`Write $${item.expr}$ in the form $R\\sin(${v} + \\phi)$.`, `将 $${item.expr}$ 化为 $R\\sin(${v} + \\phi)$ 的形式。`),
           t(`$${item.ans}$`, `$${item.ans}$`),
           item.wrong.map((w) => t(`$${w}$`, `$${w}$`)),
-          t(
-            `Factor out $R = \\sqrt{A^2 + B^2}$ and identify the auxiliary phase angle: the result is $${item.ans}$.`,
-            `提出 $R = \\sqrt{A^2 + B^2}$ 并确定初相角：结果为 $${item.ans}$。`,
+          walked(
+            [
+              [
+                ["Find the amplitude", "求振幅"],
+                t("The amplitude is the square root of the sum of the squared coefficients:", "振幅是系数平方和的平方根："),
+                [`R = \\sqrt{${item.sq[0]} + ${item.sq[1]}} = \\sqrt{${item.sq[0]! + item.sq[1]!}} = ${item.r}`],
+              ],
+              [
+                ["Factor it out", "提出振幅"],
+                t(
+                  `What is left in front of $\\sin ${v}$ and $\\cos ${v}$ is $\\cos\\phi$ and $\\sin\\phi$:`,
+                  `$\\sin ${v}$ 与 $\\cos ${v}$ 前面剩下的就是 $\\cos\\phi$ 与 $\\sin\\phi$：`,
+                ),
+                [
+                  `${item.expr} = ${item.r}\\left(${inner}\\right)`,
+                  `\\cos\\phi = ${c0}, \\quad \\sin\\phi = ${s0}, \\quad \\phi = ${item.phi}`,
+                ],
+              ],
+              [
+                ["Close up with the sum formula", "用和角公式合起来"],
+                t(
+                  `Since $\\cos\\phi\\sin ${v} + \\sin\\phi\\cos ${v} = \\sin(${v} + \\phi)$,`,
+                  `由 $\\cos\\phi\\sin ${v} + \\sin\\phi\\cos ${v} = \\sin(${v} + \\phi)$，`,
+                ),
+                [`${item.expr} = ${item.ans}`],
+              ],
+            ],
+            t(
+              `Put $${v} = 1$: $${item.expr} \\approx ${dec4(k * (an * Math.sin(1) + bn * Math.cos(1)))}$ and $${item.ans} \\approx ${dec4(k * rn * Math.sin(1 + ph))}$, which agree.`,
+              `取 $${v} = 1$：$${item.expr} \\approx ${dec4(k * (an * Math.sin(1) + bn * Math.cos(1)))}$，$${item.ans} \\approx ${dec4(k * rn * Math.sin(1 + ph))}$，两者相等。`,
+            ),
           ),
+          item.wrong.map((w, i) => why(w, item.why[i]?.[0] ?? "", item.why[i]?.[1] ?? "")),
         );
       },
     },
@@ -4689,14 +5407,42 @@ export const theDoubleAngleFormulaForSine: TopicDef = {
   encompasses: [],
   xp: 16,
   standards: ["CCSS.HSF.TF.C.9"],
+  intro: t(
+    `Putting $\\beta = \\alpha = \\theta$ in the sum formula for sine gives the sine of a double angle:
+
+$$\\sin(2\\theta) = \\sin\\theta\\cos\\theta + \\cos\\theta\\sin\\theta = 2\\sin\\theta\\cos\\theta$$
+
+Doubling the angle does not double the sine. Check: at $\\theta = 30^{\\circ}$, $2\\sin 30^{\\circ}\\cos 30^{\\circ} = 2 \\cdot \\frac{1}{2} \\cdot \\frac{\\sqrt{3}}{2} = \\frac{\\sqrt{3}}{2} = \\sin 60^{\\circ}$, while $2\\sin 30^{\\circ} = 1$.
+
+In this lesson we state the double-angle formula for sine, use it forwards and backwards, evaluate $\\sin 2\\theta$ from a known sine and cosine, and rewrite products as a single sine.`,
+    `在正弦和角公式中令 $\\beta = \\alpha = \\theta$，就得到二倍角的正弦：
+
+$$\\sin(2\\theta) = \\sin\\theta\\cos\\theta + \\cos\\theta\\sin\\theta = 2\\sin\\theta\\cos\\theta$$
+
+角加倍，正弦并不加倍。检验：当 $\\theta = 30^{\\circ}$ 时，$2\\sin 30^{\\circ}\\cos 30^{\\circ} = 2 \\cdot \\frac{1}{2} \\cdot \\frac{\\sqrt{3}}{2} = \\frac{\\sqrt{3}}{2} = \\sin 60^{\\circ}$，而 $2\\sin 30^{\\circ} = 1$。
+
+这节课我们写出正弦的二倍角公式，正着用、反着用，由已知的正弦和余弦求 $\\sin 2\\theta$，并把乘积改写成一个正弦。`,
+  ),
   knowledgePoints: [
     {
       id: "double-angle-formula-for-sine-statement",
       title: t("The double-angle formula for sine", "正弦二倍角公式的陈述"),
       figure: remainingDrawings5["the-double-angle-formula-for-sine#double-angle-formula-for-sine-statement"],
       explanation: t(
-        "The double-angle formula is a special case of the sum formula, so it does not need to be memorized separately. Note that $\\sin(2\\theta)$ is not $2\\sin\\theta$.\n\nApplying the addition formula with both angles equal gives:\n\n$$\\sin(2\\theta) = \\sin(\\theta + \\theta) = \\sin\\theta\\cos\\theta + \\cos\\theta\\sin\\theta = 2\\sin\\theta\\cos\\theta$$",
-        "二倍角公式是和角公式的特例，所以不必另外记忆。注意 $\\sin(2\\theta)$ 不等于 $2\\sin\\theta$。\n\n将和角公式中两个角取相同值，即得：\n\n$$\\sin(2\\theta) = \\sin(\\theta + \\theta) = \\sin\\theta\\cos\\theta + \\cos\\theta\\sin\\theta = 2\\sin\\theta\\cos\\theta$$",
+        `The double-angle formula is the sum formula with both angles equal, so it does not need to be memorized separately:
+
+$$\\sin(2\\theta) = \\sin(\\theta + \\theta) = \\sin\\theta\\cos\\theta + \\cos\\theta\\sin\\theta = 2\\sin\\theta\\cos\\theta$$
+
+It holds for any angle in place of $\\theta$: with $\\theta = 3x$ it reads $\\sin(6x) = 2\\sin(3x)\\cos(3x)$. Check: at $x = 10^{\\circ}$, $\\sin 60^{\\circ} \\approx 0.8660$ and $2\\sin 30^{\\circ}\\cos 30^{\\circ} = 2 \\cdot 0.5 \\cdot 0.8660 = 0.8660$.
+
+> **Watch out.** $\\sin(2\\theta)$ is not $2\\sin\\theta$: at $\\theta = 90^{\\circ}$ the first is $\\sin 180^{\\circ} = 0$ and the second is $2$. The angle on the right is half the angle on the left.`,
+        `二倍角公式就是两个角相等时的和角公式，所以不必另外记忆：
+
+$$\\sin(2\\theta) = \\sin(\\theta + \\theta) = \\sin\\theta\\cos\\theta + \\cos\\theta\\sin\\theta = 2\\sin\\theta\\cos\\theta$$
+
+它对任何代替 $\\theta$ 的角都成立：取 $\\theta = 3x$，就是 $\\sin(6x) = 2\\sin(3x)\\cos(3x)$。检验：当 $x = 10^{\\circ}$ 时，$\\sin 60^{\\circ} \\approx 0.8660$，而 $2\\sin 30^{\\circ}\\cos 30^{\\circ} = 2 \\cdot 0.5 \\cdot 0.8660 = 0.8660$。
+
+> **注意。** $\\sin(2\\theta)$ 不等于 $2\\sin\\theta$：当 $\\theta = 90^{\\circ}$ 时，前者是 $\\sin 180^{\\circ} = 0$，后者是 $2$。右边的角是左边的角的一半。`,
       ),
       generate(rng) {
         const v = rng.pick(["\\theta", "x", "\\alpha", "t", "u", "A"]);
@@ -4714,10 +5460,45 @@ export const theDoubleAngleFormulaForSine: TopicDef = {
               t(`$\\sin^2(${arg}) - \\cos^2(${arg})$`, `$\\sin^2(${arg}) - \\cos^2(${arg})$`),
               t(`$2\\cos^2(${arg}) - 1$`, `$2\\cos^2(${arg}) - 1$`),
             ],
-            t(
-              `By the double-angle formula, $\\sin(2A) = 2\\sin A\\cos A$ with $A = ${arg}$.`,
-              `由二倍角公式，当 $A = ${arg}$ 时，$\\sin(2A) = 2\\sin A\\cos A$。`,
+            walked(
+              [
+                [
+                  ["Write the double angle as a sum", "把二倍角写成和"],
+                  t("The sum formula for sine with both angles equal to $A$ gives", "正弦和角公式中两个角都取 $A$，得"),
+                  ["\\sin(2A) = \\sin(A + A) = \\sin A\\cos A + \\cos A\\sin A = 2\\sin A\\cos A"],
+                ],
+                [
+                  ["Put in the angle", "代入角"],
+                  t(`Here $2A = ${doubleArg}$, so $A = ${arg}$:`, `这里 $2A = ${doubleArg}$，所以 $A = ${arg}$：`),
+                  [`\\sin(${doubleArg}) = 2\\sin(${arg})\\cos(${arg})`],
+                ],
+              ],
+              agreeAt(
+                v,
+                k,
+                `\\sin(${doubleArg})`,
+                `2\\sin(${arg})\\cos(${arg})`,
+                (x) => Math.sin(2 * x),
+                (x) => 2 * Math.sin(x) * Math.cos(x),
+              ),
             ),
+            [
+              [
+                `$2\\sin^2(${arg})$`,
+                "This is $2\\sin A\\sin A$; the formula pairs one sine with one cosine.",
+                "这是 $2\\sin A\\sin A$；公式中是一个正弦乘一个余弦。",
+              ],
+              [
+                `$\\sin^2(${arg}) - \\cos^2(${arg})$`,
+                "This is $-\\cos(2A)$, the negative of a form of the cosine double angle.",
+                "这是 $-\\cos(2A)$，余弦二倍角一种形式的相反数。",
+              ],
+              [
+                `$2\\cos^2(${arg}) - 1$`,
+                "This is $\\cos(2A)$, a form of the cosine double angle.",
+                "这是 $\\cos(2A)$，余弦二倍角的一种形式。",
+              ],
+            ],
           );
         } else if (mode === "reverse") {
           return oneOf(
@@ -4729,10 +5510,45 @@ export const theDoubleAngleFormulaForSine: TopicDef = {
               t(`$\\tan(${doubleArg})$`, `$\\tan(${doubleArg})$`),
               t(`$2\\sin(${doubleArg})$`, `$2\\sin(${doubleArg})$`),
             ],
-            t(
-              `Since $2\\sin A\\cos A = \\sin(2A)$, the expression equals $\\sin(${doubleArg})$.`,
-              `因为 $2\\sin A\\cos A = \\sin(2A)$，所以原式等于 $\\sin(${doubleArg})$。`,
+            walked(
+              [
+                [
+                  ["Recall the formula", "写出公式"],
+                  t("Read the double-angle formula for sine from right to left:", "把正弦的二倍角公式从右往左读："),
+                  ["2\\sin A\\cos A = \\sin(2A)"],
+                ],
+                [
+                  ["Put in the angle", "代入角"],
+                  t(`Here $A = ${arg}$, so $2A = ${doubleArg}$:`, `这里 $A = ${arg}$，所以 $2A = ${doubleArg}$：`),
+                  [`2\\sin(${arg})\\cos(${arg}) = \\sin(${doubleArg})`],
+                ],
+              ],
+              agreeAt(
+                v,
+                k,
+                `2\\sin(${arg})\\cos(${arg})`,
+                `\\sin(${doubleArg})`,
+                (x) => 2 * Math.sin(x) * Math.cos(x),
+                (x) => Math.sin(2 * x),
+              ),
             ),
+            [
+              [
+                `$\\cos(${doubleArg})$`,
+                "$\\cos(2A)$ is $\\cos^2 A - \\sin^2 A$, not a product of a sine and a cosine.",
+                "$\\cos(2A)$ 是 $\\cos^2 A - \\sin^2 A$，不是正弦与余弦的积。",
+              ],
+              [
+                `$\\tan(${doubleArg})$`,
+                "$\\tan(2A)$ is a quotient, $\\frac{\\sin 2A}{\\cos 2A}$, not a product.",
+                "$\\tan(2A)$ 是商 $\\frac{\\sin 2A}{\\cos 2A}$，不是积。",
+              ],
+              [
+                `$2\\sin(${doubleArg})$`,
+                "The $2$ is already used up: $2\\sin A\\cos A$ is $\\sin(2A)$ itself, so this is twice too large.",
+                "那个 $2$ 已经用掉了：$2\\sin A\\cos A$ 本身就是 $\\sin(2A)$，这个结果大了一倍。",
+              ],
+            ],
           );
         } else {
           return oneOf(
@@ -4744,10 +5560,41 @@ export const theDoubleAngleFormulaForSine: TopicDef = {
               t(`$\\tan(${arg})$`, `$\\tan(${arg})$`),
               t(`$\\sin(${doubleArg})$`, `$\\sin(${doubleArg})$`),
             ],
-            t(
-              `Substitute $\\sin(${doubleArg}) = 2\\sin(${arg})\\cos(${arg})$ and simplify: $\\sin(${arg})$.`,
-              `代入 $\\sin(${doubleArg}) = 2\\sin(${arg})\\cos(${arg})$ 约分得：$\\sin(${arg})$。`,
+            walked(
+              [
+                [
+                  ["Expand the double angle", "展开二倍角"],
+                  t("Replace the numerator by the double-angle formula:", "用二倍角公式代替分子："),
+                  [`\\frac{\\sin(${doubleArg})}{2\\cos(${arg})} = \\frac{2\\sin(${arg})\\cos(${arg})}{2\\cos(${arg})}`],
+                ],
+                [
+                  ["Cancel", "约分"],
+                  t(`The factor $2\\cos(${arg})$ is on top and below:`, `分子分母都有因式 $2\\cos(${arg})$：`),
+                  [`\\frac{2\\sin(${arg})\\cos(${arg})}{2\\cos(${arg})} = \\sin(${arg})`],
+                ],
+              ],
+              agreeAt(
+                v,
+                k,
+                `\\frac{\\sin(${doubleArg})}{2\\cos(${arg})}`,
+                `\\sin(${arg})`,
+                (x) => Math.sin(2 * x) / (2 * Math.cos(x)),
+                Math.sin,
+              ),
             ),
+            [
+              [`$\\cos(${arg})$`, "The cosine cancels with the denominator; the sine is what is left.", "余弦与分母约去了；剩下的是正弦。"],
+              [
+                `$\\tan(${arg})$`,
+                "Nothing is left below after cancelling, so no quotient remains.",
+                "约分后分母什么也不剩，所以不会是商。",
+              ],
+              [
+                `$\\sin(${doubleArg})$`,
+                "The numerator has to be expanded and the $2\\cos$ cancelled; it cannot stay as it is.",
+                "分子要先展开，再约去 $2\\cos$；不能保持原样。",
+              ],
+            ],
           );
         }
       },
@@ -4756,8 +5603,24 @@ export const theDoubleAngleFormulaForSine: TopicDef = {
       id: "evaluating-sin-double-angle",
       title: t("Evaluating $\\sin 2\\theta$ from given values", "由已知值求 $\\sin 2\\theta$"),
       explanation: t(
-        "To use $\\sin(2\\theta) = 2\\sin\\theta\\cos\\theta$ you need both the sine and the cosine of $\\theta$. Find the missing one from the Pythagorean identity and the quadrant.\n\nIf $\\sin\\theta = \\frac{3}{5}$ and $\\theta$ is in the first quadrant, then $\\cos\\theta = \\frac{4}{5}$ (from the Pythagorean identity) and:\n\n$$\\sin(2\\theta) = 2\\cdot\\frac{3}{5}\\cdot\\frac{4}{5} = \\frac{24}{25}$$",
-        "要用 $\\sin(2\\theta) = 2\\sin\\theta\\cos\\theta$，需要同时知道 $\\theta$ 的正弦和余弦。由勾股恒等式和所在象限求出缺少的那个。\n\n若 $\\sin\\theta = \\frac{3}{5}$ 且 $\\theta$ 在第一象限，则由勾股恒等式得 $\\cos\\theta = \\frac{4}{5}$，从而：\n\n$$\\sin(2\\theta) = 2\\cdot\\frac{3}{5}\\cdot\\frac{4}{5} = \\frac{24}{25}$$",
+        `To use $\\sin(2\\theta) = 2\\sin\\theta\\cos\\theta$ you need both the sine and the cosine of $\\theta$. The Pythagorean identity gives the size of the missing one, and the quadrant gives its sign.
+
+If $\\sin\\theta = \\frac{3}{5}$ and $\\theta$ is in the second quadrant, then $\\cos^{2}\\theta = 1 - \\frac{9}{25} = \\frac{16}{25}$, and cosine is negative there, so $\\cos\\theta = -\\frac{4}{5}$ and
+
+$$\\sin(2\\theta) = 2 \\cdot \\frac{3}{5} \\cdot \\left(-\\frac{4}{5}\\right) = -\\frac{24}{25}$$
+
+Check: the angle is $\\theta \\approx 143.13^{\\circ}$, and $\\sin 286.26^{\\circ} \\approx -0.9600 = -\\frac{24}{25}$.
+
+> **Watch out.** The sign of the cosine comes from the quadrant, and it decides the sign of the answer. And do not forget the factor $2$: $\\sin\\theta\\cos\\theta$ alone is only half of $\\sin(2\\theta)$.`,
+        `要用 $\\sin(2\\theta) = 2\\sin\\theta\\cos\\theta$，需要同时知道 $\\theta$ 的正弦和余弦。勾股恒等式给出缺少的那个的大小，象限给出它的符号。
+
+若 $\\sin\\theta = \\frac{3}{5}$ 且 $\\theta$ 在第二象限，则 $\\cos^{2}\\theta = 1 - \\frac{9}{25} = \\frac{16}{25}$，而第二象限余弦为负，所以 $\\cos\\theta = -\\frac{4}{5}$，于是
+
+$$\\sin(2\\theta) = 2 \\cdot \\frac{3}{5} \\cdot \\left(-\\frac{4}{5}\\right) = -\\frac{24}{25}$$
+
+检验：这个角是 $\\theta \\approx 143.13^{\\circ}$，而 $\\sin 286.26^{\\circ} \\approx -0.9600 = -\\frac{24}{25}$。
+
+> **注意。** 余弦的符号由象限决定，它又决定答案的符号。也别忘了因数 $2$：单独的 $\\sin\\theta\\cos\\theta$ 只是 $\\sin(2\\theta)$ 的一半。`,
       ),
       generate(rng) {
         const [a, b, c] = rng.pick([
@@ -4790,9 +5653,26 @@ export const theDoubleAngleFormulaForSine: TopicDef = {
           ),
           answer: ans,
           wrong: [w1, w2, w3],
-          solution: t(
-            `In the ${quad.num} quadrant, $\\cos ${v} = ${cosVal.toLatex()}$. Then $\\sin(2${v}) = 2\\cdot(${sinVal.toLatex()})\\cdot(${cosVal.toLatex()}) = ${ans.toLatex()}$.`,
-            `在${quad.numZh}象限中，$\\cos ${v} = ${cosVal.toLatex()}$。则 $\\sin(2${v}) = 2\\cdot(${sinVal.toLatex()})\\cdot(${cosVal.toLatex()}) = ${ans.toLatex()}$。`,
+          solution: walked(
+            [
+              [
+                ["Find the cosine", "求余弦"],
+                t(
+                  `By the Pythagorean identity, and since the cosine is ${quad.cosSign > 0 ? "positive" : "negative"} in the ${quad.num} quadrant,`,
+                  `由勾股恒等式，并且${quad.numZh}象限余弦为${quad.cosSign > 0 ? "正" : "负"}，`,
+                ),
+                [
+                  `\\cos^{2} ${v} = 1 - \\left(${sinVal.toLatex()}\\right)^{2} = \\frac{${b * b}}{${c * c}}`,
+                  `\\cos ${v} = ${cosVal.toLatex()}`,
+                ],
+              ],
+              [
+                ["Use the double-angle formula", "用二倍角公式"],
+                t("Multiply twice the sine by the cosine:", "用正弦的二倍乘以余弦："),
+                [`\\sin(2${v}) = 2 \\cdot \\left(${sinVal.toLatex()}\\right) \\cdot \\left(${cosVal.toLatex()}\\right) = ${ans.toLatex()}`],
+              ],
+            ],
+            angleCheck(v, quad.sinSign * a, quad.cosSign * b, `\\sin(2${v})`, (x) => Math.sin(2 * x), ans.toLatex(), ans.toNumber()),
           ),
           form: "fraction",
         });
@@ -4802,8 +5682,20 @@ export const theDoubleAngleFormulaForSine: TopicDef = {
       id: "rewriting-products-as-sin-double-angle",
       title: t("Rewriting products using the double-angle formula", "用二倍角公式改写乘积"),
       explanation: t(
-        "A product of sine and cosine of the same angle can be written as a single sine of the double angle. Pull out a factor of $2$ first.\n\nThe product $6\\sin x\\cos x$ can be rewritten as $3\\cdot(2\\sin x\\cos x) = 3\\sin(2x)$.",
-        "同一个角的正弦与余弦之积可以写成二倍角的正弦。先凑出因数 $2$。\n\n乘积 $6\\sin x\\cos x$ 可改写为 $3\\cdot(2\\sin x\\cos x) = 3\\sin(2x)$。",
+        `A product of the sine and the cosine of the same angle is half the sine of the double angle, since $2\\sin\\theta\\cos\\theta = \\sin(2\\theta)$. So split off a factor $2$ from the coefficient and collapse:
+
+$$6\\sin x\\cos x = 3 \\cdot (2\\sin x\\cos x) = 3\\sin(2x)$$
+
+Check: at $x = 20^{\\circ}$, $6\\sin 20^{\\circ}\\cos 20^{\\circ} \\approx 6 \\cdot 0.3420 \\cdot 0.9397 \\approx 1.9284$, and $3\\sin 40^{\\circ} \\approx 3 \\cdot 0.6428 = 1.9284$.
+
+> **Watch out.** The $2$ of the formula is used up in the collapse, so the coefficient is halved: $6\\sin x\\cos x$ is $3\\sin(2x)$, not $6\\sin(2x)$. And the angle doubles, from $x$ to $2x$.`,
+        `同一个角的正弦与余弦之积是二倍角正弦的一半，因为 $2\\sin\\theta\\cos\\theta = \\sin(2\\theta)$。所以从系数中分出因数 $2$，再合并：
+
+$$6\\sin x\\cos x = 3 \\cdot (2\\sin x\\cos x) = 3\\sin(2x)$$
+
+检验：当 $x = 20^{\\circ}$ 时，$6\\sin 20^{\\circ}\\cos 20^{\\circ} \\approx 6 \\cdot 0.3420 \\cdot 0.9397 \\approx 1.9284$，而 $3\\sin 40^{\\circ} \\approx 3 \\cdot 0.6428 = 1.9284$。
+
+> **注意。** 公式里的 $2$ 在合并时用掉了，所以系数减半：$6\\sin x\\cos x$ 是 $3\\sin(2x)$，不是 $6\\sin(2x)$。角也加倍，从 $x$ 变成 $2x$。`,
       ),
       generate(rng) {
         const k = rng.pick([1, 2, 3, 4, 5, 6, 7, 8, 9]);
@@ -4830,10 +5722,45 @@ export const theDoubleAngleFormulaForSine: TopicDef = {
             ),
             t(`$${coeff}\\sin(${doubleArg})$`, `$${coeff}\\sin(${doubleArg})$`),
           ],
-          t(
-            `Factor: $${coeff}\\sin(${arg})\\cos(${arg}) = ${k}\\cdot(2\\sin(${arg})\\cos(${arg})) = ${k === 1 ? "" : k}\\sin(${doubleArg})$.`,
-            `提取因子：$${coeff}\\sin(${arg})\\cos(${arg}) = ${k}\\cdot(2\\sin(${arg})\\cos(${arg})) = ${k === 1 ? "" : k}\\sin(${doubleArg})$。`,
+          walked(
+            [
+              [
+                ["Split off the factor 2", "分出因数 2"],
+                t(`The coefficient is $${coeff} = ${k} \\cdot 2$:`, `系数 $${coeff} = ${k} \\cdot 2$：`),
+                [`${coeff}\\sin(${arg})\\cos(${arg}) = ${k}\\cdot\\left(2\\sin(${arg})\\cos(${arg})\\right)`],
+              ],
+              [
+                ["Use the double-angle formula", "用二倍角公式"],
+                t(`Since $2\\sin A\\cos A = \\sin(2A)$ with $A = ${arg}$,`, `由 $2\\sin A\\cos A = \\sin(2A)$，取 $A = ${arg}$，`),
+                [`${k}\\cdot\\left(2\\sin(${arg})\\cos(${arg})\\right) = ${k === 1 ? "" : k}\\sin(${doubleArg})`],
+              ],
+            ],
+            agreeAt(
+              v,
+              m,
+              `${coeff}\\sin(${arg})\\cos(${arg})`,
+              `${k === 1 ? "" : k}\\sin(${doubleArg})`,
+              (x) => coeff * Math.sin(x) * Math.cos(x),
+              (x) => k * Math.sin(2 * x),
+            ),
           ),
+          [
+            [
+              k === 1 ? `$\\sin^2(${arg})$` : `$${k}\\sin^2(${arg})$`,
+              "A square of the sine comes from sine times sine; sine times cosine gives the sine of the double angle.",
+              "正弦的平方来自正弦乘正弦；正弦乘余弦得到二倍角的正弦。",
+            ],
+            [
+              k === 1 ? `$\\cos(${doubleArg})$` : `$${k}\\cos(${doubleArg})$`,
+              "The cosine of the double angle is $\\cos^2 - \\sin^2$, not a product of a sine and a cosine.",
+              "二倍角的余弦是 $\\cos^2 - \\sin^2$，不是正弦与余弦的积。",
+            ],
+            [
+              `$${coeff}\\sin(${doubleArg})$`,
+              `The factor $2$ is used up in $2\\sin A\\cos A = \\sin(2A)$, so only $${k}$ is left in front.`,
+              `因数 $2$ 在 $2\\sin A\\cos A = \\sin(2A)$ 中用掉了，所以前面只剩 $${k}$。`,
+            ],
+          ],
         );
       },
     },
@@ -4854,13 +5781,41 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulaForSine: 
   encompasses: [{ topic: "the-double-angle-formula-for-sine", weight: 0.5 }],
   xp: 18,
   standards: ["CCSS.HSF.TF.C.9"],
+  intro: t(
+    `To verify an identity, rewrite one side step by step until it is the other. When a double angle appears with single angles, replace $\\sin(2\\theta)$ by $2\\sin\\theta\\cos\\theta$ so that every term uses the same angle:
+
+$$\\frac{\\sin(2\\theta)}{\\sin\\theta} = \\frac{2\\sin\\theta\\cos\\theta}{\\sin\\theta} = 2\\cos\\theta$$
+
+Check: at $\\theta = 60^{\\circ}$, $\\frac{\\sin 120^{\\circ}}{\\sin 60^{\\circ}} = 1$ and $2\\cos 60^{\\circ} = 1$.
+
+In this lesson we verify identities with the sine double angle, find $2\\sin\\theta\\cos\\theta$ hidden in squares and factored sums, and get a product from a known double angle.`,
+    `验证恒等式时，把一边逐步改写，直到它成为另一边。当二倍角与单角同时出现时，把 $\\sin(2\\theta)$ 换成 $2\\sin\\theta\\cos\\theta$，使每一项都用同一个角：
+
+$$\\frac{\\sin(2\\theta)}{\\sin\\theta} = \\frac{2\\sin\\theta\\cos\\theta}{\\sin\\theta} = 2\\cos\\theta$$
+
+检验：当 $\\theta = 60^{\\circ}$ 时，$\\frac{\\sin 120^{\\circ}}{\\sin 60^{\\circ}} = 1$，而 $2\\cos 60^{\\circ} = 1$。
+
+这节课我们用正弦的二倍角验证恒等式，找出藏在平方与因式分解中的 $2\\sin\\theta\\cos\\theta$，并由已知的二倍角求积。`,
+  ),
   knowledgePoints: [
     {
       id: "verifying-double-angle-sine-identities",
       title: t("Verifying identities with $\\sin 2\\theta$", "利用 $\\sin 2\\theta$ 验证恒等式"),
       explanation: t(
-        "To verify an identity, transform one side step by step until it matches the other side, here by replacing the sine of a double angle with its formula. To verify $\\frac{\\sin(2\\theta)}{\\sin\\theta} = 2\\cos\\theta$, substitute and simplify the left side:\n\n$$\\frac{\\sin(2\\theta)}{\\sin\\theta} = \\frac{2\\sin\\theta\\cos\\theta}{\\sin\\theta} = 2\\cos\\theta \\checkmark$$",
-        "验证恒等式时，把一边逐步变形，直到与另一边相同；这里是把二倍角的正弦换成它的公式。为验证 $\\frac{\\sin(2\\theta)}{\\sin\\theta} = 2\\cos\\theta$，代入并化简左边：\n\n$$\\frac{\\sin(2\\theta)}{\\sin\\theta} = \\frac{2\\sin\\theta\\cos\\theta}{\\sin\\theta} = 2\\cos\\theta \\checkmark$$",
+        `To verify an identity, transform one side step by step until it matches the other; here that means replacing the sine of the double angle by $2\\sin\\theta\\cos\\theta$ and cancelling. For example,
+
+$$\\sin(2\\theta)\\tan\\theta = 2\\sin\\theta\\cos\\theta \\cdot \\frac{\\sin\\theta}{\\cos\\theta} = 2\\sin^{2}\\theta$$
+
+Check: at $\\theta = 30^{\\circ}$, $\\sin 60^{\\circ}\\tan 30^{\\circ} = \\frac{\\sqrt{3}}{2} \\cdot \\frac{\\sqrt{3}}{3} = \\frac{1}{2}$, and $2\\sin^{2} 30^{\\circ} = 2 \\cdot \\frac{1}{4} = \\frac{1}{2}$.
+
+> **Watch out.** Expand before you cancel: $\\sin(2\\theta)$ has no factor $\\sin\\theta$ until it is written as $2\\sin\\theta\\cos\\theta$, and $\\frac{\\sin 2\\theta}{\\sin\\theta}$ is not $\\sin 2$ or $2$.`,
+        `验证恒等式时，把一边逐步变形直到与另一边相同；这里就是把二倍角的正弦换成 $2\\sin\\theta\\cos\\theta$，再约分。例如
+
+$$\\sin(2\\theta)\\tan\\theta = 2\\sin\\theta\\cos\\theta \\cdot \\frac{\\sin\\theta}{\\cos\\theta} = 2\\sin^{2}\\theta$$
+
+检验：当 $\\theta = 30^{\\circ}$ 时，$\\sin 60^{\\circ}\\tan 30^{\\circ} = \\frac{\\sqrt{3}}{2} \\cdot \\frac{\\sqrt{3}}{3} = \\frac{1}{2}$，而 $2\\sin^{2} 30^{\\circ} = 2 \\cdot \\frac{1}{4} = \\frac{1}{2}$。
+
+> **注意。** 先展开再约分：$\\sin(2\\theta)$ 写成 $2\\sin\\theta\\cos\\theta$ 之前没有因式 $\\sin\\theta$，$\\frac{\\sin 2\\theta}{\\sin\\theta}$ 也不是 $\\sin 2$ 或 $2$。`,
       ),
       generate(rng) {
         const v = rng.pick(["\\theta", "x", "\\alpha", "t", "u"]);
@@ -4879,10 +5834,39 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulaForSine: 
               t(`$\\cos(${doubleArg})$`, `$\\cos(${doubleArg})$`),
               t(`$\\tan(${doubleArg})$`, `$\\tan(${doubleArg})$`),
             ],
-            sol: t(
-              `Substitute $\\sin(${doubleArg}) = 2\\sin(${arg})\\cos(${arg})$: result is $2\\cos(${arg})$.`,
-              `代入 $\\sin(${doubleArg}) = 2\\sin(${arg})\\cos(${arg})$：结果为 $2\\cos(${arg})$。`,
+            sol: walked(
+              [
+                [
+                  ["Expand the double angle", "展开二倍角"],
+                  t("Replace the double angle by $2\\sin A\\cos A$:", "把二倍角换成 $2\\sin A\\cos A$："),
+                  [`\\dfrac{\\sin(${doubleArg})}{\\sin(${arg})} = \\dfrac{2\\sin(${arg})\\cos(${arg})}{\\sin(${arg})}`],
+                ],
+                [
+                  ["Simplify", "化简"],
+                  t("The factor $\\sin A$ cancels:", "因式 $\\sin A$ 约去："),
+                  [`\\dfrac{2\\sin(${arg})\\cos(${arg})}{\\sin(${arg})} = 2\\cos(${arg})`],
+                ],
+              ],
+              agreeAt(
+                v,
+                k,
+                `\\dfrac{\\sin(${doubleArg})}{\\sin(${arg})}`,
+                `2\\cos(${arg})`,
+                (x) => Math.sin(2 * x) / Math.sin(x),
+                (x) => 2 * Math.cos(x),
+              ),
             ),
+            why: [
+              ["The sine cancels; what is left is twice the cosine.", "正弦约去了；剩下的是余弦的二倍。"],
+              [
+                "Cancelling $\\sin A$ from $2\\sin A\\cos A$ leaves $2\\cos A$, a single angle.",
+                "从 $2\\sin A\\cos A$ 中约去 $\\sin A$，剩下 $2\\cos A$，是单角。",
+              ],
+              [
+                "$\\tan(2A)$ would be $\\frac{\\sin 2A}{\\cos 2A}$; here the denominator is $\\sin A$.",
+                "$\\tan(2A)$ 是 $\\frac{\\sin 2A}{\\cos 2A}$；这里的分母是 $\\sin A$。",
+              ],
+            ],
           },
           {
             prompt: t(
@@ -4895,10 +5879,36 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulaForSine: 
               t(`$\\sin(${doubleArg})$`, `$\\sin(${doubleArg})$`),
               t(`$\\tan(${arg})$`, `$\\tan(${arg})$`),
             ],
-            sol: t(
-              `Substitute $\\sin(${doubleArg}) = 2\\sin(${arg})\\cos(${arg})$: result is $\\sin(${arg})$.`,
-              `代入 $\\sin(${doubleArg}) = 2\\sin(${arg})\\cos(${arg})$：结果为 $\\sin(${arg})$。`,
+            sol: walked(
+              [
+                [
+                  ["Expand the double angle", "展开二倍角"],
+                  t("Replace the double angle by $2\\sin A\\cos A$:", "把二倍角换成 $2\\sin A\\cos A$："),
+                  [`\\dfrac{\\sin(${doubleArg})}{2\\cos(${arg})} = \\dfrac{2\\sin(${arg})\\cos(${arg})}{2\\cos(${arg})}`],
+                ],
+                [
+                  ["Simplify", "化简"],
+                  t("The factor $2\\cos A$ cancels:", "因式 $2\\cos A$ 约去："),
+                  [`\\dfrac{2\\sin(${arg})\\cos(${arg})}{2\\cos(${arg})} = \\sin(${arg})`],
+                ],
+              ],
+              agreeAt(
+                v,
+                k,
+                `\\dfrac{\\sin(${doubleArg})}{2\\cos(${arg})}`,
+                `\\sin(${arg})`,
+                (x) => Math.sin(2 * x) / (2 * Math.cos(x)),
+                Math.sin,
+              ),
             ),
+            why: [
+              ["The cosine cancels with the denominator; the sine is left.", "余弦与分母约去了；剩下的是正弦。"],
+              [
+                "The $2\\cos A$ below cancels part of $\\sin(2A) = 2\\sin A\\cos A$, so the angle is no longer doubled.",
+                "分母的 $2\\cos A$ 约去了 $\\sin(2A) = 2\\sin A\\cos A$ 的一部分，所以角不再是二倍角。",
+              ],
+              ["$\\tan A$ would need $\\cos A$ below, but it has cancelled.", "$\\tan A$ 需要分母是 $\\cos A$，但它已经约去了。"],
+            ],
           },
           {
             prompt: t(`Which expression equals $\\sin(${doubleArg})\\tan(${arg})$?`, `哪个表达式等于 $\\sin(${doubleArg})\\tan(${arg})$？`),
@@ -4908,10 +5918,42 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulaForSine: 
               t(`$\\sin(${4 * k}${v})$`, `$\\sin(${4 * k}${v})$`),
               t(`$\\tan(${doubleArg})$`, `$\\tan(${doubleArg})$`),
             ],
-            sol: t(
-              `$\\sin(${doubleArg})\\tan(${arg}) = 2\\sin(${arg})\\cos(${arg})\\cdot\\frac{\\sin(${arg})}{\\cos(${arg})} = 2\\sin^2(${arg})$.`,
-              `$\\sin(${doubleArg})\\tan(${arg}) = 2\\sin(${arg})\\cos(${arg})\\cdot\\frac{\\sin(${arg})}{\\cos(${arg})} = 2\\sin^2(${arg})$。`,
+            sol: walked(
+              [
+                [
+                  ["Expand the double angle", "展开二倍角"],
+                  t("Replace the double angle by $2\\sin A\\cos A$:", "把二倍角换成 $2\\sin A\\cos A$："),
+                  [`\\sin(${doubleArg})\\tan(${arg}) = 2\\sin(${arg})\\cos(${arg})\\cdot\\frac{\\sin(${arg})}{\\cos(${arg})}`],
+                ],
+                [
+                  ["Simplify", "化简"],
+                  t(
+                    "Write $\\tan A = \\frac{\\sin A}{\\cos A}$ and cancel the cosine:",
+                    "把 $\\tan A$ 写成 $\\frac{\\sin A}{\\cos A}$，再约去余弦：",
+                  ),
+                  [`2\\sin(${arg})\\cos(${arg})\\cdot\\frac{\\sin(${arg})}{\\cos(${arg})} = 2\\sin^2(${arg})`],
+                ],
+              ],
+              agreeAt(
+                v,
+                k,
+                `\\sin(${doubleArg})\\tan(${arg})`,
+                `2\\sin^2(${arg})`,
+                (x) => Math.sin(2 * x) * Math.tan(x),
+                (x) => 2 * Math.sin(x) ** 2,
+              ),
             ),
+            why: [
+              [
+                "The cosine cancels against the denominator of $\\tan A$, leaving the sine twice.",
+                "余弦与 $\\tan A$ 的分母约去，剩下两个正弦。",
+              ],
+              ["Multiplying by $\\tan A$ does not double the angle again.", "乘以 $\\tan A$ 不会让角再加倍。"],
+              [
+                "$\\tan(2A)$ is $\\frac{\\sin 2A}{\\cos 2A}$; here $\\sin 2A$ is multiplied, not divided.",
+                "$\\tan(2A)$ 是 $\\frac{\\sin 2A}{\\cos 2A}$；这里 $\\sin 2A$ 是被乘，不是被除。",
+              ],
+            ],
           },
           {
             prompt: t(`Simplify $\\dfrac{\\sin(${doubleArg})}{2}$.`, `化简 $\\dfrac{\\sin(${doubleArg})}{2}$。`),
@@ -4921,22 +5963,63 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulaForSine: 
               t(`$\\cos^2(${arg})$`, `$\\cos^2(${arg})$`),
               t(`$\\sin(${arg})$`, `$\\sin(${arg})$`),
             ],
-            sol: t(
-              `$\\frac{\\sin(${doubleArg})}{2} = \\frac{2\\sin(${arg})\\cos(${arg})}{2} = \\sin(${arg})\\cos(${arg})$.`,
-              `$\\frac{\\sin(${doubleArg})}{2} = \\frac{2\\sin(${arg})\\cos(${arg})}{2} = \\sin(${arg})\\cos(${arg})$。`,
+            sol: walked(
+              [
+                [
+                  ["Expand the double angle", "展开二倍角"],
+                  t("Replace the double angle by $2\\sin A\\cos A$:", "把二倍角换成 $2\\sin A\\cos A$："),
+                  [`\\frac{\\sin(${doubleArg})}{2} = \\frac{2\\sin(${arg})\\cos(${arg})}{2}`],
+                ],
+                [
+                  ["Simplify", "化简"],
+                  t("The $2$ cancels:", "约去 $2$："),
+                  [`\\frac{2\\sin(${arg})\\cos(${arg})}{2} = \\sin(${arg})\\cos(${arg})`],
+                ],
+              ],
+              agreeAt(
+                v,
+                k,
+                `\\frac{\\sin(${doubleArg})}{2}`,
+                `\\sin(${arg})\\cos(${arg})`,
+                (x) => Math.sin(2 * x) / 2,
+                (x) => Math.sin(x) * Math.cos(x),
+              ),
             ),
+            why: [
+              [
+                "Half of $2\\sin A\\cos A$ is one sine times one cosine; $\\sin^2 A$ has lost the cosine.",
+                "$2\\sin A\\cos A$ 的一半是一个正弦乘一个余弦；$\\sin^2 A$ 把余弦弄丢了。",
+              ],
+              [
+                "Half of $2\\sin A\\cos A$ is one sine times one cosine; $\\cos^2 A$ has lost the sine.",
+                "$2\\sin A\\cos A$ 的一半是一个正弦乘一个余弦；$\\cos^2 A$ 把正弦弄丢了。",
+              ],
+              ["The cosine factor stays: only the $2$ cancels.", "余弦因式还在：只约去了 $2$。"],
+            ],
           },
         ];
         const item = rng.pick(identities);
-        return oneOf(rng, item.prompt, item.ans, item.wrong, item.sol);
+        return oneOf(rng, item.prompt, item.ans, item.wrong, item.sol, whyEach(item.wrong, item.why));
       },
     },
     {
       id: "sin-double-angle-inside-squares-and-factors",
       title: t("Finding $\\sin 2\\theta$ inside squares and factored sums", "在平方与因式分解中找出 $\\sin 2\\theta$"),
       explanation: t(
-        "Sometimes the product $2\\sin\\theta\\cos\\theta$ is hidden: it appears as the middle term of a squared binomial, or after a common factor is pulled out. Expand or factor first, use $\\sin^2\\theta + \\cos^2\\theta = 1$ for the rest, and then recognize the double angle:\n\n$$(\\sin\\theta + \\cos\\theta)^2 = \\sin^2\\theta + 2\\sin\\theta\\cos\\theta + \\cos^2\\theta = 1 + \\sin(2\\theta)$$",
-        "有时乘积 $2\\sin\\theta\\cos\\theta$ 是隐藏的：它出现在二项式平方的中间项里，或在提出公因式之后才出现。先展开或因式分解，其余部分用 $\\sin^2\\theta + \\cos^2\\theta = 1$ 化简，再认出二倍角：\n\n$$(\\sin\\theta + \\cos\\theta)^2 = \\sin^2\\theta + 2\\sin\\theta\\cos\\theta + \\cos^2\\theta = 1 + \\sin(2\\theta)$$",
+        `Sometimes the product $2\\sin\\theta\\cos\\theta$ is hidden: it is the middle term of a squared binomial, or it appears after a common factor is pulled out. Expand or factor first, use $\\sin^{2}\\theta + \\cos^{2}\\theta = 1$ for the rest, and then recognize the double angle:
+
+$$(\\sin\\theta + \\cos\\theta)^{2} = \\sin^{2}\\theta + 2\\sin\\theta\\cos\\theta + \\cos^{2}\\theta = 1 + \\sin(2\\theta)$$
+
+Check: at $\\theta = 30^{\\circ}$, $(0.5 + 0.8660)^{2} \\approx 1.8660$, and $1 + \\sin 60^{\\circ} \\approx 1.8660$.
+
+> **Watch out.** The middle term of the square is $2\\sin\\theta\\cos\\theta$, which is already $\\sin(2\\theta)$, so the result is $1 + \\sin(2\\theta)$, not $1 + 2\\sin(2\\theta)$; and squaring a difference gives a minus.`,
+        `有时乘积 $2\\sin\\theta\\cos\\theta$ 是隐藏的：它是二项式平方的中间项，或在提出公因式之后才出现。先展开或分解，其余部分用 $\\sin^{2}\\theta + \\cos^{2}\\theta = 1$ 化简，再认出二倍角：
+
+$$(\\sin\\theta + \\cos\\theta)^{2} = \\sin^{2}\\theta + 2\\sin\\theta\\cos\\theta + \\cos^{2}\\theta = 1 + \\sin(2\\theta)$$
+
+检验：当 $\\theta = 30^{\\circ}$ 时，$(0.5 + 0.8660)^{2} \\approx 1.8660$，而 $1 + \\sin 60^{\\circ} \\approx 1.8660$。
+
+> **注意。** 平方的中间项是 $2\\sin\\theta\\cos\\theta$，它本身就是 $\\sin(2\\theta)$，所以结果是 $1 + \\sin(2\\theta)$，不是 $1 + 2\\sin(2\\theta)$；差的平方中间是减号。`,
       ),
       generate(rng) {
         const v = rng.pick(["\\theta", "x", "\\alpha", "t", "u"]);
@@ -4952,10 +6035,46 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulaForSine: 
             ),
             ans: m(`1 + \\sin(${doubleArg})`),
             wrong: [m(`1`), m(`1 - \\sin(${doubleArg})`), m(`\\sin(${doubleArg})`), m(`1 + 2\\sin(${doubleArg})`)],
-            sol: t(
-              `Expanding gives $\\sin^2(${arg}) + \\cos^2(${arg}) + 2\\sin(${arg})\\cos(${arg}) = 1 + \\sin(${doubleArg})$.`,
-              `展开得 $\\sin^2(${arg}) + \\cos^2(${arg}) + 2\\sin(${arg})\\cos(${arg}) = 1 + \\sin(${doubleArg})$。`,
+            sol: walked(
+              [
+                [
+                  ["Expand the square", "展开平方"],
+                  t("Square the sum term by term:", "逐项展开和的平方："),
+                  [`(\\sin(${arg}) + \\cos(${arg}))^2 = \\sin^2(${arg}) + 2\\sin(${arg})\\cos(${arg}) + \\cos^2(${arg})`],
+                ],
+                [
+                  ["Recognize the identities", "认出恒等式"],
+                  t(
+                    "Use $\\sin^2 A + \\cos^2 A = 1$ and $2\\sin A\\cos A = \\sin(2A)$:",
+                    "利用 $\\sin^2 A + \\cos^2 A = 1$ 与 $2\\sin A\\cos A = \\sin(2A)$：",
+                  ),
+                  [`\\sin^2(${arg}) + \\cos^2(${arg}) + 2\\sin(${arg})\\cos(${arg}) = 1 + \\sin(${doubleArg})`],
+                ],
+              ],
+              agreeAt(
+                v,
+                k,
+                `(\\sin(${arg}) + \\cos(${arg}))^2`,
+                `1 + \\sin(${doubleArg})`,
+                (x) => (Math.sin(x) + Math.cos(x)) ** 2,
+                (x) => 1 + Math.sin(2 * x),
+              ),
             ),
+            why: [
+              [
+                "The middle term $2\\sin A\\cos A$ does not vanish; it is $\\sin(2A)$.",
+                "中间项 $2\\sin A\\cos A$ 不会消失；它就是 $\\sin(2A)$。",
+              ],
+              ["The square of a sum has a plus in the middle.", "和的平方中间是加号。"],
+              [
+                "The squares $\\sin^2 A + \\cos^2 A$ add up to $1$, which has been dropped.",
+                "平方项 $\\sin^2 A + \\cos^2 A$ 合起来是 $1$，被漏掉了。",
+              ],
+              [
+                "$2\\sin A\\cos A$ is already $\\sin(2A)$; it is not doubled again.",
+                "$2\\sin A\\cos A$ 本身就是 $\\sin(2A)$，不能再加倍。",
+              ],
+            ],
           },
           {
             prompt: t(
@@ -4964,10 +6083,46 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulaForSine: 
             ),
             ans: m(`1 - \\sin(${doubleArg})`),
             wrong: [m(`1`), m(`1 + \\sin(${doubleArg})`), m(`-\\cos(${doubleArg})`), m(`1 - 2\\sin(${doubleArg})`)],
-            sol: t(
-              `Expanding gives $\\sin^2(${arg}) + \\cos^2(${arg}) - 2\\sin(${arg})\\cos(${arg}) = 1 - \\sin(${doubleArg})$.`,
-              `展开得 $\\sin^2(${arg}) + \\cos^2(${arg}) - 2\\sin(${arg})\\cos(${arg}) = 1 - \\sin(${doubleArg})$。`,
+            sol: walked(
+              [
+                [
+                  ["Expand the square", "展开平方"],
+                  t("Square the difference term by term:", "逐项展开差的平方："),
+                  [`(\\sin(${arg}) - \\cos(${arg}))^2 = \\sin^2(${arg}) - 2\\sin(${arg})\\cos(${arg}) + \\cos^2(${arg})`],
+                ],
+                [
+                  ["Recognize the identities", "认出恒等式"],
+                  t(
+                    "Use $\\sin^2 A + \\cos^2 A = 1$ and $2\\sin A\\cos A = \\sin(2A)$:",
+                    "利用 $\\sin^2 A + \\cos^2 A = 1$ 与 $2\\sin A\\cos A = \\sin(2A)$：",
+                  ),
+                  [`\\sin^2(${arg}) + \\cos^2(${arg}) - 2\\sin(${arg})\\cos(${arg}) = 1 - \\sin(${doubleArg})`],
+                ],
+              ],
+              agreeAt(
+                v,
+                k,
+                `(\\sin(${arg}) - \\cos(${arg}))^2`,
+                `1 - \\sin(${doubleArg})`,
+                (x) => (Math.sin(x) - Math.cos(x)) ** 2,
+                (x) => 1 - Math.sin(2 * x),
+              ),
             ),
+            why: [
+              [
+                "The middle term $-2\\sin A\\cos A$ does not vanish; it is $-\\sin(2A)$.",
+                "中间项 $-2\\sin A\\cos A$ 不会消失；它是 $-\\sin(2A)$。",
+              ],
+              ["The square of a difference has a minus in the middle.", "差的平方中间是减号。"],
+              [
+                "$-\\cos(2A) = \\sin^2 A - \\cos^2 A$, a difference of the squares, not the square of a difference.",
+                "$-\\cos(2A) = \\sin^2 A - \\cos^2 A$，是平方的差，不是差的平方。",
+              ],
+              [
+                "$2\\sin A\\cos A$ is already $\\sin(2A)$; it is not doubled again.",
+                "$2\\sin A\\cos A$ 本身就是 $\\sin(2A)$，不能再加倍。",
+              ],
+            ],
           },
           {
             prompt: t(
@@ -4976,10 +6131,47 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulaForSine: 
             ),
             ans: m(`\\sin(${doubleArg})`),
             wrong: [m(`\\sin^2(${doubleArg})`), m(`2\\sin(${doubleArg})`), m(`\\cos(${doubleArg})`)],
-            sol: t(
-              `Factor out $2\\sin(${arg})\\cos(${arg})$: it multiplies $\\cos^2(${arg}) + \\sin^2(${arg}) = 1$, leaving $\\sin(${doubleArg})$.`,
-              `提出 $2\\sin(${arg})\\cos(${arg})$：它乘以 $\\cos^2(${arg}) + \\sin^2(${arg}) = 1$，结果为 $\\sin(${doubleArg})$。`,
+            sol: walked(
+              [
+                [
+                  ["Factor", "提公因式"],
+                  t("Both terms share the factor $2\\sin A\\cos A$:", "两项都有因式 $2\\sin A\\cos A$："),
+                  [
+                    `2\\sin(${arg})\\cos^3(${arg}) + 2\\sin^3(${arg})\\cos(${arg}) = 2\\sin(${arg})\\cos(${arg})\\left(\\cos^2(${arg}) + \\sin^2(${arg})\\right)`,
+                  ],
+                ],
+                [
+                  ["Recognize the identities", "认出恒等式"],
+                  t(
+                    "Use $\\sin^2 A + \\cos^2 A = 1$ and $2\\sin A\\cos A = \\sin(2A)$:",
+                    "利用 $\\sin^2 A + \\cos^2 A = 1$ 与 $2\\sin A\\cos A = \\sin(2A)$：",
+                  ),
+                  [`2\\sin(${arg})\\cos(${arg})\\cdot 1 = \\sin(${doubleArg})`],
+                ],
+              ],
+              agreeAt(
+                v,
+                k,
+                `2\\sin(${arg})\\cos^3(${arg}) + 2\\sin^3(${arg})\\cos(${arg})`,
+                `\\sin(${doubleArg})`,
+                (x) => 2 * Math.sin(x) * Math.cos(x) ** 3 + 2 * Math.sin(x) ** 3 * Math.cos(x),
+                (x) => Math.sin(2 * x),
+              ),
             ),
+            why: [
+              [
+                "The bracket $\\cos^2 A + \\sin^2 A$ is $1$, not another $\\sin(2A)$.",
+                "括号 $\\cos^2 A + \\sin^2 A$ 等于 $1$，不是又一个 $\\sin(2A)$。",
+              ],
+              [
+                "The $2$ is part of $2\\sin A\\cos A = \\sin(2A)$, so it is not left over.",
+                "那个 $2$ 是 $2\\sin A\\cos A = \\sin(2A)$ 的一部分，不会剩下。",
+              ],
+              [
+                "The bracket is $\\cos^2 A + \\sin^2 A = 1$, a sum; $\\cos(2A)$ would need the difference.",
+                "括号是和 $\\cos^2 A + \\sin^2 A = 1$；$\\cos(2A)$ 要的是差。",
+              ],
+            ],
           },
           {
             prompt: t(
@@ -4988,14 +6180,44 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulaForSine: 
             ),
             ans: m(`2\\sin(${doubleArg})`),
             wrong: [m(`\\sin(${doubleArg})`), m(`0`), m(`2`), m(`4\\sin(${doubleArg})`)],
-            sol: t(
-              `The squares are $1 + \\sin(${doubleArg})$ and $1 - \\sin(${doubleArg})$, so the difference is $2\\sin(${doubleArg})$.`,
-              `两个平方分别是 $1 + \\sin(${doubleArg})$ 与 $1 - \\sin(${doubleArg})$，故差为 $2\\sin(${doubleArg})$。`,
+            sol: walked(
+              [
+                [
+                  ["Expand both squares", "展开两个平方"],
+                  t("Each square is $1$ plus or minus its middle term:", "每个平方都是 $1$ 加或减中间项："),
+                  [`(\\sin(${arg}) \\pm \\cos(${arg}))^2 = 1 \\pm 2\\sin(${arg})\\cos(${arg}) = 1 \\pm \\sin(${doubleArg})`],
+                ],
+                [
+                  ["Recognize the identities", "认出恒等式"],
+                  t(
+                    "Use $\\sin^2 A + \\cos^2 A = 1$ and $2\\sin A\\cos A = \\sin(2A)$:",
+                    "利用 $\\sin^2 A + \\cos^2 A = 1$ 与 $2\\sin A\\cos A = \\sin(2A)$：",
+                  ),
+                  [`\\left(1 + \\sin(${doubleArg})\\right) - \\left(1 - \\sin(${doubleArg})\\right) = 2\\sin(${doubleArg})`],
+                ],
+              ],
+              agreeAt(
+                v,
+                k,
+                `(\\sin(${arg}) + \\cos(${arg}))^2 - (\\sin(${arg}) - \\cos(${arg}))^2`,
+                `2\\sin(${doubleArg})`,
+                (x) => (Math.sin(x) + Math.cos(x)) ** 2 - (Math.sin(x) - Math.cos(x)) ** 2,
+                (x) => 2 * Math.sin(2 * x),
+              ),
             ),
+            why: [
+              [
+                "Both middle terms count: subtracting $-\\sin(2A)$ adds it, so $\\sin(2A) - (-\\sin(2A)) = 2\\sin(2A)$.",
+                "两个中间项都要算：减去 $-\\sin(2A)$ 就是加上它，所以 $\\sin(2A) - (-\\sin(2A)) = 2\\sin(2A)$。",
+              ],
+              ["The squares differ in the sign of their middle terms, so they do not cancel.", "两个平方的中间项符号不同，所以不会抵消。"],
+              ["The $1$s cancel; it is the middle terms that remain.", "两个 $1$ 抵消了；剩下的是中间项。"],
+              ["$4\\sin A\\cos A$ is $2\\sin(2A)$, not $4\\sin(2A)$.", "$4\\sin A\\cos A$ 是 $2\\sin(2A)$，不是 $4\\sin(2A)$。"],
+            ],
           },
         ];
         const item = rng.pick(items);
-        return oneOf(rng, item.prompt, item.ans, item.wrong, item.sol);
+        return oneOf(rng, item.prompt, item.ans, item.wrong, item.sol, whyEach(item.wrong, item.why));
       },
     },
   ],
@@ -5018,14 +6240,42 @@ export const usingTheDoubleAngleFormulaForSineWithThePythagoreanTheorem: TopicDe
   ],
   xp: 20,
   standards: ["CCSS.HSF.TF.C.9"],
+  intro: t(
+    `The formula $\\sin(2\\theta) = 2\\sin\\theta\\cos\\theta$ needs both ratios, but often only one is given. The Pythagorean identity supplies the size of the other, and the quadrant supplies its sign. If $\\cos\\theta = \\frac{12}{13}$ in quadrant IV, then $\\sin^{2}\\theta = 1 - \\frac{144}{169} = \\frac{25}{169}$ and the sine is negative, so
+
+$$\\sin(2\\theta) = 2 \\cdot \\left(-\\frac{5}{13}\\right) \\cdot \\frac{12}{13} = -\\frac{120}{169}$$
+
+Check: the angle is $\\theta \\approx 337.38^{\\circ}$, and $\\sin 674.76^{\\circ} = \\sin 314.76^{\\circ} \\approx -0.7101 \\approx -\\frac{120}{169}$.
+
+In this lesson we find $\\sin 2\\theta$ from a cosine alone, from a sine alone, and from a tangent, choosing each sign from the quadrant.`,
+    `公式 $\\sin(2\\theta) = 2\\sin\\theta\\cos\\theta$ 需要两个比值，但常常只给出一个。勾股恒等式给出另一个的大小，象限给出它的符号。若 $\\cos\\theta = \\frac{12}{13}$ 且在第四象限，则 $\\sin^{2}\\theta = 1 - \\frac{144}{169} = \\frac{25}{169}$，而正弦为负，所以
+
+$$\\sin(2\\theta) = 2 \\cdot \\left(-\\frac{5}{13}\\right) \\cdot \\frac{12}{13} = -\\frac{120}{169}$$
+
+检验：这个角是 $\\theta \\approx 337.38^{\\circ}$，而 $\\sin 674.76^{\\circ} = \\sin 314.76^{\\circ} \\approx -0.7101 \\approx -\\frac{120}{169}$。
+
+这节课我们只由余弦、只由正弦或由正切求 $\\sin 2\\theta$，并根据象限确定每个符号。`,
+  ),
   knowledgePoints: [
     {
       id: "sin-double-angle-from-cos-only",
       title: t("Finding $\\sin 2\\theta$ from $\\cos\\theta$ in a given quadrant", "由 $\\cos\\theta$ 在给定象限求 $\\sin 2\\theta$"),
       figure: remainingDrawings5["using-the-double-angle-formula-for-sine-with-the-pythagorean-theorem#sin-double-angle-from-cos-only"],
       explanation: t(
-        "When only the cosine is given, find the sine from the Pythagorean identity, choosing its sign from the quadrant, before using the double-angle formula. If $\\cos\\theta = -\\frac{4}{5}$ and $\\theta$ is in quadrant II, then $\\sin\\theta = \\frac{3}{5}$ (positive in QII) and:\n\n$$\\sin(2\\theta) = 2\\cdot\\frac{3}{5}\\cdot\\left(-\\frac{4}{5}\\right) = -\\frac{24}{25}$$",
-        "只给出余弦时，先用勾股恒等式求正弦，并根据所在象限确定符号，再用二倍角公式。若 $\\cos\\theta = -\\frac{4}{5}$ 且 $\\theta$ 在第二象限，则 $\\sin\\theta = \\frac{3}{5}$（第二象限正弦为正），从而：\n\n$$\\sin(2\\theta) = 2\\cdot\\frac{3}{5}\\cdot\\left(-\\frac{4}{5}\\right) = -\\frac{24}{25}$$",
+        `When only the cosine is given, find the sine from $\\sin^{2}\\theta = 1 - \\cos^{2}\\theta$, choose its sign from the quadrant, and then use the double-angle formula. If $\\cos\\theta = -\\frac{4}{5}$ and $\\theta$ is in quadrant II, then $\\sin^{2}\\theta = \\frac{9}{25}$ and sine is positive there, so $\\sin\\theta = \\frac{3}{5}$ and
+
+$$\\sin(2\\theta) = 2\\cdot\\frac{3}{5}\\cdot\\left(-\\frac{4}{5}\\right) = -\\frac{24}{25}$$
+
+Check: the angle is $\\theta \\approx 143.13^{\\circ}$, and $\\sin 286.26^{\\circ} \\approx -0.9600$.
+
+> **Watch out.** The square root gives two signs; the quadrant picks one. A sine and a cosine of opposite signs, in quadrants II and IV, make $\\sin(2\\theta)$ negative.`,
+        `只给出余弦时，由 $\\sin^{2}\\theta = 1 - \\cos^{2}\\theta$ 求正弦，按象限确定符号，再用二倍角公式。若 $\\cos\\theta = -\\frac{4}{5}$ 且 $\\theta$ 在第二象限，则 $\\sin^{2}\\theta = \\frac{9}{25}$，而第二象限正弦为正，所以 $\\sin\\theta = \\frac{3}{5}$，于是
+
+$$\\sin(2\\theta) = 2\\cdot\\frac{3}{5}\\cdot\\left(-\\frac{4}{5}\\right) = -\\frac{24}{25}$$
+
+检验：这个角是 $\\theta \\approx 143.13^{\\circ}$，而 $\\sin 286.26^{\\circ} \\approx -0.9600$。
+
+> **注意。** 开平方有两个符号，象限决定取哪一个。正弦与余弦异号（第二、四象限）时，$\\sin(2\\theta)$ 为负。`,
       ),
       generate(rng) {
         const [a, b, c] = rng.pick([
@@ -5057,9 +6307,26 @@ export const usingTheDoubleAngleFormulaForSineWithThePythagoreanTheorem: TopicDe
           ),
           answer: Q.of(num, den),
           wrong: [Q.of(-num, den), Q.of(Math.abs(num), den), Q.of(2 * a * b, c * c)],
-          solution: t(
-            `In quadrant ${quadrant.quad} the sine is ${quadrant.sinSign > 0 ? "positive" : "negative"}, so $\\sin ${v} = ${quadrant.sinTex}$. So $\\sin(2${v}) = 2\\cdot\\left(${quadrant.sinTex}\\right)\\cdot\\left(${quadrant.cosTex}\\right) = ${ansFrac}$.`,
-            `第${quadrant.quadZh}象限正弦为${quadrant.sinSign > 0 ? "正" : "负"}，所以 $\\sin ${v} = ${quadrant.sinTex}$。故 $\\sin(2${v}) = 2\\cdot\\left(${quadrant.sinTex}\\right)\\cdot\\left(${quadrant.cosTex}\\right) = ${ansFrac}$。`,
+          solution: walked(
+            [
+              [
+                ["Find the sine", "求正弦"],
+                t(
+                  `By the Pythagorean identity, and since the sine is ${quadrant.sinSign > 0 ? "positive" : "negative"} in quadrant ${quadrant.quad},`,
+                  `由勾股恒等式，并且第${quadrant.quadZh}象限正弦为${quadrant.sinSign > 0 ? "正" : "负"}，`,
+                ),
+                [
+                  `\\sin^{2} ${v} = 1 - \\left(${quadrant.cosTex}\\right)^{2} = \\frac{${a * a}}{${c * c}}`,
+                  `\\sin ${v} = ${quadrant.sinTex}`,
+                ],
+              ],
+              [
+                ["Use the double-angle formula", "用二倍角公式"],
+                t("Multiply twice the sine by the cosine:", "用正弦的二倍乘以余弦："),
+                [`\\sin(2${v}) = 2\\cdot\\left(${quadrant.sinTex}\\right)\\cdot\\left(${quadrant.cosTex}\\right) = ${ansFrac}`],
+              ],
+            ],
+            angleCheck(v, sinVal, cosVal, `\\sin(2${v})`, (x) => Math.sin(2 * x), ansFrac, num / den),
           ),
           form: "fraction",
         });
@@ -5069,8 +6336,20 @@ export const usingTheDoubleAngleFormulaForSineWithThePythagoreanTheorem: TopicDe
       id: "sin-double-angle-from-sin-only",
       title: t("Finding $\\sin 2\\theta$ from $\\sin\\theta$ in a given quadrant", "由 $\\sin\\theta$ 在给定象限求 $\\sin 2\\theta$"),
       explanation: t(
-        "When only the sine is given, the cosine comes from $\\cos^2\\theta = 1 - \\sin^2\\theta$, and the quadrant decides its sign. If $\\sin\\theta = -\\frac{5}{13}$ with $\\theta$ in quadrant III, then $\\cos^2\\theta = \\frac{144}{169}$ and the cosine is negative there, so $\\cos\\theta = -\\frac{12}{13}$:\n\n$$\\sin(2\\theta) = 2\\cdot\\left(-\\frac{5}{13}\\right)\\cdot\\left(-\\frac{12}{13}\\right) = \\frac{120}{169}$$",
-        "只给出正弦时，余弦由 $\\cos^2\\theta = 1 - \\sin^2\\theta$ 求出，所在象限决定它的符号。若 $\\sin\\theta = -\\frac{5}{13}$ 且 $\\theta$ 在第三象限，则 $\\cos^2\\theta = \\frac{144}{169}$，而第三象限余弦为负，故 $\\cos\\theta = -\\frac{12}{13}$：\n\n$$\\sin(2\\theta) = 2\\cdot\\left(-\\frac{5}{13}\\right)\\cdot\\left(-\\frac{12}{13}\\right) = \\frac{120}{169}$$",
+        `When only the sine is given, the cosine comes from $\\cos^{2}\\theta = 1 - \\sin^{2}\\theta$, and the quadrant decides its sign. If $\\sin\\theta = -\\frac{5}{13}$ with $\\theta$ in quadrant III, then $\\cos^{2}\\theta = \\frac{144}{169}$ and cosine is negative there, so $\\cos\\theta = -\\frac{12}{13}$ and
+
+$$\\sin(2\\theta) = 2\\cdot\\left(-\\frac{5}{13}\\right)\\cdot\\left(-\\frac{12}{13}\\right) = \\frac{120}{169}$$
+
+Check: the angle is $\\theta \\approx 202.62^{\\circ}$, and $\\sin 405.24^{\\circ} = \\sin 45.24^{\\circ} \\approx 0.7101 \\approx \\frac{120}{169}$.
+
+> **Watch out.** Two negative ratios multiply to a positive product, so in quadrant III $\\sin(2\\theta)$ is positive even though the sine is negative.`,
+        `只给出正弦时，余弦由 $\\cos^{2}\\theta = 1 - \\sin^{2}\\theta$ 求出，象限决定它的符号。若 $\\sin\\theta = -\\frac{5}{13}$ 且 $\\theta$ 在第三象限，则 $\\cos^{2}\\theta = \\frac{144}{169}$，而第三象限余弦为负，所以 $\\cos\\theta = -\\frac{12}{13}$，于是
+
+$$\\sin(2\\theta) = 2\\cdot\\left(-\\frac{5}{13}\\right)\\cdot\\left(-\\frac{12}{13}\\right) = \\frac{120}{169}$$
+
+检验：这个角是 $\\theta \\approx 202.62^{\\circ}$，而 $\\sin 405.24^{\\circ} = \\sin 45.24^{\\circ} \\approx 0.7101 \\approx \\frac{120}{169}$。
+
+> **注意。** 两个负的比值相乘得正，所以在第三象限虽然正弦为负，$\\sin(2\\theta)$ 却是正的。`,
       ),
       generate(rng) {
         const [a, b, c] = rng.pick(_triples);
@@ -5092,9 +6371,31 @@ export const usingTheDoubleAngleFormulaForSineWithThePythagoreanTheorem: TopicDe
           ),
           answer: ans,
           wrong: [ans.neg(), Q.of(2 * quadrant.sinSign * a, c), Q.of(2 * quadrant.sinSign * a * a, c * c)],
-          solution: t(
-            `$\\cos^2 ${v} = 1 - \\frac{${a * a}}{${c * c}} = \\frac{${b * b}}{${c * c}}$, and in quadrant ${quadrant.quad} the cosine is ${quadrant.cosSign > 0 ? "positive" : "negative"}, so $\\cos ${v} = ${cosTex}$. Then $\\sin(2${v}) = 2\\cdot(${sinTex})\\cdot(${cosTex}) = ${ans.toLatex()}$.`,
-            `$\\cos^2 ${v} = 1 - \\frac{${a * a}}{${c * c}} = \\frac{${b * b}}{${c * c}}$，第${quadrant.quadZh}象限余弦为${quadrant.cosSign > 0 ? "正" : "负"}，故 $\\cos ${v} = ${cosTex}$。于是 $\\sin(2${v}) = 2\\cdot(${sinTex})\\cdot(${cosTex}) = ${ans.toLatex()}$。`,
+          solution: walked(
+            [
+              [
+                ["Find the cosine", "求余弦"],
+                t(
+                  `By the Pythagorean identity, and since the cosine is ${quadrant.cosSign > 0 ? "positive" : "negative"} in quadrant ${quadrant.quad},`,
+                  `由勾股恒等式，并且第${quadrant.quadZh}象限余弦为${quadrant.cosSign > 0 ? "正" : "负"}，`,
+                ),
+                [`\\cos^{2} ${v} = 1 - \\frac{${a * a}}{${c * c}} = \\frac{${b * b}}{${c * c}}`, `\\cos ${v} = ${cosTex}`],
+              ],
+              [
+                ["Use the double-angle formula", "用二倍角公式"],
+                t("Multiply twice the sine by the cosine:", "用正弦的二倍乘以余弦："),
+                [`\\sin(2${v}) = 2\\cdot\\left(${sinTex}\\right)\\cdot\\left(${cosTex}\\right) = ${ans.toLatex()}`],
+              ],
+            ],
+            angleCheck(
+              v,
+              quadrant.sinSign * a,
+              quadrant.cosSign * b,
+              `\\sin(2${v})`,
+              (x) => Math.sin(2 * x),
+              ans.toLatex(),
+              ans.toNumber(),
+            ),
           ),
           form: "fraction",
         });
@@ -5117,13 +6418,41 @@ export const theDoubleAngleFormulaForCosine: TopicDef = {
   encompasses: [],
   xp: 18,
   standards: ["CCSS.HSF.TF.C.9"],
+  intro: t(
+    `Putting both angles equal to $\\theta$ in the sum formula for cosine gives
+
+$$\\cos(2\\theta) = \\cos\\theta\\cos\\theta - \\sin\\theta\\sin\\theta = \\cos^{2}\\theta - \\sin^{2}\\theta$$
+
+and replacing one square with the Pythagorean identity gives two more forms, $2\\cos^{2}\\theta - 1$ and $1 - 2\\sin^{2}\\theta$. Check: at $\\theta = 60^{\\circ}$, $\\cos 120^{\\circ} = -\\frac{1}{2}$, and $2\\cos^{2} 60^{\\circ} - 1 = 2 \\cdot \\frac{1}{4} - 1 = -\\frac{1}{2}$.
+
+In this lesson we derive the three forms of the cosine double angle and choose the form that fits the ratio we are given.`,
+    `在余弦和角公式中令两个角都等于 $\\theta$，得
+
+$$\\cos(2\\theta) = \\cos\\theta\\cos\\theta - \\sin\\theta\\sin\\theta = \\cos^{2}\\theta - \\sin^{2}\\theta$$
+
+再用勾股恒等式替换其中一个平方，又得到两种形式 $2\\cos^{2}\\theta - 1$ 与 $1 - 2\\sin^{2}\\theta$。检验：当 $\\theta = 60^{\\circ}$ 时，$\\cos 120^{\\circ} = -\\frac{1}{2}$，而 $2\\cos^{2} 60^{\\circ} - 1 = 2 \\cdot \\frac{1}{4} - 1 = -\\frac{1}{2}$。
+
+这节课我们推出余弦二倍角的三种形式，并根据已知的比值选用合适的形式。`,
+  ),
   knowledgePoints: [
     {
       id: "three-forms-of-cos-double-angle",
       title: t("The three forms of the cosine double-angle formula", "余弦二倍角公式的三种形式"),
       explanation: t(
-        "The cosine double-angle formula has three equivalent forms. Choose the one that uses the information you have, sine only, cosine only, or both.\n\nFrom $\\cos(\\alpha+\\beta) = \\cos\\alpha\\cos\\beta - \\sin\\alpha\\sin\\beta$ with $\\alpha=\\beta=\\theta$:\n\n$$\\cos(2\\theta) = \\cos^2\\theta - \\sin^2\\theta = 2\\cos^2\\theta - 1 = 1 - 2\\sin^2\\theta$$\n\nThe last two forms use $\\sin^2\\theta + \\cos^2\\theta = 1$.",
-        "余弦的二倍角公式有三种等价形式。根据已知条件选择：只有正弦、只有余弦，或者两者都有。\n\n由余弦和角公式令 $\\alpha=\\beta=\\theta$，得：\n\n$$\\cos(2\\theta) = \\cos^2\\theta - \\sin^2\\theta = 2\\cos^2\\theta - 1 = 1 - 2\\sin^2\\theta$$\n\n后两种形式利用了 $\\sin^2\\theta + \\cos^2\\theta = 1$。",
+        `The sum formula $\\cos(\\alpha+\\beta) = \\cos\\alpha\\cos\\beta - \\sin\\alpha\\sin\\beta$ with $\\alpha = \\beta = \\theta$ gives the first form, and $\\sin^{2}\\theta + \\cos^{2}\\theta = 1$ turns it into the other two:
+
+$$\\cos(2\\theta) = \\cos^{2}\\theta - \\sin^{2}\\theta = 2\\cos^{2}\\theta - 1 = 1 - 2\\sin^{2}\\theta$$
+
+Replacing $\\sin^{2}\\theta$ by $1 - \\cos^{2}\\theta$ leaves only cosines; replacing $\\cos^{2}\\theta$ by $1 - \\sin^{2}\\theta$ leaves only sines. Check at $\\theta = 30^{\\circ}$, where $\\cos 60^{\\circ} = \\frac{1}{2}$: $\\frac{3}{4} - \\frac{1}{4} = \\frac{1}{2}$, $2 \\cdot \\frac{3}{4} - 1 = \\frac{1}{2}$ and $1 - 2 \\cdot \\frac{1}{4} = \\frac{1}{2}$.
+
+> **Watch out.** The cosine square comes first: $\\sin^{2}\\theta - \\cos^{2}\\theta$ is $-\\cos(2\\theta)$. And in the one-ratio forms the $2$ multiplies the square, $2\\cos^{2}\\theta - 1$, not the angle.`,
+        `和角公式 $\\cos(\\alpha+\\beta) = \\cos\\alpha\\cos\\beta - \\sin\\alpha\\sin\\beta$ 中令 $\\alpha = \\beta = \\theta$ 得到第一种形式，再用 $\\sin^{2}\\theta + \\cos^{2}\\theta = 1$ 变出另外两种：
+
+$$\\cos(2\\theta) = \\cos^{2}\\theta - \\sin^{2}\\theta = 2\\cos^{2}\\theta - 1 = 1 - 2\\sin^{2}\\theta$$
+
+把 $\\sin^{2}\\theta$ 换成 $1 - \\cos^{2}\\theta$，就只剩余弦；把 $\\cos^{2}\\theta$ 换成 $1 - \\sin^{2}\\theta$，就只剩正弦。在 $\\theta = 30^{\\circ}$ 处检验，这时 $\\cos 60^{\\circ} = \\frac{1}{2}$：$\\frac{3}{4} - \\frac{1}{4} = \\frac{1}{2}$，$2 \\cdot \\frac{3}{4} - 1 = \\frac{1}{2}$，$1 - 2 \\cdot \\frac{1}{4} = \\frac{1}{2}$。
+
+> **注意。** 余弦的平方在前：$\\sin^{2}\\theta - \\cos^{2}\\theta$ 是 $-\\cos(2\\theta)$。只含一个比值的形式里，$2$ 乘的是平方，即 $2\\cos^{2}\\theta - 1$，不是乘角。`,
       ),
       generate(rng) {
         const v = rng.pick(["\\theta", "x", "\\alpha", "t", "u"]);
@@ -5139,10 +6468,45 @@ export const theDoubleAngleFormulaForCosine: TopicDef = {
               t(`$2\\cos^2(${arg}) - 1$`, `$2\\cos^2(${arg}) - 1$`),
               t(`$1 - 2\\sin^2(${arg})$`, `$1 - 2\\sin^2(${arg})$`),
             ],
-            sol: t(
-              `The three valid forms are $\\cos^2(${arg}) - \\sin^2(${arg})$, $2\\cos^2(${arg}) - 1$, and $1 - 2\\sin^2(${arg})$. Note: $\\sin^2 - \\cos^2$ has opposite sign.`,
-              `三种有效形式为 $\\cos^2(${arg}) - \\sin^2(${arg})$、$2\\cos^2(${arg}) - 1$ 和 $1 - 2\\sin^2(${arg})$。注意符号：$\\sin^2 - \\cos^2$ 与之相反。`,
+            sol: walked(
+              [
+                [
+                  ["Start from the sum formula", "从和角公式出发"],
+                  t(`With both angles equal to $A$, the sum formula for cosine gives`, `和角公式中两个角都取 $A$，得`),
+                  [`\\cos(2A) = \\cos A\\cos A - \\sin A\\sin A = \\cos^2 A - \\sin^2 A`],
+                ],
+                [
+                  ["Compare the options", "比较各选项"],
+                  t(
+                    `Replacing one square by the Pythagorean identity gives the other two forms, while the remaining option is the negative:`,
+                    `用勾股恒等式替换一个平方得到另两种形式，而剩下的那个选项是它的相反数：`,
+                  ),
+                  [`\\cos^2 A - \\sin^2 A = 2\\cos^2 A - 1 = 1 - 2\\sin^2 A`, `\\sin^2(${arg}) - \\cos^2(${arg}) = -\\cos(${doubleArg})`],
+                ],
+              ],
+              agreeAt(
+                v,
+                k,
+                `\\sin^2(${arg}) - \\cos^2(${arg})`,
+                `-\\cos(${doubleArg})`,
+                (x) => Math.sin(x) ** 2 - Math.cos(x) ** 2,
+                (x) => -Math.cos(2 * x),
+              ),
             ),
+            why: [
+              [
+                "This is the form the sum formula gives, so it does equal $\\cos(2A)$.",
+                "这正是和角公式给出的形式，所以它确实等于 $\\cos(2A)$。",
+              ],
+              [
+                "This comes from replacing $\\sin^2 A$ by $1 - \\cos^2 A$, so it equals $\\cos(2A)$.",
+                "它来自把 $\\sin^2 A$ 换成 $1 - \\cos^2 A$，所以等于 $\\cos(2A)$。",
+              ],
+              [
+                "This comes from replacing $\\cos^2 A$ by $1 - \\sin^2 A$, so it equals $\\cos(2A)$.",
+                "它来自把 $\\cos^2 A$ 换成 $1 - \\sin^2 A$，所以等于 $\\cos(2A)$。",
+              ],
+            ],
           },
           {
             prompt: t(
@@ -5155,10 +6519,36 @@ export const theDoubleAngleFormulaForCosine: TopicDef = {
               t(`$1 - 2\\sin^2(${arg})$`, `$1 - 2\\sin^2(${arg})$`),
               t(`$2\\cos(${arg})$`, `$2\\cos(${arg})$`),
             ],
-            sol: t(
-              `Replacing $\\sin^2(${arg}) = 1 - \\cos^2(${arg})$ gives $2\\cos^2(${arg}) - 1$.`,
-              `将 $\\sin^2(${arg}) = 1 - \\cos^2(${arg})$ 代入得 $2\\cos^2(${arg}) - 1$。`,
+            sol: walked(
+              [
+                [
+                  ["Start from the sum formula", "从和角公式出发"],
+                  t(`With both angles equal to $A$, the sum formula for cosine gives`, `和角公式中两个角都取 $A$，得`),
+                  [`\\cos(2A) = \\cos A\\cos A - \\sin A\\sin A = \\cos^2 A - \\sin^2 A`],
+                ],
+                [
+                  ["Replace the sine square", "替换正弦的平方"],
+                  t(`Put $\\sin^2 A = 1 - \\cos^2 A$:`, `代入 $\\sin^2 A = 1 - \\cos^2 A$：`),
+                  [`\\cos^2 A - (1 - \\cos^2 A) = 2\\cos^2 A - 1`, `\\cos(${doubleArg}) = 2\\cos^2(${arg}) - 1`],
+                ],
+              ],
+              agreeAt(
+                v,
+                k,
+                `\\cos(${doubleArg})`,
+                `2\\cos^2(${arg}) - 1`,
+                (x) => Math.cos(2 * x),
+                (x) => 2 * Math.cos(x) ** 2 - 1,
+              ),
             ),
+            why: [
+              ["This form also contains the sine.", "这种形式还含有正弦。"],
+              ["This form contains only the sine.", "这种形式只含正弦。"],
+              [
+                "This is not a form of $\\cos(2A)$: at $A = 0$ it gives $2$, while $\\cos 0 = 1$.",
+                "这不是 $\\cos(2A)$ 的形式：$A = 0$ 时它等于 $2$，而 $\\cos 0 = 1$。",
+              ],
+            ],
           },
           {
             prompt: t(
@@ -5171,22 +6561,64 @@ export const theDoubleAngleFormulaForCosine: TopicDef = {
               t(`$2\\cos^2(${arg}) - 1$`, `$2\\cos^2(${arg}) - 1$`),
               t(`$2\\sin(${arg})$`, `$2\\sin(${arg})$`),
             ],
-            sol: t(
-              `Replacing $\\cos^2(${arg}) = 1 - \\sin^2(${arg})$ gives $1 - 2\\sin^2(${arg})$.`,
-              `将 $\\cos^2(${arg}) = 1 - \\sin^2(${arg})$ 代入得 $1 - 2\\sin^2(${arg})$。`,
+            sol: walked(
+              [
+                [
+                  ["Start from the sum formula", "从和角公式出发"],
+                  t(`With both angles equal to $A$, the sum formula for cosine gives`, `和角公式中两个角都取 $A$，得`),
+                  [`\\cos(2A) = \\cos A\\cos A - \\sin A\\sin A = \\cos^2 A - \\sin^2 A`],
+                ],
+                [
+                  ["Replace the cosine square", "替换余弦的平方"],
+                  t(`Put $\\cos^2 A = 1 - \\sin^2 A$:`, `代入 $\\cos^2 A = 1 - \\sin^2 A$：`),
+                  [`(1 - \\sin^2 A) - \\sin^2 A = 1 - 2\\sin^2 A`, `\\cos(${doubleArg}) = 1 - 2\\sin^2(${arg})`],
+                ],
+              ],
+              agreeAt(
+                v,
+                k,
+                `\\cos(${doubleArg})`,
+                `1 - 2\\sin^2(${arg})`,
+                (x) => Math.cos(2 * x),
+                (x) => 1 - 2 * Math.sin(x) ** 2,
+              ),
             ),
+            why: [
+              ["This form also contains the cosine.", "这种形式还含有余弦。"],
+              ["This form contains only the cosine.", "这种形式只含余弦。"],
+              [
+                "This is not a form of $\\cos(2A)$: at $A = 0$ it gives $0$, while $\\cos 0 = 1$.",
+                "这不是 $\\cos(2A)$ 的形式：$A = 0$ 时它等于 $0$，而 $\\cos 0 = 1$。",
+              ],
+            ],
           },
         ];
         const item = rng.pick(items);
-        return oneOf(rng, item.prompt, item.ans, item.wrong, item.sol);
+        return oneOf(rng, item.prompt, item.ans, item.wrong, item.sol, whyEach(item.wrong, item.why));
       },
     },
     {
       id: "evaluating-cos-double-angle",
       title: t("Evaluating $\\cos 2\\theta$ from a given value", "由已知值求 $\\cos 2\\theta$"),
       explanation: t(
-        "Picking the form that matches the given ratio saves a step and avoids worrying about the sign of the other ratio.\n\nIf $\\sin\\theta = \\frac{5}{13}$, use the form $1 - 2\\sin^2\\theta$ (only sine needed):\n\n$$\\cos(2\\theta) = 1 - 2\\left(\\frac{5}{13}\\right)^2 = 1 - \\frac{50}{169} = \\frac{119}{169}$$",
-        "选用与已知三角比相对应的形式，可以省去一步，也不用考虑另一个三角比的符号。\n\n若 $\\sin\\theta = \\frac{5}{13}$，使用只含正弦的形式 $1 - 2\\sin^2\\theta$：\n\n$$\\cos(2\\theta) = 1 - 2\\left(\\frac{5}{13}\\right)^2 = 1 - \\frac{50}{169} = \\frac{119}{169}$$",
+        `Each form of $\\cos(2\\theta)$ needs different information, so pick the form that uses the ratio you are given. Then the other ratio, and its sign, never have to be found: the given ratio is squared, so its sign does not matter either.
+
+If $\\sin\\theta = \\frac{5}{13}$, use the form with the sine alone:
+
+$$\\cos(2\\theta) = 1 - 2\\left(\\frac{5}{13}\\right)^{2} = 1 - \\frac{50}{169} = \\frac{119}{169}$$
+
+Check with the first form: $\\cos^{2}\\theta = 1 - \\frac{25}{169} = \\frac{144}{169}$, and $\\frac{144}{169} - \\frac{25}{169} = \\frac{119}{169}$.
+
+> **Watch out.** Square the ratio before doubling: $2\\sin^{2}\\theta$ is $2\\left(\\frac{5}{13}\\right)^{2} = \\frac{50}{169}$, not $\\left(\\frac{10}{13}\\right)^{2}$. And $\\cos(2\\theta)$ is $\\cos^{2}\\theta - \\sin^{2}\\theta$, not $\\sin^{2}\\theta - \\cos^{2}\\theta$.`,
+        `$\\cos(2\\theta)$ 的每种形式需要的信息不同，所以选用只含已知比值的那种形式。这样就不必求另一个比值和它的符号；已知的比值要平方，它的符号也无关紧要。
+
+若 $\\sin\\theta = \\frac{5}{13}$，用只含正弦的形式：
+
+$$\\cos(2\\theta) = 1 - 2\\left(\\frac{5}{13}\\right)^{2} = 1 - \\frac{50}{169} = \\frac{119}{169}$$
+
+用第一种形式检验：$\\cos^{2}\\theta = 1 - \\frac{25}{169} = \\frac{144}{169}$，而 $\\frac{144}{169} - \\frac{25}{169} = \\frac{119}{169}$。
+
+> **注意。** 先平方再乘 $2$：$2\\sin^{2}\\theta$ 是 $2\\left(\\frac{5}{13}\\right)^{2} = \\frac{50}{169}$，不是 $\\left(\\frac{10}{13}\\right)^{2}$。$\\cos(2\\theta)$ 是 $\\cos^{2}\\theta - \\sin^{2}\\theta$，不是 $\\sin^{2}\\theta - \\cos^{2}\\theta$。`,
       ),
       generate(rng) {
         const [a, b, c] = rng.pick([
@@ -5217,9 +6649,23 @@ export const theDoubleAngleFormulaForCosine: TopicDef = {
             ),
             answer: ans,
             wrong: [wrong1, wrong2, wrong3],
-            solution: t(
-              `Use $\\cos(2${v}) = 1 - 2\\sin^2 ${v} = 1 - 2\\left(${val.toLatex()}\\right)^2 = ${ans.toLatex()}$.`,
-              `使用 $\\cos(2${v}) = 1 - 2\\sin^2 ${v} = 1 - 2\\left(${val.toLatex()}\\right)^2 = ${ans.toLatex()}$。`,
+            solution: walked(
+              [
+                [
+                  ["Choose the form", "选择形式"],
+                  t(`Only the sine is given, so use the form with the sine alone:`, `只给出了正弦，所以用只含正弦的形式：`),
+                  [`\\cos(2${v}) = 1 - 2\\sin^{2} ${v}`],
+                ],
+                [
+                  ["Substitute", "代入"],
+                  t("Square the sine, double it and subtract from $1$:", "把正弦平方，乘以 $2$，再用 $1$ 减去它："),
+                  [`\\cos(2${v}) = 1 - 2\\left(${val.toLatex()}\\right)^{2} = 1 - \\frac{${2 * a * a}}{${c * c}} = ${ans.toLatex()}`],
+                ],
+              ],
+              t(
+                `With the first form: $\\cos^{2} ${v} = 1 - \\frac{${a * a}}{${c * c}} = \\frac{${b * b}}{${c * c}}$, and $\\cos^{2} ${v} - \\sin^{2} ${v} = \\frac{${b * b}}{${c * c}} - \\frac{${a * a}}{${c * c}} = ${ans.toLatex()}$.`,
+                `用第一种形式：$\\cos^{2} ${v} = 1 - \\frac{${a * a}}{${c * c}} = \\frac{${b * b}}{${c * c}}$，而 $\\cos^{2} ${v} - \\sin^{2} ${v} = \\frac{${b * b}}{${c * c}} - \\frac{${a * a}}{${c * c}} = ${ans.toLatex()}$。`,
+              ),
             ),
             form: "fraction",
           });
@@ -5232,9 +6678,23 @@ export const theDoubleAngleFormulaForCosine: TopicDef = {
             ),
             answer: ans,
             wrong: [wrong1, wrong2, wrong3],
-            solution: t(
-              `Use $\\cos(2${v}) = 2\\cos^2 ${v} - 1 = 2\\left(${val.toLatex()}\\right)^2 - 1 = ${ans.toLatex()}$.`,
-              `使用 $\\cos(2${v}) = 2\\cos^2 ${v} - 1 = 2\\left(${val.toLatex()}\\right)^2 - 1 = ${ans.toLatex()}$。`,
+            solution: walked(
+              [
+                [
+                  ["Choose the form", "选择形式"],
+                  t(`Only the cosine is given, so use the form with the cosine alone:`, `只给出了余弦，所以用只含余弦的形式：`),
+                  [`\\cos(2${v}) = 2\\cos^{2} ${v} - 1`],
+                ],
+                [
+                  ["Substitute", "代入"],
+                  t("Square the cosine, double it and subtract $1$:", "把余弦平方，乘以 $2$，再减去 $1$："),
+                  [`\\cos(2${v}) = 2\\left(${val.toLatex()}\\right)^{2} - 1 = \\frac{${2 * b * b}}{${c * c}} - 1 = ${ans.toLatex()}`],
+                ],
+              ],
+              t(
+                `With the first form: $\\sin^{2} ${v} = 1 - \\frac{${b * b}}{${c * c}} = \\frac{${a * a}}{${c * c}}$, and $\\cos^{2} ${v} - \\sin^{2} ${v} = \\frac{${b * b}}{${c * c}} - \\frac{${a * a}}{${c * c}} = ${ans.toLatex()}$.`,
+                `用第一种形式：$\\sin^{2} ${v} = 1 - \\frac{${b * b}}{${c * c}} = \\frac{${a * a}}{${c * c}}$，而 $\\cos^{2} ${v} - \\sin^{2} ${v} = \\frac{${b * b}}{${c * c}} - \\frac{${a * a}}{${c * c}} = ${ans.toLatex()}$。`,
+              ),
             ),
             form: "fraction",
           });
@@ -5258,13 +6718,41 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulasForCosin
   encompasses: [{ topic: "the-double-angle-formula-for-cosine", weight: 0.6 }],
   xp: 18,
   standards: ["CCSS.HSF.TF.C.9"],
+  intro: t(
+    `With three forms of $\\cos(2\\theta)$ to choose from, an identity is verified fastest by the form that cancels something. Next to a $1$, choose the form whose constant cancels it:
+
+$$1 - \\cos(2\\theta) = 1 - (1 - 2\\sin^{2}\\theta) = 2\\sin^{2}\\theta$$
+
+Check: at $\\theta = 30^{\\circ}$, $1 - \\cos 60^{\\circ} = \\frac{1}{2}$, and $2\\sin^{2} 30^{\\circ} = 2 \\cdot \\frac{1}{4} = \\frac{1}{2}$.
+
+In this lesson we choose the form of $\\cos 2\\theta$ that fits an identity, and simplify quotients by factoring and cancelling.`,
+    `$\\cos(2\\theta)$ 有三种形式可选，用能约去某些东西的那种形式验证恒等式最快。旁边有 $1$ 时，选常数项能抵消它的形式：
+
+$$1 - \\cos(2\\theta) = 1 - (1 - 2\\sin^{2}\\theta) = 2\\sin^{2}\\theta$$
+
+检验：当 $\\theta = 30^{\\circ}$ 时，$1 - \\cos 60^{\\circ} = \\frac{1}{2}$，而 $2\\sin^{2} 30^{\\circ} = 2 \\cdot \\frac{1}{4} = \\frac{1}{2}$。
+
+这节课我们选择适合恒等式的 $\\cos 2\\theta$ 形式，并通过分解和约分化简分式。`,
+  ),
   knowledgePoints: [
     {
       id: "choosing-form-for-cos-identity",
       title: t("Choosing the right form of $\\cos 2\\theta$ for verification", "选择合适的 $\\cos 2\\theta$ 形式来验证恒等式"),
       explanation: t(
-        "The cosine of a double angle has three forms, so choose the one that makes the expression match the other side of the identity most directly. To show $1 + \\cos(2\\theta) = 2\\cos^2\\theta$, substitute $\\cos(2\\theta) = 2\\cos^2\\theta - 1$:\n\n$$1 + (2\\cos^2\\theta - 1) = 2\\cos^2\\theta \\checkmark$$",
-        "二倍角的余弦有三种形式，要选择能使式子最直接地与恒等式另一边相同的那一种。为证明 $1 + \\cos(2\\theta) = 2\\cos^2\\theta$，代入 $\\cos(2\\theta) = 2\\cos^2\\theta - 1$：\n\n$$1 + (2\\cos^2\\theta - 1) = 2\\cos^2\\theta \\checkmark$$",
+        `The cosine of a double angle has three forms, so choose the one that makes the expression match the other side most directly. Next to $+1$, the form $2\\cos^{2}\\theta - 1$ cancels the $1$; next to $-1$ or $1 -$, the form $1 - 2\\sin^{2}\\theta$ does:
+
+$$1 + \\cos(2\\theta) = 1 + (2\\cos^{2}\\theta - 1) = 2\\cos^{2}\\theta$$
+
+Check: at $\\theta = 60^{\\circ}$, $1 + \\cos 120^{\\circ} = \\frac{1}{2}$, and $2\\cos^{2} 60^{\\circ} = 2 \\cdot \\frac{1}{4} = \\frac{1}{2}$.
+
+> **Watch out.** Put the whole form in brackets before you subtract: $1 - \\cos(2\\theta) = 1 - (1 - 2\\sin^{2}\\theta)$, whose minus sign flips $-2\\sin^{2}\\theta$ to $+2\\sin^{2}\\theta$.`,
+        `二倍角的余弦有三种形式，要选能使式子最直接地与另一边相同的那种。旁边是 $+1$ 时，形式 $2\\cos^{2}\\theta - 1$ 能抵消 $1$；旁边是 $-1$ 或 $1 -$ 时，用形式 $1 - 2\\sin^{2}\\theta$：
+
+$$1 + \\cos(2\\theta) = 1 + (2\\cos^{2}\\theta - 1) = 2\\cos^{2}\\theta$$
+
+检验：当 $\\theta = 60^{\\circ}$ 时，$1 + \\cos 120^{\\circ} = \\frac{1}{2}$，而 $2\\cos^{2} 60^{\\circ} = 2 \\cdot \\frac{1}{4} = \\frac{1}{2}$。
+
+> **注意。** 相减之前先把整个形式加上括号：$1 - \\cos(2\\theta) = 1 - (1 - 2\\sin^{2}\\theta)$，减号会把 $-2\\sin^{2}\\theta$ 变成 $+2\\sin^{2}\\theta$。`,
       ),
       generate(rng) {
         const v = rng.pick(["\\theta", "x", "\\alpha", "t", "u"]);
@@ -5280,10 +6768,36 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulasForCosin
               t(`$\\cos^2(${arg})$`, `$\\cos^2(${arg})$`),
               t(`$2\\cos(${doubleArg})$`, `$2\\cos(${doubleArg})$`),
             ],
-            sol: t(
-              `Substitute $\\cos(${doubleArg}) = 2\\cos^2(${arg}) - 1$: result is $2\\cos^2(${arg})$.`,
-              `代入 $\\cos(${doubleArg}) = 2\\cos^2(${arg}) - 1$：结果为 $2\\cos^2(${arg})$。`,
+            sol: walked(
+              [
+                [
+                  ["Choose the form", "选择形式"],
+                  t(`The constant of $2\\cos^2 A - 1$ cancels the $1$:`, `$2\\cos^2 A - 1$ 的常数项能抵消 $1$：`),
+                  [`1 + \\cos(${doubleArg}) = 1 + \\left(2\\cos^2(${arg}) - 1\\right)`],
+                ],
+                [
+                  ["Simplify", "化简"],
+                  t(`The ones cancel:`, `两个 $1$ 抵消：`),
+                  [`1 + \\left(2\\cos^2(${arg}) - 1\\right) = 2\\cos^2(${arg})`],
+                ],
+              ],
+              agreeAt(
+                v,
+                k,
+                `1 + \\cos(${doubleArg})`,
+                `2\\cos^2(${arg})`,
+                (x) => 1 + Math.cos(2 * x),
+                (x) => 2 * Math.cos(x) ** 2,
+              ),
             ),
+            why: [
+              ["This is $1 - \\cos(2A)$; here the cosine is added.", "这是 $1 - \\cos(2A)$；这里是加上余弦。"],
+              ["The $2$ of $2\\cos^2 A - 1$ stays after the ones cancel.", "两个 $1$ 抵消后，$2\\cos^2 A - 1$ 中的 $2$ 还在。"],
+              [
+                "Adding $1$ does not double $\\cos(2A)$; replacing $\\cos(2A)$ brings the angle back to $A$.",
+                "加 $1$ 不会让 $\\cos(2A)$ 加倍；替换 $\\cos(2A)$ 后角回到 $A$。",
+              ],
+            ],
           },
           {
             prompt: t(`Which is equal to $1 - \\cos(${doubleArg})$?`, `哪个表达式等于 $1 - \\cos(${doubleArg})$？`),
@@ -5293,10 +6807,36 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulasForCosin
               t(`$\\sin^2(${arg})$`, `$\\sin^2(${arg})$`),
               t(`$-2\\sin^2(${arg})$`, `$-2\\sin^2(${arg})$`),
             ],
-            sol: t(
-              `Substitute $\\cos(${doubleArg}) = 1 - 2\\sin^2(${arg})$: result is $2\\sin^2(${arg})$.`,
-              `代入 $\\cos(${doubleArg}) = 1 - 2\\sin^2(${arg})$：结果为 $2\\sin^2(${arg})$。`,
+            sol: walked(
+              [
+                [
+                  ["Choose the form", "选择形式"],
+                  t(`The constant of $1 - 2\\sin^2 A$ cancels the $1$:`, `$1 - 2\\sin^2 A$ 的常数项能抵消 $1$：`),
+                  [`1 - \\cos(${doubleArg}) = 1 - \\left(1 - 2\\sin^2(${arg})\\right)`],
+                ],
+                [
+                  ["Simplify", "化简"],
+                  t(`The minus sign flips both terms in the brackets:`, `减号使括号里两项都变号：`),
+                  [`1 - 1 + 2\\sin^2(${arg}) = 2\\sin^2(${arg})`],
+                ],
+              ],
+              agreeAt(
+                v,
+                k,
+                `1 - \\cos(${doubleArg})`,
+                `2\\sin^2(${arg})`,
+                (x) => 1 - Math.cos(2 * x),
+                (x) => 2 * Math.sin(x) ** 2,
+              ),
             ),
+            why: [
+              ["This is $1 + \\cos(2A)$; here the cosine is subtracted.", "这是 $1 + \\cos(2A)$；这里是减去余弦。"],
+              ["The $2$ of $1 - 2\\sin^2 A$ stays after the ones cancel.", "两个 $1$ 抵消后，$1 - 2\\sin^2 A$ 中的 $2$ 还在。"],
+              [
+                "Subtracting $1 - 2\\sin^2 A$ flips the sign of $-2\\sin^2 A$, so the result is positive.",
+                "减去 $1 - 2\\sin^2 A$ 会使 $-2\\sin^2 A$ 变号，所以结果为正。",
+              ],
+            ],
           },
           {
             prompt: t(`Simplify $\\cos^2(${arg}) - \\sin^2(${arg})$.`, `化简 $\\cos^2(${arg}) - \\sin^2(${arg})$。`),
@@ -5306,10 +6846,42 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulasForCosin
               t(`$\\cos^2(${doubleArg})$`, `$\\cos^2(${doubleArg})$`),
               t(`$1$`, `$1$`),
             ],
-            sol: t(
-              `By the double-angle formula, $\\cos^2(${arg}) - \\sin^2(${arg}) = \\cos(${doubleArg})$.`,
-              `由二倍角公式，$\\cos^2(${arg}) - \\sin^2(${arg}) = \\cos(${doubleArg})$。`,
+            sol: walked(
+              [
+                [
+                  ["Start from the sum formula", "从和角公式出发"],
+                  t(`With both angles equal to $A$, the sum formula for cosine gives`, `和角公式中两个角都取 $A$，得`),
+                  [`\\cos(2A) = \\cos A\\cos A - \\sin A\\sin A = \\cos^2 A - \\sin^2 A`],
+                ],
+                [
+                  ["Read it backwards", "反过来读"],
+                  t(
+                    `With $A = ${arg}$, the difference of squares is the cosine of the double angle:`,
+                    `取 $A = ${arg}$，平方差就是二倍角的余弦：`,
+                  ),
+                  [`\\cos^2(${arg}) - \\sin^2(${arg}) = \\cos(${doubleArg})`],
+                ],
+              ],
+              agreeAt(
+                v,
+                k,
+                `\\cos^2(${arg}) - \\sin^2(${arg})`,
+                `\\cos(${doubleArg})`,
+                (x) => Math.cos(x) ** 2 - Math.sin(x) ** 2,
+                (x) => Math.cos(2 * x),
+              ),
             ),
+            why: [
+              [
+                "$\\sin(2A)$ is the product $2\\sin A\\cos A$, not a difference of squares.",
+                "$\\sin(2A)$ 是乘积 $2\\sin A\\cos A$，不是平方差。",
+              ],
+              [
+                "The squares belong to the single angle; the double angle appears once, unsquared.",
+                "平方属于单角；二倍角只出现一次，且不平方。",
+              ],
+              ["$1$ is the sum $\\cos^2 A + \\sin^2 A$, not the difference.", "$1$ 是和 $\\cos^2 A + \\sin^2 A$，不是差。"],
+            ],
           },
           {
             prompt: t(`Simplify $2\\cos^2(${arg}) - 1$.`, `化简 $2\\cos^2(${arg}) - 1$。`),
@@ -5319,22 +6891,69 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulasForCosin
               t(`$\\cos^2(${arg})$`, `$\\cos^2(${arg})$`),
               t(`$2\\cos(${doubleArg}) - 1$`, `$2\\cos(${doubleArg}) - 1$`),
             ],
-            sol: t(
-              `$2\\cos^2(${arg}) - 1 = \\cos(${doubleArg})$ is one form of the double-angle formula.`,
-              `$2\\cos^2(${arg}) - 1 = \\cos(${doubleArg})$ 是二倍角公式的一种形式。`,
+            sol: walked(
+              [
+                [
+                  ["Find the form", "找出形式"],
+                  t(
+                    `Replace $\\sin^2 A$ by $1 - \\cos^2 A$ in $\\cos(2A) = \\cos^2 A - \\sin^2 A$:`,
+                    `在 $\\cos(2A) = \\cos^2 A - \\sin^2 A$ 中把 $\\sin^2 A$ 换成 $1 - \\cos^2 A$：`,
+                  ),
+                  [`\\cos(2A) = \\cos^2 A - (1 - \\cos^2 A) = 2\\cos^2 A - 1`],
+                ],
+                [
+                  ["Read it backwards", "反过来读"],
+                  t(`With $A = ${arg}$:`, `取 $A = ${arg}$：`),
+                  [`2\\cos^2(${arg}) - 1 = \\cos(${doubleArg})`],
+                ],
+              ],
+              agreeAt(
+                v,
+                k,
+                `2\\cos^2(${arg}) - 1`,
+                `\\cos(${doubleArg})`,
+                (x) => 2 * Math.cos(x) ** 2 - 1,
+                (x) => Math.cos(2 * x),
+              ),
             ),
+            why: [
+              [
+                "$\\sin(2A)$ is the product $2\\sin A\\cos A$; this expression has only cosines.",
+                "$\\sin(2A)$ 是乘积 $2\\sin A\\cos A$；这个式子只含余弦。",
+              ],
+              [
+                "Taking $1$ from $2\\cos^2 A$ does not leave $\\cos^2 A$; that would need $\\cos^2 A = 1$.",
+                "从 $2\\cos^2 A$ 中减去 $1$ 剩下的不是 $\\cos^2 A$；那要求 $\\cos^2 A = 1$。",
+              ],
+              [
+                "The whole expression $2\\cos^2 A - 1$ is one $\\cos(2A)$; the $2$ and the $1$ are part of it.",
+                "整个 $2\\cos^2 A - 1$ 就是一个 $\\cos(2A)$；$2$ 和 $1$ 都是它的一部分。",
+              ],
+            ],
           },
         ];
         const item = rng.pick(items);
-        return oneOf(rng, item.prompt, item.ans, item.wrong, item.sol);
+        return oneOf(rng, item.prompt, item.ans, item.wrong, item.sol, whyEach(item.wrong, item.why));
       },
     },
     {
       id: "cos-double-angle-in-quotients",
       title: t("Simplifying quotients that contain $\\cos 2\\theta$", "化简含 $\\cos 2\\theta$ 的分式"),
       explanation: t(
-        "In a quotient, pick the form of $\\cos(2\\theta)$ that shares a factor with the other part, then cancel. The form $\\cos^2\\theta - \\sin^2\\theta$ factors as a difference of squares, so it cancels a sum or difference of sine and cosine:\n\n$$\\frac{\\cos(2\\theta)}{\\cos\\theta + \\sin\\theta} = \\frac{(\\cos\\theta - \\sin\\theta)(\\cos\\theta + \\sin\\theta)}{\\cos\\theta + \\sin\\theta} = \\cos\\theta - \\sin\\theta$$\n\nThe forms $1 - 2\\sin^2\\theta$ and $2\\cos^2\\theta - 1$ instead turn $1 \\pm \\cos(2\\theta)$ into a single square.",
-        "在分式中，选择与另一部分有公因式的 $\\cos(2\\theta)$ 形式，然后约分。形式 $\\cos^2\\theta - \\sin^2\\theta$ 可按平方差分解，因此能约去正弦与余弦的和或差：\n\n$$\\frac{\\cos(2\\theta)}{\\cos\\theta + \\sin\\theta} = \\frac{(\\cos\\theta - \\sin\\theta)(\\cos\\theta + \\sin\\theta)}{\\cos\\theta + \\sin\\theta} = \\cos\\theta - \\sin\\theta$$\n\n而形式 $1 - 2\\sin^2\\theta$ 与 $2\\cos^2\\theta - 1$ 则把 $1 \\pm \\cos(2\\theta)$ 变成单个平方。",
+        `In a quotient, pick the form of $\\cos(2\\theta)$ that shares a factor with the other part, then cancel. The form $\\cos^{2}\\theta - \\sin^{2}\\theta$ is a difference of squares, so it cancels a sum or a difference of the cosine and the sine:
+
+$$\\frac{\\cos(2\\theta)}{\\cos\\theta + \\sin\\theta} = \\frac{(\\cos\\theta - \\sin\\theta)(\\cos\\theta + \\sin\\theta)}{\\cos\\theta + \\sin\\theta} = \\cos\\theta - \\sin\\theta$$
+
+The forms $1 - 2\\sin^{2}\\theta$ and $2\\cos^{2}\\theta - 1$ instead turn $1 \\pm \\cos(2\\theta)$ into a single square. Check: at $\\theta = 30^{\\circ}$, $\\frac{\\cos 60^{\\circ}}{\\cos 30^{\\circ} + \\sin 30^{\\circ}} \\approx \\frac{0.5}{1.3660} \\approx 0.3660$, and $\\cos 30^{\\circ} - \\sin 30^{\\circ} \\approx 0.3660$.
+
+> **Watch out.** In the difference of squares the cosine comes first, $(\\cos\\theta - \\sin\\theta)(\\cos\\theta + \\sin\\theta)$; cancelling one factor leaves the other, not $1$.`,
+        `在分式中，选择与另一部分有公因式的 $\\cos(2\\theta)$ 形式，然后约分。形式 $\\cos^{2}\\theta - \\sin^{2}\\theta$ 是平方差，所以能约去余弦与正弦的和或差：
+
+$$\\frac{\\cos(2\\theta)}{\\cos\\theta + \\sin\\theta} = \\frac{(\\cos\\theta - \\sin\\theta)(\\cos\\theta + \\sin\\theta)}{\\cos\\theta + \\sin\\theta} = \\cos\\theta - \\sin\\theta$$
+
+而形式 $1 - 2\\sin^{2}\\theta$ 与 $2\\cos^{2}\\theta - 1$ 则把 $1 \\pm \\cos(2\\theta)$ 变成单个平方。检验：当 $\\theta = 30^{\\circ}$ 时，$\\frac{\\cos 60^{\\circ}}{\\cos 30^{\\circ} + \\sin 30^{\\circ}} \\approx \\frac{0.5}{1.3660} \\approx 0.3660$，而 $\\cos 30^{\\circ} - \\sin 30^{\\circ} \\approx 0.3660$。
+
+> **注意。** 平方差中余弦在前：$(\\cos\\theta - \\sin\\theta)(\\cos\\theta + \\sin\\theta)$；约去一个因式后剩下另一个，不是 $1$。`,
       ),
       generate(rng) {
         const v = rng.pick(["\\theta", "x", "\\alpha", "t", "u"]);
@@ -5349,19 +6968,74 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulasForCosin
             prompt: t(`Simplify $\\dfrac{\\cos(${doubleArg})}{${c} + ${s}}$.`, `化简 $\\dfrac{\\cos(${doubleArg})}{${c} + ${s}}$。`),
             ans: m(`${c} - ${s}`),
             wrong: [m(`${c} + ${s}`), m(`${s} - ${c}`), m(`1`)],
-            sol: t(
-              `$\\cos(${doubleArg}) = (${c} - ${s})(${c} + ${s})$, so the quotient is $${c} - ${s}$.`,
-              `$\\cos(${doubleArg}) = (${c} - ${s})(${c} + ${s})$，故商为 $${c} - ${s}$。`,
+            sol: walked(
+              [
+                [
+                  ["Factor the double angle", "分解二倍角"],
+                  t(
+                    `Write $\\cos(2A) = \\cos^2 A - \\sin^2 A$ as a difference of squares:`,
+                    `把 $\\cos(2A) = \\cos^2 A - \\sin^2 A$ 写成平方差：`,
+                  ),
+                  [`\\cos(${doubleArg}) = (${c} - ${s})(${c} + ${s})`],
+                ],
+                [
+                  ["Cancel", "约分"],
+                  t(`The factor $${c} + ${s}$ is on top and below:`, `分子分母都有因式 $${c} + ${s}$：`),
+                  [`\\dfrac{(${c} - ${s})(${c} + ${s})}{${c} + ${s}} = ${c} - ${s}`],
+                ],
+              ],
+              agreeAt(
+                v,
+                k,
+                `\\dfrac{\\cos(${doubleArg})}{${c} + ${s}}`,
+                `${c} - ${s}`,
+                (x) => Math.cos(2 * x) / (Math.cos(x) + Math.sin(x)),
+                (x) => Math.cos(x) - Math.sin(x),
+              ),
             ),
+            why: [
+              ["This is the factor that cancels; the other factor is what is left.", "这是被约去的因式；剩下的是另一个因式。"],
+              [
+                "The difference of squares is $\\cos^2 A - \\sin^2 A$, so the cosine comes first.",
+                "平方差是 $\\cos^2 A - \\sin^2 A$，所以余弦在前。",
+              ],
+              ["Only one factor cancels; $\\cos(2A)$ is not the denominator itself.", "只约去一个因式；$\\cos(2A)$ 并不等于分母本身。"],
+            ],
           },
           {
             prompt: t(`Simplify $\\dfrac{\\cos(${doubleArg})}{${c} - ${s}}$.`, `化简 $\\dfrac{\\cos(${doubleArg})}{${c} - ${s}}$。`),
             ans: m(`${c} + ${s}`),
             wrong: [m(`${c} - ${s}`), m(`-${c} - ${s}`), m(`1`)],
-            sol: t(
-              `$\\cos(${doubleArg}) = (${c} - ${s})(${c} + ${s})$, so the quotient is $${c} + ${s}$.`,
-              `$\\cos(${doubleArg}) = (${c} - ${s})(${c} + ${s})$，故商为 $${c} + ${s}$。`,
+            sol: walked(
+              [
+                [
+                  ["Factor the double angle", "分解二倍角"],
+                  t(
+                    `Write $\\cos(2A) = \\cos^2 A - \\sin^2 A$ as a difference of squares:`,
+                    `把 $\\cos(2A) = \\cos^2 A - \\sin^2 A$ 写成平方差：`,
+                  ),
+                  [`\\cos(${doubleArg}) = (${c} - ${s})(${c} + ${s})`],
+                ],
+                [
+                  ["Cancel", "约分"],
+                  t(`The factor $${c} - ${s}$ is on top and below:`, `分子分母都有因式 $${c} - ${s}$：`),
+                  [`\\dfrac{(${c} - ${s})(${c} + ${s})}{${c} - ${s}} = ${c} + ${s}`],
+                ],
+              ],
+              agreeAt(
+                v,
+                k,
+                `\\dfrac{\\cos(${doubleArg})}{${c} - ${s}}`,
+                `${c} + ${s}`,
+                (x) => Math.cos(2 * x) / (Math.cos(x) - Math.sin(x)),
+                (x) => Math.cos(x) + Math.sin(x),
+              ),
             ),
+            why: [
+              ["This is the factor that cancels; the other factor is what is left.", "这是被约去的因式；剩下的是另一个因式。"],
+              ["The factor left is $\\cos A + \\sin A$, with both signs positive.", "剩下的因式是 $\\cos A + \\sin A$，两项都为正。"],
+              ["Only one factor cancels; $\\cos(2A)$ is not the denominator itself.", "只约去一个因式；$\\cos(2A)$ 并不等于分母本身。"],
+            ],
           },
           {
             prompt: t(
@@ -5370,10 +7044,36 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulasForCosin
             ),
             ans: m(`\\tan^2(${arg})`),
             wrong: [m(`\\cot^2(${arg})`), m(`\\tan(${arg})`), m(`\\tan^2(${doubleArg})`)],
-            sol: t(
-              `The top is $2\\sin^2(${arg})$ and the bottom is $2\\cos^2(${arg})$, so the quotient is $\\tan^2(${arg})$.`,
-              `分子为 $2\\sin^2(${arg})$，分母为 $2\\cos^2(${arg})$，故商为 $\\tan^2(${arg})$。`,
+            sol: walked(
+              [
+                [
+                  ["Turn each part into a square", "把每部分变成平方"],
+                  t(`Use $1 - 2\\sin^2 A$ on top and $2\\cos^2 A - 1$ below:`, `分子用 $1 - 2\\sin^2 A$，分母用 $2\\cos^2 A - 1$：`),
+                  [`1 - \\cos(${doubleArg}) = 2\\sin^2(${arg})`, `1 + \\cos(${doubleArg}) = 2\\cos^2(${arg})`],
+                ],
+                [
+                  ["Divide", "相除"],
+                  t(`The $2$s cancel and sine over cosine is the tangent:`, `约去 $2$，正弦比余弦是正切：`),
+                  [`\\dfrac{2\\sin^2(${arg})}{2\\cos^2(${arg})} = \\tan^2(${arg})`],
+                ],
+              ],
+              agreeAt(
+                v,
+                k,
+                `\\dfrac{1 - \\cos(${doubleArg})}{1 + \\cos(${doubleArg})}`,
+                `\\tan^2(${arg})`,
+                (x) => (1 - Math.cos(2 * x)) / (1 + Math.cos(2 * x)),
+                (x) => Math.tan(x) ** 2,
+              ),
             ),
+            why: [
+              [
+                "The sine square is on top and the cosine square below, so this is a tangent, not a cotangent.",
+                "正弦的平方在上，余弦的平方在下，所以是正切，不是余切。",
+              ],
+              ["Both parts are squares, so the tangent is squared.", "分子分母都是平方，所以正切要平方。"],
+              ["The forms bring the angle back to $A$; the double angle is gone.", "这些形式让角回到 $A$；二倍角消失了。"],
+            ],
           },
           {
             prompt: t(
@@ -5382,23 +7082,83 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulasForCosin
             ),
             ans: m(`\\tan(${arg})`),
             wrong: [m(`\\cot(${arg})`), m(`\\tan(${doubleArg})`), m(`\\sin(${arg})`)],
-            sol: t(
-              `$\\dfrac{2\\sin^2(${arg})}{2${s}${c}} = \\dfrac{${s}}{${c}} = \\tan(${arg})$.`,
-              `$\\dfrac{2\\sin^2(${arg})}{2${s}${c}} = \\dfrac{${s}}{${c}} = \\tan(${arg})$。`,
+            sol: walked(
+              [
+                [
+                  ["Rewrite both parts", "改写分子分母"],
+                  t(
+                    `Use $1 - \\cos(2A) = 2\\sin^2 A$ on top and $\\sin(2A) = 2\\sin A\\cos A$ below:`,
+                    `分子用 $1 - \\cos(2A) = 2\\sin^2 A$，分母用 $\\sin(2A) = 2\\sin A\\cos A$：`,
+                  ),
+                  [`\\dfrac{1 - \\cos(${doubleArg})}{\\sin(${doubleArg})} = \\dfrac{2\\sin^2(${arg})}{2${s}${c}}`],
+                ],
+                [
+                  ["Cancel", "约分"],
+                  t(`The factor $2${s}$ cancels:`, `约去因式 $2${s}$：`),
+                  [`\\dfrac{2\\sin^2(${arg})}{2${s}${c}} = \\dfrac{${s}}{${c}} = \\tan(${arg})`],
+                ],
+              ],
+              agreeAt(
+                v,
+                k,
+                `\\dfrac{1 - \\cos(${doubleArg})}{\\sin(${doubleArg})}`,
+                `\\tan(${arg})`,
+                (x) => (1 - Math.cos(2 * x)) / Math.sin(2 * x),
+                Math.tan,
+              ),
             ),
+            why: [
+              ["One sine is left on top and the cosine below, so this is a tangent.", "上面剩一个正弦，下面是余弦，所以是正切。"],
+              ["The forms bring the angle back to $A$.", "这些形式让角回到 $A$。"],
+              ["The cosine stays in the denominator.", "余弦还留在分母中。"],
+            ],
           },
           {
             prompt: t(`Simplify $\\cos^4(${arg}) - \\sin^4(${arg})$.`, `化简 $\\cos^4(${arg}) - \\sin^4(${arg})$。`),
             ans: m(`\\cos(${doubleArg})`),
             wrong: [m(`\\cos^2(${doubleArg})`), m(`1`), m(`\\cos(${4 * k}${v})`)],
-            sol: t(
-              `Factor: $(\\cos^2(${arg}) - \\sin^2(${arg}))(\\cos^2(${arg}) + \\sin^2(${arg})) = \\cos(${doubleArg})\\cdot 1$.`,
-              `分解：$(\\cos^2(${arg}) - \\sin^2(${arg}))(\\cos^2(${arg}) + \\sin^2(${arg})) = \\cos(${doubleArg})\\cdot 1$。`,
+            sol: walked(
+              [
+                [
+                  ["Factor", "分解"],
+                  t(`The fourth powers are a difference of squares:`, `四次方是平方差：`),
+                  [
+                    `\\cos^4(${arg}) - \\sin^4(${arg}) = \\left(\\cos^2(${arg}) - \\sin^2(${arg})\\right)\\left(\\cos^2(${arg}) + \\sin^2(${arg})\\right)`,
+                  ],
+                ],
+                [
+                  ["Recognize the factors", "认出各因式"],
+                  t(`The first factor is $\\cos(2A)$ and the second is $1$:`, `第一个因式是 $\\cos(2A)$，第二个是 $1$：`),
+                  [`\\cos(${doubleArg}) \\cdot 1 = \\cos(${doubleArg})`],
+                ],
+              ],
+              agreeAt(
+                v,
+                k,
+                `\\cos^4(${arg}) - \\sin^4(${arg})`,
+                `\\cos(${doubleArg})`,
+                (x) => Math.cos(x) ** 4 - Math.sin(x) ** 4,
+                (x) => Math.cos(2 * x),
+              ),
             ),
+            why: [
+              [
+                "The fourth powers factor into $\\cos(2A)$ times $1$, not $\\cos(2A)$ squared.",
+                "四次方分解成 $\\cos(2A)$ 乘以 $1$，不是 $\\cos(2A)$ 的平方。",
+              ],
+              [
+                "Only the second factor is $1$; the first is $\\cos^2 A - \\sin^2 A = \\cos(2A)$.",
+                "只有第二个因式是 $1$；第一个是 $\\cos^2 A - \\sin^2 A = \\cos(2A)$。",
+              ],
+              [
+                "The angle doubles only once: $\\cos^2 A - \\sin^2 A$ is $\\cos(2A)$.",
+                "角只加倍一次：$\\cos^2 A - \\sin^2 A$ 是 $\\cos(2A)$。",
+              ],
+            ],
           },
         ];
         const item = rng.pick(items);
-        return oneOf(rng, item.prompt, item.ans, item.wrong, item.sol);
+        return oneOf(rng, item.prompt, item.ans, item.wrong, item.sol, whyEach(item.wrong, item.why));
       },
     },
   ],
@@ -5421,113 +7181,182 @@ export const findingExactValuesOfTrigonometricExpressionsUsingTheDoubleAngleForm
   encompasses: [{ topic: "the-double-angle-formula-for-cosine", weight: 0.5 }],
   xp: 20,
   standards: ["CCSS.HSF.TF.C.9"],
+  intro: t(
+    `Read in reverse, a form of $\\cos(2\\theta)$ turns an expression at an awkward angle into a cosine at a special angle. For instance, $2\\cos^{2}(22.5^{\\circ}) - 1$ is $\\cos(2 \\cdot 22.5^{\\circ}) = \\cos 45^{\\circ} = \\frac{\\sqrt{2}}{2}$.
+
+Check: $\\cos 22.5^{\\circ} \\approx 0.9239$, so $2 \\cdot 0.9239^{2} - 1 \\approx 0.7071$, and $\\frac{\\sqrt{2}}{2} \\approx 0.7071$.
+
+In this lesson we evaluate expressions at special angles with the cosine double angle, and find $\\cos^{2}\\theta$ and $\\sin^{2}\\theta$ from a known $\\cos 2\\theta$.`,
+    `把 $\\cos(2\\theta)$ 的形式反过来读，就能把一个不好算的角处的式子变成特殊角的余弦。例如 $2\\cos^{2}(22.5^{\\circ}) - 1$ 就是 $\\cos(2 \\cdot 22.5^{\\circ}) = \\cos 45^{\\circ} = \\frac{\\sqrt{2}}{2}$。
+
+检验：$\\cos 22.5^{\\circ} \\approx 0.9239$，所以 $2 \\cdot 0.9239^{2} - 1 \\approx 0.7071$，而 $\\frac{\\sqrt{2}}{2} \\approx 0.7071$。
+
+这节课我们用余弦二倍角求特殊角处表达式的值，并由已知的 $\\cos 2\\theta$ 求 $\\cos^{2}\\theta$ 与 $\\sin^{2}\\theta$。`,
+  ),
   knowledgePoints: [
     {
       id: "evaluating-cos-2theta-at-special-angles",
       title: t("Evaluating $\\cos 2\\theta$ at special angles", "在特殊角处求 $\\cos 2\\theta$"),
       explanation: t(
-        "When an angle is twice a special angle, the double angle formula expresses its cosine through the known values of the smaller angle. Use a known double angle:\n\n$$\\cos\\left(\\frac{\\pi}{3}\\right) = \\cos\\left(2\\cdot\\frac{\\pi}{6}\\right) = 2\\cos^2\\frac{\\pi}{6} - 1 = 2\\cdot\\frac{3}{4} - 1 = \\frac{1}{2} \\checkmark$$",
-        "当一个角是某个特殊角的两倍时，二倍角公式可以用小角的已知值表示它的余弦。利用已知的二倍角：\n\n$$\\cos\\left(\\frac{\\pi}{3}\\right) = \\cos\\left(2\\cdot\\frac{\\pi}{6}\\right) = 2\\cos^2\\frac{\\pi}{6} - 1 = 2\\cdot\\frac{3}{4} - 1 = \\frac{1}{2} \\checkmark$$",
+        `When an angle is twice a special angle, the double-angle formula gives its cosine from the known values of the smaller angle; and when an expression has the shape $2\\cos^{2} A - 1$ or $1 - 2\\sin^{2} A$, it is the cosine of $2A$:
+
+$$\\cos\\left(\\frac{\\pi}{3}\\right) = \\cos\\left(2\\cdot\\frac{\\pi}{6}\\right) = 2\\cos^{2}\\frac{\\pi}{6} - 1 = 2\\cdot\\frac{3}{4} - 1 = \\frac{1}{2}$$
+
+Check: $\\cos\\frac{\\pi}{6} \\approx 0.8660$, so $2 \\cdot 0.8660^{2} - 1 \\approx 0.5000$, which is $\\frac{1}{2}$.
+
+> **Watch out.** The answer is the cosine of the double angle, not of the angle you started with: $2\\cos^{2}(15^{\\circ}) - 1$ is $\\cos 30^{\\circ}$, not $\\cos 15^{\\circ}$ or $\\sin 30^{\\circ}$.`,
+        `当一个角是某个特殊角的两倍时，二倍角公式可以由小角的已知值求出它的余弦；当一个式子形如 $2\\cos^{2} A - 1$ 或 $1 - 2\\sin^{2} A$ 时，它就是 $2A$ 的余弦：
+
+$$\\cos\\left(\\frac{\\pi}{3}\\right) = \\cos\\left(2\\cdot\\frac{\\pi}{6}\\right) = 2\\cos^{2}\\frac{\\pi}{6} - 1 = 2\\cdot\\frac{3}{4} - 1 = \\frac{1}{2}$$
+
+检验：$\\cos\\frac{\\pi}{6} \\approx 0.8660$，所以 $2 \\cdot 0.8660^{2} - 1 \\approx 0.5000$，就是 $\\frac{1}{2}$。
+
+> **注意。** 答案是二倍角的余弦，不是原来那个角的：$2\\cos^{2}(15^{\\circ}) - 1$ 是 $\\cos 30^{\\circ}$，不是 $\\cos 15^{\\circ}$，也不是 $\\sin 30^{\\circ}$。`,
       ),
       generate(rng) {
-        const items = [
+        const items: {
+          expr: string;
+          half: string;
+          dbl: string;
+          hd: number;
+          kind: "double" | "cos" | "sin";
+          sq?: string;
+          ans: string;
+          wrong: string[];
+        }[] = [
           {
             expr: "\\cos\\left(\\frac{\\pi}{3}\\right)",
             half: "\\frac{\\pi}{6}",
+            dbl: "\\frac{\\pi}{3}",
+            hd: 30,
+            kind: "double",
+            sq: "\\frac{3}{4}",
             ans: "\\frac{1}{2}",
             wrong: ["\\frac{\\sqrt{3}}{2}", "\\frac{\\sqrt{2}}{2}", "-\\frac{1}{2}"],
-            sol: "$\\cos(\\pi/3) = 2\\cos^2(\\pi/6) - 1 = 2\\cdot\\frac{3}{4} - 1 = \\frac{1}{2}$",
           },
           {
             expr: "\\cos\\left(\\frac{2\\pi}{3}\\right)",
             half: "\\frac{\\pi}{3}",
+            dbl: "\\frac{2\\pi}{3}",
+            hd: 60,
+            kind: "double",
+            sq: "\\frac{1}{4}",
             ans: "-\\frac{1}{2}",
             wrong: ["\\frac{1}{2}", "\\frac{\\sqrt{3}}{2}", "-\\frac{\\sqrt{3}}{2}"],
-            sol: "$\\cos(2\\pi/3) = 2\\cos^2(\\pi/3) - 1 = 2\\cdot\\frac{1}{4} - 1 = -\\frac{1}{2}$",
           },
           {
             expr: "\\cos\\left(\\frac{\\pi}{2}\\right)",
             half: "\\frac{\\pi}{4}",
+            dbl: "\\frac{\\pi}{2}",
+            hd: 45,
+            kind: "double",
+            sq: "\\frac{1}{2}",
             ans: "0",
             wrong: ["1", "\\frac{\\sqrt{2}}{2}", "\\frac{1}{2}"],
-            sol: "$\\cos(\\pi/2) = 2\\cos^2(\\pi/4) - 1 = 2\\cdot\\frac{1}{2} - 1 = 0$",
           },
           {
             expr: "\\cos(\\pi)",
             half: "\\frac{\\pi}{2}",
+            dbl: "\\pi",
+            hd: 90,
+            kind: "double",
+            sq: "0",
             ans: "-1",
             wrong: ["0", "1", "-\\frac{1}{2}"],
-            sol: "$\\cos(\\pi) = 2\\cos^2(\\pi/2) - 1 = 2\\cdot 0 - 1 = -1$",
           },
           {
             expr: "\\cos(60^\\circ)",
             half: "30^\\circ",
+            dbl: "60^\\circ",
+            hd: 30,
+            kind: "double",
+            sq: "\\frac{3}{4}",
             ans: "\\frac{1}{2}",
             wrong: ["\\frac{\\sqrt{3}}{2}", "\\frac{\\sqrt{2}}{2}", "1"],
-            sol: "$\\cos(60^\\circ) = 2\\cos^2(30^\\circ) - 1 = 2\\cdot\\frac{3}{4} - 1 = \\frac{1}{2}$",
           },
           {
             expr: "\\cos(90^\\circ)",
             half: "45^\\circ",
+            dbl: "90^\\circ",
+            hd: 45,
+            kind: "double",
+            sq: "\\frac{1}{2}",
             ans: "0",
             wrong: ["1", "\\frac{1}{2}", "\\frac{\\sqrt{2}}{2}"],
-            sol: "$\\cos(90^\\circ) = 2\\cos^2(45^\\circ) - 1 = 2\\cdot\\frac{1}{2} - 1 = 0$",
           },
           {
             expr: "\\cos(120^\\circ)",
             half: "60^\\circ",
+            dbl: "120^\\circ",
+            hd: 60,
+            kind: "double",
+            sq: "\\frac{1}{4}",
             ans: "-\\frac{1}{2}",
             wrong: ["\\frac{1}{2}", "-\\frac{\\sqrt{3}}{2}", "0"],
-            sol: "$\\cos(120^\\circ) = 2\\cos^2(60^\\circ) - 1 = 2\\cdot\\frac{1}{4} - 1 = -\\frac{1}{2}$",
           },
           {
             expr: "\\cos(180^\\circ)",
             half: "90^\\circ",
+            dbl: "180^\\circ",
+            hd: 90,
+            kind: "double",
+            sq: "0",
             ans: "-1",
             wrong: ["0", "1", "-\\frac{1}{2}"],
-            sol: "$\\cos(180^\\circ) = 2\\cos^2(90^\\circ) - 1 = -1$",
           },
           {
             expr: "2\\cos^2(15^\\circ) - 1",
             half: "15^\\circ",
+            dbl: "30^\\circ",
+            hd: 15,
+            kind: "cos",
             ans: "\\frac{\\sqrt{3}}{2}",
             wrong: ["\\frac{1}{2}", "\\frac{\\sqrt{2}}{2}", "1"],
-            sol: "$2\\cos^2(15^\\circ) - 1 = \\cos(30^\\circ) = \\frac{\\sqrt{3}}{2}$",
           },
           {
             expr: "1 - 2\\sin^2(15^\\circ)",
             half: "15^\\circ",
+            dbl: "30^\\circ",
+            hd: 15,
+            kind: "sin",
             ans: "\\frac{\\sqrt{3}}{2}",
             wrong: ["\\frac{1}{2}", "\\frac{\\sqrt{2}}{2}", "-\\frac{\\sqrt{3}}{2}"],
-            sol: "$1 - 2\\sin^2(15^\\circ) = \\cos(30^\\circ) = \\frac{\\sqrt{3}}{2}$",
           },
           {
             expr: "2\\cos^2(22.5^\\circ) - 1",
             half: "22.5^\\circ",
+            dbl: "45^\\circ",
+            hd: 22.5,
+            kind: "cos",
             ans: "\\frac{\\sqrt{2}}{2}",
             wrong: ["\\frac{\\sqrt{3}}{2}", "\\frac{1}{2}", "1"],
-            sol: "$2\\cos^2(22.5^\\circ) - 1 = \\cos(45^\\circ) = \\frac{\\sqrt{2}}{2}$",
           },
           {
             expr: "1 - 2\\sin^2(22.5^\\circ)",
             half: "22.5^\\circ",
+            dbl: "45^\\circ",
+            hd: 22.5,
+            kind: "sin",
             ans: "\\frac{\\sqrt{2}}{2}",
             wrong: ["\\frac{\\sqrt{3}}{2}", "\\frac{1}{2}", "-\\frac{\\sqrt{2}}{2}"],
-            sol: "$1 - 2\\sin^2(22.5^\\circ) = \\cos(45^\\circ) = \\frac{\\sqrt{2}}{2}$",
           },
           {
             expr: "2\\cos^2(75^\\circ) - 1",
             half: "75^\\circ",
+            dbl: "150^\\circ",
+            hd: 75,
+            kind: "cos",
             ans: "-\\frac{\\sqrt{3}}{2}",
             wrong: ["\\frac{\\sqrt{3}}{2}", "-\\frac{1}{2}", "\\frac{1}{2}"],
-            sol: "$2\\cos^2(75^\\circ) - 1 = \\cos(150^\\circ) = -\\frac{\\sqrt{3}}{2}$",
           },
           {
             expr: "1 - 2\\sin^2(75^\\circ)",
             half: "75^\\circ",
+            dbl: "150^\\circ",
+            hd: 75,
+            kind: "sin",
             ans: "-\\frac{\\sqrt{3}}{2}",
             wrong: ["\\frac{\\sqrt{3}}{2}", "-\\frac{1}{2}", "0"],
-            sol: "$1 - 2\\sin^2(75^\\circ) = \\cos(150^\\circ) = -\\frac{\\sqrt{3}}{2}$",
           },
         ];
         const mult = rng.pick([1, 2, 4]);
@@ -5535,6 +7364,92 @@ export const findingExactValuesOfTrigonometricExpressionsUsingTheDoubleAngleForm
         const promptStr = mult === 1 ? item.expr : `${mult}\\left(${item.expr}\\right)`;
         const ansStr = scaleSurd(item.ans, mult);
         const wrongStr = item.wrong.map((w) => `$${scaleSurd(w, mult)}$`);
+        const values: Record<string, number> = {
+          "0": 0,
+          "1": 1,
+          "-1": -1,
+          "\\frac{1}{2}": 0.5,
+          "-\\frac{1}{2}": -0.5,
+          "\\frac{\\sqrt{2}}{2}": Math.SQRT1_2,
+          "-\\frac{\\sqrt{2}}{2}": -Math.SQRT1_2,
+          "\\frac{\\sqrt{3}}{2}": Math.sqrt(3) / 2,
+          "-\\frac{\\sqrt{3}}{2}": -Math.sqrt(3) / 2,
+        };
+        const av = values[item.ans] ?? Number.NaN;
+        const h = `\\left(${item.half}\\right)`;
+        const d = `\\left(${item.dbl}\\right)`;
+        const first: Step =
+          item.kind === "double"
+            ? [
+                ["Write the angle as a double", "把角写成二倍角"],
+                t(
+                  `The angle $${item.dbl}$ is twice $${item.half}$, so use $\\cos(2A) = 2\\cos^2 A - 1$ with $A = ${item.half}$:`,
+                  `角 $${item.dbl}$ 是 $${item.half}$ 的两倍，所以用 $\\cos(2A) = 2\\cos^2 A - 1$，取 $A = ${item.half}$：`,
+                ),
+                [`${item.expr} = \\cos\\left(2\\cdot ${item.half}\\right) = 2\\cos^{2}${h} - 1`],
+              ]
+            : [
+                ["Recognize the double-angle form", "认出二倍角形式"],
+                t(`This is a form of $\\cos(2A)$ with $A = ${item.half}$:`, `这是 $\\cos(2A)$ 的一种形式，其中 $A = ${item.half}$：`),
+                [`${item.expr} = \\cos\\left(2\\cdot ${item.half}\\right) = \\cos${d}`],
+              ];
+        const second: Step =
+          item.kind === "double"
+            ? [
+                ["Use the special value", "代入特殊值"],
+                t(`Here $\\cos^{2}${h} = ${item.sq}$:`, `这里 $\\cos^{2}${h} = ${item.sq}$：`),
+                [`2\\cdot ${item.sq} - 1 = ${item.ans}`],
+              ]
+            : [
+                ["Use the special value", "代入特殊值"],
+                t(`The angle $${item.dbl}$ is a special angle:`, `$${item.dbl}$ 是特殊角：`),
+                [`\\cos${d} = ${item.ans}`],
+              ];
+        const scale: Step[] =
+          mult === 1
+            ? []
+            : [
+                [
+                  ["Multiply", "乘以倍数"],
+                  t(`The expression is $${mult}$ times this value:`, `原式是这个值的 $${mult}$ 倍：`),
+                  [`${mult}\\cdot\\left(${item.ans}\\right) = ${ansStr}`],
+                ],
+              ];
+        const r = rad(item.hd);
+        const fn = item.kind === "sin" ? "\\sin" : "\\cos";
+        const base = item.kind === "sin" ? Math.sin(r) : Math.cos(r);
+        const value = mult * (item.kind === "sin" ? 1 - 2 * base ** 2 : 2 * base ** 2 - 1);
+        const [times, timesZh] = mult === 1 ? ["", ""] : [`${mult} times `, `的 ${mult} 倍`];
+        const reasons = item.wrong.map((w): Reason => {
+          const wv = values[w] ?? Number.NaN;
+          const option = `$${scaleSurd(w, mult)}$`;
+          if (Math.abs(wv + av) < 1e-9) {
+            return [
+              option,
+              `The sign is wrong: $\\cos${d} = ${item.ans}$ is ${av > 0 ? "positive" : "negative"}.`,
+              `符号错了：$\\cos${d} = ${item.ans}$ 是${av > 0 ? "正" : "负"}的。`,
+            ];
+          }
+          if (Math.abs(wv - Math.cos(r)) < 1e-9) {
+            return [
+              option,
+              `This is ${times}the cosine of $${item.half}$ itself; the expression is the cosine of the double angle $${item.dbl}$.`,
+              `这是 $${item.half}$ 本身的余弦${timesZh}；原式是二倍角 $${item.dbl}$ 的余弦。`,
+            ];
+          }
+          if (Math.abs(wv - Math.sin(2 * r)) < 1e-9) {
+            return [
+              option,
+              `This is ${times}the sine of $${item.dbl}$; the double-angle formula gives its cosine.`,
+              `这是 $${item.dbl}$ 的正弦${timesZh}；二倍角公式给出的是它的余弦。`,
+            ];
+          }
+          return [
+            option,
+            `This is ${times}the cosine of another special angle; here the angle is $${item.dbl}$, and $\\cos${d} = ${item.ans}$.`,
+            `这是另一个特殊角的余弦${timesZh}；这里的角是 $${item.dbl}$，而 $\\cos${d} = ${item.ans}$。`,
+          ];
+        });
         return oneOf(
           rng,
           t(
@@ -5543,10 +7458,14 @@ export const findingExactValuesOfTrigonometricExpressionsUsingTheDoubleAngleForm
           ),
           t(`$${ansStr}$`, `$${ansStr}$`),
           wrongStr.map((w) => t(w, w)),
-          t(
-            `${item.sol}${mult === 1 ? "" : `, and multiplying by $${mult}$ gives $${ansStr}$`}.`,
-            `${item.sol}${mult === 1 ? "" : `，乘以 $${mult}$ 得 $${ansStr}$`}。`,
+          walked(
+            [first, second, ...scale],
+            t(
+              `With a calculator, $${fn}${h} \\approx ${dec4(base)}$, so $${promptStr} \\approx ${dec4(value)}$, and $${ansStr} \\approx ${dec4(mult * av)}$.`,
+              `用计算器，$${fn}${h} \\approx ${dec4(base)}$，所以 $${promptStr} \\approx ${dec4(value)}$，而 $${ansStr} \\approx ${dec4(mult * av)}$。`,
+            ),
           ),
+          reasons,
         );
       },
     },
@@ -5557,8 +7476,20 @@ export const findingExactValuesOfTrigonometricExpressionsUsingTheDoubleAngleForm
         "由 $\\cos 2\\theta$ 求 $\\cos^2\\theta$ 或 $\\sin^2\\theta$",
       ),
       explanation: t(
-        "Solving the forms $\\cos(2\\theta) = 2\\cos^2\\theta - 1$ and $\\cos(2\\theta) = 1 - 2\\sin^2\\theta$ for the squares runs the formula in reverse:\n\n$$\\cos^2\\theta = \\frac{1 + \\cos(2\\theta)}{2}, \\qquad \\sin^2\\theta = \\frac{1 - \\cos(2\\theta)}{2}$$\n\nSo a known value of $\\cos(2\\theta)$ gives both squares exactly. If $\\cos(2\\theta) = \\frac{1}{3}$, then $\\cos^2\\theta = \\frac{1 + 1/3}{2} = \\frac{2}{3}$ and $\\sin^2\\theta = \\frac{1}{3}$; the two always add to $1$.",
-        "把 $\\cos(2\\theta) = 2\\cos^2\\theta - 1$ 与 $\\cos(2\\theta) = 1 - 2\\sin^2\\theta$ 解出平方项，就是逆用公式：\n\n$$\\cos^2\\theta = \\frac{1 + \\cos(2\\theta)}{2}, \\qquad \\sin^2\\theta = \\frac{1 - \\cos(2\\theta)}{2}$$\n\n因此已知 $\\cos(2\\theta)$ 的值就能精确求出两个平方。若 $\\cos(2\\theta) = \\frac{1}{3}$，则 $\\cos^2\\theta = \\frac{1 + 1/3}{2} = \\frac{2}{3}$，$\\sin^2\\theta = \\frac{1}{3}$；两者之和总是 $1$。",
+        `Solving the forms $\\cos(2\\theta) = 2\\cos^{2}\\theta - 1$ and $\\cos(2\\theta) = 1 - 2\\sin^{2}\\theta$ for the squares runs the formula in reverse:
+
+$$\\cos^{2}\\theta = \\frac{1 + \\cos(2\\theta)}{2}, \\qquad \\sin^{2}\\theta = \\frac{1 - \\cos(2\\theta)}{2}$$
+
+So a known value of $\\cos(2\\theta)$ gives both squares exactly. If $\\cos(2\\theta) = \\frac{1}{3}$, then $\\cos^{2}\\theta = \\frac{1 + \\frac{1}{3}}{2} = \\frac{2}{3}$ and $\\sin^{2}\\theta = \\frac{1 - \\frac{1}{3}}{2} = \\frac{1}{3}$. Check: the two add to $1$, and $2 \\cdot \\frac{2}{3} - 1 = \\frac{1}{3}$ gives back $\\cos(2\\theta)$.
+
+> **Watch out.** The cosine square takes the plus sign and the sine square the minus sign; and do not forget to divide by $2$: $1 + \\cos(2\\theta)$ alone is twice $\\cos^{2}\\theta$.`,
+        `把 $\\cos(2\\theta) = 2\\cos^{2}\\theta - 1$ 与 $\\cos(2\\theta) = 1 - 2\\sin^{2}\\theta$ 解出平方项，就是逆用公式：
+
+$$\\cos^{2}\\theta = \\frac{1 + \\cos(2\\theta)}{2}, \\qquad \\sin^{2}\\theta = \\frac{1 - \\cos(2\\theta)}{2}$$
+
+因此已知 $\\cos(2\\theta)$ 的值就能精确求出两个平方。若 $\\cos(2\\theta) = \\frac{1}{3}$，则 $\\cos^{2}\\theta = \\frac{1 + \\frac{1}{3}}{2} = \\frac{2}{3}$，$\\sin^{2}\\theta = \\frac{1 - \\frac{1}{3}}{2} = \\frac{1}{3}$。检验：两者之和为 $1$，而且 $2 \\cdot \\frac{2}{3} - 1 = \\frac{1}{3}$ 还原了 $\\cos(2\\theta)$。
+
+> **注意。** 余弦的平方取加号，正弦的平方取减号；别忘了除以 $2$：单独的 $1 + \\cos(2\\theta)$ 是 $\\cos^{2}\\theta$ 的两倍。`,
       ),
       generate(rng) {
         const v = rng.pick(["\\theta", "x", "\\alpha"]);
@@ -5576,9 +7507,28 @@ export const findingExactValuesOfTrigonometricExpressionsUsingTheDoubleAngleForm
           prompt: t(`If $\\cos(2${v}) = ${given.toLatex()}$, find $${sq}$.`, `若 $\\cos(2${v}) = ${given.toLatex()}$，求 $${sq}$。`),
           answer: ans,
           wrong: [other, wantCos ? one.add(given) : one.sub(given), given.mul(half)].filter((w) => !w.eq(ans)),
-          solution: t(
-            `$${sq} = \\dfrac{1 ${sign} \\cos(2${v})}{2} = \\dfrac{1 ${sign} (${given.toLatex()})}{2} = ${ans.toLatex()}$.`,
-            `$${sq} = \\dfrac{1 ${sign} \\cos(2${v})}{2} = \\dfrac{1 ${sign} (${given.toLatex()})}{2} = ${ans.toLatex()}$。`,
+          solution: walked(
+            [
+              [
+                ["Solve the form for the square", "由公式解出平方"],
+                t(
+                  `Solve $\\cos(2${v}) = ${wantCos ? `2\\cos^{2} ${v} - 1` : `1 - 2\\sin^{2} ${v}`}$ for $${sq}$:`,
+                  `由 $\\cos(2${v}) = ${wantCos ? `2\\cos^{2} ${v} - 1` : `1 - 2\\sin^{2} ${v}`}$ 解出 $${sq}$：`,
+                ),
+                [`${sq} = \\dfrac{1 ${sign} \\cos(2${v})}{2}`],
+              ],
+              [
+                ["Substitute", "代入"],
+                t(`Put in $\\cos(2${v}) = ${given.toLatex()}$:`, `代入 $\\cos(2${v}) = ${given.toLatex()}$：`),
+                [
+                  `${sq} = \\dfrac{1 ${sign} \\left(${given.toLatex()}\\right)}{2} = \\dfrac{${(wantCos ? one.add(given) : one.sub(given)).toLatex()}}{2} = ${ans.toLatex()}`,
+                ],
+              ],
+            ],
+            t(
+              `Put it back: $${wantCos ? `2\\cdot ${ans.toLatex()} - 1` : `1 - 2\\cdot ${ans.toLatex()}`} = ${given.toLatex()}$, the given value.`,
+              `代回去：$${wantCos ? `2\\cdot ${ans.toLatex()} - 1` : `1 - 2\\cdot ${ans.toLatex()}`} = ${given.toLatex()}$，正是已知值。`,
+            ),
           ),
           form: "fraction",
         });
@@ -5605,13 +7555,41 @@ export const simplifyingExpressionsUsingTheDoubleAngleFormulaForTangent: TopicDe
   encompasses: [],
   xp: 18,
   standards: ["CCSS.HSF.TF.C.9"],
+  intro: t(
+    `Setting both angles equal in the tangent sum formula gives the tangent of a double angle:
+
+$$\\tan(2\\theta) = \\frac{\\tan\\theta + \\tan\\theta}{1 - \\tan\\theta\\tan\\theta} = \\frac{2\\tan\\theta}{1 - \\tan^{2}\\theta}$$
+
+Check: at $\\theta = 30^{\\circ}$, $\\frac{2 \\cdot \\frac{\\sqrt{3}}{3}}{1 - \\frac{1}{3}} = \\frac{2\\sqrt{3}}{3} \\cdot \\frac{3}{2} = \\sqrt{3} = \\tan 60^{\\circ}$.
+
+In this lesson we find $\\tan 2\\theta$ from $\\tan\\theta$, and recognize the pattern $\\frac{2\\tan\\theta}{1 - \\tan^{2}\\theta}$ to collapse it into one tangent.`,
+    `在正切和角公式中令两个角相等，就得到二倍角的正切：
+
+$$\\tan(2\\theta) = \\frac{\\tan\\theta + \\tan\\theta}{1 - \\tan\\theta\\tan\\theta} = \\frac{2\\tan\\theta}{1 - \\tan^{2}\\theta}$$
+
+检验：当 $\\theta = 30^{\\circ}$ 时，$\\frac{2 \\cdot \\frac{\\sqrt{3}}{3}}{1 - \\frac{1}{3}} = \\frac{2\\sqrt{3}}{3} \\cdot \\frac{3}{2} = \\sqrt{3} = \\tan 60^{\\circ}$。
+
+这节课我们由 $\\tan\\theta$ 求 $\\tan 2\\theta$，并认出 $\\frac{2\\tan\\theta}{1 - \\tan^{2}\\theta}$ 的模式，把它合并成一个正切。`,
+  ),
   knowledgePoints: [
     {
       id: "tan-double-angle-formula",
       title: t("The double-angle formula for tangent", "正切的二倍角公式"),
       explanation: t(
-        "Setting both angles equal in the tangent sum formula gives the double angle formula, which finds the tangent of twice an angle from the tangent of the angle. From the addition formula with $A=B=\\theta$:\n\n$$\\tan(2\\theta) = \\frac{2\\tan\\theta}{1 - \\tan^2\\theta}$$\n\nExample: if $\\tan\\theta = \\frac{1}{2}$, then $\\tan(2\\theta) = \\frac{2\\cdot\\frac{1}{2}}{1 - \\frac{1}{4}} = \\frac{1}{\\frac{3}{4}} = \\frac{4}{3}$.",
-        "在正切和角公式中令两个角相等，就得到二倍角公式，它由一个角的正切求出两倍角的正切。由和角公式令 $A=B=\\theta$，得：\n\n$$\\tan(2\\theta) = \\frac{2\\tan\\theta}{1 - \\tan^2\\theta}$$\n\n例如，若 $\\tan\\theta = \\frac{1}{2}$，则 $\\tan(2\\theta) = \\frac{2\\cdot\\frac{1}{2}}{1 - \\frac{1}{4}} = \\frac{1}{\\frac{3}{4}} = \\frac{4}{3}$。",
+        `Setting $A = B = \\theta$ in $\\tan(A + B) = \\frac{\\tan A + \\tan B}{1 - \\tan A\\tan B}$ gives the tangent of twice an angle from the tangent of the angle:
+
+$$\\tan(2\\theta) = \\frac{2\\tan\\theta}{1 - \\tan^{2}\\theta}$$
+
+If $\\tan\\theta = \\frac{1}{2}$, the top is $2 \\cdot \\frac{1}{2} = 1$ and the bottom is $1 - \\frac{1}{4} = \\frac{3}{4}$, so $\\tan(2\\theta) = \\frac{4}{3}$. Check: $\\theta \\approx 26.57^{\\circ}$, and $\\tan 53.13^{\\circ} \\approx 1.3333 = \\frac{4}{3}$.
+
+> **Watch out.** $\\tan(2\\theta)$ is not $2\\tan\\theta$: the denominator $1 - \\tan^{2}\\theta$ matters, and it has a minus sign, unlike $1 + \\tan^{2}\\theta = \\sec^{2}\\theta$.`,
+        `在 $\\tan(A + B) = \\frac{\\tan A + \\tan B}{1 - \\tan A\\tan B}$ 中令 $A = B = \\theta$，就能由一个角的正切求出两倍角的正切：
+
+$$\\tan(2\\theta) = \\frac{2\\tan\\theta}{1 - \\tan^{2}\\theta}$$
+
+若 $\\tan\\theta = \\frac{1}{2}$，分子是 $2 \\cdot \\frac{1}{2} = 1$，分母是 $1 - \\frac{1}{4} = \\frac{3}{4}$，所以 $\\tan(2\\theta) = \\frac{4}{3}$。检验：$\\theta \\approx 26.57^{\\circ}$，而 $\\tan 53.13^{\\circ} \\approx 1.3333 = \\frac{4}{3}$。
+
+> **注意。** $\\tan(2\\theta)$ 不等于 $2\\tan\\theta$：分母 $1 - \\tan^{2}\\theta$ 不能丢，而且是减号，不同于 $1 + \\tan^{2}\\theta = \\sec^{2}\\theta$。`,
       ),
       generate(rng) {
         const v = rng.pick(["\\theta", "x", "\\alpha", "t", "u"]);
@@ -5642,9 +7620,33 @@ export const simplifyingExpressionsUsingTheDoubleAngleFormulaForTangent: TopicDe
           ),
           answer: tan2val,
           wrong: [wrong2a, wrong2b, wrong2c],
-          solution: t(
-            `$\\tan(2${v}) = \\frac{2\\cdot(${tanVal.toLatex()})}{1 - (${tanVal.toLatex()})^2} = ${tan2val.toLatex()}$.`,
-            `$\\tan(2${v}) = \\frac{2\\cdot(${tanVal.toLatex()})}{1 - (${tanVal.toLatex()})^2} = ${tan2val.toLatex()}$。`,
+          solution: walked(
+            [
+              [
+                ["Write the formula", "写出公式"],
+                t("The sum formula for tangent with both angles equal gives", "正切和角公式中两个角相等，得"),
+                [`\\tan(2${v}) = \\frac{2\\tan ${v}}{1 - \\tan^{2} ${v}}`],
+              ],
+              [
+                ["Work out the top and the bottom", "分别算出分子和分母"],
+                t(`Put in $\\tan ${v} = ${tanVal.toLatex()}$:`, `代入 $\\tan ${v} = ${tanVal.toLatex()}$：`),
+                [
+                  `2\\cdot\\left(${tanVal.toLatex()}\\right) = ${tanVal.mul(Q.of(2)).toLatex()}`,
+                  `1 - \\left(${tanVal.toLatex()}\\right)^{2} = ${Q.of(1).sub(tanVal.mul(tanVal)).toLatex()}`,
+                ],
+              ],
+              [
+                ["Divide", "相除"],
+                t("Divide the top by the bottom:", "用分子除以分母："),
+                [
+                  `\\tan(2${v}) = ${tanVal.mul(Q.of(2)).toLatex()} \\div \\left(${Q.of(1).sub(tanVal.mul(tanVal)).toLatex()}\\right) = ${tan2val.toLatex()}`,
+                ],
+              ],
+            ],
+            t(
+              `The angle with this tangent is $${v} \\approx ${((Math.atan(tanVal.toNumber()) * 180) / Math.PI).toFixed(2)}^{\\circ}$, and $\\tan(2${v}) \\approx ${dec4(Math.tan(2 * Math.atan(tanVal.toNumber())))}$, while $${tan2val.toLatex()} \\approx ${dec4(tan2val.toNumber())}$.`,
+              `具有这个正切的角是 $${v} \\approx ${((Math.atan(tanVal.toNumber()) * 180) / Math.PI).toFixed(2)}^{\\circ}$，而 $\\tan(2${v}) \\approx ${dec4(Math.tan(2 * Math.atan(tanVal.toNumber())))}$，$${tan2val.toLatex()} \\approx ${dec4(tan2val.toNumber())}$。`,
+            ),
           ),
           form: "fraction",
         });
@@ -5654,8 +7656,20 @@ export const simplifyingExpressionsUsingTheDoubleAngleFormulaForTangent: TopicDe
       id: "tan-double-angle-rewriting",
       title: t("Rewriting products as tan double-angle", "将乘积改写为正切二倍角"),
       explanation: t(
-        "When a fraction has twice a tangent on top and one minus its square below, it collapses to the tangent of the doubled angle. To simplify $\\dfrac{2\\tan x}{1 - \\tan^2 x}$, recognize the double-angle pattern:\n\n$$\\frac{2\\tan x}{1 - \\tan^2 x} = \\tan(2x)$$",
-        "当一个分式的分子是正切的两倍、分母是 1 减去它的平方时，它可以合并为两倍角的正切。化简 $\\dfrac{2\\tan x}{1 - \\tan^2 x}$ 时，识别二倍角模式：\n\n$$\\frac{2\\tan x}{1 - \\tan^2 x} = \\tan(2x)$$",
+        `When a fraction has twice a tangent on top and one minus its square below, it collapses to the tangent of the doubled angle, by the double-angle formula read backwards. A common factor of top and bottom cancels first:
+
+$$\\frac{6\\tan x}{3(1 - \\tan^{2} x)} = \\frac{2\\tan x}{1 - \\tan^{2} x} = \\tan(2x)$$
+
+Check: at $x = 20^{\\circ}$, $\\frac{2 \\cdot 0.3640}{1 - 0.1325} \\approx 0.8391$, and $\\tan 40^{\\circ} \\approx 0.8391$.
+
+> **Watch out.** The factor that cancels is the one shared by top and bottom; the $2$ in $2\\tan x$ belongs to the pattern and stays, and the angle doubles.`,
+        `当一个分式的分子是正切的两倍、分母是 1 减去它的平方时，把二倍角公式反过来读，它就合并为两倍角的正切。先约去分子分母的公因数：
+
+$$\\frac{6\\tan x}{3(1 - \\tan^{2} x)} = \\frac{2\\tan x}{1 - \\tan^{2} x} = \\tan(2x)$$
+
+检验：当 $x = 20^{\\circ}$ 时，$\\frac{2 \\cdot 0.3640}{1 - 0.1325} \\approx 0.8391$，而 $\\tan 40^{\\circ} \\approx 0.8391$。
+
+> **注意。** 约去的是分子分母共有的因数；$2\\tan x$ 中的 $2$ 属于公式的模式，要保留，而且角要加倍。`,
       ),
       generate(rng) {
         const v = rng.pick(["x", "\\theta", "t", "\\alpha", "u"]);
@@ -5676,10 +7690,48 @@ export const simplifyingExpressionsUsingTheDoubleAngleFormulaForTangent: TopicDe
             t(`$${kTex}\\tan(${doubleArg})$`, `$${kTex}\\tan(${doubleArg})$`),
             t(`$2\\tan(${arg})$`, `$2\\tan(${arg})$`),
           ],
-          t(
-            `Cancel the factor $${k}$: $\\frac{2\\tan(${arg})}{1 - \\tan^2(${arg})} = \\tan(${doubleArg})$.`,
-            `约去因子 $${k}$：$\\frac{2\\tan(${arg})}{1 - \\tan^2(${arg})} = \\tan(${doubleArg})$。`,
+          walked(
+            [
+              [
+                ["Cancel the common factor", "约去公因数"],
+                t(
+                  `The top is $${2 * k}\\tan(${arg}) = ${k}\\cdot 2\\tan(${arg})$, so $${k}$ cancels:`,
+                  `分子 $${2 * k}\\tan(${arg}) = ${k}\\cdot 2\\tan(${arg})$，所以约去 $${k}$：`,
+                ),
+                [`\\dfrac{${2 * k}\\tan(${arg})}{${k}(1 - \\tan^2(${arg}))} = \\dfrac{2\\tan(${arg})}{1 - \\tan^2(${arg})}`],
+              ],
+              [
+                ["Recognize the pattern", "认出模式"],
+                t(`This is the double-angle formula for tangent with $A = ${arg}$:`, `这是 $A = ${arg}$ 时正切的二倍角公式：`),
+                [`\\dfrac{2\\tan(${arg})}{1 - \\tan^2(${arg})} = \\tan(${doubleArg})`],
+              ],
+            ],
+            agreeAt(
+              v,
+              m,
+              `\\dfrac{${2 * k}\\tan(${arg})}{${k}(1 - \\tan^2(${arg}))}`,
+              `\\tan(${doubleArg})`,
+              (x) => (2 * k * Math.tan(x)) / (k * (1 - Math.tan(x) ** 2)),
+              (x) => Math.tan(2 * x),
+            ),
           ),
+          [
+            [
+              `$\\tan^2(${arg})$`,
+              "The top has the tangent to the first power; the pattern gives the tangent of the double angle, not a square.",
+              "分子中正切是一次方；这个模式给出的是二倍角的正切，不是平方。",
+            ],
+            [
+              `$${k}\\tan(${doubleArg})$`,
+              `The factor $${k}$ is on top and below, so it cancels.`,
+              `因数 $${k}$ 在分子分母中都有，所以约去了。`,
+            ],
+            [
+              `$2\\tan(${arg})$`,
+              "The denominator $1 - \\tan^2 A$ does not cancel; it is part of the pattern.",
+              "分母 $1 - \\tan^2 A$ 约不掉；它是模式的一部分。",
+            ],
+          ],
         );
       },
     },
@@ -5700,13 +7752,37 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulaForTangen
   encompasses: [{ topic: "simplifying-expressions-using-the-double-angle-formula-for-tangent", weight: 0.6 }],
   xp: 20,
   standards: ["CCSS.HSF.TF.C.9"],
+  intro: t(
+    `Identities with $\\tan(2\\theta)$ are verified by writing everything in one language: all in sines and cosines, or all in tangents. For example, $\\frac{2}{\\cot\\theta - \\tan\\theta}$ becomes $\\frac{2\\sin\\theta\\cos\\theta}{\\cos^{2}\\theta - \\sin^{2}\\theta} = \\frac{\\sin 2\\theta}{\\cos 2\\theta} = \\tan(2\\theta)$.
+
+Check: at $\\theta = 30^{\\circ}$, $\\frac{2}{\\sqrt{3} - \\frac{\\sqrt{3}}{3}} = \\frac{2}{\\frac{2\\sqrt{3}}{3}} = \\sqrt{3} = \\tan 60^{\\circ}$.
+
+In this lesson we verify identities with $\\tan 2\\theta$, and write the sine and the cosine of a double angle in terms of $\\tan\\theta$.`,
+    `含 $\\tan(2\\theta)$ 的恒等式，要把所有函数统一成一种写法来验证：都用正弦和余弦，或都用正切。例如，$\\frac{2}{\\cot\\theta - \\tan\\theta}$ 化为 $\\frac{2\\sin\\theta\\cos\\theta}{\\cos^{2}\\theta - \\sin^{2}\\theta} = \\frac{\\sin 2\\theta}{\\cos 2\\theta} = \\tan(2\\theta)$。
+
+检验：当 $\\theta = 30^{\\circ}$ 时，$\\frac{2}{\\sqrt{3} - \\frac{\\sqrt{3}}{3}} = \\frac{2}{\\frac{2\\sqrt{3}}{3}} = \\sqrt{3} = \\tan 60^{\\circ}$。
+
+这节课我们用 $\\tan 2\\theta$ 验证恒等式，并用 $\\tan\\theta$ 表示二倍角的正弦和余弦。`,
+  ),
   knowledgePoints: [
     {
       id: "verifying-tan-double-angle-identities",
       title: t("Verifying identities involving $\\tan 2\\theta$", "验证含 $\\tan 2\\theta$ 的恒等式"),
       explanation: t(
-        "To verify such an identity, rewrite every function in terms of sine and cosine or in terms of tangent, then simplify one side until it matches the other. Verify $\\tan(2\\theta) = \\dfrac{2}{\\cot\\theta - \\tan\\theta}$:\n\n$$\\frac{2}{\\cot\\theta - \\tan\\theta} = \\frac{2}{\\frac{\\cos\\theta}{\\sin\\theta} - \\frac{\\sin\\theta}{\\cos\\theta}} = \\frac{2}{\\frac{\\cos^2\\theta - \\sin^2\\theta}{\\sin\\theta\\cos\\theta}} = \\frac{2\\sin\\theta\\cos\\theta}{\\cos^2\\theta - \\sin^2\\theta} = \\frac{\\sin(2\\theta)}{\\cos(2\\theta)} = \\tan(2\\theta) \\checkmark$$",
-        "验证这样的恒等式时，把所有函数都用正弦和余弦或都用正切表示，再化简一边直到与另一边相同。验证 $\\tan(2\\theta) = \\dfrac{2}{\\cot\\theta - \\tan\\theta}$：\n\n$$\\frac{2}{\\cot\\theta - \\tan\\theta} = \\frac{2}{\\frac{\\cos\\theta}{\\sin\\theta} - \\frac{\\sin\\theta}{\\cos\\theta}} = \\frac{2}{\\frac{\\cos^2\\theta - \\sin^2\\theta}{\\sin\\theta\\cos\\theta}} = \\frac{2\\sin\\theta\\cos\\theta}{\\cos^2\\theta - \\sin^2\\theta} = \\frac{\\sin(2\\theta)}{\\cos(2\\theta)} = \\tan(2\\theta) \\checkmark$$",
+        `To verify such an identity, rewrite every function in terms of sine and cosine, or in terms of tangent, then simplify one side until it matches the other:
+
+$$\\frac{2}{\\cot\\theta - \\tan\\theta} = \\frac{2}{\\frac{\\cos^{2}\\theta - \\sin^{2}\\theta}{\\sin\\theta\\cos\\theta}} = \\frac{2\\sin\\theta\\cos\\theta}{\\cos^{2}\\theta - \\sin^{2}\\theta} = \\frac{\\sin(2\\theta)}{\\cos(2\\theta)} = \\tan(2\\theta)$$
+
+Check: at $\\theta = 20^{\\circ}$, $\\cot 20^{\\circ} - \\tan 20^{\\circ} \\approx 2.7475 - 0.3640 = 2.3835$, so the left side is $\\approx 0.8391$, and $\\tan 40^{\\circ} \\approx 0.8391$.
+
+> **Watch out.** Combine fractions over a common denominator before you divide, and keep the double angle: $\\frac{2\\sin\\theta\\cos\\theta}{\\cos^{2}\\theta - \\sin^{2}\\theta}$ is $\\tan(2\\theta)$, not $\\tan\\theta$.`,
+        `验证这样的恒等式时，把所有函数都用正弦和余弦或都用正切表示，再化简一边直到与另一边相同：
+
+$$\\frac{2}{\\cot\\theta - \\tan\\theta} = \\frac{2}{\\frac{\\cos^{2}\\theta - \\sin^{2}\\theta}{\\sin\\theta\\cos\\theta}} = \\frac{2\\sin\\theta\\cos\\theta}{\\cos^{2}\\theta - \\sin^{2}\\theta} = \\frac{\\sin(2\\theta)}{\\cos(2\\theta)} = \\tan(2\\theta)$$
+
+检验：当 $\\theta = 20^{\\circ}$ 时，$\\cot 20^{\\circ} - \\tan 20^{\\circ} \\approx 2.7475 - 0.3640 = 2.3835$，所以左边 $\\approx 0.8391$，而 $\\tan 40^{\\circ} \\approx 0.8391$。
+
+> **注意。** 先通分再相除，并且保留二倍角：$\\frac{2\\sin\\theta\\cos\\theta}{\\cos^{2}\\theta - \\sin^{2}\\theta}$ 是 $\\tan(2\\theta)$，不是 $\\tan\\theta$。`,
       ),
       generate(rng) {
         const v = rng.pick(["\\theta", "x", "\\alpha", "t", "u"]);
@@ -5722,10 +7798,38 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulaForTangen
               t(`$\\dfrac{\\tan(${arg})}{2}$`, `$\\dfrac{\\tan(${arg})}{2}$`),
               t(`$\\dfrac{2\\tan(${arg})}{1 - \\tan^2(${arg})}$`, `$\\dfrac{2\\tan(${arg})}{1 - \\tan^2(${arg})}$`),
             ],
-            sol: t(
-              `$\\frac{\\tan(${doubleArg})}{2} = \\frac{1}{2}\\cdot\\frac{2\\tan(${arg})}{1-\\tan^2(${arg})} = \\frac{\\tan(${arg})}{1-\\tan^2(${arg})}$.`,
-              `$\\frac{\\tan(${doubleArg})}{2} = \\frac{1}{2}\\cdot\\frac{2\\tan(${arg})}{1-\\tan^2(${arg})} = \\frac{\\tan(${arg})}{1-\\tan^2(${arg})}$。`,
+            sol: walked(
+              [
+                [
+                  ["Expand the double angle", "展开二倍角"],
+                  t(`Use the double-angle formula for tangent:`, `用正切的二倍角公式：`),
+                  [`\\tan(${doubleArg}) = \\dfrac{2\\tan(${arg})}{1 - \\tan^2(${arg})}`],
+                ],
+                [
+                  ["Halve", "取一半"],
+                  t(`Half of the top cancels the $2$:`, `分子的一半约去了 $2$：`),
+                  [
+                    `\\dfrac{\\tan(${doubleArg})}{2} = \\dfrac{1}{2}\\cdot\\dfrac{2\\tan(${arg})}{1 - \\tan^2(${arg})} = \\dfrac{\\tan(${arg})}{1 - \\tan^2(${arg})}`,
+                  ],
+                ],
+              ],
+              agreeAt(
+                v,
+                k,
+                `\\dfrac{\\tan(${doubleArg})}{2}`,
+                `\\dfrac{\\tan(${arg})}{1 - \\tan^2(${arg})}`,
+                (x) => Math.tan(2 * x) / 2,
+                (x) => Math.tan(x) / (1 - Math.tan(x) ** 2),
+              ),
             ),
+            why: [
+              ["The denominator $1 - \\tan^2 A$ does not cancel.", "分母 $1 - \\tan^2 A$ 约不掉。"],
+              [
+                "Halving cancels the $2$ of $2\\tan A$, so no $\\frac{1}{2}$ is left, and the denominator $1 - \\tan^2 A$ stays.",
+                "取一半约去了 $2\\tan A$ 中的 $2$，不再剩 $\\frac{1}{2}$，而分母 $1 - \\tan^2 A$ 还在。",
+              ],
+              ["This is $\\tan(2A)$ itself; it has not been halved.", "这就是 $\\tan(2A)$ 本身，还没有取一半。"],
+            ],
           },
           {
             prompt: t(
@@ -5738,10 +7842,41 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulaForTangen
               t(`$\\tan(${doubleArg})$`, `$\\tan(${doubleArg})$`),
               t(`$1$`, `$1$`),
             ],
-            sol: t(
-              `$\\frac{\\sin(${doubleArg})}{\\tan(${doubleArg})} = \\cos(${doubleArg})$.`,
-              `$\\frac{\\sin(${doubleArg})}{\\tan(${doubleArg})} = \\cos(${doubleArg})$。`,
+            sol: walked(
+              [
+                [
+                  ["Recognize the fraction", "认出分式"],
+                  t(`The fraction is the double-angle formula for tangent turned upside down:`, `这个分式是正切二倍角公式的倒数：`),
+                  [`\\dfrac{1 - \\tan^2(${arg})}{2\\tan(${arg})} = \\dfrac{1}{\\tan(${doubleArg})}`],
+                ],
+                [
+                  ["Divide", "相除"],
+                  t(`Write $\\tan(2A) = \\frac{\\sin 2A}{\\cos 2A}$:`, `把 $\\tan(2A)$ 写成 $\\frac{\\sin 2A}{\\cos 2A}$：`),
+                  [
+                    `\\dfrac{\\sin(${doubleArg})}{\\tan(${doubleArg})} = \\sin(${doubleArg})\\cdot\\dfrac{\\cos(${doubleArg})}{\\sin(${doubleArg})} = \\cos(${doubleArg})`,
+                  ],
+                ],
+              ],
+              agreeAt(
+                v,
+                k,
+                `\\sin(${doubleArg})\\cdot\\dfrac{1 - \\tan^2(${arg})}{2\\tan(${arg})}`,
+                `\\cos(${doubleArg})`,
+                (x) => (Math.sin(2 * x) * (1 - Math.tan(x) ** 2)) / (2 * Math.tan(x)),
+                (x) => Math.cos(2 * x),
+              ),
             ),
+            why: [
+              [
+                "The fraction is $\\frac{1}{\\tan 2A}$, not $1$, so the sine does change.",
+                "这个分式是 $\\frac{1}{\\tan 2A}$，不是 $1$，所以正弦会变。",
+              ],
+              [
+                "The fraction is the reciprocal of $\\tan(2A)$, so it divides by the tangent.",
+                "这个分式是 $\\tan(2A)$ 的倒数，所以是除以正切。",
+              ],
+              ["Sine divided by tangent is the cosine, not $1$.", "正弦除以正切等于余弦，不是 $1$。"],
+            ],
           },
           {
             prompt: t(
@@ -5754,10 +7889,41 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulaForTangen
               t(`$2\\tan(${arg})$`, `$2\\tan(${arg})$`),
               t(`$\\cot(${doubleArg})$`, `$\\cot(${doubleArg})$`),
             ],
-            sol: t(
-              `$\\cot(${arg}) - \\tan(${arg}) = 2\\cot(${doubleArg})$, so $\\frac{2}{2\\cot(${doubleArg})} = \\tan(${doubleArg})$.`,
-              `$\\cot(${arg}) - \\tan(${arg}) = 2\\cot(${doubleArg})$，故 $\\frac{2}{2\\cot(${doubleArg})} = \\tan(${doubleArg})$。`,
+            sol: walked(
+              [
+                [
+                  ["Combine the denominator", "通分分母"],
+                  t(`Over the common denominator $\\sin A\\cos A$:`, `以 $\\sin A\\cos A$ 为公分母：`),
+                  [
+                    `\\cot(${arg}) - \\tan(${arg}) = \\dfrac{\\cos^2(${arg}) - \\sin^2(${arg})}{\\sin(${arg})\\cos(${arg})} = \\dfrac{\\cos(${doubleArg})}{\\frac{1}{2}\\sin(${doubleArg})} = 2\\cot(${doubleArg})`,
+                  ],
+                ],
+                [
+                  ["Divide", "相除"],
+                  t(`Two divided by $2\\cot(2A)$ is the reciprocal of the cotangent:`, `$2$ 除以 $2\\cot(2A)$ 是余切的倒数：`),
+                  [`\\dfrac{2}{2\\cot(${doubleArg})} = \\tan(${doubleArg})`],
+                ],
+              ],
+              agreeAt(
+                v,
+                k,
+                `\\dfrac{2}{\\cot(${arg}) - \\tan(${arg})}`,
+                `\\tan(${doubleArg})`,
+                (x) => 2 / (1 / Math.tan(x) - Math.tan(x)),
+                (x) => Math.tan(2 * x),
+              ),
             ),
+            why: [
+              [
+                "The denominator becomes $2\\cot(2A)$, and $2$ over it is a tangent, not a sine.",
+                "分母化为 $2\\cot(2A)$，$2$ 除以它是正切，不是正弦。",
+              ],
+              [
+                "$\\cot A - \\tan A$ is not $\\frac{1}{\\tan A}$; combining it gives $2\\cot(2A)$.",
+                "$\\cot A - \\tan A$ 不是 $\\frac{1}{\\tan A}$；通分后得 $2\\cot(2A)$。",
+              ],
+              ["Dividing by $2\\cot(2A)$ gives its reciprocal, $\\tan(2A)$.", "除以 $2\\cot(2A)$ 得到它的倒数 $\\tan(2A)$。"],
+            ],
           },
           {
             prompt: t(
@@ -5770,22 +7936,60 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulaForTangen
               t(`$\\tan(${arg})$`, `$\\tan(${arg})$`),
               t(`$\\cot(${doubleArg})$`, `$\\cot(${doubleArg})$`),
             ],
-            sol: t(
-              `The numerator is $\\sin(${doubleArg})$ and the denominator is $\\cos(${doubleArg})$, and their ratio is $\\tan(${doubleArg})$.`,
-              `分子是 $\\sin(${doubleArg})$，分母是 $\\cos(${doubleArg})$，它们的比是 $\\tan(${doubleArg})$。`,
+            sol: walked(
+              [
+                [
+                  ["Recognize both parts", "认出分子分母"],
+                  t(`The top and the bottom are double-angle formulas:`, `分子和分母都是二倍角公式：`),
+                  [`2\\sin(${arg})\\cos(${arg}) = \\sin(${doubleArg})`, `\\cos^2(${arg}) - \\sin^2(${arg}) = \\cos(${doubleArg})`],
+                ],
+                [
+                  ["Divide", "相除"],
+                  t(`Sine over cosine is the tangent:`, `正弦比余弦是正切：`),
+                  [`\\dfrac{\\sin(${doubleArg})}{\\cos(${doubleArg})} = \\tan(${doubleArg})`],
+                ],
+              ],
+              agreeAt(
+                v,
+                k,
+                `\\dfrac{2\\sin(${arg})\\cos(${arg})}{\\cos^2(${arg}) - \\sin^2(${arg})}`,
+                `\\tan(${doubleArg})`,
+                (x) => (2 * Math.sin(x) * Math.cos(x)) / (Math.cos(x) ** 2 - Math.sin(x) ** 2),
+                (x) => Math.tan(2 * x),
+              ),
             ),
+            why: [
+              [
+                "The denominator $\\cos^2 A - \\sin^2 A$ is $\\cos(2A)$, not $1$.",
+                "分母 $\\cos^2 A - \\sin^2 A$ 是 $\\cos(2A)$，不是 $1$。",
+              ],
+              ["Both parts are double angles, so the angle doubles.", "分子分母都是二倍角，所以角要加倍。"],
+              ["The sine is on top and the cosine below, so this is a tangent.", "正弦在上、余弦在下，所以是正切。"],
+            ],
           },
         ];
         const item = rng.pick(identities);
-        return oneOf(rng, item.prompt, item.ans, item.wrong, item.sol);
+        return oneOf(rng, item.prompt, item.ans, item.wrong, item.sol, whyEach(item.wrong, item.why));
       },
     },
     {
       id: "double-angles-in-terms-of-tangent",
       title: t("Writing double angles in terms of $\\tan\\theta$", "用 $\\tan\\theta$ 表示二倍角"),
       explanation: t(
-        "Dividing the top and bottom of an expression by $\\cos^2\\theta$ turns sines and cosines into tangents, and $1 + \\tan^2\\theta = \\sec^2\\theta$ handles the denominator. This verifies identities such as\n\n$$\\frac{2\\tan\\theta}{1 + \\tan^2\\theta} = \\frac{2\\tan\\theta}{\\sec^2\\theta} = 2\\cdot\\frac{\\sin\\theta}{\\cos\\theta}\\cdot\\cos^2\\theta = \\sin(2\\theta)$$\n\nCombining fractions over a common denominator also often produces $1 - \\tan^2\\theta$, the denominator of $\\tan(2\\theta)$.",
-        "把表达式的分子分母同除以 $\\cos^2\\theta$，正弦与余弦就变成正切，而 $1 + \\tan^2\\theta = \\sec^2\\theta$ 可以处理分母。由此可以验证如下恒等式：\n\n$$\\frac{2\\tan\\theta}{1 + \\tan^2\\theta} = \\frac{2\\tan\\theta}{\\sec^2\\theta} = 2\\cdot\\frac{\\sin\\theta}{\\cos\\theta}\\cdot\\cos^2\\theta = \\sin(2\\theta)$$\n\n把分式通分时，也常会得到 $\\tan(2\\theta)$ 的分母 $1 - \\tan^2\\theta$。",
+        `Dividing top and bottom by $\\cos^{2}\\theta$ turns sines and cosines into tangents, and $1 + \\tan^{2}\\theta = \\sec^{2}\\theta$ handles the denominator. Read backwards, this writes the double angles through $\\tan\\theta$:
+
+$$\\frac{2\\tan\\theta}{1 + \\tan^{2}\\theta} = \\frac{2\\tan\\theta}{\\sec^{2}\\theta} = 2\\cdot\\frac{\\sin\\theta}{\\cos\\theta}\\cdot\\cos^{2}\\theta = \\sin(2\\theta)$$
+
+Check: at $\\theta = 30^{\\circ}$, $\\frac{2 \\cdot \\frac{\\sqrt{3}}{3}}{1 + \\frac{1}{3}} = \\frac{2\\sqrt{3}}{3} \\cdot \\frac{3}{4} = \\frac{\\sqrt{3}}{2} = \\sin 60^{\\circ}$. Combining fractions over a common denominator also often produces $1 - \\tan^{2}\\theta$, the denominator of $\\tan(2\\theta)$.
+
+> **Watch out.** The sign in the denominator decides the result: $\\frac{2\\tan\\theta}{1 + \\tan^{2}\\theta}$ is $\\sin(2\\theta)$, while $\\frac{2\\tan\\theta}{1 - \\tan^{2}\\theta}$ is $\\tan(2\\theta)$.`,
+        `把分子分母同除以 $\\cos^{2}\\theta$，正弦与余弦就变成正切，而 $1 + \\tan^{2}\\theta = \\sec^{2}\\theta$ 可以处理分母。反过来读，就是用 $\\tan\\theta$ 表示二倍角：
+
+$$\\frac{2\\tan\\theta}{1 + \\tan^{2}\\theta} = \\frac{2\\tan\\theta}{\\sec^{2}\\theta} = 2\\cdot\\frac{\\sin\\theta}{\\cos\\theta}\\cdot\\cos^{2}\\theta = \\sin(2\\theta)$$
+
+检验：当 $\\theta = 30^{\\circ}$ 时，$\\frac{2 \\cdot \\frac{\\sqrt{3}}{3}}{1 + \\frac{1}{3}} = \\frac{2\\sqrt{3}}{3} \\cdot \\frac{3}{4} = \\frac{\\sqrt{3}}{2} = \\sin 60^{\\circ}$。把分式通分时，也常会得到 $\\tan(2\\theta)$ 的分母 $1 - \\tan^{2}\\theta$。
+
+> **注意。** 分母中的符号决定结果：$\\frac{2\\tan\\theta}{1 + \\tan^{2}\\theta}$ 是 $\\sin(2\\theta)$，而 $\\frac{2\\tan\\theta}{1 - \\tan^{2}\\theta}$ 是 $\\tan(2\\theta)$。`,
       ),
       generate(rng) {
         const v = rng.pick(["\\theta", "x", "\\alpha", "t", "u"]);
@@ -5802,10 +8006,38 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulaForTangen
             ),
             ans: m(`\\sin(${doubleArg})`),
             wrong: [m(`\\tan(${doubleArg})`), m(`\\cos(${doubleArg})`), m(`2\\sin(${arg})`)],
-            sol: t(
-              `$1 + \\tan^2(${arg}) = \\sec^2(${arg})$, so the expression is $2\\sin(${arg})\\cos(${arg}) = \\sin(${doubleArg})$.`,
-              `$1 + \\tan^2(${arg}) = \\sec^2(${arg})$，故表达式为 $2\\sin(${arg})\\cos(${arg}) = \\sin(${doubleArg})$。`,
+            sol: walked(
+              [
+                [
+                  ["Use the secant identity", "用正割恒等式"],
+                  t(
+                    `The denominator is $\\sec^2 A$, and dividing by it multiplies by $\\cos^2 A$:`,
+                    `分母是 $\\sec^2 A$，除以它就是乘以 $\\cos^2 A$：`,
+                  ),
+                  [`\\dfrac{2${tn}}{1 + \\tan^2(${arg})} = 2\\cdot\\dfrac{\\sin(${arg})}{\\cos(${arg})}\\cdot\\cos^2(${arg})`],
+                ],
+                [["Simplify", "化简"], t(`One cosine cancels:`, `约去一个余弦：`), [`2\\sin(${arg})\\cos(${arg}) = \\sin(${doubleArg})`]],
+              ],
+              agreeAt(
+                v,
+                k,
+                `\\dfrac{2${tn}}{1 + \\tan^2(${arg})}`,
+                `\\sin(${doubleArg})`,
+                (x) => (2 * Math.tan(x)) / (1 + Math.tan(x) ** 2),
+                (x) => Math.sin(2 * x),
+              ),
             ),
+            why: [
+              [
+                "The denominator is $1 + \\tan^2 A$; $\\tan(2A)$ has $1 - \\tan^2 A$.",
+                "分母是 $1 + \\tan^2 A$；$\\tan(2A)$ 的分母是 $1 - \\tan^2 A$。",
+              ],
+              [
+                "$\\cos(2A)$ has $1 - \\tan^2 A$ on top; here the top is $2\\tan A$.",
+                "$\\cos(2A)$ 的分子是 $1 - \\tan^2 A$；这里的分子是 $2\\tan A$。",
+              ],
+              ["Multiplying by $\\cos^2 A$ leaves one cosine: $2\\sin A\\cos A$.", "乘以 $\\cos^2 A$ 后还剩一个余弦：$2\\sin A\\cos A$。"],
+            ],
           },
           {
             prompt: t(
@@ -5814,10 +8046,44 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulaForTangen
             ),
             ans: m(`\\cos(${doubleArg})`),
             wrong: [m(`\\cot(${doubleArg})`), m(`\\sin(${doubleArg})`), m(`1`)],
-            sol: t(
-              `Multiply top and bottom by $\\cos^2(${arg})$: $\\dfrac{\\cos^2(${arg}) - \\sin^2(${arg})}{\\cos^2(${arg}) + \\sin^2(${arg})} = \\cos(${doubleArg})$.`,
-              `分子分母同乘 $\\cos^2(${arg})$：$\\dfrac{\\cos^2(${arg}) - \\sin^2(${arg})}{\\cos^2(${arg}) + \\sin^2(${arg})} = \\cos(${doubleArg})$。`,
+            sol: walked(
+              [
+                [
+                  ["Clear the tangents", "消去正切"],
+                  t(`Multiply top and bottom by $\\cos^2 A$:`, `分子分母同乘 $\\cos^2 A$：`),
+                  [
+                    `\\dfrac{1 - \\tan^2(${arg})}{1 + \\tan^2(${arg})} = \\dfrac{\\cos^2(${arg}) - \\sin^2(${arg})}{\\cos^2(${arg}) + \\sin^2(${arg})}`,
+                  ],
+                ],
+                [
+                  ["Recognize the identities", "认出恒等式"],
+                  t(`The top is $\\cos(2A)$ and the bottom is $1$:`, `分子是 $\\cos(2A)$，分母是 $1$：`),
+                  [`\\dfrac{\\cos(${doubleArg})}{1} = \\cos(${doubleArg})`],
+                ],
+              ],
+              agreeAt(
+                v,
+                k,
+                `\\dfrac{1 - \\tan^2(${arg})}{1 + \\tan^2(${arg})}`,
+                `\\cos(${doubleArg})`,
+                (x) => (1 - Math.tan(x) ** 2) / (1 + Math.tan(x) ** 2),
+                (x) => Math.cos(2 * x),
+              ),
             ),
+            why: [
+              [
+                "$\\cot(2A)$ is $\\frac{1 - \\tan^2 A}{2\\tan A}$; here the bottom is $1 + \\tan^2 A$.",
+                "$\\cot(2A)$ 是 $\\frac{1 - \\tan^2 A}{2\\tan A}$；这里的分母是 $1 + \\tan^2 A$。",
+              ],
+              [
+                "$\\sin(2A)$ has $2\\tan A$ on top; here the top is $1 - \\tan^2 A$.",
+                "$\\sin(2A)$ 的分子是 $2\\tan A$；这里的分子是 $1 - \\tan^2 A$。",
+              ],
+              [
+                "The top and the bottom differ in the sign of $\\tan^2 A$, so they do not cancel.",
+                "分子分母中 $\\tan^2 A$ 的符号不同，不能约去。",
+              ],
+            ],
           },
           {
             prompt: t(
@@ -5826,23 +8092,80 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulaForTangen
             ),
             ans: m(`\\tan(${doubleArg})`),
             wrong: [m(`2${tn}`), m(`0`), m(`\\sin(${doubleArg})`)],
-            sol: t(
-              `Over the common denominator $1 - \\tan^2(${arg})$ the numerator is $2${tn}$, giving $\\tan(${doubleArg})$.`,
-              `通分后分母为 $1 - \\tan^2(${arg})$，分子为 $2${tn}$，结果为 $\\tan(${doubleArg})$。`,
+            sol: walked(
+              [
+                [
+                  ["Combine the fractions", "通分"],
+                  t(
+                    `The common denominator is $(1 - \\tan A)(1 + \\tan A) = 1 - \\tan^2 A$:`,
+                    `公分母是 $(1 - \\tan A)(1 + \\tan A) = 1 - \\tan^2 A$：`,
+                  ),
+                  [
+                    `\\dfrac{1}{1 - ${tn}} - \\dfrac{1}{1 + ${tn}} = \\dfrac{(1 + ${tn}) - (1 - ${tn})}{1 - \\tan^2(${arg})} = \\dfrac{2${tn}}{1 - \\tan^2(${arg})}`,
+                  ],
+                ],
+                [
+                  ["Recognize the pattern", "认出模式"],
+                  t(`This is the double-angle formula for tangent:`, `这是正切的二倍角公式：`),
+                  [`\\dfrac{2${tn}}{1 - \\tan^2(${arg})} = \\tan(${doubleArg})`],
+                ],
+              ],
+              agreeAt(
+                v,
+                k,
+                `\\dfrac{1}{1 - ${tn}} - \\dfrac{1}{1 + ${tn}}`,
+                `\\tan(${doubleArg})`,
+                (x) => 1 / (1 - Math.tan(x)) - 1 / (1 + Math.tan(x)),
+                (x) => Math.tan(2 * x),
+              ),
             ),
+            why: [
+              ["The common denominator $1 - \\tan^2 A$ stays under the $2\\tan A$.", "公分母 $1 - \\tan^2 A$ 还在 $2\\tan A$ 下面。"],
+              ["The fractions have different denominators, so they do not cancel.", "两个分式的分母不同，不会抵消。"],
+              [
+                "The denominator is $1 - \\tan^2 A$, the pattern of the tangent; $\\sin(2A)$ would need $1 + \\tan^2 A$.",
+                "分母是 $1 - \\tan^2 A$，是正切的模式；$\\sin(2A)$ 需要 $1 + \\tan^2 A$。",
+              ],
+            ],
           },
           {
             prompt: t(`Simplify $\\tan(${doubleArg})\\,(1 - \\tan^2(${arg}))$.`, `化简 $\\tan(${doubleArg})\\,(1 - \\tan^2(${arg}))$。`),
             ans: m(`2${tn}`),
             wrong: [m(`${tn}`), m(`\\tan(${doubleArg})`), m(`2\\tan(${doubleArg})`)],
-            sol: t(
-              `$\\tan(${doubleArg}) = \\dfrac{2${tn}}{1 - \\tan^2(${arg})}$, so multiplying by the denominator leaves $2${tn}$.`,
-              `$\\tan(${doubleArg}) = \\dfrac{2${tn}}{1 - \\tan^2(${arg})}$，乘以分母后剩下 $2${tn}$。`,
+            sol: walked(
+              [
+                [
+                  ["Expand the double angle", "展开二倍角"],
+                  t(`Use the double-angle formula for tangent:`, `用正切的二倍角公式：`),
+                  [`\\tan(${doubleArg}) = \\dfrac{2${tn}}{1 - \\tan^2(${arg})}`],
+                ],
+                [
+                  ["Cancel the denominator", "约去分母"],
+                  t(`Multiplying by $1 - \\tan^2 A$ cancels the denominator:`, `乘以 $1 - \\tan^2 A$ 约去了分母：`),
+                  [`\\dfrac{2${tn}}{1 - \\tan^2(${arg})}\\cdot\\left(1 - \\tan^2(${arg})\\right) = 2${tn}`],
+                ],
+              ],
+              agreeAt(
+                v,
+                k,
+                `\\tan(${doubleArg})\\,(1 - \\tan^2(${arg}))`,
+                `2${tn}`,
+                (x) => Math.tan(2 * x) * (1 - Math.tan(x) ** 2),
+                (x) => 2 * Math.tan(x),
+              ),
             ),
+            why: [
+              ["The $2$ of $2\\tan A$ stays.", "$2\\tan A$ 中的 $2$ 还在。"],
+              [
+                "Multiplying by $1 - \\tan^2 A$ changes the value, since it is not $1$.",
+                "乘以 $1 - \\tan^2 A$ 会改变值，因为它不等于 $1$。",
+              ],
+              ["After cancelling, only $2\\tan A$ is left; the double angle is gone.", "约分后只剩 $2\\tan A$；二倍角消失了。"],
+            ],
           },
         ];
         const item = rng.pick(items);
-        return oneOf(rng, item.prompt, item.ans, item.wrong, item.sol);
+        return oneOf(rng, item.prompt, item.ans, item.wrong, item.sol, whyEach(item.wrong, item.why));
       },
     },
   ],

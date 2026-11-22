@@ -234,8 +234,8 @@ const closeToLimit: KnowledgePointDef = {
       form: "integer",
       wrong: [byTerm, answer - 1, answer + 1, answer + 2],
       solution: t(
-        `${stepLabel(1, "Find the gap", "求差距").en} The infinite sum is $${m * q}$, the first term divided by $1 - \\frac{1}{${q}}$. The gap after $n$ terms is the infinite sum times the ratio to the power $n$. This is $\\frac{${m * q}}{${q}^{n}} = \\frac{${m}}{${q}^{n - 1}}$.\n\n${stepLabel(2, "Solve the inequality", "解不等式").en} Requiring $\\frac{${m}}{${q}^{n - 1}} < \\frac{1}{${denominator}}$ gives $${q}^{n - 1} > ${target}$. Trying powers, $${q}^{${answer - 1}} = ${q ** (answer - 1)}$ is the first to pass $${target}$, so $n = ${answer}$.\n\n**Check.** After $${answer}$ terms the gap is $${frac(m, q ** (answer - 1))}$. This is less than $\\frac{1}{${denominator}}$ because $${m} \\cdot ${denominator} = ${target} < ${q ** (answer - 1)}$. After $${answer - 1}$ terms the gap is $${frac(m, q ** (answer - 2))}$. This is not less, because $${target} \\ge ${q ** (answer - 2)}$.`,
-        `${stepLabel(1, "Find the gap", "求差距")["zh-CN"]}无穷级数的和是 $${m * q}$，即首项除以 $1 - \\frac{1}{${q}}$。前 $n$ 项之后的差距等于这个和乘以公比的 $n$ 次幂。它是 $\\frac{${m * q}}{${q}^{n}} = \\frac{${m}}{${q}^{n - 1}}$。\n\n${stepLabel(2, "Solve the inequality", "解不等式")["zh-CN"]}要求 $\\frac{${m}}{${q}^{n - 1}} < \\frac{1}{${denominator}}$，得 $${q}^{n - 1} > ${target}$。逐个试幂，$${q}^{${answer - 1}} = ${q ** (answer - 1)}$ 最先超过 $${target}$，所以 $n = ${answer}$。\n\n**检验。**取 $${answer}$ 项时差距是 $${frac(m, q ** (answer - 1))}$，它小于 $\\frac{1}{${denominator}}$，因为 $${m} \\cdot ${denominator} = ${target} < ${q ** (answer - 1)}$。取 $${answer - 1}$ 项时差距是 $${frac(m, q ** (answer - 2))}$，它不小于 $\\frac{1}{${denominator}}$，因为 $${target} \\ge ${q ** (answer - 2)}$。`,
+        `${stepLabel(1, "Find the gap", "求差距").en} The infinite sum is $${m * q}$, the first term divided by $1 - \\frac{1}{${q}}$. The gap after $n$ terms is the infinite sum times the ratio to the power $n$. This is $\\frac{${m * q}}{${q}^{n}} = \\frac{${m}}{${q}^{n - 1}}$.\n\n${stepLabel(2, "Solve the inequality", "解不等式").en} Requiring $\\frac{${m}}{${q}^{n - 1}} < \\frac{1}{${denominator}}$ gives $${q}^{n - 1} > ${target}$. Trying powers, $${q}^{${answer - 1}} = ${q ** (answer - 1)}$ is the first to pass $${target}$, so $n = ${answer}$.\n\n**Check.** After $${answer}$ terms the gap is $${frac(m, q ** (answer - 1))}$. This is less than $\\frac{1}{${denominator}}$ because $${m} \\cdot ${denominator} = ${target}$ is less than $${q ** (answer - 1)}$. After $${answer - 1}$ terms the gap is $${frac(m, q ** (answer - 2))}$. This is not less, because $${target} \\ge ${q ** (answer - 2)}$.`,
+        `${stepLabel(1, "Find the gap", "求差距")["zh-CN"]}无穷级数的和是 $${m * q}$，即首项除以 $1 - \\frac{1}{${q}}$。前 $n$ 项之后的差距等于这个和乘以公比的 $n$ 次幂。它是 $\\frac{${m * q}}{${q}^{n}} = \\frac{${m}}{${q}^{n - 1}}$。\n\n${stepLabel(2, "Solve the inequality", "解不等式")["zh-CN"]}要求 $\\frac{${m}}{${q}^{n - 1}} < \\frac{1}{${denominator}}$，得 $${q}^{n - 1} > ${target}$。逐个试幂，$${q}^{${answer - 1}} = ${q ** (answer - 1)}$ 最先超过 $${target}$，所以 $n = ${answer}$。\n\n**检验。**取 $${answer}$ 项时差距是 $${frac(m, q ** (answer - 1))}$，它小于 $\\frac{1}{${denominator}}$，因为 $${m} \\cdot ${denominator} = ${target}$ 小于 $${q ** (answer - 1)}$。取 $${answer - 1}$ 项时差距是 $${frac(m, q ** (answer - 2))}$，它不小于 $\\frac{1}{${denominator}}$，因为 $${target} \\ge ${q ** (answer - 2)}$。`,
       ),
     });
   },
@@ -415,8 +415,8 @@ const tangentOfOtherAngle: KnowledgePointDef = {
   id: "the-tangent-of-an-angle-from-the-tangent-of-a-sum",
   title: t("The tangent of an angle from the tangent of a sum", "由和角的正切求一个角的正切"),
   explanation: t(
-    "A sum formula can be used in reverse by writing the wanted angle as a difference. If the tangent of a sum and the tangent of one of the angles are known, the other angle is the sum minus the known angle, and the difference formula applies. It is tempting to subtract the two tangents directly, but tangent does not distribute over addition, so the denominator of the formula always has to be included.",
-    "和角公式可以反过来用，方法是把要求的角写成差。如果已知和角的正切和其中一个角的正切，另一个角就是和角减去已知角，于是可以用差角公式。人们容易想把两个正切直接相减，但正切对加法不满足分配律，所以公式的分母一定要算上。",
+    "A sum formula can be used in reverse by writing the wanted angle as a difference. If the tangent of a sum and the tangent of one of the angles are known, the other angle is the sum minus the known angle, and the difference formula applies. It is tempting to subtract the two tangents directly, but tangent does not distribute over addition, so the denominator of the formula always has to be included.\n\nIf $\\tan A = 2$ and $\\tan(A + B) = -1$, then $\\tan B = \\frac{-1 - 2}{1 + 2 \\cdot (-1)} = \\frac{-3}{-1} = 3$. Check: $\\tan(A + B) = \\frac{2 + 3}{1 - 2 \\cdot 3} = \\frac{5}{-5} = -1$.\n\n> **Watch out.** The difference of the tangents, $-1 - 2 = -3$, is not $\\tan B$: the difference formula divides by $1 + \\tan(A + B)\\tan A$, with a plus sign.",
+    "和角公式可以反过来用，方法是把要求的角写成差。如果已知和角的正切和其中一个角的正切，另一个角就是和角减去已知角，于是可以用差角公式。人们容易想把两个正切直接相减，但正切对加法不满足分配律，所以公式的分母一定要算上。\n\n若 $\\tan A = 2$，$\\tan(A + B) = -1$，则 $\\tan B = \\frac{-1 - 2}{1 + 2 \\cdot (-1)} = \\frac{-3}{-1} = 3$。检验：$\\tan(A + B) = \\frac{2 + 3}{1 - 2 \\cdot 3} = \\frac{5}{-5} = -1$。\n\n> **注意。** 两个正切的差 $-1 - 2 = -3$ 不是 $\\tan B$：差角公式要除以 $1 + \\tan(A + B)\\tan A$，是加号。",
   ),
   generate(rng) {
     const a = rng.int(2, 6);
@@ -432,10 +432,14 @@ const tangentOfOtherAngle: KnowledgePointDef = {
       answer: b,
       form: "integer",
       wrong: [Q.of(n - a * d, d), Q.of(n - a * d, d - a * n), Q.of(n, a * d), -b],
-      solution: t(
-        `Write $B = (A + B) - A$ and use the difference formula: $\\tan B = \\frac{${total} - ${a}}{1 + ${a} \\cdot ${ratioInParens(n, d)}} = ${b}$.`,
-        `写成 $B = (A + B) - A$，用差角公式：$\\tan B = \\frac{${total} - ${a}}{1 + ${a} \\cdot ${ratioInParens(n, d)}} = ${b}$。`,
-      ),
+      solution: (() => {
+        const line = `$$\\tan B = \\frac{${total} - ${a}}{1 + ${a} \\cdot ${ratioInParens(n, d)}} = \\frac{${frac(n - a * d, d)}}{${frac(d + a * n, d)}} = ${b}$$`;
+        const check = `$$\\tan(A + B) = \\frac{${a} + ${inParens(b)}}{1 - ${a} \\cdot ${inParens(b)}} = \\frac{${n}}{${d}} = ${total}$$`;
+        return t(
+          `${stepLabel(1, "Write B as a difference", "把 B 写成差").en} Since $B = (A + B) - A$, the difference formula gives\n\n$$\\tan B = \\frac{\\tan(A + B) - \\tan A}{1 + \\tan(A + B)\\tan A}$$\n\n${stepLabel(2, "Substitute", "代入").en} Put in $\\tan(A + B) = ${total}$ and $\\tan A = ${a}$:\n\n${line}\n\n**Check.** Put $\\tan B = ${b}$ back into the sum formula:\n\n${check}`,
+          `${stepLabel(1, "Write B as a difference", "把 B 写成差")["zh-CN"]}因为 $B = (A + B) - A$，由差角公式得\n\n$$\\tan B = \\frac{\\tan(A + B) - \\tan A}{1 + \\tan(A + B)\\tan A}$$\n\n${stepLabel(2, "Substitute", "代入")["zh-CN"]}代入 $\\tan(A + B) = ${total}$ 与 $\\tan A = ${a}$：\n\n${line}\n\n**检验。**把 $\\tan B = ${b}$ 代回和角公式：\n\n${check}`,
+        );
+      })(),
     });
   },
 };
@@ -444,8 +448,8 @@ const tanSquaredFromCos2x: KnowledgePointDef = {
   id: "the-square-of-a-tangent-from-a-cosine-of-a-double-angle",
   title: t("The square of a tangent from a cosine of a double angle", "由二倍角的余弦求正切的平方"),
   explanation: t(
-    "The forms of the double angle formula for cosine can be read backwards, so each one expresses a square of a single angle through the double angle. One form gives the square of the sine and another gives the square of the cosine. Dividing these two results gives the square of the tangent. Note that the unknown quadrant does not matter, since squares do not depend on signs, which is why the double angle alone is enough.",
-    "余弦二倍角公式的几种形式可以反过来读，每一种都用二倍角表示单角的平方。一种形式给出正弦的平方，另一种给出余弦的平方。把这两个结果相除就得到正切的平方。注意象限未知并不影响结果，因为平方与符号无关，这就是只知道二倍角就够了的原因。",
+    "The forms of the double angle formula for cosine can be read backwards, so each one expresses a square of a single angle through the double angle. One form gives the square of the sine and another gives the square of the cosine. Dividing these two results gives the square of the tangent. Note that the unknown quadrant does not matter, since squares do not depend on signs, which is why the double angle alone is enough.\n\nIf $\\cos(2x) = \\frac{1}{3}$, then $\\sin^{2} x = \\frac{1 - \\frac{1}{3}}{2} = \\frac{1}{3}$ and $\\cos^{2} x = \\frac{1 + \\frac{1}{3}}{2} = \\frac{2}{3}$, so $\\tan^{2} x = \\frac{1}{3} \\div \\frac{2}{3} = \\frac{1}{2}$. Check: $1 + \\tan^{2} x = \\frac{3}{2}$, which is $\\frac{1}{\\cos^{2} x} = \\frac{3}{2}$.\n\n> **Watch out.** The tangent square is the sine square over the cosine square, $\\frac{1 - \\cos 2x}{1 + \\cos 2x}$, not the other way round; the halves cancel.",
+    "余弦二倍角公式的几种形式可以反过来读，每一种都用二倍角表示单角的平方。一种形式给出正弦的平方，另一种给出余弦的平方。把这两个结果相除就得到正切的平方。注意象限未知并不影响结果，因为平方与符号无关，这就是只知道二倍角就够了的原因。\n\n若 $\\cos(2x) = \\frac{1}{3}$，则 $\\sin^{2} x = \\frac{1 - \\frac{1}{3}}{2} = \\frac{1}{3}$，$\\cos^{2} x = \\frac{1 + \\frac{1}{3}}{2} = \\frac{2}{3}$，所以 $\\tan^{2} x = \\frac{1}{3} \\div \\frac{2}{3} = \\frac{1}{2}$。检验：$1 + \\tan^{2} x = \\frac{3}{2}$，正是 $\\frac{1}{\\cos^{2} x} = \\frac{3}{2}$。\n\n> **注意。** 正切的平方是正弦的平方除以余弦的平方，即 $\\frac{1 - \\cos 2x}{1 + \\cos 2x}$，不能反过来；两个一半约去了。",
   ),
   generate(rng) {
     const [p, q] = rng.pick(properFractions(11));
@@ -456,10 +460,17 @@ const tanSquaredFromCos2x: KnowledgePointDef = {
       prompt: t(`If $\\cos(2x) = ${c}$, find $\\tan^{2} x$.`, `如果 $\\cos(2x) = ${c}$，求 $\\tan^{2} x$。`),
       answer,
       wrong: [Q.of(q + a, q - a), Q.of(q - a, 2 * q), Q.of(q + a, 2 * q), Q.of(a * a, q * q)],
-      solution: t(
-        `From $\\cos(2x) = 1 - 2\\sin^{2} x$, we get $\\sin^{2} x = ${frac(q - a, 2 * q)}$. From $\\cos(2x) = 2\\cos^{2} x - 1$, we get $\\cos^{2} x = ${frac(q + a, 2 * q)}$. Dividing gives $\\tan^{2} x = ${answer.toLatex()}$.`,
-        `由 $\\cos(2x) = 1 - 2\\sin^{2} x$ 得 $\\sin^{2} x = ${frac(q - a, 2 * q)}$。由 $\\cos(2x) = 2\\cos^{2} x - 1$ 得 $\\cos^{2} x = ${frac(q + a, 2 * q)}$。相除得 $\\tan^{2} x = ${answer.toLatex()}$。`,
-      ),
+      solution: (() => {
+        const cp = a < 0 ? `\\left(${c}\\right)` : c;
+        const sin2 = `$$\\sin^{2} x = \\frac{1 - ${cp}}{2} = ${frac(q - a, 2 * q)}$$`;
+        const cos2 = `$$\\cos^{2} x = \\frac{1 + ${cp}}{2} = ${frac(q + a, 2 * q)}$$`;
+        const divide = `$$\\tan^{2} x = ${frac(q - a, 2 * q)} \\div ${frac(q + a, 2 * q)} = ${answer.toLatex()}$$`;
+        const check = `$1 + \\tan^{2} x = ${frac(2 * q, q + a)}$`;
+        return t(
+          `${stepLabel(1, "Find the sine square", "求正弦的平方").en} From $\\cos(2x) = 1 - 2\\sin^{2} x$:\n\n${sin2}\n\n${stepLabel(2, "Find the cosine square", "求余弦的平方").en} From $\\cos(2x) = 2\\cos^{2} x - 1$:\n\n${cos2}\n\n${stepLabel(3, "Divide", "相除").en} The tangent square is the sine square over the cosine square:\n\n${divide}\n\n**Check.** ${check}, which is $\\frac{1}{\\cos^{2} x} = ${frac(2 * q, q + a)}$, as $1 + \\tan^{2} x = \\sec^{2} x$ requires.`,
+          `${stepLabel(1, "Find the sine square", "求正弦的平方")["zh-CN"]}由 $\\cos(2x) = 1 - 2\\sin^{2} x$：\n\n${sin2}\n\n${stepLabel(2, "Find the cosine square", "求余弦的平方")["zh-CN"]}由 $\\cos(2x) = 2\\cos^{2} x - 1$：\n\n${cos2}\n\n${stepLabel(3, "Divide", "相除")["zh-CN"]}正切的平方是正弦的平方除以余弦的平方：\n\n${divide}\n\n**检验。**${check}，正是 $\\frac{1}{\\cos^{2} x} = ${frac(2 * q, q + a)}$，符合 $1 + \\tan^{2} x = \\sec^{2} x$。`,
+        );
+      })(),
     });
   },
 };
@@ -468,8 +479,8 @@ const tanFromTanDouble: KnowledgePointDef = {
   id: "the-tangent-of-an-angle-from-the-tangent-of-its-double",
   title: t("The tangent of an angle from the tangent of its double", "由二倍角的正切求角的正切"),
   explanation: t(
-    "Halving the tangent of a double angle does not give the tangent of the angle, because the double angle formula is not linear. Instead, the formula becomes a quadratic equation when the unknown tangent is cleared from the denominator. The quadratic has two roots with a product of negative one, one positive and one negative, and these belong to two perpendicular angles. The stated range of the angle then decides which root is the right one.",
-    "把二倍角的正切减半并不能得到角的正切，因为二倍角公式不是一次的。正确的做法是清去分母中的未知正切，公式就变成一个二次方程。这个方程的两个根之积是负一，一正一负，分别属于两个互相垂直的角。题目给出的角的范围决定哪个根是正确的。",
+    "Halving the tangent of a double angle does not give the tangent of the angle, because the double angle formula is not linear. Instead, the formula becomes a quadratic equation when the unknown tangent is cleared from the denominator. The quadratic has two roots with a product of negative one, one positive and one negative, and these belong to two perpendicular angles. The stated range of the angle then decides which root is the right one.\n\nIf $\\tan(2t) = \\frac{4}{3}$ with $t$ between $0^{\\circ}$ and $45^{\\circ}$, put $u = \\tan t$: $\\frac{2u}{1 - u^{2}} = \\frac{4}{3}$ clears to $2u^{2} + 3u - 2 = 0$, that is $(2u - 1)(u + 2) = 0$, so $u = \\frac{1}{2}$ or $u = -2$, and the range keeps $\\frac{1}{2}$. Check: $\\frac{2 \\cdot \\frac{1}{2}}{1 - \\frac{1}{4}} = \\frac{1}{\\frac{3}{4}} = \\frac{4}{3}$.\n\n> **Watch out.** Halving $\\frac{4}{3}$ gives $\\frac{2}{3}$, which is not the answer; and the negative root belongs to an angle outside the range.",
+    "把二倍角的正切减半并不能得到角的正切，因为二倍角公式不是一次的。正确的做法是清去分母中的未知正切，公式就变成一个二次方程。这个方程的两个根之积是负一，一正一负，分别属于两个互相垂直的角。题目给出的角的范围决定哪个根是正确的。\n\n若 $\\tan(2t) = \\frac{4}{3}$，$t$ 在 $0^{\\circ}$ 与 $45^{\\circ}$ 之间，设 $u = \\tan t$：$\\frac{2u}{1 - u^{2}} = \\frac{4}{3}$ 去分母得 $2u^{2} + 3u - 2 = 0$，即 $(2u - 1)(u + 2) = 0$，所以 $u = \\frac{1}{2}$ 或 $u = -2$，范围保留 $\\frac{1}{2}$。检验：$\\frac{2 \\cdot \\frac{1}{2}}{1 - \\frac{1}{4}} = \\frac{1}{\\frac{3}{4}} = \\frac{4}{3}$。\n\n> **注意。** 把 $\\frac{4}{3}$ 减半得 $\\frac{2}{3}$，这不是答案；负根属于范围以外的角。",
   ),
   generate(rng) {
     const [p, q] = rng.pick(properFractions(11));
@@ -483,10 +494,20 @@ const tanFromTanDouble: KnowledgePointDef = {
       ),
       answer: Q.of(p, q),
       wrong: [Q.of(-q, p), Q.of(p * q, d), Q.of(q, p), Q.of(2 * n, d)],
-      solution: t(
-        `Let $u = \\tan t$. The formula $\\frac{2u}{1 - u^{2}} = ${value}$ clears to a quadratic in $u$ whose roots are $${frac(p, q)}$ and $${frac(-q, p)}$. In the stated range the tangent is positive, so $\\tan t = ${frac(p, q)}$.`,
-        `设 $u = \\tan t$。把 $\\frac{2u}{1 - u^{2}} = ${value}$ 去分母，得到关于 $u$ 的二次方程，它的根是 $${frac(p, q)}$ 和 $${frac(-q, p)}$。在给定范围内正切为正，所以 $\\tan t = ${frac(p, q)}$。`,
-      ),
+      solution: (() => {
+        const term = (k: number, v: string) => `${k === 1 ? "" : k}${v}`;
+        const same = value === `\\frac{${n}}{${d}}`;
+        const written = same
+          ? { en: "", zh: "" }
+          : { en: `Write $${value} = \\frac{${n}}{${d}}$. `, zh: `把 $${value}$ 写成 $\\frac{${n}}{${d}}$，` };
+        const clear = `$$\\frac{2u}{1 - u^{2}} = \\frac{${n}}{${d}} \\quad\\Rightarrow\\quad ${2 * d}u = ${n} - ${n}u^{2}$$`;
+        const quad = `$$${n}u^{2} + ${2 * d}u - ${n} = 2(${term(q, "u")} - ${p})(${term(p, "u")} + ${q}) = 0$$`;
+        const check = `$$\\frac{2 \\cdot ${frac(p, q)}}{1 - ${frac(p * p, q * q)}} = ${frac(2 * p, q)} \\cdot ${frac(q * q, d)} = ${value}$$`;
+        return t(
+          `${stepLabel(1, "Clear the denominator", "去分母").en} Let $u = \\tan t$, so $\\tan(2t) = \\frac{2u}{1 - u^{2}}$. ${written.en}Cross-multiply:\n\n${clear}\n\n${stepLabel(2, "Solve the quadratic", "解二次方程").en} Collect the terms and factor:\n\n${quad}\n\nThe roots are $u = ${frac(p, q)}$ and $u = ${frac(-q, p)}$.\n\n${stepLabel(3, "Use the range", "用范围").en} Between $0^{\\circ}$ and $45^{\\circ}$ the tangent is positive, so $\\tan t = ${frac(p, q)}$.\n\n**Check.** Put it back into the formula:\n\n${check}`,
+          `${stepLabel(1, "Clear the denominator", "去分母")["zh-CN"]}设 $u = \\tan t$，则 $\\tan(2t) = \\frac{2u}{1 - u^{2}}$。${written.zh}交叉相乘：\n\n${clear}\n\n${stepLabel(2, "Solve the quadratic", "解二次方程")["zh-CN"]}移项并分解：\n\n${quad}\n\n两个根是 $u = ${frac(p, q)}$ 与 $u = ${frac(-q, p)}$。\n\n${stepLabel(3, "Use the range", "用范围")["zh-CN"]}在 $0^{\\circ}$ 与 $45^{\\circ}$ 之间正切为正，所以 $\\tan t = ${frac(p, q)}$。\n\n**检验。**代回公式：\n\n${check}`,
+        );
+      })(),
     });
   },
 };
@@ -495,8 +516,8 @@ const missingCoefficient: KnowledgePointDef = {
   id: "a-missing-coefficient-from-the-amplitude",
   title: t("A missing coefficient from the amplitude", "由振幅求缺失的系数"),
   explanation: t(
-    "The largest value of a sum of a sine and a cosine with the same angle is the square root of the sum of the squares of the two coefficients. Since this is an equation connecting three numbers, knowing the largest value and one coefficient determines the other, up to its sign. The formula has the shape of the Pythagorean theorem, with the amplitude as the hypotenuse, so the amplitude is not simply the sum of the coefficients.",
-    "同角的正弦与余弦之和，其最大值是两个系数平方和的平方根。这是连接三个数的等式，所以知道最大值和一个系数，就能确定另一个系数（符号除外）。这个公式与勾股定理形状相同，振幅相当于斜边，所以振幅并不等于两个系数简单相加。",
+    "The largest value of a sum of a sine and a cosine with the same angle is the square root of the sum of the squares of the two coefficients. Since this is an equation connecting three numbers, knowing the largest value and one coefficient determines the other, up to its sign. The formula has the shape of the Pythagorean theorem, with the amplitude as the hypotenuse, so the amplitude is not simply the sum of the coefficients.\n\nIf $3\\sin u + b\\cos u$ with $b > 0$ has largest value $5$, then $3^{2} + b^{2} = 5^{2}$, so $b^{2} = 16$ and $b = 4$. Check: $\\sqrt{9 + 16} = \\sqrt{25} = 5$.\n\n> **Watch out.** Subtracting the coefficient from the amplitude, $5 - 3 = 2$, is wrong: the squares add, not the coefficients. And take the positive root, since $b > 0$.",
+    "同角的正弦与余弦之和，其最大值是两个系数平方和的平方根。这是连接三个数的等式，所以知道最大值和一个系数，就能确定另一个系数（符号除外）。这个公式与勾股定理形状相同，振幅相当于斜边，所以振幅并不等于两个系数简单相加。\n\n若 $3\\sin u + b\\cos u$（$b > 0$）的最大值是 $5$，则 $3^{2} + b^{2} = 5^{2}$，所以 $b^{2} = 16$，$b = 4$。检验：$\\sqrt{9 + 16} = \\sqrt{25} = 5$。\n\n> **注意。** 用振幅减去系数，$5 - 3 = 2$，是错的：相加的是平方，不是系数。而且 $b > 0$，要取正根。",
   ),
   generate(rng) {
     const [x, b, R] = legsAndHypotenuse(rng, 4) as [number, number, number];
@@ -510,10 +531,15 @@ const missingCoefficient: KnowledgePointDef = {
       answer: b,
       form: "integer",
       wrong: [R - x, R + x, b * b, x],
-      solution: t(
-        `The largest value is $\\sqrt{${inParens(a)}^{2} + b^{2}}$, so $${x * x} + b^{2} = ${R * R}$. Then $b^{2} = ${b * b}$, and since $b$ is positive, $b = ${b}$.`,
-        `最大值是 $\\sqrt{${inParens(a)}^{2} + b^{2}}$，所以 $${x * x} + b^{2} = ${R * R}$。于是 $b^{2} = ${b * b}$，而 $b$ 为正，所以 $b = ${b}$。`,
-      ),
+      solution: (() => {
+        const equation = `$$\\sqrt{${inParens(a)}^{2} + b^{2}} = ${R} \\quad\\Rightarrow\\quad ${x * x} + b^{2} = ${R * R}$$`;
+        const solve = `$$b^{2} = ${R * R} - ${x * x} = ${b * b}$$`;
+        const check = `$\\sqrt{${inParens(a)}^{2} + ${b}^{2}} = \\sqrt{${x * x} + ${b * b}} = \\sqrt{${R * R}} = ${R}$`;
+        return t(
+          `${stepLabel(1, "Use the amplitude", "用振幅").en} The largest value of $p\\sin u + q\\cos u$ is $\\sqrt{p^{2} + q^{2}}$, so\n\n${equation}\n\n${stepLabel(2, "Solve for b", "解出 b").en} Subtract and take the positive root, since $b > 0$:\n\n${solve}\n\nso $b = ${b}$.\n\n**Check.** The given largest value comes back: ${check}.`,
+          `${stepLabel(1, "Use the amplitude", "用振幅")["zh-CN"]}$p\\sin u + q\\cos u$ 的最大值是 $\\sqrt{p^{2} + q^{2}}$，所以\n\n${equation}\n\n${stepLabel(2, "Solve for b", "解出 b")["zh-CN"]}相减，因为 $b > 0$ 取正根：\n\n${solve}\n\n所以 $b = ${b}$。\n\n**检验。**代回得到给定的最大值：${check}。`,
+        );
+      })(),
     });
   },
 };

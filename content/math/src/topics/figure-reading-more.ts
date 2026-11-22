@@ -20,6 +20,7 @@ import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
 import { probabilityDrawings1 } from "../explanation-drawings-probability-and-statistics-1.ts";
 import { numberProblem } from "../problems.ts";
 import { stepLabel } from "../solution-kit.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { pickChoice as choiceFrom } from "./grade-4-fractions.ts";
 
 /** math writes the same formula as an option in both languages. */
@@ -708,8 +709,8 @@ const amplitudePhaseFromGraph: KnowledgePointDef = {
   id: "amplitude-from-the-graph-of-a-sum",
   title: t("The amplitude of a sum from its graph", "由图读和的振幅"),
   explanation: t(
-    "A sum of a sine and a cosine with the same frequency is one wave. Its amplitude is the square root of the sum of the squares of the coefficients, and not their sum, because the two waves do not peak at the same moment. A graph confirms this at a glance, as the highest point reached is this value.",
-    "频率相同的正弦和余弦之和是一条波。它的振幅是系数平方和的平方根，而不是系数之和，因为两条波不在同一时刻达到峰值。图能一眼确认这一点，因为达到的最高点就是这个值。",
+    "A sum of a sine and a cosine with the same frequency is one wave. Its amplitude is the square root of the sum of the squares of the coefficients, and not their sum, because the two waves do not peak at the same moment. A graph confirms this at a glance, as the highest point reached is this value.\n\nTake $3 \\sin x + 4 \\cos x$. Its amplitude is $\\sqrt{3^2 + 4^2} = 5$, and at $x = 0$ its height is $4$, since $\\sin 0 = 0$ and $\\cos 0 = 1$. Check: where $\\sin x = \\frac{3}{5}$ and $\\cos x = \\frac{4}{5}$, the height is $3 \\cdot \\frac{3}{5} + 4 \\cdot \\frac{4}{5} = \\frac{25}{5} = 5$, the peak.\n\n> **Watch out.** The peak is not $3 + 4 = 7$: the sine and the cosine never reach $1$ at the same $x$. Read the height at $x = 0$ for the cosine coefficient, and count the cycles in $2\\pi$ for the frequency.",
+    "频率相同的正弦和余弦之和是一条波。它的振幅是系数平方和的平方根，而不是系数之和，因为两条波不在同一时刻达到峰值。图能一眼确认这一点，因为达到的最高点就是这个值。\n\n以 $3 \\sin x + 4 \\cos x$ 为例。它的振幅是 $\\sqrt{3^2 + 4^2} = 5$，$x = 0$ 时高度是 $4$，因为 $\\sin 0 = 0$，$\\cos 0 = 1$。检验：在 $\\sin x = \\frac{3}{5}$、$\\cos x = \\frac{4}{5}$ 处，高度是 $3 \\cdot \\frac{3}{5} + 4 \\cdot \\frac{4}{5} = \\frac{25}{5} = 5$，正是峰值。\n\n> **注意。** 峰值不是 $3 + 4 = 7$：正弦和余弦不会在同一个 $x$ 处同时取到 $1$。余弦的系数看 $x = 0$ 处的高度，频率数每个 $2\\pi$ 内的周期数。",
   ),
   generate(rng) {
     const [p, q, h] = rng.pick([
@@ -724,14 +725,20 @@ const amplitudePhaseFromGraph: KnowledgePointDef = {
     const f = (x: number) => a * Math.sin(w * x) + b * Math.cos(w * x);
     const angle = (n: number) => (n === 1 ? "x" : `${n}x`);
     const write = (u: number, v: number, n: number) => `${u} \\sin ${angle(n)} ${v < 0 ? "-" : "+"} ${Math.abs(v)} \\cos ${angle(n)}`;
-    return pickChoice(
+    const cycles = { en: w === 1 ? "one cycle" : `$${w}$ cycles`, zh: `$${w}$ 个周期` };
+    const peak = `$\\sqrt{${p}^2 + ${q}^2} = \\sqrt{${p * p + q * q}} = ${h}$`;
+    const atZero = `$${a} \\sin 0 ${b < 0 ? "-" : "+"} ${Math.abs(b)} \\cos 0 = ${b}$`;
+    const one = stepLabel(1, "read the peak", "读峰值");
+    const two = stepLabel(2, "read the height at 0", "读 0 处的高度");
+    const three = stepLabel(3, "count the cycles", "数周期");
+    const problem = pickChoice(
       rng,
       t("Which function could have this graph?", "哪个函数可能有这样的图像？"),
       math(write(a, b, w)),
       [math(write(a, -b, w)), math(`${p + q} \\sin ${angle(w)}`), math(write(b, a, w)), math(write(a, b, w + 1))],
       t(
-        `The peak is $${h}$, and $\\sqrt{${p}^2 + ${q}^2} = ${h}$. At $x = 0$ the height is $${b}$, which is the coefficient of the cosine, and the wave has ${w === 1 ? "one cycle" : `$${w}$ cycles`} in each $2\\pi$.`,
-        `峰值是 $${h}$，而 $\\sqrt{${p}^2 + ${q}^2} = ${h}$。$x = 0$ 时高度是 $${b}$，也就是余弦的系数，而且每个 $2\\pi$ 内有 $${w}$ 个周期。`,
+        `${one.en} The highest point of the wave is at height $${h}$. A sum $u \\sin ${angle(w)} + v \\cos ${angle(w)}$ peaks at $\\sqrt{u^2 + v^2}$, and here ${peak}.\n\n${two.en} At $x = 0$ the sine is $0$ and the cosine is $1$, so the height there is the coefficient of the cosine. The graph passes through $(0, ${b})$, so that coefficient is $${b}$.\n\n${three.en} The wave has ${cycles.en} in each $2\\pi$, so the angle is $${angle(w)}$. That leaves $${write(a, b, w)}$.\n\n**Check.** At $x = 0$: ${atZero}, and the peak is ${peak}, both as drawn.`,
+        `${one["zh-CN"]}波的最高点高度是 $${h}$。和 $u \\sin ${angle(w)} + v \\cos ${angle(w)}$ 的峰值是 $\\sqrt{u^2 + v^2}$，这里 ${peak}。\n\n${two["zh-CN"]}$x = 0$ 时正弦为 $0$、余弦为 $1$，所以那里的高度就是余弦的系数。图像经过 $(0, ${b})$，所以这个系数是 $${b}$。\n\n${three["zh-CN"]}每个 $2\\pi$ 内有 ${cycles.zh}，所以角是 $${angle(w)}$。于是得到 $${write(a, b, w)}$。\n\n**检验。** $x = 0$ 时：${atZero}；峰值是 ${peak}，都与图相符。`,
       ),
       drawn(
         { xMin: -7, xMax: 7, yMin: -h - 1, yMax: h + 1, labelEvery: 2 },
@@ -742,6 +749,28 @@ const amplitudePhaseFromGraph: KnowledgePointDef = {
         ),
       ),
     );
+    return reasoned(problem, [
+      [
+        `$${write(a, -b, w)}$`,
+        `At $x = 0$ this has height $${-b}$, but the graph passes through $(0, ${b})$.`,
+        `它在 $x = 0$ 处的高度是 $${-b}$，但图像经过 $(0, ${b})$。`,
+      ],
+      [
+        `$${p + q} \\sin ${angle(w)}$`,
+        `This adds the coefficients: its peak is $${p + q}$, not $${h}$, and it passes through the origin.`,
+        `这是把系数相加：它的峰值是 $${p + q}$ 而不是 $${h}$，而且经过原点。`,
+      ],
+      [
+        `$${write(b, a, w)}$`,
+        `This swaps the coefficients: the peak is still $${h}$, but at $x = 0$ the height is $${a}$, not $${b}$.`,
+        `这是把系数对调：峰值仍是 $${h}$，但 $x = 0$ 处的高度是 $${a}$ 而不是 $${b}$。`,
+      ],
+      [
+        `$${write(a, b, w + 1)}$`,
+        `This has $${w + 1}$ cycles in each $2\\pi$, but the graph has ${cycles.en}.`,
+        `它每个 $2\\pi$ 内有 $${w + 1}$ 个周期，但图像只有 ${cycles.zh}。`,
+      ],
+    ]);
   },
 };
 

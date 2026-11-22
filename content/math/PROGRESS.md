@@ -148,10 +148,10 @@ Stage 0 is done. Walking its lessons against Math Academy's on the same topics f
 
 | File | Precalculus topics | Status | Owner | Notes |
 | :--- | ---: | :--- | :--- | :--- |
-| `precalculus-trigonometric-identities.ts` | 23 | in progress | |  |
+| `precalculus-trigonometric-identities.ts` | 27 | done | |  |
 | `precalculus-inequalities.ts` | 21 | done | |  |
 | `precalculus-matrices.ts` | 18 | in progress | |  |
-| `precalculus-conic-sections.ts` | 18 | open | |  |
+| `precalculus-conic-sections.ts` | 18 | in progress | |  |
 | `precalculus-series.ts` | 17 | open | |  |
 | `precalculus-linear-transformations.ts` | 17 | open | |  |
 | `precalculus-parametric-polar.ts` | 16 | open | |  |

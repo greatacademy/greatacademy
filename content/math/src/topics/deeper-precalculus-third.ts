@@ -858,14 +858,21 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "cosine-of-a-sum-from-two-triangles",
       ["Cosine of a sum from two triangles", "由两个三角形求和角余弦"],
       [
-        "The cosine formula has the opposite sign to the angle sign: a sum subtracts the product of the sines. Finding the missing cosines or sines from the triangles gives all four numbers.",
-        "余弦公式的符号与角的符号相反：和角要减去两个正弦的积。由三角形求出缺失的正弦或余弦，就有了全部四个数。",
+        "The cosine formula has the opposite sign to the angle sign: a sum subtracts the product of the sines. Finding the missing cosines or sines from the triangles gives all four numbers.\n\nFor acute angles with $\\sin\\alpha = \\frac{3}{5}$ and $\\sin\\beta = \\frac{5}{13}$: $\\cos\\alpha = \\frac{4}{5}$ and $\\cos\\beta = \\frac{12}{13}$, so $\\cos(\\alpha + \\beta) = \\frac{4}{5} \\cdot \\frac{12}{13} - \\frac{3}{5} \\cdot \\frac{5}{13} = \\frac{48 - 15}{65} = \\frac{33}{65}$. Check: $\\alpha \\approx 36.87^{\\circ}$ and $\\beta \\approx 22.62^{\\circ}$, and $\\cos 59.49^{\\circ} \\approx 0.5077 \\approx \\frac{33}{65}$.\n\n> **Watch out.** The sign in the formula is the opposite of the sign between the angles: $\\cos(\\alpha + \\beta)$ subtracts $\\sin\\alpha\\sin\\beta$, and $\\cos(\\alpha - \\beta)$ adds it.",
+        "余弦公式的符号与角的符号相反：和角要减去两个正弦的积。由三角形求出缺失的正弦或余弦，就有了全部四个数。\n\n对锐角，$\\sin\\alpha = \\frac{3}{5}$，$\\sin\\beta = \\frac{5}{13}$：$\\cos\\alpha = \\frac{4}{5}$，$\\cos\\beta = \\frac{12}{13}$，所以 $\\cos(\\alpha + \\beta) = \\frac{4}{5} \\cdot \\frac{12}{13} - \\frac{3}{5} \\cdot \\frac{5}{13} = \\frac{48 - 15}{65} = \\frac{33}{65}$。检验：$\\alpha \\approx 36.87^{\\circ}$，$\\beta \\approx 22.62^{\\circ}$，而 $\\cos 59.49^{\\circ} \\approx 0.5077 \\approx \\frac{33}{65}$。\n\n> **注意。** 公式中的符号与两角之间的符号相反：$\\cos(\\alpha + \\beta)$ 减去 $\\sin\\alpha\\sin\\beta$，$\\cos(\\alpha - \\beta)$ 加上它。",
       ],
       (rng) => {
         const [a, b, c] = triple(rng);
         const [p, q, r] = triple(rng);
         const minus = rng.bool();
         const top = minus ? b * q + a * p : b * q - a * p;
+        const op = minus ? "-" : "+";
+        const sign = minus ? "+" : "-";
+        const angle = minus ? Math.asin(a / c) - Math.asin(p / r) : Math.asin(a / c) + Math.asin(p / r);
+        const deg = (x: number) => ((x * 180) / Math.PI).toFixed(2);
+        const ans = Q.of(top, c * r).toLatex();
+        const line = `$$\\cos(\\alpha ${op} \\beta) = ${frac(b, c)} \\cdot ${frac(q, r)} ${sign} ${frac(a, c)} \\cdot ${frac(p, r)} = ${frac(`${b * q} ${sign} ${a * p}`, c * r)} = ${ans}$$`;
+        const check = `$\\alpha \\approx ${deg(Math.asin(a / c))}^{\\circ}$, $\\beta \\approx ${deg(Math.asin(p / r))}^{\\circ}$, $\\cos(${deg(angle)}^{\\circ}) \\approx ${Math.cos(angle).toFixed(4)}$, $${ans} \\approx ${(top / (c * r)).toFixed(4)}$`;
         return fraction(
           [
             `$\\alpha$ and $\\beta$ are acute, with $\\sin\\alpha = ${frac(a, c)}$ and $\\sin\\beta = ${frac(p, r)}$. Find $\\cos(\\alpha ${minus ? "-" : "+"} \\beta)$.`,
@@ -874,8 +881,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
           Q.of(top, c * r),
           [Q.of(minus ? b * q - a * p : b * q + a * p, c * r), Q.of(a * q + b * p + 1, c * r), Q.of(b * q, c * r)],
           [
-            `The cosines are $${frac(b, c)}$ and $${frac(q, r)}$, and the formula ${minus ? "adds" : "subtracts"} the product of the sines.`,
-            `余弦是 $${frac(b, c)}$ 和 $${frac(q, r)}$，公式要${minus ? "加上" : "减去"}两个正弦的积。`,
+            `**Step 1: Find the cosines.** Both angles are acute, so their cosines are positive: $\\cos\\alpha = \\sqrt{1 - ${frac(a * a, c * c)}} = ${frac(b, c)}$ and $\\cos\\beta = \\sqrt{1 - ${frac(p * p, r * r)}} = ${frac(q, r)}$.\n\n**Step 2: Use the formula.** $\\cos(\\alpha ${op} \\beta) = \\cos\\alpha\\cos\\beta ${sign} \\sin\\alpha\\sin\\beta$, which ${minus ? "adds" : "subtracts"} the product of the sines:\n\n${line}\n\n**Check.** In degrees: ${check}.`,
+            `**第一步：求余弦。**两个角都是锐角，余弦为正：$\\cos\\alpha = \\sqrt{1 - ${frac(a * a, c * c)}} = ${frac(b, c)}$，$\\cos\\beta = \\sqrt{1 - ${frac(p * p, r * r)}} = ${frac(q, r)}$。\n\n**第二步：用公式。**$\\cos(\\alpha ${op} \\beta) = \\cos\\alpha\\cos\\beta ${sign} \\sin\\alpha\\sin\\beta$，要${minus ? "加上" : "减去"}两个正弦的积：\n\n${line}\n\n**检验。**用角度：${check.replaceAll(", ", "，")}。`,
           ],
         );
       },
@@ -886,12 +893,20 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "sine-after-a-quarter-or-half-turn",
       ["Sine after a quarter or half turn", "转过四分之一或半圈后的正弦"],
       [
-        "Adding $90^{\\circ}$ or $180^{\\circ}$ makes the sum formula very short, because one of its two terms vanishes and the other keeps a simple factor. So $\\sin(\\theta + 90^{\\circ}) = \\cos\\theta$ and $\\sin(\\theta + 180^{\\circ}) = -\\sin\\theta$.",
-        "加 $90^{\\circ}$ 或 $180^{\\circ}$ 时和角公式很短，因为 $\\sin 90^{\\circ} = 1$，$\\cos 90^{\\circ} = 0$。所以 $\\sin(\\theta + 90^{\\circ}) = \\cos\\theta$，$\\sin(\\theta + 180^{\\circ}) = -\\sin\\theta$。",
+        "Adding $90^{\\circ}$ or $180^{\\circ}$ makes the sum formula very short, because one of its two terms vanishes and the other keeps a simple factor. So $\\sin(\\theta + 90^{\\circ}) = \\cos\\theta$ and $\\sin(\\theta + 180^{\\circ}) = -\\sin\\theta$.\n\nIf $\\theta$ is acute with $\\sin\\theta = \\frac{3}{5}$, then $\\sin(\\theta + 90^{\\circ}) = \\sin\\theta\\cos 90^{\\circ} + \\cos\\theta\\sin 90^{\\circ} = \\cos\\theta = \\frac{4}{5}$. Check: $\\theta \\approx 36.87^{\\circ}$, and $\\sin 126.87^{\\circ} \\approx 0.8000$.\n\n> **Watch out.** A quarter turn swaps the sine for the cosine, so the answer needs $\\cos\\theta$ from the triangle; a half turn keeps the sine but changes its sign.",
+        "加 $90^{\\circ}$ 或 $180^{\\circ}$ 时和角公式很短，因为 $\\sin 90^{\\circ} = 1$，$\\cos 90^{\\circ} = 0$。所以 $\\sin(\\theta + 90^{\\circ}) = \\cos\\theta$，$\\sin(\\theta + 180^{\\circ}) = -\\sin\\theta$。\n\n若 $\\theta$ 是锐角，$\\sin\\theta = \\frac{3}{5}$，则 $\\sin(\\theta + 90^{\\circ}) = \\sin\\theta\\cos 90^{\\circ} + \\cos\\theta\\sin 90^{\\circ} = \\cos\\theta = \\frac{4}{5}$。检验：$\\theta \\approx 36.87^{\\circ}$，而 $\\sin 126.87^{\\circ} \\approx 0.8000$。\n\n> **注意。** 转四分之一圈把正弦换成余弦，所以答案要用三角形中的 $\\cos\\theta$；转半圈保留正弦，但改变符号。",
       ],
       (rng) => {
         const [a, b, c] = triple(rng);
         const half = rng.bool();
+        const turn = half ? 180 : 90;
+        const theta = (Math.asin(a / c) * 180) / Math.PI;
+        const value = (half ? -a : b) / c;
+        const ans = (half ? Q.of(-a, c) : Q.of(b, c)).toLatex();
+        const check = [
+          `$\\theta \\approx ${theta.toFixed(2)}^{\\circ}$, and $\\sin(${(theta + turn).toFixed(2)}^{\\circ}) \\approx ${Math.sin(((theta + turn) * Math.PI) / 180).toFixed(4)}$, while $${ans} \\approx ${value.toFixed(4)}$.`,
+          `$\\theta \\approx ${theta.toFixed(2)}^{\\circ}$，而 $\\sin(${(theta + turn).toFixed(2)}^{\\circ}) \\approx ${Math.sin(((theta + turn) * Math.PI) / 180).toFixed(4)}$，$${ans} \\approx ${value.toFixed(4)}$。`,
+        ];
         return fraction(
           [
             `$\\theta$ is acute with $\\sin\\theta = ${frac(a, c)}$. Find $\\sin(\\theta + ${half ? 180 : 90}^{\\circ})$.`,
@@ -899,10 +914,15 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
           ],
           half ? Q.of(-a, c) : Q.of(b, c),
           [half ? Q.of(a, c) : Q.of(a, c), half ? Q.of(-b, c) : Q.of(-b, c), Q.of(c, a)],
-          [
-            half ? `$\\sin(\\theta + 180^{\\circ}) = -\\sin\\theta$.` : `$\\sin(\\theta + 90^{\\circ}) = \\cos\\theta = ${frac(b, c)}$.`,
-            half ? `$\\sin(\\theta + 180^{\\circ}) = -\\sin\\theta$。` : `$\\sin(\\theta + 90^{\\circ}) = \\cos\\theta = ${frac(b, c)}$。`,
-          ],
+          half
+            ? [
+                `**Step 1: Expand.** With $\\cos 180^{\\circ} = -1$ and $\\sin 180^{\\circ} = 0$,\n\n$$\\sin(\\theta + 180^{\\circ}) = \\sin\\theta\\cos 180^{\\circ} + \\cos\\theta\\sin 180^{\\circ} = -\\sin\\theta$$\n\n**Step 2: Substitute.** $-\\sin\\theta = ${ans}$.\n\n**Check.** ${check[0]}`,
+                `**第一步：展开。**由 $\\cos 180^{\\circ} = -1$，$\\sin 180^{\\circ} = 0$，\n\n$$\\sin(\\theta + 180^{\\circ}) = \\sin\\theta\\cos 180^{\\circ} + \\cos\\theta\\sin 180^{\\circ} = -\\sin\\theta$$\n\n**第二步：代入。**$-\\sin\\theta = ${ans}$。\n\n**检验。**${check[1]}`,
+              ]
+            : [
+                `**Step 1: Expand.** With $\\cos 90^{\\circ} = 0$ and $\\sin 90^{\\circ} = 1$,\n\n$$\\sin(\\theta + 90^{\\circ}) = \\sin\\theta\\cos 90^{\\circ} + \\cos\\theta\\sin 90^{\\circ} = \\cos\\theta$$\n\n**Step 2: Find the cosine.** $\\theta$ is acute, so $\\cos\\theta = \\sqrt{1 - ${frac(a * a, c * c)}} = ${frac(b, c)}$.\n\n**Check.** ${check[0]}`,
+                `**第一步：展开。**由 $\\cos 90^{\\circ} = 0$，$\\sin 90^{\\circ} = 1$，\n\n$$\\sin(\\theta + 90^{\\circ}) = \\sin\\theta\\cos 90^{\\circ} + \\cos\\theta\\sin 90^{\\circ} = \\cos\\theta$$\n\n**第二步：求余弦。**$\\theta$ 是锐角，所以 $\\cos\\theta = \\sqrt{1 - ${frac(a * a, c * c)}} = ${frac(b, c)}$。\n\n**检验。**${check[1]}`,
+              ],
         );
       },
     ),
@@ -912,12 +932,20 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "cosine-after-a-quarter-or-half-turn",
       ["Cosine after a quarter or half turn", "转过四分之一或半圈后的余弦"],
       [
-        "Adding $90^{\\circ}$ or $180^{\\circ}$ also shortens the cosine formula, because the sine and cosine of these angles are only $0$, $1$ or $-1$, so one of the two products drops out. A quarter turn gives $\\cos(\\theta + 90^{\\circ}) = -\\sin\\theta$, and a half turn gives $\\cos(\\theta + 180^{\\circ}) = -\\cos\\theta$.",
-        "加 $90^{\\circ}$ 或 $180^{\\circ}$ 也使余弦公式变短，因为这些角的正弦和余弦只是 $0$、$1$ 或 $-1$，两个乘积中有一个消失。转四分之一圈得 $\\cos(\\theta + 90^{\\circ}) = -\\sin\\theta$，转半圈得 $\\cos(\\theta + 180^{\\circ}) = -\\cos\\theta$。",
+        "Adding $90^{\\circ}$ or $180^{\\circ}$ also shortens the cosine formula, because the sine and cosine of these angles are only $0$, $1$ or $-1$, so one of the two products drops out. A quarter turn gives $\\cos(\\theta + 90^{\\circ}) = -\\sin\\theta$, and a half turn gives $\\cos(\\theta + 180^{\\circ}) = -\\cos\\theta$.\n\nIf $\\theta$ is acute with $\\sin\\theta = \\frac{3}{5}$, then $\\cos(\\theta + 180^{\\circ}) = \\cos\\theta\\cos 180^{\\circ} - \\sin\\theta\\sin 180^{\\circ} = -\\cos\\theta = -\\frac{4}{5}$. Check: $\\theta \\approx 36.87^{\\circ}$, and $\\cos 216.87^{\\circ} \\approx -0.8000$.\n\n> **Watch out.** Both turns bring a minus sign: a quarter turn gives $-\\sin\\theta$, not $\\sin\\theta$, and a half turn gives $-\\cos\\theta$.",
+        "加 $90^{\\circ}$ 或 $180^{\\circ}$ 也使余弦公式变短，因为这些角的正弦和余弦只是 $0$、$1$ 或 $-1$，两个乘积中有一个消失。转四分之一圈得 $\\cos(\\theta + 90^{\\circ}) = -\\sin\\theta$，转半圈得 $\\cos(\\theta + 180^{\\circ}) = -\\cos\\theta$。\n\n若 $\\theta$ 是锐角，$\\sin\\theta = \\frac{3}{5}$，则 $\\cos(\\theta + 180^{\\circ}) = \\cos\\theta\\cos 180^{\\circ} - \\sin\\theta\\sin 180^{\\circ} = -\\cos\\theta = -\\frac{4}{5}$。检验：$\\theta \\approx 36.87^{\\circ}$，而 $\\cos 216.87^{\\circ} \\approx -0.8000$。\n\n> **注意。** 两种转动都带来负号：转四分之一圈得 $-\\sin\\theta$，不是 $\\sin\\theta$；转半圈得 $-\\cos\\theta$。",
       ],
       (rng) => {
         const [a, b, c] = triple(rng);
         const half = rng.bool();
+        const turn = half ? 180 : 90;
+        const theta = (Math.asin(a / c) * 180) / Math.PI;
+        const value = (half ? -b : -a) / c;
+        const ans = (half ? Q.of(-b, c) : Q.of(-a, c)).toLatex();
+        const check = [
+          `$\\theta \\approx ${theta.toFixed(2)}^{\\circ}$, and $\\cos(${(theta + turn).toFixed(2)}^{\\circ}) \\approx ${Math.cos(((theta + turn) * Math.PI) / 180).toFixed(4)}$, while $${ans} \\approx ${value.toFixed(4)}$.`,
+          `$\\theta \\approx ${theta.toFixed(2)}^{\\circ}$，而 $\\cos(${(theta + turn).toFixed(2)}^{\\circ}) \\approx ${Math.cos(((theta + turn) * Math.PI) / 180).toFixed(4)}$，$${ans} \\approx ${value.toFixed(4)}$。`,
+        ];
         return fraction(
           [
             `$\\theta$ is acute with $\\sin\\theta = ${frac(a, c)}$. Find $\\cos(\\theta + ${half ? 180 : 90}^{\\circ})$.`,
@@ -925,10 +953,15 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
           ],
           half ? Q.of(-b, c) : Q.of(-a, c),
           [half ? Q.of(b, c) : Q.of(a, c), half ? Q.of(-a, c) : Q.of(b, c), Q.of(c, b)],
-          [
-            half ? `$\\cos\\theta = ${frac(b, c)}$, and a half turn changes the sign.` : `$\\cos(\\theta + 90^{\\circ}) = -\\sin\\theta$.`,
-            half ? `$\\cos\\theta = ${frac(b, c)}$，转半圈改变符号。` : `$\\cos(\\theta + 90^{\\circ}) = -\\sin\\theta$。`,
-          ],
+          half
+            ? [
+                `**Step 1: Expand.** With $\\cos 180^{\\circ} = -1$ and $\\sin 180^{\\circ} = 0$,\n\n$$\\cos(\\theta + 180^{\\circ}) = \\cos\\theta\\cos 180^{\\circ} - \\sin\\theta\\sin 180^{\\circ} = -\\cos\\theta$$\n\n**Step 2: Find the cosine.** $\\theta$ is acute, so $\\cos\\theta = \\sqrt{1 - ${frac(a * a, c * c)}} = ${frac(b, c)}$, and the half turn gives $${ans}$.\n\n**Check.** ${check[0]}`,
+                `**第一步：展开。**由 $\\cos 180^{\\circ} = -1$，$\\sin 180^{\\circ} = 0$，\n\n$$\\cos(\\theta + 180^{\\circ}) = \\cos\\theta\\cos 180^{\\circ} - \\sin\\theta\\sin 180^{\\circ} = -\\cos\\theta$$\n\n**第二步：求余弦。**$\\theta$ 是锐角，所以 $\\cos\\theta = \\sqrt{1 - ${frac(a * a, c * c)}} = ${frac(b, c)}$，转半圈得 $${ans}$。\n\n**检验。**${check[1]}`,
+              ]
+            : [
+                `**Step 1: Expand.** With $\\cos 90^{\\circ} = 0$ and $\\sin 90^{\\circ} = 1$,\n\n$$\\cos(\\theta + 90^{\\circ}) = \\cos\\theta\\cos 90^{\\circ} - \\sin\\theta\\sin 90^{\\circ} = -\\sin\\theta$$\n\n**Step 2: Substitute.** $-\\sin\\theta = ${ans}$.\n\n**Check.** ${check[0]}`,
+                `**第一步：展开。**由 $\\cos 90^{\\circ} = 0$，$\\sin 90^{\\circ} = 1$，\n\n$$\\cos(\\theta + 90^{\\circ}) = \\cos\\theta\\cos 90^{\\circ} - \\sin\\theta\\sin 90^{\\circ} = -\\sin\\theta$$\n\n**第二步：代入。**$-\\sin\\theta = ${ans}$。\n\n**检验。**${check[1]}`,
+              ],
         );
       },
     ),
@@ -938,8 +971,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "tangent-of-a-sum-from-two-tangents",
       ["Tangent of a sum from two tangents", "由两个正切求和角正切"],
       [
-        "The tangent sum formula needs only the two tangents: their sum over one minus their product. A product close to $1$ makes the result large, and a product of exactly $1$ means no tangent exists.",
-        "正切和角公式只需要两个正切：它们的和除以 $1$ 减它们的积。积接近 $1$ 时结果很大，积恰好是 $1$ 时正切不存在。",
+        "The tangent sum formula needs only the two tangents: their sum over one minus their product. A product close to $1$ makes the result large, and a product of exactly $1$ means no tangent exists.\n\nIf $\\tan\\alpha = \\frac{1}{2}$ and $\\tan\\beta = \\frac{1}{3}$, then $\\tan(\\alpha + \\beta) = \\frac{\\frac{1}{2} + \\frac{1}{3}}{1 - \\frac{1}{6}} = \\frac{\\frac{5}{6}}{\\frac{5}{6}} = 1$. Check: $\\alpha \\approx 26.57^{\\circ}$ and $\\beta \\approx 18.43^{\\circ}$ add up to $45^{\\circ}$, whose tangent is $1$.\n\n> **Watch out.** The denominator is $1$ minus the product of the tangents, not $1$ plus it, and not $1$ alone.",
+        "正切和角公式只需要两个正切：它们的和除以 $1$ 减它们的积。积接近 $1$ 时结果很大，积恰好是 $1$ 时正切不存在。\n\n若 $\\tan\\alpha = \\frac{1}{2}$，$\\tan\\beta = \\frac{1}{3}$，则 $\\tan(\\alpha + \\beta) = \\frac{\\frac{1}{2} + \\frac{1}{3}}{1 - \\frac{1}{6}} = \\frac{\\frac{5}{6}}{\\frac{5}{6}} = 1$。检验：$\\alpha \\approx 26.57^{\\circ}$，$\\beta \\approx 18.43^{\\circ}$，和为 $45^{\\circ}$，它的正切是 $1$。\n\n> **注意。** 分母是 $1$ 减去两个正切的积，不是 $1$ 加上它，也不是单独的 $1$。",
       ],
       (rng) => {
         const a = rng.int(2, 15);
@@ -951,10 +984,18 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
           ],
           Q.of(a + b, a * b - 1),
           [Q.of(a + b, a * b), Q.of(a + b, a * b + 1), Q.of(1, a + b)],
-          [
-            `$${frac(`${frac(1, a)} + ${frac(1, b)}`, `1 - ${frac(1, a * b)}`)} = ${frac(a + b, a * b - 1)}$.`,
-            `$${frac(`${frac(1, a)} + ${frac(1, b)}`, `1 - ${frac(1, a * b)}`)} = ${frac(a + b, a * b - 1)}$。`,
-          ],
+          (() => {
+            const ans = Q.of(a + b, a * b - 1).toLatex();
+            const deg = (x: number) => ((Math.atan(x) * 180) / Math.PI).toFixed(2);
+            const sum = Math.atan(1 / a) + Math.atan(1 / b);
+            const lines = `$$${frac(1, a)} + ${frac(1, b)} = ${frac(a + b, a * b)}$$\n\n$$1 - ${frac(1, a)} \\cdot ${frac(1, b)} = 1 - ${frac(1, a * b)} = ${frac(a * b - 1, a * b)}$$`;
+            const divide = `$$\\tan(\\alpha + \\beta) = ${frac(`${frac(a + b, a * b)}`, `${frac(a * b - 1, a * b)}`)} = ${frac(a + b, a * b - 1)}${frac(a + b, a * b - 1) === ans ? "" : ` = ${ans}`}$$`;
+            const check = `$\\alpha \\approx ${deg(1 / a)}^{\\circ}$, $\\beta \\approx ${deg(1 / b)}^{\\circ}$, $\\tan(${((sum * 180) / Math.PI).toFixed(2)}^{\\circ}) \\approx ${Math.tan(sum).toFixed(4)}$, $${ans} \\approx ${((a + b) / (a * b - 1)).toFixed(4)}$`;
+            return [
+              `**Step 1: Work out the top and the bottom.** The top is the sum of the tangents and the bottom is $1$ minus their product:\n\n${lines}\n\n**Step 2: Divide.** The common $${a * b}$ cancels:\n\n${divide}\n\n**Check.** In degrees: ${check}.`,
+              `**第一步：分别算出分子和分母。**分子是两个正切的和，分母是 $1$ 减去它们的积：\n\n${lines}\n\n**第二步：相除。**约去公共的 $${a * b}$：\n\n${divide}\n\n**检验。**用角度：${check.replaceAll(", ", "，")}。`,
+            ] as const;
+          })(),
         );
       },
     ),
@@ -964,8 +1005,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "a-product-from-the-double-angle",
       ["A product from the double angle", "由二倍角求积"],
       [
-        "Reading the formula backward, $\\sin\\theta\\cos\\theta$ is half of $\\sin 2\\theta$. So a value for the double angle gives the product, even though neither factor is known.",
-        "反过来读公式，$\\sin\\theta\\cos\\theta$ 是 $\\sin 2\\theta$ 的一半。所以知道二倍角的值就得到积，尽管两个因数都不知道。",
+        "Reading the formula backward, $\\sin\\theta\\cos\\theta$ is half of $\\sin 2\\theta$. So a value for the double angle gives the product, even though neither factor is known.\n\nIf $\\sin 2\\theta = \\frac{3}{5}$, then $4\\sin\\theta\\cos\\theta = 2 \\cdot (2\\sin\\theta\\cos\\theta) = 2 \\cdot \\frac{3}{5} = \\frac{6}{5}$. Check: one such angle has $2\\theta \\approx 36.87^{\\circ}$, so $\\theta \\approx 18.43^{\\circ}$, and $4\\sin\\theta\\cos\\theta \\approx 4 \\cdot 0.3162 \\cdot 0.9487 \\approx 1.2000$.\n\n> **Watch out.** $\\sin\\theta\\cos\\theta$ is half of $\\sin 2\\theta$, not twice it: the $2$ of $2\\sin\\theta\\cos\\theta$ belongs to the double angle.",
+        "反过来读公式，$\\sin\\theta\\cos\\theta$ 是 $\\sin 2\\theta$ 的一半。所以知道二倍角的值就得到积，尽管两个因数都不知道。\n\n若 $\\sin 2\\theta = \\frac{3}{5}$，则 $4\\sin\\theta\\cos\\theta = 2 \\cdot (2\\sin\\theta\\cos\\theta) = 2 \\cdot \\frac{3}{5} = \\frac{6}{5}$。检验：取一个这样的角，$2\\theta \\approx 36.87^{\\circ}$，$\\theta \\approx 18.43^{\\circ}$，而 $4\\sin\\theta\\cos\\theta \\approx 4 \\cdot 0.3162 \\cdot 0.9487 \\approx 1.2000$。\n\n> **注意。** $\\sin\\theta\\cos\\theta$ 是 $\\sin 2\\theta$ 的一半，不是两倍：$2\\sin\\theta\\cos\\theta$ 中的 $2$ 属于二倍角。",
       ],
       (rng) => {
         const n = rng.int(1, 12);
@@ -978,10 +1019,20 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
           ],
           Q.of(n * k, 2 * d),
           [Q.of(2 * n * k, d), Q.of(n * k, d), Q.of(n, 2 * d * k)],
-          [
-            `$\\sin\\theta\\cos\\theta = ${frac(1, 2)}\\sin 2\\theta$, so multiply $${frac(n, d)}$ by $${frac(k, 2)}$.`,
-            `$\\sin\\theta\\cos\\theta = ${frac(1, 2)}\\sin 2\\theta$，所以 $${frac(n, d)}$ 乘 $${frac(k, 2)}$。`,
-          ],
+          (() => {
+            const ans = Q.of(n * k, 2 * d).toLatex();
+            const kk = k === 1 ? "" : k;
+            const th = Math.asin(n / d) / 2;
+            const step2 = `$$${kk}\\sin\\theta\\cos\\theta = ${frac(k, 2)} \\cdot ${frac(n, d)} = ${ans}$$`;
+            const check = [
+              `One such angle has $2\\theta \\approx ${((2 * th * 180) / Math.PI).toFixed(2)}^{\\circ}$, so $\\theta \\approx ${((th * 180) / Math.PI).toFixed(2)}^{\\circ}$, and $${kk}\\sin\\theta\\cos\\theta \\approx ${(k * Math.sin(th) * Math.cos(th)).toFixed(4)}$, while $${ans} \\approx ${((n * k) / (2 * d)).toFixed(4)}$.`,
+              `取一个这样的角，$2\\theta \\approx ${((2 * th * 180) / Math.PI).toFixed(2)}^{\\circ}$，$\\theta \\approx ${((th * 180) / Math.PI).toFixed(2)}^{\\circ}$，而 $${kk}\\sin\\theta\\cos\\theta \\approx ${(k * Math.sin(th) * Math.cos(th)).toFixed(4)}$，$${ans} \\approx ${((n * k) / (2 * d)).toFixed(4)}$。`,
+            ];
+            return [
+              `**Step 1: Read the formula backward.** Since $\\sin 2\\theta = 2\\sin\\theta\\cos\\theta$, the product is half the double angle: $\\sin\\theta\\cos\\theta = ${frac(1, 2)}\\sin 2\\theta$.\n\n**Step 2: Substitute.**\n\n${step2}\n\n**Check.** ${check[0]}`,
+              `**第一步：反过来读公式。**因为 $\\sin 2\\theta = 2\\sin\\theta\\cos\\theta$，积是二倍角正弦的一半：$\\sin\\theta\\cos\\theta = ${frac(1, 2)}\\sin 2\\theta$。\n\n**第二步：代入。**\n\n${step2}\n\n**检验。**${check[1]}`,
+            ] as const;
+          })(),
         );
       },
     ),
@@ -991,8 +1042,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "double-angle-sine-from-tangent",
       ["Double angle sine from tangent", "由正切求二倍角正弦"],
       [
-        "A tangent gives two sides of a right triangle, and the Pythagorean theorem gives the third. Then $\\sin 2x = 2\\sin x\\cos x$ uses both ratios from that triangle.",
-        "正切给出直角三角形的两条边，勾股定理给出第三条。然后 $\\sin 2x = 2\\sin x\\cos x$ 用到这个三角形的两个比。",
+        "A tangent gives two sides of a right triangle, and the Pythagorean theorem gives the third. Then $\\sin 2x = 2\\sin x\\cos x$ uses both ratios from that triangle.\n\nIf $x$ is acute with $\\tan x = \\frac{3}{4}$, take legs $3$ and $4$; the hypotenuse is $5$, so $\\sin x = \\frac{3}{5}$, $\\cos x = \\frac{4}{5}$ and $\\sin 2x = 2 \\cdot \\frac{3}{5} \\cdot \\frac{4}{5} = \\frac{24}{25}$. Check: $x \\approx 36.87^{\\circ}$, and $\\sin 73.74^{\\circ} \\approx 0.9600$.\n\n> **Watch out.** The sine and the cosine divide by the hypotenuse, not by the other leg: $2 \\cdot \\frac{3}{4}$ is twice the tangent, not $\\sin 2x$.",
+        "正切给出直角三角形的两条边，勾股定理给出第三条。然后 $\\sin 2x = 2\\sin x\\cos x$ 用到这个三角形的两个比。\n\n若 $x$ 是锐角，$\\tan x = \\frac{3}{4}$，取两条直角边为 $3$ 和 $4$，斜边是 $5$，所以 $\\sin x = \\frac{3}{5}$，$\\cos x = \\frac{4}{5}$，$\\sin 2x = 2 \\cdot \\frac{3}{5} \\cdot \\frac{4}{5} = \\frac{24}{25}$。检验：$x \\approx 36.87^{\\circ}$，而 $\\sin 73.74^{\\circ} \\approx 0.9600$。\n\n> **注意。** 正弦和余弦要除以斜边，不是除以另一条直角边：$2 \\cdot \\frac{3}{4}$ 是正切的两倍，不是 $\\sin 2x$。",
       ],
       (rng) => {
         const [a, b, c] = triple(rng);
@@ -1005,10 +1056,20 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
           ],
           Q.of(2 * k * a * b, c * c),
           [Q.of(k * a * b, c * c), Q.of(2 * a, b), Q.of(2 * a, c)],
-          [
-            `Take legs $${a}$ and $${b}$, so the hypotenuse is $${c}$. Then $\\sin 2x = 2 \\cdot ${frac(a, c)} \\cdot ${frac(b, c)} = ${Q.of(2 * a * b, c * c).toLatex()}$${k === 1 ? "" : `, and multiplying by $${k}$ gives $${Q.of(2 * k * a * b, c * c).toLatex()}$`}.`,
-            `取两条直角边为 $${a}$ 和 $${b}$，斜边就是 $${c}$。于是 $\\sin 2x = 2 \\cdot ${frac(a, c)} \\cdot ${frac(b, c)} = ${Q.of(2 * a * b, c * c).toLatex()}$${k === 1 ? "" : `，乘以 $${k}$ 得 $${Q.of(2 * k * a * b, c * c).toLatex()}$`}。`,
-          ],
+          (() => {
+            const once = Q.of(2 * a * b, c * c).toLatex();
+            const ans = Q.of(2 * k * a * b, c * c).toLatex();
+            const x = Math.atan(a / b);
+            const line = `$$${scale}\\sin 2x = ${k === 1 ? "" : `${k} \\cdot `}2 \\cdot ${frac(a, c)} \\cdot ${frac(b, c)} = ${k === 1 ? once : `${k} \\cdot ${once} = ${ans}`}$$`;
+            const check = [
+              `$x \\approx ${((x * 180) / Math.PI).toFixed(2)}^{\\circ}$, and $${scale}\\sin ${((2 * x * 180) / Math.PI).toFixed(2)}^{\\circ} \\approx ${(k * Math.sin(2 * x)).toFixed(4)}$, while $${ans} \\approx ${((2 * k * a * b) / (c * c)).toFixed(4)}$.`,
+              `$x \\approx ${((x * 180) / Math.PI).toFixed(2)}^{\\circ}$，而 $${scale}\\sin ${((2 * x * 180) / Math.PI).toFixed(2)}^{\\circ} \\approx ${(k * Math.sin(2 * x)).toFixed(4)}$，$${ans} \\approx ${((2 * k * a * b) / (c * c)).toFixed(4)}$。`,
+            ];
+            return [
+              `**Step 1: Build the triangle.** Take the opposite leg $${a}$ and the adjacent leg $${b}$. The hypotenuse is $\\sqrt{${a}^{2} + ${b}^{2}} = ${c}$, so $\\sin x = ${frac(a, c)}$ and $\\cos x = ${frac(b, c)}$.\n\n**Step 2: Use the double-angle formula.** $\\sin 2x = 2\\sin x\\cos x$:\n\n${line}\n\n**Check.** ${check[0]}`,
+              `**第一步：作三角形。**取对边 $${a}$、邻边 $${b}$。斜边是 $\\sqrt{${a}^{2} + ${b}^{2}} = ${c}$，所以 $\\sin x = ${frac(a, c)}$，$\\cos x = ${frac(b, c)}$。\n\n**第二步：用二倍角公式。**$\\sin 2x = 2\\sin x\\cos x$：\n\n${line}\n\n**检验。**${check[1]}`,
+            ] as const;
+          })(),
         );
       },
     ),
@@ -1018,8 +1079,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "power-reduction",
       ["Power reduction", "降幂"],
       [
-        "Solving the cosine double angle formulas for the squares gives $\\cos^{2}x = \\frac{1 + \\cos 2x}{2}$ and $\\sin^{2}x = \\frac{1 - \\cos 2x}{2}$. These trade a square for a double angle.",
-        "由余弦二倍角公式解出平方，得 $\\cos^{2}x = \\frac{1 + \\cos 2x}{2}$，$\\sin^{2}x = \\frac{1 - \\cos 2x}{2}$。它们把平方换成二倍角。",
+        "Solving the cosine double angle formulas for the squares gives $\\cos^{2}x = \\frac{1 + \\cos 2x}{2}$ and $\\sin^{2}x = \\frac{1 - \\cos 2x}{2}$. These trade a square for a double angle.\n\nFor $\\sin^{2} 3\\theta$ the angle doubles to $6\\theta$: since $\\cos 6\\theta = 1 - 2\\sin^{2} 3\\theta$, $\\sin^{2} 3\\theta = \\frac{1 - \\cos 6\\theta}{2}$. Check: at $\\theta = 10^{\\circ}$, $\\sin^{2} 30^{\\circ} = \\frac{1}{4}$, and $\\frac{1 - \\cos 60^{\\circ}}{2} = \\frac{1 - \\frac{1}{2}}{2} = \\frac{1}{4}$.\n\n> **Watch out.** The sine square takes the minus sign and the cosine square the plus sign; the whole numerator is divided by $2$, and the angle exactly doubles.",
+        "由余弦二倍角公式解出平方，得 $\\cos^{2}x = \\frac{1 + \\cos 2x}{2}$，$\\sin^{2}x = \\frac{1 - \\cos 2x}{2}$。它们把平方换成二倍角。\n\n对 $\\sin^{2} 3\\theta$，角翻倍成 $6\\theta$：由 $\\cos 6\\theta = 1 - 2\\sin^{2} 3\\theta$，得 $\\sin^{2} 3\\theta = \\frac{1 - \\cos 6\\theta}{2}$。检验：当 $\\theta = 10^{\\circ}$ 时，$\\sin^{2} 30^{\\circ} = \\frac{1}{4}$，而 $\\frac{1 - \\cos 60^{\\circ}}{2} = \\frac{1 - \\frac{1}{2}}{2} = \\frac{1}{4}$。\n\n> **注意。** 正弦的平方取减号，余弦的平方取加号；整个分子除以 $2$，角恰好翻倍。",
       ],
       (rng) => {
         const m = rng.int(1, 15);
@@ -1027,14 +1088,45 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
         const inside = m === 1 ? "\\theta" : `${m}\\theta`;
         const fn = sine ? "\\sin" : "\\cos";
         const dbl = `\\cos ${2 * m}\\theta`;
-        return chooseMath(
-          rng,
-          [`Which expression equals $${fn}^{2}(${inside})$?`, `哪个式子等于 $${fn}^{2}(${inside})$？`],
-          frac(`1 ${sine ? "-" : "+"} ${dbl}`, 2),
-          [frac(`1 ${sine ? "+" : "-"} ${dbl}`, 2), `1 ${sine ? "-" : "+"} ${dbl}`, frac(`1 ${sine ? "-" : "+"} \\cos ${3 * m}\\theta`, 2)],
+        const ans = frac(`1 ${sine ? "-" : "+"} ${dbl}`, 2);
+        const wrong = [
+          frac(`1 ${sine ? "+" : "-"} ${dbl}`, 2),
+          `1 ${sine ? "-" : "+"} ${dbl}`,
+          frac(`1 ${sine ? "-" : "+"} \\cos ${3 * m}\\theta`, 2),
+        ] as const;
+        const form = sine ? `${dbl} = 1 - 2\\sin^{2}(${inside})` : `${dbl} = 2\\cos^{2}(${inside}) - 1`;
+        const x = (m * 10 * Math.PI) / 180;
+        const square = (sine ? Math.sin(x) : Math.cos(x)) ** 2;
+        const reduced = (1 + (sine ? -1 : 1) * Math.cos(2 * x)) / 2;
+        const check = [
+          `At $\\theta = 10^{\\circ}$: $${fn}^{2}(${10 * m}^{\\circ}) \\approx ${square.toFixed(4)}$, and $${frac(`1 ${sine ? "-" : "+"} \\cos ${20 * m}^{\\circ}`, 2)} \\approx ${reduced.toFixed(4)}$.`,
+          `当 $\\theta = 10^{\\circ}$ 时：$${fn}^{2}(${10 * m}^{\\circ}) \\approx ${square.toFixed(4)}$，而 $${frac(`1 ${sine ? "-" : "+"} \\cos ${20 * m}^{\\circ}`, 2)} \\approx ${reduced.toFixed(4)}$。`,
+        ];
+        return reasoned(
+          chooseMath(
+            rng,
+            [`Which expression equals $${fn}^{2}(${inside})$?`, `哪个式子等于 $${fn}^{2}(${inside})$？`],
+            ans,
+            [...wrong],
+            [
+              `**Step 1: Pick the form.** The form of the double angle with ${sine ? "the sine" : "the cosine"} alone, at the angle $${2 * m}\\theta$, is\n\n$$${form}$$\n\n**Step 2: Solve for the square.** ${sine ? "Move the square to one side and divide by $2$" : "Add $1$ and divide by $2$"}:\n\n$$${fn}^{2}(${inside}) = ${ans}$$\n\n**Check.** ${check[0]}`,
+              `**第一步：选择形式。**在角 $${2 * m}\\theta$ 处只含${sine ? "正弦" : "余弦"}的二倍角形式是\n\n$$${form}$$\n\n**第二步：解出平方。**${sine ? "把平方移到一边，再除以 $2$" : "加上 $1$，再除以 $2$"}：\n\n$$${fn}^{2}(${inside}) = ${ans}$$\n\n**检验。**${check[1]}`,
+            ],
+          ),
           [
-            `The angle doubles to $${2 * m}\\theta$, and sine takes the minus sign while cosine takes the plus.`,
-            `角翻倍成 $${2 * m}\\theta$，正弦取减号，余弦取加号。`,
+            [
+              `$${wrong[0]}$`,
+              sine
+                ? "The sine square takes the minus sign, since $\\cos 2A = 1 - 2\\sin^{2}A$."
+                : "The cosine square takes the plus sign, since $\\cos 2A = 2\\cos^{2}A - 1$.",
+              sine ? "正弦的平方取减号，因为 $\\cos 2A = 1 - 2\\sin^{2}A$。" : "余弦的平方取加号，因为 $\\cos 2A = 2\\cos^{2}A - 1$。",
+            ],
+            [
+              `$${wrong[1]}$`,
+              "The numerator is divided by $2$; without it the value can reach $2$, which no square of a sine or cosine does.",
+              "分子要除以 $2$；不除的话值可以达到 $2$，而正弦或余弦的平方不会这样。",
+            ],
+            [`$${wrong[2]}$`, `The angle doubles to $${2 * m}\\theta$; it does not triple.`, `角翻倍成 $${2 * m}\\theta$，不是变成三倍。`],
           ],
         );
       },
@@ -1045,8 +1137,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "cos-double-angle-from-sine",
       ["The double angle from a sine", "由正弦求二倍角余弦"],
       [
-        "Choosing the form with sine alone means no cosine is needed: $\\cos 2\\theta = 1 - 2\\sin^{2}\\theta$. The quadrant does not matter either, as the square removes the sign.",
-        "选只含正弦的形式，就不需要余弦：$\\cos 2\\theta = 1 - 2\\sin^{2}\\theta$。象限也不重要，因为平方去掉了符号。",
+        "Choosing the form with sine alone means no cosine is needed: $\\cos 2\\theta = 1 - 2\\sin^{2}\\theta$. The quadrant does not matter either, as the square removes the sign.\n\nIf $\\sin\\theta = -\\frac{3}{5}$, then $\\cos 2\\theta = 1 - 2 \\cdot \\frac{9}{25} = \\frac{7}{25}$, whatever the quadrant. Check: $\\cos^{2}\\theta = 1 - \\frac{9}{25} = \\frac{16}{25}$, and $\\cos^{2}\\theta - \\sin^{2}\\theta = \\frac{16 - 9}{25} = \\frac{7}{25}$.\n\n> **Watch out.** Square first and then double: $2\\sin^{2}\\theta$ is $2 \\cdot \\frac{9}{25}$, not $\\left(\\frac{6}{5}\\right)^{2}$; and a negative sine still gives a positive square.",
+        "选只含正弦的形式，就不需要余弦：$\\cos 2\\theta = 1 - 2\\sin^{2}\\theta$。象限也不重要，因为平方去掉了符号。\n\n若 $\\sin\\theta = -\\frac{3}{5}$，则无论在哪个象限，$\\cos 2\\theta = 1 - 2 \\cdot \\frac{9}{25} = \\frac{7}{25}$。检验：$\\cos^{2}\\theta = 1 - \\frac{9}{25} = \\frac{16}{25}$，而 $\\cos^{2}\\theta - \\sin^{2}\\theta = \\frac{16 - 9}{25} = \\frac{7}{25}$。\n\n> **注意。** 先平方再乘 $2$：$2\\sin^{2}\\theta$ 是 $2 \\cdot \\frac{9}{25}$，不是 $\\left(\\frac{6}{5}\\right)^{2}$；负的正弦平方后仍是正的。",
       ],
       (rng) => {
         const [a, , c] = triple(rng);
@@ -1058,10 +1150,15 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
           ],
           Q.of(c * c - 2 * a * a, c * c),
           [Q.of(2 * a * a - c * c, c * c), Q.of(c * c - a * a, c * c), Q.of(2 * a, c)],
-          [
-            `$1 - 2 \\cdot ${frac(a * a, c * c)} = ${Q.of(c * c - 2 * a * a, c * c).toLatex()}$.`,
-            `$1 - 2 \\cdot ${frac(a * a, c * c)} = ${Q.of(c * c - 2 * a * a, c * c).toLatex()}$。`,
-          ],
+          (() => {
+            const ans = Q.of(c * c - 2 * a * a, c * c).toLatex();
+            const line = `$$\\cos 2\\theta = 1 - 2 \\cdot ${frac(a * a, c * c)} = 1 - ${frac(2 * a * a, c * c)} = ${ans}$$`;
+            const check = `$\\cos^{2}\\theta = 1 - ${frac(a * a, c * c)} = ${frac(c * c - a * a, c * c)}$, and $\\cos^{2}\\theta - \\sin^{2}\\theta = ${frac(`${c * c - a * a} - ${a * a}`, c * c)} = ${ans}$`;
+            return [
+              `**Step 1: Choose the form.** Only the sine is given, so use $\\cos 2\\theta = 1 - 2\\sin^{2}\\theta$. Squaring removes the sign: $\\sin^{2}\\theta = ${frac(a * a, c * c)}$.\n\n**Step 2: Substitute.**\n\n${line}\n\n**Check.** With the first form: ${check}.`,
+              `**第一步：选择形式。**只给出了正弦，所以用 $\\cos 2\\theta = 1 - 2\\sin^{2}\\theta$。平方去掉了符号：$\\sin^{2}\\theta = ${frac(a * a, c * c)}$。\n\n**第二步：代入。**\n\n${line}\n\n**检验。**用第一种形式：${check.replace(", and ", "，而 ")}。`,
+            ] as const;
+          })(),
         );
       },
     ),
@@ -1071,8 +1168,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "double-angle-tangent-from-a-value",
       ["The double angle tangent from a value", "由值求二倍角正切"],
       [
-        "With a known tangent, the formula gives the tangent of twice the angle without finding the angle. Work out the denominator first, as subtracting the square is where errors usually occur.",
-        "已知正切时，公式不用求角就能得到二倍角的正切。先算分母，因为错误通常出在减去平方这一步。",
+        "With a known tangent, the formula gives the tangent of twice the angle without finding the angle. Work out the denominator first, as subtracting the square is where errors usually occur.\n\nIf $\\tan\\theta = \\frac{2}{3}$, the bottom is $1 - \\frac{4}{9} = \\frac{5}{9}$ and the top is $2 \\cdot \\frac{2}{3} = \\frac{4}{3}$, so $\\tan 2\\theta = \\frac{4}{3} \\cdot \\frac{9}{5} = \\frac{12}{5}$. Check: $\\theta \\approx 33.69^{\\circ}$, and $\\tan 67.38^{\\circ} \\approx 2.4000$.\n\n> **Watch out.** Square the whole tangent, $\\left(\\frac{2}{3}\\right)^{2} = \\frac{4}{9}$, subtract it from $1$, and do not forget to double the top.",
+        "已知正切时，公式不用求角就能得到二倍角的正切。先算分母，因为错误通常出在减去平方这一步。\n\n若 $\\tan\\theta = \\frac{2}{3}$，分母是 $1 - \\frac{4}{9} = \\frac{5}{9}$，分子是 $2 \\cdot \\frac{2}{3} = \\frac{4}{3}$，所以 $\\tan 2\\theta = \\frac{4}{3} \\cdot \\frac{9}{5} = \\frac{12}{5}$。检验：$\\theta \\approx 33.69^{\\circ}$，而 $\\tan 67.38^{\\circ} \\approx 2.4000$。\n\n> **注意。** 要把整个正切平方，$\\left(\\frac{2}{3}\\right)^{2} = \\frac{4}{9}$，再用 $1$ 减去它；也别忘了分子要乘 $2$。",
       ],
       (rng) => {
         const n = rng.int(1, 9);
@@ -1081,10 +1178,20 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
           [`If $\\tan\\theta = ${frac(n, d)}$, find $\\tan 2\\theta$.`, `若 $\\tan\\theta = ${frac(n, d)}$，求 $\\tan 2\\theta$。`],
           Q.of(2 * n * d, d * d - n * n),
           [Q.of(2 * n, d), Q.of(2 * n * d, d * d + n * n), Q.of(n * d, d * d - n * n)],
-          [
-            `$${frac(`2 \\cdot ${frac(n, d)}`, `1 - ${frac(n * n, d * d)}`)} = ${Q.of(2 * n * d, d * d - n * n).toLatex()}$.`,
-            `$${frac(`2 \\cdot ${frac(n, d)}`, `1 - ${frac(n * n, d * d)}`)} = ${Q.of(2 * n * d, d * d - n * n).toLatex()}$。`,
-          ],
+          (() => {
+            const ans = Q.of(2 * n * d, d * d - n * n).toLatex();
+            const th = Math.atan(n / d);
+            const bottom = `$$1 - \\left(${frac(n, d)}\\right)^{2} = 1 - ${frac(n * n, d * d)} = ${frac(d * d - n * n, d * d)}$$`;
+            const divide = `$$\\tan 2\\theta = ${frac(`2 \\cdot ${frac(n, d)}`, frac(d * d - n * n, d * d))} = ${frac(2 * n, d)} \\cdot ${frac(d * d, d * d - n * n)} = ${ans}$$`;
+            const check = [
+              `$\\theta \\approx ${((th * 180) / Math.PI).toFixed(2)}^{\\circ}$, and $\\tan ${((2 * th * 180) / Math.PI).toFixed(2)}^{\\circ} \\approx ${Math.tan(2 * th).toFixed(4)}$, while $${ans} \\approx ${((2 * n * d) / (d * d - n * n)).toFixed(4)}$.`,
+              `$\\theta \\approx ${((th * 180) / Math.PI).toFixed(2)}^{\\circ}$，而 $\\tan ${((2 * th * 180) / Math.PI).toFixed(2)}^{\\circ} \\approx ${Math.tan(2 * th).toFixed(4)}$，$${ans} \\approx ${((2 * n * d) / (d * d - n * n)).toFixed(4)}$。`,
+            ];
+            return [
+              `**Step 1: Work out the denominator.** Square the whole tangent and subtract from $1$:\n\n${bottom}\n\n**Step 2: Divide.** $\\tan 2\\theta = \\frac{2\\tan\\theta}{1 - \\tan^{2}\\theta}$, and dividing by a fraction multiplies by its reciprocal:\n\n${divide}\n\n**Check.** ${check[0]}`,
+              `**第一步：算出分母。**把整个正切平方，再用 $1$ 减去它：\n\n${bottom}\n\n**第二步：相除。**$\\tan 2\\theta = \\frac{2\\tan\\theta}{1 - \\tan^{2}\\theta}$，除以分数就是乘以它的倒数：\n\n${divide}\n\n**检验。**${check[1]}`,
+            ] as const;
+          })(),
         );
       },
     ),
