@@ -338,8 +338,8 @@ const arctanSum: KnowledgePointDef = {
   id: "the-tangent-of-a-sum-of-two-inverse-tangents",
   title: t("The tangent of a sum of two inverse tangents", "两个反正切之和的正切"),
   explanation: t(
-    "An inverse tangent is an angle whose tangent is known, even when the angle itself has no pleasant value. So a sum of two inverse tangents can be treated like a sum of any two angles. Applying the tangent sum formula removes the inverse functions, because the tangent of each angle is simply the number inside. No calculator and no reference triangle are needed, and the answer comes out as an exact fraction.",
-    "反正切是正切已知的角，即使这个角本身没有简单的值。所以两个反正切的和可以像任意两个角的和一样处理。应用正切的和角公式就能消去反函数，因为每个角的正切就是括号里的那个数。不需要计算器，也不需要参考三角形，结果是一个精确的分数。",
+    "An inverse tangent is an angle whose tangent is known, even when the angle itself has no pleasant value. So a sum of two inverse tangents can be treated like a sum of any two angles. Applying the tangent sum formula removes the inverse functions, because the tangent of each angle is simply the number inside. No calculator and no reference triangle are needed, and the answer comes out as an exact fraction.\n\nFor $\\tan(\\arctan 2 + \\arctan 3)$: $\\frac{2 + 3}{1 - 2 \\cdot 3} = \\frac{5}{-5} = -1$. Check: $\\arctan 2 + \\arctan 3 \\approx 1.1071 + 1.2490 = 2.3562$, which is $\\frac{3\\pi}{4}$, and $\\tan \\frac{3\\pi}{4} = -1$.\n\n> **Watch out.** The denominator of the sum formula is $1$ minus the product of the tangents; $1$ plus the product belongs to the difference formula. And the tangent of a sum is not the sum of the tangents.",
+    "反正切是正切已知的角，即使这个角本身没有简单的值。所以两个反正切的和可以像任意两个角的和一样处理。应用正切的和角公式就能消去反函数，因为每个角的正切就是括号里的那个数。不需要计算器，也不需要参考三角形，结果是一个精确的分数。\n\n对 $\\tan(\\arctan 2 + \\arctan 3)$：$\\frac{2 + 3}{1 - 2 \\cdot 3} = \\frac{5}{-5} = -1$。检验：$\\arctan 2 + \\arctan 3 \\approx 1.1071 + 1.2490 = 2.3562$，即 $\\frac{3\\pi}{4}$，而 $\\tan \\frac{3\\pi}{4} = -1$。\n\n> **注意。** 和角公式的分母是 $1$ 减去两个正切的积；$1$ 加上积属于差角公式。和的正切也不等于正切的和。",
   ),
   generate(rng) {
     const a = rng.int(2, 7);
@@ -352,10 +352,16 @@ const arctanSum: KnowledgePointDef = {
       ),
       answer,
       wrong: [a + b, Q.of(a + b, 1 + a * b), a * b, Q.of(a - b, 1 + a * b)],
-      solution: t(
-        `Let the two angles be $A$ and $B$, so $\\tan A = ${a}$ and $\\tan B = ${b}$. The sum formula gives $\\frac{${a} + ${inParens(b)}}{1 - ${a} \\cdot ${inParens(b)}} = ${answer.toLatex()}$.`,
-        `设这两个角为 $A$、$B$，则 $\\tan A = ${a}$，$\\tan B = ${b}$。和角公式给出 $\\frac{${a} + ${inParens(b)}}{1 - ${a} \\cdot ${inParens(b)}} = ${answer.toLatex()}$。`,
-      ),
+      solution: (() => {
+        const sum = Math.atan(a) + Math.atan(b);
+        const formula = `$$\\tan(A + B) = \\frac{\\tan A + \\tan B}{1 - \\tan A \\tan B} = \\frac{${a} + ${inParens(b)}}{1 - ${a} \\cdot ${inParens(b)}} = \\frac{${a + b}}{${1 - a * b}} = ${answer.toLatex()}$$`;
+        const check = `$\\arctan ${a} + \\arctan ${inParens(b)} \\approx ${sum.toFixed(4)}$, and $\\tan(${sum.toFixed(4)}) \\approx ${Math.tan(sum).toFixed(4)}$`;
+        const checkZh = `$\\arctan ${a} + \\arctan ${inParens(b)} \\approx ${sum.toFixed(4)}$，而 $\\tan(${sum.toFixed(4)}) \\approx ${Math.tan(sum).toFixed(4)}$`;
+        return t(
+          `${stepLabel(1, "Name the angles", "设出两个角").en} Let $A = \\arctan ${a}$ and $B = \\arctan ${inParens(b)}$, so $\\tan A = ${a}$ and $\\tan B = ${b}$.\n\n${stepLabel(2, "Use the sum formula", "用和角公式").en}\n\n${formula}\n\n**Check.** ${check}, the value of $${answer.toLatex()}$ to four places.`,
+          `${stepLabel(1, "Name the angles", "设出两个角")["zh-CN"]}设 $A = \\arctan ${a}$，$B = \\arctan ${inParens(b)}$，则 $\\tan A = ${a}$，$\\tan B = ${b}$。\n\n${stepLabel(2, "Use the sum formula", "用和角公式")["zh-CN"]}\n\n${formula}\n\n**检验。** ${checkZh}，正是 $${answer.toLatex()}$ 保留四位小数的值。`,
+        );
+      })(),
     });
   },
 };
@@ -364,8 +370,8 @@ const productFromSum: KnowledgePointDef = {
   id: "the-product-of-sine-and-cosine-from-their-sum",
   title: t("The product of sine and cosine from their sum", "由正弦与余弦的和求它们的积"),
   explanation: t(
-    "The Pythagorean identity can recover information that seems to be missing. Squaring a sum of sine and cosine produces their two squares and twice their product. The two squares add up to one, whatever the angle is, so the square of the sum tells us the product at once. The angle itself is never found and never needed, which is why this works even when the angle has no simple value.",
-    "毕达哥拉斯恒等式能找回看似缺失的信息。把正弦与余弦的和平方，得到它们的两个平方以及积的两倍。不管角是多少，两个平方之和都等于一，所以和的平方立刻给出积。始终不必求出这个角，这就是角没有简单的值时这个方法仍然有效的原因。",
+    "The Pythagorean identity can recover information that seems to be missing. Squaring a sum of sine and cosine produces their two squares and twice their product. The two squares add up to one, whatever the angle is, so the square of the sum tells us the product at once. The angle itself is never found and never needed, which is why this works even when the angle has no simple value.\n\nFor $\\sin x + \\cos x = \\frac{1}{2}$: squaring gives $1 + 2\\sin x\\cos x = \\frac{1}{4}$, so $\\sin x\\cos x = -\\frac{3}{8}$. Check: $1 + 2\\left(-\\frac{3}{8}\\right) = 1 - \\frac{3}{4} = \\frac{1}{4} = \\left(\\frac{1}{2}\\right)^{2}$.\n\n> **Watch out.** Squaring the sum gives twice the product, so halve at the end. And the two squares do not vanish: together they make $1$, which has to be taken away first.",
+    "毕达哥拉斯恒等式能找回看似缺失的信息。把正弦与余弦的和平方，得到它们的两个平方以及积的两倍。不管角是多少，两个平方之和都等于一，所以和的平方立刻给出积。始终不必求出这个角，这就是角没有简单的值时这个方法仍然有效的原因。\n\n对 $\\sin x + \\cos x = \\frac{1}{2}$：平方得 $1 + 2\\sin x\\cos x = \\frac{1}{4}$，所以 $\\sin x\\cos x = -\\frac{3}{8}$。检验：$1 + 2\\left(-\\frac{3}{8}\\right) = 1 - \\frac{3}{4} = \\frac{1}{4} = \\left(\\frac{1}{2}\\right)^{2}$。\n\n> **注意。** 和的平方给出的是积的两倍，所以最后要除以 $2$。两个平方也不会消失：它们合起来是 $1$，要先减去。",
   ),
   generate(rng) {
     const [p0, q] = rng.pick(
@@ -383,10 +389,16 @@ const productFromSum: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(p * p + q * q, 2 * q * q), Q.of(p * p - q * q, q * q), Q.of(p * p, 2 * q * q), Q.of(p, 2 * q)],
-      solution: t(
-        `Square both sides: $\\sin^{2} x + 2\\sin x \\cos x + \\cos^{2} x = ${square}$. The two squares add up to one, so $1 + 2\\sin x \\cos x = ${square}$. Solving gives $\\sin x \\cos x = ${answer.toLatex()}$.`,
-        `两边平方：$\\sin^{2} x + 2\\sin x \\cos x + \\cos^{2} x = ${square}$。两个平方之和是一，所以 $1 + 2\\sin x \\cos x = ${square}$。解得 $\\sin x \\cos x = ${answer.toLatex()}$。`,
-      ),
+      solution: (() => {
+        const solved = `$$\\sin x \\cos x = \\frac{1}{2}\\left(${square} - 1\\right) = ${answer.toLatex()}$$`;
+        const twice = Q.of(p * p - q * q, q * q).toLatex();
+        const added = twice.startsWith("-") ? `1 - ${twice.slice(1)}` : `1 + ${twice}`;
+        const check = `1 + 2\\left(${answer.toLatex()}\\right) = ${added} = ${Q.of(p * p, q * q).toLatex()} = \\left(${frac(p, q)}\\right)^{2}`;
+        return t(
+          `${stepLabel(1, "Square both sides", "两边平方").en}\n\n$$\\sin^{2} x + 2\\sin x \\cos x + \\cos^{2} x = ${square}$$\n\n${stepLabel(2, "Use the identity", "用恒等式").en} The two squares add up to $1$, so $1 + 2\\sin x \\cos x = ${square}$.\n\n${stepLabel(3, "Solve", "求解").en}\n\n${solved}\n\n**Check.** $${check}$.`,
+          `${stepLabel(1, "Square both sides", "两边平方")["zh-CN"]}\n\n$$\\sin^{2} x + 2\\sin x \\cos x + \\cos^{2} x = ${square}$$\n\n${stepLabel(2, "Use the identity", "用恒等式")["zh-CN"]}两个平方之和是 $1$，所以 $1 + 2\\sin x \\cos x = ${square}$。\n\n${stepLabel(3, "Solve", "求解")["zh-CN"]}\n\n${solved}\n\n**检验。** $${check}$。`,
+        );
+      })(),
     });
   },
 };

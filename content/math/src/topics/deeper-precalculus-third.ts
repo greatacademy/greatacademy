@@ -357,23 +357,41 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
         "undoing-sine-outside-the-range",
         ["Undoing sine outside the range", "在值域之外还原正弦"],
         [
-          "Arcsine always returns an angle from $-\\frac{\\pi}{2}$ to $\\frac{\\pi}{2}$. So for an angle outside this range, the result is the angle in the range with the same sine, not the original.",
-          "反正弦总是返回 $-\\frac{\\pi}{2}$ 到 $\\frac{\\pi}{2}$ 之间的角。所以范围外的角，结果是范围内正弦相同的角，而不是原来的角。",
+          "Arcsine always returns an angle from $-\\frac{\\pi}{2}$ to $\\frac{\\pi}{2}$. So for an angle outside this range, the result is the angle in the range with the same sine, not the original.\n\nFor $\\arcsin\\left(\\sin \\frac{5\\pi}{6}\\right)$: the angle $\\frac{5\\pi}{6}$ is past $\\frac{\\pi}{2}$, and $\\sin\\left(\\pi - \\frac{5\\pi}{6}\\right) = \\sin \\frac{\\pi}{6}$, so the result is $\\frac{\\pi}{6}$. Check: $\\sin \\frac{5\\pi}{6} = \\sin \\frac{\\pi}{6} = \\frac{1}{2}$, and $\\arcsin \\frac{1}{2} = \\frac{\\pi}{6}$.\n\n> **Watch out.** $\\arcsin(\\sin x) = x$ only when $x$ is already in the range. Reflect with $\\pi - x$; changing the sign instead gives $-x$, whose sine has the opposite sign.",
+          "反正弦总是返回 $-\\frac{\\pi}{2}$ 到 $\\frac{\\pi}{2}$ 之间的角。所以范围外的角，结果是范围内正弦相同的角，而不是原来的角。\n\n对 $\\arcsin\\left(\\sin \\frac{5\\pi}{6}\\right)$：角 $\\frac{5\\pi}{6}$ 超过了 $\\frac{\\pi}{2}$，而 $\\sin\\left(\\pi - \\frac{5\\pi}{6}\\right) = \\sin \\frac{\\pi}{6}$，所以结果是 $\\frac{\\pi}{6}$。检验：$\\sin \\frac{5\\pi}{6} = \\sin \\frac{\\pi}{6} = \\frac{1}{2}$，而 $\\arcsin \\frac{1}{2} = \\frac{\\pi}{6}$。\n\n> **注意。** 只有 $x$ 已在值域内时才有 $\\arcsin(\\sin x) = x$。要用 $\\pi - x$ 来反射；如果只改变符号得到 $-x$，它的正弦符号相反。",
         ],
         (rng) => {
           const d = rng.int(3, 18);
           const inside = rng.int(1, Math.floor((d - 1) / 2));
-          return chooseMath(
-            rng,
+          const angle = piOver(d - inside, d);
+          const ans = piOver(inside, d);
+          return reasoned(
+            chooseMath(
+              rng,
+              [`Evaluate $\\arcsin\\left(\\sin ${angle}\\right)$.`, `计算 $\\arcsin\\left(\\sin ${angle}\\right)$。`],
+              ans,
+              [angle, piOver(-inside, d), piOver(inside + d, d)],
+              [
+                `**Step 1: Compare with the range.** The angle $${angle}$ is more than $\\frac{\\pi}{2}$, so it is outside the range of arcsine, and arcsine cannot return it.\n\n**Step 2: Reflect.** Since $\\sin(\\pi - x) = \\sin x$,\n\n$$\\sin ${angle} = \\sin\\left(\\pi - ${angle}\\right) = \\sin ${ans}$$\n\n**Check.** $${ans}$ lies between $-\\frac{\\pi}{2}$ and $\\frac{\\pi}{2}$, and its sine is $\\sin ${angle}$, so $\\arcsin\\left(\\sin ${angle}\\right) = ${ans}$.`,
+                `**第一步：与值域比较。**角 $${angle}$ 大于 $\\frac{\\pi}{2}$，不在反正弦的值域内，反正弦不会返回它。\n\n**第二步：反射。**因为 $\\sin(\\pi - x) = \\sin x$，\n\n$$\\sin ${angle} = \\sin\\left(\\pi - ${angle}\\right) = \\sin ${ans}$$\n\n**检验。**$${ans}$ 在 $-\\frac{\\pi}{2}$ 与 $\\frac{\\pi}{2}$ 之间，它的正弦是 $\\sin ${angle}$，所以 $\\arcsin\\left(\\sin ${angle}\\right) = ${ans}$。`,
+              ],
+            ),
             [
-              `Evaluate $\\arcsin\\left(\\sin ${piOver(d - inside, d)}\\right)$.`,
-              `计算 $\\arcsin\\left(\\sin ${piOver(d - inside, d)}\\right)$。`,
-            ],
-            piOver(inside, d),
-            [piOver(d - inside, d), piOver(-inside, d), piOver(inside + d, d)],
-            [
-              `$\\sin(\\pi - x) = \\sin x$, and $${piOver(inside, d)}$ lies in the range of arcsine.`,
-              `$\\sin(\\pi - x) = \\sin x$，而 $${piOver(inside, d)}$ 在反正弦的值域内。`,
+              [
+                `$${angle}$`,
+                "This angle is outside the range of arcsine, from $-\\frac{\\pi}{2}$ to $\\frac{\\pi}{2}$, so arcsine cannot return it.",
+                "这个角不在反正弦的值域 $-\\frac{\\pi}{2}$ 到 $\\frac{\\pi}{2}$ 内，反正弦不会返回它。",
+              ],
+              [
+                `$${piOver(-inside, d)}$`,
+                "The sign is wrong: the sine of the angle is positive, so the result is positive too.",
+                "符号错了：这个角的正弦是正的，所以结果也是正的。",
+              ],
+              [
+                `$${piOver(inside + d, d)}$`,
+                "Adding $\\pi$ changes the sign of the sine, and the angle is outside the range.",
+                "加上 $\\pi$ 会改变正弦的符号，而且这个角不在值域内。",
+              ],
             ],
           );
         },
@@ -387,23 +405,46 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
         "undoing-cosine-outside-the-range",
         ["Undoing cosine outside the range", "在值域之外还原余弦"],
         [
-          "Arccosine always returns an angle from $0$ to $\\pi$. Cosine has the same value at $x$ and at $2\\pi - x$, so an angle past $\\pi$ comes back reflected, not unchanged.",
-          "反余弦总是返回 0 到 $\\pi$ 之间的角。余弦在 $x$ 和 $2\\pi - x$ 处相等，所以超过 $\\pi$ 的角会反射回来，而不是不变。",
+          "Arccosine always returns an angle from $0$ to $\\pi$. Cosine has the same value at $x$ and at $2\\pi - x$, so an angle past $\\pi$ comes back reflected, not unchanged.\n\nFor $\\arccos\\left(\\cos \\frac{5\\pi}{3}\\right)$: the angle is past $\\pi$, and $\\cos\\left(2\\pi - \\frac{5\\pi}{3}\\right) = \\cos \\frac{\\pi}{3}$, so the result is $\\frac{\\pi}{3}$. Check: $\\cos \\frac{5\\pi}{3} = \\cos \\frac{\\pi}{3} = \\frac{1}{2}$, and $\\arccos \\frac{1}{2} = \\frac{\\pi}{3}$.\n\n> **Watch out.** Reflect with $2\\pi - x$, not $\\pi - x$: $\\cos(\\pi - x) = -\\cos x$ has the opposite sign. And arccosine never returns a negative angle.",
+          "反余弦总是返回 0 到 $\\pi$ 之间的角。余弦在 $x$ 和 $2\\pi - x$ 处相等，所以超过 $\\pi$ 的角会反射回来，而不是不变。\n\n对 $\\arccos\\left(\\cos \\frac{5\\pi}{3}\\right)$：这个角超过了 $\\pi$，而 $\\cos\\left(2\\pi - \\frac{5\\pi}{3}\\right) = \\cos \\frac{\\pi}{3}$，所以结果是 $\\frac{\\pi}{3}$。检验：$\\cos \\frac{5\\pi}{3} = \\cos \\frac{\\pi}{3} = \\frac{1}{2}$，而 $\\arccos \\frac{1}{2} = \\frac{\\pi}{3}$。\n\n> **注意。** 要用 $2\\pi - x$ 反射，而不是 $\\pi - x$：$\\cos(\\pi - x) = -\\cos x$ 的符号相反。反余弦也从不返回负角。",
         ],
         (rng) => {
           const d = rng.pick([3, 4, 5, 6, 7, 8, 9, 10, 12]);
           const n = rng.int(1, d - 1);
-          return chooseMath(
-            rng,
+          const angle = piOver(2 * d - n, d);
+          const ans = piOver(n, d);
+          return reasoned(
+            chooseMath(
+              rng,
+              [`Evaluate $\\arccos\\left(\\cos ${angle}\\right)$.`, `计算 $\\arccos\\left(\\cos ${angle}\\right)$。`],
+              ans,
+              [angle, piOver(-n, d), piOver(d - n, d) === ans ? piOver(n + 2 * d, d) : piOver(d - n, d)],
+              [
+                `**Step 1: Compare with the range.** The angle $${angle}$ is more than $\\pi$, so it is outside the range of arccosine, from $0$ to $\\pi$.\n\n**Step 2: Reflect.** Since $\\cos(2\\pi - x) = \\cos x$,\n\n$$\\cos ${angle} = \\cos\\left(2\\pi - ${angle}\\right) = \\cos ${ans}$$\n\n**Check.** $${ans}$ lies between $0$ and $\\pi$, and its cosine is $\\cos ${angle}$, so $\\arccos\\left(\\cos ${angle}\\right) = ${ans}$.`,
+                `**第一步：与值域比较。**角 $${angle}$ 大于 $\\pi$，不在反余弦的值域 $0$ 到 $\\pi$ 内。\n\n**第二步：反射。**因为 $\\cos(2\\pi - x) = \\cos x$，\n\n$$\\cos ${angle} = \\cos\\left(2\\pi - ${angle}\\right) = \\cos ${ans}$$\n\n**检验。**$${ans}$ 在 $0$ 与 $\\pi$ 之间，它的余弦是 $\\cos ${angle}$，所以 $\\arccos\\left(\\cos ${angle}\\right) = ${ans}$。`,
+              ],
+            ),
             [
-              `Evaluate $\\arccos\\left(\\cos ${piOver(2 * d - n, d)}\\right)$.`,
-              `计算 $\\arccos\\left(\\cos ${piOver(2 * d - n, d)}\\right)$。`,
-            ],
-            piOver(n, d),
-            [piOver(2 * d - n, d), piOver(-n, d), piOver(d - n, d) === piOver(n, d) ? piOver(n + 2 * d, d) : piOver(d - n, d)],
-            [
-              `$\\cos(2\\pi - x) = \\cos x$, and $${piOver(n, d)}$ lies in the range of arccosine.`,
-              `$\\cos(2\\pi - x) = \\cos x$，而 $${piOver(n, d)}$ 在反余弦的值域内。`,
+              [
+                `$${angle}$`,
+                "This angle is outside the range of arccosine, from $0$ to $\\pi$, so arccosine cannot return it.",
+                "这个角不在反余弦的值域 $0$ 到 $\\pi$ 内，反余弦不会返回它。",
+              ],
+              [
+                `$${piOver(-n, d)}$`,
+                "Arccosine never returns a negative angle: its range is from $0$ to $\\pi$.",
+                "反余弦从不返回负角：它的值域是 $0$ 到 $\\pi$。",
+              ],
+              [
+                `$${piOver(d - n, d)}$`,
+                "This reflects with $\\pi - x$, but $\\cos(\\pi - x) = -\\cos x$ has the opposite sign.",
+                "这是用 $\\pi - x$ 反射的，但 $\\cos(\\pi - x) = -\\cos x$ 的符号相反。",
+              ],
+              [
+                `$${piOver(n + 2 * d, d)}$`,
+                "Adding $2\\pi$ keeps the cosine, but the angle is outside the range.",
+                "加上 $2\\pi$ 不改变余弦，但这个角不在值域内。",
+              ],
             ],
           );
         },
@@ -417,8 +458,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
         "undoing-tangent-outside-the-range",
         ["Undoing tangent outside the range", "在值域之外还原正切"],
         [
-          "Arctangent returns an angle strictly between $-\\frac{\\pi}{2}$ and $\\frac{\\pi}{2}$. Tangent repeats every $\\pi$, so subtract $\\pi$ as many times as it takes to land in that range.",
-          "反正切返回严格在 $-\\frac{\\pi}{2}$ 和 $\\frac{\\pi}{2}$ 之间的角。正切的周期是 $\\pi$，所以减去若干个 $\\pi$，直到落在这个范围内。",
+          "Arctangent returns an angle strictly between $-\\frac{\\pi}{2}$ and $\\frac{\\pi}{2}$. Tangent repeats every $\\pi$, so subtract $\\pi$ as many times as it takes to land in that range.\n\nFor $\\arctan\\left(\\tan \\frac{7\\pi}{6}\\right)$: subtracting $\\pi$ gives $\\frac{\\pi}{6}$, which lies in the range, so the result is $\\frac{\\pi}{6}$. Check: $\\tan \\frac{7\\pi}{6} = \\tan \\frac{\\pi}{6} = \\frac{\\sqrt{3}}{3}$.\n\n> **Watch out.** Tangent repeats every $\\pi$, so shift by whole multiples of $\\pi$; do not reflect as for sine, since $\\tan(\\pi - x) = -\\tan x$. Subtract, rather than add, to move toward the range.",
+          "反正切返回严格在 $-\\frac{\\pi}{2}$ 和 $\\frac{\\pi}{2}$ 之间的角。正切的周期是 $\\pi$，所以减去若干个 $\\pi$，直到落在这个范围内。\n\n对 $\\arctan\\left(\\tan \\frac{7\\pi}{6}\\right)$：减去 $\\pi$ 得 $\\frac{\\pi}{6}$，它在值域内，所以结果是 $\\frac{\\pi}{6}$。检验：$\\tan \\frac{7\\pi}{6} = \\tan \\frac{\\pi}{6} = \\frac{\\sqrt{3}}{3}$。\n\n> **注意。** 正切的周期是 $\\pi$，所以要平移 $\\pi$ 的整数倍；不要像正弦那样反射，因为 $\\tan(\\pi - x) = -\\tan x$。要减去而不是加上，才能靠近值域。",
         ],
         (rng) => {
           const d = rng.pick([3, 4, 5, 6, 7, 8, 9, 10, 12]);
@@ -435,8 +476,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
               piOver(small, d),
               [piOver(small + turns * d, d), piOver(-small, d), piOver(small + d + turns * d, d)],
               [
-                `Subtracting ${turns === 1 ? "$\\pi$" : `$${turns}\\pi$`} keeps the tangent and lands in the range.`,
-                `减去 ${turns === 1 ? "$\\pi$" : `$${turns}\\pi$`} 不改变正切，并落在值域内。`,
+                `**Step 1: Use the period.** Tangent repeats every $\\pi$, so subtracting a whole number of $\\pi$ keeps the tangent.\n\n**Step 2: Subtract.** Take away ${turns === 1 ? "$\\pi$" : `$${turns}\\pi$`}:\n\n$$${piOver(small + turns * d, d)} - ${turns === 1 ? "" : turns}\\pi = ${piOver(small, d)}$$\n\n**Check.** $${piOver(small, d)}$ lies strictly between $-\\frac{\\pi}{2}$ and $\\frac{\\pi}{2}$, and its tangent is $\\tan ${piOver(small + turns * d, d)}$, so it is the result.`,
+                `**第一步：利用周期。**正切的周期是 $\\pi$，所以减去 $\\pi$ 的整数倍不改变正切。\n\n**第二步：减去。**减去 ${turns === 1 ? "$\\pi$" : `$${turns}\\pi$`}：\n\n$$${piOver(small + turns * d, d)} - ${turns === 1 ? "" : turns}\\pi = ${piOver(small, d)}$$\n\n**检验。**$${piOver(small, d)}$ 严格在 $-\\frac{\\pi}{2}$ 与 $\\frac{\\pi}{2}$ 之间，它的正切是 $\\tan ${piOver(small + turns * d, d)}$，所以它就是结果。`,
               ],
             ),
             [
@@ -467,8 +508,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "a-ratio-of-an-inverse-ratio",
       ["A ratio of an inverse ratio", "反三角函数的三角比"],
       [
-        "An inverse function names an angle, and a right triangle holds its ratio. So draw the triangle, use the Pythagorean theorem for the missing side, and read off the other ratio.",
-        "反函数表示一个角，它的比可以放在直角三角形中。所以画三角形，用勾股定理求缺失的边，再读出另一个比。",
+        "An inverse function names an angle, and a right triangle holds its ratio. So draw the triangle, use the Pythagorean theorem for the missing side, and read off the other ratio.\n\nFor $\\sin\\left(\\arccos \\frac{3}{5}\\right)$: the angle has adjacent side $3$ and hypotenuse $5$, so the opposite side is $\\sqrt{5^{2} - 3^{2}} = 4$, and the sine is $\\frac{4}{5}$. Check: $\\left(\\frac{3}{5}\\right)^{2} + \\left(\\frac{4}{5}\\right)^{2} = \\frac{9}{25} + \\frac{16}{25} = 1$.\n\n> **Watch out.** Read which sides the inner ratio names: arccosine gives adjacent over hypotenuse, arcsine opposite over hypotenuse. The answer is another ratio of the same triangle, not the one inside, and here the angle is acute, so it is positive.",
+        "反函数表示一个角，它的比可以放在直角三角形中。所以画三角形，用勾股定理求缺失的边，再读出另一个比。\n\n对 $\\sin\\left(\\arccos \\frac{3}{5}\\right)$：这个角的邻边是 $3$，斜边是 $5$，所以对边是 $\\sqrt{5^{2} - 3^{2}} = 4$，正弦是 $\\frac{4}{5}$。检验：$\\left(\\frac{3}{5}\\right)^{2} + \\left(\\frac{4}{5}\\right)^{2} = \\frac{9}{25} + \\frac{16}{25} = 1$。\n\n> **注意。** 要看清里面的比指的是哪两条边：反余弦给出邻边比斜边，反正弦给出对边比斜边。答案是同一个三角形的另一个比，不是里面那个；这里的角是锐角，所以答案是正的。",
       ],
       (rng) => {
         const [a, b, c] = triple(rng);
@@ -485,8 +526,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
           answer,
           [Q.of(a, c), Q.of(c, b), Q.of(a, b)],
           [
-            `The inner angle lies in a right triangle with hypotenuse $${c}$ and one leg $${a}$, so the other leg is $\\sqrt{${c}^{2} - ${a}^{2}} = ${b}$. ${form === 2 ? `Its tangent is $\\frac{${b}}{${a}}$, opposite over adjacent.` : `The ratio asked for is the other leg over the hypotenuse, $\\frac{${b}}{${c}}$.`}`,
-            `里面的角在斜边为 $${c}$、一条直角边为 $${a}$ 的直角三角形中，所以另一条直角边是 $\\sqrt{${c}^{2} - ${a}^{2}} = ${b}$。${form === 2 ? `它的正切是对边比邻边，即 $\\frac{${b}}{${a}}$。` : `所求的比是另一条直角边比斜边，即 $\\frac{${b}}{${c}}$。`}`,
+            `**Step 1: Draw the triangle.** The inner angle has ${form === 1 ? "opposite" : "adjacent"} side $${a}$ and hypotenuse $${c}$, since $${form === 1 ? "\\sin" : "\\cos"}$ is ${form === 1 ? "opposite" : "adjacent"} over hypotenuse.\n\n**Step 2: Find the missing side.** By the Pythagorean theorem the ${form === 1 ? "adjacent" : "opposite"} side is $\\sqrt{${c}^{2} - ${a}^{2}} = \\sqrt{${c * c - a * a}} = ${b}$.\n\n**Step 3: Read off the ratio.** ${form === 2 ? `The tangent is opposite over adjacent, $${frac(b, a)}$.` : `The ${form === 0 ? "sine is opposite" : "cosine is adjacent"} over hypotenuse, $${frac(b, c)}$.`}\n\n**Check.** $${a}^{2} + ${b}^{2} = ${a * a} + ${b * b} = ${c * c} = ${c}^{2}$, so the sides do make a right triangle.`,
+            `**第一步：画三角形。**里面的角的${form === 1 ? "对边" : "邻边"}是 $${a}$，斜边是 $${c}$，因为 $${form === 1 ? "\\sin" : "\\cos"}$ 是${form === 1 ? "对边" : "邻边"}比斜边。\n\n**第二步：求缺失的边。**由勾股定理，${form === 1 ? "邻边" : "对边"}是 $\\sqrt{${c}^{2} - ${a}^{2}} = \\sqrt{${c * c - a * a}} = ${b}$。\n\n**第三步：读出比。**${form === 2 ? `正切是对边比邻边，即 $${frac(b, a)}$。` : `${form === 0 ? "正弦是对边" : "余弦是邻边"}比斜边，即 $${frac(b, c)}$。`}\n\n**检验。**$${a}^{2} + ${b}^{2} = ${a * a} + ${b * b} = ${c * c} = ${c}^{2}$，所以这三条边确实构成直角三角形。`,
           ],
         );
       },
@@ -497,8 +538,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "writing-everything-in-sine-and-cosine",
       ["Writing everything in sine and cosine", "全部写成正弦和余弦"],
       [
-        "When an expression mixes several functions, writing each in terms of sine and cosine shows what cancels. A common denominator then finishes the job.",
-        "式子中有几种函数时，把它们都写成正弦和余弦，就能看出什么可以约去。再通分就完成了。",
+        "When an expression mixes several functions, writing each in terms of sine and cosine shows what cancels. A common denominator then finishes the job.\n\nFor $\\sec\\theta - \\sin\\theta\\tan\\theta$:\n\n$$\\frac{1}{\\cos\\theta} - \\frac{\\sin^{2}\\theta}{\\cos\\theta} = \\frac{1 - \\sin^{2}\\theta}{\\cos\\theta} = \\frac{\\cos^{2}\\theta}{\\cos\\theta} = \\cos\\theta$$\n\nCheck: at $\\theta = 60^{\\circ}$, $2 - \\frac{\\sqrt{3}}{2} \\cdot \\sqrt{3} = 2 - \\frac{3}{2} = \\frac{1}{2} = \\cos 60^{\\circ}$.\n\n> **Watch out.** Put the terms over a common denominator before using $\\sin^{2} + \\cos^{2} = 1$; the identity only acts on the combined numerator. Keep the coefficient in front through every step.",
+        "式子中有几种函数时，把它们都写成正弦和余弦，就能看出什么可以约去。再通分就完成了。\n\n对 $\\sec\\theta - \\sin\\theta\\tan\\theta$：\n\n$$\\frac{1}{\\cos\\theta} - \\frac{\\sin^{2}\\theta}{\\cos\\theta} = \\frac{1 - \\sin^{2}\\theta}{\\cos\\theta} = \\frac{\\cos^{2}\\theta}{\\cos\\theta} = \\cos\\theta$$\n\n检验：当 $\\theta = 60^{\\circ}$ 时，$2 - \\frac{\\sqrt{3}}{2} \\cdot \\sqrt{3} = 2 - \\frac{3}{2} = \\frac{1}{2} = \\cos 60^{\\circ}$。\n\n> **注意。** 要先通分，再用 $\\sin^{2} + \\cos^{2} = 1$；恒等式只作用于合并后的分子。前面的系数要在每一步都保留。",
       ],
       (rng) => {
         const k = rng.int(2, 15);
@@ -506,14 +547,61 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
         const form = rng.int(0, 2);
         const expr = [`\\sec ${v} - \\sin ${v} \\tan ${v}`, `\\csc ${v} - \\cos ${v} \\cot ${v}`, `\\tan ${v} + \\cot ${v}`][form]!;
         const correct = [`${k}\\cos ${v}`, `${k}\\sin ${v}`, `${k}\\sec ${v} \\csc ${v}`][form]!;
-        return chooseMath(
-          rng,
-          [`Simplify $${k}(${expr})$.`, `化简 $${k}(${expr})$。`],
-          correct,
-          [`${k}\\tan ${v}`, `${k}`, `${k}\\cot ${v}`, `${k}\\sin ${v} \\cos ${v}`],
+        const s = `\\sin ${v}`;
+        const c = `\\cos ${v}`;
+        const written = [
+          `\\frac{1}{${c}} - \\frac{\\sin^{2} ${v}}{${c}}`,
+          `\\frac{1}{${s}} - \\frac{\\cos^{2} ${v}}{${s}}`,
+          `\\frac{${s}}{${c}} + \\frac{${c}}{${s}}`,
+        ][form]!;
+        const combined = [
+          `\\frac{1 - \\sin^{2} ${v}}{${c}} = \\frac{\\cos^{2} ${v}}{${c}} = ${c}`,
+          `\\frac{1 - \\cos^{2} ${v}}{${s}} = \\frac{\\sin^{2} ${v}}{${s}} = ${s}`,
+          `\\frac{\\sin^{2} ${v} + \\cos^{2} ${v}}{${s} ${c}} = \\frac{1}{${s} ${c}} = \\sec ${v} \\csc ${v}`,
+        ][form]!;
+        const check = [
+          [`${v} = 60^{\\circ}`, "2 - \\frac{\\sqrt{3}}{2} \\cdot \\sqrt{3} = \\frac{1}{2}", "\\cos 60^{\\circ} = \\frac{1}{2}"],
+          [`${v} = 30^{\\circ}`, "2 - \\frac{\\sqrt{3}}{2} \\cdot \\sqrt{3} = \\frac{1}{2}", "\\sin 30^{\\circ} = \\frac{1}{2}"],
+          [`${v} = 45^{\\circ}`, "1 + 1 = 2", "\\sec 45^{\\circ} \\csc 45^{\\circ} = \\sqrt{2} \\cdot \\sqrt{2} = 2"],
+        ][form]!;
+        return reasoned(
+          chooseMath(
+            rng,
+            [`Simplify $${k}(${expr})$.`, `化简 $${k}(${expr})$。`],
+            correct,
+            [`${k}\\tan ${v}`, `${k}`, `${k}\\cot ${v}`, `${k}\\sin ${v} \\cos ${v}`],
+            [
+              `**Step 1: Write everything in sine and cosine.** The bracket is\n\n$$${expr} = ${written}$$\n\n**Step 2: Combine and use the identity.** Over the common denominator, with $\\sin^{2} + \\cos^{2} = 1$:\n\n$$${written} = ${combined}$$\n\nSo $${k}(${expr}) = ${correct}$.\n\n**Check.** At $${check[0]}$ the bracket is $${check[1]}$, and $${check[2]}$, which agree.`,
+              `**第一步：全部写成正弦和余弦。**括号内是\n\n$$${expr} = ${written}$$\n\n**第二步：通分并用恒等式。**通分，并利用 $\\sin^{2} + \\cos^{2} = 1$：\n\n$$${written} = ${combined}$$\n\n所以 $${k}(${expr}) = ${correct}$。\n\n**检验。**当 $${check[0]}$ 时，括号内是 $${check[1]}$，而 $${check[2]}$，两者相等。`,
+            ],
+          ),
           [
-            `Write it over $\\sin ${v} \\cos ${v}$ or one of its factors, and $\\sin^{2} + \\cos^{2} = 1$ gives $${correct}$.`,
-            `写成以 $\\sin ${v} \\cos ${v}$ 或它的因式为分母的式子，由 $\\sin^{2} + \\cos^{2} = 1$ 得 $${correct}$。`,
+            [
+              `$${k}\\tan ${v}$`,
+              "Every tangent becomes sine over cosine, and after combining over the common denominator no tangent is left.",
+              "每个正切都化成正弦比余弦，通分合并后不会剩下正切。",
+            ],
+            [
+              `$${k}$`,
+              "The identity simplifies the numerator, but a function of the angle is left over the denominator, so the result is not a constant.",
+              "恒等式化简了分子，但分母上的三角函数还在，所以结果不是常数。",
+            ],
+            [
+              `$${k}\\cot ${v}$`,
+              "Every cotangent becomes cosine over sine, and after combining over the common denominator no cotangent is left.",
+              "每个余切都化成余弦比正弦，通分合并后不会剩下余切。",
+            ],
+            form === 2
+              ? [
+                  `$${k}\\sin ${v} \\cos ${v}$`,
+                  `This is upside down: the sum is $\\frac{1}{\\sin ${v} \\cos ${v}}$, not $\\sin ${v} \\cos ${v}$.`,
+                  `上下颠倒了：和是 $\\frac{1}{\\sin ${v} \\cos ${v}}$，不是 $\\sin ${v} \\cos ${v}$。`,
+                ]
+              : [
+                  `$${k}\\sin ${v} \\cos ${v}$`,
+                  "After cancelling, a single function is left, not a product of sine and cosine.",
+                  "约分后只剩下一个函数，而不是正弦与余弦的积。",
+                ],
           ],
         );
       },
@@ -524,8 +612,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "the-sign-from-the-quadrant",
       ["The sign from the quadrant", "由象限定符号"],
       [
-        "The identity gives $\\cos^{2}\\theta$, which has two square roots. The quadrant decides between them, as cosine is positive on the right of the circle and negative on the left.",
-        "恒等式给出 $\\cos^{2}\\theta$，它有两个平方根。象限决定取哪一个：余弦在圆的右侧为正，左侧为负。",
+        "The identity gives $\\cos^{2}\\theta$, which has two square roots. The quadrant decides between them, as cosine is positive on the right of the circle and negative on the left.\n\nFor $\\sin\\theta = \\frac{3}{5}$ in quadrant II: $\\cos^{2}\\theta = 1 - \\frac{9}{25} = \\frac{16}{25}$, and cosine is negative there, so $\\cos\\theta = -\\frac{4}{5}$. Check: $\\left(\\frac{3}{5}\\right)^{2} + \\left(-\\frac{4}{5}\\right)^{2} = \\frac{9}{25} + \\frac{16}{25} = 1$.\n\n> **Watch out.** The identity gives only $\\cos^{2}\\theta$, and both signs square to it. Decide the sign from the quadrant: in quadrant II the sine is positive but the cosine is negative.",
+        "恒等式给出 $\\cos^{2}\\theta$，它有两个平方根。象限决定取哪一个：余弦在圆的右侧为正，左侧为负。\n\n对第二象限中 $\\sin\\theta = \\frac{3}{5}$：$\\cos^{2}\\theta = 1 - \\frac{9}{25} = \\frac{16}{25}$，而余弦在那里为负，所以 $\\cos\\theta = -\\frac{4}{5}$。检验：$\\left(\\frac{3}{5}\\right)^{2} + \\left(-\\frac{4}{5}\\right)^{2} = \\frac{9}{25} + \\frac{16}{25} = 1$。\n\n> **注意。** 恒等式只给出 $\\cos^{2}\\theta$，两个符号平方后都是它。要由象限决定符号：在第二象限正弦为正，而余弦为负。",
       ],
       (rng) => {
         const [a, b, c] = triple(rng);
@@ -538,8 +626,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
           Q.of(q2 ? -b : b, c),
           [Q.of(q2 ? b : -b, c), Q.of(a, c), Q.of(b, a)],
           [
-            `$\\cos^{2}\\theta = 1 - ${frac(a * a, c * c)} = ${frac(b * b, c * c)}$, and cosine is ${q2 ? "negative" : "positive"} in that quadrant.`,
-            `$\\cos^{2}\\theta = 1 - ${frac(a * a, c * c)} = ${frac(b * b, c * c)}$，余弦在该象限为${q2 ? "负" : "正"}。`,
+            `**Step 1: Use the identity.** From $\\sin^{2}\\theta + \\cos^{2}\\theta = 1$,\n\n$$\\cos^{2}\\theta = 1 - ${frac(a * a, c * c)} = ${frac(b * b, c * c)}$$\n\n**Step 2: Choose the sign.** So $\\cos\\theta = \\pm ${frac(b, c)}$. Cosine is ${q2 ? "negative" : "positive"} in quadrant ${q2 ? "II" : "I"}, so $\\cos\\theta = ${q2 ? "-" : ""}${frac(b, c)}$.\n\n**Check.** $\\left(${frac(a, c)}\\right)^{2} + \\left(${q2 ? "-" : ""}${frac(b, c)}\\right)^{2} = ${frac(a * a + b * b, c * c)} = 1$.`,
+            `**第一步：用恒等式。**由 $\\sin^{2}\\theta + \\cos^{2}\\theta = 1$，\n\n$$\\cos^{2}\\theta = 1 - ${frac(a * a, c * c)} = ${frac(b * b, c * c)}$$\n\n**第二步：确定符号。**所以 $\\cos\\theta = \\pm ${frac(b, c)}$。余弦在第${q2 ? "二" : "一"}象限为${q2 ? "负" : "正"}，所以 $\\cos\\theta = ${q2 ? "-" : ""}${frac(b, c)}$。\n\n**检验。**$\\left(${frac(a, c)}\\right)^{2} + \\left(${q2 ? "-" : ""}${frac(b, c)}\\right)^{2} = ${frac(a * a + b * b, c * c)} = 1$。`,
           ],
         );
       },
@@ -550,8 +638,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "secant-from-tangent",
       ["Secant from tangent", "由正切求正割"],
       [
-        "The identity $1 + \\tan^{2}\\theta = \\sec^{2}\\theta$ turns a known tangent into a secant. Then the sign of the square root comes from the quadrant, as with any other square root.",
-        "恒等式 $1 + \\tan^{2}\\theta = \\sec^{2}\\theta$ 把已知的正切化成正割。平方根的符号由象限决定，和其他平方根一样。",
+        "The identity $1 + \\tan^{2}\\theta = \\sec^{2}\\theta$ turns a known tangent into a secant. Then the sign of the square root comes from the quadrant, as with any other square root.\n\nFor $\\tan\\theta = \\frac{3}{4}$ in quadrant III: $\\sec^{2}\\theta = 1 + \\frac{9}{16} = \\frac{25}{16}$, and cosine is negative there, so $\\sec\\theta = -\\frac{5}{4}$. Check: $1 + \\left(\\frac{3}{4}\\right)^{2} = \\frac{25}{16} = \\left(-\\frac{5}{4}\\right)^{2}$.\n\n> **Watch out.** Secant has the sign of cosine, not of tangent: in quadrant III the tangent is positive but the secant is negative.",
+        "恒等式 $1 + \\tan^{2}\\theta = \\sec^{2}\\theta$ 把已知的正切化成正割。平方根的符号由象限决定，和其他平方根一样。\n\n对第三象限中 $\\tan\\theta = \\frac{3}{4}$：$\\sec^{2}\\theta = 1 + \\frac{9}{16} = \\frac{25}{16}$，而余弦在那里为负，所以 $\\sec\\theta = -\\frac{5}{4}$。检验：$1 + \\left(\\frac{3}{4}\\right)^{2} = \\frac{25}{16} = \\left(-\\frac{5}{4}\\right)^{2}$。\n\n> **注意。** 正割与余弦同号，而不是与正切同号：在第三象限正切为正，正割却为负。",
       ],
       (rng) => {
         const [a, b, c] = triple(rng);
@@ -564,8 +652,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
           Q.of(q3 ? -c : c, b),
           [Q.of(q3 ? c : -c, b), Q.of(c, a), Q.of(b, c)],
           [
-            `$\\sec^{2}\\theta = 1 + ${frac(a * a, b * b)} = ${frac(c * c, b * b)}$, and secant has the sign of cosine.`,
-            `$\\sec^{2}\\theta = 1 + ${frac(a * a, b * b)} = ${frac(c * c, b * b)}$，正割与余弦同号。`,
+            `**Step 1: Use the identity.** From $1 + \\tan^{2}\\theta = \\sec^{2}\\theta$,\n\n$$\\sec^{2}\\theta = 1 + ${frac(a * a, b * b)} = ${frac(c * c, b * b)}$$\n\n**Step 2: Choose the sign.** So $\\sec\\theta = \\pm ${frac(c, b)}$. Secant has the sign of cosine, which is ${q3 ? "negative" : "positive"} in quadrant ${q3 ? "III" : "I"}, so $\\sec\\theta = ${q3 ? "-" : ""}${frac(c, b)}$.\n\n**Check.** $1 + \\left(${frac(a, b)}\\right)^{2} = ${frac(c * c, b * b)} = \\left(${q3 ? "-" : ""}${frac(c, b)}\\right)^{2}$.`,
+            `**第一步：用恒等式。**由 $1 + \\tan^{2}\\theta = \\sec^{2}\\theta$，\n\n$$\\sec^{2}\\theta = 1 + ${frac(a * a, b * b)} = ${frac(c * c, b * b)}$$\n\n**第二步：确定符号。**所以 $\\sec\\theta = \\pm ${frac(c, b)}$。正割与余弦同号，余弦在第${q3 ? "三" : "一"}象限为${q3 ? "负" : "正"}，所以 $\\sec\\theta = ${q3 ? "-" : ""}${frac(c, b)}$。\n\n**检验。**$1 + \\left(${frac(a, b)}\\right)^{2} = ${frac(c * c, b * b)} = \\left(${q3 ? "-" : ""}${frac(c, b)}\\right)^{2}$。`,
           ],
         );
       },
@@ -576,8 +664,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "the-other-factor-from-one",
       ["The other factor from one", "由一个因式求另一个"],
       [
-        "Since $(\\sec x + \\tan x)(\\sec x - \\tan x) = 1$, the two factors are reciprocals. So knowing one gives the other at once, with no need to find $x$.",
-        "由 $(\\sec x + \\tan x)(\\sec x - \\tan x) = 1$，两个因式互为倒数。所以知道一个就立刻得到另一个，不必求 $x$。",
+        "Since $(\\sec x + \\tan x)(\\sec x - \\tan x) = 1$, the two factors are reciprocals. So knowing one gives the other at once, with no need to find $x$.\n\nIf $\\sec x + \\tan x = 3$, then $\\sec x - \\tan x = \\frac{1}{3}$. Check: $3 \\cdot \\frac{1}{3} = 1 = \\sec^{2} x - \\tan^{2} x$.\n\n> **Watch out.** The other factor is the reciprocal, not the negative: the sign between the terms changes, but the value is turned upside down.",
+        "由 $(\\sec x + \\tan x)(\\sec x - \\tan x) = 1$，两个因式互为倒数。所以知道一个就立刻得到另一个，不必求 $x$。\n\n若 $\\sec x + \\tan x = 3$，则 $\\sec x - \\tan x = \\frac{1}{3}$。检验：$3 \\cdot \\frac{1}{3} = 1 = \\sec^{2} x - \\tan^{2} x$。\n\n> **注意。** 另一个因式是倒数，而不是相反数：两项之间的符号变了，但值是上下颠倒，而不是变号。",
       ],
       (rng) => {
         const n = rng.int(3, 17);
@@ -592,8 +680,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
           Q.of(d, n),
           [Q.of(n, d), Q.of(-n, d), Q.of(-d, n)],
           [
-            `The product of the two factors is 1, so the answer is the reciprocal of $${shown}$.`,
-            `两个因式的积是 1，所以答案是 $${shown}$ 的倒数。`,
+            `**Step 1: Multiply the factors.** The two factors multiply to the secant and tangent identity:\n\n$$(\\sec x + \\tan x)(\\sec x - \\tan x) = \\sec^{2} x - \\tan^{2} x = 1$$\n\n**Step 2: Divide.** So the factor asked for is the reciprocal of $${shown}$:\n\n$$\\sec x ${plusFirst ? "-" : "+"} \\tan x = \\frac{1}{${shown}} = ${Q.of(d, n).toLatex()}$$\n\n**Check.** $${shown} \\cdot ${Q.of(d, n).toLatex()} = 1$, as the identity requires.`,
+            `**第一步：两个因式相乘。**两个因式的积就是正割与正切的恒等式：\n\n$$(\\sec x + \\tan x)(\\sec x - \\tan x) = \\sec^{2} x - \\tan^{2} x = 1$$\n\n**第二步：相除。**所以所求的因式是 $${shown}$ 的倒数：\n\n$$\\sec x ${plusFirst ? "-" : "+"} \\tan x = \\frac{1}{${shown}} = ${Q.of(d, n).toLatex()}$$\n\n**检验。**$${shown} \\cdot ${Q.of(d, n).toLatex()} = 1$，符合恒等式。`,
           ],
         );
       },
@@ -604,8 +692,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "cosecant-from-cotangent",
       ["Cosecant from cotangent", "由余切求余割"],
       [
-        "The identity $1 + \\cot^{2}\\theta = \\csc^{2}\\theta$ turns a known cotangent into a cosecant. Cosecant has the sign of sine, so it is positive above the axis and negative below.",
-        "恒等式 $1 + \\cot^{2}\\theta = \\csc^{2}\\theta$ 把已知的余切化成余割。余割与正弦同号，在轴上方为正，在轴下方为负。",
+        "The identity $1 + \\cot^{2}\\theta = \\csc^{2}\\theta$ turns a known cotangent into a cosecant. Cosecant has the sign of sine, so it is positive above the axis and negative below.\n\nFor $\\cot\\theta = \\frac{4}{3}$ in quadrant III: $\\csc^{2}\\theta = 1 + \\frac{16}{9} = \\frac{25}{9}$, and sine is negative there, so $\\csc\\theta = -\\frac{5}{3}$. Check: $1 + \\left(\\frac{4}{3}\\right)^{2} = \\frac{25}{9} = \\left(-\\frac{5}{3}\\right)^{2}$.\n\n> **Watch out.** Cosecant has the sign of sine, not of cotangent: in quadrant III the cotangent is positive but the cosecant is negative.",
+        "恒等式 $1 + \\cot^{2}\\theta = \\csc^{2}\\theta$ 把已知的余切化成余割。余割与正弦同号，在轴上方为正，在轴下方为负。\n\n对第三象限中 $\\cot\\theta = \\frac{4}{3}$：$\\csc^{2}\\theta = 1 + \\frac{16}{9} = \\frac{25}{9}$，而正弦在那里为负，所以 $\\csc\\theta = -\\frac{5}{3}$。检验：$1 + \\left(\\frac{4}{3}\\right)^{2} = \\frac{25}{9} = \\left(-\\frac{5}{3}\\right)^{2}$。\n\n> **注意。** 余割与正弦同号，而不是与余切同号：在第三象限余切为正，余割却为负。",
       ],
       (rng) => {
         const [a, b, c] = triple(rng);
@@ -618,8 +706,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
           Q.of(q3 ? -c : c, b),
           [Q.of(q3 ? c : -c, b), Q.of(c, a), Q.of(b, c)],
           [
-            `$\\csc^{2}\\theta = 1 + ${frac(a * a, b * b)} = ${frac(c * c, b * b)}$, and sine is ${q3 ? "negative" : "positive"} there.`,
-            `$\\csc^{2}\\theta = 1 + ${frac(a * a, b * b)} = ${frac(c * c, b * b)}$，那里正弦为${q3 ? "负" : "正"}。`,
+            `**Step 1: Use the identity.** From $1 + \\cot^{2}\\theta = \\csc^{2}\\theta$,\n\n$$\\csc^{2}\\theta = 1 + ${frac(a * a, b * b)} = ${frac(c * c, b * b)}$$\n\n**Step 2: Choose the sign.** So $\\csc\\theta = \\pm ${frac(c, b)}$. Cosecant has the sign of sine, which is ${q3 ? "negative" : "positive"} in quadrant ${q3 ? "III" : "I"}, so $\\csc\\theta = ${q3 ? "-" : ""}${frac(c, b)}$.\n\n**Check.** $1 + \\left(${frac(a, b)}\\right)^{2} = ${frac(c * c, b * b)} = \\left(${q3 ? "-" : ""}${frac(c, b)}\\right)^{2}$.`,
+            `**第一步：用恒等式。**由 $1 + \\cot^{2}\\theta = \\csc^{2}\\theta$，\n\n$$\\csc^{2}\\theta = 1 + ${frac(a * a, b * b)} = ${frac(c * c, b * b)}$$\n\n**第二步：确定符号。**所以 $\\csc\\theta = \\pm ${frac(c, b)}$。余割与正弦同号，正弦在第${q3 ? "三" : "一"}象限为${q3 ? "负" : "正"}，所以 $\\csc\\theta = ${q3 ? "-" : ""}${frac(c, b)}$。\n\n**检验。**$1 + \\left(${frac(a, b)}\\right)^{2} = ${frac(c * c, b * b)} = \\left(${q3 ? "-" : ""}${frac(c, b)}\\right)^{2}$。`,
           ],
         );
       },
@@ -630,8 +718,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "an-equation-from-cofunctions",
       ["An equation from cofunctions", "由余函数得到方程"],
       [
-        "Sine of one acute angle equals cosine of the other exactly when the angles add up to $90^{\\circ}$. This turns an equation between the functions into a linear equation in $x$.",
-        "一个锐角的正弦等于另一个锐角的余弦，当且仅当两角之和是 $90^{\\circ}$。这把函数之间的等式变成 $x$ 的一次方程。",
+        "Sine of one acute angle equals cosine of the other exactly when the angles add up to $90^{\\circ}$. This turns an equation between the functions into a linear equation in $x$.\n\nFor $\\sin((2x + 10)^{\\circ}) = \\cos((x + 20)^{\\circ})$: the angles add up to $90^{\\circ}$, so $3x + 30 = 90$ and $x = 20$. Check: the angles are $50^{\\circ}$ and $40^{\\circ}$, which add up to $90^{\\circ}$, so $\\sin 50^{\\circ} = \\cos 40^{\\circ}$.\n\n> **Watch out.** Set the sum of the angles to $90^{\\circ}$; do not set the angles equal, since $\\sin A = \\cos B$ does not mean $A = B$.",
+        "一个锐角的正弦等于另一个锐角的余弦，当且仅当两角之和是 $90^{\\circ}$。这把函数之间的等式变成 $x$ 的一次方程。\n\n对 $\\sin((2x + 10)^{\\circ}) = \\cos((x + 20)^{\\circ})$：两角之和是 $90^{\\circ}$，所以 $3x + 30 = 90$，$x = 20$。检验：两个角是 $50^{\\circ}$ 和 $40^{\\circ}$，和是 $90^{\\circ}$，所以 $\\sin 50^{\\circ} = \\cos 40^{\\circ}$。\n\n> **注意。** 要令两角之和等于 $90^{\\circ}$；不要令两角相等，因为 $\\sin A = \\cos B$ 并不意味着 $A = B$。",
       ],
       (rng) => {
         const x = rng.int(3, 12);
@@ -650,8 +738,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
           x,
           [sum, x + 1, a + c],
           [
-            `The angles add up to $90^{\\circ}$: $${a + c}x + ${b + d} = 90$, so $x = ${x}$.`,
-            `两角之和是 90：$${a + c}x + ${b + d} = 90$，所以 $x = ${x}$。`,
+            `**Step 1: Add the angles.** A sine equals a cosine of acute angles exactly when the angles are complementary:\n\n$$(${first} + ${b}) + (${second} + ${d}) = 90$$\n\n**Step 2: Solve.** This is $${a + c}x + ${b + d} = 90$, so $${a + c}x = ${sum}$ and $x = ${x}$.\n\n**Check.** The angles are $${a * x + b}^{\\circ}$ and $${c * x + d}^{\\circ}$, both acute, and $${a * x + b} + ${c * x + d} = 90$.`,
+            `**第一步：两角相加。**锐角的正弦等于余弦，当且仅当两角互余：\n\n$$(${first} + ${b}) + (${second} + ${d}) = 90$$\n\n**第二步：求解。**即 $${a + c}x + ${b + d} = 90$，所以 $${a + c}x = ${sum}$，$x = ${x}$。\n\n**检验。**两个角是 $${a * x + b}^{\\circ}$ 和 $${c * x + d}^{\\circ}$，都是锐角，且 $${a * x + b} + ${c * x + d} = 90$。`,
           ],
         );
       },
@@ -662,8 +750,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "sine-of-a-sum-from-two-triangles",
       ["Sine of a sum from two triangles", "由两个三角形求和角正弦"],
       [
-        "Knowing the sine of two acute angles gives their cosines through the Pythagorean identity. The sum formula then combines all four numbers, whatever the angles themselves are.",
-        "知道两个锐角的正弦，由勾股恒等式得到余弦。和角公式再把这四个数合起来，不管这两个角本身是多少。",
+        "Knowing the sine of two acute angles gives their cosines through the Pythagorean identity. The sum formula then combines all four numbers, whatever the angles themselves are.\n\nFor $\\sin\\alpha = \\frac{3}{5}$ and $\\sin\\beta = \\frac{5}{13}$: $\\cos\\alpha = \\frac{4}{5}$ and $\\cos\\beta = \\frac{12}{13}$, so $\\sin(\\alpha + \\beta) = \\frac{3}{5} \\cdot \\frac{12}{13} + \\frac{4}{5} \\cdot \\frac{5}{13} = \\frac{56}{65}$. Check: $\\cos(\\alpha + \\beta) = \\frac{4}{5} \\cdot \\frac{12}{13} - \\frac{3}{5} \\cdot \\frac{5}{13} = \\frac{33}{65}$, and $56^{2} + 33^{2} = 3136 + 1089 = 4225 = 65^{2}$.\n\n> **Watch out.** $\\sin(\\alpha + \\beta)$ is not $\\sin\\alpha + \\sin\\beta$. And the angles are acute, so take the positive square roots for the cosines.",
+        "知道两个锐角的正弦，由勾股恒等式得到余弦。和角公式再把这四个数合起来，不管这两个角本身是多少。\n\n对 $\\sin\\alpha = \\frac{3}{5}$，$\\sin\\beta = \\frac{5}{13}$：$\\cos\\alpha = \\frac{4}{5}$，$\\cos\\beta = \\frac{12}{13}$，所以 $\\sin(\\alpha + \\beta) = \\frac{3}{5} \\cdot \\frac{12}{13} + \\frac{4}{5} \\cdot \\frac{5}{13} = \\frac{56}{65}$。检验：$\\cos(\\alpha + \\beta) = \\frac{4}{5} \\cdot \\frac{12}{13} - \\frac{3}{5} \\cdot \\frac{5}{13} = \\frac{33}{65}$，而 $56^{2} + 33^{2} = 3136 + 1089 = 4225 = 65^{2}$。\n\n> **注意。** $\\sin(\\alpha + \\beta)$ 不等于 $\\sin\\alpha + \\sin\\beta$。两个角是锐角，所以余弦取正的平方根。",
       ],
       (rng) => {
         const [a, b, c] = triple(rng);
@@ -677,10 +765,19 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
           ],
           Q.of(top, c * r),
           [Q.of(minus ? a * q + b * p : a * q - b * p, c * r), Q.of(a * p + b * q + 1, c * r), Q.of(a * q, c * r)],
-          [
-            `$\\cos\\alpha = ${frac(b, c)}$ and $\\cos\\beta = ${frac(q, r)}$, so it is $${frac(a, c)} \\cdot ${frac(q, r)} ${minus ? "-" : "+"} ${frac(b, c)} \\cdot ${frac(p, r)}$.`,
-            `$\\cos\\alpha = ${frac(b, c)}$，$\\cos\\beta = ${frac(q, r)}$，所以是 $${frac(a, c)} \\cdot ${frac(q, r)} ${minus ? "-" : "+"} ${frac(b, c)} \\cdot ${frac(p, r)}$。`,
-          ],
+          (() => {
+            const op = minus ? "-" : "+";
+            const other = minus ? b * q + a * p : b * q - a * p;
+            const sq = (n: number) => (n < 0 ? `(${n})^{2}` : `${n}^{2}`);
+            const value = Q.of(top, c * r).toLatex();
+            const lines = `$$\\sin(\\alpha ${op} \\beta) = \\sin\\alpha\\cos\\beta ${op} \\cos\\alpha\\sin\\beta = ${frac(a, c)} \\cdot ${frac(q, r)} ${op} ${frac(b, c)} \\cdot ${frac(p, r)} = ${frac(`${a * q} ${op} ${b * p}`, c * r)} = ${value}$$`;
+            const cosines = `$$\\cos\\alpha = \\sqrt{1 - ${frac(a * a, c * c)}} = ${frac(b, c)}, \\quad \\cos\\beta = \\sqrt{1 - ${frac(p * p, r * r)}} = ${frac(q, r)}$$`;
+            const square = `${sq(top)} + ${sq(other)} = ${top * top} + ${other * other} = ${c * r * c * r} = ${c * r}^{2}`;
+            return [
+              `**Step 1: Find the cosines.** Both angles are acute, so their cosines are positive:\n\n${cosines}\n\n**Step 2: Use the ${minus ? "difference" : "sum"} formula.**\n\n${lines}\n\n**Check.** The same numbers give $\\cos(\\alpha ${op} \\beta) = ${Q.of(other, c * r).toLatex()}$, and $${square}$, so the sine and cosine of $\\alpha ${op} \\beta$ satisfy $\\sin^{2} + \\cos^{2} = 1$.`,
+              `**第一步：求余弦。**两个角都是锐角，所以余弦为正：\n\n${cosines}\n\n**第二步：用${minus ? "差角" : "和角"}公式。**\n\n${lines}\n\n**检验。**用同样的数得 $\\cos(\\alpha ${op} \\beta) = ${Q.of(other, c * r).toLatex()}$，而 $${square}$，所以 $\\alpha ${op} \\beta$ 的正弦和余弦满足 $\\sin^{2} + \\cos^{2} = 1$。`,
+            ] as const;
+          })(),
         );
       },
     ),
