@@ -521,7 +521,8 @@ export const solvingQuadraticEquationsContainingUnknownParameters = topic(
 const oddCoefficients = [-13, -11, -9, -7, -5, -3, -1, 1, 3, 5, 7, 9, 11, 13];
 
 /** completingTheSquareWithOddLinearTerms completes the square when half the linear coefficient is a fraction. */
-export const completingTheSquareWithOddLinearTerms = topic(
+export const completingTheSquareWithOddLinearTerms: TopicDef = {
+  ...topic(
   "completing-the-square-with-odd-linear-terms",
   t("Completing the Square With Odd Linear Terms", "一次项系数为奇数时的配方"),
   t(
@@ -535,8 +536,8 @@ export const completingTheSquareWithOddLinearTerms = topic(
       "the-constant-that-completes-the-square",
       t("The constant that completes the square", "配成完全平方的常数"),
       t(
-        "$x^{2} + bx + c$ is a perfect square when $c$ is the square of half of $b$. For $x^{2} + 5x + c$, half of $5$ is $\\frac{5}{2}$, so $c = \\left(\\frac{5}{2}\\right)^{2} = \\frac{25}{4}$ and $x^{2} + 5x + \\frac{25}{4} = \\left(x + \\frac{5}{2}\\right)^{2}$. Square the whole fraction: $\\left(\\frac{5}{2}\\right)^{2}$ is $\\frac{25}{4}$, not $\\frac{25}{2}$.",
-        "当 $c$ 等于 $b$ 的一半的平方时，$x^{2} + bx + c$ 是完全平方式。对于 $x^{2} + 5x + c$，$5$ 的一半是 $\\frac{5}{2}$，所以 $c = \\left(\\frac{5}{2}\\right)^{2} = \\frac{25}{4}$，且 $x^{2} + 5x + \\frac{25}{4} = \\left(x + \\frac{5}{2}\\right)^{2}$。要把整个分数平方：$\\left(\\frac{5}{2}\\right)^{2}$ 是 $\\frac{25}{4}$，而不是 $\\frac{25}{2}$。",
+        "Expanding $(x + h)^{2}$ gives $x^{2} + 2hx + h^{2}$: the linear coefficient is twice $h$, and the constant is $h$ squared. So $x^{2} + bx + c$ is a perfect square exactly when $h$ is half of $b$ and $c$ is the square of that half. For $x^{2} + 5x + c$, half of $5$ is $\\frac{5}{2}$, so $c = \\left(\\frac{5}{2}\\right)^{2} = \\frac{25}{4}$ and $x^{2} + 5x + \\frac{25}{4} = \\left(x + \\frac{5}{2}\\right)^{2}$. When $b$ is odd the half is a fraction; keep it as a fraction rather than rounding.\n\n> **Watch out.** Square the whole fraction, top and bottom: $\\left(\\frac{5}{2}\\right)^{2}$ is $\\frac{25}{4}$, not $\\frac{25}{2}$. Stopping at the half, or squaring $b$ without halving it, misses the constant. The square is never negative, even when $b$ is.",
+        "展开 $(x + h)^{2}$ 得 $x^{2} + 2hx + h^{2}$：一次项系数是 $h$ 的两倍，常数项是 $h$ 的平方。所以当 $h$ 是 $b$ 的一半、$c$ 是这一半的平方时，$x^{2} + bx + c$ 才是完全平方式。对于 $x^{2} + 5x + c$，$5$ 的一半是 $\\frac{5}{2}$，所以 $c = \\left(\\frac{5}{2}\\right)^{2} = \\frac{25}{4}$，且 $x^{2} + 5x + \\frac{25}{4} = \\left(x + \\frac{5}{2}\\right)^{2}$。$b$ 是奇数时，它的一半是分数，要保留分数，不要取近似值。\n\n> **注意。** 要把整个分数平方，分子分母都平方：$\\left(\\frac{5}{2}\\right)^{2}$ 是 $\\frac{25}{4}$，而不是 $\\frac{25}{2}$。只求出一半就停下，或者没有减半就把 $b$ 平方，都得不到这个常数。即使 $b$ 是负数，它一半的平方也不会是负数。",
       ),
       (rng) => {
         const b = rng.pick(oddCoefficients);
@@ -551,8 +552,8 @@ export const completingTheSquareWithOddLinearTerms = topic(
           solveFor: "c",
           wrong: [half, Q.of(b * b, 2), Q.of(b * b), half.abs()],
           solution: t(
-            `Half of $${b}$ is $${half.toLatex()}$, so $c = \\left(${half.toLatex()}\\right)^{2} = ${answer.toLatex()}$, and $${poly([1, `${v}^{2}`], [b, v])} + ${answer.toLatex()} = \\left(${poly([1, v], [half, ""])}\\right)^{2}$.`,
-            `$${b}$ 的一半是 $${half.toLatex()}$，所以 $c = \\left(${half.toLatex()}\\right)^{2} = ${answer.toLatex()}$，且 $${poly([1, `${v}^{2}`], [b, v])} + ${answer.toLatex()} = \\left(${poly([1, v], [half, ""])}\\right)^{2}$。`,
+            `**Step 1: halve the linear coefficient.** A perfect square $\\left(${v} + h\\right)^{2}$ has linear coefficient $2h$, so $h$ is half of $${b}$:${steps(`h = \\frac{${b}}{2} = ${half.toLatex()}`)}**Step 2: square the half.** The constant of the square is $h^{2}$, and squaring a fraction squares its top and its bottom:${steps(`c = \\left(${half.toLatex()}\\right)^{2} = \\frac{${b * b}}{4}`)}So $c = ${answer.toLatex()}$.\n\n**Check.** Expand: $\\left(${poly([1, v], [half, ""])}\\right)^{2} = ${v}^{2} + 2 \\cdot ${paren(half)}${v} + ${answer.toLatex()} = ${poly([1, `${v}^{2}`], [b, v])} + ${answer.toLatex()}$, the trinomial we wanted.`,
+            `**第一步：一次项系数减半。** 完全平方式 $\\left(${v} + h\\right)^{2}$ 的一次项系数是 $2h$，所以 $h$ 是 $${b}$ 的一半：${steps(`h = \\frac{${b}}{2} = ${half.toLatex()}`)}**第二步：把这一半平方。** 完全平方式的常数项是 $h^{2}$，分数平方时分子分母都要平方：${steps(`c = \\left(${half.toLatex()}\\right)^{2} = \\frac{${b * b}}{4}`)}所以 $c = ${answer.toLatex()}$。\n\n**检验。** 展开：$\\left(${poly([1, v], [half, ""])}\\right)^{2} = ${v}^{2} + 2 \\cdot ${paren(half)}${v} + ${answer.toLatex()} = ${poly([1, `${v}^{2}`], [b, v])} + ${answer.toLatex()}$，正是要求的三项式。`,
           ),
         });
       },
@@ -561,8 +562,8 @@ export const completingTheSquareWithOddLinearTerms = topic(
       "the-constant-in-vertex-form",
       t("The constant in vertex form", "顶点式中的常数"),
       t(
-        "To write $x^{2} + 3x + 1$ as $(x + h)^{2} + k$, take $h = \\frac{3}{2}$. Since $\\left(x + \\frac{3}{2}\\right)^{2} = x^{2} + 3x + \\frac{9}{4}$, subtract what was added: $k = 1 - \\frac{9}{4} = -\\frac{5}{4}$. Write the constant over the common denominator $4$ before subtracting: $1 = \\frac{4}{4}$.",
-        "要把 $x^{2} + 3x + 1$ 写成 $(x + h)^{2} + k$，取 $h = \\frac{3}{2}$。因为 $\\left(x + \\frac{3}{2}\\right)^{2} = x^{2} + 3x + \\frac{9}{4}$，所以要减去多加的部分：$k = 1 - \\frac{9}{4} = -\\frac{5}{4}$。相减前先把常数化成分母为 $4$ 的分数：$1 = \\frac{4}{4}$。",
+        "The square $(x + h)^{2}$ with $h$ half the linear coefficient matches the $x^{2}$ and $x$ terms, but it brings its own constant $h^{2}$. To keep the expression equal to the original, take that constant back out: $k$ is the original constant minus $h^{2}$. To write $x^{2} + 3x + 1$ as $(x + h)^{2} + k$, take $h = \\frac{3}{2}$. Since $\\left(x + \\frac{3}{2}\\right)^{2} = x^{2} + 3x + \\frac{9}{4}$, subtract what was added: $k = 1 - \\frac{9}{4} = \\frac{4}{4} - \\frac{9}{4} = -\\frac{5}{4}$.\n\n> **Watch out.** Subtract $h^{2}$, do not add it, and subtract the square, not $h$ itself. Write the constant over the denominator $4$ before subtracting, so that $1 - \\frac{9}{4}$ does not become a fraction over $2$. The order matters too: $k$ is $1 - \\frac{9}{4}$, not $\\frac{9}{4} - 1$.",
+        "取 $h$ 为一次项系数的一半，$(x + h)^{2}$ 就与 $x^{2}$ 项和 $x$ 项相同，但它多带了一个常数 $h^{2}$。为了让式子与原式相等，要把这个常数再减掉：$k$ 等于原来的常数减去 $h^{2}$。要把 $x^{2} + 3x + 1$ 写成 $(x + h)^{2} + k$，取 $h = \\frac{3}{2}$。因为 $\\left(x + \\frac{3}{2}\\right)^{2} = x^{2} + 3x + \\frac{9}{4}$，所以要减去多加的部分：$k = 1 - \\frac{9}{4} = \\frac{4}{4} - \\frac{9}{4} = -\\frac{5}{4}$。\n\n> **注意。** 是减去 $h^{2}$，不是加上它；减的是平方，不是 $h$ 本身。相减前先把常数化成分母为 $4$ 的分数，免得 $1 - \\frac{9}{4}$ 算成分母为 $2$ 的分数。顺序也要对：$k$ 是 $1 - \\frac{9}{4}$，不是 $\\frac{9}{4} - 1$。",
       ),
       (rng) => {
         const b = rng.pick(oddCoefficients);
@@ -581,14 +582,19 @@ export const completingTheSquareWithOddLinearTerms = topic(
           solveFor: "k",
           wrong: [Q.of(d).add(square), Q.of(d).sub(half), Q.of(d * 4 - b * b, 2), square.sub(Q.of(d))],
           solution: t(
-            `Take $h = ${half.toLatex()}$. Then $\\left(${poly([1, "x"], [half, ""])}\\right)^{2} = ${poly([1, "x^{2}"], [b, "x"], [square, ""])}$, so${steps(`${expr} = \\left(${poly([1, "x"], [half, ""])}\\right)^{2} + ${paren(d)} - ${square.toLatex()}`, `k = ${k.toLatex()}`)}`,
-            `取 $h = ${half.toLatex()}$。则 $\\left(${poly([1, "x"], [half, ""])}\\right)^{2} = ${poly([1, "x^{2}"], [b, "x"], [square, ""])}$，所以${steps(`${expr} = \\left(${poly([1, "x"], [half, ""])}\\right)^{2} + ${paren(d)} - ${square.toLatex()}`, `k = ${k.toLatex()}`)}`,
+            `**Step 1: the square.** Half of $${b}$ is $h = ${half.toLatex()}$, and${steps(`\\left(${poly([1, "x"], [half, ""])}\\right)^{2} = ${poly([1, "x^{2}"], [b, "x"], [square, ""])}`)}This square has the right $x^{2}$ and $x$ terms but adds the constant $${square.toLatex()}$.\n\n**Step 2: take back what was added.** Keep the original constant $${d}$ and subtract $${square.toLatex()}$, over the denominator $4$:${steps(`${expr} = \\left(${poly([1, "x"], [half, ""])}\\right)^{2} + ${paren(d)} - ${square.toLatex()}`, `k = \\frac{${4 * d}}{4} - \\frac{${b * b}}{4} = ${k.toLatex()}`)}**Check.** Expanding $\\left(${poly([1, "x"], [half, ""])}\\right)^{2} + ${paren(k)}$ gives the constant $${square.toLatex()} + ${paren(k)} = ${d}$, and the $x^{2}$ and $x$ terms are $${poly([1, "x^{2}"], [b, "x"])}$, so it equals $${expr}$.`,
+            `**第一步：完全平方式。** $${b}$ 的一半是 $h = ${half.toLatex()}$，而${steps(`\\left(${poly([1, "x"], [half, ""])}\\right)^{2} = ${poly([1, "x^{2}"], [b, "x"], [square, ""])}`)}这个平方的 $x^{2}$ 项和 $x$ 项都对，但多加了常数 $${square.toLatex()}$。\n\n**第二步：减去多加的部分。** 保留原来的常数 $${d}$，再减去 $${square.toLatex()}$，先通分到分母 $4$：${steps(`${expr} = \\left(${poly([1, "x"], [half, ""])}\\right)^{2} + ${paren(d)} - ${square.toLatex()}`, `k = \\frac{${4 * d}}{4} - \\frac{${b * b}}{4} = ${k.toLatex()}`)}**检验。** 展开 $\\left(${poly([1, "x"], [half, ""])}\\right)^{2} + ${paren(k)}$，常数项是 $${square.toLatex()} + ${paren(k)} = ${d}$，$x^{2}$ 项和 $x$ 项是 $${poly([1, "x^{2}"], [b, "x"])}$，所以它等于 $${expr}$。`,
           ),
         });
       },
     ),
   ],
-);
+  ),
+  intro: t(
+    "Completing the square rewrites $x^{2} + bx + c$ as a square plus a number, which shows the vertex of a parabola and lets you solve a quadratic by taking a square root. The rule comes from expanding $(x + h)^{2} = x^{2} + 2hx + h^{2}$: to match $bx$, $h$ must be half of $b$, and the square then contributes $h^{2}$. When $b$ is even the half is a whole number, but when $b$ is odd, as in $x^{2} + 5x$, the half is $\\frac{5}{2}$ and its square is $\\frac{25}{4}$. Nothing new happens; you only need care with fractions, especially when you subtract the square from the original constant.",
+    "配方把 $x^{2} + bx + c$ 改写成一个平方加一个数，这样能看出抛物线的顶点，也能通过开平方解二次方程。规则来自展开 $(x + h)^{2} = x^{2} + 2hx + h^{2}$：要与 $bx$ 一致，$h$ 必须是 $b$ 的一半，这个平方还会带来常数 $h^{2}$。$b$ 是偶数时，一半是整数；$b$ 是奇数时，比如 $x^{2} + 5x$，一半是 $\\frac{5}{2}$，它的平方是 $\\frac{25}{4}$。方法没有变，只是要细心处理分数，尤其是从原来的常数中减去这个平方的时候。",
+  ),
+};
 
 /** actFundamentalsAlgebraTopics are the ACT Math Fundamentals algebra topics. */
 export const actFundamentalsAlgebraTopics: TopicDef[] = [

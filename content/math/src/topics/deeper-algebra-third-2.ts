@@ -608,8 +608,16 @@ With $50$ dollars and tickets at $8$ dollars, $8x \\le 50$ gives $x \\le 6\\frac
       "the-unit-of-a-constant",
       ["The unit of a constant", "常数的单位"],
       [
-        "Both sides of a formula must have the same units. So the unit of a constant is whatever makes the right side match the left, which can be found by dividing the units.",
-        "公式两边的单位必须相同。所以常数的单位就是使右边与左边一致的单位，可以用单位相除求出。",
+        `Both sides of a formula measure the same thing, so they must have the same units. A constant in a formula therefore carries whatever unit makes the right side match the left. To find it, solve for the constant and divide the units.
+
+In $d = kt$ with $d$ in meters and $t$ in seconds, $k = \\frac{d}{t}$ has the unit meters per second; then $kt$ is in $\\frac{\\text{m}}{\\text{s}} \\cdot \\text{s} = \\text{m}$, just as $d$ is. In $d = kt^{2}$, $k = \\frac{d}{t^{2}}$ is in meters per second squared.
+
+> **Watch out.** When the formula has $t^{2}$, the unit of time is squared too: meters per second is the unit for $d = kt$, not for $d = kt^{2}$. Multiplying the units where we should divide, or turning the quotient upside down, would not give back the units of $d$.`,
+        `公式两边度量的是同一个量，所以单位必须相同。因此公式中的常数带有使右边与左边一致的单位。要求它，就解出常数，再把单位相除。
+
+在 $d = kt$ 中，若 $d$ 以米计、$t$ 以秒计，$k = \\frac{d}{t}$ 的单位是米每秒；于是 $kt$ 的单位是 $\\frac{\\text{m}}{\\text{s}} \\cdot \\text{s} = \\text{m}$，与 $d$ 相同。在 $d = kt^{2}$ 中，$k = \\frac{d}{t^{2}}$ 的单位是米每平方秒。
+
+> **注意。** 公式中有 $t^{2}$ 时，时间单位也要平方：米每秒是 $d = kt$ 中 $k$ 的单位，不是 $d = kt^{2}$ 中的。该除的时候把单位相乘，或者把商倒过来，都得不回 $d$ 的单位。`,
       ],
       (rng) => {
         const [s, ti] = rng.pick<[[string, string], [string, string]]>([
@@ -692,8 +700,16 @@ With $50$ dollars and tickets at $8$ dollars, $8x \\le 50$ gives $x \\le 6\\frac
           correct,
           others,
           [
-            `$k = ${square ? frac("d", "t^{2}") : frac("d", "t")}$, so its unit is ${correct[0]}.`,
-            `$k = ${square ? frac("d", "t^{2}") : frac("d", "t")}$，所以单位是${correct[1]}。`,
+            `**Step 1: solve for $k$.** $k = ${square ? frac("d", "t^{2}") : frac("d", "t")}$, so the unit of $k$ is the unit of $d$ divided by the unit of $${square ? "t^{2}" : "t"}$.
+
+**Step 2: divide the units.** ${s[0][0]?.toUpperCase()}${s[0].slice(1)} divided by ${square ? `${ti[0]} squared` : ti[0]} gives ${correct[0]}.
+
+**Check.** Put the units back into $${eq}$: ${correct[0]} times ${square ? `${ti[0]} squared` : ti[0]} leaves ${s[0]}, the unit of $d$.`,
+            `**第一步：解出 $k$。** $k = ${square ? frac("d", "t^{2}") : frac("d", "t")}$，所以 $k$ 的单位是 $d$ 的单位除以 $${square ? "t^{2}" : "t"}$ 的单位。
+
+**第二步：单位相除。** ${s[1]}除以${square ? `平方${ti[1]}` : ti[1]}，得${correct[1]}。
+
+**检验。** 把单位代回 $${eq}$：${correct[1]}乘${square ? `平方${ti[1]}` : ti[1]}，剩下${s[1]}，正是 $d$ 的单位。`,
           ],
         );
       },
@@ -704,8 +720,16 @@ With $50$ dollars and tickets at $8$ dollars, $8x \\le 50$ gives $x \\le 6\\frac
       "the-slope-between-two-readings",
       ["The slope between two readings", "两次读数之间的斜率"],
       [
-        "A rate of change is the change in the output divided by the change in the input, and its unit is the same division. The two readings need not be neighbors or a single unit apart.",
-        "变化率是输出的变化除以输入的变化，单位也是同样的除法。两次读数不必相邻，也不必只隔一个单位。",
+        `A rate of change is the change in the output divided by the change in the input, and its unit comes from the same division. The two readings need not be neighbors or one unit apart. If a tank holds $50$ L after $2$ hours and $74$ L after $5$ hours, the water rose by $74 - 50 = 24$ L over $5 - 2 = 3$ hours, so the rate is
+
+$$\\frac{24\\text{ L}}{3\\text{ h}} = 8\\text{ liters per hour}.$$
+
+> **Watch out.** The change of $24$ L is not yet the rate; it must be shared among the $3$ hours. And dividing one reading by its own time, $74 \\div 5$, counts the water that was in the tank before the first reading.`,
+        `变化率是输出的变化除以输入的变化，单位也来自同样的除法。两次读数不必相邻，也不必只隔一个单位。如果水箱 $2$ 小时后有 $50$ 升，$5$ 小时后有 $74$ 升，那么在 $5 - 2 = 3$ 小时里水增加了 $74 - 50 = 24$ 升，所以速率是
+
+$$\\frac{24\\text{ L}}{3\\text{ h}} = 8\\text{ 升每小时}.$$
+
+> **注意。** 变化量 $24$ 升还不是速率，要平均分到 $3$ 个小时上。用一次读数除以它自己的时间，$74 \\div 5$，把第一次读数之前箱里已有的水也算了进去。`,
       ],
       (rng) => {
         const rate = rng.int(2, 25);
@@ -722,8 +746,16 @@ With $50$ dollars and tickets at $8$ dollars, $8x \\le 50$ gives $x \\le 6\\frac
           rate,
           [v2 - v1, Math.round(v2 / (h1 + dh)) === rate ? rate + 1 : Math.round(v2 / (h1 + dh)), rate + dh],
           [
-            `The volume changes by $${v2} - ${v1} = ${v2 - v1}$ liters over $${h1 + dh} - ${h1} = ${dh}$ hours, so the rate is $${v2 - v1} \\div ${dh} = ${rate}$ liters per hour.`,
-            `水量变化 $${v2} - ${v1} = ${v2 - v1}$ 升，经过 $${h1 + dh} - ${h1} = ${dh}$ 小时，所以速率是 $${v2 - v1} \\div ${dh} = ${rate}$ 升每小时。`,
+            `**Step 1: the changes.** From the first reading to the second, the volume changes by $${v2} - ${v1} = ${v2 - v1}$ liters, over $${h1 + dh} - ${h1} = ${dh}$ hours.
+
+**Step 2: divide.** The rate is the change in volume per hour: $${v2 - v1} \\div ${dh} = ${rate}$ liters per hour.
+
+**Check.** Starting from $${v1}$ liters and adding $${rate}$ liters in each of the $${dh}$ hours gives $${v1} + ${dh} \\cdot ${rate} = ${v2}$ liters, the second reading.`,
+            `**第一步：求变化量。** 从第一次读数到第二次，水量变化 $${v2} - ${v1} = ${v2 - v1}$ 升，经过 $${h1 + dh} - ${h1} = ${dh}$ 小时。
+
+**第二步：相除。** 速率是每小时的水量变化：$${v2 - v1} \\div ${dh} = ${rate}$ 升每小时。
+
+**检验。** 从 $${v1}$ 升开始，$${dh}$ 小时里每小时加 $${rate}$ 升，得 $${v1} + ${dh} \\cdot ${rate} = ${v2}$ 升，正是第二次读数。`,
           ],
         );
       },

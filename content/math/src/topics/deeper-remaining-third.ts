@@ -334,8 +334,16 @@ Solve $ax + b = cx + d$ for $x$. Subtract $cx$ and $b$ from both sides: $ax - cx
       "adding-lengths-in-two-units",
       ["Adding lengths in two units", "不同单位的长度相加"],
       [
-        "Lengths can only be added once they are in the same unit. So first convert the kilometers to meters, multiplying by $1000$, and then add the two numbers of meters.",
-        "长度必须化成同一单位才能相加。所以先把千米化成米（乘 $1000$），再把两个米数相加。",
+        `Lengths can be added only when they are in the same unit, just as $3$ apples and $2$ pears are not $5$ of either. A kilometer is $1000$ times as long as a meter, so each kilometer is $1000$ meters: convert the kilometers by **multiplying** by $1000$, and then add the meters.
+
+A walk of $2.4\\text{ km}$ and then $350\\text{ m}$ is $2.4 \\cdot 1000 = 2400\\text{ m}$ and $350\\text{ m}$, so $2400 + 350 = 2750\\text{ m}$ in all.
+
+> **Watch out.** Adding the numbers as they stand, $2.4 + 350$, mixes the units. Multiply by $1000$, not $100$: $2.4\\text{ km}$ is $2400$ m, not $240$ m. And mind the decimal point: $2.4 \\cdot 1000$ is $2400$, not $24000$.`,
+        `长度必须化成同一单位才能相加，就像 $3$ 个苹果和 $2$ 个梨不是 $5$ 个苹果。$1$ 千米是 $1$ 米的 $1000$ 倍长，所以每千米是 $1000$ 米：千米数要**乘** $1000$ 化成米，再与米数相加。
+
+先走 $2.4\\text{ km}$ 再走 $350\\text{ m}$，就是 $2.4 \\cdot 1000 = 2400\\text{ m}$ 加 $350\\text{ m}$，共 $2400 + 350 = 2750\\text{ m}$。
+
+> **注意。** 直接把数相加，$2.4 + 350$，是把不同单位混在一起。要乘 $1000$ 而不是 $100$：$2.4\\text{ km}$ 是 $2400$ m，不是 $240$ m。还要注意小数点：$2.4 \\cdot 1000$ 是 $2400$，不是 $24000$。`,
       ],
       (rng) => {
         const k = rng.int(11, 99);
@@ -348,8 +356,16 @@ Solve $ax + b = cx + d$ for $x$. Subtract $cx$ and $b$ from both sides: $ax - cx
           k * 100 + m,
           [k * 10 + m, k * 1000 + m, k + m],
           [
-            `$${k / 10}\\text{ km} = ${k * 100}\\text{ m}$, and adding $${m}$ gives $${k * 100 + m}$.`,
-            `$${k / 10}\\text{ km} = ${k * 100}\\text{ m}$，加上 $${m}$ 得 $${k * 100 + m}$。`,
+            `**Step 1: convert the kilometers.** A kilometer is $1000$ m, a larger unit, so the number of meters is bigger: $${k / 10}\\text{ km} = ${k / 10} \\cdot 1000\\text{ m} = ${k * 100}\\text{ m}$.
+
+**Step 2: add.** Both lengths are now in meters: $${k * 100} + ${m} = ${k * 100 + m}\\text{ m}$.
+
+**Check.** Going back, $${k * 100 + m}\\text{ m} = ${(k * 100 + m) / 1000}\\text{ km}$, which is the $${k / 10}$ km run plus the $${m / 1000}$ km of the $${m}$ m.`,
+            `**第一步：换算千米。** $1$ 千米是 $1000$ 米，千米是较大的单位，所以米数更大：$${k / 10}\\text{ km} = ${k / 10} \\cdot 1000\\text{ m} = ${k * 100}\\text{ m}$。
+
+**第二步：相加。** 现在两段长度都以米为单位：$${k * 100} + ${m} = ${k * 100 + m}\\text{ m}$。
+
+**检验。** 换算回去，$${k * 100 + m}\\text{ m} = ${(k * 100 + m) / 1000}\\text{ km}$，正是 $${k / 10}$ km 加上 $${m}$ m 即 $${m / 1000}$ km。`,
           ],
         );
       },
@@ -360,8 +376,16 @@ Solve $ax + b = cx + d$ for $x$. Subtract $cx$ and $b$ from both sides: $ax - cx
       "the-total-mass-of-many-items",
       ["The total mass of many items", "许多物品的总质量"],
       [
-        "Small items are weighed in grams, but a large total reads better in kilograms. So multiply to get the total in grams first, and then divide by $1000$.",
-        "小物品用克来称，而大的总量用千克更清楚。所以先相乘得到总克数，再除以 $1000$。",
+        `Small items are weighed in grams, but the total of many of them reads better in kilograms. First multiply to find the total in grams. Then convert: a kilogram is $1000$ times as heavy as a gram, so every $1000$ g make one kg, and we **divide** by $1000$.
+
+Twelve apples of $150\\text{ g}$ weigh $12 \\cdot 150 = 1800\\text{ g}$ together, and $1800 \\div 1000 = 1.8\\text{ kg}$.
+
+> **Watch out.** Divide by $1000$, not by $100$ or $10000$: a kilogram is a thousand grams. And do not stop at $1800$, which is the total in grams, not in kilograms.`,
+        `小物品用克来称，而许多件的总量用千克更清楚。先相乘得到总克数。再换算：$1$ 千克是 $1$ 克的 $1000$ 倍重，所以每 $1000$ g 合成 $1$ kg，要**除以** $1000$。
+
+十二个 $150\\text{ g}$ 的苹果共重 $12 \\cdot 150 = 1800\\text{ g}$，而 $1800 \\div 1000 = 1.8\\text{ kg}$。
+
+> **注意。** 要除以 $1000$，不是 $100$ 或 $10000$：$1$ 千克是 $1000$ 克。也不要停在 $1800$，那是总克数，不是千克数。`,
       ],
       (rng) => {
         const n = rng.int(3, 40);
@@ -374,8 +398,16 @@ Solve $ax + b = cx + d$ for $x$. Subtract $cx$ and $b$ from both sides: $ax - cx
           Q.of(n * g, 1000),
           [Q.of(n * g, 100), Q.of(n * g, 10000), Q.of(n * g)],
           [
-            `$${n} \\times ${g} = ${n * g}\\text{ g}$, and dividing by $1000$ gives the kilograms.`,
-            `$${n} \\times ${g} = ${n * g}\\text{ g}$，除以 $1000$ 得到千克数。`,
+            `**Step 1: the total in grams.** $${n}$ books of $${g}$ g each weigh $${n} \\times ${g} = ${n * g}\\text{ g}$.
+
+**Step 2: convert to kilograms.** A kilogram is $1000$ g, a larger unit, so the number gets smaller: $${n * g} \\div 1000 = ${(n * g) / 1000}\\text{ kg}$.
+
+**Check.** Each book is $${g / 1000}$ kg, so $${n}$ of them are $${n}$ times that, $${(n * g) / 1000}$ kg; and $${(n * g) / 1000} \\cdot 1000 = ${n * g}$ g.`,
+            `**第一步：总克数。** $${n}$ 本书每本 $${g}$ g，共重 $${n} \\times ${g} = ${n * g}\\text{ g}$。
+
+**第二步：换算成千克。** $1$ 千克是 $1000$ g，千克是较大的单位，所以数变小：$${n * g} \\div 1000 = ${(n * g) / 1000}\\text{ kg}$。
+
+**检验。** 每本书是 $${g / 1000}$ kg，$${n}$ 本就是它的 $${n}$ 倍，即 $${(n * g) / 1000}$ kg；而 $${(n * g) / 1000} \\cdot 1000 = ${n * g}$ g。`,
           ],
         );
       },
@@ -432,8 +464,16 @@ Solve $ax + b = cx + d$ for $x$. Subtract $cx$ and $b$ from both sides: $ax - cx
       "inverse-square-models",
       ["Inverse square models", "反平方模型"],
       [
-        "Some quantities vary inversely with the square of another, such as the brightness of a light with distance. Multiplying the distance by $k$ then divides the brightness by $k^{2}$, not by $k$.",
-        "有些量与另一个量的平方成反比，比如光的亮度与距离。距离乘 $k$ 时，亮度除以 $k^{2}$，而不是除以 $k$。",
+        `Some quantities vary inversely with the **square** of another: $y = \\frac{c}{x^{2}}$. The light of a lamp is like this, since it spreads over a sphere whose area grows like the square of the distance. Multiplying $x$ by $k$ then multiplies $x^{2}$ by $k^{2}$, so $y$ is **divided** by $k^{2}$.
+
+At $2$ m a lamp gives $36$ units of brightness; at $6$ m, three times as far, it gives $36 \\div 3^{2} = 36 \\div 9 = 4$ units.
+
+> **Watch out.** Dividing by $3$ alone, giving $12$, treats the model as plain inverse variation; the square makes the light fade faster. And a farther lamp looks dimmer, so the answer is smaller than $36$, never larger.`,
+        `有些量与另一个量的**平方**成反比：$y = \\frac{c}{x^{2}}$。灯光就是这样，因为光分布在球面上，而球面的面积随距离的平方增长。$x$ 乘 $k$ 时，$x^{2}$ 乘 $k^{2}$，所以 $y$ 要**除以** $k^{2}$。
+
+一盏灯在 $2$ 米处亮度是 $36$ 单位；在 $6$ 米处，距离是三倍，亮度是 $36 \\div 3^{2} = 36 \\div 9 = 4$ 单位。
+
+> **注意。** 只除以 $3$ 得 $12$，是把它当成了普通的反比例；平方使亮度减弱得更快。而且离灯越远越暗，所以答案比 $36$ 小，绝不会更大。`,
       ],
       (rng) => {
         const k = rng.int(2, 6);
@@ -448,8 +488,16 @@ Solve $ax + b = cx + d$ for $x$. Subtract $cx$ and $b$ from both sides: $ax - cx
           m,
           [k * m, start * k, start - k],
           [
-            `The distance is multiplied by $${k}$, so the brightness is divided by $${k * k}$: $${m}$.`,
-            `距离乘 $${k}$，所以亮度除以 $${k * k}$：$${m}$。`,
+            `**Step 1: the factor on the distance.** The distance goes from $${d}$ m to $${k * d}$ m, so it is multiplied by $${k * d} \\div ${d} = ${k}$.
+
+**Step 2: divide by its square.** The brightness varies inversely with the square of the distance, so it is divided by $${k}^{2} = ${k * k}$: $${start} \\div ${k * k} = ${m}$ units.
+
+**Check.** By the formula, $c = ${start} \\cdot ${d}^{2} = ${start * d * d}$, and at $${k * d}$ m the brightness is $\\frac{${start * d * d}}{${k * d}^{2}} = \\frac{${start * d * d}}{${k * k * d * d}} = ${m}$, dimmer than before.`,
+            `**第一步：距离的倍数。** 距离从 $${d}$ 米变成 $${k * d}$ 米，乘了 $${k * d} \\div ${d} = ${k}$。
+
+**第二步：除以它的平方。** 亮度与距离的平方成反比，所以除以 $${k}^{2} = ${k * k}$：$${start} \\div ${k * k} = ${m}$ 单位。
+
+**检验。** 由公式，$c = ${start} \\cdot ${d}^{2} = ${start * d * d}$，在 $${k * d}$ 米处亮度是 $\\frac{${start * d * d}}{${k * d}^{2}} = \\frac{${start * d * d}}{${k * k * d * d}} = ${m}$，比原来暗。`,
           ],
         );
       },
@@ -776,8 +824,20 @@ For $\\frac{x}{3} + \\frac{y}{2} = 7$ and $\\frac{x}{3} - \\frac{y}{2} = 1$, the
       "converting-a-speed",
       ["Converting a speed", "换算速度"],
       [
-        "A speed has two units to convert, one on top and one on the bottom. Turning kilometers into meters multiplies by 1000, and turning hours into seconds divides by 3600, so the net effect is dividing by 3.6.",
-        "速度有两个单位要换算，一个在上面，一个在下面。千米化成米要乘 1000，小时化成秒要除以 3600，合起来就是除以 3.6。",
+        `A speed has two units, one on top and one underneath, and both must be converted. From km/h to m/s: a kilometer is $1000$ m, so the number of meters per hour is $1000$ times the number of kilometers; an hour is $3600$ s, so in one second only $\\frac{1}{3600}$ of that distance is covered. Together we multiply by $1000$ and divide by $3600$, which is dividing by $3.6$:
+
+$$72\\text{ km/h} = \\frac{72 \\cdot 1000\\text{ m}}{3600\\text{ s}} = 20\\text{ m/s}.$$
+
+Going from m/s to km/h reverses both steps, so it multiplies by $3.6$.
+
+> **Watch out.** Converting only the top, $72 \\cdot 1000 = 72000$, gives meters per **hour**, not per second. And multiplying by $3.6$ where we should divide goes the wrong way: a second is so short that a speed in m/s is a smaller number than the same speed in km/h.`,
+        `速度有两个单位，一个在上，一个在下，两个都要换算。从 km/h 到 m/s：$1$ 千米是 $1000$ 米，所以每小时的米数是千米数的 $1000$ 倍；$1$ 小时是 $3600$ 秒，所以一秒只走其中的 $\\frac{1}{3600}$。合起来是乘 $1000$ 再除以 $3600$，也就是除以 $3.6$：
+
+$$72\\text{ km/h} = \\frac{72 \\cdot 1000\\text{ m}}{3600\\text{ s}} = 20\\text{ m/s}.$$
+
+从 m/s 到 km/h 两步都反过来，所以乘 $3.6$。
+
+> **注意。** 只换算上面的单位，$72 \\cdot 1000 = 72000$，得到的是米每**小时**，不是米每秒。该除的时候乘 $3.6$ 就走反了：一秒很短，所以同一个速度用 m/s 表示的数比用 km/h 表示的小。`,
       ],
       (rng) => {
         const m = rng.int(1, 40);
@@ -789,8 +849,24 @@ For $\\frac{x}{3} + \\frac{y}{2} = 7$ and $\\frac{x}{3} - \\frac{y}{2} = 1$, the
           toSeconds ? 10 * m : 36 * m,
           toSeconds ? [36 * m * 36, 36 * m * 1000, 100 * m] : [10 * m * 60, 360 * m, m],
           [
-            toSeconds ? `$${36 * m} \\times 1000 \\div 3600 = ${10 * m}$.` : `$${10 * m} \\times 3600 \\div 1000 = ${36 * m}$.`,
-            toSeconds ? `$${36 * m} \\times 1000 \\div 3600 = ${10 * m}$。` : `$${10 * m} \\times 3600 \\div 1000 = ${36 * m}$。`,
+            `${toSeconds ? `**Step 1: kilometers to meters.** Each kilometer is $1000$ m, so the number on top gets $1000$ times bigger: $${36 * m}\\text{ km/h} = ${36000 * m}\\text{ m/h}$.
+
+**Step 2: hours to seconds.** An hour is $3600$ s, so in one second the distance is $3600$ times smaller: $${36000 * m} \\div 3600 = ${10 * m}\\text{ m/s}$.
+
+**Check.** The speed in m/s is the smaller number, as it should be, and $${10 * m} \\cdot 3.6 = ${36 * m}$.` : `**Step 1: meters to kilometers.** Every $1000$ m make $1$ km, so the number on top gets $1000$ times smaller: $${10 * m}\\text{ m/s} = ${m / 100}\\text{ km/s}$.
+
+**Step 2: seconds to hours.** An hour is $3600$ s, so in an hour the distance is $3600$ times as far: $${m / 100} \\cdot 3600 = ${36 * m}\\text{ km/h}$.
+
+**Check.** The speed in km/h is the larger number, as it should be, and $${36 * m} \\div 3.6 = ${10 * m}$.`}`,
+            `${toSeconds ? `**第一步：千米化成米。** $1$ 千米是 $1000$ 米，所以上面的数变成 $1000$ 倍：$${36 * m}\\text{ km/h} = ${36000 * m}\\text{ m/h}$。
+
+**第二步：小时化成秒。** $1$ 小时是 $3600$ 秒，所以一秒走的路程是一小时的 $3600$ 分之一：$${36000 * m} \\div 3600 = ${10 * m}\\text{ m/s}$。
+
+**检验。** 用 m/s 表示的数较小，合乎道理；而 $${10 * m} \\cdot 3.6 = ${36 * m}$。` : `**第一步：米化成千米。** 每 $1000$ 米合成 $1$ 千米，所以上面的数缩小为 $1000$ 分之一：$${10 * m}\\text{ m/s} = ${m / 100}\\text{ km/s}$。
+
+**第二步：秒化成小时。** $1$ 小时是 $3600$ 秒，所以一小时走的路程是一秒的 $3600$ 倍：$${m / 100} \\cdot 3600 = ${36 * m}\\text{ km/h}$。
+
+**检验。** 用 km/h 表示的数较大，合乎道理；而 $${36 * m} \\div 3.6 = ${10 * m}$。`}`,
           ],
         );
       },
@@ -850,8 +926,20 @@ export const deeperRemainingExamThirdPoints: Readonly<Record<string, readonly Kn
       "solving-with-an-odd-coefficient",
       ["Solving with an odd coefficient", "一次项系数为奇数时求解"],
       [
-        "An odd coefficient of $x$ gives a half in the completed square, which is not a problem. The fractions in $\\left(x + \\frac{b}{2}\\right)^{2}$ work out, and the roots can still be whole numbers.",
-        "$x$ 的系数为奇数时，配方中会出现二分之一，这并不是问题。$\\left(x + \\frac{b}{2}\\right)^{2}$ 中的分数算下去，根仍可能是整数。",
+        `Completing the square works the same way when the coefficient of $x$ is odd; half of it is simply a fraction. For $x^{2} + 3x - 10 = 0$, move the constant across, $x^{2} + 3x = 10$, and add $\\left(\\frac{3}{2}\\right)^{2} = \\frac{9}{4}$ to both sides, the number that makes the left side a perfect square:
+
+$$\\left(x + \\frac{3}{2}\\right)^{2} = 10 + \\frac{9}{4} = \\frac{49}{4}.$$
+
+Taking square roots, $x + \\frac{3}{2} = \\pm\\frac{7}{2}$, so $x = -\\frac{3}{2} + \\frac{7}{2} = 2$ or $x = -\\frac{3}{2} - \\frac{7}{2} = -5$. The halves cancel and the roots are whole.
+
+> **Watch out.** Subtract the half, do not add it: $x = \\frac{3}{2} + \\frac{7}{2} = 5$ forgets the sign in $x + \\frac{3}{2}$. Neither the sum $2 + 5 = 7$ of the sizes of the roots nor the constant $10$ is a solution.`,
+        `$x$ 的系数是奇数时，配方的做法完全一样，它的一半只是一个分数。对于 $x^{2} + 3x - 10 = 0$，把常数移到右边，$x^{2} + 3x = 10$，两边加上 $\\left(\\frac{3}{2}\\right)^{2} = \\frac{9}{4}$，这个数使左边成为完全平方：
+
+$$\\left(x + \\frac{3}{2}\\right)^{2} = 10 + \\frac{9}{4} = \\frac{49}{4}.$$
+
+开平方，$x + \\frac{3}{2} = \\pm\\frac{7}{2}$，所以 $x = -\\frac{3}{2} + \\frac{7}{2} = 2$ 或 $x = -\\frac{3}{2} - \\frac{7}{2} = -5$。二分之一抵消了，根是整数。
+
+> **注意。** 要减去一半，不是加上：$x = \\frac{3}{2} + \\frac{7}{2} = 5$ 忘了 $x + \\frac{3}{2}$ 中的符号。两根大小之和 $2 + 5 = 7$ 和常数 $10$ 都不是解。`,
       ],
       (rng) => {
         const r = rng.int(1, 12);
@@ -865,8 +953,24 @@ export const deeperRemainingExamThirdPoints: Readonly<Record<string, readonly Kn
           r,
           [s, r + s, r * s],
           [
-            `$\\left(x + ${frac(b, 2)}\\right)^{2} = ${frac((r + s) * (r + s), 4)}$, so $x = -${frac(b, 2)} + ${frac(r + s, 2)} = ${r}$.`,
-            `$\\left(x + ${frac(b, 2)}\\right)^{2} = ${frac((r + s) * (r + s), 4)}$，所以 $x = -${frac(b, 2)} + ${frac(r + s, 2)} = ${r}$。`,
+            `**Step 1: move the constant.** $x^{2} + ${b === 1 ? "" : b}x = ${r * s}$.
+
+**Step 2: complete the square.** Add the square of half the coefficient of $x$, $\\left(${frac(b, 2)}\\right)^{2} = ${frac(b * b, 4)}$, to both sides:
+
+$$\\left(x + ${frac(b, 2)}\\right)^{2} = ${r * s} + ${frac(b * b, 4)} = ${frac((r + s) * (r + s), 4)}.$$
+
+**Step 3: take square roots.** $x + ${frac(b, 2)} = \\pm ${frac(r + s, 2)}$. The positive solution takes the plus sign: $x = -${frac(b, 2)} + ${frac(r + s, 2)} = ${frac(r + s - b, 2)} = ${r}$. The other is $-${frac(b, 2)} - ${frac(r + s, 2)} = -${s}$.
+
+**Check.** $${r}^{2} + ${b === 1 ? "" : `${b} \\cdot `}${r} - ${r * s} = ${r * r} + ${b * r} - ${r * s} = 0$.`,
+            `**第一步：移项。** $x^{2} + ${b === 1 ? "" : b}x = ${r * s}$。
+
+**第二步：配方。** 两边加上 $x$ 的系数一半的平方，$\\left(${frac(b, 2)}\\right)^{2} = ${frac(b * b, 4)}$：
+
+$$\\left(x + ${frac(b, 2)}\\right)^{2} = ${r * s} + ${frac(b * b, 4)} = ${frac((r + s) * (r + s), 4)}.$$
+
+**第三步：开平方。** $x + ${frac(b, 2)} = \\pm ${frac(r + s, 2)}$。正数解取正号：$x = -${frac(b, 2)} + ${frac(r + s, 2)} = ${frac(r + s - b, 2)} = ${r}$。另一个解是 $-${frac(b, 2)} - ${frac(r + s, 2)} = -${s}$。
+
+**检验。** $${r}^{2} + ${b === 1 ? "" : `${b} \\cdot `}${r} - ${r * s} = ${r * r} + ${b * r} - ${r * s} = 0$。`,
           ],
         );
       },
@@ -877,8 +981,16 @@ export const deeperRemainingExamThirdPoints: Readonly<Record<string, readonly Kn
       "area-from-lengths-in-smaller-units",
       ["Area from lengths in smaller units", "由较小单位的长度求面积"],
       [
-        "If the sides are given in a smaller unit, either convert each side first or convert the area at the end. A square meter holds $10000$ square centimeters, so converting the area divides by $10000$, not $100$.",
-        "边长用较小单位给出时，可以先换算每条边，也可以最后换算面积。$1$ 平方米含 $10000$ 平方厘米，所以换算面积要除以 $10000$，而不是 $100$。",
+        `When the sides are in centimeters and the area is wanted in square meters, either convert each side to meters first, or find the area in square centimeters and convert it at the end. A square meter is $100$ cm by $100$ cm, so it holds $100 \\cdot 100 = 10000$ square centimeters, and converting the area **divides by $10000$**.
+
+A rectangle $250$ cm by $80$ cm has area $250 \\cdot 80 = 20000\\text{ cm}^{2}$, which is $20000 \\div 10000 = 2\\text{ m}^{2}$. Converting the sides first gives the same: $2.5 \\cdot 0.8 = 2\\text{ m}^{2}$.
+
+> **Watch out.** Dividing the area by $100$ uses the length factor on an area, and $1000$ is the factor of no unit here. And an area multiplies the sides; adding them, as in $250 + 80$, gives half the perimeter.`,
+        `边长以厘米给出、面积要用平方米表示时，可以先把每条边化成米，也可以先求平方厘米数，最后换算。$1$ 平方米是 $100$ cm 乘 $100$ cm，含 $100 \\cdot 100 = 10000$ 平方厘米，所以换算面积要**除以 $10000$**。
+
+$250$ cm 乘 $80$ cm 的长方形，面积是 $250 \\cdot 80 = 20000\\text{ cm}^{2}$，即 $20000 \\div 10000 = 2\\text{ m}^{2}$。先换算边长结果相同：$2.5 \\cdot 0.8 = 2\\text{ m}^{2}$。
+
+> **注意。** 面积除以 $100$，是把长度的换算率用在面积上；$1000$ 在这里不是任何单位的换算率。面积是边长相乘；把边长相加，如 $250 + 80$，得到的是周长的一半。`,
       ],
       (rng) => {
         const a = rng.int(2, 40) * 50;
@@ -891,8 +1003,16 @@ export const deeperRemainingExamThirdPoints: Readonly<Record<string, readonly Kn
           Q.of(a * b, 10000),
           [Q.of(a * b, 100), Q.of(a * b, 1000), Q.of(a + b, 100)],
           [
-            `$${a} \\times ${b} = ${a * b}\\text{ cm}^{2}$, and dividing by $10000$ gives square meters.`,
-            `$${a} \\times ${b} = ${a * b}\\text{ cm}^{2}$，除以 $10000$ 得到平方米数。`,
+            `**Step 1: the area in square centimeters.** $${a} \\times ${b} = ${a * b}\\text{ cm}^{2}$.
+
+**Step 2: convert.** A square meter holds $100 \\cdot 100 = 10000\\text{ cm}^{2}$, a larger unit, so divide by $10000$: $${a * b} \\div 10000 = ${(a * b) / 10000}\\text{ m}^{2}$.
+
+**Check.** Converting the sides first, $${a}\\text{ cm} = ${a / 100}\\text{ m}$ and $${b}\\text{ cm} = ${b / 100}\\text{ m}$, and $${a / 100} \\times ${b / 100} = ${(a * b) / 10000}$.`,
+            `**第一步：平方厘米数。** $${a} \\times ${b} = ${a * b}\\text{ cm}^{2}$。
+
+**第二步：换算。** $1$ 平方米含 $100 \\cdot 100 = 10000\\text{ cm}^{2}$，是较大的单位，所以除以 $10000$：$${a * b} \\div 10000 = ${(a * b) / 10000}\\text{ m}^{2}$。
+
+**检验。** 先换算边长，$${a}\\text{ cm} = ${a / 100}\\text{ m}$，$${b}\\text{ cm} = ${b / 100}\\text{ m}$，而 $${a / 100} \\times ${b / 100} = ${(a * b) / 10000}$。`,
           ],
         );
       },
@@ -903,8 +1023,20 @@ export const deeperRemainingExamThirdPoints: Readonly<Record<string, readonly Kn
       "the-single-solution",
       ["The single solution", "唯一的解"],
       [
-        "A quadratic with exactly one solution is a perfect square, so $x^{2} + bx + c^{2}$ must equal $(x + c)^{2}$ or $(x - c)^{2}$. The sign of $b$ decides which, and the solution is the number that makes the square zero.",
-        "恰有一个解的二次方程是完全平方，所以 $x^{2} + bx + c^{2}$ 必须等于 $(x + c)^{2}$ 或 $(x - c)^{2}$。$b$ 的符号决定是哪一个，解就是使平方为零的数。",
+        `A quadratic $x^{2} + bx + c = 0$ has exactly one solution only when its left side is a perfect square, since a square is zero at just one number. To match $x^{2} + bx + 49$ with a square, its constant must be $49 = 7^{2}$, so the square is
+
+$$(x + 7)^{2} = x^{2} + 14x + 49 \\qquad \\text{or} \\qquad (x - 7)^{2} = x^{2} - 14x + 49.$$
+
+If $b$ is positive, it is $(x + 7)^{2}$, with $b = 14$, and the solution is the number that makes $x + 7$ zero: $x = -7$.
+
+> **Watch out.** The solution of $(x + 7)^{2} = 0$ is $-7$, not $7$: the sign flips. And $b = 14$ is the coefficient, not the solution; nor is the constant $49$.`,
+        `二次方程 $x^{2} + bx + c = 0$ 恰有一个解，只有在左边是完全平方式时才会发生，因为平方只在一个数处等于零。要让 $x^{2} + bx + 49$ 成为完全平方，常数 $49 = 7^{2}$，所以这个平方是
+
+$$(x + 7)^{2} = x^{2} + 14x + 49 \\qquad \\text{或} \\qquad (x - 7)^{2} = x^{2} - 14x + 49.$$
+
+如果 $b$ 是正数，就是 $(x + 7)^{2}$，$b = 14$，解是使 $x + 7$ 为零的数：$x = -7$。
+
+> **注意。** $(x + 7)^{2} = 0$ 的解是 $-7$，不是 $7$：符号要反过来。$b = 14$ 是系数，不是解；常数 $49$ 也不是。`,
       ],
       (rng) => {
         const c = rng.int(2, 30);
@@ -917,8 +1049,20 @@ export const deeperRemainingExamThirdPoints: Readonly<Record<string, readonly Kn
           positive ? -c : c,
           [positive ? c : -c, positive ? 2 * c : -2 * c, c * c],
           [
-            `One solution means the left side is a perfect square, and $${c * c} = ${c}^{2}$, so it is $(x + ${c})^{2}$ or $(x - ${c})^{2}$. A ${positive ? "positive" : "negative"} $b$ gives $b = ${positive ? 2 * c : -2 * c}$ and $(x ${positive ? "+" : "-"} ${c})^{2} = 0$, so $x = ${positive ? -c : c}$.`,
-            `恰有一个解说明左边是完全平方式，而 $${c * c} = ${c}^{2}$，所以它是 $(x + ${c})^{2}$ 或 $(x - ${c})^{2}$。$b$ 为${positive ? "正" : "负"}时 $b = ${positive ? 2 * c : -2 * c}$，得 $(x ${positive ? "+" : "-"} ${c})^{2} = 0$，所以 $x = ${positive ? -c : c}$。`,
+            `**Step 1: the square.** One solution means the left side is a perfect square. Its constant is $${c * c} = ${c}^{2}$, so it is $(x + ${c})^{2} = x^{2} + ${2 * c}x + ${c * c}$ or $(x - ${c})^{2} = x^{2} - ${2 * c}x + ${c * c}$.
+
+**Step 2: choose by the sign of $b$.** A ${positive ? "positive" : "negative"} $b$ gives $b = ${positive ? 2 * c : -2 * c}$ and the equation $(x ${positive ? "+" : "-"} ${c})^{2} = 0$.
+
+**Step 3: solve.** A square is zero only when what is squared is zero: $x ${positive ? "+" : "-"} ${c} = 0$, so $x = ${positive ? -c : c}$.
+
+**Check.** $${paren(positive ? -c : c)}^{2} + ${paren(positive ? 2 * c : -2 * c)} \\cdot ${paren(positive ? -c : c)} + ${c * c} = ${c * c} - ${2 * c * c} + ${c * c} = 0$.`,
+            `**第一步：完全平方。** 恰有一个解说明左边是完全平方式。常数是 $${c * c} = ${c}^{2}$，所以它是 $(x + ${c})^{2} = x^{2} + ${2 * c}x + ${c * c}$ 或 $(x - ${c})^{2} = x^{2} - ${2 * c}x + ${c * c}$。
+
+**第二步：由 $b$ 的符号选择。** $b$ 为${positive ? "正" : "负"}时 $b = ${positive ? 2 * c : -2 * c}$，方程是 $(x ${positive ? "+" : "-"} ${c})^{2} = 0$。
+
+**第三步：求解。** 平方为零只能是底数为零：$x ${positive ? "+" : "-"} ${c} = 0$，所以 $x = ${positive ? -c : c}$。
+
+**检验。** $${paren(positive ? -c : c)}^{2} + ${paren(positive ? 2 * c : -2 * c)} \\cdot ${paren(positive ? -c : c)} + ${c * c} = ${c * c} - ${2 * c * c} + ${c * c} = 0$。`,
           ],
         );
       },
@@ -929,12 +1073,20 @@ export const deeperRemainingExamThirdPoints: Readonly<Record<string, readonly Kn
       "a-perimeter-in-another-unit",
       ["A perimeter in another unit", "用另一单位表示周长"],
       [
-        "Find the perimeter in the unit of the sides, and only then convert it. Since a yard is $3$ feet, the number of yards is the number of feet divided by $3$.",
-        "先用边的单位求周长，然后再换算。因为 $1$ 码等于 $3$ 英尺，所以码数是英尺数除以 $3$。",
+        `For a fence around a rectangle, first find the perimeter in the unit of the sides, and then convert it once. A yard is $3$ times as long as a foot, so every $3$ feet make one yard: the number of yards is the number of feet **divided** by $3$.
+
+A garden $20$ ft by $16$ ft has perimeter $2 \\cdot (20 + 16) = 72$ ft, which is $72 \\div 3 = 24$ yd.
+
+> **Watch out.** Do not stop at $72$, the perimeter in feet, and go around all four sides: $20 + 16$ is only half the way. Multiplying by $3$ makes the number bigger, but a yard is the larger unit, so there are fewer yards than feet.`,
+        `给长方形围篱笆，先用边的单位求周长，再一次换算。$1$ 码是 $1$ 英尺的 $3$ 倍长，所以每 $3$ 英尺合成 $1$ 码：码数是英尺数**除以** $3$。
+
+长 $20$ 英尺、宽 $16$ 英尺的花园，周长是 $2 \\cdot (20 + 16) = 72$ 英尺，即 $72 \\div 3 = 24$ 码。
+
+> **注意。** 不要停在 $72$，那是英尺数；也要绕满四条边：$20 + 16$ 只是一半。乘 $3$ 会使数变大，但码是较大的单位，码数应比英尺数少。`,
       ],
       (rng) => {
         const a = rng.int(2, 60);
-        const yards = rng.int(Math.ceil((2 * a + 2) / 6) + 1, Math.ceil((2 * a + 2) / 6) + 30);
+        const yards = rng.int(Math.ceil((2 * a + 2) / 3) + 1, Math.ceil((2 * a + 2) / 3) + 30);
         const b = (3 * yards - 2 * a) / 2;
         const usable = Number.isInteger(b) ? b : b + 1.5;
         const y = (2 * (a + usable)) / 3;
@@ -946,8 +1098,16 @@ export const deeperRemainingExamThirdPoints: Readonly<Record<string, readonly Kn
           y,
           [2 * (a + usable), (a + usable) / 3 === Math.floor((a + usable) / 3) ? (a + usable) / 3 : y + 2, y * 9],
           [
-            `The perimeter is $${2 * (a + usable)}$ feet, and dividing by $3$ gives $${y}$ yards.`,
-            `周长是 $${2 * (a + usable)}$ 英尺，除以 $3$ 得 $${y}$ 码。`,
+            `**Step 1: the perimeter in feet.** Go around all four sides: $2 \\cdot (${a} + ${usable}) = ${2 * (a + usable)}$ feet.
+
+**Step 2: convert to yards.** A yard is $3$ feet, a larger unit, so divide: $${2 * (a + usable)} \\div 3 = ${y}$ yards.
+
+**Check.** There are fewer yards than feet, $${y} < ${2 * (a + usable)}$, and $${y} \\cdot 3 = ${2 * (a + usable)}$ feet, the perimeter.`,
+            `**第一步：以英尺计的周长。** 绕满四条边：$2 \\cdot (${a} + ${usable}) = ${2 * (a + usable)}$ 英尺。
+
+**第二步：换算成码。** $1$ 码是 $3$ 英尺，码是较大的单位，所以除：$${2 * (a + usable)} \\div 3 = ${y}$ 码。
+
+**检验。** 码数比英尺数少，$${y} < ${2 * (a + usable)}$；而 $${y} \\cdot 3 = ${2 * (a + usable)}$ 英尺，正是周长。`,
           ],
         );
       },
@@ -958,8 +1118,16 @@ export const deeperRemainingExamThirdPoints: Readonly<Record<string, readonly Kn
       "a-total-in-pounds",
       ["A total in pounds", "以磅表示总量"],
       [
-        "Multiply first to get the total in the smaller unit, and then convert it. Since a pound is $16$ ounces, a total in ounces is divided by $16$ to give pounds.",
-        "先相乘得到较小单位的总量，然后换算。因为 $1$ 磅等于 $16$ 盎司，所以盎司总数除以 $16$ 得到磅数。",
+        `Multiply first to find the total in the smaller unit, and then convert it once. A pound is $16$ times as heavy as an ounce, so every $16$ ounces make a pound: the number of pounds is the number of ounces **divided** by $16$.
+
+$24$ packets of $4$ oz weigh $24 \\cdot 4 = 96$ oz, which is $96 \\div 16 = 6$ lb.
+
+> **Watch out.** Do not stop at $96$, the total in ounces, and do not answer with the number of packets. A pound is $16$ ounces, not $8$: dividing by $8$ gives twice the right number of pounds.`,
+        `先相乘得到较小单位的总量，再一次换算。$1$ 磅是 $1$ 盎司的 $16$ 倍重，所以每 $16$ 盎司合成 $1$ 磅：磅数是盎司数**除以** $16$。
+
+$24$ 包每包 $4$ 盎司，共重 $24 \\cdot 4 = 96$ 盎司，即 $96 \\div 16 = 6$ 磅。
+
+> **注意。** 不要停在 $96$，那是盎司数，也不要用包数作答。$1$ 磅是 $16$ 盎司，不是 $8$ 盎司：除以 $8$ 得到的磅数多了一倍。`,
       ],
       (rng) => {
         const pounds = rng.int(2, 60);
@@ -973,8 +1141,16 @@ export const deeperRemainingExamThirdPoints: Readonly<Record<string, readonly Kn
           pounds,
           [n * each, n, pounds * 2],
           [
-            `$${n} \\times ${each} = ${n * each}$ ounces, and $${n * each} \\div 16 = ${pounds}$.`,
-            `$${n} \\times ${each} = ${n * each}$ 盎司，$${n * each} \\div 16 = ${pounds}$。`,
+            `**Step 1: the total in ounces.** $${n}$ packets of $${each}$ ounces weigh $${n} \\times ${each} = ${n * each}$ ounces.
+
+**Step 2: convert to pounds.** A pound is $16$ ounces, a larger unit, so divide: $${n * each} \\div 16 = ${pounds}$ pounds.
+
+**Check.** There are fewer pounds than ounces, and $${pounds} \\cdot 16 = ${n * each}$ ounces, the total.`,
+            `**第一步：总盎司数。** $${n}$ 包每包 $${each}$ 盎司，共 $${n} \\times ${each} = ${n * each}$ 盎司。
+
+**第二步：换算成磅。** $1$ 磅是 $16$ 盎司，磅是较大的单位，所以除：$${n * each} \\div 16 = ${pounds}$ 磅。
+
+**检验。** 磅数比盎司数少；而 $${pounds} \\cdot 16 = ${n * each}$ 盎司，正是总重。`,
           ],
         );
       },
@@ -985,8 +1161,16 @@ export const deeperRemainingExamThirdPoints: Readonly<Record<string, readonly Kn
       "total-time-for-many-items",
       ["Total time for many items", "许多件的总时间"],
       [
-        "Rates per item often use a small unit of time, while the total reads better in a larger one. So multiply to get the total seconds, and then divide by $60$ for minutes.",
-        "每件所用的时间常用小的时间单位，而总时间用大的单位更清楚。所以先相乘得到总秒数，再除以 $60$ 得到分钟数。",
+        `Times per item often use a small unit, while a total reads better in a larger one. Multiply first to find the total in seconds, and then convert once: a minute is $60$ times as long as a second, so every $60$ s make one minute, and we **divide** by $60$.
+
+A printer that takes $12$ s per page needs $25 \\cdot 12 = 300$ s for $25$ pages, which is $300 \\div 60 = 5$ min.
+
+> **Watch out.** Do not stop at $300$, which counts seconds, not minutes, and do not answer with the number of items. A minute is $60$ seconds, not $100$.`,
+        `每件所用的时间常用小单位，而总时间用大单位更清楚。先相乘得到总秒数，再一次换算：$1$ 分钟是 $1$ 秒的 $60$ 倍长，所以每 $60$ 秒合成 $1$ 分钟，要**除以** $60$。
+
+打印机每页用 $12$ 秒，打 $25$ 页要 $25 \\cdot 12 = 300$ 秒，即 $300 \\div 60 = 5$ 分钟。
+
+> **注意。** 不要停在 $300$，那是秒数，不是分钟数，也不要用件数作答。$1$ 分钟是 $60$ 秒，不是 $100$ 秒。`,
       ],
       (rng) => {
         const minutes = rng.int(2, 60);
@@ -1000,8 +1184,16 @@ export const deeperRemainingExamThirdPoints: Readonly<Record<string, readonly Kn
           minutes,
           [n * each, n, minutes * 60],
           [
-            `$${n} \\times ${each} = ${n * each}$ seconds, and $${n * each} \\div 60 = ${minutes}$.`,
-            `$${n} \\times ${each} = ${n * each}$ 秒，$${n * each} \\div 60 = ${minutes}$。`,
+            `**Step 1: the total in seconds.** $${n}$ items at $${each}$ seconds each take $${n} \\times ${each} = ${n * each}$ seconds.
+
+**Step 2: convert to minutes.** A minute is $60$ seconds, a larger unit, so divide: $${n * each} \\div 60 = ${minutes}$ minutes.
+
+**Check.** There are fewer minutes than seconds, and $${minutes} \\cdot 60 = ${n * each}$ seconds, the total.`,
+            `**第一步：总秒数。** $${n}$ 件每件 $${each}$ 秒，共 $${n} \\times ${each} = ${n * each}$ 秒。
+
+**第二步：换算成分钟。** $1$ 分钟是 $60$ 秒，分钟是较大的单位，所以除：$${n * each} \\div 60 = ${minutes}$ 分钟。
+
+**检验。** 分钟数比秒数少；而 $${minutes} \\cdot 60 = ${n * each}$ 秒，正是总时间。`,
           ],
         );
       },

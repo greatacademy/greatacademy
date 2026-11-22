@@ -1436,7 +1436,8 @@ function vertexForm(a: number, h: number, v: number): string {
 }
 
 /** lineAt writes m · x + b with the number x substituted, for checking a point on y = mx + b. */
-const lineAt = (m: number, b: number, x: number) => `${m} \\cdot ${paren(x)}${b === 0 ? "" : ` ${b < 0 ? "-" : "+"} ${Math.abs(b)}`}`;
+const lineAt = (m: number, b: number, x: number) =>
+  `${m === 1 ? paren(x) : m === -1 ? `-${paren(x)}` : `${m} \\cdot ${paren(x)}`}${b === 0 ? "" : ` ${b < 0 ? "-" : "+"} ${Math.abs(b)}`}`;
 
 /** plain writes a LaTeX expression for alt text: superscript squares, true minus signs and no braces. */
 const plain = (latex: string) =>
@@ -1460,144 +1461,153 @@ const parabolaCheckFigure: Figure = {
   ),
 };
 
+/** factorAt writes the factor x − r of a polynomial with root r, as x alone when r is 0. */
+const factorAt = (r: number) => (r === 0 ? "x" : `(${linear(1, -r)})`);
+
 /** solvingSystemsOfNonlinearEquationsUsingGraphs reads, counts and checks the solutions of a system as the points where its graphs meet. */
-const solvingSystemsOfNonlinearEquationsUsingGraphs = topic(
-  "solving-systems-of-nonlinear-equations-using-graphs",
-  t("Solving Systems of Nonlinear Equations Using Graphs", "用图象解非线性方程组"),
-  t(
-    "Treat the solutions of a system as the points where the graphs of its equations meet: read them from a graph, count them by picturing a parabola together with a horizontal line, and check a point by testing it in both equations.",
-    "把方程组的解看作各方程图象的交点：从图象上读出解，通过想象抛物线与水平线的位置来数出解的个数，并把一个点代入两个方程来检验它是否为解。",
-  ),
-  ["solving-systems-of-nonlinear-equations"],
-  ["A-REI.C.7", "A-REI.D.11"],
-  [
-    {
-      ...kp(
-        "reading-solutions-from-a-graph",
-        t("Reading the solutions from a graph", "从图象读出解"),
+const solvingSystemsOfNonlinearEquationsUsingGraphs: TopicDef = {
+  ...topic(
+    "solving-systems-of-nonlinear-equations-using-graphs",
+    t("Solving Systems of Nonlinear Equations Using Graphs", "用图象解非线性方程组"),
+    t(
+      "Treat the solutions of a system as the points where the graphs of its equations meet: read them from a graph, count them by picturing a parabola together with a horizontal line, and check a point by testing it in both equations.",
+      "把方程组的解看作各方程图象的交点：从图象上读出解，通过想象抛物线与水平线的位置来数出解的个数，并把一个点代入两个方程来检验它是否为解。",
+    ),
+    ["solving-systems-of-nonlinear-equations"],
+    ["A-REI.C.7", "A-REI.D.11"],
+    [
+      {
+        ...kp(
+          "reading-solutions-from-a-graph",
+          t("Reading the solutions from a graph", "从图象读出解"),
+          t(
+            "A point lies on a graph exactly when its coordinates make that equation true. A solution of a system makes every equation true at once, so it lies on every graph: once the graphs are drawn, the solutions are the points where they cross. Read the coordinates of each crossing point from the grid, then substitute them into both equations to confirm that the reading is exact. For example, $y = x^{2}$ and $y = x + 2$ cross at $(2, 4)$, and indeed $2^{2} = 4$ and $2 + 2 = 4$.\n\n> **Watch out.** Write a point as ($x$, $y$), across first and then up, not the other way round. The vertex of the parabola is not a solution unless the line passes through it, and when the question asks for one crossing, make sure you pick the one it describes.",
+            "一个点在图象上，当且仅当它的坐标使这个方程成立。方程组的解要同时使每个方程成立，所以它在每个图象上：画出图象后，解就是图象的交点。从网格上读出每个交点的坐标，再代入两个方程，确认读数准确。例如 $y = x^{2}$ 与 $y = x + 2$ 交于 $(2, 4)$，确实 $2^{2} = 4$，$2 + 2 = 4$。\n\n> **注意。** 点要写成 ($x$, $y$)，先横后纵，不要颠倒。抛物线的顶点不是解，除非直线恰好经过它；题目只问其中一个交点时，要选出它所描述的那一个。",
+          ),
+          (rng) => {
+            const a = rng.pick([1, -1]);
+            const h = rng.int(-2, 2);
+            const v = a > 0 ? rng.int(-6, -1) : rng.int(1, 6);
+            const f = (x: number) => a * (x - h) ** 2 + v;
+            const [x1, x2] = rng
+              .sample([-3, -2, -1, 1, 2, 3], 2)
+              .map((d) => h + d)
+              .sort((p, q) => p - q) as [number, number];
+            const m = a * (x1 + x2 - 2 * h);
+            const b = f(x1) - m * x1;
+            const parabola = vertexForm(a, h, v);
+            const line = linear(m, b);
+            return {
+              ...pointProblem({
+                prompt: t(
+                  `The graphs of the equations of the system $y = ${parabola}$, $y = ${line}$ are shown. Which solution has the greater $x$-coordinate?`,
+                  `图中是方程组 $y = ${parabola}$，$y = ${line}$ 中两个方程的图象。哪个解的 $x$ 坐标较大？`,
+                ),
+                answer: [x2, f(x2)],
+                wrong: [
+                  [x1, f(x1)],
+                  [f(x2), x2],
+                  [h, v],
+                ],
+                solution: t(
+                  `**Step 1: read the crossings.** The solutions are the points on both graphs, where the parabola and the line cross. Reading across and then up, they cross at $(${x1}, ${f(x1)})$ and $(${x2}, ${f(x2)})$.\n\n**Step 2: compare the $x$-coordinates.** $${x2} > ${x1}$, so the solution with the greater $x$-coordinate is $(${x2}, ${f(x2)})$.\n\n**Check.** Substitute $x = ${x2}$ into both equations: the parabola gives $${vertexForm(a, h, v).replace(/x/g, paren(x2))} = ${f(x2)}$ and the line gives $${lineAt(m, b, x2)} = ${f(x2)}$. Both give $y = ${f(x2)}$, so the reading is exact.`,
+                  `**第一步：读出交点。** 方程组的解是同时在两个图象上的点，也就是抛物线与直线的交点。先横后纵读出坐标，它们交于 $(${x1}, ${f(x1)})$ 和 $(${x2}, ${f(x2)})$。\n\n**第二步：比较 $x$ 坐标。** $${x2} > ${x1}$，所以 $x$ 坐标较大的解是 $(${x2}, ${f(x2)})$。\n\n**检验。** 把 $x = ${x2}$ 代入两个方程：抛物线给出 $${vertexForm(a, h, v).replace(/x/g, paren(x2))} = ${f(x2)}$，直线给出 $${lineAt(m, b, x2)} = ${f(x2)}$。两者都得 $y = ${f(x2)}$，所以读数准确。`,
+                ),
+              }),
+              figure: {
+                svg: plane(systemsView, [
+                  { kind: "curve", f },
+                  { kind: "line", a: [0, b], b: [1, m + b], accent: true },
+                ]),
+                alt: t(
+                  `The parabola y = ${plain(parabola)} and the line y = ${plain(line)} drawn on the same grid.`,
+                  `在同一网格中画出的抛物线 y = ${plain(parabola)} 与直线 y = ${plain(line)}。`,
+                ),
+              },
+            };
+          },
+        ),
+        figure: algebraDrawings["solving-systems-of-nonlinear-equations-using-graphs#reading-solutions-from-a-graph"],
+      },
+      kp(
+        "a-parabola-and-a-horizontal-line",
+        t("A parabola and a horizontal line", "抛物线与水平线"),
         t(
-          "Each solution of a system is a point that lies on the graph of every equation, so once the graphs are drawn, the solutions are the points where they cross. Read the coordinates of each crossing point from the grid, then substitute them into both equations to confirm that the reading is exact.",
-          "方程组的每个解都是同时位于每个方程图象上的点，所以画出图象后，解就是图象的交点。从网格上读出每个交点的坐标，再代入两个方程，确认读数准确。",
+          "The graph of $y = a(x - h)^{2} + v$ is a parabola with vertex $(h, v)$. A square is never negative, so when $a > 0$ the term $a(x - h)^{2}$ only adds: the parabola opens upward and $v$ is its lowest $y$-value. When $a < 0$ it opens downward and $v$ is its highest. A horizontal line $y = k$ on the open side of the vertex crosses the parabola twice, the line $y = v$ touches it once at the vertex, and a line beyond the vertex misses it. For example, $y = (x - 1)^{2} + 2$ has lowest value $2$, so $y = 5$ meets it twice and $y = 0$ never.\n\n> **Watch out.** Decide the side from the sign of $a$ before comparing $k$ with $v$: for a downward parabola, a line above the vertex misses it. A parabola and a line meet at most twice, so $3$ is never the answer, and a line through the vertex gives one solution, not none.",
+          "$y = a(x - h)^{2} + v$ 的图象是顶点为 $(h, v)$ 的抛物线。平方永远不是负数，所以 $a > 0$ 时，$a(x - h)^{2}$ 这一项只会往上加：抛物线开口向上，$v$ 是最小的 $y$ 值。$a < 0$ 时开口向下，$v$ 是最大的 $y$ 值。位于抛物线开口一侧的水平线 $y = k$ 与它交于两点，直线 $y = v$ 在顶点处与它切于一点，越过顶点另一侧的直线与它不相交。例如 $y = (x - 1)^{2} + 2$ 的最小值是 $2$，所以 $y = 5$ 与它交于两点，$y = 0$ 与它不相交。\n\n> **注意。** 先由 $a$ 的符号判断开口方向，再比较 $k$ 和 $v$：开口向下的抛物线，顶点上方的直线与它不相交。抛物线与直线至多交于两点，所以答案不可能是 $3$；经过顶点的直线给出一个解，不是无解。",
         ),
         (rng) => {
-          const a = rng.pick([1, -1]);
-          const h = rng.int(-2, 2);
-          const v = a > 0 ? rng.int(-6, -1) : rng.int(1, 6);
-          const f = (x: number) => a * (x - h) ** 2 + v;
-          const [x1, x2] = rng
-            .sample([-3, -2, -1, 1, 2, 3], 2)
-            .map((d) => h + d)
-            .sort((p, q) => p - q) as [number, number];
-          const m = a * (x1 + x2 - 2 * h);
-          const b = f(x1) - m * x1;
-          const parabola = vertexForm(a, h, v);
-          const line = linear(m, b);
-          return {
-            ...pointProblem({
-              prompt: t(
-                `The graphs of the equations of the system $y = ${parabola}$, $y = ${line}$ are shown. Which solution has the greater $x$-coordinate?`,
-                `图中是方程组 $y = ${parabola}$，$y = ${line}$ 中两个方程的图象。哪个解的 $x$ 坐标较大？`,
-              ),
-              answer: [x2, f(x2)],
-              wrong: [
-                [x1, f(x1)],
-                [f(x2), x2],
-                [h, v],
-              ],
-              solution: t(
-                `The graphs cross at $(${x1}, ${f(x1)})$ and $(${x2}, ${f(x2)})$, and the second has the greater $x$-coordinate. Check it in both equations: $${vertexForm(a, h, v).replace(/x/g, paren(x2))} = ${f(x2)}$ and $${lineAt(m, b, x2)} = ${f(x2)}$.`,
-                `两个图象交于 $(${x1}, ${f(x1)})$ 和 $(${x2}, ${f(x2)})$，后者的 $x$ 坐标较大。代入两个方程检验：$${vertexForm(a, h, v).replace(/x/g, paren(x2))} = ${f(x2)}$，$${lineAt(m, b, x2)} = ${f(x2)}$。`,
-              ),
-            }),
-            figure: {
-              svg: plane(systemsView, [
-                { kind: "curve", f },
-                { kind: "line", a: [0, b], b: [1, m + b], accent: true },
-              ]),
-              alt: t(
-                `The parabola y = ${plain(parabola)} and the line y = ${plain(line)} drawn on the same grid.`,
-                `在同一网格中画出的抛物线 y = ${plain(parabola)} 与直线 y = ${plain(line)}。`,
-              ),
-            },
-          };
+          const a = rng.pick([1, 2, 3, -1, -2, -3]);
+          const h = rng.int(-5, 5);
+          const v = rng.int(-6, 6);
+          const kind = rng.int(0, 2);
+          const up = a > 0;
+          const k = kind === 1 ? v : (kind === 0) === up ? v + rng.int(1, 6) : v - rng.int(1, 6);
+          const answer = kind === 0 ? 2 : kind === 1 ? 1 : 0;
+          const sq = h === 0 ? "x^{2}" : `(x ${h < 0 ? "+" : "-"} ${Math.abs(h)})^{2}`;
+          const coef = a === 1 ? "" : a === -1 ? "-" : String(a);
+          const rhs = `${coef}${sq}${v === 0 ? "" : ` ${v < 0 ? "-" : "+"} ${Math.abs(v)}`}`;
+          return numberProblem({
+            prompt: t(
+              `How many real solutions does the system $y = ${rhs}$, $y = ${k}$ have?`,
+              `方程组 $y = ${rhs}$，$y = ${k}$ 有多少个实数解？`,
+            ),
+            answer,
+            form: "integer",
+            wrong: [0, 1, 2, 3].filter((w) => w !== answer),
+            solution: t(
+              `**Step 1: the vertex and the direction.** The vertex is $(${h}, ${v})$, and $a = ${a}$ is ${up ? "positive" : "negative"}, so the parabola opens ${up ? "upward" : "downward"} and its ${up ? "least" : "greatest"} $y$-value is $${v}$.\n\n**Step 2: place the line.** The line $y = ${k}$ ${kind === 0 ? `is ${up ? "above" : "below"} the vertex, on the open side, so it crosses the parabola twice` : kind === 1 ? "passes through the vertex, so it touches the parabola once" : `is ${up ? "below" : "above"} the vertex, where the parabola never reaches, so it misses it`}: ${answer === 1 ? "$1$ solution" : `$${answer}$ solutions`}.\n\n**Check.** Setting the two expressions for $y$ equal gives $${coef}${sq} = ${k} - ${paren(v)}$, so $${sq} = ${Q.of(k - v, a).toLatex()}$, which has ${kind === 0 ? "two solutions because the right side is positive" : kind === 1 ? `one solution, $x = ${h}$, because the right side is $0$` : "no solutions because a square cannot be negative"}.`,
+              `**第一步：顶点和开口方向。** 顶点是 $(${h}, ${v})$，$a = ${a}$ 是${up ? "正数" : "负数"}，所以抛物线开口向${up ? "上" : "下"}，最${up ? "小" : "大"}的 $y$ 值是 $${v}$。\n\n**第二步：确定直线的位置。** 直线 $y = ${k}$ ${kind === 0 ? `在顶点${up ? "上方" : "下方"}，位于开口一侧，所以与抛物线交于两点` : kind === 1 ? "经过顶点，所以与抛物线切于一点" : `在顶点${up ? "下方" : "上方"}，抛物线到不了那里，所以与它不相交`}：共 $${answer}$ 个解。\n\n**检验。** 令两个 $y$ 的表达式相等，得 $${coef}${sq} = ${k} - ${paren(v)}$，所以 $${sq} = ${Q.of(k - v, a).toLatex()}$；${kind === 0 ? "右边是正数，所以有两个解" : kind === 1 ? `右边是 $0$，所以只有一个解 $x = ${h}$` : "平方不可能是负数，所以无解"}。`,
+            ),
+          });
         },
+        parabolaAndLinesFigure,
       ),
-      figure: algebraDrawings["solving-systems-of-nonlinear-equations-using-graphs#reading-solutions-from-a-graph"],
-    },
-    kp(
-      "a-parabola-and-a-horizontal-line",
-      t("A parabola and a horizontal line", "抛物线与水平线"),
-      t(
-        "The graph of $y = a(x - h)^{2} + v$ is a parabola with vertex $(h, v)$; it opens upward when $a > 0$, so $v$ is its lowest $y$-value, and downward when $a < 0$, so $v$ is its highest. A horizontal line $y = k$ on the open side of the vertex crosses the parabola twice, the line $y = v$ touches it once at the vertex, and a line beyond the vertex misses it.",
-        "$y = a(x - h)^{2} + v$ 的图象是顶点为 $(h, v)$ 的抛物线；$a > 0$ 时开口向上，$v$ 是最小的 $y$ 值；$a < 0$ 时开口向下，$v$ 是最大的 $y$ 值。位于抛物线开口一侧的水平线 $y = k$ 与它交于两点，直线 $y = v$ 在顶点处与它切于一点，越过顶点另一侧的直线与它不相交。",
+      kp(
+        "checking-an-intersection-point",
+        t("Checking an intersection point", "检验交点"),
+        t(
+          "A solution of a system must make both equations true at once, so a point that looks like an intersection on a graph is a solution only if its coordinates satisfy both equations exactly. To decide which listed point solves the system $y = x^{2} - 3$, $y = x - 1$, substitute each into both: $(2, 1)$ gives $2^{2} - 3 = 1$ and $2 - 1 = 1$, so it is a solution, while $(-2, 1)$ lies on the parabola but the line gives $-2 - 1 = -3$ there.\n\n> **Watch out.** A point that fits one equation is on one graph only; test it in the other equation too. Substitute the first coordinate for $x$ and the second for $y$, since a point with its coordinates swapped is usually a different point.",
+          "方程组的解必须同时使两个方程成立，所以图象上看起来像交点的点，只有当它的坐标恰好满足两个方程时才是解。要判断所列哪个点是方程组 $y = x^{2} - 3$，$y = x - 1$ 的解，把每个点代入两个方程：$(2, 1)$ 给出 $2^{2} - 3 = 1$ 和 $2 - 1 = 1$，所以它是解；而 $(-2, 1)$ 在抛物线上，但直线在该处给出 $-2 - 1 = -3$。\n\n> **注意。** 只满足一个方程的点只在一个图象上，还要代入另一个方程检验。第一个坐标代替 $x$，第二个坐标代替 $y$；把坐标对调，通常就是另一个点了。",
+        ),
+        (rng) => {
+          const c = rng.int(-4, 3);
+          const [r1, r2] = rng.sample([-3, -2, -1, 0, 1, 2, 3], 2) as [number, number];
+          const m = r1 + r2;
+          const b = c - r1 * r2;
+          const onParabola = (x: number) => x * x + c;
+          const onLine = (x: number) => m * x + b;
+          const x0 = rng.pick([r1, r2]);
+          const y0 = onParabola(x0);
+          const others = [-3, -2, -1, 0, 1, 2, 3].filter((x) => x !== r1 && x !== r2);
+          const [x3, x4] = rng.sample(others, 2) as [number, number];
+          const pt = (x: number, y: number) => mathText(`(${x}, ${y})`);
+          const swapped = onParabola(y0) === x0 && onLine(y0) === x0 ? [] : [pt(y0, x0)];
+          const parabola = poly([1, "x^{2}"], [c, ""]);
+          const line = linear(m, b);
+          return pickChoice(
+            rng,
+            t(
+              `Which point is a solution of the system $y = ${parabola}$, $y = ${line}$?`,
+              `哪个点是方程组 $y = ${parabola}$，$y = ${line}$ 的解？`,
+            ),
+            pt(x0, y0),
+            [pt(x3, onParabola(x3)), pt(x4, onLine(x4)), ...swapped],
+            t(
+              `**Step 1: test the point in both equations.** Substitute $(${x0}, ${y0})$: the parabola gives $${paren(x0)}^{2}${c === 0 ? "" : ` ${c < 0 ? "-" : "+"} ${Math.abs(c)}`} = ${y0}$ and the line gives $${lineAt(m, b, x0)} = ${y0}$. Both equal the $y$-coordinate, so it lies on both graphs and solves the system.\n\n**Step 2: rule out the others.** The point $(${x3}, ${onParabola(x3)})$ lies on the parabola, but the line gives $${onLine(x3)}$ at $x = ${x3}$; the point $(${x4}, ${onLine(x4)})$ lies on the line, but the parabola gives $${onParabola(x4)}$ at $x = ${x4}$.\n\n**Check.** The graphs meet where $${parabola} = ${line}$, that is $${poly([1, "x^{2}"], [-m, "x"], [r1 * r2, ""])} = 0$, or $${factorAt(r1)}${factorAt(r2)} = 0$. So the solutions have $x = ${r1}$ or $x = ${r2}$, and $x = ${x0}$ is one of them.`,
+              `**第一步：把点代入两个方程。** 代入 $(${x0}, ${y0})$：抛物线给出 $${paren(x0)}^{2}${c === 0 ? "" : ` ${c < 0 ? "-" : "+"} ${Math.abs(c)}`} = ${y0}$，直线给出 $${lineAt(m, b, x0)} = ${y0}$。两者都等于纵坐标，所以它在两个图象上，是方程组的解。\n\n**第二步：排除其他点。** 点 $(${x3}, ${onParabola(x3)})$ 在抛物线上，但直线在 $x = ${x3}$ 处给出 $${onLine(x3)}$；点 $(${x4}, ${onLine(x4)})$ 在直线上，但抛物线在 $x = ${x4}$ 处给出 $${onParabola(x4)}$。\n\n**检验。** 两个图象在 $${parabola} = ${line}$ 处相交，即 $${poly([1, "x^{2}"], [-m, "x"], [r1 * r2, ""])} = 0$，也就是 $${factorAt(r1)}${factorAt(r2)} = 0$。所以解的 $x$ 是 $${r1}$ 或 $${r2}$，而 $x = ${x0}$ 正是其中之一。`,
+            ),
+          );
+        },
+        parabolaCheckFigure,
       ),
-      (rng) => {
-        const a = rng.pick([1, 2, 3, -1, -2, -3]);
-        const h = rng.int(-5, 5);
-        const v = rng.int(-6, 6);
-        const kind = rng.int(0, 2);
-        const up = a > 0;
-        const k = kind === 1 ? v : (kind === 0) === up ? v + rng.int(1, 6) : v - rng.int(1, 6);
-        const answer = kind === 0 ? 2 : kind === 1 ? 1 : 0;
-        const sq = h === 0 ? "x^{2}" : `(x ${h < 0 ? "+" : "-"} ${Math.abs(h)})^{2}`;
-        const coef = a === 1 ? "" : a === -1 ? "-" : String(a);
-        const rhs = `${coef}${sq}${v === 0 ? "" : ` ${v < 0 ? "-" : "+"} ${Math.abs(v)}`}`;
-        return numberProblem({
-          prompt: t(
-            `How many real solutions does the system $y = ${rhs}$, $y = ${k}$ have?`,
-            `方程组 $y = ${rhs}$，$y = ${k}$ 有多少个实数解？`,
-          ),
-          answer,
-          form: "integer",
-          wrong: [0, 1, 2, 3],
-          solution: t(
-            `The parabola opens ${up ? "upward" : "downward"} from its vertex $(${h}, ${v})$, so its ${up ? "least" : "greatest"} $y$-value is $${v}$. The line $y = ${k}$ ${kind === 0 ? "lies on the open side and crosses it twice" : kind === 1 ? "passes through the vertex and touches it once" : `lies ${up ? "below" : "above"} the vertex and misses it`}: ${answer === 1 ? "$1$ solution" : `$${answer}$ solutions`}.`,
-            `抛物线从顶点 $(${h}, ${v})$ 开口向${up ? "上" : "下"}，所以它的最${up ? "小" : "大"} $y$ 值为 $${v}$。直线 $y = ${k}$ ${kind === 0 ? "位于开口一侧，与抛物线交于两点" : kind === 1 ? "经过顶点，与抛物线切于一点" : `位于顶点${up ? "下方" : "上方"}，与抛物线不相交`}：共 $${answer}$ 个解。`,
-          ),
-        });
-      },
-      parabolaAndLinesFigure,
-    ),
-    kp(
-      "checking-an-intersection-point",
-      t("Checking an intersection point", "检验交点"),
-      t(
-        "A point that looks like an intersection on a graph is a solution only if its coordinates satisfy both equations exactly. To decide which listed point solves the system $y = x^{2} - 3$, $y = x - 1$, substitute each into both: $(2, 1)$ gives $2^{2} - 3 = 1$ and $2 - 1 = 1$, so it is a solution, while $(-2, 1)$ lies on the parabola but the line gives $-2 - 1 = -3$ there.",
-        "图象上看起来像交点的点，只有当它的坐标恰好满足两个方程时才是解。要判断所列哪个点是方程组 $y = x^{2} - 3$，$y = x - 1$ 的解，把每个点代入两个方程：$(2, 1)$ 给出 $2^{2} - 3 = 1$ 和 $2 - 1 = 1$，所以它是解；而 $(-2, 1)$ 在抛物线上，但直线在该处给出 $-2 - 1 = -3$。",
-      ),
-      (rng) => {
-        const c = rng.int(-4, 3);
-        const [r1, r2] = rng.sample([-3, -2, -1, 0, 1, 2, 3], 2) as [number, number];
-        const m = r1 + r2;
-        const b = c - r1 * r2;
-        const onParabola = (x: number) => x * x + c;
-        const onLine = (x: number) => m * x + b;
-        const x0 = rng.pick([r1, r2]);
-        const y0 = onParabola(x0);
-        const others = [-3, -2, -1, 0, 1, 2, 3].filter((x) => x !== r1 && x !== r2);
-        const [x3, x4] = rng.sample(others, 2) as [number, number];
-        const pt = (x: number, y: number) => mathText(`(${x}, ${y})`);
-        const swapped = onParabola(y0) === x0 && onLine(y0) === x0 ? [] : [pt(y0, x0)];
-        const parabola = poly([1, "x^{2}"], [c, ""]);
-        const line = linear(m, b);
-        return pickChoice(
-          rng,
-          t(
-            `Which point is a solution of the system $y = ${parabola}$, $y = ${line}$?`,
-            `哪个点是方程组 $y = ${parabola}$，$y = ${line}$ 的解？`,
-          ),
-          pt(x0, y0),
-          [pt(x3, onParabola(x3)), pt(x4, onLine(x4)), ...swapped],
-          t(
-            `Substitute $(${x0}, ${y0})$: $${paren(x0)}^{2}${c === 0 ? "" : ` ${c < 0 ? "-" : "+"} ${Math.abs(c)}`} = ${y0}$ and $${lineAt(m, b, x0)} = ${y0}$, so it lies on both graphs. The point $(${x3}, ${onParabola(x3)})$ lies on the parabola, but the line gives $${onLine(x3)}$ at $x = ${x3}$; the point $(${x4}, ${onLine(x4)})$ lies on the line, but the parabola gives $${onParabola(x4)}$ at $x = ${x4}$.`,
-            `代入 $(${x0}, ${y0})$：$${paren(x0)}^{2}${c === 0 ? "" : ` ${c < 0 ? "-" : "+"} ${Math.abs(c)}`} = ${y0}$，且 $${lineAt(m, b, x0)} = ${y0}$，所以它在两个图象上。点 $(${x3}, ${onParabola(x3)})$ 在抛物线上，但直线在 $x = ${x3}$ 处给出 $${onLine(x3)}$；点 $(${x4}, ${onLine(x4)})$ 在直线上，但抛物线在 $x = ${x4}$ 处给出 $${onParabola(x4)}$。`,
-          ),
-        );
-      },
-      parabolaCheckFigure,
-    ),
-  ],
-);
+    ],
+  ),
+  intro: t(
+    "Each equation of a system has a graph, the set of all points whose coordinates make that equation true. A solution of the system must make every equation true at once, so it is a point on every graph: the solutions are exactly the points where the graphs meet. This turns a system you might not know how to solve by algebra into a picture. You can read the solutions off a graph, count them by seeing how a line sits against a parabola, and confirm a point by substituting it into both equations, since a graph read by eye can be off by a little.",
+    "方程组的每个方程都有一个图象，即坐标使这个方程成立的所有点。方程组的解必须同时使每个方程成立，所以它是每个图象上的点：解恰好就是图象的交点。这样，一个也许不会用代数方法解的方程组就变成了一幅图。我们可以从图象上读出解，看直线相对抛物线的位置来数出解的个数，再把点代入两个方程来确认，因为用眼睛读图可能会有一点偏差。",
+  ),
+};
 
 /** systemsWithACircleAndALine counts and checks the solutions of a system of a circle and a line. */
 const systemsWithACircleAndALine = topic(

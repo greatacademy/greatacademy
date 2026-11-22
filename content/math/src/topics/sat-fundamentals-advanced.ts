@@ -302,7 +302,8 @@ export const factoringExpressionsContainingHiddenFactors = topic(
 // Quadratic equations
 
 /** perfectSquareQuadraticEquationsWithOneOrNoSolutions counts the solutions of (ax + b)² = c. */
-export const perfectSquareQuadraticEquationsWithOneOrNoSolutions = topic(
+export const perfectSquareQuadraticEquationsWithOneOrNoSolutions: TopicDef = {
+  ...topic(
   "perfect-square-quadratic-equations-with-one-or-no-solutions",
   t("Perfect Square Quadratic Equations with One or No Solutions", "只有一个解或无解的完全平方二次方程"),
   t(
@@ -316,8 +317,8 @@ export const perfectSquareQuadraticEquationsWithOneOrNoSolutions = topic(
       "counting-solutions-of-a-square",
       t("Counting solutions of a square equation", "平方方程解的个数"),
       t(
-        "A square is never negative. So $(ax + b)^2 = c$ has two real solutions when $c > 0$, exactly one when $c = 0$ (then $ax + b = 0$), and none when $c < 0$. Rewrite a perfect square trinomial as a square first to see this.",
-        "平方永远不会是负数。所以 $(ax + b)^2 = c$ 在 $c > 0$ 时有两个实数解，在 $c = 0$ 时恰有一个解（此时 $ax + b = 0$），在 $c < 0$ 时无解。如果是完全平方三项式，先把它写成平方的形式。",
+        "A square is never negative, and every positive number has two square roots, one positive and one negative. So $(ax + b)^2 = c$ has two real solutions when $c > 0$, exactly one when $c = 0$ (then $ax + b = 0$), and none when $c < 0$. To use this, first get the square alone on one side; rewrite a perfect square trinomial as a square if needed. For example, $(x - 3)^2 + 5 = 5$ becomes $(x - 3)^2 = 0$, so only $x = 3$ works.\n\n> **Watch out.** Judge the number on the right only after moving every constant away from the square: $(x - 3)^2 + 5 = 2$ has a positive number on the right, yet $(x - 3)^2 = -3$ has no solutions. A square equal to $0$ still has one solution, not none.",
+        "平方永远不会是负数，而每个正数都有两个平方根，一正一负。所以 $(ax + b)^2 = c$ 在 $c > 0$ 时有两个实数解，在 $c = 0$ 时恰有一个解（此时 $ax + b = 0$），在 $c < 0$ 时无解。要用这个结论，先让平方单独留在一边；如果是完全平方三项式，先把它写成平方的形式。例如 $(x - 3)^2 + 5 = 5$ 变成 $(x - 3)^2 = 0$，所以只有 $x = 3$ 成立。\n\n> **注意。** 要先把所有常数从平方那边移走，再看右边的数：$(x - 3)^2 + 5 = 2$ 右边是正数，但 $(x - 3)^2 = -3$ 没有解。平方等于 $0$ 时仍有一个解，不是无解。",
       ),
       (rng) => {
         const h = rng.nonZero(-9, 9);
@@ -339,8 +340,8 @@ export const perfectSquareQuadraticEquationsWithOneOrNoSolutions = topic(
           label(count),
           [0, 1, 2].filter((n) => n !== count).map(label),
           t(
-            `${trinomial ? `The left side is $${lf(1, h)}^2 ${k < 0 ? "-" : "+"} ${Math.abs(k)}$. ` : ""}Moving the constant $${k}$ to the right side gives $${lf(1, h)}^2 = ${c}$. ${count === 2 ? "A positive number has two square roots, so there are two solutions." : count === 1 ? `Only $${linear(1, h)} = 0$ works, so there is exactly one solution.` : "A square cannot be negative, so there are no real solutions."}`,
-            `${trinomial ? `左边是 $${lf(1, h)}^2 ${k < 0 ? "-" : "+"} ${Math.abs(k)}$。` : ""}把常数 $${k}$ 移到右边得 $${lf(1, h)}^2 = ${c}$。${count === 2 ? "正数有两个平方根，所以有两个解。" : count === 1 ? `只有 $${linear(1, h)} = 0$ 成立，所以恰有一个解。` : "平方不可能是负数，所以没有实数解。"}`,
+            `**Step 1: get the square alone.** ${trinomial ? `The first two terms come from $${lf(1, h)}^2 = ${poly([1, "x^2"], [2 * h, "x"], [h * h, ""])}$, so the left side is $${lf(1, h)}^2 ${k < 0 ? "-" : "+"} ${Math.abs(k)}$. ` : ""}${k < 0 ? "Add" : "Subtract"} $${Math.abs(k)}$ on both sides:${steps(`${lf(1, h)}^2 = ${rhs} ${k < 0 ? "+" : "-"} ${Math.abs(k)} = ${c}`)}**Step 2: count the square roots.** ${count === 2 ? `$${c}$ is positive, and a positive number has two square roots, so $${linear(1, h)} = \\sqrt{${c}}$ or $${linear(1, h)} = -\\sqrt{${c}}$: two real solutions.` : count === 1 ? `Only the number $0$ squares to $0$, so $${linear(1, h)} = 0$ and $x = ${-h}$: exactly one real solution.` : `$${c}$ is negative, and no real number squared is negative, so there are no real solutions.`}\n\n**Check.** The left side is smallest at $x = ${-h}$, where the square is $0$ and the left side equals $${k}$. ${count === 2 ? `The right side, $${rhs}$, is above that, and the left side grows on both sides of $x = ${-h}$, so it reaches $${rhs}$ twice.` : count === 1 ? `That is exactly the right side, $${rhs}$, and every other $x$ gives more, so it is reached once.` : `The right side, $${rhs}$, is below that, so the left side never gets down to it.`}`,
+            `**第一步：让平方单独留在一边。** ${trinomial ? `前两项来自 $${lf(1, h)}^2 = ${poly([1, "x^2"], [2 * h, "x"], [h * h, ""])}$，所以左边是 $${lf(1, h)}^2 ${k < 0 ? "-" : "+"} ${Math.abs(k)}$。` : ""}两边同时${k < 0 ? "加上" : "减去"} $${Math.abs(k)}$：${steps(`${lf(1, h)}^2 = ${rhs} ${k < 0 ? "+" : "-"} ${Math.abs(k)} = ${c}`)}**第二步：数平方根的个数。** ${count === 2 ? `$${c}$ 是正数，正数有两个平方根，所以 $${linear(1, h)} = \\sqrt{${c}}$ 或 $${linear(1, h)} = -\\sqrt{${c}}$：有两个实数解。` : count === 1 ? `只有 $0$ 的平方是 $0$，所以 $${linear(1, h)} = 0$，$x = ${-h}$：恰有一个实数解。` : `$${c}$ 是负数，任何实数的平方都不是负数，所以没有实数解。`}\n\n**检验。** 左边在 $x = ${-h}$ 时最小，这时平方为 $0$，左边等于 $${k}$。${count === 2 ? `右边 $${rhs}$ 比它大，而左边在 $x = ${-h}$ 两侧都会变大，所以会两次等于 $${rhs}$。` : count === 1 ? `这正好是右边的 $${rhs}$，其他 $x$ 都使左边更大，所以只取到一次。` : `右边 $${rhs}$ 比它小，所以左边永远降不到这个值。`}`,
           ),
         );
       },
@@ -349,8 +350,8 @@ export const perfectSquareQuadraticEquationsWithOneOrNoSolutions = topic(
       "making-exactly-one-solution",
       t("Choosing a constant for exactly one solution", "选取常数使方程恰有一个解"),
       t(
-        "$x^2 + bx + c = 0$ has exactly one solution when the left side is a perfect square, $\\left(x + \\frac{b}{2}\\right)^2$. That happens when $c = \\left(\\frac{b}{2}\\right)^2$. For $x^2 - 10x + c = 0$, half of $-10$ is $-5$, so $c = 25$.",
-        "当左边是完全平方 $\\left(x + \\frac{b}{2}\\right)^2$ 时，$x^2 + bx + c = 0$ 恰有一个解，即 $c = \\left(\\frac{b}{2}\\right)^2$。对于 $x^2 - 10x + c = 0$，$-10$ 的一半是 $-5$，所以 $c = 25$。",
+        "$x^2 + bx + c = 0$ has exactly one solution when the left side is a perfect square, $\\left(x + \\frac{b}{2}\\right)^2$, because a square equal to $0$ has only the root $0$. That happens when $c = \\left(\\frac{b}{2}\\right)^2$. For $x^2 - 10x + c = 0$, half of $-10$ is $-5$, so $c = 25$, and $x^2 - 10x + 25 = (x - 5)^2 = 0$ gives only $x = 5$. If the right side is not $0$, move it to the left first, so that the whole constant on the left must equal the square.\n\n> **Watch out.** Square half of $b$. Using $b$ itself, or squaring $b$ without halving it, gives the wrong constant: $\\left(\\frac{-10}{2}\\right)^2 = 25$, while $(-10)^2 = 100$. When the right side is a number $d$, the constant $c - d$ must be the square, so $c$ is the square plus $d$, not minus $d$ and not the square alone.",
+        "当左边是完全平方 $\\left(x + \\frac{b}{2}\\right)^2$ 时，$x^2 + bx + c = 0$ 恰有一个解，因为平方等于 $0$ 时只有一个根 $0$。这要求 $c = \\left(\\frac{b}{2}\\right)^2$。对于 $x^2 - 10x + c = 0$，$-10$ 的一半是 $-5$，所以 $c = 25$，而 $x^2 - 10x + 25 = (x - 5)^2 = 0$ 只给出 $x = 5$。如果右边不是 $0$，先把它移到左边，这样左边的全部常数必须等于这个平方。\n\n> **注意。** 要把 $b$ 的一半平方。直接用 $b$，或者不减半就把 $b$ 平方，得到的常数都不对：$\\left(\\frac{-10}{2}\\right)^2 = 25$，而 $(-10)^2 = 100$。右边是数 $d$ 时，必须是 $c - d$ 等于这个平方，所以 $c$ 是平方加上 $d$，不是减去 $d$，也不只是这个平方。",
       ),
       (rng) => {
         const h = rng.nonZero(-15, 15);
@@ -365,14 +366,19 @@ export const perfectSquareQuadraticEquationsWithOneOrNoSolutions = topic(
           answer: value,
           wrong: [h * h, 2 * h + d, 4 * h * h + d, h * h - d],
           solution: t(
-            `Move $${d}$ to the left: $${poly([1, "x^2"], [2 * h, "x"])} + (c ${d < 0 ? "+" : "-"} ${Math.abs(d)}) = 0$. This has one solution when it is a perfect square, so $c ${d < 0 ? "+" : "-"} ${Math.abs(d)} = ${paren(h)}^2 = ${h * h}$ and $c = ${value}$.`,
-            `把 $${d}$ 移到左边：$${poly([1, "x^2"], [2 * h, "x"])} + (c ${d < 0 ? "+" : "-"} ${Math.abs(d)}) = 0$。当它是完全平方时恰有一个解，所以 $c ${d < 0 ? "+" : "-"} ${Math.abs(d)} = ${paren(h)}^2 = ${h * h}$，$c = ${value}$。`,
+            `**Step 1: make the right side $0$.** ${d === 0 ? `The right side is already $0$, so the constant on the left is $c$ itself.` : `Move $${d}$ to the left:${steps(`${poly([1, "x^2"], [2 * h, "x"])} + (c ${d < 0 ? "+" : "-"} ${Math.abs(d)}) = 0`)}`}${d === 0 ? "\n\n" : ""}**Step 2: match a perfect square.** One solution means the left side is a perfect square. Half of $${2 * h}$ is $${h}$, and $${lf(1, h)}^2 = ${poly([1, "x^2"], [2 * h, "x"], [h * h, ""])}$, so the constant must be $${paren(h)}^2 = ${h * h}$:${steps(d === 0 ? `c = ${h * h}` : `c ${d < 0 ? "+" : "-"} ${Math.abs(d)} = ${h * h}`, `c = ${value}`)}**Check.** With $c = ${value}$ the equation is $${poly([1, "x^2"], [2 * h, "x"], [value, ""])} = ${d}$, that is $${poly([1, "x^2"], [2 * h, "x"], [h * h, ""])} = 0$, or $${lf(1, h)}^2 = 0$. Only $x = ${-h}$ makes the square $0$, so there is exactly one solution.`,
+            `**第一步：让右边为 $0$。** ${d === 0 ? `右边已经是 $0$，所以左边的常数就是 $c$。` : `把 $${d}$ 移到左边：${steps(`${poly([1, "x^2"], [2 * h, "x"])} + (c ${d < 0 ? "+" : "-"} ${Math.abs(d)}) = 0`)}`}${d === 0 ? "\n\n" : ""}**第二步：配成完全平方。** 恰有一个解，说明左边是完全平方式。$${2 * h}$ 的一半是 $${h}$，而 $${lf(1, h)}^2 = ${poly([1, "x^2"], [2 * h, "x"], [h * h, ""])}$，所以常数必须是 $${paren(h)}^2 = ${h * h}$：${steps(d === 0 ? `c = ${h * h}` : `c ${d < 0 ? "+" : "-"} ${Math.abs(d)} = ${h * h}`, `c = ${value}`)}**检验。** 当 $c = ${value}$ 时，方程是 $${poly([1, "x^2"], [2 * h, "x"], [value, ""])} = ${d}$，即 $${poly([1, "x^2"], [2 * h, "x"], [h * h, ""])} = 0$，也就是 $${lf(1, h)}^2 = 0$。只有 $x = ${-h}$ 使平方为 $0$，所以恰有一个解。`,
           ),
         });
       },
     ),
   ],
-);
+  ),
+  intro: t(
+    "Most quadratic equations have two solutions, but some have one and some have none, and a perfect square shows which at a glance. The reason is that a square is never negative. If $(x - 4)^2 = 9$, then $x - 4$ is $3$ or $-3$: two solutions. If $(x - 4)^2 = 0$, then $x - 4$ must be $0$: one solution. And $(x - 4)^2 = -9$ has no real solution at all, since no real number squared is negative. So the plan is always the same: get the square alone on one side, then look at the sign of the other side. Turned around, the same idea tells you which constant makes an equation have exactly one solution.",
+    "大多数二次方程有两个解，但有的只有一个，有的没有，而完全平方能让人一眼看出是哪种情况。原因是平方永远不会是负数。若 $(x - 4)^2 = 9$，则 $x - 4$ 是 $3$ 或 $-3$：两个解。若 $(x - 4)^2 = 0$，则 $x - 4$ 必须是 $0$：一个解。而 $(x - 4)^2 = -9$ 根本没有实数解，因为任何实数的平方都不是负数。所以做法总是一样的：先让平方单独留在一边，再看另一边的符号。反过来用，同样的想法还能告诉我们，常数取什么值时方程恰有一个解。",
+  ),
+};
 
 /** theZeroProductRuleForSolvingPolynomialEquations solves polynomial equations given or put in factored form. */
 export const theZeroProductRuleForSolvingPolynomialEquations = topic(

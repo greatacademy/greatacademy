@@ -49,6 +49,36 @@ function convertProblem(rng: Rng, units: readonly Unit[], base: Unit, amounts: (
   const value = amount.mul(from.size).div(to.size);
   const inBase = amount.mul(from.size).div(base.size);
   const show = (q: Q) => dec(q);
+  const fromB = from.size.div(base.size);
+  const toB = to.size.div(base.size);
+  const one = (u: Unit) => (u.en === "feet" ? "foot" : u.en === "inches" ? "inch" : u.en.slice(0, -1));
+  const larger = to.size.sub(from.size).sign() > 0;
+  const a = (u: Unit) => (/^[aeiou]|^hour/.test(one(u)) ? "an" : "a");
+  const intoBase = (label: string) =>
+    `${label}Each ${one(from)} is $${show(fromB)}$ ${base.en}, so multiply by $${show(fromB)}$ to count the ${base.en}:${steps(`${show(amount)} \\cdot ${show(fromB)} = ${show(inBase)}`)}`;
+  const outOfBase = (label: string) =>
+    `${label}Each ${one(to)} is $${show(toB)}$ ${base.en}, so divide by $${show(toB)}$ to count how many ${to.en} the ${base.en} make:${steps(`${show(inBase)} \\div ${show(toB)} = ${show(value)}`)}`;
+  const intoBaseZh = (label: string) =>
+    `${label}每 $1$ ${from.zh}是 $${show(fromB)}$ ${base.zh}，所以乘以 $${show(fromB)}$，求出有多少${base.zh}：${steps(`${show(amount)} \\cdot ${show(fromB)} = ${show(inBase)}`)}`;
+  const outOfBaseZh = (label: string) =>
+    `${label}每 $1$ ${to.zh}是 $${show(toB)}$ ${base.zh}，所以除以 $${show(toB)}$，求出这些${base.zh}能凑成多少${to.zh}：${steps(`${show(inBase)} \\div ${show(toB)} = ${show(value)}`)}`;
+  const back = from.size.eq(base.size)
+    ? `${show(value)} \\cdot ${show(toB)} = ${show(amount)}`
+    : to.size.eq(base.size)
+      ? `${show(value)} \\div ${show(fromB)} = ${show(amount)}`
+      : `${show(value)} \\cdot ${show(toB)} \\div ${show(fromB)} = ${show(amount)}`;
+  const check = `**Check.** ${a(to) === "an" ? "An" : "A"} ${one(to)} is ${larger ? "larger" : "smaller"} than ${a(from)} ${one(from)}, so the number should get ${larger ? "smaller" : "bigger"}, and $${show(value)}$ is ${larger ? "less" : "more"} than $${show(amount)}$. Converting back gives $${back}$ ${from.en}.`;
+  const checkZh = `**检验。** ${to.zh}比${from.zh}${larger ? "大" : "小"}，所以数值应该变${larger ? "小" : "大"}；$${show(value)}$ 确实比 $${show(amount)}$ ${larger ? "小" : "大"}。反过来换算：$${back}$ ${from.zh}。`;
+  const en = from.size.eq(base.size)
+    ? `The amount is already in the base unit, ${base.en}. ${outOfBase("")}`
+    : to.size.eq(base.size)
+      ? `The new unit is the base unit, ${base.en}. ${intoBase("")}`
+      : `${intoBase(`**Step 1: into ${base.en}.** `)}\n\n${outOfBase(`**Step 2: into ${to.en}.** `)}`;
+  const zh = from.size.eq(base.size)
+    ? `数量已经用基本单位${base.zh}表示。${outOfBaseZh("")}`
+    : to.size.eq(base.size)
+      ? `新单位就是基本单位${base.zh}。${intoBaseZh("")}`
+      : `${intoBaseZh(`**第一步：换算成${base.zh}。** `)}\n\n${outOfBaseZh(`**第二步：换算成${to.zh}。** `)}`;
   return numberProblem({
     prompt: t(`Convert $${show(amount)}$ ${from.en} to ${to.en}.`, `把 $${show(amount)}$ ${from.zh}换算成${to.zh}。`),
     answer: value,
@@ -57,18 +87,7 @@ function convertProblem(rng: Rng, units: readonly Unit[], base: Unit, amounts: (
     wrong: [amount.mul(to.size).div(from.size), amount.mul(from.size), amount.div(to.size), value.mul(Q.of(10))].filter(
       (w) => !w.eq(value),
     ),
-    solution: t(
-      from.size.eq(base.size)
-        ? `The amount is already in the base unit, ${base.en}. Divide by the number of ${base.en} in each of the new units, $${show(to.size.div(base.size))}$: $${show(amount)}$ ${from.en} is $${show(value)}$ ${to.en}.`
-        : to.size.eq(base.size)
-          ? `The new unit is the base unit, ${base.en}. Multiply by the number of ${base.en} in each of the old units, $${show(from.size.div(base.size))}$: $${show(amount)}$ ${from.en} is $${show(value)}$ ${to.en}.`
-          : `Go through the base unit, ${base.en}: $${show(amount)}$ ${from.en} is $${show(inBase)}$ ${base.en}, which is $${show(value)}$ ${to.en}.`,
-      from.size.eq(base.size)
-        ? `数量已经用基本单位${base.zh}表示。除以每个新单位所含的${base.zh}数 $${show(to.size.div(base.size))}$：$${show(amount)}$ ${from.zh}是 $${show(value)}$ ${to.zh}。`
-        : to.size.eq(base.size)
-          ? `新单位就是基本单位${base.zh}。乘以每个原单位所含的${base.zh}数 $${show(from.size.div(base.size))}$：$${show(amount)}$ ${from.zh}是 $${show(value)}$ ${to.zh}。`
-          : `通过基本单位${base.zh}换算：$${show(amount)}$ ${from.zh}是 $${show(inBase)}$ ${base.zh}，即 $${show(value)}$ ${to.zh}。`,
-    ),
+    solution: t(`${en}\n\n${check}`, `${zh}\n\n${checkZh}`),
   });
 }
 
@@ -232,7 +251,8 @@ const times: readonly Unit[] = [
 ];
 
 /** unitConversionsUsingBaseUnitsOfMass converts between metric or customary units of mass. */
-export const unitConversionsUsingBaseUnitsOfMass = topic(
+export const unitConversionsUsingBaseUnitsOfMass: TopicDef = {
+  ...topic(
   "unit-conversions-using-base-units-of-mass",
   t("Unit Conversions Using Base Units of Mass", "以基本单位换算质量单位"),
   t(
@@ -246,8 +266,8 @@ export const unitConversionsUsingBaseUnitsOfMass = topic(
       "metric-mass",
       t("Metric units of mass", "公制质量单位"),
       t(
-        "Every metric unit of mass is a power of ten times a gram: a milligram is $0.001$ g, a centigram $0.01$ g and a kilogram $1000$ g. To convert, first write the amount in grams, then divide by the size of the new unit in grams.",
-        "每个公制质量单位都是克的十的幂倍：毫克是 $0.001$ g，厘克是 $0.01$ g，千克是 $1000$ g。换算时先把数量写成克，再除以新单位相当于多少克。",
+        "Every metric unit of mass is a power of ten times a gram: a milligram is $0.001$ g, a centigram $0.01$ g and a kilogram $1000$ g. Multiplying by the size of the old unit counts the grams; dividing by the size of the new unit counts how many new units those grams fill. For example, $2.5$ kg in centigrams: $2.5 \\cdot 1000 = 2500$ g, and $2500 \\div 0.01 = 250{,}000$ cg. Centigrams are much smaller, so the number grows.\n\n> **Watch out.** Do both steps. Stopping at grams, or dividing the starting amount by the new unit's size without first changing it to grams, gives the wrong number, and so does turning the factor upside down. Count the zeros carefully: one place too many is ten times too big.",
+        "每个公制质量单位都是克的十的幂倍：毫克是 $0.001$ g，厘克是 $0.01$ g，千克是 $1000$ g。乘以原单位的大小，就数出了有多少克；除以新单位的大小，就数出这些克能凑成多少个新单位。例如把 $2.5$ kg 换算成厘克：$2.5 \\cdot 1000 = 2500$ g，$2500 \\div 0.01 = 250{,}000$ cg。厘克小得多，所以数值变大。\n\n> **注意。** 两步都要做。只换算到克就停下，或者没有先换成克就直接用原数除以新单位的大小，都会出错；把系数颠倒也不对。数零要仔细：多一位就大了十倍。",
       ),
       (rng) => convertProblem(rng, metricMass, gram, amountFor(rng)),
     ),
@@ -255,8 +275,8 @@ export const unitConversionsUsingBaseUnitsOfMass = topic(
       "customary-mass",
       t("Customary units of mass", "英制质量单位"),
       t(
-        "In customary units, $1$ pound is $16$ ounces and $1$ ton is $2000$ pounds, so a ton is $32{,}000$ ounces. Convert through ounces: multiply by the number of ounces in the starting unit, then divide by the number in the new unit.",
-        "在英制单位中，$1$ 磅等于 $16$ 盎司，$1$ 短吨等于 $2000$ 磅，所以 $1$ 短吨等于 $32{,}000$ 盎司。通过盎司换算：先乘以原单位含有的盎司数，再除以新单位含有的盎司数。",
+        "In customary units, $1$ pound is $16$ ounces and $1$ ton is $2000$ pounds, so a ton is $2000 \\cdot 16 = 32{,}000$ ounces. Convert through ounces: multiply by the number of ounces in the starting unit, then divide by the number in the new unit. For example, $3$ tons is $3 \\cdot 32{,}000 = 96{,}000$ oz, and $96{,}000 \\div 16 = 6000$ lb.\n\n> **Watch out.** Going to a larger unit makes the number smaller, so multiplying there is a sign the factor is upside down. Do not stop at ounces when the question asks for pounds or tons.",
+        "在英制单位中，$1$ 磅等于 $16$ 盎司，$1$ 短吨等于 $2000$ 磅，所以 $1$ 短吨等于 $2000 \\cdot 16 = 32{,}000$ 盎司。通过盎司换算：先乘以原单位含有的盎司数，再除以新单位含有的盎司数。例如 $3$ 短吨是 $3 \\cdot 32{,}000 = 96{,}000$ 盎司，$96{,}000 \\div 16 = 6000$ 磅。\n\n> **注意。** 换算成较大的单位，数值会变小；如果这时却在做乘法，说明系数颠倒了。题目问磅或短吨时，不要停在盎司。",
       ),
       (rng) =>
         convertProblem(rng, customaryMass, { ...customaryMass[0]! }, (from, to) => {
@@ -267,10 +287,16 @@ export const unitConversionsUsingBaseUnitsOfMass = topic(
         }),
     ),
   ],
-);
+  ),
+  intro: t(
+    "Remembering a conversion factor for every pair of units is hard, and it is easy to multiply when you should divide. A safer route is to choose one base unit and know how big every other unit is in it: grams for metric masses, ounces for customary ones. Then any conversion is two short steps. First multiply by the size of the old unit to find how many base units there are, then divide by the size of the new unit to see how many new units they fill. A larger unit always needs fewer of itself, so you can check each answer by asking whether the number should get bigger or smaller.",
+    "每一对单位都记一个换算系数很难，也容易把该除的算成乘。更稳妥的办法是选定一个基本单位，并知道其他单位各相当于多少个基本单位：公制质量用克，英制质量用盎司。这样任何换算都只要两小步：先乘以原单位的大小，求出有多少个基本单位；再除以新单位的大小，看这些基本单位能凑成多少个新单位。单位越大，需要的个数就越少，所以每个答案都可以通过“数值应该变大还是变小”来检验。",
+  ),
+};
 
 /** unitConversionsUsingBaseUnitsOfLength converts between metric or customary units of length. */
-export const unitConversionsUsingBaseUnitsOfLength = topic(
+export const unitConversionsUsingBaseUnitsOfLength: TopicDef = {
+  ...topic(
   "unit-conversions-using-base-units-of-length",
   t("Unit Conversions Using Base Units of Length", "以基本单位换算长度单位"),
   t(
@@ -284,8 +310,8 @@ export const unitConversionsUsingBaseUnitsOfLength = topic(
       "metric-length",
       t("Metric units of length", "公制长度单位"),
       t(
-        "Metric lengths are powers of ten times a meter: $1$ mm is $0.001$ m, $1$ cm is $0.01$ m and $1$ km is $1000$ m. Converting from kilometers to millimeters therefore multiplies by $1000 \\cdot 1000 = 1{,}000{,}000$, which is easy to get wrong without the meter in between.",
-        "公制长度单位是米的十的幂倍：$1$ mm 是 $0.001$ m，$1$ cm 是 $0.01$ m，$1$ km 是 $1000$ m。所以从千米换算到毫米要乘以 $1000 \\cdot 1000 = 1{,}000{,}000$，如果不经过米这一步就容易出错。",
+        "Metric lengths are powers of ten times a meter: $1$ mm is $0.001$ m, $1$ cm is $0.01$ m and $1$ km is $1000$ m. Converting from kilometers to millimeters therefore multiplies by $1000$ to reach meters and then divides by $0.001$, which is the same as multiplying by $1000$ again: $1000 \\cdot 1000 = 1{,}000{,}000$. For example, $0.4$ km is $0.4 \\cdot 1000 = 400$ m, and $400 \\div 0.001 = 400{,}000$ mm.\n\n> **Watch out.** Without the meter in between it is easy to use only one of the two factors, or to apply a factor the wrong way round. Check the direction: millimeters are smaller, so there must be more of them.",
+        "公制长度单位是米的十的幂倍：$1$ mm 是 $0.001$ m，$1$ cm 是 $0.01$ m，$1$ km 是 $1000$ m。所以从千米换算到毫米，先乘以 $1000$ 得到米，再除以 $0.001$，也就是再乘以 $1000$：$1000 \\cdot 1000 = 1{,}000{,}000$。例如 $0.4$ km 是 $0.4 \\cdot 1000 = 400$ m，$400 \\div 0.001 = 400{,}000$ mm。\n\n> **注意。** 不经过米这一步，就容易只用了两个系数中的一个，或者把系数用反。检查方向：毫米更小，个数一定更多。",
       ),
       (rng) => convertProblem(rng, metricLength, meter, amountFor(rng)),
     ),
@@ -293,8 +319,8 @@ export const unitConversionsUsingBaseUnitsOfLength = topic(
       "customary-length",
       t("Customary units of length", "英制长度单位"),
       t(
-        "In customary units, $1$ foot is $12$ inches and $1$ yard is $3$ feet, so a yard is $36$ inches. Convert through inches when the units are not next to each other, and check the size of the answer: a larger unit gives a smaller number.",
-        "在英制单位中，$1$ 英尺等于 $12$ 英寸，$1$ 码等于 $3$ 英尺，所以 $1$ 码等于 $36$ 英寸。单位不相邻时通过英寸换算，并检查答案的大小：单位越大，数值越小。",
+        "In customary units, $1$ foot is $12$ inches and $1$ yard is $3$ feet, so a yard is $3 \\cdot 12 = 36$ inches. Convert through inches: multiply by the inches in the old unit, then divide by the inches in the new one. For example, $8$ yd is $8 \\cdot 36 = 288$ in, and $288 \\div 12 = 24$ ft. A larger unit gives a smaller number, so feet, being smaller than yards, give more.\n\n> **Watch out.** Stopping at inches answers a different question, and dividing by the old unit's size instead of multiplying turns the factor upside down. Compare the size of the answer with the starting number before you finish.",
+        "在英制单位中，$1$ 英尺等于 $12$ 英寸，$1$ 码等于 $3$ 英尺，所以 $1$ 码等于 $3 \\cdot 12 = 36$ 英寸。通过英寸换算：先乘以原单位含有的英寸数，再除以新单位含有的英寸数。例如 $8$ 码是 $8 \\cdot 36 = 288$ 英寸，$288 \\div 12 = 24$ 英尺。单位越大，数值越小；英尺比码小，所以个数更多。\n\n> **注意。** 停在英寸就答非所问了；该乘原单位的大小却去除，就是把系数颠倒了。结束之前，把答案的大小和原来的数比一比。",
       ),
       (rng) =>
         convertProblem(rng, customaryLength, { ...customaryLength[0]! }, (from, to) => {
@@ -305,10 +331,16 @@ export const unitConversionsUsingBaseUnitsOfLength = topic(
         }),
     ),
   ],
-);
+  ),
+  intro: t(
+    "A length can be measured in many units, and a direct factor between two of them, like millimeters per kilometer, is easy to get wrong. Instead, measure every unit in one base unit: meters for metric lengths, inches for customary ones. To convert, multiply by the size of the old unit to get the length in base units, then divide by the size of the new unit to see how many of it fit. The base unit is a stepping stone, and each step is a single multiplication or division you can explain. A larger unit fits fewer times, so the answer should shrink when the unit grows.",
+    "长度可以用许多单位来量，两个单位之间的直接系数（比如每千米多少毫米）很容易弄错。不如把每个单位都用同一个基本单位来量：公制长度用米，英制长度用英寸。换算时，先乘以原单位的大小，得到用基本单位表示的长度；再除以新单位的大小，看能容纳多少个新单位。基本单位是一块垫脚石，每一步都只是一次说得清道理的乘法或除法。单位越大，能容纳的个数越少，所以单位变大时，答案应该变小。",
+  ),
+};
 
 /** unitConversionsUsingUnitsOfTime converts between seconds, minutes, hours, days and weeks. */
-export const unitConversionsUsingUnitsOfTime = topic(
+export const unitConversionsUsingUnitsOfTime: TopicDef = {
+  ...topic(
   "unit-conversions-using-units-of-time",
   t("Unit Conversions Using Units of Time", "时间单位的换算"),
   t(
@@ -322,8 +354,8 @@ export const unitConversionsUsingUnitsOfTime = topic(
       "converting-times",
       t("Converting between units of time", "时间单位之间的换算"),
       t(
-        "Units of time are not powers of ten: $1$ minute is $60$ seconds, $1$ hour is $3600$ seconds, $1$ day is $86{,}400$ seconds and $1$ week is $7$ days. Writing each unit in seconds turns any conversion into one multiplication and one division.",
-        "时间单位不是十的幂倍：$1$ 分钟是 $60$ 秒，$1$ 小时是 $3600$ 秒，$1$ 天是 $86{,}400$ 秒，$1$ 周是 $7$ 天。把每个单位都写成秒，任何换算都只需要一次乘法和一次除法。",
+        "Units of time are not powers of ten: $1$ minute is $60$ seconds, $1$ hour is $60 \\cdot 60 = 3600$ seconds, $1$ day is $24 \\cdot 3600 = 86{,}400$ seconds and $1$ week is $7$ days. Writing each unit in seconds turns any conversion into one multiplication and one division. For example, $3$ hours in minutes: $3 \\cdot 3600 = 10{,}800$ s, and $10{,}800 \\div 60 = 180$ min. Minutes are shorter than hours, so there are more of them.\n\n> **Watch out.** Stopping at seconds, or skipping the first step and dividing the starting number by the new unit's size, gives the wrong count; so does turning a factor upside down. Shifting the decimal point by habit does not work here, because these factors are not powers of ten.",
+        "时间单位不是十的幂倍：$1$ 分钟是 $60$ 秒，$1$ 小时是 $60 \\cdot 60 = 3600$ 秒，$1$ 天是 $24 \\cdot 3600 = 86{,}400$ 秒，$1$ 周是 $7$ 天。把每个单位都写成秒，任何换算都只需要一次乘法和一次除法。例如把 $3$ 小时换算成分钟：$3 \\cdot 3600 = 10{,}800$ 秒，$10{,}800 \\div 60 = 180$ 分钟。分钟比小时短，所以个数更多。\n\n> **注意。** 停在秒，或者跳过第一步直接用原数除以新单位的大小，得到的个数都不对；把系数颠倒也不对。这里的系数不是十的幂，不能凭习惯移动小数点。",
       ),
       (rng) =>
         convertProblem(rng, times, second, (from, to) => {
@@ -337,8 +369,8 @@ export const unitConversionsUsingUnitsOfTime = topic(
       "converting-a-rate-per-time",
       t("Converting a rate per unit of time", "换算单位时间的比率"),
       t(
-        "A rate such as liters per minute changes in the opposite direction to the time unit: there are $60$ minutes in an hour, so $3$ liters per minute is $3 \\cdot 60 = 180$ liters per hour. Multiply by the number of small units in the large one when going to the larger time unit.",
-        "像每分钟多少升这样的比率，变化方向与时间单位相反：$1$ 小时有 $60$ 分钟，所以每分钟 $3$ 升就是每小时 $3 \\cdot 60 = 180$ 升。换算到较大的时间单位时，乘以大单位中所含小单位的个数。",
+        "A rate such as liters per minute tells how much flows in one unit of time. A longer unit of time lets more flow, so the rate moves the same way as the time unit, the opposite of a plain conversion: there are $60$ minutes in an hour, so $3$ liters per minute is $3 \\cdot 60 = 180$ liters per hour. Multiply by the number of small units in the large one when going to the larger time unit, and divide when going to the smaller one.\n\n> **Watch out.** Dividing when you go to a longer time unit gives a rate that is too small; ask whether more or less water flows in the new unit of time. Multiply by the factor once, not by its square, and do not just copy the given rate.",
+        "像每分钟多少升这样的比率，表示一个单位时间里流过多少。时间单位越长，流过的就越多，所以比率与时间单位同向变化，这和普通的单位换算正好相反：$1$ 小时有 $60$ 分钟，所以每分钟 $3$ 升就是每小时 $3 \\cdot 60 = 180$ 升。换算到较大的时间单位时，乘以大单位中所含小单位的个数；换算到较小的时间单位时，就除以这个数。\n\n> **注意。** 换算到更长的时间单位时如果做了除法，比率就太小了；先想一想，在新的时间单位里流过的水是更多还是更少。系数只乘一次，不要乘它的平方，也不要照抄已知的比率。",
       ),
       (rng) => {
         const [small, big, factor] = rng.pick([
@@ -364,17 +396,23 @@ export const unitConversionsUsingUnitsOfTime = topic(
             (w) => !w.eq(value),
           ),
           solution: t(
-            `There are $${factor}$ ${small}s in a ${big}, so the rate is $${dec(given)} ${toBig ? "\\cdot" : "\\div"} ${factor} = ${dec(value)}$ liters per ${toU}.`,
-            `$1$ ${zh[big]}有 $${factor}$ ${zh[small]}，所以比率为每${zh[toU]} $${dec(given)} ${toBig ? "\\cdot" : "\\div"} ${factor} = ${dec(value)}$ 升。`,
+            `**Step 1: compare the time units.** There are $${factor}$ ${small}s in ${big === "hour" ? "an" : "a"} ${big}, so one ${toU} is ${toBig ? `$${factor}$ times as long as one ${fromU}` : `$\\frac{1}{${factor}}$ of one ${fromU}`}.\n\n**Step 2: scale the rate.** In ${toBig ? "the longer" : "the shorter"} time the pump moves ${toBig ? `$${factor}$ times as much` : `$\\frac{1}{${factor}}$ as much`} water, so ${toBig ? "multiply" : "divide"} by $${factor}$:${steps(`${dec(given)} ${toBig ? "\\cdot" : "\\div"} ${factor} = ${dec(value)}`)}The pump moves $${dec(value)}$ liters per ${toU}.\n\n**Check.** ${toBig ? `A ${big} is longer than ${small === "hour" ? "an" : "a"} ${small}, so the rate per ${big} should be the larger number` : `${small === "hour" ? "An" : "A"} ${small} is shorter than ${big === "hour" ? "an" : "a"} ${big}, so the rate per ${small} should be the smaller number`}, and it is. Going back: $${dec(value)} ${toBig ? "\\div" : "\\cdot"} ${factor} = ${dec(given)}$.`,
+            `**第一步：比较时间单位。** $1$ ${zh[big]}有 $${factor}$ ${zh[small]}，所以 $1$ ${zh[toU]}${toBig ? `是 $1$ ${zh[fromU]}的 $${factor}$ 倍` : `是 $1$ ${zh[fromU]}的 $\\frac{1}{${factor}}$`}。\n\n**第二步：换算比率。** 在${toBig ? "更长" : "更短"}的时间里，水泵抽的水是原来的${toBig ? ` $${factor}$ 倍` : ` $\\frac{1}{${factor}}$`}，所以${toBig ? "乘以" : "除以"} $${factor}$：${steps(`${dec(given)} ${toBig ? "\\cdot" : "\\div"} ${factor} = ${dec(value)}`)}水泵每${zh[toU]}抽水 $${dec(value)}$ 升。\n\n**检验。** ${toBig ? `${zh[big]}比${zh[small]}长，所以每${zh[big]}的比率应该是较大的数` : `${zh[small]}比${zh[big]}短，所以每${zh[small]}的比率应该是较小的数`}，确实如此。反过来算：$${dec(value)} ${toBig ? "\\div" : "\\cdot"} ${factor} = ${dec(given)}$。`,
           ),
         });
       },
     ),
   ],
-);
+  ),
+  intro: t(
+    "Times are measured in seconds, minutes, hours, days and weeks, and the steps between them are $60$, $60$, $24$ and $7$, not powers of ten. So the decimal-point shortcuts of metric units do not apply, and it pays to work through one base unit, the second. Multiply by the size of the old unit in seconds, then divide by the size of the new unit. Rates per unit of time behave differently: a longer stretch of time holds more of whatever flows, so liters per hour is a larger number than liters per minute. In each problem, first decide whether the number should get bigger or smaller.",
+    "时间用秒、分钟、小时、天和周来量，相邻单位之间是 $60$、$60$、$24$ 和 $7$ 倍，不是十的幂，所以公制单位那种移动小数点的捷径用不上，最好通过一个基本单位“秒”来换算：先乘以原单位相当于多少秒，再除以新单位相当于多少秒。单位时间的比率则不同：时间越长，流过的量越多，所以每小时多少升比每分钟多少升的数值大。每道题都先判断数值应该变大还是变小。",
+  ),
+};
 
 /** convertingUnitsOfAreaToLargerUnits converts square units to larger square units by dividing by the squared factor. */
-export const convertingUnitsOfAreaToLargerUnits = topic(
+export const convertingUnitsOfAreaToLargerUnits: TopicDef = {
+  ...topic(
   "converting-units-of-area-to-larger-units",
   t("Converting Units of Area to Larger Units", "把面积单位换算成较大的单位"),
   t(
@@ -388,8 +426,8 @@ export const convertingUnitsOfAreaToLargerUnits = topic(
       "metric-areas",
       t("Metric units of area", "公制面积单位"),
       t(
-        "A square meter is $100$ cm by $100$ cm, so $1 \\text{ m}^2 = 100^2 = 10{,}000 \\text{ cm}^2$. To change square centimeters to square meters, divide by $10{,}000$, not by $100$; likewise $1 \\text{ km}^2 = 1{,}000{,}000 \\text{ m}^2$.",
-        "$1$ 平方米是 $100$ cm 乘 $100$ cm，所以 $1 \\text{ m}^2 = 100^2 = 10{,}000 \\text{ cm}^2$。把平方厘米换算成平方米时，要除以 $10{,}000$，而不是 $100$；同理 $1 \\text{ km}^2 = 1{,}000{,}000 \\text{ m}^2$。",
+        "A square meter is $100$ cm by $100$ cm, so it holds $100$ rows of $100$ square centimeters: $1 \\text{ m}^2 = 100^2 = 10{,}000 \\text{ cm}^2$. To change square centimeters to square meters, count how many groups of $10{,}000$ there are, so divide by $10{,}000$; likewise $1 \\text{ km}^2 = 1000^2 = 1{,}000{,}000 \\text{ m}^2$. For example, $35{,}000 \\text{ cm}^2 \\div 10{,}000 = 3.5 \\text{ m}^2$.\n\n> **Watch out.** Dividing by the length factor, $100$, forgets that a square has two sides; dividing by it squared is right. Multiplying makes the number bigger, but a larger unit needs fewer of itself. Count the zeros of the squared factor carefully.",
+        "$1$ 平方米是 $100$ cm 乘 $100$ cm，里面有 $100$ 行、每行 $100$ 个平方厘米：$1 \\text{ m}^2 = 100^2 = 10{,}000 \\text{ cm}^2$。把平方厘米换算成平方米，就是数一数有多少个 $10{,}000$，所以除以 $10{,}000$；同理 $1 \\text{ km}^2 = 1000^2 = 1{,}000{,}000 \\text{ m}^2$。例如 $35{,}000 \\text{ cm}^2 \\div 10{,}000 = 3.5 \\text{ m}^2$。\n\n> **注意。** 只除以长度系数 $100$，就忘了正方形有两条边；要除以它的平方。做乘法会让数值变大，但单位越大，需要的个数越少。平方后的系数要仔细数零。",
       ),
       (rng) => {
         const [from, to, f, toZh] = rng.pick([
@@ -410,8 +448,8 @@ export const convertingUnitsOfAreaToLargerUnits = topic(
           unit: `${to}^2`,
           wrong: [amount.div(Q.of(f)), amount.mul(Q.of(f * f)), amount.div(Q.of(f * f * 10))],
           solution: t(
-            `$1 \\text{ ${to}} = ${f} \\text{ ${from}}$, so $1 \\text{ ${to}}^2 = ${f}^2 = ${f * f} \\text{ ${from}}^2$. Divide: $${dec(amount)} \\div ${f * f} = ${dec(value)}$.`,
-            `$1 \\text{ ${to}} = ${f} \\text{ ${from}}$，所以 $1 \\text{ ${to}}^2 = ${f}^2 = ${f * f} \\text{ ${from}}^2$。相除：$${dec(amount)} \\div ${f * f} = ${dec(value)}$。`,
+            `**Step 1: the size of the large square unit.** $1 \\text{ ${to}} = ${f} \\text{ ${from}}$, so a square $1$ ${to} on each side holds $${f}$ rows of $${f}$ small squares: $1 \\text{ ${to}}^2 = ${f}^2 = ${dec(Q.of(f * f))} \\text{ ${from}}^2$.\n\n**Step 2: divide.** Each large square uses $${dec(Q.of(f * f))}$ small ones, so count the groups:${steps(`${dec(amount)} \\div ${dec(Q.of(f * f))} = ${dec(value)}`)}The area is $${dec(value)} \\text{ ${to}}^2$.\n\n**Check.** The new unit is larger, so the number should get smaller, and it does. Going back: $${dec(value)} \\cdot ${dec(Q.of(f * f))} = ${dec(amount)}$.`,
+            `**第一步：大平方单位有多大。** $1 \\text{ ${to}} = ${f} \\text{ ${from}}$，所以边长 $1$ ${to} 的正方形里有 $${f}$ 行、每行 $${f}$ 个小正方形：$1 \\text{ ${to}}^2 = ${f}^2 = ${dec(Q.of(f * f))} \\text{ ${from}}^2$。\n\n**第二步：相除。** 每个大正方形要用 $${dec(Q.of(f * f))}$ 个小正方形，所以数一数有多少组：${steps(`${dec(amount)} \\div ${dec(Q.of(f * f))} = ${dec(value)}`)}面积是 $${dec(value)} \\text{ ${to}}^2$。\n\n**检验。** 新单位更大，数值应该变小，确实变小了。反过来算：$${dec(value)} \\cdot ${dec(Q.of(f * f))} = ${dec(amount)}$。`,
           ),
         });
       },
@@ -420,8 +458,8 @@ export const convertingUnitsOfAreaToLargerUnits = topic(
       "customary-areas",
       t("Customary units of area", "英制面积单位"),
       t(
-        "Since $1$ ft $= 12$ in and $1$ yd $= 3$ ft, a square foot is $144$ square inches and a square yard is $9$ square feet. Divide by these squared factors to convert to the larger unit; a square yard is $1296$ square inches.",
-        "由于 $1$ ft $= 12$ in，$1$ yd $= 3$ ft，$1$ 平方英尺是 $144$ 平方英寸，$1$ 平方码是 $9$ 平方英尺。换算成较大的单位时除以这些平方因子；$1$ 平方码是 $1296$ 平方英寸。",
+        "Since $1$ ft $= 12$ in, a square foot holds $12$ rows of $12$ square inches, so it is $12^2 = 144$ square inches; since $1$ yd $= 3$ ft, a square yard is $3^2 = 9$ square feet, and $36^2 = 1296$ square inches. Divide by these squared factors to convert to the larger unit. For example, a floor of $180 \\text{ ft}^2$ is $180 \\div 9 = 20 \\text{ yd}^2$.\n\n> **Watch out.** Dividing by the length factor alone, such as $3$ instead of $9$, forgets that area has two dimensions, and doubling the factor is not squaring it. Multiplying gives a bigger number, which cannot be right for a larger unit.",
+        "由于 $1$ ft $= 12$ in，$1$ 平方英尺里有 $12$ 行、每行 $12$ 个平方英寸，即 $12^2 = 144$ 平方英寸；由于 $1$ yd $= 3$ ft，$1$ 平方码是 $3^2 = 9$ 平方英尺，也是 $36^2 = 1296$ 平方英寸。换算成较大的单位时除以这些平方后的系数。例如 $180 \\text{ ft}^2$ 的地板是 $180 \\div 9 = 20 \\text{ yd}^2$。\n\n> **注意。** 只除以长度系数（比如除以 $3$ 而不是 $9$），就忘了面积有两个方向；把系数乘以 $2$ 也不是平方。做乘法会得到更大的数，对较大的单位来说不可能对。",
       ),
       (rng) => {
         const [from, to, f, toEn, toZh] = rng.pick([
@@ -441,14 +479,19 @@ export const convertingUnitsOfAreaToLargerUnits = topic(
           unit: `${to}^2`,
           wrong: [amount.div(Q.of(f)), amount.mul(Q.of(f * f)), amount.div(Q.of(2 * f))],
           solution: t(
-            `$1 \\text{ ${to}}^2 = ${f}^2 = ${f * f} \\text{ ${from}}^2$, so the area is $${dec(amount)} \\div ${f * f} = ${dec(value)} \\text{ ${to}}^2$.`,
-            `$1 \\text{ ${to}}^2 = ${f}^2 = ${f * f} \\text{ ${from}}^2$，所以面积为 $${dec(amount)} \\div ${f * f} = ${dec(value)} \\text{ ${to}}^2$。`,
+            `**Step 1: the size of the large square unit.** $1 \\text{ ${to}} = ${f} \\text{ ${from}}$, so a square $1$ ${to} on each side holds $${f}$ rows of $${f}$ small squares: $1 \\text{ ${to}}^2 = ${f}^2 = ${dec(Q.of(f * f))} \\text{ ${from}}^2$.\n\n**Step 2: divide.** Each large square uses $${dec(Q.of(f * f))}$ small ones, so count the groups:${steps(`${dec(amount)} \\div ${dec(Q.of(f * f))} = ${dec(value)}`)}The area is $${dec(value)} \\text{ ${to}}^2$.\n\n**Check.** Square ${toEn} are larger, so the number should get smaller, and it does. Going back: $${dec(value)} \\cdot ${dec(Q.of(f * f))} = ${dec(amount)}$.`,
+            `**第一步：大平方单位有多大。** $1 \\text{ ${to}} = ${f} \\text{ ${from}}$，所以边长 $1$ ${to} 的正方形里有 $${f}$ 行、每行 $${f}$ 个小正方形：$1 \\text{ ${to}}^2 = ${f}^2 = ${dec(Q.of(f * f))} \\text{ ${from}}^2$。\n\n**第二步：相除。** 每个大正方形要用 $${dec(Q.of(f * f))}$ 个小正方形，所以数一数有多少组：${steps(`${dec(amount)} \\div ${dec(Q.of(f * f))} = ${dec(value)}`)}面积是 $${dec(value)} \\text{ ${to}}^2$。\n\n**检验。** ${toZh}更大，数值应该变小，确实变小了。反过来算：$${dec(value)} \\cdot ${dec(Q.of(f * f))} = ${dec(amount)}$。`,
           ),
         });
       },
     ),
   ],
-);
+  ),
+  intro: t(
+    "Area counts unit squares, and a larger square unit is made of many smaller ones. A square meter is $100$ cm on each side, so it is filled by $100$ rows of $100$ square centimeters, $10{,}000$ in all, not $100$. So whenever a length factor is $f$, the area factor is $f^2$. To change an area to a larger square unit, divide by $f^2$: you are counting how many large squares the small ones make. The answer should be a smaller number, and multiplying it back by $f^2$ should return the area you started with.",
+    "面积数的是单位正方形，大的平方单位由许多小的平方单位组成。$1$ 平方米边长 $100$ cm，所以由 $100$ 行、每行 $100$ 个平方厘米铺满，一共 $10{,}000$ 个，而不是 $100$ 个。因此长度系数是 $f$ 时，面积系数就是 $f^2$。把面积换算成较大的平方单位，就除以 $f^2$：数一数这些小正方形能拼成多少个大正方形。答案应该是更小的数，再乘以 $f^2$ 应该回到原来的面积。",
+  ),
+};
 
 /** convertingBetweenMixedUnitsContainingSquares converts rates per square unit and accelerations. */
 export const convertingBetweenMixedUnitsContainingSquares = topic(
