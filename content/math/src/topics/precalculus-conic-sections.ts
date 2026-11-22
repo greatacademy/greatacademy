@@ -2212,7 +2212,8 @@ In this lesson we find the asymptotes of hyperbolas centered at the origin that 
           `y = \\pm ${co(Q.of(a, b).toLatex())}x`,
           `y = \\pm ${co(Q.of(b2, a2).toLatex())}x`,
           `y = \\pm ${co(Q.of(a2, b2).toLatex())}x`,
-          `x = \\pm ${co(slopeLatex)}y`,
+          a === b ? `y = \\pm ${a}x` : `x = \\pm ${co(slopeLatex)}y`,
+          ...(a === b ? [`y = \\pm ${a2}x`, "y = x"] : []),
         ];
         const solution = walked(
           [
@@ -2248,11 +2249,31 @@ In this lesson we find the asymptotes of hyperbolas centered at the origin that 
             "This is upside down and uses the denominators instead of their square roots.",
             "这个比既颠倒了，又用了分母而不是它们的平方根。",
           ),
-          why(
-            distractors[3]!,
-            "This solves for $x$ instead of $y$, which turns the slope upside down.",
-            "这是解出 $x$ 而不是 $y$，斜率因此颠倒了。",
-          ),
+          a === b
+            ? why(
+                distractors[3]!,
+                `This uses the semi-axis $a = ${a}$ as the slope; the slope is the ratio of the semi-axes, $${a} / ${b} = 1$.`,
+                `这把半轴 $a = ${a}$ 当成了斜率；斜率是两个半轴之比 $${a} / ${b} = 1$。`,
+              )
+            : why(
+                distractors[3]!,
+                "This solves for $x$ instead of $y$, which turns the slope upside down.",
+                "这是解出 $x$ 而不是 $y$，斜率因此颠倒了。",
+              ),
+          ...(a === b
+            ? [
+                why(
+                  distractors[4]!,
+                  `This uses the denominator $${a2}$ as the slope; the slope is the ratio of the square roots of the denominators, $${a} / ${b} = 1$.`,
+                  `这把分母 $${a2}$ 当成了斜率；斜率是两个分母的平方根之比 $${a} / ${b} = 1$。`,
+                ),
+                why(
+                  distractors[5]!,
+                  "This is only one of the two asymptotes; taking the square root gives $\\pm$, so $y = -x$ is an asymptote too.",
+                  "这只是两条渐近线中的一条；开平方会得到 $\\pm$，所以 $y = -x$ 也是渐近线。",
+                ),
+              ]
+            : []),
         ]);
       },
     },
@@ -2280,7 +2301,8 @@ In this lesson we find the asymptotes of hyperbolas centered at the origin that 
           `y = \\pm ${co(Q.of(b, a).toLatex())}x`,
           `y = \\pm ${co(Q.of(a2, b2).toLatex())}x`,
           `y = \\pm ${co(Q.of(b2, a2).toLatex())}x`,
-          `x = \\pm ${co(slopeLatex)}y`,
+          a === b ? `y = \\pm ${a}x` : `x = \\pm ${co(slopeLatex)}y`,
+          ...(a === b ? [`y = \\pm ${a2}x`, "y = x"] : []),
         ];
         const solution = walked(
           [
@@ -2316,11 +2338,31 @@ In this lesson we find the asymptotes of hyperbolas centered at the origin that 
             "This is upside down and uses the denominators instead of their square roots.",
             "这个比既颠倒了，又用了分母而不是它们的平方根。",
           ),
-          why(
-            distractors[3]!,
-            "This solves for $x$ instead of $y$, which turns the slope upside down.",
-            "这是解出 $x$ 而不是 $y$，斜率因此颠倒了。",
-          ),
+          a === b
+            ? why(
+                distractors[3]!,
+                `This uses the semi-axis $a = ${a}$ as the slope; the slope is the ratio of the semi-axes, $${a} / ${b} = 1$.`,
+                `这把半轴 $a = ${a}$ 当成了斜率；斜率是两个半轴之比 $${a} / ${b} = 1$。`,
+              )
+            : why(
+                distractors[3]!,
+                "This solves for $x$ instead of $y$, which turns the slope upside down.",
+                "这是解出 $x$ 而不是 $y$，斜率因此颠倒了。",
+              ),
+          ...(a === b
+            ? [
+                why(
+                  distractors[4]!,
+                  `This uses the denominator $${a2}$ as the slope; the slope is the ratio of the square roots of the denominators, $${a} / ${b} = 1$.`,
+                  `这把分母 $${a2}$ 当成了斜率；斜率是两个分母的平方根之比 $${a} / ${b} = 1$。`,
+                ),
+                why(
+                  distractors[5]!,
+                  "This is only one of the two asymptotes; taking the square root gives $\\pm$, so $y = -x$ is an asymptote too.",
+                  "这只是两条渐近线中的一条；开平方会得到 $\\pm$，所以 $y = -x$ 也是渐近线。",
+                ),
+              ]
+            : []),
         ]);
       },
     },
@@ -2375,7 +2417,8 @@ In this lesson we find the asymptotes of shifted hyperbolas that open left and r
         const distractors = [
           `${linTerm("y", -k)} = \\pm ${slope}${linTerm("x", -h)}`,
           `${yPart} = \\pm ${Q.of(a, b).toLatex()}${xPart}`,
-          `${xPart} = \\pm ${slope}${yPart}`,
+          a === b ? `y = \\pm x` : `${xPart} = \\pm ${slope}${yPart}`,
+          ...(a === b ? [`${yPart} = \\pm ${a}${xPart}`] : []),
         ];
         const solution = walked(
           [
@@ -2413,11 +2456,26 @@ In this lesson we find the asymptotes of shifted hyperbolas that open left and r
             `The slope is upside down: for a horizontal hyperbola it is $b / a = ${b} / ${a}$.`,
             `斜率颠倒了：水平双曲线的斜率是 $b / a = ${b} / ${a}$。`,
           ),
-          why(
-            distractors[2]!,
-            "This swaps $x$ and $y$; solved for $y$, it has the reciprocal slope.",
-            "这把 $x$ 和 $y$ 对调了；解出 $y$ 后斜率是倒数。",
-          ),
+          a === b
+            ? why(
+                distractors[2]!,
+                `These are the asymptotes of the hyperbola centered at the origin; they must be moved to pass through the center $(${h}, ${k})$.`,
+                `这是中心在原点的双曲线的渐近线；还要把它们平移到经过中心 $(${h}, ${k})$。`,
+              )
+            : why(
+                distractors[2]!,
+                "This swaps $x$ and $y$; solved for $y$, it has the reciprocal slope.",
+                "这把 $x$ 和 $y$ 对调了；解出 $y$ 后斜率是倒数。",
+              ),
+          ...(a === b
+            ? [
+                why(
+                  distractors[3]!,
+                  `This uses the semi-axis $a = ${a}$ as the slope; the slope is the ratio of the semi-axes, $${a} / ${b} = 1$.`,
+                  `这把半轴 $a = ${a}$ 当成了斜率；斜率是两个半轴之比 $${a} / ${b} = 1$。`,
+                ),
+              ]
+            : []),
         ]);
       },
     },
@@ -2445,7 +2503,8 @@ In this lesson we find the asymptotes of shifted hyperbolas that open left and r
         const distractors = [
           `${linTerm("y", -k)} = \\pm ${slope}${linTerm("x", -h)}`,
           `${yPart} = \\pm ${Q.of(b, a).toLatex()}${xPart}`,
-          `${xPart} = \\pm ${slope}${yPart}`,
+          a === b ? `y = \\pm x` : `${xPart} = \\pm ${slope}${yPart}`,
+          ...(a === b ? [`${yPart} = \\pm ${a}${xPart}`] : []),
         ];
         const solution = walked(
           [
@@ -2483,11 +2542,26 @@ In this lesson we find the asymptotes of shifted hyperbolas that open left and r
             `The slope is upside down: for a vertical hyperbola it is $a / b = ${a} / ${b}$.`,
             `斜率颠倒了：竖直双曲线的斜率是 $a / b = ${a} / ${b}$。`,
           ),
-          why(
-            distractors[2]!,
-            "This swaps $x$ and $y$; solved for $y$, it has the reciprocal slope.",
-            "这把 $x$ 和 $y$ 对调了；解出 $y$ 后斜率是倒数。",
-          ),
+          a === b
+            ? why(
+                distractors[2]!,
+                `These are the asymptotes of the hyperbola centered at the origin; they must be moved to pass through the center $(${h}, ${k})$.`,
+                `这是中心在原点的双曲线的渐近线；还要把它们平移到经过中心 $(${h}, ${k})$。`,
+              )
+            : why(
+                distractors[2]!,
+                "This swaps $x$ and $y$; solved for $y$, it has the reciprocal slope.",
+                "这把 $x$ 和 $y$ 对调了；解出 $y$ 后斜率是倒数。",
+              ),
+          ...(a === b
+            ? [
+                why(
+                  distractors[3]!,
+                  `This uses the semi-axis $a = ${a}$ as the slope; the slope is the ratio of the semi-axes, $${a} / ${b} = 1$.`,
+                  `这把半轴 $a = ${a}$ 当成了斜率；斜率是两个半轴之比 $${a} / ${b} = 1$。`,
+                ),
+              ]
+            : []),
         ]);
       },
     },
@@ -2537,20 +2611,20 @@ In this lesson we find where a hyperbola crosses the axes and where it meets hor
           `确定双曲线 $${eqStr}$ 的所有坐标轴截距点。`,
         );
         const correct = horizontal
-          ? t(`$x$-intercepts at $(pm ${a}, 0)$; no $y$-intercepts`, `$x$ 轴截距为 $(pm ${a}, 0)$；无 $y$ 轴截距`)
-          : t(`$y$-intercepts at $(0, pm ${a})$; no $x$-intercepts`, `$y$ 轴截距为 $(0, pm ${a})$；无 $x$ 轴截距`);
+          ? t(`$x$-intercepts at $(\\pm ${a}, 0)$; no $y$-intercepts`, `$x$ 轴截距为 $(\\pm ${a}, 0)$；无 $y$ 轴截距`)
+          : t(`$y$-intercepts at $(0, \\pm ${a})$; no $x$-intercepts`, `$y$ 轴截距为 $(0, \\pm ${a})$；无 $x$ 轴截距`);
         const distractors = [
           horizontal
-            ? t(`$y$-intercepts at $(0, pm ${b})$; no $x$-intercepts`, `$y$ 轴截距为 $(0, pm ${b})$；无 $x$ 轴截距`)
-            : t(`$x$-intercepts at $(pm ${b}, 0)$; no $y$-intercepts`, `$x$ 轴截距为 $(pm ${b}, 0)$；无 $y$ 轴截距`),
+            ? t(`$y$-intercepts at $(0, \\pm ${b})$; no $x$-intercepts`, `$y$ 轴截距为 $(0, \\pm ${b})$；无 $x$ 轴截距`)
+            : t(`$x$-intercepts at $(\\pm ${b}, 0)$; no $y$-intercepts`, `$x$ 轴截距为 $(\\pm ${b}, 0)$；无 $y$ 轴截距`),
           horizontal
             ? t(
-                `$x$-intercepts at $(pm ${a}, 0)$ and $y$-intercepts at $(0, pm ${b})$`,
-                `$x$ 轴截距为 $(pm ${a}, 0)$，$y$ 轴截距为 $(0, pm ${b})$`,
+                `$x$-intercepts at $(\\pm ${a}, 0)$ and $y$-intercepts at $(0, \\pm ${b})$`,
+                `$x$ 轴截距为 $(\\pm ${a}, 0)$，$y$ 轴截距为 $(0, \\pm ${b})$`,
               )
             : t(
-                `$y$-intercepts at $(0, pm ${a})$ and $x$-intercepts at $(pm ${b}, 0)$`,
-                `$y$ 轴截距为 $(0, pm ${a})$，$x$ 轴截距为 $(pm ${b}, 0)$`,
+                `$y$-intercepts at $(0, \\pm ${a})$ and $x$-intercepts at $(\\pm ${b}, 0)$`,
+                `$y$ 轴截距为 $(0, \\pm ${a})$，$x$ 轴截距为 $(\\pm ${b}, 0)$`,
               ),
           t("No intercepts on either axis", "与两条坐标轴均无交点"),
         ];
