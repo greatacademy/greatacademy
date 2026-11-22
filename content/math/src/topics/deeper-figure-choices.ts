@@ -821,18 +821,26 @@ For $y \\le -x + 3$: the boundary $y = -x + 3$ is solid. Testing the origin give
       "choosing-the-drawing-of-a-square-root",
       ["Choosing the drawing of a square root", "选出平方根函数的图像"],
       [
-        "The graph of $y = \\sqrt{x - h} + k$ starts at the point $(h, k)$ and bends to the right, since the root exists only when $x - h \\ge 0$. A minus sign in front of the root sends the curve down from its starting point.",
-        "$y = \\sqrt{x - h} + k$ 的图像从点 $(h, k)$ 出发向右弯曲，因为只有当 $x - h \\ge 0$ 时根号才有意义。根号前面的负号让曲线从起点向下走。",
+        "The graph of $y = \\sqrt{x - h} + k$ starts at the point $(h, k)$ and bends to the right, since the root exists only when $x - h \\ge 0$. A minus sign in front of the root sends the curve down from its starting point.\n\n> **Watch out.** The number under the root moves the graph the opposite way to its sign: $\\sqrt{x + 2}$ starts at $x = -2$, since that makes the inside zero. The number added outside keeps its sign and moves the graph up or down.",
+        "$y = \\sqrt{x - h} + k$ 的图像从点 $(h, k)$ 出发向右弯曲，因为只有当 $x - h \\ge 0$ 时根号才有意义。根号前面的负号让曲线从起点向下走。\n\n> **注意。** 根号里的数使图像向与它的符号相反的方向移动：$\\sqrt{x + 2}$ 的起点在 $x = -2$ 处，因为这时根号里为零。外面加的数保持自己的符号，使图像上下移动。",
       ],
-      (rng) =>
-        shiftChoice(
+      (rng) => {
+        const p = shiftChoice(
           rng,
           Math.sqrt,
           (inner) => `\\sqrt{${inner}}`,
           ({ h }) => [h, h + 1],
           ["A curve starting at its first point", "一条从第一个点出发的曲线"],
           ["the starting point", "起点"],
-        ),
+        );
+        return {
+          ...p,
+          solution: t(
+            `${p.solution.en}\n\n**Check.** In the chosen drawing the curve starts at its lowest point and goes right, and one unit to the right of the start it is one unit higher, just as $y = \\sqrt{x}$ rises from $(0, 0)$ to $(1, 1)$.`,
+            `${p.solution["zh-CN"]}\n\n**检验。** 所选的图中曲线从最低点出发向右延伸，在起点右边一个单位处高一个单位，正如 $y = \\sqrt{x}$ 从 $(0, 0)$ 升到 $(1, 1)$。`,
+          ),
+        };
+      },
     ),
   ],
   "graphing-exponential-growth-functions": [
