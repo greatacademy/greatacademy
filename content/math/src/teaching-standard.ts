@@ -98,4 +98,12 @@ export const taughtTopics: readonly string[] = [
   "the-geometric-interpretation-of-the-2x2-determinant",
   "the-minors-of-a-3x3-matrix",
   "the-determinant-of-a-3x3-matrix",
+  "graphing-curves-defined-parametrically",
+  "cartesian-equations-of-parametric-curves",
+  "finding-intercepts-of-curves-defined-parametrically",
+  "finding-intersections-of-parametric-curves-and-lines",
+  "parametric-equations-of-circles",
+  "parametric-equations-of-ellipses",
+  "parametric-equations-of-parabolas",
+  "parametric-equations-of-parabolas-centered-at-hk",
 ];

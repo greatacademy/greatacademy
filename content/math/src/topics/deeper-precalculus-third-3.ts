@@ -413,8 +413,8 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
       "the-parameter-at-a-point",
       ["The parameter at a point", "某一点的参数"],
       [
-        "A point lies on a parametric curve when one value of $t$ gives both of its coordinates. So solve one equation for $t$, and check that value in the other.",
-        "一个点在参数曲线上，当且仅当同一个 $t$ 值给出它的两个坐标。所以由一个方程解出 $t$，再代入另一个方程检验。",
+        "A point lies on a parametric curve when one value of $t$ gives both of its coordinates. So solve one equation for $t$, and check that value in the other.\n\nFor $x = 3t + 1$, $y = t^{2} - 2$ and the point $(-5, 2)$: $3t + 1 = -5$ gives $t = -2$. Check: $y(-2) = 4 - 2 = 2$, the second coordinate.\n\n> **Watch out.** Solve the equation that is linear in $t$. The squared one, $t^{2} - 2 = 2$, also allows $t = 2$, but $x(2) = 7$, so that value belongs to another point.",
+        "一个点在参数曲线上，当且仅当同一个 $t$ 值给出它的两个坐标。所以由一个方程解出 $t$，再代入另一个方程检验。\n\n对 $x = 3t + 1$，$y = t^{2} - 2$ 和点 $(-5, 2)$：由 $3t + 1 = -5$ 得 $t = -2$。检验：$y(-2) = 4 - 2 = 2$，正是第二个坐标。\n\n> **注意。** 要解关于 $t$ 为一次的方程。平方的那个方程 $t^{2} - 2 = 2$ 还允许 $t = 2$，但 $x(2) = 7$，所以这个值属于另一个点。",
       ],
       (rng) => {
         const t = size(rng, 9);
@@ -432,8 +432,8 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
           t,
           [-t, x, y],
           [
-            `$${p}t${linear(q, "")} = ${x}$ gives $t = ${t}$, and $y$ agrees. The $y$ equation alone would also allow $t = ${-t}$.`,
-            `由 $${p}t${linear(q, "")} = ${x}$ 得 $t = ${t}$，$y$ 也符合。只看 $y$ 的方程还会得到 $t = ${-t}$。`,
+            `**Step 1: Solve the x equation.** It is linear in $t$:\n\n$$${p}t${linear(q, "")} = ${x} \\implies ${p}t = ${x - q} \\implies t = ${t}$$\n\n**Step 2: Test the y equation.** The same $t$ must give the second coordinate:\n\n$$y(${t}) = ${r === 1 ? "" : r}(${t})^{2}${linear(s, "")} = ${y}$$\n\n**Check.** The $y$ equation alone would also allow $t = ${-t}$, but $x(${-t}) = ${p * -t + q}$, not $${x}$; only $t = ${t}$ gives the point $(${x}, ${y})$.`,
+            `**第一步：解 x 的方程。** 它关于 $t$ 是一次的：\n\n$$${p}t${linear(q, "")} = ${x} \\implies ${p}t = ${x - q} \\implies t = ${t}$$\n\n**第二步：检验 y 的方程。** 同一个 $t$ 必须给出第二个坐标：\n\n$$y(${t}) = ${r === 1 ? "" : r}(${t})^{2}${linear(s, "")} = ${y}$$\n\n**检验。** 只看 $y$ 的方程还会得到 $t = ${-t}$，但 $x(${-t}) = ${p * -t + q}$，不是 $${x}$；只有 $t = ${t}$ 给出点 $(${x}, ${y})$。`,
           ],
         );
       },
@@ -444,8 +444,8 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
       "the-slope-of-a-parametric-line",
       ["The slope of a parametric line", "参数直线的斜率"],
       [
-        "When both coordinates change at steady rates, the curve is a line. Its slope is the change in $y$ per unit of $t$ divided by the change in $x$ per unit of $t$.",
-        "两个坐标都匀速变化时，曲线是直线。它的斜率是每单位 $t$ 的 $y$ 变化量除以每单位 $t$ 的 $x$ 变化量。",
+        "When both coordinates change at steady rates, the curve is a line. Its slope is the change in $y$ per unit of $t$ divided by the change in $x$ per unit of $t$.\n\nFor $x = 2t + 1$, $y = 6t - 5$: each unit of $t$ adds $2$ to $x$ and $6$ to $y$, so the slope is $\\frac{6}{2} = 3$. Check: $t = 0$ and $t = 1$ give $(1, -5)$ and $(3, 1)$, and $\\frac{1 - (-5)}{3 - 1} = 3$.\n\n> **Watch out.** The rate of $y$ goes on top: rise over run, $\\frac{6}{2}$, not $\\frac{2}{6}$. The constants $1$ and $-5$ only place the line and do not change its slope.",
+        "两个坐标都匀速变化时，曲线是直线。它的斜率是每单位 $t$ 的 $y$ 变化量除以每单位 $t$ 的 $x$ 变化量。\n\n对 $x = 2t + 1$，$y = 6t - 5$：$t$ 每增加 1，$x$ 增加 $2$，$y$ 增加 $6$，所以斜率是 $\\frac{6}{2} = 3$。检验：$t = 0$ 和 $t = 1$ 给出 $(1, -5)$ 和 $(3, 1)$，而 $\\frac{1 - (-5)}{3 - 1} = 3$。\n\n> **注意。** $y$ 的变化率在分子上：纵向变化比横向变化，是 $\\frac{6}{2}$，不是 $\\frac{2}{6}$。常数 $1$ 和 $-5$ 只决定直线的位置，不改变斜率。",
       ],
       (rng) => {
         const a = rng.int(2, 9);
@@ -453,6 +453,8 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
         if (Math.abs(c) === a) c += c < 0 ? -1 : 1;
         const b = rng.int(-9, 9);
         const d = rng.int(-9, 9);
+        const m = Q.of(c, a).toLatex();
+        const ratio = m === `\\frac{${c}}{${a}}` ? m : `\\frac{${c}}{${a}} = ${m}`;
         return fraction(
           [
             `What is the slope of the line $x = ${a}t${linear(b, "")}$, $y = ${c}t${linear(d, "")}$?`,
@@ -461,8 +463,8 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
           Q.of(c, a),
           [Q.of(a, c), Q.of(-c, a), Q.of(d - b === 0 ? c + 1 : d - b, a)],
           [
-            `$y$ changes by ${c} while $x$ changes by ${a}, so the slope is $${Q.of(c, a).toLatex()}$.`,
-            `$x$ 变化 ${a} 时 $y$ 变化 ${c}，所以斜率是 $${Q.of(c, a).toLatex()}$。`,
+            `**Step 1: Read the rates.** Each unit of $t$ changes $x$ by $${a}$ and $y$ by $${c}$.\n\n**Step 2: Divide rise by run.**\n\n$$m = ${ratio}$$\n\n**Check.** $t = 0$ and $t = 1$ give the points $(${b}, ${d})$ and $(${a + b}, ${c + d})$, and\n\n$$\\frac{${c + d} - ${paren(d)}}{${a + b} - ${paren(b)}} = ${ratio}$$`,
+            `**第一步：读出变化率。** $t$ 每增加 1，$x$ 变化 $${a}$，$y$ 变化 $${c}$。\n\n**第二步：纵向变化除以横向变化。**\n\n$$m = ${ratio}$$\n\n**检验。** $t = 0$ 和 $t = 1$ 给出点 $(${b}, ${d})$ 和 $(${a + b}, ${c + d})$，而\n\n$$\\frac{${c + d} - ${paren(d)}}{${a + b} - ${paren(b)}} = ${ratio}$$`,
           ],
         );
       },
@@ -473,8 +475,8 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
       "intercepts-on-a-restricted-interval",
       ["Intercepts on a restricted interval", "限定区间上的截距"],
       [
-        "A range for $t$ can remove solutions that the equations alone would allow. So after solving for $t$, keep only the values inside the range, and then find the coordinate.",
-        "$t$ 的范围可能排除方程本身允许的解。所以解出 $t$ 后，只保留范围内的值，再求坐标。",
+        "A range for $t$ can remove solutions that the equations alone would allow. So after solving for $t$, keep only the values inside the range, and then find the coordinate.\n\nFor $x = t^{2} - 9$, $y = 2t + 1$ with $0 \\le t \\le 5$: $x = 0$ gives $t = \\pm 3$, and only $t = 3$ is in the range, so the curve crosses the $y$-axis at $y = 7$. Check: $x(3) = 9 - 9 = 0$ and $0 \\le 3 \\le 5$.\n\n> **Watch out.** $t = -3$ also solves $x = 0$, but it lies outside the range, so $y(-3) = -5$ belongs to a part of the curve that is not drawn.",
+        "$t$ 的范围可能排除方程本身允许的解。所以解出 $t$ 后，只保留范围内的值，再求坐标。\n\n对 $x = t^{2} - 9$，$y = 2t + 1$，$0 \\le t \\le 5$：$x = 0$ 得 $t = \\pm 3$，只有 $t = 3$ 在范围内，所以曲线在 $y = 7$ 处穿过 $y$ 轴。检验：$x(3) = 9 - 9 = 0$，且 $0 \\le 3 \\le 5$。\n\n> **注意。** $t = -3$ 也满足 $x = 0$，但它在范围之外，所以 $y(-3) = -5$ 属于没有画出的那部分曲线。",
       ],
       (rng) => {
         const n = rng.int(2, 9);
@@ -489,8 +491,8 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
           a * n + b,
           [-a * n + b, b, a * top + b],
           [
-            `$x = 0$ gives $t = \\pm ${n}$, and only $t = ${n}$ is allowed, so $y = ${a * n + b}$.`,
-            `$x = 0$ 得 $t = \\pm ${n}$，只有 $t = ${n}$ 在范围内，所以 $y = ${a * n + b}$。`,
+            `**Step 1: Solve x = 0.** On the $y$-axis the $x$-coordinate is $0$:\n\n$$t^{2} - ${n * n} = 0 \\implies t = \\pm ${n}$$\n\n**Step 2: Keep the allowed value.** Only $t = ${n}$ lies in $0 \\le t \\le ${top}$; $t = ${-n}$ is negative.\n\n**Step 3: Find y.**\n\n$$y(${n}) = ${a === 1 ? "" : a === -1 ? "-" : a}(${n})${linear(b, "")} = ${a * n + b}$$\n\n**Check.** $x(${n}) = ${n * n} - ${n * n} = 0$, and $0 \\le ${n} \\le ${top}$, so the point $(0, ${a * n + b})$ is on the curve.`,
+            `**第一步：解 x = 0。** 在 $y$ 轴上，$x$ 坐标为 $0$：\n\n$$t^{2} - ${n * n} = 0 \\implies t = \\pm ${n}$$\n\n**第二步：保留范围内的值。** 只有 $t = ${n}$ 在 $0 \\le t \\le ${top}$ 内；$t = ${-n}$ 是负数。\n\n**第三步：求 y。**\n\n$$y(${n}) = ${a === 1 ? "" : a === -1 ? "-" : a}(${n})${linear(b, "")} = ${a * n + b}$$\n\n**检验。** $x(${n}) = ${n * n} - ${n * n} = 0$，且 $0 \\le ${n} \\le ${top}$，所以点 $(0, ${a * n + b})$ 在曲线上。`,
           ],
         );
       },
@@ -501,23 +503,42 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
       "distance-along-a-circle",
       ["Distance along a circle", "沿圆周走过的路程"],
       [
-        "With $x = r\\cos kt$ and $y = r\\sin kt$, the point goes around the circle $k$ times as $t$ runs from 0 to $2\\pi$. The distance traveled is therefore $k$ circumferences, while the curve itself stays one circle.",
-        "$x = r\\cos kt$，$y = r\\sin kt$ 时，$t$ 从 0 到 $2\\pi$，点绕圆走 $k$ 圈。所以路程是 $k$ 个周长，而曲线本身仍是一个圆。",
+        "With $x = r\\cos kt$ and $y = r\\sin kt$, the point goes around the circle $k$ times as $t$ runs from 0 to $2\\pi$. The distance traveled is therefore $k$ circumferences, while the curve itself stays one circle.\n\nFor $x = 3\\cos 2t$, $y = 3\\sin 2t$ with $0 \\le t \\le 2\\pi$: the angle $2t$ runs from $0$ to $4\\pi$, two laps of length $2\\pi \\cdot 3 = 6\\pi$ each, so the point travels $12\\pi$. Check: one lap ends at $t = \\pi$, where $2t = 2\\pi$, so $t$ from $0$ to $2\\pi$ holds two laps.\n\n> **Watch out.** A lap is the circumference $2\\pi r$, not $\\pi r$ or $\\pi r^{2}$, and the number of laps is the multiplier $k$ of $t$. Moving the center does not change the distance.",
+        "$x = r\\cos kt$，$y = r\\sin kt$ 时，$t$ 从 0 到 $2\\pi$，点绕圆走 $k$ 圈。所以路程是 $k$ 个周长，而曲线本身仍是一个圆。\n\n对 $x = 3\\cos 2t$，$y = 3\\sin 2t$，$0 \\le t \\le 2\\pi$：角 $2t$ 从 $0$ 变到 $4\\pi$，走两圈，每圈长 $2\\pi \\cdot 3 = 6\\pi$，所以点走了 $12\\pi$。检验：$t = \\pi$ 时 $2t = 2\\pi$，正好走完一圈，所以 $t$ 从 $0$ 到 $2\\pi$ 包含两圈。\n\n> **注意。** 一圈的长度是周长 $2\\pi r$，不是 $\\pi r$，也不是 $\\pi r^{2}$；圈数是 $t$ 前面的倍数 $k$。平移圆心不改变路程。",
       ],
       (rng) => {
         const r = rng.int(2, 12);
         const k = rng.int(2, 6);
         const h = rng.int(-6, 6);
         const c = rng.int(-6, 6);
-        return chooseFilled(
-          rng,
+        const wrong = [`${2 * r}\\pi`, `${r * k}\\pi`, `${r * r * k}\\pi`];
+        return reasoned(
+          chooseFilled(
+            rng,
+            [
+              `A point moves by $x = ${shifted(h, r, `\\cos ${k}t`)}$, $y = ${shifted(c, r, `\\sin ${k}t`)}$ for $0 \\le t \\le 2\\pi$. How far does it travel?`,
+              `点按 $x = ${shifted(h, r, `\\cos ${k}t`)}$，$y = ${shifted(c, r, `\\sin ${k}t`)}$ 运动，$0 \\le t \\le 2\\pi$。它走了多远？`,
+            ],
+            `${2 * r * k}\\pi`,
+            wrong,
+            [
+              `**Step 1: Count the laps.** As $t$ runs from $0$ to $2\\pi$, the angle $${k}t$ runs from $0$ to $${2 * k}\\pi$, which is $${k}$ full turns.\n\n**Step 2: Find one lap.** The radius is $${r}$, so one lap is the circumference $2\\pi \\cdot ${r} = ${2 * r}\\pi$.\n\n**Step 3: Multiply.**\n\n$$${k} \\cdot ${2 * r}\\pi = ${2 * r * k}\\pi$$\n\n**Check.** Each lap takes $2\\pi / ${k}$ units of $t$, and $${k}$ such laps fill $0 \\le t \\le 2\\pi$ exactly; the center $(${h}, ${c})$ only moves the circle.`,
+              `**第一步：数圈数。** $t$ 从 $0$ 到 $2\\pi$ 时，角 $${k}t$ 从 $0$ 到 $${2 * k}\\pi$，正好 $${k}$ 整圈。\n\n**第二步：求一圈的长度。** 半径是 $${r}$，所以一圈是周长 $2\\pi \\cdot ${r} = ${2 * r}\\pi$。\n\n**第三步：相乘。**\n\n$$${k} \\cdot ${2 * r}\\pi = ${2 * r * k}\\pi$$\n\n**检验。** 每圈用 $2\\pi / ${k}$ 个单位的 $t$，$${k}$ 圈正好填满 $0 \\le t \\le 2\\pi$；圆心 $(${h}, ${c})$ 只是移动了圆的位置。`,
+            ],
+          ),
           [
-            `A point moves by $x = ${shifted(h, r, `\\cos ${k}t`)}$, $y = ${shifted(c, r, `\\sin ${k}t`)}$ for $0 \\le t \\le 2\\pi$. How far does it travel?`,
-            `点按 $x = ${shifted(h, r, `\\cos ${k}t`)}$，$y = ${shifted(c, r, `\\sin ${k}t`)}$ 运动，$0 \\le t \\le 2\\pi$。它走了多远？`,
+            [`$${wrong[0]}$`, `This is one lap; the angle $${k}t$ goes around $${k}$ times.`, `这只是一圈；角 $${k}t$ 绕了 $${k}$ 圈。`],
+            [
+              `$${wrong[1]}$`,
+              `This counts $\\pi r$ per lap; a lap is the circumference $2\\pi r = ${2 * r}\\pi$.`,
+              `这把每圈算成 $\\pi r$；一圈是周长 $2\\pi r = ${2 * r}\\pi$。`,
+            ],
+            [
+              `$${wrong[2]}$`,
+              `This uses $\\pi r^{2}$, an area; the length of a lap is $2\\pi r$.`,
+              `这用了面积 $\\pi r^{2}$；一圈的长度是 $2\\pi r$。`,
+            ],
           ],
-          `${2 * r * k}\\pi`,
-          [`${2 * r}\\pi`, `${r * k}\\pi`, `${r * r * k}\\pi`],
-          [`It goes around ${k} times, each lap being $${2 * r}\\pi$ long.`, `它绕 ${k} 圈，每圈长 $${2 * r}\\pi$。`],
         );
       },
     ),
@@ -528,8 +549,8 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
         "the-point-at-a-given-parameter",
         ["The point at a given parameter", "给定参数对应的点"],
         [
-          "In $x = h + a\\cos\\theta$, $y = k + b\\sin\\theta$, the parameter is not the angle seen from the center in general. Its values at quarter turns still give the four ends of the axes.",
-          "在 $x = h + a\\cos\\theta$，$y = k + b\\sin\\theta$ 中，参数一般不是从中心看到的角。但它在四分之一圈处的值仍给出两条轴的四个端点。",
+          "In $x = h + a\\cos\\theta$, $y = k + b\\sin\\theta$, the parameter is not the angle seen from the center in general. Its values at quarter turns still give the four ends of the axes.\n\nFor $x = 1 + 4\\cos\\theta$, $y = 2 + 3\\sin\\theta$ at $\\theta = \\pi$: $\\cos\\pi = -1$ and $\\sin\\pi = 0$, so the point is $(1 - 4, 2) = (-3, 2)$, the left end of the major axis. Check: $\\frac{(-3 - 1)^{2}}{16} + \\frac{0^{2}}{9} = 1$.\n\n> **Watch out.** The cosine goes with $x$ and its coefficient $a$, the sine with $y$ and $b$. At $\\theta = \\frac{\\pi}{2}$ the point is $(h, k + b)$, not $(h + a, k)$.",
+          "在 $x = h + a\\cos\\theta$，$y = k + b\\sin\\theta$ 中，参数一般不是从中心看到的角。但它在四分之一圈处的值仍给出两条轴的四个端点。\n\n对 $x = 1 + 4\\cos\\theta$，$y = 2 + 3\\sin\\theta$，$\\theta = \\pi$：$\\cos\\pi = -1$，$\\sin\\pi = 0$，所以点是 $(1 - 4, 2) = (-3, 2)$，即长轴的左端点。检验：$\\frac{(-3 - 1)^{2}}{16} + \\frac{0^{2}}{9} = 1$。\n\n> **注意。** 余弦跟 $x$ 和它的系数 $a$ 在一起，正弦跟 $y$ 和 $b$ 在一起。$\\theta = \\frac{\\pi}{2}$ 时点是 $(h, k + b)$，不是 $(h + a, k)$。",
         ],
         (rng) => {
           const h = rng.int(-9, 9);
@@ -545,17 +566,38 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
           ]);
           const x = h + a * row[1];
           const y = k + b * row[2];
-          return chooseFilled(
-            rng,
+          const wrong = [`(${h + b * row[1]}, ${k + a * row[2]})`, `(${h + a * row[2]}, ${k + b * row[1]})`, `(${h}, ${k})`];
+          const check = `$$\\frac{(${x} - ${paren(h)})^{2}}{${a * a}} + \\frac{(${y} - ${paren(k)})^{2}}{${b * b}} = ${row[1] ** 2} + ${row[2] ** 2} = 1$$`;
+          return reasoned(
+            chooseFilled(
+              rng,
+              [
+                `Find the point at $\\theta = ${row[0]}$ on $x = ${shifted(h, a, "\\cos\\theta")}$, $y = ${shifted(k, b, "\\sin\\theta")}$.`,
+                `求 $x = ${shifted(h, a, "\\cos\\theta")}$，$y = ${shifted(k, b, "\\sin\\theta")}$ 上 $\\theta = ${row[0]}$ 对应的点。`,
+              ],
+              `(${x}, ${y})`,
+              wrong,
+              [
+                `**Step 1: Evaluate cosine and sine.** At $\\theta = ${row[0]}$, $\\cos\\theta = ${row[1]}$ and $\\sin\\theta = ${row[2]}$.\n\n**Step 2: Substitute.**\n\n$$x = ${h} + ${a}(${row[1]}) = ${x}, \\quad y = ${k} + ${b}(${row[2]}) = ${y}$$\n\n**Check.** The point satisfies the ellipse's standard equation:\n\n${check}`,
+                `**第一步：求余弦和正弦。** $\\theta = ${row[0]}$ 时，$\\cos\\theta = ${row[1]}$，$\\sin\\theta = ${row[2]}$。\n\n**第二步：代入。**\n\n$$x = ${h} + ${a}(${row[1]}) = ${x}, \\quad y = ${k} + ${b}(${row[2]}) = ${y}$$\n\n**检验。** 这个点满足椭圆的标准方程：\n\n${check}`,
+              ],
+            ),
             [
-              `Find the point at $\\theta = ${row[0]}$ on $x = ${shifted(h, a, "\\cos\\theta")}$, $y = ${shifted(k, b, "\\sin\\theta")}$.`,
-              `求 $x = ${shifted(h, a, "\\cos\\theta")}$，$y = ${shifted(k, b, "\\sin\\theta")}$ 上 $\\theta = ${row[0]}$ 对应的点。`,
-            ],
-            `(${x}, ${y})`,
-            [`(${h + b * row[1]}, ${k + a * row[2]})`, `(${h + a * row[2]}, ${k + b * row[1]})`, `(${h}, ${k})`],
-            [
-              `$\\cos\\theta = ${row[1]}$ and $\\sin\\theta = ${row[2]}$, which gives $(${x}, ${y})$.`,
-              `$\\cos\\theta = ${row[1]}$，$\\sin\\theta = ${row[2]}$，所以是 $(${x}, ${y})$。`,
+              [
+                `$${wrong[0]}$`,
+                `This swaps the semi-axes: $a = ${a}$ multiplies $\\cos\\theta$ in $x$, and $b = ${b}$ multiplies $\\sin\\theta$ in $y$.`,
+                `这把两条半轴对调了：$a = ${a}$ 乘 $x$ 里的 $\\cos\\theta$，$b = ${b}$ 乘 $y$ 里的 $\\sin\\theta$。`,
+              ],
+              [
+                `$${wrong[1]}$`,
+                `This swaps cosine and sine: at $\\theta = ${row[0]}$, $\\cos\\theta = ${row[1]}$ goes into $x$.`,
+                `这把余弦和正弦对调了：$\\theta = ${row[0]}$ 时，$\\cos\\theta = ${row[1]}$ 放进 $x$。`,
+              ],
+              [
+                `$${wrong[2]}$`,
+                `This is the center, which is not on the ellipse: at $\\theta = ${row[0]}$ the point moves $a\\cos\\theta$ across and $b\\sin\\theta$ up from it.`,
+                `这是中心，它不在椭圆上：$\\theta = ${row[0]}$ 时，点要从中心横向移动 $a\\cos\\theta$、纵向移动 $b\\sin\\theta$。`,
+              ],
             ],
           );
         },
@@ -568,23 +610,46 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
       "the-vertex-from-the-parameter",
       ["The vertex from the parameter", "由参数求顶点"],
       [
-        "In $x = pt + h$, $y = at^{2} + k$, the value of $y$ turns around at $t = 0$. So the vertex is the point at $t = 0$, which can be read directly from the constants.",
-        "在 $x = pt + h$，$y = at^{2} + k$ 中，$y$ 在 $t = 0$ 处转向。所以顶点就是 $t = 0$ 对应的点，可以直接从常数读出。",
+        "In $x = pt + h$, $y = at^{2} + k$, the value of $y$ turns around at $t = 0$. So the vertex is the point at $t = 0$, which can be read directly from the constants.\n\nFor $x = 3t - 2$, $y = 2t^{2} + 5$: at $t = 0$, $x = -2$ and $y = 5$, so the vertex is $(-2, 5)$. Check: $t = 1$ and $t = -1$ both give $y = 7$, at $x = 1$ and $x = -5$, which lie $3$ either side of $x = -2$.\n\n> **Watch out.** The vertex is the point at $t = 0$, not at $t = 1$, and its $x$-coordinate is the constant in $x$ with its own sign: $x = 3t - 2$ gives $-2$, not $2$.",
+        "在 $x = pt + h$，$y = at^{2} + k$ 中，$y$ 在 $t = 0$ 处转向。所以顶点就是 $t = 0$ 对应的点，可以直接从常数读出。\n\n对 $x = 3t - 2$，$y = 2t^{2} + 5$：$t = 0$ 时 $x = -2$，$y = 5$，所以顶点是 $(-2, 5)$。检验：$t = 1$ 和 $t = -1$ 都给出 $y = 7$，对应 $x = 1$ 和 $x = -5$，正好在 $x = -2$ 两侧各 $3$ 处。\n\n> **注意。** 顶点是 $t = 0$ 对应的点，不是 $t = 1$ 对应的点；它的横坐标就是 $x$ 中的常数，连同符号：$x = 3t - 2$ 给出 $-2$，不是 $2$。",
       ],
       (rng) => {
         const p = rng.int(2, 9);
         const a = rng.int(2, 6);
         const h = size(rng, 12);
         const k = size(rng, 12);
-        return chooseFilled(
-          rng,
+        const wrong = [`(${k}, ${h})`, `(${p + h}, ${a + k})`, `(${-h}, ${k})`];
+        return reasoned(
+          chooseFilled(
+            rng,
+            [
+              `Find the vertex of the parabola $x = ${p}t${linear(h, "")}$, $y = ${a}t^{2}${linear(k, "")}$.`,
+              `求抛物线 $x = ${p}t${linear(h, "")}$，$y = ${a}t^{2}${linear(k, "")}$ 的顶点。`,
+            ],
+            `(${h}, ${k})`,
+            wrong,
+            [
+              `**Step 1: Find where y turns.** $y = ${a}t^{2}${linear(k, "")}$ is smallest when $t^{2} = 0$, so the vertex comes at $t = 0$.\n\n**Step 2: Evaluate at t = 0.**\n\n$$x = ${p}(0)${linear(h, "")} = ${h}, \\quad y = ${a}(0)^{2}${linear(k, "")} = ${k}$$\n\n**Check.** $t = 1$ and $t = -1$ both give $y = ${a + k}$, at $x = ${p + h}$ and $x = ${h - p}$, which lie $${p}$ either side of $x = ${h}$: the parabola is symmetric about the vertical line through $(${h}, ${k})$.`,
+              `**第一步：找 y 转向的地方。** $y = ${a}t^{2}${linear(k, "")}$ 在 $t^{2} = 0$ 时最小，所以顶点在 $t = 0$ 处。\n\n**第二步：求 t = 0 时的点。**\n\n$$x = ${p}(0)${linear(h, "")} = ${h}, \\quad y = ${a}(0)^{2}${linear(k, "")} = ${k}$$\n\n**检验。** $t = 1$ 和 $t = -1$ 都给出 $y = ${a + k}$，对应 $x = ${p + h}$ 和 $x = ${h - p}$，正好在 $x = ${h}$ 两侧各 $${p}$ 处：抛物线关于经过 $(${h}, ${k})$ 的竖直线对称。`,
+            ],
+          ),
           [
-            `Find the vertex of the parabola $x = ${p}t${linear(h, "")}$, $y = ${a}t^{2}${linear(k, "")}$.`,
-            `求抛物线 $x = ${p}t${linear(h, "")}$，$y = ${a}t^{2}${linear(k, "")}$ 的顶点。`,
+            [
+              `$${wrong[0]}$`,
+              `This swaps the coordinates: the constant in $x$, $${h}$, is the $x$-coordinate.`,
+              `这把两个坐标对调了：$x$ 中的常数 $${h}$ 才是横坐标。`,
+            ],
+            [
+              `$${wrong[1]}$`,
+              `This is the point at $t = 1$; the vertex is where $y$ turns, at $t = 0$.`,
+              `这是 $t = 1$ 对应的点；顶点在 $y$ 转向的地方，即 $t = 0$。`,
+            ],
+            [
+              `$${wrong[2]}$`,
+              `At $t = 0$, $x = ${p}(0)${linear(h, "")} = ${h}$: the constant keeps its own sign.`,
+              `$t = 0$ 时 $x = ${p}(0)${linear(h, "")} = ${h}$：常数保留它自己的符号。`,
+            ],
           ],
-          `(${h}, ${k})`,
-          [`(${k}, ${h})`, `(${p + h}, ${a + k})`, `(${-h}, ${k})`],
-          [`The vertex comes at $t = 0$, where $x = ${h}$ and $y = ${k}$.`, `顶点在 $t = 0$ 处，此时 $x = ${h}$，$y = ${k}$。`],
         );
       },
     ),
