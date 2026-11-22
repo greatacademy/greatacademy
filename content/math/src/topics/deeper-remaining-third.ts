@@ -831,8 +831,16 @@ For $\\frac{x}{3} + \\frac{y}{2} = 7$ and $\\frac{x}{3} - \\frac{y}{2} = 1$, the
       "a-combination-at-a-quadrantal-angle",
       ["A combination at a quadrantal angle", "象限角处的组合"],
       [
-        "Every multiple of $90^{\\circ}$ reduces to one of four positions on the unit circle. So add or subtract multiples of $360^{\\circ}$ to land from $0^{\\circ}$ up to $360^{\\circ}$, read off the sine and cosine there, and then combine them.",
-        "$90^{\\circ}$ 的每个倍数都化成单位圆上四个位置之一。所以先加减 $360^{\\circ}$ 的倍数，落到 $0^{\\circ}$ 到 $360^{\\circ}$ 之间，读出那里的正弦和余弦，再组合。",
+        `A turn of $360^{\\circ}$ brings the terminal side back to where it started, so adding or subtracting whole turns changes no ratio. Every multiple of $90^{\\circ}$ therefore ends on one of four points of the unit circle: $(1, 0)$ at $0^{\\circ}$, $(0, 1)$ at $90^{\\circ}$, $(-1, 0)$ at $180^{\\circ}$ and $(0, -1)$ at $270^{\\circ}$. The cosine is the $x$-coordinate of that point and the sine the $y$-coordinate. Reduce the angle, read both off, and then combine them.
+
+For $4\\sin(-450^{\\circ}) + 3\\cos(-450^{\\circ})$: $-450^{\\circ} + 2 \\cdot 360^{\\circ} = 270^{\\circ}$, at $(0, -1)$. So $\\sin(-450^{\\circ}) = -1$ and $\\cos(-450^{\\circ}) = 0$, and the value is $4 \\cdot (-1) + 3 \\cdot 0 = -4$.
+
+> **Watch out.** The sine is the $y$-coordinate, not the $x$-coordinate. Swapping them at $270^{\\circ}$ gives $4 \\cdot 0 + 3 \\cdot (-1) = -3$. And for a negative angle, add whole turns until it lands from $0^{\\circ}$ up to $360^{\\circ}$; do not just drop the minus sign.`,
+        `转 $360^{\\circ}$ 一整圈，终边回到原处，所以加减整圈不改变任何三角比。因此 $90^{\\circ}$ 的每个倍数都落在单位圆的四个点之一：$0^{\\circ}$ 在 $(1, 0)$，$90^{\\circ}$ 在 $(0, 1)$，$180^{\\circ}$ 在 $(-1, 0)$，$270^{\\circ}$ 在 $(0, -1)$。余弦是这个点的 $x$ 坐标，正弦是 $y$ 坐标。先化简角，读出两者，再组合。
+
+计算 $4\\sin(-450^{\\circ}) + 3\\cos(-450^{\\circ})$：$-450^{\\circ} + 2 \\cdot 360^{\\circ} = 270^{\\circ}$，在 $(0, -1)$。所以 $\\sin(-450^{\\circ}) = -1$，$\\cos(-450^{\\circ}) = 0$，值为 $4 \\cdot (-1) + 3 \\cdot 0 = -4$。
+
+> **注意。** 正弦是 $y$ 坐标，不是 $x$ 坐标。在 $270^{\\circ}$ 处把它们弄反，会得到 $4 \\cdot 0 + 3 \\cdot (-1) = -3$。负角要加整圈，直到落在 $0^{\\circ}$ 到 $360^{\\circ}$ 之间，不能只去掉负号。`,
       ],
       (rng) => {
         const k = rng.int(5, 40) * (rng.bool() ? 1 : -1);
@@ -842,6 +850,13 @@ For $\\frac{x}{3} + \\frac{y}{2} = 7$ and $\\frac{x}{3} - \\frac{y}{2} = 1$, the
         const spot = ((k % 4) + 4) % 4;
         const s = [0, 1, 0, -1][spot] as number;
         const c = [1, 0, -1, 0][spot] as number;
+        const q = (angle - spot * 90) / 360;
+        const paren = (n: number) => (n < 0 ? `(${n})` : String(n));
+        const shift = `${angle}^{\\circ} ${q > 0 ? "-" : "+"} ${Math.abs(q)} \\cdot 360^{\\circ} = ${spot * 90}^{\\circ}`;
+        const turnLine = {
+          en: `A whole turn changes no ratio, so add or take away whole turns of $360^{\\circ}$ until the angle lands from $0^{\\circ}$ up to $360^{\\circ}$: $${shift}$.`,
+          zh: `整圈不改变三角比，所以加上或去掉若干个 $360^{\\circ}$，让角落到 $0^{\\circ}$ 到 $360^{\\circ}$ 之间：$${shift}$。`,
+        };
         return integer(
           [
             `Evaluate $${a}\\sin(${angle}^{\\circ}) + ${b}\\cos(${angle}^{\\circ})$.`,
@@ -850,8 +865,8 @@ For $\\frac{x}{3} + \\frac{y}{2} = 7$ and $\\frac{x}{3} - \\frac{y}{2} = 1$, the
           a * s + b * c,
           [a * c + b * s, -(a * s + b * c), a + b],
           [
-            `$${angle}^{\\circ}$ ends at the same place as $${spot * 90}^{\\circ}$, where the sine is $${s}$ and the cosine is $${c}$. So the value is $${a} \\cdot (${s}) + ${b} \\cdot (${c}) = ${a * s + b * c}$.`,
-            `$${angle}^{\\circ}$ 与 $${spot * 90}^{\\circ}$ 终边相同，那里正弦是 $${s}$，余弦是 $${c}$。所以值为 $${a} \\cdot (${s}) + ${b} \\cdot (${c}) = ${a * s + b * c}$。`,
+            `**Step 1: Remove whole turns.** ${turnLine.en}\n\n**Step 2: Read the point and combine.** At $${spot * 90}^{\\circ}$ the terminal side meets the unit circle at $(${c}, ${s})$, so the sine is $${s}$ and the cosine is $${c}$. The value is $${a} \\cdot (${s}) + ${b} \\cdot (${c}) = ${a * s + b * c}$.\n\n**Check.** Count quarter turns instead. $${angle}^{\\circ} = ${k} \\cdot 90^{\\circ}$, and $${k} = 4 \\cdot ${paren(q)} + ${spot}$, so the angle is whole turns plus $${spot}$ quarter ${spot === 1 ? "turn" : "turns"}, the same point $(${c}, ${s})$.`,
+            `**第一步：去掉整圈。**${turnLine.zh}\n\n**第二步：读出点并组合。**$${spot * 90}^{\\circ}$ 的终边与单位圆交于 $(${c}, ${s})$，所以正弦是 $${s}$，余弦是 $${c}$。值为 $${a} \\cdot (${s}) + ${b} \\cdot (${c}) = ${a * s + b * c}$。\n\n**检验。**改数四分之一圈。$${angle}^{\\circ} = ${k} \\cdot 90^{\\circ}$，而 $${k} = 4 \\cdot ${paren(q)} + ${spot}$，所以这个角是整圈再加 $${spot}$ 个四分之一圈，落在同一点 $(${c}, ${s})$。`,
           ],
         );
       },

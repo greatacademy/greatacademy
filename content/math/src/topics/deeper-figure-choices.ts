@@ -915,8 +915,16 @@ For $y \\le -x + 3$: the boundary $y = -x + 3$ is solid. Testing the origin give
       "choosing-the-drawing-of-a-logarithm",
       ["Choosing the drawing of a logarithm", "选出对数函数的图像"],
       [
-        "The graph of $y = \\log_b(x - h) + k$ with $b > 1$ rises slowly to the right from a vertical line $x = h$ it never touches. It passes through $(h + 1, k)$, because $\\log_b 1 = 0$, and through $(h + b, k + 1)$, because $\\log_b b = 1$.",
-        "当 $b > 1$ 时，$y = \\log_b(x - h) + k$ 的图像从竖直线 $x = h$ 附近向右缓慢上升，且永远碰不到这条线。它经过 $(h + 1, k)$，因为 $\\log_b 1 = 0$；还经过 $(h + b, k + 1)$，因为 $\\log_b b = 1$。",
+        `A logarithm is defined only for positive arguments, so $y = \\log_b(x - h) + k$ lives to the right of $x = h$: as $x$ comes down toward $h$, the argument shrinks toward $0$ and the logarithm drops without bound, so the vertical line $x = h$ is an asymptote. Two exact points pin the curve down: the argument is $1$ at $x = h + 1$, where $\\log_b 1 = 0$, and $b$ at $x = h + b$, where $\\log_b b = 1$. With $b > 1$ the curve rises slowly to the right.
+
+Take $y = \\log_{2}(x + 1) + 3$, where $h = -1$. The asymptote is $x = -1$. At $x = 0$ the argument is $1$, so $y = 0 + 3 = 3$; at $x = 1$ the argument is $2$, so $y = 1 + 3 = 4$. The graph climbs from near $x = -1$ through $(0, 3)$ and $(1, 4)$.
+
+> **Watch out.** A curve that falls to the right is a flipped logarithm, $-\\log_b$. A curve through the right points shifted the wrong way up or down used $-k$ instead of $+k$. And a curve that crosses the $y$-axis and grows faster and faster is the inverse, an exponential, not the logarithm.`,
+        `对数只对正的真数有定义，所以 $y = \\log_b(x - h) + k$ 的图像在 $x = h$ 的右边：$x$ 向 $h$ 靠近时，真数趋近 $0$，对数无限减小，所以竖直线 $x = h$ 是渐近线。两个准确的点确定曲线：$x = h + 1$ 时真数是 $1$，$\\log_b 1 = 0$；$x = h + b$ 时真数是 $b$，$\\log_b b = 1$。$b > 1$ 时曲线向右缓慢上升。
+
+取 $y = \\log_{2}(x + 1) + 3$，这里 $h = -1$。渐近线是 $x = -1$。$x = 0$ 时真数是 $1$，所以 $y = 0 + 3 = 3$；$x = 1$ 时真数是 $2$，所以 $y = 1 + 3 = 4$。图像从 $x = -1$ 附近上升，经过 $(0, 3)$ 和 $(1, 4)$。
+
+> **注意。** 向右下降的曲线是翻转的对数 $-\\log_b$。经过的点上下移错的曲线把 $+k$ 用成了 $-k$。与 $y$ 轴相交、越长越快的曲线是反函数，即指数函数，而不是对数函数。`,
       ],
       (rng) => {
         const b = rng.pick([2, 3]);
@@ -926,6 +934,7 @@ For $y \\le -x + 3$: the boundary $y = -x + 3$ is solid. Testing the origin give
         const shape: Pair = ["A curve", "一条曲线"];
         const inside = h === 0 ? "x" : `(x - ${h})`;
         const equation = `y = \\log_{${b}} ${inside}${plus(k)}`;
+        const val = (v: number) => (k === 0 ? String(v) : `${v}${plus(k)} = ${v + k}`);
         return figureChoice(rng, {
           prompt: t(`Which drawing shows the graph of $${equation}$?`, `哪张图是 $${equation}$ 的图像？`),
           correct: curveFigure(logView, (x) => log(x - h) + k, [h + 1, h + b], shape),
@@ -940,8 +949,8 @@ For $y \\le -x + 3$: the boundary $y = -x + 3$ is solid. Testing the origin give
             t("This is the graph of the inverse function, an exponential.", "这是反函数（指数函数）的图像。"),
           ],
           solution: t(
-            `The curve exists only for $x > ${h}$. It passes through $${tex([h + 1, k])}$, where the logarithm is $0$, and through $${tex([h + b, k + 1])}$, where it is $1$. So it rises to the right.`,
-            `曲线只在 $x > ${h}$ 时存在。它经过 $${tex([h + 1, k])}$，这里对数为 $0$；还经过 $${tex([h + b, k + 1])}$，这里对数为 $1$。所以它向右上升。`,
+            `${stepLabel(1, "find the asymptote", "找渐近线").en} The argument $${h === 0 ? "x" : `x - ${h}`}$ must be positive, so the curve exists only for $x > ${h}$ and comes down along the vertical line $x = ${h}$ without touching it.\n\n${stepLabel(2, "plot two points", "描两个点").en} At $x = ${h + 1}$ the argument is $1$, so $y = ${val(0)}$: the point $${tex([h + 1, k])}$. At $x = ${h + b}$ the argument is $${b}$, so $y = ${val(1)}$: the point $${tex([h + b, k + 1])}$. The base $${b}$ is above $1$, so the curve rises to the right through both points; the drawing that does this is the graph.\n\n**Check.** Try $x = ${h + b * b}$: the argument is $${b * b} = ${b}^{2}$, so $y = ${val(2)}$, a little higher again, as a slowly rising logarithm should be.`,
+            `${stepLabel(1, "find the asymptote", "找渐近线")["zh-CN"]}真数 $${h === 0 ? "x" : `x - ${h}`}$ 必须为正，所以曲线只在 $x > ${h}$ 时存在，沿着竖直线 $x = ${h}$ 向下延伸而不与它相交。\n\n${stepLabel(2, "plot two points", "描两个点")["zh-CN"]}$x = ${h + 1}$ 时真数是 $1$，所以 $y = ${val(0)}$，得到点 $${tex([h + 1, k])}$。$x = ${h + b}$ 时真数是 $${b}$，所以 $y = ${val(1)}$，得到点 $${tex([h + b, k + 1])}$。底数 $${b}$ 大于 $1$，所以曲线经过这两点向右上升；这样的那张图就是所求图像。\n\n**检验。** 取 $x = ${h + b * b}$：真数是 $${b * b} = ${b}^{2}$，所以 $y = ${val(2)}$，又高了一点，正符合对数缓慢上升的样子。`,
           ),
         });
       },
@@ -952,8 +961,16 @@ For $y \\le -x + 3$: the boundary $y = -x + 3$ is solid. Testing the origin give
       "choosing-the-drawing-of-a-wave",
       ["Choosing the drawing of a wave", "选出正弦和余弦的图像"],
       [
-        "Three readings settle a graph of $y = A\\sin x + k$ or $y = A\\cos x + k$. The wave swings around the line $y = k$, and it swings $|A|$ above and below it. The value at $x = 0$ tells sine from cosine: sine is $k$ there, on the middle line, and cosine is $A + k$, at a peak or a trough. For a sine, the sign of $A$ says whether the wave rises or falls to the right of $x = 0$.",
-        "$y = A\\sin x + k$ 或 $y = A\\cos x + k$ 的图像看三处就能确定。曲线围绕直线 $y = k$ 摆动，上下各摆动 $|A|$。$x = 0$ 处的值可以区分正弦和余弦：正弦在这里是 $k$，正好在中线上；余弦是 $A + k$，在波峰或波谷。对正弦来说，$A$ 的符号决定曲线在 $x = 0$ 右侧是上升还是下降。",
+        `The values of $\\sin x$ and $\\cos x$ run from $-1$ to $1$. Multiplying by $A$ stretches them to run from $-|A|$ to $|A|$, and adding $k$ lifts every point by $k$. So the graph of $y = A\\sin x + k$ or $y = A\\cos x + k$ swings around the middle line $y = k$, reaching $|A|$ above and below it. The value at $x = 0$ tells sine from cosine. Since $\\sin 0 = 0$, a sine starts at $k$, on the middle line. Since $\\cos 0 = 1$, a cosine starts at $A + k$, at a peak or a trough. Just right of $x = 0$, $\\sin x$ is positive, so a sine with $A > 0$ rises there and one with $A < 0$ falls.
+
+Take $y = 2\\sin x - 1$. The middle line is $y = -1$, and the wave runs from $-3$ to $1$. At $x = 0$, $y = 2 \\cdot 0 - 1 = -1$, on the middle line. Since $A = 2 > 0$ it rises, to its peak $2 \\cdot 1 - 1 = 1$ at $x = \\frac{\\pi}{2}$.
+
+> **Watch out.** A wave that starts at a peak or a trough is a cosine, not a sine. A sine that falls first has a negative $A$. And $|A|$ is the distance from the middle line to a peak, not from a trough to a peak, which is $2|A|$.`,
+        `$\\sin x$ 和 $\\cos x$ 的值都在 $-1$ 到 $1$ 之间。乘以 $A$ 把它们拉伸到 $-|A|$ 到 $|A|$ 之间，再加 $k$ 把每个点抬高 $k$。所以 $y = A\\sin x + k$ 或 $y = A\\cos x + k$ 的图像围绕中线 $y = k$ 摆动，上下各到 $|A|$。$x = 0$ 处的值可以区分正弦和余弦。因为 $\\sin 0 = 0$，正弦从 $k$ 出发，在中线上。因为 $\\cos 0 = 1$，余弦从 $A + k$ 出发，在波峰或波谷。在 $x = 0$ 右侧附近 $\\sin x$ 为正，所以 $A > 0$ 的正弦在那里上升，$A < 0$ 的正弦下降。
+
+取 $y = 2\\sin x - 1$。中线是 $y = -1$，曲线在 $-3$ 到 $1$ 之间。$x = 0$ 时 $y = 2 \\cdot 0 - 1 = -1$，在中线上。因为 $A = 2 > 0$，曲线上升，在 $x = \\frac{\\pi}{2}$ 处到达波峰 $2 \\cdot 1 - 1 = 1$。
+
+> **注意。** 从波峰或波谷出发的曲线是余弦，不是正弦。先下降的正弦，$A$ 为负。$|A|$ 是中线到波峰的距离，不是波谷到波峰的距离，后者是 $2|A|$。`,
       ],
       (rng) => {
         const A = rng.pick([1, 2, 3, -1, -2, -3]);
@@ -976,8 +993,8 @@ For $y \\le -x + 3$: the boundary $y = -x + 3$ is solid. Testing the origin give
             t("This wave has the wrong height: the number in front is the amplitude.", "这条波的高度不对：前面的数是振幅。"),
           ],
           solution: t(
-            `The middle line is $y = ${k}$, and the wave swings $${Math.abs(A)}$ above and below it, from $${k - Math.abs(A)}$ to $${k + Math.abs(A)}$. At $x = 0$, $y = ${start}$, because $${name} 0 = ${sine ? 0 : 1}$.${sine ? ` To the right of $x = 0$ the wave ${A > 0 ? "rises" : "falls"}, since $\\sin x$ is positive there and $${num(A)}$ is ${A > 0 ? "positive" : "negative"}.` : ""}`,
-            `中线是 $y = ${k}$，曲线在它上下各摆动 $${Math.abs(A)}$，从 $${k - Math.abs(A)}$ 到 $${k + Math.abs(A)}$。当 $x = 0$ 时，$y = ${start}$，因为 $${name} 0 = ${sine ? 0 : 1}$。${sine ? `在 $x = 0$ 右侧曲线${A > 0 ? "上升" : "下降"}，因为此处 $\\sin x$ 为正，而 $${num(A)}$ 为${A > 0 ? "正" : "负"}数。` : ""}`,
+            `${stepLabel(1, "Read the middle line and the height", "读出中线和高度").en} The middle line is $y = ${k}$, and the wave swings $${Math.abs(A)}$ above and below it, from $${k - Math.abs(A)}$ to $${k + Math.abs(A)}$.\n\n${stepLabel(2, "Read the start", "读出起点").en} At $x = 0$, $y = ${start}$, because $${name} 0 = ${sine ? 0 : 1}$. ${sine ? `To the right of $x = 0$ the wave ${A > 0 ? "rises" : "falls"}, since $\\sin x$ is positive there and $${num(A)}$ is ${A > 0 ? "positive" : "negative"}.` : `That is ${A > 0 ? "a peak" : "a trough"}, since $${num(A)}$ is ${A > 0 ? "positive" : "negative"}.`} Only one drawing does all of this.\n\n**Check.** ${sine ? `At $x = \\frac{\\pi}{2}$, where $\\sin x = 1$, the graph should be at $${A + k}$, ${A > 0 ? "its peak" : "its trough"}.` : `At $x = \\pi$, where $\\cos x = -1$, the graph should be at $${k - A}$, ${A > 0 ? "its trough" : "its peak"}.`} The right drawing passes through that point too.`,
+            `${stepLabel(1, "Read the middle line and the height", "读出中线和高度")["zh-CN"]}中线是 $y = ${k}$，曲线在它上下各摆动 $${Math.abs(A)}$，从 $${k - Math.abs(A)}$ 到 $${k + Math.abs(A)}$。\n\n${stepLabel(2, "Read the start", "读出起点")["zh-CN"]}当 $x = 0$ 时，$y = ${start}$，因为 $${name} 0 = ${sine ? 0 : 1}$。${sine ? `在 $x = 0$ 右侧曲线${A > 0 ? "上升" : "下降"}，因为此处 $\\sin x$ 为正，而 $${num(A)}$ 为${A > 0 ? "正" : "负"}数。` : `这是${A > 0 ? "波峰" : "波谷"}，因为 $${num(A)}$ 为${A > 0 ? "正" : "负"}数。`}只有一张图同时符合这些。\n\n**检验。**${sine ? `在 $x = \\frac{\\pi}{2}$ 处 $\\sin x = 1$，图像应在 $${A + k}$，是${A > 0 ? "波峰" : "波谷"}。` : `在 $x = \\pi$ 处 $\\cos x = -1$，图像应在 $${k - A}$，是${A > 0 ? "波谷" : "波峰"}。`}正确的图也经过这一点。`,
           ),
         });
       },
