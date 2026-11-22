@@ -744,8 +744,8 @@ const addToReachProbability: KnowledgePointDef = {
   id: "adding-items-to-reach-a-probability",
   title: t("Adding items to reach a probability", "加入物品以达到某个概率"),
   explanation: t(
-    "A probability from a bag is the number of favorable items over the total, and adding favorable items changes both of these numbers. Write the new probability with an unknown in both the top and the bottom, set it equal to the target, and solve. A common slip is to leave the total as it was. The answer can be checked by forming the new fraction and simplifying it to see if the target appears.",
-    "从袋子里摸的概率，是有利的物品数除以总数，加入有利的物品后，这两个数都会变。把新的概率写成分子分母都含未知数的形式，令它等于目标，再求解。常见的差错是总数没有变。把新的分数写出来再化简，看是否得到目标，就能检验答案。",
+    "A probability from a bag is the number of favorable items over the total, and adding favorable items changes both of these numbers. Write the new probability with an unknown in both the top and the bottom, set it equal to the target, and solve. A common slip is to leave the total as it was. The answer can be checked by forming the new fraction and simplifying it to see if the target appears.\n\nFor example, a bag of $2$ red and $6$ blue balls needs red to be $\\frac{1}{2}$: the $6$ blue balls must be half, so the total is $12$ and there are $6$ red, which means adding $4$. Indeed $\\frac{6}{12} = \\frac{1}{2}$.\n\n> **Watch out.** Adding red balls makes the total grow too. Solving $\\frac{2 + x}{8} = \\frac{1}{2}$, with the old total, gives $x = 2$, and then red is only $\\frac{4}{10}$.",
+    "从袋子里摸的概率，是有利的物品数除以总数，加入有利的物品后，这两个数都会变。把新的概率写成分子分母都含未知数的形式，令它等于目标，再求解。常见的差错是总数没有变。把新的分数写出来再化简，看是否得到目标，就能检验答案。\n\n例如，袋子里有 $2$ 个红球和 $6$ 个蓝球，要使红球的概率为 $\\frac{1}{2}$：$6$ 个蓝球必须占一半，所以总数是 $12$，红球 $6$ 个，要加 $4$ 个。确实 $\\frac{6}{12} = \\frac{1}{2}$。\n\n> **注意。** 加入红球后总数也会变大。用原来的总数解 $\\frac{2 + x}{8} = \\frac{1}{2}$ 得 $x = 2$，这时红球的概率只有 $\\frac{4}{10}$。",
   ),
   generate(rng) {
     const [p, q] = rng.pick([
@@ -771,8 +771,8 @@ const addToReachProbability: KnowledgePointDef = {
       form: "integer",
       wrong: [finalRed, Math.max(1, Math.round(((red + others) * p) / q - red)), answer + 1, answer + others, answer + 2, answer + 3],
       solution: t(
-        `The blue balls stay at ${others}, and they must be $\\frac{${q - p}}{${q}}$ of the total. So the total is ${others + finalRed}, with ${finalRed} red balls, which means adding ${answer}.`,
-        `蓝球还是 ${others} 个，它们必须占总数的 $\\frac{${q - p}}{${q}}$。所以总数是 ${others + finalRed}，红球 ${finalRed} 个，要加 ${answer} 个。`,
+        `**Step 1: use the balls that do not change.** The blue balls stay at ${others}, and once red is $\\frac{${p}}{${q}}$ of the bag, blue must be $\\frac{${q - p}}{${q}}$ of it. So the new total is $${others} \\div \\frac{${q - p}}{${q}} = ${others + finalRed}$.\n\n**Step 2: find the red balls to add.** The new bag holds $${others + finalRed} - ${others} = ${finalRed}$ red balls, and there ${red === 1 ? "is" : "are"} ${red} now, so add $${finalRed} - ${red} = ${answer}$.\n\n**Check.** The new probability is $\\frac{${red} + ${answer}}{${red + others} + ${answer}} = \\frac{${finalRed}}{${others + finalRed}} = \\frac{${p}}{${q}}$, the target.`,
+        `**第一步：利用不变的球。** 蓝球还是 ${others} 个；红球占 $\\frac{${p}}{${q}}$ 时，蓝球必须占 $\\frac{${q - p}}{${q}}$。所以新的总数是 $${others} \\div \\frac{${q - p}}{${q}} = ${others + finalRed}$。\n\n**第二步：求要加的红球。** 新袋子里有 $${others + finalRed} - ${others} = ${finalRed}$ 个红球，现在有 ${red} 个，所以要加 $${finalRed} - ${red} = ${answer}$ 个。\n\n**检验。** 新的概率是 $\\frac{${red} + ${answer}}{${red + others} + ${answer}} = \\frac{${finalRed}}{${others + finalRed}} = \\frac{${p}}{${q}}$，正是目标。`,
       ),
     });
   },

@@ -143,8 +143,8 @@ export const deeperCollegeThirdPoints: Readonly<Record<string, readonly Knowledg
       "more-trials-for-a-steadier-estimate",
       ["More trials for a steadier estimate", "试验越多估计越稳定"],
       [
-        "An experimental probability wanders when trials are few and settles near the true value as trials grow. So the estimate from the most trials is the one to trust.",
-        "试验次数少时实验概率波动大，次数增多后稳定在真实值附近。所以试验次数最多的估计最可信。",
+        "An experimental probability wanders when trials are few and settles near the true value as trials grow: with $10$ spins, one extra red moves the estimate by $\\frac{1}{10}$, but with $1000$ spins only by $\\frac{1}{1000}$. So the estimate from the most trials is the one to trust.\n\n> **Watch out.** A round-looking or familiar estimate is not more reliable. Judge by the number of trials, not by the value.",
+        "试验次数少时实验概率波动大，次数增多后稳定在真实值附近：转 $10$ 次时，多一次红色会使估计变化 $\\frac{1}{10}$，转 $1000$ 次时只变化 $\\frac{1}{1000}$。所以试验次数最多的估计最可信。\n\n> **注意。** 估计值看起来整齐或熟悉，并不代表更可靠。要看试验次数，而不是看数值。",
       ],
       (rng) => {
         const counts = rng.shuffle([rng.int(5, 15), rng.int(20, 60), rng.int(100, 300), rng.int(1000, 5000)]);
@@ -163,8 +163,8 @@ export const deeperCollegeThirdPoints: Readonly<Record<string, readonly Knowledg
           student(best),
           [0, 1, 2, 3].filter((i) => i !== best).map(student),
           [
-            `More trials give a steadier estimate, and ${most} is the largest number of spins.`,
-            `试验越多，估计越稳定，${most} 是最多的次数。`,
+            `**Step 1: compare the trials.** The groups spun $${counts.join("$, $")}$ times. One extra red changes an estimate by $1$ divided by the number of spins, so the fewer the spins, the more the estimate jumps around.\n\n**Step 2: pick the most trials.** $${most}$ is the largest number of spins, so Group ${best + 1}'s estimate is the steadiest and should be trusted the most.\n\n**Check.** $${most}$ is larger than each of the other counts, $${counts.filter((x) => x !== most).join("$, $")}$, so no group spun more.`,
+            `**第一步：比较试验次数。** 各组分别转了 $${counts.join("$、$")}$ 次。多一次红色会使估计变化 $1$ 除以转动次数，所以次数越少，估计波动越大。\n\n**第二步：选次数最多的。** $${most}$ 是最多的次数，所以第 ${best + 1} 组的估计最稳定，最可信。\n\n**检验。** $${most}$ 比其他各组的次数 $${counts.filter((x) => x !== most).join("$、$")}$ 都大，没有哪组转得更多。`,
           ],
         );
       },
@@ -175,8 +175,8 @@ export const deeperCollegeThirdPoints: Readonly<Record<string, readonly Knowledg
       "predicting-from-a-total-remaining",
       ["Predicting what remains", "预测剩下的部分"],
       [
-        "A prediction multiplies an experimental probability by the number of future trials. When some trials have already happened, predict only those left and add what has been seen.",
-        "预测就是用实验概率乘将来的试验次数。如果一些试验已经发生，只预测剩下的，再加上已看到的。",
+        'A prediction multiplies an experimental probability by the number of future trials: if $3$ of every $4$ throws have gone in, about $3$ of every $4$ of the next ones will too. When some trials have already happened, predict only those left, and add what has been seen if the question asks for a total.\n\n> **Watch out.** Read which count is asked for. "How many of the next throws" is the prediction alone; adding the throws already made answers a different question.',
+        "预测就是用实验概率乘将来的试验次数：如果每 $4$ 次罚球进 $3$ 次，接下来也大约每 $4$ 次进 $3$ 次。如果一些试验已经发生，只预测剩下的；若问的是总数，再加上已看到的。\n\n> **注意。** 看清问的是哪个数。“接下来投中多少次”只是预测部分；加上已经投中的次数回答的是另一个问题。",
       ],
       (rng) => {
         const d = rng.pick([4, 5, 10, 20]);
@@ -193,8 +193,8 @@ export const deeperCollegeThirdPoints: Readonly<Record<string, readonly Knowledg
           expected,
           [expected + seen, left - expected === expected ? expected + 1 : left - expected, left],
           [
-            `The rate is $${frac(seen, done)} = ${frac(n / gcd(n, d), d / gcd(n, d))}$, and $${frac(n / gcd(n, d), d / gcd(n, d))} \\times ${left} = ${expected}$.`,
-            `比率是 $${frac(seen, done)} = ${frac(n / gcd(n, d), d / gcd(n, d))}$，$${frac(n / gcd(n, d), d / gcd(n, d))} \\times ${left} = ${expected}$。`,
+            `**Step 1: find the rate.** The experimental probability of a basket is $${frac(seen, done)} = ${frac(n / gcd(n, d), d / gcd(n, d))}$.\n\n**Step 2: apply it to the throws left.** Only the next ${left} throws are asked about: $${frac(n / gcd(n, d), d / gcd(n, d))} \\times ${left} = ${expected}$.\n\n**Check.** Compare the rates: $${frac(expected, left)}$ and $${frac(seen, done)}$ cross-multiply to $${expected} \\times ${done} = ${expected * done}$ and $${seen} \\times ${left} = ${seen * left}$, which are equal, and $${expected}$ is between $0$ and $${left}$.`,
+            `**第一步：求比率。** 投中的实验概率是 $${frac(seen, done)} = ${frac(n / gcd(n, d), d / gcd(n, d))}$。\n\n**第二步：用于剩下的罚球。** 只问接下来的 ${left} 次：$${frac(n / gcd(n, d), d / gcd(n, d))} \\times ${left} = ${expected}$。\n\n**检验。** 比较两个比率：$${frac(expected, left)}$ 与 $${frac(seen, done)}$ 交叉相乘得 $${expected} \\times ${done} = ${expected * done}$ 和 $${seen} \\times ${left} = ${seen * left}$，两者相等，且 $${expected}$ 在 $0$ 与 $${left}$ 之间。`,
           ],
         );
       },
@@ -205,8 +205,8 @@ export const deeperCollegeThirdPoints: Readonly<Record<string, readonly Knowledg
       "an-or-event-from-a-two-way-table",
       ["An or event from a two-way table", "由双向表求“或”事件"],
       [
-        "An or event counts everything in a row together with everything in a column. The cell where they meet appears in both, so it must be counted only once.",
-        "“或”事件要把一行的全部和一列的全部都算上。行列相交的格子在两者中都出现，只能算一次。",
+        "An or event counts everything in a row together with everything in a column. The cell where they meet appears in both, so it must be counted only once: in a $2 \\times 2$ table that leaves three cells, and only the cell with neither property is left out.\n\n> **Watch out.** Adding the row total and the column total counts the shared cell twice. Either add the three cells, or subtract the shared cell once.",
+        "“或”事件要把一行的全部和一列的全部都算上。行列相交的格子在两者中都出现，只能算一次：在 $2 \\times 2$ 的表中这就是三个格子，只有两种属性都没有的格子被排除。\n\n> **注意。** 把行合计与列合计相加会把公共格子算两次。要么把三个格子相加，要么把公共格子减去一次。",
       ],
       (rng) => {
         const a = rng.int(4, 30);
@@ -224,8 +224,8 @@ export const deeperCollegeThirdPoints: Readonly<Record<string, readonly Knowledg
           Q.of(a + b + c, n),
           [Q.of(a + b + a + c, n), Q.of(a, n), Q.of(a + b, n)],
           [
-            `$${a} + ${b} + ${c} = ${a + b + c}$ people qualify out of ${n}, as ${a} is counted once.`,
-            `共 ${n} 人中有 $${a} + ${b} + ${c} = ${a + b + c}$ 人符合，${a} 只算一次。`,
+            `**Step 1: find the cells.** A person qualifies if they are a student (the whole first row, $${a}$ and $${b}$) or drink tea (the first column, which adds the $${c}$ teachers). The $${a}$ students who drink tea are in both, and are counted once: $${a} + ${b} + ${c} = ${a + b + c}$.\n\n**Step 2: divide by the total.** Everyone surveyed is $${a} + ${b} + ${c} + ${d} = ${n}$, so the probability is $${frac(a + b + c, n)}$.\n\n**Check.** The only cell left out is the teachers who drink coffee, $${d}$, and $${n} - ${a + b + c} = ${d}$. By the totals, $${a + b} + ${a + c} - ${a} = ${a + b + c}$ as well.`,
+            `**第一步：找出格子。** 是学生（整个第一行 $${a}$ 和 $${b}$）或喝茶（第一列，再加上 $${c}$ 名老师）的人都符合。喝茶的 $${a}$ 名学生两者都是，只算一次：$${a} + ${b} + ${c} = ${a + b + c}$。\n\n**第二步：除以总数。** 调查总人数是 $${a} + ${b} + ${c} + ${d} = ${n}$，所以概率是 $${frac(a + b + c, n)}$。\n\n**检验。** 唯一被排除的格子是喝咖啡的老师 $${d}$ 人，$${n} - ${a + b + c} = ${d}$。用合计算：$${a + b} + ${a + c} - ${a} = ${a + b + c}$，结果相同。`,
           ],
         );
       },
@@ -236,8 +236,8 @@ export const deeperCollegeThirdPoints: Readonly<Record<string, readonly Knowledg
       "neither-event-from-the-probabilities",
       ["Neither event, from the probabilities", "由概率求两事件都不发生"],
       [
-        "Neither event happening is the complement of at least one happening. So find the probability of the union with the addition rule, and then take it away from 1.",
-        "两事件都不发生，是至少一个发生的补事件。所以先用加法公式求并事件的概率，再用 1 减去它。",
+        'Neither event happening is the region outside both circles of a Venn diagram, and everything else is inside at least one circle. So neither is the complement of the union: find $P(A \\cup B)$ with the addition rule, and then take it away from $1$.\n\n> **Watch out.** $1 - P(A) - P(B)$ takes the overlap away twice, and $1 - P(A \\cap B)$ is "not both", which still includes $A$ only and $B$ only.',
+        "两事件都不发生是韦恩图中两圆之外的区域，其余部分都至少在一个圆内。所以“都不发生”是并事件的补事件：先用加法公式求 $P(A \\cup B)$，再用 $1$ 减去它。\n\n> **注意。** $1 - P(A) - P(B)$ 把重叠部分减了两次；$1 - P(A \\cap B)$ 是“不同时发生”，其中仍包括仅 $A$ 和仅 $B$。",
       ],
       (rng) => {
         const both = rng.int(1, 3) * 5;
@@ -252,8 +252,8 @@ export const deeperCollegeThirdPoints: Readonly<Record<string, readonly Knowledg
           Q.of(100 - safeUnion, 100),
           [Q.of(safeUnion, 100), Q.of(Math.abs(100 - a - b) || 1, 100), Q.of(100 - both, 100)],
           [
-            `$P(A \\cup B) = ${a} + ${b} - ${both} = ${safeUnion}$ percent, and the complement is ${100 - safeUnion} percent.`,
-            `$P(A \\cup B) = ${a} + ${b} - ${both} = ${safeUnion}$%，补事件是 ${100 - safeUnion}%。`,
+            `**Step 1: find the union.** By the addition rule, $P(A \\cup B) = ${a}\\% + ${b}\\% - ${both}\\% = ${safeUnion}\\%$.\n\n**Step 2: take the complement.** Neither is everything outside the union: $100\\% - ${safeUnion}\\% = ${100 - safeUnion}\\% = ${Q.of(100 - safeUnion, 100).toLatex()}$.\n\n**Check.** Fill in the four regions: $A$ only $${a - both}\\%$, both $${both}\\%$, $B$ only $${b - both}\\%$, neither $${100 - safeUnion}\\%$. They add to $${a - both} + ${both} + ${b - both} + ${100 - safeUnion} = 100$ percent, and each lies between $0$ and $100$ percent.`,
+            `**第一步：求并事件。** 由加法公式，$P(A \\cup B) = ${a}\\% + ${b}\\% - ${both}\\% = ${safeUnion}\\%$。\n\n**第二步：取补事件。** “都不发生”是并事件之外的一切：$100\\% - ${safeUnion}\\% = ${100 - safeUnion}\\% = ${Q.of(100 - safeUnion, 100).toLatex()}$。\n\n**检验。** 填出四个区域：仅 $A$ 为 $${a - both}\\%$，两者都有 $${both}\\%$，仅 $B$ 为 $${b - both}\\%$，都不为 $${100 - safeUnion}\\%$。它们之和 $${a - both} + ${both} + ${b - both} + ${100 - safeUnion} = 100$，且每个都在 $0$ 到 $100\\%$ 之间。`,
           ],
         );
       },

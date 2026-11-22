@@ -109,8 +109,8 @@ Stage 0 is done. Walking its lessons against Math Academy's on the same topics f
 | `geometry-proof-congruence-similarity.ts` | 13 | done | |  |
 | `geometry-circle-theorems.ts` | 13 | done | |  |
 | `geometry-trigonometry.ts` | 13 | done | |  |
-| `probability.ts` | 13 | in progress | |  |
-| `combinatorics.ts` | 13 | open | |  |
+| `probability.ts` | 13 | done | |  |
+| `combinatorics.ts` | 13 | in progress | |  |
 | `geometry-similarity.ts` | 12 | open | |  |
 | `geometry-circles.ts` | 10 | open | |  |
 | `geometry-triangles-trigonometry.ts` | 9 | open | |  |

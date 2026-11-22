@@ -1692,8 +1692,8 @@ const smallestOverlap: KnowledgePointDef = {
   id: "the-smallest-possible-overlap-of-two-events",
   title: t("The smallest possible overlap of two events", "两个事件最小可能的重叠"),
   explanation: t(
-    "Two events with large probabilities cannot avoid each other. The addition law gives the intersection as the sum of the two probabilities minus the probability of the union, and the union can never go above one. So the intersection can never go below the sum of the probabilities minus one, when that value is positive. The events need not be independent, so simply multiplying the two probabilities gives a value that holds only in a special case.",
-    "概率都很大的两个事件无法彼此避开。由加法公式，交的概率等于两个概率之和减去并的概率，而并的概率绝不会超过一。所以当两个概率之和减一为正时，交的概率不可能低于这个值。这两个事件不一定独立，所以把两个概率相乘得到的值只在特殊情况下才成立。",
+    "Two events with large probabilities cannot avoid each other. The addition law gives the intersection as the sum of the two probabilities minus the probability of the union, and the union can never go above one. So the intersection can never go below the sum of the probabilities minus one, when that value is positive. The events need not be independent, so simply multiplying the two probabilities gives a value that holds only in a special case.\n\nWith $P(A) = 0.7$ and $P(B) = 0.6$, the two together come to $1.3$, more than the whole diagram, so at least $0.3$ must be shared: $P(A \\cap B) \\ge 0.7 + 0.6 - 1 = 0.3$. That smallest overlap happens when every outcome is in $A$ or $B$.\n\n> **Watch out.** $0.7 \\times 0.6 = 0.42$ is the overlap only for independent events; it is not the smallest possible value.",
+    "概率都很大的两个事件无法彼此避开。由加法公式，交的概率等于两个概率之和减去并的概率，而并的概率绝不会超过一。所以当两个概率之和减一为正时，交的概率不可能低于这个值。这两个事件不一定独立，所以把两个概率相乘得到的值只在特殊情况下才成立。\n\n若 $P(A) = 0.7$，$P(B) = 0.6$，两者合起来是 $1.3$，超过了整个图，所以至少有 $0.3$ 是公共的：$P(A \\cap B) \\ge 0.7 + 0.6 - 1 = 0.3$。当每个结果都在 $A$ 或 $B$ 中时，重叠部分取到这个最小值。\n\n> **注意。** $0.7 \\times 0.6 = 0.42$ 只是独立事件的交的概率，并不是最小可能的值。",
   ),
   generate(rng) {
     const pa = 5 * rng.int(11, 19);
@@ -1709,8 +1709,8 @@ const smallestOverlap: KnowledgePointDef = {
       form: "decimal",
       wrong: [Q.of(Math.min(pa, pb), 100), Q.of(pa * pb, 10000), Q.of(pa + pb, 100), Q.of(100 - Math.max(pa, pb), 100)],
       solution: t(
-        `The addition law gives $P(A \\cap B) = P(A) + P(B) - P(A \\cup B)$. The intersection is smallest when the union is as large as possible, which is $1$. So the smallest value is $${da} + ${db} - 1 = ${dec(answer)}$.`,
-        `由加法公式，$P(A \\cap B) = P(A) + P(B) - P(A \\cup B)$。并的概率尽可能大时，交的概率最小，并的最大值是 $1$。所以最小值是 $${da} + ${db} - 1 = ${dec(answer)}$。`,
+        `**Step 1: write the overlap with the addition law.** $P(A \\cap B) = P(A) + P(B) - P(A \\cup B)$, so the intersection is smallest when the union is as large as possible.\n\n**Step 2: make the union as large as it can be.** No probability exceeds $1$, so the largest union is $1$, and the smallest value is $${da} + ${db} - 1 = ${dec(answer)}$.\n\n**Check.** With the overlap $${dec(answer)}$, the regions are $A$ only $${dec(Q.of(100 - pb, 100))}$, both $${dec(answer)}$, $B$ only $${dec(Q.of(100 - pa, 100))}$ and neither $0$: each lies between $0$ and $1$, they add to $1$, and $A$ only plus both gives back $${da}$.`,
+        `**第一步：用加法公式表示交。** $P(A \\cap B) = P(A) + P(B) - P(A \\cup B)$，所以并的概率越大，交的概率越小。\n\n**第二步：让并尽可能大。** 任何概率都不超过 $1$，所以并的最大值是 $1$，最小值是 $${da} + ${db} - 1 = ${dec(answer)}$。\n\n**检验。** 重叠部分为 $${dec(answer)}$ 时，各区域为：仅 $A$ 为 $${dec(Q.of(100 - pb, 100))}$，两者都有 $${dec(answer)}$，仅 $B$ 为 $${dec(Q.of(100 - pa, 100))}$，都不为 $0$：每个都在 $0$ 与 $1$ 之间，和为 $1$，并且仅 $A$ 加上两者都有正好是 $${da}$。`,
       ),
     });
   },
