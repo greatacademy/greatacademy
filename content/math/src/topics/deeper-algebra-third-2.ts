@@ -551,8 +551,16 @@ Say $(2, 3)$ solves $x + y = 5$ and $kx - y = 7$. Putting $x = 2$ and $y = 3$ in
       "rounding-the-right-way-in-a-story",
       ["Rounding the right way in a story", "故事中正确地取整"],
       [
-        "An inequality about things that cannot be split needs a whole answer. Staying under a limit rounds down, while reaching a target rounds up, whatever the usual rounding rule would say.",
-        "关于不能分割的东西，不等式需要整数答案。不超过限额要向下取整，达到目标要向上取整，不管通常的四舍五入怎么说。",
+        `An inequality about things that cannot be split, such as tickets, needs a whole answer. The solution set says which whole numbers are allowed, so the direction of the inequality decides the rounding: staying under a limit allows the whole numbers **below** the bound, so round down; reaching a target needs the whole numbers **above** it, so round up.
+
+With $50$ dollars and tickets at $8$ dollars, $8x \\le 50$ gives $x \\le 6\\frac{1}{4}$, so at most $6$ tickets: $7$ would cost $56$. To raise at least $50$ dollars, $8x \\ge 50$ gives $x \\ge 6\\frac{1}{4}$, so at least $7$ tickets: $6$ bring only $48$.
+
+> **Watch out.** The usual rounding rule does not apply: $6\\frac{1}{4}$ rounds **up** to $7$ when a target must be reached. Check the answer and the whole number next to it in the story.`,
+        `关于不能分割的东西（例如票），不等式需要整数答案。解集说明哪些整数被允许，所以不等号的方向决定取整的方向：不超过限额时，允许的是边界**以下**的整数，所以向下取整；要达到目标时，需要的是边界**以上**的整数，所以向上取整。
+
+有 $50$ 美元、每张票 $8$ 美元时，$8x \\le 50$ 得 $x \\le 6\\frac{1}{4}$，所以最多 $6$ 张：$7$ 张要 $56$ 美元。要筹到至少 $50$ 美元，$8x \\ge 50$ 得 $x \\ge 6\\frac{1}{4}$，所以至少 $7$ 张：$6$ 张只有 $48$ 美元。
+
+> **注意。** 通常的四舍五入在这里不适用：要达到目标时，$6\\frac{1}{4}$ 要**向上**取整为 $7$。在情境中检验答案和与它相邻的整数。`,
       ],
       (rng) => {
         const price = rng.int(3, 15);
@@ -572,8 +580,24 @@ Say $(2, 3)$ solves $x + y = 5$ and $kx - y = 7$. Putting $x = 2$ and $y = 3$ in
           reach ? floor + 1 : floor,
           reach ? [floor, floor + 2, budget - price] : [floor + 1, floor - 1, budget - price],
           [
-            `$${price}x ${reach ? "\\ge" : "\\le"} ${budget}$ gives $x ${reach ? "\\ge" : "\\le"} ${frac(budget, price)}$, so the whole answer is ${reach ? floor + 1 : floor}.`,
-            `$${price}x ${reach ? "\\ge" : "\\le"} ${budget}$，得 $x ${reach ? "\\ge" : "\\le"} ${frac(budget, price)}$，所以整数答案是 ${reach ? floor + 1 : floor}。`,
+            `**Solve.** $x$ tickets ${reach ? "bring" : "cost"} $${price}x$ dollars, which must be ${reach ? "at least" : "at most"} $${budget}$. Divide by $${price}$: $${price}x ${reach ? "\\ge" : "\\le"} ${budget}$ gives $x ${reach ? "\\ge" : "\\le"} ${frac(budget, price)}$.
+
+**Round.** Tickets come whole, and they must be ${reach ? "no fewer than the bound, so round up" : "no more than the bound, so round down"}: ${reach ? floor + 1 : floor}.
+
+**Check.** ${
+              reach
+                ? `$${floor + 1}$ tickets bring $${price * (floor + 1)}$ dollars, at least $${budget}$; $${floor}$ bring only $${price * floor}$.`
+                : `$${floor}$ tickets cost $${price * floor}$ dollars, within $${budget}$; $${floor + 1}$ would cost $${price * (floor + 1)}$.`
+            }`,
+            `**求解。** $x$ 张票${reach ? "能筹到" : "要花"} $${price}x$ 美元，${reach ? "至少要" : "不能超过"} $${budget}$ 美元。两边除以 $${price}$：$${price}x ${reach ? "\\ge" : "\\le"} ${budget}$，得 $x ${reach ? "\\ge" : "\\le"} ${frac(budget, price)}$。
+
+**取整。** 票只能整张卖，而且${reach ? "不能少于这个边界，所以向上取整" : "不能多于这个边界，所以向下取整"}：${reach ? floor + 1 : floor}。
+
+**检验。** ${
+              reach
+                ? `$${floor + 1}$ 张票能筹到 $${price * (floor + 1)}$ 美元，不少于 $${budget}$ 美元；$${floor}$ 张只有 $${price * floor}$ 美元。`
+                : `$${floor}$ 张票要 $${price * floor}$ 美元，没有超过 $${budget}$ 美元；$${floor + 1}$ 张要 $${price * (floor + 1)}$ 美元。`
+            }`,
           ],
         );
       },
