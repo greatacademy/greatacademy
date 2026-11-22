@@ -67,7 +67,7 @@ Counts are topics not already counted in an earlier course of the same row; cour
 | Stage | Courses | Topics | Standard adapted |
 | :--- | :--- | ---: | :--- |
 | 0 | Algebra I | 234 | Pilot. Before stage 1: merge the helpers written along the way (`signed`, `paren`, checks of equations and the like) into one shared module; make the gate hold whole courses; walk a few lessons on the web and the phones against Math Academy, and revise the standard |
-| 1 | Geometry, Algebra II, Precalculus | 573 | Geometry draws every step of an argument |
+| 1 | Geometry, Algebra II, Precalculus | 610 | Geometry draws every step of an argument |
 | 2 | AP Calculus AB and BC, Calculus I and II | 341 | A check differentiates an antiderivative, puts a derivative back on the graph, or estimates a limit numerically |
 | 3 | 1st to 8th Grade, Prealgebra | 887 | The introduction is a small scene, sentences are short, every knowledge point has a picture (number line, area or bar model), and a callout names one mistake |
 | 4 | University courses | 1,283 | A solution gives the reason for each step (definition, theorem); a check tries a special case or that every hypothesis was used |
@@ -98,6 +98,72 @@ Two helpers work at a time through stage 1; stage 4, whose courses share few fil
 | `algebra-i-approximating-systems.ts` | 2 | done | |  |
 | `algebra-ii-polynomials.ts` | 1 | done | |  |
 | SAT and ACT files | 8 | done | | Algebra I topics defined with the exam topics; their factories are unchanged |
+
+Stage 0 is done. Walking its lessons against Math Academy's on the same topics found the solutions as complete (a drawing per step, a check, a reason for each wrong option) and led to three changes kept for every later stage: an introduction works an instance of its own, not the one the first explanation walks through; the reasons for wrong options are set off from the options (`- option: reason`); and the helpers of `src/solution-kit.ts` replace private copies. The generator tests run in eight shards, since solutions written to the standard take longer to sample.
+
+### Geometry
+
+| File | Geometry topics | Status | Owner | Notes |
+| :--- | ---: | :--- | :--- | :--- |
+| `geometry-solids.ts` | 23 | open | |  |
+| `geometry-proof-congruence-similarity.ts` | 13 | open | |  |
+| `geometry-circle-theorems.ts` | 13 | open | |  |
+| `geometry-trigonometry.ts` | 13 | open | |  |
+| `probability.ts` | 13 | open | |  |
+| `combinatorics.ts` | 13 | open | |  |
+| `geometry-similarity.ts` | 12 | open | |  |
+| `geometry-circles.ts` | 10 | open | |  |
+| `geometry-triangles-trigonometry.ts` | 9 | open | |  |
+| `geometry-coordinate.ts` | 9 | open | |  |
+| `geometry-coordinate-circles.ts` | 9 | open | |  |
+| `geometry-congruence.ts` | 8 | open | |  |
+| `geometry-transformations.ts` | 7 | open | |  |
+| `geometry-radians.ts` | 4 | open | |  |
+| other files | 21 | open | | `act-fundamentals-reasoning-geometry.ts` (6), `act-geometry-data.ts` (4), `act-exam-geometry.ts` (3), `grade-7-probability.ts` (2), `act-exam-statistics.ts` (2), `act-fundamentals-reasoning-data.ts` (2), `angles.ts` (1), `act-fundamentals-modeling.ts` (1) |
+
+### Algebra II
+
+| File | Algebra II topics | Status | Owner | Notes |
+| :--- | ---: | :--- | :--- | :--- |
+| `algebra-ii-log-equations.ts` | 19 | open | |  |
+| `algebra-ii-polynomial-theorems.ts` | 16 | open | |  |
+| `algebra-ii-trigonometric-graphs.ts` | 14 | open | |  |
+| `algebra-ii-trigonometric-transformations.ts` | 14 | open | |  |
+| `algebra-ii-transformations.ts` | 12 | open | |  |
+| `algebra-ii-logarithms.ts` | 11 | open | |  |
+| `algebra-ii-radical-functions.ts` | 11 | open | |  |
+| `algebra-ii-unit-circle.ts` | 11 | open | |  |
+| `algebra-ii-inverses.ts` | 9 | open | |  |
+| `algebra-ii-conics.ts` | 9 | open | |  |
+| `algebra-ii-polynomials.ts` | 8 | open | |  |
+| `algebra-ii-factoring.ts` | 7 | open | |  |
+| `algebra-ii-rational-radical.ts` | 7 | open | |  |
+| `algebra-ii-functions.ts` | 5 | open | |  |
+| `algebra-ii-polynomial-graphs.ts` | 5 | open | |  |
+| `algebra-ii-reciprocal-functions.ts` | 5 | open | |  |
+| `algebra-ii-general-triangles.ts` | 5 | open | |  |
+| other files | 10 | open | | `act-exam-functions.ts` (5), `act-fundamentals-number.ts` (1), `act-exam-numbers.ts` (1), `act-number-algebra.ts` (1), `functions.ts` (1), `act-fundamentals-reasoning-algebra.ts` (1) |
+
+### Precalculus
+
+| File | Precalculus topics | Status | Owner | Notes |
+| :--- | ---: | :--- | :--- | :--- |
+| `precalculus-trigonometric-identities.ts` | 23 | open | |  |
+| `precalculus-inequalities.ts` | 20 | open | |  |
+| `precalculus-matrices.ts` | 18 | open | |  |
+| `precalculus-conic-sections.ts` | 18 | open | |  |
+| `precalculus-series.ts` | 17 | open | |  |
+| `precalculus-linear-transformations.ts` | 17 | open | |  |
+| `precalculus-parametric-polar.ts` | 16 | open | |  |
+| `precalculus-vectors-3d.ts` | 15 | open | |  |
+| `precalculus-rational-functions.ts` | 14 | open | |  |
+| `precalculus-trigonometric-equations.ts` | 14 | open | |  |
+| `precalculus-vectors-2d.ts` | 14 | open | |  |
+| `precalculus-complex-numbers.ts` | 14 | open | |  |
+| `precalculus-random-variables.ts` | 14 | open | |  |
+| `precalculus-de-moivre.ts` | 12 | open | |  |
+| `precalculus-statistics.ts` | 11 | open | |  |
+| other files | 18 | open | | `act-fundamentals-reasoning-algebra.ts` (3), `act-number-algebra.ts` (3), `act-exam-functions.ts` (3), `act-exam-algebra.ts` (1), `act-fundamentals-reasoning-geometry.ts` (1), `act-fundamentals-number.ts` (1), `act-geometry-data.ts` (1), `act-fundamentals-chance-conics.ts` (1), `complex-analysis-extra.ts` (1), `complex-analysis.ts` (1), `grade-7-statistics.ts` (1), `grade-6-statistics.ts` (1) |
 
 ## Open Gaps
 
