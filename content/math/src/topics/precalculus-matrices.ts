@@ -2,6 +2,8 @@ import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { precalculusDrawings2 } from "../explanation-drawings-precalculus-2.ts";
 import { article, choiceProblem, numberProblem } from "../problems.ts";
+import { stepLabel } from "../solution-kit.ts";
+import { type Reason, reasoned } from "../wrong-reasons.ts";
 
 // Precalculus unit 6: Matrices (Part 1: Matrix Algebra and Determinants,
 // modules 6.21, 6.22, and 6.23).
@@ -102,8 +104,14 @@ function nearMiss(right: Text, index: number, delta: number): Text {
   return t(change(right.en), change(right["zh-CN"]));
 }
 
-/** oneOf builds a multiple-choice problem with options shuffled and deduplicated. */
-function oneOf(rng: Rng, prompt: Text, right: Text, wrong: readonly Text[], solution: Text): Problem {
+/** missWhy is what is said about a wrong option that changes one number of the answer. */
+const missWhy = t("One number here is off. Work that entry out again.", "这里有一个数不对。把那个数重新算一遍。");
+
+/**
+ * oneOf builds a multiple-choice problem with options shuffled and deduplicated; whys say, at the same positions as wrong,
+ * what mistake leads to each wrong option, and an option filled in by changing one number of the answer is told so.
+ */
+function oneOf(rng: Rng, prompt: Text, right: Text, wrong: readonly Text[], solution: Text, whys: readonly Text[] = []): Problem {
   const seen = new Set([right.en]);
   const rest: Text[] = [];
   for (const w of wrong) {
@@ -124,7 +132,48 @@ function oneOf(rng: Rng, prompt: Text, right: Text, wrong: readonly Text[], solu
   }
   const options = [right, ...rest];
   const order = rng.shuffle(options.map((_, i) => i));
-  return choiceProblem({ prompt, options: order.map((i) => options[i]!), correct: order.indexOf(0), solution });
+  const given: Reason[] = wrong.flatMap((w, i) => {
+    const why = whys[i];
+    return why ? [[w.en, why.en, why["zh-CN"]] as const] : [];
+  });
+  const filled: Reason[] = rest.filter((r) => !wrong.some((w) => w.en === r.en)).map((r) => [r.en, missWhy.en, missWhy["zh-CN"]] as const);
+  return reasoned(choiceProblem({ prompt, options: order.map((i) => options[i]!), correct: order.indexOf(0), solution }), [
+    ...given,
+    ...filled,
+  ]);
+}
+
+/** label writes the bold start of step i, followed by a space in English. */
+function label(i: number, en: string, zh: string): Text {
+  const s = stepLabel(i, en, zh);
+  return t(`${s.en} `, s["zh-CN"]);
+}
+
+/** join puts texts one after another in each locale. */
+const join = (...parts: readonly Text[]): Text => t(parts.map((p) => p.en).join(""), parts.map((p) => p["zh-CN"]).join(""));
+
+/** para starts a new paragraph. */
+const para = t("\n\n", "\n\n");
+
+/** checked turns a text into a closing check paragraph. */
+const checked = (c: Text) => t(`\n\n**Check.** ${c.en}`, `\n\n**检验。**${c["zh-CN"]}`);
+
+/** shown is displayed math, one equation to a line, that closes a paragraph. */
+const shown = (...lines: readonly string[]) => {
+  const tex = `\n\n${lines.map((l) => `$$${l}$$`).join("\n\n")}`;
+  return t(tex, tex);
+};
+
+/** paren writes a negative number in parentheses, for use inside a sum or a product. */
+const paren = (n: number) => (n < 0 ? `(${n})` : `${n}`);
+
+/** sumOf writes numbers added one after another, with a negative one written as a subtraction. */
+const sumOf = (ns: readonly number[]) => ns.map((n, i) => (i === 0 ? `${n}` : n < 0 ? ` - ${-n}` : ` + ${n}`)).join("");
+
+/** dot writes a row times a column as a sum of products, its terms and its value: "2 \cdot 3 + (-1) \cdot 4 = 6 - 4 = 2". */
+function dot(row: readonly number[], col: readonly number[]): string {
+  const terms = row.map((r, k) => r * col[k]!);
+  return `${row.map((r, k) => `${paren(r)} \\cdot ${paren(col[k]!)}`).join(" + ")} = ${sumOf(terms)} = ${terms.reduce((a, b) => a + b, 0)}`;
 }
 
 // ─── Module 6.21. Introduction to Matrices ───────────────────────────────────
@@ -143,13 +192,17 @@ export const introductionToMatrices: TopicDef = {
   encompasses: [],
   xp: 10,
   standards: ["CCSS.HSN.VM.C.6"],
+  intro: t(
+    "You can work with numbers and expressions one at a time. A matrix keeps many numbers together in a rectangle, so that a whole table, such as the sales of several items over several days, can be handled as one object. Its size is given by how many rows run across it and how many columns run down it.\n\nThe sales of three items over two days might be\n\n$$S = \\begin{pmatrix} 3 & 0 & 5 \\\\ 1 & 2 & 4 \\end{pmatrix}$$\n\nwith one row for each day and one column for each item. It has $2$ rows and $3$ columns, so it is a $2 \\times 3$ matrix, and it holds $2 \\cdot 3 = 6$ numbers. The number $4$ sits in row $2$ and column $3$: on day $2$, four of the third item were sold.",
+    "你会一个一个地处理数和式子。矩阵把许多数排成一个矩形放在一起，这样一整张表（比如几种商品在几天里的销量）就能当作一个对象来处理。它的大小由横着的行数和竖着的列数给出。\n\n三种商品两天的销量可以写成\n\n$$S = \\begin{pmatrix} 3 & 0 & 5 \\\\ 1 & 2 & 4 \\end{pmatrix}$$\n\n每天占一行，每种商品占一列。它有 $2$ 行 $3$ 列，所以是 $2 \\times 3$ 矩阵，共有 $2 \\cdot 3 = 6$ 个数。数 $4$ 在第 $2$ 行第 $3$ 列：第 $2$ 天第三种商品卖出了四件。",
+  ),
   knowledgePoints: [
     {
       id: "matrix-dimensions-and-order",
       title: t("Matrix dimensions and order", "矩阵的维度与阶数"),
       explanation: t(
-        "A matrix is a rectangular array of numbers arranged in rows (horizontal) and columns (vertical). A matrix with $m$ rows and $n$ columns has dimensions (or order) $m \\times n$, read '$m$ by $n$'.",
-        "矩阵是由数排成的矩形阵列，由若干横行（row）和纵列（column）组成。具有 $m$ 行和 $n$ 列的矩阵其维度（或阶数）记作 $m \\times n$，读作“$m$ 乘 $n$”。",
+        "A matrix is a rectangular array of numbers arranged in rows (horizontal) and columns (vertical). A matrix with $m$ rows and $n$ columns has dimensions (or order) $m \\times n$, read '$m$ by $n$'.\n\n> **Watch out.** Rows run across and columns run down, and the rows come first. A matrix with $2$ rows and $3$ columns is $2 \\times 3$, not $3 \\times 2$.",
+        "矩阵是由数排成的矩形阵列，由若干横行（row）和纵列（column）组成。具有 $m$ 行和 $n$ 列的矩阵其维度（或阶数）记作 $m \\times n$，读作“$m$ 乘 $n$”。\n\n> **注意。** 行是横的，列是竖的，行数写在前面。$2$ 行 $3$ 列的矩阵是 $2 \\times 3$，而不是 $3 \\times 2$。",
       ),
       generate(rng) {
         const pairs: readonly (readonly [number, number])[] = [
@@ -187,10 +240,32 @@ export const introductionToMatrices: TopicDef = {
             t(`$${Math.max(1, m - 1)} \\times ${n}$`, `$${Math.max(1, m - 1)} \\times ${n}$`),
             t(`$${m} \\times ${Math.max(1, n - 1)}$`, `$${m} \\times ${Math.max(1, n - 1)}$`),
           ],
-          t(
-            `Dimensions are always written as $\\text{number of rows} \\times \\text{number of columns}$. Matrix $A$ has $${m}$ horizontal ${m === 1 ? "row" : "rows"} and $${n}$ vertical ${n === 1 ? "column" : "columns"}, so its dimensions are $${m} \\times ${n}$.`,
-            `矩阵的维度总是表示为“行数 $\\times$ 列数”。矩阵 $A$ 共有 $${m}$ 个横行和 $${n}$ 个纵列，因此其维度为 $${m} \\times ${n}$。`,
+          join(
+            label(1, "Count the rows", "数行数"),
+            t(`Matrix $A$ has $${m}$ horizontal ${m === 1 ? "row" : "rows"}.`, `矩阵 $A$ 有 $${m}$ 个横行。`),
+            para,
+            label(2, "Count the columns", "数列数"),
+            t(
+              `It has $${n}$ vertical ${n === 1 ? "column" : "columns"}. Dimensions are written as rows $\\times$ columns, so $A$ is $${m} \\times ${n}$.`,
+              `它有 $${n}$ 个纵列。维度写成“行数 $\\times$ 列数”，所以 $A$ 是 $${m} \\times ${n}$ 矩阵。`,
+            ),
+            checked(
+              t(
+                `Each row of $A$ holds $${n}$ ${n === 1 ? "entry" : "entries"}, one in each column, and each column holds $${m}$, one in each row. So there are $${m}$ rows and $${n}$ columns.`,
+                `$A$ 的每一行有 $${n}$ 个元素（每列一个），每一列有 $${m}$ 个元素（每行一个）。所以有 $${m}$ 行、$${n}$ 列。`,
+              ),
+            ),
           ),
+          [
+            t(
+              "This lists the columns first, but dimensions are rows $\\times$ columns.",
+              "这里把列数写在前面，但维度是“行数 $\\times$ 列数”。",
+            ),
+            t(`$A$ has $${m}$ rows, not $${m + 1}$.`, `$A$ 有 $${m}$ 行，不是 $${m + 1}$ 行。`),
+            t(`$A$ has $${n}$ columns, not $${n + 1}$.`, `$A$ 有 $${n}$ 列，不是 $${n + 1}$ 列。`),
+            t(`$A$ has $${m}$ rows, not $${m - 1}$.`, `$A$ 有 $${m}$ 行，不是 $${m - 1}$ 行。`),
+            t(`$A$ has $${n}$ columns, not $${n - 1}$.`, `$A$ 有 $${n}$ 列，不是 $${n - 1}$ 列。`),
+          ],
         );
       },
     },
@@ -198,8 +273,8 @@ export const introductionToMatrices: TopicDef = {
       id: "number-of-entries-in-a-matrix",
       title: t("Number of entries in a matrix", "矩阵中元素的总数"),
       explanation: t(
-        "A matrix of dimension $m \\times n$ contains a total of $m \\cdot n$ entries (or elements). An $m \\times 1$ matrix is called a column matrix (or column vector), and a $1 \\times n$ matrix is called a row matrix (or row vector).",
-        "一个 $m \\times n$ 阶的矩阵共包含 $m \\cdot n$ 个元素。只有一列的 $m \\times 1$ 矩阵称为列矩阵（或列向量），只有一行的 $1 \\times n$ 矩阵称为行矩阵（或行向量）。",
+        "A matrix of dimension $m \\times n$ contains a total of $m \\cdot n$ entries (or elements). An $m \\times 1$ matrix is called a column matrix (or column vector), and a $1 \\times n$ matrix is called a row matrix (or row vector).\n\n> **Watch out.** Multiply the two dimensions, do not add them. A $2 \\times 3$ matrix has $6$ entries, not $5$.",
+        "一个 $m \\times n$ 阶的矩阵共包含 $m \\cdot n$ 个元素。只有一列的 $m \\times 1$ 矩阵称为列矩阵（或列向量），只有一行的 $1 \\times n$ 矩阵称为行矩阵（或行向量）。\n\n> **注意。** 两个维度要相乘，不是相加。$2 \\times 3$ 矩阵有 $6$ 个元素，而不是 $5$ 个。",
       ),
       generate(rng) {
         const m = rng.pick([2, 3, 4, 5]);
@@ -208,6 +283,7 @@ export const introductionToMatrices: TopicDef = {
         const A: Mat = Array.from({ length: m }, () => Array.from({ length: n }, () => rng.pick(pool)));
         const aLatex = matLatex(A);
         const total = m * n;
+        const rows = Array.from({ length: m }, () => n).join(" + ");
 
         return numberProblem({
           prompt: t(
@@ -216,9 +292,21 @@ export const introductionToMatrices: TopicDef = {
           ),
           answer: total,
           wrong: [m + n, 2 * (m + n), total + 1, Math.max(1, total - 1), total + 2],
-          solution: t(
-            `Matrix $A$ has $${m}$ rows and $${n}$ columns. The total number of entries is the product of the row count and column count: $${m} \\times ${n} = ${total}$.`,
-            `矩阵 $A$ 包含 $${m}$ 行与 $${n}$ 列。元素的总数等于行数与列数的乘积：$${m} \\times ${n} = ${total}$。`,
+          solution: join(
+            label(1, "Read the dimensions", "读出维度"),
+            t(`Matrix $A$ has $${m}$ rows and $${n}$ columns.`, `矩阵 $A$ 有 $${m}$ 行、$${n}$ 列。`),
+            para,
+            label(2, "Multiply", "相乘"),
+            t(
+              `The number of entries is the row count times the column count: $${m} \\times ${n} = ${total}$.`,
+              `元素个数等于行数乘列数：$${m} \\times ${n} = ${total}$。`,
+            ),
+            checked(
+              t(
+                `Add the rows one at a time. Each holds $${n}$ entries, and $${rows} = ${total}$.`,
+                `逐行相加。每行有 $${n}$ 个元素，$${rows} = ${total}$。`,
+              ),
+            ),
           ),
         });
       },
@@ -240,13 +328,17 @@ export const indexNotationForMatrices: TopicDef = {
   encompasses: [],
   xp: 10,
   standards: ["CCSS.HSN.VM.C.6"],
+  intro: t(
+    "You know that a matrix has rows and columns. To talk about one of its numbers, or to describe all of them by a rule, each entry gets a name with two indices: $a_{ij}$ is the entry of $A$ in row $i$ and column $j$. This is how a spreadsheet names a cell by its row and column.\n\nFor\n\n$$B = \\begin{pmatrix} 4 & -1 & 7 \\\\ 2 & 0 & 5 \\end{pmatrix}$$\n\nthe entry $b_{13}$ is in row $1$ and column $3$, so $b_{13} = 7$, while $b_{21} = 2$. There is no entry $b_{31}$, because $B$ has only $2$ rows.",
+    "你知道矩阵有行和列。为了说出其中的某一个数，或者用一条规则描述所有的数，每个元素都用两个下标命名：$a_{ij}$ 是 $A$ 中第 $i$ 行第 $j$ 列的元素。这就像电子表格用行和列来命名一个单元格。\n\n对于\n\n$$B = \\begin{pmatrix} 4 & -1 & 7 \\\\ 2 & 0 & 5 \\end{pmatrix}$$\n\n元素 $b_{13}$ 在第 $1$ 行第 $3$ 列，所以 $b_{13} = 7$，而 $b_{21} = 2$。没有元素 $b_{31}$，因为 $B$ 只有 $2$ 行。",
+  ),
   knowledgePoints: [
     {
       id: "identifying-matrix-entries-by-index",
       title: t("Identifying matrix entries by index", "根据下标确定矩阵元素"),
       explanation: t(
-        "In a matrix $A = [a_{ij}]$, the first subscript $i$ indicates the row number and the second subscript $j$ indicates the column number. For example, $a_{23}$ is the entry in row 2 and column 3.",
-        "在矩阵 $A = [a_{ij}]$ 中，第一个下标 $i$ 表示行号，第二个下标 $j$ 表示列号。例如，$a_{23}$ 表示位于第 2 行第 3 列的元素。",
+        "In a matrix $A = [a_{ij}]$, the first subscript $i$ indicates the row number and the second subscript $j$ indicates the column number. For example, $a_{23}$ is the entry in row 2 and column 3.\n\n> **Watch out.** The row index comes first. $a_{23}$ and $a_{32}$ are different entries: one is in row $2$, the other in row $3$.",
+        "在矩阵 $A = [a_{ij}]$ 中，第一个下标 $i$ 表示行号，第二个下标 $j$ 表示列号。例如，$a_{23}$ 表示位于第 2 行第 3 列的元素。\n\n> **注意。** 行下标在前。$a_{23}$ 和 $a_{32}$ 是不同的元素：一个在第 $2$ 行，另一个在第 $3$ 行。",
       ),
       generate(rng) {
         const shapes: readonly (readonly [number, number])[] = [
@@ -285,9 +377,24 @@ export const indexNotationForMatrices: TopicDef = {
           ),
           answer: target,
           wrong: wrongVals,
-          solution: t(
-            `The entry $a_{${i}${j}}$ is located at row $${i}$ and column $${j}$. Looking across row $${i}$ to column $${j}$, the entry is $${target}$.`,
-            `元素 $a_{${i}${j}}$ 位于第 $${i}$ 行第 $${j}$ 列。沿第 $${i}$ 行数至第 $${j}$ 列，该元素为 $${target}$。`,
+          solution: join(
+            label(1, "Find the row", "找行"),
+            t(
+              `The first index is the row: row $${i}$ of $A$ is $${A[i - 1]!.join(", ")}$.`,
+              `第一个下标是行号：$A$ 的第 $${i}$ 行是 $${A[i - 1]!.join(", ")}$。`,
+            ),
+            para,
+            label(2, "Find the column", "找列"),
+            t(
+              `The second index is the column: entry number $${j}$ of that row is $${target}$, so $a_{${i}${j}} = ${target}$.`,
+              `第二个下标是列号：这一行的第 $${j}$ 个元素是 $${target}$，所以 $a_{${i}${j}} = ${target}$。`,
+            ),
+            checked(
+              t(
+                `Read down column $${j}$ instead. It is $${A.map((r) => r[j - 1]!).join(", ")}$, and entry number $${i}$ is $${target}$.`,
+                `改为沿第 $${j}$ 列向下读。这一列是 $${A.map((r) => r[j - 1]!).join(", ")}$，第 $${i}$ 个元素是 $${target}$。`,
+              ),
+            ),
           ),
         });
       },
@@ -296,8 +403,8 @@ export const indexNotationForMatrices: TopicDef = {
       id: "evaluating-entries-from-index-formula",
       title: t("Evaluating entries from index formulas", "根据下标公式计算矩阵元素"),
       explanation: t(
-        "A matrix is often defined by a general formula for its entries $a_{ij} = f(i, j)$. To find a specific entry $a_{ij}$, substitute the row number $i$ and column number $j$ into the formula.",
-        "矩阵的元素常由一般代数公式 $a_{ij} = f(i, j)$ 给出。要求出特定元素 $a_{ij}$，只需将行号 $i$ 与列号 $j$ 代入公式计算即可。",
+        "A matrix is often defined by a general formula for its entries $a_{ij} = f(i, j)$. To find a specific entry $a_{ij}$, substitute the row number $i$ and column number $j$ into the formula.\n\n> **Watch out.** Put the row number in for $i$ and the column number in for $j$. Swapping them gives $a_{ji}$, which is usually a different entry.",
+        "矩阵的元素常由一般代数公式 $a_{ij} = f(i, j)$ 给出。要求出特定元素 $a_{ij}$，只需将行号 $i$ 与列号 $j$ 代入公式计算即可。\n\n> **注意。** 行号代入 $i$，列号代入 $j$。两者交换得到的是 $a_{ji}$，通常是另一个元素。",
       ),
       generate(rng) {
         const mode = rng.pick([0, 1, 2, 3]);
@@ -308,6 +415,8 @@ export const indexNotationForMatrices: TopicDef = {
         let formulaZh = "";
         let val = 0;
         let altVal = 0;
+        let entry = (_r: number, _s: number) => 0;
+        let subst = "";
 
         if (mode === 0) {
           const c1 = rng.pick([-3, -2, -1, 1, 2, 3]);
@@ -316,26 +425,35 @@ export const indexNotationForMatrices: TopicDef = {
           formulaZh = formulaLatex;
           val = c1 * i + c2 * j;
           altVal = c1 * j + c2 * i;
+          entry = (r, s) => c1 * r + c2 * s;
+          subst = `${paren(c1)} \\cdot ${i} + ${paren(c2)} \\cdot ${j}`;
         } else if (mode === 1) {
           const c = rng.pick([1, 2, 3]);
           formulaLatex = `i^2 - ${c === 1 ? "" : c}j`;
           formulaZh = formulaLatex;
           val = i * i - c * j;
           altVal = j * j - c * i;
+          entry = (r, s) => r * r - c * s;
+          subst = `${i}^2 - ${c} \\cdot ${j}`;
         } else if (mode === 2) {
           const c = rng.pick([2, 3, 4]);
           formulaLatex = `${c}i - j^2`;
           formulaZh = formulaLatex;
           val = c * i - j * j;
           altVal = c * j - i * i;
+          entry = (r, s) => c * r - s * s;
+          subst = `${c} \\cdot ${i} - ${j}^2`;
         } else {
           const c = rng.pick([1, 2]);
           formulaLatex = `(-1)^{i+j}(i + ${c === 1 ? "" : c}j)`;
           formulaZh = formulaLatex;
           val = ((i + j) % 2 === 0 ? 1 : -1) * (i + c * j);
           altVal = -val;
+          entry = (r, s) => ((r + s) % 2 === 0 ? 1 : -1) * (r + c * s);
+          subst = `(-1)^{${i + j}}(${i} + ${c} \\cdot ${j})`;
         }
 
+        const row = [1, 2, 3].map((s) => entry(i, s));
         return numberProblem({
           prompt: t(
             `A $3 \\times 3$ matrix $A = [a_{ij}]$ has entries given by $a_{ij} = ${formulaLatex}$. Find the entry $a_{${i}${j}}$.`,
@@ -343,9 +461,22 @@ export const indexNotationForMatrices: TopicDef = {
           ),
           answer: val,
           wrong: [altVal, -val, val + 1, val - 2, val + 3],
-          solution: t(
-            `Substitute row index $i = ${i}$ and column index $j = ${j}$ into $a_{ij} = ${formulaLatex}$, which gives $a_{${i}${j}} = ${val}$.`,
-            `将行下标 $i = ${i}$ 和列下标 $j = ${j}$ 代入 $a_{ij} = ${formulaZh}$，得到 $a_{${i}${j}} = ${val}$。`,
+          solution: join(
+            label(1, "Substitute", "代入"),
+            t(
+              `Put the row index $i = ${i}$ and the column index $j = ${j}$ into $a_{ij} = ${formulaLatex}$:`,
+              `把行下标 $i = ${i}$ 和列下标 $j = ${j}$ 代入 $a_{ij} = ${formulaZh}$，得`,
+            ),
+            shown(`a_{${i}${j}} = ${subst}`),
+            para,
+            label(2, "Evaluate", "计算"),
+            t(`This gives $a_{${i}${j}} = ${val}$.`, `结果是 $a_{${i}${j}} = ${val}$。`),
+            checked(
+              t(
+                `Write out row $${i}$ from the rule. The entries $a_{${i}1}, a_{${i}2}, a_{${i}3}$ are $${row.join(", ")}$, and entry number $${j}$ is $${val}$.`,
+                `由规则写出第 $${i}$ 行。元素 $a_{${i}1}, a_{${i}2}, a_{${i}3}$ 依次是 $${row.join(", ")}$，第 $${j}$ 个是 $${val}$。`,
+              ),
+            ),
           ),
         });
       },
@@ -367,13 +498,17 @@ export const addingAndSubtractingMatrices: TopicDef = {
   encompasses: [],
   xp: 10,
   standards: ["CCSS.HSN.VM.C.8"],
+  intro: t(
+    "You know how to read the size and the entries of a matrix. Two tables of the same shape, such as the sales of the same items in two weeks, combine entry by entry: the totals for both weeks are the sums of the matching entries. This is matrix addition, and subtraction works the same way.\n\nFor example,\n\n$$\\begin{pmatrix} 1 & 4 \\\\ 0 & -2 \\end{pmatrix} + \\begin{pmatrix} 3 & -1 \\\\ 5 & 2 \\end{pmatrix} = \\begin{pmatrix} 4 & 3 \\\\ 5 & 0 \\end{pmatrix}$$\n\nEach entry of the result comes from the entries in the same place: the top left is $1 + 3 = 4$, and the bottom right is $-2 + 2 = 0$. Matrices of different sizes have entries with no partner, so they cannot be added.",
+    "你会读矩阵的大小和元素。形状相同的两张表（比如同样几种商品两周的销量）可以逐个元素合并：两周的总量就是对应元素之和。这就是矩阵加法，减法也一样。\n\n例如\n\n$$\\begin{pmatrix} 1 & 4 \\\\ 0 & -2 \\end{pmatrix} + \\begin{pmatrix} 3 & -1 \\\\ 5 & 2 \\end{pmatrix} = \\begin{pmatrix} 4 & 3 \\\\ 5 & 0 \\end{pmatrix}$$\n\n结果的每个元素都来自同一位置上的元素：左上是 $1 + 3 = 4$，右下是 $-2 + 2 = 0$。大小不同的矩阵有些元素找不到对应的元素，所以不能相加。",
+  ),
   knowledgePoints: [
     {
       id: "matrix-addition-and-subtraction-computations",
       title: t("Adding and subtracting matrices of the same dimension", "同型矩阵的加法与减法计算"),
       explanation: t(
-        "To add (or subtract) two matrices of the same dimensions, add (or subtract) corresponding entries: $(A \\pm B)_{ij} = a_{ij} \\pm b_{ij}$.",
-        "两个同型矩阵相加（或相减）时，只需将对应位置上的元素分别相加（或相减）：$(A \\pm B)_{ij} = a_{ij} \\pm b_{ij}$。",
+        "To add (or subtract) two matrices of the same dimensions, add (or subtract) corresponding entries: $(A \\pm B)_{ij} = a_{ij} \\pm b_{ij}$.\n\n> **Watch out.** Subtract each entry of $B$ with its sign: $3 - (-2) = 5$, not $1$.",
+        "两个同型矩阵相加（或相减）时，只需将对应位置上的元素分别相加（或相减）：$(A \\pm B)_{ij} = a_{ij} \\pm b_{ij}$。\n\n> **注意。** 减去 $B$ 的元素时要连同符号：$3 - (-2) = 5$，而不是 $1$。",
       ),
       generate(rng) {
         const isAdd = rng.bool();
@@ -393,6 +528,8 @@ export const addingAndSubtractingMatrices: TopicDef = {
         const bLatex = matLatex(B);
         const cLatex = matLatex(C);
         const opSymbol = isAdd ? "+" : "-";
+        const work = A.map((r, i) => r.map((v, j) => `${v} ${opSymbol} ${paren(B[i]![j]!)}`));
+        const back = isAdd ? matSub(C, B) : matAdd(C, B);
 
         return oneOf(
           rng,
@@ -413,10 +550,33 @@ export const addingAndSubtractingMatrices: TopicDef = {
               `$${matLatex(C.map((r, i) => r.map((v, j) => (i === m - 1 && j === n - 1 ? v - 2 : v))))}$`,
             ),
           ],
-          t(
-            `Perform entry-by-entry ${isAdd ? "addition" : "subtraction"}: $(A ${opSymbol} B)_{ij} = a_{ij} ${opSymbol} b_{ij}$. Result is $${cLatex}$.`,
-            `将对应位置上的元素分别进行${isAdd ? "加法" : "减法"}计算：$(A ${opSymbol} B)_{ij} = a_{ij} ${opSymbol} b_{ij}$。得到结果为 $${cLatex}$。`,
+          join(
+            label(1, "Check the dimensions", "检查维度"),
+            t(
+              `Both matrices are $${m} \\times ${n}$, so $A ${opSymbol} B$ is defined and is also $${m} \\times ${n}$.`,
+              `两个矩阵都是 $${m} \\times ${n}$，所以 $A ${opSymbol} B$ 有定义，也是 $${m} \\times ${n}$ 矩阵。`,
+            ),
+            para,
+            label(2, isAdd ? "Add matching entries" : "Subtract matching entries", isAdd ? "对应元素相加" : "对应元素相减"),
+            t(`Each entry of the result is $a_{ij} ${opSymbol} b_{ij}$.`, `结果的每个元素是 $a_{ij} ${opSymbol} b_{ij}$。`),
+            shown(`A ${opSymbol} B = ${matLatex(work)} = ${cLatex}`),
+            checked(
+              t(
+                `${isAdd ? "Subtracting $B$ from the result" : "Adding $B$ to the result"} gives $${matLatex(back)}$. This is $A$ again.`,
+                `${isAdd ? "结果减去 $B$" : "结果加上 $B$"}得 $${matLatex(back)}$。这正是 $A$。`,
+              ),
+            ),
           ),
+          [
+            isAdd
+              ? t("This subtracts the entries instead of adding them.", "这里把元素相减了，应该相加。")
+              : t("This adds the entries instead of subtracting them.", "这里把元素相加了，应该相减。"),
+            isAdd
+              ? t("This is $B - A$, a difference, not the sum.", "这是 $B - A$，是差而不是和。")
+              : t("This subtracts in the wrong order: it is $B - A$.", "减法次序反了：这是 $B - A$。"),
+            t(`The top left entry should be $${C[0]![0]!}$.`, `左上元素应该是 $${C[0]![0]!}$。`),
+            t(`The bottom right entry should be $${C[m - 1]![n - 1]!}$.`, `右下元素应该是 $${C[m - 1]![n - 1]!}$。`),
+          ],
         );
       },
     },
@@ -424,8 +584,8 @@ export const addingAndSubtractingMatrices: TopicDef = {
       id: "matrix-addition-compatibility",
       title: t("Compatibility for matrix addition and subtraction", "矩阵加减法的条件与未定义情形"),
       explanation: t(
-        "Matrix addition and subtraction are only defined for matrices of the exact same dimensions. If two matrices have different dimensions, their sum or difference is not defined.",
-        "矩阵的加法与减法仅在两个矩阵具有完全相同的维度时才有定义。若两个矩阵维度不同，则它们的和或差是未定义的。",
+        "Matrix addition and subtraction are only defined for matrices of the exact same dimensions. If two matrices have different dimensions, their sum or difference is not defined.\n\n> **Watch out.** The same number of entries is not enough. A $2 \\times 3$ and a $3 \\times 2$ matrix both have $6$ entries, but they cannot be added.",
+        "矩阵的加法与减法仅在两个矩阵具有完全相同的维度时才有定义。若两个矩阵维度不同，则它们的和或差是未定义的。\n\n> **注意。** 元素个数相同还不够。$2 \\times 3$ 矩阵和 $3 \\times 2$ 矩阵都有 $6$ 个元素，但它们不能相加。",
       ),
       generate(rng) {
         const isCompatible = rng.bool();
@@ -465,6 +625,10 @@ export const addingAndSubtractingMatrices: TopicDef = {
         const A: Mat = Array.from({ length: m1 }, () => Array.from({ length: n1 }, () => rng.pick(pool)));
         const B: Mat = Array.from({ length: m2 }, () => Array.from({ length: n2 }, () => rng.pick(pool)));
 
+        const aBigger = m1 > m2 || n1 > n2;
+        const owner = aBigger ? "A" : "B";
+        const other = aBigger ? "B" : "A";
+        const lone = aBigger ? `a_{${m1}${n1}}` : `b_{${m2}${n2}}`;
         if (isCompatible) {
           return oneOf(
             rng,
@@ -482,10 +646,31 @@ export const addingAndSubtractingMatrices: TopicDef = {
               ),
               t(`Defined; the sum has dimensions $${m1 + m2} \\times ${n1}$.`, `有定义；和矩阵的维度为 $${m1 + m2} \\times ${n1}$。`),
             ],
-            t(
-              `Both matrices have dimension $${m1} \\times ${n1}$. Since their dimensions match, $A + B$ is defined and produces ${article(m1)} $${m1} \\times ${n1}$ matrix.`,
-              `两个矩阵的维度均为 $${m1} \\times ${n1}$。由于维度完全相同，因此 $A + B$ 有定义，运算结果为 $${m1} \\times ${n1}$ 矩阵。`,
+            join(
+              label(1, "Read the dimensions", "读出维度"),
+              t(
+                `$A$ is $${m1} \\times ${n1}$ and $B$ is $${m2} \\times ${n2}$.`,
+                `$A$ 是 $${m1} \\times ${n1}$，$B$ 是 $${m2} \\times ${n2}$。`,
+              ),
+              para,
+              label(2, "Compare them", "比较维度"),
+              t(
+                `The dimensions are the same, so $A + B$ is defined and produces ${article(m1)} $${m1} \\times ${n1}$ matrix.`,
+                `维度完全相同，所以 $A + B$ 有定义，结果是 $${m1} \\times ${n1}$ 矩阵。`,
+              ),
+              checked(
+                t(
+                  `Every position of $A$, from row $1$ to row $${m1}$ and column $1$ to column $${n1}$, also holds an entry of $B$. So each entry has exactly one partner, and the sum keeps the shape $${m1} \\times ${n1}$.`,
+                  `$A$ 的每个位置（第 $1$ 行到第 $${m1}$ 行、第 $1$ 列到第 $${n1}$ 列）上 $B$ 也都有元素。所以每个元素恰好有一个对应元素，和保持 $${m1} \\times ${n1}$ 的形状。`,
+                ),
+              ),
             ),
+            [
+              t(`Both are $${m1} \\times ${n1}$, so the dimensions do match.`, `两者都是 $${m1} \\times ${n1}$，维度是相同的。`),
+              t("The sum has the same shape as the two matrices; nothing is turned around.", "和与两个矩阵形状相同，行列不会互换。"),
+              t("Adding matrices adds their entries, not their dimensions.", "矩阵相加是元素相加，不是维度相加。"),
+              t("Adding matrices adds their entries, not their dimensions.", "矩阵相加是元素相加，不是维度相加。"),
+            ],
           );
         }
 
@@ -508,10 +693,40 @@ export const addingAndSubtractingMatrices: TopicDef = {
               `有定义；和矩阵的维度为 $${m1 + m2} \\times ${n1 + n2}$。`,
             ),
           ],
-          t(
-            `Matrix $A$ is $${m1} \\times ${n1}$ while matrix $B$ is $${m2} \\times ${n2}$. Because the dimensions are not identical, addition is not defined.`,
-            `矩阵 $A$ 的维度为 $${m1} \\times ${n1}$，而矩阵 $B$ 的维度为 $${m2} \\times ${n2}$。由于维度不相同，加法运算未定义。`,
+          join(
+            label(1, "Read the dimensions", "读出维度"),
+            t(
+              `$A$ is $${m1} \\times ${n1}$ and $B$ is $${m2} \\times ${n2}$.`,
+              `$A$ 是 $${m1} \\times ${n1}$，$B$ 是 $${m2} \\times ${n2}$。`,
+            ),
+            para,
+            label(2, "Compare them", "比较维度"),
+            t("The dimensions are not identical, so addition is not defined.", "维度不相同，所以加法没有定义。"),
+            checked(
+              t(
+                `Try pairing the entries. The entry $${lone}$ of $${owner}$ has no entry in the same position of $${other}$, so it has nothing to be added to.`,
+                `试着把元素配对。$${owner}$ 的元素 $${lone}$ 在 $${other}$ 的同一位置上没有元素，没有可以与它相加的数。`,
+              ),
+            ),
           ),
+          [
+            t(
+              `No size works: $${m1} \\times ${n1}$ and $${m2} \\times ${n2}$ are different dimensions.`,
+              `任何大小都不对：$${m1} \\times ${n1}$ 和 $${m2} \\times ${n2}$ 是不同的维度。`,
+            ),
+            t(
+              `No size works: $${m1} \\times ${n1}$ and $${m2} \\times ${n2}$ are different dimensions.`,
+              `任何大小都不对：$${m1} \\times ${n1}$ 和 $${m2} \\times ${n2}$ 是不同的维度。`,
+            ),
+            t(
+              "Padding the smaller matrix is not allowed: the dimensions must already be equal.",
+              "不能把较小的矩阵补齐：维度必须本来就相同。",
+            ),
+            t(
+              "Adding matrices adds their entries, not their dimensions, and here the dimensions differ.",
+              "矩阵相加是元素相加，不是维度相加，而这里维度不同。",
+            ),
+          ],
         );
       },
     },
@@ -532,13 +747,17 @@ export const propertiesOfMatrixAddition: TopicDef = {
   encompasses: [{ topic: "adding-and-subtracting-matrices", weight: 0.4 }],
   xp: 10,
   standards: ["CCSS.HSN.VM.C.8", "CCSS.HSN.VM.C.10"],
+  intro: t(
+    "You can add matrices of the same size entry by entry. Because each entry is an ordinary sum of numbers, the rules of addition for numbers carry over: the order and the grouping do not matter, adding the zero matrix changes nothing, and every matrix has an opposite. These rules let you rearrange and solve matrix equations the way you do with numbers.\n\nFor example,\n\n$$\\begin{pmatrix} 2 & -1 \\\\ 0 & 3 \\end{pmatrix} + \\begin{pmatrix} 4 & 5 \\\\ -2 & 1 \\end{pmatrix} = \\begin{pmatrix} 6 & 4 \\\\ -2 & 4 \\end{pmatrix}$$\n\nand adding in the other order gives the same matrix, since $2 + 4 = 4 + 2$, $-1 + 5 = 5 + (-1)$, and so on for every entry.",
+    "你会把同样大小的矩阵逐个元素相加。由于每个元素都是普通的数相加，数的加法规则也就沿用过来：次序和结合方式都不影响结果，加上零矩阵不改变矩阵，每个矩阵都有相反矩阵。有了这些规则，就能像处理数那样整理和求解矩阵方程。\n\n例如\n\n$$\\begin{pmatrix} 2 & -1 \\\\ 0 & 3 \\end{pmatrix} + \\begin{pmatrix} 4 & 5 \\\\ -2 & 1 \\end{pmatrix} = \\begin{pmatrix} 6 & 4 \\\\ -2 & 4 \\end{pmatrix}$$\n\n换个次序相加得到同一个矩阵，因为 $2 + 4 = 4 + 2$，$-1 + 5 = 5 + (-1)$，每个元素都是这样。",
+  ),
   knowledgePoints: [
     {
       id: "commutative-and-associative-properties-of-matrix-addition",
       title: t("Commutative and associative properties", "矩阵加法的交换律与结合律"),
       explanation: t(
-        "Matrix addition satisfies the commutative property $A + B = B + A$ and associative property $(A + B) + C = A + (B + C)$ for all matrices of the same dimension.",
-        "同型矩阵的加法满足交换律 $A + B = B + A$ 与结合律 $(A + B) + C = A + (B + C)$。",
+        "Matrix addition satisfies the commutative property $A + B = B + A$ and associative property $(A + B) + C = A + (B + C)$ for all matrices of the same dimension.\n\n> **Watch out.** To find an unknown entry, subtract the known entry with its sign: from $-3 + x = 5$, $x = 5 - (-3) = 8$, not $2$.",
+        "同型矩阵的加法满足交换律 $A + B = B + A$ 与结合律 $(A + B) + C = A + (B + C)$。\n\n> **注意。** 求未知元素时，要连同符号减去已知元素：由 $-3 + x = 5$ 得 $x = 5 - (-3) = 8$，而不是 $2$。",
       ),
       generate(rng) {
         const pool = [-8, -6, -4, -3, -2, -1, 1, 2, 3, 4, 6, 8];
@@ -571,9 +790,24 @@ export const propertiesOfMatrixAddition: TopicDef = {
           solveFor: "x",
           answer: x,
           wrong: [-x, x + 1, x - 2, cVal + aVal],
-          solution: t(
-            `From entrywise addition at row $${targetRow + 1}$, column $${targetCol + 1}$: $${aVal} + x = ${cVal}$, so $x = ${cVal} - (${aVal}) = ${x}$.`,
-            `根据第 $${targetRow + 1}$ 行第 $${targetCol + 1}$ 列的对应元素相加关系：$${aVal} + x = ${cVal}$，解得 $x = ${cVal} - (${aVal}) = ${x}$。`,
+          solution: join(
+            label(1, "Match the entry", "对应元素"),
+            t(
+              `The unknown sits in row $${targetRow + 1}$, column $${targetCol + 1}$. Matching entries are added, so $${aVal} + x = ${cVal}$.`,
+              `未知数在第 $${targetRow + 1}$ 行第 $${targetCol + 1}$ 列。对应元素相加，所以 $${aVal} + x = ${cVal}$。`,
+            ),
+            para,
+            label(2, "Solve", "求解"),
+            t(
+              `Subtract $${aVal}$ from both sides: $x = ${cVal} - ${paren(aVal)} = ${x}$.`,
+              `两边减去 $${aVal}$：$x = ${cVal} - ${paren(aVal)} = ${x}$。`,
+            ),
+            checked(
+              t(
+                `Add in the other order, $B + A$. The same entry is $${x} + ${paren(aVal)} = ${cVal}$, the entry of the right side.`,
+                `换成 $B + A$ 的次序相加。同一位置的元素是 $${x} + ${paren(aVal)} = ${cVal}$，正是右边的元素。`,
+              ),
+            ),
           ),
         });
       },
@@ -582,8 +816,8 @@ export const propertiesOfMatrixAddition: TopicDef = {
       id: "additive-identity-and-additive-inverse",
       title: t("Additive identity and additive inverse", "加法单位元与加法逆元"),
       explanation: t(
-        "The zero matrix $O$ has all entries equal to 0 and acts as the additive identity: $A + O = A$. The additive inverse of $A$ is $-A$, satisfying $A + (-A) = O$.",
-        "零矩阵 $O$ 的所有元素均为 0，是矩阵加法的单位元，满足 $A + O = A$。矩阵 $A$ 的加法逆元是其相反矩阵 $-A$，满足 $A + (-A) = O$。",
+        "The zero matrix $O$ has all entries equal to 0 and acts as the additive identity: $A + O = A$. The additive inverse of $A$ is $-A$, satisfying $A + (-A) = O$.\n\n> **Watch out.** Negate every entry, the negative ones too: the opposite of $-3$ is $3$.",
+        "零矩阵 $O$ 的所有元素均为 0，是矩阵加法的单位元，满足 $A + O = A$。矩阵 $A$ 的加法逆元是其相反矩阵 $-A$，满足 $A + (-A) = O$。\n\n> **注意。** 每个元素都要取相反数，负的也一样：$-3$ 的相反数是 $3$。",
       ),
       generate(rng) {
         const pool = [-9, -7, -5, -3, -2, 1, 2, 4, 6, 8];
@@ -609,10 +843,35 @@ export const propertiesOfMatrixAddition: TopicDef = {
             ),
             t(`$\\begin{pmatrix} 1 & 1 \\\\ 1 & 1 \\end{pmatrix}$`, `$\\begin{pmatrix} 1 & 1 \\\\ 1 & 1 \\end{pmatrix}$`),
           ],
-          t(
-            `The additive inverse of matrix $A$ is $-A$, obtained by negating every entry: $X = -A = ${matLatex(negA)}$.`,
-            `矩阵 $A$ 的加法逆元是相反矩阵 $-A$，由将 $A$ 的每个元素取相反数得到：$X = -A = ${matLatex(negA)}$。`,
+          join(
+            label(1, "Cancel each entry", "抵消每个元素"),
+            t(
+              "Each entry of $X$ must cancel the entry of $A$ in the same place, so that the sum there is $0$.",
+              "$X$ 的每个元素都必须抵消 $A$ 同一位置的元素，使那里的和为 $0$。",
+            ),
+            para,
+            label(2, "Negate", "取相反数"),
+            t("So every entry of $A$ changes sign, and $X = -A$:", "所以 $A$ 的每个元素都变号，$X = -A$："),
+            shown(`X = ${matLatex(negA)}`),
+            checked(
+              t(
+                `Add $X$ to $A$ entry by entry: $${matLatex(A.map((r, i) => r.map((v, j) => `${v} + ${paren(negA[i]![j]!)}`)))} = O$. This is the zero matrix.`,
+                `把 $X$ 与 $A$ 逐个元素相加：$${matLatex(A.map((r, i) => r.map((v, j) => `${v} + ${paren(negA[i]![j]!)}`)))} = O$。这正是零矩阵。`,
+              ),
+            ),
           ),
+          [
+            t("This is $A$ itself, and $A + A = 2A$, not $O$.", "这是 $A$ 本身，而 $A + A = 2A$，不是 $O$。"),
+            t(
+              "This is the transpose of $A$. Its entries are moved, not made opposite.",
+              "这是 $A$ 的转置。它的元素只是换了位置，没有变成相反数。",
+            ),
+            t(`The top right entry has the wrong sign: it should be $${negA[0]![1]!}$.`, `右上元素的符号错了：应该是 $${negA[0]![1]!}$。`),
+            t(
+              "Adding a matrix of ones raises every entry by $1$; it does not cancel $A$.",
+              "加上全是 $1$ 的矩阵只会让每个元素增加 $1$，不能抵消 $A$。",
+            ),
+          ],
         );
       },
     },
@@ -633,13 +892,17 @@ export const scalarMultiplicationOfMatrices: TopicDef = {
   encompasses: [],
   xp: 11,
   standards: ["CCSS.HSN.VM.C.7", "CCSS.HSN.VM.C.8"],
+  intro: t(
+    "You can add matrices entry by entry. Adding a matrix to itself several times multiplies each entry by the same number, and this is scalar multiplication: a price list scaled by a tax rate, or a recipe table doubled, changes every entry by one factor. With it and addition, you can build combinations such as $2A - 3B$.\n\nFor example,\n\n$$3 \\begin{pmatrix} 2 & -1 \\\\ 0 & 4 \\end{pmatrix} = \\begin{pmatrix} 6 & -3 \\\\ 0 & 12 \\end{pmatrix}$$\n\nEvery entry is multiplied by $3$. This is the same as adding the matrix to itself three times, since $2 + 2 + 2 = 6$ and $-1 + (-1) + (-1) = -3$.",
+    "你会把矩阵逐个元素相加。把一个矩阵自己加几次，每个元素都乘上同一个数，这就是数乘：按税率调整价目表，或把配方表加倍，都是让每个元素变化同一个倍数。有了数乘和加法，就能构造 $2A - 3B$ 这样的组合。\n\n例如\n\n$$3 \\begin{pmatrix} 2 & -1 \\\\ 0 & 4 \\end{pmatrix} = \\begin{pmatrix} 6 & -3 \\\\ 0 & 12 \\end{pmatrix}$$\n\n每个元素都乘以 $3$。这与把矩阵自己加三次相同，因为 $2 + 2 + 2 = 6$，$-1 + (-1) + (-1) = -3$。",
+  ),
   knowledgePoints: [
     {
       id: "computing-scalar-multiplication",
       title: t("Computing scalar multiples of matrices", "计算矩阵的数乘"),
       explanation: t(
-        "Multiplying a matrix by a number changes every entry in the same way, so the result has the same size as the original matrix. To multiply a matrix $A$ by a scalar $k$, multiply every entry in $A$ by $k$: $(k A)_{ij} = k \\cdot a_{ij}$.",
-        "用一个数乘矩阵时，每个元素都按同样的方式改变，所以结果与原矩阵的大小相同。用标量（实数）$k$ 乘以矩阵 $A$ 时，需要将矩阵 $A$ 中的每一个元素都乘以 $k$：$(k A)_{ij} = k \\cdot a_{ij}$。",
+        "Multiplying a matrix by a number changes every entry in the same way, so the result has the same size as the original matrix. To multiply a matrix $A$ by a scalar $k$, multiply every entry in $A$ by $k$: $(k A)_{ij} = k \\cdot a_{ij}$.\n\n> **Watch out.** The sign of $k$ reaches every entry: $-2 \\cdot (-3) = 6$, so a negative scalar turns negative entries positive.",
+        "用一个数乘矩阵时，每个元素都按同样的方式改变，所以结果与原矩阵的大小相同。用标量（实数）$k$ 乘以矩阵 $A$ 时，需要将矩阵 $A$ 中的每一个元素都乘以 $k$：$(k A)_{ij} = k \\cdot a_{ij}$。\n\n> **注意。** $k$ 的符号作用到每个元素：$-2 \\cdot (-3) = 6$，所以负的标量会把负元素变成正的。",
       ),
       generate(rng) {
         const k = rng.pick([-4, -3, -2, 2, 3, 4, 5]);
@@ -652,6 +915,7 @@ export const scalarMultiplicationOfMatrices: TopicDef = {
         const j = rng.pick([1, 2]);
         const aVal = A[i - 1]![j - 1]!;
         const val = k * aVal;
+        const repeated = Array.from({ length: Math.abs(k) }, () => paren(aVal)).join(" + ");
 
         return numberProblem({
           prompt: t(
@@ -660,9 +924,29 @@ export const scalarMultiplicationOfMatrices: TopicDef = {
           ),
           answer: val,
           wrong: [aVal, -val, k + aVal, val + k, val - k],
-          solution: t(
-            `To find entry $(k A)_{${i}${j}}$, multiply entry $a_{${i}${j}} = ${aVal}$ by the scalar $k = ${k}$:\n\n$$(${k})(${aVal}) = ${val}$$`,
-            `计算数乘矩阵元素 $(k A)_{${i}${j}}$ 时，将元素 $a_{${i}${j}} = ${aVal}$ 乘以标量 $k = ${k}$：\n\n$$(${k})(${aVal}) = ${val}$$`,
+          solution: join(
+            label(1, "Find the entry", "找出元素"),
+            t(
+              `The entry of $A$ in row $${i}$, column $${j}$ is $a_{${i}${j}} = ${aVal}$.`,
+              `$A$ 中第 $${i}$ 行第 $${j}$ 列的元素是 $a_{${i}${j}} = ${aVal}$。`,
+            ),
+            para,
+            label(2, "Multiply", "相乘"),
+            t(
+              `Multiply it by the scalar $k = ${k}$: $(${k} A)_{${i}${j}} = ${k} \\cdot ${paren(aVal)} = ${val}$.`,
+              `把它乘以标量 $k = ${k}$：$(${k} A)_{${i}${j}} = ${k} \\cdot ${paren(aVal)} = ${val}$。`,
+            ),
+            checked(
+              k > 0
+                ? t(
+                    `Adding $A$ to itself $${k}$ times gives the same entry: $${repeated} = ${val}$.`,
+                    `把 $A$ 自己加 $${k}$ 次，得到同一个元素：$${repeated} = ${val}$。`,
+                  )
+                : t(
+                    `$${k}A$ is the opposite of $A$ added to itself $${-k}$ times: $-(${repeated}) = -${paren(-val)} = ${val}$.`,
+                    `$${k}A$ 是把 $A$ 自己加 $${-k}$ 次再取相反数：$-(${repeated}) = -${paren(-val)} = ${val}$。`,
+                  ),
+            ),
           ),
         });
       },
@@ -671,8 +955,8 @@ export const scalarMultiplicationOfMatrices: TopicDef = {
       id: "distributive-properties-of-scalar-multiplication",
       title: t("Distributive properties of scalar multiplication", "数乘矩阵的分配律与线性组合"),
       explanation: t(
-        "Scalar multiplication distributes over matrix addition: $k(A + B) = kA + kB$, and $(c + d)A = cA + dA$. A linear combination of matrices is an expression of the form $c_1 A + c_2 B$.",
-        "数乘对矩阵加法满足分配律：$k(A + B) = kA + kB$ 以及 $(c + d)A = cA + dA$。形如 $c_1 A + c_2 B$ 的式子称为矩阵的线性组合。",
+        "Scalar multiplication distributes over matrix addition: $k(A + B) = kA + kB$, and $(c + d)A = cA + dA$. A linear combination of matrices is an expression of the form $c_1 A + c_2 B$.\n\n> **Watch out.** A minus sign in front of a term multiplies every entry of that matrix: in $2A - 3B$, each entry of $B$ is multiplied by $-3$, the negative ones too.",
+        "数乘对矩阵加法满足分配律：$k(A + B) = kA + kB$ 以及 $(c + d)A = cA + dA$。形如 $c_1 A + c_2 B$ 的式子称为矩阵的线性组合。\n\n> **注意。** 一项前面的减号会乘到那个矩阵的每个元素上：在 $2A - 3B$ 中，$B$ 的每个元素都乘以 $-3$，负的元素也一样。",
       ),
       generate(rng) {
         const c1 = rng.pick([2, 3, 4]);
@@ -707,9 +991,22 @@ export const scalarMultiplicationOfMatrices: TopicDef = {
           ),
           answer: val,
           wrong: [wrongSignVal, swappedVal, -val, val + 1, val - 2],
-          solution: t(
-            `Compute the entry in row $${i}$, column $${j}$ using the linear combination of corresponding entries:\n\n$$c_{${i}${j}} = ${c1}(${aVal}) ${c2 < 0 ? "-" : "+"} ${Math.abs(c2)}(${bVal}) = ${step2} = ${val}$$`,
-            `通过对应元素的线性组合计算第 $${i}$ 行第 $${j}$ 列的元素：\n\n$$c_{${i}${j}} = ${c1}(${aVal}) ${c2 < 0 ? "-" : "+"} ${Math.abs(c2)}(${bVal}) = ${step2} = ${val}$$`,
+          solution: join(
+            label(1, "Pick out the entries", "取出元素"),
+            t(
+              `In row $${i}$, column $${j}$, the entries are $a_{${i}${j}} = ${aVal}$ and $b_{${i}${j}} = ${bVal}$.`,
+              `第 $${i}$ 行第 $${j}$ 列的元素是 $a_{${i}${j}} = ${aVal}$ 和 $b_{${i}${j}} = ${bVal}$。`,
+            ),
+            para,
+            label(2, "Combine them", "组合"),
+            t("Scale each entry and add:", "把每个元素数乘后相加："),
+            shown(`c_{${i}${j}} = ${c1}(${aVal}) ${c2 < 0 ? "-" : "+"} ${Math.abs(c2)}(${bVal}) = ${step2} = ${val}`),
+            checked(
+              t(
+                `Regroup as $${c1}(A + B) + ${paren(c2 - c1)}B$. The entry of $A + B$ is $${aVal + bVal}$, so the entry is $${c1} \\cdot ${paren(aVal + bVal)} + ${paren(c2 - c1)} \\cdot ${paren(bVal)} = ${sumOf([c1 * (aVal + bVal), (c2 - c1) * bVal])} = ${val}$.`,
+                `改写成 $${c1}(A + B) + ${paren(c2 - c1)}B$。$A + B$ 的这个元素是 $${aVal + bVal}$，所以所求元素为 $${c1} \\cdot ${paren(aVal + bVal)} + ${paren(c2 - c1)} \\cdot ${paren(bVal)} = ${sumOf([c1 * (aVal + bVal), (c2 - c1) * bVal])} = ${val}$。`,
+              ),
+            ),
           ),
         });
       },
@@ -731,13 +1028,17 @@ export const zeroSquareDiagonalAndIdentityMatrices: TopicDef = {
   encompasses: [{ topic: "introduction-to-matrices", weight: 0.2 }],
   xp: 11,
   standards: ["CCSS.HSN.VM.C.6", "CCSS.HSN.VM.C.10"],
+  intro: t(
+    "You can read the size and the entries of a matrix. A few shapes come up so often that they have names: square matrices, whose rows and columns are equally many; diagonal matrices, which are square with zeros off the main diagonal; the identity matrix, a diagonal matrix with ones on the diagonal; and the zero matrix, all of whose entries are $0$. The identity and the zero matrix play the parts of $1$ and $0$ in matrix arithmetic.\n\nThe matrix\n\n$$D = \\begin{pmatrix} 5 & 0 & 0 \\\\ 0 & -2 & 0 \\\\ 0 & 0 & 1 \\end{pmatrix}$$\n\nis square, $3 \\times 3$, and every entry off the main diagonal is $0$, so it is diagonal. It is not the identity $I_3$, because its diagonal entries $5$ and $-2$ are not $1$.",
+    "你会读矩阵的大小和元素。有几种形状经常出现，所以有专门的名字：方阵的行数和列数相等；对角矩阵是主对角线以外都是零的方阵；单位矩阵是对角线上全为一的对角矩阵；零矩阵的所有元素都是 $0$。在矩阵运算中，单位矩阵和零矩阵分别起着 $1$ 和 $0$ 的作用。\n\n矩阵\n\n$$D = \\begin{pmatrix} 5 & 0 & 0 \\\\ 0 & -2 & 0 \\\\ 0 & 0 & 1 \\end{pmatrix}$$\n\n是 $3 \\times 3$ 方阵，主对角线以外的元素都是 $0$，所以是对角矩阵。它不是单位矩阵 $I_3$，因为对角元素 $5$ 和 $-2$ 不是 $1$。",
+  ),
   knowledgePoints: [
     {
       id: "classifying-special-matrices",
       title: t("Classifying special types of matrices", "特殊矩阵的分类与识别"),
       explanation: t(
-        "A square matrix has $m = n$ (equal rows and columns). A diagonal matrix is a square matrix whose entries outside the main diagonal are all 0 ($a_{ij} = 0$ for $i \\ne j$). The identity matrix $I_n$ is a diagonal matrix whose main diagonal entries are all 1.",
-        "方阵是行数等于列数（$m = n$）的矩阵。对角矩阵是主对角线之外所有元素均为 0（即当 $i \\ne j$ 时 $a_{ij} = 0$）的方阵。单位矩阵 $I_n$ 是主对角线上所有元素均为 1 的对角矩阵。",
+        "A square matrix has $m = n$ (equal rows and columns). A diagonal matrix is a square matrix whose entries outside the main diagonal are all 0 ($a_{ij} = 0$ for $i \\ne j$). The identity matrix $I_n$ is a diagonal matrix whose main diagonal entries are all 1.\n\n> **Watch out.** A diagonal matrix may have any numbers on its diagonal, even different ones; only the identity needs them all to be $1$. Every diagonal matrix is square, but a square matrix need not be diagonal.",
+        "方阵是行数等于列数（$m = n$）的矩阵。对角矩阵是主对角线之外所有元素均为 0（即当 $i \\ne j$ 时 $a_{ij} = 0$）的方阵。单位矩阵 $I_n$ 是主对角线上所有元素均为 1 的对角矩阵。\n\n> **注意。** 对角矩阵的对角线上可以是任何数，也可以各不相同；只有单位矩阵要求它们都是 $1$。对角矩阵一定是方阵，但方阵不一定是对角矩阵。",
       ),
       generate(rng) {
         const pool = [-9, -8, -7, -6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -765,10 +1066,34 @@ export const zeroSquareDiagonalAndIdentityMatrices: TopicDef = {
               t("Row matrix only", "仅为行矩阵"),
               t("Non-square matrix", "非方阵"),
             ],
-            t(
-              `Matrix $A$ is a square matrix whose off-diagonal entries are all 0, so it is a diagonal matrix.`,
-              `矩阵 $A$ 是一个非对角线元素全为 0 的方阵，因此它是对角矩阵。`,
+            join(
+              label(1, "Check the shape", "看形状"),
+              t("$A$ has $2$ rows and $2$ columns, so it is square.", "$A$ 有 $2$ 行 $2$ 列，所以是方阵。"),
+              para,
+              label(2, "Look off the diagonal", "看对角线以外"),
+              t(
+                "Both entries off the main diagonal are $0$, so $A$ is a diagonal matrix.",
+                "主对角线以外的两个元素都是 $0$，所以 $A$ 是对角矩阵。",
+              ),
+              checked(
+                t(
+                  `Test the other names. The diagonal entries $${d1}$ and $${d2}$ are not $1$, so $A$ is not the identity, and they are not $0$, so $A$ is not the zero matrix. Of the names offered, only diagonal fits.`,
+                  `逐一检验其他名称。对角元素 $${d1}$ 和 $${d2}$ 不是 $1$，所以 $A$ 不是单位矩阵；它们也不是 $0$，所以 $A$ 不是零矩阵。在给出的名称中只有对角矩阵符合。`,
+                ),
+              ),
             ),
+            [
+              t(
+                `The identity needs $1$ on the diagonal, but here the diagonal entries are $${d1}$ and $${d2}$.`,
+                `单位矩阵的对角线上必须是 $1$，而这里的对角元素是 $${d1}$ 和 $${d2}$。`,
+              ),
+              t(
+                "A zero matrix has every entry $0$, but the diagonal entries here are not $0$.",
+                "零矩阵的每个元素都是 $0$，而这里的对角元素不是 $0$。",
+              ),
+              t("A row matrix has a single row, and $A$ has $2$.", "行矩阵只有一行，而 $A$ 有 $2$ 行。"),
+              t("$A$ has $2$ rows and $2$ columns, so it is square.", "$A$ 有 $2$ 行 $2$ 列，所以是方阵。"),
+            ],
           );
         }
 
@@ -792,10 +1117,31 @@ export const zeroSquareDiagonalAndIdentityMatrices: TopicDef = {
               t("Zero matrix", "零矩阵"),
               t("Column vector only", "仅为列向量"),
             ],
-            t(
-              `Matrix $A$ has 2 rows and 2 columns ($2 \\times 2$), making it a square matrix, but its off-diagonal entries are non-zero so it is not diagonal.`,
-              `矩阵 $A$ 包含 2 行 2 列（$2 \\times 2$），因此是方阵；但其非主对角线上有非零元素，所以不是对角矩阵。`,
+            join(
+              label(1, "Check the shape", "看形状"),
+              t("$A$ has $2$ rows and $2$ columns, so it is square.", "$A$ 有 $2$ 行 $2$ 列，所以是方阵。"),
+              para,
+              label(2, "Look off the diagonal", "看对角线以外"),
+              t(
+                `The entries off the main diagonal are $a_{12} = ${A[0]![1]!}$ and $a_{21} = ${A[1]![0]!}$, which are not $0$. So $A$ is square but not diagonal.`,
+                `主对角线以外的元素是 $a_{12} = ${A[0]![1]!}$ 和 $a_{21} = ${A[1]![0]!}$，不是 $0$。所以 $A$ 是方阵，但不是对角矩阵。`,
+              ),
+              checked(
+                t(
+                  `Test the other names. A diagonal matrix, the identity and the zero matrix all need $0$ off the main diagonal, and $a_{12} = ${A[0]![1]!}$ is not $0$. A column vector has one column, and $A$ has $2$. Only square fits.`,
+                  `逐一检验其他名称。对角矩阵、单位矩阵和零矩阵都要求主对角线以外为 $0$，而 $a_{12} = ${A[0]![1]!}$ 不是 $0$。列向量只有一列，而 $A$ 有 $2$ 列。只有方阵符合。`,
+                ),
+              ),
             ),
+            [
+              t(
+                `$a_{12} = ${A[0]![1]!}$ is off the diagonal and not $0$, so $A$ is not diagonal.`,
+                `$a_{12} = ${A[0]![1]!}$ 在对角线以外且不是 $0$，所以 $A$ 不是对角矩阵。`,
+              ),
+              t("The identity needs $0$ off the diagonal and $1$ on it.", "单位矩阵要求对角线以外为 $0$，对角线上为 $1$。"),
+              t("A zero matrix has every entry $0$, and these entries are not.", "零矩阵的每个元素都是 $0$，而这里的元素不是。"),
+              t("A column vector has a single column, and $A$ has $2$.", "列向量只有一列，而 $A$ 有 $2$ 列。"),
+            ],
           );
         }
 
@@ -809,10 +1155,31 @@ export const zeroSquareDiagonalAndIdentityMatrices: TopicDef = {
           t(`Which term best classifies the matrix $A$?\n\n$$A = ${aLatex}$$`, `下列哪个术语最准确地分类了矩阵 $A$？\n\n$$A = ${aLatex}$$`),
           t(`Rectangular matrix of dimension $${m} \\times ${n}$`, `维度为 $${m} \\times ${n}$ 的矩形矩阵`),
           [t("Square matrix", "方阵"), t("Diagonal matrix", "对角矩阵"), t("Identity matrix", "单位矩阵"), t("Zero matrix", "零矩阵")],
-          t(
-            `Because the row count $${m}$ does not equal the column count $${n}$, matrix $A$ is a rectangular matrix, not a square or diagonal matrix.`,
-            `因为行数 $${m}$ 不等于列数 $${n}$，所以矩阵 $A$ 是矩形矩阵，不是方阵或对角矩阵。`,
+          join(
+            label(1, "Count rows and columns", "数行和列"),
+            t(`$A$ has $${m}$ rows and $${n}$ columns.`, `$A$ 有 $${m}$ 行 $${n}$ 列。`),
+            para,
+            label(2, "Compare them", "比较"),
+            t(
+              `Since $${m} \\ne ${n}$, $A$ is not square. It is a rectangular $${m} \\times ${n}$ matrix.`,
+              `由于 $${m} \\ne ${n}$，$A$ 不是方阵。它是 $${m} \\times ${n}$ 的矩形矩阵。`,
+            ),
+            checked(
+              t(
+                `Test the other names. Diagonal matrices and the identity are square by definition, so they are ruled out with square. A zero matrix has every entry $0$, but $a_{11} = ${A[0]![0]!}$. Only rectangular fits.`,
+                `逐一检验其他名称。对角矩阵和单位矩阵按定义都是方阵，所以和方阵一起被排除。零矩阵的每个元素都是 $0$，而 $a_{11} = ${A[0]![0]!}$。只有矩形矩阵符合。`,
+              ),
+            ),
           ),
+          [
+            t(
+              `A square matrix has as many rows as columns, but $A$ has $${m}$ rows and $${n}$ columns.`,
+              `方阵的行数等于列数，而 $A$ 有 $${m}$ 行 $${n}$ 列。`,
+            ),
+            t("A diagonal matrix must be square.", "对角矩阵必须是方阵。"),
+            t("The identity matrix must be square.", "单位矩阵必须是方阵。"),
+            t(`A zero matrix has every entry $0$, but $a_{11} = ${A[0]![0]!}$.`, `零矩阵的每个元素都是 $0$，而 $a_{11} = ${A[0]![0]!}$。`),
+          ],
         );
       },
     },
@@ -820,8 +1187,8 @@ export const zeroSquareDiagonalAndIdentityMatrices: TopicDef = {
       id: "properties-of-identity-and-diagonal-matrices",
       title: t("Entries of diagonal and identity matrices", "对角矩阵与单位矩阵的未知数求解"),
       explanation: t(
-        "For a matrix to be a diagonal matrix, all non-diagonal entries must be 0. For it to be the $2 \\times 2$ identity matrix $I_2$, the diagonal entries must equal 1 and the non-diagonal entries must equal 0.",
-        "若一个方阵是对角矩阵，则其所有非对角线上的元素必须为 0。若为 $2 \\times 2$ 单位矩阵 $I_2$，则主对角线元素必须全为 1，非对角线元素必须全为 0。",
+        "For a matrix to be a diagonal matrix, all non-diagonal entries must be 0. For it to be the $2 \\times 2$ identity matrix $I_2$, the diagonal entries must equal 1 and the non-diagonal entries must equal 0.\n\n> **Watch out.** Only the entries off the diagonal must be $0$; the diagonal entries of a diagonal matrix can be any numbers. Solve $x - 3 = 0$ as $x = 3$, keeping track of the sign.",
+        "若一个方阵是对角矩阵，则其所有非对角线上的元素必须为 0。若为 $2 \\times 2$ 单位矩阵 $I_2$，则主对角线元素必须全为 1，非对角线元素必须全为 0。\n\n> **注意。** 只有对角线以外的元素必须是 $0$；对角矩阵的对角元素可以是任何数。解 $x - 3 = 0$ 得 $x = 3$，注意符号。",
       ),
       generate(rng) {
         const c1 = rng.pick([-5, -4, -3, -2, 2, 3, 4, 5]);
@@ -853,10 +1220,31 @@ export const zeroSquareDiagonalAndIdentityMatrices: TopicDef = {
             t(`$x = ${-xAns}, \\; y = ${yAns}$`, `$x = ${-xAns}, \\; y = ${yAns}$`),
             t(`$x = 0, \\; y = 0$`, `$x = 0, \\; y = 0$`),
           ],
-          t(
-            `In a diagonal matrix, all off-diagonal entries are 0. Thus $x ${signC1} = 0 \\implies x = ${xAns}$, and $y ${signC2} = 0 \\implies y = ${yAns}$.`,
-            `对角矩阵要求所有非对角线元素均为 0。因此 $x ${signC1} = 0 \\implies x = ${xAns}$，且 $y ${signC2} = 0 \\implies y = ${yAns}$。`,
+          join(
+            label(1, "Set the off-diagonal entries to 0", "令对角线以外的元素为 0"),
+            t(
+              `In a diagonal matrix every entry off the main diagonal is $0$, so $x ${signC1} = 0$ and $y ${signC2} = 0$.`,
+              `对角矩阵主对角线以外的元素都是 $0$，所以 $x ${signC1} = 0$，$y ${signC2} = 0$。`,
+            ),
+            para,
+            label(2, "Solve", "求解"),
+            t(`These give $x = ${xAns}$ and $y = ${yAns}$.`, `解得 $x = ${xAns}$，$y = ${yAns}$。`),
+            checked(
+              t(
+                `Put the values back. The top right entry becomes $${xAns} ${signC1} = 0$ and the bottom left entry becomes $${yAns} ${signC2} = 0$, while the diagonal entries $${d1}$ and $${d2}$ may be anything. So $M$ is diagonal.`,
+                `把值代回去。右上元素变成 $${xAns} ${signC1} = 0$，左下元素变成 $${yAns} ${signC2} = 0$，对角元素 $${d1}$ 和 $${d2}$ 可以是任何数。所以 $M$ 是对角矩阵。`,
+              ),
+            ),
           ),
+          [
+            t("Both values have the wrong sign.", "两个值的符号都错了。"),
+            t(`$y$ has the wrong sign: $y ${signC2} = 0$ gives $y = ${yAns}$.`, `$y$ 的符号错了：由 $y ${signC2} = 0$ 得 $y = ${yAns}$。`),
+            t(`$x$ has the wrong sign: $x ${signC1} = 0$ gives $x = ${xAns}$.`, `$x$ 的符号错了：由 $x ${signC1} = 0$ 得 $x = ${xAns}$。`),
+            t(
+              `With $x = 0$ the top right entry is $0 ${signC1} = ${-c1}$, not $0$.`,
+              `$x = 0$ 时右上元素是 $0 ${signC1} = ${-c1}$，不是 $0$。`,
+            ),
+          ],
         );
       },
     },
@@ -877,13 +1265,17 @@ export const theTransposeOfAMatrix: TopicDef = {
   encompasses: [],
   xp: 11,
   standards: ["CCSS.HSN.VM.C.6"],
+  intro: t(
+    "You can name each entry of a matrix by its row and column, $a_{ij}$. The transpose swaps these two roles: the entry in row $i$ and column $j$ moves to row $j$ and column $i$. A table with one row for each day and one column for each item becomes a table with one row for each item, and the transpose is needed later for symmetric matrices and for fitting products together.\n\nFor example,\n\n$$\\begin{pmatrix} 1 & 2 & 3 \\\\ 4 & 5 & 6 \\end{pmatrix}^T = \\begin{pmatrix} 1 & 4 \\\\ 2 & 5 \\\\ 3 & 6 \\end{pmatrix}$$\n\nThe first row $1, 2, 3$ has become the first column, and the $2 \\times 3$ matrix has become $3 \\times 2$.",
+    "你会用行号和列号给矩阵的元素命名，$a_{ij}$。转置把这两个角色互换：第 $i$ 行第 $j$ 列的元素移到第 $j$ 行第 $i$ 列。每天一行、每种商品一列的表，变成每种商品一行的表。以后研究对称矩阵、让乘积的形状相配时都要用到转置。\n\n例如\n\n$$\\begin{pmatrix} 1 & 2 & 3 \\\\ 4 & 5 & 6 \\end{pmatrix}^T = \\begin{pmatrix} 1 & 4 \\\\ 2 & 5 \\\\ 3 & 6 \\end{pmatrix}$$\n\n第一行 $1, 2, 3$ 变成了第一列，$2 \\times 3$ 矩阵变成了 $3 \\times 2$ 矩阵。",
+  ),
   knowledgePoints: [
     {
       id: "computing-the-transpose-of-a-matrix",
       title: t("Computing the transpose of a matrix", "求矩阵的转置"),
       explanation: t(
-        "The transpose of an $m \\times n$ matrix $A$, denoted $A^T$, is the $n \\times m$ matrix formed by interchanging its rows and columns: $(A^T)_{ij} = a_{ji}$.",
-        "$m \\times n$ 矩阵 $A$ 的转置记作 $A^T$，是一个 $n \\times m$ 矩阵，通过交换 $A$ 的行与列得到：$(A^T)_{ij} = a_{ji}$。",
+        "The transpose of an $m \\times n$ matrix $A$, denoted $A^T$, is the $n \\times m$ matrix formed by interchanging its rows and columns: $(A^T)_{ij} = a_{ji}$.\n\n> **Watch out.** Transposing only moves entries. It does not reverse the order of the rows or change any sign, and an $m \\times n$ matrix becomes $n \\times m$.",
+        "$m \\times n$ 矩阵 $A$ 的转置记作 $A^T$，是一个 $n \\times m$ 矩阵，通过交换 $A$ 的行与列得到：$(A^T)_{ij} = a_{ji}$。\n\n> **注意。** 转置只移动元素的位置，不会把行的次序倒过来，也不改变符号；$m \\times n$ 矩阵变成 $n \\times m$ 矩阵。",
       ),
       generate(rng) {
         const shapes: readonly (readonly [number, number])[] = [
@@ -915,10 +1307,28 @@ export const theTransposeOfAMatrix: TopicDef = {
             t(`$${matLatex(revRows)}$`, `$${matLatex(revRows)}$`),
             t(`$${matLatex(negAT)}$`, `$${matLatex(negAT)}$`),
           ],
-          t(
-            `Row $i$ of $A$ becomes column $i$ of $A^T$. The $${m} \\times ${n}$ matrix transposes into ${article(n)} $${n} \\times ${m}$ matrix: $A^T = ${atLatex}$.`,
-            `矩阵 $A$ 的第 $i$ 行变为 $A^T$ 的第 $i$ 列。$${m} \\times ${n}$ 矩阵转置后成为 $${n} \\times ${m}$ 矩阵：$A^T = ${atLatex}$。`,
+          join(
+            label(1, "Find the size", "确定大小"),
+            t(
+              `$A$ is $${m} \\times ${n}$, so $A^T$ is $${n} \\times ${m}$.`,
+              `$A$ 是 $${m} \\times ${n}$ 矩阵，所以 $A^T$ 是 $${n} \\times ${m}$ 矩阵。`,
+            ),
+            para,
+            label(2, "Turn rows into columns", "行变成列"),
+            t(`Row $i$ of $A$ becomes column $i$ of $A^T$:`, `$A$ 的第 $i$ 行变成 $A^T$ 的第 $i$ 列：`),
+            shown(`A^T = ${atLatex}`),
+            checked(
+              t(
+                `Read down the columns of $A$ instead. They are $${A[0]!.map((_, j) => `(${A.map((r) => r[j]!).join(", ")})`).join(", ")}$, and these are the rows of $A^T$ in order, as $(A^T)_{ij} = a_{ji}$ requires.`,
+                `改为沿 $A$ 的各列向下读。它们是 $${A[0]!.map((_, j) => `(${A.map((r) => r[j]!).join(", ")})`).join(", ")}$，正好依次是 $A^T$ 的各行，符合 $(A^T)_{ij} = a_{ji}$。`,
+              ),
+            ),
           ),
+          [
+            t("This is $A$ unchanged: its rows have not been turned into columns.", "这是没有变化的 $A$：它的行没有变成列。"),
+            t("This takes the rows of $A$ in reverse order before turning them into columns.", "这里先把 $A$ 的行倒序，再变成列。"),
+            t("Transposing moves entries but does not change their signs.", "转置只移动元素，不改变符号。"),
+          ],
         );
       },
     },
@@ -926,8 +1336,8 @@ export const theTransposeOfAMatrix: TopicDef = {
       id: "symmetric-and-skew-symmetric-matrices",
       title: t("Symmetric matrices and transpose properties", "对称矩阵与转置的性质"),
       explanation: t(
-        "The transpose flips a matrix across its main diagonal, so a symmetric matrix is one that looks the same after this reflection. A square matrix $A$ is symmetric if $A^T = A$, meaning $a_{ij} = a_{ji}$ for all $i$ and $j$. For all compatible matrices, $(A^T)^T = A$ and $(A + B)^T = A^T + B^T$.",
-        "转置把矩阵沿主对角线翻转，所以对称矩阵就是翻转后保持不变的矩阵。若方阵 $A$ 满足 $A^T = A$，则称 $A$ 为对称矩阵，这意味着对所有的 $i$ 和 $j$ 均有 $a_{ij} = a_{ji}$。对于任何相容矩阵，恒有 $(A^T)^T = A$ 以及 $(A + B)^T = A^T + B^T$。",
+        "The transpose flips a matrix across its main diagonal, so a symmetric matrix is one that looks the same after this reflection. A square matrix $A$ is symmetric if $A^T = A$, meaning $a_{ij} = a_{ji}$ for all $i$ and $j$. For all compatible matrices, $(A^T)^T = A$ and $(A + B)^T = A^T + B^T$.\n\n> **Watch out.** Only entries in mirror positions must match, such as $a_{12}$ and $a_{21}$. The diagonal entries, such as $a_{11}$ and $a_{22}$, need not equal each other.",
+        "转置把矩阵沿主对角线翻转，所以对称矩阵就是翻转后保持不变的矩阵。若方阵 $A$ 满足 $A^T = A$，则称 $A$ 为对称矩阵，这意味着对所有的 $i$ 和 $j$ 均有 $a_{ij} = a_{ji}$。对于任何相容矩阵，恒有 $(A^T)^T = A$ 以及 $(A + B)^T = A^T + B^T$。\n\n> **注意。** 只有镜像位置上的元素必须相等，比如 $a_{12}$ 和 $a_{21}$。对角元素（比如 $a_{11}$ 和 $a_{22}$）不必彼此相等。",
       ),
       generate(rng) {
         const x = rng.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]);
@@ -959,9 +1369,21 @@ export const theTransposeOfAMatrix: TopicDef = {
           solveFor: "x",
           answer: x,
           wrong: [-x, x + 1, x - 2, x + 3],
-          solution: t(
-            `For $A$ to be symmetric, $a_{12} = a_{21}$. Setting $${expr} = ${offDiagVal}$ yields $${solveStep}$.`,
-            `对称矩阵要求 $a_{12} = a_{21}$。令 $${expr} = ${offDiagVal}$，得 $${solveStep}$。`,
+          solution: join(
+            label(1, "Match the mirror entries", "镜像元素相等"),
+            t(
+              `A symmetric matrix has $a_{12} = a_{21}$, so $${expr} = ${offDiagVal}$.`,
+              `对称矩阵满足 $a_{12} = a_{21}$，所以 $${expr} = ${offDiagVal}$。`,
+            ),
+            para,
+            label(2, "Solve", "求解"),
+            t(`This gives $${solveStep}$.`, `解得 $${solveStep}$。`),
+            checked(
+              t(
+                `With $x = ${x}$ the top right entry is $${c1} \\cdot ${paren(x)} ${c2Str} = ${offDiagVal}$. This equals the bottom left entry, so flipping $A$ across its diagonal leaves it unchanged and $A^T = A$.`,
+                `$x = ${x}$ 时右上元素是 $${c1} \\cdot ${paren(x)} ${c2Str} = ${offDiagVal}$。它等于左下元素，所以把 $A$ 沿对角线翻转后不变，$A^T = A$。`,
+              ),
+            ),
           ),
         });
       },
@@ -985,13 +1407,17 @@ export const multiplyingAMatrixByAColumnVector: TopicDef = {
   encompasses: [],
   xp: 12,
   standards: ["CCSS.HSN.VM.C.8"],
+  intro: t(
+    "You can scale and add vectors and matrices. Multiplying a matrix by a column vector combines both: each row of the matrix is multiplied entry by entry with the vector and the products are added. This is how a table of prices times a list of quantities gives the totals, and it is the first step toward multiplying matrices.\n\nFor example,\n\n$$\\begin{pmatrix} 2 & 1 \\\\ -1 & 3 \\end{pmatrix} \\begin{pmatrix} 4 \\\\ 1 \\end{pmatrix} = \\begin{pmatrix} 9 \\\\ -1 \\end{pmatrix}$$\n\nsince row $1$ gives $2 \\cdot 4 + 1 \\cdot 1 = 9$ and row $2$ gives $-1 \\cdot 4 + 3 \\cdot 1 = -1$. The same vector is $4$ times the first column plus $1$ times the second: $4 \\cdot 2 + 1 = 9$ and $4 \\cdot (-1) + 3 = -1$.",
+    "你会把向量和矩阵数乘、相加。矩阵乘列向量把两者结合起来：矩阵的每一行与向量对应元素相乘，再把乘积相加。价目表乘数量清单得到总价就是这样，这也是学习矩阵乘法的第一步。\n\n例如\n\n$$\\begin{pmatrix} 2 & 1 \\\\ -1 & 3 \\end{pmatrix} \\begin{pmatrix} 4 \\\\ 1 \\end{pmatrix} = \\begin{pmatrix} 9 \\\\ -1 \\end{pmatrix}$$\n\n因为第 $1$ 行给出 $2 \\cdot 4 + 1 \\cdot 1 = 9$，第 $2$ 行给出 $-1 \\cdot 4 + 3 \\cdot 1 = -1$。同一个向量也是第一列的 $4$ 倍加第二列的 $1$ 倍：$4 \\cdot 2 + 1 = 9$，$4 \\cdot (-1) + 3 = -1$。",
+  ),
   knowledgePoints: [
     {
       id: "computing-matrix-vector-products",
       title: t("Computing matrix-vector products", "计算矩阵与列向量的乘积"),
       explanation: t(
-        "To multiply an $m \\times n$ matrix $A$ by an $n \\times 1$ column vector $\\mathbf{x}$, take the dot product of each row of $A$ with $\\mathbf{x}$:\n\n$$(A \\mathbf{x})_i = \\sum_{j=1}^n a_{ij} x_j$$",
-        "一个 $m \\times n$ 矩阵 $A$ 与 $n \\times 1$ 列向量 $\\mathbf{x}$ 相乘时，用 $A$ 的每一行与 $\\mathbf{x}$ 作点积（对应元素相乘再相加）：\n\n$$(A \\mathbf{x})_i = \\sum_{j=1}^n a_{ij} x_j$$",
+        "To multiply an $m \\times n$ matrix $A$ by an $n \\times 1$ column vector $\\mathbf{x}$, take the dot product of each row of $A$ with $\\mathbf{x}$:\n\n$$(A \\mathbf{x})_i = \\sum_{j=1}^n a_{ij} x_j$$\n\n> **Watch out.** Entry $i$ of the result comes from row $i$ of $A$, and the result is a column with one entry for each row of $A$.",
+        "一个 $m \\times n$ 矩阵 $A$ 与 $n \\times 1$ 列向量 $\\mathbf{x}$ 相乘时，用 $A$ 的每一行与 $\\mathbf{x}$ 作点积（对应元素相乘再相加）：\n\n$$(A \\mathbf{x})_i = \\sum_{j=1}^n a_{ij} x_j$$\n\n> **注意。** 结果的第 $i$ 个元素来自 $A$ 的第 $i$ 行，结果是一个列向量，$A$ 有几行它就有几个元素。",
       ),
       generate(rng) {
         const pool = [-5, -4, -3, -2, -1, 1, 2, 3, 4, 5];
@@ -1009,10 +1435,8 @@ export const multiplyingAMatrixByAColumnVector: TopicDef = {
 
         const t00 = A[0]![0]! * v[0]!;
         const t01 = A[0]![1]! * v[1]!;
-        const step0 = t01 < 0 ? `${t00} - ${-t01}` : `${t00} + ${t01}`;
         const t10 = A[1]![0]! * v[0]!;
         const t11 = A[1]![1]! * v[1]!;
-        const step1 = t11 < 0 ? `${t10} - ${-t11}` : `${t10} + ${t11}`;
 
         return oneOf(
           rng,
@@ -1027,10 +1451,37 @@ export const multiplyingAMatrixByAColumnVector: TopicDef = {
             t(`$\\begin{pmatrix} ${res0} & ${res1} \\end{pmatrix}$`, `$\\begin{pmatrix} ${res0} & ${res1} \\end{pmatrix}$`),
             t(`$${colVecLatex([res0 + 2, res1 - 1])}$`, `$${colVecLatex([res0 + 2, res1 - 1])}$`),
           ],
-          t(
-            `Multiply row by column:\n\n$$(A\\mathbf{v})_1 = (${A[0]![0]!})(${v[0]!}) + (${A[0]![1]!})(${v[1]!}) = ${step0} = ${res0}$$\n$$(A\\mathbf{v})_2 = (${A[1]![0]!})(${v[0]!}) + (${A[1]![1]!})(${v[1]!}) = ${step1} = ${res1}$$\n\nResult is $${ansLatex}$.`,
-            `按行与列相乘求和：\n\n$$(A\\mathbf{v})_1 = (${A[0]![0]!})(${v[0]!}) + (${A[0]![1]!})(${v[1]!}) = ${step0} = ${res0}$$\n$$(A\\mathbf{v})_2 = (${A[1]![0]!})(${v[0]!}) + (${A[1]![1]!})(${v[1]!}) = ${step1} = ${res1}$$\n\n结果为 $${ansLatex}$。`,
+          join(
+            label(1, "Row 1", "第 1 行"),
+            t(
+              "Multiply row $1$ of $A$ with $\\mathbf{v}$ entry by entry and add:",
+              "把 $A$ 的第 $1$ 行与 $\\mathbf{v}$ 对应元素相乘再相加：",
+            ),
+            shown(`(A\\mathbf{v})_1 = ${dot(A[0]!, v)}`),
+            para,
+            label(2, "Row 2", "第 2 行"),
+            t("Do the same with row $2$:", "第 $2$ 行也一样："),
+            shown(`(A\\mathbf{v})_2 = ${dot(A[1]!, v)}`),
+            para,
+            t(`So $A\\mathbf{v} = ${ansLatex}$.`, `所以 $A\\mathbf{v} = ${ansLatex}$。`),
+            checked(
+              t(
+                `Combine the columns of $A$ with the weights $${v[0]!}$ and $${v[1]!}$ instead:`,
+                `改为用权重 $${v[0]!}$ 和 $${v[1]!}$ 组合 $A$ 的各列：`,
+              ),
+            ),
+            shown(
+              `${v[0]!}${colVecLatex([A[0]![0]!, A[1]![0]!])} + ${paren(v[1]!)}${colVecLatex([A[0]![1]!, A[1]![1]!])} = ${colVecLatex([t00, t10])} + ${colVecLatex([t01, t11])} = ${ansLatex}`,
+            ),
+            para,
+            t("This is the same vector.", "得到同一个向量。"),
           ),
+          [
+            t("The two entries are swapped: the first entry comes from row $1$.", "两个元素位置反了：第一个元素来自第 $1$ 行。"),
+            t(`The first entry has the wrong sign: row $1$ gives $${res0}$.`, `第一个元素的符号错了：第 $1$ 行给出 $${res0}$。`),
+            t("A matrix times a column vector gives a column vector, not a row.", "矩阵乘列向量得到的是列向量，不是行向量。"),
+            t("Both entries are off. Work out each row again.", "两个元素都不对。把每一行重新算一遍。"),
+          ],
         );
       },
     },
@@ -1038,8 +1489,8 @@ export const multiplyingAMatrixByAColumnVector: TopicDef = {
       id: "matrix-vector-product-as-linear-combination",
       title: t("Matrix-vector products as linear combinations of columns", "矩阵与列向量乘积的列线性组合形式"),
       explanation: t(
-        "A matrix-vector product $A \\mathbf{x}$ equals a linear combination of the column vectors of $A$ scaled by the entries of $\\mathbf{x}$:\n\n$$A \\mathbf{x} = x_1 \\mathbf{a}_1 + x_2 \\mathbf{a}_2 + \\dots + x_n \\mathbf{a}_n$$",
-        "矩阵与列向量的乘积 $A \\mathbf{x}$ 等于矩阵 $A$ 的各列向量以 $\\mathbf{x}$ 的分量为权重的线性组合：\n\n$$A \\mathbf{x} = x_1 \\mathbf{a}_1 + x_2 \\mathbf{a}_2 + \\dots + x_n \\mathbf{a}_n$$",
+        "A matrix-vector product $A \\mathbf{x}$ equals a linear combination of the column vectors of $A$ scaled by the entries of $\\mathbf{x}$:\n\n$$A \\mathbf{x} = x_1 \\mathbf{a}_1 + x_2 \\mathbf{a}_2 + \\dots + x_n \\mathbf{a}_n$$\n\n> **Watch out.** The weights multiply the columns of $A$, not its rows, and $x_1$ goes with the first column.",
+        "矩阵与列向量的乘积 $A \\mathbf{x}$ 等于矩阵 $A$ 的各列向量以 $\\mathbf{x}$ 的分量为权重的线性组合：\n\n$$A \\mathbf{x} = x_1 \\mathbf{a}_1 + x_2 \\mathbf{a}_2 + \\dots + x_n \\mathbf{a}_n$$\n\n> **注意。** 权重乘的是 $A$ 的列，不是行，并且 $x_1$ 对应第一列。",
       ),
       generate(rng) {
         const pool = [-6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6];
@@ -1056,6 +1507,8 @@ export const multiplyingAMatrixByAColumnVector: TopicDef = {
         const col2 = colVecLatex([a12, a22]);
         const row1 = colVecLatex([a11, a12]);
         const row2 = colVecLatex([a21, a22]);
+        const lin = (p: number, q: number) =>
+          `${p === 1 ? "" : p === -1 ? "-" : p}x_1 ${q < 0 ? "-" : "+"} ${Math.abs(q) === 1 ? "" : Math.abs(q)}x_2`;
 
         return oneOf(
           rng,
@@ -1069,10 +1522,32 @@ export const multiplyingAMatrixByAColumnVector: TopicDef = {
             t(`$x_1 ${row1} + x_2 ${row2}$`, `$x_1 ${row1} + x_2 ${row2}$`),
             t(`$x_2 ${row1} + x_1 ${row2}$`, `$x_2 ${row1} + x_1 ${row2}$`),
           ],
-          t(
-            `The columns of $A$ are $\\mathbf{a}_1 = ${col1}$ and $\\mathbf{a}_2 = ${col2}$. Multiplying by $\\begin{pmatrix} x_1 \\\\ x_2 \\end{pmatrix}$ weights these columns: $x_1 \\mathbf{a}_1 + x_2 \\mathbf{a}_2 = x_1 ${col1} + x_2 ${col2}$.`,
-            `矩阵 $A$ 的两列分别为 $\\mathbf{a}_1 = ${col1}$ 和 $\\mathbf{a}_2 = ${col2}$。乘以 $\\begin{pmatrix} x_1 \\\\ x_2 \\end{pmatrix}$ 即为这两列的加权和：$x_1 \\mathbf{a}_1 + x_2 \\mathbf{a}_2 = x_1 ${col1} + x_2 ${col2}$。`,
+          join(
+            label(1, "Read the columns", "读出各列"),
+            t("The first and second columns of $A$ are", "$A$ 的第一列和第二列是"),
+            shown(`\\mathbf{a}_1 = ${col1}, \\quad \\mathbf{a}_2 = ${col2}`),
+            para,
+            label(2, "Weight them", "加权"),
+            t(
+              "Multiplying by the vector weights each column by the matching entry, the first column by $x_1$ and the second by $x_2$:",
+              "乘以这个向量，就是用对应的分量给每一列加权，第一列乘 $x_1$，第二列乘 $x_2$：",
+            ),
+            shown(`x_1 \\mathbf{a}_1 + x_2 \\mathbf{a}_2 = x_1 ${col1} + x_2 ${col2}`),
+            checked(
+              t(
+                `Multiply row by column instead. Row $1$ gives $${lin(a11, a12)}$ and row $2$ gives $${lin(a21, a22)}$. The combination has the same entries: its top entry is $x_1 \\cdot ${paren(a11)} + x_2 \\cdot ${paren(a12)}$ and its bottom entry is $x_1 \\cdot ${paren(a21)} + x_2 \\cdot ${paren(a22)}$.`,
+                `改为按行乘列计算。第 $1$ 行给出 $${lin(a11, a12)}$，第 $2$ 行给出 $${lin(a21, a22)}$。这个组合的元素相同：上面的元素是 $x_1 \\cdot ${paren(a11)} + x_2 \\cdot ${paren(a12)}$，下面的元素是 $x_1 \\cdot ${paren(a21)} + x_2 \\cdot ${paren(a22)}$。`,
+              ),
+            ),
           ),
+          [
+            t("The weights are swapped: $x_1$ goes with the first column.", "权重反了：$x_1$ 对应第一列。"),
+            t(
+              "These are the rows of $A$ written as columns, but the product weights the columns.",
+              "这是把 $A$ 的行写成了列，但乘积是给列加权。",
+            ),
+            t("These are the rows of $A$, and the weights are swapped as well.", "这是 $A$ 的行，而且权重也反了。"),
+          ],
         );
       },
     },
@@ -1090,13 +1565,17 @@ export const multiplyingSquareMatrices: TopicDef = {
   encompasses: [{ topic: "multiplying-a-matrix-by-a-column-vector", weight: 0.4 }],
   xp: 12,
   standards: ["CCSS.HSN.VM.C.8"],
+  intro: t(
+    "You can multiply a matrix by a column vector, row by column. A second matrix is just several columns side by side, so multiplying two matrices multiplies the first by each column of the second. Products of matrices describe doing one change after another, such as two steps of a process or two moves of the plane.\n\nFor example,\n\n$$\\begin{pmatrix} 1 & 2 \\\\ 0 & 1 \\end{pmatrix} \\begin{pmatrix} 3 & 0 \\\\ 1 & 2 \\end{pmatrix} = \\begin{pmatrix} 5 & 4 \\\\ 1 & 2 \\end{pmatrix}$$\n\nThe top left entry is row $1$ times column $1$, $1 \\cdot 3 + 2 \\cdot 1 = 5$, and the top right entry is row $1$ times column $2$, $1 \\cdot 0 + 2 \\cdot 2 = 4$. The bottom row comes from row $2$ in the same way.",
+    "你会按行乘列把矩阵乘以列向量。第二个矩阵就是几个并排的列，所以两个矩阵相乘，就是用第一个矩阵去乘第二个矩阵的每一列。矩阵的乘积描述一个变化接着另一个变化，比如一个过程的两个步骤，或平面的两次变换。\n\n例如\n\n$$\\begin{pmatrix} 1 & 2 \\\\ 0 & 1 \\end{pmatrix} \\begin{pmatrix} 3 & 0 \\\\ 1 & 2 \\end{pmatrix} = \\begin{pmatrix} 5 & 4 \\\\ 1 & 2 \\end{pmatrix}$$\n\n左上元素是第 $1$ 行乘第 $1$ 列，$1 \\cdot 3 + 2 \\cdot 1 = 5$；右上元素是第 $1$ 行乘第 $2$ 列，$1 \\cdot 0 + 2 \\cdot 2 = 4$。下面一行同样由第 $2$ 行得到。",
+  ),
   knowledgePoints: [
     {
       id: "multiplying-2x2-matrices",
       title: t("Multiplying 2x2 matrices", "二阶方阵相乘"),
       explanation: t(
-        "To multiply two $2 \\times 2$ matrices $A$ and $B$, entry $(AB)_{ij}$ is the dot product of row $i$ of $A$ and column $j$ of $B$:\n\n$$\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} e & f \\\\ g & h \\end{pmatrix} = \\begin{pmatrix} ae + bg & af + bh \\\\ ce + dg & cf + dh \\end{pmatrix}$$",
-        "两个 $2 \\times 2$ 矩阵 $A$ 与 $B$ 相乘时，乘积中第 $i$ 行第 $j$ 列的元素是 $A$ 的第 $i$ 行与 $B$ 的第 $j$ 列的点积：\n\n$$\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} e & f \\\\ g & h \\end{pmatrix} = \\begin{pmatrix} ae + bg & af + bh \\\\ ce + dg & cf + dh \\end{pmatrix}$$",
+        "To multiply two $2 \\times 2$ matrices $A$ and $B$, entry $(AB)_{ij}$ is the dot product of row $i$ of $A$ and column $j$ of $B$:\n\n$$\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} e & f \\\\ g & h \\end{pmatrix} = \\begin{pmatrix} ae + bg & af + bh \\\\ ce + dg & cf + dh \\end{pmatrix}$$\n\n> **Watch out.** Each entry is a row of the first matrix times a column of the second. Multiplying matching entries of $A$ and $B$ is not the matrix product, and $BA$ is usually not $AB$.",
+        "两个 $2 \\times 2$ 矩阵 $A$ 与 $B$ 相乘时，乘积中第 $i$ 行第 $j$ 列的元素是 $A$ 的第 $i$ 行与 $B$ 的第 $j$ 列的点积：\n\n$$\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} e & f \\\\ g & h \\end{pmatrix} = \\begin{pmatrix} ae + bg & af + bh \\\\ ce + dg & cf + dh \\end{pmatrix}$$\n\n> **注意。** 每个元素都是第一个矩阵的一行乘第二个矩阵的一列。把 $A$ 和 $B$ 的对应元素相乘不是矩阵乘积，而且 $BA$ 通常不等于 $AB$。",
       ),
       generate(rng) {
         const pool = [-4, -3, -2, -1, 1, 2, 3, 4];
@@ -1110,6 +1589,8 @@ export const multiplyingSquareMatrices: TopicDef = {
         ];
         const AB = matMul(A, B);
         const BA = matMul(B, A);
+        const colA = (j: number) => A.map((r) => r[j]!);
+        const colB = (j: number) => B.map((r) => r[j]!);
         // Hadamard elementwise product
         const hadamard: Mat = [
           [A[0]![0]! * B[0]![0]!, A[0]![1]! * B[0]![1]!],
@@ -1131,10 +1612,39 @@ export const multiplyingSquareMatrices: TopicDef = {
               `$${matLatex(AB.map((r, i) => r.map((v, j) => (i === 0 && j === 1 ? -v : v))))}$`,
             ),
           ],
-          t(
-            `Calculate each entry via row-by-column inner product:\n\n$$(AB)_{11} = (${A[0]![0]!})(${B[0]![0]!}) + (${A[0]![1]!})(${B[1]![0]!}) = ${AB[0]![0]!}$$\n$$(AB)_{12} = (${A[0]![0]!})(${B[0]![1]!}) + (${A[0]![1]!})(${B[1]![1]!}) = ${AB[0]![1]!}$$\n$$(AB)_{21} = (${A[1]![0]!})(${B[0]![0]!}) + (${A[1]![1]!})(${B[1]![0]!}) = ${AB[1]![0]!}$$\n$$(AB)_{22} = (${A[1]![0]!})(${B[0]![1]!}) + (${A[1]![1]!})(${B[1]![1]!}) = ${AB[1]![1]!}$$\n\nResult is $${matLatex(AB)}$.`,
-            `按行与列相乘求和：\n\n$$(AB)_{11} = (${A[0]![0]!})(${B[0]![0]!}) + (${A[0]![1]!})(${B[1]![0]!}) = ${AB[0]![0]!}$$\n$$(AB)_{12} = (${A[0]![0]!})(${B[0]![1]!}) + (${A[0]![1]!})(${B[1]![1]!}) = ${AB[0]![1]!}$$\n$$(AB)_{21} = (${A[1]![0]!})(${B[0]![0]!}) + (${A[1]![1]!})(${B[1]![0]!}) = ${AB[1]![0]!}$$\n$$(AB)_{22} = (${A[1]![0]!})(${B[0]![1]!}) + (${A[1]![1]!})(${B[1]![1]!}) = ${AB[1]![1]!}$$\n\n最终结果为 $${matLatex(AB)}$。`,
+          join(
+            label(1, "The top row", "上面一行"),
+            t("Row $1$ of $A$ times each column of $B$:", "$A$ 的第 $1$ 行乘 $B$ 的每一列："),
+            shown(`(AB)_{11} = ${dot(A[0]!, colB(0))}`, `(AB)_{12} = ${dot(A[0]!, colB(1))}`),
+            para,
+            label(2, "The bottom row", "下面一行"),
+            t("Row $2$ of $A$ times each column of $B$:", "$A$ 的第 $2$ 行乘 $B$ 的每一列："),
+            shown(`(AB)_{21} = ${dot(A[1]!, colB(0))}`, `(AB)_{22} = ${dot(A[1]!, colB(1))}`),
+            para,
+            t(`So $AB = ${matLatex(AB)}$.`, `所以 $AB = ${matLatex(AB)}$。`),
+            checked(
+              t(
+                "Build each column of $AB$ from the columns of $A$, weighted by the entries of the matching column of $B$:",
+                "用 $A$ 的各列组合出 $AB$ 的每一列，权重是 $B$ 对应列的元素：",
+              ),
+            ),
+            shown(
+              ...[0, 1].map(
+                (j) =>
+                  `${B[0]![j]!}${colVecLatex(colA(0))} + ${paren(B[1]![j]!)}${colVecLatex(colA(1))} = ${colVecLatex(AB.map((r) => r[j]!))}`,
+              ),
+            ),
+            para,
+            t("These are the columns found above.", "这正是上面求出的两列。"),
           ),
+          [
+            t("This is $BA$: a matrix product depends on the order of the factors.", "这是 $BA$：矩阵乘积与因子的次序有关。"),
+            t(
+              "This multiplies matching entries, but each entry of $AB$ is a row times a column.",
+              "这里把对应元素相乘了，但 $AB$ 的每个元素是一行乘一列。",
+            ),
+            t(`The top right entry has the wrong sign: it is $${AB[0]![1]!}$.`, `右上元素的符号错了：应该是 $${AB[0]![1]!}$。`),
+          ],
         );
       },
     },
@@ -1142,8 +1652,8 @@ export const multiplyingSquareMatrices: TopicDef = {
       id: "specific-entries-in-matrix-products",
       title: t("Finding specific entries in square matrix products", "计算方阵乘积中的特定元素"),
       explanation: t(
-        "To find a single entry $(AB)_{ij}$ of a matrix product, you only need to multiply row $i$ of matrix $A$ by column $j$ of matrix $B$, without computing the entire product.",
-        "要求矩阵乘积中的某一指定元素 $(AB)_{ij}$，只需用矩阵 $A$ 的第 $i$ 行与矩阵 $B$ 的第 $j$ 列相乘求和，无需算出整个乘积矩阵。",
+        "To find a single entry $(AB)_{ij}$ of a matrix product, you only need to multiply row $i$ of matrix $A$ by column $j$ of matrix $B$, without computing the entire product.\n\n> **Watch out.** Use row $i$ of the first matrix and column $j$ of the second. Taking row $j$ and column $i$ instead gives the entry $(AB)_{ji}$.",
+        "要求矩阵乘积中的某一指定元素 $(AB)_{ij}$，只需用矩阵 $A$ 的第 $i$ 行与矩阵 $B$ 的第 $j$ 列相乘求和，无需算出整个乘积矩阵。\n\n> **注意。** 用第一个矩阵的第 $i$ 行和第二个矩阵的第 $j$ 列。改用第 $j$ 行和第 $i$ 列，得到的是元素 $(AB)_{ji}$。",
       ),
       generate(rng) {
         const pool = [-5, -4, -3, -2, -1, 1, 2, 3, 4, 5];
@@ -1165,9 +1675,7 @@ export const multiplyingSquareMatrices: TopicDef = {
         const r2 = A[i - 1]![1]!;
         const c1 = B[0]![j - 1]!;
         const c2 = B[1]![j - 1]!;
-        const term1 = r1 * c1;
-        const term2 = r2 * c2;
-        const step = term2 < 0 ? `${term1} - ${-term2}` : `${term1} + ${term2}`;
+        const rowC = AB[i - 1]!;
 
         return numberProblem({
           prompt: t(
@@ -1176,9 +1684,22 @@ export const multiplyingSquareMatrices: TopicDef = {
           ),
           answer: val,
           wrong: [swappedVal, -val, val + 2, val - 3, val + 1],
-          solution: t(
-            `Take row $${i}$ of $A$ and column $${j}$ of $B$:\n\n$$c_{${i}${j}} = (${r1})(${c1}) + (${r2})(${c2}) = ${step} = ${val}$$`,
-            `取 $A$ 的第 $${i}$ 行与 $B$ 的第 $${j}$ 列相乘求和：\n\n$$c_{${i}${j}} = (${r1})(${c1}) + (${r2})(${c2}) = ${step} = ${val}$$`,
+          solution: join(
+            label(1, "Pick the row and the column", "取出行和列"),
+            t(
+              `Row $${i}$ of $A$ is $${r1}, ${r2}$ and column $${j}$ of $B$ is $${c1}, ${c2}$.`,
+              `$A$ 的第 $${i}$ 行是 $${r1}, ${r2}$，$B$ 的第 $${j}$ 列是 $${c1}, ${c2}$。`,
+            ),
+            para,
+            label(2, "Multiply and add", "相乘再相加"),
+            t("Multiply matching entries and add:", "对应元素相乘再相加："),
+            shown(`c_{${i}${j}} = ${dot([r1, r2], [c1, c2])}`),
+            checked(
+              t(
+                `Find the whole row $${i}$ of $AB$ instead, as $${r1}$ times row $1$ of $B$ plus $${paren(r2)}$ times row $2$ of $B$. It is $${rowC.join(", ")}$, and entry number $${j}$ is $${val}$.`,
+                `改为求出 $AB$ 的整个第 $${i}$ 行：$B$ 第 $1$ 行的 $${r1}$ 倍加第 $2$ 行的 $${paren(r2)}$ 倍。它是 $${rowC.join(", ")}$，第 $${j}$ 个元素是 $${val}$。`,
+              ),
+            ),
           ),
         });
       },
@@ -1200,13 +1721,17 @@ export const conformabilityForMatrixMultiplication: TopicDef = {
   encompasses: [],
   xp: 12,
   standards: ["CCSS.HSN.VM.C.8"],
+  intro: t(
+    "You can multiply square matrices, row by column. For that to work with any matrices, each row of the first must have as many entries as each column of the second, so that they pair up. This tells you before any arithmetic whether a product exists and how large it is.\n\nIf $A$ is $2 \\times 3$ and $B$ is $3 \\times 4$, write the sizes side by side as $(2 \\times 3)(3 \\times 4)$. The inner numbers are both $3$, so $AB$ exists, and the outer numbers give its size, $2 \\times 4$. In the other order, $(3 \\times 4)(2 \\times 3)$ has inner numbers $4$ and $2$, so $BA$ does not exist.",
+    "你会按行乘列把方阵相乘。要让任意矩阵都能这样相乘，第一个矩阵的每一行必须和第二个矩阵的每一列有同样多的元素，才能一一配对。这样在做任何计算之前，就能知道乘积是否存在、有多大。\n\n若 $A$ 是 $2 \\times 3$，$B$ 是 $3 \\times 4$，把大小并排写成 $(2 \\times 3)(3 \\times 4)$。里面的两个数都是 $3$，所以 $AB$ 存在，外面的两个数给出它的大小 $2 \\times 4$。换个次序，$(3 \\times 4)(2 \\times 3)$ 里面的数是 $4$ 和 $2$，所以 $BA$ 不存在。",
+  ),
   knowledgePoints: [
     {
       id: "dimension-conformability-conditions",
       title: t("Determining if a matrix product is defined", "判断矩阵乘法是否相容可行"),
       explanation: t(
-        "Matrix multiplication $AB$ is defined if and only if the number of columns in $A$ equals the number of rows in $B$. That is, if $A$ is $m \\times k$ and $B$ is $k \\times n$, the product $AB$ is defined and has dimension $m \\times n$.",
-        "矩阵乘法 $AB$ 有定义当且仅当矩阵 $A$ 的列数等于矩阵 $B$ 的行数（内侧维度相等）。即若 $A$ 为 $m \\times k$，而 $B$ 为 $k \\times n$，则乘积 $AB$ 有定义，其维度为 $m \\times n$。",
+        "Matrix multiplication $AB$ is defined if and only if the number of columns in $A$ equals the number of rows in $B$. That is, if $A$ is $m \\times k$ and $B$ is $k \\times n$, the product $AB$ is defined and has dimension $m \\times n$.\n\n> **Watch out.** Compare the two inner numbers, the columns of the first matrix and the rows of the second. The outer numbers give the size of the product and play no part in whether it exists.",
+        "矩阵乘法 $AB$ 有定义当且仅当矩阵 $A$ 的列数等于矩阵 $B$ 的行数（内侧维度相等）。即若 $A$ 为 $m \\times k$，而 $B$ 为 $k \\times n$，则乘积 $AB$ 有定义，其维度为 $m \\times n$。\n\n> **注意。** 比较里面的两个数，即第一个矩阵的列数和第二个矩阵的行数。外面的两个数给出乘积的大小，与乘积是否存在无关。",
       ),
       generate(rng) {
         const isDefined = rng.bool();
@@ -1228,10 +1753,33 @@ export const conformabilityForMatrixMultiplication: TopicDef = {
               t(`Defined; dimensions of $AB$ are $${k} \\times ${p}$.`, `有定义；$AB$ 的维度为 $${k} \\times ${p}$。`),
               t(`Defined; dimensions of $AB$ are $${n} \\times ${m}$.`, `有定义；$AB$ 的维度为 $${n} \\times ${m}$。`),
             ],
-            t(
-              `The inner dimensions match ($${k} = ${p}$). Therefore $AB$ is defined, with outer dimensions $${m} \\times ${n}$.`,
-              `内侧维度相等（$${k} = ${p}$）。因此 $AB$ 有定义，其外侧维度决定了结果矩阵维度为 $${m} \\times ${n}$。`,
+            join(
+              label(1, "Write the sizes", "写出大小"),
+              t(
+                `Side by side the sizes are $(${m} \\times ${k})(${p} \\times ${n})$.`,
+                `把大小并排写成 $(${m} \\times ${k})(${p} \\times ${n})$。`,
+              ),
+              para,
+              label(2, "Compare the inner numbers", "比较里面的数"),
+              t(
+                `The inner numbers are $${k}$ and $${p}$, which are equal, so $AB$ is defined. The outer numbers give its size, $${m} \\times ${n}$.`,
+                `里面的数是 $${k}$ 和 $${p}$，相等，所以 $AB$ 有定义。外面的数给出它的大小 $${m} \\times ${n}$。`,
+              ),
+              checked(
+                t(
+                  `Each entry of $AB$ pairs a row of $A$, which has $${k}$ ${k === 1 ? "entry" : "entries"}, with a column of $B$, which has $${p}$, so the entries pair up. There are $${m}$ rows of $A$ and $${n}$ ${n === 1 ? "column" : "columns"} of $B$ to choose, so $AB$ has $${m}$ rows and $${n}$ ${n === 1 ? "column" : "columns"}.`,
+                  `$AB$ 的每个元素把 $A$ 的一行（有 $${k}$ 个元素）与 $B$ 的一列（有 $${p}$ 个元素）配对，元素正好一一对应。$A$ 有 $${m}$ 行、$B$ 有 $${n}$ 列可选，所以 $AB$ 有 $${m}$ 行 $${n}$ 列。`,
+                ),
+              ),
             ),
+            [
+              t(`The inner numbers are both $${k}$, so they do match.`, `里面的两个数都是 $${k}$，是相等的。`),
+              t(
+                "These are the inner numbers, but the size of the product comes from the outer ones.",
+                "这是里面的两个数，但乘积的大小由外面的数决定。",
+              ),
+              t("The outer numbers are in the wrong order: the rows of $A$ come first.", "外面的数次序反了：$A$ 的行数在前。"),
+            ],
           );
         }
 
@@ -1247,10 +1795,33 @@ export const conformabilityForMatrixMultiplication: TopicDef = {
             t(`Defined; dimensions of $AB$ are $${k} \\times ${p}$.`, `有定义；$AB$ 的维度为 $${k} \\times ${p}$。`),
             t(`Defined; dimensions of $AB$ are $${p} \\times ${k}$.`, `有定义；$AB$ 的维度为 $${p} \\times ${k}$。`),
           ],
-          t(
-            `Matrix $A$ has $${k}$ columns, but matrix $B$ has $${p}$ rows. Because $${k} \\ne ${p}$, the inner dimensions do not match and $AB$ is not defined.`,
-            `矩阵 $A$ 有 $${k}$ 列，而矩阵 $B$ 有 $${p}$ 行。由于 $${k} \\ne ${p}$，内侧维度不相等，故乘积 $AB$ 未定义。`,
+          join(
+            label(1, "Write the sizes", "写出大小"),
+            t(
+              `Side by side the sizes are $(${m} \\times ${k})(${p} \\times ${n})$.`,
+              `把大小并排写成 $(${m} \\times ${k})(${p} \\times ${n})$。`,
+            ),
+            para,
+            label(2, "Compare the inner numbers", "比较里面的数"),
+            t(
+              `$A$ has $${k}$ ${k === 1 ? "column" : "columns"}, but $B$ has $${p}$ ${p === 1 ? "row" : "rows"}. Because $${k} \\ne ${p}$, $AB$ is not defined.`,
+              `$A$ 有 $${k}$ 列，而 $B$ 有 $${p}$ 行。由于 $${k} \\ne ${p}$，$AB$ 没有定义。`,
+            ),
+            checked(
+              t(
+                `Try to form one entry. A row of $A$ has $${k}$ ${k === 1 ? "entry" : "entries"} and a column of $B$ has $${p}$, so they cannot be paired off one to one.`,
+                `试着算一个元素。$A$ 的一行有 $${k}$ 个元素，$B$ 的一列有 $${p}$ 个元素，无法一一配对。`,
+              ),
+            ),
           ),
+          [
+            t(
+              `The outer numbers would give $${m} \\times ${n}$, but first the inner numbers $${k}$ and $${p}$ must match.`,
+              `外面的数会给出 $${m} \\times ${n}$，但先要里面的数 $${k}$ 和 $${p}$ 相等。`,
+            ),
+            t("These are the inner numbers, and they do not match.", "这是里面的两个数，而且它们不相等。"),
+            t("These are the inner numbers, and they do not match.", "这是里面的两个数，而且它们不相等。"),
+          ],
         );
       },
     },
@@ -1258,8 +1829,8 @@ export const conformabilityForMatrixMultiplication: TopicDef = {
       id: "multiplication-order-and-dimension-compatibility",
       title: t("Order and compatibility of products", "矩阵乘法次序与相容性"),
       explanation: t(
-        "Even when $AB$ is defined, $BA$ might not be defined. If $A$ is $m \\times n$ and $B$ is $n \\times p$ with $m \\ne p$, $AB$ is defined ($m \\times p$), but $BA$ is not defined because $p \\ne m$.",
-        "即使乘积 $AB$ 有定义，$BA$ 也不一定有定义。若 $A$ 为 $m \\times n$ 而 $B$ 为 $n \\times p$（且 $m \\ne p$），则 $AB$ 有定义（为 $m \\times p$），但 $BA$ 未定义（因为 $p \\ne m$）。",
+        "Even when $AB$ is defined, $BA$ might not be defined. If $A$ is $m \\times n$ and $B$ is $n \\times p$ with $m \\ne p$, $AB$ is defined ($m \\times p$), but $BA$ is not defined because $p \\ne m$.\n\n> **Watch out.** Check $AB$ and $BA$ separately. For $BA$ the inner numbers are the columns of $B$ and the rows of $A$.",
+        "即使乘积 $AB$ 有定义，$BA$ 也不一定有定义。若 $A$ 为 $m \\times n$ 而 $B$ 为 $n \\times p$（且 $m \\ne p$），则 $AB$ 有定义（为 $m \\times p$），但 $BA$ 未定义（因为 $p \\ne m$）。\n\n> **注意。** 要分别检查 $AB$ 和 $BA$。对 $BA$ 来说，里面的数是 $B$ 的列数和 $A$ 的行数。",
       ),
       generate(rng) {
         const m = rng.pick([2, 3, 4, 5, 6]);
@@ -1284,10 +1855,30 @@ export const conformabilityForMatrixMultiplication: TopicDef = {
               `$BA$ 有定义（维度为 $${p} \\times ${m}$），但 $AB$ 未定义。`,
             ),
           ],
-          t(
-            `For $AB$: inner dimensions match ($${n} = ${n}$), so $AB$ is defined with dimensions $${m} \\times ${p}$. For $BA$: dimensions are $(n \\times p)(m \\times n)$, and inner dimensions $${p} \\ne ${m}$, so $BA$ is not defined.`,
-            `对于 $AB$：内侧维度匹配（$${n} = ${n}$），故 $AB$ 有定义且维度为 $${m} \\times ${p}$。对于 $BA$：维度为 $(n \\times p)(m \\times n)$，内侧维度 $${p} \\ne ${m}$，因此 $BA$ 未定义。`,
+          join(
+            label(1, "Check $AB$", "检查 $AB$"),
+            t(
+              `The sizes are $(${m} \\times ${n})(${n} \\times ${p})$. The inner numbers are both $${n}$, so $AB$ is defined and is $${m} \\times ${p}$.`,
+              `大小是 $(${m} \\times ${n})(${n} \\times ${p})$。里面的数都是 $${n}$，所以 $AB$ 有定义，是 $${m} \\times ${p}$ 矩阵。`,
+            ),
+            para,
+            label(2, "Check $BA$", "检查 $BA$"),
+            t(
+              `The sizes are $(${n} \\times ${p})(${m} \\times ${n})$. The inner numbers are $${p}$ and $${m}$, and $${p} \\ne ${m}$, so $BA$ is not defined.`,
+              `大小是 $(${n} \\times ${p})(${m} \\times ${n})$。里面的数是 $${p}$ 和 $${m}$，而 $${p} \\ne ${m}$，所以 $BA$ 没有定义。`,
+            ),
+            checked(
+              t(
+                `Try to pair entries. In $BA$ a row of $B$ has $${p}$ ${p === 1 ? "entry" : "entries"} and a column of $A$ has $${m}$, so they cannot be paired. In $AB$ a row of $A$ and a column of $B$ both have $${n}$ entries.`,
+                `试着配对元素。在 $BA$ 中，$B$ 的一行有 $${p}$ 个元素，$A$ 的一列有 $${m}$ 个，无法配对。在 $AB$ 中，$A$ 的一行和 $B$ 的一列都有 $${n}$ 个元素。`,
+              ),
+            ),
           ),
+          [
+            t(`$BA$ would need $${p} = ${m}$, and these differ.`, `$BA$ 需要 $${p} = ${m}$，而两者不同。`),
+            t(`$AB$ is defined: its inner numbers are both $${n}$.`, `$AB$ 有定义：它里面的数都是 $${n}$。`),
+            t("This swaps the two products: $AB$ is the one whose inner numbers match.", "这把两个乘积弄反了：里面的数相等的是 $AB$。"),
+          ],
         );
       },
     },

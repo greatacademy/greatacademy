@@ -713,16 +713,17 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "the-possible-shapes-for-a-count",
       ["The possible shapes for a count", "个数对应的形状"],
       [
-        "A matrix with $m$ rows and $n$ columns has $mn$ entries. So a number of entries can be arranged in as many shapes as it has ordered factor pairs.",
-        "$m$ 行 $n$ 列的矩阵有 $mn$ 个元素。所以一个元素个数有多少组有序因数对，就能排成多少种形状。",
+        "A matrix with $m$ rows and $n$ columns has $mn$ entries. So a number of entries can be arranged in as many shapes as it has ordered factor pairs.\n\n> **Watch out.** Count $2 \\times 3$ and $3 \\times 2$ as two shapes, and do not forget the shapes with a single row or a single column, such as $1 \\times 6$ and $6 \\times 1$.",
+        "$m$ 行 $n$ 列的矩阵有 $mn$ 个元素。所以一个元素个数有多少组有序因数对，就能排成多少种形状。\n\n> **注意。** $2 \\times 3$ 和 $3 \\times 2$ 算两种形状，也不要漏掉只有一行或一列的形状，比如 $1 \\times 6$ 和 $6 \\times 1$。",
       ],
       (rng) => {
         const n = rng.pick([
           4, 6, 8, 9, 10, 12, 14, 15, 16, 18, 20, 21, 22, 24, 25, 26, 27, 28, 30, 32, 33, 34, 35, 36, 38, 39, 40, 42, 44, 45, 48, 49, 50,
           60,
         ]);
-        let count = 0;
-        for (let i = 1; i <= n; i++) if (n % i === 0) count++;
+        const factors = Array.from({ length: n }, (_, i) => i + 1).filter((f) => n % f === 0);
+        const count = factors.length;
+        const shapes = factors.map((f) => `${f} \\times ${n / f}`).join(", ");
         return whole(
           [
             `A matrix has exactly ${n} entries. How many different shapes $m \\times n$ could it have, counting $2 \\times 3$ and $3 \\times 2$ as different?`,
@@ -731,8 +732,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
           count,
           [Math.ceil(count / 2) === count ? count + 1 : Math.ceil(count / 2), count + 1, count - 1],
           [
-            `Each factor of ${n} can be the number of rows, and it has ${count} factors.`,
-            `${n} 的每个因数都可以是行数，它有 ${count} 个因数。`,
+            `**Step 1: Pick the number of rows.** The number of rows $m$ must divide $${n}$, and then the number of columns is $${n} \\div m$. So each factor of $${n}$ gives exactly one shape.\n\n**Step 2: Count the factors.** The factors of $${n}$ are $${factors.join(", ")}$. There are $${count}$ of them, so there are $${count}$ shapes.\n\n**Check.** List the shapes: $${shapes}$. Each multiplies out to $${n}$, and there are $${count}$ of them.`,
+            `**第一步：选行数。**行数 $m$ 必须整除 $${n}$，列数就是 $${n} \\div m$。所以 $${n}$ 的每个因数恰好对应一种形状。\n\n**第二步：数因数。**$${n}$ 的因数是 $${factors.join(", ")}$，共 $${count}$ 个，所以有 $${count}$ 种形状。\n\n**检验。**列出这些形状：$${shapes}$。每一种的乘积都是 $${n}$，共 $${count}$ 种。`,
           ],
         );
       },
@@ -743,16 +744,17 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "the-trace-from-the-index",
       ["Summing the diagonal from a rule", "由规则求对角线之和"],
       [
-        "The diagonal holds the entries where the row and column numbers match. So a rule for $a_{ij}$ gives each diagonal entry by setting $i = j$, and their sum is called the trace.",
-        "对角线上是行号和列号相同的元素。所以由 $a_{ij}$ 的规则，令 $i = j$ 得到每个对角元素，它们的和叫做迹。",
+        "The diagonal holds the entries where the row and column numbers match. So a rule for $a_{ij}$ gives each diagonal entry by setting $i = j$, and their sum is called the trace.\n\n> **Watch out.** The constant term is in every diagonal entry, so it is added $n$ times, not once.",
+        "对角线上是行号和列号相同的元素。所以由 $a_{ij}$ 的规则，令 $i = j$ 得到每个对角元素，它们的和叫做迹。\n\n> **注意。** 常数项在每个对角元素里都有，所以要加 $n$ 次，而不是一次。",
       ],
       (rng) => {
         const n = rng.int(2, 6);
         const p = rng.int(1, 6);
         const q = rng.int(1, 6);
         const c = rng.int(-6, 6);
-        let trace = 0;
-        for (let i = 1; i <= n; i++) trace += p * i + q * i + c;
+        const diagonal = Array.from({ length: n }, (_, i) => (p + q) * (i + 1) + c);
+        const trace = diagonal.reduce((a, b) => a + b, 0);
+        const part = ((p + q) * n * (n + 1)) / 2;
         return integer(
           [
             `A $${n} \\times ${n}$ matrix has entries $a_{ij} = ${p}i + ${q}j${c < 0 ? ` - ${-c}` : ` + ${c}`}$. Find the sum of its diagonal entries.`,
@@ -761,8 +763,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
           trace,
           [trace - n * c, (p + q + c) * n, trace + p + q],
           [
-            `Each diagonal entry is $${p + q}i${c < 0 ? ` - ${-c}` : ` + ${c}`}$, and adding for $i = 1$ to ${n} gives ${trace}.`,
-            `每个对角元素是 $${p + q}i${c < 0 ? ` - ${-c}` : ` + ${c}`}$，$i$ 从 1 到 ${n} 相加得 ${trace}。`,
+            `**Step 1: Find the diagonal entries.** On the diagonal $j = i$, so $a_{ii} = ${p}i + ${q}i${c < 0 ? ` - ${-c}` : ` + ${c}`} = ${p + q}i${c < 0 ? ` - ${-c}` : ` + ${c}`}$. For $i = 1$ to $${n}$ these are $${diagonal.join(", ")}$.\n\n**Step 2: Add them.** Their sum is $${trace}$.\n\n**Check.** Add the two parts separately. The terms $${p + q}i$ give $${p + q}(1 + \\dots + ${n}) = ${p + q} \\cdot ${(n * (n + 1)) / 2} = ${part}$, and the constant gives $${n} \\cdot ${paren(c)} = ${n * c}$. Together $${part}${n * c < 0 ? ` - ${-n * c}` : ` + ${n * c}`} = ${trace}$.`,
+            `**第一步：求对角元素。**对角线上 $j = i$，所以 $a_{ii} = ${p}i + ${q}i${c < 0 ? ` - ${-c}` : ` + ${c}`} = ${p + q}i${c < 0 ? ` - ${-c}` : ` + ${c}`}$。$i$ 从 $1$ 到 $${n}$ 时依次是 $${diagonal.join(", ")}$。\n\n**第二步：相加。**它们的和是 $${trace}$。\n\n**检验。**把两部分分开相加。$${p + q}i$ 各项之和是 $${p + q}(1 + \\dots + ${n}) = ${p + q} \\cdot ${(n * (n + 1)) / 2} = ${part}$，常数项之和是 $${n} \\cdot ${paren(c)} = ${n * c}$。合起来 $${part}${n * c < 0 ? ` - ${-n * c}` : ` + ${n * c}`} = ${trace}$。`,
           ],
         );
       },
@@ -773,8 +775,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "solving-a-matrix-equation-entry-by-entry",
       ["Solving a matrix equation entry by entry", "逐元素解矩阵方程"],
       [
-        "Matrices are equal only when each entry matches, so an unknown inside a sum is found from the one entry that contains it. The other entries are a check on the equation.",
-        "每个元素都相同时矩阵才相等，所以和中的未知数由含它的那个元素求出。其他元素用来检验方程。",
+        "Matrices are equal only when each entry matches, so an unknown inside a sum is found from the one entry that contains it. The other entries are a check on the equation.\n\n> **Watch out.** After subtracting, divide by the coefficient of $x$: $3x = 12$ gives $x = 4$, not $12$.",
+        "每个元素都相同时矩阵才相等，所以和中的未知数由含它的那个元素求出。其他元素用来检验方程。\n\n> **注意。** 相减之后还要除以 $x$ 的系数：$3x = 12$ 得 $x = 4$，而不是 $12$。",
       ],
       (rng) => {
         const a = nz(rng, 9);
@@ -793,8 +795,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
           x,
           [m * x, a + m * x, -x],
           [
-            `The top left entries give $${a} + ${m}x = ${a + m * x}$, so $x = ${x}$.`,
-            `左上元素给出 $${a} + ${m}x = ${a + m * x}$，所以 $x = ${x}$。`,
+            `**Step 1: Use the entry with $x$.** Only the top left entry contains $x$, and matching entries are added, so $${a} + ${m}x = ${a + m * x}$.\n\n**Step 2: Solve.** Subtracting gives $${m}x = ${a + m * x} - ${paren(a)} = ${m * x}$, and dividing by $${m}$ gives $x = ${x}$.\n\n**Check.** With $x = ${x}$ the top left entry is $${a} + ${m} \\cdot ${paren(x)} = ${a + m * x}$. The other entries agree as well: $${b} + ${paren(p)} = ${b + p}$, $${c} + ${paren(q)} = ${c + q}$ and $${d} + 1 = ${d + 1}$.`,
+            `**第一步：用含 $x$ 的元素。**只有左上元素含 $x$，对应元素相加，所以 $${a} + ${m}x = ${a + m * x}$。\n\n**第二步：求解。**相减得 $${m}x = ${a + m * x} - ${paren(a)} = ${m * x}$，再除以 $${m}$ 得 $x = ${x}$。\n\n**检验。**$x = ${x}$ 时左上元素是 $${a} + ${m} \\cdot ${paren(x)} = ${a + m * x}$。其他元素也都相符：$${b} + ${paren(p)} = ${b + p}$，$${c} + ${paren(q)} = ${c + q}$，$${d} + 1 = ${d + 1}$。`,
           ],
         );
       },
@@ -805,8 +807,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "the-matrix-that-completes-an-equation",
       ["The matrix that completes an equation", "使等式成立的矩阵"],
       [
-        "Additive inverses let matrix equations be solved like ordinary ones. Subtracting $A$ from both sides of $A + X = B$ leaves $X = B - A$, and the order of this subtraction matters.",
-        "有了加法逆元，矩阵方程可以像普通方程一样解。$A + X = B$ 两边减 $A$，得 $X = B - A$，减法的次序很重要。",
+        "Additive inverses let matrix equations be solved like ordinary ones. Subtracting $A$ from both sides of $A + X = B$ leaves $X = B - A$, and the order of this subtraction matters.\n\n> **Watch out.** Subtract the given matrix from the right side, $X = B - A$, not $A - B$; the second has every sign reversed.",
+        "有了加法逆元，矩阵方程可以像普通方程一样解。$A + X = B$ 两边减 $A$，得 $X = B - A$，减法的次序很重要。\n\n> **注意。** 要用右边减去给定矩阵，$X = B - A$，而不是 $A - B$；后者每个符号都反了。",
       ],
       (rng) => {
         const [a, b, c, d] = [nz(rng, 9), nz(rng, 9), nz(rng, 9), nz(rng, 9)];
@@ -820,7 +822,10 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
             ],
             mat([e - a, f - b], [g - c, h - d]),
             [mat([a - e, b - f], [c - g, d - h]), mat([e + a, f + b], [g + c, h + d]), mat([e - a, g - c], [f - b, h - d])],
-            [`$X$ is the right side minus the given matrix, entry by entry.`, `$X$ 是右边减去给定矩阵，逐元素计算。`],
+            [
+              `**Step 1: Subtract.** Subtracting the given matrix from both sides leaves $X$ equal to the right side minus the given matrix.\n\n**Step 2: Work out each entry.** Entry by entry, $${e} - ${paren(a)} = ${e - a}$, $${f} - ${paren(b)} = ${f - b}$, $${g} - ${paren(c)} = ${g - c}$ and $${h} - ${paren(d)} = ${h - d}$.\n\n**Check.** Add $X$ back to the given matrix: $${a} + ${paren(e - a)} = ${e}$, $${b} + ${paren(f - b)} = ${f}$, $${c} + ${paren(g - c)} = ${g}$ and $${d} + ${paren(h - d)} = ${h}$. These are the entries of the right side.`,
+              `**第一步：相减。**两边同时减去给定矩阵，得 $X$ 等于右边减去给定矩阵。\n\n**第二步：逐个计算。**逐个元素地，$${e} - ${paren(a)} = ${e - a}$，$${f} - ${paren(b)} = ${f - b}$，$${g} - ${paren(c)} = ${g - c}$，$${h} - ${paren(d)} = ${h - d}$。\n\n**检验。**把 $X$ 加回给定矩阵：$${a} + ${paren(e - a)} = ${e}$，$${b} + ${paren(f - b)} = ${f}$，$${c} + ${paren(g - c)} = ${g}$，$${d} + ${paren(h - d)} = ${h}$。这正是右边的元素。`,
+            ],
           ),
           [
             [
@@ -848,8 +853,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "the-scalar-from-the-entries",
       ["The scalar from the entries", "由元素求标量"],
       [
-        "If one matrix is a scalar multiple of another, every entry changes by the same factor. So any nonzero entry gives the scalar, and the others must agree with it.",
-        "如果一个矩阵是另一个的标量倍，每个元素都变化相同的倍数。所以任一非零元素给出标量，其他元素必须与之一致。",
+        "If one matrix is a scalar multiple of another, every entry changes by the same factor. So any nonzero entry gives the scalar, and the others must agree with it.\n\n> **Watch out.** Divide the new entry by the old one, not the other way around, and keep the sign: $-12 \\div 3 = -4$.",
+        "如果一个矩阵是另一个的标量倍，每个元素都变化相同的倍数。所以任一非零元素给出标量，其他元素必须与之一致。\n\n> **注意。** 用新元素除以原元素，不要反过来，并且保留符号：$-12 \\div 3 = -4$。",
       ],
       (rng) => {
         const k = rng.int(2, 9) * (rng.bool() ? 1 : -1);
@@ -861,7 +866,10 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
           ],
           k,
           [-k, k * a, k + 1],
-          [`$${k * a} \\div (${a}) = ${k}$, and every other entry agrees.`, `$${k * a} \\div (${a}) = ${k}$，其他元素都一致。`],
+          [
+            `**Step 1: Pick an entry.** The top left entry $${a}$ becomes $${k * a}$, so $k \\cdot ${paren(a)} = ${k * a}$.\n\n**Step 2: Divide.** $k = ${k * a} \\div ${paren(a)} = ${k}$.\n\n**Check.** Multiply the other entries by $${k}$: $${k} \\cdot ${paren(b)} = ${k * b}$, $${k} \\cdot ${paren(c)} = ${k * c}$ and $${k} \\cdot ${paren(d)} = ${k * d}$. These match the right side.`,
+            `**第一步：选一个元素。**左上元素 $${a}$ 变成了 $${k * a}$，所以 $k \\cdot ${paren(a)} = ${k * a}$。\n\n**第二步：相除。**$k = ${k * a} \\div ${paren(a)} = ${k}$。\n\n**检验。**把其他元素乘以 $${k}$：$${k} \\cdot ${paren(b)} = ${k * b}$，$${k} \\cdot ${paren(c)} = ${k * c}$，$${k} \\cdot ${paren(d)} = ${k * d}$。这些与右边相符。`,
+          ],
         );
       },
     ),
@@ -871,21 +879,40 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "powers-of-a-diagonal-matrix",
       ["Powers of a diagonal matrix", "对角矩阵的幂"],
       [
-        "Multiplying diagonal matrices only multiplies their diagonal entries. So a power of a diagonal matrix raises each diagonal entry to that power, with no other work needed.",
-        "对角矩阵相乘时，只有对角元素相乘。所以对角矩阵的幂就是每个对角元素取这个幂，不需要其他计算。",
+        "Multiplying diagonal matrices only multiplies their diagonal entries. So a power of a diagonal matrix raises each diagonal entry to that power, with no other work needed.\n\n> **Watch out.** A negative entry raised to an odd power stays negative: $(-2)^3 = -8$. The entries off the diagonal stay $0$.",
+        "对角矩阵相乘时，只有对角元素相乘。所以对角矩阵的幂就是每个对角元素取这个幂，不需要其他计算。\n\n> **注意。** 负的元素取奇数次幂仍是负的：$(-2)^3 = -8$。对角线以外的元素仍是 $0$。",
       ],
       (rng) => {
         const a = rng.int(2, 5) * (rng.bool() ? 1 : -1);
         const b = rng.int(2, 5) * (rng.bool() ? 1 : -1);
         const n = rng.int(2, 4);
-        return chooseFilled(
-          rng,
-          [`Find $${mat([a, 0], [0, b])}^{${n}}$.`, `求 $${mat([a, 0], [0, b])}^{${n}}$。`],
-          mat([a ** n, 0], [0, b ** n]),
-          [mat([n * a, 0], [0, n * b]), mat([a ** n, b ** n], [b ** n, a ** n]), mat([a ** n + 1, 0], [0, b ** n])],
+        return reasoned(
+          chooseFilled(
+            rng,
+            [`Find $${mat([a, 0], [0, b])}^{${n}}$.`, `求 $${mat([a, 0], [0, b])}^{${n}}$。`],
+            mat([a ** n, 0], [0, b ** n]),
+            [mat([n * a, 0], [0, n * b]), mat([a ** n, b ** n], [b ** n, a ** n]), mat([a ** n + 1, 0], [0, b ** n])],
+            [
+              `**Step 1: Multiply diagonal matrices.** In a product of diagonal matrices, each entry off the diagonal is a sum of products that each contain a $0$, so it stays $0$, and each diagonal entry is the product of the diagonal entries.\n\n**Step 2: Raise the diagonal entries.** So each diagonal entry is raised to the power $${n}$: $(${a})^{${n}} = ${a ** n}$ and $(${b})^{${n}} = ${b ** n}$.\n\n**Check.** Work out the square row by column. The top left entry is $${a} \\cdot ${paren(a)} + 0 \\cdot 0 = ${a * a}$, the top right entry is $${a} \\cdot 0 + 0 \\cdot ${paren(b)} = 0$, and the bottom row is $0, ${b * b}$ in the same way. Each further factor multiplies the diagonal entries by $${a}$ and $${b}$ again, which reaches $${a ** n}$ and $${b ** n}$ after $${n}$ factors.`,
+              `**第一步：对角矩阵相乘。**对角矩阵相乘时，对角线以外的每个元素都是一些含 $0$ 的乘积之和，所以仍是 $0$；每个对角元素是对角元素的乘积。\n\n**第二步：对角元素取幂。**所以每个对角元素取 ${n} 次幂：$(${a})^{${n}} = ${a ** n}$，$(${b})^{${n}} = ${b ** n}$。\n\n**检验。**按行乘列算出平方。左上元素是 $${a} \\cdot ${paren(a)} + 0 \\cdot 0 = ${a * a}$，右上元素是 $${a} \\cdot 0 + 0 \\cdot ${paren(b)} = 0$，同样地下面一行是 $0, ${b * b}$。每再乘一个因子，对角元素就再乘以 $${a}$ 和 $${b}$，乘满 $${n}$ 个因子得到 $${a ** n}$ 和 $${b ** n}$。`,
+            ],
+          ),
           [
-            `Raise each diagonal entry to the power ${n}: $(${a})^{${n}} = ${a ** n}$ and $(${b})^{${n}} = ${b ** n}$.`,
-            `每个对角元素取 ${n} 次幂：$(${a})^{${n}} = ${a ** n}$，$(${b})^{${n}} = ${b ** n}$。`,
+            [
+              `$${mat([n * a, 0], [0, n * b])}$`,
+              `This multiplies the diagonal entries by $${n}$ instead of raising them to the power $${n}$.`,
+              `这里把对角元素乘以 $${n}$，而不是取 $${n}$ 次幂。`,
+            ],
+            [
+              `$${mat([a ** n, b ** n], [b ** n, a ** n])}$`,
+              "The entries off the diagonal stay $0$ in every power of a diagonal matrix.",
+              "对角矩阵的每个幂中，对角线以外的元素都仍是 $0$。",
+            ],
+            [
+              `$${mat([a ** n + 1, 0], [0, b ** n])}$`,
+              `The top left entry is $(${a})^{${n}} = ${a ** n}$.`,
+              `左上元素是 $(${a})^{${n}} = ${a ** n}$。`,
+            ],
           ],
         );
       },
@@ -896,8 +923,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "the-transpose-of-a-product",
       ["The transpose of a product", "积的转置"],
       [
-        "Transposing a product reverses its order: $(AB)^{T} = B^{T}A^{T}$. The reversal is needed for the shapes to fit, and it is similar to taking off socks and shoes in reverse order.",
-        "积的转置要反转次序：$(AB)^{T} = B^{T}A^{T}$。反转才能使形状相符，就像脱鞋袜的次序与穿时相反。",
+        "Transposing a product reverses its order: $(AB)^{T} = B^{T}A^{T}$. The reversal is needed for the shapes to fit, and it is similar to taking off socks and shoes in reverse order.\n\n> **Watch out.** $(AB)^{T}$ is $B^{T}A^{T}$, not $A^{T}B^{T}$. The second is often not even defined.",
+        "积的转置要反转次序：$(AB)^{T} = B^{T}A^{T}$。反转才能使形状相符，就像脱鞋袜的次序与穿时相反。\n\n> **注意。** $(AB)^{T}$ 是 $B^{T}A^{T}$，不是 $A^{T}B^{T}$。后者常常根本没有定义。",
       ],
       (rng) => {
         const m = rng.int(2, 9);
@@ -914,8 +941,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
             `${B}^{T}${A}^{T}`,
             [`${A}^{T}${B}^{T}`, `${B}${A}`, `${A}${B}`],
             [
-              `A transpose of a product reverses the order, and the shapes $${p} \\times ${n}$ and $${n} \\times ${m}$ fit.`,
-              `积的转置反转次序，形状 $${p} \\times ${n}$ 和 $${n} \\times ${m}$ 正好相符。`,
+              `**Step 1: Find the size.** $${A}${B}$ is $${m} \\times ${p}$, so $(${A}${B})^{T}$ is $${p} \\times ${m}$.\n\n**Step 2: Reverse and transpose.** A transpose of a product reverses the order and transposes each factor. $${B}^{T}$ is $${p} \\times ${n}$ and $${A}^{T}$ is $${n} \\times ${m}$, so $${B}^{T}${A}^{T}$ fits and is $${p} \\times ${m}$ as well.\n\n**Check.** Compare one entry. The entry of $(${A}${B})^{T}$ in row $i$ and column $j$ is the entry of $${A}${B}$ in row $j$ and column $i$, that is, row $j$ of $${A}$ times column $i$ of $${B}$. In $${B}^{T}${A}^{T}$ the same entry is row $i$ of $${B}^{T}$, which is column $i$ of $${B}$, times column $j$ of $${A}^{T}$, which is row $j$ of $${A}$. These are the same products.`,
+              `**第一步：确定大小。**$${A}${B}$ 是 $${m} \\times ${p}$ 矩阵，所以 $(${A}${B})^{T}$ 是 $${p} \\times ${m}$ 矩阵。\n\n**第二步：反转并转置。**积的转置要反转次序，并把每个因子转置。$${B}^{T}$ 是 $${p} \\times ${n}$，$${A}^{T}$ 是 $${n} \\times ${m}$，所以 $${B}^{T}${A}^{T}$ 形状相符，也是 $${p} \\times ${m}$。\n\n**检验。**比较一个元素。$(${A}${B})^{T}$ 第 $i$ 行第 $j$ 列的元素是 $${A}${B}$ 第 $j$ 行第 $i$ 列的元素，即 $${A}$ 的第 $j$ 行乘 $${B}$ 的第 $i$ 列。在 $${B}^{T}${A}^{T}$ 中，同一元素是 $${B}^{T}$ 的第 $i$ 行（即 $${B}$ 的第 $i$ 列）乘 $${A}^{T}$ 的第 $j$ 列（即 $${A}$ 的第 $j$ 行）。两者是同样的乘积。`,
             ],
           ),
           [
@@ -940,20 +967,42 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "the-columns-from-standard-vectors",
       ["The columns from standard vectors", "由标准向量得到列"],
       [
-        "Multiplying a matrix by a standard basis vector picks out one column. Knowing what a matrix does to these vectors therefore reveals every entry of the matrix.",
-        "矩阵乘标准基向量，就取出一列。所以知道矩阵对这些向量的作用，就知道矩阵的每个元素。",
+        "Multiplying a matrix by a standard basis vector picks out one column. Knowing what a matrix does to these vectors therefore reveals every entry of the matrix.\n\n> **Watch out.** The results are columns of the matrix, not rows: the matrix times the first standard vector is its first column.",
+        "矩阵乘标准基向量，就取出一列。所以知道矩阵对这些向量的作用，就知道矩阵的每个元素。\n\n> **注意。** 得到的是矩阵的列，不是行：矩阵乘第一个标准向量得到的是它的第一列。",
       ],
       (rng) => {
         const [a, b, c, d] = [nz(rng, 9), nz(rng, 9), nz(rng, 9), nz(rng, 9)];
-        return chooseFilled(
-          rng,
+        return reasoned(
+          chooseFilled(
+            rng,
+            [
+              `$A${mat([1], [0])} = ${mat([a], [c])}$ and $A${mat([0], [1])} = ${mat([b], [d])}$. Find $A$.`,
+              `$A${mat([1], [0])} = ${mat([a], [c])}$，$A${mat([0], [1])} = ${mat([b], [d])}$。求 $A$。`,
+            ],
+            mat([a, b], [c, d]),
+            [mat([a, c], [b, d]), mat([b, a], [d, c]), mat([c, d], [a, b])],
+            [
+              `**Step 1: Use the first standard vector.** Row by column, $A$ times the first standard vector takes the first entry of each row, so it is the first column of $A$. The first column has entries $${a}$ and $${c}$.\n\n**Step 2: Use the second.** In the same way the second result is the second column, with entries $${b}$ and $${d}$. So $A = ${mat([a, b], [c, d])}$.\n\n**Check.** Multiply back. With the first standard vector, row $1$ gives $${a} \\cdot 1 + ${paren(b)} \\cdot 0 = ${a}$ and row $2$ gives $${c} \\cdot 1 + ${paren(d)} \\cdot 0 = ${c}$. With the second, they give $${a} \\cdot 0 + ${paren(b)} \\cdot 1 = ${b}$ and $${c} \\cdot 0 + ${paren(d)} \\cdot 1 = ${d}$.`,
+              `**第一步：用第一个标准向量。**按行乘列，$A$ 乘第一个标准向量取出每一行的第一个元素，所以得到 $A$ 的第一列，元素是 $${a}$ 和 $${c}$。\n\n**第二步：用第二个。**同样，第二个结果是第二列，元素是 $${b}$ 和 $${d}$。所以 $A = ${mat([a, b], [c, d])}$。\n\n**检验。**乘回去。乘第一个标准向量时，第 $1$ 行给出 $${a} \\cdot 1 + ${paren(b)} \\cdot 0 = ${a}$，第 $2$ 行给出 $${c} \\cdot 1 + ${paren(d)} \\cdot 0 = ${c}$。乘第二个时，分别给出 $${a} \\cdot 0 + ${paren(b)} \\cdot 1 = ${b}$ 和 $${c} \\cdot 0 + ${paren(d)} \\cdot 1 = ${d}$。`,
+            ],
+          ),
           [
-            `$A${mat([1], [0])} = ${mat([a], [c])}$ and $A${mat([0], [1])} = ${mat([b], [d])}$. Find $A$.`,
-            `$A${mat([1], [0])} = ${mat([a], [c])}$，$A${mat([0], [1])} = ${mat([b], [d])}$。求 $A$。`,
+            [
+              `$${mat([a, c], [b, d])}$`,
+              "The results are written as rows, but they are the columns of the matrix.",
+              "这里把结果写成了行，但它们是矩阵的列。",
+            ],
+            [
+              `$${mat([b, a], [d, c])}$`,
+              "The columns are in the wrong order: the first standard vector gives the first column.",
+              "列的次序反了：第一个标准向量给出第一列。",
+            ],
+            [
+              `$${mat([c, d], [a, b])}$`,
+              "The entries are mixed up: each result is a whole column, top entry first.",
+              "元素弄乱了：每个结果是完整的一列，上面的元素在前。",
+            ],
           ],
-          mat([a, b], [c, d]),
-          [mat([a, c], [b, d]), mat([b, a], [d, c]), mat([c, d], [a, b])],
-          [`The two results are the first and second columns of $A$.`, `这两个结果分别是 $A$ 的第一列和第二列。`],
         );
       },
     ),
@@ -963,8 +1012,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "the-square-of-a-matrix",
       ["The square of a matrix", "矩阵的平方"],
       [
-        "Squaring a matrix means multiplying it by itself, not squaring each entry. So every entry of the result combines a row with a column, and the two methods usually differ.",
-        "矩阵的平方是矩阵乘自身，而不是每个元素平方。所以结果的每个元素都由一行和一列组合而成，两种做法通常不同。",
+        "Squaring a matrix means multiplying it by itself, not squaring each entry. So every entry of the result combines a row with a column, and the two methods usually differ.\n\n> **Watch out.** The top left entry of the square is $a^2 + bc$, not $a^2$: each entry adds two products.",
+        "矩阵的平方是矩阵乘自身，而不是每个元素平方。所以结果的每个元素都由一行和一列组合而成，两种做法通常不同。\n\n> **注意。** 平方的左上元素是 $a^2 + bc$，不是 $a^2$：每个元素都是两个乘积之和。",
       ],
       (rng) => {
         const [a, b, c, d] = [nz(rng, 6), nz(rng, 6), nz(rng, 6), nz(rng, 6)];
@@ -979,8 +1028,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
               mat([2 * a, 2 * b], [2 * c, 2 * d]),
             ],
             [
-              `Top left is $${paren(a)} \\cdot ${paren(a)} + ${paren(b)} \\cdot ${paren(c)}$, and the other entries follow the same row by column rule.`,
-              `左上是 $${paren(a)} \\cdot ${paren(a)} + ${paren(b)} \\cdot ${paren(c)}$，其他元素按同样的行乘列规则计算。`,
+              `**Step 1: The top row.** Row $1$ times column $1$ is $${paren(a)} \\cdot ${paren(a)} + ${paren(b)} \\cdot ${paren(c)} = ${a * a + b * c}$. Row $1$ times column $2$ is $${paren(a)} \\cdot ${paren(b)} + ${paren(b)} \\cdot ${paren(d)} = ${a * b + b * d}$.\n\n**Step 2: The bottom row.** Row $2$ times column $1$ is $${paren(c)} \\cdot ${paren(a)} + ${paren(d)} \\cdot ${paren(c)} = ${c * a + d * c}$. Row $2$ times column $2$ is $${paren(c)} \\cdot ${paren(b)} + ${paren(d)} \\cdot ${paren(d)} = ${c * b + d * d}$.\n\n**Check.** Build each column of the square from the columns of the matrix. Column $1$ is $${a}$ times column $1$ plus $${c}$ times column $2$, with entries $${a} \\cdot ${paren(a)} + ${paren(c)} \\cdot ${paren(b)} = ${a * a + b * c}$ and $${a} \\cdot ${paren(c)} + ${paren(c)} \\cdot ${paren(d)} = ${c * a + d * c}$. Column $2$ is $${b}$ times column $1$ plus $${d}$ times column $2$, with entries $${b} \\cdot ${paren(a)} + ${paren(d)} \\cdot ${paren(b)} = ${a * b + b * d}$ and $${b} \\cdot ${paren(c)} + ${paren(d)} \\cdot ${paren(d)} = ${c * b + d * d}$.`,
+              `**第一步：上面一行。**第 $1$ 行乘第 $1$ 列是 $${paren(a)} \\cdot ${paren(a)} + ${paren(b)} \\cdot ${paren(c)} = ${a * a + b * c}$。第 $1$ 行乘第 $2$ 列是 $${paren(a)} \\cdot ${paren(b)} + ${paren(b)} \\cdot ${paren(d)} = ${a * b + b * d}$。\n\n**第二步：下面一行。**第 $2$ 行乘第 $1$ 列是 $${paren(c)} \\cdot ${paren(a)} + ${paren(d)} \\cdot ${paren(c)} = ${c * a + d * c}$。第 $2$ 行乘第 $2$ 列是 $${paren(c)} \\cdot ${paren(b)} + ${paren(d)} \\cdot ${paren(d)} = ${c * b + d * d}$。\n\n**检验。**用矩阵的列组合出平方的每一列。第 $1$ 列是第 $1$ 列的 $${a}$ 倍加第 $2$ 列的 $${c}$ 倍，元素为 $${a} \\cdot ${paren(a)} + ${paren(c)} \\cdot ${paren(b)} = ${a * a + b * c}$ 和 $${a} \\cdot ${paren(c)} + ${paren(c)} \\cdot ${paren(d)} = ${c * a + d * c}$。第 $2$ 列是第 $1$ 列的 $${b}$ 倍加第 $2$ 列的 $${d}$ 倍，元素为 $${b} \\cdot ${paren(a)} + ${paren(d)} \\cdot ${paren(b)} = ${a * b + b * d}$ 和 $${b} \\cdot ${paren(c)} + ${paren(d)} \\cdot ${paren(d)} = ${c * b + d * d}$。`,
             ],
           ),
           [
@@ -1009,23 +1058,42 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "a-chain-of-products",
       ["A chain of products", "连乘"],
       [
-        "In a chain of products, each pair of neighbors must fit, and the inner sizes vanish. So the result has the rows of the first matrix and the columns of the last.",
-        "连乘时每对相邻矩阵的形状都要相符，中间的尺寸消失。所以结果的行数是第一个矩阵的，列数是最后一个的。",
+        "In a chain of products, each pair of neighbors must fit, and the inner sizes vanish. So the result has the rows of the first matrix and the columns of the last.\n\n> **Watch out.** Keep the two outer numbers in order, rows of the first matrix and then columns of the last, and do not add the inner sizes: they cancel.",
+        "连乘时每对相邻矩阵的形状都要相符，中间的尺寸消失。所以结果的行数是第一个矩阵的，列数是最后一个的。\n\n> **注意。** 两端的数要按次序写，先是第一个矩阵的行数，再是最后一个的列数；中间的尺寸不要相加，它们是消掉的。",
       ],
       (rng) => {
         const [m, n, p, q] = [rng.int(2, 9), rng.int(2, 9), rng.int(2, 9), rng.int(2, 9)];
         const r = m === q ? q + 1 : q;
-        return chooseFilled(
-          rng,
+        return reasoned(
+          chooseFilled(
+            rng,
+            [
+              `$A$ is $${m} \\times ${n}$, $B$ is $${n} \\times ${p}$ and $C$ is $${p} \\times ${r}$. What is the size of $ABC$?`,
+              `$A$ 是 $${m} \\times ${n}$，$B$ 是 $${n} \\times ${p}$，$C$ 是 $${p} \\times ${r}$。$ABC$ 的尺寸是多少？`,
+            ],
+            `${m} \\times ${r}`,
+            [`${r} \\times ${m}`, `${m} \\times ${n + p + r}`, `${m + n} \\times ${p + r}`],
+            [
+              `**Step 1: Multiply the first two.** $A$ is $${m} \\times ${n}$ and $B$ is $${n} \\times ${p}$. The inner sizes match, so $AB$ is $${m} \\times ${p}$.\n\n**Step 2: Multiply by the third.** $AB$ is $${m} \\times ${p}$ and $C$ is $${p} \\times ${r}$. Again the inner sizes match, so $ABC$ is $${m} \\times ${r}$.\n\n**Check.** Group the other way. $BC$ is $${n} \\times ${r}$, and $A$ times it is $${m} \\times ${n}$ times $${n} \\times ${r}$, which is $${m} \\times ${r}$ again.`,
+              `**第一步：先乘前两个。**$A$ 是 $${m} \\times ${n}$，$B$ 是 $${n} \\times ${p}$。中间的尺寸相同，所以 $AB$ 是 $${m} \\times ${p}$。\n\n**第二步：再乘第三个。**$AB$ 是 $${m} \\times ${p}$，$C$ 是 $${p} \\times ${r}$。中间的尺寸又相同，所以 $ABC$ 是 $${m} \\times ${r}$。\n\n**检验。**换一种结合方式。$BC$ 是 $${n} \\times ${r}$，$A$ 乘它就是 $${m} \\times ${n}$ 乘 $${n} \\times ${r}$，结果还是 $${m} \\times ${r}$。`,
+            ],
+          ),
           [
-            `$A$ is $${m} \\times ${n}$, $B$ is $${n} \\times ${p}$ and $C$ is $${p} \\times ${r}$. What is the size of $ABC$?`,
-            `$A$ 是 $${m} \\times ${n}$，$B$ 是 $${n} \\times ${p}$，$C$ 是 $${p} \\times ${r}$。$ABC$ 的尺寸是多少？`,
-          ],
-          `${m} \\times ${r}`,
-          [`${r} \\times ${m}`, `${m} \\times ${n + p + r}`, `${m + n} \\times ${p + r}`],
-          [
-            `The inner sizes ${n} and ${p} vanish, leaving ${m} rows and ${r} columns.`,
-            `中间的尺寸 ${n} 和 ${p} 消失，剩下 ${m} 行 ${r} 列。`,
+            [
+              `$${r} \\times ${m}$`,
+              "The two outer numbers are reversed: the rows come from the first matrix.",
+              "两端的数反了：行数来自第一个矩阵。",
+            ],
+            [
+              `$${m} \\times ${n + p + r}$`,
+              "The inner sizes cancel; they are not added to the columns.",
+              "中间的尺寸是消掉的，不能加到列数上。",
+            ],
+            [
+              `$${m + n} \\times ${p + r}$`,
+              "Sizes are never added in a product: the inner ones cancel.",
+              "乘积中尺寸从不相加：中间的尺寸消掉。",
+            ],
           ],
         );
       },
