@@ -91,24 +91,44 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
       "foci-of-a-shifted-ellipse",
       ["Foci of a shifted ellipse", "平移后椭圆的焦点"],
       [
-        "The foci lie on the major axis, at a distance $c$ from the center, where $c^{2} = a^{2} - b^{2}$. Shifting an ellipse shifts its foci with it, so measure from the center.",
-        "焦点在长轴上，到中心的距离是 $c$，其中 $c^{2} = a^{2} - b^{2}$。椭圆平移时焦点一起平移，所以从中心开始量。",
+        "The foci lie on the major axis, at a distance $c$ from the center, where $c^{2} = a^{2} - b^{2}$. Shifting an ellipse shifts its foci with it, so measure from the center.\n\nFor $\\frac{(x - 1)^{2}}{25} + \\frac{(y + 2)^{2}}{9} = 1$: $c^{2} = 25 - 9 = 16$, so $c = 4$, and the larger denominator is under $x$, so the foci are $(-3, -2)$ and $(5, -2)$. Check: their midpoint is $(1, -2)$, the center.\n\n> **Watch out.** Move $c$ from the center, not $a$ (that gives the vertices) or $b$, and move along the major axis, the one with the larger denominator.",
+        "焦点在长轴上，到中心的距离是 $c$，其中 $c^{2} = a^{2} - b^{2}$。椭圆平移时焦点一起平移，所以从中心开始量。\n\n对 $\\frac{(x - 1)^{2}}{25} + \\frac{(y + 2)^{2}}{9} = 1$：$c^{2} = 25 - 9 = 16$，所以 $c = 4$；较大的分母在 $x$ 下，所以焦点是 $(-3, -2)$ 和 $(5, -2)$。检验：它们的中点是 $(1, -2)$，正是中心。\n\n> **注意。** 从中心移动的是 $c$，不是 $a$（那样得到顶点），也不是 $b$；而且沿分母较大的长轴移动。",
       ],
       (rng) => {
         const [b, c, a] = rng.pick(triples);
         const h = rng.int(-9, 9);
         const k = rng.int(-9, 9);
-        return chooseFilled(
-          rng,
+        const wrong = [`(${h - a}, ${k}), (${h + a}, ${k})`, `(${h}, ${k - c}), (${h}, ${k + c})`, `(${h - b}, ${k}), (${h + b}, ${k})`];
+        return reasoned(
+          chooseFilled(
+            rng,
+            [
+              `Find the foci of the ellipse $\\frac{${shift("x", h)}^{2}}{${a * a}} + \\frac{${shift("y", k)}^{2}}{${b * b}} = 1$.`,
+              `求椭圆 $\\frac{${shift("x", h)}^{2}}{${a * a}} + \\frac{${shift("y", k)}^{2}}{${b * b}} = 1$ 的焦点。`,
+            ],
+            `(${h - c}, ${k}), (${h + c}, ${k})`,
+            wrong,
+            [
+              `**Step 1: Find c.** Subtract the denominators:\n\n$$c^{2} = ${a * a} - ${b * b} = ${c * c}, \\quad c = ${c}$$\n\n**Step 2: Find the major axis.** The center is $(${h}, ${k})$, and the larger denominator is under $x$, so the major axis is horizontal.\n\n**Step 3: Move c from the center.** Move $${c}$ left and right of $(${h}, ${k})$: the foci are $(${h - c}, ${k})$ and $(${h + c}, ${k})$.\n\n**Check.** Their midpoint is $\\left(\\frac{${h - c} + ${paren(h + c)}}{2}, ${k}\\right) = (${h}, ${k})$, the center, and they are $${2 * c} = 2c$ apart.`,
+              `**第一步：求 c。**分母相减：\n\n$$c^{2} = ${a * a} - ${b * b} = ${c * c}, \\quad c = ${c}$$\n\n**第二步：找长轴。**中心是 $(${h}, ${k})$，较大的分母在 $x$ 下面，所以长轴水平。\n\n**第三步：从中心移动 c。**从 $(${h}, ${k})$ 向左右各移 $${c}$：焦点是 $(${h - c}, ${k})$ 和 $(${h + c}, ${k})$。\n\n**检验。**它们的中点是 $\\left(\\frac{${h - c} + ${paren(h + c)}}{2}, ${k}\\right) = (${h}, ${k})$，正是中心，且相距 $${2 * c} = 2c$。`,
+            ],
+          ),
           [
-            `Find the foci of the ellipse $\\frac{${shift("x", h)}^{2}}{${a * a}} + \\frac{${shift("y", k)}^{2}}{${b * b}} = 1$.`,
-            `求椭圆 $\\frac{${shift("x", h)}^{2}}{${a * a}} + \\frac{${shift("y", k)}^{2}}{${b * b}} = 1$ 的焦点。`,
-          ],
-          `(${h - c}, ${k}), (${h + c}, ${k})`,
-          [`(${h - a}, ${k}), (${h + a}, ${k})`, `(${h}, ${k - c}), (${h}, ${k + c})`, `(${h - b}, ${k}), (${h + b}, ${k})`],
-          [
-            `$c^{2} = ${a * a} - ${b * b}$, so $c = ${c}$. The larger denominator is under $x$, so move $${c}$ left and right of $(${h}, ${k})$.`,
-            `$c^{2} = ${a * a} - ${b * b}$，所以 $c = ${c}$。较大的分母在 $x$ 下面，所以从 $(${h}, ${k})$ 向左右各移 $${c}$。`,
+            [
+              `$${wrong[0]}$`,
+              `These are the vertices, $a = ${a}$ from the center; the foci are $c = ${c}$ from it.`,
+              `这是顶点，距中心 $a = ${a}$；焦点距中心 $c = ${c}$。`,
+            ],
+            [
+              `$${wrong[1]}$`,
+              "These move up and down, but the larger denominator is under $x$, so the major axis is horizontal.",
+              "这是上下移动，但较大的分母在 $x$ 下面，所以长轴水平。",
+            ],
+            [
+              `$${wrong[2]}$`,
+              `These move $b = ${b}$; the foci are $c = \\sqrt{a^{2} - b^{2}} = ${c}$ from the center.`,
+              `这是移动 $b = ${b}$；焦点距中心 $c = \\sqrt{a^{2} - b^{2}} = ${c}$。`,
+            ],
           ],
         );
       },
@@ -119,8 +139,8 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
       "the-major-axis-from-the-general-form",
       ["The major axis from the general form", "由一般式求长轴"],
       [
-        "After completing the square, divide by the constant so that the right side is 1. The larger denominator is then $a^{2}$, and the length of the major axis is $2a$, not $a^{2}$.",
-        "配方之后，除以常数使右边为 1。较大的分母就是 $a^{2}$，长轴的长是 $2a$，而不是 $a^{2}$。",
+        "After completing the square, divide by the constant so that the right side is 1. The larger denominator is then $a^{2}$, and the length of the major axis is $2a$, not $a^{2}$.\n\nFor $x^{2} + 4y^{2} - 2x - 16y + 1 = 0$: $(x - 1)^{2} + 4(y - 2)^{2} = -1 + 1 + 16 = 16$, so $\\frac{(x - 1)^{2}}{16} + \\frac{(y - 2)^{2}}{4} = 1$, $a = 4$, and the major axis is $8$. Check: the vertex $(5, 2)$ gives $25 + 16 - 10 - 32 + 1 = 0$.\n\n> **Watch out.** Read $a^{2}$ only after the right side is $1$, take its square root, and double it: the coefficient $4$ in front of $y^{2}$ is not a semi-axis.",
+        "配方之后，除以常数使右边为 1。较大的分母就是 $a^{2}$，长轴的长是 $2a$，而不是 $a^{2}$。\n\n对 $x^{2} + 4y^{2} - 2x - 16y + 1 = 0$：$(x - 1)^{2} + 4(y - 2)^{2} = -1 + 1 + 16 = 16$，所以 $\\frac{(x - 1)^{2}}{16} + \\frac{(y - 2)^{2}}{4} = 1$，$a = 4$，长轴长 $8$。检验：顶点 $(5, 2)$ 给出 $25 + 16 - 10 - 32 + 1 = 0$。\n\n> **注意。** 要在右边化成 $1$ 之后再读 $a^{2}$，开平方后再乘以 2：$y^{2}$ 前面的系数 $4$ 不是半轴。",
       ],
       (rng) => {
         const m = rng.int(2, 4);
@@ -135,10 +155,15 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
           ],
           2 * m * r,
           [m * r, 2 * r, m * m * r * r],
-          [
-            `Completing the square gives $\\frac{${shift("x", h)}^{2}}{${m * m * r * r}} + \\frac{${shift("y", k)}^{2}}{${r * r}} = 1$, so $a = ${m * r}$ and the major axis is ${2 * m * r}.`,
-            `配方得 $\\frac{${shift("x", h)}^{2}}{${m * m * r * r}} + \\frac{${shift("y", k)}^{2}}{${r * r}} = 1$，所以 $a = ${m * r}$，长轴长 ${2 * m * r}。`,
-          ],
+          (() => {
+            const grouped = `$$\\left(x^{2}${linear(-2 * h, "x")}\\right) + ${m * m}\\left(y^{2}${linear(-2 * k, "y")}\\right) = ${-f}$$`;
+            const completed = `$$${shift("x", h)}^{2} + ${m * m}${shift("y", k)}^{2} = ${-f} + ${h * h} + ${m * m * k * k} = ${m * m * r * r}$$`;
+            const standard = `$$\\frac{${shift("x", h)}^{2}}{${m * m * r * r}} + \\frac{${shift("y", k)}^{2}}{${r * r}} = 1$$`;
+            return [
+              `**Step 1: Group and factor.** Collect the $x$ terms and the $y$ terms and take out the $${m * m}$:\n\n${grouped}\n\n**Step 2: Complete the squares.** Inside the brackets add $${h * h}$ and $${k * k}$, which adds $${h * h}$ and $${m * m * k * k}$ to the left, so add them on the right:\n\n${completed}\n\n**Step 3: Divide and read a.** Divide by $${m * m * r * r}$:\n\n${standard}\n\nThe larger denominator is $a^{2} = ${m * m * r * r}$, so $a = ${m * r}$ and the major axis is $2a = ${2 * m * r}$.\n\n**Check.** The vertex $(${h + m * r}, ${k})$ gives $\\frac{${m * r}^{2}}{${m * m * r * r}} + 0 = 1$, and the two vertices $(${h - m * r}, ${k})$ and $(${h + m * r}, ${k})$ are $${2 * m * r}$ apart.`,
+              `**第一步：分组并提系数。**把 $x$ 项和 $y$ 项分别归在一起，并提出 $${m * m}$：\n\n${grouped}\n\n**第二步：配方。**在括号里加上 $${h * h}$ 和 $${k * k}$，左边就加了 $${h * h}$ 和 $${m * m * k * k}$，所以右边也加上：\n\n${completed}\n\n**第三步：相除并读出 a。**除以 $${m * m * r * r}$：\n\n${standard}\n\n较大的分母是 $a^{2} = ${m * m * r * r}$，所以 $a = ${m * r}$，长轴长 $2a = ${2 * m * r}$。\n\n**检验。**顶点 $(${h + m * r}, ${k})$ 给出 $\\frac{${m * r}^{2}}{${m * m * r * r}} + 0 = 1$，两个顶点 $(${h - m * r}, ${k})$ 与 $(${h + m * r}, ${k})$ 相距 $${2 * m * r}$。`,
+            ] as const;
+          })(),
         );
       },
     ),
@@ -148,8 +173,8 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
       "how-many-x-intercepts",
       ["How many $x$-intercepts", "有几个 $x$ 轴截点"],
       [
-        "An ellipse reaches a vertical distance of $b$ from its center. So it crosses the $x$-axis twice when the center is closer than $b$ to the axis, touches once at exactly $b$, and otherwise misses it.",
-        "椭圆在竖直方向离中心最远为 $b$。所以中心到 $x$ 轴的距离小于 $b$ 时相交两次，等于 $b$ 时相切一次，否则不相交。",
+        "An ellipse reaches a vertical distance of $b$ from its center. So it crosses the $x$-axis twice when the center is closer than $b$ to the axis, touches once at exactly $b$, and otherwise misses it.\n\nFor $\\frac{(x - 3)^{2}}{25} + \\frac{(y - 2)^{2}}{9} = 1$, the center is $2$ from the $x$-axis and $b = 3$, so there are $2$ points. Check: $y = 0$ gives $\\frac{(x - 3)^{2}}{25} = 1 - \\frac{4}{9} = \\frac{5}{9} > 0$, which has two solutions.\n\n> **Watch out.** Compare the distance of the center from the axis with $b$, the semi-axis under $y$, not with $a$. The sign of $k$ does not matter, only its size.",
+        "椭圆在竖直方向离中心最远为 $b$。所以中心到 $x$ 轴的距离小于 $b$ 时相交两次，等于 $b$ 时相切一次，否则不相交。\n\n对 $\\frac{(x - 3)^{2}}{25} + \\frac{(y - 2)^{2}}{9} = 1$，中心到 $x$ 轴的距离是 $2$，$b = 3$，所以有 $2$ 个公共点。检验：$y = 0$ 给出 $\\frac{(x - 3)^{2}}{25} = 1 - \\frac{4}{9} = \\frac{5}{9} > 0$，有两个解。\n\n> **注意。** 要把中心到轴的距离与 $y$ 下的半轴 $b$ 比较，不是与 $a$ 比较。$k$ 的正负无关，只看大小。",
       ],
       (rng) => {
         const a = rng.int(5, 12);
@@ -165,10 +190,20 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
           ],
           count,
           [0, 1, 2, 4].filter((n) => n !== count),
-          [
-            `The center is $${distance}$ from the $x$-axis and the ellipse reaches $${b}$ up and down, which gives $${count}$.`,
-            `中心到 $x$ 轴的距离是 $${distance}$，椭圆上下各伸展 $${b}$，所以有 $${count}$ 个。`,
-          ],
+          (() => {
+            const rest = Q.of(b * b - k * k, b * b).toLatex();
+            const line = `$$\\frac{${shift("x", h)}^{2}}{${a * a}} = 1 - \\frac{${k * k}}{${b * b}} = ${rest}$$`;
+            const [en, zh] =
+              count === 2
+                ? ["positive, so there are two values of $x$: $2$ points", "为正，所以 $x$ 有两个值：$2$ 个公共点"]
+                : count === 1
+                  ? [`zero, so $x = ${h}$ is the only value: $1$ point`, `为零，所以只有 $x = ${h}$：$1$ 个公共点`]
+                  : ["negative, and a square cannot be negative: $0$ points", "为负，而平方不能是负数：$0$ 个公共点"];
+            return [
+              `**Step 1: Set y = 0.** On the $x$-axis $y = 0$, so the $y$ term becomes $\\frac{${k * k}}{${b * b}}$:\n\n${line}\n\n**Step 2: Look at the sign.** The right side is ${en}.\n\n**Check.** The center is $${distance}$ from the $x$-axis and the ellipse reaches $b = ${b}$ up and down, from $y = ${k - b}$ to $y = ${k + b}$; the axis $y = 0$ is ${count === 2 ? "strictly between them" : count === 1 ? "at one end" : "outside that range"}, which gives $${count}$.`,
+              `**第一步：令 y = 0。**在 $x$ 轴上 $y = 0$，$y$ 项变成 $\\frac{${k * k}}{${b * b}}$：\n\n${line}\n\n**第二步：看符号。**右边${zh}。\n\n**检验。**中心到 $x$ 轴的距离是 $${distance}$，椭圆上下各伸展 $b = ${b}$，从 $y = ${k - b}$ 到 $y = ${k + b}$；$x$ 轴 $y = 0$ ${count === 2 ? "严格在两者之间" : count === 1 ? "恰在一端" : "在这个范围之外"}，所以有 $${count}$ 个。`,
+            ] as const;
+          })(),
         );
       },
     ),

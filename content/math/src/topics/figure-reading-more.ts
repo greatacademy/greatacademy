@@ -471,8 +471,8 @@ const fociFromDrawing: KnowledgePointDef = {
   id: "the-foci-from-a-drawn-ellipse",
   title: t("The foci from a drawn ellipse", "由图中的椭圆求焦点"),
   explanation: t(
-    "The drawing gives both semi-axes of an ellipse directly: $a$ is the longer distance from center to edge and $b$ is the shorter one. The foci sit on the longer axis, at a distance $c$ from the center with $c^2 = a^2 - b^2$. A common slip is to add the squares, as with a hyperbola, which puts the foci outside the curve.",
-    "图直接给出椭圆的两个半轴：$a$ 是中心到边缘较长的距离，$b$ 是较短的距离。焦点在长轴上，到中心的距离 $c$ 满足 $c^2 = a^2 - b^2$。常见差错是像双曲线那样把平方相加，这会把焦点放到曲线外面。",
+    "The drawing gives both semi-axes of an ellipse directly: $a$ is the longer distance from center to edge and $b$ is the shorter one. The foci sit on the longer axis, at a distance $c$ from the center with $c^2 = a^2 - b^2$. A common slip is to add the squares, as with a hyperbola, which puts the foci outside the curve.\n\nIf an ellipse reaches $5$ along one axis and $3$ along the other, then $a = 5$, $b = 3$ and $c = \\sqrt{25 - 9} = 4$, so the foci are $4$ from the center on the longer axis. Check: $4 < 5$, so the foci are inside, and $3^2 + 4^2 = 5^2$.\n\n> **Watch out.** Take $a$ as the longer reach, whichever axis it is on, and subtract the squares: $\\sqrt{5^2 + 3^2} = \\sqrt{34}$ is more than $5$ and lies outside the ellipse.",
+    "图直接给出椭圆的两个半轴：$a$ 是中心到边缘较长的距离，$b$ 是较短的距离。焦点在长轴上，到中心的距离 $c$ 满足 $c^2 = a^2 - b^2$。常见差错是像双曲线那样把平方相加，这会把焦点放到曲线外面。\n\n若椭圆沿一条轴伸到 $5$、沿另一条轴伸到 $3$，则 $a = 5$，$b = 3$，$c = \\sqrt{25 - 9} = 4$，所以焦点在较长的轴上，距中心 $4$。检验：$4 < 5$，焦点在椭圆内，且 $3^2 + 4^2 = 5^2$。\n\n> **注意。** 不管在哪条轴上，较长的那段是 $a$；平方要相减：$\\sqrt{5^2 + 3^2} = \\sqrt{34}$ 比 $5$ 大，在椭圆外面。",
   ),
   generate(rng) {
     const triples = [
@@ -494,8 +494,8 @@ const fociFromDrawing: KnowledgePointDef = {
       c,
       [a + b, a - b, a, b, Math.round(Math.hypot(a, b))],
       t(
-        `The semi-axes are ${a} and ${b}, so $c^2 = ${a}^2 - ${b}^2 = ${c * c}$, and $c = ${c}$.`,
-        `半轴是 ${a} 和 ${b}，所以 $c^2 = ${a}^2 - ${b}^2 = ${c * c}$，$c = ${c}$。`,
+        `${stepLabel(1, "read the semi-axes", "读出半轴").en} The ellipse reaches $${p}$ along the $x$-axis and $${q}$ along the $y$-axis, so the longer one is $a = ${a}$, on the ${wide ? "$x$" : "$y$"}-axis, and $b = ${b}$.\n\n${stepLabel(2, "subtract the squares", "平方相减").en} The foci are on the longer axis, $c$ from the center:\n\n$$c^2 = ${a}^2 - ${b}^2 = ${a * a} - ${b * b} = ${c * c}, \\quad c = ${c}$$\n\n**Check.** $${b}^2 + ${c}^2 = ${b * b} + ${c * c} = ${a * a} = ${a}^2$, and $${c} < ${a}$, so the foci lie inside the ellipse.`,
+        `${stepLabel(1, "read the semi-axes", "读出半轴")["zh-CN"]}椭圆沿 $x$ 轴伸到 $${p}$，沿 $y$ 轴伸到 $${q}$，所以较长的是 ${wide ? "$x$" : "$y$"} 轴上的 $a = ${a}$，$b = ${b}$。\n\n${stepLabel(2, "subtract the squares", "平方相减")["zh-CN"]}焦点在较长的轴上，距中心 $c$：\n\n$$c^2 = ${a}^2 - ${b}^2 = ${a * a} - ${b * b} = ${c * c}, \\quad c = ${c}$$\n\n**检验。** $${b}^2 + ${c}^2 = ${b * b} + ${c * c} = ${a * a} = ${a}^2$，且 $${c} < ${a}$，所以焦点在椭圆内。`,
       ),
       drawn(
         { xMin: -r, xMax: r, yMin: -r, yMax: r, step: r > 12 ? 2 : 1, labelEvery: r > 20 ? 5 : r > 12 ? 3 : 2 },

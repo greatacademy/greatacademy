@@ -1201,8 +1201,8 @@ const tangentCondition: KnowledgePointDef = {
   id: "the-condition-for-a-line-to-touch-an-ellipse",
   title: t("The condition for a line to touch an ellipse", "直线与椭圆相切的条件"),
   explanation: t(
-    "A slanted line meets an ellipse where a quadratic has its solutions, so the number of intersection points is decided by the discriminant. Substituting the line into the equation of the ellipse and clearing denominators gives that quadratic. If the line just touches the ellipse, the discriminant is zero, and after simplification this leaves a short relation between the intercept of the line, its slope and the two semi-axes of the ellipse.",
-    "斜线与椭圆的交点对应一个二次方程的解，所以交点个数由判别式决定。把直线代入椭圆方程并去分母，就得到这个二次方程。如果直线恰好与椭圆相切，判别式为零，化简后得到直线截距、斜率与椭圆两条半轴之间的一个简短关系。",
+    "A slanted line meets an ellipse where a quadratic has its solutions, so the number of intersection points is decided by the discriminant. Substituting the line into the equation of the ellipse and clearing denominators gives that quadratic. If the line just touches the ellipse, the discriminant is zero, and after simplification this leaves a short relation between the intercept of the line, its slope and the two semi-axes of the ellipse: $c^{2} = a^{2}m^{2} + b^{2}$.\n\nFor $\\frac{x^{2}}{4} + y^{2} = 1$ and $y = x + c$: substituting gives $5x^{2} + 8cx + 4c^{2} - 4 = 0$, whose discriminant $64c^{2} - 20(4c^{2} - 4) = 80 - 16c^{2}$ is zero when $c^{2} = 5$. Check: $a^{2}m^{2} + b^{2} = 4 \\cdot 1 + 1 = 5$.\n\n> **Watch out.** The slope is squared and goes with $a^{2}$, the denominator under $x^{2}$: $c^{2} = a^{2}m^{2} + b^{2}$, not $b^{2}m^{2} + a^{2}$, and the $b^{2}$ is added, not subtracted.",
+    "斜线与椭圆的交点对应一个二次方程的解，所以交点个数由判别式决定。把直线代入椭圆方程并去分母，就得到这个二次方程。如果直线恰好与椭圆相切，判别式为零，化简后得到直线截距、斜率与椭圆两条半轴之间的一个简短关系：$c^{2} = a^{2}m^{2} + b^{2}$。\n\n对 $\\frac{x^{2}}{4} + y^{2} = 1$ 和 $y = x + c$：代入得 $5x^{2} + 8cx + 4c^{2} - 4 = 0$，判别式 $64c^{2} - 20(4c^{2} - 4) = 80 - 16c^{2}$ 在 $c^{2} = 5$ 时为零。检验：$a^{2}m^{2} + b^{2} = 4 \\cdot 1 + 1 = 5$。\n\n> **注意。** 斜率要平方，并与 $x^{2}$ 下的分母 $a^{2}$ 相乘：$c^{2} = a^{2}m^{2} + b^{2}$，不是 $b^{2}m^{2} + a^{2}$；而且 $b^{2}$ 是加上，不是减去。",
   ),
   generate(rng) {
     const a = rng.int(2, 9);
@@ -1217,10 +1217,16 @@ const tangentCondition: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [a * a * Math.abs(m) + b * b, a * a * m * m - b * b, b * b * m * m + a * a, (a * Math.abs(m) + b) ** 2],
-      solution: t(
-        `Substituting the line and clearing denominators gives a quadratic in $x$. Setting its discriminant to zero simplifies to $c^{2} = a^{2}m^{2} + b^{2}$, where $a^{2} = ${a * a}$, $b^{2} = ${b * b}$ and $m = ${m}$. So $c^{2} = ${a * a} \\cdot ${m * m} + ${b * b} = ${answer}$.`,
-        `代入直线并去分母，得到关于 $x$ 的二次方程。令判别式为零，化简得 $c^{2} = a^{2}m^{2} + b^{2}$，其中 $a^{2} = ${a * a}$，$b^{2} = ${b * b}$，$m = ${m}$。所以 $c^{2} = ${a * a} \\cdot ${m * m} + ${b * b} = ${answer}$。`,
-      ),
+      solution: (() => {
+        const lead = b * b + a * a * m * m;
+        const quad = `$$${b * b}x^{2} + ${a * a}(${m}x + c)^{2} = ${a * a * b * b} \\quad\\Rightarrow\\quad ${lead}x^{2} ${2 * a * a * m < 0 ? "-" : "+"} ${Math.abs(2 * a * a * m)}c\\,x + ${a * a}(c^{2} - ${b * b}) = 0$$`;
+        const disc = `$$(${2 * a * a * m}c)^{2} - 4 \\cdot ${lead} \\cdot ${a * a}(c^{2} - ${b * b}) = 4 \\cdot ${a * a} \\cdot ${b * b}\\,(${a * a * m * m} + ${b * b} - c^{2}) = 0$$`;
+        const solve = `$$c^{2} = a^{2}m^{2} + b^{2} = ${a * a} \\cdot ${m * m} + ${b * b} = ${answer}$$`;
+        return t(
+          `${stepLabel(1, "Substitute the line", "代入直线").en} Put $y = ${m}x + c$ into the ellipse and multiply by $${a * a * b * b}$:\n\n${quad}\n\n${stepLabel(2, "Set the discriminant to zero", "令判别式为零").en} A tangent meets the ellipse once, so this quadratic in $x$ has a double root:\n\n${disc}\n\n${stepLabel(3, "Solve for the square", "求出平方").en} The bracket must be zero:\n\n${solve}\n\n**Check.** With $c^{2} = ${answer}$, the discriminant $(${2 * a * a * m}c)^{2} - 4 \\cdot ${lead} \\cdot ${a * a}(c^{2} - ${b * b})$ is $${4 * a ** 4 * m * m} \\cdot ${answer} - ${4 * lead * a * a} \\cdot ${a * a * m * m} = 0$, because $c^{2} - ${b * b} = ${a * a * m * m}$ and the leading coefficient $${lead}$ is $c^{2}$ itself.`,
+          `${stepLabel(1, "Substitute the line", "代入直线")["zh-CN"]}把 $y = ${m}x + c$ 代入椭圆，两边乘以 $${a * a * b * b}$：\n\n${quad}\n\n${stepLabel(2, "Set the discriminant to zero", "令判别式为零")["zh-CN"]}切线与椭圆只有一个公共点，所以这个关于 $x$ 的二次方程有重根：\n\n${disc}\n\n${stepLabel(3, "Solve for the square", "求出平方")["zh-CN"]}括号必须为零：\n\n${solve}\n\n**检验。**$c^{2} = ${answer}$ 时，判别式 $(${2 * a * a * m}c)^{2} - 4 \\cdot ${lead} \\cdot ${a * a}(c^{2} - ${b * b})$ 等于 $${4 * a ** 4 * m * m} \\cdot ${answer} - ${4 * lead * a * a} \\cdot ${a * a * m * m} = 0$，因为 $c^{2} - ${b * b} = ${a * a * m * m}$，而首项系数 $${lead}$ 正是 $c^{2}$。`,
+        );
+      })(),
     });
   },
 };
@@ -1230,8 +1236,8 @@ const focalTriangle: KnowledgePointDef = {
   figure: precalculusDrawings3["foci-of-ellipses#the-perimeter-of-a-triangle-with-the-two-foci"],
   title: t("The perimeter of a triangle with the two foci", "含两个焦点的三角形的周长"),
   explanation: t(
-    "An ellipse is the set of points whose distances to the two foci have a fixed sum, equal to the length of the major axis. This definition can answer questions without coordinates. For a triangle made from the two foci and any point on the ellipse, two of its sides add up to that fixed sum, and the third side is the distance between the foci. So its perimeter is the same wherever the point sits on the ellipse.",
-    "椭圆是到两个焦点距离之和为定值的点的集合，这个定值等于长轴的长。这个定义不用坐标就能回答问题。对于由两个焦点和椭圆上任意一点构成的三角形，它的两条边之和就是这个定值，第三条边是两焦点之间的距离。所以不管这个点在椭圆上的什么位置，周长都不变。",
+    "An ellipse is the set of points whose distances to the two foci have a fixed sum, equal to the length of the major axis. This definition can answer questions without coordinates. For a triangle made from the two foci and any point on the ellipse, two of its sides add up to that fixed sum, and the third side is the distance between the foci. So its perimeter is the same wherever the point sits on the ellipse.\n\nFor $\\frac{x^{2}}{25} + \\frac{y^{2}}{9} = 1$: $a = 5$ and $c = \\sqrt{25 - 9} = 4$, so the perimeter is $2a + 2c = 10 + 8 = 18$. Check: with $P = (0, 3)$, each slanted side is $\\sqrt{4^{2} + 3^{2}} = 5$, and $5 + 5 + 8 = 18$.\n\n> **Watch out.** The sum $2a$ covers only the two sides through $P$; the perimeter also includes the side between the foci, $2c$.",
+    "椭圆是到两个焦点距离之和为定值的点的集合，这个定值等于长轴的长。这个定义不用坐标就能回答问题。对于由两个焦点和椭圆上任意一点构成的三角形，它的两条边之和就是这个定值，第三条边是两焦点之间的距离。所以不管这个点在椭圆上的什么位置，周长都不变。\n\n对 $\\frac{x^{2}}{25} + \\frac{y^{2}}{9} = 1$：$a = 5$，$c = \\sqrt{25 - 9} = 4$，所以周长是 $2a + 2c = 10 + 8 = 18$。检验：取 $P = (0, 3)$，两条斜边都是 $\\sqrt{4^{2} + 3^{2}} = 5$，而 $5 + 5 + 8 = 18$。\n\n> **注意。** 和 $2a$ 只包括过 $P$ 的两条边；周长还要加上两焦点之间的边 $2c$。",
   ),
   generate(rng) {
     const [b, c, a] = legsAndHypotenuse(rng, 3) as [number, number, number];
@@ -1247,10 +1253,12 @@ const focalTriangle: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [2 * a, 2 * c, a + c, 4 * a, 2 * a + c],
-      solution: t(
-        `Here $a = ${a}$, $b = ${b}$, and $c = \\sqrt{a^{2} - b^{2}} = ${c}$. By the definition of an ellipse, $PF_1 + PF_2 = 2a = ${2 * a}$, and the foci are $2c = ${2 * c}$ apart. The perimeter is $${2 * a} + ${2 * c} = ${answer}$.`,
-        `这里 $a = ${a}$，$b = ${b}$，$c = \\sqrt{a^{2} - b^{2}} = ${c}$。由椭圆的定义，$PF_1 + PF_2 = 2a = ${2 * a}$，两焦点相距 $2c = ${2 * c}$。周长是 $${2 * a} + ${2 * c} = ${answer}$。`,
-      ),
+      solution: (() => {
+        return t(
+          `${stepLabel(1, "Find c", "求 c").en} The larger denominator is $a^{2} = ${a * a}$ and the smaller is $b^{2} = ${b * b}$:\n\n$$c = \\sqrt{${a * a} - ${b * b}} = ${c}$$\n\n${stepLabel(2, "Find the three sides", "求三条边").en} By the definition of an ellipse $PF_1 + PF_2 = 2a = ${2 * a}$, and the foci are $F_1F_2 = 2c = ${2 * c}$ apart.\n\n${stepLabel(3, "Add", "相加").en} The perimeter is\n\n$$${2 * a} + ${2 * c} = ${answer}$$\n\n**Check.** Take $P$ at an end of the minor axis: each slanted side is $\\sqrt{${c}^{2} + ${b}^{2}} = ${a}$, and $${a} + ${a} + ${2 * c} = ${answer}$.`,
+          `${stepLabel(1, "Find c", "求 c")["zh-CN"]}较大的分母是 $a^{2} = ${a * a}$，较小的是 $b^{2} = ${b * b}$：\n\n$$c = \\sqrt{${a * a} - ${b * b}} = ${c}$$\n\n${stepLabel(2, "Find the three sides", "求三条边")["zh-CN"]}由椭圆的定义 $PF_1 + PF_2 = 2a = ${2 * a}$，两焦点相距 $F_1F_2 = 2c = ${2 * c}$。\n\n${stepLabel(3, "Add", "相加")["zh-CN"]}周长是\n\n$$${2 * a} + ${2 * c} = ${answer}$$\n\n**检验。**取 $P$ 为短轴的一个端点：两条斜边都是 $\\sqrt{${c}^{2} + ${b}^{2}} = ${a}$，而 $${a} + ${a} + ${2 * c} = ${answer}$。`,
+        );
+      })(),
     });
   },
 };
@@ -1259,8 +1267,8 @@ const semiMinorFromEccentricity: KnowledgePointDef = {
   id: "the-semi-minor-axis-from-the-eccentricity-and-the-foci",
   title: t("The semi-minor axis from the eccentricity and the foci", "由离心率和焦点求短半轴"),
   explanation: t(
-    "Eccentricity and the distance between the foci together fix the whole shape of an ellipse. Half the distance between the foci is the focal distance from the center, and dividing that by the eccentricity gives the semi-major axis. The semi-minor axis then comes from the relation between the three lengths, in which the semi-major axis acts as the hypotenuse. It is a common slip to use the full distance between the foci instead of half of it.",
-    "离心率和两焦点间的距离一起确定了椭圆的整个形状。两焦点距离的一半是焦点到中心的距离，再除以离心率就得到长半轴。然后由三个长度之间的关系得到短半轴，其中长半轴相当于斜边。常见的错误是用两焦点间的全部距离，而不是它的一半。",
+    "Eccentricity and the distance between the foci together fix the whole shape of an ellipse. Half the distance between the foci is the focal distance from the center, and dividing that by the eccentricity gives the semi-major axis. The semi-minor axis then comes from the relation between the three lengths, in which the semi-major axis acts as the hypotenuse. It is a common slip to use the full distance between the foci instead of half of it.\n\nIf the foci are $6$ apart and $e = \\frac{3}{5}$, then $c = 3$, $a = \\frac{3}{3/5} = 5$, and $b^{2} = 25 - 9 = 16$. Check: $16 + 9 = 25$, so $b$, $c$ and $a$ form a right triangle.\n\n> **Watch out.** Halve the distance between the foci to get $c$, and subtract: $b^{2} = a^{2} - c^{2}$, not $a^{2} + c^{2}$.",
+    "离心率和两焦点间的距离一起确定了椭圆的整个形状。两焦点距离的一半是焦点到中心的距离，再除以离心率就得到长半轴。然后由三个长度之间的关系得到短半轴，其中长半轴相当于斜边。常见的错误是用两焦点间的全部距离，而不是它的一半。\n\n若两焦点相距 $6$，$e = \\frac{3}{5}$，则 $c = 3$，$a = \\frac{3}{3/5} = 5$，$b^{2} = 25 - 9 = 16$。检验：$16 + 9 = 25$，所以 $b$、$c$、$a$ 构成直角三角形。\n\n> **注意。** 两焦点的距离要减半才是 $c$，而且要相减：$b^{2} = a^{2} - c^{2}$，不是 $a^{2} + c^{2}$。",
   ),
   generate(rng) {
     const [p, q] = rng.pick(properFractions(7));
@@ -1275,10 +1283,12 @@ const semiMinorFromEccentricity: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [a * a + c * c, (a - c) ** 2, 4 * a * a - 4 * c * c, a * a],
-      solution: t(
-        `Half the distance between the foci gives $c = ${c}$. From $e = \\frac{c}{a}$, we get $a = ${a}$. Then $b^{2} = a^{2} - c^{2} = ${a * a} - ${c * c} = ${answer}$.`,
-        `两焦点距离的一半给出 $c = ${c}$。由 $e = \\frac{c}{a}$ 得 $a = ${a}$。于是 $b^{2} = a^{2} - c^{2} = ${a * a} - ${c * c} = ${answer}$。`,
-      ),
+      solution: (() => {
+        return t(
+          `${stepLabel(1, "Halve the distance between the foci", "把焦距减半").en} The center is midway between the foci, so $c = \\frac{${2 * c}}{2} = ${c}$.\n\n${stepLabel(2, "Find a from the eccentricity", "由离心率求 a").en} From $e = \\frac{c}{a}$:\n\n$$a = \\frac{c}{e} = ${c} \\div ${frac(p, q)} = ${a}$$\n\n${stepLabel(3, "Find b squared", "求 b 的平方").en} The semi-major axis is the hypotenuse:\n\n$$b^{2} = a^{2} - c^{2} = ${a * a} - ${c * c} = ${answer}$$\n\n**Check.** $\\frac{c}{a} = \\frac{${c}}{${a}} = ${frac(p, q)}$, the given eccentricity, and $${answer} + ${c * c} = ${a * a}$.`,
+          `${stepLabel(1, "Halve the distance between the foci", "把焦距减半")["zh-CN"]}中心在两焦点的正中间，所以 $c = \\frac{${2 * c}}{2} = ${c}$。\n\n${stepLabel(2, "Find a from the eccentricity", "由离心率求 a")["zh-CN"]}由 $e = \\frac{c}{a}$：\n\n$$a = \\frac{c}{e} = ${c} \\div ${frac(p, q)} = ${a}$$\n\n${stepLabel(3, "Find b squared", "求 b 的平方")["zh-CN"]}长半轴是斜边：\n\n$$b^{2} = a^{2} - c^{2} = ${a * a} - ${c * c} = ${answer}$$\n\n**检验。**$\\frac{c}{a} = \\frac{${c}}{${a}} = ${frac(p, q)}$，正是给定的离心率，且 $${answer} + ${c * c} = ${a * a}$。`,
+        );
+      })(),
     });
   },
 };
@@ -1287,8 +1297,8 @@ const focusToDirectrix: KnowledgePointDef = {
   id: "the-distance-from-a-focus-of-an-ellipse-to-its-directrix",
   title: t("The distance from a focus of an ellipse to its directrix", "椭圆焦点到准线的距离"),
   explanation: t(
-    "A focus and its directrix lie on the same side of the center along the major axis, the focus inside the ellipse and the directrix outside it. Their distances from the center are the focal distance and the square of the semi-major axis divided by the focal distance. Subtracting gives the distance between them, and this simplifies neatly to the square of the semi-minor axis divided by the focal distance. The direction of the major axis does not change it.",
-    "焦点和它对应的准线沿长轴在中心的同一侧，焦点在椭圆内，准线在椭圆外。它们到中心的距离分别是焦距和长半轴的平方除以焦距。相减得到它们之间的距离，化简后恰好是短半轴的平方除以焦距。长轴的方向不影响这个结果。",
+    "A focus and its directrix lie on the same side of the center along the major axis, the focus inside the ellipse and the directrix outside it. Their distances from the center are the focal distance and the square of the semi-major axis divided by the focal distance. Subtracting gives the distance between them, and this simplifies neatly to the square of the semi-minor axis divided by the focal distance. The direction of the major axis does not change it.\n\nFor $\\frac{x^{2}}{25} + \\frac{y^{2}}{16} = 1$: $c = 3$, the directrix is $\\frac{25}{3}$ from the center, and the distance is $\\frac{25}{3} - 3 = \\frac{16}{3}$. Check: $\\frac{b^{2}}{c} = \\frac{16}{3}$.\n\n> **Watch out.** $\\frac{a^{2}}{c}$ is the distance from the center to the directrix; subtract $c$ to measure from the focus instead.",
+    "焦点和它对应的准线沿长轴在中心的同一侧，焦点在椭圆内，准线在椭圆外。它们到中心的距离分别是焦距和长半轴的平方除以焦距。相减得到它们之间的距离，化简后恰好是短半轴的平方除以焦距。长轴的方向不影响这个结果。\n\n对 $\\frac{x^{2}}{25} + \\frac{y^{2}}{16} = 1$：$c = 3$，准线到中心的距离是 $\\frac{25}{3}$，所求距离是 $\\frac{25}{3} - 3 = \\frac{16}{3}$。检验：$\\frac{b^{2}}{c} = \\frac{16}{3}$。\n\n> **注意。** $\\frac{a^{2}}{c}$ 是中心到准线的距离；要从焦点量起，还得减去 $c$。",
   ),
   generate(rng) {
     const [b, c, a] = legsAndHypotenuse(rng, 3) as [number, number, number];
@@ -1303,10 +1313,12 @@ const focusToDirectrix: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(a * a, c), Q.of(a * a + c * c, c), a - c, b],
-      solution: t(
-        `Here $a = ${a}$ and $c = ${c}$. The focus is $${c}$ from the center and the directrix is $\\frac{a^{2}}{c} = ${frac(a * a, c)}$ from the center. The difference is $${frac(a * a, c)} - ${c} = ${answer.toLatex()}$.`,
-        `这里 $a = ${a}$，$c = ${c}$。焦点到中心的距离是 $${c}$，准线到中心的距离是 $\\frac{a^{2}}{c} = ${frac(a * a, c)}$。两者之差是 $${frac(a * a, c)} - ${c} = ${answer.toLatex()}$。`,
-      ),
+      solution: (() => {
+        return t(
+          `${stepLabel(1, "Find c", "求 c").en} Here $a^{2} = ${a * a}$ and $b^{2} = ${b * b}$, so $c = \\sqrt{${a * a} - ${b * b}} = ${c}$: the focus is $${c}$ from the center.\n\n${stepLabel(2, "Place the directrix", "确定准线位置").en} The directrix on the same side is\n\n$$\\frac{a^{2}}{c} = \\frac{${a * a}}{${c}}$$\n\nfrom the center.\n\n${stepLabel(3, "Subtract", "相减").en} Both lie on the major axis, on the same side, so\n\n$$\\frac{${a * a}}{${c}} - ${c} = \\frac{${a * a} - ${c * c}}{${c}} = ${answer.toLatex()}$$\n\n**Check.** The difference is $\\frac{a^{2} - c^{2}}{c} = \\frac{b^{2}}{c} = \\frac{${b * b}}{${c}} = ${answer.toLatex()}$.`,
+          `${stepLabel(1, "Find c", "求 c")["zh-CN"]}这里 $a^{2} = ${a * a}$，$b^{2} = ${b * b}$，所以 $c = \\sqrt{${a * a} - ${b * b}} = ${c}$：焦点到中心的距离是 $${c}$。\n\n${stepLabel(2, "Place the directrix", "确定准线位置")["zh-CN"]}同侧准线到中心的距离是\n\n$$\\frac{a^{2}}{c} = \\frac{${a * a}}{${c}}$$\n\n${stepLabel(3, "Subtract", "相减")["zh-CN"]}两者在长轴上、在中心同侧，所以\n\n$$\\frac{${a * a}}{${c}} - ${c} = \\frac{${a * a} - ${c * c}}{${c}} = ${answer.toLatex()}$$\n\n**检验。**这个差是 $\\frac{a^{2} - c^{2}}{c} = \\frac{b^{2}}{c} = \\frac{${b * b}}{${c}} = ${answer.toLatex()}$。`,
+        );
+      })(),
     });
   },
 };
@@ -1315,8 +1327,8 @@ const areaNonstandard: KnowledgePointDef = {
   id: "the-area-of-an-ellipse-from-an-equation-not-in-standard-form",
   title: t("The area of an ellipse from an equation not in standard form", "由非标准方程求椭圆的面积"),
   explanation: t(
-    "The area formula uses the two semi-axes, which can be read only from the standard form, where the right side is one. An equation with coefficients on the squares and another constant on the right must therefore be divided by that constant first. Each semi-axis is then the square root of a quotient, and although those roots may look awkward, they combine in the product. So the area is often simpler than either semi-axis on its own.",
-    "面积公式用到两条半轴，而半轴只能从右边等于一的标准形式读出。平方项带系数、右边是其他常数的方程，必须先除以这个常数。这时每条半轴都是一个商的平方根，虽然这些根看起来不好处理，但在乘积中会合并。所以面积往往比任何一条半轴都简单。",
+    "The area formula uses the two semi-axes, which can be read only from the standard form, where the right side is one. An equation with coefficients on the squares and another constant on the right must therefore be divided by that constant first. Each semi-axis is then the square root of a quotient, and although those roots may look awkward, they combine in the product. So the area is often simpler than either semi-axis on its own.\n\nFor $4x^{2} + 9y^{2} = 36$: dividing by $36$ gives $\\frac{x^{2}}{9} + \\frac{y^{2}}{4} = 1$, so $a = 3$, $b = 2$ and the area is $6\\pi$. Check: $\\frac{36}{2 \\cdot 3} = 6$.\n\n> **Watch out.** Divide by the right side first. The area is not $36\\pi$, and the semi-axes are $\\frac{6}{2}$ and $\\frac{6}{3}$, not $\\frac{36}{4}$ and $\\frac{36}{9}$, which are their squares.",
+    "面积公式用到两条半轴，而半轴只能从右边等于一的标准形式读出。平方项带系数、右边是其他常数的方程，必须先除以这个常数。这时每条半轴都是一个商的平方根，虽然这些根看起来不好处理，但在乘积中会合并。所以面积往往比任何一条半轴都简单。\n\n对 $4x^{2} + 9y^{2} = 36$：除以 $36$ 得 $\\frac{x^{2}}{9} + \\frac{y^{2}}{4} = 1$，所以 $a = 3$，$b = 2$，面积是 $6\\pi$。检验：$\\frac{36}{2 \\cdot 3} = 6$。\n\n> **注意。** 先除以右边的数。面积不是 $36\\pi$；两条半轴是 $\\frac{6}{2}$ 和 $\\frac{6}{3}$，不是它们的平方 $\\frac{36}{4}$ 和 $\\frac{36}{9}$。",
   ),
   generate(rng) {
     const p = rng.int(2, 6);
@@ -1330,10 +1342,12 @@ const areaNonstandard: KnowledgePointDef = {
       ),
       answer,
       wrong: [m, Q.of(m, p * p * q * q), Q.of(2 * m, p * q), Q.of(m, p + q)],
-      solution: t(
-        `Dividing by $${m}$ gives the standard form, with $a^{2} = ${frac(m, p * p)}$ and $b^{2} = ${frac(m, q * q)}$. So $a = \\frac{\\sqrt{${m}}}{${p}}$ and $b = \\frac{\\sqrt{${m}}}{${q}}$, and the product is $ab = \\frac{${m}}{${p} \\cdot ${q}}$. So $N = ${answer.toLatex()}$.`,
-        `除以 $${m}$ 得到标准形式，其中 $a^{2} = ${frac(m, p * p)}$，$b^{2} = ${frac(m, q * q)}$。所以 $a = \\frac{\\sqrt{${m}}}{${p}}$，$b = \\frac{\\sqrt{${m}}}{${q}}$，乘积 $ab = \\frac{${m}}{${p} \\cdot ${q}}$。所以 $N = ${answer.toLatex()}$。`,
-      ),
+      solution: (() => {
+        return t(
+          `${stepLabel(1, "Divide by the right side", "除以右边").en} Divide by $${m}$ so that the right side is $1$:\n\n$$\\frac{x^{2}}{${frac(m, p * p)}} + \\frac{y^{2}}{${frac(m, q * q)}} = 1$$\n\n${stepLabel(2, "Take square roots", "开平方").en} The semi-axes are the square roots of the denominators:\n\n$$\\sqrt{\\frac{${m}}{${p * p}}} = \\frac{\\sqrt{${m}}}{${p}}, \\quad \\sqrt{\\frac{${m}}{${q * q}}} = \\frac{\\sqrt{${m}}}{${q}}$$\n\n${stepLabel(3, "Multiply", "相乘").en} The area is $\\pi$ times their product, and $\\sqrt{${m}} \\cdot \\sqrt{${m}} = ${m}$:\n\n$$ab = \\frac{${m}}{${p} \\cdot ${q}} = ${answer.toLatex()}$$\n\nso $N = ${answer.toLatex()}$.\n\n**Check.** $a^{2}b^{2} = ${frac(m, p * p)} \\cdot ${frac(m, q * q)} = ${Q.of(m * m, p * p * q * q).toLatex()}$, which is $N^{2} = \\left(${answer.toLatex()}\\right)^{2}$.`,
+          `${stepLabel(1, "Divide by the right side", "除以右边")["zh-CN"]}除以 $${m}$，使右边为 $1$：\n\n$$\\frac{x^{2}}{${frac(m, p * p)}} + \\frac{y^{2}}{${frac(m, q * q)}} = 1$$\n\n${stepLabel(2, "Take square roots", "开平方")["zh-CN"]}半轴是分母的平方根：\n\n$$\\sqrt{\\frac{${m}}{${p * p}}} = \\frac{\\sqrt{${m}}}{${p}}, \\quad \\sqrt{\\frac{${m}}{${q * q}}} = \\frac{\\sqrt{${m}}}{${q}}$$\n\n${stepLabel(3, "Multiply", "相乘")["zh-CN"]}面积是 $\\pi$ 乘以它们的积，而 $\\sqrt{${m}} \\cdot \\sqrt{${m}} = ${m}$：\n\n$$ab = \\frac{${m}}{${p} \\cdot ${q}} = ${answer.toLatex()}$$\n\n所以 $N = ${answer.toLatex()}$。\n\n**检验。**$a^{2}b^{2} = ${frac(m, p * p)} \\cdot ${frac(m, q * q)} = ${Q.of(m * m, p * p * q * q).toLatex()}$，正是 $N^{2} = \\left(${answer.toLatex()}\\right)^{2}$。`,
+        );
+      })(),
     });
   },
 };
