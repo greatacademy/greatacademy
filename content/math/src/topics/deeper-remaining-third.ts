@@ -100,8 +100,16 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
       "three-kinds-of-coins",
       ["Three kinds of coins", "三种硬币"],
       [
-        "With three kinds of coins, write every count in terms of one unknown using the relations given. Then the total value gives a single equation, with each count multiplied by its value in cents.",
-        "有三种硬币时，用已知关系把每种的个数都写成同一个未知数的式子。这样总价值给出一个方程，每种个数乘它的面值（分）。",
+        `With three kinds of coins, write every count in terms of one unknown using the relations given. Then the total value gives a single equation, with each count multiplied by its value in cents.
+
+Say there are $n$ nickels, twice as many dimes, and $3$ more quarters than nickels, worth $275$ cents. The counts are $n$, $2n$ and $n + 3$, so $5n + 10 \\cdot 2n + 25(n + 3) = 275$. That is $50n + 75 = 275$, so $50n = 200$ and $n = 4$. Check: $20 + 80 + 175 = 275$.
+
+> **Watch out.** Multiply each count by its own coin value, and the whole of $n + 3$ by $25$: $25(n + 3) = 25n + 75$. The answer $n$ is the number of nickels, not of quarters.`,
+        `有三种硬币时，用已知关系把每种的个数都写成同一个未知数的式子。这样总价值给出一个方程，每种个数乘它的面值（分）。
+
+比如有 $n$ 枚 $5$ 分硬币，$10$ 分硬币是它的两倍，$25$ 分硬币比 $5$ 分硬币多 $3$ 枚，共 $275$ 分。三种的枚数是 $n$、$2n$ 和 $n + 3$，所以 $5n + 10 \\cdot 2n + 25(n + 3) = 275$，即 $50n + 75 = 275$，$50n = 200$，$n = 4$。检验：$20 + 80 + 175 = 275$。
+
+> **注意。** 每种的枚数乘以它自己的面值，$25$ 要乘整个 $n + 3$：$25(n + 3) = 25n + 75$。答案 $n$ 是 $5$ 分硬币的枚数，不是 $25$ 分硬币的。`,
       ],
       (rng) => {
         const n = rng.int(2, 30);
@@ -115,8 +123,16 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
           n,
           [n + k, 2 * n, Math.floor(cents / 40)],
           [
-            `$5n + 20n + 25(n + ${k}) = ${cents}$ gives $50n = ${cents - 25 * k}$, so $n = ${n}$.`,
-            `$5n + 20n + 25(n + ${k}) = ${cents}$，得 $50n = ${cents - 25 * k}$，所以 $n = ${n}$。`,
+            `**Write every count in terms of $n$.** There are $n$ nickels, $2n$ dimes and $n + ${k}$ quarters.
+
+**Write the value equation.** Each count times its coin value, in cents: $$5n + 10 \\cdot 2n + 25(n + ${k}) = ${cents}.$$ Multiplying out, $5n + 20n + 25n + ${25 * k} = ${cents}$, so $50n = ${cents} - ${25 * k} = ${cents - 25 * k}$ and $n = ${n}$.
+
+**Check.** $${n}$ nickels, $${2 * n}$ dimes and $${n + k}$ quarters are worth $${5 * n} + ${20 * n} + ${25 * (n + k)} = ${cents}$ cents.`,
+            `**用 $n$ 表示每种的枚数。** $5$ 分硬币 $n$ 枚，$10$ 分硬币 $2n$ 枚，$25$ 分硬币 $n + ${k}$ 枚。
+
+**列价值方程。** 每种的枚数乘以面值（分）：$$5n + 10 \\cdot 2n + 25(n + ${k}) = ${cents}.$$ 去括号得 $5n + 20n + 25n + ${25 * k} = ${cents}$，所以 $50n = ${cents} - ${25 * k} = ${cents - 25 * k}$，$n = ${n}$。
+
+**检验。** $${n}$ 枚 $5$ 分、$${2 * n}$ 枚 $10$ 分和 $${n + k}$ 枚 $25$ 分硬币共值 $${5 * n} + ${20 * n} + ${25 * (n + k)} = ${cents}$ 分。`,
           ],
         );
       },
@@ -128,8 +144,16 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
         "the-coefficient-that-makes-no-solution",
         ["The coefficient that makes no solution", "使方程组无解的系数"],
         [
-          "A system has no solution when its lines are parallel and different. So the coefficients on the left must be in one ratio, while the constants on the right are not in that ratio.",
-          "方程组无解，当且仅当两条直线平行且不重合。所以左边的系数要成同一比例，而右边的常数不成这个比例。",
+          `A system has no solution when its lines are parallel and different. So the coefficients on the left must be in one ratio, while the constants on the right are not in that ratio.
+
+For $2x + 3y = 1$ and $6x + ty = 5$: the $x$-coefficient is multiplied by $3$, so the left sides are proportional when $t = 3 \\cdot 3 = 9$. Then $6x + 9y$ would equal both $3 \\cdot 1 = 3$ and $5$, which is impossible, so there is no solution.
+
+> **Watch out.** Multiply the $y$-coefficient by the same factor, with its sign: for $2x - 3y = 1$ the answer is $t = 3 \\cdot (-3) = -9$, not $9$ and not $-3$.`,
+          `方程组无解，当且仅当两条直线平行且不重合。所以左边的系数要成同一比例，而右边的常数不成这个比例。
+
+对 $2x + 3y = 1$ 和 $6x + ty = 5$：$x$ 的系数乘了 $3$，所以当 $t = 3 \\cdot 3 = 9$ 时左边成比例。这时 $6x + 9y$ 既要等于 $3 \\cdot 1 = 3$ 又要等于 $5$，这不可能，所以无解。
+
+> **注意。** $y$ 的系数要乘以同一个倍数，连同符号：对 $2x - 3y = 1$，答案是 $t = 3 \\cdot (-3) = -9$，不是 $9$，也不是 $-3$。`,
         ],
         (rng) => {
           const a = rng.int(1, 9);
@@ -145,8 +169,12 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
             k * b,
             [b, -k * b, k * b + k],
             [
-              `The second left side must be $${k}$ times the first, so $t = ${k * b}$. The constant $${d}$ is not $${k}$ times $${c}$, so the lines differ.`,
-              `第二个方程的左边必须是第一个的 $${k}$ 倍，所以 $t = ${k * b}$。常数 $${d}$ 不是 $${c}$ 的 $${k}$ 倍，所以两条直线不重合。`,
+              `**Find the factor.** The $x$-coefficient goes from $${a}$ to $${k * a}$, a factor of $${k}$. For parallel lines the second left side must be $${k}$ times the first, so $t = ${k} \\cdot ${b < 0 ? `(${b})` : b} = ${k * b}$.
+
+**Check.** With $t = ${k * b}$, the first equation times $${k}$ reads $${k * a}x ${b < 0 ? "-" : "+"} ${Math.abs(k * b)}y = ${k * c}$, but the second says the same left side equals $${d}$. Since $${d} \\ne ${k * c}$, the lines are parallel and different, and there is no solution.`,
+              `**找倍数。** $x$ 的系数从 $${a}$ 变成 $${k * a}$，是 $${k}$ 倍。两直线平行时，第二个方程的左边必须是第一个的 $${k}$ 倍，所以 $t = ${k} \\cdot ${b < 0 ? `(${b})` : b} = ${k * b}$。
+
+**检验。** $t = ${k * b}$ 时，第一个方程乘以 $${k}$ 得 $${k * a}x ${b < 0 ? "-" : "+"} ${Math.abs(k * b)}y = ${k * c}$，而第二个方程说同一个左边等于 $${d}$。因为 $${d} \\ne ${k * c}$，两条直线平行且不重合，方程组无解。`,
             ],
           );
         },
@@ -224,8 +252,16 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
       "factoring-out-the-letter",
       ["Factoring out the letter", "提取字母"],
       [
-        "When the wanted letter appears in two terms, gather those terms on one side and factor it out. Only then can you divide by the other factor, which is assumed to be nonzero.",
-        "要求的字母出现在两项中时，先把这两项移到同一边，再提取这个字母。这时才能除以另一个因式（假定它不为零）。",
+        `When the wanted letter appears in two terms, it cannot be isolated by dividing one coefficient away. Gather those terms on one side and everything else on the other, then factor the letter out: the distributive law read backwards turns $ax - cx$ into $x(a - c)$. Only then can you divide by the other factor, which is assumed to be nonzero.
+
+Solve $ax + b = cx + d$ for $x$. Subtract $cx$ and $b$ from both sides: $ax - cx = d - b$. Factor: $x(a - c) = d - b$. Divide by $a - c$: $x = \\frac{d - b}{a - c}$. With numbers, $a = 5$, $b = 1$, $c = 2$, $d = 7$, this gives $x = \\frac{6}{3} = 2$, and indeed $5 \\cdot 2 + 1 = 11 = 2 \\cdot 2 + 7$.
+
+> **Watch out.** Keep the order of each subtraction: moving $b$ to the right gives $d - b$, not $b - d$. And the factor left after taking out $x$ is $a - c$, a difference, not the product $ac$ or the sum $a + c$.`,
+        `要求的字母出现在两项中时，不能靠除以一个系数把它单独留下。先把这两项移到同一边、其余各项移到另一边，再提取这个字母：把分配律反过来用，$ax - cx$ 就成了 $x(a - c)$。这时才能除以另一个因式（假定它不为零）。
+
+由 $ax + b = cx + d$ 解出 $x$。两边都减去 $cx$ 和 $b$：$ax - cx = d - b$。提取 $x$：$x(a - c) = d - b$。除以 $a - c$：$x = \\frac{d - b}{a - c}$。代入数，$a = 5$，$b = 1$，$c = 2$，$d = 7$，得 $x = \\frac{6}{3} = 2$，确实 $5 \\cdot 2 + 1 = 11 = 2 \\cdot 2 + 7$。
+
+> **注意。** 每个减法的顺序都要保持：把 $b$ 移到右边得 $d - b$，不是 $b - d$。提取 $x$ 后剩下的因式是差 $a - c$，不是积 $ac$，也不是和 $a + c$。`,
       ],
       (rng) => {
         const [x, a, b, c, d] = rng.sample(["x", "y", "z", "w", "k", "m", "n", "p", "q", "r", "s", "t", "u", "v"], 5) as [
@@ -248,8 +284,16 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
             `${x} = ${frac(`${d} - ${b}`, `${a}${c}`)}`,
           ],
           [
-            `$${a}${x} - ${c}${x} = ${d} - ${b}$, so $${x}(${a} - ${c}) = ${d} - ${b}$.`,
-            `$${a}${x} - ${c}${x} = ${d} - ${b}$，所以 $${x}(${a} - ${c}) = ${d} - ${b}$。`,
+            `**Gather the $${x}$ terms.** Subtract $${c}${x}$ and $${b}$ from both sides, so that every term with $${x}$ is on the left: $$${a}${x} - ${c}${x} = ${d} - ${b}.$$
+
+**Factor and divide.** Taking $${x}$ out of both terms gives $${x}(${a} - ${c}) = ${d} - ${b}$. Dividing by $${a} - ${c}$, assumed nonzero: $$${x} = ${frac(`${d} - ${b}`, `${a} - ${c}`)}.$$
+
+**Check.** Put it back into the equation. The left side minus the right side is $(${a} - ${c})${x} - (${d} - ${b})$, and with this $${x}$ that is $(${a} - ${c}) \\cdot ${frac(`${d} - ${b}`, `${a} - ${c}`)} - (${d} - ${b}) = (${d} - ${b}) - (${d} - ${b}) = 0$, so the two sides are equal.`,
+            `**把含 $${x}$ 的项移到一边。** 两边都减去 $${c}${x}$ 和 $${b}$，使含 $${x}$ 的项都在左边：$$${a}${x} - ${c}${x} = ${d} - ${b}.$$
+
+**提取再相除。** 从两项中提取 $${x}$，得 $${x}(${a} - ${c}) = ${d} - ${b}$。两边除以 $${a} - ${c}$（假定不为零）：$$${x} = ${frac(`${d} - ${b}`, `${a} - ${c}`)}.$$
+
+**检验。** 代回原方程。左边减右边是 $(${a} - ${c})${x} - (${d} - ${b})$，代入这个 $${x}$ 得 $(${a} - ${c}) \\cdot ${frac(`${d} - ${b}`, `${a} - ${c}`)} - (${d} - ${b}) = (${d} - ${b}) - (${d} - ${b}) = 0$，所以两边相等。`,
           ],
         );
       },
@@ -535,8 +579,16 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
       "a-mixture-system",
       ["A mixture system", "混合问题的方程组"],
       [
-        "Mixture problems give one equation for the total amount and one for the amount of the ingredient, which has decimal coefficients. Multiplying that second equation by a power of $10$ clears them.",
-        "混合问题有一个关于总量的方程，还有一个关于成分含量的方程，后者的系数是小数。把第二个方程乘 $10$ 的幂就能去掉小数。",
+        `Mixture problems give one equation for the total amount and one for the amount of the ingredient. A $10\\%$ solution contains $0.1$ of its volume as the ingredient, so the second equation has decimal coefficients, and multiplying it by a power of $10$ clears them.
+
+Say $5$ liters of a $20\\%$ solution and $x$ liters of a $50\\%$ solution together hold $2.5$ liters of acid. The acid equation is $0.2 \\cdot 5 + 0.5x = 2.5$; times $10$ it is $10 + 5x = 25$, so $x = 3$. Check: $1 + 1.5 = 2.5$.
+
+> **Watch out.** Write each percentage as a decimal, $30\\%$ as $0.3$, and multiply the right side by $10$ as well. And answer the question asked: the problem may want $y$, not $x$.`,
+        `混合问题有一个关于总量的方程，还有一个关于成分含量的方程。浓度 $10\\%$ 的溶液中，成分占体积的 $0.1$，所以第二个方程的系数是小数，把它乘以 $10$ 的幂就能去掉小数。
+
+比如 $5$ 升浓度 $20\\%$ 的溶液和 $x$ 升浓度 $50\\%$ 的溶液共含 $2.5$ 升酸。酸的方程是 $0.2 \\cdot 5 + 0.5x = 2.5$，乘以 $10$ 得 $10 + 5x = 25$，所以 $x = 3$。检验：$1 + 1.5 = 2.5$。
+
+> **注意。** 每个百分数都写成小数，$30\\%$ 写成 $0.3$，右边也要乘以 $10$。还要回答题目问的量：题目可能要的是 $y$，不是 $x$。`,
       ],
       (rng) => {
         const x = rng.int(1, 40);
@@ -551,8 +603,20 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
           y,
           [x, Math.round(acid), total - Math.round(acid)],
           [
-            `$x + y = ${total}$ and $0.1x + 0.3y = ${acid}$. Multiplying the second by $10$ and subtracting gives $2y = ${2 * y}$.`,
-            `$x + y = ${total}$，$0.1x + 0.3y = ${acid}$。第二式乘 $10$ 再相减，得 $2y = ${2 * y}$。`,
+            `**Write the equations.** The volumes add to the total, and the acid in each part adds to the acid in the mixture: $$x + y = ${total}, \\qquad 0.1x + 0.3y = ${acid}.$$
+
+**Clear the decimals.** Multiply the second equation by $10$: $x + 3y = ${x + 3 * y}$.
+
+**Eliminate $x$.** Subtract the first equation: $2y = ${x + 3 * y} - ${total} = ${2 * y}$, so $y = ${y}$.
+
+**Check.** Then $x = ${total} - ${y} = ${x}$, and the acid is $0.1 \\cdot ${x} + 0.3 \\cdot ${y} = ${x / 10} + ${(3 * y) / 10} = ${acid}$ liters.`,
+            `**列方程。** 两部分的体积之和是总量，各部分含的酸之和是混合液含的酸：$$x + y = ${total}, \\qquad 0.1x + 0.3y = ${acid}.$$
+
+**去掉小数。** 第二个方程乘以 $10$：$x + 3y = ${x + 3 * y}$。
+
+**消去 $x$。** 减去第一个方程：$2y = ${x + 3 * y} - ${total} = ${2 * y}$，所以 $y = ${y}$。
+
+**检验。** 于是 $x = ${total} - ${y} = ${x}$，含酸 $0.1 \\cdot ${x} + 0.3 \\cdot ${y} = ${x / 10} + ${(3 * y) / 10} = ${acid}$ 升。`,
           ],
         );
       },
@@ -563,8 +627,16 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
       "matching-fractions-in-both-equations",
       ["Matching fractions in both equations", "两个方程中相同的分数"],
       [
-        "When the same fractions appear in both equations, it is quicker not to clear them. Adding or subtracting the equations removes one fraction at once, and the other can then be solved.",
-        "两个方程中出现相同的分数时，不去分母反而更快。把方程相加或相减，一个分数立刻消去，再解另一个。",
+        `When the same fractions appear in both equations, it is quicker not to clear them. Treat each fraction as a single quantity: adding or subtracting the equations removes one of them at once, and the other can then be solved.
+
+For $\\frac{x}{3} + \\frac{y}{2} = 7$ and $\\frac{x}{3} - \\frac{y}{2} = 1$, the terms $\\frac{y}{2}$ and $-\\frac{y}{2}$ cancel when the equations are added: $2 \\cdot \\frac{x}{3} = 8$, so $\\frac{x}{3} = 4$ and $x = 12$. Check: $\\frac{y}{2} = 7 - 4 = 3$, so $y = 6$, and $4 - 3 = 1$.
+
+> **Watch out.** Finding $\\frac{x}{3} = 4$ is not the end: $x$ is $3 \\cdot 4 = 12$, not $4$. Divide by $2$ after adding, then multiply by the denominator.`,
+        `两个方程中出现相同的分数时，不去分母反而更快。把每个分数看成一个整体：把方程相加或相减，其中一个立刻消去，再解另一个。
+
+对 $\\frac{x}{3} + \\frac{y}{2} = 7$ 和 $\\frac{x}{3} - \\frac{y}{2} = 1$，相加时 $\\frac{y}{2}$ 和 $-\\frac{y}{2}$ 抵消：$2 \\cdot \\frac{x}{3} = 8$，所以 $\\frac{x}{3} = 4$，$x = 12$。检验：$\\frac{y}{2} = 7 - 4 = 3$，所以 $y = 6$，而 $4 - 3 = 1$。
+
+> **注意。** 求出 $\\frac{x}{3} = 4$ 还没完：$x$ 是 $3 \\cdot 4 = 12$，不是 $4$。相加后先除以 $2$，再乘以分母。`,
       ],
       (rng) => {
         const a = rng.int(2, 9);
@@ -579,8 +651,16 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
           a * m,
           [m, b * n, a * (m + n)],
           [
-            `Adding gives $2 \\cdot ${frac("x", a)} = ${2 * m}$, so $${frac("x", a)} = ${m}$ and $x = ${a * m}$.`,
-            `相加得 $2 \\cdot ${frac("x", a)} = ${2 * m}$，所以 $${frac("x", a)} = ${m}$，$x = ${a * m}$。`,
+            `**Add the equations.** The terms $${frac("y", b)}$ and $-${frac("y", b)}$ cancel, leaving $2 \\cdot ${frac("x", a)} = ${m + n} + ${m - n < 0 ? `(${m - n})` : m - n} = ${2 * m}$.
+
+**Solve for $x$.** Dividing by $2$ gives $${frac("x", a)} = ${m}$, and multiplying by $${a}$ gives $x = ${a * m}$.
+
+**Check.** From the first equation, $${frac("y", b)} = ${m + n} - ${m < 0 ? `(${m})` : m} = ${n}$. Then the second equation gives $${m} - ${n < 0 ? `(${n})` : n} = ${m - n}$, as it should.`,
+            `**两个方程相加。** $${frac("y", b)}$ 和 $-${frac("y", b)}$ 抵消，剩下 $2 \\cdot ${frac("x", a)} = ${m + n} + ${m - n < 0 ? `(${m - n})` : m - n} = ${2 * m}$。
+
+**解出 $x$。** 两边除以 $2$ 得 $${frac("x", a)} = ${m}$，再乘以 $${a}$ 得 $x = ${a * m}$。
+
+**检验。** 由第一个方程，$${frac("y", b)} = ${m + n} - ${m < 0 ? `(${m})` : m} = ${n}$。代入第二个方程得 $${m} - ${n < 0 ? `(${n})` : n} = ${m - n}$，正确。`,
           ],
         );
       },

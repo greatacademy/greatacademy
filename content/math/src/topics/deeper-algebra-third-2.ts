@@ -232,8 +232,16 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
       "the-value-that-makes-a-point-a-solution",
       ["The value that makes a point a solution", "使一点成为解的值"],
       [
-        "A solution of a system satisfies every equation. So one equation with a known point can reveal a missing coefficient, as substituting the coordinates leaves one unknown.",
-        "方程组的解满足每个方程。所以用已知点代入含未知系数的方程，就只剩一个未知数，可以求出它。",
+        `A solution of a system satisfies every equation. So if a point is known to be a solution, its coordinates can be put into an equation with a missing coefficient, and that leaves one equation in one unknown.
+
+Say $(2, 3)$ solves $x + y = 5$ and $kx - y = 7$. Putting $x = 2$ and $y = 3$ into the second equation gives $2k - 3 = 7$, so $2k = 10$ and $k = 5$. Check: $5 \\cdot 2 - 3 = 7$.
+
+> **Watch out.** Use the equation that contains $k$, and substitute carefully: with $y = -4$, the term $-y$ becomes $-(-4) = +4$. Dropping that sign gives the opposite number or a value off by a little.`,
+        `方程组的解满足每个方程。所以如果已知某点是解，就可以把它的坐标代入含未知系数的方程，剩下一个只含一个未知数的方程。
+
+比如 $(2, 3)$ 是 $x + y = 5$ 和 $kx - y = 7$ 的解。把 $x = 2$，$y = 3$ 代入第二个方程，得 $2k - 3 = 7$，所以 $2k = 10$，$k = 5$。检验：$5 \\cdot 2 - 3 = 7$。
+
+> **注意。** 要用含 $k$ 的那个方程，并仔细代入：$y = -4$ 时，$-y$ 变成 $-(-4) = +4$。丢掉这个符号，就会得到相反数或差一点的值。`,
       ],
       (rng) => {
         const x = rng.int(-6, 6) || 2;
@@ -242,6 +250,7 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
         const k = rng.int(-6, 6) || 2;
         const c = a * x + y;
         const d = k * x - y;
+        const kx = x === 1 ? "k" : x === -1 ? "-k" : `${x}k`;
         return integer(
           [
             `The point $(${x}, ${y})$ is a solution of $${a}x + y = ${c}$ and $kx - y = ${d}$. What is $k$?`,
@@ -250,8 +259,16 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
           k,
           [-k, a, k + 1],
           [
-            `Substitute: $${x}k - ${y < 0 ? `(${y})` : y} = ${d}$, so $${x}k = ${d + y}$ and $k = ${k}$.`,
-            `代入：$${x}k - (${y}) = ${d}$，所以 $${x}k = ${d + y}$，$k = ${k}$。`,
+            `**Substitute.** The unknown $k$ is in the second equation, so put $x = ${x}$ and $y = ${y}$ into $kx - y = ${d}$: $$${kx} - ${y < 0 ? `(${y})` : y} = ${d}.$$
+
+**Solve for $k$.** ${y < 0 ? `Subtracting $${y}$ is adding $${-y}$, so take $${-y}$ from both sides` : `Add $${y}$ to both sides`}: $${kx} = ${d + y}$${x === 1 ? "" : `, and divide by $${x}$`}, so $k = ${k}$.
+
+**Check.** $${k} \\cdot ${x < 0 ? `(${x})` : x} - ${y < 0 ? `(${y})` : y} = ${k * x} ${y < 0 ? "+" : "-"} ${Math.abs(y)} = ${d}$, as the second equation requires.`,
+            `**代入。** 未知数 $k$ 在第二个方程里，所以把 $x = ${x}$，$y = ${y}$ 代入 $kx - y = ${d}$：$$${kx} - ${y < 0 ? `(${y})` : y} = ${d}.$$
+
+**解出 $k$。** ${y < 0 ? `减去 $${y}$ 就是加上 $${-y}$，所以两边都减去 $${-y}$` : `两边都加上 $${y}$`}：$${kx} = ${d + y}$${x === 1 ? "" : `，再除以 $${x}$`}，所以 $k = ${k}$。
+
+**检验。** $${k} \\cdot ${x < 0 ? `(${x})` : x} - ${y < 0 ? `(${y})` : y} = ${k * x} ${y < 0 ? "+" : "-"} ${Math.abs(y)} = ${d}$，满足第二个方程。`,
           ],
         );
       },
@@ -720,8 +737,16 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
       "the-sum-of-the-unknowns",
       ["The sum of the unknowns", "未知数的和"],
       [
-        "Sometimes adding the equations gives the requested quantity at once, with no need to find each unknown. Look at what is asked before starting to solve.",
-        "有时把两个方程相加，就立刻得到所求的量，不必分别求出未知数。开始解之前，先看题目要什么。",
+        `Sometimes adding the equations gives the requested quantity at once, with no need to find each unknown. Look at what is asked before starting to solve: if the question wants $x + y$, check whether the coefficients of $x$ add up to the same number as the coefficients of $y$.
+
+Take $3x + 5y = 21$ and $7x + 5y = 29$. The $x$ coefficients add to $3 + 7 = 10$ and the $y$ coefficients to $5 + 5 = 10$, so adding gives $10x + 10y = 50$, that is $10(x + y) = 50$, and $x + y = 5$. Indeed $x = 2$, $y = 3$ fits both: $6 + 15 = 21$ and $14 + 15 = 29$.
+
+> **Watch out.** The sum of the equations is $10(x + y)$, not $x + y$: divide by the common coefficient before answering.`,
+        `有时把两个方程相加，就立刻得到所求的量，不必分别求出未知数。开始解之前，先看题目要什么：如果问的是 $x + y$，就看 $x$ 的系数之和是否与 $y$ 的系数之和相等。
+
+看 $3x + 5y = 21$ 和 $7x + 5y = 29$。$x$ 的系数之和是 $3 + 7 = 10$，$y$ 的系数之和是 $5 + 5 = 10$，所以相加得 $10x + 10y = 50$，即 $10(x + y) = 50$，$x + y = 5$。确实，$x = 2$，$y = 3$ 同时满足两个方程：$6 + 15 = 21$，$14 + 15 = 29$。
+
+> **注意。** 两个方程相加得到的是 $10(x + y)$，不是 $x + y$：回答之前要除以公共系数。`,
       ],
       (rng) => {
         const a = rng.int(2, 7);
@@ -731,6 +756,7 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
         const y = rng.int(-6, 9);
         const safeD = k - a;
         const safeE = k - b;
+        const pr = (v: number) => (v < 0 ? `(${v})` : `${v}`);
         return integer(
           [
             `If $${a}x + ${b}y = ${a * x + b * y}$ and $${safeD === 1 ? "" : safeD < 0 ? `(${safeD})` : safeD}x + ${safeE === 1 ? "" : safeE < 0 ? `(${safeE})` : safeE}y = ${safeD * x + safeE * y}$, what is $x + y$?`,
@@ -739,8 +765,16 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
           x + y,
           [k * (x + y), x, y],
           [
-            `Adding gives $${k}x + ${k}y = ${k * (x + y)}$, and dividing by $${k}$ gives $${x + y}$.`,
-            `相加得 $${k}x + ${k}y = ${k * (x + y)}$，除以 $${k}$ 得 $${x + y}$。`,
+            `**Add the equations.** The coefficients of $x$ add to $${a} + ${safeD} = ${k}$ and those of $y$ to $${b} + ${safeE} = ${k}$, so adding gives $${k}x + ${k}y = ${k * (x + y)}$, that is $${k}(x + y) = ${k * (x + y)}$.
+
+**Divide.** Dividing by $${k}$ gives $x + y = ${x + y}$.
+
+**Check.** Solving fully gives $x = ${x}$, $y = ${y}$, which fits both equations: $${a} \\cdot ${pr(x)} + ${b} \\cdot ${pr(y)} = ${a * x + b * y}$ and $${safeD} \\cdot ${pr(x)} + ${safeE} \\cdot ${pr(y)} = ${safeD * x + safeE * y}$. And $${x} + ${pr(y)} = ${x + y}$.`,
+            `**两个方程相加。** $x$ 的系数之和是 $${a} + ${safeD} = ${k}$，$y$ 的系数之和是 $${b} + ${safeE} = ${k}$，所以相加得 $${k}x + ${k}y = ${k * (x + y)}$，即 $${k}(x + y) = ${k * (x + y)}$。
+
+**做除法。** 两边除以 $${k}$，得 $x + y = ${x + y}$。
+
+**检验。** 完整解出来是 $x = ${x}$，$y = ${y}$，两个方程都满足：$${a} \\cdot ${pr(x)} + ${b} \\cdot ${pr(y)} = ${a * x + b * y}$，$${safeD} \\cdot ${pr(x)} + ${safeE} \\cdot ${pr(y)} = ${safeD * x + safeE * y}$。而 $${x} + ${pr(y)} = ${x + y}$。`,
           ],
         );
       },
@@ -751,8 +785,16 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
       "the-multipliers-that-eliminate",
       ["The multipliers that eliminate", "用于消元的乘数"],
       [
-        "To eliminate a variable, multiply the equations so that its coefficients become opposites. The smallest choice uses the least common multiple of the two coefficients.",
-        "要消去一个变量，就把方程乘某个数，使它的系数互为相反数。最小的选择用两个系数的最小公倍数。",
+        `To eliminate a variable by adding, multiply the equations so that its coefficients become opposites. The smallest numbers to aim for are the least common multiple of the two coefficients and its opposite, and each multiplier is what takes its coefficient there.
+
+For $2x + y = 4$ and $3x - y = 1$, the coefficients of $x$ are $2$ and $3$, with least common multiple $6$. Multiply the first equation by $3$ to get $6x$, and the second by $-2$ to get $-6x$. Adding, $6x - 6x = 0$, and $x$ is gone.
+
+> **Watch out.** Each equation is multiplied by the **other** coefficient: $2$ times $2$ would give $4x$, not $6x$. And one multiplier must be negative; with two positive ones the coefficients are equal, and adding doubles $x$ instead of cancelling it.`,
+        `要用相加来消去一个变量，就把两个方程分别乘以适当的数，使它的系数互为相反数。最小的目标是两个系数的最小公倍数和它的相反数，每个乘数就是把对应系数变成目标所需的数。
+
+对 $2x + y = 4$ 和 $3x - y = 1$，$x$ 的系数是 $2$ 和 $3$，最小公倍数是 $6$。第一个方程乘以 $3$ 得 $6x$，第二个方程乘以 $-2$ 得 $-6x$。相加时 $6x - 6x = 0$，$x$ 就消去了。
+
+> **注意。** 每个方程乘的是**另一个**方程的系数：$2$ 乘以 $2$ 得 $4x$，不是 $6x$。而且一个乘数必须是负数；两个都是正数时系数相等，相加会让 $x$ 翻倍，而不是抵消。`,
       ],
       (rng) => {
         const [a, b] = rng.pick<[number, number]>([
@@ -785,8 +827,16 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
           `${b} \\text{ and } {-${a}}`,
           [`${a} \\text{ and } {-${b}}`, `${b} \\text{ and } ${a}`, `${lcm} \\text{ and } {-${lcm}}`],
           [
-            `The coefficients of $x$ become $${lcm}$ and $-${lcm}$, which cancel when added.`,
-            `$x$ 的系数变成 $${lcm}$ 和 $-${lcm}$，相加时抵消。`,
+            `**Find the target.** The coefficients of $x$ are $${a}$ and $${b}$, which have no common factor, so their least common multiple is $${a} \\cdot ${b} = ${lcm}$.
+
+**Choose the multipliers.** To get $${lcm}x$ the first equation needs $${b}$, and to get $-${lcm}x$ the second needs $-${a}$. One multiplier is negative so that the coefficients are opposite and cancel when added. The multipliers are $${b}$ and $-${a}$.
+
+**Check.** $${b} \\cdot ${a}x + (-${a}) \\cdot ${b}x = ${lcm}x - ${lcm}x = 0$, so adding the scaled equations eliminates $x$.`,
+            `**找目标。** $x$ 的系数是 $${a}$ 和 $${b}$，没有公因数，所以最小公倍数是 $${a} \\cdot ${b} = ${lcm}$。
+
+**选乘数。** 要得到 $${lcm}x$，第一个方程要乘 $${b}$；要得到 $-${lcm}x$，第二个方程要乘 $-${a}$。其中一个乘数是负数，系数才互为相反数，相加时抵消。所以乘数是 $${b}$ 和 $-${a}$。
+
+**检验。** $${b} \\cdot ${a}x + (-${a}) \\cdot ${b}x = ${lcm}x - ${lcm}x = 0$，所以乘过之后相加能消去 $x$。`,
           ],
         );
       },

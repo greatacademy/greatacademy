@@ -422,8 +422,16 @@ const ticketsSystem: KnowledgePointDef = {
   id: "a-system-from-a-count-and-a-cost",
   title: t("A system from a count and a cost", "由数量和费用列方程组"),
   explanation: t(
-    "Problems with two kinds of item often give two facts: how many there are in all, and how much they cost in all. Each fact gives one equation. From the count, write one kind in terms of the other, and substitute this into the cost equation. Pay attention to which unknown the question is asking for. Substituting both values back into both of the original facts is the safest final check.",
-    "有两种物品的问题常常给两个条件：一共有多少个，一共多少钱。每个条件给出一个方程。由数量，把一种用另一种表示，再代入费用方程。要注意问题问的是哪个未知数。把两个值代回原来的两个条件，是最稳妥的最后检验。",
+    `Problems with two kinds of item often give two facts: how many there are in all, and how much they cost in all. Each fact gives one equation. From the count, write one kind in terms of the other, and substitute this into the cost equation.
+
+Say $10$ tickets cost $62$ dollars, adults at $8$ dollars and children at $5$. With $a$ adult tickets there are $10 - a$ child tickets, so $8a + 5(10 - a) = 62$. That is $3a + 50 = 62$, so $3a = 12$, $a = 4$, and there are $6$ child tickets. Check: $4 + 6 = 10$ and $32 + 30 = 62$.
+
+> **Watch out.** Answer the unknown the question asks for: if it wants the child tickets, $a$ is only halfway. And multiply the whole of $10 - a$ by the child price.`,
+    `有两种物品的问题常常给两个条件：一共有多少个，一共多少钱。每个条件给出一个方程。由数量，把一种用另一种表示，再代入费用方程。
+
+比如 $10$ 张票共 $62$ 美元，成人票 $8$ 美元，儿童票 $5$ 美元。设成人票 $a$ 张，儿童票就是 $10 - a$ 张，所以 $8a + 5(10 - a) = 62$，即 $3a + 50 = 62$，$3a = 12$，$a = 4$，儿童票 $6$ 张。检验：$4 + 6 = 10$，$32 + 30 = 62$。
+
+> **注意。** 要回答题目问的未知数：如果问的是儿童票，求出 $a$ 只完成了一半。还要用儿童票价乘整个 $10 - a$。`,
   ),
   generate(rng) {
     const adult = rng.int(6, 15);
@@ -450,8 +458,16 @@ const ticketsSystem: KnowledgePointDef = {
         Math.floor(count / 2),
       ],
       solution: t(
-        `With $a$ adult tickets, $${adult}a + ${child}(${count} - a) = ${cost}$. This gives $${adult - child === 1 ? "" : adult - child}a = ${cost - child * count}$, so $a = ${adults}$ and there are $${children}$ child tickets.`,
-        `设成人票 $a$ 张，$${adult}a + ${child}(${count} - a) = ${cost}$。得 $${adult - child === 1 ? "" : adult - child}a = ${cost - child * count}$，所以 $a = ${adults}$，儿童票 $${children}$ 张。`,
+        `**Write the equation.** With $a$ adult tickets there are $${count} - a$ child tickets, since $${count}$ were sold in all. The cost gives $$${adult}a + ${child}(${count} - a) = ${cost}.$$
+
+**Solve.** Multiplying out, $${adult}a + ${child * count} - ${child}a = ${cost}$, so $${adult - child === 1 ? "" : adult - child}a = ${cost} - ${child * count} = ${cost - child * count}$${adult - child === 1 ? "" : ` and $a = ${adults}$`}. There are $${adults}$ adult tickets and $${count} - ${adults} = ${children}$ child tickets, so the answer is $${answer}$.
+
+**Check.** $${adults} + ${children} = ${count}$ tickets, and $${adult} \\cdot ${adults} + ${child} \\cdot ${children} = ${adult * adults} + ${child * children} = ${cost}$ dollars.`,
+        `**列方程。** 设成人票 $a$ 张，因为一共卖出 $${count}$ 张，儿童票就是 $${count} - a$ 张。由收入得 $$${adult}a + ${child}(${count} - a) = ${cost}.$$
+
+**求解。** 去括号得 $${adult}a + ${child * count} - ${child}a = ${cost}$，所以 $${adult - child === 1 ? "" : adult - child}a = ${cost} - ${child * count} = ${cost - child * count}$${adult - child === 1 ? "" : `，$a = ${adults}$`}。成人票 $${adults}$ 张，儿童票 $${count} - ${adults} = ${children}$ 张，所以答案是 $${answer}$。
+
+**检验。** $${adults} + ${children} = ${count}$ 张，$${adult} \\cdot ${adults} + ${child} \\cdot ${children} = ${adult * adults} + ${child * children} = ${cost}$ 美元。`,
       ),
     });
   },

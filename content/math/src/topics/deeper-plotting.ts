@@ -130,12 +130,42 @@ export const plottingPoints: Readonly<Record<string, readonly KnowledgePointDef[
       "marking-a-point-on-the-grid",
       ["Marking a point on the grid", "在网格上标点"],
       [
-        "To mark the point $(x, y)$, start at the origin. The first coordinate tells you how far to go across: right if it is positive, left if it is negative. The second tells you how far to go from there: up if it is positive, down if it is negative. The order matters, because $(2, 5)$ and $(5, 2)$ are different places.",
-        "要标出点 $(x, y)$，从原点出发。第一个坐标表示水平走多远：正数向右，负数向左。第二个坐标表示接着竖直走多远：正数向上，负数向下。顺序很重要，因为 $(2, 5)$ 和 $(5, 2)$ 是不同的位置。",
+        `To mark the point $(x, y)$, read the pair as two moves from the origin, in order.
+
+1. The first coordinate is the move **across**: right if it is positive, left if it is negative.
+2. The second is the move **up or down** from there: up if it is positive, down if it is negative.
+
+For $(-3, 4)$: go $3$ to the left, then $4$ up, and mark the point you reach. It should lie left of the $y$-axis and above the $x$-axis, as the signs say.
+
+> **Watch out.** The order matters: $(2, 5)$ and $(5, 2)$ are different places. Always use the first number for the move across, never for the move up.`,
+        `要标出点 $(x, y)$，就把这个数对看成从原点出发的两次移动，按顺序走。
+
+1. 第一个坐标是**水平**移动：正数向右，负数向左。
+2. 第二个坐标是接着的**竖直**移动：正数向上，负数向下。
+
+对 $(-3, 4)$：向左走 $3$，再向上走 $4$，标出到达的点。它应在 $y$ 轴左边、$x$ 轴上方，与符号一致。
+
+> **注意。** 顺序很重要：$(2, 5)$ 和 $(5, 2)$ 是不同的位置。第一个数总是用于水平移动，不能用于竖直移动。`,
       ],
       (rng) => {
         const [a, b] = apart(rng, 5);
-        return markingPoint(grid, 1, [a, b]);
+        const p = markingPoint(grid, 1, [a, b]);
+        const [x, y] = [a, b];
+        return {
+          ...p,
+          solution: t(
+            `${walk([x, y]).en}
+
+The walk ends at $${tex([x, y])}$: mark it there.
+
+**Check.** The point is ${x < 0 ? "left" : "right"} of the $y$-axis, as a ${x < 0 ? "negative" : "positive"} first coordinate says, and ${y < 0 ? "below" : "above"} the $x$-axis, as a ${y < 0 ? "negative" : "positive"} second coordinate says.`,
+            `${walk([x, y])["zh-CN"]}
+
+到达的位置是 $${tex([x, y])}$，在那里标点。
+
+**检验。** 这个点在 $y$ 轴${x < 0 ? "左" : "右"}边，与第一个坐标为${x < 0 ? "负" : "正"}数一致；在 $x$ 轴${y < 0 ? "下方" : "上方"}，与第二个坐标为${y < 0 ? "负" : "正"}数一致。`,
+          ),
+        };
       },
     ),
   ],
@@ -389,8 +419,16 @@ export const plottingPoints: Readonly<Record<string, readonly KnowledgePointDef[
       "marking-a-point-by-rise-and-run",
       ["Marking a point by rise and run", "按升降和水平距离标点"],
       [
-        "A slope $\\frac{p}{q}$ says that each $q$ steps to the right go with $p$ steps up, or down if $p$ is negative. So from any point on a line, you can reach the next one: count the run to the right, then the rise. This is how to draw a line from one point and its slope, with no calculation.",
-        "斜率 $\\frac{p}{q}$ 表示每向右 $q$ 步，就向上 $p$ 步（$p$ 为负时向下）。所以从直线上任意一点，都能走到下一个点：先向右数水平距离，再数升降。这样只用一个点和斜率就能画出直线，不用计算。",
+        `A slope $\\frac{p}{q}$ says that each $q$ steps to the right go with $p$ steps up, or down if $p$ is negative. So from any point on a line you can reach another point of it without any calculation: count the run to the right, then the rise.
+
+For a line through $(1, -2)$ with slope $-\\frac{3}{2}$: go $2$ to the right and $3$ down, to $(3, -5)$. Both points are on the line, and joining them draws it.
+
+> **Watch out.** The rise is the **top** of the slope and the run the bottom: slope $\\frac{3}{2}$ means $2$ across and $3$ up, not $3$ across and $2$ up. A negative slope means the rise goes **down**.`,
+        `斜率 $\\frac{p}{q}$ 表示每向右 $q$ 步，就向上 $p$ 步（$p$ 为负时向下）。所以从直线上任意一点出发，不用计算就能走到直线上的另一点：先向右数水平距离，再数升降。
+
+过 $(1, -2)$、斜率为 $-\\frac{3}{2}$ 的直线：向右走 $2$，向下走 $3$，到达 $(3, -5)$。两点都在直线上，连起来就画出了直线。
+
+> **注意。** 斜率的**分子**是升降，分母是水平距离：斜率 $\\frac{3}{2}$ 表示横走 $2$、向上 $3$，不是横走 $3$、向上 $2$。斜率为负时，升降是**向下**。`,
       ],
       (rng) => {
         const a: Pt = [rng.int(-4, 0), rng.int(-2, 2)];
@@ -418,8 +456,16 @@ export const plottingPoints: Readonly<Record<string, readonly KnowledgePointDef[
             },
           ],
           solution: t(
-            `From $A${tex(a)}$, go $${run}$ to the right and $${Math.abs(rise)}$ ${rise < 0 ? "down" : "up"}, which gives $${tex(next)}$.`,
-            `从 $A${tex(a)}$ 向右走 $${run}$，再向${rise < 0 ? "下" : "上"}走 $${Math.abs(rise)}$，得到 $${tex(next)}$。`,
+            `The slope $${slope}$ means a rise of $${rise}$ for each run of $${run}$, since the rise is the top of the slope.
+
+From $A${tex(a)}$, go $${run}$ to the right and $${Math.abs(rise)}$ ${rise < 0 ? "down" : "up"}, which gives $${tex(next)}$.
+
+**Check.** From $A$ to $${tex(next)}$ the rise over the run is $\\frac{${next[1]} - ${a[1] < 0 ? `(${a[1]})` : a[1]}}{${next[0]} - ${a[0] < 0 ? `(${a[0]})` : a[0]}} = \\frac{${rise}}{${run}}$, the slope.`,
+            `斜率 $${slope}$ 表示每横走 $${run}$，升降 $${rise}$，因为斜率的分子是升降。
+
+从 $A${tex(a)}$ 向右走 $${run}$，再向${rise < 0 ? "下" : "上"}走 $${Math.abs(rise)}$，得到 $${tex(next)}$。
+
+**检验。** 从 $A$ 到 $${tex(next)}$，升降比水平距离是 $\\frac{${next[1]} - ${a[1] < 0 ? `(${a[1]})` : a[1]}}{${next[0]} - ${a[0] < 0 ? `(${a[0]})` : a[0]}} = \\frac{${rise}}{${run}}$，正是斜率。`,
           ),
           solutionAlt: t(
             `The line through A and ${tex(next)}, with its run and rise.`,
@@ -439,8 +485,16 @@ export const plottingPoints: Readonly<Record<string, readonly KnowledgePointDef[
       "marking-the-solution-of-a-system",
       ["Marking the solution of a system", "标出方程组的解"],
       [
-        "A point on a line satisfies that line's equation, so a point on both lines satisfies both equations. That makes the crossing point the solution of the system. Read it off the drawing, and then check it by putting its coordinates into each equation.",
-        "直线上的点满足这条直线的方程，所以同时在两条直线上的点满足两个方程。因此交点就是方程组的解。从图上读出它，再把坐标代入每个方程检验。",
+        `A point lies on a line exactly when it satisfies the line's equation. So a point on **both** lines satisfies both equations at once, which is what a solution of the system is: the crossing point of the two lines is the solution.
+
+To find it from a drawing, follow the two lines to where they meet and read the coordinates of that grid point, across first, then up. Then check it: if the lines $y = x + 1$ and $y = -x + 5$ cross at $(2, 3)$, then $2 + 1 = 3$ and $-2 + 5 = 3$, so $(2, 3)$ fits both.
+
+> **Watch out.** Write the crossing point with its $x$-coordinate first; $(3, 2)$ is a different point and fits neither equation here. A point on only one line is not a solution.`,
+        `点在直线上，当且仅当它满足这条直线的方程。所以同时在**两条**直线上的点同时满足两个方程，这正是方程组的解：两条直线的交点就是解。
+
+从图上找解时，顺着两条直线找到它们相交的格点，读出坐标，先横后竖。然后检验：若直线 $y = x + 1$ 和 $y = -x + 5$ 交于 $(2, 3)$，则 $2 + 1 = 3$，$-2 + 5 = 3$，所以 $(2, 3)$ 两个方程都满足。
+
+> **注意。** 交点要先写 $x$ 坐标；$(3, 2)$ 是另一个点，在这里两个方程都不满足。只在一条直线上的点不是解。`,
       ],
       (rng) => {
         const x0 = nonzero(rng, 4);
@@ -451,6 +505,8 @@ export const plottingPoints: Readonly<Record<string, readonly KnowledgePointDef[
         const b1 = y0 - (p as number) * x0;
         const b2 = y0 - (q as number) * x0;
         const shown = (m: number, b: number) => `y = ${m === 1 ? "" : m === -1 ? "-" : m}x${b === 0 ? "" : b < 0 ? ` - ${-b}` : ` + ${b}`}`;
+        const sub = (m: number, b: number) =>
+          `${m === 1 ? "" : m === -1 ? "-" : `${m} \\cdot `}${x0 < 0 ? `(${x0})` : x0}${b === 0 ? "" : b < 0 ? ` - ${-b}` : ` + ${b}`}`;
         const marks: readonly PlaneMark[] = [
           { kind: "line", a: c, b: [x0 + 1, y0 + (p as number)], accent: true },
           { kind: "line", a: c, b: [x0 + 1, y0 + (q as number)], tone: "action" },
@@ -466,8 +522,12 @@ export const plottingPoints: Readonly<Record<string, readonly KnowledgePointDef[
           answer: [c],
           wrong: [{ at: [[y0, x0]], why: t("You swapped the coordinates of the crossing point.", "你把交点的坐标对调了。") }],
           solution: t(
-            `The lines cross at $${tex(c)}$. Check: $${p} \\cdot ${x0 < 0 ? `(${x0})` : x0} + ${b1 < 0 ? `(${b1})` : b1} = ${y0}$ and $${q} \\cdot ${x0 < 0 ? `(${x0})` : x0} + ${b2 < 0 ? `(${b2})` : b2} = ${y0}$.`,
-            `两条直线相交于 $${tex(c)}$。检验：$${p} \\cdot ${x0 < 0 ? `(${x0})` : x0} + ${b1 < 0 ? `(${b1})` : b1} = ${y0}$，$${q} \\cdot ${x0 < 0 ? `(${x0})` : x0} + ${b2 < 0 ? `(${b2})` : b2} = ${y0}$。`,
+            `A solution of the system lies on both lines, so it is where they cross. Following the two lines, they meet at the grid point $${Math.abs(x0)}$ ${x0 < 0 ? "left" : "right"} of the origin and $${Math.abs(y0)}$ ${y0 < 0 ? "down" : "up"}, which is $${tex(c)}$.
+
+**Check.** Put $x = ${x0}$ into each equation: $${sub(p as number, b1)} = ${y0}$ and $${sub(q as number, b2)} = ${y0}$. Both give $y = ${y0}$.`,
+            `方程组的解同时在两条直线上，所以就是交点。顺着两条直线看，它们相交于原点${x0 < 0 ? "左" : "右"}边 $${Math.abs(x0)}$、${y0 < 0 ? "下方" : "上方"} $${Math.abs(y0)}$ 的格点，即 $${tex(c)}$。
+
+**检验。** 把 $x = ${x0}$ 代入每个方程：$${sub(p as number, b1)} = ${y0}$，$${sub(q as number, b2)} = ${y0}$。两个都得 $y = ${y0}$。`,
           ),
           solutionAlt: t(`The lines cross at ${tex(c)}.`, `两条直线相交于 ${tex(c)}。`),
         });

@@ -528,8 +528,16 @@ const combinationWithoutSolving: KnowledgePointDef = {
   id: "a-combination-without-solving-the-system",
   title: t("A combination without solving the system", "不解方程组求组合式的值"),
   explanation: t(
-    "Sometimes a question asks for $x + y$ or $x - y$ and not for the separate values. If the coefficients of the two equations are swapped, then adding the equations makes the two coefficients equal, and subtracting does the same for the difference. Factoring or dividing then gives the wanted value in one step. Looking at what is asked before solving often saves a good deal of work, and it avoids fractions on the way.",
-    "有时题目问的是 $x + y$ 或 $x - y$，而不是各自的值。如果两个方程的系数正好互换，把方程相加会使两个系数相等，相减对差也有同样的效果。接着提取公因数或做除法，一步就得到所要的值。解之前先看清问的是什么，常常能省很多功夫，还能避免中途出现分数。",
+    `Sometimes a question asks for $x + y$ or $x - y$ and not for the separate values. Look at the coefficients before solving. If they are swapped between the two equations, adding the equations makes the coefficients of $x$ and $y$ equal, and subtracting makes them equal for the difference. Factoring or dividing then gives the wanted value in one step, without fractions on the way.
+
+Take $5x + 2y = 19$ and $2x + 5y = 16$. Adding gives $7x + 7y = 35$, that is $7(x + y) = 35$, so $x + y = 5$. Subtracting the second from the first gives $3x - 3y = 3$, so $x - y = 1$. Indeed $x = 3$, $y = 2$ fits both: $15 + 4 = 19$ and $6 + 10 = 16$.
+
+> **Watch out.** $35$ is $7(x + y)$, not $x + y$: divide by the common coefficient. For the difference, subtract the second equation from the first, so that the larger coefficient of $x$ comes first; the other order gives $y - x$, the opposite number.`,
+    `有时题目问的是 $x + y$ 或 $x - y$，而不是各自的值。解之前先看系数。如果两个方程的系数正好互换，把方程相加会使 $x$ 和 $y$ 的系数相等，相减对差也有同样的效果。接着提取公因数或做除法，一步就得到所要的值，中途也不会出现分数。
+
+看 $5x + 2y = 19$ 和 $2x + 5y = 16$。相加得 $7x + 7y = 35$，即 $7(x + y) = 35$，所以 $x + y = 5$。第一个方程减去第二个方程得 $3x - 3y = 3$，所以 $x - y = 1$。确实，$x = 3$，$y = 2$ 同时满足两个方程：$15 + 4 = 19$，$6 + 10 = 16$。
+
+> **注意。** $35$ 是 $7(x + y)$，不是 $x + y$：要除以公共系数。求差时用第一个方程减去第二个方程，让 $x$ 的较大系数在前；反过来减得到的是 $y - x$，正好是相反数。`,
   ),
   generate(rng) {
     const b = rng.int(2, 6);
@@ -551,12 +559,28 @@ const combinationWithoutSolving: KnowledgePointDef = {
       form: "integer",
       wrong: [asksSum ? s + u : s - u, asksSum ? x - y : x + y, x, y, -answer, answer + 1],
       solution: t(
-        asksSum
-          ? `Adding the equations gives $${a + b}x + ${a + b}y = ${s + u}$. Dividing by $${a + b}$ gives $x + y = ${answer}$.`
-          : `Subtracting the second equation from the first gives $${differenceLeft} = ${s - u}$.${gap === 1 ? "" : ` Dividing by $${gap}$ gives $x - y = ${answer}$.`}`,
-        asksSum
-          ? `两个方程相加得 $${a + b}x + ${a + b}y = ${s + u}$。除以 $${a + b}$ 得 $x + y = ${answer}$。`
-          : `第一个方程减去第二个方程得 $${differenceLeft} = ${s - u}$。${gap === 1 ? "" : `除以 $${gap}$ 得 $x - y = ${answer}$。`}`,
+        `${
+          asksSum
+            ? `**Add the equations.** The coefficients are swapped, so adding makes them equal: $${a + b}x + ${a + b}y = ${s + u}$, that is $${a + b}(x + y) = ${s + u}$.
+
+**Divide.** Dividing by $${a + b}$ gives $x + y = ${answer}$.`
+            : `**Subtract the equations.** The coefficients are swapped, so subtracting the second equation from the first makes them equal: $${differenceLeft} = ${s - u}$.
+
+${gap === 1 ? `**Read off.** The left side is already $x - y$, so $x - y = ${answer}$.` : `**Divide.** That is $${gap}(x - y) = ${s - u}$; dividing by $${gap}$ gives $x - y = ${answer}$.`}`
+        }
+
+**Check.** Solving fully gives $x = ${x}$, $y = ${y}$, which fits both equations: $${a} \\cdot ${x} + ${b} \\cdot ${y} = ${s}$ and $${b} \\cdot ${x} + ${a} \\cdot ${y} = ${u}$. And $${asksSum ? `${x} + ${y}` : `${x} - ${y}`} = ${answer}$.`,
+        `${
+          asksSum
+            ? `**两个方程相加。** 系数正好互换，相加后系数相等：$${a + b}x + ${a + b}y = ${s + u}$，即 $${a + b}(x + y) = ${s + u}$。
+
+**做除法。** 两边除以 $${a + b}$，得 $x + y = ${answer}$。`
+            : `**两个方程相减。** 系数正好互换，第一个方程减去第二个方程后系数相等：$${differenceLeft} = ${s - u}$。
+
+${gap === 1 ? `**直接读出。** 左边已经是 $x - y$，所以 $x - y = ${answer}$。` : `**做除法。** 即 $${gap}(x - y) = ${s - u}$，两边除以 $${gap}$，得 $x - y = ${answer}$。`}`
+        }
+
+**检验。** 完整解出来是 $x = ${x}$，$y = ${y}$，两个方程都满足：$${a} \\cdot ${x} + ${b} \\cdot ${y} = ${s}$，$${b} \\cdot ${x} + ${a} \\cdot ${y} = ${u}$。而 $${asksSum ? `${x} + ${y}` : `${x} - ${y}`} = ${answer}$。`,
       ),
     });
   },

@@ -396,8 +396,16 @@ export const figureChoicePoints: Readonly<Record<string, readonly KnowledgePoint
       "choosing-the-drawing-of-a-point",
       ["Choosing the drawing of a point", "选出点的位置"],
       [
-        "The first number of a point says how far to move along the $x$-axis, and the second how far along the $y$-axis. Starting at the origin, go right for a positive first number and left for a negative one, then up for a positive second number and down for a negative one. The order matters: $(2, 5)$ and $(5, 2)$ are different points.",
-        "点的第一个数表示沿 $x$ 轴移动多远，第二个数表示沿 $y$ 轴移动多远。从原点出发，第一个数为正向右、为负向左，第二个数为正向上、为负向下。顺序不能换：$(2, 5)$ 和 $(5, 2)$ 是不同的点。",
+        `The first number of a point says how far to move along the $x$-axis, and the second how far along the $y$-axis. Starting at the origin, go right for a positive first number and left for a negative one, then up for a positive second number and down for a negative one.
+
+To choose between drawings, use the signs first: they tell which side of each axis the point is on. For $(-2, 5)$ the point must be left of the $y$-axis and above the $x$-axis; then count $2$ left and $5$ up to be sure.
+
+> **Watch out.** The order matters: $(2, 5)$ and $(5, 2)$ are different points, and a drawing with the coordinates swapped can look almost right. Check each sign too: $(-2, 5)$ and $(2, 5)$ are mirror images across the $y$-axis.`,
+        `点的第一个数表示沿 $x$ 轴移动多远，第二个数表示沿 $y$ 轴移动多远。从原点出发，第一个数为正向右、为负向左，第二个数为正向上、为负向下。
+
+在几张图中选择时，先看符号：它们说明点在每条坐标轴的哪一侧。对 $(-2, 5)$，点必须在 $y$ 轴左边、$x$ 轴上方；再数向左 $2$、向上 $5$ 来确认。
+
+> **注意。** 顺序不能换：$(2, 5)$ 和 $(5, 2)$ 是不同的点，把坐标对调的图可能看起来几乎是对的。每个符号也要检查：$(-2, 5)$ 和 $(2, 5)$ 关于 $y$ 轴对称。`,
       ],
       (rng) => {
         const a = nonzero(rng, 5);
@@ -419,8 +427,12 @@ export const figureChoicePoints: Readonly<Record<string, readonly KnowledgePoint
             ),
           ],
           solution: t(
-            `From the origin, move $${Math.abs(a)}$ ${a > 0 ? "right" : "left"} because the first number is $${num(a)}$, then $${Math.abs(b)}$ ${b > 0 ? "up" : "down"} because the second number is $${num(b)}$.`,
-            `从原点出发，因为第一个数是 $${num(a)}$，所以向${a > 0 ? "右" : "左"}移动 $${Math.abs(a)}$；因为第二个数是 $${num(b)}$，所以再向${b > 0 ? "上" : "下"}移动 $${Math.abs(b)}$。`,
+            `From the origin, move $${Math.abs(a)}$ ${a > 0 ? "right" : "left"} because the first number is $${num(a)}$, then $${Math.abs(b)}$ ${b > 0 ? "up" : "down"} because the second number is $${num(b)}$. The drawing whose point $P$ is there is the answer.
+
+**Check.** $P$ must be ${a > 0 ? "right" : "left"} of the $y$-axis and ${b > 0 ? "above" : "below"} the $x$-axis, and $${Math.abs(a)}$ from the $y$-axis rather than $${Math.abs(b)}$; the drawings with the coordinates swapped or a sign changed fail one of these.`,
+            `从原点出发，因为第一个数是 $${num(a)}$，所以向${a > 0 ? "右" : "左"}移动 $${Math.abs(a)}$；因为第二个数是 $${num(b)}$，所以再向${b > 0 ? "上" : "下"}移动 $${Math.abs(b)}$。点 $P$ 在那里的图就是答案。
+
+**检验。** $P$ 必须在 $y$ 轴${a > 0 ? "右" : "左"}边、$x$ 轴${b > 0 ? "上方" : "下方"}，并且离 $y$ 轴 $${Math.abs(a)}$ 而不是 $${Math.abs(b)}$；坐标对调或符号改变的图总有一条不符合。`,
           ),
         });
       },
@@ -516,8 +528,16 @@ export const figureChoicePoints: Readonly<Record<string, readonly KnowledgePoint
       "choosing-a-line-by-slope-and-intercept",
       ["Choosing a line by slope and intercept", "用斜率和截距选出直线"],
       [
-        "In $y = mx + b$, the line meets the $y$-axis at $(0, b)$, and one step to the right changes $y$ by $m$. A positive $m$ means the line climbs from left to right, and a negative $m$ means it falls. Check both things on a drawing: where it crosses and which way it leans.",
-        "在 $y = mx + b$ 中，直线与 $y$ 轴交于 $(0, b)$，向右走一步，$y$ 变化 $m$。$m$ 为正时直线从左到右上升，$m$ 为负时下降。在图上两件事都要检查：交点在哪里，直线往哪边倾斜。",
+        `In $y = mx + b$, the line meets the $y$-axis at $(0, b)$, and one step to the right changes $y$ by $m$. So two facts identify the drawing: where the line crosses the $y$-axis, and which way and how steeply it leans.
+
+For $y = -2x + 1$: the line crosses the $y$-axis at $(0, 1)$, and one step right takes it down $2$, to $(1, -1)$. A drawing that passes through both points is the line.
+
+> **Watch out.** Check both facts, not one: a line through $(0, 1)$ that climbs has the right intercept but the opposite slope, and a line with the slope and intercept swapped, $y = x - 2$, passes elsewhere. A negative $m$ falls from left to right.`,
+        `在 $y = mx + b$ 中，直线与 $y$ 轴交于 $(0, b)$，向右走一步，$y$ 变化 $m$。所以两件事就能认出图像：直线在哪里与 $y$ 轴相交，往哪边倾斜、倾斜多少。
+
+对 $y = -2x + 1$：直线与 $y$ 轴交于 $(0, 1)$，向右一步就下降 $2$，到达 $(1, -1)$。经过这两点的图就是这条直线。
+
+> **注意。** 两件事都要检查，不能只看一件：过 $(0, 1)$ 但上升的直线截距对了，斜率却相反；把斜率和截距对调的直线 $y = x - 2$ 则经过别处。$m$ 为负时，直线从左到右下降。`,
       ],
       (rng) => {
         const m = rng.pick(slopes);
@@ -534,8 +554,16 @@ export const figureChoicePoints: Readonly<Record<string, readonly KnowledgePoint
             t("This line swaps the slope and the intercept.", "这条直线把斜率和截距对调了。"),
           ],
           solution: t(
-            `The line meets the $y$-axis at $${tex([0, b])}$. The slope is $${num(coef(m))}$, so it ${m > 0 ? "climbs" : "falls"} from left to right, and one step right reaches $${tex(end)}$.`,
-            `直线与 $y$ 轴交于 $${tex([0, b])}$。斜率是 $${num(coef(m))}$，所以它从左到右${m > 0 ? "上升" : "下降"}，向右一步到达 $${tex(end)}$。`,
+            `**Step 1: the $y$-intercept.** At $x = 0$, $y = ${b}$, so the line meets the $y$-axis at $${tex([0, b])}$.
+
+**Step 2: the slope.** The slope is $${num(coef(m))}$, so the line ${m > 0 ? "climbs" : "falls"} from left to right, and one step right reaches $${tex(end)}$. The drawing through both points is the answer.
+
+**Check.** $x = 1$ in the equation gives $y = ${num(coef(m))} \\cdot 1${plus(b)} = ${b + m}$, so $${tex(end)}$ is on the line.`,
+            `**第一步：$y$ 轴截距。** $x = 0$ 时 $y = ${b}$，所以直线与 $y$ 轴交于 $${tex([0, b])}$。
+
+**第二步：斜率。** 斜率是 $${num(coef(m))}$，所以直线从左到右${m > 0 ? "上升" : "下降"}，向右一步到达 $${tex(end)}$。经过这两点的图就是答案。
+
+**检验。** 把 $x = 1$ 代入方程，得 $y = ${num(coef(m))} \\cdot 1${plus(b)} = ${b + m}$，所以 $${tex(end)}$ 在直线上。`,
           ),
         });
       },
@@ -546,8 +574,16 @@ export const figureChoicePoints: Readonly<Record<string, readonly KnowledgePoint
       "choosing-the-drawing-of-a-system",
       ["Choosing the drawing of a system", "选出方程组的图像"],
       [
-        "Each equation of a system is a line, and a solution is a point on both. So the drawing of a system must show both lines correctly, and the point where they cross is the solution. A drawing with one line wrong crosses somewhere else.",
-        "方程组的每个方程都是一条直线，解是同时在两条直线上的点。所以方程组的图必须把两条直线都画对，它们的交点就是解。如果有一条画错了，交点就会落在别处。",
+        `Each equation of a system is a line, and a solution is a point on both. So the drawing of a system must show both lines correctly, and the point where they cross is the solution.
+
+Check each line by its $y$-intercept and its slope. For $y = 2x - 1$ and $y = -x + 2$: the first meets the $y$-axis at $(0, -1)$ and climbs $2$ per step, the second meets it at $(0, 2)$ and falls $1$ per step. They cross at $(1, 1)$, which fits both: $2 \\cdot 1 - 1 = 1$ and $-1 + 2 = 1$.
+
+> **Watch out.** Check **both** lines. A drawing with one line wrong, leaning the other way or crossing the $y$-axis at another height, still shows two crossing lines, but they cross somewhere else.`,
+        `方程组的每个方程都是一条直线，解是同时在两条直线上的点。所以方程组的图必须把两条直线都画对，它们的交点就是解。
+
+用 $y$ 轴截距和斜率检查每条直线。对 $y = 2x - 1$ 和 $y = -x + 2$：第一条与 $y$ 轴交于 $(0, -1)$，每走一步上升 $2$；第二条与 $y$ 轴交于 $(0, 2)$，每走一步下降 $1$。它们交于 $(1, 1)$，两个方程都满足：$2 \\cdot 1 - 1 = 1$，$-1 + 2 = 1$。
+
+> **注意。** **两条**直线都要检查。有一条画错的图，比如倾斜方向反了或与 $y$ 轴交点高度不对，仍然画着两条相交的直线，但交点落在了别处。`,
       ],
       (rng) => {
         const [x0, y0] = [rng.int(-2, 2), rng.int(-2, 2)];
@@ -585,8 +621,16 @@ export const figureChoicePoints: Readonly<Record<string, readonly KnowledgePoint
             t("In this drawing, the first line crosses the $y$-axis at the wrong height.", "这张图中，第一条直线与 $y$ 轴的交点高度不对。"),
           ],
           solution: t(
-            `The first line meets the $y$-axis at $${tex([0, b1])}$ with slope $${num(p)}$, and the second at $${tex([0, b2])}$ with slope $${num(q)}$. They cross at the solution: $${tex([x0, y0])}$ fits both, since $${num(y0)} = ${num(p)} \\cdot ${paren(x0)}${plus(b1)}$ and $${num(y0)} = ${num(q)} \\cdot ${paren(x0)}${plus(b2)}$.`,
-            `第一条直线与 $y$ 轴交于 $${tex([0, b1])}$，斜率为 $${num(p)}$；第二条与 $y$ 轴交于 $${tex([0, b2])}$，斜率为 $${num(q)}$。它们的交点就是解：$${tex([x0, y0])}$ 同时满足两个方程，因为 $${num(y0)} = ${num(p)} \\cdot ${paren(x0)}${plus(b1)}$，且 $${num(y0)} = ${num(q)} \\cdot ${paren(x0)}${plus(b2)}$。`,
+            `**The first line.** It meets the $y$-axis at $${tex([0, b1])}$ with slope $${num(p)}$, so it ${p > 0 ? "climbs" : "falls"} from left to right.
+
+**The second line.** It meets the $y$-axis at $${tex([0, b2])}$ with slope $${num(q)}$, so it ${q > 0 ? "climbs" : "falls"}. The drawing with both lines right is the answer, and its lines cross at the solution.
+
+**Check.** $${tex([x0, y0])}$ fits both equations, since $${num(y0)} = ${num(p)} \\cdot ${paren(x0)}${plus(b1)}$ and $${num(y0)} = ${num(q)} \\cdot ${paren(x0)}${plus(b2)}$.`,
+            `**第一条直线。** 它与 $y$ 轴交于 $${tex([0, b1])}$，斜率为 $${num(p)}$，所以从左到右${p > 0 ? "上升" : "下降"}。
+
+**第二条直线。** 它与 $y$ 轴交于 $${tex([0, b2])}$，斜率为 $${num(q)}$，所以${q > 0 ? "上升" : "下降"}。两条直线都画对的图就是答案，它们的交点就是解。
+
+**检验。** $${tex([x0, y0])}$ 同时满足两个方程，因为 $${num(y0)} = ${num(p)} \\cdot ${paren(x0)}${plus(b1)}$，且 $${num(y0)} = ${num(q)} \\cdot ${paren(x0)}${plus(b2)}$。`,
           ),
           solutionFigure: crossing,
         });
