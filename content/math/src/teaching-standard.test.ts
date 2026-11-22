@@ -2,7 +2,7 @@ import { createRng, locales } from "@ga/content";
 import { describe, expect, it } from "vitest";
 
 import { math } from "./index.ts";
-import { taughtTopics } from "./teaching-standard.ts";
+import { taughtCourses, taughtTopics } from "./teaching-standard.ts";
 
 const callout = { en: /^> \*\*Watch out\.\*\*/m, "zh-CN": /^> \*\*注意。\*\*/m } as const;
 const check = { en: /\*\*Check[.:]?\*\*/, "zh-CN": /\*\*检验[。：]?\*\*/ } as const;
@@ -10,8 +10,17 @@ const seeds = 12;
 
 describe("topics written to the teaching standard", () => {
   const defs = new Map(math.topics.map((topic) => [topic.id, topic]));
+  const courses = new Map(math.courses.map((course) => [course.id, course]));
+  const fromCourses = taughtCourses.flatMap((id) =>
+    (courses.get(id)?.units ?? []).flatMap((unit) => unit.modules.flatMap((module) => module.topics)),
+  );
 
-  for (const id of taughtTopics) {
+  it("lists courses that exist and topics outside them", () => {
+    for (const id of taughtCourses) expect(courses.has(id), `course ${id} exists`).toBe(true);
+    for (const id of taughtTopics) expect(fromCourses, `${id} is not already in a listed course`).not.toContain(id);
+  });
+
+  for (const id of new Set([...fromCourses, ...taughtTopics])) {
     it(id, () => {
       const topic = defs.get(id);
       expect(topic, "a listed topic exists").toBeDefined();
