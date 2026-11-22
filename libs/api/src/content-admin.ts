@@ -28,6 +28,7 @@ function answerOf(problem: Problem, correct: boolean, message?: Text): MessageIn
     solution: text(problem.solution),
     answer: problem.canonical,
     ...(problem.solutionFigure && { solutionFigure: figure(problem.solutionFigure) }),
+    solutionFigures: (problem.solutionFigures ?? []).map(figure),
     solutionSounds: sounds(problem.solutionSounds),
   };
 }

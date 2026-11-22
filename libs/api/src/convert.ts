@@ -193,10 +193,13 @@ export function knowledgePointIntro(
       solution: text(example.solution),
       answer: example.canonical,
       ...(example.solutionFigure && { solutionFigure: figure(example.solutionFigure) }),
+      solutionFigures: (example.solutionFigures ?? []).map(figure),
       solutionSounds: sounds(example.solutionSounds),
     },
     ...(kp.figure && { figure: figure(kp.figure) }),
     figures: (kp.figures ?? []).map(figure),
+    ...(kp.topicIntro && { topicIntro: text(kp.topicIntro.text) }),
+    topicIntroFigures: (kp.topicIntro?.figures ?? []).map(figure),
   };
 }
 
@@ -249,6 +252,7 @@ async function answeredPart(
       ...(message && { message: text(message) }),
       solution: text(p.solution),
       ...(p.solutionFigure && { solutionFigure: figure(p.solutionFigure) }),
+      solutionFigures: (p.solutionFigures ?? []).map(figure),
       solutionSounds: sounds(p.solutionSounds),
       answer: p.canonical,
     },
@@ -437,6 +441,7 @@ async function result(
       answer: p.canonical,
       response,
       ...(p.solutionFigure && { solutionFigure: figure(p.solutionFigure) }),
+      solutionFigures: (p.solutionFigures ?? []).map(figure),
       solutionSounds: sounds(p.solutionSounds),
       elapsedMs: BigInt(Math.max(0, Math.round(elapsedMs))),
       late: a.late === true,

@@ -193,6 +193,7 @@ function feedbackOf(problem: Problem, verdict: Verdict, judged?: { readonly row:
     ...(!hide && {
       solution: text(problem.solution),
       ...(problem.solutionFigure && { solutionFigure: figure(problem.solutionFigure) }),
+      solutionFigures: (problem.solutionFigures ?? []).map(figure),
       solutionSounds: sounds(problem.solutionSounds),
       answer: problem.canonical,
     }),
