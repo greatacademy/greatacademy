@@ -32,8 +32,8 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
         "coterminal-angles",
         ["Coterminal angles", "终边相同的角"],
         [
-          "Adding or subtracting full turns leaves the terminal side where it was, so such angles are called coterminal. To find the one from $0^{\\circ}$ up to $360^{\\circ}$, add or subtract $360^{\\circ}$ until it lands there.",
-          "加减整圈不改变终边，这样的角叫终边相同的角。要找 $0^{\\circ}$ 到 $360^{\\circ}$ 之间的那个，就反复加减 $360^{\\circ}$，直到落入这个范围。",
+          "Adding or subtracting full turns leaves the terminal side where it was, so such angles are called coterminal. To find the one from $0^{\\circ}$ up to $360^{\\circ}$, add or subtract $360^{\\circ}$ until it lands there.\n\nFor $-610^{\\circ}$: one full turn gives $-250^{\\circ}$, still negative, and a second gives $-610^{\\circ} + 2 \\cdot 360^{\\circ} = 110^{\\circ}$.\n\n> **Watch out.** Stop only when the angle is in the range. After one turn $-250^{\\circ}$ is coterminal with $-610^{\\circ}$, but it is not yet between $0^{\\circ}$ and $360^{\\circ}$.",
+          "加减整圈不改变终边，这样的角叫终边相同的角。要找 $0^{\\circ}$ 到 $360^{\\circ}$ 之间的那个，就反复加减 $360^{\\circ}$，直到落入这个范围。\n\n对 $-610^{\\circ}$：加一整圈得 $-250^{\\circ}$，仍是负的；再加一圈得 $-610^{\\circ} + 2 \\cdot 360^{\\circ} = 110^{\\circ}$。\n\n> **注意。** 角落入范围才能停。加一圈后的 $-250^{\\circ}$ 虽与 $-610^{\\circ}$ 终边相同，但还不在 $0^{\\circ}$ 与 $360^{\\circ}$ 之间。",
         ],
         (rng) => {
           const base = rng.int(1, 71) * 5;
@@ -47,8 +47,8 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
             base,
             [360 - base, (base + 180) % 360, turns > 0 ? base + 360 : base - 360].filter((w) => w !== base),
             [
-              `${Math.abs(turns) === 1 ? "One full turn lands" : `$${Math.abs(turns)}$ full turns land`} in the range: $${angle}^{\\circ} ${turns > 0 ? "-" : "+"} ${Math.abs(turns) === 1 ? "" : `${Math.abs(turns)} \\cdot `}360^{\\circ} = ${base}^{\\circ}$.`,
-              `加减 $${Math.abs(turns)}$ 整圈后落入这个范围：$${angle}^{\\circ} ${turns > 0 ? "-" : "+"} ${Math.abs(turns) === 1 ? "" : `${Math.abs(turns)} \\cdot `}360^{\\circ} = ${base}^{\\circ}$。`,
+              `**Step 1: Count the full turns.** The angle is $${Math.abs(turns)}$ full turn${Math.abs(turns) === 1 ? "" : "s"} ${turns > 0 ? "above" : "below"} the range from $0^{\\circ}$ up to $360^{\\circ}$, since it lies between these multiples of $360^{\\circ}$: $${360 * turns}^{\\circ} \\le ${angle}^{\\circ} < ${360 * (turns + 1)}^{\\circ}$.\n\n**Step 2: ${turns > 0 ? "Subtract" : "Add"} them.** Full turns do not move the terminal side: $${angle}^{\\circ} ${turns > 0 ? "-" : "+"} ${Math.abs(turns) === 1 ? "" : `${Math.abs(turns)} \\cdot `}360^{\\circ} = ${base}^{\\circ}$.\n\n**Check.** The answer $${base}^{\\circ}$ is between $0^{\\circ}$ and $360^{\\circ}$, and it differs from the given angle by a whole number of turns: $${angle}^{\\circ} - ${base}^{\\circ} = ${angle - base}^{\\circ} = ${turns} \\cdot 360^{\\circ}$.`,
+              `**第一步：数整圈。** 这个角比 $0^{\\circ}$ 到 $360^{\\circ}$ 的范围${turns > 0 ? "多" : "少"}了 $${Math.abs(turns)}$ 整圈，因为它落在这两个 $360^{\\circ}$ 的倍数之间：$${360 * turns}^{\\circ} \\le ${angle}^{\\circ} < ${360 * (turns + 1)}^{\\circ}$。\n\n**第二步：${turns > 0 ? "减去" : "加上"}整圈。** 整圈不改变终边：$${angle}^{\\circ} ${turns > 0 ? "-" : "+"} ${Math.abs(turns) === 1 ? "" : `${Math.abs(turns)} \\cdot `}360^{\\circ} = ${base}^{\\circ}$。\n\n**检验。**答案 $${base}^{\\circ}$ 在 $0^{\\circ}$ 与 $360^{\\circ}$ 之间，并且与已知角相差整数圈：$${angle}^{\\circ} - ${base}^{\\circ} = ${angle - base}^{\\circ} = ${turns} \\cdot 360^{\\circ}$。`,
             ],
           );
         },
