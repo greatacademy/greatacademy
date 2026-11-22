@@ -670,17 +670,17 @@ function totalPrices(rng: Rng, c: TotalContext): [number, number] {
   return [a, b];
 }
 
-/** totalsIntro draws 9x + 5y = 720 from (0, 144) to (80, 0), with the combination (40, 72) on it. */
+/** totalsIntro draws 8x + 6y = 480 from (0, 80) to (60, 0), with the combination (30, 40) on it. */
 const totalsIntro: Figure = scaledGraph(
-  { x: 10, y: 20, nx: 10, ny: 8, xName: "x", yName: "y" },
+  { x: 10, y: 10, nx: 10, ny: 8, xName: "x", yName: "y" },
   [
-    { kind: "segment", a: [0, 7.2], b: [8, 0], accent: true },
-    { kind: "point", at: [0, 7.2], label: "(0, 144)", dir: "ne" },
-    { kind: "point", at: [8, 0], label: "(80, 0)", dir: "n" },
-    { kind: "point", at: [4, 3.6], label: "(40, 72)", dir: "ne", tone: "result" },
+    { kind: "segment", a: [0, 8], b: [6, 0], accent: true },
+    { kind: "point", at: [0, 8], label: "(0, 80)", dir: "ne" },
+    { kind: "point", at: [6, 0], label: "(60, 0)", dir: "n" },
+    { kind: "point", at: [3, 4], label: "(30, 40)", dir: "ne", tone: "result" },
   ],
-  "The line 9x + 5y = 720 from (0, 144) to (80, 0), through the combination (40, 72).",
-  "直线 9x + 5y = 720，从 (0, 144) 到 (80, 0)，经过组合 (40, 72)。",
+  "The line 8x + 6y = 480 from (0, 80) to (60, 0), through the combination (30, 40).",
+  "直线 8x + 6y = 480，从 (0, 80) 到 (60, 0)，经过组合 (30, 40)。",
 );
 
 /** totalFigure draws the line ax + by = T between its intercepts, with the intercept asked for in the result color. */
@@ -713,22 +713,22 @@ export const modelingTotalsWithTwoVariableEquations: TopicDef = {
   intro: t(
     `So far one quantity grew from a start at a steady rate. Another common situation has a **fixed total** made of two kinds of things, where both counts are unknown. Then the model is not "$y$ in terms of $x$" but a balance: what the two kinds contribute must add up to the total.
 
-A theater sells adult tickets at $\\$9$ and child tickets at $\\$5$, and one evening it takes in $\\$720$. With $x$ adult and $y$ child tickets, the adults pay $9x$ dollars and the children $5y$, so
+A museum sells adult tickets at $\\$8$ and child tickets at $\\$6$, and one day it takes in $\\$480$. With $x$ adult and $y$ child tickets, the adults pay $8x$ dollars and the children $6y$, so
 
-$$9x + 5y = 720.$$
+$$8x + 6y = 480.$$
 
-This is a line in standard form. Many combinations fit it: $40$ adults and $72$ children ($360 + 360 = 720$), $80$ adults and no children, or no adults and $144$ children. Each is a point of the line:
+This is a line in standard form. Many combinations fit it: $30$ adults and $40$ children ($240 + 240 = 480$), $60$ adults and no children, or no adults and $80$ children. Each is a point of the line:
 
 {{figure 0}}
 
 In this lesson we write such equations, find one count from the other, and read the extreme cases from the intercepts.`,
     `前面的模型中，一个量从起始量出发以固定速率变化。另一种常见情境是：一个**固定的总量**由两类东西组成，两类的数量都未知。这时模型不是“用 $x$ 表示 $y$”，而是一种平衡：两类各自贡献的部分加起来必须等于总量。
 
-剧院成人票每张 $9$ 元，儿童票每张 $5$ 元，某天晚上票房收入 $720$ 元。设成人票 $x$ 张、儿童票 $y$ 张，成人付 $9x$ 元，儿童付 $5y$ 元，所以
+博物馆成人票每张 $8$ 元，儿童票每张 $6$ 元，某天门票收入 $480$ 元。设成人票 $x$ 张、儿童票 $y$ 张，成人付 $8x$ 元，儿童付 $6y$ 元，所以
 
-$$9x + 5y = 720.$$
+$$8x + 6y = 480.$$
 
-这是一条标准式的直线。有许多组合符合它：$40$ 张成人票和 $72$ 张儿童票（$360 + 360 = 720$），$80$ 张成人票而没有儿童票，或者没有成人票而有 $144$ 张儿童票。每一种组合都是直线上的一个点：
+这是一条标准式的直线。有许多组合符合它：$30$ 张成人票和 $40$ 张儿童票（$240 + 240 = 480$），$60$ 张成人票而没有儿童票，或者没有成人票而有 $80$ 张儿童票。每一种组合都是直线上的一个点：
 
 {{figure 0}}
 
@@ -978,18 +978,18 @@ function modelGraph(rng: Rng): ModelGraph {
   return { c, sc, k0, rise, run, f, r, j, figure, marks, second };
 }
 
-/** tankIntro draws a tank that drains from 400 liters to empty in 80 minutes, with the rise and run from (0, 400) to (40, 200). */
+/** tankIntro draws a tank that drains from 600 liters to empty in 60 minutes, with the rise and run from (0, 600) to (30, 300). */
 const tankIntro: Figure = scaledGraph(
-  { x: 10, y: 50, nx: 10, ny: 8, xName: "t", yName: "V" },
+  { x: 10, y: 100, nx: 10, ny: 8, xName: "t", yName: "V" },
   [
-    { kind: "segment", a: [0, 8], b: [8, 0], accent: true },
-    ...riseRun([0, 8], [4, 4], ["40", "-200"]),
-    { kind: "point", at: [0, 8], label: "(0, 400)", dir: "ne" },
-    { kind: "point", at: [4, 4], label: "(40, 200)", dir: "ne" },
-    { kind: "point", at: [8, 0], label: "(80, 0)", dir: "ne", tone: "result" },
+    { kind: "segment", a: [0, 6], b: [6, 0], accent: true },
+    ...riseRun([0, 6], [3, 3], ["30", "-300"]),
+    { kind: "point", at: [0, 6], label: "(0, 600)", dir: "ne" },
+    { kind: "point", at: [3, 3], label: "(30, 300)", dir: "ne" },
+    { kind: "point", at: [6, 0], label: "(60, 0)", dir: "ne", tone: "result" },
   ],
-  "A line from (0, 400) to (80, 0); from (0, 400) to (40, 200) the run is 40 and the rise is -200.",
-  "一条从 (0, 400) 到 (80, 0) 的直线；从 (0, 400) 到 (40, 200)，水平变化 40，竖直变化 -200。",
+  "A line from (0, 600) to (60, 0); from (0, 600) to (30, 300) the run is 30 and the rise is -300.",
+  "一条从 (0, 600) 到 (60, 0) 的直线；从 (0, 600) 到 (30, 300)，水平变化 30，竖直变化 -300。",
 );
 
 /** signed writes "+ n" or "- n" after a value, for a change of s times n. */
@@ -1018,14 +1018,14 @@ A tank is drained, and the graph shows the volume $V$ in liters after $t$ minute
 
 {{figure 0}}
 
-Each square across is $10$ minutes and each square up is $50$ liters, so we must read the numbers on the axes, not count squares. The line starts at $(0, 400)$: the tank holds $400$ liters at first. From $(0, 400)$ to $(40, 200)$ the volume changes by $-200$ in $40$ minutes, so the slope is $\\frac{-200}{40} = -5$: it loses $5$ liters a minute. The line meets the horizontal axis at $(80, 0)$: the tank is empty after $80$ minutes. All of it together is the model $V = -5t + 400$.`,
+Each square across is $10$ minutes and each square up is $100$ liters, so we must read the numbers on the axes, not count squares. The line starts at $(0, 600)$: the tank holds $600$ liters at first. From $(0, 600)$ to $(30, 300)$ the volume changes by $-300$ in $30$ minutes, so the slope is $\\frac{-300}{30} = -10$: it loses $10$ liters a minute. The line meets the horizontal axis at $(60, 0)$: the tank is empty after $60$ minutes. All of it together is the model $V = -10t + 600$.`,
     `我们已经能由文字描述写出一次模型 $y = mx + b$，也知道在图像上 $b$ 是直线与纵轴的交点，$m$ 是斜率。很多时候情境是以**图像**给出的，我们要从图中读出模型：由截距读出起始值，由斜率读出变化率，由一个点读出一对对应的值。
 
 给水箱放水，图像表示 $t$ 分钟后水箱里的水量 $V$（升）：
 
 {{figure 0}}
 
-横向每格是 $10$ 分钟，纵向每格是 $50$ 升，所以要读坐标轴上的数，而不是数格子。直线从 $(0, 400)$ 开始：水箱一开始有 $400$ 升水。从 $(0, 400)$ 到 $(40, 200)$，水量在 $40$ 分钟里变化了 $-200$ 升，所以斜率是 $\\frac{-200}{40} = -5$：每分钟减少 $5$ 升。直线与横轴交于 $(80, 0)$：$80$ 分钟后水箱放空。把这些合起来，模型就是 $V = -5t + 400$。`,
+横向每格是 $10$ 分钟，纵向每格是 $100$ 升，所以要读坐标轴上的数，而不是数格子。直线从 $(0, 600)$ 开始：水箱一开始有 $600$ 升水。从 $(0, 600)$ 到 $(30, 300)$，水量在 $30$ 分钟里变化了 $-300$ 升，所以斜率是 $\\frac{-300}{30} = -10$：每分钟减少 $10$ 升。直线与横轴交于 $(60, 0)$：$60$ 分钟后水箱放空。把这些合起来，模型就是 $V = -10t + 600$。`,
   ),
   introFigures: [tankIntro],
   knowledgePoints: [
@@ -1686,19 +1686,19 @@ function journey(rng: Rng) {
 /** legSpeed is the speed of a leg in kilometers per hour. */
 const legSpeed = (l: Leg, km: number) => Q.of(Math.abs(l.to[1] - l.from[1]) * km, l.to[0] - l.from[0]);
 
-/** walkIntro draws a walk 12 km out in 2 hours, an hour's stop, and 12 km home in 2 hours. */
+/** walkIntro draws a walk 8 km out in 2 hours, a two-hour stop, and 8 km home in 2 hours. */
 const walkIntro: Figure = scaledGraph(
   { x: 1, y: 2, nx: 6, ny: 8, xName: "t", yName: "d" },
   [
     ...polylineMarks([
       [0, 0],
-      [2, 6],
-      [3, 6],
-      [5, 0],
+      [2, 4],
+      [4, 4],
+      [6, 0],
     ]),
   ],
-  "A distance-time graph through (0, 0), (2, 12), (3, 12) and (5, 0): out, a stop, and back.",
-  "一个经过 (0, 0)、(2, 12)、(3, 12) 和 (5, 0) 的距离—时间图：去程、停留、返程。",
+  "A distance-time graph through (0, 0), (2, 8), (4, 8) and (6, 0): out, a stop, and back.",
+  "一个经过 (0, 0)、(2, 8)、(4, 8) 和 (6, 0) 的距离—时间图：去程、停留、返程。",
 );
 
 /** sumOfLegs writes the distance covered in each leg of a journey, added up. */
@@ -1725,14 +1725,14 @@ A hiker walks out from home, rests, and walks back:
 
 {{figure 0}}
 
-In the first $2$ hours the distance rises to $12$ km, so the hiker moves away at $\\frac{12}{2} = 6$ km/h. From $t = 2$ to $t = 3$ the graph is flat: the distance does not change, so the hiker is resting. Then the distance falls back to $0$ in $2$ hours: the hiker walks home, again at $6$ km/h. In all the hiker covers $12 + 12 = 24$ km, though the trip ends where it began.`,
+In the first $2$ hours the distance rises to $8$ km, so the hiker moves away at $\\frac{8}{2} = 4$ km/h. From $t = 2$ to $t = 4$ the graph is flat: the distance does not change, so the hiker is resting. Then the distance falls back to $0$ in $2$ hours: the hiker walks home, again at $4$ km/h. In all the hiker covers $8 + 8 = 16$ km, though the trip ends where it began.`,
     `我们知道速度等于路程除以时间，也知道直线的斜率是变化率。**距离—时间图**把两者结合起来：它用离出发点的距离随时间的变化来表示一次行程，所以图像的形状讲述了行程的经过，而斜率就是速度。
 
 一名徒步者从家出发，休息一会儿，再走回来：
 
 {{figure 0}}
 
-前 $2$ 小时距离增加到 $12$ 千米，所以徒步者以 $\\frac{12}{2} = 6$ 千米/时的速度远离家。从 $t = 2$ 到 $t = 3$ 图像是水平的：距离不变，徒步者在休息。然后距离在 $2$ 小时内减少到 $0$：徒步者走回家，速度仍是 $6$ 千米/时。他一共走了 $12 + 12 = 24$ 千米，尽管最后回到了出发点。`,
+前 $2$ 小时距离增加到 $8$ 千米，所以徒步者以 $\\frac{8}{2} = 4$ 千米/时的速度远离家。从 $t = 2$ 到 $t = 4$ 图像是水平的：距离不变，徒步者在休息。然后距离在 $2$ 小时内减少到 $0$：徒步者走回家，速度仍是 $4$ 千米/时。他一共走了 $8 + 8 = 16$ 千米，尽管最后回到了出发点。`,
   ),
   introFigures: [walkIntro],
   knowledgePoints: [
@@ -2083,7 +2083,7 @@ function motion(rng: Rng) {
   return { v, sx, sy, pts, legs, figure, intro, sc };
 }
 
-/** carTrip is the trip of the introductions in grid cells of 2 s by 2 m/s: from rest to 12 m/s in 4 s, steady for 6 s, and to rest in 6 s. */
+/** carTrip is the trip of the speed-time knowledge points in grid cells of 2 s by 2 m/s: from rest to 12 m/s in 4 s, steady for 6 s, and to rest in 6 s. */
 const carTrip: [number, number][] = [
   [0, 0],
   [2, 6],
@@ -2091,12 +2091,19 @@ const carTrip: [number, number][] = [
   [8, 0],
 ];
 
-/** carIntro draws the car's trip with each part named. */
+/** carIntro draws a car's trip from rest to 8 m/s in 2 s, steady for 6 s, and to rest in 4 s. */
 const carIntro: Figure = scaledGraph(
   { x: 2, y: 2, nx: 10, ny: 8, xName: "t", yName: "v" },
-  [...polylineMarks(carTrip)],
-  "A speed-time graph through (0, 0), (4, 12), (10, 12) and (16, 0): speeding up, steady, slowing down.",
-  "一个经过 (0, 0)、(4, 12)、(10, 12) 和 (16, 0) 的速度—时间图：加速、匀速、减速。",
+  [
+    ...polylineMarks([
+      [0, 0],
+      [1, 4],
+      [4, 4],
+      [6, 0],
+    ]),
+  ],
+  "A speed-time graph through (0, 0), (2, 8), (8, 8) and (12, 0): speeding up, steady, slowing down.",
+  "一个经过 (0, 0)、(2, 8)、(8, 8) 和 (12, 0) 的速度—时间图：加速、匀速、减速。",
 );
 
 export const speedTimeGraphs: TopicDef = {
@@ -2117,14 +2124,14 @@ A car pulls away from traffic lights, drives steadily, and stops at the next lig
 
 {{figure 0}}
 
-In the first $4$ seconds the speed rises from $0$ to $12$ m/s, so the car gains $\\frac{12}{4} = 3$ m/s every second. From $t = 4$ to $t = 10$ the graph is flat at $12$: the car is moving at a constant $12$ m/s, not standing still. Then the speed falls to $0$ in $6$ seconds, losing $2$ m/s each second, and the car stops.`,
+In the first $2$ seconds the speed rises from $0$ to $8$ m/s, so the car gains $\\frac{8}{2} = 4$ m/s every second. From $t = 2$ to $t = 8$ the graph is flat at $8$: the car is moving at a constant $8$ m/s, not standing still. Then the speed falls to $0$ in $4$ seconds, losing $2$ m/s each second, and the car stops.`,
     `距离—时间图表示物体在哪里，它的斜率是速度。**速度—时间图**更进一步：它画出速度本身随时间的变化。两种图看起来相似，含义却不同，所以每种形状都要重新理解：现在水平的一段表示匀速，斜率表示速度变化的快慢，即**加速度**。
 
 一辆汽车在红绿灯前起步，匀速行驶，再在下一个红绿灯前停下：
 
 {{figure 0}}
 
-前 $4$ 秒速度从 $0$ 增加到 $12$ 米/秒，所以汽车每秒增加 $\\frac{12}{4} = 3$ 米/秒。从 $t = 4$ 到 $t = 10$，图像在 $12$ 处水平：汽车以 $12$ 米/秒匀速行驶，而不是停着不动。然后速度在 $6$ 秒内减到 $0$，每秒减少 $2$ 米/秒，汽车停下。`,
+前 $2$ 秒速度从 $0$ 增加到 $8$ 米/秒，所以汽车每秒增加 $\\frac{8}{2} = 4$ 米/秒。从 $t = 2$ 到 $t = 8$，图像在 $8$ 处水平：汽车以 $8$ 米/秒匀速行驶，而不是停着不动。然后速度在 $4$ 秒内减到 $0$，每秒减少 $2$ 米/秒，汽车停下。`,
   ),
   introFigures: [carIntro],
   knowledgePoints: [
@@ -2873,17 +2880,17 @@ ${check["zh-CN"]}`,
   };
 }
 
-/** strictIntro draws y > 2x - 1 with the solution (1, 4) and the point (2, 1) that is not one. */
+/** strictIntro draws y > x + 1 with the solution (1, 4) and the point (3, 2) that is not one. */
 const strictIntro: Figure = ineqPicture(
-  [{ m: Q.of(2), b: -1, op: ">" }],
+  [{ m: Q.of(1), b: 1, op: ">" }],
   true,
   [
     { kind: "point", at: [1, 4], label: "(1, 4)", dir: "nw", tone: "result" },
-    { kind: "point", at: [2, 1], label: "(2, 1)", dir: "se", tone: "action" },
-    { kind: "point", at: [1, 1], label: "(1, 1)", dir: "se" },
+    { kind: "point", at: [3, 2], label: "(3, 2)", dir: "se", tone: "action" },
+    { kind: "point", at: [1, 2], label: "(1, 2)", dir: "se" },
   ],
-  "The region above the dashed line y = 2x - 1, with (1, 4) inside it, (2, 1) outside it and (1, 1) on the line.",
-  "虚线 y = 2x - 1 上方的区域，(1, 4) 在区域内，(2, 1) 在区域外，(1, 1) 在直线上。",
+  "The region above the dashed line y = x + 1, with (1, 4) inside it, (3, 2) outside it and (1, 2) on the line.",
+  "虚线 y = x + 1 上方的区域，(1, 4) 在区域内，(3, 2) 在区域外，(1, 2) 在直线上。",
 );
 
 export const graphingStrictLinearInequalities: TopicDef = {
@@ -2898,16 +2905,16 @@ export const graphingStrictLinearInequalities: TopicDef = {
   xp: 12,
   standards: ["CCSS.HSA.REI.D.12"],
   intro: t(
-    `An inequality in one variable, such as $x > 3$, has a whole ray of solutions on the number line, and we draw an open circle at $3$ because $3$ itself is left out. An equation in two variables, such as $y = 2x - 1$, has a whole line of solutions in the plane. An **inequality in two variables** combines the two ideas: its solutions fill a whole region of the plane, bounded by a line.
+    `An inequality in one variable, such as $x > 3$, has a whole ray of solutions on the number line, and we draw an open circle at $3$ because $3$ itself is left out. An equation in two variables, such as $y = x + 1$, has a whole line of solutions in the plane. An **inequality in two variables** combines the two ideas: its solutions fill a whole region of the plane, bounded by a line.
 
-Take $y > 2x - 1$. At $x = 1$ the line is at $y = 1$, and the inequality asks for $y > 1$: so $(1, 4)$ is a solution, $(1, 1)$ on the line is not, and neither is $(2, 1)$, below the line at $x = 2$. At every $x$ the solutions are the points above the line:
+Take $y > x + 1$. At $x = 1$ the line is at $y = 2$, and the inequality asks for $y > 2$: so $(1, 4)$ is a solution, $(1, 2)$ on the line is not, and neither is $(3, 2)$, below the line at $x = 3$. At every $x$ the solutions are the points above the line:
 
 {{figure 0}}
 
 The solutions form a **half-plane**. The boundary is dashed, like the open circle, because its points make the two sides equal and a strict inequality leaves them out.`,
-    `一元不等式（如 $x > 3$）的解在数轴上是一整条射线，我们在 $3$ 处画空心圆，因为 $3$ 本身不是解。二元方程（如 $y = 2x - 1$）的解在平面上是一整条直线。**二元不等式**把两者结合起来：它的解充满平面上以一条直线为边界的整个区域。
+    `一元不等式（如 $x > 3$）的解在数轴上是一整条射线，我们在 $3$ 处画空心圆，因为 $3$ 本身不是解。二元方程（如 $y = x + 1$）的解在平面上是一整条直线。**二元不等式**把两者结合起来：它的解充满平面上以一条直线为边界的整个区域。
 
-看 $y > 2x - 1$。$x = 1$ 时直线在 $y = 1$ 处，不等式要求 $y > 1$：所以 $(1, 4)$ 是解，直线上的 $(1, 1)$ 不是解，$(2, 1)$ 也不是，它在 $x = 2$ 处直线的下方。对每一个 $x$，解都是直线上方的点：
+看 $y > x + 1$。$x = 1$ 时直线在 $y = 2$ 处，不等式要求 $y > 2$：所以 $(1, 4)$ 是解，直线上的 $(1, 2)$ 不是解，$(3, 2)$ 也不是，它在 $x = 3$ 处直线的下方。对每一个 $x$，解都是直线上方的点：
 
 {{figure 0}}
 
@@ -3043,16 +3050,16 @@ A dashed line through $(0, 2)$ and $(1, 4)$ has slope $2$, so it is $y = 2x + 2$
   ],
 };
 
-/** nonStrictIntro draws y ≤ -x + 4 with the boundary point (1, 3) and the solution (-1, 2). */
+/** nonStrictIntro draws y ≤ -2x + 5 with the boundary point (2, 1) and the solution (-1, 4). */
 const nonStrictIntro: Figure = ineqPicture(
-  [{ m: Q.of(-1), b: 4, op: "<=" }],
+  [{ m: Q.of(-2), b: 5, op: "<=" }],
   true,
   [
-    { kind: "point", at: [1, 3], label: "(1, 3)", dir: "ne", tone: "result" },
-    { kind: "point", at: [-1, 2], label: "(-1, 2)", dir: "sw", tone: "result" },
+    { kind: "point", at: [2, 1], label: "(2, 1)", dir: "ne", tone: "result" },
+    { kind: "point", at: [-1, 4], label: "(-1, 4)", dir: "sw", tone: "result" },
   ],
-  "The region on and below the solid line y = -x + 4, with (1, 3) on the line and (-1, 2) below it.",
-  "实线 y = -x + 4 上及其下方的区域，(1, 3) 在直线上，(-1, 2) 在直线下方。",
+  "The region on and below the solid line y = -2x + 5, with (2, 1) on the line and (-1, 4) below it.",
+  "实线 y = -2x + 5 上及其下方的区域，(2, 1) 在直线上，(-1, 4) 在直线下方。",
 );
 
 export const graphingNonStrictLinearInequalities: TopicDef = {
@@ -3067,16 +3074,16 @@ export const graphingNonStrictLinearInequalities: TopicDef = {
   xp: 12,
   standards: ["CCSS.HSA.REI.D.12"],
   intro: t(
-    `A strict inequality such as $y < -x + 4$ is graphed as a half-plane with a dashed boundary, because the points on the line make the two sides equal and are left out. With $\\le$ or $\\ge$ equality is allowed, just as $x \\le 3$ on a number line gets a filled circle at $3$. So the points of the line are solutions too, and the boundary is drawn **solid**.
+    `A strict inequality such as $y < -2x + 5$ is graphed as a half-plane with a dashed boundary, because the points on the line make the two sides equal and are left out. With $\\le$ or $\\ge$ equality is allowed, just as $x \\le 3$ on a number line gets a filled circle at $3$. So the points of the line are solutions too, and the boundary is drawn **solid**.
 
-For $y \\le -x + 4$, the point $(1, 3)$ gives $3 \\le 3$, which is true, so it is a solution on the boundary; $(-1, 2)$ gives $2 \\le 5$ and is a solution below it:
+For $y \\le -2x + 5$, the point $(2, 1)$ gives $1 \\le 1$, which is true, so it is a solution on the boundary; $(-1, 4)$ gives $4 \\le 7$ and is a solution below it:
 
 {{figure 0}}
 
 The side is chosen exactly as before; only the boundary changes.`,
-    `严格不等式（如 $y < -x + 4$）的图像是以虚线为边界的半平面，因为线上的点使两边相等，不算在内。用 $\\le$ 或 $\\ge$ 时允许相等，就像数轴上 $x \\le 3$ 在 $3$ 处画实心圆一样。所以直线上的点也是解，边界画成**实线**。
+    `严格不等式（如 $y < -2x + 5$）的图像是以虚线为边界的半平面，因为线上的点使两边相等，不算在内。用 $\\le$ 或 $\\ge$ 时允许相等，就像数轴上 $x \\le 3$ 在 $3$ 处画实心圆一样。所以直线上的点也是解，边界画成**实线**。
 
-对 $y \\le -x + 4$，点 $(1, 3)$ 给出 $3 \\le 3$，成立，所以它是边界上的解；$(-1, 2)$ 给出 $2 \\le 5$，是边界下方的解：
+对 $y \\le -2x + 5$，点 $(2, 1)$ 给出 $1 \\le 1$，成立，所以它是边界上的解；$(-1, 4)$ 给出 $4 \\le 7$，是边界下方的解：
 
 {{figure 0}}
 
@@ -3501,20 +3508,20 @@ function overlapPoint(q1: Ineq, q2: Ineq): [number, number] | undefined {
   return undefined;
 }
 
-/** systemIntro draws y > x - 1 and y ≤ -x + 3, whose overlap contains the origin. */
+/** systemIntro draws y > x - 3 and y ≤ -x + 5, whose overlap contains the origin. */
 const systemIntro: Figure = ineqPicture(
   [
-    { m: Q.of(1), b: -1, op: ">" },
-    { m: Q.of(-1), b: 3, op: "<=" },
+    { m: Q.of(1), b: -3, op: ">" },
+    { m: Q.of(-1), b: 5, op: "<=" },
   ],
   true,
   [
-    { kind: "point", at: [2, 1], label: "(2, 1)", dir: "e" },
+    { kind: "point", at: [4, 1], label: "(4, 1)", dir: "e" },
     { kind: "point", at: [0, 0], label: "(0, 0)", dir: "sw", tone: "result" },
-    { kind: "point", at: [4, 1], label: "(4, 1)", dir: "e", tone: "action" },
+    { kind: "point", at: [5, 1], label: "(5, 1)", dir: "e", tone: "action" },
   ],
-  "The overlap of the region above the dashed line y = x - 1 and the region on and below the solid line y = -x + 3: a wedge to the left of (2, 1), containing the origin; (4, 1) is outside it.",
-  "虚线 y = x - 1 上方的区域与实线 y = -x + 3 上及其下方的区域的公共部分：(2, 1) 左边的一个楔形区域，包含原点；(4, 1) 在它外面。",
+  "The overlap of the region above the dashed line y = x - 3 and the region on and below the solid line y = -x + 5: a wedge to the left of (4, 1), containing the origin; (5, 1) is outside it.",
+  "虚线 y = x - 3 上方的区域与实线 y = -x + 5 上及其下方的区域的公共部分：(4, 1) 左边的一个楔形区域，包含原点；(5, 1) 在它外面。",
 );
 
 export const systemsOfLinearInequalities: TopicDef = {
@@ -3531,18 +3538,18 @@ export const systemsOfLinearInequalities: TopicDef = {
   intro: t(
     `A system of linear equations asks for the points on **both** lines, and a graph shows them where the lines cross. A **system of linear inequalities** asks for the points that satisfy every inequality at once. Each inequality is a half-plane, so the solutions are the points in all of them: the **overlap** of the half-planes.
 
-Take $y > x - 1$ and $y \\le -x + 3$. The first is the region above a dashed line, the second the region on and below a solid line, and the two lines cross at $(2, 1)$. The overlap is a wedge:
+Take $y > x - 3$ and $y \\le -x + 5$. The first is the region above a dashed line, the second the region on and below a solid line, and the two lines cross at $(4, 1)$. The overlap is a wedge:
 
 {{figure 0}}
 
-The origin is a solution: $0 > -1$ and $0 \\le 3$ are both true. The point $(4, 1)$ is not: $1 > 3$ is false, so it fails the first inequality, and failing one is already enough. (It fails the second too, $1 \\le -1$ being false.)`,
+The origin is a solution: $0 > -3$ and $0 \\le 5$ are both true. The point $(5, 1)$ is not: $1 > 2$ is false, so it fails the first inequality, and failing one is already enough. (It fails the second too, $1 \\le 0$ being false.)`,
     `一次方程组要求同时在**两条**直线上的点，在图像上就是两条直线的交点。**一次不等式组**要求同时满足每一个不等式的点。每个不等式是一个半平面，所以解就是同时在所有半平面中的点：这些半平面的**公共部分**。
 
-看 $y > x - 1$ 和 $y \\le -x + 3$。第一个是虚线上方的区域，第二个是实线上及其下方的区域，两条直线交于 $(2, 1)$。公共部分是一个楔形区域：
+看 $y > x - 3$ 和 $y \\le -x + 5$。第一个是虚线上方的区域，第二个是实线上及其下方的区域，两条直线交于 $(4, 1)$。公共部分是一个楔形区域：
 
 {{figure 0}}
 
-原点是解：$0 > -1$ 和 $0 \\le 3$ 都成立。点 $(4, 1)$ 不是解：$1 > 3$ 不成立，它不满足第一个不等式，而只要有一个不满足就够了。（它也不满足第二个，$1 \\le -1$ 不成立。）`,
+原点是解：$0 > -3$ 和 $0 \\le 5$ 都成立。点 $(5, 1)$ 不是解：$1 > 2$ 不成立，它不满足第一个不等式，而只要有一个不满足就够了。（它也不满足第二个，$1 \\le 0$ 不成立。）`,
   ),
   introFigures: [systemIntro],
   knowledgePoints: [
@@ -3922,24 +3929,24 @@ function limitValues(rng: Rng, c: LimitContext): [number, number, number] {
   return [a, b, pickStep(rng, c.limit)];
 }
 
-/** budgetIntro shades the whole-number plans of 2x + 5y ≤ 40 (grid x in steps of 2), with (5, 6) on the boundary and (6, 6) outside. */
+/** budgetIntro shades the plans of 3x + 5y ≤ 30, with (5, 3) on the boundary and (6, 3) outside. */
 const budgetIntro: Figure = scaledGraph(
-  { x: 2, y: 1, nx: 10, ny: 8, xName: "x", yName: "y" },
+  { x: 1, y: 1, nx: 10, ny: 8, xName: "x", yName: "y" },
   [
     {
       kind: "region",
       halfPlanes: [
-        [-4, -5, 40],
+        [-3, -5, 30],
         [1, 0, 0],
         [0, 1, 0],
       ],
     },
-    { kind: "segment", a: [0, 8], b: [10, 0], accent: true },
-    { kind: "point", at: [2.5, 6], label: "(5, 6)", dir: "sw", tone: "result" },
-    { kind: "point", at: [3, 6], label: "(6, 6)", dir: "ne" },
+    { kind: "segment", a: [0, 6], b: [10, 0], accent: true },
+    { kind: "point", at: [5, 3], label: "(5, 3)", dir: "sw", tone: "result" },
+    { kind: "point", at: [6, 3], label: "(6, 3)", dir: "ne" },
   ],
-  "The line 2x + 5y = 40 from (0, 8) to (20, 0), with the triangle below it shaded; (5, 6) lies on the line and (6, 6) just outside.",
-  "直线 2x + 5y = 40，从 (0, 8) 到 (20, 0)，它下方的三角形涂了阴影；(5, 6) 在直线上，(6, 6) 刚好在外面。",
+  "The line 3x + 5y = 30 from (0, 6) to (10, 0), with the triangle below it shaded; (5, 3) lies on the line and (6, 3) just outside.",
+  "直线 3x + 5y = 30，从 (0, 6) 到 (10, 0)，它下方的三角形涂了阴影；(5, 3) 在直线上，(6, 3) 刚好在外面。",
 );
 
 /** limitCheck compares a total with its limit and says by how much it is inside or outside. */
@@ -3988,22 +3995,22 @@ export const modelingWithTwoVariableInequalities: TopicDef = {
   intro: t(
     `A total made of two kinds of items is written $ax + by$, and when the total is fixed it gives the equation $ax + by = T$. Real limits are seldom that exact: a budget says "at most", a goal says "at least". Then the total is compared with the limit instead of set equal to it, and the model is an **inequality in two variables**.
 
-Pens cost $\\$2$ and notebooks $\\$5$, and there is at most $\\$40$ to spend. With $x$ pens and $y$ notebooks the cost is $2x + 5y$, so the plans that fit are those with
+Muffins cost $\\$3$ and pies $\\$5$, and there is at most $\\$30$ to spend. With $x$ muffins and $y$ pies the cost is $3x + 5y$, so the plans that fit are those with
 
-$$2x + 5y \\le 40.$$
+$$3x + 5y \\le 30.$$
 
-Graphed, they fill the triangle under the line $2x + 5y = 40$. Five pens and six notebooks cost exactly $\\$40$, a point on the line; six of each cost $\\$42$, just outside:
+Graphed, they fill the triangle under the line $3x + 5y = 30$. Five muffins and three pies cost exactly $\\$30$, a point on the line; six muffins and three pies cost $\\$33$, just outside:
 
 {{figure 0}}
 
 In this lesson we write such inequalities from the words, check whether a combination fits, and find the most or least of one item when the other is known.`,
     `由两类物品组成的总量写成 $ax + by$，总量固定时得到方程 $ax + by = T$。现实中的限制很少这么精确：预算说的是“最多”，目标说的是“至少”。这时总量是与限额比较，而不是等于它，模型就成了**二元不等式**。
 
-钢笔每支 $2$ 元，笔记本每本 $5$ 元，最多能花 $40$ 元。设买 $x$ 支钢笔、$y$ 本笔记本，花费是 $2x + 5y$，所以可行的方案满足
+松饼每个 $3$ 元，馅饼每个 $5$ 元，最多能花 $30$ 元。设买 $x$ 个松饼、$y$ 个馅饼，花费是 $3x + 5y$，所以可行的方案满足
 
-$$2x + 5y \\le 40.$$
+$$3x + 5y \\le 30.$$
 
-画出来，它们填满直线 $2x + 5y = 40$ 下方的三角形。$5$ 支钢笔和 $6$ 本笔记本正好花 $40$ 元，是直线上的一点；两样各买 $6$ 个要花 $42$ 元，刚好在外面：
+画出来，它们填满直线 $3x + 5y = 30$ 下方的三角形。$5$ 个松饼和 $3$ 个馅饼正好花 $30$ 元，是直线上的一点；$6$ 个松饼和 $3$ 个馅饼要花 $33$ 元，刚好在外面：
 
 {{figure 0}}
 
@@ -4265,26 +4272,26 @@ function planningValues(rng: Rng, c: PlanningContext): [number, number, number, 
   return [a, b, n, r];
 }
 
-/** farmIntro shades the plans of x + y ≤ 50 and 120x + 80y ≤ 5000 (grid in steps of 10), with the corner (25, 25). */
+/** farmIntro shades the plans of x + y ≤ 40 and 150x + 100y ≤ 5000 (grid in steps of 10), with the corner (20, 20). */
 const farmIntro: Figure = scaledGraph(
   { x: 10, y: 10, nx: 8, ny: 7, xName: "x", yName: "y" },
   [
     {
       kind: "region",
       halfPlanes: [
-        [-1, -1, 5],
-        [-12, -8, 50],
+        [-1, -1, 4],
+        [-15, -10, 50],
         [1, 0, 0],
         [0, 1, 0],
       ],
     },
-    { kind: "segment", a: [0, 5], b: [5, 0] },
-    { kind: "segment", a: [0, 6.25], b: [50 / 12, 0], accent: true },
-    { kind: "point", at: [2.5, 2.5], label: "(25, 25)", dir: "ne", tone: "result" },
-    { kind: "point", at: [3, 1.5], label: "(30, 15)", dir: "e" },
+    { kind: "segment", a: [0, 4], b: [4, 0] },
+    { kind: "segment", a: [0, 5], b: [10 / 3, 0], accent: true },
+    { kind: "point", at: [2, 2], label: "(20, 20)", dir: "ne", tone: "result" },
+    { kind: "point", at: [2.5, 1], label: "(25, 10)", dir: "e" },
   ],
-  "The lines x + y = 50 and 120x + 80y = 5000, with the region under both shaded; they cross at (25, 25), and the plan (30, 15) lies inside.",
-  "直线 x + y = 50 和 120x + 80y = 5000，两条线下方的公共区域涂了阴影；它们交于 (25, 25)，方案 (30, 15) 在区域内。",
+  "The lines x + y = 40 and 150x + 100y = 5000, with the region under both shaded; they cross at (20, 20), and the plan (25, 10) lies inside.",
+  "直线 x + y = 40 和 150x + 100y = 5000，两条线下方的公共区域涂了阴影；它们交于 (20, 20)，方案 (25, 10) 在区域内。",
 );
 
 export const modelingWithSystemsOfInequalities: TopicDef = {
@@ -4304,22 +4311,22 @@ export const modelingWithSystemsOfInequalities: TopicDef = {
   intro: t(
     `One limit on a total gives one inequality $ax + by \\le L$, and a system of inequalities is solved by the points in every half-plane at once. Real plans usually face several limits together, such as space and money, or a number of sales and an amount raised, and a plan is possible only if it meets all of them. So the model is a **system of inequalities**, and the possible plans are the overlap of its half-planes.
 
-A farmer has at most $50$ acres for corn and wheat. Corn costs $\\$120$ an acre and wheat $\\$80$, and the budget is at most $\\$5000$. With $x$ acres of corn and $y$ of wheat:
+A farmer has at most $40$ acres for corn and wheat. Corn costs $\\$150$ an acre and wheat $\\$100$, and the budget is at most $\\$5000$. With $x$ acres of corn and $y$ of wheat:
 
-$$\\begin{cases} x + y \\le 50 \\\\ 120x + 80y \\le 5000 \\end{cases}$$
+$$\\begin{cases} x + y \\le 40 \\\\ 150x + 100y \\le 5000 \\end{cases}$$
 
-Planting $30$ acres of corn and $15$ of wheat uses $45$ acres and costs $\\$4800$, so it meets both limits and lies in the shaded region:
+Planting $25$ acres of corn and $10$ of wheat uses $35$ acres and costs $\\$4750$, so it meets both limits and lies in the shaded region:
 
 {{figure 0}}
 
 In this lesson we write such systems, check plans against every limit, and find the most or least of one quantity when both limits apply.`,
     `对总量的一个限制给出一个不等式 $ax + by \\le L$，而不等式组的解是同时落在每个半平面里的点。现实中的方案往往同时受多个限制，比如土地和资金，或者销售数量和筹款金额，方案只有满足全部限制才可行。所以模型是一个**不等式组**，可行的方案就是各个半平面的公共部分。
 
-农场主最多有 $50$ 英亩地种玉米和小麦。玉米每英亩成本 $120$ 元，小麦 $80$ 元，预算最多 $5000$ 元。设种玉米 $x$ 英亩，小麦 $y$ 英亩：
+农场主最多有 $40$ 英亩地种玉米和小麦。玉米每英亩成本 $150$ 元，小麦 $100$ 元，预算最多 $5000$ 元。设种玉米 $x$ 英亩，小麦 $y$ 英亩：
 
-$$\\begin{cases} x + y \\le 50 \\\\ 120x + 80y \\le 5000 \\end{cases}$$
+$$\\begin{cases} x + y \\le 40 \\\\ 150x + 100y \\le 5000 \\end{cases}$$
 
-种 $30$ 英亩玉米和 $15$ 英亩小麦，用地 $45$ 英亩，成本 $4800$ 元，两个限制都满足，它落在阴影区域里：
+种 $25$ 英亩玉米和 $10$ 英亩小麦，用地 $35$ 英亩，成本 $4750$ 元，两个限制都满足，它落在阴影区域里：
 
 {{figure 0}}
 

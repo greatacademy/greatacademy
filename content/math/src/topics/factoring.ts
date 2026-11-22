@@ -92,16 +92,16 @@ export const factoringPolynomialsUsingGcfs: TopicDef = {
   xp: 14,
   standards: ["CCSS.HSA.SSE.A.2"],
   intro: t(
-    `The distributive law multiplies a factor into a sum: $6x^{2}(2x + 3) = 12x^{3} + 18x^{2}$. **Factoring** runs it backwards. Given $12x^{3} + 18x^{2}$, we look for the factor that every term shares, the greatest common factor of the terms, which we already know how to find: here $6x^{2}$. Dividing each term by it leaves $2x$ and $3$, so
+    `The distributive law multiplies a factor into a sum: $5x^{2}(2x + 3) = 10x^{3} + 15x^{2}$. **Factoring** runs it backwards. Given $10x^{3} + 15x^{2}$, we look for the factor that every term shares, the greatest common factor of the terms, which we already know how to find: here $5x^{2}$. Dividing each term by it leaves $2x$ and $3$, so
 
-$$12x^{3} + 18x^{2} = 6x^{2}(2x + 3)$$
+$$10x^{3} + 15x^{2} = 5x^{2}(2x + 3)$$
 
 A product is often more useful than a sum: it shows what the polynomial is a multiple of, and later it lets us solve equations and simplify fractions.
 
 In this lesson we take the greatest common factor out of binomials, trinomials and polynomials in two variables, and take out a common factor that is a whole binomial.`,
-    `分配律把一个因式乘进和里：$6x^{2}(2x + 3) = 12x^{3} + 18x^{2}$。**因式分解**是倒过来做。给出 $12x^{3} + 18x^{2}$，我们找每一项都有的因式，即各项的最大公因式，这我们已经会求：这里是 $6x^{2}$。用它去除每一项，剩下 $2x$ 和 $3$，所以
+    `分配律把一个因式乘进和里：$5x^{2}(2x + 3) = 10x^{3} + 15x^{2}$。**因式分解**是倒过来做。给出 $10x^{3} + 15x^{2}$，我们找每一项都有的因式，即各项的最大公因式，这我们已经会求：这里是 $5x^{2}$。用它去除每一项，剩下 $2x$ 和 $3$，所以
 
-$$12x^{3} + 18x^{2} = 6x^{2}(2x + 3)$$
+$$10x^{3} + 15x^{2} = 5x^{2}(2x + 3)$$
 
 乘积往往比和更有用：它说明这个多项式是谁的倍数，以后还能用来解方程、化简分式。
 
@@ -416,14 +416,14 @@ export const factoringPerfectSquareTrinomials: TopicDef = {
   xp: 12,
   standards: ["CCSS.HSA.SSE.A.2"],
   intro: t(
-    `Squaring a binomial gives a trinomial with a recognizable shape: $(x + 5)^{2} = x^{2} + 10x + 25$. Its first and last terms are squares, and its middle term is twice the product of their roots, $2 \\cdot x \\cdot 5 = 10x$. A trinomial of this shape is a **perfect square trinomial**, and factoring it is the square formula read backwards. In $x^{2} - 14x + 49$, the outer terms are the squares of $x$ and $7$, and the middle term is $-2 \\cdot x \\cdot 7$, so
+    `Squaring a binomial gives a trinomial with a recognizable shape: $(x + 6)^{2} = x^{2} + 12x + 36$. Its first and last terms are squares, and its middle term is twice the product of their roots, $2 \\cdot x \\cdot 6 = 12x$. A trinomial of this shape is a **perfect square trinomial**, and factoring it is the square formula read backwards. In $x^{2} - 16x + 64$, the outer terms are the squares of $x$ and $8$, and the middle term is $-2 \\cdot x \\cdot 8$, so
 
-$$x^{2} - 14x + 49 = (x - 7)^{2}$$
+$$x^{2} - 16x + 64 = (x - 8)^{2}$$
 
 In this lesson we recognize perfect square trinomials, factor them when the leading coefficient is $1$, and factor them in two variables.`,
-    `二项式的平方是一个形状很好认的三项式：$(x + 5)^{2} = x^{2} + 10x + 25$。它的首末两项都是平方，中间项是两个平方根之积的两倍，$2 \\cdot x \\cdot 5 = 10x$。这种形状的三项式叫**完全平方三项式**，分解它就是把平方公式倒过来读。在 $x^{2} - 14x + 49$ 中，首末两项是 $x$ 和 $7$ 的平方，中间项是 $-2 \\cdot x \\cdot 7$，所以
+    `二项式的平方是一个形状很好认的三项式：$(x + 6)^{2} = x^{2} + 12x + 36$。它的首末两项都是平方，中间项是两个平方根之积的两倍，$2 \\cdot x \\cdot 6 = 12x$。这种形状的三项式叫**完全平方三项式**，分解它就是把平方公式倒过来读。在 $x^{2} - 16x + 64$ 中，首末两项是 $x$ 和 $8$ 的平方，中间项是 $-2 \\cdot x \\cdot 8$，所以
 
-$$x^{2} - 14x + 49 = (x - 7)^{2}$$
+$$x^{2} - 16x + 64 = (x - 8)^{2}$$
 
 这节课我们识别完全平方三项式，分解首项系数为 $1$ 的完全平方三项式，以及含两个变量的完全平方三项式。`,
   ),
@@ -593,18 +593,18 @@ export const factoringPerfectSquareTrinomialsWithLeadingCoefficients: TopicDef =
   xp: 12,
   standards: ["CCSS.HSA.SSE.A.2"],
   intro: t(
-    `So far the perfect squares began with $x^{2}$. The same pattern works when the first term is a square with a coefficient, such as $9x^{2} = (3x)^{2}$: the roots are whole terms, coefficient included. In $9x^{2} - 12x + 4$ the outer terms are the squares of $3x$ and $2$, and twice their product is $2 \\cdot 3x \\cdot 2 = 12x$, the middle term without its sign, so
+    `So far the perfect squares began with $x^{2}$. The same pattern works when the first term is a square with a coefficient, such as $25x^{2} = (5x)^{2}$: the roots are whole terms, coefficient included. In $25x^{2} - 30x + 9$ the outer terms are the squares of $5x$ and $3$, and twice their product is $2 \\cdot 5x \\cdot 3 = 30x$, the middle term without its sign, so
 
-$$9x^{2} - 12x + 4 = (3x - 2)^{2}$$
+$$25x^{2} - 30x + 9 = (5x - 3)^{2}$$
 
-Sometimes the square is hidden behind a common factor: $2x^{2} + 12x + 18$ has no square terms, but it is $2(x^{2} + 6x + 9) = 2(x + 3)^{2}$.
+Sometimes the square is hidden behind a common factor: $3x^{2} - 24x + 48$ has no square terms, but it is $3(x^{2} - 8x + 16) = 3(x - 4)^{2}$.
 
 In this lesson we factor perfect squares with a square leading coefficient, take out a common factor first, and factor perfect squares in two variables.`,
-    `前面的完全平方都以 $x^{2}$ 开头。第一项是带系数的平方，例如 $9x^{2} = (3x)^{2}$ 时，同样的规律也成立：平方根是包括系数在内的整项。在 $9x^{2} - 12x + 4$ 中，首末两项是 $3x$ 和 $2$ 的平方，它们之积的两倍是 $2 \\cdot 3x \\cdot 2 = 12x$，正是不计符号的中间项，所以
+    `前面的完全平方都以 $x^{2}$ 开头。第一项是带系数的平方，例如 $25x^{2} = (5x)^{2}$ 时，同样的规律也成立：平方根是包括系数在内的整项。在 $25x^{2} - 30x + 9$ 中，首末两项是 $5x$ 和 $3$ 的平方，它们之积的两倍是 $2 \\cdot 5x \\cdot 3 = 30x$，正是不计符号的中间项，所以
 
-$$9x^{2} - 12x + 4 = (3x - 2)^{2}$$
+$$25x^{2} - 30x + 9 = (5x - 3)^{2}$$
 
-有时平方藏在公因式后面：$2x^{2} + 12x + 18$ 没有平方项，但它等于 $2(x^{2} + 6x + 9) = 2(x + 3)^{2}$。
+有时平方藏在公因式后面：$3x^{2} - 24x + 48$ 没有平方项，但它等于 $3(x^{2} - 8x + 16) = 3(x - 4)^{2}$。
 
 这节课我们分解首项系数是平方数的完全平方，先提取公因式再分解，以及分解含两个变量的完全平方。`,
   ),
@@ -758,18 +758,18 @@ export const factoringDifferencesOfSquares: TopicDef = {
   xp: 14,
   standards: ["CCSS.HSA.SSE.A.2"],
   intro: t(
-    `Multiplying a sum by a difference of the same two terms gives a difference of squares, because the middle products cancel: $(x + 7)(x - 7) = x^{2} - 49$. Factoring reads this backwards. Whenever a binomial is one square minus another,
+    `Multiplying a sum by a difference of the same two terms gives a difference of squares, because the middle products cancel: $(x + 8)(x - 8) = x^{2} - 64$. Factoring reads this backwards. Whenever a binomial is one square minus another,
 
 $$a^{2} - b^{2} = (a + b)(a - b)$$
 
-So $x^{2} - 49$, which is $x^{2} - 7^{2}$, factors as $(x + 7)(x - 7)$. The skill is to see each term as a square: $49 = 7^{2}$, $9x^{2} = (3x)^{2}$, $x^{4} = (x^{2})^{2}$.
+So $x^{2} - 64$, which is $x^{2} - 8^{2}$, factors as $(x + 8)(x - 8)$. The skill is to see each term as a square: $64 = 8^{2}$, $16x^{2} = (4x)^{2}$, $x^{6} = (x^{3})^{2}$.
 
 In this lesson we factor $x^{2} - a^{2}$, differences of squares of terms with coefficients, differences hidden behind a common factor, and differences that factor twice.`,
-    `两个数的和乘以它们的差得到平方差，因为中间的乘积相互抵消：$(x + 7)(x - 7) = x^{2} - 49$。因式分解把它倒过来读。只要一个二项式是一个平方减另一个平方，就有
+    `两个数的和乘以它们的差得到平方差，因为中间的乘积相互抵消：$(x + 8)(x - 8) = x^{2} - 64$。因式分解把它倒过来读。只要一个二项式是一个平方减另一个平方，就有
 
 $$a^{2} - b^{2} = (a + b)(a - b)$$
 
-所以 $x^{2} - 49$ 即 $x^{2} - 7^{2}$，分解为 $(x + 7)(x - 7)$。关键是把每一项看成平方：$49 = 7^{2}$，$9x^{2} = (3x)^{2}$，$x^{4} = (x^{2})^{2}$。
+所以 $x^{2} - 64$ 即 $x^{2} - 8^{2}$，分解为 $(x + 8)(x - 8)$。关键是把每一项看成平方：$64 = 8^{2}$，$16x^{2} = (4x)^{2}$，$x^{6} = (x^{3})^{2}$。
 
 这节课我们分解 $x^{2} - a^{2}$、带系数的项的平方差、藏在公因式后面的平方差，以及要分解两次的平方差。`,
   ),
@@ -1081,14 +1081,14 @@ export const factoringTrinomials: TopicDef = {
   xp: 15,
   standards: ["CCSS.HSA.SSE.A.2"],
   intro: t(
-    `Multiplying two binomials, $(x + 3)(x + 4) = x^{2} + 4x + 3x + 12 = x^{2} + 7x + 12$. The middle coefficient $7$ is the sum $3 + 4$, and the constant $12$ is the product $3 \\cdot 4$. Factoring a trinomial $x^{2} + bx + c$ runs this backwards: find two numbers whose product is $c$ and whose sum is $b$, and they are the constants of the factors. For $x^{2} + 7x + 12$, the pairs with product $12$ are $1, 12$; $2, 6$; $3, 4$, and only $3 + 4 = 7$, so
+    `Multiplying two binomials, $(x + 3)(x + 5) = x^{2} + 5x + 3x + 15 = x^{2} + 8x + 15$. The middle coefficient $8$ is the sum $3 + 5$, and the constant $15$ is the product $3 \\cdot 5$. Factoring a trinomial $x^{2} + bx + c$ runs this backwards: find two numbers whose product is $c$ and whose sum is $b$, and they are the constants of the factors. For $x^{2} + 8x + 15$, the pairs with product $15$ are $1, 15$ and $3, 5$, and only $3 + 5 = 8$, so
 
-$$x^{2} + 7x + 12 = (x + 3)(x + 4)$$
+$$x^{2} + 8x + 15 = (x + 3)(x + 5)$$
 
 In this lesson we factor trinomials with a positive constant term, with a negative one, and in two variables.`,
-    `两个二项式相乘：$(x + 3)(x + 4) = x^{2} + 4x + 3x + 12 = x^{2} + 7x + 12$。中间项系数 $7$ 是和 $3 + 4$，常数项 $12$ 是积 $3 \\cdot 4$。分解三项式 $x^{2} + bx + c$ 就是倒过来做：找两个数，积为 $c$，和为 $b$，它们就是两个因式的常数。对 $x^{2} + 7x + 12$，积为 $12$ 的数对有 $1, 12$；$2, 6$；$3, 4$，只有 $3 + 4 = 7$，所以
+    `两个二项式相乘：$(x + 3)(x + 5) = x^{2} + 5x + 3x + 15 = x^{2} + 8x + 15$。中间项系数 $8$ 是和 $3 + 5$，常数项 $15$ 是积 $3 \\cdot 5$。分解三项式 $x^{2} + bx + c$ 就是倒过来做：找两个数，积为 $c$，和为 $b$，它们就是两个因式的常数。对 $x^{2} + 8x + 15$，积为 $15$ 的数对有 $1, 15$ 和 $3, 5$，只有 $3 + 5 = 8$，所以
 
-$$x^{2} + 7x + 12 = (x + 3)(x + 4)$$
+$$x^{2} + 8x + 15 = (x + 3)(x + 5)$$
 
 这节课我们分解常数项为正、常数项为负，以及含两个变量的三项式。`,
   ),
@@ -1219,16 +1219,16 @@ export const factoringTrinomialsUsingCommonFactors: TopicDef = {
   xp: 12,
   standards: ["CCSS.HSA.SSE.A.2"],
   intro: t(
-    `The sum and product method needs a trinomial that starts with $x^{2}$. Many trinomials start with something else, such as $3x^{2} - 6x - 24$, yet every term shares a factor. Taking it out first, as in factoring with the greatest common factor, leaves a trinomial we can factor:
+    `The sum and product method needs a trinomial that starts with $x^{2}$. Many trinomials start with something else, such as $5x^{2} - 5x - 30$, yet every term shares a factor. Taking it out first, as in factoring with the greatest common factor, leaves a trinomial we can factor:
 
-$$3x^{2} - 6x - 24 = 3(x^{2} - 2x - 8) = 3(x + 2)(x - 4)$$
+$$5x^{2} - 5x - 30 = 5(x^{2} - x - 6) = 5(x + 2)(x - 3)$$
 
 The common factor stays in front, so the factorization is complete.
 
 In this lesson we take out a number, a power of $x$, and a negative factor before factoring the trinomial.`,
-    `“和与积”的方法要求三项式以 $x^{2}$ 开头。很多三项式不是这样，例如 $3x^{2} - 6x - 24$，但它的每一项都有公因数。像提取最大公因式那样先把它提出来，剩下的三项式就能分解了：
+    `“和与积”的方法要求三项式以 $x^{2}$ 开头。很多三项式不是这样，例如 $5x^{2} - 5x - 30$，但它的每一项都有公因数。像提取最大公因式那样先把它提出来，剩下的三项式就能分解了：
 
-$$3x^{2} - 6x - 24 = 3(x^{2} - 2x - 8) = 3(x + 2)(x - 4)$$
+$$5x^{2} - 5x - 30 = 5(x^{2} - x - 6) = 5(x + 2)(x - 3)$$
 
 公因数留在前面，这样才算彻底分解。
 
@@ -1390,18 +1390,18 @@ export const factoringTrinomialsWithLeadingCoefficients: TopicDef = {
   xp: 18,
   standards: ["CCSS.HSA.SSE.A.2"],
   intro: t(
-    `When the leading coefficient is not $1$ and cannot be taken out, the sum and product method needs one more idea. Multiplying $(3x + 2)(2x + 3)$ gives four products before they are collected:
+    `When the leading coefficient is not $1$ and cannot be taken out, the sum and product method needs one more idea. Multiplying $(4x + 3)(x + 2)$ gives four products before they are collected:
 
-$$(3x + 2)(2x + 3) = 6x^{2} + 9x + 4x + 6 = 6x^{2} + 13x + 6$$
+$$(4x + 3)(x + 2) = 4x^{2} + 8x + 3x + 6 = 4x^{2} + 11x + 6$$
 
-To factor $6x^{2} + 13x + 6$ we rebuild those four terms. The two middle coefficients $9$ and $4$ add up to $13$, and their product $36$ equals $6 \\cdot 6$, the leading coefficient times the constant. Splitting $13x$ into $9x + 4x$ gives four terms that factor in pairs: $3x(2x + 3) + 2(2x + 3) = (3x + 2)(2x + 3)$.
+To factor $4x^{2} + 11x + 6$ we rebuild those four terms. The two middle coefficients $8$ and $3$ add up to $11$, and their product $24$ equals $4 \\cdot 6$, the leading coefficient times the constant. Splitting $11x$ into $8x + 3x$ gives four terms that factor in pairs: $4x(x + 2) + 3(x + 2) = (4x + 3)(x + 2)$.
 
 In this lesson we factor four terms by grouping, factor trinomials whose leading coefficient is prime, and use the $ac$ method.`,
-    `当首项系数不是 $1$、又不能提出来时，“和与积”的方法还需要一个想法。$(3x + 2)(2x + 3)$ 在合并之前有四个乘积：
+    `当首项系数不是 $1$、又不能提出来时，“和与积”的方法还需要一个想法。$(4x + 3)(x + 2)$ 在合并之前有四个乘积：
 
-$$(3x + 2)(2x + 3) = 6x^{2} + 9x + 4x + 6 = 6x^{2} + 13x + 6$$
+$$(4x + 3)(x + 2) = 4x^{2} + 8x + 3x + 6 = 4x^{2} + 11x + 6$$
 
-分解 $6x^{2} + 13x + 6$，就是把这四项重新找回来。两个中间系数 $9$ 和 $4$ 的和是 $13$，积 $36$ 等于 $6 \\cdot 6$，即首项系数乘常数项。把 $13x$ 拆成 $9x + 4x$，得到的四项可以两两分组分解：$3x(2x + 3) + 2(2x + 3) = (3x + 2)(2x + 3)$。
+分解 $4x^{2} + 11x + 6$，就是把这四项重新找回来。两个中间系数 $8$ 和 $3$ 的和是 $11$，积 $24$ 等于 $4 \\cdot 6$，即首项系数乘常数项。把 $11x$ 拆成 $8x + 3x$，得到的四项可以两两分组分解：$4x(x + 2) + 3(x + 2) = (4x + 3)(x + 2)$。
 
 这节课我们用分组分解四项式，分解首项系数是质数的三项式，并使用 $ac$ 法。`,
   ),
@@ -1550,14 +1550,14 @@ export const furtherFactoringTrinomialsWithLeadingCoefficients: TopicDef = {
   xp: 15,
   standards: ["CCSS.HSA.SSE.A.2"],
   intro: t(
-    `The $ac$ method factors $ax^{2} + bx + c$, and taking out a common factor makes a trinomial simpler. Real problems often need both. In $12x^{2} + 2x - 4$ every coefficient is even; taking out $2$ first leaves $6x^{2} + x - 2$, with smaller numbers for the $ac$ method, and keeps the factor $2$ in front so the result is complete:
+    `The $ac$ method factors $ax^{2} + bx + c$, and taking out a common factor makes a trinomial simpler. Real problems often need both. In $6x^{2} + 15x + 6$ every coefficient is a multiple of $3$; taking out $3$ first leaves $2x^{2} + 5x + 2$, with smaller numbers for the $ac$ method, and keeps the factor $3$ in front so the result is complete:
 
-$$12x^{2} + 2x - 4 = 2(6x^{2} + x - 2) = 2(2x - 1)(3x + 2)$$
+$$6x^{2} + 15x + 6 = 3(2x^{2} + 5x + 2) = 3(2x + 1)(x + 2)$$
 
 In this lesson we take out a common factor first, take out a negative factor when the leading coefficient is negative, and factor trinomials in two variables.`,
-    `$ac$ 法能分解 $ax^{2} + bx + c$，提取公因式能让三项式变简单。实际问题常常两者都要用。在 $12x^{2} + 2x - 4$ 中各系数都是偶数；先提出 $2$，剩下 $6x^{2} + x - 2$，用 $ac$ 法时数更小，而且因数 $2$ 留在前面，结果才彻底：
+    `$ac$ 法能分解 $ax^{2} + bx + c$，提取公因式能让三项式变简单。实际问题常常两者都要用。在 $6x^{2} + 15x + 6$ 中各系数都是 $3$ 的倍数；先提出 $3$，剩下 $2x^{2} + 5x + 2$，用 $ac$ 法时数更小，而且因数 $3$ 留在前面，结果才彻底：
 
-$$12x^{2} + 2x - 4 = 2(6x^{2} + x - 2) = 2(2x - 1)(3x + 2)$$
+$$6x^{2} + 15x + 6 = 3(2x^{2} + 5x + 2) = 3(2x + 1)(x + 2)$$
 
 这节课我们先提取公因式，在首项系数为负时提出负因数，并分解含两个变量的三项式。`,
   ),

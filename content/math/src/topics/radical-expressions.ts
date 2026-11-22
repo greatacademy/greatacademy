@@ -88,24 +88,24 @@ export const squareRootsOfAlgebraicPerfectSquares: TopicDef = {
   xp: 10,
   standards: ["CCSS.HSN.RN.A.2"],
   intro: t(
-    `For numbers, $\\sqrt{49} = 7$ because $7^{2} = 49$: the square root of a number is the number that, squared, gives it back (the one that is not negative). The same question can be asked of an expression. What squared gives $x^{6}$?
+    `For numbers, $\\sqrt{81} = 9$ because $9^{2} = 81$: the square root of a number is the number that, squared, gives it back (the one that is not negative). The same question can be asked of an expression. What squared gives $x^{10}$?
 
-By the power rule, $(x^{3})^{2} = x^{3 \\cdot 2} = x^{6}$, so
+By the power rule, $(x^{5})^{2} = x^{5 \\cdot 2} = x^{10}$, so
 
-$$\\sqrt{x^{6}} = x^{3}.$$
+$$\\sqrt{x^{10}} = x^{5}.$$
 
-Squaring doubles an exponent, so taking a square root **halves** it. That is why only even powers are perfect squares. A coefficient is handled as before: $\\sqrt{49x^{6}} = 7x^{3}$, since $(7x^{3})^{2} = 49x^{6}$.
+Squaring doubles an exponent, so taking a square root **halves** it. That is why only even powers are perfect squares. A coefficient is handled as before: $\\sqrt{81x^{10}} = 9x^{5}$, since $(9x^{5})^{2} = 81x^{10}$.
 
-In this lesson every variable is positive, so the root $x^{3}$ is positive as a square root must be. (When a variable can be negative, an absolute value is needed; that is the next lesson.) We take square roots of monomials in one variable, then in several variables, then of fractions.`,
-    `对数来说，$\\sqrt{49} = 7$，因为 $7^{2} = 49$：一个数的平方根就是平方后能得回它的那个数（取不是负数的那一个）。对代数式也可以问同样的问题：什么式子平方后得到 $x^{6}$？
+In this lesson every variable is positive, so the root $x^{5}$ is positive as a square root must be. (When a variable can be negative, an absolute value is needed; that is the next lesson.) We take square roots of monomials in one variable, then in several variables, then of fractions.`,
+    `对数来说，$\\sqrt{81} = 9$，因为 $9^{2} = 81$：一个数的平方根就是平方后能得回它的那个数（取不是负数的那一个）。对代数式也可以问同样的问题：什么式子平方后得到 $x^{10}$？
 
-由幂的乘方法则，$(x^{3})^{2} = x^{3 \\cdot 2} = x^{6}$，所以
+由幂的乘方法则，$(x^{5})^{2} = x^{5 \\cdot 2} = x^{10}$，所以
 
-$$\\sqrt{x^{6}} = x^{3}.$$
+$$\\sqrt{x^{10}} = x^{5}.$$
 
-平方使指数加倍，所以开平方使指数**减半**。正因为如此，只有偶次幂才是完全平方。系数照以前的方法处理：$\\sqrt{49x^{6}} = 7x^{3}$，因为 $(7x^{3})^{2} = 49x^{6}$。
+平方使指数加倍，所以开平方使指数**减半**。正因为如此，只有偶次幂才是完全平方。系数照以前的方法处理：$\\sqrt{81x^{10}} = 9x^{5}$，因为 $(9x^{5})^{2} = 81x^{10}$。
 
-这节课中所有变量都是正数，所以 $x^{3}$ 是正数，符合平方根不为负的要求。（变量可以为负时需要加绝对值，那是下一节的内容。）我们先求单个变量的单项式的平方根，再求多个变量的，最后求分式的。`,
+这节课中所有变量都是正数，所以 $x^{5}$ 是正数，符合平方根不为负的要求。（变量可以为负时需要加绝对值，那是下一节的内容。）我们先求单个变量的单项式的平方根，再求多个变量的，最后求分式的。`,
   ),
   knowledgePoints: [
     {
@@ -531,18 +531,18 @@ export const cubeRootsOfAlgebraicPerfectCubes: TopicDef = {
   xp: 10,
   standards: ["CCSS.HSN.RN.A.2"],
   intro: t(
-    `The cube root undoes cubing: $\\sqrt[3]{8} = 2$ because $2^{3} = 8$. Square roots of monomials were found by halving exponents, since squaring doubles them. Cubing **triples** exponents, $(x^{4})^{3} = x^{4 \\cdot 3} = x^{12}$, so the cube root divides them by $3$:
+    `The cube root undoes cubing: $\\sqrt[3]{125} = 5$ because $5^{3} = 125$. Square roots of monomials were found by halving exponents, since squaring doubles them. Cubing **triples** exponents, $(x^{5})^{3} = x^{5 \\cdot 3} = x^{15}$, so the cube root divides them by $3$:
 
-$$\\sqrt[3]{x^{12}} = x^{4}.$$
+$$\\sqrt[3]{x^{15}} = x^{5}.$$
 
-Only powers whose exponent is a multiple of $3$ are perfect cubes. There is one pleasant difference from square roots: a negative number has a cube root, $\\sqrt[3]{-8} = -2$ because $(-2)^{3} = -8$, and cubing keeps the sign. So no absolute values are ever needed, and the variables may be any real numbers.
+Only powers whose exponent is a multiple of $3$ are perfect cubes. There is one pleasant difference from square roots: a negative number has a cube root, $\\sqrt[3]{-1000} = -10$ because $(-10)^{3} = -1000$, and cubing keeps the sign. So no absolute values are ever needed, and the variables may be any real numbers.
 
 In this lesson we take cube roots of monomials in one variable, then in several, then of fractions.`,
-    `开立方是立方的逆运算：$\\sqrt[3]{8} = 2$，因为 $2^{3} = 8$。求单项式的平方根时我们把指数减半，因为平方使指数加倍。立方使指数**变为三倍**，$(x^{4})^{3} = x^{4 \\cdot 3} = x^{12}$，所以开立方就把指数除以 $3$：
+    `开立方是立方的逆运算：$\\sqrt[3]{125} = 5$，因为 $5^{3} = 125$。求单项式的平方根时我们把指数减半，因为平方使指数加倍。立方使指数**变为三倍**，$(x^{5})^{3} = x^{5 \\cdot 3} = x^{15}$，所以开立方就把指数除以 $3$：
 
-$$\\sqrt[3]{x^{12}} = x^{4}.$$
+$$\\sqrt[3]{x^{15}} = x^{5}.$$
 
-只有指数是 $3$ 的倍数的幂才是完全立方。与平方根相比有一点不同：负数也有立方根，$\\sqrt[3]{-8} = -2$，因为 $(-2)^{3} = -8$，立方保留符号。所以永远不需要绝对值，变量可以取任意实数。
+只有指数是 $3$ 的倍数的幂才是完全立方。与平方根相比有一点不同：负数也有立方根，$\\sqrt[3]{-1000} = -10$，因为 $(-10)^{3} = -1000$，立方保留符号。所以永远不需要绝对值，变量可以取任意实数。
 
 这节课先求单个变量的单项式的立方根，再求多个变量的，最后求分式的。`,
   ),
@@ -940,7 +940,7 @@ $$\\sqrt{a} \\cdot \\sqrt{b} = \\sqrt{ab}.$$
 
 It holds because both sides are the non-negative number whose square is $ab$: $(\\sqrt{a} \\cdot \\sqrt{b})^{2} = (\\sqrt{a})^{2} (\\sqrt{b})^{2} = ab$. So two roots that are not simple on their own can be multiplied under one root, and the product may simplify. For instance, with $x$ positive,
 
-$$\\sqrt{6x} \\cdot \\sqrt{10x^{3}} = \\sqrt{60x^{4}} = \\sqrt{4x^{4}} \\cdot \\sqrt{15} = 2x^{2}\\sqrt{15}.$$
+$$\\sqrt{3x} \\cdot \\sqrt{15x^{3}} = \\sqrt{45x^{4}} = \\sqrt{9x^{4}} \\cdot \\sqrt{5} = 3x^{2}\\sqrt{5}.$$
 
 In this lesson we multiply square roots, roots with coefficients in front, cube roots, and finally distribute a root over a sum. All variables under square roots are positive.`,
     `乘法法则 $\\sqrt{ab} = \\sqrt{a} \\cdot \\sqrt{b}$ 以前用来把根式拆开。从右往左读，它把两个根式合成一个：
@@ -949,7 +949,7 @@ $$\\sqrt{a} \\cdot \\sqrt{b} = \\sqrt{ab}.$$
 
 它成立，是因为两边都是平方等于 $ab$ 的那个非负数：$(\\sqrt{a} \\cdot \\sqrt{b})^{2} = (\\sqrt{a})^{2} (\\sqrt{b})^{2} = ab$。所以两个本身不能化简的根式，可以乘到一个根号下，乘积也许就能化简。例如 $x$ 为正时，
 
-$$\\sqrt{6x} \\cdot \\sqrt{10x^{3}} = \\sqrt{60x^{4}} = \\sqrt{4x^{4}} \\cdot \\sqrt{15} = 2x^{2}\\sqrt{15}.$$
+$$\\sqrt{3x} \\cdot \\sqrt{15x^{3}} = \\sqrt{45x^{4}} = \\sqrt{9x^{4}} \\cdot \\sqrt{5} = 3x^{2}\\sqrt{5}.$$
 
 这节课计算平方根的乘法、带系数的根式的乘法、立方根的乘法，最后用分配律把根式乘进和式。平方根号下的变量都是正数。`,
   ),
@@ -1171,7 +1171,7 @@ $$\\sqrt{\\frac{a}{b}} = \\frac{\\sqrt{a}}{\\sqrt{b}},$$
 
 because the right side is not negative and its square is $\\frac{(\\sqrt{a})^{2}}{(\\sqrt{b})^{2}} = \\frac{a}{b}$. This **quotient rule** works in both directions. Read from right to left, it puts a quotient of two roots under one root, where the division can be done:
 
-$$\\frac{\\sqrt{54x^{5}}}{\\sqrt{2x}} = \\sqrt{\\frac{54x^{5}}{2x}} = \\sqrt{27x^{4}} = 3x^{2}\\sqrt{3}.$$
+$$\\frac{\\sqrt{40x^{5}}}{\\sqrt{2x}} = \\sqrt{\\frac{40x^{5}}{2x}} = \\sqrt{20x^{4}} = 2x^{2}\\sqrt{5}.$$
 
 Read from left to right, it splits the root of a fraction into a root on top and a root below, each simplified on its own. In this lesson we divide roots, take roots of fractions, and reduce a fraction under the root before taking its root. All variables are positive.`,
     `乘法法则用来合并和拆开乘积的根式。商的根式也一样：当 $a \\ge 0$，$b > 0$ 时，
@@ -1180,7 +1180,7 @@ $$\\sqrt{\\frac{a}{b}} = \\frac{\\sqrt{a}}{\\sqrt{b}},$$
 
 因为右边不是负数，并且它的平方是 $\\frac{(\\sqrt{a})^{2}}{(\\sqrt{b})^{2}} = \\frac{a}{b}$。这条**除法法则**两个方向都能用。从右往左读，它把两个根式的商放到一个根号下，在那里做除法：
 
-$$\\frac{\\sqrt{54x^{5}}}{\\sqrt{2x}} = \\sqrt{\\frac{54x^{5}}{2x}} = \\sqrt{27x^{4}} = 3x^{2}\\sqrt{3}.$$
+$$\\frac{\\sqrt{40x^{5}}}{\\sqrt{2x}} = \\sqrt{\\frac{40x^{5}}{2x}} = \\sqrt{20x^{4}} = 2x^{2}\\sqrt{5}.$$
 
 从左往右读，它把分式的根式拆成分子的根式和分母的根式，分别化简。这节课先做根式的除法，再求分式的平方根，最后先在根号下约分再开方。所有变量都是正数。`,
   ),
@@ -1959,12 +1959,12 @@ export const rationalizingAlgebraicDenominators: TopicDef = {
   intro: t(
     `A simplified radical expression has no root in its denominator. With numbers we removed one by multiplying the top and the bottom by the root, as in $\\frac{1}{\\sqrt{2}} = \\frac{\\sqrt{2}}{2}$; this multiplies by $1$, so the value does not change, and $\\sqrt{2} \\cdot \\sqrt{2} = 2$ has no root. The same works when the root contains variables, because $\\sqrt{u} \\cdot \\sqrt{u} = u$ for every $u > 0$:
 
-$$\\frac{6}{\\sqrt{3x}} = \\frac{6 \\cdot \\sqrt{3x}}{\\sqrt{3x} \\cdot \\sqrt{3x}} = \\frac{6\\sqrt{3x}}{3x} = \\frac{2\\sqrt{3x}}{x}.$$
+$$\\frac{10}{\\sqrt{5x}} = \\frac{10 \\cdot \\sqrt{5x}}{\\sqrt{5x} \\cdot \\sqrt{5x}} = \\frac{10\\sqrt{5x}}{5x} = \\frac{2\\sqrt{5x}}{x}.$$
 
 In this lesson we rationalize a single root in the denominator, roots of fractions, and denominators with higher powers, which are simplified first. All variables are positive.`,
     `化简后的根式，分母中不含根式。对数字，我们把分子和分母同乘以这个根式来去掉它，例如 $\\frac{1}{\\sqrt{2}} = \\frac{\\sqrt{2}}{2}$；这相当于乘以 $1$，值不变，而 $\\sqrt{2} \\cdot \\sqrt{2} = 2$ 不含根式。根号里含变量时也一样，因为对每个 $u > 0$ 都有 $\\sqrt{u} \\cdot \\sqrt{u} = u$：
 
-$$\\frac{6}{\\sqrt{3x}} = \\frac{6 \\cdot \\sqrt{3x}}{\\sqrt{3x} \\cdot \\sqrt{3x}} = \\frac{6\\sqrt{3x}}{3x} = \\frac{2\\sqrt{3x}}{x}.$$
+$$\\frac{10}{\\sqrt{5x}} = \\frac{10 \\cdot \\sqrt{5x}}{\\sqrt{5x} \\cdot \\sqrt{5x}} = \\frac{10\\sqrt{5x}}{5x} = \\frac{2\\sqrt{5x}}{x}.$$
 
 这节课先把分母中的单个根式有理化，再处理分式的平方根，最后处理分母中含高次幂、需要先化简的情形。所有变量都是正数。`,
   ),
@@ -2159,16 +2159,16 @@ export const rationalizingTwoTermDenominators: TopicDef = {
   xp: 16,
   standards: ["CCSS.HSN.RN.A.2"],
   intro: t(
-    `A single root in a denominator is removed by multiplying by the same root. That fails for two terms: $(3 - \\sqrt{5})(3 - \\sqrt{5}) = 14 - 6\\sqrt{5}$ still has a root. The difference of squares, $(a + b)(a - b) = a^{2} - b^{2}$, gives a better factor. Changing the sign between the two terms and multiplying squares each term, so the roots go away:
+    `A single root in a denominator is removed by multiplying by the same root. That fails for two terms: $(4 - \\sqrt{7})(4 - \\sqrt{7}) = 23 - 8\\sqrt{7}$ still has a root. The difference of squares, $(a + b)(a - b) = a^{2} - b^{2}$, gives a better factor. Changing the sign between the two terms and multiplying squares each term, so the roots go away:
 
-$$(3 - \\sqrt{5})(3 + \\sqrt{5}) = 3^{2} - (\\sqrt{5})^{2} = 9 - 5 = 4.$$
+$$(4 - \\sqrt{7})(4 + \\sqrt{7}) = 4^{2} - (\\sqrt{7})^{2} = 16 - 7 = 9.$$
 
-So $\\frac{8}{3 - \\sqrt{5}} = \\frac{8(3 + \\sqrt{5})}{4} = 6 + 2\\sqrt{5}$. In this lesson we multiply such pairs, called conjugates, and use them to rationalize denominators of the forms $a + \\sqrt{b}$ and $\\sqrt{a} + \\sqrt{b}$.`,
-    `分母中只有一个根式时，乘以同一个根式就能去掉它。分母是两项时这样做不行：$(3 - \\sqrt{5})(3 - \\sqrt{5}) = 14 - 6\\sqrt{5}$ 仍含根式。平方差公式 $(a + b)(a - b) = a^{2} - b^{2}$ 给出了更好的乘数。把两项之间的符号改变后相乘，每一项都被平方，根式就消失了：
+So $\\frac{18}{4 - \\sqrt{7}} = \\frac{18(4 + \\sqrt{7})}{9} = 8 + 2\\sqrt{7}$. In this lesson we multiply such pairs, called conjugates, and use them to rationalize denominators of the forms $a + \\sqrt{b}$ and $\\sqrt{a} + \\sqrt{b}$.`,
+    `分母中只有一个根式时，乘以同一个根式就能去掉它。分母是两项时这样做不行：$(4 - \\sqrt{7})(4 - \\sqrt{7}) = 23 - 8\\sqrt{7}$ 仍含根式。平方差公式 $(a + b)(a - b) = a^{2} - b^{2}$ 给出了更好的乘数。把两项之间的符号改变后相乘，每一项都被平方，根式就消失了：
 
-$$(3 - \\sqrt{5})(3 + \\sqrt{5}) = 3^{2} - (\\sqrt{5})^{2} = 9 - 5 = 4.$$
+$$(4 - \\sqrt{7})(4 + \\sqrt{7}) = 4^{2} - (\\sqrt{7})^{2} = 16 - 7 = 9.$$
 
-所以 $\\frac{8}{3 - \\sqrt{5}} = \\frac{8(3 + \\sqrt{5})}{4} = 6 + 2\\sqrt{5}$。这节课先计算这样成对的式子，即共轭式的乘积，再用它们把形如 $a + \\sqrt{b}$ 和 $\\sqrt{a} + \\sqrt{b}$ 的分母有理化。`,
+所以 $\\frac{18}{4 - \\sqrt{7}} = \\frac{18(4 + \\sqrt{7})}{9} = 8 + 2\\sqrt{7}$。这节课先计算这样成对的式子，即共轭式的乘积，再用它们把形如 $a + \\sqrt{b}$ 和 $\\sqrt{a} + \\sqrt{b}$ 的分母有理化。`,
   ),
   knowledgePoints: [
     {
@@ -2338,16 +2338,16 @@ export const furtherRationalizingDenominators: TopicDef = {
   xp: 16,
   standards: ["CCSS.HSN.RN.A.2"],
   intro: t(
-    `Conjugates removed roots from denominators like $3 - \\sqrt{5}$, because $(a - b)(a + b) = a^{2} - b^{2}$ squares each term. Nothing in that argument needs the terms to be numbers, so it also works when the roots contain variables. For $x > 0$:
+    `Conjugates removed roots from denominators like $4 - \\sqrt{7}$, because $(a - b)(a + b) = a^{2} - b^{2}$ squares each term. Nothing in that argument needs the terms to be numbers, so it also works when the roots contain variables. For $x > 0$:
 
-$$(\\sqrt{x} - 3)(\\sqrt{x} + 3) = (\\sqrt{x})^{2} - 3^{2} = x - 9.$$
+$$(\\sqrt{x} - 4)(\\sqrt{x} + 4) = (\\sqrt{x})^{2} - 4^{2} = x - 16.$$
 
-Cube roots need a different factor. Since $\\sqrt[3]{u} \\cdot \\sqrt[3]{u} = \\sqrt[3]{u^{2}}$ is usually not a cube, we multiply instead by whatever completes a perfect cube under the root: $\\sqrt[3]{2x} \\cdot \\sqrt[3]{4x^{2}} = \\sqrt[3]{8x^{3}} = 2x$. In this lesson we use conjugates with variables, conjugates of two roots with variables, and the cube-completing factor.`,
-    `共轭式能去掉 $3 - \\sqrt{5}$ 这样的分母中的根式，因为 $(a - b)(a + b) = a^{2} - b^{2}$ 把每一项都平方了。这个道理并不要求这两项是数，所以根号里含变量时同样成立。当 $x > 0$ 时：
+Cube roots need a different factor. Since $\\sqrt[3]{u} \\cdot \\sqrt[3]{u} = \\sqrt[3]{u^{2}}$ is usually not a cube, we multiply instead by whatever completes a perfect cube under the root: $\\sqrt[3]{3x} \\cdot \\sqrt[3]{9x^{2}} = \\sqrt[3]{27x^{3}} = 3x$. In this lesson we use conjugates with variables, conjugates of two roots with variables, and the cube-completing factor.`,
+    `共轭式能去掉 $4 - \\sqrt{7}$ 这样的分母中的根式，因为 $(a - b)(a + b) = a^{2} - b^{2}$ 把每一项都平方了。这个道理并不要求这两项是数，所以根号里含变量时同样成立。当 $x > 0$ 时：
 
-$$(\\sqrt{x} - 3)(\\sqrt{x} + 3) = (\\sqrt{x})^{2} - 3^{2} = x - 9.$$
+$$(\\sqrt{x} - 4)(\\sqrt{x} + 4) = (\\sqrt{x})^{2} - 4^{2} = x - 16.$$
 
-立方根需要另一种乘数。由于 $\\sqrt[3]{u} \\cdot \\sqrt[3]{u} = \\sqrt[3]{u^{2}}$ 一般不是立方，我们改乘能把根号下补成完全立方的因式：$\\sqrt[3]{2x} \\cdot \\sqrt[3]{4x^{2}} = \\sqrt[3]{8x^{3}} = 2x$。这节课依次处理含变量的共轭式、两个含变量根式的共轭式，以及补成立方的乘数。`,
+立方根需要另一种乘数。由于 $\\sqrt[3]{u} \\cdot \\sqrt[3]{u} = \\sqrt[3]{u^{2}}$ 一般不是立方，我们改乘能把根号下补成完全立方的因式：$\\sqrt[3]{3x} \\cdot \\sqrt[3]{9x^{2}} = \\sqrt[3]{27x^{3}} = 3x$。这节课依次处理含变量的共轭式、两个含变量根式的共轭式，以及补成立方的乘数。`,
   ),
   knowledgePoints: [
     {

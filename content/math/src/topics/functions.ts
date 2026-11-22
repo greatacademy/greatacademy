@@ -781,6 +781,14 @@ const sampleGraph: readonly Point[] = [
   [5, 0],
 ];
 
+/** temperatureGraph is the temperature through (−5, 2), (−2, −2), (1, 5), (4, 1) that the introductions of graphs read from. */
+const temperatureGraph: readonly Point[] = [
+  [-5, 2],
+  [-2, -2],
+  [1, 5],
+  [4, 1],
+];
+
 export const graphsOfFunctions: TopicDef = {
   id: "graphs-of-functions",
   title: t("Graphs of Functions", "函数的图象"),
@@ -1092,22 +1100,22 @@ export const domainOfAFunction: TopicDef = {
   xp: 16,
   standards: ["CCSS.HSF.IF.A.1", "CCSS.HSF.IF.B.5"],
   intro: t(
-    `A function gives each input one output, but not every number has to be an input. Try a few inputs in $g(x) = \\sqrt{x + 3}$:
+    `A function gives each input one output, but not every number has to be an input. Try a few inputs in $g(x) = \\sqrt{x - 2}$:
 
-$$g(1) = \\sqrt{4} = 2, \\qquad g(-3) = \\sqrt{0} = 0, \\qquad g(-4) = \\sqrt{-1}\\ ?$$
+$$g(6) = \\sqrt{4} = 2, \\qquad g(2) = \\sqrt{0} = 0, \\qquad g(1) = \\sqrt{-1}\\ ?$$
 
-There is no real number whose square is $-1$, so $g(-4)$ does not exist: $-4$ is not an allowed input. The inputs that work are exactly those with $x + 3 \\ge 0$, that is $x \\ge -3$. The set of allowed inputs of a function is its **domain**; here it is $[-3, \\infty)$.
+There is no real number whose square is $-1$, so $g(1)$ does not exist: $1$ is not an allowed input. The inputs that work are exactly those with $x - 2 \\ge 0$, that is $x \\ge 2$. The set of allowed inputs of a function is its **domain**; here it is $[2, \\infty)$.
 
 On the graph the domain is easy to see. Each input $x$ that works gives a point $(x, g(x))$ above or below it, so the domain is the part of the $x$-axis that the graph covers, its shadow on the axis:
 
 {{figure 0}}
 
 Knowing the domain tells us which questions about a function make sense. In this lesson we find domains from sets of pairs, from graphs and from formulas, and write them in interval notation.`,
-    `函数给每个输入一个输出，但并不是每个数都必须是输入。在 $g(x) = \\sqrt{x + 3}$ 中试几个输入：
+    `函数给每个输入一个输出，但并不是每个数都必须是输入。在 $g(x) = \\sqrt{x - 2}$ 中试几个输入：
 
-$$g(1) = \\sqrt{4} = 2, \\qquad g(-3) = \\sqrt{0} = 0, \\qquad g(-4) = \\sqrt{-1}\\ ?$$
+$$g(6) = \\sqrt{4} = 2, \\qquad g(2) = \\sqrt{0} = 0, \\qquad g(1) = \\sqrt{-1}\\ ?$$
 
-没有哪个实数的平方是 $-1$，所以 $g(-4)$ 不存在：$-4$ 不是允许的输入。能用的输入恰好是满足 $x + 3 \\ge 0$ 的数，即 $x \\ge -3$。函数所有允许的输入组成的集合叫做它的**定义域**；这里是 $[-3, \\infty)$。
+没有哪个实数的平方是 $-1$，所以 $g(1)$ 不存在：$1$ 不是允许的输入。能用的输入恰好是满足 $x - 2 \\ge 0$ 的数，即 $x \\ge 2$。函数所有允许的输入组成的集合叫做它的**定义域**；这里是 $[2, \\infty)$。
 
 在图象上，定义域一目了然。每个能用的输入 $x$ 在它的正上方或正下方给出一个点 $(x, g(x))$，所以定义域就是图象覆盖的那部分 $x$ 轴，即图象在 $x$ 轴上的"影子"：
 
@@ -1118,13 +1126,13 @@ $$g(1) = \\sqrt{4} = 2, \\qquad g(-3) = \\sqrt{0} = 0, \\qquad g(-4) = \\sqrt{-1
   introFigures: [
     {
       svg: plane(view, [
-        { kind: "curve", f: (x) => Math.sqrt(x + 3), from: -3, accent: true },
-        { kind: "point", at: [-3, 0], accent: true },
-        ...onAxis("x", union(iv(-3, undefined)), 6),
+        { kind: "curve", f: (x) => Math.sqrt(x - 2), from: 2, accent: true },
+        { kind: "point", at: [2, 0], accent: true },
+        ...onAxis("x", union(iv(2, undefined)), 6),
       ]),
       alt: t(
-        "The graph of g(x) = √(x + 3), starting at (−3, 0) and rising to the right; its shadow on the x-axis, from −3 to the right, is marked.",
-        "g(x) = √(x + 3) 的图象，从 (−3, 0) 出发向右上升；它在 x 轴上的影子，从 −3 向右，已标出。",
+        "The graph of g(x) = √(x − 2), starting at (2, 0) and rising to the right; its shadow on the x-axis, from 2 to the right, is marked.",
+        "g(x) = √(x − 2) 的图象，从 (2, 0) 出发向右上升；它在 x 轴上的影子，从 2 向右，已标出。",
       ),
     },
   ],
@@ -1826,25 +1834,25 @@ export const globalExtrema: TopicDef = {
   intro: t(
     `On the graph of a function, the height of the point above or below each input is its output. So questions about the **largest** and **smallest** outputs become questions about the highest and lowest points of the graph.
 
-Suppose $f$ records the temperature, in degrees, $x$ hours after midnight, and its graph runs through $(-4, 1)$, $(-1, 4)$, $(2, -3)$ and $(5, 0)$. The highest point is $(-1, 4)$ and the lowest is $(2, -3)$:
+Suppose $f$ records the temperature, in degrees, $x$ hours after midnight, and its graph runs through $(-5, 2)$, $(-2, -2)$, $(1, 5)$ and $(4, 1)$. The highest point is $(1, 5)$ and the lowest is $(-2, -2)$:
 
 {{figure 0}}
 
-So the largest output, the **maximum value** of $f$, is $4$, reached at $x = -1$; the smallest output, the **minimum value**, is $-3$, reached at $x = 2$. Together they are called the **global extrema** of $f$. They answer everyday questions such as "how hot did it get, and when?" In this lesson we read maximum and minimum values off graphs, find where they occur, and see why some functions have no maximum or no minimum at all.`,
+So the largest output, the **maximum value** of $f$, is $5$, reached at $x = 1$; the smallest output, the **minimum value**, is $-2$, reached at $x = -2$. Together they are called the **global extrema** of $f$. They answer everyday questions such as "how hot did it get, and when?" In this lesson we read maximum and minimum values off graphs, find where they occur, and see why some functions have no maximum or no minimum at all.`,
     `在函数的图象上，每个输入正上方或正下方那个点的高度就是它的输出。所以关于**最大**和**最小**输出的问题，就变成了关于图象最高点和最低点的问题。
 
-假设 $f$ 记录午夜后 $x$ 小时的气温（单位：度），它的图象经过 $(-4, 1)$、$(-1, 4)$、$(2, -3)$ 和 $(5, 0)$。最高点是 $(-1, 4)$，最低点是 $(2, -3)$：
+假设 $f$ 记录午夜后 $x$ 小时的气温（单位：度），它的图象经过 $(-5, 2)$、$(-2, -2)$、$(1, 5)$ 和 $(4, 1)$。最高点是 $(1, 5)$，最低点是 $(-2, -2)$：
 
 {{figure 0}}
 
-所以最大的输出，即 $f$ 的**最大值**，是 $4$，在 $x = -1$ 处取得；最小的输出，即**最小值**，是 $-3$，在 $x = 2$ 处取得。它们统称为 $f$ 的**最值**。最值回答的是"最热时有多热、在什么时候"这类日常问题。这节课先从图象读出最大值和最小值，再找出取得最值的位置，最后看看为什么有些函数根本没有最大值或最小值。`,
+所以最大的输出，即 $f$ 的**最大值**，是 $5$，在 $x = 1$ 处取得；最小的输出，即**最小值**，是 $-2$，在 $x = -2$ 处取得。它们统称为 $f$ 的**最值**。最值回答的是"最热时有多热、在什么时候"这类日常问题。这节课先从图象读出最大值和最小值，再找出取得最值的位置，最后看看为什么有些函数根本没有最大值或最小值。`,
   ),
   introFigures: [
     {
-      svg: plane(view, [...pieceMarks([{ pts: sampleGraph }]), ...guides([-1, 4], "(−1, 4)"), ...guides([2, -3], "(2, −3)")]),
+      svg: plane(view, [...pieceMarks([{ pts: temperatureGraph }]), ...guides([1, 5], "(1, 5)"), ...guides([-2, -2], "(−2, −2)")]),
       alt: t(
-        "A graph through (−4, 1), (−1, 4), (2, −3), (5, 0). Its highest point (−1, 4) and lowest point (2, −3) are marked, with dashed guides to both axes.",
-        "经过 (−4, 1)、(−1, 4)、(2, −3)、(5, 0) 的图象。标出了最高点 (−1, 4) 和最低点 (2, −3)，并有到两条坐标轴的虚线。",
+        "A graph through (−5, 2), (−2, −2), (1, 5), (4, 1). Its highest point (1, 5) and lowest point (−2, −2) are marked, with dashed guides to both axes.",
+        "经过 (−5, 2)、(−2, −2)、(1, 5)、(4, 1) 的图象。标出了最高点 (1, 5) 和最低点 (−2, −2)，并有到两条坐标轴的虚线。",
       ),
     },
   ],
@@ -2274,25 +2282,25 @@ export const rangeOfAFunction: TopicDef = {
   intro: t(
     `The domain of a function is the set of its **inputs**: on a graph, the stretch of the $x$-axis the graph lies over. The other half of the picture is the set of its **outputs**, called the **range**: on a graph, the stretch of the $y$-axis the graph covers, from its lowest point to its highest.
 
-Take again the temperature $f$, $x$ hours after midnight, whose graph runs through $(-4, 1)$, $(-1, 4)$, $(2, -3)$ and $(5, 0)$. Its domain is $[-4, 5]$, the hours it was recorded. Its lowest point is at height $-3$ and its highest at height $4$, and the unbroken graph passes every height between, so the temperatures it took are exactly $[-3, 4]$:
+Take again the temperature $f$, $x$ hours after midnight, whose graph runs through $(-5, 2)$, $(-2, -2)$, $(1, 5)$ and $(4, 1)$. Its domain is $[-5, 4]$, the hours it was recorded. Its lowest point is at height $-2$ and its highest at height $5$, and the unbroken graph passes every height between, so the temperatures it took are exactly $[-2, 5]$:
 
 {{figure 0}}
 
-The range tells you which outputs can happen at all: here, the temperature never went above $4$ or below $-3$. In this lesson we find ranges from lists of pairs, from graphs, and from a linear formula with a restricted domain.`,
+The range tells you which outputs can happen at all: here, the temperature never went above $5$ or below $-2$. In this lesson we find ranges from lists of pairs, from graphs, and from a linear formula with a restricted domain.`,
     `函数的定义域是所有**输入**组成的集合：在图象上，就是图象下方覆盖的那一段 $x$ 轴。另一半是所有**输出**组成的集合，叫做**值域**：在图象上，就是图象从下到上覆盖的那一段 $y$ 轴。
 
-再看午夜后 $x$ 小时的气温 $f$，它的图象经过 $(-4, 1)$、$(-1, 4)$、$(2, -3)$ 和 $(5, 0)$。它的定义域是记录气温的时段 $[-4, 5]$。它的最低点高度是 $-3$，最高点高度是 $4$，而连续不断的图象经过两者之间的每一个高度，所以气温取到的值恰好是 $[-3, 4]$：
+再看午夜后 $x$ 小时的气温 $f$，它的图象经过 $(-5, 2)$、$(-2, -2)$、$(1, 5)$ 和 $(4, 1)$。它的定义域是记录气温的时段 $[-5, 4]$。它的最低点高度是 $-2$，最高点高度是 $5$，而连续不断的图象经过两者之间的每一个高度，所以气温取到的值恰好是 $[-2, 5]$：
 
 {{figure 0}}
 
-值域告诉我们哪些输出可能出现：这里气温从未高于 $4$，也从未低于 $-3$。这节课分别由数对、图象以及限制了定义域的一次函数公式求值域。`,
+值域告诉我们哪些输出可能出现：这里气温从未高于 $5$，也从未低于 $-2$。这节课分别由数对、图象以及限制了定义域的一次函数公式求值域。`,
   ),
   introFigures: [
     {
-      svg: plane(view, [...pieceMarks([{ pts: sampleGraph }]), ...onAxis("y", union(iv(-3, 4)), 6)]),
+      svg: plane(view, [...pieceMarks([{ pts: temperatureGraph }]), ...onAxis("y", union(iv(-2, 5)), 6)]),
       alt: t(
-        "A graph through (−4, 1), (−1, 4), (2, −3), (5, 0). The part of the y-axis from −3 to 4, the heights it covers, is marked.",
-        "经过 (−4, 1)、(−1, 4)、(2, −3)、(5, 0) 的图象。y 轴上从 −3 到 4 的一段，即它覆盖的高度，被标了出来。",
+        "A graph through (−5, 2), (−2, −2), (1, 5), (4, 1). The part of the y-axis from −2 to 5, the heights it covers, is marked.",
+        "经过 (−5, 2)、(−2, −2)、(1, 5)、(4, 1) 的图象。y 轴上从 −2 到 5 的一段，即它覆盖的高度，被标了出来。",
       ),
     },
   ],
@@ -2572,22 +2580,22 @@ export const rangeAdvancedCases: TopicDef = {
   intro: t(
     `So far the range has been read from one unbroken graph: from its lowest point to its highest. Two kinds of function need more care.
 
-A graph can come in **pieces**. Here one piece climbs from height $-4$ to $-1$ and another from $2$ to $5$:
+A graph can come in **pieces**. Here one piece climbs from height $-3$ to $0$ and another from $2$ to $4$:
 
 {{figure 0}}
 
-No point of the graph has a height between $-1$ and $2$, so the range is not $[-4, 5]$ but two intervals joined, $[-4, -1] \\cup [2, 5]$.
+No point of the graph has a height between $0$ and $2$, so the range is not $[-3, 4]$ but two intervals joined, $[-3, 0] \\cup [2, 4]$.
 
-A formula can also hide its lowest or highest value. In $f(x) = (x - 3)^{2} + 2$ the square is never negative and is $0$ at $x = 3$, so $f$ is never below $2$ and reaches $2$: its range is $[2, \\infty)$, found without drawing anything. In this lesson we find ranges of graphs in pieces and of functions built from squares and square roots.`,
+A formula can also hide its lowest or highest value. In $f(x) = (x - 4)^{2} + 1$ the square is never negative and is $0$ at $x = 4$, so $f$ is never below $1$ and reaches $1$: its range is $[1, \\infty)$, found without drawing anything. In this lesson we find ranges of graphs in pieces and of functions built from squares and square roots.`,
     `到目前为止，值域都是从一条连续不断的图象读出的：从最低点到最高点。有两类函数需要更仔细。
 
-图象可以由**几段**组成。下图中一段从高度 $-4$ 升到 $-1$，另一段从 $2$ 升到 $5$：
+图象可以由**几段**组成。下图中一段从高度 $-3$ 升到 $0$，另一段从 $2$ 升到 $4$：
 
 {{figure 0}}
 
-图象上没有任何点的高度在 $-1$ 和 $2$ 之间，所以值域不是 $[-4, 5]$，而是两个区间的并 $[-4, -1] \\cup [2, 5]$。
+图象上没有任何点的高度在 $0$ 和 $2$ 之间，所以值域不是 $[-3, 4]$，而是两个区间的并 $[-3, 0] \\cup [2, 4]$。
 
-公式也可能把最小值或最大值藏起来。在 $f(x) = (x - 3)^{2} + 2$ 中，平方永远不是负数，并且在 $x = 3$ 时为 $0$，所以 $f$ 不会小于 $2$，又能取到 $2$：它的值域是 $[2, \\infty)$，不用画图就能求出。这节课求分段图象的值域，以及由平方和平方根构成的函数的值域。`,
+公式也可能把最小值或最大值藏起来。在 $f(x) = (x - 4)^{2} + 1$ 中，平方永远不是负数，并且在 $x = 4$ 时为 $0$，所以 $f$ 不会小于 $1$，又能取到 $1$：它的值域是 $[1, \\infty)$，不用画图就能求出。这节课求分段图象的值域，以及由平方和平方根构成的函数的值域。`,
   ),
   introFigures: [
     {
@@ -2595,22 +2603,22 @@ A formula can also hide its lowest or highest value. In $f(x) = (x - 3)^{2} + 2$
         ...pieceMarks([
           {
             pts: [
-              [-5, -4],
-              [-2, -1],
+              [-5, -3],
+              [-2, 0],
             ],
           },
           {
             pts: [
               [1, 2],
-              [4, 5],
+              [3, 4],
             ],
           },
         ]),
-        ...onAxis("y", union(iv(-4, -1), iv(2, 5)), 6),
+        ...onAxis("y", union(iv(-3, 0), iv(2, 4)), 6),
       ]),
       alt: t(
-        "Two segments: from (−5, −4) to (−2, −1), and from (1, 2) to (4, 5), with filled dots at the ends. The y-axis is marked from −4 to −1 and from 2 to 5, with a gap between −1 and 2.",
-        "两条线段：从 (−5, −4) 到 (−2, −1)，以及从 (1, 2) 到 (4, 5)，端点都是实心点。y 轴上从 −4 到 −1 和从 2 到 5 被标出，−1 与 2 之间有空隙。",
+        "Two segments: from (−5, −3) to (−2, 0), and from (1, 2) to (3, 4), with filled dots at the ends. The y-axis is marked from −3 to 0 and from 2 to 4, with a gap between 0 and 2.",
+        "两条线段：从 (−5, −3) 到 (−2, 0)，以及从 (1, 2) 到 (3, 4)，端点都是实心点。y 轴上从 −3 到 0 和从 2 到 4 被标出，0 与 2 之间有空隙。",
       ),
     },
   ],
@@ -3070,30 +3078,29 @@ export const increasingAndDecreasing: TopicDef = {
   intro: t(
     `A line with positive slope goes up from left to right, and one with negative slope goes down. Most graphs do both: they rise in some places and fall in others, and describing **where** is one of the most useful things to know about a function.
 
-Take again the temperature $f$, $x$ hours after midnight, whose graph runs through $(-4, 1)$, $(-1, 4)$, $(2, -3)$ and $(5, 0)$. Read left to right: it warms from $x = -4$ to $x = -1$, cools from $x = -1$ to $x = 2$, and warms again from $x = 2$ to $x = 5$:
+Take again the temperature $f$, $x$ hours after midnight, whose graph runs through $(-5, 2)$, $(-2, -2)$, $(1, 5)$ and $(4, 1)$. Read left to right: it cools from $x = -5$ to $x = -2$, warms from $x = -2$ to $x = 1$, and cools again from $x = 1$ to $x = 4$:
 
 {{figure 0}}
 
-We say $f$ is **increasing** on $(-4, -1) \\cup (2, 5)$, the hours marked on the $x$-axis, and **decreasing** on $(-1, 2)$. These are sets of inputs, the times, not of temperatures. In this lesson we read such intervals off graphs and decide the direction of a linear function from its formula.`,
+We say $f$ is **increasing** on $(-2, 1)$, the hours marked on the $x$-axis, and **decreasing** on $(-5, -2) \\cup (1, 4)$. These are sets of inputs, the times, not of temperatures. In this lesson we read such intervals off graphs and decide the direction of a linear function from its formula.`,
     `斜率为正的直线从左往右上升，斜率为负的直线从左往右下降。大多数图象两者兼有：有些地方上升，有些地方下降，而说清楚在**哪里**上升、哪里下降，是了解一个函数最有用的信息之一。
 
-再看午夜后 $x$ 小时的气温 $f$，它的图象经过 $(-4, 1)$、$(-1, 4)$、$(2, -3)$ 和 $(5, 0)$。从左往右读：从 $x = -4$ 到 $x = -1$ 气温上升，从 $x = -1$ 到 $x = 2$ 下降，从 $x = 2$ 到 $x = 5$ 又上升：
+再看午夜后 $x$ 小时的气温 $f$，它的图象经过 $(-5, 2)$、$(-2, -2)$、$(1, 5)$ 和 $(4, 1)$。从左往右读：从 $x = -5$ 到 $x = -2$ 气温下降，从 $x = -2$ 到 $x = 1$ 上升，从 $x = 1$ 到 $x = 4$ 又下降：
 
 {{figure 0}}
 
-我们说 $f$ 在 $(-4, -1) \\cup (2, 5)$ 上**递增**（即 $x$ 轴上标出的时段），在 $(-1, 2)$ 上**递减**。这些是输入（时间）的集合，而不是气温的集合。这节课从图象读出这样的区间，并由一次函数的公式判断它的增减。`,
+我们说 $f$ 在 $(-2, 1)$ 上**递增**（即 $x$ 轴上标出的时段），在 $(-5, -2) \\cup (1, 4)$ 上**递减**。这些是输入（时间）的集合，而不是气温的集合。这节课从图象读出这样的区间，并由一次函数的公式判断它的增减。`,
   ),
   introFigures: [
     {
       svg: plane(view, [
-        ...pieceMarks([{ pts: sampleGraph }]),
-        stretchOf(sampleGraph, -4, -1),
-        stretchOf(sampleGraph, 2, 5),
-        ...onAxis("x", union(iv(-4, -1, false, false), iv(2, 5, false, false)), 6),
+        ...pieceMarks([{ pts: temperatureGraph }]),
+        stretchOf(temperatureGraph, -2, 1),
+        ...onAxis("x", union(iv(-2, 1, false, false)), 6),
       ]),
       alt: t(
-        "A graph through (−4, 1), (−1, 4), (2, −3), (5, 0). The rising parts, from x = −4 to −1 and from x = 2 to 5, are highlighted, and the x-axis is marked on (−4, −1) and (2, 5).",
-        "经过 (−4, 1)、(−1, 4)、(2, −3)、(5, 0) 的图象。上升的部分（从 x = −4 到 −1，以及从 x = 2 到 5）被突出显示，x 轴上标出了 (−4, −1) 和 (2, 5)。",
+        "A graph through (−5, 2), (−2, −2), (1, 5), (4, 1). The rising part, from x = −2 to 1, is highlighted, and the x-axis is marked on (−2, 1).",
+        "经过 (−5, 2)、(−2, −2)、(1, 5)、(4, 1) 的图象。上升的部分（从 x = −2 到 1）被突出显示，x 轴上标出了 (−2, 1)。",
       ),
     },
   ],
@@ -3631,18 +3638,18 @@ export const modelingWithLinearFunctions: TopicDef = {
   intro: t(
     `A line $y = mx + b$ starts at height $b$ and changes by $m$ for each step to the right. Many real quantities behave exactly like this: they start at some amount and change at a steady rate. A function of that form describing a situation is a **linear model**.
 
-A taxi charges $5$ dollars to start and $2$ dollars per kilometer, so a ride of $d$ kilometers costs
+A bike rental charges $4$ dollars to start and $3$ dollars per hour, so a ride of $h$ hours costs
 
-$$C(d) = 2d + 5 \\text{ dollars}.$$
+$$C(h) = 3h + 4 \\text{ dollars}.$$
 
-The function answers three kinds of question. Forward: a $12$ km ride costs $C(12) = 2(12) + 5 = 29$ dollars. Backward: a $29$-dollar ride solves $2d + 5 = 29$, so it was $12$ km long. And about the numbers themselves: $5$ is what you pay before moving, $C(0)$, and $2$ is what each extra kilometer adds. In this lesson we ask all three kinds of question of linear models.`,
+The function answers three kinds of question. Forward: a $6$-hour ride costs $C(6) = 3(6) + 4 = 22$ dollars. Backward: a $22$-dollar ride solves $3h + 4 = 22$, so it lasted $6$ hours. And about the numbers themselves: $4$ is what you pay before riding, $C(0)$, and $3$ is what each extra hour adds. In this lesson we ask all three kinds of question of linear models.`,
     `直线 $y = mx + b$ 从高度 $b$ 出发，向右每走一步改变 $m$。许多实际的量正是这样：从某个量开始，以固定的速率变化。描述这种情境的这类函数叫做**一次函数模型**。
 
-一辆出租车起步收 $5$ 元，每千米收 $2$ 元，所以行驶 $d$ 千米的车费是
+租一辆自行车先收 $4$ 元，每小时再收 $3$ 元，所以骑 $h$ 小时的租金是
 
-$$C(d) = 2d + 5 \\text{ 元}.$$
+$$C(h) = 3h + 4 \\text{ 元}.$$
 
-这个函数可以回答三类问题。正向：行驶 $12$ 千米的车费是 $C(12) = 2(12) + 5 = 29$ 元。反向：车费 $29$ 元的行程满足 $2d + 5 = 29$，所以行驶了 $12$ 千米。还有关于这些数本身的问题：$5$ 是车还没动就要付的钱，即 $C(0)$；$2$ 是每多行驶一千米增加的钱。这节课就对一次函数模型提出这三类问题。`,
+这个函数可以回答三类问题。正向：骑 $6$ 小时的租金是 $C(6) = 3(6) + 4 = 22$ 元。反向：租金 $22$ 元的骑行满足 $3h + 4 = 22$，所以骑了 $6$ 小时。还有关于这些数本身的问题：$4$ 是还没骑就要付的钱，即 $C(0)$；$3$ 是每多骑一小时增加的钱。这节课就对一次函数模型提出这三类问题。`,
   ),
   knowledgePoints: [
     {
@@ -3836,18 +3843,18 @@ export const constructingLinearFunctions: TopicDef = {
   intro: t(
     `Using a linear model means starting from its formula. Usually the formula is not given: you know the situation, a few measurements or a table, and must **build** the function yourself. Every linear function is $f(x) = mx + b$, so building one means finding two numbers: the rate $m$ and the starting value $b$.
 
-A tank holds $500$ liters and drains $20$ liters per minute. The starting amount is $500$ and the amount goes **down** by $20$ each minute, so after $t$ minutes
+A candle is $30$ cm tall and burns down $2$ cm per hour. The starting length is $30$ and the length goes **down** by $2$ each hour, so after $t$ hours
 
-$$V(t) = 500 - 20t.$$
+$$L(t) = 30 - 2t.$$
 
-The same two numbers can come from data instead. If a table shows $V(0) = 500$ and $V(5) = 400$, the volume fell $100$ liters in $5$ minutes, $20$ per minute, giving the same formula. In this lesson we construct linear functions from descriptions, from tables and from two values.`,
+The same two numbers can come from data instead. If a table shows $L(0) = 30$ and $L(5) = 20$, the length fell $10$ cm in $5$ hours, $2$ per hour, giving the same formula. In this lesson we construct linear functions from descriptions, from tables and from two values.`,
     `使用一次函数模型，要从它的公式出发。但公式通常不是现成的：我们知道情境、几次测量或一张表，要自己**构造**出函数。每个一次函数都是 $f(x) = mx + b$，所以构造它就是求出两个数：变化率 $m$ 和初始值 $b$。
 
-一个水箱装有 $500$ 升水，每分钟排出 $20$ 升。初始量是 $500$，每分钟**减少** $20$，所以 $t$ 分钟后
+一支蜡烛长 $30$ 厘米，每小时烧短 $2$ 厘米。初始长度是 $30$，每小时**减少** $2$，所以 $t$ 小时后
 
-$$V(t) = 500 - 20t.$$
+$$L(t) = 30 - 2t.$$
 
-这两个数也可以从数据得到。如果一张表给出 $V(0) = 500$ 和 $V(5) = 400$，那么 $5$ 分钟里水量减少了 $100$ 升，即每分钟 $20$ 升，得到同一个公式。这节课分别由文字描述、数值表和两个函数值构造一次函数。`,
+这两个数也可以从数据得到。如果一张表给出 $L(0) = 30$ 和 $L(5) = 20$，那么 $5$ 小时里长度减少了 $10$ 厘米，即每小时 $2$ 厘米，得到同一个公式。这节课分别由文字描述、数值表和两个函数值构造一次函数。`,
   ),
   knowledgePoints: [
     {
@@ -4369,20 +4376,20 @@ export const functionComposition: TopicDef = {
   intro: t(
     `Adding or multiplying two functions combines their outputs side by side. There is another way to combine functions: **one after the other**, feeding the output of the first in as the input of the second.
 
-Think of each function as a machine. With $g(x) = 3x - 2$ and $f(x) = x^{2} + 1$, put $2$ into $g$ to get $g(2) = 4$, then put that $4$ into $f$ to get $f(4) = 17$:
+Think of each function as a machine. With $g(x) = 2x + 1$ and $f(x) = x^{2} - 3$, put $3$ into $g$ to get $g(3) = 7$, then put that $7$ into $f$ to get $f(7) = 46$:
 
 {{figure 0}}
 
 The whole chain is a new function, written $f(g(x))$ or $(f \\circ g)(x)$, read "$f$ of $g$ of $x$". It describes any process done in stages, such as a price discounted and then taxed. In this lesson we evaluate compositions at numbers, read them from tables, and find their formulas.`,
     `两个函数相加或相乘，是把它们的输出并排组合。还有另一种组合函数的方式：**一个接着一个**，把第一个函数的输出作为第二个函数的输入。
 
-把每个函数想象成一台机器。设 $g(x) = 3x - 2$，$f(x) = x^{2} + 1$。把 $2$ 放进 $g$，得到 $g(2) = 4$；再把这个 $4$ 放进 $f$，得到 $f(4) = 17$：
+把每个函数想象成一台机器。设 $g(x) = 2x + 1$，$f(x) = x^{2} - 3$。把 $3$ 放进 $g$，得到 $g(3) = 7$；再把这个 $7$ 放进 $f$，得到 $f(7) = 46$：
 
 {{figure 0}}
 
 整条链是一个新函数，记作 $f(g(x))$ 或 $(f \\circ g)(x)$，读作"$f$ 复合 $g$"。它可以描述分几个阶段完成的过程，比如先打折、再加税的价格。这节课在某个数处求复合函数的值，从数值表读出它，并求出它的公式。`,
   ),
-  introFigures: [machineFigure(2, 4, 17)],
+  introFigures: [machineFigure(3, 7, 46)],
   knowledgePoints: [
     {
       id: "evaluating-compositions",
@@ -4655,20 +4662,20 @@ export const describingFunctionComposition: TopicDef = {
   intro: t(
     `We can already compute $f(g(x))$ from the formulas of $f$ and $g$. This lesson reads compositions the other way: as a **recipe of steps**, and as a way to break a complicated function into simple pieces.
 
-Take $h(x) = (2x - 5)^{3}$. To compute $h(4)$ by hand you do two things in order: first $2 \\cdot 4 - 5 = 3$, then $3^{3} = 27$. The first step is the function $g(x) = 2x - 5$, the second is $f(x) = x^{3}$, so $h = f \\circ g$:
+Take $h(x) = (3x - 2)^{2}$. To compute $h(3)$ by hand you do two things in order: first $3 \\cdot 3 - 2 = 7$, then $7^{2} = 49$. The first step is the function $g(x) = 3x - 2$, the second is $f(x) = x^{2}$, so $h = f \\circ g$:
 
 {{figure 0}}
 
 Seeing a function as steps tells you the order to compute it in, and later it is what lets you undo a function or differentiate it one piece at a time.`,
     `我们已经会由 $f$ 和 $g$ 的公式求 $f(g(x))$。这节课反过来看复合函数：把它看成**一串步骤**，并用它把复杂的函数拆成简单的部分。
 
-看 $h(x) = (2x - 5)^{3}$。手算 $h(4)$ 时要按顺序做两件事：先算 $2 \\cdot 4 - 5 = 3$，再算 $3^{3} = 27$。第一步是函数 $g(x) = 2x - 5$，第二步是 $f(x) = x^{3}$，所以 $h = f \\circ g$：
+看 $h(x) = (3x - 2)^{2}$。手算 $h(3)$ 时要按顺序做两件事：先算 $3 \\cdot 3 - 2 = 7$，再算 $7^{2} = 49$。第一步是函数 $g(x) = 3x - 2$，第二步是 $f(x) = x^{2}$，所以 $h = f \\circ g$：
 
 {{figure 0}}
 
 把函数看成步骤，就知道该按什么顺序计算；以后撤销一个函数、或者一块一块地求导，靠的也是这种看法。`,
   ),
-  introFigures: [machineFigure(4, 3, 27)],
+  introFigures: [machineFigure(3, 7, 49)],
   knowledgePoints: [
     {
       id: "compositions-in-words",
@@ -4948,12 +4955,12 @@ export const introductionToInverseFunctions: TopicDef = {
   intro: t(
     `A function takes an input to an output, and composing functions runs them one after the other. Often the question goes the other way: we know the **output** and want the input that produced it.
 
-A shop charges $f(x) = 2x + 3$ dollars for $x$ kilograms of fruit: $2$ dollars a kilogram plus $3$ for the bag. If a bill says $11$ dollars, how much fruit was bought? Undo the steps in reverse order: take away the $3$, giving $8$, then halve it, giving $4$ kilograms. The rule that does this for any bill, $x \\mapsto \\frac{x - 3}{2}$, is the **inverse function** of $f$.
+A shop charges $f(x) = 3x + 2$ dollars for $x$ kilograms of fruit: $3$ dollars a kilogram plus $2$ for the bag. If a bill says $14$ dollars, how much fruit was bought? Undo the steps in reverse order: take away the $2$, giving $12$, then divide by $3$, giving $4$ kilograms. The rule that does this for any bill, $x \\mapsto \\frac{x - 2}{3}$, is the **inverse function** of $f$.
 
 In this lesson we read inverses from tables, find the inverses of linear functions, and check by composing that two functions undo each other.`,
     `函数把输入对应到输出，复合函数把几个函数一个接一个地作用。但很多时候问题是反过来的：知道**输出**，想求出产生它的输入。
 
-一家店卖 $x$ 千克水果收 $f(x) = 2x + 3$ 元：每千克 $2$ 元，另加 $3$ 元袋子费。如果账单是 $11$ 元，买了多少水果？按相反的顺序撤销各步：先去掉 $3$，得 $8$；再除以 $2$，得 $4$ 千克。对任何账单都这样做的规则 $x \\mapsto \\frac{x - 3}{2}$，就是 $f$ 的**反函数**。
+一家店卖 $x$ 千克水果收 $f(x) = 3x + 2$ 元：每千克 $3$ 元，另加 $2$ 元袋子费。如果账单是 $14$ 元，买了多少水果？按相反的顺序撤销各步：先去掉 $2$，得 $12$；再除以 $3$，得 $4$ 千克。对任何账单都这样做的规则 $x \\mapsto \\frac{x - 2}{3}$，就是 $f$ 的**反函数**。
 
 这节课从数值表读出反函数值，求一次函数的反函数，并用复合检验两个函数是否互相撤销。`,
   ),

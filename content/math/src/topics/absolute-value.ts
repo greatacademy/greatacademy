@@ -807,20 +807,20 @@ export const furtherRulesOfAbsoluteValue: TopicDef = {
   intro: t(
     `The product rule $|ab| = |a| \\cdot |b|$ has a quiet consequence. Take $a = -1$: then $|-u| = |-1| \\cdot |u| = |u|$. A number and its opposite have the same absolute value, which makes sense, since they are the same distance from $0$.
 
-So the sign of everything inside the bars can be changed without changing the absolute value. For example $3 - x = -(x - 3)$, so
+So the sign of everything inside the bars can be changed without changing the absolute value. For example $5 - x = -(x - 5)$, so
 
-$$|3 - x| = |x - 3|.$$
+$$|5 - x| = |x - 5|.$$
 
-Try $x = 10$: $|3 - 10| = |-7| = 7$ and $|10 - 3| = |7| = 7$. Both are the distance between $x$ and $3$.
+Try $x = 12$: $|5 - 12| = |-7| = 7$ and $|12 - 5| = |7| = 7$. Both are the distance between $x$ and $5$.
 
 In this lesson we use this to reorder the inside of the bars, then find how large or small $|a + b|$ can be when only $|a|$ and $|b|$ are known, and finally remove the bars altogether when the sign of the inside is known.`,
     `积的法则 $|ab| = |a| \\cdot |b|$ 有一个不起眼的推论。取 $a = -1$：则 $|-u| = |-1| \\cdot |u| = |u|$。一个数和它的相反数绝对值相同，这很合理，因为它们到 $0$ 的距离一样。
 
-所以把绝对值符号里面整体变号，绝对值不变。例如 $3 - x = -(x - 3)$，所以
+所以把绝对值符号里面整体变号，绝对值不变。例如 $5 - x = -(x - 5)$，所以
 
-$$|3 - x| = |x - 3|.$$
+$$|5 - x| = |x - 5|.$$
 
-取 $x = 10$ 试试：$|3 - 10| = |-7| = 7$，$|10 - 3| = |7| = 7$。两者都是 $x$ 与 $3$ 之间的距离。
+取 $x = 12$ 试试：$|5 - 12| = |-7| = 7$，$|12 - 5| = |7| = 7$。两者都是 $x$ 与 $5$ 之间的距离。
 
 这节课我们先用这一点调整绝对值里面的顺序，再求只知道 $|a|$ 和 $|b|$ 时 $|a + b|$ 最大、最小能是多少，最后在知道里面的符号时把绝对值符号完全去掉。`,
   ),
@@ -1103,7 +1103,7 @@ export const absoluteValueEquations: TopicDef = {
 
 $x = 5$ and $x = -5$. This is new: the equations we have solved so far had one solution, but an absolute value equation usually has two.
 
-The same idea works when something more is inside the bars. In $|x + 2| = 5$, the number $x + 2$ is $5$ units from $0$, so $x + 2 = 5$ or $x + 2 = -5$. Each of these is an ordinary equation we already know how to solve, and they give $x = 3$ and $x = -7$.
+The same idea works when something more is inside the bars. In $|x - 4| = 6$, the number $x - 4$ is $6$ units from $0$, so $x - 4 = 6$ or $x - 4 = -6$. Each of these is an ordinary equation we already know how to solve, and they give $x = 10$ and $x = -2$.
 
 In this lesson we split absolute value equations into two equations like this, solve them, and check the answers. We also see what happens when the right side is $0$ or negative.`,
     `一个数的绝对值是它到 $0$ 的距离。所以方程 $|x| = 5$ 问的是：哪些数到 $0$ 的距离是 $5$？有两个，两边各一个：
@@ -1112,7 +1112,7 @@ In this lesson we split absolute value equations into two equations like this, s
 
 $x = 5$ 和 $x = -5$。这是新情况：以前解的方程只有一个解，而绝对值方程通常有两个解。
 
-绝对值符号里有更多内容时，道理一样。在 $|x + 2| = 5$ 中，$x + 2$ 这个数到 $0$ 的距离是 $5$，所以 $x + 2 = 5$ 或 $x + 2 = -5$。这两个都是我们会解的普通方程，分别得到 $x = 3$ 和 $x = -7$。
+绝对值符号里有更多内容时，道理一样。在 $|x - 4| = 6$ 中，$x - 4$ 这个数到 $0$ 的距离是 $6$，所以 $x - 4 = 6$ 或 $x - 4 = -6$。这两个都是我们会解的普通方程，分别得到 $x = 10$ 和 $x = -2$。
 
 这节课我们把绝对值方程这样拆成两个方程，分别求解并检验答案。我们还会看到右边是 $0$ 或负数时会发生什么。`,
   ),
@@ -1336,14 +1336,14 @@ export const furtherAbsoluteValueEquations: TopicDef = {
   intro: t(
     `We can solve $|ax + b| = c$ by splitting it into $ax + b = c$ or $ax + b = -c$. The split works because the right side, $c$, is the value of the absolute value.
 
-In $2|x - 3| + 1 = 9$ that is no longer true: $9$ is the value of the whole left side, not of $|x - 3|$. But we can treat $|x - 3|$ as a single unknown block. If we call it $u$, the equation is $2u + 1 = 9$, a two-step equation, and $u = 4$. So $|x - 3| = 4$, which we know how to split.
+In $3|x + 1| - 2 = 10$ that is no longer true: $10$ is the value of the whole left side, not of $|x + 1|$. But we can treat $|x + 1|$ as a single unknown block. If we call it $u$, the equation is $3u - 2 = 10$, a two-step equation, and $u = 4$. So $|x + 1| = 4$, which we know how to split.
 
-In this lesson we first get the absolute value alone in this way, and see that only then can we tell whether there are two solutions, one or none. Then we solve equations with an absolute value on each side, such as $|2x - 1| = |x + 4|$.`,
+In this lesson we first get the absolute value alone in this way, and see that only then can we tell whether there are two solutions, one or none. Then we solve equations with an absolute value on each side, such as $|x - 5| = |2x + 1|$.`,
     `我们会把 $|ax + b| = c$ 拆成 $ax + b = c$ 或 $ax + b = -c$ 来解。能这样拆，是因为右边的 $c$ 正是绝对值的值。
 
-在 $2|x - 3| + 1 = 9$ 中就不是这样了：$9$ 是整个左边的值，而不是 $|x - 3|$ 的值。不过可以把 $|x - 3|$ 看成一个未知的整体。把它记作 $u$，方程就是 $2u + 1 = 9$，一个两步方程，得 $u = 4$。所以 $|x - 3| = 4$，这个我们会拆。
+在 $3|x + 1| - 2 = 10$ 中就不是这样了：$10$ 是整个左边的值，而不是 $|x + 1|$ 的值。不过可以把 $|x + 1|$ 看成一个未知的整体。把它记作 $u$，方程就是 $3u - 2 = 10$，一个两步方程，得 $u = 4$。所以 $|x + 1| = 4$，这个我们会拆。
 
-这节课我们先这样把绝对值单独放在一边，并看到只有这样做之后，才能判断方程有两个解、一个解还是无解。然后解两边都有绝对值的方程，比如 $|2x - 1| = |x + 4|$。`,
+这节课我们先这样把绝对值单独放在一边，并看到只有这样做之后，才能判断方程有两个解、一个解还是无解。然后解两边都有绝对值的方程，比如 $|x - 5| = |2x + 1|$。`,
   ),
   knowledgePoints: [
     {
@@ -1623,43 +1623,43 @@ export const equationsConnectingAbsoluteValueAndLinearFunctions: TopicDef = {
   xp: 15,
   standards: ["CCSS.HSA.REI.A.1"],
   intro: t(
-    `So far the right side of an absolute value equation has been a number, as in $|2x - 1| = 9$, or another absolute value. Now it may contain $x$, as in
+    `So far the right side of an absolute value equation has been a number, as in $|2x - 3| = 7$, or another absolute value. Now it may contain $x$, as in
 
-$$|2x - 1| = x + 4.$$
+$$|2x - 3| = x + 3.$$
 
-A picture shows what such an equation asks. The left side is the V-shaped graph of $y = |2x - 1|$ and the right side is the line $y = x + 4$. A solution is an $x$ where the two have the same height, that is, where they cross:
+A picture shows what such an equation asks. The left side is the V-shaped graph of $y = |2x - 3|$ and the right side is the line $y = x + 3$. A solution is an $x$ where the two have the same height, that is, where they cross:
 
 {{figure 0}}
 
-They cross twice, at $x = -1$ and at $x = 5$. To find these without a drawing, we split the equation as before: $2x - 1$ equals the right side or its opposite. The difference is that the right side is now an expression, so each case is an equation with $x$ on both sides, which we already know how to solve.
+They cross twice, at $x = 0$ and at $x = 6$. To find these without a drawing, we split the equation as before: $2x - 3$ equals the right side or its opposite. The difference is that the right side is now an expression, so each case is an equation with $x$ on both sides, which we already know how to solve.
 
 In this lesson we write the two cases, solve them, and check a number by putting it into both sides.`,
-    `到目前为止，绝对值方程的右边是一个数，比如 $|2x - 1| = 9$，或者是另一个绝对值。现在右边可以含有 $x$，比如
+    `到目前为止，绝对值方程的右边是一个数，比如 $|2x - 3| = 7$，或者是另一个绝对值。现在右边可以含有 $x$，比如
 
-$$|2x - 1| = x + 4.$$
+$$|2x - 3| = x + 3.$$
 
-画图可以看出这样的方程在问什么。左边是 $y = |2x - 1|$ 的 V 形图象，右边是直线 $y = x + 4$。方程的解就是两者高度相同的 $x$，也就是它们的交点：
+画图可以看出这样的方程在问什么。左边是 $y = |2x - 3|$ 的 V 形图象，右边是直线 $y = x + 3$。方程的解就是两者高度相同的 $x$，也就是它们的交点：
 
 {{figure 0}}
 
-它们相交两次，在 $x = -1$ 和 $x = 5$ 处。不画图也能求出：像以前一样拆开方程，$2x - 1$ 等于右边或右边的相反数。不同的是右边现在是一个式子，所以每种情况都是两边都有 $x$ 的方程，这我们已经会解。
+它们相交两次，在 $x = 0$ 和 $x = 6$ 处。不画图也能求出：像以前一样拆开方程，$2x - 3$ 等于右边或右边的相反数。不同的是右边现在是一个式子，所以每种情况都是两边都有 $x$ 的方程，这我们已经会解。
 
 这节课我们写出两种情况，分别求解，并把一个数代入两边来检验。`,
   ),
   introFigures: [
     graphFigure(
       viewAround([
-        [-1, 3],
-        [5, 9],
+        [0, 3],
+        [6, 9],
       ]),
       [
-        { kind: "curve", f: vOf(2, -1), accent: true },
-        { kind: "line", a: [0, 4], b: [1, 5], tone: "action" },
-        { kind: "point", at: [-1, 3], label: "(−1, 3)", dir: "w", accent: true },
-        { kind: "point", at: [5, 9], label: "(5, 9)", dir: "e", accent: true },
+        { kind: "curve", f: vOf(2, -3), accent: true },
+        { kind: "line", a: [0, 3], b: [1, 4], tone: "action" },
+        { kind: "point", at: [0, 3], label: "(0, 3)", dir: "w", accent: true },
+        { kind: "point", at: [6, 9], label: "(6, 9)", dir: "e", accent: true },
       ],
-      "The V-shaped graph of y = |2x − 1| and the line y = x + 4, crossing at (−1, 3) and (5, 9).",
-      "y = |2x − 1| 的 V 形图象与直线 y = x + 4，交于 (−1, 3) 和 (5, 9)。",
+      "The V-shaped graph of y = |2x − 3| and the line y = x + 3, crossing at (0, 3) and (6, 9).",
+      "y = |2x − 3| 的 V 形图象与直线 y = x + 3，交于 (0, 3) 和 (6, 9)。",
     ),
   ],
   knowledgePoints: [
@@ -1815,24 +1815,24 @@ export const absoluteValueEquationsWithExtraneousSolutions: TopicDef = {
   xp: 15,
   standards: ["CCSS.HSA.REI.A.2"],
   intro: t(
-    `We solve $|ax + b| = cx + d$ by splitting it into two cases. Try it on $|x - 2| = 2x + 5$:
+    `We solve $|ax + b| = cx + d$ by splitting it into two cases. Try it on $|x - 3| = 2x + 3$:
 
-$$x - 2 = 2x + 5 \\;\\Rightarrow\\; x = -7 \\qquad x - 2 = -(2x + 5) \\;\\Rightarrow\\; x = -1$$
+$$x - 3 = 2x + 3 \\;\\Rightarrow\\; x = -6 \\qquad x - 3 = -(2x + 3) \\;\\Rightarrow\\; x = 0$$
 
-Put $x = -7$ back: the left side is $|-7 - 2| = 9$, but the right side is $2(-7) + 5 = -9$. So $x = -7$ is **not** a solution, even though we found it correctly.
+Put $x = -6$ back: the left side is $|-6 - 3| = 9$, but the right side is $2(-6) + 3 = -9$. So $x = -6$ is **not** a solution, even though we found it correctly.
 
-The graphs show why. The first case solves $x - 2 = 2x + 5$, which is where the line $y = 2x + 5$ meets the line $y = x - 2$. But $|x - 2|$ follows that line only to the right of $x = 2$; to the left it turns up. The crossing at $x = -7$ is on the dashed part, below the $x$-axis, where the V does not go:
+The graphs show why. The first case solves $x - 3 = 2x + 3$, which is where the line $y = 2x + 3$ meets the line $y = x - 3$. But $|x - 3|$ follows that line only to the right of $x = 3$; to the left it turns up. The crossing at $x = -6$ is on the dashed part, below the $x$-axis, where the V does not go:
 
 {{figure 0}}
 
 A number the cases produce that does not solve the original equation is called **extraneous**. It appears exactly when the right side is negative there, since no absolute value is negative. In this lesson we check every candidate and reject the extraneous ones.`,
-    `我们分两种情况解 $|ax + b| = cx + d$。试一试 $|x - 2| = 2x + 5$：
+    `我们分两种情况解 $|ax + b| = cx + d$。试一试 $|x - 3| = 2x + 3$：
 
-$$x - 2 = 2x + 5 \\;\\Rightarrow\\; x = -7 \\qquad x - 2 = -(2x + 5) \\;\\Rightarrow\\; x = -1$$
+$$x - 3 = 2x + 3 \\;\\Rightarrow\\; x = -6 \\qquad x - 3 = -(2x + 3) \\;\\Rightarrow\\; x = 0$$
 
-把 $x = -7$ 代回：左边是 $|-7 - 2| = 9$，但右边是 $2(-7) + 5 = -9$。所以 $x = -7$ **不是**解，尽管我们的计算没有错。
+把 $x = -6$ 代回：左边是 $|-6 - 3| = 9$，但右边是 $2(-6) + 3 = -9$。所以 $x = -6$ **不是**解，尽管我们的计算没有错。
 
-图象说明了原因。第一种情况解的是 $x - 2 = 2x + 5$，也就是直线 $y = 2x + 5$ 与直线 $y = x - 2$ 的交点。但 $|x - 2|$ 只在 $x = 2$ 右边沿着这条直线；在左边它向上折。$x = -7$ 处的交点在虚线部分，在 $x$ 轴下方，V 形图象根本不经过那里：
+图象说明了原因。第一种情况解的是 $x - 3 = 2x + 3$，也就是直线 $y = 2x + 3$ 与直线 $y = x - 3$ 的交点。但 $|x - 3|$ 只在 $x = 3$ 右边沿着这条直线；在左边它向上折。$x = -6$ 处的交点在虚线部分，在 $x$ 轴下方，V 形图象根本不经过那里：
 
 {{figure 0}}
 
@@ -1841,18 +1841,18 @@ $$x - 2 = 2x + 5 \\;\\Rightarrow\\; x = -7 \\qquad x - 2 = -(2x + 5) \\;\\Righta
   introFigures: [
     graphFigure(
       viewAround([
-        [-7, -9],
-        [-1, 3],
+        [-6, -9],
+        [0, 3],
       ]),
       [
-        { kind: "curve", f: vOf(1, -2), accent: true },
-        { kind: "curve", f: (x) => x - 2, to: 2, dashed: true },
-        { kind: "line", a: [0, 5], b: [1, 7], tone: "action" },
-        { kind: "point", at: [-1, 3], label: "(−1, 3)", dir: "e", accent: true },
-        { kind: "point", at: [-7, -9], open: true, label: "(−7, −9)", dir: "e" },
+        { kind: "curve", f: vOf(1, -3), accent: true },
+        { kind: "curve", f: (x) => x - 3, to: 3, dashed: true },
+        { kind: "line", a: [0, 3], b: [1, 5], tone: "action" },
+        { kind: "point", at: [0, 3], label: "(0, 3)", dir: "e", accent: true },
+        { kind: "point", at: [-6, -9], open: true, label: "(−6, −9)", dir: "e" },
       ],
-      "The V-shaped graph of y = |x − 2| and the line y = 2x + 5, crossing at (−1, 3). The line y = x − 2, continued to the left of x = 2 as a dashed line below the x-axis, meets y = 2x + 5 at (−7, −9), which is not on the V.",
-      "y = |x − 2| 的 V 形图象与直线 y = 2x + 5 交于 (−1, 3)。直线 y = x − 2 在 x = 2 左边延长成 x 轴下方的虚线，与 y = 2x + 5 交于 (−7, −9)，这一点不在 V 形图象上。",
+      "The V-shaped graph of y = |x − 3| and the line y = 2x + 3, crossing at (0, 3). The line y = x − 3, continued to the left of x = 3 as a dashed line below the x-axis, meets y = 2x + 3 at (−6, −9), which is not on the V.",
+      "y = |x − 3| 的 V 形图象与直线 y = 2x + 3 交于 (0, 3)。直线 y = x − 3 在 x = 3 左边延长成 x 轴下方的虚线，与 y = 2x + 3 交于 (−6, −9)，这一点不在 V 形图象上。",
     ),
   ],
   knowledgePoints: [
@@ -3041,26 +3041,26 @@ export const combiningTransformationsOfAbsoluteValueGraphs: TopicDef = {
   intro: t(
     `We have met three moves on the graph of $y = |x|$ one at a time: a minus sign in front reflects it in the $x$-axis, a factor $a$ stretches it vertically, and $|x - h| + k$ moves its vertex to $(h, k)$. One equation can make all three moves at once.
 
-Take $y = -2|x + 3| - 1$ and follow the point $(1, 1)$ of $y = |x|$:
+Take $y = -2|x - 2| + 1$ and follow the point $(1, 1)$ of $y = |x|$:
 
 - the factor $2$ doubles every height: $y = 2|x|$ passes through $(1, 2)$;
 - the minus sign turns every height over: $y = -2|x|$ passes through $(1, -2)$;
-- $|x + 3| - 1$ moves everything $3$ units left and $1$ unit down: $(1, -2)$ goes to $(-2, -3)$, and the vertex $(0, 0)$ goes to $(-3, -1)$.
+- $|x - 2| + 1$ moves everything $2$ units right and $1$ unit up: $(1, -2)$ goes to $(3, -1)$, and the vertex $(0, 0)$ goes to $(2, 1)$.
 
 {{figure 0}}
 
-Substituting confirms it: at $x = -2$, $y = -2|1| - 1 = -3$. In this lesson we read the three moves from an equation, write the equation of a graph, and work out values.`,
+Substituting confirms it: at $x = 3$, $y = -2|1| + 1 = -1$. In this lesson we read the three moves from an equation, write the equation of a graph, and work out values.`,
     `我们已经分别学过 $y = |x|$ 图象的三种变换：前面加负号使它关于 $x$ 轴翻折，系数 $a$ 使它在竖直方向伸缩，$|x - h| + k$ 把顶点移到 $(h, k)$。一个解析式可以同时完成这三种变换。
 
-以 $y = -2|x + 3| - 1$ 为例，跟踪 $y = |x|$ 上的点 $(1, 1)$：
+以 $y = -2|x - 2| + 1$ 为例，跟踪 $y = |x|$ 上的点 $(1, 1)$：
 
 - 系数 $2$ 把每个高度翻倍：$y = 2|x|$ 经过 $(1, 2)$；
 - 负号把每个高度翻过来：$y = -2|x|$ 经过 $(1, -2)$；
-- $|x + 3| - 1$ 把一切向左移 $3$ 个单位、向下移 $1$ 个单位：$(1, -2)$ 变到 $(-2, -3)$，顶点 $(0, 0)$ 变到 $(-3, -1)$。
+- $|x - 2| + 1$ 把一切向右移 $2$ 个单位、向上移 $1$ 个单位：$(1, -2)$ 变到 $(3, -1)$，顶点 $(0, 0)$ 变到 $(2, 1)$。
 
 {{figure 0}}
 
-代入验证：当 $x = -2$ 时，$y = -2|1| - 1 = -3$。这节课我们从解析式读出这三种变换，写出图象的解析式，并计算函数值。`,
+代入验证：当 $x = 3$ 时，$y = -2|1| + 1 = -1$。这节课我们从解析式读出这三种变换，写出图象的解析式，并计算函数值。`,
   ),
   introFigures: [
     graphFigure(
@@ -3068,12 +3068,12 @@ Substituting confirms it: at $x = -2$, $y = -2|1| - 1 = -3$. In this lesson we r
       [
         { kind: "curve", f: Math.abs, dashed: true },
         { kind: "curve", f: (x) => -2 * Math.abs(x), dashed: true, tone: "action" },
-        ...vMarks(Q.of(-2), -3, Q.of(-1)),
-        ...shift([1, -2], [-2, -3]),
-        { kind: "point", at: [-3, -1], label: "(−3, −1)", dir: "n" },
+        ...vMarks(Q.of(-2), 2, Q.of(1)),
+        ...shift([1, -2], [3, -1]),
+        { kind: "point", at: [2, 1], label: "(2, 1)", dir: "n" },
       ],
-      "Three graphs: y = |x| dashed, y = −2|x| dashed, the narrow upside-down V reflected and stretched from it, and y = −2|x + 3| − 1 solid, the same V moved 3 left and 1 down, with vertex (−3, −1). An arrow takes (1, −2) to (−2, −3).",
-      "三个图象：虚线 y = |x|；虚线 y = −2|x|，由它翻折并伸长得到的窄的倒 V 形；实线 y = −2|x + 3| − 1，是同一个 V 形向左移 3、向下移 1，顶点为 (−3, −1)。箭头把 (1, −2) 带到 (−2, −3)。",
+      "Three graphs: y = |x| dashed, y = −2|x| dashed, the narrow upside-down V reflected and stretched from it, and y = −2|x − 2| + 1 solid, the same V moved 2 right and 1 up, with vertex (2, 1). An arrow takes (1, −2) to (3, −1).",
+      "三个图象：虚线 y = |x|；虚线 y = −2|x|，由它翻折并伸长得到的窄的倒 V 形；实线 y = −2|x − 2| + 1，是同一个 V 形向右移 2、向上移 1，顶点为 (2, 1)。箭头把 (1, −2) 带到 (3, −1)。",
     ),
   ],
   knowledgePoints: [
@@ -3346,14 +3346,14 @@ export const domainAndRangeOfAbsoluteValueFunctions: TopicDef = {
   intro: t(
     `The **domain** of a function is the set of inputs it accepts, and its **range** is the set of outputs it produces. We also know that the graph of $f(x) = a|x - h| + k$ is a V with vertex $(h, k)$, opening upward when $a > 0$ and downward when $a < 0$.
 
-Take $f(x) = -2|x - 5| + 3$. Any number can go in: subtract $5$, take the absolute value, multiply by $-2$ and add $3$. So the domain is all real numbers. The outputs are another matter. Since $|x - 5| \\ge 0$, the product $-2|x - 5|$ is never positive, so $f(x)$ is never more than $3$. The value $3$ itself is reached at the vertex, $x = 5$, and the arms go down forever, so every value below $3$ is reached too. The range is $(-\\infty, 3]$, the part of the $y$-axis the graph covers:
+Take $f(x) = -3|x + 1| + 4$. Any number can go in: add $1$, take the absolute value, multiply by $-3$ and add $4$. So the domain is all real numbers. The outputs are another matter. Since $|x + 1| \\ge 0$, the product $-3|x + 1|$ is never positive, so $f(x)$ is never more than $4$. The value $4$ itself is reached at the vertex, $x = -1$, and the arms go down forever, so every value below $4$ is reached too. The range is $(-\\infty, 4]$, the part of the $y$-axis the graph covers:
 
 {{figure 0}}
 
 When the graph is drawn only for $x$ between two ends, both sets shrink: the domain is the interval between the ends, and the range runs from the lowest to the highest point of that piece. In this lesson we find domains and ranges from equations and graphs, on all real numbers and on closed intervals.`,
     `函数的**定义域**是它接受的输入组成的集合，**值域**是它产生的输出组成的集合。我们还知道 $f(x) = a|x - h| + k$ 的图象是顶点为 $(h, k)$ 的 V 形，$a > 0$ 时开口向上，$a < 0$ 时开口向下。
 
-以 $f(x) = -2|x - 5| + 3$ 为例。任何数都可以代入：减去 $5$，取绝对值，乘以 $-2$，再加 $3$。所以定义域是全体实数。输出就不同了。因为 $|x - 5| \\ge 0$，乘积 $-2|x - 5|$ 不会是正数，所以 $f(x)$ 不会超过 $3$。值 $3$ 本身在顶点 $x = 5$ 处取到，而两支一直向下延伸，所以小于 $3$ 的每个值也都能取到。值域是 $(-\\infty, 3]$，也就是图象覆盖的那部分 $y$ 轴：
+以 $f(x) = -3|x + 1| + 4$ 为例。任何数都可以代入：加上 $1$，取绝对值，乘以 $-3$，再加 $4$。所以定义域是全体实数。输出就不同了。因为 $|x + 1| \\ge 0$，乘积 $-3|x + 1|$ 不会是正数，所以 $f(x)$ 不会超过 $4$。值 $4$ 本身在顶点 $x = -1$ 处取到，而两支一直向下延伸，所以小于 $4$ 的每个值也都能取到。值域是 $(-\\infty, 4]$，也就是图象覆盖的那部分 $y$ 轴：
 
 {{figure 0}}
 
@@ -3362,9 +3362,13 @@ When the graph is drawn only for $x$ between two ends, both sets shrink: the dom
   introFigures: [
     graphFigure(
       view,
-      [...vMarks(Q.of(-2), 5, Q.of(3)), { kind: "point", at: [5, 3], label: "(5, 3)", dir: "n" }, ...onAxis("y", union(ray("<=", 3)), 6)],
-      "The upside-down V of f(x) = −2|x − 5| + 3 with its vertex (5, 3) marked; the y-axis is highlighted from 3 downward, the range (−∞, 3].",
-      "f(x) = −2|x − 5| + 3 的倒 V 形图象，标出顶点 (5, 3)；y 轴上从 3 往下的部分被突出显示，即值域 (−∞, 3]。",
+      [
+        ...vMarks(Q.of(-3), -1, Q.of(4)),
+        { kind: "point", at: [-1, 4], label: "(−1, 4)", dir: "n" },
+        ...onAxis("y", union(ray("<=", 4)), 6),
+      ],
+      "The upside-down V of f(x) = −3|x + 1| + 4 with its vertex (−1, 4) marked; the y-axis is highlighted from 4 downward, the range (−∞, 4].",
+      "f(x) = −3|x + 1| + 4 的倒 V 形图象，标出顶点 (−1, 4)；y 轴上从 4 往下的部分被突出显示，即值域 (−∞, 4]。",
     ),
   ],
   knowledgePoints: [

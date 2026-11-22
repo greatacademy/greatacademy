@@ -255,14 +255,14 @@ export const metricUnitsOfLength: TopicDef = {
 
 $$1\\text{ km} = 1000\\text{ m}, \\qquad 1\\text{ m} = 100\\text{ cm}, \\qquad 1\\text{ m} = 1000\\text{ mm}.$$
 
-The reasoning is the one we used for mass. A $1.5$ km walk is $1.5$ groups of $1000$ meters, $1.5 \\cdot 1000 = 1500$ m; and a $245$ cm board is $245 \\div 100 = 2.45$ m, because every $100$ centimeters make one meter.
+The reasoning is the one we used for mass. A $1.5$ km walk is $1.5$ groups of $1000$ meters, $1.5 \\cdot 1000 = 1500$ m; and a $380$ cm board is $380 \\div 100 = 3.8$ m, because every $100$ centimeters make one meter.
 
 What is new is that the factors differ: $1000$ for kilometers and millimeters, $100$ for centimeters. In this lesson we convert lengths to meters and from meters, choosing the factor from the prefix and checking the direction by size.`,
     `质量通过克来换算：“千”是一千克，“毫”是千分之一克。长度用同样的前缀，但基本单位不同，是**米**（m），大约是一大步的长度。长度还常用一个前缀：“厘”（centi-）表示百分之一。
 
 $$1\\text{ km} = 1000\\text{ m}, \\qquad 1\\text{ m} = 100\\text{ cm}, \\qquad 1\\text{ m} = 1000\\text{ mm}.$$
 
-道理和质量一样。走 $1.5$ km 是 $1.5$ 个 $1000$ 米，即 $1.5 \\cdot 1000 = 1500$ m；一块 $245$ cm 长的木板是 $245 \\div 100 = 2.45$ m，因为每 $100$ 厘米合成一米。
+道理和质量一样。走 $1.5$ km 是 $1.5$ 个 $1000$ 米，即 $1.5 \\cdot 1000 = 1500$ m；一块 $380$ cm 长的木板是 $380 \\div 100 = 3.8$ m，因为每 $100$ 厘米合成一米。
 
 新的地方在于换算率不同：千米和毫米是 $1000$，厘米是 $100$。这节课把长度换算成米、由米换算成其他单位，根据前缀选出换算率，并根据大小检验方向。`,
   ),
@@ -2111,18 +2111,18 @@ export const directVariation: TopicDef = {
   xp: 12,
   standards: ["CCSS.7.RP.A.2"],
   intro: t(
-    `A proportion says that two ratios are equal, as in $\\frac{2}{6} = \\frac{5}{15}$. Some pairs of quantities keep the **same ratio** all the time. Pencils at $\\$3$ each: $2$ pencils cost $\\$6$, $5$ cost $\\$15$, $8$ cost $\\$24$, and every cost divided by its number of pencils is $3$:
+    `A proportion says that two ratios are equal, as in $\\frac{2}{8} = \\frac{5}{20}$. Some pairs of quantities keep the **same ratio** all the time. Pencils at $\\$4$ each: $2$ pencils cost $\\$8$, $5$ cost $\\$20$, $7$ cost $\\$28$, and every cost divided by its number of pencils is $4$:
 
-$$\\frac{6}{2} = \\frac{15}{5} = \\frac{24}{8} = 3.$$
+$$\\frac{8}{2} = \\frac{20}{5} = \\frac{28}{7} = 4.$$
 
-So the cost is always $3$ times the number of pencils: $y = 3x$. When $x$ doubles, $y$ doubles; when $x$ is $0$, so is $y$.
+So the cost is always $4$ times the number of pencils: $y = 4x$. When $x$ doubles, $y$ doubles; when $x$ is $0$, so is $y$.
 
 A relation like this, $y = kx$ for a fixed number $k \\ne 0$, is called **direct variation**, and $k$ is the **constant of variation**. In this lesson we recognize direct variation from a list of points, find $k$ from one pair of values, and write the equation $y = kx$.`,
-    `比例式表示两个比相等，例如 $\\frac{2}{6} = \\frac{5}{15}$。有些成对的量，它们的**比始终不变**。铅笔每支 $3$ 元：$2$ 支 $6$ 元，$5$ 支 $15$ 元，$8$ 支 $24$ 元，每个总价除以支数都是 $3$：
+    `比例式表示两个比相等，例如 $\\frac{2}{8} = \\frac{5}{20}$。有些成对的量，它们的**比始终不变**。铅笔每支 $4$ 元：$2$ 支 $8$ 元，$5$ 支 $20$ 元，$7$ 支 $28$ 元，每个总价除以支数都是 $4$：
 
-$$\\frac{6}{2} = \\frac{15}{5} = \\frac{24}{8} = 3.$$
+$$\\frac{8}{2} = \\frac{20}{5} = \\frac{28}{7} = 4.$$
 
-所以总价总是支数的 $3$ 倍：$y = 3x$。$x$ 变为两倍，$y$ 也变为两倍；$x$ 为 $0$ 时，$y$ 也是 $0$。
+所以总价总是支数的 $4$ 倍：$y = 4x$。$x$ 变为两倍，$y$ 也变为两倍；$x$ 为 $0$ 时，$y$ 也是 $0$。
 
 像这样的关系，$y = kx$，其中 $k \\ne 0$ 是固定的数，叫做**正比例关系**，$k$ 叫做**比例常数**。这节课由一组点识别正比例关系，由一组值求出 $k$，并写出方程 $y = kx$。`,
   ),
@@ -2498,18 +2498,18 @@ export const inverseVariation: TopicDef = {
   encompasses: [{ topic: "one-step-equations-multiplication", weight: 0.2 }],
   xp: 15,
   intro: t(
-    `In a direct variation $y = kx$ the **ratio** $\\frac{y}{x}$ stays the same: when $x$ doubles, so does $y$. Many quantities do the opposite. Share $24$ cookies equally: $2$ friends get $12$ each, $3$ friends get $8$, $4$ friends get $6$, $6$ friends get $4$. More friends, fewer cookies each, and what stays the same is the **product**:
+    `In a direct variation $y = kx$ the **ratio** $\\frac{y}{x}$ stays the same: when $x$ doubles, so does $y$. Many quantities do the opposite. Share $36$ cookies equally: $2$ friends get $18$ each, $3$ friends get $12$, $4$ friends get $9$, $6$ friends get $6$. More friends, fewer cookies each, and what stays the same is the **product**:
 
-$$2 \\cdot 12 = 3 \\cdot 8 = 4 \\cdot 6 = 6 \\cdot 4 = 24.$$
+$$2 \\cdot 18 = 3 \\cdot 12 = 4 \\cdot 9 = 6 \\cdot 6 = 36.$$
 
-So the number each gets is $y = \\frac{24}{x}$. When $x$ doubles, $y$ is halved; when $x$ triples, $y$ becomes a third.
+So the number each gets is $y = \\frac{36}{x}$. When $x$ doubles, $y$ is halved; when $x$ triples, $y$ becomes a third.
 
 A relation $y = \\frac{k}{x}$, or $xy = k$, for a fixed number $k \\ne 0$, is called **inverse variation**. In this lesson we tell inverse variation from direct variation, find the constant $k$, write the equation and use it to find new values.`,
-    `在正比例关系 $y = kx$ 中，**比值** $\\frac{y}{x}$ 不变：$x$ 变为两倍，$y$ 也变为两倍。很多量恰好相反。把 $24$ 块饼干平均分：$2$ 个朋友每人 $12$ 块，$3$ 个朋友每人 $8$ 块，$4$ 个朋友每人 $6$ 块，$6$ 个朋友每人 $4$ 块。人越多，每人分得越少，不变的是**乘积**：
+    `在正比例关系 $y = kx$ 中，**比值** $\\frac{y}{x}$ 不变：$x$ 变为两倍，$y$ 也变为两倍。很多量恰好相反。把 $36$ 块饼干平均分：$2$ 个朋友每人 $18$ 块，$3$ 个朋友每人 $12$ 块，$4$ 个朋友每人 $9$ 块，$6$ 个朋友每人 $6$ 块。人越多，每人分得越少，不变的是**乘积**：
 
-$$2 \\cdot 12 = 3 \\cdot 8 = 4 \\cdot 6 = 6 \\cdot 4 = 24.$$
+$$2 \\cdot 18 = 3 \\cdot 12 = 4 \\cdot 9 = 6 \\cdot 6 = 36.$$
 
-所以每人分得的块数是 $y = \\frac{24}{x}$。$x$ 变为两倍，$y$ 变为一半；$x$ 变为三倍，$y$ 变为三分之一。
+所以每人分得的块数是 $y = \\frac{36}{x}$。$x$ 变为两倍，$y$ 变为一半；$x$ 变为三倍，$y$ 变为三分之一。
 
 关系 $y = \\frac{k}{x}$，即 $xy = k$，其中 $k \\ne 0$ 是固定的数，叫做**反比例关系**。这节课区分反比例和正比例，求常数 $k$，写出方程，并用它求新的值。`,
   ),

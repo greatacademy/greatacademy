@@ -221,7 +221,7 @@ Suppose $9^{\\frac{1}{2}}$ obeys the product rule. Then
 
 $$9^{\\frac{1}{2}} \\cdot 9^{\\frac{1}{2}} = 9^{\\frac{1}{2} + \\frac{1}{2}} = 9^{1} = 9.$$
 
-So $9^{\\frac{1}{2}}$ is a number whose square is $9$: it must be $\\sqrt{9} = 3$. In the same way three equal factors $8^{\\frac{1}{3}}$ multiply to $8^{1}$, so $8^{\\frac{1}{3}} = \\sqrt[3]{8} = 2$. An exponent $\\frac{1}{n}$ is a root of index $n$, and a numerator in the exponent is a power taken as well.
+So $9^{\\frac{1}{2}}$ is a number whose square is $9$: it must be $\\sqrt{9} = 3$. In the same way three equal factors $27^{\\frac{1}{3}}$ multiply to $27^{1}$, so $27^{\\frac{1}{3}} = \\sqrt[3]{27} = 3$. An exponent $\\frac{1}{n}$ is a root of index $n$, and a numerator in the exponent is a power taken as well.
 
 This gives two ways of writing the same number, as a radical and as a power, and we will move between them freely. Powers are often easier to work with, because all the rules of exponents apply to them.`,
     `到目前为止，指数都是在数因数的个数：$2^{3} = 2 \\cdot 2 \\cdot 2$；而 $x^{m} \\cdot x^{n} = x^{m + n}$，是因为两个幂的因数被放到了一起。像 $9^{\\frac{1}{2}}$ 这样的分数指数没法数因数，因为不存在“半个因数”。我们改为这样**规定**它：让指数法则继续成立。
@@ -230,7 +230,7 @@ This gives two ways of writing the same number, as a radical and as a power, and
 
 $$9^{\\frac{1}{2}} \\cdot 9^{\\frac{1}{2}} = 9^{\\frac{1}{2} + \\frac{1}{2}} = 9^{1} = 9.$$
 
-所以 $9^{\\frac{1}{2}}$ 是平方等于 $9$ 的数，它只能是 $\\sqrt{9} = 3$。同样，三个相同的因数 $8^{\\frac{1}{3}}$ 相乘得 $8^{1}$，所以 $8^{\\frac{1}{3}} = \\sqrt[3]{8} = 2$。指数 $\\frac{1}{n}$ 就是 $n$ 次方根，而指数的分子表示再取乘方。
+所以 $9^{\\frac{1}{2}}$ 是平方等于 $9$ 的数，它只能是 $\\sqrt{9} = 3$。同样，三个相同的因数 $27^{\\frac{1}{3}}$ 相乘得 $27^{1}$，所以 $27^{\\frac{1}{3}} = \\sqrt[3]{27} = 3$。指数 $\\frac{1}{n}$ 就是 $n$ 次方根，而指数的分子表示再取乘方。
 
 这样，同一个数就有了两种写法：根式和幂。我们会在两者之间自由转换。幂往往更好算，因为所有指数法则都适用于它。`,
   ),
@@ -2134,22 +2134,22 @@ export const solvingExponentialEquationsWithFractionalSolutions: TopicDef = {
   xp: 12,
   standards: ["CCSS.HSA.CED.A.1", "CCSS.HSN.RN.A.2"],
   intro: t(
-    `We solved exponential equations by writing both sides over one base and setting the exponents equal. Nothing in that method needs the solution to be a whole number. Which power of $4$ is $8$? No whole number works, since $4^{1} = 4$ and $4^{2} = 16$, but fractional exponents fill the gap.
+    `We solved exponential equations by writing both sides over one base and setting the exponents equal. Nothing in that method needs the solution to be a whole number. Which power of $9$ is $27$? No whole number works, since $9^{1} = 9$ and $9^{2} = 81$, but fractional exponents fill the gap.
 
-Write both as powers of $2$: $4 = 2^{2}$ and $8 = 2^{3}$. Then
+Write both as powers of $3$: $9 = 3^{2}$ and $27 = 3^{3}$. Then
 
-$$4^{x} = 8 \\implies 2^{2x} = 2^{3} \\implies 2x = 3 \\implies x = \\frac{3}{2}.$$
+$$9^{x} = 27 \\implies 3^{2x} = 3^{3} \\implies 2x = 3 \\implies x = \\frac{3}{2}.$$
 
-And indeed $4^{\\frac{3}{2}} = (\\sqrt{4})^{3} = 2^{3} = 8$. Roots fit the same way, because a root is a fractional power: $\\sqrt{2} = 2^{\\frac{1}{2}}$ and $\\frac{1}{\\sqrt[3]{3}} = 3^{-\\frac{1}{3}}$.
+And indeed $9^{\\frac{3}{2}} = (\\sqrt{9})^{3} = 3^{3} = 27$. Roots fit the same way, because a root is a fractional power: $\\sqrt{2} = 2^{\\frac{1}{2}}$ and $\\frac{1}{\\sqrt[3]{3}} = 3^{-\\frac{1}{3}}$.
 
 In this lesson we solve exponential equations whose solutions are fractions, and leave each answer in lowest terms.`,
-    `我们解指数方程的方法是：把两边写成同一底数的幂，再令指数相等。这个方法并不要求解是整数。$4$ 的几次幂等于 $8$？没有整数满足，因为 $4^{1} = 4$，$4^{2} = 16$，但分数指数正好补上了空隙。
+    `我们解指数方程的方法是：把两边写成同一底数的幂，再令指数相等。这个方法并不要求解是整数。$9$ 的几次幂等于 $27$？没有整数满足，因为 $9^{1} = 9$，$9^{2} = 81$，但分数指数正好补上了空隙。
 
-把它们都写成 $2$ 的幂：$4 = 2^{2}$，$8 = 2^{3}$。于是
+把它们都写成 $3$ 的幂：$9 = 3^{2}$，$27 = 3^{3}$。于是
 
-$$4^{x} = 8 \\implies 2^{2x} = 2^{3} \\implies 2x = 3 \\implies x = \\frac{3}{2}.$$
+$$9^{x} = 27 \\implies 3^{2x} = 3^{3} \\implies 2x = 3 \\implies x = \\frac{3}{2}.$$
 
-确实 $4^{\\frac{3}{2}} = (\\sqrt{4})^{3} = 2^{3} = 8$。根式也一样处理，因为根式就是分数指数幂：$\\sqrt{2} = 2^{\\frac{1}{2}}$，$\\frac{1}{\\sqrt[3]{3}} = 3^{-\\frac{1}{3}}$。
+确实 $9^{\\frac{3}{2}} = (\\sqrt{9})^{3} = 3^{3} = 27$。根式也一样处理，因为根式就是分数指数幂：$\\sqrt{2} = 2^{\\frac{1}{2}}$，$\\frac{1}{\\sqrt[3]{3}} = 3^{-\\frac{1}{3}}$。
 
 这节课解分数解的指数方程，答案写成最简分数。`,
   ),
@@ -3174,22 +3174,22 @@ export const modelingExponentialGrowthWithFunctions: TopicDef = {
   xp: 15,
   standards: ["CCSS.HSF.LE.A.2", "CCSS.HSF.LE.A.1.C"],
   intro: t(
-    `We can write expressions such as $2000(1.05)^{t}$ and evaluate exponential functions $f(x) = a \\cdot b^{x}$. A **growth model** joins the two: a function of time that tells, for every $t$, how large a growing quantity is, so that we can ask for its value at any time we like.
+    `We can write expressions such as $5000(1.04)^{t}$ and evaluate exponential functions $f(x) = a \\cdot b^{x}$. A **growth model** joins the two: a function of time that tells, for every $t$, how large a growing quantity is, so that we can ask for its value at any time we like.
 
-A town of $2000$ people growing by $5\\%$ a year has
+A town of $5000$ people growing by $4\\%$ a year has
 
-$$P(t) = 2000(1.05)^{t}$$
+$$P(t) = 5000(1.04)^{t}$$
 
-people after $t$ years. Then $P(1) = 2100$, $P(2) = 2205$, and $P(10) = 2000(1.05)^{10} \\approx 3258$. The yearly increase itself grows, $100$ in the first year and $105$ in the second, because $5\\%$ is taken of a larger town each time. When a quantity doubles every few hours instead, the exponent counts the doublings.
+people after $t$ years. Then $P(1) = 5200$, $P(2) = 5408$, and $P(10) = 5000(1.04)^{10} \\approx 7401$. The yearly increase itself grows, $200$ in the first year and $208$ in the second, because $4\\%$ is taken of a larger town each time. When a quantity doubles every few hours instead, the exponent counts the doublings.
 
 In this lesson we write growth models from a rate or from two values, evaluate them, and work with doubling times.`,
-    `我们会写 $2000(1.05)^{t}$ 这样的表达式，也会计算指数函数 $f(x) = a \\cdot b^{x}$ 的值。**增长模型**把两者结合起来：它是时间的函数，对每个 $t$ 给出增长的量有多大，于是我们可以求它在任何时刻的值。
+    `我们会写 $5000(1.04)^{t}$ 这样的表达式，也会计算指数函数 $f(x) = a \\cdot b^{x}$ 的值。**增长模型**把两者结合起来：它是时间的函数，对每个 $t$ 给出增长的量有多大，于是我们可以求它在任何时刻的值。
 
-一个 $2000$ 人的小镇，人口每年增长 $5\\%$，$t$ 年后的人口为
+一个 $5000$ 人的小镇，人口每年增长 $4\\%$，$t$ 年后的人口为
 
-$$P(t) = 2000(1.05)^{t}$$
+$$P(t) = 5000(1.04)^{t}$$
 
-于是 $P(1) = 2100$，$P(2) = 2205$，$P(10) = 2000(1.05)^{10} \\approx 3258$。每年增加的人数本身也在增长，第一年 $100$，第二年 $105$，因为每次都是对更大的小镇取 $5\\%$。如果一个量每隔几小时翻一番，指数就数翻倍的次数。
+于是 $P(1) = 5200$，$P(2) = 5408$，$P(10) = 5000(1.04)^{10} \\approx 7401$。每年增加的人数本身也在增长，第一年 $200$，第二年 $208$，因为每次都是对更大的小镇取 $4\\%$。如果一个量每隔几小时翻一番，指数就数翻倍的次数。
 
 这节课根据增长率或两个值写出增长模型，计算它的值，并处理翻倍时间。`,
   ),
@@ -3350,20 +3350,20 @@ export const solvingExponentialGrowthProblems: TopicDef = {
   xp: 15,
   standards: ["CCSS.HSA.CED.A.1", "CCSS.HSF.LE.A.2"],
   intro: t(
-    `We can write a growth model $a \\cdot b^{t}$, read its starting value and factor, and solve exponential equations such as $2^{x} = 32$. Putting these together answers the questions a model is built for: when will the quantity reach a value, where did it start, and how fast is it growing.
+    `We can write a growth model $a \\cdot b^{t}$, read its starting value and factor, and solve exponential equations such as $3^{x} = 81$. Putting these together answers the questions a model is built for: when will the quantity reach a value, where did it start, and how fast is it growing.
 
-Each question fills in all but one letter of $a \\cdot b^{t} = v$. For $250$ bacteria doubling every hour, the time to reach $8000$ comes from
+Each question fills in all but one letter of $a \\cdot b^{t} = v$. For $300$ bacteria doubling every hour, the time to reach $4800$ comes from
 
-$$250 \\cdot 2^{t} = 8000 \\implies 2^{t} = 32 = 2^{5} \\implies t = 5$$
+$$300 \\cdot 2^{t} = 4800 \\implies 2^{t} = 16 = 2^{4} \\implies t = 4$$
 
 If instead $v$ and $t$ are known, divide by $b^{t}$ to find $a$; if $a$, $v$ and $t$ are known, take a root to find $b$.
 
 In this lesson we find the time, the starting value and the growth rate from the other numbers of a growth model.`,
-    `我们会写出增长模型 $a \\cdot b^{t}$，读出它的起始值和因子，也会解 $2^{x} = 32$ 这样的指数方程。把它们结合起来，就能回答建立模型所要回答的问题：这个量何时达到某个值，它从多少开始，增长得有多快。
+    `我们会写出增长模型 $a \\cdot b^{t}$，读出它的起始值和因子，也会解 $3^{x} = 81$ 这样的指数方程。把它们结合起来，就能回答建立模型所要回答的问题：这个量何时达到某个值，它从多少开始，增长得有多快。
 
-每个问题都是在 $a \\cdot b^{t} = v$ 中只留一个字母未知。$250$ 个细菌每小时翻一番，达到 $8000$ 个所需的时间由
+每个问题都是在 $a \\cdot b^{t} = v$ 中只留一个字母未知。$300$ 个细菌每小时翻一番，达到 $4800$ 个所需的时间由
 
-$$250 \\cdot 2^{t} = 8000 \\implies 2^{t} = 32 = 2^{5} \\implies t = 5$$
+$$300 \\cdot 2^{t} = 4800 \\implies 2^{t} = 16 = 2^{4} \\implies t = 4$$
 
 求出。如果已知 $v$ 和 $t$，就除以 $b^{t}$ 求 $a$；如果已知 $a$、$v$ 和 $t$，就开方求 $b$。
 
@@ -3610,20 +3610,20 @@ export const solvingExponentialDecayProblems: TopicDef = {
   intro: t(
     `We can solve growth problems by filling in all but one letter of $a \\cdot b^{t} = v$, and we can read decay models and half-lives. Decay problems are solved the same way, with a base less than $1$: when will the substance fall to a value, how much was there at the start, and how fast is it decaying.
 
-For $800$ g of a substance with a half-life of $3$ days, the time to fall to $50$ g comes from
+For $640$ g of a substance with a half-life of $2$ days, the time to fall to $80$ g comes from
 
-$$800\\left(\\frac{1}{2}\\right)^{\\frac{t}{3}} = 50 \\implies \\left(\\frac{1}{2}\\right)^{\\frac{t}{3}} = \\frac{1}{16} = \\left(\\frac{1}{2}\\right)^{4} \\implies t = 12$$
+$$640\\left(\\frac{1}{2}\\right)^{\\frac{t}{2}} = 80 \\implies \\left(\\frac{1}{2}\\right)^{\\frac{t}{2}} = \\frac{1}{8} = \\left(\\frac{1}{2}\\right)^{3} \\implies t = 6$$
 
-Halving four times takes four half-lives, $4 \\cdot 3 = 12$ days: $800 \\to 400 \\to 200 \\to 100 \\to 50$.
+Halving three times takes three half-lives, $3 \\cdot 2 = 6$ days: $640 \\to 320 \\to 160 \\to 80$.
 
 In this lesson we find the time from a half-life, the starting value before a decay, and the decay rate from two values.`,
     `我们会在 $a \\cdot b^{t} = v$ 中只留一个字母未知来解增长问题，也会解读衰减模型和半衰期。衰减问题的解法相同，只是底数小于 $1$：物质何时减少到某个值，起初有多少，衰减得有多快。
 
-$800$ 克半衰期为 $3$ 天的物质，减少到 $50$ 克所需的时间由
+$640$ 克半衰期为 $2$ 天的物质，减少到 $80$ 克所需的时间由
 
-$$800\\left(\\frac{1}{2}\\right)^{\\frac{t}{3}} = 50 \\implies \\left(\\frac{1}{2}\\right)^{\\frac{t}{3}} = \\frac{1}{16} = \\left(\\frac{1}{2}\\right)^{4} \\implies t = 12$$
+$$640\\left(\\frac{1}{2}\\right)^{\\frac{t}{2}} = 80 \\implies \\left(\\frac{1}{2}\\right)^{\\frac{t}{2}} = \\frac{1}{8} = \\left(\\frac{1}{2}\\right)^{3} \\implies t = 6$$
 
-求出。减半四次需要四个半衰期，即 $4 \\cdot 3 = 12$ 天：$800 \\to 400 \\to 200 \\to 100 \\to 50$。
+求出。减半三次需要三个半衰期，即 $3 \\cdot 2 = 6$ 天：$640 \\to 320 \\to 160 \\to 80$。
 
 这节课由半衰期求时间，求衰减前的起始值，并由两个值求衰减率。`,
   ),
@@ -3732,12 +3732,12 @@ export const linearVsExponentialGrowthAndDecay: TopicDef = {
   intro: t(
     `We know linear functions, which change by a constant slope, and exponential functions $a \\cdot b^{x}$, which change by a constant factor. Real quantities often come as a table or a sentence, and the first question is which kind of function describes them.
 
-The test is what happens each time $x$ goes up by $1$. In $3, 7, 11, 15$ each value is $4$ more than the last: equal differences, so the function is linear. In $3, 6, 12, 24$ each value is $2$ times the last: equal ratios, so it is exponential. In words, "adds $50$ dollars a year" is linear and "adds $5\\%$ a year" is exponential. And however the two start, a growing exponential function eventually passes a linear one: $2^{x}$ is behind $20x + 50$ until $x = 8$, then ahead for good.
+The test is what happens each time $x$ goes up by $1$. In $5, 8, 11, 14$ each value is $3$ more than the last: equal differences, so the function is linear. In $2, 6, 18, 54$ each value is $3$ times the last: equal ratios, so it is exponential. In words, "adds $50$ dollars a year" is linear and "adds $5\\%$ a year" is exponential. And however the two start, a growing exponential function eventually passes a linear one: $2^{x}$ is behind $10x + 20$ until $x = 7$, then ahead for good.
 
 In this lesson we tell linear from exponential change in tables and descriptions, and find where exponential growth overtakes linear growth.`,
     `我们学过以固定斜率变化的一次函数，也学过以固定因子变化的指数函数 $a \\cdot b^{x}$。实际的量常常以数值表或文字给出，首先要问的是哪一种函数能描述它。
 
-检验方法是看 $x$ 每增加 $1$ 时发生了什么。在 $3, 7, 11, 15$ 中，每个值都比前一个多 $4$：差相等，所以是一次函数。在 $3, 6, 12, 24$ 中，每个值都是前一个的 $2$ 倍：比相等，所以是指数函数。用文字说，“每年增加 $50$ 元”是线性的，“每年增加 $5\\%$”是指数的。而且不论两者起初如何，增长的指数函数终将超过一次函数：$2^{x}$ 在 $x = 8$ 之前落后于 $20x + 50$，此后一直领先。
+检验方法是看 $x$ 每增加 $1$ 时发生了什么。在 $5, 8, 11, 14$ 中，每个值都比前一个多 $3$：差相等，所以是一次函数。在 $2, 6, 18, 54$ 中，每个值都是前一个的 $3$ 倍：比相等，所以是指数函数。用文字说，“每年增加 $50$ 元”是线性的，“每年增加 $5\\%$”是指数的。而且不论两者起初如何，增长的指数函数终将超过一次函数：$2^{x}$ 在 $x = 7$ 之前落后于 $10x + 20$，此后一直领先。
 
 这节课从数值表和文字描述中区分线性变化与指数变化，并找出指数增长超过线性增长的位置。`,
   ),
@@ -4310,12 +4310,12 @@ export const graphingExponentialGrowthFunctions: TopicDef = {
   intro: t(
     `We can evaluate $f(x) = a \\cdot b^{x}$ and we know how to read a graph, its intercepts and its range. Plotting an exponential function shows its whole behavior at once: where it starts, how fast it climbs, and the value it approaches but never reaches.
 
-Take $y = 2(3)^{x}$. Its values at $x = -2, -1, 0, 1, 2$ are $\\frac{2}{9}, \\frac{2}{3}, 2, 6, 18$. The graph crosses the $y$-axis at $(0, 2)$, the coefficient, and each step of $1$ to the right multiplies the height by $3$, the base, so it climbs ever more steeply. To the left the heights shrink toward $0$ but stay positive, so the graph flattens out along the $x$-axis.
+Take $y = 5(2)^{x}$. Its values at $x = -2, -1, 0, 1, 2$ are $\\frac{5}{4}, \\frac{5}{2}, 5, 10, 20$. The graph crosses the $y$-axis at $(0, 5)$, the coefficient, and each step of $1$ to the right multiplies the height by $2$, the base, so it climbs ever more steeply. To the left the heights shrink toward $0$ but stay positive, so the graph flattens out along the $x$-axis.
 
 In this lesson we find the equation of a growth function from its graph, its horizontal asymptote and its range.`,
     `我们会计算 $f(x) = a \\cdot b^{x}$ 的值，也会读图象、截距和值域。画出指数函数的图象，就能一下子看清它的全部性质：从哪里开始，上升得多快，以及它趋近却永远达不到的值。
 
-以 $y = 2(3)^{x}$ 为例。它在 $x = -2, -1, 0, 1, 2$ 处的值为 $\\frac{2}{9}, \\frac{2}{3}, 2, 6, 18$。图象与 $y$ 轴交于 $(0, 2)$，即系数；向右每走 $1$ 个单位，高度乘以底数 $3$，所以上升得越来越陡。向左高度越来越接近 $0$，但始终为正，所以图象沿 $x$ 轴逐渐变平。
+以 $y = 5(2)^{x}$ 为例。它在 $x = -2, -1, 0, 1, 2$ 处的值为 $\\frac{5}{4}, \\frac{5}{2}, 5, 10, 20$。图象与 $y$ 轴交于 $(0, 5)$，即系数；向右每走 $1$ 个单位，高度乘以底数 $2$，所以上升得越来越陡。向左高度越来越接近 $0$，但始终为正，所以图象沿 $x$ 轴逐渐变平。
 
 这节课由图象求增长函数的解析式，并求它的水平渐近线和值域。`,
   ),
@@ -4368,12 +4368,12 @@ export const graphingExponentialDecayFunctions: TopicDef = {
   intro: t(
     `We can graph a growth function $a \\cdot b^{x}$ with $b > 1$, read its equation from two points, and find its asymptote and range. A decay function has $0 < b < 1$, and its graph is the same picture seen in a mirror: it falls from left to right instead of rising.
 
-Take $y = 8\\left(\\frac{1}{2}\\right)^{x}$. At $x = -1, 0, 1, 2, 3$ the heights are $16, 8, 4, 2, 1$. The graph still crosses the $y$-axis at the coefficient, $(0, 8)$, and each step to the right multiplies the height by $\\frac{1}{2}$, so it falls and flattens toward the $x$-axis on the right. A negative coefficient turns the graph upside down across its asymptote: $y = -2\\left(\\frac{1}{2}\\right)^{x} + 3$ stays below $y = 3$.
+Take $y = 9\\left(\\frac{1}{3}\\right)^{x}$. At $x = -1, 0, 1, 2, 3$ the heights are $27, 9, 3, 1, \\frac{1}{3}$. The graph still crosses the $y$-axis at the coefficient, $(0, 9)$, and each step to the right multiplies the height by $\\frac{1}{3}$, so it falls and flattens toward the $x$-axis on the right. A negative coefficient turns the graph upside down across its asymptote: $y = -3\\left(\\frac{1}{2}\\right)^{x} + 2$ stays below $y = 2$.
 
 In this lesson we find the equation of a decay function from its graph, its asymptote, and the range of exponential functions with reflections.`,
     `我们会画 $b > 1$ 的增长函数 $a \\cdot b^{x}$ 的图象，由两点读出它的解析式，并求它的渐近线和值域。衰减函数的 $0 < b < 1$，它的图象像是增长函数的镜像：从左到右下降而不是上升。
 
-以 $y = 8\\left(\\frac{1}{2}\\right)^{x}$ 为例。在 $x = -1, 0, 1, 2, 3$ 处高度为 $16, 8, 4, 2, 1$。图象仍与 $y$ 轴交于系数处 $(0, 8)$；向右每走一步，高度乘以 $\\frac{1}{2}$，所以它下降，并在右侧逐渐趋于 $x$ 轴。系数为负时，图象关于渐近线上下翻折：$y = -2\\left(\\frac{1}{2}\\right)^{x} + 3$ 始终在 $y = 3$ 的下方。
+以 $y = 9\\left(\\frac{1}{3}\\right)^{x}$ 为例。在 $x = -1, 0, 1, 2, 3$ 处高度为 $27, 9, 3, 1, \\frac{1}{3}$。图象仍与 $y$ 轴交于系数处 $(0, 9)$；向右每走一步，高度乘以 $\\frac{1}{3}$，所以它下降，并在右侧逐渐趋于 $x$ 轴。系数为负时，图象关于渐近线上下翻折：$y = -3\\left(\\frac{1}{2}\\right)^{x} + 2$ 始终在 $y = 2$ 的下方。
 
 这节课由图象求衰减函数的解析式，求它的渐近线，并求带翻折的指数函数的值域。`,
   ),

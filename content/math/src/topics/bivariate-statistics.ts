@@ -191,19 +191,19 @@ function sceneData(rng: Rng, s: Scene, n: number): Pt[] {
   }
 }
 
-/** studyIntro is a scatter plot of hours studied and quiz scores, with the student (4, 7) marked. */
+/** studyIntro is a scatter plot of hours studied and quiz scores, with the student (6, 8) marked. */
 const studyIntro: Figure = scatterFigure(
   [
     [1, 3],
     [2, 4],
     [3, 4],
+    [4, 5],
     [5, 6],
-    [6, 8],
     [7, 7],
     [8, 9],
   ],
-  [{ kind: "point", at: [4, 7], accent: true, label: "(4, 7)", dir: "nw" }],
-  ["the point (4, 7) marked", "标出的点 (4, 7)"],
+  [{ kind: "point", at: [6, 8], accent: true, label: "(6, 8)", dir: "nw" }],
+  ["the point (6, 8) marked", "标出的点 (6, 8)"],
 );
 
 /** readMarks draws the guides from the axes to a data point and marks the point. */
@@ -227,14 +227,14 @@ export const scatterPlots: TopicDef = {
   intro: t(
     `A point $(x, y)$ of the coordinate plane is a pair of numbers: go right $x$, then up $y$. Data often come in exactly such pairs. For each student of a class we may know two things, the hours the student studied and the score the student got, and the interesting question is how the two go together.
 
-A **scatter plot** answers it at a glance: each student becomes one point, with the hours on the $x$-axis and the score on the $y$-axis. The student who studied $4$ hours and scored $7$ is the point $(4, 7)$:
+A **scatter plot** answers it at a glance: each student becomes one point, with the hours on the $x$-axis and the score on the $y$-axis. The student who studied $6$ hours and scored $8$ is the point $(6, 8)$:
 
 {{figure 0}}
 
 Seen together, the points show a pattern no table shows as quickly: students who studied longer tended to score higher. In this lesson we read single items from a scatter plot, count the points that meet a condition, and plot data from a table.`,
     `坐标平面上的点 $(x, y)$ 就是一对数：先向右走 $x$，再向上走 $y$。数据常常正好成对出现。对班上每名学生，我们可能知道两件事：学习时长和得分，而值得关心的是这两者之间有什么联系。
 
-**散点图**让人一眼看出答案：每名学生画成一个点，学习时长对应 $x$ 轴，得分对应 $y$ 轴。学习 $4$ 小时、得 $7$ 分的学生就是点 $(4, 7)$：
+**散点图**让人一眼看出答案：每名学生画成一个点，学习时长对应 $x$ 轴，得分对应 $y$ 轴。学习 $6$ 小时、得 $8$ 分的学生就是点 $(6, 8)$：
 
 {{figure 0}}
 
@@ -465,24 +465,24 @@ const fitOptions: readonly Text[] = [
 /** trendSlopes are the slopes of the generated trend lines. */
 const trendSlopes: readonly Q[] = [Q.of(1, 2), Q.of(2, 3), Q.of(3, 4), Q.of(1), Q.of(4, 5), Q.of(3, 5)];
 
-/** trendIntro is a scatter plot with the trend line y = 3/4 x + 2 through the grid points (0, 2) and (4, 5). */
+/** trendIntro is a scatter plot with the trend line y = 4/5 x + 1 through the grid points (0, 1) and (5, 5). */
 const trendIntro: Figure = scatterFigure(
   [
-    [1, 3],
+    [1, 2],
     [2, 3],
-    [3, 5],
-    [5, 5],
-    [6, 7],
+    [3, 3],
+    [4, 4],
+    [6, 5],
     [7, 7],
-    [8, 8],
+    [8, 7],
     [9, 9],
   ],
   [
-    lineMark(Q.of(3, 4), Q.of(2), true),
-    { kind: "point", at: [0, 2], open: true, accent: true },
-    { kind: "point", at: [4, 5], open: true, accent: true },
+    lineMark(Q.of(4, 5), Q.of(1), true),
+    { kind: "point", at: [0, 1], open: true, accent: true },
+    { kind: "point", at: [5, 5], open: true, accent: true },
   ],
-  ["a dashed trend line through (0, 2) and (4, 5)", "经过 (0, 2) 和 (4, 5) 的虚线趋势线"],
+  ["a dashed trend line through (0, 1) and (5, 5)", "经过 (0, 1) 和 (5, 5) 的虚线趋势线"],
 );
 
 export const trendLines: TopicDef = {
@@ -502,18 +502,18 @@ export const trendLines: TopicDef = {
   intro: t(
     `A scatter plot shows paired data as points, and often the points rise or fall roughly along a line. A line $y = mx + b$, on the other hand, is something we can describe exactly, by its slope and its intercept. Drawing a line through the middle of the points, a **trend line**, joins the two: it replaces a cloud of points by one equation that summarizes them.
 
-Here the points rise steadily. The dashed line through the grid points $(0, 2)$ and $(4, 5)$ runs through their middle, with points on both sides:
+Here the points rise steadily. The dashed line through the grid points $(0, 1)$ and $(5, 5)$ runs through their middle, with points on both sides:
 
 {{figure 0}}
 
-It rises $3$ for every $4$ to the right and starts at $2$, so its equation is $y = \\frac{3}{4}x + 2$. In this lesson we judge whether a line is a good trend line and write the equation of one, from a graph or from two points.`,
+It rises $4$ for every $5$ to the right and starts at $1$, so its equation is $y = \\frac{4}{5}x + 1$. In this lesson we judge whether a line is a good trend line and write the equation of one, from a graph or from two points.`,
     `散点图把成对的数据画成点，而这些点常常大致沿一条直线上升或下降。另一方面，直线 $y = mx + b$ 可以用斜率和截距精确地描述。从点的中间画一条直线，即**趋势线**，就把二者联系了起来：它用一个方程概括了一团点。
 
-这里的点稳步上升。经过网格点 $(0, 2)$ 和 $(4, 5)$ 的虚线从点的中间穿过，两侧都有点：
+这里的点稳步上升。经过网格点 $(0, 1)$ 和 $(5, 5)$ 的虚线从点的中间穿过，两侧都有点：
 
 {{figure 0}}
 
-它每向右 $4$ 上升 $3$，起点是 $2$，所以方程是 $y = \\frac{3}{4}x + 2$。这节课我们判断一条直线是不是好的趋势线，并由图像或两个点写出趋势线的方程。`,
+它每向右 $5$ 上升 $4$，起点是 $1$，所以方程是 $y = \\frac{4}{5}x + 1$。这节课我们判断一条直线是不是好的趋势线，并由图像或两个点写出趋势线的方程。`,
   ),
   introFigures: [trendIntro],
   knowledgePoints: [
@@ -972,18 +972,18 @@ export const predictionsWithTrendLines: TopicDef = {
   intro: t(
     `A trend line $y = mx + b$ summarizes a scatter plot by an equation. An equation can do something a cloud of points cannot: it gives a value of $y$ for **any** $x$, including values of $x$ that no item in the data has. That is what makes trend lines useful: they turn past data into predictions.
 
-Suppose $y = 2.5x + 40$ models the test scores of a class, where $x$ is the hours a student studied. No student in the data studied exactly $6$ hours, but the line predicts that such a student scores
+Suppose $y = 3x + 45$ models the test scores of a class, where $x$ is the hours a student studied. No student in the data studied exactly $5$ hours, but the line predicts that such a student scores
 
-$$y = 2.5 \\cdot 6 + 40 = 55 \\text{ points}.$$
+$$y = 3 \\cdot 5 + 45 = 60 \\text{ points}.$$
 
-Going the other way, the line predicts a score of $60$ for $8$ hours, since $2.5 \\cdot 8 + 40 = 60$. In this lesson we predict $y$ from $x$ and $x$ from $y$, judge how far a prediction can be trusted, and measure how far a real data point lies from the line.`,
+Going the other way, the line predicts a score of $75$ for $10$ hours, since $3 \\cdot 10 + 45 = 75$. In this lesson we predict $y$ from $x$ and $x$ from $y$, judge how far a prediction can be trusted, and measure how far a real data point lies from the line.`,
     `趋势线 $y = mx + b$ 用一个方程概括了散点图。方程能做到一团点做不到的事：对**任意**的 $x$ 都给出一个 $y$ 值，包括数据中没有任何对象取到的 $x$。这正是趋势线有用的地方：它把过去的数据变成了预测。
 
-设 $y = 2.5x + 40$ 描述某班学生的考试分数，$x$ 是学生的学习时长（小时）。数据中没有学生恰好学了 $6$ 小时，但这条直线预测这样的学生得分为
+设 $y = 3x + 45$ 描述某班学生的考试分数，$x$ 是学生的学习时长（小时）。数据中没有学生恰好学了 $5$ 小时，但这条直线预测这样的学生得分为
 
-$$y = 2.5 \\cdot 6 + 40 = 55 \\text{ 分}.$$
+$$y = 3 \\cdot 5 + 45 = 60 \\text{ 分}.$$
 
-反过来，因为 $2.5 \\cdot 8 + 40 = 60$，直线预测学习 $8$ 小时得 $60$ 分。这节课我们由 $x$ 预测 $y$、由 $y$ 求 $x$，判断预测在多大程度上可信，并衡量真实的数据点离直线有多远。`,
+反过来，因为 $3 \\cdot 10 + 45 = 75$，直线预测学习 $10$ 小时得 $75$ 分。这节课我们由 $x$ 预测 $y$、由 $y$ 求 $x$，判断预测在多大程度上可信，并衡量真实的数据点离直线有多远。`,
   ),
   knowledgePoints: [
     {
@@ -1187,12 +1187,12 @@ export const interpretingTrendLineCoefficients: TopicDef = {
   intro: t(
     `In $y = mx + b$ the slope $m$ is the change in $y$ for each step of $1$ in $x$, and $b$ is the value of $y$ at $x = 0$. When the line is a trend line of real data, $x$ and $y$ are real quantities with units, so these two numbers say something about the situation itself, and reading them is often the reason the line was drawn.
 
-Suppose $y = -2.5x + 30$ models the values of used cars of one model, in thousands of dollars, where $x$ is the age in years. A car aged $2$ years is predicted to be worth $25$ thousand dollars and one aged $3$ years $22.5$ thousand: each extra year takes off $2.5$ thousand dollars, which is the slope. At $x = 0$, a new car, the prediction is $30$ thousand dollars, the intercept.
+Suppose $y = -1.5x + 24$ models the values of used cars of one model, in thousands of dollars, where $x$ is the age in years. A car aged $2$ years is predicted to be worth $21$ thousand dollars and one aged $3$ years $19.5$ thousand: each extra year takes off $1.5$ thousand dollars, which is the slope. At $x = 0$, a new car, the prediction is $24$ thousand dollars, the intercept.
 
 In this lesson we put the slope and the intercept of a trend line into words, use the slope for changes over several units, and write a trend line from such a description.`,
     `在 $y = mx + b$ 中，斜率 $m$ 是 $x$ 每增加 $1$ 时 $y$ 的变化量，$b$ 是 $x = 0$ 时 $y$ 的值。当这条直线是真实数据的趋势线时，$x$ 和 $y$ 是带单位的真实的量，所以这两个数说的就是情境本身，而读懂它们往往正是画这条线的目的。
 
-设 $y = -2.5x + 30$ 描述某款二手车的价值（千美元），$x$ 是车龄（年）。车龄 $2$ 年的汽车预测价值 $25$ 千美元，车龄 $3$ 年的预测价值 $22.5$ 千美元：每多一年少 $2.5$ 千美元，这就是斜率。在 $x = 0$，即新车时，预测值是 $30$ 千美元，这就是截距。
+设 $y = -1.5x + 24$ 描述某款二手车的价值（千美元），$x$ 是车龄（年）。车龄 $2$ 年的汽车预测价值 $21$ 千美元，车龄 $3$ 年的预测价值 $19.5$ 千美元：每多一年少 $1.5$ 千美元，这就是斜率。在 $x = 0$，即新车时，预测值是 $24$ 千美元，这就是截距。
 
 这节课我们用文字说出趋势线的斜率和截距的含义，用斜率求多个单位上的变化，并由这样的描述写出趋势线。`,
   ),
@@ -1872,12 +1872,12 @@ export const correlationAndCausation: TopicDef = {
   intro: t(
     `A correlation coefficient close to $1$ or $-1$ says that two variables move together very reliably. It is tempting to read that as "one makes the other happen", but a correlation only describes the data; it does not say **why** the variables move together.
 
-Over a year in a seaside town, ice cream sales and the number of sunburns are strongly positively correlated. Ice cream does not burn anyone, and sunburns do not make people buy ice cream. Both rise on hot, sunny days, and fall on cold, cloudy ones: the weather drives both, and that alone makes them correlated.
+Over a year in one city, umbrella sales and the number of car accidents are strongly positively correlated. Umbrellas do not crash cars, and accidents do not make people buy umbrellas. Both rise on rainy days, and fall on dry ones: the weather drives both, and that alone makes them correlated.
 
 In this lesson we look for such hidden third variables, and we see what kind of study can show that one thing really causes another.`,
     `相关系数接近 $1$ 或 $-1$ 说明两个变量非常稳定地一起变化。人们很容易把它理解为“一个导致了另一个”，但相关只是描述数据，并不说明两个变量**为什么**一起变化。
 
-在一个海滨小镇的一年里，冰淇淋销量与晒伤人数呈很强的正相关。冰淇淋不会晒伤任何人，晒伤也不会让人去买冰淇淋。二者都在炎热晴朗的日子上升，在阴冷的日子下降：天气同时推动了二者，单凭这一点它们就会相关。
+在一座城市的一年里，雨伞销量与交通事故数呈很强的正相关。雨伞不会让汽车相撞，交通事故也不会让人去买雨伞。二者都在下雨的日子上升，在干燥的日子下降：天气同时推动了二者，单凭这一点它们就会相关。
 
 这节课我们寻找这种隐藏的第三个变量，并看看什么样的研究才能说明一件事确实导致了另一件事。`,
   ),

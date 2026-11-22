@@ -2119,14 +2119,14 @@ export const propertiesOfLinesInStandardForm: TopicDef = {
   intro: t(
     `A line in standard form, $Ax + By = C$, does not show its slope or $y$-intercept the way $y = mx + b$ does. It has its own advantage: the places where the line crosses the axes come out in one step each, because on an axis one of the variables is $0$.
 
-Take $3x - 4y = 12$. On the $x$-axis $y = 0$, which leaves $3x = 12$, so $x = 4$. On the $y$-axis $x = 0$, which leaves $-4y = 12$, so $y = -3$. Two points fix the line, and from $(0, -3)$ to $(4, 0)$ the run is $4$ and the rise $3$, so the slope is $\\frac{3}{4}$.
+Take $2x + 5y = 10$. On the $x$-axis $y = 0$, which leaves $2x = 10$, so $x = 5$. On the $y$-axis $x = 0$, which leaves $5y = 10$, so $y = 2$. Two points fix the line, and from $(0, 2)$ to $(5, 0)$ the run is $5$ and the rise $-2$, so the slope is $-\\frac{2}{5}$.
 
 {{figure 0}}
 
 In this lesson we find the intercepts of a line in standard form, read its slope from the coefficients, and write a line in standard form from its intercepts.`,
     `标准式 $Ax + By = C$ 不像 $y = mx + b$ 那样直接显示斜率和 $y$ 轴截距。但它有自己的长处：直线与坐标轴的交点各用一步就能求出，因为在坐标轴上有一个变量为 $0$。
 
-以 $3x - 4y = 12$ 为例。在 $x$ 轴上 $y = 0$，剩下 $3x = 12$，所以 $x = 4$。在 $y$ 轴上 $x = 0$，剩下 $-4y = 12$，所以 $y = -3$。两点确定直线，从 $(0, -3)$ 到 $(4, 0)$，横向变化 $4$，纵向变化 $3$，所以斜率是 $\\frac{3}{4}$。
+以 $2x + 5y = 10$ 为例。在 $x$ 轴上 $y = 0$，剩下 $2x = 10$，所以 $x = 5$。在 $y$ 轴上 $x = 0$，剩下 $5y = 10$，所以 $y = 2$。两点确定直线，从 $(0, 2)$ 到 $(5, 0)$，横向变化 $5$，纵向变化 $-2$，所以斜率是 $-\\frac{2}{5}$。
 
 {{figure 0}}
 
@@ -2134,15 +2134,15 @@ In this lesson we find the intercepts of a line in standard form, read its slope
   ),
   introFigures: [
     graphFigure(
-      { xMin: -2, xMax: 7, yMin: -5, yMax: 3 },
+      { xMin: -2, xMax: 7, yMin: -2, yMax: 4 },
       [
-        { kind: "line", a: [0, -3], b: [4, 0], accent: true },
-        ...riseRun([0, -3], [4, 0]),
-        { kind: "point", at: [4, 0], label: "(4, 0)", dir: "nw", tone: "result" },
-        { kind: "point", at: [0, -3], label: "(0, −3)", dir: "w", tone: "result" },
+        { kind: "line", a: [0, 2], b: [5, 0], accent: true },
+        ...riseRun([0, 2], [5, 0]),
+        { kind: "point", at: [5, 0], label: "(5, 0)", dir: "ne", tone: "result" },
+        { kind: "point", at: [0, 2], label: "(0, 2)", dir: "w", tone: "result" },
       ],
-      "The line 3x − 4y = 12 crosses the x-axis at (4, 0) and the y-axis at (0, −3); between them the run is 4 and the rise is 3.",
-      "直线 3x − 4y = 12 与 x 轴交于 (4, 0)，与 y 轴交于 (0, −3)；两点之间横向变化 4，纵向变化 3。",
+      "The line 2x + 5y = 10 crosses the x-axis at (5, 0) and the y-axis at (0, 2); between them the run is 5 and the rise is −2.",
+      "直线 2x + 5y = 10 与 x 轴交于 (5, 0)，与 y 轴交于 (0, 2)；两点之间横向变化 5，纵向变化 −2。",
     ),
   ],
   knowledgePoints: [
@@ -3211,20 +3211,20 @@ export const eliminationWithOneTransformation: TopicDef = {
   xp: 15,
   standards: ["CCSS.8.EE.C.8.B", "CCSS.HSA.REI.C.5"],
   intro: t(
-    `Adding or subtracting the equations eliminates a variable when its coefficients are already opposite or equal. In $\\begin{cases} 2x + y = 7 \\\\ 3x - 2y = 0 \\end{cases}$ they are not: adding gives $5x - y = 7$, which still has two unknowns.
+    `Adding or subtracting the equations eliminates a variable when its coefficients are already opposite or equal. In $\\begin{cases} x + 3y = 9 \\\\ 2x - y = 4 \\end{cases}$ they are not: adding gives $3x + 2y = 13$, which still has two unknowns.
 
-An equation keeps its solutions when both sides are multiplied by the same nonzero number. Every pair with $2x + y = 7$ also has $4x + 2y = 14$, and the other way round. So we may replace the first equation by $4x + 2y = 14$. Now the coefficients of $y$ are $2$ and $-2$, and adding gives
+An equation keeps its solutions when both sides are multiplied by the same nonzero number. Every pair with $2x - y = 4$ also has $6x - 3y = 12$, and the other way round. So we may replace the second equation by $6x - 3y = 12$. Now the coefficients of $y$ are $3$ and $-3$, and adding gives
 
-$$7x = 14, \\quad\\text{so}\\quad x = 2.$$
+$$7x = 21, \\quad\\text{so}\\quad x = 3.$$
 
-Then $2 \\cdot 2 + y = 7$ gives $y = 3$, and the second equation checks: $3 \\cdot 2 - 2 \\cdot 3 = 0$. In this lesson we multiply one equation to make a pair of coefficients match, and line up the terms when an equation is not written as $ax + by = c$.`,
-    `当某个变量的系数已经互为相反数或相等时，两个方程相加或相减就能把它消去。在 $\\begin{cases} 2x + y = 7 \\\\ 3x - 2y = 0 \\end{cases}$ 中不是这样：相加得 $5x - y = 7$，仍有两个未知数。
+Then $2 \\cdot 3 - y = 4$ gives $y = 2$, and the first equation checks: $3 + 3 \\cdot 2 = 9$. In this lesson we multiply one equation to make a pair of coefficients match, and line up the terms when an equation is not written as $ax + by = c$.`,
+    `当某个变量的系数已经互为相反数或相等时，两个方程相加或相减就能把它消去。在 $\\begin{cases} x + 3y = 9 \\\\ 2x - y = 4 \\end{cases}$ 中不是这样：相加得 $3x + 2y = 13$，仍有两个未知数。
 
-方程两边同乘以一个非零数，解不变。满足 $2x + y = 7$ 的每一对数也满足 $4x + 2y = 14$，反过来也一样。所以可以把第一个方程换成 $4x + 2y = 14$。这时 $y$ 的系数是 $2$ 和 $-2$，相加得
+方程两边同乘以一个非零数，解不变。满足 $2x - y = 4$ 的每一对数也满足 $6x - 3y = 12$，反过来也一样。所以可以把第二个方程换成 $6x - 3y = 12$。这时 $y$ 的系数是 $3$ 和 $-3$，相加得
 
-$$7x = 14, \\quad\\text{所以}\\quad x = 2.$$
+$$7x = 21, \\quad\\text{所以}\\quad x = 3.$$
 
-再由 $2 \\cdot 2 + y = 7$ 得 $y = 3$，代入第二个方程检验：$3 \\cdot 2 - 2 \\cdot 3 = 0$。这节课我们把一个方程乘以一个数，使一对系数匹配；方程不是 $ax + by = c$ 的形式时，先对齐各项。`,
+再由 $2 \\cdot 3 - y = 4$ 得 $y = 2$，代入第一个方程检验：$3 + 3 \\cdot 2 = 9$。这节课我们把一个方程乘以一个数，使一对系数匹配；方程不是 $ax + by = c$ 的形式时，先对齐各项。`,
   ),
   knowledgePoints: [
     {
@@ -3325,20 +3325,20 @@ export const eliminationWithTwoTransformations: TopicDef = {
   xp: 18,
   standards: ["CCSS.8.EE.C.8.B", "CCSS.HSA.REI.C.5"],
   intro: t(
-    `Multiplying one equation works when one coefficient is a multiple of the other, like $2$ and $6$. In $\\begin{cases} 3x + 4y = 10 \\\\ 2x - 5y = -1 \\end{cases}$ no coefficient divides its partner: $3$ and $2$, $4$ and $-5$. Multiplying one equation alone cannot make a pair match.
+    `Multiplying one equation works when one coefficient is a multiple of the other, like $2$ and $6$. In $\\begin{cases} 4x + 3y = 18 \\\\ 5x - 2y = 11 \\end{cases}$ no coefficient divides its partner: $4$ and $5$, $3$ and $-2$. Multiplying one equation alone cannot make a pair match.
 
-So multiply both. The coefficients of $x$, $3$ and $2$, have $6$ as their least common multiple. The first equation times $2$ and the second times $3$ give
+So multiply both. The coefficients of $y$, $3$ and $-2$, have $6$ as their least common multiple. The first equation times $2$ and the second times $3$ give
 
-$$\\begin{cases} 6x + 8y = 20 \\\\ 6x - 15y = -3 \\end{cases}$$
+$$\\begin{cases} 8x + 6y = 36 \\\\ 15x - 6y = 33 \\end{cases}$$
 
-Subtracting, $23y = 23$, so $y = 1$, and $3x + 4 = 10$ gives $x = 2$. Check: $2 \\cdot 2 - 5 \\cdot 1 = -1$. In this lesson we scale both equations, and keep exact fractions when the solution is not a whole number.`,
-    `当一个系数是另一个的倍数时，比如 $2$ 和 $6$，把一个方程乘以一个数就行。在 $\\begin{cases} 3x + 4y = 10 \\\\ 2x - 5y = -1 \\end{cases}$ 中，没有一个系数能整除对应的系数：$3$ 和 $2$，$4$ 和 $-5$。只乘一个方程，无法使任何一对系数匹配。
+Adding, $23x = 69$, so $x = 3$, and $12 + 3y = 18$ gives $y = 2$. Check: $5 \\cdot 3 - 2 \\cdot 2 = 11$. In this lesson we scale both equations, and keep exact fractions when the solution is not a whole number.`,
+    `当一个系数是另一个的倍数时，比如 $2$ 和 $6$，把一个方程乘以一个数就行。在 $\\begin{cases} 4x + 3y = 18 \\\\ 5x - 2y = 11 \\end{cases}$ 中，没有一个系数能整除对应的系数：$4$ 和 $5$，$3$ 和 $-2$。只乘一个方程，无法使任何一对系数匹配。
 
-那就两个都乘。$x$ 的系数 $3$ 和 $2$ 的最小公倍数是 $6$。第一个方程乘以 $2$，第二个方程乘以 $3$，得
+那就两个都乘。$y$ 的系数 $3$ 和 $-2$ 的最小公倍数是 $6$。第一个方程乘以 $2$，第二个方程乘以 $3$，得
 
-$$\\begin{cases} 6x + 8y = 20 \\\\ 6x - 15y = -3 \\end{cases}$$
+$$\\begin{cases} 8x + 6y = 36 \\\\ 15x - 6y = 33 \\end{cases}$$
 
-相减得 $23y = 23$，所以 $y = 1$，由 $3x + 4 = 10$ 得 $x = 2$。检验：$2 \\cdot 2 - 5 \\cdot 1 = -1$。这节课我们把两个方程都乘以适当的数，并在解不是整数时保留准确的分数。`,
+相加得 $23x = 69$，所以 $x = 3$，由 $12 + 3y = 18$ 得 $y = 2$。检验：$5 \\cdot 3 - 2 \\cdot 2 = 11$。这节课我们把两个方程都乘以适当的数，并在解不是整数时保留准确的分数。`,
   ),
   knowledgePoints: [
     {
@@ -3498,18 +3498,18 @@ export const systemsWithFractionalCoefficients: TopicDef = {
   intro: t(
     `Elimination is easiest with whole-number coefficients, and fractions make every step heavier. But we already know that multiplying both sides of an equation by a nonzero number keeps its solutions. If we multiply by a number that every denominator divides, the fractions disappear.
 
-Take $\\begin{cases} \\frac{1}{2}x + \\frac{2}{3}y = 3 \\\\ x - y = -1 \\end{cases}$. The denominators of the first equation are $2$ and $3$, with least common multiple $6$:
+Take $\\begin{cases} \\frac{1}{3}x + \\frac{1}{4}y = 2 \\\\ x - y = -1 \\end{cases}$. The denominators of the first equation are $3$ and $4$, with least common multiple $12$:
 
-$$6 \\cdot \\tfrac{1}{2}x + 6 \\cdot \\tfrac{2}{3}y = 6 \\cdot 3, \\quad\\text{that is}\\quad 3x + 4y = 18.$$
+$$12 \\cdot \\tfrac{1}{3}x + 12 \\cdot \\tfrac{1}{4}y = 12 \\cdot 2, \\quad\\text{that is}\\quad 4x + 3y = 24.$$
 
-Now multiply $x - y = -1$ by $4$ and add: $7x = 14$, so $x = 2$, and $y = 3$. Check in the original equation: $\\frac{1}{2} \\cdot 2 + \\frac{2}{3} \\cdot 3 = 1 + 2 = 3$. In this lesson we clear the fractions from one equation or from both, then solve by elimination.`,
+Now multiply $x - y = -1$ by $3$ and add: $7x = 21$, so $x = 3$, and $y = 4$. Check in the original equation: $\\frac{1}{3} \\cdot 3 + \\frac{1}{4} \\cdot 4 = 1 + 1 = 2$. In this lesson we clear the fractions from one equation or from both, then solve by elimination.`,
     `用消元法时，整数系数最简单，分数会让每一步都更繁琐。但我们已经知道，方程两边同乘以一个非零数，解不变。如果乘的数能被每个分母整除，分数就消失了。
 
-看 $\\begin{cases} \\frac{1}{2}x + \\frac{2}{3}y = 3 \\\\ x - y = -1 \\end{cases}$。第一个方程的分母是 $2$ 和 $3$，最小公倍数是 $6$：
+看 $\\begin{cases} \\frac{1}{3}x + \\frac{1}{4}y = 2 \\\\ x - y = -1 \\end{cases}$。第一个方程的分母是 $3$ 和 $4$，最小公倍数是 $12$：
 
-$$6 \\cdot \\tfrac{1}{2}x + 6 \\cdot \\tfrac{2}{3}y = 6 \\cdot 3, \\quad\\text{即}\\quad 3x + 4y = 18.$$
+$$12 \\cdot \\tfrac{1}{3}x + 12 \\cdot \\tfrac{1}{4}y = 12 \\cdot 2, \\quad\\text{即}\\quad 4x + 3y = 24.$$
 
-再把 $x - y = -1$ 乘以 $4$ 后相加：$7x = 14$，所以 $x = 2$，$y = 3$。代入原方程检验：$\\frac{1}{2} \\cdot 2 + \\frac{2}{3} \\cdot 3 = 1 + 2 = 3$。这节课我们去掉一个或两个方程中的分母，再用消元法求解。`,
+再把 $x - y = -1$ 乘以 $3$ 后相加：$7x = 21$，所以 $x = 3$，$y = 4$。代入原方程检验：$\\frac{1}{3} \\cdot 3 + \\frac{1}{4} \\cdot 4 = 1 + 1 = 2$。这节课我们去掉一个或两个方程中的分母，再用消元法求解。`,
   ),
   knowledgePoints: [
     {
@@ -3619,16 +3619,16 @@ export const systemsWithDecimalCoefficients: TopicDef = {
   intro: t(
     `A decimal is a fraction whose denominator is a power of ten: $0.3 = \\frac{3}{10}$ and $0.25 = \\frac{25}{100}$. So clearing decimals is clearing fractions, and the multiplier is simply $10$ for tenths or $100$ for hundredths.
 
-Take $0.3x - 1.2y = 0.6$. Every decimal has one decimal place, so multiply by $10$:
+Take $0.4x + 1.5y = 2.3$. Every decimal has one decimal place, so multiply by $10$:
 
-$$3x - 12y = 6.$$
+$$4x + 15y = 23.$$
 
 Multiplying by $10$ moves each decimal point one place right, and the equation keeps its solutions. With whole-number coefficients the system is solved by elimination as before. In this lesson we clear tenths, then hundredths, choosing the power of ten for each equation separately.`,
     `小数就是分母为 10 的幂的分数：$0.3 = \\frac{3}{10}$，$0.25 = \\frac{25}{100}$。所以去掉小数就是去分母，乘数就是 $10$（一位小数）或 $100$（两位小数）。
 
-看 $0.3x - 1.2y = 0.6$。每个小数都只有一位小数，所以乘以 $10$：
+看 $0.4x + 1.5y = 2.3$。每个小数都只有一位小数，所以乘以 $10$：
 
-$$3x - 12y = 6.$$
+$$4x + 15y = 23.$$
 
 乘以 $10$ 就是把每个小数点向右移一位，方程的解不变。系数都是整数后，就像以前一样用消元法解方程组。这节课我们先去掉一位小数，再去掉两位小数，每个方程分别选择 10 的幂。`,
   ),
@@ -4164,18 +4164,18 @@ export const solvingSystemsBySubstitution: TopicDef = {
   intro: t(
     `Elimination combines two equations to remove a variable. Sometimes there is a more direct way: when one equation already says what a variable equals, that value can be used in the other equation.
 
-Take $\\begin{cases} y = 2x - 1 \\\\ 3x + 2y = 12 \\end{cases}$. For any solution, $y$ is the same number as $2x - 1$, so in the second equation we may write $2x - 1$ in place of $y$, keeping it in parentheses because $2$ multiplies all of it:
+Take $\\begin{cases} y = x + 2 \\\\ 4x + 3y = 20 \\end{cases}$. For any solution, $y$ is the same number as $x + 2$, so in the second equation we may write $x + 2$ in place of $y$, keeping it in parentheses because $3$ multiplies all of it:
 
-$$3x + 2(2x - 1) = 12, \\quad 7x - 2 = 12, \\quad x = 2.$$
+$$4x + 3(x + 2) = 20, \\quad 7x + 6 = 20, \\quad x = 2.$$
 
-Then the first equation gives $y = 2 \\cdot 2 - 1 = 3$, and the second checks: $3 \\cdot 2 + 2 \\cdot 3 = 12$. This is the **substitution method**. In this lesson we substitute an expression we are given, and first solve an equation for a variable when its coefficient is $1$ or $-1$.`,
+Then the first equation gives $y = 2 + 2 = 4$, and the second checks: $4 \\cdot 2 + 3 \\cdot 4 = 20$. This is the **substitution method**. In this lesson we substitute an expression we are given, and first solve an equation for a variable when its coefficient is $1$ or $-1$.`,
     `消元法把两个方程合起来消去一个变量。有时还有更直接的办法：当一个方程已经说明某个变量等于什么时，就可以在另一个方程中使用它。
 
-看 $\\begin{cases} y = 2x - 1 \\\\ 3x + 2y = 12 \\end{cases}$。对任何一个解，$y$ 和 $2x - 1$ 是同一个数，所以在第二个方程中可以把 $y$ 写成 $2x - 1$，并加上括号，因为 $2$ 要乘它的全部：
+看 $\\begin{cases} y = x + 2 \\\\ 4x + 3y = 20 \\end{cases}$。对任何一个解，$y$ 和 $x + 2$ 是同一个数，所以在第二个方程中可以把 $y$ 写成 $x + 2$，并加上括号，因为 $3$ 要乘它的全部：
 
-$$3x + 2(2x - 1) = 12, \\quad 7x - 2 = 12, \\quad x = 2.$$
+$$4x + 3(x + 2) = 20, \\quad 7x + 6 = 20, \\quad x = 2.$$
 
-再由第一个方程得 $y = 2 \\cdot 2 - 1 = 3$，代入第二个方程检验：$3 \\cdot 2 + 2 \\cdot 3 = 12$。这就是**代入法**。这节课我们代入已经给出的式子，并在某个变量的系数是 $1$ 或 $-1$ 时，先用另一个变量表示它。`,
+再由第一个方程得 $y = 2 + 2 = 4$，代入第二个方程检验：$4 \\cdot 2 + 3 \\cdot 4 = 20$。这就是**代入法**。这节课我们代入已经给出的式子，并在某个变量的系数是 $1$ 或 $-1$ 时，先用另一个变量表示它。`,
   ),
   knowledgePoints: [
     {
@@ -4326,18 +4326,18 @@ export const intersectionOfTwoLines: TopicDef = {
   intro: t(
     `A point lies on a line exactly when its coordinates satisfy the line's equation. So the point where two lines meet is the one pair that satisfies both equations: the solution of their system. Reading it from a graph works only when it falls on grid points; solving the system finds it exactly.
 
-Take $y = 3x - 2$ and $y = -x + 5$. Where they meet they share the same $y$, so the right sides are equal:
+Take $y = 2x + 1$ and $y = -3x + 4$. Where they meet they share the same $y$, so the right sides are equal:
 
-$$3x - 2 = -x + 5, \\quad 4x = 7, \\quad x = \\frac{7}{4}.$$
+$$2x + 1 = -3x + 4, \\quad 5x = 3, \\quad x = \\frac{3}{5}.$$
 
-Then $y = 3 \\cdot \\frac{7}{4} - 2 = \\frac{13}{4}$, and the other line agrees: $-\\frac{7}{4} + 5 = \\frac{13}{4}$. In this lesson we intersect lines in slope-intercept form, lines in different forms, and a line given by two of its points.`,
+Then $y = 2 \\cdot \\frac{3}{5} + 1 = \\frac{11}{5}$, and the other line agrees: $-3 \\cdot \\frac{3}{5} + 4 = \\frac{11}{5}$. In this lesson we intersect lines in slope-intercept form, lines in different forms, and a line given by two of its points.`,
     `一个点在一条直线上，当且仅当它的坐标满足这条直线的方程。所以两条直线的交点，就是同时满足两个方程的那一对数：它们组成的方程组的解。从图像读交点只在它落在格点上时可行；解方程组能准确地求出它。
 
-看 $y = 3x - 2$ 和 $y = -x + 5$。在交点处它们的 $y$ 相同，所以右边相等：
+看 $y = 2x + 1$ 和 $y = -3x + 4$。在交点处它们的 $y$ 相同，所以右边相等：
 
-$$3x - 2 = -x + 5, \\quad 4x = 7, \\quad x = \\frac{7}{4}.$$
+$$2x + 1 = -3x + 4, \\quad 5x = 3, \\quad x = \\frac{3}{5}.$$
 
-于是 $y = 3 \\cdot \\frac{7}{4} - 2 = \\frac{13}{4}$，另一条直线也得到同样的值：$-\\frac{7}{4} + 5 = \\frac{13}{4}$。这节课我们求两条斜截式直线的交点、不同形式的直线的交点，以及由两点给出的直线与另一条直线的交点。`,
+于是 $y = 2 \\cdot \\frac{3}{5} + 1 = \\frac{11}{5}$，另一条直线也得到同样的值：$-3 \\cdot \\frac{3}{5} + 4 = \\frac{11}{5}$。这节课我们求两条斜截式直线的交点、不同形式的直线的交点，以及由两点给出的直线与另一条直线的交点。`,
   ),
   knowledgePoints: [
     {
@@ -4616,12 +4616,12 @@ export const modelingWithSystems: TopicDef = {
   intro: t(
     `We can now solve any system of two linear equations, by elimination or by substitution. Many questions in words are about two unknown quantities tied together by two facts, and each fact becomes one equation.
 
-"Two numbers have sum $40$ and difference $6$." Call the larger $x$ and the smaller $y$. The first fact says $x + y = 40$ and the second $x - y = 6$. Adding them gives $2x = 46$, so $x = 23$, and then $y = 40 - 23 = 17$. The answer fits the words: $23 + 17 = 40$ and $23 - 17 = 6$.
+"Two numbers have sum $50$ and difference $14$." Call the larger $x$ and the smaller $y$. The first fact says $x + y = 50$ and the second $x - y = 14$. Adding them gives $2x = 64$, so $x = 32$, and then $y = 50 - 32 = 18$. The answer fits the words: $32 + 18 = 50$ and $32 - 18 = 14$.
 
 The work always has the same shape: name the unknowns, write one equation for each fact, solve, and check the answer against the original words. In this lesson we model sums and differences, and counts and totals of two kinds of items.`,
     `我们已经会用消元法或代入法解任何由两个一次方程组成的方程组。很多文字题讨论的是由两个条件联系起来的两个未知量，每个条件就成为一个方程。
 
-“两个数的和是 $40$，差是 $6$。”设较大的数为 $x$，较小的数为 $y$。第一个条件是 $x + y = 40$，第二个是 $x - y = 6$。两式相加得 $2x = 46$，所以 $x = 23$，再得 $y = 40 - 23 = 17$。答案符合题意：$23 + 17 = 40$，$23 - 17 = 6$。
+“两个数的和是 $50$，差是 $14$。”设较大的数为 $x$，较小的数为 $y$。第一个条件是 $x + y = 50$，第二个是 $x - y = 14$。两式相加得 $2x = 64$，所以 $x = 32$，再得 $y = 50 - 32 = 18$。答案符合题意：$32 + 18 = 50$，$32 - 18 = 14$。
 
 做法总是一样的：设出未知数，每个条件列一个方程，求解，再用原来的文字检验答案。这节课我们为和与差、两类物品的数量与总值建立模型。`,
   ),
@@ -4819,18 +4819,18 @@ export const coinProblems: TopicDef = {
   intro: t(
     `A pile of coins has a count and a value, and these give the two equations of a system, just as tickets do. The value of a group of coins is the value of one coin times their number: $8$ coins of $25$ cents are worth $8 \\cdot 25 = 200$ cents.
 
-Say a jar holds $30$ coins, all $5$-cent and $25$-cent coins, worth $\\$3.10$. Working in cents keeps every number whole: $\\$3.10$ is $310$ cents. With $n$ coins of $5$ cents and $q$ of $25$ cents,
+Say a purse holds $25$ coins, all $5$-cent and $10$-cent coins, worth $\\$1.85$. Working in cents keeps every number whole: $\\$1.85$ is $185$ cents. With $n$ coins of $5$ cents and $d$ of $10$ cents,
 
-$$\\begin{cases} n + q = 30 \\\\ 5n + 25q = 310 \\end{cases}$$
+$$\\begin{cases} n + d = 25 \\\\ 5n + 10d = 185 \\end{cases}$$
 
-Five times the first equation is $5n + 5q = 150$; subtracting it from the second gives $20q = 160$, so $q = 8$ and $n = 22$. Check: $5 \\cdot 22 + 25 \\cdot 8 = 110 + 200 = 310$. In this lesson we count coins of two kinds, and use a relation between the counts when one is given.`,
+Five times the first equation is $5n + 5d = 125$; subtracting it from the second gives $5d = 60$, so $d = 12$ and $n = 13$. Check: $5 \\cdot 13 + 10 \\cdot 12 = 65 + 120 = 185$. In this lesson we count coins of two kinds, and use a relation between the counts when one is given.`,
     `一堆硬币有个数，也有价值，就像票一样，这两者给出方程组的两个方程。一组硬币的价值是一枚的面值乘以枚数：$8$ 枚 $25$ 分硬币值 $8 \\cdot 25 = 200$ 分。
 
-比如罐子里有 $30$ 枚硬币，都是 $5$ 分和 $25$ 分的，共 $3.10$ 元。以分为单位，所有数都是整数：$3.10$ 元就是 $310$ 分。设 $5$ 分硬币有 $n$ 枚，$25$ 分硬币有 $q$ 枚：
+比如钱包里有 $25$ 枚硬币，都是 $5$ 分和 $10$ 分的，共 $1.85$ 元。以分为单位，所有数都是整数：$1.85$ 元就是 $185$ 分。设 $5$ 分硬币有 $n$ 枚，$10$ 分硬币有 $d$ 枚：
 
-$$\\begin{cases} n + q = 30 \\\\ 5n + 25q = 310 \\end{cases}$$
+$$\\begin{cases} n + d = 25 \\\\ 5n + 10d = 185 \\end{cases}$$
 
-第一个方程乘以 $5$ 是 $5n + 5q = 150$，用第二个方程减去它得 $20q = 160$，所以 $q = 8$，$n = 22$。检验：$5 \\cdot 22 + 25 \\cdot 8 = 110 + 200 = 310$。这节课我们数两种硬币的枚数，并在给出枚数之间的关系时利用它。`,
+第一个方程乘以 $5$ 是 $5n + 5d = 125$，用第二个方程减去它得 $5d = 60$，所以 $d = 12$，$n = 13$。检验：$5 \\cdot 13 + 10 \\cdot 12 = 65 + 120 = 185$。这节课我们数两种硬币的枚数，并在给出枚数之间的关系时利用它。`,
   ),
   knowledgePoints: [
     {

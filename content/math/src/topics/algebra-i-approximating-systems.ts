@@ -66,16 +66,16 @@ function linePair(rng: Rng, slopes: readonly Q[], near: number): { m: [Q, Q]; b:
   }
 }
 
-/** linesIntro draws y = 2x − 1 and y = −x + 3, which cross at (4/3, 5/3), between grid points. */
+/** linesIntro draws y = x + 1 and y = −2x + 5, which cross at (4/3, 7/3), between grid points. */
 const linesIntro: Figure = {
   svg: plane(view, [
-    lineMark(Q.of(2), Q.of(-1), true),
-    lineMark(Q.of(-1), Q.of(3), false),
-    { kind: "point", at: [4 / 3, 5 / 3], tone: "result" },
+    lineMark(Q.of(1), Q.of(1), true),
+    lineMark(Q.of(-2), Q.of(5), false),
+    { kind: "point", at: [4 / 3, 7 / 3], tone: "result" },
   ]),
   alt: t(
-    "The lines y = 2x − 1 and y = −x + 3 cross a little to the right of x = 1 and a little below y = 2.",
-    "直线 y = 2x − 1 与 y = −x + 3 在 x = 1 稍右、y = 2 稍下的位置相交。",
+    "The lines y = x + 1 and y = −2x + 5 cross a little to the right of x = 1 and a little above y = 2.",
+    "直线 y = x + 1 与 y = −2x + 5 在 x = 1 稍右、y = 2 稍上的位置相交。",
   ),
 };
 
@@ -110,14 +110,14 @@ export const approximatingSolutionsToSystemsOfLinearEquations: TopicDef = {
 
 {{figure 0}}
 
-The lines $y = 2x - 1$ and $y = -x + 3$ cross a little to the right of $x = 1$ and a little below $y = 2$, so the solution is approximately $(1, 2)$. Solving $2x - 1 = -x + 3$ gives the exact solution $\\left(\\frac{4}{3}, \\frac{5}{3}\\right) \\approx (1.33, 1.67)$, which agrees.
+The lines $y = x + 1$ and $y = -2x + 5$ cross a little to the right of $x = 1$ and a little above $y = 2$, so the solution is approximately $(1, 2)$. Solving $x + 1 = -2x + 5$ gives the exact solution $\\left(\\frac{4}{3}, \\frac{7}{3}\\right) \\approx (1.33, 2.33)$, which agrees.
 
 In this lesson we estimate solutions from graphs, locate them in tables of values, and confirm estimates by solving exactly.`,
     `两个线性方程组成的方程组的解，就是两条直线的交点，用代入法可以精确地求出它。不过，我们常常先看到的是方程组的图象或数值表，而交点并不恰好落在网格点上。这时图象或数值表仍能告诉我们解大约在哪里：这既可以用来检验精确答案，有时也正是题目所需要的。
 
 {{figure 0}}
 
-直线 $y = 2x - 1$ 与 $y = -x + 3$ 在 $x = 1$ 稍右、$y = 2$ 稍下的位置相交，所以解约为 $(1, 2)$。解方程 $2x - 1 = -x + 3$ 得到精确解 $\\left(\\frac{4}{3}, \\frac{5}{3}\\right) \\approx (1.33, 1.67)$，与估计相符。
+直线 $y = x + 1$ 与 $y = -2x + 5$ 在 $x = 1$ 稍右、$y = 2$ 稍上的位置相交，所以解约为 $(1, 2)$。解方程 $x + 1 = -2x + 5$ 得到精确解 $\\left(\\frac{4}{3}, \\frac{7}{3}\\right) \\approx (1.33, 2.33)$，与估计相符。
 
 这节课我们从图象估计解，在数值表中确定解的位置，并通过精确求解来验证估计。`,
   ),
@@ -310,17 +310,17 @@ const tenths = (n: number) => `${n < 0 ? "-" : ""}${Math.floor(Math.abs(n) / 10)
 /** hundredths writes n/100 as a decimal with two places. */
 const hundredths = (n: number) => `${Math.floor(n / 100)}.${String(n % 100).padStart(2, "0")}`;
 
-/** parabolaIntro draws y = x² − 2 and y = x + 1, which cross at x = (1 ± √13)/2 ≈ −1.30 and 2.30. */
+/** parabolaIntro draws y = x² − 4 and y = x, which cross at x = (1 ± √17)/2 ≈ −1.56 and 2.56. */
 const parabolaIntro: Figure = {
   svg: plane(tallView, [
-    { kind: "curve", f: (v) => v * v - 2 },
-    { kind: "line", a: [0, 1], b: [1, 2], accent: true },
-    { kind: "point", at: [(1 - Math.sqrt(13)) / 2, (3 - Math.sqrt(13)) / 2], tone: "result" },
-    { kind: "point", at: [(1 + Math.sqrt(13)) / 2, (3 + Math.sqrt(13)) / 2], tone: "result" },
+    { kind: "curve", f: (v) => v * v - 4 },
+    { kind: "line", a: [0, 0], b: [1, 1], accent: true },
+    { kind: "point", at: [(1 - Math.sqrt(17)) / 2, (1 - Math.sqrt(17)) / 2], tone: "result" },
+    { kind: "point", at: [(1 + Math.sqrt(17)) / 2, (1 + Math.sqrt(17)) / 2], tone: "result" },
   ]),
   alt: t(
-    "The parabola y = x² − 2 and the line y = x + 1 cross twice: near x = −1 and near x = 2.",
-    "抛物线 y = x² − 2 与直线 y = x + 1 相交两次：一次在 x = −1 附近，一次在 x = 2 附近。",
+    "The parabola y = x² − 4 and the line y = x cross twice: near x = −2 and near x = 3.",
+    "抛物线 y = x² − 4 与直线 y = x 相交两次：一次在 x = −2 附近，一次在 x = 3 附近。",
   ),
 };
 
@@ -341,14 +341,14 @@ export const approximatingSolutionsToSystemsOfNonlinearEquations: TopicDef = {
 
 {{figure 0}}
 
-The parabola $y = x^{2} - 2$ and the line $y = x + 1$ cross twice. The right-hand crossing is nearest to $x = 2$. A table narrows it down: at $x = 2$ the parabola is below the line ($2 < 3$), at $x = 3$ it is above ($7 > 4$). Testing tenths, at $x = 2.3$ the parabola is still below ($3.29 < 3.3$) and at $x = 2.4$ it is above ($3.76 > 3.4$), so the crossing lies between $2.3$ and $2.4$. Exactly, it is at $x = \\frac{1 + \\sqrt{13}}{2} \\approx 2.30$.
+The parabola $y = x^{2} - 4$ and the line $y = x$ cross twice. The right-hand crossing is nearest to $x = 3$. A table narrows it down: at $x = 2$ the parabola is below the line ($0 < 2$), at $x = 3$ it is above ($5 > 3$). Testing tenths, at $x = 2.5$ the parabola is still below ($2.25 < 2.5$) and at $x = 2.6$ it is above ($2.76 > 2.6$), so the crossing lies between $2.5$ and $2.6$. Exactly, it is at $x = \\frac{1 + \\sqrt{17}}{2} \\approx 2.56$.
 
 In this lesson we estimate such solutions from a graph, locate them in a table, and narrow them down to tenths.`,
     `我们已经会从图象上读出抛物线与直线的交点来解方程组，也会估计在网格点之间相交的两条直线的解。抛物线与直线也常常在网格点之间相交，这时交点坐标通常是无理数：任何图象都无法精确显示它们，所以估计值就是实用的答案。
 
 {{figure 0}}
 
-抛物线 $y = x^{2} - 2$ 与直线 $y = x + 1$ 相交两次。右边的交点离 $x = 2$ 最近。数值表可以缩小范围：在 $x = 2$ 处抛物线在直线下方（$2 < 3$），在 $x = 3$ 处在上方（$7 > 4$）。再检验十分位数：在 $x = 2.3$ 处抛物线仍在下方（$3.29 < 3.3$），在 $x = 2.4$ 处在上方（$3.76 > 3.4$），所以交点位于 $2.3$ 与 $2.4$ 之间。精确地说，它在 $x = \\frac{1 + \\sqrt{13}}{2} \\approx 2.30$ 处。
+抛物线 $y = x^{2} - 4$ 与直线 $y = x$ 相交两次。右边的交点离 $x = 3$ 最近。数值表可以缩小范围：在 $x = 2$ 处抛物线在直线下方（$0 < 2$），在 $x = 3$ 处在上方（$5 > 3$）。再检验十分位数：在 $x = 2.5$ 处抛物线仍在下方（$2.25 < 2.5$），在 $x = 2.6$ 处在上方（$2.76 > 2.6$），所以交点位于 $2.5$ 与 $2.6$ 之间。精确地说，它在 $x = \\frac{1 + \\sqrt{17}}{2} \\approx 2.56$ 处。
 
 这节课我们从图象估计这样的解，在数值表中确定它们的位置，并把它们缩小到十分位。`,
   ),

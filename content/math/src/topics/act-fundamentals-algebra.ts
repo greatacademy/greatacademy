@@ -591,8 +591,8 @@ export const completingTheSquareWithOddLinearTerms: TopicDef = {
     ],
   ),
   intro: t(
-    "Completing the square rewrites $x^{2} + bx + c$ as a square plus a number, which shows the vertex of a parabola and lets you solve a quadratic by taking a square root. The rule comes from expanding $(x + h)^{2} = x^{2} + 2hx + h^{2}$: to match $bx$, $h$ must be half of $b$, and the square then contributes $h^{2}$. When $b$ is even the half is a whole number, but when $b$ is odd, as in $x^{2} + 5x$, the half is $\\frac{5}{2}$ and its square is $\\frac{25}{4}$. Nothing new happens; you only need care with fractions, especially when you subtract the square from the original constant.",
-    "配方把 $x^{2} + bx + c$ 改写成一个平方加一个数，这样能看出抛物线的顶点，也能通过开平方解二次方程。规则来自展开 $(x + h)^{2} = x^{2} + 2hx + h^{2}$：要与 $bx$ 一致，$h$ 必须是 $b$ 的一半，这个平方还会带来常数 $h^{2}$。$b$ 是偶数时，一半是整数；$b$ 是奇数时，比如 $x^{2} + 5x$，一半是 $\\frac{5}{2}$，它的平方是 $\\frac{25}{4}$。方法没有变，只是要细心处理分数，尤其是从原来的常数中减去这个平方的时候。",
+    "Completing the square rewrites $x^{2} + bx + c$ as a square plus a number, which shows the vertex of a parabola and lets you solve a quadratic by taking a square root. The rule comes from expanding $(x + h)^{2} = x^{2} + 2hx + h^{2}$: to match $bx$, $h$ must be half of $b$, and the square then contributes $h^{2}$. When $b$ is even the half is a whole number, but when $b$ is odd, as in $x^{2} + 7x$, the half is $\\frac{7}{2}$ and its square is $\\frac{49}{4}$. Nothing new happens; you only need care with fractions, especially when you subtract the square from the original constant.",
+    "配方把 $x^{2} + bx + c$ 改写成一个平方加一个数，这样能看出抛物线的顶点，也能通过开平方解二次方程。规则来自展开 $(x + h)^{2} = x^{2} + 2hx + h^{2}$：要与 $bx$ 一致，$h$ 必须是 $b$ 的一半，这个平方还会带来常数 $h^{2}$。$b$ 是偶数时，一半是整数；$b$ 是奇数时，比如 $x^{2} + 7x$，一半是 $\\frac{7}{2}$，它的平方是 $\\frac{49}{4}$。方法没有变，只是要细心处理分数，尤其是从原来的常数中减去这个平方的时候。",
   ),
 };
 

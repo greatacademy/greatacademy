@@ -1348,24 +1348,24 @@ export const rationalEquationsWithOneFractionalTerm: TopicDef = {
   intro: t(
     `We can solve linear equations, parentheses included, and we know that a rational expression is not defined where its denominator is zero. A **rational equation** has the variable in a denominator, as in
 
-$$\\frac{12}{x - 2} = 4.$$
+$$\\frac{20}{x - 3} = 5.$$
 
-Such equations come up whenever a quantity is divided by an unknown, for example a fixed amount shared among an unknown number of people. The fraction is what makes them new, so we remove it. Multiplying both sides of an equation by the same quantity keeps it balanced, and multiplying $\\frac{12}{x - 2}$ by $x - 2$ leaves just $12$:
+Such equations come up whenever a quantity is divided by an unknown, for example a fixed amount shared among an unknown number of people. The fraction is what makes them new, so we remove it. Multiplying both sides of an equation by the same quantity keeps it balanced, and multiplying $\\frac{20}{x - 3}$ by $x - 3$ leaves just $20$:
 
-$$12 = 4(x - 2) = 4x - 8, \\qquad 4x = 20, \\qquad x = 5.$$
+$$20 = 5(x - 3) = 5x - 15, \\qquad 5x = 35, \\qquad x = 7.$$
 
-There is a catch. Multiplying by $x - 2$ is only allowed when $x - 2$ is not zero, so $x = 2$ is excluded from the start. If the steps ever lead to an excluded value, it is not a solution. Putting $x = 5$ back in confirms the answer: $\\frac{12}{5 - 2} = 4$.
+There is a catch. Multiplying by $x - 3$ is only allowed when $x - 3$ is not zero, so $x = 3$ is excluded from the start. If the steps ever lead to an excluded value, it is not a solution. Putting $x = 7$ back in confirms the answer: $\\frac{20}{7 - 3} = 5$.
 
 In this lesson we solve equations with one fraction: a number over a binomial, a binomial over a binomial, and fractions that must first be isolated.`,
     `我们会解一次方程（包括带括号的），也知道分式在分母为零时没有意义。**分式方程**的分母中含有未知数，例如
 
-$$\\frac{12}{x - 2} = 4.$$
+$$\\frac{20}{x - 3} = 5.$$
 
-只要一个量除以未知数，就会出现这样的方程，例如把一笔固定的钱平分给人数未知的一群人。新的地方在于分式，所以我们要把它去掉。方程两边同乘一个量，等式仍然成立；而 $\\frac{12}{x - 2}$ 乘以 $x - 2$ 就只剩下 $12$：
+只要一个量除以未知数，就会出现这样的方程，例如把一笔固定的钱平分给人数未知的一群人。新的地方在于分式，所以我们要把它去掉。方程两边同乘一个量，等式仍然成立；而 $\\frac{20}{x - 3}$ 乘以 $x - 3$ 就只剩下 $20$：
 
-$$12 = 4(x - 2) = 4x - 8, \\qquad 4x = 20, \\qquad x = 5.$$
+$$20 = 5(x - 3) = 5x - 15, \\qquad 5x = 35, \\qquad x = 7.$$
 
-但要注意：只有 $x - 2$ 不为零时才能乘以它，所以一开始就要排除 $x = 2$。如果解题过程得到了要排除的值，它就不是方程的解。把 $x = 5$ 代回去可以确认答案：$\\frac{12}{5 - 2} = 4$。
+但要注意：只有 $x - 3$ 不为零时才能乘以它，所以一开始就要排除 $x = 3$。如果解题过程得到了要排除的值，它就不是方程的解。把 $x = 7$ 代回去可以确认答案：$\\frac{20}{7 - 3} = 5$。
 
 这节课我们解只含一个分式的方程：数除以二项式、二项式除以二项式，以及需要先分离出分式的方程。`,
   ),
@@ -1595,26 +1595,26 @@ export const rationalEquationsUsingCrossMultiplication: TopicDef = {
   intro: t(
     `We can solve an equation with one fraction by multiplying both sides by its denominator, and we know from proportions that $\\frac{a}{b} = \\frac{c}{d}$ exactly when $ad = bc$. Now both sides of the equation are fractions, and the variable is in a denominator:
 
-$$\\frac{5}{x + 2} = \\frac{3}{4}.$$
+$$\\frac{3}{x - 1} = \\frac{2}{5}.$$
 
 Clearing the denominators one at a time would work, but there is a shortcut. Multiplying both sides of $\\frac{a}{b} = \\frac{c}{d}$ by $bd$ cancels $b$ on the left and $d$ on the right:
 
 $$\\frac{a}{b} \\cdot bd = \\frac{c}{d} \\cdot bd \\quad\\Rightarrow\\quad ad = cb.$$
 
-Each numerator ends up multiplied by the other side's denominator: this is **cross-multiplying**. Here it gives $5 \\cdot 4 = 3(x + 2)$, so $20 = 3x + 6$ and $x = \\frac{14}{3}$.
+Each numerator ends up multiplied by the other side's denominator: this is **cross-multiplying**. Here it gives $3 \\cdot 5 = 2(x - 1)$, so $15 = 2x - 2$ and $x = \\frac{17}{2}$.
 
-Multiplying by $bd$ is only allowed when neither denominator is zero, so as before we note the excluded values first, here $x \\neq -2$, and reject any of them that the algebra produces. In this lesson we cross-multiply with a number on one side, with binomials in both denominators, and with equal denominators, where an excluded value can appear.`,
+Multiplying by $bd$ is only allowed when neither denominator is zero, so as before we note the excluded values first, here $x \\neq 1$, and reject any of them that the algebra produces. In this lesson we cross-multiply with a number on one side, with binomials in both denominators, and with equal denominators, where an excluded value can appear.`,
     `我们会把只含一个分式的方程两边同乘分母来解；从比例中也知道，$\\frac{a}{b} = \\frac{c}{d}$ 当且仅当 $ad = bc$。现在方程两边都是分式，而且未知数在分母中：
 
-$$\\frac{5}{x + 2} = \\frac{3}{4}.$$
+$$\\frac{3}{x - 1} = \\frac{2}{5}.$$
 
 一个一个地去分母也可以，但有一个捷径。把 $\\frac{a}{b} = \\frac{c}{d}$ 两边同乘 $bd$，左边约去 $b$，右边约去 $d$：
 
 $$\\frac{a}{b} \\cdot bd = \\frac{c}{d} \\cdot bd \\quad\\Rightarrow\\quad ad = cb.$$
 
-每个分子最后都乘上了另一边的分母：这就是**交叉相乘**。这里得到 $5 \\cdot 4 = 3(x + 2)$，所以 $20 = 3x + 6$，$x = \\frac{14}{3}$。
+每个分子最后都乘上了另一边的分母：这就是**交叉相乘**。这里得到 $3 \\cdot 5 = 2(x - 1)$，所以 $15 = 2x - 2$，$x = \\frac{17}{2}$。
 
-只有两个分母都不为零时才能乘以 $bd$，所以和以前一样，先写出要排除的值（这里是 $x \\neq -2$），并舍去计算中得到的这些值。这节课我们在一边是数、两边分母都是二项式、以及两边分母相同（可能得到要排除的值）的情况下练习交叉相乘。`,
+只有两个分母都不为零时才能乘以 $bd$，所以和以前一样，先写出要排除的值（这里是 $x \\neq 1$），并舍去计算中得到的这些值。这节课我们在一边是数、两边分母都是二项式、以及两边分母相同（可能得到要排除的值）的情况下练习交叉相乘。`,
   ),
   knowledgePoints: [
     {
@@ -1838,20 +1838,20 @@ export const rationalEquationsContainingBinomials: TopicDef = {
   intro: t(
     `Cross-multiplying turns $\\frac{a}{b} = \\frac{c}{d}$ into $ad = bc$, and we can multiply two binomials. When the numerators are binomials too, cross-multiplying gives a product of binomials on each side:
 
-$$\\frac{x + 1}{x - 2} = \\frac{x + 4}{x + 3} \\quad\\Rightarrow\\quad (x + 1)(x + 3) = (x + 4)(x - 2).$$
+$$\\frac{x + 2}{x - 1} = \\frac{x + 5}{x + 1} \\quad\\Rightarrow\\quad (x + 2)(x + 1) = (x + 5)(x - 1).$$
 
-That looks like a quadratic equation, but multiply out first: $x^{2} + 4x + 3 = x^{2} + 2x - 8$. Both sides have the same $x^{2}$ term, and subtracting $x^{2}$ from both sides removes it, leaving the linear equation $4x + 3 = 2x - 8$, so $2x = -11$ and $x = -\\frac{11}{2}$. As always, the denominators exclude $x = 2$ and $x = -3$, and the answer is neither.
+That looks like a quadratic equation, but multiply out first: $x^{2} + 3x + 2 = x^{2} + 4x - 5$. Both sides have the same $x^{2}$ term, and subtracting $x^{2}$ from both sides removes it, leaving the linear equation $3x + 2 = 4x - 5$, so $-x = -7$ and $x = 7$. As always, the denominators exclude $x = 1$ and $x = -1$, and the answer is neither.
 
-The squares do not always cancel. When $x$ sits in a numerator on one side and in a denominator on the other, as in $\\frac{x + 1}{4} = \\frac{9}{x + 1}$, cross-multiplying gives $(x + 1)^{2} = 36$, which is solved with square roots and can have two solutions, or none.
+The squares do not always cancel. When $x$ sits in a numerator on one side and in a denominator on the other, as in $\\frac{x - 2}{2} = \\frac{8}{x - 2}$, cross-multiplying gives $(x - 2)^{2} = 16$, which is solved with square roots and can have two solutions, or none.
 
 In this lesson we solve binomials over binomials, then the same with leading coefficients, and finally the equations whose squares do not cancel.`,
     `交叉相乘把 $\\frac{a}{b} = \\frac{c}{d}$ 变成 $ad = bc$，而我们会做两个二项式的乘法。当分子也是二项式时，交叉相乘后每一边都是二项式的乘积：
 
-$$\\frac{x + 1}{x - 2} = \\frac{x + 4}{x + 3} \\quad\\Rightarrow\\quad (x + 1)(x + 3) = (x + 4)(x - 2).$$
+$$\\frac{x + 2}{x - 1} = \\frac{x + 5}{x + 1} \\quad\\Rightarrow\\quad (x + 2)(x + 1) = (x + 5)(x - 1).$$
 
-这看起来像二次方程，但先把它乘开：$x^{2} + 4x + 3 = x^{2} + 2x - 8$。两边的 $x^{2}$ 项相同，两边同减 $x^{2}$ 就把它消去了，剩下一次方程 $4x + 3 = 2x - 8$，所以 $2x = -11$，$x = -\\frac{11}{2}$。和以前一样，分母排除 $x = 2$ 和 $x = -3$，而答案不是其中任何一个。
+这看起来像二次方程，但先把它乘开：$x^{2} + 3x + 2 = x^{2} + 4x - 5$。两边的 $x^{2}$ 项相同，两边同减 $x^{2}$ 就把它消去了，剩下一次方程 $3x + 2 = 4x - 5$，所以 $-x = -7$，$x = 7$。和以前一样，分母排除 $x = 1$ 和 $x = -1$，而答案不是其中任何一个。
 
-平方项并不总能抵消。当 $x$ 在一边的分子中、又在另一边的分母中时，例如 $\\frac{x + 1}{4} = \\frac{9}{x + 1}$，交叉相乘得 $(x + 1)^{2} = 36$，要用开平方来解，可能有两个解，也可能无解。
+平方项并不总能抵消。当 $x$ 在一边的分子中、又在另一边的分母中时，例如 $\\frac{x - 2}{2} = \\frac{8}{x - 2}$，交叉相乘得 $(x - 2)^{2} = 16$，要用开平方来解，可能有两个解，也可能无解。
 
 这节课我们先解二项式除以二项式的方程，再解首项系数不为 1 的情形，最后解平方项不抵消的方程。`,
   ),
@@ -2103,18 +2103,18 @@ export const rationalEquationsUsingTheFlipMethod: TopicDef = {
   intro: t(
     `We can solve $\\frac{a}{b} = \\frac{c}{d}$ by cross-multiplying. When the variable is only in a denominator, there is a quicker way. If two numbers are equal and not zero, their reciprocals are equal too: from $u = v$ we get $\\frac{1}{u} = \\frac{1}{v}$. The reciprocal of a fraction is the fraction turned upside down, so **flipping** both sides of the equation is allowed, and it brings the variable up into a numerator:
 
-$$\\frac{4}{2x + 1} = \\frac{2}{3} \\quad\\Rightarrow\\quad \\frac{2x + 1}{4} = \\frac{3}{2}.$$
+$$\\frac{6}{3x - 1} = \\frac{3}{4} \\quad\\Rightarrow\\quad \\frac{3x - 1}{6} = \\frac{4}{3}.$$
 
-Now multiplying by $4$ gives $2x + 1 = 6$, so $x = \\frac{5}{2}$. The denominator $2x + 1$ excludes $x = -\\frac{1}{2}$, which is not the answer, and putting $x = \\frac{5}{2}$ back confirms it: $\\frac{4}{6} = \\frac{2}{3}$.
+Now multiplying by $6$ gives $3x - 1 = 8$, so $x = 3$. The denominator $3x - 1$ excludes $x = \\frac{1}{3}$, which is not the answer, and putting $x = 3$ back confirms it: $\\frac{6}{8} = \\frac{3}{4}$.
 
-Flipping needs both sides to be nonzero. A fraction with a nonzero numerator is never $0$, so an equation such as $\\frac{6}{x - 1} = 0$ has no solution at all. In this lesson we flip fractions, whole numbers, which are fractions over $1$, and fractions with the variable in both parts, which we split after flipping.`,
+Flipping needs both sides to be nonzero. A fraction with a nonzero numerator is never $0$, so an equation such as $\\frac{5}{x + 2} = 0$ has no solution at all. In this lesson we flip fractions, whole numbers, which are fractions over $1$, and fractions with the variable in both parts, which we split after flipping.`,
     `我们会用交叉相乘解 $\\frac{a}{b} = \\frac{c}{d}$。当未知数只在分母中时，还有更快的方法。如果两个数相等且不为零，它们的倒数也相等：由 $u = v$ 得 $\\frac{1}{u} = \\frac{1}{v}$。分数的倒数就是把它上下颠倒，所以可以把方程两边都**取倒数**，这样未知数就到了分子上：
 
-$$\\frac{4}{2x + 1} = \\frac{2}{3} \\quad\\Rightarrow\\quad \\frac{2x + 1}{4} = \\frac{3}{2}.$$
+$$\\frac{6}{3x - 1} = \\frac{3}{4} \\quad\\Rightarrow\\quad \\frac{3x - 1}{6} = \\frac{4}{3}.$$
 
-再乘以 $4$ 得 $2x + 1 = 6$，所以 $x = \\frac{5}{2}$。分母 $2x + 1$ 排除 $x = -\\frac{1}{2}$，它不是答案；把 $x = \\frac{5}{2}$ 代回去可以确认：$\\frac{4}{6} = \\frac{2}{3}$。
+再乘以 $6$ 得 $3x - 1 = 8$，所以 $x = 3$。分母 $3x - 1$ 排除 $x = \\frac{1}{3}$，它不是答案；把 $x = 3$ 代回去可以确认：$\\frac{6}{8} = \\frac{3}{4}$。
 
-取倒数要求两边都不为零。分子不为零的分式永远不等于 $0$，所以像 $\\frac{6}{x - 1} = 0$ 这样的方程根本无解。这节课我们对分数取倒数，对整数（分母为 $1$ 的分数）取倒数，还要处理分子分母都含未知数的分式：取倒数后再拆开。`,
+取倒数要求两边都不为零。分子不为零的分式永远不等于 $0$，所以像 $\\frac{5}{x + 2} = 0$ 这样的方程根本无解。这节课我们对分数取倒数，对整数（分母为 $1$ 的分数）取倒数，还要处理分子分母都含未知数的分式：取倒数后再拆开。`,
   ),
   knowledgePoints: [
     {

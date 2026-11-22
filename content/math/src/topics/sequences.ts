@@ -379,28 +379,28 @@ export const recursiveSequences: TopicDef = {
   xp: 12,
   standards: ["CCSS.HSF.IF.A.3"],
   intro: t(
-    `An explicit formula computes each term of a sequence from its index. Many sequences are more naturally described by how each term comes from the one before it: a stack that grows by $5$ cm with every box, or a number that is doubled and then reduced by $3$ at each stage.
+    `An explicit formula computes each term of a sequence from its index. Many sequences are more naturally described by how each term comes from the one before it: a stack that grows by $5$ cm with every box, or a number that is tripled and then reduced by $4$ at each stage.
 
 A **recursive formula** says where to start and how to take one step. In
 
-$$a_1 = 4, \\qquad a_n = 2a_{n-1} - 3,$$
+$$a_1 = 3, \\qquad a_n = 3a_{n-1} - 4,$$
 
-the symbol $a_{n-1}$ is the term just before $a_n$, so the rule reads: to get a term, double the term before it and subtract $3$. Starting from $4$:
+the symbol $a_{n-1}$ is the term just before $a_n$, so the rule reads: to get a term, triple the term before it and subtract $4$. Starting from $3$:
 
-$$a_2 = 2 \\cdot 4 - 3 = 5, \\quad a_3 = 2 \\cdot 5 - 3 = 7, \\quad a_4 = 2 \\cdot 7 - 3 = 11.$$
+$$a_2 = 3 \\cdot 3 - 4 = 5, \\quad a_3 = 3 \\cdot 5 - 4 = 11, \\quad a_4 = 3 \\cdot 11 - 4 = 29.$$
 
 Unlike an explicit formula, a recursive one cannot jump straight to $a_{50}$: we walk one term at a time, and to go back we undo the step.
 
 In this lesson we apply recursive rules forward, use rules that involve the index $n$, and find earlier terms by undoing the rule.`,
-    `通项公式由下标计算数列的每一项。很多数列更自然的描述方式，是说明每一项怎样由它的前一项得到：每放一个箱子，一摞箱子就高 $5$ 厘米；或者每一步都把一个数翻倍再减去 $3$。
+    `通项公式由下标计算数列的每一项。很多数列更自然的描述方式，是说明每一项怎样由它的前一项得到：每放一个箱子，一摞箱子就高 $5$ 厘米；或者每一步都把一个数乘以 $3$ 再减去 $4$。
 
 **递推公式**说明从哪里开始，以及怎样走一步。在
 
-$$a_1 = 4, \\qquad a_n = 2a_{n-1} - 3$$
+$$a_1 = 3, \\qquad a_n = 3a_{n-1} - 4$$
 
-中，$a_{n-1}$ 是紧接在 $a_n$ 之前的一项，所以这条规则的意思是：要得到一项，就把它的前一项乘以 $2$ 再减去 $3$。从 $4$ 开始：
+中，$a_{n-1}$ 是紧接在 $a_n$ 之前的一项，所以这条规则的意思是：要得到一项，就把它的前一项乘以 $3$ 再减去 $4$。从 $3$ 开始：
 
-$$a_2 = 2 \\cdot 4 - 3 = 5, \\quad a_3 = 2 \\cdot 5 - 3 = 7, \\quad a_4 = 2 \\cdot 7 - 3 = 11.$$
+$$a_2 = 3 \\cdot 3 - 4 = 5, \\quad a_3 = 3 \\cdot 5 - 4 = 11, \\quad a_4 = 3 \\cdot 11 - 4 = 29.$$
 
 与通项公式不同，递推公式不能直接跳到 $a_{50}$：要一项一项地往前走，而要往回走，就把这一步撤销。
 
@@ -621,14 +621,14 @@ export const fibonacciSequences: TopicDef = {
 
 $$1, 1, 2, 3, 5, 8, 13, \\ldots \\qquad a_n = a_{n-1} + a_{n-2}.$$
 
-Here $a_{n-1}$ is the term just before $a_n$ and $a_{n-2}$ is the one before that. Because the rule needs two earlier terms, one starting term is not enough: the formula must give $a_1$ and $a_2$, and only then can $a_3$ be computed. From $a_1 = 4$ and $a_2 = -1$ the same rule gives $a_3 = -1 + 4 = 3$ and $a_4 = 3 + (-1) = 2$.
+Here $a_{n-1}$ is the term just before $a_n$ and $a_{n-2}$ is the one before that. Because the rule needs two earlier terms, one starting term is not enough: the formula must give $a_1$ and $a_2$, and only then can $a_3$ be computed. From $a_1 = 2$ and $a_2 = 5$ the same rule gives $a_3 = 5 + 2 = 7$ and $a_4 = 7 + 5 = 12$.
 
 In this lesson we compute terms with the Fibonacci rule from any two starting terms, use other rules that combine the two previous terms, and work backward from two known terms.`,
     `前面的递推规则都是由紧挨着的前一项计算每一项。有些数列要往前看得更远：在**斐波那契数列**中，每一项等于它前面两项之和，
 
 $$1, 1, 2, 3, 5, 8, 13, \\ldots \\qquad a_n = a_{n-1} + a_{n-2}.$$
 
-其中 $a_{n-1}$ 是紧挨在 $a_n$ 前面的一项，$a_{n-2}$ 是再前面的一项。由于规则需要前面两项，一个初始项是不够的：公式必须给出 $a_1$ 和 $a_2$，然后才能算出 $a_3$。由 $a_1 = 4$ 和 $a_2 = -1$，同样的规则给出 $a_3 = -1 + 4 = 3$，$a_4 = 3 + (-1) = 2$。
+其中 $a_{n-1}$ 是紧挨在 $a_n$ 前面的一项，$a_{n-2}$ 是再前面的一项。由于规则需要前面两项，一个初始项是不够的：公式必须给出 $a_1$ 和 $a_2$，然后才能算出 $a_3$。由 $a_1 = 2$ 和 $a_2 = 5$，同样的规则给出 $a_3 = 5 + 2 = 7$，$a_4 = 7 + 5 = 12$。
 
 这节课用斐波那契规则从任意两个初始项计算各项，使用组合前两项的其他规则，并由两个已知项往回推。`,
   ),
@@ -807,18 +807,18 @@ export const arithmeticSequences: TopicDef = {
   xp: 12,
   standards: ["CCSS.HSF.IF.A.3", "CCSS.HSF.LE.A.2"],
   intro: t(
-    `We can read the terms of a sequence and compute them from a formula. The simplest way for a sequence to grow is by the same amount every time: a row of seats with $5$ more in each row, or a savings box that gets $5$ dollars every week:
+    `We can read the terms of a sequence and compute them from a formula. The simplest way for a sequence to grow is by the same amount every time: a row of seats with $4$ more in each row, or a savings box that gets $4$ dollars every week:
 
-$$2, \\; 7, \\; 12, \\; 17, \\; 22, \\; \\ldots \\qquad (+5 \\text{ each time})$$
+$$3, \\; 7, \\; 11, \\; 15, \\; 19, \\; \\ldots \\qquad (+4 \\text{ each time})$$
 
-Such a sequence is called **arithmetic**, and the amount added is its **common difference** $d$. Knowing that a sequence is arithmetic is useful because then two pieces of information decide every term: a starting term and the step. To get from $2$ to $22$ above takes $4$ steps of $5$, and $2 + 4 \\cdot 5 = 22$.
+Such a sequence is called **arithmetic**, and the amount added is its **common difference** $d$. Knowing that a sequence is arithmetic is useful because then two pieces of information decide every term: a starting term and the step. To get from $3$ to $19$ above takes $4$ steps of $4$, and $3 + 4 \\cdot 4 = 19$.
 
 In this lesson we test whether a sequence is arithmetic, find its common difference, and fill in missing terms by counting steps.`,
-    `我们会读出数列的项，也会由公式计算它们。数列最简单的增长方式是每次增加同样的量：礼堂每排比前一排多 $5$ 个座位，或者存钱罐每周存入 $5$ 元：
+    `我们会读出数列的项，也会由公式计算它们。数列最简单的增长方式是每次增加同样的量：礼堂每排比前一排多 $4$ 个座位，或者存钱罐每周存入 $4$ 元：
 
-$$2, \\; 7, \\; 12, \\; 17, \\; 22, \\; \\ldots \\qquad (\\text{每次} +5)$$
+$$3, \\; 7, \\; 11, \\; 15, \\; 19, \\; \\ldots \\qquad (\\text{每次} +4)$$
 
-这样的数列叫做**等差数列**，每次加上的量叫做它的**公差** $d$。知道一个数列是等差数列很有用，因为这时只要两条信息就能确定每一项：一个起始项和每一步的量。上面从 $2$ 到 $22$ 要走 $4$ 步，每步加 $5$，$2 + 4 \\cdot 5 = 22$。
+这样的数列叫做**等差数列**，每次加上的量叫做它的**公差** $d$。知道一个数列是等差数列很有用，因为这时只要两条信息就能确定每一项：一个起始项和每一步的量。上面从 $3$ 到 $19$ 要走 $4$ 步，每步加 $4$，$3 + 4 \\cdot 4 = 19$。
 
 这节课先检验一个数列是不是等差数列，再求它的公差，最后通过数步数补全缺失的项。`,
   ),
@@ -980,18 +980,18 @@ export const recursiveFormulasForArithmeticSequences: TopicDef = {
 
 $$a_1 = \\text{first term}, \\qquad a_n = a_{n-1} + d.$$
 
-For $9, 5, 1, -3, \\ldots$ the first term is $9$ and each step adds $5 - 9 = -4$, so $a_1 = 9$ and $a_n = a_{n-1} - 4$.
+For $20, 17, 14, 11, \\ldots$ the first term is $20$ and each step adds $17 - 20 = -3$, so $a_1 = 20$ and $a_n = a_{n-1} - 3$.
 
-The formula also tells us how far apart two terms are. From $a_1$ to $a_6$ the rule is used $5$ times, so $a_6 = 9 + 5 \\cdot (-4) = -11$, with no need to write the terms in between.
+The formula also tells us how far apart two terms are. From $a_1$ to $a_6$ the rule is used $5$ times, so $a_6 = 20 + 5 \\cdot (-3) = 5$, with no need to write the terms in between.
 
 In this lesson we write the recursive formula of an arithmetic sequence, use it to find terms forward and backward, and find the common difference from two terms far apart.`,
     `等差数列每次加上公差 $d$ 得到下一项，而递推公式给出首项和求下一项的规则。两者合在一起，每个等差数列都有形式相同的递推公式：
 
 $$a_1 = \\text{首项}, \\qquad a_n = a_{n-1} + d.$$
 
-对于 $9, 5, 1, -3, \\ldots$，首项是 $9$，每一步加上 $5 - 9 = -4$，所以 $a_1 = 9$，$a_n = a_{n-1} - 4$。
+对于 $20, 17, 14, 11, \\ldots$，首项是 $20$，每一步加上 $17 - 20 = -3$，所以 $a_1 = 20$，$a_n = a_{n-1} - 3$。
 
-这个公式还告诉我们两项相隔多远。从 $a_1$ 到 $a_6$ 要用 $5$ 次规则，所以 $a_6 = 9 + 5 \\cdot (-4) = -11$，不必写出中间的项。
+这个公式还告诉我们两项相隔多远。从 $a_1$ 到 $a_6$ 要用 $5$ 次规则，所以 $a_6 = 20 + 5 \\cdot (-3) = 5$，不必写出中间的项。
 
 这节课写出等差数列的递推公式，用它向前、向后求项，并由相隔较远的两项求公差。`,
   ),
@@ -1145,26 +1145,26 @@ export const nthTermOfAnArithmeticSequence: TopicDef = {
   xp: 14,
   standards: ["CCSS.HSF.BF.A.2", "CCSS.HSF.LE.A.2"],
   intro: t(
-    `An arithmetic sequence adds its common difference $d$ at every step, so any term can be reached from the first by counting steps. For $7, 10, 13, \\ldots$, where $d = 3$:
+    `An arithmetic sequence adds its common difference $d$ at every step, so any term can be reached from the first by counting steps. For $4, 9, 14, \\ldots$, where $d = 5$:
 
-$$a_1 = 7, \\quad a_2 = 7 + 1 \\cdot 3, \\quad a_3 = 7 + 2 \\cdot 3, \\quad a_4 = 7 + 3 \\cdot 3, \\quad \\ldots$$
+$$a_1 = 4, \\quad a_2 = 4 + 1 \\cdot 5, \\quad a_3 = 4 + 2 \\cdot 5, \\quad a_4 = 4 + 3 \\cdot 5, \\quad \\ldots$$
 
 The term in position $n$ is $n - 1$ steps after the first, because the first term itself takes no step. That gives the **explicit formula** of an arithmetic sequence:
 
 $$a_n = a_1 + (n - 1)d.$$
 
-With it, the $40$th term of $7, 10, 13, \\ldots$ is $7 + 39 \\cdot 3 = 124$, found without writing the $38$ terms in between.
+With it, the $30$th term of $4, 9, 14, \\ldots$ is $4 + 29 \\cdot 5 = 149$, found without writing the $28$ terms in between.
 
 In this lesson we use the formula to find far terms, write it for a given sequence and simplify it, and read the first term and the common difference from a formula.`,
-    `等差数列每一步都加上公差 $d$，所以从首项出发数步数，就能到达任何一项。对于 $7, 10, 13, \\ldots$，$d = 3$：
+    `等差数列每一步都加上公差 $d$，所以从首项出发数步数，就能到达任何一项。对于 $4, 9, 14, \\ldots$，$d = 5$：
 
-$$a_1 = 7, \\quad a_2 = 7 + 1 \\cdot 3, \\quad a_3 = 7 + 2 \\cdot 3, \\quad a_4 = 7 + 3 \\cdot 3, \\quad \\ldots$$
+$$a_1 = 4, \\quad a_2 = 4 + 1 \\cdot 5, \\quad a_3 = 4 + 2 \\cdot 5, \\quad a_4 = 4 + 3 \\cdot 5, \\quad \\ldots$$
 
 位置 $n$ 上的项在首项之后 $n - 1$ 步，因为首项本身不用走。这就得到等差数列的**通项公式**：
 
 $$a_n = a_1 + (n - 1)d.$$
 
-用它求 $7, 10, 13, \\ldots$ 的第 $40$ 项，得 $7 + 39 \\cdot 3 = 124$，不必写出中间的 $38$ 项。
+用它求 $4, 9, 14, \\ldots$ 的第 $30$ 项，得 $4 + 29 \\cdot 5 = 149$，不必写出中间的 $28$ 项。
 
 这节课用这个公式求很远的项，为给定的数列写出公式并化简，并从公式中读出首项和公差。`,
   ),
@@ -1329,20 +1329,20 @@ export const explicitAndRecursiveArithmeticFormulas: TopicDef = {
   intro: t(
     `An arithmetic sequence can be described in two ways: recursively, by $a_1$ and the rule $a_n = a_{n-1} + d$, or explicitly, by $a_n = a_1 + (n - 1)d$, which simplifies to $a_n = dn + c$. The recursive formula shows the step from one term to the next; the explicit one reaches any term at once.
 
-Both are built from the same two numbers, the first term and the common difference, so translating means reading those two numbers from one formula and putting them into the other. From $a_1 = -2$ and $a_n = a_{n-1} + 5$:
+Both are built from the same two numbers, the first term and the common difference, so translating means reading those two numbers from one formula and putting them into the other. From $a_1 = 6$ and $a_n = a_{n-1} - 4$:
 
-$$a_n = -2 + (n - 1) \\cdot 5 = 5n - 7.$$
+$$a_n = 6 + (n - 1) \\cdot (-4) = 10 - 4n.$$
 
-Going back, $5n - 7$ has $d = 5$, the coefficient of $n$, and $a_1 = 5 \\cdot 1 - 7 = -2$.
+Going back, $10 - 4n$ has $d = -4$, the coefficient of $n$, and $a_1 = 10 - 4 \\cdot 1 = 6$.
 
 In this lesson we turn recursive formulas into explicit ones and back, and use the translation to find a term far along a recursive sequence.`,
     `等差数列有两种描述方式：递推地，用 $a_1$ 和规则 $a_n = a_{n-1} + d$；或者用通项公式 $a_n = a_1 + (n - 1)d$，它可以化简为 $a_n = dn + c$。递推公式展示从一项到下一项的那一步，通项公式则能一下子得到任何一项。
 
-两者都由同样的两个数构成：首项和公差。所以互化就是从一个公式中读出这两个数，再把它们放进另一个公式。由 $a_1 = -2$ 和 $a_n = a_{n-1} + 5$：
+两者都由同样的两个数构成：首项和公差。所以互化就是从一个公式中读出这两个数，再把它们放进另一个公式。由 $a_1 = 6$ 和 $a_n = a_{n-1} - 4$：
 
-$$a_n = -2 + (n - 1) \\cdot 5 = 5n - 7.$$
+$$a_n = 6 + (n - 1) \\cdot (-4) = 10 - 4n.$$
 
-反过来，$5n - 7$ 的 $d = 5$ 是 $n$ 的系数，$a_1 = 5 \\cdot 1 - 7 = -2$。
+反过来，$10 - 4n$ 的 $d = -4$ 是 $n$ 的系数，$a_1 = 10 - 4 \\cdot 1 = 6$。
 
 这节课把递推公式化为通项公式并化回来，再用这种互化求递推数列中很远的一项。`,
   ),
@@ -1484,22 +1484,22 @@ export const arithmeticSequencesFromTwoTerms: TopicDef = {
   xp: 15,
   standards: ["CCSS.HSF.BF.A.2", "CCSS.HSF.LE.A.2"],
   intro: t(
-    `The formula $a_n = a_1 + (n - 1)d$ needs the first term and the common difference. Often neither is given, only two terms somewhere along the sequence, such as $a_3 = 11$ and $a_8 = 31$. Two terms are enough, because the same counting of steps works between any two terms, not only from $a_1$.
+    `The formula $a_n = a_1 + (n - 1)d$ needs the first term and the common difference. Often neither is given, only two terms somewhere along the sequence, such as $a_4 = 5$ and $a_9 = 30$. Two terms are enough, because the same counting of steps works between any two terms, not only from $a_1$.
 
-From $a_3$ to $a_8$ there are $8 - 3 = 5$ steps, each adding $d$, so the whole change is $5d$:
+From $a_4$ to $a_9$ there are $9 - 4 = 5$ steps, each adding $d$, so the whole change is $5d$:
 
-$$5d = 31 - 11 = 20, \\qquad d = 4.$$
+$$5d = 30 - 5 = 25, \\qquad d = 5.$$
 
-Then walk back $2$ steps from $a_3$ to the first term, $a_1 = 11 - 2 \\cdot 4 = 3$, and the sequence is $a_n = 3 + (n - 1) \\cdot 4 = 4n - 1$.
+Then walk back $3$ steps from $a_4$ to the first term, $a_1 = 5 - 3 \\cdot 5 = -10$, and the sequence is $a_n = -10 + (n - 1) \\cdot 5 = 5n - 15$.
 
 In this lesson we find, from two terms, the common difference, the first term, the explicit formula and any other term.`,
-    `公式 $a_n = a_1 + (n - 1)d$ 需要首项和公差。很多时候两者都没有给出，只给出数列中某处的两项，比如 $a_3 = 11$ 和 $a_8 = 31$。两项就足够了，因为数步数的方法在任意两项之间都适用，不只是从 $a_1$ 开始。
+    `公式 $a_n = a_1 + (n - 1)d$ 需要首项和公差。很多时候两者都没有给出，只给出数列中某处的两项，比如 $a_4 = 5$ 和 $a_9 = 30$。两项就足够了，因为数步数的方法在任意两项之间都适用，不只是从 $a_1$ 开始。
 
-从 $a_3$ 到 $a_8$ 共 $8 - 3 = 5$ 步，每步加 $d$，所以总的变化是 $5d$：
+从 $a_4$ 到 $a_9$ 共 $9 - 4 = 5$ 步，每步加 $d$，所以总的变化是 $5d$：
 
-$$5d = 31 - 11 = 20, \\qquad d = 4.$$
+$$5d = 30 - 5 = 25, \\qquad d = 5.$$
 
-再从 $a_3$ 往回走 $2$ 步到首项，$a_1 = 11 - 2 \\cdot 4 = 3$，于是数列为 $a_n = 3 + (n - 1) \\cdot 4 = 4n - 1$。
+再从 $a_4$ 往回走 $3$ 步到首项，$a_1 = 5 - 3 \\cdot 5 = -10$，于是数列为 $a_n = -10 + (n - 1) \\cdot 5 = 5n - 15$。
 
 这节课由两项求公差、首项、通项公式以及任意其他项。`,
   ),
@@ -1672,22 +1672,22 @@ export const indexOfATermInAnArithmeticSequence: TopicDef = {
   xp: 12,
   standards: ["CCSS.HSF.LE.A.2"],
   intro: t(
-    `The explicit formula of an arithmetic sequence turns a position $n$ into a term $a_n$. The reverse question is just as common: which position holds a given value? In $7, 11, 15, \\ldots$, is $203$ a term, and if so, which one?
+    `The explicit formula of an arithmetic sequence turns a position $n$ into a term $a_n$. The reverse question is just as common: which position holds a given value? In $4, 10, 16, \\ldots$, is $178$ a term, and if so, which one?
 
-The formula answers it as an equation. Every term is $7 + (n - 1) \\cdot 4$, so set this equal to $203$ and solve for $n$, a two-step equation:
+The formula answers it as an equation. Every term is $4 + (n - 1) \\cdot 6$, so set this equal to $178$ and solve for $n$, a two-step equation:
 
-$$7 + (n - 1) \\cdot 4 = 203 \\;\\Rightarrow\\; (n - 1) \\cdot 4 = 196 \\;\\Rightarrow\\; n - 1 = 49 \\;\\Rightarrow\\; n = 50.$$
+$$4 + (n - 1) \\cdot 6 = 178 \\;\\Rightarrow\\; (n - 1) \\cdot 6 = 174 \\;\\Rightarrow\\; n - 1 = 29 \\;\\Rightarrow\\; n = 30.$$
 
-So $203$ is the $50$th term. A position must be a positive whole number: if the solution were $n = 50.5$, the value would not be a term at all.
+So $178$ is the $30$th term. A position must be a positive whole number: if the solution were $n = 30.5$, the value would not be a term at all.
 
 In this lesson we find the index of a value from an explicit formula and from listed terms, and count the terms of a finite arithmetic sequence.`,
-    `等差数列的通项公式把位置 $n$ 变成项 $a_n$。反过来的问题同样常见：某个值在哪个位置？在 $7, 11, 15, \\ldots$ 中，$203$ 是不是其中的项？如果是，是第几项？
+    `等差数列的通项公式把位置 $n$ 变成项 $a_n$。反过来的问题同样常见：某个值在哪个位置？在 $4, 10, 16, \\ldots$ 中，$178$ 是不是其中的项？如果是，是第几项？
 
-公式把它变成一个方程来回答。每一项都是 $7 + (n - 1) \\cdot 4$，令它等于 $203$，解这个两步方程求 $n$：
+公式把它变成一个方程来回答。每一项都是 $4 + (n - 1) \\cdot 6$，令它等于 $178$，解这个两步方程求 $n$：
 
-$$7 + (n - 1) \\cdot 4 = 203 \\;\\Rightarrow\\; (n - 1) \\cdot 4 = 196 \\;\\Rightarrow\\; n - 1 = 49 \\;\\Rightarrow\\; n = 50.$$
+$$4 + (n - 1) \\cdot 6 = 178 \\;\\Rightarrow\\; (n - 1) \\cdot 6 = 174 \\;\\Rightarrow\\; n - 1 = 29 \\;\\Rightarrow\\; n = 30.$$
 
-所以 $203$ 是第 $50$ 项。位置必须是正整数：如果解得 $n = 50.5$，这个值就根本不是数列中的项。
+所以 $178$ 是第 $30$ 项。位置必须是正整数：如果解得 $n = 30.5$，这个值就根本不是数列中的项。
 
 这节课由通项公式和列出的项求某个值的序号，并数出有限等差数列的项数。`,
   ),
@@ -1851,20 +1851,20 @@ export const solvingForVariablesInArithmeticSequences: TopicDef = {
   intro: t(
     `An arithmetic sequence is one where every step adds the same common difference, so consecutive terms always have equal differences. That fact can be used the other way round. If the terms contain an unknown, the equal differences give an equation for it.
 
-Suppose $x + 1$, $2x + 3$ and $4x - 1$ are consecutive terms of an arithmetic sequence. The second minus the first must equal the third minus the second:
+Suppose $x$, $2x + 1$ and $4x - 3$ are consecutive terms of an arithmetic sequence. The second minus the first must equal the third minus the second:
 
-$$(2x + 3) - (x + 1) = (4x - 1) - (2x + 3) \\;\\Rightarrow\\; x + 2 = 2x - 4 \\;\\Rightarrow\\; x = 6.$$
+$$(2x + 1) - x = (4x - 3) - (2x + 1) \\;\\Rightarrow\\; x + 1 = 2x - 4 \\;\\Rightarrow\\; x = 5.$$
 
-With $x = 6$ the terms are $7, 15, 23$, and both differences are $8$.
+With $x = 5$ the terms are $5, 11, 17$, and both differences are $6$.
 
 In this lesson we solve for the unknown from equal differences, an equation with parentheses, and then use it to find the actual terms, the common difference and the next term.`,
     `等差数列每一步都加上同一个公差，所以相邻两项的差总是相等。这个事实可以反过来用：如果各项中含有未知数，相等的差就给出关于它的方程。
 
-设 $x + 1$，$2x + 3$，$4x - 1$ 是一个等差数列中相邻的三项。第二项减第一项必须等于第三项减第二项：
+设 $x$，$2x + 1$，$4x - 3$ 是一个等差数列中相邻的三项。第二项减第一项必须等于第三项减第二项：
 
-$$(2x + 3) - (x + 1) = (4x - 1) - (2x + 3) \\;\\Rightarrow\\; x + 2 = 2x - 4 \\;\\Rightarrow\\; x = 6.$$
+$$(2x + 1) - x = (4x - 3) - (2x + 1) \\;\\Rightarrow\\; x + 1 = 2x - 4 \\;\\Rightarrow\\; x = 5.$$
 
-当 $x = 6$ 时，三项是 $7, 15, 23$，两个差都是 $8$。
+当 $x = 5$ 时，三项是 $5, 11, 17$，两个差都是 $6$。
 
 这节课由相等的差解出未知数，这是一个含括号的方程，然后用它求出各项的实际值、公差和下一项。`,
   ),
@@ -2036,18 +2036,18 @@ export const modelingWithArithmeticSequences: TopicDef = {
   intro: t(
     `We can now find any term of an arithmetic sequence, find which term has a given value, and rebuild a sequence from two of its terms. Many everyday quantities behave exactly like such a sequence: they change by the same amount at each step, such as each row, each week, each chair or each day.
 
-Suppose row $1$ of a hall has $20$ seats and each row has $3$ more than the row in front. The seat counts $20, 23, 26, \\ldots$ are an arithmetic sequence with $a_1 = 20$ and $d = 3$, where $a_n$ is the number of seats in row $n$. So row $15$ has
+Suppose a savings jar holds $50$ dollars in week $1$ and $12$ dollars are added every week. The amounts $50, 62, 74, \\ldots$ are an arithmetic sequence with $a_1 = 50$ and $d = 12$, where $a_n$ is the amount in week $n$. So in week $10$ the jar holds
 
-$$a_{15} = 20 + 14 \\cdot 3 = 62 \\text{ seats}.$$
+$$a_{10} = 50 + 9 \\cdot 12 = 158 \\text{ dollars}.$$
 
 The work is in the setting up: deciding what $n$ counts, which value is $a_1$, and what the common difference is, with its sign.
 
 In this lesson we model situations with arithmetic sequences to find a value at a given step, the step at which a value is reached, and a model from two data points.`,
     `我们现在能求等差数列的任意一项，能求取给定值的是第几项，还能由两项还原整个数列。许多日常的量正像这样的数列：每一步都变化相同的数量，比如每一排、每一周、每一把椅子或每一天。
 
-设礼堂第 $1$ 排有 $20$ 个座位，每排比前一排多 $3$ 个。座位数 $20, 23, 26, \\ldots$ 构成等差数列，$a_1 = 20$，$d = 3$，其中 $a_n$ 是第 $n$ 排的座位数。所以第 $15$ 排有
+设存钱罐第 $1$ 周有 $50$ 元，以后每周存入 $12$ 元。金额 $50, 62, 74, \\ldots$ 构成等差数列，$a_1 = 50$，$d = 12$，其中 $a_n$ 是第 $n$ 周的金额。所以第 $10$ 周罐里有
 
-$$a_{15} = 20 + 14 \\cdot 3 = 62 \\text{ 个座位}.$$
+$$a_{10} = 50 + 9 \\cdot 12 = 158 \\text{ 元}.$$
 
 关键在于建立模型：确定 $n$ 数的是什么，哪个值是 $a_1$，公差是多少以及它的正负。
 
@@ -2196,18 +2196,18 @@ export const geometricSequences: TopicDef = {
   xp: 12,
   standards: ["CCSS.HSF.IF.A.3", "CCSS.HSF.LE.A.2"],
   intro: t(
-    `An arithmetic sequence grows by adding the same number at every step. Many quantities grow differently: they are multiplied by the same number at every step. A population of cells that doubles every hour goes
+    `An arithmetic sequence grows by adding the same number at every step. Many quantities grow differently: they are multiplied by the same number at every step. A population of cells that triples every hour goes
 
-$$3, 6, 12, 24, 48, \\ldots$$
+$$2, 6, 18, 54, 162, \\ldots$$
 
-The differences $3, 6, 12, 24$ are not equal, so this is not arithmetic. But the ratios are: $\\frac{6}{3} = \\frac{12}{6} = \\frac{24}{12} = 2$, so each term is the one before times $2$. A sequence like this is called **geometric**, and the fixed multiplier is its **common ratio** $r$.
+The differences $4, 12, 36, 108$ are not equal, so this is not arithmetic. But the ratios are: $\\frac{6}{2} = \\frac{18}{6} = \\frac{54}{18} = 3$, so each term is the one before times $3$. A sequence like this is called **geometric**, and the fixed multiplier is its **common ratio** $r$.
 
 Multiplying by a ratio can also shrink a sequence, as with $r = \\frac{1}{2}$, or make its signs alternate, as with $r = -2$. In this lesson we tell geometric sequences apart from arithmetic ones, find the common ratio, and continue a geometric sequence.`,
-    `等差数列每一步都加上同一个数。许多量的增长方式不同：它们每一步都乘以同一个数。每小时翻一倍的细胞数量依次是
+    `等差数列每一步都加上同一个数。许多量的增长方式不同：它们每一步都乘以同一个数。每小时变为三倍的细胞数量依次是
 
-$$3, 6, 12, 24, 48, \\ldots$$
+$$2, 6, 18, 54, 162, \\ldots$$
 
-差 $3, 6, 12, 24$ 不相等，所以它不是等差数列。但比相等：$\\frac{6}{3} = \\frac{12}{6} = \\frac{24}{12} = 2$，所以每一项都是前一项乘以 $2$。这样的数列叫做**等比数列**，这个固定的乘数叫做**公比** $r$。
+差 $4, 12, 36, 108$ 不相等，所以它不是等差数列。但比相等：$\\frac{6}{2} = \\frac{18}{6} = \\frac{54}{18} = 3$，所以每一项都是前一项乘以 $3$。这样的数列叫做**等比数列**，这个固定的乘数叫做**公比** $r$。
 
 乘以公比也可以使数列变小，比如 $r = \\frac{1}{2}$，或者使正负交替，比如 $r = -2$。这节课区分等比数列和等差数列，求公比，并写出等比数列的后续项。`,
   ),
@@ -2409,16 +2409,16 @@ export const nthTermOfAGeometricSequence: TopicDef = {
   xp: 14,
   standards: ["CCSS.HSF.BF.A.2", "CCSS.HSF.LE.A.2"],
   intro: t(
-    `A geometric sequence moves from term to term by multiplying by the common ratio $r$. To reach a far term, such as the $10$th term of $5, 15, 45, \\ldots$, we could multiply by $3$ nine times. But repeated multiplication by the same number is exactly what a power writes in one go:
+    `A geometric sequence moves from term to term by multiplying by the common ratio $r$. To reach a far term, such as the $10$th term of $4, 8, 16, \\ldots$, we could multiply by $2$ nine times. But repeated multiplication by the same number is exactly what a power writes in one go:
 
-$$a_{10} = 5 \\cdot \\underbrace{3 \\cdot 3 \\cdots 3}_{9 \\text{ factors}} = 5 \\cdot 3^{9} = 98415.$$
+$$a_{10} = 4 \\cdot \\underbrace{2 \\cdot 2 \\cdots 2}_{9 \\text{ factors}} = 4 \\cdot 2^{9} = 2048.$$
 
 The same reasoning works for every position, and it gives an explicit formula for a geometric sequence, $a_n = a_1 \\cdot r^{n-1}$, just as $a_n = a_1 + (n - 1)d$ did for an arithmetic one.
 
 In this lesson we write this formula for a given sequence, use it to find terms, and evaluate explicit formulas whose exponent is written in other ways.`,
-    `等比数列从一项到下一项都是乘以公比 $r$。要求很远的一项，比如 $5, 15, 45, \\ldots$ 的第 $10$ 项，可以连乘九次 $3$。而连续乘同一个数，正是乘方一下子写出来的：
+    `等比数列从一项到下一项都是乘以公比 $r$。要求很远的一项，比如 $4, 8, 16, \\ldots$ 的第 $10$ 项，可以连乘九次 $2$。而连续乘同一个数，正是乘方一下子写出来的：
 
-$$a_{10} = 5 \\cdot \\underbrace{3 \\cdot 3 \\cdots 3}_{9 \\text{ 个因数}} = 5 \\cdot 3^{9} = 98415.$$
+$$a_{10} = 4 \\cdot \\underbrace{2 \\cdot 2 \\cdots 2}_{9 \\text{ 个因数}} = 4 \\cdot 2^{9} = 2048.$$
 
 同样的推理对每个位置都成立，于是得到等比数列的通项公式 $a_n = a_1 \\cdot r^{n-1}$，正如 $a_n = a_1 + (n - 1)d$ 之于等差数列。
 
@@ -2588,20 +2588,20 @@ export const recursiveFormulasForGeometricSequences: TopicDef = {
   intro: t(
     `An arithmetic sequence has two descriptions: an explicit formula $a_n = a_1 + (n - 1)d$, and a recursive one, $a_1$ together with the rule $a_n = a_{n-1} + d$. A geometric sequence has the same two, and we already know its explicit formula $a_n = a_1 r^{n-1}$. Its recursive formula says just how the sequence is built: start from the first term and multiply by the common ratio each time.
 
-For $2, -6, 18, -54, \\ldots$ the first term is $2$ and the ratio is $\\frac{-6}{2} = -3$, so
+For $5, -10, 20, -40, \\ldots$ the first term is $5$ and the ratio is $\\frac{-10}{5} = -2$, so
 
-$$a_1 = 2, \\qquad a_n = -3a_{n-1}.$$
+$$a_1 = 5, \\qquad a_n = -2a_{n-1}.$$
 
-The rule rebuilds the list: $a_2 = -3 \\cdot 2 = -6$ and $a_3 = -3 \\cdot (-6) = 18$. The explicit formula $a_n = 2 \\cdot (-3)^{n-1}$ gives the same terms, but reaches any term at once.
+The rule rebuilds the list: $a_2 = -2 \\cdot 5 = -10$ and $a_3 = -2 \\cdot (-10) = 20$. The explicit formula $a_n = 5 \\cdot (-2)^{n-1}$ gives the same terms, but reaches any term at once.
 
 In this lesson we write the recursive formula of a geometric sequence, use it forward and backward, and translate between the recursive and explicit formulas.`,
     `等差数列有两种描述：通项公式 $a_n = a_1 + (n - 1)d$，以及递推公式，即 $a_1$ 加上规则 $a_n = a_{n-1} + d$。等比数列也有这两种，我们已经知道它的通项公式 $a_n = a_1 r^{n-1}$。它的递推公式恰好说明数列是怎样构成的：从首项开始，每次乘以公比。
 
-对于 $2, -6, 18, -54, \\ldots$，首项是 $2$，公比是 $\\frac{-6}{2} = -3$，所以
+对于 $5, -10, 20, -40, \\ldots$，首项是 $5$，公比是 $\\frac{-10}{5} = -2$，所以
 
-$$a_1 = 2, \\qquad a_n = -3a_{n-1}.$$
+$$a_1 = 5, \\qquad a_n = -2a_{n-1}.$$
 
-这个规则能还原数列：$a_2 = -3 \\cdot 2 = -6$，$a_3 = -3 \\cdot (-6) = 18$。通项公式 $a_n = 2 \\cdot (-3)^{n-1}$ 给出同样的项，但能一步求出任意一项。
+这个规则能还原数列：$a_2 = -2 \\cdot 5 = -10$，$a_3 = -2 \\cdot (-10) = 20$。通项公式 $a_n = 5 \\cdot (-2)^{n-1}$ 给出同样的项，但能一步求出任意一项。
 
 这节课写出等比数列的递推公式，正向和反向使用它，并在递推公式与通项公式之间转换。`,
   ),
@@ -2930,20 +2930,20 @@ export const geometricSequencesFromTwoTerms: TopicDef = {
   xp: 15,
   standards: ["CCSS.HSF.LE.A.2"],
   intro: t(
-    `The formula $a_n = a_1 r^{n-1}$ needs the first term and the common ratio. When only two terms are known, say $a_2 = 6$ and $a_5 = 162$, the steps between them still tell the story. From $a_2$ to $a_5$ the sequence is multiplied by $r$ three times, so
+    `The formula $a_n = a_1 r^{n-1}$ needs the first term and the common ratio. When only two terms are known, say $a_3 = 12$ and $a_6 = 96$, the steps between them still tell the story. From $a_3$ to $a_6$ the sequence is multiplied by $r$ three times, so
 
-$$6 \\cdot r^{3} = 162 \\;\\Rightarrow\\; r^{3} = 27 \\;\\Rightarrow\\; r = 3.$$
+$$12 \\cdot r^{3} = 96 \\;\\Rightarrow\\; r^{3} = 8 \\;\\Rightarrow\\; r = 2.$$
 
-This is where roots come in: undoing a cube needs a cube root, and undoing a square needs a square root. Then dividing back once from $a_2$ gives $a_1 = 6 \\div 3 = 2$, and the sequence is $a_n = 2 \\cdot 3^{n-1}$.
+This is where roots come in: undoing a cube needs a cube root, and undoing a square needs a square root. Then dividing back twice from $a_3$ gives $a_1 = 12 \\div 2^{2} = 3$, and the sequence is $a_n = 3 \\cdot 2^{n-1}$.
 
-An even number of steps leaves a choice: $r^{2} = 16$ allows $r = 4$ and $r = -4$, so the sign of the ratio must be given. In this lesson we find the common ratio, the first term and other terms from two terms.`,
-    `公式 $a_n = a_1 r^{n-1}$ 需要首项和公比。当只知道两项时，比如 $a_2 = 6$ 和 $a_5 = 162$，它们之间的步数仍然说明了一切。从 $a_2$ 到 $a_5$，数列乘了三次 $r$，所以
+An even number of steps leaves a choice: $r^{2} = 25$ allows $r = 5$ and $r = -5$, so the sign of the ratio must be given. In this lesson we find the common ratio, the first term and other terms from two terms.`,
+    `公式 $a_n = a_1 r^{n-1}$ 需要首项和公比。当只知道两项时，比如 $a_3 = 12$ 和 $a_6 = 96$，它们之间的步数仍然说明了一切。从 $a_3$ 到 $a_6$，数列乘了三次 $r$，所以
 
-$$6 \\cdot r^{3} = 162 \\;\\Rightarrow\\; r^{3} = 27 \\;\\Rightarrow\\; r = 3.$$
+$$12 \\cdot r^{3} = 96 \\;\\Rightarrow\\; r^{3} = 8 \\;\\Rightarrow\\; r = 2.$$
 
-这里要用到开方：撤销立方要开立方，撤销平方要开平方。再从 $a_2$ 往回除一次，得 $a_1 = 6 \\div 3 = 2$，数列为 $a_n = 2 \\cdot 3^{n-1}$。
+这里要用到开方：撤销立方要开立方，撤销平方要开平方。再从 $a_3$ 往回除两次，得 $a_1 = 12 \\div 2^{2} = 3$，数列为 $a_n = 3 \\cdot 2^{n-1}$。
 
-步数为偶数时会有两种可能：$r^{2} = 16$ 允许 $r = 4$ 和 $r = -4$，所以必须给出公比的正负。这节课由两项求公比、首项和其他项。`,
+步数为偶数时会有两种可能：$r^{2} = 25$ 允许 $r = 5$ 和 $r = -5$，所以必须给出公比的正负。这节课由两项求公比、首项和其他项。`,
   ),
   knowledgePoints: [
     {
@@ -3086,18 +3086,18 @@ export const indexOfATermInAGeometricSequence: TopicDef = {
   xp: 12,
   standards: ["CCSS.HSF.LE.A.2"],
   intro: t(
-    `The explicit formula $a_n = a_1 r^{n-1}$ turns a position into a term. The reverse question asks which position holds a given value: in $3, 6, 12, \\ldots$, which term is $384$?
+    `The explicit formula $a_n = a_1 r^{n-1}$ turns a position into a term. The reverse question asks which position holds a given value: in $2, 10, 50, \\ldots$, which term is $1250$?
 
 Set the formula equal to the value. This time $n$ sits in an exponent, so instead of undoing an addition we divide by the first term and recognize the power that remains:
 
-$$3 \\cdot 2^{n-1} = 384 \\;\\Rightarrow\\; 2^{n-1} = 128 = 2^{7} \\;\\Rightarrow\\; n - 1 = 7 \\;\\Rightarrow\\; n = 8.$$
+$$2 \\cdot 5^{n-1} = 1250 \\;\\Rightarrow\\; 5^{n-1} = 625 = 5^{4} \\;\\Rightarrow\\; n - 1 = 4 \\;\\Rightarrow\\; n = 5.$$
 
 Two powers of the same base, other than $0$, $1$ or $-1$, are equal only when their exponents are equal, which is what lets us compare exponents. In this lesson we find the index of a value from listed terms, with whole and with fractional ratios, and from an explicit formula.`,
-    `通项公式 $a_n = a_1 r^{n-1}$ 把位置变成项。反过来的问题是：某个值在哪个位置？在 $3, 6, 12, \\ldots$ 中，$384$ 是第几项？
+    `通项公式 $a_n = a_1 r^{n-1}$ 把位置变成项。反过来的问题是：某个值在哪个位置？在 $2, 10, 50, \\ldots$ 中，$1250$ 是第几项？
 
 令公式等于这个值。这一次 $n$ 在指数上，所以不是撤销加法，而是两边除以首项，再认出剩下的是哪个乘方：
 
-$$3 \\cdot 2^{n-1} = 384 \\;\\Rightarrow\\; 2^{n-1} = 128 = 2^{7} \\;\\Rightarrow\\; n - 1 = 7 \\;\\Rightarrow\\; n = 8.$$
+$$2 \\cdot 5^{n-1} = 1250 \\;\\Rightarrow\\; 5^{n-1} = 625 = 5^{4} \\;\\Rightarrow\\; n - 1 = 4 \\;\\Rightarrow\\; n = 5.$$
 
 底数相同（且不是 $0$、$1$ 或 $-1$）的两个乘方，只有指数相等时才相等，所以可以比较指数。这节课由列出的项（公比为整数或分数）以及由通项公式求某个值的序号。`,
   ),

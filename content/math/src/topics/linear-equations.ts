@@ -913,18 +913,18 @@ export const manyVariableEquations: TopicDef = {
   xp: 15,
   standards: ["CCSS.HSA.CED.A.4"],
   intro: t(
-    `In equations such as $ax + 5 = 12$ we solved for $x$ and treated the other letter as a fixed number. Nothing forces the letter we solve for to be called $x$, or the others to be called coefficients. An equation like $3x + 2y = 12$ links two quantities, and **solving it for $y$** means rewriting it so that $y$ stands alone on one side:
+    `In equations such as $ax + 5 = 12$ we solved for $x$ and treated the other letter as a fixed number. Nothing forces the letter we solve for to be called $x$, or the others to be called coefficients. An equation like $4x + 3y = 18$ links two quantities, and **solving it for $y$** means rewriting it so that $y$ stands alone on one side:
 
-$$3x + 2y = 12 \\;\\Rightarrow\\; 2y = 12 - 3x \\;\\Rightarrow\\; y = 6 - \\frac{3}{2}x.$$
+$$4x + 3y = 18 \\;\\Rightarrow\\; 3y = 18 - 4x \\;\\Rightarrow\\; y = 6 - \\frac{4}{3}x.$$
 
-Both equations say the same thing, but the second one is ready to use: for any $x$ it gives $y$ directly. With $x = 2$ it gives $y = 6 - 3 = 3$, and indeed $3 \\cdot 2 + 2 \\cdot 3 = 12$.
+Both equations say the same thing, but the second one is ready to use: for any $x$ it gives $y$ directly. With $x = 3$ it gives $y = 6 - 4 = 2$, and indeed $4 \\cdot 3 + 3 \\cdot 2 = 18$.
 
 The rule is the one you know: treat every letter except the one you want as a number, and undo the operations on the wanted letter in the reverse order. In this lesson we solve two-variable equations for one variable, then equations with several letters for any of them.`,
-    `在 $ax + 5 = 12$ 这样的方程中，我们解出 $x$，把另一个字母当作确定的数。其实要解出的字母不一定叫 $x$，其他字母也不一定是系数。像 $3x + 2y = 12$ 这样的方程联系着两个量，**解出 $y$** 就是把它改写成 $y$ 单独在一边的形式：
+    `在 $ax + 5 = 12$ 这样的方程中，我们解出 $x$，把另一个字母当作确定的数。其实要解出的字母不一定叫 $x$，其他字母也不一定是系数。像 $4x + 3y = 18$ 这样的方程联系着两个量，**解出 $y$** 就是把它改写成 $y$ 单独在一边的形式：
 
-$$3x + 2y = 12 \\;\\Rightarrow\\; 2y = 12 - 3x \\;\\Rightarrow\\; y = 6 - \\frac{3}{2}x.$$
+$$4x + 3y = 18 \\;\\Rightarrow\\; 3y = 18 - 4x \\;\\Rightarrow\\; y = 6 - \\frac{4}{3}x.$$
 
-两个方程表达的意思相同，但第二个可以直接用：给出任意 $x$，就能直接得到 $y$。取 $x = 2$，得 $y = 6 - 3 = 3$，而确实 $3 \\cdot 2 + 2 \\cdot 3 = 12$。
+两个方程表达的意思相同，但第二个可以直接用：给出任意 $x$，就能直接得到 $y$。取 $x = 3$，得 $y = 6 - 4 = 2$，而确实 $4 \\cdot 3 + 3 \\cdot 2 = 18$。
 
 规则还是熟悉的那条：把要解出的字母以外的字母都当作数，按相反的顺序抵消作用在这个字母上的运算。这节课先从二元方程中解出一个变量，再从含多个字母的方程中解出任意一个。`,
   ),
@@ -1824,24 +1824,24 @@ export const interpretingLinearExpressions: TopicDef = {
   intro: t(
     `You know how to evaluate an expression by substituting a number, and what a unit rate is: an amount per one unit, such as dollars per month. Put the two together and an expression becomes a description of a situation.
 
-A gym charges a one-time fee of $\\$40$ and then $\\$25$ a month. After $m$ months the total cost is $40 + 25m$ dollars. Evaluate it for a few months:
+A climbing club charges a one-time fee of $\\$30$ and then $\\$15$ a month. After $m$ months the total cost is $30 + 15m$ dollars. Evaluate it for a few months:
 
-- $m = 0$: $40 + 25 \\cdot 0 = 40$, the fee alone;
-- $m = 1$: $40 + 25 \\cdot 1 = 65$;
-- $m = 2$: $40 + 25 \\cdot 2 = 90$.
+- $m = 0$: $30 + 15 \\cdot 0 = 30$, the fee alone;
+- $m = 1$: $30 + 15 \\cdot 1 = 45$;
+- $m = 2$: $30 + 15 \\cdot 2 = 60$.
 
-Each part of the expression has a job. The $40$ is there before any month has passed; the $25$ is added once for every month, so it is the rate. Reading an expression this way lets you see at a glance what a situation costs to start, how fast it changes, and what changes when the variable does.
+Each part of the expression has a job. The $30$ is there before any month has passed; the $15$ is added once for every month, so it is the rate. Reading an expression this way lets you see at a glance what a situation costs to start, how fast it changes, and what changes when the variable does.
 
 In this lesson we say what the constant and the coefficient mean, write such expressions from a description, and work out how much the expression changes when the variable increases.`,
     `你会把数代入式子求值，也知道单位率是什么：每一个单位对应的量，比如每月多少元。把两者结合起来，一个式子就成了对实际情境的描述。
 
-一家健身房收取一次性入会费 $40$ 元，之后每月 $25$ 元。$m$ 个月后的总费用是 $40 + 25m$ 元。对几个月份求值：
+一家攀岩俱乐部收取一次性入会费 $30$ 元，之后每月 $15$ 元。$m$ 个月后的总费用是 $30 + 15m$ 元。对几个月份求值：
 
-- $m = 0$：$40 + 25 \\cdot 0 = 40$，只有入会费；
-- $m = 1$：$40 + 25 \\cdot 1 = 65$；
-- $m = 2$：$40 + 25 \\cdot 2 = 90$。
+- $m = 0$：$30 + 15 \\cdot 0 = 30$，只有入会费；
+- $m = 1$：$30 + 15 \\cdot 1 = 45$；
+- $m = 2$：$30 + 15 \\cdot 2 = 60$。
 
-式子的每一部分都有自己的作用。$40$ 在一个月都没过时就已经有了；$25$ 每过一个月加一次，所以它是变化率。这样读式子，一眼就能看出这个情境的起始量、变化的快慢，以及变量改变时会发生什么。
+式子的每一部分都有自己的作用。$30$ 在一个月都没过时就已经有了；$15$ 每过一个月加一次，所以它是变化率。这样读式子，一眼就能看出这个情境的起始量、变化的快慢，以及变量改变时会发生什么。
 
 这节课先说明常数项和系数的含义，再根据描述写出这样的式子，最后求出变量增加时式子的变化量。`,
   ),
@@ -2027,22 +2027,22 @@ export const modelingWithLinearEquations: TopicDef = {
   xp: 18,
   standards: ["CCSS.HSA.CED.A.1"],
   intro: t(
-    `In the last topic, expressions described situations: a plumber who charges $\\$60$ per visit plus $\\$45$ per hour bills $60 + 45h$ dollars for $h$ hours. Given the hours, we could work out the bill. Real questions often go the other way: the bill was $\\$285$; how long did the job take?
+    `In the last topic, expressions described situations: an electrician who charges $\\$50$ per visit plus $\\$35$ per hour bills $50 + 35h$ dollars for $h$ hours. Given the hours, we could work out the bill. Real questions often go the other way: the bill was $\\$260$; how long did the job take?
 
 The expression still describes the bill, and the bill is now known, so the two must be equal. Writing that down gives an **equation**, and solving it answers the question:
 
-$$60 + 45h = 285 \\;\\Rightarrow\\; 45h = 225 \\;\\Rightarrow\\; h = 5.$$
+$$50 + 35h = 260 \\;\\Rightarrow\\; 35h = 210 \\;\\Rightarrow\\; h = 6.$$
 
-The job took $5$ hours, and $60 + 45 \\cdot 5 = 285$ confirms it.
+The job took $6$ hours, and $50 + 35 \\cdot 6 = 260$ confirms it.
 
 Every problem in this topic follows the same three moves: name the unknown with a variable, write an equation that says what the words say, and solve it, checking the answer against the words. We use them for a start and a rate, for a total split into two parts, for sentences about a number, and for two plans that cost the same.`,
-    `在上一个课题中，式子描述了实际情境：水管工每次上门收 $60$ 元，另外每小时收 $45$ 元，工作 $h$ 小时的账单是 $60 + 45h$ 元。知道小时数，就能算出账单。实际问题常常反过来问：账单是 $285$ 元，这次工作用了多久？
+    `在上一个课题中，式子描述了实际情境：电工每次上门收 $50$ 元，另外每小时收 $35$ 元，工作 $h$ 小时的账单是 $50 + 35h$ 元。知道小时数，就能算出账单。实际问题常常反过来问：账单是 $260$ 元，这次工作用了多久？
 
 式子仍然表示账单，而账单现在已知，所以两者必须相等。把这一点写下来就是一个**方程**，解方程就回答了问题：
 
-$$60 + 45h = 285 \\;\\Rightarrow\\; 45h = 225 \\;\\Rightarrow\\; h = 5.$$
+$$50 + 35h = 260 \\;\\Rightarrow\\; 35h = 210 \\;\\Rightarrow\\; h = 6.$$
 
-这次工作用了 $5$ 小时，而 $60 + 45 \\cdot 5 = 285$ 验证了它。
+这次工作用了 $6$ 小时，而 $50 + 35 \\cdot 6 = 260$ 验证了它。
 
 这个课题中的每道题都按同样的三步来做：用一个变量表示未知量，写出与文字意思相同的方程，解方程并对照文字检验答案。我们把它们用于起始量与变化率、把总量分成两部分、关于一个数的句子，以及两种费用相同的方案。`,
   ),
@@ -2385,20 +2385,20 @@ export const consecutiveIntegerProblems: TopicDef = {
   intro: t(
     `In modeling with linear equations, a total split into two parts was written with **one** variable: the second part was an expression in the first. The same idea solves puzzles about integers that come one after another.
 
-Suppose three integers in a row add up to $54$. They are not known, but each is $1$ more than the one before, so once the first is called $n$, the others are $n + 1$ and $n + 2$. Now the sum is an equation in $n$ alone:
+Suppose three integers in a row add up to $72$. They are not known, but each is $1$ more than the one before, so once the first is called $n$, the others are $n + 1$ and $n + 2$. Now the sum is an equation in $n$ alone:
 
-$$n + (n + 1) + (n + 2) = 54 \\;\\Rightarrow\\; 3n + 3 = 54 \\;\\Rightarrow\\; n = 17.$$
+$$n + (n + 1) + (n + 2) = 72 \\;\\Rightarrow\\; 3n + 3 = 72 \\;\\Rightarrow\\; n = 23.$$
 
-The integers are $17$, $18$ and $19$, and $17 + 18 + 19 = 54$.
+The integers are $23$, $24$ and $25$, and $23 + 24 + 25 = 72$.
 
 In this topic we do this for consecutive integers, for consecutive even and odd integers, which go up by $2$, and for other conditions that relate the smallest and the largest.`,
     `在用一次方程建模中，分成两部分的总量只用**一个**变量来表示：第二部分写成含第一部分的式子。同样的思路可以解决一个接一个的整数的问题。
 
-假设三个相邻的整数之和是 $54$。它们都未知，但每个都比前一个大 $1$，所以设第一个为 $n$，另外两个就是 $n + 1$ 和 $n + 2$。这样和就成了只含 $n$ 的方程：
+假设三个相邻的整数之和是 $72$。它们都未知，但每个都比前一个大 $1$，所以设第一个为 $n$，另外两个就是 $n + 1$ 和 $n + 2$。这样和就成了只含 $n$ 的方程：
 
-$$n + (n + 1) + (n + 2) = 54 \\;\\Rightarrow\\; 3n + 3 = 54 \\;\\Rightarrow\\; n = 17.$$
+$$n + (n + 1) + (n + 2) = 72 \\;\\Rightarrow\\; 3n + 3 = 72 \\;\\Rightarrow\\; n = 23.$$
 
-这三个整数是 $17$、$18$、$19$，而 $17 + 18 + 19 = 54$。
+这三个整数是 $23$、$24$、$25$，而 $23 + 24 + 25 = 72$。
 
 这个课题对连续整数、每次增加 $2$ 的连续偶数和连续奇数，以及联系最小数与最大数的其他条件，都这样来做。`,
   ),
@@ -2895,20 +2895,20 @@ export const furtherSpeedDistanceTime: TopicDef = {
   intro: t(
     `With one mover, $d = rt$ links distance, rate and time. Many questions involve **two** movers: two cars driving toward each other, a car chasing a truck, or one boat going downstream and back. Each mover still obeys $d = rt$, so we write a distance for each and look for what links them.
 
-Two towns are $210$ km apart, and cars leave both at once toward each other, at $60$ and $45$ km/h. After $t$ hours the first has gone $60t$ km and the second $45t$ km. They meet when the two distances together fill the gap:
+Two towns are $270$ km apart, and cars leave both at once toward each other, at $50$ and $40$ km/h. After $t$ hours the first has gone $50t$ km and the second $40t$ km. They meet when the two distances together fill the gap:
 
-$$60t + 45t = 210 \\;\\Rightarrow\\; 105t = 210 \\;\\Rightarrow\\; t = 2.$$
+$$50t + 40t = 270 \\;\\Rightarrow\\; 90t = 270 \\;\\Rightarrow\\; t = 3.$$
 
-They meet after $2$ hours, when the first has gone $120$ km and the second $90$ km.
+They meet after $3$ hours, when the first has gone $150$ km and the second $120$ km.
 
 In this topic the link is a sum of distances for movers approaching each other, equal distances for catching up, and equal distances with different times for round trips.`,
     `对于一个运动的物体，$d = rt$ 联系着路程、速度和时间。许多问题涉及**两个**运动的物体：两辆相向而行的车、一辆追赶卡车的小汽车，或者一艘顺流而下再返回的船。每个物体仍然满足 $d = rt$，所以分别写出各自的路程，再找出它们之间的联系。
 
-两城相距 $210$ 千米，两辆车同时从两城出发相向而行，速度分别是 $60$ 和 $45$ 千米/时。$t$ 小时后，第一辆行驶了 $60t$ 千米，第二辆行驶了 $45t$ 千米。两段路程合起来等于两城的距离时，它们相遇：
+两城相距 $270$ 千米，两辆车同时从两城出发相向而行，速度分别是 $50$ 和 $40$ 千米/时。$t$ 小时后，第一辆行驶了 $50t$ 千米，第二辆行驶了 $40t$ 千米。两段路程合起来等于两城的距离时，它们相遇：
 
-$$60t + 45t = 210 \\;\\Rightarrow\\; 105t = 210 \\;\\Rightarrow\\; t = 2.$$
+$$50t + 40t = 270 \\;\\Rightarrow\\; 90t = 270 \\;\\Rightarrow\\; t = 3.$$
 
-它们 $2$ 小时后相遇，这时第一辆行驶了 $120$ 千米，第二辆行驶了 $90$ 千米。
+它们 $3$ 小时后相遇，这时第一辆行驶了 $150$ 千米，第二辆行驶了 $120$ 千米。
 
 这个课题中，相向而行时的联系是路程之和，追及时是路程相等，往返时是路程相等而时间不同。`,
   ),
@@ -3149,20 +3149,20 @@ export const workProblems: TopicDef = {
   xp: 18,
   standards: ["CCSS.HSA.CED.A.1"],
   intro: t(
-    `Speed is distance per hour, and $d = rt$. Work has a rate too: the part of a job done per hour. If Ana paints a fence in $3$ hours, she paints $\\frac{1}{3}$ of it each hour, and in $t$ hours she paints $\\frac{t}{3}$ of it. The whole job is $1$.
+    `Speed is distance per hour, and $d = rt$. Work has a rate too: the part of a job done per hour. If Ana paints a fence in $5$ hours, she paints $\\frac{1}{5}$ of it each hour, and in $t$ hours she paints $\\frac{t}{5}$ of it. The whole job is $1$.
 
-Rates of work add, the way two cars approaching each other close the gap at the sum of their speeds. If Ben paints the same fence in $6$ hours, together they paint $\\frac{1}{3} + \\frac{1}{6} = \\frac{1}{2}$ of it each hour, so they finish in $2$ hours:
+Rates of work add, the way two cars approaching each other close the gap at the sum of their speeds. If Ben paints the same fence in $20$ hours, together they paint $\\frac{1}{5} + \\frac{1}{20} = \\frac{1}{4}$ of it each hour, so they finish in $4$ hours:
 
-$$\\frac{t}{3} + \\frac{t}{6} = 1 \\;\\Rightarrow\\; 2t + t = 6 \\;\\Rightarrow\\; t = 2.$$
+$$\\frac{t}{5} + \\frac{t}{20} = 1 \\;\\Rightarrow\\; 4t + t = 20 \\;\\Rightarrow\\; t = 4.$$
 
-The times themselves do not add: $3 + 6 = 9$ hours would be longer than either alone. In this topic we find the time together, one worker's time from the time together, the time when one worker undoes the job, and the time when one worker starts alone.`,
-    `速度是每小时的路程，$d = rt$。工作也有效率：每小时完成工作的几分之几。如果安娜 $3$ 小时刷完一道篱笆，她每小时刷 $\\frac{1}{3}$，$t$ 小时刷 $\\frac{t}{3}$。全部工作量是 $1$。
+The times themselves do not add: $5 + 20 = 25$ hours would be longer than either alone. In this topic we find the time together, one worker's time from the time together, the time when one worker undoes the job, and the time when one worker starts alone.`,
+    `速度是每小时的路程，$d = rt$。工作也有效率：每小时完成工作的几分之几。如果安娜 $5$ 小时刷完一道篱笆，她每小时刷 $\\frac{1}{5}$，$t$ 小时刷 $\\frac{t}{5}$。全部工作量是 $1$。
 
-工作效率可以相加，就像两辆相向而行的车以速度之和缩短距离一样。如果本 $6$ 小时刷完同一道篱笆，两人合作每小时刷 $\\frac{1}{3} + \\frac{1}{6} = \\frac{1}{2}$，所以 $2$ 小时刷完：
+工作效率可以相加，就像两辆相向而行的车以速度之和缩短距离一样。如果本 $20$ 小时刷完同一道篱笆，两人合作每小时刷 $\\frac{1}{5} + \\frac{1}{20} = \\frac{1}{4}$，所以 $4$ 小时刷完：
 
-$$\\frac{t}{3} + \\frac{t}{6} = 1 \\;\\Rightarrow\\; 2t + t = 6 \\;\\Rightarrow\\; t = 2.$$
+$$\\frac{t}{5} + \\frac{t}{20} = 1 \\;\\Rightarrow\\; 4t + t = 20 \\;\\Rightarrow\\; t = 4.$$
 
-时间本身不能相加：$3 + 6 = 9$ 小时比任何一人单独做的时间都长。这个课题中，我们求合作的时间，由合作时间求一方的时间，求一方起相反作用时的时间，以及一方先单独做时的时间。`,
+时间本身不能相加：$5 + 20 = 25$ 小时比任何一人单独做的时间都长。这个课题中，我们求合作的时间，由合作时间求一方的时间，求一方起相反作用时的时间，以及一方先单独做时的时间。`,
   ),
   knowledgePoints: [
     {
@@ -3437,14 +3437,14 @@ export const mixtureProblems: TopicDef = {
   xp: 18,
   standards: ["CCSS.HSA.CED.A.1"],
   intro: t(
-    `You can take a percent of a number: $40\\%$ of $20$ is $0.40 \\cdot 20 = 8$. A solution's concentration is such a percent. In $20$ liters of $40\\%$ acid solution, $40\\%$ of the liquid is acid, so it holds $8$ liters of pure acid.
+    `You can take a percent of a number: $50\\%$ of $30$ is $0.50 \\cdot 30 = 15$. A solution's concentration is such a percent. In $30$ liters of $50\\%$ acid solution, $50\\%$ of the liquid is acid, so it holds $15$ liters of pure acid.
 
-When two solutions are poured together, the concentration does not simply add, but two things do: the volumes, and the amounts of pure acid. Pour $20$ liters of $40\\%$ acid into $20$ liters of $10\\%$ acid: the acid is $8 + 2 = 10$ liters in $40$ liters, which is $25\\%$.
+When two solutions are poured together, the concentration does not simply add, but two things do: the volumes, and the amounts of pure acid. Pour $30$ liters of $50\\%$ acid into $10$ liters of $10\\%$ acid: the acid is $15 + 1 = 16$ liters in $40$ liters, which is $40\\%$.
 
 That gives an equation whenever one amount is unknown: the pure substance in the parts equals the pure substance in the mixture. In this topic we use it to mix two solutions, to add water or pure substance, and, with money instead of acid, to mix items of different prices.`,
-    `你会求一个数的百分之几：$20$ 的 $40\\%$ 是 $0.40 \\cdot 20 = 8$。溶液的浓度就是这样的百分数。$20$ 升浓度为 $40\\%$ 的酸溶液中，$40\\%$ 是酸，所以含有 $8$ 升纯酸。
+    `你会求一个数的百分之几：$30$ 的 $50\\%$ 是 $0.50 \\cdot 30 = 15$。溶液的浓度就是这样的百分数。$30$ 升浓度为 $50\\%$ 的酸溶液中，$50\\%$ 是酸，所以含有 $15$ 升纯酸。
 
-两种溶液倒在一起时，浓度并不是简单相加，但有两样东西相加：体积，以及纯酸的量。把 $20$ 升 $40\\%$ 的酸溶液倒进 $20$ 升 $10\\%$ 的酸溶液：$40$ 升中有 $8 + 2 = 10$ 升酸，浓度是 $25\\%$。
+两种溶液倒在一起时，浓度并不是简单相加，但有两样东西相加：体积，以及纯酸的量。把 $30$ 升 $50\\%$ 的酸溶液倒进 $10$ 升 $10\\%$ 的酸溶液：$40$ 升中有 $15 + 1 = 16$ 升酸，浓度是 $40\\%$。
 
 只要有一个量未知，这就给出一个方程：各部分中纯物质的量之和等于混合物中纯物质的量。这个课题中，我们用它来混合两种溶液、加水或加纯物质，并把酸换成钱，解决不同单价物品的混合问题。`,
   ),

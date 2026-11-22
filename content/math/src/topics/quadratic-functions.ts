@@ -958,22 +958,22 @@ export const rootsOfQuadraticFunctions: TopicDef = {
   intro: t(
     `A **root** of a function $f$ is an input where $f(x) = 0$; on the graph it is an $x$-intercept, a point where the graph meets the $x$-axis. For a quadratic function $f(x) = ax^{2} + bx + c$, finding the roots means solving the quadratic equation $ax^{2} + bx + c = 0$, and we already know how: by factoring, or with the quadratic formula.
 
-Take $f(x) = x^{2} - 2x - 8$. Its graph is an upward parabola crossing the $y$-axis at $(0, -8)$. Where does it cross the $x$-axis? Set $f(x) = 0$ and factor:
+Take $f(x) = x^{2} + x - 6$. Its graph is an upward parabola crossing the $y$-axis at $(0, -6)$. Where does it cross the $x$-axis? Set $f(x) = 0$ and factor:
 
-$$x^{2} - 2x - 8 = (x - 4)(x + 2) = 0$$
+$$x^{2} + x - 6 = (x + 3)(x - 2) = 0$$
 
-A product is $0$ only when a factor is $0$, so $x = 4$ or $x = -2$. Indeed $f(4) = 16 - 8 - 8 = 0$ and $f(-2) = 4 + 4 - 8 = 0$, and the graph passes through $(4, 0)$ and $(-2, 0)$:
+A product is $0$ only when a factor is $0$, so $x = -3$ or $x = 2$. Indeed $f(-3) = 9 - 3 - 6 = 0$ and $f(2) = 4 + 2 - 6 = 0$, and the graph passes through $(-3, 0)$ and $(2, 0)$:
 
 {{figure 0}}
 
 The roots tell where the graph changes sign: between them this parabola is below the axis, outside them above. In this lesson we find the roots of quadratic functions by factoring, from a factored form, and with the quadratic formula.`,
     `函数 $f$ 的**零点**是使 $f(x) = 0$ 的输入；在图象上，它是图象与 $x$ 轴的交点的横坐标。对二次函数 $f(x) = ax^{2} + bx + c$，求零点就是解一元二次方程 $ax^{2} + bx + c = 0$，而这我们已经会了：用因式分解，或用求根公式。
 
-取 $f(x) = x^{2} - 2x - 8$。它的图象是开口向上、与 $y$ 轴交于 $(0, -8)$ 的抛物线。它在哪里与 $x$ 轴相交？令 $f(x) = 0$ 并分解因式：
+取 $f(x) = x^{2} + x - 6$。它的图象是开口向上、与 $y$ 轴交于 $(0, -6)$ 的抛物线。它在哪里与 $x$ 轴相交？令 $f(x) = 0$ 并分解因式：
 
-$$x^{2} - 2x - 8 = (x - 4)(x + 2) = 0$$
+$$x^{2} + x - 6 = (x + 3)(x - 2) = 0$$
 
-乘积为 $0$ 只能是某个因式为 $0$，所以 $x = 4$ 或 $x = -2$。确实 $f(4) = 16 - 8 - 8 = 0$，$f(-2) = 4 + 4 - 8 = 0$，图象经过 $(4, 0)$ 和 $(-2, 0)$：
+乘积为 $0$ 只能是某个因式为 $0$，所以 $x = -3$ 或 $x = 2$。确实 $f(-3) = 9 - 3 - 6 = 0$，$f(2) = 4 + 2 - 6 = 0$，图象经过 $(-3, 0)$ 和 $(2, 0)$：
 
 {{figure 0}}
 
@@ -981,15 +981,15 @@ $$x^{2} - 2x - 8 = (x - 4)(x + 2) = 0$$
   ),
   introFigures: [
     graphFigure(
-      { xMin: -4, xMax: 6, yMin: -10, yMax: 4, labelEvery: 2 },
+      { xMin: -6, xMax: 4, yMin: -8, yMax: 6, labelEvery: 2 },
       [
-        { kind: "curve", f: (x) => x * x - 2 * x - 8, accent: true },
-        { kind: "point", at: [-2, 0], label: "(−2, 0)", dir: "nw", tone: "result" },
-        { kind: "point", at: [4, 0], label: "(4, 0)", dir: "ne", tone: "result" },
-        { kind: "point", at: [0, -8], label: "(0, −8)", dir: "w" },
+        { kind: "curve", f: (x) => x * x + x - 6, accent: true },
+        { kind: "point", at: [-3, 0], label: "(−3, 0)", dir: "nw", tone: "result" },
+        { kind: "point", at: [2, 0], label: "(2, 0)", dir: "ne", tone: "result" },
+        { kind: "point", at: [0, -6], label: "(0, −6)", dir: "e" },
       ],
-      "The parabola y = x² − 2x − 8 crosses the x-axis at (−2, 0) and (4, 0) and the y-axis at (0, −8).",
-      "抛物线 y = x² − 2x − 8 与 x 轴交于 (−2, 0) 和 (4, 0)，与 y 轴交于 (0, −8)。",
+      "The parabola y = x² + x − 6 crosses the x-axis at (−3, 0) and (2, 0) and the y-axis at (0, −6).",
+      "抛物线 y = x² + x − 6 与 x 轴交于 (−3, 0) 和 (2, 0)，与 y 轴交于 (0, −6)。",
     ),
   ],
   knowledgePoints: [
@@ -1506,7 +1506,7 @@ export const theAxisOfSymmetryOfAParabola: TopicDef = {
   intro: t(
     `The graph of $y = x^{2}$ is a mirror image of itself across the $y$-axis, because $x$ and $-x$ have the same square. Every parabola has such a mirror line: the vertical line through its vertex, called its **axis of symmetry**. Folding the graph along it makes the two halves match, so points at the same height come in pairs, one on each side, at the same distance from the line.
 
-Where is the axis of $y = x^{2} - 4x + 1$? Two points at the same height are easy to find. At $x = 0$ the graph is at height $1$, its $y$-intercept. The graph is at height $1$ again where $x^{2} - 4x + 1 = 1$, that is, where $x^{2} - 4x = x(x - 4) = 0$: at $x = 0$ and at $x = 4$. The axis lies halfway between them, at $x = 2$, and the vertex is on it: $2^{2} - 4 \\cdot 2 + 1 = -3$, so the vertex is $(2, -3)$:
+Where is the axis of $y = x^{2} - 6x + 5$? Two points at the same height are easy to find. At $x = 0$ the graph is at height $5$, its $y$-intercept. The graph is at height $5$ again where $x^{2} - 6x + 5 = 5$, that is, where $x^{2} - 6x = x(x - 6) = 0$: at $x = 0$ and at $x = 6$. The axis lies halfway between them, at $x = 3$, and the vertex is on it: $3^{2} - 6 \\cdot 3 + 5 = -4$, so the vertex is $(3, -4)$:
 
 {{figure 0}}
 
@@ -1517,7 +1517,7 @@ $$x = -\\frac{b}{2a}.$$
 In this lesson we read the axis of symmetry from a graph, compute it from an equation, and use it to find mirror-image points.`,
     `$y = x^{2}$ 的图象关于 $y$ 轴对称，因为 $x$ 与 $-x$ 的平方相同。每条抛物线都有这样一条对称线：经过顶点的竖直线，叫做**对称轴**。沿它对折，两半完全重合，所以同一高度的点成对出现，分居两侧，到这条线的距离相等。
 
-$y = x^{2} - 4x + 1$ 的对称轴在哪里？同一高度的两个点很容易找到。在 $x = 0$ 处图象的高度是 $1$，即 $y$ 轴截距。图象再次到达高度 $1$ 的地方满足 $x^{2} - 4x + 1 = 1$，即 $x^{2} - 4x = x(x - 4) = 0$：在 $x = 0$ 和 $x = 4$ 处。对称轴在它们正中间，即 $x = 2$，顶点就在它上面：$2^{2} - 4 \\cdot 2 + 1 = -3$，所以顶点是 $(2, -3)$：
+$y = x^{2} - 6x + 5$ 的对称轴在哪里？同一高度的两个点很容易找到。在 $x = 0$ 处图象的高度是 $5$，即 $y$ 轴截距。图象再次到达高度 $5$ 的地方满足 $x^{2} - 6x + 5 = 5$，即 $x^{2} - 6x = x(x - 6) = 0$：在 $x = 0$ 和 $x = 6$ 处。对称轴在它们正中间，即 $x = 3$，顶点就在它上面：$3^{2} - 6 \\cdot 3 + 5 = -4$，所以顶点是 $(3, -4)$：
 
 {{figure 0}}
 
@@ -1529,17 +1529,17 @@ $$x = -\\frac{b}{2a}.$$
   ),
   introFigures: [
     graphFigure(
-      view,
+      { xMin: -3, xMax: 9, yMin: -6, yMax: 8 },
       [
-        { kind: "curve", f: (x) => x * x - 4 * x + 1, accent: true },
-        { kind: "line", a: [2, 0], b: [2, 1], dashed: true, tone: "action" },
-        { kind: "segment", a: [0, 1], b: [4, 1], dashed: true },
-        { kind: "point", at: [0, 1], label: "(0, 1)", dir: "w" },
-        { kind: "point", at: [4, 1], label: "(4, 1)", dir: "e" },
-        { kind: "point", at: [2, -3], label: "(2, −3)", dir: "e", tone: "result" },
+        { kind: "curve", f: (x) => x * x - 6 * x + 5, accent: true },
+        { kind: "line", a: [3, 0], b: [3, 1], dashed: true, tone: "action" },
+        { kind: "segment", a: [0, 5], b: [6, 5], dashed: true },
+        { kind: "point", at: [0, 5], label: "(0, 5)", dir: "w" },
+        { kind: "point", at: [6, 5], label: "(6, 5)", dir: "e" },
+        { kind: "point", at: [3, -4], label: "(3, −4)", dir: "e", tone: "result" },
       ],
-      "The parabola y = x² − 4x + 1 with the points (0, 1) and (4, 1) at the same height; the axis of symmetry x = 2 lies halfway between them and passes through the vertex (2, −3).",
-      "抛物线 y = x² − 4x + 1 上同一高度的两点 (0, 1) 和 (4, 1)；对称轴 x = 2 在它们正中间，并经过顶点 (2, −3)。",
+      "The parabola y = x² − 6x + 5 with the points (0, 5) and (6, 5) at the same height; the axis of symmetry x = 3 lies halfway between them and passes through the vertex (3, −4).",
+      "抛物线 y = x² − 6x + 5 上同一高度的两点 (0, 5) 和 (6, 5)；对称轴 x = 3 在它们正中间，并经过顶点 (3, −4)。",
     ),
   ],
   knowledgePoints: [
@@ -2193,22 +2193,22 @@ export const writingTheEquationOfAParabolaInVertexForm: TopicDef = {
   intro: t(
     `Vertex form $y = a(x - h)^{2} + k$ shows the vertex at a glance, and we can already expand it to standard form. Now we go the other way. Completing the square turns $x^{2} + bx + c$ into a perfect square plus a constant, and that is exactly vertex form.
 
-Take $y = x^{2} - 6x + 11$. Half of $-6$ is $-3$, and $(-3)^{2} = 9$. Adding and subtracting $9$ changes nothing, but it makes a perfect square:
+Take $y = x^{2} + 4x + 7$. Half of $4$ is $2$, and $2^{2} = 4$. Adding and subtracting $4$ changes nothing, but it makes a perfect square:
 
-$$y = (x^{2} - 6x + 9) - 9 + 11 = (x - 3)^{2} + 2$$
+$$y = (x^{2} + 4x + 4) - 4 + 7 = (x + 2)^{2} + 3$$
 
-Now the vertex $(3, 2)$ can be read off:
+Now the vertex $(-2, 3)$ can be read off:
 
 {{figure 0}}
 
 In this lesson we complete the square to reach vertex form, with and without a leading coefficient, and we write the equation of a parabola from its vertex and one more point.`,
     `顶点式 $y = a(x - h)^{2} + k$ 一眼就能看出顶点，我们也已经会把它展开成一般式。现在反过来。配方能把 $x^{2} + bx + c$ 化成一个完全平方加一个常数，这正是顶点式。
 
-取 $y = x^{2} - 6x + 11$。$-6$ 的一半是 $-3$，$(-3)^{2} = 9$。加上再减去 $9$ 不改变式子，却凑出了完全平方：
+取 $y = x^{2} + 4x + 7$。$4$ 的一半是 $2$，$2^{2} = 4$。加上再减去 $4$ 不改变式子，却凑出了完全平方：
 
-$$y = (x^{2} - 6x + 9) - 9 + 11 = (x - 3)^{2} + 2$$
+$$y = (x^{2} + 4x + 4) - 4 + 7 = (x + 2)^{2} + 3$$
 
-现在可以直接读出顶点 $(3, 2)$：
+现在可以直接读出顶点 $(-2, 3)$：
 
 {{figure 0}}
 
@@ -2216,15 +2216,15 @@ $$y = (x^{2} - 6x + 9) - 9 + 11 = (x - 3)^{2} + 2$$
   ),
   introFigures: [
     graphFigure(
-      { xMin: -1, xMax: 7, yMin: -1, yMax: 12 },
+      { xMin: -6, xMax: 2, yMin: -1, yMax: 12 },
       [
-        { kind: "curve", f: (x) => x * x - 6 * x + 11, accent: true },
-        { kind: "line", a: [3, 0], b: [3, 1], dashed: true, tone: "action" },
-        { kind: "point", at: [3, 2], label: "(3, 2)", dir: "e", tone: "result" },
-        { kind: "point", at: [0, 11], label: "(0, 11)", dir: "e" },
+        { kind: "curve", f: (x) => x * x + 4 * x + 7, accent: true },
+        { kind: "line", a: [-2, 0], b: [-2, 1], dashed: true, tone: "action" },
+        { kind: "point", at: [-2, 3], label: "(−2, 3)", dir: "e", tone: "result" },
+        { kind: "point", at: [0, 7], label: "(0, 7)", dir: "e" },
       ],
-      "The parabola y = x² − 6x + 11 = (x − 3)² + 2 with its vertex (3, 2) and y-intercept (0, 11).",
-      "抛物线 y = x² − 6x + 11 = (x − 3)² + 2，顶点 (3, 2)，与 y 轴交于 (0, 11)。",
+      "The parabola y = x² + 4x + 7 = (x + 2)² + 3 with its vertex (−2, 3) and y-intercept (0, 7).",
+      "抛物线 y = x² + 4x + 7 = (x + 2)² + 3，顶点 (−2, 3)，与 y 轴交于 (0, 7)。",
     ),
   ],
   knowledgePoints: [
@@ -3676,14 +3676,14 @@ export const verticalMotion: TopicDef = {
 
 $$h(t) = -\\frac{1}{2}gt^{2} + v_{0}t + h_{0}$$
 
-So we can write the model ourselves from a description. A ball thrown upward at $40$ feet per second from $6$ feet, with $g = 32$ ft/s², has $h(t) = -16t^{2} + 40t + 6$. When does it land? Setting $h(t) = 0$ gives $-16t^{2} + 40t + 6 = 0$, or $8t^{2} - 20t - 3 = 0$, which does not factor over the integers. The quadratic formula still solves it.
+So we can write the model ourselves from a description. A ball thrown upward at $48$ feet per second from $5$ feet, with $g = 32$ ft/s², has $h(t) = -16t^{2} + 48t + 5$. When does it land? Setting $h(t) = 0$ gives $-16t^{2} + 48t + 5 = 0$, or $16t^{2} - 48t - 5 = 0$, which does not factor over the integers. The quadratic formula still solves it.
 
 In this lesson we write the model of vertical motion, find how long an object stays above a height, and find landing times with the quadratic formula.`,
     `落下的、向下抛出的、向上抛出的，前两节课里的物体都遵循同一个模型。变化的只是初速度 $v_{0}$ 的符号和大小：自由落下时为 $0$，向下抛出时为负，向上抛出时为正。设 $g$ 为重力加速度，
 
 $$h(t) = -\\frac{1}{2}gt^{2} + v_{0}t + h_{0}$$
 
-所以我们可以根据描述自己写出模型。从 $6$ 英尺高处以每秒 $40$ 英尺的速度向上抛出的球，取 $g = 32$ ft/s²，有 $h(t) = -16t^{2} + 40t + 6$。它何时落地？令 $h(t) = 0$ 得 $-16t^{2} + 40t + 6 = 0$，即 $8t^{2} - 20t - 3 = 0$，它不能在整数范围内分解。求根公式仍然可以解它。
+所以我们可以根据描述自己写出模型。从 $5$ 英尺高处以每秒 $48$ 英尺的速度向上抛出的球，取 $g = 32$ ft/s²，有 $h(t) = -16t^{2} + 48t + 5$。它何时落地？令 $h(t) = 0$ 得 $-16t^{2} + 48t + 5 = 0$，即 $16t^{2} - 48t - 5 = 0$，它不能在整数范围内分解。求根公式仍然可以解它。
 
 这节课我们写出竖直运动的模型，求物体高于某一高度的时长，并用求根公式求落地时间。`,
   ),
@@ -4091,20 +4091,20 @@ export const constructingRevenueCostAndProfitFunctions: TopicDef = {
   intro: t(
     `So far the revenue and cost functions were given, and we computed with them. A real business starts from facts instead: what it pays every month, what each item costs to make, what it charges. Turning those facts into functions is what makes the questions answerable.
 
-Take a bakery that pays $\\$1200$ a month in rent, spends $\\$4$ on ingredients per cake and sells each cake for $\\$10$. Making $x$ cakes costs $C(x) = 4x + 1200$, selling them brings in $R(x) = 10x$, and the profit is
+Take a candle workshop that pays $\\$900$ a month in rent, spends $\\$3$ on wax per candle and sells each candle for $\\$8$. Making $x$ candles costs $C(x) = 3x + 900$, selling them brings in $R(x) = 8x$, and the profit is
 
-$$P(x) = 10x - (4x + 1200) = 6x - 1200$$
+$$P(x) = 8x - (3x + 900) = 5x - 900$$
 
-Each cake adds $\\$6$, so the bakery needs $200$ cakes a month just to cover the rent.
+Each candle adds $\\$5$, so the workshop needs $180$ candles a month just to cover the rent.
 
 In this lesson we write cost and profit functions from a description, and revenue functions when a change in price changes the number sold.`,
     `到目前为止，收入函数和成本函数都是给定的，我们只是用它们计算。真实的生意却从事实出发：每月要付多少钱，每件商品的制作成本是多少，售价是多少。把这些事实写成函数，问题才能回答。
 
-一家面包店每月房租 $1200$ 元，每个蛋糕原料 $4$ 元，每个蛋糕售价 $10$ 元。做 $x$ 个蛋糕的成本是 $C(x) = 4x + 1200$，卖掉它们的收入是 $R(x) = 10x$，利润是
+一家蜡烛作坊每月房租 $900$ 元，每支蜡烛原料 $3$ 元，每支蜡烛售价 $8$ 元。做 $x$ 支蜡烛的成本是 $C(x) = 3x + 900$，卖掉它们的收入是 $R(x) = 8x$，利润是
 
-$$P(x) = 10x - (4x + 1200) = 6x - 1200$$
+$$P(x) = 8x - (3x + 900) = 5x - 900$$
 
-每个蛋糕带来 $6$ 元，所以面包店每月要卖 $200$ 个蛋糕才够付房租。
+每支蜡烛带来 $5$ 元，所以作坊每月要卖 $180$ 支蜡烛才够付房租。
 
 这节课我们根据描述写出成本函数和利润函数，并写出价格变化影响销量时的收入函数。`,
   ),

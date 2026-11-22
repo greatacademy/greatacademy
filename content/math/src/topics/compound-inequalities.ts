@@ -291,26 +291,26 @@ export const solvingCompoundInequalities: TopicDef = {
   xp: 15,
   standards: ["CCSS.HSA.REI.B.3"],
   intro: t(
-    `You can solve an inequality such as $2x + 1 \\le 7$: subtract $1$, divide by $2$, and $x \\le 3$. Many quantities are limited on **both** sides at once, though: a temperature between two marks, a score above a floor and below a ceiling. That is a **double inequality**, such as
+    `You can solve an inequality such as $3x - 2 \\le 10$: add $2$, divide by $3$, and $x \\le 4$. Many quantities are limited on **both** sides at once, though: a temperature between two marks, a score above a floor and below a ceiling. That is a **double inequality**, such as
 
-$$-3 < 2x + 1 \\le 7.$$
+$$1 < 3x - 2 \\le 10.$$
 
-It is two inequalities joined by "and": $-3 < 2x + 1$ and $2x + 1 \\le 7$. Solve them one at a time: the first gives $-4 < 2x$, so $x > -2$; the second gives $x \\le 3$. A solution must satisfy both, so $x$ lies between them:
-
-{{figure 0}}
-
-Notice that both solutions used the same steps, subtracting $1$ and dividing by $2$. So we can do them once, to all three parts together: $-4 < 2x \\le 6$, then $-2 < x \\le 3$. In this topic we check values against a double inequality and solve it this way, including when the coefficient of $x$ is negative.`,
-    `你会解 $2x + 1 \\le 7$ 这样的不等式：减去 $1$，除以 $2$，得到 $x \\le 3$。但很多量是**两边**同时受限的：温度在两个刻度之间，分数高于下限又低于上限。这就是**连不等式**，例如
-
-$$-3 < 2x + 1 \\le 7.$$
-
-它是用"并且"连起来的两个不等式：$-3 < 2x + 1$ 并且 $2x + 1 \\le 7$。逐个求解：第一个得到 $-4 < 2x$，即 $x > -2$；第二个得到 $x \\le 3$。解必须同时满足两者，所以 $x$ 位于它们之间：
+It is two inequalities joined by "and": $1 < 3x - 2$ and $3x - 2 \\le 10$. Solve them one at a time: the first gives $3 < 3x$, so $x > 1$; the second gives $x \\le 4$. A solution must satisfy both, so $x$ lies between them:
 
 {{figure 0}}
 
-注意两次求解用的是同样的步骤：减去 $1$，再除以 $2$。所以可以只做一次，对三部分同时进行：$-4 < 2x \\le 6$，再得到 $-2 < x \\le 3$。这个课题中，我们检验一个值是否满足连不等式，并用这种方法求解，包括 $x$ 的系数为负数的情形。`,
+Notice that both solutions used the same steps, adding $2$ and dividing by $3$. So we can do them once, to all three parts together: $3 < 3x \\le 12$, then $1 < x \\le 4$. In this topic we check values against a double inequality and solve it this way, including when the coefficient of $x$ is negative.`,
+    `你会解 $3x - 2 \\le 10$ 这样的不等式：加上 $2$，除以 $3$，得到 $x \\le 4$。但很多量是**两边**同时受限的：温度在两个刻度之间，分数高于下限又低于上限。这就是**连不等式**，例如
+
+$$1 < 3x - 2 \\le 10.$$
+
+它是用"并且"连起来的两个不等式：$1 < 3x - 2$ 并且 $3x - 2 \\le 10$。逐个求解：第一个得到 $3 < 3x$，即 $x > 1$；第二个得到 $x \\le 4$。解必须同时满足两者，所以 $x$ 位于它们之间：
+
+{{figure 0}}
+
+注意两次求解用的是同样的步骤：加上 $2$，再除以 $3$。所以可以只做一次，对三部分同时进行：$3 < 3x \\le 12$，再得到 $1 < x \\le 4$。这个课题中，我们检验一个值是否满足连不等式，并用这种方法求解，包括 $x$ 的系数为负数的情形。`,
   ),
-  introFigures: [numberLineFigure(union(span(-2, false, 3, true)), -5, 5)],
+  introFigures: [numberLineFigure(union(span(1, false, 4, true)), -5, 5)],
   knowledgePoints: [
     {
       id: "checking-double-inequalities",
@@ -1114,18 +1114,18 @@ function endWords(set: RealSet, parts: readonly Interval[]): Text {
 const unionIntro = t(
   `An inequality such as $x < -1$ or a double inequality such as $-3 \\le x < 2$ describes one piece of the number line, and interval notation writes that piece. Some sets are made of **several** pieces, or are built by putting two sets together: the hours a shop is open in the morning together with the hours it is open in the evening, or every $x$ with $x < -1$ together with every $x$ with $x \\ge 3$.
 
-The **union** $A \\cup B$ is the set of numbers in $A$, in $B$, or in both. Read off a number line, it is everything shaded on **at least one** of the lines. Take $A = [-3, 2)$ and $B = (0, 5]$:
+The **union** $A \\cup B$ is the set of numbers in $A$, in $B$, or in both. Read off a number line, it is everything shaded on **at least one** of the lines. Take $A = [-4, 1)$ and $B = (-1, 3]$:
 
 {{figure 0}}
 
-Every number from $-3$ to $5$ is shaded at least once: the left part by $A$, the right part by $B$, the middle by both. So $[-3, 2) \\cup (0, 5] = [-3, 5]$, one interval; $-3$ keeps the bracket it has in $A$ and $5$ the bracket it has in $B$. Pieces that do not overlap stay apart: $(-\\infty, -1) \\cup [3, \\infty)$ cannot be written more simply. In this topic we simplify unions of bounded intervals, of rays, and of pieces that touch or stay separate.`,
+Every number from $-4$ to $3$ is shaded at least once: the left part by $A$, the right part by $B$, the middle by both. So $[-4, 1) \\cup (-1, 3] = [-4, 3]$, one interval; $-4$ keeps the bracket it has in $A$ and $3$ the bracket it has in $B$. Pieces that do not overlap stay apart: $(-\\infty, -1) \\cup [3, \\infty)$ cannot be written more simply. In this topic we simplify unions of bounded intervals, of rays, and of pieces that touch or stay separate.`,
   `$x < -1$ 这样的不等式，或 $-3 \\le x < 2$ 这样的连不等式，描述的是数轴上的一段，区间记号写出这一段。有些集合由**几段**组成，或者是把两个集合合在一起得到的：商店上午营业的时间加上晚上营业的时间，或者满足 $x < -1$ 的所有 $x$ 加上满足 $x \\ge 3$ 的所有 $x$。
 
-**并集** $A \\cup B$ 是属于 $A$、属于 $B$ 或两者都属于的数组成的集合。在数轴上看，就是**至少在一条**数轴上涂色的全部数。取 $A = [-3, 2)$、$B = (0, 5]$：
+**并集** $A \\cup B$ 是属于 $A$、属于 $B$ 或两者都属于的数组成的集合。在数轴上看，就是**至少在一条**数轴上涂色的全部数。取 $A = [-4, 1)$、$B = (-1, 3]$：
 
 {{figure 0}}
 
-从 $-3$ 到 $5$ 的每个数都至少涂色一次：左边一段来自 $A$，右边一段来自 $B$，中间两者都有。所以 $[-3, 2) \\cup (0, 5] = [-3, 5]$，是一个区间；$-3$ 保留它在 $A$ 中的方括号，$5$ 保留它在 $B$ 中的方括号。不重叠的部分保持分开：$(-\\infty, -1) \\cup [3, \\infty)$ 无法写得更简单。这个课题中，我们化简有界区间的并集、射线的并集，以及相接或分离的几段的并集。`,
+从 $-4$ 到 $3$ 的每个数都至少涂色一次：左边一段来自 $A$，右边一段来自 $B$，中间两者都有。所以 $[-4, 1) \\cup (-1, 3] = [-4, 3]$，是一个区间；$-4$ 保留它在 $A$ 中的方括号，$3$ 保留它在 $B$ 中的方括号。不重叠的部分保持分开：$(-\\infty, -1) \\cup [3, \\infty)$ 无法写得更简单。这个课题中，我们化简有界区间的并集、射线的并集，以及相接或分离的几段的并集。`,
 );
 
 export const unionsOfIntervals: TopicDef = {
@@ -1137,7 +1137,7 @@ export const unionsOfIntervals: TopicDef = {
   xp: 14,
   standards: ["CCSS.HSA.REI.B.3"],
   intro: unionIntro,
-  introFigures: [partsFigure([span(-3, true, 2, false), span(0, false, 5, true)], union(span(-3, true, 5, true)), "\\cup")],
+  introFigures: [partsFigure([span(-4, true, 1, false), span(-1, false, 3, true)], union(span(-4, true, 3, true)), "\\cup")],
   knowledgePoints: [
     {
       id: "unions-of-overlapping-intervals",
@@ -1670,26 +1670,26 @@ export const compoundOrInequalities: TopicDef = {
 
 A compound inequality such as
 
-$$2x + 1 < -3 \\text{ or } 3x - 2 \\ge 7$$
+$$2x + 3 < -3 \\text{ or } 3x - 5 \\ge 7$$
 
-is true when **at least one** of its parts is true. So solve each part on its own: the first gives $x < -2$, the second $x \\ge 3$. A number is a solution if it is in either solution set, which is exactly the union:
+is true when **at least one** of its parts is true. So solve each part on its own: the first gives $x < -3$, the second $x \\ge 4$. A number is a solution if it is in either solution set, which is exactly the union:
 
 {{figure 0}}
 
-The solution is $(-\\infty, -2) \\cup [3, \\infty)$. In this topic we solve "or" inequalities, including parts with negative coefficients and parts whose solutions overlap.`,
+The solution is $(-\\infty, -3) \\cup [4, \\infty)$. In this topic we solve "or" inequalities, including parts with negative coefficients and parts whose solutions overlap.`,
     `你会解单个一元一次不等式，也会求两个区间的并集。把两者结合，就能处理带**或**的条件。冰柜温度低于 $-20$ 度或高于 $-15$ 度时报警，游乐设施不允许身高低于 $120$ 厘米或高于 $195$ 厘米的人乘坐，这些描述的都是由两段组成的集合。
 
 复合不等式
 
-$$2x + 1 < -3 \\text{ 或 } 3x - 2 \\ge 7$$
+$$2x + 3 < -3 \\text{ 或 } 3x - 5 \\ge 7$$
 
-只要**至少一部分**成立就成立。所以分别解每一部分：第一部分得到 $x < -2$，第二部分得到 $x \\ge 3$。属于任一解集的数都是解，这正是并集：
+只要**至少一部分**成立就成立。所以分别解每一部分：第一部分得到 $x < -3$，第二部分得到 $x \\ge 4$。属于任一解集的数都是解，这正是并集：
 
 {{figure 0}}
 
-解集是 $(-\\infty, -2) \\cup [3, \\infty)$。这个课题中，我们解"或"型不等式，包括系数为负的部分，以及解集重叠的部分。`,
+解集是 $(-\\infty, -3) \\cup [4, \\infty)$。这个课题中，我们解"或"型不等式，包括系数为负的部分，以及解集重叠的部分。`,
   ),
-  introFigures: [partsFigure([ray("<", -2), ray(">=", 3)], union(ray("<", -2), ray(">=", 3)), "\\cup")],
+  introFigures: [partsFigure([ray("<", -3), ray(">=", 4)], union(ray("<", -3), ray(">=", 4)), "\\cup")],
   knowledgePoints: [
     {
       id: "solving-or-inequalities",
@@ -1798,22 +1798,22 @@ export const compoundAndInequalities: TopicDef = {
   xp: 15,
   standards: ["CCSS.HSA.REI.B.3"],
   intro: t(
-    `A double inequality such as $-3 < 2x + 1 \\le 7$ is two conditions on the **same** expression, so we solved it in one go. Often the two conditions are on different expressions: a number $x$ with $2x - 1 > 3$ **and** $3x + 2 \\le 20$. They cannot be written as one double inequality, but the meaning is the same: both must hold.
+    `A double inequality such as $1 < 3x - 2 \\le 10$ is two conditions on the **same** expression, so we solved it in one go. Often the two conditions are on different expressions: a number $x$ with $3x + 1 > 4$ **and** $2x - 3 \\le 9$. They cannot be written as one double inequality, but the meaning is the same: both must hold.
 
-So solve each part on its own: $2x - 1 > 3$ gives $x > 2$, and $3x + 2 \\le 20$ gives $x \\le 6$. A solution must be in both solution sets, which is their intersection:
-
-{{figure 0}}
-
-The solution is $(2, 6]$, the same set as the double inequality $2 < x \\le 6$. In this topic we solve "and" inequalities, including parts with negative coefficients, and recognize when the parts share nothing, so there is no solution.`,
-    `连不等式 $-3 < 2x + 1 \\le 7$ 是对**同一个**表达式的两个条件，所以可以一次解完。但两个条件常常针对不同的表达式：满足 $2x - 1 > 3$ **并且** $3x + 2 \\le 20$ 的数 $x$。它们不能写成一个连不等式，但意思一样：两个条件都必须成立。
-
-所以分别解每一部分：$2x - 1 > 3$ 得到 $x > 2$，$3x + 2 \\le 20$ 得到 $x \\le 6$。解必须同时属于两个解集，也就是它们的交集：
+So solve each part on its own: $3x + 1 > 4$ gives $x > 1$, and $2x - 3 \\le 9$ gives $x \\le 6$. A solution must be in both solution sets, which is their intersection:
 
 {{figure 0}}
 
-解集是 $(2, 6]$，与连不等式 $2 < x \\le 6$ 是同一个集合。这个课题中，我们解"且"型不等式，包括系数为负的部分，并识别两部分没有公共部分、因而无解的情形。`,
+The solution is $(1, 6]$, the same set as the double inequality $1 < x \\le 6$. In this topic we solve "and" inequalities, including parts with negative coefficients, and recognize when the parts share nothing, so there is no solution.`,
+    `连不等式 $1 < 3x - 2 \\le 10$ 是对**同一个**表达式的两个条件，所以可以一次解完。但两个条件常常针对不同的表达式：满足 $3x + 1 > 4$ **并且** $2x - 3 \\le 9$ 的数 $x$。它们不能写成一个连不等式，但意思一样：两个条件都必须成立。
+
+所以分别解每一部分：$3x + 1 > 4$ 得到 $x > 1$，$2x - 3 \\le 9$ 得到 $x \\le 6$。解必须同时属于两个解集，也就是它们的交集：
+
+{{figure 0}}
+
+解集是 $(1, 6]$，与连不等式 $1 < x \\le 6$ 是同一个集合。这个课题中，我们解"且"型不等式，包括系数为负的部分，并识别两部分没有公共部分、因而无解的情形。`,
   ),
-  introFigures: [partsFigure([ray(">", 2), ray("<=", 6)], union(span(2, false, 6, true)), "\\cap")],
+  introFigures: [partsFigure([ray(">", 1), ray("<=", 6)], union(span(1, false, 6, true)), "\\cap")],
   knowledgePoints: [
     {
       id: "solving-and-inequalities",
@@ -2486,14 +2486,14 @@ export const modelingWithOneStepInequalities: TopicDef = {
   xp: 14,
   standards: ["CCSS.HSA.CED.A.1", "CCSS.7.EE.B.4.B"],
   intro: t(
-    `You can turn a limit in words into an inequality, such as $750 + w \\le 2000$ for a truck that already holds $750$ kg and may carry at most $2000$. Writing the model is half the job; the question usually asks **how much** is allowed, and that needs the inequality solved.
+    `You can turn a limit in words into an inequality, such as $320 + w \\le 1000$ for a lift that already carries $320$ kg and may carry at most $1000$. Writing the model is half the job; the question usually asks **how much** is allowed, and that needs the inequality solved.
 
-Solving works as with an equation, one inverse step: subtract $750$ from both sides, which keeps the symbol, and $w \\le 1250$. The truck may take up to $1250$ kg more. A quick check at the boundary confirms it: $750 + 1250 = 2000$, exactly the limit.
+Solving works as with an equation, one inverse step: subtract $320$ from both sides, which keeps the symbol, and $w \\le 680$. The lift may take up to $680$ kg more. A quick check at the boundary confirms it: $320 + 680 = 1000$, exactly the limit.
 
 One thing is new in stories. When the unknown counts things, such as notebooks or buses, the answer must be a whole number, and the inequality says which way to round: down for a greatest number, up for a least number. In this topic we write and solve such models.`,
-    `你会把文字表述的限制变成不等式，例如一辆已装 $750$ 千克、最多载重 $2000$ 千克的卡车，满足 $750 + w \\le 2000$。列出模型只完成了一半；题目通常问的是**最多（或至少）多少**，这需要解不等式。
+    `你会把文字表述的限制变成不等式，例如一部已载 $320$ 千克、最多载重 $1000$ 千克的电梯，满足 $320 + w \\le 1000$。列出模型只完成了一半；题目通常问的是**最多（或至少）多少**，这需要解不等式。
 
-解法与解方程一样，只需一步逆运算：两边同时减去 $750$，不等号方向不变，得到 $w \\le 1250$。卡车最多还能装 $1250$ 千克。在边界检验一下就能确认：$750 + 1250 = 2000$，恰好等于上限。
+解法与解方程一样，只需一步逆运算：两边同时减去 $320$，不等号方向不变，得到 $w \\le 680$。电梯最多还能载 $680$ 千克。在边界检验一下就能确认：$320 + 680 = 1000$，恰好等于上限。
 
 情境中有一点是新的。当未知数表示个数，例如笔记本或大巴时，答案必须是整数，而不等式告诉我们向哪个方向取整：求最大个数时向下取整，求最少个数时向上取整。这个课题中，我们列出并求解这样的模型。`,
   ),
@@ -3004,18 +3004,18 @@ export const modelingWithCompoundInequalities: TopicDef = {
   xp: 16,
   standards: ["CCSS.HSA.CED.A.1", "CCSS.HSA.CED.A.3"],
   intro: t(
-    `You can solve a double inequality such as $3 \\le 2x + 1 < 9$ by doing the same step to all three parts, and you can model a fixed amount plus a rate, such as a bill of $60 + 45h$ dollars for $h$ hours of work. This topic joins the two. Many limits come in pairs: a bill was at least $150$ and at most $285$ dollars, a liquid must be kept between two temperatures, a mean score should land between $80$ and $90$. The quantity is trapped in a range, so the model is a double inequality with the expression in the middle:
+    `You can solve a double inequality such as $3 \\le 2x + 1 < 9$ by doing the same step to all three parts, and you can model a fixed amount plus a rate, such as a bill of $40 + 30h$ dollars for $h$ hours of work. This topic joins the two. Many limits come in pairs: a bill was at least $100$ and at most $220$ dollars, a liquid must be kept between two temperatures, a mean score should land between $80$ and $90$. The quantity is trapped in a range, so the model is a double inequality with the expression in the middle:
 
-$$150 \\le 60 + 45h \\le 285$$
+$$100 \\le 40 + 30h \\le 220$$
 
-Solving it on all three parts at once, $90 \\le 45h \\le 225$ and then $2 \\le h \\le 5$, answers the real question: the job took from $2$ to $5$ hours.
+Solving it on all three parts at once, $60 \\le 30h \\le 180$ and then $2 \\le h \\le 6$, answers the real question: the job took from $2$ to $6$ hours.
 
 The words decide each end separately: "at least" and "at most" include the limit, "more than" and "less than" exclude it. In this topic we model costs and amounts within a range, put formulas in the middle of a double inequality, and count the whole numbers a range allows.`,
-    `你已经会解 $3 \\le 2x + 1 < 9$ 这样的连不等式：对三部分做同样的运算；也会为"固定量加变化率"建模，比如工作 $h$ 小时的账单是 $60 + 45h$ 元。这个课题把两者结合起来。很多限制是成对出现的：账单不少于 $150$ 元且不超过 $285$ 元，一种液体必须保存在两个温度之间，平均分应落在 $80$ 到 $90$ 之间。这个量被夹在一个范围内，所以模型是一个把表达式放在中间的连不等式：
+    `你已经会解 $3 \\le 2x + 1 < 9$ 这样的连不等式：对三部分做同样的运算；也会为"固定量加变化率"建模，比如工作 $h$ 小时的账单是 $40 + 30h$ 元。这个课题把两者结合起来。很多限制是成对出现的：账单不少于 $100$ 元且不超过 $220$ 元，一种液体必须保存在两个温度之间，平均分应落在 $80$ 到 $90$ 之间。这个量被夹在一个范围内，所以模型是一个把表达式放在中间的连不等式：
 
-$$150 \\le 60 + 45h \\le 285$$
+$$100 \\le 40 + 30h \\le 220$$
 
-对三部分同时求解，先得 $90 \\le 45h \\le 225$，再得 $2 \\le h \\le 5$，就回答了实际问题：这项工作用了 $2$ 到 $5$ 小时。
+对三部分同时求解，先得 $60 \\le 30h \\le 180$，再得 $2 \\le h \\le 6$，就回答了实际问题：这项工作用了 $2$ 到 $6$ 小时。
 
 两端由文字分别决定："不少于""不超过"包含界限，"多于""少于"不包含界限。这个课题中，我们为在某个范围内的费用和数量建模，把公式放在连不等式的中间，并数出一个范围允许的整数个数。`,
   ),
@@ -3730,12 +3730,12 @@ export const solvingOddPowerEquations: TopicDef = {
   intro: t(
     `You have solved $x^{2} = k$ by taking square roots, and you needed $\\pm$ because squaring hides the sign: $3^{2}$ and $(-3)^{2}$ are both $9$. Other powers are undone the same way, by the matching root. A cube-shaped box with a volume of $64$ cm³ has an edge $s$ with $s^{3} = 64$, so $s = \\sqrt[3]{64} = 4$ cm, because $4 \\cdot 4 \\cdot 4 = 64$.
 
-Odd powers behave differently from squares: they **keep** the sign. A negative number multiplied by itself three times is negative, $(-2)^{3} = -8$, so $x^{3} = -8$ has a solution, $x = -2$, and $x^{3} = 8$ has only $x = 2$, since $(-2)^{3}$ is $-8$, not $8$. Every odd power works like this, so an equation $u^{n} = k$ with $n$ odd has exactly one real solution, for every $k$, with no $\\pm$.
+Odd powers behave differently from squares: they **keep** the sign. A negative number multiplied by itself three times is negative, $(-5)^{3} = -125$, so $x^{3} = -125$ has a solution, $x = -5$, and $x^{3} = 125$ has only $x = 5$, since $(-5)^{3}$ is $-125$, not $125$. Every odd power works like this, so an equation $u^{n} = k$ with $n$ odd has exactly one real solution, for every $k$, with no $\\pm$.
 
 In this topic we solve cube equations, then fifth and seventh powers, and finally odd powers of an expression such as $(2x - 1)^{3} = -27$. As before, isolate the power first, then take the root.`,
     `你已经会用开平方解 $x^{2} = k$，并且需要加 $\\pm$，因为平方会掩盖符号：$3^{2}$ 和 $(-3)^{2}$ 都是 $9$。其他的幂也用同样的方法还原，开对应次数的方根。体积为 $64$ 立方厘米的正方体盒子，棱长 $s$ 满足 $s^{3} = 64$，所以 $s = \\sqrt[3]{64} = 4$ 厘米，因为 $4 \\cdot 4 \\cdot 4 = 64$。
 
-奇次幂与平方不同：它们**保留**符号。负数自乘三次仍是负数，$(-2)^{3} = -8$，所以 $x^{3} = -8$ 有解 $x = -2$；而 $x^{3} = 8$ 只有 $x = 2$，因为 $(-2)^{3}$ 是 $-8$，不是 $8$。所有奇次幂都是这样，所以当 $n$ 为奇数时，方程 $u^{n} = k$ 对任何 $k$ 都恰有一个实数解，不需要 $\\pm$。
+奇次幂与平方不同：它们**保留**符号。负数自乘三次仍是负数，$(-5)^{3} = -125$，所以 $x^{3} = -125$ 有解 $x = -5$；而 $x^{3} = 125$ 只有 $x = 5$，因为 $(-5)^{3}$ 是 $-125$，不是 $125$。所有奇次幂都是这样，所以当 $n$ 为奇数时，方程 $u^{n} = k$ 对任何 $k$ 都恰有一个实数解，不需要 $\\pm$。
 
 这个课题中，我们先解立方方程，再解五次幂和七次幂方程，最后解 $(2x - 1)^{3} = -27$ 这样的式子的奇次幂方程。和以前一样，先分离幂，再开方。`,
   ),

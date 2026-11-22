@@ -546,24 +546,24 @@ export const solvingPerfectSquareQuadraticEquations: TopicDef = {
   xp: 16,
   standards: ["CCSS.HSA.REI.B.4.B"],
   intro: t(
-    `We already solve $x^{2} = 25$ by taking square roots: $x$ is a number whose square is $25$, so $x = 5$ or $x = -5$. That idea does not care what is being squared. In
+    `We already solve $x^{2} = 16$ by taking square roots: $x$ is a number whose square is $16$, so $x = 4$ or $x = -4$. That idea does not care what is being squared. In
 
-$$(x - 3)^{2} = 25$$
+$$(x + 2)^{2} = 9$$
 
-the quantity $x - 3$ is a number whose square is $25$, so $x - 3 = 5$ or $x - 3 = -5$. Two easy linear equations follow: $x = 8$ or $x = -2$. Check one: $(8 - 3)^{2} = 5^{2} = 25$.
+the quantity $x + 2$ is a number whose square is $9$, so $x + 2 = 3$ or $x + 2 = -3$. Two easy linear equations follow: $x = 1$ or $x = -5$. Check one: $(1 + 2)^{2} = 3^{2} = 9$.
 
-On a graph, the solutions are where the parabola $y = (x - 3)^{2}$ reaches the height $25$; here is the same picture for $(x - 3)^{2} = 4$, with solutions $1$ and $5$, two steps either side of $3$:
+On a graph, the solutions are where the parabola $y = (x + 2)^{2}$ reaches the height $9$, three steps either side of $-2$:
 
 {{figure 0}}
 
 This is the first real method for quadratic equations: whenever an equation is a square equal to a number, take square roots. In this lesson we also see why such an equation can have two solutions, one, or none, depending on the sign of that number.`,
-    `我们已经会用开平方解 $x^{2} = 25$：$x$ 是平方等于 $25$ 的数，所以 $x = 5$ 或 $x = -5$。这个想法并不在乎被平方的是什么。在
+    `我们已经会用开平方解 $x^{2} = 16$：$x$ 是平方等于 $16$ 的数，所以 $x = 4$ 或 $x = -4$。这个想法并不在乎被平方的是什么。在
 
-$$(x - 3)^{2} = 25$$
+$$(x + 2)^{2} = 9$$
 
-中，$x - 3$ 是一个平方等于 $25$ 的数，所以 $x - 3 = 5$ 或 $x - 3 = -5$。接着解两个简单的一次方程：$x = 8$ 或 $x = -2$。检验一个：$(8 - 3)^{2} = 5^{2} = 25$。
+中，$x + 2$ 是一个平方等于 $9$ 的数，所以 $x + 2 = 3$ 或 $x + 2 = -3$。接着解两个简单的一次方程：$x = 1$ 或 $x = -5$。检验一个：$(1 + 2)^{2} = 3^{2} = 9$。
 
-从图象上看，解就是抛物线 $y = (x - 3)^{2}$ 达到某个高度的位置；下图是 $(x - 3)^{2} = 4$ 的情形，解是 $1$ 和 $5$，分别在 $3$ 的两侧、相距 $2$：
+从图象上看，解就是抛物线 $y = (x + 2)^{2}$ 达到高度 $9$ 的位置，分别在 $-2$ 的两侧、相距 $3$：
 
 {{figure 0}}
 
@@ -571,16 +571,16 @@ $$(x - 3)^{2} = 25$$
   ),
   introFigures: [
     graphFigure(
-      { xMin: -2, xMax: 8, yMin: -2, yMax: 10, labelEvery: 2, step: 1 },
+      { xMin: -7, xMax: 3, yMin: -2, yMax: 12, labelEvery: 2, step: 1 },
       [
-        { kind: "curve", f: (x) => (x - 3) ** 2, accent: true },
-        { kind: "line", a: [0, 4], b: [1, 4], tone: "action" },
-        { kind: "point", at: [1, 4], label: "(1, 4)", dir: "nw", tone: "result" },
-        { kind: "point", at: [5, 4], label: "(5, 4)", dir: "ne", tone: "result" },
-        { kind: "point", at: [3, 0], label: "(3, 0)", dir: "s" },
+        { kind: "curve", f: (x) => (x + 2) ** 2, accent: true },
+        { kind: "line", a: [0, 9], b: [1, 9], tone: "action" },
+        { kind: "point", at: [-5, 9], label: "(−5, 9)", dir: "nw", tone: "result" },
+        { kind: "point", at: [1, 9], label: "(1, 9)", dir: "ne", tone: "result" },
+        { kind: "point", at: [-2, 0], label: "(−2, 0)", dir: "s" },
       ],
-      "The parabola y = (x − 3)², lowest at (3, 0), meets the horizontal line y = 4 at (1, 4) and (5, 4), two units either side of x = 3.",
-      "抛物线 y = (x − 3)² 的最低点是 (3, 0)，它与水平直线 y = 4 交于 (1, 4) 和 (5, 4)，分别在 x = 3 两侧 2 个单位处。",
+      "The parabola y = (x + 2)², lowest at (−2, 0), meets the horizontal line y = 9 at (−5, 9) and (1, 9), three units either side of x = −2.",
+      "抛物线 y = (x + 2)² 的最低点是 (−2, 0)，它与水平直线 y = 9 交于 (−5, 9) 和 (1, 9)，分别在 x = −2 两侧 3 个单位处。",
     ),
   ],
   knowledgePoints: [
@@ -1188,18 +1188,18 @@ export const solvingQuadraticEquationsUsingADifferenceOfSquares: TopicDef = {
   intro: t(
     `The zero product rule solves an equation once one side is a product and the other side is $0$. We also know how to factor a **difference of squares**: $A^{2} - B^{2} = (A + B)(A - B)$. Put the two together on
 
-$$x^{2} - 49 = 0$$
+$$x^{2} - 36 = 0$$
 
-Since $49 = 7^{2}$, the left side is $x^{2} - 7^{2} = (x + 7)(x - 7)$. So the equation says $(x + 7)(x - 7) = 0$, and one of the factors is $0$: $x = -7$ or $x = 7$.
+Since $36 = 6^{2}$, the left side is $x^{2} - 6^{2} = (x + 6)(x - 6)$. So the equation says $(x + 6)(x - 6) = 0$, and one of the factors is $0$: $x = -6$ or $x = 6$.
 
-Taking square roots of $x^{2} = 49$ gives the same pair, $x = \\pm 7$, so the two methods agree. Factoring has an advantage, though: it fits the same pattern as every equation we will solve by factoring, and it handles coefficients such as $9x^{2} - 4 = 0$ just as easily. In this lesson we spot differences of squares, including ones hidden behind a common factor, and solve them this way.`,
+Taking square roots of $x^{2} = 36$ gives the same pair, $x = \\pm 6$, so the two methods agree. Factoring has an advantage, though: it fits the same pattern as every equation we will solve by factoring, and it handles coefficients such as $25x^{2} - 1 = 0$ just as easily. In this lesson we spot differences of squares, including ones hidden behind a common factor, and solve them this way.`,
     `零乘积法则能解一边是乘积、另一边是 $0$ 的方程。我们也会分解**平方差**：$A^{2} - B^{2} = (A + B)(A - B)$。把两者结合起来解
 
-$$x^{2} - 49 = 0$$
+$$x^{2} - 36 = 0$$
 
-因为 $49 = 7^{2}$，左边是 $x^{2} - 7^{2} = (x + 7)(x - 7)$。所以方程就是 $(x + 7)(x - 7) = 0$，某个因式为 $0$：$x = -7$ 或 $x = 7$。
+因为 $36 = 6^{2}$，左边是 $x^{2} - 6^{2} = (x + 6)(x - 6)$。所以方程就是 $(x + 6)(x - 6) = 0$，某个因式为 $0$：$x = -6$ 或 $x = 6$。
 
-对 $x^{2} = 49$ 开平方得到同样的一对解 $x = \\pm 7$，两种方法一致。不过因式分解有它的好处：它和以后所有用因式分解解的方程是同一个套路，而且处理 $9x^{2} - 4 = 0$ 这样带系数的方程同样容易。这节课我们识别平方差（包括藏在公因数后面的平方差），并用这种方法求解。`,
+对 $x^{2} = 36$ 开平方得到同样的一对解 $x = \\pm 6$，两种方法一致。不过因式分解有它的好处：它和以后所有用因式分解解的方程是同一个套路，而且处理 $25x^{2} - 1 = 0$ 这样带系数的方程同样容易。这节课我们识别平方差（包括藏在公因数后面的平方差），并用这种方法求解。`,
   ),
   knowledgePoints: [
     {
@@ -1368,18 +1368,18 @@ export const solvingQuadraticEquationsWithNoConstantTerm: TopicDef = {
   intro: t(
     `The zero product rule needs a product equal to $0$, and taking out a greatest common factor is one way to make a product. A quadratic equation with no constant term is the easiest case of all, because every term contains $x$. Take
 
-$$x^{2} - 6x = 0$$
+$$x^{2} + 5x = 0$$
 
-Both terms have a factor $x$, so $x^{2} - 6x = x(x - 6)$, and the equation is $x(x - 6) = 0$. One factor is $0$: either $x = 0$, or $x - 6 = 0$ and $x = 6$. Both check: $0^{2} - 6(0) = 0$ and $6^{2} - 6(6) = 36 - 36 = 0$.
+Both terms have a factor $x$, so $x^{2} + 5x = x(x + 5)$, and the equation is $x(x + 5) = 0$. One factor is $0$: either $x = 0$, or $x + 5 = 0$ and $x = -5$. Both check: $0^{2} + 5(0) = 0$ and $(-5)^{2} + 5(-5) = 25 - 25 = 0$.
 
-It is tempting to divide both sides by $x$ instead, which leaves $x - 6 = 0$ and only $x = 6$. That loses a solution, because dividing by $x$ is allowed only when $x \\ne 0$, and $x = 0$ is precisely the solution that disappears. In this lesson we always factor out $x$, which keeps both.`,
+It is tempting to divide both sides by $x$ instead, which leaves $x + 5 = 0$ and only $x = -5$. That loses a solution, because dividing by $x$ is allowed only when $x \\ne 0$, and $x = 0$ is precisely the solution that disappears. In this lesson we always factor out $x$, which keeps both.`,
     `零乘积法则需要一个等于 $0$ 的乘积，而提取最大公因式正是构造乘积的一种办法。不含常数项的一元二次方程是最简单的情形，因为每一项都含有 $x$。看
 
-$$x^{2} - 6x = 0$$
+$$x^{2} + 5x = 0$$
 
-两项都有因式 $x$，所以 $x^{2} - 6x = x(x - 6)$，方程就是 $x(x - 6) = 0$。某个因式为 $0$：要么 $x = 0$，要么 $x - 6 = 0$，即 $x = 6$。两个都能通过检验：$0^{2} - 6(0) = 0$，$6^{2} - 6(6) = 36 - 36 = 0$。
+两项都有因式 $x$，所以 $x^{2} + 5x = x(x + 5)$，方程就是 $x(x + 5) = 0$。某个因式为 $0$：要么 $x = 0$，要么 $x + 5 = 0$，即 $x = -5$。两个都能通过检验：$0^{2} + 5(0) = 0$，$(-5)^{2} + 5(-5) = 25 - 25 = 0$。
 
-人们很容易想到两边同时除以 $x$，剩下 $x - 6 = 0$，只得到 $x = 6$。这样会丢掉一个解，因为只有当 $x \\ne 0$ 时才能除以 $x$，而 $x = 0$ 恰恰就是被丢掉的那个解。这节课我们总是提出 $x$，这样两个解都能保住。`,
+人们很容易想到两边同时除以 $x$，剩下 $x + 5 = 0$，只得到 $x = -5$。这样会丢掉一个解，因为只有当 $x \\ne 0$ 时才能除以 $x$，而 $x = 0$ 恰恰就是被丢掉的那个解。这节课我们总是提出 $x$，这样两个解都能保住。`,
   ),
   knowledgePoints: [
     {
@@ -1628,18 +1628,18 @@ export const solvingQuadraticEquationsByFactoring: TopicDef = {
   intro: t(
     `We can factor a trinomial $x^{2} + bx + c$ by finding two numbers whose product is $c$ and whose sum is $b$, and we can solve a product equal to $0$ with the zero product rule. Put together, they solve a great many quadratic equations. Take
 
-$$x^{2} - 2x - 15 = 0$$
+$$x^{2} - 3x - 10 = 0$$
 
-We want two numbers with product $-15$ and sum $-2$: they are $3$ and $-5$. So the equation is $(x + 3)(x - 5) = 0$. A product is $0$ only when a factor is $0$, so $x + 3 = 0$ or $x - 5 = 0$, that is, $x = -3$ or $x = 5$.
+We want two numbers with product $-10$ and sum $-3$: they are $2$ and $-5$. So the equation is $(x + 2)(x - 5) = 0$. A product is $0$ only when a factor is $0$, so $x + 2 = 0$ or $x - 5 = 0$, that is, $x = -2$ or $x = 5$.
 
-Each solution can be checked in the original equation: $(-3)^{2} - 2(-3) - 15 = 9 + 6 - 15 = 0$. In this lesson we solve trinomial equations this way, first moving terms so that one side is $0$ and taking out any common factor when there is one.`,
+Each solution can be checked in the original equation: $(-2)^{2} - 3(-2) - 10 = 4 + 6 - 10 = 0$. In this lesson we solve trinomial equations this way, first moving terms so that one side is $0$ and taking out any common factor when there is one.`,
     `我们会分解三项式 $x^{2} + bx + c$：找两个积为 $c$、和为 $b$ 的数；也会用零乘积法则解“乘积等于 $0$”的方程。两者结合，就能解许多一元二次方程。看
 
-$$x^{2} - 2x - 15 = 0$$
+$$x^{2} - 3x - 10 = 0$$
 
-要找积为 $-15$、和为 $-2$ 的两个数：$3$ 和 $-5$。所以方程就是 $(x + 3)(x - 5) = 0$。乘积为 $0$ 时必有一个因式为 $0$，所以 $x + 3 = 0$ 或 $x - 5 = 0$，即 $x = -3$ 或 $x = 5$。
+要找积为 $-10$、和为 $-3$ 的两个数：$2$ 和 $-5$。所以方程就是 $(x + 2)(x - 5) = 0$。乘积为 $0$ 时必有一个因式为 $0$，所以 $x + 2 = 0$ 或 $x - 5 = 0$，即 $x = -2$ 或 $x = 5$。
 
-每个解都可以代回原方程检验：$(-3)^{2} - 2(-3) - 15 = 9 + 6 - 15 = 0$。这节课我们用这种方法解三项式方程：先移项使一边为 $0$，有公因数时先提出公因数。`,
+每个解都可以代回原方程检验：$(-2)^{2} - 3(-2) - 10 = 4 + 6 - 10 = 0$。这节课我们用这种方法解三项式方程：先移项使一边为 $0$，有公因数时先提出公因数。`,
   ),
   knowledgePoints: [
     {
@@ -1855,18 +1855,18 @@ export const solvingQuadraticEquationsWithLeadingCoefficientsByFactoring: TopicD
   intro: t(
     `We can solve $x^{2} + bx + c = 0$ by factoring, and we can factor a trinomial $ax^{2} + bx + c$ whose leading coefficient is not $1$, for example with the $ac$ method. Putting the two together solves equations such as
 
-$$2x^{2} + 5x - 3 = 0$$
+$$3x^{2} + 5x - 2 = 0$$
 
-Here $ac = 2 \\cdot (-3) = -6$, and $6$ and $-1$ have product $-6$ and sum $5$. Splitting $5x$ into $6x - x$ and grouping gives $2x(x + 3) - (x + 3) = (2x - 1)(x + 3)$. So $2x - 1 = 0$ or $x + 3 = 0$, that is, $x = \\frac{1}{2}$ or $x = -3$.
+Here $ac = 3 \\cdot (-2) = -6$, and $6$ and $-1$ have product $-6$ and sum $5$. Splitting $5x$ into $6x - x$ and grouping gives $3x(x + 2) - (x + 2) = (3x - 1)(x + 2)$. So $3x - 1 = 0$ or $x + 2 = 0$, that is, $x = \\frac{1}{3}$ or $x = -2$.
 
-The new feature is that a factor such as $2x - 1$ gives a fraction: we solve it like any linear equation, adding $1$ and then dividing by $2$. In this lesson we solve such equations, also when the terms must first be moved to one side or a common factor taken out.`,
+The new feature is that a factor such as $3x - 1$ gives a fraction: we solve it like any linear equation, adding $1$ and then dividing by $3$. In this lesson we solve such equations, also when the terms must first be moved to one side or a common factor taken out.`,
     `我们会用因式分解法解 $x^{2} + bx + c = 0$，也会分解首项系数不为 $1$ 的三项式 $ax^{2} + bx + c$，例如用 $ac$ 法。两者结合，就能解这样的方程：
 
-$$2x^{2} + 5x - 3 = 0$$
+$$3x^{2} + 5x - 2 = 0$$
 
-这里 $ac = 2 \\cdot (-3) = -6$，而 $6$ 与 $-1$ 的积是 $-6$，和是 $5$。把 $5x$ 拆成 $6x - x$ 再分组，得 $2x(x + 3) - (x + 3) = (2x - 1)(x + 3)$。所以 $2x - 1 = 0$ 或 $x + 3 = 0$，即 $x = \\frac{1}{2}$ 或 $x = -3$。
+这里 $ac = 3 \\cdot (-2) = -6$，而 $6$ 与 $-1$ 的积是 $-6$，和是 $5$。把 $5x$ 拆成 $6x - x$ 再分组，得 $3x(x + 2) - (x + 2) = (3x - 1)(x + 2)$。所以 $3x - 1 = 0$ 或 $x + 2 = 0$，即 $x = \\frac{1}{3}$ 或 $x = -2$。
 
-新的地方在于，像 $2x - 1$ 这样的因式会给出分数解：像解一次方程一样，先加 $1$，再除以 $2$。这节课我们解这类方程，包括需要先移项或先提出公因数的情形。`,
+新的地方在于，像 $3x - 1$ 这样的因式会给出分数解：像解一次方程一样，先加 $1$，再除以 $3$。这节课我们解这类方程，包括需要先移项或先提出公因数的情形。`,
   ),
   knowledgePoints: [
     {
@@ -2108,24 +2108,24 @@ export const completingTheSquare: TopicDef = {
   xp: 15,
   standards: ["CCSS.HSA.SSE.B.3.B"],
   intro: t(
-    `We know the perfect square trinomials: $x^{2} + 6x + 9 = (x + 3)^{2}$, because $(x + 3)^{2} = x^{2} + 2 \\cdot 3x + 3^{2}$. Most trinomials are not perfect squares, but every one of them is a perfect square plus a constant. Writing it that way is called **completing the square**, and it is how we will solve every quadratic equation and find the lowest or highest point of every parabola.
+    `We know the perfect square trinomials: $x^{2} + 8x + 16 = (x + 4)^{2}$, because $(x + 4)^{2} = x^{2} + 2 \\cdot 4x + 4^{2}$. Most trinomials are not perfect squares, but every one of them is a perfect square plus a constant. Writing it that way is called **completing the square**, and it is how we will solve every quadratic equation and find the lowest or highest point of every parabola.
 
-Take $x^{2} + 6x + 2$. It has the same $x^{2} + 6x$ as $(x + 3)^{2} = x^{2} + 6x + 9$, but $2$ instead of $9$, that is, $7$ less:
+Take $x^{2} + 8x + 10$. It has the same $x^{2} + 8x$ as $(x + 4)^{2} = x^{2} + 8x + 16$, but $10$ instead of $16$, that is, $6$ less:
 
-$$x^{2} + 6x + 2 = (x + 3)^{2} - 7$$
+$$x^{2} + 8x + 10 = (x + 4)^{2} - 6$$
 
-Now $x$ appears only once. Since a square is never negative, the expression is never less than $-7$, and it equals $-7$ exactly when $x = -3$:
+Now $x$ appears only once. Since a square is never negative, the expression is never less than $-6$, and it equals $-6$ exactly when $x = -4$:
 
 {{figure 0}}
 
 In this lesson we find the number that completes the square and write $x^{2} + bx + c$ as $(x + p)^{2} + q$, when $b$ is even and when it is odd.`,
-    `我们认识完全平方三项式：$x^{2} + 6x + 9 = (x + 3)^{2}$，因为 $(x + 3)^{2} = x^{2} + 2 \\cdot 3x + 3^{2}$。大多数三项式不是完全平方，但每一个都等于一个完全平方加上一个常数。这样改写叫做**配方**；以后我们要靠它解所有的一元二次方程，求所有抛物线的最低点或最高点。
+    `我们认识完全平方三项式：$x^{2} + 8x + 16 = (x + 4)^{2}$，因为 $(x + 4)^{2} = x^{2} + 2 \\cdot 4x + 4^{2}$。大多数三项式不是完全平方，但每一个都等于一个完全平方加上一个常数。这样改写叫做**配方**；以后我们要靠它解所有的一元二次方程，求所有抛物线的最低点或最高点。
 
-看 $x^{2} + 6x + 2$。它与 $(x + 3)^{2} = x^{2} + 6x + 9$ 有相同的 $x^{2} + 6x$，但常数是 $2$ 而不是 $9$，即少了 $7$：
+看 $x^{2} + 8x + 10$。它与 $(x + 4)^{2} = x^{2} + 8x + 16$ 有相同的 $x^{2} + 8x$，但常数是 $10$ 而不是 $16$，即少了 $6$：
 
-$$x^{2} + 6x + 2 = (x + 3)^{2} - 7$$
+$$x^{2} + 8x + 10 = (x + 4)^{2} - 6$$
 
-现在 $x$ 只出现一次。平方永远不是负数，所以这个式子永远不小于 $-7$，并且恰好在 $x = -3$ 时等于 $-7$：
+现在 $x$ 只出现一次。平方永远不是负数，所以这个式子永远不小于 $-6$，并且恰好在 $x = -4$ 时等于 $-6$：
 
 {{figure 0}}
 
@@ -2133,13 +2133,13 @@ $$x^{2} + 6x + 2 = (x + 3)^{2} - 7$$
   ),
   introFigures: [
     graphFigure(
-      { xMin: -8, xMax: 2, yMin: -8, yMax: 6, labelEvery: 2, step: 1 },
+      { xMin: -9, xMax: 1, yMin: -8, yMax: 6, labelEvery: 2, step: 1 },
       [
-        { kind: "curve", f: (x) => x * x + 6 * x + 2, accent: true },
-        { kind: "point", at: [-3, -7], label: "(−3, −7)", dir: "s", tone: "result" },
+        { kind: "curve", f: (x) => x * x + 8 * x + 10, accent: true },
+        { kind: "point", at: [-4, -6], label: "(−4, −6)", dir: "s", tone: "result" },
       ],
-      "The parabola y = x² + 6x + 2 = (x + 3)² − 7 has its lowest point at (−3, −7).",
-      "抛物线 y = x² + 6x + 2 = (x + 3)² − 7 的最低点是 (−3, −7)。",
+      "The parabola y = x² + 8x + 10 = (x + 4)² − 6 has its lowest point at (−4, −6).",
+      "抛物线 y = x² + 8x + 10 = (x + 4)² − 6 的最低点是 (−4, −6)。",
     ),
   ],
   knowledgePoints: [
@@ -2309,16 +2309,16 @@ export const completingTheSquareWithLeadingCoefficients: TopicDef = {
   xp: 14,
   standards: ["CCSS.HSA.SSE.B.3.B"],
   intro: t(
-    `We can complete the square of $x^{2} + bx + c$, writing it as $(x + p)^{2} + q$. A trinomial such as $2x^{2} + 12x + 5$ starts with $2x^{2}$, and no square $(x + p)^{2}$ does. The way around it is to take the $2$ out of the terms with $x$, complete the square inside the parentheses, and keep track of what the $2$ does to the number we take away:
+    `We can complete the square of $x^{2} + bx + c$, writing it as $(x + p)^{2} + q$. A trinomial such as $3x^{2} + 12x + 7$ starts with $3x^{2}$, and no square $(x + p)^{2}$ does. The way around it is to take the $3$ out of the terms with $x$, complete the square inside the parentheses, and keep track of what the $3$ does to the number we take away:
 
-$$2x^{2} + 12x + 5 = 2(x^{2} + 6x) + 5 = 2(x^{2} + 6x + 9 - 9) + 5 = 2(x + 3)^{2} - 18 + 5 = 2(x + 3)^{2} - 13$$
+$$3x^{2} + 12x + 7 = 3(x^{2} + 4x) + 7 = 3(x^{2} + 4x + 4 - 4) + 7 = 3(x + 2)^{2} - 12 + 7 = 3(x + 2)^{2} - 5$$
 
-The result $a(x + p)^{2} + q$ shows the same things as before: $2(x + 3)^{2}$ is never negative, so $2x^{2} + 12x + 5$ is never less than $-13$, and it is $-13$ exactly when $x = -3$. In this lesson we complete the square with a leading coefficient, including when $p$ is a fraction and when the leading coefficient is negative.`,
-    `我们会给 $x^{2} + bx + c$ 配方，把它写成 $(x + p)^{2} + q$。像 $2x^{2} + 12x + 5$ 这样的三项式以 $2x^{2}$ 开头，而任何 $(x + p)^{2}$ 都不是这样。办法是：从含 $x$ 的项中提出 $2$，在括号内配方，并注意 $2$ 对减去的数有什么影响：
+The result $a(x + p)^{2} + q$ shows the same things as before: $3(x + 2)^{2}$ is never negative, so $3x^{2} + 12x + 7$ is never less than $-5$, and it is $-5$ exactly when $x = -2$. In this lesson we complete the square with a leading coefficient, including when $p$ is a fraction and when the leading coefficient is negative.`,
+    `我们会给 $x^{2} + bx + c$ 配方，把它写成 $(x + p)^{2} + q$。像 $3x^{2} + 12x + 7$ 这样的三项式以 $3x^{2}$ 开头，而任何 $(x + p)^{2}$ 都不是这样。办法是：从含 $x$ 的项中提出 $3$，在括号内配方，并注意 $3$ 对减去的数有什么影响：
 
-$$2x^{2} + 12x + 5 = 2(x^{2} + 6x) + 5 = 2(x^{2} + 6x + 9 - 9) + 5 = 2(x + 3)^{2} - 18 + 5 = 2(x + 3)^{2} - 13$$
+$$3x^{2} + 12x + 7 = 3(x^{2} + 4x) + 7 = 3(x^{2} + 4x + 4 - 4) + 7 = 3(x + 2)^{2} - 12 + 7 = 3(x + 2)^{2} - 5$$
 
-结果 $a(x + p)^{2} + q$ 告诉我们的东西和以前一样：$2(x + 3)^{2}$ 永远不是负数，所以 $2x^{2} + 12x + 5$ 永远不小于 $-13$，并且恰好在 $x = -3$ 时等于 $-13$。这节课我们给首项系数不为 $1$ 的三项式配方，包括 $p$ 是分数和首项系数为负的情形。`,
+结果 $a(x + p)^{2} + q$ 告诉我们的东西和以前一样：$3(x + 2)^{2}$ 永远不是负数，所以 $3x^{2} + 12x + 7$ 永远不小于 $-5$，并且恰好在 $x = -2$ 时等于 $-5$。这节课我们给首项系数不为 $1$ 的三项式配方，包括 $p$ 是分数和首项系数为负的情形。`,
   ),
   knowledgePoints: [
     {
@@ -2521,20 +2521,20 @@ export const solvingQuadraticEquationsByCompletingTheSquare: TopicDef = {
   xp: 15,
   standards: ["CCSS.HSA.REI.B.4.A", "CCSS.HSA.REI.B.4.B"],
   intro: t(
-    `We can solve a perfect square equation such as $(x + 3)^{2} = 11$ by taking square roots, $x + 3 = \\pm\\sqrt{11}$, and we can complete the square of $x^{2} + bx$. Together they solve **every** quadratic equation, including the many that do not factor.
+    `We can solve a perfect square equation such as $(x + 4)^{2} = 13$ by taking square roots, $x + 4 = \\pm\\sqrt{13}$, and we can complete the square of $x^{2} + bx$. Together they solve **every** quadratic equation, including the many that do not factor.
 
-Take $x^{2} + 6x - 2 = 0$. No two integers have product $-2$ and sum $6$, so factoring does not help. Instead, move the constant to the right and add $9$, the number that completes the square of $x^{2} + 6x$, to both sides:
+Take $x^{2} + 8x + 3 = 0$. No two integers have product $3$ and sum $8$, so factoring does not help. Instead, move the constant to the right and add $16$, the number that completes the square of $x^{2} + 8x$, to both sides:
 
-$$x^{2} + 6x = 2 \\Rightarrow x^{2} + 6x + 9 = 11 \\Rightarrow (x + 3)^{2} = 11$$
+$$x^{2} + 8x = -3 \\Rightarrow x^{2} + 8x + 16 = 13 \\Rightarrow (x + 4)^{2} = 13$$
 
-Now it is a perfect square equation: $x + 3 = \\pm\\sqrt{11}$, so $x = -3 + \\sqrt{11}$ or $x = -3 - \\sqrt{11}$. In this lesson we solve equations $x^{2} + bx + c = 0$ this way, with even and odd $b$, and see how it shows when there is no real solution.`,
-    `我们会用开平方法解 $(x + 3)^{2} = 11$ 这样的完全平方型方程：$x + 3 = \\pm\\sqrt{11}$；也会给 $x^{2} + bx$ 配方。两者结合，就能解**所有**一元二次方程，包括许多不能分解因式的方程。
+Now it is a perfect square equation: $x + 4 = \\pm\\sqrt{13}$, so $x = -4 + \\sqrt{13}$ or $x = -4 - \\sqrt{13}$. In this lesson we solve equations $x^{2} + bx + c = 0$ this way, with even and odd $b$, and see how it shows when there is no real solution.`,
+    `我们会用开平方法解 $(x + 4)^{2} = 13$ 这样的完全平方型方程：$x + 4 = \\pm\\sqrt{13}$；也会给 $x^{2} + bx$ 配方。两者结合，就能解**所有**一元二次方程，包括许多不能分解因式的方程。
 
-看 $x^{2} + 6x - 2 = 0$。没有两个整数的积是 $-2$、和是 $6$，所以分解因式行不通。改为把常数项移到右边，再在两边都加上 $9$，即给 $x^{2} + 6x$ 配方所需的数：
+看 $x^{2} + 8x + 3 = 0$。没有两个整数的积是 $3$、和是 $8$，所以分解因式行不通。改为把常数项移到右边，再在两边都加上 $16$，即给 $x^{2} + 8x$ 配方所需的数：
 
-$$x^{2} + 6x = 2 \\Rightarrow x^{2} + 6x + 9 = 11 \\Rightarrow (x + 3)^{2} = 11$$
+$$x^{2} + 8x = -3 \\Rightarrow x^{2} + 8x + 16 = 13 \\Rightarrow (x + 4)^{2} = 13$$
 
-现在它是完全平方型方程：$x + 3 = \\pm\\sqrt{11}$，所以 $x = -3 + \\sqrt{11}$ 或 $x = -3 - \\sqrt{11}$。这节课我们用这种方法解 $x^{2} + bx + c = 0$，包括 $b$ 为偶数和奇数的情形，并看到没有实数解时它怎样显示出来。`,
+现在它是完全平方型方程：$x + 4 = \\pm\\sqrt{13}$，所以 $x = -4 + \\sqrt{13}$ 或 $x = -4 - \\sqrt{13}$。这节课我们用这种方法解 $x^{2} + bx + c = 0$，包括 $b$ 为偶数和奇数的情形，并看到没有实数解时它怎样显示出来。`,
   ),
   knowledgePoints: [
     {
@@ -2713,16 +2713,16 @@ export const solvingQuadraticEquationsWithLeadingCoefficientsByCompletingTheSqua
   xp: 15,
   standards: ["CCSS.HSA.REI.B.4.A", "CCSS.HSA.REI.B.4.B"],
   intro: t(
-    `We can solve $x^{2} + bx + c = 0$ by completing the square. An equation such as $3x^{2} - 12x + 6 = 0$ starts with $3x^{2}$ instead. In an **equation**, unlike an expression, there is a short way around it: dividing both sides by the same nonzero number does not change which values of $x$ make it true. So divide by $3$ first:
+    `We can solve $x^{2} + bx + c = 0$ by completing the square. An equation such as $4x^{2} + 8x - 8 = 0$ starts with $4x^{2}$ instead. In an **equation**, unlike an expression, there is a short way around it: dividing both sides by the same nonzero number does not change which values of $x$ make it true. So divide by $4$ first:
 
-$$3x^{2} - 12x + 6 = 0 \\Rightarrow x^{2} - 4x + 2 = 0$$
+$$4x^{2} + 8x - 8 = 0 \\Rightarrow x^{2} + 2x - 2 = 0$$
 
-Then complete the square as before: $x^{2} - 4x = -2$, so $x^{2} - 4x + 4 = 2$, that is, $(x - 2)^{2} = 2$, and $x = 2 \\pm \\sqrt{2}$. In this lesson we solve equations with a leading coefficient this way, including when dividing gives fractions and when the leading coefficient is negative.`,
-    `我们会用配方法解 $x^{2} + bx + c = 0$。像 $3x^{2} - 12x + 6 = 0$ 这样的方程却以 $3x^{2}$ 开头。与式子不同，**方程**有一条捷径：两边同时除以同一个非零数，使等式成立的 $x$ 不变。所以先除以 $3$：
+Then complete the square as before: $x^{2} + 2x = 2$, so $x^{2} + 2x + 1 = 3$, that is, $(x + 1)^{2} = 3$, and $x = -1 \\pm \\sqrt{3}$. In this lesson we solve equations with a leading coefficient this way, including when dividing gives fractions and when the leading coefficient is negative.`,
+    `我们会用配方法解 $x^{2} + bx + c = 0$。像 $4x^{2} + 8x - 8 = 0$ 这样的方程却以 $4x^{2}$ 开头。与式子不同，**方程**有一条捷径：两边同时除以同一个非零数，使等式成立的 $x$ 不变。所以先除以 $4$：
 
-$$3x^{2} - 12x + 6 = 0 \\Rightarrow x^{2} - 4x + 2 = 0$$
+$$4x^{2} + 8x - 8 = 0 \\Rightarrow x^{2} + 2x - 2 = 0$$
 
-然后像以前一样配方：$x^{2} - 4x = -2$，所以 $x^{2} - 4x + 4 = 2$，即 $(x - 2)^{2} = 2$，$x = 2 \\pm \\sqrt{2}$。这节课我们用这种方法解首项系数不为 $1$ 的方程，包括相除后出现分数和首项系数为负的情形。`,
+然后像以前一样配方：$x^{2} + 2x = 2$，所以 $x^{2} + 2x + 1 = 3$，即 $(x + 1)^{2} = 3$，$x = -1 \\pm \\sqrt{3}$。这节课我们用这种方法解首项系数不为 $1$ 的方程，包括相除后出现分数和首项系数为负的情形。`,
   ),
   knowledgePoints: [
     {
@@ -2917,18 +2917,18 @@ export const theQuadraticFormula: TopicDef = {
 
 $$x^{2} + \\frac{b}{a}x = -\\frac{c}{a} \\Rightarrow \\left(x + \\frac{b}{2a}\\right)^{2} = \\frac{b^{2}}{4a^{2}} - \\frac{c}{a} = \\frac{b^{2} - 4ac}{4a^{2}} \\Rightarrow x = \\frac{-b \\pm \\sqrt{b^{2} - 4ac}}{2a}$$
 
-This is the **quadratic formula**. It turns solving into arithmetic. For $2x^{2} - 5x - 3 = 0$ we have $a = 2$, $b = -5$, $c = -3$, so $b^{2} - 4ac = 25 + 24 = 49$ and
+This is the **quadratic formula**. It turns solving into arithmetic. For $3x^{2} + x - 2 = 0$ we have $a = 3$, $b = 1$, $c = -2$, so $b^{2} - 4ac = 1 + 24 = 25$ and
 
-$$x = \\frac{5 \\pm 7}{4}, \\text{ that is, } x = 3 \\text{ or } x = -\\frac{1}{2}$$
+$$x = \\frac{-1 \\pm 5}{6}, \\text{ that is, } x = \\frac{2}{3} \\text{ or } x = -1$$
 
 In this lesson we use the formula for rational and irrational solutions, and on equations that must first be put in standard form.`,
     `我们会通过除以 $a$ 再配方来解任意方程 $ax^{2} + bx + c = 0$。每次的步骤都一样，所以可以用字母 $a$、$b$、$c$ 一次性做完，把结果记下来：
 
 $$x^{2} + \\frac{b}{a}x = -\\frac{c}{a} \\Rightarrow \\left(x + \\frac{b}{2a}\\right)^{2} = \\frac{b^{2}}{4a^{2}} - \\frac{c}{a} = \\frac{b^{2} - 4ac}{4a^{2}} \\Rightarrow x = \\frac{-b \\pm \\sqrt{b^{2} - 4ac}}{2a}$$
 
-这就是**求根公式**。它把解方程变成了计算。对 $2x^{2} - 5x - 3 = 0$，$a = 2$，$b = -5$，$c = -3$，所以 $b^{2} - 4ac = 25 + 24 = 49$，
+这就是**求根公式**。它把解方程变成了计算。对 $3x^{2} + x - 2 = 0$，$a = 3$，$b = 1$，$c = -2$，所以 $b^{2} - 4ac = 1 + 24 = 25$，
 
-$$x = \\frac{5 \\pm 7}{4}, \\text{ 即 } x = 3 \\text{ 或 } x = -\\frac{1}{2}$$
+$$x = \\frac{-1 \\pm 5}{6}, \\text{ 即 } x = \\frac{2}{3} \\text{ 或 } x = -1$$
 
 这节课我们用公式求有理数解和无理数解，也解需要先化为一般形式的方程。`,
   ),
@@ -3388,18 +3388,18 @@ export const quadraticEquationsWithOneRealSolution: TopicDef = {
   xp: 12,
   standards: ["CCSS.HSA.REI.B.4.B"],
   intro: t(
-    `The discriminant $b^{2} - 4ac$ tells how many real solutions a quadratic equation has, and it is $0$ exactly when there is one. Now suppose one coefficient is not fixed. In $x^{2} + 6x + k = 0$, the constant $k$ changes the count:
+    `The discriminant $b^{2} - 4ac$ tells how many real solutions a quadratic equation has, and it is $0$ exactly when there is one. Now suppose one coefficient is not fixed. In $x^{2} + 8x + k = 0$, the constant $k$ changes the count:
 
-- $k = 5$: $36 - 20 = 16 > 0$, two solutions;
-- $k = 13$: $36 - 52 = -16 < 0$, no real solution.
+- $k = 7$: $64 - 28 = 36 > 0$, two solutions;
+- $k = 20$: $64 - 80 = -16 < 0$, no real solution.
 
-Somewhere between, the parabola $y = x^{2} + 6x + k$ just touches the $x$-axis. To find where, turn the condition into an equation for $k$: $36 - 4k = 0$, so $k = 9$, and indeed $x^{2} + 6x + 9 = (x + 3)^{2}$ has the single solution $x = -3$. In this lesson we find such a coefficient, whether it is the constant, the coefficient of $x^{2}$ or the coefficient of $x$.`,
-    `判别式 $b^{2} - 4ac$ 告诉我们一元二次方程有几个实数解，它等于 $0$ 时恰有一个解。现在假设某个系数不确定。在 $x^{2} + 6x + k = 0$ 中，常数 $k$ 会改变解的个数：
+Somewhere between, the parabola $y = x^{2} + 8x + k$ just touches the $x$-axis. To find where, turn the condition into an equation for $k$: $64 - 4k = 0$, so $k = 16$, and indeed $x^{2} + 8x + 16 = (x + 4)^{2}$ has the single solution $x = -4$. In this lesson we find such a coefficient, whether it is the constant, the coefficient of $x^{2}$ or the coefficient of $x$.`,
+    `判别式 $b^{2} - 4ac$ 告诉我们一元二次方程有几个实数解，它等于 $0$ 时恰有一个解。现在假设某个系数不确定。在 $x^{2} + 8x + k = 0$ 中，常数 $k$ 会改变解的个数：
 
-- $k = 5$：$36 - 20 = 16 > 0$，两个解；
-- $k = 13$：$36 - 52 = -16 < 0$，没有实数解。
+- $k = 7$：$64 - 28 = 36 > 0$，两个解；
+- $k = 20$：$64 - 80 = -16 < 0$，没有实数解。
 
-在这两者之间，抛物线 $y = x^{2} + 6x + k$ 恰好与 $x$ 轴相切。要找到这个 $k$，就把条件变成关于 $k$ 的方程：$36 - 4k = 0$，所以 $k = 9$。确实，$x^{2} + 6x + 9 = (x + 3)^{2}$ 只有一个解 $x = -3$。这节课我们求这样的系数，无论它是常数项、$x^{2}$ 的系数还是 $x$ 的系数。`,
+在这两者之间，抛物线 $y = x^{2} + 8x + k$ 恰好与 $x$ 轴相切。要找到这个 $k$，就把条件变成关于 $k$ 的方程：$64 - 4k = 0$，所以 $k = 16$。确实，$x^{2} + 8x + 16 = (x + 4)^{2}$ 只有一个解 $x = -4$。这节课我们求这样的系数，无论它是常数项、$x^{2}$ 的系数还是 $x$ 的系数。`,
   ),
   knowledgePoints: [
     {

@@ -289,18 +289,18 @@ export const introductionToPolynomials: TopicDef = {
   xp: 12,
   standards: ["CCSS.HSA.SSE.A.1.A"],
   intro: t(
-    `You can evaluate an expression such as $3x + 2$ by putting a number in place of $x$. Many of the expressions algebra works with are built the same way, from numbers and one variable, using only multiplication and addition: the area $x^{2} + 3x$ of a rectangle $x$ wide and $x + 3$ long, the height $20t - 5t^{2}$ of a ball thrown upward, or $4x^{3} - x^{2} + 7x - 5$. Such an expression is a **polynomial**. Because every polynomial is made of the same few pieces, we can name the pieces once and work with all polynomials in the same way.
+    `You can evaluate an expression such as $3x + 2$ by putting a number in place of $x$. Many of the expressions algebra works with are built the same way, from numbers and one variable, using only multiplication and addition: the area $x^{2} + 3x$ of a rectangle $x$ wide and $x + 3$ long, the height $20t - 5t^{2}$ of a ball thrown upward, or $2x^{3} - 3x^{2} + x - 6$. Such an expression is a **polynomial**. Because every polynomial is made of the same few pieces, we can name the pieces once and work with all polynomials in the same way.
 
-Read $4x^{3} - x^{2} + 7x - 5$ as a sum of four pieces, $4x^{3}$, $-x^{2}$, $7x$ and $-5$, each a number times a power of $x$. At $x = 2$ each piece is worked out on its own and the results are added:
+Read $2x^{3} - 3x^{2} + x - 6$ as a sum of four pieces, $2x^{3}$, $-3x^{2}$, $x$ and $-6$, each a number times a power of $x$. At $x = 3$ each piece is worked out on its own and the results are added:
 
-$$4(2)^{3} - (2)^{2} + 7(2) - 5 = 32 - 4 + 14 - 5 = 37$$
+$$2(3)^{3} - 3(3)^{2} + 3 - 6 = 54 - 27 + 3 - 6 = 24$$
 
 In this lesson we name the pieces of a polynomial, its terms, coefficients and constant term, tell polynomials from other expressions, and evaluate them.`,
-    `我们会把一个数代入 $3x + 2$ 中的 $x$ 求值。代数中的许多式子都是这样构成的：由数和一个变量，只用乘法和加法组成。例如宽为 $x$、长为 $x + 3$ 的长方形的面积 $x^{2} + 3x$，向上抛出的球的高度 $20t - 5t^{2}$，或者 $4x^{3} - x^{2} + 7x - 5$。这样的式子叫做**多项式**。所有多项式都由同样几种部分组成，所以只要给这些部分起一次名字，就能用同一种方法处理所有多项式。
+    `我们会把一个数代入 $3x + 2$ 中的 $x$ 求值。代数中的许多式子都是这样构成的：由数和一个变量，只用乘法和加法组成。例如宽为 $x$、长为 $x + 3$ 的长方形的面积 $x^{2} + 3x$，向上抛出的球的高度 $20t - 5t^{2}$，或者 $2x^{3} - 3x^{2} + x - 6$。这样的式子叫做**多项式**。所有多项式都由同样几种部分组成，所以只要给这些部分起一次名字，就能用同一种方法处理所有多项式。
 
-把 $4x^{3} - x^{2} + 7x - 5$ 看成四部分之和：$4x^{3}$、$-x^{2}$、$7x$ 和 $-5$，每一部分都是一个数乘以 $x$ 的幂。当 $x = 2$ 时，分别算出每一部分，再相加：
+把 $2x^{3} - 3x^{2} + x - 6$ 看成四部分之和：$2x^{3}$、$-3x^{2}$、$x$ 和 $-6$，每一部分都是一个数乘以 $x$ 的幂。当 $x = 3$ 时，分别算出每一部分，再相加：
 
-$$4(2)^{3} - (2)^{2} + 7(2) - 5 = 32 - 4 + 14 - 5 = 37$$
+$$2(3)^{3} - 3(3)^{2} + 3 - 6 = 54 - 27 + 3 - 6 = 24$$
 
 这节课我们给多项式的各部分命名：项、系数和常数项；分辨多项式与其他式子；并求多项式的值。`,
   ),
@@ -1264,16 +1264,16 @@ export const addingAndSubtractingPolynomials: TopicDef = {
   intro: t(
     `Adding and subtracting polynomials needs nothing new: remove the parentheses, then combine like terms. The care is all in the signs. A plus sign in front of parentheses leaves the terms as they are. A minus sign is a factor of $-1$, so by the distributive law it changes the sign of every term inside:
 
-$$-(2x^{2} - 4x + 6) = -2x^{2} + 4x - 6$$
+$$-(3x^{2} + 2x - 5) = -3x^{2} - 2x + 5$$
 
-So $(5x^{2} - 3x + 1) - (2x^{2} - 4x + 6) = 5x^{2} - 3x + 1 - 2x^{2} + 4x - 6 = 3x^{2} + x - 5$. Putting $x = 1$ into both sides checks it: $3 - 4 = -1$ and $3 + 1 - 5 = -1$.
+So $(4x^{2} + x - 2) - (3x^{2} + 2x - 5) = 4x^{2} + x - 2 - 3x^{2} - 2x + 5 = x^{2} - x + 3$. Putting $x = 1$ into both sides checks it: $3 - 0 = 3$ and $1 - 1 + 3 = 3$.
 
 In this lesson we add and subtract polynomials in one and in several variables.`,
     `多项式的加减不需要新方法：去掉括号，再合并同类项。要小心的全在符号上。括号前是加号时，各项保持不变。括号前的减号相当于因数 $-1$，由分配律，括号内每一项都要变号：
 
-$$-(2x^{2} - 4x + 6) = -2x^{2} + 4x - 6$$
+$$-(3x^{2} + 2x - 5) = -3x^{2} - 2x + 5$$
 
-所以 $(5x^{2} - 3x + 1) - (2x^{2} - 4x + 6) = 5x^{2} - 3x + 1 - 2x^{2} + 4x - 6 = 3x^{2} + x - 5$。把 $x = 1$ 代入两边检验：$3 - 4 = -1$，$3 + 1 - 5 = -1$。
+所以 $(4x^{2} + x - 2) - (3x^{2} + 2x - 5) = 4x^{2} + x - 2 - 3x^{2} - 2x + 5 = x^{2} - x + 3$。把 $x = 1$ 代入两边检验：$3 - 0 = 3$，$1 - 1 + 3 = 3$。
 
 这节课我们做一元和多元多项式的加法与减法。`,
   ),
@@ -1925,28 +1925,28 @@ export const multiplyingPolynomials: TopicDef = {
 
 {{figure 0}}
 
-so $(x + 2)(x^{2} - 3x + 4) = x^{3} - 3x^{2} + 4x + 2x^{2} - 6x + 8 = x^{3} - x^{2} - 2x + 8$. In the grid, like terms sit next to each other on the diagonals: $-3x^{2}$ beside $2x^{2}$, and $4x$ beside $-6x$.
+so $(x + 3)(x^{2} - 2x + 5) = x^{3} - 2x^{2} + 5x + 3x^{2} - 6x + 15 = x^{3} + x^{2} - x + 15$. In the grid, like terms sit next to each other on the diagonals: $-2x^{2}$ beside $3x^{2}$, and $5x$ beside $-6x$.
 
 In this lesson we multiply a binomial by a trinomial, with and without leading coefficients, and multiply three binomials.`,
     `两个二项式相乘时，我们用一个的每一项乘另一个的每一项。这个道理并不要求因式只有两项：由分配律，$(a + b)(c + d + e) = a(c + d + e) + b(c + d + e)$，共 $2 \\times 3 = 6$ 个乘积。用表格可以把它们排得整整齐齐，二项式的每一项占一行：
 
 {{figure 0}}
 
-所以 $(x + 2)(x^{2} - 3x + 4) = x^{3} - 3x^{2} + 4x + 2x^{2} - 6x + 8 = x^{3} - x^{2} - 2x + 8$。表格中同类项沿对角线相邻：$-3x^{2}$ 与 $2x^{2}$，$4x$ 与 $-6x$。
+所以 $(x + 3)(x^{2} - 2x + 5) = x^{3} - 2x^{2} + 5x + 3x^{2} - 6x + 15 = x^{3} + x^{2} - x + 15$。表格中同类项沿对角线相邻：$-2x^{2}$ 与 $3x^{2}$，$5x$ 与 $-6x$。
 
 这节课我们计算二项式乘三项式（包括首项系数不为 1 的情形），以及三个二项式的积。`,
   ),
   introFigures: [
     areaGrid(
-      ["x²", "−3x", "4"],
-      ["x", "2"],
+      ["x²", "−2x", "5"],
+      ["x", "3"],
       [
-        ["x³", "−3x²", "4x"],
-        ["2x²", "−6x", "8"],
+        ["x³", "−2x²", "5x"],
+        ["3x²", "−6x", "15"],
       ],
       t(
-        "A grid for (x + 2)(x² − 3x + 4): rows x and 2, columns x², −3x and 4, holding x³, −3x², 4x in the first row and 2x², −6x, 8 in the second.",
-        "(x + 2)(x² − 3x + 4) 的表格：行是 x 和 2，列是 x²、−3x 和 4；第一行是 x³、−3x²、4x，第二行是 2x²、−6x、8。",
+        "A grid for (x + 3)(x² − 2x + 5): rows x and 3, columns x², −2x and 5, holding x³, −2x², 5x in the first row and 3x², −6x, 15 in the second.",
+        "(x + 3)(x² − 2x + 5) 的表格：行是 x 和 3，列是 x²、−2x 和 5；第一行是 x³、−2x²、5x，第二行是 3x²、−6x、15。",
       ),
     ),
   ],
@@ -2359,18 +2359,18 @@ export const expandingBinomialsUsingPascalsTriangle: TopicDef = {
   xp: 16,
   standards: ["CCSS.HSA.APR.C.5"],
   intro: t(
-    `Squaring a binomial takes one multiplication: $(a + b)^{2} = a^{2} + 2ab + b^{2}$. Higher powers can be expanded the same way, one factor at a time, but $(x + 2)^{5}$ would take four rounds of multiplying and collecting. There is a shortcut. Multiplying $(a + b)^{2}$ by one more $a + b$ gives
+    `Squaring a binomial takes one multiplication: $(a + b)^{2} = a^{2} + 2ab + b^{2}$. Higher powers can be expanded the same way, one factor at a time, but $(x + 2)^{5}$ would take four rounds of multiplying and collecting. There is a shortcut, and the powers of $11 = 10 + 1$ already show it:
 
-$$(a + b)^{3} = a^{3} + 3a^{2}b + 3ab^{2} + b^{3}$$
+$$11^{2} = 121 \\qquad 11^{3} = 1331 \\qquad 11^{4} = 14641$$
 
-and the coefficients $1, 2, 1$ have become $1, 3, 3, 1$: each new number is the sum of the two above it. Stacked into a triangle, these rows form **Pascal's triangle**, and row $n$ gives all the coefficients of $(a + b)^{n}$ at once.
+Multiplying by $10 + 1$ adds each number to its neighbor, as in $1331 \\times 11 = 13310 + 1331 = 14641$, so each new digit is the sum of the two above it. Multiplying by $a + b$ does the same to the coefficients of a binomial. Stacked into a triangle, these rows form **Pascal's triangle**, and row $n$ gives all the coefficients of $(a + b)^{n}$ at once.
 
 In this lesson we build the triangle, use it to expand cubes and higher powers, and find one coefficient without expanding everything.`,
-    `二项式的平方只需乘一次：$(a + b)^{2} = a^{2} + 2ab + b^{2}$。更高次幂也可以一次乘一个因式地展开，但 $(x + 2)^{5}$ 要乘四轮、合并四轮。有一条捷径。把 $(a + b)^{2}$ 再乘一个 $a + b$，得
+    `二项式的平方只需乘一次：$(a + b)^{2} = a^{2} + 2ab + b^{2}$。更高次幂也可以一次乘一个因式地展开，但 $(x + 2)^{5}$ 要乘四轮、合并四轮。有一条捷径，$11 = 10 + 1$ 的幂已经显示了它：
 
-$$(a + b)^{3} = a^{3} + 3a^{2}b + 3ab^{2} + b^{3}$$
+$$11^{2} = 121 \\qquad 11^{3} = 1331 \\qquad 11^{4} = 14641$$
 
-系数从 $1, 2, 1$ 变成了 $1, 3, 3, 1$：每个新数都是它上方两个数之和。把这些行叠成三角形，就是**杨辉三角**（帕斯卡三角形），第 $n$ 行一下子给出 $(a + b)^{n}$ 的全部系数。
+乘以 $10 + 1$ 就是把每个数和它的邻数相加，例如 $1331 \\times 11 = 13310 + 1331 = 14641$，所以每个新数字都是它上方两个数字之和。乘以 $a + b$ 对二项式的系数做的是同一件事。把这些行叠成三角形，就是**杨辉三角**（帕斯卡三角形），第 $n$ 行一下子给出 $(a + b)^{n}$ 的全部系数。
 
 这节课我们构造这个三角形，用它展开立方和更高次幂，并且不必全部展开就求出某一项的系数。`,
   ),
@@ -2607,14 +2607,14 @@ export const differenceOfSquaresFormula: TopicDef = {
   xp: 10,
   standards: ["CCSS.HSA.APR.A.1", "CCSS.HSA.SSE.A.2"],
   intro: t(
-    `Multiplying binomials term by term, $(x + 7)(x - 7) = x^{2} - 7x + 7x - 49 = x^{2} - 49$. The two middle products cancel, because one binomial adds $7$ and the other subtracts it. That happens whenever a sum is multiplied by the difference of the same two terms, so such a product can be written down at once:
+    `Multiplying binomials term by term, $(x + 5)(x - 5) = x^{2} - 5x + 5x - 25 = x^{2} - 25$. The two middle products cancel, because one binomial adds $5$ and the other subtracts it. That happens whenever a sum is multiplied by the difference of the same two terms, so such a product can be written down at once:
 
 $$(a + b)(a - b) = a^{2} - b^{2}$$
 
 The result is a difference of two squares, with no middle term. The same pattern also makes some products of numbers easy: $49 \\times 51 = (50 - 1)(50 + 1) = 2500 - 1 = 2499$.
 
 In this lesson we use the formula with variables, with terms that have coefficients and powers, and for mental arithmetic.`,
-    `逐项相乘，$(x + 7)(x - 7) = x^{2} - 7x + 7x - 49 = x^{2} - 49$。中间的两个乘积相互抵消，因为一个二项式加 $7$，另一个减 $7$。只要两个数的和乘以这两个数的差，就会这样，所以这种乘积可以直接写出：
+    `逐项相乘，$(x + 5)(x - 5) = x^{2} - 5x + 5x - 25 = x^{2} - 25$。中间的两个乘积相互抵消，因为一个二项式加 $5$，另一个减 $5$。只要两个数的和乘以这两个数的差，就会这样，所以这种乘积可以直接写出：
 
 $$(a + b)(a - b) = a^{2} - b^{2}$$
 
@@ -2858,18 +2858,18 @@ export const greatestCommonFactorOfMonomials: TopicDef = {
   xp: 10,
   standards: ["CCSS.HSA.SSE.A.2"],
   intro: t(
-    `Factoring a polynomial starts by taking out a factor common to every term, and the most useful one to take out is the greatest. For whole numbers we already know how to find it: the greatest common factor of $12$ and $18$ is $6$. Monomials work the same way, with the variables counted too. By the product rule, $x^{5} = x^{3} \\cdot x^{2}$, so $12x^{5}$ and $18x^{3}$ both contain $6$ and three factors of $x$:
+    `Factoring a polynomial starts by taking out a factor common to every term, and the most useful one to take out is the greatest. For whole numbers we already know how to find it: the greatest common factor of $10$ and $15$ is $5$. Monomials work the same way, with the variables counted too. By the product rule, $x^{6} = x^{4} \\cdot x^{2}$, so $10x^{6}$ and $15x^{4}$ both contain $5$ and four factors of $x$:
 
-$$12x^{5} = 6x^{3} \\cdot 2x^{2} \\qquad 18x^{3} = 6x^{3} \\cdot 3$$
+$$10x^{6} = 5x^{4} \\cdot 2x^{2} \\qquad 15x^{4} = 5x^{4} \\cdot 3$$
 
-and their greatest common factor is $6x^{3}$.
+and their greatest common factor is $5x^{4}$.
 
 In this lesson we find the greatest common factor of two monomials in one variable, of monomials in two variables, and of three monomials.`,
-    `因式分解多项式，第一步是提出每一项都有的公因式，而最有用的是最大的那一个。对整数我们已经会求：$12$ 和 $18$ 的最大公因数是 $6$。单项式也一样，只是还要考虑变量。由同底数幂的乘法，$x^{5} = x^{3} \\cdot x^{2}$，所以 $12x^{5}$ 和 $18x^{3}$ 都含有 $6$ 和三个 $x$：
+    `因式分解多项式，第一步是提出每一项都有的公因式，而最有用的是最大的那一个。对整数我们已经会求：$10$ 和 $15$ 的最大公因数是 $5$。单项式也一样，只是还要考虑变量。由同底数幂的乘法，$x^{6} = x^{4} \\cdot x^{2}$，所以 $10x^{6}$ 和 $15x^{4}$ 都含有 $5$ 和四个 $x$：
 
-$$12x^{5} = 6x^{3} \\cdot 2x^{2} \\qquad 18x^{3} = 6x^{3} \\cdot 3$$
+$$10x^{6} = 5x^{4} \\cdot 2x^{2} \\qquad 15x^{4} = 5x^{4} \\cdot 3$$
 
-它们的最大公因式是 $6x^{3}$。
+它们的最大公因式是 $5x^{4}$。
 
 这节课我们求两个一元单项式、含两个变量的单项式，以及三个单项式的最大公因式。`,
   ),
