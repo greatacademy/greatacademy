@@ -540,8 +540,8 @@ To find it from a drawing, follow the two lines to where they meet and read the 
       "marking-the-vertex-from-the-equation",
       ["Marking the vertex from the equation", "根据方程标出顶点"],
       [
-        "In $y = a(x - h)^2 + k$, the square is never negative, so $y$ reaches its lowest or highest value when $x = h$, where the square is $0$ and $y = k$. So the vertex is $(h, k)$. Mind the sign: $(x - 2)^2$ has $h = 2$, and $(x + 2)^2$ has $h = -2$.",
-        "在 $y = a(x - h)^2 + k$ 中，平方不会是负数，所以当 $x = h$ 时平方为 $0$，$y = k$，这时 $y$ 达到最低或最高值。所以顶点是 $(h, k)$。注意符号：$(x - 2)^2$ 的 $h = 2$，$(x + 2)^2$ 的 $h = -2$。",
+        "In $y = a(x - h)^2 + k$, the square is never negative, so $y$ reaches its lowest or highest value when $x = h$, where the square is $0$ and $y = k$. So the vertex is $(h, k)$. For $y = 2(x + 1)^2 - 4$ the square is $0$ at $x = -1$, and there $y = -4$, so the vertex is $(-1, -4)$.\n\n> **Watch out.** Mind the sign of $h$: $(x - 2)^2$ has $h = 2$, and $(x + 2)^2$ has $h = -2$. The number added outside is $k$ with its own sign, and the factor $a$ in front changes neither coordinate of the vertex.",
+        "在 $y = a(x - h)^2 + k$ 中，平方不会是负数，所以当 $x = h$ 时平方为 $0$，$y = k$，这时 $y$ 达到最低或最高值。所以顶点是 $(h, k)$。对 $y = 2(x + 1)^2 - 4$，平方在 $x = -1$ 时为 $0$，此时 $y = -4$，所以顶点是 $(-1, -4)$。\n\n> **注意。** 注意 $h$ 的符号：$(x - 2)^2$ 的 $h = 2$，$(x + 2)^2$ 的 $h = -2$。外面加的数就是 $k$，保持自己的符号；前面的因数 $a$ 不改变顶点的任何一个坐标。",
       ],
       (rng) => {
         const [h, k] = apart(rng, 5);
@@ -568,8 +568,16 @@ To find it from a drawing, follow the two lines to where they meet and read the 
             { at: [[k, h]], why: t("You swapped the coordinates: $h$ is the first one.", "你把坐标对调了：$h$ 是第一个坐标。") },
           ],
           solution: t(
-            `The square is $0$ when $x = ${h}$, and then $y = ${k}$. The vertex is $${tex(p)}$. The factor $${a}$ changes the width and direction, not the vertex.`,
-            `当 $x = ${h}$ 时平方为 $0$，此时 $y = ${k}$。顶点是 $${tex(p)}$。因数 $${a}$ 改变的是宽窄和开口方向，不改变顶点。`,
+            `**Step 1: Find where the square is $0$.** The square $(x ${h < 0 ? `+ ${-h}` : `- ${h}`})^2$ is $0$ when $x = ${h}$, and it is positive everywhere else, so the vertex has $x = ${h}$.
+
+**Step 2: Find the height there.** With the square $0$, only the number added outside is left: $y = ${k}$. The vertex is $${tex(p)}$. The factor $${a}$ changes the width and direction, not the vertex.
+
+**Check.** Put $x = ${h}$ into the equation: $y = ${a === -1 ? "-" : `${a} \\cdot `}0^2 ${k < 0 ? `- ${-k}` : `+ ${k}`} = ${k}$, and every other $x$ makes the square positive, so $y$ is ${a > 0 ? "larger" : "smaller"} there.`,
+            `**第一步：找出平方为 $0$ 的位置。** 平方 $(x ${h < 0 ? `+ ${-h}` : `- ${h}`})^2$ 在 $x = ${h}$ 时为 $0$，在其他地方都为正，所以顶点的 $x = ${h}$。
+
+**第二步：求出那里的高度。** 平方为 $0$ 时只剩外面加的数：$y = ${k}$。顶点是 $${tex(p)}$。因数 $${a}$ 改变的是宽窄和开口方向，不改变顶点。
+
+**检验。** 把 $x = ${h}$ 代入方程：$y = ${a === -1 ? "-" : `${a} \\cdot `}0^2 ${k < 0 ? `- ${-k}` : `+ ${k}`} = ${k}$；其他的 $x$ 都使平方为正，所以那里的 $y$ 都更${a > 0 ? "大" : "小"}。`,
           ),
           solutionAlt: t(`The parabola with its vertex at ${tex(p)}.`, `顶点在 ${tex(p)} 的抛物线。`),
           solutionMarks: [{ kind: "curve", f: (x) => a * (x - h) * (x - h) + k, accent: true }],
@@ -580,8 +588,8 @@ To find it from a drawing, follow the two lines to where they meet and read the 
       "marking-the-roots-from-factors",
       ["Marking the $x$-intercepts from the factors", "根据因式标出与 $x$ 轴的交点"],
       [
-        "A product is $0$ exactly when one of its factors is $0$. So $y = (x - r)(x - s)$ meets the $x$-axis where $x = r$ and where $x = s$. These are points on the axis, with second coordinate $0$. As with the vertex form, the sign inside the factor is the opposite of the root.",
-        "乘积为 $0$，当且仅当其中一个因式为 $0$。所以 $y = (x - r)(x - s)$ 在 $x = r$ 和 $x = s$ 处与 $x$ 轴相交。这些点在轴上，第二个坐标是 $0$。和顶点式一样，因式里的符号与根相反。",
+        "A product is $0$ exactly when one of its factors is $0$. So $y = (x - r)(x - s)$ meets the $x$-axis where $x = r$ and where $x = s$. These are points on the axis, with second coordinate $0$. As with the vertex form, the sign inside the factor is the opposite of the root. For $y = (x - 1)(x + 3)$ the first factor is $0$ at $x = 1$ and the second at $x = -3$, so the points are $(1, 0)$ and $(-3, 0)$.\n\n> **Watch out.** The factor $x + 3$ is $0$ at $x = -3$, not at $3$. And the points lie on the $x$-axis, so they are written $(1, 0)$ and $(-3, 0)$, with $0$ second, not $(0, 1)$ and $(0, -3)$.",
+        "乘积为 $0$，当且仅当其中一个因式为 $0$。所以 $y = (x - r)(x - s)$ 在 $x = r$ 和 $x = s$ 处与 $x$ 轴相交。这些点在轴上，第二个坐标是 $0$。和顶点式一样，因式里的符号与根相反。对 $y = (x - 1)(x + 3)$，第一个因式在 $x = 1$ 时为 $0$，第二个在 $x = -3$ 时为 $0$，所以两点是 $(1, 0)$ 和 $(-3, 0)$。\n\n> **注意。** 因式 $x + 3$ 在 $x = -3$ 时为 $0$，不是在 $3$。这些点在 $x$ 轴上，所以写成 $(1, 0)$ 和 $(-3, 0)$，$0$ 在后，不是 $(0, 1)$ 和 $(0, -3)$。",
       ],
       (rng) => {
         const [r, s] = rng.shuffle([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]) as [number, number];
@@ -620,8 +628,12 @@ To find it from a drawing, follow the two lines to where they meet and read the 
             },
           ],
           solution: t(
-            `$${factor(r)} = 0$ when $x = ${r}$, and $${factor(s)} = 0$ when $x = ${s}$. The points are $${tex([r, 0])}$ and $${tex([s, 0])}$.`,
-            `当 $x = ${r}$ 时 $${factor(r)} = 0$，当 $x = ${s}$ 时 $${factor(s)} = 0$。两点是 $${tex([r, 0])}$ 和 $${tex([s, 0])}$。`,
+            `A product is $0$ exactly when one of its factors is $0$, and on the $x$-axis $y = 0$. So set each factor equal to $0$: $${factor(r)} = 0$ when $x = ${r}$, and $${factor(s)} = 0$ when $x = ${s}$. The points are $${tex([r, 0])}$ and $${tex([s, 0])}$.
+
+**Check.** At $x = ${r}$ the first factor is $${r} ${r < 0 ? `+ ${-r}` : `- ${r}`} = 0$, and at $x = ${s}$ the second is $${s} ${s < 0 ? `+ ${-s}` : `- ${s}`} = 0$; either way the product, $y$, is $0$.`,
+            `乘积为 $0$，当且仅当其中一个因式为 $0$，而在 $x$ 轴上 $y = 0$。所以令每个因式等于 $0$：当 $x = ${r}$ 时 $${factor(r)} = 0$，当 $x = ${s}$ 时 $${factor(s)} = 0$。两点是 $${tex([r, 0])}$ 和 $${tex([s, 0])}$。
+
+**检验。** 在 $x = ${r}$ 处第一个因式是 $${r} ${r < 0 ? `+ ${-r}` : `- ${r}`} = 0$，在 $x = ${s}$ 处第二个是 $${s} ${s < 0 ? `+ ${-s}` : `- ${s}`} = 0$；两种情况下乘积 $y$ 都是 $0$。`,
           ),
           solutionAlt: t(`The parabola crossing the x-axis at ${r} and ${s}.`, `与 x 轴交于 ${r} 和 ${s} 的抛物线。`),
           solutionMarks: [{ kind: "curve", f: (x) => (x - r) * (x - s), accent: true }],
@@ -634,8 +646,8 @@ To find it from a drawing, follow the two lines to where they meet and read the 
       "marking-a-pair-of-mirror-points",
       ["Marking a pair of mirror points", "标出一对对称点"],
       [
-        "The graph of $y = ax^2 + c$ is symmetric about the $y$-axis, since $x$ and $-x$ have the same square. So once you know the height at $x = 1$, you know it at $x = -1$ as well. Marking such a pair, plus the vertex $(0, c)$, is the quickest way to sketch the parabola.",
-        "$y = ax^2 + c$ 的图像关于 $y$ 轴对称，因为 $x$ 和 $-x$ 的平方相同。所以知道了 $x = 1$ 处的高度，也就知道了 $x = -1$ 处的高度。标出这样一对点，再加上顶点 $(0, c)$，是画抛物线最快的方法。",
+        "The graph of $y = ax^2 + c$ is symmetric about the $y$-axis, since $x$ and $-x$ have the same square. So once you know the height at $x = 1$, you know it at $x = -1$ as well. Marking such a pair, plus the vertex $(0, c)$, is the quickest way to sketch the parabola. For $y = 2x^2 - 1$, both $x = 1$ and $x = -1$ give $y = 2 \\cdot 1 - 1 = 1$, so the pair is $(1, 1)$ and $(-1, 1)$.\n\n> **Watch out.** The two points have the **same** height: $(-1)^2 = 1$, so $x = -1$ does not give the opposite of the height at $x = 1$. And write each point with $x$ first.",
+        "$y = ax^2 + c$ 的图像关于 $y$ 轴对称，因为 $x$ 和 $-x$ 的平方相同。所以知道了 $x = 1$ 处的高度，也就知道了 $x = -1$ 处的高度。标出这样一对点，再加上顶点 $(0, c)$，是画抛物线最快的方法。对 $y = 2x^2 - 1$，$x = 1$ 和 $x = -1$ 都给出 $y = 2 \\cdot 1 - 1 = 1$，所以这一对点是 $(1, 1)$ 和 $(-1, 1)$。\n\n> **注意。** 两个点的高度**相同**：$(-1)^2 = 1$，所以 $x = -1$ 处的高度不是 $x = 1$ 处高度的相反数。每个点都要 $x$ 在前。",
       ],
       (rng) => {
         const a = rng.pick([-3, -2, -1, 1, 2, 3]);
@@ -645,6 +657,8 @@ To find it from a drawing, follow the two lines to where they meet and read the 
         const y = a * use * use + c;
         const tail = c === 0 ? "" : c < 0 ? ` - ${-c}` : ` + ${c}`;
         const equation = `y = ${a === 1 ? "" : a === -1 ? "-" : a}x^2${tail}`;
+        const calc = `${a === 1 ? "" : a === -1 ? "-" : `${a} \\cdot `}${use * use}${tail}`;
+        const height = calc === String(y) ? `y = ${y}` : `y = ${calc} = ${y}`;
         return plotProblem({
           prompt: t(
             `Mark the two points of $${equation}$ where $x = ${use}$ and $x = ${-use}$.`,
@@ -676,8 +690,16 @@ To find it from a drawing, follow the two lines to where they meet and read the 
             },
           ],
           solution: t(
-            `Both values of $x$ have square $${use * use}$, so $y = ${a} \\cdot ${use * use} ${c < 0 ? `- ${-c}` : `+ ${c}`} = ${y}$ at each. The points are $${tex([use, y])}$ and $${tex([-use, y])}$.`,
-            `两个 $x$ 值的平方都是 $${use * use}$，所以两处都有 $y = ${a} \\cdot ${use * use} ${c < 0 ? `- ${-c}` : `+ ${c}`} = ${y}$。两点是 $${tex([use, y])}$ 和 $${tex([-use, y])}$。`,
+            `**Step 1: Square the inputs.** $${use}^2 = ${use * use}$ and $(${-use})^2 = ${use * use}$: the two inputs have the same square.
+
+**Step 2: Compute the height.** Both points have $${height}$. The points are $${tex([use, y])}$ and $${tex([-use, y])}$.
+
+**Check.** The vertex $(0, ${c})$ lies halfway between the two points, and both are ${y > c ? "above" : "below"} it by $${Math.abs(y - c)}$, as the mirror symmetry about the $y$-axis says.`,
+            `**第一步：把输入平方。** $${use}^2 = ${use * use}$，$(${-use})^2 = ${use * use}$：两个输入的平方相同。
+
+**第二步：计算高度。** 两处都有 $${height}$。两点是 $${tex([use, y])}$ 和 $${tex([-use, y])}$。
+
+**检验。** 顶点 $(0, ${c})$ 在两点的正中间，两点都在它${y > c ? "上方" : "下方"} $${Math.abs(y - c)}$ 处，正符合关于 $y$ 轴的对称。`,
           ),
           solutionAlt: t(`The parabola through both points, at height ${y}.`, `经过这两点的抛物线，高度为 ${y}。`),
           solutionMarks: [{ kind: "curve", f: (x) => a * x * x + c, accent: true }],

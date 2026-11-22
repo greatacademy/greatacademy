@@ -691,8 +691,8 @@ Check each line by its $y$-intercept and its slope. For $y = 2x - 1$ and $y = -x
       "choosing-the-drawing-of-a-parabola",
       ["Choosing the drawing of a parabola", "选出抛物线"],
       [
-        "The graph of $y = ax^2 + c$ is a parabola with its vertex at $(0, c)$, through the point $(1, a + c)$. A positive $a$ opens it upward and a negative $a$ downward; a larger size of $a$ makes it narrower. Reading the vertex and the height at $x = 1$ settles all of this at once.",
-        "$y = ax^2 + c$ 的图像是顶点在 $(0, c)$ 的抛物线，经过点 $(1, a + c)$。$a$ 为正时开口向上，为负时开口向下；$a$ 的绝对值越大，开口越窄。读出顶点和 $x = 1$ 处的高度，这些就都确定了。",
+        "The graph of $y = ax^2 + c$ is a parabola with its vertex at $(0, c)$, through the point $(1, a + c)$. A positive $a$ opens it upward and a negative $a$ downward; a larger size of $a$ makes it narrower. Reading the vertex and the height at $x = 1$ settles all of this at once. For $y = 2x^2 - 1$ the vertex is $(0, -1)$ and the point at $x = 1$ is $(1, 1)$: two units above the vertex, where $y = x^2 - 1$ would be only one unit above.\n\n> **Watch out.** The sign of $a$ and its size answer different questions. A minus sign turns the parabola over but does not change its width, and a fraction such as $\\frac{1}{2}$ makes it wider, not narrower. Check the drawing at $x = 1$: it must be exactly the size of $a$ above or below the vertex.",
+        "$y = ax^2 + c$ 的图像是顶点在 $(0, c)$ 的抛物线，经过点 $(1, a + c)$。$a$ 为正时开口向上，为负时开口向下；$a$ 的绝对值越大，开口越窄。读出顶点和 $x = 1$ 处的高度，这些就都确定了。对 $y = 2x^2 - 1$，顶点是 $(0, -1)$，$x = 1$ 处的点是 $(1, 1)$：比顶点高两个单位，而 $y = x^2 - 1$ 只高一个单位。\n\n> **注意。** $a$ 的符号和大小回答的是不同的问题。负号让抛物线翻转，但不改变宽窄；像 $\\frac{1}{2}$ 这样的分数让它变宽，而不是变窄。在 $x = 1$ 处检查图：它与顶点的高度差必须恰好等于 $a$ 的绝对值。",
       ],
       (rng) => {
         const a = rng.sign() * rng.pick([0.25, 0.5, 1, 2, 3]);
@@ -701,6 +701,7 @@ Check each line by its $y$-intercept and its slope. For $y = 2x - 1$ and $y = -x
         const figure = (d: number) => curveFigure(wide, (x) => d * x * x + c, [0, 1], shape);
         const equation = `y = ${poly([coef(a), "x^2"])}${plus(c)}`;
         const height = tex([1, a + c]);
+        const atOne = `${Math.abs(a) === 1 ? (a > 0 ? "" : "-") : `${num(coef(a))} \\cdot `}1^2${plus(c)}`;
         return figureChoice(rng, {
           prompt: t(`Which drawing shows the graph of $${equation}$?`, `哪张图是 $${equation}$ 的图像？`),
           correct: figure(a),
@@ -717,8 +718,16 @@ Check each line by its $y$-intercept and its slope. For $y = 2x - 1$ and $y = -x
             ),
           ],
           solution: t(
-            `The vertex is $${tex([0, c])}$, and at $x = 1$ the parabola reaches $${height}$. Since the coefficient $${num(coef(a))}$ is ${a > 0 ? "positive" : "negative"}, it opens ${a > 0 ? "upward" : "downward"}.`,
-            `顶点是 $${tex([0, c])}$，当 $x = 1$ 时抛物线到达 $${height}$。因为系数 $${num(coef(a))}$ 是${a > 0 ? "正数" : "负数"}，所以开口向${a > 0 ? "上" : "下"}。`,
+            `**Step 1: Read the vertex and the direction.** At $x = 0$ the square is $0$, so the vertex is $${tex([0, c])}$. Since the coefficient $${num(coef(a))}$ is ${a > 0 ? "positive" : "negative"}, the parabola opens ${a > 0 ? "upward" : "downward"}.
+
+**Step 2: Read the width.** At $x = 1$ the square is $1$, so the parabola reaches $${height}$, $${num(coef(Math.abs(a)))}$ ${Math.abs(a) > 1 ? "units" : "unit"} ${a > 0 ? "above" : "below"} the vertex. The drawing through both points is the graph.
+
+**Check.** Put $x = 1$ into the equation: $y = ${atOne} = ${num(coef(a + c))}$, the height read in the drawing.`,
+            `**第一步：读出顶点和开口方向。** $x = 0$ 时平方为 $0$，所以顶点是 $${tex([0, c])}$。因为系数 $${num(coef(a))}$ 是${a > 0 ? "正数" : "负数"}，所以开口向${a > 0 ? "上" : "下"}。
+
+**第二步：读出宽窄。** $x = 1$ 时平方为 $1$，所以抛物线到达 $${height}$，在顶点${a > 0 ? "上方" : "下方"} $${num(coef(Math.abs(a)))}$ 个单位处。经过这两点的图就是所求图像。
+
+**检验。** 把 $x = 1$ 代入方程：$y = ${atOne} = ${num(coef(a + c))}$，正是图中读出的高度。`,
           ),
         });
       },
@@ -729,18 +738,26 @@ Check each line by its $y$-intercept and its slope. For $y = 2x - 1$ and $y = -x
       "choosing-a-parabola-by-its-vertex",
       ["Choosing a parabola by its vertex", "用顶点选出抛物线"],
       [
-        "The graph of $y = (x - h)^2 + k$ is the parabola $y = x^2$ with its vertex moved to $(h, k)$. A minus sign in front of the square turns it upside down. Read the vertex from the equation before looking at the drawings.",
-        "$y = (x - h)^2 + k$ 的图像是把抛物线 $y = x^2$ 的顶点移到 $(h, k)$。平方前面的负号把它上下翻转。先从方程读出顶点，再看图。",
+        "The graph of $y = (x - h)^2 + k$ is the parabola $y = x^2$ with its vertex moved to $(h, k)$. A minus sign in front of the square turns it upside down. Read the vertex from the equation before looking at the drawings. For $y = (x + 1)^2 - 3$ the square is $0$ at $x = -1$, so the vertex is $(-1, -3)$, and one unit to its right the graph is one unit higher, at $(0, -2)$.\n\n> **Watch out.** The number inside the parentheses moves the graph the opposite way to its sign: $(x + 1)^2$ moves it $1$ to the **left**, since $x = -1$ makes the inside zero. The number added outside keeps its sign and moves the graph up or down.",
+        "$y = (x - h)^2 + k$ 的图像是把抛物线 $y = x^2$ 的顶点移到 $(h, k)$。平方前面的负号把它上下翻转。先从方程读出顶点，再看图。对 $y = (x + 1)^2 - 3$，平方在 $x = -1$ 时为 $0$，所以顶点是 $(-1, -3)$；在它右边一个单位处，图像高一个单位，在 $(0, -2)$。\n\n> **注意。** 括号里的数使图像向与它的符号相反的方向移动：$(x + 1)^2$ 使图像向**左**移 $1$，因为 $x = -1$ 时括号里为零。外面加的数保持自己的符号，使图像上下移动。",
       ],
-      (rng) =>
-        shiftChoice(
+      (rng) => {
+        const p = shiftChoice(
           rng,
           (x) => x * x,
           (inner) => `(${inner})^2`,
           ({ h }) => [h, h + 1],
           ["A parabola", "一条抛物线"],
           ["the vertex", "顶点"],
-        ),
+        );
+        return {
+          ...p,
+          solution: t(
+            `${p.solution.en}\n\n**Check.** In the chosen drawing the vertex is the lowest point, and one unit to the right of the vertex the graph is one unit higher, just as $y = x^2$ rises from $(0, 0)$ to $(1, 1)$.`,
+            `${p.solution["zh-CN"]}\n\n**检验。** 所选的图中顶点是最低点，在顶点右边一个单位处图像高一个单位，正如 $y = x^2$ 从 $(0, 0)$ 升到 $(1, 1)$。`,
+          ),
+        };
+      },
     ),
   ],
   "graphing-elementary-cubic-functions": [
