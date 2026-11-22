@@ -754,8 +754,8 @@ const SPECS: readonly Spec[] = [
       "认真听老师、家长或同学说的一段话：讲了什么事，说话的人请你做什么。",
     ),
     intro: t(
-      "Listening carefully means catching two things: what the talk is about, and what the speaker wants you to do. A teacher says: “明天我们去公园春游。早上八点在学校门口集合，请带上水和帽子。” It is about tomorrow's outing to the park; and the teacher asks you to bring water and a hat.\n\nWhat is said is written out here for you to read, just as you would hear it. The first knowledge point asks what a talk is about, the second what the speaker asked for.",
-      "认真听，要听清两件事：这段话讲的是什么事，说话的人请你做什么。比如老师说：“明天我们去公园春游。早上八点在学校门口集合，请带上水和帽子。”讲的是明天去公园春游；老师请大家带上水和帽子。\n\n这里把说的话写了出来，读的时候就像在听一样。第一个知识点问一段话讲了什么事，第二个问说话的人请你做什么。",
+      "Listening carefully means catching two things: what the talk is about, and what the speaker wants you to do. A teacher says: “下星期一我们去看画展。上午九点在教室门口排队，请带上本子和笔。” It is about next Monday's visit to the art show; and the teacher asks you to bring a notebook and a pen.\n\nWhat is said is written out here for you to read, just as you would hear it. The first knowledge point asks what a talk is about, the second what the speaker asked for.",
+      "认真听，要听清两件事：这段话讲的是什么事，说话的人请你做什么。比如老师说：“下星期一我们去看画展。上午九点在教室门口排队，请带上本子和笔。”讲的是下星期一去看画展；老师请大家带上本子和笔。\n\n这里把说的话写了出来，读的时候就像在听一样。第一个知识点问一段话讲了什么事，第二个问说话的人请你做什么。",
     ),
     texts: pieceTexts(TALKS),
     after: ["reading-1-stories"],
@@ -764,8 +764,8 @@ const SPECS: readonly Spec[] = [
         "about",
         t("What a Talk Is About", "一段话讲了什么"),
         t(
-          "What a talk is about is usually said at its start. Listen for the thing it tells: an outing, a change, a visit.\n\nIn “下午的音乐课改在教室里上，因为外面下雨了。”, the talk is about the music lesson moving into the classroom.\n\n> **Watch out.** Keep every word as it was said. 改在教室里上 is not 不上了: a changed word changes the message.",
-          "一段话讲什么事，常常在开头就说了。要听清它说的是哪件事：出去玩、有变动、谁要来。\n\n比如“下午的音乐课改在教室里上，因为外面下雨了。”讲的是音乐课改在教室里上。\n\n> **注意。** 要按原话记住。“改在教室里上”不是“不上了”，换了一个词，意思就变了。",
+          "What a talk is about is usually said at its start. Listen for the thing it tells: an outing, a change, a visit.\n\nIn “今天的体育课改到明天上，因为操场在修。”, the talk is about the PE lesson moving to tomorrow.\n\n> **Watch out.** Keep every word as it was said. 改到明天上 is not 不上了: a changed word changes the message.",
+          "一段话讲什么事，常常在开头就说了。要听清它说的是哪件事：出去玩、有变动、谁要来。\n\n比如“今天的体育课改到明天上，因为操场在修。”讲的是体育课改到明天上。\n\n> **注意。** 要按原话记住。“改到明天上”不是“不上了”，换了一个词，意思就变了。",
         ),
         pieceGenerator(TALKS, 0, TALK),
       ],
@@ -773,8 +773,8 @@ const SPECS: readonly Spec[] = [
         "asked",
         t("What the Speaker Asked For", "说话的人请你做什么"),
         t(
-          "What the speaker wants you to do usually follows 请, 要 or 不要. Listen for it, and for all of it.\n\nIn “出门前穿上大衣，带上帽子。”, Mother asks for two things: put on a coat and a hat.\n\n> **Watch out.** A request may have two parts. Remembering only one of them, such as only the coat, is not doing what was asked.",
-          "说话的人请你做的事，常常跟在“请”“要”“不要”后面。要听清，还要听全。\n\n比如“出门前穿上大衣，带上帽子。”妈妈请你做两件事：穿上大衣，带上帽子。\n\n> **注意。** 请你做的事可能有两件。只记住一件，比如只穿大衣，就没有做到别人请你做的事。",
+          "What the speaker wants you to do usually follows 请, 要 or 不要. Listen for it, and for all of it.\n\nIn “吃饭前洗洗手，再摆好碗筷。”, Mother asks for two things: wash your hands and set out the bowls and chopsticks.\n\n> **Watch out.** A request may have two parts. Remembering only one of them, such as only washing your hands, is not doing what was asked.",
+          "说话的人请你做的事，常常跟在“请”“要”“不要”后面。要听清，还要听全。\n\n比如“吃饭前洗洗手，再摆好碗筷。”妈妈请你做两件事：洗手，摆好碗筷。\n\n> **注意。** 请你做的事可能有两件。只记住一件，比如只洗了手，就没有做到别人请你做的事。",
         ),
         pieceGenerator(TALKS, 1, TALK),
       ],
@@ -799,8 +799,8 @@ const SPECS: readonly Spec[] = [
         "greeting",
         t("Greeting, Thanking and Saying Sorry", "问好、道谢和道歉"),
         t(
-          "First think what has just happened: you meet someone, someone helps you, or you have done something wrong. Then say the words for it.\n\nYou knock over a classmate's cup: say “对不起，我帮你擦干净。”, sorry and an offer to put it right.\n\n> **Watch out.** Saying sorry means owning what you did. “是水杯自己倒的” puts the blame on the cup: it is not saying sorry.",
-          "先想一想刚才发生了什么：遇见了人，别人帮了你，还是自己做错了事。再说合适的话。\n\n比如你把同学的水杯碰倒了，要说“对不起，我帮你擦干净。”，既道歉，又想办法弥补。\n\n> **注意。** 道歉就要承认是自己做的。“是水杯自己倒的”，是把错推给了水杯，不是道歉。",
+          "First think what has just happened: you meet someone, someone helps you, or you have done something wrong. Then say the words for it.\n\nYou tread on a classmate's foot in the line: say “对不起，踩疼你了吧？”, sorry and care for how they are.\n\n> **Watch out.** Saying sorry means owning what you did. “谁让你的脚伸出来” puts the blame on the other: it is not saying sorry.",
+          "先想一想刚才发生了什么：遇见了人，别人帮了你，还是自己做错了事。再说合适的话。\n\n比如排队时你踩到了同学的脚，要说“对不起，踩疼你了吧？”，既道歉，又关心他。\n\n> **注意。** 道歉就要承认是自己做的。“谁让你的脚伸出来”，是把错推给了别人，不是道歉。",
         ),
         ruleGenerator(
           t("Which reply is polite and fits the moment?", "这时说哪一句好？"),
@@ -821,8 +821,8 @@ const SPECS: readonly Spec[] = [
         "turns",
         t("Asking to Borrow and Waiting One's Turn", "借东西和排队等候"),
         t(
-          "To use what is someone else's, ask first and wait for a yes; give it back with thanks. Where people are waiting, take your place at the end.\n\nYou want your deskmate's ruler: “我能用一下你的尺子吗？”\n\n> **Watch out.** Taking first and asking later is not asking. Wait for the other person to say yes.",
-          "想用别人的东西，先问一问，等别人同意；用完了要还，还要道谢。大家在排队，就站到队伍后面。\n\n比如想用同桌的尺子，要说：“我能用一下你的尺子吗？”\n\n> **注意。** 先拿再问，不算是问。要等别人同意了再用。",
+          "To use what is someone else's, ask first and wait for a yes; give it back with thanks. Where people are waiting, take your place at the end.\n\nYou want to try a classmate's skipping rope: “我能借一下你的跳绳吗？”\n\n> **Watch out.** Taking first and asking later is not asking. Wait for the other person to say yes.",
+          "想用别人的东西，先问一问，等别人同意；用完了要还，还要道谢。大家在排队，就站到队伍后面。\n\n比如想借同学的跳绳，要说：“我能借一下你的跳绳吗？”\n\n> **注意。** 先拿再问，不算是问。要等别人同意了再用。",
         ),
         ruleGenerator(
           t("Which is the right thing to say or do?", "这时该怎么说、怎么做？"),
@@ -850,8 +850,8 @@ const SPECS: readonly Spec[] = [
       "把一件事说清楚：按先后顺序讲，看出讲的时候漏了什么。",
     ),
     intro: t(
-      "To tell something clearly, say it in the order it happened, and leave nothing out. Start with when, who and where: “星期天，我和妈妈去了公园。” Then what happened: “我们先看花，后来又去划船。” Then how it ended: “天黑了，我们才高高兴兴地回家。”\n\nThe first knowledge point puts the parts of a telling in order; the second finds what a telling leaves out.",
-      "要把一件事说清楚，就按事情发生的先后讲，什么都不要漏。先说什么时候、谁、在哪里：“星期天，我和妈妈去了公园。”再说发生了什么：“我们先看花，后来又去划船。”最后说结果：“天黑了，我们才高高兴兴地回家。”\n\n第一个知识点按顺序排好讲述的各部分，第二个看出讲述漏了什么。",
+      "To tell something clearly, say it in the order it happened, and leave nothing out. Start with when, who and where: “星期六，我和爷爷去了河边。” Then what happened: “我们先钓鱼，后来又捡石子。” Then how it ended: “太阳下山了，我们才提着小桶回家。”\n\nThe first knowledge point puts the parts of a telling in order; the second finds what a telling leaves out.",
+      "要把一件事说清楚，就按事情发生的先后讲，什么都不要漏。先说什么时候、谁、在哪里：“星期六，我和爷爷去了河边。”再说发生了什么：“我们先钓鱼，后来又捡石子。”最后说结果：“太阳下山了，我们才提着小桶回家。”\n\n第一个知识点按顺序排好讲述的各部分，第二个看出讲述漏了什么。",
     ),
     texts: ruleTexts([...ORDERED, ...GAPS]),
     after: ["speaking-1-listening"],
@@ -860,8 +860,8 @@ const SPECS: readonly Spec[] = [
         "order",
         t("The Parts in Order", "按顺序讲"),
         t(
-          "A telling goes in the order things happened: first when, who and where, then what happened, last how it ended.\n\nOf “最后，车子变得干干净净的。”, “昨天，我和爸爸一起洗车。” and “我们先打来水，再一起洗。”, the one with 昨天 comes first and the one with 最后 last.\n\n> **Watch out.** Words such as 先, 后来, 最后 and 天黑了 show the order. A telling that starts with the ending is hard to follow.",
-          "讲一件事，要按事情发生的先后：先说什么时候、谁、在哪里，再说发生了什么，最后说结果。\n\n比如“最后，车子变得干干净净的。”“昨天，我和爸爸一起洗车。”“我们先打来水，再一起洗。”有“昨天”的一句在前，有“最后”的一句在后。\n\n> **注意。** “先”“后来”“最后”“天黑了”这些词能看出先后。一开头就讲结果，别人就听不明白了。",
+          "A telling goes in the order things happened: first when, who and where, then what happened, last how it ended.\n\nOf “最后，小树站得直直的。”, “上午，我和姐姐在院子里种树。” and “我们先挖了一个坑，再把小树放进去。”, the one with 上午 comes first and the one with 最后 last.\n\n> **Watch out.** Words such as 先, 后来, 最后 and 太阳下山了 show the order. A telling that starts with the ending is hard to follow.",
+          "讲一件事，要按事情发生的先后：先说什么时候、谁、在哪里，再说发生了什么，最后说结果。\n\n比如“最后，小树站得直直的。”“上午，我和姐姐在院子里种树。”“我们先挖了一个坑，再把小树放进去。”有“上午”的一句在前，有“最后”的一句在后。\n\n> **注意。** “先”“后来”“最后”“太阳下山了”这些词能看出先后。一开头就讲结果，别人就听不明白了。",
         ),
         ruleGenerator(
           t("Which telling puts things in the right order?", "哪一种讲法，先做的事先讲，后做的事后讲？"),
@@ -883,8 +883,8 @@ const SPECS: readonly Spec[] = [
         "missing",
         t("What a Telling Leaves Out", "讲述漏了什么"),
         t(
-          "A clear telling says when, where, who, what happened and how it ended. Ask a telling each of these in turn, and see which it does not answer.\n\n“我和妈妈去了公园，我们看了花，还划了船，玩得很开心。” says who, where, what and how it ended, but not when.\n\n> **Watch out.** A part may be said in few words, such as 早上. Check that a part is really missing before choosing it.",
-          "把事情说清楚，要说什么时候、在哪里、谁、发生了什么、结果怎么样。拿这几个问题一个一个问讲述，看哪一个没有回答。\n\n比如“我和妈妈去了公园，我们看了花，还划了船，玩得很开心。”说了谁、在哪里、做了什么、结果怎么样，没有说什么时候。\n\n> **注意。** 有的部分只用一两个字说了，比如“早上”。要看准这一部分确实没有说，再选它。",
+          "A clear telling says when, where, who, what happened and how it ended. Ask a telling each of these in turn, and see which it does not answer.\n\n“我和哥哥在楼下踢球，踢进了好几个，玩得满头大汗。” says who, where, what and how it ended, but not when.\n\n> **Watch out.** A part may be said in few words, such as 早上. Check that a part is really missing before choosing it.",
+          "把事情说清楚，要说什么时候、在哪里、谁、发生了什么、结果怎么样。拿这几个问题一个一个问讲述，看哪一个没有回答。\n\n比如“我和哥哥在楼下踢球，踢进了好几个，玩得满头大汗。”说了谁、在哪里、做了什么、结果怎么样，没有说什么时候。\n\n> **注意。** 有的部分只用一两个字说了，比如“早上”。要看准这一部分确实没有说，再选它。",
         ),
         ruleGenerator(
           t("What does this telling leave out?", "这段话少说了什么？"),
@@ -913,8 +913,8 @@ const SPECS: readonly Spec[] = [
       "请教和问路：问得清楚，称呼得当。",
     ),
     intro: t(
-      "To ask someone for help or the way, call them in the way that suits them and say clearly what you want to know. “叔叔，请问去图书馆怎么走？” does both: 叔叔 suits a grown man, 请问 is polite, and the question says just where you want to go.\n\nThe first knowledge point asks for a clear question, the second for the right form of address.",
-      "向别人请教或问路，要称呼得当，把想知道的事问清楚。“叔叔，请问去图书馆怎么走？”两样都做到了：“叔叔”合适称呼成年男子，“请问”有礼貌，问题也说清了要去哪里。\n\n第一个知识点要问得清楚，第二个要称呼得当。",
+      "To ask someone for help or the way, call them in the way that suits them and say clearly what you want to know. “阿姨，请问去火车站怎么走？” does both: 阿姨 suits a grown woman, 请问 is polite, and the question says just where you want to go.\n\nThe first knowledge point asks for a clear question, the second for the right form of address.",
+      "向别人请教或问路，要称呼得当，把想知道的事问清楚。“阿姨，请问去火车站怎么走？”两样都做到了：“阿姨”合适称呼成年女子，“请问”有礼貌，问题也说清了要去哪里。\n\n第一个知识点要问得清楚，第二个要称呼得当。",
     ),
     texts: ruleTexts([...CLEAR, ...ADDRESS]),
     after: ["speaking-1-manners"],
@@ -923,8 +923,8 @@ const SPECS: readonly Spec[] = [
         "clear",
         t("A Clear Question", "问得清楚"),
         t(
-          "A clear question names exactly what you want to know: the place, the thing, the number of the exercise.\n\n“叔叔，怎么走？” does not say where to; “叔叔，请问去图书馆怎么走？” does.\n\n> **Watch out.** Words like 这个 and 那个 are clear only to you. Name the thing, so that the other person can answer at once.",
-          "问得清楚，就要说出你到底想知道什么：哪个地方，什么东西，第几道题。\n\n“叔叔，怎么走？”没有说去哪里；“叔叔，请问去图书馆怎么走？”就说清楚了。\n\n> **注意。** “这个”“那个”只有你自己明白。要说出是什么，别人才能马上回答你。",
+          "A clear question names exactly what you want to know: the place, the thing, the number of the exercise.\n\n“阿姨，怎么走？” does not say where to; “阿姨，请问去火车站怎么走？” does.\n\n> **Watch out.** Words like 这个 and 那个 are clear only to you. Name the thing, so that the other person can answer at once.",
+          "问得清楚，就要说出你到底想知道什么：哪个地方，什么东西，第几道题。\n\n“阿姨，怎么走？”没有说去哪里；“阿姨，请问去火车站怎么走？”就说清楚了。\n\n> **注意。** “这个”“那个”只有你自己明白。要说出是什么，别人才能马上回答你。",
         ),
         ruleGenerator(
           t("Which question is asked clearly?", "哪一句问得清楚？"),
@@ -945,8 +945,8 @@ const SPECS: readonly Spec[] = [
         "address",
         t("The Right Form of Address", "称呼得当"),
         t(
-          "Call a person by what suits them: 爷爷 or 奶奶 for an old person, 叔叔 or 阿姨 for a grown-up, 老师 or 医生 by their work, 大哥哥 or 大姐姐 for an older child; and say 您 to elders.\n\nTo ask an old man the way: “老爷爷，请问去公园怎么走？”\n\n> **Watch out.** 喂 is not a way to call anyone you are asking for help; and calling a grown-up 小朋友, or a teacher by a nickname, does not suit them.",
-          "称呼要合乎对方的年纪和身份：老人叫“爷爷”“奶奶”，大人叫“叔叔”“阿姨”，按工作叫“老师”“医生”，比你大的学生叫“大哥哥”“大姐姐”；对长辈说“您”。\n\n比如向一位老爷爷问路：“老爷爷，请问去公园怎么走？”\n\n> **注意。** 请别人帮忙，不能用“喂”来叫人；把大人叫“小朋友”，把老师叫“小王”，都不合适。",
+          "Call a person by what suits them: 爷爷 or 奶奶 for an old person, 叔叔 or 阿姨 for a grown-up, 老师 or 医生 by their work, 大哥哥 or 大姐姐 for an older child; and say 您 to elders.\n\nTo ask an old woman the way: “老奶奶，请问去菜市场怎么走？”\n\n> **Watch out.** 喂 is not a way to call anyone you are asking for help; and calling a grown-up 小朋友, or a teacher by a nickname, does not suit them.",
+          "称呼要合乎对方的年纪和身份：老人叫“爷爷”“奶奶”，大人叫“叔叔”“阿姨”，按工作叫“老师”“医生”，比你大的学生叫“大哥哥”“大姐姐”；对长辈说“您”。\n\n比如向一位老奶奶问路：“老奶奶，请问去菜市场怎么走？”\n\n> **注意。** 请别人帮忙，不能用“喂”来叫人；把大人叫“小朋友”，把老师叫“小王”，都不合适。",
         ),
         ruleGenerator(
           t("Which way of calling the person is right?", "哪一句称呼得当？"),
@@ -971,8 +971,8 @@ const SPECS: readonly Spec[] = [
       "转告：把口信完整地、不改样地说给要听的人，说清时间。",
     ),
     intro: t(
-      "To pass on a message is to tell someone what another person said for them. Aunt Li phones: “请跟你妈妈说，明天上午十点，我到你家来拿书。” You tell Mother: “妈妈，李阿姨说明天上午十点来我们家拿书。” Who said it, the time and the thing are all kept.\n\nThe first knowledge point asks for the whole message, the second for whom it is meant and when.",
-      "转告，就是把别人让你带给某个人的话说给他听。李阿姨打电话来：“请跟你妈妈说，明天上午十点，我到你家来拿书。”你跟妈妈说：“妈妈，李阿姨说明天上午十点来我们家拿书。”谁说的、什么时间、什么事，一样也没少。\n\n第一个知识点要转告完整，第二个要说清给谁、什么时候。",
+      "To pass on a message is to tell someone what another person said for them. Uncle Wang phones: “请跟你爸爸说，后天下午两点，我在小区门口等他。” You tell Father: “爸爸，王叔叔说后天下午两点在小区门口等你。” Who said it, the time, the place and the thing are all kept.\n\nThe first knowledge point asks for the whole message, the second for whom it is meant and when.",
+      "转告，就是把别人让你带给某个人的话说给他听。王叔叔打电话来：“请跟你爸爸说，后天下午两点，我在小区门口等他。”你跟爸爸说：“爸爸，王叔叔说后天下午两点在小区门口等你。”谁说的、什么时间、什么地方、什么事，一样也没少。\n\n第一个知识点要转告完整，第二个要说清给谁、什么时候。",
     ),
     texts: pieceTexts(MESSAGES),
     after: ["speaking-1-listening"],
@@ -981,8 +981,8 @@ const SPECS: readonly Spec[] = [
         "whole",
         t("The Whole Message", "完整的口信"),
         t(
-          "A whole message keeps who said it, the time, the place and the thing, with nothing changed. Turn “I” and “you” round, as the new listener needs.\n\n“请跟你妈妈说，明天上午十点，我到你家来拿书。” becomes “妈妈，李阿姨说明天上午十点来我们家拿书。”\n\n> **Watch out.** “妈妈，李阿姨说要来拿书” leaves out the time; “明天下午” changes it. Either way, Mother cannot be ready.",
-          "完整的口信，要说清谁说的、什么时间、什么地方、什么事，一点也不改。“我”“你”要按听的人换过来。\n\n“请跟你妈妈说，明天上午十点，我到你家来拿书。”转告成：“妈妈，李阿姨说明天上午十点来我们家拿书。”\n\n> **注意。** “妈妈，李阿姨说要来拿书”漏了时间；说成“明天下午”又改了时间。这样妈妈都没法准备。",
+          "A whole message keeps who said it, the time, the place and the thing, with nothing changed. Turn “I” and “you” round, as the new listener needs.\n\nGrandma Liu's “请跟你奶奶说，今天晚上七点，我来你家一起包饺子。” becomes “奶奶，刘奶奶说今天晚上七点来我们家一起包饺子。”\n\n> **Watch out.** “奶奶，刘奶奶说要来包饺子” leaves out the time; “明天晚上” changes it. Either way, Grandma cannot be ready.",
+          "完整的口信，要说清谁说的、什么时间、什么地方、什么事，一点也不改。“我”“你”要按听的人换过来。\n\n刘奶奶说：“请跟你奶奶说，今天晚上七点，我来你家一起包饺子。”转告成：“奶奶，刘奶奶说今天晚上七点来我们家一起包饺子。”\n\n> **注意。** “奶奶，刘奶奶说要来包饺子”漏了时间；说成“明天晚上”又改了时间。这样奶奶都没法准备。",
         ),
         pieceGenerator(MESSAGES, 0, TALK),
       ],
@@ -990,8 +990,8 @@ const SPECS: readonly Spec[] = [
         "who-when",
         t("Who It Is For and When", "给谁、什么时候"),
         t(
-          "A message is for one person, named after 跟……说, and often has a time. Find both before passing it on.\n\nIn “请跟你爷爷说，星期天早上，我们一起去公园下棋。”, it is for Grandpa, and the time is Sunday morning.\n\n> **Watch out.** The one who says the message is not the one it is for: Grandpa Zhang speaks, but the message is for your grandpa.",
-          "口信是给一个人的，常常在“跟”的后面说出来；口信里还常有时间。转告前，两样都要找准。\n\n比如“请跟你爷爷说，星期天早上，我们一起去公园下棋。”口信是给爷爷的，时间是星期天早上。\n\n> **注意。** 说口信的人不是要听口信的人：说话的是张爷爷，口信却是给你爷爷的。",
+          "A message is for one person, named after 跟……说, and often has a time. Find both before passing it on.\n\nXiaofang says: “请跟你姐姐说，星期五下午，我们一起去图书馆还书。” It is for your sister, and the time is Friday afternoon.\n\n> **Watch out.** The one who says the message is not the one it is for: Xiaofang speaks, but the message is for your sister.",
+          "口信是给一个人的，常常在“跟”的后面说出来；口信里还常有时间。转告前，两样都要找准。\n\n比如小芳说：“请跟你姐姐说，星期五下午，我们一起去图书馆还书。”口信是给姐姐的，时间是星期五下午。\n\n> **注意。** 说口信的人不是要听口信的人：说话的是小芳，口信却是给你姐姐的。",
         ),
         pieceGenerator(MESSAGES, 1, TALK),
       ],
@@ -1003,8 +1003,8 @@ const SPECS: readonly Spec[] = [
     title: t("Talking It Over", "商量"),
     summary: t("Talking things over: making a suggestion, and answering another's idea kindly.", "商量：提出建议，友好地回应别人的想法。"),
     intro: t(
-      "To talk something over is to find, together, a way both can agree to. You and your deskmate both want one coloured pen: “我们轮流用吧，你先用，好吗？” says your idea and asks for theirs. When someone else has an idea you do not want, answer kindly and say why: “谢谢你叫我，今天我想看书，明天我们一起踢，好吗？”\n\nThe first knowledge point makes a suggestion, the second answers another's idea.",
-      "商量，就是一起想一个大家都同意的办法。你和同桌都想用一支彩笔，说“我们轮流用吧，你先用，好吗？”，说出了自己的想法，也问了对方的意见。别人提出的想法你不想照做，也要友好地回答，说清原因：“谢谢你叫我，今天我想看书，明天我们一起踢，好吗？”\n\n第一个知识点提出建议，第二个回应别人的想法。",
+      "To talk something over is to find, together, a way both can agree to. You and your deskmate both want to read one new picture magazine: “我们一起看吧，你来翻页，好吗？” says your idea and asks for theirs. When someone asks you to skip rope and you cannot, answer kindly and say why: “谢谢你叫我，今天我要帮奶奶买菜，明天我们一起跳，好吗？”\n\nThe first knowledge point makes a suggestion, the second answers another's idea.",
+      "商量，就是一起想一个大家都同意的办法。你和同桌都想看一本新画报，说“我们一起看吧，你来翻页，好吗？”，说出了自己的想法，也问了对方的意见。别人叫你去跳绳，你去不了，也要友好地回答，说清原因：“谢谢你叫我，今天我要帮奶奶买菜，明天我们一起跳，好吗？”\n\n第一个知识点提出建议，第二个回应别人的想法。",
     ),
     texts: ruleTexts([...SUGGESTING, ...ANSWERING]),
     after: ["speaking-1-manners"],
@@ -1013,8 +1013,8 @@ const SPECS: readonly Spec[] = [
         "suggesting",
         t("Making a Suggestion", "提出建议"),
         t(
-          "A suggestion says your idea and asks what the other thinks, with 好吗, 行吗 or 怎么样. A good one gives both sides a turn or a way.\n\nWhen you and your brother want different things: “我们上午去公园，下午在家看书，好不好？”\n\n> **Watch out.** 必须 and 一定要 order, they do not suggest. Talking it over leaves the other free to say no.",
-          "提建议，要说出自己的想法，再用“好吗”“行吗”“怎么样”问问别人。好的建议，让双方都能轮到，都有办法。\n\n比如你和弟弟想做的不一样：“我们上午去公园，下午在家看书，好不好？”\n\n> **注意。** “必须”“一定要”是命令，不是建议。商量要让别人也能说“不”。",
+          "A suggestion says your idea and asks what the other thinks, with 好吗, 行吗 or 怎么样. A good one gives both sides a turn or a way.\n\nWhen you and your sister both want the swing: “你先荡十下，再换我荡十下，好不好？”\n\n> **Watch out.** 必须 and 一定要 order, they do not suggest. Talking it over leaves the other free to say no.",
+          "提建议，要说出自己的想法，再用“好吗”“行吗”“怎么样”问问别人。好的建议，让双方都能轮到，都有办法。\n\n比如你和妹妹都想荡秋千：“你先荡十下，再换我荡十下，好不好？”\n\n> **注意。** “必须”“一定要”是命令，不是建议。商量要让别人也能说“不”。",
         ),
         ruleGenerator(
           t("Which is the best way to suggest it?", "哪一句是在好好商量？"),
@@ -1035,8 +1035,8 @@ const SPECS: readonly Spec[] = [
         "answering",
         t("Answering Another Idea Kindly", "友好地回应别人的想法"),
         t(
-          "Answer someone's idea kindly: thank them or say it is a good idea. If you want something else, say why and offer another way.\n\nMother suggests noodles and you want rice: “妈妈，我今天想吃米饭，明天吃面条可以吗？”\n\n> **Watch out.** You may say no, but not by calling the idea stupid or dull. Say what you want and why, kindly.",
-          "回应别人的想法要友好：先道谢，或者说这个主意好。自己想做别的，就说出原因，再提一个办法。\n\n比如妈妈想吃面条，你想吃米饭：“妈妈，我今天想吃米饭，明天吃面条可以吗？”\n\n> **注意。** 可以不同意，但不能说别人的主意笨、没意思。要友好地说出自己想怎样，为什么。",
+          "Answer someone's idea kindly: thank them or say it is a good idea. If you want something else, say why and offer another way.\n\nFather wants to see a film and you want to fly a kite: “爸爸，今天风大，我们去放风筝，下次再看电影可以吗？”\n\n> **Watch out.** You may say no, but not by calling the idea stupid or dull. Say what you want and why, kindly.",
+          "回应别人的想法要友好：先道谢，或者说这个主意好。自己想做别的，就说出原因，再提一个办法。\n\n比如爸爸想去看电影，你想去放风筝：“爸爸，今天风大，我们去放风筝，下次再看电影可以吗？”\n\n> **注意。** 可以不同意，但不能说别人的主意笨、没意思。要友好地说出自己想怎样，为什么。",
         ),
         ruleGenerator(
           t("Which answer is kind?", "哪一句回应得友好？"),

@@ -60,8 +60,8 @@ const SPECS: readonly ReadingSpec[] = [
       "读公有领域的古诗，附注释：诗句描绘的情境，诗中表达的情感。",
     ),
     intro: t(
-      "A classical poem gives a scene and, through it, a feeling. In 王维's “人闲桂花落，夜静春山空”, the blossom falls and one notices it: the spring night on the hill is so still that a falling flower can be heard.\n\nRead the notes first, then picture the place, the time and what moves in it; then ask what the poet feels there. The first knowledge point asks the scene, the second the feeling.",
-      "古诗通过一个情境表达一种情感。王维的“人闲桂花落，夜静春山空”，桂花落下来也能觉察到：春天夜里的山，静得连花落都听得见。\n\n先读注释，再想象诗中的地点、时间和其中的动静；然后想一想诗人在这里有什么感受。第一个知识点问情境，第二个问情感。",
+      "A classical poem gives a scene and, through it, a feeling. In 叶绍翁's “萧萧梧叶送寒声，江上秋风动客情”, the plane leaves rustle in the cold and the autumn wind on the river stirs a traveller far from home: the scene brings on the feeling.\n\nRead the notes first, then picture the place, the time and what moves in it; then ask what the poet feels there. The first knowledge point asks the scene, the second the feeling.",
+      "古诗通过一个情境表达一种情感。叶绍翁的“萧萧梧叶送寒声，江上秋风动客情”，梧桐叶在寒风里萧萧作响，江上的秋风吹动了出门在外的人的思乡之情：景物引出了情感。\n\n先读注释，再想象诗中的地点、时间和其中的动静；然后想一想诗人在这里有什么感受。第一个知识点问情境，第二个问情感。",
     ),
     data: POEMS_5,
     kind: POEM,
@@ -71,16 +71,16 @@ const SPECS: readonly ReadingSpec[] = [
         "scene",
         t("The Scene", "诗中的情境"),
         t(
-          "Find the line that answers the question, read its note, and picture it: when it is, where, and what is seen or heard.\n\nWhat startled the birds in “鸟鸣涧”? “月出惊山鸟”: the moon rising.\n\n> **Watch out.** A poem's season and hour are in its words: “春山” is spring, not the autumn the 桂 might suggest. Answer from the line, not from what one usually expects.",
-          "找到回答问题的诗句，读一读注释，再想象画面：什么时候、在哪里、看见了什么、听见了什么。\n\n《鸟鸣涧》里，山鸟为什么被惊动了？“月出惊山鸟”：是月亮升起来了。\n\n> **注意。** 诗中的季节和时间要看诗句：“春山”说的是春天，不能因为写到桂花就以为是秋天。要按诗句回答，不能按平常的印象。",
+          "Find the line that answers the question, read its note, and picture it: when it is, where, and what is seen or heard.\n\nIn “宿新市徐公店”, why can the child not find the butterfly? “飞入菜花无处寻”: the yellow butterfly has flown into the yellow rape flowers.\n\n> **Watch out.** Answer from the line, not from what one usually expects: the butterfly has not flown away, as butterflies usually do; it “flew into the rape flowers”, yellow among yellow.",
+          "找到回答问题的诗句，读一读注释，再想象画面：什么时候、在哪里、看见了什么、听见了什么。\n\n《宿新市徐公店》里，孩子为什么找不到蝴蝶了？“飞入菜花无处寻”：黄蝴蝶飞进了黄色的菜花里。\n\n> **注意。** 要按诗句回答，不能按平常的印象：蝴蝶不是像平常那样飞走了，诗里说的是“飞入菜花”，黄蝴蝶混在黄菜花里，分不出来。",
         ),
       ],
       [
         "feeling",
         t("The Feeling", "诗中的情感"),
         t(
-          "The feeling of a poem is carried by what the poet chooses to show, and often stated in one line. Find that line, and ask what someone who writes it feels.\n\n“自古逢秋悲寂寥，我言秋日胜春朝”: where others find autumn sad, 刘禹锡 says it is better than spring. His feeling is bold and cheerful.\n\n> **Watch out.** A season does not fix a feeling: autumn can be sad in one poem and glad in another. Go by the words of this poem.",
-          "诗的情感藏在诗人写的景物和事情里，也常常由一句诗直接说出来。找到这一句，想一想写下它的人是什么心情。\n\n“自古逢秋悲寂寥，我言秋日胜春朝”：别人都觉得秋天悲凉，刘禹锡却说秋天胜过春天。他的心情是豪迈、乐观的。\n\n> **注意。** 季节不能决定情感：同样写秋天，有的诗悲凉，有的诗欢快。要看这首诗的诗句。",
+          "The feeling of a poem is carried by what the poet chooses to show, and often stated in one line. Find that line, and ask what someone who writes it feels.\n\n“不要人夸好颜色，只留清气满乾坤”: 王冕 wants no praise for the plum's looks, only to leave its pure fragrance in the world. His feeling is pride in an upright, modest heart.\n\n> **Watch out.** A season does not fix a feeling: 苏轼's “一年好景君须记，最是橙黄橘绿时” calls late autumn the finest time of the year, and is glad, not sad. Go by the words of this poem.",
+          "诗的情感藏在诗人写的景物和事情里，也常常由一句诗直接说出来。找到这一句，想一想写下它的人是什么心情。\n\n“不要人夸好颜色，只留清气满乾坤”：王冕不要别人夸墨梅的颜色好看，只想把清香留在天地间。他表达的是不求赞美、坚守清白的情怀。\n\n> **注意。** 季节不能决定情感：苏轼的“一年好景君须记，最是橙黄橘绿时”，说深秋初冬是一年里最好的时候，心情是欢快的，并不悲凉。要看这首诗的诗句。",
         ),
       ],
     ],
@@ -435,8 +435,8 @@ const SPECS: readonly ReadingSpec[] = [
       "读公有领域的古诗，附注释：诗句的停顿、韵脚和句式，诗中表达的情感。",
     ),
     intro: t(
-      "A classical poem is heard as well as read. A line of five characters pauses after two, “绿树/村边合”, and one of seven after four, “落花时节/又逢君”; the lines that rhyme end alike: 家, 斜, 麻, 花 in “过故人庄”, where the note tells that 斜 was once read xiá.\n\nRhythm and rhyme carry the feeling: the even, easy lines of “过故人庄” match the poet's ease among friends and fields. The first knowledge point asks the rhythm and rhyme, the second the feeling.",
-      "古诗不但要看，还要听。五言诗一般在第二个字后停顿，如“绿树/村边合”；七言诗一般在第四个字后停顿，如“落花时节/又逢君”。押韵的句子末尾的字读起来相近：《过故人庄》押的是家、斜、麻、花，注释告诉我们“斜”古时读 xiá。\n\n韵律节奏也帮着表达情感：《过故人庄》的诗句平和舒缓，正合诗人在农家做客的悠闲愉快。第一个知识点问韵律节奏，第二个问情感。",
+      "A classical poem is heard as well as read. A line of five characters pauses after two, “千山/鸟飞绝”, and one of seven after four, “黄沙百战/穿金甲”; the lines that rhyme end alike: 川, 烟, 田 in “乡村四月”.\n\nRhythm and rhyme carry the feeling: the even, flowing lines of “乡村四月” match the busy, peaceful countryside of early summer. The first knowledge point asks the rhythm and rhyme, the second the feeling.",
+      "古诗不但要看，还要听。五言诗一般在第二个字后停顿，如“千山/鸟飞绝”；七言诗一般在第四个字后停顿，如“黄沙百战/穿金甲”。押韵的句子末尾的字读起来相近：《乡村四月》押的是川、烟、田。\n\n韵律节奏也帮着表达情感：《乡村四月》的诗句平和流畅，正合初夏乡村忙碌而安宁的景象。第一个知识点问韵律节奏，第二个问情感。",
     ),
     data: POEMS_6,
     kind: POEM,
@@ -446,16 +446,16 @@ const SPECS: readonly ReadingSpec[] = [
         "rhythm",
         t("Rhythm and Rhyme", "韵律和节奏"),
         t(
-          "Pause where the words of a line join: in five characters most often after two, in seven most often after four, keeping each word whole. The rhyme is heard at the ends of the lines, mostly the even ones; read the notes for old readings.\n\n“柴门闻犬吠” pauses “柴门/闻犬吠”; “逢雪宿芙蓉山主人” rhymes on 贫 and 人.\n\n> **Watch out.** A pause must not split a word, as “柴/门” would; and characters in the middle of a line, however alike, are not the rhyme.",
-          "停顿要停在词和词之间：五言诗多在第二个字后，七言诗多在第四个字后，不能把一个词拆开。押韵要听句子末尾的字，大多是双数句的末尾；有古时读音的，要看注释。\n\n“柴门闻犬吠”停顿是“柴门/闻犬吠”；《逢雪宿芙蓉山主人》押韵的是“贫”和“人”。\n\n> **注意。** 停顿不能把一个词拆开，比如“柴/门”；句子中间的字，读音再像，也不是韵脚。",
+          "Pause where the words of a line join: in five characters most often after two, in seven most often after four, keeping each word whole. The rhyme is heard at the ends of the lines, mostly the even ones; read the notes for old readings.\n\n“春眠不觉晓” pauses “春眠/不觉晓”; “登鹳雀楼” rhymes on 流 and 楼.\n\n> **Watch out.** A pause must not split a word, as “春/眠” would; and characters in the middle of a line, however alike, are not the rhyme.",
+          "停顿要停在词和词之间：五言诗多在第二个字后，七言诗多在第四个字后，不能把一个词拆开。押韵要听句子末尾的字，大多是双数句的末尾；有古时读音的，要看注释。\n\n“春眠不觉晓”停顿是“春眠/不觉晓”；《登鹳雀楼》押韵的是“流”和“楼”。\n\n> **注意。** 停顿不能把一个词拆开，比如“春/眠”；句子中间的字，读音再像，也不是韵脚。",
         ),
       ],
       [
         "feeling",
         t("The Feeling", "诗中的情感"),
         t(
-          "Find the line where the poet's feeling shows most, often the last, and ask what someone who writes it feels; the scene before it leads up to it.\n\n“送友人” ends “萧萧班马鸣”: even the horses neigh at parting, so the poet cannot bear to let his friend go.\n\n> **Watch out.** A pleasant scene does not always carry a glad feeling: in “江南逢李龟年”, fine scenery and falling flowers frame a meeting full of regret for better days.",
-          "找到最能表现诗人感情的诗句，常常是最后一句，想一想写下它的人是什么心情；前面写的景物都在为它做铺垫。\n\n《送友人》最后一句是“萧萧班马鸣”：连马都在叫，写出了诗人舍不得朋友离开。\n\n> **注意。** 景色美，不一定心情就高兴：《江南逢李龟年》写的是江南好风景和落花，表达的却是对往日的感慨。",
+          "Find the line where the poet's feeling shows most, often the last, and ask what someone who writes it feels; the scene before it leads up to it.\n\n“示儿” ends “家祭无忘告乃翁”: dying, 陆游 asks his sons to tell him at the family rites when the north is won back, so his love of the country outlasts his life.\n\n> **Watch out.** A pleasant scene does not always carry a glad feeling: in “题临安邸”, warm winds and singing by the lake frame the poet's anger that the rulers, drunk on pleasure, forget the lost north.",
+          "找到最能表现诗人感情的诗句，常常是最后一句，想一想写下它的人是什么心情；前面写的景物都在为它做铺垫。\n\n《示儿》最后一句是“家祭无忘告乃翁”：陆游临死还嘱咐儿子，收复中原那天，祭祀时别忘了告诉他，写出了至死不变的爱国之情。\n\n> **注意。** 景色美，不一定心情就高兴：《题临安邸》写的是西湖边的暖风和歌舞，表达的却是对当权的人贪图享乐、忘了收复失地的愤慨。",
         ),
       ],
     ],

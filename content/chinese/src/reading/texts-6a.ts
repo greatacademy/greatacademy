@@ -1132,73 +1132,74 @@ export const POEMS_6 = `
 - 山里正在刮大风 ~unsaid
 - 有人在山里摘松子 ~unsaid
 
-# 夜雪（唐·白居易）
-已讶衾枕冷，复见窗户明。
-夜深知雪重，时闻折竹声。
-注：讶，惊讶。衾（qīn），被子。时闻，不时听到。
-?1 “时闻折竹声”应该怎样停顿？ | How is the line paused?
-≈ 时闻/折竹声 | 时闻折竹声
-% 这首诗每句五个字，是五言诗。五言诗一般前两个字一顿，后三个字一顿，意思也正好在这里分开。“时闻折竹声”这样读，就是“时闻/折竹声”。 | Each line has five characters: a five-character poem. Such lines are usually read 2 + 3, pausing after the first two characters, where the sense also breaks. Read so, the line is “时闻/折竹声”.
-- 时/闻折/竹声 ~pause
-- 时闻折/竹/声 ~pause
-?1 这首诗的韵脚是哪两个字？ | Which two characters rhyme?
-≈ 明、声 | 复见窗户明 | 时闻折竹声
-% 韵脚是押韵的句子末尾的字。把“复见窗户明”“时闻折竹声”这几句末尾的字连起来读：明、声，它们的韵相同或相近，读起来和谐，所以韵脚就是这几个字。 | Rhyme words are the characters that end the rhyming lines. Read the last characters of these lines together, 明、声: they share a rhyme or near rhyme and sound in harmony, so they are the rhyme words.
-- 冷、重 ~notend
-- 讶、见 ~notend
-?1 这首诗一共有几句？ | How many lines?
-≈ 四句 | 已讶衾枕冷，复见窗户明 | 夜深知雪重，时闻折竹声
-% 数一数：“已讶衾枕冷”“复见窗户明”“夜深知雪重”“时闻折竹声”，一共四句。 | Count: the poem has four lines, two in each couplet.
-- 八句 ~figure
-- 两句 ~figure
-?2 诗人是从哪些方面知道下雪了？ | How does the poet know it snowed?
-= 被子冷、窗户亮、听到竹子被压断 | 已讶衾枕冷，复见窗户明 | 时闻折竹声
-- 亲眼看到漫天大雪 ~unsaid
-- 家人告诉他的 ~unsaid
-?2 “时闻折竹声”说明了什么？ | What does the snapping bamboo show?
-≈ 雪下得很大很厚 | 夜深知雪重 | 时闻折竹声
-% 竹子很结实，却被压断了，发出“折竹声”。诗人从这声音知道“雪重”：雪积得又厚又沉，才能把竹子压断，所以雪下得很大很厚。 | Bamboo is tough, yet it snaps with a crack. From the sound the poet knows the snow is heavy: only thick, heavy snow could break bamboo, so the snowfall is great.
-- 有人在砍竹子 ~unsaid
-- 风很大 ~unsaid
-?2 这首诗写雪，好在哪里？ | What is fine in how the poem writes snow?
-≈ 不直接写雪，而从感觉和声音写出雪 | 已讶衾枕冷 | 复见窗户明 | 时闻折竹声
-% 全诗没有一句写雪的样子：被子冷是感觉，窗户亮是看见的光，折竹声是听到的声音，诗人却从这些写出了夜里下了大雪。不直接写雪，而从感觉和声音写出雪，这就是它的好处。 | No line describes the snow itself: the cold quilt is felt, the bright window is seen, the snapping bamboo is heard, and from these the poet shows a heavy night snow. Showing the snow through feeling and sound, not directly, is the poem's strength.
-- 写出了雪的颜色和形状 ~unsaid
-- 写出了孩子们玩雪的快乐 ~never
+# 春夜喜雨（唐·杜甫）
+好雨知时节，当春乃发生。
+随风潜入夜，润物细无声。
+野径云俱黑，江船火独明。
+晓看红湿处，花重锦官城。
+注：乃，就。发生，这里指下雨。潜，悄悄地。润，滋润。野径，田野间的小路。俱，都。晓，天亮。红湿处，被雨打湿的花丛。花重，花沾着雨水，显得沉甸甸的。锦官城，成都的别称。
+?1 “随风潜入夜”应该怎样停顿？ | How is the line paused?
+≈ 随风/潜入夜 | 随风潜入夜
+% 这首诗每句五个字，是五言诗。五言诗一般前两个字一顿，后三个字一顿，意思也正好在这里分开。“随风潜入夜”这样读，就是“随风/潜入夜”。 | Each line has five characters: a five-character poem. Such lines are usually read 2 + 3, pausing after the first two characters, where the sense also breaks. Read so, the line is “随风/潜入夜”.
+- 随/风潜/入夜 ~pause
+- 随风潜/入/夜 ~pause
+?1 这首诗的韵脚是哪几个字？ | Which characters rhyme?
+≈ 生、声、明、城 | 当春乃发生 | 润物细无声 | 江船火独明 | 花重锦官城
+% 韵脚是押韵的句子末尾的字。把“当春乃发生”“润物细无声”“江船火独明”“花重锦官城”这几句末尾的字连起来读：生、声、明、城，它们的韵相同或相近，读起来和谐，所以韵脚就是这几个字。 | Rhyme words are the characters that end the rhyming lines. Read the last characters of these lines together, 生、声、明、城: they share a rhyme or near rhyme and sound in harmony, so they are the rhyme words.
+- 节、夜、黑、处 ~notend
+- 雨、风、径、看 ~notend
+?1 这首诗每句几个字，一共几句？ | How many characters a line, and how many lines?
+≈ 每句五个字，一共八句 | 好雨知时节 | 花重锦官城
+% 数一数：每一句都是五个字，比如“好雨知时节”；从“好雨知时节”数到“花重锦官城”，一共八句。 | Count: each line has five characters, such as “hao yu zhi shi jie”; from the first line to “hua zhong jin guan cheng” there are eight lines.
+- 每句七个字，一共八句 ~figure
+- 每句五个字，一共四句 ~figure
+?2 诗人为什么说这是一场“好雨”？ | Why is it a good rain?
+≈ 它在春天万物需要的时候来了，悄悄地滋润万物 | 好雨知时节，当春乃发生 | 润物细无声
+- 雨下得特别大 ~unsaid
+- 雨停了，可以出门了 ~unsaid
+?2 “润物细无声”写出了春雨怎样的特点？ | What is the spring rain like in the fourth line?
+≈ 雨丝细细的，悄悄地滋润万物 | 润物细无声 | 随风潜入夜
+- 雨声很大，吵得人睡不着 ~opposite
+- 下的是冰雹 ~unsaid
+?2 题目里的“喜”字，诗中是怎样写出来的？ | How does the poem show the 喜 of its title?
+≈ 诗人夜里关注着雨，又想着天亮去看满城沾雨的花 | 晓看红湿处，花重锦官城 | 好雨知时节
+% 诗人从雨在夜里随风到来写起，写雨细细无声，又写夜色里的小路和江船，说明他一夜都在留意这场雨；最后想到天亮时，满城的花沾着雨水，沉甸甸的。他盼着这场雨、想着雨后的花，心里的喜悦就在这些诗句里。 | The poet follows the rain from its coming on the night wind, its fine soundless fall, the dark path and the lit boat, so he has watched it all night; at last he pictures the whole city's flowers heavy with rain at daybreak. His welcome for the rain and his thought of the flowers after it carry his joy.
+- 诗人因为雨停了才高兴 ~unsaid
+- 诗人在江船上喝酒很高兴 ~unsaid
 
-# 江南逢李龟年（唐·杜甫）
-岐王宅里寻常见，崔九堂前几度闻。
-正是江南好风景，落花时节又逢君。
-注：李龟年，唐朝有名的乐师。岐王、崔九，当时的达官贵人。君，你，指李龟年。
-?1 “落花时节又逢君”应该怎样停顿？ | How is the line paused?
-≈ 落花时节/又逢君 | 落花时节又逢君
-% 这首诗每句七个字，是七言诗。七言诗一般前四个字一顿，后三个字一顿，意思也正好在这里分开。“落花时节又逢君”这样读，就是“落花时节/又逢君”。 | Each line has seven characters: a seven-character poem. Such lines are usually read 4 + 3, pausing after the first four characters, where the sense also breaks. Read so, the line is “落花时节/又逢君”.
-- 落/花时/节又逢君 ~pause
-- 落花时节又/逢/君 ~pause
-?1 这首诗的韵脚是哪两个字？ | Which two characters rhyme?
-≈ 闻、君 | 崔九堂前几度闻 | 落花时节又逢君
-% 韵脚是押韵的句子末尾的字。把“崔九堂前几度闻”“落花时节又逢君”这几句末尾的字连起来读：闻、君，它们的韵相同或相近，读起来和谐，所以韵脚就是这几个字。 | Rhyme words are the characters that end the rhyming lines. Read the last characters of these lines together, 闻、君: they share a rhyme or near rhyme and sound in harmony, so they are the rhyme words.
-- 见、景 ~notend
-- 里、前 ~notend
+# 早发白帝城（唐·李白）
+朝辞白帝彩云间，千里江陵一日还。
+两岸猿声啼不住，轻舟已过万重山。
+注：发，出发。朝，早晨。辞，告别。白帝，白帝城，在长江上游的山上。江陵，在长江中游，离白帝城很远。还，回。啼不住，叫个不停。万重山，一座又一座的山。
+?1 “轻舟已过万重山”应该怎样停顿？ | How is the line paused?
+≈ 轻舟已过/万重山 | 轻舟已过万重山
+% 这首诗每句七个字，是七言诗。七言诗一般前四个字一顿，后三个字一顿，意思也正好在这里分开。“轻舟已过万重山”这样读，就是“轻舟已过/万重山”。 | Each line has seven characters: a seven-character poem. Such lines are usually read 4 + 3, pausing after the first four characters, where the sense also breaks. Read so, the line is “轻舟已过/万重山”.
+- 轻/舟已/过万重山 ~pause
+- 轻舟已过万/重/山 ~pause
+?1 这首诗的韵脚是哪几个字？ | Which characters rhyme?
+≈ 间、还、山 | 朝辞白帝彩云间 | 千里江陵一日还 | 轻舟已过万重山
+% 韵脚是押韵的句子末尾的字。把“朝辞白帝彩云间”“千里江陵一日还”“轻舟已过万重山”这几句末尾的字连起来读：间、还、山，它们的韵相同或相近，读起来和谐，所以韵脚就是这几个字。 | Rhyme words are the characters that end the rhyming lines. Read the last characters of these lines together, 间、还、山: they share a rhyme or near rhyme and sound in harmony, so they are the rhyme words.
+- 帝、陵、舟 ~notend
+- 辞、里、声 ~notend
 ?1 这首诗是几言诗？ | How many characters a line?
-≈ 七言 | 岐王宅里寻常见 | 正是江南好风景
-% 数一数：“岐王宅里寻常见”是七个字，“正是江南好风景”也是七个字，每句都是七个字，所以是七言诗。 | Count: the first line has seven characters, and so does “zheng shi jiang nan hao feng jing”; every line has seven, so it is a seven-character poem.
+≈ 七言 | 朝辞白帝彩云间 | 两岸猿声啼不住
+% 数一数：“朝辞白帝彩云间”是七个字，“两岸猿声啼不住”也是七个字，每句都是七个字，所以是七言诗。 | Count: the first line has seven characters, and so does “liang an yuan sheng ti bu zhu”; every line has seven, so it is a seven-character poem.
 - 五言 ~figure
-- 四言 ~figure
-?2 诗人和李龟年过去在哪里常常见面？ | Where did they meet in the past?
-= 岐王宅里、崔九堂前 | 岐王宅里寻常见，崔九堂前几度闻
-- 江南的花园里 ~unsaid
-- 战场上 ~never
-?2 “落花时节又逢君”中的“落花”，除了写季节，还暗含着什么？ | What more do the falling flowers suggest?
-≈ 时代和人生的衰落，令人感伤 | 落花时节又逢君 | 岐王宅里寻常见，崔九堂前几度闻
-% 当年诗人和李龟年在达官贵人家里常常相见，那是繁华的时候；如今在江南重逢，正是花落的时节。花落是春天将尽，也像那繁华的年代和两人的好时光都过去了，令人感伤。 | Long ago the poet often met Li Guinian in the houses of the great, in a time of splendour; now they meet again in Jiangnan as the flowers fall. Falling flowers end the spring, as the splendid years and their good days have passed: a sad thought.
-- 江南的花特别多 ~literal
-- 他们相见很开心，没有别的 ~nomood
-?2 这首诗表达了诗人怎样的感情？ | What feeling does the poem express?
-≈ 今昔对比的感慨 | 岐王宅里寻常见，崔九堂前几度闻 | 正是江南好风景，落花时节又逢君
-% 前两句写当年在王公贵人家常常相见，后两句写如今在落花时节的江南重逢。把过去和现在放在一起，人还是那两个人，时代却变了，诗里是今昔对比的感慨。 | The first lines recall frequent meetings in great houses long ago; the last tell of meeting again in Jiangnan as flowers fall. Setting then beside now, the same two men in a changed age, the poem voices a sigh at past and present.
-- 对江南风景的赞美 ~part
-- 对李龟年的埋怨 ~nomood
+- 六言 ~figure
+?2 “千里江陵一日还”写出了什么？ | What does the second line show?
+≈ 船顺流而下，行得非常快 | 千里江陵一日还 | 轻舟已过万重山
+% 注释说江陵离白帝城很远，诗里说有“千里”，诗人却“一日还”，一天就到了；最后一句又说船已经过了“万重山”。这么远的路一天走完，写出了船顺着江水而下，行得非常快。 | The note says Jiangling is far from Baidi, the poem says a thousand li, yet the poet is back in one day; the last line has the boat already past ten thousand hills. So long a way done in a day shows the boat racing downstream.
+- 江陵离白帝城很近 ~opposite
+- 诗人走了一千天才到 ~misread
+?2 “轻舟”的“轻”，透露出诗人怎样的心情？ | What mood does the light boat show?
+≈ 轻松愉快 | 轻舟已过万重山 | 千里江陵一日还
+% 船并没有真的变轻。顺水行船，一天就过了千里，万重山一闪而过，诗人觉得船轻快，心里也轻松愉快，这个“轻”字既写船，也写心情。 | The boat has not grown lighter. Going downstream, a thousand li in a day, ten thousand hills flashing past, the poet feels the boat is light and quick, and so is his heart: 轻 tells of both the boat and his mood.
+- 船太小，诗人很害怕 ~nomood
+- 船上没有装东西 ~literal
+?2 “两岸猿声啼不住”写出了什么？ | What does the third line show?
+≈ 船行得快，两岸的猿声连成一片，还没听够，船已经过去了 | 两岸猿声啼不住 | 轻舟已过万重山
+- 猿猴在岸上追着船跑 ~unsaid
+- 猿猴饿了，一直在叫 ~unsaid
 
 # 菊花（唐·元稹）
 秋丛绕舍似陶家，遍绕篱边日渐斜。
@@ -1231,38 +1232,36 @@ export const POEMS_6 = `
 - 说明诗人住在陶渊明家 ~literal
 - 介绍陶渊明的家人 ~unsaid
 
-# 送友人（唐·李白）
-青山横北郭，白水绕东城。
-此地一为别，孤蓬万里征。
-浮云游子意，落日故人情。
-挥手自兹去，萧萧班马鸣。
-注：郭，城外。孤蓬，像随风飘的蓬草一样孤单的人。兹，这里。班马，离群的马。
-?1 “挥手自兹去”应该怎样停顿？ | How is the line paused?
-≈ 挥手/自兹去 | 挥手自兹去
-% 这首诗每句五个字，是五言诗。五言诗一般前两个字一顿，后三个字一顿，意思也正好在这里分开。“挥手自兹去”这样读，就是“挥手/自兹去”。 | Each line has five characters: a five-character poem. Such lines are usually read 2 + 3, pausing after the first two characters, where the sense also breaks. Read so, the line is “挥手/自兹去”.
-- 挥/手自/兹去 ~pause
-- 挥手自/兹/去 ~pause
+# 题西林壁（宋·苏轼）
+横看成岭侧成峰，远近高低各不同。
+不识庐山真面目，只缘身在此山中。
+注：题，写。西林，西林寺，在庐山。横看，从正面看。侧，侧面。真面目，真正的样子。只缘，只因为。
+?1 “不识庐山真面目”应该怎样停顿？ | How is the line paused?
+≈ 不识庐山/真面目 | 不识庐山真面目
+% 这首诗每句七个字，是七言诗。七言诗一般前四个字一顿，后三个字一顿，意思也正好在这里分开。“不识庐山真面目”这样读，就是“不识庐山/真面目”。 | Each line has seven characters: a seven-character poem. Such lines are usually read 4 + 3, pausing after the first four characters, where the sense also breaks. Read so, the line is “不识庐山/真面目”.
+- 不/识庐/山真面目 ~pause
+- 不识庐山真/面/目 ~pause
 ?1 这首诗的韵脚是哪几个字？ | Which characters rhyme?
-≈ 城、征、情、鸣 | 白水绕东城 | 孤蓬万里征 | 落日故人情 | 萧萧班马鸣
-% 韵脚是押韵的句子末尾的字。把“白水绕东城”“孤蓬万里征”“落日故人情”“萧萧班马鸣”这几句末尾的字连起来读：城、征、情、鸣，它们的韵相同或相近，读起来和谐，所以韵脚就是这几个字。 | Rhyme words are the characters that end the rhyming lines. Read the last characters of these lines together, 城、征、情、鸣: they share a rhyme or near rhyme and sound in harmony, so they are the rhyme words.
-- 郭、别、意、去 ~notend
-- 山、水、云、手 ~notend
+≈ 峰、同、中 | 横看成岭侧成峰 | 远近高低各不同 | 只缘身在此山中
+% 韵脚是押韵的句子末尾的字。把“横看成岭侧成峰”“远近高低各不同”“只缘身在此山中”这几句末尾的字连起来读：峰、同、中，它们的韵相同或相近，读起来和谐，所以韵脚就是这几个字。 | Rhyme words are the characters that end the rhyming lines. Read the last characters of these lines together, 峰、同、中: they share a rhyme or near rhyme and sound in harmony, so they are the rhyme words.
+- 岭、低、目 ~notend
+- 看、近、识 ~notend
 ?1 这首诗每句几个字，一共几句？ | How many characters a line, and how many lines?
-≈ 每句五个字，一共八句 | 青山横北郭 | 萧萧班马鸣
-% 数一数：每一句都是五个字，比如“青山横北郭”；从“青山横北郭”数到“萧萧班马鸣”，一共八句。 | Count: each line has five characters, such as “qing shan heng bei guo”; from the first line to “xiao xiao ban ma ming” there are eight lines.
-- 每句七个字，一共八句 ~figure
+≈ 每句七个字，一共四句 | 横看成岭侧成峰 | 只缘身在此山中
+% 数一数：每一句都是七个字，比如“横看成岭侧成峰”；从“横看成岭侧成峰”数到“只缘身在此山中”，一共四句。 | Count: each line has seven characters, such as “heng kan cheng ling ce cheng feng”; from the first line to “zhi yuan shen zai ci shan zhong” there are four lines.
 - 每句五个字，一共四句 ~figure
-?2 “浮云游子意，落日故人情”表达了什么？ | What does the third couplet express?
-≈ 朋友像浮云一样漂泊，诗人像落日一样依依不舍 | 浮云游子意，落日故人情 | 孤蓬万里征
-% 浮云飘来飘去，没有定处，就像要远行万里的朋友；落日慢慢下山，迟迟不肯落，就像送别的诗人不舍得朋友走。诗人借这两样景物写出两人的心情。 | Drifting clouds have no fixed place, like the friend off on a long journey; the setting sun sinks slowly, loath to go, like the poet loath to let him leave. Through these two sights the poet shows both their feelings.
-- 天上有浮云和落日，风景很美 ~part
-- 诗人不想再见到朋友 ~opposite
-?2 “萧萧班马鸣”中，连马都在叫，表达了什么？ | What do the neighing horses express?
-≈ 借马的叫声写出离别的不舍 | 萧萧班马鸣 | 挥手自兹去 | 班马，离群的马
-- 马饿了 ~literal
-- 马不想走路 ~literal
-?2 全诗表达了怎样的感情？ | What feeling does the whole poem express?
-≈ 送别朋友的依依惜别之情 | 此地一为别 | 挥手自兹去 | 落日故人情
-- 送别朋友的轻松愉快 ~nomood
-- 对朋友远行的羡慕 ~nomood
+- 每句七个字，一共八句 ~figure
+?2 “横看成岭侧成峰，远近高低各不同”写出了什么？ | What do the first two lines show?
+≈ 从不同的地方看庐山，看到的样子各不相同 | 横看成岭侧成峰 | 远近高低各不同
+- 庐山一会儿变成岭，一会儿变成峰 ~literal
+- 庐山又矮又小 ~unsaid
+?2 诗人为什么说“不识庐山真面目”？ | Why can he not see Lu's true face?
+= 因为自己就在庐山里面 | 只缘身在此山中
+- 庐山被云雾遮住了 ~unsaid
+- 诗人从来没去过庐山 ~opposite
+?2 这首诗借看山说了一个什么道理？ | What lesson does the poem draw from the mountain?
+≈ 身在其中容易看不全面，要跳出来，从不同角度看问题 | 不识庐山真面目，只缘身在此山中 | 远近高低各不同
+% 诗人在庐山里，从这边看是岭，从那边看是峰，远近高低都不一样，却说不出庐山真正的样子，因为他身在山中，只能看到一部分。看事情也是这样：身在其中容易只看到一面，跳出来，从不同角度看，才能看得全面。 | Inside the mountain, the poet sees a ridge from one side and a peak from another, different from near and far, high and low, yet cannot say what Lu really looks like, for being inside he sees only part. So with any matter: inside it one sees one side; stepping out and looking from many angles one sees it whole.
+- 不要去爬太高的山 ~unsaid
+- 庐山是天下最美的山 ~unsaid
 `;

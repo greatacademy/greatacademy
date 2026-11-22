@@ -369,35 +369,37 @@ export const POEMS_5 = `
 - 说明诗人很爱留长发 ~literal
 - 说明诗人会计算长度 ~sense
 
-# 十五夜望月（唐·王建）
-中庭地白树栖鸦，冷露无声湿桂花。
-今夜月明人尽望，不知秋思落谁家。
-注：中庭，院子里。栖，鸟停在树上。秋思，秋天里思念亲人的心情。
-?1 “中庭地白”是什么原因？ | Why is the ground of the court white?
-≈ 月光照在地上 | 中庭地白树栖鸦 | 今夜月明人尽望
-% 诗写的是夜里，院子里的地却是白的。第三句说“今夜月明”，月亮很亮，所以地白是月光照在地上。 | The poem is set at night, yet the ground of the courtyard is white. The third line says “tonight the moon is bright”, so the white is moonlight on the ground.
-- 下了一场大雪 ~unsaid
-- 地上铺着白布 ~unsaid
-?1 诗中写到了哪些景物？ | Which sights are in the poem?
-= 院子、树上的乌鸦、露水、桂花、明月 | 中庭地白树栖鸦 | 冷露无声湿桂花 | 今夜月明人尽望
-- 大河、小船、渔夫 ~never
-- 高山、白云、瀑布 ~never
-?1 “今夜月明人尽望”，是什么样的夜晚？ | What kind of night is it?
-= 月亮很亮，人们都在看月亮 | 今夜月明人尽望 | 十五夜望月
-- 天很黑，看不见月亮 ~opposite
-- 下着大雨，人们都在家里 ~unsaid
-?2 这首诗表达了怎样的感情？ | What feeling does the poem express?
-≈ 中秋夜思念亲人 | 不知秋思落谁家 | 秋思，秋天里思念亲人的心情 | 十五夜望月
-- 看到月亮很害怕 ~nomood
-- 对秋天很厌烦 ~nomood
-?2 诗人说“不知秋思落谁家”，好在哪里？ | What is fine in “who knows on whose house the longing falls”?
-≈ 不直说自己想家，却写出人人都在想念亲人 | 不知秋思落谁家 | 今夜月明人尽望
-- 诗人真的不知道朋友住在哪里 ~literal
-- 诗人在问秋天的树叶落在哪里 ~literal
-?2 “冷露无声湿桂花”中的“冷”字，表现了什么？ | What does 冷 in the second line show?
-≈ 夜深了，也带出一种清冷孤单的感觉 | 冷露无声湿桂花 | 中庭地白树栖鸦
-- 诗人生病了 ~unsaid
-- 天气热得受不了 ~opposite
+# 山行（唐·杜牧）
+远上寒山石径斜，白云生处有人家。
+停车坐爱枫林晚，霜叶红于二月花。
+注：寒山，深秋时节的山。石径，石头铺的小路。斜，古音读 xiá，和家、花押韵。坐，因为。霜叶，深秋经过霜打的枫叶。
+?1 诗人在山路上看到了哪些景物？ | What does the poet see on the mountain road?
+= 石头小路、白云、人家和枫林 | 远上寒山石径斜 | 白云生处有人家 | 停车坐爱枫林晚
+- 小溪和瀑布 ~unsaid
+- 开满桃花的山坡 ~unsaid
+?1 “停车坐爱枫林晚”中的“坐”是什么意思？ | What does 坐 mean?
+≈ 因为 | 停车坐爱枫林晚 | 霜叶红于二月花
+% 诗人走在山路上，忽然把车停下了。为什么停？后一句说经霜的枫叶比二月的花还红，他爱这傍晚的枫林，才停下车来。“坐”把停车和爱枫林连在一起：因为喜爱，所以停车，“坐”就是因为。讲成“坐下”“乘坐”，诗里只说停车，并没有坐下或乘坐什么的事，和“爱枫林晚”也连不起来。 | Walking the mountain road, the poet suddenly stops his carriage. Why? The next line says the frosted maple leaves are redder than spring flowers: he loves the maple wood at dusk, so he stops. 坐 joins the stopping to the loving: he stops because he loves it, so 坐 is “because”. Read as “sit down” or “ride in”, the poem tells of no sitting or riding, and neither joins with loving the evening maples.
+- 坐下 ~modern
+- 乘坐 ~modern
+?1 “霜叶红于二月花”是什么意思？ | What does the last line mean?
+≈ 经过霜打的枫叶，比二月的花还要红 | 霜叶红于二月花 | 霜叶，深秋经过霜打的枫叶
+% “霜叶”是注释里说的经霜的枫叶，“于”在这里是“比”，“红于二月花”就是比二月的花还红。诗人在深秋看枫叶，拿春天二月的花来比，说枫叶更红。讲成“二月的花比枫叶红”，就把比较的两样东西说反了。 | 霜叶 are the frosted maple leaves of the note, and 于 here means “than”: 红于二月花 is “redder than the flowers of the second month”. Watching maples in late autumn, the poet sets them beside spring flowers and finds the leaves redder. To say the flowers are redder turns the comparison round.
+- 二月的花比枫叶还要红 ~opposite
+- 枫叶是二月长出来的 ~misread
+?2 诗人最喜爱的是什么景物？ | Which sight does the poet love most?
+= 傍晚的枫林 | 停车坐爱枫林晚 | 霜叶红于二月花
+- 白云下面的人家 ~part
+- 弯弯的石头小路 ~part
+?2 这首诗表达了诗人怎样的感情？ | What feeling does the poem express?
+≈ 对深秋山林美景的喜爱 | 停车坐爱枫林晚 | 霜叶红于二月花
+- 秋天来了，心里悲凉 ~nomood
+- 走山路太累，想早点回家 ~nomood
+?2 这首诗写出的秋天是怎样的？ | What kind of autumn does the poem show?
+≈ 色彩鲜艳，充满生机 | 霜叶红于二月花 | 白云生处有人家
+% 诗里有白云、人家，还有比春花更红的枫叶。诗人不写落叶飘零，而写满山红叶像春天的花一样鲜艳，所以这首诗里的秋天色彩鲜艳，充满生机。 | The poem has white clouds, homes, and maple leaves redder than spring flowers. The poet writes no falling, scattered leaves but a hillside of red as bright as spring blossom, so his autumn is vivid and full of life.
+- 冷清凄凉 ~opposite
+- 下着大雪 ~unsaid
 
 # 秋思（唐·张籍）
 洛阳城里见秋风，欲作家书意万重。
@@ -488,34 +490,38 @@ export const POEMS_5 = `
 - 一开头就写出亭子里风景的美 ~never
 - 一开头就写出春天来了的欢喜 ~opposite
 
-# 秋词（唐·刘禹锡）
-自古逢秋悲寂寥，我言秋日胜春朝。
-晴空一鹤排云上，便引诗情到碧霄。
-注：寂寥，冷清、孤单。春朝，春天。排云，冲开云层。碧霄，青天。
-?1 诗人对秋天的看法和古人一样吗？ | Is the poet's view of autumn the same as the ancients'?
-= 不一样，他认为秋天胜过春天 | 我言秋日胜春朝 | 自古逢秋悲寂寥
-- 一样，他也觉得秋天冷清 ~opposite
-- 一样，他觉得春天最好 ~opposite
-?1 诗中写了一个什么画面？ | What picture does the poem paint?
-= 晴空里，一只鹤冲开云层飞上去 | 晴空一鹤排云上 | 排云，冲开云层
-- 一群大雁排成队往南飞 ~changed
-- 秋风吹落了满地黄叶 ~never
-?1 “自古逢秋悲寂寥”说的是什么？ | What does the first line say?
-= 从古以来，人们一到秋天就悲叹冷清 | 自古逢秋悲寂寥 | 寂寥，冷清、孤单
-- 诗人一到秋天就生病 ~unsaid
-- 古时候秋天特别冷 ~literal
-?2 这首诗表达了诗人怎样的情感？ | What feeling does the poem express?
-≈ 乐观向上，对秋天充满喜爱 | 我言秋日胜春朝 | 晴空一鹤排云上，便引诗情到碧霄
-- 悲伤孤单 ~opposite
-- 害怕秋天 ~nomood
-?2 “便引诗情到碧霄”是什么意思？ | What does the last line mean?
-= 鹤带着诗人的兴致一直飞上了青天 | 便引诗情到碧霄 | 碧霄，青天
-- 诗人坐着鹤飞上了天 ~literal
-- 诗人把诗写在了天上 ~literal
-?2 诗中的那只鹤，表现了什么？ | What does the crane stand for in the poem?
-≈ 一种奋发向上的精神 | 晴空一鹤排云上 | 便引诗情到碧霄 | 我言秋日胜春朝
-- 秋天的冷清 ~opposite
-- 诗人想养一只鹤 ~unsaid
+# 望天门山（唐·李白）
+天门中断楚江开，碧水东流至此回。
+两岸青山相对出，孤帆一片日边来。
+注：天门，天门山，在长江两岸，两座山隔江相对，像一道门。楚江，长江流经古代楚国的一段。孤帆，一只船。日边，太阳那边。
+?1 “天门中断楚江开”写的是什么景象？ | What sight does the first line paint?
+≈ 长江从天门山中间冲开，奔流而过 | 天门中断楚江开 | 天门，天门山，在长江两岸，两座山隔江相对，像一道门
+% 注释说天门山是隔江相对的两座山，像一道门。“中断”是从中间断开，“楚江开”是长江把它冲开了：江水从两座山中间奔流过去，好像是江水把一座山劈成了两半。讲成“天上的门打开了”，是只看字面，没有读注释。 | The note says Tianmen is two hills facing each other across the river, like a gate. 中断 is “broken in the middle”, and 楚江开 says the river split it: the water rushes between the two hills, as if it had cut one mountain in two. “A gate in the sky opened” reads only the surface, not the note.
+- 天上的一道门打开了 ~literal
+- 山崩塌了，堵住了江水 ~opposite
+?1 “两岸青山相对出”中，青山为什么像是“出”来的？ | Why do the green hills seem to come out?
+≈ 诗人坐船前行，两岸的山好像一座座迎面走出来 | 两岸青山相对出 | 孤帆一片日边来
+% 山本来不会动。诗人在船上，船顺着江水向前走，两岸的山一座接一座迎面而来，看上去就像从两边“走出来”一样。下一句写“孤帆一片日边来”，说明诗人正是在船上看山。 | Hills do not move. The poet is on a boat going downstream, and the hills on both banks come at him one after another, as if stepping out from either side. The next line, a lone sail coming from the sun, shows he is watching from a boat.
+- 山真的在慢慢移动 ~literal
+- 山是从江水里长出来的 ~literal
+?1 诗人是在哪里看天门山的？ | Where does the poet watch the hills from?
+≈ 江中行驶的船上 | 孤帆一片日边来 | 两岸青山相对出
+% 诗人看到两岸的山“相对出”，迎面而来，只有人在江上行进，才会看到这样的景象；最后一句又写一只船从太阳那边驶来，诗人看的是江上的情景，他正在船上。 | The poet sees the hills on both banks come towards him, which only someone moving on the river would see; the last line has a boat sailing in from the sun. He is watching the river, from a boat.
+- 山顶上 ~unsaid
+- 家里的窗前 ~unsaid
+?2 这首诗写出了天门山怎样的特点？ | What is Tianmen like in the poem?
+≈ 雄伟壮丽 | 天门中断楚江开 | 两岸青山相对出
+- 小巧秀丽 ~opposite
+- 荒凉冷清 ~opposite
+?2 “碧水东流至此回”写出了江水怎样的情形？ | What does the second line show of the water?
+≈ 江水被山挡住，在这里打着旋转了方向，水势很大 | 碧水东流至此回 | 天门中断楚江开
+- 江水一下子干了 ~unsaid
+- 江水平平静静，一点不动 ~opposite
+?2 诗人看到这样的景色，心情怎样？ | How does the poet feel at the sight?
+≈ 开阔、愉快 | 孤帆一片日边来 | 两岸青山相对出
+% 诗人坐船顺流而下，青山迎面而来，一只船从太阳那边驶来，画面明亮开阔。“孤帆”只是说一只船，诗里没有一句写孤单难过，诗人看到这壮美的江山，心情开阔愉快。 | Sailing downstream, the poet sees hills coming to meet him and a boat sailing in from the sun: a bright, open picture. 孤帆 only means “one sail”, and no line tells of loneliness; seeing such grand scenery, he feels open and glad.
+- 孤单寂寞 ~misread
+- 害怕翻船 ~nomood
 
 # 问刘十九（唐·白居易）
 绿蚁新醅酒，红泥小火炉。
@@ -546,64 +552,71 @@ export const POEMS_5 = `
 - 一封告别的信 ~nomood
 - 一篇说明怎样酿酒的文章 ~never
 
-# 夜雨寄北（唐·李商隐）
-君问归期未有期，巴山夜雨涨秋池。
-何当共剪西窗烛，却话巴山夜雨时。
-注：君，你，这里指家里的亲人。巴山，今天四川一带的山。何当，什么时候才能。却话，回头说起。
-?1 亲人问诗人什么时候回家，诗人怎样回答？ | How does the poet answer when asked when he will return?
-= 还没有确定的日子 | 君问归期未有期 | 君，你，这里指家里的亲人
-- 明天就回去 ~opposite
-- 永远不回去了 ~unsaid
-?1 诗人写信的时候，外面是什么样子？ | What is it like outside as he writes?
-= 巴山下着夜雨，池塘里的水涨了 | 巴山夜雨涨秋池 | 夜雨寄北
-- 月亮很亮，满天星星 ~opposite
-- 下着大雪 ~changed
-?1 诗人盼望将来做什么？ | What does the poet hope to do one day?
-= 和亲人在西窗下剪烛，说起今晚的雨 | 何当共剪西窗烛，却话巴山夜雨时 | 却话，回头说起
-- 再去巴山看雨 ~unsaid
-- 在西窗下读书 ~unsaid
-?2 这首诗表达了诗人怎样的感情？ | What feeling does the poem express?
-≈ 思念亲人，盼望团聚 | 何当共剪西窗烛 | 君问归期未有期
-- 喜欢巴山的雨 ~nomood
-- 不想回家 ~opposite
-?2 “巴山夜雨”在诗中出现了两次，有什么作用？ | Why does 巴山夜雨 come twice?
-≈ 现在的孤单和将来的团聚连在一起，更显思念 | 却话巴山夜雨时 | 巴山夜雨涨秋池 | 何当共剪西窗烛
-- 说明巴山每天都下雨 ~literal
-- 诗人写错了 ~sense
-?2 “涨秋池”的雨水，让人感到诗人怎样？ | What does the rising pool make one feel of the poet?
-≈ 思念像池水一样越涨越多 | 巴山夜雨涨秋池 | 君问归期未有期
-- 担心池塘里的鱼 ~unsaid
-- 很喜欢下雨 ~nomood
+# 出塞（唐·王昌龄）
+秦时明月汉时关，万里长征人未还。
+但使龙城飞将在，不教胡马度阴山。
+注：关，边关。但使，只要。龙城飞将，指汉代名将李广。不教，不让。胡马，敌人的骑兵。度，越过。阴山，北方的山，古时的边防要地。
+?1 这首诗写的是哪里的事？ | Where is the poem set?
+≈ 边关 | 秦时明月汉时关 | 不教胡马度阴山
+% 第一句就写到“关”，注释说是边关；最后一句说不让敌人的骑兵越过阴山，阴山是北方的边防要地。诗里写的是守卫边关的事。 | The first line names 关, which the note calls the frontier pass; the last says enemy horsemen must not cross the Yin Mountains, a northern stronghold. The poem is about guarding the frontier.
+- 江南水乡 ~unsaid
+- 京城的皇宫 ~unsaid
+?1 “万里长征人未还”是什么意思？ | What does the second line mean?
+≈ 到万里之外去打仗的人，还没有回来 | 万里长征人未还 | 秦时明月汉时关
+% “长征”在这里是走远路去出征，“万里”说路远，“人未还”是人还没有回来。连着上一句的边关看，是说到万里之外守边打仗的人，一直没能回家。讲成红军的长征，是用今天的意思去读古诗。 | 长征 here is setting out on a long campaign, 万里 says how far, and 人未还 that the men have not come back. With the frontier pass of the line before, it says those sent far off to guard the border have never come home. Reading it as the Red Army's Long March reads a modern sense into an old poem.
+- 红军长征的人还没有回来 ~modern
+- 人们走了一万里，回到了家 ~opposite
+?1 “不教胡马度阴山”中的“度”是什么意思？ | What does 度 mean?
+≈ 越过 | 不教胡马度阴山 | 但使龙城飞将在
+% 阴山是北方的边防要地，敌人的骑兵要打进来，先得过这座山；“不教”是不让，只要有名将守着，就不让敌人的马从阴山过来。所以“度”是越过。讲成“温度”“度过时间”，都和马、和山连不起来。 | The Yin Mountains are a northern stronghold, and enemy horsemen must get over them to invade; 不教 is “not let”, so with a great general on guard the horses are not let past the mountains. 度 is “cross”. “Temperature” or “spend time” join with neither horse nor mountain.
+- 温度 ~modern
+- 度过时间 ~sense
+?2 “但使龙城飞将在”表达了诗人怎样的愿望？ | What wish does the third line express?
+≈ 盼望有李广那样的良将守卫边疆 | 但使龙城飞将在 | 不教胡马度阴山 | 龙城飞将，指汉代名将李广
+- 想自己去当将军 ~unsaid
+- 希望打败李广 ~opposite
+?2 “人未还”里包含着诗人怎样的感情？ | What feeling is in “the men have not returned”?
+≈ 同情长年守边、不能回家的将士 | 万里长征人未还 | 秦时明月汉时关
+% 从秦汉到诗人的时候，明月还是那轮明月，边关还是那座边关，守边的人一代代去了万里之外，没能回来。诗人写“人未还”，是在为这些离家的将士难过。 | From Qin and Han to the poet's day the moon and the pass are the same, and generation after generation of soldiers has gone far away and not come back. Writing 人未还, the poet grieves for these men far from home.
+- 埋怨出征的人不肯回家 ~nomood
+- 为将士回家而高兴 ~opposite
+?2 全诗表达了诗人怎样的感情？ | What feeling does the whole poem express?
+≈ 盼望早日平定边患，让将士和百姓过上安宁的日子 | 但使龙城飞将在，不教胡马度阴山 | 万里长征人未还
+- 对边塞风景的喜爱 ~part
+- 对打仗的向往 ~nomood
 
-# 逢入京使（唐·岑参）
-故园东望路漫漫，双袖龙钟泪不干。
-马上相逢无纸笔，凭君传语报平安。
-注：故园，家乡。龙钟，这里是沾湿的样子。凭，请。君，你，指去京城的使者。
-?1 诗人遇见了谁？ | Whom does the poet meet?
-≈ 去京城的使者 | 马上相逢无纸笔 | 凭君传语报平安
-% 题目“逢入京使”就是遇见去京城的使者。诗里说两人“马上相逢”，诗人又请“君”替他带话回家报平安，能替他带话回家乡的，正是题目里这位往京城去的使者。 | The title, 逢入京使, means meeting an envoy bound for the capital. In the poem the two meet on horseback and the poet asks “you” to carry word home that all is well; the one who can carry it home is that envoy of the title, bound for the capital.
-- 家里的亲人 ~unsaid
-- 一起打仗的朋友 ~unsaid
-?1 诗人为什么请使者带口信，而不写信？ | Why a spoken message and no letter?
-= 在马上相遇，没有纸和笔 | 马上相逢无纸笔 | 凭君传语报平安
-- 诗人不会写字 ~unsaid
-- 怕信被弄丢 ~unsaid
-?1 诗人要带回家的话是什么？ | What is the message home?
-= 报个平安 | 凭君传语报平安 | 马上相逢无纸笔
-- 让家人来接他 ~unsaid
-- 说自己生病了 ~opposite
-?2 “双袖龙钟泪不干”表现了诗人怎样的感情？ | What does the tear-soaked sleeves show?
-≈ 对家乡亲人深深的思念 | 双袖龙钟泪不干 | 故园东望路漫漫 | 龙钟，这里是沾湿的样子
-- 被风沙吹得眼睛疼 ~literal
-- 遇见使者太高兴了 ~nomood
-?2 诗人只让使者说“平安”，好在哪里？ | What is fine in sending only “all is well”?
-≈ 心里难过，却只报平安，怕家人担心 | 凭君传语报平安 | 双袖龙钟泪不干
-- 诗人没有别的话想说 ~opposite
-- 使者记不住太多的话 ~unsaid
-?2 “故园东望路漫漫”写出了什么？ | What does the first line show?
-≈ 离家很远，回家的路很长 | 故园东望路漫漫 | 故园，家乡
-- 家就在不远的地方 ~opposite
-- 诗人在看东边的太阳 ~literal
+# 芙蓉楼送辛渐（唐·王昌龄）
+寒雨连江夜入吴，平明送客楚山孤。
+洛阳亲友如相问，一片冰心在玉壶。
+注：芙蓉楼，在今江苏镇江。辛渐，诗人的朋友，要去洛阳。吴，指镇江一带，古时属吴地。平明，天刚亮。客，指辛渐。楚山，镇江一带的山，古时也属楚地。冰心，像冰一样纯洁的心。
+?1 “平明送客楚山孤”中的“平明”指什么时候？ | When is 平明?
+≈ 天刚亮的时候 | 平明送客楚山孤 | 寒雨连江夜入吴
+% 前一句说冷雨在夜里下进吴地，雨下了一夜；接着诗人“送客”，是过了这一夜，第二天清早送朋友上路。“明”是天亮，“平明”就是天刚亮的时候。讲成中午、傍晚，就和前一句的“夜”接不上。 | The line before says the cold rain came into Wu by night and fell all night; then the poet sees his guest off, after that night, early the next day. 明 is daylight, so 平明 is “at first light”. Noon or dusk would not follow on from the night of the line before.
+- 中午的时候 ~sense
+- 傍晚的时候 ~sense
+?1 “寒雨连江夜入吴”写出了怎样的景象？ | What sight does the first line paint?
+≈ 夜里冷雨下个不停，和江面连成一片 | 寒雨连江夜入吴 | 平明送客楚山孤
+% “寒雨”是冷雨，“连江”是雨和江水连在一起，一眼望去分不清，“夜入吴”是夜里下进了吴地。一夜冷雨，满江烟雨，第二天清早诗人就在这样的天气里送朋友。 | 寒雨 is cold rain, 连江 is rain and river merging so one cannot tell them apart, 夜入吴 is that it came into Wu by night. A night of cold rain over the whole river: in such weather the poet sees his friend off next morning.
+- 晴朗的夜里，江面很平静 ~opposite
+- 江上下着大雪 ~unsaid
+?1 “一片冰心在玉壶”中的“冰心”是什么意思？ | What does 冰心 mean?
+≈ 像冰一样纯洁的心 | 一片冰心在玉壶 | 洛阳亲友如相问
+% 这是诗人请朋友带给洛阳亲友的话：如果他们问起我，就说我的心像玉壶里的冰。冰和玉都洁白透明，诗人用它们说自己的心干净纯洁，一直没有变。讲成“冰冷的心”，就成了诗人对亲友冷淡，和他托朋友带话的情意不合。 | It is the message the poet sends his family in Luoyang: if they ask about me, say my heart is ice in a jade pot. Ice and jade are clear and white, and with them he says his heart is clean and pure and has not changed. “A cold heart” would make him cool towards his family, at odds with the care of the message.
+- 冰冷无情的心 ~literal
+- 一块冰 ~literal
+?2 “楚山孤”中的“孤”，写出了诗人怎样的心情？ | What does 孤 show of the poet's mood?
+≈ 送走朋友后的孤单 | 平明送客楚山孤 | 寒雨连江夜入吴
+% 山本身无所谓孤单。朋友上路了，诗人一个人对着冷雨中的楚山，觉得山也孤零零的：这是把自己的孤单写到了山上。 | A mountain is not lonely in itself. His friend gone, the poet faces the hills in the cold rain alone and finds them lonely too: he lends them his own loneliness.
+- 楚山只有一座 ~literal
+- 心里很高兴 ~nomood
+?2 诗人托朋友给洛阳亲友带去什么话？ | What message does he send to Luoyang?
+= 自己的心像玉壶里的冰一样纯洁 | 洛阳亲友如相问，一片冰心在玉壶
+- 让亲友快来看他 ~unsaid
+- 让亲友给他寄钱 ~unsaid
+?2 这首诗表达了诗人怎样的感情？ | What feeling does the poem express?
+≈ 离别的不舍，和坚守纯洁品格的心意 | 平明送客楚山孤 | 一片冰心在玉壶
+- 对洛阳亲友的埋怨 ~nomood
+- 对江南雨景的喜爱 ~part
 `;
 
 /** EXPOSITORY_5 are the expository texts of reading-5-expository: their points, and the methods by which they explain. */

@@ -418,36 +418,37 @@ export const CLASSICAL_7 = `
 - 爱读书的人 ~unsaid
 - 住在城里的人 ~unsaid
 
-# 管宁割席（《世说新语》）
-管宁、华歆共园中锄菜，见地有片金，管挥锄与瓦石不异，华捉而掷去之。又尝同席读书，有乘轩冕过门者，宁读如故，歆废书出看。宁割席分坐，曰：“子非吾友也。”
-注：共，一起。挥锄，挥动锄头。与瓦石不异，和瓦片、石头没有两样。捉，拿起来。掷，扔。尝，曾经。席，古人坐卧时铺的席子。轩冕，大官坐的车和戴的帽子，这里指大官。如故，像原来一样。废书，放下书。
-?1 “又尝同席读书”中的“尝”是什么意思？ | What does 尝 mean?
-≈ 曾经 | 又尝同席读书 | 管宁、华歆共园中锄菜
-% 故事先讲两人在园中锄菜见到金子，接着用“又”引出另一件事：两人坐在一张席子上读书。“又尝”说的是他们过去还有过这样一回，是曾经。讲成“尝一尝”“品尝”，读书就成了吃的东西，讲不通。 | The story first tells of hoeing the garden and finding gold, then 又 brings in another time, when the two read on one mat. 又尝 says this too happened once before: “once”. As “taste”, reading would become something to eat.
-- 尝一尝 ~modern
-- 品尝 ~modern
-?1 “宁读如故”中的“如故”是什么意思？ | What does 如故 mean?
-≈ 像原来一样 | 宁读如故 | 歆废书出看
-% 门外有大官经过，两人的做法正好相对：华歆“废书出看”，跑出去看；管宁“读如故”。和华歆一比，管宁没有动，照旧读他的书，所以“如故”是像原来一样。讲成“好像老朋友”，这里并没有谁和谁初次见面。 | When the great man passes, the two do opposite things: Hua Xin leaves his book to go and look, and Guan Ning 读如故. Set against Hua Xin, Guan Ning does not stir but reads on, so 如故 is “as before”. “Like old friends” fits no one meeting anyone here.
-- 好像老朋友 ~modern
-- 老家 ~modern
-?1 “歆废书出看”中的“废书”是什么意思？ | What does 废书 mean?
-≈ 放下书 | 歆废书出看 | 宁读如故
-% 华歆要“出看”，跑出去看大官，书自然不能再读；和他对着的是管宁“读如故”，照旧读书。所以“废书”说的是不读了、把书放下。讲成“没用的书”，句子就少了华歆的动作，后面的“出看”也接不上。 | Hua Xin goes out to look, so he cannot read on; set against him, Guan Ning reads as before. So 废书 is stopping reading: “put the book down”. Read as “useless book”, the sentence loses what Hua Xin does, and 出看 no longer follows.
-- 没用的书 ~modern
-- 撕坏的书 ~modern
-?2 管宁为什么要和华歆割席分坐？ | Why did Guan Ning cut the mat?
-≈ 华歆看重钱财和名利，读书不专心，和管宁志向不同 | 华捉而掷去之 | 歆废书出看 | 子非吾友也
-- 席子太小，坐不下两个人 ~literal
-- 华歆把金子拿走了 ~opposite
-?2 见到金子时，管宁和华歆有什么不同？ | How did they differ over the gold?
-= 管宁看它和瓦石一样，华歆拿起来又扔了 | 管挥锄与瓦石不异 | 华捉而掷去之
-- 两个人都把金子收起来了 ~opposite
-- 管宁拿起来又扔了 ~who
-?2 从这个故事可以看出管宁是怎样的人？ | What kind of man is Guan Ning?
-≈ 不贪钱财、不慕名利、专心读书 | 管挥锄与瓦石不异 | 宁读如故
-- 脾气很坏，不要朋友 ~misread
-- 喜欢看大官 ~who
+# 郑人买履（《韩非子》）
+郑人有欲买履者，先自度其足，而置之其坐。至之市，而忘操之。已得履，乃曰：“吾忘持度。”反归取之。及反，市罢，遂不得履。人曰：“何不试之以足？”曰：“宁信度，无自信也。”
+注：郑，郑国。履，鞋。度（duó），量。置，放。坐，同“座”，座位。之市，到集市去。度（dù），量好的尺码。反，同“返”，返回。遂，于是，就。无，不。
+?1 “而忘操之”中的“操”是什么意思？ | What does 操 mean?
+≈ 拿 | 而忘操之 | 吾忘持度
+% 他在家量好了脚，把尺码放在座位上，到了集市才发现“忘操之”；接着他自己说“吾忘持度”，我忘了拿尺码。前后说的是同一件事，“操”和“持”意思相同，都是拿。讲成“做操”“操心”，都和忘了带尺码这件事连不起来。 | He measured his foot at home and left the measure on his seat; at the market he finds he 忘操之; then he says himself 吾忘持度, “I forgot to bring the measure”. Both tell the same thing, so 操 means what 持 does: “take, carry”. “Do exercises” or “worry” do not fit his forgetting the measure.
+- 做操 ~modern
+- 操心 ~modern
+?1 “及反，市罢”中的“罢”是什么意思？ | What does 罢 mean?
+≈ 结束，散了 | 及反，市罢 | 遂不得履
+% 他跑回家拿尺码，等再回到集市，“市罢”，于是“不得履”，鞋子没买成。没买成的原因就在“市罢”：集市已经结束、散了，卖鞋的人都走了。讲成“罢工”的停止工作，说的是做工的人，和集市不合；讲成“罢了”的算了，也接不上后面的“遂不得履”。 | He runs home for the measure, and when he gets back 市罢, so he gets no shoes. The reason is 市罢: the market is over and broken up, the shoe-sellers gone. The strike sense of 罢工 is about workers, not a market, and “never mind” does not lead on to 遂不得履.
+- 停止工作 ~modern
+- 算了 ~sense
+?1 “宁信度，无自信也”中的“宁”是什么意思？ | What does 宁 mean?
+≈ 宁可 | 宁信度，无自信也 | 何不试之以足
+% 别人问他为什么不用脚试鞋，他回答：“宁信度，无自信也。”“无”是不，后半句是不相信自己的脚；前半句和它相比，是把量好的尺码放在前面：宁可相信尺码，也不相信自己的脚。所以“宁”是宁可。讲成“安宁”，和后面“信度”连不起来；讲成“难道”，他就是在反问，和他认死理的回答不合。 | Asked why he did not try the shoes on his feet, he answers 宁信度，无自信也. 无 is “not”, and the second half is “not trust myself”; the first half is weighed against it, putting the measure first: “I would rather trust the measure than myself”. So 宁 is “rather”. “Peace” does not join with 信度, and “can it be that” would make it a question, at odds with his stubborn answer.
+- 安宁 ~modern
+- 难道 ~sense
+?2 他为什么没有买到鞋？ | Why did he get no shoes?
+= 他回家去拿尺码，等再回来时，集市已经散了 | 反归取之 | 及反，市罢，遂不得履
+- 鞋子太贵，买不起 ~unsaid
+- 集市上没有合他脚的鞋 ~unsaid
+?2 别人问他“何不试之以足”，是什么意思？ | What does the bystander ask?
+≈ 为什么不用自己的脚去试鞋 | 何不试之以足 | 先自度其足
+- 为什么不光着脚回家 ~misread
+- 为什么不先量一量脚 ~misread
+?2 这个故事讽刺了什么样的人？ | Whom does the story mock?
+≈ 只相信死规矩、不顾实际情况的人 | 宁信度，无自信也 | 何不试之以足
+% 尺码是照着脚量出来的，脚就在他身上，用脚一试就知道鞋合不合适；他却宁可回家拿尺码，也不相信自己的脚，结果鞋没买成。故事讽刺的是只认死规矩、不看实际情况的人。说他只是记性不好，忘带东西，就只看到了故事的一部分。 | The measure was taken from his foot, and the foot is on him; one try would settle whether the shoes fit. Yet he would rather go home for the measure than trust his foot, and gets no shoes. The story mocks those who hold to the rule and ignore what is in front of them. To call him merely forgetful sees only part of it.
+- 爱买东西的人 ~unsaid
+- 记性不好、爱忘事的人 ~part
 
 # 疑邻盗斧（《列子》）
 人有亡斧者，意其邻之子。视其行步，窃斧也；颜色，窃斧也；言语，窃斧也；动作态度，无为而不窃斧也。俄而掘其谷而得其斧，他日复见其邻人之子，动作态度，无似窃斧者。
@@ -510,36 +511,37 @@ export const CLASSICAL_7 = `
 ≈ 借着别人的势力欺压人的人，也讽刺了看不清真相的人 | 狐曰：“子无敢食我也 | 虎不知兽畏己而走也
 - 跑得很快的人 ~unsaid
 - 爱吃肉的人 ~literal
-# 引婴投江（《吕氏春秋》）
-有过于江上者，见人方引婴儿而欲投之江中，婴儿啼。人问其故，曰：“此其父善游。”其父虽善游，其子岂遽善游哉？以此任物，亦必悖矣。
-注：过于江上，从江边经过。方，正。引，拉着，牵着。投，扔。啼，哭。故，原因。善游，很会游泳。遽，就。任物，处理事情。悖，糊涂，不合道理。
-?1 “见人方引婴儿”中的“方”是什么意思？ | What does 方 mean?
-≈ 正 | 见人方引婴儿而欲投之江中 | 婴儿啼
-% 过路人看到的是眼前的事：那人拉着婴儿，要往江里扔，婴儿在哭。这些都是此刻正在发生的，“方”说的就是正在。讲成“方形”“地方”，放进“见人方引婴儿”讲不通。 | The passer-by sees what is happening before his eyes: the man pulling the baby, about to throw it in, the baby crying. All this is under way that moment, and 方 says so: “just then”. “Square” or “place” make no sense in the sentence.
-- 方形 ~modern
-- 地方 ~modern
-?1 “人问其故”中的“故”是什么意思？ | What does 故 mean?
-≈ 原因 | 人问其故 | 此其父善游
-% 过路人问了以后，那人回答“此其父善游”，这孩子的父亲很会游泳，这是他把孩子扔进江里的理由。回答说的是理由，问的就是原因。讲成“故事”“故乡”，和那人的回答对不上。 | Asked, the man answers that the child's father swims well: his reason for throwing the child in. The answer gives a reason, so the question asked the cause. “Story” or “hometown” do not match his answer.
-- 故事 ~modern
-- 故乡 ~modern
-?1 “其子岂遽善游哉”中的“遽”是什么意思？ | What does 遽 mean?
-≈ 就 | 其子岂遽善游哉 | 其父虽善游
-% 这句是作者的反问：父亲虽然会游泳，孩子难道因此“遽”会游泳吗？“遽”本有立刻的意思，放在“善游”前面，把父亲会游和孩子会游连在一起：父亲会游，孩子难道就会游？所以“遽”是就。讲成“急忙地跑”，句子里根本没有跑的事。 | The writer asks: the father may swim well, but does the child 遽 swim well for that? 遽 at heart means “at once”; set before 善游, it links the father's swimming to the child's: does the child then swim too? So 遽 is “thereby, then”. “Hurry off running” brings in running the sentence never has.
-- 急忙地跑 ~unsaid
-- 拒绝 ~sense
-?2 那个人为什么要把婴儿扔进江里？ | Why would he throw the baby in?
-= 孩子的父亲很会游泳 | 此其父善游
-- 孩子一直在哭 ~other
-- 江里有人在等孩子 ~unsaid
-?2 作者认为那个人的做法怎样？ | What does the writer think of it?
-≈ 很糊涂，不合道理：父亲会游泳，孩子不一定会游泳 | 其子岂遽善游哉 | 亦必悖矣
-- 很聪明，值得学习 ~opposite
-- 很勇敢 ~misread
+# 宋有富人（《韩非子》）
+宋有富人，天雨墙坏。其子曰：“不筑，必将有盗。”其邻人之父亦云。暮而果大亡其财，其家甚智其子，而疑邻人之父。
+注：宋，宋国。雨（yù），下雨。筑，修补。盗，小偷。邻人之父，邻居家的老人。亦，也。暮，晚上。果，果然。甚，很。
+?1 “其邻人之父亦云”中的“云”是什么意思？ | What does 云 mean?
+≈ 说 | 其邻人之父亦云 | 其子曰
+% 前面写富人的儿子“曰”，说了“不筑，必将有盗”这句话；接着说邻居家的老人“亦云”，“亦”是也，邻居老人也这样说。后文富人家怀疑的，正是说了这话的邻居老人。所以“云”和前面的“曰”一样，是说。讲成“云彩”，和“亦”连不起来；讲成“想”，邻居心里想的，富人家就无从知道，也谈不上怀疑他。 | First the rich man's son 曰, says, “Unmended, it will bring thieves”; then the neighbour's old father 亦云, 亦 being “also”: he too says so. Later the family suspects the very old man who said it. So 云 is like 曰: “say”. “Cloud” does not join with 亦, and if he had only thought it, the family could not know it or suspect him for it.
+- 云彩 ~modern
+- 心里想 ~sense
+?1 “暮而果大亡其财”中的“亡”是什么意思？ | What does 亡 mean?
+≈ 丢失 | 暮而果大亡其财 | 必将有盗
+% 儿子和邻居老人都说墙不修会招来小偷，到了晚上“果”然出了事，“大亡其财”：被偷走了很多财物，财物丢失了。说的是钱财，不是人，所以“亡”是丢失。讲成“死亡”，财物不会死；讲成“逃跑”，财物自己也不会跑。 | Son and neighbour both said the broken wall would bring thieves, and that night, just as they said, 大亡其财: much was stolen, the goods were lost. It speaks of goods, not people, so 亡 is “lose”. Goods cannot die, so not “death”, nor can they run off by themselves.
+- 死亡 ~modern
+- 逃跑 ~sense
+?1 “其家甚智其子”中的“智”是什么意思？ | What does 智 mean?
+≈ 认为……聪明 | 其家甚智其子 | 而疑邻人之父
+% 家里被偷以后，富人家对儿子和邻居老人的看法正好相反：对邻居老人是“疑”，怀疑他；对儿子是“甚智”。和“怀疑”相对，又用在“其子”前面，“智其子”就是认为自己的儿子很聪明。讲成名词“智慧”，后面紧接着“其子”，句子就说不通了。 | After the theft the family judges son and neighbour in opposite ways: the old man they 疑, suspect; the son they 甚智. Set against “suspect” and put before 其子, 智其子 is “think the son clever”. As the noun “wisdom”, it could not take 其子 straight after it.
+- 智慧 ~modern
+- 聪明的人 ~sense
+?2 富人的儿子和邻居老人说了什么话？ | What did the son and the neighbour say?
+= 墙不修好，一定会有小偷 | 不筑，必将有盗 | 其邻人之父亦云
+- 天快要下雨了 ~unsaid
+- 家里已经丢了钱 ~wrongorder
+?2 两人说的是同样的话，富人家为什么一个夸、一个怀疑？ | They said the same; why praise one and suspect the other?
+≈ 一个是自己的儿子，一个是外人，亲疏不同 | 甚智其子 | 而疑邻人之父 | 其邻人之父亦云
+- 邻居老人说的话不对 ~opposite
+- 邻居老人真的偷了东西 ~unsaid
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
-≈ 看问题要看具体情况，不能凭不相干的理由下结论 | 其父虽善游，其子岂遽善游哉 | 以此任物，亦必悖矣
-- 孩子要早点学游泳 ~detail
-- 不能从江边经过 ~detail
+≈ 判断一句话，要看事实，不能因为和说话人亲疏不同就有偏见 | 甚智其子，而疑邻人之父 | 其邻人之父亦云
+% 两个人说的话一模一样，后来也都应验了。富人家却夸儿子聪明，怀疑邻居老人，不是因为话不同，而是因为人不同：一个是自家人，一个是外人。看人说话，应当看事实，不能因为亲疏就有偏见。说故事是教人下雨后要修墙，只看到了故事的表面。 | The two said exactly the same, and both came true. Yet the family praises the son and suspects the neighbour, not because the words differ but the speakers do: one family, one outsider. Words should be judged by the facts, not by how close the speaker is to us. To take it as “mend walls after rain” sees only the surface.
+- 下雨以后要及时修墙 ~literal
+- 不要和邻居说话 ~unsaid
 
 # 陶侃惜谷（《晋书》）
 侃尝出游，见人持一把未熟稻，侃问：“用此何为？”人云：“行道所见，聊取之耳。”侃大怒曰：“汝既不田，而戏贼人稻！”执而鞭之。是以百姓勤于农植，家给人足。
@@ -572,36 +574,37 @@ export const CLASSICAL_7 = `
 - 脾气暴躁，乱打百姓 ~misread
 - 喜欢到处游玩 ~literal
 
-# 画蛇添足（《战国策》）
-楚有祠者，赐其舍人卮酒。舍人相谓曰：“数人饮之不足，一人饮之有余。请画地为蛇，先成者饮酒。”一人蛇先成，引酒且饮之，乃左手持卮，右手画蛇曰：“吾能为之足。”未成，一人之蛇成，夺其卮曰：“蛇固无足，子安能为之足？”遂饮其酒。为蛇足者，终亡其酒。
-注：祠，祭祀。赐，赏给。舍人，门客，手下办事的人。卮，古代盛酒的器具。相谓，互相商量。引，拿起。且，将要。为之足，给它画上脚。固，本来。安，怎么。亡，失去。
-?1 “引酒且饮之”中的“且”是什么意思？ | What does 且 mean?
-≈ 将要 | 引酒且饮之 | 乃左手持卮，右手画蛇
-% 这人先画成了蛇，拿起酒来“且饮之”；可接着他左手拿着酒杯，右手又去给蛇画脚，后来酒被别人夺走了，他并没有喝到。所以“且饮之”是正要喝、还没喝，“且”是将要。讲成“而且”“并且”，前面没有可以并列的事。 | Having finished his snake, he picks up the wine and 且饮之; but then he holds the cup in his left hand and draws feet with his right, and the wine is taken before he drinks. So he was about to drink and had not: 且 is “about to”. “Moreover” or “and also” have nothing to join.
-- 而且 ~modern
-- 并且 ~modern
-?1 “蛇固无足”中的“固”是什么意思？ | What does 固 mean?
-≈ 本来 | 蛇固无足 | 子安能为之足
-% 第二个人夺过酒说：蛇“固无足”，你怎么能给它画脚呢？他是说蛇生来就没有脚，所以画脚是多余的。“固”说的是蛇原本的样子，是本来。讲成“坚固”“固定”，和“无足”连不起来。 | The second man takes the cup and says the snake 固无足, so how can you give it feet? He means a snake has no feet by nature, so adding them is pointless. 固 is how the snake is to begin with: “originally”. “Firm” or “fixed” do not go with 无足.
-- 坚固 ~modern
-- 固定 ~modern
-?1 “子安能为之足”中的“安”是什么意思？ | What does 安 mean?
-≈ 怎么 | 子安能为之足 | 蛇固无足
-% 这人先说蛇本来就没有脚，接着说“子安能为之足”，这是反问：你怎么能给它画上脚呢？他并不是真的要问，而是说画脚根本不对。“安”放在“能”前面提出反问，是怎么。讲成“安全”“安静”，句子讲不通。 | He says a snake has no feet, then asks 子安能为之足: a rhetorical question, how can you give it feet? He is not truly asking but saying the feet are wrong. 安 before 能 asks it: “how”. “Safe” or “quiet” make no sense.
-- 安全 ~modern
-- 安静 ~modern
-?2 舍人们用什么办法决定谁喝这壶酒？ | How did they decide who drinks?
-= 在地上画蛇，先画成的人喝酒 | 请画地为蛇，先成者饮酒
-- 比谁的力气大 ~unsaid
-- 大家分着喝 ~opposite
-?2 先画好蛇的人为什么没有喝到酒？ | Why did the first one lose the wine?
-≈ 他给蛇画脚，浪费了时间，而且蛇本来就没有脚 | 吾能为之足 | 蛇固无足 | 终亡其酒
-- 他画的蛇不像 ~unsaid
-- 他把酒洒了 ~unsaid
-?2 这个故事告诉我们什么道理？ | What does the story teach?
-≈ 做多余的事，不但没有好处，反而会坏事 | 吾能为之足 | 为蛇足者，终亡其酒
-- 画画要画得快 ~detail
-- 喝酒对身体不好 ~unsaid
+# 刻舟求剑（《吕氏春秋》）
+楚人有涉江者，其剑自舟中坠于水，遽契其舟，曰：“是吾剑之所从坠。”舟止，从其所契者入水求之。舟已行矣，而剑不行，求剑若此，不亦惑乎？
+注：楚，楚国。自，从。坠，落。遽（jù），急忙，立刻。是，这里。所从坠，掉下去的地方。求，寻找。若此，像这样。
+?1 “楚人有涉江者”中的“涉”是什么意思？ | What does 涉 mean?
+≈ 渡，过 | 楚人有涉江者 | 其剑自舟中坠于水
+% 下一句说他的剑“自舟中坠于水”，从船上掉进水里，可见这个楚国人是坐着船在江上。坐船在江上，就是要过江，所以“涉江”是渡江，“涉”是渡、过。讲成“涉及”，和江连不起来；讲成在江边走，他就不会在船上了。 | The next line has his sword fall from the boat into the water, so he is on the river in a boat. On a boat on the river, he is crossing it: 涉江 is “cross the river”, and 涉 is “cross”. “Concern” does not join with a river, and walking on the bank would not put him on a boat.
+- 涉及 ~modern
+- 在江边走 ~sense
+?1 “遽契其舟”中的“契”是什么意思？ | What does 契 mean?
+≈ 刻 | 遽契其舟 | 从其所契者入水求之
+% 剑掉下去以后，他马上在船上“契”了一下，说“这里是我的剑掉下去的地方”；船停了，他又从“所契者”，也就是他“契”过的地方下水找剑。他是在船上留了一个记号，好记住地方，所以“契”是刻。讲成“契约”，船上不会写合同；讲成“抓住”，抓过的地方也留不下可以认的记号。 | When the sword falls he at once does 契 to the boat and says “here is where my sword fell”; when the boat stops he goes into the water from 所契者, the place he did it. He has left a mark on the boat to know the spot, so 契 is “carve”. A contract is not written on a boat, and gripping it would leave no mark to find again.
+- 契约 ~modern
+- 抓住 ~sense
+?1 “不亦惑乎”中的“惑”是什么意思？ | What does 惑 mean?
+≈ 糊涂 | 不亦惑乎 | 舟已行矣，而剑不行
+% 作者先说明白道理：船已经走了，剑却没有跟着走，还在原来的地方；照着船上的记号去找，怎么找得到？“求剑若此”，像这样找剑，“不亦惑乎”，不是很糊涂吗？这是作者对他的评价，所以“惑”是糊涂。讲成“迷惑别人”，楚人并没有骗谁；讲成“聪明”，正和作者讲的道理相反。 | The author first sets out the reason: the boat has moved, the sword has not, it lies where it fell; how could the mark on the boat find it? 求剑若此，不亦惑乎: seeking a sword like this, is it not muddled? It is the author's verdict, so 惑 is “muddled, foolish”. He deceives no one, so not “mislead others”, and “clever” is the opposite of the author's point.
+- 迷惑别人 ~modern
+- 聪明 ~opposite
+?2 楚人为什么在船上刻记号？ | Why did he mark the boat?
+= 想记住剑掉下去的地方，好去找剑 | 是吾剑之所从坠 | 从其所契者入水求之
+- 想在船上留下自己的名字 ~unsaid
+- 船是他刚买的，要做记号 ~unsaid
+?2 他为什么找不到剑？ | Why could he not find it?
+≈ 船已经走了，剑却还在原来掉下去的地方 | 舟已行矣，而剑不行 | 从其所契者入水求之
+- 江水太深，看不见 ~unsaid
+- 剑被别人捡走了 ~unsaid
+?2 这个故事讽刺了什么样的人？ | Whom does the story mock?
+≈ 不懂得事情在变化，死守老办法的人 | 舟已行矣，而剑不行 | 求剑若此，不亦惑乎
+- 不会游泳的人 ~unsaid
+- 丢三落四的人 ~part
+
 # 叶公好龙（《新序》）
 叶公子高好龙，钩以写龙，凿以写龙，屋室雕文以写龙。于是天龙闻而下之，窥头于牖，施尾于堂。叶公见之，弃而还走，失其魂魄，五色无主。是叶公非好龙也，好夫似龙而非龙者也。
 注：叶公，春秋时楚国的贵族，字子高。好，喜欢。钩，衣带上的钩子。写，画。凿，一种酒器。雕文，雕刻的花纹。窥，探看。牖，窗户。施，伸。还走，转身就跑。失其魂魄，吓得魂都没了。五色无主，脸色一会儿一个样，自己做不了主。夫，那。

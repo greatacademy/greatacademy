@@ -536,8 +536,8 @@ const SPECS_7: readonly Spec[] = [
       "听出话里真正的意思，既不停留在字面，也不想得太多；再针对这个意思回应。",
     ),
     intro: t(
-      "People often say what they mean without saying it outright. A mother who asks at ten at night “都几点了？” is not asking the time: she means it is time for bed. Taking her at her word, “十点了”, misses it; deciding she will take the phone away for ever reads in too much.\n\nTo hear the intent, put the words together with the moment: who speaks, what is happening, and how it is said. The first knowledge point hears what is meant, the second answers it.",
-      "人们说话，常常不把意思直接说出来。晚上十点，妈妈问“都几点了？”，并不是想知道时间，而是说该睡觉了。照字面答一句“十点了”，没听懂；以为妈妈要把手机永远收走，又想得太多。\n\n要听出话里的意思，就要把话和当时的情形放在一起想：谁在说，正在发生什么，用什么口气说。第一个知识点听出话里的意思，第二个针对这个意思回应。",
+      "People often say what they mean without saying it outright. A father who sees you playing on your phone over your homework and says “手机比作业好看多了吧？” is not asking your opinion: he means put the phone away. Taking him at his word, “是啊，好看多了”, misses it; deciding he will never let you touch a phone again reads in too much.\n\nTo hear the intent, put the words together with the moment: who speaks, what is happening, and how it is said. The first knowledge point hears what is meant, the second answers it.",
+      "人们说话，常常不把意思直接说出来。爸爸看见你一边写作业一边玩手机，说“手机比作业好看多了吧？”，并不是想听你的看法，而是说该把手机放下了。照字面答一句“是啊，好看多了”，没听懂；以为爸爸再也不让你碰手机了，又想得太多。\n\n要听出话里的意思，就要把话和当时的情形放在一起想：谁在说，正在发生什么，用什么口气说。第一个知识点听出话里的意思，第二个针对这个意思回应。",
     ),
     texts: [...ruleTexts(MEANT_7), ...ruleTexts(ANSWERED_7)],
     after: ["speaking-6-responding"],
@@ -546,8 +546,8 @@ const SPECS_7: readonly Spec[] = [
         "meaning",
         t("What Is Really Meant", "听出言外之意"),
         t(
-          "Ask why the speaker says this here and now. Put the words with what you are doing and how they are said: a remark about your loud voice while someone reads is a request for quiet.\n\nA classmate whose book you have kept a month asks “那本书好看吗？”: the moment, a book long overdue, tells you he means you should return it.\n\n> **Watch out.** Do not stop at the face of the words, and do not swing to the other side: a gentle hint is not a quarrel. Read in only what the moment supports.",
-          "问一问自己：他为什么在这时、这里说这句话？把话和你正在做的事、说话的口气放在一起想：有人在看书时说“你的声音真响亮啊”，是请你小声一点。\n\n比如你借同学的书一个月没还，他问“那本书好看吗？”：书借了很久，这个情形告诉你，他是在提醒你还书。\n\n> **注意。** 不要只听字面，也不要想到另一头去：委婉的提醒不是吵架。只读出当时的情形能说明的意思。",
+          "Ask why the speaker says this here and now. Put the words with what you are doing and how they are said: “你们聊得真热闹啊”, said while someone is trying to nap, is a request for quiet.\n\nYou arrive an hour late to meet a friend, and he says “你来得可真早啊”: the moment, an hour's wait, tells you he means you are very late.\n\n> **Watch out.** Do not stop at the face of the words, and do not swing to the other side: a gentle hint is not a quarrel. Read in only what the moment supports.",
+          "问一问自己：他为什么在这时、这里说这句话？把话和你正在做的事、说话的口气放在一起想：有人正想午睡时说“你们聊得真热闹啊”，是请你们小声一点。\n\n比如你和朋友约好八点见面，九点才到，他说“你来得可真早啊”：他等了一个小时，这个情形告诉你，他是在说你来得太晚了。\n\n> **注意。** 不要只听字面，也不要想到另一头去：委婉的提醒不是吵架。只读出当时的情形能说明的意思。",
         ),
         ruleGenerator(
           t("What does the speaker really mean?", "说话人真正的意思是什么？"),
@@ -572,8 +572,8 @@ const SPECS_7: readonly Spec[] = [
         "reply",
         t("Answering What Was Meant", "针对意图回应"),
         t(
-          "Once you hear what is meant, answer that, not the words: if the hint asks you to do something, say you will do it, kindly and without making the speaker say it outright.\n\nAt a friend's house after dark, Grandma asks whether your family will be worried: “是啊，奶奶，我这就回家了，谢谢您的招待。”\n\n> **Watch out.** Answering the surface, “没事，我家里人不着急”, leaves the speaker to say it bluntly; and turning on them, “您是不是嫌我烦了？”, makes a kind hint into a quarrel.",
-          "听出了真正的意思，就针对这个意思回答，而不是针对字面：如果话里是请你做一件事，就和气地答应去做，不要逼得对方把话挑明。\n\n比如天黑了还在同学家，奶奶问你家里人会不会着急，你答：“是啊，奶奶，我这就回家了，谢谢您的招待。”\n\n> **注意。** 照字面回答“没事，我家里人不着急”，对方只好把话说破；反问“您是不是嫌我烦了？”，又把好意的提醒变成了吵架。",
+          "Once you hear what is meant, answer that, not the words: if the hint asks you to do something, say you will do it, kindly and without making the speaker say it outright.\n\nYou are bouncing a ball outside a neighbour's door, and she says “宝宝刚睡着”: “对不起，阿姨，我到楼下去拍。”\n\n> **Watch out.** Answering the surface, “没事，我拍得很轻”, leaves the speaker to say it bluntly; and turning on them, “您是不是不让我玩？”, makes a kind hint into a quarrel.",
+          "听出了真正的意思，就针对这个意思回答，而不是针对字面：如果话里是请你做一件事，就和气地答应去做，不要逼得对方把话挑明。\n\n比如你在邻居家门口拍球，阿姨说“宝宝刚睡着”，你答：“对不起，阿姨，我到楼下去拍。”\n\n> **注意。** 照字面回答“没事，我拍得很轻”，对方只好把话说破；反问“您是不是不让我玩？”，又把好意的提醒变成了吵架。",
         ),
         ruleGenerator(
           t("Which reply answers what the speaker meant?", "哪一句回应了说话人真正的意思？"),
@@ -601,8 +601,8 @@ const SPECS_7: readonly Spec[] = [
       "复述一个故事或一段话，内容和顺序都不变；把一段话转述给要听的人，说清是谁说的，把“我”“你”换过来。",
     ),
     intro: t(
-      "Retelling says again what you heard, to show you have taken it in: the people, what happened and in what order, without changing or leaving out what matters. Relaying passes a message on to someone else, so it adds who said it and turns the persons round.\n\nGrandmother on the phone: “告诉你妈妈，我周六上午坐九点的车过来。” Relayed to Mother: “妈妈，外婆说她周六上午坐九点的车过来。” The first knowledge point retells, the second relays.",
-      "复述是把听到的再说一遍，表明自己听懂了：人物、发生的事和先后顺序都要说对，要紧的内容不改也不漏。转述是把一段话传给别人，所以还要说清是谁说的，并把人称换过来。\n\n比如外婆在电话里说：“告诉你妈妈，我周六上午坐九点的车过来。”转述给妈妈：“妈妈，外婆说她周六上午坐九点的车过来。”第一个知识点学复述，第二个学转述。",
+      "Retelling says again what you heard, to show you have taken it in: the people, what happened and in what order, without changing or leaving out what matters. Relaying passes a message on to someone else, so it adds who said it and turns the persons round.\n\nYour aunt on the phone: “告诉你爸爸，我明天晚上七点把书送过来。” Relayed to Father: “爸爸，姑姑说她明天晚上七点把书送过来。” The first knowledge point retells, the second relays.",
+      "复述是把听到的再说一遍，表明自己听懂了：人物、发生的事和先后顺序都要说对，要紧的内容不改也不漏。转述是把一段话传给别人，所以还要说清是谁说的，并把人称换过来。\n\n比如姑姑在电话里说：“告诉你爸爸，我明天晚上七点把书送过来。”转述给爸爸：“爸爸，姑姑说她明天晚上七点把书送过来。”第一个知识点学复述，第二个学转述。",
     ),
     texts: [...ruleTexts(RETOLD_7), ...ruleTexts(RELAYED_7)],
     after: ["speaking-5-key-points"],
@@ -611,8 +611,8 @@ const SPECS_7: readonly Spec[] = [
         "retell",
         t("Retelling Faithfully", "完整地复述"),
         t(
-          "Keep the people, every main event and the ending, in the order they came; you may use your own words and drop small details, but not change what happened.\n\nThe fox jumped several times, could not reach the grapes, walked off and said they must be sour: all four, in that order.\n\n> **Watch out.** A retelling that changes the ending, starts from the end, or shrinks the story to “something happened” has not been retold.",
-          "人物、每一件主要的事和结果都要说到，而且按原来的顺序；可以用自己的话，可以省去小的细节，但不能改变发生的事。\n\n比如狐狸跳了几次、够不着葡萄、走开、说葡萄一定是酸的：四件事都要说，顺序不变。\n\n> **注意。** 改了结果，从结尾倒着讲，或者把故事缩成一句“发生了一件事”，都不是复述。",
+          "Keep the people, every main event and the ending, in the order they came; you may use your own words and drop small details, but not change what happened.\n\nA hole in the pen, a sheep lost, the neighbour's advice to mend it refused, another sheep lost the next day and the pen mended at once, and no sheep lost again: all of it, in that order.\n\n> **Watch out.** A retelling that changes the ending, starts from the end, or shrinks the story to “something happened” has not been retold.",
+          "人物、每一件主要的事和结果都要说到，而且按原来的顺序；可以用自己的话，可以省去小的细节，但不能改变发生的事。\n\n比如《亡羊补牢》：羊圈破了个窟窿，丢了一只羊；邻居劝他修，他不听；第二天又丢了一只，他赶紧把羊圈修好；从此再没丢过羊。这几件事都要说，顺序不变。\n\n> **注意。** 改了结果，从结尾倒着讲，或者把故事缩成一句“发生了一件事”，都不是复述。",
         ),
         ruleGenerator(
           t("Which retells it best?", "哪一项复述得最好？"),
@@ -633,8 +633,8 @@ const SPECS_7: readonly Spec[] = [
         "relay",
         t("Relaying a Message", "准确地转述"),
         t(
-          "Begin with who said it; keep every point, the time, the place and what is to be done, exactly; turn “I” and “you” round for the new listener; add nothing and leave out what they do not need.\n\nThe head teacher to you: “请你告诉李明，班会改到下午第二节。” To Li Ming: “李明，班主任说明天的班会改到下午第二节。”\n\n> **Watch out.** Adding a threat or a judgement the speaker never made, such as “你的发言稿写得太差”, changes the message and can hurt.",
-          "先说是谁说的；时间、地点、要做的事，每一点都要准确；按新的听话人把“我”“你”换过来；不添话，也不说对方不需要的话。\n\n比如班主任对你说：“请你告诉李明，班会改到下午第二节。”你对李明说：“李明，班主任说明天的班会改到下午第二节。”\n\n> **注意。** 加上说话人没有说过的威胁或评价，比如“你的发言稿写得太差”，就改变了原话的意思，还可能伤人。",
+          "Begin with who said it; keep every point, the time, the place and what is to be done, exactly; turn “I” and “you” round for the new listener; add nothing and leave out what they do not need.\n\nThe PE teacher to you: “请你告诉王小刚，明天的篮球训练改在体育馆。” To Wang Xiaogang: “王小刚，体育老师说明天的篮球训练改在体育馆。”\n\n> **Watch out.** Adding a threat or a judgement the speaker never made, such as “老师说你上次投篮太差了”, changes the message and can hurt.",
+          "先说是谁说的；时间、地点、要做的事，每一点都要准确；按新的听话人把“我”“你”换过来；不添话，也不说对方不需要的话。\n\n比如体育老师对你说：“请你告诉王小刚，明天的篮球训练改在体育馆。”你对王小刚说：“王小刚，体育老师说明天的篮球训练改在体育馆。”\n\n> **注意。** 加上说话人没有说过的威胁或评价，比如“老师说你上次投篮太差了”，就改变了原话的意思，还可能伤人。",
         ),
         ruleGenerator(
           t("Which relays the message best?", "哪一句转述得最好？"),
@@ -662,8 +662,8 @@ const SPECS_7: readonly Spec[] = [
       "说话要合乎对方的身份，既不随便，也不生硬；还要合乎场合的气氛和规矩。",
     ),
     intro: t(
-      "The same request is put differently to a headmaster and to a friend. To the headmaster: “校长好！同学们想请您给大家讲几句话，不知道您有没有时间？” To a friend: “周六一起去打球吧！” Calling the headmaster “喂” is too casual; writing to a friend like an official notice is too stiff.\n\nThe occasion matters as much: a hospital visit, a ceremony, a library, a birthday each asks for its own words and voice. The first knowledge point fits the listener, the second the occasion.",
-      "同样是请别人做事，对校长和对朋友说法不一样。对校长：“校长好！同学们想请您给大家讲几句话，不知道您有没有时间？”对朋友：“周六一起去打球吧！”对校长喊“喂”太随便；对朋友像发通知一样说话又太生硬。\n\n场合也一样要紧：看望病人、参加仪式、在图书馆里、给人祝寿，各有各该说的话、该用的声音。第一个知识点合乎对象，第二个合乎场合。",
+      "The same request is put differently to a teacher and to a friend. To the librarian: “刘老师好！我们班想请您给大家推荐几本书，不知道您什么时候方便？” To a friend: “周日一起去看展览吧！” Calling the teacher “喂” is too casual; writing to a friend like an official notice is too stiff.\n\nThe occasion matters as much: a hospital visit, a ceremony, a library, a birthday each asks for its own words and voice. The first knowledge point fits the listener, the second the occasion.",
+      "同样是请别人做事，对老师和对朋友说法不一样。对图书馆的老师：“刘老师好！我们班想请您给大家推荐几本书，不知道您什么时候方便？”对朋友：“周日一起去看展览吧！”对老师喊“喂”太随便；对朋友像发通知一样说话又太生硬。\n\n场合也一样要紧：看望病人、参加仪式、在图书馆里、给人祝寿，各有各该说的话、该用的声音。第一个知识点合乎对象，第二个合乎场合。",
     ),
     texts: [...ruleTexts(LISTENER_7), ...ruleTexts(OCCASION_7)],
     after: ["speaking-5-civil-language"],
@@ -672,8 +672,8 @@ const SPECS_7: readonly Spec[] = [
         "listener",
         t("Fitting the Listener", "合乎对象"),
         t(
-          "Think who the listener is to you, older or younger, close or a stranger, and choose how to address them and how formal to be: 您 and a greeting for an elder or a stranger, plain warm words for a friend.\n\nAsking a stranger the way: “爷爷，您好！请问去人民医院怎么走？”\n\n> **Watch out.** Fitting is not the same as formal: “敬请告知本人前往人民医院的具体路线” is polite in words but so stiff that it sounds odd. Speak as a respectful pupil, not as a notice.",
-          "想一想对方和你是什么关系：比你大还是比你小，熟悉还是陌生；再决定怎样称呼、说得多正式：对长辈和陌生人用“您”，先问好；对朋友用平常亲切的话。\n\n比如向陌生的老人问路：“爷爷，您好！请问去人民医院怎么走？”\n\n> **注意。** 得体不等于越正式越好：“敬请告知本人前往人民医院的具体路线”字面上很客气，却生硬得让人觉得奇怪。要像一个有礼貌的学生那样说话，而不是像一份通知。",
+          "Think who the listener is to you, older or younger, close or a stranger, and choose how to address them and how formal to be: 您 and a greeting for an elder or a stranger, plain warm words for a friend.\n\nAsking a stranger at a bus stop: “阿姨，您好！请问去博物馆坐几路车？”\n\n> **Watch out.** Fitting is not the same as formal: “恳请您告知鄙人去往博物馆须乘坐之公交线路” is polite in words but so stiff that it sounds odd. Speak as a respectful pupil, not as a notice.",
+          "想一想对方和你是什么关系：比你大还是比你小，熟悉还是陌生；再决定怎样称呼、说得多正式：对长辈和陌生人用“您”，先问好；对朋友用平常亲切的话。\n\n比如在车站向陌生的阿姨打听：“阿姨，您好！请问去博物馆坐几路车？”\n\n> **注意。** 得体不等于越正式越好：“恳请您告知鄙人去往博物馆须乘坐之公交线路”字面上很客气，却生硬得让人觉得奇怪。要像一个有礼貌的学生那样说话，而不是像一份通知。",
         ),
         ruleGenerator(
           t("Which way of saying it fits the listener?", "哪一种说法合乎对方的身份？"),
@@ -694,8 +694,8 @@ const SPECS_7: readonly Spec[] = [
         "occasion",
         t("Fitting the Occasion", "合乎场合"),
         t(
-          "Think what the occasion is and how people there feel: sad, solemn, quiet or joyful. Let your words and your voice suit it: comfort at a sickbed, a proper greeting at a ceremony, a low voice in a library.\n\nVisiting a sick classmate: “你好点了吗？好好休息，课上讲的内容我都记下来了。”\n\n> **Watch out.** A joke that would be fine among friends, “你可真会挑时间生病”, hurts at a sickbed; and words true enough, “人总是要死的”, are cruel to someone in mourning.",
-          "想一想这是什么场合，在场的人心里怎样：难过、庄重、安静，还是高兴；再让你的话和声音合乎它：病床前要安慰，仪式上要正式地问好，图书馆里要小声。\n\n比如看望生病的同学：“你好点了吗？好好休息，课上讲的内容我都记下来了。”\n\n> **注意。** 在朋友之间没关系的玩笑，比如“你可真会挑时间生病”，在病床前就会伤人；“人总是要死的”这话虽然不假，对刚失去亲人的人说就太冷酷了。",
+          "Think what the occasion is and how people there feel: sad, solemn, quiet or joyful. Let your words and your voice suit it: comfort at a sickbed, a proper greeting at a ceremony, a low voice in a library.\n\nVisiting a classmate who has hurt his leg: “腿还疼吗？别着急，我每天放学来给你讲作业。”\n\n> **Watch out.** A joke that would be fine among friends, “这下你可以不上体育课了”, hurts at a sickbed; and words true enough, “比赛总有输有赢”, are cold to a teammate in tears after a defeat.",
+          "想一想这是什么场合，在场的人心里怎样：难过、庄重、安静，还是高兴；再让你的话和声音合乎它：病床前要安慰，仪式上要正式地问好，图书馆里要小声。\n\n比如看望摔伤了腿的同学：“腿还疼吗？别着急，我每天放学来给你讲作业。”\n\n> **注意。** 在朋友之间没关系的玩笑，比如“这下你可以不上体育课了”，在病床前就会伤人；“比赛总有输有赢”这话虽然不假，对刚输了比赛、正在流泪的队友说就太冷淡了。",
         ),
         ruleGenerator(
           t("Which fits the occasion?", "哪一种说法合乎这个场合？"),
@@ -723,8 +723,8 @@ const SPECS_7: readonly Spec[] = [
       "不经准备当场讲话：从眼前的场合、眼前的人和事说起，讲得简短，围绕一个意思，再举一个例子。",
     ),
     intro: t(
-      "Asked to say a few words with no warning, the easiest way in is what is in front of you. On the hilltop at a class outing: “站在山顶往下看，我们刚才走过的路弯弯曲曲，可我们一个也没掉队。” Then one point, here, that together no road is too far, and stop.\n\nA speech about the importance of study, given on a hilltop, could be given anywhere and holds no one. The first knowledge point starts from the moment, the second keeps the talk short and on one point.",
-      "没有准备、突然被请上来讲几句，最好的开口是眼前的事。比如春游时在山顶：“站在山顶往下看，我们刚才走过的路弯弯曲曲，可我们一个也没掉队。”然后只讲一个意思，这里是“一起走，再远的路也不怕”，说完就停。\n\n在山顶上讲“学习的重要性”，放在哪里讲都一样，谁也打动不了。第一个知识点从眼前说起，第二个讲得简短、围绕一个意思。",
+      "Asked to say a few words with no warning, the easiest way in is what is in front of you. At the end of a class tree-planting: “大家看，我们早上种下的二十棵小树，已经站成了整整齐齐的一行。” Then one point, here, that many hands together get a thing done, and stop.\n\nA speech about the importance of study, given beside the new trees, could be given anywhere and holds no one. The first knowledge point starts from the moment, the second keeps the talk short and on one point.",
+      "没有准备、突然被请上来讲几句，最好的开口是眼前的事。比如班里植树活动结束时：“大家看，我们早上种下的二十棵小树，已经站成了整整齐齐的一行。”然后只讲一个意思，这里是“大家一起动手，就能做成一件事”，说完就停。\n\n在小树旁边讲“学习的重要性”，放在哪里讲都一样，谁也打动不了。第一个知识点从眼前说起，第二个讲得简短、围绕一个意思。",
     ),
     texts: [...ruleTexts(LINKED_7), ...ruleTexts(CENTRED_7)],
     after: ["speaking-6-short-speech"],
@@ -733,8 +733,8 @@ const SPECS_7: readonly Spec[] = [
         "moment",
         t("Starting From the Moment", "从眼前说起"),
         t(
-          "Open with something everyone present can see or has just shared, a place, a moment, a person, and draw your point from it in a sentence or two.\n\nAt a farewell: “小林，这张桌子你坐了两年，桌角还有你画的小猫。你走了，我们会想你的。”\n\n> **Watch out.** A general truth, “转学是一件很正常的事”, could open any speech, so it reaches no one; and announcing “first, second, third” before saying anything leaves the listeners waiting.",
-          "从在场的人都看得见、刚刚一起经历过的事说起：一个地方、一个时刻、一个人；再用一两句话从中引出你要说的意思。\n\n比如送别同学：“小林，这张桌子你坐了两年，桌角还有你画的小猫。你走了，我们会想你的。”\n\n> **注意。** 一句放之四海而皆准的话，比如“转学是一件很正常的事”，哪一次讲话都能用，所以打动不了谁；还没开讲就说“第一、第二、第三”，听的人只能干等。",
+          "Open with something everyone present can see or has just shared, a place, a moment, a person, and draw your point from it in a sentence or two.\n\nWelcoming a new classmate: “小雨，你坐的这个位置靠着窗，一抬头就能看见操场边的大槐树。欢迎你，以后我们一起在树下玩！”\n\n> **Watch out.** A general truth, “到了新学校总会有些不习惯”, could open any speech, so it reaches no one; and announcing “first, second, third” before saying anything leaves the listeners waiting.",
+          "从在场的人都看得见、刚刚一起经历过的事说起：一个地方、一个时刻、一个人；再用一两句话从中引出你要说的意思。\n\n比如欢迎新同学：“小雨，你坐的这个位置靠着窗，一抬头就能看见操场边的大槐树。欢迎你，以后我们一起在树下玩！”\n\n> **注意。** 一句放之四海而皆准的话，比如“到了新学校总会有些不习惯”，哪一次讲话都能用，所以打动不了谁；还没开讲就说“第一、第二、第三”，听的人只能干等。",
         ),
         ruleGenerator(
           t("Which is the best way to begin?", "哪一种开头最好？"),
@@ -755,8 +755,8 @@ const SPECS_7: readonly Spec[] = [
         "point",
         t("One Point, Briefly", "简短，有中心"),
         t(
-          "Hold the talk to one point, say it plainly, back it with one example of your own, and end by saying it again in a sentence. A minute is enough.\n\nOn saving time: doing homework first freed half an hour for reading, “所以，今天的事今天做。”\n\n> **Watch out.** Sliding from the topic to whatever comes to mind, the watch your father gave you, loses the point; and saying the same thing over in other words, “时间很重要，所以要珍惜”, fills the minute with nothing.",
-          "整段话只讲一个意思，明明白白地说出来，用一个自己的例子来说明，最后用一句话再点一下。一分钟就够了。\n\n比如谈珍惜时间：先写完作业，多出了半小时读书，“所以，今天的事今天做。”\n\n> **注意。** 从话题滑到随便想到的事上，比如爸爸送的手表，意思就丢了；换着说法把同一句话说上好几遍，比如“时间很重要，所以要珍惜”，这一分钟就什么也没说。",
+          "Hold the talk to one point, say it plainly, back it with one example of your own, and end by saying it again in a sentence. A minute is enough.\n\nOn keeping at it: ten minutes of skipping every day took you from a hundred skips to two hundred in a month, “所以，每天坚持一点，就会有大进步。”\n\n> **Watch out.** Sliding from the topic to whatever comes to mind, the colour of your new rope, loses the point; and saying the same thing over in other words, “坚持很重要，所以要坚持”, fills the minute with nothing.",
+          "整段话只讲一个意思，明明白白地说出来，用一个自己的例子来说明，最后用一句话再点一下。一分钟就够了。\n\n比如谈坚持：每天跳绳十分钟，一个月从一百下跳到了两百下，“所以，每天坚持一点，就会有大进步。”\n\n> **注意。** 从话题滑到随便想到的事上，比如新跳绳是什么颜色，意思就丢了；换着说法把同一句话说上好几遍，比如“坚持很重要，所以要坚持”，这一分钟就什么也没说。",
         ),
         ruleGenerator(
           t("Which short talk keeps best to one point?", "哪一段即席讲话最简短、有中心？"),
