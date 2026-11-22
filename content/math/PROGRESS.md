@@ -142,7 +142,7 @@ Stage 0 is done. Walking its lessons against Math Academy's on the same topics f
 | `algebra-ii-polynomial-graphs.ts` | 5 | done | |  |
 | `algebra-ii-reciprocal-functions.ts` | 6 | done | |  |
 | `algebra-ii-general-triangles.ts` | 5 | done | |  |
-| other files | 1 | in progress | | `functions.ts` (1); the other 9 counted here were already taught |
+| other files | 1 | done | | `act-fundamentals-reasoning-algebra.ts` (1); the other 9 counted here were already taught |
 
 ### Precalculus
 
