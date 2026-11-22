@@ -176,4 +176,10 @@ export const taughtTopics: readonly string[] = [
   "graphing-cubic-curves-containing-a-double-root",
   "graphing-cubic-curves-containing-one-distinct-real-root",
   "graphing-general-polynomials",
+  "graphing-reciprocal-functions",
+  "graph-transformations-of-reciprocal-functions",
+  "combining-graph-transformations-of-reciprocal-functions",
+  "domain-and-range-of-transformed-reciprocal-functions",
+  "inverses-of-reciprocal-functions",
+  "finding-intersections-of-lines-and-reciprocal-functions",
 ];
