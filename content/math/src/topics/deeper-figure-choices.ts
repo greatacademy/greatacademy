@@ -786,8 +786,8 @@ Check each line by its $y$-intercept and its slope. For $y = 2x - 1$ and $y = -x
       "choosing-the-drawing-of-exponential-growth",
       ["Choosing the drawing of exponential growth", "选出指数增长的图像"],
       [
-        "The graph of $y = a \\cdot b^x + k$ with $a > 0$ and $b > 1$ crosses the $y$-axis at $(0, a + k)$, passes through $(1, ab + k)$, and rises faster and faster to the right. To the left it comes close to the line $y = k$ without touching it.",
-        "当 $a > 0$，$b > 1$ 时，$y = a \\cdot b^x + k$ 的图像与 $y$ 轴交于 $(0, a + k)$，经过 $(1, ab + k)$，向右上升得越来越快。向左它越来越接近直线 $y = k$，但不会碰到。",
+        "The graph of $y = a \\cdot b^x + k$ with $a > 0$ and $b > 1$ crosses the $y$-axis at $(0, a + k)$, passes through $(1, ab + k)$, and rises faster and faster to the right. To the left it comes close to the line $y = k$ without touching it.\n\n> **Watch out.** Check three things on each drawing: it rises to the right (a base below $1$ would make it fall), it crosses the $y$-axis at $a + k$ (not higher), and it levels off at $y = k$, the added number.",
+        "当 $a > 0$，$b > 1$ 时，$y = a \\cdot b^x + k$ 的图像与 $y$ 轴交于 $(0, a + k)$，经过 $(1, ab + k)$，向右上升得越来越快。向左它越来越接近直线 $y = k$，但不会碰到。\n\n> **注意。** 每张图都要检查三点：向右上升（底数小于 $1$ 会使它下降）；与 $y$ 轴交于 $a + k$（不能更高）；趋近于 $y = k$，即所加的数。",
       ],
       (rng) => {
         const a = rng.int(1, 4);
@@ -810,8 +810,8 @@ Check each line by its $y$-intercept and its slope. For $y = 2x - 1$ and $y = -x
             ),
           ],
           solution: t(
-            `At $x = 0$, $y = ${a + k}$, so the curve crosses the $y$-axis at $${tex([0, a + k])}$. At $x = 1$, $y = ${a * b + k}$. Since the base $${b}$ is greater than $1$, the curve rises to the right, and to the left it comes close to $y = ${k}$.`,
-            `当 $x = 0$ 时，$y = ${a + k}$，所以曲线与 $y$ 轴交于 $${tex([0, a + k])}$。当 $x = 1$ 时，$y = ${a * b + k}$。因为底数 $${b}$ 大于 $1$，所以曲线向右上升，向左接近 $y = ${k}$。`,
+            `**Step 1:** plot two points. At $x = 0$ the power is $1$, so $y = ${a + k}$ and the curve crosses the $y$-axis at $${tex([0, a + k])}$. At $x = 1$, $y = ${a * b + k}$.\n\n**Step 2:** read the shape. Since the base $${b}$ is greater than $1$, the curve rises to the right, and to the left the power shrinks toward $0$, so the curve comes close to $y = ${k}$. The drawing that does all of this is the graph.\n\n**Check.** At $x = -1$, $y = ${factor(a)}\\frac{1}{${b}}${plus(k)}$, which lies between $${k}$ and $${a + k}$: on the left the curve is already close to its asymptote, as the chosen drawing shows.`,
+            `**第一步：** 描两个点。当 $x = 0$ 时幂为 $1$，所以 $y = ${a + k}$，曲线与 $y$ 轴交于 $${tex([0, a + k])}$。当 $x = 1$ 时，$y = ${a * b + k}$。\n\n**第二步：** 看形状。因为底数 $${b}$ 大于 $1$，所以曲线向右上升；向左幂越来越接近 $0$，所以曲线接近 $y = ${k}$。同时满足这些的那张图就是所求图像。\n\n**检验。** 当 $x = -1$ 时，$y = ${factor(a)}\\frac{1}{${b}}${plus(k)}$，在 $${k}$ 与 $${a + k}$ 之间：曲线在左边已经接近渐近线，与所选的图一致。`,
           ),
         });
       },
@@ -822,8 +822,8 @@ Check each line by its $y$-intercept and its slope. For $y = 2x - 1$ and $y = -x
       "choosing-the-drawing-of-exponential-decay",
       ["Choosing the drawing of exponential decay", "选出指数衰减的图像"],
       [
-        "The graph of $y = a \\cdot r^x + k$ with $a > 0$ and $0 < r < 1$ crosses the $y$-axis at $(0, a + k)$ and falls to the right, coming close to the line $y = k$ without touching it. Going one step left divides the power by $r$, which makes the curve climb steeply on the left.",
-        "当 $a > 0$，$0 < r < 1$ 时，$y = a \\cdot r^x + k$ 的图像与 $y$ 轴交于 $(0, a + k)$，向右下降，越来越接近直线 $y = k$ 但不会碰到。向左走一步，幂要除以 $r$，所以曲线在左边陡峭上升。",
+        "The graph of $y = a \\cdot r^x + k$ with $a > 0$ and $0 < r < 1$ crosses the $y$-axis at $(0, a + k)$ and falls to the right, coming close to the line $y = k$ without touching it. Going one step left divides the power by $r$, which makes the curve climb steeply on the left.\n\n> **Watch out.** Check three things on each drawing: it falls to the right (a base above $1$ would make it rise), it crosses the $y$-axis at $a + k$ (not higher), and it levels off at $y = k$ on the right, the added number.",
+        "当 $a > 0$，$0 < r < 1$ 时，$y = a \\cdot r^x + k$ 的图像与 $y$ 轴交于 $(0, a + k)$，向右下降，越来越接近直线 $y = k$ 但不会碰到。向左走一步，幂要除以 $r$，所以曲线在左边陡峭上升。\n\n> **注意。** 每张图都要检查三点：向右下降（底数大于 $1$ 会使它上升）；与 $y$ 轴交于 $a + k$（不能更高）；在右侧趋近于 $y = k$，即所加的数。",
       ],
       (rng) => {
         const a = rng.int(1, 4);
@@ -849,8 +849,8 @@ Check each line by its $y$-intercept and its slope. For $y = 2x - 1$ and $y = -x
             ),
           ],
           solution: t(
-            `At $x = 0$, $y = ${a + k}$, so the curve crosses the $y$-axis at $${tex([0, a + k])}$. At $x = -1$, $y = ${a * b + k}$. The base is less than $1$, so the curve falls to the right and comes close to $y = ${k}$.`,
-            `当 $x = 0$ 时，$y = ${a + k}$，所以曲线与 $y$ 轴交于 $${tex([0, a + k])}$。当 $x = -1$ 时，$y = ${a * b + k}$。底数小于 $1$，所以曲线向右下降，并接近 $y = ${k}$。`,
+            `**Step 1:** plot two points. At $x = 0$ the power is $1$, so $y = ${a + k}$ and the curve crosses the $y$-axis at $${tex([0, a + k])}$. At $x = -1$ the power is $${b}$, so $y = ${a * b + k}$.\n\n**Step 2:** read the shape. The base $\\frac{1}{${b}}$ is less than $1$, so the curve falls to the right, and there the power shrinks toward $0$, so the curve comes close to $y = ${k}$. The drawing that does all of this is the graph.\n\n**Check.** At $x = 1$, $y = ${factor(a)}\\frac{1}{${b}}${plus(k)}$, which lies between $${k}$ and $${a + k}$: on the right the curve is already close to its asymptote, as the chosen drawing shows.`,
+            `**第一步：** 描两个点。当 $x = 0$ 时幂为 $1$，所以 $y = ${a + k}$，曲线与 $y$ 轴交于 $${tex([0, a + k])}$。当 $x = -1$ 时幂为 $${b}$，所以 $y = ${a * b + k}$。\n\n**第二步：** 看形状。底数 $\\frac{1}{${b}}$ 小于 $1$，所以曲线向右下降；在右侧幂越来越接近 $0$，所以曲线接近 $y = ${k}$。同时满足这些的那张图就是所求图像。\n\n**检验。** 当 $x = 1$ 时，$y = ${factor(a)}\\frac{1}{${b}}${plus(k)}$，在 $${k}$ 与 $${a + k}$ 之间：曲线在右边已经接近渐近线，与所选的图一致。`,
           ),
         });
       },
