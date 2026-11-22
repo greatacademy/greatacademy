@@ -1899,13 +1899,17 @@ export const multiplyingMatrices: TopicDef = {
   encompasses: [{ topic: "conformability-for-matrix-multiplication", weight: 0.4 }],
   xp: 13,
   standards: ["CCSS.HSN.VM.C.8"],
+  intro: t(
+    "You can tell when a product of two matrices exists and how large it is, and you can multiply square matrices. The same row-by-column rule works for any sizes that fit: each entry is a row of the first matrix times a column of the second, with as many products as the shared inner size. This is the product that combines tables of different shapes, such as amounts per recipe times costs per ingredient.\n\nFor example,\n\n$$\\begin{pmatrix} 1 & 0 & 2 \\\\ -1 & 3 & 1 \\end{pmatrix} \\begin{pmatrix} 3 & 1 \\\\ 2 & 1 \\\\ 1 & 0 \\end{pmatrix} = \\begin{pmatrix} 5 & 1 \\\\ 4 & 2 \\end{pmatrix}$$\n\nA $2 \\times 3$ matrix times a $3 \\times 2$ matrix is $2 \\times 2$. The top left entry is $1 \\cdot 3 + 0 \\cdot 2 + 2 \\cdot 1 = 5$, with three products because the inner size is $3$.",
+    "你会判断两个矩阵的乘积是否存在、有多大，也会做方阵乘法。同样的行乘列规则适用于任何相配的大小：每个元素都是第一个矩阵的一行乘第二个矩阵的一列，乘积的个数等于共同的内侧尺寸。形状不同的表就是这样结合的，比如每份配方的用量乘每种原料的价格。\n\n例如\n\n$$\\begin{pmatrix} 1 & 0 & 2 \\\\ -1 & 3 & 1 \\end{pmatrix} \\begin{pmatrix} 3 & 1 \\\\ 2 & 1 \\\\ 1 & 0 \\end{pmatrix} = \\begin{pmatrix} 5 & 1 \\\\ 4 & 2 \\end{pmatrix}$$\n\n$2 \\times 3$ 矩阵乘 $3 \\times 2$ 矩阵得 $2 \\times 2$ 矩阵。左上元素是 $1 \\cdot 3 + 0 \\cdot 2 + 2 \\cdot 1 = 5$，有三个乘积，因为内侧尺寸是 $3$。",
+  ),
   knowledgePoints: [
     {
       id: "multiplying-rectangular-matrices",
       title: t("Multiplying rectangular matrices", "矩形矩阵相乘"),
       explanation: t(
-        "To multiply an $m \\times k$ matrix $A$ by a $k \\times n$ matrix $B$, each entry $(AB)_{ij}$ is the sum of products of corresponding entries from row $i$ of $A$ and column $j$ of $B$:\n\n$$(AB)_{ij} = \\sum_{r=1}^k a_{ir} b_{rj}$$",
-        "将 $m \\times k$ 矩阵 $A$ 与 $k \\times n$ 矩阵 $B$ 相乘时，乘积中第 $i$ 行第 $j$ 列的元素为 $A$ 的第 $i$ 行与 $B$ 的第 $j$ 列对应元素的乘积之和：\n\n$$(AB)_{ij} = \\sum_{r=1}^k a_{ir} b_{rj}$$",
+        "To multiply an $m \\times k$ matrix $A$ by a $k \\times n$ matrix $B$, each entry $(AB)_{ij}$ is the sum of products of corresponding entries from row $i$ of $A$ and column $j$ of $B$:\n\n$$(AB)_{ij} = \\sum_{r=1}^k a_{ir} b_{rj}$$\n\n> **Watch out.** The product has the rows of $A$ and the columns of $B$: a $2 \\times 3$ matrix times a $3 \\times 2$ matrix is $2 \\times 2$, not $3 \\times 3$.",
+        "将 $m \\times k$ 矩阵 $A$ 与 $k \\times n$ 矩阵 $B$ 相乘时，乘积中第 $i$ 行第 $j$ 列的元素为 $A$ 的第 $i$ 行与 $B$ 的第 $j$ 列对应元素的乘积之和：\n\n$$(AB)_{ij} = \\sum_{r=1}^k a_{ir} b_{rj}$$\n\n> **注意。** 乘积的行数来自 $A$，列数来自 $B$：$2 \\times 3$ 矩阵乘 $3 \\times 2$ 矩阵得 $2 \\times 2$ 矩阵，而不是 $3 \\times 3$。",
       ),
       generate(rng) {
         const pool = [-3, -2, -1, 1, 2, 3];
@@ -1919,6 +1923,9 @@ export const multiplyingMatrices: TopicDef = {
           [rng.pick(pool), rng.pick(pool)],
         ];
         const C = matMul(A, B);
+        const colA = (j: number) => A.map((r) => r[j]!);
+        const colB = (j: number) => B.map((r) => r[j]!);
+        const colB2 = (j: number) => C.map((r) => r[j]!);
 
         return oneOf(
           rng,
@@ -1938,10 +1945,38 @@ export const multiplyingMatrices: TopicDef = {
               `$${matLatex(C.map((r, i) => r.map((v, j) => (i === 1 && j === 1 ? -v : v))))}$`,
             ),
           ],
-          t(
-            `Matrix $A$ is $2 \\times 3$ and $B$ is $3 \\times 2$, producing a $2 \\times 2$ product:\n\n$$AB = ${matLatex(C)}$$`,
-            `矩阵 $A$ 维度为 $2 \\times 3$，$B$ 维度为 $3 \\times 2$，乘积为 $2 \\times 2$ 矩阵：\n\n$$AB = ${matLatex(C)}$$`,
+          join(
+            label(1, "Find the size", "确定大小"),
+            t(
+              "$A$ is $2 \\times 3$ and $B$ is $3 \\times 2$. The inner sizes are both $3$, so $AB$ is $2 \\times 2$ and each entry has three products.",
+              "$A$ 是 $2 \\times 3$，$B$ 是 $3 \\times 2$。内侧尺寸都是 $3$，所以 $AB$ 是 $2 \\times 2$ 矩阵，每个元素有三个乘积。",
+            ),
+            para,
+            label(2, "Multiply row by column", "行乘列"),
+            t("Each entry is a row of $A$ times a column of $B$:", "每个元素都是 $A$ 的一行乘 $B$ 的一列："),
+            shown(...[0, 1].flatMap((i) => [0, 1].map((j) => `(AB)_{${i + 1}${j + 1}} = ${dot(A[i]!, colB(j))}`))),
+            para,
+            t(`So $AB = ${matLatex(C)}$.`, `所以 $AB = ${matLatex(C)}$。`),
+            checked(
+              t(
+                "Build each column of $AB$ from the three columns of $A$, weighted by the entries of the matching column of $B$:",
+                "用 $A$ 的三列组合出 $AB$ 的每一列，权重是 $B$ 对应列的元素：",
+              ),
+            ),
+            shown(
+              ...[0, 1].map(
+                (j) =>
+                  `${[0, 1, 2].map((r) => `${r === 0 ? B[r]![j]! : paren(B[r]![j]!)}${colVecLatex(colA(r))}`).join(" + ")} = ${colVecLatex(colB2(j))}`,
+              ),
+            ),
+            para,
+            t("These are the columns found above.", "这正是上面求出的两列。"),
           ),
+          [
+            t("This has the rows and columns of $AB$ swapped.", "这把 $AB$ 的行和列互换了。"),
+            t(`The top left entry should be $${C[0]![0]!}$.`, `左上元素应该是 $${C[0]![0]!}$。`),
+            t(`The bottom right entry has the wrong sign: it is $${C[1]![1]!}$.`, `右下元素的符号错了：应该是 $${C[1]![1]!}$。`),
+          ],
         );
       },
     },
@@ -1949,8 +1984,8 @@ export const multiplyingMatrices: TopicDef = {
       id: "row-by-column-entry-calculations",
       title: t("Calculating specific entries in general matrix products", "计算一般矩阵乘积中的指定元素"),
       explanation: t(
-        "To evaluate entry $(AB)_{ij}$ of a matrix product, take the dot product of the $i$-th row of $A$ and the $j$-th column of $B$.",
-        "要计算矩阵乘积中的元素 $(AB)_{ij}$，只需对 $A$ 的第 $i$ 行与 $B$ 的第 $j$ 列进行对应相乘求和。",
+        "To evaluate entry $(AB)_{ij}$ of a matrix product, take the dot product of the $i$-th row of $A$ and the $j$-th column of $B$.\n\n> **Watch out.** Include every product: a row of three entries times a column of three entries gives three products to add, not two.",
+        "要计算矩阵乘积中的元素 $(AB)_{ij}$，只需对 $A$ 的第 $i$ 行与 $B$ 的第 $j$ 列进行对应相乘求和。\n\n> **注意。** 每个乘积都要算上：三个元素的行乘三个元素的列，要把三个乘积相加，而不是两个。",
       ),
       generate(rng) {
         const pool = [-4, -3, -2, -1, 1, 2, 3, 4];
@@ -1974,10 +2009,7 @@ export const multiplyingMatrices: TopicDef = {
         const c1 = B[0]![j - 1]!;
         const c2 = B[1]![j - 1]!;
         const c3 = B[2]![j - 1]!;
-        const t1 = r1 * c1;
-        const t2 = r2 * c2;
-        const t3 = r3 * c3;
-        const step = `${t1} ${t2 < 0 ? `- ${-t2}` : `+ ${t2}`} ${t3 < 0 ? `- ${-t3}` : `+ ${t3}`}`;
+        const rowC = AB[i - 1]!;
 
         return numberProblem({
           prompt: t(
@@ -1986,9 +2018,22 @@ export const multiplyingMatrices: TopicDef = {
           ),
           answer: val,
           wrong: [-val, val + 3, val - 2, val + 1],
-          solution: t(
-            `Multiply row $${i}$ of $A$ by column $${j}$ of $B$:\n\n$$(${r1})(${c1}) + (${r2})(${c2}) + (${r3})(${c3}) = ${step} = ${val}$$`,
-            `将 $A$ 的第 $${i}$ 行与 $B$ 的第 $${j}$ 列对应相乘求和：\n\n$$(${r1})(${c1}) + (${r2})(${c2}) + (${r3})(${c3}) = ${step} = ${val}$$`,
+          solution: join(
+            label(1, "Pick the row and the column", "取出行和列"),
+            t(
+              `Row $${i}$ of $A$ is $${r1}, ${r2}, ${r3}$ and column $${j}$ of $B$ is $${c1}, ${c2}, ${c3}$.`,
+              `$A$ 的第 $${i}$ 行是 $${r1}, ${r2}, ${r3}$，$B$ 的第 $${j}$ 列是 $${c1}, ${c2}, ${c3}$。`,
+            ),
+            para,
+            label(2, "Multiply and add", "相乘再相加"),
+            t("Multiply matching entries and add the three products:", "对应元素相乘，再把三个乘积相加："),
+            shown(`(AB)_{${i}${j}} = ${dot([r1, r2, r3], [c1, c2, c3])}`),
+            checked(
+              t(
+                `Find the whole row $${i}$ of $AB$ instead, as $${r1}$ times row $1$ of $B$ plus $${paren(r2)}$ times row $2$ plus $${paren(r3)}$ times row $3$. It is $${rowC.join(", ")}$, and entry number $${j}$ is $${val}$.`,
+                `改为求出 $AB$ 的整个第 $${i}$ 行：$B$ 第 $1$ 行的 $${r1}$ 倍加第 $2$ 行的 $${paren(r2)}$ 倍再加第 $3$ 行的 $${paren(r3)}$ 倍。它是 $${rowC.join(", ")}$，第 $${j}$ 个元素是 $${val}$。`,
+              ),
+            ),
           ),
         });
       },
@@ -2010,13 +2055,17 @@ export const powersOfMatrices: TopicDef = {
   encompasses: [{ topic: "multiplying-square-matrices", weight: 0.4 }],
   xp: 13,
   standards: ["CCSS.HSN.VM.C.8"],
+  intro: t(
+    "You can multiply square matrices. A square matrix can be multiplied by itself, again and again, and this gives its powers $A^2 = AA$, $A^3 = A^2A$ and so on. Powers describe a change applied several times, such as a population model run for several years.\n\nFor\n\n$$A = \\begin{pmatrix} 1 & 1 \\\\ 1 & 0 \\end{pmatrix}$$\n\nRow by column, $A^2 = \\begin{pmatrix} 2 & 1 \\\\ 1 & 1 \\end{pmatrix}$. Multiplying by $A$ once more gives $A^3 = \\begin{pmatrix} 3 & 2 \\\\ 2 & 1 \\end{pmatrix}$. Its top left entry is $2 \\cdot 1 + 1 \\cdot 1 = 3$, not $1^3$.",
+    "你会做方阵乘法。方阵可以一次又一次地乘自身，得到它的幂 $A^2 = AA$，$A^3 = A^2A$，等等。幂描述把同一个变化重复做几次，比如把人口模型运行好几年。\n\n对于\n\n$$A = \\begin{pmatrix} 1 & 1 \\\\ 1 & 0 \\end{pmatrix}$$\n\n按行乘列得 $A^2 = \\begin{pmatrix} 2 & 1 \\\\ 1 & 1 \\end{pmatrix}$。再乘一次 $A$ 得 $A^3 = \\begin{pmatrix} 3 & 2 \\\\ 2 & 1 \\end{pmatrix}$。它的左上元素是 $2 \\cdot 1 + 1 \\cdot 1 = 3$，而不是 $1^3$。",
+  ),
   knowledgePoints: [
     {
       id: "computing-powers-of-2x2-matrices",
       title: t("Squaring and cubing 2x2 matrices", "二阶方阵的平方与立方计算"),
       explanation: t(
-        "For a square matrix $A$, powers are defined by repeated multiplication: $A^2 = A \\cdot A$, $A^3 = A^2 \\cdot A$. Note that $A^2$ is NOT obtained by simply squaring each individual entry.",
-        "对于方阵 $A$，其正整数次幂定义为矩阵的连续乘法：$A^2 = A \\cdot A$，$A^3 = A^2 \\cdot A$。特别注意：$A^2$ 绝不是简单地把每个元素分别平方。",
+        "For a square matrix $A$, powers are defined by repeated multiplication: $A^2 = A \\cdot A$, $A^3 = A^2 \\cdot A$. Note that $A^2$ is not obtained by squaring each entry.\n\n> **Watch out.** The top left entry of $A^2$ is $a_{11}^2 + a_{12}a_{21}$, not $a_{11}^2$: every entry adds two products.",
+        "对于方阵 $A$，其正整数次幂定义为矩阵的连续乘法：$A^2 = A \\cdot A$，$A^3 = A^2 \\cdot A$。$A^2$ 不是把每个元素分别平方。\n\n> **注意。** $A^2$ 的左上元素是 $a_{11}^2 + a_{12}a_{21}$，而不是 $a_{11}^2$：每个元素都是两个乘积之和。",
       ),
       generate(rng) {
         const pool = [-3, -2, -1, 1, 2, 3];
@@ -2025,6 +2074,7 @@ export const powersOfMatrices: TopicDef = {
           [rng.pick(pool), rng.pick(pool)],
         ];
         const A2 = matMul(A, A);
+        const colA = (j: number) => A.map((r) => r[j]!);
         // Distractor: entrywise square
         const entrySq: Mat = [
           [A[0]![0]! ** 2, A[0]![1]! ** 2],
@@ -2045,10 +2095,42 @@ export const powersOfMatrices: TopicDef = {
               `$${matLatex(A2.map((r, i) => r.map((v, j) => (i === 0 && j === 1 ? -v : v))))}$`,
             ),
           ],
-          t(
-            `Multiply $A$ by itself using matrix multiplication: $A^2 = A \\cdot A = ${matLatex(A2)}$.`,
-            `用矩阵乘法计算 $A$ 与自身的乘积：$A^2 = A \\cdot A = ${matLatex(A2)}$。`,
+          join(
+            label(1, "The top row", "上面一行"),
+            t(
+              "$A^2 = A \\cdot A$, so take row $1$ of $A$ times each column of $A$:",
+              "$A^2 = A \\cdot A$，所以用 $A$ 的第 $1$ 行乘 $A$ 的每一列：",
+            ),
+            shown(`(A^2)_{11} = ${dot(A[0]!, colA(0))}`, `(A^2)_{12} = ${dot(A[0]!, colA(1))}`),
+            para,
+            label(2, "The bottom row", "下面一行"),
+            t("Then row $2$ of $A$ times each column:", "再用第 $2$ 行乘每一列："),
+            shown(`(A^2)_{21} = ${dot(A[1]!, colA(0))}`, `(A^2)_{22} = ${dot(A[1]!, colA(1))}`),
+            para,
+            t(`So $A^2 = ${matLatex(A2)}$.`, `所以 $A^2 = ${matLatex(A2)}$。`),
+            checked(
+              t(
+                "Build each column of $A^2$ from the columns of $A$, weighted by the entries of the matching column of $A$:",
+                "用 $A$ 的各列组合出 $A^2$ 的每一列，权重是 $A$ 对应列的元素：",
+              ),
+            ),
+            shown(
+              ...[0, 1].map(
+                (j) =>
+                  `${A[0]![j]!}${colVecLatex(colA(0))} + ${paren(A[1]![j]!)}${colVecLatex(colA(1))} = ${colVecLatex(A2.map((r) => r[j]!))}`,
+              ),
+            ),
+            para,
+            t("These are the columns found above.", "这正是上面求出的两列。"),
           ),
+          [
+            t(
+              "This squares each entry, but $A^2$ means $A$ times $A$, row by column.",
+              "这里把每个元素平方了，但 $A^2$ 是 $A$ 乘 $A$，按行乘列计算。",
+            ),
+            t("This is $A + A = 2A$, not $A \\cdot A$.", "这是 $A + A = 2A$，不是 $A \\cdot A$。"),
+            t(`The top right entry has the wrong sign: it is $${A2[0]![1]!}$.`, `右上元素的符号错了：应该是 $${A2[0]![1]!}$。`),
+          ],
         );
       },
     },
@@ -2056,8 +2138,8 @@ export const powersOfMatrices: TopicDef = {
       id: "powers-of-diagonal-and-pattern-matrices",
       title: t("Powers of diagonal and pattern matrices", "对角矩阵与特殊矩阵的幂"),
       explanation: t(
-        "Most powers of matrices take repeated multiplication, but some special matrices follow a pattern that you can spot after computing the first few powers. For a diagonal matrix $D = \\begin{pmatrix} d_1 & 0 \\\\ 0 & d_2 \\end{pmatrix}$, powers are given by $D^k = \\begin{pmatrix} d_1^k & 0 \\\\ 0 & d_2^k \\end{pmatrix}$. For a shear matrix $S = \\begin{pmatrix} 1 & a \\\\ 0 & 1 \\end{pmatrix}$, $S^k = \\begin{pmatrix} 1 & k a \\\\ 0 & 1 \\end{pmatrix}$.",
-        "大多数矩阵的幂需要反复相乘，但一些特殊矩阵有规律可循，算出前几个幂后就能看出规律。对于对角矩阵 $D = \\begin{pmatrix} d_1 & 0 \\\\ 0 & d_2 \\end{pmatrix}$，其 $k$ 次幂为 $D^k = \\begin{pmatrix} d_1^k & 0 \\\\ 0 & d_2^k \\end{pmatrix}$。对于剪切矩阵 $S = \\begin{pmatrix} 1 & a \\\\ 0 & 1 \\end{pmatrix}$，有 $S^k = \\begin{pmatrix} 1 & k a \\\\ 0 & 1 \\end{pmatrix}$。",
+        "Most powers of matrices take repeated multiplication, but some special matrices follow a pattern that you can spot after computing the first few powers. Powers of a diagonal matrix are again diagonal:\n\n$$\\begin{pmatrix} d_1 & 0 \\\\ 0 & d_2 \\end{pmatrix}^k = \\begin{pmatrix} d_1^k & 0 \\\\ 0 & d_2^k \\end{pmatrix}$$\n\nPowers of a shear matrix add up its top right entry:\n\n$$\\begin{pmatrix} 1 & a \\\\ 0 & 1 \\end{pmatrix}^k = \\begin{pmatrix} 1 & k a \\\\ 0 & 1 \\end{pmatrix}$$\n\n> **Watch out.** For the shear matrix the top right entry is multiplied by $k$, not raised to the power $k$, and its diagonal entries stay $1$.",
+        "大多数矩阵的幂需要反复相乘，但一些特殊矩阵有规律可循，算出前几个幂后就能看出规律。对角矩阵的幂仍是对角矩阵：\n\n$$\\begin{pmatrix} d_1 & 0 \\\\ 0 & d_2 \\end{pmatrix}^k = \\begin{pmatrix} d_1^k & 0 \\\\ 0 & d_2^k \\end{pmatrix}$$\n\n剪切矩阵的幂把右上元素累加起来：\n\n$$\\begin{pmatrix} 1 & a \\\\ 0 & 1 \\end{pmatrix}^k = \\begin{pmatrix} 1 & k a \\\\ 0 & 1 \\end{pmatrix}$$\n\n> **注意。** 剪切矩阵的右上元素是乘以 $k$，不是取 $k$ 次幂，而且对角元素始终是 $1$。",
       ),
       generate(rng) {
         const isDiag = rng.bool();
@@ -2073,6 +2155,7 @@ export const powersOfMatrices: TopicDef = {
             [d1 ** k, 0],
             [0, d2 ** k],
           ];
+          const powers = (d: number) => Array.from({ length: k }, (_, e) => d ** (e + 1));
 
           return oneOf(
             rng,
@@ -2113,10 +2196,34 @@ export const powersOfMatrices: TopicDef = {
                 ])}$`,
               ),
             ],
-            t(
-              `For any diagonal matrix, $D^k$ is obtained by raising each diagonal entry to the power $k$:\n\n$$D^{${k}} = \\begin{pmatrix} (${d1})^{${k}} & 0 \\\\ 0 & (${d2})^{${k}} \\end{pmatrix} = ${matLatex(Dk)}$$`,
-              `对角矩阵的幂运算等价于对主对角线上的每个元素分别求幂：\n\n$$D^{${k}} = \\begin{pmatrix} (${d1})^{${k}} & 0 \\\\ 0 & (${d2})^{${k}} \\end{pmatrix} = ${matLatex(Dk)}$$`,
+            join(
+              label(1, "Multiply diagonal matrices", "对角矩阵相乘"),
+              t(
+                "In a product of diagonal matrices every entry off the diagonal is $0$, and the diagonal entries are multiplied. So $D^k$ is diagonal.",
+                "对角矩阵相乘时，对角线以外的元素都是 $0$，对角元素相乘。所以 $D^k$ 是对角矩阵。",
+              ),
+              para,
+              label(2, "Raise each diagonal entry", "对角元素取幂"),
+              t(`Raise each diagonal entry to the power $${k}$:`, `把每个对角元素取 $${k}$ 次幂：`),
+              shown(`D^{${k}} = \\begin{pmatrix} (${d1})^{${k}} & 0 \\\\ 0 & (${d2})^{${k}} \\end{pmatrix} = ${matLatex(Dk)}`),
+              checked(
+                t(
+                  `Build the powers one at a time. Multiplying by $D$ again and again turns the top left entry into $${powers(d1).join(", ")}$ and the bottom right entry into $${powers(d2).join(", ")}$, while the other entries stay $0$.`,
+                  `逐次求幂。一次次乘以 $D$，左上元素依次变为 $${powers(d1).join(", ")}$，右下元素依次变为 $${powers(d2).join(", ")}$，其他元素始终是 $0$。`,
+                ),
+              ),
             ),
+            [
+              t(
+                `This multiplies the diagonal entries by $${k}$ instead of raising them to the power $${k}$.`,
+                `这里把对角元素乘以 $${k}$，而不是取 $${k}$ 次幂。`,
+              ),
+              t(
+                "The entries off the diagonal stay $0$ in every power of a diagonal matrix.",
+                "对角矩阵的每个幂中，对角线以外的元素都仍是 $0$。",
+              ),
+              t("This is $D$ itself: it has not been raised to any power.", "这是 $D$ 本身：没有取幂。"),
+            ],
           );
         }
 
@@ -2170,10 +2277,36 @@ export const powersOfMatrices: TopicDef = {
               ])}$`,
             ),
           ],
-          t(
-            `Notice that $\\begin{pmatrix} 1 & a \\\\ 0 & 1 \\end{pmatrix}^2 = \\begin{pmatrix} 1 & 2a \\\\ 0 & 1 \\end{pmatrix}$. By induction, $S^k = \\begin{pmatrix} 1 & ka \\\\ 0 & 1 \\end{pmatrix} = ${matLatex(Sk)}$.`,
-            `观察发现 $\\begin{pmatrix} 1 & a \\\\ 0 & 1 \\end{pmatrix}^2 = \\begin{pmatrix} 1 & 2a \\\\ 0 & 1 \\end{pmatrix}$。由归纳法可知，$S^k = \\begin{pmatrix} 1 & ka \\\\ 0 & 1 \\end{pmatrix} = ${matLatex(Sk)}$。`,
+          join(
+            label(1, "Square it", "先求平方"),
+            t("Row by column, the top right entry of $S^2$ is", "按行乘列，$S^2$ 的右上元素是"),
+            shown(`1 \\cdot ${paren(a)} + ${paren(a)} \\cdot 1 = ${2 * a}`),
+            para,
+            t(
+              "The other entries are $1 \\cdot 1 + a \\cdot 0 = 1$, $0$ and $1$, as in $S$.",
+              "其他元素是 $1 \\cdot 1 + a \\cdot 0 = 1$、$0$ 和 $1$，与 $S$ 相同。",
+            ),
+            para,
+            label(2, "Spot the pattern", "找出规律"),
+            t(
+              `Each further factor of $S$ adds $${a}$ to the top right entry and leaves the others alone. After $${k}$ factors it is $${k} \\cdot ${paren(a)} = ${k * a}$, so $S^{${k}} = ${matLatex(Sk)}$.`,
+              `每再乘一个 $S$，右上元素就加上 $${a}$，其他元素不变。乘满 $${k}$ 个因子后它是 $${k} \\cdot ${paren(a)} = ${k * a}$，所以 $S^{${k}} = ${matLatex(Sk)}$。`,
+            ),
+            checked(
+              t(
+                `Multiply $S^{${k - 1}}$, whose top right entry is $${(k - 1) * a}$, by $S$. The top right entry becomes $1 \\cdot ${paren(a)} + ${paren((k - 1) * a)} \\cdot 1 = ${k * a}$, and the diagonal entries stay $1 \\cdot 1 = 1$.`,
+                `用 $S^{${k - 1}}$（右上元素为 $${(k - 1) * a}$）乘 $S$。右上元素变为 $1 \\cdot ${paren(a)} + ${paren((k - 1) * a)} \\cdot 1 = ${k * a}$，对角元素仍是 $1 \\cdot 1 = 1$。`,
+              ),
+            ),
           ),
+          [
+            t(
+              `This raises $${a}$ to the power $${k}$, but the top right entry grows by $${a}$ at each step.`,
+              `这里把 $${a}$ 取了 $${k}$ 次幂，但右上元素每一步只增加 $${a}$。`,
+            ),
+            t("The diagonal entries stay $1$, since $1 \\cdot 1 = 1$.", "对角元素始终是 $1$，因为 $1 \\cdot 1 = 1$。"),
+            t("This is $S$ itself: it has not been raised to any power.", "这是 $S$ 本身：没有取幂。"),
+          ],
         );
       },
     },
@@ -2194,27 +2327,32 @@ export const multiplyingAMatrixByTheIdentityMatrix: TopicDef = {
   encompasses: [],
   xp: 12,
   standards: ["CCSS.HSN.VM.C.10"],
+  intro: t(
+    "You know the identity matrix and how to multiply matrices. Multiplying by the identity changes nothing, just as multiplying a number by $1$ does, and this is what lets you simplify matrix expressions and, later, define inverse matrices.\n\nFor example,\n\n$$\\begin{pmatrix} 2 & -1 \\\\ 3 & 4 \\end{pmatrix} \\begin{pmatrix} 1 & 0 \\\\ 0 & 1 \\end{pmatrix} = \\begin{pmatrix} 2 & -1 \\\\ 3 & 4 \\end{pmatrix}$$\n\nThe top left entry is $2 \\cdot 1 + (-1) \\cdot 0 = 2$: each column of the identity has a single $1$, so it picks out one entry of each row and nothing else.",
+    "你认识单位矩阵，也会做矩阵乘法。乘以单位矩阵什么也不改变，就像数乘以 $1$ 一样。正因为如此，才能化简矩阵表达式，以后还能定义逆矩阵。\n\n例如\n\n$$\\begin{pmatrix} 2 & -1 \\\\ 3 & 4 \\end{pmatrix} \\begin{pmatrix} 1 & 0 \\\\ 0 & 1 \\end{pmatrix} = \\begin{pmatrix} 2 & -1 \\\\ 3 & 4 \\end{pmatrix}$$\n\n左上元素是 $2 \\cdot 1 + (-1) \\cdot 0 = 2$：单位矩阵的每一列只有一个 $1$，所以它从每一行中恰好取出一个元素。",
+  ),
   knowledgePoints: [
     {
       id: "identity-matrix-multiplication-property",
       title: t("Multiplication by the identity matrix", "与单位矩阵相乘的性质"),
       explanation: t(
-        "The identity matrix has ones on its main diagonal and zeros elsewhere, and multiplying by it on either side leaves a matrix unchanged. The identity matrix $I$ acts like the number 1 in matrix algebra: for any $m \\times n$ matrix $A$, $I_m A = A$ and $A I_n = A$.",
-        "单位矩阵的主对角线上都是 1，其余都是 0，无论从哪一边乘它，矩阵都不变。单位矩阵 $I$ 在矩阵代数中的作用相当于数字 1：对于任意 $m \\times n$ 矩阵 $A$，均有 $I_m A = A$ 以及 $A I_n = A$。",
+        "The identity matrix has ones on its main diagonal and zeros elsewhere, and multiplying by it on either side leaves a matrix unchanged. The identity matrix $I$ acts like the number 1 in matrix algebra: for any $m \\times n$ matrix $A$, $I_m A = A$ and $A I_n = A$.\n\n> **Watch out.** The identity on the right of an $m \\times n$ matrix is $I_n$ and the one on the left is $I_m$. They are the same only when the matrix is square.",
+        "单位矩阵的主对角线上都是 1，其余都是 0，无论从哪一边乘它，矩阵都不变。单位矩阵 $I$ 在矩阵代数中的作用相当于数字 1：对于任意 $m \\times n$ 矩阵 $A$，均有 $I_m A = A$ 以及 $A I_n = A$。\n\n> **注意。** $m \\times n$ 矩阵右边的单位矩阵是 $I_n$，左边的是 $I_m$。只有矩阵是方阵时两者才相同。",
       ),
       generate(rng) {
         const m = rng.pick([2, 3]);
         const n = rng.pick([2, 3]);
         const pool = [-6, -4, -3, -1, 1, 2, 4, 5, 7];
         const A: Mat = Array.from({ length: m }, () => Array.from({ length: n }, () => rng.pick(pool)));
+        const unit = (size: number) => Array.from({ length: size }, (_, r) => (r === 0 ? 1 : 0));
 
         const isRight = rng.bool();
         if (isRight) {
           return oneOf(
             rng,
             t(
-              `Given the $${m} \\times ${n}$ matrix $A = ${matLatex(A)}$, which identity matrix $I$ satisfies $A I = A$, and what is the resulting product?`,
-              `给定 $${m} \\times ${n}$ 矩阵 $A = ${matLatex(A)}$，哪个单位矩阵 $I$ 满足 $A I = A$，且所得乘积是什么？`,
+              `Which identity matrix $I$ satisfies $A I = A$ for the $${m} \\times ${n}$ matrix $A$ below, and what is the resulting product?\n\n$$A = ${matLatex(A)}$$`,
+              `对下面的 $${m} \\times ${n}$ 矩阵 $A$，哪个单位矩阵 $I$ 满足 $A I = A$，且所得乘积是什么？\n\n$$A = ${matLatex(A)}$$`,
             ),
             t(
               `$I_{${n}}$ (dimension $${n} \\times ${n}$), and $A I_{${n}} = A$.`,
@@ -2232,18 +2370,48 @@ export const multiplyingAMatrixByTheIdentityMatrix: TopicDef = {
               t(`$I_{${m + n}}$, and the product is not defined.`, `$I_{${m + n}}$，且该乘积未定义。`),
               t(`$I_{${m + 1}}$, and the product is not defined.`, `$I_{${m + 1}}$，且该乘积未定义。`),
             ],
-            t(
-              `To multiply $A$ on the right by $I$, the number of rows of $I$ must match the $${n}$ columns of $A$. Hence $I$ must be $I_{${n}}$, and multiplying any matrix by the identity leaves it unchanged: $A I_{${n}} = A$.`,
-              `若在右侧乘以单位矩阵 $I$，$I$ 的行数必须等于 $A$ 的列数 $${n}$。因此该单位矩阵必须是 $I_{${n}}$，且任何矩阵乘以单位矩阵保持不变：$A I_{${n}} = A$。`,
+            join(
+              label(1, "Match the sizes", "让大小相配"),
+              t(
+                `$A$ has $${n}$ columns, so a matrix on its right needs $${n}$ rows. The identity must be $I_{${n}}$, which is $${n} \\times ${n}$.`,
+                `$A$ 有 $${n}$ 列，所以右边的矩阵需要 $${n}$ 行。单位矩阵必须是 $I_{${n}}$，即 $${n} \\times ${n}$ 矩阵。`,
+              ),
+              para,
+              label(2, "Multiply", "相乘"),
+              t(
+                `Column $j$ of $I_{${n}}$ has its only $1$ in row $j$, so row $i$ of $A$ times it picks out $a_{ij}$. So $A I_{${n}} = A$.`,
+                `$I_{${n}}$ 的第 $j$ 列只在第 $j$ 行有一个 $1$，所以 $A$ 的第 $i$ 行乘它恰好取出 $a_{ij}$。所以 $A I_{${n}} = A$。`,
+              ),
+              checked(
+                t(
+                  `Work out the top left entry: $(AI_{${n}})_{11} = ${dot(A[0]!, unit(n))}$. This is the top left entry of $A$, and the sizes $(${m} \\times ${n})(${n} \\times ${n})$ give back $${m} \\times ${n}$.`,
+                  `算出左上元素：$(AI_{${n}})_{11} = ${dot(A[0]!, unit(n))}$。这正是 $A$ 的左上元素，而大小 $(${m} \\times ${n})(${n} \\times ${n})$ 得到的仍是 $${m} \\times ${n}$。`,
+                ),
+              ),
             ),
+            [
+              t(
+                `A matrix on the right of $A$ needs $${n}$ rows, one for each column of $A$, and $I_{${m}}$ has $${m}$.`,
+                `$A$ 右边的矩阵需要 $${n}$ 行（$A$ 每列对应一行），而 $I_{${m}}$ 有 $${m}$ 行。`,
+              ),
+              t("Multiplying by the identity leaves $A$ unchanged, so the product is $A$.", "乘以单位矩阵不改变 $A$，所以乘积是 $A$。"),
+              t(
+                `The identity on the right must be $${n} \\times ${n}$, and with it the product is defined.`,
+                `右边的单位矩阵必须是 $${n} \\times ${n}$，用它乘积就有定义。`,
+              ),
+              t(
+                `The identity on the right must be $${n} \\times ${n}$, and with it the product is defined.`,
+                `右边的单位矩阵必须是 $${n} \\times ${n}$，用它乘积就有定义。`,
+              ),
+            ],
           );
         }
 
         return oneOf(
           rng,
           t(
-            `Given the $${m} \\times ${n}$ matrix $A = ${matLatex(A)}$, which identity matrix $I$ satisfies $I A = A$, and what is the resulting product?`,
-            `给定 $${m} \\times ${n}$ 矩阵 $A = ${matLatex(A)}$，哪个单位矩阵 $I$ 满足 $I A = A$，且所得乘积是什么？`,
+            `Which identity matrix $I$ satisfies $I A = A$ for the $${m} \\times ${n}$ matrix $A$ below, and what is the resulting product?\n\n$$A = ${matLatex(A)}$$`,
+            `对下面的 $${m} \\times ${n}$ 矩阵 $A$，哪个单位矩阵 $I$ 满足 $I A = A$，且所得乘积是什么？\n\n$$A = ${matLatex(A)}$$`,
           ),
           t(
             `$I_{${m}}$ (dimension $${m} \\times ${m}$), and $I_{${m}} A = A$.`,
@@ -2261,10 +2429,43 @@ export const multiplyingAMatrixByTheIdentityMatrix: TopicDef = {
             t(`$I_{${n + 1}}$, and the product is not defined.`, `$I_{${n + 1}}$，且该乘积未定义。`),
             t(`$I_{${m} \\times ${n}}$, and the product is $O$.`, `$I_{${m} \\times ${n}}$，且乘积为零矩阵 $O$。`),
           ],
-          t(
-            `To multiply $A$ on the left by $I$, the number of columns of $I$ must match the $${m}$ rows of $A$. Hence $I$ must be $I_{${m}}$, and $I_{${m}} A = A$.`,
-            `若在左侧乘以单位矩阵 $I$，$I$ 的列数必须等于 $A$ 的行数 $${m}$。因此该单位矩阵必须是 $I_{${m}}$，且 $I_{${m}} A = A$。`,
+          join(
+            label(1, "Match the sizes", "让大小相配"),
+            t(
+              `$A$ has $${m}$ rows, so a matrix on its left needs $${m}$ columns. The identity must be $I_{${m}}$, which is $${m} \\times ${m}$.`,
+              `$A$ 有 $${m}$ 行，所以左边的矩阵需要 $${m}$ 列。单位矩阵必须是 $I_{${m}}$，即 $${m} \\times ${m}$ 矩阵。`,
+            ),
+            para,
+            label(2, "Multiply", "相乘"),
+            t(
+              `Row $i$ of $I_{${m}}$ has its only $1$ in column $i$, so it times column $j$ of $A$ picks out $a_{ij}$. So $I_{${m}} A = A$.`,
+              `$I_{${m}}$ 的第 $i$ 行只在第 $i$ 列有一个 $1$，所以它乘 $A$ 的第 $j$ 列恰好取出 $a_{ij}$。所以 $I_{${m}} A = A$。`,
+            ),
+            checked(
+              t(
+                `Work out the top left entry: $(I_{${m}}A)_{11} = ${dot(
+                  unit(m),
+                  A.map((r) => r[0]!),
+                )}$. This is the top left entry of $A$, and the sizes $(${m} \\times ${m})(${m} \\times ${n})$ give back $${m} \\times ${n}$.`,
+                `算出左上元素：$(I_{${m}}A)_{11} = ${dot(
+                  unit(m),
+                  A.map((r) => r[0]!),
+                )}$。这正是 $A$ 的左上元素，而大小 $(${m} \\times ${m})(${m} \\times ${n})$ 得到的仍是 $${m} \\times ${n}$。`,
+              ),
+            ),
           ),
+          [
+            t(
+              `A matrix on the left of $A$ needs $${m}$ columns, one for each row of $A$, and $I_{${n}}$ has $${n}$.`,
+              `$A$ 左边的矩阵需要 $${m}$ 列（$A$ 每行对应一列），而 $I_{${n}}$ 有 $${n}$ 列。`,
+            ),
+            t("Multiplying by the identity leaves $A$ unchanged, so the product is $A$.", "乘以单位矩阵不改变 $A$，所以乘积是 $A$。"),
+            t(
+              `The identity on the left must be $${m} \\times ${m}$, and with it the product is defined.`,
+              `左边的单位矩阵必须是 $${m} \\times ${m}$，用它乘积就有定义。`,
+            ),
+            t("An identity matrix is square, and multiplying by it gives $A$, not $O$.", "单位矩阵是方阵，乘以它得到 $A$，而不是 $O$。"),
+          ],
         );
       },
     },
@@ -2272,8 +2473,8 @@ export const multiplyingAMatrixByTheIdentityMatrix: TopicDef = {
       id: "algebraic-simplification-with-identity-matrix",
       title: t("Algebraic expressions with the identity matrix", "含单位矩阵的代数式化简"),
       explanation: t(
-        "Because $A I = I A = A$, multiplying by $I$ commutes with any square matrix $A$. Consequently, expressions such as $(A + I)^2$ expand cleanly as $A^2 + 2A + I$, and $(A - I)(A + I) = A^2 - I$.",
-        "因为对任意方阵 $A$ 恒有 $A I = I A = A$，单位矩阵 $I$ 与 $A$ 可交换。因此类似 $(A + I)^2$ 的表达式可展开为 $A^2 + 2A + I$，而 $(A - I)(A + I) = A^2 - I$。",
+        "Because $A I = I A = A$, multiplying by $I$ commutes with any square matrix $A$. Consequently, expressions such as $(A + I)^2$ expand cleanly as $A^2 + 2A + I$, and $(A - I)(A + I) = A^2 - I$.\n\n> **Watch out.** The cross terms cancel here only because $I$ commutes with every square matrix. In general $(A + B)(A - B)$ is not $A^2 - B^2$.",
+        "因为对任意方阵 $A$ 恒有 $A I = I A = A$，单位矩阵 $I$ 与 $A$ 可交换。因此类似 $(A + I)^2$ 的表达式可展开为 $A^2 + 2A + I$，而 $(A - I)(A + I) = A^2 - I$。\n\n> **注意。** 这里交叉项能对消，只是因为 $I$ 与任何方阵都可交换。一般情况下 $(A + B)(A - B)$ 不等于 $A^2 - B^2$。",
       ),
       generate(rng) {
         const c1 = rng.pick([2, 3, 4, 5, 6, 7, 8]);
@@ -2295,10 +2496,34 @@ export const multiplyingAMatrixByTheIdentityMatrix: TopicDef = {
               t(`$${c1}A + ${c2}I$`, `$${c1}A + ${c2}I$`),
               t(`$${Math.abs(c1 - c2)}A$`, `$${Math.abs(c1 - c2)}A$`),
             ],
-            t(
-              `Since $A I = A$ and $I A = A$, we have $${c1}(A) + ${c2}(A) = (${c1} + ${c2})A = ${sum}A$.`,
-              `因为 $A I = A$ 且 $I A = A$，所以原式可化为 $${c1}(A) + ${c2}(A) = (${c1} + ${c2})A = ${sum}A$。`,
+            join(
+              label(1, "Replace the products", "替换乘积"),
+              t(
+                "Multiplying by $I$ on either side leaves $A$ unchanged, so $A I = A$ and $I A = A$.",
+                "无论从哪一边乘 $I$，$A$ 都不变，所以 $A I = A$，$I A = A$。",
+              ),
+              para,
+              label(2, "Collect the terms", "合并同类项"),
+              t(
+                `The expression becomes $${c1}A + ${c2}A = (${c1} + ${c2})A = ${sum}A$.`,
+                `原式变为 $${c1}A + ${c2}A = (${c1} + ${c2})A = ${sum}A$。`,
+              ),
+              checked(
+                t(
+                  `Test with the $1 \\times 1$ matrix $A = (2)$, for which $I = (1)$. The expression is $${c1} \\cdot 2 + ${c2} \\cdot 2 = ${2 * sum}$, and $${sum} \\cdot 2 = ${2 * sum}$ as well.`,
+                  `用 $1 \\times 1$ 矩阵 $A = (2)$ 检验，这时 $I = (1)$。原式是 $${c1} \\cdot 2 + ${c2} \\cdot 2 = ${2 * sum}$，而 $${sum} \\cdot 2 = ${2 * sum}$，相同。`,
+                ),
+              ),
             ),
+            [
+              t(
+                `The coefficients are added, not multiplied: $${c1}A + ${c2}A = ${sum}A$.`,
+                `系数是相加，不是相乘：$${c1}A + ${c2}A = ${sum}A$。`,
+              ),
+              t("$AI$ and $IA$ are both $A$, not $I$.", "$AI$ 和 $IA$ 都等于 $A$，而不是 $I$。"),
+              t("$IA$ is $A$ as well, not $I$.", "$IA$ 也等于 $A$，而不是 $I$。"),
+              t("The two terms are added, not subtracted.", "两项是相加，不是相减。"),
+            ],
           );
         }
 
@@ -2315,10 +2540,29 @@ export const multiplyingAMatrixByTheIdentityMatrix: TopicDef = {
             t(`$${c1}A^2 - I$`, `$${c1}A^2 - I$`),
             t(`$${c1}A^2 + ${c1}I$`, `$${c1}A^2 + ${c1}I$`),
           ],
-          t(
-            `Since $A I = I A = A$, the cross terms cancel: $(A + I)(A - I) = A^2 - AI + IA - I = A^2 - I$. Multiplying by $${c1}$ gives $${c1}A^2 - ${c1}I$.`,
-            `因为 $A I = I A = A$，交叉项对消：$(A + I)(A - I) = A^2 - AI + IA - I = A^2 - I$。乘以 $${c1}$ 得到 $${c1}A^2 - ${c1}I$。`,
+          join(
+            label(1, "Expand", "展开"),
+            t("Multiply out, keeping the order of each product:", "保持每个乘积的次序，把它展开："),
+            shown("(A + I)(A - I) = A^2 - AI + IA - I^2"),
+            para,
+            label(2, "Simplify", "化简"),
+            t(
+              `Since $AI = IA = A$, the middle terms cancel, and $I^2 = I$. So $(A + I)(A - I) = A^2 - I$, and multiplying by $${c1}$ gives $${c1}A^2 - ${c1}I$.`,
+              `由于 $AI = IA = A$，中间两项对消，且 $I^2 = I$。所以 $(A + I)(A - I) = A^2 - I$，乘以 $${c1}$ 得 $${c1}A^2 - ${c1}I$。`,
+            ),
+            checked(
+              t(
+                `Test with the $1 \\times 1$ matrix $A = (3)$, for which $I = (1)$. The expression is $${c1}(3 + 1)(3 - 1) = ${8 * c1}$, and $${c1} \\cdot 9 - ${c1} = ${8 * c1}$ as well.`,
+                `用 $1 \\times 1$ 矩阵 $A = (3)$ 检验，这时 $I = (1)$。原式是 $${c1}(3 + 1)(3 - 1) = ${8 * c1}$，而 $${c1} \\cdot 9 - ${c1} = ${8 * c1}$，相同。`,
+              ),
+            ),
           ),
+          [
+            t(`A number cannot be subtracted from a matrix: the last term is $${c1}I$.`, `不能从矩阵中减去一个数：最后一项是 $${c1}I$。`),
+            t("The cross terms $-AI$ and $IA$ cancel, since both are $A$.", "交叉项 $-AI$ 和 $IA$ 对消，因为两者都是 $A$。"),
+            t(`The factor $${c1}$ multiplies the $I$ term too.`, `因数 $${c1}$ 也要乘到 $I$ 那一项上。`),
+            t("The last term is $I \\cdot (-I) = -I$, so it is subtracted.", "最后一项是 $I \\cdot (-I) = -I$，所以是减去。"),
+          ],
         );
       },
     },
@@ -2339,13 +2583,17 @@ export const propertiesOfMatrixMultiplication: TopicDef = {
   encompasses: [{ topic: "multiplying-matrices", weight: 0.4 }],
   xp: 13,
   standards: ["CCSS.HSN.VM.C.9"],
+  intro: t(
+    "You can multiply matrices of any sizes that fit. Unlike numbers, matrices usually give different products in the two orders, so expressions must keep every product in its order. The other familiar rules survive: grouping does not matter, and multiplication distributes over addition.\n\nFor\n\n$$A = \\begin{pmatrix} 1 & 1 \\\\ 0 & 1 \\end{pmatrix}, \\quad B = \\begin{pmatrix} 1 & 0 \\\\ 1 & 1 \\end{pmatrix}$$\n\nRow by column, $AB = \\begin{pmatrix} 2 & 1 \\\\ 1 & 1 \\end{pmatrix}$ but $BA = \\begin{pmatrix} 1 & 1 \\\\ 1 & 2 \\end{pmatrix}$. The top left entries are $1 \\cdot 1 + 1 \\cdot 1 = 2$ and $1 \\cdot 1 + 0 \\cdot 0 = 1$.",
+    "你会把任意大小相配的矩阵相乘。与数不同，矩阵按两种次序相乘通常得到不同的积，所以式子中每个乘积都要保持次序。其他熟悉的规则仍然成立：结合方式不影响结果，乘法对加法满足分配律。\n\n对于\n\n$$A = \\begin{pmatrix} 1 & 1 \\\\ 0 & 1 \\end{pmatrix}, \\quad B = \\begin{pmatrix} 1 & 0 \\\\ 1 & 1 \\end{pmatrix}$$\n\n按行乘列得 $AB = \\begin{pmatrix} 2 & 1 \\\\ 1 & 1 \\end{pmatrix}$，而 $BA = \\begin{pmatrix} 1 & 1 \\\\ 1 & 2 \\end{pmatrix}$。左上元素分别是 $1 \\cdot 1 + 1 \\cdot 1 = 2$ 和 $1 \\cdot 1 + 0 \\cdot 0 = 1$。",
+  ),
   knowledgePoints: [
     {
       id: "non-commutativity-of-matrix-multiplication",
       title: t("Non-commutativity of matrix multiplication", "矩阵乘法的非交换性"),
       explanation: t(
-        "In general, matrix multiplication is not commutative: $AB \\ne BA$. The commutator $[A, B] = AB - BA$ measures the extent to which two matrices fail to commute.",
-        "通常情况下，矩阵乘法不满足交换律：$AB \\ne BA$。对易子 $[A, B] = AB - BA$ 衡量了两个矩阵不可交换的程度。",
+        "In general, matrix multiplication is not commutative: $AB \\ne BA$. The commutator $[A, B] = AB - BA$ measures the extent to which two matrices fail to commute.\n\n> **Watch out.** Subtract in the order given, $AB - BA$. Subtracting the other way gives $BA - AB$, the same matrix with every sign changed.",
+        "通常情况下，矩阵乘法不满足交换律：$AB \\ne BA$。对易子 $[A, B] = AB - BA$ 衡量了两个矩阵不可交换的程度。\n\n> **注意。** 按给定的次序相减，$AB - BA$。反过来相减得到 $BA - AB$，即每个符号都相反的矩阵。",
       ),
       generate(rng) {
         const pool = [-3, -2, -1, 1, 2, 3];
@@ -2379,10 +2627,28 @@ export const propertiesOfMatrixMultiplication: TopicDef = {
             t(`$${matLatex(matAdd(AB, BA))}$`, `$${matLatex(matAdd(AB, BA))}$`),
             t(`$${matLatex(matScale(-1, diff))}$`, `$${matLatex(matScale(-1, diff))}$`),
           ],
-          t(
-            `Compute $AB = ${matLatex(AB)}$ and $BA = ${matLatex(BA)}$. Subtracting gives $AB - BA = ${matLatex(diff)} \\ne O$, demonstrating that matrix multiplication is not commutative.`,
-            `计算得 $AB = ${matLatex(AB)}$ 且 $BA = ${matLatex(BA)}$。相减得 $AB - BA = ${matLatex(diff)} \\ne O$，这说明矩阵乘法通常不满足交换律。`,
+          join(
+            label(1, "Compute both products", "求两个乘积"),
+            t("Row by column, the two products are", "按行乘列，两个乘积是"),
+            shown(`AB = ${matLatex(AB)}, \\quad BA = ${matLatex(BA)}`),
+            para,
+            label(2, "Subtract", "相减"),
+            t("Subtract matching entries, $AB$ first:", "对应元素相减，$AB$ 在前："),
+            shown(`AB - BA = ${matLatex(diff)}`),
+            para,
+            t("It is not $O$, so $AB \\ne BA$ here.", "它不是 $O$，所以这里 $AB \\ne BA$。"),
+            checked(
+              t(
+                `Two shortcuts agree. The top left entry of $AB - BA$ is always $a_{12}b_{21} - b_{12}a_{21}$, here $${paren(A[0]![1]!)} \\cdot ${paren(B[1]![0]!)} - ${paren(B[0]![1]!)} \\cdot ${paren(A[1]![0]!)} = ${diff[0]![0]!}$. The two diagonal entries of $AB - BA$ always add to $0$, and here $${diff[0]![0]!} + ${paren(diff[1]![1]!)} = 0$.`,
+                `用两个简便方法核对。$AB - BA$ 的左上元素总是 $a_{12}b_{21} - b_{12}a_{21}$，这里是 $${paren(A[0]![1]!)} \\cdot ${paren(B[1]![0]!)} - ${paren(B[0]![1]!)} \\cdot ${paren(A[1]![0]!)} = ${diff[0]![0]!}$。$AB - BA$ 的两个对角元素之和总是 $0$，这里 $${diff[0]![0]!} + ${paren(diff[1]![1]!)} = 0$。`,
+              ),
+            ),
           ),
+          [
+            t("This would mean $AB = BA$, but the two products differ here.", "这意味着 $AB = BA$，但这里两个乘积不同。"),
+            t("This adds $BA$ instead of subtracting it.", "这里加上了 $BA$，应该减去。"),
+            t("This is $BA - AB$: the subtraction is the wrong way round.", "这是 $BA - AB$：减法次序反了。"),
+          ],
         );
       },
     },
@@ -2390,8 +2656,8 @@ export const propertiesOfMatrixMultiplication: TopicDef = {
       id: "associative-and-distributive-properties",
       title: t("Associative, distributive, and transpose properties", "结合律、分配律与转置性质"),
       explanation: t(
-        "Matrix multiplication is associative: $(AB)C = A(BC)$. It distributes over addition: $A(B + C) = AB + AC$ and $(A + B)C = AC + BC$. The transpose of a product reverses order: $(AB)^T = B^T A^T$.",
-        "矩阵乘法满足结合律：$(AB)C = A(BC)$；满足分配律：$A(B + C) = AB + AC$ 与 $(A + B)C = AC + BC$。乘积的转置会颠倒次序：$(AB)^T = B^T A^T$。",
+        "Matrix multiplication is associative: $(AB)C = A(BC)$. It distributes over addition: $A(B + C) = AB + AC$ and $(A + B)C = AC + BC$. The transpose of a product reverses order: $(AB)^T = B^T A^T$.\n\n> **Watch out.** Products cannot be reordered. $A(B + C) = AB + AC$ keeps $A$ on the left, and $(AB)^T$ turns around to $B^T A^T$.",
+        "矩阵乘法满足结合律：$(AB)C = A(BC)$；满足分配律：$A(B + C) = AB + AC$ 与 $(A + B)C = AC + BC$。乘积的转置会颠倒次序：$(AB)^T = B^T A^T$。\n\n> **注意。** 乘积不能随意调换次序。$A(B + C) = AB + AC$ 中 $A$ 始终在左边，而 $(AB)^T$ 要反过来写成 $B^T A^T$。",
       ),
       generate(rng) {
         const c1 = rng.pick([2, 3, 4, 5, 6, 7]);
@@ -2409,10 +2675,31 @@ export const propertiesOfMatrixMultiplication: TopicDef = {
             ),
             t(`$${c1}AC$`, `$${c1}AC$`),
             [t(`$${c1}CA$`, `$${c1}CA$`), t(`$${c1}AB + ${c1}AC$`, `$${c1}AB + ${c1}AC$`), t("$O$", "$O$"), t(`$${c1}A$`, `$${c1}A$`)],
-            t(
-              `Apply the left distributive property: $${c1}A(B + C) = ${c1}AB + ${c1}AC$. Subtracting $${c1}AB$ leaves $${c1}AC$.`,
-              `应用左分配律：$${c1}A(B + C) = ${c1}AB + ${c1}AC$。减去 $${c1}AB$ 剩下 $${c1}AC$。`,
+            join(
+              label(1, "Distribute", "分配"),
+              t(
+                `Multiply $${c1}A$ into the bracket, keeping $A$ on the left: $${c1}A(B + C) = ${c1}AB + ${c1}AC$.`,
+                `把 $${c1}A$ 乘进括号，$A$ 保持在左边：$${c1}A(B + C) = ${c1}AB + ${c1}AC$。`,
+              ),
+              para,
+              label(2, "Subtract", "相减"),
+              t(`Subtracting $${c1}AB$ leaves $${c1}AC$.`, `减去 $${c1}AB$，剩下 $${c1}AC$。`),
+              checked(
+                t(
+                  `Factor instead. Both terms start with $${c1}A$, so the expression is $${c1}A\\big((B + C) - B\\big) = ${c1}AC$.`,
+                  `改用提取公因式。两项都以 $${c1}A$ 开头，所以原式是 $${c1}A\\big((B + C) - B\\big) = ${c1}AC$。`,
+                ),
+              ),
             ),
+            [
+              t(
+                "$A$ stays on the left: $A(B + C) = AB + AC$, and $AC$ is usually not $CA$.",
+                "$A$ 要保持在左边：$A(B + C) = AB + AC$，而 $AC$ 通常不等于 $CA$。",
+              ),
+              t(`The term $${c1}AB$ has been subtracted.`, `$${c1}AB$ 这一项已经被减掉了。`),
+              t(`Only the $AB$ terms cancel; $${c1}AC$ is left.`, `只有含 $AB$ 的项对消，还剩下 $${c1}AC$。`),
+              t(`$C$ is still multiplied by $A$, so the result is $${c1}AC$.`, `$C$ 仍然要乘 $A$，所以结果是 $${c1}AC$。`),
+            ],
           );
         }
 
@@ -2424,10 +2711,31 @@ export const propertiesOfMatrixMultiplication: TopicDef = {
           ),
           t("$B^T A^T$", "$B^T A^T$"),
           [t("$A^T B^T$", "$A^T B^T$"), t("$-(B^T A^T)$", "$-(B^T A^T)$"), t("$AB$", "$AB$"), t("$BA$", "$BA$")],
-          t(
-            `The transpose of a matrix product reverses the order of factors: $(AB)^T = B^T A^T$. Notice that $B^T$ is $${n} \\times ${k}$ and $A^T$ is $${k} \\times ${m}$, so their product $B^T A^T$ is $${n} \\times ${m}$, which matches the dimension of $(AB)^T$.`,
-            `矩阵乘积的转置必须反转乘积次序：$(AB)^T = B^T A^T$。注意 $B^T$ 为 $${n} \\times ${k}$ 而 $A^T$ 为 $${k} \\times ${m}$，它们的乘积 $B^T A^T$ 维度为 $${n} \\times ${m}$，恰好与 $(AB)^T$ 的维度一致。`,
+          join(
+            label(1, "Find the size", "确定大小"),
+            t(
+              `$AB$ is $${m} \\times ${n}$, so $(AB)^T$ is $${n} \\times ${m}$.`,
+              `$AB$ 是 $${m} \\times ${n}$ 矩阵，所以 $(AB)^T$ 是 $${n} \\times ${m}$ 矩阵。`,
+            ),
+            para,
+            label(2, "Reverse and transpose", "反转并转置"),
+            t(
+              `The transpose of a product reverses the order of the factors and transposes each: $(AB)^T = B^T A^T$. Here $B^T$ is $${n} \\times ${k}$ and $A^T$ is $${k} \\times ${m}$, so $B^T A^T$ is $${n} \\times ${m}$ too.`,
+              `积的转置要反转因子的次序，并把每个因子转置：$(AB)^T = B^T A^T$。这里 $B^T$ 是 $${n} \\times ${k}$，$A^T$ 是 $${k} \\times ${m}$，所以 $B^T A^T$ 也是 $${n} \\times ${m}$。`,
+            ),
+            checked(
+              t(
+                "Compare one entry. The entry of $(AB)^T$ in row $i$ and column $j$ is the entry of $AB$ in row $j$ and column $i$, that is, row $j$ of $A$ times column $i$ of $B$. In $B^T A^T$ it is row $i$ of $B^T$, which is column $i$ of $B$, times column $j$ of $A^T$, which is row $j$ of $A$. These are the same products.",
+                "比较一个元素。$(AB)^T$ 第 $i$ 行第 $j$ 列的元素是 $AB$ 第 $j$ 行第 $i$ 列的元素，即 $A$ 的第 $j$ 行乘 $B$ 的第 $i$ 列。在 $B^T A^T$ 中，它是 $B^T$ 的第 $i$ 行（即 $B$ 的第 $i$ 列）乘 $A^T$ 的第 $j$ 列（即 $A$ 的第 $j$ 行）。两者是同样的乘积。",
+              ),
+            ),
           ),
+          [
+            t("The order must be reversed: transposing a product turns it around.", "次序必须反过来：积的转置要把次序倒转。"),
+            t("Transposing moves entries but changes no signs.", "转置只移动元素，不改变符号。"),
+            t("This is the product itself, not its transpose.", "这是乘积本身，不是它的转置。"),
+            t("The order is reversed, but each factor must also be transposed.", "次序反过来了，但每个因子还要转置。"),
+          ],
         );
       },
     },
@@ -2448,13 +2756,17 @@ export const representing2x2SystemsOfEquationsUsingAMatrixProduct: TopicDef = {
   encompasses: [{ topic: "multiplying-a-matrix-by-a-column-vector", weight: 0.2 }],
   xp: 12,
   standards: ["CCSS.HSA.REI.C.8"],
+  intro: t(
+    "You can multiply a matrix by a column vector: each row of the matrix times the column gives one entry. The left sides of a system of two linear equations have exactly that shape, so the whole system can be written as one matrix equation $A\\mathbf{x} = \\mathbf{b}$. This puts all the coefficients into one matrix, which is the form that inverses and determinants later solve.\n\nFor example, the system with equations $3x - y = 4$ and $x + 2y = 6$ becomes\n\n$$\\begin{pmatrix} 3 & -1 \\\\ 1 & 2 \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} 4 \\\\ 6 \\end{pmatrix}$$\n\nRow $1$ times the column gives $3x - y$, the left side of the first equation. The coefficient $1$ of $x$ in the second equation is written out.",
+    "你会用矩阵乘列向量：矩阵的每一行乘这一列，得到一个元素。二元一次方程组的左边正是这种形状，所以整个方程组可以写成一个矩阵方程 $A\\mathbf{x} = \\mathbf{b}$。这样所有系数都放进一个矩阵里，以后用逆矩阵和行列式解方程组用的就是这种形式。\n\n例如，由方程 $3x - y = 4$ 和 $x + 2y = 6$ 组成的方程组写成\n\n$$\\begin{pmatrix} 3 & -1 \\\\ 1 & 2 \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} 4 \\\\ 6 \\end{pmatrix}$$\n\n第 $1$ 行乘列向量得 $3x - y$，正是第一个方程的左边。第二个方程中 $x$ 的系数 $1$ 也要写出来。",
+  ),
   knowledgePoints: [
     {
       id: "system-to-matrix-equation-2x2",
       title: t("Converting a 2x2 system to matrix form", "将二元一次方程组转化为矩阵方程"),
       explanation: t(
-        "The coefficients of the variables form the matrix, the variables form a column vector, and the constants on the right form another column vector. A system of linear equations $\\begin{cases} a x + b y = e \\\\ c x + d y = f \\end{cases}$ can be written in matrix form as $A \\mathbf{x} = \\mathbf{b}$:\n\n$$\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} e \\\\ f \\end{pmatrix}$$",
-        "变量的系数组成矩阵，变量组成一个列向量，右边的常数组成另一个列向量。线性方程组 $\\begin{cases} a x + b y = e \\\\ c x + d y = f \\end{cases}$ 可以写成矩阵方程 $A \\mathbf{x} = \\mathbf{b}$ 的形式：\n\n$$\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} e \\\\ f \\end{pmatrix}$$",
+        "The coefficients of the variables form the matrix, the variables form a column vector, and the constants on the right form another column vector. The system with equations $ax + by = e$ and $cx + dy = f$ is written as $A\\mathbf{x} = \\mathbf{b}$:\n\n$$\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} e \\\\ f \\end{pmatrix}$$\n\nRow $i$ of the matrix holds the coefficients of equation $i$, first that of $x$ and then that of $y$.\n\n> **Watch out.** Each row is one equation. Writing the coefficients of $x$ across the first row gives the transpose, which stands for a different system.",
+        "变量的系数组成矩阵，变量组成一个列向量，右边的常数组成另一个列向量。由方程 $ax + by = e$ 和 $cx + dy = f$ 组成的方程组写成 $A\\mathbf{x} = \\mathbf{b}$：\n\n$$\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} e \\\\ f \\end{pmatrix}$$\n\n矩阵的第 $i$ 行是第 $i$ 个方程的系数，先写 $x$ 的系数，再写 $y$ 的系数。\n\n> **注意。** 每一行是一个方程。把 $x$ 的系数横着写在第一行，得到的是转置矩阵，表示的是另一个方程组。",
       ),
       generate(rng) {
         const pool = [-7, -5, -4, -3, -2, 2, 3, 4, 5, 7];
@@ -2467,6 +2779,7 @@ export const representing2x2SystemsOfEquationsUsingAMatrixProduct: TopicDef = {
 
         const eq1 = `${a === 1 ? "" : a === -1 ? "-" : a}x ${b < 0 ? "-" : "+"} ${Math.abs(b) === 1 ? "" : Math.abs(b)}y = ${e}`;
         const eq2 = `${c === 1 ? "" : c === -1 ? "-" : c}x ${d < 0 ? "-" : "+"} ${Math.abs(d) === 1 ? "" : Math.abs(d)}y = ${f}`;
+        const lhs = (eq: string) => eq.slice(0, eq.lastIndexOf(" = "));
 
         const A: Mat = [
           [a, b],
@@ -2487,10 +2800,42 @@ export const representing2x2SystemsOfEquationsUsingAMatrixProduct: TopicDef = {
           ),
           t(`$${correctLatex}$`, `$${correctLatex}$`),
           [t(`$${transLatex}$`, `$${transLatex}$`), t(`$${swappedLatex}$`, `$${swappedLatex}$`), t(`$${negLatex}$`, `$${negLatex}$`)],
-          t(
-            `The coefficient matrix $A$ contains the coefficients of $x$ and $y$ row by row: $A = ${matLatex(A)}$. The constant vector is $\\mathbf{b} = \\begin{pmatrix} ${e} \\\\ ${f} \\end{pmatrix}$. Thus the matrix equation is $${correctLatex}$.`,
-            `系数矩阵 $A$ 按行排列 $x$ 与 $y$ 的系数：$A = ${matLatex(A)}$。常数项向量为 $\\mathbf{b} = \\begin{pmatrix} ${e} \\\\ ${f} \\end{pmatrix}$。因此矩阵方程为 $${correctLatex}$。`,
+          join(
+            label(1, "Read off the coefficients", "读出系数"),
+            t(
+              "Each equation gives one row of $A$, with the coefficient of $x$ first and that of $y$ second:",
+              "每个方程给出 $A$ 的一行，先写 $x$ 的系数，再写 $y$ 的系数：",
+            ),
+            shown(`A = ${matLatex(A)}`),
+            para,
+            label(2, "Collect the constants", "写出常数"),
+            t(
+              "The right sides, in order, form the constant vector. So the matrix equation is",
+              "右边的常数按次序组成常数向量。所以矩阵方程是",
+            ),
+            shown(correctLatex),
+            checked(t("Multiply out the left side, row by column:", "把左边按行乘列乘开：")),
+            shown(`${matLatex(A)} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} ${lhs(eq1)} \\\\ ${lhs(eq2)} \\end{pmatrix}`),
+            para,
+            t(
+              `Setting these equal to $${e}$ and $${f}$ gives back the two equations of the system.`,
+              `令它们分别等于 $${e}$ 和 $${f}$，就回到方程组的两个方程。`,
+            ),
           ),
+          [
+            t(
+              "This writes the coefficients of $x$ across the first row, which is the transpose. Each row holds one equation.",
+              "这把 $x$ 的系数横着写在第一行，是转置矩阵。每一行应是一个方程。",
+            ),
+            t(
+              "The constants are in the wrong order. The first entry on the right belongs to the first equation.",
+              "常数的次序错了。右边的第一个元素属于第一个方程。",
+            ),
+            t(
+              "Every coefficient has the wrong sign. Copy each coefficient with its own sign.",
+              "每个系数的符号都错了。每个系数要连同它的符号照抄。",
+            ),
+          ],
         );
       },
     },
@@ -2498,8 +2843,8 @@ export const representing2x2SystemsOfEquationsUsingAMatrixProduct: TopicDef = {
       id: "matrix-equation-to-system-2x2",
       title: t("Expanding a 2x2 matrix equation into a system", "将二元矩阵方程还原为线性方程组"),
       explanation: t(
-        "Each row of the matrix times the column of variables gives the left side of one equation, so multiplying out recovers the whole system. Multiplying out the matrix equation $\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} e \\\\ f \\end{pmatrix}$ restores the original system: $\\begin{cases} ax + by = e \\\\ cx + dy = f \\end{cases}$.",
-        "矩阵的每一行乘以变量列向量得到一个方程的左边，所以把乘积展开就还原出整个方程组。展开矩阵方程 $\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} e \\\\ f \\end{pmatrix}$ 即可还原原本的方程组：$\\begin{cases} ax + by = e \\\\ cx + dy = f \\end{cases}$。",
+        "Each row of the matrix times the column of variables gives the left side of one equation, so multiplying out recovers the whole system. Take the matrix equation\n\n$$\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} e \\\\ f \\end{pmatrix}$$\n\nRow $1$ times the column gives $ax + by$, so the first equation is $ax + by = e$. Row $2$ gives $cx + dy = f$ in the same way.\n\n> **Watch out.** Read the matrix by rows. The first column holds the coefficients of $x$ in both equations, not the coefficients of the first equation.",
+        "矩阵的每一行乘变量列向量，得到一个方程的左边，所以把乘积展开就还原出整个方程组。看矩阵方程\n\n$$\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} e \\\\ f \\end{pmatrix}$$\n\n第 $1$ 行乘列向量得 $ax + by$，所以第一个方程是 $ax + by = e$。第 $2$ 行同样给出 $cx + dy = f$。\n\n> **注意。** 按行读矩阵。第一列是两个方程中 $x$ 的系数，不是第一个方程的系数。",
       ),
       generate(rng) {
         const pool = [-6, -5, -4, -3, -2, 2, 3, 4, 5, 6];
@@ -2536,10 +2881,38 @@ export const representing2x2SystemsOfEquationsUsingAMatrixProduct: TopicDef = {
               `$\\begin{cases} ${formatEq(-a, b, e)} \\\\ ${formatEq(c, -d, f)} \\end{cases}$`,
             ),
           ],
-          t(
-            `Multiply row 1 by column vector: $(${a})x + (${b})y = ${e}$. Multiply row 2 by column vector: $(${c})x + (${d})y = ${f}$. This gives $${correctSys}$.`,
-            `第 1 行与未知数列向量相乘：$(${a})x + (${b})y = ${e}$。第 2 行与列向量相乘：$(${c})x + (${d})y = ${f}$。即得到方程组 $${correctSys}$。`,
+          join(
+            label(1, "Multiply row 1", "乘第 1 行"),
+            t(
+              "Row $1$ of the matrix times the column of variables gives the first equation:",
+              "矩阵的第 $1$ 行乘变量列向量，得到第一个方程：",
+            ),
+            shown(formatEq(a, b, e)),
+            para,
+            label(2, "Multiply row 2", "乘第 2 行"),
+            t("Row $2$ gives the second equation:", "第 $2$ 行给出第二个方程："),
+            shown(formatEq(c, d, f)),
+            para,
+            t("So the system is", "所以方程组是"),
+            shown(correctSys),
+            checked(
+              t(
+                `Read the matrix by columns. The first column, $${a}$ and $${c}$, should hold the coefficients of $x$ in the two equations, and the second column, $${b}$ and $${d}$, those of $y$. Both match the system above, and the right sides $${e}$ and $${f}$ stay in order.`,
+                `按列读矩阵。第一列 $${a}$ 和 $${c}$ 应是两个方程中 $x$ 的系数，第二列 $${b}$ 和 $${d}$ 应是 $y$ 的系数。两者都与上面的方程组相符，右边的 $${e}$ 和 $${f}$ 次序也不变。`,
+              ),
+            ),
           ),
+          [
+            t(
+              "This reads the matrix by columns. The first equation comes from row $1$, not column $1$.",
+              "这是按列读矩阵。第一个方程来自第 $1$ 行，而不是第 $1$ 列。",
+            ),
+            t(
+              "The right sides are swapped. The first entry of the constant column goes with row $1$.",
+              "右边的常数对调了。常数列的第一个元素对应第 $1$ 行。",
+            ),
+            t("Two coefficients have the wrong sign. Copy each entry with its sign.", "有两个系数的符号错了。每个元素要连同符号照抄。"),
+          ],
         );
       },
     },
@@ -2560,13 +2933,17 @@ export const representing3x3SystemsOfEquationsUsingAMatrixProduct: TopicDef = {
   encompasses: [{ topic: "representing-2x2-systems-of-equations-using-a-matrix-product", weight: 0.4 }],
   xp: 13,
   standards: ["CCSS.HSA.REI.C.8"],
+  intro: t(
+    "You can write a system of two equations as $A\\mathbf{x} = \\mathbf{b}$. Three equations in $x$, $y$, $z$ work the same way, with a $3 \\times 3$ coefficient matrix and columns of three entries. This is the form that inverses and Cramer's rule work on. The new point is a missing variable: its coefficient is $0$, and that $0$ must be written in the matrix.\n\nFor example, the system with equations $x + 2y - z = 3$, $4y + z = 1$ and $2x - 3z = 5$ becomes\n\n$$\\begin{pmatrix} 1 & 2 & -1 \\\\ 0 & 4 & 1 \\\\ 2 & 0 & -3 \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\\\ z \\end{pmatrix} = \\begin{pmatrix} 3 \\\\ 1 \\\\ 5 \\end{pmatrix}$$\n\nThe second equation has no $x$ and the third has no $y$, so those places hold $0$.",
+    "你会把两个方程的方程组写成 $A\\mathbf{x} = \\mathbf{b}$。含 $x$、$y$、$z$ 的三个方程也一样，用 $3 \\times 3$ 系数矩阵和三个元素的列向量。逆矩阵和克拉默法则用的就是这种形式。新的地方在于缺少的变量：它的系数是 $0$，这个 $0$ 必须写进矩阵。\n\n例如，由方程 $x + 2y - z = 3$、$4y + z = 1$ 和 $2x - 3z = 5$ 组成的方程组写成\n\n$$\\begin{pmatrix} 1 & 2 & -1 \\\\ 0 & 4 & 1 \\\\ 2 & 0 & -3 \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\\\ z \\end{pmatrix} = \\begin{pmatrix} 3 \\\\ 1 \\\\ 5 \\end{pmatrix}$$\n\n第二个方程没有 $x$，第三个方程没有 $y$，所以这两个位置是 $0$。",
+  ),
   knowledgePoints: [
     {
       id: "system-to-matrix-equation-3x3",
       title: t("Converting a 3x3 system to matrix equation", "将三元一次方程组转化为矩阵方程"),
       explanation: t(
-        "A $3 \\times 3$ system of equations is represented as $A \\mathbf{x} = \\mathbf{b}$ where $A$ is the $3 \\times 3$ coefficient matrix, $\\mathbf{x} = \\begin{pmatrix} x \\\\ y \\\\ z \\end{pmatrix}$, and $\\mathbf{b}$ is the $3 \\times 1$ constant vector. If a variable is missing in an equation, its coefficient in $A$ is 0.",
-        "三元一次方程组可表示为 $A \\mathbf{x} = \\mathbf{b}$，其中 $A$ 为 $3 \\times 3$ 系数矩阵，$\\mathbf{x} = \\begin{pmatrix} x \\\\ y \\\\ z \\end{pmatrix}$，$\\mathbf{b}$ 为 $3 \\times 1$ 常数项向量。若某方程缺少某个未知数，则对应系数为 0。",
+        "A system of three equations in $x$, $y$, $z$ is written as $A\\mathbf{x} = \\mathbf{b}$. Here $A$ is the $3 \\times 3$ coefficient matrix with one row for each equation, $\\mathbf{x}$ is the column of the variables $x$, $y$, $z$, and $\\mathbf{b}$ is the $3 \\times 1$ column of constants. If a variable is missing in an equation, its coefficient in $A$ is $0$.\n\n> **Watch out.** A missing variable has coefficient $0$, not $1$. Only a variable written with no number in front, such as $y$ in $x + y$, has coefficient $1$.",
+        "含 $x$、$y$、$z$ 的三个方程组成的方程组写成 $A\\mathbf{x} = \\mathbf{b}$。其中 $A$ 是 $3 \\times 3$ 系数矩阵，每个方程占一行；$\\mathbf{x}$ 是变量 $x$、$y$、$z$ 组成的列向量；$\\mathbf{b}$ 是常数组成的 $3 \\times 1$ 列向量。若某方程缺少某个未知数，则它在 $A$ 中的系数为 $0$。\n\n> **注意。** 缺少的变量系数是 $0$，不是 $1$。只有前面不写数的变量，比如 $x + y$ 中的 $y$，系数才是 $1$。",
       ),
       generate(rng) {
         const pool = [-5, -4, -3, -2, 2, 3, 4, 5];
@@ -2587,6 +2964,7 @@ export const representing3x3SystemsOfEquationsUsingAMatrixProduct: TopicDef = {
         const eq1 = `${a1}x ${b1 < 0 ? "-" : "+"} ${Math.abs(b1)}y ${c1 < 0 ? "-" : "+"} ${Math.abs(c1)}z = ${r1}`;
         const eq2 = `${a2}x ${c2 < 0 ? "-" : "+"} ${Math.abs(c2)}z = ${r2}`;
         const eq3 = `${a3}x ${b3 < 0 ? "-" : "+"} ${Math.abs(b3)}y ${c3 < 0 ? "-" : "+"} ${Math.abs(c3)}z = ${r3}`;
+        const lhs = (eq: string) => eq.slice(0, eq.lastIndexOf(" = "));
 
         const A: Mat = [
           [a1, b1, c1],
@@ -2620,10 +2998,42 @@ export const representing3x3SystemsOfEquationsUsingAMatrixProduct: TopicDef = {
             t(`$${wrongAns2}$`, `$${wrongAns2}$`),
             t(`$${matLatex(A)} ${xVec} = ${colVecLatex([r3, r2, r1])}$`, `$${matLatex(A)} ${xVec} = ${colVecLatex([r3, r2, r1])}$`),
           ],
-          t(
-            `Notice that the second equation $${eq2}$ has no $y$ term, so the coefficient of $y$ in row 2 is 0. The matrix equation is $${correctAns}$.`,
-            `注意第二个方程 $${eq2}$ 不含 $y$ 项，因此第 2 行中 $y$ 的系数为 0。该矩阵方程为 $${correctAns}$。`,
+          join(
+            label(1, "Write the coefficient matrix", "写出系数矩阵"),
+            t(
+              "Each equation gives one row, with the coefficients of $x$, $y$, $z$ in that order. The second equation has no $y$ term, so the middle entry of row $2$ is $0$:",
+              "每个方程给出一行，按 $x$、$y$、$z$ 的次序写系数。第二个方程没有 $y$ 项，所以第 $2$ 行中间的元素是 $0$：",
+            ),
+            shown(`A = ${matLatex(A)}`),
+            para,
+            label(2, "Write the constants", "写出常数"),
+            t(
+              "The right sides, in order, form $\\mathbf{b}$. So the matrix equation is",
+              "右边的常数按次序组成 $\\mathbf{b}$。所以矩阵方程是",
+            ),
+            shown(correctAns),
+            checked(t("Multiply out the left side, row by column:", "把左边按行乘列乘开：")),
+            shown(`${matLatex(A)} ${xVec} = ${colVecLatex([lhs(eq1), `${a2}x + 0y ${c2 < 0 ? "-" : "+"} ${Math.abs(c2)}z`, lhs(eq3)])}`),
+            para,
+            t(
+              "Setting these equal to the entries of $\\mathbf{b}$ gives back the three equations, with $0y$ standing for the missing $y$.",
+              "令它们分别等于 $\\mathbf{b}$ 的元素，就回到三个方程，其中 $0y$ 代表缺少的 $y$。",
+            ),
           ),
+          [
+            t(
+              "This writes $1$ for the missing $y$. A missing variable has coefficient $0$.",
+              "这把缺少的 $y$ 的系数写成了 $1$。缺少的变量系数是 $0$。",
+            ),
+            t(
+              "This is the transpose. Each row must hold the coefficients of one equation, not of one variable.",
+              "这是转置矩阵。每一行应是一个方程的系数，而不是一个变量的系数。",
+            ),
+            t(
+              "The constants are in reverse order. Each entry of $\\mathbf{b}$ belongs to the equation in the same row.",
+              "常数的次序反了。$\\mathbf{b}$ 的每个元素属于同一行的方程。",
+            ),
+          ],
         );
       },
     },
@@ -2631,8 +3041,8 @@ export const representing3x3SystemsOfEquationsUsingAMatrixProduct: TopicDef = {
       id: "identifying-components-of-3x3-matrix-equations",
       title: t("Identifying components of 3x3 matrix equations", "识别三元矩阵方程的系数矩阵、未知数与常数向量"),
       explanation: t(
-        "In the matrix equation $A \\mathbf{x} = \\mathbf{b}$, $A$ is the coefficient matrix, $\\mathbf{x}$ is the column vector of variables, and $\\mathbf{b}$ is the column vector of constants on the right-hand side.",
-        "在矩阵方程 $A \\mathbf{x} = \\mathbf{b}$ 中，$A$ 是系数矩阵，$\\mathbf{x}$ 是未知数列向量，$\\mathbf{b}$ 是由方程右端常数组成的列向量。",
+        "In the matrix equation $A \\mathbf{x} = \\mathbf{b}$, $A$ is the coefficient matrix, $\\mathbf{x}$ is the column vector of variables, and $\\mathbf{b}$ is the column vector of constants on the right-hand side. The entry $a_{ij}$ sits in row $i$ and column $j$ of $A$, so it is the coefficient of variable $j$ in equation $i$.\n\n> **Watch out.** The first index is the row and the second is the column: $a_{23}$ is in row $2$, column $3$, which is a different place from $a_{32}$.",
+        "在矩阵方程 $A \\mathbf{x} = \\mathbf{b}$ 中，$A$ 是系数矩阵，$\\mathbf{x}$ 是未知数列向量，$\\mathbf{b}$ 是由方程右端常数组成的列向量。元素 $a_{ij}$ 位于 $A$ 的第 $i$ 行第 $j$ 列，所以它是第 $i$ 个方程中第 $j$ 个变量的系数。\n\n> **注意。** 第一个下标是行，第二个下标是列：$a_{23}$ 在第 $2$ 行第 $3$ 列，与 $a_{32}$ 的位置不同。",
       ),
       generate(rng) {
         const pool = [-6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6];
@@ -2647,6 +3057,14 @@ export const representing3x3SystemsOfEquationsUsingAMatrixProduct: TopicDef = {
         const j = rng.pick([1, 2, 3]);
         const targetVal = A[i - 1]![j - 1]!;
 
+        const vars = ["x", "y", "z"];
+        const row = A[i - 1]!;
+        const term = (c: number, k: number) => {
+          const size = Math.abs(c) === 1 ? "" : `${Math.abs(c)}`;
+          return k === 0 ? `${c < 0 ? "-" : ""}${size}${vars[k]!}` : ` ${c < 0 ? "-" : "+"} ${size}${vars[k]!}`;
+        };
+        const equation = `${row.map((c, k) => term(c, k)).join("")} = ${b[i - 1]!}`;
+
         return numberProblem({
           prompt: t(
             `In the matrix equation $A \\begin{pmatrix} x \\\\ y \\\\ z \\end{pmatrix} = \\mathbf{b}$ representing a linear system, what is the entry $a_{${i}${j}}$ of the coefficient matrix $A$?\n\n$$A = ${matLatex(A)}, \\quad \\mathbf{b} = ${colVecLatex(b)}$$`,
@@ -2654,9 +3072,30 @@ export const representing3x3SystemsOfEquationsUsingAMatrixProduct: TopicDef = {
           ),
           answer: targetVal,
           wrong: [-targetVal, b[i - 1]!, A[j - 1]![i - 1]!, targetVal + 1, targetVal - 1],
-          solution: t(
-            `Entry $a_{${i}${j}}$ is the coefficient in equation (row) $${i}$ for variable $j$ (column $${j}$). In matrix $A$, that entry is $${targetVal}$.`,
-            `元素 $a_{${i}${j}}$ 对应第 $${i}$ 个方程（第 $${i}$ 行）中第 $${j}$ 个未知数（第 $${j}$ 列）的系数。在矩阵 $A$ 中，该元素为 $${targetVal}$。`,
+          solution: join(
+            label(1, "Find the row", "找行"),
+            t(
+              `The first index is $${i}$, so the entry is in row $${i}$ of $A$, whose entries are ${row.map((v) => `$${v}$`).join(", ")}.`,
+              `第一个下标是 $${i}$，所以这个元素在 $A$ 的第 $${i}$ 行，这一行是 ${row.map((v) => `$${v}$`).join("、")}。`,
+            ),
+            para,
+            label(2, "Find the column", "找列"),
+            t(
+              `The second index is $${j}$, so take entry number $${j}$ of that row: $a_{${i}${j}} = ${targetVal}$.`,
+              `第二个下标是 $${j}$，所以取这一行的第 $${j}$ 个元素：$a_{${i}${j}} = ${targetVal}$。`,
+            ),
+            checked(
+              t(
+                `Read it as a coefficient instead. Row $${i}$ is equation $${i}$ of the system:`,
+                `改为把它看作系数。第 $${i}$ 行就是方程组的第 $${i}$ 个方程：`,
+              ),
+            ),
+            shown(equation),
+            para,
+            t(
+              `Its coefficient of $${vars[j - 1]!}$ is $${targetVal}$, the same entry.`,
+              `其中 $${vars[j - 1]!}$ 的系数是 $${targetVal}$，与上面相同。`,
+            ),
           ),
         });
       },
@@ -2680,13 +3119,17 @@ export const theDeterminantOfA2x2Matrix: TopicDef = {
   encompasses: [],
   xp: 12,
   standards: ["CCSS.HSN.VM.C.10", "CCSS.HSN.VM.C.12"],
+  intro: t(
+    "You can multiply $2 \\times 2$ matrices. Every square matrix has one number, its determinant, that tells whether the matrix can be undone: a $2 \\times 2$ matrix has an inverse exactly when its determinant is not $0$. For a $2 \\times 2$ matrix the determinant is the product of the main diagonal minus the product of the other diagonal.\n\nFor example,\n\n$$\\det \\begin{pmatrix} 4 & -3 \\\\ 2 & 5 \\end{pmatrix} = 4 \\cdot 5 - (-3) \\cdot 2 = 20 + 6 = 26$$\n\nThe minus sign of the formula and the negative entry together give $+6$.",
+    "你会做 $2 \\times 2$ 矩阵的乘法。每个方阵都有一个数，叫作行列式，它说明这个矩阵能否被还原：$2 \\times 2$ 矩阵有逆矩阵，当且仅当它的行列式不为 $0$。$2 \\times 2$ 矩阵的行列式是主对角线两数之积减去另一条对角线两数之积。\n\n例如\n\n$$\\det \\begin{pmatrix} 4 & -3 \\\\ 2 & 5 \\end{pmatrix} = 4 \\cdot 5 - (-3) \\cdot 2 = 20 + 6 = 26$$\n\n公式中的减号和负的元素合在一起，得到 $+6$。",
+  ),
   knowledgePoints: [
     {
       id: "evaluating-2x2-determinants",
       title: t("Evaluating determinants of 2x2 matrices", "计算二阶矩阵的行列式"),
       explanation: t(
-        "The determinant of a $2 \\times 2$ matrix is the product of the main diagonal minus the product of the other diagonal. Watch the signs of negative entries.\n\nThe determinant of a $2 \\times 2$ matrix $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$ is denoted $\\det(A)$ or $\\begin{vmatrix} a & b \\\\ c & d \\end{vmatrix}$ and is defined as:\n\n$$\\det(A) = ad - bc$$",
-        "$2 \\times 2$ 矩阵的行列式等于主对角线上两数之积减去另一条对角线上两数之积。注意负数元素的符号。\n\n$2 \\times 2$ 矩阵 $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$ 的行列式记作 $\\det(A)$ 或 $\\begin{vmatrix} a & b \\\\ c & d \\end{vmatrix}$，其计算公式为：\n\n$$\\det(A) = ad - bc$$",
+        "The determinant of a $2 \\times 2$ matrix is the product of the main diagonal minus the product of the other diagonal. Watch the signs of negative entries.\n\nWrite the matrix as\n\n$$A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$$\n\nIts determinant is written $\\det(A)$, or with straight bars in place of the parentheses, and\n\n$$\\det(A) = \\begin{vmatrix} a & b \\\\ c & d \\end{vmatrix} = ad - bc$$\n\n> **Watch out.** Subtract the whole product $bc$. When $bc$ is negative, subtracting it adds: $12 - (-6) = 12 + 6$.",
+        "$2 \\times 2$ 矩阵的行列式等于主对角线上两数之积减去另一条对角线上两数之积。注意负数元素的符号。\n\n把矩阵写成\n\n$$A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$$\n\n它的行列式记作 $\\det(A)$，或把圆括号换成两条竖线，并且\n\n$$\\det(A) = \\begin{vmatrix} a & b \\\\ c & d \\end{vmatrix} = ad - bc$$\n\n> **注意。** 要减去整个乘积 $bc$。$bc$ 为负时，减去它就是加上：$12 - (-6) = 12 + 6$。",
       ),
       generate(rng) {
         const pool = [-9, -8, -7, -6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -2724,9 +3167,23 @@ export const theDeterminantOfA2x2Matrix: TopicDef = {
           ),
           answer: val,
           wrong: [wrongSign, -val, wrongCols, val + 2, val - 2],
-          solution: t(
-            `Use the formula $\\det(A) = ad - bc$:\n\n$$\\det(A) = (${a})(${d}) - (${b})(${c}) = ${step} = ${val}$$`,
-            `根据计算公式 $\\det(A) = ad - bc$：\n\n$$\\det(A) = (${a})(${d}) - (${b})(${c}) = ${step} = ${val}$$`,
+          solution: join(
+            label(1, "Multiply along each diagonal", "沿两条对角线相乘"),
+            t("The main diagonal gives $ad$ and the other diagonal gives $bc$:", "主对角线给出 $ad$，另一条对角线给出 $bc$："),
+            shown(`ad = ${paren(a)} \\cdot ${paren(d)} = ${ad}`, `bc = ${paren(b)} \\cdot ${paren(c)} = ${bc}`),
+            para,
+            label(2, "Subtract", "相减"),
+            t("Subtract the second product from the first:", "用第一个乘积减去第二个："),
+            shown(`\\det(A) = ${step} = ${val}`),
+            checked(
+              t(
+                "Swap the two rows. A row swap changes only the sign of a determinant, and the swapped matrix gives",
+                "交换两行。交换两行只改变行列式的符号，交换后的矩阵给出",
+              ),
+            ),
+            shown(`${paren(c)} \\cdot ${paren(b)} - ${paren(d)} \\cdot ${paren(a)} = ${bc} - ${paren(ad)} = ${-val}`),
+            para,
+            t(`This is the opposite of $${val}$, as it should be.`, `这正是 $${val}$ 的相反数。`),
           ),
         });
       },
@@ -2735,8 +3192,8 @@ export const theDeterminantOfA2x2Matrix: TopicDef = {
       id: "solving-for-unknowns-in-2x2-determinants",
       title: t("Solving for an unknown in a 2x2 determinant equation", "解含未知数的二阶行列式方程"),
       explanation: t(
-        "An equation of the form $\\det\\begin{pmatrix} x & b \\\\ c & d \\end{pmatrix} = k$ translates to the linear equation $d x - b c = k$, which can be solved for $x = \\frac{k + bc}{d}$.",
-        "形如 $\\det\\begin{pmatrix} x & b \\\\ c & d \\end{pmatrix} = k$ 的方程对应于一次方程 $d x - b c = k$，解得 $x = \\frac{k + bc}{d}$。",
+        "Expanding a determinant that contains an unknown gives an ordinary linear equation. Take the equation\n\n$$\\begin{vmatrix} x & b \\\\ c & d \\end{vmatrix} = k$$\n\nThe main diagonal gives $dx$ and the other gives $bc$, so $dx - bc = k$. Add $bc$ to both sides and divide by $d$ to get $x = \\frac{k + bc}{d}$.\n\n> **Watch out.** Move $bc$ with the right sign: from $dx - bc = k$ you get $dx = k + bc$, not $dx = k - bc$.",
+        "展开含未知数的行列式，就得到普通的一次方程。看方程\n\n$$\\begin{vmatrix} x & b \\\\ c & d \\end{vmatrix} = k$$\n\n主对角线给出 $dx$，另一条对角线给出 $bc$，所以 $dx - bc = k$。两边加 $bc$ 再除以 $d$，得 $x = \\frac{k + bc}{d}$。\n\n> **注意。** 移动 $bc$ 时要注意符号：由 $dx - bc = k$ 得 $dx = k + bc$，而不是 $dx = k - bc$。",
       ),
       generate(rng) {
         const x = rng.pick([-6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6]);
@@ -2763,9 +3220,18 @@ export const theDeterminantOfA2x2Matrix: TopicDef = {
           solveFor: "x",
           answer: x,
           wrong: [-x, x + 1, x - 2, x + 3],
-          solution: t(
-            `Expand the determinant: $x(${d}) - (${b})(${c}) = ${k}$.\n\n$$${dStr}x ${subStep} = ${k} \\implies ${dStr}x = ${rhs} \\implies x = ${x}$$`,
-            `展开行列式：$x(${d}) - (${b})(${c}) = ${k}$。\n\n$$${dStr}x ${subStep} = ${k} \\implies ${dStr}x = ${rhs} \\implies x = ${x}$$`,
+          solution: join(
+            label(1, "Expand the determinant", "展开行列式"),
+            t("Main diagonal minus the other diagonal gives a linear equation:", "主对角线之积减去另一条对角线之积，得到一次方程："),
+            shown(`${dStr}x - ${paren(b)} \\cdot ${paren(c)} = ${k}`, `${dStr}x ${subStep} = ${k}`),
+            para,
+            label(2, "Solve", "求解"),
+            t(`Move the constant to the right side, then divide by $${d}$:`, `把常数移到右边，再除以 $${d}$：`),
+            shown(`${dStr}x = ${k} ${bc < 0 ? `- ${-bc}` : `+ ${bc}`} = ${rhs}`, `x = \\frac{${rhs}}{${d}} = ${x}`),
+            checked(t(`Put $x = ${x}$ back into the determinant:`, `把 $x = ${x}$ 代回行列式：`)),
+            shown(`${paren(x)} \\cdot ${paren(d)} - ${paren(b)} \\cdot ${paren(c)} = ${x * d} - ${paren(bc)} = ${k}`),
+            para,
+            t("This is the right side of the equation.", "这正是方程的右边。"),
           ),
         });
       },
@@ -2787,14 +3253,18 @@ export const theGeometricInterpretationOfThe2x2Determinant: TopicDef = {
   encompasses: [{ topic: "the-determinant-of-a-2x2-matrix", weight: 0.4 }],
   xp: 13,
   standards: ["CCSS.HSN.VM.C.12"],
+  intro: t(
+    "You can compute a $2 \\times 2$ determinant. It also measures area. The columns of the matrix are two vectors, and the absolute value of the determinant is the area of the parallelogram they span. Its sign tells which way you turn from the first vector to the second. This is how a matrix is seen as a map of the plane that scales every area by the same factor.\n\nFor example, the vectors $\\langle 3, 1 \\rangle$ and $\\langle 1, 2 \\rangle$ give\n\n$$\\det \\begin{pmatrix} 3 & 1 \\\\ 1 & 2 \\end{pmatrix} = 3 \\cdot 2 - 1 \\cdot 1 = 5$$\n\nThe parallelogram has area $5$, and the positive sign means that turning from $\\langle 3, 1 \\rangle$ to $\\langle 1, 2 \\rangle$ is counterclockwise.",
+    "你会计算 $2 \\times 2$ 行列式。它还度量面积。矩阵的两列是两个向量，行列式的绝对值就是它们张成的平行四边形的面积。它的符号说明从第一个向量转到第二个向量的方向。正是这样，矩阵被看作平面的一个变换，它把每块面积都放大同样的倍数。\n\n例如，向量 $\\langle 3, 1 \\rangle$ 和 $\\langle 1, 2 \\rangle$ 给出\n\n$$\\det \\begin{pmatrix} 3 & 1 \\\\ 1 & 2 \\end{pmatrix} = 3 \\cdot 2 - 1 \\cdot 1 = 5$$\n\n平行四边形的面积是 $5$，符号为正说明从 $\\langle 3, 1 \\rangle$ 转到 $\\langle 1, 2 \\rangle$ 是逆时针方向。",
+  ),
   knowledgePoints: [
     {
       id: "area-of-parallelogram-spanned-by-vectors",
       figure: precalculusDrawings2["the-geometric-interpretation-of-the-2x2-determinant#area-of-parallelogram-spanned-by-vectors"],
       title: t("Area of parallelogram via 2x2 determinant", "由向量张成的平行四边形面积与行列式"),
       explanation: t(
-        "The area of the parallelogram spanned by two vectors $\\mathbf{u} = \\langle u_1, u_2 \\rangle$ and $\\mathbf{v} = \\langle v_1, v_2 \\rangle$ in $\\mathbb{R}^2$ equals the absolute value of the determinant of the matrix formed by the vectors:\n\n$$\\text{Area} = |\\det[\\mathbf{u} \\quad \\mathbf{v}]| = |u_1 v_2 - u_2 v_1|$$",
-        "在 $\\mathbb{R}^2$ 平面中，由向量 $\\mathbf{u} = \\langle u_1, u_2 \\rangle$ 与 $\\mathbf{v} = \\langle v_1, v_2 \\rangle$ 所张成的平行四边形面积等于由这两个向量组成的矩阵行列式的绝对值：\n\n$$\\text{Area} = |\\det[\\mathbf{u} \\quad \\mathbf{v}]| = |u_1 v_2 - u_2 v_1|$$",
+        "The area of the parallelogram spanned by two vectors $\\mathbf{u} = \\langle u_1, u_2 \\rangle$ and $\\mathbf{v} = \\langle v_1, v_2 \\rangle$ in $\\mathbb{R}^2$ equals the absolute value of the determinant of the matrix formed by the vectors:\n\n$$\\text{Area} = |\\det[\\mathbf{u} \\quad \\mathbf{v}]| = |u_1 v_2 - u_2 v_1|$$\n\n> **Watch out.** Area is never negative, so take the absolute value. Do not halve it either: half the determinant is the area of a triangle.",
+        "在 $\\mathbb{R}^2$ 平面中，由向量 $\\mathbf{u} = \\langle u_1, u_2 \\rangle$ 与 $\\mathbf{v} = \\langle v_1, v_2 \\rangle$ 所张成的平行四边形面积等于由这两个向量组成的矩阵行列式的绝对值：\n\n$$\\text{Area} = |\\det[\\mathbf{u} \\quad \\mathbf{v}]| = |u_1 v_2 - u_2 v_1|$$\n\n> **注意。** 面积不会是负数，所以要取绝对值。也不要除以 2：行列式的一半是三角形的面积。",
       ),
       generate(rng) {
         const pool = [-6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6];
@@ -2811,6 +3281,7 @@ export const theGeometricInterpretationOfThe2x2Determinant: TopicDef = {
           detVal = u1 * v2 - u2 * v1;
         }
         const area = Math.abs(detVal);
+        const [s1, s2] = [u1 + v1, u2 + v2];
 
         return numberProblem({
           prompt: t(
@@ -2819,9 +3290,35 @@ export const theGeometricInterpretationOfThe2x2Determinant: TopicDef = {
           ),
           answer: area,
           wrong: [Math.abs(u1 * v1 + u2 * v2), Math.abs(u1 * v2 + u2 * v1), area + 4, Math.max(1, area - 2)],
-          solution: t(
-            `The area is the absolute value of the determinant:\n\n$$\\text{Area} = |\\det \\begin{pmatrix} ${u1} & ${v1} \\\\ ${u2} & ${v2} \\end{pmatrix}| = |(${u1})(${v2}) - (${u2})(${v1})| = |${detVal}| = ${area}$$`,
-            `平行四边形面积等于二阶行列式的绝对值：\n\n$$\\text{Area} = |\\det \\begin{pmatrix} ${u1} & ${v1} \\\\ ${u2} & ${v2} \\end{pmatrix}| = |(${u1})(${v2}) - (${u2})(${v1})| = |${detVal}| = ${area}$$`,
+          solution: join(
+            label(1, "Put the vectors in columns", "把向量写成列"),
+            t(
+              "Write $\\mathbf{u}$ and $\\mathbf{v}$ as the columns of a matrix and take its determinant:",
+              "把 $\\mathbf{u}$ 和 $\\mathbf{v}$ 写成矩阵的两列，求它的行列式：",
+            ),
+            shown(
+              `\\det ${matLatex([
+                [u1, v1],
+                [u2, v2],
+              ])} = ${paren(u1)} \\cdot ${paren(v2)} - ${paren(u2)} \\cdot ${paren(v1)} = ${detVal}`,
+            ),
+            para,
+            label(2, "Take the absolute value", "取绝对值"),
+            t(
+              `The area is the absolute value of the determinant, $|${detVal}| = ${area}$.`,
+              `面积是行列式的绝对值，$|${detVal}| = ${area}$。`,
+            ),
+            checked(
+              t(
+                `Use the shoelace formula on the corners $(0, 0)$, $(${u1}, ${u2})$, $(${s1}, ${s2})$ and $(${v1}, ${v2})$, taken in order. The terms with $(0, 0)$ are $0$, and the rest give`,
+                `按次序对顶点 $(0, 0)$、$(${u1}, ${u2})$、$(${s1}, ${s2})$、$(${v1}, ${v2})$ 用鞋带公式。含 $(0, 0)$ 的项都是 $0$，其余的项给出`,
+              ),
+            ),
+            shown(
+              `${paren(u1)} \\cdot ${paren(s2)} - ${paren(s1)} \\cdot ${paren(u2)} + ${paren(s1)} \\cdot ${paren(v2)} - ${paren(v1)} \\cdot ${paren(s2)} = ${2 * detVal}`,
+            ),
+            para,
+            t(`Half of its absolute value is $${area}$, the same area.`, `它的绝对值的一半是 $${area}$，面积相同。`),
           ),
         });
       },
@@ -2831,8 +3328,8 @@ export const theGeometricInterpretationOfThe2x2Determinant: TopicDef = {
       figure: precalculusDrawings2["the-geometric-interpretation-of-the-2x2-determinant#sign-of-determinant-and-orientation"],
       title: t("Orientation and sign of the 2x2 determinant", "行列式的正负符号与向量定向"),
       explanation: t(
-        "The sign of $\\det[\\mathbf{u} \\; \\mathbf{v}]$ encodes geometric orientation: if $\\det > 0$, turning from $\\mathbf{u}$ to $\\mathbf{v}$ through the smaller angle is counterclockwise (positive orientation); if $\\det < 0$, it is clockwise (negative orientation); if $\\det = 0$, the vectors are collinear (linearly dependent, area is 0).",
-        "行列式 $\\det[\\mathbf{u} \\; \\mathbf{v}]$ 的符号反映了几何定向：若 $\\det > 0$，从 $\\mathbf{u}$ 沿劣角转向 $\\mathbf{v}$ 为逆时针方向（正定向）；若 $\\det < 0$，转向为顺时针方向（负定向）；若 $\\det = 0$，则两向量共线（线性相关，面积为 0）。",
+        "The sign of $\\det[\\mathbf{u} \\; \\mathbf{v}]$ encodes geometric orientation: if $\\det > 0$, turning from $\\mathbf{u}$ to $\\mathbf{v}$ through the smaller angle is counterclockwise (positive orientation); if $\\det < 0$, it is clockwise (negative orientation); if $\\det = 0$, the vectors are collinear (linearly dependent, area is 0).\n\n> **Watch out.** The order matters: $\\det[\\mathbf{v} \\; \\mathbf{u}] = -\\det[\\mathbf{u} \\; \\mathbf{v}]$, so swapping the vectors reverses the orientation.",
+        "行列式 $\\det[\\mathbf{u} \\; \\mathbf{v}]$ 的符号反映了几何定向：若 $\\det > 0$，从 $\\mathbf{u}$ 沿劣角转向 $\\mathbf{v}$ 为逆时针方向（正定向）；若 $\\det < 0$，转向为顺时针方向（负定向）；若 $\\det = 0$，则两向量共线（线性相关，面积为 0）。\n\n> **注意。** 次序很重要：$\\det[\\mathbf{v} \\; \\mathbf{u}] = -\\det[\\mathbf{u} \\; \\mathbf{v}]$，交换两个向量会使定向反过来。",
       ),
       generate(rng) {
         const type = rng.pick([0, 1, 2]);
@@ -2862,6 +3359,25 @@ export const theGeometricInterpretationOfThe2x2Determinant: TopicDef = {
           v2 = k * u2;
         }
         const detVal = u1 * v2 - u2 * v1;
+        const turned = `\\langle ${-u2}, ${u1} \\rangle`;
+        const solve = (read: Text, verdict: Text) =>
+          join(
+            label(1, "Compute the determinant", "计算行列式"),
+            t("Put $\\mathbf{u}$ and $\\mathbf{v}$ in the columns:", "把 $\\mathbf{u}$ 和 $\\mathbf{v}$ 写成两列："),
+            shown(`\\det[\\mathbf{u} \\; \\mathbf{v}] = ${paren(u1)} \\cdot ${paren(v2)} - ${paren(u2)} \\cdot ${paren(v1)} = ${detVal}`),
+            para,
+            label(2, "Read the sign", "看符号"),
+            read,
+            checked(
+              t(
+                `Turn $\\mathbf{u}$ a quarter turn counterclockwise to get $${turned}$. Its dot product with $\\mathbf{v}$ is`,
+                `把 $\\mathbf{u}$ 逆时针转四分之一圈，得 $${turned}$。它与 $\\mathbf{v}$ 的数量积是`,
+              ),
+            ),
+            shown(`${paren(-u2)} \\cdot ${paren(v1)} + ${paren(u1)} \\cdot ${paren(v2)} = ${detVal}`),
+            para,
+            verdict,
+          );
 
         if (detVal > 0) {
           return oneOf(
@@ -2876,10 +3392,21 @@ export const theGeometricInterpretationOfThe2x2Determinant: TopicDef = {
               t("The vectors are collinear.", "两向量互相共线。"),
               t("The vectors are perpendicular.", "两向量必定互相垂直。"),
             ],
-            t(
-              `A positive $2 \\times 2$ determinant indicates that turning from $\\mathbf{u}$ to $\\mathbf{v}$ through the smaller angle proceeds counterclockwise (standard positive orientation).`,
-              `二阶行列式为正表示从 $\\mathbf{u}$ 沿较小夹角转向 $\\mathbf{v}$ 是逆时针方向（标准正定向）。`,
+            solve(
+              t(
+                "It is positive, so turning from $\\mathbf{u}$ to $\\mathbf{v}$ through the smaller angle is counterclockwise: the positive orientation.",
+                "它是正数，所以从 $\\mathbf{u}$ 沿较小的角转向 $\\mathbf{v}$ 是逆时针方向，即正定向。",
+              ),
+              t(
+                "This is positive, so $\\mathbf{v}$ lies on the counterclockwise side of $\\mathbf{u}$.",
+                "它是正数，所以 $\\mathbf{v}$ 在 $\\mathbf{u}$ 的逆时针一侧。",
+              ),
             ),
+            [
+              t("Clockwise goes with a negative determinant.", "顺时针对应负的行列式。"),
+              t("Collinear vectors have determinant $0$.", "共线向量的行列式是 $0$。"),
+              t("A right angle shows in the dot product, not in the sign of the determinant.", "直角要看数量积，而不是行列式的符号。"),
+            ],
           );
         }
 
@@ -2896,13 +3423,25 @@ export const theGeometricInterpretationOfThe2x2Determinant: TopicDef = {
               t("The vectors are collinear.", "两向量互相共线。"),
               t("The vectors span an infinite area.", "两向量张成的面积无限大。"),
             ],
-            t(
-              `A negative $2 \\times 2$ determinant indicates that turning from $\\mathbf{u}$ to $\\mathbf{v}$ proceeds clockwise (negative orientation).`,
-              `二阶行列式为负表示从 $\\mathbf{u}$ 到 $\\mathbf{v}$ 的转向为顺时针方向（负定向）。`,
+            solve(
+              t(
+                "It is negative, so turning from $\\mathbf{u}$ to $\\mathbf{v}$ through the smaller angle is clockwise: the negative orientation.",
+                "它是负数，所以从 $\\mathbf{u}$ 沿较小的角转向 $\\mathbf{v}$ 是顺时针方向，即负定向。",
+              ),
+              t(
+                "This is negative, so $\\mathbf{v}$ lies on the clockwise side of $\\mathbf{u}$.",
+                "它是负数，所以 $\\mathbf{v}$ 在 $\\mathbf{u}$ 的顺时针一侧。",
+              ),
             ),
+            [
+              t("Counterclockwise goes with a positive determinant.", "逆时针对应正的行列式。"),
+              t("Collinear vectors have determinant $0$.", "共线向量的行列式是 $0$。"),
+              t("The area is the absolute value of the determinant, a finite number.", "面积是行列式的绝对值，是一个有限的数。"),
+            ],
           );
         }
 
+        const k = v1 / u1;
         return oneOf(
           rng,
           t(
@@ -2915,10 +3454,27 @@ export const theGeometricInterpretationOfThe2x2Determinant: TopicDef = {
             t("They form a standard counterclockwise basis.", "它们构成标准的逆时针基底。"),
             t("They have equal magnitudes.", "它们具有相等的模长。"),
           ],
-          t(
-            `When the determinant is zero, the column vectors are linearly dependent (collinear), meaning the parallelogram they span is squashed into a line segment with area 0.`,
-            `当行列式等于 0 时，两列向量线性相关（共线），说明它们张成的平行四边形退化为一条线段，面积为 0。`,
+          solve(
+            t(
+              `It is $0$, so the parallelogram has no area. Indeed $\\mathbf{v} = ${k === -1 ? "-" : k}\\mathbf{u}$, so the vectors lie on one line.`,
+              `它是 $0$，所以平行四边形没有面积。事实上 $\\mathbf{v} = ${k === -1 ? "-" : k}\\mathbf{u}$，两个向量在同一条直线上。`,
+            ),
+            t(
+              "This is $0$, so $\\mathbf{v}$ is perpendicular to the turned vector, which means it lies along the line of $\\mathbf{u}$.",
+              "它是 $0$，所以 $\\mathbf{v}$ 与转过的向量垂直，也就是说它在 $\\mathbf{u}$ 所在的直线上。",
+            ),
           ),
+          [
+            t(
+              "Perpendicular nonzero vectors span a rectangle with positive area, so their determinant is not $0$.",
+              "互相垂直的非零向量张成面积为正的矩形，所以行列式不为 $0$。",
+            ),
+            t("A counterclockwise pair has a positive determinant.", "逆时针的一对向量行列式为正。"),
+            t(
+              "Equal lengths do not make the determinant $0$. Only vectors along one line do.",
+              "模长相等不会使行列式为 $0$，只有共线的向量才会。",
+            ),
+          ],
         );
       },
     },
@@ -2939,13 +3495,17 @@ export const theMinorsOfA3x3Matrix: TopicDef = {
   encompasses: [{ topic: "the-determinant-of-a-2x2-matrix", weight: 0.4 }],
   xp: 13,
   standards: ["CCSS.HSN.VM.C.10"],
+  intro: t(
+    "You can compute a $2 \\times 2$ determinant. A $3 \\times 3$ determinant is built from $2 \\times 2$ ones. Deleting the row and the column of an entry leaves a $2 \\times 2$ matrix, and its determinant is the minor of that entry. With a checkerboard sign attached, the minor becomes a cofactor, and cofactors are the pieces from which the $3 \\times 3$ determinant is assembled.\n\nFor example, take\n\n$$A = \\begin{pmatrix} 2 & 1 & 0 \\\\ 3 & -1 & 4 \\\\ 1 & 5 & 2 \\end{pmatrix}$$\n\nDeleting row $1$ and column $2$ leaves the rows $3, 4$ and $1, 2$, so $M_{12} = 3 \\cdot 2 - 4 \\cdot 1 = 2$. Position $(1, 2)$ has the sign $-$ on the checkerboard, so $C_{12} = -2$.",
+    "你会计算 $2 \\times 2$ 行列式。$3 \\times 3$ 行列式由 $2 \\times 2$ 行列式构成。划去某个元素所在的行和列，剩下一个 $2 \\times 2$ 矩阵，它的行列式就是这个元素的余子式。余子式配上棋盘符号就成为代数余子式，$3 \\times 3$ 行列式正是由代数余子式组合而成的。\n\n例如，取\n\n$$A = \\begin{pmatrix} 2 & 1 & 0 \\\\ 3 & -1 & 4 \\\\ 1 & 5 & 2 \\end{pmatrix}$$\n\n划去第 $1$ 行和第 $2$ 列，剩下 $3, 4$ 和 $1, 2$ 两行，所以 $M_{12} = 3 \\cdot 2 - 4 \\cdot 1 = 2$。位置 $(1, 2)$ 在棋盘上的符号是 $-$，所以 $C_{12} = -2$。",
+  ),
   knowledgePoints: [
     {
       id: "calculating-minors-of-a-3x3-matrix",
       title: t("Calculating minors of a 3x3 matrix", "计算三阶矩阵的余子式"),
       explanation: t(
-        "The minor $M_{ij}$ of an entry $a_{ij}$ in a $3 \\times 3$ matrix $A$ is the determinant of the $2 \\times 2$ submatrix formed by deleting row $i$ and column $j$ of $A$.",
-        "三阶矩阵 $A$ 中元素 $a_{ij}$ 的余子式 $M_{ij}$，是指划去 $A$ 中第 $i$ 行和第 $j$ 列后剩下的 $2 \\times 2$ 子矩阵的行列式。",
+        "The minor $M_{ij}$ of an entry $a_{ij}$ in a $3 \\times 3$ matrix $A$ is the determinant of the $2 \\times 2$ submatrix formed by deleting row $i$ and column $j$ of $A$.\n\n> **Watch out.** Delete the row and the column of the entry itself. A minor is a determinant, so subtract the two diagonal products; do not add them.",
+        "三阶矩阵 $A$ 中元素 $a_{ij}$ 的余子式 $M_{ij}$，是指划去 $A$ 中第 $i$ 行和第 $j$ 列后剩下的 $2 \\times 2$ 子矩阵的行列式。\n\n> **注意。** 划去的是这个元素自己所在的行和列。余子式是行列式，所以两条对角线的乘积要相减，不能相加。",
       ),
       generate(rng) {
         const pool = [-5, -4, -3, -2, -1, 1, 2, 3, 4, 5];
@@ -2966,6 +3526,9 @@ export const theMinorsOfA3x3Matrix: TopicDef = {
         const p1 = a11 * a22;
         const p2 = a12 * a21;
         const step = p2 < 0 ? `${p1} - (${p2}) = ${p1} + ${-p2}` : `${p1} - ${p2}`;
+        const rows = [1, 2, 3].filter((r) => r !== i);
+        const cols = [1, 2, 3].filter((c) => c !== j);
+        const kept = rows.flatMap((r) => cols.map((c) => `a_{${r}${c}} = ${A[r - 1]![c - 1]!}`)).join(", \\quad ");
 
         return numberProblem({
           prompt: t(
@@ -2974,9 +3537,26 @@ export const theMinorsOfA3x3Matrix: TopicDef = {
           ),
           answer: mVal,
           wrong: [-mVal, p1 + p2, mVal + 3, mVal - 4],
-          solution: t(
-            `Delete row $${i}$ and column $${j}$ to get the $2 \\times 2$ submatrix:\n\n$$M_{${i}${j}} = ${detLatex(sub)} = (${a11})(${a22}) - (${a12})(${a21}) = ${step} = ${mVal}$$`,
-            `划去第 $${i}$ 行与第 $${j}$ 列得到 $2 \\times 2$ 子矩阵：\n\n$$M_{${i}${j}} = ${detLatex(sub)} = (${a11})(${a22}) - (${a12})(${a21}) = ${step} = ${mVal}$$`,
+          solution: join(
+            label(1, "Delete the row and the column", "划去行和列"),
+            t(
+              `Deleting row $${i}$ and column $${j}$ of $A$ leaves a $2 \\times 2$ matrix, and $M_{${i}${j}}$ is its determinant:`,
+              `划去 $A$ 的第 $${i}$ 行和第 $${j}$ 列，剩下一个 $2 \\times 2$ 矩阵，$M_{${i}${j}}$ 就是它的行列式：`,
+            ),
+            shown(`M_{${i}${j}} = ${detLatex(sub)}`),
+            para,
+            label(2, "Evaluate the determinant", "计算行列式"),
+            t("Main diagonal minus the other diagonal:", "主对角线之积减去另一条对角线之积："),
+            shown(`M_{${i}${j}} = (${a11})(${a22}) - (${a12})(${a21}) = ${step} = ${mVal}`),
+            checked(
+              t(
+                `Find the four entries by their indices instead. They are the entries whose row is not $${i}$ and whose column is not $${j}$:`,
+                `改用下标找这四个元素：它们的行号不是 $${i}$，列号也不是 $${j}$。`,
+              ),
+            ),
+            shown(kept),
+            para,
+            t("These are the four entries used above, in the same places.", "这正是上面用到的四个元素，位置也相同。"),
           ),
         });
       },
@@ -2985,8 +3565,8 @@ export const theMinorsOfA3x3Matrix: TopicDef = {
       id: "calculating-cofactors-of-a-3x3-matrix",
       title: t("Calculating cofactors of a 3x3 matrix", "计算三阶矩阵的代数余子式"),
       explanation: t(
-        "A cofactor is a minor with a sign attached, and the sign depends only on the position of the entry, alternating like the squares of a chessboard. The cofactor $C_{ij}$ is the signed minor: $C_{ij} = (-1)^{i+j} M_{ij}$. The signs follow a checkerboard pattern:\n\n$$\\begin{pmatrix} + & - & + \\\\ - & + & - \\\\ + & - & + \\end{pmatrix}$$",
-        "余子式加上符号就是代数余子式，符号只取决于元素的位置，像棋盘的格子一样交替变化。代数余子式 $C_{ij}$ 是带有符号的余子式：$C_{ij} = (-1)^{i+j} M_{ij}$。符号遵循棋盘状正负交错规律：\n\n$$\\begin{pmatrix} + & - & + \\\\ - & + & - \\\\ + & - & + \\end{pmatrix}$$",
+        "A cofactor is a minor with a sign attached, and the sign depends only on the position of the entry, alternating like the squares of a chessboard. The cofactor $C_{ij}$ is the signed minor: $C_{ij} = (-1)^{i+j} M_{ij}$. The signs follow a checkerboard pattern:\n\n$$\\begin{pmatrix} + & - & + \\\\ - & + & - \\\\ + & - & + \\end{pmatrix}$$\n\n> **Watch out.** The sign comes from the position alone. When $i + j$ is odd, $C_{ij} = -M_{ij}$ even if $M_{ij}$ is already negative.",
+        "余子式加上符号就是代数余子式，符号只取决于元素的位置，像棋盘的格子一样交替变化。代数余子式 $C_{ij}$ 是带有符号的余子式：$C_{ij} = (-1)^{i+j} M_{ij}$。符号遵循棋盘状正负交错规律：\n\n$$\\begin{pmatrix} + & - & + \\\\ - & + & - \\\\ + & - & + \\end{pmatrix}$$\n\n> **注意。** 符号只由位置决定。$i + j$ 为奇数时，即使 $M_{ij}$ 本身是负数，也有 $C_{ij} = -M_{ij}$。",
       ),
       generate(rng) {
         const pool = [-5, -4, -3, -2, -1, 1, 2, 3, 4, 5];
@@ -3000,6 +3580,9 @@ export const theMinorsOfA3x3Matrix: TopicDef = {
         const mVal = minor3(A, i - 1, j - 1);
         const cVal = cofactor3(A, i - 1, j - 1);
         const sign = (i + j) % 2 === 0 ? "+" : "-";
+        const s = sign === "+" ? 1 : -1;
+        const sub = submatrix3(A, i - 1, j - 1);
+        const signRow = [1, 2, 3].map((c) => ((i + c) % 2 === 0 ? "+" : "-")).join(", ");
 
         return numberProblem({
           prompt: t(
@@ -3008,9 +3591,28 @@ export const theMinorsOfA3x3Matrix: TopicDef = {
           ),
           answer: cVal,
           wrong: [-cVal, mVal, cVal + 2, cVal - 3],
-          solution: t(
-            `First find the minor $M_{${i}${j}} = ${mVal}$. Since $i + j = ${i} + ${j} = ${i + j}$, the sign factor is $(-1)^{${i + j}} = ${sign === "+" ? "1" : "-1"}$. Thus $C_{${i}${j}} = ${cVal}$.`,
-            `首先求得余子式 $M_{${i}${j}} = ${mVal}$。由于 $i + j = ${i} + ${j} = ${i + j}$，符号因子为 $(-1)^{${i + j}} = ${sign === "+" ? "1" : "-1"}$。因此 $C_{${i}${j}} = ${cVal}$。`,
+          solution: join(
+            label(1, "Find the minor", "求余子式"),
+            t(
+              `Delete row $${i}$ and column $${j}$, then take the determinant of what is left:`,
+              `划去第 $${i}$ 行和第 $${j}$ 列，再求剩下部分的行列式：`,
+            ),
+            shown(
+              `M_{${i}${j}} = ${detLatex(sub)} = ${paren(sub[0]![0]!)} \\cdot ${paren(sub[1]![1]!)} - ${paren(sub[0]![1]!)} \\cdot ${paren(sub[1]![0]!)} = ${mVal}`,
+            ),
+            para,
+            label(2, "Attach the sign", "配上符号"),
+            t(
+              `Since $i + j = ${i} + ${j} = ${i + j}$, the sign is $(-1)^{${i + j}} = ${s}$. So`,
+              `由于 $i + j = ${i} + ${j} = ${i + j}$，符号是 $(-1)^{${i + j}} = ${s}$。所以`,
+            ),
+            shown(`C_{${i}${j}} = ${s} \\cdot ${paren(mVal)} = ${cVal}`),
+            checked(
+              t(
+                `Read the sign from the checkerboard. Row $${i}$ of the pattern is $${signRow}$, so place $${j}$ holds $${sign}$. The cofactor is ${s === 1 ? "the minor itself" : "the minor with its sign changed"}, $${cVal}$.`,
+                `从棋盘符号读出符号。符号图的第 $${i}$ 行是 $${signRow}$，所以第 $${j}$ 个位置是 $${sign}$。代数余子式${s === 1 ? "就是余子式本身" : "是余子式改变符号"}，即 $${cVal}$。`,
+              ),
+            ),
           ),
         });
       },
@@ -3032,13 +3634,17 @@ export const theDeterminantOfA3x3Matrix: TopicDef = {
   encompasses: [{ topic: "the-minors-of-a-3x3-matrix", weight: 0.4 }],
   xp: 14,
   standards: ["CCSS.HSN.VM.C.10"],
+  intro: t(
+    "You can find the minors and cofactors of a $3 \\times 3$ matrix. The determinant of the matrix is any row times its cofactors, added up. A zero in that row removes a whole term, so it pays to expand along the row or column with the most zeros. The rule of Sarrus gives the same number from six diagonal products. Like the $2 \\times 2$ determinant, it tells whether the matrix has an inverse and by how much it scales volume.\n\nFor example,\n\n$$\\det \\begin{pmatrix} 1 & 0 & 2 \\\\ 3 & 1 & 0 \\\\ 0 & 2 & 1 \\end{pmatrix} = 1 \\cdot (1 \\cdot 1 - 0 \\cdot 2) - 0 \\cdot M_{12} + 2 \\cdot (3 \\cdot 2 - 1 \\cdot 0) = 1 + 12 = 13$$\n\nThe zero in the first row removes the middle term.",
+    "你会求 $3 \\times 3$ 矩阵的余子式和代数余子式。矩阵的行列式等于任意一行的元素乘各自的代数余子式再相加。这一行中的 $0$ 会消去一整项，所以最好沿零最多的行或列展开。沙鲁法则用六个对角线乘积得到同一个数。和 $2 \\times 2$ 行列式一样，它说明矩阵是否有逆矩阵，以及体积被放大了多少倍。\n\n例如\n\n$$\\det \\begin{pmatrix} 1 & 0 & 2 \\\\ 3 & 1 & 0 \\\\ 0 & 2 & 1 \\end{pmatrix} = 1 \\cdot (1 \\cdot 1 - 0 \\cdot 2) - 0 \\cdot M_{12} + 2 \\cdot (3 \\cdot 2 - 1 \\cdot 0) = 1 + 12 = 13$$\n\n第一行的 $0$ 消去了中间一项。",
+  ),
   knowledgePoints: [
     {
       id: "evaluating-3x3-determinants-by-cofactor-expansion",
       title: t("Evaluating 3x3 determinants by cofactor expansion", "利用代数余子式展开计算三阶行列式"),
       explanation: t(
-        "By Laplace's expansion theorem, the determinant of a $3 \\times 3$ matrix $A$ can be computed by expanding along any row or column. Expanding along the first row gives:\n\n$$\\det(A) = a_{11} C_{11} + a_{12} C_{12} + a_{13} C_{13} = a_{11} M_{11} - a_{12} M_{12} + a_{13} M_{13}$$",
-        "根据拉普拉斯展开定理，三阶矩阵 $A$ 的行列式可以通过沿任意一行或一列展开来计算。沿第一行展开公式为：\n\n$$\\det(A) = a_{11} C_{11} + a_{12} C_{12} + a_{13} C_{13} = a_{11} M_{11} - a_{12} M_{12} + a_{13} M_{13}$$",
+        "By Laplace's expansion theorem, the determinant of a $3 \\times 3$ matrix $A$ can be computed by expanding along any row or column. Expanding along the first row gives:\n\n$$\\det(A) = a_{11} C_{11} + a_{12} C_{12} + a_{13} C_{13} = a_{11} M_{11} - a_{12} M_{12} + a_{13} M_{13}$$\n\n> **Watch out.** The middle term carries a minus sign, since $C_{12} = -M_{12}$. Forgetting it is the most common error.",
+        "根据拉普拉斯展开定理，三阶矩阵 $A$ 的行列式可以通过沿任意一行或一列展开来计算。沿第一行展开公式为：\n\n$$\\det(A) = a_{11} C_{11} + a_{12} C_{12} + a_{13} C_{13} = a_{11} M_{11} - a_{12} M_{12} + a_{13} M_{13}$$\n\n> **注意。** 中间一项带负号，因为 $C_{12} = -M_{12}$。忘掉它是最常见的错误。",
       ),
       generate(rng) {
         const pool = [-4, -3, -2, -1, 1, 2, 3, 4];
@@ -3056,6 +3662,14 @@ export const theDeterminantOfA3x3Matrix: TopicDef = {
         const t1 = a11 * c11;
         const t3 = a13 * c13;
         const step = t3 < 0 ? `${t1} - ${-t3}` : `${t1} + ${t3}`;
+        const at = (r: number, c: number) => A[r]![c]!;
+        const down = [at(0, 0) * at(1, 1) * at(2, 2), at(0, 1) * at(1, 2) * at(2, 0), at(0, 2) * at(1, 0) * at(2, 1)];
+        const up = [at(0, 2) * at(1, 1) * at(2, 0), at(0, 0) * at(1, 2) * at(2, 1), at(0, 1) * at(1, 0) * at(2, 2)];
+        const total = (ns: readonly number[]) => ns.reduce((x, y) => x + y, 0);
+        const minorLine = (c: number) => {
+          const s = submatrix3(A, 0, c);
+          return `${paren(s[0]![0]!)} \\cdot ${paren(s[1]![1]!)} - ${paren(s[0]![1]!)} \\cdot ${paren(s[1]![0]!)}`;
+        };
 
         return numberProblem({
           prompt: t(
@@ -3064,9 +3678,26 @@ export const theDeterminantOfA3x3Matrix: TopicDef = {
           ),
           answer: val,
           wrong: [-val, val + 4, val - 6, val + 10],
-          solution: t(
-            `Expand along the first row:\n\n$$\\det(A) = (${a11}) C_{11} + (0) C_{12} + (${a13}) C_{13} = (${a11})(${c11}) + (${a13})(${c13}) = ${step} = ${val}$$`,
-            `沿第一行展开：\n\n$$\\det(A) = (${a11}) C_{11} + (0) C_{12} + (${a13}) C_{13} = (${a11})(${c11}) + (${a13})(${c13}) = ${step} = ${val}$$`,
+          solution: join(
+            label(1, "Find the cofactors you need", "求需要的代数余子式"),
+            t(
+              "The middle entry of row $1$ is $0$, so only $C_{11}$ and $C_{13}$ are needed. Both positions have the sign $+$:",
+              "第 $1$ 行中间的元素是 $0$，所以只需要 $C_{11}$ 和 $C_{13}$。这两个位置的符号都是 $+$：",
+            ),
+            shown(`C_{11} = ${minorLine(0)} = ${c11}`, `C_{13} = ${minorLine(2)} = ${c13}`),
+            para,
+            label(2, "Expand along row 1", "沿第 1 行展开"),
+            t("Multiply each entry of row $1$ by its cofactor and add:", "第 $1$ 行每个元素乘它的代数余子式，再相加："),
+            shown(`\\det(A) = (${a11}) C_{11} + (0) C_{12} + (${a13}) C_{13} = (${a11})(${c11}) + (${a13})(${c13}) = ${step} = ${val}`),
+            checked(
+              t(
+                "Use the rule of Sarrus instead: the three downward products minus the three upward products.",
+                "改用沙鲁法则：三个向下的乘积之和减去三个向上的乘积之和。",
+              ),
+            ),
+            shown(`(${sumOf(down)}) - (${sumOf(up)}) = ${total(down)} - ${paren(total(up))} = ${val}`),
+            para,
+            t("This matches.", "结果一致。"),
           ),
         });
       },
@@ -3075,8 +3706,8 @@ export const theDeterminantOfA3x3Matrix: TopicDef = {
       id: "evaluating-3x3-determinants-rule-of-sarrus",
       title: t("Evaluating 3x3 determinants using the rule of Sarrus", "利用沙鲁法则（对角线法则）计算三阶行列式"),
       explanation: t(
-        "The rule of Sarrus calculates the determinant as the sum of three downward diagonal products minus the sum of three upward diagonal products:\n\n$$\\det(A) = (a_{11}a_{22}a_{33} + a_{12}a_{23}a_{31} + a_{13}a_{21}a_{32}) - (a_{13}a_{22}a_{31} + a_{11}a_{23}a_{32} + a_{12}a_{21}a_{33})$$",
-        "沙鲁法则（对角线法则）通过计算三条主对角线方向乘积之和减去三条副对角线方向乘积之和来求行列式：\n\n$$\\det(A) = (a_{11}a_{22}a_{33} + a_{12}a_{23}a_{31} + a_{13}a_{21}a_{32}) - (a_{13}a_{22}a_{31} + a_{11}a_{23}a_{32} + a_{12}a_{21}a_{33})$$",
+        "The rule of Sarrus calculates the determinant as the sum of three downward diagonal products minus the sum of three upward diagonal products:\n\n$$\\det(A) = (a_{11}a_{22}a_{33} + a_{12}a_{23}a_{31} + a_{13}a_{21}a_{32}) - (a_{13}a_{22}a_{31} + a_{11}a_{23}a_{32} + a_{12}a_{21}a_{33})$$\n\n> **Watch out.** Subtract the whole sum of the upward products. When that sum is negative, subtracting it adds.",
+        "沙鲁法则（对角线法则）通过计算三条主对角线方向乘积之和减去三条副对角线方向乘积之和来求行列式：\n\n$$\\det(A) = (a_{11}a_{22}a_{33} + a_{12}a_{23}a_{31} + a_{13}a_{21}a_{32}) - (a_{13}a_{22}a_{31} + a_{11}a_{23}a_{32} + a_{12}a_{21}a_{33})$$\n\n> **注意。** 要减去向上乘积的整个和。这个和为负时，减去它就是加上。",
       ),
       generate(rng) {
         const pool = [-4, -3, -2, -1, 1, 2, 3, 4];
@@ -3100,14 +3731,36 @@ export const theDeterminantOfA3x3Matrix: TopicDef = {
         const pTermsStr = `${p1} ${p2 < 0 ? `- ${-p2}` : `+ ${p2}`} ${p3 < 0 ? `- ${-p3}` : `+ ${p3}`}`;
         const mTermsStr = `${m1} ${m2 < 0 ? `- ${-m2}` : `+ ${m2}`} ${m3 < 0 ? `- ${-m3}` : `+ ${m3}`}`;
         const finalStep = sumM < 0 ? `${sumP} - (${sumM}) = ${sumP} + ${-sumM}` : `${sumP} - ${sumM}`;
+        const at = (r: number, c: number) => paren(A[r]![c]!);
+        const minors = [0, 1, 2].map((c) => minor3(A, 0, c));
+        const terms = [A[0]![0]! * minors[0]!, -A[0]![1]! * minors[1]!, A[0]![2]! * minors[2]!];
 
         return numberProblem({
           prompt: t(`Evaluate the $3 \\times 3$ determinant:\n\n$$${detLatex(A)}$$`, `计算该三阶行列式的值：\n\n$$${detLatex(A)}$$`),
           answer: val,
           wrong: [-val, val + 6, val - 6, sumP + sumM],
-          solution: t(
-            `Using Sarrus' rule:\n\nDownward products: $${pTermsStr} = ${sumP}$\nUpward products: $${mTermsStr} = ${sumM}$\n\n$$\\det(A) = ${finalStep} = ${val}$$`,
-            `利用沙鲁对角线法则：\n\n主对角线三项乘积之和：$${pTermsStr} = ${sumP}$\n副对角线三项乘积之和：$${mTermsStr} = ${sumM}$\n\n$$\\det(A) = ${finalStep} = ${val}$$`,
+          solution: join(
+            label(1, "Add the downward products", "加向下的乘积"),
+            t("The three diagonals running down to the right give", "三条向右下的对角线给出"),
+            shown(
+              `${at(0, 0)} \\cdot ${at(1, 1)} \\cdot ${at(2, 2)} + ${at(0, 1)} \\cdot ${at(1, 2)} \\cdot ${at(2, 0)} + ${at(0, 2)} \\cdot ${at(1, 0)} \\cdot ${at(2, 1)} = ${pTermsStr} = ${sumP}`,
+            ),
+            para,
+            label(2, "Add the upward products", "加向上的乘积"),
+            t("The three diagonals running up to the right give", "三条向右上的对角线给出"),
+            shown(
+              `${at(0, 2)} \\cdot ${at(1, 1)} \\cdot ${at(2, 0)} + ${at(0, 0)} \\cdot ${at(1, 2)} \\cdot ${at(2, 1)} + ${at(0, 1)} \\cdot ${at(1, 0)} \\cdot ${at(2, 2)} = ${mTermsStr} = ${sumM}`,
+            ),
+            para,
+            label(3, "Subtract", "相减"),
+            t("Subtract the upward sum from the downward sum:", "用向下的和减去向上的和："),
+            shown(`\\det(A) = ${finalStep} = ${val}`),
+            checked(t("Expand along row $1$ instead, with the signs $+, -, +$:", "改为沿第 $1$ 行展开，符号依次为 $+, -, +$：")),
+            shown(
+              `${at(0, 0)} \\cdot ${paren(minors[0]!)} - ${at(0, 1)} \\cdot ${paren(minors[1]!)} + ${at(0, 2)} \\cdot ${paren(minors[2]!)} = ${sumOf(terms)} = ${val}`,
+            ),
+            para,
+            t("This matches.", "结果一致。"),
           ),
         });
       },

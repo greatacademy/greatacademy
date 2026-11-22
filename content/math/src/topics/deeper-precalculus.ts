@@ -982,8 +982,8 @@ const squareFromTrace: KnowledgePointDef = {
   id: "the-square-of-a-2x2-matrix-from-its-trace-and-determinant",
   title: t("The square of a 2×2 matrix from its trace and determinant", "用迹和行列式表示 2×2 矩阵的平方"),
   explanation: t(
-    "Every $2 \\times 2$ matrix satisfies a quadratic equation of its own. Its square equals the trace times the matrix, minus the determinant times the identity, as multiplying out the entries will confirm. This means a square, and then any higher power, can be reduced to a combination of the matrix and the identity. The trace is the sum of the diagonal entries, and the signs in the relation are the part people most easily get wrong.",
-    "每个 $2 \\times 2$ 矩阵都满足一个属于自己的二次方程。它的平方等于迹乘以矩阵，减去行列式乘以单位矩阵，把元素乘开就可以验证。这意味着平方以及更高次幂都能化为矩阵与单位矩阵的组合。迹是对角元素之和，而这个关系式中的符号最容易弄错。",
+    "Every $2 \\times 2$ matrix satisfies a quadratic equation of its own. Its square equals the trace times the matrix, minus the determinant times the identity, as multiplying out the entries will confirm. This means a square, and then any higher power, can be reduced to a combination of the matrix and the identity. The trace is the sum of the diagonal entries, and the signs in the relation are the part people most easily get wrong.\n\n> **Watch out.** The constant term is minus the determinant: $q = -\\det A$, not $\\det A$.",
+    "每个 $2 \\times 2$ 矩阵都满足一个属于自己的二次方程。它的平方等于迹乘以矩阵，减去行列式乘以单位矩阵，把元素乘开就可以验证。这意味着平方以及更高次幂都能化为矩阵与单位矩阵的组合。迹是对角元素之和，而这个关系式中的符号最容易弄错。\n\n> **注意。** 常数项是行列式的相反数：$q = -\\det A$，而不是 $\\det A$。",
   ),
   generate(rng) {
     let [a, b, c, d] = [rng.int(-5, 5), nonzero(rng, 5), nonzero(rng, 5), rng.int(-5, 5)];
@@ -1009,8 +1009,8 @@ const squareFromTrace: KnowledgePointDef = {
         ? [-trace, determinant, -determinant, trace + 1, trace - 1, trace + 2]
         : [determinant, trace, -trace, answer + 1, answer - 1],
       solution: t(
-        `Every $2 \\times 2$ matrix satisfies $A^{2} = (\\operatorname{tr} A)A - (\\det A)I$. Here $\\operatorname{tr} A = ${trace}$ and $\\det A = ${determinant}$, so $p = ${trace}$ and $q = ${-determinant}$.`,
-        `每个 $2 \\times 2$ 矩阵都满足 $A^{2} = (\\operatorname{tr} A)A - (\\det A)I$。这里 $\\operatorname{tr} A = ${trace}$，$\\det A = ${determinant}$，所以 $p = ${trace}$，$q = ${-determinant}$。`,
+        `${stepLabel(1, "Find the trace and the determinant", "求迹和行列式").en} The trace is $${a} + ${inParens(d)} = ${trace}$ and the determinant is $${inParens(a)} \\cdot ${inParens(d)} - ${inParens(b)} \\cdot ${inParens(c)} = ${determinant}$.\n\n${stepLabel(2, "Use the relation", "套用关系式").en} Every $2 \\times 2$ matrix satisfies $A^{2} = (\\operatorname{tr} A)A - (\\det A)I$. So $p = ${trace}$ and $q = ${-determinant}$.\n\n**Check.** Compare the top left entries. In $A^{2}$ it is $${inParens(a)} \\cdot ${inParens(a)} + ${inParens(b)} \\cdot ${inParens(c)} = ${a * a + b * c}$. In $pA + qI$ it is $${inParens(trace)} \\cdot ${inParens(a)} + ${inParens(-determinant)} = ${trace * a - determinant}$. The top right entry of $A^{2}$ is $${inParens(a)} \\cdot ${inParens(b)} + ${inParens(b)} \\cdot ${inParens(d)} = ${a * b + b * d}$. In $pA + qI$ it is $${inParens(trace)} \\cdot ${inParens(b)} = ${trace * b}$, the same.`,
+        `${stepLabel(1, "Find the trace and the determinant", "求迹和行列式")["zh-CN"]}迹是 $${a} + ${inParens(d)} = ${trace}$，行列式是 $${inParens(a)} \\cdot ${inParens(d)} - ${inParens(b)} \\cdot ${inParens(c)} = ${determinant}$。\n\n${stepLabel(2, "Use the relation", "套用关系式")["zh-CN"]}每个 $2 \\times 2$ 矩阵都满足 $A^{2} = (\\operatorname{tr} A)A - (\\det A)I$。所以 $p = ${trace}$，$q = ${-determinant}$。\n\n**检验。**比较左上元素。$A^{2}$ 的左上元素是 $${inParens(a)} \\cdot ${inParens(a)} + ${inParens(b)} \\cdot ${inParens(c)} = ${a * a + b * c}$。$pA + qI$ 的左上元素是 $${inParens(trace)} \\cdot ${inParens(a)} + ${inParens(-determinant)} = ${trace * a - determinant}$。$A^{2}$ 的右上元素是 $${inParens(a)} \\cdot ${inParens(b)} + ${inParens(b)} \\cdot ${inParens(d)} = ${a * b + b * d}$。$pA + qI$ 的右上元素是 $${inParens(trace)} \\cdot ${inParens(b)} = ${trace * b}$，两者相同。`,
       ),
     });
   },
@@ -1021,8 +1021,8 @@ const triangleArea: KnowledgePointDef = {
   figure: precalculusDrawings2["the-geometric-interpretation-of-the-2x2-determinant#the-area-of-a-triangle-from-its-vertices"],
   title: t("The area of a triangle from its vertices", "由顶点坐标求三角形的面积"),
   explanation: t(
-    "A $2 \\times 2$ determinant measures the area of a parallelogram, and a triangle is half of one. To use this for a triangle placed anywhere in the plane, first form two vectors along its sides from a shared vertex, by subtracting coordinates. The determinant of these two side vectors gives the parallelogram on them, and half of its absolute value is the triangle's area. Skipping the subtraction measures a triangle with a vertex at the origin instead.",
-    "$2 \\times 2$ 行列式度量平行四边形的面积，而三角形是平行四边形的一半。要把它用于平面上任意位置的三角形，先从一个公共顶点出发，用坐标相减得到沿两条边的向量。这两个边向量的行列式给出以它们为边的平行四边形，其绝对值的一半就是三角形的面积。如果省略相减，量出的就是以原点为顶点的三角形。",
+    "A $2 \\times 2$ determinant measures the area of a parallelogram, and a triangle is half of one. To use this for a triangle placed anywhere in the plane, first form two vectors along its sides from a shared vertex, by subtracting coordinates. The determinant of these two side vectors gives the parallelogram on them, and half of its absolute value is the triangle's area. Skipping the subtraction measures a triangle with a vertex at the origin instead.\n\n> **Watch out.** Halve the absolute value of the determinant. The parallelogram is twice the triangle, and a negative determinant only means the sides are in clockwise order.",
+    "$2 \\times 2$ 行列式度量平行四边形的面积，而三角形是平行四边形的一半。要把它用于平面上任意位置的三角形，先从一个公共顶点出发，用坐标相减得到沿两条边的向量。这两个边向量的行列式给出以它们为边的平行四边形，其绝对值的一半就是三角形的面积。如果省略相减，量出的就是以原点为顶点的三角形。\n\n> **注意。** 要取行列式绝对值的一半。平行四边形是三角形的两倍，行列式为负只说明两条边按顺时针次序排列。",
   ),
   generate(rng) {
     const [ax, ay] = [rng.int(-6, 6), rng.int(-6, 6)];
@@ -1031,6 +1031,16 @@ const triangleArea: KnowledgePointDef = {
     const [bx, by, cx, cy] = [ax + u1, ay + u2, ax + v1, ay + v2];
     const determinant = u1 * v2 - u2 * v1;
     const area = Math.abs(determinant);
+    const shoelace = [
+      [ax, ay, bx, by],
+      [bx, by, cx, cy],
+      [cx, cy, ax, ay],
+    ]
+      .map(
+        ([x1, y1, x2, y2], i) =>
+          `${i === 0 ? "" : " + "}${inParens(x1!)} \\cdot ${inParens(y2!)} - ${inParens(x2!)} \\cdot ${inParens(y1!)}`,
+      )
+      .join("");
     return numberProblem({
       prompt: t(
         `Find the area of the triangle with vertices $A(${ax}, ${ay})$, $B(${bx}, ${by})$ and $C(${cx}, ${cy})$.`,
@@ -1039,8 +1049,8 @@ const triangleArea: KnowledgePointDef = {
       answer: Q.of(area, 2),
       wrong: [area, Q.of(area, 4), Q.of(Math.abs(bx * cy - by * cx), 2), 2 * area],
       solution: t(
-        `The side vectors from $A$ are $\\vec{AB} = ${vec(u1, u2)}$ and $\\vec{AC} = ${vec(v1, v2)}$. Their determinant is $${inParens(u1)} \\cdot ${inParens(v2)} - ${inParens(u2)} \\cdot ${inParens(v1)} = ${determinant}$. The triangle is half of the parallelogram, so its area is $${frac(area, 2)}$.`,
-        `从 $A$ 出发的边向量是 $\\vec{AB} = ${vec(u1, u2)}$ 和 $\\vec{AC} = ${vec(v1, v2)}$。它们的行列式是 $${inParens(u1)} \\cdot ${inParens(v2)} - ${inParens(u2)} \\cdot ${inParens(v1)} = ${determinant}$。三角形是平行四边形的一半，所以面积是 $${frac(area, 2)}$。`,
+        `${stepLabel(1, "Form the side vectors", "写出边向量").en} Subtract the coordinates of $A$. The side vectors are $\\vec{AB} = ${vec(u1, u2)}$ and $\\vec{AC} = ${vec(v1, v2)}$.\n\n${stepLabel(2, "Take half the determinant", "取行列式的一半").en} Their determinant is $${inParens(u1)} \\cdot ${inParens(v2)} - ${inParens(u2)} \\cdot ${inParens(v1)} = ${determinant}$. The triangle is half of the parallelogram on these sides, so its area is half the absolute value, $${frac(area, 2)}$.\n\n**Check.** Use the shoelace sum of the vertices: $${shoelace} = ${determinant}$. Half of its absolute value is $${frac(area, 2)}$ again.`,
+        `${stepLabel(1, "Form the side vectors", "写出边向量")["zh-CN"]}减去 $A$ 的坐标，得边向量 $\\vec{AB} = ${vec(u1, u2)}$ 和 $\\vec{AC} = ${vec(v1, v2)}$。\n\n${stepLabel(2, "Take half the determinant", "取行列式的一半")["zh-CN"]}它们的行列式是 $${inParens(u1)} \\cdot ${inParens(v2)} - ${inParens(u2)} \\cdot ${inParens(v1)} = ${determinant}$。三角形是以这两条边为边的平行四边形的一半，所以面积是绝对值的一半，即 $${frac(area, 2)}$。\n\n**检验。**用顶点的鞋带公式：$${shoelace} = ${determinant}$。它的绝对值的一半仍是 $${frac(area, 2)}$。`,
       ),
     });
   },

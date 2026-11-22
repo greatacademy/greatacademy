@@ -1104,8 +1104,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "counting-the-multiplications",
       ["Counting the multiplications", "数乘法次数"],
       [
-        "Each entry of a product takes one multiplication for every column of the first matrix. So a product of sizes $m \\times n$ and $n \\times p$ takes $mnp$ multiplications of numbers.",
-        "积的每个元素，第一个矩阵有几列就要做几次乘法。所以 $m \\times n$ 和 $n \\times p$ 相乘要做 $mnp$ 次数的乘法。",
+        "Each entry of a product takes one multiplication for every column of the first matrix. So a product of sizes $m \\times n$ and $n \\times p$ takes $mnp$ multiplications of numbers.\n\n> **Watch out.** Each entry takes as many multiplications as the shared inner size, so the total is $m \\cdot n \\cdot p$, not just the number of entries $m \\cdot p$.",
+        "积的每个元素，第一个矩阵有几列就要做几次乘法。所以 $m \\times n$ 和 $n \\times p$ 相乘要做 $mnp$ 次数的乘法。\n\n> **注意。** 每个元素要做的乘法次数等于共同的内侧尺寸，所以总数是 $m \\cdot n \\cdot p$，而不只是元素个数 $m \\cdot p$。",
       ],
       (rng) => {
         const [m, n, p] = [rng.int(2, 9), rng.int(2, 9), rng.int(2, 9)];
@@ -1117,8 +1117,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
           m * n * p,
           [m * p, m * n * n * p, m + n + p],
           [
-            `There are $${m} \\times ${p}$ entries, each taking ${n} multiplications, for ${m * n * p} in all.`,
-            `有 $${m} \\times ${p}$ 个元素，每个做 ${n} 次乘法，共 ${m * n * p} 次。`,
+            `**Step 1: Count the entries.** The product is $${m} \\times ${p}$, so it has $${m} \\cdot ${p} = ${m * p}$ entries.\n\n**Step 2: Count per entry.** Each entry is a row of $${n}$ numbers times a column of $${n}$ numbers, which takes $${n}$ multiplications. In all there are $${m * p} \\cdot ${n} = ${m * n * p}$.\n\n**Check.** Count by rows of the first matrix instead. One row times the second matrix gives a row of $${p}$ entries with $${n}$ multiplications each, so $${p * n}$ multiplications, and there are $${m}$ rows: $${m} \\cdot ${p * n} = ${m * n * p}$.`,
+            `**第一步：数元素。**乘积是 $${m} \\times ${p}$ 矩阵，有 $${m} \\cdot ${p} = ${m * p}$ 个元素。\n\n**第二步：数每个元素的乘法。**每个元素是 $${n}$ 个数的一行乘 $${n}$ 个数的一列，要做 $${n}$ 次乘法。共 $${m * p} \\cdot ${n} = ${m * n * p}$ 次。\n\n**检验。**改为按第一个矩阵的行来数。一行乘第二个矩阵得到 $${p}$ 个元素的一行，每个 $${n}$ 次乘法，共 $${p * n}$ 次；有 $${m}$ 行：$${m} \\cdot ${p * n} = ${m * n * p}$。`,
           ],
         );
       },
@@ -1129,8 +1129,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "the-size-of-the-identity-on-each-side",
       ["The size of the identity on each side", "两边单位矩阵的尺寸"],
       [
-        "A non-square matrix needs identities of different sizes on its two sides. On the left the size matches its rows, and on the right it matches its columns.",
-        "非方阵两边的单位矩阵尺寸不同。左边的尺寸等于行数，右边的尺寸等于列数。",
+        "A non-square matrix needs identities of different sizes on its two sides. On the left the size matches its rows, and on the right it matches its columns.\n\n> **Watch out.** Do not swap the sides: the identity on the left fits the rows of the matrix, and the one on the right fits its columns.",
+        "非方阵两边的单位矩阵尺寸不同。左边的尺寸等于行数，右边的尺寸等于列数。\n\n> **注意。** 不要把两边弄反：左边的单位矩阵与行数相符，右边的与列数相符。",
       ],
       (rng) => {
         const m = rng.int(2, 9);
@@ -1145,8 +1145,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
           left ? m : n,
           left ? [n, m * n, m + n] : [m, m * n, m + n],
           [
-            `$${left ? "IA" : "AI"}$ needs $I$ to fit the ${left ? "rows" : "columns"} of $A$.`,
-            `$${left ? "IA" : "AI"}$ 要求 $I$ 与 $A$ 的${left ? "行" : "列"}相符。`,
+            `**Step 1: Write the sizes.** $${left ? `(? \\times ?)(${m} \\times ${n})` : `(${m} \\times ${n})(? \\times ?)`}$. The inner sizes must match, so $I$ needs $${left ? m : n}$ ${left ? "columns" : "rows"}.\n\n**Step 2: Use that $I$ is square.** An identity matrix is square, so $I$ is $${left ? m : n} \\times ${left ? m : n}$ and has $${left ? m : n}$ rows.\n\n**Check.** With this $I$ the sizes are $${left ? `(${m} \\times ${m})(${m} \\times ${n})` : `(${m} \\times ${n})(${n} \\times ${n})`}$. The inner sizes match and the product is $${m} \\times ${n}$, the size of $A$. With $${left ? n : m}$ rows instead the inner sizes would be $${n}$ and $${m}$, which differ.`,
+            `**第一步：写出大小。**$${left ? `(? \\times ?)(${m} \\times ${n})` : `(${m} \\times ${n})(? \\times ?)`}$。内侧尺寸必须相同，所以 $I$ 需要 $${left ? m : n}$ ${left ? "列" : "行"}。\n\n**第二步：单位矩阵是方阵。**单位矩阵是方阵，所以 $I$ 是 $${left ? m : n} \\times ${left ? m : n}$，有 $${left ? m : n}$ 行。\n\n**检验。**用这个 $I$，大小是 $${left ? `(${m} \\times ${m})(${m} \\times ${n})` : `(${m} \\times ${n})(${n} \\times ${n})`}$。内侧尺寸相同，乘积是 $${m} \\times ${n}$，与 $A$ 大小相同。若改为 $${left ? n : m}$ 行，内侧尺寸就是 $${n}$ 和 $${m}$，不相同。`,
           ],
         );
       },
@@ -1157,28 +1157,40 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "the-square-of-a-sum",
       ["The square of a sum", "和的平方"],
       [
-        "Since matrices need not commute, $(A + B)^{2}$ has two different middle terms, $AB$ and $BA$. The usual formula with $2AB$ only holds when $A$ and $B$ commute.",
-        "矩阵不一定可交换，所以 $(A + B)^{2}$ 有两个不同的中间项 $AB$ 和 $BA$。通常含 $2AB$ 的公式只在 $A$、$B$ 可交换时成立。",
+        "Since matrices need not commute, $(A + B)^{2}$ has two different middle terms, $AB$ and $BA$. The usual formula with $2AB$ only holds when $A$ and $B$ commute.\n\n> **Watch out.** Do not write $2AB$: $AB$ and $BA$ are usually different matrices, so they cannot be combined.",
+        "矩阵不一定可交换，所以 $(A + B)^{2}$ 有两个不同的中间项 $AB$ 和 $BA$。通常含 $2AB$ 的公式只在 $A$、$B$ 可交换时成立。\n\n> **注意。** 不要写成 $2AB$：$AB$ 和 $BA$ 通常是不同的矩阵，不能合并。",
       ],
       (rng) => {
         const [A, B] = rng.sample(["A", "B", "C", "D", "M", "N", "P", "Q", "R", "S"], 2) as [string, string];
         const minus = rng.bool();
         const op = minus ? "-" : "+";
-        return chooseFilled(
-          rng,
+        const flipped = `${A}^{2} ${minus ? "+" : "-"} ${A}${B} ${minus ? "+" : "-"} ${B}${A} + ${B}^{2}`;
+        return reasoned(
+          chooseFilled(
+            rng,
+            [
+              `For square matrices of the same size, which expression equals $(${A} ${op} ${B})^{2}$?`,
+              `对同样大小的方阵，哪个式子等于 $(${A} ${op} ${B})^{2}$？`,
+            ],
+            `${A}^{2} ${op} ${A}${B} ${op} ${B}${A} + ${B}^{2}`,
+            [`${A}^{2} ${op} 2${A}${B} + ${B}^{2}`, `${A}^{2} + ${B}^{2}`, flipped],
+            [
+              `**Step 1: Write it as a product.** $(${A} ${op} ${B})^{2} = (${A} ${op} ${B})(${A} ${op} ${B})$.\n\n**Step 2: Expand, keeping the order.** Each term of the first factor multiplies each term of the second from the left, giving $${A}${A} ${op} ${A}${B} ${op} ${B}${A} + ${B}${B}$. Since $${A}${B}$ and $${B}${A}$ need not be equal, they stay separate.\n\n**Check.** Count the products. Two terms times two terms give four products, $${A}${A}$, $${A}${B}$, $${B}${A}$ and $${B}${B}$, and the last has sign $+$ because ${minus ? `$(-${B})(-${B}) = ${B}^{2}$` : `$${B} \\cdot ${B} = ${B}^{2}$`}. These are the four terms of the answer.`,
+              `**第一步：写成乘积。**$(${A} ${op} ${B})^{2} = (${A} ${op} ${B})(${A} ${op} ${B})$。\n\n**第二步：保持次序展开。**第一个因子的每一项从左边乘第二个因子的每一项，得 $${A}${A} ${op} ${A}${B} ${op} ${B}${A} + ${B}${B}$。由于 $${A}${B}$ 和 $${B}${A}$ 不一定相等，它们要分开写。\n\n**检验。**数一数乘积。两项乘两项得四个乘积 $${A}${A}$、$${A}${B}$、$${B}${A}$、$${B}${B}$，最后一个的符号是 $+$，因为 ${minus ? `$(-${B})(-${B}) = ${B}^{2}$` : `$${B} \\cdot ${B} = ${B}^{2}$`}。这正是答案中的四项。`,
+            ],
+          ),
           [
-            `For square matrices of the same size, which expression equals $(${A} ${op} ${B})^{2}$?`,
-            `对同样大小的方阵，哪个式子等于 $(${A} ${op} ${B})^{2}$？`,
-          ],
-          `${A}^{2} ${op} ${A}${B} ${op} ${B}${A} + ${B}^{2}`,
-          [
-            `${A}^{2} ${op} 2${A}${B} + ${B}^{2}`,
-            `${A}^{2} + ${B}^{2}`,
-            `${A}^{2} ${minus ? "+" : "-"} ${A}${B} ${minus ? "+" : "-"} ${B}${A} + ${B}^{2}`,
-          ],
-          [
-            `Expanding keeps the order of each product, so $${A}${B}$ and $${B}${A}$ stay separate.`,
-            `展开时保留每个积的次序，所以 $${A}${B}$ 和 $${B}${A}$ 不能合并。`,
+            [
+              `$${A}^{2} ${op} 2${A}${B} + ${B}^{2}$`,
+              `This merges $${A}${B}$ and $${B}${A}$, but they are equal only when the matrices commute.`,
+              `这里把 $${A}${B}$ 和 $${B}${A}$ 合并了，但只有矩阵可交换时它们才相等。`,
+            ],
+            [`$${A}^{2} + ${B}^{2}$`, `The middle terms $${A}${B}$ and $${B}${A}$ are missing.`, `漏掉了中间项 $${A}${B}$ 和 $${B}${A}$。`],
+            [
+              `$${flipped}$`,
+              `The middle terms have the wrong sign: they carry the sign $${op}$.`,
+              `中间项的符号错了：它们的符号应是 $${op}$。`,
+            ],
           ],
         );
       },
@@ -1189,13 +1201,14 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "checking-a-solution-with-the-product",
       ["Checking a solution with the product", "用乘积检验解"],
       [
-        "A vector solves a matrix equation when the product equals the right side. So a missing entry of the right side comes from multiplying the matrix by the solution.",
-        "向量是矩阵方程的解，当且仅当乘积等于右边。所以右边缺失的元素，可由矩阵乘解得到。",
+        "A vector solves a matrix equation when the product equals the right side. So a missing entry of the right side comes from multiplying the matrix by the solution.\n\n> **Watch out.** Row $2$ of the matrix gives the second entry of the product. Row $1$ only gives the entry that is already shown.",
+        "向量是矩阵方程的解，当且仅当乘积等于右边。所以右边缺失的元素，可由矩阵乘解得到。\n\n> **注意。** 矩阵的第 $2$ 行给出乘积的第二个元素。第 $1$ 行给出的只是已经写出的那个元素。",
       ],
       (rng) => {
         const [a, b, c, d] = [nz(rng, 9), nz(rng, 9), nz(rng, 9), nz(rng, 9)];
         const x = nz(rng, 6);
         const y = nz(rng, 6);
+        const combined = `${paren(x)}${mat([a], [c])} + ${paren(y)}${mat([b], [d])} = ${mat([a * x + b * y], [c * x + d * y])}`;
         return integer(
           [
             `$${mat(["x"], ["y"])} = ${mat([x], [y])}$ solves $${mat([a, b], [c, d])}${mat(["x"], ["y"])} = ${mat([a * x + b * y], ["k"])}$. What is $k$?`,
@@ -1204,8 +1217,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
           c * x + d * y,
           [a * x + b * y, c * x - d * y, c * y + d * x],
           [
-            `The second row gives $k = ${paren(c)} \\cdot ${paren(x)} + ${paren(d)} \\cdot ${paren(y)} = ${c * x + d * y}$.`,
-            `第二行给出 $k = ${paren(c)} \\cdot ${paren(x)} + ${paren(d)} \\cdot ${paren(y)} = ${c * x + d * y}$。`,
+            `**Step 1: Pick the row.** $k$ is the second entry of the product, so it comes from row $2$ of the matrix, whose entries are $${c}$ and $${d}$.\n\n**Step 2: Multiply by the solution.** $k = ${paren(c)} \\cdot ${paren(x)} + ${paren(d)} \\cdot ${paren(y)} = ${c * x + d * y}$.\n\n**Check.** Combine the columns instead, with weights $${x}$ and $${y}$: $${combined}$. Its top entry $${a * x + b * y}$ matches the right side, and its bottom entry is $${c * x + d * y}$.`,
+            `**第一步：选行。**$k$ 是乘积的第二个元素，所以来自矩阵的第 $2$ 行，这一行是 $${c}$ 和 $${d}$。\n\n**第二步：乘解向量。**$k = ${paren(c)} \\cdot ${paren(x)} + ${paren(d)} \\cdot ${paren(y)} = ${c * x + d * y}$。\n\n**检验。**改用列的组合，权重是 $${x}$ 和 $${y}$：$${combined}$。上面的元素 $${a * x + b * y}$ 与右边一致，下面的元素是 $${c * x + d * y}$。`,
           ],
         );
       },
@@ -1216,23 +1229,42 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "a-missing-variable-means-a-zero",
       ["A missing variable means a zero", "缺少变量就是 0"],
       [
-        "An equation that omits a variable still has a coefficient for it: zero. The coefficient matrix must show that zero, or the columns would no longer line up with the variables.",
-        "方程缺少某个变量时，它的系数是 0。系数矩阵必须写出这个 0，否则列就不再与变量对齐。",
+        "An equation that omits a variable still has a coefficient for it: zero. The coefficient matrix must show that zero, or the columns would no longer line up with the variables.\n\n> **Watch out.** Keep the places in the order $x, y, z$. The coefficient of $z$ goes in the third place even when $y$ is missing.",
+        "方程缺少某个变量时，它的系数是 0。系数矩阵必须写出这个 0，否则列就不再与变量对齐。\n\n> **注意。** 位置要保持 $x, y, z$ 的次序。即使缺少 $y$，$z$ 的系数也要写在第三个位置。",
       ],
       (rng) => {
         const [a, b] = [rng.int(2, 9), rng.int(2, 9)];
         const e = rng.int(1, 20);
-        return chooseFilled(
-          rng,
+        return reasoned(
+          chooseFilled(
+            rng,
+            [
+              `What is the row of the coefficient matrix for the equation $${a}x + ${b}z = ${e}$, with the variables in the order $x, y, z$?`,
+              `方程 $${a}x + ${b}z = ${e}$ 在系数矩阵中的那一行是什么（变量次序为 $x, y, z$）？`,
+            ],
+            mat([a, 0, b]),
+            [mat([a, b, 0]), mat([a, b, e]), mat([0, a, b])],
+            [
+              `**Step 1: List the coefficients in order.** The coefficient of $x$ is $${a}$. The variable $y$ does not appear, so its coefficient is $0$. The coefficient of $z$ is $${b}$.\n\n**Step 2: Write the row.** The row is $${mat([a, 0, b])}$. The constant $${e}$ stays on the right side.\n\n**Check.** Multiply the row by the column of $x$, $y$, $z$. It gives $${a}x + 0y + ${b}z = ${a}x + ${b}z$, the left side of the equation.`,
+              `**第一步：按次序列出系数。**$x$ 的系数是 $${a}$。变量 $y$ 没有出现，所以它的系数是 $0$。$z$ 的系数是 $${b}$。\n\n**第二步：写出这一行。**这一行是 $${mat([a, 0, b])}$。常数 $${e}$ 留在右边。\n\n**检验。**用这一行乘 $x$、$y$、$z$ 组成的列，得 $${a}x + 0y + ${b}z = ${a}x + ${b}z$，正是方程的左边。`,
+            ],
+          ),
           [
-            `What is the row of the coefficient matrix for the equation $${a}x + ${b}z = ${e}$, with the variables in the order $x, y, z$?`,
-            `方程 $${a}x + ${b}z = ${e}$ 在系数矩阵中的那一行是什么（变量次序为 $x, y, z$）？`,
-          ],
-          mat([a, 0, b]),
-          [mat([a, b, 0]), mat([a, b, e]), mat([0, a, b])],
-          [
-            `$y$ is missing, so its coefficient in the middle is 0. The constant ${e} stays on the right side.`,
-            `缺少 $y$，所以中间的系数是 0。常数 ${e} 留在右边。`,
+            [
+              `$${mat([a, b, 0])}$`,
+              "This puts the coefficient of $z$ under $y$. The missing $y$ needs a $0$ in the middle.",
+              "这把 $z$ 的系数放到了 $y$ 的位置。缺少的 $y$ 要在中间写 $0$。",
+            ],
+            [
+              `$${mat([a, b, e])}$`,
+              "This puts the constant into the coefficient matrix and drops the $0$ for $y$. The constant belongs on the right side.",
+              "这把常数放进了系数矩阵，又漏掉了 $y$ 的 $0$。常数属于右边。",
+            ],
+            [
+              `$${mat([0, a, b])}$`,
+              "This shifts the coefficients one place to the right. The first place belongs to $x$.",
+              "这把系数都向右移了一位。第一个位置属于 $x$。",
+            ],
           ],
         );
       },
@@ -1243,8 +1275,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "the-determinant-of-a-multiple",
       ["The determinant of a multiple", "倍数的行列式"],
       [
-        "Multiplying a $2 \\times 2$ matrix by $k$ multiplies both rows by $k$, so the determinant is multiplied by $k^{2}$, not by $k$. Each row contributes one factor.",
-        "$2 \\times 2$ 矩阵乘 $k$，两行都乘 $k$，所以行列式乘 $k^{2}$，而不是 $k$。每一行贡献一个因数。",
+        "Multiplying a $2 \\times 2$ matrix by $k$ multiplies both rows by $k$, so the determinant is multiplied by $k^{2}$, not by $k$. Each row contributes one factor.\n\n> **Watch out.** For a $2 \\times 2$ matrix the factor is $k^{2}$, not $k$ or $2k$: both rows are scaled, and the factors multiply.",
+        "$2 \\times 2$ 矩阵乘 $k$，两行都乘 $k$，所以行列式乘 $k^{2}$，而不是 $k$。每一行贡献一个因数。\n\n> **注意。** 对 $2 \\times 2$ 矩阵，因数是 $k^{2}$，不是 $k$ 也不是 $2k$：两行都被放大，因数要相乘。",
       ],
       (rng) => {
         const det = nz(rng, 12);
@@ -1256,7 +1288,10 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
           ],
           k * k * det,
           [k * det, 2 * k * det === k * k * det ? k * det + 1 : 2 * k * det, det],
-          [`$\\det(${k}A) = ${k}^{2} \\cdot (${det}) = ${k * k * det}$.`, `$\\det(${k}A) = ${k}^{2} \\cdot (${det}) = ${k * k * det}$。`],
+          [
+            `**Step 1: Count the scaled rows.** $${k}A$ multiplies each of the two rows of $A$ by $${k}$, and each scaled row multiplies the determinant by $${k}$.\n\n**Step 2: Multiply.** $\\det(${k}A) = ${k}^{2} \\cdot ${paren(det)} = ${k * k * det}$.\n\n**Check.** Try a matrix with this determinant, such as $A = ${mat([det, 0], [0, 1])}$. Its multiple is $${k}A = ${mat([k * det, 0], [0, k])}$. The determinant of that is $${paren(k * det)} \\cdot ${k} - 0 \\cdot 0 = ${k * k * det}$.`,
+            `**第一步：数被放大的行。**$${k}A$ 把 $A$ 的两行都乘 $${k}$，每放大一行，行列式就乘 $${k}$。\n\n**第二步：相乘。**$\\det(${k}A) = ${k}^{2} \\cdot ${paren(det)} = ${k * k * det}$。\n\n**检验。**取一个行列式为这个值的矩阵，比如 $A = ${mat([det, 0], [0, 1])}$。它的倍数是 $${k}A = ${mat([k * det, 0], [0, k])}$。其行列式是 $${paren(k * det)} \\cdot ${k} - 0 \\cdot 0 = ${k * k * det}$。`,
+          ],
         );
       },
     ),
@@ -1266,14 +1301,15 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "the-sign-pattern-of-cofactors",
       ["The sign pattern of cofactors", "代数余子式的符号规律"],
       [
-        "A cofactor is a minor with a sign of $(-1)^{i + j}$, which forms a checkerboard starting with plus at the top left. So entries with an even sum of indices keep the sign of the minor.",
-        "代数余子式是余子式乘符号 $(-1)^{i + j}$，形成从左上角的正号开始的棋盘。所以下标之和为偶数的元素保留余子式的符号。",
+        "A cofactor is a minor with a sign of $(-1)^{i + j}$, which forms a checkerboard starting with plus at the top left. So entries with an even sum of indices keep the sign of the minor.\n\n> **Watch out.** The sign depends on the position only. An odd $i + j$ changes the sign of the minor even when the minor is negative.",
+        "代数余子式是余子式乘符号 $(-1)^{i + j}$，形成从左上角的正号开始的棋盘。所以下标之和为偶数的元素保留余子式的符号。\n\n> **注意。** 符号只由位置决定。$i + j$ 为奇数时，即使余子式是负数，也要改变它的符号。",
       ],
       (rng) => {
         const i = rng.int(1, 3);
         const j = rng.int(1, 3);
         const m = nz(rng, 40);
         const sign = (i + j) % 2 === 0 ? 1 : -1;
+        const signRow = [1, 2, 3].map((c) => ((i + c) % 2 === 0 ? "+" : "-")).join(", ");
         return integer(
           [
             `In a $3 \\times 3$ matrix, the minor $M_{${i}${j}}$ is ${m}. What is the cofactor $C_{${i}${j}}$?`,
@@ -1282,8 +1318,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
           sign * m,
           [-sign * m, Math.abs(m) + 1, i * j * m],
           [
-            `$(-1)^{${i} + ${j}} = ${sign}$, so the cofactor is ${sign * m}.`,
-            `$(-1)^{${i} + ${j}} = ${sign}$，所以代数余子式是 ${sign * m}。`,
+            `**Step 1: Add the indices.** $i + j = ${i} + ${j} = ${i + j}$, which is ${sign === 1 ? "even" : "odd"}.\n\n**Step 2: Attach the sign.** $(-1)^{${i + j}} = ${sign}$, so $C_{${i}${j}} = ${sign} \\cdot ${paren(m)} = ${sign * m}$.\n\n**Check.** Read the checkerboard. Row $${i}$ of it is $${signRow}$, so place $${j}$ holds $${sign === 1 ? "+" : "-"}$. The cofactor is ${sign === 1 ? "the minor itself" : "the minor with its sign changed"}, $${sign * m}$.`,
+            `**第一步：下标相加。**$i + j = ${i} + ${j} = ${i + j}$，是${sign === 1 ? "偶数" : "奇数"}。\n\n**第二步：配上符号。**$(-1)^{${i + j}} = ${sign}$，所以 $C_{${i}${j}} = ${sign} \\cdot ${paren(m)} = ${sign * m}$。\n\n**检验。**看棋盘符号。它的第 $${i}$ 行是 $${signRow}$，所以第 $${j}$ 个位置是 $${sign === 1 ? "+" : "-"}$。代数余子式${sign === 1 ? "就是余子式本身" : "是余子式改变符号"}，即 $${sign * m}$。`,
           ],
         );
       },
@@ -1294,21 +1330,23 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "the-determinant-of-a-triangular-matrix",
       ["The determinant of a triangular matrix", "三角矩阵的行列式"],
       [
-        "Expanding along a column with mostly zeros leaves one term at each stage. So the determinant of a triangular matrix is just the product of its diagonal entries.",
-        "沿大部分是零的列展开，每一步只剩一项。所以三角矩阵的行列式就是对角元素的积。",
+        "Expanding along a column with mostly zeros leaves one term at each stage. So the determinant of a triangular matrix is just the product of its diagonal entries.\n\n> **Watch out.** Multiply the diagonal entries; do not add them. The entries off the diagonal do not enter at all.",
+        "沿大部分是零的列展开，每一步只剩一项。所以三角矩阵的行列式就是对角元素的积。\n\n> **注意。** 对角元素要相乘，不是相加。对角线以外的元素完全不参与。",
       ],
       (rng) => {
         const [a, b, c] = [nz(rng, 7), nz(rng, 7), nz(rng, 7)];
         const [p, q, r] = [nz(rng, 9), nz(rng, 9), nz(rng, 9)];
         const upper = rng.bool();
         const m = upper ? mat([a, p, q], [0, b, r], [0, 0, c]) : mat([a, 0, 0], [p, b, 0], [q, r, c]);
+        const rest = upper ? mat([b, r], [0, c]) : mat([b, 0], [r, c]);
+        const cross = upper ? `${paren(r)} \\cdot 0` : `0 \\cdot ${paren(r)}`;
         return integer(
           [`Evaluate $\\det ${m}$.`, `计算 $\\det ${m}$。`],
           a * b * c,
           [a + b + c, a * b * c + p * q * r, -a * b * c],
           [
-            `The matrix is triangular, so the determinant is $(${a})(${b})(${c}) = ${a * b * c}$.`,
-            `这是三角矩阵，所以行列式是 $(${a})(${b})(${c}) = ${a * b * c}$。`,
+            `**Step 1: Expand along the ${upper ? "first column" : "first row"}.** Its only nonzero entry is $${a}$, so the determinant is $${a}$ times the determinant of $${rest}$.\n\n**Step 2: Finish the $2 \\times 2$ determinant.** It is $${paren(b)} \\cdot ${paren(c)} - ${cross} = ${b * c}$. So the determinant is $${paren(a)} \\cdot ${paren(b * c)} = ${a * b * c}$.\n\n**Check.** By the rule of Sarrus, every diagonal product except the main diagonal contains a $0$. Only $${paren(a)} \\cdot ${paren(b)} \\cdot ${paren(c)} = ${a * b * c}$ is left.`,
+            `**第一步：沿${upper ? "第一列" : "第一行"}展开。**其中唯一的非零元素是 $${a}$，所以行列式等于 $${a}$ 乘 $${rest}$ 的行列式。\n\n**第二步：算完 $2 \\times 2$ 行列式。**它是 $${paren(b)} \\cdot ${paren(c)} - ${cross} = ${b * c}$。所以行列式是 $${paren(a)} \\cdot ${paren(b * c)} = ${a * b * c}$。\n\n**检验。**按沙鲁法则，除主对角线外，每个对角线乘积都含 $0$。只剩下 $${paren(a)} \\cdot ${paren(b)} \\cdot ${paren(c)} = ${a * b * c}$。`,
           ],
         );
       },
