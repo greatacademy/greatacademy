@@ -1,4 +1,4 @@
-// The kit of the language and revising topics of grades 3 and 4 (docs/chinese-curriculum.md §18.9): a choice whose
+// The kit of the language and revising topics of grades 3 to 6 (docs/chinese-curriculum.md §18.9): a choice whose
 // solution is worked in two steps and a check, and whose every wrong option says why it is wrong in its own words.
 
 import { type Generator, joinText, type Problem, type Rng, same, type Text, t } from "@ga/content";
@@ -79,4 +79,34 @@ export function bilingual(field: string): Text {
   const [zh = "", en = ""] = field.split(" ~ ").map((s) => s.trim());
   if (zh === "" || en === "") throw new Error(`language data: ${field} needs Chinese ~ English`);
   return t(en, zh);
+}
+
+/** ListedSteps are the first step and the check shared by the questions of a listed knowledge point. */
+export interface ListedSteps {
+  readonly find: Text;
+  readonly check: (right: string) => Text;
+}
+
+/**
+ * listedChoices are questions written out one a line: `question, Chinese ~ English | the right option | why, Chinese ~
+ * English | a wrong option | why it is wrong, Chinese ~ English | another | why, Chinese ~ English`.
+ */
+export function listedChoices(data: string, steps: ListedSteps): readonly Choice[] {
+  return rows(data, 7).map(([ask, right, why, w1, why1, w2, why2]) => {
+    const w = bilingual(why!);
+    const a = bilingual(why1!);
+    const b = bilingual(why2!);
+    return choice({
+      ask: bilingual(ask!),
+      shown: "",
+      right: right!,
+      wrong: [
+        [w1!, t(`${a.en}.`, `${a["zh-CN"]}。`)],
+        [w2!, t(`${b.en}.`, `${b["zh-CN"]}。`)],
+      ],
+      find: steps.find,
+      choose: t(`${right}: ${w.en}.`, `“${right}”：${w["zh-CN"]}。`),
+      check: steps.check(right!),
+    });
+  });
 }

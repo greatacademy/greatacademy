@@ -8,16 +8,7 @@ import { t } from "@ga/content";
 import type { GradeTopic } from "../grammar/index.ts";
 import { RHYMES, SIGNS, STORIES } from "./texts-1.ts";
 import { FABLES, FAIRY_TALES, NATURE } from "./texts-2.ts";
-import {
-  isHan,
-  PASSAGE,
-  type Piece,
-  quoted,
-  SIGN,
-  readingTopicOf as topicOf,
-  VERSE,
-  type Wording,
-} from "./topic-kit.ts";
+import { isHan, PASSAGE, type Piece, quoted, SIGN, readingTopicOf as topicOf, VERSE, type Wording } from "./topic-kit.ts";
 
 /** endsOf are the last characters of the lines of a verse. */
 const endsOf = (piece: Piece): string =>

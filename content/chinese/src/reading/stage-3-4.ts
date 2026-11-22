@@ -335,8 +335,8 @@ const SPECS: readonly ReadingSpec[] = [
         "imagined",
         t("What Is Imagined", "神话里的想象"),
         t(
-          "What is imagined could not happen in real life; myths use it to explain the world or show a wish. Ask of each option: could this really happen?\n\nPangu's body becomes the mountains and rivers: that is imagined, to explain where they came from. That rain floods the land is real.\n\n> **Watch out.** A myth mixes the real and the imagined. That Yu dug channels to drain the flood could happen; the dragon drawing a river with its tail could not.",
-          "想象出来的事，生活中不会真的发生；神话用它来解释世界，或者表达愿望。看每个选项都问一问：这在生活中真的会有吗？\n\n比如盘古的身体变成了山川河流，是想象，用来说明山川河流是怎样来的；下大雨会发大水，是真的。\n\n> **注意。** 神话里真的和想象的混在一起。禹挖河道把水引走，是能做到的；神龙用尾巴划出河道，是想象。",
+          "What is imagined could not happen in real life; myths use it to explain the world or show a wish. Ask of each option: could this really happen?\n\nPangu's breath becomes the wind and his blood the rivers: that is imagined, to explain where they came from. That rain floods the land is real.\n\n> **Watch out.** A myth mixes the real and the imagined. That Yu dug channels to drain the flood could happen; the dragon drawing a river with its tail could not.",
+          "想象出来的事，生活中不会真的发生；神话用它来解释世界，或者表达愿望。看每个选项都问一问：这在生活中真的会有吗？\n\n比如盘古呼出的气成了风，血成了江河，是想象，用来说明风和江河是怎样来的；下大雨会发大水，是真的。\n\n> **注意。** 神话里真的和想象的混在一起。禹挖河道把水引走，是能做到的；神龙用尾巴划出河道，是想象。",
         ),
       ],
     ],

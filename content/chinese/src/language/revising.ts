@@ -1,13 +1,14 @@
-// The revising topics of grades 3 and 4 (docs/chinese-curriculum.md §18.9): correcting the obvious mistakes of a
-// draft, a wrong character or a wrong word, in grade 3, and faulty sentences and the better word in grade 4. Each
-// sentence is written for this subject with one mistake in it; the options are ways to correct it, and the wrong ones
-// either change what was right or correct it the wrong way.
+// The revising topics of grades 3 to 6 (docs/chinese-curriculum.md §18.9): correcting the obvious mistakes of a
+// draft, a wrong character or a wrong word, in grade 3; faulty sentences and the better word in grade 4; smooth
+// sentences and their order in grade 5; the form of a page and punctuation in grade 6. Each sentence is written for
+// this subject with one mistake in it; the options are ways to correct it, and the wrong ones either change what was
+// right or correct it the wrong way.
 
 import { type Text, t } from "@ga/content";
 import { point } from "@ga/subject-chinese";
 
 import type { GradeTopic } from "../grammar/index.ts";
-import { bilingual, type Choice, choice, choiceTopicGenerator, type Heads, rows } from "./choice-kit.ts";
+import { bilingual, type Choice, choice, choiceTopicGenerator, type Heads, listedChoices, rows } from "./choice-kit.ts";
 
 /** differing is the one character in which two words of the same length differ, failing when there is not just one. */
 function differing(a: string, b: string): readonly [string, string] {
@@ -232,6 +233,153 @@ const BETTER_WORDS = `
 大雪过后，整个世界都变成了＿的。 | 白茫茫 | 雪是白的，“白茫茫”写出了到处一片白 ~ snow is white, and 白茫茫 shows white everywhere | 黑乎乎 | 下雪后到处是白的，不是黑的 ~ after snow all is white, not dark | 绿油油 | “绿油油”说庄稼草木，雪是白的 ~ 绿油油 is said of green crops and grass; snow is white
 `;
 
+/**
+ * punctuationChoices are the questions of a misused mark: `sentence | the corrected sentence | what is wrong, Chinese ~
+ * English | a correction that misses | why, Chinese ~ English | another that misses | why, Chinese ~ English`.
+ */
+function punctuationChoices(data: string): readonly Choice[] {
+  return rows(data, 7).map(([sentence, fixed, what, miss1, why1, miss2, why2]) => {
+    const w = bilingual(what!);
+    const a = bilingual(why1!);
+    const b = bilingual(why2!);
+    return choice({
+      ask: t("One mark of this sentence is misused. Which is the right correction?", "这句话有一处标点用错了。哪一种改法是对的？"),
+      shown: sentence!,
+      right: fixed!,
+      wrong: [
+        [miss1!, t(`${a.en}.`, `${a["zh-CN"]}。`)],
+        [miss2!, t(`${b.en}.`, `${b["zh-CN"]}。`)],
+      ],
+      find: t(
+        `Read the sentence with its pauses and tone, and look at each mark: ${w.en}.`,
+        `读一读句子的停顿和语气，看看每个标点：${w["zh-CN"]}。`,
+      ),
+      choose: t(
+        `The right correction changes just that mark and keeps the words: “${fixed}”`,
+        `对的改法只改这一处标点，字词都不变：“${fixed}”`,
+      ),
+      check: t(
+        `Read “${fixed}” aloud: each pause and the tone at the end match its marks.`,
+        `把“${fixed}”读一遍：每处停顿和句末的语气，都和标点对得上。`,
+      ),
+    });
+  });
+}
+
+/**
+ * orderChoices are the questions of putting sentences in order: `the sentences, each after its number ①②③④ | the right
+ * order | why, Chinese ~ English | a wrong order | why, Chinese ~ English | another | why, Chinese ~ English`.
+ */
+function orderChoices(data: string): readonly Choice[] {
+  const marks = ["①", "②", "③", "④"];
+  return rows(data, 7).map(([sentences, right, why, w1, why1, w2, why2]) => {
+    const parts = sentences!.split(/[①②③④]/u).slice(1);
+    if (parts.length !== 4 || !marks.every((m) => sentences!.includes(m))) throw new Error(`revising: ${sentences}`);
+    for (const o of [right!, w1!, w2!]) if ([...o].sort().join("") !== marks.join("")) throw new Error(`revising: order ${o}`);
+    const paragraph = [...right!].map((m) => parts[marks.indexOf(m)]!.trim()).join("");
+    const w = bilingual(why!);
+    const a = bilingual(why1!);
+    const b = bilingual(why2!);
+    return choice({
+      ask: t("In which order do these sentences make a smooth paragraph?", "这几句话按哪种顺序排列，才能成为一段通顺的话？"),
+      shown: sentences!,
+      right: right!,
+      wrong: [
+        [w1!, t(`${a.en}.`, `${a["zh-CN"]}。`)],
+        [w2!, t(`${b.en}.`, `${b["zh-CN"]}。`)],
+      ],
+      find: t(
+        "Look for the words that mark order, of time, of place, of steps, or of cause and result, and for the sentence that must come first.",
+        "找一找表示顺序的词：时间、地点、做事的步骤、原因和结果，再看哪一句应该放在最前面。",
+      ),
+      choose: t(`${right}: ${w.en}.`, `${right}：${w["zh-CN"]}。`),
+      check: t(
+        `Read them in that order: ${paragraph} Each sentence follows from the one before.`,
+        `按这个顺序读一遍：${paragraph}每一句都接得上前一句。`,
+      ),
+    });
+  });
+}
+
+/** SMOOTH_SENTENCES are the sentences of grade 5 that do not read smoothly, each with one fault. */
+const SMOOTH_SENTENCES = `
+我们要发扬和继承中华民族的优良传统。 | 我们要继承和发扬中华民族的优良传统。 | 先继承，后发扬，词语的顺序颠倒了 ~ one inherits before carrying forward, and the order is reversed | 我们要发扬中华民族的优良传统和继承。 | 把“和继承”挪到最后，句子更不通了 ~ moving 和继承 to the end makes it worse | 我们要发扬和继承中华民族的传统。 | 删了“优良”，没有改到错处，顺序还是颠倒的 ~ dropping 优良 does not touch the fault: the order is still reversed
+春天的公园是一个美丽的季节。 | 春天是一个美丽的季节。 | 公园不是季节，“公园”和“季节”搭配不当 ~ a park is not a season: 公园 and 季节 do not go together | 春天的公园是一个很美丽的季节。 | 加了“很”，公园还是被说成了季节 ~ adding 很 still makes the park a season | 夏天的公园是一个美丽的季节。 | 换成“夏天”，公园还是被说成了季节 ~ putting 夏天 for 春天 still makes the park a season
+虽然天下着大雨，所以他还是按时到校了。 | 虽然天下着大雨，但是他还是按时到校了。 | “虽然”要和“但是”搭配，不能和“所以”搭配 ~ 虽然 pairs with 但是, not with 所以 | 因为天下着大雨，但是他还是按时到校了。 | “因为”和“但是”也不能搭配 ~ 因为 does not pair with 但是 either | 虽然天下着大雨，所以他按时到校了。 | 删了“还是”，“虽然……所以”还是用错了 ~ dropping 还是 leaves 虽然 … 所以 still wrong
+小明和小刚是好朋友，他每天都去他家玩。 | 小明和小刚是好朋友，小明每天都去小刚家玩。 | 两个“他”分不清指的是谁 ~ the two 他 could be either boy | 小明和小刚是好朋友，他们每天都去他家玩。 | “他家”还是不知道是谁的家 ~ whose home 他家 is remains unclear | 小明和小刚是好朋友，他每天都去他的家玩。 | 加了“的”，两个“他”还是分不清 ~ adding 的 leaves the two 他 as unclear as before
+听了这个故事，我们受到了很大的教育意义。 | 听了这个故事，我们受到了很大的教育。 | “受到”不能和“意义”搭配 ~ one 受到 an education, not a meaning | 听了这个故事，我们受到了很大的教育意义和启发。 | 加了“和启发”，“受到……意义”还在 ~ adding 和启发 leaves 受到 … 意义 | 读了这个故事，我们受到了很大的教育意义。 | 换成“读”，毛病还在 ~ putting 读 for 听 leaves the fault
+我国的人口是世界上最多的国家。 | 我国是世界上人口最多的国家。 | “人口”不是“国家”，前后搭配不当 ~ a population is not a country | 我国的人口是世界上最多的国家之一。 | 加了“之一”，“人口”还是被说成国家 ~ adding 之一 still makes the population a country | 我国的人口是世界上很多的国家。 | 改了“最多”，毛病还在 ~ changing 最多 leaves the fault
+同学们在操场上玩耍，有的跳绳，有的踢毽子，有的在教室里看书。 | 同学们在操场上玩耍，有的跳绳，有的踢毽子，有的在打篮球。 | 前面说在操场上，后面却在教室里，前后矛盾 ~ the first part says the playground and the last the classroom | 同学们在操场上玩耍，有的跳绳，有的踢毽子，有的在教室里认真看书。 | 加了“认真”，还是在教室里 ~ adding 认真 leaves it in the classroom | 同学们在操场上玩耍，有的跳绳，有的踢毽子，有的在教室里打篮球。 | 在教室里打篮球，还是和“在操场上”合不上 ~ basketball in the classroom still clashes with the playground
+我昨天在书店买了一本新书和一支笔，我买了新书。 | 我昨天在书店买了一本新书和一支笔。 | 后半句又说了一遍买新书，重复啰嗦 ~ the last part says again that I bought a book | 我昨天在书店买了一本新书和一支笔，我买了笔。 | 换成“笔”，还是重复 ~ putting 笔 still repeats | 我昨天在书店买了一本书和一支笔，我买了新书。 | 删了“新”，重复还在 ~ dropping 新 leaves the repetition
+我们要不断提高写作。 | 我们要不断提高写作水平。 | 没说清提高写作的什么，缺了“水平” ~ it does not say what of writing is raised: 水平 is missing | 我们要不断地提高写作。 | 加了“地”，还是缺 ~ adding 地 leaves it missing | 我们要不断提高写作和阅读。 | 加了“阅读”，还是没说提高什么 ~ adding 阅读 still does not say what is raised
+妈妈买了一件很漂亮的给我毛衣。 | 妈妈给我买了一件很漂亮的毛衣。 | 词语的顺序乱了，“给我”放错了地方 ~ the words are out of order: 给我 is misplaced | 妈妈买了一件给我很漂亮的毛衣。 | “给我”还是放错了地方 ~ 给我 is still misplaced | 妈妈买了一件很漂亮的毛衣给。 | 删了“我”，句子不完整了 ~ dropping 我 leaves it unfinished
+只要努力学习，才能取得好成绩。 | 只有努力学习，才能取得好成绩。 | “只有”才和“才”搭配，“只要”要和“就”搭配 ~ 只有 pairs with 才; 只要 pairs with 就 | 只要努力学习，也能取得好成绩。 | “只要……也”不能搭配 ~ 只要 does not pair with 也 | 只要努力学习，才能取得更好的成绩。 | 加了“更好”，“只要……才”还在 ~ adding 更好 leaves 只要 … 才
+夜深了，天空中闪烁着明亮的月亮和星星。 | 夜深了，天空中挂着明亮的月亮，闪烁着星星。 | 月亮不会“闪烁”，只有星星闪烁 ~ the moon does not twinkle; only stars do | 夜深了，天空中闪烁着明亮的月亮和许多星星。 | 加了“许多”，月亮还在“闪烁” ~ adding 许多 leaves the moon twinkling | 夜深了，天空中闪烁着月亮和星星。 | 删了“明亮的”，月亮还在“闪烁” ~ dropping 明亮的 leaves the moon twinkling
+`;
+
+/** SENTENCE_ORDERS are the paragraphs of grade 5 whose sentences are out of order. */
+const SENTENCE_ORDERS = `
+①接着放上米饭一起翻炒。②先把鸡蛋打散。③最后撒上葱花。④然后把蛋液倒进锅里炒熟。 | ②④①③ | 按做事的先后，用“先、然后、接着、最后”排好 ~ in the order of the steps: 先, 然后, 接着, 最后 | ②①④③ | 鸡蛋还没下锅就放米饭，“接着”放到了“然后”前面 ~ the rice goes in before the egg: 接着 comes before 然后 | ③②④① | “最后”不能放在开头 ~ 最后 cannot come first
+①中午，太阳火辣辣的。②清晨，草叶上挂着露珠。③傍晚，晚霞染红了西边的天空。④夜里，星星眨着眼睛。 | ②①③④ | 按一天的时间，从清晨到中午、傍晚、夜里 ~ by the hours of a day, from dawn to noon, evening and night | ①②③④ | 中午不在清晨前面 ~ noon does not come before dawn | ②③①④ | 傍晚不在中午前面 ~ evening does not come before noon
+①一进大门，是一片草坪。②草坪后面是一座温室。③温室旁边有一个荷花池。④我们来到植物园门口。 | ④①②③ | 按游览的路线，从门口往里走 ~ along the way in, from the gate onward | ①④②③ | 还没到门口就写“一进大门” ~ 一进大门 comes before reaching the gate | ④②①③ | “草坪后面”要放在先写了草坪以后 ~ 草坪后面 needs the lawn named first
+①他忘了带伞。②放学时下起了大雨。③第二天他感冒了。④他只好淋着雨回家。 | ①②④③ | 按事情的先后，原因在前，结果在后 ~ in the order things happened, cause before result | ①④②③ | 还没下雨就淋着雨回家 ~ he walks home in the rain before it rains | ③①②④ | 感冒是结果，不能放在最前面 ~ the cold is the result and cannot come first
+①不久，小树苗长出了新叶。②我们在植树节种下了一棵小树苗。③每天放学，我们都给它浇水。④一个月后，它长高了一大截。 | ②③①④ | 先种下，再照顾，“不久”在前，“一个月后”在后 ~ planted, then tended, 不久 before 一个月后 | ②④③① | “一个月后”要在“不久”后面 ~ 一个月后 comes after 不久 | ①②③④ | 还没种下就长出新叶 ~ it leafs before it is planted
+①比赛开始了，我紧张得手心出汗。②老师宣布我们班得了第一名。③同学们一个接一个地跳绳。④比赛结束了。 | ①③④② | 按比赛的经过：开始、比赛、结束、宣布名次 ~ through the contest: start, events, end, result | ①②③④ | 还没比完就宣布了名次 ~ the result comes before the contest | ③①④② | “比赛开始了”要在跳绳之前 ~ 比赛开始了 comes before the skipping
+①种子喝饱了水，胀大了。②我把种子放进水里泡了一夜。③过了两天，种子长出了白白的小芽。④我把发芽的种子种进花盆里。 | ②①③④ | 按种子变化的先后：泡水、胀大、发芽、种下 ~ in the order of change: soaked, swollen, sprouted, planted | ①②③④ | 种子还没泡水就胀大了 ~ the seeds swell before they are soaked | ②①④③ | 种进花盆的是发了芽的种子，要先发芽 ~ it is sprouted seeds that are planted, so the sprouting comes first
+①大家一起动手，把教室打扫得干干净净。②下午，班主任说明天有客人来参观。③第二天，客人们夸我们的教室真整洁。④放学后，我们留下来大扫除。 | ②④①③ | 先知道有客人来，再大扫除，最后得到夸奖 ~ the news, then the cleaning, then the praise | ④②①③ | 还不知道有客人来，就留下来大扫除 ~ we clean before we hear of the visit | ②①④③ | “放学后留下来”要在“动手打扫”前面 ~ staying after school comes before the cleaning
+①天空中乌云密布。②一会儿，豆大的雨点落了下来。③雨过天晴，天边出现了一道彩虹。④接着，雨越下越大。 | ①②④③ | 按下雨的过程：乌云、雨点、大雨、雨后 ~ through the storm: clouds, drops, downpour, after | ①④②③ | “接着”要放在雨开始下以后 ~ 接着 comes after the rain begins | ③①②④ | 彩虹出现在雨后，不能放在开头 ~ the rainbow comes after the rain, not first
+①他把书包放在桌上。②小明一进门就喊：“妈妈，我回来了！”③然后拿出作业本，认真写了起来。④妈妈从厨房里笑着走出来。 | ②④①③ | 按回家后的先后：进门、妈妈出来、放书包、写作业 ~ in the order of coming home: in, mother comes, bag down, homework | ①②④③ | 还没进门就放书包 ~ the bag is put down before he comes in | ②③④① | 还没放下书包就写作业，“然后”接不上 ~ homework before the bag is down: 然后 does not follow
+①小蝌蚪先长出了两条后腿。②池塘里游来一群黑黑的小蝌蚪。③接着又长出了两条前腿。④后来尾巴不见了，变成了一只小青蛙。 | ②①③④ | 按小蝌蚪变青蛙的过程，“先、接着、后来” ~ through the tadpole's change: 先, 接着, 后来 | ①②③④ | 还没写小蝌蚪出现，就写它长腿 ~ legs grow before the tadpoles appear | ②③①④ | “先”长后腿，“接着”才长前腿 ~ the hind legs come 先, the front 接着
+①我们一早来到山脚下。②半山腰有一座亭子，我们在那里歇了一会儿。③终于，我们爬上了山顶，看到了日出。④山路弯弯曲曲，越往上越陡。 | ①④②③ | 按爬山的路线：山脚、山路、半山腰、山顶 ~ along the climb: foot, path, halfway, top | ③①④② | “终于”爬上山顶要放在最后 ~ 终于 reaching the top comes last | ②①④③ | 还没来到山脚下，就在半山腰歇息 ~ resting halfway before reaching the foot
+`;
+
+/** PAGE_FORM are the questions of grade 6 on the form of a page: letters, notices, notes and the squares of composition paper. */
+const PAGE_FORM = `
+写书信时，称呼应该写在哪里？ ~ Where does the greeting of a letter go? | 第一行顶格写，后面加冒号 | 称呼单独占一行，顶格写 ~ the greeting has a line of its own, at the margin | 第一行空两格写 | 空两格写的是正文每段的开头 ~ indenting two squares is for each paragraph of the body | 写在信的最后 | 信的最后写的是署名和日期 ~ the end of a letter has the name and the date
+书信正文的第一行怎样写？ ~ How is the first line of a letter's body written? | 另起一行，空两格写 | 正文每段开头都空两格 ~ every paragraph of the body is indented two squares | 顶格写 | 顶格写的是称呼 ~ the margin is for the greeting | 接在称呼的同一行写 | 称呼单独占一行，正文要另起一行 ~ the greeting has its own line, and the body starts a new one
+书信的署名写在哪里？ ~ Where does the signature of a letter go? | 正文下面的右边，日期写在署名下面 | 署名和日期写在信的右下方 ~ name and date go at the bottom right | 第一行的左边 | 第一行左边顶格写的是称呼 ~ the top left is for the greeting | 正文的中间 | 正文中间不写署名 ~ no name goes in the middle of the body
+书信结尾的“此致”“敬礼”怎样写？ ~ How are 此致 and 敬礼 written at a letter's end? | “此致”另起一行空两格，“敬礼”再另起一行顶格写 | 这是书信祝颂语常用的格式 ~ this is the usual form of the closing | 两个词都写在正文最后一行的末尾 | “敬礼”要另起一行顶格写 ~ 敬礼 needs a line of its own at the margin | 都写在信的第一行 | 祝颂语写在正文后面，不在开头 ~ the closing follows the body, not the top
+通知的标题“通知”两个字写在哪里？ ~ Where does the heading 通知 go? | 第一行正中间 | 标题写在第一行的中间 ~ the heading is centred on the first line | 第一行顶格 | 顶格写的是称呼，不是标题 ~ the margin is for a greeting, not the heading | 最后一行的右边 | 右下方写的是发通知的单位和日期 ~ the bottom right is for who sends it and the date
+通知的日期写在哪里？ ~ Where does the date of a notice go? | 发通知单位的下面，靠右 | 落款的单位在上，日期在下，都靠右写 ~ the sender above, the date below, both to the right | 标题的前面 | 标题前面不写日期 ~ nothing goes before the heading | 正文的第一句 | 日期属于落款，不放在正文开头 ~ the date belongs to the sign-off, not the body
+作文的题目写在哪里？ ~ Where does the title of a composition go? | 第一行中间 | 题目写在第一行的中间 ~ the title is centred on the first line | 第一行顶格 | 题目不顶格写 ~ a title is not written at the margin | 第二行空两格 | 空两格是正文段落的开头 ~ indenting two squares begins a paragraph
+写作文时，每一段的开头怎样写？ ~ How does each paragraph of a composition begin? | 空两格 | 每段开头空两格，一看就知道分段 ~ each paragraph is indented two squares, so the breaks show | 顶格写 | 顶格写看不出哪里分段 ~ at the margin the breaks do not show | 空一格 | 段落开头要空两格，不是一格 ~ a paragraph is indented two squares, not one
+在方格纸上，句号、逗号怎样写？ ~ On squared paper, how are the full stop and the comma written? | 单独占一格，写在格子的左下方 | 点号一般占一格，写在左下方 ~ such marks take a square each, at its bottom left | 和前一个字挤在同一格里 | 标点要单独占一格 ~ a mark takes a square of its own | 写在格子的正中间 | 句号、逗号要写在格子的左下方，不在正中 ~ they go at the bottom left of the square, not the centre
+逗号、句号能不能写在一行的开头？ ~ May a comma or full stop begin a line? | 不能，要写在上一行最后一个字的格子里 | 点号不能出现在一行的开头 ~ such marks may not begin a line | 能，写在哪里都可以 | 点号放在行首不合规范 ~ a mark at the start of a line is against the rules | 能，但是要先空一格 | 空一格再写点号也不对 ~ leaving a square first does not mend it
+前引号、前书名号能不能写在一行的最后？ ~ May an opening quotation mark or title mark end a line? | 不能，要移到下一行的开头 | 前引号、前书名号不能单独留在一行的末尾 ~ an opening mark may not be left at the end of a line | 能，没有关系 | 前半个引号留在行末，和后面的字分开了，不合规范 ~ left at the end it is cut off from its words | 能，但要写得小一点 | 写小一点也不合规范 ~ writing it smaller does not mend it
+省略号和破折号在方格纸上占几格？ ~ How many squares do the ellipsis and the dash take? | 两格 | 省略号和破折号都占两格 ~ both take two squares | 一格 | 它们比较长，要占两格 ~ they are long and take two | 三格 | 规范是占两格，不是三格 ~ the rule is two, not three
+写请假条时，请假人的名字写在哪里？ ~ In a leave note, where does one's name go? | 正文下面的右边，日期写在名字下面 | 请假条的落款写在右下方 ~ the sign-off of a note is at the bottom right | 第一行顶格 | 第一行顶格写的是称呼，比如“王老师：” ~ the top left is for the greeting, such as 王老师： | 正文的最前面 | 正文开头写的是请假的原因 ~ the body opens with the reason for leave
+`;
+
+/** PUNCTUATION are the sentences of grade 6 with one misused mark. */
+const PUNCTUATION = `
+你喜欢春天，还是喜欢秋天。 | 你喜欢春天，还是喜欢秋天？ | 这是选择问句，句末要用问号 ~ it asks a choice and ends with a question mark | 你喜欢春天？还是喜欢秋天？ | 选择问句中间用逗号，问号只在句末 ~ a choice question has a comma in the middle and one question mark at the end | 你喜欢春天，还是喜欢秋天！ | 这是问句，不是感叹 ~ it asks; it does not exclaim
+我家养了小猫，小狗，小兔。 | 我家养了小猫、小狗、小兔。 | 并列的词语之间用顿号 ~ words in a series are parted by the enumeration comma | 我家养了小猫；小狗；小兔。 | 分号用在并列的分句之间，不用在词语之间 ~ the semicolon parts clauses, not words | 我家养了：小猫，小狗，小兔。 | 加了冒号，词语之间还是逗号 ~ adding a colon leaves the commas between words
+老师说：“明天去春游”。 | 老师说：“明天去春游。” | 引用的是完整的话，句号要放在引号里面 ~ a whole sentence is quoted, so its full stop goes inside the quotes | 老师说：“明天去春游”！ | 换成感叹号，标点还在引号外面 ~ an exclamation mark is still outside the quotes | 老师说，“明天去春游”。 | 提示语在前要用冒号，句号也还在引号外面 ~ a lead-in before a quotation takes a colon, and the stop is still outside
+他问我今天去不去图书馆？ | 他问我今天去不去图书馆。 | 问话只是句子的一部分，全句是陈述的，句末用句号 ~ the question is only part of a statement, which ends with a full stop | 他问我：今天去不去图书馆？ | 直接引用别人的话要加引号，这样不规范 ~ a direct quotation needs quotation marks | 他问我今天去不去图书馆！ | 这句话不是感叹 ~ the sentence does not exclaim
+春天来了，小草绿了，花儿开了，燕子飞回来了， | 春天来了，小草绿了，花儿开了，燕子飞回来了。 | 话说完了，句末要用句号，不能用逗号 ~ the sentence is finished and ends with a full stop, not a comma | 春天来了，小草绿了，花儿开了，燕子飞回来了； | 句子结束不用分号 ~ a semicolon does not end a sentence | 春天来了，小草绿了，花儿开了，燕子飞回来了、 | 顿号不能放在句末 ~ the enumeration comma cannot end a sentence
+春天，桃花开了，夏天，荷花开了。 | 春天，桃花开了；夏天，荷花开了。 | 两个并列的分句里已经有逗号，分句之间要用分号 ~ the two parallel clauses already hold commas, so a semicolon parts them | 春天、桃花开了；夏天、荷花开了。 | 句子里的停顿不能改成顿号 ~ a pause within a clause is not an enumeration comma | 春天，桃花开了；夏天，荷花开了； | 句子说完了，句末不能用分号 ~ a finished sentence does not end with a semicolon
+这里的风景多美啊。 | 这里的风景多美啊！ | 这是感叹句，句末要用感叹号 ~ it exclaims and ends with an exclamation mark | 这里的风景多美啊？ | 这不是问句 ~ it does not ask | 这里的风景，多美啊。 | 加了逗号，句末还是句号 ~ adding a comma leaves the full stop
+我们班有三个兴趣小组，美术组、音乐组和科技组。 | 我们班有三个兴趣小组：美术组、音乐组和科技组。 | 后面是对“三个兴趣小组”的具体说明，要用冒号 ~ what follows spells out the three groups and takes a colon | 我们班有三个兴趣小组；美术组、音乐组和科技组。 | 分号不能引出说明 ~ a semicolon does not introduce a list | 我们班有三个兴趣小组，美术组，音乐组和科技组。 | 词语之间改成逗号，前面的逗号也没改 ~ commas between the names, and the first comma left as it was
+一年有春、夏、秋、冬，四个季节。 | 一年有春、夏、秋、冬四个季节。 | “春、夏、秋、冬”和“四个季节”说的是一样东西，中间不能停顿 ~ the four names and 四个季节 are one thing and take no pause between | 一年有春，夏，秋，冬，四个季节。 | 把顿号改成逗号，更不对了 ~ turning the enumeration commas into commas makes it worse | 一年有春、夏、秋、冬：四个季节。 | 这里不需要冒号 ~ no colon is wanted here
+小明高兴地说：“我考了一百分”！ | 小明高兴地说：“我考了一百分！” | 感叹号属于引用的话，要放在引号里面 ~ the exclamation belongs to the quoted words and goes inside | 小明高兴地说，“我考了一百分”！ | 提示语后要用冒号，感叹号也还在引号外面 ~ the lead-in takes a colon, and the mark is still outside | 小明高兴地说：“我考了一百分”。 | 换成句号，标点还在引号外，语气也不对 ~ a full stop is still outside the quotes and loses the tone
+文具店里有铅笔、橡皮、尺子……等文具。 | 文具店里有铅笔、橡皮、尺子等文具。 | 省略号和“等”意思重复，不能一起用 ~ the ellipsis and 等 say the same and are not used together | 文具店里有铅笔、橡皮、尺子……等等文具。 | 换成“等等”，还是和省略号重复 ~ 等等 still repeats the ellipsis | 文具店里有铅笔，橡皮，尺子……等文具。 | 改了顿号，省略号和“等”还在一起 ~ changing the commas leaves the ellipsis with 等
+妈妈问我：“作业写完了吗。” | 妈妈问我：“作业写完了吗？” | 妈妈问的是问句，引号里面要用问号 ~ Mother asks, so the quotation ends with a question mark | 妈妈问我：“作业写完了吗”？ | 问号是引用的话里的，要放在引号里面 ~ the question mark belongs inside the quotes | 妈妈问我：“作业写完了吗！” | 这是问话，不是感叹 ~ it asks; it does not exclaim
+`;
+
+/** ORDER_HEADS, FORM_HEADS and PUNCTUATION_HEADS are the headings of the steps of ordering, the form of a page and punctuation. */
+const ORDER_HEADS: Heads = {
+  find: t("**Step 1: find the words that mark the order.**", "**第一步：找出表示顺序的词。**"),
+  choose: t("**Step 2: put the sentences in that order.**", "**第二步：按这个顺序排列句子。**"),
+};
+const FORM_HEADS: Heads = {
+  find: t("**Step 1: recall the rule of the form.**", "**第一步：想一想格式的规矩。**"),
+  choose: t("**Step 2: choose what follows it.**", "**第二步：选出符合规矩的一项。**"),
+};
+const PUNCTUATION_HEADS: Heads = {
+  find: t("**Step 1: find the misused mark.**", "**第一步：找出用错的标点。**"),
+  choose: t("**Step 2: choose the correction that mends just that.**", "**第二步：选出正好改对它的改法。**"),
+};
+
 /** CHARACTER_HEADS and WORD_HEADS are the headings of the steps of correcting a character and a word. */
 const CHARACTER_HEADS: Heads = {
   find: t("**Step 1: find the word written wrong.**", "**第一步：找出写错的词。**"),
@@ -252,7 +400,7 @@ const BETTER_HEADS: Heads = {
   choose: t("**Step 2: choose the word that goes with the rest.**", "**第二步：选出和前后搭配的词。**"),
 };
 
-/** revisingTopics are the revising topics of grades 3 and 4. */
+/** revisingTopics are the revising topics of grades 3 to 6. */
 export const revisingTopics: readonly GradeTopic[] = [
   {
     grade: 3,
@@ -334,6 +482,97 @@ export const revisingTopics: readonly GradeTopic[] = [
             "读音或意思相近的词，要看它和什么词搭配。把整句读完，想想哪个词和前后的词搭配得当，意思也正好。\n\n比如“这座大桥非常＿”：桥要说“坚固”；“坚强”说的是人的意志。\n\n> **注意。** 和对的词样子很像的词，比如“表演”和“表扬”，意思可能完全不同。要放进句子里读一读再选。",
           ),
           choiceTopicGenerator(betterWordChoices(BETTER_WORDS), BETTER_HEADS),
+        ),
+      ],
+    },
+  },
+  {
+    grade: 5,
+    topic: {
+      id: "revising-5",
+      title: t("Revising for Smooth Sentences", "修改习作：语句通顺"),
+      summary: t(
+        "Making the sentences of a draft read smoothly, words in order, paired rightly and nothing missing or said twice, and putting sentences in an order that holds together.",
+        "让习作的语句通顺：词序正确，搭配得当，不缺不重；把句子排成前后连贯的一段话。",
+      ),
+      intro: t(
+        "A draft reads smoothly when each sentence is whole and in order, and when the sentences follow one another. “我们要发扬和继承中华民族的优良传统。” has its words the wrong way round: one inherits before carrying forward, so it is 继承和发扬.\n\nSentences, too, need their order: in a recipe, “先” comes before “然后”, “接着” and “最后”. The first knowledge point mends sentences, the second puts sentences in order.",
+        "习作要读起来通顺：每句话完整、顺序对，句子和句子之间也要接得上。“我们要发扬和继承中华民族的优良传统。”词序颠倒了：先继承，后发扬，应该是“继承和发扬”。\n\n句子之间也有顺序：写做菜，“先”要在“然后”“接着”“最后”前面。第一个知识点修改语句，第二个排列句子的顺序。",
+      ),
+      prerequisites: ["revising-4"],
+      encompasses: [],
+      xp: 12,
+      strand: "writing",
+      knowledgePoints: [
+        point(
+          "revising-5-sentences",
+          t("Smooth Sentences", "修改不通顺的句子"),
+          t(
+            "Beyond the faults of grade 4, look for words in the wrong order, pairs of connectives that do not belong together, and a 他 or 它 whose person cannot be told. Mend that one thing, and keep the meaning.\n\n“只要努力学习，才能取得好成绩。” 只有 pairs with 才, so: “只有努力学习，才能取得好成绩。”\n\n> **Watch out.** Connectives come in pairs: 虽然……但是, 因为……所以, 只要……就, 只有……才. Changing one word of a pair into another that does not belong leaves the sentence faulty.",
+            "除了四年级学过的毛病，还要留心：词序颠倒，关联词搭配不当，“他”“它”指的是谁分不清。只改这一处，意思不变。\n\n比如“只要努力学习，才能取得好成绩。”“只有”才和“才”搭配，要改成“只有努力学习，才能取得好成绩。”\n\n> **注意。** 关联词是成对用的：虽然……但是，因为……所以，只要……就，只有……才。把一个换成不配套的另一个，句子还是不通。",
+          ),
+          choiceTopicGenerator(sentenceChoices(SMOOTH_SENTENCES), SENTENCE_HEADS),
+        ),
+        point(
+          "revising-5-order",
+          t("The Order of Sentences", "排列句子的顺序"),
+          t(
+            "Find the words that mark order, of time (清晨, 中午), of place (一进大门, 后面), of steps (先, 然后, 最后), or of cause and result, and the sentence that must open; then line the rest up after it.\n\nThe storm: clouds gather, drops fall, “接着” it pours, and the rainbow comes after: ①②④③.\n\n> **Watch out.** A word like 接着, 然后 or 后面 always needs something before it: it cannot open the paragraph, and what it follows must already have been said.",
+            "找出表示顺序的词：时间（清晨、中午），地点（一进大门、后面），步骤（先、然后、最后），或者原因和结果；再找出该放在最前面的一句，其余的依次排在后面。\n\n比如下雨：乌云密布，雨点落下，“接着”雨越下越大，雨后出现彩虹：①②④③。\n\n> **注意。** “接着”“然后”“后面”这样的词，前面一定要有别的内容：它们不能放在开头，它们接的事也要先说出来。",
+          ),
+          choiceTopicGenerator(orderChoices(SENTENCE_ORDERS), ORDER_HEADS),
+        ),
+      ],
+    },
+  },
+  {
+    grade: 6,
+    topic: {
+      id: "revising-6",
+      title: t("Revising Form and Punctuation", "修改习作：行款和标点"),
+      summary: t(
+        "Setting out a page as the form asks, letters, notices, notes and the squares of composition paper, and correcting misused punctuation.",
+        "按格式写好行款：书信、通知、请假条和方格纸上的书写；改正用错的标点符号。",
+      ),
+      intro: t(
+        "A piece is revised for its look on the page as well as its words. A letter opens with the greeting at the margin, “亲爱的小华：”, starts its body on a new line indented two squares, and signs off at the bottom right with the date below.\n\nIts marks must be right too: “你喜欢春天，还是喜欢秋天。” asks a choice, so it ends with a question mark. The first knowledge point asks the form, the second corrects punctuation.",
+        "修改习作，不但要改字词，还要看写在纸上的格式。书信第一行顶格写称呼，比如“亲爱的小华：”；正文另起一行，空两格写；署名写在右下方，日期写在署名下面。\n\n标点也要用对：“你喜欢春天，还是喜欢秋天。”是选择问句，句末要用问号。第一个知识点问行款，第二个改正标点。",
+      ),
+      prerequisites: ["revising-5"],
+      encompasses: [],
+      xp: 12,
+      strand: "writing",
+      knowledgePoints: [
+        point(
+          "revising-6-form",
+          t("The Form of a Page", "行款格式"),
+          t(
+            "Each kind of piece has its form. A title is centred; a paragraph is indented two squares; a greeting stands at the margin of its own line; the sign-off, name then date, goes at the bottom right. On squared paper a mark takes a square, at its bottom left, and the ellipsis and the dash take two.\n\nA notice: 通知 centred on the first line, the body indented, the sender and the date at the bottom right.\n\n> **Watch out.** A comma or full stop never begins a line, and an opening quotation mark never ends one: move the mark to the last square of the line before, or the opening mark to the next line.",
+            "每种文章都有自己的格式。题目写在中间；每段开头空两格；称呼单独一行顶格写；落款先写名字，再写日期，都在右下方。在方格纸上，标点一般占一格，写在左下方；省略号和破折号占两格。\n\n比如通知：第一行中间写“通知”，正文空两格写，右下方写发通知的单位和日期。\n\n> **注意。** 逗号、句号不能写在一行的开头，前引号不能留在一行的末尾：点号要写进上一行最后一格，前引号要移到下一行开头。",
+          ),
+          choiceTopicGenerator(
+            listedChoices(PAGE_FORM, {
+              find: t(
+                "Recall where each part of this kind of piece goes, and how marks sit on squared paper.",
+                "想一想这种文章各部分写在哪里，标点在方格纸上怎样写。",
+              ),
+              check: (right) =>
+                t(
+                  `Picture the page written so, “${right}”: it looks as the form asks, and nothing is out of place.`,
+                  `想象一下按“${right}”写出来的样子：符合格式，没有哪里放错了地方。`,
+                ),
+            }),
+            FORM_HEADS,
+          ),
+        ),
+        point(
+          "revising-6-punctuation",
+          t("Correcting Punctuation", "改正标点"),
+          t(
+            "Read the sentence for its pauses and its tone. A question ends with ？ and an exclamation with ！; words in a series take 、; parallel clauses that hold commas are parted by ；; a colon introduces what spells out the words before it; the mark that ends quoted words goes inside the quotation marks.\n\n“小明高兴地说：‘我考了一百分’！” The exclamation is Xiaoming's, so it goes inside: “小明高兴地说：‘我考了一百分！’”\n\n> **Watch out.** A sentence that only reports a question is not a question: “他问我今天去不去图书馆。” ends with a full stop.",
+            "读一读句子的停顿和语气。问句末尾用问号，感叹句末尾用感叹号；并列的词语之间用顿号；并列的分句里已经有逗号时，分句之间用分号；冒号引出后面的具体说明；引用的话说完了，标点放在引号里面。\n\n比如“小明高兴地说：‘我考了一百分’！”感叹是小明的话里的，要放进引号：“小明高兴地说：‘我考了一百分！’”\n\n> **注意。** 只是转述别人问了什么，句子不是问句：“他问我今天去不去图书馆。”句末用句号。",
+          ),
+          choiceTopicGenerator(punctuationChoices(PUNCTUATION), PUNCTUATION_HEADS),
         ),
       ],
     },

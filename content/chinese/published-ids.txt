@@ -198,8 +198,11 @@ topic idioms-9-01 idioms-9-01-meaning idioms-9-01-use idioms-9-01-writing
 topic idioms-9-02 idioms-9-02-meaning idioms-9-02-use idioms-9-02-writing
 topic idioms-9-03 idioms-9-03-meaning idioms-9-03-use idioms-9-03-writing
 topic idioms-9-04 idioms-9-04-meaning idioms-9-04-use idioms-9-04-writing
+topic inquiry-5-sources inquiry-5-sources-answers inquiry-5-sources-where
 topic language-3-similar-characters language-3-similar-characters-form language-3-similar-characters-sound
 topic language-4-polyphones language-4-polyphones-meaning language-4-polyphones-word
+topic language-5-character-formation language-5-character-formation-phonetic language-5-character-formation-pictograph
+topic language-6-word-formation language-6-word-formation-family language-6-word-formation-structure
 topic level-1-characters-01 level-1-characters-01-form level-1-characters-01-meaning level-1-characters-01-reading
 topic level-1-characters-02 level-1-characters-02-form level-1-characters-02-meaning level-1-characters-02-reading
 topic level-1-characters-03 level-1-characters-03-form level-1-characters-03-meaning level-1-characters-03-reading
@@ -2596,6 +2599,19 @@ topic reading-4-folk-tales reading-4-folk-tales-people reading-4-folk-tales-stor
 topic reading-4-myths reading-4-myths-happened reading-4-myths-imagined
 topic reading-4-narrative reading-4-narrative-gist reading-4-narrative-people
 topic reading-4-skimming reading-4-skimming-gist reading-4-skimming-where
+topic reading-5-expository reading-5-expository-methods reading-5-expository-points
+topic reading-5-narrative reading-5-narrative-detail reading-5-narrative-outline
+topic reading-5-non-continuous reading-5-non-continuous-find reading-5-non-continuous-infer
+topic reading-5-poems reading-5-poems-feeling reading-5-poems-scene
+topic reading-5-structure reading-5-structure-methods reading-5-structure-order
+topic reading-5-word-colour reading-5-word-colour-colour reading-5-word-colour-meaning
+topic reading-6-argument reading-6-argument-example reading-6-argument-view
+topic reading-6-browsing reading-6-browsing-collect reading-6-browsing-useful
+topic reading-6-expository reading-6-expository-methods reading-6-expository-words
+topic reading-6-fiction reading-6-fiction-people reading-6-fiction-setting
+topic reading-6-non-continuous reading-6-non-continuous-read reading-6-non-continuous-use
+topic reading-6-poems reading-6-poems-feeling reading-6-poems-rhythm
+topic reading-6-prose reading-6-prose-expression reading-6-prose-feeling
 topic reading-aloud-1 reading-aloud-1-texts
 topic reading-aloud-10 reading-aloud-10-texts
 topic reading-aloud-11 reading-aloud-11-texts
@@ -3091,6 +3107,8 @@ topic recognizing-characters-9-13 recognizing-characters-9-13-reading recognizin
 topic recognizing-characters-9-14 recognizing-characters-9-14-reading recognizing-characters-9-14-writing
 topic revising-3 revising-3-characters revising-3-words
 topic revising-4 revising-4-sentences revising-4-words
+topic revising-5 revising-5-order revising-5-sentences
+topic revising-6 revising-6-form revising-6-punctuation
 topic rhetoric-1 rhetoric-1-finding rhetoric-1-naming
 topic rhetoric-2 rhetoric-2-finding rhetoric-2-naming
 topic rhetoric-3 rhetoric-3-finding rhetoric-3-naming
@@ -3120,6 +3138,14 @@ topic speaking-4-introducing speaking-4-introducing-needs speaking-4-introducing
 topic speaking-4-occasions speaking-4-occasions-phone speaking-4-occasions-visit
 topic speaking-4-persuading speaking-4-persuading-gentle speaking-4-persuading-reason
 topic speaking-4-storytelling speaking-4-storytelling-detail speaking-4-storytelling-livelier
+topic speaking-5-civil-language speaking-5-civil-language-differ speaking-5-civil-language-polite
+topic speaking-5-discussion speaking-5-discussion-reason speaking-5-discussion-topic
+topic speaking-5-key-points speaking-5-key-points-points speaking-5-key-points-relay
+topic speaking-5-tone speaking-5-tone-stress speaking-5-tone-tone
+topic speaking-6-interview speaking-6-interview-follow speaking-6-interview-questions
+topic speaking-6-presenting speaking-6-presenting-engage speaking-6-presenting-structure
+topic speaking-6-responding speaking-6-responding-grasp speaking-6-responding-respond
+topic speaking-6-short-speech speaking-6-short-speech-fit speaking-6-short-speech-point
 topic strokes-basic strokes-basic-count strokes-basic-first
 topic strokes-order strokes-order-next strokes-order-rule
 topic strokes-turning strokes-turning-count strokes-turning-next
@@ -3186,9 +3212,15 @@ topic writing-4-imagination writing-4-imagination-follows writing-4-imagination-
 topic writing-4-letter writing-4-letter-detail writing-4-letter-form
 topic writing-4-observation writing-4-observation-change writing-4-observation-detail
 topic writing-4-place writing-4-place-look writing-4-place-why
+topic writing-5-book-notes writing-5-book-notes-own writing-5-book-notes-pick
 topic writing-5-explain writing-5-explain-features writing-5-explain-methods
+topic writing-5-imagination writing-5-imagination-detail writing-5-imagination-world
+topic writing-5-notice writing-5-notice-brief writing-5-notice-complete
 topic writing-5-person writing-5-person-description writing-5-person-example
 topic writing-6-argue writing-6-argue-evidence writing-6-argue-reasoning
+topic writing-6-plan-summary writing-6-plan-summary-plan writing-6-plan-summary-summary
+topic writing-6-real-event writing-6-real-event-feeling writing-6-real-event-whole
+topic writing-6-reflection writing-6-reflection-link writing-6-reflection-point
 topic writing-6-scene writing-6-scene-feeling writing-6-scene-order
 topic writing-7-center writing-7-center-emphasis writing-7-center-material
 topic writing-7-detail writing-7-detail-meaning writing-7-detail-telling

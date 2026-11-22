@@ -12,16 +12,18 @@ import { gaokaoTopics } from "../gaokao/index.ts";
 import { grammarTopics } from "../grammar/index.ts";
 import { heritageTopics } from "../heritage/topics.ts";
 import { idiomTopics } from "../idioms/index.ts";
-import { revisingTopics, stageThreeFourLanguage } from "../language/index.ts";
+import { revisingTopics, stageFiveSixLanguage, stageThreeFourLanguage } from "../language/index.ts";
 import { readingAloudTopics } from "../oral/reading-aloud.ts";
 import { stageSpeakingTopics } from "../oral/speaking-1-2.ts";
 import { stageThreeFourSpeaking } from "../oral/speaking-3-4.ts";
+import { stageFiveSixSpeaking } from "../oral/speaking-5-6.ts";
 import { pinyinAlphabet } from "../pinyin/alphabet.ts";
 import { pinyinTopics } from "../pinyin/index.ts";
 import { heritageReading } from "../reading/heritage.ts";
 import { chineseReading } from "../reading/index.ts";
 import { stageReadingTopics } from "../reading/stage-1-2.ts";
 import { stageThreeFourReading } from "../reading/stage-3-4.ts";
+import { stageFiveSixReading } from "../reading/stage-5-6.ts";
 import { recitationTopics } from "../recitation/index.ts";
 import { componentTopics, strokeOrderTopics } from "../strokes/index.ts";
 import { handwritingTopics } from "../strokes/writing.ts";
@@ -31,6 +33,7 @@ import { earlySentenceTopics } from "../writing/early-sentences.ts";
 import { writingTopics } from "../writing/index.ts";
 import { laterWritingTopics } from "../writing/later.ts";
 import { stageThreeFourJudged } from "../writing/stage-3-4.ts";
+import { stageFiveSixJudged } from "../writing/stage-5-6.ts";
 
 /** coreShardTopics are the topics of the core shard. */
 export const coreShardTopics: readonly TopicDef[] = [
@@ -49,14 +52,18 @@ export const coreShardTopics: readonly TopicDef[] = [
   ...writingTopics.map((x) => x.topic),
   ...laterWritingTopics.map((x) => x.topic),
   ...stageThreeFourJudged.map((x) => x.topic),
+  ...stageFiveSixJudged.map((x) => x.topic),
   ...revisingTopics.map((x) => x.topic),
   ...stageThreeFourLanguage.map((x) => x.topic),
+  ...stageFiveSixLanguage.map((x) => x.topic),
   ...recitationTopics,
   ...readingAloudTopics.map((x) => x.topic),
   ...stageReadingTopics.map((x) => x.topic),
   ...stageSpeakingTopics.map((x) => x.topic),
   ...stageThreeFourReading.map((x) => x.topic),
   ...stageThreeFourSpeaking.map((x) => x.topic),
+  ...stageFiveSixReading.map((x) => x.topic),
+  ...stageFiveSixSpeaking.map((x) => x.topic),
   ...bookTopics.map((x) => x.topic),
   ...classicalTopics,
   ...heritageTopics,

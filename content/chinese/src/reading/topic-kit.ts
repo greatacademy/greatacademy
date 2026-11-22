@@ -91,6 +91,49 @@ export const REASONS = {
   unmoved: ["this reason does not matter to the one being persuaded.", "这个理由和被劝的人关心的事没有关系，打动不了他。"],
   plain: ["these words tell what is there or what happened; they do not show the feeling.", "这些话只写了景物或事情，没有表现出这种感情。"],
   elsewhere: ["that part is about something else. The answer is here: “{s}”", "那一段讲的是别的内容，答案在这里：“{s}”"],
+  // Grades 5 and 6: methods of explaining, each said not to be used where it is not.
+  nonumber: ["the sentence gives no figure to explain by: “{s}”", "句中没有用具体的数字来说明：“{s}”"],
+  noexample: ["the sentence gives no instance of the thing: “{s}”", "句中没有举出具体的例子：“{s}”"],
+  nolikening: ["the sentence likens the thing to nothing else: “{s}”", "句中没有把它比作别的东西：“{s}”"],
+  nocompare: ["the sentence sets the thing beside nothing else: “{s}”", "句中没有拿它和别的东西比较：“{s}”"],
+  nokinds: ["the sentence does not sort the thing into kinds: “{s}”", "句中没有把它分成几类来说：“{s}”"],
+  nodefine: ["the sentence does not say what the thing is in general: “{s}”", "句中没有概括地说明它是什么：“{s}”"],
+  // The colour of words.
+  praise: [
+    "this word speaks well of something, and here something is blamed: “{s}”",
+    "这个词是褒义的，带着称赞，可这里说的是不好的事：“{s}”",
+  ],
+  pejorative: [
+    "this word speaks ill of something, and here something is praised: “{s}”",
+    "这个词是贬义的，带着批评，可这里是在称赞：“{s}”",
+  ],
+  neutral: ["this word only tells what is so and shows no view of it: “{s}”", "这个词不带褒贬，只是说明事情，看不出态度：“{s}”"],
+  // The order of a text and its ways of writing.
+  wrongorder: ["the text does not go in this order; see where it says: “{s}”", "文中不是按这种顺序写的，看这一句：“{s}”"],
+  notdescribe: ["this sentence does not picture how something looks, sounds or moves: “{s}”", "这句话没有具体描写样子、声音或动作：“{s}”"],
+  notlyric: ["this sentence does not pour out a feeling: “{s}”", "这句话没有直接抒发感情：“{s}”"],
+  notargue: ["this sentence gives no view and reasons about nothing: “{s}”", "这句话没有发表看法、讲道理：“{s}”"],
+  notnarrate: ["this sentence does not tell what happened: “{s}”", "这句话不是在交代事情的经过：“{s}”"],
+  // Poems.
+  nomood: ["this feeling does not fit the lines of the poem: “{s}”", "这种感情和诗句对不上：“{s}”"],
+  pause: ["this pause breaks a word in two, and the sense with it.", "这样停顿把一个词拆开了，意思也断了。"],
+  // Arguments, tables and gathering information.
+  notview: ["this is an example the text gives, not the view it argues.", "这是文中举的事例，不是作者的观点。"],
+  noproof: ["this example does not bear on the view: “{s}”", "这个事例证明不了这个观点：“{s}”"],
+  figure: ["this misreads the figures. They say: “{s}”", "数字看错了。上面写的是：“{s}”"],
+  irrelevant: ["this is true, but it does nothing for what is to be done.", "这条信息是真的，可是和要做的事没有关系。"],
+  // Speaking in grades 5 and 6.
+  offtopic: ["this strays from the topic being discussed.", "这句话离开了讨论的话题。"],
+  tone: ["the tone does not suit the moment.", "语气不对，不像这时该有的口气。"],
+  stress: ["the stress falls on a word the question does not ask about.", "重音放错了，强调的不是对方问的内容。"],
+  trivial: ["this keeps a minor detail and drops the main point.", "抓住的是次要的细节，不是要点。"],
+  rambling: ["this rambles, and the listener cannot find the point.", "说得又散又长，听的人抓不住要点。"],
+  unfit: ["this does not suit the occasion or the listeners.", "不合这个场合，也不合听的人。"],
+  closed: ["this question can only be answered yes or no, and draws out nothing.", "这个问题只能答“是”或“不是”，问不出具体的内容。"],
+  misgrasp: ["this gets the other person's view wrong.", "把对方的意思理解错了。"],
+  attack: ["this goes at the person, not at the view.", "针对的是人，不是观点。"],
+  dull: ["this is said flatly, with nothing to hold the listeners.", "平平地说，没有用事例或问题吸引听众。"],
+  noopening: ["this plunges into a detail before saying what the talk is about.", "一开口就讲细节，没有先说清要讲什么。"],
 } as const;
 
 /** Context is what a reason may quote: the sentence that answers the question, and the sentence the text ends with. */

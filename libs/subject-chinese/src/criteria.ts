@@ -369,6 +369,135 @@ export const WRITING_CRITERIA: readonly CriterionSpec[] = [
       "Does the text carry a feeling through the scene, so that what is described shows the writer's mood, and does it say or make clear what that feeling is?",
     quoteWhenMet: true,
   },
+  // Grade 5: an imaginative composition.
+  {
+    id: "zh5-imagine-world",
+    version: "1",
+    question:
+      "Is the story built on something that could not happen in real life, as the task gives it, and does it keep to the rules of that imagined world from beginning to end?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh5-imagine-plot",
+    version: "1",
+    question:
+      "Does the story have a clear course: a beginning, a difficulty or turn that the characters meet, and an ending in which it is settled?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh5-imagine-detail",
+    version: "1",
+    question:
+      "Are the imagined things and the main moment described concretely, with what they look like, how they work, or what the characters do and say, rather than only named?",
+    quoteWhenMet: true,
+  },
+  // Grade 5: reading notes.
+  {
+    id: "zh5-notes-source",
+    version: "1",
+    question:
+      "Does the note name the book or text it is about, and copy out or sum up a part of it that agrees with the text the task gives or with the well-known book?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh5-notes-pick",
+    version: "1",
+    question:
+      "Does the note say why the part it chose is worth noting, pointing to something particular in it such as a word, a deed or a way of telling?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh5-notes-own",
+    version: "1",
+    question: "Does the note add the writer's own thought, question or plan that comes from that part, rather than only repeating it?",
+    quoteWhenMet: true,
+  },
+  // Grade 5: notices and announcements.
+  {
+    id: "zh5-notice-form",
+    version: "1",
+    question:
+      "Is the text set out as a Chinese notice or announcement: a title such as 通知, 寻物启事 or 失物招领 on the first line, then the body, and at the end who issues it and the date?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "zh5-notice-complete",
+    version: "1",
+    question:
+      "Does the notice give everything its readers need for what the task asks, such as what, when, where, who, and how to get in touch or what to bring?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh5-notice-brief",
+    version: "1",
+    question:
+      "Is the notice brief and plain, keeping to what readers need without a story or feelings, in words that suit a public notice?",
+    quoteWhenMet: false,
+  },
+  // Grade 6: a true event, truly felt.
+  {
+    id: "zh6-event-whole",
+    version: "1",
+    question:
+      "Does the text tell one event the writer could really have lived through, making clear when and where it happened, who was there, how it began, how it went and how it ended?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh6-event-detail",
+    version: "1",
+    question:
+      "Is the most important part of the event told in detail, with what people did, said and thought, rather than summed up in a sentence?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh6-event-feeling",
+    version: "1",
+    question:
+      "Does the text show a sincere feeling or thought that grows out of the event itself, rather than a general slogan that could end any story?",
+    quoteWhenMet: true,
+  },
+  // Grade 6: thoughts after reading.
+  {
+    id: "zh6-reflect-summary",
+    version: "1",
+    question:
+      "Does the text say briefly what was read, with its title and its main content in a few sentences, without retelling the whole of it?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh6-reflect-point",
+    version: "1",
+    question:
+      "Does the text pick out one thing in the reading that moved or struck the writer, and state clearly the thought it gave them?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh6-reflect-link",
+    version: "1",
+    question:
+      "Does the text connect that thought with the writer's own life or the world around them through at least one concrete example, and come back to the reading at the end?",
+    quoteWhenMet: true,
+  },
+  // Grade 6: an activity plan and an activity summary.
+  {
+    id: "zh6-plan-parts",
+    version: "1",
+    question:
+      "Is the text set out as a plan or a summary: a title naming the activity, then its parts in order, such as purpose, time and place, people and steps for a plan, or what was done, how it went and what was learned for a summary?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "zh6-plan-concrete",
+    version: "1",
+    question: "Is the text concrete enough to act on or to check, with dates, places, numbers, and who does or did what?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh6-plan-review",
+    version: "1",
+    question: "Does the summary say what went well and what did not, each with a reason, and what to do differently next time?",
+    quoteWhenMet: true,
+  },
   // Grade 7: making the centre stand out.
   {
     id: "zh7-center-clear",
