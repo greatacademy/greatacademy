@@ -87,15 +87,15 @@ Two helpers work at a time through stage 1; stage 4, whose courses share few fil
 | `sequences.ts` | 16 | done | |  |
 | `compound-inequalities.ts` | 14 | done | |  |
 | `absolute-value.ts` | 14 | done | |  |
-| `units.ts` | 13 | open | |  |
-| `two-variable-models.ts` | 13 | open | |  |
-| `radical-expressions.ts` | 12 | in progress | |  |
-| `polynomials.ts` | 12 | in progress | |  |
+| `units.ts` | 13 | in progress | |  |
+| `two-variable-models.ts` | 13 | in progress | |  |
+| `radical-expressions.ts` | 12 | done | |  |
+| `polynomials.ts` | 12 | done | |  |
 | `linear-equations.ts` | 12 | done | |  |
-| `factoring.ts` | 8 | in progress | |  |
-| `rational-expressions.ts` | 7 | in progress | |  |
-| `bivariate-statistics.ts` | 7 | open | |  |
-| `algebra-i-approximating-systems.ts` | 2 | open | |  |
+| `factoring.ts` | 8 | done | |  |
+| `rational-expressions.ts` | 7 | done | |  |
+| `bivariate-statistics.ts` | 7 | in progress | |  |
+| `algebra-i-approximating-systems.ts` | 2 | in progress | |  |
 | `algebra-ii-polynomials.ts` | 1 | open | |  |
 
 ## Open Gaps
