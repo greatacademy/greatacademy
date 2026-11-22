@@ -80,20 +80,20 @@ Two helpers work at a time through stage 1; stage 4, whose courses share few fil
 | File | Algebra I topics | Status | Owner | Notes |
 | :--- | :--- | :--- | :--- | :--- |
 | `lines.ts` | 20 | done | | `point-slope-form` is the model |
-| `exponential-functions.ts` | 22 | open | |  |
-| `quadratic-functions.ts` | 18 | open | |  |
-| `functions.ts` | 18 | in progress | |  |
-| `quadratic-equations.ts` | 17 | in progress | |  |
-| `sequences.ts` | 16 | open | |  |
+| `exponential-functions.ts` | 22 | done | |  |
+| `quadratic-functions.ts` | 18 | done | |  |
+| `functions.ts` | 18 | done | |  |
+| `quadratic-equations.ts` | 17 | done | |  |
+| `sequences.ts` | 16 | done | |  |
 | `compound-inequalities.ts` | 14 | done | |  |
 | `absolute-value.ts` | 14 | done | |  |
 | `units.ts` | 13 | open | |  |
 | `two-variable-models.ts` | 13 | open | |  |
-| `radical-expressions.ts` | 12 | open | |  |
-| `polynomials.ts` | 12 | open | |  |
+| `radical-expressions.ts` | 12 | in progress | |  |
+| `polynomials.ts` | 12 | in progress | |  |
 | `linear-equations.ts` | 12 | done | |  |
-| `factoring.ts` | 8 | open | |  |
-| `rational-expressions.ts` | 7 | open | |  |
+| `factoring.ts` | 8 | in progress | |  |
+| `rational-expressions.ts` | 7 | in progress | |  |
 | `bivariate-statistics.ts` | 7 | open | |  |
 | `algebra-i-approximating-systems.ts` | 2 | open | |  |
 | `algebra-ii-polynomials.ts` | 1 | open | |  |
