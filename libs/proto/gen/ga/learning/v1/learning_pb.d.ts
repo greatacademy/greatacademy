@@ -1936,6 +1936,20 @@ export declare type KnowledgePointIntro = Message<"ga.learning.v1.KnowledgePoint
    * @generated from field: repeated ga.common.v1.Figure figures = 7;
    */
   figures: Figure[];
+
+  /**
+   * topic_intro introduces the whole topic, before the first knowledge point; only the first carries it.
+   *
+   * @generated from field: optional ga.common.v1.Text topic_intro = 8;
+   */
+  topicIntro?: Text | undefined;
+
+  /**
+   * topic_intro_figures are drawings placed inside the topic's introduction, as figures are in the explanation.
+   *
+   * @generated from field: repeated ga.common.v1.Figure topic_intro_figures = 9;
+   */
+  topicIntroFigures: Figure[];
 };
 
 /**
@@ -1980,6 +1994,13 @@ export declare type WorkedExample = Message<"ga.learning.v1.WorkedExample"> & {
    * @generated from field: repeated ga.learning.v1.Sound solution_sounds = 5;
    */
   solutionSounds: Sound[];
+
+  /**
+   * solution_figures are drawings placed inside the solution, each by a line "{{figure N}}", N being its index.
+   *
+   * @generated from field: repeated ga.common.v1.Figure solution_figures = 6;
+   */
+  solutionFigures: Figure[];
 };
 
 /**
@@ -2695,6 +2716,13 @@ export declare type Feedback = Message<"ga.learning.v1.Feedback"> & {
    * @generated from field: string heard = 11;
    */
   heard: string;
+
+  /**
+   * solution_figures are drawings placed inside the solution, each by a line "{{figure N}}", N being its index.
+   *
+   * @generated from field: repeated ga.common.v1.Figure solution_figures = 12;
+   */
+  solutionFigures: Figure[];
 };
 
 /**
@@ -3089,6 +3117,13 @@ export declare type ResultItem = Message<"ga.learning.v1.ResultItem"> & {
    * @generated from field: optional ga.common.v1.Text knowledge_point_title = 13;
    */
   knowledgePointTitle?: Text | undefined;
+
+  /**
+   * solution_figures are drawings placed inside the solution, each by a line "{{figure N}}", N being its index.
+   *
+   * @generated from field: repeated ga.common.v1.Figure solution_figures = 14;
+   */
+  solutionFigures: Figure[];
 };
 
 /**

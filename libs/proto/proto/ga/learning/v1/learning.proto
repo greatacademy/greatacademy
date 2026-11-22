@@ -605,6 +605,10 @@ message KnowledgePointIntro {
   // figures are drawings placed inside the explanation, each by a line
   // "{{figure N}}", N being its index.
   repeated ga.common.v1.Figure figures = 7;
+  // topic_intro introduces the whole topic, before the first knowledge point; only the first carries it.
+  optional ga.common.v1.Text topic_intro = 8;
+  // topic_intro_figures are drawings placed inside the topic's introduction, as figures are in the explanation.
+  repeated ga.common.v1.Figure topic_intro_figures = 9;
 }
 
 // WorkedExample is a problem shown with its solution.
@@ -617,6 +621,8 @@ message WorkedExample {
   optional ga.common.v1.Figure solution_figure = 4;
   // solution_sounds are recordings shown with the solution.
   repeated Sound solution_sounds = 5;
+  // solution_figures are drawings placed inside the solution, each by a line "{{figure N}}", N being its index.
+  repeated ga.common.v1.Figure solution_figures = 6;
 }
 
 message LessonProgress {
@@ -811,6 +817,8 @@ message Feedback {
   repeated Sound solution_sounds = 10;
   // heard is what a speech service heard in a spoken answer.
   string heard = 11;
+  // solution_figures are drawings placed inside the solution, each by a line "{{figure N}}", N being its index.
+  repeated ga.common.v1.Figure solution_figures = 12;
 }
 
 message GetTopicRequest {
@@ -912,6 +920,8 @@ message ResultItem {
   // so that a lesson's questions can be grouped by knowledge point.
   int32 knowledge_point = 12;
   optional ga.common.v1.Text knowledge_point_title = 13;
+  // solution_figures are drawings placed inside the solution, each by a line "{{figure N}}", N being its index.
+  repeated ga.common.v1.Figure solution_figures = 14;
 }
 
 message SetSpeakingRequest {
