@@ -151,4 +151,12 @@ export const taughtTopics: readonly string[] = [
   "multiplying-complex-numbers",
   "solving-quadratic-equations-with-complex-roots",
   "cyclic-property-of-the-imaginary-unit",
+  "the-least-common-multiple-of-two-monomials",
+  "the-least-common-multiple-of-two-polynomials",
+  "describing-relationships-using-polynomial-identities",
+  "further-factoring-of-polynomials-using-gcfs",
+  "factoring-higher-order-polynomials-as-a-difference-of-squares",
+  "factoring-cubic-expressions-by-grouping",
+  "factoring-sums-and-differences-of-cubes",
+  "factoring-biquadratic-expressions",
 ];
