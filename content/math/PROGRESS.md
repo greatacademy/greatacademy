@@ -150,19 +150,19 @@ Stage 0 is done. Walking its lessons against Math Academy's on the same topics f
 | :--- | ---: | :--- | :--- | :--- |
 | `precalculus-trigonometric-identities.ts` | 27 | done | |  |
 | `precalculus-inequalities.ts` | 21 | done | |  |
-| `precalculus-matrices.ts` | 18 | in progress | |  |
-| `precalculus-conic-sections.ts` | 18 | in progress | |  |
-| `precalculus-series.ts` | 17 | open | |  |
+| `precalculus-matrices.ts` | 20 | in progress | |  |
+| `precalculus-conic-sections.ts` | 20 | done | |  |
+| `precalculus-series.ts` | 18 | open | |  |
 | `precalculus-linear-transformations.ts` | 17 | open | |  |
-| `precalculus-parametric-polar.ts` | 16 | open | |  |
+| `precalculus-parametric-polar.ts` | 16 | in progress | |  |
 | `precalculus-vectors-3d.ts` | 15 | open | |  |
-| `precalculus-rational-functions.ts` | 14 | open | |  |
-| `precalculus-trigonometric-equations.ts` | 14 | open | |  |
-| `precalculus-vectors-2d.ts` | 14 | open | |  |
-| `precalculus-complex-numbers.ts` | 14 | open | |  |
+| `precalculus-rational-functions.ts` | 16 | open | |  |
+| `precalculus-trigonometric-equations.ts` | 15 | open | |  |
+| `precalculus-vectors-2d.ts` | 15 | open | |  |
+| `precalculus-complex-numbers.ts` | 15 | open | |  |
 | `precalculus-random-variables.ts` | 14 | open | |  |
-| `precalculus-de-moivre.ts` | 12 | open | |  |
-| `precalculus-statistics.ts` | 11 | open | |  |
+| `precalculus-de-moivre.ts` | 13 | open | |  |
+| `precalculus-statistics.ts` | 12 | open | |  |
 | other files | 18 | open | | `act-fundamentals-reasoning-algebra.ts` (3), `act-number-algebra.ts` (3), `act-exam-functions.ts` (3), `act-exam-algebra.ts` (1), `act-fundamentals-reasoning-geometry.ts` (1), `act-fundamentals-number.ts` (1), `act-geometry-data.ts` (1), `act-fundamentals-chance-conics.ts` (1), `complex-analysis-extra.ts` (1), `complex-analysis.ts` (1), `grade-7-statistics.ts` (1), `grade-6-statistics.ts` (1) |
 
 ## Open Gaps
