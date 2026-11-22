@@ -268,23 +268,42 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "dividing-out-an-exponential",
       ["Dividing out an exponential", "约去指数函数"],
       [
-        "An exponential is positive for every input, so dividing both sides by it keeps the direction of the inequality. What remains is an ordinary polynomial inequality.",
-        "指数函数对每个输入都是正数，所以两边同除以它不改变不等号方向。剩下的是普通的多项式不等式。",
+        "An exponential is positive for every input, so dividing both sides by it keeps the direction of the inequality. What remains is an ordinary polynomial inequality.\n\n> **Watch out.** After dividing, $x^{2} < r^{2}$ means $-r < x < r$, not just $x < r$: a negative number with a large size has a large square too.",
+        "指数函数对每个输入都是正数，所以两边同除以它不改变不等号方向。剩下的是普通的多项式不等式。\n\n> **注意。** 除完以后，$x^{2} < r^{2}$ 的意思是 $-r < x < r$，而不只是 $x < r$：绝对值大的负数，平方也大。",
       ],
       (rng) => {
         const r = rng.int(2, 15);
         const base = rng.pick(["2", "3", "5", "e"]);
-        return chooseMath(
-          rng,
+        return reasoned(
+          chooseMath(
+            rng,
+            [
+              `Solve $x^{2} \\cdot ${base}^{x} < ${r * r} \\cdot ${base}^{x}$.`,
+              `解 $x^{2} \\cdot ${base}^{x} < ${r * r} \\cdot ${base}^{x}$。`,
+            ],
+            `(-${r}, ${r})`,
+            [`(-\\infty, ${r})`, `(${r}, \\infty)`, `(-\\infty, -${r}) \\cup (${r}, \\infty)`],
+            [
+              `**Step 1: Divide out the exponential.** Dividing by $${base}^{x} > 0$ keeps the direction and leaves $x^{2} < ${r * r}$.\n\n**Step 2: Take square roots.** $x^{2} < ${r * r}$ means $|x| < ${r}$, that is $-${r} < x < ${r}$.\n\n**Check.** At $x = 0$ the two sides are $0$ and $${r * r}$, since $${base}^{0} = 1$, so the inequality holds. At $x = ${r}$ and at $x = -${r}$ the two sides are equal, so it fails. At $x = ${r + 1}$ the left side is $${(r + 1) ** 2} \\cdot ${base}^{${r + 1}}$, larger than $${r * r} \\cdot ${base}^{${r + 1}}$, so it fails.`,
+              `**第一步：约去指数式。**除以 $${base}^{x} > 0$，不等号方向不变，得 $x^{2} < ${r * r}$。\n\n**第二步：开平方。**$x^{2} < ${r * r}$ 即 $|x| < ${r}$，也就是 $-${r} < x < ${r}$。\n\n**检验。**$x = 0$ 时 $${base}^{0} = 1$，两边分别是 $0$ 和 $${r * r}$，不等式成立。$x = ${r}$ 和 $x = -${r}$ 时两边相等，不等式不成立。$x = ${r + 1}$ 时左边是 $${(r + 1) ** 2} \\cdot ${base}^{${r + 1}}$，比 $${r * r} \\cdot ${base}^{${r + 1}}$ 大，不等式不成立。`,
+            ],
+          ),
           [
-            `Solve $x^{2} \\cdot ${base}^{x} < ${r * r} \\cdot ${base}^{x}$.`,
-            `解 $x^{2} \\cdot ${base}^{x} < ${r * r} \\cdot ${base}^{x}$。`,
-          ],
-          `(-${r}, ${r})`,
-          [`(-\\infty, ${r})`, `(${r}, \\infty)`, `(-\\infty, -${r}) \\cup (${r}, \\infty)`],
-          [
-            `Dividing by $${base}^{x} > 0$ keeps the direction and leaves $x^{2} < ${r * r}$, that is $|x| < ${r}$.`,
-            `除以 $${base}^{x} > 0$，不等号方向不变，得 $x^{2} < ${r * r}$，即 $|x| < ${r}$。`,
+            [
+              `$(-\\infty, ${r})$`,
+              `This keeps numbers such as $x = -${r + 1}$, whose square $${(r + 1) ** 2}$ is more than $${r * r}$.`,
+              `它包含了 $x = -${r + 1}$ 这样的数，而它的平方 $${(r + 1) ** 2}$ 大于 $${r * r}$。`,
+            ],
+            [
+              `$(${r}, \\infty)$`,
+              `There $x^{2} > ${r * r}$, so the left side is the larger one.`,
+              `在那里 $x^{2} > ${r * r}$，左边反而更大。`,
+            ],
+            [
+              `$(-\\infty, -${r}) \\cup (${r}, \\infty)$`,
+              `This is where $x^{2} > ${r * r}$, the opposite inequality.`,
+              `这是 $x^{2} > ${r * r}$ 的解集，方向正好相反。`,
+            ],
           ],
         );
       },
@@ -295,22 +314,46 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "an-always-positive-denominator",
       ["An always positive denominator", "恒正的分母"],
       [
-        "A denominator that is always positive cannot change the sign of a fraction. So the fraction has the sign of its numerator, and the denominator can be ignored.",
-        "恒为正的分母不会改变分数的符号。所以分数的符号与分子相同，可以不管分母。",
+        "A denominator that is always positive cannot change the sign of a fraction. So the fraction has the sign of its numerator, and the denominator can be ignored.\n\n> **Watch out.** A positive denominator can be ignored only when the other side is $0$. Against another number, such as $1$, the denominator changes the answer.",
+        "恒为正的分母不会改变分数的符号。所以分数的符号与分子相同，可以不管分母。\n\n> **注意。** 只有另一边是 $0$ 时，才能不管正的分母。如果另一边是别的数（比如 $1$），分母会影响答案。",
       ],
       (rng) => {
         const a = rng.int(-15, 15);
         const k = rng.int(1, 15);
         const up = rng.bool();
         const top = a === 0 ? "x" : `x ${a < 0 ? `+ ${-a}` : `- ${a}`}`;
-        return chooseMath(
-          rng,
-          [`Solve $${frac(top, `x^{2} + ${k}`)} ${up ? ">" : "<"} 0$.`, `解 $${frac(top, `x^{2} + ${k}`)} ${up ? ">" : "<"} 0$。`],
-          up ? `(${a}, \\infty)` : `(-\\infty, ${a})`,
-          [up ? `(-\\infty, ${a})` : `(${a}, \\infty)`, `(${-a - 1}, ${-a + 1})`, `(-\\infty, \\infty)`],
+        const f = (x: number) => `\\frac{${x - a}}{${x * x + k}}`;
+        const yes = up ? `x = ${a + 1}` : `x = ${a - 1}`;
+        const no = up ? `x = ${a - 1}` : `x = ${a + 1}`;
+        const yesAt = up ? a + 1 : a - 1;
+        const noAt = up ? a - 1 : a + 1;
+        return reasoned(
+          chooseMath(
+            rng,
+            [`Solve $${frac(top, `x^{2} + ${k}`)} ${up ? ">" : "<"} 0$.`, `解 $${frac(top, `x^{2} + ${k}`)} ${up ? ">" : "<"} 0$。`],
+            up ? `(${a}, \\infty)` : `(-\\infty, ${a})`,
+            [up ? `(-\\infty, ${a})` : `(${a}, \\infty)`, `(${-a - 1}, ${-a + 1})`, `(-\\infty, \\infty)`],
+            [
+              `**Step 1: Find the sign of the denominator.** $x^{2} + ${k} \\ge ${k} > 0$ for every real $x$, so it never changes the sign of the fraction.\n\n**Step 2: Solve for the numerator.** Only the sign of the numerator matters: $${top} ${up ? ">" : "<"} 0$, that is $x ${up ? ">" : "<"} ${a}$.\n\n**Check.** At $${yes}$ the fraction is $${f(yesAt)}$, which is ${up ? "positive" : "negative"}, as required. At $x = ${a}$ it is $0$, and at $${no}$ it is $${f(noAt)}$, which is ${up ? "negative" : "positive"}, so neither is a solution.`,
+              `**第一步：确定分母的符号。**对每个实数 $x$ 都有 $x^{2} + ${k} \\ge ${k} > 0$，所以它不会改变分数的符号。\n\n**第二步：只看分子。**分数的符号由分子决定：$${top} ${up ? ">" : "<"} 0$，即 $x ${up ? ">" : "<"} ${a}$。\n\n**检验。**$${yes}$ 时分数为 $${f(yesAt)}$，为${up ? "正" : "负"}，符合要求。$x = ${a}$ 时分数为 $0$，$${no}$ 时分数为 $${f(noAt)}$，为${up ? "负" : "正"}，所以它们都不是解。`,
+            ],
+          ),
           [
-            `$x^{2} + ${k}$ is always positive, so only the sign of the numerator matters: $${top} ${up ? ">" : "<"} 0$, that is $x ${up ? ">" : "<"} ${a}$.`,
-            `$x^{2} + ${k}$ 恒为正，所以只看分子的符号：$${top} ${up ? ">" : "<"} 0$，即 $x ${up ? ">" : "<"} ${a}$。`,
+            [
+              up ? `$(-\\infty, ${a})$` : `$(${a}, \\infty)$`,
+              `There the numerator is ${up ? "negative" : "positive"}, so the fraction has the opposite sign to the one required.`,
+              `在那里分子为${up ? "负" : "正"}，分数的符号与要求相反。`,
+            ],
+            [
+              `$(${-a - 1}, ${-a + 1})$`,
+              `The numerator $${top}$ is zero at $x = ${a}$, not at $x = ${-a}$; the sign of the constant was turned around.`,
+              `分子 $${top}$ 在 $x = ${a}$ 处为零，而不是在 $x = ${-a}$ 处；常数的符号弄反了。`,
+            ],
+            [
+              "$(-\\infty, \\infty)$",
+              `The denominator is always positive, but the numerator is not: it changes sign at $x = ${a}$.`,
+              `分母恒为正，但分子不是：它在 $x = ${a}$ 处变号。`,
+            ],
           ],
         );
       },
@@ -322,8 +365,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
         "reading-the-symbol-for-the-graph",
         ["Reading the symbol for the graph", "由符号读图像"],
         [
-          "A strict symbol leaves the curve out, so it is drawn dashed, while a symbol with equality includes it, so it is drawn solid. A greater-than for $y$ shades above, and a less-than shades below.",
-          "严格不等号不含曲线，所以画虚线；含等号时包含曲线，画实线。$y$ 大于时阴影在上方，小于时在下方。",
+          "A strict symbol leaves the curve out, so it is drawn dashed, while a symbol with equality includes it, so it is drawn solid. A greater-than for $y$ shades above, and a less-than shades below.\n\n> **Watch out.** The two choices are separate: whether the curve is solid depends only on the equality part of the symbol, and which side is shaded depends only on its direction.",
+          "严格不等号不含曲线，所以画虚线；含等号时包含曲线，画实线。$y$ 大于时阴影在上方，小于时在下方。\n\n> **注意。** 这是两个独立的判断：曲线是否画实线只看符号里有没有等号，阴影在哪一侧只看不等号的方向。",
         ],
         (rng) => {
           const a = rng.int(1, 5);
@@ -336,18 +379,43 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
             ["Solid curve, shaded below", "实线，阴影在下方"],
           ];
           const i = { ">": 0, "<": 1, "\\ge": 2, "\\le": 3 }[sym] as number;
-          return choose(
-            rng,
-            [
-              `How is the graph of $y ${sym} ${a === 1 ? "" : a}x^{2}${k < 0 ? ` - ${-k}` : ` + ${k}`}$ drawn?`,
-              `$y ${sym} ${a === 1 ? "" : a}x^{2}${k < 0 ? ` - ${-k}` : ` + ${k}`}$ 的图像怎样画？`,
-            ],
-            options[i]!,
-            options.filter((_, n) => n !== i),
-            [
-              `The symbol $${sym}$ ${i < 2 ? "leaves the curve out, so it is dashed" : "includes the curve, so it is solid"}, and points with $y$ ${i % 2 === 0 ? "greater" : "less"} than the curve lie ${i % 2 === 0 ? "above" : "below"} it.`,
-              `符号 $${sym}$ ${i < 2 ? "不含曲线本身，所以画虚线" : "包含曲线本身，所以画实线"}；$y$ ${i % 2 === 0 ? "大于" : "小于"}曲线上的值的点在曲线${i % 2 === 0 ? "上方" : "下方"}。`,
-            ],
+          const up = i % 2 === 0;
+          const near = k + (up ? 1 : -1);
+          const reasons = options
+            .filter((_, n) => n !== i)
+            .map(([en]) => {
+              const n = options.findIndex((o) => o[0] === en);
+              const line = n < 2 !== i < 2;
+              const side = (n % 2 === 0) !== up;
+              const lineEn = i < 2 ? "the symbol leaves the curve out, so it is dashed" : "the symbol includes the curve, so it is solid";
+              const lineZh = i < 2 ? "符号不含曲线，应画虚线" : "符号包含曲线，应画实线";
+              const sideEn = `points with $y$ ${up ? "greater" : "less"} than the curve lie ${up ? "above" : "below"} it`;
+              const sideZh = `$y$ ${up ? "大于" : "小于"}曲线上的值的点在曲线${up ? "上方" : "下方"}`;
+              return [
+                en,
+                line && side
+                  ? `Both parts are wrong: ${lineEn}, and ${sideEn}.`
+                  : line
+                    ? `The curve is wrong: ${lineEn}.`
+                    : `The side is wrong: ${sideEn}.`,
+                line && side ? `两处都错：${lineZh}，而且${sideZh}。` : line ? `曲线画法错了：${lineZh}。` : `阴影方向错了：${sideZh}。`,
+              ] as const;
+            });
+          return reasoned(
+            choose(
+              rng,
+              [
+                `How is the graph of $y ${sym} ${a === 1 ? "" : a}x^{2}${k < 0 ? ` - ${-k}` : ` + ${k}`}$ drawn?`,
+                `$y ${sym} ${a === 1 ? "" : a}x^{2}${k < 0 ? ` - ${-k}` : ` + ${k}`}$ 的图像怎样画？`,
+              ],
+              options[i]!,
+              options.filter((_, n) => n !== i),
+              [
+                `**Step 1: Read the boundary.** The symbol $${sym}$ ${i < 2 ? "leaves the curve out, so it is dashed" : "includes the curve, so it is solid"}.\n\n**Step 2: Read the side.** Points with $y$ ${up ? "greater" : "less"} than the curve lie ${up ? "above" : "below"} it.\n\n**Check.** The point $(0, ${near})$ lies ${up ? "above" : "below"} the vertex $(0, ${k})$, and it gives $${near} ${sym} ${k}$, which is true. The vertex itself gives $${k} ${sym} ${k}$, which is ${i < 2 ? "false, so the curve is left out" : "true, so the curve is included"}.`,
+                `**第一步：看边界。**符号 $${sym}$ ${i < 2 ? "不含曲线本身，所以画虚线" : "包含曲线本身，所以画实线"}。\n\n**第二步：看方向。**$y$ ${up ? "大于" : "小于"}曲线上的值的点在曲线${up ? "上方" : "下方"}。\n\n**检验。**点 $(0, ${near})$ 在顶点 $(0, ${k})$ 的${up ? "上方" : "下方"}，代入得 $${near} ${sym} ${k}$，成立。顶点本身代入得 $${k} ${sym} ${k}$，${i < 2 ? "不成立，所以曲线不包含在内" : "成立，所以曲线包含在内"}。`,
+              ],
+            ),
+            reasons,
           );
         },
       ),

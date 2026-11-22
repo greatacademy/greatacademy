@@ -18,6 +18,7 @@ import {
   union,
 } from "@ga/subject-math";
 import { precalculusDrawings } from "../explanation-drawings-precalculus.ts";
+import { type Reason, reasoned } from "../wrong-reasons.ts";
 import { choiceProblem, intervalProblem, numberProblem, steps, withMistakes, yesNo } from "../problems.ts";
 import { listed, stepLabel } from "../solution-kit.ts";
 
@@ -194,30 +195,133 @@ function picks(set: RealSet, o: { hint?: Q; avoid?: Q; end?: Q; also?: Q } = {})
   return out;
 }
 
+/** say writes one substituted number: its role (in the solution, outside it, or an endpoint), the relation it gives and whether that is true. */
+function say(at: string, inSet: boolean, end: boolean, l: Q, op: Op, r: Q): Text {
+  const ok = holds(l, op, r);
+  const role = end
+    ? t("The endpoint", "端点")
+    : inSet
+      ? t("A number in the solution", "解集内的数")
+      : t("A number outside the solution", "解集外的数");
+  const rel = `$${l.toLatex()} ${opL[op]} ${r.toLatex()}$`;
+  return t(
+    `${role.en}, $${at}$, gives ${rel}, which is ${ok ? "true" : "false"}${end ? (ok ? ", so it is included" : ", so it is left out") : ""}.`,
+    `${role["zh-CN"]} $${at}$ 代入得 ${rel}，${ok ? "成立" : "不成立"}${end ? (ok ? "，所以它包含在内" : "，所以它不包含在内") : ""}。`,
+  );
+}
+
+/** sayAll joins the sentences of several substituted numbers. */
+const sayAll = (parts: readonly Text[]) => t(parts.map((p) => p.en).join(" "), parts.map((p) => p["zh-CN"]).join(""));
+
 /** tests substitutes numbers into an inequality, given by the values of its two sides, and says whether each one works. */
 function tests(xs: readonly Q[], set: RealSet, sides: (x: Q) => readonly [Q, Q], op: Op, v = "x"): Text {
-  const parts = xs.map((x) => {
-    const [l, r] = sides(x);
-    const ok = holds(l, op, r);
-    const end = isEnd(set, x);
-    const inSet = member(set, x);
-    const role = end
-      ? t("The endpoint", "端点")
-      : inSet
-        ? t("A number in the solution", "解集内的数")
-        : t("A number outside the solution", "解集外的数");
-    const rel = `$${l.toLatex()} ${opL[op]} ${r.toLatex()}$`;
-    return t(
-      `${role.en}, $${v} = ${x.toLatex()}$, gives ${rel}, which is ${ok ? "true" : "false"}${end ? (ok ? ", so it is included" : ", so it is left out") : ""}.`,
-      `${role["zh-CN"]} $${v} = ${x.toLatex()}$ 代入得 ${rel}，${ok ? "成立" : "不成立"}${end ? (ok ? "，所以它包含在内" : "，所以它不包含在内") : ""}。`,
-    );
-  });
-  return t(parts.map((p) => p.en).join(" "), parts.map((p) => p["zh-CN"]).join(""));
+  return sayAll(
+    xs.map((x) => {
+      const [l, r] = sides(x);
+      return say(`${v} = ${x.toLatex()}`, member(set, x), isEnd(set, x), l, op, r);
+    }),
+  );
 }
 
 /** substituted is a check that substitutes test numbers into the inequality that was given. */
 const substituted = (xs: readonly Q[], set: RealSet, sides: (x: Q) => readonly [Q, Q], op: Op, v = "x") =>
   checked(join(t("Substitute numbers into the original inequality. ", "把数代入原不等式。"), tests(xs, set, sides, op, v)));
+
+/** powerTests is a check for an exponential inequality at numbers that make the exponent a whole number, so that the power is exact. */
+const powerTests = (xs: readonly Q[], set: RealSet, sides: (x: Q) => readonly [Q, Q], op: Op) =>
+  checked(
+    join(
+      t(
+        "Substitute numbers that make the exponent a whole number, so that the power is exact. ",
+        "代入使指数为整数的值，这样幂的值是精确的。",
+      ),
+      tests(xs, set, sides, op),
+    ),
+  );
+
+/** logTests is a check for a logarithmic inequality at numbers that make the argument a power of the base, so that the logarithm is a
+ * whole number, and, when the domain bounds the answer, at the edge of the domain. */
+function logTests(es: readonly number[], x: (e: number) => Q, set: RealSet, c: number, op: Op, edge?: Q): Text {
+  const parts = es.map((e) => say(`x = ${x(e).toLatex()}`, member(set, x(e)), isEnd(set, x(e)), Q.of(e), op, Q.of(c)));
+  const last = edge
+    ? [
+        t(
+          `The endpoint $x = ${edge.toLatex()}$ makes the argument $0$, where the logarithm is not defined, so it is left out.`,
+          `端点 $x = ${edge.toLatex()}$ 使真数为 $0$，对数在那里没有意义，所以它不包含在内。`,
+        ),
+      ]
+    : [];
+  return checked(
+    join(
+      t(
+        "Substitute numbers that make the argument a power of the base, so that the logarithm is a whole number. ",
+        "代入使真数为底数的幂的值，这样对数是整数。",
+      ),
+      sayAll([...parts, ...last]),
+    ),
+  );
+}
+
+/** signTests is a check that substitutes numbers and reads the sign of the left side from the signs of its factors, for an
+ * inequality with $0$ on the right whose factors cannot all be evaluated exactly. Each item gives the number, the product as it
+ * is evaluated, and its sign. */
+function signTests(items: readonly { readonly x: Q; readonly work: string; readonly sign: number }[], set: RealSet, op: Op): Text {
+  const parts = items.map(({ x, work, sign }) => {
+    const ok = holds(Q.of(sign), op, Q.zero);
+    const end = isEnd(set, x);
+    const role = end
+      ? t("The endpoint", "端点")
+      : member(set, x)
+        ? t("A number in the solution", "解集内的数")
+        : t("A number outside the solution", "解集外的数");
+    const word = sign > 0 ? t("positive", "正") : sign < 0 ? t("negative", "负") : t("zero", "零");
+    return t(
+      `${role.en}, $x = ${x.toLatex()}$, makes the left side $${work}$. This is ${word.en}, so the inequality ${ok ? "holds" : "fails"}${end ? (ok ? " and it is included" : " and it is left out") : ""}.`,
+      `${role["zh-CN"]} $x = ${x.toLatex()}$ 使左边为 $${work}$。结果${sign === 0 ? "等于零" : `为${word["zh-CN"]}`}，所以不等式${ok ? "成立" : "不成立"}${end ? (ok ? "，它包含在内" : "，它不包含在内") : ""}。`,
+    );
+  });
+  return checked(join(t("Substitute numbers into the original inequality. ", "把数代入原不等式。"), sayAll(parts)));
+}
+
+/** rootTests is a check for a square root against another side: each number makes the radicand the perfect square m², so the root is m. */
+function rootTests(items: readonly { readonly x: Q; readonly m: number }[], set: RealSet, right: (x: Q) => Q, op: Op): Text {
+  const xs = items.map((i) => i.x).filter((x, i, all) => all.findIndex((y) => y.eq(x)) === i);
+  const root = (x: Q) => Q.of(items.find((i) => i.x.eq(x))!.m);
+  return checked(
+    join(
+      t(
+        "Substitute numbers that make the radicand a perfect square, so that the square root is exact. ",
+        "代入使被开方数为完全平方数的值，这样平方根是精确的。",
+      ),
+      tests(xs, set, (x) => [root(x), right(x)], op),
+    ),
+  );
+}
+
+/** endpoints lists the finite endpoints of the intervals of a set. */
+const endpoints = (set: RealSet): Q[] => set.flatMap((i) => [i.lo, i.hi]).filter((x): x is Q => x !== undefined);
+
+/**
+ * quotientTests is a check for an inequality with fractions: it substitutes a number in the solution, one outside it and every
+ * endpoint, and says of each zero of a denominator that it is left out.
+ */
+function quotientTests(set: RealSet, poles: readonly Q[], sides: (x: Q) => readonly [Q, Q], op: Op): Text {
+  const xs = [...picks(set), ...endpoints(set), ...poles]
+    .filter((x, i, all) => all.findIndex((y) => y.eq(x)) === i)
+    .sort((p, q) => p.cmp(q));
+  const parts = xs.map((x) => {
+    if (!poles.some((p) => p.eq(x))) {
+      const [l, r] = sides(x);
+      return say(`x = ${x.toLatex()}`, member(set, x), isEnd(set, x), l, op, r);
+    }
+    const end = isEnd(set, x);
+    return t(
+      `${end ? "The endpoint" : "The number"} $x = ${x.toLatex()}$ makes a denominator $0$, so the inequality is not defined there and it is left out.`,
+      `${end ? "端点" : "数"} $x = ${x.toLatex()}$ 使分母为 $0$，不等式在那里没有意义，所以它不包含在内。`,
+    );
+  });
+  return checked(join(t("Substitute numbers into the original inequality. ", "把数代入原不等式。"), sayAll(parts)));
+}
 
 /** qx turns a polynomial with integer coefficients, from the highest power down, into a function of a rational x. */
 const qx =
@@ -2172,13 +2276,29 @@ export const solvingPolynomialInequalitiesUsingTheSignTableMethod: TopicDef = {
   encompasses: [{ topic: "solving-quadratic-inequalities-using-the-sign-table-method", weight: 0.5 }],
   xp: 16,
   standards: ["CCSS.HSA.REI.B.4"],
+  intro: t(
+    `You can solve a quadratic inequality with a sign table, a row for each of its two factors, and you can read a polynomial inequality from a sketch of the graph. A sign table works just as well for three factors or more, and it needs no sketch: each row records where one factor is negative, and the bottom row multiplies the signs in each column.
+
+Solve $x(x + 3)(x - 2) < 0$. The zeros $-3$, $0$ and $2$ cut the line into four intervals:
+
+$$\\begin{array}{c|cccc} & (-\\infty, -3) & (-3, 0) & (0, 2) & (2, \\infty) \\\\ \\hline x & - & - & + & + \\\\ x + 3 & - & + & + & + \\\\ x - 2 & - & - & - & + \\\\ \\hline \\text{product} & - & + & - & + \\end{array}$$
+
+The product is negative in the first and third columns, so the solution is $(-\\infty, -3) \\cup (0, 2)$. At $x = 1$, for instance, the product is $1 \\cdot 4 \\cdot (-1) = -4$.`,
+    `你会用符号表解二次不等式，两个因式各占一行；也会根据图象草图读出多项式不等式的解。三个或更多因式时，符号表同样好用，而且不用画图：每一行记下一个因式在哪里为负，最后一行把每一列的符号相乘。
+
+解 $x(x + 3)(x - 2) < 0$。零点 $-3$、$0$、$2$ 把数轴分成四个区间：
+
+$$\\begin{array}{c|cccc} & (-\\infty, -3) & (-3, 0) & (0, 2) & (2, \\infty) \\\\ \\hline x & - & - & + & + \\\\ x + 3 & - & + & + & + \\\\ x - 2 & - & - & - & + \\\\ \\hline \\text{积} & - & + & - & + \\end{array}$$
+
+乘积在第一列和第三列为负，所以解集是 $(-\\infty, -3) \\cup (0, 2)$。例如 $x = 1$ 时，乘积为 $1 \\cdot 4 \\cdot (-1) = -4$。`,
+  ),
   knowledgePoints: [
     {
       id: "sign-tables-with-three-factors",
       title: t("Sign tables with three factors", "三个因式的符号表"),
       explanation: t(
-        "For $(x + 2)(x - 1)(x - 3) > 0$, the roots $-2, 1, 3$ divide the real line into four intervals. Set up a sign table with a row for each factor and determine the sign of the product in each column:\n\n- $(-\\infty, -2)$: $(-)(-)(-) = -$\n- $(-2, 1)$: $(+)(-)(-) = +$\n- $(1, 3)$: $(+)(+)(-) = -$\n- $(3, \\infty)$: $(+)(+)(+) = +$\n\nSo the solution is $(-2, 1) \\cup (3, \\infty)$.",
-        "对于 $(x + 2)(x - 1)(x - 3) > 0$，零点 $-2, 1, 3$ 将数轴划分为四个区间。为每个因式列一行，在每列中计算乘积的符号：\n\n- $(-\\infty, -2)$：$(-)(-)(-) = -$\n- $(-2, 1)$：$(+)(-)(-) = +$\n- $(1, 3)$：$(+)(+)(-) = -$\n- $(3, \\infty)$：$(+)(+)(+) = +$\n\n所以解集是 $(-2, 1) \\cup (3, \\infty)$。",
+        "For $(x + 2)(x - 1)(x - 3) > 0$, the roots $-2, 1, 3$ divide the real line into four intervals. Set up a sign table with a row for each factor and determine the sign of the product in each column:\n\n- $(-\\infty, -2)$: $(-)(-)(-) = -$\n- $(-2, 1)$: $(+)(-)(-) = +$\n- $(1, 3)$: $(+)(+)(-) = -$\n- $(3, \\infty)$: $(+)(+)(+) = +$\n\nSo the solution is $(-2, 1) \\cup (3, \\infty)$.\n\n> **Watch out.** Read the answer from the bottom row, the sign of the whole product, not from any one factor's row. A factor written as $a - x$ is negative to the right of its root, so check its row instead of assuming every row ends in $+$.",
+        "对于 $(x + 2)(x - 1)(x - 3) > 0$，零点 $-2, 1, 3$ 将数轴划分为四个区间。为每个因式列一行，在每列中计算乘积的符号：\n\n- $(-\\infty, -2)$：$(-)(-)(-) = -$\n- $(-2, 1)$：$(+)(-)(-) = +$\n- $(1, 3)$：$(+)(+)(-) = -$\n- $(3, \\infty)$：$(+)(+)(+) = +$\n\n所以解集是 $(-2, 1) \\cup (3, \\infty)$。\n\n> **注意。** 答案要从最后一行读，也就是整个乘积的符号，而不是某一个因式那一行。写成 $a - x$ 的因式在它的根的右边为负，所以要看清它那一行，不要以为每一行最右边都是 $+$。",
       ),
       generate(rng) {
         const ds = drawFactors(rng, 3, false);
@@ -2191,7 +2311,15 @@ export const solvingPolynomialInequalitiesUsingTheSignTableMethod: TopicDef = {
           set,
           form: "interval",
           wrong: [chartSet(-1, fs, op), chartSet(1, fs, toggled[op]), complement(set)],
-          solution: chartSolution(1, fs, name, op, set),
+          solution: chartSolution(
+            1,
+            fs,
+            name,
+            op,
+            set,
+            undefined,
+            substituted(picks(set), set, (x) => [productAt(1, ds, x), Q.zero], op),
+          ),
         });
       },
     },
@@ -2199,8 +2327,8 @@ export const solvingPolynomialInequalitiesUsingTheSignTableMethod: TopicDef = {
       id: "sign-tables-with-repeated-factors",
       title: t("Sign tables with repeated factors", "含重因式的符号表"),
       explanation: t(
-        "A repeated factor $(x - a)^{m}$ behaves differently depending on whether $m$ is even or odd:\n\n- **Even powers** like $(x - 1)^{2}$ are positive everywhere except at $x = 1$, where they are zero. In the sign table, they have $+$ in every interval.\n- **Odd powers** like $(x + 2)^{3}$ change sign across their root, behaving like a single linear factor.\n\nAlways include or exclude the roots according to whether the inequality is non-strict or strict.",
-        "重因式 $(x - a)^{m}$ 的表现取决于重数 $m$ 是偶数还是奇数：\n\n- **偶次幂** 如 $(x - 1)^{2}$ 在除 $x = 1$ 外的所有区间上都为正。在符号表中，它在所有区间上都是 $+$。\n- **奇次幂** 如 $(x + 2)^{3}$ 跨过零点时会变号，行为与单个一次因式相同。\n\n始终根据不等式是非严格还是严格，来决定解集中是否包含这些零点。",
+        "A repeated factor $(x - a)^{m}$ behaves differently depending on whether $m$ is even or odd:\n\n- **Even powers** like $(x - 1)^{2}$ are positive everywhere except at $x = 1$, where they are zero. In the sign table, they have $+$ in every interval.\n- **Odd powers** like $(x + 2)^{3}$ change sign across their root, behaving like a single linear factor.\n\nAlways include or exclude the roots according to whether the inequality is non-strict or strict.\n\n> **Watch out.** The signs do not simply alternate from one interval to the next: they stay the same across the root of an even power. With $\\le$ or $\\ge$ that root still belongs to the solution, even when the product has the wrong sign on both sides of it.",
+        "重因式 $(x - a)^{m}$ 的表现取决于重数 $m$ 是偶数还是奇数：\n\n- **偶次幂** 如 $(x - 1)^{2}$ 在除 $x = 1$ 外的所有区间上都为正。在符号表中，它在所有区间上都是 $+$。\n- **奇次幂** 如 $(x + 2)^{3}$ 跨过零点时会变号，行为与单个一次因式相同。\n\n始终根据不等式是非严格还是严格，来决定解集中是否包含这些零点。\n\n> **注意。** 符号并不是每过一个区间就交替：经过偶次幂的根时符号不变。对 $\\le$ 或 $\\ge$，即使乘积在这个根两侧的符号都不对，这个根仍属于解集。",
       ),
       generate(rng) {
         const [u, v] = distinctPair(rng, -4, 4);
@@ -2215,7 +2343,26 @@ export const solvingPolynomialInequalitiesUsingTheSignTableMethod: TopicDef = {
           set,
           form: "interval",
           wrong: [chartSet(-1, fs, op), chartSet(1, fs, toggled[op]), complement(set)],
-          solution: chartSolution(1, fs, name, op, set),
+          solution: chartSolution(
+            1,
+            fs,
+            name,
+            op,
+            set,
+            undefined,
+            substituted(
+              picks(set, { also: Q.of(u) }),
+              set,
+              (x) => [
+                x
+                  .sub(Q.of(u))
+                  .pow(2)
+                  .mul(x.sub(Q.of(v))),
+                Q.zero,
+              ],
+              op,
+            ),
+          ),
         });
       },
     },
@@ -2236,13 +2383,29 @@ export const solvingRadicalInequalities: TopicDef = {
   encompasses: [],
   xp: 16,
   standards: ["CCSS.HSA.REI.A.2"],
+  intro: t(
+    `You can solve a radical equation by squaring both sides and then checking for extraneous roots, and you can solve simple quadratic inequalities. A radical inequality needs the same care plus one more thing: the square root exists only where the radicand is at least $0$, and squaring keeps the direction of an inequality only when both sides are at least $0$. So every answer is the solution of the squared inequality, cut down to the values where squaring was allowed.
+
+Solve $\\sqrt{x + 4} > 3$. The radicand needs $x + 4 \\ge 0$, that is $x \\ge -4$. Both sides are at least $0$, so square them:
+
+$$x + 4 > 9 \\implies x > 5$$
+
+Every $x > 5$ also satisfies $x \\ge -4$, so the solution is $(5, \\infty)$. For instance, $x = 12$ gives $\\sqrt{16} = 4$, which is more than $3$.`,
+    `你会通过两边平方解根式方程，再检验是否有增根；也会解简单的二次不等式。根式不等式需要同样的小心，还要多注意一点：平方根只在被开方数不小于 $0$ 时才有意义，而两边平方只有在两边都不小于 $0$ 时才保持不等号方向。所以答案总是平方后不等式的解，再限制到允许平方的那些值上。
+
+解 $\\sqrt{x + 4} > 3$。被开方数要求 $x + 4 \\ge 0$，即 $x \\ge -4$。两边都不小于 $0$，所以两边平方：
+
+$$x + 4 > 9 \\implies x > 5$$
+
+每个 $x > 5$ 都满足 $x \\ge -4$，所以解集是 $(5, \\infty)$。例如 $x = 12$ 时 $\\sqrt{16} = 4$，比 $3$ 大。`,
+  ),
   knowledgePoints: [
     {
       id: "radical-inequalities-with-a-constant",
       title: t("Square root compared with a constant", "平方根与常数比较"),
       explanation: t(
-        "For $\\sqrt{ax + b} \\text{ op } c$, the radicand must be non-negative: $ax + b \\ge 0$. Then:\n\n- $\\sqrt{ax + b} < c$: if $c \\le 0$, no solution. If $c > 0$, $0 \\le ax + b < c^{2}$.\n- $\\sqrt{ax + b} > c$: if $c < 0$, any $x$ with $ax + b \\ge 0$ works. If $c \\ge 0$, $ax + b > c^{2}$.\n\nFor $\\sqrt{2x - 3} \\le 5$:\n\n$$0 \\le 2x - 3 \\le 25 \\implies 3 \\le 2x \\le 28 \\implies \\frac{3}{2} \\le x \\le 14$$\n\nSo the solution is $\\left[\\frac{3}{2}, 14\\right]$.",
-        "对于 $\\sqrt{ax + b} \\text{ op } c$，被开方数必须非负：$ax + b \\ge 0$。随后：\n\n- $\\sqrt{ax + b} < c$：若 $c \\le 0$，无解；若 $c > 0$，则 $0 \\le ax + b < c^{2}$。\n- $\\sqrt{ax + b} > c$：若 $c < 0$，只需 $ax + b \\ge 0$；若 $c \\ge 0$，则 $ax + b > c^{2}$。\n\n以 $\\sqrt{2x - 3} \\le 5$ 为例：\n\n$$0 \\le 2x - 3 \\le 25 \\implies 3 \\le 2x \\le 28 \\implies \\frac{3}{2} \\le x \\le 14$$\n\n所以解集是 $\\left[\\frac{3}{2}, 14\\right]$。",
+        "For $\\sqrt{ax + b} \\text{ op } c$, the radicand must be non-negative: $ax + b \\ge 0$. Then:\n\n- $\\sqrt{ax + b} < c$: if $c \\le 0$, no solution. If $c > 0$, $0 \\le ax + b < c^{2}$.\n- $\\sqrt{ax + b} > c$: if $c < 0$, any $x$ with $ax + b \\ge 0$ works. If $c \\ge 0$, $ax + b > c^{2}$.\n\nFor $\\sqrt{2x - 3} \\le 5$:\n\n$$0 \\le 2x - 3 \\le 25 \\implies 3 \\le 2x \\le 28 \\implies \\frac{3}{2} \\le x \\le 14$$\n\nSo the solution is $\\left[\\frac{3}{2}, 14\\right]$.\n\n> **Watch out.** Squaring $\\sqrt{ax + b} < c$ gives only $ax + b < c^{2}$, which also allows a negative radicand. Keep the condition $ax + b \\ge 0$, which gives the left end of the answer.",
+        "对于 $\\sqrt{ax + b} \\text{ op } c$，被开方数必须非负：$ax + b \\ge 0$。随后：\n\n- $\\sqrt{ax + b} < c$：若 $c \\le 0$，无解；若 $c > 0$，则 $0 \\le ax + b < c^{2}$。\n- $\\sqrt{ax + b} > c$：若 $c < 0$，只需 $ax + b \\ge 0$；若 $c \\ge 0$，则 $ax + b > c^{2}$。\n\n以 $\\sqrt{2x - 3} \\le 5$ 为例：\n\n$$0 \\le 2x - 3 \\le 25 \\implies 3 \\le 2x \\le 28 \\implies \\frac{3}{2} \\le x \\le 14$$\n\n所以解集是 $\\left[\\frac{3}{2}, 14\\right]$。\n\n> **注意。** 把 $\\sqrt{ax + b} < c$ 两边平方只得到 $ax + b < c^{2}$，它还允许被开方数为负。要保留条件 $ax + b \\ge 0$，它给出答案的左端点。",
       ),
       generate(rng) {
         const a = rng.pick([1, 2, 3]);
@@ -2264,15 +2427,34 @@ export const solvingRadicalInequalities: TopicDef = {
           set,
           form: "interval",
           wrong: [ray(op, rootBound), union(mk(undefined, rootBound, false, !strict(op))), complement(set)],
-          solution: t(
-            `First, the domain requires $${radStr} \\ge 0 \\implies x \\ge ${domainLo.toLatex()}$. Since $${c} > 0$, square both sides:${steps(
-              `${radStr} ${opL[op]} ${c2}`,
-              `x ${opL[op]} ${rootBound.toLatex()}`,
-            )}Intersecting with $x \\ge ${domainLo.toLatex()}$, the solution is $${setL(set)}$.`,
-            `首先，定义域要求 $${radStr} \\ge 0 \\implies x \\ge ${domainLo.toLatex()}$。因为 $${c} > 0$，两边平方：${steps(
-              `${radStr} ${opL[op]} ${c2}`,
-              `x ${opL[op]} ${rootBound.toLatex()}`,
-            )}与定义域 $x \\ge ${domainLo.toLatex()}$ 取交集，解集是 $${setL(set)}$。`,
+          solution: join(
+            label(1, "Find the domain", "求定义域"),
+            t(
+              `The radicand must be at least $0$: $${radStr} \\ge 0$, so $x \\ge ${domainLo.toLatex()}$.`,
+              `被开方数必须不小于 $0$：$${radStr} \\ge 0$，所以 $x \\ge ${domainLo.toLatex()}$。`,
+            ),
+            para,
+            label(2, "Square both sides", "两边平方"),
+            t(
+              `Both sides are at least $0$, since $${c} > 0$, so squaring keeps the direction:`,
+              `两边都不小于 $0$（因为 $${c} > 0$），所以平方后不等号方向不变：`,
+            ),
+            t(
+              disp(`${radStr} ${opL[op]} ${c2}`, `x ${opL[op]} ${rootBound.toLatex()}`),
+              disp(`${radStr} ${opL[op]} ${c2}`, `x ${opL[op]} ${rootBound.toLatex()}`),
+            ),
+            para,
+            label(3, "Combine with the domain", "与定义域结合"),
+            t(
+              `Keep only the values with $x \\ge ${domainLo.toLatex()}$. The solution is $${setL(set)}$.`,
+              `只保留满足 $x \\ge ${domainLo.toLatex()}$ 的值。解集是 $${setL(set)}$。`,
+            ),
+            rootTests(
+              [0, c - 1, c, c + 1].map((m) => ({ x: Q.of(m * m - b, a), m })),
+              set,
+              () => Q.of(c),
+              op,
+            ),
           ),
         });
       },
@@ -2281,8 +2463,8 @@ export const solvingRadicalInequalities: TopicDef = {
       id: "radical-inequalities-linear-bound",
       title: t("Radical inequalities with a variable side", "含变量边界的根式不等式"),
       explanation: t(
-        "To solve $\\sqrt{x + 5} < x - 1$, both sides must be valid: the radicand $x + 5 \\ge 0 \\implies x \\ge -5$, and since the square root is non-negative, the right side must be positive: $x - 1 > 0 \\implies x > 1$. Then square both sides:\n\n$$x + 5 < (x - 1)^{2} = x^{2} - 2x + 1 \\implies x^{2} - 3x - 4 > 0 \\implies (x - 4)(x + 1) > 0$$\n\nSince $x > 1$, the only valid interval is $(4, \\infty)$.",
-        "求解 $\\sqrt{x + 5} < x - 1$ 时两边都要满足条件：被开方数 $x + 5 \\ge 0 \\implies x \\ge -5$；且因为平方根非负，右侧必须为正：$x - 1 > 0 \\implies x > 1$。随后两边平方：\n\n$$x + 5 < (x - 1)^{2} = x^{2} - 2x + 1 \\implies x^{2} - 3x - 4 > 0 \\implies (x - 4)(x + 1) > 0$$\n\n结合 $x > 1$，唯一有效的区间是 $(4, \\infty)$。",
+        "To solve $\\sqrt{x + 5} < x - 1$, both sides must be valid: the radicand $x + 5 \\ge 0 \\implies x \\ge -5$, and since the square root is non-negative, the right side must be positive: $x - 1 > 0 \\implies x > 1$. Then square both sides:\n\n$$x + 5 < (x - 1)^{2} = x^{2} - 2x + 1 \\implies x^{2} - 3x - 4 > 0 \\implies (x - 4)(x + 1) > 0$$\n\nSince $x > 1$, the only valid interval is $(4, \\infty)$.\n\n> **Watch out.** Squaring keeps the direction only when both sides are at least $0$. Without the condition $x - 1 > 0$, the squared inequality also keeps $x < -1$, where the right side is negative and the original inequality fails.",
+        "求解 $\\sqrt{x + 5} < x - 1$ 时两边都要满足条件：被开方数 $x + 5 \\ge 0 \\implies x \\ge -5$；且因为平方根非负，右侧必须为正：$x - 1 > 0 \\implies x > 1$。随后两边平方：\n\n$$x + 5 < (x - 1)^{2} = x^{2} - 2x + 1 \\implies x^{2} - 3x - 4 > 0 \\implies (x - 4)(x + 1) > 0$$\n\n结合 $x > 1$，唯一有效的区间是 $(4, \\infty)$。\n\n> **注意。** 只有两边都不小于 $0$ 时，平方才保持不等号方向。没有条件 $x - 1 > 0$，平方后的不等式还会保留 $x < -1$，而那里右边为负，原不等式并不成立。",
       ),
       generate(rng) {
         const c = rng.int(-4, 6);
@@ -2301,17 +2483,35 @@ export const solvingRadicalInequalities: TopicDef = {
             ray(">", c),
             union(mk(Q.of(p), Q.of(q), false, false)),
           ],
-          solution: t(
-            `The radicand needs $x \\ge ${-b}$, and a square root is never negative, so the right side must be positive: $x > ${c}$. On these values both sides may be squared:${steps(
-              `${radicand} < (${right})^{2}`,
-              `${quad(1, -(p + q), p * q)} > 0`,
-              `(${linear(1, -p)})(${linear(1, -q)}) > 0`,
-            )}So $x < ${p}$ or $x > ${q}$. But $${p}$ is less than $${c}$, so $x < ${p}$ makes the right side negative and is rejected. The solution is $${setL(set)}$.`,
-            `被开方数要求 $x \\ge ${-b}$；平方根不会是负数，所以右边必须为正：$x > ${c}$。在这些值上两边可以平方：${steps(
-              `${radicand} < (${right})^{2}`,
-              `${quad(1, -(p + q), p * q)} > 0`,
-              `(${linear(1, -p)})(${linear(1, -q)}) > 0`,
-            )}所以 $x < ${p}$ 或 $x > ${q}$。但 $${p}$ 小于 $${c}$，$x < ${p}$ 会使右边为负，应舍去。解集是 $${setL(set)}$。`,
+          solution: join(
+            label(1, "Find the allowed values", "找出允许的值"),
+            t(
+              `The radicand needs $x \\ge ${-b}$, and a square root is never negative, so the right side must be positive: $x > ${c}$.`,
+              `被开方数要求 $x \\ge ${-b}$；平方根不会是负数，所以右边必须为正：$x > ${c}$。`,
+            ),
+            para,
+            label(2, "Square both sides", "两边平方"),
+            t("On these values both sides are at least $0$, so they may be squared:", "在这些值上两边都不小于 $0$，可以平方："),
+            t(
+              disp(`${radicand} < (${right})^{2}`, `${quad(1, -(p + q), p * q)} > 0`, `(${linear(1, -p)})(${linear(1, -q)}) > 0`),
+              disp(`${radicand} < (${right})^{2}`, `${quad(1, -(p + q), p * q)} > 0`, `(${linear(1, -p)})(${linear(1, -q)}) > 0`),
+            ),
+            para,
+            label(3, "Keep the allowed part", "保留允许的部分"),
+            t(
+              `So $x < ${p}$ or $x > ${q}$. But $${p}$ is less than $${c}$, so $x < ${p}$ makes the right side negative and is rejected. The solution is $${setL(set)}$.`,
+              `所以 $x < ${p}$ 或 $x > ${q}$。但 $${p}$ 小于 $${c}$，$x < ${p}$ 会使右边为负，应舍去。解集是 $${setL(set)}$。`,
+            ),
+            rootTests(
+              [
+                { x: Q.of((d + 1) * (d + 1) - b), m: d + 1 },
+                { x: Q.of(q), m: d },
+                { x: Q.of((d - 2) * (d - 2) - b), m: d - 2 },
+              ],
+              set,
+              (x) => x.sub(Q.of(c)),
+              "<",
+            ),
           ),
         });
       },
@@ -2333,13 +2533,29 @@ export const solvingInequalitiesInvolvingExponentialFunctions: TopicDef = {
   encompasses: [{ topic: "solving-exponential-equations", weight: 0.3 }],
   xp: 15,
   standards: ["CCSS.HSA.CED.A.1"],
+  intro: t(
+    `You can solve an exponential equation by writing both sides as powers of the same base and setting the exponents equal. An inequality works the same way, with one question added: does the exponential grow or shrink as the exponent grows? With a base above $1$ it grows, so the inequality between the exponents points the same way. With a base between $0$ and $1$ it shrinks, so the inequality reverses.
+
+Solve $3^{x + 1} > 27$. Write $27$ as $3^{3}$. The base $3$ is above $1$, so the exponents keep the direction:
+
+$$3^{x + 1} > 3^{3} \\implies x + 1 > 3 \\implies x > 2$$
+
+The solution is $(2, \\infty)$. For instance, $x = 3$ gives $3^{4} = 81$, which is more than $27$.`,
+    `你会把两边写成同底数的幂、令指数相等来解指数方程。不等式的做法相同，只多一个问题：指数变大时，指数函数是变大还是变小？底数大于 $1$ 时它变大，所以指数之间的不等号方向不变；底数在 $0$ 和 $1$ 之间时它变小，所以不等号反向。
+
+解 $3^{x + 1} > 27$。把 $27$ 写成 $3^{3}$。底数 $3$ 大于 $1$，所以比较指数时方向不变：
+
+$$3^{x + 1} > 3^{3} \\implies x + 1 > 3 \\implies x > 2$$
+
+解集是 $(2, \\infty)$。例如 $x = 3$ 时 $3^{4} = 81$，比 $27$ 大。`,
+  ),
   knowledgePoints: [
     {
       id: "exponential-inequalities-with-base-greater-than-one",
       title: t("Base greater than one", "底数大于 1 的指数不等式"),
       explanation: t(
-        "For $b > 1$, the function $f(x) = b^{x}$ is strictly increasing. Therefore, $b^{u} < b^{v}$ if and only if $u < v$. For example:\n\n$$2^{3x - 1} \\le 16 \\implies 2^{3x - 1} \\le 2^{4} \\implies 3x - 1 \\le 4 \\implies x \\le \\frac{5}{3}$$\n\nSo the solution is $\\left(-\\infty, \\frac{5}{3}\\right]$.",
-        "当 $b > 1$ 时，函数 $f(x) = b^{x}$ 在整个实数集上严格单调递增。因此 $b^{u} < b^{v}$ 当且仅当 $u < v$。例如：\n\n$$2^{3x - 1} \\le 16 \\implies 2^{3x - 1} \\le 2^{4} \\implies 3x - 1 \\le 4 \\implies x \\le \\frac{5}{3}$$\n\n所以解集是 $\\left(-\\infty, \\frac{5}{3}\\right]$。",
+        "For $b > 1$, the function $f(x) = b^{x}$ is strictly increasing. Therefore, $b^{u} < b^{v}$ if and only if $u < v$. For example:\n\n$$2^{3x - 1} \\le 16 \\implies 2^{3x - 1} \\le 2^{4} \\implies 3x - 1 \\le 4 \\implies x \\le \\frac{5}{3}$$\n\nSo the solution is $\\left(-\\infty, \\frac{5}{3}\\right]$.\n\n> **Watch out.** Compare exponents only after both sides are powers of the same base. $2^{3x - 1} \\le 16$ does not give $3x - 1 \\le 16$: the number $16$ must first become $2^{4}$.",
+        "当 $b > 1$ 时，函数 $f(x) = b^{x}$ 在整个实数集上严格单调递增。因此 $b^{u} < b^{v}$ 当且仅当 $u < v$。例如：\n\n$$2^{3x - 1} \\le 16 \\implies 2^{3x - 1} \\le 2^{4} \\implies 3x - 1 \\le 4 \\implies x \\le \\frac{5}{3}$$\n\n所以解集是 $\\left(-\\infty, \\frac{5}{3}\\right]$。\n\n> **注意。** 只有两边都化成同底数的幂以后才能比较指数。由 $2^{3x - 1} \\le 16$ 得不到 $3x - 1 \\le 16$：要先把 $16$ 写成 $2^{4}$。",
       ),
       generate(rng) {
         const b = rng.pick([2, 3, 5]);
@@ -2356,15 +2572,27 @@ export const solvingInequalitiesInvolvingExponentialFunctions: TopicDef = {
           set,
           form: "interval",
           wrong: [ray(reversed[op], xVal), ray(op, Q.of(bk - q, p)), complement(set)],
-          solution: t(
-            `Rewrite $${bk}$ as $${b}^{${k}}$. Since $${b} > 1$, the exponential function is increasing, preserving the inequality:${steps(
-              `${linear(p, q)} ${opL[op]} ${k}`,
-              `x ${opL[op]} ${xVal.toLatex()}`,
-            )}The solution is $${setL(set)}$.`,
-            `将 ${bk} 写为 $${b}^{${k}}$。因为底数 $${b} > 1$，指数函数单调递增，不等号方向不变：${steps(
-              `${linear(p, q)} ${opL[op]} ${k}`,
-              `x ${opL[op]} ${xVal.toLatex()}`,
-            )}解集是 $${setL(set)}$。`,
+          solution: join(
+            label(1, "Use one base", "化为同底数"),
+            t(`Rewrite $${bk}$ as $${b}^{${k}}$.`, `把 $${bk}$ 写成 $${b}^{${k}}$。`),
+            para,
+            label(2, "Compare the exponents", "比较指数"),
+            t(
+              `Since $${b} > 1$, the exponential function is increasing, so the inequality keeps its direction:`,
+              `因为底数 $${b} > 1$，指数函数单调递增，所以不等号方向不变：`,
+            ),
+            t(
+              disp(`${linear(p, q)} ${opL[op]} ${k}`, `x ${opL[op]} ${xVal.toLatex()}`),
+              disp(`${linear(p, q)} ${opL[op]} ${k}`, `x ${opL[op]} ${xVal.toLatex()}`),
+            ),
+            para,
+            t(`The solution is $${setL(set)}$.`, `解集是 $${setL(set)}$。`),
+            powerTests(
+              [k + 1, k, k - 1].map((e) => Q.of(e - q, p)),
+              set,
+              (x) => [Q.of(b).pow(Math.round(p * x.toNumber()) + q), Q.of(bk)],
+              op,
+            ),
           ),
         });
       },
@@ -2373,8 +2601,8 @@ export const solvingInequalitiesInvolvingExponentialFunctions: TopicDef = {
       id: "exponential-inequalities-with-fractional-base",
       title: t("Base between zero and one", "底数在 0 到 1 之间的指数不等式"),
       explanation: t(
-        "When $0 < b < 1$, the function $f(x) = b^{x}$ is strictly decreasing: larger exponents yield smaller values! Therefore, $b^{u} < b^{v} \\iff u > v$. For example:\n\n$$\\left(\\frac{1}{2}\\right)^{x + 2} > \\frac{1}{8} \\implies \\left(\\frac{1}{2}\\right)^{x + 2} > \\left(\\frac{1}{2}\\right)^{3} \\implies x + 2 < 3 \\implies x < 1$$\n\nSo the solution is $(-\\infty, 1)$.",
-        "当 $0 < b < 1$ 时，函数 $f(x) = b^{x}$ 严格单调递减：指数越大，函数值越小！因此 $b^{u} < b^{v} \\iff u > v$。例如：\n\n$$\\left(\\frac{1}{2}\\right)^{x + 2} > \\frac{1}{8} \\implies \\left(\\frac{1}{2}\\right)^{x + 2} > \\left(\\frac{1}{2}\\right)^{3} \\implies x + 2 < 3 \\implies x < 1$$\n\n所以解集是 $(-\\infty, 1)$。",
+        "When $0 < b < 1$, the function $f(x) = b^{x}$ is strictly decreasing: larger exponents yield smaller values! Therefore, $b^{u} < b^{v} \\iff u > v$. For example:\n\n$$\\left(\\frac{1}{2}\\right)^{x + 2} > \\frac{1}{8} \\implies \\left(\\frac{1}{2}\\right)^{x + 2} > \\left(\\frac{1}{2}\\right)^{3} \\implies x + 2 < 3 \\implies x < 1$$\n\nSo the solution is $(-\\infty, 1)$.\n\n> **Watch out.** Reverse the inequality when you pass from the powers to the exponents, and only then. Here $x + 2 < 3$, not $x + 2 > 3$; the steps after that, such as subtracting $2$, keep the direction as usual.",
+        "当 $0 < b < 1$ 时，函数 $f(x) = b^{x}$ 严格单调递减：指数越大，函数值越小！因此 $b^{u} < b^{v} \\iff u > v$。例如：\n\n$$\\left(\\frac{1}{2}\\right)^{x + 2} > \\frac{1}{8} \\implies \\left(\\frac{1}{2}\\right)^{x + 2} > \\left(\\frac{1}{2}\\right)^{3} \\implies x + 2 < 3 \\implies x < 1$$\n\n所以解集是 $(-\\infty, 1)$。\n\n> **注意。** 只在从幂转到指数的那一步反转不等号。这里是 $x + 2 < 3$，而不是 $x + 2 > 3$；之后的步骤（比如减去 $2$）照常保持方向。",
       ),
       generate(rng) {
         const den = rng.pick([2, 3]);
@@ -2392,15 +2620,27 @@ export const solvingInequalitiesInvolvingExponentialFunctions: TopicDef = {
           set,
           form: "interval",
           wrong: [ray(op, xVal), ray(reversed[op], Q.of(-k - q, p)), complement(set)],
-          solution: t(
-            `Rewrite $${rhsTex}$ as $\\left(${baseTex}\\right)^{${k}}$. Because the base $${baseTex}$ is strictly between $0$ and $1$, the exponential function is decreasing, reversing the inequality:${steps(
-              `${linear(p, q)} ${opL[reversed[op]]} ${k}`,
-              `x ${opL[reversed[op]]} ${xVal.toLatex()}`,
-            )}The solution is $${setL(set)}$.`,
-            `将 $${rhsTex}$ 改写为 $\\left(${baseTex}\\right)^{${k}}$。因为底数 $${baseTex}$ 严格介于 $0$ 与 $1$ 之间，指数函数单调递减，不等号方向反转：${steps(
-              `${linear(p, q)} ${opL[reversed[op]]} ${k}`,
-              `x ${opL[reversed[op]]} ${xVal.toLatex()}`,
-            )}解集是 $${setL(set)}$。`,
+          solution: join(
+            label(1, "Use one base", "化为同底数"),
+            t(`Rewrite $${rhsTex}$ as $\\left(${baseTex}\\right)^{${k}}$.`, `把 $${rhsTex}$ 写成 $\\left(${baseTex}\\right)^{${k}}$。`),
+            para,
+            label(2, "Compare the exponents", "比较指数"),
+            t(
+              `The base $${baseTex}$ is between $0$ and $1$, so the exponential function is decreasing and the inequality reverses:`,
+              `底数 $${baseTex}$ 介于 $0$ 与 $1$ 之间，指数函数单调递减，所以不等号反向：`,
+            ),
+            t(
+              disp(`${linear(p, q)} ${opL[reversed[op]]} ${k}`, `x ${opL[reversed[op]]} ${xVal.toLatex()}`),
+              disp(`${linear(p, q)} ${opL[reversed[op]]} ${k}`, `x ${opL[reversed[op]]} ${xVal.toLatex()}`),
+            ),
+            para,
+            t(`The solution is $${setL(set)}$.`, `解集是 $${setL(set)}$。`),
+            powerTests(
+              [k + 1, k, k - 1].map((e) => Q.of(e - q, p)),
+              set,
+              (x) => [Q.of(1, den).pow(Math.round(p * x.toNumber()) + q), Q.of(1, den ** k)],
+              op,
+            ),
           ),
         });
       },
@@ -2409,8 +2649,8 @@ export const solvingInequalitiesInvolvingExponentialFunctions: TopicDef = {
       id: "exponential-inequalities-quadratic-in-form",
       title: t("Inequalities quadratic in an exponential", "二次型指数不等式"),
       explanation: t(
-        "When one power is the square of another, a substitution turns the inequality into a quadratic one; solve that, then undo the substitution, remembering that an exponential is always positive. Substitute $u = 2^{x}$ in $4^{x} - 6 \\cdot 2^{x} + 8 < 0$:\n\n$$u^{2} - 6u + 8 < 0 \\implies (u - 2)(u - 4) < 0 \\implies 2 < u < 4$$\n\nSubstituting back $u = 2^{x}$ gives $2 < 2^{x} < 4 \\implies 1 < x < 2$, so the solution is $(1, 2)$.",
-        "当一个幂是另一个幂的平方时，换元可以把不等式化为二次不等式；先解它，再代回原变量，并记住指数式总是正的。在 $4^{x} - 6 \\cdot 2^{x} + 8 < 0$ 中令 $u = 2^{x}$：\n\n$$u^{2} - 6u + 8 < 0 \\implies (u - 2)(u - 4) < 0 \\implies 2 < u < 4$$\n\n代回 $u = 2^{x}$ 得 $2 < 2^{x} < 4 \\implies 1 < x < 2$，所以解集是 $(1, 2)$。",
+        "When one power is the square of another, a substitution turns the inequality into a quadratic one; solve that, then undo the substitution, remembering that an exponential is always positive. Substitute $u = 2^{x}$ in $4^{x} - 6 \\cdot 2^{x} + 8 < 0$:\n\n$$u^{2} - 6u + 8 < 0 \\implies (u - 2)(u - 4) < 0 \\implies 2 < u < 4$$\n\nSubstituting back $u = 2^{x}$ gives $2 < 2^{x} < 4 \\implies 1 < x < 2$, so the solution is $(1, 2)$.\n\n> **Watch out.** Finish by turning the bounds on $u$ back into bounds on $x$: $2 < u < 4$ means $2 < 2^{x} < 4$, so $1 < x < 2$, not $2 < x < 4$.",
+        "当一个幂是另一个幂的平方时，换元可以把不等式化为二次不等式；先解它，再代回原变量，并记住指数式总是正的。在 $4^{x} - 6 \\cdot 2^{x} + 8 < 0$ 中令 $u = 2^{x}$：\n\n$$u^{2} - 6u + 8 < 0 \\implies (u - 2)(u - 4) < 0 \\implies 2 < u < 4$$\n\n代回 $u = 2^{x}$ 得 $2 < 2^{x} < 4 \\implies 1 < x < 2$，所以解集是 $(1, 2)$。\n\n> **注意。** 最后要把关于 $u$ 的范围换回关于 $x$ 的范围：$2 < u < 4$ 即 $2 < 2^{x} < 4$，所以 $1 < x < 2$，而不是 $2 < x < 4$。",
       ),
       generate(rng) {
         const [e1, e2] = distinctPair(rng, 0, 4).sort((p, q) => p - q);
@@ -2426,15 +2666,41 @@ export const solvingInequalitiesInvolvingExponentialFunctions: TopicDef = {
           set,
           form: "interval",
           wrong: [chartSet(-1, fs, op), chartSet(1, [lin(1, -u1), lin(1, -u2)], op), complement(set)],
-          solution: t(
-            `Let $u = 2^{x}$. The inequality becomes:${steps(
-              `u^{2} - ${sum}u + ${prod} ${opL[op]} 0`,
-              `(u - ${u1})(u - ${u2}) ${opL[op]} 0`,
-            )}For $u$, the roots are $${u1} = 2^{${e1}}$ and $${u2} = 2^{${e2}}$. Converting back to $x$, the solution is $${setL(set)}$.`,
-            `令 $u = 2^{x}$，不等式变为：${steps(
-              `u^{2} - ${sum}u + ${prod} ${opL[op]} 0`,
-              `(u - ${u1})(u - ${u2}) ${opL[op]} 0`,
-            )}关于 $u$ 的两根是 $${u1} = 2^{${e1}}$ 和 $${u2} = 2^{${e2}}$。换回 $x$，解集是 $${setL(set)}$。`,
+          solution: join(
+            label(1, "Substitute", "换元"),
+            t(`Let $u = 2^{x}$, so that $4^{x} = u^{2}$. The inequality becomes:`, `令 $u = 2^{x}$，则 $4^{x} = u^{2}$。不等式变为：`),
+            t(
+              disp(`u^{2} - ${sum}u + ${prod} ${opL[op]} 0`, `(u - ${u1})(u - ${u2}) ${opL[op]} 0`),
+              disp(`u^{2} - ${sum}u + ${prod} ${opL[op]} 0`, `(u - ${u1})(u - ${u2}) ${opL[op]} 0`),
+            ),
+            para,
+            label(2, "Return to x", "换回 x"),
+            t(
+              `The roots in $u$ are $${u1} = 2^{${e1}}$ and $${u2} = 2^{${e2}}$. Since $2^{x}$ is increasing, $u$ lies between them exactly when $x$ lies between $${e1}$ and $${e2}$. ${ends(op).en} The solution is $${setL(set)}$.`,
+              `关于 $u$ 的两根是 $${u1} = 2^{${e1}}$ 和 $${u2} = 2^{${e2}}$。$2^{x}$ 单调递增，所以 $u$ 在两根之间当且仅当 $x$ 在 $${e1}$ 与 $${e2}$ 之间。${ends(op)["zh-CN"]}解集是 $${setL(set)}$。`,
+            ),
+            (() => {
+              const at = (u: Q) => u.mul(u).sub(Q.of(sum).mul(u)).add(Q.of(prod));
+              const between = op === "<" || op === "<=";
+              const mid = e2 - e1 >= 2 ? undefined : Q.of(u1 + u2, 2);
+              const xs = [e1 - 1, e1, ...(mid ? [] : [e1 + 1]), e2 + 1];
+              const parts = xs.map((x) => {
+                const u = Q.of(2).pow(x);
+                return say(`x = ${x}`, member(set, Q.of(x)), isEnd(set, Q.of(x)), at(u), op, Q.zero);
+              });
+              if (mid) {
+                parts.splice(2, 0, say(`x = \\log_{2} ${mid.toLatex()}`, between, false, at(mid), op, Q.zero));
+              }
+              return checked(
+                join(
+                  t(
+                    "Substitute numbers into the original inequality, using $4^{x} = (2^{x})^{2}$. ",
+                    "把数代入原不等式，利用 $4^{x} = (2^{x})^{2}$。",
+                  ),
+                  sayAll(parts),
+                ),
+              );
+            })(),
           ),
         });
       },
@@ -2456,13 +2722,29 @@ export const solvingInequalitiesInvolvingLogarithmicFunctions: TopicDef = {
   encompasses: [{ topic: "solving-logarithmic-equations", weight: 0.3 }],
   xp: 16,
   standards: ["CCSS.HSA.CED.A.1"],
+  intro: t(
+    `You can solve a logarithmic equation by rewriting it in exponential form and checking that every argument stays positive, and you know that an exponential inequality reverses when the base is between $0$ and $1$. A logarithmic inequality combines the two. A logarithm with a base above $1$ is increasing, so it keeps the direction; with a base between $0$ and $1$ it is decreasing, so it reverses it. Either way the argument must stay positive, and that condition often gives one end of the answer.
+
+Solve $\\log_{3}(x + 2) < 2$. The argument needs $x + 2 > 0$, so $x > -2$. The base $3$ is above $1$, so rewrite in exponential form with the same direction:
+
+$$x + 2 < 3^{2} = 9 \\implies x < 7$$
+
+Both conditions together give $(-2, 7)$. For instance, $x = 1$ gives $\\log_{3} 3 = 1$, which is less than $2$.`,
+    `你会把对数方程化成指数形式来解，并检验每个真数都为正；也知道底数在 $0$ 和 $1$ 之间时，指数不等式要反向。对数不等式把这两点结合起来：底数大于 $1$ 的对数单调递增，不等号方向不变；底数在 $0$ 和 $1$ 之间的对数单调递减，不等号反向。无论哪种情况，真数都必须为正，这个条件常常给出答案的一个端点。
+
+解 $\\log_{3}(x + 2) < 2$。真数要求 $x + 2 > 0$，所以 $x > -2$。底数 $3$ 大于 $1$，所以化成指数形式时方向不变：
+
+$$x + 2 < 3^{2} = 9 \\implies x < 7$$
+
+两个条件合起来得 $(-2, 7)$。例如 $x = 1$ 时 $\\log_{3} 3 = 1$，比 $2$ 小。`,
+  ),
   knowledgePoints: [
     {
       id: "logarithmic-inequalities-with-base-greater-than-one",
       title: t("Base greater than one", "底数大于 1 的对数不等式"),
       explanation: t(
-        "When $b > 1$, $\\log_{b}(u)$ is strictly increasing. Remember the **domain**: the argument must be strictly positive ($u > 0$):\n\n- $\\log_{b}(u) < c \\iff 0 < u < b^{c}$\n- $\\log_{b}(u) > c \\iff u > b^{c}$\n\nFor $\\log_{2}(3x - 1) \\le 3$:\n\n$$0 < 3x - 1 \\le 2^{3} = 8 \\implies 1 < 3x \\le 9 \\implies \\frac{1}{3} < x \\le 3$$\n\nSo the solution is $\\left(\\frac{1}{3}, 3\\right]$.",
-        "当 $b > 1$ 时，$\\log_{b}(u)$ 严格单调递增。牢记**定义域**：真数必须严格大于零（$u > 0$）：\n\n- $\\log_{b}(u) < c \\iff 0 < u < b^{c}$\n- $\\log_{b}(u) > c \\iff u > b^{c}$\n\n以 $\\log_{2}(3x - 1) \\le 3$ 为例：\n\n$$0 < 3x - 1 \\le 2^{3} = 8 \\implies 1 < 3x \\le 9 \\implies \\frac{1}{3} < x \\le 3$$\n\n所以解集是 $\\left(\\frac{1}{3}, 3\\right]$。",
+        "When $b > 1$, $\\log_{b}(u)$ is strictly increasing. Remember the **domain**: the argument must be strictly positive ($u > 0$):\n\n- $\\log_{b}(u) < c \\iff 0 < u < b^{c}$\n- $\\log_{b}(u) > c \\iff u > b^{c}$\n\nFor $\\log_{2}(3x - 1) \\le 3$:\n\n$$0 < 3x - 1 \\le 2^{3} = 8 \\implies 1 < 3x \\le 9 \\implies \\frac{1}{3} < x \\le 3$$\n\nSo the solution is $\\left(\\frac{1}{3}, 3\\right]$.\n\n> **Watch out.** Rewriting $\\log_{b}(u) < c$ as $u < b^{c}$ loses the condition $u > 0$, so keep it beside the result: the answer starts where the argument becomes positive, not at $-\\infty$.",
+        "当 $b > 1$ 时，$\\log_{b}(u)$ 严格单调递增。牢记**定义域**：真数必须严格大于零（$u > 0$）：\n\n- $\\log_{b}(u) < c \\iff 0 < u < b^{c}$\n- $\\log_{b}(u) > c \\iff u > b^{c}$\n\n以 $\\log_{2}(3x - 1) \\le 3$ 为例：\n\n$$0 < 3x - 1 \\le 2^{3} = 8 \\implies 1 < 3x \\le 9 \\implies \\frac{1}{3} < x \\le 3$$\n\n所以解集是 $\\left(\\frac{1}{3}, 3\\right]$。\n\n> **注意。** 把 $\\log_{b}(u) < c$ 写成 $u < b^{c}$ 会丢掉条件 $u > 0$，所以要把它和结果放在一起：答案从真数开始为正的地方开始，而不是从 $-\\infty$ 开始。",
       ),
       generate(rng) {
         const b = rng.pick([2, 3]);
@@ -2484,15 +2766,26 @@ export const solvingInequalitiesInvolvingLogarithmicFunctions: TopicDef = {
           set,
           form: "interval",
           wrong: [ray(op, xVal), union(mk(undefined, xVal, false, !strict(op))), complement(set)],
-          solution: t(
-            `The argument must be positive: $${linear(p, q)} > 0 \\implies x > ${domainLo.toLatex()}$. Since $${b} > 1$, exponentiate with base $${b}$:${steps(
-              `${linear(p, q)} ${opL[op]} ${b}^{${c}} = ${bc}`,
-              `x ${opL[op]} ${xVal.toLatex()}`,
-            )}Combining with the domain condition, the solution is $${setL(set)}$.`,
-            `真数必须为正：$${linear(p, q)} > 0 \\implies x > ${domainLo.toLatex()}$。因为底数 $${b} > 1$，以 $${b}$ 为底转化为指数不等式：${steps(
-              `${linear(p, q)} ${opL[op]} ${b}^{${c}} = ${bc}`,
-              `x ${opL[op]} ${xVal.toLatex()}`,
-            )}与定义域结合，解集是 $${setL(set)}$。`,
+          solution: join(
+            label(1, "Find the domain", "求定义域"),
+            t(
+              `The argument must be positive: $${linear(p, q)} > 0$, so $x > ${domainLo.toLatex()}$.`,
+              `真数必须为正：$${linear(p, q)} > 0$，所以 $x > ${domainLo.toLatex()}$。`,
+            ),
+            para,
+            label(2, "Rewrite in exponential form", "化为指数形式"),
+            t(
+              `Since $${b} > 1$, the logarithm is increasing, so the direction stays:`,
+              `因为底数 $${b} > 1$，对数单调递增，不等号方向不变：`,
+            ),
+            t(
+              disp(`${linear(p, q)} ${opL[op]} ${b}^{${c}} = ${bc}`, `x ${opL[op]} ${xVal.toLatex()}`),
+              disp(`${linear(p, q)} ${opL[op]} ${b}^{${c}} = ${bc}`, `x ${opL[op]} ${xVal.toLatex()}`),
+            ),
+            para,
+            label(3, "Combine with the domain", "与定义域结合"),
+            t(`The solution is $${setL(set)}$.`, `解集是 $${setL(set)}$。`),
+            logTests([c + 1, c, c - 1], (e) => Q.of(b ** e - q, p), set, c, op, op === "<" || op === "<=" ? domainLo : undefined),
           ),
         });
       },
@@ -2501,15 +2794,15 @@ export const solvingInequalitiesInvolvingLogarithmicFunctions: TopicDef = {
       id: "logarithmic-inequalities-with-fractional-base",
       title: t("Base between zero and one", "底数在 0 到 1 之间的对数不等式"),
       explanation: t(
-        "When $0 < b < 1$, $\\log_{b}(u)$ is decreasing, reversing the inequality. For $\\log_{1/2}(x - 3) \\ge -2$:\n\n$$0 < x - 3 \\le \\left(\\frac{1}{2}\\right)^{-2} = 4 \\implies 3 < x \\le 7$$\n\nSo the solution is $(3, 7]$. Notice that $x > 3$ is open because the logarithm is not defined at $0$.",
-        "当 $0 < b < 1$ 时，$\\log_{b}(u)$ 严格单调递减，不等号方向反转。以 $\\log_{1/2}(x - 3) \\ge -2$ 为例：\n\n$$0 < x - 3 \\le \\left(\\frac{1}{2}\\right)^{-2} = 4 \\implies 3 < x \\le 7$$\n\n所以解集是 $(3, 7]$。注意 $x > 3$ 处是开区间，因为对数在 $0$ 处无定义。",
+        "When $0 < b < 1$, $\\log_{b}(u)$ is decreasing, reversing the inequality. For $\\log_{1/2}(x - 3) \\ge -2$:\n\n$$0 < x - 3 \\le \\left(\\frac{1}{2}\\right)^{-2} = 4 \\implies 3 < x \\le 7$$\n\nSo the solution is $(3, 7]$. Notice that $x > 3$ is open because the logarithm is not defined at $0$.\n\n> **Watch out.** The base reverses the inequality between the logarithm and the number, but not the domain condition: the argument must still be greater than $0$.",
+        "当 $0 < b < 1$ 时，$\\log_{b}(u)$ 严格单调递减，不等号方向反转。以 $\\log_{1/2}(x - 3) \\ge -2$ 为例：\n\n$$0 < x - 3 \\le \\left(\\frac{1}{2}\\right)^{-2} = 4 \\implies 3 < x \\le 7$$\n\n所以解集是 $(3, 7]$。注意 $x > 3$ 处是开区间，因为对数在 $0$ 处无定义。\n\n> **注意。** 底数使对数与数之间的不等号反向，但不改变定义域条件：真数仍然必须大于 $0$。",
       ),
       generate(rng) {
         const h = rng.int(1, 5);
         const c = rng.int(-2, 2);
         const pow = c >= 0 ? Q.of(1, 2 ** c) : Q.of(2 ** -c);
         const op = rng.pick(ops);
-        const ineq = `\\log_{1/2}(x ${tail(-h)}) ${opL[op]} ${c}`;
+        const ineq = `\\log_{1/2}(x${tail(-h)}) ${opL[op]} ${c}`;
         const rev = reversed[op];
         const hi = Q.of(h).add(pow);
         let set: RealSet;
@@ -2522,15 +2815,30 @@ export const solvingInequalitiesInvolvingLogarithmicFunctions: TopicDef = {
           set,
           form: "interval",
           wrong: [ray(op, hi), ray(rev, hi), complement(set)],
-          solution: t(
-            `The domain requires $x ${tail(-h)} > 0 \\implies x > ${h}$. Because the base $\\frac{1}{2}$ is less than $1$, the inequality direction reverses:${steps(
-              `x ${tail(-h)} ${opL[rev]} \\left(\\frac{1}{2}\\right)^{${c}} = ${pow.toLatex()}`,
-              `x ${opL[rev]} ${hi.toLatex()}`,
-            )}The solution is $${setL(set)}$.`,
-            `定义域要求 $x ${tail(-h)} > 0 \\implies x > ${h}$。因为底数 $\\frac{1}{2} < 1$，不等号方向反转：${steps(
-              `x ${tail(-h)} ${opL[rev]} \\left(\\frac{1}{2}\\right)^{${c}} = ${pow.toLatex()}`,
-              `x ${opL[rev]} ${hi.toLatex()}`,
-            )}解集是 $${setL(set)}$。`,
+          solution: join(
+            label(1, "Find the domain", "求定义域"),
+            t(`The argument must be positive: $x${tail(-h)} > 0$, so $x > ${h}$.`, `真数必须为正：$x${tail(-h)} > 0$，所以 $x > ${h}$。`),
+            para,
+            label(2, "Rewrite in exponential form", "化为指数形式"),
+            t(
+              "The base $\\frac{1}{2}$ is less than $1$, so the logarithm is decreasing and the direction reverses:",
+              "底数 $\\frac{1}{2}$ 小于 $1$，对数单调递减，所以不等号反向：",
+            ),
+            t(
+              disp(`x${tail(-h)} ${opL[rev]} \\left(\\frac{1}{2}\\right)^{${c}} = ${pow.toLatex()}`, `x ${opL[rev]} ${hi.toLatex()}`),
+              disp(`x${tail(-h)} ${opL[rev]} \\left(\\frac{1}{2}\\right)^{${c}} = ${pow.toLatex()}`, `x ${opL[rev]} ${hi.toLatex()}`),
+            ),
+            para,
+            label(3, "Combine with the domain", "与定义域结合"),
+            t(`The solution is $${setL(set)}$.`, `解集是 $${setL(set)}$。`),
+            logTests(
+              [c + 1, c, c - 1],
+              (e) => Q.of(h).add(Q.of(1, 2).pow(e)),
+              set,
+              c,
+              op,
+              rev === "<" || rev === "<=" ? Q.of(h) : undefined,
+            ),
           ),
         });
       },
@@ -2552,13 +2860,29 @@ export const solvingInequalitiesInvolvingExponentialFunctionsAndPolynomials: Top
   encompasses: [],
   xp: 16,
   standards: ["CCSS.HSA.CED.A.1"],
+  intro: t(
+    `You can solve an exponential inequality such as $3^{x} < 9$, and you can solve a product inequality with a sign table. When a product mixes the two kinds of factor, each needs only its sign. A power such as $3^{x}$ is positive for every $x$, so it never changes the sign of a product. A factor such as $3^{x} - 9$ changes sign once, where $3^{x} = 9$.
+
+Solve $x(3^{x} - 9) \\le 0$. The factor $x$ is zero at $0$, and $3^{x} - 9$ is zero where $3^{x} = 3^{2}$, at $2$. Both factors are positive to the right of $2$, and each changes sign at its zero:
+
+$$\\begin{array}{c|ccc} & (-\\infty, 0) & (0, 2) & (2, \\infty) \\\\ \\hline x & - & + & + \\\\ 3^{x} - 9 & - & - & + \\\\ \\hline \\text{product} & + & - & + \\end{array}$$
+
+With the zeros included, the solution is $[0, 2]$. For instance, $x = 1$ gives $1 \\cdot (3 - 9) = -6$.`,
+    `你会解 $3^{x} < 9$ 这样的指数不等式，也会用符号表解乘积不等式。当乘积里两类因式混在一起时，每个因式只需要知道它的符号。像 $3^{x}$ 这样的幂对每个 $x$ 都是正的，所以不会改变乘积的符号；像 $3^{x} - 9$ 这样的因式只变号一次，在 $3^{x} = 9$ 的地方。
+
+解 $x(3^{x} - 9) \\le 0$。因式 $x$ 在 $0$ 处为零，$3^{x} - 9$ 在 $3^{x} = 3^{2}$ 即 $2$ 处为零。两个因式在 $2$ 的右边都为正，各自经过零点时变号：
+
+$$\\begin{array}{c|ccc} & (-\\infty, 0) & (0, 2) & (2, \\infty) \\\\ \\hline x & - & + & + \\\\ 3^{x} - 9 & - & - & + \\\\ \\hline \\text{积} & + & - & + \\end{array}$$
+
+再把零点包含进来，解集是 $[0, 2]$。例如 $x = 1$ 时，乘积为 $1 \\cdot (3 - 9) = -6$。`,
+  ),
   knowledgePoints: [
     {
       id: "factoring-out-positive-exponentials",
       title: t("Dividing by positive exponential factors", "除以恒正的指数因式"),
       explanation: t(
-        "For any real number $x$, $e^{x} > 0$ and $2^{x} > 0$. An exponential factor is never zero and never negative! We can divide both sides by it without changing the direction of the inequality:\n\n$$(x^{2} - 9)e^{x} \\ge 0 \\iff x^{2} - 9 \\ge 0 \\iff (x - 3)(x + 3) \\ge 0$$\n\nSo the solution is $(-\\infty, -3] \\cup [3, \\infty)$.",
-        "对任意实数 $x$，都有 $e^{x} > 0$ 以及 $2^{x} > 0$。指数因式永不为零，也永不为负！我们可以直接在两边除以它而不改变不等号方向：\n\n$$(x^{2} - 9)e^{x} \\ge 0 \\iff x^{2} - 9 \\ge 0 \\iff (x - 3)(x + 3) \\ge 0$$\n\n所以解集是 $(-\\infty, -3] \\cup [3, \\infty)$。",
+        "For any real number $x$, $e^{x} > 0$ and $2^{x} > 0$. An exponential factor is never zero and never negative! We can divide both sides by it without changing the direction of the inequality:\n\n$$(x^{2} - 9)e^{x} \\ge 0 \\iff x^{2} - 9 \\ge 0 \\iff (x - 3)(x + 3) \\ge 0$$\n\nSo the solution is $(-\\infty, -3] \\cup [3, \\infty)$.\n\n> **Watch out.** Dividing by $e^{x}$ is safe only because it is positive. A factor that can be negative or zero, such as $x$, cannot be divided out this way; it needs its own row in a sign table.",
+        "对任意实数 $x$，都有 $e^{x} > 0$ 以及 $2^{x} > 0$。指数因式永不为零，也永不为负！我们可以直接在两边除以它而不改变不等号方向：\n\n$$(x^{2} - 9)e^{x} \\ge 0 \\iff x^{2} - 9 \\ge 0 \\iff (x - 3)(x + 3) \\ge 0$$\n\n所以解集是 $(-\\infty, -3] \\cup [3, \\infty)$。\n\n> **注意。** 能除以 $e^{x}$，只是因为它是正的。可能为负或为零的因式（比如 $x$）不能这样约去，它要在符号表里单独占一行。",
       ),
       generate(rng) {
         const [u, v] = distinctPair(rng, -5, 5);
@@ -2566,20 +2890,35 @@ export const solvingInequalitiesInvolvingExponentialFunctionsAndPolynomials: Top
         const fs = [lin(1, -u), lin(1, -v)];
         const op = rng.pick(ops);
         const set = chartSet(1, fs, op);
-        const polyName = `(x ${tail(-u)})(x ${tail(-v)})`;
+        const polyName = `(x${tail(-u)})(x${tail(-v)})`;
         const ineq = `${polyName}${expStr} ${opL[op]} 0`;
         return intervalProblem({
           prompt: solvePrompt(ineq),
           set,
           form: "interval",
           wrong: [chartSet(-1, fs, op), chartSet(1, fs, toggled[op]), complement(set)],
-          solution: t(
-            `Since $${expStr} > 0$ for all real $x$, divide both sides by $${expStr}$ without flipping the inequality:${steps(
-              `${polyName} ${opL[op]} 0`,
-            )}The roots are $${u}$ and $${v}$. The solution is $${setL(set)}$.`,
-            `因为对所有实数 $x$ 都有 $${expStr} > 0$，两边同时除以 $${expStr}$（不等号方向不变）：${steps(
-              `${polyName} ${opL[op]} 0`,
-            )}两根为 $${u}$ 和 $${v}$。解集是 $${setL(set)}$。`,
+          solution: join(
+            label(1, "Divide out the exponential", "约去指数式"),
+            t(
+              `Since $${expStr} > 0$ for every real $x$, dividing both sides by it keeps the direction:`,
+              `因为对每个实数 $x$ 都有 $${expStr} > 0$，两边同除以它，不等号方向不变：`,
+            ),
+            t(disp(`${polyName} ${opL[op]} 0`), disp(`${polyName} ${opL[op]} 0`)),
+            para,
+            label(2, "Solve the quadratic inequality", "解二次不等式"),
+            t(
+              `The roots are $${Math.min(u, v)}$ and $${Math.max(u, v)}$, and the product is positive outside them and negative between them. ${ends(op).en} The solution is $${setL(set)}$.`,
+              `两根为 $${Math.min(u, v)}$ 和 $${Math.max(u, v)}$，乘积在两根之外为正、之间为负。${ends(op)["zh-CN"]}解集是 $${setL(set)}$。`,
+            ),
+            signTests(
+              picks(set).map((x) => {
+                const [a, b] = [x.sub(Q.of(u)), x.sub(Q.of(v))];
+                const e = `${expStr.slice(0, expStr.indexOf("^"))}^{${x.toLatex()}}`;
+                return { x, work: `${paren(a)} \\cdot ${paren(b)} \\cdot ${e}`, sign: a.mul(b).sign() };
+              }),
+              set,
+              op,
+            ),
           ),
         });
       },
@@ -2588,15 +2927,15 @@ export const solvingInequalitiesInvolvingExponentialFunctionsAndPolynomials: Top
       id: "products-where-exponentials-change-sign",
       title: t("Factors of the form $b^{x} - c$", "形如 $b^{x} - c$ 的因式"),
       explanation: t(
-        "The factor $(2^{x} - 4)$ changes sign at $x = 2$, since $2^{x} < 4$ when $x < 2$ and $2^{x} > 4$ when $x > 2$. To solve $(x + 1)(2^{x} - 4) < 0$:\n\n1. **Zeros**: $x = -1$ and $x = 2$.\n2. **Intervals**: on $(-1, 2)$, $(x + 1) > 0$ while $(2^{x} - 4) < 0$, so the product is negative.\n\nThe solution is $(-1, 2)$.",
-        "因式 $(2^{x} - 4)$ 在 $x = 2$ 处变号，因为当 $x < 2$ 时 $2^{x} < 4$，当 $x > 2$ 时 $2^{x} > 4$。求解 $(x + 1)(2^{x} - 4) < 0$ 的步骤：\n\n1. **零点**：$x = -1$ 与 $x = 2$。\n2. **区间**：在 $(-1, 2)$ 上，$(x + 1) > 0$ 而 $(2^{x} - 4) < 0$，乘积为负。\n\n解集是 $(-1, 2)$。",
+        "The factor $(2^{x} - 4)$ changes sign at $x = 2$, since $2^{x} < 4$ when $x < 2$ and $2^{x} > 4$ when $x > 2$. To solve $(x + 1)(2^{x} - 4) < 0$:\n\n1. **Zeros**: $x = -1$ and $x = 2$.\n2. **Intervals**: on $(-1, 2)$, $(x + 1) > 0$ while $(2^{x} - 4) < 0$, so the product is negative.\n\nThe solution is $(-1, 2)$.\n\n> **Watch out.** The factor $2^{x} - 4$ is zero at $x = 2$, where $2^{x} = 4$, not at $x = 4$. Solve the exponential equation to find the critical point.",
+        "因式 $(2^{x} - 4)$ 在 $x = 2$ 处变号，因为当 $x < 2$ 时 $2^{x} < 4$，当 $x > 2$ 时 $2^{x} > 4$。求解 $(x + 1)(2^{x} - 4) < 0$ 的步骤：\n\n1. **零点**：$x = -1$ 与 $x = 2$。\n2. **区间**：在 $(-1, 2)$ 上，$(x + 1) > 0$ 而 $(2^{x} - 4) < 0$，乘积为负。\n\n解集是 $(-1, 2)$。\n\n> **注意。** 因式 $2^{x} - 4$ 在 $2^{x} = 4$ 即 $x = 2$ 处为零，而不是在 $x = 4$ 处。要先解指数方程，才能找到临界点。",
       ),
       generate(rng) {
         const u = rng.int(-4, 0);
         const e = rng.int(1, 3);
         const c = 2 ** e;
         const op = rng.pick(ops);
-        const ineq = `(x ${tail(-u)})(2^{x} - ${c}) ${opL[op]} 0`;
+        const ineq = `(x${tail(-u)})(2^{x} - ${c}) ${opL[op]} 0`;
         const fs = [lin(1, -u), lin(1, -e)];
         const set = chartSet(1, fs, op);
         return intervalProblem({
@@ -2604,9 +2943,33 @@ export const solvingInequalitiesInvolvingExponentialFunctionsAndPolynomials: Top
           set,
           form: "interval",
           wrong: [chartSet(-1, fs, op), chartSet(1, fs, toggled[op]), complement(set)],
-          solution: t(
-            `The factor $x ${tail(-u)}$ is zero at $x = ${u}$, and $2^{x} - ${c}$ is zero at $x = ${e}$. The product is positive to the right of both zeros and changes sign at each one, which gives the solution $${setL(set)}$.`,
-            `因式 $x ${tail(-u)}$ 在 $x = ${u}$ 处为零，因式 $2^{x} - ${c}$ 在 $x = ${e}$ 处为零。乘积在两个零点的右边为正，每经过一个零点就变号，所以解集为 $${setL(set)}$。`,
+          solution: join(
+            label(1, "Find the zeros", "找出零点"),
+            t(
+              `The factor $x${tail(-u)}$ is zero at $x = ${u}$, and $2^{x} - ${c}$ is zero where $2^{x} = 2^{${e}}$, at $x = ${e}$.`,
+              `因式 $x${tail(-u)}$ 在 $x = ${u}$ 处为零；$2^{x} - ${c}$ 在 $2^{x} = 2^{${e}}$ 即 $x = ${e}$ 处为零。`,
+            ),
+            para,
+            label(2, "Read the signs", "确定符号"),
+            t(
+              `Both factors are positive to the right of $${e}$, and each changes sign at its zero, since $2^{x}$ is increasing. So the product is positive on $(${e}, \\infty)$, negative on $(${u}, ${e})$ and positive on $(-\\infty, ${u})$. ${ends(op).en} The solution is $${setL(set)}$.`,
+              `两个因式在 $${e}$ 的右边都为正；$2^{x}$ 单调递增，所以每个因式经过自己的零点时变号。于是乘积在 $(${e}, \\infty)$ 上为正，在 $(${u}, ${e})$ 上为负，在 $(-\\infty, ${u})$ 上为正。${ends(op)["zh-CN"]}解集是 $${setL(set)}$。`,
+            ),
+            signTests(
+              [Q.of(u - 1), Q.of(u), e - u >= 2 ? Q.of(u + 1) : Q.of(2 * u + 1, 2), Q.of(e), Q.of(e + 1)].map((x) => {
+                const a = x.sub(Q.of(u));
+                const whole = Number.isInteger(x.toNumber());
+                const b = whole ? Q.of(2).pow(x.toNumber()).sub(Q.of(c)) : undefined;
+                const sign = a.sign() * Math.sign(x.toNumber() - e);
+                return {
+                  x,
+                  work: b ? `${paren(a)} \\cdot ${paren(b)} = ${a.mul(b).toLatex()}` : `${paren(a)} \\cdot (2^{${x.toLatex()}} - ${c})`,
+                  sign,
+                };
+              }),
+              set,
+              op,
+            ),
           ),
         });
       },
@@ -2631,34 +2994,65 @@ export const solvingInequalitiesInvolvingPositiveAndNegativeFactors: TopicDef = 
   encompasses: [{ topic: "solving-polynomial-inequalities-using-the-sign-table-method", weight: 0.3 }],
   xp: 15,
   standards: ["CCSS.HSA.REI.B.4"],
+  intro: t(
+    `You can solve a product inequality with a sign table, and you know that a quadratic with a negative discriminant has no real roots, so it keeps one sign for every $x$. Such a factor needs no row in the table. If it is always positive, dividing by it leaves the inequality as it is; if it is always negative, dividing by it reverses the inequality.
+
+Solve $(x^{2} + 2x + 5)(x - 1) \\ge 0$. The quadratic has discriminant $2^{2} - 4 \\cdot 5 = -16 < 0$ and a positive leading coefficient, so it is positive for every $x$. Dividing by it keeps the direction:
+
+$$x - 1 \\ge 0 \\implies x \\ge 1$$
+
+The solution is $[1, \\infty)$. For instance, $x = 0$ gives $5 \\cdot (-1) = -5$, which is not at least $0$, and indeed $0$ is not in the solution.`,
+    `你会用符号表解乘积不等式，也知道判别式为负的二次式没有实数根，所以对每个 $x$ 都保持同一个符号。这样的因式在符号表里不需要占一行：如果它恒为正，除以它不等式不变；如果它恒为负，除以它不等号反向。
+
+解 $(x^{2} + 2x + 5)(x - 1) \\ge 0$。这个二次式的判别式是 $2^{2} - 4 \\cdot 5 = -16 < 0$，首项系数为正，所以它对每个 $x$ 都为正。除以它，方向不变：
+
+$$x - 1 \\ge 0 \\implies x \\ge 1$$
+
+解集是 $[1, \\infty)$。例如 $x = 0$ 时，乘积为 $5 \\cdot (-1) = -5$，小于 $0$，而 $0$ 确实不在解集中。`,
+  ),
   knowledgePoints: [
     {
       id: "factors-with-no-real-roots",
       title: t("Strictly positive quadratic factors", "恒为正的二次因式"),
       explanation: t(
-        "A quadratic factor $x^{2} + c$ with $c > 0$ (or $x^{2} + px + q$ with $p^{2} - 4q < 0$ and $a > 0$) is **strictly positive** for every real number $x$. It never equals zero and never changes sign. You can divide both sides by it:\n\n$$(x^{2} + 4)(x - 5) < 0 \\iff x - 5 < 0 \\iff x < 5$$\n\nSo the solution is $(-\\infty, 5)$.",
-        "当 $c > 0$ 时，二次因式 $x^{2} + c$（或判别式 $p^{2} - 4q < 0$ 且 $a > 0$ 的二次式 $x^{2} + px + q$）对任意实数 $x$ 都**恒为正**。它既不为零，也不变号。两边可直接除以该因式：\n\n$$(x^{2} + 4)(x - 5) < 0 \\iff x - 5 < 0 \\iff x < 5$$\n\n所以解集是 $(-\\infty, 5)$。",
+        "A quadratic factor $x^{2} + c$ with $c > 0$ (or $x^{2} + px + q$ with $p^{2} - 4q < 0$ and $a > 0$) is **strictly positive** for every real number $x$. It never equals zero and never changes sign. You can divide both sides by it:\n\n$$(x^{2} + 4)(x - 5) < 0 \\iff x - 5 < 0 \\iff x < 5$$\n\nSo the solution is $(-\\infty, 5)$.\n\n> **Watch out.** Make sure the factor really has no real roots before dividing it out. $x^{2} - 4$ looks similar to $x^{2} + 4$, but it is zero at $\\pm 2$ and changes sign there.",
+        "当 $c > 0$ 时，二次因式 $x^{2} + c$（或判别式 $p^{2} - 4q < 0$ 且 $a > 0$ 的二次式 $x^{2} + px + q$）对任意实数 $x$ 都**恒为正**。它既不为零，也不变号。两边可直接除以该因式：\n\n$$(x^{2} + 4)(x - 5) < 0 \\iff x - 5 < 0 \\iff x < 5$$\n\n所以解集是 $(-\\infty, 5)$。\n\n> **注意。** 约去因式之前，要确认它真的没有实数根。$x^{2} - 4$ 看上去和 $x^{2} + 4$ 差不多，但它在 $\\pm 2$ 处为零，并在那里变号。",
       ),
       generate(rng) {
         const c = rng.int(1, 9);
         const r = rng.int(-6, 6);
         const op = rng.pick(ops);
-        const ineq = `(x^{2} + ${c})(x ${tail(-r)}) ${opL[op]} 0`;
+        const ineq = `(x^{2} + ${c})(${linear(1, -r)}) ${opL[op]} 0`;
         const set = ray(op, r);
         return intervalProblem({
           prompt: solvePrompt(ineq),
           set,
           form: "interval",
           wrong: [ray(reversed[op], r), union(mk(Q.of(-c), Q.of(r))), complement(set)],
-          solution: t(
-            `Since $x^{2} + ${c} \\ge ${c} > 0$ for all real $x$, divide both sides by $x^{2} + ${c}$ without changing the inequality direction:${steps(
-              `x ${tail(-r)} ${opL[op]} 0`,
-              `x ${opL[op]} ${r}`,
-            )}The solution is $${setL(set)}$.`,
-            `因为对任意实数 $x$ 都有 $x^{2} + ${c} \\ge ${c} > 0$，两边直接除以 $x^{2} + ${c}$（不等号方向不变）：${steps(
-              `x ${tail(-r)} ${opL[op]} 0`,
-              `x ${opL[op]} ${r}`,
-            )}解集是 $${setL(set)}$。`,
+          solution: join(
+            label(1, "Find the sign of the quadratic", "确定二次式的符号"),
+            t(
+              `Since $x^{2} \\ge 0$, the factor satisfies $x^{2} + ${c} \\ge ${c} > 0$ for every real $x$.`,
+              `因为 $x^{2} \\ge 0$，所以对每个实数 $x$ 都有 $x^{2} + ${c} \\ge ${c} > 0$。`,
+            ),
+            para,
+            label(2, "Divide it out", "约去它"),
+            t("Dividing by a positive number keeps the direction:", "除以正数，不等号方向不变："),
+            t(disp(`${linear(1, -r)} ${opL[op]} 0`, `x ${opL[op]} ${r}`), disp(`${linear(1, -r)} ${opL[op]} 0`, `x ${opL[op]} ${r}`)),
+            para,
+            t(`The solution is $${setL(set)}$.`, `解集是 $${setL(set)}$。`),
+            substituted(
+              picks(set),
+              set,
+              (x) => [
+                x
+                  .mul(x)
+                  .add(Q.of(c))
+                  .mul(x.sub(Q.of(r))),
+                Q.zero,
+              ],
+              op,
+            ),
           ),
         });
       },
@@ -2667,29 +3061,48 @@ export const solvingInequalitiesInvolvingPositiveAndNegativeFactors: TopicDef = 
       id: "negative-definite-factors",
       title: t("Strictly negative factors", "恒为负的因式"),
       explanation: t(
-        "Similarly, $-x^{2} - 3 = -(x^{2} + 3)$ is strictly negative for all real $x$. Dividing both sides by it **reverses** the inequality direction:\n\n$$(-x^{2} - 3)(2x - 8) \\le 0 \\iff 2x - 8 \\ge 0 \\iff x \\ge 4$$\n\nSo the solution is $[4, \\infty)$.",
-        "同理，$-x^{2} - 3 = -(x^{2} + 3)$ 对所有实数 $x$ 都恒为负。两边同时除以它会**反转**不等号方向：\n\n$$(-x^{2} - 3)(2x - 8) \\le 0 \\iff 2x - 8 \\ge 0 \\iff x \\ge 4$$\n\n所以解集是 $[4, \\infty)$。",
+        "Similarly, $-x^{2} - 3 = -(x^{2} + 3)$ is strictly negative for all real $x$. Dividing both sides by it **reverses** the inequality direction:\n\n$$(-x^{2} - 3)(2x - 8) \\le 0 \\iff 2x - 8 \\ge 0 \\iff x \\ge 4$$\n\nSo the solution is $[4, \\infty)$.\n\n> **Watch out.** Reverse the inequality once, when you divide by the negative factor. The steps after that, such as dividing $2x - 8 \\ge 0$ by $2$, keep the new direction.",
+        "同理，$-x^{2} - 3 = -(x^{2} + 3)$ 对所有实数 $x$ 都恒为负。两边同时除以它会**反转**不等号方向：\n\n$$(-x^{2} - 3)(2x - 8) \\le 0 \\iff 2x - 8 \\ge 0 \\iff x \\ge 4$$\n\n所以解集是 $[4, \\infty)$。\n\n> **注意。** 只在除以负因式的那一步反转一次不等号。之后的步骤（比如把 $2x - 8 \\ge 0$ 两边除以 $2$）保持新的方向。",
       ),
       generate(rng) {
         const c = rng.int(1, 6);
         const r = rng.int(-5, 5);
         const op = rng.pick(ops);
-        const ineq = `(-x^{2} - ${c})(x ${tail(-r)}) ${opL[op]} 0`;
+        const ineq = `(-x^{2} - ${c})(${linear(1, -r)}) ${opL[op]} 0`;
         const set = ray(reversed[op], r);
         return intervalProblem({
           prompt: solvePrompt(ineq),
           set,
           form: "interval",
           wrong: [ray(op, r), complement(set), union(point(r))],
-          solution: t(
-            `Since $-x^{2} - ${c} \\le -${c} < 0$ for all real $x$, divide both sides by it and reverse the inequality:${steps(
-              `x ${tail(-r)} ${opL[reversed[op]]} 0`,
-              `x ${opL[reversed[op]]} ${r}`,
-            )}The solution is $${setL(set)}$.`,
-            `因为对所有实数 $x$ 都有 $-x^{2} - ${c} \\le -${c} < 0$，两边除以它并反转不等号：${steps(
-              `x ${tail(-r)} ${opL[reversed[op]]} 0`,
-              `x ${opL[reversed[op]]} ${r}`,
-            )}解集是 $${setL(set)}$。`,
+          solution: join(
+            label(1, "Find the sign of the quadratic", "确定二次式的符号"),
+            t(
+              `Since $x^{2} \\ge 0$, the factor satisfies $-x^{2} - ${c} \\le -${c} < 0$ for every real $x$.`,
+              `因为 $x^{2} \\ge 0$，所以对每个实数 $x$ 都有 $-x^{2} - ${c} \\le -${c} < 0$。`,
+            ),
+            para,
+            label(2, "Divide it out", "约去它"),
+            t("Dividing by a negative number reverses the direction:", "除以负数，不等号反向："),
+            t(
+              disp(`${linear(1, -r)} ${opL[reversed[op]]} 0`, `x ${opL[reversed[op]]} ${r}`),
+              disp(`${linear(1, -r)} ${opL[reversed[op]]} 0`, `x ${opL[reversed[op]]} ${r}`),
+            ),
+            para,
+            t(`The solution is $${setL(set)}$.`, `解集是 $${setL(set)}$。`),
+            substituted(
+              picks(set),
+              set,
+              (x) => [
+                x
+                  .mul(x)
+                  .add(Q.of(c))
+                  .neg()
+                  .mul(x.sub(Q.of(r))),
+                Q.zero,
+              ],
+              op,
+            ),
           ),
         });
       },
@@ -2711,13 +3124,17 @@ export const solvingInequalitiesInvolvingGeometricSequences: TopicDef = {
   encompasses: [{ topic: "nth-term-of-a-geometric-sequence", weight: 0.4 }],
   xp: 15,
   standards: ["CCSS.HSF.BF.A.2"],
+  intro: t(
+    "You know the $n$-th term of a geometric sequence, $a_{n} = a_{1} r^{n-1}$, and you can solve an exponential inequality by comparing powers. Together they answer questions such as when a quantity that grows by a fixed factor first passes a target. Because $n$ counts terms, the answer is the smallest whole number that works, found by comparing nearby powers.\n\nFor $a_{1} = 5$ and $r = 3$, find the smallest $n$ with $a_{n} > 1000$:\n\n$$5 \\cdot 3^{n-1} > 1000 \\implies 3^{n-1} > 200$$\n\nSince $3^{4} = 81$ and $3^{5} = 243$, the exponent $n - 1$ must be at least $5$, so $n = 6$. Indeed $a_{5} = 405$ is below $1000$ and $a_{6} = 1215$ is above it.",
+    "你会写等比数列的第 $n$ 项 $a_{n} = a_{1} r^{n-1}$，也会通过比较幂来解指数不等式。把两者合起来，就能回答这样的问题：一个按固定倍数增长的量，什么时候第一次超过目标。因为 $n$ 是项数，答案是满足条件的最小整数，可以通过比较相邻的幂找到。\n\n设 $a_{1} = 5$、$r = 3$，求使 $a_{n} > 1000$ 的最小 $n$：\n\n$$5 \\cdot 3^{n-1} > 1000 \\implies 3^{n-1} > 200$$\n\n因为 $3^{4} = 81$、$3^{5} = 243$，指数 $n - 1$ 至少是 $5$，所以 $n = 6$。确实 $a_{5} = 405$ 小于 $1000$，而 $a_{6} = 1215$ 大于 $1000$。",
+  ),
   knowledgePoints: [
     {
       id: "terms-of-a-geometric-sequence-exceeding-a-bound",
       title: t("Term of a geometric sequence exceeding a bound", "等比数列某项超过阈值"),
       explanation: t(
-        "For a geometric sequence with first term $a_{1}$ and common ratio $r > 1$, the $n$-th term is $a_{n} = a_{1} r^{n-1}$. To find the smallest $n$ such that $a_{n} > M$:\n\n$$a_{1} r^{n-1} > M \\implies r^{n-1} > \\frac{M}{a_{1}} \\implies n - 1 > \\frac{\\ln(M / a_{1})}{\\ln r}$$\n\nFor $a_{1} = 3$ and $r = 2$, to exceed $100$:\n\n$$3 \\cdot 2^{n-1} > 100 \\implies 2^{n-1} > 33.\\overline{3} \\implies n - 1 \\ge 6 \\implies n \\ge 7$$\n\nSo the smallest integer is $n = 7$.",
-        "对于首项为 $a_{1}$、公比为 $r > 1$ 的等比数列，第 $n$ 项为 $a_{n} = a_{1} r^{n-1}$。求使得 $a_{n} > M$ 成立的最小正整数 $n$：\n\n$$a_{1} r^{n-1} > M \\implies r^{n-1} > \\frac{M}{a_{1}} \\implies n - 1 > \\frac{\\ln(M / a_{1})}{\\ln r}$$\n\n以 $a_{1} = 3$、$r = 2$ 超过 $100$ 为例：\n\n$$3 \\cdot 2^{n-1} > 100 \\implies 2^{n-1} > 33.\\overline{3} \\implies n - 1 \\ge 6 \\implies n \\ge 7$$\n\n所以最小的正整数是 $n = 7$。",
+        "For a geometric sequence with first term $a_{1}$ and common ratio $r > 1$, the $n$-th term is $a_{n} = a_{1} r^{n-1}$. To find the smallest $n$ such that $a_{n} > M$:\n\n$$a_{1} r^{n-1} > M \\implies r^{n-1} > \\frac{M}{a_{1}} \\implies n - 1 > \\frac{\\ln(M / a_{1})}{\\ln r}$$\n\nFor $a_{1} = 3$ and $r = 2$, to exceed $100$:\n\n$$3 \\cdot 2^{n-1} > 100 \\implies 2^{n-1} > 33.\\overline{3} \\implies n - 1 \\ge 6 \\implies n \\ge 7$$\n\nSo the smallest integer is $n = 7$.\n\n> **Watch out.** The exponent is $n - 1$, not $n$, because the first term is $a_{1} = a_{1} r^{0}$. Solving $r^{n} > \\frac{M}{a_{1}}$ instead gives an answer one too small.",
+        "对于首项为 $a_{1}$、公比为 $r > 1$ 的等比数列，第 $n$ 项为 $a_{n} = a_{1} r^{n-1}$。求使得 $a_{n} > M$ 成立的最小正整数 $n$：\n\n$$a_{1} r^{n-1} > M \\implies r^{n-1} > \\frac{M}{a_{1}} \\implies n - 1 > \\frac{\\ln(M / a_{1})}{\\ln r}$$\n\n以 $a_{1} = 3$、$r = 2$ 超过 $100$ 为例：\n\n$$3 \\cdot 2^{n-1} > 100 \\implies 2^{n-1} > 33.\\overline{3} \\implies n - 1 \\ge 6 \\implies n \\ge 7$$\n\n所以最小的正整数是 $n = 7$。\n\n> **注意。** 指数是 $n - 1$ 而不是 $n$，因为首项是 $a_{1} = a_{1} r^{0}$。如果解成 $r^{n} > \\frac{M}{a_{1}}$，答案会小 $1$。",
       ),
       generate(rng) {
         const a1 = rng.int(2, 5);
@@ -2725,6 +3142,8 @@ export const solvingInequalitiesInvolvingGeometricSequences: TopicDef = {
         const nTarget = rng.int(5, 8);
         const termVal = a1 * r ** (nTarget - 1);
         const M = termVal - rng.int(1, Math.floor(termVal / 3));
+        const ratio = Q.of(M, a1).toLatex();
+        const terms = Array.from({ length: nTarget }, (_, i) => a1 * r ** i);
         return numberProblem({
           prompt: t(
             `A geometric sequence has first term $a_{1} = ${a1}$ and common ratio $r = ${r}$. Find the smallest positive integer $n$ such that $a_{n} > ${M}$.`,
@@ -2732,15 +3151,28 @@ export const solvingInequalitiesInvolvingGeometricSequences: TopicDef = {
           ),
           answer: nTarget,
           wrong: [nTarget - 1, nTarget + 1, nTarget + 2],
-          solution: t(
-            `The formula for the $n$-th term is $a_{n} = ${a1} \\cdot ${r}^{n-1}$. We require:${steps(
-              `${a1} \\cdot ${r}^{n-1} > ${M}`,
-              `${r}^{n-1} > ${(M / a1).toFixed(2)}`,
-            )}For $n = ${nTarget - 1}$, $a_{${nTarget - 1}} = ${a1 * r ** (nTarget - 2)} \\le ${M}$. For $n = ${nTarget}$, $a_{${nTarget}} = ${termVal} > ${M}$. The smallest integer is $n = ${nTarget}$.`,
-            `第 $n$ 项公式为 $a_{n} = ${a1} \\cdot ${r}^{n-1}$。要求：${steps(
-              `${a1} \\cdot ${r}^{n-1} > ${M}`,
-              `${r}^{n-1} > ${(M / a1).toFixed(2)}`,
-            )}当 $n = ${nTarget - 1}$ 时，$a_{${nTarget - 1}} = ${a1 * r ** (nTarget - 2)} \\le ${M}$；当 $n = ${nTarget}$ 时，$a_{${nTarget}} = ${termVal} > ${M}$。因此最小正整数为 $n = ${nTarget}$。`,
+          solution: join(
+            label(1, "Write the inequality", "列出不等式"),
+            t(
+              `The $n$-th term is $a_{n} = ${a1} \\cdot ${r}^{n-1}$, so we need`,
+              `第 $n$ 项为 $a_{n} = ${a1} \\cdot ${r}^{n-1}$，所以要求`,
+            ),
+            t(
+              disp(`${a1} \\cdot ${r}^{n-1} > ${M}`, `${r}^{n-1} > ${ratio}`),
+              disp(`${a1} \\cdot ${r}^{n-1} > ${M}`, `${r}^{n-1} > ${ratio}`),
+            ),
+            para,
+            label(2, "Compare powers", "比较幂"),
+            t(
+              `Since $${r}^{${nTarget - 2}} = ${r ** (nTarget - 2)}$ is not more than $${ratio}$ but $${r}^{${nTarget - 1}} = ${r ** (nTarget - 1)}$ is, the exponent $n - 1$ must be at least $${nTarget - 1}$. The smallest integer is $n = ${nTarget}$.`,
+              `因为 $${r}^{${nTarget - 2}} = ${r ** (nTarget - 2)}$ 不超过 $${ratio}$，而 $${r}^{${nTarget - 1}} = ${r ** (nTarget - 1)}$ 超过它，指数 $n - 1$ 至少是 $${nTarget - 1}$。最小正整数为 $n = ${nTarget}$。`,
+            ),
+            checked(
+              t(
+                `List the terms, multiplying by $${r}$ each time: $${terms.join(", ")}$. The first one above $${M}$ is $a_{${nTarget}} = ${termVal}$, so $n = ${nTarget}$.`,
+                `逐项乘以 $${r}$，列出各项：$${terms.join(", ")}$。第一个超过 $${M}$ 的是 $a_{${nTarget}} = ${termVal}$，所以 $n = ${nTarget}$。`,
+              ),
+            ),
           ),
         });
       },
@@ -2749,13 +3181,14 @@ export const solvingInequalitiesInvolvingGeometricSequences: TopicDef = {
       id: "sums-of-a-geometric-series-exceeding-a-bound",
       title: t("Partial sums of a geometric series exceeding a bound", "等比数列前项和超过阈值"),
       explanation: t(
-        "The sum of the first $n$ terms of a geometric series is $S_{n} = a_{1} \\frac{r^{n} - 1}{r - 1}$. For $a_{1} = 1$ and $r = 2$:\n\n$$S_{n} = 2^{n} - 1 > 50 \\implies 2^{n} > 51 \\implies n \\ge 6$$\n\nSo the smallest integer is $n = 6$.",
-        "等比数列前 $n$ 项和为 $S_{n} = a_{1} \\frac{r^{n} - 1}{r - 1}$。以 $a_{1} = 1$、$r = 2$ 为例：\n\n$$S_{n} = 2^{n} - 1 > 50 \\implies 2^{n} > 51 \\implies n \\ge 6$$\n\n所以最小的正整数是 $n = 6$。",
+        "The sum of the first $n$ terms of a geometric series is $S_{n} = a_{1} \\frac{r^{n} - 1}{r - 1}$. For $a_{1} = 1$ and $r = 2$:\n\n$$S_{n} = 2^{n} - 1 > 50 \\implies 2^{n} > 51 \\implies n \\ge 6$$\n\nSo the smallest integer is $n = 6$.\n\n> **Watch out.** Move the $1$ to the other side with its sign changed: $2^{n} - 1 > 50$ gives $2^{n} > 51$, not $2^{n} > 49$.",
+        "等比数列前 $n$ 项和为 $S_{n} = a_{1} \\frac{r^{n} - 1}{r - 1}$。以 $a_{1} = 1$、$r = 2$ 为例：\n\n$$S_{n} = 2^{n} - 1 > 50 \\implies 2^{n} > 51 \\implies n \\ge 6$$\n\n所以最小的正整数是 $n = 6$。\n\n> **注意。** 把 $1$ 移到另一边时要变号：$2^{n} - 1 > 50$ 得 $2^{n} > 51$，而不是 $2^{n} > 49$。",
       ),
       generate(rng) {
         const nTarget = rng.int(6, 9);
         const sumVal = 2 ** nTarget - 1;
         const M = sumVal - rng.int(1, 2 ** (nTarget - 2));
+        const sums = Array.from({ length: nTarget }, (_, i) => 2 ** (i + 1) - 1);
         return numberProblem({
           prompt: t(
             `For the geometric sequence with $a_{1} = 1$ and common ratio $r = 2$, find the smallest positive integer $n$ such that the sum of the first $n$ terms $S_{n} > ${M}$.`,
@@ -2763,9 +3196,25 @@ export const solvingInequalitiesInvolvingGeometricSequences: TopicDef = {
           ),
           answer: nTarget,
           wrong: [nTarget - 1, nTarget + 1, nTarget + 2],
-          solution: t(
-            `The sum formula is $S_{n} = \\frac{1(2^{n} - 1)}{2 - 1} = 2^{n} - 1$. We need $2^{n} - 1 > ${M} \\implies 2^{n} > ${M + 1}$. Since $2^{${nTarget - 1}} = ${2 ** (nTarget - 1)} \\le ${M + 1}$ and $2^{${nTarget}} = ${2 ** nTarget} > ${M + 1}$, the smallest integer is $n = ${nTarget}$.`,
-            `前 $n$ 项和公式为 $S_{n} = \\frac{1(2^{n} - 1)}{2 - 1} = 2^{n} - 1$。需要 $2^{n} - 1 > ${M} \\implies 2^{n} > ${M + 1}$。由于 $2^{${nTarget - 1}} = ${2 ** (nTarget - 1)} \\le ${M + 1}$ 且 $2^{${nTarget}} = ${2 ** nTarget} > ${M + 1}$，因此最小正整数为 $n = ${nTarget}$。`,
+          solution: join(
+            label(1, "Write the sum", "写出和"),
+            t(
+              "The sum formula is $S_{n} = \\frac{1(2^{n} - 1)}{2 - 1} = 2^{n} - 1$, so we need",
+              "前 $n$ 项和公式为 $S_{n} = \\frac{1(2^{n} - 1)}{2 - 1} = 2^{n} - 1$，所以要求",
+            ),
+            t(disp(`2^{n} - 1 > ${M}`, `2^{n} > ${M + 1}`), disp(`2^{n} - 1 > ${M}`, `2^{n} > ${M + 1}`)),
+            para,
+            label(2, "Compare powers", "比较幂"),
+            t(
+              `Since $2^{${nTarget - 1}} = ${2 ** (nTarget - 1)}$ is not more than $${M + 1}$ but $2^{${nTarget}} = ${2 ** nTarget}$ is, the smallest integer is $n = ${nTarget}$.`,
+              `因为 $2^{${nTarget - 1}} = ${2 ** (nTarget - 1)}$ 不超过 $${M + 1}$，而 $2^{${nTarget}} = ${2 ** nTarget}$ 超过它，所以最小正整数为 $n = ${nTarget}$。`,
+            ),
+            checked(
+              t(
+                `Add the terms $1, 2, 4, \\ldots$ one at a time. The partial sums are $${sums.join(", ")}$, and the first one above $${M}$ is $S_{${nTarget}} = ${sumVal}$.`,
+                `逐项加上 $1, 2, 4, \\ldots$，部分和依次是 $${sums.join(", ")}$，第一个超过 $${M}$ 的是 $S_{${nTarget}} = ${sumVal}$。`,
+              ),
+            ),
           ),
         });
       },
@@ -2787,13 +3236,17 @@ export const solvingRationalInequalities: TopicDef = {
   encompasses: [{ topic: "solving-polynomial-inequalities-using-the-sign-table-method", weight: 0.4 }],
   xp: 16,
   standards: ["CCSS.HSA.REI.B.4"],
+  intro: t(
+    "You can solve a polynomial inequality with a sign table, and you know that a rational function is not defined where its denominator is zero. A quotient can change sign only where its numerator or its denominator is zero, so the same sign table works, with one difference: a zero of the denominator is never a solution. Rational inequalities answer questions such as when an average cost per item falls below a target.\n\nSolve $\\frac{x + 2}{x - 4} > 0$. The critical points are $x = -2$, where the numerator is zero, and $x = 4$, where the denominator is zero. Test one number on each interval:\n\n$$x = -3: \\frac{-1}{-7} > 0, \\quad x = 0: \\frac{2}{-4} < 0, \\quad x = 5: \\frac{7}{1} > 0$$\n\nSo the solution is $(-\\infty, -2) \\cup (4, \\infty)$. Neither critical point belongs to it: the quotient is $0$ at $-2$ and is not defined at $4$.",
+    "你会用符号表解多项式不等式，也知道有理函数在分母为零处没有定义。商只可能在分子或分母为零的地方变号，所以同样可以用符号表，只有一点不同：分母的零点绝不是解。分式不等式可以回答这样的问题：每件物品的平均成本什么时候低于目标。\n\n解 $\\frac{x + 2}{x - 4} > 0$。临界点是 $x = -2$（分子为零）和 $x = 4$（分母为零）。在每个区间上各试一个数：\n\n$$x = -3: \\frac{-1}{-7} > 0, \\quad x = 0: \\frac{2}{-4} < 0, \\quad x = 5: \\frac{7}{1} > 0$$\n\n所以解集是 $(-\\infty, -2) \\cup (4, \\infty)$。两个临界点都不在解集中：商在 $-2$ 处为 $0$，在 $4$ 处没有定义。",
+  ),
   knowledgePoints: [
     {
       id: "basic-rational-inequalities",
       title: t("Simple rational inequalities", "简单的分式不等式"),
       explanation: t(
-        "To solve $\\frac{x - 1}{x + 3} \\le 0$:\n\n1. **Critical values**: numerator is zero at $x = 1$; denominator is zero at $x = -3$.\n2. **Sign table**: the quotient has the same sign as $(x - 1)(x + 3)$ on each interval, being negative on $(-3, 1)$.\n3. **Endpoints**: $x = 1$ gives $0 \\le 0$ (included), but $x = -3$ makes the fraction invalid since division by zero is not defined (excluded!).\n\nThe solution is $(-3, 1]$.",
-        "求解 $\\frac{x - 1}{x + 3} \\le 0$ 的步骤：\n\n1. **关键值**：分子在 $x = 1$ 处为零；分母在 $x = -3$ 处为零。\n2. **符号表**：商在每个区间上的正负号与乘积 $(x - 1)(x + 3)$ 完全相同，在 $(-3, 1)$ 上为负。\n3. **端点**：$x = 1$ 使得 $0 \\le 0$（包含）；但 $x = -3$ 使得分母为零无意义（必须排除！）。\n\n解集是 $(-3, 1]$。",
+        "To solve $\\frac{x - 1}{x + 3} \\le 0$:\n\n1. **Critical values**: numerator is zero at $x = 1$; denominator is zero at $x = -3$.\n2. **Sign table**: the quotient has the same sign as $(x - 1)(x + 3)$ on each interval, being negative on $(-3, 1)$.\n3. **Endpoints**: $x = 1$ gives $0 \\le 0$ (included), but $x = -3$ makes the fraction invalid since division by zero is not defined (excluded!).\n\nThe solution is $(-3, 1]$.\n\n> **Watch out.** Do not multiply both sides by $x + 3$ to clear the fraction. Its sign depends on $x$, so the direction of the inequality would be right on one side of $-3$ and wrong on the other.",
+        "求解 $\\frac{x - 1}{x + 3} \\le 0$ 的步骤：\n\n1. **关键值**：分子在 $x = 1$ 处为零；分母在 $x = -3$ 处为零。\n2. **符号表**：商在每个区间上的正负号与乘积 $(x - 1)(x + 3)$ 完全相同，在 $(-3, 1)$ 上为负。\n3. **端点**：$x = 1$ 使得 $0 \\le 0$（包含）；但 $x = -3$ 使得分母为零无意义（必须排除！）。\n\n解集是 $(-3, 1]$。\n\n> **注意。** 不要两边同乘 $x + 3$ 来去分母。它的符号随 $x$ 而变，不等号的方向在 $-3$ 的一侧对，在另一侧就错了。",
       ),
       generate(rng) {
         const [u, v] = distinctPair(rng, -6, 6);
@@ -2802,13 +3255,21 @@ export const solvingRationalInequalities: TopicDef = {
         const fs = [top, bot];
         const op = rng.pick(ops);
         const set = chartSet(1, fs, op);
-        const expr = `\\frac{x ${tail(-u)}}{x ${tail(-v)}}`;
+        const expr = `\\frac{x${tail(-u)}}{x${tail(-v)}}`;
         return intervalProblem({
           prompt: solvePrompt(`${expr} ${opL[op]} 0`),
           set,
           form: "interval",
           wrong: [chartSet(1, [top, lin(1, -v)], op), chartSet(-1, fs, op), complement(set)],
-          solution: chartSolution(1, fs, expr, op, set),
+          solution: chartSolution(
+            1,
+            fs,
+            expr,
+            op,
+            set,
+            undefined,
+            quotientTests(set, [Q.of(v)], (x) => [x.sub(Q.of(u)).div(x.sub(Q.of(v))), Q.zero], op),
+          ),
         });
       },
     },
@@ -2816,8 +3277,8 @@ export const solvingRationalInequalities: TopicDef = {
       id: "rational-inequalities-with-multiple-factors",
       title: t("Rational inequalities with multiple factors", "含多个因式的分式不等式"),
       explanation: t(
-        "For $\\frac{(x - 2)(x + 4)}{x - 1} > 0$, the critical points are $-4, 1, 2$. The denominator root $1$ must be excluded under all circumstances. Checking signs on the intervals gives $(-4, 1) \\cup (2, \\infty)$.",
-        "对于 $\\frac{(x - 2)(x + 4)}{x - 1} > 0$，关键点为 $-4, 1, 2$。分母零点 $1$ 在任何情况下都必须排除。在各区间检验符号可得解集为 $(-4, 1) \\cup (2, \\infty)$。",
+        "For $\\frac{(x - 2)(x + 4)}{x - 1} > 0$, the critical points are $-4, 1, 2$. The denominator root $1$ must be excluded under all circumstances. Checking signs on the intervals gives $(-4, 1) \\cup (2, \\infty)$.\n\n> **Watch out.** With $\\le$ or $\\ge$, the zeros of the numerator are included, but a zero of the denominator never is. Write a round bracket there.",
+        "对于 $\\frac{(x - 2)(x + 4)}{x - 1} > 0$，关键点为 $-4, 1, 2$。分母零点 $1$ 在任何情况下都必须排除。在各区间检验符号可得解集为 $(-4, 1) \\cup (2, \\infty)$。\n\n> **注意。** 对 $\\le$ 或 $\\ge$，分子的零点包含在内，但分母的零点绝不包含。那里要用圆括号。",
       ),
       generate(rng) {
         const [r1, r2, r3] = distinctTriple(rng, -5, 5);
@@ -2832,7 +3293,26 @@ export const solvingRationalInequalities: TopicDef = {
           set,
           form: "interval",
           wrong: [chartSet(-1, fs, op), chartSet(1, fs, toggled[op]), complement(set)],
-          solution: chartSolution(1, fs, expr, op, set),
+          solution: chartSolution(
+            1,
+            fs,
+            expr,
+            op,
+            set,
+            undefined,
+            quotientTests(
+              set,
+              [Q.of(r2)],
+              (x) => [
+                x
+                  .sub(Q.of(r1))
+                  .mul(x.sub(Q.of(r3)))
+                  .div(x.sub(Q.of(r2))),
+                Q.zero,
+              ],
+              op,
+            ),
+          ),
         });
       },
     },
@@ -2853,13 +3333,17 @@ export const furtherSolvingOfRationalInequalities: TopicDef = {
   encompasses: [{ topic: "solving-rational-inequalities", weight: 0.5 }],
   xp: 16,
   standards: ["CCSS.HSA.REI.B.4"],
+  intro: t(
+    "You can solve a rational inequality with $0$ on one side by a sign table. When the other side is not $0$, first bring everything to one side and combine it into a single fraction; then the sign table applies as before. Multiplying both sides by the denominator does not work, because the denominator can be positive or negative.\n\nSolve $\\frac{3}{x - 1} < 1$. Subtract $1$ and combine:\n\n$$\\frac{3}{x - 1} - 1 < 0 \\implies \\frac{3 - (x - 1)}{x - 1} < 0 \\implies \\frac{4 - x}{x - 1} < 0$$\n\nThe critical points are $x = 4$ and $x = 1$. At $x = 0$ the fraction is $\\frac{4}{-1} < 0$, at $x = 2$ it is $\\frac{2}{1} > 0$, and at $x = 5$ it is $\\frac{-1}{4} < 0$. So the solution is $(-\\infty, 1) \\cup (4, \\infty)$. For instance, $x = 5$ gives $\\frac{3}{4} < 1$ in the original inequality.",
+    "你会用符号表解一边为 $0$ 的分式不等式。另一边不是 $0$ 时，先把所有项移到一边并通分成一个分式，然后照常用符号表。两边同乘分母是不行的，因为分母可正可负。\n\n解 $\\frac{3}{x - 1} < 1$。减去 $1$ 并通分：\n\n$$\\frac{3}{x - 1} - 1 < 0 \\implies \\frac{3 - (x - 1)}{x - 1} < 0 \\implies \\frac{4 - x}{x - 1} < 0$$\n\n临界点是 $x = 4$ 和 $x = 1$。$x = 0$ 时分式为 $\\frac{4}{-1} < 0$，$x = 2$ 时为 $\\frac{2}{1} > 0$，$x = 5$ 时为 $\\frac{-1}{4} < 0$。所以解集是 $(-\\infty, 1) \\cup (4, \\infty)$。例如 $x = 5$ 代入原不等式得 $\\frac{3}{4} < 1$。",
+  ),
   knowledgePoints: [
     {
       id: "rational-inequalities-with-a-non-zero-constant",
       title: t("Comparing a rational expression to a non-zero number", "分式与非零常数比较"),
       explanation: t(
-        "**Never** multiply both sides by the denominator, because its sign changes depending on $x$! Instead, subtract the constant and find a common denominator:\n\n$$\\frac{x + 1}{x - 2} \\ge 2 \\implies \\frac{x + 1}{x - 2} - 2 \\ge 0 \\implies \\frac{(x + 1) - 2(x - 2)}{x - 2} \\ge 0 \\implies \\frac{-x + 5}{x - 2} \\ge 0$$\n\nThe critical values are $x = 5$ (numerator zero) and $x = 2$ (pole). Testing intervals gives $(2, 5]$. Note that $2$ is open because it makes the denominator zero.",
-        "**切勿**直接在两边乘以分母，因为分母的正负号随 $x$ 而变！正确方法是移项后通分：\n\n$$\\frac{x + 1}{x - 2} \\ge 2 \\implies \\frac{x + 1}{x - 2} - 2 \\ge 0 \\implies \\frac{(x + 1) - 2(x - 2)}{x - 2} \\ge 0 \\implies \\frac{-x + 5}{x - 2} \\ge 0$$\n\n关键值是 $x = 5$（分子零点）与 $x = 2$（奇点）。检验各区间可得解集为 $(2, 5]$。注意 $2$ 处为开区间，因为它使分母为零。",
+        "**Never** multiply both sides by the denominator, because its sign changes depending on $x$! Instead, subtract the constant and find a common denominator:\n\n$$\\frac{x + 1}{x - 2} \\ge 2 \\implies \\frac{x + 1}{x - 2} - 2 \\ge 0 \\implies \\frac{(x + 1) - 2(x - 2)}{x - 2} \\ge 0 \\implies \\frac{-x + 5}{x - 2} \\ge 0$$\n\nThe critical values are $x = 5$ (numerator zero) and $x = 2$ (pole). Testing intervals gives $(2, 5]$. Note that $2$ is open because it makes the denominator zero.\n\n> **Watch out.** Subtract the constant times the whole denominator. In the example, $2(x - 2) = 2x - 4$, so the numerator is $(x + 1) - 2x + 4$; dropping the parentheses gives $x + 1 - 2x - 2$, which is wrong.",
+        "**切勿**直接在两边乘以分母，因为分母的正负号随 $x$ 而变！正确方法是移项后通分：\n\n$$\\frac{x + 1}{x - 2} \\ge 2 \\implies \\frac{x + 1}{x - 2} - 2 \\ge 0 \\implies \\frac{(x + 1) - 2(x - 2)}{x - 2} \\ge 0 \\implies \\frac{-x + 5}{x - 2} \\ge 0$$\n\n关键值是 $x = 5$（分子零点）与 $x = 2$（奇点）。检验各区间可得解集为 $(2, 5]$。注意 $2$ 处为开区间，因为它使分母为零。\n\n> **注意。** 要减去常数乘以整个分母。在例子中 $2(x - 2) = 2x - 4$，所以分子是 $(x + 1) - 2x + 4$；去掉括号写成 $x + 1 - 2x - 2$ 就错了。",
       ),
       generate(rng) {
         const c = rng.int(-4, 4);
@@ -2879,17 +3363,25 @@ export const furtherSolvingOfRationalInequalities: TopicDef = {
           set,
           form: "interval",
           wrong: [chartSet(-1, fs, op), chartSet(1, [lin(1, -numRoot), lin(1, -c)], op), complement(set)],
-          solution: t(
-            `Subtract $${k}$ and combine over a common denominator:${steps(
-              `\\frac{${topOrig}}{${botOrig}} - ${k} ${opL[op]} 0`,
-              `\\frac{(${topOrig}) - ${k}(${botOrig})}{${botOrig}} ${opL[op]} 0`,
-              `\\frac{${linear(1 - k, b + k * c)}}{${botOrig}} ${opL[op]} 0`,
-            )}The critical values are $${numRoot}$ (from the numerator) and $${c}$ (from the denominator). The denominator root is never included. The solution is $${setL(set)}$.`,
-            `移项减去 $${k}$ 并通分：${steps(
-              `\\frac{${topOrig}}{${botOrig}} - ${k} ${opL[op]} 0`,
-              `\\frac{(${topOrig}) - ${k}(${botOrig})}{${botOrig}} ${opL[op]} 0`,
-              `\\frac{${linear(1 - k, b + k * c)}}{${botOrig}} ${opL[op]} 0`,
-            )}关键值为 $${numRoot}$（分子零点）和 $${c}$（分母零点，不可取）。解集是 $${setL(set)}$。`,
+          solution: chartSolution(
+            1,
+            fs,
+            `\\frac{${linear(1 - k, b + k * c)}}{${botOrig}}`,
+            op,
+            set,
+            t(
+              `Subtract $${k}$ and combine over a common denominator:${disp(
+                `\\frac{${topOrig}}{${botOrig}} - ${k} ${opL[op]} 0`,
+                `\\frac{(${topOrig}) - ${k}(${botOrig})}{${botOrig}} ${opL[op]} 0`,
+                `\\frac{${linear(1 - k, b + k * c)}}{${botOrig}} ${opL[op]} 0`,
+              )}`,
+              `减去 $${k}$ 并通分：${disp(
+                `\\frac{${topOrig}}{${botOrig}} - ${k} ${opL[op]} 0`,
+                `\\frac{(${topOrig}) - ${k}(${botOrig})}{${botOrig}} ${opL[op]} 0`,
+                `\\frac{${linear(1 - k, b + k * c)}}{${botOrig}} ${opL[op]} 0`,
+              )}`,
+            ),
+            quotientTests(set, [Q.of(c)], (x) => [x.add(Q.of(b)).div(x.sub(Q.of(c))), Q.of(k)], op),
           ),
         });
       },
@@ -2898,13 +3390,13 @@ export const furtherSolvingOfRationalInequalities: TopicDef = {
       id: "sum-of-two-rational-expressions",
       title: t("Comparing two rational expressions", "比较两个分式"),
       explanation: t(
-        "To solve $\\frac{1}{x - 1} < \\frac{1}{x - 3}$, subtract the right-hand side to get zero on one side:\n\n$$\\frac{1}{x - 1} - \\frac{1}{x - 3} < 0 \\implies \\frac{(x - 3) - (x - 1)}{(x - 1)(x - 3)} < 0 \\implies \\frac{-2}{(x - 1)(x - 3)} < 0$$\n\nDividing by $-2$ reverses the inequality: $\\frac{1}{(x - 1)(x - 3)} > 0$, which yields $(-\\infty, 1) \\cup (3, \\infty)$.",
-        "求解 $\\frac{1}{x - 1} < \\frac{1}{x - 3}$ 时，先移项使右边为零：\n\n$$\\frac{1}{x - 1} - \\frac{1}{x - 3} < 0 \\implies \\frac{(x - 3) - (x - 1)}{(x - 1)(x - 3)} < 0 \\implies \\frac{-2}{(x - 1)(x - 3)} < 0$$\n\n除以 $-2$ 反转不等号：$\\frac{1}{(x - 1)(x - 3)} > 0$，可得解集为 $(-\\infty, 1) \\cup (3, \\infty)$。",
+        "To solve $\\frac{1}{x - 1} < \\frac{1}{x - 3}$, subtract the right-hand side to get zero on one side:\n\n$$\\frac{1}{x - 1} - \\frac{1}{x - 3} < 0 \\implies \\frac{(x - 3) - (x - 1)}{(x - 1)(x - 3)} < 0 \\implies \\frac{-2}{(x - 1)(x - 3)} < 0$$\n\nDividing by $-2$ reverses the inequality: $\\frac{1}{(x - 1)(x - 3)} > 0$, which yields $(-\\infty, 1) \\cup (3, \\infty)$.\n\n> **Watch out.** Do not cross-multiply. $\\frac{1}{x - 1} < \\frac{1}{x - 3}$ is not the same as $x - 3 < x - 1$, because the denominators can be negative.",
+        "求解 $\\frac{1}{x - 1} < \\frac{1}{x - 3}$ 时，先移项使右边为零：\n\n$$\\frac{1}{x - 1} - \\frac{1}{x - 3} < 0 \\implies \\frac{(x - 3) - (x - 1)}{(x - 1)(x - 3)} < 0 \\implies \\frac{-2}{(x - 1)(x - 3)} < 0$$\n\n除以 $-2$ 反转不等号：$\\frac{1}{(x - 1)(x - 3)} > 0$，可得解集为 $(-\\infty, 1) \\cup (3, \\infty)$。\n\n> **注意。** 不要交叉相乘。$\\frac{1}{x - 1} < \\frac{1}{x - 3}$ 与 $x - 3 < x - 1$ 并不等价，因为分母可能是负的。",
       ),
       generate(rng) {
         const [u, v] = distinctPair(rng, -5, 5).sort((p, q) => p - q);
         const op = rng.pick(ops);
-        const ineq = `\\frac{1}{x ${tail(-u)}} ${opL[op]} \\frac{1}{x ${tail(-v)}}`;
+        const ineq = `\\frac{1}{x${tail(-u)}} ${opL[op]} \\frac{1}{x${tail(-v)}}`;
         const diff = u - v;
         const fs = [lin(1, -u, 1, { pole: true }), lin(1, -v, 1, { pole: true })];
         const set = chartSet(diff, fs, op);
@@ -2913,17 +3405,25 @@ export const furtherSolvingOfRationalInequalities: TopicDef = {
           set,
           form: "interval",
           wrong: [chartSet(-diff, fs, op), chartSet(1, fs, toggled[op]), complement(set)],
-          solution: t(
-            `Subtract to get zero on the right side and find a common denominator:${steps(
-              `\\frac{1}{x ${tail(-u)}} - \\frac{1}{x ${tail(-v)}} ${opL[op]} 0`,
-              `\\frac{(x ${tail(-v)}) - (x ${tail(-u)})}{(x ${tail(-u)})(x ${tail(-v)})} ${opL[op]} 0`,
-              `\\frac{${diff}}{(x ${tail(-u)})(x ${tail(-v)})} ${opL[op]} 0`,
-            )}The poles are $x = ${u}$ and $x = ${v}$. Testing intervals gives the solution $${setL(set)}$.`,
-            `移项并通分：${steps(
-              `\\frac{1}{x ${tail(-u)}} - \\frac{1}{x ${tail(-v)}} ${opL[op]} 0`,
-              `\\frac{(x ${tail(-v)}) - (x ${tail(-u)})}{(x ${tail(-u)})(x ${tail(-v)})} ${opL[op]} 0`,
-              `\\frac{${diff}}{(x ${tail(-u)})(x ${tail(-v)})} ${opL[op]} 0`,
-            )}奇点为 $x = ${u}$ 和 $x = ${v}$。检验区间符号得解集为 $${setL(set)}$。`,
+          solution: chartSolution(
+            diff,
+            fs,
+            `\\frac{${diff}}{(x${tail(-u)})(x${tail(-v)})}`,
+            op,
+            set,
+            t(
+              `Subtract to get zero on the right side and combine over a common denominator:${disp(
+                `\\frac{1}{x${tail(-u)}} - \\frac{1}{x${tail(-v)}} ${opL[op]} 0`,
+                `\\frac{(x${tail(-v)}) - (x${tail(-u)})}{(x${tail(-u)})(x${tail(-v)})} ${opL[op]} 0`,
+                `\\frac{${diff}}{(x${tail(-u)})(x${tail(-v)})} ${opL[op]} 0`,
+              )}`,
+              `移项并通分，使右边为零：${disp(
+                `\\frac{1}{x${tail(-u)}} - \\frac{1}{x${tail(-v)}} ${opL[op]} 0`,
+                `\\frac{(x${tail(-v)}) - (x${tail(-u)})}{(x${tail(-u)})(x${tail(-v)})} ${opL[op]} 0`,
+                `\\frac{${diff}}{(x${tail(-u)})(x${tail(-v)})} ${opL[op]} 0`,
+              )}`,
+            ),
+            quotientTests(set, [Q.of(u), Q.of(v)], (x) => [Q.one.div(x.sub(Q.of(u))), Q.one.div(x.sub(Q.of(v)))], op),
           ),
         });
       },
@@ -2945,13 +3445,17 @@ export const solvingTwoVariableNonlinearInequalities: TopicDef = {
   encompasses: [{ topic: "graphing-non-strict-linear-inequalities", weight: 0.4 }],
   xp: 15,
   standards: ["CCSS.HSA.REI.D.12"],
+  intro: t(
+    "You can graph a linear inequality in two variables: draw the boundary line, solid or dashed, and shade the side whose points make the inequality true. The same method works when the boundary is a curve, such as the parabola from a quadratic function. Such regions describe, for example, the heights a thrown ball stays under.\n\nGraph $y \\le 4 - x^{2}$. The boundary $y = 4 - x^{2}$ is a parabola opening down, with vertex $(0, 4)$ and roots $\\pm 2$. It is solid, because $\\le$ includes it. Test the origin:\n\n$$0 \\le 4 - 0^{2} = 4$$\n\nThis is true, so the region is the side of the curve that holds the origin, the points on or below the parabola. A point above it, such as $(0, 5)$, gives $5 \\le 4$, which is false.",
+    "你会画二元一次不等式的图像：画出边界直线（实线或虚线），再给使不等式成立的那一侧涂上阴影。边界是曲线时（比如二次函数的抛物线），方法相同。这样的区域可以描述，例如抛出的球始终低于哪些高度。\n\n画出 $y \\le 4 - x^{2}$。边界 $y = 4 - x^{2}$ 是开口向下的抛物线，顶点为 $(0, 4)$，根为 $\\pm 2$。因为 $\\le$ 包含边界，所以画实线。检验原点：\n\n$$0 \\le 4 - 0^{2} = 4$$\n\n这成立，所以区域是曲线含原点的一侧，即抛物线上及其下方的点。抛物线上方的点，比如 $(0, 5)$，得 $5 \\le 4$，不成立。",
+  ),
   knowledgePoints: [
     {
       id: "testing-points-in-nonlinear-inequalities",
       title: t("Testing a point in a nonlinear inequality", "在非线性不等式中代入点检验"),
       explanation: t(
-        "To determine whether a point $(x_{0}, y_{0})$ satisfies an inequality such as $y > x^{2} - 3$, substitute its coordinates directly. For $(1, 2)$:\n\n$$2 > 1^{2} - 3 = -2 \\quad \\text{(true)}$$\n\nSo $(1, 2)$ lies in the solution region. For $(2, 1)$:\n\n$$1 > 2^{2} - 3 = 1 \\quad \\text{(false, since the inequality is strict)}$$\n\nSo $(2, 1)$ does not belong to the solution set.",
-        "要判断点 $(x_{0}, y_{0})$ 是否满足像 $y > x^{2} - 3$ 这样的不等式，直接代入坐标计算。对点 $(1, 2)$：\n\n$$2 > 1^{2} - 3 = -2 \\quad \\text{（成立）}$$\n\n因此 $(1, 2)$ 在解集区域内。对点 $(2, 1)$：\n\n$$1 > 2^{2} - 3 = 1 \\quad \\text{（不成立，因为是不等式严格为大于）}$$\n\n因此 $(2, 1)$ 不在解集内。",
+        "To determine whether a point $(x_{0}, y_{0})$ satisfies an inequality such as $y > x^{2} - 3$, substitute its coordinates directly. For $(1, 2)$:\n\n$$2 > 1^{2} - 3 = -2 \\quad \\text{(true)}$$\n\nSo $(1, 2)$ lies in the solution region. For $(2, 1)$:\n\n$$1 > 2^{2} - 3 = 1 \\quad \\text{(false, since the inequality is strict)}$$\n\nSo $(2, 1)$ does not belong to the solution set.\n\n> **Watch out.** A point on the boundary satisfies $\\ge$ or $\\le$ but not $>$ or $<$. Work out both sides exactly before deciding.",
+        "要判断点 $(x_{0}, y_{0})$ 是否满足像 $y > x^{2} - 3$ 这样的不等式，直接代入坐标计算。对点 $(1, 2)$：\n\n$$2 > 1^{2} - 3 = -2 \\quad \\text{（成立）}$$\n\n因此 $(1, 2)$ 在解集区域内。对点 $(2, 1)$：\n\n$$1 > 2^{2} - 3 = 1 \\quad \\text{（不成立，因为是不等式严格为大于）}$$\n\n因此 $(2, 1)$ 不在解集内。\n\n> **注意。** 边界上的点满足 $\\ge$ 或 $\\le$，但不满足 $>$ 或 $<$。要把两边都精确算出来再判断。",
       ),
       generate(rng) {
         const c = rng.int(-4, 2);
@@ -2960,7 +3464,7 @@ export const solvingTwoVariableNonlinearInequalities: TopicDef = {
         const offset = rng.pick([-2, -1, 0, 1, 2]);
         const y0 = yVal + offset;
         const op = rng.pick(ops);
-        const ineq = `y ${opL[op]} x^{2} ${tail(c)}`;
+        const ineq = `y ${opL[op]} x^{2}${tail(c)}`;
         let satisfies = false;
         if (op === "<") satisfies = y0 < yVal;
         else if (op === "<=") satisfies = y0 <= yVal;
@@ -2970,15 +3474,25 @@ export const solvingTwoVariableNonlinearInequalities: TopicDef = {
           prompt: t(`Does the point $(${x0}, ${y0})$ satisfy the inequality $${ineq}$?`, `点 $(${x0}, ${y0})$ 是否满足不等式 $${ineq}$？`),
           options: yesNo,
           correct: satisfies ? 0 : 1,
-          solution: t(
-            `Substitute $x = ${x0}$ and $y = ${y0}$ into the inequality:${steps(
-              `${y0} ${opL[op]} (${x0})^{2} ${tail(c)}`,
-              `${y0} ${opL[op]} ${yVal}`,
-            )}This statement is ${satisfies ? "true" : "false"}. Therefore, the point $(${x0}, ${y0})$ ${satisfies ? "satisfies" : "does not satisfy"} the inequality.`,
-            `将 $x = ${x0}$ 和 $y = ${y0}$ 代入不等式：${steps(
-              `${y0} ${opL[op]} (${x0})^{2} ${tail(c)}`,
-              `${y0} ${opL[op]} ${yVal}`,
-            )}该不等式${satisfies ? "成立" : "不成立"}。因此点 $(${x0}, ${y0})$ ${satisfies ? "满足" : "不满足"}该不等式。`,
+          solution: join(
+            label(1, "Substitute the point", "代入点"),
+            t(`Put $x = ${x0}$ and $y = ${y0}$ into the inequality:`, `把 $x = ${x0}$ 和 $y = ${y0}$ 代入不等式：`),
+            t(
+              disp(`${y0} ${opL[op]} (${x0})^{2}${tail(c)}`, `${y0} ${opL[op]} ${yVal}`),
+              disp(`${y0} ${opL[op]} (${x0})^{2}${tail(c)}`, `${y0} ${opL[op]} ${yVal}`),
+            ),
+            para,
+            label(2, "Decide", "作出判断"),
+            t(
+              `This statement is ${satisfies ? "true" : "false"}. Therefore, the point $(${x0}, ${y0})$ ${satisfies ? "satisfies" : "does not satisfy"} the inequality.`,
+              `该不等式${satisfies ? "成立" : "不成立"}。因此点 $(${x0}, ${y0})$ ${satisfies ? "满足" : "不满足"}该不等式。`,
+            ),
+            checked(
+              t(
+                `On the boundary, $x = ${x0}$ gives $y = ${yVal}$. The point has $y = ${y0}$, so it lies ${offset === 0 ? "on the curve" : `${Math.abs(offset)} ${offset > 0 ? "above" : "below"} the curve`}. The inequality asks for the points ${above(op) ? "above" : "below"} the curve${strict(op) ? ", not on it" : " or on it"}, so the point ${satisfies ? "is" : "is not"} a solution.`,
+                `在边界上，$x = ${x0}$ 时 $y = ${yVal}$。这个点的 $y = ${y0}$，所以它${offset === 0 ? "在曲线上" : `在曲线${offset > 0 ? "上方" : "下方"} $${Math.abs(offset)}$ 个单位处`}。不等式要求点在曲线${above(op) ? "上方" : "下方"}${strict(op) ? "，不含曲线本身" : "或曲线上"}，所以这个点${satisfies ? "是" : "不是"}解。`,
+              ),
+            ),
           ),
         });
       },
@@ -2988,28 +3502,67 @@ export const solvingTwoVariableNonlinearInequalities: TopicDef = {
       figure: precalculusDrawings["solving-two-variable-nonlinear-inequalities#identifying-nonlinear-inequality-regions"],
       title: t("Regions bounded by parabolas", "抛物线围成的区域"),
       explanation: t(
-        "For $y \\ge ax^{2} + c$ with $a > 0$, the boundary is the solid curve $y = ax^{2} + c$, and the region contains all points **above** or on the curve. For $y < ax^{2} + c$, the boundary is dashed, and the region is **below** the curve.",
-        "对于 $a > 0$ 的 $y \\ge ax^{2} + c$，边界是实线曲线 $y = ax^{2} + c$，区域包含曲线**上方**及曲线上的所有点。对 $y < ax^{2} + c$，边界为虚线，区域位于曲线**下方**。",
+        "For $y \\ge ax^{2} + c$ with $a > 0$, the boundary is the solid curve $y = ax^{2} + c$, and the region contains all points **above** or on the curve. For $y < ax^{2} + c$, the boundary is dashed, and the region is **below** the curve.\n\n> **Watch out.** $>$ means above only when $y$ stands alone on the left. The inequality $x^{2} + c < y$ also describes the region above the curve.",
+        "对于 $a > 0$ 的 $y \\ge ax^{2} + c$，边界是实线曲线 $y = ax^{2} + c$，区域包含曲线**上方**及曲线上的所有点。对 $y < ax^{2} + c$，边界为虚线，区域位于曲线**下方**。\n\n> **注意。** 只有 $y$ 单独在左边时，$>$ 才表示上方。不等式 $x^{2} + c < y$ 表示的也是曲线上方的区域。",
       ),
       generate(rng) {
         const c = rng.int(-5, 4);
         const aboveCurve = rng.bool();
         const solid = rng.bool();
         const op: Op = aboveCurve ? (solid ? ">=" : ">") : solid ? "<=" : "<";
-        const correctIneq = `y ${opL[op]} x^{2} ${tail(c)}`;
-        const options = ops.map((o) => t(`$y ${opL[o]} x^{2} ${tail(c)}$`, `$y ${opL[o]} x^{2} ${tail(c)}$`));
-        return choiceProblem({
-          prompt: t(
-            `Which inequality describes the region ${aboveCurve ? "above" : "below"} the parabola $y = x^{2} ${tail(c)}$, with a ${solid ? "solid" : "dashed"} boundary curve?`,
-            `哪个不等式表示抛物线 $y = x^{2} ${tail(c)}$ ${aboveCurve ? "上方" : "下方"}的区域，且边界为${solid ? "实线" : "虚线"}？`,
-          ),
-          options,
-          correct: ops.indexOf(op),
-          solution: t(
-            `The region is ${aboveCurve ? "above" : "below"} the parabola, which corresponds to $y ${aboveCurve ? ">" : "<"}$. The boundary curve is ${solid ? "solid" : "dashed"}, which means points on the curve are ${solid ? "included ($\\ge$ or $\\le$)" : "excluded ($>$ or $<$)"}. Thus, the inequality is $${correctIneq}$.`,
-            `区域位于抛物线${aboveCurve ? "上方" : "下方"}，对应于 $y ${aboveCurve ? ">" : "<"}$。边界为${solid ? "实线" : "虚线"}，意味着边界上的点${solid ? "包含在内（$\\ge$ 或 $\\le$）" : "不包含（$>$ 或 $<$）"}。因此不等式为 $${correctIneq}$。`,
-          ),
-        });
+        const correctIneq = `y ${opL[op]} x^{2}${tail(c)}`;
+        const options = ops.map((o) => t(`$y ${opL[o]} x^{2}${tail(c)}$`, `$y ${opL[o]} x^{2}${tail(c)}$`));
+        const mark = aboveCurve ? 1 : -1;
+        const reasons = ops
+          .filter((o) => o !== op)
+          .map((o): Reason => {
+            const side = above(o) !== aboveCurve;
+            const line = strict(o) === solid;
+            const sideEn = `it shades ${above(o) ? "above" : "below"} the curve, not ${aboveCurve ? "above" : "below"}`;
+            const sideZh = `它的阴影在曲线${above(o) ? "上方" : "下方"}，而不是${aboveCurve ? "上方" : "下方"}`;
+            const lineEn = strict(o)
+              ? "it leaves the curve out, but the boundary is solid"
+              : "it includes the curve, but the boundary is dashed";
+            const lineZh = strict(o) ? "它不含曲线本身，但边界是实线" : "它包含曲线本身，但边界是虚线";
+            const en =
+              side && line
+                ? `Both are wrong: ${sideEn}, and ${lineEn}.`
+                : side
+                  ? `The side is wrong: ${sideEn}.`
+                  : `The boundary is wrong: ${lineEn}.`;
+            const zh = side && line ? `两处都错：${sideZh}，而且${lineZh}。` : side ? `方向错了：${sideZh}。` : `边界错了：${lineZh}。`;
+            return [options[ops.indexOf(o)]!.en, en, zh];
+          });
+        return reasoned(
+          choiceProblem({
+            prompt: t(
+              `Which inequality describes the region ${aboveCurve ? "above" : "below"} the parabola $y = x^{2}${tail(c)}$, with a ${solid ? "solid" : "dashed"} boundary curve?`,
+              `哪个不等式表示抛物线 $y = x^{2}${tail(c)}$ ${aboveCurve ? "上方" : "下方"}的区域，且边界为${solid ? "实线" : "虚线"}？`,
+            ),
+            options,
+            correct: ops.indexOf(op),
+            solution: join(
+              label(1, "Choose the side", "确定方向"),
+              t(
+                `The region is ${aboveCurve ? "above" : "below"} the parabola, so there $y$ is ${aboveCurve ? "greater" : "less"} than $x^{2}${tail(c)}$.`,
+                `区域位于抛物线${aboveCurve ? "上方" : "下方"}，所以那里的 $y$ ${aboveCurve ? "大于" : "小于"} $x^{2}${tail(c)}$。`,
+              ),
+              para,
+              label(2, "Choose the symbol", "确定符号"),
+              t(
+                `The boundary curve is ${solid ? "solid" : "dashed"}, which means points on the curve are ${solid ? "included ($\\ge$ or $\\le$)" : "excluded ($>$ or $<$)"}. Thus, the inequality is $${correctIneq}$.`,
+                `边界为${solid ? "实线" : "虚线"}，意味着边界上的点${solid ? "包含在内（$\\ge$ 或 $\\le$）" : "不包含（$>$ 或 $<$）"}。因此不等式为 $${correctIneq}$。`,
+              ),
+              checked(
+                t(
+                  `The point $(0, ${c + mark})$ lies ${aboveCurve ? "above" : "below"} the vertex $(0, ${c})$, and it gives $${c + mark} ${opL[op]} ${c}$, which is true. The vertex itself gives $${c} ${opL[op]} ${c}$, which is ${solid ? "true, so the curve is included" : "false, so the curve is left out"}.`,
+                  `点 $(0, ${c + mark})$ 在顶点 $(0, ${c})$ 的${aboveCurve ? "上方" : "下方"}，代入得 $${c + mark} ${opL[op]} ${c}$，成立。顶点本身代入得 $${c} ${opL[op]} ${c}$，${solid ? "成立，所以曲线包含在内" : "不成立，所以曲线不包含在内"}。`,
+                ),
+              ),
+            ),
+          }),
+          reasons,
+        );
       },
     },
   ],
@@ -3029,13 +3582,17 @@ export const furtherSolvingOfTwoVariableNonlinearInequalities: TopicDef = {
   encompasses: [{ topic: "solving-two-variable-nonlinear-inequalities", weight: 0.5 }],
   xp: 16,
   standards: ["CCSS.HSA.REI.D.12"],
+  intro: t(
+    "You can graph one nonlinear inequality in two variables, and you can solve a system of linear inequalities by taking the points that satisfy all of them. Putting the two together, a system with curved boundaries has as its solution the overlap of the regions, often bounded by the points where the boundaries meet. Such systems describe, for example, the area between a cable and a road.\n\nSolve the system $y \\ge x^{2} - 1$ and $y \\le 3$. The first region is on or above the parabola, the second on or below the horizontal line. They meet where $x^{2} - 1 = 3$, that is at $x = \\pm 2$, so the overlap is the region between the curves from $(-2, 3)$ to $(2, 3)$. The origin is in it:\n\n$$0 \\ge 0^{2} - 1 = -1, \\quad 0 \\le 3$$\n\nThe point $(3, 2)$ is not, since $2 \\ge 3^{2} - 1 = 8$ is false.",
+    "你会画一个二元非线性不等式的图像，也会把同时满足所有不等式的点作为二元一次不等式组的解。把两者结合起来，边界是曲线的不等式组，其解就是各区域的重叠部分，常常以边界的交点为界。这样的不等式组可以描述，例如电缆与路面之间的区域。\n\n解不等式组 $y \\ge x^{2} - 1$ 和 $y \\le 3$。第一个区域是抛物线上及其上方，第二个是水平线上及其下方。它们在 $x^{2} - 1 = 3$ 处相交，即 $x = \\pm 2$，所以重叠部分是从 $(-2, 3)$ 到 $(2, 3)$ 之间两条边界围成的区域。原点在其中：\n\n$$0 \\ge 0^{2} - 1 = -1, \\quad 0 \\le 3$$\n\n点 $(3, 2)$ 不在其中，因为 $2 \\ge 3^{2} - 1 = 8$ 不成立。",
+  ),
   knowledgePoints: [
     {
       id: "testing-points-in-systems-of-nonlinear-inequalities",
       title: t("Testing points in a nonlinear system", "在非线性不等式组中代入点检验"),
       explanation: t(
-        "A point $(x_{0}, y_{0})$ satisfies a system of inequalities if and only if it satisfies **every** inequality in the system. For:\n\n$$\\begin{cases} y \\ge x^{2} - 4 \\\\ y \\le 2x + 1 \\end{cases}$$\n\nFor $(0, 0)$:\n\n- $0 \\ge 0^{2} - 4 = -4$ (true)\n- $0 \\le 2(0) + 1 = 1$ (true)\n\nBoth are satisfied, so $(0, 0)$ lies in the solution set.",
-        "点 $(x_{0}, y_{0})$ 满足不等式组当且仅当它满足组中的**每一个**不等式。例如：\n\n$$\\begin{cases} y \\ge x^{2} - 4 \\\\ y \\le 2x + 1 \\end{cases}$$\n\n对点 $(0, 0)$：\n\n- $0 \\ge 0^{2} - 4 = -4$（成立）\n- $0 \\le 2(0) + 1 = 1$（成立）\n\n两个条件均满足，因此 $(0, 0)$ 在解集中。",
+        "A point $(x_{0}, y_{0})$ satisfies a system of inequalities if and only if it satisfies **every** inequality in the system. For:\n\n$$\\begin{cases} y \\ge x^{2} - 4 \\\\ y \\le 2x + 1 \\end{cases}$$\n\nFor $(0, 0)$:\n\n- $0 \\ge 0^{2} - 4 = -4$ (true)\n- $0 \\le 2(0) + 1 = 1$ (true)\n\nBoth are satisfied, so $(0, 0)$ lies in the solution set.\n\n> **Watch out.** Passing the first inequality is not enough. A point is a solution only if it passes every inequality, so test them all.",
+        "点 $(x_{0}, y_{0})$ 满足不等式组当且仅当它满足组中的**每一个**不等式。例如：\n\n$$\\begin{cases} y \\ge x^{2} - 4 \\\\ y \\le 2x + 1 \\end{cases}$$\n\n对点 $(0, 0)$：\n\n- $0 \\ge 0^{2} - 4 = -4$（成立）\n- $0 \\le 2(0) + 1 = 1$（成立）\n\n两个条件均满足，因此 $(0, 0)$ 在解集中。\n\n> **注意。** 满足第一个不等式还不够。只有满足每一个不等式的点才是解，所以要逐个检验。",
       ),
       generate(rng) {
         const c = rng.int(1, 4);
@@ -3048,6 +3605,8 @@ export const furtherSolvingOfTwoVariableNonlinearInequalities: TopicDef = {
         const sat1 = y0 >= x0 * x0 - c;
         const sat2 = y0 <= m * x0 + d;
         const satisfies = sat1 && sat2;
+        const lowY = x0 * x0 - c;
+        const highY = m * x0 + d;
         return choiceProblem({
           prompt: t(
             `Does the point $(${x0}, ${y0})$ satisfy the system $\\begin{cases} ${ineq1} \\\\ ${ineq2} \\end{cases}$?`,
@@ -3055,15 +3614,30 @@ export const furtherSolvingOfTwoVariableNonlinearInequalities: TopicDef = {
           ),
           options: yesNo,
           correct: satisfies ? 0 : 1,
-          solution: t(
-            `Test the point $(${x0}, ${y0})$ in both inequalities:${steps(
-              `${y0} \\ge (${x0})^{2} - ${c} = ${x0 * x0 - c} \\quad \\text{(${sat1 ? "true" : "false"})}`,
-              `${y0} \\le ${m}(${x0}) + ${d} = ${m * x0 + d} \\quad \\text{(${sat2 ? "true" : "false"})}`,
-            )}Since ${satisfies ? "both inequalities are" : "not all inequalities are"} satisfied, the point ${satisfies ? "satisfies" : "does not satisfy"} the system.`,
-            `在两个不等式中分别检验点 $(${x0}, ${y0})$：${steps(
-              `${y0} \\ge (${x0})^{2} - ${c} = ${x0 * x0 - c} \\quad \\text{（${sat1 ? "成立" : "不成立"}）}`,
-              `${y0} \\le ${m}(${x0}) + ${d} = ${m * x0 + d} \\quad \\text{（${sat2 ? "成立" : "不成立"}）}`,
-            )}因为两个不等式${satisfies ? "均成立" : "未能全部成立"}，所以该点${satisfies ? "满足" : "不满足"}该不等式组。`,
+          solution: join(
+            label(1, "Test the first inequality", "检验第一个不等式"),
+            t(
+              disp(`${y0} \\ge (${x0})^{2} - ${c} = ${x0 * x0 - c} \\quad \\text{(${sat1 ? "true" : "false"})}`),
+              disp(`${y0} \\ge (${x0})^{2} - ${c} = ${x0 * x0 - c} \\quad \\text{（${sat1 ? "成立" : "不成立"}）}`),
+            ),
+            para,
+            label(2, "Test the second inequality", "检验第二个不等式"),
+            t(
+              disp(`${y0} \\le ${m}(${x0}) + ${d} = ${m * x0 + d} \\quad \\text{(${sat2 ? "true" : "false"})}`),
+              disp(`${y0} \\le ${m}(${x0}) + ${d} = ${m * x0 + d} \\quad \\text{（${sat2 ? "成立" : "不成立"}）}`),
+            ),
+            para,
+            label(3, "Decide", "作出判断"),
+            t(
+              `Since ${satisfies ? "both inequalities are" : "not all inequalities are"} satisfied, the point ${satisfies ? "satisfies" : "does not satisfy"} the system.`,
+              `因为两个不等式${satisfies ? "均成立" : "未能全部成立"}，所以该点${satisfies ? "满足" : "不满足"}该不等式组。`,
+            ),
+            checked(
+              t(
+                `At $x = ${x0}$ the parabola is at $y = ${lowY}$ and the line at $y = ${highY}$, and the system asks for $y$ from $${lowY}$ up to $${highY}$. ${lowY > highY ? `Since $${lowY} > ${highY}$, no point with $x = ${x0}$ satisfies both, so $(${x0}, ${y0})$ is not a solution.` : `The value $y = ${y0}$ is ${satisfies ? "" : "not "}in this range, so $(${x0}, ${y0})$ is ${satisfies ? "" : "not "}a solution.`}`,
+                `在 $x = ${x0}$ 处，抛物线在 $y = ${lowY}$，直线在 $y = ${highY}$，不等式组要求 $y$ 从 $${lowY}$ 到 $${highY}$。${lowY > highY ? `因为 $${lowY} > ${highY}$，$x = ${x0}$ 处没有点同时满足两个不等式，所以 $(${x0}, ${y0})$ 不是解。` : `$y = ${y0}$ ${satisfies ? "在" : "不在"}这个范围内，所以 $(${x0}, ${y0})$ ${satisfies ? "是" : "不是"}解。`}`,
+              ),
+            ),
           ),
         });
       },
@@ -3072,8 +3646,8 @@ export const furtherSolvingOfTwoVariableNonlinearInequalities: TopicDef = {
       id: "intersection-points-of-nonlinear-boundaries",
       title: t("Vertices of the solution region", "解集区域的交点顶点"),
       explanation: t(
-        "To find where the boundary curves $y = x^{2} - 2$ and $y = x + 4$ meet, set them equal:\n\n$$x^{2} - 2 = x + 4 \\implies x^{2} - x - 6 = 0 \\implies (x - 3)(x + 2) = 0$$\n\nSubstituting $x = 3$ gives $y = 7$, and $x = -2$ gives $y = 2$. The intersection points are $(-2, 2)$ and $(3, 7)$.",
-        "要找出边界曲线 $y = x^{2} - 2$ 与 $y = x + 4$ 的交点，联立方程：\n\n$$x^{2} - 2 = x + 4 \\implies x^{2} - x - 6 = 0 \\implies (x - 3)(x + 2) = 0$$\n\n代入 $x = 3$ 得 $y = 7$；代入 $x = -2$ 得 $y = 2$。交点坐标为 $(-2, 2)$ 与 $(3, 7)$。",
+        "To find where the boundary curves $y = x^{2} - 2$ and $y = x + 4$ meet, set them equal:\n\n$$x^{2} - 2 = x + 4 \\implies x^{2} - x - 6 = 0 \\implies (x - 3)(x + 2) = 0$$\n\nSubstituting $x = 3$ gives $y = 7$, and $x = -2$ gives $y = 2$. The intersection points are $(-2, 2)$ and $(3, 7)$.\n\n> **Watch out.** Find each $y$ from one of the original equations, not from the factored one. $(x - 3)(x + 2)$ is $0$ at both points, but $0$ is not their $y$-coordinate.",
+        "要找出边界曲线 $y = x^{2} - 2$ 与 $y = x + 4$ 的交点，联立方程：\n\n$$x^{2} - 2 = x + 4 \\implies x^{2} - x - 6 = 0 \\implies (x - 3)(x + 2) = 0$$\n\n代入 $x = 3$ 得 $y = 7$；代入 $x = -2$ 得 $y = 2$。交点坐标为 $(-2, 2)$ 与 $(3, 7)$。\n\n> **注意。** 每个 $y$ 要由原来的某个方程求出，而不是由分解后的方程。$(x - 3)(x + 2)$ 在两个点处都是 $0$，但 $0$ 不是它们的纵坐标。",
       ),
       generate(rng) {
         const [u, v] = distinctPair(rng, -3, 3).sort((p, q) => p - q);
@@ -3088,31 +3662,68 @@ export const furtherSolvingOfTwoVariableNonlinearInequalities: TopicDef = {
         const options = [
           t(correctText, correctTextZh),
           t(`$(${u}, ${u * u + c})$ and $(${v}, ${v * v + c})$`, `$(${u}, ${u * u + c})$ 和 $(${v}, ${v * v + c})$`),
-          t(`$(${-u}, ${u * u - c})$ and $(${-v}, ${v * v - c})$`, `$(${-u}, ${u * u - c})$ 和 $(${-v}, ${v * v - c})$`),
+          u === -v
+            ? t(`$(${u}, ${u * u})$ and $(${v}, ${v * v})$`, `$(${u}, ${u * u})$ 和 $(${v}, ${v * v})$`)
+            : t(`$(${-u}, ${u * u - c})$ and $(${-v}, ${v * v - c})$`, `$(${-u}, ${u * u - c})$ 和 $(${-v}, ${v * v - c})$`),
           t(`$(${u + 1}, ${u * u})$ and $(${v - 1}, ${v * v})$`, `$(${u + 1}, ${u * u})$ 和 $(${v - 1}, ${v * v})$`),
         ];
         const order = rng.shuffle([0, 1, 2, 3]);
         const fx = (r: number) => (r === 0 ? "x" : `(${linear(1, -r)})`);
-        return choiceProblem({
-          prompt: t(
-            `Find the intersection points of the boundary curves $y = x^{2} - ${c}$ and $y = ${linear(m, d)}$.`,
-            `求边界曲线 $y = x^{2} - ${c}$ 与 $y = ${linear(m, d)}$ 的交点坐标。`,
-          ),
-          options: order.map((k) => options[k]!),
-          correct: order.indexOf(0),
-          solution: t(
-            `Set the two equations equal to solve for $x$:${steps(
-              `x^{2} - ${c} = ${linear(m, d)}`,
-              `${poly([1, "x^{2}"], [-m, "x"], [-p, ""])} = 0`,
-              `${fx(u)}${fx(v)} = 0`,
-            )}The solutions are $x = ${u}$ and $x = ${v}$. Substituting back gives the points $${p1}$ and $${p2}$.`,
-            `联立方程求 $x$：${steps(
-              `x^{2} - ${c} = ${linear(m, d)}`,
-              `${poly([1, "x^{2}"], [-m, "x"], [-p, ""])} = 0`,
-              `${fx(u)}${fx(v)} = 0`,
-            )}解得 $x = ${u}$ 和 $x = ${v}$。代回求 $y$ 得交点坐标为 $${p1}$ 和 $${p2}$。`,
-          ),
-        });
+        const reasons: Reason[] = [
+          [
+            options[1]!.en,
+            `These use $+${c}$ for $y$. Substituting into $y = x^{2} - ${c}$ gives $${u * u - c}$ and $${v * v - c}$.`,
+            `这里 $y$ 用了 $+${c}$。代入 $y = x^{2} - ${c}$ 得 $${u * u - c}$ 和 $${v * v - c}$。`,
+          ],
+          u === -v
+            ? [options[2]!.en, `These leave out the $-${c}$ when finding $y$.`, `求 $y$ 时漏掉了 $-${c}$。`]
+            : [
+                options[2]!.en,
+                `These take the roots with the wrong sign: $${fx(u)}${fx(v)} = 0$ gives $x = ${u}$ and $x = ${v}$.`,
+                `根的符号弄反了：$${fx(u)}${fx(v)} = 0$ 得 $x = ${u}$ 和 $x = ${v}$。`,
+              ],
+          [
+            options[3]!.en,
+            `These shift the $x$-values by $1$; the factored equation gives $x = ${u}$ and $x = ${v}$ exactly.`,
+            `横坐标偏移了 $1$；分解后的方程恰好给出 $x = ${u}$ 和 $x = ${v}$。`,
+          ],
+        ];
+        return reasoned(
+          choiceProblem({
+            prompt: t(
+              `Find the intersection points of the boundary curves $y = x^{2} - ${c}$ and $y = ${linear(m, d)}$.`,
+              `求边界曲线 $y = x^{2} - ${c}$ 与 $y = ${linear(m, d)}$ 的交点坐标。`,
+            ),
+            options: order.map((k) => options[k]!),
+            correct: order.indexOf(0),
+            solution: join(
+              label(1, "Set the curves equal", "联立方程"),
+              t("At a meeting point both equations give the same $y$:", "在交点处两个方程给出相同的 $y$："),
+              t(
+                disp(`x^{2} - ${c} = ${linear(m, d)}`, `${poly([1, "x^{2}"], [-m, "x"], [-p, ""])} = 0`),
+                disp(`x^{2} - ${c} = ${linear(m, d)}`, `${poly([1, "x^{2}"], [-m, "x"], [-p, ""])} = 0`),
+              ),
+              para,
+              label(2, "Factor", "因式分解"),
+              t(`Factor the quadratic:${disp(`${fx(u)}${fx(v)} = 0`)}`, `把二次式分解：${disp(`${fx(u)}${fx(v)} = 0`)}`),
+              para,
+              t(`The solutions are $x = ${u}$ and $x = ${v}$.`, `解得 $x = ${u}$ 和 $x = ${v}$。`),
+              para,
+              label(3, "Find the y-values", "求纵坐标"),
+              t(
+                `Substituting into $y = x^{2} - ${c}$ gives the points $${p1}$ and $${p2}$.`,
+                `代入 $y = x^{2} - ${c}$ 得交点坐标为 $${p1}$ 和 $${p2}$。`,
+              ),
+              checked(
+                t(
+                  `Both points lie on the line too: $y = ${linear(m, d)}$ gives $y = ${m * u + d}$ at $x = ${u}$ and $y = ${m * v + d}$ at $x = ${v}$.`,
+                  `两个点也都在直线上：$y = ${linear(m, d)}$ 在 $x = ${u}$ 处得 $y = ${m * u + d}$，在 $x = ${v}$ 处得 $y = ${m * v + d}$。`,
+                ),
+              ),
+            ),
+          }),
+          reasons,
+        );
       },
     },
   ],

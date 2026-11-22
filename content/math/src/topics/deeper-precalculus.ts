@@ -11,6 +11,9 @@ import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
 import { numberProblem } from "../problems.ts";
 import { stepLabel } from "../solution-kit.ts";
 
+/** range lists the integers from lo up to, but not including, hi. */
+const range = (lo: number, hi: number) => Array.from({ length: Math.max(0, hi - lo) }, (_, i) => lo + i);
+
 /** frac writes a rational number. */
 const frac = (n: number, d = 1) => Q.of(n, d).toLatex();
 /** nonzero picks a nonzero integer from -r to r. */
@@ -122,8 +125,8 @@ const integersInFourFactors: KnowledgePointDef = {
   id: "counting-the-integers-in-a-four-factor-sign-table",
   title: t("Counting the integers in a four-factor sign table", "数出四因式符号表中的整数解"),
   explanation: t(
-    "With an even number of factors, the product is positive far to the right and far to the left, so a strict inequality below zero has a solution set made of bounded intervals, and only finitely many integers lie in it. To count them, build the sign table, keep the intervals with the right sign, and remember that a strict inequality leaves out every endpoint. Each interval then contributes the integers strictly between its two ends.",
-    "因式个数为偶数时，乘积在最右边和最左边都是正的，所以严格小于零的不等式的解集由有界区间组成，其中只有有限个整数。要数出它们，先列符号表，保留符号正确的区间，并记住严格不等式不含任何端点。于是每个区间贡献严格位于两端之间的整数。",
+    "With an even number of factors, the product is positive far to the right and far to the left, so a strict inequality below zero has a solution set made of bounded intervals, and only finitely many integers lie in it. To count them, build the sign table, keep the intervals with the right sign, and remember that a strict inequality leaves out every endpoint. Each interval then contributes the integers strictly between its two ends.\n\n> **Watch out.** An open interval $(a, b)$ of integers holds $b - a - 1$ integers, not $b - a$: both ends are left out.",
+    "因式个数为偶数时，乘积在最右边和最左边都是正的，所以严格小于零的不等式的解集由有界区间组成，其中只有有限个整数。要数出它们，先列符号表，保留符号正确的区间，并记住严格不等式不含任何端点。于是每个区间贡献严格位于两端之间的整数。\n\n> **注意。** 整数端点的开区间 $(a, b)$ 含 $b - a - 1$ 个整数，而不是 $b - a$ 个：两个端点都不算。",
   ),
   generate(rng) {
     const a = rng.int(-9, -2);
@@ -137,8 +140,8 @@ const integersInFourFactors: KnowledgePointDef = {
       form: "integer",
       wrong: [answer + 4, answer + 2, g2 - 1, d - a - 1, answer + 1],
       solution: t(
-        `The product is positive to the right of $${d}$, and its sign changes at each zero. So it is negative on $(${c}, ${d})$ and on $(${a}, ${b})$. The endpoints are excluded, so the intervals hold $${g3 - 1}$ and $${g1 - 1}$ integers, which is $${answer}$ in all.`,
-        `乘积在 $${d}$ 的右边为正，每经过一个零点就变号。所以它在 $(${c}, ${d})$ 和 $(${a}, ${b})$ 上为负。端点不包括在内，两个区间分别含 $${g3 - 1}$ 个和 $${g1 - 1}$ 个整数，共 $${answer}$ 个。`,
+        `${stepLabel(1, "Find where the product is negative", "找出乘积为负的区间").en} The product is positive to the right of $${d}$, and its sign changes at each zero. So it is negative on $(${c}, ${d})$ and on $(${a}, ${b})$, and positive on $(${b}, ${c})$.\n\n${stepLabel(2, "Count the integers", "数整数").en} The endpoints are excluded, so the intervals hold $${d} - ${inParens(c)} - 1 = ${g3 - 1}$ and $${b} - ${inParens(a)} - 1 = ${g1 - 1}$ integers, which is $${answer}$ in all.\n\n**Check.** List them: $${range(a + 1, b).join(", ")}$ and $${range(c + 1, d).join(", ")}$. That makes $${answer}$ integers. A number between, $x = ${b + 1}$, gives $${[a, b, c, d].map((v) => inParens(b + 1 - v)).join(" \\cdot ")} = ${[a, b, c, d].reduce((acc, v) => acc * (b + 1 - v), 1)}$. This is positive, so the middle interval adds none.`,
+        `${stepLabel(1, "Find where the product is negative", "找出乘积为负的区间")["zh-CN"]}乘积在 $${d}$ 的右边为正，每经过一个零点就变号。所以它在 $(${c}, ${d})$ 和 $(${a}, ${b})$ 上为负，在 $(${b}, ${c})$ 上为正。\n\n${stepLabel(2, "Count the integers", "数整数")["zh-CN"]}端点不包括在内，两个区间分别含 $${d} - ${inParens(c)} - 1 = ${g3 - 1}$ 个和 $${b} - ${inParens(a)} - 1 = ${g1 - 1}$ 个整数，共 $${answer}$ 个。\n\n**检验。**逐个列出：$${range(a + 1, b).join(", ")}$ 和 $${range(c + 1, d).join(", ")}$，共 $${answer}$ 个整数。中间的数 $x = ${b + 1}$ 代入得 $${[a, b, c, d].map((v) => inParens(b + 1 - v)).join(" \\cdot ")} = ${[a, b, c, d].reduce((acc, v) => acc * (b + 1 - v), 1)}$。结果为正，所以中间的区间不提供整数。`,
       ),
     });
   },
@@ -148,8 +151,8 @@ const radicalBothSides: KnowledgePointDef = {
   id: "a-radical-inequality-with-the-unknown-on-both-sides",
   title: t("A radical inequality with the unknown on both sides", "两边都含未知数的根式不等式"),
   explanation: t(
-    "When a square root is less than an expression in the unknown, that expression must be positive, because a square root is never negative. Only on that condition may both sides be squared. Squaring gives a quadratic inequality whose two roots look equally good, but one of them makes the right side negative and belongs to the squared inequality alone. The positivity condition removes that root and everything beyond it.",
-    "平方根小于一个含未知数的式子时，这个式子必须为正，因为平方根不会是负数。只有在这个条件下才能两边平方。平方后得到一个二次不等式，它的两个根看起来同样合理，但其中一个使右边为负，只属于平方后的不等式。正数条件排除了这个根以及它之外的部分。",
+    "When a square root is less than an expression in the unknown, that expression must be positive, because a square root is never negative. Only on that condition may both sides be squared. Squaring gives a quadratic inequality whose two roots look equally good, but one of them makes the right side negative and belongs to the squared inequality alone. The positivity condition removes that root and everything beyond it.\n\n> **Watch out.** Do not pick a root of the squared inequality by habit. Test each root in the right side: the one that makes it negative is not a boundary of the answer.",
+    "平方根小于一个含未知数的式子时，这个式子必须为正，因为平方根不会是负数。只有在这个条件下才能两边平方。平方后得到一个二次不等式，它的两个根看起来同样合理，但其中一个使右边为负，只属于平方后的不等式。正数条件排除了这个根以及它之外的部分。\n\n> **注意。** 不要凭习惯选平方后不等式的某个根。把每个根代入右边：使右边为负的那个根不是答案的边界。",
   ),
   generate(rng) {
     const u = rng.int(2, 7);
@@ -168,8 +171,8 @@ const radicalBothSides: KnowledgePointDef = {
       form: "integer",
       wrong: [s, -b, -a, r + 1],
       solution: t(
-        `The right side must be positive, so $x > ${-b}$. Squaring then gives $(${minus(r)})(${minus(s)}) > 0$. The root $x = ${s}$ makes the right side negative, so it lies outside the allowed values, and only $x > ${r}$ remains. So $c = ${r}$.`,
-        `右边必须为正，所以 $x > ${-b}$。平方后得 $(${minus(r)})(${minus(s)}) > 0$。根 $x = ${s}$ 使右边为负，不在允许范围内，只剩下 $x > ${r}$。所以 $c = ${r}$。`,
+        `${stepLabel(1, "Square on the allowed values", "在允许的值上平方").en} The right side must be positive, so $x > ${-b}$. On those values squaring gives $(${minus(r)})(${minus(s)}) > 0$, so $x < ${s}$ or $x > ${r}$.\n\n${stepLabel(2, "Reject the extra root", "舍去多余的根").en} The root $x = ${s}$ makes the right side $${s + b}$, which is negative, so it lies outside the allowed values, and only $x > ${r}$ remains. So $c = ${r}$.\n\n**Check.** At $x = ${r}$ the left side is $\\sqrt{${u * u}} = ${u}$ and the right side is $${u}$, so the two sides are equal there. At $x = ${2 * u + 1 + r}$ the left side is $\\sqrt{${(u + 1) ** 2}} = ${u + 1}$ and the right side is $${3 * u + 1}$, so the inequality holds. At $x = ${s}$ the left side is $\\sqrt{${(u - 1) ** 2}} = ${u - 1}$ and the right side is $${1 - u}$, so it fails.`,
+        `${stepLabel(1, "Square on the allowed values", "在允许的值上平方")["zh-CN"]}右边必须为正，所以 $x > ${-b}$。在这些值上平方得 $(${minus(r)})(${minus(s)}) > 0$，所以 $x < ${s}$ 或 $x > ${r}$。\n\n${stepLabel(2, "Reject the extra root", "舍去多余的根")["zh-CN"]}根 $x = ${s}$ 使右边等于 $${s + b}$，是负数，不在允许范围内，只剩下 $x > ${r}$。所以 $c = ${r}$。\n\n**检验。**$x = ${r}$ 时左边为 $\\sqrt{${u * u}} = ${u}$，右边为 $${u}$，两边相等。$x = ${2 * u + 1 + r}$ 时左边为 $\\sqrt{${(u + 1) ** 2}} = ${u + 1}$，右边为 $${3 * u + 1}$，不等式成立。$x = ${s}$ 时左边为 $\\sqrt{${(u - 1) ** 2}} = ${u - 1}$，右边为 $${1 - u}$，不等式不成立。`,
       ),
     });
   },
@@ -179,8 +182,8 @@ const sumOfLogs: KnowledgePointDef = {
   id: "a-sum-of-two-logarithms-in-an-inequality",
   title: t("A sum of two logarithms in an inequality", "不等式中两个对数的和"),
   explanation: t(
-    "A sum of logarithms with one base combines into the logarithm of a product, and with a base above one the inequality then passes straight to the arguments. But combining hides a condition: each original argument must be positive on its own, while the product can also be positive when both are negative. So the quadratic that results has a root that must be thrown away, and the domain has to be read from the original logarithms.",
-    "同底对数的和可以合并成积的对数，底数大于一时，不等式就直接转到真数上。但合并会隐藏一个条件：原来的每个真数都必须各自为正，而两个真数同时为负时积也是正的。所以得到的二次式有一个根必须舍去，定义域要从原来的对数读出。",
+    "A sum of logarithms with one base combines into the logarithm of a product, and with a base above one the inequality then passes straight to the arguments. But combining hides a condition: each original argument must be positive on its own, while the product can also be positive when both are negative. So the quadratic that results has a root that must be thrown away, and the domain has to be read from the original logarithms.\n\n> **Watch out.** Check a root against each original argument, not against the product: at the negative root both arguments are negative, so neither logarithm exists there.",
+    "同底对数的和可以合并成积的对数，底数大于一时，不等式就直接转到真数上。但合并会隐藏一个条件：原来的每个真数都必须各自为正，而两个真数同时为负时积也是正的。所以得到的二次式有一个根必须舍去，定义域要从原来的对数读出。\n\n> **注意。** 要用原来的每个真数检验根，而不是用它们的积：在负根处两个真数都是负数，两个对数都不存在。",
   ),
   generate(rng) {
     const base = rng.pick([2, 3]);
@@ -198,8 +201,8 @@ const sumOfLogs: KnowledgePointDef = {
       form: "integer",
       wrong: [shift - small, big, i + j, shift + gap, shift + big * small],
       solution: t(
-        `Write $u = ${minus(shift)}$. Combining the logarithms gives $u(${minus(gap, "u")}) \\le ${big * small}$, which factors as $(${minus(big, "u")})(${minus(-small, "u")}) \\le 0$. The original logarithms need $u > ${gap}$, so the negative root is thrown away and $u \\le ${big}$. The largest solution is $x = ${shift} + ${big} = ${answer}$.`,
-        `设 $u = ${minus(shift)}$。合并对数得 $u(${minus(gap, "u")}) \\le ${big * small}$，分解为 $(${minus(big, "u")})(${minus(-small, "u")}) \\le 0$。原来的对数要求 $u > ${gap}$，所以舍去负根，得 $u \\le ${big}$。最大解是 $x = ${shift} + ${big} = ${answer}$。`,
+        `${stepLabel(1, "Combine the logarithms", "合并对数").en} Write $u = ${minus(shift)}$. The sum is the logarithm of a product, and $${base} > 1$, so the inequality passes to the arguments: $u(${minus(gap, "u")}) \\le ${base}^{${i + j}} = ${big * small}$. This factors as $(${minus(big, "u")})(${minus(-small, "u")}) \\le 0$, so $${-small} \\le u \\le ${big}$.\n\n${stepLabel(2, "Use the domain", "用定义域").en} The original logarithms need $u > 0$ and $u > ${gap}$, so $${gap} < u \\le ${big}$. The largest solution is $x = ${shift} + ${big} = ${answer}$.\n\n**Check.** At $x = ${answer}$ the arguments are $${big}$ and $${small}$, and $\\log_{${base}} ${big} + \\log_{${base}} ${small} = ${i} + ${j} = ${i + j}$, so equality holds. For a larger $x$ both arguments are larger, so both logarithms are larger and the sum exceeds $${i + j}$.`,
+        `${stepLabel(1, "Combine the logarithms", "合并对数")["zh-CN"]}设 $u = ${minus(shift)}$。对数的和是积的对数，且 $${base} > 1$，所以不等式直接转到真数上：$u(${minus(gap, "u")}) \\le ${base}^{${i + j}} = ${big * small}$。分解为 $(${minus(big, "u")})(${minus(-small, "u")}) \\le 0$，所以 $${-small} \\le u \\le ${big}$。\n\n${stepLabel(2, "Use the domain", "用定义域")["zh-CN"]}原来的对数要求 $u > 0$ 且 $u > ${gap}$，所以 $${gap} < u \\le ${big}$。最大解是 $x = ${shift} + ${big} = ${answer}$。\n\n**检验。**$x = ${answer}$ 时两个真数是 $${big}$ 和 $${small}$，$\\log_{${base}} ${big} + \\log_{${base}} ${small} = ${i} + ${j} = ${i + j}$，等号成立。$x$ 再大时两个真数都更大，两个对数都更大，和就超过 $${i + j}$。`,
       ),
     });
   },
@@ -209,8 +212,8 @@ const closeToLimit: KnowledgePointDef = {
   id: "how-many-terms-bring-a-series-close-to-its-limit",
   title: t("How many terms bring a series close to its limit", "多少项能使级数接近它的极限"),
   explanation: t(
-    "When the common ratio is between zero and one, the partial sums climb toward the infinite sum, and the gap left over has a formula of its own. It equals the infinite sum multiplied by the ratio raised to the number of terms taken. So asking how many terms are needed to come within a given tolerance is an inequality in a power. Note that this gap is larger than the next term, so judging by the size of a term alone gives too few terms.",
-    "公比在零和一之间时，部分和逐渐上升，趋向无穷级数的和，剩下的差距有自己的公式：它等于无穷级数的和乘以公比的项数次幂。所以问需要多少项才能进入给定的误差范围，就是一个关于幂的不等式。注意这个差距比下一项大，所以只凭某一项的大小来判断，得到的项数会偏少。",
+    "When the common ratio is between zero and one, the partial sums climb toward the infinite sum, and the gap left over has a formula of its own. It equals the infinite sum multiplied by the ratio raised to the number of terms taken. So asking how many terms are needed to come within a given tolerance is an inequality in a power. Note that this gap is larger than the next term, so judging by the size of a term alone gives too few terms.\n\n> **Watch out.** The gap after $n$ terms is the infinite sum times $r^{n}$, not the $n$-th term or the next term. Using a term gives too small an answer.",
+    "公比在零和一之间时，部分和逐渐上升，趋向无穷级数的和，剩下的差距有自己的公式：它等于无穷级数的和乘以公比的项数次幂。所以问需要多少项才能进入给定的误差范围，就是一个关于幂的不等式。注意这个差距比下一项大，所以只凭某一项的大小来判断，得到的项数会偏少。\n\n> **注意。** 前 $n$ 项之后的差距是无穷级数的和乘以 $r^{n}$，不是第 $n$ 项，也不是下一项。用某一项来判断，答案会偏小。",
   ),
   generate(rng) {
     const q = rng.int(2, 5);
@@ -231,8 +234,8 @@ const closeToLimit: KnowledgePointDef = {
       form: "integer",
       wrong: [byTerm, answer - 1, answer + 1, answer + 2],
       solution: t(
-        `The infinite sum is $${m * q}$, and the gap after $n$ terms is the infinite sum times the ratio to the power $n$, which is $${m * q} \\cdot \\frac{1}{${q}^{n}}$. Requiring this to be below the tolerance gives $${q}^{n - 1} > ${target}$. Trying powers, $${q}^{${answer - 1}} = ${q ** (answer - 1)}$ is the first to pass $${target}$, so $n = ${answer}$.`,
-        `无穷级数的和是 $${m * q}$，前 $n$ 项之后的差距等于这个和乘以公比的 $n$ 次幂，即 $${m * q} \\cdot \\frac{1}{${q}^{n}}$。要求它小于误差范围，得 $${q}^{n - 1} > ${target}$。逐个试幂，$${q}^{${answer - 1}} = ${q ** (answer - 1)}$ 最先超过 ${target}，所以 $n = ${answer}$。`,
+        `${stepLabel(1, "Find the gap", "求差距").en} The infinite sum is $${m * q}$, the first term divided by $1 - \\frac{1}{${q}}$. The gap after $n$ terms is the infinite sum times the ratio to the power $n$. This is $\\frac{${m * q}}{${q}^{n}} = \\frac{${m}}{${q}^{n - 1}}$.\n\n${stepLabel(2, "Solve the inequality", "解不等式").en} Requiring $\\frac{${m}}{${q}^{n - 1}} < \\frac{1}{${denominator}}$ gives $${q}^{n - 1} > ${target}$. Trying powers, $${q}^{${answer - 1}} = ${q ** (answer - 1)}$ is the first to pass $${target}$, so $n = ${answer}$.\n\n**Check.** After $${answer}$ terms the gap is $${frac(m, q ** (answer - 1))}$. This is less than $\\frac{1}{${denominator}}$ because $${m} \\cdot ${denominator} = ${target} < ${q ** (answer - 1)}$. After $${answer - 1}$ terms the gap is $${frac(m, q ** (answer - 2))}$. This is not less, because $${target} \\ge ${q ** (answer - 2)}$.`,
+        `${stepLabel(1, "Find the gap", "求差距")["zh-CN"]}无穷级数的和是 $${m * q}$，即首项除以 $1 - \\frac{1}{${q}}$。前 $n$ 项之后的差距等于这个和乘以公比的 $n$ 次幂。它是 $\\frac{${m * q}}{${q}^{n}} = \\frac{${m}}{${q}^{n - 1}}$。\n\n${stepLabel(2, "Solve the inequality", "解不等式")["zh-CN"]}要求 $\\frac{${m}}{${q}^{n - 1}} < \\frac{1}{${denominator}}$，得 $${q}^{n - 1} > ${target}$。逐个试幂，$${q}^{${answer - 1}} = ${q ** (answer - 1)}$ 最先超过 $${target}$，所以 $n = ${answer}$。\n\n**检验。**取 $${answer}$ 项时差距是 $${frac(m, q ** (answer - 1))}$，它小于 $\\frac{1}{${denominator}}$，因为 $${m} \\cdot ${denominator} = ${target} < ${q ** (answer - 1)}$。取 $${answer - 1}$ 项时差距是 $${frac(m, q ** (answer - 2))}$，它不小于 $\\frac{1}{${denominator}}$，因为 $${target} \\ge ${q ** (answer - 2)}$。`,
       ),
     });
   },
@@ -242,8 +245,8 @@ const denominatorFromCount: KnowledgePointDef = {
   id: "a-denominator-from-a-count-of-integer-solutions",
   title: t("A denominator from a count of integer solutions", "由整数解个数求分母"),
   explanation: t(
-    "In a rational inequality with a weak sign, the zero of the numerator belongs to the solution set and the zero of the denominator never does, since the quotient does not exist there. This difference matters when a count of solutions is given. The interval is closed at one end and open at the other, so the number of integers in it equals the distance between the ends, and an unknown end can be read off from the count.",
-    "在带等号的分式不等式中，分子的零点属于解集，分母的零点却绝不属于解集，因为分式在那里没有意义。给出解的个数时，这个区别就很重要。区间一端闭、一端开，所以其中的整数个数恰好等于两端之间的距离，由个数就能读出未知的端点。",
+    "In a rational inequality with a weak sign, the zero of the numerator belongs to the solution set and the zero of the denominator never does, since the quotient does not exist there. This difference matters when a count of solutions is given. The interval is closed at one end and open at the other, so the number of integers in it equals the distance between the ends, and an unknown end can be read off from the count.\n\n> **Watch out.** The zero of the denominator is never a solution, even with $\\le$. The set is $[a, b)$, not $[a, b]$; counting $b$ as well gives a $b$ one too small.",
+    "在带等号的分式不等式中，分子的零点属于解集，分母的零点却绝不属于解集，因为分式在那里没有意义。给出解的个数时，这个区别就很重要。区间一端闭、一端开，所以其中的整数个数恰好等于两端之间的距离，由个数就能读出未知的端点。\n\n> **注意。** 分母的零点绝不是解，即使不等号是 $\\le$ 也一样。解集是 $[a, b)$ 而不是 $[a, b]$；把 $b$ 也算进去，求出的 $b$ 会小 $1$。",
   ),
   generate(rng) {
     const a = rng.int(-9, 9);
@@ -259,8 +262,8 @@ const denominatorFromCount: KnowledgePointDef = {
       form: "integer",
       wrong: [answer + 1, answer - 1, a - count, count],
       solution: t(
-        `The quotient is negative between $${a}$ and $b$, is zero at $x = ${a}$, and does not exist at $x = b$. So the solution set is $[${a}, b)$, whose integers run from $${a}$ up to the one just below $b$. Their number is the distance from $${a}$ to $b$, so $b = ${answer}$.`,
-        `商在 $${a}$ 与 $b$ 之间为负，在 $x = ${a}$ 处为零，在 $x = b$ 处没有意义。所以解集是 $[${a}, b)$，其中的整数从 $${a}$ 一直到比 $b$ 小 $1$ 的数，个数等于 $${a}$ 到 $b$ 的距离，所以 $b = ${answer}$。`,
+        `${stepLabel(1, "Find the solution set", "求解集").en} The quotient is negative between $${a}$ and $b$, is zero at $x = ${a}$, and does not exist at $x = b$. So the solution set is $[${a}, b)$.\n\n${stepLabel(2, "Count the integers", "数整数").en} The integers in it run from $${a}$ up to the one just below $b$. Their number is the distance from $${a}$ to $b$, so $b - ${inParens(a)} = ${count}$ and $b = ${answer}$.\n\n**Check.** With $b = ${answer}$, the integers in $[${a}, ${answer})$ are $${range(a, answer).join(", ")}$, and there are $${count}$ of them. The number $x = ${answer}$ itself is left out, because the denominator is $0$ there.`,
+        `${stepLabel(1, "Find the solution set", "求解集")["zh-CN"]}商在 $${a}$ 与 $b$ 之间为负，在 $x = ${a}$ 处为零，在 $x = b$ 处没有意义。所以解集是 $[${a}, b)$。\n\n${stepLabel(2, "Count the integers", "数整数")["zh-CN"]}其中的整数从 $${a}$ 一直到比 $b$ 小 $1$ 的数，个数等于 $${a}$ 到 $b$ 的距离，所以 $b - ${inParens(a)} = ${count}$，$b = ${answer}$。\n\n**检验。**$b = ${answer}$ 时，$[${a}, ${answer})$ 中的整数是 $${range(a, answer).join(", ")}$，共 $${count}$ 个。$x = ${answer}$ 本身不包含在内，因为那里分母为 $0$。`,
       ),
     });
   },
@@ -270,8 +273,8 @@ const constantFromInterval: KnowledgePointDef = {
   id: "the-constant-from-the-solution-set-of-a-rational-inequality",
   title: t("The constant from the solution set of a rational inequality", "由分式不等式的解集求常数"),
   explanation: t(
-    "The ends of a solution set are not arbitrary. One end of a rational inequality comes from a zero of the denominator, and the other comes from a point where the two sides are equal. So if the solution set is known, the end that is not a zero of the denominator can be substituted to give an equation, and any unknown constant in the inequality can be found with no need to solve the inequality at all.",
-    "解集的端点不是随意的。分式不等式的一个端点来自分母的零点，另一个来自两边相等的点。所以如果已知解集，就可以把不是分母零点的那个端点代入，得到一个方程，从而求出不等式中的未知常数，根本不必解这个不等式。",
+    "The ends of a solution set are not arbitrary. One end of a rational inequality comes from a zero of the denominator, and the other comes from a point where the two sides are equal. So if the solution set is known, the end that is not a zero of the denominator can be substituted to give an equation, and any unknown constant in the inequality can be found with no need to solve the inequality at all.\n\n> **Watch out.** Substitute only the end that is not a zero of the denominator. At that zero the fraction is not defined, so it gives no equation for the constant.",
+    "解集的端点不是随意的。分式不等式的一个端点来自分母的零点，另一个来自两边相等的点。所以如果已知解集，就可以把不是分母零点的那个端点代入，得到一个方程，从而求出不等式中的未知常数，根本不必解这个不等式。\n\n> **注意。** 只能代入不是分母零点的那个端点。分式在分母零点处没有意义，得不到关于常数的方程。",
   ),
   generate(rng) {
     const b = rng.int(-8, 8);
@@ -279,6 +282,7 @@ const constantFromInterval: KnowledgePointDef = {
     const k = rng.int(2, 7);
     const a = b - g * (k - 1);
     const end = b + g;
+    const inside = frac(2 * b + g, 2);
     const fraction = `\\frac{${minus(a)}}{${minus(b)}}`;
     return numberProblem({
       prompt: t(
@@ -289,8 +293,8 @@ const constantFromInterval: KnowledgePointDef = {
       form: "integer",
       wrong: [k - 1, k + 1, -k, g + k],
       solution: t(
-        `The end $x = ${b}$ is the zero of the denominator, so the two sides must be equal at the other end, $x = ${end}$. There the numerator is $${g * k}$ and the denominator is $${g}$, so $k = ${k}$.`,
-        `端点 $x = ${b}$ 是分母的零点，所以两边必须在另一个端点 $x = ${end}$ 处相等。这时分子是 $${g * k}$，分母是 $${g}$，所以 $k = ${k}$。`,
+        `${stepLabel(1, "Choose the end", "选端点").en} The end $x = ${b}$ is the zero of the denominator, so the two sides must be equal at the other end, $x = ${end}$.\n\n${stepLabel(2, "Solve for the constant", "求常数").en} There the numerator is $${g * k}$ and the denominator is $${g}$, so $k = \\frac{${g * k}}{${g}} = ${k}$.\n\n**Check.** With $k = ${k}$, the number $x = ${inside}$ inside the interval makes the left side $${frac(2 * k - 1)}$, which is more than $${k}$. The number $x = ${end + g}$ to the right makes it $${frac(k + 1, 2)}$, and the number $x = ${b - g}$ to the left makes it $${frac(2 - k)}$; both are less than $${k}$. So the inequality holds inside the interval and fails outside it.`,
+        `${stepLabel(1, "Choose the end", "选端点")["zh-CN"]}端点 $x = ${b}$ 是分母的零点，所以两边必须在另一个端点 $x = ${end}$ 处相等。\n\n${stepLabel(2, "Solve for the constant", "求常数")["zh-CN"]}这时分子是 $${g * k}$，分母是 $${g}$，所以 $k = \\frac{${g * k}}{${g}} = ${k}$。\n\n**检验。**$k = ${k}$ 时，区间内的数 $x = ${inside}$ 使左边为 $${frac(2 * k - 1)}$，大于 $${k}$。右边的数 $x = ${end + g}$ 使左边为 $${frac(k + 1, 2)}$，左边的数 $x = ${b - g}$ 使左边为 $${frac(2 - k)}$，都小于 $${k}$。所以不等式在区间内成立，在区间外不成立。`,
       ),
     });
   },
@@ -300,8 +304,8 @@ const gridPoints: KnowledgePointDef = {
   id: "counting-the-grid-points-in-a-region-between-two-boundaries",
   title: t("Counting the grid points in a region between two boundaries", "数出两条边界之间区域内的格点"),
   explanation: t(
-    "A system of inequalities in two variables describes a region, and sometimes the useful question is how many points with whole-number coordinates it contains. The region can be cut into vertical columns, one for each whole value of $x$. In each column, the lower boundary and the upper boundary give the first and last allowed $y$, and a weak inequality includes both of them. The symmetry of the curve means that matching columns on either side hold the same count.",
-    "二元不等式组描述一个区域，有时有用的问题是其中含有多少个坐标为整数的点。可以把区域切成竖列，每个整数 $x$ 对应一列。在每一列中，下边界和上边界给出最小和最大的 $y$，带等号的不等式把这两个值都包括在内。曲线的对称性说明，左右相对的两列含有相同个数的点。",
+    "A system of inequalities in two variables describes a region, and sometimes the useful question is how many points with whole-number coordinates it contains. The region can be cut into vertical columns, one for each whole value of $x$. In each column, the lower boundary and the upper boundary give the first and last allowed $y$, and a weak inequality includes both of them. The symmetry of the curve means that matching columns on either side hold the same count.\n\n> **Watch out.** Both boundaries count, so a column from $y = p$ up to $y = q$ holds $q - p + 1$ points, not $q - p$.",
+    "二元不等式组描述一个区域，有时有用的问题是其中含有多少个坐标为整数的点。可以把区域切成竖列，每个整数 $x$ 对应一列。在每一列中，下边界和上边界给出最小和最大的 $y$，带等号的不等式把这两个值都包括在内。曲线的对称性说明，左右相对的两列含有相同个数的点。\n\n> **注意。** 两条边界上的点都算，所以从 $y = p$ 到 $y = q$ 的一列有 $q - p + 1$ 个点，而不是 $q - p$ 个。",
   ),
   generate(rng) {
     const c = rng.int(-5, 5);
@@ -314,6 +318,10 @@ const gridPoints: KnowledgePointDef = {
     const strict = columns.reduce((sum, v, x) => sum + (v >= 2 ? (x === 0 ? v - 2 : 2 * (v - 2)) : 0), 0);
     const half = columns.reduce((sum, v) => sum + v, 0);
     const curve = poly([1, "x^{2}"], [c, ""]);
+    // Rows y = c + j with s² ≤ j < (s + 1)² hold 2s + 1 points each.
+    const rows = range(0, widest + 1)
+      .map((r) => `${Math.min(m, (r + 1) ** 2 - 1) - r * r + 1} \\cdot ${2 * r + 1}`)
+      .join(" + ");
     return numberProblem({
       prompt: t(
         `How many points with integer coordinates satisfy both $y \\ge ${curve}$ and $y \\le ${top}$?`,
@@ -323,8 +331,8 @@ const gridPoints: KnowledgePointDef = {
       form: "integer",
       wrong: [strict, half, m + 1, answer + 1],
       solution: t(
-        `The boundaries meet where $x^{2} = ${m}$, so the columns run from $x = ${-widest}$ to $x = ${widest}$. A column with a given $x$ holds the integers from $${curve}$ up to $${top}$, both included. The column at $x = 0$ holds $${columns[0]}$ points, and columns come in matching pairs, so the total is $${columns[0]} + 2(${rest.join(" + ")}) = ${answer}$.`,
-        `两条边界在 $x^{2} = ${m}$ 处相交，所以各列从 $x = ${-widest}$ 到 $x = ${widest}$。给定 $x$ 的一列含有从 $${curve}$ 到 $${top}$ 的整数，两端都包括。$x = 0$ 这一列有 $${columns[0]}$ 个点，其他列左右成对，所以总数是 $${columns[0]} + 2(${rest.join(" + ")}) = ${answer}$。`,
+        `${stepLabel(1, "Find the columns", "找出各列").en} The boundaries meet where $x^{2} = ${m}$, so the columns run from $x = ${-widest}$ to $x = ${widest}$.\n\n${stepLabel(2, "Count each column", "数每一列").en} A column with a given $x$ holds the integers from $${curve}$ up to $${top}$, both included, which is $${m} - x^{2} + 1$ of them. The column at $x = 0$ holds $${columns[0]}$ points, and columns come in matching pairs, so the total is $${columns[0]} + 2(${rest.join(" + ")}) = ${answer}$.\n\n**Check.** Count row by row instead. The row $y = ${curve.replace("x^{2}", "j")}$, for $j$ from $0$ to $${m}$, holds the integers $x$ with $x^{2} \\le j$. Grouping rows with the same count gives $${rows} = ${answer}$.`,
+        `${stepLabel(1, "Find the columns", "找出各列")["zh-CN"]}两条边界在 $x^{2} = ${m}$ 处相交，所以各列从 $x = ${-widest}$ 到 $x = ${widest}$。\n\n${stepLabel(2, "Count each column", "数每一列")["zh-CN"]}给定 $x$ 的一列含有从 $${curve}$ 到 $${top}$ 的整数，两端都包括，共 $${m} - x^{2} + 1$ 个。$x = 0$ 这一列有 $${columns[0]}$ 个点，其他列左右成对，所以总数是 $${columns[0]} + 2(${rest.join(" + ")}) = ${answer}$。\n\n**检验。**改为逐行来数。对 $j$ 从 $0$ 到 $${m}$，$y = ${curve.replace("x^{2}", "j")}$ 这一行含有满足 $x^{2} \\le j$ 的整数 $x$。把点数相同的行合在一起，得 $${rows} = ${answer}$。`,
       ),
     });
   },
