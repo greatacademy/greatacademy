@@ -16,6 +16,12 @@ export type WhyNot = (wrong: string, right: string, shown: string) => Text;
 /** ChoiceItem is one bank item of a choice: what to show, the right option and the wrong ones. */
 export type ChoiceItem = readonly [shown: string, right: string, wrong: readonly string[]];
 
+/** withReasons ends a solution with why each wrong option is wrong, one line an option. */
+function withReasons(solution: Text, reasons: readonly Text[]): Text {
+  const list = (locale: "en" | "zh-CN") => reasons.map((r) => `- ${r[locale]}`).join("\n");
+  return t(`${solution.en}\n\nThe other options:\n\n${list("en")}`, `${solution["zh-CN"]}\n\n其他选项：\n\n${list("zh-CN")}`);
+}
+
 /**
  * choiceGenerator picks an item of a bank by seed and shuffles its options. Each wrong option is a plausible mistake, so
  * it also serves as a listed wrong response; with whyNot, choosing it gets feedback of its own.
@@ -25,10 +31,11 @@ export function choiceGenerator(question: Text, bank: readonly ChoiceItem[], why
     const [shown, right, wrong] = rng.cycle(bank);
     const options = rng.shuffle([right, ...wrong]);
     const answer = options.indexOf(right);
+    const reasons = whyNot ? options.filter((o) => o !== right).map((w) => whyNot(w, right, shown)) : [];
     return {
       prompt: shown === "" ? question : joinText([question, same(quote(shown))]),
       answer: { checker: "choice", expected: answer, input: { kind: "choice", options: options.map((o) => same(o)) } },
-      solution: why(right, shown),
+      solution: reasons.length === 0 ? why(right, shown) : withReasons(why(right, shown), reasons),
       canonical: String(answer),
       wrong: options.map((_, i) => String(i)).filter((i) => i !== String(answer)),
       ...(whyNot && {

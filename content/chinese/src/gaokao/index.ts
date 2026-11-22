@@ -14,7 +14,7 @@ import { type Ask, examChoice, examGroup } from "../hsk/exam.ts";
 import type { Idiom } from "../idioms/idioms.ts";
 import { idiomsByGrade } from "../idioms/index.ts";
 import { recitedPoems } from "../recitation/index.ts";
-import type { Poem } from "../recitation/poems.ts";
+import type { Line, Poem } from "../recitation/poems.ts";
 import { gaokaoEssayTopic } from "../writing/later.ts";
 import { informationalPassages } from "./informational-data.ts";
 import { languageWritingTopic } from "./language.ts";
@@ -106,6 +106,88 @@ function writtenItems(): readonly TypedItem[] {
 }
 
 const lineSource = new Map(poems.flat().flatMap((p) => p.lines.map((l) => [l.text, { poem: p, line: l }] as const)));
+
+/** sourceOf finds where a line comes from. */
+function sourceOf(text: string): { poem: Poem; line: Line; next: Line | undefined } {
+  const source = lineSource.get(text);
+  if (!source) throw new Error(`gaokao: no source for ${text}`);
+  const i = source.poem.lines.indexOf(source.line);
+  return { ...source, next: source.poem.lines[i + 1] ?? source.poem.lines[i - 1] };
+}
+
+/** named names a line's text by its author and title, in Chinese. */
+const named = (poem: Poem): string => `${poem.author["zh-CN"]}《${poem.title["zh-CN"]}》`;
+
+/** namedEn names it in English. */
+const namedEn = (poem: Poem): string => `"${poem.title.en}" (${poem.title["zh-CN"]}) by ${poem.author.en}`;
+
+/** together reads a line with its neighbour, in the text's order. */
+function together(poem: Poem, line: Line, next: Line | undefined): string {
+  if (!next) return line.shown;
+  return poem.lines.indexOf(next) > poem.lines.indexOf(line) ? `${line.shown}${next.shown}` : `${next.shown}${line.shown}`;
+}
+
+/** carefulOf says which characters of a line are not to be written as which, in Chinese and in English. */
+const carefulOf = (line: Line): Text =>
+  line.miswritten.length === 0
+    ? t("Mind that every character is the one in the text.", "留心每个字都和原文一样。")
+    : t(
+        `Mind the characters: ${line.miswritten.map(([r, w]) => `${r}, not ${w}`).join("; ")}.`,
+        `书写时，${line.miswritten.map(([r, w]) => `“${r}”不要写成“${w}”`).join("，")}。`,
+      );
+
+const [introPoem, choosePoem, writePoem] = [0, 1, 2].map((k) => {
+  const poem = poems.flat()[k];
+  if (!poem) throw new Error("gaokao: too few recited texts");
+  return poem;
+}) as [Poem, Poem, Poem];
+
+const introLine = introPoem.lines[0]!;
+/** recitationIntro says what the paper's description task asks and how it is worked. */
+const recitationIntro = t(
+  `The Gaokao paper does not ask for the line after a given one. It describes what a line says, a picture or an idea, and asks for the line itself: in ${namedEn(introPoem)}, the line that says "${introLine.meaning}" is ${introLine.text}.\n\nSo a line has to be known by its meaning, and across all the texts recited in grades 7 to 11, not one text at a time. Work it in two steps: from the description, find the text and the line; then write the line with every character right, since a line with one wrong character gets no mark. The two knowledge points practise these steps: first choosing the line among lines of several texts, then writing it given the title.`,
+  `高考的默写题不是给上句写下句，而是描述一句话写了什么，一个画面或一个道理，让你写出这一句。比如${named(introPoem)}中，写“${introLine.meaning}”的一句是“${introLine.text}”。\n\n所以每一句都要按意思记住，而且是七至十一年级的全部背诵篇目放在一起，不是一篇一篇分开。做的时候分两步：先从描述想到篇目和句子，再一字不错地写出来，因为错一个字这一句就不得分。下面两个知识点依次练这两步：先在几篇的句子里选出这一句，再给出篇名写出来。`,
+);
+
+const chooseLine = choosePoem.lines[1] ?? choosePoem.lines[0]!;
+/** chooseExplanation teaches finding a line among several texts by its meaning. */
+const chooseExplanation = t(
+  `A description of meaning names a picture or an idea. Think first which text it comes from, then which of its lines says it as a whole.\n\nFor example, "${chooseLine.meaning}" describes ${chooseLine.text}, from ${namedEn(choosePoem)}. Read the line and its meaning side by side: what the line says is exactly what the description says.\n\n> **Watch out.** The other options are real lines of other recited texts, and may share a word or a picture with the description. Match the whole line, not one word of it.`,
+  `意思的描述说的是一个画面或一个道理。先想它出自哪篇，再想其中哪一句整句说的正是这件事。\n\n比如“${chooseLine.meaning}”，写的是${named(choosePoem)}中的“${chooseLine.text}”。把句子和意思对着读：句子写的，正是描述说的。\n\n> **注意。** 其他选项也是背诵篇目里的真句子，可能有一个词、一个景物和描述相同。要整句对上，不能只对上一个词。`,
+);
+
+/** chooseWhy works the choice of a line by its meaning. */
+const chooseWhy = (right: string, shown: string): Text => {
+  const { poem, line, next } = sourceOf(right);
+  return t(
+    `**Step 1: find the text.** The description "${shown}" is a picture of ${namedEn(poem)}.\n\n**Step 2: find the line.** In that text, the line that says it is ${right}.\n\n**Check.** Read it with the line it goes with: ${together(poem, line, next)} It fits the text, and as a whole it says what the description says.`,
+    `**第一步：想出篇目。**描述“${shown}”写的是${named(poem)}里的情景。\n\n**第二步：找出句子。**这一篇中，整句写这件事的是“${right}”。\n\n**检验。** 和相连的一句合起来读：“${together(poem, line, next)}”放回原文通顺，整句说的正是描述的意思。`,
+  );
+};
+
+/** chooseWhyNot says where a wrong line comes from and what it says instead. */
+const chooseWhyNot = (wrong: string): Text => {
+  const { poem, line } = sourceOf(wrong);
+  return t(`${wrong} is from ${namedEn(poem)}; it says: ${line.meaning}.`, `“${wrong}”出自${named(poem)}，写的是：${line.meaning}。`);
+};
+
+const writeLine = writePoem.lines.find((l) => l.miswritten.length > 0) ?? writePoem.lines[0]!;
+const [writeRight, writeWrong] = writeLine.miswritten[0] ?? ["", ""];
+/** writeExplanation teaches writing a line from its title and meaning. */
+const writeExplanation = t(
+  `The title narrows the search to one text; the meaning picks the line in it. Then write it in characters, with no character miswritten: the paper gives no mark to a line with one wrong character.\n\nFor example, the line of ${namedEn(writePoem)} that says "${writeLine.meaning}" is ${writeLine.text}.${writeRight ? ` Its ${writeRight} is often written as ${writeWrong}, which sounds or looks like it but does not fit the meaning.` : ""}\n\n> **Watch out.** Write the line the description asks for, not the one next to it; and think of what each character means in the line, since a wrong character that sounds the same reads aloud with no fault.`,
+  `篇名把范围缩到一篇，意思再从这一篇里挑出一句。然后用汉字写出来，一个字都不能错：试卷上错一个字，这一句就不得分。\n\n比如${named(writePoem)}中，写“${writeLine.meaning}”的一句是“${writeLine.text}”。${writeRight ? `句中的“${writeRight}”常被写成“${writeWrong}”，音近或形近，意思却对不上。` : ""}\n\n> **注意。** 要写描述说的那一句，不是它旁边的一句；还要想一想每个字在句中的意思，音同的错字读起来是听不出来的。`,
+);
+
+/** writeWhy works the writing of a line from its title and meaning. */
+const writeWhy = (right: string): Text => {
+  const { poem, line, next } = sourceOf(right);
+  const mind = carefulOf(line);
+  return t(
+    `**Step 1: recall it by its meaning.** In ${namedEn(poem)}, the line that says "${line.meaning}" is this one.\n\n**Step 2: write the line.** ${right}. ${mind.en}\n\n**Check.** Read it with the line it goes with: ${together(poem, line, next)} The two run on in meaning, and every character is the one in the text.`,
+    `**第一步：从意思想起。**${named(poem)}中，写“${line.meaning}”的就是这一句。\n\n**第二步：写出这一句。**“${right}”。${mind["zh-CN"]}\n\n**检验。** 和相连的一句合起来读：“${together(poem, line, next)}”前后意思接得上，每个字也都和原文一样。`,
+  );
+};
 
 /** BRACKETED is a shown sentence with the character asked about in brackets after it. */
 const BRACKETED = /^(.*)（(.)）$/u;
@@ -257,6 +339,7 @@ export const gaokaoTopics: readonly TopicDef[] = [
       "The lines of the recited texts of grades 7 to 11 mixed, found from a description of their meaning: first chosen without the title, then written with it.",
       "七至十一年级背诵篇目的句子混在一起，按意思的描述找句子：先不给篇名选出来，再给出篇名写出来。",
     ),
+    intro: recitationIntro,
     prerequisites: [lastPoem],
     encompasses: [],
     xp: 12,
@@ -266,29 +349,14 @@ export const gaokaoTopics: readonly TopicDef[] = [
       point(
         "gaokao-recitation-choose",
         t("Choosing the Line", "选出句子"),
-        t(
-          "A description of meaning names a picture or an idea. Think which text it comes from, then which of its lines says it.",
-          "意思的描述说的是一个画面或一个道理。先想它出自哪篇，再想是其中哪一句。",
-        ),
-        choiceGenerator(t("Which line has this meaning?", "哪一句写的是这个意思？"), lineItems(), (right) => {
-          const source = lineSource.get(right);
-          return t(`It is ${right}, from ${source?.poem.title.en ?? ""}.`, `是“${right}”，出自《${source?.poem.title["zh-CN"] ?? ""}》。`);
-        }),
+        chooseExplanation,
+        choiceGenerator(t("Which line has this meaning?", "哪一句写的是这个意思？"), lineItems(), chooseWhy, chooseWhyNot),
       ),
       point(
         "gaokao-recitation-write",
         t("Writing the Line", "写出句子"),
-        t(
-          "Write the line in characters, with no character miswritten: the paper gives no mark to a line with one wrong character.",
-          "用汉字写出这一句，一个字都不能写错：试卷上错一个字，这一句就不得分。",
-        ),
-        typedGenerator("hanzi", t("Write the line.", "写出这一句。"), writtenItems(), (right) => {
-          const source = lineSource.get(right);
-          return t(
-            `The line is: ${right}`,
-            `这一句是：${right}${source ? `（${source.poem.author["zh-CN"]}《${source.poem.title["zh-CN"]}》）` : ""}`,
-          );
-        }),
+        writeExplanation,
+        typedGenerator("hanzi", t("Write the line.", "写出这一句。"), writtenItems(), writeWhy),
       ),
     ],
   },
