@@ -877,24 +877,32 @@ $$72\\text{ km/h} = \\frac{72 \\cdot 1000\\text{ m}}{3600\\text{ s}} = 20\\text{
           toSeconds ? 10 * m : 36 * m,
           toSeconds ? [36 * m * 36, 36 * m * 1000, 100 * m] : [10 * m * 60, 360 * m, m],
           [
-            `${toSeconds ? `**Step 1: kilometers to meters.** Each kilometer is $1000$ m, so the number on top gets $1000$ times bigger: $${36 * m}\\text{ km/h} = ${36000 * m}\\text{ m/h}$.
+            `${
+              toSeconds
+                ? `**Step 1: kilometers to meters.** Each kilometer is $1000$ m, so the number on top gets $1000$ times bigger: $${36 * m}\\text{ km/h} = ${36000 * m}\\text{ m/h}$.
 
 **Step 2: hours to seconds.** An hour is $3600$ s, so in one second the distance is $3600$ times smaller: $${36000 * m} \\div 3600 = ${10 * m}\\text{ m/s}$.
 
-**Check.** The speed in m/s is the smaller number, as it should be, and $${10 * m} \\cdot 3.6 = ${36 * m}$.` : `**Step 1: meters to kilometers.** Every $1000$ m make $1$ km, so the number on top gets $1000$ times smaller: $${10 * m}\\text{ m/s} = ${m / 100}\\text{ km/s}$.
+**Check.** The speed in m/s is the smaller number, as it should be, and $${10 * m} \\cdot 3.6 = ${36 * m}$.`
+                : `**Step 1: meters to kilometers.** Every $1000$ m make $1$ km, so the number on top gets $1000$ times smaller: $${10 * m}\\text{ m/s} = ${m / 100}\\text{ km/s}$.
 
 **Step 2: seconds to hours.** An hour is $3600$ s, so in an hour the distance is $3600$ times as far: $${m / 100} \\cdot 3600 = ${36 * m}\\text{ km/h}$.
 
-**Check.** The speed in km/h is the larger number, as it should be, and $${36 * m} \\div 3.6 = ${10 * m}$.`}`,
-            `${toSeconds ? `**第一步：千米化成米。** $1$ 千米是 $1000$ 米，所以上面的数变成 $1000$ 倍：$${36 * m}\\text{ km/h} = ${36000 * m}\\text{ m/h}$。
+**Check.** The speed in km/h is the larger number, as it should be, and $${36 * m} \\div 3.6 = ${10 * m}$.`
+            }`,
+            `${
+              toSeconds
+                ? `**第一步：千米化成米。** $1$ 千米是 $1000$ 米，所以上面的数变成 $1000$ 倍：$${36 * m}\\text{ km/h} = ${36000 * m}\\text{ m/h}$。
 
 **第二步：小时化成秒。** $1$ 小时是 $3600$ 秒，所以一秒走的路程是一小时的 $3600$ 分之一：$${36000 * m} \\div 3600 = ${10 * m}\\text{ m/s}$。
 
-**检验。** 用 m/s 表示的数较小，合乎道理；而 $${10 * m} \\cdot 3.6 = ${36 * m}$。` : `**第一步：米化成千米。** 每 $1000$ 米合成 $1$ 千米，所以上面的数缩小为 $1000$ 分之一：$${10 * m}\\text{ m/s} = ${m / 100}\\text{ km/s}$。
+**检验。** 用 m/s 表示的数较小，合乎道理；而 $${10 * m} \\cdot 3.6 = ${36 * m}$。`
+                : `**第一步：米化成千米。** 每 $1000$ 米合成 $1$ 千米，所以上面的数缩小为 $1000$ 分之一：$${10 * m}\\text{ m/s} = ${m / 100}\\text{ km/s}$。
 
 **第二步：秒化成小时。** $1$ 小时是 $3600$ 秒，所以一小时走的路程是一秒的 $3600$ 倍：$${m / 100} \\cdot 3600 = ${36 * m}\\text{ km/h}$。
 
-**检验。** 用 km/h 表示的数较大，合乎道理；而 $${36 * m} \\div 3.6 = ${10 * m}$。`}`,
+**检验。** 用 km/h 表示的数较大，合乎道理；而 $${36 * m} \\div 3.6 = ${10 * m}$。`
+            }`,
           ],
         );
       },

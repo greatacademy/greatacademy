@@ -1428,113 +1428,113 @@ export const endBehaviorOfPolynomials = topic(
 /** findingTheCommonDifferenceOfAnArithmeticSequence finds the common difference from terms, formulas and two far-apart terms. */
 export const findingTheCommonDifferenceOfAnArithmeticSequence: TopicDef = {
   ...topic(
-  "finding-the-common-difference-of-an-arithmetic-sequence",
-  t("Finding the Common Difference of an Arithmetic Sequence", "求等差数列的公差"),
-  t(
-    "Find the common difference of an arithmetic sequence from its listed terms, from a formula, and from two terms that are not next to each other.",
-    "由列出的项、由公式、由两个不相邻的项求等差数列的公差。",
-  ),
-  ["explicit-and-recursive-arithmetic-formulas"],
-  ["HSF.BF.A.2", "HSF.LE.A.2"],
-  [
-    kp(
-      "the-difference-from-listed-terms",
-      t("The difference from listed terms", "由列出的项求公差"),
-      t(
-        "The common difference $d$ is what each term adds to the one before it: $a_{n + 1} = a_{n} + d$. Solving for $d$ shows the order of subtraction, later term minus earlier term: $d = a_{n + 1} - a_{n}$. For $20, 17, 14, \\dots$ the difference is $17 - 20 = -3$, negative because the terms decrease. Any two neighbors give the same answer, so you can check with another pair: $14 - 17 = -3$.\n\n> **Watch out.** Subtracting in the other order gives the wrong sign; a falling sequence must have a negative difference. Use neighboring terms, not terms two apart, which give twice the difference, and subtract them rather than adding them.",
-        "公差 $d$ 是每一项比前一项多出的量：$a_{n + 1} = a_{n} + d$。把它解出 $d$，就看出相减的顺序是后项减前项：$d = a_{n + 1} - a_{n}$。对 $20, 17, 14, \\dots$，公差是 $17 - 20 = -3$，因为各项递减所以为负。任意两个相邻项都给出同样的结果，所以可以用另一对来检验：$14 - 17 = -3$。\n\n> **注意。** 反过来相减会得到相反的符号；递减的数列公差一定是负数。要用相邻的两项，隔一项相减会得到公差的两倍；两项要相减，不能相加。",
-      ),
-      (rng) => {
-        const a = rng.int(-20, 40);
-        const d = rng.pick([-12, -9, -7, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8, 9, 11, 15]);
-        const s = rng.int(0, 2);
-        const seq = [a, a + d, a + 2 * d, a + 3 * d];
-        return numberProblem({
-          prompt: t(
-            `What is the common difference of the arithmetic sequence $${seq.join(", ")}, \\dots$?`,
-            `等差数列 $${seq.join(", ")}, \\dots$ 的公差是多少？`,
-          ),
-          answer: d,
-          solveFor: "d",
-          wrong: [-d, 2 * d, a + d + a, Math.abs(d) === 1 ? 3 : d + 1],
-          solution: t(
-            `The difference is what each term adds to the previous one, so subtract a term from the one after it. Take the neighbors $${seq[s]}$ and $${seq[s + 1]}$:${steps(`d = ${seq[s + 1]} - ${(seq[s] as number) < 0 ? `(${seq[s]})` : seq[s]} = ${d}`)}The terms ${d < 0 ? "decrease, so the difference is negative" : "increase, so the difference is positive"}.\n\n**Check.** Adding $${d}$ again and again from $${a}$ gives ${seq.map((x) => `$${x}$`).join(", ")}, the listed terms.`,
-            `公差是每一项比前一项多出的量，所以用后一项减去前一项。取相邻的 $${seq[s]}$ 和 $${seq[s + 1]}$：${steps(`d = ${seq[s + 1]} - ${(seq[s] as number) < 0 ? `(${seq[s]})` : seq[s]} = ${d}`)}各项${d < 0 ? "递减，所以公差是负数" : "递增，所以公差是正数"}。\n\n**检验。** 从 $${a}$ 开始不断加 $${d}$，得到 ${seq.map((x) => `$${x}$`).join("、")}，正是列出的各项。`,
-          ),
-        });
-      },
+    "finding-the-common-difference-of-an-arithmetic-sequence",
+    t("Finding the Common Difference of an Arithmetic Sequence", "求等差数列的公差"),
+    t(
+      "Find the common difference of an arithmetic sequence from its listed terms, from a formula, and from two terms that are not next to each other.",
+      "由列出的项、由公式、由两个不相邻的项求等差数列的公差。",
     ),
-    kp(
-      "the-difference-from-a-formula",
-      t("The difference from a formula", "由公式求公差"),
-      t(
-        "The common difference is how much a term changes when $n$ goes up by one. In $a_{n} = a_{1} + d(n - 1)$ that is the number multiplying $n - 1$. Written as $a_{n} = dn + c$, it is the coefficient of $n$, not the constant, because raising $n$ by one adds exactly that coefficient. In a recursive formula $a_{n} = a_{n - 1} + d$, it is the number added to the previous term. For example, $a_{n} = 7 - 2n$ gives $a_{1} = 5$ and $a_{2} = 3$, so $d = -2$.\n\n> **Watch out.** The constant is not the difference: it is the first term, or the term before the first. Keep the sign that belongs to the coefficient, and do not mistake a term of the sequence for the difference.",
-        "公差是 $n$ 增加一时项的变化量。在 $a_{n} = a_{1} + d(n - 1)$ 中，它是乘 $n - 1$ 的数。写成 $a_{n} = dn + c$ 时，公差是 $n$ 的系数，而不是常数，因为 $n$ 增加一时恰好增加这个系数。在递推公式 $a_{n} = a_{n - 1} + d$ 中，公差是加到前一项上的数。例如 $a_{n} = 7 - 2n$ 给出 $a_{1} = 5$，$a_{2} = 3$，所以 $d = -2$。\n\n> **注意。** 常数不是公差：它是首项，或者首项之前的那一项。系数的符号要一起带上，也不要把数列中的某一项当成公差。",
+    ["explicit-and-recursive-arithmetic-formulas"],
+    ["HSF.BF.A.2", "HSF.LE.A.2"],
+    [
+      kp(
+        "the-difference-from-listed-terms",
+        t("The difference from listed terms", "由列出的项求公差"),
+        t(
+          "The common difference $d$ is what each term adds to the one before it: $a_{n + 1} = a_{n} + d$. Solving for $d$ shows the order of subtraction, later term minus earlier term: $d = a_{n + 1} - a_{n}$. For $20, 17, 14, \\dots$ the difference is $17 - 20 = -3$, negative because the terms decrease. Any two neighbors give the same answer, so you can check with another pair: $14 - 17 = -3$.\n\n> **Watch out.** Subtracting in the other order gives the wrong sign; a falling sequence must have a negative difference. Use neighboring terms, not terms two apart, which give twice the difference, and subtract them rather than adding them.",
+          "公差 $d$ 是每一项比前一项多出的量：$a_{n + 1} = a_{n} + d$。把它解出 $d$，就看出相减的顺序是后项减前项：$d = a_{n + 1} - a_{n}$。对 $20, 17, 14, \\dots$，公差是 $17 - 20 = -3$，因为各项递减所以为负。任意两个相邻项都给出同样的结果，所以可以用另一对来检验：$14 - 17 = -3$。\n\n> **注意。** 反过来相减会得到相反的符号；递减的数列公差一定是负数。要用相邻的两项，隔一项相减会得到公差的两倍；两项要相减，不能相加。",
+        ),
+        (rng) => {
+          const a = rng.int(-20, 40);
+          const d = rng.pick([-12, -9, -7, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8, 9, 11, 15]);
+          const s = rng.int(0, 2);
+          const seq = [a, a + d, a + 2 * d, a + 3 * d];
+          return numberProblem({
+            prompt: t(
+              `What is the common difference of the arithmetic sequence $${seq.join(", ")}, \\dots$?`,
+              `等差数列 $${seq.join(", ")}, \\dots$ 的公差是多少？`,
+            ),
+            answer: d,
+            solveFor: "d",
+            wrong: [-d, 2 * d, a + d + a, Math.abs(d) === 1 ? 3 : d + 1],
+            solution: t(
+              `The difference is what each term adds to the previous one, so subtract a term from the one after it. Take the neighbors $${seq[s]}$ and $${seq[s + 1]}$:${steps(`d = ${seq[s + 1]} - ${(seq[s] as number) < 0 ? `(${seq[s]})` : seq[s]} = ${d}`)}The terms ${d < 0 ? "decrease, so the difference is negative" : "increase, so the difference is positive"}.\n\n**Check.** Adding $${d}$ again and again from $${a}$ gives ${seq.map((x) => `$${x}$`).join(", ")}, the listed terms.`,
+              `公差是每一项比前一项多出的量，所以用后一项减去前一项。取相邻的 $${seq[s]}$ 和 $${seq[s + 1]}$：${steps(`d = ${seq[s + 1]} - ${(seq[s] as number) < 0 ? `(${seq[s]})` : seq[s]} = ${d}`)}各项${d < 0 ? "递减，所以公差是负数" : "递增，所以公差是正数"}。\n\n**检验。** 从 $${a}$ 开始不断加 $${d}$，得到 ${seq.map((x) => `$${x}$`).join("、")}，正是列出的各项。`,
+            ),
+          });
+        },
       ),
-      (rng) => {
-        const d = rng.pick([-9, -7, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8, 9]);
-        const a = rng.pick([-8, -5, -3, -1, 1, 4, 6, 10, 12, 15, 20, 25]);
-        const form = rng.int(0, 2);
-        const shown =
-          form === 0
-            ? `a_{n} = ${a} ${d < 0 ? "-" : "+"} ${Math.abs(d)}(n - 1)`
-            : form === 1
-              ? `a_{n} = ${poly([d, "n"], [a, ""])}`
-              : `a_{1} = ${a}, \\quad a_{n} = ${poly([1, "a_{n - 1}"], [d, ""])}`;
-        const c = form === 0 ? a + d : form === 1 ? a + 2 * d : a + d;
-        return numberProblem({
-          prompt: t(
-            `An arithmetic sequence is given by $${shown}$. What is its common difference?`,
-            `一个等差数列由 $${shown}$ 给出。它的公差是多少？`,
-          ),
-          answer: d,
-          solveFor: "d",
-          wrong: [a, -d, c, d + a],
-          solution: t(
-            `${
-              form === 2
-                ? `The formula makes each term by adding the same number to the previous term, and that number is the common difference: $d = ${d}$.`
-                : `Raising $n$ by one changes the term by the number multiplying ${form === 0 ? "$n - 1$" : "$n$"}, so the common difference is $${d}$. The constant $${a}$ is ${form === 0 ? "the first term" : "the value at $n = 0$"}, not the difference.`
-            }\n\n**Check.** The first two terms are $a_{1} = ${form === 1 ? a + d : a}$ and $a_{2} = ${form === 1 ? a + 2 * d : a + d}$, and $${form === 1 ? a + 2 * d : a + d} - ${paren(form === 1 ? a + d : a)} = ${d}$.`,
-            `${
-              form === 2
-                ? `这个公式每次都给前一项加上同一个数得到下一项，这个数就是公差：$d = ${d}$。`
-                : `$n$ 增加一时，项的变化量就是乘${form === 0 ? " $n - 1$ " : " $n$ "}的数，所以公差是 $${d}$。常数 $${a}$ 是${form === 0 ? "首项" : " $n = 0$ 时的值"}，不是公差。`
-            }\n\n**检验。** 前两项是 $a_{1} = ${form === 1 ? a + d : a}$ 和 $a_{2} = ${form === 1 ? a + 2 * d : a + d}$，而 $${form === 1 ? a + 2 * d : a + d} - ${paren(form === 1 ? a + d : a)} = ${d}$。`,
-          ),
-        });
-      },
-    ),
-    kp(
-      "the-difference-from-two-separated-terms",
-      t("The difference from two separated terms", "由两个不相邻的项求公差"),
-      t(
-        "Going from term $m$ to term $n$ takes $n - m$ steps, each adding $d$, so $a_{n} = a_{m} + (n - m)d$. Solving for $d$ gives $d = \\frac{a_{n} - a_{m}}{n - m}$: the change in value over the number of steps. If $a_{3} = 11$ and $a_{8} = 31$, there are $8 - 3 = 5$ steps sharing a change of $31 - 11 = 20$, so $d = 4$. Check: $11 + 5 \\cdot 4 = 31$.\n\n> **Watch out.** The change itself is not the difference; divide it by the number of steps, $n - m$, not by $n$ or $m$. Subtract the terms in the same order as their positions, later minus earlier, so the sign comes out right, and never add the two terms.",
-        "从第 $m$ 项到第 $n$ 项要走 $n - m$ 步，每步加 $d$，所以 $a_{n} = a_{m} + (n - m)d$。解出 $d$ 得 $d = \\frac{a_{n} - a_{m}}{n - m}$，即值的变化量除以步数。若 $a_{3} = 11$，$a_{8} = 31$，则 $8 - 3 = 5$ 步共变化 $31 - 11 = 20$，所以 $d = 4$。检验：$11 + 5 \\cdot 4 = 31$。\n\n> **注意。** 变化量本身不是公差，要除以步数 $n - m$，而不是除以 $n$ 或 $m$。两项相减的顺序要与位置的顺序一致，后项减前项，符号才对；也不要把两项相加。",
+      kp(
+        "the-difference-from-a-formula",
+        t("The difference from a formula", "由公式求公差"),
+        t(
+          "The common difference is how much a term changes when $n$ goes up by one. In $a_{n} = a_{1} + d(n - 1)$ that is the number multiplying $n - 1$. Written as $a_{n} = dn + c$, it is the coefficient of $n$, not the constant, because raising $n$ by one adds exactly that coefficient. In a recursive formula $a_{n} = a_{n - 1} + d$, it is the number added to the previous term. For example, $a_{n} = 7 - 2n$ gives $a_{1} = 5$ and $a_{2} = 3$, so $d = -2$.\n\n> **Watch out.** The constant is not the difference: it is the first term, or the term before the first. Keep the sign that belongs to the coefficient, and do not mistake a term of the sequence for the difference.",
+          "公差是 $n$ 增加一时项的变化量。在 $a_{n} = a_{1} + d(n - 1)$ 中，它是乘 $n - 1$ 的数。写成 $a_{n} = dn + c$ 时，公差是 $n$ 的系数，而不是常数，因为 $n$ 增加一时恰好增加这个系数。在递推公式 $a_{n} = a_{n - 1} + d$ 中，公差是加到前一项上的数。例如 $a_{n} = 7 - 2n$ 给出 $a_{1} = 5$，$a_{2} = 3$，所以 $d = -2$。\n\n> **注意。** 常数不是公差：它是首项，或者首项之前的那一项。系数的符号要一起带上，也不要把数列中的某一项当成公差。",
+        ),
+        (rng) => {
+          const d = rng.pick([-9, -7, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8, 9]);
+          const a = rng.pick([-8, -5, -3, -1, 1, 4, 6, 10, 12, 15, 20, 25]);
+          const form = rng.int(0, 2);
+          const shown =
+            form === 0
+              ? `a_{n} = ${a} ${d < 0 ? "-" : "+"} ${Math.abs(d)}(n - 1)`
+              : form === 1
+                ? `a_{n} = ${poly([d, "n"], [a, ""])}`
+                : `a_{1} = ${a}, \\quad a_{n} = ${poly([1, "a_{n - 1}"], [d, ""])}`;
+          const c = form === 0 ? a + d : form === 1 ? a + 2 * d : a + d;
+          return numberProblem({
+            prompt: t(
+              `An arithmetic sequence is given by $${shown}$. What is its common difference?`,
+              `一个等差数列由 $${shown}$ 给出。它的公差是多少？`,
+            ),
+            answer: d,
+            solveFor: "d",
+            wrong: [a, -d, c, d + a],
+            solution: t(
+              `${
+                form === 2
+                  ? `The formula makes each term by adding the same number to the previous term, and that number is the common difference: $d = ${d}$.`
+                  : `Raising $n$ by one changes the term by the number multiplying ${form === 0 ? "$n - 1$" : "$n$"}, so the common difference is $${d}$. The constant $${a}$ is ${form === 0 ? "the first term" : "the value at $n = 0$"}, not the difference.`
+              }\n\n**Check.** The first two terms are $a_{1} = ${form === 1 ? a + d : a}$ and $a_{2} = ${form === 1 ? a + 2 * d : a + d}$, and $${form === 1 ? a + 2 * d : a + d} - ${paren(form === 1 ? a + d : a)} = ${d}$.`,
+              `${
+                form === 2
+                  ? `这个公式每次都给前一项加上同一个数得到下一项，这个数就是公差：$d = ${d}$。`
+                  : `$n$ 增加一时，项的变化量就是乘${form === 0 ? " $n - 1$ " : " $n$ "}的数，所以公差是 $${d}$。常数 $${a}$ 是${form === 0 ? "首项" : " $n = 0$ 时的值"}，不是公差。`
+              }\n\n**检验。** 前两项是 $a_{1} = ${form === 1 ? a + d : a}$ 和 $a_{2} = ${form === 1 ? a + 2 * d : a + d}$，而 $${form === 1 ? a + 2 * d : a + d} - ${paren(form === 1 ? a + d : a)} = ${d}$。`,
+            ),
+          });
+        },
       ),
-      (rng) => {
-        const d = rng.pick([-6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8]);
-        const m = rng.int(1, 8);
-        const gap = rng.int(2, 9);
-        const n = m + gap;
-        const am = rng.int(-15, 30);
-        const an = am + d * gap;
-        return numberProblem({
-          prompt: t(
-            `In an arithmetic sequence, $a_{${m}} = ${am}$ and $a_{${n}} = ${an}$. What is the common difference?`,
-            `在一个等差数列中，$a_{${m}} = ${am}$，$a_{${n}} = ${an}$。公差是多少？`,
-          ),
-          answer: d,
-          solveFor: "d",
-          wrong: [an - am, -d, Q.of(an - am, n), Q.of(an, n), Q.of(an + am, gap)],
-          solution: t(
-            `**Step 1: count the steps.** From term $${m}$ to term $${n}$ there are $${n} - ${m} = ${gap}$ steps, and each adds the same $d$.\n\n**Step 2: share the change.** The value changes by $${an} - ${paren(am)} = ${an - am}$ over those steps:${steps(`d = \\frac{${an} - ${paren(am)}}{${gap}} = \\frac{${an - am}}{${gap}} = ${d}`)}**Check.** Start at $a_{${m}} = ${am}$ and add $${gap}$ steps of $${d}$: $${am} + ${gap} \\cdot ${paren(d)} = ${an}$, which is $a_{${n}}$.`,
-            `**第一步：数步数。** 从第 $${m}$ 项到第 $${n}$ 项有 $${n} - ${m} = ${gap}$ 步，每步加同样的 $d$。\n\n**第二步：平均分配变化量。** 这些步一共变化 $${an} - ${paren(am)} = ${an - am}$：${steps(`d = \\frac{${an} - ${paren(am)}}{${gap}} = \\frac{${an - am}}{${gap}} = ${d}`)}**检验。** 从 $a_{${m}} = ${am}$ 开始，加 $${gap}$ 步、每步 $${d}$：$${am} + ${gap} \\cdot ${paren(d)} = ${an}$，正是 $a_{${n}}$。`,
-          ),
-        });
-      },
-    ),
-  ],
+      kp(
+        "the-difference-from-two-separated-terms",
+        t("The difference from two separated terms", "由两个不相邻的项求公差"),
+        t(
+          "Going from term $m$ to term $n$ takes $n - m$ steps, each adding $d$, so $a_{n} = a_{m} + (n - m)d$. Solving for $d$ gives $d = \\frac{a_{n} - a_{m}}{n - m}$: the change in value over the number of steps. If $a_{3} = 11$ and $a_{8} = 31$, there are $8 - 3 = 5$ steps sharing a change of $31 - 11 = 20$, so $d = 4$. Check: $11 + 5 \\cdot 4 = 31$.\n\n> **Watch out.** The change itself is not the difference; divide it by the number of steps, $n - m$, not by $n$ or $m$. Subtract the terms in the same order as their positions, later minus earlier, so the sign comes out right, and never add the two terms.",
+          "从第 $m$ 项到第 $n$ 项要走 $n - m$ 步，每步加 $d$，所以 $a_{n} = a_{m} + (n - m)d$。解出 $d$ 得 $d = \\frac{a_{n} - a_{m}}{n - m}$，即值的变化量除以步数。若 $a_{3} = 11$，$a_{8} = 31$，则 $8 - 3 = 5$ 步共变化 $31 - 11 = 20$，所以 $d = 4$。检验：$11 + 5 \\cdot 4 = 31$。\n\n> **注意。** 变化量本身不是公差，要除以步数 $n - m$，而不是除以 $n$ 或 $m$。两项相减的顺序要与位置的顺序一致，后项减前项，符号才对；也不要把两项相加。",
+        ),
+        (rng) => {
+          const d = rng.pick([-6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8]);
+          const m = rng.int(1, 8);
+          const gap = rng.int(2, 9);
+          const n = m + gap;
+          const am = rng.int(-15, 30);
+          const an = am + d * gap;
+          return numberProblem({
+            prompt: t(
+              `In an arithmetic sequence, $a_{${m}} = ${am}$ and $a_{${n}} = ${an}$. What is the common difference?`,
+              `在一个等差数列中，$a_{${m}} = ${am}$，$a_{${n}} = ${an}$。公差是多少？`,
+            ),
+            answer: d,
+            solveFor: "d",
+            wrong: [an - am, -d, Q.of(an - am, n), Q.of(an, n), Q.of(an + am, gap)],
+            solution: t(
+              `**Step 1: count the steps.** From term $${m}$ to term $${n}$ there are $${n} - ${m} = ${gap}$ steps, and each adds the same $d$.\n\n**Step 2: share the change.** The value changes by $${an} - ${paren(am)} = ${an - am}$ over those steps:${steps(`d = \\frac{${an} - ${paren(am)}}{${gap}} = \\frac{${an - am}}{${gap}} = ${d}`)}**Check.** Start at $a_{${m}} = ${am}$ and add $${gap}$ steps of $${d}$: $${am} + ${gap} \\cdot ${paren(d)} = ${an}$, which is $a_{${n}}$.`,
+              `**第一步：数步数。** 从第 $${m}$ 项到第 $${n}$ 项有 $${n} - ${m} = ${gap}$ 步，每步加同样的 $d$。\n\n**第二步：平均分配变化量。** 这些步一共变化 $${an} - ${paren(am)} = ${an - am}$：${steps(`d = \\frac{${an} - ${paren(am)}}{${gap}} = \\frac{${an - am}}{${gap}} = ${d}`)}**检验。** 从 $a_{${m}} = ${am}$ 开始，加 $${gap}$ 步、每步 $${d}$：$${am} + ${gap} \\cdot ${paren(d)} = ${an}$，正是 $a_{${n}}$。`,
+            ),
+          });
+        },
+      ),
+    ],
   ),
   intro: t(
     "An arithmetic sequence grows by the same amount at every step, like $5, 9, 13, 17$, where each term is $4$ more than the one before. That amount, the common difference $d$, is the whole engine of the sequence: with the first term it decides every other term. You can find it in three ways, and they all measure the same thing, the change from one term to the next. From listed terms, subtract neighbors, later minus earlier. From a formula, read off the number that multiplies $n$, or the number added each time. From two terms far apart, divide the change in value by the number of steps between them.",
