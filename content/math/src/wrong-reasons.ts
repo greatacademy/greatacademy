@@ -26,7 +26,7 @@ export function reasoned(problem: Problem, reasons: readonly Reason[]): Problem 
   const lines = (locale: "en" | "zh-CN", heading: string, why: (r: Reason) => string) => {
     const items = shown.flatMap((o) => {
       const r = by.get(o.en);
-      return r ? [`- ${o[locale]} ${why(r)}`] : [];
+      return r ? [`- ${o[locale]}${locale === "en" ? ": " : "："}${why(r)}`] : [];
     });
     return items.length > 0 ? `${problem.solution[locale]}\n\n${heading}\n\n${items.join("\n")}` : problem.solution[locale];
   };

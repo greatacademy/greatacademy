@@ -686,7 +686,7 @@ export function explainedChoice(rng: Rng, p: ExplainedChoice): Problem {
   const shown = input.kind === "choice" ? input.options : [];
   const inOrder = shown.flatMap((o) => wrong.filter((w) => w.option === o));
   const lines = (locale: "en" | "zh-CN", heading: string) =>
-    `${p.solution[locale]}\n\n${heading}\n\n${inOrder.map((w) => `- ${w.option[locale]} ${w.why[locale]}`).join("\n")}`;
+    `${p.solution[locale]}\n\n${heading}\n\n${inOrder.map((w) => `- ${w.option[locale]}${locale === "en" ? ": " : "："}${w.why[locale]}`).join("\n")}`;
   return withMistakes(
     {
       ...problem,

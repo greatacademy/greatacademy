@@ -30,8 +30,8 @@ describe("explainedChoice", () => {
   });
 
   it("goes through the wrong options in the solution, in both languages", () => {
-    expect(problem.solution.en).toContain("- Far It is far.");
-    expect(problem.solution["zh-CN"]).toContain("- 偏 它偏了。");
+    expect(problem.solution.en).toContain("- Far: It is far.");
+    expect(problem.solution["zh-CN"]).toContain("- 偏：它偏了。");
     expect(problem.solution.en).not.toContain("Again.");
   });
 });
