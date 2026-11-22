@@ -21,13 +21,16 @@ import { levelSevenCourse } from "./level-7/index.ts";
 import { levelEightCourse } from "./level-8/index.ts";
 import { levelNineCourse } from "./level-9/index.ts";
 import { readingAloudTopics } from "./oral/reading-aloud.ts";
+import { stageSpeakingTopics } from "./oral/speaking-1-2.ts";
 import { heritageReading } from "./reading/heritage.ts";
 import { chineseReading } from "./reading/index.ts";
+import { stageReadingTopics } from "./reading/stage-1-2.ts";
 import { recitedPoems } from "./recitation/index.ts";
 import { componentTopics, strokeOrderTopics } from "./strokes/index.ts";
 import { levelHandwritingByLevel } from "./strokes/levels.ts";
 import { handwritingByGrade } from "./strokes/writing.ts";
 import { wordBatches } from "./words/index.ts";
+import { earlyJudgedTopics } from "./writing/early-judged.ts";
 import { earlySentenceTopics } from "./writing/early-sentences.ts";
 import { writingTopics } from "./writing/index.ts";
 import { laterWritingTopics } from "./writing/later.ts";
@@ -37,10 +40,11 @@ const NUMERALS = ["零", "一", "二", "三", "四", "五", "六", "七", "八",
 /** MODULE is the number of recognition batches of a module. */
 const MODULE = 6;
 
-/** PINYIN_MODULES are the pinyin of grade 1: the topics of the course chinese-pinyin, explained in Chinese. */
+/** PINYIN_MODULES are the pinyin of grade 1: the topics of the course chinese-pinyin and the alphabet, explained in Chinese. */
 const PINYIN_MODULES: readonly ModuleDef[] = [
   { title: t("Tones", "声调"), topics: ["pinyin-tones"] },
   { title: t("Initials and Finals", "声母和韵母"), topics: ["pinyin-initials", "pinyin-finals", "pinyin-spelling"] },
+  { title: t("The Alphabet", "字母表"), topics: ["pinyin-alphabet"] },
   { title: t("Hearing", "听音"), topics: ["pinyin-hearing"] },
   { title: t("Tones in Speech", "语流变调"), topics: ["pinyin-yi-and-bu", "pinyin-third-tones"] },
   { title: t("Saying Words", "说词语"), topics: ["pinyin-saying"] },
@@ -99,9 +103,32 @@ function grammarModules(grade: number): readonly ModuleDef[] {
 /** writingModules are a grade's modules of judged writing, those it has. */
 function writingModules(grade: number): readonly ModuleDef[] {
   const sentences = ofGrade(earlySentenceTopics, grade);
-  if (sentences.length > 0) return [{ title: t("Building Sentences", "连词成句"), topics: sentences }];
+  if (sentences.length > 0) {
+    const judged = ofGrade(earlyJudgedTopics, grade);
+    return [
+      { title: t("Building Sentences", "连词成句"), topics: sentences },
+      ...(judged.length > 0 ? [{ title: t("Writing Sentences", "写话"), topics: judged }] : []),
+    ];
+  }
   const topics = ofGrade([...writingTopics, ...laterWritingTopics], grade);
   return topics.length > 0 ? [{ title: t("Writing", grade >= 7 ? "写作" : "习作"), topics }] : [];
+}
+
+/** stageUnits are a grade's units of reading and of speaking, those it has. */
+function stageUnits(grade: number): CourseDef["units"] {
+  const reading = ofGrade(stageReadingTopics, grade);
+  const speaking = ofGrade(stageSpeakingTopics, grade);
+  return [
+    ...(reading.length > 0 ? [{ title: t("Reading", "阅读"), modules: [{ title: t("Reading", "阅读"), topics: reading }] }] : []),
+    ...(speaking.length > 0
+      ? [
+          {
+            title: t("Speaking and Listening", "口语交际"),
+            modules: [{ title: t("Speaking and Listening", "口语交际"), topics: speaking }],
+          },
+        ]
+      : []),
+  ];
 }
 
 /** classicalModules are a grade's modules of classical language, those it has. */
@@ -175,10 +202,6 @@ function gradeCourse(grade: number, description: CourseDef["description"]): Cour
               title: t("Components", "偏旁部首"),
               modules: [{ title: t("Components", "偏旁部首"), topics: componentTopics.map((x) => x.id) }],
             },
-          ]
-        : []),
-      ...(grade === 3
-        ? [
             {
               title: t("Using a Dictionary", "查字典"),
               modules: [{ title: t("Using a Dictionary", "查字典"), topics: dictionaryTopics.map((x) => x.id) }],
@@ -192,6 +215,7 @@ function gradeCourse(grade: number, description: CourseDef["description"]): Cour
       ...(writingModules(grade).length > 0
         ? [{ title: t("Writing", grade >= 7 ? "写作" : grade <= 2 ? "写话" : "习作"), modules: writingModules(grade) }]
         : []),
+      ...stageUnits(grade),
       ...readingAloudUnits(grade),
       {
         title: t("Recitation", "积累与背诵"),

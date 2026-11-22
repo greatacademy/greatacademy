@@ -1,7 +1,7 @@
-// Using a dictionary (docs/chinese-curriculum.md §8.1, grades 3 and 4): looking a character up by its pinyin, by the
+// Using a dictionary (docs/chinese-curriculum.md §8.1 and §18.9, grade 2): looking a character up by its pinyin, by the
 // capital letter and then the syllable, and by its radical, then by the strokes left. Each is asked of characters a
-// learner of grade 3 already knows: the pinyin from the recognition batches of grades 1 and 2, the radical from the
-// components of grade 2 and the strokes from the standard medians the writing topics use.
+// learner of grade 2 already knows: the pinyin from the recognition batches of grade 1, the radical from the components
+// of grade 2 and the strokes from the standard medians the writing topics use.
 
 import { type Text, type TopicDef, t } from "@ga/content";
 import { toneless } from "@ga/subject-chinese";
@@ -80,7 +80,7 @@ const strokeItems: readonly DrillItem[] = RADICALS.flatMap((r) =>
   }),
 );
 
-/** Entry is a character known by grade 3 with its syllable. */
+/** Entry is a character known by grade 2 with its syllable. */
 interface Entry {
   readonly char: string;
   readonly reading: string;
@@ -91,9 +91,9 @@ interface Entry {
 /** syllableOf writes a reading without its tone, keeping ü. */
 const syllableOf = (reading: string): string => toneless(reading.normalize("NFC")).replace(/v/gu, "ü");
 
-/** ENTRIES are the characters of grades 1 and 2 with one reading, in the order taught. */
+/** ENTRIES are the characters of grade 1 with one reading, in the order taught. */
 const ENTRIES: readonly Entry[] = recognitionByGrade
-  .filter((g) => g.grade <= 2)
+  .filter((g) => g.grade === 1)
   .flatMap((g) => g.batches.flatMap((b) => b.entries))
   .filter((e) => /^[a-zāáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜü]+$/u.test(e.reading.normalize("NFC")))
   .map((e) => ({ char: e.char, reading: e.reading, syllable: syllableOf(e.reading) }));

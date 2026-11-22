@@ -31,7 +31,7 @@
 | 《3-6岁儿童学习与发展指南》（2012） | 教育部 | 为什么不设学前识字课：语言领域要求的是倾听、表达和阅读书写准备，而不是教汉字（§8.1） |
 | 新 HSK（HSK 3.0） | 教育部中外语言交流合作中心与汉考国际 | 考试课程：以 GF 0025-2021 为基础的九个等级；一至六级的试卷结构是考试主办方 2025 年 12 月公布、2026 年 7 月起实行的结构；据报道首次正式考试在 2026 年 12 月 13 日，要以考试主办方自己的通知核实 |
 
-本文关于两部课程标准的表述，已对照 2026-11-16 从 moe.gov.cn 下载的教育部 PDF 核对。§8.3 中 GF 0025-2021 的数字已对照该标准的正式文本核对。标准只引用和概述，绝不复制（§13）。
+本文关于两部课程标准的表述，已对照 2026-11-16 从 moe.gov.cn 下载的教育部 PDF 核对；§18 连同两部课标的学段要求、学习任务群、背诵推荐篇目和读物建议，2026-11-22 又对照这些 PDF 核对了一遍。§8.3 中 GF 0025-2021 的数字已对照该标准的正式文本核对。标准只引用和概述，绝不复制（§13）。
 
 ## 3. 学习对象
 
@@ -116,15 +116,15 @@
 
 | 课程 | 最重的部分 |
 | :--- | :--- |
-| 一、二年级 | 先识字，再把拼音当工具，和 2024 年修订的统编教材一样；笔画和部件；认识 1600 字，会写 800 字；儿歌和短诗；先写一句话，再写几句话 |
-| 三、四年级 | 2500 和 1600 字；查字典；词语和成语；段落；记叙和说明的阅读；古诗 |
+| 一、二年级 | 先识字，再把拼音当工具，和 2024 年修订的统编教材一样；笔画和部件；查字典；认识 1600 字，会写 800 字；儿歌和短诗；先写一句话，再写几句话 |
+| 三、四年级 | 2500 和 1600 字；在字典里选择义项；词语和成语；段落；记叙和说明的阅读；古诗 |
 | 五、六年级 | 3000 和 2500 字；阅读速度；最早的文言短文；整本书；400 至 500 字的习作 |
 | 七至九年级 | 3500 字和行楷；文言文；议论和说明；每年三本整本书；45 分钟写 500 字的作文 |
 | 高中 | 18 个任务群：整本书阅读、语言、文学、思辨性阅读、实用性阅读、传统文化经典、革命传统与现当代作品、外国作品、科学与文化论著 |
 
 一、二年级各自成课，比英语的大，因为课标要求二年级末认识 1600 字，而语文占在校时间的五分之一。课时仍然要短，适合孩子在大人身边学。不设学前课程：3-6 岁指南要求的是倾听、表达和准备，不是识字。
 
-每门母语课程在写作之后有一个朗读与整本书阅读单元：一个朗读本年级文章的主题，每次读几个完整的句子，由语音服务核对读出的字，不因口音扣分（§11）；三年级到高中必修还有一个只练习的本年级整本书主题（§9）。三年级以查字典单元开始：用音序查字法，先查大写字母再查音节，用部首查字法，先查部首再数剩余笔画，查的都是学习者已经认识的字。
+每门母语课程在写作之后有一个朗读与整本书阅读单元：一个朗读本年级文章的主题，每次读几个完整的句子，由语音服务核对读出的字，不因口音扣分（§11）；三年级到高中必修还有一个只练习的本年级整本书主题（§9）。二年级有一个查字典单元，这是课标对一、二年级的要求：用音序查字法，先查大写字母再查音节，用部首查字法，先查部首再数剩余笔画，查的都是学习者已经认识的字；三年级接着在字典、词典里为字和词选择义项（§18）。
 
 ### 8.2 华裔课程
 
@@ -264,7 +264,7 @@ AI 评判的写作需要由中文教师评分的校准集，和英语的分开�
 3. **外语一至三级**，和英语一样用事先录好的录音，加上拼音判定器。已开始：课程 `chinese-pinyin`，8 个主题，讲声调、声母、韵母、拼写规则、听音节、变调和说词语；一级课程 `chinese-level-1`，168 个主题，学习 300 个字、500 个词、48 个语法主题、26 个听说主题、4 个连词成句主题和 10 个写汉字主题；二级课程 `chinese-level-2`，219 个主题，再学 300 个字、770 个词、70 个语法主题、26 个听说主题、4 个连词成句主题、2 个写作主题和 10 个写汉字主题；三级课程 `chinese-level-3`，250 个主题，再学 300 个字、970 个词、81 个语法主题、26 个听说主题、4 个连词成句主题、2 个写作主题和 10 个写汉字主题。每一级的听说主题包括两个听对话主题，在第 6 和第 12 单元的最后。
 4. **手写：** 网页和应用里的笔画输入板、笔画判定器，以及写字主题。已建：输入板、判定器，以及母语课程和华裔衔接课的 300 个写字主题。
 5. **一、二年级**和华裔衔接课，它们需要手写、拼音和录音。已开始：`chinese-grade-1` 和 `chinese-grade-2`，265 个主题、556 个知识点：一年级的汉语拼音，笔画和笔顺三个主题、偏旁部首三个主题，字表一其余的 1600 字分成 133 个识字批次，其中 800 字分 80 个写字批次手写，八批词语、八个连词成句主题、二十首短诗和两个朗读主题；六个阅读单元共十八篇短文。华裔识字衔接课 `chinese-heritage-1` 至 `chinese-heritage-3` 共 505 个主题，按顺序编排一至四年级的识字批次和这些字的写字批次，连同一、二年级的连词成句和它们的文章用到的 17 个词语批次，另有八个自有主题，其中四个在第三门衔接课，有两个进一步认读繁体字（§5.4）。
-6. **七至九年级、高中和文言。** 已开始：`chinese-grade-7` 到 `chinese-grade-9`，132 个主题、348 个知识点：字表二中最后的 500 个字分 42 批识字，十二批词语和十二批成语，三个语法主题，七至九年级的 60 篇背诵篇目和三个文言练习；以及 `chinese-hs-required` 和 `chinese-hs-selective`，98 个主题、284 个知识点：八批词语和八批成语，两个语法主题，高中的 72 篇背诵篇目和八个文言练习；以及七至九年级记叙文、说明文、议论文九个阅读单元，以及高中六个阅读单元。每门母语课程还有一个朗读主题，共十一个；三至九年级和高中必修各有一个只练习的整本书主题，共八个；三年级有两个查字典主题（§8.1）。
+6. **七至九年级、高中和文言。** 已开始：`chinese-grade-7` 到 `chinese-grade-9`，132 个主题、348 个知识点：字表二中最后的 500 个字分 42 批识字，十二批词语和十二批成语，三个语法主题，七至九年级的 60 篇背诵篇目和三个文言练习；以及 `chinese-hs-required` 和 `chinese-hs-selective`，98 个主题、284 个知识点：八批词语和八批成语，两个语法主题，高中的 72 篇背诵篇目和八个文言练习；以及七至九年级记叙文、说明文、议论文九个阅读单元，以及高中六个阅读单元。每门母语课程还有一个朗读主题，共十一个；三至九年级和高中必修各有一个只练习的整本书主题，共八个；二年级有两个查字典主题（§8.1）。
 7. **四至九级、AI 评判的写作、口语和会话，然后是考试课程。** 已开始：四级课程 `chinese-level-4`，245 个主题，再学 300 个字、1000 个词、73 个语法主题、26 个听说主题、4 个连词成句主题、2 个写作主题和 10 个写汉字主题；五级课程 `chinese-level-5`，246 个主题，再学 300 个字、1070 个词、62 个语法主题、26 个听说主题、4 个连词成句主题、2 个写作主题和 15 个写汉字主题；六级课程 `chinese-level-6`，253 个主题，再学 300 个字、1140 个词、62 个语法主题、26 个听说主题、4 个连词成句主题、2 个写作主题和 15 个写汉字主题；七级课程 `chinese-level-7`，326 个主题，再学 400 个字、1880 个词、49 个语法主题、26 个听说主题、4 个连词成句主题、2 个写作主题和 17 个写汉字主题；八级课程 `chinese-level-8`，327 个主题，再学 400 个字、1880 个词、51 个语法主题、26 个听说主题、4 个连词成句主题、2 个写作主题和 16 个写汉字主题；九级课程 `chinese-level-9`，328 个主题，再学 400 个字、1880 个词、51 个语法主题、26 个听说主题、4 个连词成句主题、2 个写作主题和 17 个写汉字主题；四至九级的第三、六、九、十二单元还各以一段对话结束，共 24 段，用普通话和 AI 导师交谈；HSK 课程 `chinese-hsk-1` 至 `chinese-hsk-6` 和 `chinese-hsk-7-9`，每门是所考等级的单元、这些等级的写汉字，加九个只练习的考试主题，HSK 2 十个，HSK 3 至 6 十一个，HSK 7–9 十三个，共 76 个；以及高考课程 `chinese-gaokao`，是两门高中课程的单元再加十二个，其中六个是现代文阅读和古代诗歌阅读。
 
 [中文开发计划](chinese-development-plan.zh-CN.md)把这张清单细化为里程碑、文件和闸门。
@@ -287,3 +287,259 @@ AI 评判的写作需要由中文教师评分的校准集，和英语的分开�
 - 教育部.《3-6岁儿童学习与发展指南》. 2012.
 - GB/T 16159-2012《汉语拼音正词法基本规则》；GB/T 15834-2011《标点符号用法》；GF 0023-2020《通用规范汉字笔顺规范》。
 - Nation, I. S. P. (2007). The four strands. *Innovation in Language Learning and Teaching*, 1(1), 2–13.
+
+## 18. 逐条对照课程标准
+
+学习者可以在任何时候离开母语课程去上学，所以每门年级课程教的是两部课程标准对本学段的要求，比例按课标，课标不要求的不教。本节把义务教育课标的每条学段要求、六个学习任务群，以及高中必修和选择性必修的学习任务群，逐条对照现有课程；把背诵篇目和课标推荐篇目对照；并列出补足缺口的主题。课标只概述，不照录（§13）。
+
+### 18.1 怎样读这张对照表
+
+一条要求如果有主题或阅读单元按课标的意思练习，就是**已覆盖**；只练到一部分是**部分**；没有任何内容练习是**缺口**；最后一列写补足它的主题（§18.9）。有几条要求不属于掌握练习：毛笔字和行楷、默读姿势、课外阅读量，以及梳理与探究和跨学科学习里的活动（办刊、演出、调查、跨学科研究）。它们在应用之外完成，和选修课一样（§8.1），§18.7 列出。默读速度，六年级每分钟 300 字、九年级 500 字，需要给阅读计时的题目，核心还没有，等核心改动。
+
+本节之前，三年级有 104 个主题：80 个识字、写字批次和查字典主题，8 篇背诵，8 批词语，4 个语法主题，2 个写作，1 个朗读和 1 本整本书，另有三个阅读单元各三篇文章。四至九年级大体相同。汉字和背诵已覆盖；阅读理解、习作和口语交际没有。
+
+### 18.2 一、二年级
+
+| 要求 | 现有 | 状态 | 补足 |
+| :--- | :--- | :--- | :--- |
+| **识字与写字。** 拼读音节，认识大写字母，熟记字母表 | 一年级拼音单元 | 部分 | `pinyin-alphabet` |
+| 认识常用字 1600 个左右，会写 800 个左右 | 133 个识字批次、80 个写字批次 | 已覆盖 | — |
+| 基本笔画、偏旁和笔顺；用硬笔写正楷 | 笔画、部件、写字批次 | 已覆盖 | — |
+| 用音序和部首检字法查字典 | 三年级的 `dictionary-pinyin`、`dictionary-radicals` | 部分 | 两个主题移到二年级 |
+| **阅读与鉴赏。** 用普通话朗读，学习默读 | `reading-aloud-1`、`reading-aloud-2` | 已覆盖 | — |
+| 认识常用标点，体会句号、问号、感叹号的语气 | 三年级才有 | 缺口 | `punctuation-sentence-ends` 移到二年级 |
+| 结合上下文和生活了解词句意思，借助图画阅读 | 六个阅读单元 | 部分 | `reading-1-stories`、`reading-1-signs` |
+| 读浅近的童话、寓言、故事，关心其中的人物 | 六个阅读单元 | 部分 | `reading-2-fables`、`reading-2-fairy-tales`、`reading-2-science` |
+| 诵读儿歌、儿童诗和浅近的古诗，本学段背诵 50 篇 | 20 首诗 | 部分 | §18.8；`reading-1-rhymes` |
+| 积累自己喜欢的成语和格言警句；尝试阅读整本书，向别人介绍 | 成语和整本书从三年级开始 | 应用之外 | 学习者自己选的成语和最初的书（§18.7） |
+| **表达与交流。** 认真听别人讲话，了解主要内容 | — | 缺口 | `speaking-1-listening` |
+| 复述听到的故事的大意；按顺序讲述小故事和见闻 | — | 缺口 | `speaking-1-telling` |
+| 交谈自然大方、有礼貌；会问、会答、会商量 | — | 缺口 | `speaking-1-manners`、`speaking-2-asking`、`speaking-2-messages`、`speaking-2-discussing` |
+| 写话：写想说的话、想象中的事物，运用学到的词语 | 八个连词成句主题 | 部分 | `writing-1-want-to-say`、`writing-2-picture`、`writing-2-imagination` |
+| 写话中使用逗号、句号、问号、感叹号 | — | 缺口 | `punctuation-sentence-ends`；写话主题的评判标准 |
+| **梳理与探究。** 观察自然和生活，梳理所学，提出问题 | 部件给汉字归类 | 部分 | `writing-2-picture`；提问属于课堂活动（§18.7） |
+
+### 18.3 三、四年级
+
+| 要求 | 现有 | 状态 | 补足 |
+| :--- | :--- | :--- | :--- |
+| **识字与写字。** 累计认识 2500 个左右，会写 1600 个左右 | 识字、写字批次 | 已覆盖 | — |
+| 会查字典、词典 | 查字典主题 | 部分 | `dictionary-words` |
+| 用毛笔临摹正楷字帖 | — | 应用之外 | §18.7 |
+| **阅读与鉴赏。** 朗读；默读不出声、不指读；略读，粗知大意 | `reading-aloud-3`、`reading-aloud-4` | 部分 | `reading-4-skimming` |
+| 联系上下文理解词句，体会关键句的作用 | 阅读单元 | 部分 | `reading-3-key-sentences` |
+| 把握文章主要内容和思想感情，对不懂的地方提问 | 阅读单元 | 部分 | `reading-3-main-idea`、`reading-4-feelings` |
+| 叙事性作品：复述大意，关心人物的命运和喜怒哀乐 | 阅读单元、`book-andersen`、`book-chinese-myths` | 部分 | `reading-3-fairy-tales`、`reading-3-fables`、`reading-4-narrative`、`reading-4-myths`、`reading-4-folk-tales` |
+| 诵读诗文，想象画面，领悟大意；本学段背诵 50 篇 | 16 首诗 | 部分 | §18.8；`reading-3-poems` |
+| 积累优美词语和精彩句段 | 词语和成语批次 | 已覆盖 | `language-3-similar-characters`、`language-4-polyphones` |
+| 逗号和句号；冒号和引号 | 标点主题 | 已覆盖 | — |
+| 生活中的实用文；写自然和科学的文章 | 阅读单元 | 部分 | `reading-3-science`、`reading-4-everyday-texts` |
+| **表达与交流。** 认真倾听，就不懂的地方请教，就不同意见商讨 | — | 缺口 | `speaking-3-listening`、`speaking-3-discussing` |
+| 简要转述听到的内容 | — | 缺口 | `speaking-3-relaying` |
+| 清楚地讲述见闻并说出感受；具体生动地讲故事 | — | 缺口 | `speaking-3-telling`、`speaking-4-storytelling`、`speaking-4-introducing`、`speaking-4-occasions`、`speaking-4-persuading` |
+| 不拘形式地写见闻、感受和想象，写新奇有趣或印象最深、最受感动的内容 | `writing-3-paragraph`、`writing-3-diary`、`writing-4-event` | 部分 | `writing-3-imagination`、`writing-3-favourite-thing`、`writing-4-observation`、`writing-4-imagination`、`writing-4-place` |
+| 简短的书信、便条 | `writing-4-letter` | 部分 | `writing-3-note` |
+| 修改习作中明显错误的词句 | 四年级起的病句 | 部分 | `revising-3`、`revising-4` |
+| 每学年习作 16 次左右 | 每年级两个评判主题 | 缺口 | 每年级五个评判主题，十种习作 |
+| **梳理与探究。** 提出问题，搜集资料，用语文和其他学科知识解决问题 | — | 应用之外 | §18.7；科普阅读 |
+
+### 18.4 五、六年级
+
+| 要求 | 现有 | 状态 | 补足 |
+| :--- | :--- | :--- | :--- |
+| **识字与写字。** 累计认识 3000 个左右，会写 2500 个左右；硬笔书写有一定速度 | 批次 | 已覆盖 | — |
+| 感受汉字的构字和组词特点 | — | 缺口 | `language-5-character-formation`、`language-6-word-formation` |
+| 毛笔写楷书 | — | 应用之外 | §18.7 |
+| **阅读与鉴赏。** 熟练朗读；默读每分钟不少于 300 字 | 朗读 | 部分 | 计时阅读等核心改动（§18.1） |
+| 浏览，根据需要搜集信息 | — | 缺口 | `reading-6-browsing`、`inquiry-5-sources` |
+| 推想词句意思，辨别词语的感情色彩 | 词语批次 | 部分 | `reading-5-word-colour` |
+| 揣摩表达顺序，领悟基本的表达方法 | — | 缺口 | `reading-5-structure` |
+| 叙事性作品：了解梗概，说出印象最深的场景、人物、细节和自己的感受 | 阅读单元、`book-journey-to-the-west`、`book-robinson-crusoe` | 部分 | `reading-5-narrative`、`reading-6-fiction`、`reading-6-prose` |
+| 诗歌：大体把握诗意，想象情境，通过语调、韵律、节奏体会情感 | 背诵 | 部分 | `reading-5-poems`、`reading-6-poems` |
+| 说明性文章：抓住要点，了解说明方法 | 阅读单元 | 部分 | `reading-5-expository`、`reading-6-expository` |
+| 非连续性文本：从图文组合材料中找出有价值的信息 | — | 缺口 | `reading-5-non-continuous`、`reading-6-non-continuous` |
+| 简单的论说：观点和事例 | `writing-6-argue` | 部分 | `reading-6-argument` |
+| 顿号和逗号、分号和句号 | 标点主题 | 已覆盖 | — |
+| 本学段背诵 60 篇 | 22 篇 | 部分 | §18.8 |
+| 阅读整本书，把握主要内容，向同学推荐并说明理由 | 每年级一本 | 部分 | 推荐属于课堂活动（§18.7） |
+| **表达与交流。** 参与讨论，敢于发表意见 | — | 缺口 | `speaking-5-discussion`、`speaking-6-responding` |
+| 认真耐心地听，抓住要点并转述 | — | 缺口 | `speaking-5-key-points` |
+| 表达有条理，语气语调适当；根据对象和场合稍作准备后发言 | — | 缺口 | `speaking-5-tone`、`speaking-6-short-speech`、`speaking-6-presenting`、`speaking-6-interview` |
+| 注意语言美，抵制不文明的语言 | — | 缺口 | `speaking-5-civil-language` |
+| 写纪实作文和想象作文，内容具体，感情真实，分段表述 | `writing-5-person`、`writing-5-explain`、`writing-6-scene`、`writing-6-argue` | 部分 | `writing-5-imagination`、`writing-6-real-event` |
+| 读书笔记和常见应用文 | — | 缺口 | `writing-5-book-notes`、`writing-6-reflection`、`writing-5-notice` |
+| 修改自己的习作，与他人交换修改 | 病句 | 部分 | `revising-5`、`revising-6` |
+| 每学年习作 16 次左右 | 每年级两个评判主题 | 缺口 | 每年级五个评判主题 |
+| **梳理与探究。** 分类整理语言材料；策划活动，写计划和总结；讨论共同关注的问题；利用图书馆和网络；尝试写简单的研究报告 | 词语批次 | 部分 | `writing-6-plan-summary`、`inquiry-5-sources`；其余在应用之外（§18.7） |
+
+### 18.5 七至九年级
+
+| 要求 | 现有 | 状态 | 补足 |
+| :--- | :--- | :--- | :--- |
+| **识字与写字。** 累计认识 3500 个左右；使用字典词典 | 批次 | 已覆盖 | — |
+| 行楷；临摹名家书法 | — | 应用之外 | §18.7 |
+| **阅读与鉴赏。** 朗读；默读现代文每分钟不少于 500 字；略读和浏览 | 朗读 | 部分 | 计时阅读等核心改动 |
+| 理清思路，推敲重要词句在语境中的意义和作用，形成自己的见解 | 阅读单元 | 部分 | `reading-7-narrative`、`reading-7-description` |
+| 表达方式；写实和虚构；诗歌、散文、小说、戏剧 | — | 缺口 | `reading-9-forms`、`reading-9-drama` |
+| 欣赏文学作品：形象、情感、富有表现力的语言 | 阅读单元 | 部分 | `reading-7-prose`、`reading-8-fiction`、`reading-9-fiction` |
+| 议论文：区分观点和材料，作出判断 | 议论阅读单元 | 部分 | `reading-8-argument`、`reading-9-argument` |
+| 新闻和说明性文章：基本观点和主要信息；科技作品的科学精神和方法 | 说明阅读单元 | 部分 | `reading-7-news`、`reading-7-expository`、`reading-8-expository`、`reading-8-science` |
+| 较复杂的非连续性文本 | — | 缺口 | `reading-8-non-continuous` |
+| 诵读古代诗词；借助注释和工具书读懂浅易文言文 | 背诵、文言练习 | 部分 | `reading-7-classical`、`reading-8-classical`、`reading-9-classical`、`reading-7-poems`、`reading-8-poems`、`reading-9-poems` |
+| 本学段背诵 80 篇 | 60 篇 | 部分 | §18.8 |
+| 每学年读两三部名著 | 每年级一本 | 部分 | `book-twenty-thousand-leagues`、`book-steel-tempered`、`book-jane-eyre` |
+| 基本词汇、语法和修辞；作家作品和文化常识 | 词语、成语和语法主题 | 已覆盖 | — |
+| **表达与交流。** 注意对象和场合；根据话语、表情和手势理解意图 | — | 缺口 | `speaking-7-intent`、`speaking-7-proper`、`speaking-9-hosting` |
+| 清楚、有说服力地表达观点 | — | 缺口 | `speaking-8-persuading`、`speaking-8-speech` |
+| 讲述生动；复述转述完整准确；即席讲话；有准备的主题演讲 | `writing-8-speech` | 部分 | `speaking-7-retelling`、`speaking-7-impromptu`、`speaking-8-speech` |
+| 讨论有中心、有根据、有条理，抓住焦点 | — | 缺口 | `speaking-8-discussion-focus`、`speaking-8-interview`、`speaking-9-debate`、`speaking-9-listening-argument` |
+| 观察生活，写出真情实感；运用联想和想象 | `writing-7-center`、`writing-7-detail` | 部分 | `writing-7-feeling`、`writing-7-imagination`、`writing-8-travel` |
+| 记叙文、说明文、议论文、应用文；缩写、扩写、改写；诗歌和小小说 | `writing-8-explain`、`writing-9-argue`、`writing-9-story` | 部分 | `writing-7-expand-condense`、`writing-7-practical`、`writing-8-news`、`writing-8-rewrite`、`writing-9-poem`、`writing-9-short-story`、`writing-9-review`、`writing-9-refute` |
+| 搜集素材、构思、列纲、起草、修改 | — | 缺口 | `planning-7-outline`、`revising-8`、`revising-9` |
+| 每学年作文不少于 14 次；45 分钟不少于 500 字 | 每年级两个评判主题 | 缺口 | 每年级六个评判主题；限时等核心改动 |
+| **梳理与探究。** 分类整理语言材料 | 词语批次 | 已覆盖 | — |
+| 跨媒介阅读，选择合适的媒介 | — | 缺口 | `reading-9-cross-media` |
+| 文学活动、关注时事、调查访问 | — | 应用之外 | §18.7 |
+| 选题研究，写简单的研究报告，区分原始资料和间接资料并注明出处 | — | 缺口 | `writing-8-research-report`、`inquiry-8-sources`、`speaking-9-reporting` |
+
+### 18.6 学习任务群
+
+| 义务教育学习任务群 | 由什么覆盖 |
+| :--- | :--- |
+| 语言文字积累与梳理 | 识字、词语批次，成语，语法，背诵；新增 `pinyin-alphabet`、`dictionary-words`、`language-*` |
+| 实用性阅读与交流 | 新增 `reading-1-signs`、`reading-2-science`、`reading-3-science`、`reading-4-everyday-texts`，五至九年级的非连续性文本、说明文、新闻和科技作品阅读，实用写作，全部 `speaking-*` 主题 |
+| 文学阅读与创意表达 | 记叙阅读单元；背诵；新增儿歌、故事、寓言、童话、神话、诗歌、散文、小说和戏剧阅读；想象写作和文学写作 |
+| 思辨性阅读与表达 | `writing-6-argue`、`writing-9-argue`、议论阅读单元；新增 `reading-6-argument`、`reading-8-argument`、`reading-9-argument`、`writing-9-refute`、讨论和辩论 |
+| 整本书阅读 | 三年级起每年级一本；新增七至九年级每年级第二本 |
+| 跨学科学习 | 活动在应用之外（§18.7）；应用里有科普和非连续性文本阅读、`inquiry-5-sources`、`inquiry-8-sources`、`writing-8-research-report` |
+
+| 高中学习任务群 | 课程 | 由什么覆盖 |
+| :--- | :--- | :--- |
+| 整本书阅读与研讨 | 必修，并贯穿其后 | `book-dream-of-red-chamber`，必修要求的长篇小说；新增学术著作 `book-xiangtu-zhongguo` |
+| 当代文化参与 | 必修，并贯穿其后 | 新增 `reading-10-media`、`writing-10-report`、`speaking-10-interview` |
+| 跨媒介阅读与交流 | 必修，并贯穿其后 | 新增 `reading-10-media` |
+| 语言积累、梳理与探究 | 必修和选择性必修 | 词语、成语批次，`rhetoric-4`；新增 `language-10-usage` |
+| 文学阅读与写作 | 必修 | 文学阅读单元；新增 `reading-10-fiction`、`reading-10-poetry`、`reading-10-prose`、`writing-10-literary` |
+| 思辨性阅读与表达 | 必修 | `writing-10-material`、`writing-10-commentary`、议论阅读单元；新增 `reading-10-argument`、`writing-10-rigorous`、`speaking-10-debate` |
+| 实用性阅读与交流 | 必修 | 信息类阅读单元；新增 `reading-10-practical`、`speaking-10-speech` |
+| 中华传统文化经典研习 | 选择性必修 | 背诵、文言练习；新增 `reading-10-classical`、`reading-11-masters`、`reading-11-histories`、`reading-11-poems` |
+| 中国革命传统作品研习 | 选择性必修，并贯穿三类课程 | 新增 `reading-11-revolutionary`，只用公有领域作品 |
+| 中国现当代作家作品研习 | 选择性必修 | 新增 `book-call-to-arms`；这个任务群要求的至少十位作家的作品大多受版权保护，在应用之外阅读，本学科不编写替代文本 |
+| 外国作家作品研习 | 选择性必修 | 新增 `reading-11-foreign`，用为本学科翻译的公有领域作品 |
+| 科学与文化论著研习 | 选择性必修 | 学科阅读单元；新增 `reading-11-treatises`、`writing-11-academic`、`speaking-11-seminar` |
+
+选择性必修的 `writing-11-dialectic`、`writing-11-proposal` 和新增的 `writing-11-literary-review` 承担其中的思辨写作和实用写作。选修的六个任务群是接着选择性必修的专题研讨，不建课程（§8.1）。
+
+整本书跟随同一年级的统编教材和两部课标附录 2 的读物建议，附录只是举例：《海底两万里》《钢铁是怎样炼成的》《简·爱》在义务教育课标的建议里，《呐喊》在高中课标的建议里。高中的学术著作是必修教材所读的《乡土中国》；高中课标建议的语言文学理论著作没有一部属于公有领域。
+
+### 18.7 应用之外
+
+毛笔字和行楷；默读姿势和习惯；课外阅读量；梳理与探究中的提问、活动、办刊、演出、调查和跨学科学习；圈点批注；低年级学习者自己选来积累的成语，以及一、二年级最初的整本书；推荐图书；整本书研讨；选择性必修中受版权保护的现当代作品。默读速度和限时作文要等核心支持有时限的题目。
+
+### 18.8 背诵与推荐篇目
+
+义务教育课标附录推荐 1～6 年级 75 首诗，7～9 年级 60 篇（段）诗文；高中课标推荐 72 篇，文言文 32 篇，诗词曲 40 首，分布在必修、选择性必修和选修。学段要求的背诵量多于推荐篇目：一、二年级 50 篇（段），三、四年级 50 篇，五、六年级 60 篇，七至九年级 80 篇；推荐篇目之外的由教师选。现有课程：
+
+| 学段 | 现有背诵 | 其中在推荐篇目里 | 缺少的推荐篇目 | 推荐篇目之外 | 学段要求 |
+| :--- | ---: | ---: | ---: | ---: | ---: |
+| 一、二年级 | 20 | 19 | — | 1 | 50 |
+| 三、四年级 | 16 | 12 | — | 4 | 50 |
+| 五、六年级 | 22 | 10 | — | 12 | 60 |
+| 一至六年级 | 58 | 41 | 34 | 17 | 160 |
+| 七至九年级 | 60 | 40（38 个推荐条目） | 22 | 20 | 80 |
+| 高中 | 72 | 59（另有一篇在八年级） | 12 | 13 | 72 |
+
+**一至六年级。** 推荐篇目之外的 17 篇保留：夜宿山寺、赠刘景文、夜书所见、雪梅、清平乐·村居、稚子弄冰、村晚、从军行（青海长云）、宿建德江、西江月·夜行黄沙道中、马诗，文言短文守株待兔、杨氏之子、囊萤夜读、学弈、铁杵成针，以及出自《列子》的伯牙鼓琴，它不是 7～9 年级推荐篇目所列的《吕氏春秋》那一则。缺少的 34 首加入统编教材教它们的那个年级，学习者转去上学，同一年就会遇到：
+
+| 年级 | 新增的推荐篇目 |
+| :--- | :--- |
+| 1 | 赠汪伦 |
+| 2 | 小儿垂钓、敕勒歌 |
+| 3 | 所见、绝句（迟日江山丽）、早发白帝城、元日、清明、忆江南、九月九日忆山东兄弟、滁州西涧 |
+| 4 | 蜂、鹿柴、江畔独步寻花、四时田园杂兴（梅子金黄杏子肥）、别董大、墨梅 |
+| 5 | 游子吟、黄鹤楼送孟浩然之广陵、凉州词（黄河远上白云间）、枫桥夜泊、送元二使安西、渔歌子、观书有感（其一）、乡村四月 |
+| 6 | 江上渔者、回乡偶书、长歌行、春夜喜雨、早春呈水部张十八员外、江南春、泊船瓜洲、书湖阴先生壁、游园不值 |
+
+各学段其余的篇数只用同一年级统编教材要求背诵、推荐篇目和现有课程都没有的公有领域古诗补足；本学科不自选篇目。它们是：
+
+| 年级 | 新增的教材篇目 |
+| :--- | :--- |
+| 1 | 画（远看山有色）、画鸡 |
+| 2 | 梅花（墙角数枝梅）、舟夜书所见 |
+| 3 | 采莲曲、大林寺桃花 |
+| 4 | 暮江吟、嫦娥、宿新市徐公店、独坐敬亭山 |
+| 5 | 蝉、乞巧、长相思（山一程）、观书有感（其二）、鸟鸣涧、山居秋暝 |
+| 6 | 过故人庄、寒食、迢迢牵牛星、十五夜望月、采薇（节选）、闻官军收河南河北、卜算子·送鲍浩然之浙东、浣溪沙（山下兰芽短浸溪）、清平乐（春归何处） |
+
+山居秋暝在高中的推荐篇目里，不在义务教育的推荐篇目里；五年级的教材在枫桥夜泊和长相思的同一课里教它，所以五年级包含它。这样三个学段分别有 27、36、54 篇，要求是 50、50、60 篇，其余仍是缺口：一、二年级 23 篇，三、四年级 14 篇，五、六年级 6 篇。教材里的文言短文和儿歌，确认了教材自己的背诵要求之后，可以补上一部分。每篇都是 §7 那样的背诵主题。
+
+教材古诗的年级取自 2019 年起使用的版本 112 首古诗的两份公开清单，两份在五年级的几首上不一致（寒菊只见于其中一份，未收）。作者作品尚未进入公有领域的古诗不收。
+
+**七至九年级。** 推荐篇目之外的 20 篇保留：峨眉山月歌、江南逢李龟年、夜上受降城闻笛、秋词（其一）、逢入京使、晚春、陈太丘与友期、咏雪、诫子书、穿井得一人、孙权劝学、卖油翁、野望、渡荆门送别、龟虽寿、与朱元思书、大道之行也、送友人、月夜忆舍弟和卜算子·咏梅。缺少的 22 篇加入各年级，本学段达到 82 篇：
+
+| 年级 | 新增的推荐篇目 |
+| :--- | :--- |
+| 7 | 木兰辞、《论语》十二章（初中推荐的十二章，从“学而时习之”到“博学而笃志”）、登飞来峰、游山西村、己亥杂诗（浩荡离愁白日斜）、十五从军征、《吕氏春秋》伯牙鼓琴 |
+| 8 | 关雎、蒹葭（全诗；高中课程的 `recite-jian-jia` 只有第一章）、卖炭翁、茅屋为秋风所破歌、白雪歌送武判官归京、《庄子》北冥有鱼、《礼记》虽有嘉肴 |
+| 9 | 行路难（其一）、相见欢（无言独上西楼）、渔家傲（天接云涛连晓雾）、南乡子·登京口北固亭有怀、山坡羊·潼关怀古、满江红（小住京华）、出师表、送东阳马生序（节选） |
+
+**高中。** 2020 年修订版的推荐篇目把文言文分给必修十篇、选择性必修十篇、选修十二篇，诗词曲四十首合在一起。推荐篇目之外的 13 篇保留：蒹葭（节选）、雨霖铃、氓、咏怀古迹（其三）、定风波、《孟子》三篇（齐桓晋文之事、寡人之于国也、人皆有不忍人之心，都不是推荐篇目所列的那一则）、庖丁解牛、逍遥游（节选）（教材的选段；推荐篇目所列的《庄子》一段从“惠子谓庄子曰”起，就是五石之瓠）、烛之武退秦师、鸿门宴和苏武传。两篇推荐篇目只有一部分：论语十二章有推荐篇目所列十二章中的十章，岁寒和君子义以为质代替了譬如为山和知者不惑；老子四章有所列八章中的两章，第二十四章和第三十三章，另有第十一章和第六十四章。八年级的大道之行也就是推荐篇目里的《礼运》，选择性必修课程也包含它。缺少的 12 篇加入课程：山居秋暝加入五年级，因为五年级的教材教它，必修课程也包含它；必修加诗词曲菩萨蛮（小山重叠金明灭）、菩萨蛮·书江西造口壁、贺新郎（国脉微如缕）和朝天子·咏喇叭；选择性必修加报任安书（推荐的选段），并因为选修不建课程，加选修篇目季氏将伐颛臾、中庸（两段）、《孟子》从“敢问夫子恶乎长”起的一则、黄冈竹楼记、上枢密韩太尉书，以及作为一个主题的六段古代文论：毛诗序、典论·论文、诗品序、与元九书、郑燮题画和人间词话三则。论语十二章缺的两章加进它自己，老子四章缺的六章另成一个主题：老子六章。
+
+### 18.9 新增主题
+
+补足缺口的主题分五类，从一开始就按讲授标准编写（主题导入有自己的实例，讲解用实例教并以“注意”结尾，解答分步并以检验结尾，选择题的解答说明其他每个选项错在哪里），并列入 `teaching-standard.ts`：
+
+| 类别 | id | 判定 | 内容 |
+| :--- | :--- | :--- | :--- |
+| 阅读 | `reading-<年级>-<类>` | 选择题，说明每个错误选项错在哪里 | 每个主题至少 10 篇文章，每个知识点至少 30 道题；文章为本学科编写，或在所有首批市场都属公有领域（文言文和古诗、古典白话小说、为本学科改写的民间故事和寓言、为本学科翻译的外国作品）；本年级的阅读单元也进入题库。不用任何教材课文或考试题 |
+| 评判写作 | `writing-<年级>-<类>` | `writingGenerator`，`libs/subject-chinese` 中三条是非评判标准，两个知识点各按其中两条评判 | 十二个任务，每个都有范文，篇幅按字数，从一年级的 20 字到高中的 800 字 |
+| 规则判定的写作 | `revising-<年级>`、`planning-7-outline` | 选择、输入汉字、排序 | 修改习作草稿中的错误；选择和排列提纲 |
+| 口语交际 | `speaking-<年级>-<类>` | 规则判定的选择：哪句回应适合听的人、目的和场合；哪个转述保留了完整的信息 | 为本学科编写的情境；一、二年级的情境和选项都用预先录好的录音播放，三年级起倾听和转述的情境也用录音；录音做好以前，说的话先用文字显示 |
+| 语言与探究 | `pinyin-alphabet`、`dictionary-words`、`language-<年级>-<类>`、`inquiry-<年级>-sources` | 选择、输入汉字、拼音 | 本年级的字词 |
+
+每个主题两个知识点；标题给出英文和中文，标题没有说清的，写出知识点问什么。没有写出知识点的：阅读主题第一个知识点问文章说了什么，第二个问它怎么说，即标题所说的方法；评判主题两个知识点各按三条标准中的两条评判，和 §11 一样；口语交际主题第一个知识点在读到的情境中选择合适的回应，第二个在听到的情境中选择，一、二年级两个都是听到的。
+
+**一年级**（8 个）：`pinyin-alphabet` The Pinyin Alphabet / 汉语拼音字母表——字母的顺序；大写和小写。`reading-1-rhymes` Rhymes and Children's Verse / 读儿歌和儿童诗——儿歌说了什么；哪些字押韵。`reading-1-stories` Short Stories / 读小故事——谁、在哪里、发生了什么；从句子里知道词的意思。`reading-1-signs` The Words Around Us / 读身边的文字——标牌和标签；课程表和日历。`writing-1-want-to-say` Writing What I Want to Say / 写自己想说的话——写自己的一句话；写喜欢的东西的两句话（评判）。`speaking-1-listening` Listening Carefully / 认真听——一段话讲了什么；说话的人请你做什么。`speaking-1-manners` Talking Politely / 有礼貌地交谈——问好、道谢和道歉；借东西和排队等候。`speaking-1-telling` Telling It Clearly / 把事情说清楚——按顺序排好讲述的各部分；讲述漏了什么。
+
+**二年级**（8 个；`punctuation-sentence-ends`、`dictionary-pinyin` 和 `dictionary-radicals` 从三年级移来）：`reading-2-fables` Fables / 读寓言——发生了什么；讲了什么道理。`reading-2-fairy-tales` Fairy Tales / 读童话——谁想要什么；哪些是想象的。`reading-2-science` Nature and Things / 读浅近的科普短文——文中的事实；文中给出的原因。`writing-2-picture` Writing About a Picture / 看图写话——图上有谁、在做什么；按顺序写几句话（评判；图画按 [汉语插图](chinese-illustrations.zh-CN.md) 的做法绘制）。`writing-2-imagination` Writing What I Imagine / 写想象中的事物——它是什么样的；发生了什么（评判）。`speaking-2-asking` Asking for Help and the Way / 请教和问路——问得清楚；称呼得当。`speaking-2-messages` Passing On a Message / 转告——完整的口信；给谁、什么时候。`speaking-2-discussing` Talking It Over / 商量——提出建议；友好地回应别人的想法。
+
+**三年级**（16 个）：`dictionary-words` Choosing a Sense in the Dictionary / 查字典词典：选择义项——字在词里的意思；词在句子里的意思。`language-3-similar-characters` Characters That Look or Sound Alike / 形近字和同音字——字形相近；字音相同。`reading-3-fairy-tales` Fairy Tales: the Gist / 读童话：复述大意——大意；人物的心情。`reading-3-fables` Fables and Their Lessons / 读寓言：故事和道理——发生了什么；道理。`reading-3-poems` Poems: Picture and Meaning / 读诗：想象画面，领悟大意——画面；大意。`reading-3-key-sentences` Key Words and Sentences / 联系上下文理解词句——从上下文理解词语；关键句的作用。`reading-3-main-idea` The Main Idea / 把握主要内容——段意；全文的主要内容。`reading-3-science` Popular Science / 读科普短文——事实；原因。`writing-3-imagination` An Imagined Story / 写想象故事（评判）。`writing-3-note` Notes and Messages / 写留言条和便条（评判）。`writing-3-favourite-thing` Something I Like / 写一样喜爱的东西（评判）。`revising-3` Correcting Obvious Mistakes / 修改明显错误的词句——错字；用错的词。`speaking-3-listening` Listening and Asking / 倾听和请教——说了什么；就不懂的地方提问。`speaking-3-relaying` Relaying Briefly / 简要转述——要点；谁说了什么。`speaking-3-telling` Telling What I Saw and Felt / 讲述见闻——顺序清楚；说出感受。`speaking-3-discussing` Talking Over Different Views / 与人商讨——说出理由；面对不同意见。
+
+**四年级**（15 个）：`language-4-polyphones` Characters With Several Readings / 多音字——词里的读音；按读音辨意思。`reading-4-myths` Myths / 读神话——发生了什么；想象了什么。`reading-4-folk-tales` Folk Tales / 读民间故事——故事；人物。`reading-4-narrative` Narratives: Retelling and People / 读叙事性作品——大意；人物的命运和喜怒哀乐。`reading-4-feelings` The Feeling of a Text / 体会思想感情——作者的感情；表现感情的词句。`reading-4-everyday-texts` Notices, Announcements and Instructions / 读通知、启事和说明书——要做什么；谁、何时、何地。`reading-4-skimming` Skimming for the Gist / 略读：粗知大意——大意；答案在哪里。`writing-4-observation` Observing a Change / 写观察：植物或动物的变化（评判）。`writing-4-imagination` Continuing a Story / 续编故事（评判）。`writing-4-place` A Place, in Order / 按顺序写一处地方（评判）。`revising-4` Revising Sentences / 修改病句和用词不当——病句；更好的词。`speaking-4-storytelling` Telling a Story Vividly / 生动地讲故事——更生动的讲法；让故事活起来的细节。`speaking-4-introducing` Introducing, With the Listener in Mind / 介绍：想着听的人——这位听众需要什么；顺序。`speaking-4-occasions` On the Phone and as a Guest / 打电话和做客——开头和结尾；合乎场合。`speaking-4-persuading` Persuading Kindly / 劝说——能打动这位听众的理由；委婉的说法。
+
+**五年级**（16 个）：`language-5-character-formation` How Characters Are Made / 汉字的造字方法——象形、指事、会意；形声。`inquiry-5-sources` Finding and Using Information / 查找和运用资料——到哪里查；能回答问题的资料。`reading-5-narrative` Narratives: Outline and Detail / 叙事性作品：梗概和细节。`reading-5-poems` Poems: Scene and Feeling / 读诗：情境和情感。`reading-5-expository` Expository Texts: Points and Methods / 说明性文章：要点和说明方法。`reading-5-non-continuous` Texts With Tables and Pictures / 非连续性文本。`reading-5-word-colour` Meaning and Colour of Words / 推想词句意思，辨别感情色彩。`reading-5-structure` Order and Methods of Expression / 表达顺序和表达方法。`writing-5-imagination` An Imaginative Composition / 想象作文（评判）。`writing-5-book-notes` Reading Notes / 读书笔记（评判）。`writing-5-notice` Notices and Announcements / 写通知和启事（评判）。`revising-5` Revising for Smooth Sentences / 修改习作：语句通顺——句子；句子的顺序。`speaking-5-discussion` Speaking in a Discussion / 参与讨论——不离题；有理由的观点。`speaking-5-key-points` Key Points and Relaying / 抓住要点转述。`speaking-5-tone` Fitting Tone and Wording / 语气语调适当。`speaking-5-civil-language` Civil Language / 语言文明。
+
+**六年级**（16 个）：`language-6-word-formation` How Words Are Formed / 构词和组词——合成词的结构；词族。`reading-6-fiction` Fiction: People, Plot and Setting / 读小说：人物、情节和环境。`reading-6-prose` Prose: Feeling and Expression / 读散文。`reading-6-argument` Views and Examples / 读议论性文字：观点和事例。`reading-6-expository` Methods of Explaining and Their Use / 说明方法及其作用。`reading-6-non-continuous` Instructions, Charts and Maps / 读说明书、图表和地图。`reading-6-browsing` Browsing for Information / 浏览，搜集信息。`reading-6-poems` Poems: Rhythm and Feeling / 读诗：韵律节奏和情感。`writing-6-real-event` A True Event, Truly Felt / 写真实的经历（评判）。`writing-6-reflection` Thoughts After Reading / 读后感（评判）。`writing-6-plan-summary` An Activity Plan and Summary / 活动计划和活动总结（评判）。`revising-6` Revising Form and Punctuation / 修改习作：行款和标点。`speaking-6-short-speech` Brief Prepared Remarks / 稍作准备的发言。`speaking-6-presenting` Presenting a Topic / 专题演讲。`speaking-6-interview` Asking in an Interview / 采访。`speaking-6-responding` Responding to a View / 回应别人的观点。
+
+**七年级**（17 个）：`reading-7-narrative` Narratives: Thread, Order and Detail / 记叙文：线索、顺序和详略。`reading-7-description` Description and Its Effect / 描写方法及其作用。`reading-7-prose` Prose: Language and Feeling / 散文：品味语言，体会情感。`reading-7-expository` Exposition: Object, Features, Methods / 说明文：对象、特征和方法。`reading-7-news` News / 读新闻：要素和观点。`reading-7-classical` Easy Classical Prose / 阅读浅易文言文——借助注释理解字词；文章说了什么。`reading-7-poems` Classical Poems / 古诗词鉴赏——意象和情境；情感。`writing-7-feeling` Writing With Feeling / 抒发真情（评判）。`writing-7-expand-condense` Expanding and Condensing / 扩写和缩写（评判）。`writing-7-imagination` Association and Imagination / 发挥联想和想象（评判）。`writing-7-practical` Applications and Suggestions / 写申请书和建议书（评判）。`planning-7-outline` An Outline / 列提纲——为中心服务的提纲；各部分的顺序。`speaking-7-intent` Hearing What Is Meant / 听出话语的意图。`speaking-7-retelling` Retelling and Relaying / 复述和转述。`speaking-7-proper` Fitting the Listener and Occasion / 文明得体地交流。`speaking-7-impromptu` Speaking Off the Cuff / 即席讲话。`book-twenty-thousand-leagues` Whole Book: *Twenty Thousand Leagues Under the Seas* / 整本书阅读：《海底两万里》（只练习）。
+
+**八年级**（18 个）：`reading-8-expository` Order and Language of Explaining / 说明顺序和说明语言。`reading-8-science` Science Writing / 读科技作品：科学精神和方法。`reading-8-argument` Argument: Claim and Material / 议论文：观点和材料。`reading-8-non-continuous` Complex Non-continuous Texts / 较复杂的非连续性文本。`reading-8-fiction` Fiction / 读小说。`reading-8-classical` Classical Prose / 阅读文言文。`reading-8-poems` Classical Poems / 古诗词鉴赏。`writing-8-news` Writing News / 写消息（评判）。`writing-8-travel` Travel Writing / 写游记（评判）。`writing-8-rewrite` Rewriting / 改写（评判）。`writing-8-research-report` A Simple Research Report / 写简单的研究报告（评判）。`revising-8` Revising to Read Smoothly / 修改：文从字顺。`inquiry-8-sources` Sources and Citations / 原始资料、间接资料和注明出处。`speaking-8-speech` A Prepared Speech / 主题演讲。`speaking-8-interview` Interviewing / 采访和访谈。`speaking-8-discussion-focus` Keeping to the Focus / 抓住讨论焦点。`speaking-8-persuading` Speaking Persuasively / 增强说服力。`book-steel-tempered` Whole Book: *How the Steel Was Tempered* / 整本书阅读：《钢铁是怎样炼成的》（只练习）。
+
+**九年级**（17 个）：`reading-9-argument` Methods and Line of Argument / 论证方法和论证思路。`reading-9-fiction` Fiction: Theme and Craft / 小说：主题和写法。`reading-9-drama` Drama: Conflict and Lines / 读戏剧：冲突和台词。`reading-9-forms` Modes and Forms; Fact and Fiction / 表达方式、文学样式、写实与虚构。`reading-9-cross-media` Reading Across Media / 跨媒介阅读。`reading-9-classical` Classical Prose / 阅读文言文。`reading-9-poems` Classical Poems / 古诗词鉴赏。`writing-9-poem` Trying a Poem / 尝试写诗（评判）。`writing-9-short-story` A Very Short Story / 写小小说（评判）。`writing-9-review` A Review / 写评论（评判）。`writing-9-refute` Refuting a View / 驳论（评判）。`revising-9` Revising a Whole Essay / 修改全文：立意、结构和语言。`speaking-9-debate` Debating / 辩论。`speaking-9-listening-argument` Hearing Claims and Grounds / 听辨观点和依据。`speaking-9-reporting` Reporting Findings / 汇报探究成果。`speaking-9-hosting` Hosting and Formal Remarks / 主持和致辞。`book-jane-eyre` Whole Book: *Jane Eyre* / 整本书阅读：《简·爱》（只练习）。
+
+**高中必修**（15 个）：`reading-10-fiction` Fiction / 小说阅读。`reading-10-poetry` Modern Poetry / 现代诗歌阅读。`reading-10-prose` Prose / 散文阅读。`reading-10-practical` News, Features and Reports / 实用性阅读：新闻、通讯和报告。`reading-10-argument` Logic in Argument / 思辨性阅读：论证和逻辑。`reading-10-media` Media and Culture Today / 跨媒介阅读与当代文化。`reading-10-classical` Classical Prose / 文言文阅读。`language-10-usage` Organizing Usage: Sense, Register, Sentence / 语言梳理：词义、语体和句式。`writing-10-literary` Literary Writing / 文学写作（评判）。`writing-10-report` A Survey Report / 写调查报告（评判）。`writing-10-rigorous` Arguing Rigorously / 立论严谨（评判）。`speaking-10-speech` Speeches / 演讲。`speaking-10-debate` Debate / 辩论。`speaking-10-interview` Interviews / 访谈。`book-xiangtu-zhongguo` Whole Book: *From the Soil* / 整本书阅读：《乡土中国》（只练习）。
+
+**高中选择性必修**（11 个）：`reading-11-masters` The Pre-Qin Masters / 先秦诸子研习。`reading-11-histories` Histories and Biographies / 史传文言阅读。`reading-11-revolutionary` Works of the Revolutionary Tradition / 革命传统作品研习。`reading-11-foreign` Foreign Writers / 外国作家作品研习。`reading-11-treatises` Scientific and Cultural Treatises / 科学与文化论著研习。`reading-11-poems` Classical Poems and Ci / 古代诗词鉴赏。`writing-11-literary-review` A Short Literary Review / 写文学短评（评判）。`writing-11-academic` A Short Research Essay / 写学术小论文（评判）。`speaking-11-seminar` Speaking in a Seminar / 研讨发言。`speaking-11-presenting-research` Presenting Research / 学术报告。`book-call-to-arms` Whole Book: *Call to Arms* / 整本书阅读：《呐喊》（只练习）。
+
+评判主题每个两种习作，使三至六年级每年级有十种习作，七至九年级十二种，对应课标每学年 16 次左右和不少于 14 次的要求；其余由规则判定的修改和列纲承担。所有评判主题都按 §11 等待校准。
+
+### 18.10 规模
+
+各课程前后的主题数，按线分；阅读包括整本书和探究，写作包括修改和列纲，词语包括语言主题。
+
+| 课程 | 之前 | 之后 | 汉字 | 背诵 | 阅读 | 写作 | 口语 | 其他 |
+| :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 一年级 | 137 | 148 | 110 | 13 | 3 | 5 | 4 | 13 |
+| 二年级 | 128 | 143 | 111 | 14 | 3 | 6 | 4 | 5 |
+| 三年级 | 104 | 127 | 79 | 18 | 7 | 6 | 5 | 12 |
+| 四年级 | 103 | 128 | 77 | 18 | 7 | 6 | 5 | 15 |
+| 五年级 | 96 | 126 | 66 | 25 | 8 | 6 | 5 | 16 |
+| 六年级 | 94 | 128 | 66 | 29 | 8 | 6 | 5 | 14 |
+| 七年级 | 65 | 89 | 31 | 27 | 9 | 7 | 5 | 10 |
+| 八年级 | 64 | 89 | 30 | 27 | 10 | 7 | 5 | 10 |
+| 九年级 | 65 | 90 | 31 | 28 | 9 | 7 | 5 | 10 |
+| 高中必修 | 53 | 73 | — | 41 | 9 | 5 | 4 | 14 |
+| 高中选择性必修 | 52 | 72 | — | 45 | 7 | 4 | 3 | 13 |
+| **母语合计** | **961** | **1,213** | | | | | | |
+
+新增的 252 个位置是：157 个阅读、写作、口语、语言和探究的新主题，69 篇推荐背诵篇目（含老子的第二个主题），24 首教材古诗，以及高中课程再次包含的两篇：五年级的山居秋暝和八年级的大道之行也。主题数低估了阅读和写作：一首背诵的诗是三个很短的知识点，一个阅读主题是十篇文章上的两个知识点，一个评判主题是两篇习作。阅读主题共需要约 650 篇文章，阅读单元的 99 篇是其中一部分。

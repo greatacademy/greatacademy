@@ -4,11 +4,74 @@ import { LEVEL_CRITERIA_A } from "./criteria-levels-a.ts";
 import { LEVEL_CRITERIA_B } from "./criteria-levels-b.ts";
 
 /**
- * WRITING_CRITERIA are the criteria of the judged writing of native grades 3 to 11, the essay of the Gaokao, its short answers on modern texts and its judged use of language (docs/chinese-curriculum.md §11): W4
- * paragraphs and W5 compositions, with starting questions to be calibrated against texts scored by teachers of Chinese.
+ * WRITING_CRITERIA are the criteria of the judged writing of native grades 1 to 11, the essay of the Gaokao, its short answers on modern texts and its judged use of language (docs/chinese-curriculum.md §11 and §18.9): the
+ * first written sentences of grades 1 and 2, W4 paragraphs and W5 compositions, with starting questions to be calibrated against texts scored by teachers of Chinese.
  * Their questions are in English, as the core asks; the texts they are asked of are in Chinese.
  */
 export const WRITING_CRITERIA: readonly CriterionSpec[] = [
+  // Grade 1: writing what one wants to say.
+  {
+    id: "zh1-say-self",
+    version: "1",
+    question:
+      "Is the text, written in Chinese, made of complete sentences about the writer, saying something true of them such as their name, their family or what they do, as the task asks?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh1-say-ends",
+    version: "1",
+    question:
+      "Does each sentence say one whole thing and end with a full stop, a question mark or an exclamation mark, rather than running on without an end?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "zh1-say-like",
+    version: "1",
+    question:
+      "Does the text name the one thing the task asks about that the writer likes, and say at least two things about it, such as what it looks like, what it does or why the writer likes it?",
+    quoteWhenMet: true,
+  },
+  // Grade 2: writing about a picture.
+  {
+    id: "zh2-picture-who",
+    version: "1",
+    question: "Does the text say who is in the scene the task describes, and where and when it is, as the scene shows?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh2-picture-what",
+    version: "1",
+    question:
+      "Does the text say what the people or animals in the scene are doing, keeping to what the scene shows and adding nothing that goes against it?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh2-picture-order",
+    version: "1",
+    question:
+      "Are the sentences in an order that makes sense, such as what happens first, next and last, so that they read as one connected piece rather than a list?",
+    quoteWhenMet: false,
+  },
+  // Grade 2: writing what one imagines.
+  {
+    id: "zh2-imagine-like",
+    version: "1",
+    question:
+      "Does the text say what the imagined thing of the task is like, with at least two details such as how it looks, how it sounds or what it can do?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh2-imagine-happens",
+    version: "1",
+    question: "Does the text tell something that happens with the imagined thing, one event after another, rather than only describing it?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh2-imagine-stays",
+    version: "1",
+    question: "Does every sentence keep to the imagined thing of the task, without wandering to something else?",
+    quoteWhenMet: false,
+  },
   // Grade 3: a paragraph about one idea.
   {
     id: "zh3-paragraph-idea",

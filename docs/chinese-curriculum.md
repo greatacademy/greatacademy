@@ -31,7 +31,7 @@ This document specifies the design of the Chinese subject: its sources, its audi
 | *Early Learning and Development Guidelines for Children Aged 3 to 6* (3-6岁儿童学习与发展指南, 2012) | Ministry of Education | Why there is no preschool literacy course: the language domain asks for listening, speaking and readiness for reading and writing, not for teaching characters (§8.1) |
 | New HSK (HSK 3.0) | Center for Language Education and Cooperation and Chinese Testing International | Exam courses: nine levels built on GF 0025-2021; the structure of the papers of levels 1 to 6 is the one the test owner published in December 2025, in force from July 2026; its first regular sittings are reported for 13 December 2026, to be confirmed from the test owner's own notice |
 
-Statements of this document about the two curriculum standards were checked against the Ministry's PDFs, downloaded from moe.gov.cn on 2026-11-16. The figures of GF 0025-2021 in §8.3 were checked against the standard's published text. Standards are cited and summarized, never copied (§13).
+Statements of this document about the two curriculum standards were checked against the Ministry's PDFs, downloaded from moe.gov.cn on 2026-11-16; §18, with the stage requirements, the task groups, the recommended recitation lists and the reading lists of both standards, was checked against them again on 2026-11-22. The figures of GF 0025-2021 in §8.3 were checked against the standard's published text. Standards are cited and summarized, never copied (§13).
 
 ## 3. Audiences
 
@@ -116,15 +116,15 @@ One course per grade, `chinese-grade-1` to `chinese-grade-9`, and two for senior
 
 | Course | What weighs most |
 | :--- | :--- |
-| Grades 1 and 2 | Characters first, then pinyin as a tool, as the 2024 revision of the national textbooks does; strokes and components; 1,600 characters recognized and 800 written; nursery rhymes and short poems; writing a sentence, then a few |
-| Grades 3 and 4 | 2,500 and 1,600 characters; the dictionary; words and idioms; paragraphs; narrative and expository reading; poems |
+| Grades 1 and 2 | Characters first, then pinyin as a tool, as the 2024 revision of the national textbooks does; strokes and components; the dictionary; 1,600 characters recognized and 800 written; nursery rhymes and short poems; writing a sentence, then a few |
+| Grades 3 and 4 | 2,500 and 1,600 characters; choosing a sense in the dictionary; words and idioms; paragraphs; narrative and expository reading; poems |
 | Grades 5 and 6 | 3,000 and 2,500 characters; reading speed; the first classical passages; whole books; compositions of 400 to 500 characters |
 | Grades 7 to 9 | 3,500 characters and semi-cursive writing; classical prose; argument and exposition; three whole books a year; a composition of 500 characters in 45 minutes |
 | Senior secondary | The 18 task groups: whole-book reading, language, literature, critical reading, practical reading, classical texts, revolutionary and modern literature, foreign literature, scientific and cultural works |
 
 Grades 1 and 2 are courses of their own, larger than in English because the standard asks for 1,600 characters by the end of grade 2 and Chinese takes a fifth of school time. Their lessons stay short, for a child learning with an adult nearby. There is no preschool course: the guidelines for children aged 3 to 6 ask for listening, speaking and readiness, not characters.
 
-Every native course has a unit of reading aloud and whole books after its writing: a topic of reading the grade's own passages aloud, a few whole sentences at a time, heard by a speech service that checks the characters said and not the accent (§11), and from grade 3 to the senior required course a practice-only topic of the grade's whole book (§9). Grade 3 begins with a unit on using a dictionary: looking a character up by the order of pinyin, the capital letter and then the syllable, and by its radical and then the strokes left, asked of characters the learner already knows.
+Every native course has a unit of reading aloud and whole books after its writing: a topic of reading the grade's own passages aloud, a few whole sentences at a time, heard by a speech service that checks the characters said and not the accent (§11), and from grade 3 to the senior required course a practice-only topic of the grade's whole book (§9). Grade 2 has a unit on using a dictionary, as the standard asks of grades 1 and 2: looking a character up by the order of pinyin, the capital letter and then the syllable, and by its radical and then the strokes left, asked of characters the learner already knows; grade 3 goes on to choosing the sense of a character or word in a dictionary (§18).
 
 ### 8.2 Heritage Courses
 
@@ -264,7 +264,7 @@ For comparison, `cn-math-taxonomy` has 682 knowledge points of primary and junio
 3. **Foreign-language levels 1 to 3**, with recordings made ahead of time as for English, and the pinyin checker. Begun: the course `chinese-pinyin`, 8 topics of tones, initials, finals, spelling rules, hearing syllables, tone changes and saying words; level 1, `chinese-level-1`, 168 topics teaching 300 characters, 500 words, 48 grammar topics, 26 of listening and speaking, four of sentence building and ten of writing characters by hand; level 2, `chinese-level-2`, 219 topics teaching 300 more characters, 770 words, 70 grammar topics, 26 of listening and speaking, four of sentence building, two of paragraph writing and ten of writing characters by hand; level 3, `chinese-level-3`, 250 topics teaching 300 more characters, 970 words, 81 grammar topics, 26 of listening and speaking, four of sentence building, two of paragraph writing and ten of writing characters by hand. The listening and speaking of every level include two topics of dialogues, at the end of units 6 and 12.
 4. **Handwriting:** the stroke pad in the web and the apps, the stroke checker, and the writing topics. Built: the pad, the checker, and 300 writing topics of the native courses and the heritage bridges.
 5. **Grades 1 and 2** and the heritage bridges, which need handwriting, pinyin and recordings. Begun: `chinese-grade-1` and `chinese-grade-2`, 265 topics and 556 knowledge points: the pinyin of grade 1, three topics of strokes and their order and three of components, the other 1,600 characters of table one in 133 recognition batches, 800 of them written by hand in 80 writing batches, eight word batches, eight topics of sentence building, twenty short poems and two of reading aloud; six reading units of eighteen passages. The heritage bridges `chinese-heritage-1` to `chinese-heritage-3`, 505 topics, order the recognition batches of grades 1 to 4 and the writing batches of their characters, take the sentence building of grades 1 and 2 and the 17 word batches their passages use with them, and add eight topics of their own, four of them in the third bridge, two of which read traditional characters further (§5.4).
-6. **Grades 7 to 9, senior secondary and classical language.** Begun: `chinese-grade-7` to `chinese-grade-9`, 132 topics and 348 knowledge points: the last 500 characters of table two in 42 recognition batches, twelve word and twelve idiom batches, three grammar topics, the 60 recited texts of grades 7 to 9 and three drills of classical Chinese; and `chinese-hs-required` and `chinese-hs-selective`, 98 topics and 284 knowledge points: eight word and eight idiom batches, two grammar topics, the 72 recited texts of senior secondary school and eight drills of classical Chinese; and nine reading units of narrative, exposition and argument for grades 7 to 9, and six for senior secondary school. Every native course also has a topic of reading aloud, eleven in all, grades 3 to 9 and the senior required course a practice-only topic of a whole book each, eight in all, and grade 3 two topics of using a dictionary (§8.1).
+6. **Grades 7 to 9, senior secondary and classical language.** Begun: `chinese-grade-7` to `chinese-grade-9`, 132 topics and 348 knowledge points: the last 500 characters of table two in 42 recognition batches, twelve word and twelve idiom batches, three grammar topics, the 60 recited texts of grades 7 to 9 and three drills of classical Chinese; and `chinese-hs-required` and `chinese-hs-selective`, 98 topics and 284 knowledge points: eight word and eight idiom batches, two grammar topics, the 72 recited texts of senior secondary school and eight drills of classical Chinese; and nine reading units of narrative, exposition and argument for grades 7 to 9, and six for senior secondary school. Every native course also has a topic of reading aloud, eleven in all, grades 3 to 9 and the senior required course a practice-only topic of a whole book each, eight in all, and grade 2 two topics of using a dictionary (§8.1).
 7. **Levels 4 to 9, judged writing, speech and conversations, then the exam courses.** Begun: level 4, `chinese-level-4`, 245 topics teaching 300 more characters, 1,000 words, 73 grammar topics, 26 of listening and speaking, four of sentence building, two of paragraph writing and ten of writing characters by hand, level 5, `chinese-level-5`, 246 topics teaching 300 more, 1,070 words, 62 grammar topics, 26 of listening and speaking, four of sentence building, two of paragraph writing and fifteen of writing characters by hand, level 6, `chinese-level-6`, 253 topics teaching 300 more, 1,140 words, 62 grammar topics, 26 of listening and speaking, four of sentence building, two of paragraph writing and fifteen of writing characters by hand, level 7, `chinese-level-7`, 326 topics teaching 400 more, 1,880 words, 49 grammar topics, 26 of listening and speaking, four of sentence building, two of paragraph writing and seventeen of writing characters by hand, level 8, `chinese-level-8`, 327 topics teaching 400 more, 1,880 words, 51 grammar topics, 26 of listening and speaking, four of sentence building, two of paragraph writing and sixteen of writing characters by hand, and level 9, `chinese-level-9`, 328 topics teaching 400 more, 1,880 words, 51 grammar topics, 26 of listening and speaking, four of sentence building, two of paragraph writing and seventeen of writing characters by hand; levels 4 to 9 also close units 3, 6, 9 and 12 with a conversation each, 24 in all, spoken in Mandarin with an AI tutor; the HSK courses `chinese-hsk-1` to `chinese-hsk-6` and `chinese-hsk-7-9`, each its levels' units, its levels' writing of characters and nine practice-only exam topics, ten at HSK 2, eleven at HSK 3 to 6 and thirteen at HSK 7–9, 76 in all; and the Gaokao course `chinese-gaokao`, the two senior courses' units and twelve more, six of them the reading of modern texts and classical poems.
 
 [Chinese Development Plan](chinese-development-plan.md) breaks this list down into milestones, files and gates.
@@ -287,3 +287,259 @@ For comparison, `cn-math-taxonomy` has 682 knowledge points of primary and junio
 - Ministry of Education. *Early Learning and Development Guidelines for Children Aged 3 to 6*. 2012.
 - GB/T 16159-2012 *Basic Rules of Hanyu Pinyin Orthography*; GB/T 15834-2011 *Use of Punctuation Marks*; GF 0023-2020 *Stroke Order of General Standard Chinese Characters*.
 - Nation, I. S. P. (2007). The four strands. *Innovation in Language Learning and Teaching*, 1(1), 2–13.
+
+## 18. The Standards, Requirement by Requirement
+
+A learner may leave the native courses for a school at any point, so each grade course teaches what the two curriculum standards require of its stage, in the proportions they give it, and nothing they do not ask for. This section maps every stage requirement (学段要求) of the compulsory standard, its six learning task groups and the task groups of the senior required and selective required courses against the courses, compares the recited texts with the standards' recommended lists, and sets out the topics that close the gaps. Requirements are summarized, not quoted (§13).
+
+### 18.1 How the Map Reads
+
+Each requirement is **covered** when topics or reading units practise it as the standard asks, **partly** when they practise some of it, and a **gap** when nothing does; the last column names the topics that fill it (§18.9). A few requirements are not mastery practice: handwriting with a brush and in semi-cursive script, silent reading posture, the volume of reading outside class, and the projects of organizing and inquiry and of interdisciplinary learning (school magazines, performances, surveys, research across subjects). They are done outside the app, as the electives are (§8.1), and §18.7 lists them. Silent reading speed, 300 characters a minute by grade 6 and 500 by grade 9, needs problems that time the reading, which the core does not have; it waits for that change.
+
+Before this section, grade 3 had 104 topics: 80 character batches and dictionary topics, 8 recited texts, 8 word batches, 4 of grammar, 2 of writing, 1 of reading aloud and 1 whole book, besides three reading units of three passages. Grades 4 to 9 were alike. Characters and recitation were covered; reading comprehension, composition and spoken communication were not.
+
+### 18.2 Grades 1 and 2
+
+| Requirement | Now | Status | Filled by |
+| :--- | :--- | :--- | :--- |
+| **Literacy and writing.** Read and spell syllables, know the capital letters and the alphabet table | The pinyin unit of grade 1 | Partly | `pinyin-alphabet` |
+| About 1,600 characters recognized, about 800 written | 133 recognition and 80 writing batches | Covered | — |
+| Basic strokes, components and stroke order; regular script with a pen | Strokes, components, writing batches | Covered | — |
+| Look characters up by pinyin order and by radical | `dictionary-pinyin`, `dictionary-radicals` in grade 3 | Partly | The two topics move to grade 2 |
+| **Reading.** Read aloud in Putonghua, begin silent reading | `reading-aloud-1`, `reading-aloud-2` | Covered | — |
+| Know common punctuation; feel the tone of 。？！ | Only from grade 3 | Gap | `punctuation-sentence-ends` moves to grade 2 |
+| Understand words and sentences from context and life; read with pictures | Six reading units | Partly | `reading-1-stories`, `reading-1-signs` |
+| Read simple fairy tales, fables and stories, feel for their people | Six reading units | Partly | `reading-2-fables`, `reading-2-fairy-tales`, `reading-2-science` |
+| Recite nursery rhymes, children's verse and simple old poems, 50 in the stage | 20 poems | Partly | §18.8; `reading-1-rhymes` |
+| Gather idioms and maxims one likes; try a whole book and tell others about it | Idioms and whole books from grade 3 | Outside | The learner's own choice of idioms and first books (§18.7) |
+| **Expression.** Listen carefully and grasp what is said | — | Gap | `speaking-1-listening` |
+| Retell the gist of a story heard; tell a short story or what one saw, in order | — | Gap | `speaking-1-telling` |
+| Talk politely and naturally; ask, answer, talk things over | — | Gap | `speaking-1-manners`, `speaking-2-asking`, `speaking-2-messages`, `speaking-2-discussing` |
+| Write sentences: what one wants to say, what one imagines, using words learned | Eight topics of sentence building | Partly | `writing-1-want-to-say`, `writing-2-picture`, `writing-2-imagination` |
+| Use 。，？！ in writing | — | Gap | `punctuation-sentence-ends`; the criteria of the writing topics |
+| **Inquiry.** Observe nature and life; sort what is learned; ask questions | Components sort characters | Partly | `writing-2-picture`; the questions are classroom activity (§18.7) |
+
+### 18.3 Grades 3 and 4
+
+| Requirement | Now | Status | Filled by |
+| :--- | :--- | :--- | :--- |
+| **Literacy and writing.** About 2,500 recognized and 1,600 written in all | Recognition and writing batches | Covered | — |
+| Use a character dictionary and a word dictionary | Dictionary topics | Partly | `dictionary-words` |
+| Copy regular script with a brush | — | Outside | §18.7 |
+| **Reading.** Read aloud; silent reading without sound or finger; skim for the gist | `reading-aloud-3`, `reading-aloud-4` | Partly | `reading-4-skimming` |
+| Understand words and sentences from context; feel what key sentences do | Reading units | Partly | `reading-3-key-sentences` |
+| Grasp the main content and the feeling of a text; ask about what is unclear | Reading units | Partly | `reading-3-main-idea`, `reading-4-feelings` |
+| Narratives: retell the gist, feel for the characters and their fate | Reading units, `book-andersen`, `book-chinese-myths` | Partly | `reading-3-fairy-tales`, `reading-3-fables`, `reading-4-narrative`, `reading-4-myths`, `reading-4-folk-tales` |
+| Recite poems, imagine their pictures, grasp their meaning; 50 in the stage | 16 poems | Partly | §18.8; `reading-3-poems` |
+| Gather fine words and sentences | Word and idiom batches | Covered | `language-3-similar-characters`, `language-4-polyphones` |
+| Comma and full stop; colon and quotation marks | Punctuation topics | Covered | — |
+| Practical texts of daily life; texts on nature and science | Reading units | Partly | `reading-3-science`, `reading-4-everyday-texts` |
+| **Expression.** Listen, ask about what is unclear, talk over different views | — | Gap | `speaking-3-listening`, `speaking-3-discussing` |
+| Relay briefly what was heard | — | Gap | `speaking-3-relaying` |
+| Tell what one saw clearly, with one's feelings; tell a story vividly | — | Gap | `speaking-3-telling`, `speaking-4-storytelling`, `speaking-4-introducing`, `speaking-4-occasions`, `speaking-4-persuading` |
+| Write freely what one saw, felt and imagined, what was new or moved one most | `writing-3-paragraph`, `writing-3-diary`, `writing-4-event` | Partly | `writing-3-imagination`, `writing-3-favourite-thing`, `writing-4-observation`, `writing-4-imagination`, `writing-4-place` |
+| Short letters and notes | `writing-4-letter` | Partly | `writing-3-note` |
+| Revise obvious errors of words and sentences | Faulty sentences from grade 4 | Partly | `revising-3`, `revising-4` |
+| About 16 compositions a year | Two judged topics a grade | Gap | Five judged topics a grade, ten kinds of piece |
+| **Inquiry.** Ask questions, gather material, solve problems with Chinese and other subjects | — | Outside | §18.7; science reading |
+
+### 18.4 Grades 5 and 6
+
+| Requirement | Now | Status | Filled by |
+| :--- | :--- | :--- | :--- |
+| **Literacy and writing.** About 3,000 recognized and 2,500 written in all; pen writing at speed | Batches | Covered | — |
+| Feel how characters are built and words formed | — | Gap | `language-5-character-formation`, `language-6-word-formation` |
+| Brush writing in regular script | — | Outside | §18.7 |
+| **Reading.** Read aloud fluently; silent reading at 300 characters a minute | Reading aloud | Partly | Timed reading waits for the core (§18.1) |
+| Browse, gather information as needed | — | Gap | `reading-6-browsing`, `inquiry-5-sources` |
+| Infer the meaning of words, tell their emotional colour | Word batches | Partly | `reading-5-word-colour` |
+| See the order of a text and its methods of expression | — | Gap | `reading-5-structure` |
+| Narratives: the outline, the scene, person or detail that struck one, one's feelings | Reading units, `book-journey-to-the-west`, `book-robinson-crusoe` | Partly | `reading-5-narrative`, `reading-6-fiction`, `reading-6-prose` |
+| Poems: their meaning, scene and feeling, by tone, rhyme and rhythm | Recitation | Partly | `reading-5-poems`, `reading-6-poems` |
+| Expository texts: key points and methods of explaining | Reading units | Partly | `reading-5-expository`, `reading-6-expository` |
+| Non-continuous texts: find what matters in text with tables and pictures | — | Gap | `reading-5-non-continuous`, `reading-6-non-continuous` |
+| Simple argument: a view and its examples | `writing-6-argue` | Partly | `reading-6-argument` |
+| 、 against ， and ； against 。 | Punctuation topics | Covered | — |
+| Recite 60 in the stage | 22 texts | Partly | §18.8 |
+| Read whole books, grasp their content and recommend one with reasons | One whole book a grade | Partly | Recommending is classroom activity (§18.7) |
+| **Expression.** Take part in discussion and give one's view | — | Gap | `speaking-5-discussion`, `speaking-6-responding` |
+| Listen patiently, catch the key points, relay them | — | Gap | `speaking-5-key-points` |
+| Speak in order with fitting tone; brief prepared remarks for the listener and occasion | — | Gap | `speaking-5-tone`, `speaking-6-short-speech`, `speaking-6-presenting`, `speaking-6-interview` |
+| Keep language civil | — | Gap | `speaking-5-civil-language` |
+| Factual and imaginative compositions, specific, sincere, in paragraphs | `writing-5-person`, `writing-5-explain`, `writing-6-scene`, `writing-6-argue` | Partly | `writing-5-imagination`, `writing-6-real-event` |
+| Reading notes and common practical writing | — | Gap | `writing-5-book-notes`, `writing-6-reflection`, `writing-5-notice` |
+| Revise one's own work and a partner's | Faulty sentences | Partly | `revising-5`, `revising-6` |
+| About 16 compositions a year | Two judged topics a grade | Gap | Five judged topics a grade |
+| **Inquiry.** Sort language materials; plan an activity and sum it up; discuss shared questions; use libraries and the internet; try a simple research report | Word batches | Partly | `writing-6-plan-summary`, `inquiry-5-sources`; the rest outside (§18.7) |
+
+### 18.5 Grades 7 to 9
+
+| Requirement | Now | Status | Filled by |
+| :--- | :--- | :--- | :--- |
+| **Literacy and writing.** About 3,500 characters; dictionaries | Batches | Covered | — |
+| Semi-cursive script; copying calligraphy | — | Outside | §18.7 |
+| **Reading.** Read aloud; silent reading at 500 characters a minute; skim and browse | Reading aloud | Partly | Timed reading waits for the core |
+| Follow the line of a text, weigh key words in context, form one's own view | Reading units | Partly | `reading-7-narrative`, `reading-7-description` |
+| Modes of expression; fact and fiction; poetry, prose, fiction and drama | — | Gap | `reading-9-forms`, `reading-9-drama` |
+| Appreciate literature: images, feeling, expressive language | Reading units | Partly | `reading-7-prose`, `reading-8-fiction`, `reading-9-fiction` |
+| Argument: tell claim from material and judge it | Reading units of argument | Partly | `reading-8-argument`, `reading-9-argument` |
+| News and exposition: main view and information; science writing and its method | Reading units of exposition | Partly | `reading-7-news`, `reading-7-expository`, `reading-8-expository`, `reading-8-science` |
+| Complex non-continuous texts | — | Gap | `reading-8-non-continuous` |
+| Read old poems; read easy classical prose with notes and dictionaries | Recitation, classical drills | Partly | `reading-7-classical`, `reading-8-classical`, `reading-9-classical`, `reading-7-poems`, `reading-8-poems`, `reading-9-poems` |
+| Recite 80 in the stage | 60 texts | Partly | §18.8 |
+| Two or three classics a year | One whole book a grade | Partly | `book-twenty-thousand-leagues`, `book-steel-tempered`, `book-jane-eyre` |
+| Basic vocabulary, grammar and rhetoric; writers and culture | Word, idiom and grammar topics | Covered | — |
+| **Expression.** Fit the listener and occasion; read intention from words, face and gesture | — | Gap | `speaking-7-intent`, `speaking-7-proper`, `speaking-9-hosting` |
+| State a view clearly and persuasively | — | Gap | `speaking-8-persuading`, `speaking-8-speech` |
+| Tell vividly; retell and relay accurately; speak off the cuff; give a prepared speech | `writing-8-speech` | Partly | `speaking-7-retelling`, `speaking-7-impromptu`, `speaking-8-speech` |
+| Discuss with a centre, grounds and order; keep to the focus | — | Gap | `speaking-8-discussion-focus`, `speaking-8-interview`, `speaking-9-debate`, `speaking-9-listening-argument` |
+| Write with feeling from observed life; association and imagination | `writing-7-center`, `writing-7-detail` | Partly | `writing-7-feeling`, `writing-7-imagination`, `writing-8-travel` |
+| Narrative, exposition, argument, practical writing; condensing, expanding and rewriting; poems and very short stories | `writing-8-explain`, `writing-9-argue`, `writing-9-story` | Partly | `writing-7-expand-condense`, `writing-7-practical`, `writing-8-news`, `writing-8-rewrite`, `writing-9-poem`, `writing-9-short-story`, `writing-9-review`, `writing-9-refute` |
+| Gather material, plan, outline, draft and revise | — | Gap | `planning-7-outline`, `revising-8`, `revising-9` |
+| At least 14 compositions a year; 500 characters in 45 minutes | Two judged topics a grade | Gap | Six judged topics a grade; the time limit waits for the core |
+| **Inquiry.** Sort language materials | Word batches | Covered | — |
+| Read across media and choose a medium | — | Gap | `reading-9-cross-media` |
+| Literary activities, current events, surveys | — | Outside | §18.7 |
+| Research a question, write a simple report, tell primary from secondary sources and cite them | — | Gap | `writing-8-research-report`, `inquiry-8-sources`, `speaking-9-reporting` |
+
+### 18.6 The Task Groups
+
+| Task group of the compulsory standard | Covered by |
+| :--- | :--- |
+| Accumulating and organizing language (语言文字积累与梳理) | Character and word batches, idioms, grammar, recitation; new: `pinyin-alphabet`, `dictionary-words`, `language-*` |
+| Practical reading and communication (实用性阅读与交流) | New: `reading-1-signs`, `reading-2-science`, `reading-3-science`, `reading-4-everyday-texts`, the non-continuous, expository, news and science reading of grades 5 to 9, practical writing, every `speaking-*` topic |
+| Literary reading and creative expression (文学阅读与创意表达) | Reading units of narrative; recitation; new: the rhymes, stories, fables, fairy tales, myths, poems, prose, fiction and drama reading; imaginative and literary writing |
+| Critical reading and expression (思辨性阅读与表达) | `writing-6-argue`, `writing-9-argue`, reading units of argument; new: `reading-6-argument`, `reading-8-argument`, `reading-9-argument`, `writing-9-refute`, discussion and debate |
+| Whole-book reading (整本书阅读) | One book a grade from grade 3; new: a second book a grade in grades 7 to 9 |
+| Interdisciplinary learning (跨学科学习) | Projects outside the app (§18.7); in the app, the science and non-continuous reading, `inquiry-5-sources`, `inquiry-8-sources`, `writing-8-research-report` |
+
+| Senior task group | Course | Covered by |
+| :--- | :--- | :--- |
+| Whole-book reading and discussion | Required, and through the others | `book-dream-of-red-chamber`, the novel the required course asks for; new: `book-xiangtu-zhongguo`, the academic work |
+| Taking part in today's culture | Required, and through the others | New: `reading-10-media`, `writing-10-report`, `speaking-10-interview` |
+| Reading and communicating across media | Required, and through the others | New: `reading-10-media` |
+| Accumulating, organizing and inquiring into language | Required and selective required | Word and idiom batches, `rhetoric-4`; new: `language-10-usage` |
+| Literary reading and writing | Required | Reading unit of literature; new: `reading-10-fiction`, `reading-10-poetry`, `reading-10-prose`, `writing-10-literary` |
+| Critical reading and expression | Required | `writing-10-material`, `writing-10-commentary`, reading unit of argument; new: `reading-10-argument`, `writing-10-rigorous`, `speaking-10-debate` |
+| Practical reading and communication | Required | Reading unit of informational texts; new: `reading-10-practical`, `speaking-10-speech` |
+| Studying the classics of traditional culture | Selective required | Recitation, classical drills; new: `reading-10-classical`, `reading-11-masters`, `reading-11-histories`, `reading-11-poems` |
+| Studying works of the revolutionary tradition | Selective required, and through all three kinds of course | New: `reading-11-revolutionary`, on works in the public domain only |
+| Studying modern and contemporary Chinese writers | Selective required | New: `book-call-to-arms`; the works of at least ten writers that the group asks for are mostly under copyright and read outside the app, and the subject writes no stand-ins for them |
+| Studying foreign writers | Selective required | New: `reading-11-foreign`, on public-domain works translated for the subject |
+| Studying scientific and cultural treatises | Selective required | Reading unit of disciplines; new: `reading-11-treatises`, `writing-11-academic`, `speaking-11-seminar` |
+
+The selective course's `writing-11-dialectic` and `writing-11-proposal`, and the new `writing-11-literary-review`, carry its critical and practical writing. The six groups of the electives, the seminars that follow on from the selective required groups, are not built (§8.1).
+
+The whole books follow the national textbooks of their grades and the reading lists of both standards' appendix 2, which give examples only: 《海底两万里》, 《钢铁是怎样炼成的》 and 《简·爱》 are on the compulsory list, and 《呐喊》 on the senior one. The senior academic work is 《乡土中国》, the one the required textbook reads; the senior list names no academic work in the public domain.
+
+### 18.7 Outside the App
+
+Brush and semi-cursive writing; silent reading posture and habits; the reading volume outside class; the questions, projects, magazines, performances, surveys and interdisciplinary work of organizing and inquiry; annotating while reading; the idioms a young learner chooses to gather and the first whole books of grades 1 and 2; recommending books; seminars on whole books; and the modern and contemporary works under copyright of the selective required course. Silent reading speed and timed compositions wait for problems with a time limit.
+
+### 18.8 Recitation Against the Lists
+
+The compulsory standard's appendix recommends 75 poems for grades 1 to 6 and 60 poems and passages for grades 7 to 9; the senior standard recommends 72 texts, 32 of classical prose and 40 poems, ci and qu, across required, selective required and elective courses. The stages ask for more recitation than the lists: 50 texts in grades 1 and 2, 50 in grades 3 and 4, 60 in grades 5 and 6 and 80 in grades 7 to 9; the texts beyond the list are the teacher's choice. The courses held:
+
+| Stage | Recited now | Of them on the list | List texts missing | Not on the list | Stage asks for |
+| :--- | ---: | ---: | ---: | ---: | ---: |
+| Grades 1 and 2 | 20 | 19 | — | 1 | 50 |
+| Grades 3 and 4 | 16 | 12 | — | 4 | 50 |
+| Grades 5 and 6 | 22 | 10 | — | 12 | 60 |
+| Grades 1 to 6 | 58 | 41 | 34 | 17 | 160 |
+| Grades 7 to 9 | 60 | 40 (38 list items) | 22 | 20 | 80 |
+| Senior | 72 | 59 (and one in grade 8) | 12 | 13 | 72 |
+
+**Grades 1 to 6.** The 17 texts not on the list stay: 夜宿山寺, 赠刘景文, 夜书所见, 雪梅, 清平乐·村居, 稚子弄冰, 村晚, 从军行 (青海长云), 宿建德江, 西江月·夜行黄沙道中, 马诗, the classical passages 守株待兔, 杨氏之子, 囊萤夜读, 学弈, 铁杵成针, and 伯牙鼓琴 from the *Liezi*, which is not the *Lüshi Chunqiu* text that the list of grades 7 to 9 names. The 34 missing poems join the grade whose national textbook (统编) teaches them, so that a learner who goes to school meets them in the same year:
+
+| Grade | Added from the list |
+| :--- | :--- |
+| 1 | 赠汪伦 |
+| 2 | 小儿垂钓, 敕勒歌 |
+| 3 | 所见, 绝句（迟日江山丽）, 早发白帝城, 元日, 清明, 忆江南, 九月九日忆山东兄弟, 滁州西涧 |
+| 4 | 蜂, 鹿柴, 江畔独步寻花, 四时田园杂兴（梅子金黄杏子肥）, 别董大, 墨梅 |
+| 5 | 游子吟, 黄鹤楼送孟浩然之广陵, 凉州词（黄河远上白云间）, 枫桥夜泊, 送元二使安西, 渔歌子, 观书有感（其一）, 乡村四月 |
+| 6 | 江上渔者, 回乡偶书, 长歌行, 春夜喜雨, 早春呈水部张十八员外, 江南春, 泊船瓜洲, 书湖阴先生壁, 游园不值 |
+
+The rest of each stage's number comes only from classical poems in the public domain that the national textbook of the same grade teaches for recitation and that neither the list nor the courses already hold; the subject chooses none of its own. They are:
+
+| Grade | Added from the textbook |
+| :--- | :--- |
+| 1 | 画（远看山有色）, 画鸡 |
+| 2 | 梅花（墙角数枝梅）, 舟夜书所见 |
+| 3 | 采莲曲, 大林寺桃花 |
+| 4 | 暮江吟, 嫦娥, 宿新市徐公店, 独坐敬亭山 |
+| 5 | 蝉, 乞巧, 长相思（山一程）, 观书有感（其二）, 鸟鸣涧, 山居秋暝 |
+| 6 | 过故人庄, 寒食, 迢迢牵牛星, 十五夜望月, 采薇（节选）, 闻官军收河南河北, 卜算子·送鲍浩然之浙东, 浣溪沙（山下兰芽短浸溪）, 清平乐（春归何处） |
+
+山居秋暝 is on the senior list, not the compulsory one; grade 5 holds it because its textbook teaches it in the same lesson as 枫桥夜泊 and 长相思. With them the stages hold 27, 36 and 54 texts against the 50, 50 and 60 asked for, and the rest stays a gap: 23 in grades 1 and 2, 14 in grades 3 and 4 and 6 in grades 5 and 6. The textbooks' classical prose passages and their nursery rhymes would close part of it once the textbooks' own recitation requirements are confirmed. Each text is a recitation topic as in §7.
+
+The grades of the textbook poems are those of two published lists of the 112 poems of the edition used from 2019, which disagree on a few poems of grade 5 (寒菊 is in one only and is left out). Poems by authors not yet in the public domain are left out.
+
+**Grades 7 to 9.** The 20 texts not on the list stay: 峨眉山月歌, 江南逢李龟年, 夜上受降城闻笛, 秋词（其一）, 逢入京使, 晚春, 陈太丘与友期, 咏雪, 诫子书, 穿井得一人, 孙权劝学, 卖油翁, 野望, 渡荆门送别, 龟虽寿, 与朱元思书, 大道之行也, 送友人, 月夜忆舍弟 and 卜算子·咏梅. The 22 missing join the grades, which brings the stage to 82:
+
+| Grade | Added from the list |
+| :--- | :--- |
+| 7 | 木兰辞, 《论语》十二章 (the twelve of the junior list, from 学而时习之 to 博学而笃志), 登飞来峰, 游山西村, 己亥杂诗（浩荡离愁白日斜）, 十五从军征, 伯牙鼓琴 from the *Lüshi Chunqiu* |
+| 8 | 关雎, 蒹葭 (whole; `recite-jian-jia` of the senior course is its first stanza), 卖炭翁, 茅屋为秋风所破歌, 白雪歌送武判官归京, 北冥有鱼 from the *Zhuangzi*, 虽有嘉肴 from the *Liji* |
+| 9 | 行路难（其一）, 相见欢（无言独上西楼）, 渔家傲（天接云涛连晓雾）, 南乡子·登京口北固亭有怀, 山坡羊·潼关怀古, 满江红（小住京华）, 出师表, 送东阳马生序（节选） |
+
+**Senior.** The list of the 2020 revision names ten prose texts for the required course, ten for the selective required course and twelve for the electives, and the forty poems together. The 13 texts not on the list stay: 蒹葭（节选）, 雨霖铃, 氓, 咏怀古迹（其三）, 定风波, the three passages of the *Mencius* (齐桓晋文之事, 寡人之于国也, 人皆有不忍人之心, none of them the list's), 庖丁解牛, 逍遥游（节选） (the textbook's passage; the list's passage of the *Zhuangzi*, from 惠子谓庄子曰, is 五石之瓠), 烛之武退秦师, 鸿门宴 and 苏武传. Two list texts are held in part: 论语十二章 has ten of the twelve sayings the list names, with 岁寒 and 君子义以为质 in place of 譬如为山 and 知者不惑, and 老子四章 two of its eight chapters, 24 and 33, besides chapters 11 and 64. 大道之行也 of grade 8 is the list's 礼运 and is held by the selective course as well. The 12 missing join the courses: 山居秋暝 joins grade 5, whose textbook teaches it, and is held by the required course as well; the required course takes the poems 菩萨蛮（小山重叠金明灭）, 菩萨蛮·书江西造口壁, 贺新郎（国脉微如缕） and 朝天子·咏喇叭; the selective course takes 报任安书 (the list's excerpt) and, since the electives are not built, the elective texts 季氏将伐颛臾, 中庸 (its two passages), the *Mencius* passage from 敢问夫子恶乎长, 黄冈竹楼记, 上枢密韩太尉书, and the classical literary theory as one topic of six passages: 毛诗序, 典论·论文, 诗品序, 与元九书, Zheng Xie's 题画 and three passages of 人间词话. The two sayings 论语十二章 lacks join it, and the six chapters of the *Laozi* that 老子四章 lacks are a second topic, 老子六章.
+
+### 18.9 The New Topics
+
+Five kinds of topic close the gaps, each written to the teaching standard from the start (an introduction with its own instance, explanations that teach with an instance and end with a warning, solutions in steps that end with a check, and choice solutions that say why each other option is wrong) and listed in `teaching-standard.ts`:
+
+| Kind | Ids | Checker | Content |
+| :--- | :--- | :--- | :--- |
+| Reading | `reading-<grade>-<kind>` | Choice, with why each wrong option is wrong | At least 10 passages a topic and 30 questions a knowledge point, written for the subject or in the public domain in every first market (classical prose and poems, classical vernacular novels, folk tales and fables retold for the subject, foreign works translated for it); the grade's reading units feed the banks. No textbook passage or exam question is used |
+| Judged writing | `writing-<grade>-<kind>` | `writingGenerator`, three yes-or-no criteria in `libs/subject-chinese`, two knowledge points of two criteria each | Twelve tasks with a model answer each, lengths in characters from 20 in grade 1 to 800 in senior school |
+| Writing by rules | `revising-<grade>`, `planning-7-outline` | Choice, typed characters, order | Faulty pieces of a learner's draft to correct; outlines to choose and order |
+| Speaking | `speaking-<grade>-<kind>` | Choice by rules: the reply that suits the listener, the purpose and the occasion; the relay that keeps the whole message | Scenes written for the subject; in grades 1 and 2 the scene and the options are heard from recordings made ahead, and from grade 3 the scenes of listening and relaying are heard; until the recordings are made, what is said is shown as text |
+| Language and inquiry | `pinyin-alphabet`, `dictionary-words`, `language-<grade>-<kind>`, `inquiry-<grade>-sources` | Choice, typed characters, pinyin | Characters and words of the grade |
+
+Each topic has two knowledge points; titles are given in English and Chinese, and the knowledge points by what they ask where the title does not say it. Where none are named, a reading topic's first point asks what the passage says and its second how it says it, by the method its title names; a judged topic's two points each judge the piece by two of its three criteria, as in §11; and a speaking topic's first point asks for the fitting reply in scenes read and its second in scenes heard, both heard in grades 1 and 2.
+
+**Grade 1** (8): `pinyin-alphabet` The Pinyin Alphabet / 汉语拼音字母表 — the letters in order; capitals and small letters. `reading-1-rhymes` Rhymes and Children's Verse / 读儿歌和儿童诗 — what a verse says; which characters rhyme. `reading-1-stories` Short Stories / 读小故事 — who, where and what happened; a word's meaning from its sentence. `reading-1-signs` The Words Around Us / 读身边的文字 — signs and labels; a timetable and a calendar. `writing-1-want-to-say` Writing What I Want to Say / 写自己想说的话 — a sentence about oneself; two sentences about something one likes (judged). `speaking-1-listening` Listening Carefully / 认真听 — what a short talk is about; what the speaker asked for. `speaking-1-manners` Talking Politely / 有礼貌地交谈 — greeting, thanking and saying sorry; asking to borrow and waiting one's turn. `speaking-1-telling` Telling It Clearly / 把事情说清楚 — the parts of a telling in order; what a telling leaves out.
+
+**Grade 2** (8, and `punctuation-sentence-ends`, `dictionary-pinyin` and `dictionary-radicals` move here from grade 3): `reading-2-fables` Fables / 读寓言 — what happened; what it teaches. `reading-2-fairy-tales` Fairy Tales / 读童话 — who wants what; what is imagined. `reading-2-science` Nature and Things / 读浅近的科普短文 — facts in the text; the reason the text gives. `writing-2-picture` Writing About a Picture / 看图写话 — who and what the picture shows; a few sentences in order (judged; pictures drawn as [Chinese Illustrations](chinese-illustrations.md) describes). `writing-2-imagination` Writing What I Imagine / 写想象中的事物 — what it is like; what happens (judged). `speaking-2-asking` Asking for Help and the Way / 请教和问路 — a clear question; the right form of address. `speaking-2-messages` Passing On a Message / 转告 — the whole message; who it is for and when. `speaking-2-discussing` Talking It Over / 商量 — making a suggestion; answering another idea kindly.
+
+**Grade 3** (16): `dictionary-words` Choosing a Sense in the Dictionary / 查字典词典：选择义项 — the sense of a character in a word; the sense of a word in a sentence. `language-3-similar-characters` Characters That Look or Sound Alike / 形近字和同音字 — like forms; like sounds. `reading-3-fairy-tales` Fairy Tales: the Gist / 读童话：复述大意 — the gist; how a character feels. `reading-3-fables` Fables and Their Lessons / 读寓言：故事和道理 — what happened; the lesson. `reading-3-poems` Poems: Picture and Meaning / 读诗：想象画面，领悟大意 — the picture; the meaning. `reading-3-key-sentences` Key Words and Sentences / 联系上下文理解词句 — a word from its context; what a key sentence does. `reading-3-main-idea` The Main Idea / 把握主要内容 — of a paragraph; of a text. `reading-3-science` Popular Science / 读科普短文 — facts; reasons. `writing-3-imagination` An Imagined Story / 写想象故事 (judged). `writing-3-note` Notes and Messages / 写留言条和便条 (judged). `writing-3-favourite-thing` Something I Like / 写一样喜爱的东西 (judged). `revising-3` Correcting Obvious Mistakes / 修改明显错误的词句 — wrong characters; wrong words. `speaking-3-listening` Listening and Asking / 倾听和请教 — what was said; the question about what was unclear. `speaking-3-relaying` Relaying Briefly / 简要转述 — the main point; who said what. `speaking-3-telling` Telling What I Saw and Felt / 讲述见闻 — a clear order; saying one's feeling. `speaking-3-discussing` Talking Over Different Views / 与人商讨 — giving a reason; meeting a different view.
+
+**Grade 4** (15): `language-4-polyphones` Characters With Several Readings / 多音字 — the reading in a word; the meaning by the reading. `reading-4-myths` Myths / 读神话 — what happened; what is imagined. `reading-4-folk-tales` Folk Tales / 读民间故事 — the story; its people. `reading-4-narrative` Narratives: Retelling and People / 读叙事性作品 — the gist; a character's fate and feelings. `reading-4-feelings` The Feeling of a Text / 体会思想感情 — what the writer feels; the words that show it. `reading-4-everyday-texts` Notices, Announcements and Instructions / 读通知、启事和说明书 — what to do; who, when and where. `reading-4-skimming` Skimming for the Gist / 略读：粗知大意 — the gist; where the answer lies. `writing-4-observation` Observing a Change / 写观察：植物或动物的变化 (judged). `writing-4-imagination` Continuing a Story / 续编故事 (judged). `writing-4-place` A Place, in Order / 按顺序写一处地方 (judged). `revising-4` Revising Sentences / 修改病句和用词不当 — faulty sentences; the better word. `speaking-4-storytelling` Telling a Story Vividly / 生动地讲故事 — the livelier telling; the detail that brings it alive. `speaking-4-introducing` Introducing, With the Listener in Mind / 介绍：想着听的人 — what this listener needs; the order. `speaking-4-occasions` On the Phone and as a Guest / 打电话和做客 — opening and closing; what suits the occasion. `speaking-4-persuading` Persuading Kindly / 劝说 — the reason that moves this listener; the gentle wording.
+
+**Grade 5** (16): `language-5-character-formation` How Characters Are Made / 汉字的造字方法 — pictographs, indicatives and compound ideographs; phono-semantic characters. `inquiry-5-sources` Finding and Using Information / 查找和运用资料 — where to look; the information that answers the question. `reading-5-narrative` Narratives: Outline and Detail / 叙事性作品：梗概和细节. `reading-5-poems` Poems: Scene and Feeling / 读诗：情境和情感. `reading-5-expository` Expository Texts: Points and Methods / 说明性文章：要点和说明方法. `reading-5-non-continuous` Texts With Tables and Pictures / 非连续性文本. `reading-5-word-colour` Meaning and Colour of Words / 推想词句意思，辨别感情色彩. `reading-5-structure` Order and Methods of Expression / 表达顺序和表达方法. `writing-5-imagination` An Imaginative Composition / 想象作文 (judged). `writing-5-book-notes` Reading Notes / 读书笔记 (judged). `writing-5-notice` Notices and Announcements / 写通知和启事 (judged). `revising-5` Revising for Smooth Sentences / 修改习作：语句通顺 — sentences; the order of sentences. `speaking-5-discussion` Speaking in a Discussion / 参与讨论 — keeping to the topic; a view with its reason. `speaking-5-key-points` Key Points and Relaying / 抓住要点转述. `speaking-5-tone` Fitting Tone and Wording / 语气语调适当. `speaking-5-civil-language` Civil Language / 语言文明.
+
+**Grade 6** (16): `language-6-word-formation` How Words Are Formed / 构词和组词 — the structure of compound words; families of words. `reading-6-fiction` Fiction: People, Plot and Setting / 读小说：人物、情节和环境. `reading-6-prose` Prose: Feeling and Expression / 读散文. `reading-6-argument` Views and Examples / 读议论性文字：观点和事例. `reading-6-expository` Methods of Explaining and Their Use / 说明方法及其作用. `reading-6-non-continuous` Instructions, Charts and Maps / 读说明书、图表和地图. `reading-6-browsing` Browsing for Information / 浏览，搜集信息. `reading-6-poems` Poems: Rhythm and Feeling / 读诗：韵律节奏和情感. `writing-6-real-event` A True Event, Truly Felt / 写真实的经历 (judged). `writing-6-reflection` Thoughts After Reading / 读后感 (judged). `writing-6-plan-summary` An Activity Plan and Summary / 活动计划和活动总结 (judged). `revising-6` Revising Form and Punctuation / 修改习作：行款和标点. `speaking-6-short-speech` Brief Prepared Remarks / 稍作准备的发言. `speaking-6-presenting` Presenting a Topic / 专题演讲. `speaking-6-interview` Asking in an Interview / 采访. `speaking-6-responding` Responding to a View / 回应别人的观点.
+
+**Grade 7** (17): `reading-7-narrative` Narratives: Thread, Order and Detail / 记叙文：线索、顺序和详略. `reading-7-description` Description and Its Effect / 描写方法及其作用. `reading-7-prose` Prose: Language and Feeling / 散文：品味语言，体会情感. `reading-7-expository` Exposition: Object, Features, Methods / 说明文：对象、特征和方法. `reading-7-news` News / 读新闻：要素和观点. `reading-7-classical` Easy Classical Prose / 阅读浅易文言文 — words with the notes; what the passage says. `reading-7-poems` Classical Poems / 古诗词鉴赏 — image and scene; feeling. `writing-7-feeling` Writing With Feeling / 抒发真情 (judged). `writing-7-expand-condense` Expanding and Condensing / 扩写和缩写 (judged). `writing-7-imagination` Association and Imagination / 发挥联想和想象 (judged). `writing-7-practical` Applications and Suggestions / 写申请书和建议书 (judged). `planning-7-outline` An Outline / 列提纲 — the outline that serves the centre; the parts in order. `speaking-7-intent` Hearing What Is Meant / 听出话语的意图. `speaking-7-retelling` Retelling and Relaying / 复述和转述. `speaking-7-proper` Fitting the Listener and Occasion / 文明得体地交流. `speaking-7-impromptu` Speaking Off the Cuff / 即席讲话. `book-twenty-thousand-leagues` Whole Book: *Twenty Thousand Leagues Under the Seas* / 整本书阅读：《海底两万里》 (practice only).
+
+**Grade 8** (18): `reading-8-expository` Order and Language of Explaining / 说明顺序和说明语言. `reading-8-science` Science Writing / 读科技作品：科学精神和方法. `reading-8-argument` Argument: Claim and Material / 议论文：观点和材料. `reading-8-non-continuous` Complex Non-continuous Texts / 较复杂的非连续性文本. `reading-8-fiction` Fiction / 读小说. `reading-8-classical` Classical Prose / 阅读文言文. `reading-8-poems` Classical Poems / 古诗词鉴赏. `writing-8-news` Writing News / 写消息 (judged). `writing-8-travel` Travel Writing / 写游记 (judged). `writing-8-rewrite` Rewriting / 改写 (judged). `writing-8-research-report` A Simple Research Report / 写简单的研究报告 (judged). `revising-8` Revising to Read Smoothly / 修改：文从字顺. `inquiry-8-sources` Sources and Citations / 原始资料、间接资料和注明出处. `speaking-8-speech` A Prepared Speech / 主题演讲. `speaking-8-interview` Interviewing / 采访和访谈. `speaking-8-discussion-focus` Keeping to the Focus / 抓住讨论焦点. `speaking-8-persuading` Speaking Persuasively / 增强说服力. `book-steel-tempered` Whole Book: *How the Steel Was Tempered* / 整本书阅读：《钢铁是怎样炼成的》 (practice only).
+
+**Grade 9** (17): `reading-9-argument` Methods and Line of Argument / 论证方法和论证思路. `reading-9-fiction` Fiction: Theme and Craft / 小说：主题和写法. `reading-9-drama` Drama: Conflict and Lines / 读戏剧：冲突和台词. `reading-9-forms` Modes and Forms; Fact and Fiction / 表达方式、文学样式、写实与虚构. `reading-9-cross-media` Reading Across Media / 跨媒介阅读. `reading-9-classical` Classical Prose / 阅读文言文. `reading-9-poems` Classical Poems / 古诗词鉴赏. `writing-9-poem` Trying a Poem / 尝试写诗 (judged). `writing-9-short-story` A Very Short Story / 写小小说 (judged). `writing-9-review` A Review / 写评论 (judged). `writing-9-refute` Refuting a View / 驳论 (judged). `revising-9` Revising a Whole Essay / 修改全文：立意、结构和语言. `speaking-9-debate` Debating / 辩论. `speaking-9-listening-argument` Hearing Claims and Grounds / 听辨观点和依据. `speaking-9-reporting` Reporting Findings / 汇报探究成果. `speaking-9-hosting` Hosting and Formal Remarks / 主持和致辞. `book-jane-eyre` Whole Book: *Jane Eyre* / 整本书阅读：《简·爱》 (practice only).
+
+**Senior required** (15): `reading-10-fiction` Fiction / 小说阅读. `reading-10-poetry` Modern Poetry / 现代诗歌阅读. `reading-10-prose` Prose / 散文阅读. `reading-10-practical` News, Features and Reports / 实用性阅读：新闻、通讯和报告. `reading-10-argument` Logic in Argument / 思辨性阅读：论证和逻辑. `reading-10-media` Media and Culture Today / 跨媒介阅读与当代文化. `reading-10-classical` Classical Prose / 文言文阅读. `language-10-usage` Organizing Usage: Sense, Register, Sentence / 语言梳理：词义、语体和句式. `writing-10-literary` Literary Writing / 文学写作 (judged). `writing-10-report` A Survey Report / 写调查报告 (judged). `writing-10-rigorous` Arguing Rigorously / 立论严谨 (judged). `speaking-10-speech` Speeches / 演讲. `speaking-10-debate` Debate / 辩论. `speaking-10-interview` Interviews / 访谈. `book-xiangtu-zhongguo` Whole Book: *From the Soil* / 整本书阅读：《乡土中国》 (practice only).
+
+**Senior selective required** (11): `reading-11-masters` The Pre-Qin Masters / 先秦诸子研习. `reading-11-histories` Histories and Biographies / 史传文言阅读. `reading-11-revolutionary` Works of the Revolutionary Tradition / 革命传统作品研习. `reading-11-foreign` Foreign Writers / 外国作家作品研习. `reading-11-treatises` Scientific and Cultural Treatises / 科学与文化论著研习. `reading-11-poems` Classical Poems and Ci / 古代诗词鉴赏. `writing-11-literary-review` A Short Literary Review / 写文学短评 (judged). `writing-11-academic` A Short Research Essay / 写学术小论文 (judged). `speaking-11-seminar` Speaking in a Seminar / 研讨发言. `speaking-11-presenting-research` Presenting Research / 学术报告. `book-call-to-arms` Whole Book: *Call to Arms* / 整本书阅读：《呐喊》 (practice only).
+
+The judged topics bring a grade's kinds of piece, two a topic, to ten in grades 3 to 6 and twelve in grades 7 to 9, against the 16 and at least 14 compositions a year that the standard asks for; the rest are the rule-checked revising and planning. All judged topics wait for calibration as §11 says.
+
+### 18.10 Size
+
+Topics a course, before and after, by strand; reading counts the whole books and inquiry, writing the revising and planning, and words the language topics.
+
+| Course | Before | After | Characters | Recitation | Reading | Writing | Speaking | Other |
+| :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Grade 1 | 137 | 148 | 110 | 13 | 3 | 5 | 4 | 13 |
+| Grade 2 | 128 | 143 | 111 | 14 | 3 | 6 | 4 | 5 |
+| Grade 3 | 104 | 127 | 79 | 18 | 7 | 6 | 5 | 12 |
+| Grade 4 | 103 | 128 | 77 | 18 | 7 | 6 | 5 | 15 |
+| Grade 5 | 96 | 126 | 66 | 25 | 8 | 6 | 5 | 16 |
+| Grade 6 | 94 | 128 | 66 | 29 | 8 | 6 | 5 | 14 |
+| Grade 7 | 65 | 89 | 31 | 27 | 9 | 7 | 5 | 10 |
+| Grade 8 | 64 | 89 | 30 | 27 | 10 | 7 | 5 | 10 |
+| Grade 9 | 65 | 90 | 31 | 28 | 9 | 7 | 5 | 10 |
+| Senior required | 53 | 73 | — | 41 | 9 | 5 | 4 | 14 |
+| Senior selective | 52 | 72 | — | 45 | 7 | 4 | 3 | 13 |
+| **Native** | **961** | **1,213** | | | | | | |
+
+The 252 new places are 157 new topics of reading, writing, speaking, language and inquiry, 69 recited texts from the lists (with the second topic of the *Laozi*), 24 recited poems of the textbooks, and the two texts a senior course holds again: 山居秋暝 of grade 5 and 大道之行也 of grade 8. A topic count understates reading and writing: a recited poem is three short knowledge points, a reading topic two over ten passages, and a judged topic two pieces of writing. The reading topics need about 650 passages, of which the 99 of the reading units are a part.

@@ -2559,6 +2559,7 @@ topic level-9-words-98 level-9-words-98-meaning level-9-words-98-reading level-9
 topic level-9-words-99 level-9-words-99-meaning level-9-words-99-reading level-9-words-99-use
 topic level-9-writing-01 level-9-writing-01-development level-9-writing-01-thesis
 topic level-9-writing-02 level-9-writing-02-content level-9-writing-02-format
+topic pinyin-alphabet pinyin-alphabet-case pinyin-alphabet-order
 topic pinyin-finals pinyin-finals-choosing pinyin-finals-finding
 topic pinyin-hearing pinyin-hearing-sounds pinyin-hearing-tones
 topic pinyin-initials pinyin-initials-choosing pinyin-initials-finding
@@ -2574,6 +2575,12 @@ topic punctuation-semicolons punctuation-semicolons-checking punctuation-semicol
 topic punctuation-sentence-ends punctuation-sentence-ends-checking punctuation-sentence-ends-marks
 topic punctuation-speech punctuation-speech-checking punctuation-speech-marks
 topic punctuation-titles punctuation-titles-checking punctuation-titles-marks
+topic reading-1-rhymes reading-1-rhymes-rhyme reading-1-rhymes-says
+topic reading-1-signs reading-1-signs-signs reading-1-signs-timetables
+topic reading-1-stories reading-1-stories-happens reading-1-stories-word
+topic reading-2-fables reading-2-fables-happened reading-2-fables-teaches
+topic reading-2-fairy-tales reading-2-fairy-tales-imagined reading-2-fairy-tales-wants
+topic reading-2-science reading-2-science-facts reading-2-science-reasons
 topic reading-aloud-1 reading-aloud-1-texts
 topic reading-aloud-10 reading-aloud-10-texts
 topic reading-aloud-11 reading-aloud-11-texts
@@ -3082,6 +3089,12 @@ topic sentences-2-04 sentences-2-04-long sentences-2-04-short
 topic sentences-ba-and-bei sentences-ba-and-bei-to-ba sentences-ba-and-bei-to-bei
 topic sentences-reported-speech sentences-reported-speech-to-direct sentences-reported-speech-to-reported
 topic sentences-rhetorical-questions sentences-rhetorical-questions-to-question sentences-rhetorical-questions-to-statement
+topic speaking-1-listening speaking-1-listening-about speaking-1-listening-asked
+topic speaking-1-manners speaking-1-manners-greeting speaking-1-manners-turns
+topic speaking-1-telling speaking-1-telling-missing speaking-1-telling-order
+topic speaking-2-asking speaking-2-asking-address speaking-2-asking-clear
+topic speaking-2-discussing speaking-2-discussing-answering speaking-2-discussing-suggesting
+topic speaking-2-messages speaking-2-messages-who-when speaking-2-messages-whole
 topic strokes-basic strokes-basic-count strokes-basic-first
 topic strokes-order strokes-order-next strokes-order-rule
 topic strokes-turning strokes-turning-count strokes-turning-next
@@ -3131,10 +3144,13 @@ topic words-9-01 words-9-01-meaning words-9-01-relations words-9-01-use
 topic words-9-02 words-9-02-meaning words-9-02-relations words-9-02-use
 topic words-9-03 words-9-03-meaning words-9-03-relations words-9-03-use
 topic words-9-04 words-9-04-meaning words-9-04-relations words-9-04-use
+topic writing-1-want-to-say writing-1-want-to-say-like writing-1-want-to-say-self
 topic writing-10-commentary writing-10-commentary-analysis writing-10-commentary-view
 topic writing-10-material writing-10-material-depth writing-10-material-view
 topic writing-11-dialectic writing-11-dialectic-position writing-11-dialectic-sides
 topic writing-11-proposal writing-11-proposal-actions writing-11-proposal-form
+topic writing-2-imagination writing-2-imagination-happens writing-2-imagination-like
+topic writing-2-picture writing-2-picture-order writing-2-picture-who
 topic writing-3-diary writing-3-diary-change writing-3-diary-observed
 topic writing-3-paragraph writing-3-paragraph-details writing-3-paragraph-idea
 topic writing-4-event writing-4-event-detail writing-4-event-parts

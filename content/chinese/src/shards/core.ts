@@ -13,13 +13,17 @@ import { grammarTopics } from "../grammar/index.ts";
 import { heritageTopics } from "../heritage/topics.ts";
 import { idiomTopics } from "../idioms/index.ts";
 import { readingAloudTopics } from "../oral/reading-aloud.ts";
+import { stageSpeakingTopics } from "../oral/speaking-1-2.ts";
+import { pinyinAlphabet } from "../pinyin/alphabet.ts";
 import { pinyinTopics } from "../pinyin/index.ts";
 import { heritageReading } from "../reading/heritage.ts";
 import { chineseReading } from "../reading/index.ts";
+import { stageReadingTopics } from "../reading/stage-1-2.ts";
 import { recitationTopics } from "../recitation/index.ts";
 import { componentTopics, strokeOrderTopics } from "../strokes/index.ts";
 import { handwritingTopics } from "../strokes/writing.ts";
 import { wordTopics } from "../words/index.ts";
+import { earlyJudgedTopics } from "../writing/early-judged.ts";
 import { earlySentenceTopics } from "../writing/early-sentences.ts";
 import { writingTopics } from "../writing/index.ts";
 import { laterWritingTopics } from "../writing/later.ts";
@@ -27,6 +31,7 @@ import { laterWritingTopics } from "../writing/later.ts";
 /** coreShardTopics are the topics of the core shard. */
 export const coreShardTopics: readonly TopicDef[] = [
   ...pinyinTopics,
+  pinyinAlphabet,
   ...strokeOrderTopics,
   ...componentTopics,
   ...characterTopics,
@@ -36,10 +41,13 @@ export const coreShardTopics: readonly TopicDef[] = [
   ...idiomTopics,
   ...grammarTopics,
   ...earlySentenceTopics.map((x) => x.topic),
+  ...earlyJudgedTopics.map((x) => x.topic),
   ...writingTopics.map((x) => x.topic),
   ...laterWritingTopics.map((x) => x.topic),
   ...recitationTopics,
   ...readingAloudTopics.map((x) => x.topic),
+  ...stageReadingTopics.map((x) => x.topic),
+  ...stageSpeakingTopics.map((x) => x.topic),
   ...bookTopics.map((x) => x.topic),
   ...classicalTopics,
   ...heritageTopics,

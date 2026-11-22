@@ -1,4 +1,4 @@
-// The punctuation topics of grades 3 to 5. The sentences are written for this subject; in each, the marks a topic takes
+// The punctuation topics of grades 2 to 5. The sentences are written for this subject; in each, the marks a topic takes
 // out can be only what they are, so a gap has one answer.
 
 import { t } from "@ga/content";
@@ -11,7 +11,7 @@ export type PunctuationData = Omit<PunctuationSpec, "prerequisites"> & { readonl
 /** punctuationData are the punctuation topics, in the order they are taught. */
 export const punctuationData: readonly PunctuationData[] = [
   {
-    grade: 3,
+    grade: 2,
     id: "punctuation-sentence-ends",
     title: t("Full Stops, Question Marks and Exclamation Marks", "句号、问号和叹号"),
     taught: ["。", "？", "！"],
