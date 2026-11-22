@@ -1060,8 +1060,8 @@ const recoverFromInverse: KnowledgePointDef = {
   id: "recovering-a-matrix-from-its-inverse",
   title: t("Recovering a matrix from its inverse", "由逆矩阵还原矩阵"),
   explanation: t(
-    "Inverting twice brings back the original matrix, so a matrix can be recovered from its inverse by the usual formula for a $2 \\times 2$ inverse. Swap the diagonal entries, change the signs of the other two entries, and divide by the determinant of the matrix being inverted. The determinant here is that of the given inverse, not of the unknown matrix, and forgetting this division, or its sign, is the mistake to watch for.",
-    "求两次逆就回到原矩阵，所以用通常的 $2 \\times 2$ 求逆公式，就能由逆矩阵还原矩阵。交换对角元素，改变另外两个元素的符号，再除以被求逆矩阵的行列式。这里的行列式是已知的逆矩阵的行列式，不是未知矩阵的，要留意不要漏掉这一步除法或它的符号。",
+    "Inverting twice brings back the original matrix, so a matrix can be recovered from its inverse by the usual formula for a $2 \\times 2$ inverse. Swap the diagonal entries, change the signs of the other two entries, and divide by the determinant of the matrix being inverted. The determinant here is that of the given inverse, not of the unknown matrix.\n\n> **Watch out.** Do not forget the division by the determinant, or its sign. When the determinant is $-1$, every entry changes sign once more.",
+    "求两次逆就回到原矩阵，所以用通常的 $2 \\times 2$ 求逆公式，就能由逆矩阵还原矩阵。交换对角元素，改变另外两个元素的符号，再除以被求逆矩阵的行列式。这里的行列式是已知的逆矩阵的行列式，不是未知矩阵的。\n\n> **注意。** 不要漏掉除以行列式这一步，也不要弄错它的符号。行列式为 $-1$ 时，每个元素还要再变一次号。",
   ),
   generate(rng) {
     const m = signedIn(rng, 2, 5);
@@ -1090,6 +1090,16 @@ const recoverFromInverse: KnowledgePointDef = {
     ].filter(([i, j]) => Math.abs(inverse[i!]![j!]!) >= 2);
     const [i, j] = rng.pick(positions) as [number, number];
     const answer = inverse[i]![j]!;
+    // entry writes row k of the given matrix times column l of A as a sum of products and its value.
+    const entry = (k: number, l: number) => {
+      const terms = [given[k]![0]! * inverse[0]![l]!, given[k]![1]! * inverse[1]![l]!];
+      return `${inParens(given[k]![0]!)} \\cdot ${inParens(inverse[0]![l]!)} + ${inParens(given[k]![1]!)} \\cdot ${inParens(inverse[1]![l]!)} = ${terms[0]! + terms[1]!}`;
+    };
+    const factor = determinant === 1 ? "" : "-";
+    const adjugate = mat([
+      [s, -q],
+      [-r, p],
+    ]);
     return numberProblem({
       prompt: t(
         `A matrix $A$ has inverse $A^{-1} = ${mat(given)}$. Find the entry of $A$ in row ${i + 1}, column ${j + 1}.`,
@@ -1099,8 +1109,8 @@ const recoverFromInverse: KnowledgePointDef = {
       form: "integer",
       wrong: [given[i]![j]!, -answer, inverse[j]![i]!, answer + 1, answer - 1],
       solution: t(
-        `The inverse of $A^{-1}$ is $A$. The determinant of $A^{-1}$ is $${determinant}$. Swapping the diagonal entries, negating the others and dividing by the determinant gives $A = ${mat(inverse)}$, so the entry is $${answer}$.`,
-        `$A^{-1}$ 的逆矩阵就是 $A$。$A^{-1}$ 的行列式是 $${determinant}$。交换对角元素，其余元素变号，再除以行列式，得 $A = ${mat(inverse)}$，所以这个元素是 $${answer}$。`,
+        `${stepLabel(1, "Find the determinant", "求行列式").en} The inverse of $A^{-1}$ is $A$, so invert the given matrix. Its determinant is $${inParens(p)} \\cdot ${inParens(s)} - ${inParens(q)} \\cdot ${inParens(r)} = ${determinant}$.\n\n${stepLabel(2, "Swap, negate and divide", "交换、变号、相除").en} Swap the diagonal entries, change the signs of the other two and divide by $${determinant}$:\n\n$$A = ${factor}${adjugate} = ${mat(inverse)}$$\n\nThe entry in row ${i + 1}, column ${j + 1} is $${answer}$.\n\n**Check.** Multiply $A^{-1}$ by $A$. Row 1 times column 1 is $${entry(0, 0)}$. Row 1 times column 2 is $${entry(0, 1)}$. Row 2 times column 1 is $${entry(1, 0)}$. Row 2 times column 2 is $${entry(1, 1)}$. The product is $I$.`,
+        `${stepLabel(1, "Find the determinant", "求行列式")["zh-CN"]}$A^{-1}$ 的逆矩阵就是 $A$，所以对已知矩阵求逆。它的行列式是 $${inParens(p)} \\cdot ${inParens(s)} - ${inParens(q)} \\cdot ${inParens(r)} = ${determinant}$。\n\n${stepLabel(2, "Swap, negate and divide", "交换、变号、相除")["zh-CN"]}交换对角元素，改变另外两个元素的符号，再除以 $${determinant}$：\n\n$$A = ${factor}${adjugate} = ${mat(inverse)}$$\n\n第 ${i + 1} 行第 ${j + 1} 列的元素是 $${answer}$。\n\n**检验。**用 $A^{-1}$ 乘 $A$。第 1 行乘第 1 列是 $${entry(0, 0)}$。第 1 行乘第 2 列是 $${entry(0, 1)}$。第 2 行乘第 1 列是 $${entry(1, 0)}$。第 2 行乘第 2 列是 $${entry(1, 1)}$。乘积是 $I$。`,
       ),
     });
   },
@@ -1110,8 +1120,8 @@ const combinationOfRightSides: KnowledgePointDef = {
   id: "the-solution-for-a-combination-of-right-sides",
   title: t("The solution for a combination of right sides", "右端为组合时方程组的解"),
   explanation: t(
-    "Once a system has been solved through an inverse matrix, the inverse does not depend on the right side, and it acts linearly. So if the solutions for two right sides are known, the solution for any combination of those right sides is the same combination of the two known solutions. This works without seeing the matrix or computing its inverse, and it explains why solving for several right sides at once takes so little extra effort.",
-    "用逆矩阵解方程组时，逆矩阵与右端无关，并且作用是线性的。所以如果已知两个右端对应的解，这两个右端的任何组合对应的解，就是两个已知解的相同组合。这样做不必看到矩阵，也不必求它的逆，这也说明了为什么同时解多个右端几乎不需要额外的工作。",
+    "Once a system has been solved through an inverse matrix, the inverse does not depend on the right side, and it acts linearly. So if the solutions for two right sides are known, the solution for any combination of those right sides is the same combination of the two known solutions. This works without seeing the matrix or computing its inverse, and it explains why solving for several right sides at once takes so little extra effort.\n\n> **Watch out.** Put the same coefficients on the solutions as on the right sides, and take the wanted component from each solution.",
+    "用逆矩阵解方程组时，逆矩阵与右端无关，并且作用是线性的。所以如果已知两个右端对应的解，这两个右端的任何组合对应的解，就是两个已知解的相同组合。这样做不必看到矩阵，也不必求它的逆，这也说明了为什么同时解多个右端几乎不需要额外的工作。\n\n> **注意。** 解上的系数要与右端的系数相同，并且从每个解中取所求的那个分量。",
   ),
   generate(rng) {
     const [x1, x2, y1, y2] = [rng.int(-6, 6), rng.int(-6, 6), rng.int(-6, 6), rng.int(-6, 6)];
@@ -1121,6 +1131,8 @@ const combinationOfRightSides: KnowledgePointDef = {
     const [xi, yi, xj, yj] = first ? [x1, y1, x2, y2] : [x2, y2, x1, y1];
     const answer = a * xi + b * yi;
     const combination = poly([a, "\\mathbf{p}"], [b, "\\mathbf{q}"]);
+    const solutions = poly([a, "\\mathbf{s}"], [b, "\\mathbf{t}"]);
+    const whole = vec(a * x1 + b * y1, a * x2 + b * y2);
     return numberProblem({
       prompt: t(
         `For an invertible matrix $A$, the system $A\\mathbf{x} = \\mathbf{p}$ has the solution $${vec(x1, x2)}$, and $A\\mathbf{x} = \\mathbf{q}$ has the solution $${vec(y1, y2)}$. Find the ${first ? "first" : "second"} component of the solution of $A\\mathbf{x} = ${combination}$.`,
@@ -1130,8 +1142,8 @@ const combinationOfRightSides: KnowledgePointDef = {
       form: "integer",
       wrong: [a * xi, xi + yi, a * yi + b * xi, a * xj + b * yj, answer + 1, answer - 1, answer + 2],
       solution: t(
-        `The solution is $A^{-1}(${combination})$, and the inverse distributes, so it is the same combination of the two known solutions. Taking the wanted component gives $${inParens(a)} \\cdot ${inParens(xi)} + ${inParens(b)} \\cdot ${inParens(yi)} = ${answer}$.`,
-        `解是 $A^{-1}(${combination})$，逆矩阵可以分配，所以它是两个已知解的相同组合。取所求的分量得 $${inParens(a)} \\cdot ${inParens(xi)} + ${inParens(b)} \\cdot ${inParens(yi)} = ${answer}$。`,
+        `${stepLabel(1, "Distribute the inverse", "分配逆矩阵").en} Call the known solutions $\\mathbf{s} = ${vec(x1, x2)}$ and $\\mathbf{t} = ${vec(y1, y2)}$. The new solution is $A^{-1}(${combination})$. The inverse distributes, and $A^{-1}\\mathbf{p} = \\mathbf{s}$ and $A^{-1}\\mathbf{q} = \\mathbf{t}$, so the solution is $${solutions}$.\n\n${stepLabel(2, "Take the component", "取分量").en} The ${first ? "first" : "second"} component is $${inParens(a)} \\cdot ${inParens(xi)} + ${inParens(b)} \\cdot ${inParens(yi)} = ${answer}$. The whole solution is $${whole}$.\n\n**Check.** Multiply the solution by $A$. Since $A\\mathbf{s} = \\mathbf{p}$ and $A\\mathbf{t} = \\mathbf{q}$, the product $A(${solutions})$ is $${combination}$, the right side of the system.`,
+        `${stepLabel(1, "Distribute the inverse", "分配逆矩阵")["zh-CN"]}把已知的解记作 $\\mathbf{s} = ${vec(x1, x2)}$ 和 $\\mathbf{t} = ${vec(y1, y2)}$。新的解是 $A^{-1}(${combination})$。逆矩阵可以分配，并且 $A^{-1}\\mathbf{p} = \\mathbf{s}$，$A^{-1}\\mathbf{q} = \\mathbf{t}$，所以解是 $${solutions}$。\n\n${stepLabel(2, "Take the component", "取分量")["zh-CN"]}第${first ? "一" : "二"}个分量是 $${inParens(a)} \\cdot ${inParens(xi)} + ${inParens(b)} \\cdot ${inParens(yi)} = ${answer}$。整个解是 $${whole}$。\n\n**检验。**用 $A$ 乘这个解。由于 $A\\mathbf{s} = \\mathbf{p}$，$A\\mathbf{t} = \\mathbf{q}$，乘积 $A(${solutions})$ 等于 $${combination}$，正是方程组的右端。`,
       ),
     });
   },

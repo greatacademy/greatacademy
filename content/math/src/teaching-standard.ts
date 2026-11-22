@@ -106,4 +106,13 @@ export const taughtTopics: readonly string[] = [
   "parametric-equations-of-ellipses",
   "parametric-equations-of-parabolas",
   "parametric-equations-of-parabolas-centered-at-hk",
+  "introduction-to-the-inverse-of-a-matrix",
+  "inverses-of-2x2-matrices",
+  "calculating-the-inverse-of-a-3x3-matrix-using-the-cofactor-method",
+  "solving-2x2-systems-of-equations-using-inverse-matrices",
+  "solving-systems-of-equations-using-inverse-matrices",
+  "introduction-to-linear-transformations",
+  "the-standard-matrix-of-a-linear-transformation",
+  "linear-transformations-of-points-and-lines-in-the-plane",
+  "linear-transformations-of-objects-in-the-plane",
 ];

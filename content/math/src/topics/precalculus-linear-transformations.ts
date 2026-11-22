@@ -5,6 +5,8 @@ import { precalculusDrawings2 } from "../explanation-drawings-precalculus-2.ts";
 import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
 import { remainingDrawings8 } from "../explanation-drawings-remaining-8.ts";
 import { article, choiceProblem, numberProblem, pointProblem, vectorLatex } from "../problems.ts";
+import { stepLabel } from "../solution-kit.ts";
+import { type Reason, reasoned } from "../wrong-reasons.ts";
 
 // Precalculus Unit 6 Part 2: Matrix Inverses, Systems, and Linear Transformations in the Plane
 // Modules 6.24 and 6.25 (17 topics total).
@@ -14,28 +16,54 @@ type Vec2 = readonly [number, number];
 type Mat3 = readonly [readonly [number, number, number], readonly [number, number, number], readonly [number, number, number]];
 type Vec3 = readonly [number, number, number];
 
+/** mat2Latex formats a 2x2 matrix of whole numbers as a LaTeX pmatrix. */
 function mat2Latex(m: Mat2): string {
   return `\\begin{pmatrix} ${m[0][0]} & ${m[0][1]} \\\\ ${m[1][0]} & ${m[1][1]} \\end{pmatrix}`;
 }
 
+/** mat2QLatex formats a 2x2 matrix of rational numbers as a LaTeX pmatrix. */
 function mat2QLatex(m: readonly [readonly [Q, Q], readonly [Q, Q]]): string {
   return `\\begin{pmatrix} ${m[0][0].toLatex()} & ${m[0][1].toLatex()} \\\\ ${m[1][0].toLatex()} & ${m[1][1].toLatex()} \\end{pmatrix}`;
 }
 
+/** vec2Latex formats a vector of two whole numbers as a LaTeX column. */
 function vec2Latex(v: Vec2): string {
   return `\\begin{pmatrix} ${v[0]} \\\\ ${v[1]} \\end{pmatrix}`;
 }
 
+/** mat3Latex formats a 3x3 matrix of whole numbers as a LaTeX pmatrix. */
 function mat3Latex(m: Mat3): string {
   return `\\begin{pmatrix} ${m[0][0]} & ${m[0][1]} & ${m[0][2]} \\\\ ${m[1][0]} & ${m[1][1]} & ${m[1][2]} \\\\ ${m[2][0]} & ${m[2][1]} & ${m[2][2]} \\end{pmatrix}`;
 }
 
+/** vec3Latex formats a vector of three whole numbers as a LaTeX column. */
 function vec3Latex(v: Vec3): string {
   return `\\begin{pmatrix} ${v[0]} \\\\ ${v[1]} \\\\ ${v[2]} \\end{pmatrix}`;
 }
 
-/** oneOf builds a multiple-choice problem with options shuffled and deduplicated. */
-function oneOf(rng: Rng, prompt: Text, right: Text, wrong: readonly Text[], solution: Text): Problem {
+/** NUMBER matches the whole numbers of an answer, leaving out subscripts and braces. */
+const NUMBER = /(?<![_{\\\w^])-?\d+/g;
+
+/** nearMiss changes one number of an answer, which gives a wrong answer of the same form. */
+function nearMiss(right: Text, index: number, delta: number): Text {
+  const change = (text: string) => {
+    let seen = -1;
+    return text.replace(NUMBER, (found) => {
+      seen++;
+      return seen === index ? String(Number(found) + delta) : found;
+    });
+  };
+  return t(change(right.en), change(right["zh-CN"]));
+}
+
+/** missWhy is what is said about a wrong option that changes one number of the answer. */
+const missWhy = t("One number here is off. Work that entry out again.", "这里有一个数不对。把那个数重新算一遍。");
+
+/**
+ * oneOf builds a multiple-choice problem with options shuffled and deduplicated; whys say, at the same positions as wrong,
+ * what mistake leads to each wrong option, and an option filled in by changing one number of the answer is told so.
+ */
+function oneOf(rng: Rng, prompt: Text, right: Text, wrong: readonly Text[], solution: Text, whys: readonly Text[] = []): Problem {
   const seen = new Set([right.en]);
   const rest: Text[] = [];
   for (const w of wrong) {
@@ -45,9 +73,85 @@ function oneOf(rng: Rng, prompt: Text, right: Text, wrong: readonly Text[], solu
       if (rest.length === 3) break;
     }
   }
+  const count = right.en.match(NUMBER)?.length ?? 0;
+  const start = rest.length < 3 && count > 0 ? rng.int(0, count - 1) : 0;
+  for (let step = 0; step < 3 * count && rest.length < 3; step++) {
+    const miss = nearMiss(right, (start + step) % count, [1, -1, 2][Math.floor(step / count)]!);
+    if (!seen.has(miss.en)) {
+      seen.add(miss.en);
+      rest.push(miss);
+    }
+  }
   const options = [right, ...rest];
   const order = rng.shuffle(options.map((_, i) => i));
-  return choiceProblem({ prompt, options: order.map((i) => options[i]!), correct: order.indexOf(0), solution });
+  const given: Reason[] = wrong.flatMap((w, i) => {
+    const why = whys[i];
+    return why ? [[w.en, why.en, why["zh-CN"]] as const] : [];
+  });
+  const filled: Reason[] = rest.filter((r) => !wrong.some((w) => w.en === r.en)).map((r) => [r.en, missWhy.en, missWhy["zh-CN"]] as const);
+  return reasoned(choiceProblem({ prompt, options: order.map((i) => options[i]!), correct: order.indexOf(0), solution }), [
+    ...given,
+    ...filled,
+  ]);
+}
+
+/** label writes the bold start of step i, followed by a space in English. */
+function label(i: number, en: string, zh: string): Text {
+  const s = stepLabel(i, en, zh);
+  return t(`${s.en} `, s["zh-CN"]);
+}
+
+/** join puts texts one after another in each locale. */
+const join = (...parts: readonly Text[]): Text => t(parts.map((p) => p.en).join(""), parts.map((p) => p["zh-CN"]).join(""));
+
+/** para starts a new paragraph. */
+const para = t("\n\n", "\n\n");
+
+/** checked turns a text into a closing check paragraph. */
+const checked = (c: Text) => t(`\n\n**Check.** ${c.en}`, `\n\n**检验。**${c["zh-CN"]}`);
+
+/** shown is displayed math, one equation to a line, that closes a paragraph. */
+const shown = (...lines: readonly string[]) => {
+  const tex = `\n\n${lines.map((l) => `$$${l}$$`).join("\n\n")}`;
+  return t(tex, tex);
+};
+
+/** paren writes a negative number in parentheses, for use inside a sum or a product. */
+const paren = (n: number) => (n < 0 ? `(${n})` : `${n}`);
+
+/** qp writes a negative rational number in parentheses, for use inside a sum or a product. */
+const qp = (q: Q) => (q.sign() < 0 ? `(${q.toLatex()})` : q.toLatex());
+
+/** sumOf writes numbers added one after another, with a negative one written as a subtraction. */
+const sumOf = (ns: readonly number[]) => ns.map((n, i) => (i === 0 ? `${n}` : n < 0 ? ` - ${-n}` : ` + ${n}`)).join("");
+
+/** dot writes a row times a column as a sum of products, its terms and its value: "2 \cdot 3 + (-1) \cdot 4 = 6 - 4 = 2". */
+function dot(row: readonly number[], col: readonly number[]): string {
+  const terms = row.map((r, k) => r * col[k]!);
+  return `${row.map((r, k) => `${paren(r)} \\cdot ${paren(col[k]!)}`).join(" + ")} = ${sumOf(terms)} = ${terms.reduce((a, b) => a + b, 0)}`;
+}
+
+/** qdot writes a row of whole numbers times a column of rational numbers as a sum of products, its terms and its value. */
+function qdot(row: readonly number[], col: readonly Q[]): string {
+  const terms = row.map((r, k) => col[k]!.mul(Q.of(r)));
+  const sum = terms.map((q, i) => (i === 0 ? q.toLatex() : q.sign() < 0 ? ` - ${q.neg().toLatex()}` : ` + ${q.toLatex()}`)).join("");
+  return `${row.map((r, k) => `${paren(r)} \\cdot ${qp(col[k]!)}`).join(" + ")} = ${sum} = ${terms.reduce((a, b) => a.add(b), Q.zero).toLatex()}`;
+}
+
+/** over writes the factor one over a nonzero whole number, written as nothing for 1 and as a minus sign for -1. */
+const over = (n: number) => (n === 1 ? "" : n === -1 ? "-" : n < 0 ? `-\\frac{1}{${-n}}` : `\\frac{1}{${n}}`);
+
+/** products writes, one sentence each, the entries of a product of two matrices at the given places, as row times column. */
+function products(
+  left: readonly (readonly number[])[],
+  right: readonly (readonly number[])[],
+  places: readonly (readonly [number, number])[],
+): Text {
+  const column = (j: number) => right.map((r) => r[j]!);
+  return t(
+    places.map(([i, j]) => `Row $${i + 1}$ times column $${j + 1}$ is $${dot(left[i]!, column(j))}$.`).join(" "),
+    places.map(([i, j]) => `第 $${i + 1}$ 行乘第 $${j + 1}$ 列是 $${dot(left[i]!, column(j))}$。`).join(""),
+  );
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -66,13 +170,17 @@ export const introductionToTheInverseOfAMatrix: TopicDef = {
   encompasses: [],
   xp: 14,
   standards: ["CCSS.HSN.VM.C.10"],
+  intro: t(
+    "You can find the determinant of a $2 \\times 2$ matrix. For numbers, multiplying by $\\frac{1}{5}$ undoes multiplying by $5$, because $5 \\cdot \\frac{1}{5} = 1$. The inverse of a square matrix $A$ does the same job for matrices. It is the matrix $A^{-1}$ with $AA^{-1} = A^{-1}A = I$, and it lets you undo $A$, for instance to solve a matrix equation. It exists exactly when $\\det(A) \\ne 0$.\n\nTake\n\n$$A = \\begin{pmatrix} 7 & 2 \\\\ 3 & 1 \\end{pmatrix}, \\quad B = \\begin{pmatrix} 1 & -2 \\\\ -3 & 7 \\end{pmatrix}$$\n\nThe top row of $AB$ is $7 \\cdot 1 + 2 \\cdot (-3) = 1$ and $7 \\cdot (-2) + 2 \\cdot 7 = 0$. The bottom row is $3 \\cdot 1 + 1 \\cdot (-3) = 0$ and $3 \\cdot (-2) + 1 \\cdot 7 = 1$. So $AB = I$ and $B = A^{-1}$. This agrees with the test, since $\\det(A) = 7 \\cdot 1 - 2 \\cdot 3 = 1$ is not zero. The matrix with rows $(2, 4)$ and $(1, 2)$ has determinant $2 \\cdot 2 - 4 \\cdot 1 = 0$, so it has no inverse.",
+    "你会求 $2 \\times 2$ 矩阵的行列式。对数来说，乘 $\\frac{1}{5}$ 能抵消乘 $5$，因为 $5 \\cdot \\frac{1}{5} = 1$。方阵 $A$ 的逆矩阵对矩阵起同样的作用。它是满足 $AA^{-1} = A^{-1}A = I$ 的矩阵 $A^{-1}$，可以用来抵消 $A$，比如解矩阵方程。它存在当且仅当 $\\det(A) \\ne 0$。\n\n取\n\n$$A = \\begin{pmatrix} 7 & 2 \\\\ 3 & 1 \\end{pmatrix}, \\quad B = \\begin{pmatrix} 1 & -2 \\\\ -3 & 7 \\end{pmatrix}$$\n\n$AB$ 的第一行是 $7 \\cdot 1 + 2 \\cdot (-3) = 1$ 和 $7 \\cdot (-2) + 2 \\cdot 7 = 0$。第二行是 $3 \\cdot 1 + 1 \\cdot (-3) = 0$ 和 $3 \\cdot (-2) + 1 \\cdot 7 = 1$。所以 $AB = I$，$B = A^{-1}$。这与判别法一致，因为 $\\det(A) = 7 \\cdot 1 - 2 \\cdot 3 = 1$ 不为零。行为 $(2, 4)$ 和 $(1, 2)$ 的矩阵，行列式是 $2 \\cdot 2 - 4 \\cdot 1 = 0$，所以它没有逆矩阵。",
+  ),
   knowledgePoints: [
     {
       id: "matrix-inverse-definition",
       title: t("Definition of a matrix inverse", "逆矩阵的定义与单位矩阵"),
       explanation: t(
-        "For a square matrix $A$, if there exists a matrix $B$ such that $AB = BA = I$, then $B$ is the multiplicative inverse of $A$, denoted $A^{-1}$. Here $I$ is the identity matrix.",
-        "对于方阵 $A$，若存在方阵 $B$ 使得 $AB = BA = I$，则称 $B$ 为 $A$ 的乘法逆矩阵，记作 $A^{-1}$。其中 $I$ 为单位矩阵。",
+        "For a square matrix $A$, if there exists a matrix $B$ such that $AB = BA = I$, then $B$ is the multiplicative inverse of $A$, denoted $A^{-1}$. Here $I$ is the identity matrix. For a $2 \\times 2$ matrix with $ad - bc \\ne 0$ the inverse is\n\n$$\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}^{-1} = \\frac{1}{ad - bc}\\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}$$\n\n> **Watch out.** $A^{-1}$ is not the matrix of the reciprocals of the entries. Check a candidate by multiplying: only the inverse gives $AA^{-1} = I$.",
+        "对于方阵 $A$，若存在方阵 $B$ 使得 $AB = BA = I$，则称 $B$ 为 $A$ 的乘法逆矩阵，记作 $A^{-1}$。其中 $I$ 为单位矩阵。对 $ad - bc \\ne 0$ 的 $2 \\times 2$ 矩阵，逆矩阵是\n\n$$\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}^{-1} = \\frac{1}{ad - bc}\\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}$$\n\n> **注意。** $A^{-1}$ 不是把各元素取倒数得到的矩阵。用乘法检验候选答案：只有逆矩阵满足 $AA^{-1} = I$。",
       ),
       generate(rng) {
         const candidates: [number, number, number, number][] = [
@@ -148,6 +256,8 @@ export const introductionToTheInverseOfAMatrix: TopicDef = {
 
         const rightLatex = mat2QLatex(invA);
         const aLatex = mat2Latex(A);
+        const col1 = [invA[0][0], invA[1][0]];
+        const col2 = [invA[0][1], invA[1][1]];
 
         return oneOf(
           rng,
@@ -159,10 +269,49 @@ export const introductionToTheInverseOfAMatrix: TopicDef = {
             t(`$${mat2QLatex(w3)}$`, `$${mat2QLatex(w3)}$`),
             t(`$${mat2QLatex(w4)}$`, `$${mat2QLatex(w4)}$`),
           ],
-          t(
-            `The inverse matrix satisfies $A A^{-1} = I$. Using the $2 \\times 2$ formula $A^{-1} = \\frac{1}{ad-bc}\\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}$ with $\\det(A) = (${a})(${d}) - (${b})(${c}) = ${D}$, we obtain $A^{-1} = ${rightLatex}$.`,
-            `逆矩阵满足 $A A^{-1} = I$。由二阶逆矩阵公式 $A^{-1} = \\frac{1}{ad-bc}\\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}$，其中 $\\det(A) = (${a})(${d}) - (${b})(${c}) = ${D}$，计算得 $A^{-1} = ${rightLatex}$。`,
+          join(
+            label(1, "Find the determinant", "求行列式"),
+            t(
+              `The inverse exists only when the determinant is not zero. Here $\\det(A) = ${paren(a)} \\cdot ${paren(d)} - ${paren(b)} \\cdot ${paren(c)} = ${D}$.`,
+              `只有行列式不为零时逆矩阵才存在。这里 $\\det(A) = ${paren(a)} \\cdot ${paren(d)} - ${paren(b)} \\cdot ${paren(c)} = ${D}$。`,
+            ),
+            para,
+            label(2, "Apply the formula", "套用公式"),
+            t(
+              `Swap the diagonal entries, change the signs of the other two and divide by $${D}$:`,
+              `交换对角元素，改变另外两个元素的符号，再除以 $${D}$：`,
+            ),
+            shown(
+              `A^{-1} = ${over(D)}${mat2Latex([
+                [d, -b],
+                [-c, a],
+              ])} = ${rightLatex}`,
+            ),
+            checked(
+              t(
+                `Multiply $A$ by the answer. Row $1$ of $A$ times column $1$ is $${qdot([a, b], col1)}$. Row $1$ times column $2$ is $${qdot([a, b], col2)}$. Row $2$ times column $1$ is $${qdot([c, d], col1)}$. Row $2$ times column $2$ is $${qdot([c, d], col2)}$. The product is $I$, so the answer is the inverse.`,
+                `用 $A$ 乘答案。$A$ 的第 $1$ 行乘第 $1$ 列是 $${qdot([a, b], col1)}$。第 $1$ 行乘第 $2$ 列是 $${qdot([a, b], col2)}$。第 $2$ 行乘第 $1$ 列是 $${qdot([c, d], col1)}$。第 $2$ 行乘第 $2$ 列是 $${qdot([c, d], col2)}$。乘积是 $I$，所以答案就是逆矩阵。`,
+              ),
+            ),
           ),
+          [
+            t(
+              "This divides $A$ itself by the determinant. The diagonal entries must be swapped and the other two negated first.",
+              "这是把 $A$ 本身除以行列式。要先交换对角元素，并改变另外两个元素的符号。",
+            ),
+            t(
+              "This changes the signs of the diagonal entries instead of the other two.",
+              "这里改变符号的是对角元素，而应该改变的是另外两个元素。",
+            ),
+            t(
+              "This swaps the diagonal entries but forgets to change the signs of the other two.",
+              "这里交换了对角元素，但忘了改变另外两个元素的符号。",
+            ),
+            t(
+              "This changes every sign. Only the two entries off the diagonal change sign.",
+              "这里改变了所有符号。只有对角线以外的两个元素变号。",
+            ),
+          ],
         );
       },
     },
@@ -170,8 +319,8 @@ export const introductionToTheInverseOfAMatrix: TopicDef = {
       id: "invertibility-and-determinant-condition",
       title: t("Condition for invertibility of a matrix", "矩阵可逆与行列式条件"),
       explanation: t(
-        "A square matrix $A$ is invertible if and only if $\\det(A) \\ne 0$. If $\\det(A) = 0$, the matrix is singular and has no multiplicative inverse.",
-        "方阵 $A$ 可逆的充要条件是 $\\det(A) \\ne 0$。若 $\\det(A) = 0$，则称该矩阵是奇异的（退化的），它没有乘法逆矩阵。",
+        "A square matrix $A$ is invertible if and only if $\\det(A) \\ne 0$. If $\\det(A) = 0$, the matrix is singular and has no multiplicative inverse. For a $2 \\times 2$ matrix this happens exactly when one row is a multiple of the other.\n\n> **Watch out.** Set the determinant equal to zero, not an entry. A matrix with no zero entries can still be singular.",
+        "方阵 $A$ 可逆的充要条件是 $\\det(A) \\ne 0$。若 $\\det(A) = 0$，则称该矩阵是奇异的（退化的），它没有乘法逆矩阵。对 $2 \\times 2$ 矩阵，这恰好发生在一行是另一行的倍数时。\n\n> **注意。** 要令行列式等于零，而不是令某个元素等于零。没有零元素的矩阵也可能是奇异的。",
       ),
       generate(rng) {
         const a = rng.pick([-6, -5, -4, -3, -2, 2, 3, 4, 5, 6]);
@@ -192,9 +341,24 @@ export const introductionToTheInverseOfAMatrix: TopicDef = {
           ),
           answer: kSingular,
           solveFor: "k",
-          solution: t(
-            `A matrix is singular if and only if its determinant is zero:\n\n$$\\det(M) = (${a})(k) - (${b})(${c}) = 0 \\implies ${poly([a, "k"])} = ${b * c} \\implies k = ${kSingular}$$.`,
-            `方阵为奇异矩阵当且仅当其行列式为零：\n\n$$\\det(M) = (${a})(k) - (${b})(${c}) = 0 \\implies ${poly([a, "k"])} = ${b * c} \\implies k = ${kSingular}$$。`,
+          solution: join(
+            label(1, "Set the determinant to zero", "令行列式为零"),
+            t(
+              `A matrix is singular exactly when its determinant is $0$. Here $\\det(M) = ${paren(a)} \\cdot k - ${paren(b)} \\cdot ${paren(c)} = ${poly([a, "k"], [-b * c, ""])}$.`,
+              `矩阵奇异当且仅当它的行列式为 $0$。这里 $\\det(M) = ${paren(a)} \\cdot k - ${paren(b)} \\cdot ${paren(c)} = ${poly([a, "k"], [-b * c, ""])}$。`,
+            ),
+            para,
+            label(2, "Solve for k", "解出 k"),
+            t(
+              `Setting $${poly([a, "k"], [-b * c, ""])} = 0$ gives $${poly([a, "k"])} = ${b * c}$. Dividing by $${a}$ gives $k = ${kSingular}$.`,
+              `令 $${poly([a, "k"], [-b * c, ""])} = 0$，得 $${poly([a, "k"])} = ${b * c}$。两边除以 $${a}$，得 $k = ${kSingular}$。`,
+            ),
+            checked(
+              t(
+                `With $k = ${kSingular}$, row $2$ of $M$ is $(${c}, ${kSingular})$, which is $${m}$ times row $1$, $(${a}, ${b})$. When one row is a multiple of the other, the determinant is $0$. Indeed $${paren(a)} \\cdot ${paren(kSingular)} - ${paren(b)} \\cdot ${paren(c)} = ${a * kSingular} - ${paren(b * c)} = 0$.`,
+                `$k = ${kSingular}$ 时，$M$ 的第 $2$ 行是 $(${c}, ${kSingular})$，是第 $1$ 行 $(${a}, ${b})$ 的 $${m}$ 倍。一行是另一行的倍数时，行列式为 $0$。确实 $${paren(a)} \\cdot ${paren(kSingular)} - ${paren(b)} \\cdot ${paren(c)} = ${a * kSingular} - ${paren(b * c)} = 0$。`,
+              ),
+            ),
           ),
           wrong: [w1, w2, w3, w4],
         });
@@ -215,13 +379,17 @@ export const inversesOf2x2Matrices: TopicDef = {
   encompasses: [],
   xp: 14,
   standards: ["CCSS.HSN.VM.C.10"],
+  intro: t(
+    "You know what an inverse is and that it exists when the determinant is not zero. For a $2 \\times 2$ matrix it can be found in three moves: swap the diagonal entries, change the signs of the other two, and divide by the determinant. The middle result is called the adjugate. This gives inverses quickly, which you will need to solve systems and to undo transformations.\n\nTake\n\n$$A = \\begin{pmatrix} 6 & 4 \\\\ 1 & 1 \\end{pmatrix}$$\n\nIts determinant is $6 \\cdot 1 - 4 \\cdot 1 = 2$. Swapping $6$ and $1$ and changing the signs of $4$ and $1$ gives the adjugate. Dividing it by $2$ gives\n\n$$A^{-1} = \\frac{1}{2}\\begin{pmatrix} 1 & -4 \\\\ -1 & 6 \\end{pmatrix} = \\begin{pmatrix} \\frac{1}{2} & -2 \\\\ -\\frac{1}{2} & 3 \\end{pmatrix}$$\n\nAs a check, row $1$ of $A$ times column $1$ of $A^{-1}$ is $6 \\cdot \\frac{1}{2} + 4 \\cdot (-\\frac{1}{2}) = 3 - 2 = 1$, the top left entry of $I$.",
+    "你知道什么是逆矩阵，也知道行列式不为零时它存在。$2 \\times 2$ 矩阵的逆可以分三步求出：交换对角元素，改变另外两个元素的符号，再除以行列式。中间得到的矩阵叫伴随矩阵。这样能很快求出逆矩阵，解方程组和还原变换时都要用到。\n\n取\n\n$$A = \\begin{pmatrix} 6 & 4 \\\\ 1 & 1 \\end{pmatrix}$$\n\n它的行列式是 $6 \\cdot 1 - 4 \\cdot 1 = 2$。交换 $6$ 和 $1$，并改变 $4$ 和 $1$ 的符号，得到伴随矩阵。再除以 $2$，得\n\n$$A^{-1} = \\frac{1}{2}\\begin{pmatrix} 1 & -4 \\\\ -1 & 6 \\end{pmatrix} = \\begin{pmatrix} \\frac{1}{2} & -2 \\\\ -\\frac{1}{2} & 3 \\end{pmatrix}$$\n\n检验一下，$A$ 的第 $1$ 行乘 $A^{-1}$ 的第 $1$ 列是 $6 \\cdot \\frac{1}{2} + 4 \\cdot (-\\frac{1}{2}) = 3 - 2 = 1$，正是 $I$ 的左上元素。",
+  ),
   knowledgePoints: [
     {
       id: "formula-for-inverse-of-2x2-matrix",
       title: t("Formula for the inverse of a 2x2 matrix", "二阶逆矩阵的计算公式"),
       explanation: t(
-        "Swap the diagonal entries, change the signs of the other two, and divide by the determinant; if the determinant is zero, there is no inverse. For $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$, the adjugate is $\\text{adj}(A) = \\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}$, and the inverse is $A^{-1} = \\frac{1}{\\det(A)}\\text{adj}(A) = \\frac{1}{ad-bc}\\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}$.",
-        "交换主对角线上的元素，改变另外两个元素的符号，再除以行列式；如果行列式为零，就没有逆矩阵。对于二阶矩阵 $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$，其伴随矩阵为 $\\text{adj}(A) = \\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}$，逆矩阵为 $A^{-1} = \\frac{1}{\\det(A)}\\text{adj}(A) = \\frac{1}{ad-bc}\\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}$。",
+        "Swap the diagonal entries, change the signs of the other two, and divide by the determinant; if the determinant is zero, there is no inverse. In symbols, the adjugate and the inverse are\n\n$$\\text{adj}\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} = \\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}, \\quad A^{-1} = \\frac{1}{\\det(A)}\\text{adj}(A)$$\n\n> **Watch out.** The diagonal entries trade places but keep their signs. Only the two entries off the diagonal change sign.",
+        "交换主对角线上的元素，改变另外两个元素的符号，再除以行列式；如果行列式为零，就没有逆矩阵。用符号写，伴随矩阵和逆矩阵是\n\n$$\\text{adj}\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} = \\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}, \\quad A^{-1} = \\frac{1}{\\det(A)}\\text{adj}(A)$$\n\n> **注意。** 对角元素互换位置，但符号不变。只有对角线以外的两个元素变号。",
       ),
       generate(rng) {
         const a = rng.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]);
@@ -259,6 +427,7 @@ export const inversesOf2x2Matrices: TopicDef = {
 
         const ALatex = mat2Latex(A);
         const adjLatex = mat2Latex(adj);
+        const D = a * d - b * c;
 
         return oneOf(
           rng,
@@ -273,10 +442,55 @@ export const inversesOf2x2Matrices: TopicDef = {
             t(`$${mat2Latex(w3)}$`, `$${mat2Latex(w3)}$`),
             t(`$${mat2Latex(w4)}$`, `$${mat2Latex(w4)}$`),
           ],
-          t(
-            `To form the adjugate of a $2 \\times 2$ matrix $\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$, swap the main diagonal entries and negate the off-diagonal entries: $\\text{adj}(A) = \\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix} = ${adjLatex}$.`,
-            `求二阶方阵 $\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$ 的伴随矩阵时，交换主对角线元素，并对副对角线元素取相反数：$\\text{adj}(A) = \\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix} = ${adjLatex}$。`,
+          join(
+            label(1, "Swap the diagonal entries", "交换对角元素"),
+            t(
+              `The diagonal entries $${a}$ and $${d}$ trade places, so $${d}$ goes to the top left and $${a}$ to the bottom right.`,
+              `对角元素 $${a}$ 和 $${d}$ 互换位置，$${d}$ 放到左上，$${a}$ 放到右下。`,
+            ),
+            para,
+            label(2, "Change the signs of the other two", "另外两个元素变号"),
+            t(
+              `The entries $${b}$ and $${c}$ stay where they are and become $${-b}$ and $${-c}$. So the adjugate is`,
+              `元素 $${b}$ 和 $${c}$ 位置不变，变成 $${-b}$ 和 $${-c}$。所以伴随矩阵是`,
+            ),
+            shown(`\\text{adj}(A) = ${adjLatex}`),
+            checked(
+              t(
+                `$A$ times its adjugate should be $\\det(A)$ times $I$, and $\\det(A) = ${paren(a)} \\cdot ${paren(d)} - ${paren(b)} \\cdot ${paren(c)} = ${D}$. ${
+                  products(A, adj, [
+                    [0, 0],
+                    [0, 1],
+                    [1, 0],
+                    [1, 1],
+                  ]).en
+                } So the product is $${D}I$.`,
+                `$A$ 乘它的伴随矩阵应该等于 $\\det(A)$ 乘 $I$，而 $\\det(A) = ${paren(a)} \\cdot ${paren(d)} - ${paren(b)} \\cdot ${paren(c)} = ${D}$。${
+                  products(A, adj, [
+                    [0, 0],
+                    [0, 1],
+                    [1, 0],
+                    [1, 1],
+                  ])["zh-CN"]
+                }所以乘积是 $${D}I$。`,
+              ),
+            ),
           ),
+          [
+            t(
+              "This changes the signs of the other two entries but leaves the diagonal entries unswapped.",
+              "这里另外两个元素变了号，但对角元素没有交换。",
+            ),
+            t("This swaps the diagonal entries but changes the signs of the wrong pair.", "这里交换了对角元素，但变号的那一对选错了。"),
+            t(
+              "This swaps the diagonal entries but forgets to change the signs of the other two.",
+              "这里交换了对角元素，但忘了改变另外两个元素的符号。",
+            ),
+            t(
+              "This moves the entries off the diagonal and negates the diagonal. The adjugate does neither.",
+              "这里移动了对角线以外的元素，又把对角元素变了号。伴随矩阵两样都不做。",
+            ),
+          ],
         );
       },
     },
@@ -284,8 +498,8 @@ export const inversesOf2x2Matrices: TopicDef = {
       id: "calculating-inverse-of-2x2-matrix",
       title: t("Calculating the inverse of a 2x2 matrix", "计算二阶矩阵的逆矩阵"),
       explanation: t(
-        "You can check the answer by multiplying the matrix by its inverse, which should give the identity matrix. To find the inverse of $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$, calculate $\\det(A) = ad - bc$, verify $\\det(A) \\ne 0$, and scale the adjugate matrix by $\\frac{1}{\\det(A)}$.",
-        "可以把矩阵与求出的逆矩阵相乘来检验答案，结果应该是单位矩阵。求二阶矩阵 $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$ 的逆矩阵，先计算 $\\det(A) = ad - bc$，确认 $\\det(A) \\ne 0$，再将伴随矩阵乘以 $\\frac{1}{\\det(A)}$。",
+        "You can check the answer by multiplying the matrix by its inverse, which should give the identity matrix. To find the inverse of $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$, calculate $\\det(A) = ad - bc$, verify $\\det(A) \\ne 0$, and scale the adjugate matrix by $\\frac{1}{\\det(A)}$.\n\n> **Watch out.** Divide every entry of the adjugate by the determinant, keeping its sign. Forgetting the division gives a matrix $\\det(A)$ times too large.",
+        "可以把矩阵与求出的逆矩阵相乘来检验答案，结果应该是单位矩阵。求二阶矩阵 $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$ 的逆矩阵，先计算 $\\det(A) = ad - bc$，确认 $\\det(A) \\ne 0$，再将伴随矩阵乘以 $\\frac{1}{\\det(A)}$。\n\n> **注意。** 伴随矩阵的每个元素都要除以行列式，连同它的符号。忘了除，得到的矩阵就大了 $\\det(A)$ 倍。",
       ),
       generate(rng) {
         const a = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]);
@@ -323,6 +537,8 @@ export const inversesOf2x2Matrices: TopicDef = {
 
         const ALatex = mat2Latex(A);
         const rightLatex = mat2QLatex(invA);
+        const col1 = [invA[0][0], invA[1][0]];
+        const col2 = [invA[0][1], invA[1][1]];
 
         return oneOf(
           rng,
@@ -334,10 +550,52 @@ export const inversesOf2x2Matrices: TopicDef = {
             t(`$${mat2QLatex(w3)}$`, `$${mat2QLatex(w3)}$`),
             t(`$${mat2QLatex(w4)}$`, `$${mat2QLatex(w4)}$`),
           ],
-          t(
-            `Calculate the determinant: $\\det(A) = (${a})(${d}) - (${b})(${c}) = ${det}$.\n\nThen compute $A^{-1} = ${Q.of(1, det).toLatex()}\\begin{pmatrix} ${d} & ${-b} \\\\ ${-c} & ${a} \\end{pmatrix} = ${rightLatex}$.`,
-            `计算行列式：$\\det(A) = (${a})(${d}) - (${b})(${c}) = ${det}$。\n\n因此 $A^{-1} = ${Q.of(1, det).toLatex()}\\begin{pmatrix} ${d} & ${-b} \\\\ ${-c} & ${a} \\end{pmatrix} = ${rightLatex}$。`,
+          join(
+            label(1, "Find the determinant", "求行列式"),
+            t(
+              `$\\det(A) = ${paren(a)} \\cdot ${paren(d)} - ${paren(b)} \\cdot ${paren(c)} = ${det}$. It is not zero, so the inverse exists.`,
+              `$\\det(A) = ${paren(a)} \\cdot ${paren(d)} - ${paren(b)} \\cdot ${paren(c)} = ${det}$。它不为零，所以逆矩阵存在。`,
+            ),
+            para,
+            label(2, "Form the adjugate", "写出伴随矩阵"),
+            t(
+              `Swap $${a}$ and $${d}$, and change the signs of $${b}$ and $${c}$:`,
+              `交换 $${a}$ 和 $${d}$，并改变 $${b}$ 和 $${c}$ 的符号：`,
+            ),
+            shown(
+              `\\text{adj}(A) = ${mat2Latex([
+                [d, -b],
+                [-c, a],
+              ])}`,
+            ),
+            para,
+            label(3, "Divide by the determinant", "除以行列式"),
+            t(`Every entry is divided by $${det}$:`, `每个元素都除以 $${det}$：`),
+            shown(
+              `A^{-1} = ${over(det)}${mat2Latex([
+                [d, -b],
+                [-c, a],
+              ])} = ${rightLatex}`,
+            ),
+            checked(
+              t(
+                `Multiply $A$ by the answer. Row $1$ of $A$ times column $1$ is $${qdot([a, b], col1)}$. Row $1$ times column $2$ is $${qdot([a, b], col2)}$. Row $2$ times column $1$ is $${qdot([c, d], col1)}$. Row $2$ times column $2$ is $${qdot([c, d], col2)}$. The product is $I$.`,
+                `用 $A$ 乘答案。$A$ 的第 $1$ 行乘第 $1$ 列是 $${qdot([a, b], col1)}$。第 $1$ 行乘第 $2$ 列是 $${qdot([a, b], col2)}$。第 $2$ 行乘第 $1$ 列是 $${qdot([c, d], col1)}$。第 $2$ 行乘第 $2$ 列是 $${qdot([c, d], col2)}$。乘积是 $I$。`,
+              ),
+            ),
           ),
+          [
+            t("This forgets to swap the diagonal entries.", "这里忘了交换对角元素。"),
+            t(
+              "This changes the signs of the diagonal entries instead of the other two.",
+              "这里改变符号的是对角元素，而应该改变的是另外两个元素。",
+            ),
+            t("This forgets to change the signs of the two entries off the diagonal.", "这里忘了改变对角线以外两个元素的符号。"),
+            t(
+              "This swaps the rows of $A$ and divides by the determinant. That is not the inverse.",
+              "这是把 $A$ 的两行交换后除以行列式，不是逆矩阵。",
+            ),
+          ],
         );
       },
     },
@@ -356,13 +614,17 @@ export const calculatingTheInverseOfA3x3MatrixUsingTheCofactorMethod: TopicDef =
   encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.VM.C.10"],
+  intro: t(
+    "You can find cofactors and $3 \\times 3$ determinants, and you can invert a $2 \\times 2$ matrix. For a $3 \\times 3$ matrix there is no swapping trick. Instead, replace every entry by its cofactor, transpose the result to get the adjugate, and divide by the determinant. The $2 \\times 2$ rule is the same method in a small case.\n\nTake\n\n$$A = \\begin{pmatrix} 2 & 0 & 0 \\\\ 0 & 1 & 1 \\\\ 0 & 1 & 2 \\end{pmatrix}$$\n\nExpanding along row $1$ gives $\\det(A) = 2(1 \\cdot 2 - 1 \\cdot 1) = 2$. The cofactors are $C_{11} = 1$, $C_{22} = 4$, $C_{23} = C_{32} = -2$ and $C_{33} = 2$, and the other four are $0$. The cofactor matrix is symmetric, so transposing leaves it as it is. Dividing by $2$ gives\n\n$$A^{-1} = \\frac{1}{2}\\begin{pmatrix} 1 & 0 & 0 \\\\ 0 & 4 & -2 \\\\ 0 & -2 & 2 \\end{pmatrix} = \\begin{pmatrix} \\frac{1}{2} & 0 & 0 \\\\ 0 & 2 & -1 \\\\ 0 & -1 & 1 \\end{pmatrix}$$\n\nAs a check, row $3$ of $A$ times column $2$ of $A^{-1}$ is $0 \\cdot 0 + 1 \\cdot 2 + 2 \\cdot (-1) = 0$, as it is in $I$.",
+    "你会求代数余子式和 $3 \\times 3$ 行列式，也会求 $2 \\times 2$ 矩阵的逆。$3 \\times 3$ 矩阵没有交换元素的简便做法。要把每个元素换成它的代数余子式，把结果转置得到伴随矩阵，再除以行列式。$2 \\times 2$ 的公式就是这个方法的特例。\n\n取\n\n$$A = \\begin{pmatrix} 2 & 0 & 0 \\\\ 0 & 1 & 1 \\\\ 0 & 1 & 2 \\end{pmatrix}$$\n\n沿第 $1$ 行展开，得 $\\det(A) = 2(1 \\cdot 2 - 1 \\cdot 1) = 2$。代数余子式是 $C_{11} = 1$，$C_{22} = 4$，$C_{23} = C_{32} = -2$，$C_{33} = 2$，其余四个是 $0$。代数余子式矩阵是对称的，所以转置后不变。除以 $2$，得\n\n$$A^{-1} = \\frac{1}{2}\\begin{pmatrix} 1 & 0 & 0 \\\\ 0 & 4 & -2 \\\\ 0 & -2 & 2 \\end{pmatrix} = \\begin{pmatrix} \\frac{1}{2} & 0 & 0 \\\\ 0 & 2 & -1 \\\\ 0 & -1 & 1 \\end{pmatrix}$$\n\n检验一下，$A$ 的第 $3$ 行乘 $A^{-1}$ 的第 $2$ 列是 $0 \\cdot 0 + 1 \\cdot 2 + 2 \\cdot (-1) = 0$，与 $I$ 一致。",
+  ),
   knowledgePoints: [
     {
       id: "cofactor-and-adjugate-matrix-3x3",
       title: t("Cofactors and the adjugate of a 3x3 matrix", "三阶矩阵的代数余子式与伴随矩阵"),
       explanation: t(
-        "For a $3 \\times 3$ matrix $A$, the cofactor of element $a_{ij}$ is $C_{ij} = (-1)^{i+j} M_{ij}$, where $M_{ij}$ is the determinant of the $2 \\times 2$ submatrix after deleting row $i$ and column $j$. The adjugate matrix is the transpose of the cofactor matrix: $\\text{adj}(A) = C^T$.",
-        "对于三阶矩阵 $A$，元素 $a_{ij}$ 的代数余子式为 $C_{ij} = (-1)^{i+j} M_{ij}$，其中 $M_{ij}$ 是划去第 $i$ 行和第 $j$ 列后的二阶子式。伴随矩阵为代数余子式矩阵的转置：$\\text{adj}(A) = C^T$。",
+        "For a $3 \\times 3$ matrix $A$, the cofactor of element $a_{ij}$ is $C_{ij} = (-1)^{i+j} M_{ij}$, where $M_{ij}$ is the determinant of the $2 \\times 2$ submatrix after deleting row $i$ and column $j$. The adjugate matrix is the transpose of the cofactor matrix: $\\text{adj}(A) = C^T$.\n\n> **Watch out.** Where $i + j$ is odd, the cofactor is the minor with its sign changed. Do not stop at the minor.",
+        "对于三阶矩阵 $A$，元素 $a_{ij}$ 的代数余子式为 $C_{ij} = (-1)^{i+j} M_{ij}$，其中 $M_{ij}$ 是划去第 $i$ 行和第 $j$ 列后的二阶子式。伴随矩阵为代数余子式矩阵的转置：$\\text{adj}(A) = C^T$。\n\n> **注意。** $i + j$ 为奇数时，代数余子式是余子式改变符号。不要停在余子式上。",
       ),
       generate(rng) {
         const pool: Mat3[] = [
@@ -438,16 +700,45 @@ export const calculatingTheInverseOfA3x3MatrixUsingTheCofactorMethod: TopicDef =
 
         const ALatex = mat3Latex(A);
         const entryVal = A[row]![col]!;
+        const ij = `${row + 1}${col + 1}`;
+        const signRow = [0, 1, 2].map((c) => ((row + c) % 2 === 0 ? "+" : "-")).join(", ");
 
         return numberProblem({
           prompt: t(
-            `For the matrix $A = ${ALatex}$, find the cofactor $C_{${row + 1}${col + 1}}$ corresponding to entry $a_{${row + 1}${col + 1}} = ${entryVal}$.`,
-            `对于矩阵 $A = ${ALatex}$，求元素 $a_{${row + 1}${col + 1}} = ${entryVal}$ 对应的代数余子式 $C_{${row + 1}${col + 1}}$。`,
+            `For the matrix $A = ${ALatex}$, find the cofactor $C_{${ij}}$ corresponding to entry $a_{${ij}} = ${entryVal}$.`,
+            `对于矩阵 $A = ${ALatex}$，求元素 $a_{${ij}} = ${entryVal}$ 对应的代数余子式 $C_{${ij}}$。`,
           ),
           answer: cofactor,
-          solution: t(
-            `Delete row ${row + 1} and column ${col + 1} to get the submatrix $\\begin{pmatrix} ${m00} & ${m01} \\\\ ${m10} & ${m11} \\end{pmatrix}$.\n\nIts determinant is $M_{${row + 1}${col + 1}} = (${m00})(${m11}) - (${m01})(${m10}) = ${minor}$.\n\nThe sign is $(-1)^{${row + 1} + ${col + 1}} = ${sign > 0 ? "1" : "-1"}$, so $C_{${row + 1}${col + 1}} = ${cofactor}$.`,
-            `划去第 ${row + 1} 行与第 ${col + 1} 列，得到子矩阵 $\\begin{pmatrix} ${m00} & ${m01} \\\\ ${m10} & ${m11} \\end{pmatrix}$。\n\n其行列式为 $M_{${row + 1}${col + 1}} = (${m00})(${m11}) - (${m01})(${m10}) = ${minor}$。\n\n符号为 $(-1)^{${row + 1} + ${col + 1}} = ${sign > 0 ? "1" : "-1"}$，故 $C_{${row + 1}${col + 1}} = ${cofactor}$。`,
+          solution: join(
+            label(1, "Delete the row and the column", "划去行和列"),
+            t(
+              `Cross out row $${row + 1}$ and column $${col + 1}$ of $A$. What is left is`,
+              `划去 $A$ 的第 $${row + 1}$ 行和第 $${col + 1}$ 列，剩下的是`,
+            ),
+            shown(
+              mat2Latex([
+                [m00, m01],
+                [m10, m11],
+              ]),
+            ),
+            para,
+            label(2, "Find the minor", "求余子式"),
+            t(
+              `$M_{${ij}} = ${paren(m00)} \\cdot ${paren(m11)} - ${paren(m01)} \\cdot ${paren(m10)} = ${minor}$.`,
+              `$M_{${ij}} = ${paren(m00)} \\cdot ${paren(m11)} - ${paren(m01)} \\cdot ${paren(m10)} = ${minor}$。`,
+            ),
+            para,
+            label(3, "Attach the sign", "配上符号"),
+            t(
+              `The sign is $(-1)^{${row + 1} + ${col + 1}} = ${sign}$. So $C_{${ij}} = ${sign} \\cdot ${paren(minor)} = ${cofactor}$.`,
+              `符号是 $(-1)^{${row + 1} + ${col + 1}} = ${sign}$。所以 $C_{${ij}} = ${sign} \\cdot ${paren(minor)} = ${cofactor}$。`,
+            ),
+            checked(
+              t(
+                `Read the checkerboard of signs, which starts with $+$ at the top left. Row $${row + 1}$ of it is $${signRow}$, so place $${col + 1}$ holds $${sign === 1 ? "+" : "-"}$. The cofactor is ${sign === 1 ? "the minor itself" : "the minor with its sign changed"}, $${cofactor}$.`,
+                `看从左上角正号开始的棋盘符号。它的第 $${row + 1}$ 行是 $${signRow}$，所以第 $${col + 1}$ 个位置是 $${sign === 1 ? "+" : "-"}$。代数余子式${sign === 1 ? "就是余子式本身" : "是余子式改变符号"}，即 $${cofactor}$。`,
+              ),
+            ),
           ),
           wrong: [w1, w2, w3, w4],
         });
@@ -457,8 +748,8 @@ export const calculatingTheInverseOfA3x3MatrixUsingTheCofactorMethod: TopicDef =
       id: "inverse-of-3x3-matrix-by-cofactors",
       title: t("Computing the inverse of a 3x3 matrix using cofactors", "伴随矩阵法求解三阶逆矩阵"),
       explanation: t(
-        "For an invertible $3 \\times 3$ matrix $A$, its inverse is given by $A^{-1} = \\frac{1}{\\det(A)}\\text{adj}(A)$, where the $(i, j)$ entry of $\\text{adj}(A)$ is the cofactor $C_{ji}$.",
-        "对于可逆的三阶方阵 $A$，其逆矩阵公式为 $A^{-1} = \\frac{1}{\\det(A)}\\text{adj}(A)$，其中伴随矩阵 $\\text{adj}(A)$ 的第 $(i, j)$ 个元素为代数余子式 $C_{ji}$。",
+        "For an invertible $3 \\times 3$ matrix $A$, its inverse is given by $A^{-1} = \\frac{1}{\\det(A)}\\text{adj}(A)$, where the $(i, j)$ entry of $\\text{adj}(A)$ is the cofactor $C_{ji}$.\n\n> **Watch out.** The adjugate is the transpose of the cofactor matrix. The cofactor of row $i$, column $j$ goes to row $j$, column $i$.",
+        "对于可逆的三阶方阵 $A$，其逆矩阵公式为 $A^{-1} = \\frac{1}{\\det(A)}\\text{adj}(A)$，其中伴随矩阵 $\\text{adj}(A)$ 的第 $(i, j)$ 个元素为代数余子式 $C_{ji}$。\n\n> **注意。** 伴随矩阵是代数余子式矩阵的转置。第 $i$ 行第 $j$ 列的代数余子式要放到第 $j$ 行第 $i$ 列。",
       ),
       generate(rng) {
         const isUpper = rng.pick([true, false]);
@@ -516,6 +807,27 @@ export const calculatingTheInverseOfA3x3MatrixUsingTheCofactorMethod: TopicDef =
           [A[2][0], A[2][1], A[2][2]],
         ];
 
+        const corner = isUpper
+          ? t(
+              `For example, $C_{31}$ comes from deleting row $3$ and column $1$: $C_{31} = ${paren(a)} \\cdot ${paren(c)} - ${paren(b)} \\cdot 1 = ${a * c - b}$.`,
+              `例如 $C_{31}$ 由划去第 $3$ 行和第 $1$ 列得到：$C_{31} = ${paren(a)} \\cdot ${paren(c)} - ${paren(b)} \\cdot 1 = ${a * c - b}$。`,
+            )
+          : t(
+              `For example, $C_{13}$ comes from deleting row $1$ and column $3$: $C_{13} = ${paren(a)} \\cdot ${paren(c)} - 1 \\cdot ${paren(b)} = ${a * c - b}$.`,
+              `例如 $C_{13}$ 由划去第 $1$ 行和第 $3$ 列得到：$C_{13} = ${paren(a)} \\cdot ${paren(c)} - 1 \\cdot ${paren(b)} = ${a * c - b}$。`,
+            );
+        const places: readonly (readonly [number, number])[] = isUpper
+          ? [
+              [0, 1],
+              [0, 2],
+              [1, 2],
+            ]
+          : [
+              [1, 0],
+              [2, 0],
+              [2, 1],
+            ];
+
         return oneOf(
           rng,
           t(
@@ -529,10 +841,49 @@ export const calculatingTheInverseOfA3x3MatrixUsingTheCofactorMethod: TopicDef =
             t(`$${mat3Latex(w3)}$`, `$${mat3Latex(w3)}$`),
             t(`$${mat3Latex(w4)}$`, `$${mat3Latex(w4)}$`),
           ],
-          t(
-            `The determinant of the triangular matrix is the product of its diagonal entries: $\\det(A) = 1$. Computing the cofactor matrix $C$ and taking its transpose gives $\\text{adj}(A) = C^T = ${invLatex}$. Hence $A^{-1} = \\text{adj}(A) = ${invLatex}$.`,
-            `三角形矩阵的行列式为其主对角线元素的乘积：$\\det(A) = 1$。计算代数余子式矩阵 $C$ 并转置得到伴随矩阵 $\\text{adj}(A) = C^T = ${invLatex}$。因此 $A^{-1} = \\text{adj}(A) = ${invLatex}$。`,
+          join(
+            label(1, "Find the determinant", "求行列式"),
+            t(
+              `$A$ is triangular, so its determinant is the product of the diagonal entries, $1 \\cdot 1 \\cdot 1 = 1$.`,
+              `$A$ 是三角矩阵，所以行列式是对角元素之积，即 $1 \\cdot 1 \\cdot 1 = 1$。`,
+            ),
+            para,
+            label(2, "Find the cofactors", "求代数余子式"),
+            join(
+              corner,
+              t(" Working out all nine signed minors gives the cofactor matrix", "算出全部九个带符号的余子式，得到代数余子式矩阵"),
+            ),
+            shown(`C = ${mat3Latex(w2)}`),
+            para,
+            label(3, "Transpose and divide", "转置再相除"),
+            t(
+              "The adjugate is the transpose of $C$, and dividing by the determinant $1$ changes nothing:",
+              "伴随矩阵是 $C$ 的转置，除以行列式 $1$ 不改变它：",
+            ),
+            shown(`A^{-1} = \\text{adj}(A) = ${invLatex}`),
+            checked(
+              join(
+                t("Multiply $A$ by the answer. ", "用 $A$ 乘答案。"),
+                products(A, inv, places),
+                t(
+                  " Both matrices have $1$s on the diagonal and zeros on the same side of it, so the product has $1$s on the diagonal and zeros on that side. It is $I$.",
+                  "两个矩阵对角线上都是 $1$，并且在同一侧都是零，所以乘积的对角线上是 $1$，那一侧是零。乘积是 $I$。",
+                ),
+              ),
+            ),
           ),
+          [
+            t(
+              "Two entries have the wrong sign. Recheck the signs $(-1)^{i+j}$ of those cofactors.",
+              "有两个元素符号错了。重新检查那两个代数余子式的符号 $(-1)^{i+j}$。",
+            ),
+            t("This is the cofactor matrix itself. The adjugate is its transpose.", "这是代数余子式矩阵本身。伴随矩阵是它的转置。"),
+            t(
+              "This changes every sign. With $\\det(A) = 1$, dividing changes no signs.",
+              "这里改变了所有符号。$\\det(A) = 1$，相除不会改变符号。",
+            ),
+            t("This is close to $A$ itself, not its inverse.", "这接近 $A$ 本身，不是它的逆矩阵。"),
+          ],
         );
       },
     },
@@ -551,13 +902,17 @@ export const solving2x2SystemsOfEquationsUsingInverseMatrices: TopicDef = {
   encompasses: [],
   xp: 14,
   standards: ["CCSS.HSA.REI.C.8", "CCSS.HSA.REI.C.9"],
+  intro: t(
+    "You can write a system of two equations as $A\\mathbf{x} = \\mathbf{b}$, and you can invert a $2 \\times 2$ matrix. Putting the two together solves the system in one move: multiply both sides on the left by $A^{-1}$ to get $\\mathbf{x} = A^{-1}\\mathbf{b}$. This works for every system whose coefficient matrix is invertible.\n\nThe system $3x + 2y = 7$, $4x + 3y = 10$ is\n\n$$\\begin{pmatrix} 3 & 2 \\\\ 4 & 3 \\end{pmatrix}\\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} 7 \\\\ 10 \\end{pmatrix}$$\n\nThe determinant is $3 \\cdot 3 - 2 \\cdot 4 = 1$, so the inverse is the adjugate itself. Then\n\n$$\\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} 3 & -2 \\\\ -4 & 3 \\end{pmatrix}\\begin{pmatrix} 7 \\\\ 10 \\end{pmatrix} = \\begin{pmatrix} 1 \\\\ 2 \\end{pmatrix}$$\n\nSubstituting back, $3 \\cdot 1 + 2 \\cdot 2 = 7$ and $4 \\cdot 1 + 3 \\cdot 2 = 10$.",
+    "你会把二元方程组写成 $A\\mathbf{x} = \\mathbf{b}$，也会求 $2 \\times 2$ 矩阵的逆。两者结合，一步就能解出方程组：两边左乘 $A^{-1}$，得 $\\mathbf{x} = A^{-1}\\mathbf{b}$。只要系数矩阵可逆，这个方法都适用。\n\n方程组 $3x + 2y = 7$，$4x + 3y = 10$ 写成\n\n$$\\begin{pmatrix} 3 & 2 \\\\ 4 & 3 \\end{pmatrix}\\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} 7 \\\\ 10 \\end{pmatrix}$$\n\n行列式是 $3 \\cdot 3 - 2 \\cdot 4 = 1$，所以逆矩阵就是伴随矩阵本身。于是\n\n$$\\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} 3 & -2 \\\\ -4 & 3 \\end{pmatrix}\\begin{pmatrix} 7 \\\\ 10 \\end{pmatrix} = \\begin{pmatrix} 1 \\\\ 2 \\end{pmatrix}$$\n\n代回检验，$3 \\cdot 1 + 2 \\cdot 2 = 7$，$4 \\cdot 1 + 3 \\cdot 2 = 10$。",
+  ),
   knowledgePoints: [
     {
       id: "matrix-inversion-form-for-2x2-system",
       title: t("Matrix equation form and inverse solution expression", "矩阵方程形式与逆矩阵表达式"),
       explanation: t(
-        "Just as dividing both sides solves a number equation, multiplying both sides on the left by the inverse solves a matrix equation. A system $\\begin{cases} ax + by = e \\\\ cx + dy = f \\end{cases}$ is represented as $A\\mathbf{x} = \\mathbf{b}$, where $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$, $\\mathbf{x} = \\begin{pmatrix} x \\\\ y \\end{pmatrix}$, and $\\mathbf{b} = \\begin{pmatrix} e \\\\ f \\end{pmatrix}$. Left-multiplying by $A^{-1}$ yields $\\mathbf{x} = A^{-1}\\mathbf{b}$.",
-        "就像两边同除可以解数的方程一样，两边同时左乘逆矩阵可以解矩阵方程。线性方程组 $\\begin{cases} ax + by = e \\\\ cx + dy = f \\end{cases}$ 可以写成矩阵方程 $A\\mathbf{x} = \\mathbf{b}$。两边左乘逆矩阵 $A^{-1}$，可得解向量 $\\mathbf{x} = A^{-1}\\mathbf{b}$。",
+        "Just as dividing both sides solves a number equation, multiplying both sides on the left by the inverse solves a matrix equation. The system $ax + by = e$, $cx + dy = f$ is represented as $A\\mathbf{x} = \\mathbf{b}$ with\n\n$$A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}, \\quad \\mathbf{x} = \\begin{pmatrix} x \\\\ y \\end{pmatrix}, \\quad \\mathbf{b} = \\begin{pmatrix} e \\\\ f \\end{pmatrix}$$\n\nLeft-multiplying by $A^{-1}$ yields $\\mathbf{x} = A^{-1}\\mathbf{b}$.\n\n> **Watch out.** The inverse goes on the left of $\\mathbf{b}$. The product $\\mathbf{b}A^{-1}$ is a $2 \\times 1$ column times a $2 \\times 2$ matrix, which is not even defined.",
+        "就像两边同除可以解数的方程一样，两边同时左乘逆矩阵可以解矩阵方程。方程组 $ax + by = e$，$cx + dy = f$ 可以写成矩阵方程 $A\\mathbf{x} = \\mathbf{b}$，其中\n\n$$A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}, \\quad \\mathbf{x} = \\begin{pmatrix} x \\\\ y \\end{pmatrix}, \\quad \\mathbf{b} = \\begin{pmatrix} e \\\\ f \\end{pmatrix}$$\n\n两边左乘逆矩阵 $A^{-1}$，可得解向量 $\\mathbf{x} = A^{-1}\\mathbf{b}$。\n\n> **注意。** 逆矩阵要放在 $\\mathbf{b}$ 的左边。$\\mathbf{b}A^{-1}$ 是 $2 \\times 1$ 的列乘 $2 \\times 2$ 矩阵，根本没有定义。",
       ),
       generate(rng) {
         const a = rng.pick([2, 3, 4, 5]);
@@ -589,10 +944,41 @@ export const solving2x2SystemsOfEquationsUsingInverseMatrices: TopicDef = {
             t(`$${bLatex}^{-1} ${ALatex}$`, `$${bLatex}^{-1} ${ALatex}$`),
             t(`$(${ALatex} ${bLatex})^{-1}$`, `$(${ALatex} ${bLatex})^{-1}$`),
           ],
-          t(
-            `Writing the system as $A \\mathbf{x} = \\mathbf{b}$ with $A = ${ALatex}$ and $\\mathbf{b} = ${bLatex}$, left-multiplying both sides by $A^{-1}$ gives $\\mathbf{x} = A^{-1}\\mathbf{b} = ${ALatex}^{-1} ${bLatex}$. Notice matrix multiplication is not commutative, so $A^{-1}$ must be on the left.`,
-            `将方程组写为 $A \\mathbf{x} = \\mathbf{b}$，其中 $A = ${ALatex}$，$\\mathbf{b} = ${bLatex}$。两边左乘 $A^{-1}$ 得 $\\mathbf{x} = A^{-1}\\mathbf{b} = ${ALatex}^{-1} ${bLatex}$。注意矩阵乘法不满足交换律，因此 $A^{-1}$ 必须在左侧。`,
+          join(
+            label(1, "Write the system as a product", "把方程组写成乘积"),
+            t(
+              "The coefficients form $A$, the unknowns form $\\mathbf{x}$, and the right sides form $\\mathbf{b}$:",
+              "系数组成 $A$，未知数组成 $\\mathbf{x}$，右边组成 $\\mathbf{b}$：",
+            ),
+            shown(`${ALatex}\\begin{pmatrix} x \\\\ y \\end{pmatrix} = ${bLatex}`),
+            para,
+            label(2, "Multiply on the left by the inverse", "两边左乘逆矩阵"),
+            t(
+              "Since $A^{-1}A = I$, multiplying both sides on the left by $A^{-1}$ leaves $\\mathbf{x}$ alone:",
+              "因为 $A^{-1}A = I$，两边左乘 $A^{-1}$ 后左边只剩 $\\mathbf{x}$：",
+            ),
+            shown(`\\begin{pmatrix} x \\\\ y \\end{pmatrix} = ${ALatex}^{-1}${bLatex}`),
+            para,
+            t(
+              "Matrix multiplication is not commutative, so $A^{-1}$ has to stay on the left.",
+              "矩阵乘法不满足交换律，所以 $A^{-1}$ 必须在左边。",
+            ),
+            checked(
+              t(
+                "Compare sizes. $A^{-1}$ is $2 \\times 2$ and $\\mathbf{b}$ is $2 \\times 1$, so $A^{-1}\\mathbf{b}$ is $2 \\times 1$, the size of the unknown vector. The reversed product $\\mathbf{b}A^{-1}$ would be $2 \\times 1$ times $2 \\times 2$, which is not defined.",
+                "比较大小。$A^{-1}$ 是 $2 \\times 2$，$\\mathbf{b}$ 是 $2 \\times 1$，所以 $A^{-1}\\mathbf{b}$ 是 $2 \\times 1$，正是未知向量的大小。次序颠倒的 $\\mathbf{b}A^{-1}$ 是 $2 \\times 1$ 乘 $2 \\times 2$，没有定义。",
+              ),
+            ),
           ),
+          [
+            t(
+              "A $2 \\times 1$ column times a $2 \\times 2$ matrix is not defined. The inverse goes on the left.",
+              "$2 \\times 1$ 的列乘 $2 \\times 2$ 矩阵没有定义。逆矩阵应放在左边。",
+            ),
+            t("This multiplies by $A$ again instead of undoing it.", "这是再乘一次 $A$，而不是抵消它。"),
+            t("A column vector has no inverse.", "列向量没有逆。"),
+            t("$A\\mathbf{b}$ is a column vector, and a vector has no inverse.", "$A\\mathbf{b}$ 是列向量，向量没有逆。"),
+          ],
         );
       },
     },
@@ -600,8 +986,8 @@ export const solving2x2SystemsOfEquationsUsingInverseMatrices: TopicDef = {
       id: "solving-2x2-system-via-inverse-matrix",
       title: t("Solving a 2x2 linear system using the inverse matrix", "利用逆矩阵求解二元线性方程组"),
       explanation: t(
-        "Once the inverse is known, the solution is a single matrix times vector product, and the entries of the result are the values of the variables. To solve $A\\mathbf{x} = \\mathbf{b}$, calculate $A^{-1} = \\frac{1}{\\det(A)}\\text{adj}(A)$ and multiply by $\\mathbf{b}$ to obtain $\\begin{pmatrix} x \\\\ y \\end{pmatrix}$.",
-        "求出逆矩阵后，解就是一次矩阵与向量的乘积，结果的各个元素就是变量的值。求解 $A\\mathbf{x} = \\mathbf{b}$ 时，先求出逆矩阵 $A^{-1} = \\frac{1}{\\det(A)}\\text{adj}(A)$，再计算矩阵乘积 $A^{-1}\\mathbf{b}$ 即可得到 $\\begin{pmatrix} x \\\\ y \\end{pmatrix}$。",
+        "Once the inverse is known, the solution is a single matrix times vector product, and the entries of the result are the values of the variables. To solve $A\\mathbf{x} = \\mathbf{b}$, calculate $A^{-1} = \\frac{1}{\\det(A)}\\text{adj}(A)$ and multiply by $\\mathbf{b}$ to obtain $\\begin{pmatrix} x \\\\ y \\end{pmatrix}$.\n\n> **Watch out.** Remember to divide by the determinant. Multiplying $\\mathbf{b}$ by the adjugate alone gives a vector $\\det(A)$ times too large.",
+        "求出逆矩阵后，解就是一次矩阵与向量的乘积，结果的各个元素就是变量的值。求解 $A\\mathbf{x} = \\mathbf{b}$ 时，先求出逆矩阵 $A^{-1} = \\frac{1}{\\det(A)}\\text{adj}(A)$，再计算矩阵乘积 $A^{-1}\\mathbf{b}$ 即可得到 $\\begin{pmatrix} x \\\\ y \\end{pmatrix}$。\n\n> **注意。** 别忘了除以行列式。只用伴随矩阵乘 $\\mathbf{b}$，得到的向量大了 $\\det(A)$ 倍。",
       ),
       generate(rng) {
         const x0 = rng.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]);
@@ -677,6 +1063,15 @@ export const solving2x2SystemsOfEquationsUsingInverseMatrices: TopicDef = {
         const w3: Vec2 = [x0, -y0];
         const w4: Vec2 = [x0 + 1, y0 - 1];
 
+        const det = A[0][0] * A[1][1] - A[0][1] * A[1][0];
+        const adj: Mat2 = [
+          [A[1][1], -A[0][1]],
+          [-A[1][0], A[0][0]],
+        ];
+        const p = adj[0][0] * e + adj[0][1] * f;
+        const q = adj[1][0] * e + adj[1][1] * f;
+        const middle = det === 1 ? "" : ` = ${over(det)}${vec2Latex([p, q])}`;
+
         return pointProblem({
           prompt: t(
             `Use inverse matrices to solve the system of equations:\n\n$$\\begin{cases} ${poly([A[0][0], "x"], [A[0][1], "y"])} = ${e} \\\\ ${poly([A[1][0], "x"], [A[1][1], "y"])} = ${f} \\end{cases}$$`,
@@ -684,9 +1079,29 @@ export const solving2x2SystemsOfEquationsUsingInverseMatrices: TopicDef = {
           ),
           answer: [x0, y0],
           vars: ["x", "y"],
-          solution: t(
-            `Coefficient matrix $A = ${mat2Latex(A)}$ has determinant $\\det(A) = (${A[0][0]})(${A[1][1]}) - (${A[0][1]})(${A[1][0]}) = ${A[0][0] * A[1][1] - A[0][1] * A[1][0]}$.\n\nMultiplying $\\mathbf{x} = A^{-1}\\mathbf{b}$ gives $(x, y) = (${x0}, ${y0})$.`,
-            `系数矩阵 $A = ${mat2Latex(A)}$ 的行列式为 $\\det(A) = (${A[0][0]})(${A[1][1]}) - (${A[0][1]})(${A[1][0]}) = ${A[0][0] * A[1][1] - A[0][1] * A[1][0]}$。\n\n计算 $\\mathbf{x} = A^{-1}\\mathbf{b}$ 可得 $(x, y) = (${x0}, ${y0})$。`,
+          solution: join(
+            label(1, "Find the determinant", "求行列式"),
+            t(
+              `The coefficient matrix is $A = ${mat2Latex(A)}$. Its determinant is $${paren(A[0][0])} \\cdot ${paren(A[1][1])} - ${paren(A[0][1])} \\cdot ${paren(A[1][0])} = ${det}$, which is not zero.`,
+              `系数矩阵是 $A = ${mat2Latex(A)}$。它的行列式是 $${paren(A[0][0])} \\cdot ${paren(A[1][1])} - ${paren(A[0][1])} \\cdot ${paren(A[1][0])} = ${det}$，不为零。`,
+            ),
+            para,
+            label(2, "Multiply by the inverse", "乘逆矩阵"),
+            t(
+              "The inverse is the adjugate divided by the determinant, and it multiplies the right side:",
+              "逆矩阵是伴随矩阵除以行列式，用它乘右边：",
+            ),
+            shown(
+              `\\begin{pmatrix} x \\\\ y \\end{pmatrix} = ${over(det)}${mat2Latex(adj)}${vec2Latex([e, f])}${middle} = ${vec2Latex([x0, y0])}`,
+            ),
+            para,
+            t(`So $(x, y) = (${x0}, ${y0})$.`, `所以 $(x, y) = (${x0}, ${y0})$。`),
+            checked(
+              t(
+                `Substitute back. The left side of the first equation is $${dot(A[0], [x0, y0])}$. The left side of the second is $${dot(A[1], [x0, y0])}$. These are the right sides $${e}$ and $${f}$.`,
+                `代回原方程组。第一个方程的左边是 $${dot(A[0], [x0, y0])}$。第二个方程的左边是 $${dot(A[1], [x0, y0])}$。正是右边的 $${e}$ 和 $${f}$。`,
+              ),
+            ),
           ),
           wrong: [w1, w2, w3, w4],
         });
@@ -707,13 +1122,17 @@ export const solvingSystemsOfEquationsUsingInverseMatrices: TopicDef = {
   encompasses: [],
   xp: 14,
   standards: ["CCSS.HSA.REI.C.8", "CCSS.HSA.REI.C.9"],
+  intro: t(
+    "You can solve a $2 \\times 2$ system with $\\mathbf{x} = A^{-1}\\mathbf{b}$. The same formula works for a square system of any size, as long as $A^{-1}$ exists. So the determinant tells you in advance whether there is exactly one solution, and once the inverse is known, solving takes one product.\n\nThe system $x + 2y = 3$, $2x + 4y = 5$ has determinant $1 \\cdot 4 - 2 \\cdot 2 = 0$. Its left sides are proportional, so it has no unique solution. Now suppose a $3 \\times 3$ system $A\\mathbf{x} = \\mathbf{b}$ has\n\n$$A^{-1} = \\begin{pmatrix} 2 & 0 & 1 \\\\ 0 & 1 & 0 \\\\ 1 & 0 & 1 \\end{pmatrix}, \\quad \\mathbf{b} = \\begin{pmatrix} 1 \\\\ 2 \\\\ 3 \\end{pmatrix}$$\n\nThen $x = 2 \\cdot 1 + 0 \\cdot 2 + 1 \\cdot 3 = 5$, $y = 2$ and $z = 1 \\cdot 1 + 1 \\cdot 3 = 4$.",
+    "你会用 $\\mathbf{x} = A^{-1}\\mathbf{b}$ 解 $2 \\times 2$ 方程组。只要 $A^{-1}$ 存在，同一个公式对任何大小的方阵方程组都适用。所以行列式能预先告诉你是否恰有一个解，而知道逆矩阵以后，求解只需一次乘法。\n\n方程组 $x + 2y = 3$，$2x + 4y = 5$ 的行列式是 $1 \\cdot 4 - 2 \\cdot 2 = 0$。它的两个左边成比例，所以没有唯一解。再设 $3 \\times 3$ 方程组 $A\\mathbf{x} = \\mathbf{b}$ 中\n\n$$A^{-1} = \\begin{pmatrix} 2 & 0 & 1 \\\\ 0 & 1 & 0 \\\\ 1 & 0 & 1 \\end{pmatrix}, \\quad \\mathbf{b} = \\begin{pmatrix} 1 \\\\ 2 \\\\ 3 \\end{pmatrix}$$\n\n于是 $x = 2 \\cdot 1 + 0 \\cdot 2 + 1 \\cdot 3 = 5$，$y = 2$，$z = 1 \\cdot 1 + 1 \\cdot 3 = 4$。",
+  ),
   knowledgePoints: [
     {
       id: "solvability-and-invertibility-of-linear-systems",
       title: t("Uniqueness of solutions and matrix invertibility", "矩阵可逆性与解的存在唯一性"),
       explanation: t(
-        "A square linear system $A\\mathbf{x} = \\mathbf{b}$ has a unique solution $\\mathbf{x} = A^{-1}\\mathbf{b}$ if and only if $A$ is invertible (i.e. $\\det(A) \\ne 0$). If $\\det(A) = 0$, the system either has no solution or infinitely many solutions.",
-        "线性方程组 $A\\mathbf{x} = \\mathbf{b}$ 存在唯一解 $\\mathbf{x} = A^{-1}\\mathbf{b}$ 的充要条件是系数矩阵 $A$ 可逆（即 $\\det(A) \\ne 0$）。若 $\\det(A) = 0$，则方程组无解或有无穷多解。",
+        "A square linear system $A\\mathbf{x} = \\mathbf{b}$ has a unique solution $\\mathbf{x} = A^{-1}\\mathbf{b}$ if and only if $A$ is invertible (i.e. $\\det(A) \\ne 0$). If $\\det(A) = 0$, the system either has no solution or infinitely many solutions.\n\n> **Watch out.** A zero determinant does not say there is no solution. It says there is no unique one: there may be none or infinitely many.",
+        "线性方程组 $A\\mathbf{x} = \\mathbf{b}$ 存在唯一解 $\\mathbf{x} = A^{-1}\\mathbf{b}$ 的充要条件是系数矩阵 $A$ 可逆（即 $\\det(A) \\ne 0$）。若 $\\det(A) = 0$，则方程组无解或有无穷多解。\n\n> **注意。** 行列式为零并不说明无解，而是说明没有唯一解：可能无解，也可能有无穷多解。",
       ),
       generate(rng) {
         const a = rng.pick([2, 3, 4, 5]);
@@ -730,6 +1149,15 @@ export const solvingSystemsOfEquationsUsingInverseMatrices: TopicDef = {
           [c, actualD],
         ];
         const ALatex = mat2Latex(A);
+        const findDet = join(
+          label(1, "Find the determinant", "求行列式"),
+          t(
+            `$\\det(A) = ${paren(a)} \\cdot ${paren(actualD)} - ${paren(b)} \\cdot ${paren(c)} = ${det}$.`,
+            `$\\det(A) = ${paren(a)} \\cdot ${paren(actualD)} - ${paren(b)} \\cdot ${paren(c)} = ${det}$。`,
+          ),
+          para,
+          label(2, "Decide", "下结论"),
+        );
 
         if (det === 0) {
           return oneOf(
@@ -744,10 +1172,24 @@ export const solvingSystemsOfEquationsUsingInverseMatrices: TopicDef = {
               t(`Yes, because every linear system has a unique solution.`, `是，因为任何线性方程组都有唯一解。`),
               t(`No, because the right-hand vector has non-zero entries.`, `否，因为等号右侧常数向量非零。`),
             ],
-            t(
-              `Calculate the determinant: $\\det(A) = (${a})(${actualD}) - (${b})(${c}) = 0$. Since $\\det(A) = 0$, $A$ is singular (not invertible), so the system does not have a unique solution.`,
-              `计算系数矩阵的行列式：$\\det(A) = (${a})(${actualD}) - (${b})(${c}) = 0$。由于 $\\det(A) = 0$，矩阵 $A$ 奇异不可逆，因此方程组不存在唯一解。`,
+            join(
+              findDet,
+              t(
+                "Since $\\det(A) = 0$, $A$ is singular and has no inverse. So the system does not have a unique solution.",
+                "由于 $\\det(A) = 0$，$A$ 奇异，没有逆矩阵。所以方程组没有唯一解。",
+              ),
+              checked(
+                t(
+                  `Compare the rows of $A$. Row $2$ is $(${c}, ${actualD})$, which is $${m}$ times row $1$, $(${a}, ${b})$. So the left side of the second equation is $${m}$ times the left side of the first, and the two equations cannot pin down a single point.`,
+                  `比较 $A$ 的两行。第 $2$ 行 $(${c}, ${actualD})$ 是第 $1$ 行 $(${a}, ${b})$ 的 $${m}$ 倍。所以第二个方程的左边是第一个方程左边的 $${m}$ 倍，两个方程不能确定唯一的一点。`,
+                ),
+              ),
             ),
+            [
+              t("The determinant here is $0$, so $A^{-1}$ does not exist.", "这里行列式是 $0$，所以 $A^{-1}$ 不存在。"),
+              t("Systems whose matrix has determinant $0$ do not have a unique solution.", "系数矩阵行列式为 $0$ 的方程组没有唯一解。"),
+              t("The right side does not decide uniqueness. The determinant does.", "是否唯一不由右边决定，而由行列式决定。"),
+            ],
           );
         }
 
@@ -763,10 +1205,30 @@ export const solvingSystemsOfEquationsUsingInverseMatrices: TopicDef = {
             t(`No, because $2 \\times 2$ systems never have unique solutions.`, `否，因为二阶系统从无唯一解。`),
             t(`Yes, but only if the right-hand side is the zero vector.`, `是，但仅当常数项为零向量时才成立。`),
           ],
-          t(
-            `Calculate the determinant: $\\det(A) = (${a})(${actualD}) - (${b})(${c}) = ${det} \\ne 0$. Because $\\det(A) \\ne 0$, the matrix $A$ is invertible, guaranteeing the unique solution $\\mathbf{x} = A^{-1}\\mathbf{b}$.`,
-            `计算行列式：$\\det(A) = (${a})(${actualD}) - (${b})(${c}) = ${det} \\ne 0$。因为 $\\det(A) \\ne 0$，矩阵 $A$ 可逆，因此保证存在唯一解 $\\mathbf{x} = A^{-1}\\mathbf{b}$。`,
+          join(
+            findDet,
+            t(
+              "Since $\\det(A) \\ne 0$, $A$ is invertible. So the system has the unique solution $\\mathbf{x} = A^{-1}\\mathbf{b}$.",
+              "由于 $\\det(A) \\ne 0$，$A$ 可逆。所以方程组有唯一解 $\\mathbf{x} = A^{-1}\\mathbf{b}$。",
+            ),
+            checked(
+              t(
+                `Compare the rows of $A$. The only multiple of row $1$, $(${a}, ${b})$, that starts with $${c}$ is $${m}$ times it, $(${c}, ${m * b})$. Row $2$ is $(${c}, ${actualD})$, so it is not a multiple of row $1$, and the two equations describe lines that cross at one point.`,
+                `比较 $A$ 的两行。第 $1$ 行 $(${a}, ${b})$ 的倍数中，以 $${c}$ 开头的只有它的 $${m}$ 倍 $(${c}, ${m * b})$。第 $2$ 行是 $(${c}, ${actualD})$，不是第 $1$ 行的倍数，所以两个方程表示的直线交于一点。`,
+              ),
+            ),
           ),
+          [
+            t(`The determinant here is $${det}$, not $0$.`, `这里行列式是 $${det}$，不是 $0$。`),
+            t(
+              "A $2 \\times 2$ system has a unique solution whenever its determinant is not zero.",
+              "只要行列式不为零，$2 \\times 2$ 方程组就有唯一解。",
+            ),
+            t(
+              "An invertible matrix gives a unique solution for every right side, not only the zero vector.",
+              "矩阵可逆时，对任何右边都有唯一解，不只是零向量。",
+            ),
+          ],
         );
       },
     },
@@ -774,8 +1236,8 @@ export const solvingSystemsOfEquationsUsingInverseMatrices: TopicDef = {
       id: "solving-systems-given-matrix-inverse",
       title: t("Solving a 3x3 system using a given inverse matrix", "利用已知逆矩阵求解三阶线性方程组"),
       explanation: t(
-        "When the inverse matrix $A^{-1}$ of a system $A\\mathbf{x} = \\mathbf{b}$ is already known, we directly calculate the solution vector by matrix-vector multiplication: $\\mathbf{x} = A^{-1}\\mathbf{b}$.",
-        "当方程组 $A\\mathbf{x} = \\mathbf{b}$ 的逆矩阵 $A^{-1}$ 已知时，直接通过矩阵与向量的乘积求解未知向量：$\\mathbf{x} = A^{-1}\\mathbf{b}$。",
+        "When the inverse matrix $A^{-1}$ of a system $A\\mathbf{x} = \\mathbf{b}$ is already known, we directly calculate the solution vector by matrix-vector multiplication: $\\mathbf{x} = A^{-1}\\mathbf{b}$.\n\n> **Watch out.** Each unknown comes from one row of $A^{-1}$ times $\\mathbf{b}$. Use row $1$ for $x$, row $2$ for $y$ and row $3$ for $z$.",
+        "当方程组 $A\\mathbf{x} = \\mathbf{b}$ 的逆矩阵 $A^{-1}$ 已知时，直接通过矩阵与向量的乘积求解未知向量：$\\mathbf{x} = A^{-1}\\mathbf{b}$。\n\n> **注意。** 每个未知数来自 $A^{-1}$ 的一行乘 $\\mathbf{b}$。第 $1$ 行给出 $x$，第 $2$ 行给出 $y$，第 $3$ 行给出 $z$。",
       ),
       generate(rng) {
         const a = rng.pick([-2, -1, 1, 2]);
@@ -784,10 +1246,16 @@ export const solvingSystemsOfEquationsUsingInverseMatrices: TopicDef = {
         const isUpper = rng.pick([true, false]);
 
         let inv: Mat3;
+        let A: Mat3;
         if (isUpper) {
           inv = [
             [1, a, bVal],
             [0, 1, c],
+            [0, 0, 1],
+          ];
+          A = [
+            [1, -a, a * c - bVal],
+            [0, 1, -c],
             [0, 0, 1],
           ];
         } else {
@@ -795,6 +1263,11 @@ export const solvingSystemsOfEquationsUsingInverseMatrices: TopicDef = {
             [1, 0, 0],
             [a, 1, 0],
             [bVal, c, 1],
+          ];
+          A = [
+            [1, 0, 0],
+            [-a, 1, 0],
+            [a * c - bVal, -c, 1],
           ];
         }
 
@@ -843,10 +1316,40 @@ export const solvingSystemsOfEquationsUsingInverseMatrices: TopicDef = {
               `$\\begin{pmatrix} x \\\\ y \\\\ z \\end{pmatrix} = ${vec3Latex(w4)}$`,
             ),
           ],
-          t(
-            `Compute the matrix-vector product $\\mathbf{x} = A^{-1}\\mathbf{b}$:\n\n$$\\mathbf{x} = ${invLatex} ${bLatex} = ${vec3Latex([x, y, z])}$$.`,
-            `计算矩阵与向量的乘积 $\\mathbf{x} = A^{-1}\\mathbf{b}$：\n\n$$\\mathbf{x} = ${invLatex} ${bLatex} = ${vec3Latex([x, y, z])}$$.`,
+          join(
+            label(1, "Multiply on the left by the inverse", "两边左乘逆矩阵"),
+            t("Since $A^{-1}A = I$, the solution is", "因为 $A^{-1}A = I$，解是"),
+            shown(`\\mathbf{x} = A^{-1}\\mathbf{b} = ${invLatex}${bLatex}`),
+            para,
+            label(2, "Multiply row by row", "逐行相乘"),
+            t(
+              `Row $1$ gives $x = ${dot(inv[0], b)}$. Row $2$ gives $y = ${dot(inv[1], b)}$. Row $3$ gives $z = ${dot(inv[2], b)}$. So $(x, y, z) = (${x}, ${y}, ${z})$.`,
+              `第 $1$ 行给出 $x = ${dot(inv[0], b)}$。第 $2$ 行给出 $y = ${dot(inv[1], b)}$。第 $3$ 行给出 $z = ${dot(inv[2], b)}$。所以 $(x, y, z) = (${x}, ${y}, ${z})$。`,
+            ),
+            checked(
+              join(
+                t(
+                  "The inverse of $A^{-1}$ is $A$. Inverting this triangular matrix, which has $1$s on the diagonal, gives",
+                  "$A^{-1}$ 的逆就是 $A$。对这个对角线上为 $1$ 的三角矩阵求逆，得",
+                ),
+                shown(`A = ${mat3Latex(A)}`),
+                para,
+                t(
+                  `Multiply it by the answer. Row $1$ gives $${dot(A[0], [x, y, z])}$. Row $2$ gives $${dot(A[1], [x, y, z])}$. Row $3$ gives $${dot(A[2], [x, y, z])}$. These are the entries of $\\mathbf{b}$.`,
+                  `用它乘答案。第 $1$ 行得 $${dot(A[0], [x, y, z])}$。第 $2$ 行得 $${dot(A[1], [x, y, z])}$。第 $3$ 行得 $${dot(A[2], [x, y, z])}$。正是 $\\mathbf{b}$ 的各元素。`,
+                ),
+              ),
+            ),
           ),
+          [
+            t(
+              "Two entries are off by one. Recompute the row products for $x$ and $y$.",
+              "有两个元素差了 $1$。重新计算 $x$ 和 $y$ 的行乘积。",
+            ),
+            t("This lists the entries in reverse order.", "这里把各元素的次序颠倒了。"),
+            t("The sign of $x$ is wrong.", "$x$ 的符号错了。"),
+            t("The sign of $y$ is wrong.", "$y$ 的符号错了。"),
+          ],
         );
       },
     },
@@ -869,13 +1372,17 @@ export const introductionToLinearTransformations: TopicDef = {
   encompasses: [],
   xp: 14,
   standards: ["CCSS.HSN.VM.C.11"],
+  intro: t(
+    "You can multiply a matrix by a column vector. Doing so turns each vector of the plane into another one, and such a rule is called a transformation. The transformations that come from matrices are the linear ones: they respect sums and multiples, so they send straight lines to straight lines and keep the origin in place. Rotations, reflections and stretches are all of this kind.\n\nTake $T(x, y) = (2x + y, x - 3y)$. Then $T(1, 2) = (4, -5)$ and $T(2, 4) = (8, -10)$, which is $2T(1, 2)$, as linearity requires. By contrast, $S(x, y) = (x + 1, y)$ sends the origin to $(1, 0)$, so it is not linear.",
+    "你会用矩阵乘列向量。这样做把平面上的每个向量变成另一个向量，这样的规则叫做变换。由矩阵给出的变换就是线性变换：它们保持和与倍数，所以把直线变成直线，并保持原点不动。旋转、反射和伸缩都属于这一类。\n\n取 $T(x, y) = (2x + y, x - 3y)$。则 $T(1, 2) = (4, -5)$，$T(2, 4) = (8, -10)$，正是 $2T(1, 2)$，符合线性的要求。相比之下，$S(x, y) = (x + 1, y)$ 把原点变到 $(1, 0)$，所以不是线性的。",
+  ),
   knowledgePoints: [
     {
       id: "definition-and-properties-of-linear-transformations",
       title: t("Properties and linearity tests", "线性变换的性质与判定"),
       explanation: t(
-        "A transformation $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ is linear if and only if for all vectors $\\mathbf{u}, \\mathbf{v}$ and scalars $c$:\n1. $T(\\mathbf{u} + \\mathbf{v}) = T(\\mathbf{u}) + T(\\mathbf{v})$ (additivity)\n2. $T(c\\mathbf{u}) = c T(\\mathbf{u})$ (homogeneity)\nIn particular, every linear transformation maps the origin to itself: $T(\\mathbf{0}) = \\mathbf{0}$.",
-        "映射 $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ 是线性变换，当且仅当对任意向量 $\\mathbf{u}, \\mathbf{v}$ 及标量 $c$ 满足：\n1. $T(\\mathbf{u} + \\mathbf{v}) = T(\\mathbf{u}) + T(\\mathbf{v})$（可加性）\n2. $T(c\\mathbf{u}) = c T(\\mathbf{u})$（齐次性）\n特别地，所有线性变换必将原点映射到原点：$T(\\mathbf{0}) = \\mathbf{0}$。",
+        "A transformation $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ is linear if and only if for all vectors $\\mathbf{u}, \\mathbf{v}$ and scalars $c$:\n1. $T(\\mathbf{u} + \\mathbf{v}) = T(\\mathbf{u}) + T(\\mathbf{v})$ (additivity)\n2. $T(c\\mathbf{u}) = c T(\\mathbf{u})$ (homogeneity)\nIn particular, every linear transformation maps the origin to itself: $T(\\mathbf{0}) = \\mathbf{0}$.\n\n> **Watch out.** Keeping the origin fixed is not enough. Terms such as $x^2$, $xy$ and $|x|$ keep the origin fixed and still break the rules for sums and multiples.",
+        "映射 $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ 是线性变换，当且仅当对任意向量 $\\mathbf{u}, \\mathbf{v}$ 及标量 $c$ 满足：\n1. $T(\\mathbf{u} + \\mathbf{v}) = T(\\mathbf{u}) + T(\\mathbf{v})$（可加性）\n2. $T(c\\mathbf{u}) = c T(\\mathbf{u})$（齐次性）\n特别地，所有线性变换必将原点映射到原点：$T(\\mathbf{0}) = \\mathbf{0}$。\n\n> **注意。** 只保持原点不动还不够。$x^2$、$xy$ 和 $|x|$ 这样的项也保持原点不动，却不满足和与倍数的规则。",
       ),
       generate(rng) {
         const isLinear = rng.pick([true, false]);
@@ -886,31 +1393,97 @@ export const introductionToLinearTransformations: TopicDef = {
         const k = rng.pick([2, 3, 4, 5]);
 
         let formula = "";
-        let reasonEn = "";
-        let reasonZh = "";
+        let look: Text;
+        let test: Text;
+        let check: Text;
+        let whyOpposite: Text;
 
         if (isLinear) {
           formula = `(${poly([a, "x"], [b, "y"])}, \\; ${poly([c, "x"], [d, "y"])})`;
-          reasonEn = `Each component is a linear combination of $x$ and $y$ with no constants or non-linear terms. It satisfies $T(\\mathbf{u} + \\mathbf{v}) = T(\\mathbf{u}) + T(\\mathbf{v})$ and $T(c\\mathbf{u}) = cT(\\mathbf{u})$.`;
-          reasonZh = `每个坐标分量都是 $x$ 与 $y$ 的齐次一次线性组合，满足可加性与齐次性。`;
+          look = t(
+            "Each component is a multiple of $x$ plus a multiple of $y$, with no constant, power, product or absolute value.",
+            "每个分量都是 $x$ 的倍数加 $y$ 的倍数，没有常数项、乘方、乘积或绝对值。",
+          );
+          test = t(
+            `So $T$ is multiplication by a matrix. Its matrix is $${mat2Latex([
+              [a, b],
+              [c, d],
+            ])}$. Every matrix map respects sums and multiples, so $T$ is linear.`,
+            `所以 $T$ 是乘一个矩阵。它的矩阵是 $${mat2Latex([
+              [a, b],
+              [c, d],
+            ])}$。每个矩阵映射都保持和与倍数，所以 $T$ 是线性的。`,
+          );
+          check = t(
+            `Test a multiple. $T(1, 1) = (${a + b}, ${c + d})$ and $T(2, 2) = (${2 * (a + b)}, ${2 * (c + d)})$, which is $2T(1, 1)$.`,
+            `检验倍数。$T(1, 1) = (${a + b}, ${c + d})$，$T(2, 2) = (${2 * (a + b)}, ${2 * (c + d)})$，正是 $2T(1, 1)$。`,
+          );
+          whyOpposite = t(
+            "Each component has the form $ax + by$, and every map of that form is linear.",
+            "每个分量都是 $ax + by$ 的形式，这种形式的映射都是线性的。",
+          );
         } else {
           const nonlinType = rng.pick(["offset", "square", "product", "abs"]);
           if (nonlinType === "offset") {
             formula = `(${poly([a, "x"], [b, "y"], [k, ""])}, \\; ${poly([c, "x"], [d, "y"])})`;
-            reasonEn = `It includes a constant offset $+${k}$, so $T(\\mathbf{0}) = (${k}, 0) \\ne \\mathbf{0}$, violating linearity.`;
-            reasonZh = `含有非零常数偏移 $+${k}$，导致 $T(\\mathbf{0}) \\ne \\mathbf{0}$，因此不是线性变换。`;
+            look = t(`The first component has the constant term $${k}$.`, `第一个分量有常数项 $${k}$。`);
+            test = t(
+              `A linear map sends the origin to the origin, but $T(0, 0) = (${k}, 0)$. So $T$ is not linear.`,
+              `线性映射把原点变到原点，但 $T(0, 0) = (${k}, 0)$。所以 $T$ 不是线性的。`,
+            );
+            check = t(
+              `Test a multiple. $T(1, 0) = (${a + k}, ${c})$, so $2T(1, 0) = (${2 * (a + k)}, ${2 * c})$. But $T(2, 0) = (${2 * a + k}, ${2 * c})$. The first components differ by $${k}$, so $T$ fails again.`,
+              `检验倍数。$T(1, 0) = (${a + k}, ${c})$，所以 $2T(1, 0) = (${2 * (a + k)}, ${2 * c})$。但 $T(2, 0) = (${2 * a + k}, ${2 * c})$。第一个分量相差 $${k}$，所以 $T$ 仍不满足。`,
+            );
+            whyOpposite = t(
+              "The constant term moves the origin, so the map cannot be linear.",
+              "常数项移动了原点，所以这个映射不可能是线性的。",
+            );
           } else if (nonlinType === "square") {
             formula = `(${poly([1, "x^2"], [b, "y"])}, \\; ${poly([c, "x"])})`;
-            reasonEn = `It contains a quadratic term $x^2$, violating homogeneity: $T(c\\mathbf{u}) \\ne cT(\\mathbf{u})$.`;
-            reasonZh = `含有平方项 $x^2$，破坏了齐次性。`;
+            look = t("The first component contains $x^2$.", "第一个分量含有 $x^2$。");
+            test = t(
+              `Doubling the input should double the output. But $T(2, 0) = (4, ${2 * c})$, while $2T(1, 0) = (2, ${2 * c})$. So $T$ is not linear.`,
+              `输入加倍，输出应该加倍。但 $T(2, 0) = (4, ${2 * c})$，而 $2T(1, 0) = (2, ${2 * c})$。所以 $T$ 不是线性的。`,
+            );
+            check = t(
+              `Test a negative multiple. $T(-1, 0) = (1, ${-c})$, while $-T(1, 0) = (-1, ${-c})$. The first components differ, so $T$ fails again.`,
+              `检验负倍数。$T(-1, 0) = (1, ${-c})$，而 $-T(1, 0) = (-1, ${-c})$。第一个分量不同，所以 $T$ 仍不满足。`,
+            );
+            whyOpposite = t(
+              "The term $x^2$ does not scale like $x$, so the map cannot be linear.",
+              "$x^2$ 不像 $x$ 那样按倍数变化，所以这个映射不可能是线性的。",
+            );
           } else if (nonlinType === "product") {
             formula = `(xy, \\; ${poly([c, "x"], [d, "y"])})`;
-            reasonEn = `It contains the product term $xy$, violating additivity.`;
-            reasonZh = `含有乘积项 $xy$，不满足可加性。`;
+            look = t("The first component is the product $xy$.", "第一个分量是乘积 $xy$。");
+            test = t(
+              `Doubling the input should double the output. But $T(2, 2) = (4, ${2 * (c + d)})$, while $2T(1, 1) = (2, ${2 * (c + d)})$. So $T$ is not linear.`,
+              `输入加倍，输出应该加倍。但 $T(2, 2) = (4, ${2 * (c + d)})$，而 $2T(1, 1) = (2, ${2 * (c + d)})$。所以 $T$ 不是线性的。`,
+            );
+            check = t(
+              `Test a sum. $T(1, 1) = (1, ${c + d})$. Adding the images of the pieces gives $T(1, 0) + T(0, 1) = (0, ${c}) + (0, ${d}) = (0, ${c + d})$. The first components differ, so $T$ fails again.`,
+              `检验和。$T(1, 1) = (1, ${c + d})$。把各部分的像相加得 $T(1, 0) + T(0, 1) = (0, ${c}) + (0, ${d}) = (0, ${c + d})$。第一个分量不同，所以 $T$ 仍不满足。`,
+            );
+            whyOpposite = t(
+              "The product $xy$ does not respect sums or multiples, so the map cannot be linear.",
+              "乘积 $xy$ 不保持和与倍数，所以这个映射不可能是线性的。",
+            );
           } else {
             formula = `(|x|, \\; ${poly([c, "y"])})`;
-            reasonEn = `It contains an absolute value $|x|$, violating linearity.`;
-            reasonZh = `含有绝对值 $|x|$，不是线性变换。`;
+            look = t("The first component is $|x|$.", "第一个分量是 $|x|$。");
+            test = t(
+              "A linear map sends $-\\mathbf{v}$ to $-T(\\mathbf{v})$. But $T(-1, 0) = (1, 0)$, while $-T(1, 0) = (-1, 0)$. So $T$ is not linear.",
+              "线性映射把 $-\\mathbf{v}$ 变到 $-T(\\mathbf{v})$。但 $T(-1, 0) = (1, 0)$，而 $-T(1, 0) = (-1, 0)$。所以 $T$ 不是线性的。",
+            );
+            check = t(
+              "Test a sum. $(1, 0) + (-1, 0) = (0, 0)$, and $T(0, 0) = (0, 0)$. Adding the images of the pieces gives $T(1, 0) + T(-1, 0) = (1, 0) + (1, 0) = (2, 0)$. The two results differ, so $T$ fails again.",
+              "检验和。$(1, 0) + (-1, 0) = (0, 0)$，而 $T(0, 0) = (0, 0)$。把各部分的像相加得 $T(1, 0) + T(-1, 0) = (1, 0) + (1, 0) = (2, 0)$。两个结果不同，所以 $T$ 仍不满足。",
+            );
+            whyOpposite = t(
+              "The absolute value $|x|$ does not respect negative multiples, so the map cannot be linear.",
+              "绝对值 $|x|$ 不保持负倍数，所以这个映射不可能是线性的。",
+            );
           }
         }
 
@@ -933,10 +1506,25 @@ export const introductionToLinearTransformations: TopicDef = {
           ),
           rightAnswer,
           [wrong1, wrong2, wrong3],
-          t(
-            `A transformation is linear if and only if each coordinate formula is of the form $ax + by$ with no constants, products, powers, or non-linear operations.\n\n${reasonEn}`,
-            `平面映射是线性的，当且仅当各个坐标分量均为形如 $ax + by$ 的齐次一次式，且不含常数偏置、乘积、乘方或非线性函数。\n\n${reasonZh}`,
+          join(
+            label(1, "Look at the components", "看各个分量"),
+            look,
+            para,
+            label(2, isLinear ? "Find the matrix" : "Test the rules", isLinear ? "找出矩阵" : "检验规则"),
+            test,
+            checked(check),
           ),
+          [
+            whyOpposite,
+            t(
+              "Linearity is a rule about all vectors at once. It does not hold in some quadrants and fail in others.",
+              "线性是对所有向量的要求，不会在某些象限成立、在另一些象限不成立。",
+            ),
+            t(
+              "The formula settles it. Testing sums and multiples, or finding a matrix, decides the question.",
+              "由公式就能判断。检验和与倍数，或者找出矩阵，就能下结论。",
+            ),
+          ],
         );
       },
     },
@@ -944,8 +1532,8 @@ export const introductionToLinearTransformations: TopicDef = {
       id: "evaluating-linear-transformations-on-vectors",
       title: t("Evaluating linear transformations on linear combinations", "在线性组合上计算线性变换"),
       explanation: t(
-        "A linear transformation respects addition and scaling, so knowing its values on a few vectors determines its value on any combination of them. By linearity, for any vectors $\\mathbf{u}, \\mathbf{v}$ and constants $c_1, c_2$, we have $T(c_1\\mathbf{u} + c_2\\mathbf{v}) = c_1 T(\\mathbf{u}) + c_2 T(\\mathbf{v})$.",
-        "线性变换保持加法和数乘，所以知道它在几个向量上的值，就能求出它在这些向量任意组合上的值。根据线性性质，对任意向量 $\\mathbf{u}, \\mathbf{v}$ 和常数 $c_1, c_2$，均有 $T(c_1\\mathbf{u} + c_2\\mathbf{v}) = c_1 T(\\mathbf{u}) + c_2 T(\\mathbf{v})$。",
+        "A linear transformation respects addition and scaling, so knowing its values on a few vectors determines its value on any combination of them. By linearity, for any vectors $\\mathbf{u}, \\mathbf{v}$ and constants $c_1, c_2$, we have $T(c_1\\mathbf{u} + c_2\\mathbf{v}) = c_1 T(\\mathbf{u}) + c_2 T(\\mathbf{v})$.\n\n> **Watch out.** Keep each coefficient with its own image. A negative coefficient changes the sign of every component of that image.",
+        "线性变换保持加法和数乘，所以知道它在几个向量上的值，就能求出它在这些向量任意组合上的值。根据线性性质，对任意向量 $\\mathbf{u}, \\mathbf{v}$ 和常数 $c_1, c_2$，均有 $T(c_1\\mathbf{u} + c_2\\mathbf{v}) = c_1 T(\\mathbf{u}) + c_2 T(\\mathbf{v})$。\n\n> **注意。** 每个系数要配它自己的像。负系数会改变那个像每个分量的符号。",
       ),
       generate(rng) {
         const uImg: Vec2 = [rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]), rng.pick([-4, -3, -2, -1, 1, 2, 3, 4])];
@@ -964,18 +1552,33 @@ export const introductionToLinearTransformations: TopicDef = {
 
         const uLatex = vec2Latex(uImg);
         const vLatex = vec2Latex(vImg);
-        const rightLatex = vec2Latex(rightVec);
+        const combo = poly([c1, "\\mathbf{u}"], [c2, "\\mathbf{v}"]);
 
         return pointProblem({
           prompt: t(
-            `Let $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ be a linear transformation such that $T(\\mathbf{u}) = ${uLatex}$ and $T(\\mathbf{v}) = ${vLatex}$. Find $T(${poly([c1, "\\mathbf{u}"], [c2, "\\mathbf{v}"])})$.`,
-            `设 $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ 是线性变换，且 $T(\\mathbf{u}) = ${uLatex}$，$T(\\mathbf{v}) = ${vLatex}$。求 $T(${poly([c1, "\\mathbf{u}"], [c2, "\\mathbf{v}"])})$ 的值。`,
+            `Let $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ be a linear transformation such that $T(\\mathbf{u}) = ${uLatex}$ and $T(\\mathbf{v}) = ${vLatex}$. Find $T(${combo})$.`,
+            `设 $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ 是线性变换，且 $T(\\mathbf{u}) = ${uLatex}$，$T(\\mathbf{v}) = ${vLatex}$。求 $T(${combo})$ 的值。`,
           ),
           answer: rightVec,
           vector: true,
-          solution: t(
-            `By the linearity property:\n\n$$T(${poly([c1, "\\mathbf{u}"], [c2, "\\mathbf{v}"])}) = ${poly([c1, "T(\\mathbf{u})"], [c2, "T(\\mathbf{v})"])} = ${poly([c1, uLatex], [c2, vLatex])} = ${rightLatex} = ${vectorLatex(rightVec)}$$.`,
-            `由线性变换的基本性质：\n\n$$T(${poly([c1, "\\mathbf{u}"], [c2, "\\mathbf{v}"])}) = ${poly([c1, "T(\\mathbf{u})"], [c2, "T(\\mathbf{v})"])} = ${poly([c1, uLatex], [c2, vLatex])} = ${rightLatex} = ${vectorLatex(rightVec)}$$。`,
+          solution: join(
+            label(1, "Use linearity", "利用线性"),
+            t(
+              `A linear map respects sums and multiples, so $T(${combo}) = ${poly([c1, "T(\\mathbf{u})"], [c2, "T(\\mathbf{v})"])}$.`,
+              `线性映射保持和与倍数，所以 $T(${combo}) = ${poly([c1, "T(\\mathbf{u})"], [c2, "T(\\mathbf{v})"])}$。`,
+            ),
+            para,
+            label(2, "Combine the images", "组合各个像"),
+            t(
+              `The first component is $${dot([c1, c2], [uImg[0], vImg[0]])}$. The second is $${dot([c1, c2], [uImg[1], vImg[1]])}$. So $T(${combo}) = ${vectorLatex(rightVec)}$.`,
+              `第一个分量是 $${dot([c1, c2], [uImg[0], vImg[0]])}$。第二个分量是 $${dot([c1, c2], [uImg[1], vImg[1]])}$。所以 $T(${combo}) = ${vectorLatex(rightVec)}$。`,
+            ),
+            checked(
+              t(
+                `Take away the part from $\\mathbf{u}$. The answer minus $${c1}T(\\mathbf{u})$ is $(${rx} - ${paren(c1 * uImg[0])}, ${ry} - ${paren(c1 * uImg[1])}) = (${c2 * vImg[0]}, ${c2 * vImg[1]})$. This is $${c2}$ times $T(\\mathbf{v})$, as it should be.`,
+                `去掉来自 $\\mathbf{u}$ 的部分。答案减去 $${c1}T(\\mathbf{u})$ 得 $(${rx} - ${paren(c1 * uImg[0])}, ${ry} - ${paren(c1 * uImg[1])}) = (${c2 * vImg[0]}, ${c2 * vImg[1]})$。这正是 $T(\\mathbf{v})$ 的 $${c2}$ 倍。`,
+              ),
+            ),
           ),
           wrong: [w1, w2, w3, w4],
         });
@@ -996,13 +1599,17 @@ export const theStandardMatrixOfALinearTransformation: TopicDef = {
   encompasses: [],
   xp: 14,
   standards: ["CCSS.HSN.VM.C.11"],
+  intro: t(
+    "You know that a linear transformation respects sums and multiples. Every vector is $(x, y) = x\\mathbf{e}_1 + y\\mathbf{e}_2$, so $T(x, y) = xT(\\mathbf{e}_1) + yT(\\mathbf{e}_2)$. That means two images decide the whole transformation, and placing them side by side as columns gives a matrix that does the same job. This matrix is the standard matrix of $T$, and it lets you compute any image by one multiplication.\n\nSuppose $T(\\mathbf{e}_1) = (7, -2)$ and $T(\\mathbf{e}_2) = (0, 8)$. Then\n\n$$A = \\begin{pmatrix} 7 & 0 \\\\ -2 & 8 \\end{pmatrix}$$\n\nFor the vector $(3, 1)$, linearity gives $3(7, -2) + 1(0, 8) = (21, 2)$. The matrix gives the same: $7 \\cdot 3 + 0 \\cdot 1 = 21$ and $-2 \\cdot 3 + 8 \\cdot 1 = 2$.",
+    "你知道线性变换保持和与倍数。每个向量都是 $(x, y) = x\\mathbf{e}_1 + y\\mathbf{e}_2$，所以 $T(x, y) = xT(\\mathbf{e}_1) + yT(\\mathbf{e}_2)$。这说明两个像就决定了整个变换，把它们作为列并排放好，就得到一个起同样作用的矩阵。这个矩阵叫 $T$ 的标准矩阵，用它乘一次就能求出任何像。\n\n设 $T(\\mathbf{e}_1) = (7, -2)$，$T(\\mathbf{e}_2) = (0, 8)$。则\n\n$$A = \\begin{pmatrix} 7 & 0 \\\\ -2 & 8 \\end{pmatrix}$$\n\n对向量 $(3, 1)$，由线性得 $3(7, -2) + 1(0, 8) = (21, 2)$。用矩阵得到同样的结果：$7 \\cdot 3 + 0 \\cdot 1 = 21$，$-2 \\cdot 3 + 8 \\cdot 1 = 2$。",
+  ),
   knowledgePoints: [
     {
       id: "constructing-standard-matrix-from-basis-images",
       title: t("Standard matrix from images of basis vectors", "由基向量的像构造标准矩阵"),
       explanation: t(
-        "Every linear transformation $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ can be represented as multiplication by a unique matrix $A = [T(\\mathbf{e}_1) \\mid T(\\mathbf{e}_2)]$, whose columns are the images of the standard basis vectors $\\mathbf{e}_1 = \\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix}$ and $\\mathbf{e}_2 = \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}$.",
-        "每个线性变换 $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ 都可以表示为乘以唯一的标准矩阵 $A = [T(\\mathbf{e}_1) \\mid T(\\mathbf{e}_2)]$，该矩阵的各列分别是标准基向量 $\\mathbf{e}_1 = \\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix}$ 与 $\\mathbf{e}_2 = \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}$ 的像。",
+        "Every linear transformation $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ can be represented as multiplication by a unique matrix $A = [T(\\mathbf{e}_1) \\mid T(\\mathbf{e}_2)]$, whose columns are the images of the standard basis vectors\n\n$$\\mathbf{e}_1 = \\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix}, \\quad \\mathbf{e}_2 = \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}$$\n\n> **Watch out.** The images go in as columns, not rows, and $T(\\mathbf{e}_1)$ comes first.",
+        "每个线性变换 $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ 都可以表示为乘以唯一的标准矩阵 $A = [T(\\mathbf{e}_1) \\mid T(\\mathbf{e}_2)]$，该矩阵的各列分别是标准基向量\n\n$$\\mathbf{e}_1 = \\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix}, \\quad \\mathbf{e}_2 = \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}$$\n\n的像。\n\n> **注意。** 像要作为列放入，而不是作为行，并且 $T(\\mathbf{e}_1)$ 在前。",
       ),
       generate(rng) {
         const a = rng.pick([-6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6]);
@@ -1051,10 +1658,35 @@ export const theStandardMatrixOfALinearTransformation: TopicDef = {
             t(`$${mat2Latex(w3)}$`, `$${mat2Latex(w3)}$`),
             t(`$${mat2Latex(w4)}$`, `$${mat2Latex(w4)}$`),
           ],
-          t(
-            `The columns of the standard matrix are precisely $T(\\mathbf{e}_1)$ and $T(\\mathbf{e}_2)$:\n\n$$A = [T(\\mathbf{e}_1) \\mid T(\\mathbf{e}_2)] = ${rightLatex}$$.`,
-            `标准矩阵的各列正是标准基向量的像 $T(\\mathbf{e}_1)$ 与 $T(\\mathbf{e}_2)$：\n\n$$A = [T(\\mathbf{e}_1) \\mid T(\\mathbf{e}_2)] = ${rightLatex}$$.`,
+          join(
+            label(1, "Place the first image", "放入第一个像"),
+            t(
+              `Column $1$ of the standard matrix is $T(\\mathbf{e}_1) = (${a}, ${c})$.`,
+              `标准矩阵的第 $1$ 列是 $T(\\mathbf{e}_1) = (${a}, ${c})$。`,
+            ),
+            para,
+            label(2, "Place the second image", "放入第二个像"),
+            t(`Column $2$ is $T(\\mathbf{e}_2) = (${b}, ${d})$. So`, `第 $2$ 列是 $T(\\mathbf{e}_2) = (${b}, ${d})$。所以`),
+            shown(`A = [T(\\mathbf{e}_1) \\mid T(\\mathbf{e}_2)] = ${rightLatex}`),
+            checked(
+              t(
+                `Multiply $A$ by the basis vectors. $A\\mathbf{e}_1$ has entries $${dot([a, b], [1, 0])}$ and $${dot([c, d], [1, 0])}$. This is $T(\\mathbf{e}_1)$. $A\\mathbf{e}_2$ has entries $${dot([a, b], [0, 1])}$ and $${dot([c, d], [0, 1])}$. This is $T(\\mathbf{e}_2)$.`,
+                `用 $A$ 乘基向量。$A\\mathbf{e}_1$ 的元素是 $${dot([a, b], [1, 0])}$ 和 $${dot([c, d], [1, 0])}$。这正是 $T(\\mathbf{e}_1)$。$A\\mathbf{e}_2$ 的元素是 $${dot([a, b], [0, 1])}$ 和 $${dot([c, d], [0, 1])}$。这正是 $T(\\mathbf{e}_2)$。`,
+              ),
+            ),
           ),
+          [
+            t("This writes the images as rows. They go in as columns.", "这里把像写成了行。它们应该作为列。"),
+            t(
+              "This puts $T(\\mathbf{e}_2)$ first. Column $1$ is the image of $\\mathbf{e}_1$.",
+              "这里把 $T(\\mathbf{e}_2)$ 放在前面。第 $1$ 列是 $\\mathbf{e}_1$ 的像。",
+            ),
+            t("Every sign is changed. The images are used as given.", "这里所有符号都变了。像应该按原样使用。"),
+            t(
+              "This swaps the diagonal entries, as for an inverse. The images go in unchanged.",
+              "这里像求逆那样交换了对角元素。像应该原样放入。",
+            ),
+          ],
         );
       },
     },
@@ -1062,8 +1694,8 @@ export const theStandardMatrixOfALinearTransformation: TopicDef = {
       id: "finding-standard-matrix-from-formula",
       title: t("Finding standard matrix from algebraic formulas", "由代数表达式求标准矩阵"),
       explanation: t(
-        "The coefficients of each output formula fill one row of the matrix, so read them off in order of the variables. If a linear transformation is given by $T\\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} ax + by \\\\ cx + dy \\end{pmatrix}$, its standard matrix is $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$.",
-        "每个输出公式的系数填成矩阵的一行，所以按变量的顺序把它们读出来。若线性变换的坐标公式为 $T\\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} ax + by \\\\ cx + dy \\end{pmatrix}$，则其标准矩阵为 $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$。",
+        "The coefficients of each output formula fill one row of the matrix, so read them off in order of the variables. If a linear transformation is given by $T(x, y) = (ax + by, cx + dy)$, its standard matrix is\n\n$$A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$$\n\n> **Watch out.** Each formula fills a row, with the coefficient of $x$ first. Writing the coefficients down a column gives the transpose.",
+        "每个输出公式的系数填成矩阵的一行，所以按变量的顺序把它们读出来。若线性变换的坐标公式为 $T(x, y) = (ax + by, cx + dy)$，则其标准矩阵为\n\n$$A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$$\n\n> **注意。** 每个公式填一行，$x$ 的系数在前。把系数竖着写成一列，得到的是转置。",
       ),
       generate(rng) {
         const a = rng.pick([-6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6]);
@@ -1107,10 +1739,38 @@ export const theStandardMatrixOfALinearTransformation: TopicDef = {
             t(`$${mat2Latex(w3)}$`, `$${mat2Latex(w3)}$`),
             t(`$${mat2Latex(w4)}$`, `$${mat2Latex(w4)}$`),
           ],
-          t(
-            `Evaluating $T$ at the unit basis vectors:\n$T\\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix} = \\begin{pmatrix} ${a} \\\\ ${c} \\end{pmatrix}$ and $T\\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix} = \\begin{pmatrix} ${b} \\\\ ${d} \\end{pmatrix}$.\nArranging these as columns yields $A = ${rightLatex}$.`,
-            `计算单位基向量的像：\n$T\\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix} = \\begin{pmatrix} ${a} \\\\ ${c} \\end{pmatrix}$，$T\\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix} = \\begin{pmatrix} ${b} \\\\ ${d} \\end{pmatrix}$。\n将它们作为矩阵的列，可得标准矩阵 $A = ${rightLatex}$。`,
+          join(
+            label(1, "Read the first formula", "读第一个公式"),
+            t(
+              `The first output is $${poly([a, "x"], [b, "y"])}$, so row $1$ is $(${a}, ${b})$.`,
+              `第一个输出是 $${poly([a, "x"], [b, "y"])}$，所以第 $1$ 行是 $(${a}, ${b})$。`,
+            ),
+            para,
+            label(2, "Read the second formula", "读第二个公式"),
+            t(
+              `The second output is $${poly([c, "x"], [d, "y"])}$, so row $2$ is $(${c}, ${d})$. So`,
+              `第二个输出是 $${poly([c, "x"], [d, "y"])}$，所以第 $2$ 行是 $(${c}, ${d})$。所以`,
+            ),
+            shown(`A = ${rightLatex}`),
+            checked(
+              t(
+                `Evaluate $T$ at the basis vectors. $T(1, 0) = (${a}, ${c})$, which is column $1$ of $A$. $T(0, 1) = (${b}, ${d})$, which is column $2$.`,
+                `在基向量处求 $T$。$T(1, 0) = (${a}, ${c})$，正是 $A$ 的第 $1$ 列。$T(0, 1) = (${b}, ${d})$，正是第 $2$ 列。`,
+              ),
+            ),
           ),
+          [
+            t(
+              "This writes the coefficients of each formula down a column. Each formula fills a row.",
+              "这里把每个公式的系数竖着写成了一列。每个公式应该填一行。",
+            ),
+            t(
+              "This puts the coefficient of $y$ first. The columns follow the order $x$, then $y$.",
+              "这里把 $y$ 的系数放在前面。列的顺序是先 $x$ 后 $y$。",
+            ),
+            t("This changes two signs. The coefficients are copied unchanged.", "这里改变了两个符号。系数应该原样照抄。"),
+            t("This puts the second formula in the first row.", "这里把第二个公式放到了第一行。"),
+          ],
         );
       },
     },
@@ -1129,13 +1789,17 @@ export const linearTransformationsOfPointsAndLinesInThePlane: TopicDef = {
   encompasses: [],
   xp: 14,
   standards: ["CCSS.HSN.VM.C.11", "CCSS.HSN.VM.C.12"],
+  intro: t(
+    "You can find the standard matrix of a linear transformation. Applying it to a point means multiplying the matrix by the point's column of coordinates. A line through the origin is made of all multiples of one direction vector, and linearity sends those to all multiples of the transformed direction. So the image of such a line is found from one vector.\n\nTake\n\n$$A = \\begin{pmatrix} 1 & -1 \\\\ 2 & 1 \\end{pmatrix}$$\n\nThe point $(3, 1)$ goes to $(1 \\cdot 3 - 1 \\cdot 1, 2 \\cdot 3 + 1 \\cdot 1) = (2, 7)$. The line $y = -3x$ has direction $(1, -3)$, which goes to $(1 + 3, 2 - 3) = (4, -1)$. So the image is the line $y = -\\frac{1}{4}x$.",
+    "你会求线性变换的标准矩阵。把它作用在一个点上，就是用矩阵乘这个点的坐标列。过原点的直线由一个方向向量的所有倍数组成，线性把它们变成变换后方向的所有倍数。所以这种直线的像只需一个向量就能求出。\n\n取\n\n$$A = \\begin{pmatrix} 1 & -1 \\\\ 2 & 1 \\end{pmatrix}$$\n\n点 $(3, 1)$ 变到 $(1 \\cdot 3 - 1 \\cdot 1, 2 \\cdot 3 + 1 \\cdot 1) = (2, 7)$。直线 $y = -3x$ 的方向是 $(1, -3)$，它变到 $(1 + 3, 2 - 3) = (4, -1)$。所以像是直线 $y = -\\frac{1}{4}x$。",
+  ),
   knowledgePoints: [
     {
       id: "transforming-points-in-the-plane",
       title: t("Transforming points under a linear transformation", "线性变换作用下的点变换"),
       explanation: t(
-        "To find where a point goes, write it as a column vector and multiply it by the matrix; the product gives the coordinates of the image. A point $P(x, y)$ represented by column vector $\\begin{pmatrix} x \\\\ y \\end{pmatrix}$ transforms to $P'(x', y') = A \\begin{pmatrix} x \\\\ y \\end{pmatrix}$.",
-        "要找一个点被变换到哪里，把它写成列向量再用矩阵去乘；乘积给出像点的坐标。平面上的点 $P(x, y)$ 对应列向量 $\\begin{pmatrix} x \\\\ y \\end{pmatrix}$，在线性变换 $A$ 作用下的像为 $P'(x', y') = A \\begin{pmatrix} x \\\\ y \\end{pmatrix}$。",
+        "To find where a point goes, write it as a column vector and multiply it by the matrix; the product gives the coordinates of the image. A point $P(x, y)$ transforms to\n\n$$\\begin{pmatrix} x' \\\\ y' \\end{pmatrix} = A \\begin{pmatrix} x \\\\ y \\end{pmatrix}$$\n\n> **Watch out.** Row $1$ of the matrix gives the new $x$ and row $2$ the new $y$. Do not multiply the entries of the matrix by the coordinates one by one.",
+        "要找一个点被变换到哪里，把它写成列向量再用矩阵去乘；乘积给出像点的坐标。点 $P(x, y)$ 变到\n\n$$\\begin{pmatrix} x' \\\\ y' \\end{pmatrix} = A \\begin{pmatrix} x \\\\ y \\end{pmatrix}$$\n\n> **注意。** 矩阵的第 $1$ 行给出新的 $x$，第 $2$ 行给出新的 $y$。不要把矩阵元素与坐标逐个对应相乘。",
       ),
       generate(rng) {
         const a = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]);
@@ -1157,6 +1821,16 @@ export const linearTransformationsOfPointsAndLinesInThePlane: TopicDef = {
           [a, b],
           [c, d],
         ]);
+        const multiply = t(
+          `The new first coordinate comes from row $1$: $${dot([a, b], [x, y])}$. The new second coordinate comes from row $2$: $${dot([c, d], [x, y])}$.`,
+          `新的第一个坐标来自第 $1$ 行：$${dot([a, b], [x, y])}$。新的第二个坐标来自第 $2$ 行：$${dot([c, d], [x, y])}$。`,
+        );
+        const check = checked(
+          t(
+            `Use the columns instead. The image is $${paren(x)}$ times column $1$ plus $${paren(y)}$ times column $2$: $${paren(x)} \\cdot (${a}, ${c}) + ${paren(y)} \\cdot (${b}, ${d}) = (${x * a}, ${x * c}) + (${y * b}, ${y * d}) = (${xp}, ${yp})$.`,
+            `改用列来算。像是 $${paren(x)}$ 乘第 $1$ 列加 $${paren(y)}$ 乘第 $2$ 列：$${paren(x)} \\cdot (${a}, ${c}) + ${paren(y)} \\cdot (${b}, ${d}) = (${x * a}, ${x * c}) + (${y * b}, ${y * d}) = (${xp}, ${yp})$。`,
+          ),
+        );
 
         const isVector = rng.pick([true, false]);
         if (isVector) {
@@ -1167,9 +1841,15 @@ export const linearTransformationsOfPointsAndLinesInThePlane: TopicDef = {
             ),
             answer: [xp, yp],
             vector: true,
-            solution: t(
-              `Multiply the matrix by the vector:\n\n$$T(\\mathbf{v}) = A\\mathbf{v} = ${ALatex}\\begin{pmatrix} ${x} \\\\ ${y} \\end{pmatrix} = \\begin{pmatrix} (${a})(${x}) + (${b})(${y}) \\\\ (${c})(${x}) + (${d})(${y}) \\end{pmatrix} = ${vectorLatex([xp, yp])}$$.\n\nSo $T(\\mathbf{v}) = ${vectorLatex([xp, yp])}$.`,
-              `将标准矩阵与向量相乘：\n\n$$T(\\mathbf{v}) = A\\mathbf{v} = ${ALatex}\\begin{pmatrix} ${x} \\\\ ${y} \\end{pmatrix} = \\begin{pmatrix} (${a})(${x}) + (${b})(${y}) \\\\ (${c})(${x}) + (${d})(${y}) \\end{pmatrix} = ${vectorLatex([xp, yp])}$$.\n\n故像向量为 $T(\\mathbf{v}) = ${vectorLatex([xp, yp])}$。`,
+            solution: join(
+              label(1, "Set up the product", "列出乘积"),
+              t("The image is the matrix times the vector:", "像等于矩阵乘向量："),
+              shown(`T(\\mathbf{v}) = A\\mathbf{v} = ${ALatex}\\begin{pmatrix} ${x} \\\\ ${y} \\end{pmatrix}`),
+              para,
+              label(2, "Multiply row by row", "逐行相乘"),
+              multiply,
+              t(` So $T(\\mathbf{v}) = ${vectorLatex([xp, yp])}$.`, `所以 $T(\\mathbf{v}) = ${vectorLatex([xp, yp])}$。`),
+              check,
             ),
             wrong: [w1, w2, w3, w4],
           });
@@ -1182,9 +1862,15 @@ export const linearTransformationsOfPointsAndLinesInThePlane: TopicDef = {
           ),
           answer: [xp, yp],
           vars: ["x", "y"],
-          solution: t(
-            `Multiply the matrix by the point vector:\n\n$$A\\begin{pmatrix} x \\\\ y \\end{pmatrix} = ${ALatex}\\begin{pmatrix} ${x} \\\\ ${y} \\end{pmatrix} = \\begin{pmatrix} (${a})(${x}) + (${b})(${y}) \\\\ (${c})(${x}) + (${d})(${y}) \\end{pmatrix} = \\begin{pmatrix} ${xp} \\\\ ${yp} \\end{pmatrix}$$.\n\nSo the image point is $(${xp}, ${yp})$.`,
-            `将标准矩阵与点的坐标列向量相乘：\n\n$$A\\begin{pmatrix} x \\\\ y \\end{pmatrix} = ${ALatex}\\begin{pmatrix} ${x} \\\\ ${y} \\end{pmatrix} = \\begin{pmatrix} (${a})(${x}) + (${b})(${y}) \\\\ (${c})(${x}) + (${d})(${y}) \\end{pmatrix} = \\begin{pmatrix} ${xp} \\\\ ${yp} \\end{pmatrix}$$.\n\n故像点坐标为 $(${xp}, ${yp})$。`,
+          solution: join(
+            label(1, "Set up the product", "列出乘积"),
+            t("Write the point as a column and multiply it by the matrix:", "把点写成列向量，再用矩阵乘它："),
+            shown(`A\\begin{pmatrix} ${x} \\\\ ${y} \\end{pmatrix} = ${ALatex}\\begin{pmatrix} ${x} \\\\ ${y} \\end{pmatrix}`),
+            para,
+            label(2, "Multiply row by row", "逐行相乘"),
+            multiply,
+            t(` So the image point is $(${xp}, ${yp})$.`, `所以像点是 $(${xp}, ${yp})$。`),
+            check,
           ),
           wrong: [w1, w2, w3, w4],
         });
@@ -1194,8 +1880,8 @@ export const linearTransformationsOfPointsAndLinesInThePlane: TopicDef = {
       id: "transforming-lines-through-origin",
       title: t("Images of lines under linear transformations", "直线的线性变换与像方程"),
       explanation: t(
-        "A line through the origin with direction vector $\\mathbf{v} = \\begin{pmatrix} 1 \\\\ m \\end{pmatrix}$ transforms under matrix $A$ to a line through the origin directed along $A\\mathbf{v} = \\begin{pmatrix} u \\\\ v \\end{pmatrix}$. If $u \\ne 0$, its equation is $y = \\frac{v}{u}x$.",
-        "过原点且方向向量为 $\\mathbf{v} = \\begin{pmatrix} 1 \\\\ m \\end{pmatrix}$ 的直线 $y = mx$，在矩阵 $A$ 作用下的像仍为过原点的直线，其方向向量为 $A\\mathbf{v} = \\begin{pmatrix} u \\\\ v \\end{pmatrix}$。若 $u \\ne 0$，其方程为 $y = \\frac{v}{u}x$。",
+        "A line through the origin with direction vector $\\mathbf{v} = (1, m)$ transforms under matrix $A$ to a line through the origin directed along $A\\mathbf{v} = (u, v)$. If $u \\ne 0$, its equation is $y = \\frac{v}{u}x$.\n\n> **Watch out.** Transform a direction vector, not the slope. The new slope is $\\frac{v}{u}$, rise over run, and it is usually not $m$.",
+        "过原点且方向向量为 $\\mathbf{v} = (1, m)$ 的直线 $y = mx$，在矩阵 $A$ 作用下的像仍为过原点的直线，其方向向量为 $A\\mathbf{v} = (u, v)$。若 $u \\ne 0$，其方程为 $y = \\frac{v}{u}x$。\n\n> **注意。** 要变换方向向量，而不是斜率。新的斜率是 $\\frac{v}{u}$，即纵向变化除以横向变化，通常不等于 $m$。",
       ),
       generate(rng) {
         const a = rng.pick([1, 2, 3, 4]);
@@ -1228,10 +1914,40 @@ export const linearTransformationsOfPointsAndLinesInThePlane: TopicDef = {
           ),
           t(`$${rightEq}$`, `$${rightEq}$`),
           [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`), t(`$${w4}$`, `$${w4}$`)],
-          t(
-            `The line $y = ${poly([m, "x"])}$ has direction vector $\\mathbf{v} = \\begin{pmatrix} 1 \\\\ ${m} \\end{pmatrix}$. Applying the matrix transformation:\n\n$$A\\mathbf{v} = ${ALatex}\\begin{pmatrix} 1 \\\\ ${m} \\end{pmatrix} = \\begin{pmatrix} ${u} \\\\ ${v} \\end{pmatrix}$$.\n\nSince the line passes through the origin $(0, 0)$, its slope is $\\frac{${v}}{${u}} = ${slopeQ.toLatex()}$, giving the equation $${rightEq}$.`,
-            `直线 $y = ${poly([m, "x"])}$ 的方向向量为 $\\mathbf{v} = \\begin{pmatrix} 1 \\\\ ${m} \\end{pmatrix}$。对方向向量作用矩阵变换：\n\n$$A\\mathbf{v} = ${ALatex}\\begin{pmatrix} 1 \\\\ ${m} \\end{pmatrix} = \\begin{pmatrix} ${u} \\\\ ${v} \\end{pmatrix}$$.\n\n由于像过原点 $(0, 0)$，斜率为 $\\frac{${v}}{${u}} = ${slopeQ.toLatex()}$，故像方程为 $${rightEq}$。`,
+          join(
+            label(1, "Take a direction vector", "取方向向量"),
+            t(
+              `The line $y = ${poly([m, "x"])}$ passes through the origin and through the point $(1, ${m})$. So the vector $(1, ${m})$ is a direction vector.`,
+              `直线 $y = ${poly([m, "x"])}$ 过原点，也过点 $(1, ${m})$。所以向量 $(1, ${m})$ 是方向向量。`,
+            ),
+            para,
+            label(2, "Transform it", "变换它"),
+            t(
+              `Row $1$ gives $${dot([a, b], [1, m])}$. Row $2$ gives $${dot([c, d], [1, m])}$. So the new direction is $(${u}, ${v})$.`,
+              `第 $1$ 行得 $${dot([a, b], [1, m])}$。第 $2$ 行得 $${dot([c, d], [1, m])}$。所以新的方向是 $(${u}, ${v})$。`,
+            ),
+            para,
+            label(3, "Write the line", "写出直线"),
+            t(
+              `The slope is the second component divided by the first, $${paren(v)} \\div ${paren(u)} = ${slopeQ.toLatex()}$. The origin stays fixed, so the image is the line $${rightEq}$.`,
+              `斜率是第二个分量除以第一个分量，$${paren(v)} \\div ${paren(u)} = ${slopeQ.toLatex()}$。原点不动，所以像是直线 $${rightEq}$。`,
+            ),
+            checked(
+              t(
+                `Try another point of the original line, $(2, ${2 * m})$. Its image has coordinates $${dot([a, b], [2, 2 * m])}$ and $${dot([c, d], [2, 2 * m])}$. On the answer line, $x = ${2 * u}$ gives $y = ${slopeQ.toLatex()} \\cdot ${paren(2 * u)} = ${2 * v}$, so the image lies on it.`,
+                `再取原直线上的点 $(2, ${2 * m})$。它的像的坐标是 $${dot([a, b], [2, 2 * m])}$ 和 $${dot([c, d], [2, 2 * m])}$。在答案直线上，$x = ${2 * u}$ 时 $y = ${slopeQ.toLatex()} \\cdot ${paren(2 * u)} = ${2 * v}$，所以像在这条直线上。`,
+              ),
+            ),
           ),
+          [
+            t("The sign of the slope is wrong.", "斜率的符号错了。"),
+            t(
+              "This divides the components the wrong way. The slope is the second component over the first.",
+              "这里两个分量除反了。斜率是第二个分量除以第一个分量。",
+            ),
+            t("This keeps the original slope, but the matrix changes the direction.", "这里保留了原来的斜率，但矩阵改变了方向。"),
+            t("This adds $1$ to the slope. Nothing in the transformation does that.", "这里把斜率加了 $1$。变换中没有这一步。"),
+          ],
         );
       },
     },
@@ -1250,14 +1966,18 @@ export const linearTransformationsOfObjectsInThePlane: TopicDef = {
   encompasses: [],
   xp: 14,
   standards: ["CCSS.HSN.VM.C.12"],
+  intro: t(
+    "You can transform points and lines with a matrix. A linear transformation sends line segments to line segments, so a polygon goes to the polygon whose vertices are the images of its vertices. Only the corners need to be transformed. Averages are kept too, so the centroid of the image is the image of the centroid.\n\nUnder\n\n$$M = \\begin{pmatrix} 2 & 1 \\\\ 0 & 1 \\end{pmatrix}$$\n\nthe unit square with corners $(0, 0)$, $(1, 0)$, $(1, 1)$ and $(0, 1)$ goes to the parallelogram with corners $(0, 0)$, $(2, 0)$, $(3, 1)$ and $(1, 1)$. The triangle with vertices $(0, 0)$, $(3, 0)$ and $(0, 3)$ has centroid $(1, 1)$. Its image has vertices $(0, 0)$, $(6, 0)$ and $(3, 3)$, with centroid $(3, 1)$, and indeed $M$ sends $(1, 1)$ to $(3, 1)$.",
+    "你会用矩阵变换点和直线。线性变换把线段变成线段，所以多边形变成以原顶点的像为顶点的多边形。只需变换各个角。平均也保持不变，所以像的重心就是重心的像。\n\n在\n\n$$M = \\begin{pmatrix} 2 & 1 \\\\ 0 & 1 \\end{pmatrix}$$\n\n作用下，顶点为 $(0, 0)$，$(1, 0)$，$(1, 1)$，$(0, 1)$ 的单位正方形变成顶点为 $(0, 0)$，$(2, 0)$，$(3, 1)$，$(1, 1)$ 的平行四边形。顶点为 $(0, 0)$，$(3, 0)$，$(0, 3)$ 的三角形重心是 $(1, 1)$。它的像的顶点是 $(0, 0)$，$(6, 0)$，$(3, 3)$，重心是 $(3, 1)$，而 $M$ 确实把 $(1, 1)$ 变到 $(3, 1)$。",
+  ),
   knowledgePoints: [
     {
       id: "transforming-vertices-of-polygons",
       figure: precalculusDrawings2["linear-transformations-of-objects-in-the-plane#transforming-vertices-of-polygons"],
       title: t("Transforming polygon vertices", "变换多边形的各个顶点"),
       explanation: t(
-        "Because linear transformations map line segments to line segments, the image of a polygon is the polygon whose vertices are the transformed original vertices.",
-        "由于线性变换将线段映射为线段，因此多边形在线性变换下的像，就是以变换后的原顶点为新顶点的多边形。",
+        "Because linear transformations map line segments to line segments, the image of a polygon is the polygon whose vertices are the transformed original vertices.\n\n> **Watch out.** Transform each vertex by multiplying the matrix by it. Adding matrix entries to the coordinates is not a transformation by the matrix.",
+        "由于线性变换将线段映射为线段，因此多边形在线性变换下的像，就是以变换后的原顶点为新顶点的多边形。\n\n> **注意。** 每个顶点都要用矩阵去乘。把矩阵元素加到坐标上，并不是用这个矩阵作变换。",
       ),
       generate(rng) {
         const A: Mat2 = [
@@ -1279,6 +1999,7 @@ export const linearTransformationsOfObjectsInThePlane: TopicDef = {
         const w4: Vec2 = [orig[0] + 1, orig[1] + 1];
 
         const MLatex = mat2Latex(A);
+        const [x, y] = orig;
 
         return pointProblem({
           prompt: t(
@@ -1287,9 +2008,24 @@ export const linearTransformationsOfObjectsInThePlane: TopicDef = {
           ),
           answer: [xp, yp],
           vars: ["x", "y"],
-          solution: t(
-            `Multiply the transformation matrix $M$ by the column vector of vertex $${targetVertex}(${orig[0]}, ${orig[1]})$:\n\n$$M \\begin{pmatrix} ${orig[0]} \\\\ ${orig[1]} \\end{pmatrix} = ${MLatex}\\begin{pmatrix} ${orig[0]} \\\\ ${orig[1]} \\end{pmatrix} = \\begin{pmatrix} ${xp} \\\\ ${yp} \\end{pmatrix}$$.\n\nThus $${targetVertex}'$ has coordinates $(${xp}, ${yp})$.`,
-            `将变换矩阵 $M$ 与顶点 $${targetVertex}(${orig[0]}, ${orig[1]})$ 的坐标列向量相乘：\n\n$$M \\begin{pmatrix} ${orig[0]} \\\\ ${orig[1]} \\end{pmatrix} = ${MLatex}\\begin{pmatrix} ${orig[0]} \\\\ ${orig[1]} \\end{pmatrix} = \\begin{pmatrix} ${xp} \\\\ ${yp} \\end{pmatrix}$$.\n\n故 $${targetVertex}'$ 的坐标为 $(${xp}, ${yp})$。`,
+          solution: join(
+            label(1, "Pick out the vertex", "找出顶点"),
+            t(
+              `Only $${targetVertex}(${x}, ${y})$ is needed. Its image is $M$ times its column of coordinates.`,
+              `只需要 $${targetVertex}(${x}, ${y})$。它的像是 $M$ 乘它的坐标列。`,
+            ),
+            para,
+            label(2, "Multiply row by row", "逐行相乘"),
+            t(
+              `Row $1$ gives $${dot(A[0], orig)}$. Row $2$ gives $${dot(A[1], orig)}$. So $${targetVertex}' = (${xp}, ${yp})$.`,
+              `第 $1$ 行得 $${dot(A[0], orig)}$。第 $2$ 行得 $${dot(A[1], orig)}$。所以 $${targetVertex}' = (${xp}, ${yp})$。`,
+            ),
+            checked(
+              t(
+                `Use the columns instead. $${paren(x)} \\cdot (${A[0][0]}, ${A[1][0]}) + ${paren(y)} \\cdot (${A[0][1]}, ${A[1][1]}) = (${x * A[0][0]}, ${x * A[1][0]}) + (${y * A[0][1]}, ${y * A[1][1]}) = (${xp}, ${yp})$.`,
+                `改用列来算。$${paren(x)} \\cdot (${A[0][0]}, ${A[1][0]}) + ${paren(y)} \\cdot (${A[0][1]}, ${A[1][1]}) = (${x * A[0][0]}, ${x * A[1][0]}) + (${y * A[0][1]}, ${y * A[1][1]}) = (${xp}, ${yp})$。`,
+              ),
+            ),
           ),
           wrong: [w1, w2, w3, w4],
         });
@@ -1299,8 +2035,8 @@ export const linearTransformationsOfObjectsInThePlane: TopicDef = {
       id: "centroid-and-midpoints-of-transformed-shapes",
       title: t("Centroid preservation under linear transformations", "线性变换下重心的保真性"),
       explanation: t(
-        "Linear transformations preserve barycentric combinations and centroids: the centroid of the transformed figure $T(S)$ is the image of the centroid of $S$, i.e., $G' = T(G)$.",
-        "线性变换保持重心坐标与形心：变换后图形 $T(S)$ 的重心，就是原图形 $S$ 重心的像，即 $G' = T(G)$。",
+        "Linear transformations preserve barycentric combinations and centroids: the centroid of the transformed figure $T(S)$ is the image of the centroid of $S$, i.e., $G' = T(G)$.\n\n> **Watch out.** This works because the centroid is an average of the vertices and a linear map respects averages. You do not need the vertices, only $G$.",
+        "线性变换保持重心坐标与形心：变换后图形 $T(S)$ 的重心，就是原图形 $S$ 重心的像，即 $G' = T(G)$。\n\n> **注意。** 这是因为重心是顶点的平均，而线性映射保持平均。不需要知道顶点，只要 $G$。",
       ),
       generate(rng) {
         const gx = rng.pick([-3, -2, -1, 1, 2, 3]);
@@ -1319,6 +2055,15 @@ export const linearTransformationsOfObjectsInThePlane: TopicDef = {
         const w4: Vec2 = [gx, gy];
 
         const MLatex = mat2Latex(M);
+        const vertices: Vec2[] = [
+          [gx + 1, gy + 1],
+          [gx - 2, gy + 1],
+          [gx + 1, gy - 2],
+        ];
+        const images = vertices.map((p): Vec2 => [M[0][0] * p[0] + M[0][1] * p[1], M[1][0] * p[0] + M[1][1] * p[1]]);
+        const sx = images.reduce((s, p) => s + p[0], 0);
+        const sy = images.reduce((s, p) => s + p[1], 0);
+        const list = (ps: readonly Vec2[]) => ps.map((p) => `(${p[0]}, ${p[1]})`).join(", ");
 
         return pointProblem({
           prompt: t(
@@ -1327,9 +2072,24 @@ export const linearTransformationsOfObjectsInThePlane: TopicDef = {
           ),
           answer: [gpx, gpy],
           vars: ["x", "y"],
-          solution: t(
-            `Because linear transformations preserve centroids, $G' = M G$:\n\n$$G' = ${MLatex}\\begin{pmatrix} ${gx} \\\\ ${gy} \\end{pmatrix} = \\begin{pmatrix} ${gpx} \\\\ ${gpy} \\end{pmatrix}$$.\n\nSo $G' = (${gpx}, ${gpy})$.`,
-            `由于线性变换保持图形的重心性质，$G' = M G$：\n\n$$G' = ${MLatex}\\begin{pmatrix} ${gx} \\\\ ${gy} \\end{pmatrix} = \\begin{pmatrix} ${gpx} \\\\ ${gpy} \\end{pmatrix}$$.\n\n因此 $G' = (${gpx}, ${gpy})$。`,
+          solution: join(
+            label(1, "Send the centroid along", "把重心一起变换"),
+            t(
+              "The centroid is the average of the vertices, and a linear map respects averages. So $G' = MG$.",
+              "重心是顶点的平均，线性映射保持平均。所以 $G' = MG$。",
+            ),
+            para,
+            label(2, "Multiply", "相乘"),
+            t(
+              `Row $1$ gives $${dot(M[0], [gx, gy])}$. Row $2$ gives $${dot(M[1], [gx, gy])}$. So $G' = (${gpx}, ${gpy})$.`,
+              `第 $1$ 行得 $${dot(M[0], [gx, gy])}$。第 $2$ 行得 $${dot(M[1], [gx, gy])}$。所以 $G' = (${gpx}, ${gpy})$。`,
+            ),
+            checked(
+              t(
+                `Try one triangle with this centroid, with vertices $${list(vertices)}$. Their images are $${list(images)}$. The average of the images is $(\\frac{${sx}}{3}, \\frac{${sy}}{3}) = (${gpx}, ${gpy})$.`,
+                `取一个以 $G$ 为重心的三角形，顶点为 $${list(vertices)}$。它们的像是 $${list(images)}$。像的平均是 $(\\frac{${sx}}{3}, \\frac{${sy}}{3}) = (${gpx}, ${gpy})$。`,
+              ),
+            ),
           ),
           wrong: [w1, w2, w3, w4],
         });

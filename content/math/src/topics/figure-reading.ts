@@ -14,6 +14,7 @@ import { multivariableDrawings7 } from "../explanation-drawings-multivariable-7.
 import { probabilityDrawings1 } from "../explanation-drawings-probability-and-statistics-1.ts";
 
 import { numberProblem } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { pickChoice as choiceFrom } from "./grade-4-fractions.ts";
 
 // ---------------------------------------------------------------------------
@@ -1031,25 +1032,41 @@ const matrixFromUnitSquare: KnowledgePointDef = {
   id: "the-matrix-from-the-image-of-the-unit-square",
   title: t("The matrix from the image of the unit square", "由单位正方形的像求矩阵"),
   explanation: t(
-    "A linear transformation of the plane is fixed by where it sends the basis vectors, and the columns of its matrix are those images. So the unit square goes to the parallelogram with sides $T(\\mathbf{e}_1)$ and $T(\\mathbf{e}_2)$, and the matrix can be read straight from a drawing: the first column is the tip of $T(\\mathbf{e}_1)$ and the second is the tip of $T(\\mathbf{e}_2)$.",
-    "平面上的线性变换由基向量的像决定，其矩阵的各列就是这些像。所以单位正方形变成以 $T(\\mathbf{e}_1)$ 和 $T(\\mathbf{e}_2)$ 为边的平行四边形，矩阵可以直接从图上读出：第一列是 $T(\\mathbf{e}_1)$ 的终点，第二列是 $T(\\mathbf{e}_2)$ 的终点。",
+    "A linear transformation of the plane is fixed by where it sends the basis vectors, and the columns of its matrix are those images. So the unit square goes to the parallelogram with sides $T(\\mathbf{e}_1)$ and $T(\\mathbf{e}_2)$, and the matrix can be read straight from a drawing: the first column is the tip of $T(\\mathbf{e}_1)$ and the second is the tip of $T(\\mathbf{e}_2)$.\n\n> **Watch out.** Each tip is a column, not a row, and the image of $\\mathbf{e}_1$ comes first.",
+    "平面上的线性变换由基向量的像决定，其矩阵的各列就是这些像。所以单位正方形变成以 $T(\\mathbf{e}_1)$ 和 $T(\\mathbf{e}_2)$ 为边的平行四边形，矩阵可以直接从图上读出：第一列是 $T(\\mathbf{e}_1)$ 的终点，第二列是 $T(\\mathbf{e}_2)$ 的终点。\n\n> **注意。** 每个终点是一列，不是一行，并且 $\\mathbf{e}_1$ 的像在前。",
   ),
   figure: imageOfUnitSquare(2, 1, 0, 2),
   generate(rng: Rng): Problem {
     const [a, b, c, d] = invertibleEntries(rng);
+    const wrong = [matrix(a, c, b, d), matrix(b, a, d, c), matrix(c, d, a, b)];
     return withFigure(
-      pickChoice(
-        rng,
-        t(
-          "The drawing shows the unit square and its image under a linear transformation $T$. What is the standard matrix of $T$?",
-          "图中是单位正方形及其在线性变换 $T$ 下的像。$T$ 的标准矩阵是什么？",
+      reasoned(
+        pickChoice(
+          rng,
+          t(
+            "The drawing shows the unit square and its image under a linear transformation $T$. What is the standard matrix of $T$?",
+            "图中是单位正方形及其在线性变换 $T$ 下的像。$T$ 的标准矩阵是什么？",
+          ),
+          math(matrix(a, b, c, d)),
+          wrong.map(math),
+          t(
+            `**Step 1: Read the first arrow.** The tip of $T(\\mathbf{e}_1)$ is at $(${a}, ${c})$, so column 1 of the matrix is $(${a}, ${c})$.\n\n**Step 2: Read the second arrow.** The tip of $T(\\mathbf{e}_2)$ is at $(${b}, ${d})$, so column 2 is $(${b}, ${d})$. The matrix is $${matrix(a, b, c, d)}$.\n\n**Check.** The corner $(1, 1)$ of the square is $\\mathbf{e}_1 + \\mathbf{e}_2$, so its image is the sum of the columns, $(${a + b}, ${c + d})$. This is the far corner of the shaded parallelogram.`,
+            `**第一步：读第一个箭头。**$T(\\mathbf{e}_1)$ 的终点在 $(${a}, ${c})$，所以矩阵的第 1 列是 $(${a}, ${c})$。\n\n**第二步：读第二个箭头。**$T(\\mathbf{e}_2)$ 的终点在 $(${b}, ${d})$，所以第 2 列是 $(${b}, ${d})$。矩阵是 $${matrix(a, b, c, d)}$。\n\n**检验。**正方形的角 $(1, 1)$ 是 $\\mathbf{e}_1 + \\mathbf{e}_2$，所以它的像是两列之和 $(${a + b}, ${c + d})$。这正是阴影平行四边形的对角顶点。`,
+          ),
         ),
-        math(matrix(a, b, c, d)),
-        [math(matrix(a, c, b, d)), math(matrix(b, a, d, c)), math(matrix(c, d, a, b))],
-        t(
-          `Read the tips: $T(\\mathbf{e}_1) = (${a}, ${c})$ and $T(\\mathbf{e}_2) = (${b}, ${d})$. These are the columns of the matrix, in this order.`,
-          `读出终点：$T(\\mathbf{e}_1) = (${a}, ${c})$，$T(\\mathbf{e}_2) = (${b}, ${d})$。它们依次是矩阵的列。`,
-        ),
+        [
+          [`$${wrong[0]}$`, "This writes the tips as rows. They are the columns.", "这里把终点写成了行。它们应该是列。"],
+          [
+            `$${wrong[1]}$`,
+            "This puts the tip of $T(\\mathbf{e}_2)$ in the first column. The image of $\\mathbf{e}_1$ comes first.",
+            "这里把 $T(\\mathbf{e}_2)$ 的终点放在了第一列。$\\mathbf{e}_1$ 的像应该在前。",
+          ],
+          [
+            `$${wrong[2]}$`,
+            "This swaps the two rows. The first row holds the $x$-coordinates of the tips.",
+            "这里交换了两行。第一行应该是各终点的横坐标。",
+          ],
+        ],
       ),
       imageOfUnitSquare(a, b, c, d),
     );

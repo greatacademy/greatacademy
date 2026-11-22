@@ -1357,26 +1357,61 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "the-inverse-of-a-product",
       ["The inverse of a product", "积的逆"],
       [
-        "To undo a product, undo the last factor first, so $(AB)^{-1} = B^{-1}A^{-1}$. Keeping the original order would not cancel the matrices next to each other.",
-        "要还原一个积，先还原最后一个因子，所以 $(AB)^{-1} = B^{-1}A^{-1}$。保持原来的次序，相邻的矩阵就不能抵消。",
+        "To undo a product, undo the last factor first, so $(AB)^{-1} = B^{-1}A^{-1}$. Keeping the original order would not cancel the matrices next to each other.\n\n> **Watch out.** Reverse the order and invert every factor. Inverting without reversing, or reversing without inverting, does not give the inverse.",
+        "要还原一个积，先还原最后一个因子，所以 $(AB)^{-1} = B^{-1}A^{-1}$。保持原来的次序，相邻的矩阵就不能抵消。\n\n> **注意。** 既要颠倒次序，又要对每个因子求逆。只求逆不颠倒，或只颠倒不求逆，都得不到逆矩阵。",
       ],
       (rng) => {
         const [A, B, C] = rng.sample(["A", "B", "C", "D", "M", "N", "P", "Q"], 3) as [string, string, string];
         const three = rng.bool();
-        return chooseFilled(
-          rng,
-          [
-            `The matrices are invertible. Which expression equals $(${three ? `${A}${B}${C}` : `${A}${B}`})^{-1}$?`,
-            `这些矩阵都可逆。哪个式子等于 $(${three ? `${A}${B}${C}` : `${A}${B}`})^{-1}$？`,
-          ],
-          three ? `${C}^{-1}${B}^{-1}${A}^{-1}` : `${B}^{-1}${A}^{-1}`,
-          three
-            ? [`${A}^{-1}${B}^{-1}${C}^{-1}`, `${A}^{-1}${C}^{-1}${B}^{-1}`, `${C}^{-1}${A}^{-1}${B}^{-1}`]
-            : [`${A}^{-1}${B}^{-1}`, `${B}${A}`, `-${A}${B}`],
-          [
-            `The inverses appear in reverse order, so the neighbors cancel one pair at a time.`,
-            `逆矩阵按相反次序出现，这样相邻的一对对抵消。`,
-          ],
+        const product = three ? `${A}${B}${C}` : `${A}${B}`;
+        const right = three ? `${C}^{-1}${B}^{-1}${A}^{-1}` : `${B}^{-1}${A}^{-1}`;
+        const wrong = three
+          ? [`${A}^{-1}${B}^{-1}${C}^{-1}`, `${A}^{-1}${C}^{-1}${B}^{-1}`, `${C}^{-1}${A}^{-1}${B}^{-1}`]
+          : [`${A}^{-1}${B}^{-1}`, `${B}${A}`, `-${A}${B}`];
+        const cancel = three
+          ? `${product}${right} = ${A}${B}(${C}${C}^{-1})${B}^{-1}${A}^{-1} = ${A}(${B}${B}^{-1})${A}^{-1} = ${A}${A}^{-1} = I`
+          : `${product}${right} = ${A}(${B}${B}^{-1})${A}^{-1} = ${A}${A}^{-1} = I`;
+        const whys: [string, string][] = three
+          ? [
+              [
+                "This keeps the original order, so no factor stands next to its own inverse.",
+                "这里保持了原来的次序，没有一个因子挨着它自己的逆。",
+              ],
+              [
+                `This reverses only part of the order. The inverse of the last factor, $${C}$, has to come first.`,
+                `这里只颠倒了一部分次序。最后一个因子 $${C}$ 的逆必须放在最前面。`,
+              ],
+              [
+                `This moves only $${C}^{-1}$ to the front. The inverse of the first factor, $${A}$, has to come last.`,
+                `这里只把 $${C}^{-1}$ 移到了前面。第一个因子 $${A}$ 的逆必须放在最后。`,
+              ],
+            ]
+          : [
+              [
+                "This keeps the original order, so no factor stands next to its own inverse.",
+                "这里保持了原来的次序，没有一个因子挨着它自己的逆。",
+              ],
+              ["This reverses the order but forgets to invert the factors.", "这里颠倒了次序，但忘了对因子求逆。"],
+              [
+                "Changing the sign is not inverting. A negative of a matrix is not its inverse.",
+                "改变符号不是求逆。矩阵的相反矩阵不是它的逆。",
+              ],
+            ];
+        return reasoned(
+          chooseFilled(
+            rng,
+            [
+              `The matrices are invertible. Which expression equals $(${product})^{-1}$?`,
+              `这些矩阵都可逆。哪个式子等于 $(${product})^{-1}$？`,
+            ],
+            right,
+            wrong,
+            [
+              `**Step 1: Undo the last factor first.** In $${product}X = I$, the factor that touches $X$ is the last one, $${three ? C : B}$. So $X$ has to start with its inverse.\n\n**Step 2: Work outward.** Each factor is undone in turn, from the last to the first. So $(${product})^{-1} = ${right}$.\n\n**Check.** Multiply and cancel the neighbors from the middle out. $${cancel}$.`,
+              `**第一步：先还原最后一个因子。**在 $${product}X = I$ 中，挨着 $X$ 的是最后一个因子 $${three ? C : B}$。所以 $X$ 必须以它的逆开头。\n\n**第二步：由内向外。**从最后一个因子到第一个因子，依次还原。所以 $(${product})^{-1} = ${right}$。\n\n**检验。**相乘，并从中间向外抵消相邻的一对。$${cancel}$。`,
+            ],
+          ),
+          wrong.map((w, i) => [`$${w}$`, whys[i]![0], whys[i]![1]] as const),
         );
       },
     ),
@@ -1386,13 +1421,14 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "the-inverse-of-a-diagonal-matrix",
       ["The inverse of a diagonal matrix", "对角矩阵的逆"],
       [
-        "A diagonal matrix is undone by inverting each diagonal entry, as the cofactor method confirms. A zero on the diagonal would make the determinant zero, and no inverse would exist.",
-        "对角矩阵的逆就是把每个对角元素取倒数，余子式法也证实了这一点。对角线上有零时行列式为零，逆不存在。",
+        "A diagonal matrix is undone by inverting each diagonal entry, as the cofactor method confirms. A zero on the diagonal would make the determinant zero, and no inverse would exist.\n\n> **Watch out.** The inverse holds the reciprocals $\\frac{1}{a}$ of the diagonal entries, not $-a$ or $a$ itself. Only a diagonal matrix can be inverted entry by entry like this.",
+        "对角矩阵的逆就是把每个对角元素取倒数，余子式法也证实了这一点。对角线上有零时行列式为零，逆不存在。\n\n> **注意。** 逆矩阵里是对角元素的倒数 $\\frac{1}{a}$，不是 $-a$，也不是 $a$ 本身。只有对角矩阵才能这样逐个元素求逆。",
       ],
       (rng) => {
         const [a, b, c] = [rng.int(2, 9), rng.int(2, 9), rng.int(2, 9)];
         const pos = rng.int(0, 2);
         const value = [a, b, c][pos]!;
+        const [o1, o2] = [a, b, c].filter((_, i) => i !== pos) as [number, number];
         return fraction(
           [
             `Find the entry in row ${pos + 1}, column ${pos + 1} of the inverse of $${mat([a, 0, 0], [0, b, 0], [0, 0, c])}$.`,
@@ -1400,7 +1436,10 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
           ],
           Q.of(1, value),
           [Q.of(value), Q.of(-1, value), Q.of(1, a * b * c)],
-          [`Each diagonal entry is inverted, so it is $${frac(1, value)}$.`, `每个对角元素取倒数，所以是 $${frac(1, value)}$。`],
+          [
+            `**Step 1: Find the determinant.** The matrix is diagonal, so its determinant is the product of the diagonal entries, $${a} \\cdot ${b} \\cdot ${c} = ${a * b * c}$.\n\n**Step 2: Find the cofactor.** Deleting row ${pos + 1} and column ${pos + 1} leaves a diagonal $2 \\times 2$ matrix, so the minor is $${o1} \\cdot ${o2} = ${o1 * o2}$. Its sign is $+$, since the row and column numbers are equal. So the entry is $${o1 * o2}$ divided by $${a * b * c}$, which is $${frac(1, value)}$.\n\n**Check.** The product of two diagonal matrices multiplies matching diagonal entries. Here $${value} \\cdot ${frac(1, value)} = 1$, the matching entry of $I$.`,
+            `**第一步：求行列式。**这是对角矩阵，所以行列式是对角元素之积，$${a} \\cdot ${b} \\cdot ${c} = ${a * b * c}$。\n\n**第二步：求代数余子式。**划去第 ${pos + 1} 行和第 ${pos + 1} 列，剩下一个 $2 \\times 2$ 对角矩阵，所以余子式是 $${o1} \\cdot ${o2} = ${o1 * o2}$。行号与列号相同，符号是 $+$。所以这个元素是 $${o1 * o2}$ 除以 $${a * b * c}$，即 $${frac(1, value)}$。\n\n**检验。**两个对角矩阵相乘，就是对应的对角元素相乘。这里 $${value} \\cdot ${frac(1, value)} = 1$，正是 $I$ 中对应的元素。`,
+          ],
         );
       },
     ),
@@ -1410,8 +1449,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "solving-with-a-computed-inverse",
       ["Solving with a computed inverse", "用求出的逆矩阵解"],
       [
-        "Multiplying both sides by the inverse on the left gives $\\mathbf{x} = A^{-1}\\mathbf{b}$. For a $2 \\times 2$ system, the inverse comes from swapping the diagonal, negating the rest and dividing by the determinant.",
-        "两边左乘逆矩阵，得 $\\mathbf{x} = A^{-1}\\mathbf{b}$。对 $2 \\times 2$ 方程组，逆矩阵由交换对角元素、其余取负、再除以行列式得到。",
+        "Multiplying both sides by the inverse on the left gives $\\mathbf{x} = A^{-1}\\mathbf{b}$. For a $2 \\times 2$ system, the inverse comes from swapping the diagonal, negating the rest and dividing by the determinant.\n\n> **Watch out.** Multiply $\\mathbf{b}$ by $A^{-1}$ one row at a time: row $1$ gives $x$ and row $2$ gives $y$. Multiplying by $A$ itself solves nothing.",
+        "两边左乘逆矩阵，得 $\\mathbf{x} = A^{-1}\\mathbf{b}$。对 $2 \\times 2$ 方程组，逆矩阵由交换对角元素、其余取负、再除以行列式得到。\n\n> **注意。** 用 $A^{-1}$ 逐行乘 $\\mathbf{b}$：第 $1$ 行给出 $x$，第 $2$ 行给出 $y$。用 $A$ 本身去乘解不出任何东西。",
       ],
       (rng) => {
         const row = rng.pick<[number, number, number, number]>([
@@ -1424,22 +1463,24 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
           [2, 3, 1, 2],
           [3, 5, 1, 2],
           [4, 1, 3, 1],
-          [7, 4, 2, 1],
+          [7, 3, 2, 1],
         ]);
         const [a, b, c, d] = row;
         const x = nz(rng, 9);
         const y = nz(rng, 9);
+        const e = a * x + b * y;
+        const f = c * x + d * y;
         const askX = rng.bool();
         return integer(
           [
-            `Using the inverse of the coefficient matrix, which has determinant 1, solve $${mat([a, b], [c, d])}${mat(["x"], ["y"])} = ${mat([a * x + b * y], [c * x + d * y])}$. What is $${askX ? "x" : "y"}$?`,
-            `用系数矩阵（行列式为 1）的逆解 $${mat([a, b], [c, d])}${mat(["x"], ["y"])} = ${mat([a * x + b * y], [c * x + d * y])}$。$${askX ? "x" : "y"}$ 是多少？`,
+            `Using the inverse of the coefficient matrix, which has determinant 1, solve $${mat([a, b], [c, d])}${mat(["x"], ["y"])} = ${mat([e], [f])}$. What is $${askX ? "x" : "y"}$?`,
+            `用系数矩阵（行列式为 1）的逆解 $${mat([a, b], [c, d])}${mat(["x"], ["y"])} = ${mat([e], [f])}$。$${askX ? "x" : "y"}$ 是多少？`,
           ],
           askX ? x : y,
-          [askX ? y : x, a * x + b * y, c * x + d * y],
+          [askX ? y : x, e, f],
           [
-            `The inverse is $${mat([d, -b], [-c, a])}$, and multiplying gives $x = ${x}$ and $y = ${y}$.`,
-            `逆矩阵是 $${mat([d, -b], [-c, a])}$，相乘得 $x = ${x}$，$y = ${y}$。`,
+            `**Step 1: Invert the matrix.** The determinant is $${a} \\cdot ${d} - ${b} \\cdot ${c} = 1$, so the inverse is the adjugate, $${mat([d, -b], [-c, a])}$.\n\n**Step 2: Multiply.** Row 1 of the inverse gives $x = ${d} \\cdot ${paren(e)} - ${b} \\cdot ${paren(f)} = ${x}$. Row 2 gives $y = -${c} \\cdot ${paren(e)} + ${a} \\cdot ${paren(f)} = ${y}$.\n\n**Check.** Substitute back. The first equation gives $${a} \\cdot ${paren(x)} + ${b} \\cdot ${paren(y)} = ${e}$. The second gives $${c} \\cdot ${paren(x)} + ${d} \\cdot ${paren(y)} = ${f}$.`,
+            `**第一步：求逆矩阵。**行列式是 $${a} \\cdot ${d} - ${b} \\cdot ${c} = 1$，所以逆矩阵就是伴随矩阵 $${mat([d, -b], [-c, a])}$。\n\n**第二步：相乘。**逆矩阵的第 1 行给出 $x = ${d} \\cdot ${paren(e)} - ${b} \\cdot ${paren(f)} = ${x}$。第 2 行给出 $y = -${c} \\cdot ${paren(e)} + ${a} \\cdot ${paren(f)} = ${y}$。\n\n**检验。**代回原方程。第一个方程得 $${a} \\cdot ${paren(x)} + ${b} \\cdot ${paren(y)} = ${e}$。第二个方程得 $${c} \\cdot ${paren(x)} + ${d} \\cdot ${paren(y)} = ${f}$。`,
           ],
         );
       },
@@ -1450,24 +1491,37 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "the-image-of-a-combination",
       ["The image of a combination", "线性组合的像"],
       [
-        "Linearity means a transformation respects sums and multiples. So knowing the images of two vectors gives the image of any combination of them, with no need for a formula.",
-        "线性表示变换保持和与倍数。所以知道两个向量的像，就能得到它们任意线性组合的像，不需要公式。",
+        "Linearity means a transformation respects sums and multiples. So knowing the images of two vectors gives the image of any combination of them, with no need for a formula.\n\n> **Watch out.** Each coefficient stays with its own vector, and a minus sign applies to every component of the image it stands before.",
+        "线性表示变换保持和与倍数。所以知道两个向量的像，就能得到它们任意线性组合的像，不需要公式。\n\n> **注意。** 每个系数跟着它自己的向量，减号作用在它后面那个像的每个分量上。",
       ],
       (rng) => {
         const [a, b, c, d] = [nz(rng, 7), nz(rng, 7), nz(rng, 7), nz(rng, 7)];
         const p = rng.int(2, 5);
         const q = rng.int(2, 5);
-        return chooseFilled(
-          rng,
+        const [rx, ry] = [p * a - q * c, p * b - q * d];
+        const wrong = [vec(p * a + q * c, p * b + q * d), vec(a - c, b - d), vec(p * c - q * a, p * d - q * b)];
+        return reasoned(
+          chooseFilled(
+            rng,
+            [
+              `$T$ is linear, with $T(\\mathbf{u}) = ${vec(a, b)}$ and $T(\\mathbf{v}) = ${vec(c, d)}$. Find $T(${p}\\mathbf{u} - ${q}\\mathbf{v})$.`,
+              `$T$ 是线性变换，$T(\\mathbf{u}) = ${vec(a, b)}$，$T(\\mathbf{v}) = ${vec(c, d)}$。求 $T(${p}\\mathbf{u} - ${q}\\mathbf{v})$。`,
+            ],
+            vec(rx, ry),
+            wrong,
+            [
+              `**Step 1: Use linearity.** A linear map respects combinations, so $T(${p}\\mathbf{u} - ${q}\\mathbf{v}) = ${p}T(\\mathbf{u}) - ${q}T(\\mathbf{v})$.\n\n**Step 2: Combine the components.** The first is $${p} \\cdot ${paren(a)} - ${q} \\cdot ${paren(c)} = ${rx}$. The second is $${p} \\cdot ${paren(b)} - ${q} \\cdot ${paren(d)} = ${ry}$. So the image is $${vec(rx, ry)}$.\n\n**Check.** Add back $${q}T(\\mathbf{v}) = ${vec(q * c, q * d)}$. The sum is $${vec(rx + q * c, ry + q * d)}$, which is $${p}T(\\mathbf{u})$, as it should be.`,
+              `**第一步：利用线性。**线性变换保持线性组合，所以 $T(${p}\\mathbf{u} - ${q}\\mathbf{v}) = ${p}T(\\mathbf{u}) - ${q}T(\\mathbf{v})$。\n\n**第二步：组合各分量。**第一个分量是 $${p} \\cdot ${paren(a)} - ${q} \\cdot ${paren(c)} = ${rx}$。第二个分量是 $${p} \\cdot ${paren(b)} - ${q} \\cdot ${paren(d)} = ${ry}$。所以像是 $${vec(rx, ry)}$。\n\n**检验。**加回 $${q}T(\\mathbf{v}) = ${vec(q * c, q * d)}$。和是 $${vec(rx + q * c, ry + q * d)}$，正是 $${p}T(\\mathbf{u})$。`,
+            ],
+          ),
           [
-            `$T$ is linear, with $T(\\mathbf{u}) = ${vec(a, b)}$ and $T(\\mathbf{v}) = ${vec(c, d)}$. Find $T(${p}\\mathbf{u} - ${q}\\mathbf{v})$.`,
-            `$T$ 是线性变换，$T(\\mathbf{u}) = ${vec(a, b)}$，$T(\\mathbf{v}) = ${vec(c, d)}$。求 $T(${p}\\mathbf{u} - ${q}\\mathbf{v})$。`,
-          ],
-          vec(p * a - q * c, p * b - q * d),
-          [vec(p * a + q * c, p * b + q * d), vec(a - c, b - d), vec(p * c - q * a, p * d - q * b)],
-          [
-            `A linear map respects combinations: $T(${p}\\mathbf{u} - ${q}\\mathbf{v}) = ${p}${vec(a, b)} - ${q}${vec(c, d)} = ${vec(p * a - q * c, p * b - q * d)}$.`,
-            `线性变换保持线性组合：$T(${p}\\mathbf{u} - ${q}\\mathbf{v}) = ${p}${vec(a, b)} - ${q}${vec(c, d)} = ${vec(p * a - q * c, p * b - q * d)}$。`,
+            [`$${wrong[0]}$`, `This adds $${q}T(\\mathbf{v})$ instead of subtracting it.`, `这里加上了 $${q}T(\\mathbf{v})$，而应该减去。`],
+            [`$${wrong[1]}$`, `This drops the multiples $${p}$ and $${q}$.`, `这里丢掉了倍数 $${p}$ 和 $${q}$。`],
+            [
+              `$${wrong[2]}$`,
+              `This swaps the multiples $${p}$ and $${q}$ between the two vectors.`,
+              `这里把两个向量的倍数 $${p}$ 和 $${q}$ 对调了。`,
+            ],
           ],
         );
       },
@@ -1478,22 +1532,33 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "the-origin-stays-fixed",
       ["The origin stays fixed", "原点不动"],
       [
-        "Any matrix sends the zero vector to the zero vector, so a linear transformation keeps the origin where it is. A map that moves the origin, such as a translation, cannot be linear.",
-        "任何矩阵都把零向量变成零向量，所以线性变换保持原点不动。移动原点的映射（比如平移）不可能是线性的。",
+        "Any matrix sends the zero vector to the zero vector, so a linear transformation keeps the origin where it is. A map that moves the origin, such as a translation, cannot be linear.\n\n> **Watch out.** Keeping the origin fixed is necessary but not enough. A map such as $(x^2, y)$ keeps the origin and is still not linear.",
+        "任何矩阵都把零向量变成零向量，所以线性变换保持原点不动。移动原点的映射（比如平移）不可能是线性的。\n\n> **注意。** 保持原点不动是必要条件，但不是充分条件。像 $(x^2, y)$ 这样的映射保持原点不动，却仍然不是线性的。",
       ],
       (rng) => {
         const [a, b, c, d] = [rng.int(2, 9), rng.int(2, 9), rng.int(2, 9), rng.int(2, 9)];
-        const e = nz(rng, 9);
+        const e = Math.abs(nz(rng, 9));
         const linear: Pair = [`$T(x, y) = (${a}x + ${b}y, ${c}x + ${d}y)$`, `$T(x, y) = (${a}x + ${b}y, ${c}x + ${d}y)$`];
         const others: Pair[] = [
-          [`$T(x, y) = (x + ${Math.abs(e)}, y)$`, `$T(x, y) = (x + ${Math.abs(e)}, y)$`],
-          [`$T(x, y) = (${a}x, y + ${Math.abs(d)})$`, `$T(x, y) = (${a}x, y + ${Math.abs(d)})$`],
-          [`$T(x, y) = (${b}x + ${Math.abs(c)}, ${d}y)$`, `$T(x, y) = (${b}x + ${Math.abs(c)}, ${d}y)$`],
+          [`$T(x, y) = (x + ${e}, y)$`, `$T(x, y) = (x + ${e}, y)$`],
+          [`$T(x, y) = (${a}x, y + ${d})$`, `$T(x, y) = (${a}x, y + ${d})$`],
+          [`$T(x, y) = (${b}x + ${c}, ${d}y)$`, `$T(x, y) = (${b}x + ${c}, ${d}y)$`],
         ];
-        return choose(rng, ["Which of these maps can be linear?", "下面哪个映射可能是线性的？"], linear, others, [
-          "Each of the others sends the origin to a point that is not the origin.",
-          "其他映射都把原点变到了不是原点的点。",
-        ]);
+        const moved = [`(${e}, 0)`, `(0, ${d})`, `(${c}, 0)`];
+        return reasoned(
+          choose(rng, ["Which of these maps can be linear?", "下面哪个映射可能是线性的？"], linear, others, [
+            `**Step 1: Test the origin.** A linear map sends $(0, 0)$ to $(0, 0)$. Putting in $(0, 0)$ gives $${moved[0]}$ for $(x + ${e}, y)$, $${moved[1]}$ for $(${a}x, y + ${d})$ and $${moved[2]}$ for $(${b}x + ${c}, ${d}y)$. These three maps move the origin, so none of them is linear.\n\n**Step 2: Keep the one left.** The map $(${a}x + ${b}y, ${c}x + ${d}y)$ sends $(0, 0)$ to $(0, 0)$. It is the only one that can be linear.\n\n**Check.** It is multiplication by the matrix $${mat([a, b], [c, d])}$. Every matrix map respects sums and multiples, so it is linear.`,
+            `**第一步：检验原点。**线性映射把 $(0, 0)$ 变到 $(0, 0)$。代入 $(0, 0)$，$(x + ${e}, y)$ 得 $${moved[0]}$，$(${a}x, y + ${d})$ 得 $${moved[1]}$，$(${b}x + ${c}, ${d}y)$ 得 $${moved[2]}$。这三个映射都移动了原点，所以都不是线性的。\n\n**第二步：留下剩下的那个。**映射 $(${a}x + ${b}y, ${c}x + ${d}y)$ 把 $(0, 0)$ 变到 $(0, 0)$。只有它可能是线性的。\n\n**检验。**它就是乘矩阵 $${mat([a, b], [c, d])}$。每个矩阵映射都保持和与倍数，所以它是线性的。`,
+          ]),
+          others.map(
+            (o, i) =>
+              [
+                o[0],
+                `This sends the origin to $${moved[i]}$, so it cannot be linear.`,
+                `它把原点变到 $${moved[i]}$，所以不可能是线性的。`,
+              ] as const,
+          ),
+        );
       },
     ),
   ],
@@ -1502,8 +1567,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "the-area-after-a-transformation",
       ["The area after a transformation", "变换后的面积"],
       [
-        "A linear transformation multiplies every area by the same factor, the absolute value of its determinant. So the new area needs only the old area and that one number.",
-        "线性变换把所有面积都乘同一个因数，即行列式的绝对值。所以新的面积只需要原面积和这一个数。",
+        "A linear transformation multiplies every area by the same factor, the absolute value of its determinant. So the new area needs only the old area and that one number.\n\n> **Watch out.** Use the absolute value of the determinant. A negative determinant flips the shape over, but its area is still positive.",
+        "线性变换把所有面积都乘同一个因数，即行列式的绝对值。所以新的面积只需要原面积和这一个数。\n\n> **注意。** 要用行列式的绝对值。行列式为负说明图形被翻转，但面积仍是正的。",
       ],
       (rng) => {
         const [a, b, c, d] = [rng.int(1, 6), rng.int(0, 5), rng.int(0, 5), rng.int(1, 6)];
@@ -1511,16 +1576,17 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
         const dd = a * d - b * c === 0 ? d + 1 : d;
         const real = a * dd - b * c;
         const area = rng.int(2, 20);
+        const size = Math.abs(real);
         return whole(
           [
             `A shape of area ${area} is transformed by $${mat([a, b], [c, dd])}$. What is the area of the image?`,
             `面积为 ${area} 的图形经 $${mat([a, b], [c, dd])}$ 变换。像的面积是多少？`,
           ],
-          Math.abs(real) * area,
-          [area, (a + dd) * area, Math.abs(det) * area === Math.abs(real) * area ? Math.abs(real) * area + area : Math.abs(det) * area],
+          size * area,
+          [area, (a + dd) * area, Math.abs(det) * area === size * area ? size * area + area : Math.abs(det) * area],
           [
-            `$|\\det| = ${Math.abs(real)}$, and $${Math.abs(real)} \\times ${area} = ${Math.abs(real) * area}$.`,
-            `$|\\det| = ${Math.abs(real)}$，$${Math.abs(real)} \\times ${area} = ${Math.abs(real) * area}$。`,
+            `**Step 1: Find the determinant.** $\\det = ${a} \\cdot ${dd} - ${b} \\cdot ${c} = ${real}$.\n\n**Step 2: Scale the area.** Every area is multiplied by $|${real}| = ${size}$. So the image has area $${size} \\times ${area} = ${size * area}$.\n\n**Check.** Take a rectangle of area ${area} with sides $\\langle ${area}, 0 \\rangle$ and $\\langle 0, 1 \\rangle$. Their images are $\\langle ${area * a}, ${area * c} \\rangle$ and $\\langle ${b}, ${dd} \\rangle$. The parallelogram on these sides has area $|${area * a} \\cdot ${dd} - ${b} \\cdot ${area * c}| = ${size * area}$.`,
+            `**第一步：求行列式。**$\\det = ${a} \\cdot ${dd} - ${b} \\cdot ${c} = ${real}$。\n\n**第二步：放缩面积。**每个面积都乘 $|${real}| = ${size}$。所以像的面积是 $${size} \\times ${area} = ${size * area}$。\n\n**检验。**取面积为 ${area}、两边为 $\\langle ${area}, 0 \\rangle$ 和 $\\langle 0, 1 \\rangle$ 的矩形。两边的像是 $\\langle ${area * a}, ${area * c} \\rangle$ 和 $\\langle ${b}, ${dd} \\rangle$。以它们为边的平行四边形面积是 $|${area * a} \\cdot ${dd} - ${b} \\cdot ${area * c}| = ${size * area}$。`,
           ],
         );
       },
