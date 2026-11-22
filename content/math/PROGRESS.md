@@ -133,7 +133,7 @@ Stage 0 is done. Walking its lessons against Math Academy's on the same topics f
 | `algebra-ii-logarithms.ts` | 14 | done | |  |
 | `algebra-ii-radical-functions.ts` | 11 | done | |  |
 | `algebra-ii-unit-circle.ts` | 11 | done | |  |
-| `algebra-ii-inverses.ts` | 9 | open | |  |
+| `algebra-ii-inverses.ts` | 8 | done | |  |
 | `algebra-ii-conics.ts` | 9 | open | |  |
 | `algebra-ii-polynomials.ts` | 8 | open | |  |
 | `algebra-ii-factoring.ts` | 7 | open | |  |

@@ -124,4 +124,12 @@ export const taughtTopics: readonly string[] = [
   "extending-the-trigonometric-ratios-to-large-angles",
   "using-the-pythagorean-identity-in-the-first-quadrant",
   "extending-the-pythagorean-identity-to-all-quadrants",
+  "calculating-the-inverse-of-a-function",
+  "inverses-of-quadratic-functions",
+  "plotting-x-as-a-function-of-y",
+  "periodic-functions",
+  "even-and-odd-functions",
+  "products-of-even-and-odd-functions",
+  "unbounded-behavior-of-functions-near-a-point",
+  "the-average-rate-of-change-of-a-function",
 ];
