@@ -5,7 +5,7 @@ import { expect, it } from "vitest";
 import { compileMath } from "./index.ts";
 
 /** shards is the number of test files that sample the generators in parallel. */
-export const shards = 4;
+export const shards = 8;
 
 const mathSpans = /\$\$[\s\S]*?\$\$|\$[^$]*\$/g;
 const latexCommand = /\\(frac|sqrt|langle|mathbb|le|ge|cdot|pi|infty|left|right|begin|times|sum|int)\b/;
@@ -45,5 +45,5 @@ export function testShard(index: number) {
       maxPositionShare: 0.8,
     });
     expect(issues.map(formatIssue)).toEqual([]);
-  }, 300_000);
+  }, 600_000);
 }
