@@ -1,12 +1,13 @@
 // Further knowledge points for topics of Probability & Statistics, each a skill
 // the topic's own points leave out. See `deeperProbabilityStatisticsPoints`.
 
-import type { KnowledgePointDef, Rng } from "@ga/content";
-import { t } from "@ga/content";
+import type { KnowledgePointDef, Rng, Text } from "@ga/content";
+import { joinText, t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
 import { probabilityDrawings1 } from "../explanation-drawings-probability-and-statistics-1.ts";
 
-import { numberProblem } from "../problems.ts";
+import { numberProblem, steps } from "../problems.ts";
+import { stepLabel } from "../solution-kit.ts";
 
 /** nonzero picks a nonzero integer from -r to r. */
 const nonzero = (rng: Rng, r: number) => rng.pick([...Array(2 * r + 1).keys()].map((i) => i - r).filter((i) => i !== 0));
@@ -661,12 +662,42 @@ const gcdOf = (a: number, b: number): number => (b === 0 ? a : gcdOf(b, a % b));
 /** sampleOf draws a list of whole numbers from lo to hi. */
 const sampleOf = (rng: Rng, size: number, lo: number, hi: number) => [...Array(size).keys()].map(() => rng.int(lo, hi));
 
+/** priorSolution solves p · r + (1 − p) · q = total for p, the probability of the first event, and substitutes it back. */
+function priorSolution(rate: Q, other: Q, total: Q, answer: Q): Text {
+  const [r, q, b, p] = [rate.toLatex(), other.toLatex(), total.toLatex(), answer.toLatex()];
+  const [num, den] = [total.sub(other), rate.sub(other)];
+  const [pr, pq] = [answer.mul(rate), Q.one.sub(answer).mul(other)];
+  const first = stepLabel(1, "set up the equation", "列方程");
+  const second = stepLabel(2, "solve for p", "解出 p");
+  const equation = `p \\cdot ${r} + (1 - p) \\cdot ${q} = ${b}`;
+  const solve = steps(
+    `p \\cdot ${r} + ${q} - p \\cdot ${q} = ${b}`,
+    `p \\left(${r} - ${q}\\right) = ${b} - ${q}`,
+    `${den.toLatex()} \\, p = ${num.toLatex()}`,
+    `p = ${num.toLatex()} \\div ${den.n < 0n ? `\\left(${den.toLatex()}\\right)` : den.toLatex()} = ${p}`,
+  );
+  return joinText([
+    t(
+      `${first.en} Let $p = P(A)$, so $P(A') = 1 - p$. The law of total probability adds the path through $A$ and the path through $A'$:${steps(equation)}`,
+      `${first["zh-CN"]}设 $p = P(A)$，则 $P(A') = 1 - p$。全概率公式把经过 $A$ 和经过 $A'$ 的两条路径相加：${steps(equation)}`,
+    ),
+    t(
+      `${second.en} The equation is linear in $p$. Expand, collect the terms with $p$ on the left, and divide by their coefficient:${solve}`,
+      `${second["zh-CN"]}这是关于 $p$ 的一次方程。展开，把含 $p$ 的项留在左边，再除以它的系数：${solve}`,
+    ),
+    t(
+      `**Check.** Substitute $p = ${p}$: $${p} \\cdot ${r} + ${Q.one.sub(answer).toLatex()} \\cdot ${q} = ${pr.toLatex()} + ${pq.toLatex()} = ${pr.add(pq).toLatex()}$, which is $P(B)$.`,
+      `**检验。** 代入 $p = ${p}$：$${p} \\cdot ${r} + ${Q.one.sub(answer).toLatex()} \\cdot ${q} = ${pr.toLatex()} + ${pq.toLatex()} = ${pr.add(pq).toLatex()}$，正是 $P(B)$。`,
+    ),
+  ]);
+}
+
 const priorFromTotal: KnowledgePointDef = {
   id: "the-prior-from-a-total-probability",
   title: t("The prior from a total probability", "由全概率求先验概率"),
   explanation: t(
-    "The law of total probability says $P(B) = pr + (1 - p)q$, where $p = P(A)$, $r = P(B \\mid A)$ and $q = P(B \\mid A')$. This is linear in $p$, so it can also be run backwards. If the overall rate of $B$ is known, the formula gives the size of the hidden group, $p = \\frac{P(B) - q}{r - q}$.",
-    "全概率公式说 $P(B) = pr + (1 - p)q$，其中 $p = P(A)$，$r = P(B \\mid A)$，$q = P(B \\mid A')$。它关于 $p$ 是线性的，所以也可以反过来用。如果知道 $B$ 的总体比率，公式就给出隐藏群体的大小：$p = \\frac{P(B) - q}{r - q}$。",
+    "The law of total probability says $P(B) = pr + (1 - p)q$, where $p = P(A)$, $r = P(B \\mid A)$ and $q = P(B \\mid A')$. This is linear in $p$, so it can also be run backwards. If the overall rate of $B$ is known, the formula gives the size of the hidden group: expanding, $pr + q - pq = P(B)$, so $p(r - q) = P(B) - q$ and\n\n$$p = \\frac{P(B) - q}{r - q}.$$\n\nFor instance, with $r = 0.8$, $q = 0.3$ and $P(B) = 0.5$, $p = \\frac{0.5 - 0.3}{0.8 - 0.3} = \\frac{0.2}{0.5} = \\frac{2}{5}$, and indeed $\\frac{2}{5} \\cdot 0.8 + \\frac{3}{5} \\cdot 0.3 = 0.32 + 0.18 = 0.5$.\n\n> **Watch out.** The unknown $p$ appears twice, in $p$ and in $1 - p$; dividing $P(B)$ by $r$ ignores the path through $A'$. And the question asks for $P(A)$, so do not stop at $1 - p$.",
+    "全概率公式说 $P(B) = pr + (1 - p)q$，其中 $p = P(A)$，$r = P(B \\mid A)$，$q = P(B \\mid A')$。它关于 $p$ 是线性的，所以也可以反过来用。如果知道 $B$ 的总体比率，公式就给出隐藏群体的大小：展开得 $pr + q - pq = P(B)$，所以 $p(r - q) = P(B) - q$，\n\n$$p = \\frac{P(B) - q}{r - q}.$$\n\n例如 $r = 0.8$，$q = 0.3$，$P(B) = 0.5$ 时，$p = \\frac{0.5 - 0.3}{0.8 - 0.3} = \\frac{0.2}{0.5} = \\frac{2}{5}$；验证：$\\frac{2}{5} \\cdot 0.8 + \\frac{3}{5} \\cdot 0.3 = 0.32 + 0.18 = 0.5$。\n\n> **注意。** 未知数 $p$ 出现了两次，在 $p$ 和 $1 - p$ 中；直接用 $P(B)$ 除以 $r$ 就漏掉了经过 $A'$ 的路径。题目求的是 $P(A)$，不要停在 $1 - p$。",
   ),
   generate(rng) {
     const a = rng.int(1, 9);
@@ -683,10 +714,7 @@ const priorFromTotal: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(10 - a, 10), total, total.div(rate)],
-      solution: t(
-        `Solving $p \\cdot ${rate.toLatex()} + (1 - p) \\cdot ${other.toLatex()} = ${total.toLatex()}$ gives $p = \\frac{${total.toLatex()} - ${other.toLatex()}}{${rate.toLatex()} - ${other.toLatex()}} = ${answer.toLatex()}$.`,
-        `解 $p \\cdot ${rate.toLatex()} + (1 - p) \\cdot ${other.toLatex()} = ${total.toLatex()}$，得 $p = \\frac{${total.toLatex()} - ${other.toLatex()}}{${rate.toLatex()} - ${other.toLatex()}} = ${answer.toLatex()}$。`,
-      ),
+      solution: priorSolution(rate, other, total, answer),
     });
   },
 };

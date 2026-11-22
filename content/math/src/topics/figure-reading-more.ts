@@ -19,6 +19,7 @@ import { precalculusDrawings3 } from "../explanation-drawings-precalculus-3.ts";
 import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
 import { probabilityDrawings1 } from "../explanation-drawings-probability-and-statistics-1.ts";
 import { numberProblem } from "../problems.ts";
+import { stepLabel } from "../solution-kit.ts";
 import { pickChoice as choiceFrom } from "./grade-4-fractions.ts";
 
 /** math writes the same formula as an option in both languages. */
@@ -1529,8 +1530,8 @@ const totalFromTree: KnowledgePointDef = {
   id: "reading-a-probability-tree",
   title: t("Reading a probability tree", "读概率树"),
   explanation: t(
-    "A probability tree splits by the first event and then by the second. Multiplying along a branch gives the probability of that whole path, and adding the paths that end in the second event gives its total probability. Bayes' theorem reverses the question: it divides one such path by that total, to see what share of the second event came through the first.",
-    "概率树先按第一个事件分，再按第二个事件分。沿一条分支相乘，得到这条路径的概率；把以第二个事件结尾的路径相加，得到它的总概率。贝叶斯定理把问题反过来：用一条这样的路径除以总概率，看第二个事件中有多大比例来自第一个事件。",
+    "A probability tree splits by the first event and then by the second. Multiplying along a branch gives the probability of that whole path, and adding the paths that end in the second event gives its total probability. Bayes' theorem reverses the question: it divides one such path by that total, to see what share of the second event came through the first.\n\nWith $P(A) = 0.4$, $P(B \\mid A) = 0.5$ and $P(B \\mid A') = 0.2$, the two paths that end in $B$ have probabilities $0.4 \\times 0.5 = 0.2$ and $0.6 \\times 0.2 = 0.12$, so $P(B) = 0.32$.\n\n> **Watch out.** Read the second-stage numbers as conditional: $0.5$ and $0.2$ are not probabilities of $B$ on their own, so adding them, $0.7$, means nothing. Each must be multiplied by the branch before it, and both paths ending in $B$ count, not only the one through $A$.",
+    "概率树先按第一个事件分，再按第二个事件分。沿一条分支相乘，得到这条路径的概率；把以第二个事件结尾的路径相加，得到它的总概率。贝叶斯定理把问题反过来：用一条这样的路径除以总概率，看第二个事件中有多大比例来自第一个事件。\n\n若 $P(A) = 0.4$，$P(B \\mid A) = 0.5$，$P(B \\mid A') = 0.2$，以 $B$ 结尾的两条路径的概率是 $0.4 \\times 0.5 = 0.2$ 和 $0.6 \\times 0.2 = 0.12$，所以 $P(B) = 0.32$。\n\n> **注意。** 第二层上的数是条件概率：$0.5$ 和 $0.2$ 本身都不是 $B$ 的概率，把它们相加得到的 $0.7$ 没有意义。每个数都要乘它前面的那一段，而且两条以 $B$ 结尾的路径都要算，不只是经过 $A$ 的那一条。",
   ),
   generate(rng) {
     const a = rng.pick([2, 3, 4, 5, 6, 8]);
@@ -1545,8 +1546,8 @@ const totalFromTree: KnowledgePointDef = {
       answer,
       [Q.of(pathA, 100), Q.of(pathN, 100), Q.of(ba + bn, 10), Q.of(100 - total, 100)],
       t(
-        `Add the two paths that end in B: $${a / 10} \\times ${ba / 10} + ${(10 - a) / 10} \\times ${bn / 10} = ${total / 100}$.`,
-        `把以 B 结尾的两条路径相加：$${a / 10} \\times ${ba / 10} + ${(10 - a) / 10} \\times ${bn / 10} = ${total / 100}$。`,
+        `${stepLabel(1, "multiply along each path to B", "沿每条通向 B 的路径相乘").en} The path through $A$ has probability $${a / 10} \\times ${ba / 10} = ${pathA / 100}$, and the path through $A'$ has probability $${(10 - a) / 10} \\times ${bn / 10} = ${pathN / 100}$.\n\n${stepLabel(2, "add the paths", "把路径相加").en} The two paths cannot both happen, so $P(B) = ${pathA / 100} + ${pathN / 100} = ${total / 100}$.\n\n**Check.** The other two paths end in $B'$: $${a / 10} \\times ${(10 - ba) / 10} + ${(10 - a) / 10} \\times ${(10 - bn) / 10} = ${(100 - total) / 100}$, and $${total / 100} + ${(100 - total) / 100} = 1$.`,
+        `${stepLabel(1, "multiply along each path to B", "沿每条通向 B 的路径相乘")["zh-CN"]}经过 $A$ 的路径概率是 $${a / 10} \\times ${ba / 10} = ${pathA / 100}$，经过 $A'$ 的路径概率是 $${(10 - a) / 10} \\times ${bn / 10} = ${pathN / 100}$。\n\n${stepLabel(2, "add the paths", "把路径相加")["zh-CN"]}两条路径不会同时发生，所以 $P(B) = ${pathA / 100} + ${pathN / 100} = ${total / 100}$。\n\n**检验。** 另外两条路径以 $B'$ 结尾：$${a / 10} \\times ${(10 - ba) / 10} + ${(10 - a) / 10} \\times ${(10 - bn) / 10} = ${(100 - total) / 100}$，而 $${total / 100} + ${(100 - total) / 100} = 1$。`,
       ),
       treeFigure(
         `${a / 10}`,

@@ -9,6 +9,7 @@ import { precalculusDrawings2 } from "../explanation-drawings-precalculus-2.ts";
 import { precalculusDrawings3 } from "../explanation-drawings-precalculus-3.ts";
 import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
 import { numberProblem } from "../problems.ts";
+import { stepLabel } from "../solution-kit.ts";
 
 /** frac writes a rational number. */
 const frac = (n: number, d = 1) => Q.of(n, d).toLatex();
@@ -1664,8 +1665,8 @@ const itemsFromProbability: KnowledgePointDef = {
   id: "the-number-of-items-from-a-probability-without-replacement",
   title: t("The number of items from a probability without replacement", "由不放回的概率求物品个数"),
   explanation: t(
-    "A tree diagram can also be read from the far end back to the start. When two items are drawn without replacement, the probability that both have a certain colour is a product of two fractions, whose numerators are consecutive integers. If that probability and the total are known, multiplying out shows the product of those two consecutive integers. Since such a product increases steadily with the count, there is only one value that fits.",
-    "树状图也可以从末端读回开头。不放回地取两件物品时，两件都是某种颜色的概率是两个分数的积，它们的分子是相邻的整数。如果已知这个概率和总数，乘开就能得到这两个相邻整数的积。这样的积随个数稳定增大，所以只有一个值符合。",
+    "A tree diagram can also be read from the far end back to the start. When two items are drawn without replacement, the probability that both have a certain colour is a product of two fractions, whose numerators are consecutive integers. If that probability and the total are known, multiplying out shows the product of those two consecutive integers. Since such a product increases steadily with the count, there is only one value that fits.\n\nWith $10$ marbles and $P(\\text{both red}) = \\frac{1}{3}$, the path red, red is $\\frac{r}{10} \\cdot \\frac{r - 1}{9} = \\frac{r(r - 1)}{90}$, so $r(r - 1) = \\frac{1}{3} \\cdot 90 = 30 = 6 \\cdot 5$ and $r = 6$.\n\n> **Watch out.** Of the two consecutive integers, $r$ is the larger one: the second fraction has $r - 1$ on top because one red marble is already gone. Taking the smaller one, $5$, gives the wrong count.",
+    "树状图也可以从末端读回开头。不放回地取两件物品时，两件都是某种颜色的概率是两个分数的积，它们的分子是相邻的整数。如果已知这个概率和总数，乘开就能得到这两个相邻整数的积。这样的积随个数稳定增大，所以只有一个值符合。\n\n若有 $10$ 颗弹珠，$P(\\text{两颗都是红色}) = \\frac{1}{3}$，则“红、红”这条路径是 $\\frac{r}{10} \\cdot \\frac{r - 1}{9} = \\frac{r(r - 1)}{90}$，所以 $r(r - 1) = \\frac{1}{3} \\cdot 90 = 30 = 6 \\cdot 5$，$r = 6$。\n\n> **注意。** 两个相邻整数中，$r$ 是较大的那个：第二个分数的分子是 $r - 1$，因为已经取走了一颗红色的。取较小的 $5$ 就数错了。",
   ),
   generate(rng) {
     const n = rng.int(6, 20);
@@ -1681,8 +1682,8 @@ const itemsFromProbability: KnowledgePointDef = {
       form: "integer",
       wrong: [red - 1, red + 1, n - red, 2 * red],
       solution: t(
-        `If $r$ marbles are red, the probability is $\\frac{r}{${n}} \\cdot \\frac{r - 1}{${n - 1}}$. Multiplying by $${n} \\cdot ${n - 1}$ gives $r(r - 1) = ${product}$, and the consecutive integers with this product are ${red} and ${red - 1}. So $r = ${red}$.`,
-        `如果有 $r$ 颗红色弹珠，概率是 $\\frac{r}{${n}} \\cdot \\frac{r - 1}{${n - 1}}$。乘以 $${n} \\cdot ${n - 1}$ 得 $r(r - 1) = ${product}$，积为这个数的相邻整数是 ${red} 和 ${red - 1}。所以 $r = ${red}$。`,
+        `${stepLabel(1, "write the path red, red", "写出“红、红”这条路径").en} If $r$ marbles are red, the first is red with probability $\\frac{r}{${n}}$, and then $r - 1$ of the $${n - 1}$ marbles left are red, so the probability is $\\frac{r}{${n}} \\cdot \\frac{r - 1}{${n - 1}} = \\frac{r(r - 1)}{${n * (n - 1)}}$.\n\n${stepLabel(2, "find the two consecutive integers", "找出两个相邻整数").en} Multiplying by $${n * (n - 1)}$ gives $r(r - 1) = ${probability.toLatex()} \\cdot ${n * (n - 1)} = ${product}$, and $${product} = ${red} \\cdot ${red - 1}$. The larger of the two is $r$, so $r = ${red}$.\n\n**Check.** With $${red}$ red marbles: $\\frac{${red}}{${n}} \\cdot \\frac{${red - 1}}{${n - 1}} = \\frac{${product}}{${n * (n - 1)}} = ${probability.toLatex()}$, the given probability.`,
+        `${stepLabel(1, "write the path red, red", "写出“红、红”这条路径")["zh-CN"]}如果有 $r$ 颗红色弹珠，第一颗是红色的概率是 $\\frac{r}{${n}}$，之后剩下的 $${n - 1}$ 颗中有 $r - 1$ 颗红色，所以概率是 $\\frac{r}{${n}} \\cdot \\frac{r - 1}{${n - 1}} = \\frac{r(r - 1)}{${n * (n - 1)}}$。\n\n${stepLabel(2, "find the two consecutive integers", "找出两个相邻整数")["zh-CN"]}两边乘以 $${n * (n - 1)}$，得 $r(r - 1) = ${probability.toLatex()} \\cdot ${n * (n - 1)} = ${product}$，而 $${product} = ${red} \\cdot ${red - 1}$。其中较大的是 $r$，所以 $r = ${red}$。\n\n**检验。** 有 $${red}$ 颗红色弹珠时：$\\frac{${red}}{${n}} \\cdot \\frac{${red - 1}}{${n - 1}} = \\frac{${product}}{${n * (n - 1)}} = ${probability.toLatex()}$，正是已知的概率。`,
       ),
     });
   },
