@@ -1276,8 +1276,16 @@ For the outputs $1, 4, 6, 5, 2$ at $x = 0, 1, 2, 3, 4$, the changes from one out
       "the-hidden-third-factor",
       ["The hidden third factor", "隐藏的第三个因素"],
       [
-        "Two quantities can rise together because a third one drives both. Before believing that one causes the other, look for a factor that could explain them both.",
-        "两个量可能因为第三个量同时推动而一起上升。相信其中一个导致另一个之前，先找能同时解释两者的因素。",
+        `Two quantities can rise together because a third one drives both: when the third factor goes up, it pushes up each of them, so they move together although neither affects the other. Before believing that one causes the other, look for a factor that could explain them both.
+
+Ice cream sales and sunburn cases rise together over a year. Hot, sunny weather makes people buy ice cream and also makes them burn, so it explains both.
+
+> **Watch out.** The third factor must affect **both** quantities. A factor linked to only one of them, such as the price of ice cream, cannot make the two move together, and neither can a detail that affects neither.`,
+        `两个量可能因为第三个量同时推动而一起上升：第三个因素增加时，它分别推高这两个量，所以即使谁也不影响谁，它们也会一起变化。相信其中一个导致另一个之前，先找能同时解释两者的因素。
+
+一年中冰淇淋销量和晒伤人数一起上升。炎热晴朗的天气让人们买冰淇淋，也让人们晒伤，所以它能解释二者。
+
+> **注意。** 第三个因素必须影响**两个**量。只与其中一个有关的因素，比如冰淇淋的价格，不能让二者一起变化；对二者都没有影响的细节也不能。`,
       ],
       (rng) => {
         const cases: { a: [string, string]; b: [string, string]; c: [string, string]; w: [string, string][] }[] = [
@@ -1352,8 +1360,8 @@ For the outputs $1, 4, 6, 5, 2$ at $x = 0, 1, 2, 3, 4$, the changes from one out
           one.c,
           rng.sample([...one.w], 3),
           [
-            `Here ${one.c[0]} drives both quantities, so neither needs to cause the other.`,
-            `${one.c[1]}同时影响这两个量，所以不必是其中一个导致另一个。`,
+            `**Step 1: What the factor must do.** To explain the correlation, a third factor must push up both ${one.a[0]} and ${one.b[0]}.\n\n**Step 2: Test the choices.** ${one.c[0][0]!.toUpperCase()}${one.c[0].slice(1)} raises each of them, so it drives both quantities, and neither needs to cause the other. The other choices affect at most one of the two quantities.\n\n**Check.** Among cases alike in ${one.c[0]}, the two quantities would no longer be expected to rise together.`,
+            `**第一步：这个因素必须做到什么。** 要解释这种相关，第三个因素必须同时推高${one.a[1]}和${one.b[1]}。\n\n**第二步：检验各个选项。** “${one.c[1]}”会同时推高二者，所以它推动了这两个量，不必是其中一个导致另一个。其余选项至多只影响其中一个量。\n\n**检验。** 在“${one.c[1]}”相同的情况下，这两个量就不会再一起上升了。`,
           ],
         );
       },

@@ -672,8 +672,16 @@ $$5d = 30 - 5 = 25, \\qquad d = 5.$$
         "distance-from-the-area",
         ["Distance from the area", "由面积求路程"],
         [
-          "The area under a speed-time graph is the distance traveled, because speed times time is distance. A speed-up from rest makes a triangle, and steady speed makes a rectangle.",
-          "速度-时间图象下方的面积就是路程，因为速度乘时间就是路程。从静止加速得到三角形，匀速得到矩形。",
+          `At a steady speed, distance is speed times time, and on a speed-time graph that product is the area of the rectangle under the level part: height the speed, width the time. When the speed changes steadily, the distance is still the area under the graph, and a speed-up from rest makes a triangle, half of the rectangle around it.
+
+A speed-up from $0$ to $10$ m/s in $4$ s, then $10$ m/s for $6$ s: the triangle is $\\frac{1}{2} \\cdot 4 \\cdot 10 = 20$ m and the rectangle $10 \\cdot 6 = 60$ m, so $80$ m in all.
+
+> **Watch out.** The triangle is half of its rectangle: $4 \\cdot 10 = 40$ would count the speed-up as if the object had been at full speed all along. Add both parts; the rectangle alone leaves out the speed-up. And do not halve the whole trip: only the sloping part is a triangle.`,
+          `匀速运动时，路程等于速度乘时间；在速度—时间图上，这个乘积就是水平部分下方矩形的面积：高是速度，宽是时间。速度均匀变化时，路程仍然是图像下方的面积，从静止加速得到一个三角形，它是外面那个矩形的一半。
+
+在 $4$ 秒内从 $0$ 加速到 $10$ 米/秒，再以 $10$ 米/秒运动 $6$ 秒：三角形是 $\\frac{1}{2} \\cdot 4 \\cdot 10 = 20$ 米，矩形是 $10 \\cdot 6 = 60$ 米，一共 $80$ 米。
+
+> **注意。** 三角形是它所在矩形的一半：$4 \\cdot 10 = 40$ 相当于把加速阶段也当成一直是最高速度。两部分都要加上；只算矩形就漏掉了加速阶段。也不要把整个行程都减半：只有倾斜的部分是三角形。`,
         ],
         (rng) => {
           const v = 2 * rng.int(1, 15);
@@ -687,8 +695,28 @@ $$5d = 30 - 5 = 25, \\qquad d = 5.$$
             (v * t) / 2 + v * s,
             [v * t + v * s, v * s, (v * (t + s)) / 2],
             [
-              `The area under the graph is the distance. The triangle has area $${(v * t) / 2}$ and the rectangle has area $${v * s}$, so the total is $${(v * t) / 2 + v * s}$ m.`,
-              `图象下方的面积就是路程。三角形面积是 $${(v * t) / 2}$，矩形面积是 $${v * s}$，所以总路程是 $${(v * t) / 2 + v * s}$ 米。`,
+              `**Step 1: the speed-up.** The distance is the area under the graph. While speeding up, the region is a triangle with base $${t}$ s and height $${v}$ m/s:
+
+$$\\tfrac{1}{2} \\cdot ${t} \\cdot ${v} = ${(v * t) / 2}$$
+
+**Step 2: the steady part.** While level, the region is a rectangle $${s}$ s wide and $${v}$ m/s high:
+
+$$${v} \\cdot ${s} = ${v * s}$$
+
+**Step 3: add.** $${(v * t) / 2} + ${v * s} = ${(v * t) / 2 + v * s}$ m.
+
+**Check.** The average speed during the speed-up is $\\frac{0 + ${v}}{2} = ${v / 2}$ m/s, and $${v / 2} \\cdot ${t} = ${(v * t) / 2}$ m, the same as the triangle.`,
+              `**第一步：加速阶段。** 路程是图像下方的面积。加速时，这个区域是底为 $${t}$ 秒、高为 $${v}$ 米/秒的三角形：
+
+$$\\tfrac{1}{2} \\cdot ${t} \\cdot ${v} = ${(v * t) / 2}$$
+
+**第二步：匀速阶段。** 水平的一段下方是宽 $${s}$ 秒、高 $${v}$ 米/秒的矩形：
+
+$$${v} \\cdot ${s} = ${v * s}$$
+
+**第三步：相加。** $${(v * t) / 2} + ${v * s} = ${(v * t) / 2 + v * s}$ 米。
+
+**检验。** 加速阶段的平均速度是 $\\frac{0 + ${v}}{2} = ${v / 2}$ 米/秒，而 $${v / 2} \\cdot ${t} = ${(v * t) / 2}$ 米，与三角形的面积相同。`,
             ],
           );
         },

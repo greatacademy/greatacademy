@@ -291,8 +291,18 @@ function inequalityChoice(rng: Rng, strict: boolean) {
       t("This line has the opposite slope, so it leans the wrong way.", "这条直线的斜率符号相反，倾斜方向错了。"),
     ],
     solution: t(
-      `The boundary is $y = ${linear(coef(m), b)}$, through $${tex([0, b])}$ with slope $${num(coef(m))}$. It is ${strict ? "dashed, because points on it do not satisfy a strict inequality" : "solid, because points on it satisfy the inequality"}. Test the origin: $0 ${sign} ${num(b)}$ is ${holds ? "true" : "false"}, so the shading ${holds ? "includes" : "leaves out"} the origin.`,
-      `边界是 $y = ${linear(coef(m), b)}$，经过 $${tex([0, b])}$，斜率为 $${num(coef(m))}$。${strict ? "它画成虚线，因为边界上的点不满足严格不等式" : "它画成实线，因为边界上的点满足不等式"}。用原点检验：$0 ${sign} ${num(b)}$ ${holds ? "成立" : "不成立"}，所以阴影${holds ? "包含" : "不包含"}原点。`,
+      [
+        `**Step 1: Find the boundary.** Replace $${sign}$ by $=$: the boundary is $y = ${linear(coef(m), b)}$. It crosses the $y$-axis at $${tex([0, b])}$ and has slope $${num(coef(m))}$, so it passes through $${tex([1, b + m])}$ too. This rules out the drawing whose line leans the other way.`,
+        `**Step 2: Dashed or solid.** The sign is $${sign}$, ${strict ? "a strict inequality, so points on the line do not count and the boundary is dashed" : "which allows equality, so points on the line count and the boundary is solid"}.`,
+        `**Step 3: Choose the side.** The origin is not on the line, so test it: $0 ${sign} ${num(b)}$ is ${holds ? "true" : "false"}. So the shaded side is the one ${holds ? "that holds" : "without"} the origin: the side ${above ? "above" : "below"} the line.`,
+        `**Check.** Take the point $${tex([0, above ? b + 1 : b - 1])}$, one unit ${above ? "above" : "below"} the line in the shaded part: $${num(above ? b + 1 : b - 1)} ${sign} ${num(b)}$ is true.`,
+      ].join("\n\n"),
+      [
+        `**第一步：找边界。** 把 $${sign}$ 换成 $=$，边界是 $y = ${linear(coef(m), b)}$。它与 $y$ 轴交于 $${tex([0, b])}$，斜率为 $${num(coef(m))}$，所以也经过 $${tex([1, b + m])}$。倾斜方向相反的那张图可以排除。`,
+        `**第二步：虚线还是实线。** 符号是 $${sign}$，${strict ? "这是严格不等式，线上的点不算解，所以边界画成虚线" : "它允许取等号，线上的点也算解，所以边界画成实线"}。`,
+        `**第三步：选一侧。** 原点不在直线上，用它检验：$0 ${sign} ${num(b)}$ ${holds ? "成立" : "不成立"}。所以涂阴影的是${holds ? "有" : "没有"}原点的一侧，也就是直线${above ? "上方" : "下方"}的一侧。`,
+        `**检验。** 取阴影里、直线${above ? "上方" : "下方"}一个单位的点 $${tex([0, above ? b + 1 : b - 1])}$：$${num(above ? b + 1 : b - 1)} ${sign} ${num(b)}$ 成立。`,
+      ].join("\n\n"),
     ),
   });
 }
@@ -642,8 +652,20 @@ Check each line by its $y$-intercept and its slope. For $y = 2x - 1$ and $y = -x
       "choosing-the-drawing-of-a-strict-inequality",
       ["Choosing the drawing of a strict inequality", "选出严格不等式的图像"],
       [
-        "A drawing of a strict inequality has a dashed boundary, because points on the line do not count. To decide which side is shaded, test a point off the line, usually the origin: if it satisfies the inequality, its side is shaded.",
-        "严格不等式的图用虚线作边界，因为线上的点不算解。要判断哪一侧有阴影，取一个不在线上的点检验，通常取原点：如果它满足不等式，它所在的一侧就涂阴影。",
+        `A drawing of an inequality has two parts, the boundary line and the shaded side, and each must match the inequality.
+
+The boundary comes from replacing the sign by $=$. With $<$ or $>$, a point on that line makes both sides equal, so it is not a solution: the boundary is dashed. The line splits the plane in two, and on each side the inequality is either true everywhere or false everywhere, so one test point decides the side.
+
+For $y > 2x - 1$: the boundary $y = 2x - 1$ is dashed. Testing the origin gives $0 > -1$, which is true, so the side holding the origin is shaded.
+
+> **Watch out.** Check all three features: a drawing can shade the wrong side, draw a solid line for a strict sign, or use a line that leans the wrong way because its slope has the opposite sign.`,
+        `不等式的图像有两部分：边界直线和涂阴影的一侧，两者都要与不等式相符。
+
+把不等号换成 $=$ 就得到边界。用 $<$ 或 $>$ 时，线上的点使两边相等，不是解，所以边界画成虚线。直线把平面分成两半，在每一半里不等式要么处处成立，要么处处不成立，所以检验一个点就能定下是哪一侧。
+
+例如 $y > 2x - 1$：边界 $y = 2x - 1$ 画成虚线。代入原点得 $0 > -1$，成立，所以原点所在的一侧涂阴影。
+
+> **注意。** 三处都要核对：有的图涂错了一侧，有的把严格不等式的边界画成实线，有的直线斜率符号相反，倾斜方向错了。`,
       ],
       (rng) => inequalityChoice(rng, true),
     ),
@@ -653,8 +675,16 @@ Check each line by its $y$-intercept and its slope. For $y = 2x - 1$ and $y = -x
       "choosing-the-drawing-of-a-non-strict-inequality",
       ["Choosing the drawing of a non-strict inequality", "选出非严格不等式的图像"],
       [
-        "With $\\le$ or $\\ge$, the points on the line count too, so the boundary is solid. The side to shade is found the same way as for a strict inequality: test a point off the line.",
-        "用 $\\le$ 或 $\\ge$ 时，线上的点也算解，所以边界是实线。阴影在哪一侧的判断方法与严格不等式相同：取一个不在线上的点检验。",
+        `With $\\le$ or $\\ge$, a point on the boundary makes both sides equal, and equality is allowed, so the points on the line are solutions: the boundary is solid. The side is found as for a strict inequality, by testing a point off the line.
+
+For $y \\le -x + 3$: the boundary $y = -x + 3$ is solid. Testing the origin gives $0 \\le 3$, which is true, so the side holding the origin, below the line, is shaded.
+
+> **Watch out.** Check all three features: a drawing can shade the wrong side, draw a dashed line although equality is allowed, or use a line that leans the wrong way because its slope has the opposite sign.`,
+        `用 $\\le$ 或 $\\ge$ 时，边界上的点使两边相等，而这里允许相等，所以线上的点也是解，边界画成实线。阴影在哪一侧，和严格不等式一样，取一个不在线上的点检验。
+
+例如 $y \\le -x + 3$：边界 $y = -x + 3$ 画成实线。代入原点得 $0 \\le 3$，成立，所以原点所在的一侧，也就是直线下方，涂阴影。
+
+> **注意。** 三处都要核对：有的图涂错了一侧，有的在允许取等号时把边界画成虚线，有的直线斜率符号相反，倾斜方向错了。`,
       ],
       (rng) => inequalityChoice(rng, false),
     ),
