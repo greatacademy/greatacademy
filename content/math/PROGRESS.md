@@ -128,7 +128,7 @@ Stage 0 is done. Walking its lessons against Math Academy's on the same topics f
 | `algebra-ii-log-equations.ts` | 19 | done | |  |
 | `algebra-ii-polynomial-theorems.ts` | 16 | done | |  |
 | `algebra-ii-trigonometric-graphs.ts` | 14 | done | |  |
-| `algebra-ii-trigonometric-transformations.ts` | 14 | in progress | |  |
+| `algebra-ii-trigonometric-transformations.ts` | 16 | done | |  |
 | `algebra-ii-transformations.ts` | 12 | done | |  |
 | `algebra-ii-logarithms.ts` | 11 | open | |  |
 | `algebra-ii-radical-functions.ts` | 11 | open | |  |
