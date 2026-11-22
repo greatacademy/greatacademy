@@ -187,8 +187,16 @@ For $2x + 3y = 1$ and $6x + ty = 5$: the $x$-coefficient is multiplied by $3$, s
       "end-behavior-from-factors",
       ["End behavior from factors", "由因式看端点行为"],
       [
-        "Multiplying out is not needed to find end behavior. The degree is the sum of the powers of the factors, and the leading coefficient is the number in front, assuming each factor starts with $x$.",
-        "看端点行为不需要展开。次数是各因式次数之和，首项系数是前面的数（假定每个因式都以 $x$ 开头）。",
+        `End behavior depends only on the leading term, and the leading term of a product can be found without multiplying out. Multiplying out, the highest power of $x$ comes from multiplying the $x$ of every factor together, so the powers add up, and the number in front multiplies it.
+
+For $f(x) = -2(x - 1)^{3}(x + 4)^{2}$: the factor $(x - 1)^{3}$ contributes $x^{3}$ and $(x + 4)^{2}$ contributes $x^{2}$, so the leading term is $-2x^{3} \\cdot x^{2} = -2x^{5}$. Degree $5$ is odd and $-2$ is negative, so the graph rises to the left and falls to the right.
+
+> **Watch out.** The degree is the **sum** of the powers, $3 + 2 = 5$, not their product and not the largest one. And the numbers inside the factors, such as $-1$ and $4$, only move the graph sideways; they do not change the end behavior.`,
+        `端点行为只取决于首项，而乘积的首项不必展开就能求出。展开时，$x$ 的最高次幂来自把每个因式中的 $x$ 相乘，所以次数相加，前面的数再乘上去。
+
+对于 $f(x) = -2(x - 1)^{3}(x + 4)^{2}$：因式 $(x - 1)^{3}$ 贡献 $x^{3}$，$(x + 4)^{2}$ 贡献 $x^{2}$，所以首项是 $-2x^{3} \\cdot x^{2} = -2x^{5}$。次数 $5$ 是奇数，$-2$ 是负数，所以图象左端上升、右端下降。
+
+> **注意。** 次数是各因式次数之**和**，$3 + 2 = 5$，不是乘积，也不是其中较大的那个。因式里的数（如 $-1$ 和 $4$）只让图象左右移动，不改变端点行为。`,
       ],
       (rng) => {
         const a = nz(rng, 5);
@@ -213,8 +221,20 @@ For $2x + 3y = 1$ and $6x + ty = 5$: the $x$-coefficient is multiplied by $3$, s
           text(leftUp, rightUp),
           [text(!leftUp, rightUp), text(leftUp, !rightUp), text(!leftUp, !rightUp)],
           [
-            `The degree is $${m} + ${n} = ${degree}$, which is ${degree % 2 === 0 ? "even" : "odd"}, and the leading coefficient $${a}$ is ${a > 0 ? "positive" : "negative"}, so the graph behaves like $${a === 1 ? "" : a === -1 ? "-" : a}x^{${degree}}$ at both ends. It ${leftUp ? "rises" : "falls"} to the left and ${rightUp ? "rises" : "falls"} to the right.`,
-            `次数是 $${m} + ${n} = ${degree}$，是${degree % 2 === 0 ? "偶数" : "奇数"}，首项系数 $${a}$ 是${a > 0 ? "正数" : "负数"}，所以图象在两端的走向与 $${a === 1 ? "" : a === -1 ? "-" : a}x^{${degree}}$ 相同：左端${leftUp ? "上升" : "下降"}，右端${rightUp ? "上升" : "下降"}。`,
+            `**Step 1: the leading term.** Each factor starts with $x$, so multiplying out, the highest power is $${m === 1 ? "x" : `x^{${m}}`} \\cdot ${n === 1 ? "x" : `x^{${n}}`} = x^{${degree}}$, the powers adding to $${m} + ${n} = ${degree}$. With the number in front, the leading term is $${a === 1 ? "" : a === -1 ? "-" : a}x^{${degree}}$.
+
+**Step 2: the right end.** For a large positive $x$, $x^{${degree}}$ is positive and the coefficient $${a}$ is ${a > 0 ? "positive" : "negative"}, so the graph ${rightUp ? "rises" : "falls"} to the right.
+
+**Step 3: the left end.** For a large negative $x$, $x^{${degree}}$ is ${degree % 2 === 0 ? "positive, since the degree is even" : "negative, since the degree is odd"}, so the graph ${leftUp ? "rises" : "falls"} to the left.
+
+**Check.** At $x = 100$ every factor is positive, so the sign of $f(100)$ is the sign of $${a}$: ${a > 0 ? "positive" : "negative"}, matching a graph that ${rightUp ? "rises" : "falls"} to the right.`,
+            `**第一步：求首项。** 每个因式都以 $x$ 开头，展开后最高次幂是 $${m === 1 ? "x" : `x^{${m}}`} \\cdot ${n === 1 ? "x" : `x^{${n}}`} = x^{${degree}}$，次数相加得 $${m} + ${n} = ${degree}$。乘上前面的数，首项是 $${a === 1 ? "" : a === -1 ? "-" : a}x^{${degree}}$。
+
+**第二步：右端。** 当 $x$ 是很大的正数时，$x^{${degree}}$ 为正，系数 $${a}$ 为${a > 0 ? "正" : "负"}，所以图象右端${rightUp ? "上升" : "下降"}。
+
+**第三步：左端。** 当 $x$ 是绝对值很大的负数时，${degree % 2 === 0 ? "次数为偶数" : "次数为奇数"}，$x^{${degree}}$ 为${degree % 2 === 0 ? "正" : "负"}，所以图象左端${leftUp ? "上升" : "下降"}。
+
+**检验。** 当 $x = 100$ 时每个因式都是正数，所以 $f(100)$ 与 $${a}$ 同号，为${a > 0 ? "正" : "负"}，与右端${rightUp ? "上升" : "下降"}相符。`,
           ],
         );
       },
@@ -430,8 +450,16 @@ Solve $ax + b = cx + d$ for $x$. Subtract $cx$ and $b$ from both sides: $ax - cx
       "solving-an-equation-in-pieces",
       ["Solving an equation in pieces", "分段解方程"],
       [
-        "To solve an equation with a piecewise function, solve it in each piece separately. Then keep a solution only if it lies in the part of the domain where that piece applies.",
-        "解分段函数的方程时，要在每一段分别求解。然后只保留落在这一段定义域内的解。",
+        `Each formula of a piecewise function speaks only for its own part of the domain. So to solve an equation, solve it with **each** formula separately, then keep a solution only if it lies in the part where that formula applies.
+
+Take $f(x) = 2x + 1$ if $x < 3$ and $f(x) = x + 4$ if $x \\ge 3$, and solve $f(x) = 5$. The first formula gives $2x + 1 = 5$, so $x = 2$; since $2 < 3$, this formula really does apply there, and $x = 2$ is a solution. The second gives $x + 4 = 5$, so $x = 1$; but $1$ is not $\\ge 3$, so at $x = 1$ the function uses the other formula, and $x = 1$ is rejected.
+
+> **Watch out.** Solving each piece's equation is only half the work: a value outside its piece's condition is not a solution, however neatly it came out. Check every candidate against its own condition.`,
+        `分段函数的每个公式只管它自己那一部分定义域。所以解方程时，要用**每个**公式分别求解，然后只保留落在该公式适用范围内的解。
+
+设 $x < 3$ 时 $f(x) = 2x + 1$，$x \\ge 3$ 时 $f(x) = x + 4$，解 $f(x) = 5$。第一个公式给出 $2x + 1 = 5$，得 $x = 2$；因为 $2 < 3$，这个公式在那里确实适用，所以 $x = 2$ 是解。第二个公式给出 $x + 4 = 5$，得 $x = 1$；但 $1$ 不满足 $\\ge 3$，在 $x = 1$ 处函数用的是另一个公式，所以舍去 $x = 1$。
+
+> **注意。** 解出每一段的方程只是完成了一半：不满足这一段条件的值不是解，不管它算得多么整齐。每个候选值都要用它自己那一段的条件检验。`,
       ],
       (rng) => {
         const c = rng.int(-4, 6);
@@ -451,8 +479,16 @@ Solve $ax + b = cx + d$ for $x$. Subtract $cx$ and $b$ from both sides: $ax - cx
           x1,
           [Number.isInteger(second) ? second : x2, c, v],
           [
-            `The first piece gives $x = ${x1}$, which is below $${c}$. The second gives $x = ${Q.of(v - e, d).toLatex()}$, which is not at least $${c}$, so it is rejected.`,
-            `第一段得 $x = ${x1}$，小于 $${c}$。第二段得 $x = ${Q.of(v - e, d).toLatex()}$，不满足至少为 $${c}$，所以舍去。`,
+            `**Step 1: the first piece.** Solve $${a}x${signed(b)} = ${v}$: ${b > 0 ? `subtract $${b}$` : `add $${-b}$`} to get $${a}x = ${v - b}$, then divide by $${a}$: $x = ${x1}$. Since $${x1} < ${c}$, this piece applies there, so $x = ${x1}$ is a solution.
+
+**Step 2: the second piece.** Solve $${d}x${signed(e)} = ${v}$: ${e > 0 ? `subtract $${e}$` : `add $${-e}$`} to get $${d}x = ${v - e}$, then divide by $${d}$: $x = ${Q.of(v - e, d).toLatex()}$. This is less than $${c}$, so it fails $x \\ge ${c}$ and is rejected.
+
+**Check.** $f(${x1}) = ${a}(${x1})${signed(b)} = ${a * x1}${signed(b)} = ${v}$, using the first formula because $${x1} < ${c}$.`,
+            `**第一步：第一段。** 解 $${a}x${signed(b)} = ${v}$：${b > 0 ? `两边减去 $${b}$` : `两边加上 $${-b}$`}得 $${a}x = ${v - b}$，再除以 $${a}$：$x = ${x1}$。因为 $${x1} < ${c}$，这一段在那里适用，所以 $x = ${x1}$ 是解。
+
+**第二步：第二段。** 解 $${d}x${signed(e)} = ${v}$：${e > 0 ? `两边减去 $${e}$` : `两边加上 $${-e}$`}得 $${d}x = ${v - e}$，再除以 $${d}$：$x = ${Q.of(v - e, d).toLatex()}$。它小于 $${c}$，不满足 $x \\ge ${c}$，所以舍去。
+
+**检验。** $f(${x1}) = ${a}(${x1})${signed(b)} = ${a * x1}${signed(b)} = ${v}$，因为 $${x1} < ${c}$，用的是第一个公式。`,
           ],
         );
       },
@@ -464,14 +500,23 @@ Solve $ax + b = cx + d$ for $x$. Subtract $cx$ and $b$ from both sides: $ax - cx
         "the-range-of-a-reciprocal-function",
         ["The range of a reciprocal function", "倒数函数的值域"],
         [
-          "A fraction with a constant top can be very large or very small but never zero. So $\\frac{a}{x - h} + k$ takes every value except $k$, which is the horizontal asymptote.",
-          "分子是常数的分数可以很大或很小，但不会是零。所以 $\\frac{a}{x - h} + k$ 取到除 $k$ 以外的所有值，$k$ 就是水平渐近线。",
+          `A fraction is zero only when its top is zero. So a fraction whose top is a nonzero constant, such as $\\frac{6}{x - 2}$, is **never** $0$. It takes every other value: to get $3$, solve $\\frac{6}{x - 2} = 3$, which gives $x - 2 = 2$, so $x = 4$; any nonzero target works the same way.
+
+So $f(x) = \\frac{6}{x - 2} + 1$ takes every value except $0 + 1 = 1$: its range is all real numbers except $1$. On the graph, $y = 1$ is the horizontal asymptote, the height the graph approaches but never reaches.
+
+> **Watch out.** The excluded output is the number **added**, $1$, not the $2$ in the denominator: $x = 2$ is the input left out of the domain, the vertical asymptote. And the range is not just $y > 1$: the fraction is negative for $x < 2$, so outputs below $1$ occur too.`,
+          `分数为零当且仅当分子为零。所以分子是非零常数的分数，例如 $\\frac{6}{x - 2}$，**永远**不等于 $0$。其他值它都能取到：要得到 $3$，解 $\\frac{6}{x - 2} = 3$，得 $x - 2 = 2$，即 $x = 4$；任何非零的目标值都可以这样得到。
+
+所以 $f(x) = \\frac{6}{x - 2} + 1$ 取到除 $0 + 1 = 1$ 以外的所有值：它的值域是除 $1$ 以外的全体实数。在图象上，$y = 1$ 是水平渐近线，即图象无限接近却达不到的高度。
+
+> **注意。** 取不到的输出是**加上**的那个数 $1$，而不是分母里的 $2$：$x = 2$ 是定义域中去掉的输入，是竖直渐近线。另外，值域不只是 $y > 1$：当 $x < 2$ 时分数为负，所以小于 $1$ 的输出也会出现。`,
         ],
         (rng) => {
           const a = nz(rng, 9);
           let h = nz(rng, 9);
           const k = nz(rng, 9);
           if (h === k) h = -h;
+          const den = factorOf(h).replace(/[()]/g, "");
           return chooseFilled(
             rng,
             [
@@ -481,8 +526,16 @@ Solve $ax + b = cx + d$ for $x$. Subtract $cx$ and $b$ from both sides: $ax - cx
             `y \\ne ${k}`,
             [`y \\ne ${h}`, `y > ${k}`, `\\text{all real numbers}`],
             [
-              `The fraction is never $0$, so $f(x)$ is never $${k}$, and it takes every other value.`,
-              `分数不会是 $0$，所以 $f(x)$ 不会等于 $${k}$，其他值都能取到。`,
+              `**Step 1: the fraction.** The top of $\\frac{${a}}{${den}}$ is $${a}$, which is not zero, so the fraction is never $0$. It takes every other value: for any nonzero $c$, the input $x = ${h} + \\frac{${a}}{c}$ gives exactly $c$.
+
+**Step 2: add the constant.** $f(x)$ is the fraction ${k < 0 ? `minus $${-k}$` : `plus $${k}$`}, so it takes every value except $0${signed(k)} = ${k}$. The range is $y \\ne ${k}$.
+
+**Check.** Setting $f(x) = ${k}$ would need $\\frac{${a}}{${den}} = 0$, impossible. A nearby value is reached: $f(${h + a}) = \\frac{${a}}{${a}}${signed(k)} = ${k + 1}$.`,
+              `**第一步：看分数。** $\\frac{${a}}{${den}}$ 的分子是 $${a}$，不为零，所以分数永远不等于 $0$。其他值它都能取到：对任何非零的 $c$，输入 $x = ${h} + \\frac{${a}}{c}$ 恰好得到 $c$。
+
+**第二步：加上常数。** $f(x)$ 等于分数${k < 0 ? `减 $${-k}$` : `加 $${k}$`}，所以取到除 $0${signed(k)} = ${k}$ 以外的所有值。值域是 $y \\ne ${k}$。
+
+**检验。** 要使 $f(x) = ${k}$，需要 $\\frac{${a}}{${den}} = 0$，这不可能。附近的值能取到：$f(${h + a}) = \\frac{${a}}{${a}}${signed(k)} = ${k + 1}$。`,
             ],
           );
         },
@@ -727,8 +780,16 @@ For $\\frac{x}{3} + \\frac{y}{2} = 7$ and $\\frac{x}{3} - \\frac{y}{2} = 1$, the
       "points-that-break-the-test",
       ["Points that break the test", "破坏检验的点"],
       [
-        "Two points with the same input and different outputs lie on one vertical line, so the relation is not a function. Comparing the first coordinates is therefore enough to check a list of points.",
-        "输入相同、输出不同的两个点在同一条竖直线上，所以这个关系不是函数。因此检查点列时，只需比较第一个坐标。",
+        `Two points with the same input and different outputs, such as $(2, 5)$ and $(2, -1)$, lie on one vertical line, the line $x = 2$, so a relation containing both fails the vertical line test and is not a function. That means a list of points can be checked without drawing it: compare the first coordinates.
+
+For $\\{(1, 4), (3, 0), (k, 6)\\}$, the new point $(k, 6)$ spoils the function only if $k$ is an input already used with a different output. With $k = 3$ the input $3$ would have the outputs $0$ and $6$; with $k = 4$ or $k = 0$ nothing goes wrong, because $4$ and $0$ are not inputs yet.
+
+> **Watch out.** $k$ is a **first** coordinate, an input, so compare it with the other first coordinates. Matching it to an output, such as $k = 4$ above, puts no two points on one vertical line.`,
+        `输入相同、输出不同的两个点，例如 $(2, 5)$ 和 $(2, -1)$，在同一条竖直线 $x = 2$ 上，所以含有这两点的关系不能通过竖直线检验，不是函数。这说明检查点列时不必画图：比较第一个坐标即可。
+
+对于 $\\{(1, 4), (3, 0), (k, 6)\\}$，新点 $(k, 6)$ 只有当 $k$ 是已用过、且输出不同的输入时，才会破坏函数。$k = 3$ 时，输入 $3$ 会有输出 $0$ 和 $6$；$k = 4$ 或 $k = 0$ 时没有问题，因为 $4$ 和 $0$ 还不是输入。
+
+> **注意。** $k$ 是**第一个**坐标，即输入，所以要与其他点的第一个坐标比较。让它等于某个输出（例如上面的 $k = 4$），并不会使两个点落在同一条竖直线上。`,
       ],
       (rng) => {
         const xs = rng.sample([-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 3);
@@ -743,7 +804,18 @@ For $\\frac{x}{3} + \\frac{y}{2} = 7$ and $\\frac{x}{3} - \\frac{y}{2} = 1$, the
           ],
           `k = ${hit}`,
           [`k = ${ys[0]}`, `k = ${ys[3]}`, `k = ${ys[1]}`],
-          [`With $k = ${hit}$, the input ${hit} has two different outputs.`, `$k = ${hit}$ 时，输入 ${hit} 有两个不同的输出。`],
+          [
+            `**Step 1: list the inputs in use.** The first coordinates of the other points are $${xs.join(", ")}$, with the outputs $${ys.slice(0, 3).join(", ")}$.
+
+**Step 2: find the clash.** The point $(k, ${ys[3]})$ breaks the function only when $k$ is one of those inputs, since its output $${ys[3]}$ differs from all of theirs. Of the choices, only $k = ${hit}$ is an input already in use.
+
+**Check.** With $k = ${hit}$ the relation holds $(${hit}, ${ys[xs.indexOf(hit)]})$ and $(${hit}, ${ys[3]})$, two points on the vertical line $x = ${hit}$: the input $${hit}$ has two outputs.`,
+            `**第一步：列出已用的输入。** 其他点的第一个坐标是 $${xs.join(", ")}$，对应的输出是 $${ys.slice(0, 3).join(", ")}$。
+
+**第二步：找出冲突。** 点 $(k, ${ys[3]})$ 的输出 $${ys[3]}$ 与它们的输出都不同，所以只有当 $k$ 是这些输入之一时才会破坏函数。在选项中，只有 $k = ${hit}$ 是已用过的输入。
+
+**检验。** $k = ${hit}$ 时，关系中有 $(${hit}, ${ys[xs.indexOf(hit)]})$ 和 $(${hit}, ${ys[3]})$ 两点，都在竖直线 $x = ${hit}$ 上：输入 $${hit}$ 有两个输出。`,
+          ],
         );
       },
     ),

@@ -872,8 +872,16 @@ For $2x + y = 4$ and $3x - y = 1$, the coefficients of $x$ are $2$ and $3$, with
         "the-rule-behind-a-table",
         ["The rule behind a table", "表格背后的规则"],
         [
-          "A table, a rule and a graph can show one function. To find a linear rule from a table, take the change per step as the multiplier and the output at zero as the constant.",
-          "表格、规则和图像可以表示同一个函数。要由表格求线性规则，每步的变化是乘数，输入为 $0$ 时的输出是常数。",
+          `A table, a rule and a graph can show one function. When the inputs go up by $1$ and the outputs change by the same amount each time, the rule is $y = mx + b$: each extra $1$ of input adds $m$ more, so $m$ is the **change per step**, and $b$ is the output when the input is $0$.
+
+Take the points $(1, 7)$, $(2, 10)$, $(3, 13)$. The outputs go up by $10 - 7 = 3$ and $13 - 10 = 3$, so $m = 3$. Going back one step, from $x = 1$ to $x = 0$, takes $3$ away: $b = 7 - 3 = 4$. The rule is $y = 3x + 4$, and indeed $3(2) + 4 = 10$.
+
+> **Watch out.** The constant is the output at $x = 0$, not the first output in the table: here $7$ is the output at $x = 1$. And the change per step multiplies $x$; it is not the constant.`,
+          `表格、规则和图象可以表示同一个函数。当输入每次增加 $1$、输出每次变化同样的量时，规则就是 $y = mx + b$：输入每多 $1$，输出就多 $m$，所以 $m$ 是**每步的变化**，$b$ 是输入为 $0$ 时的输出。
+
+看点 $(1, 7)$、$(2, 10)$、$(3, 13)$。输出依次增加 $10 - 7 = 3$ 和 $13 - 10 = 3$，所以 $m = 3$。往回退一步，从 $x = 1$ 到 $x = 0$，要减去 $3$：$b = 7 - 3 = 4$。规则是 $y = 3x + 4$，验证：$3(2) + 4 = 10$。
+
+> **注意。** 常数是 $x = 0$ 时的输出，不是表中的第一个输出：这里的 $7$ 是 $x = 1$ 时的输出。另外，每步的变化是 $x$ 的系数，不是常数。`,
         ],
         (rng) => {
           const m = rng.int(2, 9) * (rng.bool() ? 1 : -1);
@@ -888,8 +896,16 @@ For $2x + y = 4$ and $3x - y = 1$, the coefficients of $x$ are $2$ and $3$, with
             line(m, b),
             [line(b, m), line(m, -b), line(-m, b)],
             [
-              `$y$ changes by $${m}$ per step, and stepping back from $x = 1$ to $x = 0$ gives $${b}$.`,
-              `每步 $y$ 变化 $${m}$，从 $x = 1$ 退回到 $x = 0$ 得 $${b}$。`,
+              `**Step 1: the change per step.** From $x = 1$ to $x = 2$ the output goes from $${m + b}$ to $${2 * m + b}$, a change of $${m}$; from $x = 2$ to $x = 3$ it changes by $${m}$ again. So $m = ${m}$.
+
+**Step 2: the output at $x = 0$.** Step back from $x = 1$ to $x = 0$ by undoing one change: $${m + b}${m < 0 ? ` + ${-m}` : ` - ${m}`} = ${b}$. So $b = ${b}$, and the rule is $${line(m, b)}$.
+
+**Check.** At $x = 3$ the rule gives $${m}(3)${signed(b)} = ${3 * m + b}$, the last point of the list.`,
+              `**第一步：每步的变化。** 从 $x = 1$ 到 $x = 2$，输出从 $${m + b}$ 变为 $${2 * m + b}$，变化 $${m}$；从 $x = 2$ 到 $x = 3$，又变化 $${m}$。所以 $m = ${m}$。
+
+**第二步：$x = 0$ 时的输出。** 从 $x = 1$ 退回到 $x = 0$，撤销一次变化：$${m + b}${m < 0 ? ` + ${-m}` : ` - ${m}`} = ${b}$。所以 $b = ${b}$，规则是 $${line(m, b)}$。
+
+**检验。** 当 $x = 3$ 时，规则给出 $${m}(3)${signed(b)} = ${3 * m + b}$，正是最后一个点。`,
             ],
           );
         },
@@ -902,8 +918,16 @@ For $2x + y = 4$ and $3x - y = 1$, the coefficients of $x$ are $2$ and $3$, with
       "from-a-table-of-values",
       ["From a table of values", "由数值表判断"],
       [
-        "Reading across a table in order of the input, a function is increasing where the outputs go up and decreasing where they go down. The turning point is where this changes.",
-        "按输入的顺序读表，输出上升的地方函数递增，下降的地方函数递减。发生变化的地方就是转折点。",
+        `A table shows only some points of a graph, but reading it in order of the input still shows the direction: where each output is larger than the one before, the function is going up, **increasing**; where it is smaller, it is going down, **decreasing**. The input where the direction changes is the **turning point**.
+
+For the outputs $1, 4, 6, 5, 2$ at $x = 0, 1, 2, 3, 4$, the changes from one output to the next are $+3, +2, -1, -3$. The function rises up to $x = 2$ and falls after it, so it stops increasing at $x = 2$, where its output $6$ is the largest.
+
+> **Watch out.** The answer is the input at the turn, $2$, not the output $6$ there. And it is the last input of the rise, not the first input after it, $3$: the function climbs all the way to $x = 2$.`,
+        `数值表只给出图象上的一些点，但按输入的顺序读表，仍然能看出方向：每个输出都比前一个大的地方，函数在上升，即**递增**；比前一个小的地方，函数在下降，即**递减**。方向改变处的输入就是**转折点**。
+
+对于 $x = 0, 1, 2, 3, 4$ 处的输出 $1, 4, 6, 5, 2$，相邻输出的变化是 $+3, +2, -1, -3$。函数一直上升到 $x = 2$，之后下降，所以它在 $x = 2$ 处停止递增，此时输出 $6$ 最大。
+
+> **注意。** 答案是转折处的输入 $2$，而不是那里的输出 $6$。另外，它是上升段的最后一个输入，而不是之后的第一个输入 $3$：函数一直升到 $x = 2$。`,
       ],
       (rng) => {
         const turn = rng.int(1, 4);
@@ -914,6 +938,7 @@ For $2x + y = 4$ and $3x - y = 1$, the coefficients of $x$ are $2$ and $3$, with
         let run = start;
         const ys = [start, ...steps.map((s) => (run += s))];
         const table = `\\begin{array}{|c|c|c|c|c|c|c|}\\hline x & ${xs.join(" & ")} \\\\ \\hline y & ${ys.join(" & ")} \\\\ \\hline\\end{array}`;
+        const changes = steps.map((s) => (s > 0 ? `+${s}` : `${s}`)).join(", ");
         return whole(
           flip
             ? [
@@ -927,8 +952,16 @@ For $2x + y = 4$ and $3x - y = 1$, the coefficients of $x$ are $2$ and $3$, with
           turn,
           [turn + 1, turn === 1 ? 5 : turn - 1, ys[turn]! >= 0 && ys[turn] !== turn ? ys[turn]! : turn + 2],
           [
-            `The outputs change direction at $x = ${turn}$, where $y = ${ys[turn]}$.`,
-            `输出在 $x = ${turn}$ 处改变方向，此时 $y = ${ys[turn]}$。`,
+            `**Step 1: the changes.** Going from each output to the next, the changes are $${changes}$.
+
+**Step 2: find the turn.** The changes are ${flip ? "negative" : "positive"} up to $x = ${turn}$ and ${flip ? "positive" : "negative"} after it, so the function ${flip ? "decreases" : "increases"} until $x = ${turn}$ and stops there.
+
+**Check.** At $x = ${turn}$ the output is $${ys[turn]}$, the ${flip ? "smallest" : "largest"} in the table, as it must be where a ${flip ? "fall" : "rise"} ends.`,
+            `**第一步：看变化。** 从每个输出到下一个，变化依次是 $${changes}$。
+
+**第二步：找转折点。** 到 $x = ${turn}$ 为止变化都是${flip ? "负" : "正"}的，之后都是${flip ? "正" : "负"}的，所以函数${flip ? "递减" : "递增"}到 $x = ${turn}$ 为止。
+
+**检验。** $x = ${turn}$ 处的输出是 $${ys[turn]}$，是表中最${flip ? "小" : "大"}的，${flip ? "下降" : "上升"}结束的地方正应如此。`,
           ],
         );
       },
