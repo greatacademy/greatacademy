@@ -162,7 +162,7 @@ Stage 0 is done. Walking its lessons against Math Academy's on the same topics f
 | `precalculus-complex-numbers.ts` | 15 | done | |  |
 | `precalculus-random-variables.ts` | 14 | done | |  |
 | `precalculus-de-moivre.ts` | 13 | done | |  |
-| `precalculus-statistics.ts` | 12 | in progress | |  |
+| `precalculus-statistics.ts` | 12 | done | |  |
 
 ### Calculus
 
