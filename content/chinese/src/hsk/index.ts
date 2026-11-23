@@ -8,7 +8,7 @@
 // characters from their pinyin of written.ts, and HSK 4 to 6 the paper's own tasks of paper.ts.
 
 import { type CourseDef, type CriterionSpec, type Generator, same, slimTopics, type Text, type TopicDef, t } from "@ga/content";
-import { criterionById, point, quote, toneless, writingGenerator, zhQuote } from "@ga/subject-chinese";
+import { criterionById, point, toneless, writingGenerator, zhQuote } from "@ga/subject-chinese";
 import { checkApart, type LevelOneCharacter, lookalikeOf, notTheCharacter } from "../level-1/characters.ts";
 import { nearOf, spread } from "../level-1/kit.ts";
 import {
@@ -34,9 +34,10 @@ import {
   parseSentences,
   SHORT_EXPLANATION,
   sentenceGenerator,
+  sentencesIntro,
 } from "../level-1/sentences.ts";
 import { GAP, type LevelOneWord, pinyinOf } from "../level-1/words.ts";
-import { type LevelWriting, levelWritingId } from "../level-1/writing.ts";
+import { type LevelWriting, levelWorked, levelWritingId } from "../level-1/writing.ts";
 import { levelTwoPlan } from "../level-2/plan.ts";
 import { sentences as levelTwoSentences } from "../level-2/sentence-data.ts";
 import { levelThreePlan } from "../level-3/plan.ts";
@@ -340,9 +341,6 @@ const criterion = (id: string): CriterionSpec => {
   return found;
 };
 
-/** onePiece shows a model answer as one quotation. */
-const onePiece = (model: string): Text => t(`One good answer:\n\n${quote(model)}`, `一篇好的答案：\n\n${quote(model)}`);
-
 /**
  * writingExam builds the writing topic of an HSK course from level 3 on, judged by a model: a knowledge point for each
  * paragraph-writing topic of its levels, asked with that topic's tasks and judged by all three of its criteria.
@@ -351,7 +349,9 @@ function writingExam(spec: HskSpec): readonly TopicDef[] {
   const kinds = spec.numbers.flatMap((level) => (WRITING[level] ?? []).map((w, k) => ({ level, n: k + 1, w })));
   if (kinds.length === 0) return [];
   const last = kinds.at(-1)!;
+  const first = kinds[0]!.w;
   const id = `hsk-${spec.key}-writing`;
+  const joined = (texts: readonly Text[]): Text => t(texts.map((x) => x.en).join(" "), texts.map((x) => x["zh-CN"]).join(""));
   return [
     {
       id,
@@ -359,6 +359,10 @@ function writingExam(spec: HskSpec): readonly TopicDef[] {
       summary: t(
         `Writing short texts in Chinese as the writing paper asks, judged by a model: every kind of writing of the levels HSK ${spec.name} tests.`,
         `按写作试卷的要求用中文写短文，由 AI 评判：HSK ${spec.name} 所考等级的各种写作。`,
+      ),
+      intro: t(
+        `The writing paper asks for short texts of the kinds the levels teach, each marked on what it says, how it is put together and its language at once. ${first.instance.en}\n\nEach knowledge point is one kind of writing of the levels HSK ${spec.name} tests: ${kinds.map((k) => `“${k.w.title.en}”`).join(", ")}.`,
+        `写作试卷要求写各等级学过的几种短文，内容、结构和语言一起评分。${first.instance["zh-CN"]}\n\n每个知识点是 HSK ${spec.name} 所考等级的一种写作：${kinds.map((k) => `“${k.w.title["zh-CN"]}”`).join("、")}。`,
       ),
       prerequisites: [levelWritingId(last.level, last.n)],
       encompasses: [],
@@ -379,15 +383,15 @@ function writingExam(spec: HskSpec): readonly TopicDef[] {
           `${id}-level-${level}-${String(n).padStart(2, "0")}`,
           w.title,
           t(
-            `In the paper, a text is marked on all of it at once: what it says, how it is put together, and its language. Plan before you write, keep to the task, and leave time to check your characters. ${w.summary.en}${longer.en}`,
-            `考试时，一篇短文的内容、结构和语言一起评分。先想好再写，紧扣题目，留出时间检查有没有写错字。${w.summary["zh-CN"]}${longer.zh}`,
+            `In the paper, a text is marked on all of it at once: what it says, how it is put together, and its language. Plan before you write, keep to the task, and leave time to check your characters. ${w.summary.en}${longer.en}\n\n${w.instance.en}\n\n> **Watch out.** A text with a perfect form and nothing to say, or with good ideas in a jumble, loses on the rest. Before you hand it in, read it once for what it says, once for its order, and once for its characters.`,
+            `考试时，一篇短文的内容、结构和语言一起评分。先想好再写，紧扣题目，留出时间检查有没有写错字。${w.summary["zh-CN"]}${longer.zh}\n\n${w.instance["zh-CN"]}\n\n> **注意。** 格式完美却没有内容，或者想法很好却杂乱无章，都会在别的方面失分。交卷前读三遍：一遍看内容，一遍看顺序，一遍看有没有写错字。`,
           ),
           writingGenerator(
             t(`Write the text below in Chinese, of at least ${least} characters.`, `按下面的要求，用中文写一篇不少于 ${least} 字的短文。`),
             w.bank,
             [...w.criteria],
             { minWords: least, maxChars: least * 10 },
-            onePiece,
+            levelWorked(joined(w.points.map((p) => p.plan)), joined(w.points.map((p) => p.check))),
           ),
         );
       }),
@@ -546,6 +550,7 @@ function examTopics(spec: HskSpec): readonly TopicDef[] {
         `把词语排成句子，练习试卷各部分都要用到的语序，句子来自 HSK ${name} 所考等级的各个单元。`,
       ),
       prerequisites: [levelSentencesId(spec.numbers.at(-1) ?? 1, SENTENCES[(spec.numbers.at(-1) ?? 1) - 1]?.length ?? 4)],
+      intro: sentencesIntro(sentenceBank(spec.numbers, "short")),
       strand: "writing",
       knowledgePoints: [
         point(

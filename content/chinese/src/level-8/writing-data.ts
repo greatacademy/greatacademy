@@ -15,6 +15,10 @@ export const writing: readonly LevelWriting[] = [
     ),
     criteria: ["zhl8-problem-causes", "zhl8-problem-proposals", "zhl8-problem-language"],
     minChars: 300,
+    instance: t(
+      "Take older people living alone, one of whom fell and lay long unfound. The report shows how serious it is, with a number or a case; analyses the causes, 从老人方面看……从社区方面看……; puts forward two or three proposals, such as visits by volunteers, and weighs each; and recommends: 综合来看，笔者建议先从……做起。",
+      "比如小区里的独居老人，有老人摔倒后很久没人发现。报告先用数字或事例说明问题有多严重；再分析原因：“从老人方面看……从社区方面看……”；然后提出两三条对策，比如志愿者定期探访，并逐条权衡；最后提出建议：“综合来看，笔者建议先从……做起。”",
+    ),
     points: [
       {
         suffix: "causes",
@@ -28,6 +32,18 @@ export const writing: readonly LevelWriting[] = [
           "根据下面的要求，用中文写一篇不少于300字的简短报告。用事实说明问题有多严重，并分析它的至少两个原因。",
         ),
         criteria: ["zhl8-problem-causes", "zhl8-problem-language"],
+        callout: t(
+          "A cause is not the problem renamed: 老人摔倒没人发现 is the problem itself; that they live alone and no one looks in on them each day is a cause.",
+          "原因不是把问题换个说法：“老人摔倒没人发现”就是问题本身；他们一个人住、没人每天去看望，才是原因。",
+        ),
+        plan: t(
+          "Find a number or a case that shows how serious the problem is, and list two causes from different sides.",
+          "找一个能说明问题严重的数字或事例，再从不同方面列出两个原因。",
+        ),
+        check: t(
+          "Find the fact that shows the seriousness, and ask of each cause whether it explains why the problem arises.",
+          "找到说明严重程度的事实，再问问每个原因：它解释了问题为什么会出现吗？",
+        ),
       },
       {
         suffix: "proposals",
@@ -41,6 +57,18 @@ export const writing: readonly LevelWriting[] = [
           "根据下面的要求，用中文写一篇不少于300字的简短报告。提出两三种具体的对策，比较每一种的好处和困难，并说明你建议采用哪一种。",
         ),
         criteria: ["zhl8-problem-proposals", "zhl8-problem-language"],
+        callout: t(
+          "A proposal names who acts: 应该加强关心 names no one, while 社区每周安排志愿者上门两次 can be weighed.",
+          "对策要说出谁来做：“应该加强关心”没说谁做，“社区每周安排志愿者上门两次”才能拿来权衡。",
+        ),
+        plan: t(
+          "Write two or three proposals with who does what, and for each its advantage and its difficulty.",
+          "写出两三条对策，每条说清谁做什么，再各写出它的好处和困难。",
+        ),
+        check: t(
+          "Find for each proposal its advantage and its difficulty, and at the end a recommendation that follows from them.",
+          "每条对策都有好处和困难；结尾的建议是从这些权衡中得出的。",
+        ),
       },
     ],
     bank: [
@@ -115,6 +143,10 @@ export const writing: readonly LevelWriting[] = [
     ),
     criteria: ["zhl8-comment-thesis", "zhl8-comment-analysis", "zhl8-comment-language"],
     minChars: 300,
+    instance: t(
+      "Take the plan to pull down the old street under a city wall and build an imitation one. A thesis, not a topic: 笔者认为，拆真建假，留下的只是一条商业街，失去的却是古城的记忆。 Then details analysed: what the old street holds that a copy cannot, and an answer to those who point to the income from tourism.",
+      "比如某古城计划拆掉城墙下的老街，建一条仿古商业街。论点而不是话题：“笔者认为，拆真建假，留下的只是一条商业街，失去的却是古城的记忆。”再用细节加以分析：老街有什么是仿造的街没有的；并回应看重旅游收入的人。",
+    ),
     points: [
       {
         suffix: "thesis",
@@ -128,6 +160,18 @@ export const writing: readonly LevelWriting[] = [
           "根据下面的要求，用中文写一篇不少于300字的评论。在开头提出一个鲜明的论点，全文围绕它展开，结尾回到论点。",
         ),
         criteria: ["zhl8-comment-thesis", "zhl8-comment-language"],
+        callout: t(
+          "A thesis no one could disagree with says nothing: 老街很重要 is safe and empty. Say what follows from it, and what you are against.",
+          "没人会反对的论点什么也没说：“老街很重要”稳妥却空洞。要说出由此得出什么、你反对的是什么。",
+        ),
+        plan: t(
+          "Write the thesis in one sentence one could disagree with, beginning 笔者认为, and plan how the ending returns to it in new words.",
+          "用“笔者认为”开头，写出一句别人可以不同意的论点，再想好结尾怎样换个说法回到它。",
+        ),
+        check: t(
+          "Find the thesis in the first paragraph, check that each later paragraph serves it, and that the ending returns to it in new words.",
+          "在第一段找到论点；看看后面每一段是否都为它服务，结尾是否换了说法回到它。",
+        ),
       },
       {
         suffix: "analysis",
@@ -141,6 +185,18 @@ export const writing: readonly LevelWriting[] = [
           "根据下面的要求，用中文写一篇不少于300字的评论。通过分析具体的内容来支持你的论点，说明每一处内容和论点的关系。",
         ),
         criteria: ["zhl8-comment-analysis", "zhl8-comment-language"],
+        callout: t(
+          "Retelling is not analysis: 诗里写了农民在中午锄地 says what is there; analysis says what it shows and why it bears on the thesis.",
+          "复述不是分析：“诗里写了农民在中午锄地”只是说出写了什么；分析要说出它表现了什么，为什么和论点有关。",
+        ),
+        plan: t(
+          "Choose two specific details, and for each write what it shows and how it bears on the thesis.",
+          "选两个具体的细节，为每个写出它表现了什么、和论点有什么关系。",
+        ),
+        check: t(
+          "After each detail, find the sentence that analyses it, beginning for example with 这一细节说明 or 由此可见.",
+          "在每个细节后面，找到分析它的句子，比如用“这一细节说明”“由此可见”开头的句子。",
+        ),
       },
     ],
     bank: [

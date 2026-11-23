@@ -15,6 +15,10 @@ export const writing: readonly LevelWriting[] = [
     ),
     criteria: ["zhl6-compare-points", "zhl6-compare-conclusion", "zhl6-compare-language"],
     minChars: 200,
+    instance: t(
+      "Take letters and WeChat messages to family far away. Choose the points, speed, cost and feeling, and under each say how both are: 发微信几秒钟就到了，而写信要等好几天。 Then conclude from them: 总的来说，平时联系发微信更方便，重要的话写在信里更有分量。",
+      "比如给远方的亲人写信和发微信：选好几个方面，速度、费用、感受，每个方面都说出两者怎么样：“发微信几秒钟就到了，而写信要等好几天。”再从比较中得出结论：“总的来说，平时联系发微信更方便，重要的话写在信里更有分量。”",
+    ),
     points: [
       {
         suffix: "points",
@@ -28,6 +32,18 @@ export const writing: readonly LevelWriting[] = [
           "根据下面的要求，用中文写一段不少于200字的文章。逐点比较两种事物，至少比较两点，每一点都要说到两者。",
         ),
         criteria: ["zhl6-compare-points", "zhl6-compare-language"],
+        callout: t(
+          "Do not give one thing a paragraph and then the other: the reader must hold the first in mind to compare. Put both under each point.",
+          "不要先用一整段写一样，再用一整段写另一样：读者得记着前一段才能比。每个方面都把两者放在一起写。",
+        ),
+        plan: t(
+          "Choose two or three points, and for each note how both things are, and the word that will show the difference.",
+          "选好两三个方面，每个方面记下两者各是什么样，以及表示差别的词。",
+        ),
+        check: t(
+          "Under each point, find both things, and the word, such as 而, 比 or 相比之下, that sets them side by side.",
+          "在每个方面里找到两样东西，以及把它们放在一起比的词，比如“而”“比”“相比之下”。",
+        ),
       },
       {
         suffix: "conclusion",
@@ -41,6 +57,18 @@ export const writing: readonly LevelWriting[] = [
           "根据下面的要求，用中文写一段不少于200字的文章。比较两种事物，最后得出一个从比较中来的结论。",
         ),
         criteria: ["zhl6-compare-conclusion", "zhl6-compare-language"],
+        callout: t(
+          "A conclusion that says 两种都很好 has compared nothing. Say which you prefer and why, or when each one is better.",
+          "结论写“两种都很好”，等于没比。要说出你更喜欢哪一种、为什么，或者什么时候哪一种更好。",
+        ),
+        plan: t(
+          "Look back at the points, and write the conclusion in one sentence: which is better, or when each is.",
+          "回头看看比较过的几个方面，用一句话写出结论：哪一种更好，或者什么时候哪一种更好。",
+        ),
+        check: t(
+          "Find the conclusion with 总的来说 or 总之, and trace each part of it back to a point you compared.",
+          "找到用“总的来说”或“总之”开头的结论，把它的每一部分追回到比较过的某个方面。",
+        ),
       },
     ],
     bank: [
@@ -115,6 +143,10 @@ export const writing: readonly LevelWriting[] = [
     ),
     criteria: ["zhl6-argue-reasons", "zhl6-argue-objection", "zhl6-argue-language"],
     minChars: 200,
+    instance: t(
+      "Take “中学生每天都应该看新闻吗？”. The first sentence gives the view, 我认为中学生每天都应该看一点新闻; 首先 and 其次 bring two reasons, one with an example; an objection, 有人担心看新闻会占用学习时间, is granted and answered; and 所以 says the view again.",
+      "比如“中学生每天都应该看新闻吗？”：第一句提出观点：“我认为中学生每天都应该看一点新闻。”然后用“首先”“其次”给出两个理由，其中一个举例子；再写出一个反对意见：“有人担心看新闻会占用学习时间”，承认它有道理，再回答它；最后用“所以”再说一次观点。",
+    ),
     points: [
       {
         suffix: "reasons",
@@ -128,6 +160,18 @@ export const writing: readonly LevelWriting[] = [
           "根据下面的要求，用中文写一段不少于200字的文章。清楚地说出你的观点，并用至少两个理由和一个例子支持它。",
         ),
         criteria: ["zhl6-argue-reasons", "zhl6-argue-language"],
+        callout: t(
+          "An example must be concrete: 比如很多人都这样 names no one. Say what happened: 比如上个月我看到一条新闻，……",
+          "例子要具体：“比如很多人都这样”没有说出任何人。要写出发生了什么：“比如上个月我看到一条新闻，……”",
+        ),
+        plan: t(
+          "Write the view in one sentence, choose two reasons, and note an example from life for at least one of them.",
+          "用一句话写出观点，选好两个理由，至少给其中一个配上生活中的例子。",
+        ),
+        check: t(
+          "Find the view at the start, two numbered reasons, an example with 比如, and the view again at the end.",
+          "找一找：开头的观点，两个标了序号的理由，一个用“比如”引出的例子，结尾又回到观点。",
+        ),
       },
       {
         suffix: "objection",
@@ -141,6 +185,18 @@ export const writing: readonly LevelWriting[] = [
           "根据下面的要求，用中文写一段不少于200字的文章。说出你的观点，提出一种反对意见，并用理由回答它。",
         ),
         criteria: ["zhl6-argue-objection", "zhl6-argue-language"],
+        callout: t(
+          "Do not set up an objection no one holds just to knock it down. Choose the one a reader would really raise, such as the time it takes.",
+          "不要编一个没人会提的反对意见再去驳倒它。要选读者真的会提出的，比如会占用时间。",
+        ),
+        plan: t(
+          "Choose the objection a reader would really raise, decide what is true in it, and the reason your view still stands.",
+          "选一个读者真的会提出的反对意见，想好它哪里有道理，以及你的观点为什么仍然成立。",
+        ),
+        check: t(
+          "Find the objection, the words that grant it, and the reason that answers it; the answer is a reason, not the view said again.",
+          "找到反对意见、承认它的话和回答它的理由；回答是理由，不是把观点再说一遍。",
+        ),
       },
     ],
     bank: [

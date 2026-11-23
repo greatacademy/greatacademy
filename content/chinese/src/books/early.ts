@@ -13,6 +13,10 @@ export const earlyBooks: readonly BookData[] = [
       en: "Read one tale at a time, and after each one say in a sentence who it is about and what happens to them. Notice how toys, animals and flowers think and speak like people. Look for what each main character wants and what stands in the way. Many tales end sadly or strangely: ask yourself what the author wants you to feel and to think about.",
       zh: "一次读一个故事，读完用一句话说说它讲的是谁、遇到了什么事。留意玩具、动物和花草怎样像人一样想事情、说话。找一找每个主人公想要什么，又是什么在挡着他。很多故事的结尾让人难过或意想不到，问问自己：作者想让我们感受到什么、想到什么？",
     },
+    callout: {
+      en: "Many tales share names and shapes: a girl, a swan, a soldier. Before you choose, place the question in its own tale: the match girl's visions are not the little mermaid's, and the ugly duckling's winter is not the snow queen's.",
+      zh: "很多故事里都有女孩、天鹅、士兵。选之前先想清楚问的是哪一个故事：卖火柴的小女孩看到的幻象不是小美人鱼的，丑小鸭的冬天也不是冰雪女王的冬天。",
+    },
     questions: `
 问：丑小鸭为什么总被大家欺负？
 答：它长得又大又丑
@@ -239,6 +243,10 @@ export const earlyBooks: readonly BookData[] = [
     guide: {
       en: "Each myth is short: after reading one, name its hero, the trouble they faced and what they did about it. Notice what each myth explains, such as where the sky, people or writing came from. The same gods appear in several stories, so keep a list of names and what each one did. Ask what wish or quality of the ancient people each story shows.",
       zh: "每个神话都不长，读完一个，说说它的主人公是谁、遇到了什么难题、怎样解决的。留意每个神话在解释什么，比如天地、人类或文字是怎么来的。同一位神常在好几个故事里出现，可以列一张表，记下名字和他们做的事。想一想：每个故事表现了古人怎样的愿望和品质？",
+    },
+    callout: {
+      en: "Gods and heroes cross between myths: Nüwa, Fuxi, Houyi and Chang'e. Before you choose, place the question in its own myth: Nüwa mends the sky, but she does not shoot the suns.",
+      zh: "神话里的神和英雄常常互相出现：女娲、伏羲、后羿、嫦娥。选之前先想清楚问的是哪一个神话：女娲补天，射日的却不是她。",
     },
     questions: `
 问：盘古在混沌中睡了多久才醒来？
@@ -467,6 +475,10 @@ export const earlyBooks: readonly BookData[] = [
       en: "The book has two parts: Sun Wukong's early life and his rebellion in Heaven, then the long journey west with the monk and his three disciples. Keep a list of the four pilgrims with their weapons, their skills and their faults, and note which one solves or causes each trouble. Most adventures follow a pattern: a demon appears, captures the monk, and the disciples must find out who it is and how to defeat it. Notice how the characters change over the journey, and enjoy the humour, especially Zhu Bajie's.",
       zh: "全书可以分两大部分：先是孙悟空出世、学艺、大闹天宫，然后是唐僧师徒四人西天取经。给师徒四人各列一张卡片，写上兵器、本领和缺点，看看每次的麻烦是谁解决的、又是谁惹出来的。很多故事有相似的样子：妖怪出现、抓走唐僧，徒弟们要查清妖怪的来历、想办法打败它。留意人物在取经路上的变化，也读一读书里有趣的地方，特别是猪八戒。",
     },
+    callout: {
+      en: "The pilgrims meet many demons with the same tricks. Before you choose, place the question in its own episode, then ask who did it: Wukong, Bajie, Sha Wujing or the monk; a right deed given to the wrong pilgrim is still wrong.",
+      zh: "取经路上的妖怪很多，手段也相似。选之前先想清楚问的是哪一难，再想是谁做的：悟空、八戒、沙僧还是唐僧；事情对了，人说错了，还是错的。",
+    },
     questions: `
 问：孙悟空是怎样出生的？
 答：从一块仙石里蹦出来
@@ -687,6 +699,10 @@ export const earlyBooks: readonly BookData[] = [
     guide: {
       en: "Robinson tells his own story, so notice how he feels and reasons at each turn, not only what he does. Keep a timeline: his voyages before the island, the shipwreck, building a home, the footprint, Friday, and the rescue. List the problems he faces, such as food, shelter, loneliness and fear, and how he solves each with his hands and his head. Ask yourself what the long years alone teach him, and what you would have done in his place.",
       zh: "这本书是鲁滨逊自己讲自己的故事，读的时候不光要看他做了什么，还要留意他每一步的想法和心情。可以画一条时间线：上岛前的航海、遇难、建家园、发现脚印、救下星期五、最后获救。把他遇到的难题列出来，比如吃的、住的、孤独和害怕，再看看他是怎样动手动脑解决的。想一想：二十多年的独居生活让他明白了什么？如果你在他的位置，会怎么做？",
+    },
+    callout: {
+      en: "Robinson's years on the island follow an order: the wreck, the shelter, the crops, the footprint, Friday, the ship. Place the question in that order before you choose; an act of a later year is wrong for an earlier one.",
+      zh: "鲁滨逊在岛上的经历有先后：沉船、搭住处、种庄稼、发现脚印、救下星期五、搭船回国。选之前先把问题放回这个顺序里；后来才做的事，放在前面就错了。",
     },
     questions: `
 问：鲁滨逊为什么要出海？

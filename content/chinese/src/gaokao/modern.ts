@@ -4,7 +4,7 @@
 // rules, with a knowledge point of understanding and one of analysis, and one judged, which builds on it.
 
 import { type CriterionSpec, type Generator, joinText, type Problem, type Rng, same, type Text, type TopicDef, t } from "@ga/content";
-import { type ChoiceItem, choiceGenerator, criterionById, point, quote } from "@ga/subject-chinese";
+import { criterionById, point, quote, zhQuote } from "@ga/subject-chinese";
 
 /** ModernChoice is a choice question on a passage: what it asks, the right option and three wrong ones. */
 export interface ModernChoice {
@@ -34,11 +34,18 @@ export interface ModernPassage {
   readonly answers: readonly [ModernAnswer, ModernAnswer];
 }
 
-/** ModernPointSpec is what a knowledge point teaches and asks. */
+/** ModernPointSpec is what a knowledge point teaches and asks, and the warning its explanation ends with. */
 export interface ModernPointSpec {
   readonly title: Text;
   readonly explanation: Text;
+  readonly callout: Text;
   readonly question: Text;
+}
+
+/** ModernAnswersSpec is a judged knowledge point: what it teaches, and how its worked answer plans and checks. */
+export interface ModernAnswersSpec extends ModernPointSpec {
+  readonly plan: Text;
+  readonly check: Text;
 }
 
 /** ModernSpec describes one kind of modern text: its two topics and their passages. */
@@ -52,7 +59,7 @@ export interface ModernSpec {
   readonly prerequisites: readonly string[];
   readonly understanding: ModernPointSpec;
   readonly analysis: ModernPointSpec;
-  readonly answers: ModernPointSpec;
+  readonly answers: ModernAnswersSpec;
   /** criteria are the ids of the criteria that judge the answers. */
   readonly criteria: readonly string[];
   readonly passages: readonly ModernPassage[];
@@ -83,6 +90,112 @@ const criterion = (id: string): CriterionSpec => {
   return found;
 };
 
+/** bigrams are the pairs of Han characters side by side in a text. */
+const bigrams = (text: string): Set<string> => {
+  const hans = [...text].filter((ch) => /\p{Script=Han}/u.test(ch));
+  return new Set(hans.slice(1).map((ch, i) => `${hans[i]}${ch}`));
+};
+
+/** sentencesOf splits a passage into its sentences, or a poem into its lines. */
+const sentencesOf = (p: ModernPassage): readonly string[] =>
+  p.body
+    .split(/(?<=[。！？；])|\n/u)
+    .map((x) => x.trim())
+    .filter((x) => bigrams(x).size > 0);
+
+/** STRUCTURE finds an option about how a passage or poem is built as a whole: its paragraphs, its opening, its order. */
+const STRUCTURE = /第[一二三四五六七八九十至、]+[段句]|全文|全诗|通篇|开篇|开头|结尾|首段|末段|各段|文章(?:先|以|采用|运用)/u;
+
+/**
+ * restsOn is the sentence of a passage an option goes back to: the one holding a line the option quotes, or else the one
+ * sharing most pairs of characters with it, leaving out those of the question; none when no sentence shares two.
+ */
+function restsOn(p: ModernPassage, option: string, ask: string): string | undefined {
+  const sentences = sentencesOf(p);
+  for (const [, quoted] of option.matchAll(/“([^”]+)”/gu)) {
+    const found = sentences.find((x) => x.includes(quoted!));
+    if (found) return found;
+  }
+  if (STRUCTURE.test(option)) return undefined;
+  const asked = bigrams(ask);
+  const own = [...bigrams(option)].filter((b) => !asked.has(b));
+  let best: string | undefined;
+  let most = 1;
+  for (const x of sentences) {
+    const pairs = bigrams(x);
+    const n = own.filter((b) => pairs.has(b)).length;
+    if (n > most) {
+      most = n;
+      best = x;
+    }
+  }
+  return best;
+}
+
+/** whereText says where an option points: a sentence of the passage, or the passage as a whole. */
+const whereText = (ground: string | undefined): Text =>
+  ground ? t(`goes back to ${zhQuote(ground)}`, `依据的是${zhQuote(ground)}这一句`) : t("speaks of the passage as a whole", "说的是全文");
+
+/** wrongReason gives a wrong option its own reason: the sentence it goes back to and does not match, or none at all. */
+function wrongReason(p: ModernPassage, q: ModernChoice, wrong: string): Text {
+  const ground = restsOn(p, q.right, q.ask);
+  const near = restsOn(p, wrong, q.ask);
+  if (!near && STRUCTURE.test(wrong))
+    return t(
+      `${zhQuote(wrong)} describes how the whole is built, but the ${p.author ? "poem" : "passage"} does not go that way: follow its ${p.author ? "lines" : "paragraphs"} in order again.`,
+      `${zhQuote(wrong)}说的是${p.author ? "全诗" : "全文"}的写法或结构，可${p.author ? "诗" : "文章"}并不是这样写的：按顺序再看一遍各${p.author ? "句" : "段"}。`,
+    );
+  if (!near)
+    return t(
+      `${zhQuote(wrong)} rests on nothing in the passage: no sentence says or does what it claims.`,
+      `${zhQuote(wrong)}在文中找不到依据：没有哪一句说了或做了它说的事。`,
+    );
+  if (near === ground)
+    return t(
+      `${zhQuote(wrong)} goes back to the same sentence as the right option, ${zhQuote(near)}, but changes what it says.`,
+      `${zhQuote(wrong)}和正确选项依据的是同一句${zhQuote(near)}，却改变了这句话的意思。`,
+    );
+  return t(
+    `${zhQuote(wrong)} goes back to ${zhQuote(near)}, but that sentence does not say what the option says.`,
+    `${zhQuote(wrong)}依据的是${zhQuote(near)}这一句，可这句话并没有选项说的意思。`,
+  );
+}
+
+/** choiceSolution works a choice question: where the options point, the right one matched, each wrong one's reason, a check. */
+function choiceSolution(p: ModernPassage, q: ModernChoice, wrong: readonly string[]): Text {
+  const where = whereText(restsOn(p, q.right, q.ask));
+  const reasons = wrong.map((w) => wrongReason(p, q, w));
+  const list = (l: "en" | "zh-CN") => reasons.map((r) => r[l]).join("\n\n");
+  return t(
+    `**Step 1: find where each option points.** The question is **${q.ask}** Take each option back to the sentence of the passage it rests on.\n\n**Step 2: compare, word by word.** The right option, ${zhQuote(q.right)}, ${where.en}, and says what it says, no more and no less.\n\n${list("en")}\n\n**Check.** Read the right option against the passage once more: nothing is widened or narrowed, no cause and effect is swapped, nothing is added. Each other option fell for its own reason above.`,
+    `**第一步：找出每个选项的依据。**题目是“${q.ask}”。把每个选项带回文中，找到它依据的句子。\n\n**第二步：逐词比较。**正确选项${zhQuote(q.right)}${where["zh-CN"]}，说的正是原文的意思，不多也不少。\n\n${list("zh-CN")}\n\n**检验。** 再拿正确选项和原文对一遍：范围没有扩大或缩小，因果没有颠倒，也没有添加内容。其他选项都已按各自的理由排除。`,
+  );
+}
+
+/** choiceInstance walks the first question of a knowledge point: where its right option and one wrong option point. */
+function choiceInstance(p: ModernPassage, q: ModernChoice): Text {
+  const where = whereText(restsOn(p, q.right, q.ask));
+  const why = wrongReason(p, q, q.wrong[0]);
+  return t(
+    `In 《${p.title}》, asked **${q.ask}**, the right option ${zhQuote(q.right)} ${where.en}. ${why.en}`,
+    `比如《${p.title}》问“${q.ask}”，正确选项${zhQuote(q.right)}${where["zh-CN"]}。${why["zh-CN"]}`,
+  );
+}
+
+/** explained is a knowledge point's explanation, then its instance, then its warning. */
+const explained = (spec: ModernPointSpec, instance: Text): Text =>
+  t(
+    `${spec.explanation.en}\n\n${instance.en}\n\n> **Watch out.** ${spec.callout.en}`,
+    `${spec.explanation["zh-CN"]}\n\n${instance["zh-CN"]}\n\n> **注意。** ${spec.callout["zh-CN"]}`,
+  );
+
+/** answerSolution works a judged answer: what to answer, a good answer, and a check against what the question asks. */
+const answerSolution = (spec: ModernAnswersSpec, model: string): Text =>
+  t(
+    `**Step 1: find what to answer.** ${spec.plan.en}\n\n**Step 2: write it.** One good answer:\n\n${quote(model)}\n\n**Check.** ${spec.check.en}`,
+    `**第一步：想清楚答什么。**${spec.plan["zh-CN"]}\n\n**第二步：写下来。**一个好的答案：\n\n${quote(model)}\n\n**检验。** ${spec.check["zh-CN"]}`,
+  );
+
 /** choicePoint builds a knowledge point of choice questions, each asked with two of its wrong options in three rounds. */
 function choicePoint(
   id: string,
@@ -90,23 +203,31 @@ function choicePoint(
   passages: readonly ModernPassage[],
   pick: (p: ModernPassage) => readonly ModernChoice[],
 ) {
-  const items = passages.flatMap((p) => pick(p).map((q) => ({ shown: `${shownPassage(p)}\n\n${q.ask}`, q })));
+  const items = passages.flatMap((p) => pick(p).map((q) => ({ p, q })));
   for (const { q } of items) {
     if (new Set([q.right, ...q.wrong]).size !== 4) throw new Error(`${id}: the options of ${q.ask}`);
   }
-  const bank: readonly ChoiceItem[] = PAIRS.flatMap(([a, b]) =>
-    items.map(({ shown, q }): ChoiceItem => [shown, q.right, [q.wrong[a], q.wrong[b]]]),
-  );
-  return point(
-    id,
-    spec.title,
-    spec.explanation,
-    choiceGenerator(spec.question, bank, (right) => t(`The right option is: ${right}`, `正确的一项是：${right}`)),
-  );
+  const bank = PAIRS.flatMap(([a, b]) => items.map(({ p, q }) => ({ p, q, wrong: [q.wrong[a], q.wrong[b]] })));
+  const generate = (rng: Rng): Problem => {
+    const { p, q, wrong } = rng.cycle(bank);
+    const options = rng.shuffle([q.right, ...wrong]);
+    const answer = options.indexOf(q.right);
+    return {
+      prompt: joinText([spec.question, same(quote(`${shownPassage(p)}\n\n${q.ask}`))]),
+      answer: { checker: "choice", expected: answer, input: { kind: "choice", options: options.map((o) => same(o)) } },
+      solution: choiceSolution(p, q, wrong),
+      canonical: String(answer),
+      wrong: [],
+      mistakes: wrong.map((w) => ({ response: String(options.indexOf(w)), feedback: wrongReason(p, q, w) })),
+    };
+  };
+  const first = items[0]!;
+  return point(id, spec.title, explained(spec, choiceInstance(first.p, first.q)), generate);
 }
 
 /** answerGenerator picks a question by seed; the learner answers in a few sentences that a model judges against the passage. */
-function answerGenerator(question: Text, passages: readonly ModernPassage[], criteria: readonly string[]): Generator {
+function answerGenerator(spec: ModernAnswersSpec, passages: readonly ModernPassage[], criteria: readonly string[]): Generator {
+  const question = spec.question;
   const bank = passages.flatMap((p) => p.answers.map((a) => ({ p, a })));
   return (rng: Rng): Problem => {
     const { p, a } = rng.cycle(bank);
@@ -118,7 +239,7 @@ function answerGenerator(question: Text, passages: readonly ModernPassage[], cri
         input: { kind: "writing", ...ANSWER_LIMITS },
         judged: { criteria: [...criteria], source: shownPassage(p) },
       },
-      solution: t(`One good answer:\n\n${quote(a.model)}`, `一个好的答案：\n\n${quote(a.model)}`),
+      solution: answerSolution(spec, a.model),
       canonical: a.model,
       wrong: [[...a.model].slice(0, 6).join("")],
     };
@@ -140,11 +261,19 @@ export function modernTopics(spec: ModernSpec): readonly [TopicDef, TopicDef] {
       if (n < ANSWER_LIMITS.minWords || n > 200) throw new Error(`${answers}: the model of ${a.ask} has ${n} characters, not 30 to 200`);
     }
   }
+  const first = spec.passages[0]!;
+  const asked = first.understanding[0];
+  const answered = first.answers[0];
+  const where = whereText(restsOn(first, asked.right, asked.ask));
   return [
     {
       id: reading,
       title: spec.title,
       summary: spec.summary,
+      intro: t(
+        `${spec.summary.en} Take 《${first.title}》: asked **${asked.ask}**, the right option is ${zhQuote(asked.right)}; it ${where.en}.\n\nThe first knowledge point is ${spec.understanding.title.en}; the second is ${spec.analysis.title.en}. In both, every option is taken back to the passage.`,
+        `${spec.summary["zh-CN"]}比如《${first.title}》问“${asked.ask}”，正确选项是${zhQuote(asked.right)}，它${where["zh-CN"]}。\n\n第一个知识点是${spec.understanding.title["zh-CN"]}，第二个是${spec.analysis.title["zh-CN"]}。两者都要把每个选项带回原文核对。`,
+      ),
       prerequisites: [...spec.prerequisites],
       encompasses: [],
       xp: 16,
@@ -159,6 +288,10 @@ export function modernTopics(spec: ModernSpec): readonly [TopicDef, TopicDef] {
       id: answers,
       title: spec.answersTitle,
       summary: spec.answersSummary,
+      intro: t(
+        `${spec.answersSummary.en} Take 《${first.title}》, asked **${answered.ask}**. One good answer:\n\n${quote(answered.model)}\n\nThe one knowledge point is ${spec.answers.title.en}.`,
+        `${spec.answersSummary["zh-CN"]}比如《${first.title}》问“${answered.ask}”，一个好的答案是：\n\n${quote(answered.model)}\n\n本主题只有一个知识点：${spec.answers.title["zh-CN"]}。`,
+      ),
       prerequisites: [reading],
       encompasses: [],
       xp: 16,
@@ -166,7 +299,18 @@ export function modernTopics(spec: ModernSpec): readonly [TopicDef, TopicDef] {
       practiceOnly: true,
       criteria: spec.criteria.map(criterion),
       knowledgePoints: [
-        point(answers, spec.answers.title, spec.answers.explanation, answerGenerator(spec.answers.question, spec.passages, spec.criteria)),
+        point(
+          answers,
+          spec.answers.title,
+          explained(
+            spec.answers,
+            t(
+              `In 《${first.title}》, asked **${answered.ask}**, one good answer reads:\n\n${quote(answered.model)}`,
+              `比如《${first.title}》问“${answered.ask}”，一个好的答案是：\n\n${quote(answered.model)}`,
+            ),
+          ),
+          answerGenerator(spec.answers, spec.passages, spec.criteria),
+        ),
       ],
     },
   ];
@@ -202,6 +346,10 @@ export function informationalSpec(prerequisites: readonly string[], passages: re
         "The wrong options of the paper are made in a few ways: they **widen or narrow** what the passage says (all for some, always for often), **swap cause and effect**, turn a **possibility into a certainty**, or **mix up** who said what. Find the sentence of the passage each option rests on and compare them word by word.",
         "试卷的错误选项常用几种办法设置：**扩大或缩小范围**（把“有些”说成“所有”，把“常常”说成“总是”），**因果倒置**，把**可能说成必然**，或者**张冠李戴**。找到每个选项依据的原句，逐词比较。",
       ),
+      callout: t(
+        "An option can copy the passage's words and still be wrong: one changed word, 都 for 有的 or 必然 for 可能, turns it. Compare the meaning, not the words shared.",
+        "选项可以照抄原文的词，却仍然是错的：换掉一个词，把“有的”换成“都”，把“可能”换成“必然”，意思就变了。要比意思，不要只看相同的词。",
+      ),
       question: CHOICE_QUESTION,
     },
     analysis: {
@@ -210,6 +358,10 @@ export function informationalSpec(prerequisites: readonly string[], passages: re
         "Questions of analysis ask how the passage makes its case: its **thesis** and the sub-points under it, its **evidence** (examples, facts, data, quotations) and its **methods** (comparison, analogy, cause and effect, refutation), and how its paragraphs **follow on** from each other. Check that an option names the method rightly and says rightly what it proves.",
         "分析题问的是文章怎样论证：**中心论点**和分论点，**论据**（事例、事实、数据、引言），**论证方法**（对比、类比、因果、驳论），以及各段之间的**思路**。检查选项是否说对了方法，又是否说对了它证明了什么。",
       ),
+      callout: t(
+        "A method named rightly can still be wrong in what it proves: an example used to support the second sub-point is not proof of the thesis as a whole. Check both halves of the option.",
+        "论证方法说对了，证明的对象也可能说错：用来证明第二个分论点的事例，不是在证明整个中心论点。选项的前后两半都要核对。",
+      ),
       question: CHOICE_QUESTION,
     },
     answers: {
@@ -217,6 +369,18 @@ export function informationalSpec(prerequisites: readonly string[], passages: re
       explanation: t(
         "A short answer is marked by its **points**. Read what the question asks, how many points it needs, then find each one in the passage: a reason, a condition, a consequence. Write each point as a sentence of your own, number them, and add nothing the passage does not support.",
         "简答题按**要点**给分。先看题目问什么、需要几点，再到文章里找出每一点：一个原因、一个条件、一个结果。每点用自己的话写成一句，分条列出，不加文章没有的内容。",
+      ),
+      callout: t(
+        "A point copied out at length is not a point made: one sentence in your own words for each, and only as many as the question asks.",
+        "大段照抄原文不等于答出要点：每点用自己的话写一句，题目要几点就写几点。",
+      ),
+      plan: t(
+        "Read what the question asks and how many points it needs, then mark in the passage the sentence each point comes from: a reason, a condition, a consequence.",
+        "看清题目问什么、要几点，再在文中标出每一点所在的句子：一个原因、一个条件或一个结果。",
+      ),
+      check: t(
+        "Count the points against what the question asks, and find each one in the passage: none is missing, none is copied out at length, and nothing is added that the passage does not support.",
+        "对照题目数一数要点，每一点都能在文中找到出处：没有漏掉，没有大段照抄，也没有文章不支持的内容。",
       ),
       question: ANSWER_QUESTION,
     },
@@ -246,6 +410,10 @@ export function literarySpec(prerequisites: readonly string[], passages: readonl
         "Questions of understanding ask what happens, what a character is like and why they act, and what the writer feels. A wrong option often **reads too much** into a detail, gives a character a **motive** the text does not show, or names a **feeling** of the wrong kind. Go back to the sentences an option points to.",
         "理解题问的是情节、人物的性格和行为的原因，以及作者的情感。错误选项常常**过度解读**一个细节，给人物加上文中没有的**动机**，或者把**情感**说错了方向。回到选项指向的句子去核对。",
       ),
+      callout: t(
+        "A feeling must be read from the words, not brought to them: if no sentence shows the character angry or the writer longing, an option that says so is wrong, however likely it sounds.",
+        "情感要从字句里读出来，不能凭想象加上去：如果没有哪一句写出人物生气或作者思念，说他生气、思念的选项就是错的，听起来再合理也不行。",
+      ),
       question: CHOICE_QUESTION,
     },
     analysis: {
@@ -254,6 +422,10 @@ export function literarySpec(prerequisites: readonly string[], passages: readonl
         "Questions of craft ask how the passage is written: **description** of setting, action, speech and mind; **narrative** devices such as clues, foreshadowing, contrast and a shift of viewpoint; and **language**, its rhetoric and its tone. A wrong option usually names a technique the passage does not use, or gives a right technique the wrong effect.",
         "鉴赏题问的是文章怎样写：环境、动作、语言、心理等**描写**；线索、伏笔、对比、视角变化等**叙述**手法；以及**语言**的修辞和风格。错误选项通常说了文章没用的手法，或者把对的手法说成了错的作用。",
       ),
+      callout: t(
+        "Name a technique only where the words show it: a contrast needs two things set side by side, foreshadowing needs a later event it points to. Find both in the passage before you accept the option.",
+        "只有字句里确实有的手法才能说：对比要有两样东西放在一起，伏笔要有后文照应的情节。在文中找到这两样，才能认定选项是对的。",
+      ),
       question: CHOICE_QUESTION,
     },
     answers: {
@@ -261,6 +433,18 @@ export function literarySpec(prerequisites: readonly string[], passages: readonl
       explanation: t(
         "An answer on a literary text has three parts: **name** the technique or feature, **point** to the words of the passage where it is used, and **explain** its effect on the character, the feeling, the theme or the structure. An answer that names a technique and stops there gets few marks.",
         "文学类文本的简答一般有三部分：**说出**手法或特点，**指出**它在文中用在哪些语句上，**分析**它对人物、情感、主题或结构的作用。只说出手法而不分析，得分很少。",
+      ),
+      callout: t(
+        "The effect must be this passage's effect: “it makes the writing vivid” fits any text and earns little. Say what it does to this character, this feeling or this theme.",
+        "作用要说到这篇文章上：“使文章生动形象”放在哪篇都行，得分很少。要说出它对这个人物、这种情感或这个主题起了什么作用。",
+      ),
+      plan: t(
+        "Name what the question asks about, a technique, a feature or a feeling, and mark the sentences of the passage where it is found.",
+        "说出题目问的是什么，手法、特点还是情感，再在文中标出体现它的语句。",
+      ),
+      check: t(
+        "Read the answer against its three parts: the technique named, the words of the passage pointed to, and its effect on this character, feeling or theme said, not an effect any text would have.",
+        "对照三部分检查答案：说出了手法，指出了文中的语句，说明了它对这个人物、情感或主题的作用，而不是放在哪篇文章都成立的作用。",
       ),
       question: ANSWER_QUESTION,
     },
@@ -290,6 +474,10 @@ export function poetrySpec(prerequisites: readonly string[], passages: readonly 
         "First read the title, the author and the period, and any note: they often name the occasion, a parting, a journey, a visit or a festival. Then find the **images** of each line and the **feeling** they carry. A wrong option often misreads a line, or gives the poet a feeling of the wrong kind, joy for grief or resentment for calm.",
         "先读标题、作者和时代，以及注释：它们常常点明写作的缘由，送别、行旅、登临或节日。再找出每一句的**意象**和它们寄托的**情感**。错误选项常常把诗句理解错，或者把情感说反，把悲说成喜，把闲适说成怨愤。",
       ),
+      callout: t(
+        "A bright scene does not always carry a bright feeling: a poem can set spring flowers against grief. Read the feeling from the whole poem, its title and its last line, before you judge an option.",
+        "明丽的景色不一定寄托欢快的情感：诗人可以用春花反衬悲伤。判断选项前，要结合标题和末句，从整首诗读出情感。",
+      ),
       question: CHOICE_QUESTION,
     },
     analysis: {
@@ -298,6 +486,10 @@ export function poetrySpec(prerequisites: readonly string[], passages: readonly 
         "Questions of craft ask how the poem is made: **description** (motion and stillness, sound and sight, near and far), **expression** (feeling through scene, the scene set against the feeling, allusion, reasoning through things), **rhetoric** (personification, metaphor, exaggeration, contrast), and **structure** (an opening that sets the tone, a turn, an ending that leaves the feeling open). Check both that the technique is used and that its effect is stated rightly.",
         "鉴赏题问的是诗怎样写：**描写**（动静、声色、远近），**表达方式**（借景抒情、以乐景写哀情、用典、托物言志），**修辞**（拟人、比喻、夸张、对比），以及**结构**（起句定调、转折、以景结情）。既要核对诗中是否用了这种手法，也要核对作用是否说对。",
       ),
+      callout: t(
+        "A personification needs a thing that acts like a person, an allusion needs a story behind the words: name a device only when the line shows it.",
+        "拟人要有像人一样行动的事物，用典要有字面背后的故事：诗句里确实有，才能说用了这种手法。",
+      ),
       question: CHOICE_QUESTION,
     },
     answers: {
@@ -305,6 +497,18 @@ export function poetrySpec(prerequisites: readonly string[], passages: readonly 
       explanation: t(
         "An answer on a poem has three parts: **name** the technique or feeling, **point** to the lines and images where it is found, and **explain** what it does: the scene it builds, the feeling it carries, or the way it closes the poem.",
         "古代诗歌的简答一般有三部分：**说出**手法或情感，**指出**体现它的诗句和意象，**分析**它的作用：营造了怎样的画面，寄托了怎样的情感，或怎样收束全诗。",
+      ),
+      callout: t(
+        "Quote the line, do not only name it: an answer on 以景结情 that never says which scene ends the poem has not shown it.",
+        "要引出诗句，不能只说手法名称：答“以景结情”却不说是哪一句景物收束全诗，就没有答到点上。",
+      ),
+      plan: t(
+        "Name what the question asks about, a technique or a feeling, and mark the lines and images of the poem where it is found.",
+        "说出题目问的是手法还是情感，再标出体现它的诗句和意象。",
+      ),
+      check: t(
+        "Read the answer against its three parts: the technique or feeling named, the lines quoted, and what it does in this poem, the scene, the feeling or the close, said.",
+        "对照三部分检查答案：说出了手法或情感，引出了诗句，说明了它在这首诗里的作用：画面、情感或收束。",
       ),
       question: t(
         "Read the poem, then answer the question below in Chinese, in a few sentences.",

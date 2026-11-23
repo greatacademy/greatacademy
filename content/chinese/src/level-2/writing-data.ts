@@ -15,6 +15,10 @@ export const writing: readonly LevelWriting[] = [
     ),
     criteria: ["zhl2-day-order", "zhl2-day-details", "zhl2-day-language"],
     minChars: 80,
+    instance: t(
+      "Take “我的一天”. A good paragraph follows the day from morning to night, a word of time leading each part: 早上六点半起床, 七点半去学校, 中午和同学在学校吃饭, 晚上和爸爸妈妈一起吃晚饭. It says what, where and with whom, and ends with how the day feels: 我的一天很忙，可是我很喜欢。",
+      "比如《我的一天》：好的一段话从早上写到晚上，每部分前面都有表示时间的词：早上六点半起床，七点半去学校，中午和同学在学校吃饭，晚上和爸爸妈妈一起吃晚饭。写清楚做什么、在哪儿、和谁一起，最后说说这一天怎么样：“我的一天很忙，可是我很喜欢。”",
+    ),
     points: [
       {
         suffix: "order",
@@ -28,6 +32,18 @@ export const writing: readonly LevelWriting[] = [
           "围绕下面的题目，用中文写一段话。按时间顺序写，用上“早上”“然后”“晚上”这样表示时间的词。",
         ),
         criteria: ["zhl2-day-order", "zhl2-day-language"],
+        callout: t(
+          "A word of time stands before the verb: 我早上七点起床 or 早上七点我起床, never 我起床早上七点.",
+          "表示时间的词放在动词前面：说“我早上七点起床”或“早上七点我起床”，不说“我起床早上七点”。",
+        ),
+        plan: t(
+          "List the parts of the day in order, and give each a word of time: 早上, 中午, 下午, 晚上.",
+          "按顺序列出一天的几个时候，每个配上表示时间的词：早上、中午、下午、晚上。",
+        ),
+        check: t(
+          "Mark the words of time: they run from morning to night, and each stands before its verb.",
+          "把表示时间的词画出来：从早到晚排着，每个都在动词前面。",
+        ),
       },
       {
         suffix: "details",
@@ -41,6 +57,18 @@ export const writing: readonly LevelWriting[] = [
           "围绕下面的题目，用中文写一段话。写清楚做什么、在哪儿做、和谁一起做。",
         ),
         criteria: ["zhl2-day-details", "zhl2-day-language"],
+        callout: t(
+          "Do not join every step with 然后: three in a row read like a list. Vary them with ……以后, 先……再…… or a new word of time.",
+          "不要每一步都用“然后”：连着三个“然后”，读起来像清单。可以换成“……以后”“先……再……”或者新的时间词。",
+        ),
+        plan: t(
+          "For each part of the day, note what you do, where, and with whom, and one small thing you like.",
+          "每个时候都记下做什么、在哪儿、和谁一起，再加一件你喜欢的小事。",
+        ),
+        check: t(
+          "Ask of each part whether it says what, where and with whom, then find the last sentence about how the day feels.",
+          "问问每一部分：写了做什么、在哪儿、和谁一起吗？再找到最后说这一天怎么样的那句话。",
+        ),
       },
     ],
     bank: [
@@ -115,6 +143,10 @@ export const writing: readonly LevelWriting[] = [
     ),
     criteria: ["zhl2-message-form", "zhl2-message-plan", "zhl2-message-language"],
     minChars: 80,
+    instance: t(
+      "Take an invitation to climb a hill on Saturday. The message opens with the friend's name and a colon, 小明：; says what, when and where, 星期六早上八点，我们在学校门口见面; says what to bring and asks 你能去吗？; and ends with who wrote it.",
+      "比如请朋友星期六一起去爬山：短信开头写朋友的名字和冒号“小明：”；说清楚做什么、什么时候、在哪儿：“星期六早上八点，我们在学校门口见面”；再说带什么，问一句“你能去吗？”；最后写上自己的名字。",
+    ),
     points: [
       {
         suffix: "form",
@@ -128,6 +160,18 @@ export const writing: readonly LevelWriting[] = [
           "根据下面的情况，用中文写一个留言或者短信。开头写朋友的名字，最后写上你的名字。",
         ),
         criteria: ["zhl2-message-form", "zhl2-message-language"],
+        callout: t(
+          "Without your name at the end the friend may not know who wrote; and a note left on a table needs the time too, or they cannot tell whether the plan has passed.",
+          "最后不写名字，朋友可能不知道是谁写的；留在桌子上的便条还要写时间，不然朋友不知道约的事过去了没有。",
+        ),
+        plan: t(
+          "Write the friend's name with a colon, decide the few sentences that say why you write, then add your name.",
+          "先写朋友的名字和冒号，再想好说明来意的几句话，最后写自己的名字。",
+        ),
+        check: t(
+          "Find the three parts: the friend's name at the top, the message, and your name at the end, with the time on a note.",
+          "找出三个部分：开头朋友的名字，中间的话，最后你的名字；便条还要有时间。",
+        ),
       },
       {
         suffix: "plan",
@@ -141,6 +185,18 @@ export const writing: readonly LevelWriting[] = [
           "根据下面的情况，用中文写一个留言或者短信。把计划说清楚：做什么、什么时候、在哪儿。",
         ),
         criteria: ["zhl2-message-plan", "zhl2-message-language"],
+        callout: t(
+          "“星期六见！” is friendly but leaves the friend asking when and where. A plan needs a time and a place the friend can act on.",
+          "“星期六见！”很亲切，可朋友还是不知道几点、在哪儿。约定要有朋友能照着做的时间和地点。",
+        ),
+        plan: t(
+          "Write down what, when and where, what to bring, and the question you will ask.",
+          "写下做什么、什么时候、在哪儿、要带什么，以及你要问的话。",
+        ),
+        check: t(
+          "Read it as the friend: you know what to do, when, where and what to bring, and there is a question to answer.",
+          "站在朋友的角度读：知道做什么、什么时候、在哪儿、带什么，还有一个要回答的问题。",
+        ),
       },
     ],
     bank: [

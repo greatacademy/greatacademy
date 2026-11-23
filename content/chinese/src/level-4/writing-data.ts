@@ -15,6 +15,10 @@ export const writing: readonly LevelWriting[] = [
     ),
     criteria: ["zhl4-trip-order", "zhl4-trip-feeling", "zhl4-trip-language"],
     minChars: 120,
+    instance: t(
+      "Take “一次难忘的旅行”. It follows the trip: 早上七点，我们从家里出发; the way there in a sentence; the most interesting place in detail; the way home. And at the important moments it says how you felt and why: nervous as the plane took off, glad at the first sight of the sea.",
+      "比如《一次难忘的旅行》：按旅行的顺序写：“早上七点，我们从家里出发”；路上一句带过；最有意思的地方写详细；再写回家。在重要的时刻写出感受和原因：飞机起飞时有点儿紧张，第一次看到大海时很高兴。",
+    ),
     points: [
       {
         suffix: "order",
@@ -28,6 +32,18 @@ export const writing: readonly LevelWriting[] = [
           "用中文写一写下面这次旅行或者经历。按顺序写，从开始一直写到最后。",
         ),
         criteria: ["zhl4-trip-order", "zhl4-trip-language"],
+        callout: t(
+          "Do not give every stop the same weight. Two hours in the car need one sentence; the best part of the day needs the most.",
+          "不要每一站都写得一样多。坐两个小时的车，一句话就够了；一天里最有意思的部分要写得最多。",
+        ),
+        plan: t(
+          "List the stops in order with a word of time or place for each, and mark the one to tell in detail.",
+          "按顺序列出去过的地方，每处配一个表示时间或地点的词，标出要详细写的那一处。",
+        ),
+        check: t(
+          "Follow the words of time and place: the trip goes in order, and the most interesting part is the longest.",
+          "顺着表示时间和地点的词读：旅行的顺序没有乱，最有意思的部分写得最长。",
+        ),
       },
       {
         suffix: "feeling",
@@ -41,6 +57,18 @@ export const writing: readonly LevelWriting[] = [
           "用中文写一写下面这次旅行或者经历。写出重要时候的心情，也写出原因。",
         ),
         criteria: ["zhl4-trip-feeling", "zhl4-trip-language"],
+        callout: t(
+          "A feeling needs its reason. 我很高兴 alone tells little; 看到大海的时候，我高兴得跳了起来，因为这是我第一次看见海 shows it.",
+          "感受要有原因。光写“我很高兴”说得太少；“看到大海的时候，我高兴得跳了起来，因为这是我第一次看见海”才写出来了。",
+        ),
+        plan: t(
+          "Mark two moments where you felt something, and note the feeling and its reason for each.",
+          "标出两个有感受的时刻，记下当时的感受和原因。",
+        ),
+        check: t(
+          "Find each feeling and the reason beside it, and the last sentence that says what the trip meant to you.",
+          "找出每一种感受和旁边的原因，再找到最后说这次旅行对你意味着什么的那句话。",
+        ),
       },
     ],
     bank: [
@@ -115,6 +143,10 @@ export const writing: readonly LevelWriting[] = [
     ),
     criteria: ["zhl4-explain-steps", "zhl4-explain-clear", "zhl4-explain-language"],
     minChars: 120,
+    instance: t(
+      "Take “为什么会下雨？”. The explanation goes link by link: 首先，太阳把河里和海里的水变成水汽；然后，水汽上升到天上，遇冷变成小水滴，聚成云；最后，小水滴越聚越大，就落下来成了雨。 Each step has a sentence of its own, and none of it is a guess.",
+      "比如“为什么会下雨？”：一环一环地说明：“首先，太阳把河里和海里的水变成水汽；然后，水汽上升到天上，遇冷变成小水滴，聚成云；最后，小水滴越聚越大，就落下来成了雨。”每一步一句话，没有一句是猜的。",
+    ),
     points: [
       {
         suffix: "steps",
@@ -128,6 +160,18 @@ export const writing: readonly LevelWriting[] = [
           "用中文说明下面的问题。一步一步地说明，从第一步写到最后一步。",
         ),
         criteria: ["zhl4-explain-steps", "zhl4-explain-language"],
+        callout: t(
+          "Do not leave out a link: going from 水变成水汽 straight to 下雨了 skips the cloud, and the reader cannot see how one became the other.",
+          "不要漏掉中间的一环：从“水变成水汽”直接跳到“下雨了”，漏了云，读者就看不懂前一步怎么变成了后一步。",
+        ),
+        plan: t(
+          "List the steps or links from the first to the last, and give each a marking word: 首先, 然后, 所以, 最后.",
+          "从头到尾列出每一步或每一环，各配上一个标示词：首先、然后、所以、最后。",
+        ),
+        check: t(
+          "Read it as someone who does not know the answer: each step follows from the one before, and no link is missing.",
+          "站在不知道答案的人的角度读：每一步都接得上前一步，没有漏掉的环节。",
+        ),
       },
       {
         suffix: "clear",
@@ -141,6 +185,18 @@ export const writing: readonly LevelWriting[] = [
           "用中文说明下面的问题。让不知道的人也能看懂，只写事实。",
         ),
         criteria: ["zhl4-explain-clear", "zhl4-explain-language"],
+        callout: t(
+          "An example or a comparison must make the point easier, not add a new one: 心脏就像一个水泵 helps; the story of the day you ran a race does not explain the heart.",
+          "举例和打比方是为了把道理讲明白，不是加新内容：“心脏就像一个水泵”有帮助；写你那天赛跑的经过，并没有说明心脏。",
+        ),
+        plan: t(
+          "Write first what the thing is in one plain sentence, and choose a comparison or an example for the hardest point.",
+          "先用一句平实的话说出它是什么，再为最难懂的地方选一个比方或例子。",
+        ),
+        check: t(
+          "Check every statement as a fact you are sure of, and find the comparison or example that makes the hard point easy.",
+          "把每句话当作事实核对：都是你确定的；再找到把难点讲明白的那个比方或例子。",
+        ),
       },
     ],
     bank: [

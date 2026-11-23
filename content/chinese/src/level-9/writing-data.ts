@@ -15,6 +15,10 @@ export const writing: readonly LevelWriting[] = [
     ),
     criteria: ["zhl9-essay-thesis", "zhl9-essay-development", "zhl9-essay-register"],
     minChars: 350,
+    instance: t(
+      "Take “言多必失”. The essay first makes the saying clear, 所谓“言多必失”，即话说多了难免出错; then takes a position beyond it, 然而在笔者看来，“失”并不在于“多”，而在于说话不经思考; develops it in two stages, a reason and then a contrast; and concludes with 由此可见.",
+      "比如“言多必失”：先把这句话讲清楚：“所谓‘言多必失’，即话说多了难免出错。”再提出超出解释的看法：“然而在笔者看来，‘失’并不在于‘多’，而在于说话不经思考。”接着分两层展开，先讲理由，再作对比；最后用“由此可见”作结。",
+    ),
     points: [
       {
         suffix: "thesis",
@@ -28,6 +32,18 @@ export const writing: readonly LevelWriting[] = [
           "根据下面的要求，用中文写一篇不少于350字的议论文。解释题目中的观念，并在开头提出你自己鲜明的论点。",
         ),
         criteria: ["zhl9-essay-thesis", "zhl9-essay-register"],
+        callout: t(
+          "Explaining the saying is not yet a thesis: an essay that only says what 言多必失 means has taken no position. Add what you think of it.",
+          "解释俗语还不是论点：只说清“言多必失”是什么意思，还没有表明立场。要加上你对它的看法。",
+        ),
+        plan: t(
+          "Write one sentence that explains the idea, and one that takes your position on it, often with 然而 or 诚然……然而…….",
+          "写一句解释这个说法的话，再写一句表明你立场的话，常用“然而”或“诚然……然而……”。",
+        ),
+        check: t(
+          "Find the explanation and the position, and check that the position says more than the explanation.",
+          "找到解释和立场两句，看看立场是否比解释多说了东西。",
+        ),
       },
       {
         suffix: "development",
@@ -41,6 +57,18 @@ export const writing: readonly LevelWriting[] = [
           "根据下面的要求，用中文写一篇不少于350字的议论文。至少分两层展开你的论点，并写一个把各层论证收拢起来的结尾。",
         ),
         criteria: ["zhl9-essay-development", "zhl9-essay-register"],
+        callout: t(
+          "Stages that only stand side by side do not develop: three examples of the same point are one stage. Each must take the thought further, as 进一步说 promises.",
+          "只是并列的几层并没有推进：同一个意思举三个例子，仍然只是一层。每一层都要像“进一步说”所承诺的那样，把思考往前推。",
+        ),
+        plan: t(
+          "Plan two stages, each a step beyond the last, the linking words between them, and a conclusion that draws them together.",
+          "想好两层，每一层都比前一层更进一步，再想好连接的词语，以及把它们收拢的结论。",
+        ),
+        check: t(
+          "Sum up each stage in a line: the second says something the first did not, and the conclusion gathers both.",
+          "给每一层写一句概括：第二层说出了第一层没说的东西，结论把两层收拢起来。",
+        ),
       },
     ],
     bank: [
@@ -115,6 +143,10 @@ export const writing: readonly LevelWriting[] = [
     ),
     criteria: ["zhl9-formal-format", "zhl9-formal-content", "zhl9-formal-register"],
     minChars: 350,
+    instance: t(
+      "Take a notice from the school office about a visiting group of students. The title, 关于接待国际中学生访问团的通知; the addressee, 各年级、各班级：; the purpose, 为了促进国际文化交流; numbered items for the dates, what each class does and whom to contact; 特此通知。; and the office and the date on the last two lines.",
+      "比如学校办公室发通知，接待外国中学生访问团。标题：“关于接待国际中学生访问团的通知”；称呼：“各年级、各班级：”；先写目的：“为了促进国际文化交流”；再分条写日期、各班要做什么、联系人；然后写“特此通知。”；最后两行是学校办公室和日期。",
+    ),
     points: [
       {
         suffix: "format",
@@ -128,6 +160,18 @@ export const writing: readonly LevelWriting[] = [
           "根据下面的要求，用中文写一篇不少于350字的应用文。注意格式：在该有的地方写标题、称呼、正文、结束语、署名和日期。",
         ),
         criteria: ["zhl9-formal-format", "zhl9-formal-register"],
+        callout: t(
+          "Each kind has its own closing: 特此通知。 ends a notice, not a letter; 此致 and 敬礼！ end a letter or an invitation, not a notice.",
+          "每种文体有自己的结束语：“特此通知。”用在通知后面，不用在书信里；“此致”“敬礼！”用在书信、邀请函后面，不用在通知里。",
+        ),
+        plan: t(
+          "Name the kind, then set out its parts in order: title, addressee, body, closing, sender and date.",
+          "先确定文体，再按顺序排好各部分：标题、称呼、正文、结束语、署名和日期。",
+        ),
+        check: t(
+          "Go through the parts in order, and check that the closing is the one its kind uses.",
+          "按顺序逐项核对，看看结束语是不是这种文体用的。",
+        ),
       },
       {
         suffix: "content",
@@ -141,6 +185,18 @@ export const writing: readonly LevelWriting[] = [
           "根据下面的要求，用中文写一篇不少于350字的应用文。把读者需要的信息写完整，比如目的、时间、地点、安排和要求，并且条理清楚。",
         ),
         criteria: ["zhl9-formal-content", "zhl9-formal-register"],
+        callout: t(
+          "Casual words break the register: 大家到时候一起来玩儿 suits a chat, not a notice; write 届时请各班准时参加.",
+          "口语词会破坏文体：“大家到时候一起来玩儿”适合聊天，不适合通知；要写“届时请各班准时参加”。",
+        ),
+        plan: t(
+          "Write the purpose with 为了 or 根据, then list in numbered items the time, the place, who takes part, what is required and whom to contact.",
+          "用“为了”或“根据”写出目的，再分条列出时间、地点、参加的人、要求和联系人。",
+        ),
+        check: t(
+          "Read it as the person who must act: every fact needed is there, in numbered items, in a formal register.",
+          "站在要照着做的人的角度读：需要的事实都有，分条写清，语体正式。",
+        ),
       },
     ],
     bank: [

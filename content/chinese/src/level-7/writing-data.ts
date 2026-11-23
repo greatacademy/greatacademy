@@ -15,6 +15,10 @@ export const writing: readonly LevelWriting[] = [
     ),
     criteria: ["zhl7-change-contrast", "zhl7-change-causes", "zhl7-change-language"],
     minChars: 250,
+    instance: t(
+      "Take a hometown over the last ten years. Before: 十几年前，县城只有一条主要的街道，一到下雨天，街上到处是泥水。 Now: 如今，新修的马路通到了每个村子。 Then why, 主要是因为交通改善了, and what it brought, the good and a problem, with 一方面……另一方面…….",
+      "比如家乡近十几年的变化。过去：“十几年前，县城只有一条主要的街道，一到下雨天，街上到处是泥水。”现在：“如今，新修的马路通到了每个村子。”再写原因：“主要是因为交通改善了”；还有影响，好的一面和带来的问题，用“一方面……另一方面……”。",
+    ),
     points: [
       {
         suffix: "before-after",
@@ -28,6 +32,18 @@ export const writing: readonly LevelWriting[] = [
           "根据下面的要求，用中文写一段不少于250字的文章。清楚地写出变化以前和变化以后的样子，要有具体的细节。",
         ),
         criteria: ["zhl7-change-contrast", "zhl7-change-language"],
+        callout: t(
+          "Both sides need a detail: 以前很穷，现在很好 shows no change the reader can see. Give a scene or a number for each.",
+          "两边都要有细节：“以前很穷，现在很好”，读者看不到变化。每一边都要写出一个场景或一个数字。",
+        ),
+        plan: t(
+          "Note a concrete detail of before and one of now, best the same thing at two times, and the word that marks each.",
+          "记下过去和现在各一个具体细节，最好是同一样东西在两个时候的样子，以及标示时间的词。",
+        ),
+        check: t(
+          "Find before and now, each with a detail, and a word of change such as 越来越 or 从……变成…….",
+          "找到过去和现在，各有一个细节，还有“越来越”“从……变成……”这样表示变化的词。",
+        ),
       },
       {
         suffix: "causes",
@@ -41,6 +57,18 @@ export const writing: readonly LevelWriting[] = [
           "根据下面的要求，用中文写一段不少于250字的文章。描述这个变化，并说明它的至少一个原因和至少一个影响。",
         ),
         criteria: ["zhl7-change-causes", "zhl7-change-language"],
+        callout: t(
+          "A cause explains the change, an effect follows from it: do not give what the change brought as the reason it happened. New roads are a cause of the town's growth; busier shops are an effect.",
+          "原因解释变化，影响是变化带来的：不要把变化带来的结果当成变化的原因。修路是县城发展的原因，商店生意变好是影响。",
+        ),
+        plan: t(
+          "List one or two causes with 由于 or 之所以……是因为……, and one good effect and one problem.",
+          "用“由于”或“之所以……是因为……”列出一两个原因，再写一个好的影响和一个带来的问题。",
+        ),
+        check: t(
+          "Sort the sentences into causes and effects: each cause comes before the change, each effect after it, and the effects weigh the good against a problem.",
+          "把句子分成原因和影响两类：原因在变化之前，影响在变化之后；影响里有好的一面，也有问题。",
+        ),
       },
     ],
     bank: [
@@ -115,6 +143,10 @@ export const writing: readonly LevelWriting[] = [
     ),
     criteria: ["zhl7-review-work", "zhl7-review-evidence", "zhl7-review-language"],
     minChars: 250,
+    instance: t(
+      "Take a review of a historical film. It first says what it is: its kind, its title in 《》, and in two sentences what it is about. Then a strength with a scene as evidence, 有一个场景让我印象很深, and a weakness with evidence, 后半部分节奏太慢; and 总的来说 closes it, with whom you would recommend it to.",
+      "比如评一部历史题材的电影：先介绍它是什么：类型、用《》标出的片名，再用两句话说它讲了什么。然后写一个优点，用一个场景作证据：“有一个场景让我印象很深”；再写一个不足，也有证据：“后半部分节奏太慢”；最后用“总的来说”收尾，说说推荐给谁看。",
+    ),
     points: [
       {
         suffix: "work",
@@ -128,6 +160,18 @@ export const writing: readonly LevelWriting[] = [
           "根据下面的要求，用中文写一篇不少于250字的短评。先介绍作品是什么、内容或样子怎么样，再评价它，最后给出总的看法。",
         ),
         criteria: ["zhl7-review-work", "zhl7-review-language"],
+        callout: t(
+          "Do not retell the whole film: if the introduction runs to half the review, the judgement has no room. Two or three sentences are enough.",
+          "不要把整部电影复述一遍：介绍占了一半篇幅，评价就没有地方写了。两三句话就够了。",
+        ),
+        plan: t(
+          "Note the kind, the title in 《》 and the maker, write two or three sentences on what it is about, and decide your overall view.",
+          "记下类型、用《》标出的名称和作者，用两三句话写出它的内容，再想好总体评价。",
+        ),
+        check: t(
+          "Find the introduction, no longer than three sentences, and the overall view at the end, with whom you would recommend it to.",
+          "找到介绍，不超过三句；再找到结尾的总体评价和推荐对象。",
+        ),
       },
       {
         suffix: "evidence",
@@ -141,6 +185,18 @@ export const writing: readonly LevelWriting[] = [
           "根据下面的要求，用中文写一篇不少于250字的短评。至少说出作品的一个优点和一个不足，每一点都要用作品中的内容作依据。",
         ),
         criteria: ["zhl7-review-evidence", "zhl7-review-language"],
+        callout: t(
+          "Evidence comes from the work, not from what others say: 网上评分很高 is not evidence; a scene, a line or a detail is.",
+          "证据要来自作品本身，不是别人的说法：“网上评分很高”不是证据；一个场景、一句台词、一个细节才是。",
+        ),
+        plan: t(
+          "Choose one strength and one weakness, and for each the scene, line or detail that shows it.",
+          "选好一个优点和一个不足，各配上能证明它的场景、台词或细节。",
+        ),
+        check: t(
+          "Find the strength and the weakness, and beside each the evidence from the work.",
+          "找到优点和不足，每一个旁边都有来自作品的证据。",
+        ),
       },
     ],
     bank: [

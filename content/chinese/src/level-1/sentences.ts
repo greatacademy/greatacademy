@@ -76,9 +76,89 @@ export function parseSentences(
 /** QUESTION asks for the parts in order. */
 const QUESTION = t("Put the parts in order to make a sentence.", "把下面的词语排成一个句子。");
 
+/** TIME_WORDS open a part that tells when; such a part comes after who, or opens the sentence. */
+const TIME_WORDS = [
+  "今天",
+  "明天",
+  "昨天",
+  "后天",
+  "前天",
+  "早上",
+  "上午",
+  "中午",
+  "下午",
+  "晚上",
+  "每天",
+  "星期",
+  "周末",
+  "现在",
+  "去年",
+  "明年",
+  "今年",
+  "上个",
+  "下个",
+  "刚才",
+];
+
+/** PLACE_ENDS end a part of 在 and a place, such as 在家里 or 在饭馆. */
+const PLACE_ENDS = [..."里上下家校馆店园边外面室院场站楼中前后"];
+
+/** isTime says whether a part tells when: it opens with a word of time and does not describe a noun with 的. */
+const isTime = (part: string): boolean => TIME_WORDS.some((w) => part.startsWith(w)) && !part.includes("的");
+
+/** roleOf says why a part stands where it does, when its form shows it: a closing mark, a place with 在, a time. */
+function roleOf(part: string, last: boolean): Text | undefined {
+  if (last) return t(`“${part}” carries the closing mark, so it ends the sentence`, `“${part}”带着句末的标点，放在最后`);
+  if (part.startsWith("在") && part.length > 1 && PLACE_ENDS.includes(part.at(-1) ?? ""))
+    return t(`“${part}” is a place with 在, so it stands before the verb`, `“${part}”是“在＋地点”，放在动词前面`);
+  if (isTime(part))
+    return t(`“${part}” tells when, so it comes right after who or opens the sentence`, `“${part}”表示时间，紧跟在主语后面或放在句子开头`);
+  return undefined;
+}
+
+/** startOf says how a sentence opens: with a time, with a word or clause set off by a comma, or with what it is about. */
+function startOf(first: string): Text {
+  if (/[，、]$/u.test(first))
+    return t(`It opens with “${first}”, set off by a comma before the rest.`, `句子以“${first}”开头，用逗号和后面隔开。`);
+  if (isTime(first)) return t(`It opens with “${first}”, which tells when.`, `句子以“${first}”开头，先说时间。`);
+  return t(
+    `It opens with “${first}”: who or what a sentence is about usually comes first.`,
+    `句子以“${first}”开头：说的是谁或什么，一般放在最前面。`,
+  );
+}
+
+/** sentenceSolution works a sentence in two steps, its start and its parts in order, and checks it by reading it whole. */
+function sentenceSolution(parts: readonly string[], others: readonly string[]): Text {
+  const whole = parts.join("");
+  const start = startOf(parts[0] ?? "");
+  const notes = parts.map((p, i) => roleOf(p, i === parts.length - 1)).filter((x): x is Text => x !== undefined);
+  const chain = parts.join(" → ");
+  const also = others.length
+    ? t(` Also right: ${others.map((o) => `“${o}”`).join(", ")}.`, `“${others.join("”“")}”这样排也对。`)
+    : t("", "");
+  return t(
+    `**Step 1: find the start.** ${start.en}\n\n**Step 2: add the parts in order.** ${notes.map((n) => n.en).join("; ")}. In order: ${chain}\n\n**Check.** Read it whole: “${whole}”. All ${parts.length} parts are used once, and it reads as one sentence.${also.en}`,
+    `**第一步：找出开头。**${start["zh-CN"]}\n\n**第二步：按顺序接上各部分。**${notes.map((n) => n["zh-CN"]).join("；")}。依次是：${chain}\n\n**检验。** 连起来读一遍：“${whole}”。${parts.length}个部分都用上了，各用一次，读起来是一个通顺的句子。${also["zh-CN"]}`,
+  );
+}
+
+/** shownFeedback says why submitting the parts in the order shown is wrong: it names the first place that order leaves every right order. */
+function shownFeedback(parts: readonly string[], shown: readonly number[], rightOrders: readonly (readonly number[])[]): Text {
+  const read = shown.map((i) => parts[i] ?? "").join("");
+  const astray = (order: readonly number[]) => shown.findIndex((original, i) => original !== order[i]);
+  const closest = rightOrders.reduce((best, o) => (astray(o) > astray(best) ? o : best));
+  const k = astray(closest);
+  const right = parts[closest[k] ?? 0] ?? "";
+  const there = parts[shown[k] ?? 0] ?? "";
+  return t(
+    `That is the order the parts were shown in, and “${read}” is not a sentence. It first goes astray at part ${k + 1}: there the sentence needs “${right}”, not “${there}”.`,
+    `这是题目给出的顺序，“${read}”不成句子。从第${k + 1}个部分起就错了：那里应该是“${right}”，不是“${there}”。`,
+  );
+}
+
 /**
  * sentenceGenerator picks a sentence by seed and shuffles its parts, never showing them already in a right order. The
- * shown order is the listed wrong response: submitting the parts as they come.
+ * shown order is the mistake it explains: submitting the parts as they come.
  */
 export function sentenceGenerator(bank: readonly SentenceItem[]): Generator {
   return (rng: Rng): Problem => {
@@ -90,7 +170,7 @@ export function sentenceGenerator(bank: readonly SentenceItem[]): Generator {
     for (let tries = 0; isRight(shuffled) && tries < parts.length; tries++) shuffled = [...shuffled.slice(1), shuffled[0] ?? 0];
     const position = (from: readonly number[]) => from.map((original) => shuffled.indexOf(original));
     const expected = rightOrders.map(position);
-    const whole = parts.join("");
+    const others = alsoRight.map((o) => o.map((i) => parts[i] ?? "").join(""));
     return {
       prompt: QUESTION,
       answer: {
@@ -98,11 +178,30 @@ export function sentenceGenerator(bank: readonly SentenceItem[]): Generator {
         expected: expected.map((o) => [...o]),
         input: { kind: "order", items: shuffled.map((i) => same(parts[i] ?? "")) },
       },
-      solution: t(`The sentence reads: ${whole}`, `句子是：${whole}`),
+      solution: sentenceSolution(parts, others),
       canonical: (expected[0] ?? []).join(","),
-      wrong: isRight(shuffled) ? [] : [shuffled.map((_, i) => i).join(",")],
+      wrong: [],
+      ...(!isRight(shuffled) && {
+        mistakes: [{ response: shuffled.map((_, i) => i).join(","), feedback: shownFeedback(parts, shuffled, rightOrders) }],
+      }),
     };
   };
+}
+
+/** sentencesIntro introduces a sentence-building topic with the first short sentence of its bank, its parts shown out of order. */
+export function sentencesIntro(bank: readonly SentenceItem[]): Text {
+  const item = bank[0];
+  if (!item) throw new Error("a sentence topic needs a sentence");
+  const { parts, alsoRight } = item;
+  const right = [parts.map((_, i) => i), ...alsoRight].map((o) => o.join());
+  let shown = parts.map((_, i) => i);
+  for (let k = 1; k <= parts.length && right.includes(shown.join()); k++) shown = [...parts.keys()].map((i) => (i + k) % parts.length);
+  const listed = shown.map((i) => `“${parts[i]}”`);
+  const whole = parts.join("");
+  return t(
+    `Each problem gives the parts of a sentence out of order, and you put them back in the order Chinese keeps: who, then when and where, then the action, then what. The parts ${listed.join(", ")} become “${whole}”.\n\nThe first knowledge point builds short sentences of three or four parts; the second, longer ones of five to seven.`,
+    `每道题把一个句子的几个部分打乱，你要按中文的语序把它们排回去：先说谁，再说什么时候、在哪儿，然后是动作，最后是什么。比如${listed.join("、")}，排成“${whole}”。\n\n第一个知识点排三四个部分的短句；第二个排五到七个部分的长句。`,
+  );
 }
 
 /** SHORT_EXPLANATION teaches the order of a simple Chinese sentence. */
@@ -114,6 +213,8 @@ export const SHORT_EXPLANATION = t(
     "- 他 / 在家里 / 看书。 — *He / at home / reads.*",
     "",
     "Words of time may also open the sentence (明天我去学校), but places with 在 always come before the verb, never after it as in English. Question words such as 什么 and 哪儿 stay where the answer would go.",
+    "",
+    "> **Watch out.** English puts the place after the verb, *reads at home*; Chinese puts it before. Say 他在家里看书, never 他看书在家里.",
   ].join("\n"),
   [
     "中文句子的语序比较固定：先说**谁**（主语），再说**什么时候**、**在哪儿**，然后是**动作**（动词），最后是**什么**（宾语）。",
@@ -122,6 +223,8 @@ export const SHORT_EXPLANATION = t(
     "- 他 / 在家里 / 看书。",
     "",
     "表示时间的词也可以放在句子开头（明天我去学校），但“在＋地点”一定放在动词前面。什么、哪儿这样的疑问词放在答案应该在的位置。",
+    "",
+    "> **注意。** 排好以后从头读一遍：读着别扭，多半是哪个部分放错了位置。说“他在家里看书”，不说“他看书在家里”。",
   ].join("\n"),
 );
 
@@ -135,6 +238,8 @@ export const LONG_EXPLANATION = t(
     "- 我 / 上个星期 / 跟朋友 / 在饭馆 / 吃了 / 一顿饭。",
     "",
     "A word that describes a noun comes before it with 的 (我买的书); a clause of reason or time comes before the main clause (因为下雨，……). When two orders are both right, either is accepted.",
+    "",
+    "> **Watch out.** Everything that frames the action, the time, the place, with whom, stands before the verb; only the object follows it. Say 我跟朋友在饭馆吃了一顿饭, never 我吃了一顿饭跟朋友在饭馆.",
   ].join("\n"),
   [
     "长一些的句子也按同样的顺序加进各个部分，从说明动作的情况到动作本身：",
@@ -144,6 +249,8 @@ export const LONG_EXPLANATION = t(
     "- 我 / 上个星期 / 跟朋友 / 在饭馆 / 吃了 / 一顿饭。",
     "",
     "修饰名词的成分用“的”放在名词前面（我买的书）；表示原因或时间的分句放在主句前面（因为下雨，……）。两种顺序都对的时候，哪一种都算对。",
+    "",
+    "> **注意。** 说明动作情况的部分，时间、地点、跟谁，都放在动词前面；动词后面只跟宾语。说“我跟朋友在饭馆吃了一顿饭”，不说“我吃了一顿饭跟朋友在饭馆”。",
   ].join("\n"),
 );
 
@@ -186,6 +293,7 @@ export function sentenceTopic(spec: SentenceSpec): TopicDef {
     ],
     encompasses: [],
     xp: 12,
+    intro: sentencesIntro(short),
     strand: "writing",
     knowledgePoints: [
       point(

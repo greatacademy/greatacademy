@@ -50,7 +50,7 @@ describe("sentence building", () => {
       expect(expected).toHaveLength(2);
       for (const order of expected) expect(order.map((i) => shown[i]).join("")).toMatch(/^(我+和朋友|朋友和我+)都去。$/u);
       expect(expected.map((o) => o.join(","))).not.toContain(shown.map((_, i) => i).join(","));
-      expect(p.wrong).toEqual([shown.map((_, i) => i).join(",")]);
+      expect(p.mistakes?.map((m) => m.response)).toEqual([shown.map((_, i) => i).join(",")]);
     }
   });
 

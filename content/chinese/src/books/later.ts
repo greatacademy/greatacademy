@@ -13,6 +13,10 @@ export const laterBooks: readonly BookData[] = [
       en: "These ten essays are memories: a grown man writes about his childhood and youth, so listen for two voices, the child who lived it and the adult who looks back and judges. For each essay, note the people in it, what happened, and how the writer feels about them, which often changes from the start to the end. Read the essays in order and they trace his life from his home town to his studies in Nanjing and Japan and his return. Watch for gentle humour and for sharp criticism of old customs, old education and quack doctors.",
       zh: "这十篇散文都是回忆：一个成年人写自己的童年和青年，所以要听出两种声音，一种是当年经历这些事的孩子，一种是回头看、作评价的成年人。每读一篇，记下其中的人物、发生的事，以及作者对他们的感情，这种感情常常从开头到结尾有变化。按顺序读下来，能看出作者从故乡到南京、到日本求学再回国的经历。留意文中温和的幽默，也留意他对旧习俗、旧教育和庸医的尖锐批评。",
     },
+    callout: {
+      en: "The ten essays look back on different times and people: Ah Chang, Mr Fujino, Fan Ainong, the garden and the school. Place the question in its own essay before you choose; a memory of one person given to another is wrong.",
+      zh: "十篇文章回忆的是不同的时候和人：阿长、藤野先生、范爱农、百草园和三味书屋。选之前先想清楚问的是哪一篇；把一个人的事安到另一个人身上，就错了。",
+    },
     questions: `
 问：《朝花夕拾》原来的书名是什么？
 答：《旧事重提》
@@ -240,6 +244,10 @@ export const laterBooks: readonly BookData[] = [
       en: "This is a science-fiction novel told in the first person by Professor Aronnax, so everything is seen through a scientist's eyes. Follow the voyage on a map, marking where the Nautilus goes and what happens there; it circles much of the world's oceans in about ten months. Keep a note on each of the four main people: the professor, his servant Conseil, the harpooner Ned Land and Captain Nemo, and how each feels about life aboard. Ask what science the book uses, what it imagined that later came true, and what kind of man Nemo is: why he has left the land, and whom he helps and whom he fights.",
       zh: "这是一部科幻小说，由阿龙纳斯教授用第一人称讲述，所以书里的一切都是从一位科学家的眼中看到的。可以对着地图读，标出鹦鹉螺号到过哪里、在那里发生了什么；它用大约十个月走遍了世界上的许多大洋。为四个主要人物各做一份笔记：教授、他的仆人康塞尔、捕鲸手尼德·兰和尼摩船长，记下每个人对船上生活的态度。想一想：书里用到了哪些科学知识，书中想象的哪些东西后来成了真；尼摩船长是一个什么样的人，他为什么离开陆地，他帮助谁，又和谁作对。",
     },
+    callout: {
+      en: "The Nautilus visits many seas, and the narrator, Ned Land and Conseil see each wonder differently. Place the question in its stretch of the voyage, and ask whose view it is, before you choose.",
+      zh: "鹦鹉螺号去过许多海域，阿龙纳斯、尼德·兰和康塞尔对同一件事的看法也不一样。选之前先想清楚问的是航行的哪一段，又是谁的看法。",
+    },
     questions: `
 问：《海底两万里》的作者凡尔纳是哪个国家的人？
 答：法国
@@ -430,6 +438,10 @@ export const laterBooks: readonly BookData[] = [
     guide: {
       en: "Fabre writes as both a scientist and a storyteller: for each insect, note what he wanted to find out, how he watched or tested it, and what he concluded. Keep a table of the insects with where they live, what they eat, how they build or hunt, and one surprising fact. Notice how he compares insects to people, giving them feelings and characters, and ask whether this helps or misleads. Above all, watch his method: patience, repeated observation and simple experiments in the field rather than dead specimens.",
       zh: "法布尔既是科学家，又是讲故事的人：读每一种昆虫时，记下他想弄清什么问题、怎样观察或做实验、得出了什么结论。可以列一张表，写上每种昆虫住在哪儿、吃什么、怎样筑巢或捕猎，再加一个让你惊奇的发现。留意他常把昆虫比作人，写出它们的感情和性格，想一想这样写有什么好处，会不会让人误解。最重要的是学习他的方法：耐心，反复观察，在野外做简单的实验，而不是只看死去的标本。",
+    },
+    callout: {
+      en: "Fabre describes many insects, and each has its own way of living. Place the question with its own insect before you choose: what the dung beetle does is not what the cicada or the mantis does.",
+      zh: "法布尔写了很多昆虫，每种都有自己的生活方式。选之前先想清楚问的是哪一种：蜣螂做的事，不是蝉或螳螂做的事。",
     },
     questions: `
 问：法布尔是哪个国家的人？
@@ -652,6 +664,10 @@ export const laterBooks: readonly BookData[] = [
       en: "The novel follows Pavel Korchagin from a quick-tempered boy in a small Ukrainian town to a young man who keeps working for his cause after war, labour and illness have taken his health and sight. Read it as the story of a character being made: mark the turns of his life, the people who shaped him, such as the sailor Zhukhrai, his friends and the girls he loved, and the choices he made each time and why. Ask what the title means, steel hardened in fire and then cooled, and how it fits Pavel. Notice that much of the book comes from the author's own life, and that it was written when he was bedridden and blind. Keep a timeline of Pavel's life and, beside each stage, what he learned.",
       zh: "小说写保尔·柯察金从乌克兰小城里一个脾气倔强的少年，成长为一个在战争、劳动和疾病夺去了健康和视力以后仍然坚持工作的青年。可以把它当作一个人怎样被“炼成”的故事来读：标出他一生的几次转折，记下影响过他的人，比如水兵朱赫来、他的朋友和他爱过的姑娘，想一想他每一次作了什么选择、为什么这样选。想一想书名的意思：钢铁要在烈火里烧、再经过冷却才能炼成，这和保尔的经历有什么相像。还要注意，书里很多内容来自作者自己的经历，而作者是在瘫痪、失明以后写成这本书的。可以给保尔的一生画一条时间线，在每一段旁边写下他从中学到了什么。",
     },
+    callout: {
+      en: "Pavel changes from a rough boy into a soldier and a writer. Place the question in its stage of his life before you choose; what he does after his wounds is not what he did as a boy in Shepetivka.",
+      zh: "保尔从一个莽撞的少年成长为战士，又成为作家。选之前先把问题放回他人生的那个阶段；他受伤以后做的事，不是他少年时在小镇上做的事。",
+    },
     questions: `
 问：《钢铁是怎样炼成的》的作者是哪国作家？
 答：苏联
@@ -854,6 +870,10 @@ export const laterBooks: readonly BookData[] = [
     guide: {
       en: "The novel is built like a chain: one hero's story leads to the next, until they all gather at Liangshan. Keep a list of the main heroes with their nicknames, weapons, former jobs and the event that drove each to Liangshan. For each hero, ask what forced him to rebel, and notice how often it was a corrupt official. Compare heroes who seem alike, such as Lu Zhishen, Wu Song and Li Kui, by what they do, not by labels. In the end, think about the amnesty and what it means for the story's idea of loyalty and justice.",
       zh: "这部小说像一条链子：一个好汉的故事引出下一个，最后大家都聚到梁山。给主要好汉列一张表，写上绰号、兵器、原来的身份，以及让他上梁山的那件事。读每个好汉时，想一想是什么逼他造反，留意这里有多少次是贪官恶霸。比较几个看起来相像的人物，比如鲁智深、武松和李逵，要看他们做了什么，而不是只看标签。读到结尾，想一想招安对“忠义”这个主题意味着什么。",
+    },
+    callout: {
+      en: "There are a hundred and eight heroes, and their deeds are easily mixed: Wu Song kills the tiger, Lu Zhishen uproots the willow, Lin Chong is driven to Liangshan. Before you choose, ask whose story the question is about.",
+      zh: "一百零八位好汉的故事很容易混：武松打虎，鲁智深倒拔垂杨柳，林冲被逼上梁山。选之前先想清楚问的是谁的故事。",
     },
     questions: `
 问：鲁达为什么要打镇关西？
@@ -1075,6 +1095,10 @@ export const laterBooks: readonly BookData[] = [
     guide: {
       en: "Jane tells her own story, from an orphan bullied in her aunt's house, through a hard charity school, to a governess at Thornfield who loves her employer, leaves him when she learns the truth, and returns to him of her own free will. Follow the places in order, Gateshead, Lowood, Thornfield, the house on the moor where she is taken in, and Ferndean, and note at each what she suffers and what she chooses. Ask what she will not give up, whatever it costs her: her self-respect, her belief that a poor plain woman is equal in spirit to anyone, and her wish to love and be loved freely. Compare the people round her, Helen Burns and Miss Temple, Mr Rochester and St John Rivers, and what each of them teaches her or asks of her. The book was written in England in the 1840s, when a woman without money had few choices; read Jane's choices against that.",
       zh: "这部小说由简·爱自己讲述：她从舅妈家受欺负的孤女，到条件艰苦的慈善学校，再到桑菲尔德庄园当家庭教师；她爱上了庄园的主人，得知真相后离开了他，最后又凭自己的意愿回到他身边。按顺序记下她到过的地方：盖茨黑德府、洛伍德学校、桑菲尔德庄园、收留她的荒原上的那户人家、芬丁庄园，在每一处旁边写下她受了什么苦、作了什么选择。想一想，不管付出什么代价，她始终不肯放弃的是什么：她的自尊，她相信一个贫穷、不美的女子在精神上和任何人都是平等的，还有她要自由地爱、也被人爱的愿望。比较她身边的人：海伦·彭斯和谭波尔小姐，罗切斯特和圣约翰，想一想他们各自教给了她什么、又要她做什么。这本书写于十九世纪四十年代的英国，那时一个没有钱的女子很少有选择的机会；把简的选择放到这样的背景下去读。",
+    },
+    callout: {
+      en: "Jane's life moves through places, Gateshead, Lowood, Thornfield, Moor House, and each has its own people. Place the question in its place before you choose; Mrs Reed's cruelty is not Mr Brocklehurst's.",
+      zh: "简·爱的经历按地方展开：盖茨黑德、劳渥德、桑菲尔德、沼泽居，每处有各自的人。选之前先把问题放回那个地方；里德太太的冷酷不是布罗克尔赫斯特的。",
     },
     questions: `
 问：《简·爱》的作者是谁？
@@ -1333,6 +1357,10 @@ export const laterBooks: readonly BookData[] = [
       en: "Start with the frame: a stone left over from the goddess Nüwa's mending of the sky enters the human world, and Baoyu's dream in the Land of Illusion foretells the fates of the girls, so early riddles point to later events. Draw a family tree of the Jia household and the four great families, and mark where each young woman lives in the Grand View Garden. Judge the characters by what they do in scenes such as Daiyu burying flowers, Xifeng running the household or Grannie Liu's visits, not by a single label. Follow the movement from splendour toward decline, and the way poems, names and small details carry hidden meaning.",
       zh: "先读懂小说的框架：女娲补天剩下的一块石头来到人间，宝玉在太虚幻境里的梦预示了众女子的命运，所以前面的判词和曲子都暗示着后面的情节。给贾府和四大家族画一张人物关系图，并标出每位姑娘在大观园里住在哪儿。评价人物要看她们在具体情节里怎么做，比如黛玉葬花、凤姐理家、刘姥姥进大观园，而不是只贴一个标签。留意贾府从繁华走向衰败的趋势，也留意诗词、名字和小细节里藏着的意思。",
     },
+    callout: {
+      en: "The novel has hundreds of people, and many of its scenes look alike: poems, banquets, illnesses. Before you choose, ask who it is about and in which scene; Daiyu's poem is not Baochai's, and her burial of flowers is not Xiangyun's sleep among peonies.",
+      zh: "小说里的人物有几百个，诗会、宴席、生病的场面也很相似。选之前先想清楚问的是谁、在哪一回；黛玉的诗不是宝钗的，黛玉葬花也不是湘云醉卧。",
+    },
     questions: `
 问：小说开头的那块石头是怎么来的？
 答：女娲补天剩下的一块
@@ -1561,6 +1589,10 @@ export const laterBooks: readonly BookData[] = [
     guide: {
       en: "This is not a story but a short work of sociology: fourteen essays, first given as lectures in the late 1940s, on how rural Chinese society holds together. Read it as an argument. For each essay, write down the one idea it names, such as the differential mode of association, rule by rites, or the power of elders, and the image or example the author uses to make it clear, such as ripples spreading from a stone thrown into water against a bundle of sticks tied together. Note what each idea is set against, usually a Western or modern society, and how the essays build on one another: a society that does not move needs little writing, a society of acquaintances is ruled by custom rather than by law, and so on. Then test the ideas against what you know of village and town today: which still hold, and which have changed.",
       zh: "这不是一部故事，而是一本篇幅不长的社会学著作：十四篇文章，最初是二十世纪四十年代后期的讲课稿，讲的是中国乡村社会靠什么组织起来、维持下去。要把它当作论证来读。每读一篇，记下它提出的一个概念，比如差序格局、礼治秩序、长老统治，再记下作者用来说明它的比喻或例子，比如把石头丢进水里一圈圈推开的波纹，和一捆捆扎在一起的柴。留意每个概念是拿什么来对比的，通常是西方的或现代的社会；也留意各篇之间怎样一层层连起来：不流动的社会不大需要文字，熟人社会靠礼俗而不靠法律，等等。最后，拿这些概念对照你所知道的今天的乡村和城镇，想一想哪些还说得通，哪些已经变了。",
+    },
+    callout: {
+      en: "Fei Xiaotong's ideas are named in his own words: 差序格局, 礼治秩序, 无讼, 长老统治. Before you choose, say what the term means in his book, not what the same words mean today.",
+      zh: "费孝通的观点都有他自己的说法：差序格局、礼治秩序、无讼、长老统治。选之前先说清这个说法在书里是什么意思，而不是这几个字在今天的意思。",
     },
     questions: `
 问：《乡土中国》的作者是谁？
@@ -1813,6 +1845,10 @@ export const laterBooks: readonly BookData[] = [
     guide: {
       en: "Call to Arms is Lu Xun's first collection of stories, fourteen of them, written between 1918 and 1922 and published in 1923. Begin with the preface: it tells why he gave up medicine for writing, and its image of people asleep in an iron house with no windows explains the title. Then read the stories one by one, and for each write down three things: who tells it and from where, such as the boy in the wine shop of Kong Yiji; the scene in which the people around the main figure show what they are, often a crowd that watches and laughs; and what the story suggests is wrong in the minds of the people of its time. Notice the places that recur, Luzhen and Weizhuang, and the kinds of people: scholars who failed the examinations, villagers, onlookers. Compare the stories that end in darkness with the few that end in hope, such as the road at the end of My Old Home. Last, ask which of the habits of mind these stories expose you still meet today.",
       zh: "《呐喊》是鲁迅的第一部小说集，收了十四篇小说，写于1918年到1922年，1923年出版。先读书前的《自序》：它讲了作者为什么弃医从文，其中关于人们睡在一间没有窗户的铁屋子里的比喻，也说明了书名的意思。然后一篇一篇地读，每读一篇，记下三点：谁在讲这个故事、站在什么位置，比如《孔乙己》里酒店的小伙计；主要人物周围的人在哪个场面里露出了他们的样子，常常是一群围观、发笑的人；小说揭示了那个时代的人们精神上的什么毛病。留意反复出现的地方，鲁镇、未庄，和反复出现的几类人：考不中的读书人、乡民、看客。再把结局黑暗的几篇和少数带着希望的几篇对比着读，比如《故乡》结尾关于路的话。最后想一想，这些小说揭示的精神上的毛病，今天还能不能见到。",
+    },
+    callout: {
+      en: "The stories have different people and towns: Ah Q, Kong Yiji, Runtu, the madman, Hua Laoshuan. Place the question in its own story before you choose; Kong Yiji's beans are not Ah Q's turnips.",
+      zh: "这些小说的人物和地方各不相同：阿Q、孔乙己、闰土、狂人、华老栓。选之前先想清楚问的是哪一篇；孔乙己的茴香豆不是阿Q的萝卜。",
     },
     questions: `
 问：《呐喊》的作者是谁？

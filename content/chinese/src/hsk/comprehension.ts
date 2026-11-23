@@ -409,6 +409,14 @@ export function comprehensionTopics(spec: ComprehensionSpec, data: Comprehension
         `Short texts and passages in the words of the levels HSK ${spec.name} tests, each with a question on it, as the reading paper asks.`,
         `阅读用 HSK ${spec.name} 所考等级的词语写的短文，回答关于它的问题，像阅读试卷那样。`,
       ),
+      intro: comprehensionIntro(
+        shortPassages,
+        false,
+        t(
+          `Here every text and passage is in the words of the levels HSK ${spec.name} tests, each with a question among ${options} answers, as the reading paper asks.`,
+          `这里的短文和文章都用 HSK ${spec.name} 所考等级的词语，每篇后面有一个问题和${options}个选项，像阅读试卷那样。`,
+        ),
+      ),
       prerequisites: [spec.readingAfter],
       encompasses: [],
       xp: 12,

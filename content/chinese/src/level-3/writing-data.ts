@@ -15,6 +15,10 @@ export const writing: readonly LevelWriting[] = [
     ),
     criteria: ["zhl3-opinion-view", "zhl3-opinion-reasons", "zhl3-opinion-language"],
     minChars: 100,
+    instance: t(
+      "Take “学生应该不应该穿校服？”. The first sentence answers: 我认为学生应该穿校服。 Then two reasons, counted: 第一, a uniform saves the time of choosing clothes; 第二, everyone is dressed alike, so no one compares clothes; each with a sentence that explains it. The last sentence comes back to the view: 所以，我支持穿校服。",
+      "比如“学生应该不应该穿校服？”：第一句就回答：“我认为学生应该穿校服。”接着给出两个理由，并数出来：第一，穿校服省去了挑衣服的时间；第二，大家穿得一样，就不会比衣服；每个理由后面用一句话说明。最后回到观点：“所以，我支持穿校服。”",
+    ),
     points: [
       {
         suffix: "view",
@@ -28,6 +32,18 @@ export const writing: readonly LevelWriting[] = [
           "用中文写一段话，回答下面的问题。一开始就说清楚你的观点，最后再回到这个观点。",
         ),
         criteria: ["zhl3-opinion-view", "zhl3-opinion-language"],
+        callout: t(
+          "Do not keep the reader waiting: a paragraph that opens with 有人说……也有人说…… and gives your view only at the end is hard to follow. Your own view comes first.",
+          "不要让读者等：开头先写“有人说……也有人说……”，到最后才说自己的看法，读者很难跟上。自己的观点放在最前面。",
+        ),
+        plan: t(
+          "Write your answer to the question in one sentence, and the sentence that will say it again at the end.",
+          "用一句话写出你对问题的回答，再想好结尾换个说法再说一遍的那句话。",
+        ),
+        check: t(
+          "Find the view in the first sentence and again at the end; the two agree.",
+          "第一句有观点，结尾又回到观点，两处说的是一回事。",
+        ),
       },
       {
         suffix: "reasons",
@@ -41,6 +57,18 @@ export const writing: readonly LevelWriting[] = [
           "用中文写一段话，回答下面的问题。至少说两个理由，每个理由都要说明白。",
         ),
         criteria: ["zhl3-opinion-reasons", "zhl3-opinion-language"],
+        callout: t(
+          "A reason must support your side. If you say uniforms are good, 校服不好看 is a reason against you: leave it out, or answer it.",
+          "理由要支持你这一边。说穿校服好，“校服不好看”就是反方的理由：不写，或者回答它。",
+        ),
+        plan: t(
+          "Choose two reasons, number them 第一 and 第二, and note an example or an explanation for each.",
+          "选好两个理由，标上“第一”“第二”，每个配上一个例子或一句说明。",
+        ),
+        check: t(
+          "Count the reasons: at least two, each followed by a sentence that explains it, and each supports your view.",
+          "数一数理由：至少两个，每个后面都有一句说明，都在支持你的观点。",
+        ),
       },
     ],
     bank: [
@@ -115,6 +143,10 @@ export const writing: readonly LevelWriting[] = [
     ),
     criteria: ["zhl3-event-setting", "zhl3-event-sequence", "zhl3-event-language"],
     minChars: 100,
+    instance: t(
+      "Take “一次去公园清理垃圾”. The first sentence sets it: 上个星期六上午，我和三个同学去了学校附近的公园。 Then what happened, step by step with 先, 后来 and 最后: the bags handed out, the rubbish under the benches, the full bags at noon. The last sentence says how it came out or what you thought.",
+      "比如《一次去公园清理垃圾》：第一句交代时间、地点、人物：“上个星期六上午，我和三个同学去了学校附近的公园。”接着用“先”“后来”“最后”一步一步写发生的事：发袋子，捡长椅下面的垃圾，中午装满了袋子。最后一句写结果或者你的想法。",
+    ),
     points: [
       {
         suffix: "setting",
@@ -128,6 +160,18 @@ export const writing: readonly LevelWriting[] = [
           "用中文写一写下面这件事。说清楚是什么时候、在哪儿、有谁。",
         ),
         criteria: ["zhl3-event-setting", "zhl3-event-language"],
+        callout: t(
+          "“有一天，我和朋友去了一个地方” sets nothing: the reader still does not know when or where. Name the day and the place.",
+          "“有一天，我和朋友去了一个地方”什么也没交代：读者还是不知道什么时候、在哪儿。要写出具体的日子和地方。",
+        ),
+        plan: t(
+          "Write the first sentence with when, where and who, and note anyone who comes into the event later.",
+          "先写好第一句：什么时候、在哪儿、有谁；再记下后来出现的人。",
+        ),
+        check: t(
+          "Read the first sentence or two: when, where and who are all there, and concrete.",
+          "读第一两句：时间、地点、人物都有，而且很具体。",
+        ),
       },
       {
         suffix: "sequence",
@@ -141,6 +185,18 @@ export const writing: readonly LevelWriting[] = [
           "用中文写一写下面这件事。按顺序讲清楚发生了什么，一直讲到结果。",
         ),
         criteria: ["zhl3-event-sequence", "zhl3-event-language"],
+        callout: t(
+          "One event, not the whole day: what you had for breakfast before going to the park is no part of clearing it.",
+          "只写一件事，不写一整天：去公园以前早饭吃了什么，和清理垃圾没有关系。",
+        ),
+        plan: t(
+          "List the steps of the event in order with 先, 然后, 后来 and 最后, and decide how it ends.",
+          "用“先”“然后”“后来”“最后”按顺序列出事情的几步，想好结果是什么。",
+        ),
+        check: t(
+          "Follow the order words through the piece: the steps come in order, all belong to the one event, and it has an end.",
+          "顺着表示顺序的词读一遍：步骤没有乱，都属于这一件事，而且有结果。",
+        ),
       },
     ],
     bank: [

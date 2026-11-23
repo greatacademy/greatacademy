@@ -15,6 +15,10 @@ export const writing: readonly LevelWriting[] = [
     ),
     criteria: ["zhl5-letter-form", "zhl5-letter-request", "zhl5-letter-language"],
     minChars: 150,
+    instance: t(
+      "Take a letter asking the class teacher for leave from Monday's test. It opens 王老师： and 您好！; says who you are and why you write, 我是三年级二班的学生李明; gives the facts, the illness and the doctor's advice, and asks exactly, 希望能补考; and ends with 祝您工作顺利！, your name and the date.",
+      "比如给班主任写信，请假不参加星期一的考试：开头写“王老师：”和“您好！”；说明你是谁、为什么写信：“我是三年级二班的学生李明”；写出事实，生了什么病、医生怎么说，再明确提出请求：“希望能补考”；结尾写“祝您工作顺利！”，再署名、写日期。",
+    ),
     points: [
       {
         suffix: "form",
@@ -28,6 +32,18 @@ export const writing: readonly LevelWriting[] = [
           "根据下面的情况，用中文写信或者邮件。开头和结尾的格式要对。",
         ),
         criteria: ["zhl5-letter-form", "zhl5-letter-language"],
+        callout: t(
+          "To a teacher or an office, 你 is too familiar: use 您 throughout, and a wish such as 祝您工作顺利！, not 再见.",
+          "给老师或单位写信，用“你”太随便：从头到尾用“您”，结尾用“祝您工作顺利！”这样的祝福语，不用“再见”。",
+        ),
+        plan: t(
+          "Set out the reader's name with a colon, the greeting, the body, the wish, your name and the date.",
+          "排好称呼和冒号、问候语、正文、祝福语、署名和日期。",
+        ),
+        check: t(
+          "Go through the form line by line, and find 您 wherever you speak to the reader.",
+          "一行一行对格式；凡是称呼对方的地方，都用了“您”。",
+        ),
       },
       {
         suffix: "request",
@@ -41,6 +57,18 @@ export const writing: readonly LevelWriting[] = [
           "根据下面的情况，用中文写信或者邮件。说清楚你是谁、为什么写信、具体要求是什么。",
         ),
         criteria: ["zhl5-letter-request", "zhl5-letter-language"],
+        callout: t(
+          "A vague request cannot be granted: 希望您帮帮我 leaves the reader asking with what. Say exactly what you want and by when.",
+          "笼统的请求没法答应：“希望您帮帮我”，对方还是不知道帮什么。要说清楚你要什么、什么时候要。",
+        ),
+        plan: t(
+          "Write who you are and why you write, list the facts the reader needs, and put the request in one exact sentence.",
+          "写出你是谁、为什么写信，列出对方需要的事实，再用一句明确的话提出请求。",
+        ),
+        check: t(
+          "Find the request: it says exactly what you ask for, the facts before it support it, and the letter ends with thanks.",
+          "找到请求：说清楚了要什么，前面的事实支持它，结尾有感谢。",
+        ),
       },
     ],
     bank: [
@@ -115,6 +143,10 @@ export const writing: readonly LevelWriting[] = [
     ),
     criteria: ["zhl5-custom-what", "zhl5-custom-meaning", "zhl5-custom-language"],
     minChars: 150,
+    instance: t(
+      "Take “春节包饺子”. It says what it is and when: 饺子是中国北方人最喜欢的食物之一，春节的时候家家都吃。 It says how it is made, in order: 先和面、做馅儿，然后包，最后煮。 And it says what it means: the family together, and wishes for the new year.",
+      "比如《春节包饺子》：先说它是什么、在什么时候：“饺子是中国北方人最喜欢的食物之一，春节的时候家家都吃。”再按顺序写怎么做：“先和面、做馅儿，然后包，最后煮。”最后写它的意义：全家团聚，对新年的祝愿。",
+    ),
     points: [
       {
         suffix: "what",
@@ -128,6 +160,18 @@ export const writing: readonly LevelWriting[] = [
           "用中文介绍下面的习俗或者菜。说清楚它是什么、怎么做。",
         ),
         criteria: ["zhl5-custom-what", "zhl5-custom-language"],
+        callout: t(
+          "Write for a reader who has never seen it: 大家都知道饺子 skips what you should explain. Say what it looks like and tastes like.",
+          "要写给从没见过的人看：“大家都知道饺子”就把该说明的跳过去了。要写出它的样子和味道。",
+        ),
+        plan: t(
+          "Say what the thing is and when it belongs in one sentence, then list the steps of doing or making it in order.",
+          "用一句话说出它是什么、在什么时候，再按顺序列出做法的几步。",
+        ),
+        check: t(
+          "Read it as someone who has never seen it: they could picture it, and the steps come in order.",
+          "站在没见过的人的角度读：能想象出它的样子，做法的步骤没有乱。",
+        ),
       },
       {
         suffix: "meaning",
@@ -141,6 +185,18 @@ export const writing: readonly LevelWriting[] = [
           "用中文介绍下面的习俗或者菜。说清楚它有什么意义，或者人们为什么一直这样做。",
         ),
         criteria: ["zhl5-custom-meaning", "zhl5-custom-language"],
+        callout: t(
+          "A meaning must be one people hold, not one you invent. 月饼是圆的，圆代表团圆 is what people say; if you are not sure where a custom comes from, leave the origin out.",
+          "意义要是大家公认的，不能自己编。“月饼是圆的，圆代表团圆”是大家的说法；不确定一个习俗的来历，就不写来历。",
+        ),
+        plan: t(
+          "Note what the custom stands for or wishes for, with 代表, 表示 or 希望, and what it means to you or your family.",
+          "用“代表”“表示”“希望”记下这个习俗象征什么、寄托了什么愿望，再想想它对你或你家意味着什么。",
+        ),
+        check: t(
+          "Find the sentence of meaning and the sentence of what it means to you, and check that the meaning is one people really hold.",
+          "找出写意义的句子和写对你意味着什么的句子，再核对：这个意义是大家真正公认的。",
+        ),
       },
     ],
     bank: [

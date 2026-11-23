@@ -22,6 +22,12 @@ export interface LevelWritingPoint {
   readonly question: Text;
   /** criteria are the ids of the two criteria that judge the point, among the topic's three. */
   readonly criteria: readonly [string, string];
+  /** callout is the mistake to watch out for, which ends the explanation. */
+  readonly callout: Text;
+  /** plan is the first step of the point's solutions: what to plan before writing. */
+  readonly plan: Text;
+  /** check is how a learner checks their own text against the point's focus. */
+  readonly check: Text;
 }
 
 /** LevelWriting is a writing topic of a level as written in its data. */
@@ -34,6 +40,8 @@ export interface LevelWriting {
   readonly criteria: readonly [string, string, string];
   /** minChars is the fewest characters a response may have; it may have ten times as many. */
   readonly minChars: number;
+  /** instance walks one task of the bank, the first, as the topic's introduction does. */
+  readonly instance: Text;
   readonly points: readonly [LevelWritingPoint, LevelWritingPoint];
   /** bank holds the tasks, each with one good answer written for the subject. */
   readonly bank: readonly WritingItem[];
@@ -58,7 +66,25 @@ const quoted = (model: string) =>
     .map((line) => (line ? `> ${line}` : ">"))
     .join("\n");
 
-const onePiece = (model: string): Text => t(`One good answer:\n\n${quoted(model)}`, `一篇好的答案：\n\n${quoted(model)}`);
+/** levelWorked writes the solution of a task: what to plan, the model as one good answer, and how to check one's own. */
+export const levelWorked =
+  (plan: Text, check: Text) =>
+  (model: string): Text =>
+    t(
+      `**Step 1: plan what to write.** ${plan.en}\n\n**Step 2: write it.** One good answer:\n\n${quoted(model)}\n\n**Check.** ${check.en}`,
+      `**第一步：想好要写什么。**${plan["zh-CN"]}\n\n**第二步：写下来。**一篇好的答案：\n\n${quoted(model)}\n\n**检验。** ${check["zh-CN"]}`,
+    );
+
+/** explained ends a point's explanation with its callout. */
+const explained = (p: LevelWritingPoint): Text =>
+  t(`${p.explanation.en}\n\n> **Watch out.** ${p.callout.en}`, `${p.explanation["zh-CN"]}\n\n> **注意。** ${p.callout["zh-CN"]}`);
+
+/** levelWritingIntro introduces a writing topic: its instance, then what its two knowledge points do. */
+export const levelWritingIntro = (w: LevelWriting): Text =>
+  t(
+    `${w.instance.en}\n\nThe first knowledge point is “${w.points[0].title.en}”; the second, “${w.points[1].title.en}”.`,
+    `${w.instance["zh-CN"]}\n\n第一个知识点是“${w.points[0].title["zh-CN"]}”，第二个是“${w.points[1].title["zh-CN"]}”。`,
+  );
 
 /** WritingSpec says how to build the writing topic that ends a unit. */
 export interface WritingSpec {
@@ -93,13 +119,19 @@ export function writingTopic(spec: WritingSpec): TopicDef {
     id,
     title: w.title,
     summary: w.summary,
+    intro: levelWritingIntro(w),
     prerequisites: [spec.after, ...(spec.n > 1 ? [levelWritingId(spec.level, spec.n - 1)] : [])],
     encompasses: [],
     xp: 18,
     strand: "writing",
     criteria: w.criteria.map(criterion),
     knowledgePoints: w.points.map((p) =>
-      point(`${id}-${p.suffix}`, p.title, p.explanation, writingGenerator(p.question, w.bank, [...p.criteria], limits, onePiece)),
+      point(
+        `${id}-${p.suffix}`,
+        p.title,
+        explained(p),
+        writingGenerator(p.question, w.bank, [...p.criteria], limits, levelWorked(p.plan, p.check)),
+      ),
     ),
   };
 }
