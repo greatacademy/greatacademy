@@ -1375,8 +1375,8 @@ const hyperbolicSlopeAtZero = {
     "the-slope-of-a-hyperbolic-combination-at-zero",
     ["The slope of a hyperbolic combination at zero", "双曲函数组合在零处的斜率"],
     [
-      "At $x = 0$, $\\sinh 0 = 0$, $\\cosh 0 = \\operatorname{sech} 0 = 1$ and $\\tanh 0 = 0$. So the derivatives there are $\\cosh 0 = 1$ for $\\sinh$, $\\operatorname{sech}^{2} 0 = 1$ for $\\tanh$, and $0$ for both $\\cosh$ and $\\operatorname{sech}$, whose graphs have a horizontal tangent at $0$.",
-      "在 $x = 0$ 处，$\\sinh 0 = 0$，$\\cosh 0 = \\operatorname{sech} 0 = 1$，$\\tanh 0 = 0$。所以此处 $\\sinh$ 的导数是 $\\cosh 0 = 1$，$\\tanh$ 的导数是 $\\operatorname{sech}^{2} 0 = 1$，而 $\\cosh$ 和 $\\operatorname{sech}$ 的导数都是 $0$，它们的图像在 $0$ 处有水平切线。",
+      "At $x = 0$, $\\sinh 0 = 0$, $\\cosh 0 = \\operatorname{sech} 0 = 1$ and $\\tanh 0 = 0$. So the derivatives there are $\\cosh 0 = 1$ for $\\sinh$, $\\operatorname{sech}^{2} 0 = 1$ for $\\tanh$, and $0$ for both $\\cosh$ and $\\operatorname{sech}$, whose graphs have a horizontal tangent at $0$.\n\nFor example, $f(x) = 2\\operatorname{sech} x + 3\\tanh x - \\sinh x + 4\\cosh x$ has $f'(0) = 3 - 1 = 2$.\n\nCheck: $\\frac{f(0.01) - f(0)}{0.01} \\approx 2.010$ and $\\frac{f(-0.01) - f(0)}{-0.01} \\approx 1.990$, whose average is $2$.\n\n> **Watch out.** $\\cosh 0$ and $\\operatorname{sech} 0$ are $1$, but their slopes at $0$ are $0$. Do not confuse the value of a function with its slope.",
+      "在 $x = 0$ 处，$\\sinh 0 = 0$，$\\cosh 0 = \\operatorname{sech} 0 = 1$，$\\tanh 0 = 0$。所以此处 $\\sinh$ 的导数是 $\\cosh 0 = 1$，$\\tanh$ 的导数是 $\\operatorname{sech}^{2} 0 = 1$，而 $\\cosh$ 和 $\\operatorname{sech}$ 的导数都是 $0$，它们的图像在 $0$ 处有水平切线。\n\n例如 $f(x) = 2\\operatorname{sech} x + 3\\tanh x - \\sinh x + 4\\cosh x$ 有 $f'(0) = 3 - 1 = 2$。\n\n检验：$\\frac{f(0.01) - f(0)}{0.01} \\approx 2.010$，$\\frac{f(-0.01) - f(0)}{-0.01} \\approx 1.990$，平均值为 $2$。\n\n> **注意。** $\\cosh 0$ 和 $\\operatorname{sech} 0$ 的值是 $1$，但它们在 $0$ 处的斜率是 $0$。不要把函数值和斜率混为一谈。",
     ],
     (rng) => {
       const a = nz(rng, 9);
@@ -1385,14 +1385,29 @@ const hyperbolicSlopeAtZero = {
       const d = nz(rng, 9);
       const f = poly([a, "\\operatorname{sech} x"], [b, "\\tanh x"], [c, "\\sinh x"], [d, "\\cosh x"]);
       const answer = b + c;
+      const value = (x: number) => a / Math.cosh(x) + b * Math.tanh(x) + c * Math.sinh(x) + d * Math.cosh(x);
+      const dq = (s: number) => (value(s) - value(0)) / s;
+      const quotients = table(["$h$", "$0.01$", "$-0.01$"], ["$\\frac{f(h) - f(0)}{h}$", `$${num(dq(0.01))}$`, `$${num(dq(-0.01))}$`]);
+      const derivative = poly([-a, "\\operatorname{sech} x\\tanh x"], [b, "\\operatorname{sech}^{2}x"], [c, "\\cosh x"], [d, "\\sinh x"]);
       return ask(
         [`Let $f(x) = ${f}$. Find $f'(0)$.`, `设 $f(x) = ${f}$。求 $f'(0)$。`],
         answer,
         [a + d, a + b + c + d, b + c - a, b - c],
-        [
-          `$f'(x) = ${poly([-a, "\\operatorname{sech} x\\tanh x"], [b, "\\operatorname{sech}^{2}x"], [c, "\\cosh x"], [d, "\\sinh x"])}$. At $0$, the first and last terms vanish, which leaves $${paren(b)} + ${paren(c)} = ${answer}$.`,
-          `$f'(x) = ${poly([-a, "\\operatorname{sech} x\\tanh x"], [b, "\\operatorname{sech}^{2}x"], [c, "\\cosh x"], [d, "\\sinh x"])}$。在 $0$ 处第一项和最后一项为零，剩下 $${paren(b)} + ${paren(c)} = ${answer}$。`,
-        ],
+        walk(
+          [
+            ["Differentiate", "求导", `Term by term,\n\n$$f'(x) = ${derivative}.$$`, `逐项求导，\n\n$$f'(x) = ${derivative}.$$`],
+            [
+              "Substitute x = 0",
+              "代入 x = 0",
+              `At $0$, $\\tanh 0 = \\sinh 0 = 0$ and $\\operatorname{sech} 0 = \\cosh 0 = 1$. The first and last terms vanish, which leaves $${paren(b)} + ${paren(c)} = ${answer}$.`,
+              `在 $0$ 处 $\\tanh 0 = \\sinh 0 = 0$，$\\operatorname{sech} 0 = \\cosh 0 = 1$。第一项和最后一项为零，剩下 $${paren(b)} + ${paren(c)} = ${answer}$。`,
+            ],
+          ],
+          [
+            `Compute difference quotients of $f$ at $0$, with $h = 0.01$ on each side:\n\n${quotients}\n\nTheir average is $${num((dq(0.01) + dq(-0.01)) / 2)}$, which matches $${answer}$.`,
+            `计算 $f$ 在 $0$ 处的差商，两侧各取 $h = 0.01$：\n\n${quotients}\n\n它们的平均值是 $${num((dq(0.01) + dq(-0.01)) / 2)}$，与 $${answer}$ 相符。`,
+          ],
+        ),
       );
     },
   ),
@@ -1403,14 +1418,20 @@ const quotientFromSegment = point(
   "derivatives-of-quotients-from-a-segment",
   ["Derivatives of quotients from a segment", "由线段求商的导数"],
   [
-    "On a line segment the slope gives $f'$, and the point on the segment gives $f$. Those two values go into the quotient rule, $\\left(\\frac{f}{g}\\right)' = \\frac{f'g - fg'}{g^{2}}$, where the order in the numerator matters.",
-    "在线段上，斜率给出 $f'$，线段上的点给出 $f$。把这两个值代入商法则 $\\left(\\frac{f}{g}\\right)' = \\frac{f'g - fg'}{g^{2}}$，分子的顺序不能颠倒。",
+    "On a line segment the slope gives $f'$, and the point on the segment gives $f$. Those two values go into the quotient rule, where the order in the numerator matters:\n\n$$\\left(\\frac{f}{g}\\right)' = \\frac{f'g - fg'}{g^{2}}.$$\n\nFor example, if near $x = 2$ the graph of $f$ is a segment of slope $3$ through $(2, 1)$, then $h(x) = \\frac{f(x)}{x}$ has $h'(2) = \\frac{3 \\cdot 2 - 1 \\cdot 1}{4}$, which is $\\frac{5}{4}$.\n\nCheck: near $2$, $f(x) = 1 + 3(x - 2)$, and $\\frac{h(2.01) - h(2)}{0.01} \\approx 1.244$, close to $1.25$.\n\n> **Watch out.** The numerator is $f'g - fg'$, in that order. For $g(x) = x$, $g' = 1$ and $g(a) = a$.",
+    "在线段上，斜率给出 $f'$，线段上的点给出 $f$。把这两个值代入商法则，分子的顺序不能颠倒：\n\n$$\\left(\\frac{f}{g}\\right)' = \\frac{f'g - fg'}{g^{2}}.$$\n\n例如，若在 $x = 2$ 附近 $f$ 的图像是过 $(2, 1)$、斜率为 $3$ 的线段，则 $h(x) = \\frac{f(x)}{x}$ 有 $h'(2) = \\frac{3 \\cdot 2 - 1 \\cdot 1}{4}$，即 $\\frac{5}{4}$。\n\n检验：在 $2$ 附近 $f(x) = 1 + 3(x - 2)$，而 $\\frac{h(2.01) - h(2)}{0.01} \\approx 1.244$，接近 $1.25$。\n\n> **注意。** 分子是 $f'g - fg'$，顺序不能变。对 $g(x) = x$，$g' = 1$，$g(a) = a$。",
   ],
   (rng) => {
     const a = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]);
     const m = nz(rng, 4);
     const v = rng.int(-6, 6);
     const answer = Q.of(m * a - v, a * a);
+    const H = (x: number) => (v + m * (x - a)) / x;
+    const dq = (s: number) => (H(a + s) - H(a)) / s;
+    const quotients = table(
+      ["$s$", "$0.01$", "$-0.01$"],
+      [`$\\frac{H(${a} + s) - H(${a})}{s}$`, `$${num(dq(0.01))}$`, `$${num(dq(-0.01))}$`],
+    );
     return ask(
       [
         `Near $x = ${a}$, the graph of $f$ is the line segment from $(${a - 1}, ${v - m})$ to $(${a + 1}, ${v + m})$. Let $h(x) = \\frac{f(x)}{x}$. Find $h'(${a})$.`,
@@ -1418,10 +1439,26 @@ const quotientFromSegment = point(
       ],
       answer,
       [Q.of(v - m * a, a * a), Q.of(m, 1), Q.of(m * a + v, a * a)],
-      [
-        `The slope gives $f'(${a}) = ${m}$ and the midpoint gives $f(${a}) = ${v}$. Then $h'(${a}) = \\frac{${paren(m)} \\cdot ${paren(a)} - ${paren(v)} \\cdot 1}{${paren(a)}^{2}} = ${answer.toLatex()}$.`,
-        `斜率给出 $f'(${a}) = ${m}$，中点给出 $f(${a}) = ${v}$。于是 $h'(${a}) = \\frac{${paren(m)} \\cdot ${paren(a)} - ${paren(v)} \\cdot 1}{${paren(a)}^{2}} = ${answer.toLatex()}$。`,
-      ],
+      walk(
+        [
+          [
+            "Read the segment",
+            "读线段",
+            `The slope gives $f'(${a}) = \\frac{${v + m} - ${paren(v - m)}}{2} = ${m}$, and the midpoint gives $f(${a}) = ${v}$.`,
+            `斜率给出 $f'(${a}) = \\frac{${v + m} - ${paren(v - m)}}{2} = ${m}$，中点给出 $f(${a}) = ${v}$。`,
+          ],
+          [
+            "Apply the quotient rule",
+            "使用商法则",
+            `With $g(x) = x$,\n\n$$h'(${a}) = \\frac{${paren(m)} \\cdot ${paren(a)} - ${paren(v)} \\cdot 1}{${paren(a)}^{2}} = ${answer.toLatex()}.$$`,
+            `取 $g(x) = x$，\n\n$$h'(${a}) = \\frac{${paren(m)} \\cdot ${paren(a)} - ${paren(v)} \\cdot 1}{${paren(a)}^{2}} = ${answer.toLatex()}.$$`,
+          ],
+        ],
+        [
+          `Near $x = ${a}$, $f$ is the line $${poly([v, ""], [m, `(x ${a < 0 ? "+" : "-"} ${Math.abs(a)})`]) || "0"}$, so $H(x)$, that line divided by $x$, equals $h$ there. Its difference quotients:\n\n${quotients}\n\nTheir average is $${num((dq(0.01) + dq(-0.01)) / 2)}$, close to $${answer.toLatex()}${approx(answer)}$.`,
+          `在 $x = ${a}$ 附近，$f$ 就是直线 $${poly([v, ""], [m, `(x ${a < 0 ? "+" : "-"} ${Math.abs(a)})`]) || "0"}$，所以这条直线除以 $x$ 得到的 $H(x)$ 在那里等于 $h$。它的差商：\n\n${quotients}\n\n它们的平均值是 $${num((dq(0.01) + dq(-0.01)) / 2)}$，接近 $${answer.toLatex()}${approx(answer)}$。`,
+        ],
+      ),
     );
   },
 );

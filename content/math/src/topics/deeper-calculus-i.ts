@@ -563,8 +563,8 @@ const productOfThree: KnowledgePointDef = {
   id: "the-product-rule-for-three-functions",
   title: t("The product rule for three functions", "三个函数的乘积法则"),
   explanation: t(
-    "Grouping $fgh$ as $(fg)h$ and applying the product rule twice gives $(fgh)' = f'gh + fg'h + fgh'$. There is one term for each factor, with only that factor differentiated. The pattern extends to any number of factors.",
-    "把 $fgh$ 看成 $(fg)h$，用两次乘积法则，得 $(fgh)' = f'gh + fg'h + fgh'$。每个因子对应一项，这一项中只有这个因子被求导。这个规律可以推广到任意多个因子。",
+    "Grouping $fgh$ as $(fg)h$ and applying the product rule twice gives $(fgh)' = f'gh + fg'h + fgh'$. There is one term for each factor, with only that factor differentiated. The pattern extends to any number of factors.\n\nFor example, if $f = 1$, $g = 2$, $h = 3$, $f' = 4$, $g' = 5$ and $h' = 6$ at a point, the derivative there is $24 + 15 + 12 = 51$.\n\nCheck: with $f = g = h = x$, the rule gives $3x^{2}$, which is the power rule for $x^{3}$.\n\n> **Watch out.** The derivative is not $f'g'h'$. Each of the three terms differentiates exactly one factor and keeps the other two.",
+    "把 $fgh$ 看成 $(fg)h$，用两次乘积法则，得 $(fgh)' = f'gh + fg'h + fgh'$。每个因子对应一项，这一项中只有这个因子被求导。这个规律可以推广到任意多个因子。\n\n例如，若在某点 $f = 1$，$g = 2$，$h = 3$，$f' = 4$，$g' = 5$，$h' = 6$，则那里的导数是 $24 + 15 + 12 = 51$。\n\n检验：取 $f = g = h = x$，法则给出 $3x^{2}$，正是 $x^{3}$ 的幂法则。\n\n> **注意。** 导数不是 $f'g'h'$。三项中的每一项恰好对一个因子求导，另外两个保持不变。",
   ),
   generate(rng) {
     const c = rng.int(1, 5);
@@ -575,6 +575,12 @@ const productOfThree: KnowledgePointDef = {
     const dg = nonzero(rng, 4);
     const dh = nonzero(rng, 4);
     const answer = df * g * h + f * dg * h + f * g * dh;
+    const P = (s: number) => (f + df * s) * (g + dg * s) * (h + dh * s);
+    const dq = (s: number) => (P(s) - P(0)) / s;
+    const quotients = table(
+      ["$s$", "$0.01$", "$-0.01$"],
+      [`$\\frac{P(${c} + s) - P(${c})}{s}$`, `$${num(dq(0.01))}$`, `$${num(dq(-0.01))}$`],
+    );
     return numberProblem({
       prompt: t(
         `At $x = ${c}$: $f = ${f}$, $g = ${g}$, $h = ${h}$, $f' = ${df}$, $g' = ${dg}$ and $h' = ${dh}$. Find the derivative of $fgh$ at $x = ${c}$.`,
@@ -583,9 +589,25 @@ const productOfThree: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [df * dg * dh, df * g * h, df * g * h + f * dg * h],
-      solution: t(
-        `$f'gh + fg'h + fgh' = ${inParens(df * g * h)} + ${inParens(f * dg * h)} + ${inParens(f * g * dh)} = ${answer}$.`,
-        `$f'gh + fg'h + fgh' = ${inParens(df * g * h)} + ${inParens(f * dg * h)} + ${inParens(f * g * dh)} = ${answer}$。`,
+      solution: walk(
+        [
+          [
+            "Write one term per factor",
+            "每个因子写一项",
+            `The derivative is $f'gh + fg'h + fgh'$. Its terms are $${df} \\cdot ${inParens(g)} \\cdot ${inParens(h)} = ${df * g * h}$, $${f} \\cdot ${inParens(dg)} \\cdot ${inParens(h)} = ${f * dg * h}$ and $${f} \\cdot ${inParens(g)} \\cdot ${inParens(dh)} = ${f * g * dh}$.`,
+            `导数是 $f'gh + fg'h + fgh'$。各项为 $${df} \\cdot ${inParens(g)} \\cdot ${inParens(h)} = ${df * g * h}$，$${f} \\cdot ${inParens(dg)} \\cdot ${inParens(h)} = ${f * dg * h}$，$${f} \\cdot ${inParens(g)} \\cdot ${inParens(dh)} = ${f * g * dh}$。`,
+          ],
+          [
+            "Add the terms",
+            "把各项相加",
+            `$${inParens(df * g * h)} + ${inParens(f * dg * h)} + ${inParens(f * g * dh)} = ${answer}$.`,
+            `$${inParens(df * g * h)} + ${inParens(f * dg * h)} + ${inParens(f * g * dh)} = ${answer}$。`,
+          ],
+        ],
+        [
+          `Replace $f$, $g$ and $h$ by lines with the same values and slopes at $x = ${c}$, such as $${f} ${df < 0 ? "-" : "+"} ${Math.abs(df)}(x - ${c})$ for $f$. Their product $P$ has the same derivative at $x = ${c}$, and its difference quotients are\n\n${quotients}\n\nTheir average is $${num((dq(0.01) + dq(-0.01)) / 2)}$, which matches $${answer}$.`,
+          `把 $f$、$g$、$h$ 换成在 $x = ${c}$ 处有相同值和斜率的直线，例如 $f$ 换成 $${f} ${df < 0 ? "-" : "+"} ${Math.abs(df)}(x - ${c})$。它们的积 $P$ 在 $x = ${c}$ 处有相同的导数，其差商为\n\n${quotients}\n\n它们的平均值是 $${num((dq(0.01) + dq(-0.01)) / 2)}$，与 $${answer}$ 相符。`,
+        ],
       ),
     });
   },
@@ -595,21 +617,38 @@ const largestValueOfAQuotient: KnowledgePointDef = {
   id: "the-largest-value-of-a-quotient",
   title: t("The largest value of a quotient", "商的最大值"),
   explanation: t(
-    "A derivative from the quotient rule is zero exactly when its numerator is zero, because the denominator of $f'$ is a square. So only the numerator needs to be solved. For a function that tends to zero at both ends, the positive critical point gives the largest value.",
-    "由商法则得到的导数，分母是平方，所以导数为零当且仅当分子为零，只需解分子。对两端都趋于零的函数，正的临界点给出最大值。",
+    "A derivative from the quotient rule is zero exactly when its numerator is zero, because the denominator of $f'$ is a square. So only the numerator needs to be solved. For a function that tends to zero at both ends, the positive critical point gives the largest value.\n\nFor example, $f(x) = \\frac{x}{x^{2} + 1}$ has numerator $1 - x^{2}$ in $f'$, from $(x^{2} + 1) - 2x^{2}$, which vanishes at $x = \\pm 1$, and $f(1) = \\frac{1}{2}$.\n\nCheck: $f(0.5) = 0.4$ and $f(2) = 0.4$, both below $0.5$.\n\n> **Watch out.** The denominator $x^{2} + k^{2}$ is never zero, so it gives no critical points. The negative critical point gives the smallest value, not the largest.",
+    "由商法则得到的导数，分母是平方，所以导数为零当且仅当分子为零，只需解分子。对两端都趋于零的函数，正的临界点给出最大值。\n\n例如 $f(x) = \\frac{x}{x^{2} + 1}$ 的导数分子为 $(x^{2} + 1) - 2x^{2}$，即 $1 - x^{2}$，在 $x = \\pm 1$ 处为零，且 $f(1) = \\frac{1}{2}$。\n\n检验：$f(0.5) = 0.4$，$f(2) = 0.4$，都小于 $0.5$。\n\n> **注意。** 分母 $x^{2} + k^{2}$ 永不为零，不产生临界点。负的临界点给出最小值，而不是最大值。",
   ),
   generate(rng) {
     const a = rng.int(1, 9);
     const k = rng.int(1, 12);
     const answer = Q.of(a, 2 * k);
     const f = `\\frac{${poly([a, "x"])}}{${poly([1, "x^2"], [k * k, ""])}}`;
+    const rows = valueTable([k / 2, k, 2 * k], [["f(x)", (x) => (a * x) / (x * x + k * k)]]);
     return numberProblem({
       prompt: t(`Find the largest value of $f(x) = ${f}$.`, `求 $f(x) = ${f}$ 的最大值。`),
       answer,
       wrong: [Q.of(a, k), Q.of(k), Q.of(a, k * k)],
-      solution: t(
-        `The numerator of $f'(x)$ is $${a}(${poly([k * k, ""], [-1, "x^2"])})$, which vanishes at $x = \\pm ${k}$. The positive value gives $f(${k}) = \\frac{${a * k}}{${2 * k * k}} = ${answer.toLatex()}$.`,
-        `$f'(x)$ 的分子是 $${a}(${poly([k * k, ""], [-1, "x^2"])})$，在 $x = \\pm ${k}$ 处为零。取正值得 $f(${k}) = \\frac{${a * k}}{${2 * k * k}} = ${answer.toLatex()}$。`,
+      solution: walk(
+        [
+          [
+            "Find the numerator of the derivative",
+            "求导数的分子",
+            `By the quotient rule the numerator of $f'(x)$ is\n\n$$${a}(${poly([1, "x^2"], [k * k, ""])}) - ${poly([a, "x"])} \\cdot 2x = ${a}(${poly([k * k, ""], [-1, "x^2"])}).$$\n\nIt vanishes at $x = \\pm ${k}$.`,
+            `由商法则，$f'(x)$ 的分子是\n\n$$${a}(${poly([1, "x^2"], [k * k, ""])}) - ${poly([a, "x"])} \\cdot 2x = ${a}(${poly([k * k, ""], [-1, "x^2"])}).$$\n\n它在 $x = \\pm ${k}$ 处为零。`,
+          ],
+          [
+            "Evaluate at the positive point",
+            "在正的临界点求值",
+            `The largest value is\n\n$$f(${k}) = \\frac{${a * k}}{${2 * k * k}} = ${answer.toLatex()}.$$`,
+            `最大值是\n\n$$f(${k}) = \\frac{${a * k}}{${2 * k * k}} = ${answer.toLatex()}.$$`,
+          ],
+        ],
+        [
+          `Compare values on each side of $x = ${k}$:\n\n${rows}\n\nThe middle value, $${num(answer.toNumber())}$, is the largest, and $f$ is negative for $x < 0$.`,
+          `比较 $x = ${k}$ 两侧的函数值：\n\n${rows}\n\n中间的值 $${num(answer.toNumber())}$ 最大，而 $x < 0$ 时 $f$ 为负。`,
+        ],
       ),
     });
   },
@@ -619,21 +658,44 @@ const highDerivativeOfAProduct: KnowledgePointDef = {
   id: "a-high-derivative-of-x-times-an-exponential",
   title: t("A high derivative of $x$ times an exponential", "$x$ 与指数函数之积的高阶导数"),
   explanation: t(
-    "Differentiating $xe^{ax}$ repeatedly shows a pattern: $f^{(n)}(x) = (a^n x + na^{n-1})e^{ax}$. Each new derivative multiplies by $a$ and adds another copy of the term coming from the factor $x$. At $x = 0$ only $na^{n-1}$ is left.",
-    "对 $xe^{ax}$ 反复求导会出现规律：$f^{(n)}(x) = (a^n x + na^{n-1})e^{ax}$。每求一次导都乘以 $a$，再多加一份来自因子 $x$ 的项。在 $x = 0$ 处只剩 $na^{n-1}$。",
+    "Differentiating $xe^{ax}$ repeatedly shows a pattern: $f^{(n)}(x) = (a^n x + na^{n-1})e^{ax}$. Each new derivative multiplies by $a$ and adds another copy of the term coming from the factor $x$. At $x = 0$ only $na^{n-1}$ is left.\n\nFor example, $f(x) = xe^{2x}$ has $f'(x) = (2x + 1)e^{2x}$ and $f''(x) = (4x + 4)e^{2x}$, so $f''(0) = 4$.\n\nCheck: the pattern with $n = 2$ and $a = 2$ gives $(4x + 2 \\cdot 2)e^{2x}$, the same as differentiating twice.\n\n> **Watch out.** The constant term is $na^{n-1}$, not $a^{n}$: the factor $x$ contributes once at each of the $n$ steps.",
+    "对 $xe^{ax}$ 反复求导会出现规律：$f^{(n)}(x) = (a^n x + na^{n-1})e^{ax}$。每求一次导都乘以 $a$，再多加一份来自因子 $x$ 的项。在 $x = 0$ 处只剩 $na^{n-1}$。\n\n例如 $f(x) = xe^{2x}$ 有 $f'(x) = (2x + 1)e^{2x}$，$f''(x) = (4x + 4)e^{2x}$，所以 $f''(0) = 4$。\n\n检验：在规律中取 $n = 2$、$a = 2$，得 $(4x + 2 \\cdot 2)e^{2x}$，与直接求两次导相同。\n\n> **注意。** 常数项是 $na^{n-1}$，不是 $a^{n}$：因子 $x$ 在 $n$ 步中每步都贡献一次。",
   ),
   generate(rng) {
     const a = nonzero(rng, 3);
     const n = rng.int(3, 7);
     const answer = n * a ** (n - 1);
+    const prev = (x: number) => (a ** (n - 1) * x + (n - 1) * a ** (n - 2)) * Math.exp(a * x);
+    const dq = (s: number) => (prev(s) - prev(0)) / s;
+    const e = `e^{${poly([a, "x"])}}`;
+    const quotients = table(
+      ["$h$", "$0.01$", "$-0.01$"],
+      [`$\\frac{f^{(${n - 1})}(h) - f^{(${n - 1})}(0)}{h}$`, `$${num(dq(0.01))}$`, `$${num(dq(-0.01))}$`],
+    );
     return numberProblem({
-      prompt: t(`Let $f(x) = xe^{${poly([a, "x"])}}$. Find $f^{(${n})}(0)$.`, `设 $f(x) = xe^{${poly([a, "x"])}}$。求 $f^{(${n})}(0)$。`),
+      prompt: t(`Let $f(x) = x${e}$. Find $f^{(${n})}(0)$.`, `设 $f(x) = x${e}$。求 $f^{(${n})}(0)$。`),
       answer,
       form: "integer",
       wrong: [a ** n, n * a ** n, a ** (n - 1)],
-      solution: t(
-        `By the pattern, $f^{(${n})}(x) = (${inParens(a ** n)}x + ${inParens(answer)})e^{${poly([a, "x"])}}$. At $x = 0$ this is $${n} \\cdot ${inParens(a)}^{${n - 1}} = ${answer}$.`,
-        `由规律，$f^{(${n})}(x) = (${inParens(a ** n)}x + ${inParens(answer)})e^{${poly([a, "x"])}}$。在 $x = 0$ 处等于 $${n} \\cdot ${inParens(a)}^{${n - 1}} = ${answer}$。`,
+      solution: walk(
+        [
+          [
+            "Use the pattern",
+            "利用规律",
+            `With $a = ${a}$ and $n = ${n}$,\n\n$$f^{(${n})}(x) = (${inParens(a ** n)}x + ${inParens(answer)})${e}.$$`,
+            `取 $a = ${a}$，$n = ${n}$，\n\n$$f^{(${n})}(x) = (${inParens(a ** n)}x + ${inParens(answer)})${e}.$$`,
+          ],
+          [
+            "Substitute x = 0",
+            "代入 x = 0",
+            `The term in $x$ vanishes and $e^{0} = 1$, leaving $${n} \\cdot ${inParens(a)}^{${n - 1}} = ${answer}$.`,
+            `含 $x$ 的项为零，$e^{0} = 1$，剩下 $${n} \\cdot ${inParens(a)}^{${n - 1}} = ${answer}$。`,
+          ],
+        ],
+        [
+          `The pattern gives $f^{(${n - 1})}(x) = (${inParens(a ** (n - 1))}x + ${inParens((n - 1) * a ** (n - 2))})${e}$. Its difference quotients at $0$ estimate $f^{(${n})}(0)$:\n\n${quotients}\n\nTheir average is $${num((dq(0.01) + dq(-0.01)) / 2)}$, close to $${answer}$.`,
+          `由规律，$f^{(${n - 1})}(x) = (${inParens(a ** (n - 1))}x + ${inParens((n - 1) * a ** (n - 2))})${e}$。它在 $0$ 处的差商估计了 $f^{(${n})}(0)$：\n\n${quotients}\n\n它们的平均值是 $${num((dq(0.01) + dq(-0.01)) / 2)}$，接近 $${answer}$。`,
+        ],
       ),
     });
   },
@@ -3200,8 +3262,8 @@ const highDerivativeOfSineCosineSum: KnowledgePointDef = {
   id: "a-high-derivative-of-a-sine-and-cosine-sum",
   title: t("A high derivative of a sine and cosine sum", "正弦余弦之和的高阶导数"),
   explanation: t(
-    "The derivatives of sine and cosine repeat with period 4: $\\sin x$, $\\cos x$, $-\\sin x$, $-\\cos x$, and back to $\\sin x$. So a derivative of high order depends only on the remainder of the order on division by 4. That remainder tells us which of the four forms applies. At $x = 0$, the sine terms vanish, and only the coefficient of the cosine term of that form survives.",
-    "正弦和余弦的导数以 4 为周期重复：$\\sin x$、$\\cos x$、$-\\sin x$、$-\\cos x$，然后回到 $\\sin x$。所以高阶导数只取决于阶数除以 4 的余数。这个余数告诉我们属于四种形式中的哪一种。在 $x = 0$ 处，正弦项为零，只有该形式中余弦项的系数保留下来。",
+    "The derivatives of sine and cosine repeat with period 4: $\\sin x$, $\\cos x$, $-\\sin x$, $-\\cos x$, and back to $\\sin x$. So a derivative of high order depends only on the remainder of the order on division by 4. That remainder tells us which of the four forms applies. At $x = 0$, the sine terms vanish, and only the coefficient of the cosine term of that form survives.\n\nFor example, $y = 2\\sin x + 3\\cos x$ has tenth derivative $-2\\sin x - 3\\cos x$, since $10$ leaves remainder $2$. At $x = 0$ it equals $-3$.\n\nCheck: each derivative shifts sine and cosine by a quarter turn, so the tenth derivative is $2\\sin(x + 5\\pi) + 3\\cos(x + 5\\pi)$, which is $-3$ at $x = 0$.\n\n> **Watch out.** A remainder of $0$ means the derivative is $y$ itself. At $x = 0$ read the coefficient of the cosine term, since $\\sin 0 = 0$.",
+    "正弦和余弦的导数以 4 为周期重复：$\\sin x$、$\\cos x$、$-\\sin x$、$-\\cos x$，然后回到 $\\sin x$。所以高阶导数只取决于阶数除以 4 的余数。这个余数告诉我们属于四种形式中的哪一种。在 $x = 0$ 处，正弦项为零，只有该形式中余弦项的系数保留下来。\n\n例如 $y = 2\\sin x + 3\\cos x$ 的十阶导数是 $-2\\sin x - 3\\cos x$，因为 $10$ 除以 $4$ 余 $2$。它在 $x = 0$ 处等于 $-3$。\n\n检验：每求一次导，正弦和余弦就平移四分之一周，所以十阶导数是 $2\\sin(x + 5\\pi) + 3\\cos(x + 5\\pi)$，在 $x = 0$ 处为 $-3$。\n\n> **注意。** 余数为 $0$ 时导数就是 $y$ 本身。在 $x = 0$ 处读余弦项的系数，因为 $\\sin 0 = 0$。",
   ),
   generate(rng) {
     const a = nonzero(rng, 9);
@@ -3215,6 +3277,14 @@ const highDerivativeOfSineCosineSum: KnowledgePointDef = {
       poly([-a, "\\cos x"], [b, "\\sin x"]),
     ];
     const answer = [b, a, -b, -a][remainder] ?? 0;
+    const [s, c] = (
+      [
+        [0, 1],
+        [1, 0],
+        [0, -1],
+        [-1, 0],
+      ] as const
+    )[remainder] ?? [0, 1];
     return numberProblem({
       prompt: t(
         `Let $y = ${forms[0]}$. Find the value of $\\frac{d^{${n}}y}{dx^{${n}}}$ at $x = 0$.`,
@@ -3223,9 +3293,25 @@ const highDerivativeOfSineCosineSum: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [a, b, -a, -b, 0],
-      solution: t(
-        `The derivatives repeat with period 4, and ${n} leaves remainder ${remainder}. So this derivative is $${forms[remainder]}$, which equals $${answer}$ at $x = 0$.`,
-        `导数以 4 为周期重复，${n} 除以 4 余 ${remainder}。所以这个导数是 $${forms[remainder]}$，它在 $x = 0$ 处等于 $${answer}$。`,
+      solution: walk(
+        [
+          [
+            "Find the remainder",
+            "求余数",
+            `The derivatives repeat with period $4$, and $${n} = 4 \\cdot ${Math.floor(n / 4)} + ${remainder}$, so this derivative is $${forms[remainder]}$.`,
+            `导数以 $4$ 为周期重复，而 $${n} = 4 \\cdot ${Math.floor(n / 4)} + ${remainder}$，所以这个导数是 $${forms[remainder]}$。`,
+          ],
+          [
+            "Substitute x = 0",
+            "代入 x = 0",
+            `With $\\sin 0 = 0$ and $\\cos 0 = 1$, only the cosine coefficient remains: $${answer}$.`,
+            `由 $\\sin 0 = 0$，$\\cos 0 = 1$，只剩余弦项的系数：$${answer}$。`,
+          ],
+        ],
+        [
+          `Each derivative shifts sine and cosine by a quarter turn, so the derivative of order $${n}$ is $${a}\\sin\\left(x + \\frac{${n}\\pi}{2}\\right) + ${inParens(b)}\\cos\\left(x + \\frac{${n}\\pi}{2}\\right)$.\n\nAt $x = 0$, $\\sin \\frac{${n}\\pi}{2} = ${s}$ and $\\cos \\frac{${n}\\pi}{2} = ${c}$, so the value is $${a} \\cdot ${inParens(s)} + ${inParens(b)} \\cdot ${inParens(c)} = ${answer}$, as before.`,
+          `每求一次导，正弦和余弦就平移四分之一周，所以 $${n}$ 阶导数是 $${a}\\sin\\left(x + \\frac{${n}\\pi}{2}\\right) + ${inParens(b)}\\cos\\left(x + \\frac{${n}\\pi}{2}\\right)$。\n\n在 $x = 0$ 处 $\\sin \\frac{${n}\\pi}{2} = ${s}$，$\\cos \\frac{${n}\\pi}{2} = ${c}$，所以值为 $${a} \\cdot ${inParens(s)} + ${inParens(b)} \\cdot ${inParens(c)} = ${answer}$，与前面相同。`,
+        ],
       ),
     });
   },
@@ -3235,14 +3321,21 @@ const coshSlopeAtHeight: KnowledgePointDef = {
   id: "the-slope-of-a-cosh-curve-at-a-given-height",
   title: t("The slope of a cosh curve at a given height", "cosh 曲线在给定高度处的斜率"),
   explanation: t(
-    "The slope of $y = k\\cosh x$ is $k\\sinh x$, and the identity $\\cosh^2 x - \\sinh^2 x = 1$ gives $\\sinh x$ from $\\cosh x$ with no need to find $x$. The identity alone gives only the size of $\\sinh x$. Each value of $\\cosh x$ above 1 occurs twice, at $x$ and at $-x$, with slopes of opposite signs. So the side of the curve must be stated, and $x > 0$ gives a positive $\\sinh x$.",
-    "$y = k\\cosh x$ 的斜率是 $k\\sinh x$，恒等式 $\\cosh^2 x - \\sinh^2 x = 1$ 由 $\\cosh x$ 给出 $\\sinh x$，不必求出 $x$。恒等式只给出 $\\sinh x$ 的大小。$\\cosh x$ 大于 1 的每个值出现两次，在 $x$ 和 $-x$ 处，斜率符号相反。所以必须说明在曲线的哪一侧，$x > 0$ 时 $\\sinh x$ 为正。",
+    "The slope of $y = k\\cosh x$ is $k\\sinh x$, and the identity $\\cosh^2 x - \\sinh^2 x = 1$ gives $\\sinh x$ from $\\cosh x$ with no need to find $x$. The identity alone gives only the size of $\\sinh x$. Each value of $\\cosh x$ above 1 occurs twice, at $x$ and at $-x$, with slopes of opposite signs. So the side of the curve must be stated, and $x > 0$ gives a positive $\\sinh x$.\n\nFor example, on $y = 2\\cosh x$ where $\\cosh x = \\frac{5}{3}$ and $x > 0$: $\\sinh x = \\frac{4}{3}$, so the slope is $\\frac{8}{3}$.\n\nCheck: $x = \\ln 3$ has $e^{x} = 3$ and $e^{-x} = \\frac{1}{3}$, so $\\cosh x = \\frac{5}{3}$ and $\\sinh x = \\frac{4}{3}$.\n\n> **Watch out.** The slope is $k\\sinh x$, not $k\\cosh x$. For $x < 0$ the slope would be negative.",
+    "$y = k\\cosh x$ 的斜率是 $k\\sinh x$，恒等式 $\\cosh^2 x - \\sinh^2 x = 1$ 由 $\\cosh x$ 给出 $\\sinh x$，不必求出 $x$。恒等式只给出 $\\sinh x$ 的大小。$\\cosh x$ 大于 1 的每个值出现两次，在 $x$ 和 $-x$ 处，斜率符号相反。所以必须说明在曲线的哪一侧，$x > 0$ 时 $\\sinh x$ 为正。\n\n例如在 $y = 2\\cosh x$ 上 $\\cosh x = \\frac{5}{3}$ 且 $x > 0$ 处：$\\sinh x = \\frac{4}{3}$，所以斜率是 $\\frac{8}{3}$。\n\n检验：取 $x = \\ln 3$，$e^{x} = 3$，$e^{-x} = \\frac{1}{3}$，所以 $\\cosh x = \\frac{5}{3}$，$\\sinh x = \\frac{4}{3}$。\n\n> **注意。** 斜率是 $k\\sinh x$，不是 $k\\cosh x$。当 $x < 0$ 时斜率为负。",
   ),
   generate(rng) {
     const [a, b, c] = rng.pick(rightTriangles);
     const k = rng.int(1, 9);
     const answer = Q.of(k * b, a);
     const cosh = Q.of(c, a);
+    const exp = Q.of(c + b, a);
+    const x0 = Math.log(exp.toNumber());
+    const dq = (s: number) => (k * Math.cosh(x0 + s) - k * Math.cosh(x0)) / s;
+    const quotients = table(
+      ["$h$", "$0.01$", "$-0.01$"],
+      [`$\\frac{y(x_{0} + h) - y(x_{0})}{h}$`, `$${num(dq(0.01))}$`, `$${num(dq(-0.01))}$`],
+    );
     return numberProblem({
       prompt: t(
         `Find the slope of $y = ${poly([k, "\\cosh x"])}$ at the point with $x > 0$ where $\\cosh x = ${cosh.toLatex()}$.`,
@@ -3250,9 +3343,26 @@ const coshSlopeAtHeight: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(k * c, a), Q.of(-k * b, a), Q.of(k * a, b), Q.of(k * b, c)],
-      solution: t(
-        `The slope is $${poly([k, "\\sinh x"])}$. From $\\sinh^2 x = \\cosh^2 x - 1 = \\frac{${b * b}}{${a * a}}$ and $x > 0$, we get $\\sinh x = ${Q.of(b, a).toLatex()}$, so the slope is $${answer.toLatex()}$.`,
-        `斜率是 $${poly([k, "\\sinh x"])}$。由 $\\sinh^2 x = \\cosh^2 x - 1 = \\frac{${b * b}}{${a * a}}$ 和 $x > 0$，得 $\\sinh x = ${Q.of(b, a).toLatex()}$，所以斜率是 $${answer.toLatex()}$。`,
+      solution: walk(
+        [
+          ["Differentiate", "求导", `The slope is $y' = ${poly([k, "\\sinh x"])}$.`, `斜率是 $y' = ${poly([k, "\\sinh x"])}$。`],
+          [
+            "Find sinh x",
+            "求 sinh x",
+            `By the identity,\n\n$$\\sinh^2 x = \\cosh^2 x - 1 = \\frac{${b * b}}{${a * a}}.$$\n\nSince $x > 0$, $\\sinh x$ is positive, so $\\sinh x = ${Q.of(b, a).toLatex()}$.`,
+            `由恒等式，\n\n$$\\sinh^2 x = \\cosh^2 x - 1 = \\frac{${b * b}}{${a * a}}.$$\n\n因为 $x > 0$，$\\sinh x$ 为正，所以 $\\sinh x = ${Q.of(b, a).toLatex()}$。`,
+          ],
+          [
+            "Multiply",
+            "相乘",
+            `The slope is $${k} \\cdot ${Q.of(b, a).toLatex()} = ${answer.toLatex()}$.`,
+            `斜率是 $${k} \\cdot ${Q.of(b, a).toLatex()} = ${answer.toLatex()}$。`,
+          ],
+        ],
+        [
+          `Find the point itself. Since $e^{x} = \\cosh x + \\sinh x$, here $e^{x} = ${exp.toLatex()}$ and $x_{0} = \\ln ${exp.toLatex()} \\approx ${num(x0)}$. Difference quotients of $y$ there:\n\n${quotients}\n\nTheir average is $${num((dq(0.01) + dq(-0.01)) / 2)}$, close to $${answer.toLatex()}${approx(answer)}$.`,
+          `求出这个点本身。因为 $e^{x} = \\cosh x + \\sinh x$，这里 $e^{x} = ${exp.toLatex()}$，$x_{0} = \\ln ${exp.toLatex()} \\approx ${num(x0)}$。$y$ 在那里的差商：\n\n${quotients}\n\n它们的平均值是 $${num((dq(0.01) + dq(-0.01)) / 2)}$，接近 $${answer.toLatex()}${approx(answer)}$。`,
+        ],
       ),
     });
   },
@@ -3263,8 +3373,8 @@ const squaresOfSecantAndTangent: KnowledgePointDef = {
   figure: calculusDrawings2["differentiating-reciprocal-trigonometric-functions#a-sum-of-squares-of-secant-and-tangent"],
   title: t("A sum of squares of secant and tangent", "正割与正切的平方之和"),
   explanation: t(
-    "By the chain rule, the derivative of $\\sec^2 x$ is $2\\sec x \\cdot \\sec x\\tan x$, and the derivative of $\\tan^2 x$ is $2\\tan x \\cdot \\sec^2 x$. These are the same expression, $2\\sec^2 x\\tan x$, which reflects the identity $\\sec^2 x = 1 + \\tan^2 x$: the two functions differ only by a constant. So a combination of them has a derivative that depends only on the sum of the two coefficients.",
-    "由链式法则，$\\sec^2 x$ 的导数是 $2\\sec x \\cdot \\sec x\\tan x$，$\\tan^2 x$ 的导数是 $2\\tan x \\cdot \\sec^2 x$。它们是同一个式子 $2\\sec^2 x\\tan x$，这反映了恒等式 $\\sec^2 x = 1 + \\tan^2 x$：两个函数只差一个常数。所以它们的组合的导数只取决于两个系数之和。",
+    "By the chain rule, the derivative of $\\sec^2 x$ is $2\\sec x \\cdot \\sec x\\tan x$, and the derivative of $\\tan^2 x$ is $2\\tan x \\cdot \\sec^2 x$. These are the same expression, $2\\sec^2 x\\tan x$, which reflects the identity $\\sec^2 x = 1 + \\tan^2 x$: the two functions differ only by a constant. So a combination of them has a derivative that depends only on the sum of the two coefficients.\n\nFor example, $y = 3\\sec^2 x + 2\\tan^2 x$ has $y' = 10\\sec^2 x\\tan x$, which is $20$ at $x = \\frac{\\pi}{4}$.\n\nCheck: by the identity $y = 3 + 5\\tan^2 x$, and its derivative is $5 \\cdot 2\\tan x\\sec^2 x$, the same.\n\n> **Watch out.** At $x = \\frac{3\\pi}{4}$, $\\tan x = -1$, so the sign changes. $\\sec^2 x = 2$ at both points.",
+    "由链式法则，$\\sec^2 x$ 的导数是 $2\\sec x \\cdot \\sec x\\tan x$，$\\tan^2 x$ 的导数是 $2\\tan x \\cdot \\sec^2 x$。它们是同一个式子 $2\\sec^2 x\\tan x$，这反映了恒等式 $\\sec^2 x = 1 + \\tan^2 x$：两个函数只差一个常数。所以它们的组合的导数只取决于两个系数之和。\n\n例如 $y = 3\\sec^2 x + 2\\tan^2 x$ 有 $y' = 10\\sec^2 x\\tan x$，在 $x = \\frac{\\pi}{4}$ 处为 $20$。\n\n检验：由恒等式 $y = 3 + 5\\tan^2 x$，其导数是 $5 \\cdot 2\\tan x\\sec^2 x$，相同。\n\n> **注意。** 在 $x = \\frac{3\\pi}{4}$ 处 $\\tan x = -1$，符号改变。两个点处都有 $\\sec^2 x = 2$。",
   ),
   generate(rng) {
     const a = rng.int(1, 9);
@@ -3273,6 +3383,13 @@ const squaresOfSecantAndTangent: KnowledgePointDef = {
     const sum = a + b;
     const answer = (first ? 4 : -4) * sum;
     const point = first ? "\\frac{\\pi}{4}" : "\\frac{3\\pi}{4}";
+    const x0 = first ? Math.PI / 4 : (3 * Math.PI) / 4;
+    const y = (x: number) => a / Math.cos(x) ** 2 + b * Math.tan(x) ** 2;
+    const dq = (s: number) => (y(x0 + s) - y(x0)) / s;
+    const quotients = table(
+      ["$h$", "$0.01$", "$-0.01$"],
+      [`$\\frac{y\\left(${point} + h\\right) - y\\left(${point}\\right)}{h}$`, `$${num(dq(0.01))}$`, `$${num(dq(-0.01))}$`],
+    );
     return numberProblem({
       prompt: t(
         `Let $y = ${poly([a, "\\sec^2 x"], [b, "\\tan^2 x"])}$. Find $y'$ at $x = ${point}$.`,
@@ -3281,9 +3398,25 @@ const squaresOfSecantAndTangent: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [-answer, 2 * sum, 4 * a, 4 * b],
-      solution: t(
-        `Both terms have the same derivative form, so $y' = ${poly([2 * sum, "\\sec^2 x\\tan x"])}$. At this point, $\\sec^2 x = 2$ and $\\tan x = ${first ? 1 : -1}$, which gives $${answer}$.`,
-        `两项的导数形式相同，所以 $y' = ${poly([2 * sum, "\\sec^2 x\\tan x"])}$。在这一点，$\\sec^2 x = 2$，$\\tan x = ${first ? 1 : -1}$，得 $${answer}$。`,
+      solution: walk(
+        [
+          [
+            "Differentiate",
+            "求导",
+            `Both terms have derivatives of the form $2\\sec^2 x\\tan x$, so $y' = ${poly([2 * sum, "\\sec^2 x\\tan x"])}$.`,
+            `两项的导数都是 $2\\sec^2 x\\tan x$ 的倍数，所以 $y' = ${poly([2 * sum, "\\sec^2 x\\tan x"])}$。`,
+          ],
+          [
+            "Substitute the point",
+            "代入该点",
+            `At $x = ${point}$, $\\sec^2 x = 2$ and $\\tan x = ${first ? 1 : -1}$, so $y' = ${2 * sum} \\cdot 2 \\cdot ${first ? 1 : "(-1)"} = ${answer}$.`,
+            `在 $x = ${point}$ 处 $\\sec^2 x = 2$，$\\tan x = ${first ? 1 : -1}$，所以 $y' = ${2 * sum} \\cdot 2 \\cdot ${first ? 1 : "(-1)"} = ${answer}$。`,
+          ],
+        ],
+        [
+          `Compute difference quotients of $y$ at $x = ${point}$, with $h = 0.01$ on each side:\n\n${quotients}\n\nTheir average is $${num((dq(0.01) + dq(-0.01)) / 2)}$, close to $${answer}$.`,
+          `计算 $y$ 在 $x = ${point}$ 处的差商，两侧各取 $h = 0.01$：\n\n${quotients}\n\n它们的平均值是 $${num((dq(0.01) + dq(-0.01)) / 2)}$，接近 $${answer}$。`,
+        ],
       ),
     });
   },
@@ -3293,8 +3426,8 @@ const secondDerivativeOfProduct: KnowledgePointDef = {
   id: "a-second-derivative-of-a-product-from-values",
   title: t("A second derivative of a product from values", "由函数值求积的二阶导数"),
   explanation: t(
-    "Applying the product rule twice gives $(fg)'' = f''g + 2f'g' + fg''$, a pattern with the same coefficients as $(a + b)^2$. The middle term has a coefficient of 2, because it arises once from each of the two terms of the first derivative. Given a table of values at a point, the formula needs nothing else, so the functions themselves need not be known. Taking the product of the second derivatives is a common mistake.",
-    "用两次积法则，得 $(fg)'' = f''g + 2f'g' + fg''$，系数规律与 $(a + b)^2$ 相同。中间项系数为 2，因为它从一阶导数的两项各产生一次。给出一点处的数值表，这个公式就不需要别的了，所以不必知道函数本身。把二阶导数直接相乘是常见的错误。",
+    "Applying the product rule twice gives $(fg)'' = f''g + 2f'g' + fg''$, a pattern with the same coefficients as $(a + b)^2$. The middle term has a coefficient of 2, because it arises once from each of the two terms of the first derivative. Given a table of values at a point, the formula needs nothing else, so the functions themselves need not be known.\n\nFor example, if $f = 1$, $f' = 2$, $f'' = 3$, $g = 4$, $g' = 5$ and $g'' = 6$ at a point, then $(fg)'' = 12 + 20 + 6 = 38$ there.\n\nCheck: with $f = g = x$, the formula gives $0 + 2 \\cdot 1 \\cdot 1 + 0 = 2$, and indeed $(x^{2})'' = 2$.\n\n> **Watch out.** Taking the product of the second derivatives is a common mistake, and so is forgetting the $2$ in the middle term.",
+    "用两次积法则，得 $(fg)'' = f''g + 2f'g' + fg''$，系数规律与 $(a + b)^2$ 相同。中间项系数为 2，因为它从一阶导数的两项各产生一次。给出一点处的数值表，这个公式就不需要别的了，所以不必知道函数本身。\n\n例如，若在某点 $f = 1$，$f' = 2$，$f'' = 3$，$g = 4$，$g' = 5$，$g'' = 6$，则那里 $(fg)'' = 12 + 20 + 6 = 38$。\n\n检验：取 $f = g = x$，公式给出 $0 + 2 \\cdot 1 \\cdot 1 + 0 = 2$，而 $(x^{2})'' = 2$。\n\n> **注意。** 把二阶导数直接相乘是常见的错误，忘记中间项的 $2$ 也是。",
   ),
   generate(rng) {
     const c = rng.int(0, 5);
@@ -3306,14 +3439,36 @@ const secondDerivativeOfProduct: KnowledgePointDef = {
     const g2 = nonzero(rng, 5);
     const answer = f2 * g0 + 2 * f1 * g1 + f0 * g2;
     const values = `f(${c}) = ${f0}, \\; f'(${c}) = ${f1}, \\; f''(${c}) = ${f2}, \\; g(${c}) = ${g0}, \\; g'(${c}) = ${g1}, \\; g''(${c}) = ${g2}`;
+    const P = (s: number) => (f0 + f1 * s + (f2 * s * s) / 2) * (g0 + g1 * s + (g2 * s * s) / 2);
+    const d2 = (s: number) => (P(s) - 2 * P(0) + P(-s)) / (s * s);
+    const differences = table(
+      ["$s$", "$0.1$", "$0.01$"],
+      [`$\\frac{P(${c} + s) - 2P(${c}) + P(${c} - s)}{s^{2}}$`, `$${num(d2(0.1))}$`, `$${num(d2(0.01))}$`],
+    );
     return numberProblem({
       prompt: t(`$${values}$. Let $h = fg$. Find $h''(${c})$.`, `$${values}$。设 $h = fg$。求 $h''(${c})$。`),
       answer,
       form: "integer",
       wrong: [f2 * g0 + f0 * g2, f2 * g2, f2 * g0 + f1 * g1 + f0 * g2, f1 * g1],
-      solution: t(
-        `Here $h'' = f''g + 2f'g' + fg''$. At this point, that is $${f2} \\cdot ${inParens(g0)} + 2 \\cdot ${inParens(f1)} \\cdot ${inParens(g1)} + ${inParens(f0)} \\cdot ${inParens(g2)} = ${answer}$.`,
-        `这里 $h'' = f''g + 2f'g' + fg''$。在这一点，它等于 $${f2} \\cdot ${inParens(g0)} + 2 \\cdot ${inParens(f1)} \\cdot ${inParens(g1)} + ${inParens(f0)} \\cdot ${inParens(g2)} = ${answer}$。`,
+      solution: walk(
+        [
+          [
+            "Write the formula",
+            "写出公式",
+            "Applying the product rule twice gives $h'' = f''g + 2f'g' + fg''$.",
+            "用两次乘积法则，得 $h'' = f''g + 2f'g' + fg''$。",
+          ],
+          [
+            "Substitute the values",
+            "代入数值",
+            `At $x = ${c}$,\n\n$$h''(${c}) = ${f2} \\cdot ${inParens(g0)} + 2 \\cdot ${inParens(f1)} \\cdot ${inParens(g1)} + ${inParens(f0)} \\cdot ${inParens(g2)} = ${answer}.$$`,
+            `在 $x = ${c}$ 处，\n\n$$h''(${c}) = ${f2} \\cdot ${inParens(g0)} + 2 \\cdot ${inParens(f1)} \\cdot ${inParens(g1)} + ${inParens(f0)} \\cdot ${inParens(g2)} = ${answer}.$$`,
+          ],
+        ],
+        [
+          `Replace $f$ and $g$ by quadratics with the same values and first two derivatives at $x = ${c}$, such as $${f0} + ${inParens(f1)}(x - ${c}) + \\frac{${f2}}{2}(x - ${c})^{2}$ for $f$. Their product $P$ has the same second derivative there, and its second differences are\n\n${differences}\n\nThese approach $${answer}$.`,
+          `把 $f$、$g$ 换成在 $x = ${c}$ 处值和前两阶导数都相同的二次函数，例如 $f$ 换成 $${f0} + ${inParens(f1)}(x - ${c}) + \\frac{${f2}}{2}(x - ${c})^{2}$。它们的积 $P$ 在那里有相同的二阶导数，其二阶差分为\n\n${differences}\n\n这些值逼近 $${answer}$。`,
+        ],
       ),
     });
   },
