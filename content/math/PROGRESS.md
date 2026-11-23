@@ -198,8 +198,8 @@ Stage 2: AP Calculus AB and BC, Calculus I and II. Counts are topics of these co
 | `calculus-ii-sequences.ts` | 19 | done | |  |
 | `calculus-ii-convergence.ts` | 13 | in progress | |  |
 | `calculus-ii-taylor.ts` | 14 | in progress | |  |
-| `ap-calculus-technology.ts` | 9 | in progress | |  |
-| other files | 18 | in progress | | `act-fundamentals-reasoning-algebra.ts` (3), `act-number-algebra.ts` (3), `act-exam-functions.ts` (3), `act-exam-algebra.ts` (1), `act-fundamentals-reasoning-geometry.ts` (1), `act-fundamentals-number.ts` (1), `act-geometry-data.ts` (1), `act-fundamentals-chance-conics.ts` (1), `complex-analysis-extra.ts` (1), `complex-analysis.ts` (1), `grade-7-statistics.ts` (1), `grade-6-statistics.ts` (1) |
+| `ap-calculus-technology.ts` | 9 | done | |  |
+| other files | 18 | done | | Already taught by earlier stages when checked on 2026-11-23 |
 
 ## Open Gaps
 
