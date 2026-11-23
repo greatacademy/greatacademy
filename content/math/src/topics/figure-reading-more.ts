@@ -1509,15 +1509,15 @@ const expectedFromBars: KnowledgePointDef = {
   },
 };
 
-const empiricalFromCurve: KnowledgePointDef = {
-  id: "the-empirical-rule-from-a-shaded-curve",
-  figure: precalculusDrawings4["the-empirical-rule-for-the-normal-distribution#the-empirical-rule-from-a-shaded-curve"],
 /** EMPIRICAL_PIECE is the percent of a normal distribution between k and k + 1 standard deviations from the mean, for k = -3 to 2. */
 const EMPIRICAL_PIECE: Record<number, string> = { [-3]: "2.35", [-2]: "13.5", [-1]: "34", 0: "34", 1: "13.5", 2: "2.35" };
 
 /** EMPIRICAL_BELOW is the percent of a normal distribution below k standard deviations from the mean, for k = -3 to 3. */
 const EMPIRICAL_BELOW: Record<number, string> = { [-3]: "0.15", [-2]: "2.5", [-1]: "16", 0: "50", 1: "84", 2: "97.5", 3: "99.85" };
 
+const empiricalFromCurve: KnowledgePointDef = {
+  id: "the-empirical-rule-from-a-shaded-curve",
+  figure: precalculusDrawings4["the-empirical-rule-for-the-normal-distribution#the-empirical-rule-from-a-shaded-curve"],
   title: t("The empirical rule from a shaded curve", "由阴影曲线用经验法则"),
   explanation: t(
     "About 68 percent of a normal distribution lies within one standard deviation of the mean, 95 percent within two, and 99.7 percent within three. The curve is symmetric, so half of each of these lies on either side of the mean. Translate the shaded bounds into standard deviations from the mean, and then combine the pieces of the rule that are needed.\n\nWith mean $100$ and standard deviation $10$, a region shaded from $90$ to $120$ runs from $-1$ to $2$ standard deviations, so it holds $34 + 34 + 13.5 = 81.5$ percent.\n\nCheck: $97.5$ percent lies below $120$ and $16$ percent below $90$, and $97.5 - 16 = 81.5$.\n\n> **Watch out.** Only the two pieces next to the mean hold $34$ percent each. From one to two standard deviations out the piece is $13.5$ percent, and from two to three it is $2.35$ percent.",
@@ -1560,8 +1560,6 @@ const EMPIRICAL_BELOW: Record<number, string> = { [-3]: "0.15", [-2]: "2.5", [-1
           `A normal distribution has mean ${mu} and standard deviation ${sigma}. According to the empirical rule, what percent of it lies in the shaded region?`,
           `一个正态分布的均值是 ${mu}，标准差是 ${sigma}。按经验法则，阴影区域占多少百分比？`,
         ),
-      },
-    };
         answer,
         form: "decimal",
         mistakes: [
@@ -1612,6 +1610,8 @@ const EMPIRICAL_BELOW: Record<number, string> = { [-3]: "0.15", [-2]: "2.5", [-1
       figure: {
         svg,
         alt: t(`A normal curve, shaded between ${lo} and ${hi}.`, `一条正态曲线，在 ${lo} 和 ${hi} 之间涂了阴影。`),
+      },
+    };
   },
 };
 
