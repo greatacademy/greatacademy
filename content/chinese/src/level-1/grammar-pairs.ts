@@ -774,6 +774,330 @@ const PAIRS = `
   就 | 把 | 就 here means “as for, on”: 就…而言, 就这个问题. 把 brings an object before a verb. | 这里的“就”表示“关于、从……方面”：就……而言、就这个问题。“把”是把宾语提到动词前。
   就 | 被 | 就 here means “as for, on”: 就…而言, 就这个问题. 被 marks who does an action. | 这里的“就”表示“关于、从……方面”：就……而言、就这个问题。“被”引出施事者。
   就 | 让 | The fixed phrase is 就…而言, “as for …”: 就面积而言. 让 does not go with 而言. | 固定说法是“就……而言”，表示从某方面说：就面积而言。“让”不和“而言”搭配。
+  美化 | 漂亮 | 美化 is a verb, “to make beautiful”, so it can follow 被: 被美化了. 漂亮 is an adjective, not an action, and cannot follow 被. | “美化”是动词，意思是使变美，可以说“被美化了”。“漂亮”是形容词，不是动作，不能放在“被”后面。
+  自动化 | 自动地 | 自动化 is a noun here, “automation”, the thing that 实现 brings about. 自动地 only goes before a verb, as in 自动地关门, and cannot be an object. | “自动化”在这里是名词，是“实现”的对象。“自动地”只能放在动词前面，比如“自动地关门”，不能做宾语。
+  绿化 | 绿色 | 绿化 is an action, “planting trees and grass”, so it can follow 进行 and 正在. 绿色 is only a color, not an action. | “绿化”是动作，指种树种草，可以跟在“进行”“正在”后面。“绿色”只是颜色，不是动作。
+  全球化 | 全球地 | 全球化, “globalization”, names a process, so it can be what 让 starts from. 全球地 only goes before a verb. | “全球化”指一个过程，可以做“让”前面的主语。“全球地”只能放在动词前面。
+  有的是 | 有点儿 | 有的是 means “there is plenty”, and the rest of the sentence leans on that. 有点儿 means “a little”, the opposite amount. | “有的是”表示很多、不缺，句子后面的话正靠这一点。“有点儿”表示少量，意思正好相反。
+  有的是 | 很有 | 有的是 can end a clause after the noun: 时间有的是. 很有 needs a noun after it, as in 很有经验, so it cannot end the clause. | “有的是”可以放在名词后面结尾：时间有的是。“很有”后面要带名词，比如“很有经验”，不能这样结尾。
+  有的 | 有很多 | 有的是 is one fixed phrase, “has plenty of”: 有的是钱. Putting 很多 inside breaks it, and 有很多是钱 is not said. | “有的是”是一个固定说法：有的是钱，就是钱很多。中间插进“很多”就拆散了它，“有很多是钱”不成话。
+  别看 | 因为 | 别看 means “it may look …, but”, and the next clause goes against that look. 因为 gives a reason, but the first clause is no reason for the second: they point opposite ways. | “别看”表示“虽然看起来……”，后一句说出相反的情况。“因为”引出原因，可是前一句不是后一句的原因，两句意思相反。
+  经验可丰富了 | 所以经验丰富 | After 别看, the second clause goes against the first, and 可…了 stresses the surprise: 经验可丰富了. 所以 gives a result, which does not go with 别看. | 前一句用了“别看”，后一句要说出相反的情况，用“可……了”加强语气：经验可丰富了。“所以”表示结果，不和“别看”搭配。
+  经验可丰富了 | 因此经验丰富 | After 别看, the second clause goes against the first, and 可…了 stresses the surprise: 经验可丰富了. 因此 gives a result, which does not go with 别看. | 前一句用了“别看”，后一句要说出相反的情况，用“可……了”加强语气：经验可丰富了。“因此”表示结果，不和“别看”搭配。
+  她可会用电脑了 | 所以她会用电脑 | After 别看, the second clause goes against the first, and 可…了 stresses the surprise: 她可会用电脑了. 所以 gives a result, which does not go with 别看. | 前一句用了“别看”，后一句要说出相反的情况，用“可……了”加强语气：她可会用电脑了。“所以”表示结果，不和“别看”搭配。
+  她可会用电脑了 | 因此她会用电脑 | After 别看, the second clause goes against the first, and 可…了 stresses the surprise: 她可会用电脑了. 因此 gives a result, which does not go with 别看. | 前一句用了“别看”，后一句要说出相反的情况，用“可……了”加强语气：她可会用电脑了。“因此”表示结果，不和“别看”搭配。
+  干得可好了 | 所以干得好 | After 别看, the second clause goes against the first, and 可…了 stresses the surprise: 干得可好了. 所以 gives a result, which does not go with 别看. | 前一句用了“别看”，后一句要说出相反的情况，用“可……了”加强语气：干得可好了。“所以”表示结果，不和“别看”搭配。
+  干得可好了 | 因此干得好 | After 别看, the second clause goes against the first, and 可…了 stresses the surprise: 干得可好了. 因此 gives a result, which does not go with 别看. | 前一句用了“别看”，后一句要说出相反的情况，用“可……了”加强语气：干得可好了。“因此”表示结果，不和“别看”搭配。
+  历史可长了 | 所以历史很长 | After 别看, the second clause goes against the first, and 可…了 stresses the surprise: 历史可长了. 所以 gives a result, which does not go with 别看. | 前一句用了“别看”，后一句要说出相反的情况，用“可……了”加强语气：历史可长了。“所以”表示结果，不和“别看”搭配。
+  历史可长了 | 因此历史很长 | After 别看, the second clause goes against the first, and 可…了 stresses the surprise: 历史可长了. 因此 gives a result, which does not go with 别看. | 前一句用了“别看”，后一句要说出相反的情况，用“可……了”加强语气：历史可长了。“因此”表示结果，不和“别看”搭配。
+  中 | 起 | The frame is 从…中, “from within something”: 从例子中发现. 从…起 tells a starting time, as in 从明天起, not where something is found. | 格式是“从……中”，表示从某个范围里面：从例子中发现。“从……起”表示从某个时间开始，比如“从明天起”，不表示在哪里找到。
+  中学会 | 的学会 | The frame is 从…中, “from within”: they learned it in the games, 从游戏中学会. 的 needs a noun after it, and 学会 is a verb. | 格式是“从……中”：在游戏里学会，从游戏中学会。“的”后面要接名词，“学会”是动词。
+  中学会 | 到学会 | The frame is 从…中, “from within”: 从游戏中学会. 从…到… marks a range from one point to another, and here there is no second point. | 格式是“从……中”：从游戏中学会。“从……到……”表示从一点到另一点的范围，这里没有第二个点。
+  中学会 | 起学会 | The frame is 从…中, “from within”: 从游戏中学会. 从…起 tells a starting time, not where something is learned. | 格式是“从……中”：从游戏中学会。“从……起”表示从某个时间开始，不表示在哪里学会。
+  你可 | 你好 | 可 before a verb stresses a warning or a claim: 你可别忘了. 你好 is a greeting, and 好 gives no such stress. | “可”放在动词前加强语气，用来提醒或强调：你可别忘了。“你好”是打招呼，“好”没有加强语气的作用。
+  可 | 好 | 可 stresses a denial: 我可没说过, “I really never said it”. 好 gives no such stress before 没. | “可”加强否定的语气：我可没说过，表示确实没说过。“好”放在“没”前面没有这个作用。
+  还是 | 三遍 | The frame is V了又V，…还是…: after doing it again and again, nothing changed. 还是 says “still”. 三遍 is a count and cannot go before 舍不得 or 听不懂. | 格式是“V了又V，……还是……”：反复做了，结果仍然没变。“还是”表示仍然。“三遍”是次数，不能放在“舍不得”“听不懂”前面。
+  面 | 前 | The fixed phrase is 当着…的面, “in front of someone, to their face”. 当着…的前 is not said; 前 goes in 在…前面. | 固定说法是“当着……的面”，表示在某人面前。不说“当着……的前”，“前”用在“在……前面”里。
+  没办法 | 没有法 | The fixed frame is 拿…没办法, “can do nothing with someone”. 办法 is one word, “a way”, and 法 alone is not used like this. | 固定格式是“拿……没办法”，表示对某人毫无办法。“办法”是一个词，单用“法”不能这样说。
+  不过来 | 不下来 | V不过来 says there is too much to handle: 忙不过来, 照顾不过来. V不下来 says one cannot finish or stop, as in 停不下来; it says nothing about too much. | “V不过来”表示太多了，顾不上：忙不过来、照顾不过来。“V不下来”表示完成不了或停不住，比如“停不下来”，不表示太多。
+  不过来 | 不出来 | V不过来 says there is too much to handle: 忙不过来, 照顾不过来. V不出来 says one cannot produce or find something, as in 想不出来. | “V不过来”表示太多了，顾不上：忙不过来、照顾不过来。“V不出来”表示做不出、找不出，比如“想不出来”。
+  才不要 | 不才是要 | The frame 才不…呢 makes a strong refusal, and 才 comes before 不: 我才不要. 不才是要 breaks the order of the frame and is not said. | “才不……呢”表示坚决不要，“才”要在“不”前面：我才不要。“不才是要”打乱了格式的顺序，不成话。
+  破坏 | 保护 | 遭到 is used for bad things that happen to someone: 遭到破坏. 保护 is a good thing, so 遭到保护 is not said. | “遭到”后面只接不好的事：遭到破坏。“保护”是好事，不说“遭到保护”。
+  破坏 | 欢迎 | 遭到 is used for bad things that happen to someone: 遭到破坏. 欢迎 is a good thing, so 遭到欢迎 is not said. | “遭到”后面只接不好的事：遭到破坏。“欢迎”是好事，不说“遭到欢迎”。
+  破坏 | 表扬 | 遭到 is used for bad things that happen to someone: 遭到破坏. 表扬 is a good thing, so 遭到表扬 is not said. | “遭到”后面只接不好的事：遭到破坏。“表扬”是好事，不说“遭到表扬”。
+  破坏 | 改善 | 遭到 is used for bad things that happen to someone: 遭到破坏. 改善 is a good change, so 遭到改善 is not said. | “遭到”后面只接不好的事：遭到破坏。“改善”是变好，不说“遭到改善”。
+  破坏 | 帮助 | 遭到 is used for bad things: 遭到大风的破坏. 帮助 is a good thing, so 遭到…的帮助 is not said. | “遭到”后面只接不好的事：遭到大风的破坏。“帮助”是好事，不说“遭到……的帮助”。
+  污染 | 治理 | 遭到 is used for bad things: 遭到了污染. 治理 means setting a problem right, a good thing, so 遭到治理 is not said. | “遭到”后面只接不好的事：遭到了污染。“治理”是把问题解决好，是好事，不说“遭到治理”。
+  遭到 | 达到 | 遭到 means “to suffer”, and takes something bad like 反对, 污染 or 批评. 达到 means “to reach” a goal or a level, as in 达到目标. | “遭到”表示受到不好的事，后面接反对、污染、批评。“达到”表示到了某个目标或程度，比如“达到目标”。
+  遭到 | 到达 | 遭到 means “to suffer”, and takes something bad like 反对, 污染 or 批评. 到达 means “to arrive at” a place, as in 到达北京. | “遭到”表示受到不好的事，后面接反对、污染、批评。“到达”表示到了某个地方，比如“到达北京”。
+  损失 | 收获 | 遭受 is used for bad things: 遭受了很大的损失 after a flood. 收获 is a gain, so 遭受收获 is not said. | “遭受”后面只接不好的事：洪水过后遭受了很大的损失。“收获”是好的结果，不说“遭受收获”。
+  捕杀 | 保护 | 遭到 is used for bad things: the birds 遭到了大量捕杀 because people hunt them. 保护 is a good thing, so 遭到保护 is not said. | “遭到”后面只接不好的事：因为人们乱捕，这种鸟遭到了大量捕杀。“保护”是好事，不说“遭到保护”。
+  大量捕杀 | 热烈欢迎 | 遭到 is used for bad things: 遭到了大量捕杀. 热烈欢迎 is a warm welcome, a good thing, and does not follow 遭到. | “遭到”后面只接不好的事：遭到了大量捕杀。“热烈欢迎”是好事，不放在“遭到”后面。
+  大量捕杀 | 很多表扬 | 遭到 is used for bad things: 遭到了大量捕杀. 表扬 is praise, a good thing, and does not follow 遭到. | “遭到”后面只接不好的事：遭到了大量捕杀。“表扬”是好事，不放在“遭到”后面。
+  性 | 化 | 性 turns a word into a quality, one that can be high, low or missing: 安全性, 可能性. 化 means “becoming”, a change, as in 现代化; it does not name a quality. | “性”表示某种性质，可以高、低或缺少：安全性、可能性。“化”表示变成某种状态，比如“现代化”，不表示性质。
+  度 | 率 | 度 tells how much of a quality there is: 知名度, 难度, 热度. 率 is a rate counted out of a whole, as in 成功率, and these words do not take it. | “度”表示某种性质的程度：知名度、难度、热度。“率”是按总数算出的比例，比如“成功率”，这些词不用“率”。
+  度 | 性 | 度 tells how much of a quality there is, so it rises or falls: 知名度越来越高, 难度很大. These words are fixed with 度; 知名性 and 难性 are not said. | “度”表示程度，可以升高或降低：知名度越来越高、难度很大。这些词固定用“度”，不说“知名性”“难性”。
+  度 | 化 | 度 tells how much of a quality there is: 知名度, 难度, 热度. 化 means “becoming”, a change, not an amount that can be high. | “度”表示某种性质的程度：知名度、难度、热度。“化”表示变成某种状态，不是可以高低的程度。
+  率 | 性 | 率 is a rate counted out of a whole, so it can be a percent: 成功率, 及格率, 出生率. 性 names a quality and is not counted in percents. | “率”是按总数算出的比例，可以用百分数说：成功率、及格率、出生率。“性”表示性质，不用百分数来算。
+  率 | 化 | 率 is a rate counted out of a whole, so it can be a percent: 成功率, 及格率, 出生率. 化 means “becoming”, a change, and is not counted. | “率”是按总数算出的比例，可以用百分数说：成功率、及格率、出生率。“化”表示变成某种状态，不能这样计算。
+  增长率 | 增长度 | 增长率 is a rate, so it is told in percents: 超过了百分之十. 增长度 is not a word. | “增长率”是比率，用百分数说：超过了百分之十。没有“增长度”这个词。
+  增长率 | 增长性 | 增长率 is a rate, so it is told in percents: 超过了百分之十. 性 names a quality, which cannot pass 百分之十. | “增长率”是比率，用百分数说：超过了百分之十。“性”表示性质，不能说超过百分之十。
+  增长率 | 增长化 | 增长率 is a rate, so it is told in percents: 超过了百分之十. 化 means “becoming”, and 增长化 is not a word. | “增长率”是比率，用百分数说：超过了百分之十。“化”表示变成，没有“增长化”这个词。
+  失业率 | 失业度 | 失业率 is the share of people without work, a rate that goes up and down. 失业度 is not a word. | “失业率”是没有工作的人所占的比例，会上升或下降。没有“失业度”这个词。
+  失业率 | 失业性 | 失业率 is the share of people without work, a rate that goes up and down. 性 names a quality, not a share of people. | “失业率”是没有工作的人所占的比例，会上升或下降。“性”表示性质，不是人数的比例。
+  失业率 | 失业化 | 失业率 is the share of people without work, a rate that goes up and down. 化 means “becoming”, and 失业化 is not a word. | “失业率”是没有工作的人所占的比例，会上升或下降。“化”表示变成，没有“失业化”这个词。
+  作用 | 影响 | The verb 起 goes with 作用: 起作用, “to work, to have an effect”. 影响 goes with 有 or 产生, not with 起. | 动词“起”和“作用”搭配：起作用。“影响”和“有”“产生”搭配，不说“起影响”。
+  影响 | 帮助 | 产生…影响 is a fixed pairing, and 深远, “far-reaching”, describes 影响. 帮助 is not produced, and is not called 深远. | “产生……影响”是固定搭配，“深远”形容影响。“帮助”不和“产生”“深远”搭配。
+  影响 | 好处 | 产生…影响 is a fixed pairing, and 深远, “far-reaching”, describes 影响. 产生好处 is not said, and 好处 is not called 深远. | “产生……影响”是固定搭配，“深远”形容影响。不说“产生好处”，“好处”也不用“深远”形容。
+  影响 | 关心 | 产生…影响 is a fixed pairing: an invention has an effect on society. 关心 is care that a person shows, and an invention does not produce it. | “产生……影响”是固定搭配：发明对社会有影响。“关心”是人对人的关怀，发明不会产生关心。
+  对孩子的 | 给孩子有 | The frame is 对…的影响, “the effect on …”, and the whole of it is the subject: 手机对孩子的影响很大. 给孩子有影响很大 puts in a second verb 有 and leaves 影响很大 with no subject. | 格式是“对……的影响”，整个短语做主语：手机对孩子的影响很大。“给孩子有影响很大”多了动词“有”，“影响很大”就没有主语了。
+  带来 | 带着 | 给…带来 means “to bring something to someone”: 带来了收入. 带着 means “carrying along”, a lasting state, and does not take 了 and a gain like this. | “给……带来”表示让某人得到：带来了收入。“带着”表示随身拿着，是持续的状态，不能这样接“了”和得到的东西。
+  带来 | 带出 | 给…带来 means “to bring something to someone”: 带来了收入. 带出 means taking something out of a place, as in 带出教室. | “给……带来”表示让某人得到：带来了收入。“带出”表示从某个地方拿出去，比如“带出教室”。
+  提供 | 提起 | 为…提供 means “to supply someone with”: 提供电子书. 提起 means “to mention” or “to lift”, as in 提起这件事. | “为……提供”表示给某人供给东西：提供电子书。“提起”表示说起或拿起，比如“提起这件事”。
+  早在 | 早就 | The frame is 早在 + a time, …就…: 早在两千多年前，这里就…. 早在 goes before a time; 早就 goes before a verb, as in 早就知道, so it cannot go before the time. | 格式是“早在+时间，……就……”。“早在”放在时间前面；“早就”放在动词前面，比如“早就知道”，不能放在时间前面。
+  早在两千年前，这里就 | 早就两千年前，这里 | The frame is 早在 + a time, then 就 before the verb: 早在两千年前，这里就有了城市. 早就 cannot go before a time, and the 就 before the verb is lost. | 格式是“早在+时间”，后面动词前用“就”：早在两千年前，这里就有了城市。“早就”不能放在时间前面，动词前的“就”也丢了。
+  早在汉代，人们就 | 早就汉代，人们 | The frame is 早在 + a time, then 就 before the verb: 早在汉代，人们就用纸写字了. 早就 cannot go before a time, and the 就 before the verb is lost. | 格式是“早在+时间”，后面动词前用“就”：早在汉代，人们就用纸写字了。“早就”不能放在时间前面，动词前的“就”也丢了。
+  早在一百年前，他就 | 早就一百年前，他 | The frame is 早在 + a time, then 就 before the verb: 早在一百年前，他就提出了这个想法. 早就 cannot go before a time, and the 就 before the verb is lost. | 格式是“早在+时间”，后面动词前用“就”：早在一百年前，他就提出了这个想法。“早就”不能放在时间前面，动词前的“就”也丢了。
+  早在唐朝，这里就是 | 早就唐朝，这里是 | The frame is 早在 + a time, then 就 before the verb: 早在唐朝，这里就是港口了. 早就 cannot go before a time, and the 就 before 是 is lost. | 格式是“早在+时间”，后面动词前用“就”：早在唐朝，这里就是港口了。“早就”不能放在时间前面，“是”前面的“就”也丢了。
+  早在古代，这个故事就 | 早就古代，这个故事 | The frame is 早在 + a time, then 就 before the verb: 早在古代，这个故事就流传开了. 早就 cannot go before a time, and the 就 before the verb is lost. | 格式是“早在+时间”，后面动词前用“就”：早在古代，这个故事就流传开了。“早就”不能放在时间前面，动词前的“就”也丢了。
+  早在我出生前，这座桥就 | 早就我出生前，这座桥 | The frame is 早在 + a time, then 就 before the verb: 早在我出生前，这座桥就建好了. 早就 cannot go before a time, and the 就 before the verb is lost. | 格式是“早在+时间”，后面动词前用“就”：早在我出生前，这座桥就建好了。“早就”不能放在时间前面，动词前的“就”也丢了。
+  早在古时候，这里就 | 早就古时候，这里 | The frame is 早在 + a time, then 就 before the verb: 早在古时候，这里就有人住了. 早就 cannot go before a time, and the 就 before the verb is lost. | 格式是“早在+时间”，后面动词前用“就”：早在古时候，这里就有人住了。“早就”不能放在时间前面，动词前的“就”也丢了。
+  早在一千年前，这种技术就 | 早就一千年前，这种技术 | The frame is 早在 + a time, then 就 before the verb: 早在一千年前，这种技术就传到了国外. 早就 cannot go before a time, and the 就 before the verb is lost. | 格式是“早在+时间”，后面动词前用“就”：早在一千年前，这种技术就传到了国外。“早就”不能放在时间前面，动词前的“就”也丢了。
+  早在三千年前，人们就 | 早就三千年前，人们 | The frame is 早在 + a time, then 就 before the verb: 早在三千年前，人们就会种这种粮食. 早就 cannot go before a time, and the 就 before the verb is lost. | 格式是“早在+时间”，后面动词前用“就”：早在三千年前，人们就会种这种粮食。“早就”不能放在时间前面，动词前的“就”也丢了。
+  早在五百年前，这条路就 | 早就五百年前，这条路 | The frame is 早在 + a time, then 就 before the verb: 早在五百年前，这条路就很有名了. 早就 cannot go before a time, and the 就 before 很有名 is lost. | 格式是“早在+时间”，后面用“就”：早在五百年前，这条路就很有名了。“早就”不能放在时间前面，“很有名”前面的“就”也丢了。
+  十几 | 一 | 先后 tells of several things happening one after another, so it needs more than one: 十几本书. 一本 is only one book, and one thing cannot come one after another. | “先后”表示几件事一件接一件发生，所以要有不止一个：十几本书。“一本”只有一本，谈不上先后。
+  了十几 | 这 | 先后 tells of several things done one after another, so it needs a number like 十几 and 了 for the finished acts: 写了十几本书. 写这本书 is one book, not done in turn. | “先后”表示几件事一件接一件做完，所以要有“十几”这样的数和表示完成的“了”：写了十几本书。“写这本书”只有一本，谈不上先后。
+  了十几本书 | 过一次 | 先后 tells of several things done one after another: 写了十几本书. 写过一次 counts one time only, and drops what he wrote. | “先后”表示几件事一件接一件：写了十几本书。“写过一次”只有一次，也丢了写的东西。
+  先后 | 一起 | 先后 means “one after another, at different times”. 一起 means “together, at the same time”, but these things happened in different years. | “先后”表示在不同时间一个接一个。“一起”表示同时、在一块儿，可是这些事发生在不同的年代。
+  上过三 | 正在上一 | 先后 tells of several things in turn, all done: 上过三所学校. 正在 is one act going on now, and 一所 is only one school. | “先后”表示几件事一件接一件，都已做过：上过三所学校。“正在”是现在进行的一件事，“一所”也只有一所。
+  上过三 | 只上过一 | 先后 tells of several things in turn: 上过三所学校. 只上过一所 is only one school, and one thing cannot come in turn. | “先后”表示几件事一件接一件：上过三所学校。“只上过一所”只有一所，谈不上先后。
+  好几 | 一 | 先后 tells of several things in turn: it passed through 好几个人的手. 一个人 is only one, and one cannot come in turn. | “先后”表示几件事一件接一件：经过了好几个人的手。“一个人”只有一个，谈不上先后。
+  经过了好几 | 正经过一 | 先后 tells of several things in turn, all done: 经过了好几个人的手. 正 is one act going on now, and 一个人 is only one. | “先后”表示几件事一件接一件，都已完成：经过了好几个人的手。“正”是现在进行的事，“一个人”也只有一个。
+  好几个人 | 这个人 | 先后 tells of several things in turn: it passed through 好几个人的手. 这个人 is only one person, and one cannot come in turn. | “先后”表示几件事一件接一件：经过了好几个人的手。“这个人”只有一个，谈不上先后。
+  过老师、记者和作家 | 着老师 | 先后 lists several jobs held one after another, all in the past: 当过老师、记者和作家. 着 is one state going on, and only one job is left. | “先后”列出一个接一个做过的几种工作：当过老师、记者和作家。“着”表示一种持续的状态，也只剩下一种工作。
+  老师、记者和作家 | 一次老师 | 先后 lists several jobs held one after another: 老师、记者和作家. 当过一次老师 is one job only, so nothing comes in turn. | “先后”列出一个接一个做过的几种工作：老师、记者和作家。“当过一次老师”只有一种工作，谈不上先后。
+  等到 | 等待 | 等到 + an event means “by the time …”, and the rest says what was so then. 等待 is the verb “to wait for”, and cannot open a time clause like this. | “等到+事情”表示“到……的时候”，后面说那时的情况。“等待”是动词，表示等候，不能这样引出时间。
+  等到 | 等等 | 等到 + an event means “by the time …”, and the rest says what was so then. 等等 means “and so on” or “wait a moment”, and does not tell a time. | “等到+事情”表示“到……的时候”，后面说那时的情况。“等等”表示列举未完或叫人稍等，不表示时间。
+  已经不 | 将要不 | 等到… tells what had already happened by then: the house 已经不在了 when he came back. 将要 points to the future, but the house was gone before he came. | “等到……”后面说那时已经发生的情况：他回来时房子已经不在了。“将要”表示将来，可是房子在他回来前就不在了。
+  下了课 | 下课以前 | 等到 means waiting until something has happened: 等到下了课. 以前 means “before”, which goes against waiting for it. | “等到”是等某件事发生以后：等到下了课。“以前”表示在那之前，和“等到”矛盾。
+  放了假 | 放假以前 | 等到 means waiting until something has happened: 等到放了假. 以前 means “before”, which goes against waiting for it. | “等到”是等某件事发生以后：等到放了假。“以前”表示在那之前，和“等到”矛盾。
+  来看 | 来看看 | The frame is 从…来看, “judging from …”, with 看 said once. 看看 means “take a look”, and does not fit the frame. | 格式是“从……来看”，表示从某方面判断，“看”只说一次。“看看”表示看一下，不能用在这个格式里。
+  倒说 | 再说 | 倒 here means “against what you expect”: he usually says little, but today he said a lot. 再 means “again” for a later act, and does not go with a past 说了. | 这里的“倒”表示跟平常相反：平时不爱说话，今天却说了很多。“再”表示以后重复，不和已经发生的“说了”连用。
+  有头有尾 | 有头尾尾 | The pattern is 有A有B, with 有 before each noun: 有头有尾. 有头尾尾 drops the second 有 and says 尾 twice. | 格式是“有A有B”，两个名词前都有“有”：有头有尾。“有头尾尾”丢了第二个“有”，又把“尾”说了两次。
+  有理有据 | 有理据据 | The pattern is 有A有B, with 有 before each noun: 有理有据. 有理据据 drops the second 有 and says 据 twice. | 格式是“有A有B”，两个名词前都有“有”：有理有据。“有理据据”丢了第二个“有”，又把“据”说了两次。
+  有理有据 | 理理有据 | The pattern is 有A有B, with 有 before each noun: 有理有据. 理理有据 drops the first 有 and says 理 twice. | 格式是“有A有B”，两个名词前都有“有”：有理有据。“理理有据”丢了第一个“有”，又把“理”说了两次。
+  有血有肉 | 有血肉肉 | The pattern is 有A有B, with 有 before each noun: 有血有肉. 有血肉肉 drops the second 有 and says 肉 twice. | 格式是“有A有B”，两个名词前都有“有”：有血有肉。“有血肉肉”丢了第二个“有”，又把“肉”说了两次。
+  有始有终 | 有始终终 | The pattern is 有A有B, with 有 before each noun: 有始有终. 有始终终 drops the second 有 and says 终 twice. | 格式是“有A有B”，两个名词前都有“有”：有始有终。“有始终终”丢了第二个“有”，又把“终”说了两次。
+  有始有终 | 始始有终 | The pattern is 有A有B, with 有 before each noun: 有始有终. 始始有终 drops the first 有 and says 始 twice. | 格式是“有A有B”，两个名词前都有“有”：有始有终。“始始有终”丢了第一个“有”，又把“始”说了两次。
+  有声有色 | 有声色色 | The pattern is 有A有B, with 有 before each noun: 有声有色. 有声色色 drops the second 有 and says 色 twice. | 格式是“有A有B”，两个名词前都有“有”：有声有色。“有声色色”丢了第二个“有”，又把“色”说了两次。
+  有声有色 | 声声有色 | The pattern is 有A有B, with 有 before each noun: 有声有色. 声声有色 drops the first 有 and says 声 twice. | 格式是“有A有B”，两个名词前都有“有”：有声有色。“声声有色”丢了第一个“有”，又把“声”说了两次。
+  有情有义 | 有情义义 | The pattern is 有A有B, with 有 before each noun: 有情有义. 有情义义 drops the second 有 and says 义 twice. | 格式是“有A有B”，两个名词前都有“有”：有情有义。“有情义义”丢了第二个“有”，又把“义”说了两次。
+  有情有义 | 情情有义 | The pattern is 有A有B, with 有 before each noun: 有情有义. 情情有义 drops the first 有 and says 情 twice. | 格式是“有A有B”，两个名词前都有“有”：有情有义。“情情有义”丢了第一个“有”，又把“情”说了两次。
+  有条有理 | 有条理理 | The pattern is 有A有B, with 有 before each noun: 有条有理. 有条理理 drops the second 有 and says 理 twice. | 格式是“有A有B”，两个名词前都有“有”：有条有理。“有条理理”丢了第二个“有”，又把“理”说了两次。
+  有根有据 | 有根据据 | The pattern is 有A有B, with 有 before each noun: 有根有据. 有根据据 drops the second 有 and says 据 twice. | 格式是“有A有B”，两个名词前都有“有”：有根有据。“有根据据”丢了第二个“有”，又把“据”说了两次。
+  右 | 左 | The pattern is 左A右B: 左 and 右 take turns to say “again and again, this way and that”: 左思右想. Saying 左 twice breaks the pattern. | 格式是“左A右B”，“左”“右”交替，表示反复多次：左思右想。说两次“左”就打乱了格式。
+  左 | 右 | The pattern is 左A，右B: 左 and 右 take turns to say “one after another”: 左一个电话，右一个电话. Saying 右 twice breaks the pattern. | 格式是“左A，右B”，“左”“右”交替，表示一个接一个：左一个电话，右一个电话。说两次“右”就打乱了格式。
+  式 | 型 | 式 means a style, as in 中式 “Chinese style”, 西式 and 老式. 型 means a size or a model, as in 中型 “medium-sized”; clothes, food and old radios here are about style. | “式”表示样式，比如中式、西式、老式。“型”表示大小或型号，比如“中型”是中等大小；这里说的衣服、饭菜、收音机讲的是样式。
+  式 | 化 | 中式 means “Chinese style”. 化 means “becoming”, a change, and 中化 is not a word for a style. | “中式”表示中国的样式。“化”表示变成，“中化”不是表示样式的词。
+  大型 | 大式 | 型 tells a size: 大型 means “large-scale”. 式 tells a style, and 大式 is not a word. | “型”表示大小：大型就是规模大。“式”表示样式，没有“大式”这个词。
+  小型 | 小式 | 型 tells a size: 小型 means “small-scale”. 式 tells a style, and 小式 is not a word. | “型”表示大小：小型就是规模小。“式”表示样式，没有“小式”这个词。
+  新型 | 新化 | 新型 means “a new model, a new kind”. 化 means “becoming”, and 新化 is not a word. | “新型”表示新的型号、新的类型。“化”表示变成，没有“新化”这个词。
+  式 | 样 | 西式 is a fixed word, “Western style”. 样 means “look, kind” and does not join 西 this way. | “西式”是固定的词，表示西方的样式。“样”表示样子，不能这样和“西”连用。
+  型 | 式 | 型 tells a size or a kind: 中型客车 is a medium-sized bus, and 类型 means “type”. 式 tells a style: 中式 means “Chinese style”, and 类式 is not a word. | “型”表示大小或类型：中型客车是中等大小的客车，“类型”表示种类。“式”表示样式：“中式”是中国的样式，没有“类式”这个词。
+  型 | 样 | 类型 is one word, “type”. 类样 is not a word. | “类型”是一个词，表示种类。没有“类样”这个词。
+  是一座大型体育馆 | 座体育馆很大型 | 大型 only goes right before a noun: 一座大型体育馆. It is not a plain adjective, so it cannot follow 很 and end the sentence. | “大型”只能直接放在名词前面：一座大型体育馆。它不是一般的形容词，不能放在“很”后面做谓语。
+  穿了一件中式礼服 | 的礼服很中式型 | 中式 only goes right before a noun: 一件中式礼服. It cannot follow 很 and end the sentence, and 中式型 is not a word. | “中式”只能直接放在名词前面：一件中式礼服。它不能放在“很”后面做谓语，也没有“中式型”这个词。
+  是一种新型空调 | 种空调很新型 | 新型 only goes right before a noun: 一种新型空调. It is not a plain adjective, so it cannot follow 很 and end the sentence. | “新型”只能直接放在名词前面：一种新型空调。它不是一般的形容词，不能放在“很”后面做谓语。
+  是一家小型企业 | 家企业很小型 | 小型 only goes right before a noun: 一家小型企业. It is not a plain adjective, so it cannot follow 很 and end the sentence. | “小型”只能直接放在名词前面：一家小型企业。它不是一般的形容词，不能放在“很”后面做谓语。
+  有一台老式收音机 | 的收音机很老型 | 老式 only goes right before a noun: 一台老式收音机. It cannot follow 很 and end the sentence, and 老型 is not a word. | “老式”只能直接放在名词前面：一台老式收音机。它不能放在“很”后面做谓语，也没有“老型”这个词。
+  是一辆中型客车 | 辆客车很中型 | 中型 only goes right before a noun: 一辆中型客车. It is not a plain adjective, so it cannot follow 很 and end the sentence. | “中型”只能直接放在名词前面：一辆中型客车。它不是一般的形容词，不能放在“很”后面做谓语。
+  是一家西式餐厅 | 家餐厅很西型 | 西式 only goes right before a noun: 一家西式餐厅. It cannot follow 很 and end the sentence, and 西型 is not a word. | “西式”只能直接放在名词前面：一家西式餐厅。它不能放在“很”后面做谓语，也没有“西型”这个词。
+  这是一个大型广场 | 这个广场很大型 | 大型 only goes right before a noun: 一个大型广场. It is not a plain adjective, so it cannot follow 很 and end the sentence. | “大型”只能直接放在名词前面：一个大型广场。它不是一般的形容词，不能放在“很”后面做谓语。
+  推出了新型产品 | 的产品很新型 | 新型 only goes right before a noun: 推出了新型产品. It is not a plain adjective, so it cannot follow 很 and end the sentence. | “新型”只能直接放在名词前面：推出了新型产品。它不是一般的形容词，不能放在“很”后面做谓语。
+  明白 | 明明白 | The frame is V个 + a result: 问个明白. 明白 is one word, and 明明白 doubles only half of it; the full double is 明明白白. | 格式是“V个+结果”：问个明白。“明白”是一个词，“明明白”只重叠了一半，完整的重叠是“明明白白”。
+  干干净净 | 很干净 | The frame V了个 + a result takes a doubled form: 打扫了个干干净净. 很干净 is a plain description and does not follow 个. | “V了个+结果”常用重叠形式：打扫了个干干净净。“很干净”是一般的描写，不放在“个”后面。
+  干干净净 | 干净地 | The frame V了个 + a result takes a doubled form: 打扫了个干干净净. 干净地 goes before a verb, not after 个. | “V了个+结果”常用重叠形式：打扫了个干干净净。“干净地”放在动词前面，不放在“个”后面。
+  干干净净 | 干净极了 | The frame V了个 + a result takes a doubled form: 打扫了个干干净净. 极了 ends a plain description, and does not follow 个. | “V了个+结果”常用重叠形式：打扫了个干干净净。“极了”用在一般描写的后面，不放在“个”后面。
+  够 | 足够 | V了个够 is fixed, “to one’s heart’s content”: 唱了个够. 足够 means “enough” before a noun, as in 足够的时间, and does not follow 个. | “V了个够”是固定说法，表示尽情地做：唱了个够。“足够”放在名词前面，比如“足够的时间”，不放在“个”后面。
+  爱要不要 | 爱要爱不要 | The fixed phrase is 爱V不V, “take it or leave it”: 爱要不要. 爱 comes once, at the front; 爱要爱不要 is not said. | 固定说法是“爱V不V”，表示随你便：爱要不要。“爱”只在前面用一次，不说“爱要爱不要”。
+  非 | 否 | 非 before a word means “not, non-”: 非正式, 非专业. 否 is a written “no” used in 是否 and 否则, and is not put before a word this way. | “非”放在词前面表示“不是”：非正式、非专业。“否”用在“是否”“否则”里，不能这样加在词前面。
+  反 | 否 | 反 means “the opposite, the wrong way round”: 反作用, 挂反了. 否 is a written “no” used in 是否, and does not mean “the wrong way”. | “反”表示相反、颠倒：反作用、挂反了。“否”用在“是否”里，不表示颠倒。
+  是反 | 是否 | 反科学 means “against science”, held in 是…的: 是反科学的. 是否 means “whether”, and 是否科学的 makes no statement. | “反科学”表示违反科学，放在“是……的”里：是反科学的。“是否”表示“是不是”，“是否科学的”不成陈述。
+  反 | 超 | 挂反了 means “hung the wrong way round”. 超 means “beyond, over”, and 挂超了 is not said. | “挂反了”表示挂得颠倒了。“超”表示超过，不说“挂超了”。
+  超 | 反 | 超 before a word means “super, beyond the usual”: 超大型, 超高速. 反 means “against”, and 反大型 makes no sense. | “超”放在词前面表示超过一般：超大型、超高速。“反”表示相反，“反大型”说不通。
+  超 | 否 | 超 before a word means “super, beyond the usual”: 超大型, 超高速. 否 is a written “no” used in 是否, and is not put before a word. | “超”放在词前面表示超过一般：超大型、超高速。“否”用在“是否”里，不加在词前面。
+  超速 | 反速 | 超速 is one word, “to go over the speed limit”. 反速 is not a word. | “超速”是一个词，表示超过规定的速度。没有“反速”这个词。
+  超速 | 否速 | 超速 is one word, “to go over the speed limit”. 否速 is not a word. | “超速”是一个词，表示超过规定的速度。没有“否速”这个词。
+  超速 | 太速 | 超速 is one word, “to go over the speed limit”. 太 goes before an adjective, as in 太快, and 速 alone is not one. | “超速”是一个词，表示超过规定的速度。“太”放在形容词前面，比如“太快”，“速”单用不是形容词。
+  超速 | 速超了 | 超速 is one fixed word, with 超 first: 超速了. Its two parts are not swapped. | “超速”是固定的词，“超”在前：超速了。两个字不能调换。
+  千万 | 千多万 | 将近 means “nearly, a little under”, so a round number follows: 将近一千万. 多 means “more than”, which goes against 将近. | “将近”表示接近而还不到，后面跟整数：将近一千万。“多”表示超过，和“将近”矛盾。
+  将近 | 上 | 将近 means “close to, not quite”: 将近一百人. 上 before a number means “reaching, as many as”, which does not say “not quite”. | “将近”表示接近而还不到：将近一百人。“上”放在数字前面表示达到，不表示还不到。
+  将近十年 | 上十年多 | 将近十年 means “not quite ten years”. 上…多 is not a frame, and 多 says “more than”, the opposite. | “将近十年”表示快到十年还不到。“上……多”不是一个格式，“多”表示超过，意思正好相反。
+  不止 | 不少 | 不止 + a number means “more than”: 不止一次, 不止三百人. 不少 means “quite a lot” and does not go before a number. | “不止+数量”表示超过：不止一次、不止三百人。“不少”表示数量多，不放在数字前面。
+  批 | 项 | 批 counts a group of goods or people that come at one time: 这批货, 第一批产品. 项 counts items of work or rules, as in 一项任务. | “批”用于同一次来的一群货物或人：这批货、第一批产品。“项”用于工作、规定等分项的事，比如“一项任务”。
+  届 | 项 | 届 counts events held in turn, like a fair or a games: 第十届, 本届. 项 counts items of work or rules, as in 一项任务. | “届”用于定期举行的活动，比如博览会、运动会：第十届、本届。“项”用于工作、规定等分项的事，比如“一项任务”。
+  回一次国 | 回国了一次 | 回国 is a verb with its object inside, so the count goes between: 回一次国. And 每隔 tells a habit, so 了 does not fit. | “回国”是离合词，次数放在中间：回一次国。“每隔”说的是习惯，也不用“了”。
+  就有 | 就是了 | 每隔…就有… says the same thing is found again at each step: 每隔五十米就有一个路灯. 就是了 means “that is all” and ends a sentence; it cannot take 一个路灯. | “每隔……就有……”表示每隔一段就有同样的东西：每隔五十米就有一个路灯。“就是了”表示“罢了”，用在句末，不能带“一个路灯”。
+  出于 | 处于 | 出于 means “out of, coming from” a reason or feeling: 出于好心, 出于安全的考虑. 处于 means “to be in” a state, as in 处于危险之中. | “出于”表示从某种原因、想法出发：出于好心、出于安全的考虑。“处于”表示在某种状态中，比如“处于危险之中”。
+  与此同时 | 与其同时 | 与此同时 is fixed: 此 is “this”, “at the same time as this”. 与其 goes in 与其…不如…, “rather than”, which this sentence is not. | “与此同时”是固定说法，“此”指这件事，表示在这同时。“与其”用在“与其……不如……”里，表示比较取舍，这句不是。
+  鸟也多 | 鸟同多 | 也 says the second change matches the first: trees grew more, and 鸟也多了. 同 means “same, together with” and cannot stand before 多 like this. | “也”表示后一个变化和前一个一样：树多了，鸟也多了。“同”表示相同、跟，不能这样放在“多”前面。
+  的基础 | 地基础 | The frame is 在…的基础上, and 基础 is a noun, so 的 joins the words before it. 地 goes before a verb, not a noun. | 格式是“在……的基础上”，“基础”是名词，前面用“的”。“地”放在动词前面，不放在名词前面。
+  颇有 | 颇很有 | 颇 already means “quite”, so it stands right before 有: 颇有新意. 很 would say “quite” a second time. | “颇”本身就表示“很”，直接放在“有”前面：颇有新意。再加“很”就重复了。
+  受 | 受到地 | 颇受欢迎 is fixed: 受 goes straight to 欢迎. 地 goes before a verb, and 受到地欢迎 is not said. | “颇受欢迎”是固定说法，“受”直接接“欢迎”。“地”放在描写的词和动词之间，不说“受到地欢迎”。
+  颇为 | 很颇 | 颇为 is one written word, “rather”: 颇为相似. 很 and 颇 both mean “very”, so 很颇 says it twice and leaves 颇 without its 为. | “颇为”是一个书面词，表示“很”：颇为相似。“很”和“颇”意思一样，“很颇”重复了，也丢了“为”。
+  颇为 | 颇很 | 颇为 is one written word, “rather”: 颇为相似. 颇 and 很 both mean “very”, so 颇很 says it twice. | “颇为”是一个书面词，表示“很”：颇为相似。“颇”和“很”意思一样，“颇很”重复了。
+  颇有名 | 颇很有名 | 颇 already means “quite”, so it stands right before 有: 颇有名气. 很 would say “quite” a second time. | “颇”本身就表示“很”，直接放在“有”前面：颇有名气。再加“很”就重复了。
+  颇有 | 颇是 | 颇有感想 means “had quite a few thoughts”: 有 is the verb that takes 感想. 是 cannot take 感想 this way. | “颇有感想”表示有不少感想，动词“有”带“感想”。“是”不能这样带“感想”。
+  颇有 | 颇很 | 颇有感想: 有 is the verb that takes 感想. 颇很 drops the verb, and 很 says “quite” a second time. | “颇有感想”里“有”是动词，带“感想”。“颇很”丢了动词，“很”和“颇”也重复了。
+  颇有 | 颇在 | 颇有感想: 有 is the verb that takes 感想. 在 means “at, in”, and 在感想 is not said. | “颇有感想”里“有”是动词，带“感想”。“在”表示在某处，不说“在感想”。
+  颇有 | 颇为有很 | 颇有 is enough: 颇 “quite” plus 有: 颇有名气. 颇为有很 piles up 颇为 and 很, which say the same, and puts 很 inside 有名气. | 说“颇有”就够了：颇有名气。“颇为有很”把意思相同的“颇为”“很”堆在一起，还把“很”插进了“有名气”。
+  不懂 | 没懂着 | 不懂 tells a lasting state: questions you do not understand. 着 shows an action going on, and does not go with 没懂. | “不懂”表示一直不明白的状态：不懂的问题。“着”表示动作在进行，不和“没懂”连用。
+  分别 | 别的 | 分别 before a verb means “each, separately”: 分别在两个城市工作. 别的 means “other” and goes before a noun. | “分别”放在动词前面表示各自：分别在两个城市工作。“别的”表示其他的，放在名词前面。
+  为止 | 以止 | The frame is 到…为止, “up to …”. 以止 is not a word. | 格式是“到……为止”，表示到某个时候或地方停止。没有“以止”这个词。
+  至今 | 直今 | 至今 means “until now”, written with 至. 直今 is not a word; 直 goes in 直到. | “至今”表示直到现在，用“至”字。没有“直今”这个词，“直”用在“直到”里。
+  一共 | 一同共 | 一共 means “in all”: 一共收到了五十份. 一同 means “together”, and 一同共 is not said. | “一共”表示合起来：一共收到了五十份。“一同”表示一起，不说“一同共”。
+  种的 | 种地 | The frame is 所 + verb + 的 + noun: 所种的菜. 种地 means “to farm the land”, and it leaves 菜 with no 的. | 格式是“所+动词+的+名词”：所种的菜。“种地”是在田里干活，“菜”前面也没有“的”了。
+  产的 | 产地 | The frame is 所 + verb + 的 + noun: 所产的水果. 产地 is a noun, “place of origin”, and it leaves 水果 with no 的. | 格式是“所+动词+的+名词”：所产的水果。“产地”是名词，指出产的地方，“水果”前面也没有“的”了。
+  起见 | 起来 | The frame is 为了…起见, “for the sake of …”. 起来 goes after a verb, as in 站起来, and does not end this frame. | 格式是“为了……起见”，表示为了某个目的。“起来”放在动词后面，比如“站起来”，不能结束这个格式。
+  起见 | 看见 | The frame is 为了…起见, “for the sake of …”. 看见 means “to see”, and does not end this frame. | 格式是“为了……起见”，表示为了某个目的。“看见”表示看到，不能结束这个格式。
+  为方便 | 对方便 | The frame is 为…起见, “for the sake of …”: 为方便病人起见. 对 means “to, toward”, and 对…起见 is not said. | 格式是“为……起见”：为方便病人起见。“对”表示对待的对象，不说“对……起见”。
+  给予 | 给以予 | 给予 is one written verb, “to give”: 给予帮助. 给以予 is not a word. | “给予”是一个书面动词，表示给：给予帮助。没有“给以予”这个词。
+  给予 | 予以给 | 给予 is one written verb, “to give”: 给予帮助. 予以 and 给 both mean “give”, and they are not put together. | “给予”是一个书面动词，表示给：给予帮助。“予以”和“给”意思一样，不能放在一起。
+  对困难家庭给予 | 予以给困难家庭 | The frame is 对 + someone + 给予 + what is given: 对困难家庭给予帮助. 予以给 puts two words for “give” together, and leaves 了 cut off from its verb. | 格式是“对+某人+给予+东西”：对困难家庭给予帮助。“予以给”把两个表示“给”的词放在一起，“了”也离开了动词。
+  给予 | 予以 | 给予 can take a person and then what is given: 给予了老人们很大的关心. 予以 takes only an action, as in 予以批评, and not a person after it. | “给予”后面可以先带人再带东西：给予了老人们很大的关心。“予以”后面只带动作，比如“予以批评”，不带人。
+  本着 | 本来 | 本着 means “in keeping with”, and takes 原则 or 精神: 本着节约的原则. 本来 means “at first, originally”. | “本着”表示按照，后面带“原则”“精神”：本着节约的原则。“本来”表示原先。
+  借助 | 帮助 | 借助 means “with the help of”, making use of a thing: 借助风力. 帮助 means “to help someone”, and here nobody helps the wind or the sun. | “借助”表示利用某种东西：借助风力。“帮助”是去帮别人，这里不是帮风或太阳。
+  一来 | 以来 | The phrase is 这样一来, “this being so, as a result”. 以来 means “since”, as in 去年以来. | 固定说法是“这样一来”，表示这样做的结果。“以来”表示从过去某时到现在，比如“去年以来”。
+  一来 | 一下 | The phrase is 这样一来, “this being so, as a result”. 一下 means “once, a little” after a verb, as in 看一下, and 这样一下 is not said. | 固定说法是“这样一来”，表示这样做的结果。“一下”放在动词后面，比如“看一下”，不说“这样一下”。
+  索性 | 索然 | 索性 is one word, “might as well, simply”: 索性走路回家. 索然 means “dull, without interest”, and cannot go before a verb this way. | “索性”是一个词，表示干脆：索性走路回家。“索然”表示没有兴趣，不能这样放在动词前面。
+  索性 | 不禁 | 索性 means “simply, might as well”: they gave up waiting and chose to act. 不禁 means “cannot help”, for a feeling, as in 不禁笑了; walking home is a choice, not a feeling. | “索性”表示干脆：不再等了，决定这样做。“不禁”表示忍不住，用于感情，比如“不禁笑了”；走路回家是选择，不是感情。
+  大家索性 | 索然大家 | 索性 goes after the subject, before the verb: 大家索性早点儿睡觉. 索然 is also the wrong word: it means “dull”. | “索性”放在主语后面、动词前面：大家索性早点儿睡觉。“索然”也用错了，它表示没有兴趣。
+  不妨 | 不防 | 不妨 means “might as well, there is no harm in”: 不妨试一试. 妨 means “harm”; 防 means “to guard against”, and 不防 is not a word. | “不妨”表示可以这样做，没有坏处：不妨试一试。“妨”是妨碍，“防”是防备，没有“不防”这个词。
+  势必 | 务必 | 势必 means “is bound to”, telling what will happen: 工期势必会推迟. 务必 means “be sure to”, telling someone what to do. | “势必”表示一定会发生：工期势必会推迟。“务必”表示一定要做，是要求别人。
+  势必 | 必须 | 势必 means “is bound to”, telling what will happen: 势必会出问题. 必须 means “must” and states a duty, but a delay or a problem is a result, not a duty. | “势必”表示一定会发生：势必会出问题。“必须”表示一定要做，可是推迟、出问题是结果，不是要做的事。
+  增加工 | 增着加工 | 增加 is one word, and 着 cannot go inside it: 增加工程的成本. | “增加”是一个词，“着”不能插在中间：增加工程的成本。
+  必 | 须 | 势必 is a fixed word, “is bound to”. 势须 is not a word. | “势必”是固定的词，表示一定会。没有“势须”这个词。
+  出发 | 出去 | The frame is 从…出发, “starting from, basing on”: 从实际情况出发. 出去 means “to go out”. | 格式是“从……出发”，表示从某方面考虑：从实际情况出发。“出去”表示到外面去。
+  随后 | 随着 | 随后 means “soon after”: 随后又去了古城墙. 随着 means “along with” and needs a noun after it, as in 随着时间. | “随后”表示紧接着以后：随后又去了古城墙。“随着”表示跟着，后面要带名词，比如“随着时间”。
+  随后 | 即随 | 随后 means “soon after”: 随后又去了古城墙. 即随 is not a word. | “随后”表示紧接着以后：随后又去了古城墙。没有“即随”这个词。
+  随即 | 随着 | 随即 means “at once”: 随即出发了. 随着 means “along with” and needs a noun after it, as in 随着时间. | “随即”表示立刻：随即出发了。“随着”表示跟着，后面要带名词，比如“随着时间”。
+  随即 | 后随 | 随即 means “at once”: 随即出发了. 后随 is not a word. | “随即”表示立刻：随即出发了。没有“后随”这个词。
+  正如 | 正好 | The frame is 正如…所…的, “just as …”: 正如大家所看到的. 正好 means “just right, by chance”, and does not go with 所看到的. | 格式是“正如……所……的”：正如大家所看到的。“正好”表示恰巧，不和“所看到的”搭配。
+  正如 | 比如 | The frame is 正如…所…的, “just as …”: 正如我们所知道的. 比如 means “for example” and lists cases; it does not go with 所…的. | 格式是“正如……所……的”：正如我们所知道的。“比如”用来举例，不和“所……的”搭配。
+  文明是在交流中发展的 | 在交流中文明是发展地 | The subject comes first, and 是…的 holds the part it stresses: 文明是在交流中发展的. 在交流中 moved before the subject leaves 是…的 holding nothing, and 地 cannot close the frame. | 主语在前，“是……的”中间放要强调的部分：文明是在交流中发展的。把“在交流中”移到主语前面，“是……的”就没有强调的内容了，“地”也不能结束这个格式。
+  不愧 | 惭愧 | 不愧 means “is worthy of being”, praise: 不愧是一位好医生. 惭愧 means “ashamed”, the opposite of praise. | “不愧”表示当得起，是称赞：不愧是一位好医生。“惭愧”表示觉得羞愧，和称赞相反。
+  为 | 作 | 不愧为 is fixed, a written form of 不愧是: 不愧为大家的榜样. 作 means “to act as”, and does not follow 不愧. | “不愧为”是固定说法，是“不愧是”的书面形式：不愧为大家的榜样。“作”表示当作，不放在“不愧”后面。
+  决不 | 不决了 | 决不 means “never, firmly not”, with 决 before 不: 决不放弃. 不决 means “undecided”, and 了 does not stand before the verb. | “决不”表示坚决不，“决”在“不”前面：决不放弃。“不决”表示拿不定主意，“了”也不能放在动词前面。
+  退休了 | 退了休了着 | 早就该退休了 says it was long time to retire. 着 shows a state going on, and does not end this; 退了休了 also says 了 twice. | “早就该退休了”表示早到了该退休的时候。“着”表示持续，不能这样结尾；“退了休了”也用了两个“了”。
+  一旦 | 一下 | 一旦 means “once, if ever”, and opens a condition: 一旦上了舞台，就…. 一下 goes after a verb, as in 看一下, and does not open a condition. | “一旦”表示如果有一天，引出条件：一旦上了舞台，就……。“一下”放在动词后面，比如“看一下”，不能引出条件。
+  半 | 全 | The pattern is 半A半B, “half A, half B”: 半信半疑, 半真半假. 全 means “all”, which goes against the first 半. | 格式是“半A半B”，表示两种情况各有一半：半信半疑、半真半假。“全”表示全部，和前面的“半”矛盾。
+  半信半 | 一半信 | The pattern is 半A半B, with 半 before each word: 半信半疑. 一半 is a noun, “one half”, and 一半信疑 drops the second 半. | 格式是“半A半B”，两个字前都有“半”：半信半疑。“一半”是名词，“一半信疑”丢了第二个“半”。
+  半真半假 | 一半真假 | The pattern is 半A半B, with 半 before each word: 半真半假. 一半 is a noun, “one half”, and 一半真假 drops the second 半. | 格式是“半A半B”，两个字前都有“半”：半真半假。“一半”是名词，“一半真假”丢了第二个“半”。
+  半文半 | 一半文 | The pattern is 半A半B, with 半 before each word: 半文半白. 一半 is a noun, “one half”, and 一半文白 drops the second 半. | 格式是“半A半B”，两个字前都有“半”：半文半白。“一半”是名词，“一半文白”丢了第二个“半”。
+  半工半 | 一半工 | The pattern is 半A半B, with 半 before each word: 半工半读. 一半 is a noun, “one half”, and 一半工读 drops the second 半. | 格式是“半A半B”，两个字前都有“半”：半工半读。“一半”是名词，“一半工读”丢了第二个“半”。
+  半明半 | 一半明 | The pattern is 半A半B, with 半 before each word: 半明半暗. 一半 is a noun, “one half”, and 一半明暗 drops the second 半. | 格式是“半A半B”，两个字前都有“半”：半明半暗。“一半”是名词，“一半明暗”丢了第二个“半”。
+  半睡半 | 一半睡 | The pattern is 半A半B, with 半 before each word: 半睡半醒. 一半 is a noun, “one half”, and 一半睡醒 drops the second 半. | 格式是“半A半B”，两个字前都有“半”：半睡半醒。“一半”是名词，“一半睡醒”丢了第二个“半”。
+  半新半 | 一半新 | The pattern is 半A半B, with 半 before each word: 半新半旧. 一半 is a noun, “one half”, and 一半新旧 drops the second 半. | 格式是“半A半B”，两个字前都有“半”：半新半旧。“一半”是名词，“一半新旧”丢了第二个“半”。
+  半醉半 | 一半醉 | The pattern is 半A半B, with 半 before each word: 半醉半醒. 一半 is a noun, “one half”, and 一半醉醒 drops the second 半. | 格式是“半A半B”，两个字前都有“半”：半醉半醒。“一半”是名词，“一半醉醒”丢了第二个“半”。
+  半推半 | 一半推 | The pattern is 半A半B, with 半 before each word: 半推半就. 一半 is a noun, “one half”, and 一半推就 drops the second 半. | 格式是“半A半B”，两个字前都有“半”：半推半就。“一半”是名词，“一半推就”丢了第二个“半”。
+  不少 | 又少 | The pattern is 不A不B with two opposites: 不多不少, “just right”. 不多又少 says “not many, and also few”, which is not the pattern. | 格式是“不A不B”，A和B意思相反：不多不少，表示正好。“不多又少”意思是不多而且少，不是这个格式。
+  西 | 南 | These fixed phrases pair 东 with 西: 东张西望, “look this way and that”, 东奔西走. 东…南 is not said in them. | 这些固定说法里“东”和“西”成对：东张西望、东奔西走。不说“东……南……”。
+  东张西 | 南张北 | The fixed phrase is 东张西望, “look this way and that”, with 东 and 西. 南张北望 is not said. | 固定说法是“东张西望”，用“东”和“西”。不说“南张北望”。
+  东倒西 | 南倒北 | The fixed phrase is 东倒西歪, “leaning every which way”, with 东 and 西. 南倒北歪 is not said. | 固定说法是“东倒西歪”，用“东”和“西”。不说“南倒北歪”。
+  恨不得 | 恨不了 | 恨不得 means “to wish one could”: 恨不得马上再看一遍. 恨不了 would mean “cannot hate”, which is not meant. | “恨不得”表示非常想马上做：恨不得马上再看一遍。“恨不了”意思是没法恨，这里不是这个意思。
+  巴不得 | 怪不得 | 巴不得 means “to be eager for”: 巴不得天天都放假. 怪不得 means “no wonder”, and explains a fact that is already there. | “巴不得”表示急切地盼望：巴不得天天都放假。“怪不得”表示难怪，用来说明已有的事实。
+  不得他不 | 不得不得他 | 巴不得 is one word, and the wish follows it whole: 巴不得他不去. 不得不 means “have to”, and 巴不得不得他去 mixes the two. | “巴不得”是一个词，盼望的事完整地放在后面：巴不得他不去。“不得不”表示必须，“巴不得不得他去”把两个说法混在了一起。
+  睡 | 睡着了 | The frame is 一V就是 + a length of time: 一睡就是十个小时. A bare verb goes after 一; 着了 makes it a finished change, which cannot last ten hours. | 格式是“一V就是+时间”：一睡就是十个小时。“一”后面用单个动词；“睡着了”表示进入睡眠的变化，不能持续十个小时。
+  道了歉 | 道歉了着 | 道歉 is a verb with its object inside, so 了 goes between: 道了歉. 着 does not follow a finished act. | “道歉”是离合词，“了”放在中间：道了歉。“着”不能放在已经完成的动作后面。
+  生气 | 生着气 | 生气 here names the act in general, after 为…而 or in 不生气才怪, so it takes nothing after it. 着 shows a state going on at one moment, which does not fit. | 这里的“生气”泛指这件事，用在“为……而”后面或“不生气才怪”里，后面不加别的。“着”表示某一时刻持续的状态，用在这里不合适。
+  制定 | 定制着 | 制定 means “to draw up” a rule: 为…而制定的. 定制 means “to have made to order”, and 着 does not go inside 是…的. | “制定”表示订出规则：为……而制定的。“定制”表示按要求专门做，“着”也不能放在“是……的”里。
+  大不了 | 了不起 | 大不了 means “at worst”: 大不了再赚. 了不起 means “amazing, great”, which is praise. | “大不了”表示最坏也不过如此：大不了再赚。“了不起”表示很出色，是称赞。
+  大不 | 不得 | 大不了 means “at worst”: 大不了再赚. 不得了 means “terribly” or “that's a disaster”, not “at worst”. | “大不了”表示最坏也不过如此：大不了再赚。“不得了”表示程度很深或情况严重，不表示最坏也不过如此。
+  不了不要 | 不得不要 | 大不了 is fixed, “at worst”: 大不了不要这笔奖金. 大不得 is not a phrase. | “大不了”是固定说法，表示最坏也不过如此：大不了不要这笔奖金。没有“大不得”这个说法。
+  成 | 分之 | 成 means “a tenth”: 两成 is twenty percent. 分之 needs a number on both sides, as in 五分之二, and 两分之 is left unfinished. | “成”表示十分之一：两成就是百分之二十。“分之”两边都要有数，比如“五分之二”，“两分之”没有说完。
+  是七十元 | 是三十元 | 打七折 means paying seventy percent, so 100 yuan becomes 七十元. 三十 is the part taken off, not the price paid. | “打七折”是按原价的百分之七十付钱，一百元就是七十元。“三十元”是减掉的部分，不是要付的钱。
+  百分之十 | 百分之九 | 打九折 means paying ninety percent, so you save 百分之十. 九 is the part you pay, not the part you save. | “打九折”是按原价的百分之九十付钱，所以少花了百分之十。“九”是付的部分，不是省下的部分。
+  百分之十 | 百分之一 | 打九折 means paying ninety percent, so you save 百分之十. 百分之一 is one part in a hundred, far less than you save. | “打九折”是按原价的百分之九十付钱，所以少花了百分之十。“百分之一”只是一百份中的一份，比省下的少得多。
+  只要一百元 | 只要五十元 | 打五折 means paying half: half of 200 yuan is 一百元. 五十 is only a quarter of the price. | “打五折”是按原价的一半付钱：两百元的一半是一百元。“五十元”只是原价的四分之一。
+  只要一百元 | 只要两百五十元 | 打五折 means paying half: half of 200 yuan is 一百元. 两百五十 is more than the old price, and 只要 says it costs less. | “打五折”是按原价的一半付钱：两百元的一半是一百元。“两百五十元”比原价还多，“只要”说的却是便宜了。
+  回来 | 过来 | The fixed phrase is 话说回来, “that said, on the other hand”. 过来 does not make this phrase. | 固定说法是“话说回来”，表示换个角度说。不说“话说过来”。
+  怪 | 奇 | The frame is 不…才怪, “it would be strange if not”: 不花光才怪. 怪 alone means “strange” here; 才奇 is not said. | 格式是“不……才怪”，表示一定会这样：不花光才怪。这里单用“怪”表示奇怪，不说“才奇”。
+  古人的 | 古地人 | 古人 is one word, “people of old”, and 的 joins it to 名言: 古人的名言. 地 goes before a verb and cannot split 古人. | “古人”是一个词，后面用“的”连接“名言”：古人的名言。“地”放在动词前面，不能把“古人”拆开。
+  并非 | 不乃 | 并非 is the written “is not at all”: 并非他的本意. 乃 is a written “is”, and 不乃 is not said. | “并非”是书面语，表示并不是：并非他的本意。“乃”是书面的“是”，不说“不乃”。
+  并非 | 乃不 | 并非 is the written “is not at all”: 并非他的本意. 乃不 is not said; 乃 is not put before 不 to deny. | “并非”是书面语，表示并不是：并非他的本意。不说“乃不”，“乃”不用来加“不”表示否定。
+  并非 | 乃没 | 并非 is the written “is not at all”: 并非他的本意. 乃没 is not said; 没 does not deny 乃. | “并非”是书面语，表示并不是：并非他的本意。不说“乃没”，“没”不能否定“乃”。
+  岂 | 起 | 岂 asks a question that expects “of course”: 岂不可惜, “isn't it a pity?”. 起 means “to rise”, a different word with nothing to ask. | “岂”用来反问，答案是肯定的：岂不可惜，就是很可惜。“起”表示起来，是另一个字，没有反问的意思。
+  岂能 | 起能 | 岂能 means “how could …?”: 岂能做不到. 起 means “to rise”, a different word, and 起能 is not said. | “岂能”表示怎么能：岂能做不到。“起”表示起来，是另一个字，不说“起能”。
+  不相信 | 没相信了 | After 岂能 comes what one wants or will do: 岂能不相信他. 没…了 tells a past fact, and does not follow 能. | “岂能”后面说意愿或会不会做：岂能不相信他。“没……了”说过去的事实，不放在“能”后面。
+  岂能 | 岂是能 | 岂能 joins 岂 straight to 能: 岂能得到兔子. 是 does not go between them. | “岂能”是“岂”直接接“能”：岂能得到兔子。中间不能加“是”。
+  早点儿说 | 早说点儿着 | 早点儿 goes before the verb: 早点儿说, “say it a bit earlier”. 点儿 cannot follow 说 here, and 着 does not go with advice. | “早点儿”放在动词前面：早点儿说。“点儿”不能放在“说”后面，“着”也不用在建议里。
+  闻名 | 著名了 | 闻名 can take a place after it: 闻名全国, “known across the country”. 著名 is an adjective, “famous”, and cannot take 全国. | “闻名”后面可以带地方：闻名全国。“著名”是形容词，不能带“全国”。
+  无关系 | 没关系 | The frame is 不无 + a noun, “not without”: 不无关系. 不没 is not said: 不 and 没 do not stand together. | 格式是“不无+名词”，表示不是没有：不无关系。不说“不没”，“不”和“没”不连用。
+  获 | 获得 | 不无 takes a noun: 不无收获. 收获 is the noun “gain”, and 收获得 is not a word. | “不无”后面带名词：不无收获。“收获”是名词，没有“收获得”这个词。
+  无事实 | 没事实 | The frame is 不无 + a noun, “not without”: 不无事实根据. 不没 is not said: 不 and 没 do not stand together. | 格式是“不无+名词”，表示不是没有：不无事实根据。不说“不没”，“不”和“没”不连用。
+  莫过于 | 不过于 | 莫过于 means “nothing is more … than”: 最重要的莫过于身体健康. 不过于 is not a phrase; 过于 means “too”. | “莫过于”表示没有比这更……的：最重要的莫过于身体健康。没有“不过于”这个说法，“过于”表示太。
+  自己 | 的己自 | 自己 is one word, “oneself”: 他自己. 的己自 breaks it and turns it round. | “自己”是一个词：他自己。“的己自”把它拆开又颠倒了。
+  勿 | 物 | 勿 is a written “do not”: 请勿大声说话, 切勿相信. 物 means “thing”, a different word. | “勿”是书面语，表示不要：请勿大声说话、切勿相信。“物”表示东西，是另一个字。
+  似懂非懂 | 似懂似懂 | The pattern is 似A非A, “seeming to A, but not”: 似懂非懂. 非 comes in the second half; 似懂似懂 only says “seems”. | 格式是“似A非A”，表示好像A又不是A：似懂非懂。后半要用“非”，“似懂似懂”只说了“好像”。
+  似懂非懂 | 是懂非懂 | The pattern is 似A非A, “seeming to A, but not”: 似懂非懂. 似 means “to seem”; 是 means “is”, and 是懂非懂 is not said. | 格式是“似A非A”，表示好像A又不是A：似懂非懂。“似”表示好像，“是”不能代替它，不说“是懂非懂”。
+  非 | 似 | The pattern is 似A非A, “seeming to A, but not”: 似笑非笑. 非 comes in the second half; 似笑似笑 only says “seems”. | 格式是“似A非A”，表示好像A又不是A：似笑非笑。后半要用“非”，“似笑似笑”只说了“好像”。
+  示 | 防 | 以示 means “so as to show”: 以示尊敬. 以防 means “so as to guard against” something bad, and respect is not something bad. | “以示”表示用来表示：以示尊敬。“以防”表示防备不好的事，尊敬不是坏事。
+  示 | 求 | 以示 means “so as to show”: 以示尊敬. 以求 means “so as to seek”, but he shows respect, not asks for it. | “以示”表示用来表示：以示尊敬。“以求”表示为了得到，可是他是表示尊敬，不是求尊敬。
+  示 | 至 | 以示 means “so as to show”: 以示尊敬. 以至 means “so much that”, and tells a result. | “以示”表示用来表示：以示尊敬。“以至”表示由此造成的结果。
+  防 | 示 | 以防 means “so as to guard against” something bad: 以防天气变冷, 以防忘记. 以示 means “so as to show”, but no one shows the cold or forgetting. | “以防”表示防备不好的事：以防天气变冷、以防忘记。“以示”表示用来表示，变冷、忘记不是要表示的东西。
+  防 | 求 | 以防 means “so as to guard against” something bad: 以防天气变冷, 以防忘记. 以求 means “so as to seek”, but no one seeks the cold or forgetting. | “以防”表示防备不好的事：以防天气变冷、以防忘记。“以求”表示为了得到，没有人想得到变冷或忘记。
+  防 | 至 | 以防 means “so as to guard against” something bad: 以防天气变冷, 以防忘记. 以至 means “so much that”, and tells a result, not a guard. | “以防”表示防备不好的事：以防天气变冷、以防忘记。“以至”表示由此造成的结果，不是防备。
+  求 | 示 | 以求 means “so as to seek”: 以求进步. 以示 means “so as to show”, but he reads to make progress, not to show it. | “以求”表示为了得到：以求进步。“以示”表示用来表示，可是他读书是为了进步，不是为了表示。
+  求 | 防 | 以求 means “so as to seek”: 以求进步. 以防 means “so as to guard against”, but progress is a good thing. | “以求”表示为了得到：以求进步。“以防”表示防备不好的事，进步是好事。
+  求 | 至 | 以求 means “so as to seek”: 以求进步. 以至 means “so much that”, and tells a result, not a goal. | “以求”表示为了得到：以求进步。“以至”表示由此造成的结果，不是目的。
+  出话来 | 出来话了着 | The object goes between 出 and 来: 说不出话来. 话 cannot follow 出来 here, and 了着 do not end it. | 宾语放在“出”和“来”中间：说不出话来。“话”不能放在“出来”后面，句末也不能加“了着”。
+  达 | 达到 | 多达 and 高达 are fixed, “as many as, as high as”, with the number right after: 多达几千亿颗. 达到 means “to reach”, and does not follow 多 or 高. | “多达”“高达”是固定说法，后面直接跟数量：多达几千亿颗。“达到”表示到达某个程度，不放在“多”“高”后面。
+  十几亿元 | 几十亿元地 | The number ends the sentence: 高达十几亿元. 地 goes before a verb and cannot end a sentence after 元, and 几十 is a different number. | 数量放在句末：高达十几亿元。“地”放在动词前面，不能放在“元”后面结尾，“几十”也是另一个数。
+  余年 | 少年 | 余 after a number means “more than”: 七十余年, 五百余年. 少年 means “a youth”, and 七十少年 is not said. | “余”放在数字后面表示多于：七十余年、五百余年。“少年”指年轻人，不说“七十少年”。
+  余 | 少 | 余 after a number means “more than”: 三十余人, 十余万字. 少 means “few”, and does not follow a number this way. | “余”放在数字后面表示多于：三十余人、十余万字。“少”表示不多，不能这样放在数字后面。
+  有余 | 多余 | 有余 after a length means “and more”: 二十年有余. 多余 means “extra, not needed”. | “有余”放在时间后面表示还多一些：二十年有余。“多余”表示用不着的、额外的。
+  余年 | 年多有 | 余 goes right after the number, before the unit: 七十余年. 年多有 breaks the order, and 有 is left hanging. | “余”放在数字后面、单位前面：七十余年。“年多有”打乱了顺序，“有”也没有着落。
+  不得 | 不可 | The fixed phrase is 不得而知, “it is not known”. 不可 means “must not”, and 不可而知 is not said. | 固定说法是“不得而知”，表示没法知道。“不可”表示不允许，不说“不可而知”。
+  人人皆知道 | 人人皆都知道 | 皆 is a written “all”, so 都 is not added: 人人皆知道. 皆都 says “all” twice. | “皆”是书面语，表示都，不再加“都”：人人皆知道。“皆都”把“都”说了两次。
+  人人皆知道 | 人人都皆知道 | 皆 is a written “all”, so 都 is not added: 人人皆知道. 都皆 says “all” twice. | “皆”是书面语，表示都，不再加“都”：人人皆知道。“都皆”把“都”说了两次。
+  人人皆知道 | 人人皆是都知道 | 皆 is a written “all” and goes straight before the verb: 人人皆知道. 是都 adds a second “all” and a 是 that has no use. | “皆”是书面语，表示都，直接放在动词前面：人人皆知道。“是都”又加了一个“都”和多余的“是”。
+  宜 | 便宜 | 不宜 means “should not”: 不宜吃得太多. 便宜 means “cheap”. | “不宜”表示不适合、不应该：不宜吃得太多。“便宜”表示价钱低。
+  旨 | 指 | 旨在 means “aims to”: 旨在提高. 旨 is “aim”; 指 means “to point”, and 指在 is not said. | “旨在”表示目的是：旨在提高。“旨”是目的，“指”是指向，不说“指在”。
+  等 | 诸 | The frame is 诸如…等, “such as … and so on”: 诸如画画、唱歌等. 诸 opens the list in 诸如; it does not close it. | 格式是“诸如……等”：诸如画画、唱歌等。“诸”用在开头的“诸如”里，不放在列举的后面。
+  等 | 们 | The frame is 诸如…等, “such as … and so on”: 诸如画画、唱歌等. 们 marks more than one person, not a list of activities. | 格式是“诸如……等”：诸如画画、唱歌等。“们”表示人的多数，不用在活动的列举后面。
+  等 | 如 | The frame is 诸如…等, “such as … and so on”: 诸如画画、唱歌等. 如 means “like” and opens the list, not closes it. | 格式是“诸如……等”：诸如画画、唱歌等。“如”表示比如，放在列举的前面，不放在后面。
+  非是 | 不是 | 无非是 means “only, nothing but”: 无非是想让我们帮忙. 无不是 means “all are, without exception”, which is not meant. | “无非是”表示只不过是：无非是想让我们帮忙。“无不是”表示没有一个不是，意思不对。
+  堪称 | 勘称 | 堪称 means “can be called”: 堪称奇迹. 勘 means “to survey”, a different word, and 勘称 is not a word. | “堪称”表示可以称为：堪称奇迹。“勘”表示查看，是另一个字，没有“勘称”这个词。
+  无可置疑 | 无能置疑 | 无可置疑 is a fixed phrase, “beyond doubt”. Its 可 cannot be swapped for 能. | “无可置疑”是固定说法，表示不用怀疑。里面的“可”不能换成“能”。
+  无可置疑 | 无可以置疑 | 无可置疑 is a fixed phrase, “beyond doubt”. Its 可 cannot be stretched to 可以. | “无可置疑”是固定说法，表示不用怀疑。里面的“可”不能换成“可以”。
+  此起彼伏 | 这起那伏 | 此起彼伏 is fixed: 此 and 彼 are written “this” and “that”, “rising here and falling there”. The spoken 这 and 那 cannot take their places. | “此起彼伏”是固定说法，“此”“彼”是书面的“这”“那”，表示这里起来那里落下。不能换成口语的“这”“那”。
+  此起彼伏 | 此起此伏 | 此起彼伏 needs both 此 “this” and 彼 “that”: rising here and falling there. 此起此伏 says “this” twice. | “此起彼伏”要“此”和“彼”两个字：这里起来那里落下。“此起此伏”把“此”说了两次。
+  此失彼 | 这失那 | 顾此失彼 is fixed: 此 and 彼 are written “this” and “that”, “minding this and losing that”. The spoken 这 and 那 cannot take their places. | “顾此失彼”是固定说法，“此”“彼”是书面的“这”“那”，表示顾了这个丢了那个。不能换成口语的“这”“那”。
+  此消彼 | 这消那 | 此消彼长 is fixed: 此 and 彼 are written “this” and “that”, “this one shrinks as that one grows”. The spoken 这 and 那 cannot take their places. | “此消彼长”是固定说法，“此”“彼”是书面的“这”“那”，表示这个减少那个增长。不能换成口语的“这”“那”。
+  厚此薄彼 | 厚这薄那 | 厚此薄彼 is fixed: 此 and 彼 are written “this” and “that”, “kind to this one, cold to that one”. The spoken 这 and 那 cannot take their places. | “厚此薄彼”是固定说法，“此”“彼”是书面的“这”“那”，表示重视这个、看轻那个。不能换成口语的“这”“那”。
+  厚此薄彼 | 厚此薄此 | 厚此薄彼 needs both 此 “this” and 彼 “that”: kind to one, cold to the other. 厚此薄此 says “this” twice. | “厚此薄彼”要“此”和“彼”两个字：重视这个、看轻那个。“厚此薄此”把“此”说了两次。
+  彼此 | 彼彼 | 彼此 is one word, “each other”: 彼 “that” and 此 “this”. 彼彼 says “that” twice. | “彼此”是一个词，表示双方：“彼”是那个，“此”是这个。“彼彼”把“彼”说了两次。
+  此即彼 | 这即那 | 非此即彼 is fixed: 此 and 彼 are written “this” and “that”, “if not this, then that”. The spoken 这 and 那 cannot take their places. | “非此即彼”是固定说法，“此”“彼”是书面的“这”“那”，表示不是这个就是那个。不能换成口语的“这”“那”。
+  知己知彼 | 知己知此 | 知己知彼 is fixed: know yourself, 己, and know the other side, 彼. 此 means “this”, not the other side. | “知己知彼”是固定说法：了解自己，也了解对方。“彼”指对方，“此”指这个，不是对方。
+  知己知彼 | 知己知那 | 知己知彼 is fixed: 彼 is the written word for “the other side”. The spoken 那 cannot take its place. | “知己知彼”是固定说法，“彼”是书面语，指对方。不能换成口语的“那”。
+  知己知彼 | 知己知己 | 知己知彼 is fixed: know yourself, 己, and know the other side, 彼. 知己知己 says yourself twice and leaves out the other side. | “知己知彼”是固定说法：了解自己，也了解对方。“知己知己”把自己说了两次，丢了对方。
+  此及彼 | 这及那 | 由此及彼 is fixed: 此 and 彼 are written “this” and “that”, “from this one to that one”. The spoken 这 and 那 cannot take their places. | “由此及彼”是固定说法，“此”“彼”是书面的“这”“那”，表示从这个推到那个。不能换成口语的“这”“那”。
+  之际 | 之间 | 之际 means “at the time of”: 在新年到来之际, 在毕业之际. 之间 means “between” two things, and here there is only one event. | “之际”表示在某个时候：在新年到来之际、在毕业之际。“之间”表示两者中间，这里只有一件事。
+  有 | 称 | The frame is 有“…”之称, “is known as …”: 有“国宝”之称. 称…之称 drops 有 and says 称 twice. | 格式是“有‘……’之称”，表示被称为：有“国宝”之称。“称……之称”丢了“有”，又把“称”说了两次。
+  以 | 按 | 以 + a score means “by”: 以三比一战胜了对手. 按 means “according to”, as in 按时, and does not tell a score. | “以+比分”表示凭着：以三比一战胜了对手。“按”表示依照，比如“按时”，不用来说比分。
+  不足 | 不止 | 不足 means “less than”: 不足一百人, 不足一个星期. 不止 means “more than”, the opposite of what 人口很少 and 时间很紧 say. | “不足”表示不到：不足一百人、不足一个星期。“不止”表示超过，和“人口很少”“时间很紧”的意思相反。
+  特此通知 | 特这通知 | 特此通知 is the fixed end of a notice: 此 is the written “this”. The spoken 这 is not used in it. | “特此通知”是通知的固定结尾，“此”是书面的“这”。里面不能用口语的“这”。
+  特此通知 | 这特通知 | 特此通知 is the fixed end of a notice, with 特 first and then 此, the written “this”. 这特 changes the order and uses the spoken 这. | “特此通知”是通知的固定结尾，先“特”后“此”，“此”是书面的“这”。“这特”颠倒了顺序，还用了口语的“这”。
+  此致 | 这致 | 特此致谢 is a fixed end of a notice: 此 is the written “this”. The spoken 这 is not used in it. | “特此致谢”是固定的结尾，“此”是书面的“这”。里面不能用口语的“这”。
+  特此致 | 这特致 | 特此致谢 is a fixed end of a notice, with 特 first and then 此, the written “this”. 这特 changes the order and uses the spoken 这. | “特此致谢”是固定的结尾，先“特”后“此”，“此”是书面的“这”。“这特”颠倒了顺序，还用了口语的“这”。
+  如下 | 如上 | 如下 means “as follows”, and the colon points to what comes next. 如上 means “as above”, pointing back. | “如下”表示像下面所写的，冒号后面就是内容。“如上”表示像上面所写的，指前面的内容。
+  者 | 员 | 者 after a verb makes “a person who …”: 参赛者, 违者. 员 goes after a job or group, as in 运动员, and 参赛员, 违员 are not said. | “者”放在动词后面表示做这件事的人：参赛者、违者。“员”用在职业或团体后面，比如“运动员”，不说“参赛员”“违员”。
+  者 | 们 | 者 after a verb makes “a person who …”: 参赛者, 获胜者. 们 marks more than one person after a person word; it cannot turn 参赛 into a person. | “者”放在动词后面表示做这件事的人：参赛者、获胜者。“们”放在指人的词后面表示多数，不能把“参赛”变成人。
+  志愿者 | 志愿家 | 志愿者 is the word for “volunteer”: 者 marks the person who does it. 家 marks an expert, as in 作家, and 志愿家 is not said. | “志愿者”是固定的词，“者”表示做这件事的人。“家”表示某方面的专家，比如“作家”，不说“志愿家”。
+  志愿者 | 志愿员 | 志愿者 is the word for “volunteer”: 者 marks the person who does it. 员 marks a worker or member, as in 售货员, and 志愿员 is not said. | “志愿者”是固定的词，“者”表示做这件事的人。“员”表示做某种工作的人，比如“售货员”，不说“志愿员”。
+  志愿者 | 志愿手 | 志愿者 is the word for “volunteer”: 者 marks the person who does it. 手 marks a skilled person, as in 歌手, and 志愿手 is not said. | “志愿者”是固定的词，“者”表示做这件事的人。“手”表示有某种技能的人，比如“歌手”，不说“志愿手”。
+  爱好者 | 爱好家 | 爱好者 means “a fan, a lover of”: 者 marks the person. 家 marks an expert, as in 作家, and 爱好家 is not said. | “爱好者”表示爱好某事的人，“者”表示人。“家”表示某方面的专家，比如“作家”，不说“爱好家”。
+  爱好者 | 爱好员 | 爱好者 means “a fan, a lover of”: 者 marks the person. 员 marks a worker or member, as in 售货员, and 爱好员 is not said. | “爱好者”表示爱好某事的人，“者”表示人。“员”表示做某种工作的人，比如“售货员”，不说“爱好员”。
+  爱好者 | 爱好手 | 爱好者 means “a fan, a lover of”: 者 marks the person. 手 marks a skilled person, as in 歌手, and 爱好手 is not said. | “爱好者”表示爱好某事的人，“者”表示人。“手”表示有某种技能的人，比如“歌手”，不说“爱好手”。
+  消费者 | 消费家 | 消费者 means “a consumer, a buyer”: 者 marks the person. 家 marks an expert, as in 作家, and 消费家 is not said. | “消费者”表示买东西、用东西的人，“者”表示人。“家”表示某方面的专家，比如“作家”，不说“消费家”。
+  消费者 | 消费员 | 消费者 means “a consumer, a buyer”: 者 marks the person. 员 marks a worker or member, as in 售货员, and 消费员 is not said. | “消费者”表示买东西、用东西的人，“者”表示人。“员”表示做某种工作的人，比如“售货员”，不说“消费员”。
+  消费者 | 消费们 | 消费者 means “a consumer, a buyer”: 者 marks the person. 们 goes after a person word; it cannot turn 消费 into a person. | “消费者”表示买东西、用东西的人，“者”表示人。“们”放在指人的词后面，不能把“消费”变成人。
+  志愿者 | 志愿人者 | 者 already means “the person who”: 志愿者. 人者 says “person” twice. | “者”本身就表示人：志愿者。“人者”把“人”说了两次。
+  爱好者 | 爱好人者 | 者 already means “the person who”: 爱好者. 人者 says “person” twice. | “者”本身就表示人：爱好者。“人者”把“人”说了两次。
+  消费者 | 消费人者 | 者 already means “the person who”: 消费者. 人者 says “person” twice. | “者”本身就表示人：消费者。“人者”把“人”说了两次。
+  届时 | 到届 | 届时 means “when the time comes”, with 届 first and then 时. 到届 is not a word. | “届时”表示到那个时候，先“届”后“时”。没有“到届”这个词。
+  届时 | 届到 | 届时 means “when the time comes”, with 届 first and then 时. 届到 is not a word. | “届时”表示到那个时候，先“届”后“时”。没有“届到”这个词。
+  下周六举行，届时欢迎参加 | 上周六举行了，届时大家都参加了 | 届时 points to a time still to come, so the first clause tells a plan: 下周六举行. 上周六 is past, and 届时 cannot look back to it. | “届时”指将来的那个时候，前面要说将要发生的事：下周六举行。“上周六”已经过去，“届时”不能指过去。
+  明天开始，届时请准时到场 | 昨天开始了，届时大家都准时到场了 | 届时 points to a time still to come, so the first clause tells a plan: 明天开始. 昨天 is past, and 届时 cannot look back to it. | “届时”指将来的那个时候，前面要说将要发生的事：明天开始。“昨天”已经过去，“届时”不能指过去。
+  年底通车，届时交通更方便 | 去年通车了，届时交通更方便了 | 届时 points to a time still to come, so the first clause tells a plan: 年底通车. 去年 is past, and 届时 cannot look back to it. | “届时”指将来的那个时候，前面要说将要发生的事：年底通车。“去年”已经过去，“届时”不能指过去。
+  下月开幕，届时有名画展出 | 上月开幕了，届时有名画展出了 | 届时 points to a time still to come, so the first clause tells a plan: 下月开幕. 上月 is past, and 届时 cannot look back to it. | “届时”指将来的那个时候，前面要说将要发生的事：下月开幕。“上月”已经过去，“届时”不能指过去。
+  十月举行，届时校友会回来 | 去年举行了，届时校友都回来了 | 届时 points to a time still to come, so the first clause tells a plan: 十月举行. 去年 is past, and 届时 cannot look back to it. | “届时”指将来的那个时候，前面要说将要发生的事：十月举行。“去年”已经过去，“届时”不能指过去。
+  明天有大风，届时请关好 | 昨天有大风，届时大家关好了 | 届时 points to a time still to come, so the first clause tells what will happen: 明天有大风. 昨天 is past, and 届时 cannot look back to it. | “届时”指将来的那个时候，前面要说将要发生的事：明天有大风。“昨天”已经过去，“届时”不能指过去。
+  下周开家长会，届时请准时出席 | 上周开了家长会，届时家长都出席了 | 届时 points to a time still to come, so the first clause tells a plan: 下周开家长会. 上周 is past, and 届时 cannot look back to it. | “届时”指将来的那个时候，前面要说将要发生的事：下周开家长会。“上周”已经过去，“届时”不能指过去。
+  春节商场打折，届时顾客会很多 | 去年春节商场打折了，届时顾客很多了 | 届时 points to a time still to come, so the first clause tells a plan: 春节商场打折. 去年 is past, and 届时 cannot look back to it. | “届时”指将来的那个时候，前面要说将要发生的事：春节商场打折。“去年”已经过去，“届时”不能指过去。
+  明年实行，届时人人都要遵守 | 去年实行了，届时人人都遵守了 | 届时 points to a time still to come, so the first clause tells a plan: 明年实行. 去年 is past, and 届时 cannot look back to it. | “届时”指将来的那个时候，前面要说将要发生的事：明年实行。“去年”已经过去，“届时”不能指过去。
+  日 | 天 | The frame is 自…之日起, “from the day …”. 之 goes with the written 日; the spoken 天 is not used after 之. | 格式是“自……之日起”，表示从那一天开始。“之”后面用书面的“日”，不用口语的“天”。
+  自 | 至 | The frame is 自…起, “from … on”: 自开学之日起. 至 means “to, until”, the other end, and does not go with 起. | 格式是“自……起”，表示从某时开始：自开学之日起。“至”表示到，是终点，不和“起”搭配。
 `;
 
 /** pairReasons are the written reasons, by `right|wrong`. */

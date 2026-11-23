@@ -199,4 +199,7 @@ export const taughtTopics: readonly string[] = [
   ...levelGrammar(4, 73),
   ...levelGrammar(5, 62),
   ...levelGrammar(6, 62),
+  ...levelGrammar(7, 49),
+  ...levelGrammar(8, 51),
+  ...levelGrammar(9, 51),
 ];

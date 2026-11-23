@@ -367,3 +367,99 @@ export const usage: ReadonlyMap<string, Usage> = (() => {
   }
   return out;
 })();
+
+/** PHRASES are notes on answers that the cut of a sentence into words must not see: phrases and written words of the
+ * later levels, such as 有的是 or 不下, whose characters stand apart in other sentences (这些饺子有的是羊肉的, 明天不下雨). A
+ * line each: `phrase | what it does in English | what it does in Chinese`. They serve step 2 of a solution only. */
+const PHRASES = `
+  有的是 | says there is plenty of something, and can end a clause | 表示很多、不缺，可以放在句末
+  别看 | says “it may look so, but”, and the next clause goes against the look | 表示“虽然看起来……”，后一句说出相反的情况
+  从中 | says “from it, from among them”, pointing back to what was named | 表示从这里面，指前面说过的事物
+  当着 | says “in front of, to the face of” someone | 表示在某人面前
+  背着 | says “behind the back of” someone, without their knowing | 表示瞒着某人
+  遭到 | says something bad happens to someone: to suffer | 表示受到不好的事
+  早在 | puts a time far back, as early as, before 就 | 表示远在某个时候，后面常用“就”
+  先后 | says several things happened one after another | 表示几件事一个接一个地发生
+  等到 | says “by the time”, and the next clause tells what was so then | 表示“到……的时候”，后面说那时的情况
+  不止 | says “more than” a number | 表示超过某个数量
+  每隔 | says “every so often”: after each gap of time or space | 表示每间隔一段时间或距离
+  针对 | aims at a certain problem or group | 表示对准某个问题或对象
+  出于 | says “out of” a reason or a feeling | 表示从某种原因或想法出发
+  基于 | says “based on” facts or reasons | 表示根据
+  取决于 | says “depends on” | 表示由……决定
+  分别 | says each one on its own: separately, or respectively | 表示各自、分头，或者依次对应
+  起见 | ends 为…起见, “for the sake of” | 用在“为……起见”里，表示为了某个目的
+  予以 | is a written “to give”, before an action such as 批评 or 帮助 | 书面语，表示给以，后面带动作
+  有待 | says something still waits to be done | 表示还需要等待
+  本着 | says “in keeping with” a rule or a spirit | 表示按照某种原则、精神
+  借助 | says “with the help of” a thing | 表示利用别的力量
+  这样一来 | says “this being so”, and gives the result | 表示这样做以后的结果
+  索性 | says “might as well, simply”, giving up and choosing to act | 表示干脆
+  势必 | says something is bound to happen | 表示必然会
+  随后 | says “soon after” | 表示紧接着以后
+  随即 | says “at once, right away” | 表示立刻
+  正如 | says “just as”, often with 所…的 | 表示正像，常和“所……的”连用
+  不愧 | says someone is worthy of a name, as praise | 表示当得起某种称号，是称赞
+  绝不 | says “never, not at all”, firmly | 表示坚决不
+  正因为 | says “just because”, stressing the reason | 强调原因
+  按理说 | says “by rights, it should be”, before what did not happen | 表示按道理应该这样，后面常说出实际不同
+  照理说 | says “by rights, it should be”, before what did not happen | 表示按道理应该这样，后面常说出实际不同
+  一旦 | says “once, if ever” something happens | 表示如果有一天
+  巴不得 | says someone is eager for something | 表示急切地盼望
+  大不了 | says “at worst”, it is no great matter | 表示最坏也不过如此
+  话说回来 | says “that said”, turning to the other side | 表示换个角度说
+  说到底 | says “in the end, at bottom” | 表示归根结底
+  不比 | says one is not more so than the other, often about the same | 表示不超过另一方，常常是差不多
+  才怪 | ends 不…才怪: it would be strange if not, so surely it will | 用在“不……才怪”里，表示一定会这样
+  并非 | is a written “is not at all” | 书面语，表示并不是
+  何以 | is a written “why, how” | 书面语，表示为什么、怎么
+  何不 | is a written “why not”, giving advice | 书面语，表示为什么不，用来建议
+  著称 | says “is known for”, after 以 | 用在“以……著称”里，表示因某方面出名
+  闻名 | says “is famous”, and can take a place: 闻名全国 | 表示有名，后面可以带地方：闻名全国
+  不无 | says “not without”, so there is some | 表示不是没有，多少有一些
+  莫过于 | says nothing is more so than this | 表示没有比这更……的
+  切勿 | is a written “never do” | 书面语，表示一定不要
+  抑或 | is a written “or” | 书面语，表示或者
+  以示 | says “so as to show” | 表示用来表示
+  不下 | says “no fewer than” a number | 表示不少于某个数量
+  多达 | says “as many as” a number | 表示数量多到
+  高达 | says “as high as” a number | 表示高到
+  有余 | says “and more”, after an amount | 用在数量后面，表示还多一些
+  不得而知 | says “it is not known” | 表示没法知道
+  易于 | says “easy to” | 表示容易
+  便于 | says “easy for, handy for” | 表示方便做某事
+  不宜 | says something should not be done | 表示不适合、不应该
+  尚未 | is a written “not yet” | 书面语，表示还没有
+  旨在 | says “aims to” | 表示目的是
+  不失为 | says something can still be counted as | 表示还可以算是
+  诸如 | is a written “such as”, before a list that 等 closes | 书面语，表示例如，后面常用“等”
+  无异于 | says “is no different from” | 表示和……没有区别
+  殊不知 | says “little does one know” | 表示竟没想到
+  无非 | says “only, nothing but” | 表示只不过
+  不外乎 | says “is nothing but”, within these | 表示不超出某个范围
+  归功于 | says the credit goes to someone or something | 表示把功劳归给
+  得以 | says something gets the chance to happen, made possible by what came before | 表示借助前面的条件能够实现
+  不乏 | says “there is no lack of” | 表示有不少
+  之际 | says “at the time of” | 表示在……的时候
+  之称 | ends 有…之称, “is known as” | 用在“有……之称”里，表示被称为
+  不亚于 | says “is no less than” | 表示不比……差
+  莫属 | ends 非…莫属: no one but this one | 用在“非……莫属”里，表示只有这一个
+  特此 | is a written “hereby”, at the end of a notice | 书面语，用在通知末尾，表示特地在此
+  未经 | says “without having gone through” | 表示没有经过
+  无法 | says there is no way to | 表示没有办法
+  无从 | says there is no way or place to begin | 表示找不到办法或头绪
+  谈不上 | says it cannot be called that | 表示说不上
+  算不上 | says it does not count as that | 表示不能算作
+  不仅如此 | says “not only that”, adding more | 表示不只这样，引出更多
+  前提下 | ends 在…的前提下, “on the condition that” | 用在“在……的前提下”里，表示先满足的条件
+`;
+
+/** phraseNotes are what the phrases do, by phrase. */
+export const phraseNotes: ReadonlyMap<string, Text> = (() => {
+  const out = new Map<string, Text>();
+  for (const [phrase = "", en = "", zh = ""] of lines(PHRASES, 3)) {
+    if (out.has(phrase) || usage.has(phrase)) throw new Error(`grammar phrases: ${phrase} twice`);
+    out.set(phrase, t(en, zh));
+  }
+  return out;
+})();

@@ -8,7 +8,7 @@ import { type Text, t } from "@ga/content";
 
 import type { LevelOneCharacter } from "./characters.ts";
 import { pairReasons } from "./grammar-pairs.ts";
-import { usage, type WordClass } from "./grammar-usage.ts";
+import { phraseNotes, usage, type WordClass } from "./grammar-usage.ts";
 
 /** Glossary is what the reasons know of the words and characters taught by a unit. */
 export interface Glossary {
@@ -624,7 +624,7 @@ const IN_CONTEXT: readonly { readonly word: string; readonly cue: RegExp; readon
   },
   {
     word: "就",
-    cue: /双方就|就[^，。]{1,10}(进行|展开|发表)/,
+    cue: /双方就|就[^，。]{1,10}(进行|展开|发表)|^就[^，。]{1,8}(问题|事)，|[想要]就[这那][^，。]{0,4}(问题|事)/,
     note: t("marks the matter something is about, “on”, in formal writing", "书面语，引出动作涉及的对象，意思是“关于”"),
   },
   {
@@ -766,6 +766,47 @@ const IN_CONTEXT: readonly { readonly word: string; readonly cue: RegExp; readon
     word: "而",
     cue: /因[^，。]*而/,
     note: t("links the cause to the result, in 因…而", "用在“因……而”里，连接原因和结果"),
+  },
+  {
+    word: "过去",
+    cue: /晕了?过去/,
+    note: t(", after 晕, says one loses one's senses: 晕过去, to faint", "用在“晕”后面，表示失去知觉"),
+  },
+  {
+    word: "就是",
+    cue: /倒是[^。]*，就是/,
+    note: t("here means “it's just that”, and names a drawback after a good point", "在这里表示“只是”，在优点后面说出不足"),
+  },
+  {
+    word: "就是",
+    cue: /一[^，。就]{1,3}就是/,
+    note: t(
+      ", after 一 and a verb, stresses how long or how much: 一睡就是十个小时",
+      "用在“一+动词”后面，强调时间长或数量多：一睡就是十个小时",
+    ),
+  },
+  {
+    word: "了",
+    cue: /别提多[^。！]*了/,
+    note: t("closes 别提多…了, “so … that words fail”", "和“别提多”搭配，用在句末，表示程度很高"),
+  },
+  {
+    word: "了",
+    cue: /可想而知了/,
+    note: t(", after 可想而知, ends the sentence and stresses that it is plain to see", "用在“可想而知”后面，加强语气"),
+  },
+  {
+    word: "在",
+    cue: /^在[^。]*(基础上|前提下)/,
+    note: t(
+      "opens 在…上 or 在…下, a frame for what something rests on: the basis or the condition",
+      "和后面的“上”或“下”组成框架，说明依据或条件",
+    ),
+  },
+  {
+    word: "才",
+    cue: /正因为/,
+    note: t(", after 正因为, says this is the very reason, and only so", "和“正因为”搭配，强调正是这个原因才这样"),
   },
 ];
 
@@ -973,10 +1014,11 @@ export function pointOf(right: string, wrong: string, glossary: Glossary): Text 
   return t(`${r} or ${w}`, `用${q(r)}还是${q(w)}`);
 }
 
-/** noteOf is what a grammar word does in a sentence, or what a taught word means, for a solution; undefined when neither
- * is known. */
+/** noteOf is what a grammar word does in a sentence, what a taught word means, or what a phrase of the later levels does,
+ * for a solution; undefined when none is known. */
 export function noteOf(word: string, glossary: Glossary, sentence = ""): Text | undefined {
   const c = inContext(word, sentence);
   if (c) return t(`${word}${c.en.startsWith(",") ? "" : " "}${c.en}`, `${q(word)}${c["zh-CN"]}`);
-  return what(word, glossary);
+  const p = phraseNotes.get(word);
+  return what(word, glossary) ?? (p && t(`${word} ${p.en}`, `${q(word)}${p["zh-CN"]}`));
 }
