@@ -163,6 +163,42 @@ Stage 0 is done. Walking its lessons against Math Academy's on the same topics f
 | `precalculus-random-variables.ts` | 14 | done | |  |
 | `precalculus-de-moivre.ts` | 13 | done | |  |
 | `precalculus-statistics.ts` | 12 | in progress | |  |
+
+### Calculus
+
+Stage 2: AP Calculus AB and BC, Calculus I and II. Counts are topics of these courses not already counted in Precalculus.
+
+| File | Calculus topics | Status | Owner | Notes |
+| :--- | ---: | :--- | :--- | :--- |
+| `calculus-i-limits.ts` | 18 | in progress | |  |
+| `calculus-i-limit-techniques.ts` | 13 | open | |  |
+| `calculus-i-continuity.ts` | 13 | open | |  |
+| `calculus-i-differentiation.ts` | 9 | open | |  |
+| `calculus-i-derivative-rules.ts` | 12 | open | |  |
+| `calculus-i-chain-rule.ts` | 7 | open | |  |
+| `calculus-i-implicit-inverse.ts` | 11 | open | |  |
+| `calculus-i-hyperbolic.ts` | 6 | open | |  |
+| `calculus-i-contextual.ts` | 16 | open | |  |
+| `calculus-i-extrema.ts` | 11 | open | |  |
+| `calculus-i-curves.ts` | 8 | open | |  |
+| `calculus-i-optimization.ts` | 14 | open | |  |
+| `calculus-i-antiderivatives.ts` | 10 | open | |  |
+| `calculus-i-riemann.ts` | 12 | open | |  |
+| `calculus-i-accumulation.ts` | 10 | open | |  |
+| `calculus-ii-substitution.ts` | 17 | open | |  |
+| `calculus-ii-identities-parts.ts` | 12 | open | |  |
+| `calculus-ii-fractions-improper.ts` | 12 | open | |  |
+| `calculus-ii-areas.ts` | 11 | open | |  |
+| `calculus-ii-revolution.ts` | 9 | open | |  |
+| `calculus-ii-motion.ts` | 6 | open | |  |
+| `calculus-ii-differential-equations.ts` | 23 | open | |  |
+| `calculus-ii-parametric.ts` | 6 | open | |  |
+| `calculus-ii-polar.ts` | 10 | open | |  |
+| `calculus-ii-vectors.ts` | 8 | open | |  |
+| `calculus-ii-sequences.ts` | 19 | open | |  |
+| `calculus-ii-convergence.ts` | 13 | open | |  |
+| `calculus-ii-taylor.ts` | 14 | open | |  |
+| `ap-calculus-technology.ts` | 9 | open | |  |
 | other files | 18 | open | | `act-fundamentals-reasoning-algebra.ts` (3), `act-number-algebra.ts` (3), `act-exam-functions.ts` (3), `act-exam-algebra.ts` (1), `act-fundamentals-reasoning-geometry.ts` (1), `act-fundamentals-number.ts` (1), `act-geometry-data.ts` (1), `act-fundamentals-chance-conics.ts` (1), `complex-analysis-extra.ts` (1), `complex-analysis.ts` (1), `grade-7-statistics.ts` (1), `grade-6-statistics.ts` (1) |
 
 ## Open Gaps
