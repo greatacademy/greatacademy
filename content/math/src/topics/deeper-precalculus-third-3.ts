@@ -1,9 +1,11 @@
 // A third knowledge point for the Precalculus topics on conics, parametric curves, polar coordinates and complex numbers.
 
 import type { KnowledgePointDef } from "@ga/content";
+import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 import { precalculusDrawings3 } from "../explanation-drawings-precalculus-3.ts";
 import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
+import { numberProblem, why } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
 import { whole } from "./early-grades-more-kit.ts";
 import { chooseFilled, decimal, frac, fraction, gcd, integer, skill } from "./third-kit.ts";
@@ -1314,20 +1316,43 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
       "a-symmetric-interval",
       ["A symmetric interval", "对称区间"],
       [
-        "The curve is symmetric about 0, so each tail beyond $\\pm z$ has probability $1 - \\Phi(z)$. Removing both tails gives $P(-z < Z < z) = 2\\Phi(z) - 1$.",
-        "曲线关于 0 对称，所以 $\\pm z$ 之外的每个尾部的概率是 $1 - \\Phi(z)$。去掉两个尾部，得 $P(-z < Z < z) = 2\\Phi(z) - 1$。",
+        "The curve is symmetric about 0, so each tail beyond $\\pm z$ has probability $1 - \\Phi(z)$. Removing both tails gives $P(-z < Z < z) = 2\\Phi(z) - 1$.\n\nWith $\\Phi(1.96) = 0.975$, each tail is $1 - 0.975 = 0.025$, so $P(-1.96 < Z < 1.96) = 1 - 2(0.025) = 0.95$.\n\nCheck: $2\\Phi(1.96) - 1 = 2(0.975) - 1 = 0.95$.\n\n> **Watch out.** $\\Phi(z)$ by itself still includes the left tail, and $1 - \\Phi(z)$ is only one tail. Remove both tails from the whole area.",
+        "曲线关于 0 对称，所以 $\\pm z$ 之外的每个尾部的概率是 $1 - \\Phi(z)$。去掉两个尾部，得 $P(-z < Z < z) = 2\\Phi(z) - 1$。\n\n由 $\\Phi(1.96) = 0.975$，每个尾部是 $1 - 0.975 = 0.025$，所以 $P(-1.96 < Z < 1.96) = 1 - 2(0.025) = 0.95$。\n\n检验：$2\\Phi(1.96) - 1 = 2(0.975) - 1 = 0.95$。\n\n> **注意。** $\\Phi(z)$ 本身还包括左边的尾部，$1 - \\Phi(z)$ 只是一个尾部。要从全部面积中去掉两个尾部。",
       ],
       (rng) => {
         const [z, v] = rng.pick(standardNormal);
-        return decimal(
-          [
-            `$Z \\sim N(0, 1)$ and $\\Phi(${z}) = ${v / 10000}$. Find $P(-${z} < Z < ${z})$.`,
-            `$Z \\sim N(0, 1)$，$\\Phi(${z}) = ${v / 10000}$。求 $P(-${z} < Z < ${z})$。`,
+        const phi = v / 10000;
+        const tail = (10000 - v) / 10000;
+        const answer = (2 * v - 10000) / 10000;
+        return numberProblem({
+          prompt: t(
+            `$Z \\sim N(0, 1)$ and $\\Phi(${z}) = ${phi}$. Find $P(-${z} < Z < ${z})$.`,
+            `$Z \\sim N(0, 1)$，$\\Phi(${z}) = ${phi}$。求 $P(-${z} < Z < ${z})$。`,
+          ),
+          answer: Q.of(2 * v - 10000, 10000),
+          form: "decimal",
+          mistakes: [
+            why(
+              Q.of(v, 10000),
+              `This is $\\Phi(${z})$, everything below $${z}$; it still includes the tail below $-${z}$.`,
+              `这是 $\\Phi(${z})$，即 $${z}$ 以下的全部；它还包括 $-${z}$ 以下的尾部。`,
+            ),
+            why(
+              Q.of(10000 - v, 10000),
+              `This is one tail, beyond $${z}$, not the middle part.`,
+              `这是 $${z}$ 之外的一个尾部，不是中间部分。`,
+            ),
+            why(
+              Q.of(2 * (10000 - v), 10000),
+              "This is both tails together, the part outside the interval.",
+              "这是两个尾部之和，即区间之外的部分。",
+            ),
           ],
-          Q.of(2 * v - 10000, 10000),
-          [Q.of(v, 10000), Q.of(10000 - v, 10000), Q.of(2 * (10000 - v), 10000)],
-          [`$2 \\times ${v / 10000} - 1 = ${(2 * v - 10000) / 10000}$.`, `$2 \\times ${v / 10000} - 1 = ${(2 * v - 10000) / 10000}$。`],
-        );
+          solution: t(
+            `**Step 1: Find one tail.** By symmetry the tails beyond $-${z}$ and $${z}$ are equal, each\n\n$$1 - \\Phi(${z}) = 1 - ${phi} = ${tail}$$\n\n**Step 2: Remove both tails.**\n\n$$P(-${z} < Z < ${z}) = 1 - 2(${tail}) = ${answer}$$\n\n**Check.** By the formula for a symmetric interval:\n\n$$2\\Phi(${z}) - 1 = 2 \\times ${phi} - 1 = ${answer}$$`,
+            `**第一步：求一个尾部。**由对称性，$-${z}$ 和 $${z}$ 之外的两个尾部相等，各为\n\n$$1 - \\Phi(${z}) = 1 - ${phi} = ${tail}$$\n\n**第二步：去掉两个尾部。**\n\n$$P(-${z} < Z < ${z}) = 1 - 2(${tail}) = ${answer}$$\n\n**检验。**用对称区间的公式：\n\n$$2\\Phi(${z}) - 1 = 2 \\times ${phi} - 1 = ${answer}$$`,
+          ),
+        });
       },
     ),
   ],

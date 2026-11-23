@@ -8,8 +8,10 @@ import { Q } from "@ga/subject-math";
 import { multivariableDrawings8 } from "../explanation-drawings-multivariable-8.ts";
 import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
 import { probabilityDrawings1 } from "../explanation-drawings-probability-and-statistics-1.ts";
+import { withMistakes } from "../problems.ts";
 
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
+import { type Reason, reasoned } from "../wrong-reasons.ts";
 import { bars, chart, curvePath, intTicks, normal, shadeUnder, tenthTicks } from "./figure-charts.ts";
 import { drawn, label } from "./figure-reading-more.ts";
 
@@ -176,6 +178,7 @@ function normalArea(rng: Rng, kinds: readonly ShadeKind[]) {
   const candidates = [phi, 1 - phi, 2 * phi - 1, 2 - 2 * phi, phi / 2].map(fourPlaces);
   const right = fourPlaces(value);
   const wrong = [...new Set(candidates)].filter((c) => c !== right);
+  const given = fourPlaces(phi);
   const why: Pair =
     kind === "left"
       ? [
@@ -203,6 +206,27 @@ function normalArea(rng: Rng, kinds: readonly ShadeKind[]) {
                   "The shaded area is two equal tails, each of which is one minus the given value",
                   "阴影是两个相等的尾部，每个都等于一减给定的值",
                 ];
+  const work = {
+    left: `\\Phi(${zText}) = ${right}`,
+    right: `1 - \\Phi(${zText}) = 1 - ${given} = ${right}`,
+    between: `2\\Phi(${zText}) - 1 = 2(${given}) - 1 = ${right}`,
+    negLeft: `P(Z < -${zText}) = 1 - \\Phi(${zText}) = 1 - ${given} = ${right}`,
+    negRight: `P(Z > -${zText}) = \\Phi(${zText}) = ${right}`,
+    outside: `2\\bigl(1 - \\Phi(${zText})\\bigr) = 2(1 - ${given}) = ${right}`,
+  }[kind];
+  const unshaded = fourPlaces(1 - value);
+  const restBy: Record<ShadeKind, Pair> = {
+    left: [`the area to the right of $${zText}$`, `$${zText}$ 右边的面积`],
+    right: [`the area to the left of $${zText}$, $\\Phi(${zText})$`, `$${zText}$ 左边的面积，即 $\\Phi(${zText})$`],
+    between: [`the two tails beyond $-${zText}$ and $${zText}$`, `$-${zText}$ 与 $${zText}$ 之外的两条尾部`],
+    negLeft: [
+      `the area to the right of $-${zText}$, equal by symmetry to $\\Phi(${zText})$`,
+      `$-${zText}$ 右边的面积，由对称性等于 $\\Phi(${zText})$`,
+    ],
+    negRight: [`the tail to the left of $-${zText}$`, `$-${zText}$ 左边的尾部`],
+    outside: [`the middle part between $-${zText}$ and $${zText}$`, `$-${zText}$ 与 $${zText}$ 之间的中间部分`],
+  };
+  const rest = restBy[kind];
   const svg = chart(
     [-3.5, 3.5],
     [0, 0.45],
@@ -228,22 +252,55 @@ function normalArea(rng: Rng, kinds: readonly ShadeKind[]) {
       return shade + curvePath(f, -3.5, 3.5, x, y);
     },
   );
-  return choose(
-    rng,
+  const reasons: Reason[] = [
     [
-      `The curve is the standard normal density, and $\\Phi(${zText}) = ${fourPlaces(phi)}$. What is the shaded area?`,
-      `曲线是标准正态密度，$\\Phi(${zText}) = ${fourPlaces(phi)}$。阴影面积是多少？`,
+      `$${fourPlaces(phi)}$`,
+      `This is $\\Phi(${zText})$, the area to the left of $${zText}$.`,
+      `这是 $\\Phi(${zText})$，即 $${zText}$ 左边的面积。`,
     ],
-    same(right),
-    rng.shuffle(wrong).map((c) => same(c)),
-    [`${why[0]}, so the area is $${right}$.`, `${why[1]}，所以面积是 $${right}$。`],
-    {
-      svg,
-      alt: t(
-        `A standard normal curve with ticks at plus and minus ${zText}. ${{ left: `Everything to the left of ${zText} is shaded`, right: `Everything to the right of ${zText} is shaded`, between: `The part between −${zText} and ${zText} is shaded`, negLeft: `Everything to the left of −${zText} is shaded`, negRight: `Everything to the right of −${zText} is shaded`, outside: `The two tails beyond −${zText} and ${zText} are shaded` }[kind]}.`,
-        `标准正态曲线，在正负 ${zText} 处有刻度。${{ left: `${zText} 左边全部涂色`, right: `${zText} 右边全部涂色`, between: `−${zText} 与 ${zText} 之间涂色`, negLeft: `−${zText} 左边全部涂色`, negRight: `−${zText} 右边全部涂色`, outside: `−${zText} 和 ${zText} 外侧的两条尾部涂色` }[kind]}。`,
-      ),
-    },
+    [
+      `$${fourPlaces(1 - phi)}$`,
+      `This is $1 - \\Phi(${zText})$, a single tail beyond $${zText}$ or beyond $-${zText}$.`,
+      `这是 $1 - \\Phi(${zText})$，即 $${zText}$ 或 $-${zText}$ 外侧的一条尾部。`,
+    ],
+    [
+      `$${fourPlaces(2 * phi - 1)}$`,
+      `This is $2\\Phi(${zText}) - 1$, the middle part between $-${zText}$ and $${zText}$.`,
+      `这是 $2\\Phi(${zText}) - 1$，即 $-${zText}$ 与 $${zText}$ 之间的中间部分。`,
+    ],
+    [
+      `$${fourPlaces(2 - 2 * phi)}$`,
+      `This is $2\\bigl(1 - \\Phi(${zText})\\bigr)$, both tails together.`,
+      `这是 $2\\bigl(1 - \\Phi(${zText})\\bigr)$，即两条尾部之和。`,
+    ],
+    [
+      `$${fourPlaces(phi / 2)}$`,
+      `This halves $\\Phi(${zText})$, but symmetry halves the whole area, not $\\Phi(${zText})$.`,
+      `这把 $\\Phi(${zText})$ 减半了，但对称性平分的是全部面积，不是 $\\Phi(${zText})$。`,
+    ],
+  ];
+  return reasoned(
+    choose(
+      rng,
+      [
+        `The curve is the standard normal density, and $\\Phi(${zText}) = ${given}$. What is the shaded area?`,
+        `曲线是标准正态密度，$\\Phi(${zText}) = ${given}$。阴影面积是多少？`,
+      ],
+      same(right),
+      rng.shuffle(wrong).map((c) => same(c)),
+      [
+        `**Step 1: Describe the shaded region.** ${why[0]}.\n\n**Step 2: Compute it.**\n\n$$${work}$$\n\n**Check.** The unshaded part is ${rest[0]}, which is $${unshaded}$, and the whole area is one:\n\n$$${right} + ${unshaded} = 1$$`,
+        `**第一步：描述阴影区域。**${why[1]}。\n\n**第二步：计算。**\n\n$$${work}$$\n\n**检验。**没有阴影的部分是 ${rest[1]}，为 $${unshaded}$，而全部面积是一：\n\n$$${right} + ${unshaded} = 1$$`,
+      ],
+      {
+        svg,
+        alt: t(
+          `A standard normal curve with ticks at plus and minus ${zText}. ${{ left: `Everything to the left of ${zText} is shaded`, right: `Everything to the right of ${zText} is shaded`, between: `The part between −${zText} and ${zText} is shaded`, negLeft: `Everything to the left of −${zText} is shaded`, negRight: `Everything to the right of −${zText} is shaded`, outside: `The two tails beyond −${zText} and ${zText} are shaded` }[kind]}.`,
+          `标准正态曲线，在正负 ${zText} 处有刻度。${{ left: `${zText} 左边全部涂色`, right: `${zText} 右边全部涂色`, between: `−${zText} 与 ${zText} 之间涂色`, negLeft: `−${zText} 左边全部涂色`, negRight: `−${zText} 右边全部涂色`, outside: `−${zText} 和 ${zText} 外侧的两条尾部涂色` }[kind]}。`,
+        ),
+      },
+    ),
+    reasons,
   );
 }
 
@@ -251,8 +308,8 @@ const standardArea = point(
   "a-shaded-area-under-the-standard-normal",
   ["A shaded area under the standard normal", "标准正态曲线下的阴影面积"],
   [
-    "The distribution function $\\Phi(z)$ gives the area under the standard normal curve to the left of $z$. Any other area comes from this one. The area to the right of $z$ is one minus $\\Phi(z)$, and the middle area between $-z$ and $z$ is the whole area minus two tails of equal size.",
-    "分布函数 $\\Phi(z)$ 给出标准正态曲线在 $z$ 左边的面积。其他面积都由它得到。$z$ 右边的面积是一减 $\\Phi(z)$，$-z$ 与 $z$ 之间的中间面积是全部面积减去两个相等的尾部。",
+    "The distribution function $\\Phi(z)$ gives the area under the standard normal curve to the left of $z$. Any other area comes from this one. The area to the right of $z$ is one minus $\\Phi(z)$, and the middle area between $-z$ and $z$ is the whole area minus two tails of equal size.\n\nWith $\\Phi(1) = 0.8413$, the area to the right of $1$ is $1 - 0.8413 = 0.1587$, and the area between $-1$ and $1$ is $2(0.8413) - 1 = 0.6826$.\n\nCheck: the middle part and the two tails make up the whole, $0.6826 + 2(0.1587) = 1$.\n\n> **Watch out.** $\\Phi(z)$ is the area to the left. The area to the right is $1 - \\Phi(z)$, and the middle is $2\\Phi(z) - 1$, not $\\Phi(z)$ itself.",
+    "分布函数 $\\Phi(z)$ 给出标准正态曲线在 $z$ 左边的面积。其他面积都由它得到。$z$ 右边的面积是一减 $\\Phi(z)$，$-z$ 与 $z$ 之间的中间面积是全部面积减去两个相等的尾部。\n\n由 $\\Phi(1) = 0.8413$，$1$ 右边的面积是 $1 - 0.8413 = 0.1587$，$-1$ 与 $1$ 之间的面积是 $2(0.8413) - 1 = 0.6826$。\n\n检验：中间部分与两条尾部合起来是全部，$0.6826 + 2(0.1587) = 1$。\n\n> **注意。** $\\Phi(z)$ 是左边的面积。右边的面积是 $1 - \\Phi(z)$，中间部分是 $2\\Phi(z) - 1$，而不是 $\\Phi(z)$ 本身。",
   ],
   (rng) => normalArea(rng, ["left", "right", "between"]),
 );
@@ -261,8 +318,8 @@ const symmetricArea = point(
   "a-shaded-tail-by-symmetry",
   ["A shaded tail by symmetry", "由对称性求阴影尾部"],
   [
-    "The standard normal curve is a mirror image in the vertical axis, so areas on the negative side equal areas on the positive side. A table lists $\\Phi(z)$ only for positive values, so a shaded region on the left must be turned into the matching region on the right, and then read through the table or the given value.",
-    "标准正态曲线关于纵轴镜像对称，所以负的一侧的面积等于正的一侧相应的面积。表只列出正值的 $\\Phi(z)$，所以左边的阴影必须转换成右边相应的区域，再通过表或给定的值读出。",
+    "The standard normal curve is a mirror image in the vertical axis, so areas on the negative side equal areas on the positive side. A table lists $\\Phi(z)$ only for positive values, so a shaded region on the left must be turned into the matching region on the right, and then read through the table or the given value.\n\nWith $\\Phi(1.5) = 0.9332$, the tail to the left of $-1.5$ is the mirror image of the tail to the right of $1.5$, so it is $1 - 0.9332 = 0.0668$.\n\nCheck: the area to the right of $-1.5$ mirrors the area to the left of $1.5$, which is $0.9332$, and $0.0668 + 0.9332 = 1$.\n\n> **Watch out.** $\\Phi(-z)$ is neither $-\\Phi(z)$ nor $\\Phi(z)$: it is $1 - \\Phi(z)$, a small tail when $z$ is positive.",
+    "标准正态曲线关于纵轴镜像对称，所以负的一侧的面积等于正的一侧相应的面积。表只列出正值的 $\\Phi(z)$，所以左边的阴影必须转换成右边相应的区域，再通过表或给定的值读出。\n\n由 $\\Phi(1.5) = 0.9332$，$-1.5$ 左边的尾部是 $1.5$ 右边尾部的镜像，所以等于 $1 - 0.9332 = 0.0668$。\n\n检验：$-1.5$ 右边的面积是 $1.5$ 左边面积的镜像，为 $0.9332$，而 $0.0668 + 0.9332 = 1$。\n\n> **注意。** $\\Phi(-z)$ 既不是 $-\\Phi(z)$，也不是 $\\Phi(z)$：它等于 $1 - \\Phi(z)$，当 $z$ 为正时是一条小尾部。",
   ],
   (rng) => normalArea(rng, ["negLeft", "negRight", "outside"]),
 );
@@ -271,8 +328,8 @@ const compareCurves = point(
   "comparing-two-drawn-normal-curves",
   ["Comparing two drawn normal curves", "比较图中的两条正态曲线"],
   [
-    "The mean of a normal distribution is where its curve peaks, and its standard deviation is how wide the curve is. A taller curve is always narrower, because the total area is one. So a comparison of two curves separates into two readings: which peak lies further to the right, and which curve is more spread out.",
-    "正态分布的均值是曲线的峰所在之处，标准差是曲线的宽度。较高的曲线总是较窄，因为总面积是一。所以比较两条曲线分成两个读数：哪个峰更靠右，哪条曲线更分散。",
+    "The mean of a normal distribution is where its curve peaks, and its standard deviation is how wide the curve is. A taller curve is always narrower, because the total area is one. So a comparison of two curves separates into two readings: which peak lies further to the right, and which curve is more spread out.\n\nIf curve $A$ peaks at $1$ and is tall and narrow while curve $B$ peaks at $-1$ and is low and wide, then $A$ has the larger mean and the smaller standard deviation.\n\nCheck: the peak of a normal density is $\\frac{1}{\\sigma\\sqrt{2\\pi}}$, about $0.80$ for $\\sigma = 0.5$ and $0.40$ for $\\sigma = 1$, so the taller curve has the smaller $\\sigma$.\n\n> **Watch out.** Height and spread go opposite ways: the taller curve has the smaller standard deviation. The mean is read along the horizontal axis, not from the height of the peak.",
+    "正态分布的均值是曲线的峰所在之处，标准差是曲线的宽度。较高的曲线总是较窄，因为总面积是一。所以比较两条曲线分成两个读数：哪个峰更靠右，哪条曲线更分散。\n\n若曲线 $A$ 的峰在 $1$，又高又窄，曲线 $B$ 的峰在 $-1$，又低又宽，则 $A$ 的均值较大，标准差较小。\n\n检验：正态密度的峰高为 $\\frac{1}{\\sigma\\sqrt{2\\pi}}$，$\\sigma = 0.5$ 时约为 $0.80$，$\\sigma = 1$ 时约为 $0.40$，所以较高的曲线 $\\sigma$ 较小。\n\n> **注意。** 高度与分散程度方向相反：较高的曲线标准差较小。均值沿横轴读出，与峰的高度无关。",
   ],
   (rng) => {
     const [m1, m2] = rng.sample([-3, -2, -1, 0, 1, 2, 3], 2) as [number, number];
@@ -293,25 +350,47 @@ const compareCurves = point(
         label(x(m1), y(a(m1)) - 6, "A") +
         label(x(m2), y(b(m2)) - 6, "B"),
     );
-    return choose(
-      rng,
+    const meanWhy: Pair = [
+      `the peak of $A$ is at $${m1}$, to the ${m1 > m2 ? "right" : "left"} of the peak of $B$ at $${m2}$, so $A$ has the ${m1 > m2 ? "larger" : "smaller"} mean`,
+      `$A$ 的峰在 $${m1}$，在 $B$ 的峰 $${m2}$ 的${m1 > m2 ? "右" : "左"}边，所以 $A$ 的均值${m1 > m2 ? "较大" : "较小"}`,
+    ];
+    const sdWhy: Pair = [
+      `$A$ is ${s1 > s2 ? "lower and wider" : "taller and narrower"} than $B$, so $A$ has the ${s1 > s2 ? "larger" : "smaller"} standard deviation`,
+      `$A$ 比 $B$ ${s1 > s2 ? "更低更宽" : "更高更窄"}，所以 $A$ 的标准差${s1 > s2 ? "较大" : "较小"}`,
+    ];
+    const reasons: Reason[] = [
+      [option(m1 < m2, s1 > s2)[0], `The ${meanWhy[0].slice(4)}.`, `${meanWhy[1]}。`],
+      [option(m1 > m2, s1 < s2)[0], `${sdWhy[0]}.`, `${sdWhy[1]}。`],
       [
-        "The two curves are normal densities, labeled at their peaks. How do they compare?",
-        "这两条曲线是正态密度，标记在各自的峰上。它们如何比较？",
+        option(m1 < m2, s1 < s2)[0],
+        `Both readings are reversed: ${meanWhy[0]}, and ${sdWhy[0]}.`,
+        `两个读数都反了：${meanWhy[1]}；${sdWhy[1]}。`,
       ],
-      option(m1 > m2, s1 > s2),
-      [option(m1 < m2, s1 > s2), option(m1 > m2, s1 < s2), option(m1 < m2, s1 < s2)],
-      [
-        `The peak of $A$ is at $${m1}$ and that of $B$ is at $${m2}$, so the means compare that way. The curve of $${s1 > s2 ? "A" : "B"}$ is lower and wider, so it has the larger standard deviation.`,
-        `$A$ 的峰在 $${m1}$，$B$ 的峰在 $${m2}$，均值由此比较。$${s1 > s2 ? "A" : "B"}$ 的曲线更低更宽，所以标准差更大。`,
-      ],
-      {
-        svg,
-        alt: t(
-          `Two normal curves: A with mean ${m1} and spread ${s1}, and a dashed B with mean ${m2} and spread ${s2}.`,
-          `两条正态曲线：A 的均值 ${m1}、分散度 ${s1}，虚线 B 的均值 ${m2}、分散度 ${s2}。`,
-        ),
-      },
+    ];
+    const peakA = a(m1).toFixed(2);
+    const peakB = b(m2).toFixed(2);
+    return reasoned(
+      choose(
+        rng,
+        [
+          "The two curves are normal densities, labeled at their peaks. How do they compare?",
+          "这两条曲线是正态密度，标记在各自的峰上。它们如何比较？",
+        ],
+        option(m1 > m2, s1 > s2),
+        [option(m1 < m2, s1 > s2), option(m1 > m2, s1 < s2), option(m1 < m2, s1 < s2)],
+        [
+          `**Step 1: Compare the peaks along the axis.** The peak of $A$ is at $${m1}$ and that of $B$ is at $${m2}$, so $A$ has the ${m1 > m2 ? "larger" : "smaller"} mean.\n\n**Step 2: Compare the spreads.** The curve of $${s1 > s2 ? "A" : "B"}$ is lower and wider, so it has the larger standard deviation.\n\n**Check.** The peak of a normal density is $\\frac{1}{\\sigma\\sqrt{2\\pi}}$. The peaks are about $${peakA}$ for $A$ and $${peakB}$ for $B$, so the ${s1 > s2 ? "lower" : "taller"} peak of $A$ means a ${s1 > s2 ? "larger" : "smaller"} $\\sigma$.`,
+          `**第一步：沿横轴比较峰的位置。**$A$ 的峰在 $${m1}$，$B$ 的峰在 $${m2}$，所以 $A$ 的均值${m1 > m2 ? "较大" : "较小"}。\n\n**第二步：比较分散程度。**$${s1 > s2 ? "A" : "B"}$ 的曲线更低更宽，所以标准差更大。\n\n**检验。**正态密度的峰高为 $\\frac{1}{\\sigma\\sqrt{2\\pi}}$。$A$ 的峰高约为 $${peakA}$，$B$ 的约为 $${peakB}$，所以 $A$ 的峰${s1 > s2 ? "较低" : "较高"}，意味着 $\\sigma$ ${s1 > s2 ? "较大" : "较小"}。`,
+        ],
+        {
+          svg,
+          alt: t(
+            `Two normal curves: A with mean ${m1} and spread ${s1}, and a dashed B with mean ${m2} and spread ${s2}.`,
+            `两条正态曲线：A 的均值 ${m1}、分散度 ${s1}，虚线 B 的均值 ${m2}、分散度 ${s2}。`,
+          ),
+        },
+      ),
+      reasons,
     );
   },
 );
@@ -320,8 +399,8 @@ const varianceFromInflection = point(
   "mean-and-variance-from-inflection-points",
   ["Mean and variance from inflection points", "由拐点读均值和方差"],
   [
-    "A normal curve changes its bending at exactly one standard deviation on each side of its mean. So the two inflection points are symmetric about the mean, and half the distance between them is the standard deviation. The variance is the square of this value, which is easy to forget when reading the answer off a picture.",
-    "正态曲线恰好在均值两侧各一个标准差处改变弯曲方向。所以两个拐点关于均值对称，它们之间距离的一半就是标准差。方差是这个值的平方，从图上读答案时很容易忘记。",
+    "A normal curve changes its bending at exactly one standard deviation on each side of its mean. So the two inflection points are symmetric about the mean, and half the distance between them is the standard deviation. The variance is the square of this value, which is easy to forget when reading the answer off a picture.\n\nIf the inflection points are at $2$ and $8$, the mean is halfway, at $5$, the standard deviation is $\\frac{8 - 2}{2} = 3$, and the variance is $3^2 = 9$.\n\nCheck: $5 - 3 = 2$ and $5 + 3 = 8$ are the two inflection points.\n\n> **Watch out.** The distance between the inflection points, $6$ here, is two standard deviations, not one, and the variance is the square of the standard deviation, $9$, not $3$.",
+    "正态曲线恰好在均值两侧各一个标准差处改变弯曲方向。所以两个拐点关于均值对称，它们之间距离的一半就是标准差。方差是这个值的平方，从图上读答案时很容易忘记。\n\n若拐点在 $2$ 和 $8$，则均值在正中间，为 $5$，标准差为 $\\frac{8 - 2}{2} = 3$，方差为 $3^2 = 9$。\n\n检验：$5 - 3 = 2$，$5 + 3 = 8$，正是两个拐点。\n\n> **注意。** 两个拐点之间的距离（这里是 $6$）是两个标准差，不是一个；方差是标准差的平方 $9$，不是 $3$。",
   ],
   (rng) => {
     const mu = rng.int(2, 8);
@@ -341,25 +420,44 @@ const varianceFromInflection = point(
         curvePath(f, mu - 4 * sigma, mu + 4 * sigma, x, y) +
         `<circle cx="${x(lo)}" cy="${y(f(lo))}" r="4" fill="currentColor"/><circle cx="${x(hi)}" cy="${y(f(hi))}" r="4" fill="currentColor"/><line stroke-dasharray="4 3" x1="${x(lo)}" y1="${y(f(lo))}" x2="${x(lo)}" y2="${y(0)}"/><line stroke-dasharray="4 3" x1="${x(hi)}" y1="${y(f(hi))}" x2="${x(hi)}" y2="${y(0)}"/>`,
     );
-    return ask(
-      askMean
-        ? ["The dots mark the inflection points of a normal density. What is its mean?", "这些点标出某正态密度的拐点。它的均值是多少？"]
-        : [
-            "The dots mark the inflection points of a normal density. What is its variance?",
-            "这些点标出某正态密度的拐点。它的方差是多少？",
-          ],
-      askMean ? mu : sigma * sigma,
-      askMean ? [lo, hi, sigma] : [sigma === 1 ? 2 : sigma, 2 * sigma === sigma * sigma ? 3 * sigma : 2 * sigma, mu],
-      askMean
-        ? [
-            `The inflection points are at $${lo}$ and $${hi}$, and the mean lies halfway between them, at $${mu}$.`,
-            `拐点在 $${lo}$ 和 $${hi}$，均值在它们正中间，即 $${mu}$。`,
-          ]
-        : [
-            `The inflection points are at $${lo}$ and $${hi}$, so half their distance gives $\\sigma = ${sigma}$, and the variance is $\\sigma^2 = ${sigma * sigma}$.`,
-            `拐点在 $${lo}$ 和 $${hi}$，距离的一半给出 $\\sigma = ${sigma}$，方差是 $\\sigma^2 = ${sigma * sigma}$。`,
-          ],
-      { svg, alt: t(`A normal curve with inflection points at ${lo} and ${hi}.`, `拐点在 ${lo} 和 ${hi} 的正态曲线。`) },
+    const why = (value: number, en: string, zh: string) => ({ response: String(value), why: t(en, zh) });
+    const mistakes = askMean
+      ? [
+          why(lo, "This is the left inflection point, one standard deviation below the mean.", "这是左边的拐点，比均值低一个标准差。"),
+          why(hi, "This is the right inflection point, one standard deviation above the mean.", "这是右边的拐点，比均值高一个标准差。"),
+          why(sigma, "This is the standard deviation, half the distance between the points.", "这是标准差，即两点之间距离的一半。"),
+        ]
+      : [
+          why(sigma, "This is the standard deviation; the variance is its square.", "这是标准差；方差是它的平方。"),
+          why(
+            2 * sigma,
+            "This is the whole distance between the inflection points, two standard deviations; halve it, then square.",
+            "这是两个拐点之间的整段距离，即两个标准差；要先减半，再平方。",
+          ),
+          why(mu, "This is the mean, at the peak, not the variance.", "这是峰处的均值，不是方差。"),
+        ];
+    return withMistakes(
+      ask(
+        askMean
+          ? ["The dots mark the inflection points of a normal density. What is its mean?", "这些点标出某正态密度的拐点。它的均值是多少？"]
+          : [
+              "The dots mark the inflection points of a normal density. What is its variance?",
+              "这些点标出某正态密度的拐点。它的方差是多少？",
+            ],
+        askMean ? mu : sigma * sigma,
+        askMean ? [lo, hi, sigma] : [sigma === 1 ? 2 : sigma, 2 * sigma === sigma * sigma ? 3 * sigma : 2 * sigma, mu],
+        askMean
+          ? [
+              `**Step 1: Read the inflection points.** They are at $${lo}$ and $${hi}$.\n\n**Step 2: Take the midpoint.** The mean lies halfway between them:\n\n$$\\mu = \\frac{${lo} + ${hi}}{2} = ${mu}$$\n\n**Check.** Half the distance gives $\\sigma = \\frac{${hi} - ${lo < 0 ? `(${lo})` : lo}}{2} = ${sigma}$, and $${mu} - ${sigma} = ${lo}$, $${mu} + ${sigma} = ${hi}$ are the two points.`,
+              `**第一步：读出拐点。**拐点在 $${lo}$ 和 $${hi}$。\n\n**第二步：取中点。**均值在它们正中间：\n\n$$\\mu = \\frac{${lo} + ${hi}}{2} = ${mu}$$\n\n**检验。**距离的一半给出 $\\sigma = \\frac{${hi} - ${lo < 0 ? `(${lo})` : lo}}{2} = ${sigma}$，而 $${mu} - ${sigma} = ${lo}$，$${mu} + ${sigma} = ${hi}$ 正是两个拐点。`,
+            ]
+          : [
+              `**Step 1: Read the inflection points.** They are at $${lo}$ and $${hi}$, so half their distance is the standard deviation:\n\n$$\\sigma = \\frac{${hi} - ${lo < 0 ? `(${lo})` : lo}}{2} = ${sigma}$$\n\n**Step 2: Square it.**\n\n$$\\sigma^2 = ${sigma}^2 = ${sigma * sigma}$$\n\n**Check.** The mean is the midpoint, $${mu}$, and the distance from it to the right inflection point is $${hi} - ${mu} = ${sigma}$, whose square is $${sigma * sigma}$.`,
+              `**第一步：读出拐点。**拐点在 $${lo}$ 和 $${hi}$，距离的一半就是标准差：\n\n$$\\sigma = \\frac{${hi} - ${lo < 0 ? `(${lo})` : lo}}{2} = ${sigma}$$\n\n**第二步：平方。**\n\n$$\\sigma^2 = ${sigma}^2 = ${sigma * sigma}$$\n\n**检验。**均值是中点 $${mu}$，它到右边拐点的距离为 $${hi} - ${mu} = ${sigma}$，平方为 $${sigma * sigma}$。`,
+            ],
+        { svg, alt: t(`A normal curve with inflection points at ${lo} and ${hi}.`, `拐点在 ${lo} 和 ${hi} 的正态曲线。`) },
+      ),
+      mistakes,
     );
   },
 );
@@ -605,8 +703,8 @@ const geometricBars = point(
   "a-geometric-distribution-from-its-bars",
   ["A geometric distribution from its bars", "由条形读几何分布"],
   [
-    "The geometric distribution counts trials up to the first success. Its bars start with height $p$ at one and shrink by the factor $1 - p$ at each step. So the first bar gives the parameter directly. From $p$ the mean follows as $1 / p$, and the probability of needing more than one trial is $1 - p$.",
-    "几何分布计算到首次成功为止的试验次数。它的条形从一处的高度 $p$ 开始，每一步按因子 $1 - p$ 缩小。所以第一根条形直接给出参数。由 $p$ 得到均值 $1 / p$，需要超过一次试验的概率是 $1 - p$。",
+    "The geometric distribution counts trials up to the first success. Its bars start with height $p$ at one and shrink by the factor $1 - p$ at each step. So the first bar gives the parameter directly. From $p$ the mean follows as $1 / p$, and the probability of needing more than one trial is $1 - p$.\n\nIf the first bar has height $0.4$, then $p = 0.4$, the mean is $\\frac{1}{0.4} = 2.5$, $P(X > 1) = 0.6$ and $P(X = 2) = 0.6 \\cdot 0.4 = 0.24$.\n\nCheck: the second bar should be the first shrunk by $1 - p$, and $0.4 \\cdot 0.6 = 0.24$.\n\n> **Watch out.** The mean is $\\frac{1}{p}$, not $p$, and $P(X = 2)$ is a failure then a success, $(1 - p)p$, not $p^2$.",
+    "几何分布计算到首次成功为止的试验次数。它的条形从一处的高度 $p$ 开始，每一步按因子 $1 - p$ 缩小。所以第一根条形直接给出参数。由 $p$ 得到均值 $1 / p$，需要超过一次试验的概率是 $1 - p$。\n\n若第一根条形高 $0.4$，则 $p = 0.4$，均值为 $\\frac{1}{0.4} = 2.5$，$P(X > 1) = 0.6$，$P(X = 2) = 0.6 \\cdot 0.4 = 0.24$。\n\n检验：第二根条形应是第一根按 $1 - p$ 缩小的结果，而 $0.4 \\cdot 0.6 = 0.24$。\n\n> **注意。** 均值是 $\\frac{1}{p}$，不是 $p$；$P(X = 2)$ 是先失败再成功，即 $(1 - p)p$，不是 $p^2$。",
   ],
   (rng) => {
     const tenthsP = rng.int(1, 7);
@@ -626,29 +724,97 @@ const geometricBars = point(
           : kind === "more"
             ? ["$P(X > 1)$", "$P(X > 1)$"]
             : ["$P(X = 2)$", "$P(X = 2)$"];
-    return ask(
-      [
-        `The bars show a geometric distribution on the positive integers. What is ${q[0]}?`,
-        `这些条形表示正整数上的几何分布。${q[1]}是多少？`,
+    const pl = P.toLatex();
+    const ql = Q.one.sub(P).toLatex();
+    const second = Q.one.sub(P).mul(P);
+    const work = {
+      p: `p = ${pl}`,
+      mean: `E[X] = \\frac{1}{p} = \\frac{1}{${pl}} = ${answer.toLatex()}`,
+      more: `P(X > 1) = 1 - p = 1 - ${pl} = ${answer.toLatex()}`,
+      second: `P(X = 2) = (1 - p)p = ${ql} \\cdot ${pl} = ${answer.toLatex()}`,
+    }[kind];
+    const checkBy: Record<typeof kind, Pair> = {
+      p: [
+        `The second bar is the first shrunk by $1 - p = ${ql}$: $${pl} \\cdot ${ql} = ${second.toLatex()}$, which matches its height.`,
+        `第二根条形是第一根按 $1 - p = ${ql}$ 缩小的结果：$${pl} \\cdot ${ql} = ${second.toLatex()}$，与它的高度相符。`,
       ],
-      answer,
-      [
-        P.eq(answer) ? P.add(Q.of(1, 10)) : P,
-        Q.of(tenthsP + 1, 10).eq(answer) ? Q.of(tenthsP + 2, 10) : Q.of(tenthsP + 1, 10),
-        Q.of(10, tenthsP + 1),
-        Q.one.sub(P).eq(answer) ? Q.of(1, 20) : Q.one.sub(P),
+      mean: [
+        `The mean times $p$ is one: $${answer.toLatex()} \\cdot ${pl} = 1$.`,
+        `均值乘以 $p$ 等于一：$${answer.toLatex()} \\cdot ${pl} = 1$。`,
       ],
-      [
-        `The first bar has height $${P.toLatex()}$, so $p = ${P.toLatex()}$. From this, ${q[0]} equals $${answer.toLatex()}$.`,
-        `第一根条形的高度是 $${P.toLatex()}$，所以 $p = ${P.toLatex()}$。由此，${q[1]}等于 $${answer.toLatex()}$。`,
+      more: [
+        `Add the bars after the first as a geometric series, starting at $${second.toLatex()}$ with ratio $${ql}$:\n\n$$\\frac{${second.toLatex()}}{1 - ${ql}} = ${answer.toLatex()}$$`,
+        `把第一根之后的条形作为等比级数相加，首项为 $${second.toLatex()}$，公比为 $${ql}$：\n\n$$\\frac{${second.toLatex()}}{1 - ${ql}} = ${answer.toLatex()}$$`,
       ],
-      {
-        svg,
-        alt: t(
-          `Bars at 1, 2, 3 and so on with first height ${p}, each later bar shrinking by a factor ${(1 - p).toFixed(1)}.`,
-          `在 1、2、3 等处的条形，第一根高度为 ${p}，之后每根按因子 ${(1 - p).toFixed(1)} 缩小。`,
-        ),
-      },
+      second: [
+        `Needing exactly two trials is needing more than one but not more than two:\n\n$$P(X > 1) - P(X > 2) = ${ql} - \\left(${ql}\\right)^2 = ${answer.toLatex()}$$`,
+        `恰好需要两次，就是需要超过一次但不超过两次：\n\n$$P(X > 1) - P(X > 2) = ${ql} - \\left(${ql}\\right)^2 = ${answer.toLatex()}$$`,
+      ],
+    };
+    const check = checkBy[kind];
+    const mistakes = [
+      ...(kind === "p"
+        ? []
+        : [{ response: pl, why: t(`This is $p$, the height of the first bar, not ${q[0]}.`, `这是第一根条形的高度 $p$，不是${q[1]}。`) }]),
+      ...(kind === "more"
+        ? []
+        : [
+            {
+              response: ql,
+              why: t("This is $1 - p$, the chance that the first trial fails.", "这是 $1 - p$，即第一次试验失败的概率。"),
+            },
+          ]),
+      ...(kind === "mean"
+        ? [
+            {
+              response: Q.one.sub(P).div(P).toLatex(),
+              why: t(
+                "This is $\\frac{1 - p}{p}$, the mean number of failures before the first success; the trials include the success.",
+                "这是 $\\frac{1 - p}{p}$，即首次成功之前失败次数的均值；试验次数还要算上成功的那一次。",
+              ),
+            },
+          ]
+        : []),
+      ...(kind === "second"
+        ? [
+            {
+              response: P.mul(P).toLatex(),
+              why: t(
+                "This is $p^2$, two successes; $X = 2$ means a failure and then a success.",
+                "这是 $p^2$，即两次成功；$X = 2$ 表示先失败再成功。",
+              ),
+            },
+          ]
+        : []),
+    ];
+    return withMistakes(
+      ask(
+        [
+          `The bars show a geometric distribution on the positive integers. What is ${q[0]}?`,
+          `这些条形表示正整数上的几何分布。${q[1]}是多少？`,
+        ],
+        answer,
+        [
+          P.eq(answer) ? P.add(Q.of(1, 10)) : P,
+          Q.of(tenthsP + 1, 10).eq(answer) ? Q.of(tenthsP + 2, 10) : Q.of(tenthsP + 1, 10),
+          Q.of(10, tenthsP + 1),
+          Q.one.sub(P).eq(answer) ? Q.of(1, 20) : Q.one.sub(P),
+          ...(kind === "mean" ? [Q.one.sub(P).div(P)] : []),
+          ...(kind === "second" ? [P.mul(P)] : []),
+        ],
+        [
+          `**Step 1: Read the first bar.** It has height $${pl}$, so $p = ${pl}$.\n\n**Step 2: Find ${q[0]}.**\n\n$$${work}$$\n\n**Check.** ${check[0]}`,
+          `**第一步：读第一根条形。**它的高度是 $${pl}$，所以 $p = ${pl}$。\n\n**第二步：求${q[1]}。**\n\n$$${work}$$\n\n**检验。**${check[1]}`,
+        ],
+        {
+          svg,
+          alt: t(
+            `Bars at 1, 2, 3 and so on with first height ${p}, each later bar shrinking by a factor ${(1 - p).toFixed(1)}.`,
+            `在 1、2、3 等处的条形，第一根高度为 ${p}，之后每根按因子 ${(1 - p).toFixed(1)} 缩小。`,
+          ),
+        },
+      ),
+      mistakes,
     );
   },
 );

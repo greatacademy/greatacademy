@@ -6,6 +6,7 @@ import type { KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 import { probabilityDrawings1 } from "../explanation-drawings-probability-and-statistics-1.ts";
+import { withMistakes } from "../problems.ts";
 
 import { ask, choose, point, same } from "../university-kit.ts";
 import { bars, chart, curvePath, intTicks, normal, shadeUnder, tenthTicks } from "./figure-charts.ts";
@@ -26,8 +27,8 @@ const binomialTail = point(
   "a-binomial-probability-from-its-bars",
   ["A binomial probability from its bars", "由条形图求二项分布概率"],
   [
-    'The bars of a binomial distribution show $P(X = k)$ for each count $k$. "At least" and "at most" questions add a run of bars, and with $p = \\frac{1}{2}$ every bar is a whole number of sixteenths or thirty-seconds, since the outcomes are equally likely.',
-    "二项分布的条形图给出每个次数 $k$ 的 $P(X = k)$。“至少”和“至多”的问题就是把连续几根条形相加；当 $p = \\frac{1}{2}$ 时，所有结果等可能，每根条形都是若干个十六分之一或三十二分之一。",
+    'The bars of a binomial distribution show $P(X = k)$ for each count $k$. "At least" and "at most" questions add a run of bars, and with $p = \\frac{1}{2}$ every bar is a whole number of sixteenths or thirty-seconds, since the outcomes are equally likely.\n\nFor $4$ fair coin tosses the bars are $\\frac{1}{16}, \\frac{4}{16}, \\frac{6}{16}, \\frac{4}{16}, \\frac{1}{16}$, so $P(X \\ge 3) = \\frac{4 + 1}{16} = \\frac{5}{16}$.\n\nCheck: the other bars give $P(X \\le 2) = \\frac{1 + 4 + 6}{16} = \\frac{11}{16}$, and $\\frac{5}{16} + \\frac{11}{16} = 1$.\n\n> **Watch out.** "At least $3$" and "at most $3$" both include the bar at $3$. Leaving out an end bar, or taking only the last bar, gives a different probability.',
+    "二项分布的条形图给出每个次数 $k$ 的 $P(X = k)$。“至少”和“至多”的问题就是把连续几根条形相加；当 $p = \\frac{1}{2}$ 时，所有结果等可能，每根条形都是若干个十六分之一或三十二分之一。\n\n抛 $4$ 次均匀硬币，各条形依次为 $\\frac{1}{16}, \\frac{4}{16}, \\frac{6}{16}, \\frac{4}{16}, \\frac{1}{16}$，所以 $P(X \\ge 3) = \\frac{4 + 1}{16} = \\frac{5}{16}$。\n\n检验：其余条形给出 $P(X \\le 2) = \\frac{1 + 4 + 6}{16} = \\frac{11}{16}$，而 $\\frac{5}{16} + \\frac{11}{16} = 1$。\n\n> **注意。** “至少 $3$”和“至多 $3$”都包括 $3$ 处的条形。漏掉端点的条形，或只取最后一根条形，得到的都是别的概率。",
   ],
   (rng) => {
     const n = rng.pick([4, 5, 6]);
@@ -52,24 +53,60 @@ const binomialTail = point(
           y,
         ),
     );
-    return ask(
+    const answer = Q.of(sum, denominator);
+    const outside = [...counts.slice(0, a), ...counts.slice(b + 1)];
+    const outsideSum = outside.length > 0 ? `\\frac{${outside.join(" + ")}}{${denominator}}` : "0";
+    const range = counts.slice(a, b + 1).join(" + ");
+    return withMistakes(
+      ask(
+        [
+          `The chart shows the distribution of the number of heads $X$ in ${n} fair coin tosses. Find $P(${event})$.`,
+          `图中是抛 ${n} 次均匀硬币时正面次数 $X$ 的分布。求 $P(${event})$。`,
+        ],
+        answer,
+        [Q.of(other, denominator), Q.of(counts[b] as number, denominator), Q.of(open, denominator), Q.of(sum, 2 * denominator)],
+        [
+          `**Step 1: Read the bars.** The event $${event}$ takes the bars from $${a}$ to $${b}$, both included, with heights $${counts
+            .slice(a, b + 1)
+            .map((c) => `\\frac{${c}}{${denominator}}`)
+            .join(
+              ", ",
+            )}$.\n\n**Step 2: Add their heights.**\n\n$$P(${event}) = \\frac{${range}}{${denominator}} = ${answer.toLatex()}$$\n\n**Check.** The other bars add up to $${outsideSum} = ${Q.of(other, denominator).toLatex()}$, and\n\n$$${answer.toLatex()} + ${Q.of(other, denominator).toLatex()} = 1$$`,
+          `**第一步：读条形。**事件 $${event}$ 取从 $${a}$ 到 $${b}$（两端都包括）的条形，高度为 $${counts
+            .slice(a, b + 1)
+            .map((c) => `\\frac{${c}}{${denominator}}`)
+            .join(
+              ", ",
+            )}$。\n\n**第二步：把高度相加。**\n\n$$P(${event}) = \\frac{${range}}{${denominator}} = ${answer.toLatex()}$$\n\n**检验。**其余条形之和为 $${outsideSum} = ${Q.of(other, denominator).toLatex()}$，而\n\n$$${answer.toLatex()} + ${Q.of(other, denominator).toLatex()} = 1$$`,
+        ],
+        {
+          svg,
+          alt: t(
+            `A bar chart of the number of heads in ${n} fair coin tosses, with heights ${counts.map((c) => `${c}/${denominator}`).join(", ")} for 0 to ${n}.`,
+            `抛 ${n} 次均匀硬币的正面次数的条形图，0 到 ${n} 的高度依次为 ${counts.map((c) => `${c}/${denominator}`).join("、")}。`,
+          ),
+        },
+      ),
       [
-        `The chart shows the distribution of the number of heads $X$ in ${n} fair coin tosses. Find $P(${event})$.`,
-        `图中是抛 ${n} 次均匀硬币时正面次数 $X$ 的分布。求 $P(${event})$。`,
+        {
+          response: Q.of(other, denominator).toLatex(),
+          why: t("This adds the bars outside the event, its complement.", "这加的是事件之外的条形，即它的对立事件。"),
+        },
+        {
+          response: Q.of(counts[b] as number, denominator).toLatex(),
+          why: t(
+            `This is only the bar at $${b}$; add every bar from $${a}$ to $${b}$.`,
+            `这只是 $${b}$ 处的一根条形；要把从 $${a}$ 到 $${b}$ 的每根条形都加起来。`,
+          ),
+        },
+        {
+          response: Q.of(open, denominator).toLatex(),
+          why: t(
+            `This leaves out the end bars at $${a}$ and $${b}$, but the event includes them.`,
+            `这漏掉了 $${a}$ 和 $${b}$ 两端的条形，而事件包括它们。`,
+          ),
+        },
       ],
-      Q.of(sum, denominator),
-      [Q.of(other, denominator), Q.of(counts[b] as number, denominator), Q.of(open, denominator), Q.of(sum, 2 * denominator)],
-      [
-        `Add the heights of the bars from $${a}$ to $${b}$, both included: $\\frac{${counts.slice(a, b + 1).join(" + ")}}{${denominator}} = \\frac{${sum}}{${denominator}}$.`,
-        `把从 $${a}$ 到 $${b}$（两端都包括）的条形高度相加：$\\frac{${counts.slice(a, b + 1).join(" + ")}}{${denominator}} = \\frac{${sum}}{${denominator}}$。`,
-      ],
-      {
-        svg,
-        alt: t(
-          `A bar chart of the number of heads in ${n} fair coin tosses, with heights ${counts.map((c) => `${c}/${denominator}`).join(", ")} for 0 to ${n}.`,
-          `抛 ${n} 次均匀硬币的正面次数的条形图，0 到 ${n} 的高度依次为 ${counts.map((c) => `${c}/${denominator}`).join("、")}。`,
-        ),
-      },
     );
   },
 );

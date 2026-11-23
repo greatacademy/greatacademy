@@ -1433,8 +1433,8 @@ const expectedFromBars: KnowledgePointDef = {
   id: "the-expected-value-from-a-bar-chart",
   title: t("The expected value from a bar chart", "由条形图求期望"),
   explanation: t(
-    "A probability bar chart gives each value of a random variable and its probability. The expected value multiplies each value by the height of its bar and adds the results. It is the balance point of the chart, and not the value of the tallest bar, which is the mode. Check first that the heights add up to one, as they must.",
-    "概率条形图给出随机变量的每个值和它的概率。期望把每个值乘它的条的高度再相加。它是这张图的平衡点，而不是最高的条对应的值，那是众数。先检查高度之和是否等于 1，这是必须满足的。",
+    "A probability bar chart gives each value of a random variable and its probability. The expected value multiplies each value by the height of its bar and adds the results. It is the balance point of the chart, and not the value of the tallest bar, which is the mode. Check first that the heights add up to one, as they must.\n\nIf bars at $1$, $2$ and $3$ have heights $0.2$, $0.5$ and $0.3$, the heights add up to $1$ and $E[X] = 1(0.2) + 2(0.5) + 3(0.3) = 2.1$.\n\nCheck: measured from $2$, the values are $-1$, $0$ and $1$, so $E[X] = 2 + (-1)(0.2) + 0(0.5) + 1(0.3) = 2 + 0.1 = 2.1$.\n\n> **Watch out.** Weight each value by its bar. The tallest bar gives the mode, $2$ here, and the plain average of the values, $\\frac{1 + 2 + 3}{3} = 2$, treats the bars as equally tall.",
+    "概率条形图给出随机变量的每个值和它的概率。期望把每个值乘它的条的高度再相加。它是这张图的平衡点，而不是最高的条对应的值，那是众数。先检查高度之和是否等于 1，这是必须满足的。\n\n若在 $1$、$2$、$3$ 处的条高分别为 $0.2$、$0.5$、$0.3$，则高度之和为 $1$，且 $E[X] = 1(0.2) + 2(0.5) + 3(0.3) = 2.1$。\n\n检验：以 $2$ 为基准，各值依次为 $-1$、$0$、$1$，所以 $E[X] = 2 + (-1)(0.2) + 0(0.5) + 1(0.3) = 2 + 0.1 = 2.1$。\n\n> **注意。** 每个值都要乘它的条高。最高的条给出的是众数，这里是 $2$；而各值的简单平均 $\\frac{1 + 2 + 3}{3} = 2$ 把所有条当作一样高。",
   ),
   generate(rng) {
     const values = [1, 2, 3, 4];
@@ -1457,15 +1457,44 @@ const expectedFromBars: KnowledgePointDef = {
     const answer = Q.of(sum, 10);
     const mode = vals[tenths.indexOf(Math.max(...tenths))] as number;
     const mean = vals.reduce((a, b) => a + b, 0) / 4;
-    return numeric(
-      t("The bars give the probability of each value of $X$. What is $E[X]$?", "这些条给出 $X$ 每个值的概率。$E[X]$ 是多少？"),
-      answer,
-      [Q.of(mode), Q.of(Math.round(mean * 2), 2), Q.of(sum), answer.add(Q.of(1, 2))],
-      t(
-        `$E[X] = ${vals.map((v, i) => `${v} \\times ${(tenths[i] as number) / 10}`).join(" + ")} = ${(sum / 10).toString()}$.`,
-        `$E[X] = ${vals.map((v, i) => `${v} \\times ${(tenths[i] as number) / 10}`).join(" + ")} = ${(sum / 10).toString()}$。`,
-      ),
-      pmfFigure(
+    const p = (i: number) => (tenths[i] as number) / 10;
+    const base = vals[0] as number;
+    const shift = tenths.reduce((total, h, i) => total + i * h, 0);
+    return {
+      ...numberProblem({
+        prompt: t("The bars give the probability of each value of $X$. What is $E[X]$?", "这些条给出 $X$ 每个值的概率。$E[X]$ 是多少？"),
+        answer,
+        form: "decimal",
+        wrong: [answer.add(Q.of(1, 2))],
+        mistakes: [
+          {
+            value: Q.of(mode),
+            why: t(
+              `This is the value of the tallest bar, the mode; the expected value weights every value by its bar.`,
+              `这是最高的条对应的值，即众数；期望要把每个值按它的条高加权。`,
+            ),
+          },
+          {
+            value: Q.of(Math.round(mean * 2), 2),
+            why: t(
+              "This is the plain average of the four values, as if every bar had the same height.",
+              "这是四个值的简单平均，相当于把每个条都当作一样高。",
+            ),
+          },
+          {
+            value: Q.of(sum),
+            why: t(
+              `This reads the heights as $${tenths.join("$, $")}$ instead of $${tenths.map((h) => h / 10).join("$, $")}$: it is ten times too large.`,
+              `这把高度读成了 $${tenths.join("$、$")}$，而不是 $${tenths.map((h) => h / 10).join("$、$")}$：大了十倍。`,
+            ),
+          },
+        ],
+        solution: t(
+          `**Step 1: Read the heights.** The bars at $${vals.join("$, $")}$ have heights $${tenths.map((h) => h / 10).join("$, $")}$, which add up to $1$.\n\n**Step 2: Multiply each value by its height and add.**\n\n$$E[X] = ${vals.map((v, i) => `${v} \\times ${p(i)}`).join(" + ")} = ${(sum / 10).toString()}$$\n\n**Check.** Measured from $${base}$, the values are $0, 1, 2, 3$:\n\n$$E[X] = ${base} + ${[1, 2, 3].map((i) => `${i} \\times ${p(i)}`).join(" + ")} = ${base} + ${(shift / 10).toString()} = ${(sum / 10).toString()}$$`,
+          `**第一步：读出高度。**在 $${vals.join("$、$")}$ 处的条高分别为 $${tenths.map((h) => h / 10).join("$、$")}$，和为 $1$。\n\n**第二步：每个值乘它的高度，再相加。**\n\n$$E[X] = ${vals.map((v, i) => `${v} \\times ${p(i)}`).join(" + ")} = ${(sum / 10).toString()}$$\n\n**检验。**以 $${base}$ 为基准，各值依次为 $0, 1, 2, 3$：\n\n$$E[X] = ${base} + ${[1, 2, 3].map((i) => `${i} \\times ${p(i)}`).join(" + ")} = ${base} + ${(shift / 10).toString()} = ${(sum / 10).toString()}$$`,
+        ),
+      }),
+      figure: pmfFigure(
         vals,
         tenths,
         t(
@@ -1473,18 +1502,23 @@ const expectedFromBars: KnowledgePointDef = {
           `在 ${vals.join("、")} 处的条，高度分别是 ${tenths.map((v) => v / 10).join("、")}。`,
         ),
       ),
-      "decimal",
-    );
+    };
   },
 };
 
 const empiricalFromCurve: KnowledgePointDef = {
   id: "the-empirical-rule-from-a-shaded-curve",
   figure: precalculusDrawings4["the-empirical-rule-for-the-normal-distribution#the-empirical-rule-from-a-shaded-curve"],
+/** EMPIRICAL_PIECE is the percent of a normal distribution between k and k + 1 standard deviations from the mean, for k = -3 to 2. */
+const EMPIRICAL_PIECE: Record<number, string> = { [-3]: "2.35", [-2]: "13.5", [-1]: "34", 0: "34", 1: "13.5", 2: "2.35" };
+
+/** EMPIRICAL_BELOW is the percent of a normal distribution below k standard deviations from the mean, for k = -3 to 3. */
+const EMPIRICAL_BELOW: Record<number, string> = { [-3]: "0.15", [-2]: "2.5", [-1]: "16", 0: "50", 1: "84", 2: "97.5", 3: "99.85" };
+
   title: t("The empirical rule from a shaded curve", "由阴影曲线用经验法则"),
   explanation: t(
-    "About 68 percent of a normal distribution lies within one standard deviation of the mean, 95 percent within two, and 99.7 percent within three. The curve is symmetric, so half of each of these lies on either side of the mean. Translate the shaded bounds into standard deviations from the mean, and then combine the pieces of the rule that are needed.",
-    "正态分布约 68% 落在均值一个标准差之内，95% 在两个标准差之内，99.7% 在三个标准差之内。曲线是对称的，所以这些比例在均值两侧各占一半。把阴影边界换算成离均值几个标准差，再把需要的部分组合起来。",
+    "About 68 percent of a normal distribution lies within one standard deviation of the mean, 95 percent within two, and 99.7 percent within three. The curve is symmetric, so half of each of these lies on either side of the mean. Translate the shaded bounds into standard deviations from the mean, and then combine the pieces of the rule that are needed.\n\nWith mean $100$ and standard deviation $10$, a region shaded from $90$ to $120$ runs from $-1$ to $2$ standard deviations, so it holds $34 + 34 + 13.5 = 81.5$ percent.\n\nCheck: $97.5$ percent lies below $120$ and $16$ percent below $90$, and $97.5 - 16 = 81.5$.\n\n> **Watch out.** Only the two pieces next to the mean hold $34$ percent each. From one to two standard deviations out the piece is $13.5$ percent, and from two to three it is $2.35$ percent.",
+    "正态分布约 68% 落在均值一个标准差之内，95% 在两个标准差之内，99.7% 在三个标准差之内。曲线是对称的，所以这些比例在均值两侧各占一半。把阴影边界换算成离均值几个标准差，再把需要的部分组合起来。\n\n均值为 $100$、标准差为 $10$ 时，从 $90$ 到 $120$ 的阴影区域对应 $-1$ 到 $2$ 个标准差，所以占 $34 + 34 + 13.5 = 81.5$%。\n\n检验：低于 $120$ 的占 $97.5$%，低于 $90$ 的占 $16$%，而 $97.5 - 16 = 81.5$。\n\n> **注意。** 只有紧挨均值的两块各占 $34$%。离均值一到两个标准差的一块占 $13.5$%，两到三个标准差的一块占 $2.35$%。",
   ),
   generate(rng) {
     const mu = 10 * rng.int(5, 12);
@@ -1511,26 +1545,70 @@ const empiricalFromCurve: KnowledgePointDef = {
       180,
       `<polygon class="accent" points="${px(c.lo)},150 ${shade.map((z) => `${px(z)},${py(z)}`).join(" ")} ${px(c.hi)},150" fill="currentColor" fill-opacity="0.3" stroke="none"/><polyline class="accent" points="${zs.map((z) => `${px(z)},${py(z)}`).join(" ")}"/><line x1="${px(-3.5)}" y1="150" x2="${px(3.5)}" y2="150"/>${[-3, -2, -1, 0, 1, 2, 3].map((z) => `<line x1="${px(z)}" y1="146" x2="${px(z)}" y2="154"/>${label(px(z), 170, `${mu + z * sigma}`, 'font-size="11"')}`).join("")}`,
     );
-    return numeric(
-      t(
-        `A normal distribution has mean ${mu} and standard deviation ${sigma}. According to the empirical rule, what percent of it lies in the shaded region?`,
-        `一个正态分布的均值是 ${mu}，标准差是 ${sigma}。按经验法则，阴影区域占多少百分比？`,
-      ),
-      answer,
-      [Q.of(68), Q.of(95), Q.of(34), Q.of(50), Q.of(c.tenths === 475 ? 950 : 475, 10)],
-      t(
-        `The bounds ${mu + c.lo * sigma} and ${mu + c.hi * sigma} are $${c.lo}$ and $${c.hi}$ standard deviations from the mean. By the rule and the symmetry of the curve, this region holds ${c.tenths / 10}%.`,
-        `边界 ${mu + c.lo * sigma} 和 ${mu + c.hi * sigma} 分别离均值 $${c.lo}$ 和 $${c.hi}$ 个标准差。由经验法则和曲线的对称性，这个区域占 ${c.tenths / 10}%。`,
-      ),
-      {
-        svg,
-        alt: t(
-          `A normal curve, shaded between ${mu + c.lo * sigma} and ${mu + c.hi * sigma}.`,
-          `一条正态曲线，在 ${mu + c.lo * sigma} 和 ${mu + c.hi * sigma} 之间涂了阴影。`,
+    const lo = mu + c.lo * sigma;
+    const hi = mu + c.hi * sigma;
+    const pieces = Array.from({ length: c.hi - c.lo }, (_, i) => EMPIRICAL_PIECE[c.lo + i] as string);
+    const result = (c.tenths / 10).toString();
+    const sum = `$$${pieces.length > 1 ? `${pieces.join(" + ")} = ` : ""}${result}$$`;
+    const check = `$$${EMPIRICAL_BELOW[c.hi]} - ${EMPIRICAL_BELOW[c.lo]} = ${result}$$`;
+    return {
+      ...numberProblem({
+        prompt: t(
+          `A normal distribution has mean ${mu} and standard deviation ${sigma}. According to the empirical rule, what percent of it lies in the shaded region?`,
+          `一个正态分布的均值是 ${mu}，标准差是 ${sigma}。按经验法则，阴影区域占多少百分比？`,
         ),
       },
-      "decimal",
-    );
+    };
+        answer,
+        form: "decimal",
+        mistakes: [
+          {
+            value: Q.of(68),
+            why: t(
+              `This is the part within one standard deviation on both sides, from $${mu - sigma}$ to $${mu + sigma}$; the shading runs from $${lo}$ to $${hi}$.`,
+              `这是两侧各一个标准差之内的部分，即从 $${mu - sigma}$ 到 $${mu + sigma}$；而阴影从 $${lo}$ 到 $${hi}$。`,
+            ),
+          },
+          {
+            value: Q.of(95),
+            why: t(
+              `This is the part within two standard deviations on both sides, from $${mu - 2 * sigma}$ to $${mu + 2 * sigma}$; the shading runs from $${lo}$ to $${hi}$.`,
+              `这是两侧各两个标准差之内的部分，即从 $${mu - 2 * sigma}$ 到 $${mu + 2 * sigma}$；而阴影从 $${lo}$ 到 $${hi}$。`,
+            ),
+          },
+          {
+            value: Q.of(34),
+            why: t(
+              "This is one piece next to the mean, as if every piece held $34$ percent; farther out the pieces are $13.5$ and $2.35$ percent.",
+              "这只是紧挨均值的一块，好像每一块都占 $34$%；再往外的块只占 $13.5$% 和 $2.35$%。",
+            ),
+          },
+          {
+            value: Q.of(50),
+            why: t("This is half of the curve, everything on one side of the mean.", "这是曲线的一半，即均值一侧的全部。"),
+          },
+          {
+            value: Q.of(c.tenths === 475 ? 950 : 475, 10),
+            why:
+              c.tenths === 475
+                ? t(
+                    "This is the part within two standard deviations on both sides; only one side of the mean is shaded.",
+                    "这是均值两侧各两个标准差之内的部分；阴影只在均值的一侧。",
+                  )
+                : t(
+                    "This is half of $95$ percent, from the mean to two standard deviations on one side.",
+                    "这是 $95$% 的一半，即从均值到一侧两个标准差。",
+                  ),
+          },
+        ],
+        solution: t(
+          `**Step 1: Turn the bounds into standard deviations.** The bounds $${lo}$ and $${hi}$ are $${c.lo}$ and $${c.hi}$ standard deviations from the mean $${mu}$.\n\n**Step 2: ${pieces.length > 1 ? "Add the pieces" : "Read the piece"} of the rule between them.**\n\n${sum}\n\nThe region holds ${result}%.\n\n**Check.** Subtract the percent below $${lo}$ from the percent below $${hi}$:\n\n${check}`,
+          `**第一步：把边界换算成标准差。**边界 $${lo}$ 和 $${hi}$ 分别离均值 $${mu}$ 有 $${c.lo}$ 和 $${c.hi}$ 个标准差。\n\n**第二步：${pieces.length > 1 ? "把两者之间各块相加" : "读出两者之间的那一块"}。**\n\n${sum}\n\n这个区域占 ${result}%。\n\n**检验。**用低于 $${hi}$ 的百分比减去低于 $${lo}$ 的百分比：\n\n${check}`,
+        ),
+      }),
+      figure: {
+        svg,
+        alt: t(`A normal curve, shaded between ${lo} and ${hi}.`, `一条正态曲线，在 ${lo} 和 ${hi} 之间涂了阴影。`),
   },
 };
 
