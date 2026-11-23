@@ -1287,13 +1287,17 @@ const criticalOutsideInterval = point(
 );
 
 /** toQv reads the value of a mistake as an exact number. */
+const toQv = (v: ReturnType<typeof why>["value"]) => (v instanceof Q ? v : Q.of(Number(v)));
 /** distinctWhys keeps the first mistake for each value, so that one wrong answer gets one reason. */
+const distinctWhys = (ms: readonly ReturnType<typeof why>[]) =>
+  ms.filter((m, i) => ms.findIndex((n) => toQv(n.value).eq(toQv(m.value))) === i);
+
 const unknownFromLimit = point(
   "an-unknown-derivative-from-the-limit",
   ["An unknown derivative from the limit", "由极限求未知的导数"],
   [
-    "L'Hopital's rule also runs backwards. When $f(a) = g(a) = 0$ and the derivatives are continuous with $g'(a) \\ne 0$, the limit of $\\frac{f}{g}$ is $\\frac{f'(a)}{g'(a)}$, so knowing the limit and one derivative gives the other. Both functions must vanish at $a$ first.",
-    "洛必达法则也可以反过来用。当 $f(a) = g(a) = 0$，导数连续且 $g'(a) \\ne 0$ 时，$\\frac{f}{g}$ 的极限是 $\\frac{f'(a)}{g'(a)}$，所以知道极限和其中一个导数，就能求出另一个。前提是两个函数在 $a$ 处都为零。",
+    "L'Hopital's rule also runs backwards. When $f(a) = g(a) = 0$ and the derivatives are continuous with $g'(a) \\ne 0$, the limit of $\\frac{f}{g}$ is $\\frac{f'(a)}{g'(a)}$, so knowing the limit and one derivative gives the other.\n\nFor example, if $f(1) = g(1) = 0$, $g'(1) = 4$ and $\\lim_{x \\to 1} \\frac{f(x)}{g(x)} = \\frac{3}{2}$, then $\\frac{f'(1)}{4} = \\frac{3}{2}$, so $f'(1) = 6$.\n\nCheck: near $x = 1$, $f(x) \\approx 6(x - 1)$ and $g(x) \\approx 4(x - 1)$, so the ratio is close to $\\frac{6}{4} = \\frac{3}{2}$, the given limit.\n\n> **Watch out.** Both functions must vanish at $a$ first. If the form is not $\\frac{0}{0}$, the limit is simply $\\frac{f(a)}{g(a)}$ and tells you nothing about the derivatives.",
+    "洛必达法则也可以反过来用。当 $f(a) = g(a) = 0$，导数连续且 $g'(a) \\ne 0$ 时，$\\frac{f}{g}$ 的极限是 $\\frac{f'(a)}{g'(a)}$，所以知道极限和其中一个导数，就能求出另一个。\n\n例如，若 $f(1) = g(1) = 0$，$g'(1) = 4$，且 $\\lim_{x \\to 1} \\frac{f(x)}{g(x)} = \\frac{3}{2}$，则 $\\frac{f'(1)}{4} = \\frac{3}{2}$，所以 $f'(1) = 6$。\n\n检验：在 $x = 1$ 附近，$f(x) \\approx 6(x - 1)$，$g(x) \\approx 4(x - 1)$，所以比值接近 $\\frac{6}{4} = \\frac{3}{2}$，正是给定的极限。\n\n> **注意。** 前提是两个函数在 $a$ 处都为零。如果不是 $\\frac{0}{0}$ 型，极限就是 $\\frac{f(a)}{g(a)}$，对导数什么也说明不了。",
   ],
   (rng) => {
     const a = rng.int(-6, 6);
@@ -1304,18 +1308,77 @@ const unknownFromLimit = point(
     const answer = findTop ? fp : gp;
     const table = `| $x$ | $f(x)$ | $g(x)$ | $f'(x)$ | $g'(x)$ |\n| :---: | :---: | :---: | :---: | :---: |\n| $${a}$ | $0$ | $0$ | $${findTop ? "p" : fp}$ | $${findTop ? gp : "p"}$ |`;
     const limit = `\\lim_{x \\to ${a}} \\frac{f(x)}{g(x)} = ${L.toLatex()}`;
-    return ask(
-      [
+    const ratio = findTop ? `\\frac{p}{${gp}}` : `\\frac{${fp}}{p}`;
+    const near = (c: number) => `${c}${a === 0 ? "x" : `(${minus(a)})`}`;
+    const raw = `\\frac{${fp}}{${gp}}`;
+    const quotient = raw === L.toLatex() ? raw : `${raw} = ${L.toLatex()}`;
+    const solve: Pair = findTop
+      ? [
+          `Multiply both sides by $${gp}$: $p = ${L.toLatex()} \\cdot ${paren(gp)} = ${answer}$.`,
+          `两边乘以 $${gp}$：$p = ${L.toLatex()} \\cdot ${paren(gp)} = ${answer}$。`,
+        ]
+      : [`Cross-multiply: $p = ${fp} \\div ${paren(L)} = ${answer}$.`, `交叉相乘：$p = ${fp} \\div ${paren(L)} = ${answer}$。`];
+    const mistakes = findTop
+      ? [
+          why(
+            Q.of(gp).div(L),
+            `This solves $\\frac{${gp}}{p} = ${L.toLatex()}$: the ratio is upside down. The limit is $\\frac{f'}{g'}$, top over bottom.`,
+            `这是在解 $\\frac{${gp}}{p} = ${L.toLatex()}$：比值上下颠倒了。极限是 $\\frac{f'}{g'}$，分子的导数比分母的导数。`,
+          ),
+          why(
+            L.div(Q.of(gp)),
+            `This divides the limit by $g'(${a}) = ${gp}$; to undo the division by $${gp}$, multiply.`,
+            `这是用极限除以 $g'(${a}) = ${gp}$；要抵消除以 $${gp}$，应该乘。`,
+          ),
+          why(
+            L,
+            "This is the limit itself. The limit is the ratio of the derivatives, not $f'(a)$.",
+            "这是极限本身。极限是两个导数的比，不是 $f'(a)$。",
+          ),
+        ]
+      : [
+          why(
+            L.mul(Q.of(fp)),
+            `This solves $\\frac{p}{${fp}} = ${L.toLatex()}$: the ratio is upside down. $g'$ is in the denominator.`,
+            `这是在解 $\\frac{p}{${fp}} = ${L.toLatex()}$：比值上下颠倒了。$g'$ 在分母上。`,
+          ),
+          why(
+            fp,
+            `This is $f'(${a})$; $p$ is $g'(${a})$, which differs unless the limit is $1$.`,
+            `这是 $f'(${a})$；$p$ 是 $g'(${a})$，除非极限是 $1$，两者不同。`,
+          ),
+          why(
+            L,
+            "This is the limit itself. The limit is the ratio of the derivatives, not $g'(a)$.",
+            "这是极限本身。极限是两个导数的比，不是 $g'(a)$。",
+          ),
+        ];
+    return numberProblem({
+      prompt: t(
         `$f$ and $g$ have continuous derivatives, with these values, and $${limit}$. Find $p$.\n\n${table}`,
         `$f$ 和 $g$ 的导数连续，取值如下，且 $${limit}$。求 $p$。\n\n${table}`,
-      ],
+      ),
       answer,
-      findTop ? [L.div(Q.of(gp)), gp, -fp] : [L.mul(Q.of(fp)), fp, -gp],
-      [
-        `The form is $\\frac{0}{0}$, so the limit equals $\\frac{f'(${a})}{g'(${a})}$. Solving $${findTop ? `\\frac{p}{${gp}}` : `\\frac{${fp}}{p}`} = ${L.toLatex()}$ gives $p = ${answer}$.`,
-        `这是 $\\frac{0}{0}$ 型，所以极限等于 $\\frac{f'(${a})}{g'(${a})}$。解 $${findTop ? `\\frac{p}{${gp}}` : `\\frac{${fp}}{p}`} = ${L.toLatex()}$ 得 $p = ${answer}$。`,
-      ],
-    );
+      mistakes: distinctWhys(mistakes),
+      solution: t(
+        ...walkPair(
+          [
+            [
+              "Check the form",
+              "检查类型",
+              `$f(${a}) = g(${a}) = 0$, so the limit has the form $\\frac{0}{0}$, and with $g'(${a}) \\ne 0$ it equals $\\frac{f'(${a})}{g'(${a})}$.`,
+              `$f(${a}) = g(${a}) = 0$，所以极限是 $\\frac{0}{0}$ 型，又 $g'(${a}) \\ne 0$，它等于 $\\frac{f'(${a})}{g'(${a})}$。`,
+            ],
+            ["Set up the equation", "列方程", `$${ratio} = ${L.toLatex()}$.`, `$${ratio} = ${L.toLatex()}$。`],
+            ["Solve for $p$", "解出 $p$", solve[0], solve[1]],
+          ],
+          [
+            `Near $x = ${a}$, $f(x) \\approx ${near(fp)}$ and $g(x) \\approx ${near(gp)}$, so $\\frac{f(x)}{g(x)} \\approx ${quotient}$, the given limit.`,
+            `在 $x = ${a}$ 附近，$f(x) \\approx ${near(fp)}$，$g(x) \\approx ${near(gp)}$，所以 $\\frac{f(x)}{g(x)} \\approx ${quotient}$，正是给定的极限。`,
+          ],
+        ),
+      ),
+    });
   },
 );
 

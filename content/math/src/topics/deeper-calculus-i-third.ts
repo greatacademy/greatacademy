@@ -1973,12 +1973,19 @@ const rateContexts: readonly { en: string; zh: string; unit: string; unitZh: str
   },
 ];
 
+/** distinctWhys keeps the first reason for each wrong value. */
+const distinctWhys = (ms: readonly ReturnType<typeof why>[]) =>
+  ms.filter((m, i) => ms.findIndex((n) => toQv(n.value).eq(toQv(m.value))) === i);
+
+/** toQv turns a wrong value into a rational number. */
+const toQv = (v: ReturnType<typeof why>["value"]) => (v instanceof Q ? v : Q.of(Number(v)));
+
 const estimateFromDerivative = point(
   "estimating-a-later-value-from-the-derivative",
   ["Estimating a later value from the derivative", "用导数估计之后的值"],
   [
-    "A derivative value is a rate, so over a short time it predicts the change: the change in $f$ is about $f'(a) \\cdot h$. To estimate the value at $a + h$, add that change to $f(a)$. The result is an estimate, because the rate may not stay constant.",
-    "导数值是变化率，所以在短时间内可以预测变化量：$f$ 的变化约为 $f'(a) \\cdot h$。要估计 $a + h$ 处的值，把这个变化量加到 $f(a)$ 上。结果只是估计值，因为变化率不一定保持不变。",
+    "A derivative value is a rate, so over a short time it predicts the change: the change in $f$ is about $f'(a) \\cdot h$. To estimate the value at $a + h$, add that change to $f(a)$. The result is an estimate, because the rate may not stay constant.\n\nFor example, if a tank holds $V(3) = 500$ liters and $V'(3) = 40$ liters per minute, then two minutes later it holds about $500 + 40 \\cdot 2 = 580$ liters.\n\nCheck: going from $500$ to $580$ liters in $2$ minutes is an average of $\\frac{80}{2} = 40$ liters per minute, the rate we assumed.\n\n> **Watch out.** Multiply the rate by the time step $h$, not by the time $a$ since the start. A negative rate lowers the value.",
+    "导数值是变化率，所以在短时间内可以预测变化量：$f$ 的变化约为 $f'(a) \\cdot h$。要估计 $a + h$ 处的值，把这个变化量加到 $f(a)$ 上。结果只是估计值，因为变化率不一定保持不变。\n\n例如水箱中有 $V(3) = 500$ 升水，$V'(3) = 40$ 升每分钟，则两分钟后约有 $500 + 40 \\cdot 2 = 580$ 升。\n\n检验：$2$ 分钟内从 $500$ 升变为 $580$ 升，平均每分钟 $\\frac{80}{2} = 40$ 升，正是所设的变化率。\n\n> **注意。** 用变化率乘以时间步长 $h$，不是乘以从开始算起的时间 $a$。变化率为负时函数值减小。",
   ],
   (rng) => {
     const c = rng.pick(rateContexts);
@@ -1988,18 +1995,57 @@ const estimateFromDerivative = point(
     const h = rng.int(2, 5);
     const name = c.en.charAt(1);
     const answer = v + r * h;
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `${c.en}, in ${c.unit}, $t$ ${c.time} after a measurement starts. If $${name}(${a}) = ${v}$ and $${name}'(${a}) = ${r}$, estimate $${name}(${a + h})$.`,
         `${c.zh}（单位：${c.unitZh}），$t$ 是测量开始后的${c.timeZh}数。已知 $${name}(${a}) = ${v}$，$${name}'(${a}) = ${r}$。估计 $${name}(${a + h})$。`,
-      ],
+      ),
       answer,
-      [v + r, v - r * h, r * h, v + r * a],
-      [
-        `The change over $${h}$ ${c.time} is about $${paren(r)} \\cdot ${h} = ${r * h}$, so the value is about $${v} + ${paren(r * h)} = ${answer}$.`,
-        `$${h}$ ${c.timeZh}内的变化约为 $${paren(r)} \\cdot ${h} = ${r * h}$，所以函数值约为 $${v} + ${paren(r * h)} = ${answer}$。`,
-      ],
-    );
+      mistakes: distinctWhys([
+        why(
+          v + r,
+          `This adds the change over one unit of time; from $t = ${a}$ to $t = ${a + h}$ is $${h}$ units.`,
+          `这只加了一个单位时间的变化量；从 $t = ${a}$ 到 $t = ${a + h}$ 是 $${h}$ 个单位。`,
+        ),
+        why(
+          v - r * h,
+          "This subtracts the change. The rate's sign already says whether the value rises or falls.",
+          "这是减去了变化量。变化率的符号已经说明了函数值是增大还是减小。",
+        ),
+        why(
+          r * h,
+          `This is only the change. Add it to the value $${v}$ at $t = ${a}$.`,
+          `这只是变化量。还要把它加到 $t = ${a}$ 时的值 $${v}$ 上。`,
+        ),
+        why(
+          v + r * a,
+          `This multiplies the rate by the time $${a}$ since the start; the step is $h = ${h}$.`,
+          `这是用变化率乘以从开始算起的时间 $${a}$；步长是 $h = ${h}$。`,
+        ),
+      ]),
+      solution: t(
+        ...walk(
+          [
+            [
+              "Estimate the change",
+              "估计变化量",
+              `The time step is $h = ${a + h} - ${a} = ${h}$, so the change is about $${paren(r)} \\cdot ${h} = ${r * h}$.`,
+              `时间步长是 $h = ${a + h} - ${a} = ${h}$，所以变化量约为 $${paren(r)} \\cdot ${h} = ${r * h}$。`,
+            ],
+            [
+              "Add it to the current value",
+              "加到当前的值上",
+              `$${name}(${a + h}) \\approx ${v} + ${paren(r * h)} = ${answer}$.`,
+              `$${name}(${a + h}) \\approx ${v} + ${paren(r * h)} = ${answer}$。`,
+            ],
+          ],
+          [
+            `Going from $${v}$ to $${answer}$ in $${h}$ ${c.time} is an average rate of $\\frac{${answer} - ${v}}{${h}} = ${r}$, the given derivative, as the estimate assumes.`,
+            `在 $${h}$ ${c.timeZh}内从 $${v}$ 变为 $${answer}$，平均变化率为 $\\frac{${answer} - ${v}}{${h}} = ${r}$，正是给定的导数值，与估计的假设一致。`,
+          ],
+        ),
+      ),
+    });
   },
 );
 
@@ -2007,8 +2053,8 @@ const whenRateReachesValue = point(
   "when-a-rate-reaches-a-given-value",
   ["When a rate reaches a given value", "变化率何时达到给定值"],
   [
-    "The reverse question gives the rate and asks for the time or quantity. Differentiate the model, set the derivative equal to the given rate, and solve. The value of the model itself is not used, and the constant term plays no part.",
-    "反过来的问题是给出变化率，求时间或数量。对模型求导，令导数等于给定的变化率，然后求解。这里用不到模型本身的值，常数项也不起作用。",
+    "The reverse question gives the rate and asks for the time or quantity. Differentiate the model, set the derivative equal to the given rate, and solve. The value of the model itself is not used, and the constant term plays no part.\n\nFor example, if $h(t) = -5t^{2} + 30t + 2$, the velocity is $h'(t) = -10t + 30$, and it equals $10$ when $t = 2$.\n\nCheck: $h(2.01) = 42.0995$ and $h(1.99) = 41.8995$, so the height changes by $0.2$ over $0.02$ seconds, a velocity of $10$.\n\n> **Watch out.** Set the derivative, not the model, equal to the given rate. When solving, move the constant of the derivative to the other side with its sign changed.",
+    "反过来的问题是给出变化率，求时间或数量。对模型求导，令导数等于给定的变化率，然后求解。这里用不到模型本身的值，常数项也不起作用。\n\n例如 $h(t) = -5t^{2} + 30t + 2$，速度为 $h'(t) = -10t + 30$，当 $t = 2$ 时它等于 $10$。\n\n检验：$h(2.01) = 42.0995$，$h(1.99) = 41.8995$，高度在 $0.02$ 秒内变化 $0.2$，速度为 $10$。\n\n> **注意。** 令导数而不是模型本身等于给定的变化率。求解时，把导数中的常数移到另一边要变号。",
   ],
   (rng) => {
     if (rng.bool()) {
@@ -2016,45 +2062,112 @@ const whenRateReachesValue = point(
       const c = rng.int(1, 40);
       const w = rng.pick([-1, 1]) * rng.int(1, 3) * 5;
       const answer = Q.of(v - w, 10);
-      return ask(
-        [
+      const T = answer.toNumber();
+      const height = (s: number) => -5 * s * s + v * s + c;
+      return numberProblem({
+        prompt: t(
           `A ball's height after $t$ seconds is $h(t) = ${poly([-5, "t^{2}"], [v, "t"], [c, ""])}$ meters. At what time is its velocity $${w}$ m/s?`,
           `一个球 $t$ 秒后的高度是 $h(t) = ${poly([-5, "t^{2}"], [v, "t"], [c, ""])}$ 米。什么时候它的速度是 $${w}$ 米/秒？`,
-        ],
+        ),
         answer,
-        [Q.of(v + w, 10), Q.of(v - w, 5), Q.of(v, 10)],
-        [
-          `$h'(t) = ${poly([-10, "t"], [v, ""])}$. Setting this equal to $${w}$ gives $t = \\frac{${v} - ${paren(w)}}{10} = ${answer.toLatex()}$.`,
-          `$h'(t) = ${poly([-10, "t"], [v, ""])}$。令它等于 $${w}$，得 $t = \\frac{${v} - ${paren(w)}}{10} = ${answer.toLatex()}$。`,
-        ],
-      );
+        mistakes: distinctWhys([
+          why(
+            Q.of(v + w, 10),
+            `This solves $-10t + ${v} = ${-w}$: the sign of the velocity $${w}$ was changed.`,
+            `这是在解 $-10t + ${v} = ${-w}$：速度 $${w}$ 的符号被改变了。`,
+          ),
+          why(
+            Q.of(v - w, 5),
+            "This differentiates $-5t^{2}$ to $-5t$; the power rule gives $-10t$.",
+            "这把 $-5t^{2}$ 的导数算成了 $-5t$；幂法则给出 $-10t$。",
+          ),
+          why(
+            Q.of(v, 10),
+            "This is when the velocity is $0$, at the top, not when it equals the given value.",
+            "这是速度为 $0$ 的时刻，即最高点，不是速度等于给定值的时刻。",
+          ),
+        ]),
+        solution: t(
+          ...walk(
+            [
+              [
+                "Differentiate",
+                "求导",
+                `The velocity is $h'(t) = ${poly([-10, "t"], [v, ""])}$.`,
+                `速度是 $h'(t) = ${poly([-10, "t"], [v, ""])}$。`,
+              ],
+              [
+                "Set it equal to the rate",
+                "令它等于给定的变化率",
+                `$${poly([-10, "t"], [v, ""])} = ${w}$ gives $t = \\frac{${v} - ${paren(w)}}{10} = ${answer.toLatex()}$.`,
+                `由 $${poly([-10, "t"], [v, ""])} = ${w}$ 得 $t = \\frac{${v} - ${paren(w)}}{10} = ${answer.toLatex()}$。`,
+              ],
+            ],
+            [
+              `$h(${num(T + 0.01)}) \\approx ${num(height(T + 0.01))}$ and $h(${num(T - 0.01)}) \\approx ${num(height(T - 0.01))}$, so over those $0.02$ seconds the height changes at about $${num((height(T + 0.01) - height(T - 0.01)) / 0.02)}$ m/s, the given velocity.`,
+              `$h(${num(T + 0.01)}) \\approx ${num(height(T + 0.01))}$，$h(${num(T - 0.01)}) \\approx ${num(height(T - 0.01))}$，所以在这 $0.02$ 秒内高度的变化率约为 $${num((height(T + 0.01) - height(T - 0.01)) / 0.02)}$ 米/秒，正是给定的速度。`,
+            ],
+          ),
+        ),
+      });
     }
     const a = rng.int(1, 5);
     const b = rng.int(2, 30);
     const c = rng.int(50, 900);
     const q = rng.int(5, 40);
     const m = 2 * a * q + b;
-    return ask(
-      [
+    const cost = (x: number) => a * x * x + b * x + c;
+    return numberProblem({
+      prompt: t(
         `The cost of producing $q$ items is $C(q) = ${poly([a, "q^{2}"], [b, "q"], [c, ""])}$ dollars. At what output is the marginal cost $${m}$ dollars per item?`,
         `生产 $q$ 件产品的成本是 $C(q) = ${poly([a, "q^{2}"], [b, "q"], [c, ""])}$ 美元。产量为多少时边际成本是每件 $${m}$ 美元？`,
-      ],
-      q,
-      [Q.of(m, 2 * a), Q.of(m - b, a), Q.of(m + b, 2 * a)],
-      [
-        `$C'(q) = ${poly([2 * a, "q"], [b, ""])}$. Setting this equal to $${m}$ gives $${2 * a}q = ${m - b}$, so $q = ${q}$.`,
-        `$C'(q) = ${poly([2 * a, "q"], [b, ""])}$。令它等于 $${m}$，得 $${2 * a}q = ${m - b}$，所以 $q = ${q}$。`,
-      ],
-    );
+      ),
+      answer: q,
+      mistakes: distinctWhys([
+        why(
+          Q.of(m, 2 * a),
+          `This leaves out the $${b}$ in $C'(q) = ${poly([2 * a, "q"], [b, ""])}$.`,
+          `这漏掉了 $C'(q) = ${poly([2 * a, "q"], [b, ""])}$ 中的 $${b}$。`,
+        ),
+        why(
+          Q.of(m - b, a),
+          `This differentiates $${a === 1 ? "" : a}q^{2}$ to $${a === 1 ? "" : a}q$; the power rule doubles the coefficient.`,
+          `这把 $${a === 1 ? "" : a}q^{2}$ 的导数算成了 $${a === 1 ? "" : a}q$；幂法则会使系数加倍。`,
+        ),
+        why(Q.of(m + b, 2 * a), `This adds $${b}$ to $${m}$ instead of subtracting it.`, `这是把 $${b}$ 加到 $${m}$ 上，而应该减去。`),
+      ]),
+      solution: t(
+        ...walk(
+          [
+            [
+              "Differentiate",
+              "求导",
+              `The marginal cost is $C'(q) = ${poly([2 * a, "q"], [b, ""])}$.`,
+              `边际成本是 $C'(q) = ${poly([2 * a, "q"], [b, ""])}$。`,
+            ],
+            [
+              "Set it equal to the rate",
+              "令它等于给定的变化率",
+              `$${poly([2 * a, "q"], [b, ""])} = ${m}$ gives $${2 * a}q = ${m - b}$, so $q = ${q}$.`,
+              `由 $${poly([2 * a, "q"], [b, ""])} = ${m}$ 得 $${2 * a}q = ${m - b}$，所以 $q = ${q}$。`,
+            ],
+          ],
+          [
+            `Raising output from $${q} - 0.5$ to $${q} + 0.5$ items costs $C(${q + 0.5}) - C(${q - 0.5}) = ${num(cost(q + 0.5))} - ${num(cost(q - 0.5))} = ${num(cost(q + 0.5) - cost(q - 0.5))}$ dollars for one item, as the marginal cost says.`,
+            `产量从 $${q} - 0.5$ 增加到 $${q} + 0.5$ 件，成本增加 $C(${q + 0.5}) - C(${q - 0.5}) = ${num(cost(q + 0.5))} - ${num(cost(q - 0.5))} = ${num(cost(q + 0.5) - cost(q - 0.5))}$ 美元，即一件的成本，与边际成本一致。`,
+          ],
+        ),
+      ),
+    });
   },
 );
 
 const forwardError = point(
   "the-exact-error-of-a-forward-difference",
-  ["The exact error of a forward difference", "前向差商的精确误差"],
+  ["The exact error of a forward difference", "向前差商的精确误差"],
   [
-    "For a quadratic $f(x) = Ax^{2} + Bx + C$, the forward difference quotient is exactly $f'(a) + Ah$. So its error is $Ah$: it does not depend on $a$, it shrinks in proportion to $h$, and its sign shows that a concave-up function is overestimated.",
-    "对二次函数 $f(x) = Ax^{2} + Bx + C$，前向差商恰好等于 $f'(a) + Ah$。所以误差是 $Ah$：它与 $a$ 无关，与 $h$ 成比例地缩小，它的符号说明上凹函数的导数被高估。",
+    "For a quadratic $f(x) = Ax^{2} + Bx + C$, the forward difference quotient is exactly $f'(a) + Ah$. So its error is $Ah$: it does not depend on $a$, it shrinks in proportion to $h$, and its sign shows that a concave-up function is overestimated.\n\nFor example, $f(x) = 3x^{2} + x$ at $a = 1$ with $h = 0.1$: $\\frac{f(1.1) - f(1)}{0.1} = \\frac{4.73 - 4}{0.1} = 7.3$, while $f'(1) = 7$. The error is $0.3 = 3 \\cdot 0.1$.\n\nCheck: $Ah = 3(0.1) = 0.3$, the same as $7.3 - 7$.\n\n> **Watch out.** The error is $Ah$ with $A$ the coefficient of $x^{2}$, not the second derivative $2A$. It is positive when $A > 0$: the forward quotient is too high.",
+    "对二次函数 $f(x) = Ax^{2} + Bx + C$，向前差商恰好等于 $f'(a) + Ah$。所以误差是 $Ah$：它与 $a$ 无关，与 $h$ 成比例地缩小，它的符号说明上凹函数的导数被高估。\n\n例如 $f(x) = 3x^{2} + x$，在 $a = 1$ 处取 $h = 0.1$：$\\frac{f(1.1) - f(1)}{0.1} = \\frac{4.73 - 4}{0.1} = 7.3$，而 $f'(1) = 7$。误差是 $0.3 = 3 \\cdot 0.1$。\n\n检验：$Ah = 3(0.1) = 0.3$，与 $7.3 - 7$ 相同。\n\n> **注意。** 误差是 $Ah$，$A$ 是 $x^{2}$ 的系数，不是二阶导数 $2A$。$A > 0$ 时误差为正：向前差商偏高。",
   ],
   (rng) => {
     const A = nz(rng, 6);
@@ -2063,27 +2176,64 @@ const forwardError = point(
     const a = rng.int(-4, 4);
     const h = rng.pick([Q.of(1, 2), Q.of(1, 4), Q.of(1, 5), Q.of(1, 10)]);
     const answer = h.mul(Q.of(A));
-    return ask(
-      [
+    const f = (x: Q) => Q.of(A).mul(x).mul(x).add(Q.of(B).mul(x)).add(Q.of(C));
+    const ah = Q.of(a).add(h);
+    const quotient = f(ah)
+      .sub(f(Q.of(a)))
+      .div(h);
+    const exact = 2 * A * a + B;
+    return numberProblem({
+      prompt: t(
         `Let $f(x) = ${poly([A, "x^{2}"], [B, "x"], [C, ""])}$. By how much does the forward difference quotient at $a = ${a}$ with $h = ${h.toLatex()}$ exceed the true value of $f'(${a})$? (The answer is negative if the estimate is too low.)`,
-        `设 $f(x) = ${poly([A, "x^{2}"], [B, "x"], [C, ""])}$。在 $a = ${a}$ 处取 $h = ${h.toLatex()}$ 的前向差商比 $f'(${a})$ 的真实值大多少？（估计值偏低时答案为负。）`,
-      ],
+        `设 $f(x) = ${poly([A, "x^{2}"], [B, "x"], [C, ""])}$。在 $a = ${a}$ 处取 $h = ${h.toLatex()}$ 的向前差商比 $f'(${a})$ 的真实值大多少？（估计值偏低时答案为负。）`,
+      ),
       answer,
-      [answer.neg(), answer.mul(Q.of(2)), h, Q.of(2 * A * a + B)],
-      [
-        `$\\frac{f(a + h) - f(a)}{h} = 2Aa + B + Ah$, while $f'(a) = 2Aa + B$. The difference is $Ah = ${paren(A)} \\cdot ${h.toLatex()} = ${answer.toLatex()}$.`,
-        `$\\frac{f(a + h) - f(a)}{h} = 2Aa + B + Ah$，而 $f'(a) = 2Aa + B$。二者之差是 $Ah = ${paren(A)} \\cdot ${h.toLatex()} = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: distinctWhys([
+        why(
+          answer.neg(),
+          `This is the error of the backward quotient, $-Ah$. The forward quotient is too ${A > 0 ? "high" : "low"} here because $A = ${A}$.`,
+          `这是向后差商的误差 $-Ah$。这里 $A = ${A}$，所以向前差商偏${A > 0 ? "高" : "低"}。`,
+        ),
+        why(answer.mul(Q.of(2)), "This uses the second derivative $2A$ in place of $A$.", "这用二阶导数 $2A$ 代替了 $A$。"),
+        why(h, `This is $h$ alone; the error is $Ah$ with $A = ${A}$.`, `这只是 $h$；误差是 $Ah$，其中 $A = ${A}$。`),
+        why(
+          exact,
+          `This is $f'(${a})$ itself, not the amount by which the estimate exceeds it.`,
+          `这是 $f'(${a})$ 本身，不是估计值比它大的量。`,
+        ),
+      ]),
+      solution: t(
+        ...walk(
+          [
+            [
+              "Expand the quotient",
+              "展开差商",
+              `Write $f(x) = Ax^{2} + Bx + C$ with $A = ${A}$, $B = ${B}$ and $C = ${C}$. Then $f(a + h) - f(a) = 2Aah + Ah^{2} + Bh$, so $\\frac{f(a + h) - f(a)}{h} = 2Aa + B + Ah$.`,
+              `把 $f(x)$ 写成 $Ax^{2} + Bx + C$，其中 $A = ${A}$，$B = ${B}$，$C = ${C}$。于是 $f(a + h) - f(a) = 2Aah + Ah^{2} + Bh$，所以 $\\frac{f(a + h) - f(a)}{h} = 2Aa + B + Ah$。`,
+            ],
+            [
+              "Subtract the derivative",
+              "减去导数",
+              `$f'(a) = 2Aa + B$, so the excess is $Ah = ${paren(A)} \\cdot ${h.toLatex()} = ${answer.toLatex()}$.`,
+              `$f'(a) = 2Aa + B$，所以多出的量是 $Ah = ${paren(A)} \\cdot ${h.toLatex()} = ${answer.toLatex()}$。`,
+            ],
+          ],
+          [
+            `Directly: $f\\left(${ah.toLatex()}\\right) = ${f(ah).toLatex()}$ and $f(${a}) = ${f(Q.of(a)).toLatex()}$, so the quotient is $${quotient.toLatex()}$, while $f'(${a}) = ${exact}$. The difference is $${quotient.toLatex()} - ${paren(exact)} = ${quotient.sub(Q.of(exact)).toLatex()}$.`,
+            `直接计算：$f\\left(${ah.toLatex()}\\right) = ${f(ah).toLatex()}$，以及 $f(${a}) = ${f(Q.of(a)).toLatex()}$，所以差商是 $${quotient.toLatex()}$，而 $f'(${a}) = ${exact}$。二者之差是 $${quotient.toLatex()} - ${paren(exact)} = ${quotient.sub(Q.of(exact)).toLatex()}$。`,
+          ],
+        ),
+      ),
+    });
   },
 );
 
 const centralFromBoth = point(
   "averaging-backward-and-forward-estimates",
-  ["Averaging backward and forward estimates", "对后向和前向估计取平均"],
+  ["Averaging backward and forward estimates", "对向后和向前估计取平均"],
   [
-    "The average of the backward and forward quotients at $a$ is the central difference quotient, $\\frac{f(a + h) - f(a - h)}{2h}$, in which the value $f(a)$ cancels. It is usually a much better estimate than either one alone. Note the $2h$ in the denominator.",
-    "$a$ 处后向差商和前向差商的平均就是中心差商 $\\frac{f(a + h) - f(a - h)}{2h}$，其中 $f(a)$ 被抵消了。它通常比两者中任何一个都准确得多。注意分母是 $2h$。",
+    "The average of the backward and forward quotients at $a$ is the central difference quotient, $\\frac{f(a + h) - f(a - h)}{2h}$, in which the value $f(a)$ cancels. It is usually a much better estimate than either one alone.\n\nFor example, if $f(1) = 4$, $f(2) = 7$ and $f(3) = 12$, then at $a = 2$ with $h = 1$ the backward quotient is $3$ and the forward quotient is $5$; their average is $4$.\n\nCheck: the central quotient gives $\\frac{12 - 4}{2} = 4$ directly.\n\n> **Watch out.** The two outer inputs are $2h$ apart, so the denominator is $2h$, not $h$.",
+    "$a$ 处向后差商和向前差商的平均就是中心差商 $\\frac{f(a + h) - f(a - h)}{2h}$，其中 $f(a)$ 被抵消了。它通常比两者中任何一个都准确得多。\n\n例如 $f(1) = 4$，$f(2) = 7$，$f(3) = 12$，则在 $a = 2$ 处取 $h = 1$，向后差商是 $3$，向前差商是 $5$，平均为 $4$。\n\n检验：直接用中心差商，$\\frac{12 - 4}{2} = 4$。\n\n> **注意。** 两端的输入值相距 $2h$，所以分母是 $2h$，不是 $h$。",
   ],
   (rng) => {
     const h = rng.pick([1, 2]);
@@ -2094,18 +2244,47 @@ const centralFromBoth = point(
     const xs = [a - h, a, a + h];
     const table = `| $x$ | ${xs.map((x) => `$${x}$`).join(" | ")} |\n| :---: | :---: | :---: | :---: |\n| $f(x)$ | $${vm}$ | $${v0}$ | $${vp}$ |`;
     const answer = Q.of(vp - vm, 2 * h);
-    return ask(
-      [
+    const back = Q.of(v0 - vm, h);
+    const fore = Q.of(vp - v0, h);
+    return numberProblem({
+      prompt: t(
         `The table gives values of a differentiable function $f$.\n\n${table}\n\nFind the average of the backward and forward difference estimates of $f'(${a})$, using $h = ${h}$.`,
-        `表中给出可导函数 $f$ 的值。\n\n${table}\n\n取 $h = ${h}$，求 $f'(${a})$ 的后向差商估计与前向差商估计的平均值。`,
-      ],
+        `表中给出可导函数 $f$ 的值。\n\n${table}\n\n取 $h = ${h}$，求 $f'(${a})$ 的向后差商估计与向前差商估计的平均值。`,
+      ),
       answer,
-      [Q.of(vp - vm, h), Q.of(v0 - vm, h), Q.of(vp - v0, h), Q.of(vp + vm, 2 * h)],
-      [
-        `Backward: $\\frac{${paren(v0)} - ${paren(vm)}}{${h}}$; forward: $\\frac{${paren(vp)} - ${paren(v0)}}{${h}}$. Their average is $\\frac{${paren(vp)} - ${paren(vm)}}{${2 * h}} = ${answer.toLatex()}$, where the middle value cancels.`,
-        `后向：$\\frac{${paren(v0)} - ${paren(vm)}}{${h}}$；前向：$\\frac{${paren(vp)} - ${paren(v0)}}{${h}}$。它们的平均值是 $\\frac{${paren(vp)} - ${paren(vm)}}{${2 * h}} = ${answer.toLatex()}$，中间的值被抵消了。`,
-      ],
-    );
+      mistakes: distinctWhys([
+        why(
+          Q.of(vp - vm, h),
+          `This divides by $h = ${h}$, but $${a - h}$ and $${a + h}$ are $${2 * h}$ apart.`,
+          `这是除以 $h = ${h}$，但 $${a - h}$ 和 $${a + h}$ 相距 $${2 * h}$。`,
+        ),
+        why(back, "This is the backward estimate alone; average it with the forward one.", "这只是向后估计；还要与向前估计取平均。"),
+        why(fore, "This is the forward estimate alone; average it with the backward one.", "这只是向前估计；还要与向后估计取平均。"),
+        why(Q.of(vp + vm, 2 * h), "This adds the two outer values; the quotient subtracts them.", "这是把两端的值相加；差商要把它们相减。"),
+      ]),
+      solution: t(
+        ...walk(
+          [
+            [
+              "Find both estimates",
+              "求两个估计值",
+              `Backward: $\\frac{${paren(v0)} - ${paren(vm)}}{${h}} = ${back.toLatex()}$; forward: $\\frac{${paren(vp)} - ${paren(v0)}}{${h}} = ${fore.toLatex()}$.`,
+              `向后：$\\frac{${paren(v0)} - ${paren(vm)}}{${h}} = ${back.toLatex()}$；向前：$\\frac{${paren(vp)} - ${paren(v0)}}{${h}} = ${fore.toLatex()}$。`,
+            ],
+            [
+              "Average them",
+              "取平均",
+              `$\\frac{1}{2}\\left(${back.toLatex()} + ${paren(fore)}\\right) = ${answer.toLatex()}$.`,
+              `$\\frac{1}{2}\\left(${back.toLatex()} + ${paren(fore)}\\right) = ${answer.toLatex()}$。`,
+            ],
+          ],
+          [
+            `The central quotient gives it in one step, without the middle value: $\\frac{${paren(vp)} - ${paren(vm)}}{${2 * h}} = ${answer.toLatex()}$.`,
+            `中心差商一步就能得到，不需要中间的值：$\\frac{${paren(vp)} - ${paren(vm)}}{${2 * h}} = ${answer.toLatex()}$。`,
+          ],
+        ),
+      ),
+    });
   },
 );
 
@@ -2113,8 +2292,8 @@ const whereRatesCompare = point(
   "where-one-rate-is-a-multiple-of-the-other",
   ["Where one rate is a multiple of the other", "一个变化率是另一个的倍数之处"],
   [
-    "The chain rule says $\\frac{dy}{dt} = f'(x)\\frac{dx}{dt}$, so the ratio of the two rates is $f'(x)$. To find where $y$ changes $k$ times as fast as $x$, solve $f'(x) = k$. The actual speed of $x$ does not matter.",
-    "链式法则给出 $\\frac{dy}{dt} = f'(x)\\frac{dx}{dt}$，所以两个变化率之比就是 $f'(x)$。要找 $y$ 的变化率是 $x$ 的 $k$ 倍的位置，只需解 $f'(x) = k$。$x$ 的实际变化速度无关紧要。",
+    "The chain rule says $\\frac{dy}{dt} = f'(x)\\frac{dx}{dt}$, so the ratio of the two rates is $f'(x)$. To find where $y$ changes $k$ times as fast as $x$, solve $f'(x) = k$. The actual speed of $x$ does not matter.\n\nFor example, with $y = x^{2} + 3x$, $\\frac{dy}{dt} = (2x + 3)\\frac{dx}{dt}$, so $y$ changes $7$ times as fast as $x$ where $2x + 3 = 7$, at $x = 2$.\n\nCheck: $y(2.01) - y(1.99) = 10.0701 - 9.9301 = 0.14$, which is $7$ times the change $0.02$ in $x$.\n\n> **Watch out.** Solve $f'(x) = k$, not $f(x) = k$. Cancel $\\frac{dx}{dt}$, which is not zero.",
+    "链式法则给出 $\\frac{dy}{dt} = f'(x)\\frac{dx}{dt}$，所以两个变化率之比就是 $f'(x)$。要找 $y$ 的变化率是 $x$ 的 $k$ 倍的位置，只需解 $f'(x) = k$。$x$ 的实际变化速度无关紧要。\n\n例如 $y = x^{2} + 3x$，$\\frac{dy}{dt} = (2x + 3)\\frac{dx}{dt}$，所以 $y$ 的变化率是 $x$ 的 $7$ 倍之处满足 $2x + 3 = 7$，即 $x = 2$。\n\n检验：$y(2.01) - y(1.99) = 10.0701 - 9.9301 = 0.14$，是 $x$ 的变化量 $0.02$ 的 $7$ 倍。\n\n> **注意。** 解的是 $f'(x) = k$，不是 $f(x) = k$。约去不为零的 $\\frac{dx}{dt}$。",
   ],
   (rng) => {
     const a = nz(rng, 5);
@@ -2122,18 +2301,52 @@ const whereRatesCompare = point(
     const c = rng.int(-9, 9);
     const k = rng.pick([-12, -8, -6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 8, 12]);
     const answer = Q.of(k - b, 2 * a);
-    return ask(
-      [
+    const X = answer.toNumber();
+    const y = (x: number) => a * x * x + b * x + c;
+    const change = y(X + 0.01) - y(X - 0.01);
+    return numberProblem({
+      prompt: t(
         `$x$ and $y$ are functions of $t$ with $y = ${poly([a, "x^{2}"], [b, "x"], [c, ""])}$, and $\\frac{dx}{dt} \\ne 0$. For which $x$ is $\\frac{dy}{dt} = ${k}\\frac{dx}{dt}$?`,
         `$x$ 和 $y$ 都是 $t$ 的函数，$y = ${poly([a, "x^{2}"], [b, "x"], [c, ""])}$，且 $\\frac{dx}{dt} \\ne 0$。$x$ 为何值时 $\\frac{dy}{dt} = ${k}\\frac{dx}{dt}$？`,
-      ],
+      ),
       answer,
-      [Q.of(k + b, 2 * a), Q.of(k - b, a), Q.of(k, 2 * a), Q.of(b - k, 2 * a)],
-      [
-        `$\\frac{dy}{dt} = (${linear(2 * a, b)})\\frac{dx}{dt}$. Cancelling $\\frac{dx}{dt}$ gives $${linear(2 * a, b)} = ${k}$, so $x = ${answer.toLatex()}$.`,
-        `$\\frac{dy}{dt} = (${linear(2 * a, b)})\\frac{dx}{dt}$。约去 $\\frac{dx}{dt}$，得 $${linear(2 * a, b)} = ${k}$，所以 $x = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: distinctWhys([
+        why(
+          Q.of(k + b, 2 * a),
+          `This adds $${paren(b)}$ to $${k}$ instead of subtracting it.`,
+          `这是把 $${paren(b)}$ 加到 $${k}$ 上，而应该减去。`,
+        ),
+        why(
+          Q.of(k - b, a),
+          `This differentiates $${poly([a, "x^{2}"])}$ to $${poly([a, "x"])}$; the power rule doubles the coefficient.`,
+          `这把 $${poly([a, "x^{2}"])}$ 的导数算成了 $${poly([a, "x"])}$；幂法则会使系数加倍。`,
+        ),
+        why(Q.of(k, 2 * a), `This leaves out the term $${paren(b)}$ of the derivative.`, `这漏掉了导数中的 $${paren(b)}$ 项。`),
+        why(Q.of(b - k, 2 * a), "This has the sign reversed when solving for $x$.", "这在解 $x$ 时符号弄反了。"),
+      ]),
+      solution: t(
+        ...walk(
+          [
+            [
+              "Differentiate with the chain rule",
+              "用链式法则求导",
+              `$\\frac{dy}{dt} = (${linear(2 * a, b)})\\frac{dx}{dt}$.`,
+              `$\\frac{dy}{dt} = (${linear(2 * a, b)})\\frac{dx}{dt}$。`,
+            ],
+            [
+              "Solve for the ratio",
+              "按比值求解",
+              `Cancelling $\\frac{dx}{dt}$ gives $${linear(2 * a, b)} = ${k}$, so $x = ${answer.toLatex()}$.`,
+              `约去 $\\frac{dx}{dt}$，得 $${linear(2 * a, b)} = ${k}$，所以 $x = ${answer.toLatex()}$。`,
+            ],
+          ],
+          [
+            `Move $x$ from $${num(X - 0.01)}$ to $${num(X + 0.01)}$: $y$ changes by $${num(change)}$, which is $${num(change / 0.02)}$ times the change $0.02$ in $x$.`,
+            `让 $x$ 从 $${num(X - 0.01)}$ 变到 $${num(X + 0.01)}$：$y$ 变化了 $${num(change)}$，是 $x$ 的变化量 $0.02$ 的 $${num(change / 0.02)}$ 倍。`,
+          ],
+        ),
+      ),
+    });
   },
 );
 
@@ -2141,8 +2354,8 @@ const distanceRate = point(
   "the-rate-of-change-of-the-distance-from-the-origin",
   ["The rate of change of the distance from the origin", "到原点距离的变化率"],
   [
-    "If $D$ is the distance from the origin to a moving point, then $D^{2} = x^{2} + y^{2}$. Differentiating implicitly gives $D\\frac{dD}{dt} = x\\frac{dx}{dt} + y\\frac{dy}{dt}$, so the rate depends on the position as well as on the two velocities.",
-    "设 $D$ 是从原点到动点的距离，则 $D^{2} = x^{2} + y^{2}$。隐函数求导得 $D\\frac{dD}{dt} = x\\frac{dx}{dt} + y\\frac{dy}{dt}$，所以这个变化率既取决于两个速度，也取决于位置。",
+    "If $D$ is the distance from the origin to a moving point, then $D^{2} = x^{2} + y^{2}$. Differentiating implicitly gives $D\\frac{dD}{dt} = x\\frac{dx}{dt} + y\\frac{dy}{dt}$, so the rate depends on the position as well as on the two velocities.\n\nFor example, at $(3, 4)$ with $\\frac{dx}{dt} = 2$ and $\\frac{dy}{dt} = -1$: $D = 5$ and $5\\frac{dD}{dt} = 6 - 4 = 2$, so $\\frac{dD}{dt} = 0.4$.\n\nCheck: $0.01$ later the point is near $(3.02, 3.99)$, at distance $\\sqrt{25.0405} \\approx 5.00405$, an increase of $0.00405$ in $0.01$, about $0.4$.\n\n> **Watch out.** Divide by $D$ at the end, and keep the signs of the coordinates: a point with negative $x$ moving left moves away from the origin.",
+    "设 $D$ 是从原点到动点的距离，则 $D^{2} = x^{2} + y^{2}$。隐函数求导得 $D\\frac{dD}{dt} = x\\frac{dx}{dt} + y\\frac{dy}{dt}$，所以这个变化率既取决于两个速度，也取决于位置。\n\n例如在 $(3, 4)$ 处，$\\frac{dx}{dt} = 2$，$\\frac{dy}{dt} = -1$：$D = 5$，$5\\frac{dD}{dt} = 6 - 4 = 2$，所以 $\\frac{dD}{dt} = 0.4$。\n\n检验：经过 $0.01$，点约在 $(3.02, 3.99)$，距离为 $\\sqrt{25.0405} \\approx 5.00405$，在 $0.01$ 内增加 $0.00405$，约为 $0.4$。\n\n> **注意。** 最后要除以 $D$，并保留坐标的符号：$x$ 为负的点向左运动时，是在远离原点。",
   ],
   (rng) => {
     const [p, q, d] = rng.pick([
@@ -2158,19 +2371,57 @@ const distanceRate = point(
     const y = rng.pick([1, -1]) * q;
     const u = nz(rng, 9);
     const v = nz(rng, 9);
-    const answer = Q.of(x * u + y * v, d);
-    return ask(
-      [
+    const top = x * u + y * v;
+    const answer = Q.of(top, d);
+    const e = 0.001;
+    const later = Math.hypot(x + e * u, y + e * v);
+    return numberProblem({
+      prompt: t(
         `A point moves in the plane. When it is at $(${x}, ${y})$, $\\frac{dx}{dt} = ${u}$ and $\\frac{dy}{dt} = ${v}$. Find the rate of change of its distance $D$ from the origin at that moment.`,
         `一个点在平面上运动。当它位于 $(${x}, ${y})$ 时，$\\frac{dx}{dt} = ${u}$，$\\frac{dy}{dt} = ${v}$。求此刻它到原点的距离 $D$ 的变化率。`,
-      ],
+      ),
       answer,
-      [Q.of(x * u + y * v), Q.of(u + v), Q.of(2 * (x * u + y * v), d), Q.of(x * v + y * u, d)],
-      [
-        `Here $D = ${d}$, and $${d}\\frac{dD}{dt} = ${paren(x)} \\cdot ${paren(u)} + ${paren(y)} \\cdot ${paren(v)} = ${x * u + y * v}$. So $\\frac{dD}{dt} = ${answer.toLatex()}$.`,
-        `此时 $D = ${d}$，且 $${d}\\frac{dD}{dt} = ${paren(x)} \\cdot ${paren(u)} + ${paren(y)} \\cdot ${paren(v)} = ${x * u + y * v}$。所以 $\\frac{dD}{dt} = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: distinctWhys([
+        why(top, `This leaves out the division by $D = ${d}$.`, `这漏掉了除以 $D = ${d}$。`),
+        why(
+          u + v,
+          "This adds the two velocities; each must be weighted by its coordinate.",
+          "这是把两个速度相加；每个速度都要乘以对应的坐标。",
+        ),
+        why(
+          Q.of(2 * top, d),
+          "This keeps a $2$ on one side only; the $2$s from $D^{2}$, $x^{2}$ and $y^{2}$ all cancel.",
+          "这只在一边保留了 $2$；$D^{2}$、$x^{2}$、$y^{2}$ 求导得到的 $2$ 都会约掉。",
+        ),
+        why(
+          Q.of(x * v + y * u, d),
+          "This pairs $x$ with $\\frac{dy}{dt}$ and $y$ with $\\frac{dx}{dt}$.",
+          "这是把 $x$ 与 $\\frac{dy}{dt}$、$y$ 与 $\\frac{dx}{dt}$ 配在了一起。",
+        ),
+      ]),
+      solution: t(
+        ...walk(
+          [
+            [
+              "Find the distance",
+              "求距离",
+              `$D = \\sqrt{${paren(x)}^{2} + ${paren(y)}^{2}} = ${d}$.`,
+              `$D = \\sqrt{${paren(x)}^{2} + ${paren(y)}^{2}} = ${d}$。`,
+            ],
+            [
+              "Differentiate and substitute",
+              "求导并代入",
+              `$${d}\\frac{dD}{dt} = ${paren(x)} \\cdot ${paren(u)} + ${paren(y)} \\cdot ${paren(v)} = ${top}$, so $\\frac{dD}{dt} = ${answer.toLatex()}$.`,
+              `$${d}\\frac{dD}{dt} = ${paren(x)} \\cdot ${paren(u)} + ${paren(y)} \\cdot ${paren(v)} = ${top}$，所以 $\\frac{dD}{dt} = ${answer.toLatex()}$。`,
+            ],
+          ],
+          [
+            `$0.001$ later the point is near $(${num(x + e * u)}, ${num(y + e * v)})$, at distance about $${later.toFixed(5)}$. The change divided by $0.001$ is about $${num((later - d) / e)}$, close to $${answer.toLatex()}${approx(answer)}$.`,
+            `经过 $0.001$，点约在 $(${num(x + e * u)}, ${num(y + e * v)})$，距离约为 $${later.toFixed(5)}$。变化量除以 $0.001$ 约为 $${num((later - d) / e)}$，接近 $${answer.toLatex()}${approx(answer)}$。`,
+          ],
+        ),
+      ),
+    });
   },
 );
 

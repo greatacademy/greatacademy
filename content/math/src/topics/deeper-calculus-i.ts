@@ -821,14 +821,19 @@ const inverseInsideAChain: KnowledgePointDef = {
 };
 
 /** toQv turns a wrong value into a rational number. */
+const toQv = (v: ReturnType<typeof why>["value"]) => (v instanceof Q ? v : Q.of(Number(v)));
+
 /** distinctWhys keeps the first reason for each wrong value. */
+const distinctWhys = (ms: readonly ReturnType<typeof why>[]) =>
+  ms.filter((m, i) => ms.findIndex((n) => toQv(n.value).eq(toQv(m.value))) === i);
+
 const troughDepth: KnowledgePointDef = {
   id: "the-rising-depth-in-a-triangular-trough",
   figure: calculusDrawings2["calculating-related-rates-using-similar-triangles#the-rising-depth-in-a-triangular-trough"],
   title: t("The rising depth in a triangular trough", "三角形水槽中上升的水深"),
   explanation: t(
-    "Similar triangles relate the width of the water surface to its depth in a trough, so the volume can be written using the depth alone. Differentiating that formula with respect to time relates the inflow to the rate at which the depth rises. Substitute the current depth only after differentiating.",
-    "由相似三角形可以把水面宽度用水深表示，于是体积只含水深一个变量。对时间求导，就得到流入量与水深上升速率的关系。求导之后才代入当前的水深。",
+    "Similar triangles relate the width of the water surface to its depth in a trough, so the volume can be written using the depth alone. Differentiating that formula with respect to time relates the inflow to the rate at which the depth rises. Substitute the current depth only after differentiating.\n\nFor example, a trough $5$ m long whose triangular end is $2$ m wide and $2$ m deep has a surface $y$ m wide at depth $y$, so $V = \\frac{1}{2} \\cdot y \\cdot y \\cdot 5 = 2.5y^{2}$ and $\\frac{dV}{dt} = 5y\\frac{dy}{dt}$. With $3$ m³/min flowing in at depth $1$ m, $\\frac{dy}{dt} = \\frac{3}{5} = 0.6$ m/min.\n\nCheck: the surface is then $5 \\times 1 = 5$ m², and $3$ m³ a minute spread over it raises the level $0.6$ m a minute.\n\n> **Watch out.** The surface width at depth $y$ is $\\frac{w}{h}y$, not the top width $w$. Put in the depth only after differentiating.",
+    "由相似三角形可以把水面宽度用水深表示，于是体积只含水深一个变量。对时间求导，就得到流入量与水深上升速率的关系。求导之后才代入当前的水深。\n\n例如水槽长 $5$ m，三角形端面宽 $2$ m、深 $2$ m，水深为 $y$ 时水面宽 $y$ m，所以 $V = \\frac{1}{2} \\cdot y \\cdot y \\cdot 5 = 2.5y^{2}$，$\\frac{dV}{dt} = 5y\\frac{dy}{dt}$。每分钟流入 $3$ m³，水深 $1$ m 时，$\\frac{dy}{dt} = \\frac{3}{5} = 0.6$ m/min。\n\n检验：此时水面面积为 $5 \\times 1 = 5$ m²，每分钟 $3$ m³ 的水铺在上面，使水面每分钟上升 $0.6$ m。\n\n> **注意。** 水深为 $y$ 时水面宽为 $\\frac{w}{h}y$，不是顶部宽度 $w$。求导之后才代入水深。",
   ),
   generate(rng) {
     const L = rng.int(2, 10);
@@ -837,16 +842,55 @@ const troughDepth: KnowledgePointDef = {
     const y = rng.int(1, h - 1);
     const R = rng.int(1, 12);
     const answer = Q.of(R * h, L * w * y);
+    const width = Q.of(w * y, h);
     return numberProblem({
       prompt: t(
         `A trough is $${L}$ m long, and its cross section is an isosceles triangle, vertex down, $${w}$ m wide at the top and $${h}$ m deep. Water flows in at $${R}$ m³/min. How fast is the depth rising, in m/min, when the depth is $${y}$ m?`,
         `水槽长 $${L}$ m，横截面是顶点朝下的等腰三角形，顶部宽 $${w}$ m，深 $${h}$ m。水以 $${R}$ m³/min 的速率流入。当水深为 $${y}$ m 时，水深上升的速率是多少 m/min？`,
       ),
       answer,
-      wrong: [Q.of(R * h, 2 * L * w * y), Q.of(R, L * w), Q.of(R * h, L * w)],
-      solution: t(
-        `At depth $y$ the surface is $${poly([Q.of(w, h), "y"])}$ wide, so $V = \\frac{1}{2} \\cdot ${poly([Q.of(w, h), "y"])} \\cdot y \\cdot ${L} = ${poly([Q.of(L * w, 2 * h), "y^2"])}$. Differentiating gives $\\frac{dV}{dt} = ${poly([Q.of(L * w, h), "y"])}\\frac{dy}{dt}$. With $y = ${y}$ and $\\frac{dV}{dt} = ${R}$, $\\frac{dy}{dt} = ${answer.toLatex()}$.`,
-        `水深为 $y$ 时水面宽 $${poly([Q.of(w, h), "y"])}$，所以 $V = \\frac{1}{2} \\cdot ${poly([Q.of(w, h), "y"])} \\cdot y \\cdot ${L} = ${poly([Q.of(L * w, 2 * h), "y^2"])}$。求导得 $\\frac{dV}{dt} = ${poly([Q.of(L * w, h), "y"])}\\frac{dy}{dt}$。代入 $y = ${y}$ 和 $\\frac{dV}{dt} = ${R}$，得 $\\frac{dy}{dt} = ${answer.toLatex()}$。`,
+      mistakes: distinctWhys([
+        why(
+          Q.of(R * h, 2 * L * w * y),
+          "This keeps the $\\frac{1}{2}$ of the triangle's area; the $2$ from differentiating $y^{2}$ cancels it.",
+          "这保留了三角形面积中的 $\\frac{1}{2}$；对 $y^{2}$ 求导得到的 $2$ 会把它约掉。",
+        ),
+        why(
+          Q.of(R, L * w),
+          `This uses the top width $${w}$ m for the width of the water surface, which is only $${width.toLatex()}$ m at this depth.`,
+          `这把顶部宽度 $${w}$ m 当成了水面宽度，而此时水面只有 $${width.toLatex()}$ m 宽。`,
+        ),
+        why(
+          Q.of(R * h, L * w),
+          "This leaves out the depth $y$ that comes from differentiating $y^{2}$.",
+          "这漏掉了对 $y^{2}$ 求导得到的水深 $y$。",
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Write the volume in the depth",
+            "用水深表示体积",
+            `By similar triangles the surface is $${poly([Q.of(w, h), "y"])}$ wide at depth $y$, so $V = \\frac{1}{2} \\cdot ${poly([Q.of(w, h), "y"])} \\cdot y \\cdot ${L} = ${poly([Q.of(L * w, 2 * h), "y^2"])}$.`,
+            `由相似三角形，水深为 $y$ 时水面宽 $${poly([Q.of(w, h), "y"])}$，所以 $V = \\frac{1}{2} \\cdot ${poly([Q.of(w, h), "y"])} \\cdot y \\cdot ${L} = ${poly([Q.of(L * w, 2 * h), "y^2"])}$。`,
+          ],
+          [
+            "Differentiate",
+            "求导",
+            `$\\frac{dV}{dt} = ${poly([Q.of(L * w, h), "y"])}\\frac{dy}{dt}$.`,
+            `$\\frac{dV}{dt} = ${poly([Q.of(L * w, h), "y"])}\\frac{dy}{dt}$。`,
+          ],
+          [
+            "Substitute and solve",
+            "代入并求解",
+            `With $y = ${y}$ and $\\frac{dV}{dt} = ${R}$: $${R} = ${Q.of(L * w * y, h).toLatex()}\\frac{dy}{dt}$, so $\\frac{dy}{dt} = ${answer.toLatex()}$.`,
+            `代入 $y = ${y}$，$\\frac{dV}{dt} = ${R}$：$${R} = ${Q.of(L * w * y, h).toLatex()}\\frac{dy}{dt}$，所以 $\\frac{dy}{dt} = ${answer.toLatex()}$。`,
+          ],
+        ],
+        [
+          `At depth $${y}$ m the water surface is $${L}$ m by $${width.toLatex()}$ m, an area of $${width.mul(Q.of(L)).toLatex()}$ m². Spreading $${R}$ m³ a minute over it raises the level $${R} \\div ${width.mul(Q.of(L)).toLatex()} = ${answer.toLatex()}$ m a minute.`,
+          `水深 $${y}$ m 时水面为 $${L}$ m 乘 $${width.toLatex()}$ m，面积为 $${width.mul(Q.of(L)).toLatex()}$ m²。每分钟 $${R}$ m³ 的水铺在上面，使水面每分钟上升 $${R} \\div ${width.mul(Q.of(L)).toLatex()} = ${answer.toLatex()}$ m。`,
+        ],
       ),
     });
   },
@@ -857,8 +901,8 @@ const coneWithALeak: KnowledgePointDef = {
   figure: calculusDrawings2["calculating-related-rates-with-cones#a-conical-tank-with-a-leak"],
   title: t("A conical tank with a leak", "有渗漏的圆锥形水箱"),
   explanation: t(
-    "When water flows in and out at once, $\\frac{dV}{dt}$ is the inflow minus the outflow. The geometry of the cone gives $\\frac{dV}{dt}$ from the depth and its rate, because the surface radius is a fixed fraction of the depth. So the inflow is this net rate plus the leak.",
-    "水同时流入和流出时，$\\frac{dV}{dt}$ 等于流入量减流出量。由于水面半径是水深的固定比例，圆锥的几何关系可以由水深及其变化率给出 $\\frac{dV}{dt}$。所以流入量等于这个净速率加上渗漏量。",
+    "When water flows in and out at once, $\\frac{dV}{dt}$ is the inflow minus the outflow. The geometry of the cone gives $\\frac{dV}{dt}$ from the depth and its rate, because the surface radius is a fixed fraction of the depth. So the inflow is this net rate plus the leak.\n\nFor example, in a cone of top radius $2$ m and height $4$ m, water $2$ m deep has surface radius $1$ m. If the depth rises at $\\frac{1}{2}$ m/min, $\\frac{dV}{dt} = \\pi(1)^{2} \\cdot \\frac{1}{2} = \\frac{\\pi}{2}$ m³/min. With a leak of $3\\pi$ m³/min, the inflow is $3.5\\pi$ m³/min.\n\nCheck: $3.5\\pi$ in minus $3\\pi$ out leaves $\\frac{\\pi}{2}$, which is the surface area $\\pi$ times the rise $\\frac{1}{2}$.\n\n> **Watch out.** $\\frac{dV}{dt}$ is the net rate. The pump must supply that and also replace what leaks out, so add the leak.",
+    "水同时流入和流出时，$\\frac{dV}{dt}$ 等于流入量减流出量。由于水面半径是水深的固定比例，圆锥的几何关系可以由水深及其变化率给出 $\\frac{dV}{dt}$。所以流入量等于这个净速率加上渗漏量。\n\n例如顶部半径 $2$ m、高 $4$ m 的圆锥中，深 $2$ m 的水面半径为 $1$ m。若水深以 $\\frac{1}{2}$ m/min 上升，则 $\\frac{dV}{dt} = \\pi(1)^{2} \\cdot \\frac{1}{2} = \\frac{\\pi}{2}$ m³/min。渗漏 $3\\pi$ m³/min 时，流入量是 $3.5\\pi$ m³/min。\n\n检验：流入 $3.5\\pi$ 减去流出 $3\\pi$ 剩下 $\\frac{\\pi}{2}$，正是水面面积 $\\pi$ 乘以上升速率 $\\frac{1}{2}$。\n\n> **注意。** $\\frac{dV}{dt}$ 是净速率。泵既要提供这部分，还要补上渗漏的水，所以要加上渗漏量。",
   ),
   generate(rng) {
     const R = rng.int(1, 5);
@@ -868,16 +912,45 @@ const coneWithALeak: KnowledgePointDef = {
     const rate = Q.of(1, rng.pick([2, 3, 4, 5]));
     const net = Q.of(R * R * y * y, H * H).mul(rate);
     const answer = net.add(Q.of(leak));
+    const r = Q.of(R * y, H);
     return numberProblem({
       prompt: t(
         `A conical tank, vertex down, has top radius $${R}$ m and height $${H}$ m. Water leaks out at $${leak}\\pi$ m³/min while being pumped in. At depth $${y}$ m, the depth is rising at $${rate.toLatex()}$ m/min. The inflow is $c\\pi$ m³/min. Find $c$.`,
         `圆锥形水箱顶点朝下，顶部半径 $${R}$ m，高 $${H}$ m。水以 $${leak}\\pi$ m³/min 的速率渗漏，同时被泵入。水深 $${y}$ m 时，水深正以 $${rate.toLatex()}$ m/min 的速率上升。流入量是 $c\\pi$ m³/min。求 $c$。`,
       ),
       answer,
-      wrong: [net, net.sub(Q.of(leak)), Q.of(leak).sub(net)],
-      solution: t(
-        `The surface radius at depth $y$ is $${poly([Q.of(R, H), "y"])}$, so $\\frac{dV}{dt} = \\pi\\left(${Q.of(R, H).toLatex()}\\right)^2y^2\\frac{dy}{dt} = ${net.toLatex()}\\pi$. The inflow is this plus the leak, so $c = ${net.toLatex()} + ${leak} = ${answer.toLatex()}$.`,
-        `水深为 $y$ 时水面半径是 $${poly([Q.of(R, H), "y"])}$，所以 $\\frac{dV}{dt} = \\pi\\left(${Q.of(R, H).toLatex()}\\right)^2y^2\\frac{dy}{dt} = ${net.toLatex()}\\pi$。流入量等于它加上渗漏量，所以 $c = ${net.toLatex()} + ${leak} = ${answer.toLatex()}$。`,
+      mistakes: distinctWhys([
+        why(
+          net,
+          "This is only the net rate $\\frac{dV}{dt}$; the pump must also replace the water that leaks out.",
+          "这只是净速率 $\\frac{dV}{dt}$；泵还要补上渗漏的水。",
+        ),
+        why(
+          net.sub(Q.of(leak)),
+          "This subtracts the leak. Inflow minus leak is the net rate, so the inflow is the net rate plus the leak.",
+          "这是减去了渗漏量。流入量减渗漏量等于净速率，所以流入量是净速率加渗漏量。",
+        ),
+        why(Q.of(leak).sub(net), "This is the leak minus the net rate; the inflow is their sum.", "这是渗漏量减净速率；流入量是两者之和。"),
+      ]),
+      solution: walk(
+        [
+          [
+            "Find the net rate",
+            "求净速率",
+            `The surface radius at depth $y$ is $${poly([Q.of(R, H), "y"])}$, so $\\frac{dV}{dt} = \\pi\\left(${Q.of(R, H).toLatex()}\\right)^2y^2\\frac{dy}{dt} = \\pi\\left(${Q.of(R, H).toLatex()}\\right)^2(${y})^{2} \\cdot ${rate.toLatex()} = ${net.toLatex()}\\pi$.`,
+            `水深为 $y$ 时水面半径是 $${poly([Q.of(R, H), "y"])}$，所以 $\\frac{dV}{dt} = \\pi\\left(${Q.of(R, H).toLatex()}\\right)^2y^2\\frac{dy}{dt} = \\pi\\left(${Q.of(R, H).toLatex()}\\right)^2(${y})^{2} \\cdot ${rate.toLatex()} = ${net.toLatex()}\\pi$。`,
+          ],
+          [
+            "Add the leak",
+            "加上渗漏量",
+            `Inflow minus $${leak}\\pi$ equals the net rate, so $c = ${net.toLatex()} + ${leak} = ${answer.toLatex()}$.`,
+            `流入量减去 $${leak}\\pi$ 等于净速率，所以 $c = ${net.toLatex()} + ${leak} = ${answer.toLatex()}$。`,
+          ],
+        ],
+        [
+          `At depth $${y}$ m the surface has radius $${r.toLatex()}$ m and area $${r.mul(r).toLatex()}\\pi$ m²; rising $${rate.toLatex()}$ m a minute, the water gains $${r.mul(r).toLatex()} \\cdot ${rate.toLatex()} = ${net.toLatex()}$ times $\\pi$ m³ a minute, which is $${answer.toLatex()}\\pi$ in minus $${leak}\\pi$ out.`,
+          `水深 $${y}$ m 时水面半径为 $${r.toLatex()}$ m，面积为 $${r.mul(r).toLatex()}\\pi$ m²；每分钟上升 $${rate.toLatex()}$ m，水每分钟增加 $${r.mul(r).toLatex()} \\cdot ${rate.toLatex()} = ${net.toLatex()}$ 乘 $\\pi$ m³，正是流入 $${answer.toLatex()}\\pi$ 减去流出 $${leak}\\pi$。`,
+        ],
       ),
     });
   },
@@ -887,8 +960,8 @@ const boxDiagonal: KnowledgePointDef = {
   id: "the-rate-of-the-diagonal-of-a-box",
   title: t("The rate of the diagonal of a box", "长方体对角线的变化率"),
   explanation: t(
-    "The diagonal of a box satisfies $\\ell^2 = a^2 + b^2 + c^2$. Differentiating with respect to time and cancelling the factor of two gives $\\ell\\frac{d\\ell}{dt} = a\\frac{da}{dt} + b\\frac{db}{dt} + c\\frac{dc}{dt}$. So the current length of the diagonal divides a weighted sum of the edge rates.",
-    "长方体的对角线满足 $\\ell^2 = a^2 + b^2 + c^2$。对时间求导并约去因子二，得 $\\ell\\frac{d\\ell}{dt} = a\\frac{da}{dt} + b\\frac{db}{dt} + c\\frac{dc}{dt}$。所以对角线的当前长度要除棱长变化率的加权和。",
+    "The diagonal of a box satisfies $\\ell^2 = a^2 + b^2 + c^2$. Differentiating with respect to time and cancelling the factor of two gives $\\ell\\frac{d\\ell}{dt} = a\\frac{da}{dt} + b\\frac{db}{dt} + c\\frac{dc}{dt}$. So the current length of the diagonal divides a weighted sum of the edge rates.\n\nFor example, a box with edges $1$, $2$ and $2$ has diagonal $3$. If every edge grows at $1$, then $3\\frac{d\\ell}{dt} = 1 + 2 + 2 = 5$ and $\\frac{d\\ell}{dt} = \\frac{5}{3}$.\n\nCheck: $0.01$ later the edges are $1.01$, $2.01$ and $2.01$, the diagonal is $\\sqrt{9.1003} \\approx 3.0167$, an increase of $0.0167$ in $0.01$, about $1.67$.\n\n> **Watch out.** Divide by the diagonal $\\ell$, not by the sum of the edges. A shrinking edge has a negative rate.",
+    "长方体的对角线满足 $\\ell^2 = a^2 + b^2 + c^2$。对时间求导并约去因子二，得 $\\ell\\frac{d\\ell}{dt} = a\\frac{da}{dt} + b\\frac{db}{dt} + c\\frac{dc}{dt}$。所以对角线的当前长度要除棱长变化率的加权和。\n\n例如棱长为 $1$、$2$、$2$ 的长方体，对角线为 $3$。若每条棱都以 $1$ 增长，则 $3\\frac{d\\ell}{dt} = 1 + 2 + 2 = 5$，$\\frac{d\\ell}{dt} = \\frac{5}{3}$。\n\n检验：经过 $0.01$，棱长为 $1.01$、$2.01$、$2.01$，对角线为 $\\sqrt{9.1003} \\approx 3.0167$，在 $0.01$ 内增加 $0.0167$，约为 $1.67$。\n\n> **注意。** 要除以对角线 $\\ell$，不是棱长之和。缩短的棱变化率为负。",
   ),
   generate(rng) {
     const [a, b, c, d] = rng.pick([
@@ -903,16 +976,50 @@ const boxDiagonal: KnowledgePointDef = {
     const rc = nonzero(rng, 5);
     const sum = a * ra + b * rb + c * rc;
     const answer = Q.of(sum, d);
+    const e = 0.001;
+    const later = Math.hypot(a + e * ra, b + e * rb, c + e * rc);
     return numberProblem({
       prompt: t(
         `At one moment the edges of a box are $${a}$, $${b}$ and $${c}$ cm, and they are changing at $${ra}$, $${rb}$ and $${rc}$ cm/s respectively. How fast is the diagonal changing, in cm/s?`,
         `某一时刻长方体的棱长是 $${a}$、$${b}$、$${c}$ cm，变化率依次是 $${ra}$、$${rb}$、$${rc}$ cm/s。对角线的变化率是多少 cm/s？`,
       ),
       answer,
-      wrong: [Q.of(ra + rb + rc), Q.of(sum, a + b + c), Q.of(sum, 2 * d)],
-      solution: t(
-        `The diagonal is $\\sqrt{${a * a} + ${b * b} + ${c * c}} = ${d}$. So $${d}\\frac{d\\ell}{dt} = ${a}(${ra}) + ${b}(${rb}) + ${c}(${rc}) = ${sum}$, and the rate is $${answer.toLatex()}$.`,
-        `对角线是 $\\sqrt{${a * a} + ${b * b} + ${c * c}} = ${d}$。所以 $${d}\\frac{d\\ell}{dt} = ${a}(${ra}) + ${b}(${rb}) + ${c}(${rc}) = ${sum}$，变化率是 $${answer.toLatex()}$。`,
+      mistakes: distinctWhys([
+        why(
+          Q.of(ra + rb + rc),
+          "This adds the edge rates; each must be weighted by its edge and the sum divided by the diagonal.",
+          "这是把棱长变化率相加；每个变化率都要乘以对应的棱长，再把和除以对角线。",
+        ),
+        why(
+          Q.of(sum, a + b + c),
+          `This divides by the sum of the edges, $${a + b + c}$, instead of the diagonal $${d}$.`,
+          `这是除以棱长之和 $${a + b + c}$，而应该除以对角线 $${d}$。`,
+        ),
+        why(
+          Q.of(sum, 2 * d),
+          "This keeps a $2$ on one side only; the $2$s from all four squares cancel.",
+          "这只在一边保留了 $2$；四个平方求导得到的 $2$ 都会约掉。",
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Find the diagonal",
+            "求对角线",
+            `$\\ell = \\sqrt{${a * a} + ${b * b} + ${c * c}} = ${d}$.`,
+            `$\\ell = \\sqrt{${a * a} + ${b * b} + ${c * c}} = ${d}$。`,
+          ],
+          [
+            "Differentiate and substitute",
+            "求导并代入",
+            `$${d}\\frac{d\\ell}{dt} = ${a}${inParensAll(ra)} + ${b}${inParensAll(rb)} + ${c}${inParensAll(rc)} = ${sum}$, so $\\frac{d\\ell}{dt} = ${answer.toLatex()}$.`,
+            `$${d}\\frac{d\\ell}{dt} = ${a}${inParensAll(ra)} + ${b}${inParensAll(rb)} + ${c}${inParensAll(rc)} = ${sum}$，所以 $\\frac{d\\ell}{dt} = ${answer.toLatex()}$。`,
+          ],
+        ],
+        [
+          `$0.001$ s later the edges are $${num(a + e * ra)}$, $${num(b + e * rb)}$ and $${num(c + e * rc)}$, and the diagonal is about $${later.toFixed(5)}$. The change divided by $0.001$ is about $${num((later - d) / e)}$, close to $${answer.toLatex()}${approx(answer)}$.`,
+          `$0.001$ s 后棱长为 $${num(a + e * ra)}$、$${num(b + e * rb)}$、$${num(c + e * rc)}$，对角线约为 $${later.toFixed(5)}$。变化量除以 $0.001$ 约为 $${num((later - d) / e)}$，接近 $${answer.toLatex()}${approx(answer)}$。`,
+        ],
       ),
     });
   },
@@ -925,27 +1032,63 @@ const zeroTimesInfinity: KnowledgePointDef = {
   id: "lhopitals-rule-for-zero-times-infinity",
   title: t("L'Hopital's rule for zero times infinity", "零乘无穷型的洛必达法则"),
   explanation: t(
-    "L'Hopital's rule applies only to quotients, so a product of the form $0 \\cdot \\infty$ must be rewritten first. Moving the growing factor into a denominator gives a $\\frac{0}{0}$ form: $x \\cdot g\\left(\\frac{1}{x}\\right) = \\frac{g(1/x)}{1/x}$. Then the rule applies as usual.",
-    "洛必达法则只适用于商，所以 $0 \\cdot \\infty$ 型的乘积要先改写。把增长的因子移到分母，就得到 $\\frac{0}{0}$ 型：$x \\cdot g\\left(\\frac{1}{x}\\right) = \\frac{g(1/x)}{1/x}$。然后照常使用法则。",
+    "L'Hopital's rule applies only to quotients, so a product of the form $0 \\cdot \\infty$ must be rewritten first. Moving the growing factor into a denominator gives a $\\frac{0}{0}$ form: $x \\cdot g\\left(\\frac{1}{x}\\right) = \\frac{g(1/x)}{1/x}$. Then the rule applies as usual.\n\nFor example, put $u = \\frac{1}{x}$ in $\\lim_{x \\to \\infty} x\\sin\\left(\\frac{2}{x}\\right)$: it becomes $\\lim_{u \\to 0^{+}}\\frac{\\sin(2u)}{u}$, a $\\frac{0}{0}$ form, and the rule gives $\\lim_{u \\to 0^{+}}\\frac{2\\cos(2u)}{1} = 2$.\n\nCheck: at $x = 1000$, $1000\\sin(0.002) \\approx 1.999999$.\n\n> **Watch out.** $0 \\cdot \\infty$ is not $0$: one factor shrinks while the other grows. Rewrite the product as a quotient before differentiating.",
+    "洛必达法则只适用于商，所以 $0 \\cdot \\infty$ 型的乘积要先改写。把增长的因子移到分母，就得到 $\\frac{0}{0}$ 型：$x \\cdot g\\left(\\frac{1}{x}\\right) = \\frac{g(1/x)}{1/x}$。然后照常使用法则。\n\n例如在 $\\lim_{x \\to \\infty} x\\sin\\left(\\frac{2}{x}\\right)$ 中令 $u = \\frac{1}{x}$：它变为 $\\lim_{u \\to 0^{+}}\\frac{\\sin(2u)}{u}$，是 $\\frac{0}{0}$ 型，由法则得 $\\lim_{u \\to 0^{+}}\\frac{2\\cos(2u)}{1} = 2$。\n\n检验：在 $x = 1000$ 处，$1000\\sin(0.002) \\approx 1.999999$。\n\n> **注意。** $0 \\cdot \\infty$ 不是 $0$：一个因子变小，另一个变大。求导之前先把乘积改写成商。",
   ),
   generate(rng) {
     const a = rng.int(1, 9);
     const b = rng.int(1, 5);
-    const piece = rng.pick([
-      `\\sin\\left(\\frac{${a}}{x}\\right)`,
-      `\\left(e^{${a}/x} - 1\\right)`,
-      `\\ln\\left(1 + \\frac{${a}}{x}\\right)`,
-    ]);
+    const kind = rng.int(0, 2);
+    const au = a === 1 ? "u" : `${a}u`;
+    const [piece, top, dTop, g] = [
+      [`\\sin\\left(\\frac{${a}}{x}\\right)`, `\\sin(${au})`, `${a === 1 ? "" : a}\\cos(${au})`, (z: number) => Math.sin(z)],
+      [`\\left(e^{${a}/x} - 1\\right)`, `e^{${au}} - 1`, `${a === 1 ? "" : a}e^{${au}}`, (z: number) => Math.exp(z) - 1],
+      [`\\ln\\left(1 + \\frac{${a}}{x}\\right)`, `\\ln(1 + ${au})`, `\\frac{${a}}{1 + ${au}}`, (z: number) => Math.log(1 + z)],
+    ][kind] as [string, string, string, (z: number) => number];
     const answer = a * b;
     const front = poly([b, "x"]);
+    const big = 1000;
     return numberProblem({
       prompt: t(`Find $\\lim_{x \\to \\infty} ${front}${piece}$.`, `求 $\\lim_{x \\to \\infty} ${front}${piece}$。`),
       answer,
       form: "integer",
-      wrong: [0, a, a + b],
-      solution: t(
-        `Write the product as a quotient with denominator $\\frac{1}{${front}}$, which is a $\\frac{0}{0}$ form. Differentiating top and bottom cancels the factor $-\\frac{1}{x^2}$, and what is left tends to $${a} \\cdot ${b} = ${answer}$.`,
-        `把乘积写成分母为 $\\frac{1}{${front}}$ 的商，这是 $\\frac{0}{0}$ 型。分子分母分别求导，因子 $-\\frac{1}{x^2}$ 约去，剩下的部分趋于 $${a} \\cdot ${b} = ${answer}$。`,
+      mistakes: distinctWhys([
+        why(
+          0,
+          "This takes $0 \\cdot \\infty$ to be $0$. The first factor grows while the second shrinks, so the product needs rewriting as a quotient.",
+          "这把 $0 \\cdot \\infty$ 当成了 $0$。第一个因子变大，第二个变小，所以要把乘积改写成商。",
+        ),
+        why(a, `This leaves out the factor $${b}$ in front.`, `这漏掉了前面的因子 $${b}$。`),
+        why(
+          b,
+          `This leaves out the factor $${a}$ that the chain rule brings out of $${a === 1 ? "u" : `${a}u`}$.`,
+          `这漏掉了链式法则从 $${a === 1 ? "u" : `${a}u`}$ 带出的因子 $${a}$。`,
+        ),
+        why(
+          a + b,
+          `This adds the factors $${a}$ and $${b}$; the limit is their product.`,
+          `这是把因子 $${a}$ 和 $${b}$ 相加；极限是它们的积。`,
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Rewrite as a quotient",
+            "改写成商",
+            `Put $u = \\frac{1}{x}$, so $u \\to 0^{+}$ as $x \\to \\infty$: the limit is $\\lim_{u \\to 0^{+}}\\frac{${b === 1 ? "" : b}\\left(${top}\\right)}{u}$, a $\\frac{0}{0}$ form.`,
+            `令 $u = \\frac{1}{x}$，当 $x \\to \\infty$ 时 $u \\to 0^{+}$：极限为 $\\lim_{u \\to 0^{+}}\\frac{${b === 1 ? "" : b}\\left(${top}\\right)}{u}$，是 $\\frac{0}{0}$ 型。`,
+          ],
+          [
+            "Apply L'Hopital's rule",
+            "使用洛必达法则",
+            `The derivative of the bottom is $1$, so the limit is $\\lim_{u \\to 0^{+}} ${b === 1 ? "" : `${b} \\cdot `}${dTop} = ${b} \\cdot ${a} = ${answer}$.`,
+            `分母的导数是 $1$，所以极限为 $\\lim_{u \\to 0^{+}} ${b === 1 ? "" : `${b} \\cdot `}${dTop} = ${b} \\cdot ${a} = ${answer}$。`,
+          ],
+        ],
+        [
+          `At $x = ${big}$ the product is $${b * big}${piece.replaceAll("x", String(big))} \\approx ${num(b * big * g(a / big))}$, close to $${answer}$.`,
+          `在 $x = ${big}$ 处乘积为 $${b * big}${piece.replaceAll("x", String(big))} \\approx ${num(b * big * g(a / big))}$，接近 $${answer}$。`,
+        ],
       ),
     });
   },
@@ -2478,8 +2621,8 @@ const squareFromDiagonal: KnowledgePointDef = {
   id: "the-area-of-a-square-from-its-diagonal",
   title: t("The area of a square from its diagonal", "由对角线求正方形的面积"),
   explanation: t(
-    "A related-rates problem is easiest when the quantities are linked directly. The side of a square is the diagonal divided by the square root of two, and squaring removes that root, so the area is half the square of the diagonal. Differentiating this relation with respect to time links the two rates without ever computing the side.",
-    "相关变化率问题中，把两个量直接联系起来最省事。正方形的边长等于对角线除以根号二，平方后根号消失，所以面积等于对角线平方的一半。对这个关系关于时间求导，就把两个变化率联系起来，完全不必算出边长。",
+    "A related-rates problem is easiest when the quantities are linked directly. The side of a square is the diagonal divided by the square root of two, and squaring removes that root, so the area is half the square of the diagonal. Differentiating this relation with respect to time links the two rates without ever computing the side.\n\nFor example, $A = \\frac{1}{2}D^{2}$ gives $\\frac{dA}{dt} = D\\frac{dD}{dt}$, so a diagonal of $10$ cm growing at $3$ cm/s makes the area grow at $30$ cm²/s.\n\nCheck: through the side, $s = \\frac{10}{\\sqrt{2}}$ grows at $\\frac{3}{\\sqrt{2}}$, and $\\frac{dA}{dt} = 2s\\frac{ds}{dt} = 2 \\cdot \\frac{10}{\\sqrt{2}} \\cdot \\frac{3}{\\sqrt{2}} = 30$.\n\n> **Watch out.** The area is $\\frac{1}{2}D^{2}$, not $D^{2}$. The $2$ from the power rule cancels the $\\frac{1}{2}$.",
+    "相关变化率问题中，把两个量直接联系起来最省事。正方形的边长等于对角线除以根号二，平方后根号消失，所以面积等于对角线平方的一半。对这个关系关于时间求导，就把两个变化率联系起来，完全不必算出边长。\n\n例如由 $A = \\frac{1}{2}D^{2}$ 得 $\\frac{dA}{dt} = D\\frac{dD}{dt}$，所以对角线为 $10$ cm、以 $3$ cm/s 增长时，面积以 $30$ cm²/s 增长。\n\n检验：通过边长计算，$s = \\frac{10}{\\sqrt{2}}$ 以 $\\frac{3}{\\sqrt{2}}$ 增长，$\\frac{dA}{dt} = 2s\\frac{ds}{dt} = 2 \\cdot \\frac{10}{\\sqrt{2}} \\cdot \\frac{3}{\\sqrt{2}} = 30$。\n\n> **注意。** 面积是 $\\frac{1}{2}D^{2}$，不是 $D^{2}$。幂法则带下的 $2$ 与 $\\frac{1}{2}$ 约掉。",
   ),
   generate(rng) {
     const d = rng.int(2, 20);
@@ -2493,10 +2636,42 @@ const squareFromDiagonal: KnowledgePointDef = {
           `正方形的对角线以 $${rate}$ cm/s 的速度增长。求对角线为 $${d}$ cm 时其面积的变化率，单位为 cm²/s。`,
         ),
         answer,
-        wrong: [2 * answer, Q.of(answer, 2), 4 * answer],
-        solution: t(
-          `The area is $A = \\frac{1}{2}D^{2}$, so $\\frac{dA}{dt} = D\\frac{dD}{dt} = ${d} \\cdot ${rate} = ${answer}$.`,
-          `面积是 $A = \\frac{1}{2}D^{2}$，所以 $\\frac{dA}{dt} = D\\frac{dD}{dt} = ${d} \\cdot ${rate} = ${answer}$。`,
+        mistakes: distinctWhys([
+          why(
+            2 * answer,
+            "This uses $A = D^{2}$; the area of a square is half the square of its diagonal.",
+            "这用的是 $A = D^{2}$；正方形的面积是对角线平方的一半。",
+          ),
+          why(
+            Q.of(answer, 2),
+            "This differentiates $\\frac{1}{2}D^{2}$ to $\\frac{1}{2}D$; the power rule gives $D$.",
+            "这把 $\\frac{1}{2}D^{2}$ 的导数算成了 $\\frac{1}{2}D$；幂法则给出 $D$。",
+          ),
+          why(
+            rate,
+            `This leaves out the diagonal $D = ${d}$ from $\\frac{dA}{dt} = D\\frac{dD}{dt}$.`,
+            `这漏掉了 $\\frac{dA}{dt} = D\\frac{dD}{dt}$ 中的对角线 $D = ${d}$。`,
+          ),
+        ]),
+        solution: walk(
+          [
+            [
+              "Link area and diagonal",
+              "联系面积与对角线",
+              "The side is $\\frac{D}{\\sqrt{2}}$, so $A = \\frac{1}{2}D^{2}$.",
+              "边长是 $\\frac{D}{\\sqrt{2}}$，所以 $A = \\frac{1}{2}D^{2}$。",
+            ],
+            [
+              "Differentiate and substitute",
+              "求导并代入",
+              `$\\frac{dA}{dt} = D\\frac{dD}{dt} = ${d} \\cdot ${rate} = ${answer}$.`,
+              `$\\frac{dA}{dt} = D\\frac{dD}{dt} = ${d} \\cdot ${rate} = ${answer}$。`,
+            ],
+          ],
+          [
+            `Through the side: $s = \\frac{${d}}{\\sqrt{2}}$ grows at $\\frac{${rate}}{\\sqrt{2}}$, and $\\frac{dA}{dt} = 2s\\frac{ds}{dt} = 2 \\cdot \\frac{${d}}{\\sqrt{2}} \\cdot \\frac{${rate}}{\\sqrt{2}} = ${answer}$.`,
+            `通过边长计算：$s = \\frac{${d}}{\\sqrt{2}}$ 以 $\\frac{${rate}}{\\sqrt{2}}$ 增长，$\\frac{dA}{dt} = 2s\\frac{ds}{dt} = 2 \\cdot \\frac{${d}}{\\sqrt{2}} \\cdot \\frac{${rate}}{\\sqrt{2}} = ${answer}$。`,
+          ],
         ),
       });
     }
@@ -2507,10 +2682,43 @@ const squareFromDiagonal: KnowledgePointDef = {
         `正方形的面积以 $${rate}$ cm²/s 的速度增长。对角线为 $${d}$ cm 时，它增长的速度是多少 cm/s？`,
       ),
       answer,
-      wrong: [Q.of(2 * rate, d), Q.of(rate, 2 * d), Q.of(rate * d), Q.of(rate, d * d)],
-      solution: t(
-        `The area is $A = \\frac{1}{2}D^{2}$, so $\\frac{dA}{dt} = D\\frac{dD}{dt}$, that is $${rate} = ${d}\\frac{dD}{dt}$, and $\\frac{dD}{dt} = ${answer.toLatex()}$.`,
-        `面积是 $A = \\frac{1}{2}D^{2}$，所以 $\\frac{dA}{dt} = D\\frac{dD}{dt}$，即 $${rate} = ${d}\\frac{dD}{dt}$，得 $\\frac{dD}{dt} = ${answer.toLatex()}$。`,
+      mistakes: distinctWhys([
+        why(
+          Q.of(rate, 2 * d),
+          "This uses $A = D^{2}$; the area of a square is half the square of its diagonal.",
+          "这用的是 $A = D^{2}$；正方形的面积是对角线平方的一半。",
+        ),
+        why(
+          Q.of(2 * rate, d),
+          "This differentiates $\\frac{1}{2}D^{2}$ to $\\frac{1}{2}D$; the power rule gives $D$.",
+          "这把 $\\frac{1}{2}D^{2}$ 的导数算成了 $\\frac{1}{2}D$；幂法则给出 $D$。",
+        ),
+        why(Q.of(rate * d), `This multiplies by $D = ${d}$ instead of dividing by it.`, `这是乘以 $D = ${d}$，而应该除以它。`),
+        why(
+          Q.of(rate, d * d),
+          `This divides by $D^{2} = ${d * d}$; the derivative of $\\frac{1}{2}D^{2}$ leaves $D$.`,
+          `这是除以 $D^{2} = ${d * d}$；$\\frac{1}{2}D^{2}$ 的导数只剩 $D$。`,
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Link area and diagonal",
+            "联系面积与对角线",
+            "The side is $\\frac{D}{\\sqrt{2}}$, so $A = \\frac{1}{2}D^{2}$.",
+            "边长是 $\\frac{D}{\\sqrt{2}}$，所以 $A = \\frac{1}{2}D^{2}$。",
+          ],
+          [
+            "Differentiate and solve",
+            "求导并求解",
+            `$\\frac{dA}{dt} = D\\frac{dD}{dt}$, so $${rate} = ${d}\\frac{dD}{dt}$ and $\\frac{dD}{dt} = ${answer.toLatex()}$.`,
+            `$\\frac{dA}{dt} = D\\frac{dD}{dt}$，所以 $${rate} = ${d}\\frac{dD}{dt}$，得 $\\frac{dD}{dt} = ${answer.toLatex()}$。`,
+          ],
+        ],
+        [
+          `Through the side: $s = \\frac{${d}}{\\sqrt{2}}$ and $${rate} = 2s\\frac{ds}{dt}$ give $\\frac{ds}{dt} = \\frac{${rate}}{${d}\\sqrt{2}}$; the diagonal is $\\sqrt{2}$ times the side, so it grows at $\\frac{${rate}}{${d}} = ${answer.toLatex()}$.`,
+          `通过边长计算：由 $s = \\frac{${d}}{\\sqrt{2}}$ 和 $${rate} = 2s\\frac{ds}{dt}$ 得 $\\frac{ds}{dt} = \\frac{${rate}}{${d}\\sqrt{2}}$；对角线是边长的 $\\sqrt{2}$ 倍，所以它以 $\\frac{${rate}}{${d}} = ${answer.toLatex()}$ 增长。`,
+        ],
       ),
     });
   },
@@ -2521,8 +2729,8 @@ const triangleWithGrowingAngle: KnowledgePointDef = {
   figure: calculusDrawings2["calculating-related-rates-using-trigonometry#the-area-of-a-triangle-with-a-growing-angle"],
   title: t("The area of a triangle with a growing angle", "夹角增大时三角形的面积"),
   explanation: t(
-    "With two sides fixed, the area of a triangle depends only on the angle between them, through one half the product of the sides times the sine of the angle. Differentiating brings in the cosine and the angle's rate. Past a right angle the cosine is negative, so the area shrinks even though the angle keeps growing.",
-    "两边固定时，三角形的面积只取决于它们的夹角：面积等于两边之积的一半乘以夹角的正弦。求导时出现余弦和夹角的变化率。夹角超过直角后余弦为负，所以尽管夹角继续增大，面积却在减小。",
+    "With two sides fixed, the area of a triangle depends only on the angle between them, through one half the product of the sides times the sine of the angle. Differentiating brings in the cosine and the angle's rate. Past a right angle the cosine is negative, so the area shrinks even though the angle keeps growing.\n\nFor example, with sides $4$ and $6$, $A = 12\\sin\\theta$ and $\\frac{dA}{dt} = 12\\cos\\theta\\frac{d\\theta}{dt}$. At $\\theta = \\frac{\\pi}{3}$ with $\\frac{d\\theta}{dt} = 0.1$: $\\frac{dA}{dt} = 12 \\cdot \\frac{1}{2} \\cdot 0.1 = 0.6$.\n\nCheck: $\\frac{12\\sin\\left(\\frac{\\pi}{3} + 0.001\\right) - 12\\sin\\left(\\frac{\\pi}{3} - 0.001\\right)}{0.02} \\approx 0.6$, the change in area over $0.01$ s each side.\n\n> **Watch out.** The derivative of $\\sin\\theta$ is $\\cos\\theta$, which is negative for an obtuse angle, so the area then shrinks. Keep the $\\frac{1}{2}$ of the area formula.",
+    "两边固定时，三角形的面积只取决于它们的夹角：面积等于两边之积的一半乘以夹角的正弦。求导时出现余弦和夹角的变化率。夹角超过直角后余弦为负，所以尽管夹角继续增大，面积却在减小。\n\n例如两边为 $4$ 和 $6$ 时，$A = 12\\sin\\theta$，$\\frac{dA}{dt} = 12\\cos\\theta\\frac{d\\theta}{dt}$。在 $\\theta = \\frac{\\pi}{3}$，$\\frac{d\\theta}{dt} = 0.1$ 时：$\\frac{dA}{dt} = 12 \\cdot \\frac{1}{2} \\cdot 0.1 = 0.6$。\n\n检验：$\\frac{12\\sin\\left(\\frac{\\pi}{3} + 0.001\\right) - 12\\sin\\left(\\frac{\\pi}{3} - 0.001\\right)}{0.02} \\approx 0.6$，即前后各 $0.01$ s 内面积的变化。\n\n> **注意。** $\\sin\\theta$ 的导数是 $\\cos\\theta$，钝角时它为负，所以面积在减小。不要漏掉面积公式中的 $\\frac{1}{2}$。",
   ),
   generate(rng) {
     const p = rng.int(2, 12);
@@ -2534,16 +2742,44 @@ const triangleWithGrowingAngle: KnowledgePointDef = {
     const cosine = acute ? "\\frac{1}{2}" : "-\\frac{1}{2}";
     const omega = Q.of(1, n);
     const answer = Q.of(s * p * q, 4 * n);
+    const theta = acute ? Math.PI / 3 : (2 * Math.PI) / 3;
+    const turn = 0.01 / n;
+    const area = (x: number) => 0.5 * p * q * Math.sin(x);
+    const central = (area(theta + turn) - area(theta - turn)) / 0.02;
     return numberProblem({
       prompt: t(
         `Two sides of a triangle stay fixed at $${p}$ cm and $${q}$ cm, while the angle between them grows at $${omega.toLatex()}$ radians per second. Find the rate of change of the area, in cm²/s, when the angle is $${angle}$. Give a negative value if the area is shrinking.`,
         `三角形的两边固定为 $${p}$ cm 和 $${q}$ cm，它们的夹角以每秒 $${omega.toLatex()}$ 弧度的速度增大。求夹角为 $${angle}$ 时面积的变化率，单位为 cm²/s。若面积在减小，请给出负值。`,
       ),
       answer,
-      wrong: [Q.of(-s * p * q, 4 * n), Q.of(s * p * q, 2 * n), Q.of(s * p * q, n), Q.of(p * q, 4)],
-      solution: t(
-        `The area is $A = \\frac{1}{2}(${p})(${q})\\sin\\theta$, so $\\frac{dA}{dt} = \\frac{1}{2}(${p})(${q})\\cos\\theta\\,\\frac{d\\theta}{dt}$. With $\\cos\\theta = ${cosine}$ this is $${answer.toLatex()}$.`,
-        `面积是 $A = \\frac{1}{2}(${p})(${q})\\sin\\theta$，所以 $\\frac{dA}{dt} = \\frac{1}{2}(${p})(${q})\\cos\\theta\\,\\frac{d\\theta}{dt}$。由 $\\cos\\theta = ${cosine}$，结果是 $${answer.toLatex()}$。`,
+      mistakes: distinctWhys([
+        why(Q.of(-s * p * q, 4 * n), `The sign is wrong: $\\cos${angle} = ${cosine}$.`, `符号错了：$\\cos${angle} = ${cosine}$。`),
+        why(Q.of(s * p * q, 2 * n), "This leaves out the $\\frac{1}{2}$ of the area formula.", "这漏掉了面积公式中的 $\\frac{1}{2}$。"),
+        why(
+          Q.of(s * p * q, 4),
+          `This leaves out the rate of the angle, $\\frac{d\\theta}{dt} = ${omega.toLatex()}$.`,
+          `这漏掉了夹角的变化率 $\\frac{d\\theta}{dt} = ${omega.toLatex()}$。`,
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Differentiate the area",
+            "对面积求导",
+            `$A = \\frac{1}{2}(${p})(${q})\\sin\\theta$, so $\\frac{dA}{dt} = \\frac{1}{2}(${p})(${q})\\cos\\theta\\,\\frac{d\\theta}{dt}$.`,
+            `$A = \\frac{1}{2}(${p})(${q})\\sin\\theta$，所以 $\\frac{dA}{dt} = \\frac{1}{2}(${p})(${q})\\cos\\theta\\,\\frac{d\\theta}{dt}$。`,
+          ],
+          [
+            "Substitute",
+            "代入",
+            `At $\\theta = ${angle}$, $\\cos\\theta = ${cosine}$, so $\\frac{dA}{dt} = ${Q.of(p * q, 2).toLatex()} \\cdot \\left(${cosine}\\right) \\cdot ${omega.toLatex()} = ${answer.toLatex()}$.`,
+            `在 $\\theta = ${angle}$ 时 $\\cos\\theta = ${cosine}$，所以 $\\frac{dA}{dt} = ${Q.of(p * q, 2).toLatex()} \\cdot \\left(${cosine}\\right) \\cdot ${omega.toLatex()} = ${answer.toLatex()}$。`,
+          ],
+        ],
+        [
+          `In $0.01$ s before and after, the angle moves $${num(turn)}$ radians each way, and the area goes from about $${num(area(theta - turn))}$ to $${num(area(theta + turn))}$ cm². The change divided by $0.02$ is about $${num(central)}$, close to $${answer.toLatex()}${approx(answer)}$.`,
+          `前后各 $0.01$ s 内夹角各变化 $${num(turn)}$ 弧度，面积约从 $${num(area(theta - turn))}$ 变为 $${num(area(theta + turn))}$ cm²。变化量除以 $0.02$ 约为 $${num(central)}$，接近 $${answer.toLatex()}${approx(answer)}$。`,
+        ],
       ),
     });
   },
@@ -3017,8 +3253,8 @@ const centralDifferenceError: KnowledgePointDef = {
   id: "the-error-of-a-central-difference-on-a-cubic",
   title: t("The error of a central difference on a cubic", "三次函数的中心差商误差"),
   explanation: t(
-    "A central difference balances the two sides of a point, so its even-powered terms in the step cancel. For a cubic the error is therefore exactly its leading coefficient times the square of the step, and it does not depend on the point at all. Halving the step divides the error by four, which is why central differences are preferred.",
-    "中心差商平衡了一点的两侧，所以步长的偶次项相互抵消。因此对三次函数，误差恰好等于最高次项系数乘以步长的平方，完全与所取的点无关。步长减半，误差就变为四分之一，这正是人们偏爱中心差商的原因。",
+    "A central difference balances the two sides of a point, so its even-powered terms in the step cancel. For a cubic the error is therefore exactly its leading coefficient times the square of the step, and it does not depend on the point at all. Halving the step divides the error by four, which is why central differences are preferred.\n\nFor example, for $f(x) = x^{3}$ at $x = 2$ with $h = 0.1$: $\\frac{2.1^{3} - 1.9^{3}}{0.2} = \\frac{9.261 - 6.859}{0.2} = 12.01$, while $f'(2) = 12$.\n\nCheck: the leading coefficient is $1$ and $h^{2} = 0.01$, the same error.\n\n> **Watch out.** The error is $Ah^{2}$ with $A$ the coefficient of $x^{3}$: it uses $h^{2}$, not $h$, and it is the same at every point.",
+    "中心差商平衡了一点的两侧，所以步长的偶次项相互抵消。因此对三次函数，误差恰好等于最高次项系数乘以步长的平方，完全与所取的点无关。步长减半，误差就变为四分之一，这正是人们偏爱中心差商的原因。\n\n例如 $f(x) = x^{3}$ 在 $x = 2$ 处取 $h = 0.1$：$\\frac{2.1^{3} - 1.9^{3}}{0.2} = \\frac{9.261 - 6.859}{0.2} = 12.01$，而 $f'(2) = 12$。\n\n检验：最高次项系数为 $1$，$h^{2} = 0.01$，误差相同。\n\n> **注意。** 误差是 $Ah^{2}$，$A$ 是 $x^{3}$ 的系数：用的是 $h^{2}$ 而不是 $h$，且在每一点都相同。",
   ),
   generate(rng) {
     const a = nonzero(rng, 5);
@@ -3031,16 +3267,50 @@ const centralDifferenceError: KnowledgePointDef = {
     const forward = Q.of(3 * a * c)
       .mul(h)
       .add(answer);
+    const fq = (x: Q) => Q.of(a).mul(x.pow(3)).add(Q.of(b).mul(x)).add(Q.of(e));
+    const [hi, lo] = [Q.of(c).add(h), Q.of(c).sub(h)];
+    const estimate = fq(hi).sub(fq(lo)).div(h.add(h));
+    const exact = 3 * a * c * c + b;
     return numberProblem({
       prompt: t(
         `Let $f(x) = ${f}$. Estimate $f'(${c})$ with a central difference quotient $\\frac{f(a + h) - f(a - h)}{2h}$, using $h = ${h.toLatex()}$. Find the estimate minus the true value of $f'(${c})$.`,
         `设 $f(x) = ${f}$。用中心差商 $\\frac{f(a + h) - f(a - h)}{2h}$ 估计 $f'(${c})$，取 $h = ${h.toLatex()}$。求估计值减去 $f'(${c})$ 的真实值。`,
       ),
       answer,
-      wrong: [forward, h.mul(Q.of(a)), answer.mul(Q.of(2)), Q.of(0), answer.neg()],
-      solution: t(
-        `Expanding, $\\frac{(a + h)^{3} - (a - h)^{3}}{2h} = 3a^{2} + h^{2}$, while the linear and constant terms are estimated exactly. So the error is $${inParens(a)} \\cdot \\left(${h.toLatex()}\\right)^{2} = ${answer.toLatex()}$.`,
-        `展开得 $\\frac{(a + h)^{3} - (a - h)^{3}}{2h} = 3a^{2} + h^{2}$，而一次项和常数项的估计完全准确。所以误差是 $${inParens(a)} \\cdot \\left(${h.toLatex()}\\right)^{2} = ${answer.toLatex()}$。`,
+      mistakes: distinctWhys([
+        why(
+          forward,
+          "This is the error of the forward quotient, $3Aah + Ah^{2}$; in the central quotient the $h$ term cancels.",
+          "这是向前差商的误差 $3Aah + Ah^{2}$；中心差商中 $h$ 的一次项被抵消了。",
+        ),
+        why(h.mul(Q.of(a)), "This uses $h$ in place of $h^{2}$.", "这用 $h$ 代替了 $h^{2}$。"),
+        why(answer.mul(Q.of(2)), "This divides $2h^{3}$ by $h$ instead of $2h$.", "这是把 $2h^{3}$ 除以 $h$，而应该除以 $2h$。"),
+        why(
+          0,
+          "Central differences are exact only up to quadratics; a cubic leaves an error.",
+          "中心差商只对二次以下的函数精确；三次函数会留下误差。",
+        ),
+        why(answer.neg(), "The sign is wrong: the error is $+Ah^{2}$.", "符号错了：误差是 $+Ah^{2}$。"),
+      ]),
+      solution: walk(
+        [
+          [
+            "Expand the cubic part",
+            "展开三次项",
+            `$(x + h)^{3} - (x - h)^{3} = 6x^{2}h + 2h^{3}$, so the term $${poly([a, "x^3"])}$ contributes $${inParens(a)}(3x^{2} + h^{2})$ to the quotient. The terms $${poly([b, "x"], [e, ""])}$ contribute exactly $${b}$.`,
+            `$(x + h)^{3} - (x - h)^{3} = 6x^{2}h + 2h^{3}$，所以 $${poly([a, "x^3"])}$ 这一项在差商中贡献 $${inParens(a)}(3x^{2} + h^{2})$。$${poly([b, "x"], [e, ""])}$ 恰好贡献 $${b}$。`,
+          ],
+          [
+            "Subtract the derivative",
+            "减去导数",
+            `$f'(x) = ${poly([3 * a, "x^2"], [b, ""])}$, so the estimate minus $f'(${c})$ is $${inParens(a)}h^{2} = ${inParens(a)} \\cdot \\left(${h.toLatex()}\\right)^{2} = ${answer.toLatex()}$.`,
+            `$f'(x) = ${poly([3 * a, "x^2"], [b, ""])}$，所以估计值减去 $f'(${c})$ 是 $${inParens(a)}h^{2} = ${inParens(a)} \\cdot \\left(${h.toLatex()}\\right)^{2} = ${answer.toLatex()}$。`,
+          ],
+        ],
+        [
+          `Directly: $f\\left(${hi.toLatex()}\\right) = ${fq(hi).toLatex()}$ and $f\\left(${lo.toLatex()}\\right) = ${fq(lo).toLatex()}$, so the estimate is $${estimate.toLatex()}$, while $f'(${c}) = ${exact}$. The difference is $${estimate.sub(Q.of(exact)).toLatex()}$.`,
+          `直接计算：$f\\left(${hi.toLatex()}\\right) = ${fq(hi).toLatex()}$，以及 $f\\left(${lo.toLatex()}\\right) = ${fq(lo).toLatex()}$，所以估计值是 $${estimate.toLatex()}$，而 $f'(${c}) = ${exact}$。二者之差是 $${estimate.sub(Q.of(exact)).toLatex()}$。`,
+        ],
       ),
     });
   },
@@ -4107,23 +4377,58 @@ const boatOnARope: KnowledgePointDef = {
   figure: calculusDrawings2["calculating-related-rates-using-the-pythagorean-theorem#a-boat-pulled-by-a-rope"],
   title: t("A boat pulled by a rope", "用绳子拉船"),
   explanation: t(
-    "A boat pulled toward a dock by a rope through a raised pulley forms a right triangle with a fixed height, a shrinking base and a shrinking rope. Differentiating $x^2 + h^2 = s^2$ removes the constant height and gives $x\\frac{dx}{dt} = s\\frac{ds}{dt}$. Since the rope is longer than the base, the boat moves faster than the rope is pulled. The closer the boat comes to the dock, the larger this speed becomes.",
-    "用穿过高处滑轮的绳子把船拉向码头，构成一个直角三角形：高固定，底边缩短，绳子也缩短。对 $x^2 + h^2 = s^2$ 求导，常数高消失，得 $x\\frac{dx}{dt} = s\\frac{ds}{dt}$。由于绳子比底边长，船的速度大于拉绳的速度。船越靠近码头，这个速度就越大。",
+    "A boat pulled toward a dock by a rope through a raised pulley forms a right triangle with a fixed height, a shrinking base and a shrinking rope. Differentiating $x^2 + h^2 = s^2$ removes the constant height and gives $x\\frac{dx}{dt} = s\\frac{ds}{dt}$. Since the rope is longer than the base, the boat moves faster than the rope is pulled. The closer the boat comes to the dock, the larger this speed becomes.\n\nFor example, with the pulley $3$ m up and $5$ m of rope out, the boat is $4$ m away. Pulling in at $2$ m/s gives $4\\frac{dx}{dt} = 5(-2)$, so the boat moves at $2.5$ m/s.\n\nCheck: $0.001$ s later the rope is $4.998$ m and the boat $\\sqrt{4.998^{2} - 9} \\approx 3.9975$ m away, $0.0025$ m closer, that is $2.5$ m/s.\n\n> **Watch out.** Find the horizontal distance first, and divide by it, not by the height. The rope shortens, so $\\frac{ds}{dt}$ is negative.",
+    "用穿过高处滑轮的绳子把船拉向码头，构成一个直角三角形：高固定，底边缩短，绳子也缩短。对 $x^2 + h^2 = s^2$ 求导，常数高消失，得 $x\\frac{dx}{dt} = s\\frac{ds}{dt}$。由于绳子比底边长，船的速度大于拉绳的速度。船越靠近码头，这个速度就越大。\n\n例如滑轮高 $3$ m，绳子放出 $5$ m，船离码头 $4$ m。以 $2$ m/s 拉绳时，$4\\frac{dx}{dt} = 5(-2)$，所以船以 $2.5$ m/s 运动。\n\n检验：$0.001$ s 后绳长 $4.998$ m，船离码头 $\\sqrt{4.998^{2} - 9} \\approx 3.9975$ m，靠近了 $0.0025$ m，即 $2.5$ m/s。\n\n> **注意。** 先求出水平距离，并除以它，不是除以高度。绳子在缩短，所以 $\\frac{ds}{dt}$ 为负。",
   ),
   generate(rng) {
     const [h, x, s] = rng.pick(rightTriangles);
     const r = rng.int(1, 6);
     const answer = Q.of(s * r, x);
+    const e = 0.001;
+    const x1 = Math.sqrt((s - e * r) ** 2 - h * h);
     return numberProblem({
       prompt: t(
         `A rope runs from a boat to a pulley $${h}$ m above the level of the boat. The rope is pulled in at $${r}$ m/s. How fast, in m/s, is the boat moving horizontally when $${s}$ m of rope is out?`,
         `一根绳子从船连到比船高 $${h}$ 米的滑轮。绳子以每秒 $${r}$ 米的速度被拉进。当绳子放出 $${s}$ 米时，船的水平速度是每秒多少米？`,
       ),
       answer,
-      wrong: [Q.of(r), Q.of(x * r, s), Q.of(h * r, x), Q.of(s * r, h)],
-      solution: t(
-        `At this moment, the horizontal distance is $\\sqrt{${s * s} - ${h * h}} = ${x}$. From $x\\frac{dx}{dt} = s\\frac{ds}{dt}$, the speed is $\\frac{${s} \\cdot ${r}}{${x}} = ${answer.toLatex()}$.`,
-        `此时水平距离是 $\\sqrt{${s * s} - ${h * h}} = ${x}$。由 $x\\frac{dx}{dt} = s\\frac{ds}{dt}$，速度是 $\\frac{${s} \\cdot ${r}}{${x}} = ${answer.toLatex()}$。`,
+      mistakes: distinctWhys([
+        why(
+          r,
+          "This is the speed of the rope. The boat moves faster, because the rope is longer than the horizontal distance.",
+          "这是拉绳的速度。船移动得更快，因为绳子比水平距离长。",
+        ),
+        why(
+          Q.of(x * r, s),
+          "This has the ratio upside down: the boat's speed is $\\frac{s}{x}$ times the rope's.",
+          "比例弄反了：船速是绳速的 $\\frac{s}{x}$ 倍。",
+        ),
+        why(Q.of(h * r, x), `This uses the height $${h}$ in place of the length of rope $${s}$.`, `这用高度 $${h}$ 代替了绳长 $${s}$。`),
+        why(
+          Q.of(s * r, h),
+          `This divides by the height $${h}$ instead of the horizontal distance $${x}$.`,
+          `这是除以高度 $${h}$，而应该除以水平距离 $${x}$。`,
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Find the horizontal distance",
+            "求水平距离",
+            `$x = \\sqrt{${s * s} - ${h * h}} = ${x}$.`,
+            `$x = \\sqrt{${s * s} - ${h * h}} = ${x}$。`,
+          ],
+          [
+            "Differentiate and substitute",
+            "求导并代入",
+            `From $x\\frac{dx}{dt} = s\\frac{ds}{dt}$ with $\\frac{ds}{dt} = -${r}$: $${x}\\frac{dx}{dt} = ${s}(-${r})$, so $\\frac{dx}{dt} = ${answer.neg().toLatex()}$ and the boat moves at $${answer.toLatex()}$ m/s.`,
+            `由 $x\\frac{dx}{dt} = s\\frac{ds}{dt}$，$\\frac{ds}{dt} = -${r}$：$${x}\\frac{dx}{dt} = ${s}(-${r})$，所以 $\\frac{dx}{dt} = ${answer.neg().toLatex()}$，船速是 $${answer.toLatex()}$ m/s。`,
+          ],
+        ],
+        [
+          `$0.001$ s later the rope is $${num(s - e * r)}$ m and the boat $\\sqrt{${num(s - e * r)}^{2} - ${h * h}} \\approx ${x1.toFixed(5)}$ m away, about $${(x - x1).toFixed(5)}$ m closer, that is about $${num((x - x1) / e)}$ m/s, close to $${answer.toLatex()}${approx(answer)}$.`,
+          `$0.001$ s 后绳长 $${num(s - e * r)}$ m，船离码头 $\\sqrt{${num(s - e * r)}^{2} - ${h * h}} \\approx ${x1.toFixed(5)}$ m，约靠近了 $${(x - x1).toFixed(5)}$ m，即约 $${num((x - x1) / e)}$ m/s，接近 $${answer.toLatex()}${approx(answer)}$。`,
+        ],
       ),
     });
   },
