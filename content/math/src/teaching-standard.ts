@@ -13,6 +13,7 @@ export const taughtCourses: readonly string[] = [
   "ap-calculus-ab",
   "ap-calculus-bc",
   "1st-grade-math",
+  "2nd-grade-math",
 ];
 
 /**
