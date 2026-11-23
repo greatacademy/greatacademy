@@ -8,7 +8,7 @@ import { calculusDrawings1 } from "../explanation-drawings-calculus-1.ts";
 import { calculusDrawings2 } from "../explanation-drawings-calculus-2.ts";
 import { calculusDrawings3 } from "../explanation-drawings-calculus-3.ts";
 
-import { numberProblem } from "../problems.ts";
+import { numberProblem, why } from "../problems.ts";
 import { stepLabel } from "../solution-kit.ts";
 import { piLatex, power, range, table } from "./calculus-common.ts";
 
@@ -100,12 +100,19 @@ const coefficientForPiecewiseLimit: KnowledgePointDef = {
   },
 };
 
+/** firstMistakes drops mistakes whose value is the answer or repeats an earlier one, so each response gets one reason. */
+function firstMistakes(answer: number | Q, ms: readonly ReturnType<typeof why>[]): ReturnType<typeof why>[] {
+  const key = (v: unknown) => (typeof v === "number" ? Q.of(v) : (v as Q)).toString();
+  const seen = new Set([key(answer)]);
+  return ms.filter((m) => !seen.has(key(m.value)) && Boolean(seen.add(key(m.value))));
+}
+
 const limitThatMustExist: KnowledgePointDef = {
   id: "a-limit-that-forces-a-factor",
   title: t("A limit that forces a factor", "迫使出现因式的极限"),
   explanation: t(
-    "If the denominator of a quotient tends to zero and the limit is finite, the numerator must tend to zero too. So the point is a root of the numerator, which then has the matching linear factor. Cancelling that factor gives the limit by substitution.",
-    "如果分母趋于零而极限有限，分子也必须趋于零。所以这一点是分子的根，分子含有相应的一次因式。约去这个因式后，代入就得到极限。",
+    "If the denominator of a quotient tends to zero and the limit is finite, the numerator must tend to zero too. So the point is a root of the numerator, which then has the matching linear factor. Cancelling that factor gives the limit by substitution.\n\nFor $\\lim_{x \\to 2} \\frac{x^{2} + kx - 6}{x - 2}$ to exist, the top must be $0$ at $x = 2$: $4 + 2k - 6 = 0$, so $k = 1$. Then $x^{2} + x - 6 = (x - 2)(x + 3)$, and the limit is $2 + 3 = 5$.\n\nCheck: with $k = 1$, the quotient is $5.001$ at $x = 2.001$ and $4.999$ at $x = 1.999$.\n\n> **Watch out.** Finding $k$ is only the first step: the question asks for the limit. The other root comes from the product of the roots, here $-6 = 2 \\cdot (-3)$.",
+    "如果分母趋于零而极限有限，分子也必须趋于零。所以这一点是分子的根，分子含有相应的一次因式。约去这个因式后，代入就得到极限。\n\n要使 $\\lim_{x \\to 2} \\frac{x^{2} + kx - 6}{x - 2}$ 存在，分子在 $x = 2$ 处必须为 $0$：$4 + 2k - 6 = 0$，所以 $k = 1$。于是 $x^{2} + x - 6 = (x - 2)(x + 3)$，极限是 $2 + 3 = 5$。\n\n检验：取 $k = 1$，商在 $x = 2.001$ 处是 $5.001$，在 $x = 1.999$ 处是 $4.999$。\n\n> **注意。** 求出 $k$ 只是第一步，题目问的是极限。另一个根由两根之积得到，这里 $-6 = 2 \\cdot (-3)$。",
   ),
   generate(rng) {
     const a = nonzero(rng, 6);
@@ -113,6 +120,7 @@ const limitThatMustExist: KnowledgePointDef = {
     const m = a * r;
     const answer = a - r;
     const k = -(a + r);
+    const top = poly([1, "x^2"], [k, "x"], [m, ""]);
     return numberProblem({
       prompt: t(
         `The limit $\\lim_{x \\to ${a}} \\frac{${poly([1, "x^2"], [1, "kx"], [m, ""])}}{${poly([1, "x"], [-a, ""])}}$ exists for exactly one value of $k$. Find the limit.`,
@@ -120,10 +128,48 @@ const limitThatMustExist: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [k, a + r, r - a],
-      solution: t(
-        `The numerator must vanish at $x = ${a}$. Its roots multiply to $${m}$, so the other root is $${r}$, and it equals $(${poly([1, "x"], [-a, ""])})(${poly([1, "x"], [-r, ""])})$. After cancelling, the limit is $${a} - ${inParens(r)} = ${answer}$.`,
-        `分子在 $x = ${a}$ 处必须为零。两根之积是 $${m}$，所以另一根是 $${r}$，分子等于 $(${poly([1, "x"], [-a, ""])})(${poly([1, "x"], [-r, ""])})$。约去后，极限是 $${a} - ${inParens(r)} = ${answer}$。`,
+      mistakes: firstMistakes(answer, [
+        why(
+          k,
+          `This is the value of $k$. The question asks for the limit, which comes after cancelling.`,
+          `这是 $k$ 的值。题目问的是极限，要约分之后才得到。`,
+        ),
+        why(
+          a + r,
+          `This gives the other factor the wrong sign. It is $${poly([1, "x"], [-r, ""])}$, which is $${answer}$ at $x = ${a}$.`,
+          `这把另一个因式的符号弄反了。它是 $${poly([1, "x"], [-r, ""])}$，在 $x = ${a}$ 处等于 $${answer}$。`,
+        ),
+        why(
+          r - a,
+          `This subtracts the wrong way round: substitute $x = ${a}$ into $${poly([1, "x"], [-r, ""])}$.`,
+          `这减反了：要把 $x = ${a}$ 代入 $${poly([1, "x"], [-r, ""])}$。`,
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Make the top vanish",
+            "令分子为零",
+            `The bottom tends to $0$, so for a finite limit the top must be $0$ at $x = ${a}$: $${a * a} + ${inParens(a)}k + ${inParens(m)} = 0$, so $k = ${k}$.`,
+            `分母趋于 $0$，要使极限有限，分子在 $x = ${a}$ 处必须为 $0$：$${a * a} + ${inParens(a)}k + ${inParens(m)} = 0$，所以 $k = ${k}$。`,
+          ],
+          [
+            "Factor",
+            "分解因式",
+            `The roots multiply to $${m}$, so the other root is $${r}$:\n\n$$${top} = (${poly([1, "x"], [-a, ""])})(${poly([1, "x"], [-r, ""])})$$`,
+            `两根之积是 $${m}$，所以另一个根是 $${r}$：\n\n$$${top} = (${poly([1, "x"], [-a, ""])})(${poly([1, "x"], [-r, ""])})$$`,
+          ],
+          [
+            "Cancel and substitute",
+            "约分后代入",
+            `Cancel $${poly([1, "x"], [-a, ""])}$ and put $x = ${a}$: $${a} - ${inParens(r)} = ${answer}$.`,
+            `约去 $${poly([1, "x"], [-a, ""])}$，代入 $x = ${a}$：$${a} - ${inParens(r)} = ${answer}$。`,
+          ],
+        ],
+        [
+          `With $k = ${k}$, evaluate the quotient on both sides of $x = ${a}$:\n\n${valueTable(around(a), [["f(x)", (x) => (x * x + k * x + m) / (x - a)]])}\n\nThe values close in on $${answer}$.`,
+          `取 $k = ${k}$，计算商在 $x = ${a}$ 两侧的值：\n\n${valueTable(around(a), [["f(x)", (x) => (x * x + k * x + m) / (x - a)]])}\n\n这些值逼近 $${answer}$。`,
+        ],
       ),
     });
   },
@@ -133,8 +179,8 @@ const conjugatesTopAndBottom: KnowledgePointDef = {
   id: "conjugates-in-the-numerator-and-the-denominator",
   title: t("Conjugates in the numerator and the denominator", "分子和分母同时用共轭"),
   explanation: t(
-    "When a root difference appears both above and below the line, multiply by both conjugates. Each difference of squares then produces the same factor that vanishes at the limit point, and what remains is a ratio of the two conjugates, which can be found by substitution.",
-    "当分子和分母都含根式之差时，同时乘以两个共轭式。每个平方差都产生同一个在极限点为零的因式，约去后剩下两个共轭式之比，代入即可求值。",
+    "When a root difference appears both above and below the line, multiply by both conjugates. Each difference of squares then produces the same factor that vanishes at the limit point, and what remains is a ratio of the two conjugates, which can be found by substitution.\n\nFor $\\lim_{x \\to 5} \\frac{\\sqrt{x + 4} - 3}{\\sqrt{x - 1} - 2}$, the top times $\\sqrt{x + 4} + 3$ is $x - 5$, and the bottom times $\\sqrt{x - 1} + 2$ is $x - 5$. What is left is $\\frac{\\sqrt{x - 1} + 2}{\\sqrt{x + 4} + 3} \\to \\frac{4}{6} = \\frac{2}{3}$.\n\nCheck: at $x = 5.01$ the quotient is about $0.6669$, and at $x = 4.99$ about $0.6664$.\n\n> **Watch out.** Each conjugate ends up on the other side of the line: the bottom's conjugate goes to the top. So the answer is $\\frac{4}{6}$, not $\\frac{6}{4}$.",
+    "当分子和分母都含根式之差时，同时乘以两个共轭式。每个平方差都产生同一个在极限点为零的因式，约去后剩下两个共轭式之比，代入即可求值。\n\n对于 $\\lim_{x \\to 5} \\frac{\\sqrt{x + 4} - 3}{\\sqrt{x - 1} - 2}$，分子乘以 $\\sqrt{x + 4} + 3$ 得 $x - 5$，分母乘以 $\\sqrt{x - 1} + 2$ 也得 $x - 5$。剩下 $\\frac{\\sqrt{x - 1} + 2}{\\sqrt{x + 4} + 3} \\to \\frac{4}{6} = \\frac{2}{3}$。\n\n检验：$x = 5.01$ 时商约为 $0.6669$，$x = 4.99$ 时约为 $0.6664$。\n\n> **注意。** 每个共轭式最后都到了分数线的另一侧：分母的共轭式到了分子上。所以答案是 $\\frac{4}{6}$，不是 $\\frac{6}{4}$。",
   ),
   generate(rng) {
     const a = rng.int(1, 9);
@@ -143,14 +189,51 @@ const conjugatesTopAndBottom: KnowledgePointDef = {
     const p = u * u - a;
     const q = v * v - a;
     const answer = Q.of(v, u);
-    const expression = `\\frac{\\sqrt{${poly([1, "x"], [p, ""])}} - ${u}}{\\sqrt{${poly([1, "x"], [q, ""])}} - ${v}}`;
+    const top = `\\sqrt{${poly([1, "x"], [p, ""])}}`;
+    const bottom = `\\sqrt{${poly([1, "x"], [q, ""])}}`;
+    const expression = `\\frac{${top} - ${u}}{${bottom} - ${v}}`;
+    const f = (x: number) => (Math.sqrt(x + p) - u) / (Math.sqrt(x + q) - v);
     return numberProblem({
       prompt: t(`Find $\\lim_{x \\to ${a}} ${expression}$.`, `求 $\\lim_{x \\to ${a}} ${expression}$。`),
       answer,
-      wrong: [Q.of(u, v), Q.of(1), Q.of(v, 2 * u)],
-      solution: t(
-        `Multiplying by both conjugates turns the top and the bottom each into $x - ${a}$ times a conjugate, and those factors cancel. This leaves $\\frac{\\sqrt{${poly([1, "x"], [q, ""])}} + ${v}}{\\sqrt{${poly([1, "x"], [p, ""])}} + ${u}}$, which at $x = ${a}$ is $\\frac{${2 * v}}{${2 * u}} = ${answer.toLatex()}$.`,
-        `同时乘以两个共轭式后，分子和分母都变成 $x - ${a}$ 乘一个共轭式，这个因式约去。剩下 $\\frac{\\sqrt{${poly([1, "x"], [q, ""])}} + ${v}}{\\sqrt{${poly([1, "x"], [p, ""])}} + ${u}}$，在 $x = ${a}$ 处等于 $\\frac{${2 * v}}{${2 * u}} = ${answer.toLatex()}$。`,
+      mistakes: firstMistakes(answer, [
+        why(
+          Q.of(u, v),
+          "This turns the answer upside down: each conjugate ends up on the other side of the line.",
+          "这把结果颠倒了：每个共轭式最后都在分数线的另一侧。",
+        ),
+        why(1, "This cancels the common factor and forgets the two conjugates that remain.", "这约去了公因式，却忘了还剩下两个共轭式。"),
+        why(
+          Q.of(v, 2 * u),
+          `This takes the bottom's conjugate as $${v}$. At $x = ${a}$ it is $\\sqrt{${v * v}} + ${v} = ${2 * v}$.`,
+          `这把分母的共轭式当成了 $${v}$。在 $x = ${a}$ 处它等于 $\\sqrt{${v * v}} + ${v} = ${2 * v}$。`,
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Multiply the top by its conjugate",
+            "分子乘以共轭式",
+            `\n\n$$(${top} - ${u})(${top} + ${u}) = (${poly([1, "x"], [p, ""])}) - ${u * u} = ${poly([1, "x"], [-a, ""])}$$`,
+            `\n\n$$(${top} - ${u})(${top} + ${u}) = (${poly([1, "x"], [p, ""])}) - ${u * u} = ${poly([1, "x"], [-a, ""])}$$`,
+          ],
+          [
+            "Multiply the bottom by its conjugate",
+            "分母乘以共轭式",
+            `\n\n$$(${bottom} - ${v})(${bottom} + ${v}) = (${poly([1, "x"], [q, ""])}) - ${v * v} = ${poly([1, "x"], [-a, ""])}$$`,
+            `\n\n$$(${bottom} - ${v})(${bottom} + ${v}) = (${poly([1, "x"], [q, ""])}) - ${v * v} = ${poly([1, "x"], [-a, ""])}$$`,
+          ],
+          [
+            "Cancel and substitute",
+            "约分后代入",
+            `Cancel $${poly([1, "x"], [-a, ""])}$. The conjugates are left, each on the other side:\n\n$$\\lim_{x \\to ${a}} \\frac{${bottom} + ${v}}{${top} + ${u}} = \\frac{${2 * v}}{${2 * u}} = ${answer.toLatex()}$$`,
+            `约去 $${poly([1, "x"], [-a, ""])}$，剩下两个共轭式，各在另一侧：\n\n$$\\lim_{x \\to ${a}} \\frac{${bottom} + ${v}}{${top} + ${u}} = \\frac{${2 * v}}{${2 * u}} = ${answer.toLatex()}$$`,
+          ],
+        ],
+        [
+          `Evaluate the quotient on both sides of $x = ${a}$:\n\n${valueTable(around(a), [["f(x)", f]])}\n\nThe values close in on $${answer.toLatex()}${approx(answer)}$.`,
+          `计算商在 $x = ${a}$ 两侧的值：\n\n${valueTable(around(a), [["f(x)", f]])}\n\n这些值逼近 $${answer.toLatex()}${approx(answer)}$。`,
+        ],
       ),
     });
   },
@@ -162,8 +245,8 @@ const crossingTheAsymptote: KnowledgePointDef = {
     calculusDrawings1["limits-at-infinity-and-horizontal-asymptotes-of-rational-functions#where-a-graph-crosses-its-horizontal-asymptote"],
   title: t("Where a graph crosses its horizontal asymptote", "图象与水平渐近线的交点"),
   explanation: t(
-    "A horizontal asymptote describes the behaviour of a function far from the origin, so the graph may cross it elsewhere. To find where, set the function equal to the asymptote's value and clear the denominator. The highest powers cancel, which leaves a lower-degree equation.",
-    "水平渐近线描述的是函数远离原点时的行为，所以图象可以在别处穿过它。要找交点，令函数等于渐近线的值并去分母。最高次项相消，剩下次数更低的方程。",
+    "A horizontal asymptote describes the behaviour of a function far from the origin, so the graph may cross it elsewhere. To find where, set the function equal to the asymptote's value and clear the denominator. The highest powers cancel, which leaves a lower-degree equation.\n\nFor $f(x) = \\frac{2x^{2} + 3x - 1}{x^{2} + 1}$ the asymptote is $y = 2$. Setting $2x^{2} + 3x - 1 = 2(x^{2} + 1)$ leaves $3x - 1 = 2$, so $x = 1$.\n\nCheck: $f(1) = \\frac{2 + 3 - 1}{1 + 1} = \\frac{4}{2} = 2$.\n\n> **Watch out.** Set $f(x)$ equal to the asymptote's value, not to $0$: setting the top equal to $0$ finds where the graph crosses the $x$-axis. Multiply the whole denominator by that value, constant term included.",
+    "水平渐近线描述的是函数远离原点时的行为，所以图象可以在别处穿过它。要找交点，令函数等于渐近线的值并去分母。最高次项相消，剩下次数更低的方程。\n\n对于 $f(x) = \\frac{2x^{2} + 3x - 1}{x^{2} + 1}$，渐近线是 $y = 2$。令 $2x^{2} + 3x - 1 = 2(x^{2} + 1)$，剩下 $3x - 1 = 2$，所以 $x = 1$。\n\n检验：$f(1) = \\frac{2 + 3 - 1}{1 + 1} = \\frac{4}{2} = 2$。\n\n> **注意。** 要令 $f(x)$ 等于渐近线的值，而不是等于 $0$：令分子为 $0$ 求的是图象与 $x$ 轴的交点。分母的每一项（包括常数项）都要乘以这个值。",
   ),
   generate(rng) {
     const a = rng.int(1, 5);
@@ -172,16 +255,52 @@ const crossingTheAsymptote: KnowledgePointDef = {
     const d = rng.int(1, 9);
     const answer = Q.of(a * d - c, b);
     const f = `\\frac{${poly([a, "x^2"], [b, "x"], [c, ""])}}{${poly([1, "x^2"], [d, ""])}}`;
+    const top = Q.of(a).mul(answer).mul(answer).add(Q.of(b).mul(answer)).add(Q.of(c));
+    const bottom = answer.mul(answer).add(Q.of(d));
     return numberProblem({
       prompt: t(
         `At which value of $x$ does the graph of $f(x) = ${f}$ cross its horizontal asymptote?`,
         `$f(x) = ${f}$ 的图象在 $x$ 取何值时穿过它的水平渐近线？`,
       ),
       answer,
-      wrong: [Q.of(c - a * d, b), Q.of(-c, b), Q.of(a)],
-      solution: t(
-        `The asymptote is $y = ${a}$. Setting $f(x) = ${a}$ and clearing the denominator cancels the $x^2$ terms and leaves $${b}x + ${inParens(c)} = ${a * d}$, so $x = ${answer.toLatex()}$.`,
-        `渐近线是 $y = ${a}$。令 $f(x) = ${a}$ 并去分母，$x^2$ 项相消，剩下 $${b}x + ${inParens(c)} = ${a * d}$，所以 $x = ${answer.toLatex()}$。`,
+      mistakes: firstMistakes(answer, [
+        why(Q.of(c - a * d, b), "This moves a term across without changing its sign.", "这把一项移到另一边时没有变号。"),
+        why(
+          Q.of(-c, b),
+          `This leaves out the constant $${d}$ of the denominator. Clearing it gives $${a}(x^{2} + ${d}) = ${poly([a, "x^2"], [a * d, ""])}$.`,
+          `这漏掉了分母的常数 $${d}$。去分母得 $${a}(x^{2} + ${d}) = ${poly([a, "x^2"], [a * d, ""])}$。`,
+        ),
+        why(
+          a,
+          `This is the height of the asymptote, $y = ${a}$. The question asks for $x$.`,
+          `这是渐近线的高度 $y = ${a}$。题目问的是 $x$。`,
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Find the asymptote",
+            "求渐近线",
+            `The degrees are equal, so the asymptote is the ratio of the leading coefficients: $y = \\frac{${a}}{1} = ${a}$.`,
+            `分子分母次数相等，渐近线是首项系数之比：$y = \\frac{${a}}{1} = ${a}$。`,
+          ],
+          [
+            "Set f equal to it",
+            "令 f 等于它",
+            `Clear the denominator; the $x^2$ terms cancel:\n\n$$${poly([a, "x^2"], [b, "x"], [c, ""])} = ${poly([a, "x^2"], [a * d, ""])}$$`,
+            `去分母，$x^2$ 项相消：\n\n$$${poly([a, "x^2"], [b, "x"], [c, ""])} = ${poly([a, "x^2"], [a * d, ""])}$$`,
+          ],
+          [
+            "Solve",
+            "求解",
+            `\n\n$${poly([b, "x"])} = ${a * d} - ${inParens(c)} = ${a * d - c}$, so $x = ${answer.toLatex()}$.`,
+            `\n\n$${poly([b, "x"])} = ${a * d} - ${inParens(c)} = ${a * d - c}$，所以 $x = ${answer.toLatex()}$。`,
+          ],
+        ],
+        [
+          `Put $x = ${answer.toLatex()}$ into $f$: the top is $${top.toLatex()}$ and the bottom is $${bottom.toLatex()}$, and their quotient is $${top.div(bottom).toLatex()}$, the height of the asymptote.`,
+          `把 $x = ${answer.toLatex()}$ 代入 $f$：分子是 $${top.toLatex()}$，分母是 $${bottom.toLatex()}$，二者之商是 $${top.div(bottom).toLatex()}$，正是渐近线的高度。`,
+        ],
       ),
     });
   },
@@ -191,24 +310,63 @@ const quadraticInsideSine: KnowledgePointDef = {
   id: "a-quadratic-inside-the-sine",
   title: t("A quadratic inside the sine", "正弦内的二次式"),
   explanation: t(
-    "To use $\\lim_{u \\to 0} \\frac{\\sin u}{u} = 1$, the denominator must match the argument of the sine. If the argument is a quadratic and the denominator only a linear factor of it, multiply and divide by the other factor. The other factor stays behind as a value found by substitution.",
-    "要使用 $\\lim_{u \\to 0} \\frac{\\sin u}{u} = 1$，分母必须与正弦的自变量一致。如果自变量是二次式，而分母只是它的一个一次因式，就乘除另一个因式。另一个因式留下来，代入求值。",
+    "To use $\\lim_{u \\to 0} \\frac{\\sin u}{u} = 1$, the denominator must match the argument of the sine. If the argument is a quadratic and the denominator only a linear factor of it, multiply and divide by the other factor. The other factor stays behind as a value found by substitution.\n\nFor $\\lim_{x \\to 2} \\frac{\\sin(2x^{2} - 8)}{x - 2}$, the argument is $u = 2(x - 2)(x + 2)$. Multiplying and dividing by $2(x + 2)$ gives $\\frac{\\sin u}{u} \\cdot 2(x + 2) \\to 1 \\cdot 2 \\cdot 4 = 8$.\n\nCheck: at $x = 2.001$ the quotient is about $8.002$, and at $x = 1.999$ about $7.998$.\n\n> **Watch out.** The factor left behind is $2(x + 2)$, evaluated at $x = 2$: it is $8$. Do not drop it, and do not put $x = 0$ into it.",
+    "要使用 $\\lim_{u \\to 0} \\frac{\\sin u}{u} = 1$，分母必须与正弦的自变量一致。如果自变量是二次式，而分母只是它的一个一次因式，就乘除另一个因式。另一个因式留下来，代入求值。\n\n对于 $\\lim_{x \\to 2} \\frac{\\sin(2x^{2} - 8)}{x - 2}$，自变量是 $u = 2(x - 2)(x + 2)$。乘除 $2(x + 2)$ 得 $\\frac{\\sin u}{u} \\cdot 2(x + 2) \\to 1 \\cdot 2 \\cdot 4 = 8$。\n\n检验：$x = 2.001$ 时商约为 $8.002$，$x = 1.999$ 时约为 $7.998$。\n\n> **注意。** 留下的因式是 $2(x + 2)$，要在 $x = 2$ 处求值，得 $8$。不能丢掉它，也不能代入 $x = 0$。",
   ),
   generate(rng) {
     const a = nonzero(rng, 6);
     const k = rng.int(1, 6);
     const answer = 2 * a * k;
+    const lower = poly([1, "x"], [-a, ""]);
+    const other = poly([1, "x"], [a, ""]);
+    const scale = k === 1 ? "" : `${k}`;
+    const xs = [-0.001, -0.0001, 0.0001, 0.001].map((d) => Math.round((a + d) * 10000) / 10000);
+    const f = (x: number) => Math.sin(k * (x * x - a * a)) / (x - a);
     return numberProblem({
       prompt: t(
-        `Find $\\lim_{x \\to ${a}} \\frac{\\sin(${poly([k, "x^2"], [-k * a * a, ""])})}{${poly([1, "x"], [-a, ""])}}$.`,
-        `求 $\\lim_{x \\to ${a}} \\frac{\\sin(${poly([k, "x^2"], [-k * a * a, ""])})}{${poly([1, "x"], [-a, ""])}}$。`,
+        `Find $\\lim_{x \\to ${a}} \\frac{\\sin(${poly([k, "x^2"], [-k * a * a, ""])})}{${lower}}$.`,
+        `求 $\\lim_{x \\to ${a}} \\frac{\\sin(${poly([k, "x^2"], [-k * a * a, ""])})}{${lower}}$。`,
       ),
       answer,
       form: "integer",
-      wrong: [a * k, k, 2 * a],
-      solution: t(
-        `Write the argument as $u = ${k}(${poly([1, "x"], [-a, ""])})(${poly([1, "x"], [a, ""])})$. Multiplying and dividing by $${k}(${poly([1, "x"], [a, ""])})$ gives $\\frac{\\sin u}{u} \\cdot ${k}(${poly([1, "x"], [a, ""])})$, which tends to $1 \\cdot ${k} \\cdot ${inParens(2 * a)} = ${answer}$.`,
-        `把自变量写成 $u = ${k}(${poly([1, "x"], [-a, ""])})(${poly([1, "x"], [a, ""])})$。乘除 $${k}(${poly([1, "x"], [a, ""])})$ 得 $\\frac{\\sin u}{u} \\cdot ${k}(${poly([1, "x"], [a, ""])})$，它趋于 $1 \\cdot ${k} \\cdot ${inParens(2 * a)} = ${answer}$。`,
+      mistakes: firstMistakes(answer, [
+        why(
+          a * k,
+          `This takes $${other}$ as $${a}$. At $x = ${a}$ it is $${2 * a}$.`,
+          `这把 $${other}$ 当成了 $${a}$。在 $x = ${a}$ 处它等于 $${2 * a}$。`,
+        ),
+        why(
+          k,
+          `This drops the factor $${other}$, which is left behind and is $${2 * a}$ at $x = ${a}$.`,
+          `这丢掉了留下的因式 $${other}$，它在 $x = ${a}$ 处等于 $${2 * a}$。`,
+        ),
+        why(2 * a, `This drops the coefficient $${k}$ of the argument.`, `这丢掉了自变量中的系数 $${k}$。`),
+      ]),
+      solution: walk(
+        [
+          [
+            "Factor the argument",
+            "分解自变量",
+            `\n\n$$u = ${poly([k, "x^2"], [-k * a * a, ""])} = ${scale}(${lower})(${other})$$`,
+            `\n\n$$u = ${poly([k, "x^2"], [-k * a * a, ""])} = ${scale}(${lower})(${other})$$`,
+          ],
+          [
+            "Multiply and divide",
+            "乘除另一个因式",
+            `Multiply and divide by $${scale}(${other})$:\n\n$$\\frac{\\sin u}{${lower}} = \\frac{\\sin u}{u} \\cdot ${scale}(${other})$$`,
+            `乘除 $${scale}(${other})$：\n\n$$\\frac{\\sin u}{${lower}} = \\frac{\\sin u}{u} \\cdot ${scale}(${other})$$`,
+          ],
+          [
+            "Take the limits",
+            "求极限",
+            `As $x \\to ${a}$, $u \\to 0$, so the limit is $1 \\cdot ${k} \\cdot ${inParens(2 * a)} = ${answer}$.`,
+            `当 $x \\to ${a}$ 时 $u \\to 0$，所以极限是 $1 \\cdot ${k} \\cdot ${inParens(2 * a)} = ${answer}$。`,
+          ],
+        ],
+        [
+          `Evaluate the quotient close to $x = ${a}$:\n\n${valueTable(xs, [["f(x)", f]])}\n\nThe values close in on $${answer}$.`,
+          `在 $x = ${a}$ 附近计算商的值：\n\n${valueTable(xs, [["f(x)", f]])}\n\n这些值逼近 $${answer}$。`,
+        ],
       ),
     });
   },
@@ -218,8 +376,8 @@ const ratioToAPower: KnowledgePointDef = {
   id: "a-ratio-of-linear-terms-to-a-growing-power",
   title: t("A ratio of linear terms to a growing power", "一次式之比的增长次幂"),
   explanation: t(
-    "A quotient that tends to $1$, raised to a growing power, is an indeterminate form. Rewrite the quotient as one plus a small term: $\\frac{x+a}{x+b} = 1 + \\frac{a-b}{x+b}$. Then the standard limit gives $e$ raised to the product of the small term's numerator and the coefficient of the power.",
-    "趋于 $1$ 的商的增长次幂是不定式。把商写成一加一个小量：$\\frac{x+a}{x+b} = 1 + \\frac{a-b}{x+b}$。再用标准极限，结果是 $e$ 的幂，指数是小量的分子与幂的系数之积。",
+    "A quotient that tends to $1$, raised to a growing power, is an indeterminate form. Rewrite the quotient as one plus a small term: $\\frac{x+a}{x+b} = 1 + \\frac{a-b}{x+b}$. Then the standard limit gives $e$ raised to the product of the small term's numerator and the coefficient of the power.\n\nFor $\\left(\\frac{x + 3}{x + 1}\\right)^{2x}$ the quotient is $1 + \\frac{2}{x + 1}$, so the limit is $e^{2 \\cdot 2} = e^{4}$.\n\nCheck: the logarithm is $2x \\ln\\frac{x + 3}{x + 1}$, about $3.992$ at $x = 1000$ and $3.9992$ at $x = 10\\,000$, close to $4$.\n\n> **Watch out.** Use the difference $a - b$, not $a$ alone, and multiply by the coefficient of the power. The base tending to $1$ does not make the limit $1$.",
+    "趋于 $1$ 的商的增长次幂是不定式。把商写成一加一个小量：$\\frac{x+a}{x+b} = 1 + \\frac{a-b}{x+b}$。再用标准极限，结果是 $e$ 的幂，指数是小量的分子与幂的系数之积。\n\n对于 $\\left(\\frac{x + 3}{x + 1}\\right)^{2x}$，商是 $1 + \\frac{2}{x + 1}$，所以极限是 $e^{2 \\cdot 2} = e^{4}$。\n\n检验：取对数得 $2x \\ln\\frac{x + 3}{x + 1}$，$x = 1000$ 时约为 $3.992$，$x = 10\\,000$ 时约为 $3.9992$，接近 $4$。\n\n> **注意。** 要用差 $a - b$，不是只用 $a$，还要乘以幂的系数。底数趋于 $1$ 并不意味着极限是 $1$。",
   ),
   generate(rng) {
     const a = nonzero(rng, 9);
@@ -227,6 +385,7 @@ const ratioToAPower: KnowledgePointDef = {
     const c = rng.int(1, 5);
     const answer = (a - b) * c;
     const expression = `\\left(\\frac{${poly([1, "x"], [a, ""])}}{${poly([1, "x"], [b, ""])}}\\right)^{${poly([c, "x"])}}`;
+    const lnf = (x: number) => c * x * Math.log((x + a) / (x + b));
     return numberProblem({
       prompt: t(
         `The limit $\\lim_{x \\to \\infty} ${expression}$ equals $e^k$. Find $k$.`,
@@ -234,10 +393,39 @@ const ratioToAPower: KnowledgePointDef = {
       ),
       answer,
       solveFor: "k",
-      wrong: [a * c, (a + b) * c, a - b],
-      solution: t(
-        `The quotient is $1 + \\frac{${a - b}}{${poly([1, "x"], [b, ""])}}$, and the exponent is $${poly([c, "x"])}$. So the limit is $e$ to the power $(${a - b})(${c}) = ${answer}$.`,
-        `商等于 $1 + \\frac{${a - b}}{${poly([1, "x"], [b, ""])}}$，指数是 $${poly([c, "x"])}$。所以极限是 $e$ 的 $(${a - b})(${c}) = ${answer}$ 次幂。`,
+      mistakes: firstMistakes(answer, [
+        why(
+          a * c,
+          `This uses $${a}$ alone. The small term is $\\frac{${a - b}}{${poly([1, "x"], [b, ""])}}$, with numerator $${a} - ${inParens(b)}$.`,
+          `这只用了 $${a}$。小量是 $\\frac{${a - b}}{${poly([1, "x"], [b, ""])}}$，分子是 $${a} - ${inParens(b)}$。`,
+        ),
+        why((a + b) * c, `This adds $${b}$ instead of subtracting it.`, `这把 $${b}$ 加上了，应该减去。`),
+        why(a - b, `This forgets the coefficient $${c}$ of the power.`, `这忘了幂的系数 $${c}$。`),
+        why(
+          0,
+          "This reads the limit as $1 = e^{0}$ because the base tends to $1$. The growing power keeps it away from $1$.",
+          "这因为底数趋于 $1$ 就把极限当成 $1 = e^{0}$。不断增大的指数使它不等于 $1$。",
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Write the quotient as one plus a small term",
+            "把商写成一加小量",
+            `\n\n$$\\frac{${poly([1, "x"], [a, ""])}}{${poly([1, "x"], [b, ""])}} = 1 + \\frac{${a - b}}{${poly([1, "x"], [b, ""])}}$$`,
+            `\n\n$$\\frac{${poly([1, "x"], [a, ""])}}{${poly([1, "x"], [b, ""])}} = 1 + \\frac{${a - b}}{${poly([1, "x"], [b, ""])}}$$`,
+          ],
+          [
+            "Use the standard limit",
+            "利用标准极限",
+            `For large $x$, $\\left(1 + \\frac{${a - b}}{${poly([1, "x"], [b, ""])}}\\right)^{x} \\to e^{${a - b}}$, and the power is $${c}$ times $x$, so the limit is $e^{${a - b} \\cdot ${c}} = e^{${answer}}$. So $k = ${answer}$.`,
+            `当 $x$ 很大时，$\\left(1 + \\frac{${a - b}}{${poly([1, "x"], [b, ""])}}\\right)^{x} \\to e^{${a - b}}$，而指数是 $x$ 的 $${c}$ 倍，所以极限是 $e^{${a - b} \\cdot ${c}} = e^{${answer}}$。所以 $k = ${answer}$。`,
+          ],
+        ],
+        [
+          `Take the logarithm, $${poly([c, "x"])} \\ln\\frac{${poly([1, "x"], [a, ""])}}{${poly([1, "x"], [b, ""])}}$, for larger and larger $x$:\n\n${valueTable([100, 1000, 10000], [["\\ln f(x)", lnf]])}\n\nThe logarithms close in on $${answer}$.`,
+          `取对数 $${poly([c, "x"])} \\ln\\frac{${poly([1, "x"], [a, ""])}}{${poly([1, "x"], [b, ""])}}$，计算 $x$ 越来越大时的值：\n\n${valueTable([100, 1000, 10000], [["\\ln f(x)", lnf]])}\n\n对数值逼近 $${answer}$。`,
+        ],
       ),
     });
   },
@@ -1159,8 +1347,8 @@ const tangentMinusSine: KnowledgePointDef = {
   id: "tangent-minus-sine-over-a-cube",
   title: t("Tangent minus sine over a cube", "正切减正弦除以立方"),
   explanation: t(
-    "Tangent and sine agree to first order near zero, so their difference shrinks faster than the angle, and splitting the quotient into two limits at once would fail. Factor the sine out of the numerator using $\\tan u = \\frac{\\sin u}{\\cos u}$. This exposes one minus cosine, which supplies two powers of the angle, while the sine supplies the third.",
-    "正切和正弦在零附近的一阶行为相同，所以它们的差比角本身更快地趋于零，直接把商拆成两个极限是行不通的。利用 $\\tan u = \\frac{\\sin u}{\\cos u}$ 把分子里的正弦提出来。这样就出现一减余弦，它提供角的两次方，而正弦提供第三次方。",
+    "Tangent and sine agree to first order near zero, so their difference shrinks faster than the angle, and splitting the quotient into two limits at once would fail. Factor the sine out of the numerator using $\\tan u = \\frac{\\sin u}{\\cos u}$. This exposes one minus cosine, which supplies two powers of the angle, while the sine supplies the third.\n\n$$\\lim_{x \\to 0} \\frac{\\tan x - \\sin x}{x^{3}} = \\lim_{x \\to 0} \\frac{\\sin x}{x} \\cdot \\frac{1 - \\cos x}{x^{2}} \\cdot \\frac{1}{\\cos x} = 1 \\cdot \\frac{1}{2} \\cdot 1 = \\frac{1}{2}.$$\n\nCheck: at $x = 0.1$ the quotient is about $0.5013$, and at $x = 0.01$ about $0.50001$.\n\n> **Watch out.** Splitting into $\\frac{\\tan x}{x^{3}} - \\frac{\\sin x}{x^{3}}$ gives $\\infty - \\infty$. With $ax$ inside, each power of the angle brings a factor $a$, so the answer has $a^{3}$.",
+    "正切和正弦在零附近的一阶行为相同，所以它们的差比角本身更快地趋于零，直接把商拆成两个极限是行不通的。利用 $\\tan u = \\frac{\\sin u}{\\cos u}$ 把分子里的正弦提出来。这样就出现一减余弦，它提供角的两次方，而正弦提供第三次方。\n\n$$\\lim_{x \\to 0} \\frac{\\tan x - \\sin x}{x^{3}} = \\lim_{x \\to 0} \\frac{\\sin x}{x} \\cdot \\frac{1 - \\cos x}{x^{2}} \\cdot \\frac{1}{\\cos x} = 1 \\cdot \\frac{1}{2} \\cdot 1 = \\frac{1}{2}.$$\n\n检验：$x = 0.1$ 时商约为 $0.5013$，$x = 0.01$ 时约为 $0.50001$。\n\n> **注意。** 拆成 $\\frac{\\tan x}{x^{3}} - \\frac{\\sin x}{x^{3}}$ 会得到 $\\infty - \\infty$。自变量是 $ax$ 时，角的每一次方都带来一个因子 $a$，所以答案中是 $a^{3}$。",
   ),
   generate(rng) {
     const a = rng.int(1, 6);
@@ -1170,16 +1358,56 @@ const tangentMinusSine: KnowledgePointDef = {
     const product = Q.of(a ** 3, 2).toLatex();
     const scale = c === 1 ? "" : `, and dividing by $${c}$ gives $${answer.toLatex()}$`;
     const scaleZh = c === 1 ? "" : `，再除以 $${c}$ 得 $${answer.toLatex()}$`;
+    const f = (x: number) => (Math.tan(a * x) - Math.sin(a * x)) / (c * x ** 3);
     return numberProblem({
       prompt: t(
         `Find $\\lim_{x \\to 0} \\frac{\\tan ${u} - \\sin ${u}}{${poly([c, "x^3"])}}$.`,
         `求 $\\lim_{x \\to 0} \\frac{\\tan ${u} - \\sin ${u}}{${poly([c, "x^3"])}}$。`,
       ),
       answer,
-      wrong: [Q.of(a * a, 2 * c), Q.of(a ** 3, c), Q.of(a, 2 * c), Q.of(0), Q.of(a ** 3, 3 * c)],
-      solution: t(
-        `The numerator is $\\frac{\\sin ${u}}{\\cos ${u}}(1 - \\cos ${u})$. As $x \\to 0$, $\\frac{\\sin ${u}}{x} \\to ${a}$, $\\cos ${u} \\to 1$ and $\\frac{1 - \\cos ${u}}{x^2} \\to ${Q.of(a * a, 2).toLatex()}$. Multiplying these gives $${product}$${scale}.`,
-        `分子等于 $\\frac{\\sin ${u}}{\\cos ${u}}(1 - \\cos ${u})$。当 $x \\to 0$ 时，$\\frac{\\sin ${u}}{x} \\to ${a}$，$\\cos ${u} \\to 1$，$\\frac{1 - \\cos ${u}}{x^2} \\to ${Q.of(a * a, 2).toLatex()}$。三者相乘得 $${product}$${scaleZh}。`,
+      wrong: [Q.of(a ** 3, 3 * c)],
+      mistakes: firstMistakes(answer, [
+        why(
+          Q.of(a * a, 2 * c),
+          `This uses $a^{2}$. Three powers of the angle each bring a factor $${a}$: $${a}^{3}$.`,
+          `这用了 $a^{2}$。角的三次方各带一个因子 $${a}$：$${a}^{3}$。`,
+        ),
+        why(
+          Q.of(a ** 3, c),
+          `This drops the $\\frac{1}{2}$ from $\\frac{1 - \\cos u}{u^{2}} \\to \\frac{1}{2}$.`,
+          `这漏掉了 $\\frac{1 - \\cos u}{u^{2}} \\to \\frac{1}{2}$ 中的 $\\frac{1}{2}$。`,
+        ),
+        why(
+          Q.of(a, 2 * c),
+          `This keeps only one factor $${a}$. The argument $${u}$ appears to the third power.`,
+          `这只保留了一个因子 $${a}$。自变量 $${u}$ 出现了三次方。`,
+        ),
+        why(
+          0,
+          "This takes tangent and sine as cancelling. Their difference shrinks like $x^{3}$, as fast as the bottom.",
+          "这认为正切和正弦相互抵消。它们的差像 $x^{3}$ 那样趋于零，与分母一样快。",
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Factor out the sine",
+            "提出正弦",
+            `\n\n$$\\tan ${u} - \\sin ${u} = \\frac{\\sin ${u}}{\\cos ${u}}(1 - \\cos ${u})$$`,
+            `\n\n$$\\tan ${u} - \\sin ${u} = \\frac{\\sin ${u}}{\\cos ${u}}(1 - \\cos ${u})$$`,
+          ],
+          [
+            "Take each limit",
+            "分别求极限",
+            `As $x \\to 0$, $\\frac{\\sin ${u}}{x} \\to ${a}$, $\\frac{1 - \\cos ${u}}{x^2} \\to ${Q.of(a * a, 2).toLatex()}$ and $\\cos ${u} \\to 1$.`,
+            `当 $x \\to 0$ 时，$\\frac{\\sin ${u}}{x} \\to ${a}$，$\\frac{1 - \\cos ${u}}{x^2} \\to ${Q.of(a * a, 2).toLatex()}$，$\\cos ${u} \\to 1$。`,
+          ],
+          ["Multiply", "相乘", `Multiplying these gives $${product}$${scale}.`, `三者相乘得 $${product}$${scaleZh}。`],
+        ],
+        [
+          `Evaluate the quotient close to $x = 0$:\n\n${valueTable(around(0), [["f(x)", f]])}\n\nThe values close in on $${answer.toLatex()}${approx(answer)}$.`,
+          `在 $x = 0$ 附近计算商的值：\n\n${valueTable(around(0), [["f(x)", f]])}\n\n这些值逼近 $${answer.toLatex()}${approx(answer)}$。`,
+        ],
       ),
     });
   },
@@ -1189,8 +1417,8 @@ const differenceOfTwoRoots: KnowledgePointDef = {
   id: "a-difference-of-two-roots-at-infinity",
   title: t("A difference of two roots at infinity", "两个根式之差在无穷远处的极限"),
   explanation: t(
-    "Two square roots with the same leading term both grow without bound, yet their difference can settle at a finite value. Multiplying by the conjugate cancels the squared terms and leaves a linear numerator over a sum of roots. Each root behaves like $k|x|$, and when $x$ is negative that absolute value contributes a change of sign.",
-    "两个最高次项相同的平方根都无限增大，但它们的差可以趋于有限值。乘以共轭式消去平方项，剩下一次式的分子和根式之和的分母。每个根式的行为都像 $k|x|$，当 $x$ 为负时，这个绝对值会带来一次变号。",
+    "Two square roots with the same leading term both grow without bound, yet their difference can settle at a finite value. Multiplying by the conjugate cancels the squared terms and leaves a linear numerator over a sum of roots. Each root behaves like $k|x|$, and when $x$ is negative that absolute value contributes a change of sign.\n\nFor $\\sqrt{x^{2} + 4x} - \\sqrt{x^{2} + x}$, the conjugate gives $\\frac{3x}{\\sqrt{x^{2} + 4x} + \\sqrt{x^{2} + x}}$, and the bottom behaves like $2|x|$. So the limit as $x \\to \\infty$ is $\\frac{3}{2}$, and as $x \\to -\\infty$ it is $-\\frac{3}{2}$.\n\nCheck: at $x = 1000$ the difference is about $1.498$, and at $x = 10\\,000$ about $1.4998$.\n\n> **Watch out.** The bottom is a sum of two roots, so it behaves like $2k|x|$, not $k|x|$. And $\\infty - \\infty$ is not $0$.",
+    "两个最高次项相同的平方根都无限增大，但它们的差可以趋于有限值。乘以共轭式消去平方项，剩下一次式的分子和根式之和的分母。每个根式的行为都像 $k|x|$，当 $x$ 为负时，这个绝对值会带来一次变号。\n\n对于 $\\sqrt{x^{2} + 4x} - \\sqrt{x^{2} + x}$，乘以共轭式得 $\\frac{3x}{\\sqrt{x^{2} + 4x} + \\sqrt{x^{2} + x}}$，分母的行为像 $2|x|$。所以 $x \\to \\infty$ 时极限是 $\\frac{3}{2}$，$x \\to -\\infty$ 时是 $-\\frac{3}{2}$。\n\n检验：$x = 1000$ 时这个差约为 $1.498$，$x = 10\\,000$ 时约为 $1.4998$。\n\n> **注意。** 分母是两个根式之和，行为像 $2k|x|$，不是 $k|x|$。$\\infty - \\infty$ 也不等于 $0$。",
   ),
   generate(rng) {
     const k = rng.int(1, 3);
@@ -1205,16 +1433,62 @@ const differenceOfTwoRoots: KnowledgePointDef = {
     const second = `\\sqrt{${poly([k * k, "x^2"], [c, "x"], [d, ""])}}`;
     const target = positive ? "\\infty" : "-\\infty";
     const top = poly([a - c, "x"], [b - d, ""]);
+    const f = (x: number) => Math.sqrt(k * k * x * x + a * x + b) - Math.sqrt(k * k * x * x + c * x + d);
+    const xs = [100, 1000, 10000].map((x) => s * x);
     return numberProblem({
       prompt: t(
         `Find $\\lim_{x \\to ${target}} \\left(${first} - ${second}\\right)$.`,
         `求 $\\lim_{x \\to ${target}} \\left(${first} - ${second}\\right)$。`,
       ),
       answer,
-      wrong: [Q.of(-s * (a - c), 2 * k), Q.of(s * (a - c), k), Q.of(s * (a - c)), Q.of(a + c, 2 * k), Q.of(s * (a - c), 4 * k)],
-      solution: t(
-        `Multiplying by the conjugate makes the numerator $${top}$, over the sum of the roots, which behaves like $${2 * k}|x|$. ${positive ? "Here $|x| = x$" : "Here $|x| = -x$"}, so the limit is $${answer.toLatex()}$.`,
-        `乘以共轭式后，分子是 $${top}$，分母是两个根式之和，其行为像 $${2 * k}|x|$。${positive ? "这里 $|x| = x$" : "这里 $|x| = -x$"}，所以极限是 $${answer.toLatex()}$。`,
+      wrong: [Q.of(s * (a - c), 4 * k)],
+      mistakes: firstMistakes(answer, [
+        why(
+          answer.neg(),
+          positive
+            ? "This has the wrong sign. As $x \\to \\infty$, $|x| = x$."
+            : "This takes $|x|$ as $x$. As $x \\to -\\infty$, $|x| = -x$, so the sign flips.",
+          positive
+            ? "这符号错了。当 $x \\to \\infty$ 时 $|x| = x$。"
+            : "这把 $|x|$ 当成了 $x$。当 $x \\to -\\infty$ 时 $|x| = -x$，符号要变。",
+        ),
+        why(
+          Q.of(s * (a - c), k),
+          `This takes the bottom as $${k}|x|$. It is a sum of two roots, about $${2 * k}|x|$.`,
+          `这把分母当成了 $${k}|x|$。它是两个根式之和，约为 $${2 * k}|x|$。`,
+        ),
+        why(Q.of(s * (a - c)), "This forgets to divide by the sum of the roots.", "这忘了除以两个根式之和。"),
+        why(
+          Q.of(a + c, 2 * k),
+          `This adds the coefficients $${a}$ and $${c}$. The conjugate subtracts the second root's terms.`,
+          `这把系数 $${a}$ 和 $${c}$ 相加了。乘以共轭式后，第二个根式的各项是减去的。`,
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Multiply by the conjugate",
+            "乘以共轭式",
+            `The $x^2$ terms cancel:\n\n$$${first} - ${second} = \\frac{${top}}{${first} + ${second}}$$`,
+            `$x^2$ 项相消：\n\n$$${first} - ${second} = \\frac{${top}}{${first} + ${second}}$$`,
+          ],
+          [
+            "Compare the sizes",
+            "比较大小",
+            `Each root behaves like $${k === 1 ? "" : k}|x|$, so the bottom behaves like $${2 * k}|x|$. ${positive ? "Here $|x| = x$" : "Here $|x| = -x$"}.`,
+            `每个根式的行为像 $${k === 1 ? "" : k}|x|$，所以分母的行为像 $${2 * k}|x|$。${positive ? "这里 $|x| = x$" : "这里 $|x| = -x$"}。`,
+          ],
+          [
+            "Divide",
+            "相除",
+            `\n\n$$\\frac{${poly([a - c, "x"])}}{${poly([s * 2 * k, "x"])}} = ${answer.toLatex()}$$`,
+            `\n\n$$\\frac{${poly([a - c, "x"])}}{${poly([s * 2 * k, "x"])}} = ${answer.toLatex()}$$`,
+          ],
+        ],
+        [
+          `Evaluate the difference farther and farther out:\n\n${valueTable(xs, [["f(x)", f]])}\n\nThe values close in on $${answer.toLatex()}${approx(answer)}$.`,
+          `计算越来越远处的差：\n\n${valueTable(xs, [["f(x)", f]])}\n\n这些值逼近 $${answer.toLatex()}${approx(answer)}$。`,
+        ],
       ),
     });
   },
@@ -1224,8 +1498,8 @@ const boundedTermInRatio: KnowledgePointDef = {
   id: "a-bounded-term-inside-a-ratio-at-infinity",
   title: t("A bounded term inside a ratio at infinity", "无穷远处比值中的有界项"),
   explanation: t(
-    "Sine and cosine never settle down as $x$ grows, so this limit cannot be found by substituting or by splitting into separate limits of the oscillating part. Dividing above and below by $x$ fixes it: the oscillating term becomes a bounded quantity over $x$, and the squeeze theorem sends that term to zero whatever its oscillation does.",
-    "当 $x$ 增大时，正弦和余弦不会稳定下来，所以不能靠代入或单独求振荡部分的极限来解决。分子分母同除以 $x$ 就行了：振荡项变成有界量除以 $x$，无论它怎样振荡，夹逼定理都使这一项趋于零。",
+    "Sine and cosine never settle down as $x$ grows, so this limit cannot be found by substituting or by splitting into separate limits of the oscillating part. Dividing above and below by $x$ fixes it: the oscillating term becomes a bounded quantity over $x$, and the squeeze theorem sends that term to zero whatever its oscillation does.\n\nFor $\\frac{2x + 3\\sin x}{x + 5}$, divide by $x$: $\\frac{2 + \\frac{3\\sin x}{x}}{1 + \\frac{5}{x}}$. Since $\\left|\\frac{3\\sin x}{x}\\right| \\le \\frac{3}{x}$, that term tends to $0$, and the limit is $2$.\n\nCheck: at $x = 1000$ the quotient is about $1.993$, and at $x = 10\\,000$ about $1.999$.\n\n> **Watch out.** $\\sin x$ does not behave like $x$ for large $x$; that is only true near $0$. It stays between $-1$ and $1$, so only the coefficients of $x$ decide the limit.",
+    "当 $x$ 增大时，正弦和余弦不会稳定下来，所以不能靠代入或单独求振荡部分的极限来解决。分子分母同除以 $x$ 就行了：振荡项变成有界量除以 $x$，无论它怎样振荡，夹逼定理都使这一项趋于零。\n\n对于 $\\frac{2x + 3\\sin x}{x + 5}$，同除以 $x$：$\\frac{2 + \\frac{3\\sin x}{x}}{1 + \\frac{5}{x}}$。因为 $\\left|\\frac{3\\sin x}{x}\\right| \\le \\frac{3}{x}$，这一项趋于 $0$，极限是 $2$。\n\n检验：$x = 1000$ 时商约为 $1.993$，$x = 10\\,000$ 时约为 $1.999$。\n\n> **注意。** 当 $x$ 很大时，$\\sin x$ 并不近似于 $x$，那只在 $0$ 附近成立。它始终在 $-1$ 与 $1$ 之间，所以只有 $x$ 的系数决定极限。",
   ),
   generate(rng) {
     const a = nonzero(rng, 6);
@@ -1233,16 +1507,63 @@ const boundedTermInRatio: KnowledgePointDef = {
     const c = rng.int(1, 6);
     const d = nonzero(rng, 9);
     const wave = rng.pick(["\\sin x", "\\cos x"]);
+    const trig = wave === "\\sin x" ? Math.sin : Math.cos;
     const answer = Q.of(a, c);
     const f = `\\frac{${poly([a, "x"], [b, wave])}}{${poly([c, "x"], [d, ""])}}`;
     const reduced = `\\frac{${poly([b, wave])}}{x}`;
+    const g = (x: number) => (a * x + b * trig(x)) / (c * x + d);
     return numberProblem({
       prompt: t(`Find $\\lim_{x \\to \\infty} ${f}$.`, `求 $\\lim_{x \\to \\infty} ${f}$。`),
       answer,
-      wrong: [Q.of(b, d), Q.of(a + b, c), Q.of(0), Q.of(a, d), answer.neg(), Q.of(b, c), answer.mul(Q.of(2))],
-      solution: t(
-        `Divide the top and the bottom by $x$. Since $\\left|${reduced}\\right| \\le \\frac{${Math.abs(b)}}{x}$, the squeeze theorem sends this term to $0$, and $\\frac{${d}}{x} \\to 0$ as well. What remains is $${answer.toLatex()}$.`,
-        `分子分母同除以 $x$。因为 $\\left|${reduced}\\right| \\le \\frac{${Math.abs(b)}}{x}$，由夹逼定理这一项趋于 $0$，$\\frac{${d}}{x}$ 也趋于 $0$。剩下的就是 $${answer.toLatex()}$。`,
+      wrong: [Q.of(b, d), answer.mul(Q.of(2))],
+      mistakes: firstMistakes(answer, [
+        why(
+          Q.of(a + b, c),
+          `This treats $${wave}$ like $x$, which is only true near $0$ for sine. Here it stays between $-1$ and $1$.`,
+          `这把 $${wave}$ 当成了 $x$，那只在 $0$ 附近对正弦成立。这里它始终在 $-1$ 与 $1$ 之间。`,
+        ),
+        why(
+          0,
+          `Only the oscillating term tends to $0$ after dividing by $x$. The terms $${poly([a, "x"])}$ and $${poly([c, "x"])}$ remain.`,
+          `除以 $x$ 后只有振荡项趋于 $0$。$${poly([a, "x"])}$ 和 $${poly([c, "x"])}$ 两项还在。`,
+        ),
+        why(
+          Q.of(a, d),
+          `This divides by the constant $${d}$. After dividing by $x$, the bottom tends to $${c}$.`,
+          `这除以了常数 $${d}$。同除以 $x$ 后，分母趋于 $${c}$。`,
+        ),
+        why(answer.neg(), `This has the wrong sign: the limit is $\\frac{${a}}{${c}}$.`, `这符号错了：极限是 $\\frac{${a}}{${c}}$。`),
+        why(
+          Q.of(b, c),
+          `This keeps the coefficient of $${wave}$, whose term tends to $0$, instead of the coefficient of $x$.`,
+          `这用了 $${wave}$ 的系数，而那一项趋于 $0$；应该用 $x$ 的系数。`,
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Divide by x",
+            "同除以 x",
+            `\n\n$$${f} = \\frac{${a} + ${reduced}}{${c} + \\frac{${d}}{x}}$$`,
+            `\n\n$$${f} = \\frac{${a} + ${reduced}}{${c} + \\frac{${d}}{x}}$$`,
+          ],
+          [
+            "Squeeze the oscillating term",
+            "夹逼振荡项",
+            `Since $\\left|${reduced}\\right| \\le \\frac{${Math.abs(b)}}{x}$, the squeeze theorem sends this term to $0$, and $\\frac{${d}}{x} \\to 0$ as well.`,
+            `因为 $\\left|${reduced}\\right| \\le \\frac{${Math.abs(b)}}{x}$，由夹逼定理这一项趋于 $0$，$\\frac{${d}}{x}$ 也趋于 $0$。`,
+          ],
+          [
+            "Read off the limit",
+            "得出极限",
+            `What remains is $\\frac{${a}}{${c}} = ${answer.toLatex()}$.`,
+            `剩下的是 $\\frac{${a}}{${c}} = ${answer.toLatex()}$。`,
+          ],
+        ],
+        [
+          `Evaluate the quotient farther and farther out:\n\n${valueTable([100, 1000, 10000], [["f(x)", g]])}\n\nThe values wobble less and less and close in on $${answer.toLatex()}${approx(answer)}$.`,
+          `计算越来越远处商的值：\n\n${valueTable([100, 1000, 10000], [["f(x)", g]])}\n\n这些值摆动越来越小，逼近 $${answer.toLatex()}${approx(answer)}$。`,
+        ],
       ),
     });
   },
@@ -1252,8 +1573,8 @@ const differenceOfCosines: KnowledgePointDef = {
   id: "a-difference-of-cosines-over-x-squared",
   title: t("A difference of cosines over x squared", "余弦之差除以 x 的平方"),
   explanation: t(
-    "The standard limit involves one minus a cosine, and a difference of two cosines has none in sight. Adding and subtracting one rewrites the numerator as a difference of two such expressions. Each then has its own limit over $x^{2}$, half the square of its coefficient, so the two can be taken separately and subtracted.",
-    "标准极限涉及一减余弦，而两个余弦之差里看不出这种形式。加一再减一，就把分子改写成两个这样的式子之差。每个式子除以 $x^{2}$ 都有自己的极限，即系数平方的一半，所以可以分别求出再相减。",
+    "The standard limit involves one minus a cosine, and a difference of two cosines has none in sight. Adding and subtracting one rewrites the numerator as a difference of two such expressions. Each then has its own limit over $x^{2}$, half the square of its coefficient, so the two can be taken separately and subtracted.\n\n$$\\lim_{x \\to 0} \\frac{\\cos x - \\cos 3x}{x^{2}} = \\lim_{x \\to 0} \\frac{(1 - \\cos 3x) - (1 - \\cos x)}{x^{2}} = \\frac{9}{2} - \\frac{1}{2} = 4.$$\n\nCheck: at $x = 0.01$ the quotient is about $3.9997$.\n\n> **Watch out.** Keep the order: $\\cos ax - \\cos bx = (1 - \\cos bx) - (1 - \\cos ax)$, so the answer has $b^{2} - a^{2}$, not $a^{2} - b^{2}$. Square each coefficient before subtracting.",
+    "标准极限涉及一减余弦，而两个余弦之差里看不出这种形式。加一再减一，就把分子改写成两个这样的式子之差。每个式子除以 $x^{2}$ 都有自己的极限，即系数平方的一半，所以可以分别求出再相减。\n\n$$\\lim_{x \\to 0} \\frac{\\cos x - \\cos 3x}{x^{2}} = \\lim_{x \\to 0} \\frac{(1 - \\cos 3x) - (1 - \\cos x)}{x^{2}} = \\frac{9}{2} - \\frac{1}{2} = 4.$$\n\n检验：$x = 0.01$ 时商约为 $3.9997$。\n\n> **注意。** 顺序不能弄错：$\\cos ax - \\cos bx = (1 - \\cos bx) - (1 - \\cos ax)$，所以答案是 $b^{2} - a^{2}$，不是 $a^{2} - b^{2}$。先把每个系数平方，再相减。",
   ),
   generate(rng) {
     const a = rng.int(1, 7);
@@ -1265,16 +1586,55 @@ const differenceOfCosines: KnowledgePointDef = {
     const difference = Q.of(b * b - a * a, 2).toLatex();
     const scale = c === 1 ? "" : `, and dividing by $${c}$ gives $${answer.toLatex()}$`;
     const scaleZh = c === 1 ? "" : `，再除以 $${c}$ 得 $${answer.toLatex()}$`;
+    const f = (x: number) => (Math.cos(a * x) - Math.cos(b * x)) / (c * x * x);
     return numberProblem({
       prompt: t(
         `Find $\\lim_{x \\to 0} \\frac{\\cos ${ua} - \\cos ${ub}}{${poly([c, "x^2"])}}$.`,
         `求 $\\lim_{x \\to 0} \\frac{\\cos ${ua} - \\cos ${ub}}{${poly([c, "x^2"])}}$。`,
       ),
       answer,
-      wrong: [Q.of(a * a - b * b, 2 * c), Q.of(b * b - a * a, c), Q.of(b - a, 2 * c), Q.of((b - a) ** 2, 2 * c)],
-      solution: t(
-        `The numerator equals $(1 - \\cos ${ub}) - (1 - \\cos ${ua})$. Over $x^2$ these tend to $${Q.of(b * b, 2).toLatex()}$ and $${Q.of(a * a, 2).toLatex()}$, whose difference is $${difference}$${scale}.`,
-        `分子等于 $(1 - \\cos ${ub}) - (1 - \\cos ${ua})$。除以 $x^2$ 后，它们分别趋于 $${Q.of(b * b, 2).toLatex()}$ 和 $${Q.of(a * a, 2).toLatex()}$，二者之差是 $${difference}$${scaleZh}。`,
+      mistakes: firstMistakes(answer, [
+        why(
+          Q.of(a * a - b * b, 2 * c),
+          `This has the order reversed: $\\cos ${ua} - \\cos ${ub} = (1 - \\cos ${ub}) - (1 - \\cos ${ua})$.`,
+          `这把顺序弄反了：$\\cos ${ua} - \\cos ${ub} = (1 - \\cos ${ub}) - (1 - \\cos ${ua})$。`,
+        ),
+        why(
+          Q.of(b * b - a * a, c),
+          "This drops the $\\frac{1}{2}$: $\\frac{1 - \\cos u}{u^{2}} \\to \\frac{1}{2}$.",
+          "这漏掉了 $\\frac{1}{2}$：$\\frac{1 - \\cos u}{u^{2}} \\to \\frac{1}{2}$。",
+        ),
+        why(
+          Q.of(b - a, 2 * c),
+          "This does not square the coefficients. Each part gives half the square of its coefficient.",
+          "这没有把系数平方。每部分给出的是系数平方的一半。",
+        ),
+        why(
+          Q.of((b - a) ** 2, 2 * c),
+          "This squares the difference of the coefficients. Square each one, then subtract.",
+          "这把系数之差平方了。要先分别平方，再相减。",
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Add and subtract one",
+            "加一再减一",
+            `\n\n$$\\cos ${ua} - \\cos ${ub} = (1 - \\cos ${ub}) - (1 - \\cos ${ua})$$`,
+            `\n\n$$\\cos ${ua} - \\cos ${ub} = (1 - \\cos ${ub}) - (1 - \\cos ${ua})$$`,
+          ],
+          [
+            "Take each limit",
+            "分别求极限",
+            `Over $x^2$ these tend to $${Q.of(b * b, 2).toLatex()}$ and $${Q.of(a * a, 2).toLatex()}$.`,
+            `除以 $x^2$ 后，它们分别趋于 $${Q.of(b * b, 2).toLatex()}$ 和 $${Q.of(a * a, 2).toLatex()}$。`,
+          ],
+          ["Subtract", "相减", `Their difference is $${difference}$${scale}.`, `二者之差是 $${difference}$${scaleZh}。`],
+        ],
+        [
+          `Evaluate the quotient close to $x = 0$:\n\n${valueTable(around(0), [["f(x)", f]])}\n\nThe values close in on $${answer.toLatex()}${approx(answer)}$.`,
+          `在 $x = 0$ 附近计算商的值：\n\n${valueTable(around(0), [["f(x)", f]])}\n\n这些值逼近 $${answer.toLatex()}${approx(answer)}$。`,
+        ],
       ),
     });
   },
@@ -1284,8 +1644,8 @@ const ratioOfExponentialDifferences: KnowledgePointDef = {
   id: "a-ratio-of-two-exponential-differences",
   title: t("A ratio of two exponential differences", "两个指数差之比"),
   explanation: t(
-    "Both the numerator and the denominator tend to zero, and neither has the form $e^{u} - 1$ on its own. Subtracting and adding one splits each into two familiar pieces. Dividing above and below by $x$ then turns each piece into a standard limit equal to its exponent's coefficient, so only those coefficients decide the value.",
-    "分子和分母都趋于零，而且都不是 $e^{u} - 1$ 的形式。减一再加一，把每一个拆成两个熟悉的部分。分子分母同除以 $x$ 后，每一部分都变成标准极限，其值等于指数的系数，所以结果只取决于这些系数。",
+    "Both the numerator and the denominator tend to zero, and neither has the form $e^{u} - 1$ on its own. Subtracting and adding one splits each into two familiar pieces. Dividing above and below by $x$ then turns each piece into a standard limit equal to its exponent's coefficient, so only those coefficients decide the value.\n\n$$\\lim_{x \\to 0} \\frac{e^{3x} - e^{x}}{e^{2x} - e^{-x}} = \\frac{3 - 1}{2 - (-1)} = \\frac{2}{3}.$$\n\nCheck: at $x = 0.001$ the quotient is about $0.6677$, and at $x = -0.001$ about $0.6657$.\n\n> **Watch out.** Subtract the coefficients with their signs: $2 - (-1) = 3$, not $1$. And keep the top's difference on top.",
+    "分子和分母都趋于零，而且都不是 $e^{u} - 1$ 的形式。减一再加一，把每一个拆成两个熟悉的部分。分子分母同除以 $x$ 后，每一部分都变成标准极限，其值等于指数的系数，所以结果只取决于这些系数。\n\n$$\\lim_{x \\to 0} \\frac{e^{3x} - e^{x}}{e^{2x} - e^{-x}} = \\frac{3 - 1}{2 - (-1)} = \\frac{2}{3}.$$\n\n检验：$x = 0.001$ 时商约为 $0.6677$，$x = -0.001$ 时约为 $0.6657$。\n\n> **注意。** 系数要带着符号相减：$2 - (-1) = 3$，不是 $1$。分子的差要留在分子上。",
   ),
   generate(rng) {
     const a = nonzero(rng, 5);
@@ -1295,22 +1655,60 @@ const ratioOfExponentialDifferences: KnowledgePointDef = {
     const answer = Q.of(a - b, c - d);
     const e = (m: number) => `e^{${timesX(m)}}`;
     const f = `\\frac{${e(a)} - ${e(b)}}{${e(c)} - ${e(d)}}`;
+    const g = (x: number) => (Math.exp(a * x) - Math.exp(b * x)) / (Math.exp(c * x) - Math.exp(d * x));
+    const xs = [-0.001, -0.0001, 0.0001, 0.001];
     return numberProblem({
       prompt: t(`Find $\\lim_{x \\to 0} ${f}$.`, `求 $\\lim_{x \\to 0} ${f}$。`),
       answer,
-      wrong: [
-        Q.of(c - d, a - b),
-        Q.of(a, c),
-        Q.of(b - a, c - d),
-        Q.of(a - b),
-        Q.of(b, d),
-        Q.of(2 * (a - b), c - d),
-        Q.of(a * d, b * c),
-        Q.of(3 * (a - b), c - d),
-      ],
-      solution: t(
-        `Since $\\frac{e^{mx} - 1}{x} \\to m$, the top over $x$ tends to $${poly([a, ""], [-b, ""])} = ${a - b}$ and the bottom over $x$ to $${poly([c, ""], [-d, ""])} = ${c - d}$. The limit is their ratio, $${answer.toLatex()}$.`,
-        `由于 $\\frac{e^{mx} - 1}{x} \\to m$，分子除以 $x$ 趋于 $${poly([a, ""], [-b, ""])} = ${a - b}$，分母除以 $x$ 趋于 $${poly([c, ""], [-d, ""])} = ${c - d}$。极限是二者之比 $${answer.toLatex()}$。`,
+      wrong: [Q.of(2 * (a - b), c - d), Q.of(a * d, b * c)],
+      mistakes: firstMistakes(answer, [
+        why(
+          Q.of(c - d, a - b),
+          "This turns the ratio upside down. The top's difference goes on top.",
+          "这把比颠倒了。分子的差应在分子上。",
+        ),
+        why(
+          Q.of(a, c),
+          "This keeps only the first exponential above and below. The second ones count too.",
+          "这只保留了分子分母中的第一个指数式。第二个也要算。",
+        ),
+        why(
+          Q.of(b - a, c - d),
+          `This subtracts the top's coefficients the wrong way round: it is $${a} - ${inParens(b)}$.`,
+          `这把分子的系数减反了：应是 $${a} - ${inParens(b)}$。`,
+        ),
+        why(Q.of(a - b), `This forgets the bottom, which over $x$ tends to $${c - d}$.`, `这忘了分母，它除以 $x$ 后趋于 $${c - d}$。`),
+        why(
+          Q.of(b, d),
+          "This keeps only the second exponential above and below. The first ones count too.",
+          "这只保留了分子分母中的第二个指数式。第一个也要算。",
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Split the top",
+            "拆开分子",
+            `\n\n$$\\frac{${e(a)} - ${e(b)}}{x} = \\frac{${e(a)} - 1}{x} - \\frac{${e(b)} - 1}{x} \\to ${a} - ${inParens(b)} = ${a - b}$$`,
+            `\n\n$$\\frac{${e(a)} - ${e(b)}}{x} = \\frac{${e(a)} - 1}{x} - \\frac{${e(b)} - 1}{x} \\to ${a} - ${inParens(b)} = ${a - b}$$`,
+          ],
+          [
+            "Split the bottom",
+            "拆开分母",
+            `\n\n$$\\frac{${e(c)} - ${e(d)}}{x} \\to ${c} - ${inParens(d)} = ${c - d}$$`,
+            `\n\n$$\\frac{${e(c)} - ${e(d)}}{x} \\to ${c} - ${inParens(d)} = ${c - d}$$`,
+          ],
+          [
+            "Divide",
+            "相除",
+            `The limit is their ratio, $\\frac{${a - b}}{${c - d}} = ${answer.toLatex()}$.`,
+            `极限是二者之比 $\\frac{${a - b}}{${c - d}} = ${answer.toLatex()}$。`,
+          ],
+        ],
+        [
+          `Evaluate the quotient close to $x = 0$:\n\n${valueTable(xs, [["f(x)", g]])}\n\nThe values close in on $${answer.toLatex()}${approx(answer)}$.`,
+          `在 $x = 0$ 附近计算商的值：\n\n${valueTable(xs, [["f(x)", g]])}\n\n这些值逼近 $${answer.toLatex()}${approx(answer)}$。`,
+        ],
       ),
     });
   },
@@ -2317,14 +2715,15 @@ const quotientOfAbsoluteValues: KnowledgePointDef = {
   id: "a-quotient-of-absolute-values-that-has-a-limit",
   title: t("A quotient of absolute values that has a limit", "有极限的绝对值之商"),
   explanation: t(
-    "A quotient like $\\frac{|x^2 - a^2|}{x - a}$ has no two-sided limit at $a$, because it takes opposite signs on either side. But when the absolute value appears in both the numerator and the denominator, the sign cancels. Since $|x^2 - a^2| = |x - a||x + a|$, the factor $|x - a|$ can be cancelled for $x \\ne a$, which leaves a continuous function. So this limit exists, even though each piece vanishes at $a$.",
-    "像 $\\frac{|x^2 - a^2|}{x - a}$ 这样的商在 $a$ 处没有双侧极限，因为两侧符号相反。但当绝对值同时出现在分子和分母中时，符号抵消了。由于 $|x^2 - a^2| = |x - a||x + a|$，当 $x \\ne a$ 时可以约去 $|x - a|$，剩下一个连续函数。所以这个极限存在，尽管分子和分母在 $a$ 处都为零。",
+    "A quotient like $\\frac{|x^2 - a^2|}{x - a}$ has no two-sided limit at $a$, because it takes opposite signs on either side. But when the absolute value appears in both the numerator and the denominator, the sign cancels. Since $|x^2 - a^2| = |x - a||x + a|$, the factor $|x - a|$ can be cancelled for $x \\ne a$, which leaves a continuous function. So this limit exists, even though each piece vanishes at $a$.\n\nFor $\\lim_{x \\to 3} \\frac{|x^{2} - 9|}{|x - 3|}$, cancelling leaves $|x + 3|$, so the limit is $6$.\n\nCheck: at $x = 2.99$ the quotient is $5.99$, and at $x = 3.01$ it is $6.01$.\n\n> **Watch out.** What is left is $|x + a|$, evaluated at $x = a$: it is $|2a|$, which is positive even when $a$ is negative.",
+    "像 $\\frac{|x^2 - a^2|}{x - a}$ 这样的商在 $a$ 处没有双侧极限，因为两侧符号相反。但当绝对值同时出现在分子和分母中时，符号抵消了。由于 $|x^2 - a^2| = |x - a||x + a|$，当 $x \\ne a$ 时可以约去 $|x - a|$，剩下一个连续函数。所以这个极限存在，尽管分子和分母在 $a$ 处都为零。\n\n对于 $\\lim_{x \\to 3} \\frac{|x^{2} - 9|}{|x - 3|}$，约去后剩下 $|x + 3|$，所以极限是 $6$。\n\n检验：$x = 2.99$ 时商是 $5.99$，$x = 3.01$ 时是 $6.01$。\n\n> **注意。** 剩下的是 $|x + a|$，要在 $x = a$ 处求值：它等于 $|2a|$，即使 $a$ 是负数，它也是正的。",
   ),
   generate(rng) {
     const a = nonzero(rng, 9);
     const k = rng.int(1, 6);
     const answer = 2 * k * Math.abs(a);
     const scale = k === 1 ? "" : `${k}`;
+    const f = (x: number) => (k * Math.abs(x * x - a * a)) / Math.abs(x - a);
     return numberProblem({
       prompt: t(
         `Find $\\lim_{x \\to ${a}} \\frac{${scale}|x^2 - ${a * a}|}{|${poly([1, "x"], [-a, ""])}|}$.`,
@@ -2332,10 +2731,51 @@ const quotientOfAbsoluteValues: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [-answer, k * Math.abs(a), k * a * a, 0],
-      solution: t(
-        `Factoring gives $|x^2 - ${a * a}| = |${poly([1, "x"], [-a, ""])}||${poly([1, "x"], [a, ""])}|$. Cancelling leaves $${scale}|${poly([1, "x"], [a, ""])}|$, which tends to $${answer}$ at $x = ${a}$.`,
-        `分解得 $|x^2 - ${a * a}| = |${poly([1, "x"], [-a, ""])}||${poly([1, "x"], [a, ""])}|$。约去后剩下 $${scale}|${poly([1, "x"], [a, ""])}|$，它在 $x = ${a}$ 处趋于 $${answer}$。`,
+      mistakes: firstMistakes(answer, [
+        why(
+          -answer,
+          a < 0
+            ? `This takes $|${2 * a}|$ as $${2 * a}$. An absolute value is never negative.`
+            : "A quotient of absolute values is never negative.",
+          a < 0 ? `这把 $|${2 * a}|$ 当成了 $${2 * a}$。绝对值永远不是负数。` : "绝对值之商永远不是负数。",
+        ),
+        why(
+          k * Math.abs(a),
+          `This takes $|${poly([1, "x"], [a, ""])}|$ as $|${a}|$. At $x = ${a}$ it is $|${2 * a}|$.`,
+          `这把 $|${poly([1, "x"], [a, ""])}|$ 当成了 $|${a}|$。在 $x = ${a}$ 处它等于 $|${2 * a}|$。`,
+        ),
+        why(
+          k * a * a,
+          `This uses $x^2 = ${a * a}$. The factor left after cancelling is $|${poly([1, "x"], [a, ""])}|$.`,
+          `这用了 $x^2 = ${a * a}$。约分后剩下的因式是 $|${poly([1, "x"], [a, ""])}|$。`,
+        ),
+        why(0, "This reads $\\frac{0}{0}$ as $0$. Cancel the common factor first.", "这把 $\\frac{0}{0}$ 当成了 $0$。要先约去公因式。"),
+      ]),
+      solution: walk(
+        [
+          [
+            "Factor",
+            "分解因式",
+            `\n\n$$|x^2 - ${a * a}| = |${poly([1, "x"], [-a, ""])}||${poly([1, "x"], [a, ""])}|$$`,
+            `\n\n$$|x^2 - ${a * a}| = |${poly([1, "x"], [-a, ""])}||${poly([1, "x"], [a, ""])}|$$`,
+          ],
+          [
+            "Cancel",
+            "约分",
+            `For $x \\ne ${a}$, cancel $|${poly([1, "x"], [-a, ""])}|$. This leaves $${scale}|${poly([1, "x"], [a, ""])}|$, which is continuous.`,
+            `当 $x \\ne ${a}$ 时约去 $|${poly([1, "x"], [-a, ""])}|$，剩下 $${scale}|${poly([1, "x"], [a, ""])}|$，它是连续的。`,
+          ],
+          [
+            "Substitute",
+            "代入",
+            `At $x = ${a}$: $${k === 1 ? "" : `${k} \\cdot `}|${2 * a}| = ${answer}$.`,
+            `在 $x = ${a}$ 处：$${k === 1 ? "" : `${k} \\cdot `}|${2 * a}| = ${answer}$。`,
+          ],
+        ],
+        [
+          `Evaluate the quotient on both sides of $x = ${a}$:\n\n${valueTable(around(a), [["f(x)", f]])}\n\nBoth sides close in on $${answer}$.`,
+          `计算商在 $x = ${a}$ 两侧的值：\n\n${valueTable(around(a), [["f(x)", f]])}\n\n两侧都逼近 $${answer}$。`,
+        ],
       ),
     });
   },
@@ -2345,8 +2785,8 @@ const shiftedSineOverSquares: KnowledgePointDef = {
   id: "a-shifted-sine-over-a-difference-of-squares",
   title: t("A shifted sine over a difference of squares", "平移的正弦与平方差之比"),
   explanation: t(
-    "The special limit $\\frac{\\sin u}{u} \\to 1$ works for any quantity $u$ that tends to zero, not just for $x$ itself. Near $x = a$, the natural choice is $u = x - a$, so the denominator must be arranged to contain this factor. Factoring a difference of squares does this, and it leaves a second factor that is continuous at $a$ and may simply be evaluated. So the limit is a product of two easy limits.",
-    "特殊极限 $\\frac{\\sin u}{u} \\to 1$ 对任何趋于零的量 $u$ 都成立，不只是 $x$ 本身。在 $x = a$ 附近，自然的选择是 $u = x - a$，所以要把分母整理成含有这个因子的形式。分解平方差正好做到这一点，并留下另一个在 $a$ 处连续的因子，可以直接代入。所以极限是两个简单极限之积。",
+    "The special limit $\\frac{\\sin u}{u} \\to 1$ works for any quantity $u$ that tends to zero, not just for $x$ itself. Near $x = a$, the natural choice is $u = x - a$, so the denominator must be arranged to contain this factor. Factoring a difference of squares does this, and it leaves a second factor that is continuous at $a$ and may simply be evaluated. So the limit is a product of two easy limits.\n\nFor $\\lim_{x \\to 1} \\frac{\\sin 3(x - 1)}{x^{2} - 1}$: $\\frac{\\sin 3(x - 1)}{x - 1} \\to 3$ and $\\frac{1}{x + 1} \\to \\frac{1}{2}$, so the limit is $\\frac{3}{2}$.\n\nCheck: at $x = 1.001$ the quotient is about $1.4992$, and at $x = 0.999$ about $1.5007$.\n\n> **Watch out.** The second factor $\\frac{1}{x + a}$ stays in the answer: at $x = a$ it is $\\frac{1}{2a}$, not $1$ and not $\\frac{1}{a}$.",
+    "特殊极限 $\\frac{\\sin u}{u} \\to 1$ 对任何趋于零的量 $u$ 都成立，不只是 $x$ 本身。在 $x = a$ 附近，自然的选择是 $u = x - a$，所以要把分母整理成含有这个因子的形式。分解平方差正好做到这一点，并留下另一个在 $a$ 处连续的因子，可以直接代入。所以极限是两个简单极限之积。\n\n对于 $\\lim_{x \\to 1} \\frac{\\sin 3(x - 1)}{x^{2} - 1}$：$\\frac{\\sin 3(x - 1)}{x - 1} \\to 3$，$\\frac{1}{x + 1} \\to \\frac{1}{2}$，所以极限是 $\\frac{3}{2}$。\n\n检验：$x = 1.001$ 时商约为 $1.4992$，$x = 0.999$ 时约为 $1.5007$。\n\n> **注意。** 第二个因子 $\\frac{1}{x + a}$ 要留在答案里：它在 $x = a$ 处等于 $\\frac{1}{2a}$，不是 $1$，也不是 $\\frac{1}{a}$。",
   ),
   generate(rng) {
     const a = nonzero(rng, 9);
@@ -2354,16 +2794,55 @@ const shiftedSineOverSquares: KnowledgePointDef = {
     const answer = Q.of(k, 2 * a);
     const shift = poly([1, "x"], [-a, ""]);
     const argument = k === 1 ? shift : `${k}(${shift})`;
+    const f = (x: number) => Math.sin(k * (x - a)) / (x * x - a * a);
     return numberProblem({
       prompt: t(
         `Find $\\lim_{x \\to ${a}} \\frac{\\sin(${argument})}{x^2 - ${a * a}}$.`,
         `求 $\\lim_{x \\to ${a}} \\frac{\\sin(${argument})}{x^2 - ${a * a}}$。`,
       ),
       answer,
-      wrong: [Q.of(k, a), Q.of(1, 2 * a), Q.of(k), Q.of(-k, 2 * a)],
-      solution: t(
-        `The denominator is $(${shift})(${poly([1, "x"], [a, ""])})$. As $x \\to ${a}$, $\\frac{\\sin(${argument})}{${shift}} \\to ${k}$ and $\\frac{1}{${poly([1, "x"], [a, ""])}} \\to ${Q.of(1, 2 * a).toLatex()}$. Their product is $${answer.toLatex()}$.`,
-        `分母是 $(${shift})(${poly([1, "x"], [a, ""])})$。当 $x \\to ${a}$ 时，$\\frac{\\sin(${argument})}{${shift}} \\to ${k}$，$\\frac{1}{${poly([1, "x"], [a, ""])}} \\to ${Q.of(1, 2 * a).toLatex()}$。它们的积是 $${answer.toLatex()}$。`,
+      mistakes: firstMistakes(answer, [
+        why(
+          Q.of(k, a),
+          `This takes $${poly([1, "x"], [a, ""])}$ as $${a}$. At $x = ${a}$ it is $${2 * a}$.`,
+          `这把 $${poly([1, "x"], [a, ""])}$ 当成了 $${a}$。在 $x = ${a}$ 处它等于 $${2 * a}$。`,
+        ),
+        why(
+          Q.of(1, 2 * a),
+          `This drops the multiple $${k}$: $\\frac{\\sin(${argument})}{${shift}} \\to ${k}$.`,
+          `这丢掉了倍数 $${k}$：$\\frac{\\sin(${argument})}{${shift}} \\to ${k}$。`,
+        ),
+        why(
+          Q.of(k),
+          `This drops the second factor $\\frac{1}{${poly([1, "x"], [a, ""])}}$, which is $${Q.of(1, 2 * a).toLatex()}$ at $x = ${a}$.`,
+          `这丢掉了第二个因子 $\\frac{1}{${poly([1, "x"], [a, ""])}}$，它在 $x = ${a}$ 处等于 $${Q.of(1, 2 * a).toLatex()}$。`,
+        ),
+        why(
+          Q.of(-k, 2 * a),
+          `This has the wrong sign: $${poly([1, "x"], [a, ""])}$ is $${2 * a}$ at $x = ${a}$.`,
+          `这符号错了：$${poly([1, "x"], [a, ""])}$ 在 $x = ${a}$ 处等于 $${2 * a}$。`,
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Factor the denominator",
+            "分解分母",
+            `\n\n$$\\frac{\\sin(${argument})}{x^2 - ${a * a}} = \\frac{\\sin(${argument})}{${shift}} \\cdot \\frac{1}{${poly([1, "x"], [a, ""])}}$$`,
+            `\n\n$$\\frac{\\sin(${argument})}{x^2 - ${a * a}} = \\frac{\\sin(${argument})}{${shift}} \\cdot \\frac{1}{${poly([1, "x"], [a, ""])}}$$`,
+          ],
+          [
+            "Take each limit",
+            "分别求极限",
+            `With $u = ${shift} \\to 0$, $\\frac{\\sin ${k === 1 ? "" : k}u}{u} \\to ${k}$, and $\\frac{1}{${poly([1, "x"], [a, ""])}} \\to ${Q.of(1, 2 * a).toLatex()}$.`,
+            `令 $u = ${shift} \\to 0$，则 $\\frac{\\sin ${k === 1 ? "" : k}u}{u} \\to ${k}$，而 $\\frac{1}{${poly([1, "x"], [a, ""])}} \\to ${Q.of(1, 2 * a).toLatex()}$。`,
+          ],
+          ["Multiply", "相乘", `Their product is $${answer.toLatex()}$.`, `它们的积是 $${answer.toLatex()}$。`],
+        ],
+        [
+          `Evaluate the quotient on both sides of $x = ${a}$:\n\n${valueTable(around(a), [["f(x)", f]])}\n\nThe values close in on $${answer.toLatex()}${approx(answer)}$.`,
+          `计算商在 $x = ${a}$ 两侧的值：\n\n${valueTable(around(a), [["f(x)", f]])}\n\n这些值逼近 $${answer.toLatex()}${approx(answer)}$。`,
+        ],
       ),
     });
   },

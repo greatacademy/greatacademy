@@ -10,6 +10,19 @@ export const taughtCourses: readonly string[] = ["algebra-i", "geometry", "algeb
  * course is listed in taughtCourses, its topics leave this list.
  */
 export const taughtTopics: readonly string[] = [
+  "calculating-limits-of-rational-functions-by-factoring",
+  "limits-of-absolute-value-functions",
+  "calculating-limits-of-radical-functions-using-conjugate-multiplication",
+  "calculating-limits-using-trigonometric-identities",
+  "limits-at-infinity-and-horizontal-asymptotes-of-rational-functions",
+  "evaluating-limits-at-infinity-by-comparing-relative-magnitudes-of-functions",
+  "evaluating-limits-at-infinity-of-radical-functions",
+  "the-squeeze-theorem",
+  "special-limits-involving-sine",
+  "evaluating-special-limits-involving-sine-using-a-substitution",
+  "special-limits-involving-cosine",
+  "limits-involving-the-exponential-function",
+  "further-limits-involving-the-exponential-function",
   "the-finite-limit-of-a-function",
   "the-left-and-right-sided-limits-of-a-function",
   "finding-the-existence-of-a-limit-using-one-sided-limits",

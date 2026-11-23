@@ -8,7 +8,7 @@ import { dec, linear, paren, poly, Q, union } from "@ga/subject-math";
 import { calculusDrawings1 } from "../explanation-drawings-calculus-1.ts";
 import { calculusDrawings2 } from "../explanation-drawings-calculus-2.ts";
 
-import { explainedChoice, functionProblem, intervalProblem, solutionsProblem } from "../problems.ts";
+import { explainedChoice, functionProblem, intervalProblem, numberProblem, solutionsProblem, why } from "../problems.ts";
 import { stepLabel } from "../solution-kit.ts";
 import { ask, choose, type Pair, point } from "../university-kit.ts";
 import { type Reason, reasoned } from "../wrong-reasons.ts";
@@ -736,8 +736,8 @@ const sameBaseExponentials = point(
   "dominant-exponentials-with-the-same-base",
   ["Dominant exponentials with the same base", "底相同的主导指数项"],
   [
-    "In a quotient at infinity, only the fastest-growing term of the numerator and of the denominator matter. An exponential with the largest base beats every power and every smaller base. When both sides share that base, it cancels and the limit is the ratio of the coefficients.",
-    "在无穷远处的商中，只有分子和分母里增长最快的项起作用。底最大的指数项胜过任何幂函数和任何底更小的指数项。如果分子分母都以这个底为主导，它就约去了，极限等于系数之比。",
+    "In a quotient at infinity, only the fastest-growing term of the numerator and of the denominator matter. An exponential with the largest base beats every power and every smaller base. When both sides share that base, it cancels and the limit is the ratio of the coefficients.\n\nFor $\\frac{2 \\cdot 3^{x} + x^{5}}{4 \\cdot 3^{x} + 2^{x}}$, divide top and bottom by $3^{x}$: $\\frac{x^{5}}{3^{x}} \\to 0$ and $\\frac{2^{x}}{3^{x}} \\to 0$, so the limit is $\\frac{2}{4} = \\frac{1}{2}$.\n\nCheck: at $x = 20$ the quotient is about $0.5002$, and at $x = 30$ about $0.5000$.\n\n> **Watch out.** A high power such as $x^{9}$ can be larger than $3^{x}$ for small $x$, but the exponential wins in the end. The smaller exponential tends to $0$ after dividing, so it adds nothing to the bottom's coefficient.",
+    "在无穷远处的商中，只有分子和分母里增长最快的项起作用。底最大的指数项胜过任何幂函数和任何底更小的指数项。如果分子分母都以这个底为主导，它就约去了，极限等于系数之比。\n\n对于 $\\frac{2 \\cdot 3^{x} + x^{5}}{4 \\cdot 3^{x} + 2^{x}}$，分子分母同除以 $3^{x}$：$\\frac{x^{5}}{3^{x}} \\to 0$，$\\frac{2^{x}}{3^{x}} \\to 0$，所以极限是 $\\frac{2}{4} = \\frac{1}{2}$。\n\n检验：$x = 20$ 时商约为 $0.5002$，$x = 30$ 时约为 $0.5000$。\n\n> **注意。** 像 $x^{9}$ 这样的高次幂在 $x$ 较小时可能比 $3^{x}$ 大，但最终指数函数胜出。底更小的指数项除以主导项后趋于 $0$，不会给分母的系数增加任何东西。",
   ],
   (rng) => {
     const b = rng.int(3, 7);
@@ -749,15 +749,56 @@ const sameBaseExponentials = point(
     const answer = Q.of(c, d);
     const top = poly([c, `\\cdot ${b}^{x}`], [m, `x^{${n}}`]).replace(/^(-?)\\cdot /, "$1");
     const bottom = `${d} \\cdot ${b}^{x} + ${e}^{x}`;
-    return ask(
-      [`Find $\\lim_{x \\to \\infty} \\frac{${top}}{${bottom}}$.`, `求 $\\lim_{x \\to \\infty} \\frac{${top}}{${bottom}}$。`],
-      answer,
-      [0, Q.of(m, d), Q.of(c, d + 1), Q.of(d, c)],
+    const f = (x: number) => (c * b ** x + m * x ** n) / (d * b ** x + e ** x);
+    const values = table(["$x$", "$50$", "$100$", "$200$"], ["$f(x)$", ...[50, 100, 200].map((x) => `$${num(f(x))}$`)]);
+    const seen = new Set([answer.toString()]);
+    const mistakes = [
+      why(
+        0,
+        `The top grows like $${b}^{x}$ too, as fast as the bottom, so the limit is not $0$.`,
+        `分子也像 $${b}^{x}$ 那样增长，与分母一样快，所以极限不是 $0$。`,
+      ),
+      why(
+        Q.of(m, d),
+        `This uses the coefficient $${m}$ of $x^{${n}}$. Divided by $${b}^{x}$, that term tends to $0$.`,
+        `这用了 $x^{${n}}$ 的系数 $${m}$。除以 $${b}^{x}$ 后这一项趋于 $0$。`,
+      ),
+      why(
+        Q.of(c, d + 1),
+        `This counts $${e}^{x}$ as if it grew like $${b}^{x}$. Divided by $${b}^{x}$, it tends to $0$.`,
+        `这把 $${e}^{x}$ 当成了与 $${b}^{x}$ 增长得一样快。除以 $${b}^{x}$ 后它趋于 $0$。`,
+      ),
+      why(Q.of(d, c), "This turns the ratio upside down.", "这把比颠倒了。"),
+    ].filter((w) => {
+      const key = (typeof w.value === "number" ? Q.of(w.value) : w.value).toString();
+      return !seen.has(key) && Boolean(seen.add(key));
+    });
+    const [solutionEn, solutionZh] = walk(
       [
-        `$${b}^{x}$ beats $x^{${n}}$ and $${e}^{x}$. Dividing the top and bottom by $${b}^{x}$, the other terms tend to $0$, which leaves $\\frac{${c}}{${d}} = ${answer.toLatex()}$.`,
-        `$${b}^{x}$ 胜过 $x^{${n}}$ 和 $${e}^{x}$。分子分母同除以 $${b}^{x}$，其余各项趋于 $0$，剩下 $\\frac{${c}}{${d}} = ${answer.toLatex()}$。`,
+        [
+          "Find the dominant term",
+          "找出主导项",
+          `$${b}^{x}$ grows faster than $x^{${n}}$ and than $${e}^{x}$, and it appears both above and below.`,
+          `$${b}^{x}$ 比 $x^{${n}}$ 和 $${e}^{x}$ 增长得都快，并且分子分母中都有它。`,
+        ],
+        [
+          "Divide by it",
+          "同除以它",
+          `Divide top and bottom by $${b}^{x}$; the other terms tend to $0$:\n\n$$\\frac{${c} + 0}{${d} + 0} = ${answer.toLatex()}$$`,
+          `分子分母同除以 $${b}^{x}$，其余各项趋于 $0$：\n\n$$\\frac{${c} + 0}{${d} + 0} = ${answer.toLatex()}$$`,
+        ],
+      ],
+      [
+        `Evaluate the quotient farther and farther out:\n\n${values}\n\nThe values close in on $${answer.toLatex()}${approx(answer)}$.`,
+        `计算越来越远处商的值：\n\n${values}\n\n这些值逼近 $${answer.toLatex()}${approx(answer)}$。`,
       ],
     );
+    return numberProblem({
+      prompt: t(`Find $\\lim_{x \\to \\infty} \\frac{${top}}{${bottom}}$.`, `求 $\\lim_{x \\to \\infty} \\frac{${top}}{${bottom}}$。`),
+      answer,
+      mistakes,
+      solution: t(solutionEn, solutionZh),
+    });
   },
 );
 
