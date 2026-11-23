@@ -432,12 +432,12 @@ export const wordBatches4: readonly LevelWordBatch[] = [
     data: `
 乒乓球 | pīng pāng qiú | table tennis | 在球台上用球拍把小球打来打去的运动 | ＿＿在中国被称为“国球”，很多人都会打。
 球台 | qiú tái | (table tennis) table | 打乒乓球用的台子 | 乒乓球的＿＿中间有一张网，把它分成两半。
-发球 | fā qiú | to serve | 比赛时把球发出去 | 打乒乓球时，＿＿的人要先把球向上抛起来，再用球拍打。
+发球 | fā qiú | to serve | 比赛时把球发出去 | 打乒乓球时，＿＿的人要先把球向上抛起来，再用球拍打。 | 接球
 接球 | jiē qiú | to receive the ball | 把对方打过来的球接住或打回去 | 对方的球又快又低，他＿＿的时候没有打过网。
 横拍 | héng pāi | shakehand grip | 像握手一样握住拍子的方法 | 用＿＿的运动员握拍的样子就像跟人握手。 | 直拍
 直拍 | zhí pāi | penhold grip | 像拿笔一样握住拍子的方法 | 很多中国老一代运动员用＿＿，握拍的样子像拿笔。 | 横拍
 握拍 | wò pāi | to grip the racket | 用手拿住球拍 | 教练说，＿＿不能太紧，手腕要放松。
-杀球 | shā qiú | to smash | 羽毛球里从高处用力向下打球 | 她跳起来一个＿＿，羽毛球又快又重地落在了对方的场地上。
+杀球 | shā qiú | to smash | 羽毛球里从高处用力向下打球 | 她跳起来一个＿＿，羽毛球又快又重地落在了对方的场地上。 | 吊球
 吊球 | diào qiú | drop shot | 羽毛球里把球轻轻打到对方网前 | 对方站在后场，她一个轻轻的＿＿，球刚过网就落了下去。
 清脆 | qīng cuì | clear and crisp (of sound) | （声音）清亮好听 | 乒乓球打在球台上，发出＿＿的响声。
 `,
@@ -449,11 +449,11 @@ export const wordBatches4: readonly LevelWordBatch[] = [
 跨栏 | kuà lán | hurdles | 跑步时跳过一个个栏架的项目 | 在一百一十米＿＿比赛中，运动员要跨过十个栏架。
 接力赛 | jiē lì sài | relay race | 几个人轮流跑完全程的比赛 | 在四乘一百米＿＿中，每个队有四个人，每个人跑一百米。
 马拉松 | mǎ lā sōng | marathon | 全程约四十二公里的长跑比赛 | ＿＿全程四十二点一九五公里，要跑好几个小时。
-铅球 | qiān qiú | shot put | 用力把一个金属球推出去的项目 | 推＿＿的时候，要把球放在肩膀上，然后用力推出去。
+铅球 | qiān qiú | shot put | 用力把一个金属球推出去的项目 | 推＿＿的时候，要把球放在肩膀上，然后用力推出去。 | 标枪 铁饼
 标枪 | biāo qiāng | javelin | 把一根细长的枪用力扔出去的项目 | ＿＿又细又长，运动员助跑以后用力把它扔出去。
 铁饼 | tiě bǐng | discus | 把一个像盘子的东西转身扔出去的项目 | ＿＿的形状像一个扁扁的盘子，运动员转几圈以后才把它扔出去。
 投掷 | tóu zhì | to throw | 扔 | 铅球、标枪和铁饼都是＿＿项目。
-起跑线 | qǐ pǎo xiàn | starting line | 比赛开始时运动员站的线 | 比赛开始前，运动员都在＿＿后面做好了准备。
+起跑线 | qǐ pǎo xiàn | starting line | 比赛开始时运动员站的线 | 比赛开始前，运动员都在＿＿后面做好了准备。 | 终点线
 终点线 | zhōng diǎn xiàn | finish line | 比赛结束的地方画的线 | 他第一个冲过了＿＿，赢得了冠军。
 `,
   },
@@ -475,7 +475,7 @@ export const wordBatches4: readonly LevelWordBatch[] = [
   {
     theme: ["Swimming and Bathing", "游泳和洗浴"],
     data: `
-自由泳 | zì yóu yǒng | freestyle | 对泳姿没有限制的游泳项目 | ＿＿比赛对泳姿没有限制，大多数运动员用的是爬泳，因为它最快。
+自由泳 | zì yóu yǒng | freestyle | 对泳姿没有限制的游泳项目 | ＿＿比赛对泳姿没有限制，大多数运动员用的是爬泳，因为它最快。 | 蛙泳 仰泳
 蛙泳 | wā yǒng | breaststroke | 动作像青蛙的泳姿 | ＿＿的动作像青蛙，两只手一起向外划，两条腿一起向后蹬。
 仰泳 | yǎng yǒng | backstroke | 脸朝上的泳姿 | 在四种泳姿里，只有＿＿是脸朝上游的。
 花样游泳 | huā yàng yóu yǒng | artistic swimming | 在水中随着音乐做各种优美动作的项目 | ＿＿运动员在水里随着音乐做出各种优美的动作，好像在水中跳舞。
@@ -540,7 +540,7 @@ export const wordBatches4: readonly LevelWordBatch[] = [
 全运会 | quán yùn huì | National Games of China | 中国全国运动会 | ＿＿是中国国内水平最高的综合性运动会，各省都派队参加。
 残奥会 | cán ào huì | Paralympic Games | 残疾人奥林匹克运动会 | ＿＿是残疾人运动员参加的奥运会，一般在奥运会以后举行。
 代表团 | dài biǎo tuán | delegation | 代表一个国家或单位去参加活动的一群人 | 中国＿＿一共有四百多名运动员参加了这届奥运会。
-开幕式 | kāi mù shì | opening ceremony | 大会开始时举行的仪式 | 奥运会的＿＿上，各国运动员排着队走进体育场。
+开幕式 | kāi mù shì | opening ceremony | 大会开始时举行的仪式 | 奥运会的＿＿上，各国运动员排着队走进体育场。 | 闭幕式
 闭幕式 | bì mù shì | closing ceremony | 大会结束时举行的仪式 | 在运动会的＿＿上，大家依依不舍地告别。
 圣火 | shèng huǒ | sacred flame | 奥运会等大会上点燃的火 | 奥运会的＿＿要在希腊点燃，再传到举办的城市。
 奖牌榜 | jiǎng pái bǎng | medal table | 按得到的奖牌多少排的名次表 | 比赛的最后一天，这个国家在＿＿上排到了第一名。
@@ -550,7 +550,7 @@ export const wordBatches4: readonly LevelWordBatch[] = [
   {
     theme: ["On the Field and the Court", "球场上"],
     data: `
-前锋 | qián fēng | forward | 球队里主要负责进攻的队员 | 他是球队的＿＿，这个赛季已经进了二十个球。 | 中锋
+前锋 | qián fēng | forward | 球队里主要负责进攻的队员 | 他是球队的＿＿，这个赛季已经进了二十个球。 | 中锋 后卫
 后卫 | hòu wèi | defender; guard | 球队里主要负责防守的队员 | 我们的＿＿防守很好，对方一个球也没进。
 中锋 | zhōng fēng | centre | 篮球队里一般个子最高、在篮下的队员 | 他身高两米一，是篮球队的＿＿。 | 前锋
 扣篮 | kòu lán | to dunk | 跳起来把球从上往下扣进篮筐 | 他高高跳起，双手把球扣进篮筐，一个漂亮的＿＿！
@@ -601,7 +601,7 @@ export const wordBatches4: readonly LevelWordBatch[] = [
 此致 | cǐ zhì | (closing formula) | 书信结尾的客气话，后面常接“敬礼” | 信的最后，先写“＿＿”，再在下一行顶格写“敬礼”。
 敬上 | jìng shàng | respectfully yours | 写在信末自己名字后面的客气话 | 给老师写信，他在最后自己的名字后面写上了“＿＿”两个字。
 附言 | fù yán | postscript | 信写完以后另外加上的话 | 写完信以后，他又在下面加了一段＿＿，提醒朋友记得回信。
-收件人 | shōu jiàn rén | recipient | 收信或收包裹的人 | 快递员把包裹送到了，请＿＿签字。
+收件人 | shōu jiàn rén | recipient | 收信或收包裹的人 | 快递员把包裹送到了，请＿＿签字。 | 发件人
 发件人 | fā jiàn rén | sender | 寄信或发包裹的人 | 这封信没写＿＿的名字，不知道是谁寄来的。
 敬启者 | jìng qǐ zhě | (opening formula of an old-style letter) | 旧式书信开头的客气话 | 旧式的书信常常用“＿＿”开头，意思是写信的人恭敬地向对方陈述。
 邮政编码 | yóu zhèng biān mǎ | postcode | 邮局为了分送信件给每个地区编的号码 | 在中国寄信，信封左上角的六个小格子里要填写＿＿。
@@ -676,7 +676,7 @@ export const wordBatches4: readonly LevelWordBatch[] = [
 成倍 | chéng bèi | manyfold | 一倍一倍地 | 这几年，在网上买东西的人＿＿增加。
 倍增 | bèi zēng | to double, to multiply | 成倍地增加 | 用了新机器以后，工厂的产量＿＿，从每天一百件变成了两百件。
 事半功倍 | shì bàn gōng bèi | to get twice the result with half the effort | 用的力气小，收到的效果大 | 方法对了，学习就能＿＿。
-同比 | tóng bǐ | year on year | 跟去年同一时期相比 | 今年五月的销售额比去年五月增长了百分之十，也就是＿＿增长百分之十。
+同比 | tóng bǐ | year on year | 跟去年同一时期相比 | 今年五月的销售额比去年五月增长了百分之十，也就是＿＿增长百分之十。 | 环比
 环比 | huán bǐ | compared with the previous period | 跟上一个时期相比 | 这个月的销售额比上个月增长了百分之五，也就是＿＿增长百分之五。
 百分点 | bǎi fēn diǎn | percentage point | 百分比中相当于百分之一的单位 | 失业率从百分之五降到百分之四，下降了一个＿＿。
 剩余 | shèng yú | surplus, remainder | 用完以后留下来的 | 这次活动的经费用了八千元，＿＿的两千元交还给了学校。
@@ -701,7 +701,7 @@ export const wordBatches4: readonly LevelWordBatch[] = [
   {
     theme: ["Minutes of a Meeting", "会议记录"],
     data: `
-会议纪要 | huì yì jì yào | summary of a meeting | 记下会议的主要事项和决定的文件 | 开完会以后，秘书把会上决定的事情整理成一份＿＿，发给各个部门。
+会议纪要 | huì yì jì yào | summary of a meeting | 记下会议的主要事项和决定的文件 | 开完会以后，秘书把会上决定的事情整理成一份＿＿，发给各个部门。 | 会议记录
 会议记录 | huì yì jì lù | minutes | 会议中当场记下的内容 | ＿＿要写清楚开会的时间、地点和每个人的发言。
 记录人 | jì lù rén | minute-taker | 负责记录的人 | 会议记录的最后要写上＿＿的名字。
 列席 | liè xí | to attend without a vote | 参加会议，但是没有表决权 | 这次会议，几位学生代表也＿＿了，但是他们不参加表决。
@@ -731,7 +731,7 @@ export const wordBatches4: readonly LevelWordBatch[] = [
   {
     theme: ["Phrases of Official Letters", "公函用语"],
     data: `
-来函 | lái hán | your letter | 对方寄来的信 | 贵校的＿＿已经收到，我们同意派两名老师参加交流。
+来函 | lái hán | your letter | 对方寄来的信 | 贵校的＿＿已经收到，我们同意派两名老师参加交流。 | 复函
 复函 | fù hán | letter of reply | 回复的信 | 收到对方的信以后，我们要尽快写一份＿＿。
 致函 | zhì hán | to write to | 给某人或某单位写信 | 公司＿＿市政府，希望在这里建一座新工厂。
 函件 | hán jiàn | letters, correspondence | 信件 | 秘书每天要处理几十封＿＿。
@@ -746,7 +746,7 @@ export const wordBatches4: readonly LevelWordBatch[] = [
   {
     theme: ["Receipts and Capital Numerals", "收据和大写数字"],
     data: `
-收条 | shōu tiáo | receipt (note) | 收到钱或东西时写给对方的条子 | 他把班费交给了老师，老师给他写了一张＿＿：今收到班费叁拾元整。
+收条 | shōu tiáo | receipt (note) | 收到钱或东西时写给对方的条子 | 他把班费交给了老师，老师给他写了一张＿＿：今收到班费叁拾元整。 | 欠条 领条
 欠条 | qiàn tiáo | IOU | 欠别人钱或东西时写的条子 | 他买东西时钱不够，给店主写了一张＿＿：今欠货款玖拾元整。
 领条 | lǐng tiáo | note acknowledging items received | 领东西时写的条子 | 他从体育室领了八个篮球，在＿＿上写着：今领到篮球捌个。
 大写金额 | dà xiě jīn é | amount in capital numerals | 用壹、贰、叁等大写数字写的钱数 | 填写支票的时候，＿＿要写成“壹万元整”，不容易被别人改动。
@@ -754,7 +754,7 @@ export const wordBatches4: readonly LevelWordBatch[] = [
 合计 | hé jì | to add up to | 合起来计算 | 三本书的价钱＿＿六十元。
 累计 | lěi jì | cumulative | 一次一次加起来 | 这个月他＿＿跑了一百公里。 | 合计
 结余 | jié yú | balance, surplus | 收入除去支出以后留下的钱 | 这个月他花了两千元，还＿＿三百元。
-乙方 | yǐ fāng | Party B | 合同中称另一方 | 合同里，出租房子的一方是甲方，租房子的一方是＿＿。
+乙方 | yǐ fāng | Party B | 合同中称另一方 | 合同里，出租房子的一方是甲方，租房子的一方是＿＿。 | 丙方
 丙方 | bǐng fāng | Party C | 合同中的第三方 | 如果一份合同有三方，排在第三的一方就叫＿＿。
 `,
   },

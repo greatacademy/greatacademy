@@ -486,13 +486,13 @@ export const wordBatches1: readonly LevelWordBatch[] = [
     data: `
 函数 | hán shù | function | 一个量随另一个量变化的对应关系 | 中学数学里，＿＿的图像可以是一条直线，也可以是一条曲线。
 一次函数 | yī cì hán shù | linear function | 图像是一条直线的函数 | ＿＿的图像是一条直线。 | 函数
-自变量 | zì biàn liàng | independent variable | 会引起别的量变化的量 | 在研究温度对植物生长的影响时，温度是＿＿。
+自变量 | zì biàn liàng | independent variable | 会引起别的量变化的量 | 在研究温度对植物生长的影响时，温度是＿＿。 | 因变量
 因变量 | yīn biàn liàng | dependent variable | 随着别的量变化的量 | 在研究温度对植物生长的影响时，植物的高度是＿＿。
 坐标 | zuò biāo | coordinates | 确定点的位置的一组数 | 在地图上，用经度和纬度可以确定一个地方的＿＿。
 矩阵 | jǔ zhèn | matrix | 排成长方形的一组数 | 电脑处理图片时，常常把一张图片看成一个由数字组成的＿＿。
 矩形 | jǔ xíng | rectangle | 四个角都是直角的四边形 | 足球场是一个大大的＿＿。
 斜率 | xié lǜ | slope | 直线倾斜的程度 | 一条直线往右上方升得越快，它的＿＿就越大。
-平均数 | píng jūn shù | mean | 一组数的总和除以个数 | 二、三、七这三个数的＿＿是四。
+平均数 | píng jūn shù | mean | 一组数的总和除以个数 | 二、三、七这三个数的＿＿是四。 | 中位数
 中位数 | zhōng wèi shù | median | 按大小排列后处在中间的数 | 二、三、七这三个数的＿＿是三。
 `,
   },
@@ -847,7 +847,7 @@ export const wordBatches1: readonly LevelWordBatch[] = [
     data: `
 施肥 | shī féi | to apply fertilizer | 给植物加肥料 | 种庄稼要按时浇水、＿＿。 | 追肥
 追肥 | zhuī féi | top dressing | 在植物生长期间再加肥料 | 小麦长到一定高度时，要再＿＿一次。 | 施肥
-磷肥 | lín féi | phosphate fertilizer | 含磷的肥料 | ＿＿能帮助植物的根长得更好，也能让花和果实发育得更好。
+磷肥 | lín féi | phosphate fertilizer | 含磷的肥料 | ＿＿能帮助植物的根长得更好，也能让花和果实发育得更好。 | 钾肥 氮肥
 钾肥 | jiǎ féi | potash fertilizer | 含钾的肥料 | ＿＿能让庄稼的茎秆更结实，不容易倒。
 氮肥 | dàn féi | nitrogen fertilizer | 含氮的肥料 | ＿＿能让叶子长得又大又绿。
 复合肥 | fù hé féi | compound fertilizer | 同时含有几种养分的化肥 | 这种＿＿里同时含有氮、磷、钾三种养分。

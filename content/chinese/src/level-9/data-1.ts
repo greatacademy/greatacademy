@@ -170,7 +170,7 @@ export const wordBatches1: readonly LevelWordBatch[] = [
     data: `
 双关 | shuāng guān | pun, double meaning | 一个词语同时有两层意思 | 春节时人们把“福”字倒着贴，因为“倒”和“到”同音，这是一种＿＿。
 借代 | jiè dài | metonymy | 不直接说出某人或某物，而用跟它有关的东西来代替 | 用“笔杆子”代替会写文章的人，这种修辞叫＿＿。
-明喻 | míng yù | simile | 用“像”“好像”“如同”等词把两种事物连起来的比喻 | “她的脸红得像苹果”用了“像”字，是一个＿＿。
+明喻 | míng yù | simile | 用“像”“好像”“如同”等词把两种事物连起来的比喻 | “她的脸红得像苹果”用了“像”字，是一个＿＿。 | 暗喻 借喻
 暗喻 | àn yù | metaphor | 用“是”“成了”等词代替“像”的比喻 | “时间是一条河”没有用“像”字，而用了“是”字，是一个＿＿。
 借喻 | jiè yù | metaphor naming only the image | 只出现用来比喻的事物，不出现被比喻的事物 | 句子里只出现用来比喻的东西，被比喻的东西不出现，这种比喻叫＿＿。
 反语 | fǎn yǔ | irony | 故意说跟本意相反的话 | 他的房间又脏又乱，妈妈却说“你可真爱干净”，这是＿＿。
@@ -219,7 +219,7 @@ export const wordBatches1: readonly LevelWordBatch[] = [
 感叹句 | gǎn tàn jù | exclamatory sentence | 表达强烈感情的句子 | “这里的风景太美了！”是一个＿＿。
 病句 | bìng jù | faulty sentence | 有语法错误或意思不清楚的句子 | “通过这次活动，使我明白了很多道理。”缺少主语，是一个＿＿。
 歧义 | qí yì | ambiguity | 一句话可以有两种或更多的理解 | “两个学校的老师”有＿＿，可以理解成两种不同的意思。
-实词 | shí cí | content word | 有实在意义、能单独作句子成分的词 | 名词、动词、形容词都是＿＿。
+实词 | shí cí | content word | 有实在意义、能单独作句子成分的词 | 名词、动词、形容词都是＿＿。 | 虚词
 虚词 | xū cí | function word | 没有实在意义、不能单独作句子成分的词 | 介词、连词、助词都是＿＿。
 语法 | yǔ fǎ | grammar | 词组成句子的规则 | 他的作文内容不错，可是有不少＿＿错误。
 数词 | shù cí | numeral | 表示数目的词 | “一”“十”“百”“千”都是＿＿。
@@ -258,7 +258,7 @@ export const wordBatches1: readonly LevelWordBatch[] = [
   {
     theme: ["Sounds of Mandarin", "普通话的语音"],
     data: `
-声母 | shēng mǔ | initial | 一个音节开头的辅音 | “包”和“抛”的韵母和声调都一样，只是＿＿不同。
+声母 | shēng mǔ | initial | 一个音节开头的辅音 | “包”和“抛”的韵母和声调都一样，只是＿＿不同。 | 韵母
 韵母 | yùn mǔ | final | 一个音节里声母后面的部分 | “妈”和“摸”的声母和声调都一样，只是＿＿不同。
 卷舌 | juǎn shé | to curl the tongue (retroflex) | 发音时舌尖往上翘 | 说“知”“吃”“是”的时候要＿＿，很多南方人觉得这几个音不好发。
 儿化 | ér huà | rhotacization | 字音后面加上卷舌的“儿” | 北京人常说“玩儿”“一点儿”，这种发音叫＿＿。
@@ -273,12 +273,12 @@ export const wordBatches1: readonly LevelWordBatch[] = [
   {
     theme: ["Words and Their Meanings", "字词的意义"],
     data: `
-近义词 | jìn yì cí | synonym | 意思相近的词 | “美丽”和“漂亮”是一对＿＿。
+近义词 | jìn yì cí | synonym | 意思相近的词 | “美丽”和“漂亮”是一对＿＿。 | 反义词
 反义词 | fǎn yì cí | antonym | 意思相反的词 | “冷”和“热”是一对＿＿。
 同音字 | tóng yīn zì | homophone | 读音相同而写法、意思不同的字 | “是”“事”“试”读音完全相同，是＿＿。
 多音字 | duō yīn zì | character with several readings | 有两个或更多读音的字 | “长”在“长短”和“长大”里读音不同，是一个＿＿。
 错别字 | cuò bié zì | wrongly written character | 写错或用错的字 | 他把“再见”写成了“在见”，作文里出了一个＿＿。
-本义 | běn yì | original meaning | 一个字或词最早的意思 | 古代“走”的＿＿是跑，后来才有了现在的意思。
+本义 | běn yì | original meaning | 一个字或词最早的意思 | 古代“走”的＿＿是跑，后来才有了现在的意思。 | 引申义
 引申义 | yǐn shēn yì | extended meaning | 从最早的意思发展出来的意思 | “深”本来指水深，“感情很深”里用的是它的＿＿。
 词义 | cí yì | meaning of a word | 词所表示的意思 | 学一个新词，不但要会读会写，还要理解它的＿＿。 | 本义 引申义
 通假字 | tōng jiǎ zì | phonetic loan character | 古书里代替本字的读音相同或相近的字 | 古书里有时用一个读音相近的字代替本来该用的字，这样的字叫＿＿。
@@ -356,7 +356,7 @@ export const wordBatches1: readonly LevelWordBatch[] = [
 画龙点睛 | huà lóng diǎn jīng | the finishing touch | 在关键处加上一笔，使内容更生动传神 | 结尾这一句起到了＿＿的作用，让文章的主题更加鲜明。
 欲扬先抑 | yù yáng xiān yì | to belittle before praising | 想要表扬，先故意贬低 | 文章开头写他很不起眼，后来才写他的了不起，这是＿＿的写法。
 侧面描写 | cè miàn miáo xiě | indirect description | 通过别人的反应来写人物 | 作者没有直接写她有多美，而是写路上的人都回头看她，这是＿＿。
-正面描写 | zhèng miàn miáo xiě | direct description | 直接写人物的样子、语言和动作 | 作者直接写了他的外貌、语言和动作，这是＿＿。
+正面描写 | zhèng miàn miáo xiě | direct description | 直接写人物的样子、语言和动作 | 作者直接写了他的外貌、语言和动作，这是＿＿。 | 侧面描写
 借物喻人 | jiè wù yù rén | to portray people through things | 借写一种事物来比喻人的品格 | 这篇文章写的是路边的小草，其实是＿＿，赞美那些默默工作的普通人。
 `,
   },
@@ -744,7 +744,7 @@ export const wordBatches1: readonly LevelWordBatch[] = [
 陆九渊 | lù jiǔ yuān | Lu Jiuyuan | 南宋思想家，心学的开创者 | 南宋的＿＿被看作心学的开创者，后来王阳明继承和发展了他的思想。
 张载 | zhāng zài | Zhang Zai | 北宋思想家 | “为天地立心，为生民立命”是北宋思想家＿＿说的话。
 二程 | èr chéng | the two Cheng brothers | 北宋的程颢和程颐两兄弟 | 北宋有一对兄弟都是理学家，后人合称他们为“＿＿”。
-理学 | lǐ xué | the School of Principle | 宋明时期以“理”为核心的儒家学说 | 宋朝的＿＿认为，天地万物都有一个“理”。
+理学 | lǐ xué | the School of Principle | 宋明时期以“理”为核心的儒家学说 | 宋朝的＿＿认为，天地万物都有一个“理”。 | 心学
 心学 | xīn xué | the School of Mind | 宋明时期认为“心”就是“理”的儒家学说 | 王阳明的＿＿认为，道理不在外面，就在自己的心里。
 知行合一 | zhī xíng hé yī | the unity of knowing and doing | 认识和行动是统一的 | 光知道道理还不够，还要去做，这就是＿＿。
 致良知 | zhì liáng zhī | to extend one's innate knowing | 把本来就有的善心推广到做事上 | 王阳明晚年提出＿＿，认为每个人心里本来就有分辨善恶的能力。
@@ -804,7 +804,7 @@ export const wordBatches1: readonly LevelWordBatch[] = [
 不可知论 | bù kě zhī lùn | agnosticism | 认为世界的本质无法被认识的理论 | ＿＿认为，事物背后的本质是人永远无法认识的。 | 怀疑论
 决定论 | jué dìng lùn | determinism | 认为一切事情都由原因决定的理论 | 按照＿＿的看法，只要知道了所有的原因，就能准确地预测将来发生的事。 | 宿命论
 宿命论 | sù mìng lùn | fatalism | 认为一切都由命运决定、人无法改变的观点 | 他相信＿＿，觉得努力也没有用，因为一切都是命中注定的。 | 决定论
-经验主义 | jīng yàn zhǔ yì | empiricism | 认为知识来自感觉经验的理论 | 洛克是＿＿的代表人物，他认为一切知识都来自经验。
+经验主义 | jīng yàn zhǔ yì | empiricism | 认为知识来自感觉经验的理论 | 洛克是＿＿的代表人物，他认为一切知识都来自经验。 | 理性主义
 理性主义 | lǐ xìng zhǔ yì | rationalism | 认为知识主要来自理性的理论 | 笛卡尔是＿＿的代表人物，他相信理性是知识最可靠的来源。
 实用主义 | shí yòng zhǔ yì | pragmatism | 以实际效果来判断真理的理论 | 美国哲学家杜威是＿＿的代表人物。
 虚无主义 | xū wú zhǔ yì | nihilism | 否定一切意义和价值的思想 | ＿＿认为，人生没有任何意义和价值。
@@ -820,7 +820,7 @@ export const wordBatches1: readonly LevelWordBatch[] = [
 民贵君轻 | mín guì jūn qīng | the people matter more than the ruler | 百姓比君主更重要 | 孟子提出＿＿的思想，认为国家的根本在于百姓。
 鱼与熊掌 | yú yǔ xióng zhǎng | fish and bear's paw (one cannot have both) | 比喻两样好东西不能同时得到 | 既想多玩又想考第一，这就像＿＿，不可兼得。
 五十步笑百步 | wǔ shí bù xiào bǎi bù | the pot calling the kettle black | 比喻自己和别人有同样的缺点，只是程度轻一些，却嘲笑别人 | 你自己也迟到了五分钟，还笑他迟到了十分钟，这是＿＿。
-性善论 | xìng shàn lùn | the theory that human nature is good | 认为人的本性是善良的学说 | 孟子主张＿＿，认为每个人天生都有同情心。
+性善论 | xìng shàn lùn | the theory that human nature is good | 认为人的本性是善良的学说 | 孟子主张＿＿，认为每个人天生都有同情心。 | 性恶论
 性恶论 | xìng è lùn | the theory that human nature is bad | 认为人的本性是恶的、需要后天教化的学说 | 与孟子相反，有的儒家学者主张＿＿，认为人要靠学习和礼法才能变好。
 生于忧患 | shēng yú yōu huàn | to thrive in adversity | 在忧愁和困难中使人奋发而生存 | 孟子说“＿＿，死于安乐”，困难能让人变得坚强。
 牺牲 | xī shēng | to sacrifice | 为了某种目的舍弃自己的生命或利益 | 为了照顾生病的妈妈，她＿＿了很多休息时间。
@@ -864,7 +864,7 @@ export const wordBatches1: readonly LevelWordBatch[] = [
 物极必反 | wù jí bì fǎn | extremes turn into their opposites | 事物发展到极点就会向相反的方向转化 | 吃东西也要适量，＿＿，吃得太多反而伤身体。
 否极泰来 | pǐ jí tài lái | after the storm comes the calm | 坏运到了尽头，好运就来了 | ＿＿，经过那几年的艰难，他们一家终于过上了好日子。
 对立统一 | duì lì tǒng yī | the unity of opposites | 矛盾双方既互相排斥又互相依存 | 冷和热、上和下、有和无，都是＿＿的关系。
-量变 | liàng biàn | quantitative change | 数量上的变化 | 水温一度一度升高，是＿＿，到了一百度变成水蒸气，就是质变了。
+量变 | liàng biàn | quantitative change | 数量上的变化 | 水温一度一度升高，是＿＿，到了一百度变成水蒸气，就是质变了。 | 质变
 质变 | zhì biàn | qualitative change | 根本性质的变化 | 每天进步一点点，积累多了就会发生＿＿。
 相对 | xiāng duì | relative | 依靠一定条件而存在的，不是绝对的 | 大和小是＿＿的，一座山比石头大，可是比地球小得多。
 扬弃 | yáng qì | to sublate | 发扬好的、去掉坏的 | 对传统文化，我们要有所＿＿，保留好的，去掉不好的。
@@ -878,7 +878,7 @@ export const wordBatches1: readonly LevelWordBatch[] = [
 冥想 | míng xiǎng | meditation | 静下心来深深地思考或放松 | 每天早上他都要闭上眼睛＿＿十分钟，让自己平静下来。 | 静坐 沉思
 当头棒喝 | dāng tóu bàng hè | a sharp warning | 比喻使人猛然醒悟的警告 | 老师的批评对他来说是＿＿，让他明白了自己的问题。
 机锋 | jī fēng | pointed, subtle words | 禅宗里含义深刻、巧妙的话 | 禅师们说话常带＿＿，意思要细细体会。
-顿悟 | dùn wù | sudden enlightenment | 突然明白 | 他想了很久都没想通，看到窗外的落叶时一下子＿＿了。
+顿悟 | dùn wù | sudden enlightenment | 突然明白 | 他想了很久都没想通，看到窗外的落叶时一下子＿＿了。 | 渐悟
 沉思 | chén sī | to ponder | 深深地思考 | 他站在窗前，陷入了长久的＿＿。 | 冥想
 内省 | nèi xǐng | introspection | 检查自己的思想和言行 | 曾子说“吾日三省吾身”，强调每天都要＿＿。 | 反思
 反思 | fǎn sī | to reflect on | 回过头来思考 | 考试失败后，他认真＿＿了自己的学习方法。 | 内省

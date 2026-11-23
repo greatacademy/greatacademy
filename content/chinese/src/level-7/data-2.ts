@@ -147,7 +147,7 @@ export const wordBatches2: readonly LevelWordBatch[] = [
 内脏 | nèi zàng | internal organs | 胸和肚子里的各种器官 | 心、肝、肺、胃、肠都是长在身体里面的＿＿。 | 器官
 肠道 | cháng dào | intestinal tract | 消化食物、吸收营养的长管子 | 人的＿＿有好几米长，分成小肠和大肠两部分。
 大肠 | dà cháng | large intestine | 肠的后一段，比较粗 | 食物先经过小肠，再进入＿＿。
-小肠 | xiǎo cháng | small intestine | 肠的前一段，细而长，吸收营养最多 | 食物里的营养主要在＿＿里被吸收。
+小肠 | xiǎo cháng | small intestine | 肠的前一段，细而长，吸收营养最多 | 食物里的营养主要在＿＿里被吸收。 | 肠道
 声带 | shēng dài | vocal cords | 喉部发出声音的部分 | 他大声喊了一天，＿＿受了伤，几天说不出话。
 颈部 | jǐng bù | neck | 头下面连接身体的部分 | 长时间低头看手机，＿＿会很累。
 `,
@@ -156,7 +156,7 @@ export const wordBatches2: readonly LevelWordBatch[] = [
     theme: ["Spine and Limbs", "脊椎和四肢"],
     data: `
 脊椎 | jǐ zhuī | spine | 背中间一节一节连起来的骨头 | 人的＿＿从头下面一直到腰下面，一共有三十多节。
-颈椎 | jǐng zhuī | cervical vertebrae | 脖子里的那几节骨头 | 整天低头看手机，容易得＿＿病。
+颈椎 | jǐng zhuī | cervical vertebrae | 脖子里的那几节骨头 | 整天低头看手机，容易得＿＿病。 | 腰椎
 腰椎 | yāo zhuī | lumbar vertebrae | 腰部的那几节骨头 | 搬重东西时弯着腰用力，容易伤到＿＿。 | 脊椎
 手腕 | shǒu wàn | wrist | 手和胳膊连接的地方 | 她打字打得太多，＿＿有点儿疼。
 四肢 | sì zhī | the four limbs | 两只胳膊和两条腿 | 人有＿＿：两只手臂和两条腿。
@@ -432,7 +432,7 @@ export const wordBatches2: readonly LevelWordBatch[] = [
 狼 | láng | wolf | 像狗的野兽，常常成群生活 | 夜里，山上传来＿＿的叫声。 | 狼群
 狼群 | láng qún | wolf pack | 一群狼 | 一个＿＿里有好几只狼，它们一起打猎。 | 狼
 老鼠 | lǎo shǔ | mouse, rat | 尾巴长、爱偷吃粮食的小动物 | 猫会抓＿＿。
-松鼠 | sōng shǔ | squirrel | 尾巴大、在树上生活、爱吃果子的小动物 | 公园的树上有一只＿＿，正抱着果子吃。
+松鼠 | sōng shǔ | squirrel | 尾巴大、在树上生活、爱吃果子的小动物 | 公园的树上有一只＿＿，正抱着果子吃。 | 老鼠
 袋鼠 | dài shǔ | kangaroo | 腿很有力、肚子上有口袋的动物 | ＿＿主要生活在澳大利亚，用后腿跳着走。
 鼠疫 | shǔ yì | plague | 由老鼠等传播的一种严重的传染病 | 历史上，＿＿曾经让欧洲很多人死去。
 胆小如鼠 | dǎn xiǎo rú shǔ | timid as a mouse | 胆子非常小 | 他＿＿，晚上一个人不敢出门。
@@ -459,7 +459,7 @@ export const wordBatches2: readonly LevelWordBatch[] = [
 蚊子 | wén zi | mosquito | 会叮人吸血的小飞虫 | 夏天晚上＿＿很多，叮得人身上起包。
 蚊帐 | wén zhàng | mosquito net | 挂在床上挡蚊子的网 | 以前夏天睡觉时，人们常常挂＿＿。
 蚊香 | wén xiāng | mosquito coil | 点着以后能赶走蚊子的东西 | 他在屋里点了一盘＿＿。
-驱蚊 | qū wén | to repel mosquitoes | 把蚊子赶走 | 出去露营别忘了带＿＿水。
+驱蚊 | qū wén | to repel mosquitoes | 把蚊子赶走 | 出去露营别忘了带＿＿水。 | 灭蚊
 灭蚊 | miè wén | to kill mosquitoes | 把蚊子消灭 | 夏天到了，社区组织大家＿＿，清理积水。
 益虫 | yì chóng | beneficial insect | 对人有好处的昆虫 | 蜜蜂能帮植物传花粉，是＿＿。
 虫卵 | chóng luǎn | insect egg | 昆虫产下的卵 | 叶子背面有很多＿＿，过几天就会变成小虫子。
@@ -476,17 +476,17 @@ export const wordBatches2: readonly LevelWordBatch[] = [
 沼泽地 | zhǎo zé dì | marshland | 有沼泽的地方 | 这块＿＿里生活着很多水鸟。 | 沼泽 泥沼
 泥沼 | ní zhǎo | mire; predicament | 很软的泥地；比喻很难摆脱的环境 | 他的公司落入了经济困难的＿＿，很难走出来。 | 沼泽 沼泽地
 沼气 | zhǎo qì | marsh gas, biogas | 草和粪便等在水里腐烂后产生的可以燃烧的气体 | 农村用＿＿做饭，又干净又省钱。
-河滩 | hé tān | river beach | 河边的沙地 | 孩子们在＿＿上找漂亮的石头。
+河滩 | hé tān | river beach | 河边的沙地 | 孩子们在＿＿上找漂亮的石头。 | 沙滩 海滩
 沙滩 | shā tān | sandy beach | 水边由沙子形成的地方 | 夏天，很多人在海边的＿＿上晒太阳。 | 海滩
 海滩 | hǎi tān | beach | 海边的沙地 | 退潮以后，＿＿上留下了很多小鱼和小石头。 | 沙滩
 险滩 | xiǎn tān | dangerous shoal | 水急、石头多、很危险的河段 | 这条河有很多＿＿，开船要特别小心。
-泥滩 | ní tān | mudflat | 海边或河边又软又湿的泥地 | 这片＿＿上全是软软的泥，一脚下去就到了膝盖。
+泥滩 | ní tān | mudflat | 海边或河边又软又湿的泥地 | 这片＿＿上全是软软的泥，一脚下去就到了膝盖。 | 河滩
 `,
   },
   {
     theme: ["Coral Reefs", "珊瑚礁"],
     data: `
-珊瑚 | shān hú | coral | 海里一种像树枝的东西，由小动物造成 | 海底的＿＿五颜六色，非常好看。
+珊瑚 | shān hú | coral | 海里一种像树枝的东西，由小动物造成 | 海底的＿＿五颜六色，非常好看。 | 珊瑚礁
 珊瑚礁 | shān hú jiāo | coral reef | 由珊瑚形成的礁石 | 澳大利亚东北海岸有世界上最大的＿＿。
 礁石 | jiāo shí | rock (in the sea) | 海里或江河里的大石头 | 海浪一次又一次地打在＿＿上。 | 暗礁
 暗礁 | àn jiāo | hidden reef | 在水面下、看不见的礁石 | 这一带海里有很多＿＿，船很容易出事故。 | 礁石
@@ -504,7 +504,7 @@ export const wordBatches2: readonly LevelWordBatch[] = [
 涝灾 | lào zāi | waterlogging disaster | 雨水太多、地里积水造成的灾害 | 连着下了半个月的雨，这里发生了＿＿。 | 洪涝
 洪涝 | hóng lào | flooding | 大水和积水 | 这个地区夏天雨多，常常发生＿＿灾害。 | 涝灾
 旱涝 | hàn lào | drought and waterlogging | 干旱和雨水太多 | 修了水渠以后，这里的庄稼＿＿都不怕了。
-内涝 | nèi lào | urban waterlogging | 城市里下大雨后积水排不出去 | 一场大雨以后，城里很多路段出现了＿＿。
+内涝 | nèi lào | urban waterlogging | 城市里下大雨后积水排不出去 | 一场大雨以后，城里很多路段出现了＿＿。 | 积水
 排涝 | pái lào | to drain waterlogged land | 把地里或路上的积水排出去 | 大雨以后，工人们连夜＿＿。
 积水 | jī shuǐ | standing water | 地上存着的水 | 下完雨，路上有很多＿＿，开车要慢一点。
 决堤 | jué dī | to breach a dike | 河水冲破了堤 | 河水太大，＿＿了，附近的村子都进了水。
@@ -517,7 +517,7 @@ export const wordBatches2: readonly LevelWordBatch[] = [
     theme: ["Frost and Cold", "霜和寒冷"],
     data: `
 霜 | shuāng | frost | 天冷时地面上结的白色小冰 | 早上，地上铺了一层白白的＿＿。 | 冰霜
-霜冻 | shuāng dòng | frost damage | 气温降到零度以下，让植物受冻 | 一场＿＿让果园里的花都冻坏了。
+霜冻 | shuāng dòng | frost damage | 气温降到零度以下，让植物受冻 | 一场＿＿让果园里的花都冻坏了。 | 寒潮
 霜降 | shuāng jiàng | Frost's Descent (solar term) | 二十四节气之一，在十月下旬 | ＿＿以后，天气越来越冷了。
 结霜 | jié shuāng | to frost over | 东西表面上结了霜 | 天太冷了，窗户上都＿＿了。
 寒潮 | hán cháo | cold wave | 从北方来的强冷空气 | ＿＿来了，气温一天就下降了十几度。
@@ -539,7 +539,7 @@ export const wordBatches2: readonly LevelWordBatch[] = [
 堤防 | dī fáng | levees | 防水的堤 | 雨季以前，政府加固了＿＿。 | 河堤
 筑坝 | zhù bà | to build a dam | 修水坝 | 在河上＿＿会影响鱼的游动。
 海堤 | hǎi dī | sea wall | 沿着海边修的堤 | 这道＿＿挡住了海水，保护了后面的村子。
-水电站 | shuǐ diàn zhàn | hydroelectric station | 用水力发电的地方 | 这个＿＿发的电可以供好几个城市用。
+水电站 | shuǐ diàn zhàn | hydroelectric station | 用水力发电的地方 | 这个＿＿发的电可以供好几个城市用。 | 水坝
 蓄水 | xù shuǐ | to store water | 把水存起来 | 雨季的时候，大坝开始＿＿，留着旱季用。
 `,
   },
@@ -550,7 +550,7 @@ export const wordBatches2: readonly LevelWordBatch[] = [
 沃土 | wò tǔ | fertile soil | 肥沃的土地 | 黑土地是一片＿＿，出产大量粮食。 | 沃野
 沃野 | wò yě | fertile plain | 肥沃的大片田野 | 站在山上往下看，＿＿千里，一眼望不到边。 | 沃土
 腐烂 | fǔ làn | to rot | 东西坏了、烂了 | 落叶＿＿以后会变成土里的养分。
-腐殖质 | fǔ zhí zhì | humus | 动植物腐烂以后在土里形成的物质 | 森林的土里有很多＿＿，所以很肥。
+腐殖质 | fǔ zhí zhì | humus | 动植物腐烂以后在土里形成的物质 | 森林的土里有很多＿＿，所以很肥。 | 腐叶
 腐叶 | fǔ yè | rotting leaves | 腐烂的落叶 | 用＿＿做的土特别适合养花。
 侵蚀 | qīn shí | to erode | 慢慢地损坏 | 风和水长年＿＿着山上的石头。
 水土流失 | shuǐ tǔ liú shī | soil erosion | 土被水冲走，土地变坏 | 山上的树被砍光了，造成了严重的＿＿。
@@ -567,7 +567,7 @@ export const wordBatches2: readonly LevelWordBatch[] = [
 垦荒 | kěn huāng | to open up wasteland | 开发荒地 | 几十年前，很多年轻人来到北方＿＿。 | 开垦
 退耕还林 | tuì gēng huán lín | to return farmland to forest | 不在山坡上种庄稼，改种树 | 为了保护环境，这里实行＿＿。
 农耕 | nóng gēng | farming | 种地 | 中国有几千年的＿＿历史。
-春耕 | chūn gēng | spring ploughing | 春天的耕地播种 | 天气暖和了，农民开始忙着＿＿。
+春耕 | chūn gēng | spring ploughing | 春天的耕地播种 | 天气暖和了，农民开始忙着＿＿。 | 深耕
 深耕 | shēn gēng | to plough deep | 把地耕得很深 | ＿＿能让土变松，庄稼长得更好。
 精耕细作 | jīng gēng xì zuò | intensive farming | 认真细心地种地 | 他们靠＿＿，在这块小地上收了很多粮食。
 耕牛 | gēng niú | plough ox | 用来耕地的牛 | 以前农民家里都有＿＿，现在大多用机器了。
@@ -656,7 +656,7 @@ export const wordBatches2: readonly LevelWordBatch[] = [
 裂开 | liè kāi | to split open | 破开，分开 | 天太干了，地都＿＿了。
 分裂 | fēn liè | to divide | 一个分成几个 | 一个细胞＿＿成两个细胞。
 裂变 | liè biàn | fission | 原子核分成两个或几个，放出能量 | 核电站利用原子核＿＿产生的能量发电。
-破裂 | pò liè | to rupture | 完整的东西破开 | 气球充气太多，一下子＿＿了。
+破裂 | pò liè | to rupture | 完整的东西破开 | 气球充气太多，一下子＿＿了。 | 断裂
 断裂 | duàn liè | to fracture | 断开 | 这根钢管受力太大，已经＿＿了。
 裂痕 | liè hén | crack; rift | 东西裂开的痕迹；比喻感情上的分歧 | 那次吵架以后，两个人的友谊有了＿＿。 | 裂缝
 四分五裂 | sì fēn wǔ liè | to fall apart | 分成很多部分，不完整、不团结 | 杯子掉在地上，摔得＿＿。
@@ -699,7 +699,7 @@ export const wordBatches2: readonly LevelWordBatch[] = [
     data: `
 合金 | hé jīn | alloy | 两种以上金属等熔合成的金属 | 钢是铁和碳的＿＿。 | 铝合金
 铝合金 | lǚ hé jīn | aluminium alloy | 以铝为主的合金 | 这辆自行车是用＿＿做的，又轻又结实。 | 合金
-不锈钢 | bù xiù gāng | stainless steel | 不容易生锈的钢 | 厨房里的锅和水池常常是用＿＿做的。
+不锈钢 | bù xiù gāng | stainless steel | 不容易生锈的钢 | 厨房里的锅和水池常常是用＿＿做的。 | 铝合金
 单晶硅 | dān jīng guī | monocrystalline silicon | 结构整齐的纯硅 | 太阳能电池板常常用＿＿做。
 锂电池 | lǐ diàn chí | lithium battery | 用锂做的电池 | 电动汽车大多用＿＿。
 韧性 | rèn xìng | toughness | 受力时不容易断的性质 | 这种材料＿＿很好，弯过来也不会断。 | 柔韧 坚韧
@@ -790,7 +790,7 @@ export const wordBatches2: readonly LevelWordBatch[] = [
 边缘 | biān yuán | edge, margin | 靠近边的部分 | 小心！不要站在悬崖的＿＿。
 绝缘 | jué yuán | to insulate | 不让电通过 | 电线外面包着一层＿＿材料。
 半导体 | bàn dǎo tǐ | semiconductor | 导电能力在导体和绝缘体之间的材料 | 硅是做芯片的重要＿＿材料。
-电路 | diàn lù | circuit | 电流通过的路线 | 灯不亮了，可能是＿＿出了问题。
+电路 | diàn lù | circuit | 电流通过的路线 | 灯不亮了，可能是＿＿出了问题。 | 电压
 电压 | diàn yā | voltage | 电的压力，单位是伏特 | 电池的＿＿太低了，灯不亮了。
 短路 | duǎn lù | short circuit | 电流不经过用电器直接流回去 | 电线老化容易引起＿＿，甚至着火。
 超导 | chāo dǎo | superconductivity | 在很低的温度下电阻变成零 | ＿＿材料在很低的温度下导电时几乎没有损失。

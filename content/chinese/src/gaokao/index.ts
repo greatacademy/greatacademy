@@ -95,7 +95,7 @@ const gapWhy = (right: string, shown: string): Text => {
   const idiom = idiomOf(right);
   const c = gapClue(right);
   return t(
-    `**${right}** fits: ${put(shown, right)}\n\nHere ${c.en}, and ${right} (${idiom.pinyin}) means ${idiom.meaning.en}.\n\n**Check.** Read the gap as that meaning: ${put(shown, `[${idiom.meaning.en}]`)} It still says the same.`,
+    `**${right}** fits: ${put(shown, right)}\n\n${c.en} ${right} (${idiom.pinyin}) means ${idiom.meaning.en}.\n\n**Check.** Read the gap as that meaning: ${put(shown, `[${idiom.meaning.en}]`)} It still says the same.`,
     `填“**${right}**”：${put(shown, right)}\n\n${c["zh-CN"]}，“${right}”（${idiom.pinyin}）的意思正是${idiom.meaning["zh-CN"]}。\n\n**检验。** 把横线换成成语的意思来读：${zhQuote(put(shown, `（${idiom.meaning["zh-CN"]}）`))}，意思仍然说得通。`,
   );
 };
@@ -104,7 +104,7 @@ const gapWhy = (right: string, shown: string): Text => {
 const gapWhyNot = (wrong: string, right: string): Text => {
   const c = gapClue(right);
   return t(
-    `Here ${c.en}, but ${wrong} means "${idiomOf(wrong).meaning.en}".`,
+    `${c.en} ${wrong} means "${idiomOf(wrong).meaning.en}", which the sentence does not say.`,
     `${c["zh-CN"]}，而“${wrong}”的意思是${idiomOf(wrong).meaning["zh-CN"]}。`,
   );
 };
@@ -415,7 +415,7 @@ export const gaokaoTopics: readonly TopicDef[] = [
       "七至十一年级的成语混在一起，按试卷的问法：先按意思选成语，再选句子需要的成语，每次在同一组的四个成语中选。",
     ),
     intro: t(
-      `The paper asks about idioms two ways: by meaning, and in a sentence. Take **${firstIdiom.text}** (${firstIdiom.pinyin}): it means ${firstIdiom.meaning.en}, and it fills ${firstIdiom.sentences[1]} because there ${gapClue(firstIdiom.text).en}.\n\nThe first knowledge point names the idiom of a meaning, the second the idiom a sentence needs, among four of the same set; these are the idioms of grades 7 to 11.`,
+      `The paper asks about idioms two ways: by meaning, and in a sentence. Take **${firstIdiom.text}** (${firstIdiom.pinyin}): it means ${firstIdiom.meaning.en}, and it fills ${firstIdiom.sentences[1]} ${gapClue(firstIdiom.text).en}\n\nThe first knowledge point names the idiom of a meaning, the second the idiom a sentence needs, among four of the same set; these are the idioms of grades 7 to 11.`,
       `试卷考成语有两种问法：按意思选，在句子里选。比如“**${firstIdiom.text}**”（${firstIdiom.pinyin}）：意思是${firstIdiom.meaning["zh-CN"]}；${zhQuote(firstIdiom.sentences[1])}要填它，因为${gapClue(firstIdiom.text)["zh-CN"]}。\n\n第一个知识点按意思选成语，第二个选句子需要的成语，都在同一组的四个成语中选；成语来自七至十一年级。`,
     ),
     prerequisites: [lastIdioms],
@@ -437,7 +437,7 @@ export const gaokaoTopics: readonly TopicDef[] = [
         "gaokao-idioms-sentence",
         t("In a Sentence", "在句子里选成语"),
         t(
-          `Find the clue in the sentence, then check three things in turn: whether the idiom's meaning fits, whether its feeling, praise or blame, fits, and whether it fits the thing it describes. Take ${firstIdiom.sentences[1]} Here ${gapClue(firstIdiom.text).en}, so it needs ${firstIdiom.text}: ${put(firstIdiom.sentences[1], firstIdiom.text)}\n\n> **Watch out.** ${firstMisfit.text} may sound fine there, but it means "${firstMisfit.meaning.en}", and here ${gapClue(firstIdiom.text).en}. Match the clue, not the sound.`,
+          `Find the clue in the sentence, then check three things in turn: whether the idiom's meaning fits, whether its feeling, praise or blame, fits, and whether it fits the thing it describes. Take ${firstIdiom.sentences[1]} ${gapClue(firstIdiom.text).en} So it needs ${firstIdiom.text}: ${put(firstIdiom.sentences[1], firstIdiom.text)}\n\n> **Watch out.** ${firstMisfit.text} may sound fine there, but it means "${firstMisfit.meaning.en}". ${gapClue(firstIdiom.text).en} Match the clue, not the sound.`,
           `先找出句子里的线索，再依次检查三点：意思是否对得上，感情色彩（褒义还是贬义）是否对得上，适用的对象是否对得上。比如${zhQuote(firstIdiom.sentences[1])}：${gapClue(firstIdiom.text)["zh-CN"]}，所以填“${firstIdiom.text}”：${put(firstIdiom.sentences[1], firstIdiom.text)}\n\n> **注意。** 填“${firstMisfit.text}”读起来也许顺口，可是${gapClue(firstIdiom.text)["zh-CN"]}，而“${firstMisfit.text}”的意思是${firstMisfit.meaning["zh-CN"]}，对不上。要对线索，不能只凭语感。`,
         ),
         choiceGenerator(t("Which idiom fills the gap?", "横线处填哪个成语？"), idiomItems(true), gapWhy, gapWhyNot),

@@ -355,7 +355,7 @@ export const wordBatches4: readonly LevelWordBatch[] = [
     theme: ["Lawsuits", "诉讼"],
     data: `
 诉讼 | sù sòng | lawsuit | 请求法院解决争执 | 两家公司因为合同问题，进行了一年多的＿＿。
-起诉 | qǐ sù | to sue | 向法院告人 | 他决定＿＿那家公司，要求赔偿损失。
+起诉 | qǐ sù | to sue | 向法院告人 | 他决定＿＿那家公司，要求赔偿损失。 | 上诉
 上诉 | shàng sù | to appeal (to a higher court) | 不服判决，请求上一级法院重新审理 | 他对判决不满意，决定向上一级法院＿＿。
 申诉 | shēn sù | to lodge a complaint | 认为处理不公，向有关部门说明理由，请求重新处理 | 他认为学校的处理不公平，向教育部门提出了＿＿。
 民事 | mín shì | civil (case) | 跟财产、婚姻等有关的 | 邻居之间因为房子发生的纠纷属于＿＿案件。
@@ -387,7 +387,7 @@ export const wordBatches4: readonly LevelWordBatch[] = [
 嫌疑 | xián yí | suspicion | 被怀疑做了某事 | 他有作案的＿＿，但是警察还没有找到证据。
 嫌疑人 | xián yí rén | suspect | 被怀疑犯了罪的人 | 警察正在寻找一名犯罪＿＿。
 涉嫌 | shè xián | to be suspected of | 有跟某件坏事有关的嫌疑 | 这家公司＿＿制造假商品，正在接受调查。
-拘留 | jū liú | to detain | 公安机关把人关起来一段时间 | 他因为多次在网上造谣，被警察＿＿了五天。
+拘留 | jū liú | to detain | 公安机关把人关起来一段时间 | 他因为多次在网上造谣，被警察＿＿了五天。 | 逮捕
 逮捕 | dài bǔ | to arrest | 抓住犯法的人 | 经过一个月的追查，警察终于＿＿了这个骗子。
 侦查 | zhēn chá | to investigate (a crime) | 为了找出事情真相而进行调查 | 警方正在＿＿这起案件，还没有找到线索。 | 侦破
 侦破 | zhēn pò | to crack (a case) | 查清案件的真相 | 这起案件很快就被＿＿了，警察找到了真正的作案人。 | 侦查
@@ -430,7 +430,7 @@ export const wordBatches4: readonly LevelWordBatch[] = [
     theme: ["Bribery and Corruption", "贿赂和腐败"],
     data: `
 贿赂 | huì lù | to bribe | 用钱财买通别人 | 他想用钱＿＿官员，被拒绝了。
-行贿 | xíng huì | to offer a bribe | 给有权的人送钱财，请他办事 | 给官员送钱，请他帮忙办事，叫做＿＿。
+行贿 | xíng huì | to offer a bribe | 给有权的人送钱财，请他办事 | 给官员送钱，请他帮忙办事，叫做＿＿。 | 受贿
 受贿 | shòu huì | to accept a bribe | 收别人送的钱财，为人办事 | 这名官员收了别人的钱，帮人办事，犯了＿＿罪。
 贪污 | tān wū | to embezzle | 利用职务把公家的钱财变成自己的 | 他把公家的钱据为己有，犯了＿＿罪。
 廉洁 | lián jié | honest, clean | 不收不该收的钱财 | 当官的要＿＿，不能收别人的礼物。 | 清廉
@@ -611,7 +611,7 @@ export const wordBatches4: readonly LevelWordBatch[] = [
     theme: ["Prices and Value", "价格和价值"],
     data: `
 贬值 | biǎn zhí | to depreciate | 货币或东西的价值降低 | 这个国家的货币大幅＿＿，进口商品变得很贵。
-升值 | shēng zhí | to appreciate | 价值提高 | 本国的货币＿＿以后，出国旅游变得更便宜了。
+升值 | shēng zhí | to appreciate | 价值提高 | 本国的货币＿＿以后，出国旅游变得更便宜了。 | 贬值
 昂贵 | áng guì | expensive | 价格很高 | 这块手表非常＿＿，一般人买不起。 | 高昂
 高昂 | gāo áng | high (cost); high-spirited | 很高 | 在大城市，住房的成本很＿＿。 | 昂贵
 溢价 | yì jià | premium | 高出原来价值的部分 | 这家公司被收购时，收购价比市场价高出一半，＿＿很高。
@@ -692,7 +692,7 @@ export const wordBatches4: readonly LevelWordBatch[] = [
 初创 | chū chuàng | start-up | 刚刚开始创办的 | 这家＿＿公司只有五名员工。
 证券 | zhèng quàn | securities | 股票、债券等有价值的凭证 | 他在一家＿＿公司工作，帮客户买卖股票。
 债券 | zhài quàn | bond | 借钱的一方发给出钱的人的凭证 | 政府发行＿＿向老百姓借钱，到期还本付息。
-合资 | hé zī | joint venture | 双方或多方共同出钱 | 这家汽车厂是中国和德国的公司共同出钱办的＿＿企业。
+合资 | hé zī | joint venture | 双方或多方共同出钱 | 这家汽车厂是中国和德国的公司共同出钱办的＿＿企业。 | 独资
 独资 | dú zī | sole proprietorship | 只由一方出钱 | 这家工厂是一个人出钱办的，属于＿＿企业。
 外资 | wài zī | foreign capital | 外国的资金 | 这个城市吸引了很多＿＿，建起了很多外国公司的工厂。
 `,
@@ -779,7 +779,7 @@ export const wordBatches4: readonly LevelWordBatch[] = [
 关税 | guān shuì | customs duty | 商品进出国境时要交的税 | 进口汽车要交＿＿，所以价格比较高。
 自由贸易 | zì yóu mào yì | free trade | 国家之间不加限制地买卖商品 | 两国签订了＿＿协议，大部分商品不再收关税。
 自贸区 | zì mào qū | free trade zone | 实行特别贸易政策的地区 | 在＿＿里，进口的商品可以享受更低的税。
-顺差 | shùn chā | trade surplus | 出口比进口多 | 这个国家出口的商品比进口的多，有贸易＿＿。
+顺差 | shùn chā | trade surplus | 出口比进口多 | 这个国家出口的商品比进口的多，有贸易＿＿。 | 逆差
 逆差 | nì chā | trade deficit | 进口比出口多 | 这个国家进口的商品比出口的多，有贸易＿＿。
 贸易战 | mào yì zhàn | trade war | 国家之间互相提高关税等限制贸易的做法 | 两国互相提高关税，打起了＿＿。
 配额 | pèi é | quota | 规定的数量 | 这种商品每年进口的＿＿是十万吨，超过了就不能再进口。

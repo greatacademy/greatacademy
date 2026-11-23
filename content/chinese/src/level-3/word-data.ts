@@ -12,9 +12,9 @@ export const wordBatches: readonly LevelWordBatch[] = [
   {
     theme: ["Linking Words", "关联词"],
     data: `
-而且 | ér qiě | and also | 表示更进一层 | 他会说中文，＿＿说得很好。
+而且 | ér qiě | and also | 表示更进一层 | 他会说中文，＿＿说得很好。 | 甚至
 却 | què | but, yet | 表示转折，倒是 | 天气很冷，他＿＿只穿了一件衣服。 | 仍然 甚至
-并 | bìng | (before a negative) not at all | 用在否定词前加强语气 | 这个问题＿＿不难，你别担心。
+并 | bìng | (before a negative) not at all | 用在否定词前加强语气 | 这个问题＿＿不难，你别担心。 | 却
 否则 | fǒu zé | otherwise | 如果不这样 | 快走吧，＿＿就要迟到了。
 必须 | bì xū | must | 一定要 | 明天的考试很重要，你＿＿参加。
 甚至 | shèn zhì | even | 更进一层地说 | 他很忙，＿＿星期天也要上班。
@@ -167,7 +167,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 特别 | tè bié | especially | 跟一般的不一样 | 今天＿＿冷，多穿点衣服。
 特点 | tè diǎn | feature | 不一样的地方 | 这个地方的菜有什么＿＿？ | 优点 缺点
 一般 | yī bān | generally | 通常 | 我＿＿晚上十一点睡觉。
-普通 | pǔ tōng | ordinary | 一般，不特别 | 他只是一个＿＿的工人。
+普通 | pǔ tōng | ordinary | 一般，不特别 | 他只是一个＿＿的工人。 | 一般
 通过 | tōng guò | to pass | 经过，达到 | 他＿＿了这次考试。
 其他 | qí tā | other | 别的 | 我只吃了一个，＿＿的都给你。
 其中 | qí zhōng | among them | 那里面 | 我们班有三十个学生，＿＿有十个是男生。
@@ -210,7 +210,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 个性 | gè xìng | individuality | 跟别人不一样的性格 | 她很有＿＿，穿衣服跟别人都不一样。
 性别 | xìng bié | sex, gender | 男或女 | 请在这里写上你的名字和＿＿。
 实在 | shí zài | really | 的确 | 我＿＿太累了，想休息一下。
-事实 | shì shí | fact | 真有的事 | 你说的不是＿＿，是你想出来的。
+事实 | shì shí | fact | 真有的事 | 你说的不是＿＿，是你想出来的。 | 现实
 真实 | zhēn shí | true, real | 跟事实一样 | 这个电影讲的是一个＿＿的故事。
 现实 | xiàn shí | realistic | 合乎现在真有的情况 | 你的计划很好，但是不太＿＿。 | 实用
 实用 | shí yòng | practical | 有用 | 这个包不好看，但是很＿＿。 | 个性
@@ -241,7 +241,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 责怪 | zé guài | to blame | 说别人的错 | 这不是你的错，没有人会＿＿你。
 负 | fù | to lose (a match) | 比赛没有赢 | 我们队二比三＿＿了。
 通 | tōng | to get through | 没有阻碍 | 电话打不＿＿，他可能关机了。
-特 | tè | very (spoken) | 非常（口语） | 今天＿＿热，我不想出门。
+特 | tè | very (spoken) | 非常（口语） | 今天＿＿热，我不想出门。 | 极其
 普通话 | pǔ tōng huà | Mandarin | 中国通用的语言 | 他说的＿＿很好，听不出他是南方人。
 粗细 | cū xì | thickness | 粗和细的程度 | 这两支笔的＿＿不一样。
 细小 | xì xiǎo | tiny | 很小 | 这些＿＿的问题也要想到。
@@ -271,8 +271,8 @@ export const wordBatches: readonly LevelWordBatch[] = [
 互相 | hù xiāng | each other | 彼此 | 我们是好朋友，常常＿＿帮助。
 了解 | liǎo jiě | to know well | 知道得清楚 | 我跟他不熟，不太＿＿他。 | 理解
 理解 | lǐ jiě | to understand (someone) | 懂得别人的想法 | 我＿＿你的心情，换了我也会生气。 | 了解
-尊重 | zūn zhòng | to respect | 尊敬，看重 | 我们要＿＿别人的意见。
-原谅 | yuán liàng | to forgive | 不再责怪 | 对不起，请你＿＿我。
+尊重 | zūn zhòng | to respect | 尊敬，看重 | 我们要＿＿别人的意见。 | 理解
+原谅 | yuán liàng | to forgive | 不再责怪 | 对不起，请你＿＿我。 | 理解
 误会 | wù huì | to misunderstand | 理解错了别人的意思 | 你＿＿了，我不是这个意思。
 联系 | lián xì | to contact | 跟人接上关系 | 到了北京以后，请跟我＿＿。
 约会 | yuē huì | date, appointment | 约定的见面 | 今天晚上我有一个＿＿，不能和你吃饭了。
@@ -285,7 +285,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 熟悉 | shú xī | familiar | 知道得很清楚 | 我刚来这里，对这里还不＿＿。
 夫妻 | fū qī | husband and wife | 结了婚的两个人 | 他们是一对＿＿，结婚十年了。
 妻子 | qī zi | wife | 结了婚的女子 | 他的＿＿是一名医生，他们结婚五年了。 | 夫人
-父母 | fù mǔ | parents | 爸爸和妈妈 | 我的＿＿都是老师。
+父母 | fù mǔ | parents | 爸爸和妈妈 | 我的＿＿都是老师。 | 亲戚
 父亲 | fù qīn | father | 爸爸 | 我的＿＿和母亲结婚二十年了。 | 母亲
 母亲 | mǔ qīn | mother | 妈妈 | 他小时候，＿＿每天给他做饭，送他去上学。 | 父亲
 叔叔 | shū shu | uncle | 爸爸的弟弟 | 爸爸的弟弟，我叫他＿＿。
@@ -304,7 +304,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 道歉 | dào qiàn | to apologize | 说对不起 | 你做错了，应该跟他＿＿。
 安慰 | ān wèi | to comfort | 让别人心里好受 | 他很难过，我们去＿＿一下他吧。 | 陪
 陪 | péi | to accompany | 跟别人在一起 | 今天我＿＿妈妈去医院。
-照顾 | zhào gù | to take care of | 照看 | 妈妈病了，我在家＿＿她。
+照顾 | zhào gù | to take care of | 照看 | 妈妈病了，我在家＿＿她。 | 陪
 顾客 | gù kè | customer | 来买东西的人 | 这家店的＿＿很多。
 打架 | dǎ jià | to fight | 动手打人 | 两个孩子在学校＿＿，老师很生气。 | 吵架
 `,
@@ -366,7 +366,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 书架 | shū jià | bookshelf | 放书的架子 | 请把这本书放回＿＿上。
 顾 | gù | to attend to | 照看 | 他只＿＿着玩，忘了做作业。
 交朋友 | jiāo péng you | to make friends | 和别人成为朋友 | 他喜欢＿＿，认识很多人。
-互动 | hù dòng | to interact | 互相影响 | 上课的时候，老师常常和学生＿＿。
+互动 | hù dòng | to interact | 互相影响 | 上课的时候，老师常常和学生＿＿。 | 交朋友
 `,
   },
   {
@@ -387,7 +387,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
   {
     theme: ["At School", "在学校"],
     data: `
-教育 | jiào yù | education | 培养和教导 | 父母都很重视孩子的＿＿。
+教育 | jiào yù | education | 培养和教导 | 父母都很重视孩子的＿＿。 | 成绩
 教室 | jiào shì | classroom | 上课的房间 | 下课了，学生们都走出了＿＿。
 教师 | jiào shī | teacher | 老师 | 他是一名中学＿＿。
 答案 | dá àn | answer | 问题的解答 | 这个问题的＿＿是什么？ | 回答
@@ -454,7 +454,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 抄写 | chāo xiě | to copy out | 照着写一遍 | 请照着书把这十个生词＿＿三遍。 | 抄
 翻译 | fān yì | to translate | 把一种语言换成另一种 | 请你把这句话＿＿成中文。
 翻 | fān | to turn (pages) | 反过来 | 请大家把书＿＿到第十页。
-解释 | jiě shì | to explain | 说明原因或意思 | 这个词是什么意思？请你＿＿一下。
+解释 | jiě shì | to explain | 说明原因或意思 | 这个词是什么意思？请你＿＿一下。 | 翻译
 例子 | lì zi | example | 用来说明的事 | 你能给我说一个＿＿吗？
 例如 | lì rú | for example | 比如 | 我喜欢很多水果，＿＿苹果和西瓜。
 `,
@@ -554,7 +554,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
     data: `
 客户 | kè hù | client | 买东西或服务的人 | 他每天都要给很多＿＿打电话。 | 用户
 用户 | yòng hù | user | 使用东西的人 | 这个网站有一千万＿＿。 | 客户
-销售 | xiāo shòu | sales | 卖东西 | 他在公司做＿＿工作。
+销售 | xiāo shòu | sales | 卖东西 | 他在公司做＿＿工作。 | 生产
 生产 | shēng chǎn | to produce | 做出东西 | 这个工厂每天＿＿一千辆自行车。
 产品 | chǎn pǐn | product | 做出来的东西 | 这家公司的＿＿质量很好。
 质量 | zhì liàng | quality | 好坏的程度 | 这双鞋很便宜，＿＿也很好。
@@ -573,7 +573,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 企业 | qǐ yè | enterprise | 公司 | 他在一家大＿＿工作。 | 工厂
 工厂 | gōng chǎng | factory | 做东西的地方 | 他爸爸在＿＿里工作，每天做自行车。 | 企业
 材料 | cái liào | material | 做东西用的东西 | 做这个桌子要用什么＿＿？
-制造 | zhì zào | to manufacture | 做出东西 | 这辆车是中国＿＿的。
+制造 | zhì zào | to manufacture | 做出东西 | 这辆车是中国＿＿的。 | 设计
 设计 | shè jì | to design | 事先想好怎么做 | 这件衣服是她自己＿＿的。
 效果 | xiào guǒ | effect | 产生的结果 | 这个药的＿＿很好，吃了就不疼了。
 效率 | xiào lǜ | efficiency | 做事的快慢 | 他工作的＿＿很高，一天能做完两天的事。
@@ -703,7 +703,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
     theme: ["Towns and Villages", "城镇和乡村"],
     data: `
 农业 | nóng yè | agriculture | 在地里生产吃的东西的产业 | 这个地方的人大多做＿＿，在地里工作。
-农村 | nóng cūn | the countryside | 农民住的地方 | 他从小在＿＿长大。 | 乡下 城镇 村
+农村 | nóng cūn | the countryside | 农民住的地方 | 他从小在＿＿长大。 | 乡下 城镇 村 家乡 小镇
 村 | cūn | village | 农民住在一起的地方 | 这个＿＿里只有一百个人。 | 小镇 城镇
 乡下 | xiāng xia | the country | 城市外面的地方 | 爷爷奶奶住在＿＿，那里空气很好。 | 农村 家乡 小镇 城镇 村
 家乡 | jiā xiāng | hometown | 自己出生长大的地方 | 我的＿＿在南方，冬天不太冷。
@@ -752,7 +752,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 一共 | yī gòng | altogether | 合起来 | 这些东西＿＿多少钱？
 座 | zuò | (measure word for mountains, buildings) | 用于山和楼 | 前面有一＿＿大山。
 位 | wèi | (polite measure word for people) | 用于人，表示尊敬 | 这＿＿是我们的新老师。
-地位 | dì wèi | status | 在社会中的位置 | 他在公司里的＿＿很高。
+地位 | dì wèi | status | 在社会中的位置 | 他在公司里的＿＿很高。 | 排名
 排 | pái | row | 一行一行的 | 我坐在第三＿＿。
 排名 | pái míng | ranking | 按名次排 | 这次比赛，他的＿＿是第五。
 广播 | guǎng bō | broadcast | 用电波播出 | 我每天早上都听＿＿。
@@ -764,7 +764,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
     data: `
 民间 | mín jiān | folk | 老百姓中间 | 这是一个中国＿＿故事。
 公民 | gōng mín | citizen | 有一个国家国籍的人 | 他是中国＿＿，有中国护照。
-选民 | xuǎn mín | voter | 有选举权的人 | 很多＿＿都选了他。
+选民 | xuǎn mín | voter | 有选举权的人 | 很多＿＿都选了他。 | 公民
 罚单 | fá dān | ticket (for a fine) | 罚款的单子 | 他把车停在不能停的地方，收到了一张＿＿。
 警方 | jǐng fāng | the police | 警察那一方 | ＿＿正在调查这件事。
 危害 | wēi hài | to harm | 伤害 | 喝太多酒会＿＿身体健康。
@@ -779,7 +779,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
     data: `
 降价 | jiàng jià | to cut prices | 价格降低 | 商店的衣服＿＿了，我们去买吧。
 农场 | nóng chǎng | farm | 生产吃的东西，养动物的地方 | 他家有一个大＿＿，有很多牛和羊。
-乡村 | xiāng cūn | village area | 农村 | ＿＿的空气很新鲜，很安静。
+乡村 | xiāng cūn | village area | 农村 | ＿＿的空气很新鲜，很安静。 | 农场
 富人 | fù rén | the rich | 有钱的人 | 这个地方住的都是＿＿。
 镇上 | zhèn shang | in town | 镇里 | 我每个星期去＿＿买一次东西。
 共计 | gòng jì | to total | 合起来算 | 这次旅行＿＿花了五千块。
@@ -812,7 +812,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 塑料 | sù liào | plastic | 很轻、可以做袋子的材料 | 这个杯子是＿＿的，很轻。
 袋子 | dài zi | bag | 放东西的东西 | 我买了很多东西，要一个大＿＿。 | 口袋
 口袋 | kǒu dài | pocket | 衣服上放东西的地方 | 他把手机放在＿＿里。 | 袋子
-费用 | fèi yòng | cost | 要花的钱 | 这次旅行的＿＿是多少？
+费用 | fèi yòng | cost | 要花的钱 | 这次旅行的＿＿是多少？ | 花费
 花费 | huā fèi | to spend | 用掉 | 做这件事＿＿了我很多时间。
 清洁工 | qīng jié gōng | cleaner | 打扫卫生的人 | 每天早上，＿＿都把路上的垃圾拿走。
 保证 | bǎo zhèng | to guarantee | 说一定会做到 | 我＿＿明天不迟到。
@@ -831,7 +831,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 火灾 | huǒ zāi | fire (disaster) | 着火的灾难 | 这个楼里发生了＿＿，大家都跑了出来。
 野生 | yě shēng | wild | 在自然里自己长大的 | 这里有很多＿＿动物。
 植树 | zhí shù | to plant trees | 把小树放进土里 | 春天我们去山上＿＿。
-野外 | yě wài | the outdoors | 城市外面的自然地方 | 周六我们去＿＿玩。
+野外 | yě wài | the outdoors | 城市外面的自然地方 | 周六我们去＿＿玩。 | 森林
 `,
   },
   {
@@ -882,7 +882,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
   {
     theme: ["After a Disaster", "灾后"],
     data: `
-灾区 | zāi qū | disaster area | 发生灾难的地方 | 很多人给＿＿送去了吃的和穿的。
+灾区 | zāi qū | disaster area | 发生灾难的地方 | 很多人给＿＿送去了吃的和穿的。 | 伤员
 伤员 | shāng yuán | the wounded | 伤到的人 | 医生们在照顾＿＿。
 美食 | měi shí | delicious food | 好吃的东西 | 这个城市有很多有名的＿＿。
 零食 | líng shí | snacks | 饭以外的小吃 | 小孩子饭前不要吃＿＿。 | 美食
@@ -897,7 +897,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
   {
     theme: ["Saving Lives", "救命"],
     data: `
-救灾 | jiù zāi | disaster relief | 帮助遇到灾难的人 | 地震以后，很多人去帮忙＿＿。
+救灾 | jiù zāi | disaster relief | 帮助遇到灾难的人 | 地震以后，很多人去帮忙＿＿。 | 救人
 救人 | jiù rén | to save people | 帮人离开危险 | 医生的工作是＿＿。
 伤害 | shāng hài | to hurt | 让人受伤 | 他说的话＿＿了朋友的心。
 食用 | shí yòng | to eat (as food) | 可以吃 | 这些野菜可以＿＿。
@@ -929,7 +929,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
     data: `
 密码 | mì mǎ | password | 不让别人知道的数字 | 我忘了手机的＿＿，打不开了。
 登录 | dēng lù | to log in | 进入网站或软件 | 你要先＿＿，才能用这个软件。 | 充电
-账号 | zhàng hào | account | 用来登录的名字 | 我在这个网站上有一个＿＿。
+账号 | zhàng hào | account | 用来登录的名字 | 我在这个网站上有一个＿＿。 | 密码
 存 | cún | to deposit | 放起来 | 他每个月都＿＿一点钱。
 搜索 | sōu suǒ | to search | 在网上找 | 不知道的事，可以上网＿＿一下。
 充电 | chōng diàn | to charge (a battery) | 给电池加电 | 手机没电了，我要＿＿。
@@ -1099,7 +1099,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 演奏 | yǎn zòu | to perform (music) | 用乐器表演 | 他在音乐会上＿＿了一个小时。
 节奏 | jié zòu | rhythm | 音乐的快慢 | 这个音乐的＿＿很快。
 龙 | lóng | dragon | 中国传说里的动物 | 中国传说里的＿＿会飞。
-画画 | huà huà | to draw | 画图 | 我的爱好是＿＿。
+画画 | huà huà | to draw | 画图 | 我的爱好是＿＿。 | 演奏
 图画 | tú huà | picture | 画出来的东西 | 这本书里有很多＿＿。 | 动画
 动画 | dòng huà | animation | 会动的画 | 孩子们喜欢看＿＿片。
 `,
@@ -1140,7 +1140,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 龙年 | lóng nián | Year of the Dragon | 十二年里的一年 | 他是＿＿出生的。
 舞龙 | wǔ lóng | dragon dance | 一种民间表演 | 春节的时候，很多人在广场上＿＿。
 喜庆 | xǐ qìng | festive | 让人高兴的 | 红色很＿＿，过年的时候大家都喜欢。
-古琴 | gǔ qín | guqin | 中国古代的琴 | 他喜欢听＿＿。
+古琴 | gǔ qín | guqin | 中国古代的琴 | 他喜欢听＿＿。 | 民歌
 传出 | chuán chū | to come out (of a sound) | 从里面出来（声音） | 房间里＿＿了笑声。
 展示 | zhǎn shì | to show | 拿出来让人看 | 他给大家＿＿了自己的画。
 习俗 | xí sú | custom | 习惯和风俗 | 春节吃饺子是北方的＿＿。
@@ -1212,7 +1212,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
   {
     theme: ["The Post", "邮寄"],
     data: `
-寄 | jì | to post | 用邮局送 | 我给妈妈＿＿了一个包。
+寄 | jì | to post | 用邮局送 | 我给妈妈＿＿了一个包。 | 递
 邮递员 | yóu dì yuán | postman | 送信的人 | ＿＿每天给我们送信。
 地址 | dì zhǐ | address | 住的地方 | 请写下你家的＿＿。
 邮票 | yóu piào | stamp | 贴在信上的票 | 寄信要买＿＿。
@@ -1442,7 +1442,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 经营 | jīng yíng | to run (a business) | 管理生意 | 他＿＿着一家小饭馆。
 国营 | guó yíng | state-run | 国家开的 | 这是一家＿＿工厂。
 抽查 | chōu chá | to spot-check | 拿出一部分来检查 | 老师＿＿了几个同学的作业。
-散开 | sàn kāi | to scatter | 分开 | 警察来了，人们很快＿＿了。
+散开 | sàn kāi | to scatter | 分开 | 警察来了，人们很快＿＿了。 | 散场
 肥肉 | féi ròu | fatty meat | 很肥的肉 | 我不喜欢吃＿＿。
 夜车 | yè chē | night train | 夜里开的车 | 我们坐＿＿去上海，早上就到了。
 烟酒 | yān jiǔ | tobacco and alcohol | 烟和酒 | 这家小店卖＿＿。

@@ -5,6 +5,7 @@ import { t } from "@ga/content";
 
 import { levelOnePlan } from "../level-1/plan.ts";
 import { characterBatches } from "./character-data.ts";
+import { levelTwoClues } from "./clue-data.ts";
 import { dialogues } from "./dialogue-data.ts";
 import { grammar } from "./grammar-data.ts";
 import { type LevelPlan, type LevelUnit, planLevel } from "./level.ts";
@@ -35,6 +36,7 @@ export const levelTwoPlan: LevelPlan = planLevel({
   units: UNITS,
   characterBatches,
   wordBatches,
+  clues: levelTwoClues,
   grammar,
   sentences,
   writing,

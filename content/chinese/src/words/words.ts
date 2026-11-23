@@ -4,7 +4,7 @@
 // three at a time in four different sets, or the near-synonyms and antonyms of other words.
 
 import { type Text, type TopicDef, t } from "@ga/content";
-import { type ChoiceItem, choiceGenerator, joinPinyin, point, zhQuote } from "@ga/subject-chinese";
+import { type ChoiceItem, choiceGenerator, joinPinyin, point, spokenSyllables, zhQuote } from "@ga/subject-chinese";
 
 import { type Clue, clueOf } from "./clues.ts";
 
@@ -48,7 +48,14 @@ export function parseWords(data: string): readonly Word[] {
       if (pinyin.split(" ").length !== [...text].length) throw new Error(`word data: the pinyin of ${text}`);
       for (const s of [first, second]) if (s.split(GAP).length !== 2) throw new Error(`word data: a sentence of ${text}: ${s}`);
       if (new Set([text, synonym, antonym]).size !== 3) throw new Error(`word data: the relations of ${text}`);
-      return { text, pinyin: joinPinyin(pinyin.split(" ")), meaning: t(en, zh), sentences: [first, second], synonym, antonym };
+      return {
+        text,
+        pinyin: joinPinyin(spokenSyllables(text, pinyin.split(" "))),
+        meaning: t(en, zh),
+        sentences: [first, second],
+        synonym,
+        antonym,
+      };
     });
 }
 
@@ -175,7 +182,7 @@ export function wordTopic(spec: WordSpec): TopicDef {
         `${spec.id}-use`,
         t("Using Them", "选词填空"),
         t(
-          `Choose a word by what the sentence says and by the words around the gap. Take ${first.sentences[0]} Here ${firstClue.why.en}: ${put(first.sentences[0], first.text)}\n\n${useList}\n\n> **Watch out.** A word of the same theme can seem to fit: ${firstClue.why.en}, but ${misfit.text} means "${misfit.meaning.en}". Find what in the sentence decides the word before you choose.`,
+          `Choose a word by what the sentence says and by the words around the gap. Take ${first.sentences[0]} ${firstClue.why.en} So it takes ${first.text}: ${put(first.sentences[0], first.text)}\n\n${useList}\n\n> **Watch out.** A word of the same theme can seem to fit, as ${misfit.text} does there. ${firstClue.why.en} ${misfit.text} means "${misfit.meaning.en}", so it does not fit. Find what in the sentence decides the word before you choose.`,
           `选词填空要看句子的意思，也要看词语和前后的词能不能搭配。比如${zhQuote(first.sentences[0])}：${firstClue.why["zh-CN"]}，所以填 **${first.text}**：${put(first.sentences[0], first.text)}\n\n${useList}\n\n> **注意。** 同一主题的词乍一看也像能填：${firstClue.why["zh-CN"]}，而“${misfit.text}”的意思是${misfit.meaning["zh-CN"]}，对不上。选之前先找出句子里决定用词的地方。`,
         ),
         choiceGenerator(
@@ -184,14 +191,16 @@ export function wordTopic(spec: WordSpec): TopicDef {
           (right, shown) => {
             const c = clueAt.get(shown)!;
             return t(
-              `**${right}** fits: ${put(shown, right)} Here ${c.why.en}, and ${right} means ${meaningOfEn(right)}.\n\n**Check.** Read the gap as that meaning: ${put(shown, `[${meaningOfEn(right)}]`)} It still says the same.`,
+              `**${right}** fits: ${put(shown, right)}
+
+${c.why.en} ${right} means ${meaningOfEn(right)}.\n\n**Check.** Read the gap as that meaning: ${put(shown, `[${meaningOfEn(right)}]`)} It still says the same.`,
               `填“**${right}**”：${put(shown, right)}${c.why["zh-CN"]}，“${right}”的意思正是${meaningOf(right)}。\n\n**检验。** 把横线换成词义来读：${zhQuote(put(shown, `（${meaningOf(right)}）`))}，意思仍然说得通。`,
             );
           },
           (wrong, _right, shown) => {
             const c = clueAt.get(shown)!;
             return t(
-              `Here ${c.why.en}, but ${wrong} means "${meaningOfEn(wrong)}".`,
+              `${c.why.en} ${wrong} means "${meaningOfEn(wrong)}", which the sentence does not say.`,
               `${c.why["zh-CN"]}，而“${wrong}”的意思是${meaningOf(wrong)}。`,
             );
           },

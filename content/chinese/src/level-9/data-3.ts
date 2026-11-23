@@ -133,7 +133,7 @@ export const wordBatches3: readonly LevelWordBatch[] = [
   {
     theme: ["Missions Abroad", "驻外机构"],
     data: `
-驻华 | zhù huá | stationed in China | 派到中国、在中国工作的 | 各国＿＿大使馆大多设在北京。
+驻华 | zhù huá | stationed in China | 派到中国、在中国工作的 | 各国＿＿大使馆大多设在北京。 | 驻外
 驻外 | zhù wài | stationed abroad | 派到外国、在外国工作的 | 他是一名＿＿记者，已经在非洲工作了五年。
 常驻 | cháng zhù | to be permanently posted | 长期留在某地工作 | 公司派他去巴黎，要在那里＿＿三年。
 总领事 | zǒng lǐng shì | consul general | 领事馆中级别最高的负责人 | 这位＿＿负责领导设在上海的领事馆，处理当地侨民的事务。
@@ -284,7 +284,7 @@ export const wordBatches3: readonly LevelWordBatch[] = [
     theme: ["Trade", "国际贸易"],
     data: `
 贸易额 | mào yì é | trade volume | 买进卖出的总金额 | 这两个国家去年的＿＿比前年增长了百分之十。
-贸易顺差 | mào yì shùn chā | trade surplus | 出口比进口多的差额 | 一个国家出口多、进口少，就会出现＿＿。
+贸易顺差 | mào yì shùn chā | trade surplus | 出口比进口多的差额 | 一个国家出口多、进口少，就会出现＿＿。 | 贸易逆差
 贸易逆差 | mào yì nì chā | trade deficit | 进口比出口多的差额 | 进口比出口多的情况叫作＿＿。
 贸易伙伴 | mào yì huǒ bàn | trading partner | 互相做买卖的国家或地区 | 中国是很多国家最大的＿＿。
 贸易壁垒 | mào yì bì lěi | trade barrier | 限制外国商品进入的措施 | 提高关税是一种常见的＿＿。
@@ -313,7 +313,7 @@ export const wordBatches3: readonly LevelWordBatch[] = [
   {
     theme: ["Land and Sea", "领土和海洋"],
     data: `
-领土 | lǐng tǔ | territory | 一个国家拥有的土地 | 俄罗斯是世界上＿＿面积最大的国家。
+领土 | lǐng tǔ | territory | 一个国家拥有的土地 | 俄罗斯是世界上＿＿面积最大的国家。 | 领海 领空
 领海 | lǐng hǎi | territorial waters | 属于一个国家的沿海水域 | ＿＿的宽度从海岸基线算起，一般是十二海里。
 领空 | lǐng kōng | airspace | 一个国家领土和领海上面的天空 | 外国飞机进入一个国家的＿＿，需要得到允许。
 主权 | zhǔ quán | sovereignty | 国家独立处理内外事务的权力 | 每个国家，不论大小，都应该尊重别国的＿＿。
@@ -358,7 +358,7 @@ export const wordBatches3: readonly LevelWordBatch[] = [
   {
     theme: ["Countries and Regions", "国家和地区"],
     data: `
-瑞士 | ruì shì | Switzerland | 欧洲中部的一个国家，首都伯尔尼 | ＿＿是一个山地国家，以手表和巧克力闻名。
+瑞士 | ruì shì | Switzerland | 欧洲中部的一个国家，首都伯尔尼 | ＿＿是一个山地国家，以手表和巧克力闻名。 | 瑞典
 瑞典 | ruì diǎn | Sweden | 北欧的一个国家，首都斯德哥尔摩 | 除了和平奖，诺贝尔奖的颁奖典礼都在＿＿首都斯德哥尔摩举行。
 芬兰 | fēn lán | Finland | 北欧的一个国家，首都赫尔辛基 | ＿＿有“千湖之国”的美称，境内有十几万个湖泊。
 丹麦 | dān mài | Denmark | 北欧的一个国家，首都哥本哈根 | 童话作家安徒生是＿＿人。
@@ -404,7 +404,7 @@ export const wordBatches3: readonly LevelWordBatch[] = [
   {
     theme: ["Newspapers and Magazines", "报纸和杂志"],
     data: `
-创刊 | chuàng kān | to start publication | 报刊开始出版 | 这份报纸＿＿于一九四九年，至今已有七十多年的历史。
+创刊 | chuàng kān | to start publication | 报刊开始出版 | 这份报纸＿＿于一九四九年，至今已有七十多年的历史。 | 停刊 复刊
 停刊 | tíng kān | to cease publication | 报刊停止出版 | 由于读者越来越少，这本杂志去年＿＿了。
 复刊 | fù kān | to resume publication | 停止出版后又开始出版 | 这份停办了十年的报纸今年终于＿＿了。
 创刊号 | chuàng kān hào | first issue | 报刊出版的第一期 | 他收藏了这本杂志的＿＿，现在已经很值钱了。
@@ -494,7 +494,7 @@ export const wordBatches3: readonly LevelWordBatch[] = [
   {
     theme: ["On the Air", "播出"],
     data: `
-收视率 | shōu shì lǜ | (TV) ratings | 看某个电视节目的观众的比例 | 这部电视剧的＿＿很高，几乎家家都在看。
+收视率 | shōu shì lǜ | (TV) ratings | 看某个电视节目的观众的比例 | 这部电视剧的＿＿很高，几乎家家都在看。 | 收听率
 收听率 | shōu tīng lǜ | (radio) ratings | 听某个广播节目的人的比例 | 早上开车上班的人多，这个时段的广播＿＿最高。
 转播 | zhuǎn bō | to relay (a broadcast) | 播送别的电台、电视台的节目 | 全国很多电视台同时＿＿了这场足球比赛。
 录播 | lù bō | to broadcast a recording | 先录下来，以后再播出 | 这个节目不是直播，是＿＿的，所以出了错可以重新录。
@@ -509,7 +509,7 @@ export const wordBatches3: readonly LevelWordBatch[] = [
   {
     theme: ["Film and Television", "影视制作"],
     data: `
-片头 | piàn tóu | opening titles | 电影或电视剧开头的部分 | 这部电视剧的＿＿只有三十秒，音乐很好听。
+片头 | piàn tóu | opening titles | 电影或电视剧开头的部分 | 这部电视剧的＿＿只有三十秒，音乐很好听。 | 片尾
 片尾 | piàn wěi | end credits | 电影或电视剧结尾的部分 | 电影放完以后，＿＿会列出所有工作人员的名字。
 主题曲 | zhǔ tí qǔ | theme song | 一部电影或电视剧的主要歌曲 | 这部动画片的＿＿，很多孩子都会唱。 | 插曲
 插曲 | chā qǔ | interlude; episode | 电影或电视剧中间插入的歌曲；事情进行中的小事 | 比赛中出现了一个小＿＿：一只小狗跑进了球场。 | 主题曲
@@ -712,7 +712,7 @@ export const wordBatches3: readonly LevelWordBatch[] = [
 打地基 | dǎ dì jī | to lay a foundation | 建房子前先做好下面的基础 | 盖高楼首先要＿＿，基础打得牢，楼才稳。
 夯土 | hāng tǔ | rammed earth | 用力砸实的土 | 长城有些地方是用＿＿筑成的，已经有两千多年的历史。
 夯实 | hāng shí | to tamp; to consolidate | 用力砸实；比喻打好基础 | 学外语要先＿＿基础，才能越学越好。
-青砖 | qīng zhuān | grey brick | 青灰色的砖 | 北京老胡同里的房子，很多是用灰色的＿＿盖的。
+青砖 | qīng zhuān | grey brick | 青灰色的砖 | 北京老胡同里的房子，很多是用灰色的＿＿盖的。 | 红砖
 红砖 | hóng zhuān | red brick | 红色的砖 | 这所大学的老教学楼是用＿＿砌的，远远看去一片红色。
 砾石 | lì shí | gravel | 小石块 | 公园的小路上铺着一层＿＿，走起来沙沙响。
 `,
@@ -721,7 +721,7 @@ export const wordBatches3: readonly LevelWordBatch[] = [
     theme: ["Building Work", "施工和装修"],
     data: `
 建筑工地 | jiàn zhù gōng dì | construction site | 正在盖房子的地方 | ＿＿上很危险，没有戴安全帽的人不能进去。
-毛坯房 | máo pī fáng | unfinished flat | 没有装修的房子 | 他们买的是＿＿，墙上什么也没有，要自己装修。
+毛坯房 | máo pī fáng | unfinished flat | 没有装修的房子 | 他们买的是＿＿，墙上什么也没有，要自己装修。 | 精装修
 精装修 | jīng zhuāng xiū | fully fitted (flat) | 交房时已经装修好 | 这套房子是＿＿的，买了家具就能直接住进去。
 防水 | fáng shuǐ | waterproofing; waterproof | 防止水渗透 | 卫生间的地面一定要做好＿＿，不然楼下会漏水。
 隔音 | gé yīn | soundproofing; soundproof | 隔断声音 | 这栋楼的＿＿效果不好，邻居说话都能听见。
@@ -737,7 +737,7 @@ export const wordBatches3: readonly LevelWordBatch[] = [
     data: `
 户型 | hù xíng | flat layout | 住房内部房间的布局 | 买房子不光要看价钱，还要看＿＿好不好。
 两室一厅 | liǎng shì yì tīng | two bedrooms and a living room | 两个卧室、一个客厅的住房 | 他们一家三口住在一套＿＿的房子里。
-主卧 | zhǔ wò | master bedroom | 最大的卧室 | ＿＿最大，还带一个卫生间，是爸爸妈妈住的。
+主卧 | zhǔ wò | master bedroom | 最大的卧室 | ＿＿最大，还带一个卫生间，是爸爸妈妈住的。 | 次卧
 次卧 | cì wò | second bedroom | 比最大的卧室小的卧室 | 我住的是＿＿，比爸妈的房间小一点。
 阳台 | yáng tái | balcony | 楼房伸出墙外的平台 | 奶奶在＿＿上种了很多花。
 飘窗 | piāo chuāng | bay window | 向外凸出的窗户 | 她喜欢坐在＿＿上看书，窗外就是公园。
@@ -770,7 +770,7 @@ export const wordBatches3: readonly LevelWordBatch[] = [
 天际线 | tiān jì xiàn | skyline | 天空和地面建筑相接的线 | 夜晚，江边的高楼亮起灯光，城市的＿＿非常美。
 超高层 | chāo gāo céng | super high-rise | 特别高的楼房 | 一般把高度超过一百米的楼房叫作＿＿建筑。
 电梯房 | diàn tī fáng | flat in a building with lifts | 装有电梯的楼房里的住房 | 爷爷年纪大了，爬楼梯困难，就搬进了＿＿。
-顶层 | dǐng céng | top floor | 最高的一层 | 他住在＿＿，夏天屋里特别热。
+顶层 | dǐng céng | top floor | 最高的一层 | 他住在＿＿，夏天屋里特别热。 | 底层
 底层 | dǐ céng | ground floor | 最低的一层 | 这栋楼的＿＿是商店，二楼以上是住宅。
 别墅 | bié shù | villa | 带花园的独立住宅 | 他们在海边买了一栋＿＿，周末去那里度假。
 轮廓 | lún kuò | outline, contour | 物体的外缘 | 天快黑了，远处的山只能看到一个模糊的＿＿。
@@ -784,7 +784,7 @@ export const wordBatches3: readonly LevelWordBatch[] = [
 总体规划 | zǒng tǐ guī huà | master plan | 对全局的长远安排 | 根据这座城市的＿＿，老城区里不能再建高楼。
 布局 | bù jú | layout | 对事物的全面安排 | 这个小区的＿＿很合理，每栋楼都能晒到太阳。
 功能区 | gōng néng qū | functional zone | 按用途划分的区域 | 这座城市分成了几个＿＿：有的地方住人，有的地方办公，有的地方是工厂。
-商业区 | shāng yè qū | commercial district | 商店集中的地区 | 市中心是＿＿，商场和饭店一家挨着一家。
+商业区 | shāng yè qū | commercial district | 商店集中的地区 | 市中心是＿＿，商场和饭店一家挨着一家。 | 住宅区 工业区
 住宅区 | zhù zhái qū | residential area | 主要用来住人的地区 | 工厂不能建在＿＿旁边，免得噪音影响居民。
 工业区 | gōng yè qū | industrial zone | 工厂集中的地区 | 城市的＿＿一般建在下风的地方，减少对居民的污染。
 开发区 | kāi fā qū | development zone | 为发展经济专门划出来的地区 | 十年前这里还是农田，现在成了经济＿＿，建了很多工厂。

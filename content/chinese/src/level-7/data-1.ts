@@ -176,7 +176,7 @@ export const wordBatches1: readonly LevelWordBatch[] = [
 萧条 | xiāo tiáo | depressed, in a slump | 经济不活跃，生意冷清 | 那几年经济＿＿，很多工厂都停工了。 | 衰退
 崛起 | jué qǐ | to rise (to prominence) | 兴起，变得强大 | 一个国家的＿＿离不开教育和科技。 | 腾飞
 腾飞 | téng fēi | to take off, to soar | 迅速发展 | 改革开放以后，这个地区的经济开始＿＿。 | 崛起
-衰老 | shuāi lǎo | to age; ageing | 年纪大，身体变弱 | 适当运动可以延缓身体的＿＿。
+衰老 | shuāi lǎo | to age; ageing | 年纪大，身体变弱 | 适当运动可以延缓身体的＿＿。 | 衰退
 `,
   },
   {
@@ -197,7 +197,7 @@ export const wordBatches1: readonly LevelWordBatch[] = [
   {
     theme: ["Moving and Settling", "迁移和定居"],
     data: `
-迁徙 | qiān xǐ | to migrate | 离开原来的地方，搬到很远的地方 | 每年秋天，很多鸟都会向南＿＿。
+迁徙 | qiān xǐ | to migrate | 离开原来的地方，搬到很远的地方 | 每年秋天，很多鸟都会向南＿＿。 | 迁居
 拆迁 | chāi qiān | to demolish and relocate | 拆掉旧房子，让住户搬走 | 这片老房子要＿＿，居民们都搬进了新楼。 | 拆除
 拆除 | chāi chú | to demolish | 拆掉，去掉 | 这座危险的旧桥已经被＿＿了。
 涌入 | yǒng rù | to pour into | 大量地进入 | 春节过后，大批打工的人＿＿城市。
@@ -230,7 +230,7 @@ export const wordBatches1: readonly LevelWordBatch[] = [
 少子化 | shǎo zǐ huà | falling number of children | 出生的孩子越来越少的现象 | 日本和韩国都有＿＿的问题，新生儿越来越少。
 生育率 | shēng yù lǜ | fertility rate | 女性平均一生生孩子的数量 | 要让人口保持稳定，＿＿大约需要达到二点一。
 人均寿命 | rén jūn shòu mìng | life expectancy | 一个地区的人平均能活的岁数 | 随着医疗条件的改善，＿＿不断提高。
-独生子女 | dú shēng zǐ nǚ | only child | 没有兄弟姐妹的孩子 | 他是＿＿，小时候常常羡慕有哥哥姐姐的同学。
+独生子女 | dú shēng zǐ nǚ | only child | 没有兄弟姐妹的孩子 | 他是＿＿，小时候常常羡慕有哥哥姐姐的同学。 | 留守儿童
 空巢老人 | kōng cháo lǎo rén | elderly people whose children have left home | 孩子都离开家、自己生活的老人 | 社区的志愿者每周都去看望那些＿＿，陪他们聊天。 | 银发族
 赡养 | shàn yǎng | to support (one's parents) | 供给父母等长辈生活所需 | 子女有＿＿父母的义务。
 留守儿童 | liú shǒu ér tóng | left-behind children | 父母外出打工、自己留在家乡的孩子 | 他的父母在城里打工，他是由奶奶带大的＿＿。
@@ -259,7 +259,7 @@ export const wordBatches1: readonly LevelWordBatch[] = [
     data: `
 温饱 | wēn bǎo | having enough food and clothing | 吃得饱，穿得暖 | 几十年前，很多家庭最大的愿望就是解决＿＿问题。
 小康 | xiǎo kāng | moderately well-off | 生活比较富裕 | 经过多年的努力，他们一家过上了＿＿生活。
-脱贫 | tuō pín | to escape poverty | 不再贫困 | 这个山村靠种茶叶成功＿＿了。
+脱贫 | tuō pín | to escape poverty | 不再贫困 | 这个山村靠种茶叶成功＿＿了。 | 扶贫
 扶贫 | fú pín | poverty relief | 帮助贫困的地区或人家 | 他大学毕业后到山区参加＿＿工作，帮村民卖水果。
 贫富差距 | pín fù chā jù | wealth gap | 富人和穷人之间的差别 | 怎样减小＿＿，是很多国家都要面对的难题。
 富豪 | fù háo | tycoon | 非常有钱的人 | 这位＿＿把一大半财产都捐给了慈善机构。
@@ -456,7 +456,7 @@ export const wordBatches1: readonly LevelWordBatch[] = [
 寝室 | qǐn shì | dormitory room | 学生睡觉的屋子 | 他们＿＿住了四个人，大家相处得很好。
 熄灯 | xī dēng | to turn off the lights | 把灯关掉 | 宿舍晚上十一点＿＿，大家必须上床睡觉。
 晨读 | chén dú | morning reading | 早上读书 | 每天早上七点，学生们在教室里＿＿，大声朗读课文。
-早操 | zǎo cāo | morning exercises | 早上做的体操 | 每天早上六点半，住校的学生要到操场上做＿＿。
+早操 | zǎo cāo | morning exercises | 早上做的体操 | 每天早上六点半，住校的学生要到操场上做＿＿。 | 课间操
 课间操 | kè jiān cāo | exercises between classes | 上午两节课中间做的体操 | 第二节课下课后，全校同学都到操场上做＿＿。
 晚自习 | wǎn zì xí | evening self-study | 晚上在教室里自己学习 | 高三的学生每天都有＿＿，九点半才放学。
 上课铃 | shàng kè líng | bell for the start of class | 开始上课时响的铃 | ＿＿响了，同学们赶快跑回教室。
@@ -534,7 +534,7 @@ export const wordBatches1: readonly LevelWordBatch[] = [
 发呆 | fā dāi | to be in a daze | 什么也不做，只是愣愣地看着 | 上课的时候他常常看着窗外＿＿。
 天分 | tiān fèn | talent, gift | 天生的才能 | 她在音乐方面很有＿＿，三岁就会弹钢琴。 | 资质
 资质 | zī zhì | natural endowment | 人生来的素质 | 学习的好坏不光看＿＿，更要看是不是努力。 | 天分
-呆板 | dāi bǎn | rigid, wooden | 死板，不灵活 | 这篇文章写得很＿＿，读起来没有意思。
+呆板 | dāi bǎn | rigid, wooden | 死板，不灵活 | 这篇文章写得很＿＿，读起来没有意思。 | 笨拙
 大智若愚 | dà zhì ruò yú | the truly wise seem slow | 很有智慧的人表面上看起来很笨 | 他平时话不多，看上去有点笨，其实是＿＿。
 心灵手巧 | xīn líng shǒu qiǎo | clever and deft | 心思灵敏，手也灵巧 | 她＿＿，用一张纸就能剪出一只漂亮的小鸟。
 愚公移山 | yú gōng yí shān | the foolish old man moves the mountains | 比喻做事有毅力，不怕困难 | 我们要学习＿＿的精神，再难的事也坚持去做。
@@ -546,11 +546,11 @@ export const wordBatches1: readonly LevelWordBatch[] = [
 懒惰 | lǎn duò | lazy | 不爱劳动和工作 | ＿＿的人很难取得成功。
 偷懒 | tōu lǎn | to slack off | 趁别人不注意少做事 | 老师一离开教室，有几个同学就开始＿＿。
 刻苦 | kè kǔ | hardworking | 很能吃苦，非常努力 | 他学习非常＿＿，每天很晚才睡。
-废寝忘食 | fèi qǐn wàng shí | to forget food and sleep | 非常专心努力 | 为了完成这个实验，他＿＿地工作了好几天。
+废寝忘食 | fèi qǐn wàng shí | to forget food and sleep | 非常专心努力 | 为了完成这个实验，他＿＿地工作了好几天。 | 持之以恒
 持之以恒 | chí zhī yǐ héng | to persevere | 长久坚持下去 | 学习贵在＿＿，每天进步一点点。
 半途而废 | bàn tú ér fèi | to give up halfway | 事情做到一半就停下来 | 既然开始了，就不要＿＿。
 闻鸡起舞 | wén jī qǐ wǔ | to rise at cockcrow to practise | 比喻有志向的人及时努力 | 他每天天不亮就起床练习，有一种＿＿的精神。
-好学 | hào xué | eager to learn | 喜欢学习 | 这个孩子很＿＿，遇到不懂的问题总要问个明白。
+好学 | hào xué | eager to learn | 喜欢学习 | 这个孩子很＿＿，遇到不懂的问题总要问个明白。 | 刻苦
 笨鸟先飞 | bèn niǎo xiān fēi | the slow bird sets off early | 能力差的人做事要比别人先开始 | 我学得慢，就＿＿，每天比别人早到一个小时练习。
 十年寒窗 | shí nián hán chuāng | years of hard study | 长期刻苦读书 | 经过＿＿的苦读，他终于考上了理想的大学。
 `,
@@ -580,7 +580,7 @@ export const wordBatches1: readonly LevelWordBatch[] = [
 金榜题名 | jīn bǎng tí míng | to pass an exam with success | 考试被录取 | 祝你高考顺利，＿＿！
 名落孙山 | míng luò sūn shān | to fail an exam | 考试没有考上 | 他准备得不够充分，结果＿＿。 | 落榜
 分数线 | fēn shù xiàn | cut-off score | 录取需要达到的最低分数 | 他的成绩比这所大学的＿＿高了二十分。
-中考 | zhōng kǎo | senior high school entrance exam | 初中毕业升高中的考试 | 初三的学生正在紧张地准备＿＿。
+中考 | zhōng kǎo | senior high school entrance exam | 初中毕业升高中的考试 | 初三的学生正在紧张地准备＿＿。 | 统考
 统考 | tǒng kǎo | unified examination | 统一组织的考试 | 全市的初二学生下周参加数学＿＿。
 复读 | fù dú | to repeat a year to retake an exam | 没考上的学生再读一年 | 他高考成绩不理想，决定＿＿一年。
 `,
@@ -593,7 +593,7 @@ export const wordBatches1: readonly LevelWordBatch[] = [
 填报 | tián bào | to fill in and submit | 填写以后报给有关部门 | 高考成绩出来以后，考生要＿＿志愿。
 调剂 | tiáo jì | to reassign | 把多的和少的调整一下 | 他没被第一志愿录取，被＿＿到了别的专业。
 慎重 | shèn zhòng | prudent, careful | 认真小心，不轻率 | 选择专业是件大事，一定要＿＿考虑。
-升学 | shēng xué | to go on to a higher school | 进入上一级学校学习 | 很多家长很关心孩子的＿＿问题。
+升学 | shēng xué | to go on to a higher school | 进入上一级学校学习 | 很多家长很关心孩子的＿＿问题。 | 择校
 择校 | zé xiào | to choose a school | 选择学校 | 为了＿＿，有的家长很早就开始打听各个学校的情况。
 插班 | chā bān | to join a class midway | 中途进入某个班学习 | 他是从外地转来的，这学期＿＿到我们班。
 跳级 | tiào jí | to skip a grade | 越过一个年级去读高一级 | 他成绩特别好，从三年级直接＿＿到了五年级。
@@ -623,7 +623,7 @@ export const wordBatches1: readonly LevelWordBatch[] = [
 纵容 | zòng róng | to condone | 对错误的行为不加管教 | 孩子犯了错，大人不能＿＿，要耐心地讲道理。 | 放纵
 放纵 | fàng zòng | to let oneself go | 不加约束，随着自己的性子 | 放假也不能＿＿自己，每天玩到半夜。 | 纵容
 叮嘱 | dīng zhǔ | to urge again and again | 一再地嘱咐 | 出门前，妈妈＿＿他路上注意安全。
-娇气 | jiāo qì | soft, unable to bear hardship | 意志不坚强，不能吃苦 | 这孩子太＿＿了，走一点路就喊累。
+娇气 | jiāo qì | soft, unable to bear hardship | 意志不坚强，不能吃苦 | 这孩子太＿＿了，走一点路就喊累。 | 娇惯
 望子成龙 | wàng zǐ chéng lóng | to long for one's child to succeed | 希望孩子成为有出息的人 | 很多家长＿＿，给孩子报了很多补习班。
 拔苗助长 | bá miáo zhù zhǎng | to spoil things by excessive haste | 违反规律，急于求成，反而坏事 | 让三岁的孩子每天学五个小时，简直是＿＿。
 栋梁 | dòng liáng | pillar (of society) | 能担当重任的人 | 老师希望学生们将来都能成为国家的＿＿。
@@ -694,9 +694,9 @@ export const wordBatches1: readonly LevelWordBatch[] = [
   {
     theme: ["Ranks and Departments", "职位和部门"],
     data: `
-总监 | zǒng jiān | director | 负责某方面全部工作的高级管理人员 | 她是公司的市场＿＿，管理着二十多人的团队。
+总监 | zǒng jiān | director | 负责某方面全部工作的高级管理人员 | 她是公司的市场＿＿，管理着二十多人的团队。 | 总裁
 总裁 | zǒng cái | president (of a company) | 大公司的最高管理人员 | 他从普通员工做起，二十年后成了公司的＿＿。
-合伙人 | hé huǒ rén | partner | 一起出钱办企业的人 | 他和大学同学一起开了一家公司，两人是＿＿。
+合伙人 | hé huǒ rén | partner | 一起出钱办企业的人 | 他和大学同学一起开了一家公司，两人是＿＿。 | 创始人
 创始人 | chuàng shǐ rén | founder | 最早创办的人 | 这家公司的＿＿当年在自己家里开始创业。
 高层 | gāo céng | senior management | 地位高的领导 | 这个重大的决定是公司＿＿开会做出的，普通员工事先都不知道。 | 中层
 中层 | zhōng céng | middle management | 上面有领导、下面有员工的管理人员 | 他是公司的＿＿管理人员，上面有领导，下面有十几个员工。 | 高层
@@ -743,7 +743,7 @@ export const wordBatches1: readonly LevelWordBatch[] = [
 踏实 | tā shi | steady, down-to-earth | 实在，不浮躁 | 这个年轻人做事很＿＿，交给他的工作总能按时完成。 | 敬业 脚踏实地
 兢兢业业 | jīng jīng yè yè | conscientiously | 小心谨慎、认真负责 | 他在这个岗位上＿＿地工作了三十年。 | 任劳任怨
 任劳任怨 | rèn láo rèn yuàn | to work hard without complaint | 不怕累，也不怕别人埋怨 | 他每天干最累的活，从不抱怨，真是＿＿。 | 兢兢业业
-精益求精 | jīng yì qiú jīng | to keep improving | 已经很好了还要求更好 | 这位老师傅对自己的手艺＿＿，做出来的东西已经很好了，他还要改了又改。
+精益求精 | jīng yì qiú jīng | to keep improving | 已经很好了还要求更好 | 这位老师傅对自己的手艺＿＿，做出来的东西已经很好了，他还要改了又改。 | 一丝不苟
 一丝不苟 | yì sī bù gǒu | meticulous | 一点儿也不马虎 | 她做账＿＿，每一个数字都要核对好几遍。
 脚踏实地 | jiǎo tà shí dì | down-to-earth | 做事认真实在 | 做事要＿＿，不能总想着一步登天。 | 踏实
 诚恳 | chéng kěn | sincere | 真诚 | 他＿＿地向客户道了歉。
@@ -814,7 +814,7 @@ export const wordBatches1: readonly LevelWordBatch[] = [
   {
     theme: ["Skills and Know-How", "技能和门道"],
     data: `
-窍门 | qiào mén | knack | 解决问题的好方法 | 洗这种衣服有个＿＿，用冷水洗不容易变形。
+窍门 | qiào mén | knack | 解决问题的好方法 | 洗这种衣服有个＿＿，用冷水洗不容易变形。 | 门道
 一窍不通 | yí qiào bù tōng | to know nothing about | 一点也不懂 | 我对电脑＿＿，连开机都要问别人。
 门道 | mén dao | the way of doing something | 做事的方法 | 外行看热闹，内行看＿＿。
 内行 | nèi háng | expert | 对某种工作很懂的人 | 说到修汽车，他可是＿＿。 | 外行

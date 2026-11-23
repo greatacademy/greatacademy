@@ -12,8 +12,8 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
     theme: ["Languages of the World", "世界的语言"],
     data: `
 语言 | yǔ yán | language | 人们用来交流的声音和文字 | 世界上有几千种＿＿，有的只有很少的人会说。 | 语种
-书面语 | shū miàn yǔ | written language | 写文章时用的比较正式的语言 | 写论文要用＿＿，不能像聊天一样随便。
-俗语 | sú yǔ | common saying | 老百姓口头上流传很久的话 | “活到老，学到老”是一句＿＿。
+书面语 | shū miàn yǔ | written language | 写文章时用的比较正式的语言 | 写论文要用＿＿，不能像聊天一样随便。 | 术语
+俗语 | sú yǔ | common saying | 老百姓口头上流传很久的话 | “活到老，学到老”是一句＿＿。 | 成语
 成语 | chéng yǔ | set phrase, idiom | 大多是四个字、意思固定的老说法 | “一举两得”是一个＿＿，意思是做一件事得到两种好处。
 词典 | cí diǎn | dictionary | 解释词语的意思和用法的书 | 遇到不认识的词，可以查＿＿。 | 字典
 字典 | zì diǎn | character dictionary | 解释单个汉字的书 | 这本小＿＿收了一万多个汉字，每个字都标了拼音。 | 词典
@@ -57,7 +57,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
     theme: ["Persuading and Agreeing", "劝说和同意"],
     data: `
 劝 | quàn | to urge | 讲道理让人听从 | 医生＿＿他多休息，少看手机。 | 劝说 劝告
-劝说 | quàn shuō | to persuade | 讲道理让别人同意 | 经过朋友们的＿＿，他终于决定去看医生。 | 劝 劝告
+劝说 | quàn shuō | to persuade | 讲道理让别人同意 | 经过朋友们的＿＿，他终于决定去看医生。 | 劝 劝告 说服
 劝告 | quàn gào | advice | 劝人的话 | 他没有听父母的＿＿，结果后悔了。 | 劝 劝说
 说服 | shuō fú | to convince | 讲道理让人心里同意 | 他的理由很充分，＿＿了所有的人。
 肯定 | kěn dìng | to affirm | 承认事情是对的、好的 | 老师＿＿了他的做法，说这个办法很好。 | 赞同
@@ -88,7 +88,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
     data: `
 或者 | huò zhě | or | 表示几个里面选一个 | 你可以坐地铁＿＿坐公共汽车去机场。
 或许 | huò xǔ | perhaps | 可能 | 天这么黑，＿＿要下雨了。 | 万一
-若是 | ruò shì | if | 如果 | ＿＿明天不下雨，我们就去爬山。
+若是 | ruò shì | if | 如果 | ＿＿明天不下雨，我们就去爬山。 | 万一
 若干 | ruò gān | a number of | 一些，数量不定 | 这本书分成＿＿个部分，每部分讲一个问题。
 万一 | wàn yī | in case | 可能性很小的意外 | 多穿一件衣服吧，＿＿晚上变冷呢？ | 或许
 要不 | yào bù | otherwise | 不然 | 快走吧，＿＿就要迟到了。
@@ -118,7 +118,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
     data: `
 比较 | bǐ jiào | to compare | 放在一起看有什么不同 | 买东西以前，可以先＿＿一下几家商店的价格。
 较 | jiào | rather, relatively | 比一般的程度高一点 | 今天的气温＿＿高，注意多喝水。 | 比较
-似乎 | sì hū | seemingly | 好像 | 他＿＿不太高兴，一句话也没说。
+似乎 | sì hū | seemingly | 好像 | 他＿＿不太高兴，一句话也没说。 | 几乎
 几乎 | jī hū | almost | 差不多 | 他＿＿每天都读一个小时的书。
 类似 | lèi sì | similar | 差不多一样 | 我以前也遇到过＿＿的问题。 | 相似
 相似 | xiāng sì | alike | 很像 | 姐妹两个长得很＿＿。 | 类似
@@ -149,7 +149,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 青年 | qīng nián | young people | 大约十五到三十岁的人 | 很多＿＿喜欢在网上发表自己的看法。 | 青少年
 青少年 | qīng shào nián | teenagers | 十几岁的孩子 | 这本杂志是给＿＿看的，很适合中学生。 | 青年
 青春 | qīng chūn | youth | 年轻的时候 | 他把自己的＿＿都给了山里的这所学校。
-流行语 | liú xíng yǔ | buzzword | 一段时间里很多人都在说的话 | 每年都会出现一些新的＿＿，很快大家都在说。
+流行语 | liú xíng yǔ | buzzword | 一段时间里很多人都在说的话 | 每年都会出现一些新的＿＿，很快大家都在说。 | 用语
 用语 | yòng yǔ | wording, terms | 说话或写文章用的词语 | 这份合同里的＿＿很正式。
 它们 | tā men | they (things) | 几个不是人的东西 | 这些花需要阳光，请把＿＿放在窗户边。
 表情包 | biǎo qíng bāo | sticker, meme picture | 聊天时发的表示心情的图片 | 他不打字，只发了一个笑脸的＿＿。
@@ -200,7 +200,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 一辈子 | yí bèi zi | all one's life | 从出生到老的整个时间 | 他＿＿都住在这个小村子里。
 孙子 | sūn zi | grandson | 儿子的儿子 | 爷爷奶奶有一个孙女和一个＿＿。 | 外孙
 外孙 | wài sūn | grandson (daughter's son) | 女儿的儿子 | 女儿生了个儿子，外公外婆有了＿＿。 | 孙子
-兄弟 | xiōng dì | brothers | 哥哥和弟弟 | 他们＿＿两个长得很像，大家常常分不清。
+兄弟 | xiōng dì | brothers | 哥哥和弟弟 | 他们＿＿两个长得很像，大家常常分不清。 | 兄妹
 兄妹 | xiōng mèi | brother and sister | 哥哥和妹妹 | 这对＿＿感情很好，哥哥总是照顾妹妹。
 `,
   },
@@ -210,11 +210,11 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 婴儿 | yīng ér | baby | 刚出生不久的孩子 | 医院里的这个＿＿才出生三天。 | 宝宝
 宝宝 | bǎo bao | baby (affectionate) | 对小孩子亲切的叫法 | 妈妈轻声对怀里的＿＿说话。 | 婴儿
 娃娃 | wá wa | doll | 做成小孩样子的玩具 | 妹妹最喜欢她的布＿＿，每天都带着它。
-抚养 | fǔ yǎng | to raise | 照顾孩子，让他长大 | 他从小是外婆＿＿大的。
+抚养 | fǔ yǎng | to raise | 照顾孩子，让他长大 | 他从小是外婆＿＿大的。 | 收养
 早教 | zǎo jiào | early education | 对很小的孩子进行的教育 | 很多父母送两三岁的孩子去上＿＿课。
 摇篮 | yáo lán | cradle | 让婴儿睡觉的、可以来回动的小床 | 妈妈轻轻地推着＿＿，孩子很快就睡着了。
 收养 | shōu yǎng | to adopt | 把别人的孩子当作自己的孩子养 | 他们＿＿了一个女孩，对她像亲生的一样。
-育儿 | yù ér | childcare | 养育孩子 | 这本书讲了很多＿＿知识，很适合刚当父母的人。
+育儿 | yù ér | childcare | 养育孩子 | 这本书讲了很多＿＿知识，很适合刚当父母的人。 | 早教
 母婴室 | mǔ yīng shì | nursing room | 给妈妈照顾婴儿用的房间 | 机场里有＿＿，妈妈可以在里面给孩子换衣服。
 疼爱 | téng ài | to love dearly | 非常爱 | 奶奶最＿＿这个小孙女。
 `,
@@ -224,13 +224,13 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
     data: `
 嘱咐 | zhǔ fù | to exhort | 告诉别人要注意的事 | 出门前，妈妈＿＿我路上小心。
 可怜 | kě lián | pitiful | 让人同情 | 这只小狗又冷又饿，看起来很＿＿。
-温柔 | wēn róu | gentle | 温和，让人感到舒服 | 她说话的声音很＿＿，孩子们都喜欢她。
+温柔 | wēn róu | gentle | 温和，让人感到舒服 | 她说话的声音很＿＿，孩子们都喜欢她。 | 柔软
 柔软 | róu ruǎn | soft | 不硬 | 这件衣服的布料很＿＿，穿着很舒服。
 盼望 | pàn wàng | to long for | 很希望 | 孩子们天天＿＿着放假。
 忍不住 | rěn bu zhù | cannot help (doing) | 控制不了自己 | 听到这个笑话，大家都＿＿笑了。
 和睦 | hé mù | harmonious | 相处得好，不吵架 | 他们一家人相处得很＿＿。
 严厉 | yán lì | stern | 很严格，不轻易原谅 | 他的父亲很＿＿，作业写不好就要重写。
-慈祥 | cí xiáng | kindly | 老人和气、善良 | 奶奶的脸上总是带着＿＿的笑容。
+慈祥 | cí xiáng | kindly | 老人和气、善良 | 奶奶的脸上总是带着＿＿的笑容。 | 温柔
 亲情 | qīn qíng | family love | 家人之间的感情 | 不管走多远，＿＿都是最重要的。
 `,
   },
@@ -274,7 +274,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 体谅 | tǐ liàng | to show understanding | 站在别人的位置上理解别人 | 妈妈工作很累，我们要＿＿她。
 和好 | hé hǎo | to make up | 吵架以后又变好 | 两个好朋友吵了一架，第二天就＿＿了。
 分担 | fēn dān | to share (a burden) | 一起承担 | 家里的家务应该大家一起＿＿。
-照看 | zhào kàn | to look after | 照顾，看着 | 我出去一会儿，请你帮我＿＿一下孩子。
+照看 | zhào kàn | to look after | 照顾，看着 | 我出去一会儿，请你帮我＿＿一下孩子。 | 接送
 接送 | jiē sòng | to pick up and drop off | 去接和去送 | 爷爷每天负责＿＿孙子上下学。
 隔开 | gé kāi | to separate | 从中间分开 | 一条小河把两个村子＿＿了。
 `,
@@ -320,7 +320,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 稻田 | dào tián | rice paddy | 种水稻的田 | 夏天，一片片＿＿绿油油的。 | 田野
 小麦 | xiǎo mài | wheat | 一种庄稼，种子可以磨成面粉 | 做面包和饺子皮的面粉来自＿＿。
 棉花 | mián hua | cotton | 一种植物，种子上的白毛可以做衣服和被子 | 这件衣服是用＿＿做的，穿着很舒服。
-庄稼 | zhuāng jia | crops | 地里种的粮食作物 | 今年雨水多，地里的＿＿长得很好。
+庄稼 | zhuāng jia | crops | 地里种的粮食作物 | 今年雨水多，地里的＿＿长得很好。 | 水稻 小麦 棉花
 丰收 | fēng shōu | bumper harvest | 收成好 | 今年粮食＿＿，农民们都很高兴。
 播种 | bō zhǒng | to sow | 把种子放进土里 | 春天是＿＿的季节。
 `,
@@ -382,7 +382,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 物业 | wù yè | property management | 管理小区的公司 | 楼里的灯坏了，我打电话给＿＿，他们马上派人来修。
 门卫 | mén wèi | gatekeeper | 在门口看门的人 | 小区的＿＿认识每一位住户。
 楼道 | lóu dào | stairwell | 楼里的走道 | ＿＿里不能放自行车，会影响别人走路。
-住房 | zhù fáng | housing | 住的房子 | 大城市的＿＿很贵，年轻人买房不容易。
+住房 | zhù fáng | housing | 住的房子 | 大城市的＿＿很贵，年轻人买房不容易。 | 公寓
 `,
   },
   {
@@ -407,9 +407,9 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 宁静 | níng jìng | tranquil | 安静 | 山村的夜晚非常＿＿，只能听到虫叫。 | 安宁
 安宁 | ān níng | at peace | 平安，不受打扰 | 楼下天天有人装修，大家都不得＿＿。 | 宁静
 宁可 | nìng kě | would rather | 两样都不好时选一样 | 我＿＿走路去，也不想在路上堵一个小时。
-闲 | xián | idle | 没有事做 | 他退休以后一点也不＿＿，每天都去帮社区做事。
+闲 | xián | idle | 没有事做 | 他退休以后一点也不＿＿，每天都去帮社区做事。 | 空闲
 空闲 | kòng xián | free (time) | 没有事的时候 | 你什么时候有＿＿，我们一起吃个饭？
-休闲 | xiū xián | leisure | 休息和娱乐 | 公园是市民＿＿的好地方。
+休闲 | xiū xián | leisure | 休息和娱乐 | 公园是市民＿＿的好地方。 | 闲聊
 闲聊 | xián liáo | to chat idly | 随便地聊天 | 吃完晚饭，邻居们在楼下＿＿。
 乱 | luàn | messy | 没有次序 | 你的房间太＿＿了，快收拾一下。
 农闲 | nóng xián | slack farming season | 农活不多的时候 | 冬天是＿＿的时候，农民有时间休息。
@@ -424,7 +424,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 早高峰 | zǎo gāo fēng | morning rush hour | 早上上班时车和人最多的时候 | ＿＿的时候，路上特别堵。
 十字路口 | shí zì lù kǒu | crossroads | 两条路交叉的地方 | 在下一个＿＿往左转就到了。
 拖拉机 | tuō lā jī | tractor | 在农田里用的机器车 | 农民开着＿＿去地里干活。
-超车 | chāo chē | to overtake | 从别的车旁边开到它前面 | 这段路有很多弯，不能＿＿。
+超车 | chāo chē | to overtake | 从别的车旁边开到它前面 | 这段路有很多弯，不能＿＿。 | 超过
 超过 | chāo guò | to exceed | 比……更多 | 这座城市的人口已经＿＿一千万了。
 街头 | jiē tóu | street | 街上 | 节日的时候，＿＿到处都是人。
 拖 | tuō | to drag | 拉着走 | 他＿＿着一个大箱子走进了车站。
@@ -468,7 +468,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 肝 | gān | liver | 人体里分解有毒物质的器官 | ＿＿是人体里最重的内脏。
 胸口 | xiōng kǒu | chest | 胸的中间部分 | 他用手按着＿＿，觉得心跳得很快。
 腰 | yāo | waist | 身体中部，肚子后面的部分 | 这条裤子的＿＿太大了，穿着往下掉。
-腹部 | fù bù | abdomen | 肚子 | 吃了不干净的东西以后，他觉得＿＿很不舒服。
+腹部 | fù bù | abdomen | 肚子 | 吃了不干净的东西以后，他觉得＿＿很不舒服。 | 胸口
 膝盖 | xī gài | knee | 大腿和小腿连接的地方 | 裤子在＿＿的地方破了一个洞。
 手臂 | shǒu bì | arm | 肩到手的部分 | 他举起＿＿向我们打招呼。
 肌肉 | jī ròu | muscle | 身体里能让身体动起来的部分 | 经常锻炼，＿＿会变得结实。
@@ -479,7 +479,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
   {
     theme: ["Feeling Unwell", "身体不舒服"],
     data: `
-咳 | ké | to cough | 用力往外出气并发出声音 | 他感冒了，晚上一直＿＿个不停。
+咳 | ké | to cough | 用力往外出气并发出声音 | 他感冒了，晚上一直＿＿个不停。 | 吐
 肿 | zhǒng | swollen | 皮肉鼓起来 | 他的脚受伤了，＿＿得穿不进鞋。
 头晕 | tóu yūn | dizzy | 觉得周围在转 | 他一整天没吃东西，站起来的时候觉得＿＿。 | 晕车
 晕车 | yùn chē | carsick | 坐车时头晕、想吐 | 她坐长途汽车容易＿＿，所以总是坐在前面。 | 头晕
@@ -512,7 +512,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 伸 | shēn | to stretch out | 把身体或手脚展开 | 他＿＿出手，跟我握了握。
 拉伸 | lā shēn | to stretch (muscles) | 运动前后让肌肉慢慢变长的动作 | 跑步以前，要先做一些＿＿运动。
 伸懒腰 | shēn lǎn yāo | to stretch oneself | 累了的时候把身体展开 | 坐了一上午，他站起来＿＿。
-跳绳 | tiào shéng | to skip rope | 一种跳过绳子的运动 | 下课以后，女孩子们在操场上＿＿。
+跳绳 | tiào shéng | to skip rope | 一种跳过绳子的运动 | 下课以后，女孩子们在操场上＿＿。 | 慢跑
 绳子 | shéng zi | rope | 用来捆东西的长条 | 这根＿＿很结实，可以用来拉车。
 汗水 | hàn shuǐ | sweat | 身体出的汗 | 他跑完步，衣服都被＿＿打湿了。
 擦 | cā | to wipe | 用布等来回地抹 | 他跑完步，用纸＿＿了一下脸。
@@ -600,7 +600,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
     theme: ["Keeping Fit", "健身"],
     data: `
 健身操 | jiàn shēn cāo | aerobics | 锻炼身体的一种操 | 每天早上，很多人在广场上做＿＿。
-快走 | kuài zǒu | brisk walking | 很快地走路 | 不喜欢跑步的人，可以试试＿＿。
+快走 | kuài zǒu | brisk walking | 很快地走路 | 不喜欢跑步的人，可以试试＿＿。 | 骑行
 骑行 | qí xíng | cycling | 骑自行车出行 | 星期六他和朋友一起去郊外＿＿。
 球类 | qiú lèi | ball games | 用球的运动 | 足球、篮球都是＿＿运动。
 运动量 | yùn dòng liàng | amount of exercise | 运动的多少 | 他每天只走一千步，＿＿太少了。
@@ -624,7 +624,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 天文台 | tiān wén tái | observatory | 观测星星的地方 | 山上有一座＿＿，晚上可以去看星星。
 流星 | liú xīng | meteor | 划过夜空、发出亮光的星星 | 晚上我们看到＿＿从天上划过，大家都很兴奋。
 日食 | rì shí | solar eclipse | 月亮挡住太阳的现象 | 发生＿＿的时候，白天的天色会突然变暗。
-星空 | xīng kōng | starry sky | 有星星的夜空 | 我们躺在草地上看＿＿。
+星空 | xīng kōng | starry sky | 有星星的夜空 | 我们躺在草地上看＿＿。 | 流星
 `,
   },
   {
@@ -634,8 +634,8 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 气体 | qì tǐ | gas | 没有一定形状、能到处流动的东西，比如空气 | 空气是由好几种＿＿组成的。
 熔化 | róng huà | to melt (by heat) | 固体受热变成液体 | 铁在很高的温度下会＿＿。 | 融化
 融化 | róng huà | to thaw | 冰雪变成水 | 太阳出来了，雪慢慢＿＿了。 | 熔化
-溶解 | róng jiě | to dissolve | 在水里化开 | 糖放进水里很快就＿＿了。
-凝固 | níng gù | to solidify | 液体变成固体 | 水在零度以下会＿＿成冰。
+溶解 | róng jiě | to dissolve | 在水里化开 | 糖放进水里很快就＿＿了。 | 融化
+凝固 | níng gù | to solidify | 液体变成固体 | 水在零度以下会＿＿成冰。 | 结冰
 蒸发 | zhēng fā | to evaporate | 液体变成气体 | 太阳一晒，地上的水很快就＿＿了。
 结冰 | jié bīng | to freeze | 水变成冰 | 天气太冷了，河面都＿＿了。
 水蒸气 | shuǐ zhēng qì | water vapor | 水变成的气体 | 锅里的水开了，冒出很多＿＿。
@@ -663,7 +663,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 秒 | miǎo | second | 一分钟的六十分之一 | 一分钟有六十＿＿。
 秒表 | miǎo biǎo | stopwatch | 能精确计时的表 | 体育老师用＿＿记录我们跑一百米的时间。
 毫米 | háo mǐ | millimeter | 一米的千分之一 | 一厘米等于十＿＿。
-厘米 | lí mǐ | centimeter | 一米的百分之一 | 这支笔长十五＿＿。
+厘米 | lí mǐ | centimeter | 一米的百分之一 | 这支笔长十五＿＿。 | 毫米
 毫升 | háo shēng | milliliter | 一升的千分之一 | 这瓶水有五百＿＿。
 吨 | dūn | ton | 一千公斤 | 这辆大卡车能装十＿＿货物。
 误差 | wù chā | error (of measurement) | 测量的结果和真实数值的差别 | 每次测量都会有一点儿＿＿，所以要多量几次。
@@ -676,7 +676,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
     theme: ["The Animal World", "动物世界"],
     data: `
 昆虫 | kūn chóng | insect | 身体分三部分、有六条腿的小动物 | 蜜蜂是一种＿＿，有六条腿。
-蜜蜂 | mì fēng | bee | 会采花蜜、会做蜂蜜的小虫子 | 花园里有很多＿＿在花上飞来飞去。
+蜜蜂 | mì fēng | bee | 会采花蜜、会做蜂蜜的小虫子 | 花园里有很多＿＿在花上飞来飞去。 | 昆虫
 蜂蜜 | fēng mì | honey | 蜜蜂做的又甜又稠的东西 | 他喝茶的时候喜欢放一点儿＿＿。
 鲸鱼 | jīng yú | whale | 生活在海里的最大的动物 | ＿＿虽然生活在海里，但它不是鱼。
 老鹰 | lǎo yīng | eagle | 眼睛很亮、会抓小动物的大鸟 | 一只＿＿在天上飞，看着地上的小动物。
@@ -691,13 +691,13 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
     theme: ["Rocks and Minerals", "岩石和矿物"],
     data: `
 岩石 | yán shí | rock | 构成地球表面的坚硬物质 | 这座山都是由坚硬的＿＿构成的。
-矿物 | kuàng wù | mineral | 地下天然形成的有用的东西 | 盐也是一种＿＿。
+矿物 | kuàng wù | mineral | 地下天然形成的有用的东西 | 盐也是一种＿＿。 | 矿石
 矿石 | kuàng shí | ore | 含有金属等有用物质的石头 | 工人们把＿＿运出来，再从里面提取铁。
 煤矿 | méi kuàng | coal mine | 挖煤的地方 | 这个城市以前有很多＿＿，现在都关了。
 铜 | tóng | copper | 一种红色的金属 | ＿＿很容易导电，所以电线里常用它。
 化石 | huà shí | fossil | 古代生物留在石头里的样子 | 科学家在这里发现了恐龙的＿＿。
 地质 | dì zhì | geology | 地球的结构和变化 | 这位＿＿学家研究这里的山已经二十年了。
-青铜 | qīng tóng | bronze | 铜和别的金属混合成的金属 | 中国古代用＿＿做了很多器物。
+青铜 | qīng tóng | bronze | 铜和别的金属混合成的金属 | 中国古代用＿＿做了很多器物。 | 铜
 灰色 | huī sè | gray | 黑和白中间的颜色 | 这种石头是＿＿的，不黑也不白。
 金子 | jīn zi | gold | 一种黄色的、很贵的金属 | 这块手表是用＿＿做的，所以很贵。
 `,
@@ -712,7 +712,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 获得 | huò dé | to obtain | 得到 | 他在比赛中＿＿了第一名。
 获奖 | huò jiǎng | to win a prize | 得到奖 | 这部电影在国际上多次＿＿。
 诺贝尔奖 | nuò bèi ěr jiǎng | Nobel Prize | 世界上很有名的科学和文学奖 | 居里夫人两次获得了＿＿。
-假说 | jiǎ shuō | hypothesis | 还没有被证明的科学说法 | 这个＿＿还需要更多的实验来证明。
+假说 | jiǎ shuō | hypothesis | 还没有被证明的科学说法 | 这个＿＿还需要更多的实验来证明。 | 推测
 突破 | tū pò | breakthrough | 打破原来的限制，有很大的进步 | 这项研究取得了重大＿＿。
 推测 | tuī cè | to infer | 根据已知的东西去想 | 科学家根据化石＿＿，这种动物会飞。
 `,
@@ -771,10 +771,10 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 佛教 | fó jiào | Buddhism | 一种从古代印度传来的宗教 | ＿＿大约在两千年前从印度传到了中国。
 佛像 | fó xiàng | statue of the Buddha | 佛的像 | 石窟里有很多大大小小的＿＿。
 和尚 | hé shang | Buddhist monk | 在寺庙里修行的男子 | 寺里的＿＿每天很早就起床读经。
-宫殿 | gōng diàn | palace | 皇帝住的高大的房子 | 故宫是明清两代皇帝住的＿＿。
+宫殿 | gōng diàn | palace | 皇帝住的高大的房子 | 故宫是明清两代皇帝住的＿＿。 | 大殿
 大殿 | dà diàn | main hall | 寺庙或宫殿里最主要的大房子 | 寺庙的＿＿里有一座很大的佛像。
 少林寺 | shào lín sì | Shaolin Temple | 河南的一座以武术出名的寺庙 | ＿＿的和尚会功夫，在世界上很有名。
-石窟 | shí kū | grotto | 在山上开出来的洞，里面常有佛像 | 这里的＿＿是一千多年前开出来的。
+石窟 | shí kū | grotto | 在山上开出来的洞，里面常有佛像 | 这里的＿＿是一千多年前开出来的。 | 莫高窟
 莫高窟 | mò gāo kū | Mogao Caves | 中国西北一处有名的石窟 | ＿＿在中国西北，里面有很多一千多年前的画。
 `,
   },
@@ -788,7 +788,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 陶艺 | táo yì | the art of pottery | 做陶器的手艺 | 星期六他去上＿＿课，学习用泥土做杯子。
 景德镇 | jǐng dé zhèn | Jingdezhen | 江西一个以瓷器出名的城市 | ＿＿做瓷器已经有一千多年的历史了。
 精致 | jīng zhì | exquisite | 做得很细，很好看 | 这个小瓷杯做得非常＿＿。
-古董 | gǔ dǒng | antique | 古代留下来的、很值钱的东西 | 爷爷收藏了很多＿＿，有的已经几百年了。
+古董 | gǔ dǒng | antique | 古代留下来的、很值钱的东西 | 爷爷收藏了很多＿＿，有的已经几百年了。 | 陶瓷 瓷器
 茶叶 | chá yè | tea leaves | 做茶用的叶子 | 春天采的＿＿最好。
 功夫茶 | gōng fu chá | gongfu tea | 一种很讲究方法的做茶、喝茶方式 | 广东人喜欢喝＿＿，用的杯子很小。
 `,
@@ -833,7 +833,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 手艺人 | shǒu yì rén | craftsperson | 靠手艺生活的人 | 老街上有很多＿＿，有的会做灯笼，有的会剪纸。 | 工匠
 传承 | chuán chéng | to pass on | 一代一代传下去 | 这门手艺已经＿＿了三百年。
 传人 | chuán rén | successor (of a craft) | 学到并继续传下去的人 | 他是这门古老手艺的第五代＿＿。
-文物 | wén wù | cultural relic | 古代留下来的有历史价值的东西 | 这些＿＿都是从地下发现的。
+文物 | wén wù | cultural relic | 古代留下来的有历史价值的东西 | 这些＿＿都是从地下发现的。 | 玉器
 修复 | xiū fù | to restore | 把坏了的东西修好，变回原来的样子 | 专家们花了三年时间＿＿这张古画。
 出土 | chū tǔ | to be unearthed | 从地下发现 | 这件青铜器是在河南＿＿的。
 `,
@@ -859,7 +859,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 楷书 | kǎi shū | regular script | 一种工整的汉字字体 | 学书法的人一般先学＿＿。
 书法家 | shū fǎ jiā | calligrapher | 字写得特别好的艺术家 | 这位＿＿写的字被很多人收藏。
 国画 | guó huà | traditional Chinese painting | 中国传统的绘画 | ＿＿常常用毛笔和墨在纸上画。 | 水墨画
-山水画 | shān shuǐ huà | landscape painting | 画山和水的中国画 | 这张＿＿画的是黄山的风景。
+山水画 | shān shuǐ huà | landscape painting | 画山和水的中国画 | 这张＿＿画的是黄山的风景。 | 国画 水墨画
 水墨画 | shuǐ mò huà | ink-wash painting | 只用墨和水画的画 | ＿＿只有黑白两种颜色，却很有味道。 | 国画
 毛笔 | máo bǐ | writing brush | 用动物的毛做的笔 | 写书法要用＿＿。
 宣纸 | xuān zhǐ | Xuan paper | 写字画画用的一种好纸 | 他在＿＿上写了一个大大的“福”字。
@@ -873,14 +873,14 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
     data: `
 辉煌 | huī huáng | glorious | 光彩照人；成就很大 | 唐朝是中国历史上非常＿＿的一个朝代。 | 灿烂
 灿烂 | càn làn | brilliant | 光彩很亮 | 中华民族创造了＿＿的文化。 | 辉煌
-宏伟 | hóng wěi | magnificent | 规模大，雄伟 | 长城是一个非常＿＿的建筑。
+宏伟 | hóng wěi | magnificent | 规模大，雄伟 | 长城是一个非常＿＿的建筑。 | 辉煌
 杰作 | jié zuò | masterpiece | 非常好的作品 | 大家都认为这张画是他的＿＿。
 杰出 | jié chū | outstanding | 能力和成就比一般人高很多 | 他是一位＿＿的科学家。
 四大发明 | sì dà fā míng | the Four Great Inventions | 造纸术、印刷术、火药和指南针 | 造纸术是中国古代的＿＿之一。
 造纸术 | zào zhǐ shù | papermaking | 做纸的方法 | 在＿＿出现以前，人们把字写在竹简上。
 印刷术 | yìn shuā shù | printing | 印书的技术 | 有了＿＿，书就可以一次印很多本了。
 火药 | huǒ yào | gunpowder | 一种点了火就会突然烧起来的东西 | 古人用＿＿做成了烟花。
-精华 | jīng huá | essence | 最好、最重要的部分 | 这本书收集了唐诗的＿＿。
+精华 | jīng huá | essence | 最好、最重要的部分 | 这本书收集了唐诗的＿＿。 | 杰作
 `,
   },
   {

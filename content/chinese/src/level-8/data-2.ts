@@ -190,7 +190,7 @@ export const wordBatches2: readonly LevelWordBatch[] = [
 检疫 | jiǎn yì | quarantine inspection | 为防止传染病传入，对人、动物、货物进行的检查 | 从国外进口的水果要先经过＿＿，才能在市场上出售。
 排查 | pái chá | to check one by one | 一个一个地检查 | 卫生部门正在＿＿每一位和病人见过面的人。
 密切接触者 | mì qiè jiē chù zhě | close contact | 和病人近距离接触过的人 | 病人确诊以后，他的家人作为＿＿也要接受检查。
-阳性 | yáng xìng | positive (of a test) | 检查结果显示有某种病原体 | 他的检测结果是＿＿，说明他被感染了。
+阳性 | yáng xìng | positive (of a test) | 检查结果显示有某种病原体 | 他的检测结果是＿＿，说明他被感染了。 | 阴性
 阴性 | yīn xìng | negative (of a test) | 检查结果显示没有某种病原体 | 检测结果是＿＿，他终于可以放心地回家了。
 确诊 | què zhěn | to confirm a diagnosis | 经过检查，确定得了某种病 | 经过几次检查，医生终于＿＿他得的是肝炎。
 疑似 | yí sì | suspected | 好像是，但是还不能确定 | 他有发热和咳嗽的症状，被当作＿＿病例送到了医院。
@@ -503,7 +503,7 @@ export const wordBatches2: readonly LevelWordBatch[] = [
     data: `
 潮汐 | cháo xī | tide | 海水定时涨落的现象 | ＿＿是由月亮和太阳的引力引起的。
 潮汐能 | cháo xī néng | tidal energy | 海水涨落产生的能量 | 利用海水涨落产生的＿＿，可以发电。
-涨潮 | zhǎng cháo | rising tide | 海水上涨 | ＿＿的时候，海水会盖住这片沙滩，要早点儿离开。
+涨潮 | zhǎng cháo | rising tide | 海水上涨 | ＿＿的时候，海水会盖住这片沙滩，要早点儿离开。 | 退潮
 退潮 | tuì cháo | ebb tide | 海水下降 | ＿＿以后，海边露出了一大片沙滩。
 风力发电 | fēng lì fā diàn | wind power | 用风的力量发电 | 这片草原上风很大，适合发展＿＿。 | 风电场 海上风电
 风电场 | fēng diàn chǎng | wind farm | 很多风力发电机组成的发电场 | 海边的＿＿里，几十台大风车在不停地转动。 | 风力发电 海上风电
@@ -685,7 +685,7 @@ export const wordBatches2: readonly LevelWordBatch[] = [
 缝隙 | fèng xì | crack, crevice | 裂开或没合严的小缝 | 阳光从门的＿＿里照了进来。 | 空隙 间隙
 间隙 | jiàn xì | interval | 两件事之间空着的时间 | 他利用工作的＿＿，学会了一门外语。 | 缝隙 空隙
 空隙 | kòng xì | empty space | 空着的地方 | 书架上的书摆得满满的，一点儿＿＿也没有。 | 缝隙 间隙
-拧紧 | nǐng jǐn | to screw tight | 转动使紧 | 用完水以后，要把水龙头＿＿，不然会一直滴水。
+拧紧 | nǐng jǐn | to screw tight | 转动使紧 | 用完水以后，要把水龙头＿＿，不然会一直滴水。 | 拧开 拧干
 拧开 | nǐng kāi | to twist open | 转动使打开 | 他用力＿＿瓶盖，喝了一大口水。
 拧干 | níng gān | to wring out | 用力扭，把水挤出去 | 洗完衣服，要先＿＿再挂起来。
 撬开 | qiào kāi | to pry open | 用工具插进缝里，用力把东西打开 | 罐头的盖子太紧，他用刀把它＿＿了。

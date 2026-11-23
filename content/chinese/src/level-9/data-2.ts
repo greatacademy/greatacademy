@@ -164,7 +164,7 @@ export const wordBatches2: readonly LevelWordBatch[] = [
 好脾气 | hǎo pí qi | good temper | 性情温和，不容易生气 | 王老师是个＿＿，从来不对学生发火。
 耍脾气 | shuǎ pí qi | to throw a tantrum | 故意发脾气 | 小妹妹没买到玩具，就在商店门口＿＿，不肯走。
 倔脾气 | juè pí qi | stubborn temper | 性子硬，不容易改变主意 | 爷爷是个＿＿，他决定的事谁也劝不动。
-急性子 | jí xìng zi | impatient person | 性情急的人 | 他是个＿＿，等公交车等了五分钟就不耐烦了。
+急性子 | jí xìng zi | impatient person | 性情急的人 | 他是个＿＿，等公交车等了五分钟就不耐烦了。 | 慢性子
 慢性子 | màn xìng zi | unhurried person | 做事不慌不忙、动作慢的人 | 她是个＿＿，吃一顿饭要一个小时。
 `,
   },
@@ -428,10 +428,10 @@ export const wordBatches2: readonly LevelWordBatch[] = [
     theme: ["Orbits", "轨道和引力"],
     data: `
 椭圆 | tuǒ yuán | ellipse | 长圆形 | 行星绕太阳运动的轨道不是正圆，而是＿＿。
-自转 | zì zhuàn | rotation (of a planet) | 天体绕着自己的轴转动 | 地球＿＿一周大约是二十四小时，于是有了白天和黑夜。
+自转 | zì zhuàn | rotation (of a planet) | 天体绕着自己的轴转动 | 地球＿＿一周大约是二十四小时，于是有了白天和黑夜。 | 公转
 公转 | gōng zhuàn | revolution (in orbit) | 一个天体绕着另一个天体转动 | 地球绕太阳＿＿一周是一年。
 公转轨道 | gōng zhuàn guǐ dào | orbit | 天体公转时走的路线 | 八大行星的＿＿差不多都在同一个平面上。
-近地点 | jìn dì diǎn | perigee | 月亮或卫星离地球最近的点 | 月亮运行到＿＿附近时如果正好是满月，看起来会特别大。
+近地点 | jìn dì diǎn | perigee | 月亮或卫星离地球最近的点 | 月亮运行到＿＿附近时如果正好是满月，看起来会特别大。 | 远地点
 远地点 | yuǎn dì diǎn | apogee | 月亮或卫星离地球最远的点 | 月亮在＿＿的时候，离地球大约四十万公里。
 地轴 | dì zhóu | Earth's axis | 地球自转的轴 | 因为＿＿是倾斜的，地球上才有了四季的变化。
 万有引力 | wàn yǒu yǐn lì | universal gravitation | 任何两个物体之间互相吸引的力 | 牛顿提出了＿＿定律，解释了行星为什么绕太阳运动。
@@ -477,7 +477,7 @@ export const wordBatches2: readonly LevelWordBatch[] = [
 日全食 | rì quán shí | total solar eclipse | 月亮完全挡住太阳的现象 | 发生＿＿的时候，白天会突然变得像夜晚一样黑。 | 日环食
 日环食 | rì huán shí | annular solar eclipse | 月亮挡住太阳中间，四周留下一圈光环的现象 | 发生＿＿时，太阳像一个金色的圆环挂在天上。 | 日全食
 月食 | yuè shí | lunar eclipse | 地球挡住太阳照向月亮的光的现象 | 发生＿＿的时候，地球的影子落在了月亮上。
-满月 | mǎn yuè | full moon | 圆圆的月亮 | 中秋节的晚上，天上挂着一轮＿＿。
+满月 | mǎn yuè | full moon | 圆圆的月亮 | 中秋节的晚上，天上挂着一轮＿＿。 | 新月
 新月 | xīn yuè | new moon | 农历月初的月亮 | 农历每月初一前后是＿＿，在地球上几乎看不到月亮。
 月相 | yuè xiàng | phase of the moon | 月亮圆缺的样子 | 月亮从圆到缺、又从缺到圆，这种变化叫作＿＿变化。
 天狗吃月亮 | tiān gǒu chī yuè liang | the heavenly dog eating the moon | 古人对月食的说法 | 古人不明白月食的原因，以为是＿＿。
@@ -607,7 +607,7 @@ export const wordBatches2: readonly LevelWordBatch[] = [
   {
     theme: ["Time and Motion", "时间和动静"],
     data: `
-上旬 | shàng xún | first ten days of a month | 每个月一日到十日 | 国庆节是十月一日，在十月＿＿。
+上旬 | shàng xún | first ten days of a month | 每个月一日到十日 | 国庆节是十月一日，在十月＿＿。 | 中旬 下旬
 中旬 | zhōng xún | middle ten days of a month | 每个月十一日到二十日 | 今天是五月十五日，正好是五月＿＿。
 下旬 | xià xún | last ten days of a month | 每个月二十一日到月底 | 一月三十一日是一月＿＿的最后一天。
 芒种 | máng zhòng | Grain in Ear (a solar term) | 二十四节气之一，在六月初 | ＿＿前后，北方的农民忙着收麦子。
@@ -624,7 +624,7 @@ export const wordBatches2: readonly LevelWordBatch[] = [
     theme: ["Cells", "细胞"],
     data: `
 细胞核 | xì bāo hé | nucleus | 细胞中央储存遗传物质的部分 | 遗传物质主要储存在＿＿里。
-细胞膜 | xì bāo mó | cell membrane | 包在细胞外面的一层薄膜 | ＿＿控制着物质进出细胞。
+细胞膜 | xì bāo mó | cell membrane | 包在细胞外面的一层薄膜 | ＿＿控制着物质进出细胞。 | 细胞壁
 细胞质 | xì bāo zhì | cytoplasm | 细胞膜以内、细胞核以外的部分 | 线粒体等结构都分布在＿＿中。
 细胞壁 | xì bāo bì | cell wall | 植物细胞最外面坚硬的一层 | 植物细胞有＿＿，动物细胞却没有。
 细胞分裂 | xì bāo fēn liè | cell division | 一个细胞分成两个细胞 | 生物体通过＿＿使细胞的数量不断增加。
@@ -643,7 +643,7 @@ export const wordBatches2: readonly LevelWordBatch[] = [
 双螺旋 | shuāng luó xuán | double helix | 两条链互相缠绕的结构 | 一九五三年，科学家发现了脱氧核糖核酸的＿＿结构。
 基因组 | jī yīn zǔ | genome | 一种生物全部的遗传信息 | 人类＿＿计划在二零零三年基本完成。
 遗传病 | yí chuán bìng | hereditary disease | 由遗传物质改变引起的病 | 色盲是一种常见的＿＿。
-显性 | xiǎn xìng | dominant (of a trait) | 容易表现出来的 | 如果一个性状是＿＿的，只要有一个这种基因就会表现出来。
+显性 | xiǎn xìng | dominant (of a trait) | 容易表现出来的 | 如果一个性状是＿＿的，只要有一个这种基因就会表现出来。 | 隐性
 隐性 | yǐn xìng | recessive | 不容易表现出来的 | ＿＿基因只有成对出现的时候，才会表现出来。
 变异 | biàn yì | variation, mutation | 生物后代与上一代之间的差异 | 同一对父母生的孩子长得也不完全一样，这是＿＿的结果。
 遗传学 | yí chuán xué | genetics | 研究遗传和变异的学科 | 他大学学的是＿＿，研究基因怎样代代相传。
@@ -673,7 +673,7 @@ export const wordBatches2: readonly LevelWordBatch[] = [
 神经系统 | shén jīng xì tǒng | nervous system | 负责感觉和控制身体活动的器官 | 大脑和脊髓是＿＿的中心部分。
 呼吸系统 | hū xī xì tǒng | respiratory system | 负责吸入氧气、呼出二氧化碳的器官 | 肺是＿＿最重要的器官。
 血液循环 | xuè yè xún huán | blood circulation | 血液在身体里不停地流动 | 冬天手脚总是冰冷，可能是＿＿不好。
-红细胞 | hóng xì bāo | red blood cell | 运输氧气的血细胞 | ＿＿负责把氧气运送到身体各处。
+红细胞 | hóng xì bāo | red blood cell | 运输氧气的血细胞 | ＿＿负责把氧气运送到身体各处。 | 白细胞
 白细胞 | bái xì bāo | white blood cell | 消灭病菌的血细胞 | 身体发炎的时候，血液里的＿＿会增多。
 血小板 | xuè xiǎo bǎn | platelet | 帮助血液凝固的血细胞 | 手指划破以后，＿＿会帮助止血。
 干细胞 | gàn xì bāo | stem cell | 能变成多种细胞的细胞 | ＿＿可以变成多种不同的细胞，在医学上很有用。
@@ -700,10 +700,10 @@ export const wordBatches2: readonly LevelWordBatch[] = [
     data: `
 孵化 | fū huà | to hatch | 卵变成幼小动物的过程 | 这些小鸡是在机器里＿＿出来的。
 孵蛋 | fū dàn | to brood eggs | 鸟类伏在蛋上使蛋变成小鸟 | 母鸡正在＿＿，二十一天以后小鸡就会出来了。
-卵生 | luǎn shēng | oviparous | 动物用产卵的方式繁殖 | 鸟类和大多数爬行动物都是＿＿的。
+卵生 | luǎn shēng | oviparous | 动物用产卵的方式繁殖 | 鸟类和大多数爬行动物都是＿＿的。 | 胎生
 胎生 | tāi shēng | viviparous | 动物在母体内发育后生出来 | 鲸虽然生活在海里，却是＿＿的哺乳动物。
 受精 | shòu jīng | to be fertilised | 精子和卵子结合 | 卵子＿＿以后，开始发育成新的个体。
-雌性 | cí xìng | female | 能产生卵子的性别 | 在蜜蜂中，负责产卵的蜂王是＿＿的。
+雌性 | cí xìng | female | 能产生卵子的性别 | 在蜜蜂中，负责产卵的蜂王是＿＿的。 | 雄性
 雄性 | xióng xìng | male | 能产生精子的性别 | 头上有一圈长毛的是＿＿狮子。
 雌雄 | cí xióng | male and female | 雌性和雄性 | 很多鸟类的＿＿羽毛颜色不同，雄鸟往往更漂亮。
 试管婴儿 | shì guǎn yīng ér | test-tube baby | 用体外受精技术出生的孩子 | 一九七八年，世界上第一个＿＿在英国出生。
@@ -729,13 +729,13 @@ export const wordBatches2: readonly LevelWordBatch[] = [
     theme: ["Groups of Animals", "动物的类别"],
     data: `
 哺乳动物 | bǔ rǔ dòng wù | mammal | 用乳汁喂养后代的动物 | 鲸是生活在海里的＿＿。
-脊椎动物 | jǐ zhuī dòng wù | vertebrate | 有脊椎骨的动物 | 鱼、鸟和人都是＿＿。
+脊椎动物 | jǐ zhuī dòng wù | vertebrate | 有脊椎骨的动物 | 鱼、鸟和人都是＿＿。 | 无脊椎动物
 无脊椎动物 | wú jǐ zhuī dòng wù | invertebrate | 没有脊椎骨的动物 | 昆虫和蚯蚓都是＿＿。 | 节肢动物 软体动物
 节肢动物 | jié zhī dòng wù | arthropod | 身体和脚分节的动物 | 虾和蜘蛛都属于＿＿。 | 无脊椎动物
 软体动物 | ruǎn tǐ dòng wù | mollusc | 身体柔软、多数有壳的动物 | 章鱼和贝类都是＿＿。 | 无脊椎动物
 鸟类 | niǎo lèi | birds | 有羽毛、会生蛋的脊椎动物 | 很多＿＿的骨头是空心的，所以身体比较轻。
 杂食动物 | zá shí dòng wù | omnivore | 既吃植物又吃动物的动物 | 熊既吃果子又吃鱼，是＿＿。
-恒温动物 | héng wēn dòng wù | warm-blooded animal | 体温保持不变的动物 | 鸟和哺乳动物都是＿＿，体温基本不变。
+恒温动物 | héng wēn dòng wù | warm-blooded animal | 体温保持不变的动物 | 鸟和哺乳动物都是＿＿，体温基本不变。 | 变温动物
 变温动物 | biàn wēn dòng wù | cold-blooded animal | 体温随环境变化的动物 | 蛇是＿＿，天冷的时候要冬眠。
 水生动物 | shuǐ shēng dòng wù | aquatic animal | 生活在水里的动物 | 鱼、虾和水母都是＿＿。
 `,
@@ -819,7 +819,7 @@ export const wordBatches2: readonly LevelWordBatch[] = [
     theme: ["Flowers and Fruits", "花和果实"],
     data: `
 花蕊 | huā ruǐ | stamens and pistils | 花中心的部分 | 蜜蜂停在花上，把头伸进了＿＿里。
-雄蕊 | xióng ruǐ | stamen | 产生花粉的部分 | ＿＿顶端的花药里有花粉。
+雄蕊 | xióng ruǐ | stamen | 产生花粉的部分 | ＿＿顶端的花药里有花粉。 | 雌蕊
 雌蕊 | cí ruǐ | pistil | 接受花粉、能结出果实的部分 | 花粉落到＿＿上以后，花才能结出果实。
 花瓣 | huā bàn | petal | 花的一片一片的部分 | 一阵风吹过，粉红色的＿＿落了一地。
 子房 | zǐ fáng | ovary (of a flower) | 雌蕊下部膨大的部分 | 受精以后，＿＿慢慢发育成果实。

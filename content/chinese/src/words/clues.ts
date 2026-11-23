@@ -15,8 +15,9 @@ export const clueKey = (word: string, n: number): string => `${word}/${n}`;
 
 /**
  * parseClues reads clue data, a line a sentence, its fields separated by ` | `: the word and the sentence's place, as
- * clueKey writes them, the clue in Chinese and in English, without a full stop, and, if any, the words of the batch that
- * would also fit the gap, separated by spaces.
+ * clueKey writes them, the clue in Chinese, a phrase without a full stop, the clue in English, a whole sentence that ends
+ * with a full stop and says what the gap must mean, and, if any, the words of the batch that would also fit the gap,
+ * separated by spaces.
  */
 export function parseClues(data: string): ReadonlyMap<string, Clue> {
   const out = new Map<string, Clue>();
@@ -25,7 +26,7 @@ export function parseClues(data: string): ReadonlyMap<string, Clue> {
     const fields = line.split(" | ").map((f) => f.trim());
     if (fields.length < 3 || fields.length > 4) throw new Error(`clue data: ${line}`);
     const [key = "", zh = "", en = "", fits = ""] = fields;
-    if (!/\/\d$/u.test(key) || zh === "" || en === "") throw new Error(`clue data: ${line}`);
+    if (!/\/\d$/u.test(key) || zh === "" || /[。.]$/u.test(zh) || !/^["A-Z].*\.$/u.test(en)) throw new Error(`clue data: ${line}`);
     if (out.has(key)) throw new Error(`clue data: ${key} appears twice`);
     out.set(key, { why: t(en, zh), fits: fits === "" ? [] : fits.split(" ") });
   }

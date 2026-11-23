@@ -111,8 +111,14 @@ function gapItems(levels: readonly LevelData[], wrong: number): readonly Ask[] {
             mates[i]!.map((v) => v.word),
             4,
           );
+          const clue = w.clue;
           const reason = (x: string): Text => {
             const v = byWord.get(x)!;
+            if (clue)
+              return t(
+                `${clue.why.en} ${v.word} (${pinyin(v)}) means "${v.meaning.en}", so it does not fit.`,
+                `${clue.why["zh-CN"]}，而“${v.word}”（${pinyin(v)}）的意思是${zhQuote(v.meaning["zh-CN"])}，填不进去。`,
+              );
             return t(
               `${v.word} (${pinyin(v)}) means "${v.meaning.en}". Put in the gap it reads ${gapWhole(w, v.word)} Read the words on both sides of the gap with that meaning: they do not go with it.`,
               `“${v.word}”（${pinyin(v)}）的意思是${zhQuote(v.meaning["zh-CN"])}。放进横线处，句子成了${zhQuote(gapWhole(w, v.word))}；连着横线前后的词按这个意思读，搭配不上。`,
@@ -123,8 +129,8 @@ function gapItems(levels: readonly LevelData[], wrong: number): readonly Ask[] {
             right: same(w.word),
             wrong: others.map(same),
             solution: t(
-              `The sentence is ${gapWhole(w)}\n\n**${w.word}** (${pinyin(w)}) means "${w.meaning.en}", which is what the words around the gap call for.\n\n**Check.** Read the gap as that meaning: ${gapWhole(w, `[${w.meaning.en}]`)} It still says the same.`,
-              `完整的句子是：${gapWhole(w)}\n\n“**${w.word}**”（${pinyin(w)}）的意思是${zhQuote(w.meaning["zh-CN"])}，正是横线前后的词要求的意思。\n\n**检验。** 把横线换成词义来读：${gapWhole(w, `（${zhQuote(w.meaning["zh-CN"]).slice(1, -1)}）`)}意思仍然通顺。`,
+              `The sentence is ${gapWhole(w)}\n\n${clue ? `${clue.why.en} ` : ""}**${w.word}** (${pinyin(w)}) means "${w.meaning.en}", which is what the words around the gap call for.\n\n**Check.** Read the gap as that meaning: ${gapWhole(w, `[${w.meaning.en}]`)} It still says the same.`,
+              `完整的句子是：${gapWhole(w)}\n\n${clue ? `${clue.why["zh-CN"]}，` : ""}“**${w.word}**”（${pinyin(w)}）的意思是${zhQuote(w.meaning["zh-CN"])}，正是横线前后的词要求的意思。\n\n**检验。** 把横线换成词义来读：${gapWhole(w, `（${zhQuote(w.meaning["zh-CN"]).slice(1, -1)}）`)}意思仍然通顺。`,
             ),
             reasons: others.map(reason),
           };

@@ -6,7 +6,7 @@
 // clue, written by hand, to that idiom's own meaning.
 
 import { type Text, type TopicDef, t } from "@ga/content";
-import { type ChoiceItem, choiceGenerator, joinPinyin, point, zhQuote } from "@ga/subject-chinese";
+import { type ChoiceItem, choiceGenerator, joinPinyin, point, spokenSyllables, zhQuote } from "@ga/subject-chinese";
 
 import { type Clue, clueOf } from "../words/clues.ts";
 
@@ -43,8 +43,9 @@ const UNSPLIT: ReadonlySet<string> = new Set([
   "无与伦比",
 ]);
 
-/** idiomPinyin writes an idiom's pinyin by GB/T 16159: two halves joined by a hyphen, or all joined. */
-export function idiomPinyin(text: string, syllables: readonly string[]): string {
+/** idiomPinyin writes an idiom's pinyin by GB/T 16159, two halves joined by a hyphen or all joined, with 一 and 不 in the tone said (see spokenSyllables). */
+export function idiomPinyin(text: string, written: readonly string[]): string {
+  const syllables = spokenSyllables(text, written);
   if (syllables.length !== 4 || UNSPLIT.has(text)) return joinPinyin(syllables);
   return `${joinPinyin(syllables.slice(0, 2))}-${joinPinyin(syllables.slice(2))}`;
 }
@@ -195,7 +196,7 @@ export function idiomTopic(spec: IdiomSpec): TopicDef {
         `${spec.id}-use`,
         t("Using Them", "恰当运用"),
         t(
-          `Choose an idiom by the clue in the sentence, not by how the idiom sounds. Take ${first.sentences[0]} Here ${firstClue.why.en}, so it needs an idiom meaning "${first.meaning.en}": ${put(first.sentences[0], first.text)}\n\n${useList}\n\n> **Watch out.** An idiom that sounds fine can still say the wrong thing: with ${misfit.text} the sentence would read ${put(first.sentences[0], misfit.text)} But here ${firstClue.why.en}, and ${misfit.text} means "${misfit.meaning.en}". Check that the idiom's meaning is what the sentence describes.`,
+          `Choose an idiom by the clue in the sentence, not by how the idiom sounds. Take ${first.sentences[0]} ${firstClue.why.en} So it takes ${first.text}: ${put(first.sentences[0], first.text)}\n\n${useList}\n\n> **Watch out.** An idiom that sounds fine can still say the wrong thing: with ${misfit.text} the sentence would read ${put(first.sentences[0], misfit.text)} ${firstClue.why.en} ${misfit.text} means "${misfit.meaning.en}", so it does not fit. Check that the idiom's meaning is what the sentence describes.`,
           `选用成语要找出句子里决定用哪个成语的线索。比如${zhQuote(first.sentences[0])}：${firstClue.why["zh-CN"]}，要的是“${first.meaning["zh-CN"]}”的意思：${put(first.sentences[0], first.text)}\n\n${useList}\n\n> **注意。** 读起来顺口的成语，意思不一定对：填“${misfit.text}”，句子成了${zhQuote(put(first.sentences[0], misfit.text))}，可是${firstClue.why["zh-CN"]}，而“${misfit.text}”的意思是${misfit.meaning["zh-CN"]}，对不上。要看成语的意思是不是句子描写的情形。`,
         ),
         choiceGenerator(
@@ -204,14 +205,16 @@ export function idiomTopic(spec: IdiomSpec): TopicDef {
           (right, shown) => {
             const c = clueOfSentence(shown).why;
             return t(
-              `**${right}** fits: ${put(shown, right)} Here ${c.en}, and ${right} means ${meaningOfEn(right)}.\n\n**Check.** Read the gap as that meaning: ${put(shown, `[${meaningOfEn(right)}]`)} It still says the same.`,
+              `**${right}** fits: ${put(shown, right)}
+
+${c.en} ${right} means ${meaningOfEn(right)}.\n\n**Check.** Read the gap as that meaning: ${put(shown, `[${meaningOfEn(right)}]`)} It still says the same.`,
               `填“**${right}**”：${put(shown, right)}${c["zh-CN"]}，“${right}”的意思正是${meaningOf(right)}。\n\n**检验。** 把横线换成成语的意思来读：${zhQuote(put(shown, `（${meaningOf(right)}）`))}，意思仍然说得通。`,
             );
           },
           (wrong, _right, shown) => {
             const c = clueOfSentence(shown).why;
             return t(
-              `Here ${c.en}, but ${wrong} means "${meaningOfEn(wrong)}".`,
+              `${c.en} ${wrong} means "${meaningOfEn(wrong)}", which the sentence does not say.`,
               `${c["zh-CN"]}，而“${wrong}”的意思是${meaningOf(wrong)}。`,
             );
           },

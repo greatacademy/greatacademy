@@ -7,6 +7,7 @@ import { type LevelPlan, type LevelUnit, planLevel } from "../level-2/level.ts";
 import { levelFourPlan } from "../level-4/plan.ts";
 import { characterBatchesA } from "./character-data-a.ts";
 import { characterBatchesB } from "./character-data-b.ts";
+import { levelFiveClues } from "./clue-data.ts";
 import { dialogues } from "./dialogue-data.ts";
 import { grammar } from "./grammar-data.ts";
 import { sentences } from "./sentence-data.ts";
@@ -37,6 +38,7 @@ export const levelFivePlan: LevelPlan = planLevel({
   units: UNITS,
   characterBatches: [...characterBatchesA, ...characterBatchesB],
   wordBatches: [...wordBatchesA, ...wordBatchesB],
+  clues: levelFiveClues,
   grammar,
   sentences,
   writing,

@@ -128,14 +128,14 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
   {
     theme: ["Globalization", "全球化"],
     data: `
-全球化 | quán qiú huà | globalization | 世界各国越来越紧地连在一起 | 在＿＿的今天，各国的经济联系越来越紧。
+全球化 | quán qiú huà | globalization | 世界各国越来越紧地连在一起 | 在＿＿的今天，各国的经济联系越来越紧。 | 一体化
 国际化 | guó jì huà | internationalization | 变得有国际的特点 | 这所大学越来越＿＿，有很多外国学生和老师。
 地球村 | dì qiú cūn | global village | 像一个村子一样的世界 | 有了网络，世界变成了一个＿＿。
 跨国 | kuà guó | transnational | 跨过国家界线的 | 他在一家＿＿公司工作，这家公司在二十个国家都有办公室。
 进出口 | jìn chū kǒu | import and export | 进口和出口 | 这家公司做＿＿生意，常常跟外国打交道。
 一体化 | yī tǐ huà | integration | 合成一个整体 | 经济＿＿让欧洲国家之间的联系更紧了。
 本土 | běn tǔ | local; homegrown | 本国的，本地的 | 这家咖啡店是中国＿＿的品牌。
-多样化 | duō yàng huà | diversification | 变得有很多不同的样子 | 现在人们的生活方式越来越＿＿了。
+多样化 | duō yàng huà | diversification | 变得有很多不同的样子 | 现在人们的生活方式越来越＿＿了。 | 国际化
 影响力 | yǐng xiǎng lì | influence | 影响别人的能力 | 这位歌手在年轻人中很有＿＿。
 世界各地 | shì jiè gè dì | all over the world | 世界上的每个地方 | 来自＿＿的学生在这里学习中文。
 `,
@@ -159,7 +159,7 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
   {
     theme: ["Leaders and Staff", "领导和员工"],
     data: `
-董事长 | dǒng shì zhǎng | chairman of the board | 董事会里最高的领导 | 董事会开会的时候，由＿＿主持。
+董事长 | dǒng shì zhǎng | chairman of the board | 董事会里最高的领导 | 董事会开会的时候，由＿＿主持。 | 总经理
 董事会 | dǒng shì huì | board of directors | 股东选出来决定公司大事的组织 | 这个计划要先由＿＿同意。 | 管理层
 总经理 | zǒng jīng lǐ | general manager | 公司里管日常工作的最高的人 | 他是公司的＿＿，全公司的日常工作都由他来管。
 管理层 | guǎn lǐ céng | management | 公司里负责管理的那些人 | 员工们向＿＿提出了自己的意见。 | 董事会
@@ -221,7 +221,7 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
     data: `
 营销 | yíng xiāo | marketing | 推广和卖产品 | 他在公司负责＿＿，想办法让更多的人买我们的产品。 | 推广
 推广 | tuī guǎng | to promote | 让更多人知道和使用 | 学校正在＿＿一种新的学习方法。 | 营销
-促销 | cù xiāo | sales promotion | 用打折等办法让东西卖得更多 | 商店正在做＿＿活动，很多东西打五折。
+促销 | cù xiāo | sales promotion | 用打折等办法让东西卖得更多 | 商店正在做＿＿活动，很多东西打五折。 | 推广
 包装 | bāo zhuāng | packaging | 包东西用的纸、袋子等 | 这个礼物的＿＿很漂亮。
 消费者 | xiāo fèi zhě | consumer | 买东西、用东西的人 | 产品的质量有问题，＿＿可以要求退货。
 售后 | shòu hòu | after-sales | 卖出以后（的服务） | 这家店的＿＿服务很好，东西坏了可以免费修。
@@ -300,7 +300,7 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
 减压 | jiǎn yā | to reduce stress | 减少压力 | 运动是一种很好的＿＿方法。 | 放松
 疲劳 | pí láo | fatigued | 身体或精神很累 | 开车时间太长，人容易＿＿。 | 精疲力尽
 精疲力尽 | jīng pí lì jìn | exhausted | 精神和力气都用完了 | 爬了一天的山，大家都＿＿了。 | 疲劳
-失眠 | shī mián | to have insomnia | 晚上睡不着 | 他最近压力很大，常常＿＿。
+失眠 | shī mián | to have insomnia | 晚上睡不着 | 他最近压力很大，常常＿＿。 | 焦虑
 烦恼 | fán nǎo | worries | 让人心里不舒服的事 | 每个人都有自己的＿＿。
 担忧 | dān yōu | to be worried | 担心，发愁 | 妈妈对孩子的健康很＿＿。 | 焦虑 不安
 不安 | bù ān | uneasy | 心里不平静 | 他做了错事，心里一直很＿＿。 | 焦虑 担忧
@@ -433,7 +433,7 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
     data: `
 情节 | qíng jié | plot | 故事里发生的事和经过 | 这部小说的＿＿很复杂，我看了两遍才看懂。
 人物 | rén wù | character | 故事里的人 | 这本小说里的＿＿很多，有老人，也有孩子。
-主人公 | zhǔ rén gōng | protagonist | 故事里最主要的人物 | 这个故事的＿＿是一个十岁的小男孩。
+主人公 | zhǔ rén gōng | protagonist | 故事里最主要的人物 | 这个故事的＿＿是一个十岁的小男孩。 | 人物
 结局 | jié jú | ending | 故事最后的结果 | 这个故事的＿＿很好，两个人最后结婚了。
 开头 | kāi tóu | beginning | 最开始的部分 | 好文章的＿＿常常能马上吸引读者。
 高潮 | gāo cháo | climax | 故事里最紧张、最精彩的部分 | 电影到了＿＿，大家都不说话了，紧张地看着。
@@ -482,7 +482,7 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
 宋词 | sòng cí | Song ci poetry | 宋朝的词 | ＿＿是宋朝最有名的文学形式。
 朗读 | lǎng dú | to read aloud | 大声地读 | 老师请我在班上＿＿这首诗。
 诗意 | shī yì | poetic quality | 像诗一样的美 | 下雪的西湖很有＿＿。
-诗词 | shī cí | poetry | 诗和词 | 爷爷喜欢中国古代的＿＿，会背很多首。
+诗词 | shī cí | poetry | 诗和词 | 爷爷喜欢中国古代的＿＿，会背很多首。 | 唐诗
 李白 | lǐ bái | Li Bai | 唐朝的大诗人，诗写得自由、浪漫 | ＿＿比杜甫大十一岁，两个人是好朋友。
 杜甫 | dù fǔ | Du Fu | 唐朝的大诗人，诗里常写百姓的生活 | ＿＿的很多诗写的是战争年代普通百姓的苦日子。
 现代诗 | xiàn dài shī | modern poetry | 现代人写的、不讲究古代格式的诗 | ＿＿不像古诗那样每句字数都一样。
@@ -544,7 +544,7 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
 传记 | zhuàn jì | biography | 写一个人一生的书 | 我读过一本孔子的＿＿，知道了他的一生。 | 自传
 游记 | yóu jì | travel writing | 写旅行经历的文章 | 他把这次旅行写成了一篇＿＿。
 杂文 | zá wén | short critical essay | 短小的评论社会的文章 | 鲁迅写了很多＿＿，批评当时社会的问题。
-体会 | tǐ huì | understanding gained | 亲身感受到的东西 | 读了这本书，你有什么＿＿？
+体会 | tǐ huì | understanding gained | 亲身感受到的东西 | 读了这本书，你有什么＿＿？ | 读后感
 作品集 | zuò pǐn jí | collected works | 一个人的作品放在一起出的书 | 这本＿＿里有他一生写的所有短篇小说。
 `,
   },
@@ -591,7 +591,7 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
 味精 | wèi jīng | MSG | 让菜更鲜的白色调料 | 很多人做菜不放＿＿，觉得不健康。
 白糖 | bái táng | white sugar | 白色的糖 | 做蛋糕需要面粉、鸡蛋和＿＿。
 果酱 | guǒ jiàng | jam | 用水果做的甜的酱 | 用苹果做的＿＿，可以放在面包上吃。
-香料 | xiāng liào | spice | 有香味的调料 | 印度菜里放了很多＿＿，味道很特别。
+香料 | xiāng liào | spice | 有香味的调料 | 印度菜里放了很多＿＿，味道很特别。 | 辣椒
 `,
   },
   {
@@ -614,7 +614,7 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
     data: `
 蔬菜 | shū cài | vegetables | 可以做菜吃的植物 | 多吃＿＿和水果对身体好。
 土豆 | tǔ dòu | potato | 一种长在土里的圆的蔬菜 | ＿＿长在土里，可以做成很多种菜。
-白菜 | bái cài | Chinese cabbage | 一种叶子很大的蔬菜 | 冬天，北方人家里常常放着很多＿＿。
+白菜 | bái cài | Chinese cabbage | 一种叶子很大的蔬菜 | 冬天，北方人家里常常放着很多＿＿。 | 土豆
 大米 | dà mǐ | rice (uncooked) | 去了皮的稻子 | 南方人爱吃米饭，米饭是用＿＿做的。
 面粉 | miàn fěn | flour | 用麦子做成的粉 | 包饺子要先用＿＿和水做面。
 花生 | huā shēng | peanut | 一种长在土里、可以做油的果实 | ＿＿可以生吃，也可以用来做油。
@@ -630,7 +630,7 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
 锅 | guō | pot; wok | 做饭做菜用的圆的器具 | 水开了，把面条放进＿＿里。
 火锅 | huǒ guō | hotpot | 一边煮一边吃的锅和菜 | 冬天，大家喜欢一起吃＿＿，一边煮一边吃。
 电饭锅 | diàn fàn guō | rice cooker | 用电做米饭的锅 | 用＿＿做米饭又快又方便。
-餐具 | cān jù | tableware | 吃饭用的碗、筷子等 | 吃完饭，请把＿＿放到厨房里。 | 工具
+餐具 | cān jù | tableware | 吃饭用的碗、筷子等 | 吃完饭，请把＿＿放到厨房里。 | 工具 厨具
 工具 | gōng jù | tool | 做事用的东西 | 筷子是中国人吃饭的＿＿。 | 餐具
 茶具 | chá jù | tea set | 喝茶用的杯子、壶等 | 爷爷有很漂亮的＿＿，来了客人就拿出来喝茶。
 厨具 | chú jù | kitchenware | 厨房里用的东西 | 他们搬了新家，买了很多新的＿＿，有锅也有刀。
@@ -646,11 +646,11 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
 午餐 | wǔ cān | lunch | 中午吃的饭 | 学校的＿＿是十二点。
 晚餐 | wǎn cān | dinner | 晚上吃的饭 | 下班以后，一家人一起吃＿＿。
 加餐 | jiā cān | extra snack meal | 正常吃饭以外再吃一点东西 | 孩子下午四点要＿＿，吃点水果和饼干。
-快餐 | kuài cān | fast food | 很快就能做好的饭 | 他工作太忙，中午常常吃＿＿。
+快餐 | kuài cān | fast food | 很快就能做好的饭 | 他工作太忙，中午常常吃＿＿。 | 工作餐
 西餐 | xī cān | Western food | 西方的饭菜 | 吃＿＿的时候，人们用刀，不用筷子。
 中餐 | zhōng cān | Chinese food | 中国的饭菜 | 很多外国人喜欢吃＿＿，也会用筷子。
 自助餐 | zì zhù cān | buffet | 自己拿、想吃什么就拿什么的饭 | 这家饭店的＿＿一个人一百块，想吃什么就拿什么。
-工作餐 | gōng zuò cān | staff meal | 单位给工作人员准备的饭 | 公司中午给员工提供＿＿。
+工作餐 | gōng zuò cān | staff meal | 单位给工作人员准备的饭 | 公司中午给员工提供＿＿。 | 午餐
 用餐 | yòng cān | to dine | 吃饭 | 请大家八点到饭厅＿＿。
 `,
   },

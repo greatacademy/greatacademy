@@ -323,7 +323,7 @@ export const wordBatches3: readonly LevelWordBatch[] = [
   {
     theme: ["World History", "世界历史"],
     data: `
-古希腊 | gǔ xī là | ancient Greece | 两千多年前在希腊地区的文明 | 很多西方哲学思想都起源于＿＿。
+古希腊 | gǔ xī là | ancient Greece | 两千多年前在希腊地区的文明 | 很多西方哲学思想都起源于＿＿。 | 古罗马
 古罗马 | gǔ luó mǎ | ancient Rome | 以罗马城为中心的古代国家 | ＿＿人修了很多又长又直的大路，有的今天还能看到。
 金字塔 | jīn zì tǎ | pyramid | 古代埃及国王的坟墓 | ＿＿是用巨大的石块建成的，样子像汉字“金”。
 两河流域 | liǎng hé liú yù | Mesopotamia | 亚洲西部两条大河之间的地区 | ＿＿的人发明了最早的文字之一，把字刻在泥板上。
@@ -389,7 +389,7 @@ export const wordBatches3: readonly LevelWordBatch[] = [
 诡辩 | guǐ biàn | sophistry | 表面上有理、其实歪曲事实的辩论 | 他说的话听起来有道理，其实是＿＿。
 辩证法 | biàn zhèng fǎ | dialectics | 从发展、联系的角度看问题的方法 | ＿＿认为，事物总是在变化发展的，不是一成不变的。
 范畴 | fàn chóu | category | 类型，范围 | 这个问题不属于数学的＿＿，而属于哲学。
-唯物主义 | wéi wù zhǔ yì | materialism | 认为物质第一、意识第二的哲学 | ＿＿认为世界是由物质构成的。
+唯物主义 | wéi wù zhǔ yì | materialism | 认为物质第一、意识第二的哲学 | ＿＿认为世界是由物质构成的。 | 唯心主义
 唯心主义 | wéi xīn zhǔ yì | idealism | 认为意识第一、物质第二的哲学 | ＿＿认为意识比物质更根本。
 伦理学 | lún lǐ xué | ethics | 研究道德的学问 | ＿＿研究什么是善、什么是恶，人应该怎样做。
 神学 | shén xué | theology | 研究宗教道理的学问 | 中世纪欧洲的很多大学都有＿＿，研究基督教的道理。
@@ -747,7 +747,7 @@ export const wordBatches3: readonly LevelWordBatch[] = [
     data: `
 文体 | wén tǐ | literary form | 文章的种类 | 诗歌、小说、散文、戏剧是四种主要的文学＿＿。 | 体裁
 体裁 | tǐ cái | genre | 文学作品的表现形式 | 这篇作文的＿＿不限，可以写成诗，也可以写成故事。 | 文体
-记叙文 | jì xù wén | narrative essay | 记人、叙事、写景的文章 | ＿＿要写清楚时间、地点、人物和事情的经过。
+记叙文 | jì xù wén | narrative essay | 记人、叙事、写景的文章 | ＿＿要写清楚时间、地点、人物和事情的经过。 | 说明文
 议论文 | yì lùn wén | argumentative essay | 讲道理、发表看法的文章 | 写＿＿要有明确的观点和充分的理由。
 说明文 | shuō míng wén | expository essay | 介绍事物、说明道理的文章 | 这篇＿＿介绍了熊猫的生活习惯。
 应用文 | yìng yòng wén | practical writing | 日常生活和工作中用的文章，比如书信、通知 | 通知、请假条都属于＿＿。
@@ -781,7 +781,7 @@ export const wordBatches3: readonly LevelWordBatch[] = [
 汉赋 | hàn fù | Han rhapsody | 汉代流行的一种讲究文采的文体 | ＿＿是汉代最有代表性的文学形式。
 乐府 | yuè fǔ | yuefu | 汉代收集民歌的机构，也指这类诗 | 汉代设立了＿＿，专门收集民间的歌谣。
 元曲 | yuán qǔ | Yuan qu | 元代流行的戏曲和散曲 | 唐诗、宋词、＿＿是中国古代文学的三座高峰。
-唐宋八大家 | táng sòng bā dà jiā | the Eight Masters of Tang and Song | 唐代和宋代八位著名的散文家 | 韩愈和欧阳修都属于＿＿。
+唐宋八大家 | táng sòng bā dà jiā | the Eight Masters of Tang and Song | 唐代和宋代八位著名的散文家 | 韩愈和欧阳修都属于＿＿。 | 白居易
 白居易 | bái jū yì | Bai Juyi | 唐代诗人 | ＿＿的诗通俗易懂，据说连老奶奶都能听懂。
 陶渊明 | táo yuān míng | Tao Yuanming | 东晋诗人，喜欢写田园生活 | ＿＿辞官回家，写了很多田园诗。
 词牌 | cí pái | ci tune name | 填词用的曲调名 | “水调歌头”是一个＿＿的名字。

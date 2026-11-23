@@ -5,9 +5,10 @@ import { type Text, t } from "@ga/content";
 
 import { characterBatches } from "./character-data.ts";
 import { type LevelOneCharacter, parseLevelOneCharacters } from "./characters.ts";
+import { levelOneClues } from "./clue-data.ts";
 import { registerUnitSpeech, type UnitSpeechSpec } from "./listening.ts";
 import { wordBatches } from "./word-data.ts";
-import { firstTwice, type LevelOneWord, parseLevelOneWords } from "./words.ts";
+import { firstTwice, type LevelOneWord, parseLevelWords } from "./words.ts";
 
 /** LEVEL_ONE_UNITS are the units of level 1: a theme, how many character batches and how many word batches it has. */
 export const LEVEL_ONE_UNITS: readonly { readonly title: Text; readonly characters: number; readonly words: number }[] = [
@@ -37,7 +38,7 @@ export const levelOneWordId = (n: number): string => `level-1-words-${two(n)}`;
 export const levelOneCharacterBatches: readonly (readonly LevelOneCharacter[])[] = characterBatches.map(parseLevelOneCharacters);
 
 /** levelOneWordBatches are the word batches of level 1, in order. */
-export const levelOneWordBatches: readonly (readonly LevelOneWord[])[] = wordBatches.map((b) => parseLevelOneWords(b.data));
+export const levelOneWordBatches: readonly (readonly LevelOneWord[])[] = wordBatches.map((b) => parseLevelWords(b.data, 1, levelOneClues));
 
 /** levelOneCharacters are all the characters of level 1, by character. */
 export const levelOneCharacters: ReadonlyMap<string, LevelOneCharacter> = (() => {

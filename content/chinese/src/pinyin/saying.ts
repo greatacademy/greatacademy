@@ -73,34 +73,44 @@ ${check["zh-CN"]}`,
   );
 };
 
-/** changeWhy works a word whose tone changes in speech: find the change and why, then say it as it is said. */
+/**
+ * changeWhy works a word whose tone changes in speech: find the change and why, then say it as it is said. Pinyin marks
+ * the tone 一 and 不 are said in, so their change is already written; the change of two third tones is not.
+ */
 const changeWhy = (w: SaidWord): Text => {
   const said = w.said ?? w.pinyin;
   const written = w.pinyin.split(" ");
   const spoken = said.split(" ");
-  const at = spoken.findIndex((x, i) => x !== written[i]);
   const chars = [...w.word];
-  const next = tonesOf(w.pinyin)[at + 1]?.[1];
-  const char = at < 0 ? chars.at(-1) : chars[at];
+  const yiBu = chars.findIndex((c) => c === "一" || c === "不");
+  const at = yiBu >= 0 ? yiBu : spoken.findIndex((x, i) => x !== written[i]);
+  const next = tonesOf(said)[at + 1]?.[1];
+  const char = chars[at];
   const reason =
-    at < 0
+    next === undefined
       ? t(`${char} ends the word, so it keeps its own tone.`, `“${char}”在词尾，读原调。`)
       : char === "一"
         ? next === 4
           ? t("一 comes before a fourth tone, so it is said in the second tone.", "“一”在第四声前，读第二声。")
           : t("一 comes before a tone other than the fourth, so it is said in the fourth tone.", "“一”在第四声以外的声调前，读第四声。")
         : char === "不"
-          ? t("不 comes before a fourth tone, so it is said in the second tone.", "“不”在第四声前，读第二声。")
+          ? next === 4
+            ? t("不 comes before a fourth tone, so it is said in the second tone.", "“不”在第四声前，读第二声。")
+            : t("不 comes before a tone other than the fourth, so it keeps its own tone.", "“不”在第四声以外的声调前，读原调。")
           : t("Two third tones come together, so the first is said in the second tone.", "两个第三声相连，前一个读第二声。");
+  const how =
+    yiBu >= 0
+      ? t("Pinyin marks the tone of 一 and 不 as it is said, so say it as written.", "拼音按实际读音标“一”“不”的声调，照着写的读。")
+      : t(`Pinyin does not mark this change; the word is said ${said}.`, `拼音不标这个变调，整个词读作 ${said}。`);
   const each = saying(said);
   const check = humCheck(said);
   return t(
-    `**Step 1: find the change.** ${w.word} is written ${w.pinyin}. ${reason.en} The word is said ${said}.
+    `**Step 1: find the change.** ${w.word} is written ${w.pinyin}. ${reason.en} ${how.en}
 
 **Step 2: say it after the recording.** Say ${said}: ${each.en}.
 
 ${check.en}`,
-    `**第一步：找出变调。**“${w.word}”写作 ${w.pinyin}。${reason["zh-CN"]}整个词读作 ${said}。
+    `**第一步：找出变调。**“${w.word}”写作 ${w.pinyin}。${reason["zh-CN"]}${how["zh-CN"]}
 
 **第二步：跟着录音说。**读 ${said}：${each["zh-CN"]}。
 
@@ -224,8 +234,8 @@ export function sayingTopic(changes: readonly SaidWord[], prerequisites: readonl
         "pinyin-saying-tone-changes",
         t("Tones That Change", "变调"),
         t(
-          "Some tones change in speech while pinyin writes the original: the first of two third tones is said in the second tone (你好 ní hǎo); 一 is said yí before a fourth tone and yì before the others; 不 is said bú before a fourth tone. Listen for the change in the recording, and copy it.\n\n一定 is written yī dìng. dìng is a fourth tone, so 一 rises: yídìng.\n\n> **Watch out.** Say the tone the rule gives, not the one written. Read straight from the pinyin, 一定 would come out yī dìng, and 你好 nǐ hǎo with two dips, which is not how they are said.",
-          "有些声调在说话时会变，拼音仍写原调：两个第三声相连，前一个读第二声（你好 ní hǎo）；“一”在第四声前读 yí，在其他声调前读 yì；“不”在第四声前读 bú。听出录音里的变调，照着说。\n\n比如“一定”写作 yī dìng。dìng 是第四声，所以“一”往上升：yídìng。\n\n> **注意。** 要按变调规则读，不要照着写出来的声调读。照拼音直接念，“一定”会读成 yī dìng，“你好”会读成两个降升调 nǐ hǎo，都不是实际的读法。",
+          "Some tones change in speech. 一 is said yí before a fourth tone and yì before the others, and 不 is said bú before a fourth tone; pinyin marks these as said, so 一定 is written yí dìng. The first of two third tones is said in the second tone, but pinyin keeps both third tones: 你好 is written nǐ hǎo and said ní hǎo. Listen for the change in the recording, and copy it.\n\nIn 一定 yí dìng, dìng is a fourth tone, so 一 rises: yídìng.\n\n> **Watch out.** Two third tones are not written as said. Read straight from the pinyin, 你好 would come out nǐ hǎo with two dips, which is not how it is said; the first rises: ní hǎo.",
+          "有些声调在说话时会变。“一”在第四声前读 yí，在其他声调前读 yì；“不”在第四声前读 bú。拼音按实际读音标这两个字，所以“一定”写作 yí dìng。两个第三声相连，前一个读第二声，但拼音仍标两个第三声：“你好”写作 nǐ hǎo，读作 ní hǎo。听出录音里的变调，照着说。\n\n比如“一定”yí dìng，dìng 是第四声，所以“一”往上升：yídìng。\n\n> **注意。** 两个第三声的变调不写出来。照拼音直接念，“你好”会读成两个降升调 nǐ hǎo，不是实际的读法；前一个要上升：ní hǎo。",
         ),
         repeating(changes, changeWhy),
       ),

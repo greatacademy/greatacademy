@@ -152,7 +152,7 @@ export const wordBatches4: readonly LevelWordBatch[] = [
 圆号 | yuán hào | French horn | 一种管子绕成圆形的铜管乐器 | ＿＿的管子绕成一个圆圈，吹的人常常把一只手放进它的大口里。
 定音鼓 | dìng yīn gǔ | timpani | 能调出一定音高的大鼓 | 交响乐团里的＿＿可以调出不同的音高，不只是打节奏。
 架子鼓 | jià zi gǔ | drum kit | 几个大小不同、放在架子上由一个人敲的鼓 | 摇滚乐队里，坐在后面敲＿＿的人负责掌握节奏。
-弦乐器 | xián yuè qì | string instrument | 靠弦振动发声的乐器 | 小提琴、大提琴和吉他都是＿＿。
+弦乐器 | xián yuè qì | string instrument | 靠弦振动发声的乐器 | 小提琴、大提琴和吉他都是＿＿。 | 管乐器 打击乐器
 管乐器 | guǎn yuè qì | wind instrument | 靠吹气发声的乐器 | 长笛和单簧管都属于＿＿，都要用嘴吹。 | 铜管乐器
 打击乐器 | dǎ jī yuè qì | percussion instrument | 敲打发声的乐器 | 锣、鼓和木鱼都是＿＿。
 铜管乐器 | tóng guǎn yuè qì | brass instrument | 用铜等金属做的管乐器 | 小号和圆号都是金属做的＿＿，声音很响亮。 | 管乐器
@@ -196,9 +196,9 @@ export const wordBatches4: readonly LevelWordBatch[] = [
 和声 | hé shēng | harmony | 几个音按规律组合在一起的声音效果 | 合唱时，几个声部唱的音不一样，合起来就成了好听的＿＿。 | 和弦
 节拍 | jié pāi | beat, metre | 音乐中强弱有规律的重复 | 跳舞的时候要跟上音乐的＿＿。
 音阶 | yīn jiē | scale | 按高低顺序排列的一组音 | 练钢琴的人每天都要先把＿＿从低到高、再从高到低弹几遍。
-五线谱 | wǔ xiàn pǔ | staff notation | 在五条平行线上记音符的乐谱 | ＿＿用五条平行的线来记录音的高低。
+五线谱 | wǔ xiàn pǔ | staff notation | 在五条平行线上记音符的乐谱 | ＿＿用五条平行的线来记录音的高低。 | 简谱
 简谱 | jiǎn pǔ | numbered musical notation | 用数字表示音高的乐谱 | 在＿＿里，用数字一到七表示七个基本的音。
-大调 | dà diào | major key | 一种听起来明亮的调式 | 这首曲子是＿＿的，听起来明亮欢快。
+大调 | dà diào | major key | 一种听起来明亮的调式 | 这首曲子是＿＿的，听起来明亮欢快。 | 小调
 小调 | xiǎo diào | minor key; ditty | 听起来比较忧伤的调式；民间小曲 | 这首曲子用的是＿＿，听起来有点忧伤。
 音准 | yīn zhǔn | pitch accuracy | 唱歌或演奏时音高准不准 | 他唱歌很有感情，可是＿＿不太好，常常唱得偏高。
 音域 | yīn yù | range (of a voice or instrument) | 能发出的从最低到最高的音的范围 | 她的＿＿很宽，能唱很高的音，也能唱很低的音。
@@ -209,7 +209,7 @@ export const wordBatches4: readonly LevelWordBatch[] = [
     data: `
 音色 | yīn sè | timbre | 声音的特色 | 同样一个音，钢琴和小提琴的＿＿完全不同。
 嘹亮 | liáo liàng | loud and clear | 声音响亮，传得很远 | 军号声＿＿，整个营地都听得见。
-男高音 | nán gāo yīn | tenor | 男声中最高的声部 | 他是一位著名的＿＿，能唱很高的音。
+男高音 | nán gāo yīn | tenor | 男声中最高的声部 | 他是一位著名的＿＿，能唱很高的音。 | 女高音
 女高音 | nǚ gāo yīn | soprano | 女声中最高的声部 | 歌剧里的女主角常常由＿＿来唱。
 美声 | měi shēng | bel canto | 一种起源于意大利的歌唱方法 | 她在音乐学院学的是＿＿唱法，常常唱意大利歌剧。
 哼唱 | hēng chàng | to hum | 嘴闭着或低声地唱 | 妈妈一边做饭，一边轻轻地＿＿着一首老歌。
@@ -304,7 +304,7 @@ export const wordBatches4: readonly LevelWordBatch[] = [
 场记 | chǎng jì | script supervisor | 记录拍摄现场每个镜头情况的人 | ＿＿要把每个镜头拍了几遍、演员穿什么衣服都记下来。
 外景 | wài jǐng | location (shooting) | 在摄影棚外面拍的景物 | 这部电影的＿＿是在一个海边小村子拍的。
 杀青 | shā qīng | to wrap (filming) | 拍完全部镜头 | 电影拍了半年，今天终于＿＿了，大家一起合影留念。
-开机 | kāi jī | to start shooting | 电影开始拍摄 | 这部电影将在下个月＿＿，计划拍四个月。
+开机 | kāi jī | to start shooting | 电影开始拍摄 | 这部电影将在下个月＿＿，计划拍四个月。 | 杀青
 试镜 | shì jìng | screen test | 演员在镜头前试演 | 几百名演员参加了＿＿，最后只选上了三个。
 群众演员 | qún zhòng yǎn yuán | extra | 在电影里扮演普通人群、一般没有台词的演员 | 他在电影里当过＿＿，只在街上走了两步。
 `,
@@ -342,7 +342,7 @@ export const wordBatches4: readonly LevelWordBatch[] = [
   {
     theme: ["Stars and Audiences", "明星和观众"],
     data: `
-影帝 | yǐng dì | best-actor winner | 获得最佳男演员奖的人 | 他凭这部电影获得了最佳男主角奖，成了＿＿。
+影帝 | yǐng dì | best-actor winner | 获得最佳男演员奖的人 | 他凭这部电影获得了最佳男主角奖，成了＿＿。 | 影后
 影后 | yǐng hòu | best-actress winner | 获得最佳女演员奖的人 | 她三次获得最佳女主角奖，被大家称为“三届＿＿”。
 煽情 | shān qíng | sentimental, tear-jerking | 故意激起别人的感情 | 这部电影有些地方太＿＿了，反而让人不感动。
 温馨 | wēn xīn | warm and cosy | 温暖而让人舒服 | 这是一部讲一家人互相关爱的＿＿电影。
@@ -396,7 +396,7 @@ export const wordBatches4: readonly LevelWordBatch[] = [
 批文 | pī wén | written approval | 上级批准的文件 | 拿到政府的＿＿以后，这座桥才能开工。
 红头文件 | hóng tóu wén jiàn | official directive | 政府机关发出的、标题印成红色的正式文件 | 这件事已经写进了＿＿，各部门都要执行。
 复印件 | fù yìn jiàn | photocopy | 复印出来的文件 | 办理手续时，要带身份证原件和＿＿。
-原件 | yuán jiàn | original (document) | 最初的文件，不是复印的 | 这份是复印件，请把＿＿也拿来给我看一下。
+原件 | yuán jiàn | original (document) | 最初的文件，不是复印的 | 这份是复印件，请把＿＿也拿来给我看一下。 | 复印件
 一沓 | yì dá | a stack (of paper) | 叠在一起的一些纸 | 他从包里拿出＿＿文件，放在桌上。
 `,
   },
@@ -528,7 +528,7 @@ export const wordBatches4: readonly LevelWordBatch[] = [
 打勾 | dǎ gōu | to put a tick | 画一个“√”形的记号 | 老师在做对的题目后面＿＿，做错的后面画圈。
 一栏 | yì lán | a column, a field | 表格中的一格或一列 | 表格的最后＿＿是签名，请不要忘了。
 空格 | kòng gé | blank space | 表格或文字中空着的格子 | 这张表上还有几个＿＿没有填。
-必填 | bì tián | required (field) | 一定要填的 | 带星号的都是＿＿项，不能空着。
+必填 | bì tián | required (field) | 一定要填的 | 带星号的都是＿＿项，不能空着。 | 选填
 选填 | xuǎn tián | optional (field) | 可以填也可以不填的 | 电话号码是＿＿的，你不想写就可以不写。
 漏填 | lòu tián | to leave out (on a form) | 应该填的没有填 | 你的表上出生日期＿＿了，请补上。
 附件 | fù jiàn | attachment | 随文件或邮件一起送去的材料 | 申请材料请作为邮件的＿＿发送。
@@ -662,7 +662,7 @@ export const wordBatches4: readonly LevelWordBatch[] = [
 贰 | èr | two (in formal writing) | “二”的大写 | 支票上的金额要写大写，“二”要写成“＿＿”。
 叁 | sān | three (in formal writing) | “三”的大写 | 写收据时，“三十元”要写成“＿＿拾元”。
 肆 | sì | four (in formal writing) | “四”的大写 | 发票上的“＿＿”，就是数字“四”。
-大写 | dà xiě | formal numerals | 为了防止涂改而用的笔画多的汉字数字 | 银行的单据上，金额要用＿＿数字写，防止别人涂改。
+大写 | dà xiě | formal numerals | 为了防止涂改而用的笔画多的汉字数字 | 银行的单据上，金额要用＿＿数字写，防止别人涂改。 | 小写
 小写 | xiǎo xiě | ordinary numerals | 一般写法的数字 | 支票上要同时写上金额的大写和＿＿。
 票据 | piào jù | bill, voucher | 支票、发票、收据等凭证的总称 | 出差回来以后，要把所有＿＿交给财务部门。
 开票 | kāi piào | to issue an invoice | 开出发票 | 买东西时如果需要发票，可以请商店＿＿。
@@ -705,7 +705,7 @@ export const wordBatches4: readonly LevelWordBatch[] = [
     theme: ["Market Moves", "行情"],
     data: `
 飙升 | biāo shēng | to soar | 急速上升 | 夏天一到，空调的销量就＿＿。 | 暴涨
-暴涨 | bào zhǎng | to rise sharply | 价格等突然大幅度上涨 | 因为天气干旱，粮食价格＿＿。 | 飙升
+暴涨 | bào zhǎng | to rise sharply | 价格等突然大幅度上涨 | 因为天气干旱，粮食价格＿＿。 | 飙升 暴跌
 暴跌 | bào diē | to plunge | 价格等突然大幅度下降 | 消息传出后，这家公司的股价＿＿了一半。
 行情 | háng qíng | market conditions | 市场上商品的价格和变化情况 | 最近蔬菜的＿＿不太好，农民卖不出好价钱。
 涨幅 | zhǎng fú | size of a rise | 上涨的幅度 | 今年房价的＿＿比去年小。 | 跌幅

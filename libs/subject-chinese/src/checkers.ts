@@ -63,7 +63,8 @@ const toneSlip = t("The syllables are right. Check the tones.", "音节对了，
 
 /**
  * pinyinChecker accepts any listed spelling, in tone marks or tone numbers, with ü typed as v, in either case and with
- * any spacing; expected is an array of spellings. The tone written is the character's own, not the changed tone of sandhi.
+ * any spacing; expected is an array of spellings. A word with 一 or 不 lists both its spelling in the tone said and
+ * the one in their own tones (see pinyinSpellings), so either is accepted.
  */
 export const pinyinChecker: Checker = {
   id: "pinyin",

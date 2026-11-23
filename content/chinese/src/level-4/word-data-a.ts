@@ -26,7 +26,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
   {
     theme: ["Pain and Blood", "疼痛和血"],
     data: `
-疼痛 | téng tòng | pain | 疼的感觉 | 这个药能减少病人的＿＿。
+疼痛 | téng tòng | pain | 疼的感觉 | 这个药能减少病人的＿＿。 | 痛苦
 头痛 | tóu tòng | headache | 头疼 | 我昨天晚上没睡好，今天有点儿＿＿。 | 胃痛
 痛苦 | tòng kǔ | suffering | 身体或心里很难过 | 病人很＿＿，一晚上都没睡着。 | 心痛
 血压 | xuè yā | blood pressure | 血在血管里流的时候的压力 | 医生给他量了一下＿＿，有点儿高。
@@ -61,7 +61,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 难受 | nán shòu | to feel unwell | 身体或心里不舒服 | 我感冒了，全身都很＿＿。
 活动 | huó dòng | to move about | 让身体动一动 | 你坐了一上午，起来＿＿一下吧。
 生活 | shēng huó | life | 每天过的日子 | 退休以后，爷爷的＿＿很简单。
-弱 | ruò | weak | 力气小，不强 | 他病了很久，身体很＿＿。
+弱 | ruò | weak | 力气小，不强 | 他病了很久，身体很＿＿。 | 难受
 开始 | kāi shǐ | to begin | 从这时起做 | 电影七点＿＿，我们快走吧。
 睡眠 | shuì mián | sleep | 睡觉 | 每天要有八个小时的＿＿，身体才会好。
 维生素 | wéi shēng sù | vitamin | 身体需要的一种营养 | 水果里有很多＿＿。
@@ -71,13 +71,13 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
   {
     theme: ["Inflammation and Viruses", "发炎和病毒"],
     data: `
-发炎 | fā yán | to become inflamed | 身体的一个地方又红又疼 | 他的伤口＿＿了，要马上去医院。
+发炎 | fā yán | to become inflamed | 身体的一个地方又红又疼 | 他的伤口＿＿了，要马上去医院。 | 感染
 病毒 | bìng dú | virus | 让人生病的很小的东西 | 这个＿＿传得很快，很多人都病了。
 消毒 | xiāo dú | to disinfect | 让东西干净，没有让人生病的东西 | 这些碗筷要先＿＿，再给病人用。
 中毒 | zhòng dú | to be poisoned | 吃了有毒的东西以后生病 | 他吃了坏了的鱼，食物＿＿了。
 有毒 | yǒu dú | poisonous | 能让人生病或死去 | 这些花＿＿，千万别吃。
 感染 | gǎn rǎn | to infect | 病毒进到身体里 | 他的伤口被＿＿了，一直不好。
-传染 | chuán rǎn | to be contagious | 病从一个人到另一个人身上 | 感冒会＿＿，你最好在家休息。
+传染 | chuán rǎn | to be contagious | 病从一个人到另一个人身上 | 感冒会＿＿，你最好在家休息。 | 感染
 预防 | yù fáng | to prevent | 先做准备，不让坏事发生 | 多运动可以＿＿很多病。
 疫苗 | yì miáo | vaccine | 打进身体，让人不得某种病的药 | 孩子出生以后要打很多次＿＿。
 抗生素 | kàng shēng sù | antibiotic | 一种治发炎的药 | 医生说感冒不用吃＿＿。
@@ -165,7 +165,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 驾驶 | jià shǐ | to drive, to pilot | 开（车、船、飞机） | 他会＿＿飞机。
 驾照 | jià zhào | driving licence | 可以开车的证 | 他刚拿到＿＿，还不敢上高速。
 拐弯 | guǎi wān | to turn a corner | 改变方向走 | 前面路口往左＿＿就到了。
-轮胎 | lún tāi | tyre | 车轮外面的那一圈 | 车的＿＿坏了，我们得换一个新的。
+轮胎 | lún tāi | tyre | 车轮外面的那一圈 | 车的＿＿坏了，我们得换一个新的。 | 轮子
 轮子 | lún zi | wheel | 车下面会动的圆东西 | 这个箱子下面有四个＿＿，拉起来很方便。
 弯 | wān | curved | 不直 | 这条路很＿＿，开车要小心。
 靠边 | kào biān | to pull over | 往路边去 | 前面有警察，请把车＿＿停一下。
@@ -222,7 +222,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
   {
     theme: ["Money and Luggage", "换钱和行李"],
     data: `
-兑换 | duì huàn | to exchange (money) | 用一个国家的钱换别的国家的钱 | 出国以前，我去银行＿＿了一些美元。
+兑换 | duì huàn | to exchange (money) | 用一个国家的钱换别的国家的钱 | 出国以前，我去银行＿＿了一些美元。 | 取
 取 | qǔ | to take out | 拿 | 我去银行＿＿点儿钱。
 取消 | qǔ xiāo | to cancel | 不做了 | 因为天气不好，航班被＿＿了。
 随便 | suí biàn | as one likes | 想怎么样就怎么样 | 你想吃什么就点什么，＿＿。
@@ -301,7 +301,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 阅读 | yuè dú | to read | 看（书、文章） | 他每天晚上都要＿＿一个小时。 | 浏览
 浏览 | liú lǎn | to browse | 大概地看一看 | 我每天早上都会＿＿一下新闻网站。 | 阅读
 浏览器 | liú lǎn qì | browser | 上网看网页用的软件 | 请打开＿＿，看看这个网页。
-链接 | liàn jiē | link | 点一下就能打开别的网页的东西 | 我把＿＿发给你，你点一下就能看到。
+链接 | liàn jiē | link | 点一下就能打开别的网页的东西 | 我把＿＿发给你，你点一下就能看到。 | 网页
 注意 | zhù yì | to pay attention | 留心 | 过马路的时候要＿＿车。
 标题 | biāo tí | headline, title | 文章的名字 | 这条新闻的＿＿很有意思，我一看就想读。
 点击 | diǎn jī | to click | 用鼠标按一下 | ＿＿这里就能下载这个软件。
@@ -374,7 +374,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
     theme: ["Reviews", "评价"],
     data: `
 评价 | píng jià | evaluation | 说好不好 | 大家对这家饭店的＿＿都很高。
-好评 | hǎo píng | good review | 好的评价 | 这件衣服在网上有很多＿＿，买的人很多。
+好评 | hǎo píng | good review | 好的评价 | 这件衣服在网上有很多＿＿，买的人很多。 | 评价
 差评 | chà píng | bad review | 不好的评价 | 东西太差了，我给了一个＿＿。
 批评 | pī píng | to criticize | 说别人的缺点 | 他上课说话，被老师＿＿了。
 转 | zhuǎn | to turn | 改变方向 | 前面路口向右＿＿。
@@ -439,7 +439,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 公主 | gōng zhǔ | princess | 国王的女儿 | 小女孩最喜欢听＿＿的故事。 | 王子
 皇后 | huáng hòu | empress | 皇帝的妻子 | 皇帝和＿＿住在皇宫里。
 王 | wáng | king, monarch | 一个国家最高的统治者 | 很久以前，他是这个国家的＿＿。 | 国王
-帝王 | dì wáng | monarchs | 皇帝和国王 | 这里是古代＿＿住过的地方。
+帝王 | dì wáng | monarchs | 皇帝和国王 | 这里是古代＿＿住过的地方。 | 皇后 国王
 王朝 | wáng cháo | royal dynasty | 一个皇帝家的统治 | 这个＿＿只有三十年就没了。
 后代 | hòu dài | descendants | 后来的人；孩子们 | 我们要保护好环境，留给＿＿。
 清朝 | qīng cháo | the Qing dynasty | 中国最后一个朝代 | ＿＿结束以后，中国就没有皇帝了。
@@ -451,10 +451,10 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
     data: `
 将军 | jiāng jūn | general | 军队里很高的领导 | 这位＿＿带着军队打败了很多国家。
 军队 | jūn duì | army | 国家的兵 | 这个国家的＿＿有一百万人。
-军人 | jūn rén | serviceman | 在军队里工作的人 | 他的爸爸是＿＿，很少回家。 | 士兵
+军人 | jūn rén | serviceman | 在军队里工作的人 | 他的爸爸是＿＿，很少回家。 | 士兵 空军 海军
 士兵 | shì bīng | soldier | 军队里最下面的兵 | 一个＿＿站在门口。 | 军人 战士
 当兵 | dāng bīng | to serve in the army | 去军队里 | 他十八岁就去＿＿了。
-兵 | bīng | soldiers | 军人 | 将军带着一万个＿＿出发了。
+兵 | bīng | soldiers | 军人 | 将军带着一万个＿＿出发了。 | 士兵
 空军 | kōng jūn | air force | 在天上打仗的军队 | 他想当＿＿，开飞机。 | 海军
 海军 | hǎi jūn | navy | 在海上打仗的军队 | 他在＿＿工作，经常坐船出海。 | 空军
 军事 | jūn shì | military affairs | 跟军队、战争有关的事 | 他喜欢看＿＿新闻。
@@ -464,7 +464,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
   {
     theme: ["Victory and Defeat", "胜败"],
     data: `
-胜利 | shèng lì | victory | 打赢了 | 经过三年的战争，他们终于＿＿了。
+胜利 | shèng lì | victory | 打赢了 | 经过三年的战争，他们终于＿＿了。 | 胜
 失败 | shī bài | to fail | 没有成功 | 这次＿＿了没关系，下次再来。 | 败
 打败 | dǎ bài | to defeat | 打赢别人 | 我们队＿＿了去年的第一名。 | 战胜
 战胜 | zhàn shèng | to overcome | 在战争、比赛或困难中赢了 | 他＿＿了自己的病，又回到了学校。 | 打败
@@ -481,10 +481,10 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
     data: `
 英雄 | yīng xióng | hero | 为国家、为大家做了大事的人 | 他救了三个孩子，大家都说他是＿＿。
 伟大 | wěi dà | great | 非常了不起 | 她是一位＿＿的母亲。
-伟人 | wěi rén | great person | 非常了不起的人 | 他是一位写进了历史的＿＿。
+伟人 | wěi rén | great person | 非常了不起的人 | 他是一位写进了历史的＿＿。 | 英雄
 祖先 | zǔ xiān | ancestors | 很早以前的家人 | 我们的＿＿很早就住在这里了。
 祖国 | zǔ guó | motherland | 自己的国家 | 他在国外住了很多年，一直想回＿＿。
-祖父 | zǔ fù | grandfather | 爸爸的爸爸 | 我的＿＿今年八十岁了，身体很好。
+祖父 | zǔ fù | grandfather | 爸爸的爸爸 | 我的＿＿今年八十岁了，身体很好。 | 祖母
 祖母 | zǔ mǔ | grandmother | 爸爸的妈妈 | 我的＿＿是一位很会做饭的老奶奶。
 英国 | yīng guó | Britain | 欧洲的一个国家 | 他从＿＿来，说英语。
 英语 | yīng yǔ | English (language) | 英国、美国等国家的人说的话 | 我会说汉语和＿＿。
@@ -497,9 +497,9 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 遗迹 | yí jì | ruins | 古代留下来的东西或地方 | 这里有很多古代的＿＿。 | 古迹
 古迹 | gǔ jì | historic site | 古代的建筑或地方 | 这个城市有很多名胜＿＿。 | 遗迹
 遗产 | yí chǎn | heritage | 前人留下的东西 | 长城是世界文化＿＿。
-城墙 | chéng qiáng | city wall | 城外面的墙 | 这个老城的＿＿已经有六百年了。
+城墙 | chéng qiáng | city wall | 城外面的墙 | 这个老城的＿＿已经有六百年了。 | 墙
 墙 | qiáng | wall | 房子四边立着的部分 | ＿＿上有一张地图。
-名胜 | míng shèng | famous scenic spot | 有名的风景好的地方 | 这里有很多＿＿，每年有很多人来旅游。
+名胜 | míng shèng | famous scenic spot | 有名的风景好的地方 | 这里有很多＿＿，每年有很多人来旅游。 | 古迹 遗迹
 将来 | jiāng lái | future | 以后的日子 | 你＿＿想做什么工作？
 遗失 | yí shī | to lose | 丢了 | 他在火车上＿＿了一个包。
 文明 | wén míng | civilization | 社会发展到比较高的样子 | 中国有五千年的＿＿。
@@ -525,7 +525,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
     theme: ["Formal Words", "书面语"],
     data: `
 之前 | zhī qián | before | 以前 | 睡觉＿＿，别喝咖啡。
-之后 | zhī hòu | after | 以后 | 毕业＿＿，他去了北京工作。
+之后 | zhī hòu | after | 以后 | 毕业＿＿，他去了北京工作。 | 之前
 之一 | zhī yī | one of | 里面的一个 | 长城是世界上最有名的地方＿＿。
 之间 | zhī jiān | between | 中间 | 我们两个人＿＿没有秘密。
 此外 | cǐ wài | besides | 这个以外 | 他会说英语，＿＿还会说一点儿法语。
@@ -543,7 +543,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 绘画 | huì huà | painting | 画画儿 | 她从小就学＿＿，画得很好。
 雕刻 | diāo kè | to carve | 在木头、石头上刻出东西 | 这块石头上＿＿着一条龙。
 雕像 | diāo xiàng | statue | 刻出来的人或动物 | 广场上有一个很大的＿＿。
-墨水 | mò shuǐ | ink | 写字用的有颜色的水 | 我的笔没有＿＿了。
+墨水 | mò shuǐ | ink | 写字用的有颜色的水 | 我的笔没有＿＿了。 | 墨
 墨 | mò | ink stick | 画中国画用的黑色的东西 | 画中国画要用笔和＿＿。
 彩色 | cǎi sè | in colour | 有很多颜色的 | 以前的照片是黑白的，现在都是＿＿的。
 色彩 | sè cǎi | colours | 各样的颜色 | 这张画的＿＿很美。
@@ -574,10 +574,10 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 赏 | shǎng | to admire | 看，觉得美 | 中秋节的晚上，我们一起＿＿月。
 精彩 | jīng cǎi | wonderful | 非常好看 | 昨天的比赛太＿＿了。
 经典 | jīng diǎn | classic | 很好的，很多人一直喜欢的 | 这是一部＿＿电影，我看了很多遍。
-古典 | gǔ diǎn | classical | 古代传下来的 | 他喜欢听＿＿音乐。
+古典 | gǔ diǎn | classical | 古代传下来的 | 他喜欢听＿＿音乐。 | 经典
 优雅 | yōu yǎ | elegant | 美，让人觉得很舒服 | 她走路的样子很＿＿。
 有趣 | yǒu qù | interesting | 有意思 | 这个故事很＿＿，孩子们都笑了。
-趣味 | qù wèi | fun | 让人觉得有意思的东西 | 这本书很有＿＿，我一下就看完了。
+趣味 | qù wèi | fun | 让人觉得有意思的东西 | 这本书很有＿＿，我一下就看完了。 | 乐趣
 兴趣 | xìng qù | interest | 喜欢做某件事的心情 | 他对音乐很感＿＿。
 乐趣 | lè qù | pleasure | 快乐 | 画画给他带来了很多＿＿。
 `,
@@ -619,7 +619,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 表达 | biǎo dá | to express | 说出来、写出来想法 | 他不太会用中文＿＿自己的想法。
 表现 | biǎo xiàn | performance | 做出来的样子 | 他在比赛中的＿＿很好。
 表情 | biǎo qíng | facial expression | 脸上的样子 | 看他的＿＿，就知道他很高兴。
-手表 | shǒu biǎo | wristwatch | 戴在手上看时间的东西 | 我的＿＿慢了五分钟。
+手表 | shǒu biǎo | wristwatch | 戴在手上看时间的东西 | 我的＿＿慢了五分钟。 | 表
 表 | biǎo | form | 写个人资料用的纸 | 请在这张＿＿上写上你的名字。
 代表 | dài biǎo | representative | 为大家说话、做事的人 | 他是我们班的＿＿。
 收藏 | shōu cáng | to collect | 把东西收起来放好 | 他喜欢＿＿老邮票。
@@ -669,7 +669,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 主义 | zhǔ yì | -ism | 一套理论或想法 | 这本书讲的是社会＿＿。
 平等 | píng děng | equal | 有一样的权利 | 男女＿＿，大家都有一样的机会。 | 公平
 公平 | gōng píng | fair | 对每个人都一样 | 这次比赛很＿＿，大家都很满意。 | 平等
-和平 | hé píng | peace | 没有战争 | 大家都希望世界＿＿。
+和平 | hé píng | peace | 没有战争 | 大家都希望世界＿＿。 | 平等
 自主 | zì zhǔ | to decide for oneself | 自己作主 | 孩子长大了，可以＿＿选择自己的专业。
 `,
   },
@@ -728,7 +728,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 承担 | chéng dān | to bear (responsibility) | 负起（责任） | 这件事你要＿＿全部责任。
 承认 | chéng rèn | to admit | 说出是自己做的 | 他＿＿是自己拿了那本书。
 继承 | jì chéng | to inherit | 接受前人留下的东西 | 他＿＿了爸爸的公司。
-承受 | chéng shòu | to endure | 受着，忍着 | 他＿＿了很大的压力。
+承受 | chéng shòu | to endure | 受着，忍着 | 他＿＿了很大的压力。 | 承担
 赔礼 | péi lǐ | to apologize formally | 向人道歉 | 你做错了，快去给人家＿＿道歉。
 继父 | jì fù | stepfather | 妈妈后来的丈夫 | 他的＿＿对他很好，就像亲爸爸一样。
 `,
@@ -737,14 +737,14 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
     theme: ["Rules", "规定"],
     data: `
 违反 | wéi fǎn | to violate | 不遵守 | 他＿＿了学校的规定，被老师批评了。
-违法 | wéi fǎ | illegal | 不合法 | 开车喝酒是＿＿的。
+违法 | wéi fǎ | illegal | 不合法 | 开车喝酒是＿＿的。 | 违规
 违规 | wéi guī | to break the rules | 不按规定做 | 他在比赛中＿＿了三次，不能再比了。
 禁止 | jìn zhǐ | to prohibit | 不让做 | 这里＿＿吸烟。 | 不许
 停止 | tíng zhǐ | to stop | 停下来 | 雨＿＿了，我们出去吧。
 为止 | wéi zhǐ | up to | 到……的时候 | 到今天＿＿，已经有一百个人报名了。
 允许 | yǔn xǔ | to allow | 同意别人做 | 妈妈不＿＿我晚上出去玩。
 不许 | bù xǔ | must not | 不可以 | 上课的时候＿＿玩手机。 | 禁止
-许可 | xǔ kě | permission | 同意 | 没有老师的＿＿，不能进这个房间。
+许可 | xǔ kě | permission | 同意 | 没有老师的＿＿，不能进这个房间。 | 允许
 禁烟 | jìn yān | smoking ban | 不让吸烟 | 这家饭店是＿＿的，想抽烟要到外面去。
 `,
   },

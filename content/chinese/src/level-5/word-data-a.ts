@@ -11,7 +11,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
   {
     theme: ["Charity and Help", "慈善和帮助"],
     data: `
-慈善 | cí shàn | charity | 用钱或东西帮助有困难的人 | 这家公司每年都拿出一部分钱做＿＿。
+慈善 | cí shàn | charity | 用钱或东西帮助有困难的人 | 这家公司每年都拿出一部分钱做＿＿。 | 公益
 捐款 | juān kuǎn | to donate money | 把钱送给需要帮助的人 | 地震以后，很多人给灾区＿＿。 | 捐献
 捐献 | juān xiàn | to donate (something valuable) | 把自己贵重的东西送给国家或组织 | 他把自己收藏的古画都＿＿给了博物馆。 | 捐款
 援助 | yuán zhù | aid | 在钱或东西上帮助别人 | 很多国家向发生灾难的地区提供了＿＿。 | 救援
@@ -104,7 +104,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 矛盾 | máo dùn | conflict | 互相冲突 | 他们两个人之间有＿＿，很久没说话了。
 和谐 | hé xié | harmonious | 配合得好，没有冲突 | 这个社区的邻居们相处得很＿＿。
 趋势 | qū shì | trend | 事情发展的方向 | 在网上买东西的人一年比一年多，这是一个新的＿＿。
-形势 | xíng shì | situation | 事情发展的情况 | 现在的经济＿＿很好，找工作不太难。
+形势 | xíng shì | situation | 事情发展的情况 | 现在的经济＿＿很好，找工作不太难。 | 趋势
 谐音 | xié yīn | homophone | 读音一样或差不多 | “四”和“死”是＿＿，所以有的人不喜欢这个数字。
 敬意 | jìng yì | respect | 尊敬的心意 | 我们向救援人员表示＿＿。
 劳驾 | láo jià | excuse me | 请别人帮忙时说的客气话 | ＿＿，请让我过去一下。
@@ -411,7 +411,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 受灾 | shòu zāi | to be hit by a disaster | 遇到灾害 | 这次台风让很多村子＿＿。
 预警 | yù jǐng | early warning | 在危险发生以前提醒大家 | 天气台发布了暴雨＿＿，请大家不要出门。
 逃生 | táo shēng | to escape (danger) | 从危险的地方逃出来 | 发生火灾的时候，大家要知道怎么＿＿。
-抗灾 | kàng zāi | to fight a disaster | 和灾害斗争，减少损失 | 洪水来了，村里的人一起＿＿，保住了大家的房子。
+抗灾 | kàng zāi | to fight a disaster | 和灾害斗争，减少损失 | 洪水来了，村里的人一起＿＿，保住了大家的房子。 | 防灾
 防火 | fáng huǒ | fire prevention | 不让着火 | 秋天山上的草很干，要注意＿＿。 | 防灾
 `,
   },
@@ -427,7 +427,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 航天员 | háng tiān yuán | astronaut | 到太空去工作的人 | 三名＿＿在太空中生活了半年。
 遥远 | yáo yuǎn | distant | 很远 | 火星离地球非常＿＿。
 空间站 | kōng jiān zhàn | space station | 在太空中让人住和工作的地方 | 航天员在＿＿里做了很多实验。
-探测器 | tàn cè qì | probe | 用来探查的机器 | 科学家把＿＿送到了火星上。
+探测器 | tàn cè qì | probe | 用来探查的机器 | 科学家把＿＿送到了火星上。 | 卫星
 登月 | dēng yuè | to land on the moon | 登上月球 | 一九六九年，人类第一次＿＿。
 `,
   },
@@ -480,7 +480,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
     theme: ["Types and Weights", "类型和重量"],
     data: `
 类型 | lèi xíng | type | 种类 | 你喜欢什么＿＿的电影？
-型号 | xíng hào | model number | 产品的种类和编号 | 这两部手机的＿＿不一样。
+型号 | xíng hào | model number | 产品的种类和编号 | 这两部手机的＿＿不一样。 | 类型
 模型 | mó xíng | model (replica) | 照着真东西做的小东西 | 他用纸做了一个飞机＿＿。
 大型 | dà xíng | large-scale | 很大的 | 这里要建一个＿＿体育馆。 | 小型 新型
 小型 | xiǎo xíng | small-scale | 很小的 | 他开了一家＿＿公司，只有五个员工。 | 大型 新型
@@ -589,7 +589,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 新娘 | xīn niáng | bride | 结婚那天的女子 | ＿＿穿着白色的长裙，非常漂亮。
 嫁 | jià | (of a woman) to marry | 女子结婚 | 她＿＿给了一个医生。
 娶 | qǔ | (of a man) to marry | 男子结婚，把女子接过来 | 他＿＿了一位老师做妻子。
-婚宴 | hūn yàn | wedding banquet | 结婚时请客人吃的饭 | 他们的＿＿请了两百多位客人。
+婚宴 | hūn yàn | wedding banquet | 结婚时请客人吃的饭 | 他们的＿＿请了两百多位客人。 | 宴会
 宴会 | yàn huì | banquet | 很多人在一起吃饭的正式活动 | 学校为毕业生举办了一场＿＿。
 寿星 | shòu xing | birthday person | 过生日的人 | 今天的＿＿是谁？祝你生日快乐！
 长寿 | cháng shòu | long-lived | 活得很久 | 他们村有很多＿＿的老人，有的已经一百多岁了。
@@ -607,7 +607,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 禁忌 | jìn jì | taboo | 不能做、不能说的事 | 每个地方都有自己的＿＿，去旅行以前最好先了解一下。
 迷信 | mí xìn | superstition | 相信没有科学根据的东西 | 有人认为数字“四”不好，这只是一种＿＿。
 仪式 | yí shì | ceremony | 正式的活动 | 学校举行了开学＿＿。
-礼仪 | lǐ yí | etiquette | 礼节和规矩 | 去别人家做客要注意＿＿。
+礼仪 | lǐ yí | etiquette | 礼节和规矩 | 去别人家做客要注意＿＿。 | 禁忌
 鞠躬 | jū gōng | to bow | 弯下身子表示尊敬 | 在日本，人们见面的时候常常＿＿。
 祭祖 | jì zǔ | to honor one's ancestors | 纪念祖先的活动 | 春节的时候，有些家庭会＿＿，纪念家里的先人。
 `,
@@ -619,7 +619,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 剪刀 | jiǎn dāo | scissors | 剪东西的工具 | 小孩子用＿＿的时候要小心。
 书法 | shū fǎ | calligraphy | 写毛笔字的艺术 | 爷爷每天都练习＿＿，他的毛笔字写得很好。
 武术 | wǔ shù | martial arts | 中国传统的打拳、用刀等的功夫 | 他从小就学习＿＿，身体特别好。
-舞狮 | wǔ shī | lion dance | 人在狮子的道具里跳舞 | 过年的时候，街上有＿＿表演。
+舞狮 | wǔ shī | lion dance | 人在狮子的道具里跳舞 | 过年的时候，街上有＿＿表演。 | 杂技
 狮子 | shī zi | lion | 一种很大的猛兽 | 动物园里的＿＿正在睡觉。
 旗袍 | qí páo | qipao | 中国女子穿的一种传统长裙 | 她穿着一件红色的＿＿，非常漂亮。 | 汉服
 汉服 | hàn fú | Hanfu | 汉族的传统服装 | 现在很多年轻人喜欢穿＿＿拍照。 | 旗袍
@@ -752,7 +752,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
     theme: ["Upholding the Law", "依法办事"],
     data: `
 执行 | zhí xíng | to carry out | 按照计划或决定去做 | 他认真地＿＿了领导的决定。
-执法 | zhí fǎ | to enforce the law | 按照法律办事 | 警察要严格＿＿，对每个人都一样。
+执法 | zhí fǎ | to enforce the law | 按照法律办事 | 警察要严格＿＿，对每个人都一样。 | 执行
 依法 | yī fǎ | according to law | 按照法律 | 公民要＿＿纳税。
 依靠 | yī kào | to rely on | 靠 | 他不想＿＿父母，想自己赚钱。
 惩罚 | chéng fá | to punish | 处罚 | 违反规定的人会受到＿＿。
@@ -772,7 +772,7 @@ export const wordBatchesA: readonly LevelWordBatch[] = [
 票价 | piào jià | fare | 车票的价钱 | 这条线的＿＿是两块钱。
 繁忙 | fán máng | busy | 事情多，很忙 | 早上七八点是交通最＿＿的时候。
 首班车 | shǒu bān chē | first bus or train | 每天的第一班车 | ＿＿早上五点半发车。
-公交站 | gōng jiāo zhàn | bus stop | 等公交车的地方 | 我在＿＿等了十分钟，车才来。
+公交站 | gōng jiāo zhàn | bus stop | 等公交车的地方 | 我在＿＿等了十分钟，车才来。 | 地铁站
 准点 | zhǔn diǎn | on time | 按规定的时间 | 这里的地铁很＿＿，很少晚到。
 公交卡 | gōng jiāo kǎ | transit card | 坐公交和地铁用的卡 | 上车的时候，刷一下＿＿就行了。
 让座 | ràng zuò | to give up one's seat | 把座位让给别人 | 他在地铁上给一位老人＿＿。

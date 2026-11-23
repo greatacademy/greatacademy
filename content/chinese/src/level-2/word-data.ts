@@ -12,14 +12,14 @@ export const wordBatches: readonly LevelWordBatch[] = [
   {
     theme: ["Time Words", "时间副词"],
     data: `
-已经 | yǐ jīng | already | 表示事情做完了或时间过去了 | 我＿＿吃过早饭了，不饿。 | 刚才
-正在 | zhèng zài | in the middle of (doing) | 表示动作在进行 | 现在妈妈＿＿做饭呢，你等一下。
+已经 | yǐ jīng | already | 表示事情做完了或时间过去了 | 我＿＿吃过早饭了，不饿。 | 刚才 自己
+正在 | zhèng zài | in the middle of (doing) | 表示动作在进行 | 现在妈妈＿＿做饭呢，你等一下。 | 自己
 才 | cái | not until, only then | 表示事情发生得晚 | 我等了他一个小时，他＿＿来。
-又 | yòu | again (it already happened) | 表示动作重复发生 | 昨天他没来上课，今天他＿＿没来。
+又 | yòu | again (it already happened) | 表示动作重复发生 | 昨天他没来上课，今天他＿＿没来。 | 一直
 只 | zhǐ | only | 仅仅，表示限于某个范围 | 我们家＿＿有我一个孩子。 | 才
 更 | gèng | even more | 表示程度又高了一层 | 今天很冷，明天比今天＿＿冷。
 一直 | yī zhí | all along, continuously | 表示动作不停或状态不变 | 昨天晚上的雨＿＿下到今天早上。
-刚才 | gāng cái | just now | 不久以前的那个时候 | 你＿＿去哪里了？我找了你半天。 | 已经
+刚才 | gāng cái | just now | 不久以前的那个时候 | 你＿＿去哪里了？我找了你半天。 | 已经 又 自己
 常常 | cháng cháng | often | 表示次数多 | 我＿＿去那个饭店吃饭，一个星期去三次。 | 自己
 自己 | zì jǐ | oneself | 本人 | 这件事我想＿＿做，不要别人帮忙。 | 常常
 `,
@@ -43,11 +43,11 @@ export const wordBatches: readonly LevelWordBatch[] = [
     theme: ["Getting Ready", "准备"],
     data: `
 准备 | zhǔn bèi | to prepare | 预先安排或筹划 | 明天要考试，我在＿＿。
-完成 | wán chéng | to complete | 按要求做好 | 这个工作很难，我们三天才＿＿。
+完成 | wán chéng | to complete | 按要求做好 | 这个工作很难，我们三天才＿＿。 | 完
 完 | wán | to finish | 结束，没有剩下的 | 我吃＿＿饭就去找你。
 告诉 | gào su | to tell | 把事情说给别人听 | 请你＿＿我，这个字怎么读。
 成 | chéng | to become | 变为 | 她长大以后＿＿了一个老师。
-非常 | fēi cháng | extremely | 表示程度很高 | 这个电影＿＿有意思，你可以去看看。 | 一定
+非常 | fēi cháng | extremely | 表示程度很高 | 这个电影＿＿有意思，你可以去看看。 | 一定 当然
 一定 | yī dìng | surely, must | 必定，没有问题 | 明天的考试你＿＿要来，别忘了。 | 当然 准时 非常
 当然 | dāng rán | of course | 应该这样，没有疑问 | “你会来吗？”“＿＿会来！” | 一定
 准时 | zhǔn shí | on time | 按时间，不早也不晚 | 明天八点上课，请大家＿＿来。 | 一定
@@ -65,7 +65,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 刚刚 | gāng gāng | only a moment ago | 发生在不久以前 | 他＿＿出去，一会儿就回来。
 直到 | zhí dào | until | 到某个时候为止 | 我们＿＿晚上十点才回家。
 不但 | bù dàn | not only | 不仅 | 他＿＿会说汉语，还会写汉字。
-当时 | dāng shí | at that time | 那个时候 | 我十岁来中国，＿＿还不会说汉语。
+当时 | dāng shí | at that time | 那个时候 | 我十岁来中国，＿＿还不会说汉语。 | 但是
 只要 | zhǐ yào | as long as | 表示有了这个条件就够了 | ＿＿你认真学习，就能学好汉语。 | 如果
 `,
   },
@@ -78,10 +78,10 @@ export const wordBatches: readonly LevelWordBatch[] = [
 记得 | jì de | to remember | 没有忘 | 你还＿＿我吗？我们是小学同学。 | 记住
 忘记 | wàng jì | to forget | 不记得了 | 对不起，我＿＿你的名字了。
 日记 | rì jì | diary | 每天写下来的事 | 她每天晚上睡觉前都写＿＿。
-记住 | jì zhù | to remember firmly | 牢牢地留在脑子里 | 这些汉字你都＿＿了吗？明天要考试。 | 记得
+记住 | jì zhù | to remember firmly | 牢牢地留在脑子里 | 这些汉字你都＿＿了吗？明天要考试。 | 记得 忘记
 放心 | fàng xīn | to feel at ease | 心里安定，不担忧 | 你＿＿，我会认真工作的。
 放学 | fàng xué | (of school) to let out | 学校里一天的课上完了 | 下午四点＿＿以后，我去打球。
-拿走 | ná zǒu | to take away | 拿着离开 | 这本书是我的，你别＿＿。
+拿走 | ná zǒu | to take away | 拿着离开 | 这本书是我的，你别＿＿。 | 忘记
 `,
   },
   {
@@ -102,10 +102,10 @@ export const wordBatches: readonly LevelWordBatch[] = [
   {
     theme: ["Only and Just", "只和刚"],
     data: `
-只好 | zhǐ hǎo | to have no choice but | 不得已，只能 | 没有车了，我们＿＿走路回家。
+只好 | zhǐ hǎo | to have no choice but | 不得已，只能 | 没有车了，我们＿＿走路回家。 | 只有
 只有 | zhǐ yǒu | only if | 表示唯一的条件 | ＿＿多说，才能说好汉语。
 只是 | zhǐ shì | it's just that | 仅仅是 | 我不是不想去，＿＿太忙了。
-刚好 | gāng hǎo | exactly | 正巧，恰恰 | 这个房间住四个人，我们＿＿四个人。
+刚好 | gāng hǎo | exactly | 正巧，恰恰 | 这个房间住四个人，我们＿＿四个人。 | 只有
 看起来 | kàn qǐ lai | to look, to seem | 从外表看 | 他今天＿＿很累，昨天晚上一定没睡好。
 当地 | dāng dì | local | 本地，那个地方 | 我们去中国南方玩，吃了很多＿＿的菜。
 叫醒 | jiào xǐng | to wake (someone) up | 使睡着的人醒过来 | 明天早上六点请你＿＿我。
@@ -155,7 +155,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 左右 | zuǒ yòu | about, approximately | 表示比某个数稍多或稍少 | 这个班有三十个学生＿＿。
 一半 | yī bàn | half | 二分之一 | 这些钱太多了，我只要＿＿。
 有些 | yǒu xiē | some | 有一部分 | ＿＿学生会说汉语，有的不会。
-有点 | yǒu diǎn | a little, somewhat | 表示程度不高 | 今天＿＿冷，你多穿一件衣服吧。
+有点 | yǒu diǎn | a little, somewhat | 表示程度不高 | 今天＿＿冷，你多穿一件衣服吧。 | 十分
 本来 | běn lái | originally | 原先，先前 | 我＿＿想去看电影，后来没时间了。
 `,
   },
@@ -200,8 +200,8 @@ export const wordBatches: readonly LevelWordBatch[] = [
 附近 | fù jìn | nearby | 离某个地方不远的地方 | 学校＿＿有很多饭店。
 安静 | ān jìng | quiet | 没有声音，不吵 | 晚上十二点了，大家都睡了，楼里很＿＿。
 城市 | chéng shì | city | 人多、房子多的大地方 | 北京是一个很大的＿＿。
-市中心 | shì zhōng xīn | city centre | 城市最中间的地方 | 我家在＿＿，去哪里都很方便。
-小区 | xiǎo qū | residential compound | 一片住房和它们四周的地方 | 我们＿＿里有一个小公园。
+市中心 | shì zhōng xīn | city centre | 城市最中间的地方 | 我家在＿＿，去哪里都很方便。 | 附近
+小区 | xiǎo qū | residential compound | 一片住房和它们四周的地方 | 我们＿＿里有一个小公园。 | 城市
 `,
   },
   {
@@ -210,7 +210,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 街 | jiē | street | 城里两边有房子的路 | 这里的＿＿上有很多商店。
 安心 | ān xīn | to be at peace | 心里安定 | 家里没事了，你＿＿工作吧。
 城里 | chéng li | in town | 城市里面 | 他每天从家坐车到＿＿上学。 | 城外
-市场 | shì chǎng | market | 买卖东西的地方 | 我常去＿＿买菜。
+市场 | shì chǎng | market | 买卖东西的地方 | 我常去＿＿买菜。 | 城里
 地区 | dì qū | area, region | 较大的一片地方 | 这个＿＿冬天很冷。
 居住 | jū zhù | to reside | 长时间住在一个地方 | 很多外国人在这里＿＿。
 搬走 | bān zǒu | to move away | 搬到别处去 | 我的邻居上个月＿＿了。
@@ -226,7 +226,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 打扫 | dǎ sǎo | to clean, to sweep | 除去尘土 | 星期六我们一起＿＿房间吧。 | 收拾
 收拾 | shōu shi | to tidy up | 把东西放好 | 出门前，你要＿＿好你的书包。 | 打扫
 换 | huàn | to change | 拿这个，不要原来那个 | 这件衣服太小了，我想＿＿一件大的。
-冰箱 | bīng xiāng | refrigerator | 使食物保持冷的电器 | 牛奶在＿＿里。
+冰箱 | bīng xiāng | refrigerator | 使食物保持冷的电器 | 牛奶在＿＿里。 | 箱子
 空调 | kōng tiáo | air conditioner | 使屋里变冷或变暖的电器 | 天太热了，开＿＿吧。
 有空 | yǒu kòng | to be free | 有时间 | 你今天＿＿吗？我们去看电影吧。
 冰 | bīng | ice | 水冷到零度以下变成的东西 | 天太冷了，外边的水都成了＿＿。
@@ -259,7 +259,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 静 | jìng | still, quiet | 没有声音 | 大家都走了，学校里很＿＿。
 收下 | shōu xià | to accept | 接受别人给的东西 | 这是我送你的东西，请你＿＿。
 空中 | kōng zhōng | in the air | 天上 | 飞机在＿＿飞。
-窗外 | chuāng wài | outside the window | 窗子外面 | ＿＿下雪了，真好看！
+窗外 | chuāng wài | outside the window | 窗子外面 | ＿＿下雪了，真好看！ | 街上 空中
 长城 | cháng chéng | the Great Wall | 中国北方很长的古代城墙 | 到了北京，一定要去看看＿＿。
 街上 | jiē shang | on the street | 街道上 | 下雨了，＿＿没有几个人。
 `,
@@ -312,7 +312,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
   {
     theme: ["Looking Good", "好看"],
     data: `
-漂亮 | piào liang | pretty | 样子好看 | 你的新衣服真＿＿！ | 合适
+漂亮 | piào liang | pretty | 样子好看 | 你的新衣服真＿＿！ | 合适 亮
 合适 | hé shì | fitting, suitable | 正好符合要求 | 这双鞋不大也不小，很＿＿。 | 漂亮 适合
 亮 | liàng | bright | 光线强 | 这个房间的灯很＿＿。
 适合 | shì hé | to suit | 符合实际情况或要求 | 这件衣服很＿＿你，你穿上真好看。 | 合适
@@ -330,7 +330,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 试穿 | shì chuān | to try on | 买以前穿上看看 | 这件衣服我可以＿＿一下吗？
 大号 | dà hào | large size | 大的尺码 | 这件衣服太小了，有没有＿＿的？
 小号 | xiǎo hào | small size | 小的尺码 | 这件衣服太大了，有没有＿＿的？
-戴上 | dài shang | to put on (a hat, glasses) | 戴到头、脸或手上 | 外面很冷，你＿＿帽子吧。
+戴上 | dài shang | to put on (a hat, glasses) | 戴到头、脸或手上 | 外面很冷，你＿＿帽子吧。 | 换上
 鞋店 | xié diàn | shoe shop | 卖鞋的商店 | 我想买一双新鞋，我们去＿＿看看吧。
 合身 | hé shēn | to fit well (of clothes) | 衣服的大小正好 | 这件衣服不大也不小，很＿＿。
 双方 | shuāng fāng | both sides | 两个方面的人 | 这件事要问问＿＿的意见。
@@ -364,7 +364,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 买单 | mǎi dān | to pay the bill | 吃完饭以后付钱 | 服务员，我们吃好了，＿＿！
 碗 | wǎn | bowl | 盛饭的器具 | 我吃了两＿＿米饭。 | 瓶
 筷子 | kuài zi | chopsticks | 吃饭用的两根细棍 | 中国人吃饭用＿＿。
-盘子 | pán zi | plate | 放菜的器具 | 桌上有一个＿＿，里面是鱼。
+盘子 | pán zi | plate | 放菜的器具 | 桌上有一个＿＿，里面是鱼。 | 碗
 瓶 | píng | bottle (as a measure) | 用于口小肚大的容器装的东西 | 我想买一＿＿水。 | 碗
 汤 | tāng | soup | 做菜时煮出来的汁水 | 我想喝一碗热＿＿。
 `,
@@ -387,7 +387,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
   {
     theme: ["Fruit and Meat", "水果和肉"],
     data: `
-苹果 | píng guǒ | apple | 一种圆的、红色或绿色的水果 | 我每天吃一个＿＿。 | 西瓜 羊肉
+苹果 | píng guǒ | apple | 一种圆的、红色或绿色的水果 | 我每天吃一个＿＿。 | 西瓜 羊肉 黄瓜
 西瓜 | xī guā | watermelon | 夏天吃的大水果，里面是红的 | 夏天很热，我们吃一个大＿＿吧。 | 苹果
 新鲜 | xīn xiān | fresh | 刚出产的，没有变坏的 | 这些鱼很＿＿，是今天早上买的。
 羊肉 | yáng ròu | mutton, lamb | 羊身上的肉 | 冬天很冷，北方人喜欢吃＿＿。 | 猪肉 苹果
@@ -395,7 +395,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 刀 | dāo | knife | 切东西的工具 | 这把＿＿很快，你要小心。
 够 | gòu | enough | 满足需要 | 三个菜＿＿了，我们只有两个人。
 饮料 | yǐn liào | drink, beverage | 可以喝的东西 | 你想喝什么＿＿？
-黄瓜 | huáng guā | cucumber | 一种长条的绿色蔬菜 | 这个＿＿是绿色的，很新鲜。 | 猪肉
+黄瓜 | huáng guā | cucumber | 一种长条的绿色蔬菜 | 这个＿＿是绿色的，很新鲜。 | 猪肉 西瓜
 能够 | néng gòu | to be able to | 有能力做 | 他已经＿＿说很多汉语了。
 `,
   },
@@ -403,11 +403,11 @@ export const wordBatches: readonly LevelWordBatch[] = [
     theme: ["Cooking", "做饭"],
     data: `
 糖 | táng | sugar | 甜的东西 | 你的咖啡里要放＿＿吗？
-甜点 | tián diǎn | dessert | 饭后吃的甜的东西 | 吃完饭，我们再来一个＿＿吧。
+甜点 | tián diǎn | dessert | 饭后吃的甜的东西 | 吃完饭，我们再来一个＿＿吧。 | 小吃
 洗碗 | xǐ wǎn | to do the dishes | 把吃饭用的器具弄干净 | 妈妈做饭，我＿＿。
 鸡汤 | jī tāng | chicken soup | 用鸡做的汤 | 妈妈做了一碗＿＿，里面有很多鸡肉。
 酸甜 | suān tián | sweet and sour | 又酸又甜 | 这个菜＿＿，很好吃。
-香菜 | xiāng cài | coriander | 一种有特别香味的菜 | 我不喜欢＿＿，请不要放在汤里。
+香菜 | xiāng cài | coriander | 一种有特别香味的菜 | 我不喜欢＿＿，请不要放在汤里。 | 糖
 吃饱 | chī bǎo | to eat one's fill | 吃得够了 | 你＿＿了吗？还要不要米饭？
 菜刀 | cài dāo | kitchen knife | 切菜用的刀 | 做饭要用＿＿，小心手。
 小吃 | xiǎo chī | snacks | 量少的、不是正餐的食物 | 北京有很多好吃的＿＿。
@@ -434,9 +434,9 @@ export const wordBatches: readonly LevelWordBatch[] = [
     data: `
 名单 | míng dān | list of names | 写着人名的单子 | 老师，我的名字不在这个＿＿上。
 吃苦 | chī kǔ | to bear hardship | 受苦，经得起困难 | 他很能＿＿，工作再累也不说。
-香甜 | xiāng tián | sweet and fragrant | 又香又甜 | 这个西瓜真＿＿！
+香甜 | xiāng tián | sweet and fragrant | 又香又甜 | 这个西瓜真＿＿！ | 酸
 茶杯 | chá bēi | teacup | 喝茶用的杯子 | 他把茶放在＿＿里。
-早点 | zǎo diǎn | breakfast (snack) | 早上吃的东西 | 他每天早上在路上买＿＿吃。
+早点 | zǎo diǎn | breakfast (snack) | 早上吃的东西 | 他每天早上在路上买＿＿吃。 | 点心
 点心 | diǎn xin | pastry, snack | 量少的、吃着玩的食物 | 下午喝茶的时候，我们吃一点＿＿。
 菜市场 | cài shì chǎng | food market | 卖菜、肉、鱼的市场 | 妈妈每天早上去＿＿买菜。
 南瓜 | nán guā | pumpkin | 一种大的、黄色的瓜 | 这个＿＿是黄色的，很大。
@@ -448,7 +448,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
     theme: ["At the Company", "在公司"],
     data: `
 公司 | gōng sī | company | 做生意的单位 | 我爸爸在一家大＿＿工作。
-经理 | jīng lǐ | manager | 公司里管事的人 | 我们公司的＿＿人很好，常常请我们吃饭。
+经理 | jīng lǐ | manager | 公司里管事的人 | 我们公司的＿＿人很好，常常请我们吃饭。 | 同事
 办公室 | bàn gōng shì | office | 工作的房间 | 我们的＿＿在三层，很大。
 会议 | huì yì | meeting | 很多人一起讨论问题的会 | 明天上午公司有一个＿＿，大家都要来。
 职业 | zhí yè | occupation | 人做的工作 | “你的＿＿是什么？”“我是老师。”
@@ -468,7 +468,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 接 | jiē | to pick up, to meet | 到某地去迎人 | 我去机场＿＿朋友。
 发 | fā | to send | 送出 | 我到了北京就给你＿＿短信。
 短信 | duǎn xìn | text message | 用手机送出的短的文字 | 我给你发了一个＿＿，你看了吗？
-信 | xìn | letter | 写给别人的书面的话 | 我每个月都给爷爷写＿＿。
+信 | xìn | letter | 写给别人的书面的话 | 我每个月都给爷爷写＿＿。 | 短信
 纸 | zhǐ | paper | 写字用的薄片 | 请给我一张＿＿，我想写几个字。 | 笔
 笔 | bǐ | pen | 写字的工具 | 我没带＿＿，可以用一下你的吗？我想写几个字。 | 纸
 页 | yè | page | 书本中的一面 | 请打开书，看第十＿＿。
@@ -527,7 +527,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 头发 | tóu fa | hair | 人头上长的毛 | 她的＿＿很长，是黑色的。
 出发 | chū fā | to set out | 离开原地到别的地方去 | 明天早上七点我们从学校＿＿，九点到机场。
 直接 | zhí jiē | directly | 不经过别的 | 下了班，我不去别的地方，＿＿回家。
-笔记 | bǐ jì | notes | 听课或读书时写下来的东西 | 上课的时候，他写了很多＿＿。
+笔记 | bǐ jì | notes | 听课或读书时写下来的东西 | 上课的时候，他写了很多＿＿。 | 作业
 词语 | cí yǔ | words and phrases | 词和短语 | 这一课的＿＿你都会读了吗？
 理发 | lǐ fà | to have a haircut | 把头发剪短 | 你的头发太长了，该去＿＿了。
 作业 | zuò yè | homework | 老师给学生的练习 | 今天的＿＿太多了，我写到十点才写完。
@@ -541,7 +541,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 加上 | jiā shang | plus, in addition | 再加 | 我们班有二十个学生，＿＿老师，有二十一个人。
 办事 | bàn shì | to get things done | 做事，处理事情 | 他＿＿很认真，大家都放心。
 商业 | shāng yè | commerce, business | 买卖东西的事业 | 这里是城市的＿＿中心，有很多商店。
-迎接 | yíng jiē | to meet, to greet | 到某个地方去接 | 我们去机场＿＿新同学。
+迎接 | yíng jiē | to meet, to greet | 到某个地方去接 | 我们去机场＿＿新同学。 | 接到
 接到 | jiē dào | to receive (a call, a letter) | 收到 | 我刚才＿＿了妈妈的电话。
 钟头 | zhōng tóu | hour | 六十分 | 我每天学习两个＿＿汉语。
 留下 | liú xià | to leave behind | 走的时候让东西或人留在原地 | 他走的时候＿＿了一本书。
@@ -571,7 +571,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 嘴 | zuǐ | mouth | 吃东西、说话的器官 | 吃饭的时候，不要张着＿＿说话。 | 眼睛
 腿 | tuǐ | leg | 人用来走路的身体部分 | 我走了一天的路，＿＿很累。
 肚子 | dù zi | belly | 身体前面中部的部分 | 我吃得太多了，＿＿很不舒服。
-眼睛 | yǎn jing | eye | 看东西的器官 | 她的＿＿很大，很漂亮。 | 嘴
+眼睛 | yǎn jing | eye | 看东西的器官 | 她的＿＿很大，很漂亮。 | 嘴 脸
 门口 | mén kǒu | doorway, entrance | 门的前面 | 我在学校＿＿等你。
 牙 | yá | tooth | 嘴里咬东西的器官 | 我的＿＿很疼，吃东西的时候更疼。
 脸 | liǎn | face | 头的前部 | 她的＿＿红了，她有点不好意思。
@@ -586,7 +586,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 感冒 | gǎn mào | to catch a cold | 一种常见病，会头疼、发烧 | 天冷了，多穿点衣服，别＿＿了。 | 发烧
 舒服 | shū fu | comfortable | 身体或心里感到好 | 这张床很＿＿，我睡得很好。
 健康 | jiàn kāng | healthy | 身体好，没有病 | 爷爷八十岁了，身体还很＿＿。
-肚子疼 | dù zi téng | stomachache | 身体前面中部疼 | 我吃了不新鲜的鱼，现在＿＿。
+肚子疼 | dù zi téng | stomachache | 身体前面中部疼 | 我吃了不新鲜的鱼，现在＿＿。 | 发烧
 感觉 | gǎn jué | feeling; to feel | 觉得 | 你今天＿＿怎么样？好一点了吗？ | 感到
 检查 | jiǎn chá | to examine | 仔细地看 | 医生给我＿＿了身体，说我没有病。 | 爱护
 感到 | gǎn dào | to feel (a state) | 心里有某种感觉 | 他工作了一天，＿＿很累。 | 感觉
@@ -629,7 +629,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
     data: `
 一口 | yī kǒu | a mouthful | 嘴里放一次的量 | 这个菜太辣了，我只吃了＿＿。
 出口 | chū kǒu | exit | 出去的门 | 地铁站的＿＿在哪里？
-路口 | lù kǒu | intersection | 路和路相交的地方 | 到了前面的＿＿，往左走。
+路口 | lù kǒu | intersection | 路和路相交的地方 | 到了前面的＿＿，往左走。 | 出口
 查看 | chá kàn | to look over | 检查着看 | 出门前，他又＿＿了一下门关好了没有。
 轻轻 | qīng qīng | gently, softly | 很轻地 | 孩子睡着了，你＿＿地走进去。
 发冷 | fā lěng | to feel chilly | 身体感到冷 | 我有点＿＿，可能感冒了。
@@ -651,7 +651,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 行李 | xíng li | luggage | 出门带的箱子和包 | 你的＿＿太多了，我帮你拿吧。
 地图 | dì tú | map | 画着地方和路的图 | 我不认识路，要看一下＿＿。
 订 | dìng | to book | 预先约定 | 我已经＿＿好了飞机票。
-护照 | hù zhào | passport | 出国用的证件 | 出国一定要带＿＿。
+护照 | hù zhào | passport | 出国用的证件 | 出国坐飞机一定要带＿＿，不然不能上飞机。
 `,
   },
   {
@@ -672,7 +672,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
   {
     theme: ["Plans and Holidays", "计划和假期"],
     data: `
-全部 | quán bù | all, whole | 所有的 | 我的钱＿＿用完了。
+全部 | quán bù | all, whole | 所有的 | 我的钱＿＿用完了。 | 完全
 到处 | dào chù | everywhere | 各个地方 | 过年的时候，＿＿都是人。
 遇到 | yù dào | to come across | 碰到 | 我在路上＿＿了我的老师。
 放假 | fàng jià | to have a holiday | 学校或单位停止上课或工作 | 学校下个星期＿＿，我要回家。
@@ -708,7 +708,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 全身 | quán shēn | the whole body | 身体的每个部分 | 下了大雨，我＿＿都是水。
 景点 | jǐng diǎn | scenic spot | 好看的、游客常去的地方 | 长城是北京最有名的＿＿。
 旅客 | lǚ kè | traveller | 旅行的人 | 飞机场里有很多＿＿在等飞机。
-行人 | xíng rén | pedestrian | 在路上走的人 | 路上的＿＿很多，开车要小心。
+行人 | xíng rén | pedestrian | 在路上走的人 | 路上的＿＿很多，开车要小心。 | 旅客
 相同 | xiāng tóng | identical | 一样 | 我们两个人的名字＿＿，都叫小明。
 东部 | dōng bù | eastern part | 东边的部分 | 这个国家的＿＿人很多，西部人很少。
 住处 | zhù chù | place to live | 住的地方 | 我在北京还没有找到＿＿，现在住在宾馆。
@@ -762,11 +762,11 @@ export const wordBatches: readonly LevelWordBatch[] = [
   {
     theme: ["Strong Feelings", "强烈的感情"],
     data: `
-害怕 | hài pà | afraid | 心里不安，觉得会出事 | 晚上一个人在家，她有点＿＿，把灯都打开了。 | 紧张 着急
+害怕 | hài pà | afraid | 心里不安，觉得会出事 | 晚上一个人在家，她有点＿＿，把灯都打开了。 | 紧张 着急 急
 着急 | zháo jí | anxious | 心里不安，想快一点 | 飞机快起飞了，他还没到机场，很＿＿。 | 急 紧张 害怕
 紧张 | jǐn zhāng | nervous | 心里放松不下来 | 明天要考试了，我很＿＿。 | 害怕 着急 急
 满意 | mǎn yì | satisfied | 觉得够好，合自己的心意 | 老师对我的作业很＿＿。
-讨厌 | tǎo yàn | to dislike | 很不喜欢 | 我＿＿下雨天，不能出去玩。
+讨厌 | tǎo yàn | to dislike | 很不喜欢 | 我＿＿下雨天，不能出去玩。 | 害怕
 难怪 | nán guài | no wonder | 明白了原因，不再觉得奇怪 | 他昨天晚上没睡觉，＿＿今天这么累。
 哈哈 | hā hā | (sound of laughter) | 大笑的声音 | “＿＿，你说得太好玩了！”
 啊 | a | (particle of exclamation) | 表示感叹的语气词 | 今天的天气多好＿＿！ | 呀
@@ -777,7 +777,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
   {
     theme: ["Emotions", "感情"],
     data: `
-爱情 | ài qíng | romantic love | 男女之间相爱的感情 | 这个电影讲的是＿＿，他们两个人非常相爱。
+爱情 | ài qíng | romantic love | 男女之间相爱的感情 | 这个电影讲的是＿＿，他们两个人非常相爱。 | 感情
 热情 | rè qíng | warm, enthusiastic | 对人很好，很热心 | 这里的人很＿＿，常常请我去他们家吃饭。
 感情 | gǎn qíng | affection | 对人的爱和关心 | 他们是十年的老朋友，＿＿很好。 | 事情
 事情 | shì qing | matter, thing | 要做的事 | 我今天有很多＿＿要做。 | 感情
@@ -816,7 +816,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 乐意 | lè yì | glad to | 愿意 | 我很＿＿帮助你。
 天真 | tiān zhēn | innocent, naive | 像孩子一样单纯 | 这个孩子很＿＿，别人说什么他都相信。
 害处 | hài chù | harm | 不好的地方 | 吃太多糖对身体有＿＿。
-心急 | xīn jí | impatient | 想马上做好，等不了 | 别＿＿，饭一会儿就好。
+心急 | xīn jí | impatient | 想马上做好，等不了 | 别＿＿，饭一会儿就好。 | 急忙
 `,
   },
   {
@@ -828,7 +828,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 开玩笑 | kāi wán xiào | to joke | 说好玩的话，不是真的 | 别生气，我是跟你＿＿的。
 可爱 | kě ài | cute | 让人喜爱 | 这个小孩子很＿＿，大家都喜欢她。 | 友好
 友好 | yǒu hǎo | friendly | 对人好，像朋友一样 | 这里的人对我们很＿＿。 | 可爱
-明白 | míng bai | to understand | 知道是什么意思 | 你说的话我＿＿了。
+明白 | míng bai | to understand | 知道是什么意思 | 你说的话我＿＿了。 | 同意
 同意 | tóng yì | to agree | 觉得对，可以这样做 | 爸爸＿＿我一个人去旅行了。
 好友 | hǎo yǒu | good friend | 很好的朋友 | 他是我的＿＿，我们认识十年了。
 千万 | qiān wàn | by all means | 一定要 | 外面很冷，你＿＿要多穿点衣服。
@@ -841,11 +841,11 @@ export const wordBatches: readonly LevelWordBatch[] = [
 海 | hǎi | sea | 地球上很大很大的一片咸水 | 我家住在＿＿边，每天都能看到大船。 | 河 湖 江
 河 | hé | river | 地上流着的长长的水 | 这条＿＿里的水很清，能看到鱼。 | 江 湖 海
 湖 | hú | lake | 四面是地的一大片水 | 公园里有一个小＿＿，我们可以去划船。 | 河 海 江
-树 | shù | tree | 长得很高、有木头的植物 | 夏天很热，我们坐在大＿＿下面。
+树 | shù | tree | 长得很高、有木头的植物 | 夏天很热，我们坐在大＿＿下面。 | 山
 花 | huā | flower | 植物上开的好看的部分 | 妈妈过生日，我买了一些＿＿送给她。
 草 | cǎo | grass | 地上长的绿色小植物 | 羊很喜欢吃＿＿。 | 花
 鸟 | niǎo | bird | 有羽毛、会飞的动物 | 树上有一只小＿＿在唱歌。
-云 | yún | cloud | 天上白色的一团一团的东西 | 天上的＿＿很白。
+云 | yún | cloud | 天上白色的一团一团的东西 | 天上的＿＿很白。 | 鸟
 江 | jiāng | big river | 很大的河 | 长＿＿是中国最长的河。 | 河
 `,
   },
@@ -856,7 +856,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 猫 | māo | cat | 会抓老鼠的小动物 | 这只小＿＿很喜欢吃鱼。 | 狗
 马 | mǎ | horse | 能让人骑、跑得很快的大动物 | 他会骑＿＿，跑得很快。
 动物 | dòng wù | animal | 能自己走来走去的生物 | 熊猫是很可爱的＿＿。
-熊猫 | xióng māo | panda | 中国特有的黑白色的熊 | ＿＿是黑白色的，很可爱。
+熊猫 | xióng māo | panda | 中国特有的黑白色的熊 | ＿＿是黑白色的，很可爱。 | 狗 猫
 叶子 | yè zi | leaf | 树上长的绿色的片 | 秋天到了，树上的＿＿都黄了。
 石头 | shí tou | stone | 很硬的东西，山上常有 | 这块＿＿很重，我拿不动。
 太阳 | tài yáng | sun | 天上发光发热的星球 | ＿＿出来了，天亮了。 | 阳光
@@ -884,9 +884,9 @@ export const wordBatches: readonly LevelWordBatch[] = [
     data: `
 上山 | shàng shān | to go up a mountain | 往山上走 | 我们早上六点就＿＿了，下午才下来。
 海边 | hǎi biān | seaside | 靠近海的地方 | 夏天我们去＿＿玩水，看大船。 | 河边
-河边 | hé biān | riverside | 靠近河的地方 | 晚饭以后，我们常去＿＿走走。 | 海边
+河边 | hé biān | riverside | 靠近河的地方 | 晚饭以后，我们常去＿＿走走。 | 海边 花园 草地
 花园 | huā yuán | garden | 种着花草的地方 | 我家后面有一个小＿＿，里面有很多花。
-草地 | cǎo dì | lawn | 长满了草的地 | 孩子们在＿＿上玩。
+草地 | cǎo dì | lawn | 长满了草的地 | 孩子们在＿＿上玩。 | 马路
 白云 | bái yún | white cloud | 白色的云 | 天上有很多＿＿。
 大海 | dà hǎi | the sea | 很大的海 | 他住在山区，从来没有见过＿＿，也没有坐过船。 | 海边
 花钱 | huā qián | to spend money | 用钱买东西 | 他很会＿＿，一个月的钱几天就用完了。
@@ -901,7 +901,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 动 | dòng | to move | 改变位置 | 别＿＿，我给你照相。
 光线 | guāng xiàn | light | 照到一个地方的光 | 这个房间＿＿不好，在这里看书对眼睛不好。
 四季 | sì jì | the four seasons | 春夏秋冬 | 这个地方＿＿都有花。
-温暖 | wēn nuǎn | warm (also in feeling) | 暖和，让人舒服 | 妈妈的话让我觉得很＿＿。
+温暖 | wēn nuǎn | warm (also in feeling) | 暖和，让人舒服 | 妈妈的话让我觉得很＿＿。 | 动人
 气温 | qì wēn | air temperature | 空气的冷热 | 今天的＿＿很高，有三十五度。
 变成 | biàn chéng | to turn into | 成为 | 水到了零度就会＿＿冰。
 文化 | wén huà | culture | 一个国家的历史、生活、艺术等 | 我很喜欢中国＿＿。
@@ -928,7 +928,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
     theme: ["Sky and Earth", "天和地"],
     data: `
 星星 | xīng xing | star | 晚上天上发光的小点 | 晚上天上有很多＿＿。
-月亮 | yuè liang | the moon | 晚上天上最亮的那个 | 今天晚上的＿＿又大又亮。
+月亮 | yuè liang | the moon | 晚上天上最亮的那个 | 今天晚上的＿＿又大又亮。 | 星星
 地球 | dì qiú | the earth | 我们住的星球 | 我们都住在＿＿上。
 气候 | qì hòu | climate | 一个地方一年里的天气情况 | 这里的＿＿很好，不冷也不热。
 小河 | xiǎo hé | stream | 不大的河 | 我家门口有一条＿＿，水很清。
@@ -992,7 +992,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 舞会 | wǔ huì | dance party | 大家一起跳舞的晚会 | 晚上学校有一个＿＿，大家都要去跳舞。
 爬 | pá | to crawl, to climb | 手和脚一起向前动 | 孩子还不会走，只会在地上＿＿。
 不足 | bù zú | not enough | 不够 | 我的钱＿＿，买不了这个。
-球赛 | qiú sài | ball game | 打球或踢球的比赛 | 昨天晚上的＿＿太好看了。
+球赛 | qiú sài | ball game | 打球或踢球的比赛 | 昨天晚上的＿＿太好看了。 | 舞会
 踢球 | tī qiú | to play football | 用脚玩球 | 下课以后，男孩子们都去＿＿。
 运气 | yùn qi | luck | 碰到好事或坏事的机会 | 他的＿＿真好，一出门就打到了出租车。
 队长 | duì zhǎng | team captain | 一个队的头 | 他是我们球队的＿＿。
@@ -1020,7 +1020,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
 球员 | qiú yuán | player | 球队里的人 | 这个球队有很多好＿＿。 | 队员
 队员 | duì yuán | team member | 队里的人 | 我们队有十个＿＿。 | 球员
 比分 | bǐ fēn | score | 比赛中两边得的分 | 现在的＿＿是二比一。
-输赢 | shū yíng | winning or losing | 输和赢 | 比赛的＿＿不重要，开心就好。
+输赢 | shū yíng | winning or losing | 输和赢 | 比赛的＿＿不重要，开心就好。 | 比分
 第一名 | dì yī míng | first place | 最好的那一个 | 他跑得最快，得了＿＿。
 骑马 | qí mǎ | to ride a horse | 坐在马上走 | 我第一次＿＿，有点害怕。
 用力 | yòng lì | to put effort into | 用很大的力气 | 门太重了，要＿＿推。 | 全力
@@ -1033,7 +1033,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
     theme: ["News and Shows", "新闻和节目"],
     data: `
 节目 | jié mù | programme, show | 电视上或台上演的东西 | 这个电视＿＿很好看，我每个星期都看。 | 新闻 演出
-新闻 | xīn wén | news | 新近发生的事情的报道 | 爸爸每天晚上都看电视＿＿。 | 节目 演出
+新闻 | xīn wén | news | 新近发生的事情的报道 | 爸爸每天晚上都看电视＿＿。 | 节目 演出 直播
 报纸 | bào zhǐ | newspaper | 每天印出来的新闻纸 | 这张＿＿上有很多新闻。 | 杂志
 故事 | gù shi | story | 讲出来的事情 | 妈妈每天晚上给孩子讲＿＿。
 杂志 | zá zhì | magazine | 定期出的一本一本的读物 | 这本＿＿每个月出一次。 | 报纸
@@ -1049,7 +1049,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
     data: `
 号码 | hào mǎ | number | 用来找到人或东西的数字 | 你的电话＿＿是多少？
 聊天 | liáo tiān | to chat | 随便说说话 | 我们一边喝茶一边＿＿。 | 谈
-微信 | wēi xìn | WeChat | 中国人常用的手机通信软件 | 我加你的＿＿吧。
+微信 | wēi xìn | WeChat | 中国人常用的手机通信软件 | 我加你的＿＿吧。 | 号码
 句子 | jù zi | sentence | 一句一句的话 | 请用这个词说一个＿＿。
 讨论 | tǎo lùn | to discuss | 大家一起说自己的想法 | 大家一起＿＿一下，每个人都说说自己的意见。 | 谈 聊天
 简单 | jiǎn dān | simple | 不难，容易 | 这个问题很＿＿，我一下就做完了。
@@ -1100,14 +1100,14 @@ export const wordBatches: readonly LevelWordBatch[] = [
 对话 | duì huà | dialogue | 两个人的说话 | 请你们两个人练习这个＿＿。
 说明 | shuō míng | explanation | 讲清楚怎么用的话 | 这个东西怎么用？你看一下＿＿书吧。
 方面 | fāng miàn | aspect, side | 事情的一个部分 | 他在学习＿＿做得很好。
-区别 | qū bié | difference | 不一样的地方 | 这两个字有什么＿＿？
+区别 | qū bié | difference | 不一样的地方 | 这两个字有什么＿＿？ | 作用
 作用 | zuò yòng | effect | 对别的东西的影响 | 这个药没有＿＿，我吃了还是很疼。
 `,
   },
   {
     theme: ["Festivals", "节日"],
     data: `
-礼物 | lǐ wù | gift | 送给别人的东西 | 这是我送给你的生日＿＿。
+礼物 | lǐ wù | gift | 送给别人的东西 | 这是我送给你的生日＿＿。 | 蛋糕
 祝 | zhù | to wish | 希望别人好 | ＿＿你生日快乐！ | 祝贺 祝福
 祝贺 | zhù hè | to congratulate | 为别人的好事高兴 | 听说你考上了大学，＿＿你！ | 祝 祝福
 蛋糕 | dàn gāo | cake | 用面和蛋做的甜点 | 生日的时候要吃＿＿。 | 月饼
@@ -1124,7 +1124,7 @@ export const wordBatches: readonly LevelWordBatch[] = [
     data: `
 婚礼 | hūn lǐ | wedding | 结婚的仪式 | 我要去参加朋友的＿＿。
 送礼 | sòng lǐ | to give gifts | 把礼物给人 | 中国人过年的时候喜欢＿＿。
-过节 | guò jié | to celebrate a festival | 在节日里玩、吃、休息 | ＿＿的时候，大家都回家。
+过节 | guò jié | to celebrate a festival | 在节日里玩、吃、休息 | ＿＿的时候，大家都回家。 | 中秋节
 结果 | jié guǒ | result | 最后的情况 | 考试的＿＿出来了，我考得很好。
 饼干 | bǐng gān | biscuit | 烤的干的小点心 | 我饿了，吃了几块＿＿。 | 年糕
 年糕 | nián gāo | rice cake | 过年吃的米做的糕 | 过年的时候，南方人喜欢吃＿＿。 | 饼干
@@ -1137,12 +1137,12 @@ export const wordBatches: readonly LevelWordBatch[] = [
   {
     theme: ["New Year", "新年"],
     data: `
-过年 | guò nián | to celebrate the New Year | 过春节 | ＿＿的时候，孩子们最高兴。
+过年 | guò nián | to celebrate the New Year | 过春节 | ＿＿的时候，孩子们最高兴。 | 长假
 红包 | hóng bāo | red envelope | 装着钱的红色小包 | 过年的时候，爷爷给了我一个＿＿。
 好运 | hǎo yùn | good luck | 好的运气 | 明天就要考试了，祝你＿＿！ | 万事如意
 万事如意 | wàn shì rú yì | may all go well | 什么事都顺心 | 新年快乐，＿＿！ | 好运
 新人 | xīn rén | bride and groom | 刚结婚的两个人 | 婚礼上，大家都祝福这对＿＿。
-喜糖 | xǐ táng | wedding sweets | 结婚时送人的糖 | 他们结婚了，给同事们送了＿＿。
+喜糖 | xǐ táng | wedding sweets | 结婚时送人的糖 | 他们结婚了，给同事们送了＿＿。 | 红包
 喜酒 | xǐ jiǔ | wedding banquet | 结婚时请人喝的酒 | 下个星期我要去喝他们的＿＿。
 长假 | cháng jià | long holiday | 很多天的假期 | 这次放＿＿，我们要去旅行。
 礼服 | lǐ fú | formal dress | 在重要的场合穿的衣服 | 参加婚礼要穿＿＿。

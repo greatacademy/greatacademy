@@ -44,16 +44,16 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
 弹幕 | dàn mù | bullet comments | 看视频时在画面上飞过的评论 | 看视频的时候，屏幕上飞过很多＿＿。
 热搜 | rè sōu | trending searches | 网上搜索最多的话题 | 这件事一下子上了＿＿，很多人都看到了。
 博主 | bó zhǔ | blogger | 在网上发文章、视频的人 | 这位美食＿＿每周发一个做菜的视频。
-点评 | diǎn píng | to comment on | 评论，指出好的和不好的地方 | 老师逐一＿＿了每个同学的作文。
+点评 | diǎn píng | to comment on | 评论，指出好的和不好的地方 | 老师逐一＿＿了每个同学的作文。 | 议论
 争议 | zhēng yì | controversy | 不同意见的争论 | 这部电影的结局很有＿＿，有人喜欢，有人不喜欢。
 议论 | yì lùn | to talk about | 对人或事说出自己的看法 | 下课后，同学们都在＿＿新来的老师。
-吐槽 | tǔ cáo | to rant | 说出不满，开玩笑地批评 | 他在网上＿＿这家饭馆的服务太差。
+吐槽 | tǔ cáo | to rant | 说出不满，开玩笑地批评 | 他在网上＿＿这家饭馆的服务太差。 | 议论
 `,
   },
   {
     theme: ["Sources and Facts", "来源和事实"],
     data: `
-真相 | zhēn xiàng | the truth | 事情真实的情况 | 经过调查，事情的＿＿终于清楚了。
+真相 | zhēn xiàng | the truth | 事情真实的情况 | 经过调查，事情的＿＿终于清楚了。 | 内幕
 核实 | hé shí | to verify | 审查，看是不是真的 | 记者发新闻前，一定要先＿＿消息是否准确。
 当事人 | dāng shì rén | person involved | 跟事情直接有关的人 | 记者采访了这件事的＿＿，听他自己怎么说。
 目击者 | mù jī zhě | eyewitness | 亲眼看到事情发生的人 | 警察找到了一位＿＿，他亲眼看到了整个过程。
@@ -83,10 +83,10 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
   {
     theme: ["Exposing and Clarifying", "揭露和澄清"],
     data: `
-澄清 | chéng qīng | to clarify | 把不清楚或错误的说法说清楚 | 关于这个误会，他发表文章作了＿＿。
+澄清 | chéng qīng | to clarify | 把不清楚或错误的说法说清楚 | 关于这个误会，他发表文章作了＿＿。 | 声明
 曝光 | bào guāng | to expose | 把隐藏的事公开出来 | 这家工厂偷偷往河里排污水，被记者＿＿了。 | 揭露
 揭露 | jiē lù | to expose; to unmask | 让隐藏的事显露出来 | 这本书＿＿了当时社会的很多问题。 | 曝光
-披露 | pī lù | to disclose | 公开发表 | 公司在年度报告里＿＿了去年的收入。
+披露 | pī lù | to disclose | 公开发表 | 公司在年度报告里＿＿了去年的收入。 | 透露
 透露 | tòu lù | to let out (news) | 把消息稍微说出来 | 他不愿意＿＿新电影的结局。 | 揭晓
 揭晓 | jiē xiǎo | to announce (results) | 公布结果 | 比赛的结果明天＿＿。
 声明 | shēng míng | statement; to declare | 公开表明态度或说明情况的文字 | 公司发表了一份＿＿，说网上的消息不是真的。
@@ -118,7 +118,7 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
 质疑 | zhì yí | to question | 提出疑问 | 有科学家＿＿这个研究的结论。
 辨别 | biàn bié | to tell apart | 根据特点分清 | 小孩子还不太会＿＿好人和坏人。
 片面 | piàn miàn | one-sided | 只看到一个方面的 | 只听一个人的话，了解的情况很＿＿。
-夸大 | kuā dà | to exaggerate | 说得比实际大 | 广告常常＿＿产品的效果。
+夸大 | kuā dà | to exaggerate | 说得比实际大 | 广告常常＿＿产品的效果。 | 夸张
 夸张 | kuā zhāng | exaggerated | 说得过分，超过实际 | 他说自己一次能吃十碗饭，这也太＿＿了。
 证实 | zhèng shí | to confirm | 证明是真的 | 这个消息已经被医院＿＿了。
 中立 | zhōng lì | neutral | 不站在哪一边 | 记者在报道时要保持＿＿，不能偏向哪一方。
@@ -159,7 +159,7 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
   {
     theme: ["Banks and Payments", "银行和付款"],
     data: `
-取款 | qǔ kuǎn | to withdraw money | 从银行拿出钱来 | 他去银行＿＿，准备给房东交房租。
+取款 | qǔ kuǎn | to withdraw money | 从银行拿出钱来 | 他去银行＿＿，准备给房东交房租。 | 转账
 取款机 | qǔ kuǎn jī | cash machine | 自动取钱的机器 | 银行门口有一台＿＿，晚上也能取钱。
 转账 | zhuǎn zhàng | to transfer money | 把钱从一个账户转到另一个账户 | 我用手机给他＿＿了两百块。
 手续费 | shǒu xù fèi | service fee | 办事时要交的钱 | 往国外汇钱要交一点＿＿。
@@ -227,7 +227,7 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
 外币 | wài bì | foreign currency | 外国的钱 | 这家银行可以兑换十几种＿＿。
 富裕 | fù yù | well-off | 钱财多，生活好 | 经过多年的努力，这里的农民生活越来越＿＿了。
 欧元 | ōu yuán | euro | 欧洲很多国家用的钱 | 法国和德国都用＿＿。
-日元 | rì yuán | Japanese yen | 日本的钱 | 去日本旅行以前，他换了一些＿＿。
+日元 | rì yuán | Japanese yen | 日本的钱 | 去日本旅行以前，他换了一些＿＿。 | 外币
 膨胀 | péng zhàng | to expand | 体积变大 | 很多东西受热以后会＿＿。
 `,
   },
@@ -289,7 +289,7 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
 共同语言 | gòng tóng yǔ yán | common ground | 相同的兴趣和想法 | 我们都喜欢足球，很有＿＿。
 结识 | jié shí | to get to know | 跟人认识并开始来往 | 在夏令营里，他＿＿了很多新朋友。
 义气 | yì qi | loyalty to friends | 为了朋友愿意承担风险的感情 | 他很讲＿＿，朋友有困难他一定帮忙。
-亲密 | qīn mì | close; intimate | 关系非常近 | 她们俩是＿＿的朋友，常常一起上学。
+亲密 | qīn mì | close; intimate | 关系非常近 | 她们俩是＿＿的朋友，常常一起上学。 | 志同道合
 `,
   },
   {
@@ -344,7 +344,7 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
 闹别扭 | nào biè niu | to be at odds | 因为不满意而互相不理 | 小明和弟弟为了一个玩具＿＿，整个下午都不说话。 | 闹矛盾
 指责 | zhǐ zé | to blame | 指出错误并批评 | 出了问题，大家不应该互相＿＿，而应该一起想办法。 | 埋怨
 埋怨 | mán yuàn | to grumble | 因为不满而怪别人 | 他总是＿＿天气不好，从来不想自己的原因。 | 指责
-欺负 | qī fu | to bully | 仗着力量强去伤害、看不起别人 | 大孩子不能＿＿小孩子。
+欺负 | qī fu | to bully | 仗着力量强去伤害、看不起别人 | 大孩子不能＿＿小孩子。 | 排挤
 排挤 | pái jǐ | to push out | 用办法让别人不能留在某个集体里 | 他在新班级里被几个同学＿＿，心里很难过。 | 孤立
 孤立 | gū lì | to isolate | 让别人没有朋友、得不到帮助 | 不要因为别人和你不一样就＿＿他。 | 排挤
 冷淡 | lěng dàn | cold; indifferent | 不热情 | 吵架以后，她对我的态度变得很＿＿。
@@ -355,10 +355,10 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
   {
     theme: ["Hurt Feelings", "受伤的感受"],
     data: `
-委屈 | wěi qu | to feel wronged | 受到不公平的对待而难过 | 他没有做错事却被批评了，觉得很＿＿。
+委屈 | wěi qu | to feel wronged | 受到不公平的对待而难过 | 他没有做错事却被批评了，觉得很＿＿。 | 难为情
 嫉妒 | jí dù | to be jealous | 看到别人比自己好就不舒服 | 看到朋友考了第一名，他心里有点儿＿＿。
 怨恨 | yuàn hèn | resentment | 对人强烈的不满 | 过了这么多年，他心里对那件事已经没有＿＿了。
-嘲笑 | cháo xiào | to laugh at | 用话笑别人 | 别人说错了话，我们不应该＿＿他。
+嘲笑 | cháo xiào | to laugh at | 用话笑别人 | 别人说错了话，我们不应该＿＿他。 | 冷嘲热讽
 冷嘲热讽 | lěng cháo rè fěng | sarcasm | 用冷冷的、带刺的话笑话人 | 他不但不帮忙，还在一边＿＿。
 难为情 | nán wéi qíng | embarrassed | 不好意思 | 在大家面前唱歌，她觉得很＿＿。
 抱怨 | bào yuàn | to complain | 心里不满，说出来 | 他总是＿＿工作太累，工资太低。
@@ -372,9 +372,9 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
     data: `
 和解 | hé jiě | to reconcile | 不再争吵，关系恢复 | 经过朋友的帮助，两家人终于＿＿了。 | 和好如初
 和好如初 | hé hǎo rú chū | to be friends again | 关系又像原来一样好 | 他们吵过一次架，后来很快就＿＿了。 | 和解
-化解 | huà jiě | to defuse | 消除 | 一句真诚的道歉，＿＿了两个人之间的矛盾。
+化解 | huà jiě | to defuse | 消除 | 一句真诚的道歉，＿＿了两个人之间的矛盾。 | 调解
 调解 | tiáo jiě | to mediate | 劝说争吵的双方，让他们和好 | 邻居之间发生了矛盾，居委会派人来＿＿。
-劝架 | quàn jià | to break up a quarrel | 劝吵架的人不要吵 | 看到两个同学吵起来，班长马上过来＿＿。
+劝架 | quàn jià | to break up a quarrel | 劝吵架的人不要吵 | 看到两个同学吵起来，班长马上过来＿＿。 | 调解
 握手言和 | wò shǒu yán hé | to make peace | 握手，表示不再争吵 | 比赛结束后，两个队员＿＿，成了好朋友。
 赔礼道歉 | péi lǐ dào qiàn | to apologize formally | 向别人认错并表示歉意 | 他打破了邻居家的窗户，主动上门＿＿。
 认错 | rèn cuò | to admit a mistake | 说自己错了 | 他知道自己错了，主动向老师＿＿。 | 赔礼道歉
@@ -461,7 +461,7 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
   {
     theme: ["Rehearsal and the Stage", "排练和舞台"],
     data: `
-排练 | pái liàn | to rehearse | 演出前反复练习 | 为了这场演出，他们＿＿了三个月。
+排练 | pái liàn | to rehearse | 演出前反复练习 | 为了这场演出，他们＿＿了三个月。 | 彩排
 彩排 | cǎi pái | dress rehearsal | 正式演出前化好妆、穿上服装的最后一次练习 | 正式演出前一天，演员们穿上服装进行了＿＿。
 谢幕 | xiè mù | to take a curtain call | 演出结束后演员出来向观众行礼 | 演出结束了，演员们走到台前＿＿，观众热情地鼓掌。
 后台 | hòu tái | backstage | 舞台后面的地方 | 上场前，演员们在＿＿化妆。
@@ -476,9 +476,9 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
   {
     theme: ["Roles and Make-up", "角色和化妆"],
     data: `
-配角 | pèi jué | supporting role | 戏里不是最重要的角色 | 他在这部电影里演一个＿＿，只出现了五分钟。
+配角 | pèi jué | supporting role | 戏里不是最重要的角色 | 他在这部电影里演一个＿＿，只出现了五分钟。 | 反派
 扮演 | bàn yǎn | to play (a role) | 在戏里演某个人物 | 她在这部电影里＿＿一位老师。
-化妆 | huà zhuāng | to put on make-up | 用颜色、粉等让脸更好看或变样子 | 演员上台前要先＿＿。
+化妆 | huà zhuāng | to put on make-up | 用颜色、粉等让脸更好看或变样子 | 演员上台前要先＿＿。 | 打扮
 化妆师 | huà zhuāng shī | make-up artist | 专门给人化妆的人 | ＿＿只用了半个小时，就把年轻演员变成了一位老人。
 打扮 | dǎ ban | to dress up | 让外表更好看 | 参加晚会以前，她把自己＿＿得很漂亮。
 装扮 | zhuāng bàn | to disguise oneself as | 化妆成另一个人的样子 | 他＿＿成一位老爷爷，谁也没认出他来。 | 打扮
@@ -690,7 +690,7 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
     data: `
 论点 | lùn diǎn | thesis; point | 文章或发言里要证明的看法 | 这篇文章的＿＿很清楚：读书能让人进步。
 论据 | lùn jù | supporting evidence | 用来证明看法的事实和道理 | 你的看法很好，但是＿＿不够，需要更多的事实来支持。 | 依据
-论证 | lùn zhèng | to argue (a point) | 用事实和道理证明一个看法 | 他用三个例子＿＿了自己的观点。
+论证 | lùn zhèng | to argue (a point) | 用事实和道理证明一个看法 | 他用三个例子＿＿了自己的观点。 | 论述
 前提 | qián tí | premise; precondition | 事情发生或推理先要有的条件 | 身体健康是做好一切工作的＿＿。
 推论 | tuī lùn | inference | 从知道的道理推出来的结论 | 从这些数据得出的＿＿是：多运动的人睡得更好。
 依据 | yī jù | basis | 作为根据的事实或道理 | 法官判案要以法律为＿＿。 | 论据
@@ -749,13 +749,13 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
     theme: ["Guessing and Pondering", "猜想和琢磨"],
     data: `
 料想 | liào xiǎng | to expect | 事先估计 | 谁也没有＿＿到，比赛的结果会是这样。
-猜测 | cāi cè | to guess | 根据不清楚的线索去想 | 大家都在＿＿新来的老师是什么样的人。
+猜测 | cāi cè | to guess | 根据不清楚的线索去想 | 大家都在＿＿新来的老师是什么样的人。 | 猜想
 猜想 | cāi xiǎng | conjecture | 还没有被证明的想法 | 这个数学＿＿提出了两百多年，到现在还没有人能证明。
 猜谜 | cāi mí | to guess riddles | 猜别人出的谜语 | 元宵节晚上，大家一边看灯一边＿＿。
 斟酌 | zhēn zhuó | to weigh one's words | 仔细考虑后决定 | 这封信很重要，每个词他都反复＿＿。 | 琢磨
 琢磨 | zuó mo | to ponder | 反复思考 | 这道题他＿＿了一个晚上，终于想出来了。
 权衡 | quán héng | to weigh up | 比较好处和坏处 | 他＿＿了两份工作的好处和坏处，最后选择了第一份。
-深思熟虑 | shēn sī shú lǜ | careful consideration | 很深很仔细地考虑 | 经过＿＿，他决定出国留学。
+深思熟虑 | shēn sī shú lǜ | careful consideration | 很深很仔细地考虑 | 经过＿＿，他决定出国留学。 | 三思而后行
 三思而后行 | sān sī ér hòu xíng | to think twice before acting | 考虑好了再去做 | 做重要的决定以前，最好＿＿。
 想当然 | xiǎng dāng rán | to take for granted | 不调查，凭自己的想法就认为是这样 | 做事不能＿＿，要先了解实际情况。
 `,
@@ -808,7 +808,7 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
   {
     theme: ["Linking an Argument", "连接论证"],
     data: `
-由此可见 | yóu cǐ kě jiàn | thus it can be seen | 从这里可以看出 | 他每天都练习，从来不休息。＿＿，他的成功不是因为运气好。
+由此可见 | yóu cǐ kě jiàn | thus it can be seen | 从这里可以看出 | 他每天都练习，从来不休息。＿＿，他的成功不是因为运气好。 | 综上所述
 综上所述 | zōng shàng suǒ shù | to sum up | 总结上面说的 | ＿＿，我认为学生应该多参加体育运动。
 从而 | cóng ér | thereby | 因此就 | 他改进了学习方法，＿＿提高了成绩。 | 进而
 进而 | jìn ér | and then; further | 在这个基础上进一步 | 先学好拼音，＿＿学习汉字。 | 从而

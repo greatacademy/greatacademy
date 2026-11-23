@@ -4,7 +4,7 @@
 // traditional characters. Every sentence is written for this subject.
 
 import { type Text, type TopicDef, t } from "@ga/content";
-import { joinPinyin, zhQuote } from "@ga/subject-chinese";
+import { joinPinyin, spokenSyllables, zhQuote } from "@ga/subject-chinese";
 
 import { simplifying } from "../characters/traditional.ts";
 import { type DrillItem, drillItem, drillTopic, lines } from "../grammar/drill.ts";
@@ -312,8 +312,8 @@ interface SpokenItem extends DrillItem {
 /** spokenItems reads lines of `pinyin | meaning in Chinese | in English | right | wrong | wrong | wrong | note in Chinese | in English`. */
 const spokenItems = (data: string, pinyin: (text: string, syllables: readonly string[]) => string): readonly SpokenItem[] =>
   lines(data, 9).map(([py, zh, en, right, a, b, c, nz, ne]) => {
-    const syllables = py!.split(" ");
-    if (syllables.length !== [...right!].length) throw new Error(`heritage: the pinyin of ${right}`);
+    if (py!.split(" ").length !== [...right!].length) throw new Error(`heritage: the pinyin of ${right}`);
+    const syllables = spokenSyllables(right!, py!.split(" "));
     for (const w of [a!, b!, c!]) for (const [i, ch] of [...w].entries()) if (ch !== [...right!][i]) glossOf(MISWRITTEN, ch, right!);
     return {
       ...drillItem(`${pinyin(right!, syllables)}（${zh}）`, right!, [a!, b!, c!]),
@@ -344,17 +344,17 @@ zhǔn bèi | 预先安排 | to prepare | 准备 | 准被 | 准背 | 谁备 | “
 const setPhrases = spokenItems(
   `
 luàn qī bā zāo | 又乱又没有条理 | in a mess | 乱七八糟 | 乱七八遭 | 乱七八早 | 乱漆八糟 | “七”“八”是数目字，表示杂乱；“糟”是糟糕的“糟” | 七 and 八 are numbers that mean a jumble, and 糟 is the 糟 of 糟糕, bad
-yī mú yī yàng | 完全相同 | exactly alike | 一模一样 | 一摸一样 | 一模一洋 | 一谟一样 | “模”是模样、模子的“模”，不是用手摸的“摸” | 模 is the 模 of a mould or a look, not 摸 of touching
+yì mú yí yàng | 完全相同 | exactly alike | 一模一样 | 一摸一样 | 一模一洋 | 一谟一样 | “模”是模样、模子的“模”，不是用手摸的“摸” | 模 is the 模 of a mould or a look, not 摸 of touching
 pò bù jí dài | 急得不能再等 | unable to wait | 迫不及待 | 迫不急待 | 破不及待 | 迫不及代 | “及”是来得及的“及”，“待”是等待的“待” | 及 is the 及 of in time, 待 the 待 of waiting
 zài jiē zài lì | 一次又一次加倍努力 | to keep up the effort | 再接再厉 | 再接再励 | 在接再厉 | 再接在厉 | “再”是又一次；“厉”同“砺”，是把刀磨快 | 再 is again, and 厉, the same as 砺, is to whet a blade
-yī gǔ zuò qì | 趁着劲头一下子做完 | in one burst of effort | 一鼓作气 | 一股作气 | 一鼓做气 | 一古作气 | “鼓”是打仗时击鼓，“作”是振作，一击鼓就振作起士气 | 鼓 is the war drum, 作 is to rouse: at the first drum the troops are roused
+yì gǔ zuò qì | 趁着劲头一下子做完 | in one burst of effort | 一鼓作气 | 一股作气 | 一鼓做气 | 一古作气 | “鼓”是打仗时击鼓，“作”是振作，一击鼓就振作起士气 | 鼓 is the war drum, 作 is to rouse: at the first drum the troops are roused
 zǒu tóu wú lù | 无路可走 | at the end of one's tether | 走投无路 | 走头无路 | 走投无陆 | 奏投无路 | “投”是投奔，无处投奔、无路可走 | 投 is to seek refuge: nowhere to go, no road to take
 zì shǐ zhì zhōng | 从开头到结尾 | from start to finish | 自始至终 | 自使至终 | 自始自终 | 子始至终 | “自”是从，“始”是开始，“至”是到 | 自 is from, 始 the start, 至 to
 bù zhī bù jué | 没有察觉到 | without noticing | 不知不觉 | 不知不决 | 不只不觉 | 不知不角 | “觉”是察觉的“觉”，“知”是知道的“知” | 觉 is the 觉 of noticing, 知 that of knowing
 qī shàng bā xià | 心里慌乱不安 | on tenterhooks | 七上八下 | 七上八夏 | 起上八下 | 七尚八下 | “上”“下”是方向，心里像东西上上下下不安定 | 上 and 下 are up and down: a heart going up and down
 jīn jīn yǒu wèi | 吃得或听得很有滋味 | with relish | 津津有味 | 津津有未 | 斤斤有味 | 津津有昧 | “味”是滋味的“味”，“津津”是很有兴味的样子 | 味 is the 味 of taste, and 津津 is relishing it
 shǒu zhū dài tù | 死守经验，不知变通 | waiting for windfalls | 守株待兔 | 守珠待兔 | 守株代兔 | 手株待兔 | “守”是守着，“株”是露出地面的树桩，“待”是等待 | 守 is to keep watch, 株 a tree stump, 待 to wait
-yī jǔ liǎng dé | 做一件事得到两种好处 | two birds with one stone | 一举两得 | 一举两的 | 一句两得 | 一举俩得 | “举”是举动，“两”是两种，“得”是得到 | 举 is a deed, 两 two, 得 to gain
+yì jǔ liǎng dé | 做一件事得到两种好处 | two birds with one stone | 一举两得 | 一举两的 | 一句两得 | 一举俩得 | “举”是举动，“两”是两种，“得”是得到 | 举 is a deed, 两 two, 得 to gain
 `,
   idiomPinyin,
 );

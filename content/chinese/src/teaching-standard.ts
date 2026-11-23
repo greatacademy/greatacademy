@@ -3,7 +3,7 @@
 // beside this file holds every listed topic to it.
 
 /** taughtStrands lists the strands whose every topic is written to the teaching standard. */
-export const taughtStrands: readonly string[] = ["recitation", "classical", "pinyin", "grammar", "characters"];
+export const taughtStrands: readonly string[] = ["recitation", "classical", "pinyin", "grammar", "characters", "words"];
 
 /**
  * taughtTopics lists further topics written to the standard while their strand is still being rewritten; once the
@@ -68,7 +68,6 @@ export const taughtTopics: readonly string[] = [
   "speaking-5-key-points",
   "speaking-5-tone",
   "speaking-5-civil-language",
-  "language-6-word-formation",
   "reading-6-fiction",
   "reading-6-prose",
   "reading-6-argument",

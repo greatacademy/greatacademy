@@ -355,8 +355,8 @@ function buildUnitSpeakingTopic(spec: UnitSpeechSpec): TopicDef {
         `${id}-words`,
         t("Saying Words", "说词语"),
         t(
-          "Listen to the recording, then say the word at the same pace, each syllable in its tone. Where two third tones meet, or before 一 and 不 change, copy the recording rather than the written tones.",
-          "先听录音，再用同样的速度说出这个词，每个音节读准声调。两个第三声相连，或者“一”“不”变调的地方，照录音说，不要照着拼音的原调说。",
+          "Listen to the recording, then say the word at the same pace, each syllable in its tone. 一 and 不 are written in the tone they are said in; where two third tones meet, the first is written as a third tone but said in the second, so copy the recording rather than the written tones.",
+          "先听录音，再用同样的速度说出这个词，每个音节读准声调。“一”“不”的拼音按实际读的变调标写；两个第三声相连时，前一个仍标第三声，却要读第二声，这里照录音说，不要照着拼音的原调说。",
         ),
         fromBank(sayWord),
       ),

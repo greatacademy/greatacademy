@@ -739,8 +739,12 @@ const saidInBrackets = (shown: string): Text => {
   return m ? t(`${m[1]} (said ${m[2]})`, shown) : t(shown, shown);
 };
 
-/** shownWord is how a word of 一 or 不 is shown. */
-const shownWord = (w: Changing): string => `${w.word}（${w.pinyin}）`;
+/** shownWord is how a word of 一 or 不 is shown: its pinyin with 一 or 不 left without a tone mark, the tone being asked. */
+const shownWord = (w: Changing): string =>
+  `${w.word}（${w.pinyin
+    .split(" ")
+    .map((x, i) => (i === w.at ? (parseSyllable(x)?.plain ?? x) : x))
+    .join(" ")}）`;
 
 /** saidAs builds the items that ask how 一 or 不 is said in a word, its four tones the options. */
 const saidAs = (words: readonly Changing[], plain: string): readonly (readonly [string, string, readonly [string, string, string]])[] =>
@@ -756,7 +760,7 @@ const nextTone = (w: Changing): number | undefined => {
   return next === undefined ? undefined : parseSyllable(next)?.tone;
 };
 
-/** saidWord writes a word of 一 or 不 as it is said. */
+/** saidWord writes a word of 一 or 不 as it is said, which is also how pinyin writes it. */
 const saidWord = (w: Changing, plain: string): string =>
   w.pinyin
     .split(" ")
@@ -771,7 +775,7 @@ const another = (w: Changing, words: readonly Changing[]): Changing =>
 /** changeWhy works how 一 or 不 is said in a word: the tone after it, then the rule. */
 function changeWhy(char: string, plain: string, words: readonly Changing[]) {
   const byShown = new Map(words.map((w) => [shownWord(w), w]));
-  const written = mark(plain, char === "一" ? 1 : 4);
+  const own = mark(plain, char === "一" ? 1 : 4);
   return (right: string, shown: string): Text => {
     const w = byShown.get(shown)!;
     const next = nextTone(w);
@@ -799,8 +803,8 @@ function changeWhy(char: string, plain: string, words: readonly Changing[]) {
               )
             : t(`Before a tone other than the fourth, 不 keeps its own tone: ${right}.`, `在第四声以外的声调前，“不”读原调：${right}。`);
     return t(
-      `${step1.en}\n\n**Step 2: apply the rule.** ${rule.en} ${right === written ? "Here the writing and the speaking agree." : `Pinyin still writes ${written}.`}\n\n**Check.** Another word with ${char} in the same place, ${other.word}, is said ${saidWord(other, plain)} the same way.`,
-      `${step1["zh-CN"]}\n\n**第二步：用规则。**${rule["zh-CN"]}${right === written ? "这里写法和读法一样。" : `拼音仍写 ${written}。`}\n\n**检验。** 同样情况的另一个词“${other.word}”，也读作 ${saidWord(other, plain)}。`,
+      `${step1.en}\n\n**Step 2: apply the rule.** ${rule.en} ${right === own ? `Here ${char} keeps its own tone.` : `Pinyin marks the tone it is said in, so the word is written ${saidWord(w, plain)}.`}\n\n**Check.** Another word with ${char} in the same place, ${other.word}, is said ${saidWord(other, plain)} the same way.`,
+      `${step1["zh-CN"]}\n\n**第二步：用规则。**${rule["zh-CN"]}${right === own ? `这里“${char}”读原调。` : `拼音按实际读音标调，这个词写作 ${saidWord(w, plain)}。`}\n\n**检验。** 同样情况的另一个词“${other.word}”，也读作 ${saidWord(other, plain)}。`,
     );
   };
 }
@@ -827,8 +831,8 @@ function changeWhyNot(char: string, plain: string, words: readonly Changing[]) {
     }
     if (tone === own)
       return t(
-        `${wrong} is how ${char} is written, and said ${char === "一" ? "alone or at the end of a word" : "before tones other than the fourth"}; here ${where.en}, so it changes.`,
-        `${wrong} 是“${char}”的写法，${char === "一" ? "单念或在词尾" : "在第四声以外的声调前"}才这样读；这里${where["zh-CN"]}，要变调。`,
+        `${wrong} is the own tone of ${char}, said and written only ${char === "一" ? "alone or at the end of a word" : "before tones other than the fourth"}; here ${where.en}, so it changes.`,
+        `${wrong} 是“${char}”的原调，${char === "一" ? "单念或在词尾" : "在第四声以外的声调前"}才这样读、这样标；这里${where["zh-CN"]}，要变调。`,
       );
     if (tone === 2)
       return t(`${wrong} is said only before a fourth tone; here ${where.en}.`, `${wrong} 只在第四声前才读；这里${where["zh-CN"]}。`);
@@ -843,12 +847,12 @@ const pinyinYiBu: TopicDef = {
   id: "pinyin-yi-and-bu",
   title: t("The Tones of 一 and 不", "“一”和“不”的变调"),
   summary: t(
-    "How 一 and 不 are said before other tones, while their written tones stay.",
-    "“一”和“不”在不同声调前的读法，书写时仍标原调。",
+    "How 一 and 不 are said before other tones, and written in the tone they are said in.",
+    "“一”和“不”在不同声调前的读法，拼音按实际读的变调标写。",
   ),
   intro: t(
-    "一 and 不 change their tone in speech, but pinyin writes their own tones, yī and bù. What they change to depends on the tone of the syllable after them. 一天 is written yī tiān: tiān is the first tone, so 一 is said yì, yìtiān. 不是 is written bù shì: shì is the fourth tone, so 不 is said bú, búshì.\n\nThe first knowledge point says 一 in a word, the second says 不.",
-    "“一”和“不”在说话时会变调，但拼音仍写它们原来的声调 yī 和 bù。变成什么，要看后面那个音节的声调。“一天”写作 yī tiān，tiān 是第一声，“一”读 yì：yìtiān。“不是”写作 bù shì，shì 是第四声，“不”读 bú：búshì。\n\n第一个知识点读词里的“一”，第二个读词里的“不”。",
+    "一 and 不 change their tone in speech, and pinyin marks the tone they are said in, as school textbooks and the HSK lists do; alone they are yī and bù. What they change to depends on the tone of the syllable after them. In 一天, tiān is the first tone, so 一 is said yì and the word is written yì tiān. In 不是, shì is the fourth tone, so 不 is said bú and the word is written bú shì.\n\nThe first knowledge point says 一 in a word, the second says 不.",
+    "“一”和“不”在说话时会变调，拼音按实际读的变调标写，和小学语文课本、HSK 词表一样；单念时是 yī 和 bù。变成什么，要看后面那个音节的声调。“一天”的 tiān 是第一声，“一”读 yì，写作 yì tiān。“不是”的 shì 是第四声，“不”读 bú，写作 bú shì。\n\n第一个知识点读词里的“一”，第二个读词里的“不”。",
   ),
   prerequisites: ["pinyin-tones"],
   encompasses: [],
@@ -859,11 +863,11 @@ const pinyinYiBu: TopicDef = {
       "pinyin-yi-and-bu-yi",
       t("Saying 一", "“一”的读法"),
       t(
-        "Look at the syllable after 一. Before a fourth tone 一 is said yí; before the first, second and third tones it is said yì. Alone, in counting, at the end of a word or as an ordinal it keeps yī.\n\nIn 一定 yī dìng, dìng is the fourth tone, so 一 is said yí: yídìng.\n\n> **Watch out.** 一 at the end of a word keeps yī, even after a fourth tone: 第一 is said dì yī. What decides is the syllable after 一, not the one before it.",
-        "看“一”后面的音节。在第四声前，“一”读 yí；在第一、二、三声前读 yì。单念、数数、在词尾或表示序数时读 yī。\n\n比如“一定”yī dìng，dìng 是第四声，“一”读 yí：yídìng。\n\n> **注意。** 在词尾的“一”读 yī，即使前面是第四声：“第一”读 dì yī。决定读法的是“一”后面的音节，不是前面的。",
+        "Look at the syllable after 一. Before a fourth tone 一 is said yí; before the first, second and third tones it is said yì. Alone, in counting, at the end of a word or as an ordinal it keeps yī.\n\nIn 一定, dìng is the fourth tone, so 一 is said yí, and the word is written yí dìng.\n\n> **Watch out.** 一 at the end of a word keeps yī, even after a fourth tone: 第一 is said dì yī. What decides is the syllable after 一, not the one before it.",
+        "看“一”后面的音节。在第四声前，“一”读 yí；在第一、二、三声前读 yì。单念、数数、在词尾或表示序数时读 yī。\n\n比如“一定”，dìng 是第四声，“一”读 yí，写作 yí dìng。\n\n> **注意。** 在词尾的“一”读 yī，即使前面是第四声：“第一”读 dì yī。决定读法的是“一”后面的音节，不是前面的。",
       ),
       choiceGenerator(
-        t("How is 一 said in this word?", "这个词里的“一”读什么？"),
+        t("How is 一 said and written in this word?", "这个词里的“一”读什么、标什么调？"),
         rounds(spread(saidAs(yiWords, "yi"), 5)),
         changeWhy("一", "yi", yiWords),
         changeWhyNot("一", "yi", yiWords),
@@ -874,11 +878,11 @@ const pinyinYiBu: TopicDef = {
       "pinyin-yi-and-bu-bu",
       t("Saying 不", "“不”的读法"),
       t(
-        "Look at the syllable after 不. Before a fourth tone 不 is said bú; before the other tones it keeps bù.\n\nIn 不是 bù shì, shì is the fourth tone, so 不 is said bú: búshì.\n\n> **Watch out.** 不 changes only before a fourth tone. 不好 bù hǎo and 不来 bù lái keep bù, however quickly they are said.",
-        "看“不”后面的音节。在第四声前，“不”读 bú；在其他声调前仍读 bù。\n\n比如“不是”bù shì，shì 是第四声，“不”读 bú：búshì。\n\n> **注意。** “不”只在第四声前变调。“不好”bù hǎo、“不来”bù lái 都读 bù，说得再快也不变。",
+        "Look at the syllable after 不. Before a fourth tone 不 is said bú; before the other tones it keeps bù.\n\nIn 不是, shì is the fourth tone, so 不 is said bú, and the word is written bú shì.\n\n> **Watch out.** 不 changes only before a fourth tone. 不好 bù hǎo and 不来 bù lái keep bù, however quickly they are said.",
+        "看“不”后面的音节。在第四声前，“不”读 bú；在其他声调前仍读 bù。\n\n比如“不是”，shì 是第四声，“不”读 bú，写作 bú shì。\n\n> **注意。** “不”只在第四声前变调。“不好”bù hǎo、“不来”bù lái 都读 bù，说得再快也不变。",
       ),
       choiceGenerator(
-        t("How is 不 said in this word?", "这个词里的“不”读什么？"),
+        t("How is 不 said and written in this word?", "这个词里的“不”读什么、标什么调？"),
         rounds(spread(saidAs(buWords, "bu"), 5)),
         changeWhy("不", "bu", buWords),
         changeWhyNot("不", "bu", buWords),
@@ -945,8 +949,8 @@ function thirdWhyNot(wrong: string, w: Third, writing: boolean): Text {
     );
   if (writing)
     return t(
-      `${wrong} writes the tone that is said; pinyin writes the tone of each character, and ${w.word.charAt(0)} alone is ${first}.`,
-      `${wrong} 写的是实际读音；拼音标每个字原来的声调，“${w.word.charAt(0)}”单念是 ${first}。`,
+      `${wrong} writes the tone that is said; for two third tones pinyin writes the tone of each character alone, and ${w.word.charAt(0)} alone is ${first}.`,
+      `${wrong} 写的是实际读音；两个第三声相连时，拼音标每个字原来的声调，“${w.word.charAt(0)}”单念是 ${first}。`,
     );
   return t(
     `${wrong} is how the word is written; said, the first of the two third tones rises to the second.`,
@@ -962,8 +966,8 @@ const pinyinThirdTones: TopicDef = {
     "两个第三声相连时前一个读第二声，书写时仍标第三声。",
   ),
   intro: t(
-    "When two third tones come together, the first is said in the second tone. 水果 is written shuǐ guǒ, both third tones; said, shuǐ rises to shuí, and the word is shuí guǒ. Only the speaking changes: pinyin still writes both third tones, the tone each character has alone.\n\nThe first knowledge point says such a word, the second writes it.",
-    "两个第三声连在一起时，前一个读成第二声。“水果”写作 shuǐ guǒ，两个都是第三声；说的时候 shuǐ 读成 shuí，整个词读 shuí guǒ。变的只是读音，拼音仍然标两个第三声，也就是每个字单念时的声调。\n\n第一个知识点读这样的词，第二个写这样的词。",
+    "When two third tones come together, the first is said in the second tone. 水果 is written shuǐ guǒ, both third tones; said, shuǐ rises to shuí, and the word is shuí guǒ. Only the speaking changes: unlike 一 and 不, pinyin still writes both third tones, the tone each character has alone.\n\nThe first knowledge point says such a word, the second writes it.",
+    "两个第三声连在一起时，前一个读成第二声。“水果”写作 shuǐ guǒ，两个都是第三声；说的时候 shuǐ 读成 shuí，整个词读 shuí guǒ。变的只是读音；和“一”“不”不同，拼音仍然标两个第三声，也就是每个字单念时的声调。\n\n第一个知识点读这样的词，第二个写这样的词。",
   ),
   prerequisites: ["pinyin-tones"],
   encompasses: [],
@@ -1002,8 +1006,8 @@ const pinyinThirdTones: TopicDef = {
       "pinyin-third-tones-writing",
       t("Writing Them", "写法"),
       t(
-        "Pinyin writes the tone each character has alone, not the tone it is said in. A second tone heard before a third tone may be a third tone written.\n\n你好 is said ní hǎo. 你 alone is nǐ and 好 is hǎo, so the word is written nǐ hǎo.\n\n> **Watch out.** Do not write what you hear. ní hǎo is the speaking; the writing keeps both third tones: nǐ hǎo.",
-        "拼音标的是每个字单念时的声调，不是说话时的读音。第三声前面听到的第二声，写的时候可能是第三声。\n\n比如“你好”读作 ní hǎo。“你”单念是 nǐ，“好”是 hǎo，所以写作 nǐ hǎo。\n\n> **注意。** 不要听到什么就写什么。ní hǎo 是读音，写的时候要标两个第三声：nǐ hǎo。",
+        "Where two third tones meet, pinyin writes the tone each character has alone, not the tone it is said in; only 一 and 不 are written as said. A second tone heard before a third tone may be a third tone written.\n\n你好 is said ní hǎo. 你 alone is nǐ and 好 is hǎo, so the word is written nǐ hǎo.\n\n> **Watch out.** Do not write what you hear. ní hǎo is the speaking; the writing keeps both third tones: nǐ hǎo.",
+        "两个第三声相连时，拼音标的是每个字单念时的声调，不是说话时的读音；只有“一”“不”按实际读音标。第三声前面听到的第二声，写的时候可能是第三声。\n\n比如“你好”读作 ní hǎo。“你”单念是 nǐ，“好”是 hǎo，所以写作 nǐ hǎo。\n\n> **注意。** 不要听到什么就写什么。ní hǎo 是读音，写的时候要标两个第三声：nǐ hǎo。",
       ),
       choiceGenerator(
         t("How is this word written in pinyin?", "这个词的拼音应该怎样写？"),
@@ -1018,8 +1022,8 @@ const pinyinThirdTones: TopicDef = {
           const [first, second] = w.pinyin.split(" ");
           const [a, b] = [...w.word];
           return t(
-            `**Step 1: take each character alone.** ${a} alone is ${first} and ${b} alone is ${second}: both third tones.\n\n**Step 2: write their own tones.** Pinyin writes the tone of each character: ${right}.\n\n**Check.** Say ${right} by the rule: two third tones, the first rises to the second, which gives ${w.said}, the reading given.`,
-            `**第一步：一个字一个字地看。**“${a}”单念是 ${first}，“${b}”单念是 ${second}，都是第三声。\n\n**第二步：标原来的声调。**拼音标每个字原来的声调：${right}。\n\n**检验。** 按规则读 ${right}：两个第三声相连，前一个读第二声，得到 ${w.said}，和题目给的读音一样。`,
+            `**Step 1: take each character alone.** ${a} alone is ${first} and ${b} alone is ${second}: both third tones.\n\n**Step 2: write their own tones.** Third tones are written as each character is alone: ${right}.\n\n**Check.** Say ${right} by the rule: two third tones, the first rises to the second, which gives ${w.said}, the reading given.`,
+            `**第一步：一个字一个字地看。**“${a}”单念是 ${first}，“${b}”单念是 ${second}，都是第三声。\n\n**第二步：标原来的声调。**第三声变调不标，拼音标每个字原来的声调：${right}。\n\n**检验。** 按规则读 ${right}：两个第三声相连，前一个读第二声，得到 ${w.said}，和题目给的读音一样。`,
           );
         },
         (wrong, _right, shown) => thirdWhyNot(wrong, byWrittenShown.get(shown)!, true),
@@ -1029,9 +1033,9 @@ const pinyinThirdTones: TopicDef = {
   ],
 };
 
-/** changedAt says a word of 一 or 不 in the tone it takes in speech. */
+/** changedAt writes a word of 一 or 不 in the tone it takes in speech, which is also how pinyin writes it. */
 const changedAt = (words: readonly Changing[], plain: string): readonly SaidWord[] =>
-  words.map((w) => ({ word: w.word, pinyin: w.pinyin, said: saidWord(w, plain) }));
+  words.map((w) => ({ word: w.word, pinyin: saidWord(w, plain) }));
 
 /** pinyinSaying is the spoken topic: tone pairs, then the words whose tones change in speech. */
 const pinyinSaying: TopicDef = sayingTopic(

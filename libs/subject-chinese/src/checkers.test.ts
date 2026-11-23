@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { hanziChecker, pinyinChecker } from "./checkers.ts";
+import { pinyinSpellings } from "./pinyin.ts";
 
 describe("hanziChecker", () => {
   it("accepts the text whatever the width of its punctuation and its spacing", () => {
@@ -35,5 +36,15 @@ describe("pinyinChecker", () => {
     expect(tone.correct).toBe(false);
     expect(tone.feedback?.["zh-CN"]).toContain("声调");
     expect(pinyinChecker.check(["mǎ"], "mo3")).toEqual({ correct: false });
+  });
+
+  it("accepts 一 and 不 in the tone said or in their own tones, and no other", () => {
+    const expected = pinyinSpellings("一样", ["yí", "yàng"]);
+    expect(pinyinChecker.check(expected, "yi2yang4").correct).toBe(true);
+    expect(pinyinChecker.check(expected, "yīyàng").correct).toBe(true);
+    expect(pinyinChecker.check(expected, "yi4yang4").correct).toBe(false);
+    const polite = pinyinSpellings("不客气", ["bù", "kè", "qi"]);
+    expect(pinyinChecker.check(polite, "bu2 ke4 qi").correct).toBe(true);
+    expect(pinyinChecker.check(polite, "bu4 ke4 qi").correct).toBe(true);
   });
 });

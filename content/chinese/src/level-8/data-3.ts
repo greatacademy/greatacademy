@@ -239,7 +239,7 @@ export const wordBatches3: readonly LevelWordBatch[] = [
     data: `
 桅杆 | wéi gān | mast | 船上挂帆的长杆 | 船上的＿＿很高，上面挂着三面大帆。
 抛锚 | pāo máo | to drop anchor; to break down | 把锚扔进水里使船停住；车在半路坏了 | 汽车在半路上＿＿了，我们只好等人来修。
-起锚 | qǐ máo | to weigh anchor | 把锚拉上来，开船 | 天一亮，船长就下令＿＿出发。
+起锚 | qǐ máo | to weigh anchor | 把锚拉上来，开船 | 天一亮，船长就下令＿＿出发。 | 抛锚
 铁锚 | tiě máo | iron anchor | 铁做的锚 | 水手们把沉重的＿＿抛进了海里。
 宝船 | bǎo chuán | treasure ship | 明朝出使海外的船队里最大的船 | 明朝出使海外的船队里，最大的船叫＿＿。
 船队 | chuán duì | fleet | 一起航行的许多船 | 十几条渔船组成一支＿＿，一起出海捕鱼。
@@ -270,7 +270,7 @@ export const wordBatches3: readonly LevelWordBatch[] = [
 玉玺 | yù xǐ | imperial jade seal | 皇帝用的玉印 | 皇帝的命令上要盖上＿＿才算数。
 诏书 | zhào shū | imperial edict | 皇帝发布命令的文书 | 大臣们站在殿上，听人宣读皇帝的＿＿。
 下诏 | xià zhào | to issue an edict | 皇帝发布命令 | 那年发生了大水灾，皇帝＿＿减免灾区的赋税。
-即位 | jí wèi | to ascend the throne | 开始做皇帝或国王 | 他十六岁＿＿，做了五十多年的皇帝。
+即位 | jí wèi | to ascend the throne | 开始做皇帝或国王 | 他十六岁＿＿，做了五十多年的皇帝。 | 退位
 退位 | tuì wèi | to abdicate | 不再做皇帝或国王 | 一九一二年，清朝最后一位皇帝宣布＿＿。
 禅让 | shàn ràng | to cede the throne to the worthy | 把帝位让给有才德的人 | 传说上古的帝王不把位子传给儿子，而是＿＿给有才德的人。
 传位 | chuán wèi | to pass on the throne | 把帝位传给别人 | 老皇帝临终前，＿＿给了他的第三个儿子。
@@ -616,7 +616,7 @@ export const wordBatches3: readonly LevelWordBatch[] = [
     data: `
 平仄 | píng zè | level and oblique tones | 诗词里声调的平声和仄声 | 写律诗要讲究＿＿，让声调高低交替。
 仄声 | zè shēng | oblique tone | 古汉语中上声、去声和入声的总称 | 在古汉语里，上声、去声和入声都属于＿＿。
-平声 | píng shēng | level tone | 古汉语四声中的第一类 | 普通话的第一声和第二声，大多来自古代的＿＿。
+平声 | píng shēng | level tone | 古汉语四声中的第一类 | 普通话的第一声和第二声，大多来自古代的＿＿。 | 仄声
 近体诗 | jìn tǐ shī | regulated verse | 唐代形成的、讲究格律的诗 | 律诗和绝句都属于＿＿，对字数和平仄都有严格的要求。
 古体诗 | gǔ tǐ shī | ancient-style verse | 不太讲究格律的古代诗歌 | ＿＿的句数不固定，平仄也比较自由。
 五言 | wǔ yán | five characters a line | 每句五个字的诗 | 这首诗每句五个字，是一首＿＿诗。
@@ -724,7 +724,7 @@ export const wordBatches3: readonly LevelWordBatch[] = [
 蝶泳 | dié yǒng | butterfly stroke | 一种游泳的姿势 | 他最擅长的游泳项目是＿＿。
 蝉联 | chán lián | to retain a title | 连续保持 | 她在这项比赛中＿＿了三届冠军。
 知了 | zhī liǎo | cicada (in everyday speech) | 蝉的俗称 | 夏天的树上，＿＿不停地叫。
-晚霞 | wǎn xiá | sunset glow | 傍晚天空的彩云 | 太阳下山了，西边的天空布满了红色的＿＿。 | 彩霞
+晚霞 | wǎn xiá | sunset glow | 傍晚天空的彩云 | 太阳下山了，西边的天空布满了红色的＿＿。 | 彩霞 朝霞
 朝霞 | zhāo xiá | morning glow | 早上天空的彩云 | 早上，东方的天空出现了美丽的＿＿。 | 彩霞
 彩霞 | cǎi xiá | rosy clouds | 彩色的云 | 雨过天晴，天边出现了一片片＿＿。
 霞光 | xiá guāng | glow of clouds | 彩云发出的光 | 山顶上，＿＿照在云海上，美得像一幅画。
@@ -749,9 +749,9 @@ export const wordBatches3: readonly LevelWordBatch[] = [
   {
     theme: ["Poets and Their Lines", "诗人和诗句"],
     data: `
-诗仙 | shī xiān | the Immortal Poet | 后人对李白的称呼 | 李白被后人称为“＿＿”。
+诗仙 | shī xiān | the Immortal Poet | 后人对李白的称呼 | 李白被后人称为“＿＿”。 | 诗圣
 诗圣 | shī shèng | the Sage of Poetry | 后人对杜甫的称呼 | 杜甫被后人称为“＿＿”。
-婉约派 | wǎn yuē pài | the graceful school | 宋词中风格柔美的一派 | 李清照是＿＿的代表，她的词写得很柔美。
+婉约派 | wǎn yuē pài | the graceful school | 宋词中风格柔美的一派 | 李清照是＿＿的代表，她的词写得很柔美。 | 豪放派
 豪放派 | háo fàng pài | the bold school | 宋词中风格豪迈的一派 | 辛弃疾是＿＿的代表词人，他的词充满了爱国热情。
 千古绝唱 | qiān gǔ jué chàng | an unsurpassed masterpiece | 流传千年、没有人能超过的好作品 | 这首词被称为＿＿，到今天还有很多人会背。
 佳句 | jiā jù | fine line | 好的句子 | 这首诗里有很多＿＿，值得背下来。

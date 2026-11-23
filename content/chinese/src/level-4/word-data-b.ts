@@ -46,7 +46,7 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
 穷人 | qióng rén | the poor | 没有钱的人 | 这家医院给＿＿看病不要钱。
 贫富 | pín fù | rich and poor | 穷和有钱 | 这个城市的＿＿差别很大。
 资产 | zī chǎn | assets | 公司或个人有的钱和值钱的东西 | 这家公司的＿＿有几千万元。 | 财产 财富
-本钱 | běn qián | money to start a business | 做生意最开始用的钱 | 他想开一家小店，可是没有＿＿，只好先向朋友借。
+本钱 | běn qián | money to start a business | 做生意最开始用的钱 | 他想开一家小店，可是没有＿＿，只好先向朋友借。 | 资产
 财经 | cái jīng | finance and economics | 跟钱和经济有关的事 | 他每天晚上都看电视上的＿＿新闻。
 `,
   },
@@ -75,7 +75,7 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
 亏本 | kuī běn | to sell at a loss | 卖的钱比成本少 | 这些衣服卖这么便宜，商店不会＿＿吗？ | 亏损
 利润 | lì rùn | profit | 做生意赚到的钱 | 这些产品的＿＿很高。
 破产 | pò chǎn | to go bankrupt | 钱都赔光了，开不下去 | 这家公司亏了很多钱，最后＿＿了。
-涨价 | zhǎng jià | to go up in price | 价格变高 | 最近菜又＿＿了，比上个月贵了不少。
+涨价 | zhǎng jià | to go up in price | 价格变高 | 最近菜又＿＿了，比上个月贵了不少。 | 上涨
 上涨 | shàng zhǎng | to rise | 往高处走 | 今年房价＿＿了很多。 | 下跌
 下跌 | xià diē | to fall | 往下降 | 今天股票＿＿了，很多人亏了钱。 | 上涨
 `,
@@ -102,7 +102,7 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
 资金 | zī jīn | funds | 做事要用的钱 | 我们想开一家店，可是＿＿不够。 | 预算
 奖金 | jiǎng jīn | bonus | 工作做得好多得的钱 | 过年前，公司给每个人发了＿＿。
 金钱 | jīn qián | money | 钱 | 他认为健康比＿＿更重要。
-财务 | cái wù | finances | 单位里管钱的事 | 他在公司的＿＿部门工作，每天跟数字打交道。
+财务 | cái wù | finances | 单位里管钱的事 | 他在公司的＿＿部门工作，每天跟数字打交道。 | 会计
 会计 | kuài jì | accountant | 管账的人 | 公司的＿＿每个月都要算一次账。
 预算 | yù suàn | budget | 事先算好要花的钱 | 这次旅行的＿＿是五千元。 | 资金
 开支 | kāi zhī | spending | 花出去的钱 | 孩子上学以后，家里的＿＿大了很多。 | 收支
@@ -166,7 +166,7 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
 慌 | huāng | flustered | 心里很急，不知道怎么办 | 别＿＿，我们慢慢想办法。 | 心慌 慌张 惊慌 恐慌
 慌张 | huāng zhāng | in a fluster | 着急，动作乱 | 他＿＿地跑进教室，说他的钱包不见了。 | 慌 惊慌 惊恐
 惊慌 | jīng huāng | alarmed | 吃惊而手忙脚乱 | 着火了！大家不要＿＿，从这个门出去。 | 慌 慌张 惊恐 恐慌
-心慌 | xīn huāng | nervous | 心里着急不安 | 第一次上台讲话，我有点儿＿＿。 | 慌
+心慌 | xīn huāng | nervous | 心里着急不安 | 第一次上台讲话，我有点儿＿＿。 | 慌 慌张 惊慌
 恐慌 | kǒng huāng | panic | 很多人一起害怕不安 | 疫情刚开始时，很多人都很＿＿，抢着买米和油。 | 慌 惊慌
 恐高 | kǒng gāo | afraid of heights | 怕站在高处 | 我＿＿，不敢站在十楼的窗前往下看。
 `,
@@ -180,17 +180,17 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
 心酸 | xīn suān | heartbroken | 心里又难过又痛苦 | 想起小时候的苦日子，他就感到＿＿。 | 伤感 悲伤
 痛心 | tòng xīn | deeply grieved | 非常难过、可惜 | 看到这么美的森林被大火烧了，大家都很＿＿。 | 悲伤 悲痛
 伤感 | shāng gǎn | sentimental | 有点难过，有点感动 | 每次听这首老歌，他都有些＿＿。 | 悲观 心酸
-心疼 | xīn téng | to feel for | 舍不得，十分爱怜 | 看到孩子病了，妈妈很＿＿。
+心疼 | xīn téng | to feel for | 舍不得，十分爱怜 | 看到孩子病了，妈妈很＿＿。 | 痛心 悲伤
 不幸 | bú xìng | unfortunately | 运气很坏 | 他三岁时，父母＿＿去世了。
 悲剧 | bēi jù | tragedy | 结果很坏的戏或事情 | 这个故事是一个＿＿，最后男女主人公都死了。
-失意 | shī yì | frustrated | 工作或生活不顺心 | 他最＿＿的时候，是朋友一直陪着他。
+失意 | shī yì | frustrated | 工作或生活不顺心 | 他最＿＿的时候，是朋友一直陪着他。 | 悲伤 悲观
 `,
   },
   {
     theme: ["Surprise and Envy", "惊讶和羡慕"],
     data: `
-惊讶 | jīng yà | surprised | 感到很奇怪 | 他的中文说得这么好，大家都很＿＿。 | 吃惊
-吃惊 | chī jīng | to be startled | 受到突然的刺激，感到意外 | 看到他瘦了这么多，我＿＿得说不出话来。 | 惊讶
+惊讶 | jīng yà | surprised | 感到很奇怪 | 他的中文说得这么好，大家都很＿＿。 | 吃惊 震惊
+吃惊 | chī jīng | to be startled | 受到突然的刺激，感到意外 | 看到他瘦了这么多，我＿＿得说不出话来。 | 惊讶 震惊
 惊喜 | jīng xǐ | pleasant surprise | 又吃惊又高兴 | 生日那天，朋友们给了我一个＿＿。
 震惊 | zhèn jīng | to shock | 让人非常吃惊 | 这条新闻＿＿了全世界。
 惊人 | jīng rén | astonishing | 让人吃惊 | 他的记忆力好得＿＿。
@@ -235,7 +235,7 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
     theme: ["Happiness", "幸福"],
     data: `
 愉快 | yú kuài | pleasant | 快乐，舒服 | 祝你旅途＿＿！ | 痛快
-幸福 | xìng fú | happy (life) | 生活美满，称心如意 | 他们一家人生活得很＿＿。
+幸福 | xìng fú | happy (life) | 生活美满，称心如意 | 他们一家人生活得很＿＿。 | 愉快
 幸运 | xìng yùn | lucky | 运气好 | 他很＿＿，第一次买彩票就中了大奖。
 幸好 | xìng hǎo | luckily | 多亏 | ＿＿你提醒我，不然我就忘了。
 庆幸 | qìng xìng | to be glad (of a lucky escape) | 为结果比想的好而高兴 | 车坏了，人没受伤，他觉得很＿＿。
@@ -325,10 +325,10 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
   {
     theme: ["Mountains and Plains", "山和平原"],
     data: `
-山峰 | shān fēng | peak | 山的尖顶 | 远处的＿＿上还有白雪。
+山峰 | shān fēng | peak | 山的尖顶 | 远处的＿＿上还有白雪。 | 雪山
 高峰 | gāo fēng | peak, rush hour | 高的山峰；最高点 | 上下班＿＿的时候，路上车很多。
 山谷 | shān gǔ | valley | 两山之间的低地 | 一条小河从＿＿里流过。
-平原 | píng yuán | plain | 又平又大的地方 | 这里是一片大＿＿，一眼望去看不到山。
+平原 | píng yuán | plain | 又平又大的地方 | 这里是一片大＿＿，一眼望去看不到山。 | 草原
 草原 | cǎo yuán | grassland | 长满草的大平地 | ＿＿上有很多牛和羊。
 高原 | gāo yuán | plateau | 很高很平的地方 | 西藏在＿＿上，有的人去了会不舒服。
 雪山 | xuě shān | snowy mountain | 一年到头都有雪的山 | 远远看去，那座＿＿是白色的。
@@ -393,7 +393,7 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
 奖牌 | jiǎng pái | medal | 比赛前几名得到的牌子 | 这次比赛，中国队一共得了二十块＿＿。 | 金牌
 领奖台 | lǐng jiǎng tái | podium | 发奖时运动员站的台子 | 三名运动员站在＿＿上，笑得很开心。
 纪录 | jì lù | record | 最好的成绩 | 他打破了自己保持了十年的＿＿。
-连胜 | lián shèng | winning streak | 一连几次都赢 | 这支球队已经＿＿五场了。
+连胜 | lián shèng | winning streak | 一连几次都赢 | 这支球队已经＿＿五场了。 | 连败
 击败 | jī bài | to defeat | 打败 | 中国队二比一＿＿了对手。
 连败 | lián bài | losing streak | 一连几次都输 | 这支球队已经＿＿五场了，球迷都很失望。
 `,
@@ -421,10 +421,10 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
 防守 | fáng shǒu | to defend | 守住，不让对方进攻 | 他们队的＿＿很好，对方一个球也没进。
 攻守 | gōng shǒu | attack and defence | 进攻和防守 | 这支球队＿＿都很好，所以总能赢。
 射门 | shè mén | to shoot (at goal) | 用脚或头把球踢向球门 | 他一脚＿＿，球进了！
-传球 | chuán qiú | to pass | 把球给队友 | 他很会＿＿，队友都喜欢跟他一起踢球。
-投篮 | tóu lán | to shoot (in basketball) | 打篮球时把球投向篮筐 | 他＿＿很准，十个能进八个。
+传球 | chuán qiú | to pass | 把球给队友 | 他很会＿＿，队友都喜欢跟他一起踢球。 | 射门
+投篮 | tóu lán | to shoot (in basketball) | 打篮球时把球投向篮筐 | 他＿＿很准，十个能进八个。 | 射门
 球门 | qiú mén | goal | 足球比赛中要把球踢进去的门 | 球打在＿＿上，没进。
-门将 | mén jiàng | goalkeeper | 守门员 | 他们队的＿＿很好，对方一个点球也没踢进。
+门将 | mén jiàng | goalkeeper | 守门员 | 他们队的＿＿很好，对方一个点球也没踢进。 | 防守
 队友 | duì yǒu | teammate | 同一个队的人 | 他把球传给了＿＿。
 `,
   },
@@ -462,7 +462,7 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
     theme: ["Ball and Board Games", "球和棋"],
     data: `
 羽毛球 | yǔ máo qiú | badminton | 用球拍打的一种带羽毛的球 | 我们去打＿＿吧。
-羽毛 | yǔ máo | feather | 鸟的毛 | 这只鸟的＿＿很漂亮。
+羽毛 | yǔ máo | feather | 鸟的毛 | 这只鸟的＿＿很漂亮。 | 毛
 毛 | máo | fur | 动物身上长的细丝 | 这只小猫的＿＿是白色的。
 球拍 | qiú pāi | racket | 打球用的拍子 | 他的＿＿坏了，要买一个新的。
 下棋 | xià qí | to play chess | 玩棋 | 爷爷每天下午都在公园里跟朋友＿＿。
@@ -522,7 +522,7 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
   {
     theme: ["Space", "太空"],
     data: `
-宇宙 | yǔ zhòu | universe | 所有的空间和时间 | ＿＿有多大？没有人知道。
+宇宙 | yǔ zhòu | universe | 所有的空间和时间 | ＿＿有多大？没有人知道。 | 太空
 宇航员 | yǔ háng yuán | astronaut | 坐飞船去太空的人 | 他从小的理想是当一名＿＿。
 太空 | tài kōng | outer space | 地球外面很高很远的空间 | 飞船把三个人送上了＿＿。
 星球 | xīng qiú | heavenly body | 宇宙中很大的天体 | 我们住的地球也是一个＿＿。 | 行星
@@ -558,8 +558,8 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
 准确 | zhǔn què | accurate | 完全对，没有差错 | 他的发音很＿＿。 | 正确
 正确 | zhèng què | correct | 对的，合乎道理的 | 请选出＿＿的答案。 | 准确
 明确 | míng què | clear-cut | 清楚，不含糊 | 他的目标很＿＿：考上北京大学。
-确认 | què rèn | to confirm | 明确地承认 | 请你再＿＿一下飞机起飞的时间。
-显然 | xiǎn rán | obviously | 很容易看出来 | 他一句话也不说，＿＿是生气了。
+确认 | què rèn | to confirm | 明确地承认 | 请你再＿＿一下飞机起飞的时间。 | 确定
+显然 | xiǎn rán | obviously | 很容易看出来 | 他一句话也不说，＿＿是生气了。 | 明显
 明显 | míng xiǎn | obvious | 很清楚，容易看出 | 吃了药以后，他的病有了＿＿的好转。
 显得 | xiǎn de | to look | 表现出某种样子 | 穿上这件衣服，他＿＿年轻了很多。
 `,
@@ -571,7 +571,7 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
 探测 | tàn cè | to probe | 用仪器检查看不见的东西 | 这台机器可以＿＿地下的水。
 探讨 | tàn tǎo | to discuss | 研究讨论 | 会上大家＿＿了这个问题。
 探险 | tàn xiǎn | to explore (danger) | 到危险的地方去考察 | 他喜欢去沙漠＿＿。
-引起 | yǐn qǐ | to cause | 让某种事情出现 | 这个新发现＿＿了很多人的注意。
+引起 | yǐn qǐ | to cause | 让某种事情出现 | 这个新发现＿＿了很多人的注意。 | 吸引
 吸引 | xī yǐn | to attract | 让人或东西过来 | 这里的风景＿＿了很多游客。
 引导 | yǐn dǎo | to guide | 带着人往一个方向走 | 老师＿＿学生自己去发现问题。
 理论 | lǐ lùn | theory | 系统的知识和观点 | 他的＿＿后来被实验证明了。
@@ -612,7 +612,7 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
   {
     theme: ["Ways and Times", "方式和时间"],
     data: `
-方式 | fāng shì | way | 方法和样子 | 每个人学习的＿＿都不一样。
+方式 | fāng shì | way | 方法和样子 | 每个人学习的＿＿都不一样。 | 态度 形式
 形式 | xíng shì | form | 外在的样子 | 这次考试的＿＿很特别，要求学生做一个实验。
 正式 | zhèng shì | formal | 合乎规定的 | 他下个月＿＿开始上班。
 使用 | shǐ yòng | to use | 用 | 这台机器很容易＿＿。
@@ -630,7 +630,7 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
     data: `
 求职 | qiú zhí | to look for a job | 找工作 | 毕业以后，他到处＿＿，可是一直没找到合适的工作。
 简历 | jiǎn lì | résumé | 写着自己学习和工作经历的材料 | 请把你的＿＿发到我们公司的邮箱。
-面试 | miàn shì | job interview | 面对面的考查 | 明天上午我要去一家公司＿＿。
+面试 | miàn shì | job interview | 面对面的考查 | 明天上午我要去一家公司＿＿。 | 应聘
 应聘 | yìng pìn | to apply for a job | 去参加招聘 | 他去这家公司＿＿销售经理。
 就业 | jiù yè | to find employment | 得到工作 | 今年大学生＿＿很难。
 岗位 | gǎng wèi | post | 工作的地方，职位 | 他在这个＿＿上工作了十年。 | 职位
@@ -643,9 +643,9 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
   {
     theme: ["Pay", "工资"],
     data: `
-薪水 | xīn shuǐ | pay | 工资 | 他的＿＿很高，可是工作很累。 | 月薪
+薪水 | xīn shuǐ | pay | 工资 | 他的＿＿很高，可是工作很累。 | 月薪 年薪
 月薪 | yuè xīn | monthly pay | 一个月的工资 | 这份工作＿＿八千元。 | 薪水
-年薪 | nián xīn | annual salary | 一年的工资 | 他当了经理以后，＿＿有五十万。
+年薪 | nián xīn | annual salary | 一年的工资 | 他当了经理以后，＿＿有五十万。 | 月薪
 加薪 | jiā xīn | to get a raise | 加工资 | 他工作做得很好，老板给他＿＿了。
 带薪 | dài xīn | paid (leave) | 照常发工资的 | 公司每年给员工十天＿＿假。
 福利 | fú lì | benefits | 工资以外的好处 | 这家公司的＿＿很好，员工可以免费吃午饭。
@@ -673,9 +673,9 @@ export const wordBatchesB: readonly LevelWordBatch[] = [
   {
     theme: ["Moving On", "升职和辞职"],
     data: `
-升职 | shēng zhí | to be promoted | 提高职位 | 他工作很努力，今年＿＿当了经理。
+升职 | shēng zhí | to be promoted | 提高职位 | 他工作很努力，今年＿＿当了经理。 | 提升
 提升 | tí shēng | to enhance | 提高 | 学外语可以＿＿你的竞争力。
-上升 | shàng shēng | to go up | 向上走 | 今年公司的收入＿＿了百分之二十。
+上升 | shàng shēng | to go up | 向上走 | 今年公司的收入＿＿了百分之二十。 | 提升
 升级 | shēng jí | to upgrade | 提高等级 | 我的手机要＿＿了。
 辞职 | cí zhí | to resign | 自己不再做原来的工作 | 他不喜欢这份工作，就＿＿了。 | 辞退
 辞退 | cí tuì | to dismiss | 让员工离开 | 他常常迟到，被公司＿＿了。 | 辞职

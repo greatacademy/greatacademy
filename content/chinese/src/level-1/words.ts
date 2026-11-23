@@ -2,22 +2,27 @@
 // meaning, read in pinyin and put into a short sentence written with the characters taught so far.
 
 import { same, slimmed, type Text, type TopicDef, t } from "@ga/content";
-import { joinPinyin, point, toneless, zhQuote } from "@ga/subject-chinese";
+import { joinPinyin, point, spokenSyllables, toneless, zhQuote } from "@ga/subject-chinese";
 
 import { toneName } from "../characters/teach.ts";
+import { type Clue, clueKey } from "../words/clues.ts";
 import type { LevelOneCharacter } from "./characters.ts";
 import { type Asked, askedGenerator, dataLines, fields, nearOf, spread, three, threeOf, toneOf, withTone } from "./kit.ts";
 
 /** GAP marks where the word goes in a sentence. */
 export const GAP = "＿＿";
 
-/** LevelOneWord is a level 1 word: its syllables, its meaning, a sentence to fill and the words kept apart from it. */
+/**
+ * LevelOneWord is a level 1 word: its syllables, its meaning, a sentence to fill, the words kept apart from it and the
+ * clue of its sentence, written by hand, once its level has clues.
+ */
 export interface LevelOneWord {
   readonly word: string;
   readonly syllables: readonly string[];
   readonly meaning: Text;
   readonly sentence: string;
   readonly near: readonly string[];
+  readonly clue?: Clue;
 }
 
 /** parseLevelOneWords reads a batch of level 1 words (see word-data.ts). */
@@ -25,16 +30,21 @@ export function parseLevelOneWords(data: string): readonly LevelOneWord[] {
   return parseLevelWords(data, 1);
 }
 
-/** parseLevelWords reads a batch of words of a level, written as in level 1, naming the level in its errors. */
-export function parseLevelWords(data: string, level: number): readonly LevelOneWord[] {
+/**
+ * parseLevelWords reads a batch of words of a level, written as in level 1, naming the level in its errors; with the
+ * level's clues, keyed by clueKey with the sentence counted as 1, each word takes the clue of its sentence.
+ */
+export function parseLevelWords(data: string, level: number, clues?: ReadonlyMap<string, Clue>): readonly LevelOneWord[] {
   return dataLines(data).map((line) => {
     const [word = "", pinyin = "", en = "", zh = "", sentence = "", near = ""] = fields(line, 5, 6, `level ${level}`);
-    const syllables = pinyin.split(" ").map((s) => s.normalize("NFC"));
-    if ([...word].length !== syllables.length) throw new Error(`level ${level} words: the pinyin of ${word}`);
+    const written = pinyin.split(" ").map((s) => s.normalize("NFC"));
+    if ([...word].length !== written.length) throw new Error(`level ${level} words: the pinyin of ${word}`);
+    const syllables = spokenSyllables(word, written);
     if (zh.includes(word)) throw new Error(`level ${level} words: the meaning of ${word} uses it`);
     if (sentence.split(GAP).length !== 2) throw new Error(`level ${level} words: the sentence of ${word} needs one gap`);
     if (sentence.includes(word)) throw new Error(`level ${level} words: the sentence of ${word} gives it away`);
-    return { word, syllables, meaning: t(en, zh), sentence, near: near === "" ? [] : near.split(" ") };
+    const clue = clues?.get(clueKey(word, 1));
+    return { word, syllables, meaning: t(en, zh), sentence, near: near === "" ? [] : near.split(" "), ...(clue ? { clue } : {}) };
   });
 }
 
@@ -115,6 +125,26 @@ function backCheck(w: LevelOneWord): Text {
   );
 }
 
+/** saidNote says how 一 and 不 of a word are marked: in the tone said before the next syllable, or in their own tone. */
+function saidNote(w: LevelOneWord): Text {
+  const notes = [...w.word].flatMap((ch, i): Text[] => {
+    if (!KEPT.has(ch) || w.syllables.length === 1) return [];
+    const s = w.syllables[i]!;
+    const tone = toneOf(s);
+    if (ch === "一" && tone === 2)
+      return [t(`${ch} is marked ${s}, as it is said before a fourth tone.`, `“一”在第四声前读第二声，标作 ${s}。`)];
+    if (ch === "一" && tone === 4)
+      return [
+        t(`${ch} is marked ${s}, as it is said before a first, second or third tone.`, `“一”在第一、二、三声前读第四声，标作 ${s}。`),
+      ];
+    if (ch === "不" && tone === 2)
+      return [t(`${ch} is marked ${s}, as it is said before a fourth tone.`, `“不”在第四声前读第二声，标作 ${s}。`)];
+    if (tone === 0) return [t(`${ch} is light here, ${s}.`, `“${ch}”在这里读轻声，标作 ${s}。`)];
+    return [t(`${ch} keeps its own tone here, ${s}.`, `“${ch}”在这里读原调 ${s}。`)];
+  });
+  return t(notes.map((n) => ` ${n.en}`).join(""), notes.map((n) => n["zh-CN"]).join(""));
+}
+
 /** buildLevelOneWordTopic builds a level 1 word topic with its three knowledge points. */
 function buildLevelOneWordTopic(spec: LevelOneWordSpec): TopicDef {
   const { batch, id } = spec;
@@ -187,14 +217,7 @@ function buildLevelOneWordTopic(spec: LevelOneWordSpec): TopicDef {
         `${x} 是这一组另一个词“${v.word}”的拼音，“${v.word}”的意思是${zhQuote(v.meaning["zh-CN"])}。`,
       );
     };
-    const kept = [...w.word].filter((ch) => KEPT.has(ch));
-    const keptNote =
-      kept.length > 0
-        ? t(
-            ` ${kept.join(" and ")} is written with its own tone, though it changes in speech.`,
-            `“${kept.join("”“")}”按原调标写，说话时会变调。`,
-          )
-        : t("", "");
+    const keptNote = saidNote(w);
     return {
       shown: same(w.word),
       right: same(right),
@@ -214,8 +237,14 @@ function buildLevelOneWordTopic(spec: LevelOneWordSpec): TopicDef {
       mates(w, i).map((v) => v.word),
       `level ${level}`,
     );
+    const clue = w.clue;
     const notThe = (x: string): Text => {
       const v = byWord.get(x)!;
+      if (clue)
+        return t(
+          `${clue.why.en} ${v.word} means "${v.meaning.en}", so it does not fit.`,
+          `${clue.why["zh-CN"]}，而“${v.word}”的意思是${zhQuote(v.meaning["zh-CN"])}，填不进去。`,
+        );
       return t(
         `With ${v.word}, "${v.meaning.en}", the sentence would read ${whole(w, v.word)} That is wrong or makes no sense.`,
         `填“${v.word}”（${v.meaning["zh-CN"]}），句子成了${zhQuote(whole(w, v.word))}，意思不对或说不通。`,
@@ -226,8 +255,12 @@ function buildLevelOneWordTopic(spec: LevelOneWordSpec): TopicDef {
       right: same(w.word),
       wrong: three(wrong),
       solution: t(
-        `The sentence is ${whole(w)} **${w.word}** (${pinyin(w)}) means "${w.meaning.en}".\n\n**Check.** Read the gap as that meaning: ${whole(w, `[${w.meaning.en}]`)} It still says the same.`,
-        `完整的句子是：${whole(w)}“**${w.word}**”（${pinyin(w)}）的意思是：${w.meaning["zh-CN"]}。\n\n**检验。** 把横线换成词义来读：${whole(w, `（${zhQuote(w.meaning["zh-CN"]).slice(1, -1)}）`)}意思仍然通顺。`,
+        clue
+          ? `The sentence is ${whole(w)}\n\n${clue.why.en} **${w.word}** (${pinyin(w)}) means "${w.meaning.en}".\n\n**Check.** Read the gap as that meaning: ${whole(w, `[${w.meaning.en}]`)} It still says the same.`
+          : `The sentence is ${whole(w)} **${w.word}** (${pinyin(w)}) means "${w.meaning.en}".\n\n**Check.** Read the gap as that meaning: ${whole(w, `[${w.meaning.en}]`)} It still says the same.`,
+        clue
+          ? `完整的句子是：${whole(w)}\n\n${clue.why["zh-CN"]}，“**${w.word}**”（${pinyin(w)}）的意思正是${zhQuote(w.meaning["zh-CN"])}。\n\n**检验。** 把横线换成词义来读：${whole(w, `（${zhQuote(w.meaning["zh-CN"]).slice(1, -1)}）`)}意思仍然通顺。`
+          : `完整的句子是：${whole(w)}“**${w.word}**”（${pinyin(w)}）的意思是：${w.meaning["zh-CN"]}。\n\n**检验。** 把横线换成词义来读：${whole(w, `（${zhQuote(w.meaning["zh-CN"]).slice(1, -1)}）`)}意思仍然通顺。`,
       ),
       reasons: [notThe(wrong[0]), notThe(wrong[1]), notThe(wrong[2])],
     };
@@ -250,8 +283,8 @@ function buildLevelOneWordTopic(spec: LevelOneWordSpec): TopicDef {
         `> **注意。** 一个声调错了，就是另一个读音：${joinedWrong.text} 不是 ${pinyin(joined)}。每个音节的声调符号都要看清。`,
       )
     : t(
-        `> **Watch out.** 一 and 不 change their tones in speech, but the pinyin of a word writes their own tones: ${pinyin(joined)}.`,
-        `> **注意。** “一”“不”说话时会变调，词语的拼音却按原调标写：${pinyin(joined)}。`,
+        `> **Watch out.** 一 and 不 are marked in the tone they are said in, which depends on the syllable after them: ${pinyin(joined)}.`,
+        `> **注意。** “一”“不”按实际读的变调标写，读什么调要看后面的音节：${pinyin(joined)}。`,
       );
   return {
     id,
@@ -282,8 +315,8 @@ function buildLevelOneWordTopic(spec: LevelOneWordSpec): TopicDef {
         `${id}-reading`,
         t("Reading the Word", "读准词语"),
         t(
-          `A word of pinyin is written as one: its syllables are joined, and an apostrophe comes before a syllable that starts with a, o or e. A syllable with no tone mark is read in the neutral tone, light and short. 一 and 不 are written with their own tones, though they change in speech. Take **${joined.word}**: ${syllablesOf(joined, "en")}; joined, it is **${pinyin(joined)}**.\n\n${list("en")}\n\n${readWatch.en}`,
-          `一个词的拼音连在一起写；以 a、o、e 开头的音节前面加隔音符号“'”。没有调号的音节读轻声，又轻又短。“一”和“不”按原调标写，说话时会变调。比如 **${joined.word}**：${syllablesOf(joined, "zh-CN")}，连起来写作 **${pinyin(joined)}**。\n\n${list("zh-CN")}\n\n${readWatch["zh-CN"]}`,
+          `A word of pinyin is written as one: its syllables are joined, and an apostrophe comes before a syllable that starts with a, o or e. A syllable with no tone mark is read in the neutral tone, light and short. 一 and 不 are marked in the tone they are said in: yí and bú before a fourth tone, yì before the other tones, and 一 keeps yī at the end of a word or as a number. Take **${joined.word}**: ${syllablesOf(joined, "en")}; joined, it is **${pinyin(joined)}**.\n\n${list("en")}\n\n${readWatch.en}`,
+          `一个词的拼音连在一起写；以 a、o、e 开头的音节前面加隔音符号“'”。没有调号的音节读轻声，又轻又短。“一”“不”按实际读的变调标写：在第四声前标 yí、bú，“一”在其他声调前标 yì，在词尾或表示数目、次序时标 yī。比如 **${joined.word}**：${syllablesOf(joined, "zh-CN")}，连起来写作 **${pinyin(joined)}**。\n\n${list("zh-CN")}\n\n${readWatch["zh-CN"]}`,
         ),
         askedGenerator(t("Which is the pinyin of this word?", "这个词语的拼音是什么？"), reading),
       ),
@@ -291,8 +324,8 @@ function buildLevelOneWordTopic(spec: LevelOneWordSpec): TopicDef {
         `${id}-use`,
         t("Using the Word", "选词填空"),
         t(
-          `Read the whole sentence first, then try each word in the gap: only one makes the sentence say something true and complete. Take ${first.sentence} With **${first.word}** it reads ${whole(first)}\n\n${list("en")}\n\n> **Watch out.** A word of the same theme can look right at a glance: with ${firstMate.word} the sentence would read ${whole(first, firstMate.word)} Read the words just before and after the gap with the word in place.`,
-          `先读完整个句子，再把每个词放进横线处试一试：只有一个词能让句子通顺、意思完整。比如${zhQuote(first.sentence)}，填 **${first.word}**，就是：${whole(first)}\n\n${list("zh-CN")}\n\n> **注意。** 同一类的词乍一看也像能填：填“${firstMate.word}”，句子成了${zhQuote(whole(first, firstMate.word))}，意思不对或说不通。要把词放进去，连着横线前后的词一起读。`,
+          `Read the whole sentence first, then try each word in the gap: only one makes the sentence say something true and complete. Take ${first.sentence}${first.clue ? ` ${first.clue.why.en}` : ""} With **${first.word}** it reads ${whole(first)}\n\n${list("en")}\n\n> **Watch out.** A word of the same theme can look right at a glance: with ${firstMate.word} the sentence would read ${whole(first, firstMate.word)}${first.clue ? ` ${firstMate.word} means "${firstMate.meaning.en}", which is not what the sentence needs.` : ""} Read the words just before and after the gap with the word in place.`,
+          `先读完整个句子，再把每个词放进横线处试一试：只有一个词能让句子通顺、意思完整。比如${zhQuote(first.sentence)}，${first.clue ? `${first.clue.why["zh-CN"]}，` : ""}填 **${first.word}**，就是：${whole(first)}\n\n${list("zh-CN")}\n\n> **注意。** 同一类的词乍一看也像能填：填“${firstMate.word}”，句子成了${zhQuote(whole(first, firstMate.word))}，${first.clue ? `而“${firstMate.word}”的意思是${zhQuote(firstMate.meaning["zh-CN"])}，不是句子需要的。` : "意思不对或说不通。"}要把词放进去，连着横线前后的词一起读。`,
         ),
         askedGenerator(t("Which word fills the gap?", "横线处填哪个词语？"), use),
       ),

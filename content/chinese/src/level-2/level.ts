@@ -12,6 +12,7 @@ import { registerUnitSpeech, type UnitSpeechSpec, unitListeningTopic, unitSpeaki
 import { type LevelSentences, unitSentenceTopics } from "../level-1/sentences.ts";
 import { firstTwice, GAP, type LevelOneWord, levelOneWordTopic, parseLevelWords } from "../level-1/words.ts";
 import { type LevelWriting, unitWritingTopics } from "../level-1/writing.ts";
+import type { Clue } from "../words/clues.ts";
 
 /** LevelUnit is a unit of a level: a theme, how many character batches and how many word batches it has. */
 export interface LevelUnit {
@@ -37,6 +38,8 @@ export interface LevelSpec {
   readonly wordBatches: readonly LevelWordBatch[];
   /** earlierCharacters are the characters of the earlier levels, by character. */
   readonly earlierCharacters: ReadonlyMap<string, LevelOneCharacter>;
+  /** clues are the clues of the level's gap sentences, by clueKey with each word's sentence counted as 1. */
+  readonly clues?: ReadonlyMap<string, Clue>;
   /** earlierWords are the words of the earlier levels. */
   readonly earlierWords: readonly string[];
   /** earlierMeanings are the meanings of the words of the earlier levels, by word. */
@@ -99,7 +102,7 @@ export function planLevel(spec: LevelSpec): LevelPlan {
   const { level, numeral } = spec;
   const where = `level ${level}`;
   const characterBatches = spec.characterBatches.map((b) => parseLevelCharacters(b, level));
-  const wordBatches: readonly (readonly LevelOneWord[])[] = spec.wordBatches.map((b) => parseLevelWords(b.data, level));
+  const wordBatches: readonly (readonly LevelOneWord[])[] = spec.wordBatches.map((b) => parseLevelWords(b.data, level, spec.clues));
   const characters = new Map(spec.earlierCharacters);
   for (const c of characterBatches.flat()) {
     if (characters.has(c.char)) throw new Error(`${where}: ${c.char} is taught twice`);

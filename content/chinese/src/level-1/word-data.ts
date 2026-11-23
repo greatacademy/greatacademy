@@ -2,8 +2,8 @@
 // only with characters taught by its unit, each with a short sentence of those characters to fill.
 //
 // A line a word: `word | pinyin, a syllable each | meaning in English | meaning in Chinese | sentence with ＿＿ for the
-// word[ | words of the batch that could also fill the gap or mean nearly the same, kept apart from it]`. 一 and 不 keep
-// their own tones in the pinyin, as dictionaries write them.
+// word[ | words of the batch that could also fill the gap or mean nearly the same, kept apart from it]`. 一 and 不 are
+// written in their own tones here; the words mark them in the tone said, as textbooks and the HSK lists do (see spokenSyllables).
 
 /** WordBatchData is a batch of level 1 words: its theme and its lines. */
 export interface WordBatchData {
@@ -65,7 +65,7 @@ export const wordBatches: readonly WordBatchData[] = [
 几 | jǐ | how many (small numbers) | 问十以内的数目 | 你＿＿岁？ | 多少
 个 | gè | (general measure word) | 最常用的量词 | 他是一＿＿好人。
 岁 | suì | years old | 表示年龄的单位 | 我十＿＿。 | 几 多
-两 | liǎng | two (before a measure word) | 数目二，用在量词前面 | 我有＿＿个名字。 | 几
+两 | liǎng | two (before a measure word) | 数目二，用在量词前面 | 我有＿＿个名字。 | 几 多
 零 | líng | zero | 表示没有数量 | 这是一百＿＿五。
 百 | bǎi | hundred | 十个十 | 十个十是一＿＿。
 千 | qiān | thousand | 十个一百 | 十个一百是一＿＿。
@@ -108,7 +108,7 @@ export const wordBatches: readonly WordBatchData[] = [
     data: `
 家 | jiā | home, family | 亲人一起生活的地方 | 我＿＿有四个人。 | 家人
 家人 | jiā rén | family members | 一家里的人 | 爸爸、妈妈、哥哥都是我的＿＿。 | 朋友
-孩子 | hái zi | child | 儿童；儿女 | 他们有两个＿＿：一个男孩，一个女孩。 | 家人
+孩子 | hái zi | child | 儿童；儿女 | 他们有两个＿＿：一个男孩，一个女孩。 | 家人 朋友
 男孩 | nán hái | boy | 男性的小孩 | 他是＿＿，她是女孩。
 女孩 | nǚ hái | girl | 女性的小孩 | 她是＿＿，他是男孩。
 朋友 | péng you | friend | 有交情的人 | 他不是我哥哥，他是我的好＿＿。
@@ -127,8 +127,8 @@ export const wordBatches: readonly WordBatchData[] = [
 女朋友 | nǚ péng you | girlfriend | 恋爱中的女方 | 她是我哥哥的＿＿。 | 爱人
 爱人 | ài ren | husband or wife | 丈夫或妻子 | 我爸爸是我妈妈的＿＿。
 子女 | zǐ nǚ | sons and daughters | 儿子和女儿 | 他们有三个＿＿：两个儿子，一个女儿。
-姐妹 | jiě mèi | sisters | 姐姐和妹妹 | 我和我姐姐是＿＿。
-爸妈 | bà mā | mom and dad | 爸爸和妈妈 | 我爱我的＿＿，也爱我的爷爷奶奶。 | 子女
+姐妹 | jiě mèi | sisters | 姐姐和妹妹 | 我和我姐姐是＿＿。 | 一家人
+爸妈 | bà mā | mom and dad | 爸爸和妈妈 | 我的＿＿是我爸爸和我妈妈。 | 子女 一家人
 一家人 | yī jiā rén | the whole family | 全家的人 | 爸爸、妈妈和我，我们＿＿都很好。 | 家里
 家里 | jiā li | at home, in the family | 家中 | 我＿＿有五个人。
 `,
@@ -143,7 +143,7 @@ export const wordBatches: readonly WordBatchData[] = [
 星期一 | xīng qī yī | Monday | 每周的头一天 | 星期日的下一天是＿＿。
 星期日 | xīng qī rì | Sunday | 每周的最后一天 | 星期六的下一天是＿＿。
 天 | tiān | day | 一昼夜 | 一个星期有七＿＿。 | 日 年
-年 | nián | year | 十二个月的时间 | 我今＿＿十岁。
+年 | nián | year | 十二个月的时间 | 我今＿＿十岁。 | 日
 月 | yuè | month | 一年的十二分之一 | 一年有十二个＿＿。
 日 | rì | day of the month | 一个月里的某一天 | 今天是五月一＿＿。
 `,
@@ -160,7 +160,7 @@ export const wordBatches: readonly WordBatchData[] = [
 早上 | zǎo shang | (early) morning | 天亮以后的一段时间 | ＿＿好！你今天几点起来的？
 前天 | qián tiān | the day before yesterday | 昨天的前一天 | 今天是星期三，＿＿是星期一。
 后天 | hòu tiān | the day after tomorrow | 明天的后一天 | 今天是星期一，＿＿是星期三。
-每天 | měi tiān | every day | 天天 | 我＿＿早上六点起来。 | 前天 后天
+每天 | měi tiān | every day | 天天 | 我＿＿早上六点起来。 | 前天 后天 现在
 `,
   },
   {
@@ -172,9 +172,9 @@ export const wordBatches: readonly WordBatchData[] = [
 晚上 | wǎn shang | evening | 太阳落山以后的时间 | ＿＿好！你要去哪里？
 过 | guò | (marks past experience) | 表示曾经有这样的事 | 我见＿＿他的妈妈。 | 了
 了 | le | (marks completion) | 用在动词后，表示完成 | 我昨天见＿＿他。 | 过
-会 | huì | can (know how); will | 懂得怎样做；有可能 | 他明天＿＿来吗？ | 要
-要 | yào | to want; to be going to | 希望得到；表示快发生 | 我＿＿去朋友家。 | 会
-住 | zhù | to live, to stay | 长时间在某处生活 | 你＿＿在哪里？
+会 | huì | can (know how); will | 懂得怎样做；有可能 | 我妹妹三岁了，她＿＿叫爸爸妈妈了。 | 要 上午 晚上
+要 | yào | to want; to be going to | 希望得到；表示快发生 | 我＿＿去朋友家。 | 会 上午 晚上
+住 | zhù | to live, to stay | 长时间在某处生活 | 你＿＿在哪里？ | 会 要 上午 晚上
 周 | zhōu | week | 星期 | 一＿＿有七天。
 `,
   },
@@ -185,7 +185,7 @@ export const wordBatches: readonly WordBatchData[] = [
 明年 | míng nián | next year | 今年的下一年 | 我今年十岁，＿＿十一岁。
 去年 | qù nián | last year | 今年的前一年 | 我今年十岁，＿＿九岁。
 每年 | měi nián | every year | 年年 | ＿＿五月，我们都去爷爷家。 | 今年 明年 去年 前年 后年
-下午 | xià wǔ | afternoon | 中午以后到晚上的时间 | ＿＿三点，我们在朋友家见。
+下午 | xià wǔ | afternoon | 中午以后到晚上的时间 | ＿＿三点，我们在朋友家见。 | 星期六
 一月 | yī yuè | January | 一年的头一个月 | 十二月的下一个月是＿＿。
 十二月 | shí èr yuè | December | 一年的最后一个月 | 十一月的下一个月是＿＿。
 前年 | qián nián | the year before last | 去年的前一年 | 我今年十岁，＿＿八岁。
@@ -215,9 +215,9 @@ export const wordBatches: readonly WordBatchData[] = [
 牛奶 | niú nǎi | milk | 母牛的奶 | 早上我喝了一杯＿＿。 | 水
 水 | shuǐ | water | 无色无味、可以喝的液体 | 天太热了，我想喝冷＿＿。
 面包 | miàn bāo | bread | 用面粉做的、烤熟的食物 | 我早饭吃了一个＿＿。
-鸡肉 | jī ròu | chicken (meat) | 鸡身上的肉 | 这个菜是用＿＿做的，不是牛肉。
-好吃 | hǎo chī | tasty | 吃起来味道好 | 妈妈做的菜很＿＿。 | 好喝
-好喝 | hǎo hē | tasty (of drinks) | 喝起来味道好 | 这杯茶真＿＿！
+鸡肉 | jī ròu | chicken (meat) | 鸡身上的肉 | 这个菜是用＿＿做的，不是牛肉。 | 面包
+好吃 | hǎo chī | tasty | 吃起来味道好 | 妈妈做的菜很＿＿。 | 好喝 冷
+好喝 | hǎo hē | tasty (of drinks) | 喝起来味道好 | 这杯茶真＿＿！ | 冷
 冷 | lěng | cold | 温度低 | 今天很＿＿，我想喝热茶。
 想 | xiǎng | to want to | 希望，打算 | 我＿＿吃面包。
 给 | gěi | to give | 使对方得到 | 请＿＿我一杯水。
@@ -287,7 +287,7 @@ export const wordBatches: readonly WordBatchData[] = [
     theme: ["In the Shop", "在商店"],
     data: `
 开 | kāi | to open | 使关着的东西不再关着 | 商店早上九点＿＿，晚上十点关。
-能 | néng | can | 有力量或条件做某事 | 我＿＿穿这件衣服吗？ | 还
+能 | néng | can | 有力量或条件做某事 | 我＿＿穿这件衣服吗？ | 还 就
 怎么 | zěn me | how | 问方式或原因 | 这个＿＿卖？
 怎么样 | zěn me yàng | how is it | 问情况 | 这件衣服＿＿？
 还 | hái | also; still | 另外；仍然 | 我买了一件衣服，＿＿买了两个包。
@@ -309,20 +309,20 @@ export const wordBatches: readonly WordBatchData[] = [
 多大 | duō dà | how old | 问年龄 | 你今年＿＿？
 还是 | hái shi | or (in questions) | 用在问句里表示选择 | 你想喝茶＿＿喝水？
 小朋友 | xiǎo péng you | little friend (to a child) | 对儿童的称呼 | ＿＿，你几岁了？
-可能 | kě néng | maybe | 也许 | 明天＿＿很冷。 | 白天
+可能 | kě néng | maybe | 也许 | 明天＿＿很冷。 | 白天 一样
 开会 | kāi huì | to have a meeting | 很多人一起讨论事情 | 爸爸今天下午要＿＿。
 `,
   },
   {
     theme: ["At School", "在学校"],
     data: `
-学校 | xué xiào | school | 教学生读书的地方 | 我每天早上七点去＿＿。 | 上课
+学校 | xué xiào | school | 教学生读书的地方 | 我每天早上七点去＿＿。 | 上课 学习
 学生 | xué sheng | student | 在学校读书的人 | 我是＿＿，她是老师。 | 同学
 老师 | lǎo shī | teacher | 教学生知识的人 | 她是我们的＿＿，我们是她的学生。
 同学 | tóng xué | classmate | 在一个学校学习的人 | 他和我在一个班，是我的＿＿。
 书 | shū | book | 装订成册的著作 | 我买了一本＿＿。
 本 | běn | (measure word for books) | 量词，用于书 | 我有三＿＿汉语书。
-上课 | shàng kè | to have class | 开始讲课或听课 | 我们八点＿＿。 | 下课
+上课 | shàng kè | to have class | 开始讲课或听课 | 我们八点＿＿。 | 下课 学习
 下课 | xià kè | class is over | 一节课结束 | ＿＿了，我们去吃午饭吧。
 班 | bān | class (group) | 学校里按学生分成的组 | 我们＿＿有三十个学生。 | 学校
 学习 | xué xí | to study | 获得知识或技能 | 我在中国＿＿汉语。
@@ -348,12 +348,12 @@ export const wordBatches: readonly WordBatchData[] = [
     data: `
 知道 | zhī dao | to know | 了解，明白 | 我不＿＿他叫什么名字。
 认识 | rèn shi | to know (a person) | 见过面，知道是谁 | 我＿＿他，他是我的同学。 | 知道
-考试 | kǎo shì | exam | 用问题测试知识 | 明天我们有汉语＿＿。 | 课 课本
+考试 | kǎo shì | exam | 用问题测试知识 | 明天我们有汉语＿＿。 | 课 课本 题
 题 | tí | question (in an exercise) | 练习或考试中要回答的地方 | 这道＿＿太难了。 | 问题
 难 | nán | difficult | 不容易 | 汉字很＿＿写。
 第一 | dì yī | first | 次序在最前的 | 他考试考了＿＿。
-课 | kè | lesson | 教学的段落 | 今天我们学第五＿＿。
-课本 | kè běn | textbook | 上课用的书 | 这是我的汉语＿＿。
+课 | kè | lesson | 教学的段落 | 今天我们学第五＿＿。 | 题
+课本 | kè běn | textbook | 上课用的书 | 这是我的汉语＿＿。 | 课 题 问题
 问题 | wèn tí | question | 要求回答的事 | 老师，我有一个＿＿。
 老 | lǎo | old | 年纪大 | 我爷爷很＿＿了。
 `,
@@ -366,7 +366,7 @@ export const wordBatches: readonly WordBatchData[] = [
 小学 | xiǎo xué | primary school | 儿童最先上的学校 | 我妹妹七岁，在＿＿读书。
 学会 | xué huì | to learn (and master) | 学了以后会了 | 我＿＿了写我的名字。
 生日 | shēng rì | birthday | 出生的日子 | 今天是我的＿＿，我十岁了。
-本子 | běn zi | notebook | 用来写字的本儿 | 我在＿＿上写字。
+本子 | běn zi | notebook | 用来写字的本儿 | 我在＿＿上写字。 | 书包
 书包 | shū bāo | schoolbag | 学生上学用的包 | 我的书和本子都在＿＿里。
 写字 | xiě zì | to write characters | 用笔写出文字 | 我用这个本子＿＿。 | 读书
 读书 | dú shū | to read; to study | 看书学习；上学 | 他在大学＿＿。
@@ -397,7 +397,7 @@ export const wordBatches: readonly WordBatchData[] = [
 后边 | hòu bian | back | 背对着的一边 | 他在我前边，我在他＿＿。
 里边 | lǐ bian | inside | 一定范围以内 | 外边很冷，我们去＿＿吧。 | 前边 后边 左边 右边
 外边 | wài bian | outside | 一定范围以外 | 里边人太多了，我们去＿＿吧。 | 前边 后边 左边 右边
-北京 | běi jīng | Beijing | 中国的首都 | 他从＿＿来。
+北京 | běi jīng | Beijing | 中国的首都 | 我想去＿＿大学读书。
 近 | jìn | near | 距离短 | 我家到学校很＿＿，走一会儿就到了。
 远 | yuǎn | far | 距离长 | 我家到学校很＿＿，要走一个小时。
 呢 | ne | (asks back: and …?) | 用在问句末尾，表示追问 | 我很好，你＿＿？
@@ -408,13 +408,13 @@ export const wordBatches: readonly WordBatchData[] = [
     data: `
 门 | mén | door | 房子的出入口 | 请开＿＿。 | 大门
 房间 | fáng jiān | room | 房子里隔开的部分 | 家里有三个＿＿。 | 门 大门
-公园 | gōng yuán | park | 大家游玩的地方 | 星期天我们去＿＿走走。 | 饭店
+公园 | gōng yuán | park | 大家游玩的地方 | 星期天我们去＿＿走走。 | 饭店 东边
 医院 | yī yuàn | hospital | 治病的地方 | 我妈妈是医生，每天去＿＿上班。
 医生 | yī shēng | doctor | 给人治病的人 | 他去医院找＿＿。
 路 | lù | road | 人或车走的地方 | 从我家到学校的＿＿很近。
 楼 | lóu | floor; building | 两层以上的房子 | 我家住在三＿＿。
 大门 | dà mén | main gate | 外边的大的门 | 我在学校＿＿等你。 | 东边
-饭店 | fàn diàn | restaurant | 吃饭的地方 | 我们晚上去＿＿吃饭吧。
+饭店 | fàn diàn | restaurant | 吃饭的地方 | 我们晚上去＿＿吃饭吧。 | 东边
 东边 | dōng bian | east | 东的那一边 | 学校在公园的＿＿。
 `,
   },
@@ -422,10 +422,10 @@ export const wordBatches: readonly WordBatchData[] = [
     theme: ["Going Places", "去哪里"],
     data: `
 走 | zǒu | to walk | 一步一步向前移动 | 我们＿＿路去学校。
-到 | dào | to arrive | 抵达某个地方 | 我们八点＿＿学校。 | 回
+到 | dào | to arrive | 抵达某个地方 | 我们八点＿＿学校。 | 回 进
 从 | cóng | from | 表示起点 | 我＿＿北京来。 | 到 回
 回 | huí | to go back | 由别处到原来的地方 | 下课了，我要＿＿家。
-出 | chū | out | 从里面到外面 | 他从房间里走＿＿来。 | 进
+出 | chū | out | 从里面到外面 | 他从房间里走＿＿来。 | 进 回
 进 | jìn | to enter | 从外面到里面 | 请＿＿，请坐。
 找 | zhǎo | to look for | 为了得到而寻求 | 我在＿＿我的书包。 | 等
 往 | wǎng | towards | 向，朝 | 你＿＿前走，就到了。
@@ -467,15 +467,15 @@ export const wordBatches: readonly WordBatchData[] = [
     theme: ["Abroad", "国外"],
     data: `
 外语 | wài yǔ | foreign language | 外国的语言 | 我在学校学习＿＿。
-外国 | wài guó | foreign country | 本国以外的国家 | 我想去＿＿学习。 | 国外 外面
+外国 | wài guó | foreign country | 本国以外的国家 | 我想去＿＿学习。 | 国外 外面 校园 院子
 外国人 | wài guó rén | foreigner | 外国的人 | 他是＿＿，他不是中国人。
-国外 | guó wài | abroad | 本国以外 | 他在＿＿住了两年。 | 外面
+国外 | guó wài | abroad | 本国以外 | 他在＿＿住了两年。 | 外面 校园 院子
 校园 | xiào yuán | campus | 学校里的地方 | 我们的＿＿很大，有很多楼。 | 院子
 院子 | yuàn zi | courtyard | 房子前后用墙围起来的地方 | 奶奶家的＿＿里有一个小门。
 回国 | huí guó | to return to one's country | 回到自己的国家 | 他在中国学习了两年，明年要＿＿了。 | 出国
 出国 | chū guó | to go abroad | 到外国去 | 我想＿＿学习外语。
 从前 | cóng qián | in the past | 过去的时候 | ＿＿这里没有路，现在有了。
-外面 | wài mian | outside | 外边 | ＿＿很冷，我们在房间里吧。
+外面 | wài mian | outside | 外边 | ＿＿很冷，我们在房间里吧。 | 院子 校园
 `,
   },
   {
@@ -501,10 +501,10 @@ export const wordBatches: readonly WordBatchData[] = [
 次 | cì | time(s) | 动作的回数 | 我去过北京两＿＿。
 送 | sòng | to see off | 陪着离开的人走一段路 | 我去机场＿＿朋友。 | 带
 带 | dài | to take, to bring | 随身拿着 | 我们去公园，你＿＿水了吗？
-跟 | gēn | with | 和，同 | 我＿＿妈妈一起去北京。 | 让
+跟 | gēn | with | 和，同 | 我＿＿妈妈一起去北京。 | 让 带
 别 | bié | don't | 不要 | ＿＿走，等等我！ | 慢
 让 | ràng | to let | 允许，使 | 妈妈不＿＿我一个人去。
-先 | xiān | first | 时间在前 | 我们＿＿吃饭，再去公园。
+先 | xiān | first | 时间在前 | 我们＿＿吃饭，再去公园。 | 快
 铁路 | tiě lù | railway | 火车走的路 | 北京到这里有＿＿，我们可以坐火车去。
 `,
   },
@@ -544,9 +544,9 @@ export const wordBatches: readonly WordBatchData[] = [
 天气 | tiān qì | weather | 阴晴冷热等情况 | 今天＿＿很好，我们去公园吧。
 下雨 | xià yǔ | to rain | 雨从天上落下来 | ＿＿了，别出去了。 | 下雪
 下雪 | xià xuě | to snow | 雪从天上落下来 | 冬天＿＿了，地上都是白的。
-雨 | yǔ | rain | 从云里落下的水 | 今天的＿＿很大，你别出去。 | 风
+雨 | yǔ | rain | 从云里落下的水 | 今天的＿＿很大，你别出去。 | 风 雪
 雪 | xuě | snow | 冬天从天上落下的白色冰花 | ＿＿是白的。
-风 | fēng | wind | 流动的空气 | 外边＿＿很大，你多穿一件衣服。
+风 | fēng | wind | 流动的空气 | 外边＿＿很大，你多穿一件衣服。 | 雪
 晴 | qíng | sunny | 天空没有云或云很少 | 今天天气很好，是＿＿天。
 阴天 | yīn tiān | cloudy day | 天空有云的天气 | 今天不是晴天，是＿＿。 | 春天
 比 | bǐ | than | 用来对照两样东西 | 今天＿＿昨天冷。
@@ -604,7 +604,7 @@ export const wordBatches: readonly WordBatchData[] = [
 工作 | gōng zuò | job; to work | 为了生活做的事 | 我爸爸在医院＿＿。
 忙 | máng | busy | 事情多，没有空 | 我今天很＿＿，没有时间玩。
 意思 | yì si | meaning | 语言文字的含义 | 这个字是什么＿＿？
-事 | shì | matter, thing | 人做的或遇到的情况 | 我今天有＿＿，不能来了。
+事 | shì | matter, thing | 人做的或遇到的情况 | 我今天有＿＿，不能来了。 | 工作
 觉得 | jué de | to think, to feel | 认为，感到 | 我＿＿这个电影很有意思。
 看见 | kàn jiàn | to see | 看到 | 我在路上＿＿了我的老师。 | 听见
 听见 | tīng jiàn | to hear | 听到 | 你＿＿了吗？外边有人叫你。
@@ -619,7 +619,7 @@ export const wordBatches: readonly WordBatchData[] = [
 看书 | kàn shū | to read books | 阅读书本 | 我喜欢在家＿＿，不喜欢看电视。 | 唱
 电影院 | diàn yǐng yuàn | cinema | 看电影的地方 | 我们去＿＿看电影。
 歌 | gē | song | 可以唱的曲子 | 这个＿＿很好听。
-好听 | hǎo tīng | pleasant to hear | 听起来舒服 | 她唱歌很＿＿。 | 好看
+好听 | hǎo tīng | pleasant to hear | 听起来舒服 | 她唱歌很＿＿。 | 好看 好玩
 好看 | hǎo kàn | good-looking | 看起来美 | 这件衣服很＿＿。 | 好玩
 好玩 | hǎo wán | fun | 有意思，能让人高兴 | 这个公园很＿＿。
 打开 | dǎ kāi | to open | 使关着的东西开 | 请＿＿门。
@@ -632,7 +632,7 @@ export const wordBatches: readonly WordBatchData[] = [
     theme: ["More Free Time", "更多空闲时间"],
     data: `
 看看 | kàn kan | to have a look | 看一下 | 我可以＿＿你的书吗？ | 打
-午睡 | wǔ shuì | afternoon nap | 吃午饭后睡一会儿 | 吃了午饭，我要＿＿一个小时。 | 下班
+午睡 | wǔ shuì | afternoon nap | 吃午饭后睡一会儿 | 吃了午饭，我要＿＿一个小时。 | 下班 打
 打 | dǎ | to hit; to play | 用手或东西撞击 | 我们去＿＿球吧。
 晚会 | wǎn huì | evening party | 晚上的聚会 | 今天晚上学校有新年＿＿。
 意见 | yì jiàn | opinion | 对事情的看法 | 我想听听你的＿＿。 | 作文
@@ -677,7 +677,7 @@ export const wordBatches: readonly WordBatchData[] = [
     theme: ["Hobbies", "爱好"],
     data: `
 爱好 | ài hào | hobby | 喜欢做的事 | 我的＿＿是唱歌。
-电视机 | diàn shì jī | TV set | 看电视用的机器 | 我家的＿＿是新买的。 | 电影票
+电视机 | diàn shì jī | TV set | 看电视用的机器 | 我家的＿＿是新买的。 | 电影票 书店
 作家 | zuò jiā | writer | 写书的人 | 他写了很多小说，是一个有名的＿＿。
 打工 | dǎ gōng | to work part-time | 做临时的工作 | 他是学生，晚上去饭店＿＿。
 打字 | dǎ zì | to type | 用机器写字 | 我＿＿很快。
@@ -706,13 +706,13 @@ export const wordBatches: readonly WordBatchData[] = [
   {
     theme: ["Health", "健康"],
     data: `
-病 | bìng | illness; ill | 身体不健康的情况 | 他＿＿了，今天没来上课。 | 生病 累
+病 | bìng | illness; ill | 身体不健康的情况 | 他＿＿了，今天没来上课。 | 生病 累 头疼
 生病 | shēng bìng | to fall ill | 得了病 | 天冷了，多穿衣服，别＿＿了。 | 累
 看病 | kàn bìng | to see a doctor | 请医生治病 | 我要去医院＿＿。 | 吃药
 药 | yào | medicine | 用来治病的东西 | 医生给了我一些＿＿。
 吃药 | chī yào | to take medicine | 把药吃下去 | 你病了，要多喝水，还要＿＿。
 病人 | bìng rén | patient | 生病的人 | 医院里有很多＿＿。
-疼 | téng | to hurt | 有病或受伤时难受的感觉 | 我的头很＿＿。
+疼 | téng | to hurt | 有病或受伤时难受的感觉 | 我的头很＿＿。 | 累
 头疼 | tóu téng | headache | 头里面疼 | 我＿＿，想休息一下。 | 累
 累 | lèi | tired | 身体或心里感到很疲劳 | 工作了一天，我很＿＿。
 药店 | yào diàn | pharmacy | 卖药的商店 | 我去＿＿买药。
@@ -724,7 +724,7 @@ export const wordBatches: readonly WordBatchData[] = [
 洗 | xǐ | to wash | 用水去掉脏东西 | 吃饭前要＿＿手。
 洗手 | xǐ shǒu | to wash one's hands | 用水把手弄干净 | 吃饭前，我们要先＿＿。
 洗手间 | xǐ shǒu jiān | toilet | 厕所 | 我想洗手，请问＿＿在哪里？
-帮 | bāng | to help | 替别人做事 | 你能＿＿我一下吗？ | 帮忙
+帮 | bāng | to help | 替别人做事 | 你能＿＿我一下吗？ | 帮忙 关心
 帮忙 | bāng máng | to help out | 帮助别人做事 | 我很忙，你能来＿＿吗？
 小心 | xiǎo xīn | careful | 注意，留神 | 路上车多，你要＿＿。
 关心 | guān xīn | to care about | 把人或事放在心上 | 妈妈很＿＿我的身体。
@@ -736,7 +736,7 @@ export const wordBatches: readonly WordBatchData[] = [
   {
     theme: ["Reasons", "原因"],
     data: `
-因为 | yīn wèi | because | 说明原因 | ＿＿下雨，我们没去公园。
+因为 | yīn wèi | because | 说明原因 | ＿＿下雨，我们没去公园。 | 最近
 所以 | suǒ yǐ | so | 说明结果 | 今天下雨，＿＿我们没去公园。
 为什么 | wèi shén me | why | 问原因 | 你＿＿不来上课？
 为了 | wèi le | in order to | 表示目的 | ＿＿学好汉语，他每天都看中文书。
@@ -745,7 +745,7 @@ export const wordBatches: readonly WordBatchData[] = [
 最 | zuì | most | 表示程度到了顶点 | 他是我们班个子＿＿高的人。
 最后 | zuì hòu | last, finally | 在所有的后面 | 他第一个来，我＿＿一个来。
 最近 | zuì jìn | recently | 不久以前 | 你＿＿忙吗？
-最好 | zuì hǎo | had better | 表示建议 | 你病了，＿＿在家休息。
+最好 | zuì hǎo | had better | 表示建议 | 你病了，＿＿在家休息。 | 所以
 `,
   },
   {
