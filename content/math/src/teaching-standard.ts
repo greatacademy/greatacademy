@@ -131,4 +131,13 @@ export const taughtTopics: readonly string[] = [
   "polar-equations-of-radial-lines",
   "polar-equations-of-circles-centered-on-the-coordinate-axes",
   "finding-intersections-of-polar-curves",
+  "sigma-notation",
+  "properties-of-finite-series",
+  "expressing-an-arithmetic-series-in-sigma-notation",
+  "finding-the-sum-of-an-arithmetic-series",
+  "finding-the-first-term-of-an-arithmetic-series",
+  "calculating-the-number-of-terms-in-an-arithmetic-series",
+  "modeling-with-arithmetic-series",
+  "the-sum-of-a-finite-geometric-series",
+  "the-sum-of-the-first-n-terms-of-a-geometric-series",
 ];

@@ -4403,15 +4403,20 @@ export const singularLinearTransformationsInThePlane: TopicDef = {
           [t(`A line with equation $${w1}$`, `直线 $${w1}$`), t(`A line with equation $${w2}$`, `直线 $${w2}$`), t(w3, w3Zh), t(w4, w4Zh)],
           join(
             label(1, "Compare the columns", "比较两列"),
-            t(
-              `Column $1$ is $(${k1 * u}, ${k1 * v})$, which is $${k1}$ times $(${u}, ${v})$. Column $2$ is $(${k2 * u}, ${k2 * v})$, which is $${k2}$ times $(${u}, ${v})$.`,
-              `第 $1$ 列是 $(${k1 * u}, ${k1 * v})$，是 $(${u}, ${v})$ 的 $${k1}$ 倍。第 $2$ 列是 $(${k2 * u}, ${k2 * v})$，是 $(${u}, ${v})$ 的 $${k2}$ 倍。`,
-            ),
+            k1 === k2
+              ? t(
+                  `Column $1$ is $(${k1 * u}, ${k1 * v})$, which is not zero. Column $2$ is the same vector.`,
+                  `第 $1$ 列是 $(${k1 * u}, ${k1 * v})$，不是零向量。第 $2$ 列是同一个向量。`,
+                )
+              : t(
+                  `Column $1$ is $(${k1 * u}, ${k1 * v})$, which is not zero. Column $2$ is $(${k2 * u}, ${k2 * v})$, which is $${Q.of(k2, k1).toLatex()}$ times column $1$.`,
+                  `第 $1$ 列是 $(${k1 * u}, ${k1 * v})$，不是零向量。第 $2$ 列是 $(${k2 * u}, ${k2 * v})$，是第 $1$ 列的 $${Q.of(k2, k1).toLatex()}$ 倍。`,
+                ),
             para,
             label(2, "Find the line", "求出直线"),
             t(
-              `Every image $A\\mathbf{x}$ is $x_1$ times column $1$ plus $x_2$ times column $2$, so it is a multiple of $(${u}, ${v})$. The plane goes onto the line through the origin in that direction. Its slope is $${v} \\div ${paren(u)} = ${slope}$. So the line is $${lineEq}$.`,
-              `每个像 $A\\mathbf{x}$ 都是 $x_1$ 乘第 $1$ 列加 $x_2$ 乘第 $2$ 列，所以是 $(${u}, ${v})$ 的倍数。平面被压到过原点、沿这个方向的直线上。它的斜率是 $${v} \\div ${paren(u)} = ${slope}$。所以直线是 $${lineEq}$。`,
+              `Every image $A\\mathbf{x}$ is $x_1$ times column $1$ plus $x_2$ times column $2$, so it is a multiple of column $1$. The plane goes onto the line through the origin in that direction. Its slope is $${k1 * v} \\div ${paren(k1 * u)} = ${slope}$. So the line is $${lineEq}$.`,
+              `每个像 $A\\mathbf{x}$ 都是 $x_1$ 乘第 $1$ 列加 $x_2$ 乘第 $2$ 列，所以是第 $1$ 列的倍数。平面被压到过原点、沿这个方向的直线上。它的斜率是 $${k1 * v} \\div ${paren(k1 * u)} = ${slope}$。所以直线是 $${lineEq}$。`,
             ),
             checked(
               t(
