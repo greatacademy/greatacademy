@@ -211,8 +211,8 @@ const cornerOfSegments = {
     "the-derivative-at-a-corner",
     ["The derivative at a corner", "折点处的导数"],
     [
-      "On a piecewise-linear graph each segment has its own slope. At the point where two segments meet, the derivative exists only if the slopes agree; at a true corner the one-sided slopes differ and the derivative does not exist, even though $f$ is continuous there.",
-      "在折线图像上，每条线段有自己的斜率。在两条线段的交点处，只有斜率相同时导数才存在；在真正的折点处，两侧斜率不同，导数不存在，尽管 $f$ 在那里连续。",
+      "On a piecewise-linear graph each segment has its own slope. At the point where two segments meet, the derivative exists only if the slopes agree; at a true corner the one-sided slopes differ and the derivative does not exist, even though $f$ is continuous there. For segments from $(-1, -1)$ to $(0, 1)$ and from $(0, 1)$ to $(2, 0)$, the slopes are $2$ and $-0.5$, so $f'(0)$ does not exist.\n\nCheck: on the right, $f(0.1) = 0.95$, so the difference quotient with $h = 0.1$ is $-0.5$; on the left, $f(-0.1) = 0.8$, so the quotient with $h = -0.1$ is $2$. They disagree.\n\n> **Watch out.** Averaging the two slopes does not give a derivative. At a corner there is no single tangent line, so $f'$ does not exist there.",
+      "在折线图像上，每条线段有自己的斜率。在两条线段的交点处，只有斜率相同时导数才存在；在真正的折点处，两侧斜率不同，导数不存在，尽管 $f$ 在那里连续。对从 $(-1, -1)$ 到 $(0, 1)$、再从 $(0, 1)$ 到 $(2, 0)$ 的线段，斜率分别是 $2$ 和 $-0.5$，所以 $f'(0)$ 不存在。\n\n检验：在右侧 $f(0.1) = 0.95$，所以 $h = 0.1$ 的差商是 $-0.5$；在左侧 $f(-0.1) = 0.8$，所以 $h = -0.1$ 的差商是 $2$。两者不一致。\n\n> **注意。** 把两侧斜率取平均并不能得到导数。折点处没有唯一的切线，所以 $f'$ 在那里不存在。",
     ],
     (rng) => {
       const x1 = rng.int(-3, 3);
@@ -221,22 +221,69 @@ const cornerOfSegments = {
       const m1 = nz(rng, 4);
       const m2 = rng.bool(0.25) ? m1 : rng.pick([-4, -3, -2, -1, 1, 2, 3, 4].filter((x) => x !== m1));
       const y1 = rng.int(-5, 5);
-      const path = `$(${x1 - w1}, ${y1 - m1 * w1})$, $(${x1}, ${y1})$, $(${x1 + w2}, ${y1 + m2 * w2})$`;
+      const [y0, y2] = [y1 - m1 * w1, y1 + m2 * w2];
+      const path = `$(${x1 - w1}, ${y0})$, $(${x1}, ${y1})$, $(${x1 + w2}, ${y2})$`;
       const none: Pair = [`It does not exist`, `不存在`];
       const num = (v: Q | number): Pair => same2(v instanceof Q ? v.toLatex() : String(v));
       const avg = Q.of(m1 + m2, 2);
-      return choose(
-        rng,
-        [
-          `The graph of $f$ is made of line segments joining ${path}, in that order. Find $f'(${x1})$.`,
-          `$f$ 的图像由依次连接 ${path} 的线段组成。求 $f'(${x1})$。`,
-        ],
-        m1 === m2 ? num(m1) : none,
-        m1 === m2 ? [none, num(m1 + 1), num(-m1)] : [num(m1), num(m2), num(avg)],
-        [
-          `The slope is $${m1}$ on the left and $${m2}$ on the right. ${m1 === m2 ? `They agree, so the two segments form one line and $f'(${x1}) = ${m1}$.` : "They differ, so the graph has a corner and the derivative does not exist."}`,
-          `左侧斜率是 $${m1}$，右侧斜率是 $${m2}$。${m1 === m2 ? `二者相同，所以两条线段构成一条直线，$f'(${x1}) = ${m1}$。` : "二者不同，所以图像有折点，导数不存在。"}`,
-        ],
+      const tenth = Q.of(1, 10);
+      const [right, left] = [Q.of(y1).add(tenth.mul(Q.of(m2))), Q.of(y1).sub(tenth.mul(Q.of(m1)))];
+      const agree = m1 === m2;
+      const wrong = agree ? [none, num(m1 + 1), num(-m1)] : [num(m1), num(m2), num(avg)];
+      const reasons: (readonly [string, string, string])[] = agree
+        ? [
+            [
+              none[0],
+              "The slopes on the two sides agree, so the segments form one straight line and the derivative exists.",
+              "两侧斜率相同，所以两条线段构成一条直线，导数存在。",
+            ],
+            [num(m1 + 1)[0], "This is not the slope of either segment.", "这不是任何一条线段的斜率。"],
+            [
+              num(-m1)[0],
+              `This has the wrong sign: the graph ${m1 > 0 ? "rises" : "falls"} through the point.`,
+              `符号反了：图像经过该点时在${m1 > 0 ? "上升" : "下降"}。`,
+            ],
+          ]
+        : [
+            [num(m1)[0], `This is only the slope on the left. On the right it is $${m2}$.`, `这只是左侧的斜率。右侧斜率是 $${m2}$。`],
+            [num(m2)[0], `This is only the slope on the right. On the left it is $${m1}$.`, `这只是右侧的斜率。左侧斜率是 $${m1}$。`],
+            [
+              num(avg)[0],
+              "Averaging the slopes does not give a derivative: at a corner there is none.",
+              "把斜率取平均得不到导数：折点处没有导数。",
+            ],
+          ];
+      return reasoned(
+        choose(
+          rng,
+          [
+            `The graph of $f$ is made of line segments joining ${path}, in that order. Find $f'(${x1})$.`,
+            `$f$ 的图像由依次连接 ${path} 的线段组成。求 $f'(${x1})$。`,
+          ],
+          agree ? num(m1) : none,
+          wrong,
+          walkPair(
+            [
+              [
+                "Find the slope on the left",
+                "求左侧的斜率",
+                `From $(${x1 - w1}, ${y0})$ to $(${x1}, ${y1})$ the height changes by $${y1 - y0}$ over $${w1}$, so the slope is $${m1}$.`,
+                `从 $(${x1 - w1}, ${y0})$ 到 $(${x1}, ${y1})$，图像在 $${w1}$ 的宽度改变 $${y1 - y0}$，所以斜率是 $${m1}$。`,
+              ],
+              [
+                "Find the slope on the right",
+                "求右侧的斜率",
+                `From $(${x1}, ${y1})$ to $(${x1 + w2}, ${y2})$ the height changes by $${y2 - y1}$ over $${w2}$, so the slope is $${m2}$. ${agree ? `The slopes agree, so the two segments form one line and $f'(${x1}) = ${m1}$.` : "The slopes differ, so the graph has a corner and the derivative does not exist."}`,
+                `从 $(${x1}, ${y1})$ 到 $(${x1 + w2}, ${y2})$，图像在 $${w2}$ 的宽度改变 $${y2 - y1}$，所以斜率是 $${m2}$。${agree ? `两侧斜率相同，所以两条线段构成一条直线，$f'(${x1}) = ${m1}$。` : "两侧斜率不同，所以图像有折点，导数不存在。"}`,
+              ],
+            ],
+            [
+              `Take difference quotients at $x = ${x1}$. On the right, $f(${dec(Q.of(x1).add(tenth))}) = ${dec(right)}$, so the quotient with $h = 0.1$ is $${m2}$. On the left, $f(${dec(Q.of(x1).sub(tenth))}) = ${dec(left)}$, so the quotient with $h = -0.1$ is $${m1}$. ${agree ? "They agree." : "They disagree."}`,
+              `在 $x = ${x1}$ 处求差商。右侧 $f(${dec(Q.of(x1).add(tenth))}) = ${dec(right)}$，所以 $h = 0.1$ 的差商是 $${m2}$。左侧 $f(${dec(Q.of(x1).sub(tenth))}) = ${dec(left)}$，所以 $h = -0.1$ 的差商是 $${m1}$。${agree ? "两者一致。" : "两者不一致。"}`,
+            ],
+          ),
+        ),
+        reasons,
       );
     },
   ),
@@ -248,29 +295,70 @@ const peakOfDerivative = {
     "a-peak-of-the-derivative-is-not-a-peak-of-the-function",
     ["A peak of the derivative is not a peak of the function", "导数的峰值不是函数的峰值"],
     [
-      "It is easy to read the graph of $f'$ as if it were $f$. The height of $f'$ gives the slope of $f$: its sign shows whether $f$ rises or falls. A local maximum or minimum of $f'$ is where the slope is most extreme, which is an inflection point of $f$, not an extremum.",
-      "很容易把 $f'$ 的图像误读成 $f$ 的图像。$f'$ 的高度给出 $f$ 的斜率：它的符号说明 $f$ 上升还是下降。$f'$ 的局部极大或极小值是斜率最极端的地方，那是 $f$ 的拐点，而不是极值点。",
+      "It is easy to read the graph of $f'$ as if it were $f$. The height of $f'$ gives the slope of $f$: its sign shows whether $f$ rises or falls. A local maximum or minimum of $f'$ is where the slope is most extreme, which is an inflection point of $f$, not an extremum. If $f'(x) = 4 - x^{2}$, its graph has a peak at $(0, 4)$. There $f'(0) = 4 > 0$, so $f$ is rising, not at a peak, and $f$ changes from concave up to concave down: a point of inflection.\n\nCheck: $f''(x) = -2x$ is positive for $x < 0$ and negative for $x > 0$, so the concavity of $f$ does change at $0$.\n\n> **Watch out.** The extrema of $f$ are where the graph of $f'$ crosses the axis, not where it peaks. A peak of $f'$ above the axis is where $f$ climbs fastest.",
+      "很容易把 $f'$ 的图像误读成 $f$ 的图像。$f'$ 的高度给出 $f$ 的斜率：它的符号说明 $f$ 上升还是下降。$f'$ 的局部极大或极小值是斜率最极端的地方，那是 $f$ 的拐点，而不是极值点。若 $f'(x) = 4 - x^{2}$，它的图像在 $(0, 4)$ 处有峰。那里 $f'(0) = 4 > 0$，所以 $f$ 在上升，并不在峰顶，而 $f$ 由上凹变为下凹：这是拐点。\n\n检验：$f''(x) = -2x$ 当 $x < 0$ 时为正，当 $x > 0$ 时为负，所以 $f$ 的凹凸性确实在 $0$ 处改变。\n\n> **注意。** $f$ 的极值在 $f'$ 的图像穿过 $x$ 轴的地方，而不是在它的峰处。$f'$ 在 $x$ 轴上方的峰是 $f$ 上升最快的地方。",
     ],
     (rng) => {
       const c = rng.int(-6, 6);
       const v = nz(rng, 9);
       const peak = rng.bool();
       const dir: Pair = v > 0 ? ["increasing", "递增"] : ["decreasing", "递减"];
-      return choose(
-        rng,
+      const sign: Pair = v > 0 ? ["positive", "正"] : ["negative", "负"];
+      const shift = c === 0 ? "x" : `(${minus(c)})`;
+      const model = `${v} ${peak ? "-" : "+"} ${power(c, 2)}`;
+      const second = `${peak ? "-2" : "2"}${shift}`;
+      const extremum: Pair = [`$f$ has a local ${peak ? "maximum" : "minimum"}`, `$f$ 有局部${peak ? "极大值" : "极小值"}`];
+      const height: Pair = [`$f$ has the value $${v}$ and a horizontal tangent`, `$f$ 的值是 $${v}$，并且有水平切线`];
+      const opposite: Pair = [
+        `$f$ is ${v > 0 ? "decreasing" : "increasing"} and has a point of inflection`,
+        `$f$ ${v > 0 ? "递减" : "递增"}，并且有拐点`,
+      ];
+      return reasoned(
+        choose(
+          rng,
+          [
+            `The graph of $f'$ has a local ${peak ? "maximum" : "minimum"} at $(${c}, ${v})$. Which is true of $f$ at $x = ${c}$?`,
+            `$f'$ 的图像在 $(${c}, ${v})$ 处有局部${peak ? "极大值" : "极小值"}。关于 $f$ 在 $x = ${c}$ 处，哪项正确？`,
+          ],
+          [`$f$ is ${dir[0]} and has a point of inflection`, `$f$ ${dir[1]}，并且有拐点`],
+          [extremum, height, opposite],
+          walkPair(
+            [
+              [
+                "Read the sign of f'",
+                "读 f' 的符号",
+                `$f'(${c}) = ${v}$, which is ${sign[0]}, so $f$ is ${dir[0]} at $x = ${c}$ and has no extremum there.`,
+                `$f'(${c}) = ${v}$ 为${sign[1]}，所以 $f$ 在 $x = ${c}$ 处${dir[1]}，那里没有极值。`,
+              ],
+              [
+                "Read the turn of f'",
+                "读 f' 的转向",
+                `$f'$ has a local ${peak ? "maximum" : "minimum"} at $x = ${c}$, so it changes from ${peak ? "increasing to decreasing" : "decreasing to increasing"} there. So $f$ changes from concave ${peak ? "up to concave down" : "down to concave up"}: a point of inflection.`,
+                `$f'$ 在 $x = ${c}$ 处有局部${peak ? "极大值" : "极小值"}，所以它在那里${peak ? "由递增变为递减" : "由递减变为递增"}。于是 $f$ ${peak ? "由上凹变为下凹" : "由下凹变为上凹"}：这是拐点。`,
+              ],
+            ],
+            [
+              `Take $f'(x) = ${model}$, which has this ${peak ? "peak" : "valley"}. Then $f''(x) = ${second}$ changes sign at $x = ${c}$, while $f'$ stays ${sign[0]} near $x = ${c}$.`,
+              `取 $f'(x) = ${model}$，它有这样的${peak ? "峰" : "谷"}。于是 $f''(x) = ${second}$ 在 $x = ${c}$ 处变号，而 $f'$ 在 $x = ${c}$ 附近保持为${sign[1]}。`,
+            ],
+          ),
+        ),
         [
-          `The graph of $f'$ has a local ${peak ? "maximum" : "minimum"} at $(${c}, ${v})$. Which is true of $f$ at $x = ${c}$?`,
-          `$f'$ 的图像在 $(${c}, ${v})$ 处有局部${peak ? "极大值" : "极小值"}。关于 $f$ 在 $x = ${c}$ 处，哪项正确？`,
-        ],
-        [`$f$ is ${dir[0]} and has a point of inflection`, `$f$ ${dir[1]}，并且有拐点`],
-        [
-          [`$f$ has a local ${peak ? "maximum" : "minimum"}`, `$f$ 有局部${peak ? "极大值" : "极小值"}`],
-          [`$f$ has the value $${v}$ and a horizontal tangent`, `$f$ 的值是 $${v}$，并且有水平切线`],
-          [`$f$ is ${v > 0 ? "decreasing" : "increasing"} and has a point of inflection`, `$f$ ${v > 0 ? "递减" : "递增"}，并且有拐点`],
-        ],
-        [
-          `Since $f'(${c}) = ${v} ${v > 0 ? "> 0" : "< 0"}$, $f$ is ${dir[0]} there, so it is not an extremum. And $f'$ switches between increasing and decreasing at $x = ${c}$, so $f$ changes concavity: a point of inflection.`,
-          `因为 $f'(${c}) = ${v} ${v > 0 ? "> 0" : "< 0"}$，所以 $f$ 在那里${dir[1]}，不是极值点。而 $f'$ 在 $x = ${c}$ 处从递增变为递减或相反，所以 $f$ 改变凹凸性：这是拐点。`,
+          [
+            extremum[0],
+            `That would need $f'$ to change sign at $x = ${c}$, but $f'(${c}) = ${v}$ is not zero.`,
+            `那需要 $f'$ 在 $x = ${c}$ 处变号，但 $f'(${c}) = ${v}$ 不为零。`,
+          ],
+          [
+            height[0],
+            `$${v}$ is the slope of $f$ at $x = ${c}$, not its value, and the tangent is horizontal only where $f' = 0$.`,
+            `$${v}$ 是 $f$ 在 $x = ${c}$ 处的斜率，不是函数值；只有 $f' = 0$ 的地方切线才水平。`,
+          ],
+          [
+            opposite[0],
+            `$f'(${c}) = ${v}$ is ${sign[0]}, so $f$ is ${dir[0]} there.`,
+            `$f'(${c}) = ${v}$ 为${sign[1]}，所以 $f$ 在那里${dir[1]}。`,
+          ],
         ],
       );
     },
@@ -282,8 +370,8 @@ const shapeFromDerivativeValues = point(
   "the-shape-from-values-of-the-derivative",
   ["The shape from values of the derivative", "由导数值判断形状"],
   [
-    "Two separate readings: the sign of $f'$ says whether $f$ rises or falls, and whether $f'$ goes up or down says the concavity. So negative values of $f'$ moving toward zero mean $f$ falls, more and more slowly, and is concave up.",
-    "这是两个独立的判断：$f'$ 的符号说明 $f$ 上升还是下降，$f'$ 的增减说明凹凸性。所以 $f'$ 的负值逐渐接近零，意味着 $f$ 在下降且越降越慢，图像上凹。",
+    "Two separate readings: the sign of $f'$ says whether $f$ rises or falls, and whether $f'$ goes up or down says the concavity. So negative values of $f'$ moving toward zero mean $f$ falls, more and more slowly, and is concave up.\n\nCheck: $f(x) = x^{2}$ on $[-3, -1]$ has $f'(x) = 2x$, with values $-6$, $-4$ and $-2$ at $x = -3, -2, -1$: negative and increasing. Its graph falls and is concave up there, as the two readings say.\n\n> **Watch out.** Do not read the size of the values as the direction of $f$. Values of $f'$ that shrink toward zero from below still mean that $f$ is falling.",
+    "这是两个独立的判断：$f'$ 的符号说明 $f$ 上升还是下降，$f'$ 的增减说明凹凸性。所以 $f'$ 的负值逐渐接近零，意味着 $f$ 在下降且越降越慢，图像上凹。\n\n检验：$f(x) = x^{2}$ 在 $[-3, -1]$ 上有 $f'(x) = 2x$，在 $x = -3, -2, -1$ 处的值为 $-6$、$-4$、$-2$：为负且在增大。它的图像在那里下降且上凹，与两个判断一致。\n\n> **注意。** 不要把数值的大小当成 $f$ 的方向。$f'$ 的值从下方向零靠近，仍然意味着 $f$ 在下降。",
   ],
   (rng) => {
     const x0 = rng.int(-6, 3);
@@ -302,17 +390,54 @@ const shapeFromDerivativeValues = point(
       `$f$ is ${inc ? "increasing" : "decreasing"} and concave ${cup ? "up" : "down"}`,
       `$f$ ${inc ? "递增" : "递减"}且${cup ? "上凹" : "下凹"}`,
     ];
-    return choose(
-      rng,
+    const [d1, d2] = [vals[1]! - vals[0]!, vals[2]! - vals[1]!];
+    const rates = [Q.of(d1, w), Q.of(d2, w)].map((q) => q.toLatex());
+    return reasoned(
+      choose(
+        rng,
+        [
+          `The derivative $f'$ is monotonic on $[${xs[0]}, ${xs[2]}]$, keeps its sign there, and has these values.\n\n${table}\n\nWhich describes $f$ on this interval?`,
+          `导数 $f'$ 在 $[${xs[0]}, ${xs[2]}]$ 上单调且不变号，取值如下。\n\n${table}\n\n$f$ 在这个区间上的情况是哪一项？`,
+        ],
+        text(positive, up),
+        [text(!positive, up), text(positive, !up), text(!positive, !up)],
+        walkPair(
+          [
+            [
+              "Read the sign",
+              "读符号",
+              `The values of $f'$ are ${positive ? "positive, so $f$ is increasing" : "negative, so $f$ is decreasing"}.`,
+              `$f'$ 的值${positive ? "为正，所以 $f$ 递增" : "为负，所以 $f$ 递减"}。`,
+            ],
+            [
+              "Read the trend",
+              "读增减",
+              `From left to right the values ${up ? "increase, so $f'$ is increasing and $f$ is concave up" : "decrease, so $f'$ is decreasing and $f$ is concave down"}.`,
+              `从左到右这些值${up ? "在增大，所以 $f'$ 递增，$f$ 上凹" : "在减小，所以 $f'$ 递减，$f$ 下凹"}。`,
+            ],
+          ],
+          [
+            `The average rates of change of $f'$ over the two steps are $${rates[0]}$ and $${rates[1]}$. Both are ${up ? "positive" : "negative"}, so $f''$ is ${up ? "positive" : "negative"} on average, which again gives concave ${up ? "up" : "down"}.`,
+            `$f'$ 在两步上的平均变化率分别是 $${rates[0]}$ 和 $${rates[1]}$。两者都${up ? "为正" : "为负"}，所以 $f''$ 平均${up ? "为正" : "为负"}，同样得出${up ? "上凹" : "下凹"}。`,
+          ],
+        ),
+      ),
       [
-        `The derivative $f'$ is monotonic on $[${xs[0]}, ${xs[2]}]$, keeps its sign there, and has these values.\n\n${table}\n\nWhich describes $f$ on this interval?`,
-        `导数 $f'$ 在 $[${xs[0]}, ${xs[2]}]$ 上单调且不变号，取值如下。\n\n${table}\n\n$f$ 在这个区间上的情况是哪一项？`,
-      ],
-      text(positive, up),
-      [text(!positive, up), text(positive, !up), text(!positive, !up)],
-      [
-        `The values of $f'$ are ${positive ? "positive, so $f$ is increasing" : "negative, so $f$ is decreasing"}. They ${up ? "increase, so $f$ is concave up" : "decrease, so $f$ is concave down"}.`,
-        `$f'$ 的值${positive ? "为正，所以 $f$ 递增" : "为负，所以 $f$ 递减"}。这些值${up ? "在增大，所以 $f$ 上凹" : "在减小，所以 $f$ 下凹"}。`,
+        [
+          text(!positive, up)[0],
+          `The values of $f'$ are ${positive ? "positive" : "negative"}, so $f$ is ${positive ? "increasing" : "decreasing"}.`,
+          `$f'$ 的值${positive ? "为正" : "为负"}，所以 $f$ ${positive ? "递增" : "递减"}。`,
+        ],
+        [
+          text(positive, !up)[0],
+          `The values of $f'$ ${up ? "increase" : "decrease"}, so $f$ is concave ${up ? "up" : "down"}.`,
+          `$f'$ 的值在${up ? "增大" : "减小"}，所以 $f$ ${up ? "上凹" : "下凹"}。`,
+        ],
+        [
+          text(!positive, !up)[0],
+          "Both readings are reversed: check the sign of $f'$ and whether its values go up or down.",
+          "两个判断都反了：要看 $f'$ 的符号，以及它的值是增大还是减小。",
+        ],
       ],
     );
   },
@@ -323,8 +448,8 @@ const areaUnderSlopedDerivative = {
     "values-from-a-sloped-segment-of-the-derivative",
     ["Values from a sloped segment of the derivative", "由导数的斜线段求函数值"],
     [
-      "The change in $f$ over an interval is the signed area under the graph of $f'$. When $f'$ is a sloped segment that area is a trapezoid, so the change is the average of the two end values of $f'$ times the width. Using just one end value is the common mistake.",
-      "$f$ 在区间上的变化量等于 $f'$ 图像下的有向面积。当 $f'$ 是斜线段时，这个面积是梯形，所以变化量等于 $f'$ 两端值的平均数乘以宽度。只用一端的值是常见的错误。",
+      "The change in $f$ over an interval is the signed area under the graph of $f'$. When $f'$ is a sloped segment that area is a trapezoid, so the change is the average of the two end values of $f'$ times the width. If $f'$ goes from $2$ at $x = 0$ to $6$ at $x = 3$, the change in $f$ over $[0, 3]$ is\n\n$$\\frac{2 + 6}{2} \\cdot 3 = 12.$$\n\nCheck: this segment is $f'(x) = 2 + \\frac{4}{3}x$, and $f(x) = 2x + \\frac{2}{3}x^{2}$ has it as derivative, with $f(3) - f(0) = 6 + 6 = 12$.\n\n> **Watch out.** Use the average of the two end values. Multiplying the width by just one end value counts a rectangle instead of the trapezoid.",
+      "$f$ 在区间上的变化量等于 $f'$ 图像下的有向面积。当 $f'$ 是斜线段时，这个面积是梯形，所以变化量等于 $f'$ 两端值的平均数乘以宽度。若 $f'$ 从 $x = 0$ 处的 $2$ 变到 $x = 3$ 处的 $6$，则 $f$ 在 $[0, 3]$ 上的变化量为\n\n$$\\frac{2 + 6}{2} \\cdot 3 = 12.$$\n\n检验：这条线段是 $f'(x) = 2 + \\frac{4}{3}x$，而 $f(x) = 2x + \\frac{2}{3}x^{2}$ 以它为导数，$f(3) - f(0) = 6 + 6 = 12$。\n\n> **注意。** 要用两端值的平均数。只用一端的值乘以宽度，算的是矩形而不是梯形。",
     ],
     (rng) => {
       const a = rng.int(-6, 2);
@@ -335,6 +460,8 @@ const areaUnderSlopedDerivative = {
       const start = rng.int(-8, 8);
       const change = Q.of((u + v) * w, 2);
       const answer = change.add(Q.of(start));
+      const pr = (q: Q) => (q.sign() < 0 ? `\\left(${q.toLatex()}\\right)` : q.toLatex());
+      const triangle = Q.of((v - u) * w, 2);
       return ask(
         [
           `The graph of $f'$ on $[${a}, ${b}]$ is the line segment from $(${a}, ${u})$ to $(${b}, ${v})$, and $f(${a}) = ${start}$. Find $f(${b})$.`,
@@ -342,10 +469,26 @@ const areaUnderSlopedDerivative = {
         ],
         answer,
         [Q.of(start + v * w), Q.of(start + u * w), Q.of(start + v - u), change],
-        [
-          `The signed area is $\\frac{${paren(u)} + ${paren(v)}}{2} \\cdot ${w} = ${change.toLatex()}$, so $f(${b}) = ${start} + ${change.sign() < 0 ? `(${change.toLatex()})` : change.toLatex()} = ${answer.toLatex()}$.`,
-          `有向面积是 $\\frac{${paren(u)} + ${paren(v)}}{2} \\cdot ${w} = ${change.toLatex()}$，所以 $f(${b}) = ${start} + ${change.sign() < 0 ? `(${change.toLatex()})` : change.toLatex()} = ${answer.toLatex()}$。`,
-        ],
+        walkPair(
+          [
+            [
+              "Find the signed area",
+              "求有向面积",
+              `The area under the segment is a trapezoid of width $${w}$:\n\n$$\\frac{${paren(u)} + ${paren(v)}}{2} \\cdot ${w} = ${change.toLatex()}$$`,
+              `线段下方的面积是宽为 $${w}$ 的梯形：\n\n$$\\frac{${paren(u)} + ${paren(v)}}{2} \\cdot ${w} = ${change.toLatex()}$$`,
+            ],
+            [
+              "Add it to the starting value",
+              "加到起始值上",
+              `This is the change in $f$, so\n\n$$f(${b}) = ${start} + ${pr(change)} = ${answer.toLatex()}$$`,
+              `这就是 $f$ 的变化量，所以\n\n$$f(${b}) = ${start} + ${pr(change)} = ${answer.toLatex()}$$`,
+            ],
+          ],
+          [
+            `Split the trapezoid into a rectangle of height $${u}$ and a triangle of height $${v - u}$:\n\n$$${paren(u)} \\cdot ${w} + \\frac{${paren(v - u)} \\cdot ${w}}{2} = ${u * w} + ${pr(triangle)} = ${change.toLatex()}$$\n\nThis is the same change.`,
+            `把梯形分成高为 $${u}$ 的矩形和高为 $${v - u}$ 的三角形：\n\n$$${paren(u)} \\cdot ${w} + \\frac{${paren(v - u)} \\cdot ${w}}{2} = ${u * w} + ${pr(triangle)} = ${change.toLatex()}$$\n\n得到同样的变化量。`,
+          ],
+        ),
       );
     },
   ),
@@ -356,8 +499,8 @@ const secondTestSilent = point(
   "when-the-second-derivative-test-says-nothing",
   ["When the second derivative test says nothing", "二阶导数判别法失效时"],
   [
-    "If $f'(a) = 0$ and $f''(a) = 0$, the second derivative test gives no information: $f$ may have a minimum, a maximum or neither. Look at the sign of $f'$ on each side instead. For $k(x - a)^{n}$ this depends on whether $n$ is even or odd.",
-    "如果 $f'(a) = 0$ 且 $f''(a) = 0$，二阶导数判别法不提供任何信息：$f$ 可能有极小值、极大值或都没有。这时要看 $f'$ 在两侧的符号。对 $k(x - a)^{n}$，结果取决于 $n$ 的奇偶。",
+    "If $f'(a) = 0$ and $f''(a) = 0$, the second derivative test gives no information: $f$ may have a minimum, a maximum or neither. Look at the sign of $f'$ on each side instead. For $k(x - a)^{n}$ this depends on whether $n$ is even or odd. For $f(x) = x^{4}$ at $0$, $f'(0) = 0$ and $f''(0) = 0$, yet $f$ has a minimum there, while $x^{3}$ has neither.\n\nCheck: $f'(x) = 4x^{3}$ is negative for $x < 0$ and positive for $x > 0$, so $x^{4}$ falls and then rises.\n\n> **Watch out.** $f''(a) = 0$ does not mean there is no extremum, or that nothing can be said. It only means the second derivative test is silent; the first derivative test can still decide.",
+    "如果 $f'(a) = 0$ 且 $f''(a) = 0$，二阶导数判别法不提供任何信息：$f$ 可能有极小值、极大值或都没有。这时要看 $f'$ 在两侧的符号。对 $k(x - a)^{n}$，结果取决于 $n$ 的奇偶。对 $0$ 处的 $f(x) = x^{4}$，$f'(0) = 0$，$f''(0) = 0$，但 $f$ 在那里有极小值，而 $x^{3}$ 既没有极大值也没有极小值。\n\n检验：$f'(x) = 4x^{3}$ 当 $x < 0$ 时为负，当 $x > 0$ 时为正，所以 $x^{4}$ 先降后升。\n\n> **注意。** $f''(a) = 0$ 既不意味着没有极值，也不意味着无法判断。它只说明二阶导数判别法失效；一阶导数判别法仍然可以判断。",
   ],
   (rng) => {
     const a = rng.int(-6, 6);
@@ -371,21 +514,68 @@ const secondTestSilent = point(
     const neither: Pair = ["Neither a maximum nor a minimum", "既没有极大值也没有极小值"];
     const cannot: Pair = ["It cannot be decided, because $f''$ is zero there", "无法判断，因为 $f''$ 在该点为零"];
     const correct = even ? (k > 0 ? min : max) : neither;
-    return choose(
-      rng,
+    const tenth = Q.of(1, 10);
+    const at = (h: Q) => {
+      let p = Q.one;
+      for (let i = 0; i < n; i++) p = p.mul(h);
+      return dec(Q.of(k).mul(p).add(Q.of(b)));
+    };
+    const left = even ? (k > 0 ? -1 : 1) : k > 0 ? 1 : -1;
+    const right = k > 0 ? 1 : -1;
+    const word = (s: number): Pair => (s > 0 ? ["positive", "正"] : ["negative", "负"]);
+    const odd = `An odd power changes sign at the point, so $f$ is above $f(${a})$ on one side and below it on the other.`;
+    const oddZh = `奇数次幂在该点变号，所以 $f$ 在一侧大于 $f(${a})$，在另一侧小于它。`;
+    return reasoned(
+      choose(
+        rng,
+        [
+          `$f(x) = ${f}$ has $f'(${a}) = 0$ and $f''(${a}) = 0$. What does $f$ have at $x = ${a}$?`,
+          `$f(x) = ${f}$ 满足 $f'(${a}) = 0$ 且 $f''(${a}) = 0$。$f$ 在 $x = ${a}$ 处有什么？`,
+        ],
+        correct,
+        [min, max, neither, cannot].filter((o) => o !== correct),
+        walkPair(
+          [
+            [
+              "Differentiate",
+              "求导",
+              `$f'(x) = ${poly([k * n, power(a, n - 1)])}$, with the ${even ? "odd" : "even"} power $${n - 1}$.`,
+              `$f'(x) = ${poly([k * n, power(a, n - 1)])}$，指数 $${n - 1}$ 是${even ? "奇数" : "偶数"}。`,
+            ],
+            [
+              "Read the sign of f' on each side",
+              "读 f' 在两侧的符号",
+              `Just left of $x = ${a}$, $f'$ is ${word(left)[0]}, and just right of it, $f'$ is ${word(right)[0]}. ${even ? `So $f$ ${left < 0 ? "falls and then rises: a local minimum" : "rises and then falls: a local maximum"}.` : "$f'$ keeps its sign, so there is no extremum."}`,
+              `在 $x = ${a}$ 左侧 $f'$ 为${word(left)[1]}，右侧为${word(right)[1]}。${even ? `所以 $f$ ${left < 0 ? "先降后升：局部极小值" : "先升后降：局部极大值"}。` : "$f'$ 不变号，所以没有极值。"}`,
+            ],
+          ],
+          [
+            `Compare values: $f(${dec(Q.of(a).sub(tenth))}) = ${at(tenth.neg())}$, $f(${a}) = ${b}$ and $f(${dec(Q.of(a).add(tenth))}) = ${at(tenth)}$. ${even ? `Both neighbours are ${k > 0 ? "above" : "below"} $f(${a})$.` : `One neighbour is above $f(${a})$ and the other below.`}`,
+            `比较函数值：$f(${dec(Q.of(a).sub(tenth))}) = ${at(tenth.neg())}$，$f(${a}) = ${b}$，$f(${dec(Q.of(a).add(tenth))}) = ${at(tenth)}$。${even ? `两侧的值都${k > 0 ? "大于" : "小于"} $f(${a})$。` : `一侧大于 $f(${a})$，另一侧小于它。`}`,
+          ],
+        ),
+      ),
       [
-        `$f(x) = ${f}$ has $f'(${a}) = 0$ and $f''(${a}) = 0$. What does $f$ have at $x = ${a}$?`,
-        `$f(x) = ${f}$ 满足 $f'(${a}) = 0$ 且 $f''(${a}) = 0$。$f$ 在 $x = ${a}$ 处有什么？`,
-      ],
-      correct,
-      [min, max, neither, cannot].filter((o) => o !== correct),
-      [
-        even
-          ? `The power $${n}$ is even, so $${power(a, n)}$ is positive on both sides of $x = ${a}$ and the coefficient $${k}$ is ${k > 0 ? "positive" : "negative"}. So $f$ is ${k > 0 ? "above" : "below"} $f(${a})$ on both sides: a local ${k > 0 ? "minimum" : "maximum"}.`
-          : `$f'(x) = ${poly([k * n, power(a, n - 1)])}$ has the even power $${n - 1}$, so $f'$ keeps its sign across $x = ${a}$. So there is no extremum.`,
-        even
-          ? `指数 $${n}$ 是偶数，所以 $${power(a, n)}$ 在 $x = ${a}$ 两侧都为正，而系数 $${k}$ ${k > 0 ? "为正" : "为负"}。所以 $f$ 在两侧都${k > 0 ? "大于" : "小于"} $f(${a})$：这是局部${k > 0 ? "极小值" : "极大值"}。`
-          : `$f'(x) = ${poly([k * n, power(a, n - 1)])}$ 的指数 $${n - 1}$ 是偶数，所以 $f'$ 在 $x = ${a}$ 两侧不变号。因此没有极值。`,
+        [
+          min[0],
+          even ? `The coefficient $${k}$ is negative, so $f$ is below $f(${a})$ on both sides.` : odd,
+          even ? `系数 $${k}$ 为负，所以 $f$ 在两侧都小于 $f(${a})$。` : oddZh,
+        ],
+        [
+          max[0],
+          even ? `The coefficient $${k}$ is positive, so $f$ is above $f(${a})$ on both sides.` : odd,
+          even ? `系数 $${k}$ 为正，所以 $f$ 在两侧都大于 $f(${a})$。` : oddZh,
+        ],
+        [
+          neither[0],
+          `The power $${n}$ is even, so $f - f(${a})$ has the same sign on both sides: there is an extremum.`,
+          `指数 $${n}$ 是偶数，所以 $f - f(${a})$ 在两侧同号：有极值。`,
+        ],
+        [
+          cannot[0],
+          "The second derivative test is silent, but the sign of $f'$ on each side still decides.",
+          "二阶导数判别法失效，但 $f'$ 在两侧的符号仍然可以判断。",
+        ],
       ],
     );
   },
@@ -396,8 +586,8 @@ const overOrUnderTrig = {
     "whether-a-trigonometric-linearization-is-too-high-or-too-low",
     ["Whether a linearization is too high or too low", "线性近似偏高还是偏低"],
     [
-      "A tangent line lies above a concave-down graph and below a concave-up one. So the sign of $f''$ on the side of the point decides whether the linearization overestimates or underestimates. Sine and tangent change concavity at $0$, so the side matters.",
-      "切线位于下凹图像的上方、上凹图像的下方。所以该点那一侧 $f''$ 的符号决定线性近似是偏高还是偏低。正弦和正切在 $0$ 处改变凹凸性，所以哪一侧很重要。",
+      "A tangent line lies above a concave-down graph and below a concave-up one. So the sign of $f''$ on the side of the point decides whether the linearization overestimates or underestimates. Sine and tangent change concavity at $0$, so the side matters. For $\\sin x$ at $x = 0.1$, $f''(x) = -\\sin x$ is negative between $0$ and $0.1$, so $L(0.1) = 0.1$ is too high.\n\nCheck: a calculator gives $\\sin 0.1 \\approx 0.0998$, just below $0.1$.\n\n> **Watch out.** For sine and tangent the answer changes with the side of $0$. At $x = -0.1$, $\\sin x$ is concave up, and $L(-0.1) = -0.1$ is too low.",
+      "切线位于下凹图像的上方、上凹图像的下方。所以该点那一侧 $f''$ 的符号决定线性近似是偏高还是偏低。正弦和正切在 $0$ 处改变凹凸性，所以哪一侧很重要。对 $x = 0.1$ 处的 $\\sin x$，$f''(x) = -\\sin x$ 在 $0$ 与 $0.1$ 之间为负，所以 $L(0.1) = 0.1$ 偏高。\n\n检验：计算器给出 $\\sin 0.1 \\approx 0.0998$，略小于 $0.1$。\n\n> **注意。** 对正弦和正切，结论随 $0$ 的哪一侧而变。在 $x = -0.1$ 处 $\\sin x$ 上凹，$L(-0.1) = -0.1$ 偏低。",
     ],
     (rng) => {
       const kind = rng.pick(["sin", "tan", "cos"] as const);
@@ -409,20 +599,52 @@ const overOrUnderTrig = {
       const under = f2 > 0;
       const f = poly([k, `\\${kind} x`]);
       const L = kind === "cos" ? `${k}` : poly([k, "x"]);
+      const second = kind === "sin" ? poly([-k, "\\sin x"]) : kind === "tan" ? poly([2 * k, "\\sec^{2} x \\tan x"]) : poly([-k, "\\cos x"]);
+      const xv = x.toNumber();
+      const value = k * (kind === "sin" ? Math.sin(xv) : kind === "tan" ? Math.tan(xv) : Math.cos(xv));
+      const line = kind === "cos" ? Q.of(k) : Q.of(k).mul(x);
+      const eight = dec(Q.of(Math.round(value * 1e8), 1e8));
       const over: Pair = ["An overestimate", "偏高"];
       const low: Pair = ["An underestimate", "偏低"];
       const exact: Pair = ["Exactly right, since $x$ is so small", "完全准确，因为 $x$ 很小"];
-      return choose(
-        rng,
+      return reasoned(
+        choose(
+          rng,
+          [
+            `Near $0$, the linearization of $f(x) = ${f}$ is $L(x) = ${L}$. What is $L(${dec(x)})$ compared with $f(${dec(x)})$?`,
+            `在 $0$ 附近，$f(x) = ${f}$ 的线性近似是 $L(x) = ${L}$。$L(${dec(x)})$ 与 $f(${dec(x)})$ 相比如何？`,
+          ],
+          under ? low : over,
+          [under ? over : low, exact],
+          walkPair(
+            [
+              [
+                "Find the sign of f''",
+                "求 f'' 的符号",
+                `$f''(x) = ${second}$. Between $0$ and $${dec(x)}$ it is ${under ? "positive" : "negative"}.`,
+                `$f''(x) = ${second}$。在 $0$ 与 $${dec(x)}$ 之间它${under ? "为正" : "为负"}。`,
+              ],
+              [
+                "Compare with the tangent",
+                "与切线比较",
+                `So the graph is concave ${under ? "up and lies above" : "down and lies below"} its tangent there, and the linearization is ${under ? "too low" : "too high"}.`,
+                `所以图像在那里${under ? "上凹，位于切线上方" : "下凹，位于切线下方"}，线性近似${under ? "偏低" : "偏高"}。`,
+              ],
+            ],
+            [
+              `With a calculator, $f(${dec(x)}) \\approx ${eight}$, while $L(${dec(x)}) = ${dec(line)}$. The linearization is ${under ? "smaller" : "larger"}.`,
+              `用计算器算，$f(${dec(x)}) \\approx ${eight}$，而 $L(${dec(x)}) = ${dec(line)}$。线性近似${under ? "更小" : "更大"}。`,
+            ],
+          ),
+        ),
         [
-          `Near $0$, the linearization of $f(x) = ${f}$ is $L(x) = ${L}$. What is $L(${dec(x)})$ compared with $f(${dec(x)})$?`,
-          `在 $0$ 附近，$f(x) = ${f}$ 的线性近似是 $L(x) = ${L}$。$L(${dec(x)})$ 与 $f(${dec(x)})$ 相比如何？`,
-        ],
-        under ? low : over,
-        [under ? over : low, exact],
-        [
-          `Between $0$ and $${dec(x)}$, $f''$ is ${under ? "positive, so the graph is concave up and lies above its tangent" : "negative, so the graph is concave down and lies below its tangent"}. So the linearization is ${under ? "too low" : "too high"}.`,
-          `在 $0$ 与 $${dec(x)}$ 之间，$f''$ ${under ? "为正，所以图像上凹，位于切线上方" : "为负，所以图像下凹，位于切线下方"}。所以线性近似${under ? "偏低" : "偏高"}。`,
+          [over[0], "The graph lies above its tangent here, so the line is too low.", "这里图像在切线上方，所以直线偏低。"],
+          [low[0], "The graph lies below its tangent here, so the line is too high.", "这里图像在切线下方，所以直线偏高。"],
+          [
+            exact[0],
+            "A linearization is exact only where the graph is straight. Here $f'' \\ne 0$, so there is an error, however small $x$ is.",
+            "只有图像是直线时线性近似才精确。这里 $f'' \\ne 0$，所以无论 $x$ 多小都有误差。",
+          ],
         ],
       );
     },

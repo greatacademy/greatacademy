@@ -1243,14 +1243,20 @@ const linearizationError: KnowledgePointDef = {
   id: "bounding-the-error-of-a-linearization",
   title: t("Bounding the error of a linearization", "线性近似的误差界"),
   explanation: t(
-    "A tangent line departs from a curve because of curvature, so the error depends on the second derivative. If $|f''| \\le M$ between $a$ and $x$, then $|f(x) - L(x)| \\le \\frac{M}{2}(x - a)^2$. Because of the square, moving ten times closer makes the error bound a hundred times smaller.",
-    "切线偏离曲线是因为曲线弯曲，所以误差取决于二阶导数。如果在 $a$ 与 $x$ 之间 $|f''| \\le M$，则 $|f(x) - L(x)| \\le \\frac{M}{2}(x - a)^2$。由于有平方，距离缩小到十分之一时，误差界缩小到百分之一。",
+    "A tangent line departs from a curve because of curvature, so the error depends on the second derivative. If $|f''| \\le M$ between $a$ and $x$, then $|f(x) - L(x)| \\le \\frac{M}{2}(x - a)^2$. Because of the square, moving ten times closer makes the error bound a hundred times smaller. For $L$ at $a = 1$ with $|f''| \\le 4$, the bound at $x = 1.1$ is\n\n$$\\frac{4}{2}(0.1)^{2} = 0.02.$$\n\nCheck: $f(x) = 2x^{2}$ has $f'' = 4$, and its tangent at $1$ is $L(x) = 4x - 2$. Then $f(1.1) - L(1.1) = 2.42 - 2.4 = 0.02$, exactly the bound.\n\n> **Watch out.** Square the distance $x - a$ and halve $M$. Forgetting the square or the half gives a bound that is far too big.",
+    "切线偏离曲线是因为曲线弯曲，所以误差取决于二阶导数。如果在 $a$ 与 $x$ 之间 $|f''| \\le M$，则 $|f(x) - L(x)| \\le \\frac{M}{2}(x - a)^2$。由于有平方，距离缩小到十分之一时，误差界缩小到百分之一。对 $a = 1$ 处的 $L$，若 $|f''| \\le 4$，则在 $x = 1.1$ 处误差界为\n\n$$\\frac{4}{2}(0.1)^{2} = 0.02.$$\n\n检验：$f(x) = 2x^{2}$ 有 $f'' = 4$，它在 $1$ 处的切线是 $L(x) = 4x - 2$。于是 $f(1.1) - L(1.1) = 2.42 - 2.4 = 0.02$，正好等于误差界。\n\n> **注意。** 要把距离 $x - a$ 平方，并把 $M$ 减半。漏掉平方或一半，得到的误差界会大得多。",
   ),
   generate(rng) {
     const a = rng.int(1, 5);
     const d = rng.int(1, 9);
     const M = rng.int(1, 12);
     const answer = Q.of(M * d * d, 200);
+    const h = Q.of(d, 10);
+    const half = Q.of(M, 2);
+    const x = Q.of(a).add(h);
+    const g = half.mul(x).mul(x);
+    const l = half.mul(Q.of(a * a)).add(Q.of(M * a).mul(h));
+    const lead = half.eq(Q.one) ? "" : half.toLatex();
     return numberProblem({
       prompt: t(
         `$L$ is the linearization of $f$ at $x = ${a}$, and $|f''(x)| \\le ${M}$ between $${a}$ and $${a}.${d}$. What upper bound does the error formula give for $|f(${a}.${d}) - L(${a}.${d})|$?`,
@@ -1258,9 +1264,25 @@ const linearizationError: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(M * d, 10), Q.of(M * d * d, 100), Q.of(M * d, 20)],
-      solution: t(
-        `The distance from the center is $0.${d}$, so the bound is $\\frac{${M}}{2}(0.${d})^2 = ${answer.toLatex()}$.`,
-        `到中心的距离是 $0.${d}$，所以误差界是 $\\frac{${M}}{2}(0.${d})^2 = ${answer.toLatex()}$。`,
+      solution: walk(
+        [
+          [
+            "Find the distance",
+            "求距离",
+            `The distance from the center is $${a}.${d} - ${a} = 0.${d}$.`,
+            `到中心的距离是 $${a}.${d} - ${a} = 0.${d}$。`,
+          ],
+          [
+            "Apply the bound",
+            "代入误差界",
+            `With $M = ${M}$, the bound is\n\n$$\\frac{${M}}{2}(0.${d})^{2} = \\frac{${M}}{2} \\cdot ${dec(h.mul(h))} = ${dec(answer)}$$`,
+            `取 $M = ${M}$，误差界为\n\n$$\\frac{${M}}{2}(0.${d})^{2} = \\frac{${M}}{2} \\cdot ${dec(h.mul(h))} = ${dec(answer)}$$`,
+          ],
+        ],
+        [
+          `$g(x) = ${lead}x^{2}$ has $g'' = ${M}$ everywhere, and its tangent at $${a}$ is $L(x) = ${poly([M * a, "x"], [half.mul(Q.of(a * a)).neg(), ""])}$. Then\n\n$$g(${dec(x)}) - L(${dec(x)}) = ${dec(g)} - ${dec(l)} = ${dec(answer)}$$\n\nThis is exactly the bound, so the formula cannot promise anything smaller.`,
+          `$g(x) = ${lead}x^{2}$ 处处有 $g'' = ${M}$，它在 $${a}$ 处的切线是 $L(x) = ${poly([M * a, "x"], [half.mul(Q.of(a * a)).neg(), ""])}$。于是\n\n$$g(${dec(x)}) - L(${dec(x)}) = ${dec(g)} - ${dec(l)} = ${dec(answer)}$$\n\n正好等于误差界，所以这个公式不能保证更小的值。`,
+        ],
       ),
     });
   },
@@ -4537,8 +4559,8 @@ const reciprocalOfRoot: KnowledgePointDef = {
   id: "approximating-a-reciprocal-of-a-root",
   title: t("Approximating a reciprocal of a root", "近似计算根式的倒数"),
   explanation: t(
-    "Local linearity works for any differentiable function, and the choice of function follows from the shape of the number. To approximate $\\frac{1}{\\sqrt{N}}$, use $f(x) = x^{-1/2}$ at a nearby perfect square, where $f$ and $f'$ have exact values. Since $f$ is decreasing, its slope is negative, so a number above the square has an approximation below the exact value at the square. Because $f$ is concave up, this estimate is slightly low.",
-    "局部线性化适用于任何可导函数，函数的选择取决于这个数的形式。要近似 $\\frac{1}{\\sqrt{N}}$，取 $f(x) = x^{-1/2}$，在附近的完全平方数处，$f$ 和 $f'$ 都有精确值。由于 $f$ 递减，斜率为负，所以大于该平方数的数，其近似值小于在平方数处的精确值。又因为 $f$ 是上凹的，这个估计略微偏低。",
+    "Local linearity works for any differentiable function, and the choice of function follows from the shape of the number. To approximate $\\frac{1}{\\sqrt{N}}$, use $f(x) = x^{-1/2}$ at a nearby perfect square, where $f$ and $f'$ have exact values. Since $f$ is decreasing, its slope is negative, so a number above the square has an approximation below the exact value at the square. Because $f$ is concave up, this estimate is slightly low. For $\\frac{1}{\\sqrt{26}}$, use $a = 25$: $f(25) = \\frac{1}{5}$, and $f'(x) = -\\frac{1}{2}x^{-3/2}$ gives $f'(25) = -\\frac{1}{250}$. Then\n\n$$\\frac{1}{\\sqrt{26}} \\approx \\frac{1}{5} - \\frac{1}{250} = \\frac{49}{250} = 0.196.$$\n\nCheck: $0.196^{2} \\cdot 26 \\approx 0.9988$, just below $1$, so $0.196$ is slightly below $\\frac{1}{\\sqrt{26}}$, as concave up predicts.\n\n> **Watch out.** The derivative of $x^{-1/2}$ is $-\\frac{1}{2}x^{-3/2}$, with a minus sign. Dropping it moves the estimate the wrong way.",
+    "局部线性化适用于任何可导函数，函数的选择取决于这个数的形式。要近似 $\\frac{1}{\\sqrt{N}}$，取 $f(x) = x^{-1/2}$，在附近的完全平方数处，$f$ 和 $f'$ 都有精确值。由于 $f$ 递减，斜率为负，所以大于该平方数的数，其近似值小于在平方数处的精确值。又因为 $f$ 是上凹的，这个估计略微偏低。对 $\\frac{1}{\\sqrt{26}}$，取 $a = 25$：$f(25) = \\frac{1}{5}$，由 $f'(x) = -\\frac{1}{2}x^{-3/2}$ 得 $f'(25) = -\\frac{1}{250}$。于是\n\n$$\\frac{1}{\\sqrt{26}} \\approx \\frac{1}{5} - \\frac{1}{250} = \\frac{49}{250} = 0.196.$$\n\n检验：$0.196^{2} \\cdot 26 \\approx 0.9988$，略小于 $1$，所以 $0.196$ 略小于 $\\frac{1}{\\sqrt{26}}$，与上凹的判断一致。\n\n> **注意。** $x^{-1/2}$ 的导数是 $-\\frac{1}{2}x^{-3/2}$，带负号。漏掉负号会让估计朝错误的方向移动。",
   ),
   generate(rng) {
     const a = rng.int(3, 10);
@@ -4546,17 +4568,35 @@ const reciprocalOfRoot: KnowledgePointDef = {
     const base = Q.of(1, a);
     const step = Q.of(h, 2 * a ** 3);
     const answer = base.sub(step);
-    const shown = Q.of(Math.abs(h), 2 * a ** 3).toLatex();
+    const n = a * a + h;
+    const back = answer.toNumber() ** 2 * n;
+    const six = dec(Q.of(Math.round(back * 1e6), 1e6));
     return numberProblem({
       prompt: t(
-        `Use the linearization of $f(x) = \\frac{1}{\\sqrt{x}}$ at $x = ${a * a}$ to approximate $\\frac{1}{\\sqrt{${a * a + h}}}$.`,
-        `用 $f(x) = \\frac{1}{\\sqrt{x}}$ 在 $x = ${a * a}$ 处的线性化近似 $\\frac{1}{\\sqrt{${a * a + h}}}$。`,
+        `Use the linearization of $f(x) = \\frac{1}{\\sqrt{x}}$ at $x = ${a * a}$ to approximate $\\frac{1}{\\sqrt{${n}}}$.`,
+        `用 $f(x) = \\frac{1}{\\sqrt{x}}$ 在 $x = ${a * a}$ 处的线性化近似 $\\frac{1}{\\sqrt{${n}}}$。`,
       ),
       answer,
       wrong: [base.add(step), base.sub(Q.of(h, a ** 3)), base, base.sub(Q.of(h, 2 * a))],
-      solution: t(
-        `Here $f(${a * a}) = ${base.toLatex()}$ and $f'(${a * a}) = -\\frac{1}{2 \\cdot ${a}^3}$. With the step $${h}$, the estimate is $${base.toLatex()} ${h > 0 ? "-" : "+"} ${shown} = ${answer.toLatex()}$.`,
-        `这里 $f(${a * a}) = ${base.toLatex()}$，$f'(${a * a}) = -\\frac{1}{2 \\cdot ${a}^3}$。步长为 $${h}$，估计值是 $${base.toLatex()} ${h > 0 ? "-" : "+"} ${shown} = ${answer.toLatex()}$。`,
+      solution: walk(
+        [
+          [
+            "Find the value and the slope",
+            "求函数值和斜率",
+            `$f(x) = x^{-1/2}$ has $f'(x) = -\\frac{1}{2}x^{-3/2}$. At the perfect square $${a * a}$,\n\n$$f(${a * a}) = \\frac{1}{${a}}, \\quad f'(${a * a}) = -\\frac{1}{2 \\cdot ${a}^{3}} = -\\frac{1}{${2 * a ** 3}}$$`,
+            `$f(x) = x^{-1/2}$ 的导数为 $f'(x) = -\\frac{1}{2}x^{-3/2}$。在完全平方数 $${a * a}$ 处，\n\n$$f(${a * a}) = \\frac{1}{${a}}, \\quad f'(${a * a}) = -\\frac{1}{2 \\cdot ${a}^{3}} = -\\frac{1}{${2 * a ** 3}}$$`,
+          ],
+          [
+            "Linearize",
+            "线性化",
+            `The step is $${n} - ${a * a} = ${h}$, so\n\n$$\\frac{1}{\\sqrt{${n}}} \\approx \\frac{1}{${a}} - \\frac{1}{${2 * a ** 3}} \\cdot ${inParens(h)} = ${answer.toLatex()}${approx(answer)}$$`,
+            `步长为 $${n} - ${a * a} = ${h}$，所以\n\n$$\\frac{1}{\\sqrt{${n}}} \\approx \\frac{1}{${a}} - \\frac{1}{${2 * a ** 3}} \\cdot ${inParens(h)} = ${answer.toLatex()}${approx(answer)}$$`,
+          ],
+        ],
+        [
+          `If the estimate were exact, its square times $${n}$ would be $1$. Instead\n\n$$\\left(${answer.toLatex()}\\right)^{2} \\cdot ${n} \\approx ${six}$$\n\nThis is just below $1$, so the estimate is slightly below the exact value, as concave up predicts.`,
+          `如果估计值是精确的，它的平方乘以 $${n}$ 应等于 $1$。实际上\n\n$$\\left(${answer.toLatex()}\\right)^{2} \\cdot ${n} \\approx ${six}$$\n\n略小于 $1$，所以估计值略小于精确值，与上凹的判断一致。`,
+        ],
       ),
     });
   },

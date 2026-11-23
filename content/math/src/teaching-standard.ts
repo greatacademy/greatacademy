@@ -126,4 +126,12 @@ export const taughtTopics: readonly string[] = [
   "relating-concavity-to-the-second-derivative",
   "points-of-inflection",
   "the-second-derivative-test",
+  "sketching-the-derivative-of-a-function-from-the-functions-graph",
+  "interpreting-the-graph-of-a-functions-derivative",
+  "interpreting-the-graph-of-a-functions-derivative-concavity-and-points-of-inflection",
+  "sketching-a-function-from-the-graph-of-its-derivative",
+  "sketching-a-function-given-some-derivative-properties",
+  "approximating-functions-using-local-linearity-and-linearization",
+  "approximating-the-roots-of-a-number-using-local-linearity",
+  "approximating-trigonometric-functions-using-local-linearity",
 ];
