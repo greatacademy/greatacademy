@@ -9,7 +9,7 @@ import { calculusDrawings4 } from "../explanation-drawings-calculus-4.ts";
 import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 
 import { explainedChoice, numberProblem } from "../problems.ts";
-import { ask, choose, type Pair, point, same } from "../university-kit.ts";
+import { type Pair, point, same } from "../university-kit.ts";
 import { type Step, walked } from "./calculus-i-differentiation.ts";
 import { drawn, label } from "./figure-reading-more.ts";
 
@@ -944,8 +944,8 @@ const nthTermPlot = point(
   "the-nth-term-test-on-a-plot-of-terms",
   ["The nth term test on a plot of terms", "在项的图上用第 n 项判别法"],
   [
-    "The divergence test looks at the terms themselves. If the terms approach a nonzero number or have no limit, the series diverges. If they approach zero, the test says nothing, because some such series converge and others diverge. So a plot of terms heading to zero never proves convergence by itself.",
-    "发散判别法看的是项本身。如果项趋向非零数或没有极限，级数发散。如果项趋向零，判别法什么也没说，因为这样的级数有的收敛有的发散。所以项趋向零的图本身不能证明收敛。",
+    "The divergence test looks at the terms themselves. If the terms approach a nonzero number or have no limit, the series diverges. If they approach zero, the test says nothing, because some such series converge and others diverge. For terms $a_{n} = 2 + \\frac{3}{n}$, which settle at $2$, the partial sums grow by about $2$ per step: $S_{N} = 2N + 3\\left(1 + \\frac{1}{2} + \\cdots + \\frac{1}{N}\\right)$.\n\nCheck: $S_{100} > 200$ and $S_{1000} > 2000$, so the partial sums pass every bound and the series diverges.\n\n> **Watch out.** A plot of terms heading to zero never proves convergence by itself: $\\frac{1}{n}$ and $\\frac{1}{n^{2}}$ both head to zero, but only $\\sum \\frac{1}{n^{2}}$ converges.",
+    "发散判别法看的是项本身。如果项趋向非零数或没有极限，级数发散。如果项趋向零，判别法什么也没说，因为这样的级数有的收敛有的发散。对于稳定在 $2$ 的项 $a_{n} = 2 + \\frac{3}{n}$，部分和每一步大约增加 $2$：$S_{N} = 2N + 3\\left(1 + \\frac{1}{2} + \\cdots + \\frac{1}{N}\\right)$。\n\n检验：$S_{100} > 200$，$S_{1000} > 2000$，所以部分和超过任何界，级数发散。\n\n> **注意。** 项趋向零的图本身永远不能证明收敛：$\\frac{1}{n}$ 和 $\\frac{1}{n^{2}}$ 都趋向零，但只有 $\\sum \\frac{1}{n^{2}}$ 收敛。",
   ],
   (rng) => {
     const c = rng.pick([-3, -2, -1, 1, 2, 3]);
@@ -954,32 +954,87 @@ const nthTermPlot = point(
     const up = rng.bool();
     const f = toZero ? (n: number) => (up ? 1 : -1) * (size / n) : (n: number) => c + ((up ? 1 : -1) * size) / n;
     const values = Array.from({ length: 12 }, (_, i) => f(i + 1));
+    const limit = toZero ? 0 : c;
     const right: Pair = toZero ? ["The test gives no conclusion", "判别法得不出结论"] : ["The series diverges", "级数发散"];
-    const wrong: Pair[] = [
-      toZero ? ["The series diverges", "级数发散"] : ["The test gives no conclusion", "判别法得不出结论"],
-      ["The series converges to $0$", "级数收敛到 $0$"],
-      [`The series converges to $${toZero ? size : c}$`, `级数收敛到 $${toZero ? size : c}$`],
-    ];
-    const reason: Pair = toZero
-      ? [
-          "The terms approach zero, so the divergence test does not apply and other tests are needed",
-          "项趋向零，所以发散判别法不适用，需要别的判别法",
-        ]
-      : [`The terms approach $${c}$, which is not zero, so the series cannot converge`, `项趋向 $${c}$，它不是零，所以级数不可能收敛`];
-    return choose(
-      rng,
+    const cN = c === 1 ? "N" : c === -1 ? "-N" : `${c}N`;
+    const s1000 = Math.round(Array.from({ length: 1000 }, (_, i) => f(i + 1)).reduce((x, y) => x + y, 0));
+    const wrong: readonly (readonly [Pair, Pair])[] = [
+      toZero
+        ? [
+            ["The series diverges", "级数发散"],
+            [
+              "The divergence test cannot show this when the terms tend to $0$; it needs a nonzero limit",
+              "项趋于 $0$ 时发散判别法不能说明这一点；它需要非零的极限",
+            ],
+          ]
+        : [
+            ["The test gives no conclusion", "判别法得不出结论"],
+            [
+              `It does conclude: the terms tend to $${c}$, not $0$, so the series diverges`,
+              `它能得出结论：项趋于 $${c}$，不是 $0$，所以级数发散`,
+            ],
+          ],
       [
+        ["The series converges to $0$", "级数收敛到 $0$"],
+        [
+          "This confuses the limit of the terms with the sum of the series, and the test never proves convergence",
+          "这里把项的极限和级数的和混为一谈了，而且这个判别法从不证明收敛",
+        ],
+      ],
+      [
+        [`The series converges to $${toZero ? size : c}$`, `级数收敛到 $${toZero ? size : c}$`],
+        toZero
+          ? [
+              `$${size}$ is the size of the first term, not a sum, and the test never proves convergence`,
+              `$${size}$ 是第一项的大小，不是和，而且这个判别法从不证明收敛`,
+            ]
+          : [
+              `$${c}$ is the limit of the terms, not the sum; terms that do not tend to $0$ make the series diverge`,
+              `$${c}$ 是项的极限，不是和；项不趋于 $0$ 时级数发散`,
+            ],
+      ],
+    ];
+    const parts: Step[] = [
+      [
+        ["Read the limit of the terms", "读出项的极限"],
+        t(`The dots settle at height $${limit}$:`, `点稳定在高度 $${limit}$ 处：`),
+        [`\\lim_{n \\to \\infty} a_{n} = ${limit}`],
+      ],
+      [
+        ["Apply the test", "应用判别法"],
+        toZero
+          ? t(
+              "A limit of $0$ is the one case in which the divergence test says nothing; another test must decide.",
+              "极限为 $0$ 正是发散判别法什么也说不出的情形；必须用别的判别法来判断。",
+            )
+          : t(
+              `The limit is $${c}$, not $0$, so the terms do not shrink away and the series diverges.`,
+              `极限是 $${c}$，不是 $0$，所以项不会趋于消失，级数发散。`,
+            ),
+      ],
+    ];
+    const check: Pair = toZero
+      ? [
+          `Two series fit such a plot and disagree. Terms $\\frac{${size}}{n}$ give a divergent series, while terms $\\frac{${size}}{n^{2}}$, which look much the same on a plot, give a convergent one. So a picture of terms tending to $0$ cannot settle it.`,
+          `两个级数都符合这样的图，结论却不同。项 $\\frac{${size}}{n}$ 给出发散级数，而在图上看起来差不多的项 $\\frac{${size}}{n^{2}}$ 给出收敛级数。所以项趋于 $0$ 的图不能作出判断。`,
+        ]
+      : [
+          `Add the terms: each is close to $${c}$, so $S_{N}$ is roughly $${cN}$. On the same pattern $S_{1000} \\approx ${s1000}$, and the partial sums keep growing in size without bound.`,
+          `把项加起来：每项都接近 $${c}$，所以 $S_{N}$ 大约是 $${cN}$。按同样的规律，$S_{1000} \\approx ${s1000}$，部分和的大小不断增大，没有界。`,
+        ];
+    return explainedChoice(rng, {
+      prompt: t(
         "The dots show the terms $a_n$ of a series, and the pattern continues. What does the divergence test say?",
         "图中的点是某级数的项 $a_n$，规律一直持续。发散判别法说明了什么？",
-      ],
-      right,
-      wrong,
-      [`${reason[0]}.`, `${reason[1]}。`],
-      fig({ xMin: 0, xMax: 13, yMin: -7, yMax: 7, xName: "n", yName: "a" }, dots(values), [
-        `The terms of a series, which settle at ${toZero ? 0 : c}, starting from ${f(1)}.`,
-        `某级数的项，稳定在 ${toZero ? 0 : c}，从 ${f(1)} 开始。`,
+      ),
+      correct: t(...right),
+      wrong: wrong.map(([o, why]) => ({ option: t(...o), why: t(...why) })),
+      solution: walked(parts, t(...check)),
+      figure: fig({ xMin: 0, xMax: 13, yMin: -7, yMax: 7, xName: "n", yName: "a" }, dots(values), [
+        `The terms of a series, which settle at ${limit}, starting from ${f(1)}.`,
+        `某级数的项，稳定在 ${limit}，从 ${f(1)} 开始。`,
       ]),
-    );
+    });
   },
 );
 
@@ -987,29 +1042,65 @@ const alternatingBound = point(
   "an-alternating-error-bound-from-a-plot",
   ["An alternating error bound from a plot", "由图读交错级数的误差界"],
   [
-    "For an alternating series whose term sizes decrease to zero, the error after $n$ terms is at most the size of the next term. So on a plot of term sizes, the bound on the error of $S_n$ is the height of the dot at $n + 1$, and not the dot at $n$, which has already been added in.",
-    "对于项的大小递减趋于零的交错级数，取前 $n$ 项后的误差不超过下一项的大小。所以在项大小的图上，$S_n$ 的误差界是 $n + 1$ 处点的高度，而不是 $n$ 处的点，那一项已经加进去了。",
+    "For an alternating series whose term sizes decrease to zero, the error after $n$ terms is at most the size of the next term, $|S - S_{n}| \\le |a_{n+1}|$. So on a plot of term sizes, the bound on the error of $S_{n}$ is the height of the dot at $n + 1$. For the alternating harmonic series, the error of $S_{3}$ is at most $|a_{4}| = \\frac{1}{4}$. Indeed, the actual error is $|\\ln 2 - S_{3}| = \\left|\\ln 2 - \\frac{5}{6}\\right| \\approx 0.140$.\n\nCheck: $0.140 < \\frac{1}{4}$, as the bound promises.\n\n> **Watch out.** The dot at $n$ is a term already added into $S_{n}$; the bound is the dot at $n + 1$.",
+    "对于项的大小递减趋于零的交错级数，取前 $n$ 项后的误差不超过下一项的大小，即 $|S - S_{n}| \\le |a_{n+1}|$。所以在项大小的图上，$S_{n}$ 的误差界是 $n + 1$ 处点的高度。对交错调和级数，$S_{3}$ 的误差不超过 $|a_{4}| = \\frac{1}{4}$。事实上，实际误差是 $|\\ln 2 - S_{3}| = \\left|\\ln 2 - \\frac{5}{6}\\right| \\approx 0.140$。\n\n检验：$0.140 < \\frac{1}{4}$，符合误差界。\n\n> **注意。** $n$ 处的点是已经加进 $S_{n}$ 的项；误差界是 $n + 1$ 处的点。",
   ],
   (rng) => {
     const values = rng.sample([9, 8, 7, 6, 5, 4, 3, 2, 1], 6).sort((x, y) => y - x);
     const n = rng.int(1, 4);
     const next = values[n] as number;
-    return ask(
+    const here = values[n - 1] as number;
+    const after = values[n + 1] as number;
+    const all: { value: number; why: ReturnType<typeof t> }[] = [
+      {
+        value: here,
+        why: t(`This is the dot at $${n}$, a term already included in $S_{${n}}$`, `这是 $${n}$ 处的点，那一项已经包含在 $S_{${n}}$ 中`),
+      },
+      {
+        value: after,
+        why: t(
+          `This is the dot at $${n + 2}$; the first term left out is $a_{${n + 1}}$`,
+          `这是 $${n + 2}$ 处的点；第一个被舍去的项是 $a_{${n + 1}}$`,
+        ),
+      },
+      { value: here + next, why: t("The bound is a single term, not the sum of two", "误差界是一项，而不是两项之和") },
+    ];
+    const parts: Step[] = [
       [
-        `The dots show the sizes $|a_1|, \\ldots, |a_6|$ of the terms of an alternating series, and the sizes keep decreasing to zero. By the alternating series bound, what is the smallest upper bound the plot gives on the error of $S_{${n}}$?`,
-        `图中的点是某交错级数各项的大小 $|a_1|, \\ldots, |a_6|$，这些大小继续递减趋于零。由交错级数误差界，图给出的 $S_{${n}}$ 误差的最小上界是多少？`,
+        ["Find the first term left out", "找出第一个被舍去的项"],
+        t(
+          `$S_{${n}}$ includes the terms up to $a_{${n}}$, so the first term left out is $a_{${n + 1}}$:`,
+          `$S_{${n}}$ 包含到 $a_{${n}}$ 为止的项，所以第一个被舍去的项是 $a_{${n + 1}}$：`,
+        ),
+        [`|S - S_{${n}}| \\le |a_{${n + 1}}|`],
       ],
-      next,
-      [values[n - 1] as number, values[n + 1] as number, (values[n - 1] as number) + next],
       [
-        `The error after $${n}$ terms is at most the next term size, $|a_{${n + 1}}|$, and the dot at $${n + 1}$ has height $${next}$.`,
-        `取前 $${n}$ 项后的误差不超过下一项的大小 $|a_{${n + 1}}|$，而 $${n + 1}$ 处点的高度是 $${next}$。`,
+        ["Read its dot", "读出它的点"],
+        t(`The dot at $n = ${n + 1}$ has height $${next}$:`, `$n = ${n + 1}$ 处的点高度是 $${next}$：`),
+        [`|a_{${n + 1}}| = ${next}`],
       ],
-      fig({ xMin: 0, xMax: 7, yMin: 0, yMax: 10, xName: "n" }, dots(values), [
+    ];
+    return {
+      ...numberProblem({
+        prompt: t(
+          `The dots show the sizes $|a_1|, \\ldots, |a_6|$ of the terms of an alternating series, and the sizes keep decreasing to zero. By the alternating series bound, what is the smallest upper bound the plot gives on the error of $S_{${n}}$?`,
+          `图中的点是某交错级数各项的大小 $|a_1|, \\ldots, |a_6|$，这些大小继续递减趋于零。由交错级数误差界，图给出的 $S_{${n}}$ 误差的最小上界是多少？`,
+        ),
+        answer: next,
+        mistakes: all.filter((x, i) => x.value !== next && all.findIndex((y) => y.value === x.value) === i),
+        solution: walked(
+          parts,
+          t(
+            `Bracket $S$ instead. Because the sizes decrease, $S$ lies between $S_{${n}}$ and $S_{${n + 1}}$, and these differ by exactly $|a_{${n + 1}}| = ${next}$. So $S$ is within $${next}$ of $S_{${n}}$, and the plot gives no smaller bound.`,
+            `改为把 $S$ 夹住。因为各项大小递减，$S$ 在 $S_{${n}}$ 与 $S_{${n + 1}}$ 之间，而两者恰好相差 $|a_{${n + 1}}| = ${next}$。所以 $S$ 与 $S_{${n}}$ 的距离不超过 $${next}$，图给不出更小的界。`,
+          ),
+        ),
+      }),
+      figure: fig({ xMin: 0, xMax: 7, yMin: 0, yMax: 10, xName: "n" }, dots(values), [
         `Term sizes at n = 1 to 6: ${values.join(", ")}.`,
         `n = 1 到 6 的项的大小：${values.join("，")}。`,
       ]),
-    );
+    };
   },
 );
 
@@ -1018,8 +1109,8 @@ const radiusFromInterval = {
     "radius-from-a-drawn-interval-of-convergence",
     ["Radius from a drawn interval of convergence", "由图中收敛区间读半径"],
     [
-      "A power series converges on an interval centered at its center $a$, with radius $R$ being half the length of the interval. The endpoints may or may not belong to the interval, and that does not change $R$. So open and filled circles at the ends matter for convergence at those points only, and not for the radius.",
-      "幂级数在以中心 $a$ 为中点的区间上收敛，半径 $R$ 是区间长度的一半。端点可能属于区间，也可能不属于，这不改变 $R$。所以两端的空心圆和实心圆只影响那两点的收敛性，不影响半径。",
+      "A power series converges on an interval centered at its center $a$, and the radius $R$ is half the length of the interval. The endpoints may or may not belong to the interval, and that does not change $R$. If the interval runs from $-1$ to $5$, the center is its midpoint and the radius is half its length: $a = \\frac{-1 + 5}{2} = 2, \\quad R = \\frac{5 - (-1)}{2} = 3$.\n\nCheck: $2 - 3 = -1$ and $2 + 3 = 5$ give back the ends.\n\n> **Watch out.** Open and filled circles at the ends matter for convergence at those points only, not for the radius; and the radius is half the length, not the whole length $6$.",
+      "幂级数在以中心 $a$ 为中点的区间上收敛，半径 $R$ 是区间长度的一半。端点可能属于区间，也可能不属于，这不改变 $R$。如果区间从 $-1$ 到 $5$，中心是它的中点，半径是它长度的一半：$a = \\frac{-1 + 5}{2} = 2, \\quad R = \\frac{5 - (-1)}{2} = 3$。\n\n检验：$2 - 3 = -1$，$2 + 3 = 5$，正好回到两端。\n\n> **注意。** 两端的空心圆和实心圆只影响那两点的收敛性，不影响半径；而且半径是长度的一半，不是整个长度 $6$。",
     ],
     (rng) => {
       const a = rng.int(-3, 3);
@@ -1035,30 +1126,86 @@ const radiusFromInterval = {
         `<circle class="accent" cx="${x(v)}" cy="50" r="5" fill="${filled ? "currentColor" : "none"}" stroke="currentColor"/>`;
       body += `<line class="accent" x1="${x(a - R)}" y1="50" x2="${x(a + R)}" y2="50" stroke-width="3" stroke="currentColor"/>${end(a - R, leftIn)}${end(a + R, rightIn)}`;
       const name = (open: boolean): Pair => (open ? ["filled", "实心"] : ["open", "空心"]);
-      return ask(
+      const pn = (v: number) => (v < 0 ? `(${v})` : `${v}`);
+      const answer = askCenter ? a : R;
+      const all: { value: number; why: ReturnType<typeof t> }[] = askCenter
+        ? [
+            { value: a - R, why: t("This is the left end of the interval, not its midpoint", "这是区间的左端，不是中点") },
+            { value: a + R, why: t("This is the right end of the interval, not its midpoint", "这是区间的右端，不是中点") },
+            {
+              value: R,
+              why: t(
+                "This is the radius, the distance from the center to an end, not the center",
+                "这是半径，即中心到端点的距离，不是中心",
+              ),
+            },
+          ]
+        : [
+            {
+              value: 2 * R,
+              why: t("This is the whole length of the interval; the radius is half of it", "这是区间的整个长度；半径是它的一半"),
+            },
+            { value: a, why: t("This is the center of the interval, not the radius", "这是区间的中心，不是半径") },
+            {
+              value: R + 1,
+              why: t(
+                "This counts tick marks including the one at the center; the radius is the distance from the center to an end",
+                "这里数刻度时把中心的刻度也算上了；半径是中心到端点的距离",
+              ),
+            },
+          ];
+      const parts: Step[] = [
+        [
+          ["Read the ends", "读出两端"],
+          t(
+            `The segment runs from $${a - R}$ to $${a + R}$. The ${name(leftIn)[0]} and ${name(rightIn)[0]} circles only say whether the ends belong to it:`,
+            `线段从 $${a - R}$ 到 $${a + R}$。左端${name(leftIn)[1]}圆、右端${name(rightIn)[1]}圆只说明端点是否属于区间：`,
+          ),
+          [`${leftIn ? "[" : "("}${a - R}, ${a + R}${rightIn ? "]" : ")"}`],
+        ],
         askCenter
           ? [
-              `The thick segment shows the interval of convergence of a power series. What is the center of the series?`,
-              `粗线段表示某幂级数的收敛区间。级数的中心是多少？`,
+              ["Take the midpoint", "取中点"],
+              t("The center is the midpoint of the ends:", "中心是两端的中点："),
+              [`a = \\frac{${a - R} + ${pn(a + R)}}{2} = ${a}`],
             ]
           : [
-              `The thick segment shows the interval of convergence of a power series. What is its radius of convergence?`,
-              `粗线段表示某幂级数的收敛区间。它的收敛半径是多少？`,
+              ["Take half the length", "取长度的一半"],
+              t("The radius is half the length:", "半径是长度的一半："),
+              [`R = \\frac{${a + R} - ${pn(a - R)}}{2} = ${R}`],
             ],
-        askCenter ? a : R,
-        askCenter ? [a - R, a + R, R] : [2 * R, a, R + 1],
-        [
-          `The interval runs from $${a - R}$ to $${a + R}$, so its midpoint is $${a}$ and half its length is $${R}$. The ${name(leftIn)[0]} and ${name(rightIn)[0]} ends do not affect either number.`,
-          `区间从 $${a - R}$ 到 $${a + R}$，所以中点是 $${a}$，长度的一半是 $${R}$。左端${name(leftIn)[1]}和右端${name(rightIn)[1]}都不影响这两个数。`,
-        ],
-        {
+      ];
+      return {
+        ...numberProblem({
+          prompt: t(
+            ...((askCenter
+              ? [
+                  "The thick segment shows the interval of convergence of a power series. What is the center of the series?",
+                  "粗线段表示某幂级数的收敛区间。级数的中心是多少？",
+                ]
+              : [
+                  "The thick segment shows the interval of convergence of a power series. What is its radius of convergence?",
+                  "粗线段表示某幂级数的收敛区间。它的收敛半径是多少？",
+                ]) as Pair),
+          ),
+          answer,
+          mistakes: all.filter((m, i) => m.value !== answer && all.findIndex((y) => y.value === m.value) === i),
+          solution: walked(
+            parts,
+            t(
+              `Go back out from the center: $${a} - ${R} = ${a - R}$ and $${a} + ${R} = ${a + R}$ are the two ends, so the center $${a}$ and the radius $${R}$ fit the drawing.`,
+              `从中心向两边走回去：$${a} - ${R} = ${a - R}$，$${a} + ${R} = ${a + R}$ 正是两端，所以中心 $${a}$ 和半径 $${R}$ 与图相符。`,
+            ),
+          ),
+        }),
+        figure: {
           svg: svgDocument(90, body),
           alt: t(
             `An interval on a number line from ${a - R} (${name(leftIn)[0]}) to ${a + R} (${name(rightIn)[0]}).`,
             `数轴上从 ${a - R}（${name(leftIn)[1]}）到 ${a + R}（${name(rightIn)[1]}）的区间。`,
           ),
         },
-      );
+      };
     },
   ),
   figure: calculusDrawings5["radius-of-convergence-of-power-series#radius-from-a-drawn-interval-of-convergence"],
@@ -1069,8 +1216,8 @@ const taylorSigns = {
     "signs-of-taylor-coefficients-from-a-graph",
     ["Signs of Taylor coefficients from a graph", "由图读泰勒系数的符号"],
     [
-      "The second-degree Taylor polynomial at $a$ uses $f(a)$, $f'(a)$ and $f''(a)$, and a graph shows the sign of each. The height at $a$ gives the first, the rise or fall through $a$ gives the second, and whether the graph bends upward or downward at $a$ gives the third.",
-      "在 $a$ 处的二阶泰勒多项式用到 $f(a)$、$f'(a)$ 和 $f''(a)$，图能显示每一个的符号。$a$ 处的高度给出第一个，经过 $a$ 时的上升或下降给出第二个，图在 $a$ 处向上弯还是向下弯给出第三个。",
+      "The second-degree Taylor polynomial at $a$ is built from three numbers: $T_{2}(x) = f(a) + f'(a)(x - a) + \\frac{f''(a)}{2}(x - a)^{2}$. A graph shows the sign of each. The height at $a$ gives the first, the rise or fall through $a$ gives the second, and whether the graph bends upward or downward at $a$ gives the third. For $f(x) = 1 - x + x^{2}$ at $a = 0$, the graph sits at height $1$, falls through $0$ and bends upward.\n\nCheck: $f(0) = 1 > 0$, $f'(0) = -1 < 0$ and $f''(0) = 2 > 0$, matching what the graph shows.\n\n> **Watch out.** A graph can be below the axis and still rising, or falling while it bends upward: read each sign on its own.",
+      "在 $a$ 处的二阶泰勒多项式由三个数构成：$T_{2}(x) = f(a) + f'(a)(x - a) + \\frac{f''(a)}{2}(x - a)^{2}$。图能显示每一个的符号。$a$ 处的高度给出第一个，经过 $a$ 时的上升或下降给出第二个，图在 $a$ 处向上弯还是向下弯给出第三个。对 $f(x) = 1 - x + x^{2}$ 在 $a = 0$ 处，图象位于高度 $1$，经过 $0$ 时下降，并向上弯。\n\n检验：$f(0) = 1 > 0$，$f'(0) = -1 < 0$，$f''(0) = 2 > 0$，与图所示一致。\n\n> **注意。** 图象可以在轴下方却仍在上升，也可以在下降的同时向上弯：每个符号要分别读。",
     ],
     (rng) => {
       const a = rng.int(-2, 2);
@@ -1082,16 +1229,61 @@ const taylorSigns = {
       const sign = (s: number) => (s > 0 ? ">" : "<");
       const form = (x: number, y: number, z: number) => same(`f(a) ${sign(x)} 0,\\; f'(a) ${sign(y)} 0,\\; f''(a) ${sign(z)} 0`);
       const word = (s: number): Pair => (s > 0 ? ["positive", "正"] : ["negative", "负"]);
-      return choose(
-        rng,
-        ["What are the signs at the marked point $x = a$ of the function drawn?", "图中函数在所标点 $x = a$ 处的符号是什么？"],
-        form(s0, s1, s2),
-        [form(s0, s1, -s2), form(s0, -s1, s2), form(-s0, s1, s2), form(-s0, -s1, s2), form(s0, -s1, -s2)],
+      const near = (x: number) => Math.round(f(x) * 100) / 100;
+      const parts: Step[] = [
         [
-          `At $a$ the height is ${word(s0)[0]}, the graph is ${s1 > 0 ? "rising" : "falling"} so the slope is ${word(s1)[0]}, and the graph bends ${s2 > 0 ? "upward" : "downward"} so the second derivative is ${word(s2)[0]}.`,
-          `在 $a$ 处高度为${word(s0)[1]}，图象${s1 > 0 ? "上升" : "下降"}，所以斜率为${word(s1)[1]}；图象${s2 > 0 ? "向上" : "向下"}弯，所以二阶导数为${word(s2)[1]}。`,
+          ["Read the height", "读高度"],
+          t(`The marked point is ${s0 > 0 ? "above" : "below"} the $x$-axis:`, `所标的点在 $x$ 轴${s0 > 0 ? "上方" : "下方"}：`),
+          [`f(a) ${sign(s0)} 0`],
         ],
-        fig(
+        [
+          ["Read the slope", "读斜率"],
+          t(`Moving right through $a$, the graph ${s1 > 0 ? "rises" : "falls"}:`, `从左向右经过 $a$ 时，图象${s1 > 0 ? "上升" : "下降"}：`),
+          [`f'(a) ${sign(s1)} 0`],
+        ],
+        [
+          ["Read the bending", "读弯曲方向"],
+          t(
+            `The graph bends ${s2 > 0 ? "upward, like a cup" : "downward, like a cap"}:`,
+            `图象${s2 > 0 ? "向上弯，像杯口朝上" : "向下弯，像杯口朝下"}：`,
+          ),
+          [`f''(a) ${sign(s2)} 0`],
+        ],
+      ];
+      return explainedChoice(rng, {
+        prompt: t("What are the signs at the marked point $x = a$ of the function drawn?", "图中函数在所标点 $x = a$ 处的符号是什么？"),
+        correct: t(...form(s0, s1, s2)),
+        wrong: [
+          {
+            option: t(...form(s0, s1, -s2)),
+            why: t(
+              `The graph bends ${s2 > 0 ? "upward" : "downward"}, so $f''(a)$ is ${word(s2)[0]}`,
+              `图象${s2 > 0 ? "向上" : "向下"}弯，所以 $f''(a)$ 为${word(s2)[1]}`,
+            ),
+          },
+          {
+            option: t(...form(s0, -s1, s2)),
+            why: t(
+              `The graph ${s1 > 0 ? "rises" : "falls"} through $a$, so $f'(a)$ is ${word(s1)[0]}`,
+              `图象经过 $a$ 时${s1 > 0 ? "上升" : "下降"}，所以 $f'(a)$ 为${word(s1)[1]}`,
+            ),
+          },
+          {
+            option: t(...form(-s0, s1, s2)),
+            why: t(
+              `The point is ${s0 > 0 ? "above" : "below"} the axis, so $f(a)$ is ${word(s0)[0]}`,
+              `该点在轴${s0 > 0 ? "上方" : "下方"}，所以 $f(a)$ 为${word(s0)[1]}`,
+            ),
+          },
+        ],
+        solution: walked(
+          parts,
+          t(
+            `Compare nearby heights: $f(a - 1) \\approx ${near(a - 1)}$, $f(a) = ${value}$ and $f(a + 1) \\approx ${near(a + 1)}$. The step from the left is ${near(a) - near(a - 1) < near(a + 1) - near(a) ? "smaller" : "larger"} than the step to the right, so the slope ${s2 > 0 ? "increases" : "decreases"} and the graph bends ${s2 > 0 ? "upward" : "downward"}; their average change, $${Math.round(((near(a + 1) - near(a - 1)) / 2) * 100) / 100}$, has the sign of $f'(a)$.`,
+            `比较附近的高度：$f(a - 1) \\approx ${near(a - 1)}$，$f(a) = ${value}$，$f(a + 1) \\approx ${near(a + 1)}$。左边一步的变化${near(a) - near(a - 1) < near(a + 1) - near(a) ? "小于" : "大于"}右边一步，所以斜率${s2 > 0 ? "增大" : "减小"}，图象${s2 > 0 ? "向上" : "向下"}弯；两步的平均变化 $${Math.round(((near(a + 1) - near(a - 1)) / 2) * 100) / 100}$ 与 $f'(a)$ 同号。`,
+          ),
+        ),
+        figure: fig(
           { xMin: -7, xMax: 7, yMin: -7, yMax: 7 },
           [
             { kind: "curve", f, accent: true },
@@ -1102,7 +1294,7 @@ const taylorSigns = {
             `一条抛物线，在 x = ${a} 处高度为 ${value}，在那里${s1 > 0 ? "上升" : "下降"}，并${s2 > 0 ? "向上" : "向下"}弯。`,
           ],
         ),
-      );
+      });
     },
   ),
   figure: calculusDrawings5["analyzing-second-degree-taylor-polynomials#signs-of-taylor-coefficients-from-a-graph"],

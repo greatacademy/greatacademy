@@ -2,9 +2,12 @@
 // leave out. See `deeperRealAnalysisPoints`.
 
 import type { KnowledgePointDef } from "@ga/content";
+import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { numberProblem, why } from "../problems.ts";
 
 import { ask, point } from "../university-kit.ts";
+import { type Step, walked } from "./calculus-i-differentiation.ts";
 
 /** frac builds a rational number with a positive denominator. */
 const frac = (n: number, d: number) => (d < 0 ? Q.of(-n, -d) : Q.of(n, d));
@@ -128,25 +131,76 @@ const tailBound = point(
   "bounding-the-tail-of-a-p-series",
   ["Bounding the tail of a p-series", "估计 p 级数的尾部"],
   [
-    "Comparing with an integral bounds what remains of a convergent $p$-series. The sum of $\\frac{1}{k^p}$ over $k > n$ is less than $\\int_n^\\infty x^{-p} \\, dx = \\frac{1}{(p - 1) n^{p - 1}}$. So the partial sum to $n$ is known with an explicit error, and the bound shows how slowly small $p$ converges.",
-    "与积分比较可以估计收敛 $p$ 级数的余项。$k > n$ 时 $\\frac{1}{k^p}$ 之和小于 $\\int_n^\\infty x^{-p} \\, dx = \\frac{1}{(p - 1) n^{p - 1}}$。所以到 $n$ 的部分和有明确的误差，这个界也说明了 $p$ 较小时收敛有多慢。",
+    "Comparing with an integral bounds what remains of a convergent $p$-series. The sum of $\\frac{1}{k^p}$ over $k > n$ is less than $\\int_n^\\infty x^{-p} \\, dx = \\frac{1}{(p - 1) n^{p - 1}}$. So the partial sum to $n$ is known with an explicit error, and the bound shows how slowly small $p$ converges. For $p = 2$ and $n = 3$, $\\sum_{k > 3} \\frac{1}{k^{2}} < \\int_{3}^{\\infty} \\frac{dx}{x^{2}} = \\frac{1}{3}$.\n\nCheck: the whole sum is $\\frac{\\pi^{2}}{6} \\approx 1.6449$, and the first three terms give about $1.3611$. So the tail is about $0.2838$, which is indeed below $\\frac{1}{3}$.\n\n> **Watch out.** The integral starts at $n$, not at $n + 1$: starting at $n + 1$ gives a lower bound for the tail instead.",
+    "与积分比较可以估计收敛 $p$ 级数的余项。$k > n$ 时 $\\frac{1}{k^p}$ 之和小于 $\\int_n^\\infty x^{-p} \\, dx = \\frac{1}{(p - 1) n^{p - 1}}$。所以到 $n$ 的部分和有明确的误差，这个界也说明了 $p$ 较小时收敛有多慢。对 $p = 2$，$n = 3$，$\\sum_{k > 3} \\frac{1}{k^{2}} < \\int_{3}^{\\infty} \\frac{dx}{x^{2}} = \\frac{1}{3}$。\n\n检验：整个和是 $\\frac{\\pi^{2}}{6} \\approx 1.6449$，前三项之和约为 $1.3611$。所以尾部约为 $0.2838$，确实小于 $\\frac{1}{3}$。\n\n> **注意。** 积分从 $n$ 开始，而不是从 $n + 1$ 开始：从 $n + 1$ 开始得到的是尾部的下界。",
   ],
   (rng) => {
     const p = rng.int(2, 5);
-    const n = rng.int(2, 10);
+    const n = rng.int(2, [20, 10, 5, 2][p - 2] ?? 2);
     const answer = Q.of(1, (p - 1) * n ** (p - 1));
-    return ask(
+    const lower = Q.of(1, (p - 1) * (n + 1) ** (p - 1));
+    const last = 2000;
+    let tail = 1 / ((p - 1) * (last + 0.5) ** (p - 1));
+    for (let k = n + 1; k <= last; k += 1) tail += 1 / k ** p;
+    const value = p === 2 ? `\\frac{1}{${n}}` : `\\frac{1}{${p - 1} \\cdot ${n}^{${p - 1}}} = ${answer.toLatex()}`;
+    const parts: Step[] = [
       [
+        ["Compare with the integral", "与积分比较"],
+        t(
+          "Each term $\\frac{1}{k^{p}}$ is less than the area under $x^{-p}$ from $k - 1$ to $k$, so the tail is less than the integral from $n$:",
+          "每一项 $\\frac{1}{k^{p}}$ 都小于 $x^{-p}$ 从 $k - 1$ 到 $k$ 下方的面积，所以尾部小于从 $n$ 开始的积分：",
+        ),
+        [`\\sum_{k > ${n}} \\frac{1}{k^{${p}}} < \\int_{${n}}^{\\infty} x^{-${p}}\\,dx`],
+      ],
+      [
+        ["Evaluate the integral", "计算积分"],
+        t(
+          `Put $p = ${p}$ and $n = ${n}$ into $\\frac{1}{(p - 1) n^{p - 1}}$:`,
+          `把 $p = ${p}$，$n = ${n}$ 代入 $\\frac{1}{(p - 1) n^{p - 1}}$：`,
+        ),
+        [`\\int_{${n}}^{\\infty} x^{-${p}}\\,dx = ${value}`],
+      ],
+    ];
+    return numberProblem({
+      prompt: t(
         `What does the integral bound $\\frac{1}{(p - 1) n^{p - 1}}$ give for $\\sum_{k > ${n}} \\frac{1}{k^{${p}}}$?`,
         `积分界 $\\frac{1}{(p - 1) n^{p - 1}}$ 对 $\\sum_{k > ${n}} \\frac{1}{k^{${p}}}$ 给出什么结果？`,
-      ],
+      ),
       answer,
-      [Q.of(1, n ** (p - 1)), Q.of(1, p * n ** p), Q.of(1, (p - 1) * n ** p), Q.of(1, p * n ** (p - 1))],
-      [
-        `Here $p = ${p}$ and $n = ${n}$, so the bound is $\\frac{1}{${p - 1} \\cdot ${n}^{${p - 1}}} = ${answer.toLatex()}$.`,
-        `这里 $p = ${p}$，$n = ${n}$，所以界是 $\\frac{1}{${p - 1} \\cdot ${n}^{${p - 1}}} = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: (
+        [
+          [
+            Q.of(1, n ** (p - 1)),
+            "This forgets to divide by $p - 1$, which comes from the antiderivative",
+            "这里忘了除以 $p - 1$，它来自原函数",
+          ],
+          [
+            lower,
+            `This starts the integral at $${n + 1}$; that gives a lower bound for the tail, not an upper bound`,
+            `这里积分从 $${n + 1}$ 开始；那样得到的是尾部的下界，而不是上界`,
+          ],
+          [
+            Q.of(1, (p - 1) * n ** p),
+            `This keeps the power $${p}$; integrating lowers it to $${p - 1}$`,
+            `这里保留了幂次 $${p}$；积分后幂次降为 $${p - 1}$`,
+          ],
+          [
+            Q.of(1, p * n ** (p - 1)),
+            `This divides by $${p}$; the antiderivative of $x^{-${p}}$ has $-${p - 1}$ in front`,
+            `这里除以了 $${p}$；$x^{-${p}}$ 的原函数前面是 $-${p - 1}$`,
+          ],
+        ] as const
+      )
+        .filter(([v], i, all) => !v.eq(answer) && all.findIndex(([u]) => u.eq(v)) === i)
+        .map(([v, en, zh]) => why(v, en, zh)),
+      solution: walked(
+        parts,
+        t(
+          `Add the terms numerically. The tail is about $${tail.toFixed(5)}$, which lies between the integral from $${n + 1}$, about $${lower.toNumber().toFixed(5)}$, and the bound $${answer.toLatex()} \\approx ${answer.toNumber().toFixed(5)}$.`,
+          `用数值把各项加起来。尾部约为 $${tail.toFixed(5)}$，介于从 $${n + 1}$ 开始的积分（约 $${lower.toNumber().toFixed(5)}$）与界 $${answer.toLatex()} \\approx ${answer.toNumber().toFixed(5)}$ 之间。`,
+        ),
+      ),
+    });
   },
 );
 

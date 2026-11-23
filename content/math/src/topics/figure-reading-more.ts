@@ -357,8 +357,8 @@ const taylorFromDrawing: KnowledgePointDef = {
   figure: calculusDrawings5["second-degree-taylor-polynomials#a-taylor-polynomial-from-a-drawing"],
   title: t("A Taylor polynomial from a drawing", "由图选泰勒多项式"),
   explanation: t(
-    "The first coefficients of a Taylor polynomial can be read off a graph at the center. The constant is the height, the coefficient of the linear term is the slope, and the coefficient of the square term has the sign of the concavity. So a curve that is rising and bending downward has a positive linear coefficient and a negative square coefficient.",
-    "泰勒多项式的前几个系数可以从图上中心点处读出。常数项是高度，一次项系数是斜率，二次项系数的符号和凹凸性相同。所以上升且向下弯的曲线，一次项系数为正，二次项系数为负。",
+    "The first coefficients of a Taylor polynomial can be read off a graph at the center. The constant is the height, the coefficient of the linear term is the slope, and the coefficient of the square term has the sign of the concavity. So a curve that is rising and bending downward has a positive linear coefficient and a negative square coefficient. A curve through $(0, 2)$ that rises with slope $1$ and bends downward could have $P_{2}(x) = 2 + x - \\tfrac{1}{2}x^{2}$.\n\nCheck: this polynomial is $2.5$ at $x = 1$ and $0.5$ at $x = -1$. It is higher on the right, as a rising curve is, and the average $1.5$ lies below the height $2$, as it does for a curve bending downward.\n\n> **Watch out.** Read each feature at the center $x = 0$ only: a curve can rise there and fall farther away.",
+    "泰勒多项式的前几个系数可以从图上中心点处读出。常数项是高度，一次项系数是斜率，二次项系数的符号和凹凸性相同。所以上升且向下弯的曲线，一次项系数为正，二次项系数为负。一条过 $(0, 2)$、以斜率 $1$ 上升并向下弯的曲线，可以有 $P_{2}(x) = 2 + x - \\tfrac{1}{2}x^{2}$。\n\n检验：这个多项式在 $x = 1$ 处是 $2.5$，在 $x = -1$ 处是 $0.5$。右边更高，正如上升的曲线；两者的平均值 $1.5$ 低于高度 $2$，正如向下弯的曲线。\n\n> **注意。** 每个特征都只在中心 $x = 0$ 处读：曲线可以在那里上升，而在远处下降。",
   ),
   generate(rng) {
     const h = rng.pick([-3, -2, -1, 1, 2, 3]);
@@ -370,19 +370,69 @@ const taylorFromDrawing: KnowledgePointDef = {
       return `${hv} ${lin} ${sq}`;
     };
     const f = (x: number) => h + m * x + (c * x * x) / 2;
-    return pickChoice(
-      rng,
-      t(
+    const right = Q.of(2 * h + 2 * m + c, 2).toLatex();
+    const left = Q.of(2 * h - 2 * m + c, 2).toLatex();
+    const middle = Q.of(2 * h + c, 2).toLatex();
+    const rising = m > 0;
+    const up = c > 0;
+    const parts: Step[] = [
+      [
+        ["Read the height", "读出高度"],
+        t(`The curve passes through $(0, ${h})$, so the constant term is $${h}$.`, `曲线经过 $(0, ${h})$，所以常数项是 $${h}$。`),
+      ],
+      [
+        ["Read the slope", "读出斜率"],
+        t(
+          `At $0$ the curve is ${rising ? "rising" : "falling"}, so the coefficient of $x$ is ${rising ? "positive" : "negative"}.`,
+          `曲线在 $0$ 处${rising ? "上升" : "下降"}，所以 $x$ 的系数为${rising ? "正" : "负"}。`,
+        ),
+      ],
+      [
+        ["Read the bending", "读出弯曲方向"],
+        t(
+          `The curve bends ${up ? "upward" : "downward"}, so the coefficient of $x^{2}$ is ${up ? "positive" : "negative"}.`,
+          `曲线${up ? "向上弯" : "向下弯"}，所以 $x^{2}$ 的系数为${up ? "正" : "负"}。`,
+        ),
+      ],
+    ];
+    return explainedChoice(rng, {
+      prompt: t(
         "The graph shows a function near $x = 0$. Which could be its second-degree Taylor polynomial at 0?",
         "图中是一个函数在 $x = 0$ 附近的图像。它在 0 处的二次泰勒多项式可能是哪个？",
       ),
-      math(write(h, m, c)),
-      [math(write(h, -m, c)), math(write(h, m, -c)), math(write(h, -m, -c)), math(write(-h, m, c))],
-      t(
-        `The height at 0 is ${h}, the slope there is ${m > 0 ? "positive" : "negative"}, and the curve bends ${c > 0 ? "upward, so the square term is positive" : "downward, so the square term is negative"}.`,
-        `0 处的高度是 ${h}，那里的斜率为${m > 0 ? "正" : "负"}，曲线${c > 0 ? "向上弯，所以二次项为正" : "向下弯，所以二次项为负"}。`,
+      correct: math(write(h, m, c)),
+      wrong: [
+        {
+          option: math(write(h, -m, c)),
+          why: t(
+            `The linear term has the wrong sign: the curve is ${rising ? "rising" : "falling"} at $0$`,
+            `一次项的符号错了：曲线在 $0$ 处${rising ? "上升" : "下降"}`,
+          ),
+        },
+        {
+          option: math(write(h, m, -c)),
+          why: t(
+            `The square term has the wrong sign: the curve bends ${up ? "upward" : "downward"}`,
+            `二次项的符号错了：曲线${up ? "向上弯" : "向下弯"}`,
+          ),
+        },
+        {
+          option: math(write(h, -m, -c)),
+          why: t("Both the slope and the bending have the wrong sign", "斜率和弯曲方向的符号都错了"),
+        },
+        {
+          option: math(write(-h, m, c)),
+          why: t(`The constant is the height at $0$, which is $${h}$, not $${-h}$`, `常数项是 $0$ 处的高度，即 $${h}$，而不是 $${-h}$`),
+        },
+      ],
+      solution: walked(
+        parts,
+        t(
+          `Read two more heights off the drawing. The right polynomial is $${right}$ at $x = 1$ and $${left}$ at $x = -1$, so the curve is ${rising ? "higher on the right" : "higher on the left"}. Their average $${middle}$ lies ${up ? "above" : "below"} the height $${h}$, as it does for a curve bending ${up ? "upward" : "downward"}.`,
+          `从图上再读两个高度。正确的多项式在 $x = 1$ 处是 $${right}$，在 $x = -1$ 处是 $${left}$，所以曲线${rising ? "右边更高" : "左边更高"}。两者的平均值 $${middle}$ ${up ? "高于" : "低于"}高度 $${h}$，正如${up ? "向上弯" : "向下弯"}的曲线。`,
+        ),
       ),
-      drawn(
+      figure: drawn(
         square(4),
         [
           { kind: "curve", f, accent: true },
@@ -393,7 +443,7 @@ const taylorFromDrawing: KnowledgePointDef = {
           `一条过 (0, ${h}) 的曲线，在那里${m > 0 ? "上升" : "下降"}，并且${c > 0 ? "向上弯" : "向下弯"}。`,
         ),
       ),
-    );
+    });
   },
 };
 

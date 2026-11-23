@@ -10,7 +10,7 @@ import { calculusDrawings4 } from "../explanation-drawings-calculus-4.ts";
 import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 
 import { explainedChoice, numberProblem } from "../problems.ts";
-import { ask, choose, type Pair, point } from "../university-kit.ts";
+import { ask, type Pair, point } from "../university-kit.ts";
 import { type Step, walked } from "./calculus-i-differentiation.ts";
 import { bars, chart, curvePath, intTicks, type Scale, shadeUnder } from "./figure-charts.ts";
 import { drawn } from "./figure-reading-more.ts";
@@ -1672,8 +1672,8 @@ const integralComparison = {
     "what-a-drawing-of-the-integral-test-shows",
     ["What a drawing of the integral test shows", "积分判别法的图说明了什么"],
     [
-      "Rectangles of width one with heights $f(n)$ have total area equal to the series. If they sit under a curve whose improper integral is finite, the series converges. If they cover a curve whose improper integral is infinite, the series diverges. The other two arrangements prove nothing.",
-      "宽度为一、高度为 $f(n)$ 的矩形总面积等于级数。如果它们位于反常积分有限的曲线下方，级数收敛。如果它们盖住反常积分无穷的曲线，级数发散。另外两种情况什么也证明不了。",
+      "Rectangles of width one with heights $f(n)$ have total area equal to the series. If they sit under a curve whose improper integral is finite, the series converges. If they cover a curve whose improper integral is infinite, the series diverges. For $f(x) = \\frac{1}{x^{2}}$, the rectangles from $n = 2$ sit under the curve from $x = 1$, whose area is $\\int_{1}^{\\infty} \\frac{dx}{x^{2}} = 1$.\n\nCheck: so $\\sum_{n=2}^{\\infty} \\frac{1}{n^{2}} \\le 1$, and indeed this sum is $\\frac{\\pi^{2}}{6} - 1$, about $0.645$.\n\n> **Watch out.** The other two arrangements prove nothing: rectangles below an infinite area, or above a finite one, can belong to a convergent or a divergent series.",
+      "宽度为一、高度为 $f(n)$ 的矩形总面积等于级数。如果它们位于反常积分有限的曲线下方，级数收敛。如果它们盖住反常积分无穷的曲线，级数发散。对 $f(x) = \\frac{1}{x^{2}}$，从 $n = 2$ 起的矩形位于曲线从 $x = 1$ 起的部分下方，而这部分的面积是 $\\int_{1}^{\\infty} \\frac{dx}{x^{2}} = 1$。\n\n检验：所以 $\\sum_{n=2}^{\\infty} \\frac{1}{n^{2}} \\le 1$，事实上这个和是 $\\frac{\\pi^{2}}{6} - 1$，约为 $0.645$。\n\n> **注意。** 另外两种情况什么也证明不了：位于无穷面积下方或有限面积上方的矩形，对应的级数可能收敛也可能发散。",
     ],
     (rng) => {
       const c = rng.int(1, 8);
@@ -1691,34 +1691,89 @@ const integralComparison = {
         (x, y) => bars(cuts, values, x, y) + curvePath(f, 1, 8, x, y, 'stroke="currentColor"'),
       );
       const base = p === 0.5 ? "\\sqrt{x}" : p === 1 ? "x" : `x^${p}`;
+      const xTerm = `\\frac{${c}}{${p === 0.5 ? "\\sqrt{x}" : p === 1 ? "x" : `x^{${p}}`}}`;
+      const pTex = p === 0.5 ? "\\frac{1}{2}" : `${p}`;
       const down: Pair = ["It converges: its area is below a finite area", "收敛：它的面积小于一个有限面积"];
       const up: Pair = ["It diverges: its area is above an infinite area", "发散：它的面积大于一个无穷面积"];
       const down2: Pair = ["It diverges: its area is below an infinite area", "发散：它的面积小于一个无穷面积"];
       const up2: Pair = ["It converges: its area is above a finite area", "收敛：它的面积大于一个有限面积"];
-      return choose(
-        rng,
+      const reasons: readonly (readonly [Pair, Pair])[] = [
         [
-          `The curve is $y = \\frac{${c}}{${base}}$ for $x \\ge 1$, and the rectangles show the terms of a series with $f(n) = \\frac{${c}}{${base.replace("x", "n")}}$, starting at $n = ${start}$. The rectangles continue to the right. What does the drawing show?`,
-          `曲线是 $y = \\frac{${c}}{${base}}$（$x \\ge 1$），矩形表示 $f(n) = \\frac{${c}}{${base.replace("x", "n")}}$ 从 $n = ${start}$ 开始的级数的项。矩形向右延续。这幅图说明了什么？`,
+          up,
+          [
+            "Here the rectangles lie under the curve, and the power of $x$ is above $1$, so the area under the curve is finite",
+            "这里矩形位于曲线下方，而 $x$ 的幂次大于 $1$，所以曲线下的面积有限",
+          ],
         ],
-        convergent ? down : up,
-        convergent ? [up, down2, up2] : [down, down2, up2],
+        [
+          down,
+          [
+            "Here the rectangles stand above the curve, and the power of $x$ is at most $1$, so the area under the curve is infinite",
+            "这里矩形高出曲线，而 $x$ 的幂次不超过 $1$，所以曲线下的面积为无穷",
+          ],
+        ],
+        [
+          down2,
+          ["Being below an infinite area proves nothing: the area could still be finite", "小于一个无穷面积证明不了什么：面积仍可能有限"],
+        ],
+        [
+          up2,
+          ["Being above a finite area proves nothing: the area could still be infinite", "大于一个有限面积证明不了什么：面积仍可能是无穷"],
+        ],
+      ];
+      const parts: Step[] = [
         convergent
           ? [
-              `The rectangles lie under the curve, and $\\int_1^\\infty y\\,dx$ is finite since the power of $x$ is above $1$.`,
-              `矩形位于曲线下方，而 $x$ 的幂次大于 $1$，所以 $\\int_1^\\infty y\\,dx$ 有限。`,
+              ["See where the rectangles sit", "看矩形的位置"],
+              t(
+                "Each rectangle from $n = 2$ stands on $[n - 1, n]$, and its height $f(n)$ is the lowest value of the curve there, so the rectangles lie under the curve from $x = 1$:",
+                "从 $n = 2$ 起的每个矩形立在 $[n - 1, n]$ 上，其高度 $f(n)$ 是曲线在那里的最小值，所以矩形位于曲线从 $x = 1$ 起的部分下方：",
+              ),
+              ["\\sum_{n=2}^{\\infty} f(n) \\le \\int_{1}^{\\infty} f(x) \\, dx"],
             ]
           : [
-              `The rectangles cover the curve, and $\\int_1^\\infty y\\,dx$ is infinite since the power of $x$ is at most $1$.`,
-              `矩形盖住曲线，而 $x$ 的幂次不超过 $1$，所以 $\\int_1^\\infty y\\,dx$ 为无穷。`,
+              ["See where the rectangles sit", "看矩形的位置"],
+              t(
+                "Each rectangle from $n = 1$ stands on $[n, n + 1]$, and its height $f(n)$ is the highest value of the curve there, so the rectangles cover the curve:",
+                "从 $n = 1$ 起的每个矩形立在 $[n, n + 1]$ 上，其高度 $f(n)$ 是曲线在那里的最大值，所以矩形盖住曲线：",
+              ),
+              ["\\sum_{n=1}^{\\infty} f(n) \\ge \\int_{1}^{\\infty} f(x) \\, dx"],
             ],
-        figureOf(svg, [
+        [
+          ["Find the area under the curve", "求曲线下的面积"],
+          convergent
+            ? t("The power of $x$ is above $1$, so the area is finite:", "$x$ 的幂次大于 $1$，所以面积有限：")
+            : t("The power of $x$ is at most $1$, so the area grows without bound:", "$x$ 的幂次不超过 $1$，所以面积无限增大："),
+          [
+            convergent
+              ? `\\int_{1}^{\\infty} ${xTerm} \\, dx = ${Q.of(c, p - 1).toLatex()}`
+              : p === 1
+                ? `\\int_{1}^{N} ${xTerm} \\, dx = ${c === 1 ? "" : c}\\ln N \\to \\infty`
+                : `\\int_{1}^{N} ${xTerm} \\, dx = ${2 * c}\\left(\\sqrt{N} - 1\\right) \\to \\infty`,
+          ],
+        ],
+      ];
+      return explainedChoice(rng, {
+        prompt: t(
+          `The curve is $y = \\frac{${c}}{${base}}$ for $x \\ge 1$, and the rectangles show the terms of a series with $f(n) = \\frac{${c}}{${base.replace("x", "n")}}$, starting at $n = ${start}$. The rectangles continue to the right. What does the drawing show?`,
+          `曲线是 $y = \\frac{${c}}{${base}}$（$x \\ge 1$），矩形表示 $f(n) = \\frac{${c}}{${base.replace("x", "n")}}$ 从 $n = ${start}$ 开始的级数的项。矩形向右延续。这幅图说明了什么？`,
+        ),
+        correct: t(...(convergent ? down : up)),
+        wrong: reasons.filter(([o]) => o !== (convergent ? down : up)).map(([o, why]) => ({ option: t(...o), why: t(...why) })),
+        solution: walked(
+          parts,
+          t(
+            `The $p$-series test agrees without any drawing: the terms are $${c}$ times $\\frac{1}{n^{p}}$ with $p = ${pTex}$, which is ${convergent ? "above $1$, so the series converges" : "at most $1$, so the series diverges"}.`,
+            `不用图，$p$ 级数判别法也给出同样结论：各项是 $\\frac{1}{n^{p}}$ 的 $${c}$ 倍，$p = ${pTex}$，${convergent ? "大于 $1$，所以级数收敛" : "不超过 $1$，所以级数发散"}。`,
+          ),
+        ),
+        figure: figureOf(svg, [
           convergent
             ? "A decreasing curve with unit-width rectangles that lie under it."
             : "A decreasing curve with unit-width rectangles that rise above it.",
           convergent ? "递减曲线，宽度为一的矩形位于它下方。" : "递减曲线，宽度为一的矩形高出曲线。",
         ]),
-      );
+      });
     },
   ),
   figure: calculusDrawings5["the-integral-test#what-a-drawing-of-the-integral-test-shows"],
@@ -1729,8 +1784,8 @@ const remainderDrawn = {
     "a-remainder-bound-from-drawn-rectangles",
     ["A remainder bound from drawn rectangles", "由所画矩形得到余项界"],
     [
-      "The rectangles for the terms after $n = N$ lie under the curve from $x = N$ onward. So for a decreasing positive $f$, the remainder satisfies $R_N \\le \\int_N^\\infty f(x)\\,dx$.",
-      "$n = N$ 之后各项的矩形位于曲线从 $x = N$ 起的部分下方。所以对递减的正函数 $f$，余项满足 $R_N \\le \\int_N^\\infty f(x)\\,dx$。",
+      "The rectangles for the terms after $n = N$ lie under the curve from $x = N$ onward, because the rectangle of height $f(n)$ stands on $[n - 1, n]$. So for a decreasing positive $f$, the remainder satisfies $R_N \\le \\int_N^\\infty f(x)\\,dx$. For $f(x) = \\frac{1}{x^{2}}$ and $N = 2$ the bound is $\\int_{2}^{\\infty} \\frac{dx}{x^{2}} = \\frac{1}{2}$.\n\nCheck: the true remainder is $\\frac{\\pi^{2}}{6} - 1 - \\frac{1}{4}$, about $0.395$, which is below $\\frac{1}{2}$.\n\n> **Watch out.** The integral starts at $N$, not at $N + 1$: from $N + 1$ it gives $\\frac{1}{3}$, which is below the true remainder.",
+      "$n = N$ 之后各项的矩形位于曲线从 $x = N$ 起的部分下方，因为高为 $f(n)$ 的矩形立在 $[n - 1, n]$ 上。所以对递减的正函数 $f$，余项满足 $R_N \\le \\int_N^\\infty f(x)\\,dx$。对 $f(x) = \\frac{1}{x^{2}}$ 和 $N = 2$，上界是 $\\int_{2}^{\\infty} \\frac{dx}{x^{2}} = \\frac{1}{2}$。\n\n检验：真实的余项是 $\\frac{\\pi^{2}}{6} - 1 - \\frac{1}{4}$，约为 $0.395$，小于 $\\frac{1}{2}$。\n\n> **注意。** 积分从 $N$ 开始，而不是从 $N + 1$ 开始：从 $N + 1$ 开始得到 $\\frac{1}{3}$，比真实余项还小。",
     ],
     (rng) => {
       const c = rng.int(1, 12);
@@ -1746,22 +1801,76 @@ const remainderDrawn = {
         [],
         (x, y) => bars(cuts, values, x, y) + curvePath(f, N, 9, x, y, 'stroke="currentColor"') + mark(x, y, N, f(N)),
       );
-      return ask(
+      const answer = Q.of(c, N);
+      const asQ = (v: number | Q) => (typeof v === "number" ? Q.of(v) : v);
+      const atN = N === 1 ? `${c}` : `\\frac{${c}}{${N}}`;
+      const all: { value: number | Q; why: ReturnType<typeof t> }[] = [
+        {
+          value: Q.of(c, N + 1),
+          why: t(
+            `This starts the integral at $${N + 1}$, which gives a lower bound, not an upper one`,
+            `这里积分从 $${N + 1}$ 开始，得到的是下界，不是上界`,
+          ),
+        },
+        {
+          value: Q.of(c, N * N),
+          why: t(`This is the height of the curve at $x = ${N}$, not an area`, `这是曲线在 $x = ${N}$ 处的高度，不是面积`),
+        },
+        {
+          value: c * N,
+          why: t(
+            `The antiderivative $-\\frac{${c}}{x}$ at $x = ${N}$ gives $\\frac{${c}}{${N}}$, not $${c} \\cdot ${N}$`,
+            `原函数 $-\\frac{${c}}{x}$ 在 $x = ${N}$ 处给出 $\\frac{${c}}{${N}}$，而不是 $${c} \\cdot ${N}$`,
+          ),
+        },
+        {
+          value: Q.of(2 * c, N),
+          why: t(
+            `The derivative of $-\\frac{${c}}{x}$ is already $\\frac{${c}}{x^{2}}$; there is no factor $2$`,
+            `$-\\frac{${c}}{x}$ 的导数已经是 $\\frac{${c}}{x^{2}}$；没有因子 $2$`,
+          ),
+        },
+        { value: c, why: t("This integrates from $1$, which also counts the first terms", "这里从 $1$ 开始积分，把前面的项也算进去了") },
+      ];
+      const parts: Step[] = [
         [
-          `The curve is $y = \\frac{${c}}{x^2}$, and the rectangles show the terms $\\frac{${c}}{n^2}$ after the first $${N}$. They continue to the right without end. What upper bound does the drawing give for the sum of those terms?`,
-          `曲线是 $y = \\frac{${c}}{x^2}$，矩形表示前 $${N}$ 项之后的各项 $\\frac{${c}}{n^2}$。它们向右无限延续。这幅图给出这些项之和的什么上界？`,
+          ["Place the integral", "确定积分范围"],
+          t(
+            `The first rectangle after the first $${N}$ terms has height $f(${N + 1})$ and stands on $[${N}, ${N + 1}]$, so the rectangles lie under the curve from $x = ${N}$:`,
+            `前 $${N}$ 项之后的第一个矩形高为 $f(${N + 1})$，立在 $[${N}, ${N + 1}]$ 上，所以这些矩形位于曲线从 $x = ${N}$ 起的部分下方：`,
+          ),
+          [`R_{${N}} \\le \\int_{${N}}^{\\infty} \\frac{${c}}{x^{2}} \\, dx`],
         ],
-        Q.of(c, N),
-        [Q.of(c, N + 1), Q.of(c, N * N), c * N, Q.of(2 * c, N), c],
         [
-          `The rectangles lie under the curve from $x = ${N}$ onward, so the sum is at most $\\int_{${N}}^{\\infty} \\frac{${c}}{x^2}\\,dx = ${Q.of(c, N).toLatex()}$.`,
-          `矩形位于曲线从 $x = ${N}$ 起的部分下方，所以和不超过 $\\int_{${N}}^{\\infty} \\frac{${c}}{x^2}\\,dx = ${Q.of(c, N).toLatex()}$。`,
+          ["Integrate", "积分"],
+          t(
+            `An antiderivative is $-\\frac{${c}}{x}$, which tends to $0$ as $x \\to \\infty$:`,
+            `一个原函数是 $-\\frac{${c}}{x}$，当 $x \\to \\infty$ 时它趋于 $0$：`,
+          ),
+          [`\\int_{${N}}^{\\infty} \\frac{${c}}{x^{2}} \\, dx = 0 - \\left(-${atN}\\right) =${answer.toLatex()}`],
         ],
-        figureOf(svg, [
+      ];
+      return {
+        ...numberProblem({
+          prompt: t(
+            `The curve is $y = \\frac{${c}}{x^2}$, and the rectangles show the terms $\\frac{${c}}{n^2}$ after the first $${N}$. They continue to the right without end. What upper bound does the drawing give for the sum of those terms?`,
+            `曲线是 $y = \\frac{${c}}{x^2}$，矩形表示前 $${N}$ 项之后的各项 $\\frac{${c}}{n^2}$。它们向右无限延续。这幅图给出这些项之和的什么上界？`,
+          ),
+          answer,
+          mistakes: all.filter((m, i) => !asQ(m.value).eq(answer) && all.findIndex((y) => asQ(y.value).eq(asQ(m.value))) === i),
+          solution: walked(
+            parts,
+            t(
+              `Differentiate back: the derivative of $-\\frac{${c}}{x}$ is $\\frac{${c}}{x^{2}}$, so the area is right. The bound $${answer.toLatex()}$ is also larger than the first remaining term, $\\frac{${c}}{${(N + 1) ** 2}}$, as it must be.`,
+              `求导回去：$-\\frac{${c}}{x}$ 的导数是 $\\frac{${c}}{x^{2}}$，所以面积是对的。上界 $${answer.toLatex()}$ 也大于剩下的第一项 $\\frac{${c}}{${(N + 1) ** 2}}$，这是应当的。`,
+            ),
+          ),
+        }),
+        figure: figureOf(svg, [
           `A decreasing curve starting from x = ${N}, with unit-width rectangles under it.`,
           `从 x = ${N} 开始的递减曲线，宽度为一的矩形位于它下方。`,
         ]),
-      );
+      };
     },
   ),
   figure: calculusDrawings5["the-remainder-estimate-for-the-integral-test#a-remainder-bound-from-drawn-rectangles"],
@@ -1772,8 +1881,8 @@ const lagrangeDrawn = {
     "a-taylor-error-bound-from-a-drawn-derivative",
     ["A Taylor error bound from a drawn derivative", "由所画导数求泰勒误差界"],
     [
-      "The Lagrange bound is $|R_n(x)| \\le \\frac{M|x - a|^{n+1}}{(n+1)!}$, where $M$ is the largest size of $f^{(n+1)}$ between $a$ and $x$. Only that interval counts: bigger values elsewhere on the graph do not matter.",
-      "拉格朗日界为 $|R_n(x)| \\le \\frac{M|x - a|^{n+1}}{(n+1)!}$，其中 $M$ 是 $f^{(n+1)}$ 在 $a$ 与 $x$ 之间的最大绝对值。只有这个区间才算：图上其他地方更大的值无关紧要。",
+      "The Lagrange bound is $|R_n(x)| \\le \\frac{M|x - a|^{n+1}}{(n+1)!}$, where $M$ is the largest size of $f^{(n+1)}$ between $a$ and $x$. Only that interval counts: bigger values elsewhere on the graph do not matter. If $|f'''| \\le 4$ on $[0, 2]$, the error of $T_{2}$ at $2$ is at most $\\frac{4 \\cdot 2^{3}}{3!} = \\frac{16}{3}$.\n\nCheck: $f(x) = \\frac{2x^{3}}{3}$ has $f''' = 4$ and $T_{2} = 0$ at $0$, and its error at $2$ reaches the bound exactly: $\\frac{2 \\cdot 8}{3} = \\frac{16}{3}$.\n\n> **Watch out.** Take $M$ on $[a, x]$ only, and divide by $(n+1)!$, not by $n + 1$.",
+      "拉格朗日界为 $|R_n(x)| \\le \\frac{M|x - a|^{n+1}}{(n+1)!}$，其中 $M$ 是 $f^{(n+1)}$ 在 $a$ 与 $x$ 之间的最大绝对值。只有这个区间才算：图上其他地方更大的值无关紧要。如果在 $[0, 2]$ 上 $|f'''| \\le 4$，那么 $T_{2}$ 在 $2$ 处的误差不超过 $\\frac{4 \\cdot 2^{3}}{3!} = \\frac{16}{3}$。\n\n检验：$f(x) = \\frac{2x^{3}}{3}$ 满足 $f''' = 4$，在 $0$ 处 $T_{2} = 0$，它在 $2$ 处的误差恰好达到上界：$\\frac{2 \\cdot 8}{3} = \\frac{16}{3}$。\n\n> **注意。** $M$ 只在 $[a, x]$ 上取，而且要除以 $(n+1)!$，不是除以 $n + 1$。",
     ],
     (rng) => {
       const order = rng.pick([2, 3]);
@@ -1788,24 +1897,69 @@ const lagrangeDrawn = {
       const n = order - 1;
       const name = order === 2 ? "f''" : "f'''";
       const points = values.map((v, i): Point => [i, v]);
-      return ask(
-        [
-          `The graph shows $${name}$. Let $T_{${n}}$ be the degree $${n}$ Taylor polynomial of $f$ at $0$. Use the Lagrange bound to give an upper bound for $|f(${h}) - T_{${n}}(${h})|$, using the largest size of $${name}$ on $[0, ${h}]$.`,
-          `图中是 $${name}$。设 $T_{${n}}$ 是 $f$ 在 $0$ 处的 $${n}$ 次泰勒多项式。用 $${name}$ 在 $[0, ${h}]$ 上的最大绝对值，由拉格朗日界给出 $|f(${h}) - T_{${n}}(${h})|$ 的上界。`,
-        ],
-        answer,
-        [
-          Q.of(outer * h ** order, fact),
-          M * h ** order,
-          Q.of(M * h ** (order - 1), order - 1),
-          Q.of(M * h ** order, fact * 2),
-          Q.of(M * h, fact),
-        ],
-        [
-          `On $[0, ${h}]$ the largest size of $${name}$ is $M = ${M}$. The bound is $\\frac{${M} \\cdot ${h}^{${order}}}{${order}!} = ${answer.toLatex()}$.`,
-          `在 $[0, ${h}]$ 上 $${name}$ 的最大绝对值为 $M = ${M}$。上界为 $\\frac{${M} \\cdot ${h}^{${order}}}{${order}!} = ${answer.toLatex()}$。`,
-        ],
+      const top = [M === 1 ? "" : `${M}`, h === 1 ? "" : `${h}^{${order}}`].filter(Boolean).join(" \\cdot ") || "1";
+      const all: { value: number | Q; why: ReturnType<typeof t> }[] = [
         {
+          value: Q.of(outer * h ** order, fact),
+          why: t(
+            `This uses the value $${outer}$ at $x = ${h + 1}$, outside $[0, ${h}]$; only the interval counts`,
+            `这里用了 $[0, ${h}]$ 之外 $x = ${h + 1}$ 处的值 $${outer}$；只有这个区间才算`,
+          ),
+        },
+        { value: M * h ** order, why: t(`This forgets to divide by $${order}! = ${fact}$`, `这里忘了除以 $${order}! = ${fact}$`) },
+        {
+          value: Q.of(M * h ** (order - 1), order - 1),
+          why: t(
+            `This uses the power $${order - 1}$; the error of $T_{${n}}$ involves the power $${order}$ and $${order}!$`,
+            `这里用了 $${order - 1}$ 次幂；$T_{${n}}$ 的误差用的是 $${order}$ 次幂和 $${order}!$`,
+          ),
+        },
+        {
+          value: Q.of(M * h ** order, fact * 2),
+          why: t(`The denominator is $${order}! = ${fact}$, not $${fact * 2}$`, `分母是 $${order}! = ${fact}$，而不是 $${fact * 2}$`),
+        },
+        {
+          value: Q.of(M * h, fact),
+          why: t(`This forgets the power: $|x - 0|$ is raised to the power $${order}$`, `这里忘了乘方：$|x - 0|$ 要取 $${order}$ 次幂`),
+        },
+      ];
+      const asQ = (v: number | Q) => (typeof v === "number" ? Q.of(v) : v);
+      const meets = `\\frac{${M === 1 ? "" : M}x^{${order}}}{${order}!}`;
+      const parts: Step[] = [
+        [
+          ["Find M on the interval", "求区间上的 M"],
+          t(
+            `On $[0, ${h}]$ the graph of $${name}$ runs through the heights $${inner.join(", ")}$, and its size is largest at one of these corners. The value $${outer}$ at $x = ${h + 1}$ lies outside and does not count:`,
+            `在 $[0, ${h}]$ 上，$${name}$ 的图象经过高度 $${inner.join(", ")}$，其绝对值的最大值出现在这些拐点之一。$x = ${h + 1}$ 处的值 $${outer}$ 在区间之外，不算：`,
+          ),
+          [`M = ${M}`],
+        ],
+        [
+          ["Apply the bound", "代入误差界"],
+          t(
+            `With $n = ${n}$, the power is $${order}$ and the factorial is $${order}!$:`,
+            `$n = ${n}$，幂次是 $${order}$，阶乘是 $${order}!$：`,
+          ),
+          [`|f(${h}) - T_{${n}}(${h})| \\le \\frac{${top}}{${order}!} = ${answer.toLatex()}`],
+        ],
+      ];
+      return {
+        ...numberProblem({
+          prompt: t(
+            `The graph shows $${name}$. Let $T_{${n}}$ be the degree $${n}$ Taylor polynomial of $f$ at $0$. Use the Lagrange bound to give an upper bound for $|f(${h}) - T_{${n}}(${h})|$, using the largest size of $${name}$ on $[0, ${h}]$.`,
+            `图中是 $${name}$。设 $T_{${n}}$ 是 $f$ 在 $0$ 处的 $${n}$ 次泰勒多项式。用 $${name}$ 在 $[0, ${h}]$ 上的最大绝对值，由拉格朗日界给出 $|f(${h}) - T_{${n}}(${h})|$ 的上界。`,
+          ),
+          answer,
+          mistakes: all.filter((m, i) => !asQ(m.value).eq(answer) && all.findIndex((y) => asQ(y.value).eq(asQ(m.value))) === i),
+          solution: walked(
+            parts,
+            t(
+              `Test the bound on a function that meets it: for $f(x) = ${meets}$,$${name}$ is the constant $${M}$ and $T_{${n}} = 0$, so its error at $${h}$ is exactly $${answer.toLatex()}$. A function allowed by the graph can reach this value, so the bound is the right size.`,
+              `用一个恰好达到上界的函数检验：对 $f(x) = ${meets}$，$${name}$ 是常数 $${M}$，$T_{${n}} = 0$，所以它在 $${h}$ 处的误差恰好是 $${answer.toLatex()}$。符合图的函数能达到这个值，所以上界的大小是对的。`,
+            ),
+          ),
+        }),
+        figure: {
           svg: chart([0, 6], [-5, 7], intTicks(0, 6), intTicks(-5, 7), (x, y) => {
             const line = points.map(([u, v]) => `${x(u)},${y(v)}`).join(" ");
             return `<line stroke="currentColor" stroke-dasharray="5 4" x1="${x(0)}" y1="${y(0)}" x2="${x(6)}" y2="${y(0)}"/><polyline class="accent" stroke="currentColor" fill="none" points="${line}"/>`;
@@ -1815,7 +1969,7 @@ const lagrangeDrawn = {
             `由直线段组成的图像，过 ${points.map((p) => `(${p[0]}, ${p[1]})`).join("、")}。`,
           ),
         },
-      );
+      };
     },
   ),
   figure: calculusDrawings5["the-lagrange-error-bound#a-taylor-error-bound-from-a-drawn-derivative"],

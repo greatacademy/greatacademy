@@ -1094,8 +1094,8 @@ const productOfSeries: KnowledgePointDef = {
   id: "a-coefficient-from-a-product-of-series",
   title: t("A coefficient from a product of series", "级数之积的系数"),
   explanation: t(
-    "Power series multiply like long polynomials. To find one coefficient of a product, there is no need for the whole product: collect the pairs of terms whose powers add up to the wanted power. This is usually far quicker than differentiating the product repeatedly.",
-    "幂级数可以像很长的多项式一样相乘。要求乘积的一个系数，不必算出整个乘积，只要收集幂次之和等于所求幂次的各对项。这通常比反复对乘积求导快得多。",
+    "Power series multiply like long polynomials. To find one coefficient of a product, there is no need for the whole product: collect the pairs of terms whose powers add up to the wanted power. For $\\frac{e^{x}}{1 - x}$, the series are $1 + x + \\frac{x^{2}}{2} + \\cdots$ and $1 + x + x^{2} + \\cdots$, and the coefficient of $x^{2}$ collects three pairs: $1 + 1 + \\frac{1}{2} = \\frac{5}{2}$. They are $1$ with $x^{2}$, $x$ with $x$, and $\\frac{x^{2}}{2}$ with $1$.\n\nCheck: the quotient $f$ satisfies $(1 - x)f(x) = e^{x}$. Its series begins $1 + 2x + \\frac{5}{2}x^{2}$, and the coefficient of $x^{2}$ in $(1 - x)f(x)$ is $\\frac{5}{2} - 2$, which is $\\frac{1}{2}$, the coefficient of $x^{2}$ in $e^{x}$.\n\n> **Watch out.** Every pair counts: the constant of each series with the $x^{2}$ term of the other, and the two $x$ terms together.",
+    "幂级数可以像很长的多项式一样相乘。要求乘积的一个系数，不必算出整个乘积，只要收集幂次之和等于所求幂次的各对项。对 $\\frac{e^{x}}{1 - x}$，两个级数是 $1 + x + \\frac{x^{2}}{2} + \\cdots$ 和 $1 + x + x^{2} + \\cdots$，$x^{2}$ 的系数收集三对：$1 + 1 + \\frac{1}{2} = \\frac{5}{2}$。它们是 $1$ 与 $x^{2}$、$x$ 与 $x$、$\\frac{x^{2}}{2}$ 与 $1$。\n\n检验：商 $f$ 满足 $(1 - x)f(x) = e^{x}$。它的级数开头是 $1 + 2x + \\frac{5}{2}x^{2}$，$(1 - x)f(x)$ 中 $x^{2}$ 的系数是 $\\frac{5}{2} - 2$，即 $\\frac{1}{2}$，正是 $e^{x}$ 中 $x^{2}$ 的系数。\n\n> **注意。** 每一对都要算：每个级数的常数项与另一个级数的 $x^{2}$ 项，以及两个 $x$ 项相乘。",
   ),
   generate(rng) {
     const a = rng.int(1, 5);
@@ -1103,18 +1103,42 @@ const productOfSeries: KnowledgePointDef = {
     const half = Q.of(a * a, 2);
     const answer = half.add(Q.of(a * b + b * b));
     const exponent = poly([a, "x"]);
-    return numberProblem({
-      prompt: t(
-        `Find the coefficient of $x^2$ in the Maclaurin series of $\\frac{e^{${exponent}}}{${poly([1, ""], [-b, "x"])}}$.`,
-        `求 $\\frac{e^{${exponent}}}{${poly([1, ""], [-b, "x"])}}$ 的麦克劳林级数中 $x^2$ 的系数。`,
-      ),
+    const below = poly([1, ""], [-b, "x"]);
+    return deNumber(
+      [
+        `Find the coefficient of $x^2$ in the Maclaurin series of $\\frac{e^{${exponent}}}{${below}}$.`,
+        `求 $\\frac{e^{${exponent}}}{${below}}$ 的麦克劳林级数中 $x^2$ 的系数。`,
+      ],
       answer,
-      wrong: [half.add(Q.of(b * b)), Q.of(a * a + a * b + b * b), Q.of(a * b)],
-      solution: t(
-        `The series are $1 + ${a}x + ${half.toLatex()}x^2 + \\cdots$ and $1 + ${inParens(b)}x + ${b * b}x^2 + \\cdots$. The $x^2$ terms come from three pairs: $${b * b} + ${inParens(a * b)} + ${half.toLatex()} = ${answer.toLatex()}$.`,
-        `两个级数是 $1 + ${a}x + ${half.toLatex()}x^2 + \\cdots$ 和 $1 + ${inParens(b)}x + ${b * b}x^2 + \\cdots$。$x^2$ 项来自三对：$${b * b} + ${inParens(a * b)} + ${half.toLatex()} = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        deStepOf(
+          ["Write both series", "写出两个级数"],
+          "The exponential series and the geometric series begin:",
+          "指数级数和几何级数的开头是：",
+          `e^{${exponent}} = ${poly([1, ""], [a, "x"], [half, "x^{2}"])} + \\cdots`,
+          `\\frac{1}{${below}} = ${poly([1, ""], [b, "x"], [b * b, "x^{2}"])} + \\cdots`,
+        ),
+        deStepOf(
+          ["Collect the pairs", "收集各对"],
+          "The $x^{2}$ terms come from the constant with the $x^{2}$ term, the two $x$ terms, and the $x^{2}$ term with the constant:",
+          "$x^{2}$ 项来自常数项与 $x^{2}$ 项、两个 $x$ 项、$x^{2}$ 项与常数项：",
+          `${b * b} + ${inParens(a * b)} + ${half.toLatex()} = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `Multiply back. The quotient times $${below}$ must give $e^{${exponent}}$. The quotient begins $${poly([1, ""], [a + b, "x"], [answer, "x^{2}"])}$, and its product with $${below}$ has the coefficient of $x^{2}$ equal to $${answer.toLatex()} - (${b})(${a + b})$, which is $${half.toLatex()}$, the coefficient of $x^{2}$ in $e^{${exponent}}$.`,
+        `乘回去检验。商乘以 $${below}$ 应得 $e^{${exponent}}$。商的开头是 $${poly([1, ""], [a + b, "x"], [answer, "x^{2}"])}$，它与 $${below}$ 之积中 $x^{2}$ 的系数是 $${answer.toLatex()} - (${b})(${a + b})$，即 $${half.toLatex()}$，正是 $e^{${exponent}}$ 中 $x^{2}$ 的系数。`,
+      ],
+      [
+        [half.add(Q.of(b * b)), "This leaves out the pair of the two $x$ terms", "这里漏了两个 $x$ 项相乘的那一对"],
+        [
+          Q.of(a * a + a * b + b * b),
+          `This forgets the $\\frac{1}{2!}$ in the $x^{2}$ term of $e^{${exponent}}$`,
+          `这里忘了 $e^{${exponent}}$ 的 $x^{2}$ 项中的 $\\frac{1}{2!}$`,
+        ],
+        [Q.of(a * b), "This keeps only the pair of the two $x$ terms", "这里只保留了两个 $x$ 项相乘的那一对"],
+      ],
+    );
   },
 };
 
@@ -1122,25 +1146,48 @@ const limitFromExponentialSeries: KnowledgePointDef = {
   id: "a-limit-from-the-exponential-series",
   title: t("A limit from the exponential series", "由指数级数求极限"),
   explanation: t(
-    "A series can replace repeated use of L'Hopital's rule. Write the function by its series around the limit point, and cancel what the numerator subtracts. The first term that survives decides the limit, since every later term has a higher power of $x$ and vanishes after dividing.",
-    "级数可以代替反复使用洛必达法则。把函数在极限点附近写成级数，消去分子减掉的部分。留下的第一项决定极限，因为后面的项 $x$ 的幂次更高，相除后都趋于零。",
+    "A series can replace repeated use of L'Hopital's rule. Write the function by its series around the limit point, and cancel what the numerator subtracts. The first term that survives decides the limit, since every later term has a higher power of $x$ and vanishes after dividing. For example, $\\lim_{x \\to 0} \\frac{e^{x} - 1 - x}{x^{2}} = \\lim_{x \\to 0} \\left(\\frac{1}{2} + \\frac{x}{6} + \\cdots\\right) = \\frac{1}{2}$.\n\nCheck: L'Hopital's rule twice gives $\\frac{e^{x} - 1}{2x}$ and then $\\frac{e^{x}}{2}$, which tends to $\\frac{1}{2}$.\n\n> **Watch out.** The $x^{2}$ term of $e^{u}$ is $\\frac{u^{2}}{2}$, and with $u = ax$ the $a$ is squared too.",
+    "级数可以代替反复使用洛必达法则。把函数在极限点附近写成级数，消去分子减掉的部分。留下的第一项决定极限，因为后面的项 $x$ 的幂次更高，相除后都趋于零。例如 $\\lim_{x \\to 0} \\frac{e^{x} - 1 - x}{x^{2}} = \\lim_{x \\to 0} \\left(\\frac{1}{2} + \\frac{x}{6} + \\cdots\\right) = \\frac{1}{2}$。\n\n检验：用两次洛必达法则，先得 $\\frac{e^{x} - 1}{2x}$，再得 $\\frac{e^{x}}{2}$，它趋于 $\\frac{1}{2}$。\n\n> **注意。** $e^{u}$ 的 $x^{2}$ 项是 $\\frac{u^{2}}{2}$，令 $u = ax$ 后 $a$ 也要平方。",
   ),
   generate(rng) {
     const a = nonzero(rng, 9);
     const b = rng.int(1, 6);
     const answer = Q.of(a * a, 2 * b);
-    return numberProblem({
-      prompt: t(
-        `Find $\\lim_{x \\to 0} \\frac{e^{${poly([a, "x"])}} - 1 ${a < 0 ? "+" : "-"} ${poly([Math.abs(a), "x"])}}{${poly([b, "x^2"])}}$.`,
-        `求 $\\lim_{x \\to 0} \\frac{e^{${poly([a, "x"])}} - 1 ${a < 0 ? "+" : "-"} ${poly([Math.abs(a), "x"])}}{${poly([b, "x^2"])}}$。`,
-      ),
+    const ax = poly([a, "x"]);
+    const top = `e^{${ax}} - 1 ${a < 0 ? "+" : "-"} ${poly([Math.abs(a), "x"])}`;
+    const bottom = poly([b, "x^2"]);
+    const square = Q.of(a * a, 2);
+    return deNumber(
+      [`Find $\\lim_{x \\to 0} \\frac{${top}}{${bottom}}$.`, `求 $\\lim_{x \\to 0} \\frac{${top}}{${bottom}}$。`],
       answer,
-      wrong: [Q.of(a * a, b), Q.of(a, 2 * b), Q.of(0)],
-      solution: t(
-        `The series begins $1 + ${inParens(a)}x + \\frac{${a * a}}{2}x^2 + \\cdots$, so the numerator begins with $\\frac{${a * a}}{2}x^2$. Dividing by $${poly([b, "x^2"])}$ gives the limit $${answer.toLatex()}$.`,
-        `级数开头是 $1 + ${inParens(a)}x + \\frac{${a * a}}{2}x^2 + \\cdots$，所以分子以 $\\frac{${a * a}}{2}x^2$ 开头。除以 $${poly([b, "x^2"])}$ 得极限 $${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        deStepOf(
+          ["Expand the exponential", "展开指数函数"],
+          `Put $u = ${ax}$ into $e^{u} = 1 + u + \\frac{u^{2}}{2} + \\cdots$:`,
+          `把 $u = ${ax}$ 代入 $e^{u} = 1 + u + \\frac{u^{2}}{2} + \\cdots$：`,
+          `e^{${ax}} = ${poly([1, ""], [a, "x"], [square, "x^{2}"])} + \\cdots`,
+        ),
+        deStepOf(
+          ["Cancel and divide", "消去并相除"],
+          "The $1$ and the $x$ term cancel, and the $x^{2}$ term decides the limit:",
+          "$1$ 和 $x$ 项消去，$x^{2}$ 项决定极限：",
+          `\\frac{${top}}{${bottom}} = \\frac{${square.toLatex()}x^{2} + \\cdots}{${bottom}} \\to ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `L'Hopital's rule twice agrees. The second derivative of the numerator is $${coefficientOf(a * a)}e^{${ax}}$, which is $${a * a}$ at $0$, and that of the denominator is $${2 * b}$. So the limit is $${a * a}$ divided by $${2 * b}$, which is $${answer.toLatex()}$.`,
+        `用两次洛必达法则也得到同样结果。分子的二阶导数是 $${coefficientOf(a * a)}e^{${ax}}$，在 $0$ 处为 $${a * a}$；分母的二阶导数是 $${2 * b}$。所以极限是 $${a * a}$ 除以 $${2 * b}$，即 $${answer.toLatex()}$。`,
+      ],
+      [
+        [Q.of(a * a, b), "This forgets the $\\frac{1}{2!}$ of the $x^{2}$ term", "这里忘了 $x^{2}$ 项的 $\\frac{1}{2!}$"],
+        [
+          Q.of(a, 2 * b),
+          `This forgets to square $${a}$: the $x^{2}$ term is $\\frac{(${ax})^{2}}{2}$`,
+          `这里忘了把 $${a}$ 平方：$x^{2}$ 项是 $\\frac{(${ax})^{2}}{2}$`,
+        ],
+        [Q.of(0), "The $x^{2}$ term survives; only the $1$ and the $x$ term cancel", "$x^{2}$ 项留了下来；只有 $1$ 和 $x$ 项被消去"],
+      ],
+    );
   },
 };
 
@@ -1148,26 +1195,48 @@ const limitFromSineSeries: KnowledgePointDef = {
   id: "a-limit-from-the-sine-series",
   title: t("A limit from the sine series", "由正弦级数求极限"),
   explanation: t(
-    "The series of sine begins $u - \\frac{u^3}{6} + \\cdots$, so $\\sin u$ differs from $u$ by about $\\frac{u^3}{6}$ for small $u$. This settles limits in which the first term cancels. Remember that the coefficient of $u^3$ is negative, and that the substitution raises any constant in $u$ to the third power.",
-    "正弦的级数开头是 $u - \\frac{u^3}{6} + \\cdots$，所以 $u$ 很小时，$\\sin u$ 与 $u$ 相差约 $\\frac{u^3}{6}$。这可以解决第一项被抵消的极限。注意 $u^3$ 的系数是负的，而且代入后 $u$ 中的常数也要取三次方。",
+    "The series of sine begins $u - \\frac{u^3}{6} + \\cdots$, so $\\sin u$ differs from $u$ by about $\\frac{u^3}{6}$ for small $u$. This settles limits in which the first term cancels. For example, $\\lim_{x \\to 0} \\frac{\\sin x - x}{x^{3}} = \\lim_{x \\to 0} \\left(-\\frac{1}{6} + \\frac{x^{2}}{120} - \\cdots\\right) = -\\frac{1}{6}$.\n\nCheck: at $x = 0.1$ the quotient $\\frac{\\sin 0.1 - 0.1}{0.001}$ is about $-0.16658$, close to $-\\frac{1}{6} \\approx -0.16667$.\n\n> **Watch out.** The coefficient of $u^3$ is negative, and the substitution raises any constant in $u$ to the third power.",
+    "正弦的级数开头是 $u - \\frac{u^3}{6} + \\cdots$，所以 $u$ 很小时，$\\sin u$ 与 $u$ 相差约 $\\frac{u^3}{6}$。这可以解决第一项被抵消的极限。例如 $\\lim_{x \\to 0} \\frac{\\sin x - x}{x^{3}} = \\lim_{x \\to 0} \\left(-\\frac{1}{6} + \\frac{x^{2}}{120} - \\cdots\\right) = -\\frac{1}{6}$。\n\n检验：在 $x = 0.1$ 处，商 $\\frac{\\sin 0.1 - 0.1}{0.001}$ 约为 $-0.16658$，接近 $-\\frac{1}{6} \\approx -0.16667$。\n\n> **注意。** $u^3$ 的系数是负的，而且代入后 $u$ 中的常数也要取三次方。",
   ),
   generate(rng) {
     const a = rng.int(1, 5);
     const b = rng.int(1, 6);
     const answer = Q.of(-(a ** 3), 6 * b);
     const u = poly([a, "x"]);
-    return numberProblem({
-      prompt: t(
-        `Find $\\lim_{x \\to 0} \\frac{\\sin(${u}) - ${u}}{${poly([b, "x^3"])}}$.`,
-        `求 $\\lim_{x \\to 0} \\frac{\\sin(${u}) - ${u}}{${poly([b, "x^3"])}}$。`,
-      ),
+    const bottom = poly([b, "x^3"]);
+    const near = (Math.sin(a * 0.01) - a * 0.01) / (b * 1e-6);
+    return deNumber(
+      [`Find $\\lim_{x \\to 0} \\frac{\\sin(${u}) - ${u}}{${bottom}}$.`, `求 $\\lim_{x \\to 0} \\frac{\\sin(${u}) - ${u}}{${bottom}}$。`],
       answer,
-      wrong: [answer.neg(), Q.of(-(a ** 3), 2 * b), Q.of(0)],
-      solution: t(
-        `$\\sin(${u}) = ${u} - \\frac{${a ** 3}x^3}{6} + \\cdots$, so the numerator begins with $-\\frac{${a ** 3}}{6}x^3$. Dividing by $${poly([b, "x^3"])}$ gives $${answer.toLatex()}$.`,
-        `$\\sin(${u}) = ${u} - \\frac{${a ** 3}x^3}{6} + \\cdots$，所以分子以 $-\\frac{${a ** 3}}{6}x^3$ 开头。除以 $${poly([b, "x^3"])}$ 得 $${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        deStepOf(
+          ["Expand the sine", "展开正弦"],
+          `Put $u = ${u}$ into $\\sin u = u - \\frac{u^{3}}{6} + \\cdots$:`,
+          `把 $u = ${u}$ 代入 $\\sin u = u - \\frac{u^{3}}{6} + \\cdots$：`,
+          `\\sin(${u}) = ${u} - \\frac{${coefficientOf(a ** 3)}x^{3}}{6} + \\cdots`,
+        ),
+        deStepOf(
+          ["Cancel and divide", "消去并相除"],
+          `The $${u}$ cancels, and the $x^{3}$ term decides the limit:`,
+          `$${u}$ 消去，$x^{3}$ 项决定极限：`,
+          `\\frac{\\sin(${u}) - ${u}}{${bottom}} = \\frac{-\\frac{${a ** 3}}{6}x^{3} + \\cdots}{${bottom}} \\to ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `Put in a small number. At $x = 0.01$ the quotient is about $${near.toFixed(5)}$, close to $${answer.toLatex()} \\approx ${answer.toNumber().toFixed(5)}$.`,
+        `代入一个小的数。在 $x = 0.01$ 处，商约为 $${near.toFixed(5)}$，接近 $${answer.toLatex()} \\approx ${answer.toNumber().toFixed(5)}$。`,
+      ],
+      [
+        [
+          answer.neg(),
+          "The $u^{3}$ term of sine is negative: $\\sin u = u - \\frac{u^{3}}{6} + \\cdots$",
+          "正弦的 $u^{3}$ 项是负的：$\\sin u = u - \\frac{u^{3}}{6} + \\cdots$",
+        ],
+        [Q.of(-(a ** 3), 2 * b), "This divides by $2$; the $u^{3}$ term has $3! = 6$", "这里除以了 $2$；$u^{3}$ 项的分母是 $3! = 6$"],
+        [Q.of(-a, 6 * b), `This forgets to cube $${a}$`, `这里忘了把 $${a}$ 取三次方`],
+        [Q.of(0), "The $x^{3}$ term survives; only the first term cancels", "$x^{3}$ 项留了下来；只有第一项被消去"],
+      ],
+    );
   },
 };
 
@@ -3133,25 +3202,44 @@ const taylorBySubstitution: KnowledgePointDef = {
   id: "a-taylor-coefficient-by-substitution",
   title: t("A Taylor coefficient by substitution", "用代入法求泰勒系数"),
   explanation: t(
-    "Computing many derivatives of $e^{ax^2}$ would be painful, but its series comes straight from that of $e^u$ with $u = ax^2$. Only even powers of $x$ appear, and the term in $x^{2m}$ is the term in $u^m$. So the coefficient is $\\frac{a^m}{m!}$. The factorial belongs to $m$, not to the power $2m$.",
-    "计算 $e^{ax^2}$ 的多阶导数很麻烦，但它的级数可以直接由 $e^u$ 的级数令 $u = ax^2$ 得到。只出现 $x$ 的偶次幂，$x^{2m}$ 项就是 $u^m$ 项。所以系数是 $\\frac{a^m}{m!}$。阶乘属于 $m$，而不是幂次 $2m$。",
+    "Computing many derivatives of $e^{ax^2}$ would be painful, but its series comes straight from that of $e^u$ with $u = ax^2$. Only even powers of $x$ appear, and the term in $x^{2m}$ is the term in $u^m$. So the coefficient is $\\frac{a^m}{m!}$. For $e^{2x^{2}}$ the term in $x^{6}$ comes from $u^{3}$: $\\frac{(2x^{2})^{3}}{3!} = \\frac{8x^{6}}{6} = \\frac{4}{3}x^{6}$.\n\nCheck: $f = e^{2x^{2}}$ satisfies $f' = 4xf$, so matching powers gives $2k\\,c_{2k} = 4c_{2k-2}$. From $c_{0} = 1$ this gives $c_{2} = 2$, $c_{4} = 2$ and $c_{6} = \\frac{4}{3}$.\n\n> **Watch out.** The factorial belongs to $m$, not to the power $2m$: it is $3!$ here, not $6!$.",
+    "计算 $e^{ax^2}$ 的多阶导数很麻烦，但它的级数可以直接由 $e^u$ 的级数令 $u = ax^2$ 得到。只出现 $x$ 的偶次幂，$x^{2m}$ 项就是 $u^m$ 项。所以系数是 $\\frac{a^m}{m!}$。对 $e^{2x^{2}}$，$x^{6}$ 项来自 $u^{3}$：$\\frac{(2x^{2})^{3}}{3!} = \\frac{8x^{6}}{6} = \\frac{4}{3}x^{6}$。\n\n检验：$f = e^{2x^{2}}$ 满足 $f' = 4xf$，比较同次幂得 $2k\\,c_{2k} = 4c_{2k-2}$。由 $c_{0} = 1$ 依次得 $c_{2} = 2$、$c_{4} = 2$、$c_{6} = \\frac{4}{3}$。\n\n> **注意。** 阶乘属于 $m$，而不是幂次 $2m$：这里是 $3!$，不是 $6!$。",
   ),
   generate(rng) {
     const a = nonzero(rng, 5);
     const m = rng.int(2, 5);
     const answer = Q.of(a ** m, factorial(m));
-    return numberProblem({
-      prompt: t(
+    const u = poly([a, "x^{2}"]);
+    const chain: Q[] = [Q.of(1)];
+    for (let j = 1; j <= m; j += 1) chain.push((chain[j - 1] ?? Q.of(1)).mul(Q.of(a, j)));
+    return deNumber(
+      [
         `Find the coefficient of $x^{${2 * m}}$ in the Taylor series of $e^{${poly([a, "x^2"])}}$ about 0.`,
         `求 $e^{${poly([a, "x^2"])}}$ 在 0 处的泰勒级数中 $x^{${2 * m}}$ 的系数。`,
-      ),
+      ],
       answer,
-      wrong: [Q.of(a ** m, factorial(2 * m)), Q.of(a ** m), Q.of(a, factorial(m))],
-      solution: t(
-        `With $u = ${poly([a, "x^2"])}$, the term in $x^{${2 * m}}$ comes from $\\frac{u^{${m}}}{${m}!}$. Its coefficient is $\\frac{${a < 0 ? `(${a})` : a}^{${m}}}{${factorial(m)}} = ${answer.toLatex()}$.`,
-        `令 $u = ${poly([a, "x^2"])}$，$x^{${2 * m}}$ 项来自 $\\frac{u^{${m}}}{${m}!}$。它的系数是 $\\frac{${a < 0 ? `(${a})` : a}^{${m}}}{${factorial(m)}} = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        deStepOf(
+          ["Substitute into the exponential series", "代入指数级数"],
+          `Put $u = ${u}$ into the exponential series, whose terms are $\\frac{u^{k}}{k!}$. The term in $x^{${2 * m}}$ is the term with $k = ${m}$:`,
+          `把 $u = ${u}$ 代入指数级数，它的各项是 $\\frac{u^{k}}{k!}$。$x^{${2 * m}}$ 项就是 $k = ${m}$ 的项：`,
+          `\\frac{(${u})^{${m}}}{${m}!} = \\frac{${signedCoefficient(a ** m)}x^{${2 * m}}}{${factorial(m)}} = ${answer.toLatex()}x^{${2 * m}}`,
+        ),
+      ],
+      [
+        `The function satisfies $f' = ${poly([2 * a, "x"])}f$. Matching the powers of $x$ gives $c_{2k} = \\frac{${a}}{k}c_{2k-2}$, and starting from $c_{0} = 1$ the coefficients $c_{0}, c_{2}, \\dots, c_{${2 * m}}$ are $${chain.map((q) => q.toLatex()).join(", ")}$. The last is $${answer.toLatex()}$.`,
+        `这个函数满足 $f' = ${poly([2 * a, "x"])}f$。比较 $x$ 的同次幂得 $c_{2k} = \\frac{${a}}{k}c_{2k-2}$，从 $c_{0} = 1$ 出发，系数 $c_{0}, c_{2}, \\dots, c_{${2 * m}}$ 依次是 $${chain.map((q) => q.toLatex()).join(", ")}$。最后一个是 $${answer.toLatex()}$。`,
+      ],
+      [
+        [
+          Q.of(a ** m, factorial(2 * m)),
+          `This divides by $${2 * m}!$; the factorial belongs to the power of $u$, which is $${m}$`,
+          `这里除以了 $${2 * m}!$；阶乘属于 $u$ 的幂次，即 $${m}$`,
+        ],
+        [Q.of(a ** m), `This forgets the $\\frac{1}{${m}!}$ of the exponential series`, `这里忘了指数级数中的 $\\frac{1}{${m}!}$`],
+        [Q.of(a, factorial(m)), `This forgets to raise $${a}$ to the power $${m}$`, `这里忘了把 $${a}$ 取 $${m}$ 次方`],
+      ],
+    );
   },
 };
 
@@ -3159,27 +3247,60 @@ const geometricSubstitution: KnowledgePointDef = {
   id: "a-coefficient-of-a-geometric-series-in-x-squared",
   title: t("A coefficient of a geometric series in $x^2$", "关于 $x^2$ 的几何级数的系数"),
   explanation: t(
-    "The fraction $\\frac{k}{1 + ax^2}$ is a geometric series with first term $k$ and ratio $-ax^2$. Keep the minus sign with the ratio, because it makes the coefficients alternate. The term in $x^{2m}$ uses the ratio $m$ times, and so its coefficient is $k(-a)^m$. Odd powers of $x$ have coefficient zero.",
-    "分式 $\\frac{k}{1 + ax^2}$ 是首项为 $k$、公比为 $-ax^2$ 的几何级数。负号要留在公比里，正是它使系数正负交替。$x^{2m}$ 项用了 $m$ 次公比，所以系数是 $k(-a)^m$。$x$ 的奇次幂系数为零。",
+    "The fraction $\\frac{k}{1 + ax^2}$ is a geometric series with first term $k$ and ratio $-ax^2$. The term in $x^{2m}$ uses the ratio $m$ times, and so its coefficient is $k(-a)^m$. Odd powers of $x$ have coefficient zero. For example, $\\frac{3}{1 + 2x^{2}} = 3 - 6x^{2} + 12x^{4} - 24x^{6} + \\cdots$. So the coefficient of $x^{4}$ is $12$.\n\nCheck: multiplying back by $1 + 2x^{2}$, the coefficient of $x^{4}$ is $12 + 2(-6)$, which is $0$, as it must be for the constant $3$.\n\n> **Watch out.** Keep the minus sign with the ratio, because it makes the coefficients alternate.",
+    "分式 $\\frac{k}{1 + ax^2}$ 是首项为 $k$、公比为 $-ax^2$ 的几何级数。$x^{2m}$ 项用了 $m$ 次公比，所以系数是 $k(-a)^m$。$x$ 的奇次幂系数为零。例如 $\\frac{3}{1 + 2x^{2}} = 3 - 6x^{2} + 12x^{4} - 24x^{6} + \\cdots$。所以 $x^{4}$ 的系数是 $12$。\n\n检验：乘回 $1 + 2x^{2}$，$x^{4}$ 的系数是 $12 + 2(-6)$，即 $0$，这正符合乘积是常数 $3$。\n\n> **注意。** 负号要留在公比里，正是它使系数正负交替。",
   ),
   generate(rng) {
     const a = rng.int(1, 4);
     const k = rng.int(1, 6);
     const m = rng.int(2, 5);
     const answer = k * (-a) ** m;
-    return numberProblem({
-      prompt: t(
+    const lead = k === 1 ? "" : `${k}`;
+    const ratio = `-${coefficientOf(a)}x^{2}`;
+    return deNumber(
+      [
         `Find the coefficient of $x^{${2 * m}}$ in the power series of $\\frac{${k}}{1 + ${coefficientOf(a)}x^2}$ about 0.`,
         `求 $\\frac{${k}}{1 + ${coefficientOf(a)}x^2}$ 在 0 处的幂级数中 $x^{${2 * m}}$ 的系数。`,
-      ),
+      ],
       answer,
-      form: "integer",
-      wrong: [-answer, k * (-a) ** (2 * m), k * (-a) ** (m + 1), k * a * m],
-      solution: t(
-        `The ratio is $-${coefficientOf(a)}x^2$, used ${m} times, so the coefficient is $${k} \\cdot (-${a})^{${m}} = ${answer}$.`,
-        `公比是 $-${coefficientOf(a)}x^2$，用了 ${m} 次，所以系数是 $${k} \\cdot (-${a})^{${m}} = ${answer}$。`,
-      ),
-    });
+      [
+        deStepOf(
+          ["Read off the ratio", "读出公比"],
+          `The fraction is a geometric series with first term $${k}$ and ratio $${ratio}$:`,
+          `这个分式是首项为 $${k}$、公比为 $${ratio}$ 的几何级数：`,
+          `\\frac{${k}}{1 + ${coefficientOf(a)}x^{2}} = ${lead}\\sum_{n=0}^{\\infty} (${ratio})^{n}`,
+        ),
+        deStepOf(
+          ["Use the ratio the right number of times", "用对公比的次数"],
+          `The term in $x^{${2 * m}}$ uses the ratio $${m}$ times:`,
+          `$x^{${2 * m}}$ 项用了 $${m}$ 次公比：`,
+          `${lead}(${ratio})^{${m}} = ${signedCoefficient(answer)}x^{${2 * m}}`,
+        ),
+      ],
+      [
+        `Multiply back by $1 + ${coefficientOf(a)}x^{2}$. The product is the constant $${k}$, so its coefficient of $x^{${2 * m}}$ must be $0$. It is the coefficient $${answer}$ plus $${a}$ times the coefficient of $x^{${2 * m - 2}}$, which is $${k * (-a) ** (m - 1)}$, and this gives $${answer} ${answer > 0 ? "-" : "+"} ${Math.abs(answer)} = 0$.`,
+        `乘回 $1 + ${coefficientOf(a)}x^{2}$。乘积是常数 $${k}$，所以其中 $x^{${2 * m}}$ 的系数必须是 $0$。它等于系数 $${answer}$ 加上 $${a}$ 乘以 $x^{${2 * m - 2}}$ 的系数 $${k * (-a) ** (m - 1)}$，得 $${answer} ${answer > 0 ? "-" : "+"} ${Math.abs(answer)} = 0$。`,
+      ],
+      [
+        [-answer, "The sign is lost: the ratio is negative, so the sign alternates with $m$", "符号丢了：公比是负的，所以符号随 $m$ 交替"],
+        [
+          k * (-a) ** (2 * m),
+          `This uses the ratio $${2 * m}$ times; each use of $x^{2}$ adds two to the power`,
+          `这里用了 $${2 * m}$ 次公比；每用一次 $x^{2}$，幂次加二`,
+        ],
+        [
+          k * (-a) ** (m + 1),
+          `This uses the ratio $${m + 1}$ times; the first term $${k}$ uses it zero times`,
+          `这里用了 $${m + 1}$ 次公比；首项 $${k}$ 用了零次`,
+        ],
+        [
+          k * a * m,
+          "This multiplies by the ratio's coefficient instead of raising it to a power",
+          "这里把公比的系数相乘了，而不是取它的幂",
+        ],
+      ],
+      "integer",
+    );
   },
 };
 
@@ -3187,27 +3308,57 @@ const highDerivativeOfProduct: KnowledgePointDef = {
   id: "a-high-derivative-of-a-product-from-its-series",
   title: t("A high derivative of a product from its series", "由级数求乘积的高阶导数"),
   explanation: t(
-    "Multiplying a series by $x^2$ shifts every term up by two places. So the coefficient of $x^n$ in $x^2e^{ax}$ is the coefficient of $x^{n-2}$ in $e^{ax}$. The derivative at 0 is then $n!$ times that coefficient. This avoids differentiating a product $n$ times, which would be slow and prone to mistakes.",
-    "把级数乘以 $x^2$，每一项都上移两位。所以 $x^2e^{ax}$ 中 $x^n$ 的系数，就是 $e^{ax}$ 中 $x^{n-2}$ 的系数。在 0 处的导数就是 $n!$ 乘以这个系数。这样就不用对乘积求 $n$ 次导，那样既慢又容易出错。",
+    "Multiplying a series by $x^2$ shifts every term up by two places. So the coefficient of $x^n$ in $x^2e^{ax}$ is the coefficient of $x^{n-2}$ in $e^{ax}$. The derivative at 0 is then $n!$ times that coefficient. This avoids differentiating a product $n$ times. For $f(x) = x^{2}e^{x}$ the coefficient of $x^{5}$ is $\\frac{1}{3!}$, so $f^{(5)}(0)$ is $\\frac{5!}{3!}$, which is $20$.\n\nCheck: by Leibniz's rule only the term that differentiates $x^{2}$ exactly twice survives at $0$. It is $\\binom{5}{2} \\cdot 2 \\cdot e^{0}$, which is $20$.\n\n> **Watch out.** The derivative is $n!$ times the coefficient, not the coefficient itself.",
+    "把级数乘以 $x^2$，每一项都上移两位。所以 $x^2e^{ax}$ 中 $x^n$ 的系数，就是 $e^{ax}$ 中 $x^{n-2}$ 的系数。在 0 处的导数就是 $n!$ 乘以这个系数。这样就不用对乘积求 $n$ 次导。对 $f(x) = x^{2}e^{x}$，$x^{5}$ 的系数是 $\\frac{1}{3!}$，所以 $f^{(5)}(0)$ 是 $\\frac{5!}{3!}$，即 $20$。\n\n检验：由莱布尼茨法则，在 $0$ 处只有恰好对 $x^{2}$ 求两次导的那一项留下。它是 $\\binom{5}{2} \\cdot 2 \\cdot e^{0}$，即 $20$。\n\n> **注意。** 导数是 $n!$ 乘以系数，而不是系数本身。",
   ),
   generate(rng) {
     const a = nonzero(rng, 3);
     const n = rng.int(4, 8);
     const power = a ** (n - 2);
     const answer = n * (n - 1) * power;
-    return numberProblem({
-      prompt: t(
-        `Let $f(x) = x^2e^{${poly([a, "x"])}}$. Find $f^{(${n})}(0)$.`,
-        `设 $f(x) = x^2e^{${poly([a, "x"])}}$。求 $f^{(${n})}(0)$。`,
-      ),
+    const coefficient = `\\frac{${inParens(a)}^{${n - 2}}}{${n - 2}!}`;
+    const product = Math.abs(power) === 1 ? "" : ` = ${n * (n - 1)} \\cdot ${inParens(power)}`;
+    const leibniz = a === 1 ? "" : ` \\cdot ${inParens(a)}^{${n - 2}}`;
+    return deNumber(
+      [`Let $f(x) = x^2e^{${poly([a, "x"])}}$. Find $f^{(${n})}(0)$.`, `设 $f(x) = x^2e^{${poly([a, "x"])}}$。求 $f^{(${n})}(0)$。`],
       answer,
-      form: "integer",
-      wrong: [power, n * power, n * (n - 1) * a ** n],
-      solution: t(
-        `The coefficient of $x^{${n}}$ is $\\frac{${inParens(a)}^{${n - 2}}}{${n - 2}!}$. Multiplying by $${n}!$ gives $${n} \\cdot ${n - 1} \\cdot ${inParens(a)}^{${n - 2}} = ${answer}$.`,
-        `$x^{${n}}$ 的系数是 $\\frac{${inParens(a)}^{${n - 2}}}{${n - 2}!}$。乘以 $${n}!$，得 $${n} \\cdot ${n - 1} \\cdot ${inParens(a)}^{${n - 2}} = ${answer}$。`,
-      ),
-    });
+      [
+        deStepOf(
+          ["Shift the series", "平移级数"],
+          `Multiplying the series of $e^{${poly([a, "x"])}}$ by $x^{2}$ moves its term in $x^{${n - 2}}$ to $x^{${n}}$, so the coefficient of $x^{${n}}$ is:`,
+          `把 $e^{${poly([a, "x"])}}$ 的级数乘以 $x^{2}$，它的 $x^{${n - 2}}$ 项移到 $x^{${n}}$，所以 $x^{${n}}$ 的系数是：`,
+          `c_{${n}} = ${coefficient}`,
+        ),
+        deStepOf(
+          ["Multiply by the factorial", "乘以阶乘"],
+          `The derivative at $0$ is $${n}!$ times the coefficient:`,
+          `在 $0$ 处的导数是 $${n}!$ 乘以系数：`,
+          `f^{(${n})}(0) = ${n}! \\cdot ${coefficient}${product} = ${answer}`,
+        ),
+      ],
+      [
+        `Leibniz's rule agrees. At $0$ every term vanishes except the one that differentiates $x^{2}$ exactly twice, and that term is $\\binom{${n}}{2} \\cdot 2${leibniz}$. Since $\\binom{${n}}{2}$ is $${(n * (n - 1)) / 2}$, this is $${answer}$.`,
+        `用莱布尼茨法则也得到同样结果。在 $0$ 处，除了恰好对 $x^{2}$ 求两次导的那一项，其余各项都为零；那一项是 $\\binom{${n}}{2} \\cdot 2${leibniz}$。由于 $\\binom{${n}}{2}$ 是 $${(n * (n - 1)) / 2}$，结果是 $${answer}$。`,
+      ],
+      [
+        [
+          power,
+          `This forgets to multiply by $\\frac{${n}!}{${n - 2}!}$; it reads the derivative as $${n - 2}!$ times the coefficient`,
+          `这里忘了乘以 $\\frac{${n}!}{${n - 2}!}$；把导数当成了 $${n - 2}!$ 乘以系数`,
+        ],
+        [
+          n * power,
+          `This multiplies by $${n}$ only; the shift by two places needs $${n} \\cdot ${n - 1}$`,
+          `这里只乘了 $${n}$；平移两位需要乘 $${n} \\cdot ${n - 1}$`,
+        ],
+        [
+          n * (n - 1) * a ** n,
+          `This takes the power $${n}$ of $${a}$; the factor $x^{2}$ leaves only $${n - 2}$ powers for the exponential`,
+          `这里取了 $${a}$ 的 $${n}$ 次方；因子 $x^{2}$ 只给指数函数留下 $${n - 2}$ 次`,
+        ],
+      ],
+      "integer",
+    );
   },
 };
 
@@ -3215,26 +3366,54 @@ const evenPowersRadius: KnowledgePointDef = {
   id: "the-radius-of-a-series-in-even-powers",
   title: t("The radius of a series in even powers", "偶次幂级数的收敛半径"),
   explanation: t(
-    "A series with only even powers of $x$ skips terms, so the usual ratio of coefficients does not give the radius directly. Treat it as a geometric series in $x^2$ instead. It converges when the ratio has size less than one, which bounds $x^2$. Then take a square root, and this is the step most easily forgotten.",
-    "只含 $x$ 偶次幂的级数跳过了一些项，所以通常的系数之比不能直接给出半径。可以把它看作关于 $x^2$ 的几何级数。公比的大小小于一时收敛，这就限定了 $x^2$。然后要开平方，这是最容易忘记的一步。",
+    "A series with only even powers of $x$ skips terms, so the usual ratio of coefficients does not give the radius directly. Treat it as a geometric series in $x^2$ instead. It converges when the ratio has size less than one, which bounds $x^2$. For $\\sum \\frac{x^{2n}}{4^{n}}$ the ratio is $\\frac{x^{2}}{4}$, so the series converges when $x^{2} < 4$, that is when $|x| < 2$. The radius is $2$.\n\nCheck: at $x = 2$ the ratio is exactly $1$, every term equals $1$, and the series diverges, so the radius is not larger.\n\n> **Watch out.** The bound is on $x^{2}$, so take a square root at the end; this step is the one most easily forgotten.",
+    "只含 $x$ 偶次幂的级数跳过了一些项，所以通常的系数之比不能直接给出半径。可以把它看作关于 $x^2$ 的几何级数。公比的大小小于一时收敛，这就限定了 $x^2$。对 $\\sum \\frac{x^{2n}}{4^{n}}$，公比是 $\\frac{x^{2}}{4}$，所以当 $x^{2} < 4$，即 $|x| < 2$ 时收敛。半径是 $2$。\n\n检验：在 $x = 2$ 处公比恰好是 $1$，每一项都等于 $1$，级数发散，所以半径不会更大。\n\n> **注意。** 限定的是 $x^{2}$，最后要开平方；这一步最容易忘记。",
   ),
   generate(rng) {
     const s = rng.int(2, 9);
     const u = rng.pick([1, 2, 3, 4, 5, 6, 7, 8, 9].filter((v) => v !== s));
     const answer = Q.of(s, u);
     const top = u === 1 ? "" : `${u * u}^n`;
-    return numberProblem({
-      prompt: t(
+    const ratio = Q.of(u * u, s * s).toLatex();
+    const squared = Q.of(s * s, u * u).toLatex();
+    return deNumber(
+      [
         `Find the radius of convergence of $\\sum_{n=0}^\\infty \\frac{${top}x^{2n}}{${s * s}^n}$.`,
         `求 $\\sum_{n=0}^\\infty \\frac{${top}x^{2n}}{${s * s}^n}$ 的收敛半径。`,
-      ),
+      ],
       answer,
-      wrong: [Q.of(s * s, u * u), Q.of(u, s), Q.of(s * s, u)],
-      solution: t(
-        `The ratio is $${Q.of(u * u, s * s).toLatex()}x^2$, and it has size below 1 when $x^2 < ${Q.of(s * s, u * u).toLatex()}$. The square root gives $${answer.toLatex()}$.`,
-        `公比是 $${Q.of(u * u, s * s).toLatex()}x^2$，当 $x^2 < ${Q.of(s * s, u * u).toLatex()}$ 时它的大小小于 1。开平方得 $${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        deStepOf(
+          ["Find the ratio in x squared", "求关于 x 平方的公比"],
+          "The series is geometric, and each term is the previous one times:",
+          "这个级数是几何级数，每一项是前一项乘以：",
+          `r = ${ratio}x^{2}`,
+        ),
+        deStepOf(
+          ["Bound x squared, then take the root", "限定 x 平方，再开方"],
+          "It converges when the ratio has size less than one:",
+          "公比的大小小于一时收敛：",
+          `${ratio}x^{2} < 1 \\iff x^{2} < ${squared} \\iff |x| < ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `At the edge $x = ${answer.toLatex()}$, the ratio is $${ratio}$ times $${squared}$, which is exactly $1$. Every term then equals $1$, so the series diverges there and converges just inside: the radius is $${answer.toLatex()}$.`,
+        `在边界 $x = ${answer.toLatex()}$ 处，公比是 $${ratio}$ 乘以 $${squared}$，恰好是 $1$。这时每一项都等于 $1$，级数在那里发散，而在稍内处收敛：半径是 $${answer.toLatex()}$。`,
+      ],
+      [
+        [Q.of(s * s, u * u), "This is the bound on $x^{2}$; take its square root", "这是 $x^{2}$ 的界；还要开平方"],
+        [
+          Q.of(u, s),
+          "This turns the fraction upside down: the series converges for small $x$, so the radius is the denominator's root over the numerator's",
+          "这里把分数颠倒了：级数在 $x$ 小时收敛，半径是分母的平方根除以分子的平方根",
+        ],
+        [
+          Q.of(s * s, u),
+          "This takes the square root of the bottom only; both parts of the fraction need it",
+          "这里只对分母开了平方；分数的两部分都要开平方",
+        ],
+      ],
+    );
   },
 };
 
@@ -5122,27 +5301,70 @@ const widthOfIntegralBounds: KnowledgePointDef = {
   id: "the-width-of-the-integral-test-bounds",
   title: t("The width of the integral test bounds", "积分判别法上下界的宽度"),
   explanation: t(
-    "The remainder after $N$ terms lies between two improper integrals: one starting at $N + 1$ and one starting at $N$. Adding $S_N$ traps the true sum between a lower and an upper bound. The partial sum is common to both, so the distance between the bounds depends only on the two integrals, and it can be found without computing $S_N$.",
-    "前 $N$ 项之后的余项介于两个反常积分之间：一个从 $N + 1$ 开始，另一个从 $N$ 开始。加上 $S_N$，就把真正的和夹在下界和上界之间。两个界都含部分和，所以它们之间的距离只取决于这两个积分，不必计算 $S_N$ 就能求出。",
+    "The remainder after $N$ terms lies between two improper integrals: one starting at $N + 1$ and one starting at $N$. Adding $S_N$ traps the true sum between a lower and an upper bound. The partial sum is common to both, so the distance between the bounds depends only on the two integrals. For $\\sum \\frac{1}{n^{2}}$ with $N = 3$ the distance is $\\int_{3}^{\\infty} \\frac{dx}{x^{2}} - \\int_{4}^{\\infty} \\frac{dx}{x^{2}} = \\frac{1}{3} - \\frac{1}{4} = \\frac{1}{12}$.\n\nCheck: the distance is the integral from $3$ to $4$, and a decreasing function on that interval lies between $\\frac{1}{16}$ and $\\frac{1}{9}$. Indeed $\\frac{1}{16} < \\frac{1}{12} < \\frac{1}{9}$.\n\n> **Watch out.** The width needs no $S_N$ at all: it cancels when the two bounds are subtracted.",
+    "前 $N$ 项之后的余项介于两个反常积分之间：一个从 $N + 1$ 开始，另一个从 $N$ 开始。加上 $S_N$，就把真正的和夹在下界和上界之间。两个界都含部分和，所以它们之间的距离只取决于这两个积分。对 $\\sum \\frac{1}{n^{2}}$，$N = 3$，距离是 $\\int_{3}^{\\infty} \\frac{dx}{x^{2}} - \\int_{4}^{\\infty} \\frac{dx}{x^{2}} = \\frac{1}{3} - \\frac{1}{4} = \\frac{1}{12}$。\n\n检验：这个距离就是从 $3$ 到 $4$ 的积分，而递减函数在这一段上介于 $\\frac{1}{16}$ 和 $\\frac{1}{9}$ 之间。确实 $\\frac{1}{16} < \\frac{1}{12} < \\frac{1}{9}$。\n\n> **注意。** 宽度根本不需要 $S_N$：两个界相减时它就消去了。",
   ),
   generate(rng) {
     const k = rng.int(1, 9);
     const p = rng.int(2, 3);
-    const N = rng.int(3, 12);
+    const N = p === 2 ? rng.int(3, 12) : rng.int(2, 4);
     const tail = (start: number) => Q.of(k, (p - 1) * start ** (p - 1));
     const answer = tail(N).sub(tail(N + 1));
-    return numberProblem({
-      prompt: t(
+    const f = `\\frac{${k}}{x^{${p}}}`;
+    return deNumber(
+      [
         `For $S = \\sum_{n=1}^{\\infty} \\frac{${k}}{n^{${p}}}$, the integral test traps $S$ between a lower and an upper bound that both use $S_{${N}}$. How far apart are the two bounds?`,
         `对 $S = \\sum_{n=1}^{\\infty} \\frac{${k}}{n^{${p}}}$，积分判别法把 $S$ 夹在都用到 $S_{${N}}$ 的下界和上界之间。这两个界相距多远？`,
-      ),
+      ],
       answer,
-      wrong: [tail(N), tail(N + 1), tail(N).add(tail(N + 1)), Q.of(k, N ** p)],
-      solution: t(
-        `The bounds are $S_{${N}} + \\int_{${N + 1}}^\\infty f$ and $S_{${N}} + \\int_{${N}}^\\infty f$, where $f(x) = \\frac{${k}}{x^{${p}}}$. These integrals are $${tail(N + 1).toLatex()}$ and $${tail(N).toLatex()}$. The partial sum cancels, so the distance is $${tail(N).toLatex()} - ${tail(N + 1).toLatex()} = ${answer.toLatex()}$.`,
-        `两个界是 $S_{${N}} + \\int_{${N + 1}}^\\infty f$ 和 $S_{${N}} + \\int_{${N}}^\\infty f$，其中 $f(x) = \\frac{${k}}{x^{${p}}}$。这两个积分分别是 $${tail(N + 1).toLatex()}$ 和 $${tail(N).toLatex()}$。部分和相互抵消，所以距离是 $${tail(N).toLatex()} - ${tail(N + 1).toLatex()} = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        deStepOf(
+          ["Write the two bounds", "写出两个界"],
+          `With $f(x) = ${f}$, the integral test gives:`,
+          `设 $f(x) = ${f}$，积分判别法给出：`,
+          `S_{${N}} + \\int_{${N + 1}}^{\\infty} f(x)\\,dx \\le S \\le S_{${N}} + \\int_{${N}}^{\\infty} f(x)\\,dx`,
+        ),
+        deStepOf(
+          ["Evaluate the integrals", "计算两个积分"],
+          "Both integrals are improper integrals of a power:",
+          "两个积分都是幂函数的反常积分：",
+          `\\int_{${N}}^{\\infty} ${f}\\,dx = ${tail(N).toLatex()}`,
+          `\\int_{${N + 1}}^{\\infty} ${f}\\,dx = ${tail(N + 1).toLatex()}`,
+        ),
+        deStepOf(
+          ["Subtract", "相减"],
+          `The partial sum $S_{${N}}$ cancels, so the distance is:`,
+          `部分和 $S_{${N}}$ 消去，所以距离是：`,
+          `${tail(N).toLatex()} - ${tail(N + 1).toLatex()} = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `The distance is the integral of $f$ from $${N}$ to $${N + 1}$. Since $f$ decreases, it lies between $f(${N + 1})$ and $f(${N})$, and indeed $${Q.of(k, (N + 1) ** p).toLatex()} < ${answer.toLatex()} < ${Q.of(k, N ** p).toLatex()}$.`,
+        `这个距离就是 $f$ 从 $${N}$ 到 $${N + 1}$ 的积分。由于 $f$ 递减，它介于 $f(${N + 1})$ 和 $f(${N})$ 之间，确实 $${Q.of(k, (N + 1) ** p).toLatex()} < ${answer.toLatex()} < ${Q.of(k, N ** p).toLatex()}$。`,
+      ],
+      [
+        [
+          tail(N),
+          "This is the integral of the upper bound alone; the lower bound's integral must be subtracted",
+          "这只是上界中的积分；还要减去下界中的积分",
+        ],
+        [
+          tail(N + 1),
+          "This is the integral of the lower bound alone; the distance is the difference of the two integrals",
+          "这只是下界中的积分；距离是两个积分之差",
+        ],
+        [
+          tail(N).add(tail(N + 1)),
+          "This adds the two integrals; the distance between the bounds is their difference",
+          "这里把两个积分相加了；两个界的距离是它们之差",
+        ],
+        [
+          Q.of(k, N ** p),
+          `This is the term $f(${N})$; the distance is the integral from $${N}$ to $${N + 1}$, which is smaller`,
+          `这是项 $f(${N})$；距离是从 $${N}$ 到 $${N + 1}$ 的积分，它更小`,
+        ],
+      ],
+    );
   },
 };
 
@@ -5150,8 +5372,8 @@ const degreeForAccuracy: KnowledgePointDef = {
   id: "the-degree-needed-for-an-accuracy",
   title: t("The degree needed for an accuracy", "达到给定精度所需的次数"),
   explanation: t(
-    "The Lagrange bound can be read backwards. Every derivative of sine and cosine is at most $1$ in size, so the error of the polynomial of degree $n$ is bounded by a power of $|x|$ over a factorial, both with index $n + 1$. The factorial eventually wins, so try successive values of $n$ until the bound falls below the required accuracy.",
-    "拉格朗日界可以反过来用。正弦和余弦的各阶导数的绝对值都不超过 $1$，所以 $n$ 次多项式的误差不超过 $|x|$ 的幂除以阶乘，两者的指标都是 $n + 1$。阶乘最终占优，所以逐个试 $n$，直到这个界小于所要求的精度。",
+    "The Lagrange bound can be read backwards. Every derivative of sine and cosine is at most $1$ in size, so the error of the polynomial of degree $n$ is bounded by a power of $|x|$ over a factorial, both with index $n + 1$. The factorial eventually wins, so try successive values of $n$ until the bound falls below the required accuracy. For $\\sin x$ at $x = 1$ to within $\\frac{1}{1000}$, degree $5$ gives the bound $\\frac{1}{6!}$, which is $\\frac{1}{720}$ and too large. Degree $6$ gives $\\frac{1}{7!}$, which is $\\frac{1}{5040}$ and small enough. So $n$ is $6$.\n\nCheck: going from degree $5$ to degree $6$ multiplies the bound by $\\frac{1}{7}$, and $\\frac{1}{720}$ times $\\frac{1}{7}$ is $\\frac{1}{5040}$.\n\n> **Watch out.** The index is $n + 1$, not $n$: the bound for degree $n$ uses $|x|^{n+1}$ and $(n+1)!$.",
+    "拉格朗日界可以反过来用。正弦和余弦的各阶导数的绝对值都不超过 $1$，所以 $n$ 次多项式的误差不超过 $|x|$ 的幂除以阶乘，两者的指标都是 $n + 1$。阶乘最终占优，所以逐个试 $n$，直到这个界小于所要求的精度。对 $\\sin x$ 在 $x = 1$ 处精确到 $\\frac{1}{1000}$，次数 $5$ 给出的界是 $\\frac{1}{6!}$，即 $\\frac{1}{720}$，太大。次数 $6$ 给出 $\\frac{1}{7!}$，即 $\\frac{1}{5040}$，足够小。所以 $n$ 是 $6$。\n\n检验：从次数 $5$ 到次数 $6$，界乘以 $\\frac{1}{7}$，而 $\\frac{1}{720}$ 乘以 $\\frac{1}{7}$ 是 $\\frac{1}{5040}$。\n\n> **注意。** 指标是 $n + 1$ 而不是 $n$：$n$ 次的界用的是 $|x|^{n+1}$ 和 $(n+1)!$。",
   ),
   generate(rng) {
     const sine = rng.pick([true, false]);
@@ -5162,19 +5384,48 @@ const degreeForAccuracy: KnowledgePointDef = {
     let n = 0;
     while (bound(n).cmp(accuracy) >= 0) n += 1;
     const fn = sine ? "\\sin" : "\\cos";
-    return numberProblem({
-      prompt: t(
+    const factor = x.div(Q.of(n + 1));
+    return deNumber(
+      [
         `Find the smallest degree $n$ for which the Lagrange error bound guarantees that the Taylor polynomial of degree $n$ for $${fn} x$ centered at $0$ has error less than $${accuracy.toLatex()}$ at $x = ${x.toLatex()}$.`,
         `求最小的次数 $n$，使拉格朗日误差界能保证 $${fn} x$ 在 $0$ 处的 $n$ 次泰勒多项式在 $x = ${x.toLatex()}$ 处的误差小于 $${accuracy.toLatex()}$。`,
-      ),
-      answer: n,
-      form: "integer",
-      wrong: [n + 1, n - 1, n + 2, n + 3],
-      solution: t(
-        `Every derivative of $${fn} x$ is at most $1$ in size, so the error is at most $\\frac{|x|^{n+1}}{(n+1)!}$. At degree $${n - 1}$ this is $${bound(n - 1).toLatex()}$, which is not below the accuracy. At degree $${n}$ it is $${bound(n).toLatex()}$, which is. So $n = ${n}$.`,
-        `$${fn} x$ 的各阶导数的绝对值都不超过 $1$，所以误差不超过 $\\frac{|x|^{n+1}}{(n+1)!}$。次数为 $${n - 1}$ 时它等于 $${bound(n - 1).toLatex()}$，没有小于所要求的精度。次数为 $${n}$ 时它等于 $${bound(n).toLatex()}$，小于精度。所以 $n = ${n}$。`,
-      ),
-    });
+      ],
+      n,
+      [
+        deStepOf(
+          ["Bound the derivatives", "估计各阶导数"],
+          `Every derivative of $${fn} x$ is at most $1$ in size, so the error of degree $n$ is at most:`,
+          `$${fn} x$ 的各阶导数的绝对值都不超过 $1$，所以 $n$ 次的误差不超过：`,
+          `|R_{n}(x)| \\le \\frac{|x|^{n+1}}{(n+1)!}`,
+        ),
+        deStepOf(
+          ["Try successive degrees", "逐个试次数"],
+          `At $x = ${x.toLatex()}$ the bound first falls below $${accuracy.toLatex()}$ at degree $${n}$:`,
+          `在 $x = ${x.toLatex()}$ 处，界在次数 $${n}$ 时第一次小于 $${accuracy.toLatex()}$：`,
+          `n = ${n - 1}: \\quad ${bound(n - 1).toLatex()} \\ge ${accuracy.toLatex()}`,
+          `n = ${n}: \\quad ${bound(n).toLatex()} < ${accuracy.toLatex()}`,
+        ),
+      ],
+      [
+        `Each bound is the one before times $\\frac{|x|}{n+1}$. Going from degree $${n - 1}$ to degree $${n}$ multiplies $${bound(n - 1).toLatex()}$ by $${factor.toLatex()}$, which gives $${bound(n).toLatex()}$, so the two values agree.`,
+        `每个界是前一个乘以 $\\frac{|x|}{n+1}$。从次数 $${n - 1}$ 到次数 $${n}$，$${bound(n - 1).toLatex()}$ 乘以 $${factor.toLatex()}$，得 $${bound(n).toLatex()}$，两个值相符。`,
+      ],
+      [
+        [
+          n + 1,
+          "This uses $\\frac{|x|^{n}}{n!}$; the bound for degree $n$ has index $n + 1$",
+          "这里用了 $\\frac{|x|^{n}}{n!}$；$n$ 次的界的指标是 $n + 1$",
+        ],
+        [
+          n - 1,
+          `At degree $${n - 1}$ the bound is $${bound(n - 1).toLatex()}$, which is not below $${accuracy.toLatex()}$`,
+          `次数为 $${n - 1}$ 时界是 $${bound(n - 1).toLatex()}$，没有小于 $${accuracy.toLatex()}$`,
+        ],
+        [n + 2, "A larger degree also works, but the question asks for the smallest", "更高的次数也可以，但题目要的是最小的"],
+        [n + 3, "A larger degree also works, but the question asks for the smallest", "更高的次数也可以，但题目要的是最小的"],
+      ],
+      "integer",
+    );
   },
 };
 
@@ -5182,8 +5433,8 @@ const sumWithNSquared: KnowledgePointDef = {
   id: "a-sum-with-n-squared-by-differentiating-twice",
   title: t("A sum with n squared by differentiating twice", "两次求导求含 n 平方的和"),
   explanation: t(
-    "Differentiating a power series and multiplying by $x$ puts one factor of $n$ into each term. Doing this to the geometric series gives the sum of $nx^n$, and doing it once more gives the sum of $n^2x^n$. Each round is a quotient rule on a closed form, and the result holds inside the interval of convergence, so a number can then be substituted.",
-    "对幂级数求导再乘以 $x$，每一项就多一个因子 $n$。对等比级数这样做一次，得到 $nx^n$ 的和；再做一次，得到 $n^2x^n$ 的和。每一轮都是对闭式用商法则，结果在收敛区间内成立，所以可以代入具体的数。",
+    "Differentiating a power series and multiplying by $x$ puts one factor of $n$ into each term. Doing this to the geometric series gives the sum of $nx^n$, and doing it once more gives the sum of $n^2x^n$, which is $\\frac{x(1 + x)}{(1 - x)^{3}}$ inside the interval of convergence. For example, $\\sum_{n=1}^{\\infty} \\frac{n^{2}}{2^{n}} = \\frac{\\frac{1}{2} \\cdot \\frac{3}{2}}{\\left(\\frac{1}{2}\\right)^{3}} = 6$.\n\nCheck: the first $20$ terms already add up to about $5.9995$.\n\n> **Watch out.** Each differentiation must be followed by multiplying by $x$; the sum of $n^{2}x^{n}$ is not the second derivative of the geometric series.",
+    "对幂级数求导再乘以 $x$，每一项就多一个因子 $n$。对等比级数这样做一次，得到 $nx^n$ 的和；再做一次，得到 $n^2x^n$ 的和，在收敛区间内它等于 $\\frac{x(1 + x)}{(1 - x)^{3}}$。例如 $\\sum_{n=1}^{\\infty} \\frac{n^{2}}{2^{n}} = \\frac{\\frac{1}{2} \\cdot \\frac{3}{2}}{\\left(\\frac{1}{2}\\right)^{3}} = 6$。\n\n检验：前 $20$ 项之和已经约为 $5.9995$。\n\n> **注意。** 每次求导之后都要乘以 $x$；$n^{2}x^{n}$ 的和不是等比级数的二阶导数。",
   ),
   generate(rng) {
     const b = rng.int(2, 9);
@@ -5199,23 +5450,53 @@ const sumWithNSquared: KnowledgePointDef = {
     const factor = k === 1 ? "" : `, multiplied by $${k}$`;
     const factorZh = k === 1 ? "" : `，再乘以 $${k}$`;
     const noteZh = alternating ? "，而 $(-1)^{n+1} = -(-1)^n$ 使前面多一个负号" : "";
-    return numberProblem({
-      prompt: t(
-        `Find the sum of $\\sum_{n=1}^{\\infty} \\frac{${signPart}${coefficientOf(k)}n^2}{${b}^n}$.`,
-        `求 $\\sum_{n=1}^{\\infty} \\frac{${signPart}${coefficientOf(k)}n^2}{${b}^n}$ 的和。`,
-      ),
+    const series = `\\sum_{n=1}^{\\infty} \\frac{${signPart}${coefficientOf(k)}n^2}{${b}^n}`;
+    let partial = 0;
+    for (let n = 1; n <= 40; n += 1) partial += ((alternating && n % 2 === 0 ? -k : k) * n * n) / b ** n;
+    return deNumber(
+      [`Find the sum of $${series}$.`, `求 $${series}$ 的和。`],
       answer,
-      wrong: [
-        sign.mul(x).div(one.sub(x).pow(2)),
-        sign.mul(one.add(x)).div(one.sub(x).pow(3)),
-        sign.mul(x).div(one.sub(x).pow(3)),
-        answer.neg(),
+      [
+        deStepOf(
+          ["Differentiate once", "求导一次"],
+          "Differentiate the geometric series and multiply by $x$:",
+          "对等比级数求导，再乘以 $x$：",
+          `\\sum_{n=1}^{\\infty} nx^{n} = x\\frac{d}{dx}\\frac{1}{1 - x} = \\frac{x}{(1 - x)^{2}}`,
+        ),
+        deStepOf(
+          ["Differentiate again", "再求导一次"],
+          "Do the same to that sum:",
+          "对这个和再做一次：",
+          `\\sum_{n=1}^{\\infty} n^{2}x^{n} = x\\frac{d}{dx}\\frac{x}{(1 - x)^{2}} = \\frac{x(1 + x)}{(1 - x)^{3}}`,
+        ),
+        deStepOf(
+          ["Substitute", "代入"],
+          `Put $x = ${x.toLatex()}$, where the closed form is $${closed.toLatex()}$${note}${factor}:`,
+          `代入 $x = ${x.toLatex()}$，闭式的值是 $${closed.toLatex()}$${noteZh}${factorZh}：`,
+          `${series} = ${answer.toLatex()}`,
+        ),
       ],
-      solution: t(
-        `From $\\sum_{n=1}^{\\infty} nx^n = \\frac{x}{(1 - x)^2}$, differentiating and multiplying by $x$ gives $\\sum_{n=1}^{\\infty} n^2x^n = \\frac{x(1 + x)}{(1 - x)^3}$. Here $x = ${x.toLatex()}$${note}${factor}. The sum is $${answer.toLatex()}$.`,
-        `由 $\\sum_{n=1}^{\\infty} nx^n = \\frac{x}{(1 - x)^2}$，求导再乘以 $x$，得 $\\sum_{n=1}^{\\infty} n^2x^n = \\frac{x(1 + x)}{(1 - x)^3}$。这里 $x = ${x.toLatex()}$${noteZh}${factorZh}。和是 $${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        `Add up the terms numerically. The first $40$ terms give about $${partial.toFixed(4)}$, which matches $${answer.toLatex()} \\approx ${answer.toNumber().toFixed(4)}$.`,
+        `用数值把各项加起来。前 $40$ 项之和约为 $${partial.toFixed(4)}$，与 $${answer.toLatex()} \\approx ${answer.toNumber().toFixed(4)}$ 相符。`,
+      ],
+      [
+        [
+          sign.mul(x).div(one.sub(x).pow(2)),
+          "This is the sum of $nx^{n}$; the factor $n^{2}$ needs a second round of differentiating and multiplying by $x$",
+          "这是 $nx^{n}$ 的和；因子 $n^{2}$ 需要再求导一次并乘以 $x$",
+        ],
+        [sign.mul(one.add(x)).div(one.sub(x).pow(3)), "This forgets the last multiplication by $x$", "这里忘了最后乘以 $x$"],
+        [sign.mul(x).div(one.sub(x).pow(3)), "This loses the factor $1 + x$ from the quotient rule", "这里丢了商法则给出的因子 $1 + x$"],
+        [
+          answer.neg(),
+          alternating
+            ? "The sign is wrong: $(-1)^{n+1}$ makes the first term positive, and it is the largest"
+            : "The sign is wrong: every term is positive",
+          alternating ? "符号错了：$(-1)^{n+1}$ 使第一项为正，而它是最大的一项" : "符号错了：每一项都是正的",
+        ],
+      ],
+    );
   },
 };
 
@@ -5223,8 +5504,8 @@ const errorOfSeriesIntegral: KnowledgePointDef = {
   id: "the-error-of-a-series-estimate-of-an-integral",
   title: t("The error of a series estimate of an integral", "用级数估计积分的误差"),
   explanation: t(
-    "Integrating a Maclaurin series term by term gives a numerical series for the integral. When that series alternates and its terms shrink, the error of stopping early is at most the size of the first term left out. So the accuracy of the estimate can be read from one more term of the series, without knowing the exact value of the integral.",
-    "把麦克劳林级数逐项积分，就得到积分值的数项级数。当这个级数交错且各项递减时，提前停止的误差不超过第一个被舍去项的大小。所以只要多算一项，就能知道估计的精度，不必知道积分的精确值。",
+    "Integrating a Maclaurin series term by term gives a numerical series for the integral. When that series alternates and its terms shrink, the error of stopping early is at most the size of the first term left out. For $\\int_{0}^{1/2} e^{-t^{2}}\\,dt$ the series is $\\frac{1}{2} - \\frac{1}{24} + \\frac{1}{320} - \\cdots$, so two terms give $\\frac{11}{24}$ with an error of at most $\\frac{1}{320}$.\n\nCheck: numerically the integral is about $0.46128$ and $\\frac{11}{24}$ is about $0.45833$. They differ by about $0.00295$, which is below $\\frac{1}{320} \\approx 0.00313$.\n\n> **Watch out.** The term left out has both the $n!$ of the exponential series and the $2n + 1$ from integrating.",
+    "把麦克劳林级数逐项积分，就得到积分值的数项级数。当这个级数交错且各项递减时，提前停止的误差不超过第一个被舍去项的大小。对 $\\int_{0}^{1/2} e^{-t^{2}}\\,dt$，级数是 $\\frac{1}{2} - \\frac{1}{24} + \\frac{1}{320} - \\cdots$，所以取两项得 $\\frac{11}{24}$，误差不超过 $\\frac{1}{320}$。\n\n检验：数值上积分约为 $0.46128$，$\\frac{11}{24}$ 约为 $0.45833$。两者相差约 $0.00295$，小于 $\\frac{1}{320} \\approx 0.00313$。\n\n> **注意。** 被舍去的项既有指数级数的 $n!$，也有积分带来的 $2n + 1$。",
   ),
   generate(rng) {
     const [c, a] = rng.pick([
@@ -5250,23 +5531,63 @@ const errorOfSeriesIntegral: KnowledgePointDef = {
     const answer = size(m);
     const upper = a.toLatex();
     const growth = c === 1 ? "" : `${c}^n `;
-    return numberProblem({
-      prompt: t(
+    const cPower = c === 1 ? "" : `${c}^{${m}}`;
+    const end = a.toNumber();
+    const g = (s: number) => Math.exp(-c * s * s);
+    const pieces = 200;
+    const h = end / pieces;
+    let simpson = g(0) + g(end);
+    for (let i = 1; i < pieces; i += 1) simpson += (i % 2 === 1 ? 4 : 2) * g(i * h);
+    const integral = (simpson * h) / 3;
+    let estimate = 0;
+    for (let n = 0; n < m; n += 1) estimate += (n % 2 === 0 ? 1 : -1) * size(n).toNumber();
+    const sci = (v: number) => {
+      const e = Math.floor(Math.log10(Math.abs(v)));
+      return `${(v / 10 ** e).toFixed(2)} \\times 10^{${e}}`;
+    };
+    return deNumber(
+      [
         `Use the first ${m} nonzero terms of a Maclaurin series to approximate $\\int_0^{${upper}} e^{-${coefficientOf(c)}t^2}\\,dt$. The series alternates and its terms decrease in size. Find the bound on the error given by the alternating series error bound.`,
         `用麦克劳林级数的前 ${m} 个非零项近似 $\\int_0^{${upper}} e^{-${coefficientOf(c)}t^2}\\,dt$。这个级数交错，各项的大小递减。求交错级数误差界给出的误差上界。`,
-      ),
-      answer,
-      wrong: [
-        size(m - 1),
-        Q.of(c ** m, factorial(m)).mul(a.pow(2 * m + 1)),
-        Q.of(c ** m, 2 * m + 1).mul(a.pow(2 * m + 1)),
-        Q.of(c ** m, factorial(m)).mul(a.pow(2 * m)),
       ],
-      solution: t(
-        `Integrating term by term gives terms of size $\\frac{${growth}\\left(${upper}\\right)^{2n+1}}{n!(2n+1)}$ for $n = 0, 1, 2, \\dots$. The terms kept stop at $n = ${m - 1}$, so the bound is the term with $n = ${m}$, which is $${answer.toLatex()}$.`,
-        `逐项积分，各项的大小是 $\\frac{${growth}\\left(${upper}\\right)^{2n+1}}{n!(2n+1)}$，$n = 0, 1, 2, \\dots$。保留的项到 $n = ${m - 1}$ 为止，所以误差界是 $n = ${m}$ 的项，等于 $${answer.toLatex()}$。`,
-      ),
-    });
+      answer,
+      [
+        deStepOf(
+          ["Integrate the series term by term", "逐项积分"],
+          `Put $u = -${coefficientOf(c)}t^{2}$ into the exponential series and integrate each term from $0$ to $${upper}$. The terms have sizes:`,
+          `把 $u = -${coefficientOf(c)}t^{2}$ 代入指数级数，再把每一项从 $0$ 积分到 $${upper}$。各项的大小是：`,
+          `\\frac{${growth}\\left(${upper}\\right)^{2n+1}}{n!\\,(2n+1)}, \\quad n = 0, 1, 2, \\dots`,
+        ),
+        deStepOf(
+          ["Take the first term left out", "取第一个被舍去的项"],
+          `The ${m} terms kept stop at $n = ${m - 1}$, so the bound is the term with $n = ${m}$:`,
+          `保留的 ${m} 项到 $n = ${m - 1}$ 为止，所以误差界是 $n = ${m}$ 的项：`,
+          `\\frac{${cPower}\\left(${upper}\\right)^{${2 * m + 1}}}{${m}! \\cdot ${2 * m + 1}} = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `Compare with a numerical value. Simpson's rule gives the integral as about $${integral.toFixed(6)}$, and the ${m} terms give about $${estimate.toFixed(6)}$. The actual error is about $${sci(Math.abs(integral - estimate))}$, below the bound $${sci(answer.toNumber())}$.`,
+        `与数值结果比较。辛普森法则给出积分约为 $${integral.toFixed(6)}$，前 ${m} 项之和约为 $${estimate.toFixed(6)}$。实际误差约为 $${sci(Math.abs(integral - estimate))}$，小于误差界 $${sci(answer.toNumber())}$。`,
+      ],
+      [
+        [size(m - 1), "This is the last term kept; the bound is the first term left out", "这是保留的最后一项；误差界是第一个被舍去的项"],
+        [
+          Q.of(c ** m, factorial(m)).mul(a.pow(2 * m + 1)),
+          `This forgets to divide by $${2 * m + 1}$, which comes from integrating $t^{${2 * m}}$`,
+          `这里忘了除以 $${2 * m + 1}$，它来自对 $t^{${2 * m}}$ 积分`,
+        ],
+        [
+          Q.of(c ** m, 2 * m + 1).mul(a.pow(2 * m + 1)),
+          `This forgets the $${m}!$ of the exponential series`,
+          `这里忘了指数级数中的 $${m}!$`,
+        ],
+        [
+          Q.of(c ** m, factorial(m)).mul(a.pow(2 * m)),
+          "This is a term of the series of the integrand at the upper limit, not of the integral",
+          "这是被积函数的级数在上限处的项，不是积分的项",
+        ],
+      ],
+    );
   },
 };
 

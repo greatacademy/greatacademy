@@ -8,7 +8,7 @@ import { dec, linear, paren, poly, Q } from "@ga/subject-math";
 import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 import { explainedChoice, numberProblem } from "../problems.ts";
 
-import { ask, choose, type Pair, point } from "../university-kit.ts";
+import { type Pair, point } from "../university-kit.ts";
 import { type Step, walked } from "./calculus-i-differentiation.ts";
 
 /** nz picks a nonzero integer from -r to r. */
@@ -264,43 +264,113 @@ const repeatingNines = point(
   },
 );
 
-/** pSeries lists terms of the form c over a power of n, with whether their series converges. */
+/** SeriesSlip is a wrong number of a series question with its reason in English and Chinese. */
+type SeriesSlip = readonly [value: number | Q, en: string, zh: string];
+
+/** SeriesOption is a wrong option of a series question with its reason in English and Chinese. */
+type SeriesOption = readonly [option: Pair, en: string, zh: string];
+
+/** seriesQ turns a whole number into a rational and leaves a rational as it is. */
+const seriesQ = (v: number | Q) => (typeof v === "number" ? Q.of(v) : v);
+
+/** seriesSolved asks for a number, explains it in labelled steps with a check, and keeps the first reason for each wrong value. */
+function seriesSolved(prompt: Pair, answer: number | Q, parts: readonly Step[], check: Pair, mistakes: readonly SeriesSlip[]): Problem {
+  const right = seriesQ(answer);
+  const kept = mistakes.filter((m, i) => !seriesQ(m[0]).eq(right) && mistakes.findIndex((n) => seriesQ(n[0]).eq(seriesQ(m[0]))) === i);
+  return numberProblem({
+    prompt: t(...prompt),
+    answer: right,
+    mistakes: kept.map(([value, en, zh]) => ({ value: seriesQ(value), why: t(en, zh) })),
+    solution: walked(parts, t(...check)),
+  });
+}
+
+/** seriesPicked asks a choice whose wrong options each have a reason, explained in labelled steps with a check. */
+function seriesPicked(rng: Rng, prompt: Pair, correct: Pair, wrong: readonly SeriesOption[], parts: readonly Step[], check: Pair): Problem {
+  return explainedChoice(rng, {
+    prompt: t(...prompt),
+    correct: t(...correct),
+    wrong: wrong.map(([option, en, zh]) => ({ option: t(...option), why: t(en, zh) })),
+    solution: walked(parts, t(...check)),
+  });
+}
+
+/** pSeries lists terms of the form c over a power of n, with the same term in x and the power p. */
 const pSeries = [
-  { term: (c: number) => `\\frac{${c}}{n}`, converges: false },
-  { term: (c: number) => `\\frac{${c}}{\\sqrt{n}}`, converges: false },
-  { term: (c: number) => `\\frac{${c}}{n^{2}}`, converges: true },
-  { term: (c: number) => `\\frac{${c}}{n\\sqrt{n}}`, converges: true },
-  { term: (c: number) => `\\frac{${c}}{n^{3}}`, converges: true },
+  { term: (c: number) => `\\frac{${c}}{n}`, x: (c: number) => `\\frac{${c}}{x}`, p: Q.of(1) },
+  { term: (c: number) => `\\frac{${c}}{\\sqrt{n}}`, x: (c: number) => `\\frac{${c}}{\\sqrt{x}}`, p: Q.of(1, 2) },
+  { term: (c: number) => `\\frac{${c}}{n^{2}}`, x: (c: number) => `\\frac{${c}}{x^{2}}`, p: Q.of(2) },
+  { term: (c: number) => `\\frac{${c}}{n\\sqrt{n}}`, x: (c: number) => `\\frac{${c}}{x\\sqrt{x}}`, p: Q.of(3, 2) },
+  { term: (c: number) => `\\frac{${c}}{n^{3}}`, x: (c: number) => `\\frac{${c}}{x^{3}}`, p: Q.of(3) },
 ] as const;
 
 const converseTrap = point(
   "terms-tending-to-zero-prove-nothing",
   ["Terms tending to zero prove nothing", "通项趋于零不能证明收敛"],
   [
-    "The $n$th term test can only prove divergence. When the terms tend to $0$ it says nothing, and the series may converge or diverge. Another test must decide, and the harmonic series is the standard warning that small terms are not enough.",
-    "第 $n$ 项检验只能证明发散。通项趋于 $0$ 时它不提供任何信息，级数可能收敛也可能发散。必须用别的检验来判断，调和级数就是通项很小也不够的典型例子。",
+    "The $n$th term test can only prove divergence: if the terms do not tend to $0$, the series diverges. When the terms do tend to $0$ it says nothing, and another test must decide. The harmonic series is the standard warning. Its terms tend to $0$, yet it diverges by the $p$-series test with $p = 1$, and its partial sums grow without bound: $\\sum_{n=1}^{N} \\frac{1}{n} \\ge \\int_{1}^{N+1} \\frac{dx}{x} = \\ln(N + 1)$.\n\nCheck: group the terms. $\\frac{1}{3} + \\frac{1}{4} > \\frac{1}{2}$ and $\\frac{1}{5} + \\frac{1}{6} + \\frac{1}{7} + \\frac{1}{8} > \\frac{1}{2}$, and each later block of doubled length adds more than $\\frac{1}{2}$ again, so the partial sums pass every bound.\n\n> **Watch out.** A limit of $0$ is necessary for convergence, not sufficient: $\\frac{1}{n} \\to 0$, but $\\sum \\frac{1}{n}$ diverges.",
+    "第 $n$ 项检验只能证明发散：通项不趋于 $0$ 时级数发散。通项趋于 $0$ 时它不提供任何信息，必须用别的检验来判断。调和级数就是典型的警示。它的通项趋于 $0$，但由 $p = 1$ 的 $p$ 级数检验它发散，部分和无限增大：$\\sum_{n=1}^{N} \\frac{1}{n} \\ge \\int_{1}^{N+1} \\frac{dx}{x} = \\ln(N + 1)$。\n\n检验：把各项分组。$\\frac{1}{3} + \\frac{1}{4} > \\frac{1}{2}$，$\\frac{1}{5} + \\frac{1}{6} + \\frac{1}{7} + \\frac{1}{8} > \\frac{1}{2}$，以后每一组长度加倍，又加上超过 $\\frac{1}{2}$ 的量，所以部分和超过任何界。\n\n> **注意。** 极限为 $0$ 是收敛的必要条件，不是充分条件：$\\frac{1}{n} \\to 0$，但 $\\sum \\frac{1}{n}$ 发散。",
   ],
   (rng) => {
     const s = rng.pick(pSeries);
     const c = rng.int(1, 20);
+    const conv = s.p.sub(Q.one).sign() > 0;
+    const p = s.p.toLatex();
     const yes: Pair = ["The test says nothing; the $p$-series test shows that it converges", "该检验不提供信息；$p$ 级数检验说明它收敛"];
     const no: Pair = ["The test says nothing; the $p$-series test shows that it diverges", "该检验不提供信息；$p$ 级数检验说明它发散"];
-    return choose(
+    const parts: Step[] = [
+      [
+        ["Apply the nth term test", "用第 n 项检验"],
+        t("The terms tend to $0$, so the $n$th term test gives no information:", "通项趋于 $0$，所以第 $n$ 项检验不提供信息："),
+        [`\\lim_{n \\to \\infty} ${s.term(c)} = 0`],
+      ],
+      [
+        ["Use the p-series test", "用 p 级数检验"],
+        t(
+          `The terms are a constant multiple of $\\frac{1}{n^{p}}$, and a $p$-series converges exactly when $p > 1$. Here ${conv ? "it does" : "it does not"}:`,
+          `通项是 $\\frac{1}{n^{p}}$ 的常数倍，而 $p$ 级数恰好在 $p > 1$ 时收敛。这里${conv ? "满足" : "不满足"}：`,
+        ),
+        [`p = ${p} ${conv ? ">" : "\\le"} 1`],
+      ],
+    ];
+    const growth = s.p.eq(Q.one) ? `${c === 1 ? "" : c}\\ln N` : `${2 * c}\\left(\\sqrt{N} - 1\\right)`;
+    const check: Pair = conv
+      ? [
+          `The integral test agrees, because the area under $${s.x(c)}$ from $1$ is finite: $\\int_{1}^{\\infty} ${s.x(c)} \\, dx = ${Q.of(c).div(s.p.sub(Q.one)).toLatex()}$. A finite area bounds the partial sums, so the series converges.`,
+          `积分检验给出同样的结论，因为 $${s.x(c)}$ 从 $1$ 起的面积有限：$\\int_{1}^{\\infty} ${s.x(c)} \\, dx = ${Q.of(c).div(s.p.sub(Q.one)).toLatex()}$。面积有限，部分和就有上界，所以级数收敛。`,
+        ]
+      : [
+          `The integral test agrees, because the area under $${s.x(c)}$ from $1$ grows without bound: $\\int_{1}^{N} ${s.x(c)} \\, dx = ${growth}$. The partial sums are at least this area, so the series diverges.`,
+          `积分检验给出同样的结论，因为 $${s.x(c)}$ 从 $1$ 起的面积无限增大：$\\int_{1}^{N} ${s.x(c)} \\, dx = ${growth}$。部分和不小于这个面积，所以级数发散。`,
+        ];
+    return seriesPicked(
       rng,
       [
         `The terms of $\\sum_{n=1}^{\\infty} ${s.term(c)}$ tend to $0$. Which conclusion is correct?`,
         `$\\sum_{n=1}^{\\infty} ${s.term(c)}$ 的通项趋于 $0$。哪个结论是正确的？`,
       ],
-      s.converges ? yes : no,
+      conv ? yes : no,
       [
-        s.converges ? no : yes,
-        ["The test shows that it converges, because the terms tend to $0$", "该检验说明它收敛，因为通项趋于 $0$"],
-        ["The test shows that it diverges, because the limit of the terms is $0$", "该检验说明它发散，因为通项的极限是 $0$"],
+        [
+          conv ? no : yes,
+          conv
+            ? `Here $p = ${p} > 1$, and a $p$-series with $p > 1$ converges`
+            : `Here $p = ${p} \\le 1$, and a $p$-series with $p \\le 1$ diverges`,
+          conv ? `这里 $p = ${p} > 1$，$p > 1$ 的 $p$ 级数收敛` : `这里 $p = ${p} \\le 1$，$p \\le 1$ 的 $p$ 级数发散`,
+        ],
+        [
+          ["The test shows that it converges, because the terms tend to $0$", "该检验说明它收敛，因为通项趋于 $0$"],
+          "Terms tending to $0$ do not prove convergence: $\\frac{1}{n} \\to 0$, but the harmonic series diverges",
+          "通项趋于 $0$ 不能证明收敛：$\\frac{1}{n} \\to 0$，但调和级数发散",
+        ],
+        [
+          ["The test shows that it diverges, because the limit of the terms is $0$", "该检验说明它发散，因为通项的极限是 $0$"],
+          "The $n$th term test proves divergence only when the limit of the terms is not $0$",
+          "第 $n$ 项检验只有在通项极限不为 $0$ 时才能证明发散",
+        ],
       ],
-      [
-        `A limit of $0$ gives no information from the $n$th term test. The power of $n$ in the denominator is ${s.converges ? "greater than $1$, so the series converges" : "at most $1$, so the series diverges"}.`,
-        `极限为 $0$ 时，第 $n$ 项检验不提供信息。分母中 $n$ 的次数${s.converges ? "大于 $1$，所以级数收敛" : "不超过 $1$，所以级数发散"}。`,
-      ],
+      parts,
+      check,
     );
   },
 );
@@ -310,24 +380,61 @@ const integralTailBound = {
     "bounding-the-tail-with-an-integral",
     ["Bounding the tail with an integral", "用积分估计余项"],
     [
-      "The integral test also estimates the error. For positive decreasing $f$, the tail after $N$ terms satisfies $\\sum_{n=N+1}^{\\infty} f(n) \\le \\int_{N}^{\\infty} f(x) \\, dx$. The lower limit is $N$, the last term included in the partial sum, because the rectangles lie under the curve.",
-      "积分检验也能估计误差。对正的递减函数 $f$，前 $N$ 项之后的余项满足 $\\sum_{n=N+1}^{\\infty} f(n) \\le \\int_{N}^{\\infty} f(x) \\, dx$。下限是 $N$，即部分和所含的最后一项，因为这些矩形位于曲线下方。",
+      "The integral test also estimates the error. For positive decreasing $f$, the tail after $N$ terms is at most the area from $N$, $\\sum_{n=N+1}^{\\infty} f(n) \\le \\int_{N}^{\\infty} f(x) \\, dx$. The lower limit is $N$, the last term included in the partial sum, because the rectangle of height $f(n)$ stands on $[n - 1, n]$, under the curve. For $\\sum \\frac{1}{n^{2}}$ after $N = 10$ terms, the bound is $\\int_{10}^{\\infty} \\frac{dx}{x^{2}} = \\frac{1}{10}$.\n\nCheck: the true tail is $\\frac{\\pi^{2}}{6} - S_{10}$, about $0.0952$, which is indeed below $0.1$.\n\n> **Watch out.** Starting the integral at $N + 1$ gives $\\frac{1}{11}$, about $0.0909$, which is below the true tail: it is a lower bound, not an upper one.",
+      "积分检验也能估计误差。对正的递减函数 $f$，前 $N$ 项之后的余项不超过从 $N$ 起的面积，即 $\\sum_{n=N+1}^{\\infty} f(n) \\le \\int_{N}^{\\infty} f(x) \\, dx$。下限是 $N$，即部分和所含的最后一项，因为高为 $f(n)$ 的矩形立在 $[n - 1, n]$ 上，位于曲线下方。对 $\\sum \\frac{1}{n^{2}}$ 取前 $N = 10$ 项，上界是 $\\int_{10}^{\\infty} \\frac{dx}{x^{2}} = \\frac{1}{10}$。\n\n检验：真实的余项是 $\\frac{\\pi^{2}}{6} - S_{10}$，约为 $0.0952$，确实小于 $0.1$。\n\n> **注意。** 从 $N + 1$ 开始积分得到 $\\frac{1}{11}$，约为 $0.0909$，比真实余项小：它是下界，不是上界。",
     ],
     (rng) => {
       const p = rng.int(2, 4);
       const c = rng.int(1, 20);
-      const N = rng.int(2, 15);
+      const N = rng.int(2, p === 2 ? 15 : p === 3 ? 9 : 5);
       const answer = Q.of(c, (p - 1) * N ** (p - 1));
-      return ask(
+      const anti = p === 2 ? `-\\frac{${c}}{x}` : `-\\frac{${c}}{${p - 1}x^{${p - 1}}}`;
+      const below = p === 2 ? `${N}` : `${p - 1} \\cdot ${N}^{${p - 1}}`;
+      const parts: Step[] = [
+        [
+          ["Choose the integral", "选择积分"],
+          t(
+            `The tail starts at $n = ${N + 1}$. Its rectangles stand on $[${N}, ${N + 1}]$, $[${N + 1}, ${N + 2}]$, and so on, under the curve, so the integral starts at $${N}$:`,
+            `余项从 $n = ${N + 1}$ 开始。它的矩形立在 $[${N}, ${N + 1}]$、$[${N + 1}, ${N + 2}]$ 等区间上，位于曲线下方，所以积分从 $${N}$ 开始：`,
+          ),
+          [`\\sum_{n=${N + 1}}^{\\infty} \\frac{${c}}{n^{${p}}} \\le \\int_{${N}}^{\\infty} \\frac{${c}}{x^{${p}}} \\, dx`],
+        ],
+        [
+          ["Integrate", "积分"],
+          t(
+            `An antiderivative is $${anti}$, which tends to $0$ as $x \\to \\infty$:`,
+            `一个原函数是 $${anti}$，当 $x \\to \\infty$ 时它趋于 $0$：`,
+          ),
+          [`\\int_{${N}}^{\\infty} \\frac{${c}}{x^{${p}}} \\, dx = \\frac{${c}}{${below}} = ${answer.toLatex()}`],
+        ],
+      ];
+      return seriesSolved(
         [
           `Use the integral $\\int_{${N}}^{\\infty}$ to find an upper bound for $\\sum_{n=${N + 1}}^{\\infty} \\frac{${c}}{n^{${p}}}$.`,
           `用积分 $\\int_{${N}}^{\\infty}$ 求 $\\sum_{n=${N + 1}}^{\\infty} \\frac{${c}}{n^{${p}}}$ 的一个上界。`,
         ],
         answer,
-        [Q.of(c, N ** p), Q.of(c, N ** (p - 1)), Q.of(c, (p - 1) * (N + 1) ** (p - 1))],
+        parts,
         [
-          `$\\int_{${N}}^{\\infty} \\frac{${c}}{x^{${p}}} \\, dx = ${answer.toLatex()}$, and the sum of the rectangles to the right of $${N}$ is below this area.`,
-          `$\\int_{${N}}^{\\infty} \\frac{${c}}{x^{${p}}} \\, dx = ${answer.toLatex()}$，而 $${N}$ 右侧各矩形面积之和小于这个面积。`,
+          `Differentiate the antiderivative back: the derivative of $${anti}$ is $\\frac{${c}}{x^{${p}}}$. Its value at $x = ${N}$ is $-${answer.toLatex()}$, so the area from $${N}$ is $${answer.toLatex()}$. The bound is also larger than the first term of the tail, $\\frac{${c}}{${N + 1}^{${p}}}$, as it must be.`,
+          `把原函数求导回去：$${anti}$ 的导数是 $\\frac{${c}}{x^{${p}}}$。它在 $x = ${N}$ 处的值是 $-${answer.toLatex()}$，所以从 $${N}$ 起的面积是 $${answer.toLatex()}$。这个上界也大于余项的第一项 $\\frac{${c}}{${N + 1}^{${p}}}$，这是应当的。`,
+        ],
+        [
+          [
+            Q.of(c, N ** p),
+            `This is the single term at $n = ${N}$; the bound is the area over $[${N}, \\infty)$`,
+            `这是 $n = ${N}$ 处的单独一项；上界是 $[${N}, \\infty)$ 上的面积`,
+          ],
+          [
+            Q.of(c, N ** (p - 1)),
+            `This forgets to divide by $${p - 1}$ when integrating $x^{-${p}}$`,
+            `积分 $x^{-${p}}$ 时忘了除以 $${p - 1}$`,
+          ],
+          [
+            Q.of(c, (p - 1) * (N + 1) ** (p - 1)),
+            `This integral starts at $${N + 1}$; it is a lower bound for the tail, not an upper one`,
+            `这个积分从 $${N + 1}$ 开始；它是余项的下界，不是上界`,
+          ],
         ],
       );
     },
@@ -339,37 +446,106 @@ const comparisonDirections = point(
   "comparisons-in-the-wrong-direction",
   ["Comparisons in the wrong direction", "方向错误的比较"],
   [
-    "Comparison works in only two directions: below a convergent series gives convergence, and above a divergent series gives divergence. Being below a divergent series, or above a convergent one, proves nothing, however natural the comparison looks.",
-    "比较只在两个方向上有效：小于收敛级数则收敛，大于发散级数则发散。小于发散级数或大于收敛级数都证明不了什么，不管这个比较看起来多么自然。",
+    "Comparison works in only two directions: below a convergent series gives convergence, and above a divergent series gives divergence. Being below a divergent series, or above a convergent one, proves nothing, however natural the comparison looks. For example, $\\frac{1}{n^{2}} \\le \\frac{1}{n}$, and $\\sum \\frac{1}{n}$ diverges, but this says nothing about the smaller series, which in fact converges: $\\sum_{n=1}^{\\infty} \\frac{1}{n^{2}} = \\frac{\\pi^{2}}{6}$.\n\nCheck: $\\frac{1}{n} \\le 1$ too, and $\\sum 1$ diverges. Here the smaller series also diverges, so a series below a divergent one can go either way.\n\n> **Watch out.** Only two pairings decide anything: smaller than a convergent series, or larger than a divergent one.",
+    "比较只在两个方向上有效：小于收敛级数则收敛，大于发散级数则发散。小于发散级数或大于收敛级数都证明不了什么，不管这个比较看起来多么自然。例如 $\\frac{1}{n^{2}} \\le \\frac{1}{n}$，而 $\\sum \\frac{1}{n}$ 发散，但这对较小的级数说明不了什么，事实上它收敛：$\\sum_{n=1}^{\\infty} \\frac{1}{n^{2}} = \\frac{\\pi^{2}}{6}$。\n\n检验：同样有 $\\frac{1}{n} \\le 1$，而 $\\sum 1$ 发散。这里较小的级数也发散，所以小于发散级数的级数可能收敛也可能发散。\n\n> **注意。** 只有两种搭配能得出结论：小于收敛级数，或大于发散级数。",
   ],
   (rng) => {
     const big = rng.bool();
     const conv = rng.bool();
     const c = rng.int(1, 12);
     const p = rng.int(2, 6);
-    const b = conv ? `\\frac{${c}}{n^{${p}}}` : rng.pick([`\\frac{${c}}{n}`, `\\frac{${c}}{\\sqrt{n}}`]);
+    const [b, bp] = conv
+      ? [`\\frac{${c}}{n^{${p}}}`, `${p}`]
+      : rng.pick([
+          [`\\frac{${c}}{n}`, "1"],
+          [`\\frac{${c}}{\\sqrt{n}}`, "\\frac{1}{2}"],
+        ] as const);
     const ineq = big ? `a_{n} \\ge ${b} > 0` : `0 \\le a_{n} \\le ${b}`;
     const yes: Pair = ["$\\sum a_{n}$ converges", "$\\sum a_{n}$ 收敛"];
     const no: Pair = ["$\\sum a_{n}$ diverges", "$\\sum a_{n}$ 发散"];
     const none: Pair = ["Nothing can be concluded from this", "由此得不出任何结论"];
     const eq: Pair = ["$\\sum a_{n}$ equals the other sum", "$\\sum a_{n}$ 等于另一个和"];
     const correct = !big && conv ? yes : big && !conv ? no : none;
-    return choose(
+    const side = big ? (conv ? "above a convergent" : "above a divergent") : conv ? "below a convergent" : "below a divergent";
+    const sideZh = big ? (conv ? "大于一个收敛" : "大于一个发散") : conv ? "小于一个收敛" : "小于一个发散";
+    const parts: Step[] = [
+      [
+        ["Classify the comparison series", "判断比较级数"],
+        t(
+          `$\\sum ${b}$ is a constant multiple of a $p$-series, and it ${conv ? "converges" : "diverges"}:`,
+          `$\\sum ${b}$ 是 $p$ 级数的常数倍，它${conv ? "收敛" : "发散"}：`,
+        ),
+        [`p = ${bp} ${conv ? ">" : "\\le"} 1`],
+      ],
+      [
+        ["Check the direction", "检查方向"],
+        t(
+          `So $a_{n}$ lies ${side} series. ${correct === none ? "That direction proves nothing." : "That is a direction the comparison test uses."}`,
+          `所以 $a_{n}$ ${sideZh}级数。${correct === none ? "这个方向证明不了什么。" : "这正是比较检验所用的方向。"}`,
+        ),
+      ],
+    ];
+    const smaller = `\\frac{${c}}{n^{2}}`;
+    const check: Pair =
+      correct === yes
+        ? [
+            `Argue with partial sums instead: they increase, because $a_{n} \\ge 0$, and each is at most the matching partial sum of $\\sum ${b}$, which stays below its finite sum. An increasing sequence that is bounded above converges.`,
+            `改用部分和论证：因为 $a_{n} \\ge 0$，部分和递增，并且每个都不超过 $\\sum ${b}$ 对应的部分和，后者小于它有限的和。有上界的递增数列收敛。`,
+          ]
+        : correct === no
+          ? [
+              `Argue with partial sums instead: each is at least the matching partial sum of $\\sum ${b}$, and those grow without bound. So the partial sums of $\\sum a_{n}$ grow without bound too.`,
+              `改用部分和论证：每个部分和都不小于 $\\sum ${b}$ 对应的部分和，而后者无限增大。所以 $\\sum a_{n}$ 的部分和也无限增大。`,
+            ]
+          : big
+            ? [
+                `Two examples fit the condition and disagree: $a_{n} = ${b}$ gives a convergent series, while $a_{n} = \\frac{${c}}{n}$, which is at least $${b}$, gives a divergent one.`,
+                `两个满足条件的例子结论不同：$a_{n} = ${b}$ 给出收敛级数，而不小于 $${b}$ 的 $a_{n} = \\frac{${c}}{n}$ 给出发散级数。`,
+              ]
+            : [
+                `Two examples fit the condition and disagree: $a_{n} = ${b}$ gives a divergent series, while $a_{n} = ${smaller}$, which is at most $${b}$, gives a convergent one.`,
+                `两个满足条件的例子结论不同：$a_{n} = ${b}$ 给出发散级数，而不超过 $${b}$ 的 $a_{n} = ${smaller}$ 给出收敛级数。`,
+              ];
+    const why = (o: Pair): readonly [string, string] => {
+      if (o === yes)
+        return correct === no
+          ? [
+              "Its partial sums are at least those of a divergent series of positive terms, so they grow without bound",
+              "它的部分和不小于一个正项发散级数的部分和，所以无限增大",
+            ]
+          : [
+              `That needs $a_{n}$ below a convergent series, but here it lies ${side} one`,
+              `这需要 $a_{n}$ 小于收敛级数，但这里它${sideZh}级数`,
+            ];
+      if (o === no)
+        return correct === yes
+          ? [
+              "Its partial sums are at most those of a convergent series, so they stay bounded",
+              "它的部分和不超过一个收敛级数的部分和，所以有界",
+            ]
+          : [
+              `That needs $a_{n}$ above a divergent series, but here it lies ${side} one`,
+              `这需要 $a_{n}$ 大于发散级数，但这里它${sideZh}级数`,
+            ];
+      if (o === none)
+        return correct === yes
+          ? ["This direction does decide: below a convergent series means convergence", "这个方向能得出结论：小于收敛级数就收敛"]
+          : ["This direction does decide: above a divergent series means divergence", "这个方向能得出结论：大于发散级数就发散"];
+      return [
+        "A comparison gives at most an inequality between the sums, never their equality",
+        "比较最多给出两个和之间的不等式，不会给出相等",
+      ];
+    };
+    return seriesPicked(
       rng,
       [
         `For every $n \\ge 1$, $${ineq}$. What follows about $\\sum_{n=1}^{\\infty} a_{n}$?`,
         `对每个 $n \\ge 1$，都有 $${ineq}$。关于 $\\sum_{n=1}^{\\infty} a_{n}$ 能得出什么？`,
       ],
       correct,
-      [yes, no, none, eq].filter((o) => o !== correct),
-      [
-        correct === none
-          ? `The series on the right ${conv ? "converges" : "diverges"} and $a_{n}$ is ${big ? "above" : "below"} it, which is the useless direction. So nothing follows.`
-          : `The series on the right ${conv ? "converges" : "diverges"} and $a_{n}$ is ${big ? "above" : "below"} it, so the comparison test applies and $\\sum a_{n}$ ${conv ? "converges" : "diverges"}.`,
-        correct === none
-          ? `右边的级数${conv ? "收敛" : "发散"}，而 $a_{n}$ ${big ? "大于" : "小于"}它，这是无效的方向。所以得不出结论。`
-          : `右边的级数${conv ? "收敛" : "发散"}，而 $a_{n}$ ${big ? "大于" : "小于"}它，所以比较检验适用，$\\sum a_{n}$ ${conv ? "收敛" : "发散"}。`,
-      ],
+      [yes, no, none, eq].filter((o) => o !== correct).map((o) => [o, ...why(o)] as const),
+      parts,
+      check,
     );
   },
 );
@@ -378,8 +554,8 @@ const pForComparison = point(
   "choosing-the-power-to-compare-with",
   ["Choosing the power to compare with", "选择用于比较的幂"],
   [
-    "The limit comparison test needs a good comparison series. Keep only the dominant term of the numerator and of the denominator. A root halves the exponent, so $\\sqrt{n^{m}}$ behaves like $n^{m/2}$, and the power in the comparison is a difference of these degrees.",
-    "极限比较检验需要一个合适的比较级数。分子和分母都只保留主导项。根号使指数减半，所以 $\\sqrt{n^{m}}$ 的行为像 $n^{m/2}$，比较级数的幂就是这些次数之差。",
+    "The limit comparison test needs a good comparison series. Keep only the dominant term of the numerator and of the denominator. A root halves the exponent, so $\\sqrt{n^{m}}$ behaves like $n^{m/2}$, and the power to compare with is the degree of the denominator minus the degree of the numerator. For $\\frac{2n + 1}{\\sqrt{n^{5} + 3}}$ the degrees are $1$ and $\\frac{5}{2}$, so $p = \\frac{3}{2}$ and the series converges.\n\nCheck: the ratio of the terms to $\\frac{1}{n^{3/2}}$ has a finite nonzero limit, $\\lim_{n \\to \\infty} \\frac{2n + 1}{\\sqrt{n^{5} + 3}} \\cdot n^{3/2} = 2$.\n\n> **Watch out.** Under a root the degree is halved: $\\sqrt{n^{5}}$ behaves like $n^{5/2}$, not $n^{5}$.",
+    "极限比较检验需要一个合适的比较级数。分子和分母都只保留主导项。根号使指数减半，所以 $\\sqrt{n^{m}}$ 的行为像 $n^{m/2}$，用于比较的幂就是分母的次数减去分子的次数。对 $\\frac{2n + 1}{\\sqrt{n^{5} + 3}}$，次数分别是 $1$ 和 $\\frac{5}{2}$，所以 $p = \\frac{3}{2}$，级数收敛。\n\n检验：通项与 $\\frac{1}{n^{3/2}}$ 之比的极限有限且不为零，$\\lim_{n \\to \\infty} \\frac{2n + 1}{\\sqrt{n^{5} + 3}} \\cdot n^{3/2} = 2$。\n\n> **注意。** 根号下的次数要减半：$\\sqrt{n^{5}}$ 的行为像 $n^{5/2}$，而不是 $n^{5}$。",
   ],
   (rng) => {
     const i = rng.int(1, 2);
@@ -388,17 +564,47 @@ const pForComparison = point(
     const b = rng.int(1, 9);
     const d = rng.int(1, 9);
     const answer = Q.of(m - 2 * i, 2);
-    const top = poly([a, i === 1 ? "n" : `n^{${i}}`], [b, ""]);
-    return ask(
+    const half = Q.of(m, 2).toLatex();
+    const lead = i === 1 ? "n" : `n^{${i}}`;
+    const top = poly([a, lead], [b, ""]);
+    const nP = answer.eq(Q.one) ? "n" : `n^{${answer.toLatex()}}`;
+    const parts: Step[] = [
+      [
+        ["Keep the dominant terms", "保留主导项"],
+        t(
+          `The numerator behaves like $${a === 1 ? "" : a}${lead}$, and under the root $n^{${m}}$ dominates, so the denominator behaves like $n^{${half}}$:`,
+          `分子的行为像 $${a === 1 ? "" : a}${lead}$；根号下 $n^{${m}}$ 占主导，所以分母的行为像 $n^{${half}}$：`,
+        ),
+        [`\\frac{${top}}{\\sqrt{n^{${m}} + ${d}}} \\sim \\frac{${a === 1 ? "" : a}${lead}}{n^{${half}}}`],
+      ],
+      [
+        ["Subtract the degrees", "次数相减"],
+        t(
+          "The power to compare with is the degree of the denominator minus that of the numerator:",
+          "用于比较的幂是分母的次数减去分子的次数：",
+        ),
+        [`p = ${half} - ${i} = ${answer.toLatex()}`],
+      ],
+    ];
+    return seriesSolved(
       [
         `To test $\\sum_{n=1}^{\\infty} \\frac{${top}}{\\sqrt{n^{${m}} + ${d}}}$, it is compared with $\\sum_{n=1}^{\\infty} \\frac{1}{n^{p}}$, so that the limit of the ratio of terms is finite and not zero. Find $p$.`,
         `为了检验 $\\sum_{n=1}^{\\infty} \\frac{${top}}{\\sqrt{n^{${m}} + ${d}}}$，把它与 $\\sum_{n=1}^{\\infty} \\frac{1}{n^{p}}$ 比较，使通项之比的极限有限且不为零。求 $p$。`,
       ],
       answer,
-      [m - i, Q.of(m + 2 * i, 2), Q.of(m, 2)],
+      parts,
       [
-        `The numerator behaves like $${i === 1 ? "n" : `n^{${i}}`}$ and the denominator like $n^{${Q.of(m, 2).toLatex()}}$. So the terms behave like a constant over $n^{p}$ with $p = ${Q.of(m, 2).toLatex()} - ${i} = ${answer.toLatex()}$.`,
-        `分子的行为像 $${i === 1 ? "n" : `n^{${i}}`}$，分母的行为像 $n^{${Q.of(m, 2).toLatex()}}$。所以通项的行为像常数除以 $n^{p}$，其中 $p = ${Q.of(m, 2).toLatex()} - ${i} = ${answer.toLatex()}$。`,
+        `Compute the limit the test needs, with $p = ${answer.toLatex()}$. Dividing the numerator by $${lead}$ and the denominator by $n^{${half}}$ gives $${a}$ over $1$: $\\lim_{n \\to \\infty} \\frac{${top}}{\\sqrt{n^{${m}} + ${d}}} \\cdot ${nP} = ${a}$. The limit is finite and not zero, as required.`,
+        `用 $p = ${answer.toLatex()}$ 计算检验所需的极限。分子除以 $${lead}$，分母除以 $n^{${half}}$，得到 $${a}$ 比 $1$：$\\lim_{n \\to \\infty} \\frac{${top}}{\\sqrt{n^{${m}} + ${d}}} \\cdot ${nP} = ${a}$。极限有限且不为零，符合要求。`,
+      ],
+      [
+        [
+          m - i,
+          `This forgets the root: $\\sqrt{n^{${m}}}$ behaves like $n^{${half}}$, not $n^{${m}}$`,
+          `这里忘了根号：$\\sqrt{n^{${m}}}$ 的行为像 $n^{${half}}$，而不是 $n^{${m}}$`,
+        ],
+        [Q.of(m + 2 * i, 2), "This adds the degrees; the degree of the numerator is subtracted", "这里把次数相加了；分子的次数应当减去"],
+        [Q.of(m, 2), `This ignores the numerator, which grows like $${lead}$`, `这里忽略了分子，它像 $${lead}$ 一样增长`],
       ],
     );
   },
@@ -408,8 +614,8 @@ const betweenPartialSums = point(
   "the-sum-lies-between-consecutive-partial-sums",
   ["The sum lies between consecutive partial sums", "和位于相邻部分和之间"],
   [
-    "For an alternating series with decreasing terms and positive first term, partial sums go up and down around the sum. Odd partial sums are too high and even ones too low. So the sum is always between two consecutive partial sums.",
-    "对通项递减、首项为正的交错级数，部分和在和的上下交替。奇数项部分和偏高，偶数项部分和偏低。所以和总是在两个相邻的部分和之间。",
+    "For an alternating series with decreasing terms and positive first term, the partial sums go up and down around the sum. Odd partial sums are too high and even ones too low, so the sum always lies between two consecutive partial sums. The alternating harmonic series has the sum $\\ln 2$, and its partial sums $S_{3} = \\frac{5}{6}$ and $S_{4}$ lie on either side of it. Indeed, $S_{4} = 1 - \\frac{1}{2} + \\frac{1}{3} - \\frac{1}{4} = \\frac{7}{12}$.\n\nCheck: $\\ln 2 \\approx 0.693$ lies between $\\frac{7}{12} \\approx 0.583$ and $\\frac{5}{6} \\approx 0.833$.\n\n> **Watch out.** The next partial sum is on the other side of $S$, so step from $S_{N}$ in the direction of the sign of the next term.",
+    "对通项递减、首项为正的交错级数，部分和在和的上下交替。奇数项部分和偏高，偶数项部分和偏低，所以和总是在两个相邻的部分和之间。交错调和级数的和是 $\\ln 2$，它的部分和 $S_{3} = \\frac{5}{6}$ 和 $S_{4}$ 分别在和的两侧。事实上 $S_{4} = 1 - \\frac{1}{2} + \\frac{1}{3} - \\frac{1}{4} = \\frac{7}{12}$。\n\n检验：$\\ln 2 \\approx 0.693$ 在 $\\frac{7}{12} \\approx 0.583$ 与 $\\frac{5}{6} \\approx 0.833$ 之间。\n\n> **注意。** 下一个部分和在 $S$ 的另一侧，所以要从 $S_{N}$ 出发，朝下一项符号的方向走。",
   ],
   (rng) => {
     const N = rng.int(3, 14);
@@ -418,18 +624,50 @@ const betweenPartialSums = point(
     const even = N % 2 === 0;
     const low = S.sub(b);
     const high = S.add(b);
+    const next = even ? high : low;
     const interval = (p: Q, q: Q): Pair => same2(`${dec(p)} < S < ${dec(q)}`);
-    return choose(
+    const parts: Step[] = [
+      [
+        ["Find the sign of the next term", "确定下一项的符号"],
+        t(
+          `Term $n = ${N + 1}$ carries the sign of $(-1)^{${N + 2}}$, so it is ${even ? "added" : "subtracted"}:`,
+          `第 $n = ${N + 1}$ 项带有 $(-1)^{${N + 2}}$ 的符号，所以要${even ? "加上" : "减去"}：`,
+        ),
+        [`S_{${N + 1}} = ${dec(S)} ${even ? "+" : "-"} ${dec(b)} = ${dec(next)}`],
+      ],
+      [
+        ["Place the sum", "确定和的位置"],
+        t(
+          `The sum lies between the consecutive partial sums $S_{${N}}$ and $S_{${N + 1}}$:`,
+          `和位于相邻的部分和 $S_{${N}}$ 与 $S_{${N + 1}}$ 之间：`,
+        ),
+        [even ? `${dec(S)} < S < ${dec(high)}` : `${dec(low)} < S < ${dec(S)}`],
+      ],
+    ];
+    const outside: readonly [string, string] = [
+      `$S$ cannot be farther than $${dec(b)}$ from $S_{${N}}$, because it lies between $S_{${N}}$ and $S_{${N + 1}}$`,
+      `$S$ 与 $S_{${N}}$ 的距离不超过 $${dec(b)}$，因为它在 $S_{${N}}$ 与 $S_{${N + 1}}$ 之间`,
+    ];
+    return seriesPicked(
       rng,
       [
         `$S = \\sum_{n=1}^{\\infty} (-1)^{n+1} b_{n}$, where the positive terms $b_{n}$ decrease to $0$. If $S_{${N}} = ${dec(S)}$ and $b_{${N + 1}} = ${dec(b)}$, which is true?`,
         `$S = \\sum_{n=1}^{\\infty} (-1)^{n+1} b_{n}$，其中正项 $b_{n}$ 递减趋于 $0$。如果 $S_{${N}} = ${dec(S)}$，$b_{${N + 1}} = ${dec(b)}$，哪项正确？`,
       ],
       even ? interval(S, high) : interval(low, S),
-      [even ? interval(low, S) : interval(S, high), interval(high, high.add(b)), interval(low.sub(b), low)],
       [
-        `The next term is ${even ? "added" : "subtracted"} because $${N} + 1$ is ${even ? "odd" : "even"}, so $S_{${N + 1}} = ${dec(even ? high : low)}$. The sum $S$ lies between $S_{${N}}$ and $S_{${N + 1}}$.`,
-        `因为 $${N} + 1$ 是${even ? "奇数，下一项要加上" : "偶数，下一项要减去"}，所以 $S_{${N + 1}} = ${dec(even ? high : low)}$。和 $S$ 在 $S_{${N}}$ 与 $S_{${N + 1}}$ 之间。`,
+        [
+          even ? interval(low, S) : interval(S, high),
+          `This is on the wrong side of $S_{${N}}$: the next term is ${even ? "added, so $S$ is above" : "subtracted, so $S$ is below"} $S_{${N}}$`,
+          `这在 $S_{${N}}$ 错误的一侧：下一项要${even ? "加上，所以 $S$ 大于" : "减去，所以 $S$ 小于"} $S_{${N}}$`,
+        ],
+        [interval(high, high.add(b)), ...outside],
+        [interval(low.sub(b), low), ...outside],
+      ],
+      parts,
+      [
+        `Look one step further: $S_{${N + 2}}$ is $S_{${N + 1}}$ ${even ? "minus" : "plus"} a term no larger than $${dec(b)}$, so it lands between $S_{${N}}$ and $S_{${N + 1}}$ again, and so does every later partial sum. Their limit $S$ is therefore in the same interval.`,
+        `再往后看一步：$S_{${N + 2}}$ 是 $S_{${N + 1}}$ ${even ? "减去" : "加上"}一个不超过 $${dec(b)}$ 的项，所以它又落在 $S_{${N}}$ 与 $S_{${N + 1}}$ 之间，以后的每个部分和也都如此。因此它们的极限 $S$ 也在这个区间内。`,
       ],
     );
   },
@@ -439,31 +677,73 @@ const ratioWithNN = point(
   "the-ratio-test-with-n-to-the-n",
   ["The ratio test with n to the n", "含 n 的 n 次幂的比值检验"],
   [
-    "When $n^{n}$ appears, the ratio simplifies to a power that gives a limit involving $e$: $\\frac{(n + 1)!}{(n + 1)^{n+1}} \\cdot \\frac{n^{n}}{n!} = \\left(\\frac{n}{n + 1}\\right)^{n} \\to \\frac{1}{e}$. So the decision depends on how a base compares with $e$, not with $1$.",
-    "出现 $n^{n}$ 时，比值化简后是一个幂，其极限涉及 $e$：$\\frac{(n + 1)!}{(n + 1)^{n+1}} \\cdot \\frac{n^{n}}{n!} = \\left(\\frac{n}{n + 1}\\right)^{n} \\to \\frac{1}{e}$。所以结论取决于底数与 $e$ 的大小，而不是与 $1$ 比较。",
+    "When $n^{n}$ appears, the ratio simplifies to a power whose limit involves $e$. For $a_{n} = \\frac{n!}{n^{n}}$, the ratio is $\\frac{(n + 1)!}{(n + 1)^{n+1}} \\cdot \\frac{n^{n}}{n!} = \\left(\\frac{n}{n + 1}\\right)^{n}$. This tends to $\\frac{1}{e}$, so a factor $c^{n}$ in the numerator gives $L = \\frac{c}{e}$, and the decision depends on how $c$ compares with $e$.\n\nCheck: with $c = 2$, $L = \\frac{2}{e} \\approx 0.74$, and at $n = 10$ the ratio is already $2\\left(\\frac{10}{11}\\right)^{10} \\approx 0.77$, below $1$.\n\n> **Watch out.** $\\left(\\frac{n}{n + 1}\\right)^{n}$ tends to $\\frac{1}{e}$, not to $1$: the base tends to $1$, but the exponent grows.",
+    "出现 $n^{n}$ 时，比值化简后是一个幂，其极限涉及 $e$。对 $a_{n} = \\frac{n!}{n^{n}}$，比值是 $\\frac{(n + 1)!}{(n + 1)^{n+1}} \\cdot \\frac{n^{n}}{n!} = \\left(\\frac{n}{n + 1}\\right)^{n}$。它趋于 $\\frac{1}{e}$，所以分子中的因子 $c^{n}$ 给出 $L = \\frac{c}{e}$，结论取决于 $c$ 与 $e$ 的大小。\n\n检验：取 $c = 2$，$L = \\frac{2}{e} \\approx 0.74$，而在 $n = 10$ 时比值已经是 $2\\left(\\frac{10}{11}\\right)^{10} \\approx 0.77$，小于 $1$。\n\n> **注意。** $\\left(\\frac{n}{n + 1}\\right)^{n}$ 趋于 $\\frac{1}{e}$，而不是 $1$：底数趋于 $1$，但指数在增大。",
   ],
   (rng) => {
     const c = rng.int(1, 6);
     const d = rng.int(1, 9);
     const conv = c <= 2;
+    const cc = c === 1 ? "" : `${c}`;
     const num = `${d === 1 ? "" : `${d} \\cdot `}${c === 1 ? "" : `${c}^{n} \\cdot `}n!`;
     const L = `L = \\frac{${c}}{e}`;
     const say = (l: string, yes: boolean): Pair => [
       `$${l}$, so it ${yes ? "converges" : "diverges"}`,
       `$${l}$，所以它${yes ? "收敛" : "发散"}`,
     ];
-    return choose(
+    const parts: Step[] = [
+      [
+        ["Form the ratio", "写出比值"],
+        t(
+          `Going from $n$ to $n + 1$ multiplies the numerator by $${cc}(n + 1)$ and changes $n^{n}$ to $(n + 1)^{n+1}$${d === 1 ? "" : `; the factor $${d}$ cancels`}:`,
+          `从 $n$ 到 $n + 1$，分子乘以 $${cc}(n + 1)$，$n^{n}$ 变为 $(n + 1)^{n+1}$${d === 1 ? "" : `；因子 $${d}$ 约去`}：`,
+        ),
+        [`\\frac{a_{n+1}}{a_{n}} = \\frac{${cc}(n + 1) \\, n^{n}}{(n + 1)^{n+1}} = ${cc}\\left(\\frac{n}{n + 1}\\right)^{n}`],
+      ],
+      [
+        ["Take the limit", "求极限"],
+        t(
+          "Since $\\left(1 + \\frac{1}{n}\\right)^{n}$ tends to $e$, its reciprocal $\\left(\\frac{n}{n + 1}\\right)^{n}$ tends to $\\frac{1}{e}$:",
+          "因为 $\\left(1 + \\frac{1}{n}\\right)^{n}$ 趋于 $e$，它的倒数 $\\left(\\frac{n}{n + 1}\\right)^{n}$ 趋于 $\\frac{1}{e}$：",
+        ),
+        [`L = \\frac{${c}}{e} \\approx ${(c / Math.E).toFixed(3)} ${conv ? "<" : ">"} 1`],
+      ],
+    ];
+    const at10 = (c * (10 / 11) ** 10).toFixed(3);
+    return seriesPicked(
       rng,
       [
         `What does the ratio test say about $\\sum_{n=1}^{\\infty} \\frac{${num}}{n^{n}}$?`,
         `比值检验对 $\\sum_{n=1}^{\\infty} \\frac{${num}}{n^{n}}$ 给出什么结论？`,
       ],
       say(L, conv),
-      [say(L, !conv), say(`L = ${c}`, c < 1), say("L = 0", true)],
       [
-        `The ratio simplifies to $${c}\\left(\\frac{n}{n + 1}\\right)^{n}$, which tends to $\\frac{${c}}{e}$. Since $e$ is about $2.718$, this is ${conv ? "less than $1$, so the series converges" : "greater than $1$, so the series diverges"}.`,
-        `比值化简为 $${c}\\left(\\frac{n}{n + 1}\\right)^{n}$，它趋于 $\\frac{${c}}{e}$。因为 $e$ 约为 $2.718$，所以它${conv ? "小于 $1$，级数收敛" : "大于 $1$，级数发散"}。`,
+        [
+          say(L, !conv),
+          `$e \\approx 2.718$, so $\\frac{${c}}{e}$ is ${conv ? "less" : "greater"} than $1$`,
+          `$e \\approx 2.718$，所以 $\\frac{${c}}{e}$ ${conv ? "小于" : "大于"} $1$`,
+        ],
+        [
+          say(`L = ${c}`, c < 1),
+          "This drops the factor $\\left(\\frac{n}{n + 1}\\right)^{n}$, which tends to $\\frac{1}{e}$, not to $1$",
+          "这里丢掉了因子 $\\left(\\frac{n}{n + 1}\\right)^{n}$，它趋于 $\\frac{1}{e}$，而不是 $1$",
+        ],
+        [
+          say("L = 0", true),
+          `The factorial grows almost as fast as $n^{n}$ here: the ratio tends to $\\frac{${c}}{e}$, not to $0$`,
+          `这里阶乘的增长几乎和 $n^{n}$ 一样快：比值趋于 $\\frac{${c}}{e}$，而不是 $0$`,
+        ],
       ],
+      parts,
+      conv
+        ? [
+            `Look at actual ratios: $\\left(\\frac{n}{n + 1}\\right)^{n}$ decreases toward $\\frac{1}{e}$, and at $n = 10$ the ratio is $${cc}\\left(\\frac{10}{11}\\right)^{10} \\approx ${at10}$. From there on every ratio is at most this, below $1$, so the terms shrink at least as fast as a convergent geometric series.`,
+            `看实际的比值：$\\left(\\frac{n}{n + 1}\\right)^{n}$ 递减趋于 $\\frac{1}{e}$，在 $n = 10$ 时比值是 $${cc}\\left(\\frac{10}{11}\\right)^{10} \\approx ${at10}$。此后每个比值都不超过它，小于 $1$，所以通项至少像一个收敛的几何级数那样快地减小。`,
+          ]
+        : [
+            `Look at the terms instead: $\\left(\\frac{n}{n + 1}\\right)^{n}$ decreases toward $\\frac{1}{e}$, so every ratio is above $\\frac{${c}}{e}$, which is above $1$. The terms keep growing, so they do not tend to $0$, and the $n$th term test confirms that the series diverges.`,
+            `改看通项：$\\left(\\frac{n}{n + 1}\\right)^{n}$ 递减趋于 $\\frac{1}{e}$，所以每个比值都大于 $\\frac{${c}}{e}$，而它大于 $1$。通项不断增大，不趋于 $0$，第 $n$ 项检验也说明级数发散。`,
+          ],
     );
   },
 );
@@ -472,8 +752,8 @@ const rootWithE = point(
   "the-root-test-with-a-limit-equal-to-a-power-of-e",
   ["The root test with a power of e", "极限为 e 的幂的根值检验"],
   [
-    "The root of $\\left(1 + \\frac{k}{n}\\right)^{n^{2}}$ is $\\left(1 + \\frac{k}{n}\\right)^{n}$, which tends to $e^{k}$, not to $1$. It is tempting to say the base tends to $1$, but the exponent also grows, and that argument is not valid.",
-    "$\\left(1 + \\frac{k}{n}\\right)^{n^{2}}$ 的 $n$ 次方根是 $\\left(1 + \\frac{k}{n}\\right)^{n}$，它趋于 $e^{k}$，而不是 $1$。很容易认为底数趋于 $1$，但指数也在增大，这种论证是不成立的。",
+    "The $n$th root of $\\left(1 + \\frac{k}{n}\\right)^{n^{2}}$ is $\\left(1 + \\frac{k}{n}\\right)^{n}$, which tends to $e^{k}$, not to $1$. With a factor $\\frac{1}{c^{n}}$ the root test gives $L = \\frac{e^{k}}{c}$, so the series converges exactly when $c > e^{k}$. For $k = 1$ and $c = 3$ the limit is $\\lim_{n \\to \\infty} \\frac{1}{3}\\left(1 + \\frac{1}{n}\\right)^{n} = \\frac{e}{3}$.\n\nCheck: $\\frac{e}{3} \\approx 0.906 < 1$, and at $n = 100$ the root is already $\\frac{1}{3}(1.01)^{100} \\approx 0.902$.\n\n> **Watch out.** The base tends to $1$, but the exponent $n^{2}$ grows, so saying that a power of something near $1$ is near $1$ is not a valid argument here.",
+    "$\\left(1 + \\frac{k}{n}\\right)^{n^{2}}$ 的 $n$ 次方根是 $\\left(1 + \\frac{k}{n}\\right)^{n}$，它趋于 $e^{k}$，而不是 $1$。带有因子 $\\frac{1}{c^{n}}$ 时，根值检验给出 $L = \\frac{e^{k}}{c}$，所以级数恰好在 $c > e^{k}$ 时收敛。取 $k = 1$，$c = 3$，极限是 $\\lim_{n \\to \\infty} \\frac{1}{3}\\left(1 + \\frac{1}{n}\\right)^{n} = \\frac{e}{3}$。\n\n检验：$\\frac{e}{3} \\approx 0.906 < 1$，而在 $n = 100$ 时根已经是 $\\frac{1}{3}(1.01)^{100} \\approx 0.902$。\n\n> **注意。** 底数趋于 $1$，但指数 $n^{2}$ 在增大，所以说接近 $1$ 的数的幂也接近 $1$，在这里是不成立的论证。",
   ],
   (rng) => {
     const k = rng.int(1, 3);
@@ -487,15 +767,52 @@ const rootWithE = point(
       `$${l}$，所以它${yes ? "收敛" : "发散"}`,
     ];
     const term = `\\frac{1}{${c}^{n}}\\left(1 + \\frac{${k}}{n}\\right)^{n^{2}}`;
-    return choose(
+    const parts: Step[] = [
+      [
+        ["Take the nth root", "开 n 次方"],
+        t("The root divides each exponent by $n$:", "开方使每个指数除以 $n$："),
+        [`\\sqrt[n]{a_{n}} = \\frac{1}{${c}}\\left(1 + \\frac{${k}}{n}\\right)^{n}`],
+      ],
+      [
+        ["Take the limit", "求极限"],
+        t(
+          `Since $\\left(1 + \\frac{${k}}{n}\\right)^{n}$ tends to $${power}$, about $${size.toFixed(2)}$:`,
+          `因为 $\\left(1 + \\frac{${k}}{n}\\right)^{n}$ 趋于 $${power}$，约为 $${size.toFixed(2)}$：`,
+        ),
+        [`L = \\frac{${power}}{${c}} \\approx ${(size / c).toFixed(3)} ${conv ? "<" : ">"} 1`],
+      ],
+    ];
+    return seriesPicked(
       rng,
       [`What does the root test say about $\\sum_{n=1}^{\\infty} ${term}$?`, `根值检验对 $\\sum_{n=1}^{\\infty} ${term}$ 给出什么结论？`],
       say(L, conv),
-      [say(L, !conv), say(`L = \\frac{1}{${c}}`, true), ["$L = 1$, so the test says nothing", "$L = 1$，所以该检验不提供信息"]],
       [
-        `$\\sqrt[n]{a_{n}} = \\frac{1}{${c}}\\left(1 + \\frac{${k}}{n}\\right)^{n}$ tends to $\\frac{${power}}{${c}}$. Here $${power}$ is about $${size.toFixed(2)}$, so this is ${conv ? "less than $1$, and the series converges" : "greater than $1$, and the series diverges"}.`,
-        `$\\sqrt[n]{a_{n}} = \\frac{1}{${c}}\\left(1 + \\frac{${k}}{n}\\right)^{n}$ 趋于 $\\frac{${power}}{${c}}$。这里 $${power}$ 约为 $${size.toFixed(2)}$，所以它${conv ? "小于 $1$，级数收敛" : "大于 $1$，级数发散"}。`,
+        [
+          say(L, !conv),
+          `$${power} \\approx ${size.toFixed(2)}$, which is ${conv ? "less" : "greater"} than $${c}$`,
+          `$${power} \\approx ${size.toFixed(2)}$，它${conv ? "小于" : "大于"} $${c}$`,
+        ],
+        [
+          say(`L = \\frac{1}{${c}}`, true),
+          `This treats $\\left(1 + \\frac{${k}}{n}\\right)^{n}$ as tending to $1$; it tends to $${power}$`,
+          `这里把 $\\left(1 + \\frac{${k}}{n}\\right)^{n}$ 当作趋于 $1$；它趋于 $${power}$`,
+        ],
+        [
+          ["$L = 1$, so the test says nothing", "$L = 1$，所以该检验不提供信息"],
+          `The root is $\\frac{1}{${c}}$ times a quantity tending to $${power}$, so $L$ is not $1$`,
+          `根是 $\\frac{1}{${c}}$ 乘以一个趋于 $${power}$ 的量，所以 $L$ 不是 $1$`,
+        ],
       ],
+      parts,
+      conv
+        ? [
+            `Compare with a geometric series instead: $\\left(1 + \\frac{${k}}{n}\\right)^{n}$ increases toward $${power}$, so every root is below $L$, and $a_{n} < L^{n}$ for every $n$. The geometric series $\\sum L^{n}$ converges because $L < 1$, so the given series converges as well.`,
+            `改与几何级数比较：$\\left(1 + \\frac{${k}}{n}\\right)^{n}$ 递增趋于 $${power}$，所以每个根都小于 $L$，对每个 $n$ 都有 $a_{n} < L^{n}$。因为 $L < 1$，几何级数 $\\sum L^{n}$ 收敛，所以原级数也收敛。`,
+          ]
+        : [
+            "Look at the terms instead: once the root is above $1$, the term $a_{n}$, its $n$th power, is above $1$ too. The terms do not tend to $0$, so the $n$th term test confirms that the series diverges.",
+            "改看通项：一旦根大于 $1$，通项 $a_{n}$ 作为它的 $n$ 次方也大于 $1$。通项不趋于 $0$，第 $n$ 项检验也说明级数发散。",
+          ],
     );
   },
 );
@@ -504,25 +821,60 @@ const conditionalParameter = point(
   "where-conditional-convergence-happens",
   ["Where conditional convergence happens", "条件收敛发生的范围"],
   [
-    "For $\\sum \\frac{(-1)^{n}}{n^{s}}$, the series converges absolutely for $s > 1$, conditionally for $0 < s \\le 1$, and diverges for $s \\le 0$. So the boundary $s = 1$ belongs to the conditional case, because it is the alternating harmonic series.",
-    "对 $\\sum \\frac{(-1)^{n}}{n^{s}}$，当 $s > 1$ 时绝对收敛，当 $0 < s \\le 1$ 时条件收敛，当 $s \\le 0$ 时发散。所以边界 $s = 1$ 属于条件收敛，因为此时是交错调和级数。",
+    "For $\\sum \\frac{(-1)^{n}}{n^{s}}$, the series converges absolutely for $s > 1$, conditionally for $0 < s \\le 1$, and diverges for $s \\le 0$. The boundary $s = 1$ belongs to the conditional case, because it gives the alternating harmonic series, $\\sum_{n=1}^{\\infty} \\frac{(-1)^{n+1}}{n} = \\ln 2$.\n\nCheck: at $s = 1$ the absolute values form the harmonic series, which diverges, while the alternating series test still applies. At $s = 0$ the terms are $\\pm 1$ and do not tend to $0$.\n\n> **Watch out.** If the exponent is $3p$, solve $0 < 3p \\le 1$ for $p$: the answer is $0 < p \\le \\frac{1}{3}$, not $0 < p \\le 1$.",
+    "对 $\\sum \\frac{(-1)^{n}}{n^{s}}$，当 $s > 1$ 时绝对收敛，当 $0 < s \\le 1$ 时条件收敛，当 $s \\le 0$ 时发散。边界 $s = 1$ 属于条件收敛，因为此时是交错调和级数，$\\sum_{n=1}^{\\infty} \\frac{(-1)^{n+1}}{n} = \\ln 2$。\n\n检验：$s = 1$ 时绝对值构成调和级数，它发散，而交错级数检验仍然适用。$s = 0$ 时通项是 $\\pm 1$，不趋于 $0$。\n\n> **注意。** 如果指数是 $3p$，要对 $p$ 解 $0 < 3p \\le 1$：答案是 $0 < p \\le \\frac{1}{3}$，而不是 $0 < p \\le 1$。",
   ],
   (rng) => {
     const k = rng.int(2, 9);
     const c = rng.int(1, 9);
     const v = `\\frac{1}{${k}}`;
     const top = c === 1 ? "(-1)^{n}" : `${c}(-1)^{n}`;
-    return choose(
+    const parts: Step[] = [
+      [
+        ["Find where it converges absolutely", "确定绝对收敛的范围"],
+        t(
+          `The absolute values form a $p$-series with exponent $${k}p$, which diverges when the exponent is at most $1$:`,
+          `绝对值构成指数为 $${k}p$ 的 $p$ 级数，指数不超过 $1$ 时发散：`,
+        ),
+        [`${k}p \\le 1 \\iff p \\le ${v}`],
+      ],
+      [
+        ["Find where it still converges", "确定仍然收敛的范围"],
+        t(
+          "The alternating series test needs the sizes of the terms to decrease to $0$, which happens when the exponent is positive. Together:",
+          "交错级数检验要求通项的大小递减趋于 $0$，这在指数为正时成立。合起来：",
+        ),
+        [`${k}p > 0 \\iff p > 0`, `0 < p \\le ${v}`],
+      ],
+    ];
+    return seriesPicked(
       rng,
       [
         `For which $p$ does $\\sum_{n=1}^{\\infty} \\frac{${top}}{n^{${k}p}}$ converge conditionally?`,
         `当 $p$ 取何值时，$\\sum_{n=1}^{\\infty} \\frac{${top}}{n^{${k}p}}$ 条件收敛？`,
       ],
       same2(`0 < p \\le ${v}`),
-      [same2(`p > ${v}`), same2(`0 < p < ${v}`), same2(`p \\le ${v}`)],
       [
-        `The series of absolute values is a $p$-series with exponent $${k}p$, so it diverges for $${k}p \\le 1$. The alternating series test needs the terms to decrease to $0$, which means $${k}p > 0$. So the answer is $0 < p \\le ${v}$.`,
-        `绝对值组成的级数是指数为 $${k}p$ 的 $p$ 级数，当 $${k}p \\le 1$ 时发散。交错级数检验要求通项递减趋于 $0$，即 $${k}p > 0$。所以答案是 $0 < p \\le ${v}$。`,
+        [
+          same2(`p > ${v}`),
+          "For these $p$ the exponent is above $1$, so the series converges absolutely, not conditionally",
+          "对这些 $p$，指数大于 $1$，级数绝对收敛，而不是条件收敛",
+        ],
+        [
+          same2(`0 < p < ${v}`),
+          `This leaves out $p = ${v}$, where the series is a multiple of the alternating harmonic series, which converges conditionally`,
+          `这里漏掉了 $p = ${v}$，此时级数是交错调和级数的倍数，条件收敛`,
+        ],
+        [
+          same2(`p \\le ${v}`),
+          "This includes $p \\le 0$, where the terms do not tend to $0$ and the series diverges",
+          "这里包含了 $p \\le 0$，此时通项不趋于 $0$，级数发散",
+        ],
+      ],
+      parts,
+      [
+        `Test the two ends. At $p = ${v}$ the exponent is $1$, and the series is ${c === 1 ? "" : `$${c}$ times `}the alternating series $\\sum \\frac{(-1)^{n}}{n}$, which converges, while $\\sum \\frac{${c}}{n}$ diverges: conditional. At $p = 0$ the terms are $\\pm ${c}$, which do not tend to $0$, so the series diverges there.`,
+        `检验两个端点。$p = ${v}$ 时指数为 $1$，级数是交错级数 $\\sum \\frac{(-1)^{n}}{n}$${c === 1 ? "" : `的 $${c}$ 倍`}，它收敛，而 $\\sum \\frac{${c}}{n}$ 发散：条件收敛。$p = 0$ 时通项是 $\\pm ${c}$，不趋于 $0$，所以级数在那里发散。`,
       ],
     );
   },
@@ -532,13 +884,13 @@ const overOrUnderPartial = point(
   "whether-a-partial-sum-is-too-high-or-too-low",
   ["Whether a partial sum is too high or too low", "部分和偏高还是偏低"],
   [
-    "The error bound gives more than a size. The first omitted term also has the sign of the error: with a positive first term, stopping after an odd number of terms overestimates the sum, and stopping after an even number underestimates it.",
-    "误差界不只给出大小。第一个被舍去的项还给出误差的符号：首项为正时，取奇数项后停止会高估和，取偶数项后停止会低估和。",
+    "The alternating series error bound gives more than a size. The first omitted term also gives the sign of the error. With a positive first term, stopping after an odd number of terms overestimates the sum, because the next term is subtracted, and stopping after an even number underestimates it. Take the alternating harmonic series, $S = \\sum_{n=1}^{\\infty} \\frac{(-1)^{n+1}}{n} = 1 - \\frac{1}{2} + \\frac{1}{3} - \\cdots$. Its partial sum $S_{3} = \\frac{5}{6}$ is too high, by at most $\\frac{1}{4}$.\n\nCheck: $S = \\ln 2 \\approx 0.693$, and $\\frac{5}{6} - 0.693 \\approx 0.140$, which is positive and less than $\\frac{1}{4}$.\n\n> **Watch out.** The bound is the first omitted term $b_{N+1}$, not the last included term $b_{N}$.",
+    "交错级数的误差界不只给出大小。第一个被舍去的项还给出误差的符号。首项为正时，取奇数项后停止会高估和，因为下一项要减去；取偶数项后停止会低估和。以交错调和级数为例，$S = \\sum_{n=1}^{\\infty} \\frac{(-1)^{n+1}}{n} = 1 - \\frac{1}{2} + \\frac{1}{3} - \\cdots$。它的部分和 $S_{3} = \\frac{5}{6}$ 偏高，误差不超过 $\\frac{1}{4}$。\n\n检验：$S = \\ln 2 \\approx 0.693$，而 $\\frac{5}{6} - 0.693 \\approx 0.140$，为正且小于 $\\frac{1}{4}$。\n\n> **注意。** 误差界是第一个被舍去的项 $b_{N+1}$，而不是最后一个保留的项 $b_{N}$。",
   ],
   (rng) => {
-    const N = rng.int(3, 20);
-    const c = rng.int(1, 9);
     const p = rng.int(1, 3);
+    const N = rng.int(3, p === 3 ? 8 : 20);
+    const c = rng.int(1, 9);
     const odd = N % 2 === 1;
     const nextQ = Q.of(c, (N + 1) ** p);
     const thisQ = Q.of(c, N ** p);
@@ -547,17 +899,57 @@ const overOrUnderPartial = point(
       `它${over ? "偏高" : "偏低"}，误差不超过 $${v.toLatex()}$`,
     ];
     const power = p === 1 ? "n" : `n^{${p}}`;
-    return choose(
+    const nextPower = p === 1 ? `${N + 1}` : `${N + 1}^{${p}}`;
+    const parts: Step[] = [
+      [
+        ["Find the first omitted term", "找出第一个被舍去的项"],
+        t(
+          `$S_{${N}}$ stops at $n = ${N}$, so the first omitted term is $n = ${N + 1}$, with the sign of $(-1)^{${N + 2}}$:`,
+          `$S_{${N}}$ 在 $n = ${N}$ 处停止，所以第一个被舍去的项是 $n = ${N + 1}$，符号是 $(-1)^{${N + 2}}$ 的符号：`,
+        ),
+        [`${odd ? "-" : "+"}\\frac{${c}}{${nextPower}} = ${odd ? "-" : ""}${nextQ.toLatex()}`],
+      ],
+      [
+        ["Read the sign and the size", "读出符号和大小"],
+        t(
+          odd
+            ? `The next term is subtracted, so the sum is below $S_{${N}}$: the partial sum is too high, by less than the size of that term:`
+            : `The next term is added, so the sum is above $S_{${N}}$: the partial sum is too low, by less than the size of that term:`,
+          odd
+            ? `下一项要减去，所以和小于 $S_{${N}}$：部分和偏高，误差小于这一项的大小：`
+            : `下一项要加上，所以和大于 $S_{${N}}$：部分和偏低，误差小于这一项的大小：`,
+        ),
+        [`0 < ${odd ? `S_{${N}} - S` : `S - S_{${N}}`} < ${nextQ.toLatex()}`],
+      ],
+    ];
+    return seriesPicked(
       rng,
       [
         `Let $S = \\sum_{n=1}^{\\infty} (-1)^{n+1} \\frac{${c}}{${power}}$. How does $S_{${N}}$ compare with $S$?`,
         `设 $S = \\sum_{n=1}^{\\infty} (-1)^{n+1} \\frac{${c}}{${power}}$。$S_{${N}}$ 与 $S$ 相比如何？`,
       ],
       claim(odd, nextQ),
-      [claim(!odd, nextQ), claim(odd, thisQ), claim(!odd, thisQ)],
       [
-        `The first omitted term is $n = ${N + 1}$, which ${odd ? "is subtracted, so the partial sum is too high" : "is added, so the partial sum is too low"}. Its size $${nextQ.toLatex()}$ bounds the error.`,
-        `第一个被舍去的项是 $n = ${N + 1}$，它${odd ? "要被减去，所以部分和偏高" : "要被加上，所以部分和偏低"}。它的大小 $${nextQ.toLatex()}$ 是误差的上界。`,
+        [
+          claim(!odd, nextQ),
+          `The term after $S_{${N}}$ is ${odd ? "subtracted, so $S$ is below" : "added, so $S$ is above"} $S_{${N}}$`,
+          `$S_{${N}}$ 之后的项要${odd ? "减去，所以 $S$ 小于" : "加上，所以 $S$ 大于"} $S_{${N}}$`,
+        ],
+        [
+          claim(odd, thisQ),
+          `$${thisQ.toLatex()}$ is the last term included; the bound is the first term omitted, $${nextQ.toLatex()}$`,
+          `$${thisQ.toLatex()}$ 是最后一个保留的项；误差界是第一个被舍去的项 $${nextQ.toLatex()}$`,
+        ],
+        [
+          claim(!odd, thisQ),
+          `Both parts are wrong: the next term is ${odd ? "subtracted" : "added"}, and the bound is the first omitted term, $${nextQ.toLatex()}$`,
+          `两部分都错了：下一项要${odd ? "减去" : "加上"}，误差界是第一个被舍去的项 $${nextQ.toLatex()}$`,
+        ],
+      ],
+      parts,
+      [
+        `Add one more term: $S_{${N + 1}}$ is $S_{${N}}$ ${odd ? "minus" : "plus"} $${nextQ.toLatex()}$, and it overshoots to the other side of $S$, so $S$ lies between $S_{${N + 1}}$ and $S_{${N}}$. Its distance from $S_{${N}}$ is therefore less than $${nextQ.toLatex()}$, and $S_{${N}}$ is on the ${odd ? "high" : "low"} side.`,
+        `再加一项：$S_{${N + 1}}$ 是 $S_{${N}}$ ${odd ? "减去" : "加上"} $${nextQ.toLatex()}$，它越过 $S$ 到了另一侧，所以 $S$ 在 $S_{${N + 1}}$ 与 $S_{${N}}$ 之间。因此它与 $S_{${N}}$ 的距离小于 $${nextQ.toLatex()}$，而 $S_{${N}}$ 在${odd ? "偏高" : "偏低"}的一侧。`,
       ],
     );
   },
@@ -567,8 +959,8 @@ const logParameter = point(
   "a-parameter-in-a-logarithmic-series",
   ["A parameter in a logarithmic series", "对数级数中的参数"],
   [
-    "By the integral test, $\\sum_{n=2}^{\\infty} \\frac{1}{n(\\ln n)^{s}}$ converges exactly when $s > 1$, using $u = \\ln x$. When $s$ depends on a parameter, solve the strict inequality, and reverse its direction when dividing by a negative number.",
-    "由积分检验，令 $u = \\ln x$，$\\sum_{n=2}^{\\infty} \\frac{1}{n(\\ln n)^{s}}$ 恰好在 $s > 1$ 时收敛。当 $s$ 依赖于参数时，解这个严格不等式，除以负数时要改变不等号的方向。",
+    "By the integral test with $u = \\ln x$, $\\sum_{n=2}^{\\infty} \\frac{1}{n(\\ln n)^{s}}$ converges exactly when $s > 1$. Indeed, for $s > 1$ the integral is finite, $\\int_{2}^{\\infty} \\frac{dx}{x(\\ln x)^{s}} = \\frac{(\\ln 2)^{1-s}}{s - 1}$. When $s$ depends on a parameter, solve the strict inequality $s > 1$: for $s = 2p - 3$ this gives $p > 2$.\n\nCheck: at $p = 2$ the exponent is $1$, and the integral grows without bound, so $p = 2$ is rightly left out: $\\int_{2}^{N} \\frac{dx}{x \\ln x} = \\ln(\\ln N) - \\ln(\\ln 2)$.\n\n> **Watch out.** Dividing by a negative coefficient reverses the inequality: $-2p + 5 > 1$ gives $p < 2$.",
+    "由积分检验，令 $u = \\ln x$，$\\sum_{n=2}^{\\infty} \\frac{1}{n(\\ln n)^{s}}$ 恰好在 $s > 1$ 时收敛。事实上，$s > 1$ 时积分有限，$\\int_{2}^{\\infty} \\frac{dx}{x(\\ln x)^{s}} = \\frac{(\\ln 2)^{1-s}}{s - 1}$。当 $s$ 依赖于参数时，解严格不等式 $s > 1$：对 $s = 2p - 3$，得到 $p > 2$。\n\n检验：$p = 2$ 时指数为 $1$，积分无限增大，所以去掉 $p = 2$ 是对的：$\\int_{2}^{N} \\frac{dx}{x \\ln x} = \\ln(\\ln N) - \\ln(\\ln 2)$。\n\n> **注意。** 除以负系数时不等号要改变方向：$-2p + 5 > 1$ 得到 $p < 2$。",
   ],
   (rng) => {
     const a = rng.int(2, 6) * rng.pick([-1, 1]);
@@ -577,17 +969,59 @@ const logParameter = point(
     const exp = poly([a, "p"], [b, ""]);
     const form = (sym: string) => same2(`p ${sym} ${v.toLatex()}`);
     const up = a > 0;
-    return choose(
+    const vNum = (1 - b) / a;
+    const p0 = up ? Math.floor(vNum) + 1 : Math.ceil(vNum) - 1;
+    const e0 = a * p0 + b;
+    const parts: Step[] = [
+      [
+        ["Use the integral test", "用积分检验"],
+        t(
+          "With $u = \\ln x$, the integral of $\\frac{1}{x(\\ln x)^{s}}$ is finite exactly when $s > 1$, so the exponent must satisfy a strict inequality:",
+          "令 $u = \\ln x$，$\\frac{1}{x(\\ln x)^{s}}$ 的积分恰好在 $s > 1$ 时有限，所以指数要满足严格不等式：",
+        ),
+        [`${exp} > 1`],
+      ],
+      [
+        ["Solve for p", "解出 p"],
+        t(
+          up
+            ? `Divide by the positive coefficient $${a}$, keeping the direction:`
+            : `Divide by the negative coefficient $${a}$, reversing the direction:`,
+          up ? `除以正系数 $${a}$，方向不变：` : `除以负系数 $${a}$，方向改变：`,
+        ),
+        [`${a}p > ${1 - b}`, `p ${up ? ">" : "<"} ${v.toLatex()}`],
+      ],
+    ];
+    return seriesPicked(
       rng,
       [
         `For which $p$ does $\\sum_{n=2}^{\\infty} \\frac{1}{n(\\ln n)^{${exp}}}$ converge?`,
         `当 $p$ 取何值时，$\\sum_{n=2}^{\\infty} \\frac{1}{n(\\ln n)^{${exp}}}$ 收敛？`,
       ],
       form(up ? ">" : "<"),
-      [form(up ? "<" : ">"), form(up ? "\\ge" : "\\le"), form(up ? "\\le" : "\\ge")],
       [
-        `The integral test requires $${exp} > 1$, a strict inequality because the exponent $1$ gives $\\ln(\\ln x)$, which diverges. ${up ? "Dividing by the positive coefficient keeps the direction" : "Dividing by the negative coefficient reverses the direction"}, so $p ${up ? ">" : "<"} ${v.toLatex()}$.`,
-        `积分检验要求 $${exp} > 1$，这是严格不等式，因为指数为 $1$ 时积分是 $\\ln(\\ln x)$，发散。${up ? "除以正系数时方向不变" : "除以负系数时方向改变"}，所以 $p ${up ? ">" : "<"} ${v.toLatex()}$。`,
+        [
+          form(up ? "<" : ">"),
+          up
+            ? "Dividing by a positive coefficient keeps the direction of the inequality"
+            : "Dividing by a negative coefficient reverses the direction of the inequality",
+          up ? "除以正系数时不等号方向不变" : "除以负系数时不等号方向要改变",
+        ],
+        [
+          form(up ? "\\ge" : "\\le"),
+          `At $p = ${v.toLatex()}$ the exponent is $1$, and $\\sum \\frac{1}{n \\ln n}$ diverges, so the boundary is left out`,
+          `$p = ${v.toLatex()}$ 时指数为 $1$，而 $\\sum \\frac{1}{n \\ln n}$ 发散，所以边界不包含在内`,
+        ],
+        [
+          form(up ? "\\le" : "\\ge"),
+          "This has the wrong direction, and it also includes the boundary, where the series diverges",
+          "这个方向错了，而且还包含了级数发散的边界",
+        ],
+      ],
+      parts,
+      [
+        `Try a value. At $p = ${p0}$, on the side of the answer, the exponent is $${e0}$, which is greater than $1$, so the series converges there. At $p = ${v.toLatex()}$ itself the exponent is $1$, and $\\sum \\frac{1}{n \\ln n}$ diverges, so the inequality is strict.`,
+        `代入一个值。在答案一侧取 $p = ${p0}$，指数是 $${e0}$，大于 $1$，所以级数在那里收敛。在 $p = ${v.toLatex()}$ 处指数为 $1$，而 $\\sum \\frac{1}{n \\ln n}$ 发散，所以不等式是严格的。`,
       ],
     );
   },
@@ -597,8 +1031,8 @@ const testThatFails = point(
   "tests-that-are-certain-to-say-nothing",
   ["Tests that are certain to say nothing", "肯定不提供信息的检验"],
   [
-    "Good selection also rules tests out. On any rational function of $n$, the ratio test and the root test both give $L = 1$, so they say nothing, whether the series converges or not. Comparing with a $p$-series is the method that works.",
-    "好的选择也包括排除检验。对 $n$ 的任何有理函数，比值检验和根值检验都给出 $L = 1$，所以不提供信息，无论级数是否收敛。与 $p$ 级数比较才是有效的方法。",
+    "Good selection also rules tests out. On any rational function of $n$, the ratio test and the root test both give $L = 1$, so they say nothing, whether the series converges or not. For $a_{n} = \\frac{n + 1}{n^{3}}$ the ratio test gives $\\lim_{n \\to \\infty} \\frac{(n + 2)n^{3}}{(n + 1)^{3}(n + 1)} = 1$. Comparing with a $p$-series is the method that works: here $a_{n}$ behaves like $\\frac{1}{n^{2}}$, so the series converges.\n\nCheck: the ratio test also gives $1$ on $\\sum \\frac{1}{n}$, which diverges, and on $\\sum \\frac{1}{n^{2}}$, which converges, so $L = 1$ cannot tell them apart.\n\n> **Watch out.** $L = 1$ is not a verdict of convergence or divergence; it means the test has failed.",
+    "好的选择也包括排除检验。对 $n$ 的任何有理函数，比值检验和根值检验都给出 $L = 1$，所以不提供信息，无论级数是否收敛。对 $a_{n} = \\frac{n + 1}{n^{3}}$，比值检验给出 $\\lim_{n \\to \\infty} \\frac{(n + 2)n^{3}}{(n + 1)^{3}(n + 1)} = 1$。与 $p$ 级数比较才是有效的方法：这里 $a_{n}$ 的行为像 $\\frac{1}{n^{2}}$，所以级数收敛。\n\n检验：比值检验对发散的 $\\sum \\frac{1}{n}$ 和收敛的 $\\sum \\frac{1}{n^{2}}$ 也都给出 $1$，所以 $L = 1$ 无法区分它们。\n\n> **注意。** $L = 1$ 不是收敛或发散的结论；它表示该检验失效了。",
   ],
   (rng) => {
     const a = rng.int(1, 9);
@@ -609,9 +1043,33 @@ const testThatFails = point(
       ["The root test", "根值检验"],
     ];
     const test = rng.pick(tests);
+    const ratioTest = test === tests[0];
     const other = p === 2 ? "\\frac{1}{n}" : `\\frac{1}{n^{${p - 1}}}`;
+    const nPow = p === 2 ? "n" : `n^{${p - 1}}`;
     const term = `\\frac{n + ${a}}{n^{${p}} + ${b}}`;
-    return choose(
+    const f = (n: number) => (n + a) / (n ** p + b);
+    const at100 = ratioTest ? (f(101) / f(100)).toFixed(4) : (f(1000) ** (1 / 1000)).toFixed(4);
+    const verdict = p === 2 ? "diverges" : "converges";
+    const verdictZh = p === 2 ? "发散" : "收敛";
+    const parts: Step[] = [
+      [
+        ["Try the test", "试用该检验"],
+        t(
+          `The terms are a rational function of $n$, so ${ratioTest ? "the ratio of consecutive terms" : "the $n$th root of the terms"} tends to $1$:`,
+          `通项是 $n$ 的有理函数，所以${ratioTest ? "相邻两项之比" : "通项的 $n$ 次方根"}趋于 $1$：`,
+        ),
+        [ratioTest ? `\\lim_{n \\to \\infty} \\frac{a_{n+1}}{a_{n}} = 1` : `\\lim_{n \\to \\infty} \\sqrt[n]{a_{n}} = 1`],
+      ],
+      [
+        ["Find a test that decides", "找出能判断的检验"],
+        t(
+          `With $L = 1$ the test says nothing. The terms behave like $${other}$, and the limit comparison gives a finite nonzero limit, so the series ${verdict}:`,
+          `$L = 1$ 时该检验不提供信息。通项的行为像 $${other}$，极限比较得到有限非零的极限，所以级数${verdictZh}：`,
+        ),
+        [`\\lim_{n \\to \\infty} ${term} \\cdot ${nPow} = 1`],
+      ],
+    ];
+    return seriesPicked(
       rng,
       [
         `Which test is certain to give no conclusion for $\\sum_{n=1}^{\\infty} ${term}$?`,
@@ -619,13 +1077,26 @@ const testThatFails = point(
       ],
       test,
       [
-        [`The limit comparison test with $${other}$`, `与 $${other}$ 的极限比较检验`],
-        ["The integral test", "积分检验"],
-        ["The comparison test", "比较检验"],
+        [
+          [`The limit comparison test with $${other}$`, `与 $${other}$ 的极限比较检验`],
+          `It gives the limit $1$, finite and not zero, so it decides: the series ${verdict}`,
+          `它给出极限 $1$，有限且不为零，所以能作出判断：级数${verdictZh}`,
+        ],
+        [
+          ["The integral test", "积分检验"],
+          "For large $x$ the function is positive and decreasing, so the integral test applies, and its integral behaves like that of the comparison term",
+          "当 $x$ 较大时函数为正且递减，所以积分检验适用，其积分的行为与比较项的积分相同",
+        ],
+        [
+          ["The comparison test", "比较检验"],
+          `For large $n$ the terms lie between constant multiples of $${other}$, so a direct comparison decides`,
+          `当 $n$ 较大时，通项介于 $${other}$ 的两个常数倍之间，所以直接比较就能判断`,
+        ],
       ],
+      parts,
       [
-        `The terms form a rational function of $n$, so $\\frac{a_{n+1}}{a_{n}} \\to 1$ and $\\sqrt[n]{a_{n}} \\to 1$. With $L = 1$ the test says nothing. The limit comparison with $${other}$ gives a limit of $1$ and does decide it.`,
-        `通项是 $n$ 的有理函数，所以 $\\frac{a_{n+1}}{a_{n}} \\to 1$，$\\sqrt[n]{a_{n}} \\to 1$。$L = 1$ 时该检验不提供信息。与 $${other}$ 的极限比较得到极限 $1$，可以作出判断。`,
+        `Compute a value: at $n = ${ratioTest ? 100 : 1000}$, ${ratioTest ? "$\\frac{a_{101}}{a_{100}}$" : "$\\sqrt[1000]{a_{1000}}$"} is about $${at100}$, already close to $1$, as the limit says. A test whose limit is $1$ cannot decide, while the comparison with $${other}$ shows that the series ${verdict}.`,
+        `算一个值：在 $n = ${ratioTest ? 100 : 1000}$ 时，${ratioTest ? "$\\frac{a_{101}}{a_{100}}$" : "$\\sqrt[1000]{a_{1000}}$"} 约为 $${at100}$，已经接近 $1$，与极限一致。极限为 $1$ 的检验无法判断，而与 $${other}$ 比较说明级数${verdictZh}。`,
       ],
     );
   },
@@ -635,8 +1106,8 @@ const derivativeFromCoefficient = point(
   "a-derivative-from-a-taylor-coefficient",
   ["A derivative from a Taylor coefficient", "由泰勒系数求导数"],
   [
-    "A Taylor polynomial stores derivatives. The coefficient of $(x - a)^{k}$ is $\\frac{f^{(k)}(a)}{k!}$, so the derivative is that coefficient times $k!$. Reading the coefficient directly as the derivative forgets the factorial.",
-    "泰勒多项式储存了导数的信息。$(x - a)^{k}$ 的系数是 $\\frac{f^{(k)}(a)}{k!}$，所以导数等于这个系数乘以 $k!$。把系数直接当作导数就忘了阶乘。",
+    "A Taylor polynomial stores derivatives. The coefficient of $(x - a)^{k}$ is $\\frac{f^{(k)}(a)}{k!}$, so the derivative is that coefficient times $k!$. If the polynomial centered at $1$ has the term $4(x - 1)^{3}$, the third derivative follows: $\\frac{f'''(1)}{3!} = 4, \\quad f'''(1) = 3! \\cdot 4 = 24$.\n\nCheck: differentiating $4(x - 1)^{3}$ three times gives $4 \\cdot 3 \\cdot 2 = 24$, and the lower terms vanish.\n\n> **Watch out.** Reading the coefficient directly as the derivative forgets the factorial: $f'''(1)$ is $24$, not $4$.",
+    "泰勒多项式储存了导数的信息。$(x - a)^{k}$ 的系数是 $\\frac{f^{(k)}(a)}{k!}$，所以导数等于这个系数乘以 $k!$。如果以 $1$ 为中心的多项式含有 $4(x - 1)^{3}$ 这一项，就可得三阶导数：$\\frac{f'''(1)}{3!} = 4, \\quad f'''(1) = 3! \\cdot 4 = 24$。\n\n检验：把 $4(x - 1)^{3}$ 求导三次得 $4 \\cdot 3 \\cdot 2 = 24$，较低次的项都消失了。\n\n> **注意。** 把系数直接当作导数就忘了阶乘：$f'''(1)$ 是 $24$，而不是 $4$。",
   ],
   (rng) => {
     const a = nz(rng, 5);
@@ -645,21 +1116,53 @@ const derivativeFromCoefficient = point(
     const c2 = nz(rng, 9);
     const c3 = nz(rng, 9);
     const third = rng.bool();
+    const k = third ? 3 : 2;
     const base = linear(1, -a);
     const T = poly([c0, ""], [c1, `(${base})`], [c2, `(${base})^{2}`], [c3, `(${base})^{3}`]);
     const answer = third ? 6 * c3 : 2 * c2;
     const c = third ? c3 : c2;
     const name = third ? "f'''" : "f''";
-    return ask(
+    const times = c === 1 ? `${k}!` : `${k}! \\cdot ${paren(c)}`;
+    const chain = [...(third ? ["3", "2"] : ["2"]), ...(c === 1 ? [] : [paren(c)])].join(" \\cdot ");
+    const termTex = `${c === 1 ? "" : c === -1 ? "-" : c}(${base})^{${k}}`;
+    const parts: Step[] = [
+      [
+        ["Match the coefficient", "对应系数"],
+        t(
+          `The coefficient of $(${base})^{${k}}$ in the polynomial is $${c}$, and Taylor's formula says it is $\\frac{${name}(${a})}{${k}!}$:`,
+          `多项式中 $(${base})^{${k}}$ 的系数是 $${c}$，而泰勒公式说它等于 $\\frac{${name}(${a})}{${k}!}$：`,
+        ),
+        [`\\frac{${name}(${a})}{${k}!} = ${c}`],
+      ],
+      [
+        ["Multiply by the factorial", "乘以阶乘"],
+        t(`Multiply both sides by $${k}! = ${k === 3 ? 6 : 2}$:`, `两边乘以 $${k}! = ${k === 3 ? 6 : 2}$：`),
+        [`${name}(${a}) = ${times} = ${answer}`],
+      ],
+    ];
+    return seriesSolved(
       [
         `The Taylor polynomial of degree 3 for $f$ centered at $x = ${a}$ is $${T}$. Find $${name}(${a})$.`,
         `$f$ 在 $x = ${a}$ 处的 3 次泰勒多项式是 $${T}$。求 $${name}(${a})$。`,
       ],
       answer,
-      [c, third ? 3 * c3 : Q.of(c2, 2), third ? Q.of(c3, 6) : 4 * c2],
+      parts,
       [
-        `The coefficient of $(${base})^{${third ? 3 : 2}}$ is $\\frac{${name}(${a})}{${third ? 3 : 2}!}$. So $${name}(${a}) = ${third ? 6 : 2} \\cdot ${c < 0 ? `(${c})` : c} = ${answer}$.`,
-        `$(${base})^{${third ? 3 : 2}}$ 的系数是 $\\frac{${name}(${a})}{${third ? 3 : 2}!}$。所以 $${name}(${a}) = ${third ? 6 : 2} \\cdot ${c < 0 ? `(${c})` : c} = ${answer}$。`,
+        `Differentiate the polynomial ${third ? "three" : "two"} times instead. The term $${termTex}$ becomes $${chain}$, which is $${answer}$; the lower terms vanish${third ? "" : `, and the cubic term leaves a multiple of $(${base})$, which is $0$ at $x = ${a}$`}. So $${name}(${a}) = ${answer}$.`,
+        `改为把多项式求导${third ? "三" : "两"}次。$${termTex}$ 这一项变为 $${chain}$，即 $${answer}$；较低次的项都消失${third ? "" : `，三次项留下 $(${base})$ 的倍数，它在 $x = ${a}$ 处为 $0$`}。所以 $${name}(${a}) = ${answer}$。`,
+      ],
+      [
+        [
+          c,
+          `This reads the coefficient as the derivative; the coefficient is the derivative divided by $${k}!$`,
+          `这里把系数当作导数；系数是导数除以 $${k}!$`,
+        ],
+        third
+          ? [3 * c3, "This multiplies by $3$; the factor is $3! = 6$", "这里乘以 $3$；因子应是 $3! = 6$"]
+          : [Q.of(c2, 2), "This divides by $2!$; the derivative is the coefficient times $2!$", "这里除以了 $2!$；导数是系数乘以 $2!$"],
+        third
+          ? [Q.of(c3, 6), "This divides by $3!$; the derivative is the coefficient times $3!$", "这里除以了 $3!$；导数是系数乘以 $3!$"]
+          : [4 * c2, "This multiplies by $2^{2}$; the factor is $2! = 2$", "这里乘以 $2^{2}$；因子应是 $2! = 2$"],
       ],
     );
   },
@@ -669,8 +1172,8 @@ const radiusWithCoefficient = point(
   "the-radius-when-x-has-a-coefficient",
   ["The radius when x has a coefficient", "x 带系数时的收敛半径"],
   [
-    "The radius belongs to $x$, not to the expression in brackets. For powers of $kx + d$, the series converges when $|kx + d| < c$, and dividing by $k$ shows that $x$ is within $\\frac{c}{k}$ of its center. The value $c$ alone is the common wrong answer.",
-    "收敛半径是对 $x$ 而言的，不是对括号内的式子而言的。对 $kx + d$ 的幂，当 $|kx + d| < c$ 时级数收敛，除以 $k$ 后可见 $x$ 到中心的距离小于 $\\frac{c}{k}$。只答 $c$ 是常见的错误。",
+    "The radius belongs to $x$, not to the expression in brackets. Take $\\sum \\frac{(2x + 1)^{n}}{6^{n}}$, a geometric series with ratio $\\frac{2x + 1}{6}$. The ratio test gives $\\lim_{n \\to \\infty} \\left|\\frac{(2x + 1)^{n+1}}{6^{n+1}} \\cdot \\frac{6^{n}}{(2x + 1)^{n}}\\right| = \\frac{|2x + 1|}{6}$. So the series converges when $|2x + 1| < 6$, that is, when $\\left|x + \\frac{1}{2}\\right| < 3$, and the radius is $3$. In general, for powers of $kx + d$ over $c^{n}$, the radius is $\\frac{c}{k}$.\n\nCheck: the interval runs from $-\\frac{7}{2}$ to $\\frac{5}{2}$, where $2x + 1 = \\pm 6$, and its length $6$ is twice the radius.\n\n> **Watch out.** $6$ is the bound on $|2x + 1|$, not on the distance of $x$ from the center: divide by the coefficient $2$.",
+    "收敛半径是对 $x$ 而言的，不是对括号内的式子而言的。以 $\\sum \\frac{(2x + 1)^{n}}{6^{n}}$ 为例，它是公比为 $\\frac{2x + 1}{6}$ 的几何级数。比值检验给出 $\\lim_{n \\to \\infty} \\left|\\frac{(2x + 1)^{n+1}}{6^{n+1}} \\cdot \\frac{6^{n}}{(2x + 1)^{n}}\\right| = \\frac{|2x + 1|}{6}$。所以当 $|2x + 1| < 6$，即 $\\left|x + \\frac{1}{2}\\right| < 3$ 时级数收敛，收敛半径是 $3$。一般地，对 $kx + d$ 的幂除以 $c^{n}$，收敛半径是 $\\frac{c}{k}$。\n\n检验：区间从 $-\\frac{7}{2}$ 到 $\\frac{5}{2}$，两端满足 $2x + 1 = \\pm 6$，长度 $6$ 是半径的两倍。\n\n> **注意。** $6$ 是 $|2x + 1|$ 的界，而不是 $x$ 到中心距离的界：要除以系数 $2$。",
   ],
   (rng) => {
     const k = rng.int(2, 6);
@@ -678,16 +1181,46 @@ const radiusWithCoefficient = point(
     const d = nz(rng, 9);
     const inner = linear(k, d);
     const answer = Q.of(c, k);
-    return ask(
+    const lo = Q.of(-c - d, k);
+    const hi = Q.of(c - d, k);
+    const parts: Step[] = [
+      [
+        ["Find when the ratio is small", "确定公比何时足够小"],
+        t(
+          `The series is geometric with ratio $\\frac{${inner}}{${c}}$, so it converges exactly when the ratio has size less than $1$:`,
+          `级数是公比为 $\\frac{${inner}}{${c}}$ 的几何级数，所以恰好在公比的绝对值小于 $1$ 时收敛：`,
+        ),
+        [`\\left|\\frac{${inner}}{${c}}\\right| < 1 \\iff |${inner}| < ${c}`],
+      ],
+      [
+        ["Divide by the coefficient", "除以系数"],
+        t(`Divide by $${k}$ to see how far $x$ may be from its center:`, `除以 $${k}$，看 $x$ 离中心能有多远：`),
+        [`\\left|${poly([1, "x"], [Q.of(d, k), ""])}\\right| < ${answer.toLatex()}`],
+      ],
+    ];
+    return seriesSolved(
       [
         `Find the radius of convergence of $\\sum_{n=0}^{\\infty} \\frac{(${inner})^{n}}{${c}^{n}}$.`,
         `求 $\\sum_{n=0}^{\\infty} \\frac{(${inner})^{n}}{${c}^{n}}$ 的收敛半径。`,
       ],
       answer,
-      [c, Q.of(k, c), c * k],
+      parts,
       [
-        `The geometric ratio has size less than $1$ when $|${inner}| < ${c}$, that is, when $\\left|${poly([1, "x"], [Q.of(d, k), ""])}\\right| < ${answer.toLatex()}$. So the radius is $${answer.toLatex()}$.`,
-        `当 $|${inner}| < ${c}$ 时，公比的绝对值小于 $1$，即 $\\left|${poly([1, "x"], [Q.of(d, k), ""])}\\right| < ${answer.toLatex()}$。所以收敛半径是 $${answer.toLatex()}$。`,
+        `Find the ends of the interval instead, where $${inner} = \\pm ${c}$: they are $x = ${lo.toLatex()}$ and $x = ${hi.toLatex()}$. The length of the interval is $${hi.sub(lo).toLatex()}$, and half of it is $${answer.toLatex()}$, the radius.`,
+        `改求区间的端点，即 $${inner} = \\pm ${c}$ 处：它们是 $x = ${lo.toLatex()}$ 和 $x = ${hi.toLatex()}$。区间长度是 $${hi.sub(lo).toLatex()}$，它的一半 $${answer.toLatex()}$ 就是收敛半径。`,
+      ],
+      [
+        [
+          c,
+          `This is the bound on $|${inner}|$; divide by $${k}$ to get the bound on the distance of $x$ from the center`,
+          `这是 $|${inner}|$ 的界；除以 $${k}$ 才得到 $x$ 到中心距离的界`,
+        ],
+        [
+          Q.of(k, c),
+          `This turns the fraction upside down; the radius is $\\frac{${c}}{${k}}$`,
+          `这里把分数颠倒了；收敛半径是 $\\frac{${c}}{${k}}$`,
+        ],
+        [c * k, `This multiplies by $${k}$; divide by it instead`, `这里乘以了 $${k}$；应当除以它`],
       ],
     );
   },
