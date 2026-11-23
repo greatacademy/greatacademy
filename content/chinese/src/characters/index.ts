@@ -66,6 +66,7 @@ function stage(first: number, entries: readonly CharacterEntry[], grades = 2, ru
           title: t(`Grade ${grade} Characters, Set ${i + 1}`, `${NUMERALS[grade]}年级识字 第${i + 1}组`),
           prerequisites: i === 0 ? [] : [recognitionId(grade, i)],
           entries: batch,
+          known,
         }),
       })),
   }));
@@ -116,6 +117,11 @@ export const gradesFiveAndSixEntries: readonly CharacterEntry[] = parseCharacter
 
 /** gradesSevenToNineEntries are the characters of grades 7 to 9 with their words and confusable characters. */
 export const gradesSevenToNineEntries: readonly CharacterEntry[] = parseCharacters(gradesSevenToNineData);
+
+/** known are the characters of every grade, by character, for the reasons of the recognition topics. */
+const known: ReadonlyMap<string, CharacterEntry> = new Map(
+  [gradesOneAndTwoEntries, gradesThreeAndFourEntries, gradesFiveAndSixEntries, gradesSevenToNineEntries].flat().map((e) => [e.char, e]),
+);
 
 /** recognitionByGrade are the recognition batches of each grade. */
 export const recognitionByGrade: readonly GradeCharacters[] = [

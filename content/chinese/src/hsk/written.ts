@@ -8,7 +8,7 @@ import { type TopicDef, t } from "@ga/content";
 import { point } from "@ga/subject-chinese";
 
 import { GAP, type LevelOneWord } from "../level-1/words.ts";
-import { gap, type HandTask, handGenerator, strokeCount, wordTask } from "../strokes/hand.ts";
+import { gap, type HandTask, handGenerator, handSteps, wordTask } from "../strokes/hand.ts";
 import { levelHandwritingByLevel, levelWords } from "../strokes/levels.ts";
 
 /** PINYIN_LEVELS are the HSK levels whose writing paper asks for characters from their pinyin. */
@@ -34,11 +34,16 @@ function sentenceTask(char: string, w: LevelOneWord): HandTask {
   );
   return {
     char,
+    cue: t(`in ${whole}`, `在“${whole}”里`),
     trace: ask,
     write: ask,
-    solution: t(
-      `The sentence is **${whole}**, with ${char} (${reading}), of ${strokeCount(char)!} strokes.`,
-      `这个句子是“**${whole}**”，括号里是“${char}”（${reading}），共 ${strokeCount(char)!} 画。`,
+    solution: handSteps(
+      t(
+        `Read the sentence with the word in its place: **${whole}**. The word is ${w.word}, so the character is ${char}, read ${reading}.`,
+        `把词放回句子里读：“**${whole}**”。这个词是“${w.word}”，所以是“${char}”字，读 ${reading}。`,
+      ),
+      char,
+      t(`Then read the sentence back with it.`, `再把句子读一遍。`),
     ),
   };
 }

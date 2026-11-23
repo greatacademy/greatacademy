@@ -19,7 +19,7 @@ import { levelSixPlan } from "../level-6/plan.ts";
 import { levelSevenPlan } from "../level-7/plan.ts";
 import { levelEightPlan } from "../level-8/plan.ts";
 import { levelNinePlan } from "../level-9/plan.ts";
-import { HAND_BATCH, type HandTask, handTopic, medians, strokeCount, wordTask } from "./hand.ts";
+import { HAND_BATCH, type HandTask, handSteps, handTopic, medians, strokeCount, wordTask } from "./hand.ts";
 
 /** WRITTEN_BY_LEVEL is how many characters a learner writes by the end of each level, from level 1. */
 export const WRITTEN_BY_LEVEL = [100, 200, 300, 400, 550, 700, 870, 1030, 1200] as const;
@@ -113,9 +113,17 @@ function fillTask(c: LevelOneCharacter, k: number): HandTask {
   const [trace, write] = ways[k]!;
   return {
     char: c.char,
+    cue: t(`read ${c.reading}, “${en}”`, `读 ${c.reading}，意思是“${zh}”`),
     trace,
     write,
-    solution: t(`The character is ${c.char} (${c.reading}), of ${n} strokes.`, `这个字是“${c.char}”（${c.reading}），共 ${n} 画。`),
+    solution: handSteps(
+      t(
+        `The character read ${c.reading} that means “${en}” is **${c.char}**${looks ? `, not ${c.looks.join(" or ")}, which only look like it` : ""}.`,
+        `读 ${c.reading}、意思是“${zh}”的字是“**${c.char}**”${looks ? `，不是长得像它的“${c.looks.join("”或“")}”` : ""}。`,
+      ),
+      c.char,
+      t(`Then read it: ${c.char}, ${c.reading}, “${en}”.`, `再读一读：“${c.char}”读 ${c.reading}，意思是“${zh}”。`),
+    ),
   };
 }
 

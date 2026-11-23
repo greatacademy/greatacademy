@@ -2,6 +2,10 @@
 // explanation that walks one instance and ends with a callout, and solutions in steps that end with a check. The test
 // beside this file holds every listed topic to it.
 
+import { characterTopics } from "./characters/index.ts";
+import { levelHandwritingTopics } from "./strokes/levels.ts";
+import { handwritingTopics } from "./strokes/writing.ts";
+
 /** taughtStrands lists the strands whose every topic is written to the teaching standard. */
 export const taughtStrands: readonly string[] = ["recitation", "classical", "pinyin", "grammar"];
 
@@ -161,4 +165,5 @@ export const taughtTopics: readonly string[] = [
   "writing-11-academic",
   "speaking-11-seminar",
   "speaking-11-presenting-research",
+  ...[...characterTopics, ...handwritingTopics, ...levelHandwritingTopics].map((topic) => topic.id),
 ];

@@ -30,12 +30,12 @@ export const gradesSevenToNineData = `
 匾 biǎn 牌匾 匾额 金匾 扁偏
 鳖 biē 鳖甲 瓮中捉鳖 老鳖 憋弊
 瘪 biě 干瘪 瘪嘴 瘪三@biē 憋鳖
-彬 bīn 彬彬 彬彬有礼 文质彬彬 杉斌
-斌 bīn 斌斌 斌斌有礼 文质斌斌 彬武
+彬 bīn 彬彬 彬彬有礼 文质彬彬 杉林
+斌 bīn 斌斌 斌斌有礼 文质斌斌 武赋
 濒 bīn 濒临 濒危 濒死 频颇
 鬓 bìn 鬓角 两鬓 鬓发 宾滨
 秉 bǐng 秉性 秉公 秉烛夜游 乘兼
-禀 bǐng 禀告 禀报 禀性 秉凛
+禀 bǐng 禀告 禀报 禀性 凛京
 舶 bó 船舶 舶来品 海舶 泊伯
 渤 bó 渤海 渤海湾 渤海国 勃脖
 跛 bǒ 跛脚 跛子 跛足 跋坡
@@ -104,7 +104,7 @@ export const gradesSevenToNineData = `
 筏 fá 竹筏 木筏 皮筏 伐阀
 矾 fán 明矾 白矾 胆矾 帆凡
 诽 fěi 诽谤 腹诽 诽谤罪 排匪
-忿 fèn 忿忿 不忿 忿恨 念愤
+忿 fèn 忿忿 不忿 忿恨 念分
 芙 fú 芙蓉 芙蕖 出水芙蓉 夫扶
 袱 fú 包袱 包袱皮 包袱底 伏服
 甫 fǔ 惊魂甫定 甫一 台甫 捕浦
@@ -137,7 +137,7 @@ export const gradesSevenToNineData = `
 翰 hàn 翰林 文翰 翰墨 韩朝
 夯 hāng 打夯 夯实 夯土 夸夺
 皓 hào 皓月 皓首 明眸皓齿 浩告
-弘 hóng 弘扬 弘大 恢弘 宏引
+弘 hóng 弘扬 弘大 恢弘 引红
 沪 hù 沪剧 沪宁 沪上 护户
 猾 huá 狡猾 奸猾 老奸巨猾 滑骨
 徊 huái 徘徊 低徊 徘徊不前 回徘
@@ -173,7 +173,7 @@ export const gradesSevenToNineData = `
 襟 jīn 衣襟 襟怀 胸襟 禁林
 荆 jīng 荆棘 负荆请罪 披荆斩棘 刑型
 兢 jīng 兢兢业业 战战兢兢 兢兢 竞克
-靖 jìng 绥靖 安靖 靖乱 静精
+靖 jìng 绥靖 安靖 靖乱 精请
 灸 jiǔ 针灸 艾灸 灸法 久炎
 玖 jiǔ 玖拾 琼玖 玖佰 久玫
 臼 jiù 臼齿 石臼 不落窠臼 旧白
@@ -263,7 +263,7 @@ export const gradesSevenToNineData = `
 觅 mì 寻觅 觅食 寻寻觅觅 览觉
 缅 miǎn 缅怀 缅甸 缅想 绵勉
 渺 miǎo 渺小 渺茫 浩渺 秒妙
-藐 miǎo 藐视 藐小 藐藐 貌渺
+藐 miǎo 藐视 藐小 藐藐 貌秒
 蔑 miè 轻蔑 蔑视 污蔑 茂威
 皿 mǐn 器皿 玻璃器皿 金属器皿 血四
 闽 mǐn 闽南 闽江 闽剧 闻阀
@@ -405,7 +405,7 @@ export const gradesSevenToNineData = `
 涡 wō 漩涡 涡流 涡轮 锅祸
 戊 wù 戊戌变法 戊午 戊辰 戌戈
 镶 xiāng 镶嵌 镶边 镶牙 壤嚷
-潇 xiāo 潇洒 潇潇 风雨潇潇 萧肃
+潇 xiāo 潇洒 潇潇 风雨潇潇 箫肃
 霄 xiāo 云霄 九霄 霄汉 宵消
 嚣 xiāo 喧嚣 嚣张 叫嚣 器噩
 淆 xiáo 混淆 混淆视听 淆乱 肴希
