@@ -1570,8 +1570,8 @@ const polarThroughPoint: KnowledgePointDef = {
   id: "a-polar-circle-through-a-given-point",
   title: t("A polar circle through a given point", "经过给定点的极坐标圆"),
   explanation: t(
-    "A polar equation with a sine or a cosine on the right describes a circle through the pole, and the coefficient is its diameter. To test a point given in Cartesian coordinates, multiply the equation by the radial coordinate, so that the polar terms become the square of the distance from the pole and a single Cartesian coordinate. The equation then holds for that point only if the coefficient has one particular value, which can be found by division.",
-    "右边含正弦或余弦的极坐标方程表示一个经过极点的圆，系数就是它的直径。要检验用直角坐标给出的点，就把方程乘以极径，这样极坐标的各项就变成到极点距离的平方和一个直角坐标。于是对这个点来说，方程只有在系数取某个特定值时才成立，用除法就能求出。",
+    "A polar equation with a sine or a cosine on the right describes a circle through the pole, and the coefficient is its diameter. To test a point given in Cartesian coordinates, multiply the equation by the radial coordinate, so that the polar terms become the square of the distance from the pole and a single Cartesian coordinate. The equation then holds for that point only if the coefficient has one particular value, which can be found by division.\n\nFor the point $(3, 4)$ on $r = k\\sin\\theta$: multiplying by $r$ gives $x^{2} + y^{2} = ky$, so $9 + 16 = 4k$ and $k = 25/4$. Check: the circle has center $(0, 25/8)$ and radius $25/8$, and the point is that far from the center, since $3^{2} + (4 - 25/8)^{2} = 9 + 49/64 = 625/64 = (25/8)^{2}$.\n\n> **Watch out.** Divide by the coordinate that goes with the function, $y$ for the sine and $x$ for the cosine, and divide the whole of $x^{2} + y^{2}$, not the distance $\\sqrt{x^{2} + y^{2}}$.",
+    "右边含正弦或余弦的极坐标方程表示一个经过极点的圆，系数就是它的直径。要检验用直角坐标给出的点，就把方程乘以极径，这样极坐标的各项就变成到极点距离的平方和一个直角坐标。于是对这个点来说，方程只有在系数取某个特定值时才成立，用除法就能求出。\n\n对 $r = k\\sin\\theta$ 上的点 $(3, 4)$：乘以 $r$ 得 $x^{2} + y^{2} = ky$，所以 $9 + 16 = 4k$，$k = 25/4$。检验：这个圆的圆心是 $(0, 25/8)$，半径是 $25/8$，而这个点到圆心的距离正是半径，因为 $3^{2} + (4 - 25/8)^{2} = 9 + 49/64 = 625/64 = (25/8)^{2}$。\n\n> **注意。** 要除以与函数对应的坐标：正弦用 $y$，余弦用 $x$；而且要除整个 $x^{2} + y^{2}$，不是距离 $\\sqrt{x^{2} + y^{2}}$。",
   ),
   generate(rng) {
     const [x, y] = [nonzero(rng, 7), nonzero(rng, 7)];
@@ -1579,6 +1579,7 @@ const polarThroughPoint: KnowledgePointDef = {
     const s = x * x + y * y;
     const [main, other, fn, letter] = useSine ? [y, x, "\\sin", "y"] : [x, y, "\\cos", "x"];
     const answer = Q.of(s, main);
+    const sq = (v: number) => (v < 0 ? `(${v})^{2}` : `${v}^{2}`);
     return numberProblem({
       prompt: t(
         `The circle $r = k${fn}\\theta$ passes through the point with Cartesian coordinates $(${x}, ${y})$. Find $k$.`,
@@ -1587,8 +1588,8 @@ const polarThroughPoint: KnowledgePointDef = {
       answer,
       wrong: [s, Q.of(s, other), Q.of(s, 2 * main), main, answer.mul(Q.of(-1)), Q.of(main, s)],
       solution: t(
-        `Multiplying by $r$ gives $r^{2} = kr${fn}\\theta$, which is $x^{2} + y^{2} = k${letter}$ in Cartesian form. Substituting the point gives $${s} = ${poly([main, "k"])}$, so $k = ${answer.toLatex()}$.`,
-        `乘以 $r$ 得 $r^{2} = kr${fn}\\theta$，用直角坐标写成 $x^{2} + y^{2} = k${letter}$。代入这个点得 $${s} = ${poly([main, "k"])}$，所以 $k = ${answer.toLatex()}$。`,
+        `${stepLabel(1, "Multiply by r", "两边乘 r").en} Multiplying by $r$ turns both sides into Cartesian terms, since $r^{2} = x^{2} + y^{2}$ and $r${fn}\\theta = ${letter}$:\n\n$$r^{2} = kr${fn}\\theta \\implies x^{2} + y^{2} = k${letter}$$\n\n${stepLabel(2, "Substitute the point", "代入这个点").en} Put in $x = ${x}$ and $y = ${y}$, then solve for $k$:\n\n$$${sq(x)} + ${sq(y)} = ${poly([main, "k"])}$$\n\n$$${s} = ${poly([main, "k"])} \\implies k = ${answer.toLatex()}$$\n\n**Check.** With this $k$ the right side gives back $x^{2} + y^{2}$:\n\n$$${main < 0 ? `(${main})` : main} \\cdot ${answer.sign() < 0 ? `\\left(${answer.toLatex()}\\right)` : answer.toLatex()} = ${s} = ${sq(x)} + ${sq(y)}$$`,
+        `${stepLabel(1, "Multiply by r", "两边乘 r")["zh-CN"]}两边乘 $r$，两边都化成直角坐标，因为 $r^{2} = x^{2} + y^{2}$，$r${fn}\\theta = ${letter}$：\n\n$$r^{2} = kr${fn}\\theta \\implies x^{2} + y^{2} = k${letter}$$\n\n${stepLabel(2, "Substitute the point", "代入这个点")["zh-CN"]}代入 $x = ${x}$，$y = ${y}$，再解出 $k$：\n\n$$${sq(x)} + ${sq(y)} = ${poly([main, "k"])}$$\n\n$$${s} = ${poly([main, "k"])} \\implies k = ${answer.toLatex()}$$\n\n**检验。** 用这个 $k$，右边还原为 $x^{2} + y^{2}$：\n\n$$${main < 0 ? `(${main})` : main} \\cdot ${answer.sign() < 0 ? `\\left(${answer.toLatex()}\\right)` : answer.toLatex()} = ${s} = ${sq(x)} + ${sq(y)}$$`,
       ),
     });
   },

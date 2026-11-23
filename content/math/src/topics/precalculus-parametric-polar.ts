@@ -56,6 +56,60 @@ function twelfthsOf(tex: string): number {
   return (Number(found?.[1] || 1) * 12) / Number(found?.[2] ?? 1);
 }
 
+/** doubledPoint gives the Cartesian point at distance 2 from the pole in a direction counted in twelfths of pi. */
+const doubledPoint: Readonly<Record<number, readonly [x: string, y: string]>> = {
+  2: ["\\sqrt{3}", "1"],
+  3: ["\\sqrt{2}", "\\sqrt{2}"],
+  4: ["1", "\\sqrt{3}"],
+  8: ["-1", "\\sqrt{3}"],
+  9: ["-\\sqrt{2}", "\\sqrt{2}"],
+  10: ["-\\sqrt{3}", "1"],
+  14: ["-\\sqrt{3}", "-1"],
+  15: ["-\\sqrt{2}", "-\\sqrt{2}"],
+  16: ["-1", "-\\sqrt{3}"],
+  20: ["1", "-\\sqrt{3}"],
+  21: ["\\sqrt{2}", "-\\sqrt{2}"],
+  22: ["\\sqrt{3}", "-1"],
+};
+
+/** slopeValue reads a slope written in LaTeX, such as -\frac{\sqrt{3}}{3}, as a number. */
+function slopeValue(tex: string): number {
+  const negative = tex.startsWith("-");
+  const body = negative ? tex.slice(1) : tex;
+  const size = body === "\\sqrt{3}" ? Math.sqrt(3) : body === "\\frac{\\sqrt{3}}{3}" ? Math.sqrt(3) / 3 : Number(body);
+  return negative ? -size : size;
+}
+
+/** slopeMistake says how a wrong slope differs from the slope m = tan(angle) of a line whose direction is in the given quadrant. */
+function slopeMistake(bad: string, m: string, angle: string, quadrant: number): readonly [en: string, zh: string] {
+  const b = slopeValue(bad);
+  const v = slopeValue(m);
+  const right = `the slope is $\\tan\\left(${angle}\\right) = ${m}$`;
+  const rightZh = `斜率是 $\\tan\\left(${angle}\\right) = ${m}$`;
+  if (Math.abs(b + v) < 1e-9) {
+    const positive = quadrant === 1 || quadrant === 3;
+    const q = ["I", "II", "III", "IV"][quadrant - 1];
+    const qz = ["一", "二", "三", "四"][quadrant - 1];
+    return [
+      `The sign is wrong: $${angle}$ points into Quadrant ${q}, where the tangent is ${positive ? "positive" : "negative"}, so ${right}.`,
+      `符号错了：$${angle}$ 指向第${qz}象限，那里正切为${positive ? "正" : "负"}，所以${rightZh}。`,
+    ];
+  }
+  if (Math.abs(b * v - 1) < 1e-9) {
+    return [
+      `This is $\\cot\\left(${angle}\\right)$, which is $x/y$ instead of $y/x$; ${right}.`,
+      `这是 $\\cot\\left(${angle}\\right)$，即 $x/y$ 而不是 $y/x$；${rightZh}。`,
+    ];
+  }
+  if (Math.abs(b * v + 1) < 1e-9) {
+    return [`This is the slope of the perpendicular line through the pole; ${right}.`, `这是过极点的垂直直线的斜率；${rightZh}。`];
+  }
+  return [`This is the slope of a line at a different angle; ${right}.`, `这是另一个倾斜角的直线的斜率；${rightZh}。`];
+}
+
+/** quadrantOf gives the quadrant, 1 to 4, of a direction counted in twelfths of pi that is not on an axis. */
+const quadrantOf = (twelfths: number) => Math.floor((((twelfths % 24) + 24) % 24) / 6) + 1;
+
 /** piAngle writes a multiple of pi over 12 as a reduced angle in the interval from 0 to 2 pi. */
 function piAngle(twelfths: number): string {
   const n = ((twelfths % 24) + 24) % 24;
@@ -995,11 +1049,18 @@ $$x = 1 + 3\\cos\\frac{\\pi}{2} = 1, \\quad y = -2 + 3\\sin\\frac{\\pi}{2} = 1$$
             ),
           ),
           [
-            why(
-              same(`$${wrong1}$`),
-              `The center's coordinates are swapped: $h = ${h}$ goes with $x$ and $k = ${k}$ with $y$.`,
-              `圆心坐标对调了：$h = ${h}$ 跟 $x$，$k = ${k}$ 跟 $y$。`,
-            ),
+            // When h = -k, swapping the center's coordinates and flipping their signs give the same option.
+            h === -k
+              ? why(
+                  same(`$${wrong1}$`),
+                  `The signs of the center are flipped: $${sq("x", h)}$ means $h = ${h}$, and $${sq("y", k)}$ means $k = ${k}$.`,
+                  `圆心的符号反了：$${sq("x", h)}$ 表示 $h = ${h}$，$${sq("y", k)}$ 表示 $k = ${k}$。`,
+                )
+              : why(
+                  same(`$${wrong1}$`),
+                  `The center's coordinates are swapped: $h = ${h}$ goes with $x$ and $k = ${k}$ with $y$.`,
+                  `圆心坐标对调了：$h = ${h}$ 跟 $x$，$k = ${k}$ 跟 $y$。`,
+                ),
             why(
               same(`$${wrong2}$`),
               `This uses $r^{2} = ${r2}$ as the coefficient; the radius is $\\sqrt{${r2}} = ${r}$.`,
@@ -1715,13 +1776,33 @@ export const parametricEquationsOfHorizontalHyperbolas: TopicDef = {
   encompasses: [],
   xp: 16,
   standards: ["CCSS.HSG.GPE.A.3"],
+  intro: t(
+    `A circle uses $\\cos^{2}\\theta + \\sin^{2}\\theta = 1$; a hyperbola uses the identity with a minus sign, $\\sec^{2}\\theta - \\tan^{2}\\theta = 1$. Take $x = 3\\sec\\theta$ and $y = 2\\tan\\theta$. Then
+
+$$\\frac{x^{2}}{9} - \\frac{y^{2}}{4} = \\sec^{2}\\theta - \\tan^{2}\\theta = 1$$
+
+so every $\\theta$ gives a point of the hyperbola $\\frac{x^{2}}{9} - \\frac{y^{2}}{4} = 1$. At $\\theta = 0$, $\\sec\\theta = 1$ and $\\tan\\theta = 0$, which gives the vertex $(3, 0)$.
+
+Check: at $\\theta = \\frac{\\pi}{4}$ the point is $(3\\sqrt{2}, 2)$, and $\\frac{18}{9} - \\frac{4}{4} = 1$.
+
+In this lesson we write parametric equations for hyperbolas that open left and right, and eliminate the parameter to get the standard equation back.`,
+    `圆用的是 $\\cos^{2}\\theta + \\sin^{2}\\theta = 1$；双曲线用的是带减号的恒等式 $\\sec^{2}\\theta - \\tan^{2}\\theta = 1$。取 $x = 3\\sec\\theta$，$y = 2\\tan\\theta$。于是
+
+$$\\frac{x^{2}}{9} - \\frac{y^{2}}{4} = \\sec^{2}\\theta - \\tan^{2}\\theta = 1$$
+
+所以每个 $\\theta$ 都给出双曲线 $\\frac{x^{2}}{9} - \\frac{y^{2}}{4} = 1$ 上的一点。$\\theta = 0$ 时 $\\sec\\theta = 1$，$\\tan\\theta = 0$，给出顶点 $(3, 0)$。
+
+检验：$\\theta = \\frac{\\pi}{4}$ 时点为 $(3\\sqrt{2}, 2)$，而 $\\frac{18}{9} - \\frac{4}{4} = 1$。
+
+这节课我们写出向左右张开的双曲线的参数方程，并消去参数还原标准方程。`,
+  ),
   knowledgePoints: [
     {
       id: "horizontal-hyperbola-standard-to-parametric",
       title: t("Standard to parametric form of horizontal hyperbolas", "水平双曲线标准方程化为参数方程"),
       explanation: t(
-        "A horizontal hyperbola with center $(h, k)$ and semi-axes $a$ and $b$ has standard equation:\n$$\\frac{(x - h)^2}{a^2} - \\frac{(y - k)^2}{b^2} = 1$$\nUsing the identity $\\sec^2\\theta - \\tan^2\\theta = 1$, we assign $\\frac{x - h}{a} = \\sec\\theta$ and $\\frac{y - k}{b} = \\tan\\theta$, which yields:\n$$x = h + a\\sec\\theta, \\quad y = k + b\\tan\\theta$$",
-        "中心在 $(h, k)$、半实轴为 $a$、半虚轴为 $b$ 的水平双曲线的标准方程为：\n$$\\frac{(x - h)^2}{a^2} - \\frac{(y - k)^2}{b^2} = 1$$\n利用三角恒等式 $\\sec^2\\theta - \\tan^2\\theta = 1$，令 $\\frac{x - h}{a} = \\sec\\theta$ 与 $\\frac{y - k}{b} = \\tan\\theta$，得到其参数方程为：\n$$x = h + a\\sec\\theta, \\quad y = k + b\\tan\\theta$$",
+        "A horizontal hyperbola with center $(h, k)$ and semi-axes $a$ and $b$ has standard equation:\n$$\\frac{(x - h)^2}{a^2} - \\frac{(y - k)^2}{b^2} = 1$$\nUsing the identity $\\sec^2\\theta - \\tan^2\\theta = 1$, we assign $\\frac{x - h}{a} = \\sec\\theta$ and $\\frac{y - k}{b} = \\tan\\theta$, which yields:\n$$x = h + a\\sec\\theta, \\quad y = k + b\\tan\\theta$$\n\nFor $\\frac{(x - 2)^{2}}{16} - \\frac{(y + 1)^{2}}{9} = 1$: the center is $(2, -1)$, $a = 4$ and $b = 3$, so $x = 2 + 4\\sec\\theta$, $y = -1 + 3\\tan\\theta$. Check: $\\theta = 0$ gives $(6, -1)$, and $\\frac{16}{16} - 0 = 1$.\n\n> **Watch out.** The secant goes with the positive term, here $x$. The coefficients are the square roots of the denominators, $4$ and $3$, not $16$ and $9$. Cosine and sine would trace an ellipse instead.",
+        "中心在 $(h, k)$、半实轴为 $a$、半虚轴为 $b$ 的水平双曲线的标准方程为：\n$$\\frac{(x - h)^2}{a^2} - \\frac{(y - k)^2}{b^2} = 1$$\n利用三角恒等式 $\\sec^2\\theta - \\tan^2\\theta = 1$，令 $\\frac{x - h}{a} = \\sec\\theta$ 与 $\\frac{y - k}{b} = \\tan\\theta$，得到其参数方程为：\n$$x = h + a\\sec\\theta, \\quad y = k + b\\tan\\theta$$\n\n对 $\\frac{(x - 2)^{2}}{16} - \\frac{(y + 1)^{2}}{9} = 1$：中心是 $(2, -1)$，$a = 4$，$b = 3$，所以 $x = 2 + 4\\sec\\theta$，$y = -1 + 3\\tan\\theta$。检验：$\\theta = 0$ 给出 $(6, -1)$，而 $\\frac{16}{16} - 0 = 1$。\n\n> **注意。** 正割跟正项在一起，这里是 $x$。系数是分母的平方根 $4$ 和 $3$，不是 $16$ 和 $9$。用余弦和正弦描出的会是椭圆。",
       ),
       generate(rng) {
         const h = rng.int(-5, 5);
@@ -1739,17 +1820,57 @@ export const parametricEquationsOfHorizontalHyperbolas: TopicDef = {
         return oneOf(
           rng,
           t(`Find the parametric equations of the horizontal hyperbola $${stdEq}$.`, `求水平双曲线 $${stdEq}$ 的参数方程。`),
-          t(`$${rightParam}$`, `$${rightParam}$`),
-          [
-            t(`$${wrong1}$`, `$${wrong1}$`),
-            t(`$${wrong2}$`, `$${wrong2}$`),
-            t(`$${wrong3}$`, `$${wrong3}$`),
-            t(`$${wrong4}$`, `$${wrong4}$`),
-          ],
-          t(
-            `The center is $(h, k) = (${h}, ${k})$. The semi-transverse axis is $a = \\sqrt{${a2}} = ${a}$ and semi-conjugate axis is $b = \\sqrt{${b2}} = ${b}$.\nUsing $\\sec^2\\theta - \\tan^2\\theta = 1$:\n$$x = h + a\\sec\\theta = ${trigTerm(h, a, "\\sec\\theta")}, \\quad y = k + b\\tan\\theta = ${trigTerm(k, b, "\\tan\\theta")}$$`,
-            `双曲线中心为 $(h, k) = (${h}, ${k})$，半实轴长 $a = \\sqrt{${a2}} = ${a}$，半虚轴长 $b = \\sqrt{${b2}} = ${b}$。\n利用 $\\sec^2\\theta - \\tan^2\\theta = 1$ 可得：\n$$x = h + a\\sec\\theta = ${trigTerm(h, a, "\\sec\\theta")}, \\quad y = k + b\\tan\\theta = ${trigTerm(k, b, "\\tan\\theta")}$$`,
+          same(`$${rightParam}$`),
+          [same(`$${wrong1}$`), same(`$${wrong2}$`), same(`$${wrong3}$`), same(`$${wrong4}$`)],
+          walked(
+            [
+              [
+                ["Read the center and semi-axes", "读出中心和半轴"],
+                t(
+                  `Compare with $\\frac{(x - h)^{2}}{a^{2}} - \\frac{(y - k)^{2}}{b^{2}} = 1$:`,
+                  `与 $\\frac{(x - h)^{2}}{a^{2}} - \\frac{(y - k)^{2}}{b^{2}} = 1$ 比较：`,
+                ),
+                [`(h, k) = (${h}, ${k}), \\quad a = \\sqrt{${a2}} = ${a}, \\quad b = \\sqrt{${b2}} = ${b}`],
+              ],
+              [
+                ["Match the identity", "对照恒等式"],
+                t(
+                  `Because $\\sec^{2}\\theta - \\tan^{2}\\theta = 1$, the positive $x$-term goes with the secant:`,
+                  `因为 $\\sec^{2}\\theta - \\tan^{2}\\theta = 1$，正的 $x$ 项跟正割在一起：`,
+                ),
+                [
+                  `\\frac{${linExpr(1, -h, "x")}}{${a}} = \\sec\\theta, \\quad \\frac{${linExpr(1, -k, "y")}}{${b}} = \\tan\\theta`,
+                  `x = ${trigTerm(h, a, "\\sec\\theta")}, \\quad y = ${trigTerm(k, b, "\\tan\\theta")}`,
+                ],
+              ],
+            ],
+            t(
+              `At $\\theta = 0$, $\\sec\\theta = 1$ and $\\tan\\theta = 0$, so the point is $(${h + a}, ${k})$, and $${a}^{2}/${a2} - 0 = 1$: it is the right vertex.`,
+              `$\\theta = 0$ 时 $\\sec\\theta = 1$，$\\tan\\theta = 0$，所以点为 $(${h + a}, ${k})$，而 $${a}^{2}/${a2} - 0 = 1$：它是右顶点。`,
+            ),
           ),
+          [
+            why(
+              same(`$${wrong1}$`),
+              `With the secant in $y$ this is the vertical hyperbola $\\frac{${sq("y", k)}}{${a2}} - \\frac{${sq("x", h)}}{${b2}} = 1$; the secant goes with the positive $x$-term.`,
+              `正割放在 $y$ 里，得到的是铅直双曲线 $\\frac{${sq("y", k)}}{${a2}} - \\frac{${sq("x", h)}}{${b2}} = 1$；正割应跟正的 $x$ 项在一起。`,
+            ),
+            why(
+              same(`$${wrong2}$`),
+              `This uses the denominators $${a2}$ and $${b2}$ as coefficients; the semi-axes are their square roots, $${a}$ and $${b}$.`,
+              `这把分母 $${a2}$ 和 $${b2}$ 当成了系数；半轴是它们的平方根 $${a}$ 和 $${b}$。`,
+            ),
+            why(
+              same(`$${wrong3}$`),
+              `Cosine and sine satisfy $\\cos^{2}\\theta + \\sin^{2}\\theta = 1$, so this traces the ellipse $\\frac{${sq("x", h)}}{${a2}} + \\frac{${sq("y", k)}}{${b2}} = 1$.`,
+              `余弦和正弦满足 $\\cos^{2}\\theta + \\sin^{2}\\theta = 1$，所以这描出的是椭圆 $\\frac{${sq("x", h)}}{${a2}} + \\frac{${sq("y", k)}}{${b2}} = 1$。`,
+            ),
+            why(
+              same(`$${wrong4}$`),
+              `The signs of the center are flipped: $${sq("x", h)}$ means $h = ${h}$, and $${sq("y", k)}$ means $k = ${k}$.`,
+              `中心的符号反了：$${sq("x", h)}$ 表示 $h = ${h}$，$${sq("y", k)}$ 表示 $k = ${k}$。`,
+            ),
+          ],
         );
       },
     },
@@ -1757,8 +1878,8 @@ export const parametricEquationsOfHorizontalHyperbolas: TopicDef = {
       id: "horizontal-hyperbola-parametric-to-standard",
       title: t("Identify center and vertices from horizontal hyperbola", "由参数方程确定水平双曲线的中心与顶点"),
       explanation: t(
-        "For a horizontal hyperbola $x = h + a\\sec\\theta, y = k + b\\tan\\theta$:\n- The center is $(h, k)$.\n- The transverse axis is horizontal, along the line $y = k$.\n- The vertices occur where $\\tan\\theta = 0$ (so $\\sec\\theta = \\pm 1$), giving $(h - a, k)$ and $(h + a, k)$.\n- The Cartesian equation is $\\frac{(x - h)^2}{a^2} - \\frac{(y - k)^2}{b^2} = 1$.",
-        "对于水平双曲线参数方程 $x = h + a\\sec\\theta, y = k + b\\tan\\theta$：\n- 中心为 $(h, k)$。\n- 实轴沿水平方向直线 $y = k$。\n- 顶点发生在 $\\tan\\theta = 0$（此时 $\\sec\\theta = \\pm 1$）处，坐标为 $(h - a, k)$ 和 $(h + a, k)$。\n- 直角坐标方程为 $\\frac{(x - h)^2}{a^2} - \\frac{(y - k)^2}{b^2} = 1$。",
+        "For a horizontal hyperbola $x = h + a\\sec\\theta, y = k + b\\tan\\theta$:\n- The center is $(h, k)$.\n- The transverse axis is horizontal, along the line $y = k$.\n- The vertices occur where $\\tan\\theta = 0$ (so $\\sec\\theta = \\pm 1$), giving $(h - a, k)$ and $(h + a, k)$.\n- The Cartesian equation is $\\frac{(x - h)^2}{a^2} - \\frac{(y - k)^2}{b^2} = 1$.\n\nFor $x = 1 + 2\\sec\\theta$, $y = 3 + 5\\tan\\theta$: $\\sec\\theta = \\frac{x - 1}{2}$ and $\\tan\\theta = \\frac{y - 3}{5}$, so $\\frac{(x - 1)^{2}}{4} - \\frac{(y - 3)^{2}}{25} = 1$, with vertices $(-1, 3)$ and $(3, 3)$. Check: $\\theta = \\pi$ gives $\\sec\\theta = -1$ and the point $(-1, 3)$, and $\\frac{(-2)^{2}}{4} - 0 = 1$.\n\n> **Watch out.** The terms are subtracted, because $\\sec^{2}\\theta - \\tan^{2}\\theta = 1$; a plus sign would give an ellipse. The constant in $x$ keeps its sign in the bracket: $x = 1 + \\dots$ gives $(x - 1)$, not $(x + 1)$.",
+        "对于水平双曲线参数方程 $x = h + a\\sec\\theta, y = k + b\\tan\\theta$：\n- 中心为 $(h, k)$。\n- 实轴沿水平方向直线 $y = k$。\n- 顶点发生在 $\\tan\\theta = 0$（此时 $\\sec\\theta = \\pm 1$）处，坐标为 $(h - a, k)$ 和 $(h + a, k)$。\n- 直角坐标方程为 $\\frac{(x - h)^2}{a^2} - \\frac{(y - k)^2}{b^2} = 1$。\n\n对 $x = 1 + 2\\sec\\theta$，$y = 3 + 5\\tan\\theta$：$\\sec\\theta = \\frac{x - 1}{2}$，$\\tan\\theta = \\frac{y - 3}{5}$，所以 $\\frac{(x - 1)^{2}}{4} - \\frac{(y - 3)^{2}}{25} = 1$，顶点为 $(-1, 3)$ 和 $(3, 3)$。检验：$\\theta = \\pi$ 时 $\\sec\\theta = -1$，点为 $(-1, 3)$，而 $\\frac{(-2)^{2}}{4} - 0 = 1$。\n\n> **注意。** 两项是相减的，因为 $\\sec^{2}\\theta - \\tan^{2}\\theta = 1$；写成加号就成了椭圆。$x$ 中的常数在括号里保留符号：$x = 1 + \\dots$ 给出 $(x - 1)$，不是 $(x + 1)$。",
       ),
       generate(rng) {
         const h = rng.int(-5, 5);
@@ -1781,9 +1902,23 @@ export const parametricEquationsOfHorizontalHyperbolas: TopicDef = {
             `\\frac{${sq("x", -h)}}{${a2}} - \\frac{${sq("y", -k)}}{${b2}} = 1`,
             `\\frac{${sq("x", h)}}{${a2}} + \\frac{${sq("y", k)}}{${b2}} = 1`,
           ],
-          solution: t(
-            `The center is $(h, k) = (${h}, ${k})$. Since $\\sec\\theta = \\frac{${lin("x", h)}}{${a}}$ and $\\tan\\theta = \\frac{${lin("y", k)}}{${b}}$, using $\\sec^2\\theta - \\tan^2\\theta = 1$ gives:\n$$${stdEq}$$`,
-            `中心为 $(h, k) = (${h}, ${k})$。由于 $\\sec\\theta = \\frac{${lin("x", h)}}{${a}}$ 且 $\\tan\\theta = \\frac{${lin("y", k)}}{${b}}$，利用 $\\sec^2\\theta - \\tan^2\\theta = 1$ 可得：\n$$${stdEq}$$`,
+          solution: walked(
+            [
+              [
+                ["Isolate the secant and tangent", "分离正割和正切"],
+                t(`Move the constants and divide by the coefficients:`, `移走常数，再除以系数：`),
+                [`\\sec\\theta = \\frac{${linExpr(1, -h, "x")}}{${a}}, \\quad \\tan\\theta = \\frac{${linExpr(1, -k, "y")}}{${b}}`],
+              ],
+              [
+                ["Square and subtract", "平方后相减"],
+                t(`Since $\\sec^{2}\\theta - \\tan^{2}\\theta = 1$:`, `因为 $\\sec^{2}\\theta - \\tan^{2}\\theta = 1$：`),
+                [stdEq],
+              ],
+            ],
+            t(
+              `At $\\theta = 0$ the curve is at $(${h + a}, ${k})$, where $x - h = ${a}$ and $y - k = 0$: $${a}^{2}/${a2} - 0 = 1$.`,
+              `$\\theta = 0$ 时曲线在 $(${h + a}, ${k})$，这里 $x - h = ${a}$，$y - k = 0$：$${a}^{2}/${a2} - 0 = 1$。`,
+            ),
           ),
         });
       },
@@ -1805,13 +1940,33 @@ export const parametricEquationsOfVerticalHyperbolas: TopicDef = {
   encompasses: [],
   xp: 16,
   standards: ["CCSS.HSG.GPE.A.3"],
+  intro: t(
+    `A hyperbola that opens up and down has its positive term in $y$, so the secant moves into $y$. Take $x = 2\\tan\\theta$ and $y = 3\\sec\\theta$. Then
+
+$$\\frac{y^{2}}{9} - \\frac{x^{2}}{4} = \\sec^{2}\\theta - \\tan^{2}\\theta = 1$$
+
+and at $\\theta = 0$ the point is $(0, 3)$, the upper vertex.
+
+Check: at $\\theta = \\frac{\\pi}{4}$ the point is $(2, 3\\sqrt{2})$, and $\\frac{18}{9} - \\frac{4}{4} = 1$.
+
+In this lesson we write parametric equations for hyperbolas that open up and down, and eliminate the parameter to get the standard equation back.`,
+    `上下张开的双曲线，正项在 $y$ 上，所以正割移到 $y$ 里。取 $x = 2\\tan\\theta$，$y = 3\\sec\\theta$。于是
+
+$$\\frac{y^{2}}{9} - \\frac{x^{2}}{4} = \\sec^{2}\\theta - \\tan^{2}\\theta = 1$$
+
+而 $\\theta = 0$ 时点为 $(0, 3)$，即上顶点。
+
+检验：$\\theta = \\frac{\\pi}{4}$ 时点为 $(2, 3\\sqrt{2})$，而 $\\frac{18}{9} - \\frac{4}{4} = 1$。
+
+这节课我们写出向上下张开的双曲线的参数方程，并消去参数还原标准方程。`,
+  ),
   knowledgePoints: [
     {
       id: "vertical-hyperbola-standard-to-parametric",
       title: t("Standard to parametric form of vertical hyperbolas", "铅直双曲线标准方程化为参数方程"),
       explanation: t(
-        "A vertical hyperbola with center $(h, k)$ has standard equation:\n$$\\frac{(y - k)^2}{a^2} - \\frac{(x - h)^2}{b^2} = 1$$\nTo match $\\sec^2\\theta - \\tan^2\\theta = 1$, we assign the secant to the positive term (here $y$):\n$$\\frac{y - k}{a} = \\sec\\theta, \\quad \\frac{x - h}{b} = \\tan\\theta$$\nwhich gives:\n$$x = h + b\\tan\\theta, \\quad y = k + a\\sec\\theta$$",
-        "中心在 $(h, k)$ 的铅直双曲线的标准方程为：\n$$\\frac{(y - k)^2}{a^2} - \\frac{(x - h)^2}{b^2} = 1$$\n对照 $\\sec^2\\theta - \\tan^2\\theta = 1$，正项（$y$ 项）对应正割函数：\n$$\\frac{y - k}{a} = \\sec\\theta, \\quad \\frac{x - h}{b} = \\tan\\theta$$\n得到参数方程为：\n$$x = h + b\\tan\\theta, \\quad y = k + a\\sec\\theta$$",
+        "A vertical hyperbola with center $(h, k)$ has standard equation:\n$$\\frac{(y - k)^2}{a^2} - \\frac{(x - h)^2}{b^2} = 1$$\nTo match $\\sec^2\\theta - \\tan^2\\theta = 1$, we assign the secant to the positive term (here $y$):\n$$\\frac{y - k}{a} = \\sec\\theta, \\quad \\frac{x - h}{b} = \\tan\\theta$$\nwhich gives:\n$$x = h + b\\tan\\theta, \\quad y = k + a\\sec\\theta$$\n\nFor $\\frac{(y + 2)^{2}}{25} - \\frac{(x - 1)^{2}}{4} = 1$: the center is $(1, -2)$, $a = 5$ under $y$ and $b = 2$ under $x$, so $x = 1 + 2\\tan\\theta$, $y = -2 + 5\\sec\\theta$. Check: $\\theta = 0$ gives $(1, 3)$, and $\\frac{25}{25} - 0 = 1$.\n\n> **Watch out.** Here the secant goes into $y$ with $a$, the root of the denominator under $y$, and the tangent into $x$ with $b$. Putting the secant into $x$ gives a hyperbola that opens left and right.",
+        "中心在 $(h, k)$ 的铅直双曲线的标准方程为：\n$$\\frac{(y - k)^2}{a^2} - \\frac{(x - h)^2}{b^2} = 1$$\n对照 $\\sec^2\\theta - \\tan^2\\theta = 1$，正项（$y$ 项）对应正割函数：\n$$\\frac{y - k}{a} = \\sec\\theta, \\quad \\frac{x - h}{b} = \\tan\\theta$$\n得到参数方程为：\n$$x = h + b\\tan\\theta, \\quad y = k + a\\sec\\theta$$\n\n对 $\\frac{(y + 2)^{2}}{25} - \\frac{(x - 1)^{2}}{4} = 1$：中心是 $(1, -2)$，$y$ 下面的 $a = 5$，$x$ 下面的 $b = 2$，所以 $x = 1 + 2\\tan\\theta$，$y = -2 + 5\\sec\\theta$。检验：$\\theta = 0$ 给出 $(1, 3)$，而 $\\frac{25}{25} - 0 = 1$。\n\n> **注意。** 这里正割放进 $y$，配 $y$ 下面分母的平方根 $a$；正切放进 $x$，配 $b$。把正割放进 $x$ 得到的是向左右张开的双曲线。",
       ),
       generate(rng) {
         const h = rng.int(-5, 5);
@@ -1829,17 +1984,57 @@ export const parametricEquationsOfVerticalHyperbolas: TopicDef = {
         return oneOf(
           rng,
           t(`Find the parametric equations of the vertical hyperbola $${stdEq}$.`, `求铅直双曲线 $${stdEq}$ 的参数方程。`),
-          t(`$${rightParam}$`, `$${rightParam}$`),
-          [
-            t(`$${wrong1}$`, `$${wrong1}$`),
-            t(`$${wrong2}$`, `$${wrong2}$`),
-            t(`$${wrong3}$`, `$${wrong3}$`),
-            t(`$${wrong4}$`, `$${wrong4}$`),
-          ],
-          t(
-            `The positive term is $y$, so the transverse axis is vertical with semi-axis $a = ${a}$, and semi-conjugate axis $b = ${b}$.\nUsing $\\sec^2\\theta - \\tan^2\\theta = 1$:\n$$x = h + b\\tan\\theta = ${trigTerm(h, b, "\\tan\\theta")}, \\quad y = k + a\\sec\\theta = ${trigTerm(k, a, "\\sec\\theta")}$$`,
-            `方程中正项为 $y$，因此主轴为铅直方向，半实轴长 $a = ${a}$，半虚轴长 $b = ${b}$。\n利用 $\\sec^2\\theta - \\tan^2\\theta = 1$：\n$$x = h + b\\tan\\theta = ${trigTerm(h, b, "\\tan\\theta")}, \\quad y = k + a\\sec\\theta = ${trigTerm(k, a, "\\sec\\theta")}$$`,
+          same(`$${rightParam}$`),
+          [same(`$${wrong1}$`), same(`$${wrong2}$`), same(`$${wrong3}$`), same(`$${wrong4}$`)],
+          walked(
+            [
+              [
+                ["Read the center and semi-axes", "读出中心和半轴"],
+                t(
+                  `The positive term is in $y$. Compare with $\\frac{(y - k)^{2}}{a^{2}} - \\frac{(x - h)^{2}}{b^{2}} = 1$:`,
+                  `正项在 $y$ 上。与 $\\frac{(y - k)^{2}}{a^{2}} - \\frac{(x - h)^{2}}{b^{2}} = 1$ 比较：`,
+                ),
+                [`(h, k) = (${h}, ${k}), \\quad a = \\sqrt{${a2}} = ${a}, \\quad b = \\sqrt{${b2}} = ${b}`],
+              ],
+              [
+                ["Match the identity", "对照恒等式"],
+                t(
+                  `Because $\\sec^{2}\\theta - \\tan^{2}\\theta = 1$, the positive $y$-term goes with the secant:`,
+                  `因为 $\\sec^{2}\\theta - \\tan^{2}\\theta = 1$，正的 $y$ 项跟正割在一起：`,
+                ),
+                [
+                  `\\frac{${linExpr(1, -k, "y")}}{${a}} = \\sec\\theta, \\quad \\frac{${linExpr(1, -h, "x")}}{${b}} = \\tan\\theta`,
+                  `x = ${trigTerm(h, b, "\\tan\\theta")}, \\quad y = ${trigTerm(k, a, "\\sec\\theta")}`,
+                ],
+              ],
+            ],
+            t(
+              `At $\\theta = 0$, $\\tan\\theta = 0$ and $\\sec\\theta = 1$, so the point is $(${h}, ${k + a})$, and $${a}^{2}/${a2} - 0 = 1$: it is the upper vertex.`,
+              `$\\theta = 0$ 时 $\\tan\\theta = 0$，$\\sec\\theta = 1$，所以点为 $(${h}, ${k + a})$，而 $${a}^{2}/${a2} - 0 = 1$：它是上顶点。`,
+            ),
           ),
+          [
+            why(
+              same(`$${wrong1}$`),
+              `With the secant in $x$ this is the horizontal hyperbola $\\frac{${sq("x", h)}}{${a2}} - \\frac{${sq("y", k)}}{${b2}} = 1$; the secant goes with the positive $y$-term.`,
+              `正割放在 $x$ 里，得到的是水平双曲线 $\\frac{${sq("x", h)}}{${a2}} - \\frac{${sq("y", k)}}{${b2}} = 1$；正割应跟正的 $y$ 项在一起。`,
+            ),
+            why(
+              same(`$${wrong2}$`),
+              `This uses the denominators $${b2}$ and $${a2}$ as coefficients; the semi-axes are their square roots, $${b}$ and $${a}$.`,
+              `这把分母 $${b2}$ 和 $${a2}$ 当成了系数；半轴是它们的平方根 $${b}$ 和 $${a}$。`,
+            ),
+            why(
+              same(`$${wrong3}$`),
+              `The signs of the center are flipped: $${sq("y", k)}$ means $k = ${k}$, and $${sq("x", h)}$ means $h = ${h}$.`,
+              `中心的符号反了：$${sq("y", k)}$ 表示 $k = ${k}$，$${sq("x", h)}$ 表示 $h = ${h}$。`,
+            ),
+            why(
+              same(`$${wrong4}$`),
+              `Sine and cosine satisfy $\\sin^{2}\\theta + \\cos^{2}\\theta = 1$, so this traces the ellipse $\\frac{${sq("x", h)}}{${b2}} + \\frac{${sq("y", k)}}{${a2}} = 1$.`,
+              `正弦和余弦满足 $\\sin^{2}\\theta + \\cos^{2}\\theta = 1$，所以这描出的是椭圆 $\\frac{${sq("x", h)}}{${b2}} + \\frac{${sq("y", k)}}{${a2}} = 1$。`,
+            ),
+          ],
         );
       },
     },
@@ -1847,8 +2042,8 @@ export const parametricEquationsOfVerticalHyperbolas: TopicDef = {
       id: "vertical-hyperbola-parametric-to-standard",
       title: t("Identify center and vertices of vertical hyperbola", "由参数方程确定铅直双曲线的中心与顶点"),
       explanation: t(
-        "For a vertical hyperbola $x = h + b\\tan\\theta, y = k + a\\sec\\theta$:\n- The center is $(h, k)$.\n- The transverse axis is vertical, along the line $x = h$.\n- The vertices occur at $\\tan\\theta = 0$ (so $\\sec\\theta = \\pm 1$), giving $(h, k - a)$ and $(h, k + a)$.\n- The Cartesian equation is $\\frac{(y - k)^2}{a^2} - \\frac{(x - h)^2}{b^2} = 1$.",
-        "对于铅直双曲线参数方程 $x = h + b\\tan\\theta, y = k + a\\sec\\theta$：\n- 中心为 $(h, k)$。\n- 实轴沿铅直方向直线 $x = h$。\n- 顶点发生在 $\\tan\\theta = 0$（此时 $\\sec\\theta = \\pm 1$）处，坐标为 $(h, k - a)$ 和 $(h, k + a)$。\n- 直角坐标方程为 $\\frac{(y - k)^2}{a^2} - \\frac{(x - h)^2}{b^2} = 1$。",
+        "For a vertical hyperbola $x = h + b\\tan\\theta, y = k + a\\sec\\theta$:\n- The center is $(h, k)$.\n- The transverse axis is vertical, along the line $x = h$.\n- The vertices occur at $\\tan\\theta = 0$ (so $\\sec\\theta = \\pm 1$), giving $(h, k - a)$ and $(h, k + a)$.\n- The Cartesian equation is $\\frac{(y - k)^2}{a^2} - \\frac{(x - h)^2}{b^2} = 1$.\n\nFor $x = -1 + 3\\tan\\theta$, $y = 2 + 4\\sec\\theta$: $\\sec\\theta = \\frac{y - 2}{4}$ and $\\tan\\theta = \\frac{x + 1}{3}$, so $\\frac{(y - 2)^{2}}{16} - \\frac{(x + 1)^{2}}{9} = 1$, with vertices $(-1, -2)$ and $(-1, 6)$. Check: $\\theta = 0$ gives $(-1, 6)$, and $\\frac{4^{2}}{16} - 0 = 1$.\n\n> **Watch out.** The $y$-term comes first, because the secant is in $y$. Writing the $x$-term first gives a hyperbola that opens left and right.",
+        "对于铅直双曲线参数方程 $x = h + b\\tan\\theta, y = k + a\\sec\\theta$：\n- 中心为 $(h, k)$。\n- 实轴沿铅直方向直线 $x = h$。\n- 顶点发生在 $\\tan\\theta = 0$（此时 $\\sec\\theta = \\pm 1$）处，坐标为 $(h, k - a)$ 和 $(h, k + a)$。\n- 直角坐标方程为 $\\frac{(y - k)^2}{a^2} - \\frac{(x - h)^2}{b^2} = 1$。\n\n对 $x = -1 + 3\\tan\\theta$，$y = 2 + 4\\sec\\theta$：$\\sec\\theta = \\frac{y - 2}{4}$，$\\tan\\theta = \\frac{x + 1}{3}$，所以 $\\frac{(y - 2)^{2}}{16} - \\frac{(x + 1)^{2}}{9} = 1$，顶点为 $(-1, -2)$ 和 $(-1, 6)$。检验：$\\theta = 0$ 给出 $(-1, 6)$，而 $\\frac{4^{2}}{16} - 0 = 1$。\n\n> **注意。** $y$ 项在前，因为正割在 $y$ 里。把 $x$ 项写在前面得到的是向左右张开的双曲线。",
       ),
       generate(rng) {
         const h = rng.int(-5, 5);
@@ -1871,9 +2066,26 @@ export const parametricEquationsOfVerticalHyperbolas: TopicDef = {
             `\\frac{${sq("y", -k)}}{${a2}} - \\frac{${sq("x", -h)}}{${b2}} = 1`,
             `\\frac{${sq("y", k)}}{${a2}} + \\frac{${sq("x", h)}}{${b2}} = 1`,
           ],
-          solution: t(
-            `The center is $(h, k) = (${h}, ${k})$. Since $\\sec\\theta = \\frac{${lin("y", k)}}{${a}}$ and $\\tan\\theta = \\frac{${lin("x", h)}}{${b}}$, using $\\sec^2\\theta - \\tan^2\\theta = 1$ gives:\n$$${stdEq}$$`,
-            `中心为 $(h, k) = (${h}, ${k})$。由于 $\\sec\\theta = \\frac{${lin("y", k)}}{${a}}$ 且 $\\tan\\theta = \\frac{${lin("x", h)}}{${b}}$，利用 $\\sec^2\\theta - \\tan^2\\theta = 1$ 可得：\n$$${stdEq}$$`,
+          solution: walked(
+            [
+              [
+                ["Isolate the secant and tangent", "分离正割和正切"],
+                t(`Move the constants and divide by the coefficients:`, `移走常数，再除以系数：`),
+                [`\\sec\\theta = \\frac{${linExpr(1, -k, "y")}}{${a}}, \\quad \\tan\\theta = \\frac{${linExpr(1, -h, "x")}}{${b}}`],
+              ],
+              [
+                ["Square and subtract", "平方后相减"],
+                t(
+                  `Since $\\sec^{2}\\theta - \\tan^{2}\\theta = 1$, the $y$-term comes first:`,
+                  `因为 $\\sec^{2}\\theta - \\tan^{2}\\theta = 1$，$y$ 项在前：`,
+                ),
+                [stdEq],
+              ],
+            ],
+            t(
+              `At $\\theta = 0$ the curve is at $(${h}, ${k + a})$, where $y - k = ${a}$ and $x - h = 0$: $${a}^{2}/${a2} - 0 = 1$.`,
+              `$\\theta = 0$ 时曲线在 $(${h}, ${k + a})$，这里 $y - k = ${a}$，$x - h = 0$：$${a}^{2}/${a2} - 0 = 1$。`,
+            ),
           ),
         });
       },
@@ -1895,14 +2107,26 @@ export const introductionToPolarCoordinates: TopicDef = {
   encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.CN.B.4"],
+  intro: t(
+    `Polar coordinates name a point by how far it is from the pole and which way it lies. The point $(4, \\frac{\\pi}{6})$ is $4$ from the pole along the ray at angle $\\frac{\\pi}{6}$ from the polar axis. Half a turn further on, the point $(4, \\frac{7\\pi}{6})$ is $4$ along the opposite ray, and a negative radius names the same point: $(-4, \\frac{\\pi}{6})$ means $4$ backward along the ray at $\\frac{\\pi}{6}$.
+
+Check: both $(4, \\frac{7\\pi}{6})$ and $(-4, \\frac{\\pi}{6})$ are $4$ from the pole, and $\\frac{7\\pi}{6} - \\frac{\\pi}{6} = \\pi$, a half turn.
+
+In this lesson we plot points $(r, \\theta)$, including points with a negative radius, write one point in several ways, and find distances between points.`,
+    `极坐标用点到极点的距离和点所在的方向来确定一个点。点 $(4, \\frac{\\pi}{6})$ 在与极轴成 $\\frac{\\pi}{6}$ 角的射线上，离极点 $4$。再转半圈，点 $(4, \\frac{7\\pi}{6})$ 在相反的射线上，离极点 $4$；负极径也表示同一个点：$(-4, \\frac{\\pi}{6})$ 表示沿 $\\frac{\\pi}{6}$ 方向的射线倒退 $4$。
+
+检验：$(4, \\frac{7\\pi}{6})$ 和 $(-4, \\frac{\\pi}{6})$ 都离极点 $4$，而 $\\frac{7\\pi}{6} - \\frac{\\pi}{6} = \\pi$，正好半圈。
+
+这节课我们描出点 $(r, \\theta)$，包括负极径的点，用几种方式写同一个点，并求两点间的距离。`,
+  ),
   knowledgePoints: [
     {
       id: "plotting-polar-coordinates",
       figure: precalculusDrawings3["introduction-to-polar-coordinates#plotting-polar-coordinates"],
       title: t("Plotting points and negative r in polar coordinates", "在极坐标系中描点与负极径"),
       explanation: t(
-        "In the polar coordinate system, a point $P$ is located by $(r, \\theta)$:\n- The origin is the **pole** $O$, and the positive horizontal axis is the **polar axis**.\n- $r$ is the directed distance from the pole to $P$.\n- $\\theta$ is the directed angle measured counterclockwise from the polar axis.\n\nWhen $r < 0$, plot the point $|r|$ units along the opposite ray pointing in direction $\\theta + \\pi$:\n$$(-r, \\theta) = (r, \\theta + \\pi)$$\nFor example, $(-4, \\frac{\\pi}{3}) = (4, \\frac{4\\pi}{3})$, which lies in Quadrant III.",
-        "在极坐标系中，平面上的点 $P$ 由有序数对 $(r, \\theta)$ 确定：\n- 原点称为**极点** $O$，水平向右的射线称为**极轴**。\n- $r$ 是从极点到点 $P$ 的有向距离（极径）。\n- $\\theta$ 是从极轴逆时针旋转到极径的有向角（极角）。\n\n当 $r < 0$ 时，点位于射线反向延长线上（即 $\\theta + \\pi$ 方向），距极点 $|r|$ 个单位：\n$$(-r, \\theta) = (r, \\theta + \\pi)$$\n例如，$(-4, \\frac{\\pi}{3}) = (4, \\frac{4\\pi}{3})$，位于第三象限。",
+        "In the polar coordinate system, a point $P$ is located by $(r, \\theta)$:\n- The origin is the **pole** $O$, and the positive horizontal axis is the **polar axis**.\n- $r$ is the directed distance from the pole to $P$.\n- $\\theta$ is the directed angle measured counterclockwise from the polar axis.\n\nWhen $r < 0$, plot the point $|r|$ units along the opposite ray pointing in direction $\\theta + \\pi$:\n$$(-r, \\theta) = (r, \\theta + \\pi)$$\nFor example, $(-4, \\frac{\\pi}{3}) = (4, \\frac{4\\pi}{3})$, which lies in Quadrant III.\n\nFor $(-2, \\frac{3\\pi}{4})$: $\\frac{3\\pi}{4} + \\pi = \\frac{7\\pi}{4}$, so the point is $(2, \\frac{7\\pi}{4})$, in Quadrant IV. Check: $\\frac{3\\pi}{4}$ points into Quadrant II, and the opposite direction points into Quadrant IV.\n\n> **Watch out.** A negative radius turns the direction by $\\pi$; it does not reflect the angle. $(-2, \\frac{3\\pi}{4})$ is not $(2, -\\frac{3\\pi}{4})$, which is in Quadrant III.",
+        "在极坐标系中，平面上的点 $P$ 由有序数对 $(r, \\theta)$ 确定：\n- 原点称为**极点** $O$，水平向右的射线称为**极轴**。\n- $r$ 是从极点到点 $P$ 的有向距离（极径）。\n- $\\theta$ 是从极轴逆时针旋转到极径的有向角（极角）。\n\n当 $r < 0$ 时，点位于射线反向延长线上（即 $\\theta + \\pi$ 方向），距极点 $|r|$ 个单位：\n$$(-r, \\theta) = (r, \\theta + \\pi)$$\n例如，$(-4, \\frac{\\pi}{3}) = (4, \\frac{4\\pi}{3})$，位于第三象限。\n\n对 $(-2, \\frac{3\\pi}{4})$：$\\frac{3\\pi}{4} + \\pi = \\frac{7\\pi}{4}$，所以这个点是 $(2, \\frac{7\\pi}{4})$，在第四象限。检验：$\\frac{3\\pi}{4}$ 指向第二象限，相反方向指向第四象限。\n\n> **注意。** 负极径是把方向转 $\\pi$，不是把角取对称。$(-2, \\frac{3\\pi}{4})$ 不是 $(2, -\\frac{3\\pi}{4})$，后者在第三象限。",
       ),
       generate(rng) {
         const specialAngles = [
@@ -1922,23 +2146,62 @@ export const introductionToPolarCoordinates: TopicDef = {
         const wrong2 = `(${rNeg}, ${item.oppStr})`;
         const wrong3 = `(${rPos}, -${item.angleStr})`;
         const wrong4 = `(${rPos}, 2\\pi - ${item.angleStr})`;
+        // At pi/2, -pi/2 names the same point as the answer, though outside 0 <= theta < 2pi.
+        const quarter = item.angleStr === "\\frac{\\pi}{2}";
         return oneOf(
           rng,
           t(
             `Which of the following gives the polar coordinates of $(${rNeg}, ${item.angleStr})$ with positive radius $r > 0$ and $0 \\le \\theta < 2\\pi$?`,
             `下列哪个选项给出了极坐标点 $(${rNeg}, ${item.angleStr})$ 在 $r > 0$ 且 $0 \\le \\theta < 2\\pi$ 条件下的等价坐标？`,
           ),
-          t(`$${rightChoice}$`, `$${rightChoice}$`),
-          [
-            t(`$${wrong1}$`, `$${wrong1}$`),
-            t(`$${wrong2}$`, `$${wrong2}$`),
-            t(`$${wrong3}$`, `$${wrong3}$`),
-            t(`$${wrong4}$`, `$${wrong4}$`),
-          ],
-          t(
-            `A negative radius represents movement in the opposite direction $\\theta + \\pi$:\n$$(${rNeg}, ${item.angleStr}) = (${rPos}, ${item.angleStr} + \\pi) = (${rPos}, ${item.oppStr})$$`,
-            `负极径表示沿反方向 $\\theta + \\pi$ 度量：\n$$(${rNeg}, ${item.angleStr}) = (${rPos}, ${item.angleStr} + \\pi) = (${rPos}, ${item.oppStr})$$`,
+          same(`$${rightChoice}$`),
+          [same(`$${wrong1}$`), same(`$${wrong2}$`), same(`$${wrong3}$`), same(`$${wrong4}$`)],
+          walked(
+            [
+              [
+                ["Turn the direction by a half turn", "把方向转半圈"],
+                t(`A negative radius points the opposite way, so add $\\pi$ to the angle:`, `负极径指向相反方向，所以把角加上 $\\pi$：`),
+                [`${item.angleStr} + \\pi = ${item.oppStr}`],
+              ],
+              [
+                ["Make the radius positive", "把极径变为正数"],
+                t(`Along the new direction the distance is $|${rNeg}| = ${rPos}$:`, `沿新的方向，距离是 $|${rNeg}| = ${rPos}$：`),
+                [`(${rNeg}, ${item.angleStr}) = (${rPos}, ${item.oppStr})`],
+              ],
+            ],
+            t(
+              `The angle $${item.oppStr}$ is in $0 \\le \\theta < 2\\pi$. Going back, $${item.oppStr} - \\pi = ${item.angleStr}$, and stepping $${rPos}$ backward along that direction is what the radius $${rNeg}$ means.`,
+              `角 $${item.oppStr}$ 在 $0 \\le \\theta < 2\\pi$ 内。反过来，$${item.oppStr} - \\pi = ${item.angleStr}$，沿这个方向倒退 $${rPos}$，正是极径 $${rNeg}$ 的意思。`,
+            ),
           ),
+          [
+            why(
+              same(`$${wrong1}$`),
+              `Making $r$ positive also needs a half turn: this point is on the ray at $${item.angleStr}$, opposite to the given point.`,
+              `把 $r$ 变为正数还要转半圈：这个点在 $${item.angleStr}$ 方向的射线上，和所给的点方向相反。`,
+            ),
+            why(
+              same(`$${wrong2}$`),
+              `This turns the direction but keeps the radius negative, so the two changes cancel: it is the point $(${rPos}, ${item.angleStr})$, and its radius is not positive.`,
+              `这转了方向却保留了负极径，两处改变相互抵消：它是点 $(${rPos}, ${item.angleStr})$，而且极径不是正的。`,
+            ),
+            quarter
+              ? why(
+                  same(`$${wrong3}$`),
+                  `This names the same point, but its angle $-${item.angleStr}$ is not in $0 \\le \\theta < 2\\pi$.`,
+                  `这表示的是同一个点，但它的角 $-${item.angleStr}$ 不在 $0 \\le \\theta < 2\\pi$ 内。`,
+                )
+              : why(
+                  same(`$${wrong3}$`),
+                  `Negating the angle reflects the point across the polar axis instead of turning it by $\\pi$, and $-${item.angleStr}$ is not in $0 \\le \\theta < 2\\pi$.`,
+                  `把角取相反数是关于极轴作对称，不是转 $\\pi$；而且 $-${item.angleStr}$ 不在 $0 \\le \\theta < 2\\pi$ 内。`,
+                ),
+            why(
+              same(`$${wrong4}$`),
+              `$2\\pi - ${item.angleStr}$ reflects the direction across the polar axis; a negative radius turns it by $\\pi$, to $${item.oppStr}$.`,
+              `$2\\pi - ${item.angleStr}$ 是把方向关于极轴作对称；负极径是把方向转 $\\pi$，到 $${item.oppStr}$。`,
+            ),
+          ],
         );
       },
     },
@@ -1946,8 +2209,8 @@ export const introductionToPolarCoordinates: TopicDef = {
       id: "multiple-polar-representations",
       title: t("Equivalent polar coordinate representations", "点的等价极坐标表示"),
       explanation: t(
-        "Unlike Cartesian coordinates, polar representations are not unique. Every point in the plane has infinitely many pairs of polar coordinates:\n$$(r, \\theta) = (r, \\theta + 2k\\pi) = (-r, \\theta + (2k+1)\\pi), \\quad k \\in \\mathbb{Z}$$\nFor example, $(3, \\frac{\\pi}{4})$ can also be written as $(3, \\frac{9\\pi}{4})$, $(3, -\\frac{7\\pi}{4})$, or $(-3, \\frac{5\\pi}{4})$.",
-        "与直角坐标不同，平面的极坐标表示不是唯一的。同一个点具有无穷多对极坐标表示：\n$$(r, \\theta) = (r, \\theta + 2k\\pi) = (-r, \\theta + (2k+1)\\pi), \\quad k \\in \\mathbb{Z}$$\n例如，$(3, \\frac{\\pi}{4})$ 亦可表示为 $(3, \\frac{9\\pi}{4})$、$(3, -\\frac{7\\pi}{4})$ 或 $(-3, \\frac{5\\pi}{4})$。",
+        "Unlike Cartesian coordinates, polar representations are not unique. Every point in the plane has infinitely many pairs of polar coordinates:\n$$(r, \\theta) = (r, \\theta + 2k\\pi) = (-r, \\theta + (2k+1)\\pi), \\quad k \\in \\mathbb{Z}$$\nFor example, $(3, \\frac{\\pi}{4})$ can also be written as $(3, \\frac{9\\pi}{4})$, $(3, -\\frac{7\\pi}{4})$, or $(-3, \\frac{5\\pi}{4})$.\n\nFor $(5, \\frac{2\\pi}{3})$ with a negative radius: $\\frac{2\\pi}{3} + \\pi = \\frac{5\\pi}{3}$, so it is $(-5, \\frac{5\\pi}{3})$. Check: turning $\\frac{5\\pi}{3}$ by $\\pi$ again gives $\\frac{8\\pi}{3} = \\frac{2\\pi}{3} + 2\\pi$, the original direction.\n\n> **Watch out.** Changing the sign of $r$ and adding $\\pi$ go together; either one alone moves the point to the opposite ray. Adding or subtracting $2\\pi$ on its own never moves the point.",
+        "与直角坐标不同，平面的极坐标表示不是唯一的。同一个点具有无穷多对极坐标表示：\n$$(r, \\theta) = (r, \\theta + 2k\\pi) = (-r, \\theta + (2k+1)\\pi), \\quad k \\in \\mathbb{Z}$$\n例如，$(3, \\frac{\\pi}{4})$ 亦可表示为 $(3, \\frac{9\\pi}{4})$、$(3, -\\frac{7\\pi}{4})$ 或 $(-3, \\frac{5\\pi}{4})$。\n\n用负极径表示 $(5, \\frac{2\\pi}{3})$：$\\frac{2\\pi}{3} + \\pi = \\frac{5\\pi}{3}$，所以是 $(-5, \\frac{5\\pi}{3})$。检验：$\\frac{5\\pi}{3}$ 再转 $\\pi$ 得 $\\frac{8\\pi}{3} = \\frac{2\\pi}{3} + 2\\pi$，正是原来的方向。\n\n> **注意。** 改变 $r$ 的符号和加 $\\pi$ 必须同时进行；只做其中一个，点就跑到相反的射线上。单独加减 $2\\pi$ 则不会移动点。",
       ),
       generate(rng) {
         const angleList = [
@@ -1980,12 +2243,51 @@ export const introductionToPolarCoordinates: TopicDef = {
               `Which of the following coordinates represents the point $(${rVal}, ${item.th})$ using a negative radius $r < 0$ and $0 \\le \\theta < 2\\pi$?`,
               `下列哪个选项使用负极径 $r < 0$ 且 $0 \\le \\theta < 2\\pi$ 表示点 $(${rVal}, ${item.th})$？`,
             ),
-            t(`$${rightChoice}$`, `$${rightChoice}$`),
-            [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
-            t(
-              `Using $(-r, \\theta + \\pi)$:\n$$(${rVal}, ${item.th}) = (-${rVal}, ${item.th} + \\pi) = ${rightChoice}$$`,
-              `根据 $(-r, \\theta + \\pi)$：\n$$(${rVal}, ${item.th}) = (-${rVal}, ${item.th} + \\pi) = ${rightChoice}$$`,
+            same(`$${rightChoice}$`),
+            [same(`$${wrong1}$`), same(`$${wrong2}$`), same(`$${wrong3}$`)],
+            walked(
+              [
+                [
+                  ["Turn by a half turn", "转半圈"],
+                  t(
+                    `A negative radius points the opposite way, so add $\\pi$ to the angle, and subtract $2\\pi$ if the sum reaches $2\\pi$. The new angle is $${item.plusPi}$.`,
+                    `负极径指向相反方向，所以把角加上 $\\pi$，和达到 $2\\pi$ 时再减去 $2\\pi$。新的角是 $${item.plusPi}$。`,
+                  ),
+                ],
+                [
+                  ["Negate the radius", "极径取相反数"],
+                  t(`Then the radius becomes $-${rVal}$:`, `于是极径变为 $-${rVal}$：`),
+                  [`(${rVal}, ${item.th}) = (-${rVal}, ${item.plusPi})`],
+                ],
+              ],
+              t(
+                `Undo both changes: the direction $${item.plusPi}$ turned by $\\pi$ is the direction $${item.th}$, and the radius $-${rVal}$ walks $${rVal}$ backward from the pole, so the point is again $${rVal}$ along $${item.th}$.`,
+                `把两处改变都撤回：方向 $${item.plusPi}$ 转 $\\pi$ 就是方向 $${item.th}$，而极径 $-${rVal}$ 表示从极点倒退 $${rVal}$，所以这个点仍是沿 $${item.th}$ 方向离极点 $${rVal}$ 的点。`,
+              ),
             ),
+            [
+              why(
+                same(`$${wrong1}$`),
+                "Negating $r$ alone moves the point to the opposite ray; the angle must also turn by $\\pi$.",
+                "只把 $r$ 取相反数，点就到了相反的射线上；角还要转 $\\pi$。",
+              ),
+              why(
+                same(`$${wrong2}$`),
+                "Turning by $\\pi$ alone moves the point to the opposite ray, and the radius here is not negative.",
+                "只转 $\\pi$，点就到了相反的射线上；而且这里的极径不是负的。",
+              ),
+              item.th === "\\frac{\\pi}{2}"
+                ? why(
+                    same(`$${wrong3}$`),
+                    `This names the same point, but its angle $-${item.th}$ is not in $0 \\le \\theta < 2\\pi$.`,
+                    `这表示的是同一个点，但它的角 $-${item.th}$ 不在 $0 \\le \\theta < 2\\pi$ 内。`,
+                  )
+                : why(
+                    same(`$${wrong3}$`),
+                    `Negating the angle reflects across the polar axis: this is the point $(${rVal}, \\pi - ${item.th})$, not $(${rVal}, ${item.th})$, and $-${item.th}$ is not in $0 \\le \\theta < 2\\pi$.`,
+                    `把角取相反数是关于极轴作对称：这是点 $(${rVal}, \\pi - ${item.th})$，不是 $(${rVal}, ${item.th})$；而且 $-${item.th}$ 不在 $0 \\le \\theta < 2\\pi$ 内。`,
+                  ),
+            ],
           );
         }
 
@@ -1999,12 +2301,43 @@ export const introductionToPolarCoordinates: TopicDef = {
             `Which of the following coordinates represents the point $(${rVal}, ${item.th})$ with a negative angle in $[-2\\pi, 0)$?`,
             `下列哪个选项使用在 $[-2\\pi, 0)$ 内的负角表示点 $(${rVal}, ${item.th})$？`,
           ),
-          t(`$${rightChoice}$`, `$${rightChoice}$`),
-          [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
-          t(
-            `Subtract $2\\pi$ from the angle:\n$$(${rVal}, ${item.th}) = (${rVal}, ${item.th} - 2\\pi) = ${rightChoice}$$`,
-            `极角减去 $2\\pi$：\n$$(${rVal}, ${item.th}) = (${rVal}, ${item.th} - 2\\pi) = ${rightChoice}$$`,
+          same(`$${rightChoice}$`),
+          [same(`$${wrong1}$`), same(`$${wrong2}$`), same(`$${wrong3}$`)],
+          walked(
+            [
+              [
+                ["Subtract a full turn", "减去一整圈"],
+                t(`A full turn of $2\\pi$ comes back to the same direction:`, `转一整圈 $2\\pi$ 回到同一个方向：`),
+                [`${item.th} - 2\\pi = ${item.minus2Pi}`],
+              ],
+              [
+                ["Keep the radius", "保持极径"],
+                t(`The radius stays $${rVal}$, and the angle is now in $[-2\\pi, 0)$:`, `极径仍是 $${rVal}$，角现在在 $[-2\\pi, 0)$ 内：`),
+                [`(${rVal}, ${item.th}) = (${rVal}, ${item.minus2Pi})`],
+              ],
+            ],
+            t(
+              `Adding $2\\pi$ back to $${item.minus2Pi}$ gives $${item.th}$, so both name the point $${rVal}$ from the pole in the same direction.`,
+              `把 $${item.minus2Pi}$ 加回 $2\\pi$ 得 $${item.th}$，所以两者都表示沿同一方向离极点 $${rVal}$ 的点。`,
+            ),
           ),
+          [
+            why(
+              same(`$${wrong1}$`),
+              "Negating the angle reflects the point across the polar axis; to keep the point, subtract $2\\pi$ instead.",
+              "把角取相反数是关于极轴作对称；要保持这个点，应该减去 $2\\pi$。",
+            ),
+            why(
+              same(`$${wrong2}$`),
+              "The angle is right, but the negative radius sends the point to the opposite ray.",
+              "角是对的，但负极径把点送到了相反的射线上。",
+            ),
+            why(
+              same(`$${wrong3}$`),
+              "A half turn points to the opposite ray, and this angle is not in $[-2\\pi, 0)$.",
+              "转半圈指向相反的射线，而且这个角不在 $[-2\\pi, 0)$ 内。",
+            ),
+          ],
         );
       },
     },
@@ -2025,14 +2358,34 @@ export const convertingFromPolarCoordinatesToCartesianCoordinates: TopicDef = {
   encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.CN.B.4"],
+  intro: t(
+    `A point can be named by $(x, y)$ or by $(r, \\theta)$, and a right triangle with the radius as its hypotenuse links the two. For the polar point $(2, \\frac{\\pi}{3})$:
+
+$$x = 2\\cos\\frac{\\pi}{3} = 1, \\quad y = 2\\sin\\frac{\\pi}{3} = \\sqrt{3}$$
+
+Going back, $r = \\sqrt{1^{2} + (\\sqrt{3})^{2}} = 2$, and $\\tan\\theta = \\sqrt{3}$ with the point in Quadrant I gives $\\theta = \\frac{\\pi}{3}$.
+
+Check: $1^{2} + (\\sqrt{3})^{2} = 4 = 2^{2}$, so the point is $2$ from the origin.
+
+In this lesson we convert points from polar to Cartesian coordinates and back, and recognize polar equations that are lines.`,
+    `一个点可以用 $(x, y)$ 表示，也可以用 $(r, \\theta)$ 表示；以极径为斜边的直角三角形把两者联系起来。对极坐标点 $(2, \\frac{\\pi}{3})$：
+
+$$x = 2\\cos\\frac{\\pi}{3} = 1, \\quad y = 2\\sin\\frac{\\pi}{3} = \\sqrt{3}$$
+
+反过来，$r = \\sqrt{1^{2} + (\\sqrt{3})^{2}} = 2$，而 $\\tan\\theta = \\sqrt{3}$ 且点在第一象限，所以 $\\theta = \\frac{\\pi}{3}$。
+
+检验：$1^{2} + (\\sqrt{3})^{2} = 4 = 2^{2}$，所以这个点离原点 $2$。
+
+这节课我们把点从极坐标化为直角坐标，再化回来，并认出表示直线的极坐标方程。`,
+  ),
   knowledgePoints: [
     {
       id: "polar-to-cartesian",
       figure: precalculusDrawings3["converting-from-polar-coordinates-to-cartesian-coordinates#polar-to-cartesian"],
       title: t("Convert polar coordinates to Cartesian coordinates", "将极坐标转换为直角坐标"),
       explanation: t(
-        "A point in polar coordinates is given by its distance from the origin and its angle, and right-triangle trigonometry gives its horizontal and vertical coordinates. To convert polar coordinates $(r, \\theta)$ to Cartesian coordinates $(x, y)$:\n$$x = r\\cos\\theta, \\quad y = r\\sin\\theta$$\nFor example, for $(r, \\theta) = (6, \\frac{2\\pi}{3})$:\n$$x = 6\\cos\\frac{2\\pi}{3} = 6\\left(-\\frac{1}{2}\\right) = -3, \\quad y = 6\\sin\\frac{2\\pi}{3} = 6\\left(\\frac{\\sqrt{3}}{2}\\right) = 3\\sqrt{3}$$\nThus $(x, y) = (-3, 3\\sqrt{3})$.",
-        "极坐标中的点由它到原点的距离和角度给出，用直角三角形中的三角比就能求出它的横坐标和纵坐标。将极坐标 $(r, \\theta)$ 转换为直角坐标 $(x, y)$ 的公式为：\n$$x = r\\cos\\theta, \\quad y = r\\sin\\theta$$\n例如，对于 $(r, \\theta) = (6, \\frac{2\\pi}{3})$：\n$$x = 6\\cos\\frac{2\\pi}{3} = 6\\left(-\\frac{1}{2}\\right) = -3, \\quad y = 6\\sin\\frac{2\\pi}{3} = 6\\left(\\frac{\\sqrt{3}}{2}\\right) = 3\\sqrt{3}$$\n直角坐标为 $(-3, 3\\sqrt{3})$。",
+        "A point in polar coordinates is given by its distance from the origin and its angle, and right-triangle trigonometry gives its horizontal and vertical coordinates. To convert polar coordinates $(r, \\theta)$ to Cartesian coordinates $(x, y)$:\n$$x = r\\cos\\theta, \\quad y = r\\sin\\theta$$\nFor example, for $(r, \\theta) = (6, \\frac{2\\pi}{3})$:\n$$x = 6\\cos\\frac{2\\pi}{3} = 6\\left(-\\frac{1}{2}\\right) = -3, \\quad y = 6\\sin\\frac{2\\pi}{3} = 6\\left(\\frac{\\sqrt{3}}{2}\\right) = 3\\sqrt{3}$$\nThus $(x, y) = (-3, 3\\sqrt{3})$.\n\nFor $(4, \\frac{7\\pi}{6})$: $\\cos\\frac{7\\pi}{6} = -\\frac{\\sqrt{3}}{2}$ and $\\sin\\frac{7\\pi}{6} = -\\frac{1}{2}$, so $(x, y) = (-2\\sqrt{3}, -2)$. Check: $(-2\\sqrt{3})^{2} + (-2)^{2} = 12 + 4 = 16 = 4^{2}$.\n\n> **Watch out.** The cosine gives $x$ and the sine gives $y$. Their signs come from the quadrant of $\\theta$: $\\frac{7\\pi}{6}$ is in Quadrant III, so both are negative.",
+        "极坐标中的点由它到原点的距离和角度给出，用直角三角形中的三角比就能求出它的横坐标和纵坐标。将极坐标 $(r, \\theta)$ 转换为直角坐标 $(x, y)$ 的公式为：\n$$x = r\\cos\\theta, \\quad y = r\\sin\\theta$$\n例如，对于 $(r, \\theta) = (6, \\frac{2\\pi}{3})$：\n$$x = 6\\cos\\frac{2\\pi}{3} = 6\\left(-\\frac{1}{2}\\right) = -3, \\quad y = 6\\sin\\frac{2\\pi}{3} = 6\\left(\\frac{\\sqrt{3}}{2}\\right) = 3\\sqrt{3}$$\n直角坐标为 $(-3, 3\\sqrt{3})$。\n\n对 $(4, \\frac{7\\pi}{6})$：$\\cos\\frac{7\\pi}{6} = -\\frac{\\sqrt{3}}{2}$，$\\sin\\frac{7\\pi}{6} = -\\frac{1}{2}$，所以 $(x, y) = (-2\\sqrt{3}, -2)$。检验：$(-2\\sqrt{3})^{2} + (-2)^{2} = 12 + 4 = 16 = 4^{2}$。\n\n> **注意。** 余弦给出 $x$，正弦给出 $y$。它们的符号由 $\\theta$ 所在的象限决定：$\\frac{7\\pi}{6}$ 在第三象限，所以两者都是负的。",
       ),
       generate(rng) {
         const k = rng.int(1, 6);
@@ -2051,6 +2404,13 @@ export const convertingFromPolarCoordinatesToCartesianCoordinates: TopicDef = {
         const negX = item.x.startsWith("-") ? item.x.slice(1) : `-${item.x}`;
         const negY = item.y.startsWith("-") ? item.y.slice(1) : `-${item.y}`;
         const rightChoice = `(${item.x}, ${item.y})`;
+        const root3 = (s: string) => s.includes("sqrt");
+        const unit = (s: string) => `${s.startsWith("-") ? "-" : ""}\\frac{${root3(s) ? "\\sqrt{3}" : "1"}}{2}`;
+        const square = (s: string) => (root3(s) ? 3 * k * k : k * k);
+        const quadrant = item.x.startsWith("-") ? (item.y.startsWith("-") ? 3 : 2) : item.y.startsWith("-") ? 4 : 1;
+        const quadrantEn = ["I", "II", "III", "IV"][quadrant - 1];
+        const quadrantZh = ["一", "二", "三", "四"][quadrant - 1];
+        const sign = (s: string, en: boolean) => (s.startsWith("-") ? (en ? "negative" : "负") : en ? "positive" : "正");
         const wrong1 = `(${item.y}, ${item.x})`;
         const wrong2 = `(${negX}, ${item.y})`;
         const wrong3 = `(${item.x}, ${negY})`;
@@ -2060,12 +2420,49 @@ export const convertingFromPolarCoordinatesToCartesianCoordinates: TopicDef = {
             `Convert the polar coordinates $(${r}, ${item.th})$ into Cartesian coordinates $(x, y)$.`,
             `将极坐标 $(${r}, ${item.th})$ 转换为直角坐标 $(x, y)$。`,
           ),
-          t(`$${rightChoice}$`, `$${rightChoice}$`),
-          [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
-          t(
-            `Calculate $x$ and $y$:\n$$x = ${r}\\cos\\left(${item.th}\\right) = ${item.x}$$\n$$y = ${r}\\sin\\left(${item.th}\\right) = ${item.y}$$\nThus $(x, y) = ${rightChoice}$.`,
-            `计算 $x$ 与 $y$：\n$$x = ${r}\\cos\\left(${item.th}\\right) = ${item.x}$$\n$$y = ${r}\\sin\\left(${item.th}\\right) = ${item.y}$$\n因此直角坐标为 $${rightChoice}$。`,
+          same(`$${rightChoice}$`),
+          [same(`$${wrong1}$`), same(`$${wrong2}$`), same(`$${wrong3}$`)],
+          walked(
+            [
+              [
+                ["Find the cosine and sine", "求余弦和正弦"],
+                t(
+                  `The angle $${item.th}$ is in Quadrant ${quadrantEn}, which fixes the signs:`,
+                  `角 $${item.th}$ 在第${quadrantZh}象限，由此确定符号：`,
+                ),
+                [`\\cos${item.th} = ${unit(item.x)}, \\quad \\sin${item.th} = ${unit(item.y)}`],
+              ],
+              [
+                ["Multiply by r", "乘以 r"],
+                t(
+                  `Use $x = r\\cos\\theta$ and $y = r\\sin\\theta$ with $r = ${r}$:`,
+                  `用 $x = r\\cos\\theta$，$y = r\\sin\\theta$，其中 $r = ${r}$：`,
+                ),
+                [`x = ${r}\\left(${unit(item.x)}\\right) = ${item.x}, \\quad y = ${r}\\left(${unit(item.y)}\\right) = ${item.y}`],
+              ],
+            ],
+            t(
+              `The point should be $${r}$ from the origin:\n\n$$(${item.x})^{2} + (${item.y})^{2} = ${square(item.x)} + ${square(item.y)} = ${r * r} = ${r}^{2}$$`,
+              `这个点应离原点 $${r}$：\n\n$$(${item.x})^{2} + (${item.y})^{2} = ${square(item.x)} + ${square(item.y)} = ${r * r} = ${r}^{2}$$`,
+            ),
           ),
+          [
+            why(
+              same(`$${wrong1}$`),
+              `This swaps the coordinates: $x$ comes from the cosine, $${r}\\cos${item.th} = ${item.x}$.`,
+              `这把两个坐标对调了：$x$ 来自余弦，$${r}\\cos${item.th} = ${item.x}$。`,
+            ),
+            why(
+              same(`$${wrong2}$`),
+              `The sign of $x$ is wrong: in Quadrant ${quadrantEn} the cosine is ${sign(item.x, true)}, so $x = ${item.x}$.`,
+              `$x$ 的符号错了：在第${quadrantZh}象限余弦为${sign(item.x, false)}，所以 $x = ${item.x}$。`,
+            ),
+            why(
+              same(`$${wrong3}$`),
+              `The sign of $y$ is wrong: in Quadrant ${quadrantEn} the sine is ${sign(item.y, true)}, so $y = ${item.y}$.`,
+              `$y$ 的符号错了：在第${quadrantZh}象限正弦为${sign(item.y, false)}，所以 $y = ${item.y}$。`,
+            ),
+          ],
         );
       },
     },
@@ -2074,8 +2471,8 @@ export const convertingFromPolarCoordinatesToCartesianCoordinates: TopicDef = {
       figure: precalculusDrawings4["converting-from-polar-coordinates-to-cartesian-coordinates#cartesian-to-polar"],
       title: t("Convert Cartesian coordinates to polar coordinates", "将直角坐标转换为极坐标"),
       explanation: t(
-        "To convert Cartesian coordinates $(x, y)$ into polar coordinates $(r, \\theta)$ with $r > 0$ and $0 \\le \\theta < 2\\pi$:\n1. Find the distance $r = \\sqrt{x^2 + y^2}$.\n2. Find the reference angle $\\alpha = \\arctan|y/x|$.\n3. Determine $\\theta$ by identifying the quadrant of $(x, y)$:\n   - Quadrant I: $\\theta = \\alpha$\n   - Quadrant II: $\\theta = \\pi - \\alpha$\n   - Quadrant III: $\\theta = \\pi + \\alpha$\n   - Quadrant IV: $\\theta = 2\\pi - \\alpha$",
-        "将直角坐标 $(x, y)$ 转换为满足 $r > 0$ 且 $0 \\le \\theta < 2\\pi$ 的极坐标 $(r, \\theta)$ 的步骤：\n1. 计算距离 $r = \\sqrt{x^2 + y^2}$。\n2. 计算参考角 $\\alpha = \\arctan|y/x|$。\n3. 根据 $(x, y)$ 所在的象限确定极角 $\\theta$：\n   - 第一象限：$\\theta = \\alpha$\n   - 第二象限：$\\theta = \\pi - \\alpha$\n   - 第三象限：$\\theta = \\pi + \\alpha$\n   - 第四象限：$\\theta = 2\\pi - \\alpha$",
+        "To convert Cartesian coordinates $(x, y)$ into polar coordinates $(r, \\theta)$ with $r > 0$ and $0 \\le \\theta < 2\\pi$:\n1. Find the distance $r = \\sqrt{x^2 + y^2}$.\n2. Find the reference angle $\\alpha = \\arctan|y/x|$.\n3. Determine $\\theta$ by identifying the quadrant of $(x, y)$:\n   - Quadrant I: $\\theta = \\alpha$\n   - Quadrant II: $\\theta = \\pi - \\alpha$\n   - Quadrant III: $\\theta = \\pi + \\alpha$\n   - Quadrant IV: $\\theta = 2\\pi - \\alpha$\n\nFor $(-2, 2\\sqrt{3})$: $r = \\sqrt{4 + 12} = 4$, and $\\tan\\alpha = \\frac{2\\sqrt{3}}{2} = \\sqrt{3}$ gives $\\alpha = \\frac{\\pi}{3}$. The point is in Quadrant II, so $\\theta = \\pi - \\frac{\\pi}{3} = \\frac{2\\pi}{3}$. Check: $4\\cos\\frac{2\\pi}{3} = -2$ and $4\\sin\\frac{2\\pi}{3} = 2\\sqrt{3}$.\n\n> **Watch out.** $\\arctan\\frac{y}{x}$ on its own only gives angles between $-\\frac{\\pi}{2}$ and $\\frac{\\pi}{2}$: here $\\arctan(-\\sqrt{3}) = -\\frac{\\pi}{3}$, which points into Quadrant IV. Always place $\\theta$ by the quadrant of the point.",
+        "将直角坐标 $(x, y)$ 转换为满足 $r > 0$ 且 $0 \\le \\theta < 2\\pi$ 的极坐标 $(r, \\theta)$ 的步骤：\n1. 计算距离 $r = \\sqrt{x^2 + y^2}$。\n2. 计算参考角 $\\alpha = \\arctan|y/x|$。\n3. 根据 $(x, y)$ 所在的象限确定极角 $\\theta$：\n   - 第一象限：$\\theta = \\alpha$\n   - 第二象限：$\\theta = \\pi - \\alpha$\n   - 第三象限：$\\theta = \\pi + \\alpha$\n   - 第四象限：$\\theta = 2\\pi - \\alpha$\n\n对 $(-2, 2\\sqrt{3})$：$r = \\sqrt{4 + 12} = 4$，由 $\\tan\\alpha = \\frac{2\\sqrt{3}}{2} = \\sqrt{3}$ 得 $\\alpha = \\frac{\\pi}{3}$。点在第二象限，所以 $\\theta = \\pi - \\frac{\\pi}{3} = \\frac{2\\pi}{3}$。检验：$4\\cos\\frac{2\\pi}{3} = -2$，$4\\sin\\frac{2\\pi}{3} = 2\\sqrt{3}$。\n\n> **注意。** 单用 $\\arctan\\frac{y}{x}$ 只能得到 $-\\frac{\\pi}{2}$ 到 $\\frac{\\pi}{2}$ 之间的角：这里 $\\arctan(-\\sqrt{3}) = -\\frac{\\pi}{3}$，指向第四象限。一定要按点所在的象限确定 $\\theta$。",
       ),
       generate(rng) {
         const k = rng.int(1, 6);
@@ -2091,6 +2488,16 @@ export const convertingFromPolarCoordinatesToCartesianCoordinates: TopicDef = {
         ];
         const item = rng.pick(configs);
         const rightChoice = `(${item.r}, ${item.th})`;
+        const diagonal = item.r.includes("sqrt{2}");
+        const unit = (s: string) =>
+          `${s.startsWith("-") ? "-" : ""}\\frac{${diagonal ? "\\sqrt{2}" : s.includes("sqrt") ? "\\sqrt{3}" : "1"}}{2}`;
+        const flip = (s: string) => (s.startsWith("-") ? s.slice(1) : `-${s}`);
+        const sum = diagonal ? 2 * k * k : 4 * k * k;
+        const quadrant = item.x.startsWith("-") ? (item.y.startsWith("-") ? 3 : 2) : item.y.startsWith("-") ? 4 : 1;
+        const quadrantEn = ["I", "II", "III", "IV"][quadrant - 1];
+        const quadrantZh = ["一", "二", "三", "四"][quadrant - 1];
+        const alpha = diagonal ? "\\frac{\\pi}{4}" : "\\frac{\\pi}{6}";
+        const rule = ["\\alpha", "\\pi - \\alpha", "\\pi + \\alpha", "2\\pi - \\alpha"][quadrant - 1];
         const wrong1 = `(${item.r}, ${piAngle(-twelfthsOf(item.th))})`;
         const wrong2 = `(${k}, ${item.th})`;
         const wrong3 = `(${item.r}, ${piAngle(twelfthsOf(item.th) + 12)})`;
@@ -2100,12 +2507,48 @@ export const convertingFromPolarCoordinatesToCartesianCoordinates: TopicDef = {
             `Convert the Cartesian point $(${item.x}, ${item.y})$ into polar coordinates $(r, \\theta)$ with $r > 0$ and $0 \\le \\theta < 2\\pi$.`,
             `将直角坐标点 $(${item.x}, ${item.y})$ 转换为满足 $r > 0$ 且 $0 \\le \\theta < 2\\pi$ 的极坐标 $(r, \\theta)$。`,
           ),
-          t(`$${rightChoice}$`, `$${rightChoice}$`),
-          [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
-          t(
-            `Compute radius:\n$$r = \\sqrt{x^2 + y^2} = ${item.r}$$\nDetermine angle $\\theta$ from $\\tan\\theta = y/x$ and quadrant analysis:\n$$\\theta = ${item.th}$$\nThus $(r, \\theta) = ${rightChoice}$.`,
-            `计算极径：\n$$r = \\sqrt{x^2 + y^2} = ${item.r}$$\n根据 $\\tan\\theta = y/x$ 结合所在象限确定极角：\n$$\\theta = ${item.th}$$\n因此极坐标为 $${rightChoice}$。`,
+          same(`$${rightChoice}$`),
+          [same(`$${wrong1}$`), same(`$${wrong2}$`), same(`$${wrong3}$`)],
+          walked(
+            [
+              [
+                ["Find the radius", "求极径"],
+                t(`The radius is the distance from the origin:`, `极径是到原点的距离：`),
+                [`r = \\sqrt{(${item.x})^{2} + (${item.y})^{2}} = \\sqrt{${sum}} = ${item.r}`],
+              ],
+              [
+                ["Find the reference angle", "求参考角"],
+                t(`Use the sizes of the coordinates:`, `用两个坐标的绝对值：`),
+                [`\\tan\\alpha = \\left|\\frac{y}{x}\\right| = ${diagonal ? "1" : "\\frac{1}{\\sqrt{3}}"} \\implies \\alpha = ${alpha}`],
+              ],
+              [
+                ["Place the angle by the quadrant", "按象限确定角"],
+                t(`The point is in Quadrant ${quadrantEn}, so $\\theta = ${rule}$:`, `点在第${quadrantZh}象限，所以 $\\theta = ${rule}$：`),
+                [`\\theta = ${item.th}`],
+              ],
+            ],
+            t(
+              `Converting back gives the point again:\n\n$$${item.r}\\cos${item.th} = ${item.r}\\left(${unit(item.x)}\\right) = ${item.x}, \\quad ${item.r}\\sin${item.th} = ${item.r}\\left(${unit(item.y)}\\right) = ${item.y}$$`,
+              `化回直角坐标又得到原来的点：\n\n$$${item.r}\\cos${item.th} = ${item.r}\\left(${unit(item.x)}\\right) = ${item.x}, \\quad ${item.r}\\sin${item.th} = ${item.r}\\left(${unit(item.y)}\\right) = ${item.y}$$`,
+            ),
           ),
+          [
+            why(
+              same(`$${wrong1}$`),
+              `This angle is the reflection across the polar axis; it gives the point $(${item.x}, ${flip(item.y)})$.`,
+              `这个角是关于极轴的对称角；它给出的是点 $(${item.x}, ${flip(item.y)})$。`,
+            ),
+            why(
+              same(`$${wrong2}$`),
+              `$${k}$ is the size of a coordinate, not the distance from the origin: $r = \\sqrt{${sum}} = ${item.r}$.`,
+              `$${k}$ 是一个坐标的绝对值，不是到原点的距离：$r = \\sqrt{${sum}} = ${item.r}$。`,
+            ),
+            why(
+              same(`$${wrong3}$`),
+              `A half turn points into the opposite quadrant; it gives the point $(${flip(item.x)}, ${flip(item.y)})$.`,
+              `转半圈指向相对的象限；它给出的是点 $(${flip(item.x)}, ${flip(item.y)})$。`,
+            ),
+          ],
         );
       },
     },
@@ -2126,13 +2569,25 @@ export const polarEquationsOfCirclesCenteredAtTheOrigin: TopicDef = {
   encompasses: [],
   xp: 16,
   standards: ["CCSS.HSG.GPE.A.1", "CCSS.HSN.CN.B.4"],
+  intro: t(
+    `The equation $r = 3$ says nothing about the angle, so it holds for $(3, 0)$, $(3, \\frac{\\pi}{2})$, $(3, \\pi)$ and every other direction: all the points $3$ from the pole. That is the circle of radius $3$ centered at the pole. Squaring gives $r^{2} = 9$, and since $r^{2} = x^{2} + y^{2}$, its Cartesian equation is $x^{2} + y^{2} = 9$.
+
+Check: $(3, \\frac{\\pi}{2})$ is the Cartesian point $(0, 3)$, and $0^{2} + 3^{2} = 9$.
+
+In this lesson we read the radius and diameter of circles $r = a$, convert them to Cartesian equations, and find the areas of rings between two of them.`,
+    `方程 $r = 3$ 对角没有任何要求，所以 $(3, 0)$、$(3, \\frac{\\pi}{2})$、$(3, \\pi)$ 以及其他任何方向上的点都满足它：也就是所有离极点 $3$ 的点。这就是以极点为圆心、半径为 $3$ 的圆。两边平方得 $r^{2} = 9$，又因为 $r^{2} = x^{2} + y^{2}$，它的直角坐标方程是 $x^{2} + y^{2} = 9$。
+
+检验：$(3, \\frac{\\pi}{2})$ 是直角坐标点 $(0, 3)$，而 $0^{2} + 3^{2} = 9$。
+
+这节课我们读出圆 $r = a$ 的半径和直径，把它化为直角坐标方程，并求两个这样的圆之间圆环的面积。`,
+  ),
   knowledgePoints: [
     {
       id: "circle-at-origin-polar-form",
       title: t("Circles centered at the pole r = a", "以极点为圆心的圆 r = a"),
       explanation: t(
-        "The polar equation $r = a$ (where $a \\ne 0$) states that every point on the graph is at directed distance $|a|$ from the pole, for every angle $\\theta$:\n- The graph is a circle centered at the pole $(0, 0)$ with radius $R = |a|$.\n- The equation $r = -a$ produces the identical circle, because $(-a, \\theta) = (a, \\theta + \\pi)$.\n- Varying $a$ generates a family of concentric circles centered at the origin.",
-        "极坐标方程 $r = a$（其中 $a \\ne 0$）表示平面上所有与极点的距离均为 $|a|$ 的点构成的集合：\n- 其图形是以极点 $(0, 0)$ 为圆心、半径为 $R = |a|$ 的圆。\n- 方程 $r = -a$ 表示完全相同的圆，因为 $(-a, \\theta) = (a, \\theta + \\pi)$。\n- 改变常数 $a$ 的值，可得到以极点为中心的同心圆族。",
+        "The polar equation $r = a$ (where $a \\ne 0$) states that every point on the graph is at directed distance $|a|$ from the pole, for every angle $\\theta$:\n- The graph is a circle centered at the pole $(0, 0)$ with radius $R = |a|$.\n- The equation $r = -a$ produces the identical circle, because $(-a, \\theta) = (a, \\theta + \\pi)$.\n- Varying $a$ generates a family of concentric circles centered at the origin.\n\nFor $r = -6$: every point is $|-6| = 6$ from the pole, so the radius is $6$ and the diameter is $12$. Check: $(-6, 0)$ is the Cartesian point $(-6, 0)$ and $(-6, \\pi)$ is $(6, 0)$; they are $12$ apart, on opposite sides of the pole.\n\n> **Watch out.** A radius is never negative: $r = -6$ is the same circle as $r = 6$, with radius $6$. The diameter is twice the radius.",
+        "极坐标方程 $r = a$（其中 $a \\ne 0$）表示平面上所有与极点的距离均为 $|a|$ 的点构成的集合：\n- 其图形是以极点 $(0, 0)$ 为圆心、半径为 $R = |a|$ 的圆。\n- 方程 $r = -a$ 表示完全相同的圆，因为 $(-a, \\theta) = (a, \\theta + \\pi)$。\n- 改变常数 $a$ 的值，可得到以极点为中心的同心圆族。\n\n对 $r = -6$：每个点都离极点 $|-6| = 6$，所以半径是 $6$，直径是 $12$。检验：$(-6, 0)$ 是直角坐标点 $(-6, 0)$，$(-6, \\pi)$ 是 $(6, 0)$；它们在极点两侧，相距 $12$。\n\n> **注意。** 半径不会是负数：$r = -6$ 与 $r = 6$ 是同一个圆，半径为 $6$。直径是半径的两倍。",
       ),
       figure: concentricCirclesFigure,
       generate(rng) {
@@ -2148,9 +2603,25 @@ export const polarEquationsOfCirclesCenteredAtTheOrigin: TopicDef = {
             : t(`Find the diameter of the circle with polar equation $r = ${a}$.`, `求极坐标方程 $r = ${a}$ 所表示的圆的直径。`),
           answer: askRadius ? radius : diameter,
           wrong: [askRadius ? diameter : radius, a, radius * radius],
-          solution: t(
-            `The equation $r = ${a}$ represents all points at distance $|${a}| = ${radius}$ from the pole $(0, 0)$.\nThus the center is $(0, 0)$, radius is $${radius}$, and diameter is $2(${radius}) = ${diameter}$.`,
-            `方程 $r = ${a}$ 表示所有到极点 $(0, 0)$ 的距离为 $|${a}| = ${radius}$ 的点。\n因此圆心为 $(0, 0)$，半径为 $${radius}$，直径为 $2(${radius}) = ${diameter}$。`,
+          solution: walked(
+            [
+              [
+                ["Read the radius", "读出半径"],
+                t(
+                  `The equation fixes the distance from the pole for every angle, so every point is $|${a}| = ${radius}$ from the pole: the radius is $${radius}$.`,
+                  `这个方程对每个角都固定了到极点的距离，所以每个点都离极点 $|${a}| = ${radius}$：半径是 $${radius}$。`,
+                ),
+              ],
+              [
+                ["Double it for the diameter", "加倍得直径"],
+                t(`The diameter is twice the radius:`, `直径是半径的两倍：`),
+                [`d = 2(${radius}) = ${diameter}`],
+              ],
+            ],
+            t(
+              `The points $(${a}, 0)$ and $(${a}, \\pi)$ are the Cartesian points $(${a}, 0)$ and $(${-a}, 0)$, each $${radius}$ from the pole and $${diameter}$ apart. So the radius is $${radius}$ and the diameter is $${diameter}$; the question asks for the ${askRadius ? "radius" : "diameter"}.`,
+              `点 $(${a}, 0)$ 和 $(${a}, \\pi)$ 是直角坐标点 $(${a}, 0)$ 和 $(${-a}, 0)$，各离极点 $${radius}$，彼此相距 $${diameter}$。所以半径是 $${radius}$，直径是 $${diameter}$；题目问的是${askRadius ? "半径" : "直径"}。`,
+            ),
           ),
         });
       },
@@ -2160,8 +2631,8 @@ export const polarEquationsOfCirclesCenteredAtTheOrigin: TopicDef = {
       figure: precalculusDrawings4["polar-equations-of-circles-centered-at-the-origin#circle-at-origin-conversion"],
       title: t("Convert r = a to Cartesian equation", "将 r = a 转化为直角坐标方程"),
       explanation: t(
-        "Since polar and Cartesian coordinates are related by $x^2 + y^2 = r^2$, squaring both sides of $r = a$ gives:\n$$r^2 = a^2 \\implies x^2 + y^2 = a^2$$\nFor instance, the polar circle $r = 5$ has Cartesian equation $x^2 + y^2 = 25$.",
-        "由于极坐标与直角坐标的关系满足 $x^2 + y^2 = r^2$，将 $r = a$ 两边平方即可得：\n$$r^2 = a^2 \\implies x^2 + y^2 = a^2$$\n例如，极坐标方程 $r = 5$ 对应的直角坐标方程为 $x^2 + y^2 = 25$。",
+        "Since polar and Cartesian coordinates are related by $x^2 + y^2 = r^2$, squaring both sides of $r = a$ gives:\n$$r^2 = a^2 \\implies x^2 + y^2 = a^2$$\nFor instance, the polar circle $r = 5$ has Cartesian equation $x^2 + y^2 = 25$.\n\nFor $r = -7$: $r^{2} = 49$, so $x^{2} + y^{2} = 49$. Check: the polar point $(-7, 0)$ is the Cartesian point $(-7, 0)$, and $(-7)^{2} + 0^{2} = 49$.\n\n> **Watch out.** The right side is $a^{2}$, not $a$: $r = -7$ gives $49$, not $7$ or $-7$. The center is the pole, so there are no shifted brackets such as $(x + 7)^{2}$.",
+        "由于极坐标与直角坐标的关系满足 $x^2 + y^2 = r^2$，将 $r = a$ 两边平方即可得：\n$$r^2 = a^2 \\implies x^2 + y^2 = a^2$$\n例如，极坐标方程 $r = 5$ 对应的直角坐标方程为 $x^2 + y^2 = 25$。\n\n对 $r = -7$：$r^{2} = 49$，所以 $x^{2} + y^{2} = 49$。检验：极坐标点 $(-7, 0)$ 是直角坐标点 $(-7, 0)$，而 $(-7)^{2} + 0^{2} = 49$。\n\n> **注意。** 右边是 $a^{2}$，不是 $a$：$r = -7$ 给出 $49$，不是 $7$ 或 $-7$。圆心是极点，所以不会出现 $(x + 7)^{2}$ 这样平移的括号。",
       ),
       generate(rng) {
         const a = rng.pick([
@@ -2177,9 +2648,23 @@ export const polarEquationsOfCirclesCenteredAtTheOrigin: TopicDef = {
           ),
           answer: `x^2 + y^2 = ${a2}`,
           wrong: [`x^2 + y^2 = ${radius}`, `${sq("x", a)} + y^2 = ${a2}`, `x^2 + ${sq("y", a)} = ${a2}`],
-          solution: t(
-            `Square both sides of $r = ${a}$:\n$$r^2 = (${a})^2 = ${a2}$$\nSince $r^2 = x^2 + y^2$, the Cartesian equation is $x^2 + y^2 = ${a2}$.`,
-            `将 $r = ${a}$ 两边平方：\n$$r^2 = (${a})^2 = ${a2}$$\n由 $r^2 = x^2 + y^2$ 可得直角坐标方程为 $x^2 + y^2 = ${a2}$。`,
+          solution: walked(
+            [
+              [
+                ["Square both sides", "两边平方"],
+                t(`Square both sides; the square of $${a}$ is positive:`, `两边平方；$${a}$ 的平方是正数：`),
+                [`r^{2} = (${a})^{2} = ${a2}`],
+              ],
+              [
+                ["Replace r squared", "替换 r 的平方"],
+                t(`Since $r^{2} = x^{2} + y^{2}$:`, `因为 $r^{2} = x^{2} + y^{2}$：`),
+                [`x^2 + y^2 = ${a2}`],
+              ],
+            ],
+            t(
+              `The polar point $(${a}, 0)$ is the Cartesian point $(${a}, 0)$, and $(${a})^{2} + 0^{2} = ${a2}$.`,
+              `极坐标点 $(${a}, 0)$ 是直角坐标点 $(${a}, 0)$，而 $(${a})^{2} + 0^{2} = ${a2}$。`,
+            ),
           ),
         });
       },
@@ -2201,14 +2686,26 @@ export const polarEquationsOfRadialLines: TopicDef = {
   encompasses: [{ topic: "introduction-to-polar-coordinates", weight: 0.3 }],
   xp: 16,
   standards: ["CCSS.HSN.CN.B.4"],
+  intro: t(
+    `The equation $\\theta = \\frac{\\pi}{4}$ says nothing about $r$. With $r = 2$ it gives $(2, \\frac{\\pi}{4})$, the Cartesian point $(\\sqrt{2}, \\sqrt{2})$; with $r = -2$ it gives the point $2$ the other way, $(-\\sqrt{2}, -\\sqrt{2})$. All these points have $y = x$, so the graph is the whole line $y = x$ through the pole, with slope $\\tan\\frac{\\pi}{4} = 1$.
+
+Check: $(-\\sqrt{2}, -\\sqrt{2})$ has $\\frac{y}{x} = 1$, and it is $\\sqrt{2 + 2} = 2$ from the pole.
+
+In this lesson we find the slopes of lines $\\theta = \\alpha$, convert between $\\theta = \\alpha$ and $y = mx$, and see why two angles describe the same line.`,
+    `方程 $\\theta = \\frac{\\pi}{4}$ 对 $r$ 没有任何要求。$r = 2$ 时得 $(2, \\frac{\\pi}{4})$，即直角坐标点 $(\\sqrt{2}, \\sqrt{2})$；$r = -2$ 时得反方向 $2$ 处的点 $(-\\sqrt{2}, -\\sqrt{2})$。这些点都满足 $y = x$，所以图形是过极点的整条直线 $y = x$，斜率为 $\\tan\\frac{\\pi}{4} = 1$。
+
+检验：$(-\\sqrt{2}, -\\sqrt{2})$ 满足 $\\frac{y}{x} = 1$，而且它离极点 $\\sqrt{2 + 2} = 2$。
+
+这节课我们求直线 $\\theta = \\alpha$ 的斜率，在 $\\theta = \\alpha$ 与 $y = mx$ 之间互化，并说明为什么两个角表示同一条直线。`,
+  ),
   knowledgePoints: [
     {
       id: "radial-line-polar-equation",
       figure: precalculusDrawings3["polar-equations-of-radial-lines#radial-line-polar-equation"],
       title: t("The polar equation $\\theta = \\alpha$", "极坐标方程 $\\theta = \\alpha$"),
       explanation: t(
-        "The polar equation $\\theta = \\alpha$ places no restriction on $r$, allowing $r$ to be any real number:\n- For $r \\ge 0$, the points trace the ray making angle $\\alpha$ with the polar axis.\n- For $r < 0$, the points trace the opposite ray in direction $\\alpha + \\pi$.\nTogether, all values of $r \\in \\mathbb{R}$ form the complete straight line passing through the pole with slope:\n$$m = \\tan\\alpha$$",
-        "极坐标方程 $\\theta = \\alpha$ 对极径 $r$ 没有任何限制，$r$ 可取任意实数：\n- 当 $r \\ge 0$ 时，点构成与极轴夹角为 $\\alpha$ 的射线。\n- 当 $r < 0$ 时，点构成反方向角为 $\\alpha + \\pi$ 的反向射线。\n两部分结合，全体 $r \\in \\mathbb{R}$ 构成了整条穿过极点且斜率为：\n$$m = \\tan\\alpha$$\n的直线。",
+        "The polar equation $\\theta = \\alpha$ places no restriction on $r$, allowing $r$ to be any real number:\n- For $r \\ge 0$, the points trace the ray making angle $\\alpha$ with the polar axis.\n- For $r < 0$, the points trace the opposite ray in direction $\\alpha + \\pi$.\nTogether, all values of $r \\in \\mathbb{R}$ form the complete straight line passing through the pole with slope:\n$$m = \\tan\\alpha$$\n\nFor $\\theta = \\frac{2\\pi}{3}$: the slope is $\\tan\\frac{2\\pi}{3} = -\\sqrt{3}$. Check: the point $(2, \\frac{2\\pi}{3})$ is $(-1, \\sqrt{3})$, and $\\frac{\\sqrt{3}}{-1} = -\\sqrt{3}$.\n\n> **Watch out.** The slope is the tangent, $\\frac{y}{x}$, not the cotangent: $\\tan\\frac{\\pi}{6} = \\frac{\\sqrt{3}}{3}$, not $\\sqrt{3}$. A direction in Quadrant II or IV gives a negative slope.",
+        "极坐标方程 $\\theta = \\alpha$ 对极径 $r$ 没有任何限制，$r$ 可取任意实数：\n- 当 $r \\ge 0$ 时，点构成与极轴夹角为 $\\alpha$ 的射线。\n- 当 $r < 0$ 时，点构成反方向角为 $\\alpha + \\pi$ 的反向射线。\n两部分结合，全体 $r \\in \\mathbb{R}$ 构成了整条穿过极点且斜率为：\n$$m = \\tan\\alpha$$\n的直线。\n\n对 $\\theta = \\frac{2\\pi}{3}$：斜率是 $\\tan\\frac{2\\pi}{3} = -\\sqrt{3}$。检验：点 $(2, \\frac{2\\pi}{3})$ 是 $(-1, \\sqrt{3})$，而 $\\frac{\\sqrt{3}}{-1} = -\\sqrt{3}$。\n\n> **注意。** 斜率是正切 $\\frac{y}{x}$，不是余切：$\\tan\\frac{\\pi}{6} = \\frac{\\sqrt{3}}{3}$，不是 $\\sqrt{3}$。方向在第二或第四象限时，斜率为负。",
       ),
       generate(rng) {
         const lineData = [
@@ -2288,10 +2785,51 @@ export const polarEquationsOfRadialLines: TopicDef = {
             ),
             at(opposite),
             [at(piAngle(tw + 6)), at(piAngle(-tw)), at(piAngle(tw + 4)), at(piAngle(tw + 8))],
-            t(
-              `Adding $\\pi$ to the angle and changing the sign of $r$ gives the same point, so $\\left(${r},\\, ${opposite}\\right)$ is the point $\\left(${-r},\\, ${item.alpha}\\right)$, which satisfies $\\theta = ${item.alpha}$. It lies on the opposite ray. The other angles do not differ from $${item.alpha}$ by a multiple of $\\pi$.`,
-              `角加 $\\pi$ 并改变 $r$ 的符号，得到的是同一个点，所以 $\\left(${r},\\, ${opposite}\\right)$ 就是点 $\\left(${-r},\\, ${item.alpha}\\right)$，它满足 $\\theta = ${item.alpha}$，位于反向射线上。其余的角与 $${item.alpha}$ 之差都不是 $\\pi$ 的整数倍。`,
+            walked(
+              [
+                [
+                  ["Find both rays of the line", "找出直线的两条射线"],
+                  t(
+                    `With $r$ any real number, the line covers the ray at $${item.alpha}$ and, for negative $r$, the opposite ray:`,
+                    `$r$ 取任意实数时，这条直线包括 $${item.alpha}$ 方向的射线，以及 $r$ 为负时的相反射线：`,
+                  ),
+                  [`${item.alpha} + \\pi ${tw + 12 >= 24 ? "- 2\\pi " : ""}= ${opposite}`],
+                ],
+                [
+                  ["Match the point", "对照选项"],
+                  t(
+                    `So $\\left(${r},\\, ${opposite}\\right)$ lies on the opposite ray: it is the point $\\left(${-r},\\, ${item.alpha}\\right)$, which has $\\theta = ${item.alpha}$.`,
+                    `所以 $\\left(${r},\\, ${opposite}\\right)$ 在相反的射线上：它就是点 $\\left(${-r},\\, ${item.alpha}\\right)$，满足 $\\theta = ${item.alpha}$。`,
+                  ),
+                ],
+              ],
+              t(
+                `Both rays have the slope of the line: $\\tan${opposite} = \\tan${item.alpha} = ${item.slope}$.`,
+                `两条射线的斜率都是这条直线的斜率：$\\tan${opposite} = \\tan${item.alpha} = ${item.slope}$。`,
+              ),
             ),
+            [
+              why(
+                at(piAngle(tw + 6)),
+                `This direction is a quarter turn from $${item.alpha}$, so the point is on the perpendicular line through the pole.`,
+                `这个方向与 $${item.alpha}$ 相差四分之一圈，所以这个点在过极点的垂直直线上。`,
+              ),
+              why(
+                at(piAngle(-tw)),
+                `The angle $${piAngle(-tw)}$ reflects $${item.alpha}$ across the polar axis; the point is on the line with the opposite slope.`,
+                `角 $${piAngle(-tw)}$ 是 $${item.alpha}$ 关于极轴的对称角；这个点在斜率相反的直线上。`,
+              ),
+              why(
+                at(piAngle(tw + 4)),
+                `This direction is $\\frac{\\pi}{3}$ from $${item.alpha}$; a point is on the line only when its angle differs from $${item.alpha}$ by a multiple of $\\pi$.`,
+                `这个方向与 $${item.alpha}$ 相差 $\\frac{\\pi}{3}$；只有角与 $${item.alpha}$ 相差 $\\pi$ 的整数倍时，点才在这条直线上。`,
+              ),
+              why(
+                at(piAngle(tw + 8)),
+                `This direction is $\\frac{2\\pi}{3}$ from $${item.alpha}$; a point is on the line only when its angle differs from $${item.alpha}$ by a multiple of $\\pi$.`,
+                `这个方向与 $${item.alpha}$ 相差 $\\frac{2\\pi}{3}$；只有角与 $${item.alpha}$ 相差 $\\pi$ 的整数倍时，点才在这条直线上。`,
+              ),
+            ],
           );
         }
         const angleTex = mode === "slopeDeg" ? item.deg : item.alpha;
@@ -2314,9 +2852,25 @@ export const polarEquationsOfRadialLines: TopicDef = {
           ),
           answer: slopeAnswer,
           wrong: [item.bad1, item.bad2, "0"],
-          solution: t(
-            `The line passes through the pole with inclination angle $\\alpha = ${angleTex}$.\nThe slope is $m = \\tan\\left(${angleTex}\\right) = ${item.slope}$.`,
-            `该直线通过极点，倾斜角为 $\\alpha = ${angleTex}$。\n因此斜率为 $m = \\tan\\left(${angleTex}\\right) = ${item.slope}$。`,
+          solution: walked(
+            [
+              [
+                ["Read the angle of the line", "读出直线的倾斜角"],
+                t(
+                  `The line $\\theta = ${angleTex}$ passes through the pole and makes the angle $${angleTex}$ with the polar axis, the positive $x$-axis.`,
+                  `直线 $\\theta = ${angleTex}$ 过极点，与极轴（$x$ 轴正方向）成 $${angleTex}$ 角。`,
+                ),
+              ],
+              [
+                ["Take the tangent", "取正切"],
+                t(`The slope of a line is the tangent of the angle it makes with the $x$-axis:`, `直线的斜率是它与 $x$ 轴所成角的正切：`),
+                [`m = \\tan\\left(${angleTex}\\right) = ${item.slope}`],
+              ],
+            ],
+            t(
+              `The point $(2, ${angleTex})$ on the line is the Cartesian point $(${doubledPoint[twelfthsOf(item.alpha)]?.[0]}, ${doubledPoint[twelfthsOf(item.alpha)]?.[1]})$, and its rise over run from the pole is the slope:\n\n$$\\frac{${doubledPoint[twelfthsOf(item.alpha)]?.[1]}}{${doubledPoint[twelfthsOf(item.alpha)]?.[0]}} = ${item.slope}$$`,
+              `直线上的点 $(2, ${angleTex})$ 是直角坐标点 $(${doubledPoint[twelfthsOf(item.alpha)]?.[0]}, ${doubledPoint[twelfthsOf(item.alpha)]?.[1]})$，它相对极点的纵横比就是斜率：\n\n$$\\frac{${doubledPoint[twelfthsOf(item.alpha)]?.[1]}}{${doubledPoint[twelfthsOf(item.alpha)]?.[0]}} = ${item.slope}$$`,
+            ),
           ),
         });
       },
@@ -2326,8 +2880,8 @@ export const polarEquationsOfRadialLines: TopicDef = {
       figure: precalculusDrawings4["polar-equations-of-radial-lines#radial-line-to-cartesian"],
       title: t("Convert $\\theta = \\alpha$ to a Cartesian equation", "将 $\\theta = \\alpha$ 转化为直角坐标方程"),
       explanation: t(
-        "A fixed angle with any distance describes a whole line through the origin, because negative distances reach the points on the opposite side. To convert $\\theta = \\alpha$ into Cartesian coordinates, take the tangent of both sides:\n$$\\tan\\theta = \\tan\\alpha \\implies \\frac{y}{x} = \\tan\\alpha \\implies y = (\\tan\\alpha)x$$\nFor example, $\\theta = \\frac{\\pi}{3}$ gives $y = \\left(\\tan\\frac{\\pi}{3}\\right)x = \\sqrt{3}x$.",
-        "固定角度而距离任意时，描述的是一条经过原点的直线，因为负的距离会到达另一侧的点。将 $\\theta = \\alpha$ 转化为直角坐标方程时，两边取正切：\n$$\\tan\\theta = \\tan\\alpha \\implies \\frac{y}{x} = \\tan\\alpha \\implies y = (\\tan\\alpha)x$$\n例如，$\\theta = \\frac{\\pi}{3}$ 对应直线 $y = \\left(\\tan\\frac{\\pi}{3}\\right)x = \\sqrt{3}x$。",
+        "A fixed angle with any distance describes a whole line through the origin, because negative distances reach the points on the opposite side. To convert $\\theta = \\alpha$ into Cartesian coordinates, take the tangent of both sides:\n$$\\tan\\theta = \\tan\\alpha \\implies \\frac{y}{x} = \\tan\\alpha \\implies y = (\\tan\\alpha)x$$\nFor example, $\\theta = \\frac{\\pi}{3}$ gives $y = \\left(\\tan\\frac{\\pi}{3}\\right)x = \\sqrt{3}x$.\n\nFor $\\theta = \\frac{5\\pi}{6}$: $\\tan\\frac{5\\pi}{6} = -\\frac{\\sqrt{3}}{3}$, so the line is $y = -\\frac{\\sqrt{3}}{3}x$. Check: the point $(2, \\frac{5\\pi}{6})$ is $(-\\sqrt{3}, 1)$, and $-\\frac{\\sqrt{3}}{3}(-\\sqrt{3}) = 1$.\n\n> **Watch out.** $\\theta = \\alpha$ and $\\theta = \\alpha + \\pi$ give the same line: $\\theta = \\frac{7\\pi}{6}$ is also $y = \\frac{\\sqrt{3}}{3}x$. Going back from $y = mx$, choose the angle in $0 \\le \\alpha < \\pi$ whose tangent is $m$.",
+        "固定角度而距离任意时，描述的是一条经过原点的直线，因为负的距离会到达另一侧的点。将 $\\theta = \\alpha$ 转化为直角坐标方程时，两边取正切：\n$$\\tan\\theta = \\tan\\alpha \\implies \\frac{y}{x} = \\tan\\alpha \\implies y = (\\tan\\alpha)x$$\n例如，$\\theta = \\frac{\\pi}{3}$ 对应直线 $y = \\left(\\tan\\frac{\\pi}{3}\\right)x = \\sqrt{3}x$。\n\n对 $\\theta = \\frac{5\\pi}{6}$：$\\tan\\frac{5\\pi}{6} = -\\frac{\\sqrt{3}}{3}$，所以直线是 $y = -\\frac{\\sqrt{3}}{3}x$。检验：点 $(2, \\frac{5\\pi}{6})$ 是 $(-\\sqrt{3}, 1)$，而 $-\\frac{\\sqrt{3}}{3}(-\\sqrt{3}) = 1$。\n\n> **注意。** $\\theta = \\alpha$ 和 $\\theta = \\alpha + \\pi$ 是同一条直线：$\\theta = \\frac{7\\pi}{6}$ 也是 $y = \\frac{\\sqrt{3}}{3}x$。由 $y = mx$ 反求时，要在 $0 \\le \\alpha < \\pi$ 中选正切为 $m$ 的角。",
       ),
       generate(rng) {
         const lineData = [
@@ -2442,6 +2996,36 @@ export const polarEquationsOfRadialLines: TopicDef = {
         ];
         const item = rng.pick(lineData);
         const mode = rng.pick(["polarToCartRad", "polarToCartDeg", "cartToPolarSlope", "cartToPolarStd"]);
+        const slopeOf = (eq: string) => {
+          const s = eq.slice(4, -1);
+          return s === "" ? "1" : s === "-" ? "-1" : s;
+        };
+        const m = slopeOf(item.eq);
+        const tw = twelfthsOf(item.alpha);
+        const twReduced = twelfthsOf(item.reducedAlpha);
+        const [px, py] = doubledPoint[twReduced] ?? ["", ""];
+        const perpendicular = `\\theta = ${piAngle((twReduced + 6) % 12)}`;
+        const backReasons: Reason[] = [
+          [
+            `$${perpendicular}$`,
+            "This angle is a quarter turn from the line, so it gives the perpendicular line through the pole.",
+            "这个角与直线相差四分之一圈，给出的是过极点的垂直直线。",
+          ],
+          [
+            `$r = ${item.reducedAlpha}$`,
+            `This fixes the distance from the pole at $${item.reducedAlpha}$, so it is a circle, not a line through the pole.`,
+            `这把到极点的距离固定为 $${item.reducedAlpha}$，所以它是圆，不是过极点的直线。`,
+          ],
+          [
+            "$\\theta = 0$",
+            `$\\theta = 0$ is the polar axis, the line $y = 0$, whose slope is $0$, not $${m}$.`,
+            `$\\theta = 0$ 是极轴，即直线 $y = 0$，斜率是 $0$，不是 $${m}$。`,
+          ],
+        ];
+        const backCheck = t(
+          `The point $(2, ${item.reducedAlpha})$ is the Cartesian point $(${px}, ${py})$, and its ratio $y/x$ is the slope of the line:\n\n$$\\frac{${py}}{${px}} = ${m}$$`,
+          `点 $(2, ${item.reducedAlpha})$ 是直角坐标点 $(${px}, ${py})$，它的 $y/x$ 正是直线的斜率：\n\n$$\\frac{${py}}{${px}} = ${m}$$`,
+        );
 
         if (mode === "cartToPolarStd") {
           const c = rng.int(1, 5);
@@ -2452,19 +3036,27 @@ export const polarEquationsOfRadialLines: TopicDef = {
               `Convert the Cartesian equation $${cartEq}$ into a polar equation of the form $\\theta = \\alpha$ with $0 \\le \\alpha < \\pi$.`,
               `将直角坐标方程 $${cartEq}$ 转化为形如 $\\theta = \\alpha$（$0 \\le \\alpha < \\pi$）的极坐标方程。`,
             ),
-            t(`$\\theta = ${item.reducedAlpha}$`, `$\\theta = ${item.reducedAlpha}$`),
-            [
-              t(
-                `$\\theta = ${piAngle((twelfthsOf(item.reducedAlpha) + 6) % 12)}$`,
-                `$\\theta = ${piAngle((twelfthsOf(item.reducedAlpha) + 6) % 12)}$`,
-              ),
-              t(`$r = ${item.reducedAlpha}$`, `$r = ${item.reducedAlpha}$`),
-              t(`$\\theta = 0$`, `$\\theta = 0$`),
-            ],
-            t(
-              `Substitute $x = r\\cos\\theta$ and $y = r\\sin\\theta$ into $${cartEq}$ to find $\\tan\\theta$. For $0 \\le \\alpha < \\pi$, the polar equation is $\\theta = ${item.reducedAlpha}$.`,
-              `将 $x = r\\cos\\theta$ 与 $y = r\\sin\\theta$ 代入 $${cartEq}$ 可得 $\\tan\\theta$ 的值。在 $0 \\le \\alpha < \\pi$ 范围内，极坐标方程为 $\\theta = ${item.reducedAlpha}$。`,
+            same(`$\\theta = ${item.reducedAlpha}$`),
+            [same(`$${perpendicular}$`), same(`$r = ${item.reducedAlpha}$`), same(`$\\theta = 0$`)],
+            walked(
+              [
+                [
+                  ["Solve for y", "解出 y"],
+                  t(`Move the $x$-term across and divide by the coefficient of $y$:`, `把 $x$ 项移到另一边，再除以 $y$ 的系数：`),
+                  [`${cartEq} \\implies ${item.eq}`],
+                ],
+                [
+                  ["Find the angle", "求角"],
+                  t(
+                    `The slope $${m}$ is $\\tan\\alpha$, and in $0 \\le \\alpha < \\pi$ only one angle has this tangent:`,
+                    `斜率 $${m}$ 就是 $\\tan\\alpha$，在 $0 \\le \\alpha < \\pi$ 中只有一个角的正切等于它：`,
+                  ),
+                  [`\\theta = ${item.reducedAlpha}`],
+                ],
+              ],
+              backCheck,
             ),
+            backReasons,
           );
         }
 
@@ -2475,19 +3067,26 @@ export const polarEquationsOfRadialLines: TopicDef = {
               `Convert the Cartesian line $${item.eq}$ into a polar equation of the form $\\theta = \\alpha$ with $0 \\le \\alpha < \\pi$.`,
               `将直角坐标直线 $${item.eq}$ 转化为形如 $\\theta = \\alpha$（$0 \\le \\alpha < \\pi$）的极坐标方程。`,
             ),
-            t(`$\\theta = ${item.reducedAlpha}$`, `$\\theta = ${item.reducedAlpha}$`),
-            [
-              t(
-                `$\\theta = ${piAngle((twelfthsOf(item.reducedAlpha) + 6) % 12)}$`,
-                `$\\theta = ${piAngle((twelfthsOf(item.reducedAlpha) + 6) % 12)}$`,
-              ),
-              t(`$r = ${item.reducedAlpha}$`, `$r = ${item.reducedAlpha}$`),
-              t(`$\\theta = 0$`, `$\\theta = 0$`),
-            ],
-            t(
-              `The slope of $${item.eq}$ is $\\tan\\alpha$. For $0 \\le \\alpha < \\pi$, $\\theta = ${item.reducedAlpha}$.`,
-              `直线 $${item.eq}$ 的斜率为 $\\tan\\alpha$。在 $0 \\le \\alpha < \\pi$ 内，$\\theta = ${item.reducedAlpha}$。`,
+            same(`$\\theta = ${item.reducedAlpha}$`),
+            [same(`$${perpendicular}$`), same(`$r = ${item.reducedAlpha}$`), same(`$\\theta = 0$`)],
+            walked(
+              [
+                [
+                  ["Read the slope", "读出斜率"],
+                  t(
+                    `The line passes through the origin with slope $${m}$, and the slope of a line through the pole is $\\tan\\alpha$.`,
+                    `这条直线过原点，斜率为 $${m}$；过极点的直线的斜率是 $\\tan\\alpha$。`,
+                  ),
+                ],
+                [
+                  ["Find the angle", "求角"],
+                  t(`In $0 \\le \\alpha < \\pi$ only one angle has this tangent:`, `在 $0 \\le \\alpha < \\pi$ 中只有一个角的正切等于它：`),
+                  [`\\tan\\alpha = ${m} \\implies \\theta = ${item.reducedAlpha}`],
+                ],
+              ],
+              backCheck,
             ),
+            backReasons,
           );
         }
 
@@ -2498,12 +3097,35 @@ export const polarEquationsOfRadialLines: TopicDef = {
             `Convert the polar equation $\\theta = ${angleTex}$ into a Cartesian equation.`,
             `将极坐标方程 $\\theta = ${angleTex}$ 转化为直角坐标方程。`,
           ),
-          t(`$${item.eq}$`, `$${item.eq}$`),
-          [t(`$${item.bad1}$`, `$${item.bad1}$`), t(`$${item.bad2}$`, `$${item.bad2}$`), t(`$x = 0$`, `$x = 0$`)],
-          t(
-            `Take tangent of both sides: $\\tan\\theta = \\tan\\left(${angleTex}\\right)$.\nSince $\\tan\\theta = y/x$, we obtain $y = (\\tan\\left(${angleTex}\\right))x$, which simplifies to $${item.eq}$.`,
-            `两边取正切得：$\\tan\\theta = \\tan\\left(${angleTex}\\right)$。\n由于 $\\tan\\theta = y/x$，化简即得 $${item.eq}$。`,
+          same(`$${item.eq}$`),
+          [same(`$${item.bad1}$`), same(`$${item.bad2}$`), same(`$x = 0$`)],
+          walked(
+            [
+              [
+                ["Take the tangent", "取正切"],
+                t(`Take the tangent of both sides:`, `两边取正切：`),
+                [`\\tan\\theta = \\tan\\left(${angleTex}\\right) = ${m}`],
+              ],
+              [
+                ["Use y over x", "用 y/x 替换"],
+                t(`Since $\\tan\\theta = \\frac{y}{x}$:`, `因为 $\\tan\\theta = \\frac{y}{x}$：`),
+                [`\\frac{y}{x} = ${m} \\implies ${item.eq}`],
+              ],
+            ],
+            t(
+              `The point $(2, ${angleTex})$ is the Cartesian point $(${doubledPoint[tw]?.[0]}, ${doubledPoint[tw]?.[1]})$, and $\\frac{${doubledPoint[tw]?.[1]}}{${doubledPoint[tw]?.[0]}} = ${m}$. The point with $r = -2$ is the opposite point, with the same ratio, so the whole line through the pole is $${item.eq}$.`,
+              `点 $(2, ${angleTex})$ 是直角坐标点 $(${doubledPoint[tw]?.[0]}, ${doubledPoint[tw]?.[1]})$，而 $\\frac{${doubledPoint[tw]?.[1]}}{${doubledPoint[tw]?.[0]}} = ${m}$。$r = -2$ 对应的是关于极点的对称点，比值相同，所以过极点的整条直线就是 $${item.eq}$。`,
+            ),
           ),
+          [
+            why(same(`$${item.bad1}$`), ...slopeMistake(slopeOf(item.bad1), m, angleTex, quadrantOf(tw))),
+            why(same(`$${item.bad2}$`), ...slopeMistake(slopeOf(item.bad2), m, angleTex, quadrantOf(tw))),
+            why(
+              same("$x = 0$"),
+              `$x = 0$ is the vertical line $\\theta = \\frac{\\pi}{2}$; this line has slope $${m}$.`,
+              `$x = 0$ 是竖直线 $\\theta = \\frac{\\pi}{2}$；这条直线的斜率是 $${m}$。`,
+            ),
+          ],
         );
       },
     },
@@ -2524,13 +3146,25 @@ export const polarEquationsOfCirclesCenteredOnTheCoordinateAxes: TopicDef = {
   encompasses: [],
   xp: 16,
   standards: ["CCSS.HSG.GPE.A.1", "CCSS.HSN.CN.B.4"],
+  intro: t(
+    `Take $r = 4\\cos\\theta$. Multiplying by $r$ gives $r^{2} = 4r\\cos\\theta$, and since $r^{2} = x^{2} + y^{2}$ and $r\\cos\\theta = x$, this is $x^{2} + y^{2} = 4x$. Completing the square gives $(x - 2)^{2} + y^{2} = 4$: the circle with center $(2, 0)$ and radius $2$, which passes through the pole.
+
+Check: $\\theta = 0$ gives $r = 4$, the point $(4, 0)$, and $(4 - 2)^{2} + 0^{2} = 4$; $\\theta = \\frac{\\pi}{2}$ gives $r = 0$, the pole.
+
+In this lesson we convert circles $r = 2a\\cos\\theta$ and $r = 2b\\sin\\theta$ to Cartesian form, read their centers and radii, and write such a circle from its center or from a point on it.`,
+    `取 $r = 4\\cos\\theta$。两边乘 $r$ 得 $r^{2} = 4r\\cos\\theta$，又 $r^{2} = x^{2} + y^{2}$，$r\\cos\\theta = x$，所以它就是 $x^{2} + y^{2} = 4x$。配方得 $(x - 2)^{2} + y^{2} = 4$：圆心 $(2, 0)$、半径 $2$ 的圆，经过极点。
+
+检验：$\\theta = 0$ 时 $r = 4$，即点 $(4, 0)$，而 $(4 - 2)^{2} + 0^{2} = 4$；$\\theta = \\frac{\\pi}{2}$ 时 $r = 0$，即极点。
+
+这节课我们把圆 $r = 2a\\cos\\theta$ 和 $r = 2b\\sin\\theta$ 化为直角坐标方程，读出圆心和半径，并由圆心或圆上一点写出这样的圆。`,
+  ),
   knowledgePoints: [
     {
       id: "circle-on-x-axis-polar",
       title: t("Circles of the form $r = 2a\\cos\\theta$", "形如 $r = 2a\\cos\\theta$ 的圆"),
       explanation: t(
-        "Multiplying $r = 2a\\cos\\theta$ by $r$ gives:\n$$r^2 = 2a(r\\cos\\theta) \\implies x^2 + y^2 = 2ax \\implies (x - a)^2 + y^2 = a^2$$\nThis is a circle with:\n- Center at $(a, 0)$ on the $x$-axis\n- Radius $R = |a|$\n- Passing through the pole $(0, 0)$ and tangent to the $y$-axis.",
-        "将方程 $r = 2a\\cos\\theta$ 两端同乘 $r$ 可得：\n$$r^2 = 2a(r\\cos\\theta) \\implies x^2 + y^2 = 2ax \\implies (x - a)^2 + y^2 = a^2$$\n这表示一个圆，其特征为：\n- 圆心在 $x$ 轴上的 $(a, 0)$\n- 半径为 $R = |a|$\n- 经过极点 $(0, 0)$ 且与 $y$ 轴相切于极点。",
+        "Multiplying $r = 2a\\cos\\theta$ by $r$ gives:\n$$r^2 = 2a(r\\cos\\theta) \\implies x^2 + y^2 = 2ax \\implies (x - a)^2 + y^2 = a^2$$\nThis is a circle with:\n- Center at $(a, 0)$ on the $x$-axis\n- Radius $R = |a|$\n- Passing through the pole $(0, 0)$ and tangent to the $y$-axis.\n\nFor $r = -6\\cos\\theta$: $2a = -6$, so $a = -3$ and the circle is $(x + 3)^2 + y^2 = 9$, with center $(-3, 0)$ and radius $3$. Check: $\\theta = 0$ gives $r = -6$, the point $(-6, 0)$, and $(-6 + 3)^{2} + 0^{2} = 9$.\n\n> **Watch out.** The coefficient $2a$ is the diameter: halve it for the center $(a, 0)$, and the radius is $|a|$. A cosine circle has its center on the $x$-axis, a sine circle on the $y$-axis.",
+        "将方程 $r = 2a\\cos\\theta$ 两端同乘 $r$ 可得：\n$$r^2 = 2a(r\\cos\\theta) \\implies x^2 + y^2 = 2ax \\implies (x - a)^2 + y^2 = a^2$$\n这表示一个圆，其特征为：\n- 圆心在 $x$ 轴上的 $(a, 0)$\n- 半径为 $R = |a|$\n- 经过极点 $(0, 0)$ 且与 $y$ 轴相切于极点。\n\n对 $r = -6\\cos\\theta$：$2a = -6$，所以 $a = -3$，圆是 $(x + 3)^2 + y^2 = 9$，圆心 $(-3, 0)$，半径 $3$。检验：$\\theta = 0$ 时 $r = -6$，即点 $(-6, 0)$，而 $(-6 + 3)^{2} + 0^{2} = 9$。\n\n> **注意。** 系数 $2a$ 是直径：取一半得圆心 $(a, 0)$，半径是 $|a|$。余弦型的圆圆心在 $x$ 轴上，正弦型的圆圆心在 $y$ 轴上。",
       ),
       figure: cosineCircleFigure,
       generate(rng) {
@@ -2549,14 +3183,48 @@ export const polarEquationsOfCirclesCenteredOnTheCoordinateAxes: TopicDef = {
             rng,
             t(
               `Find the polar equation for the circle centered at $(${a}, 0)$ with radius $${radius}$.`,
-              `求圆心在 $(${a}, 0)$、半径为 $r = ${radius}$ 的圆的极坐标方程。`,
+              `求圆心在 $(${a}, 0)$、半径为 $${radius}$ 的圆的极坐标方程。`,
             ),
             t(`$${rightEq}$`, `$${rightEq}$`),
             [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
-            t(
-              `The standard Cartesian equation is $${sq("x", a)} + y^2 = ${a2} \\implies x^2 + y^2 = ${twoA}x$.\nSubstitute $r^2 = x^2 + y^2$ and $x = r\\cos\\theta$:\n$$r^2 = ${twoA}r\\cos\\theta \\implies ${rightEq}$$`,
-              `直角坐标方程为 $${sq("x", a)} + y^2 = ${a2} \\implies x^2 + y^2 = ${twoA}x$。\n代入 $r^2 = x^2 + y^2$ 及 $x = r\\cos\\theta$：\n$$r^2 = ${twoA}r\\cos\\theta \\implies ${rightEq}$$`,
+            walked(
+              [
+                [
+                  ["Expand the Cartesian equation", "展开直角坐标方程"],
+                  t(`Write the circle and expand the square; the $${a2}$ cancels:`, `写出圆的方程并展开平方，$${a2}$ 抵消：`),
+                  [`${sq("x", a)} + y^2 = ${a2}`, `${poly([1, "x^2"], [-twoA, "x"], [a2, ""])} + y^2 = ${a2}`, `x^2 + y^2 = ${twoA}x`],
+                ],
+                [
+                  ["Substitute polar coordinates", "代入极坐标"],
+                  t(
+                    `Replace $x^2 + y^2$ by $r^2$ and $x$ by $r\\cos\\theta$, then divide by $r$; the pole stays on the curve at $\\theta = \\frac{\\pi}{2}$:`,
+                    `把 $x^2 + y^2$ 换成 $r^2$，$x$ 换成 $r\\cos\\theta$，再除以 $r$；极点仍在曲线上（$\\theta = \\frac{\\pi}{2}$）：`,
+                  ),
+                  [`r^2 = ${twoA}r\\cos\\theta \\implies ${rightEq}`],
+                ],
+              ],
+              t(
+                `$\\theta = 0$ gives $r = ${twoA}$, the Cartesian point $(${twoA}, 0)$, which is on the circle:\n\n$$(${twoA} - ${paren(a)})^{2} + 0^{2} = ${a2}$$`,
+                `$\\theta = 0$ 时 $r = ${twoA}$，即直角坐标点 $(${twoA}, 0)$，它在圆上：\n\n$$(${twoA} - ${paren(a)})^{2} + 0^{2} = ${a2}$$`,
+              ),
             ),
+            [
+              why(
+                same(`$${wrong1}$`),
+                `$${wrong1}$ is the circle with center $(0, ${a})$ on the $y$-axis; a center on the $x$-axis goes with $\\cos\\theta$, since $x = r\\cos\\theta$.`,
+                `$${wrong1}$ 是圆心在 $y$ 轴上 $(0, ${a})$ 的圆；圆心在 $x$ 轴上要用 $\\cos\\theta$，因为 $x = r\\cos\\theta$。`,
+              ),
+              why(
+                same(`$${wrong2}$`),
+                `This circle has diameter $${radius}$ and center $(${a % 2 === 0 ? a / 2 : `${a}/2`}, 0)$; the coefficient is the diameter $2a = ${twoA}$.`,
+                `这个圆的直径是 $${radius}$，圆心 $(${a % 2 === 0 ? a / 2 : `${a}/2`}, 0)$；系数应是直径 $2a = ${twoA}$。`,
+              ),
+              why(
+                same(`$${wrong3}$`),
+                `This is the mirror image, the circle centered at $(${-a}, 0)$: the sign of the coefficient is the sign of the center's $x$-coordinate.`,
+                `这是对称的圆，圆心在 $(${-a}, 0)$：系数的符号就是圆心横坐标的符号。`,
+              ),
+            ],
           );
         }
 
@@ -2567,9 +3235,26 @@ export const polarEquationsOfCirclesCenteredOnTheCoordinateAxes: TopicDef = {
           ),
           answer: `${sq("x", a)} + y^2 = ${a2}`,
           wrong: [`x^2 + ${sq("y", a)} = ${a2}`, `${sq("x", twoA)} + y^2 = ${twoA * twoA}`, `${sq("x", -a)} + y^2 = ${a2}`],
-          solution: t(
-            `Multiply by $r$: $r^2 = ${twoA}r\\cos\\theta \\implies x^2 + y^2 = ${twoA}x$.\nComplete the square: $${poly([1, "x^2"], [-twoA, "x"], [a2, ""])} + y^2 = ${a2} \\implies ${sq("x", a)} + y^2 = ${a2}$.\nCenter is $(${a}, 0)$ and radius is $${radius}$.`,
-            `两端同乘 $r$ 得 $r^2 = ${twoA}r\\cos\\theta \\implies x^2 + y^2 = ${twoA}x$。\n配方得 $${poly([1, "x^2"], [-twoA, "x"], [a2, ""])} + y^2 = ${a2} \\implies ${sq("x", a)} + y^2 = ${a2}$。\n因此圆心为 $(${a}, 0)$，半径为 $${radius}$。`,
+          solution: walked(
+            [
+              [
+                ["Multiply by r", "两边乘 r"],
+                t(
+                  `Multiply both sides by $r$, then use $r^2 = x^2 + y^2$ and $r\\cos\\theta = x$:`,
+                  `两边乘 $r$，再用 $r^2 = x^2 + y^2$ 和 $r\\cos\\theta = x$：`,
+                ),
+                [`r^2 = ${twoA}r\\cos\\theta`, `x^2 + y^2 = ${twoA}x`],
+              ],
+              [
+                ["Complete the square", "配方"],
+                t(`Move $${twoA}x$ to the left and add $${a2}$ to both sides:`, `把 $${twoA}x$ 移到左边，两边加 $${a2}$：`),
+                [`${poly([1, "x^2"], [-twoA, "x"], [a2, ""])} + y^2 = ${a2}`, `${sq("x", a)} + y^2 = ${a2}`],
+              ],
+            ],
+            t(
+              `The center is $(${a}, 0)$ and the radius $${radius}$. $\\theta = 0$ gives $r = ${twoA}$, the point $(${twoA}, 0)$, and $\\theta = \\frac{\\pi}{2}$ gives the pole; both are on the circle:\n\n$$(${twoA} - ${paren(a)})^{2} + 0^{2} = ${a2}, \\quad (0 - ${paren(a)})^{2} + 0^{2} = ${a2}$$`,
+              `圆心是 $(${a}, 0)$，半径 $${radius}$。$\\theta = 0$ 时 $r = ${twoA}$，即点 $(${twoA}, 0)$；$\\theta = \\frac{\\pi}{2}$ 时是极点；两者都在圆上：\n\n$$(${twoA} - ${paren(a)})^{2} + 0^{2} = ${a2}, \\quad (0 - ${paren(a)})^{2} + 0^{2} = ${a2}$$`,
+            ),
           ),
         });
       },
@@ -2578,8 +3263,8 @@ export const polarEquationsOfCirclesCenteredOnTheCoordinateAxes: TopicDef = {
       id: "circle-on-y-axis-polar",
       title: t("Circles of the form $r = 2b\\sin\\theta$", "形如 $r = 2b\\sin\\theta$ 的圆"),
       explanation: t(
-        "Multiplying $r = 2b\\sin\\theta$ by $r$ gives:\n$$r^2 = 2b(r\\sin\\theta) \\implies x^2 + y^2 = 2by \\implies x^2 + (y - b)^2 = b^2$$\nThis is a circle with:\n- Center at $(0, b)$ on the $y$-axis\n- Radius $R = |b|$\n- Passing through the pole $(0, 0)$ and tangent to the $x$-axis.",
-        "将方程 $r = 2b\\sin\\theta$ 两端同乘 $r$ 可得：\n$$r^2 = 2b(r\\sin\\theta) \\implies x^2 + y^2 = 2by \\implies x^2 + (y - b)^2 = b^2$$\n这表示一个圆，其特征为：\n- 圆心在 $y$ 轴上的 $(0, b)$\n- 半径为 $R = |b|$\n- 经过极点 $(0, 0)$ 且与 $x$ 轴相切于极点。",
+        "Multiplying $r = 2b\\sin\\theta$ by $r$ gives:\n$$r^2 = 2b(r\\sin\\theta) \\implies x^2 + y^2 = 2by \\implies x^2 + (y - b)^2 = b^2$$\nThis is a circle with:\n- Center at $(0, b)$ on the $y$-axis\n- Radius $R = |b|$\n- Passing through the pole $(0, 0)$ and tangent to the $x$-axis.\n\nFor $r = 10\\sin\\theta$: $2b = 10$, so $b = 5$ and the circle is $x^2 + (y - 5)^2 = 25$, with center $(0, 5)$ and radius $5$. Check: $\\theta = \\frac{\\pi}{2}$ gives $r = 10$, the point $(0, 10)$, and $0^{2} + (10 - 5)^{2} = 25$.\n\n> **Watch out.** A sine circle has its center on the $y$-axis, at $(0, b)$ with $b$ half the coefficient, not at $(b, 0)$. A negative coefficient puts the circle below the pole.",
+        "将方程 $r = 2b\\sin\\theta$ 两端同乘 $r$ 可得：\n$$r^2 = 2b(r\\sin\\theta) \\implies x^2 + y^2 = 2by \\implies x^2 + (y - b)^2 = b^2$$\n这表示一个圆，其特征为：\n- 圆心在 $y$ 轴上的 $(0, b)$\n- 半径为 $R = |b|$\n- 经过极点 $(0, 0)$ 且与 $x$ 轴相切于极点。\n\n对 $r = 10\\sin\\theta$：$2b = 10$，所以 $b = 5$，圆是 $x^2 + (y - 5)^2 = 25$，圆心 $(0, 5)$，半径 $5$。检验：$\\theta = \\frac{\\pi}{2}$ 时 $r = 10$，即点 $(0, 10)$，而 $0^{2} + (10 - 5)^{2} = 25$。\n\n> **注意。** 正弦型的圆圆心在 $y$ 轴上，是 $(0, b)$，$b$ 为系数的一半，不是 $(b, 0)$。系数为负时，圆在极点下方。",
       ),
       figure: sineCircleFigure,
       generate(rng) {
@@ -2598,14 +3283,48 @@ export const polarEquationsOfCirclesCenteredOnTheCoordinateAxes: TopicDef = {
             rng,
             t(
               `Find the polar equation for the circle centered at $(0, ${b})$ with radius $${radius}$.`,
-              `求圆心在 $(0, ${b})$、半径为 $r = ${radius}$ 的圆的极坐标方程。`,
+              `求圆心在 $(0, ${b})$、半径为 $${radius}$ 的圆的极坐标方程。`,
             ),
             t(`$${rightEq}$`, `$${rightEq}$`),
             [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
-            t(
-              `The standard Cartesian equation is $x^2 + ${sq("y", b)} = ${b2} \\implies x^2 + y^2 = ${twoB}y$.\nSubstitute $r^2 = x^2 + y^2$ and $y = r\\sin\\theta$:\n$$r^2 = ${twoB}r\\sin\\theta \\implies ${rightEq}$$`,
-              `直角坐标方程为 $x^2 + ${sq("y", b)} = ${b2} \\implies x^2 + y^2 = ${twoB}y$。\n代入 $r^2 = x^2 + y^2$ 及 $y = r\\sin\\theta$：\n$$r^2 = ${twoB}r\\sin\\theta \\implies ${rightEq}$$`,
+            walked(
+              [
+                [
+                  ["Expand the Cartesian equation", "展开直角坐标方程"],
+                  t(`Write the circle and expand the square; the $${b2}$ cancels:`, `写出圆的方程并展开平方，$${b2}$ 抵消：`),
+                  [`x^2 + ${sq("y", b)} = ${b2}`, `x^2 + ${poly([1, "y^2"], [-twoB, "y"], [b2, ""])} = ${b2}`, `x^2 + y^2 = ${twoB}y`],
+                ],
+                [
+                  ["Substitute polar coordinates", "代入极坐标"],
+                  t(
+                    `Replace $x^2 + y^2$ by $r^2$ and $y$ by $r\\sin\\theta$, then divide by $r$; the pole stays on the curve at $\\theta = 0$:`,
+                    `把 $x^2 + y^2$ 换成 $r^2$，$y$ 换成 $r\\sin\\theta$，再除以 $r$；极点仍在曲线上（$\\theta = 0$）：`,
+                  ),
+                  [`r^2 = ${twoB}r\\sin\\theta \\implies ${rightEq}`],
+                ],
+              ],
+              t(
+                `$\\theta = \\frac{\\pi}{2}$ gives $r = ${twoB}$, the Cartesian point $(0, ${twoB})$, which is on the circle:\n\n$$0^{2} + (${twoB} - ${paren(b)})^{2} = ${b2}$$`,
+                `$\\theta = \\frac{\\pi}{2}$ 时 $r = ${twoB}$，即直角坐标点 $(0, ${twoB})$，它在圆上：\n\n$$0^{2} + (${twoB} - ${paren(b)})^{2} = ${b2}$$`,
+              ),
             ),
+            [
+              why(
+                same(`$${wrong1}$`),
+                `$${wrong1}$ is the circle with center $(${b}, 0)$ on the $x$-axis; a center on the $y$-axis goes with $\\sin\\theta$, since $y = r\\sin\\theta$.`,
+                `$${wrong1}$ 是圆心在 $x$ 轴上 $(${b}, 0)$ 的圆；圆心在 $y$ 轴上要用 $\\sin\\theta$，因为 $y = r\\sin\\theta$。`,
+              ),
+              why(
+                same(`$${wrong2}$`),
+                `This circle has diameter $${radius}$ and center $(0, ${b % 2 === 0 ? b / 2 : `${b}/2`})$; the coefficient is the diameter $2b = ${twoB}$.`,
+                `这个圆的直径是 $${radius}$，圆心 $(0, ${b % 2 === 0 ? b / 2 : `${b}/2`})$；系数应是直径 $2b = ${twoB}$。`,
+              ),
+              why(
+                same(`$${wrong3}$`),
+                `This is the mirror image, the circle centered at $(0, ${-b})$: the sign of the coefficient is the sign of the center's $y$-coordinate.`,
+                `这是对称的圆，圆心在 $(0, ${-b})$：系数的符号就是圆心纵坐标的符号。`,
+              ),
+            ],
           );
         }
 
@@ -2616,9 +3335,26 @@ export const polarEquationsOfCirclesCenteredOnTheCoordinateAxes: TopicDef = {
           ),
           answer: `x^2 + ${sq("y", b)} = ${b2}`,
           wrong: [`${sq("x", b)} + y^2 = ${b2}`, `x^2 + ${sq("y", twoB)} = ${twoB * twoB}`, `x^2 + ${sq("y", -b)} = ${b2}`],
-          solution: t(
-            `Multiply by $r$: $r^2 = ${twoB}r\\sin\\theta \\implies x^2 + y^2 = ${twoB}y$.\nComplete the square: $x^2 + ${poly([1, "y^2"], [-twoB, "y"], [b2, ""])} = ${b2} \\implies x^2 + ${sq("y", b)} = ${b2}$.\nCenter is $(0, ${b})$ and radius is $${radius}$.`,
-            `两端同乘 $r$ 得 $r^2 = ${twoB}r\\sin\\theta \\implies x^2 + y^2 = ${twoB}y$。\n配方得 $x^2 + ${poly([1, "y^2"], [-twoB, "y"], [b2, ""])} = ${b2} \\implies x^2 + ${sq("y", b)} = ${b2}$。\n因此圆心为 $(0, ${b})$，半径为 $${radius}$。`,
+          solution: walked(
+            [
+              [
+                ["Multiply by r", "两边乘 r"],
+                t(
+                  `Multiply both sides by $r$, then use $r^2 = x^2 + y^2$ and $r\\sin\\theta = y$:`,
+                  `两边乘 $r$，再用 $r^2 = x^2 + y^2$ 和 $r\\sin\\theta = y$：`,
+                ),
+                [`r^2 = ${twoB}r\\sin\\theta`, `x^2 + y^2 = ${twoB}y`],
+              ],
+              [
+                ["Complete the square", "配方"],
+                t(`Move $${twoB}y$ to the left and add $${b2}$ to both sides:`, `把 $${twoB}y$ 移到左边，两边加 $${b2}$：`),
+                [`x^2 + ${poly([1, "y^2"], [-twoB, "y"], [b2, ""])} = ${b2}`, `x^2 + ${sq("y", b)} = ${b2}`],
+              ],
+            ],
+            t(
+              `The center is $(0, ${b})$ and the radius $${radius}$. $\\theta = \\frac{\\pi}{2}$ gives $r = ${twoB}$, the point $(0, ${twoB})$, and $\\theta = 0$ gives the pole; both are on the circle:\n\n$$0^{2} + (${twoB} - ${paren(b)})^{2} = ${b2}, \\quad 0^{2} + (0 - ${paren(b)})^{2} = ${b2}$$`,
+              `圆心是 $(0, ${b})$，半径 $${radius}$。$\\theta = \\frac{\\pi}{2}$ 时 $r = ${twoB}$，即点 $(0, ${twoB})$；$\\theta = 0$ 时是极点；两者都在圆上：\n\n$$0^{2} + (${twoB} - ${paren(b)})^{2} = ${b2}, \\quad 0^{2} + (0 - ${paren(b)})^{2} = ${b2}$$`,
+            ),
           ),
         });
       },
@@ -2640,13 +3376,25 @@ export const findingIntersectionsOfPolarCurves: TopicDef = {
   encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.CN.B.4"],
+  intro: t(
+    `Where do $r = 2$ and $r = 4\\sin\\theta$ meet? Setting the radii equal gives $4\\sin\\theta = 2$, so $\\sin\\theta = \\frac{1}{2}$ and $\\theta = \\frac{\\pi}{6}$ or $\\frac{5\\pi}{6}$: the points $(2, \\frac{\\pi}{6})$ and $(2, \\frac{5\\pi}{6})$. The pole needs a test of its own: $r = 4\\sin\\theta$ passes through it at $\\theta = 0$, but $r = 2$ never does, so there are no more.
+
+Check: $(2, \\frac{\\pi}{6})$ is the Cartesian point $(\\sqrt{3}, 1)$, which is $2$ from the pole and satisfies $x^{2} + y^{2} = 4y$, the Cartesian form of $r = 4\\sin\\theta$: $3 + 1 = 4 \\cdot 1$.
+
+In this lesson we solve $r_1(\\theta) = r_2(\\theta)$ for intersections, test the pole separately, and find the radius where two circles through the pole meet.`,
+    `$r = 2$ 与 $r = 4\\sin\\theta$ 在哪里相交？令极径相等得 $4\\sin\\theta = 2$，所以 $\\sin\\theta = \\frac{1}{2}$，$\\theta = \\frac{\\pi}{6}$ 或 $\\frac{5\\pi}{6}$：交点为 $(2, \\frac{\\pi}{6})$ 和 $(2, \\frac{5\\pi}{6})$。极点要单独检验：$r = 4\\sin\\theta$ 在 $\\theta = 0$ 处经过极点，但 $r = 2$ 从不经过，所以没有别的交点。
+
+检验：$(2, \\frac{\\pi}{6})$ 是直角坐标点 $(\\sqrt{3}, 1)$，它离极点 $2$，并满足 $r = 4\\sin\\theta$ 的直角坐标方程 $x^{2} + y^{2} = 4y$：$3 + 1 = 4 \\cdot 1$。
+
+这节课我们通过解 $r_1(\\theta) = r_2(\\theta)$ 求交点，单独检验极点，并求两个过极点的圆相交处的半径。`,
+  ),
   knowledgePoints: [
     {
       id: "solve-simultaneous-polar-equations",
       title: t("Solving simultaneous polar equations", "联立求解极坐标方程"),
       explanation: t(
-        "To find the intersection points of two polar curves $r_1(\\theta)$ and $r_2(\\theta)$:\n1. Set $r_1(\\theta) = r_2(\\theta)$ and solve for $\\theta \\in [0, 2\\pi)$.\n2. Compute $r$ for each solution to obtain $(r, \\theta)$.\n\nFor example, to intersect $r = 3$ and $r = 6\\cos\\theta$:\n$$6\\cos\\theta = 3 \\implies \\cos\\theta = \\frac{1}{2} \\implies \\theta = \\frac{\\pi}{3}, \\; \\frac{5\\pi}{3}$$\nyielding points $(3, \\frac{\\pi}{3})$ and $(3, \\frac{5\\pi}{3})$.",
-        "求解两极坐标曲线 $r_1(\\theta)$ 与 $r_2(\\theta)$ 的交点方法：\n1. 令 $r_1(\\theta) = r_2(\\theta)$ 并在 $[0, 2\\pi)$ 内求解 $\\theta$。\n2. 将解出的每个 $\\theta$ 代入求出 $r$，得到交点极坐标 $(r, \\theta)$。\n\n例如，求 $r = 3$ 与 $r = 6\\cos\\theta$ 的交点：\n$$6\\cos\\theta = 3 \\implies \\cos\\theta = \\frac{1}{2} \\implies \\theta = \\frac{\\pi}{3}, \\; \\frac{5\\pi}{3}$$\n交点为 $(3, \\frac{\\pi}{3})$ 和 $(3, \\frac{5\\pi}{3})$。",
+        "To find the intersection points of two polar curves $r_1(\\theta)$ and $r_2(\\theta)$:\n1. Set $r_1(\\theta) = r_2(\\theta)$ and solve for $\\theta \\in [0, 2\\pi)$.\n2. Compute $r$ for each solution to obtain $(r, \\theta)$.\n\nFor example, to intersect $r = 3$ and $r = 6\\cos\\theta$:\n$$6\\cos\\theta = 3 \\implies \\cos\\theta = \\frac{1}{2} \\implies \\theta = \\frac{\\pi}{3}, \\; \\frac{5\\pi}{3}$$\nyielding points $(3, \\frac{\\pi}{3})$ and $(3, \\frac{5\\pi}{3})$.\n\nCheck: $6\\cos\\frac{\\pi}{3} = 6 \\cdot \\frac{1}{2} = 3$ and $6\\cos\\frac{5\\pi}{3} = 6 \\cdot \\frac{1}{2} = 3$, so both points are on $r = 6\\cos\\theta$, and their $r$ is $3$.\n\n> **Watch out.** $\\cos\\theta = c$ with $0 < c < 1$ has two solutions in $[0, 2\\pi)$, in Quadrants I and IV; $\\sin\\theta = c$ has them in Quadrants I and II. Keep both, and take $r$ from the circle $r = 3$, not from the coefficient $6$.",
+        "求解两极坐标曲线 $r_1(\\theta)$ 与 $r_2(\\theta)$ 的交点方法：\n1. 令 $r_1(\\theta) = r_2(\\theta)$ 并在 $[0, 2\\pi)$ 内求解 $\\theta$。\n2. 将解出的每个 $\\theta$ 代入求出 $r$，得到交点极坐标 $(r, \\theta)$。\n\n例如，求 $r = 3$ 与 $r = 6\\cos\\theta$ 的交点：\n$$6\\cos\\theta = 3 \\implies \\cos\\theta = \\frac{1}{2} \\implies \\theta = \\frac{\\pi}{3}, \\; \\frac{5\\pi}{3}$$\n交点为 $(3, \\frac{\\pi}{3})$ 和 $(3, \\frac{5\\pi}{3})$。\n\n检验：$6\\cos\\frac{\\pi}{3} = 6 \\cdot \\frac{1}{2} = 3$，$6\\cos\\frac{5\\pi}{3} = 6 \\cdot \\frac{1}{2} = 3$，所以两个点都在 $r = 6\\cos\\theta$ 上，它们的 $r$ 都是 $3$。\n\n> **注意。** $\\cos\\theta = c$（$0 < c < 1$）在 $[0, 2\\pi)$ 内有两个解，在第一、第四象限；$\\sin\\theta = c$ 的两个解在第一、第二象限。两个都要保留，$r$ 取圆 $r = 3$ 的值，而不是系数 $6$。",
       ),
       generate(rng) {
         const a = rng.int(2, 14);
@@ -2673,10 +3421,54 @@ export const findingIntersectionsOfPolarCurves: TopicDef = {
               t(`$${wrong2}$`, `$${wrong2}$`.replace(" and ", " 和 ")),
               t(`$${wrong3}$`, `$${wrong3}$`.replace(" and ", " 和 ")),
             ],
-            t(
-              `Set equations equal: $${twoA}\\cos\\theta = ${eq1} \\implies \\cos\\theta = \\frac{\\sqrt{2}}{2}$.\nOn $[0, 2\\pi)$, $\\theta = \\frac{\\pi}{4}, \\frac{7\\pi}{4}$.\nThus the intersection points are $${p1}$ and $${p2}$.`,
-              `联立方程：$${twoA}\\cos\\theta = ${eq1} \\implies \\cos\\theta = \\frac{\\sqrt{2}}{2}$。\n在 $[0, 2\\pi)$ 内解得 $\\theta = \\frac{\\pi}{4}, \\frac{7\\pi}{4}$。\n因此交点为 $${p1}$ 和 $${p2}$。`,
+            walked(
+              [
+                [
+                  ["Set the radii equal", "令极径相等"],
+                  t(
+                    `At an intersection reached at the same angle, both curves give the same $r$:`,
+                    `在同一个角处相交时，两条曲线给出相同的 $r$：`,
+                  ),
+                  [`${twoA}\\cos\\theta = ${eq1}`, `\\cos\\theta = \\frac{${eq1}}{${twoA}} = \\frac{\\sqrt{2}}{2}`],
+                ],
+                [
+                  ["Find both angles", "求出两个角"],
+                  t(
+                    `The cosine is positive in Quadrants I and IV, so in $[0, 2\\pi)$:`,
+                    `余弦在第一、第四象限为正，所以在 $[0, 2\\pi)$ 内：`,
+                  ),
+                  [`\\theta = \\frac{\\pi}{4}, \\quad \\theta = 2\\pi - \\frac{\\pi}{4} = \\frac{7\\pi}{4}`],
+                ],
+                [
+                  ["Write the points", "写出交点"],
+                  t(
+                    `At both angles $r = ${eq1}$, so the points are $${p1}$ and $${p2}$. The circle $r = ${eq1}$ never reaches the pole, so there are no others.`,
+                    `两个角处都有 $r = ${eq1}$，所以交点是 $${p1}$ 和 $${p2}$。圆 $r = ${eq1}$ 不经过极点，所以没有别的交点。`,
+                  ),
+                ],
+              ],
+              t(
+                `The second angle also gives the radius $${eq1}$ on the other curve:\n\n$$${twoA}\\cos\\frac{7\\pi}{4} = ${twoA} \\cdot \\frac{\\sqrt{2}}{2} = ${eq1}$$`,
+                `第二个角在另一条曲线上也给出极径 $${eq1}$：\n\n$$${twoA}\\cos\\frac{7\\pi}{4} = ${twoA} \\cdot \\frac{\\sqrt{2}}{2} = ${eq1}$$`,
+              ),
             ),
+            [
+              why(
+                same(`$${wrong1}$`),
+                `At these angles $\\cos\\theta = 1/2$, but here $\\cos\\theta = \\sqrt{2}/2$.`,
+                `这些角处 $\\cos\\theta = 1/2$，而这里 $\\cos\\theta = \\sqrt{2}/2$。`,
+              ),
+              why(
+                same(`$${wrong2}$`),
+                `The angles are right, but $r$ is the radius $${eq1}$ of the circle $r = ${eq1}$, not the coefficient $${twoA}$.`,
+                `角是对的，但 $r$ 应是圆 $r = ${eq1}$ 的半径 $${eq1}$，不是系数 $${twoA}$。`,
+              ),
+              why(
+                same(`$${wrong3}$`),
+                `At these angles $\\cos\\theta = -\\sqrt{2}/2$, so the points have $x < 0$, while the circle $r = ${twoA}\\cos\\theta$ lies where $x \\ge 0$.`,
+                `这些角处 $\\cos\\theta = -\\sqrt{2}/2$，这些点满足 $x < 0$，而圆 $r = ${twoA}\\cos\\theta$ 在 $x \\ge 0$ 的一侧。`,
+              ),
+            ],
           );
         }
 
@@ -2700,10 +3492,54 @@ export const findingIntersectionsOfPolarCurves: TopicDef = {
               t(`$${wrong2}$`, `$${wrong2}$`.replace(" and ", " 和 ")),
               t(`$${wrong3}$`, `$${wrong3}$`.replace(" and ", " 和 ")),
             ],
-            t(
-              `Set equations equal: $${twoA}\\sin\\theta = ${eq1} \\implies \\sin\\theta = \\frac{\\sqrt{2}}{2}$.\nOn $[0, 2\\pi)$, $\\theta = \\frac{\\pi}{4}, \\frac{3\\pi}{4}$.\nThus the intersection points are $${p1}$ and $${p2}$.`,
-              `联立方程：$${twoA}\\sin\\theta = ${eq1} \\implies \\sin\\theta = \\frac{\\sqrt{2}}{2}$。\n在 $[0, 2\\pi)$ 内解得 $\\theta = \\frac{\\pi}{4}, \\frac{3\\pi}{4}$。\n因此交点为 $${p1}$ 和 $${p2}$。`,
+            walked(
+              [
+                [
+                  ["Set the radii equal", "令极径相等"],
+                  t(
+                    `At an intersection reached at the same angle, both curves give the same $r$:`,
+                    `在同一个角处相交时，两条曲线给出相同的 $r$：`,
+                  ),
+                  [`${twoA}\\sin\\theta = ${eq1}`, `\\sin\\theta = \\frac{${eq1}}{${twoA}} = \\frac{\\sqrt{2}}{2}`],
+                ],
+                [
+                  ["Find both angles", "求出两个角"],
+                  t(
+                    `The sine is positive in Quadrants I and II, so in $[0, 2\\pi)$:`,
+                    `正弦在第一、第二象限为正，所以在 $[0, 2\\pi)$ 内：`,
+                  ),
+                  [`\\theta = \\frac{\\pi}{4}, \\quad \\theta = \\pi - \\frac{\\pi}{4} = \\frac{3\\pi}{4}`],
+                ],
+                [
+                  ["Write the points", "写出交点"],
+                  t(
+                    `At both angles $r = ${eq1}$, so the points are $${p1}$ and $${p2}$. The circle $r = ${eq1}$ never reaches the pole, so there are no others.`,
+                    `两个角处都有 $r = ${eq1}$，所以交点是 $${p1}$ 和 $${p2}$。圆 $r = ${eq1}$ 不经过极点，所以没有别的交点。`,
+                  ),
+                ],
+              ],
+              t(
+                `The second angle also gives the radius $${eq1}$ on the other curve:\n\n$$${twoA}\\sin\\frac{3\\pi}{4} = ${twoA} \\cdot \\frac{\\sqrt{2}}{2} = ${eq1}$$`,
+                `第二个角在另一条曲线上也给出极径 $${eq1}$：\n\n$$${twoA}\\sin\\frac{3\\pi}{4} = ${twoA} \\cdot \\frac{\\sqrt{2}}{2} = ${eq1}$$`,
+              ),
             ),
+            [
+              why(
+                same(`$${wrong1}$`),
+                `At these angles $\\sin\\theta = 1/2$, but here $\\sin\\theta = \\sqrt{2}/2$.`,
+                `这些角处 $\\sin\\theta = 1/2$，而这里 $\\sin\\theta = \\sqrt{2}/2$。`,
+              ),
+              why(
+                same(`$${wrong2}$`),
+                `The angles are right, but $r$ is the radius $${eq1}$ of the circle $r = ${eq1}$, not the coefficient $${twoA}$.`,
+                `角是对的，但 $r$ 应是圆 $r = ${eq1}$ 的半径 $${eq1}$，不是系数 $${twoA}$。`,
+              ),
+              why(
+                same(`$${wrong3}$`),
+                `At these angles $\\sin\\theta = -\\sqrt{2}/2$, so the points have $y < 0$, while the circle $r = ${twoA}\\sin\\theta$ lies where $y \\ge 0$.`,
+                `这些角处 $\\sin\\theta = -\\sqrt{2}/2$，这些点满足 $y < 0$，而圆 $r = ${twoA}\\sin\\theta$ 在 $y \\ge 0$ 的一侧。`,
+              ),
+            ],
           );
         }
 
@@ -2712,9 +3548,11 @@ export const findingIntersectionsOfPolarCurves: TopicDef = {
         const p1 = isCos ? `(${a}, \\frac{\\pi}{3})` : `(${a}, \\frac{\\pi}{6})`;
         const p2 = isCos ? `(${a}, \\frac{5\\pi}{3})` : `(${a}, \\frac{5\\pi}{6})`;
         const rightChoice = `$${p1}$ and $${p2}$`;
+        const fn = isCos ? "\\cos" : "\\sin";
+        const second = isCos ? "\\frac{5\\pi}{3}" : "\\frac{5\\pi}{6}";
         const wrong1 = isCos
-          ? `(${a}, \\frac{\\pi}{6}) and (${a}, \\frac{11\\pi}{6})`
-          : `(${a}, \\frac{\\pi}{3}) and (${a}, \\frac{2\\pi}{3})`;
+          ? `(${a}, \\frac{\\pi}{6})$ and $(${a}, \\frac{11\\pi}{6})`
+          : `(${a}, \\frac{\\pi}{3})$ and $(${a}, \\frac{2\\pi}{3})`;
         const wrong2 = `(${twoA}, \\frac{\\pi}{4})$ and $(${twoA}, \\frac{7\\pi}{4})`;
         const wrong3 = `(${a}, \\frac{\\pi}{4})$ and $(${a}, \\frac{5\\pi}{4})`;
         return oneOf(
@@ -2729,10 +3567,58 @@ export const findingIntersectionsOfPolarCurves: TopicDef = {
             t(`$${wrong2}$`, `$${wrong2}$`.replace(" and ", " 和 ")),
             t(`$${wrong3}$`, `$${wrong3}$`.replace(" and ", " 和 ")),
           ],
-          t(
-            `Set equations equal: $${eq2} = ${a} \\implies ${isCos ? "\\cos" : "\\sin"}\\theta = \\frac{1}{2}$.\nOn $[0, 2\\pi)$, $\\theta = ${isCos ? "\\frac{\\pi}{3}, \\frac{5\\pi}{3}" : "\\frac{\\pi}{6}, \\frac{5\\pi}{6}"}$.\nThe points are $${p1}$ and $${p2}$.`,
-            `联立方程：$${eq2} = ${a} \\implies ${isCos ? "\\cos" : "\\sin"}\\theta = \\frac{1}{2}$。\n在 $[0, 2\\pi)$ 内，解得 $\\theta = ${isCos ? "\\frac{\\pi}{3}, \\frac{5\\pi}{3}" : "\\frac{\\pi}{6}, \\frac{5\\pi}{6}"}$。\n因此交点为 $${p1}$ 和 $${p2}$。`,
+          walked(
+            [
+              [
+                ["Set the radii equal", "令极径相等"],
+                t(
+                  `At an intersection reached at the same angle, both curves give the same $r$:`,
+                  `在同一个角处相交时，两条曲线给出相同的 $r$：`,
+                ),
+                [`${eq2} = ${a}`, `${fn}\\theta = \\frac{${a}}{${twoA}} = \\frac{1}{2}`],
+              ],
+              [
+                ["Find both angles", "求出两个角"],
+                t(
+                  `The ${isCos ? "cosine" : "sine"} is positive in Quadrants I and ${isCos ? "IV" : "II"}, so in $[0, 2\\pi)$:`,
+                  `${isCos ? "余弦" : "正弦"}在第一、第${isCos ? "四" : "二"}象限为正，所以在 $[0, 2\\pi)$ 内：`,
+                ),
+                [
+                  isCos
+                    ? `\\theta = \\frac{\\pi}{3}, \\quad \\theta = 2\\pi - \\frac{\\pi}{3} = \\frac{5\\pi}{3}`
+                    : `\\theta = \\frac{\\pi}{6}, \\quad \\theta = \\pi - \\frac{\\pi}{6} = \\frac{5\\pi}{6}`,
+                ],
+              ],
+              [
+                ["Write the points", "写出交点"],
+                t(
+                  `At both angles $r = ${a}$, so the points are $${p1}$ and $${p2}$. The circle $r = ${a}$ never reaches the pole, so there are no others.`,
+                  `两个角处都有 $r = ${a}$，所以交点是 $${p1}$ 和 $${p2}$。圆 $r = ${a}$ 不经过极点，所以没有别的交点。`,
+                ),
+              ],
+            ],
+            t(
+              `The second angle also gives the radius $${a}$ on the other curve:\n\n$$${twoA}${fn}${second} = ${twoA} \\cdot \\frac{1}{2} = ${a}$$`,
+              `第二个角在另一条曲线上也给出极径 $${a}$：\n\n$$${twoA}${fn}${second} = ${twoA} \\cdot \\frac{1}{2} = ${a}$$`,
+            ),
           ),
+          [
+            why(
+              same(`$${wrong1}$`),
+              `At these angles $${fn}\\theta = \\sqrt{3}/2$, but here $${fn}\\theta = 1/2$.`,
+              `这些角处 $${fn}\\theta = \\sqrt{3}/2$，而这里 $${fn}\\theta = 1/2$。`,
+            ),
+            why(
+              same(`$${wrong2}$`),
+              `These points are $${twoA}$ from the pole, but every point of $r = ${a}$ is $${a}$ from it; and at $\\frac{\\pi}{4}$ the value is $\\sqrt{2}/2$, not $1/2$.`,
+              `这些点离极点 $${twoA}$，但 $r = ${a}$ 上每个点离极点都是 $${a}$；而且 $\\frac{\\pi}{4}$ 处的值是 $\\sqrt{2}/2$，不是 $1/2$。`,
+            ),
+            why(
+              same(`$${wrong3}$`),
+              `At $\\theta = \\frac{\\pi}{4}$ the other curve gives $${twoA}${fn}\\frac{\\pi}{4} = ${a}\\sqrt{2}$, not $${a}$, so these points are not on it.`,
+              `在 $\\theta = \\frac{\\pi}{4}$ 处另一条曲线给出 $${twoA}${fn}\\frac{\\pi}{4} = ${a}\\sqrt{2}$，不是 $${a}$，所以这些点不在它上面。`,
+            ),
+          ],
         );
       },
     },
@@ -2741,8 +3627,8 @@ export const findingIntersectionsOfPolarCurves: TopicDef = {
       figure: precalculusDrawings4["finding-intersections-of-polar-curves#pole-as-polar-intersection"],
       title: t("The pole as an intersection point", "极点作为交点的检验"),
       explanation: t(
-        "The pole is represented by $(0, \\theta)$ for **any** angle $\\theta$. As a result, two polar curves can both pass through the pole at different angles $\\theta_1 \\ne \\theta_2$.\nSuch a shared point may not show up by simply equating $r_1(\\theta) = r_2(\\theta)$!\n\nTo verify if the pole is an intersection point:\n1. Check whether there is a $\\theta_1$ with $r_1(\\theta_1) = 0$.\n2. Check whether there is a $\\theta_2$ with $r_2(\\theta_2) = 0$.\nIf both curves pass through $r = 0$, the pole $(0, 0)$ is an intersection point.",
-        "极点由 $(0, \\theta)$ 表示，对于**任意**角度 $\\theta$ 均代表同一点。因此，两条极坐标曲线完全可以在不同角度 $\\theta_1 \\ne \\theta_2$ 处穿过极点。\n这种交点往往无法通过直接联立方程 $r_1(\\theta) = r_2(\\theta)$ 求解得到！\n\n检验极点是否为交点的方法：\n1. 检查是否存在 $\\theta_1$ 使得 $r_1(\\theta_1) = 0$。\n2. 检查是否存在 $\\theta_2$ 使得 $r_2(\\theta_2) = 0$。\n若两曲线均能取到 $r = 0$，则极点 $(0, 0)$ 是它们的公共交点。",
+        "The pole is represented by $(0, \\theta)$ for **any** angle $\\theta$. As a result, two polar curves can both pass through the pole at different angles $\\theta_1 \\ne \\theta_2$.\nSuch a shared point may not show up by simply equating $r_1(\\theta) = r_2(\\theta)$!\n\nTo verify if the pole is an intersection point:\n1. Check whether there is a $\\theta_1$ with $r_1(\\theta_1) = 0$.\n2. Check whether there is a $\\theta_2$ with $r_2(\\theta_2) = 0$.\nIf both curves pass through $r = 0$, the pole $(0, 0)$ is an intersection point.\n\nFor $C_1: r = 4\\cos\\theta$ and $C_2: r = 6\\sin\\theta$: $C_1$ reaches the pole at $\\theta = \\frac{\\pi}{2}$ and $C_2$ at $\\theta = 0$, so the pole is shared. Setting $4\\cos\\theta = 6\\sin\\theta$ gives $\\tan\\theta = 2/3$, one more point, so there are 2 in all. Check: at $\\theta = 0$ the radii are $4$ and $0$, and at $\\theta = \\frac{\\pi}{2}$ they are $0$ and $6$; neither angle solves $r_1 = r_2$, yet both curves contain the pole.\n\n> **Watch out.** Equating radii only finds points the curves reach at the same angle. Test $r = 0$ on each curve on its own; a circle $r = c$ with $c \\ne 0$ never passes through the pole.",
+        "极点由 $(0, \\theta)$ 表示，对于**任意**角度 $\\theta$ 均代表同一点。因此，两条极坐标曲线完全可以在不同角度 $\\theta_1 \\ne \\theta_2$ 处穿过极点。\n这种交点往往无法通过直接联立方程 $r_1(\\theta) = r_2(\\theta)$ 求解得到！\n\n检验极点是否为交点的方法：\n1. 检查是否存在 $\\theta_1$ 使得 $r_1(\\theta_1) = 0$。\n2. 检查是否存在 $\\theta_2$ 使得 $r_2(\\theta_2) = 0$。\n若两曲线均能取到 $r = 0$，则极点 $(0, 0)$ 是它们的公共交点。\n\n对 $C_1: r = 4\\cos\\theta$ 和 $C_2: r = 6\\sin\\theta$：$C_1$ 在 $\\theta = \\frac{\\pi}{2}$ 处经过极点，$C_2$ 在 $\\theta = 0$ 处经过极点，所以极点是公共点。令 $4\\cos\\theta = 6\\sin\\theta$ 得 $\\tan\\theta = 2/3$，又一个交点，共 2 个。检验：$\\theta = 0$ 时两极径是 $4$ 和 $0$，$\\theta = \\frac{\\pi}{2}$ 时是 $0$ 和 $6$；两个角都不满足 $r_1 = r_2$，但两条曲线都经过极点。\n\n> **注意。** 令极径相等只能找到两曲线在同一个角处到达的点。要对每条曲线分别检验 $r = 0$；圆 $r = c$（$c \\ne 0$）永远不经过极点。",
       ),
       generate(rng) {
         const a = rng.int(1, 8);
@@ -2765,37 +3651,131 @@ export const findingIntersectionsOfPolarCurves: TopicDef = {
           ),
           t("No, the two curves do not intersect anywhere.", "否，两条曲线在平面内没有任何交点。"),
         ];
-        const pole = t(
-          `$C_1$ passes through the pole at $\\theta = \\frac{\\pi}{2}$, since $\\cos\\frac{\\pi}{2} = 0$.`,
-          `$C_1$ 在 $\\theta = \\frac{\\pi}{2}$ 处经过极点，因为 $\\cos\\frac{\\pi}{2} = 0$。`,
+        const ab = Q.of(a, b).toLatex();
+        const ca = Q.of(c, 2 * a).toLatex();
+        // Each case: how C2 meets the pole, what equal radii give, and the check.
+        const parts: readonly (readonly [Text, Text, Text])[] = [
+          [
+            t(
+              `$C_2$ reaches the pole at $\\theta = 0$, since $\\sin 0 = 0$. So the pole is on both curves, though they reach it at different angles.`,
+              `$C_2$ 在 $\\theta = 0$ 处经过极点，因为 $\\sin 0 = 0$。所以极点在两条曲线上，尽管它们到达极点的角度不同。`,
+            ),
+            t(
+              `$${2 * a}\\cos\\theta = ${2 * b}\\sin\\theta$ gives $\\tan\\theta = ${ab}$, one angle in $\\left(0, \\frac{\\pi}{2}\\right)$ and one more point. So there are 2 intersection points.`,
+              `$${2 * a}\\cos\\theta = ${2 * b}\\sin\\theta$ 得 $\\tan\\theta = ${ab}$，在 $\\left(0, \\frac{\\pi}{2}\\right)$ 内有一个角，又得一个交点。所以共有 2 个交点。`,
+            ),
+            t(
+              `At that angle $\\cos\\theta > 0$, so $r = ${2 * a}\\cos\\theta > 0$: the second point is not the pole, and the two are distinct.`,
+              `在这个角处 $\\cos\\theta > 0$，所以 $r = ${2 * a}\\cos\\theta > 0$：第二个点不是极点，两个交点不同。`,
+            ),
+          ],
+          [
+            t(
+              `$C_2$ also reaches the pole, at $\\theta = \\frac{\\pi}{2}$, since $\\cos\\frac{\\pi}{2} = 0$. So the pole is an intersection point.`,
+              `$C_2$ 也在 $\\theta = \\frac{\\pi}{2}$ 处经过极点，因为 $\\cos\\frac{\\pi}{2} = 0$。所以极点是交点。`,
+            ),
+            t(
+              `$${2 * a}\\cos\\theta = ${2 * b}\\cos\\theta$ gives $${2 * a - 2 * b}\\cos\\theta = 0$, so $\\cos\\theta = 0$: the pole again. The circles meet only at the pole.`,
+              `$${2 * a}\\cos\\theta = ${2 * b}\\cos\\theta$ 得 $${2 * a - 2 * b}\\cos\\theta = 0$，所以 $\\cos\\theta = 0$：仍是极点。两圆只在极点相遇。`,
+            ),
+            t(
+              `The centers $(${a}, 0)$ and $(${b}, 0)$ are $${Math.abs(a - b)}$ apart, which is the difference of the radii $${a}$ and $${b}$, so the circles touch at one point, the pole.`,
+              `圆心 $(${a}, 0)$ 与 $(${b}, 0)$ 相距 $${Math.abs(a - b)}$，正好是半径 $${a}$ 与 $${b}$ 之差，所以两圆只相切于一点，即极点。`,
+            ),
+          ],
+          [
+            t(
+              `$C_2$ is the circle of radius $${c}$ about the pole; its $r$ is never $0$, so the pole is not on it.`,
+              `$C_2$ 是以极点为圆心、半径为 $${c}$ 的圆；它的 $r$ 永远不是 $0$，所以极点不在它上面。`,
+            ),
+            t(
+              `$${2 * a}\\cos\\theta = ${c}$ gives $\\cos\\theta = ${ca}$, which lies between $0$ and $1$, so it has two solutions $\\pm\\theta$ in $\\left(-\\frac{\\pi}{2}, \\frac{\\pi}{2}\\right)$: 2 intersection points.`,
+              `$${2 * a}\\cos\\theta = ${c}$ 得 $\\cos\\theta = ${ca}$，在 $0$ 与 $1$ 之间，所以在 $\\left(-\\frac{\\pi}{2}, \\frac{\\pi}{2}\\right)$ 内有两个解 $\\pm\\theta$：共 2 个交点。`,
+            ),
+            t(
+              `$C_1$ reaches as far as $${2 * a}$ from the pole and $C_2$ is at $${c} < ${2 * a}$, so $C_2$ crosses $C_1$ in two points, mirror images across the polar axis.`,
+              `$C_1$ 离极点最远 $${2 * a}$，$C_2$ 离极点 $${c} < ${2 * a}$，所以 $C_2$ 与 $C_1$ 交于两点，关于极轴对称。`,
+            ),
+          ],
+          [
+            t(
+              `$C_2$ is the circle of radius $${c}$ about the pole; its $r$ is never $0$, so the pole is not on it.`,
+              `$C_2$ 是以极点为圆心、半径为 $${c}$ 的圆；它的 $r$ 永远不是 $0$，所以极点不在它上面。`,
+            ),
+            t(
+              `$${2 * a}\\cos\\theta = ${c}$ would need $\\cos\\theta = ${ca} > 1$, which is impossible.`,
+              `$${2 * a}\\cos\\theta = ${c}$ 需要 $\\cos\\theta = ${ca} > 1$，这不可能。`,
+            ),
+            t(
+              `Every point of $C_1$ is $|${2 * a}\\cos\\theta| \\le ${2 * a} < ${c}$ from the pole, so $C_1$ lies inside $C_2$ and the curves do not meet.`,
+              `$C_1$ 上每一点到极点的距离 $|${2 * a}\\cos\\theta| \\le ${2 * a} < ${c}$，所以 $C_1$ 在 $C_2$ 内部，两曲线不相交。`,
+            ),
+          ],
+        ];
+        const [onPole, equal, check] = parts[kind]!;
+        const poled = kind < 2;
+        const noPole = t(
+          `$C_2: r = ${c}$ never has $r = 0$, so the pole is not on it.`,
+          `$C_2: r = ${c}$ 的 $r$ 永远不是 $0$，所以极点不在它上面。`,
         );
-        const rest = [
-          t(
-            `$C_2$ passes through the pole at $\\theta = 0$, since $\\sin 0 = 0$, so the pole is an intersection point even though the curves reach it at different angles. Equating radii: $${2 * a}\\cos\\theta = ${2 * b}\\sin\\theta$ gives $\\tan\\theta = ${Q.of(a, b).toLatex()}$, one more point. So there are 2 intersection points.`,
-            `$C_2$ 在 $\\theta = 0$ 处经过极点，因为 $\\sin 0 = 0$，所以即使两曲线到达极点的角度不同，极点仍是交点。令极径相等：$${2 * a}\\cos\\theta = ${2 * b}\\sin\\theta$，得 $\\tan\\theta = ${Q.of(a, b).toLatex()}$，又得一个交点。所以共有 2 个交点。`,
-          ),
-          t(
-            `$C_2$ also passes through the pole at $\\theta = \\frac{\\pi}{2}$. Equating radii: $${2 * a}\\cos\\theta = ${2 * b}\\cos\\theta$ forces $\\cos\\theta = 0$, which is the pole again. The circles touch only at the pole.`,
-            `$C_2$ 也在 $\\theta = \\frac{\\pi}{2}$ 处经过极点。令极径相等：$${2 * a}\\cos\\theta = ${2 * b}\\cos\\theta$ 迫使 $\\cos\\theta = 0$，仍是极点。两圆只在极点相切。`,
-          ),
-          t(
-            `$C_2$ is the circle of radius $${c}$ about the pole, so it never reaches the pole. Equating radii: $\\cos\\theta = ${Q.of(c, 2 * a).toLatex()}$ has two solutions in $\\left(-\\frac{\\pi}{2}, \\frac{\\pi}{2}\\right)$, so there are 2 intersection points, neither of them the pole.`,
-            `$C_2$ 是以极点为圆心、半径为 $${c}$ 的圆，永远不经过极点。令极径相等：$\\cos\\theta = ${Q.of(c, 2 * a).toLatex()}$ 在 $\\left(-\\frac{\\pi}{2}, \\frac{\\pi}{2}\\right)$ 内有两个解，所以共有 2 个交点，都不是极点。`,
-          ),
-          t(
-            `$C_2$ is the circle of radius $${c}$ about the pole, so it never reaches the pole. Every point of $C_1$ is at distance $|${2 * a}\\cos\\theta| \\le ${2 * a} < ${c}$ from the pole, so the curves do not meet.`,
-            `$C_2$ 是以极点为圆心、半径为 $${c}$ 的圆，永远不经过极点。$C_1$ 上每一点到极点的距离 $|${2 * a}\\cos\\theta| \\le ${2 * a} < ${c}$，所以两曲线不相交。`,
-          ),
-        ][kind]!;
-        return choiceProblem({
-          prompt: t(
-            `Do the polar curves $C_1: r = ${c1}$ and $C_2: r = ${c2}$ intersect at the pole, and how many distinct intersection points do they have in the plane?`,
-            `极坐标曲线 $C_1: r = ${c1}$ 与 $C_2: r = ${c2}$ 是否相交于极点？它们在平面内共有几个不同的交点？`,
-          ),
-          options,
-          correct: kind,
-          solution: t(`${pole.en} ${rest.en}`, `${pole["zh-CN"]}${rest["zh-CN"]}`),
-        });
+        const sharedPole = t(
+          `Both curves pass through the pole, $C_1$ at $\\theta = \\frac{\\pi}{2}$ and $C_2$ at $\\theta = ${kind === 0 ? "0" : "\\frac{\\pi}{2}"}$, so the pole is an intersection point.`,
+          `两条曲线都经过极点：$C_1$ 在 $\\theta = \\frac{\\pi}{2}$，$C_2$ 在 $\\theta = ${kind === 0 ? "0" : "\\frac{\\pi}{2}"}$，所以极点是交点。`,
+        );
+        const optionReasons: readonly Text[] = [
+          poled
+            ? t(
+                "Equal radii give only $\\cos\\theta = 0$, the pole itself, so there is no second point.",
+                "令极径相等只得 $\\cos\\theta = 0$，即极点本身，没有第二个交点。",
+              )
+            : noPole,
+          poled
+            ? t(
+                `Equal radii give $\\tan\\theta = ${ab}$, a second point away from the pole.`,
+                `令极径相等得 $\\tan\\theta = ${ab}$，还有一个不在极点的交点。`,
+              )
+            : noPole,
+          poled
+            ? sharedPole
+            : t(
+                `$${2 * a}\\cos\\theta = ${c}$ has no solution, since $${c} > ${2 * a}$; the curves do not meet at all.`,
+                `$${2 * a}\\cos\\theta = ${c}$ 无解，因为 $${c} > ${2 * a}$；两曲线根本不相交。`,
+              ),
+          poled
+            ? sharedPole
+            : t(
+                `$\\cos\\theta = ${ca}$ has two solutions, since $${c} < ${2 * a}$, so the curves meet twice.`,
+                `$\\cos\\theta = ${ca}$ 有两个解，因为 $${c} < ${2 * a}$，所以两曲线相交两次。`,
+              ),
+        ];
+        return reasoned(
+          choiceProblem({
+            prompt: t(
+              `Do the polar curves $C_1: r = ${c1}$ and $C_2: r = ${c2}$ intersect at the pole, and how many distinct intersection points do they have in the plane?`,
+              `极坐标曲线 $C_1: r = ${c1}$ 与 $C_2: r = ${c2}$ 是否相交于极点？它们在平面内共有几个不同的交点？`,
+            ),
+            options,
+            correct: kind,
+            solution: walked(
+              [
+                [
+                  ["Test the pole on C1", "检验极点是否在 C1 上"],
+                  t(
+                    `$C_1$ passes through the pole at $\\theta = \\frac{\\pi}{2}$, since $\\cos\\frac{\\pi}{2} = 0$.`,
+                    `$C_1$ 在 $\\theta = \\frac{\\pi}{2}$ 处经过极点，因为 $\\cos\\frac{\\pi}{2} = 0$。`,
+                  ),
+                ],
+                [["Test the pole on C2", "检验极点是否在 C2 上"], onPole],
+                [["Equate the radii", "令极径相等"], equal],
+              ],
+              check,
+            ),
+          }),
+          options.flatMap((o, i) => {
+            const r = optionReasons[i];
+            return i === kind || !r ? [] : [why(o, r.en, r["zh-CN"])];
+          }),
+        );
       },
     },
   ],

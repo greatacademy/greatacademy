@@ -123,4 +123,12 @@ export const taughtTopics: readonly string[] = [
   "inverting-linear-transformations",
   "area-scale-factors-of-linear-transformations",
   "singular-linear-transformations-in-the-plane",
+  "parametric-equations-of-horizontal-hyperbolas",
+  "parametric-equations-of-vertical-hyperbolas",
+  "introduction-to-polar-coordinates",
+  "converting-from-polar-coordinates-to-cartesian-coordinates",
+  "polar-equations-of-circles-centered-at-the-origin",
+  "polar-equations-of-radial-lines",
+  "polar-equations-of-circles-centered-on-the-coordinate-axes",
+  "finding-intersections-of-polar-curves",
 ];
