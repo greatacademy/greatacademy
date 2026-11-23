@@ -549,8 +549,8 @@ const fromKnownAngle: KnowledgePointDef = {
   figure: precalculusDrawings4["elementary-trigonometric-equations-containing-sine#solutions-of-a-sine-equation-from-one-known-angle"],
   title: t("Solutions of a sine equation from one known angle", "由一个已知角求正弦方程的解"),
   explanation: t(
-    "Sine equations do not need a special value to be solved exactly. Once one acute angle with the right sine is known, its reflections give all the others in a full turn. The same sine appears again in the second quadrant, at the straight angle minus the known angle. The opposite sine appears in the third and fourth quadrants, at the known angle past a straight angle and at the known angle short of a full turn.",
-    "解正弦方程不一定需要特殊值。只要知道一个正弦合适的锐角，由它的对称位置就能得到一周内所有其他的角。相同的正弦值在第二象限再次出现，位置是平角减去已知角。相反的正弦值出现在第三、第四象限，位置分别是平角加上已知角、周角减去已知角。",
+    "Sine equations do not need a special value to be solved exactly. Once one acute angle with the right sine is known, its reflections give all the others in a full turn. The same sine appears again in the second quadrant, at the straight angle minus the known angle. The opposite sine appears in the third and fourth quadrants, at the known angle past a straight angle and at the known angle short of a full turn.\n\nFor example, if $\\sin(25^{\\circ}) = c$, then $\\sin(x^{\\circ}) = c$ also at $x = 180 - 25 = 155$, and $\\sin(x^{\\circ}) = -c$ at $x = 180 + 25 = 205$ and $x = 360 - 25 = 335$. Check: each of $155$, $205$ and $335$ is $25$ away from the horizontal axis, so each has reference angle $25^{\\circ}$, and only $155$ lies above the axis.\n\n> **Watch out.** The second solution of $\\sin(x^{\\circ}) = c$ is $180 - a$, not $360 - a$: the angle $360 - a$ lies below the axis, where the sine is $-c$.",
+    "解正弦方程不一定需要特殊值。只要知道一个正弦合适的锐角，由它的对称位置就能得到一周内所有其他的角。相同的正弦值在第二象限再次出现，位置是平角减去已知角。相反的正弦值出现在第三、第四象限，位置分别是平角加上已知角、周角减去已知角。\n\n例如，若 $\\sin(25^{\\circ}) = c$，则 $\\sin(x^{\\circ}) = c$ 还在 $x = 180 - 25 = 155$ 处成立，而 $\\sin(x^{\\circ}) = -c$ 在 $x = 180 + 25 = 205$ 和 $x = 360 - 25 = 335$ 处成立。检验：$155$、$205$、$335$ 与横轴的夹角都是 $25$，参考角都是 $25^{\\circ}$，其中只有 $155$ 在横轴上方。\n\n> **注意。** $\\sin(x^{\\circ}) = c$ 的第二个解是 $180 - a$，不是 $360 - a$：角 $360 - a$ 在横轴下方，那里的正弦是 $-c$。",
   ),
   generate(rng) {
     const a = rng.int(1, 89);
@@ -572,11 +572,11 @@ const fromKnownAngle: KnowledgePointDef = {
       wrong: [a, 180 - a, 180 + a, 360 - a, 90 + a],
       solution: t(
         kind === 0
-          ? `Since $${a}^{\\circ}$ is acute, $c$ is positive, and sine is positive also in the second quadrant. The reflection there is $180 - ${a} = ${answer}$.`
-          : `Since $${a}^{\\circ}$ is acute, $c$ is positive, so $-c$ is negative, and sine is negative in the third and fourth quadrants. The solutions are $180 + ${a} = ${180 + a}$ and $360 - ${a} = ${360 - a}$, so the answer is $${answer}$.`,
+          ? `${stepLabel(1, "Find the sign", "确定符号").en} Since $${a}^{\\circ}$ is acute, $c$ is positive, and sine is positive in Quadrants I and II.\n\n${stepLabel(2, "Reflect into Quadrant II", "对称到第二象限").en} The angle with the same reference angle there is\n\n$$x = 180 - ${a} = ${answer}$$\n\n**Check.** The reference angle of $${answer}^{\\circ}$ is $180 - ${answer} = ${a}$, and $${answer}^{\\circ}$ lies in Quadrant II, where sine is positive, so $\\sin(${answer}^{\\circ}) = \\sin(${a}^{\\circ}) = c$.`
+          : `${stepLabel(1, "Find the sign", "确定符号").en} Since $${a}^{\\circ}$ is acute, $c$ is positive, so $-c$ is negative, and sine is negative in Quadrants III and IV.\n\n${stepLabel(2, "Reflect into Quadrants III and IV", "对称到第三、四象限").en} The angles with reference angle $${a}^{\\circ}$ there are\n\n$$180 + ${a} = ${180 + a}$$\n\n$$360 - ${a} = ${360 - a}$$\n\nso the ${kind === 1 ? "smaller" : "larger"} one is $${answer}$.\n\n**Check.** Both lie below the horizontal axis, $${a}$ away from it: $${180 + a} - 180 = ${a}$ and $360 - ${360 - a} = ${a}$. So each has the same size of sine as $${a}^{\\circ}$, with the negative sign, which is $-c$.`,
         kind === 0
-          ? `$${a}^{\\circ}$ 是锐角，所以 $c$ 为正，而正弦在第二象限也为正。那里的对称角是 $180 - ${a} = ${answer}$。`
-          : `$${a}^{\\circ}$ 是锐角，所以 $c$ 为正，$-c$ 为负，而正弦在第三、第四象限为负。解是 $180 + ${a} = ${180 + a}$ 和 $360 - ${a} = ${360 - a}$，所以答案是 $${answer}$。`,
+          ? `${stepLabel(1, "Find the sign", "确定符号")["zh-CN"]}$${a}^{\\circ}$ 是锐角，所以 $c$ 为正，而正弦在第一、二象限为正。\n\n${stepLabel(2, "Reflect into Quadrant II", "对称到第二象限")["zh-CN"]}第二象限里参考角相同的角是\n\n$$x = 180 - ${a} = ${answer}$$\n\n**检验。**$${answer}^{\\circ}$ 的参考角是 $180 - ${answer} = ${a}$，而 $${answer}^{\\circ}$ 在第二象限，正弦为正，所以 $\\sin(${answer}^{\\circ}) = \\sin(${a}^{\\circ}) = c$。`
+          : `${stepLabel(1, "Find the sign", "确定符号")["zh-CN"]}$${a}^{\\circ}$ 是锐角，所以 $c$ 为正，$-c$ 为负，而正弦在第三、四象限为负。\n\n${stepLabel(2, "Reflect into Quadrants III and IV", "对称到第三、四象限")["zh-CN"]}这两个象限里参考角为 $${a}^{\\circ}$ 的角是\n\n$$180 + ${a} = ${180 + a}$$\n\n$$360 - ${a} = ${360 - a}$$\n\n所以${kind === 1 ? "较小" : "较大"}的一个是 $${answer}$。\n\n**检验。**两个角都在横轴下方，与横轴相差 $${a}$：$${180 + a} - 180 = ${a}$，$360 - ${360 - a} = ${a}$。所以它们的正弦与 $${a}^{\\circ}$ 的正弦大小相同、符号为负，也就是 $-c$。`,
       ),
     });
   },
@@ -586,8 +586,8 @@ const countMultipleAngle: KnowledgePointDef = {
   id: "counting-the-solutions-of-a-multiple-angle-equation",
   title: t("Counting the solutions of a multiple-angle equation", "数出倍角方程的解的个数"),
   explanation: t(
-    "To count solutions of a trigonometric equation with a multiple angle, it is not necessary to list them. As the unknown runs over its interval, the multiple angle runs over a longer one, so the number of full cycles grows by that multiple. Each full cycle holds the same number of solutions: two for a value strictly between the extremes, or for zero, and one when the value is the greatest or the least the function can take.",
-    "要数出倍角三角方程的解，不必把它们列出来。未知数走过它的区间时，倍角走过的区间更长，所以完整周期数按这个倍数增加。每个完整周期含有相同个数的解：当值严格位于最大值与最小值之间（包括零）时有两个，当值恰好是函数的最大值或最小值时只有一个。",
+    "To count solutions of a trigonometric equation with a multiple angle, it is not necessary to list them. As the unknown runs over its interval, the multiple angle runs over a longer one, so the number of full cycles grows by that multiple. Each full cycle holds the same number of solutions: two for a value strictly between the extremes, or for zero, and one when the value is the greatest or the least the function can take.\n\nFor example, $\\sin(3x^{\\circ}) = \\frac{1}{2}$ for $0 \\le x < 360$: the angle $3x$ runs over $[0, 1080)$, three full turns with two solutions each, so there are $6$. Check: listing them gives $x = 10, 50, 130, 170, 250, 290$, six values.\n\n> **Watch out.** Count the cycles of the multiple angle, not of $x$: $\\cos(4x^{\\circ}) = 0$ has $8$ solutions for $0 \\le x < 360$, not $2$.",
+    "要数出倍角三角方程的解，不必把它们列出来。未知数走过它的区间时，倍角走过的区间更长，所以完整周期数按这个倍数增加。每个完整周期含有相同个数的解：当值严格位于最大值与最小值之间（包括零）时有两个，当值恰好是函数的最大值或最小值时只有一个。\n\n例如，$\\sin(3x^{\\circ}) = \\frac{1}{2}$，$0 \\le x < 360$：角 $3x$ 走过 $[0, 1080)$，即三整圈，每圈两个解，所以共有 $6$ 个。检验：把它们列出来是 $x = 10, 50, 130, 170, 250, 290$，正好六个。\n\n> **注意。** 要数倍角走过的周期，而不是 $x$ 走过的周期：在 $0 \\le x < 360$ 内，$\\cos(4x^{\\circ}) = 0$ 有 $8$ 个解，不是 $2$ 个。",
   ),
   generate(rng) {
     const fn = rng.pick(["\\sin", "\\cos"]);
@@ -611,10 +611,32 @@ const countMultipleAngle: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [per * m, answer + 1, 2 * answer, per === 2 ? n * m : 2 * n * m],
-      solution: t(
-        `As $x$ runs over the interval, the angle $${n}x^{\\circ}$ runs over $${n * m}$ full cycles. Each cycle holds ${per === 1 ? "one solution" : "two solutions"}, so the total is $${answer}$.`,
-        `$x$ 走过这个区间时，角 $${n}x^{\\circ}$ 走过 $${n * m}$ 个完整周期。每个周期有 $${per}$ 个解，所以共有 $${answer}$ 个。`,
-      ),
+      solution: (() => {
+        const first: Record<string, readonly number[]> = {
+          "\\sin,\\frac{1}{2}": [30, 150],
+          "\\sin,-\\frac{1}{2}": [210, 330],
+          "\\sin,\\frac{\\sqrt{2}}{2}": [45, 135],
+          "\\sin,\\frac{\\sqrt{3}}{2}": [60, 120],
+          "\\sin,0": [0, 180],
+          "\\sin,1": [90],
+          "\\sin,-1": [270],
+          "\\cos,\\frac{1}{2}": [60, 300],
+          "\\cos,-\\frac{1}{2}": [120, 240],
+          "\\cos,\\frac{\\sqrt{2}}{2}": [45, 315],
+          "\\cos,\\frac{\\sqrt{3}}{2}": [30, 330],
+          "\\cos,0": [90, 270],
+          "\\cos,1": [0],
+          "\\cos,-1": [180],
+        };
+        const turn = first[`${fn},${value}`]!;
+        const xs = turn.map((d) => frac(d, n)).join(", \\; ");
+        const range = `${n}x \\in [0, ${360 * n * m})`;
+        const count = `${n * m} \\cdot ${per} = ${answer}`;
+        return t(
+          `${stepLabel(1, "Count the cycles", "数周期").en} As $x$ runs over $[0, ${360 * m})$, the angle runs over\n\n$$${range}$$\n\nwhich is $${n * m}$ full turns.\n\n${stepLabel(2, "Count per cycle", "数每个周期的解").en} ${per === 1 ? `The value $${value}$ is the ${value === "1" ? "greatest" : "least"} that $${fn}$ takes, so each turn holds one solution` : "Each turn holds two solutions"}:\n\n$$${count}$$\n\n**Check.** In the first turn of the angle, $${fn}$ equals $${value}$ at $${turn.join(", ")}$, which gives $x = ${xs}$. Each later turn adds $${frac(360, n)}$ to $x$ and gives the same number of new solutions, and $x$ stays below $${360 * m}$ for exactly $${n * m}$ turns, so the count is $${answer}$.`,
+          `${stepLabel(1, "Count the cycles", "数周期")["zh-CN"]}当 $x$ 取遍 $[0, ${360 * m})$ 时，这个角取遍\n\n$$${range}$$\n\n即 $${n * m}$ 整圈。\n\n${stepLabel(2, "Count per cycle", "数每个周期的解")["zh-CN"]}${per === 1 ? `值 $${value}$ 是 $${fn}$ 的${value === "1" ? "最大值" : "最小值"}，所以每圈只有一个解` : "每圈有两个解"}：\n\n$$${count}$$\n\n**检验。**在角的第一圈里，$${fn}$ 在 $${turn.join(", ")}$ 处等于 $${value}$，对应 $x = ${xs}$。以后每一圈都使 $x$ 增加 $${frac(360, n)}$，并给出同样多的新解，而 $x$ 恰好在 $${n * m}$ 圈内保持小于 $${360 * m}$，所以共有 $${answer}$ 个。`,
+        );
+      })(),
     });
   },
 };
@@ -623,8 +645,8 @@ const rejectedRoot: KnowledgePointDef = {
   id: "a-quadratic-in-sine-or-cosine-with-a-root-that-cannot-occur",
   title: t("A quadratic in sine or cosine with a root that cannot occur", "正弦或余弦的二次方程中不可能出现的根"),
   explanation: t(
-    "A quadratic in sine or cosine factors like any other quadratic, but its roots then have to pass a second test. Sine and cosine never leave the interval from negative one to one, so a root outside that interval gives no angle at all and has to be dropped without further work. Only the remaining factor produces solutions. Treating the rejected root as a mistake in the algebra would be wrong, since the equation really does factor that way.",
-    "正弦或余弦的二次方程可以像其他二次方程一样分解，但它的根还要通过第二道检验。正弦和余弦永远不会离开从负一到一的区间，所以这个区间之外的根根本不对应任何角，直接舍去即可。只有剩下的因式才产生解。不要把被舍去的根当作代数上的错误，方程确实是这样分解的。",
+    "A quadratic in sine or cosine factors like any other quadratic, but its roots then have to pass a second test. Sine and cosine never leave the interval from negative one to one, so a root outside that interval gives no angle at all and has to be dropped without further work. Only the remaining factor produces solutions. Treating the rejected root as a mistake in the algebra would be wrong, since the equation really does factor that way.\n\nFor example, $2\\sin^{2}(x^{\\circ}) - 7\\sin(x^{\\circ}) + 3 = 0$ factors as $(2\\sin(x^{\\circ}) - 1)(\\sin(x^{\\circ}) - 3) = 0$. The root $3$ is rejected, and $\\sin(x^{\\circ}) = \\frac{1}{2}$ gives $x = 30, 150$. Check: at $x = 30$, $2 \\cdot \\frac{1}{4} - \\frac{7}{2} + 3 = 0$.\n\n> **Watch out.** Reject a root because it lies outside $[-1, 1]$, not because it is negative: $\\cos(x^{\\circ}) = -\\frac{1}{2}$ is a good value, with solutions $120$ and $240$.",
+    "正弦或余弦的二次方程可以像其他二次方程一样分解，但它的根还要通过第二道检验。正弦和余弦永远不会离开从负一到一的区间，所以这个区间之外的根根本不对应任何角，直接舍去即可。只有剩下的因式才产生解。不要把被舍去的根当作代数上的错误，方程确实是这样分解的。\n\n例如，$2\\sin^{2}(x^{\\circ}) - 7\\sin(x^{\\circ}) + 3 = 0$ 分解为 $(2\\sin(x^{\\circ}) - 1)(\\sin(x^{\\circ}) - 3) = 0$。根 $3$ 要舍去，由 $\\sin(x^{\\circ}) = \\frac{1}{2}$ 得 $x = 30, 150$。检验：在 $x = 30$ 处，$2 \\cdot \\frac{1}{4} - \\frac{7}{2} + 3 = 0$。\n\n> **注意。** 舍去一个根是因为它不在 $[-1, 1]$ 内，而不是因为它是负数：$\\cos(x^{\\circ}) = -\\frac{1}{2}$ 是正常的值，解是 $120$ 和 $240$。",
   ),
   generate(rng) {
     const fn = rng.pick(["\\sin", "\\cos"]);
@@ -650,10 +672,15 @@ const rejectedRoot: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [larger ? lo : hi, oppositeLo, oppositeHi, 360 - answer, answer + 180],
-      solution: t(
-        `The equation factors as $(2${angle} ${v > 0 ? "-" : "+"} 1)(${angle} ${r > 0 ? "-" : "+"} ${Math.abs(r)}) = 0$. The second factor would need the value $${r}$, which is out of range, so it gives no angle. The first gives the value $${frac(v, 2)}$, with solutions $${lo}$ and $${hi}$, so the answer is $${answer}$.`,
-        `方程分解为 $(2${angle} ${v > 0 ? "-" : "+"} 1)(${angle} ${r > 0 ? "-" : "+"} ${Math.abs(r)}) = 0$。第二个因式要求函数值为 $${r}$，超出了范围，不对应任何角。第一个因式给出函数值 $${frac(v, 2)}$，解是 $${lo}$ 和 $${hi}$，所以答案是 $${answer}$。`,
-      ),
+      solution: (() => {
+        const factored = `(2${angle} ${v > 0 ? "-" : "+"} 1)(${angle} ${r > 0 ? "-" : "+"} ${Math.abs(r)}) = 0`;
+        const solved = `${angle} = ${frac(v, 2)} \\implies x = ${lo}, \\; ${hi}`;
+        const expanded = `2${fn}^{2}(x^{\\circ}) ${r > 0 ? "-" : "+"} ${2 * Math.abs(r)}${angle} ${v > 0 ? "-" : "+"} ${angle} ${v * r > 0 ? "+" : "-"} ${Math.abs(v * r)} = ${equation}`;
+        return t(
+          `${stepLabel(1, "Factor", "分解因式").en} Treat $${angle}$ as the unknown of a quadratic:\n\n$$${factored}$$\n\n${stepLabel(2, "Reject the impossible root", "舍去不可能的根").en} The second factor would need $${angle} = ${r}$, which is outside $[-1, 1]$, so it gives no angle.\n\n${stepLabel(3, "Solve the other factor", "解另一个因式").en} The first factor gives\n\n$$${solved}$$\n\nso the ${larger ? "larger" : "smaller"} solution is $${answer}$.\n\n**Check.** Multiplying the factors back out returns the equation:\n\n$$${expanded}$$\n\nAnd $${fn}(${answer}^{\\circ}) = ${frac(v, 2)}$, the value the first factor needs.`,
+          `${stepLabel(1, "Factor", "分解因式")["zh-CN"]}把 $${angle}$ 看作二次方程的未知数：\n\n$$${factored}$$\n\n${stepLabel(2, "Reject the impossible root", "舍去不可能的根")["zh-CN"]}第二个因式要求 $${angle} = ${r}$，它不在 $[-1, 1]$ 内，不对应任何角。\n\n${stepLabel(3, "Solve the other factor", "解另一个因式")["zh-CN"]}第一个因式给出\n\n$$${solved}$$\n\n所以${larger ? "较大" : "较小"}的解是 $${answer}$。\n\n**检验。**把因式乘开就回到原方程：\n\n$$${expanded}$$\n\n而且 $${fn}(${answer}^{\\circ}) = ${frac(v, 2)}$，正是第一个因式所需的值。`,
+        );
+      })(),
     });
   },
 };

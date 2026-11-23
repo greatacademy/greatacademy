@@ -81,11 +81,15 @@ const cosineValues: readonly Value[] = [
   { latex: "-1", angles: [180] },
 ];
 
+/** radians writes a list of angles given in degrees as multiples of pi. */
+const radians = (angles: readonly number[], over = 1) => angles.map((a) => piOver(a, 180 * over)).join(", \\; ");
+
 /** fullTurnCount builds a problem counting the solutions of a function that repeats each full turn over several turns. */
 const fullTurnCount = (rng: Rng, name: string, values: readonly Value[]) => {
   const v = rng.pick(values);
   const k = rng.int(2, 9);
   const one = v.angles.length;
+  const last = v.angles[one - 1]!;
   return whole(
     [
       `How many solutions does $\\${name} \\theta = ${v.latex}$ have on $[0, ${2 * k}\\pi)$?`,
@@ -94,8 +98,8 @@ const fullTurnCount = (rng: Rng, name: string, values: readonly Value[]) => {
     one * k,
     [one, one * 2 * k, one === 1 ? 2 * k : k],
     [
-      `There ${one === 1 ? "is $1$ solution" : `are $${one}$ solutions`} per full turn, and the interval holds $${k}$ full turns.`,
-      `每一整圈有 $${one}$ 个解，这个区间含 $${k}$ 整圈。`,
+      `**Step 1: Solve in one turn.** On $[0, 2\\pi)$, $\\${name} \\theta = ${v.latex}$ at $\\theta = ${radians(v.angles)}$, so there ${one === 1 ? "is $1$ solution" : `are $${one}$ solutions`} per full turn.\n\n**Step 2: Count the turns.** The interval $[0, ${2 * k}\\pi)$ holds $${k}$ full turns of $2\\pi$, so there are\n\n$$${one} \\cdot ${k} = ${one * k}$$\n\n**Check.** Each turn adds $2\\pi$. The largest solution is $${piOver(last, 180)} + ${2 * (k - 1)}\\pi = ${piOver(last + 360 * (k - 1), 180)}$, which is less than $${2 * k}\\pi$, while adding one more $2\\pi$ would pass $${2 * k}\\pi$. So exactly $${k}$ copies of the first turn's solutions fit.`,
+      `**第一步：解一圈。**在 $[0, 2\\pi)$ 上，$\\${name} \\theta = ${v.latex}$ 的解是 $\\theta = ${radians(v.angles)}$，所以每整圈有 $${one}$ 个解。\n\n**第二步：数圈数。**区间 $[0, ${2 * k}\\pi)$ 含 $${k}$ 个长为 $2\\pi$ 的整圈，所以共有\n\n$$${one} \\cdot ${k} = ${one * k}$$\n\n**检验。**每过一圈角增加 $2\\pi$。最大的解是 $${piOver(last, 180)} + ${2 * (k - 1)}\\pi = ${piOver(last + 360 * (k - 1), 180)}$，小于 $${2 * k}\\pi$，再加一个 $2\\pi$ 就超过 $${2 * k}\\pi$ 了。所以第一圈的解恰好重复 $${k}$ 次。`,
     ],
   );
 };
@@ -118,6 +122,7 @@ const reciprocalCount = (rng: Rng, name: string, base: string, values: readonly 
     const n = rng.int(2, 9);
     const d = n + rng.int(1, 9);
     const sign = rng.bool() ? "-" : "";
+    const flipped = Q.of(sign ? -d : d, n).toLatex();
     return whole(
       [
         `How many solutions does $\\${name} \\theta = ${sign}${frac(n, d)}$ have on $[0, ${2 * k}\\pi)$?`,
@@ -126,14 +131,15 @@ const reciprocalCount = (rng: Rng, name: string, base: string, values: readonly 
       0,
       [2 * k, k, 1],
       [
-        `$\\${name} \\theta$ is the reciprocal of $\\${base} \\theta$, so its size is never below 1, and there are no solutions.`,
-        `$\\${name} \\theta$ 是 $\\${base} \\theta$ 的倒数，大小不会小于 1，所以没有解。`,
+        `**Step 1: Take the reciprocal.** $\\${name} \\theta = \\frac{1}{\\${base} \\theta}$, so the equation says\n\n$$\\${base} \\theta = ${flipped}$$\n\n**Step 2: Compare with the range.** Since $${d} > ${n}$, this value is ${sign ? "less than $-1$" : "greater than $1$"}, and $\\${base} \\theta$ never leaves $[-1, 1]$. So there are no solutions, $0$, however many turns the interval holds.\n\n**Check.** $|\\${name} \\theta| = \\frac{1}{|\\${base} \\theta|} \\ge 1$, because $|\\${base} \\theta| \\le 1$. The value $${sign}${frac(n, d)}$ has size $${frac(n, d)} < 1$, so $\\${name} \\theta$ can never equal it.`,
+        `**第一步：取倒数。**$\\${name} \\theta = \\frac{1}{\\${base} \\theta}$，所以方程就是\n\n$$\\${base} \\theta = ${flipped}$$\n\n**第二步：与值域比较。**因为 $${d} > ${n}$，这个值${sign ? "小于 $-1$" : "大于 $1$"}，而 $\\${base} \\theta$ 不会离开 $[-1, 1]$。所以无论区间含多少圈，解的个数都是 $0$。\n\n**检验。**$|\\${name} \\theta| = \\frac{1}{|\\${base} \\theta|} \\ge 1$，因为 $|\\${base} \\theta| \\le 1$。而 $${sign}${frac(n, d)}$ 的大小是 $${frac(n, d)} < 1$，所以 $\\${name} \\theta$ 永远取不到它。`,
       ],
     );
   }
   const v = rng.pick(values.filter((value) => value.latex !== "0"));
   const one = v.angles.length;
   const shown = reciprocalOf(v.latex);
+  const first = v.angles[0]!;
   return whole(
     [
       `How many solutions does $\\${name} \\theta = ${shown}$ have on $[0, ${2 * k}\\pi)$?`,
@@ -142,10 +148,16 @@ const reciprocalCount = (rng: Rng, name: string, base: string, values: readonly 
     one * k,
     [one, one * 2 * k, one === 1 ? 2 * k : k],
     [
-      `It is the same as $\\${base} \\theta = ${v.latex}$, with $${one}$ ${one === 1 ? "solution" : "solutions"} per full turn over $${k}$ full turns.`,
-      `它等同于 $\\${base} \\theta = ${v.latex}$，每整圈 $${one}$ 个解，共 $${k}$ 整圈。`,
+      `**Step 1: Take the reciprocal.** $\\${name} \\theta = \\frac{1}{\\${base} \\theta}$, so the equation is the same as\n\n$$\\${base} \\theta = ${v.latex}$$\n\nwhich on $[0, 2\\pi)$ holds at $\\theta = ${radians(v.angles)}$: $${one}$ ${one === 1 ? "solution" : "solutions"} per full turn.\n\n**Step 2: Count the turns.** The interval $[0, ${2 * k}\\pi)$ holds $${k}$ full turns, so there are\n\n$$${one} \\cdot ${k} = ${one * k}$$\n\n**Check.** At $\\theta = ${piOver(first, 180)}$, $\\${base} \\theta = ${v.latex}$, and its reciprocal is $${shown}$, as required. Each of the $${k}$ turns repeats the same ${one === 1 ? "solution" : "solutions"}, $2\\pi$ apart, so the count is $${one * k}$.`,
+      `**第一步：取倒数。**$\\${name} \\theta = \\frac{1}{\\${base} \\theta}$，所以方程等同于\n\n$$\\${base} \\theta = ${v.latex}$$\n\n它在 $[0, 2\\pi)$ 上的解是 $\\theta = ${radians(v.angles)}$，每整圈 $${one}$ 个。\n\n**第二步：数圈数。**区间 $[0, ${2 * k}\\pi)$ 含 $${k}$ 整圈，所以共有\n\n$$${one} \\cdot ${k} = ${one * k}$$\n\n**检验。**在 $\\theta = ${piOver(first, 180)}$ 处，$\\${base} \\theta = ${v.latex}$，它的倒数是 $${shown}$，符合要求。$${k}$ 圈中每一圈都重复同样的解，相隔 $2\\pi$，所以共有 $${one * k}$ 个。`,
     ],
   );
+};
+
+/** halfTurnBase gives the angle in degrees in [0, 180) where tangent or cotangent takes a value. */
+const halfTurnBase: Readonly<Record<string, Readonly<Record<string, number>>>> = {
+  tan: { "1": 45, "-1": 135, "\\sqrt{3}": 60, "-\\sqrt{3}": 120, [frac("\\sqrt{3}", 3)]: 30, [`-${frac("\\sqrt{3}", 3)}`]: 150, "0": 0 },
+  cot: { "1": 45, "-1": 135, "\\sqrt{3}": 30, "-\\sqrt{3}": 150, [frac("\\sqrt{3}", 3)]: 60, [`-${frac("\\sqrt{3}", 3)}`]: 120 },
 };
 
 /** halfTurnCount builds a problem counting the solutions of a function that repeats each half turn. */
@@ -153,6 +165,9 @@ const halfTurnCount = (rng: Rng, name: string) => {
   const value = rng.pick(["1", "-1", "\\sqrt{3}", "-\\sqrt{3}", frac("\\sqrt{3}", 3), `-${frac("\\sqrt{3}", 3)}`, "0"]);
   const k = rng.int(2, 9);
   const usable = name === "cot" && value === "0" ? "1" : value;
+  const base = halfTurnBase[name]![usable]!;
+  const at = piOver(base, 180);
+  const last = piOver(base + 180 * (k - 1), 180);
   return whole(
     [
       `How many solutions does $\\${name} \\theta = ${usable}$ have on $[0, ${k}\\pi)$?`,
@@ -161,8 +176,8 @@ const halfTurnCount = (rng: Rng, name: string) => {
     k,
     [2 * k, Math.ceil(k / 2), k + 1],
     [
-      `$\\${name}$ repeats every $\\pi$ with one solution each time, and the interval holds $${k}$ such stretches.`,
-      `$\\${name}$ 的周期是 $\\pi$，每个周期一个解，这个区间含 $${k}$ 个周期。`,
+      `**Step 1: Solve in one period.** $\\${name}$ has period $\\pi$ and takes each value once per period. On $[0, \\pi)$, $\\${name} \\theta = ${usable}$ at $\\theta = ${at}$.\n\n**Step 2: Count the periods.** The interval $[0, ${k}\\pi)$ holds $${k}$ periods of length $\\pi$, one solution in each, so there are $${k}$.\n\n**Check.** The solutions are $${at} + j\\pi$ for $j = 0, 1, \\ldots, ${k - 1}$. The last is $${last}$, which is less than $${k}\\pi$, and the next, $${piOver(base + 180 * k, 180)}$, is not. That is $${k}$ values of $j$.`,
+      `**第一步：解一个周期。**$\\${name}$ 的周期是 $\\pi$，每个周期内每个值恰好取一次。在 $[0, \\pi)$ 上，$\\${name} \\theta = ${usable}$ 的解是 $\\theta = ${at}$。\n\n**第二步：数周期。**区间 $[0, ${k}\\pi)$ 含 $${k}$ 个长为 $\\pi$ 的周期，每个周期一个解，所以有 $${k}$ 个。\n\n**检验。**解是 $${at} + j\\pi$，$j = 0, 1, \\ldots, ${k - 1}$。最后一个是 $${last}$，小于 $${k}\\pi$，而下一个 $${piOver(base + 180 * k, 180)}$ 不小于它。$j$ 共有 $${k}$ 个值。`,
     ],
   );
 };
@@ -180,8 +195,8 @@ const scaledCount = (rng: Rng, name: string, values: readonly Value[]) => {
     one * k,
     [one, k, one * k + 1],
     [
-      `As $\\theta$ runs over one turn, $${k}\\theta$ runs over ${k} turns, each with ${one} ${one === 1 ? "solution" : "solutions"}.`,
-      `$\\theta$ 走一圈时，$${k}\\theta$ 走 ${k} 圈，每圈 ${one} 个解。`,
+      `**Step 1: Count the turns of the angle.** As $\\theta$ runs over $[0, 2\\pi)$, the angle $${k}\\theta$ runs over $[0, ${2 * k}\\pi)$, which is $${k}$ full turns.\n\n**Step 2: Count per turn.** In each turn $\\${name}$ takes the value $${v.latex}$ ${one === 1 ? "once" : "twice"}, so there are\n\n$$${one} \\cdot ${k} = ${one * k}$$\n\n**Check.** In the first turn, $${k}\\theta = ${radians(v.angles)}$, so $\\theta = ${radians(v.angles, k)}$. Each later turn adds $${piOver(360, 180 * k)}$ to $\\theta$, and $${k}$ such steps reach $2\\pi$, so $${k}$ groups of $${one}$ fit, $${one * k}$ in all.`,
+      `**第一步：数角走过的圈数。**当 $\\theta$ 走遍 $[0, 2\\pi)$ 时，角 $${k}\\theta$ 走遍 $[0, ${2 * k}\\pi)$，即 $${k}$ 整圈。\n\n**第二步：数每圈的解。**每一圈中 $\\${name}$ 取到 $${v.latex}$ ${one === 1 ? "一次" : "两次"}，所以共有\n\n$$${one} \\cdot ${k} = ${one * k}$$\n\n**检验。**在第一圈里，$${k}\\theta = ${radians(v.angles)}$，所以 $\\theta = ${radians(v.angles, k)}$。以后每一圈使 $\\theta$ 增加 $${piOver(360, 180 * k)}$，$${k}$ 步恰好到 $2\\pi$，所以能放下 $${k}$ 组、每组 $${one}$ 个，共 $${one * k}$ 个。`,
     ],
   );
 };
@@ -1201,8 +1216,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "counting-cosine-solutions",
       ["Counting cosine solutions", "数余弦方程的解"],
       [
-        "Cosine repeats every full turn, so each turn holds the same solutions. Most values occur twice per turn, while 1 and $-1$ occur only once, at the top and the bottom.",
-        "余弦每一整圈重复，所以每圈的解相同。多数值每圈出现两次，而 1 和 $-1$ 只出现一次，在最高点和最低点。",
+        "Cosine repeats every full turn, so each turn holds the same solutions. Most values occur twice per turn, while 1 and $-1$ occur only once, at the top and the bottom.\n\nFor $\\cos\\theta = \\frac{1}{2}$ on $[0, 6\\pi)$: one turn gives $\\frac{\\pi}{3}$ and $\\frac{5\\pi}{3}$, and the interval holds $3$ turns, so there are $6$ solutions. Check: the largest is $\\frac{5\\pi}{3} + 4\\pi = \\frac{17\\pi}{3}$, below $6\\pi$, and one more $2\\pi$ would pass it.\n\n> **Watch out.** The interval $[0, 2k\\pi)$ holds $k$ turns, not $2k$: a turn is $2\\pi$ long. And for $1$ or $-1$ count one solution per turn, not two.",
+        "余弦每一整圈重复，所以每圈的解相同。多数值每圈出现两次，而 1 和 $-1$ 只出现一次，在最高点和最低点。\n\n对 $[0, 6\\pi)$ 上的 $\\cos\\theta = \\frac{1}{2}$：一圈内的解是 $\\frac{\\pi}{3}$ 和 $\\frac{5\\pi}{3}$，区间含 $3$ 圈，所以有 $6$ 个解。检验：最大的解是 $\\frac{5\\pi}{3} + 4\\pi = \\frac{17\\pi}{3}$，小于 $6\\pi$，再加一个 $2\\pi$ 就超过了。\n\n> **注意。** 区间 $[0, 2k\\pi)$ 含 $k$ 圈，不是 $2k$ 圈：一圈长 $2\\pi$。值为 $1$ 或 $-1$ 时每圈只有一个解，不是两个。",
       ],
       (rng) => fullTurnCount(rng, "cos", cosineValues),
     ),
@@ -1212,8 +1227,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "counting-tangent-solutions",
       ["Counting tangent solutions", "数正切方程的解"],
       [
-        "Tangent takes each real value exactly once in every half turn. So the number of solutions is the number of half turns the interval holds, for any value at all.",
-        "正切在每半圈恰好取每个实数值一次。所以解的个数就是区间内半圈的个数，不管这个值是多少。",
+        "Tangent takes each real value exactly once in every half turn. So the number of solutions is the number of half turns the interval holds, for any value at all.\n\nFor $\\tan\\theta = 1$ on $[0, 3\\pi)$: the solutions are $\\frac{\\pi}{4}$, $\\frac{5\\pi}{4}$ and $\\frac{9\\pi}{4}$, one in each of the $3$ half turns. Check: the next one, $\\frac{13\\pi}{4}$, is past $3\\pi$.\n\n> **Watch out.** The period of tangent is $\\pi$, not $2\\pi$: $[0, k\\pi)$ holds $k$ periods, not $\\frac{k}{2}$. And each period holds one solution, not two as for sine.",
+        "正切在每半圈恰好取每个实数值一次。所以解的个数就是区间内半圈的个数，不管这个值是多少。\n\n对 $[0, 3\\pi)$ 上的 $\\tan\\theta = 1$：解是 $\\frac{\\pi}{4}$、$\\frac{5\\pi}{4}$ 和 $\\frac{9\\pi}{4}$，$3$ 个半圈各一个。检验：下一个解 $\\frac{13\\pi}{4}$ 已超过 $3\\pi$。\n\n> **注意。** 正切的周期是 $\\pi$，不是 $2\\pi$：$[0, k\\pi)$ 含 $k$ 个周期，不是 $\\frac{k}{2}$ 个。每个周期只有一个解，不像正弦那样有两个。",
       ],
       (rng) => halfTurnCount(rng, "tan"),
     ),
@@ -1223,8 +1238,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "counting-secant-solutions",
       ["Counting secant solutions", "数正割方程的解"],
       [
-        "Secant is the reciprocal of cosine, so its values never lie strictly between $-1$ and $1$. Such an equation has no solutions, and any other one matches an equation in cosine.",
-        "正割是余弦的倒数，所以它的值不会严格落在 $-1$ 和 $1$ 之间。这样的方程无解，其他方程都对应一个余弦方程。",
+        "Secant is the reciprocal of cosine, so its values never lie strictly between $-1$ and $1$. Such an equation has no solutions, and any other one matches an equation in cosine.\n\nFor $\\sec\\theta = 2$ on $[0, 4\\pi)$: this is $\\cos\\theta = \\frac{1}{2}$, with $\\frac{\\pi}{3}$ and $\\frac{5\\pi}{3}$ in each of $2$ turns, so $4$ solutions. Check: $\\cos\\frac{\\pi}{3} = \\frac{1}{2}$, so $\\sec\\frac{\\pi}{3} = 2$.\n\n> **Watch out.** Take the reciprocal of the value as well: $\\sec\\theta = \\frac{1}{2}$ means $\\cos\\theta = 2$, which has no solutions, not $\\cos\\theta = \\frac{1}{2}$.",
+        "正割是余弦的倒数，所以它的值不会严格落在 $-1$ 和 $1$ 之间。这样的方程无解，其他方程都对应一个余弦方程。\n\n对 $[0, 4\\pi)$ 上的 $\\sec\\theta = 2$：它就是 $\\cos\\theta = \\frac{1}{2}$，$2$ 圈中每圈有 $\\frac{\\pi}{3}$ 和 $\\frac{5\\pi}{3}$，所以有 $4$ 个解。检验：$\\cos\\frac{\\pi}{3} = \\frac{1}{2}$，所以 $\\sec\\frac{\\pi}{3} = 2$。\n\n> **注意。** 值也要取倒数：$\\sec\\theta = \\frac{1}{2}$ 意味着 $\\cos\\theta = 2$，无解，而不是 $\\cos\\theta = \\frac{1}{2}$。",
       ],
       (rng) =>
         reciprocalCount(
@@ -1240,8 +1255,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "counting-cosecant-solutions",
       ["Counting cosecant solutions", "数余割方程的解"],
       [
-        "Cosecant is the reciprocal of sine, so its values never lie strictly between $-1$ and $1$. Such an equation has no solutions, and any other one matches an equation in sine.",
-        "余割是正弦的倒数，所以它的值不会严格落在 $-1$ 和 $1$ 之间。这样的方程无解，其他方程都对应一个正弦方程。",
+        "Cosecant is the reciprocal of sine, so its values never lie strictly between $-1$ and $1$. Such an equation has no solutions, and any other one matches an equation in sine.\n\nFor $\\csc\\theta = 2$ on $[0, 4\\pi)$: this is $\\sin\\theta = \\frac{1}{2}$, with $\\frac{\\pi}{6}$ and $\\frac{5\\pi}{6}$ in each of $2$ turns, so $4$ solutions. Check: $\\sin\\frac{5\\pi}{6} = \\frac{1}{2}$, so $\\csc\\frac{5\\pi}{6} = 2$.\n\n> **Watch out.** Take the reciprocal of the value as well: $\\csc\\theta = \\frac{1}{2}$ means $\\sin\\theta = 2$, which has no solutions, not $\\sin\\theta = \\frac{1}{2}$.",
+        "余割是正弦的倒数，所以它的值不会严格落在 $-1$ 和 $1$ 之间。这样的方程无解，其他方程都对应一个正弦方程。\n\n对 $[0, 4\\pi)$ 上的 $\\csc\\theta = 2$：它就是 $\\sin\\theta = \\frac{1}{2}$，$2$ 圈中每圈有 $\\frac{\\pi}{6}$ 和 $\\frac{5\\pi}{6}$，所以有 $4$ 个解。检验：$\\sin\\frac{5\\pi}{6} = \\frac{1}{2}$，所以 $\\csc\\frac{5\\pi}{6} = 2$。\n\n> **注意。** 值也要取倒数：$\\csc\\theta = \\frac{1}{2}$ 意味着 $\\sin\\theta = 2$，无解，而不是 $\\sin\\theta = \\frac{1}{2}$。",
       ],
       (rng) =>
         reciprocalCount(
@@ -1257,8 +1272,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "counting-cotangent-solutions",
       ["Counting cotangent solutions", "数余切方程的解"],
       [
-        "Like tangent, cotangent takes each real value exactly once in every half turn. So the number of solutions matches the number of half turns in the interval.",
-        "和正切一样，余切在每半圈恰好取每个实数值一次。所以解的个数等于区间内半圈的个数。",
+        "Like tangent, cotangent takes each real value exactly once in every half turn. So the number of solutions matches the number of half turns in the interval.\n\nFor $\\cot\\theta = 1$ on $[0, 4\\pi)$: the solutions are $\\frac{\\pi}{4}$, $\\frac{5\\pi}{4}$, $\\frac{9\\pi}{4}$ and $\\frac{13\\pi}{4}$, so there are $4$. Check: $\\cot\\frac{5\\pi}{4} = \\frac{\\cos\\frac{5\\pi}{4}}{\\sin\\frac{5\\pi}{4}} = \\frac{-\\frac{\\sqrt{2}}{2}}{-\\frac{\\sqrt{2}}{2}} = 1$.\n\n> **Watch out.** The period of cotangent is $\\pi$, like tangent, not $2\\pi$. And $\\cot\\theta = \\sqrt{3}$ is at $\\frac{\\pi}{6}$, where $\\tan\\theta = \\frac{\\sqrt{3}}{3}$, not at $\\frac{\\pi}{3}$.",
+        "和正切一样，余切在每半圈恰好取每个实数值一次。所以解的个数等于区间内半圈的个数。\n\n对 $[0, 4\\pi)$ 上的 $\\cot\\theta = 1$：解是 $\\frac{\\pi}{4}$、$\\frac{5\\pi}{4}$、$\\frac{9\\pi}{4}$ 和 $\\frac{13\\pi}{4}$，共 $4$ 个。检验：$\\cot\\frac{5\\pi}{4} = \\frac{\\cos\\frac{5\\pi}{4}}{\\sin\\frac{5\\pi}{4}} = \\frac{-\\frac{\\sqrt{2}}{2}}{-\\frac{\\sqrt{2}}{2}} = 1$。\n\n> **注意。** 余切和正切一样，周期是 $\\pi$，不是 $2\\pi$。$\\cot\\theta = \\sqrt{3}$ 的解是 $\\frac{\\pi}{6}$（那里 $\\tan\\theta = \\frac{\\sqrt{3}}{3}$），不是 $\\frac{\\pi}{3}$。",
       ],
       (rng) => halfTurnCount(rng, "cot"),
     ),
@@ -1268,8 +1283,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "the-first-solution-past-a-bound",
       ["The first solution past a bound", "超过某界的第一个解"],
       [
-        "The general solution lists every angle, one family for each base angle. To find the first past a bound, take the smallest member over it in each family and compare the two.",
-        "通解列出所有的角，每个基本角一族。要求超过某界的第一个解，就取每族中超过它的最小值，再比较这两个。",
+        "The general solution lists every angle, one family for each base angle. To find the first past a bound, take the smallest member over it in each family and compare the two.\n\nFor $\\cos(x^{\\circ}) = \\frac{1}{2}$ with $x > 400$: the families are $60 + 360k$ and $300 + 360k$, whose first members past $400$ are $420$ and $660$, so the answer is $420$. Check: $420 - 360 = 60$ is not past $400$, and $\\cos(420^{\\circ}) = \\cos(60^{\\circ}) = \\frac{1}{2}$.\n\n> **Watch out.** Look in both families. The first solution past the bound can come from the second base angle, even though it is the larger of the two.",
+        "通解列出所有的角，每个基本角一族。要求超过某界的第一个解，就取每族中超过它的最小值，再比较这两个。\n\n对 $\\cos(x^{\\circ}) = \\frac{1}{2}$、$x > 400$：两族是 $60 + 360k$ 和 $300 + 360k$，超过 $400$ 的第一个值是 $420$ 和 $660$，所以答案是 $420$。检验：$420 - 360 = 60$ 不超过 $400$，而且 $\\cos(420^{\\circ}) = \\cos(60^{\\circ}) = \\frac{1}{2}$。\n\n> **注意。** 两族都要看。超过界的第一个解可能来自第二个基本角，尽管它是两个基本角中较大的那个。",
       ],
       (rng) => {
         const v = rng.pick(cosineValues.slice(0, 6));
@@ -1277,16 +1292,18 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
         const next = (a: number) => a + 360 * Math.ceil((bound - a + 1) / 360);
         const [p, q] = v.angles as [number, number];
         const answer = Math.min(next(p), next(q));
+        const other = Math.max(next(p), next(q));
+        const base = answer === next(p) ? p : q;
         return whole(
           [
             `What is the smallest solution of $\\cos(x^{\\circ}) = ${v.latex}$ with $x > ${bound}$?`,
             `$\\cos(x^{\\circ}) = ${v.latex}$ 满足 $x > ${bound}$ 的最小解是多少？`,
           ],
           answer,
-          [Math.max(next(p), next(q)), answer + 360, answer - 360 > 0 ? answer - 360 : answer + 720],
+          [other, answer + 360, answer - 360 > 0 ? answer - 360 : answer + 720],
           [
-            `The families are $${p} + 360k$ and $${q} + 360k$, whose first values past $${bound}$ are $${next(p)}$ and $${next(q)}$.`,
-            `两族是 $${p} + 360k$ 和 $${q} + 360k$，超过 $${bound}$ 的第一个值是 $${next(p)}$ 和 $${next(q)}$。`,
+            `**Step 1: Write the families.** On $[0, 360)$, $\\cos(x^{\\circ}) = ${v.latex}$ at $${p}$ and $${q}$, so every solution is in\n\n$$x = ${p} + 360k \\quad \\text{or} \\quad x = ${q} + 360k$$\n\n**Step 2: Go past the bound in each.** Adding turns of $360$ until the value passes $${bound}$ gives $${next(p)}$ in the first family and $${next(q)}$ in the second. The smaller is $${answer}$.\n\n**Check.** One turn back, $${answer} - 360 = ${answer - 360}$ is not past $${bound}$, and the other family's first value, $${other}$, is larger. And $${answer} = ${base} + ${answer - base}$, a whole number of turns past $${base}$, so $\\cos(${answer}^{\\circ}) = \\cos(${base}^{\\circ}) = ${v.latex}$.`,
+            `**第一步：写出两族解。**在 $[0, 360)$ 上，$\\cos(x^{\\circ}) = ${v.latex}$ 的解是 $${p}$ 和 $${q}$，所以所有解是\n\n$$x = ${p} + 360k \\quad \\text{或} \\quad x = ${q} + 360k$$\n\n**第二步：每族各取超过界的第一个。**不断加 $360$ 直到超过 $${bound}$，第一族得 $${next(p)}$，第二族得 $${next(q)}$。较小的是 $${answer}$。\n\n**检验。**往回退一圈，$${answer} - 360 = ${answer - 360}$ 不超过 $${bound}$，另一族的第一个值 $${other}$ 更大。而 $${answer} = ${base} + ${answer - base}$，比 $${base}$ 多整数圈，所以 $\\cos(${answer}^{\\circ}) = \\cos(${base}^{\\circ}) = ${v.latex}$。`,
           ],
         );
       },
@@ -1297,8 +1314,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "counting-solutions-of-a-multiple-angle-sine",
       ["Counting solutions of a multiple angle sine", "数多倍角正弦方程的解"],
       [
-        "Multiplying the angle by $k$ fits $k$ full cycles of sine into one turn. Each cycle repeats the solutions, so the count for one cycle is multiplied by $k$.",
-        "把角乘 $k$，就在一圈内放进 $k$ 个完整的正弦周期。每个周期的解重复出现，所以一周期的解数要乘 $k$。",
+        "Multiplying the angle by $k$ fits $k$ full cycles of sine into one turn. Each cycle repeats the solutions, so the count for one cycle is multiplied by $k$.\n\nFor $\\sin(2\\theta) = \\frac{1}{2}$ on $[0, 2\\pi)$: $2\\theta$ runs over $2$ turns with $2$ solutions each, so there are $4$. Check: $2\\theta = \\frac{\\pi}{6}, \\frac{5\\pi}{6}, \\frac{13\\pi}{6}, \\frac{17\\pi}{6}$ gives $\\theta = \\frac{\\pi}{12}, \\frac{5\\pi}{12}, \\frac{13\\pi}{12}, \\frac{17\\pi}{12}$, four values in $[0, 2\\pi)$.\n\n> **Watch out.** Count the turns of $k\\theta$, not of $\\theta$: solving $\\sin\\theta = \\frac{1}{2}$ and stopping gives only $2$. For $1$ or $-1$ each turn holds one solution, so the count is $k$.",
+        "把角乘 $k$，就在一圈内放进 $k$ 个完整的正弦周期。每个周期的解重复出现，所以一周期的解数要乘 $k$。\n\n对 $[0, 2\\pi)$ 上的 $\\sin(2\\theta) = \\frac{1}{2}$：$2\\theta$ 走 $2$ 圈，每圈 $2$ 个解，所以有 $4$ 个。检验：$2\\theta = \\frac{\\pi}{6}, \\frac{5\\pi}{6}, \\frac{13\\pi}{6}, \\frac{17\\pi}{6}$，得 $\\theta = \\frac{\\pi}{12}, \\frac{5\\pi}{12}, \\frac{13\\pi}{12}, \\frac{17\\pi}{12}$，在 $[0, 2\\pi)$ 内正好四个。\n\n> **注意。** 要数 $k\\theta$ 走过的圈数，而不是 $\\theta$ 的：只解 $\\sin\\theta = \\frac{1}{2}$ 就停下，只能得到 $2$ 个。值为 $1$ 或 $-1$ 时每圈只有一个解，个数是 $k$。",
       ],
       (rng) => scaledCount(rng, "sin", sineValues),
     ),
@@ -1308,8 +1325,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "counting-solutions-of-a-multiple-angle-cosine",
       ["Counting solutions of a multiple angle cosine", "数多倍角余弦方程的解"],
       [
-        "Multiplying the angle by $k$ fits $k$ full cycles of cosine into one turn. The count for one cycle is multiplied by $k$, which is two per cycle for most values.",
-        "把角乘 $k$，就在一圈内放进 $k$ 个完整的余弦周期。一周期的解数乘 $k$，多数值每周期有两个解。",
+        "Multiplying the angle by $k$ fits $k$ full cycles of cosine into one turn. The count for one cycle is multiplied by $k$, which is two per cycle for most values.\n\nFor $\\cos(3\\theta) = 0$ on $[0, 2\\pi)$: $3\\theta$ runs over $3$ turns with $2$ solutions each, so there are $6$. Check: they are $\\theta = \\frac{\\pi}{6}, \\frac{\\pi}{2}, \\frac{5\\pi}{6}, \\frac{7\\pi}{6}, \\frac{3\\pi}{2}, \\frac{11\\pi}{6}$, each $\\frac{\\pi}{3}$ apart.\n\n> **Watch out.** Multiply by the number of turns of $3\\theta$, not divide: the multiple angle runs faster, so there are more solutions, not fewer. For $1$ or $-1$ each turn holds one solution.",
+        "把角乘 $k$，就在一圈内放进 $k$ 个完整的余弦周期。一周期的解数乘 $k$，多数值每周期有两个解。\n\n对 $[0, 2\\pi)$ 上的 $\\cos(3\\theta) = 0$：$3\\theta$ 走 $3$ 圈，每圈 $2$ 个解，所以有 $6$ 个。检验：它们是 $\\theta = \\frac{\\pi}{6}, \\frac{\\pi}{2}, \\frac{5\\pi}{6}, \\frac{7\\pi}{6}, \\frac{3\\pi}{2}, \\frac{11\\pi}{6}$，相邻两个相差 $\\frac{\\pi}{3}$。\n\n> **注意。** 要乘以 $3\\theta$ 走过的圈数，而不是除：倍角走得更快，解更多而不是更少。值为 $1$ 或 $-1$ 时每圈只有一个解。",
       ],
       (rng) => scaledCount(rng, "cos", cosineValues),
     ),
@@ -1319,12 +1336,13 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "counting-solutions-of-a-multiple-angle-tangent",
       ["Counting solutions of a multiple angle tangent", "数多倍角正切方程的解"],
       [
-        "Tangent has one solution per half turn. With the angle multiplied by $k$ there are $k$ solutions in every half turn of $\\theta$, and so $2k$ in one full turn.",
-        "正切每半圈一个解。角乘 $k$ 后，$\\theta$ 每半圈有 $k$ 个解，所以一整圈有 $2k$ 个解。",
+        "Tangent has one solution per half turn. With the angle multiplied by $k$ there are $k$ solutions in every half turn of $\\theta$, and so $2k$ in one full turn.\n\nFor $\\tan(2\\theta) = 1$ on $[0, 2\\pi)$: $2\\theta$ runs over $[0, 4\\pi)$, which is $4$ periods of tangent, so there are $4$ solutions. Check: $\\theta = \\frac{\\pi}{8}, \\frac{5\\pi}{8}, \\frac{9\\pi}{8}, \\frac{13\\pi}{8}$, each $\\frac{\\pi}{2}$ apart.\n\n> **Watch out.** The period of tangent is $\\pi$, so $[0, 2k\\pi)$ holds $2k$ periods, not $k$: the answer is $2k$.",
+        "正切每半圈一个解。角乘 $k$ 后，$\\theta$ 每半圈有 $k$ 个解，所以一整圈有 $2k$ 个解。\n\n对 $[0, 2\\pi)$ 上的 $\\tan(2\\theta) = 1$：$2\\theta$ 走遍 $[0, 4\\pi)$，即正切的 $4$ 个周期，所以有 $4$ 个解。检验：$\\theta = \\frac{\\pi}{8}, \\frac{5\\pi}{8}, \\frac{9\\pi}{8}, \\frac{13\\pi}{8}$，相邻两个相差 $\\frac{\\pi}{2}$。\n\n> **注意。** 正切的周期是 $\\pi$，所以 $[0, 2k\\pi)$ 含 $2k$ 个周期，不是 $k$ 个：答案是 $2k$。",
       ],
       (rng) => {
         const k = rng.int(2, 15);
         const v = rng.pick(["1", "-1", "\\sqrt{3}", "-\\sqrt{3}", "0"]);
+        const base = halfTurnBase.tan![v]!;
         return whole(
           [
             `How many solutions does $\\tan(${k}\\theta) = ${v}$ have on $[0, 2\\pi)$?`,
@@ -1333,8 +1351,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
           2 * k,
           [k, 4 * k, 2 * k + 1],
           [
-            `As $\\theta$ runs over $[0, 2\\pi)$, $${k}\\theta$ runs over $[0, ${2 * k}\\pi)$. Tangent has period $\\pi$ and takes each value once per period, and this interval holds $${2 * k}$ periods, so there are $${2 * k}$ solutions.`,
-            `当 $\\theta$ 走遍 $[0, 2\\pi)$ 时，$${k}\\theta$ 走遍 $[0, ${2 * k}\\pi)$。正切的周期是 $\\pi$，每个周期内每个值恰好取到一次；这个区间含 $${2 * k}$ 个周期，所以有 $${2 * k}$ 个解。`,
+            `**Step 1: Find the range of the angle.** As $\\theta$ runs over $[0, 2\\pi)$, $${k}\\theta$ runs over $[0, ${2 * k}\\pi)$.\n\n**Step 2: Count the periods.** Tangent has period $\\pi$ and takes each value once per period, and this interval holds $${2 * k}$ periods, so there are $${2 * k}$ solutions.\n\n**Check.** In the first period, $${k}\\theta = ${piOver(base, 180)}$, so $\\theta = ${piOver(base, 180 * k)}$. The solutions are $\\theta = ${piOver(base, 180 * k)} + j \\cdot ${piOver(180, 180 * k)}$, and the last below $2\\pi$ is at $j = ${2 * k - 1}$, $\\theta = ${piOver(base + 180 * (2 * k - 1), 180 * k)}$. That is $${2 * k}$ values of $j$.`,
+            `**第一步：求角的范围。**当 $\\theta$ 走遍 $[0, 2\\pi)$ 时，$${k}\\theta$ 走遍 $[0, ${2 * k}\\pi)$。\n\n**第二步：数周期。**正切的周期是 $\\pi$，每个周期内每个值恰好取到一次；这个区间含 $${2 * k}$ 个周期，所以有 $${2 * k}$ 个解。\n\n**检验。**在第一个周期里 $${k}\\theta = ${piOver(base, 180)}$，所以 $\\theta = ${piOver(base, 180 * k)}$。解是 $\\theta = ${piOver(base, 180 * k)} + j \\cdot ${piOver(180, 180 * k)}$，小于 $2\\pi$ 的最后一个在 $j = ${2 * k - 1}$ 处，$\\theta = ${piOver(base + 180 * (2 * k - 1), 180 * k)}$。$j$ 共有 $${2 * k}$ 个值。`,
           ],
         );
       },
@@ -1345,12 +1363,14 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "the-tangent-from-a-balance",
       ["The tangent from a balance", "由等式求正切"],
       [
-        "An equation between a multiple of sine and a multiple of cosine sets their ratio. Dividing by cosine, which cannot be zero here, gives the tangent as a single number.",
-        "正弦的倍数与余弦的倍数相等，就确定了它们的比。除以余弦（这里不可能为零），正切就是一个确定的数。",
+        "An equation between a multiple of sine and a multiple of cosine sets their ratio. Dividing by cosine, which cannot be zero here, gives the tangent as a single number.\n\nFor $3\\sin\\theta = 4\\cos\\theta$: dividing by $3\\cos\\theta$ gives $\\tan\\theta = \\frac{4}{3}$. Check: with $\\sin\\theta = \\frac{4}{5}$ and $\\cos\\theta = \\frac{3}{5}$, both sides are $\\frac{12}{5}$.\n\n> **Watch out.** $\\tan\\theta = \\frac{\\sin\\theta}{\\cos\\theta}$, so the coefficient of cosine goes on top: the answer is $\\frac{4}{3}$, not $\\frac{3}{4}$.",
+        "正弦的倍数与余弦的倍数相等，就确定了它们的比。除以余弦（这里不可能为零），正切就是一个确定的数。\n\n对 $3\\sin\\theta = 4\\cos\\theta$：两边除以 $3\\cos\\theta$，得 $\\tan\\theta = \\frac{4}{3}$。检验：取 $\\sin\\theta = \\frac{4}{5}$、$\\cos\\theta = \\frac{3}{5}$，两边都是 $\\frac{12}{5}$。\n\n> **注意。** $\\tan\\theta = \\frac{\\sin\\theta}{\\cos\\theta}$，所以余弦的系数在分子上：答案是 $\\frac{4}{3}$，不是 $\\frac{3}{4}$。",
       ],
       (rng) => {
         const a = rng.int(2, 15);
         const b = rng.int(1, 15) * (rng.bool() ? 1 : -1);
+        const ratio = Q.of(b, a).toLatex();
+        const r = `\\sqrt{${a * a + b * b}}`;
         return fraction(
           [
             `If $${a}\\sin\\theta = ${b}\\cos\\theta$, what is $\\tan\\theta$?`,
@@ -1359,8 +1379,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
           Q.of(b, a),
           [Q.of(a, b), Q.of(-b, a), Q.of(a * b, 1)],
           [
-            `Dividing both sides by $${a}\\cos\\theta$ gives $\\tan\\theta = ${Q.of(b, a).toLatex()}$.`,
-            `两边除以 $${a}\\cos\\theta$，得 $\\tan\\theta = ${Q.of(b, a).toLatex()}$。`,
+            `**Step 1: Make sure cosine is not zero.** If $\\cos\\theta = 0$, then $\\sin\\theta = \\pm 1$, and the left side would be $\\pm ${a}$ while the right side is $0$. So $\\cos\\theta \\ne 0$.\n\n**Step 2: Divide.** Dividing both sides by $${a}\\cos\\theta$ gives\n\n$$\\tan\\theta = \\frac{\\sin\\theta}{\\cos\\theta} = ${ratio}$$\n\n**Check.** Take the point $(${a}, ${b})$ on the terminal side, at distance $${r}$ from the origin, so $\\sin\\theta = \\frac{${b}}{${r}}$ and $\\cos\\theta = \\frac{${a}}{${r}}$. Then both sides of the equation are $\\frac{${a * b}}{${r}}$, and $\\tan\\theta = ${frac(b, a)} = ${ratio}$.`,
+            `**第一步：确认余弦不为零。**若 $\\cos\\theta = 0$，则 $\\sin\\theta = \\pm 1$，左边是 $\\pm ${a}$，右边是 $0$。所以 $\\cos\\theta \\ne 0$。\n\n**第二步：相除。**两边除以 $${a}\\cos\\theta$，得\n\n$$\\tan\\theta = \\frac{\\sin\\theta}{\\cos\\theta} = ${ratio}$$\n\n**检验。**在终边上取点 $(${a}, ${b})$，它到原点的距离是 $${r}$，所以 $\\sin\\theta = \\frac{${b}}{${r}}$，$\\cos\\theta = \\frac{${a}}{${r}}$。这时方程两边都是 $\\frac{${a * b}}{${r}}$，而 $\\tan\\theta = ${frac(b, a)} = ${ratio}$。`,
           ],
         );
       },
@@ -1371,19 +1391,19 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "counting-distinct-solutions-of-a-product",
       ["Counting distinct solutions of a product", "数乘积方程的不同解"],
       [
-        "A product is zero when either factor is. But the factors can share an angle, and a shared angle counts once, so list each factor's solutions and then merge the lists.",
-        "任一因式为零时积为零。但两个因式可能有相同的角，相同的角只算一次，所以分别列出解，再合并。",
+        "A product is zero when either factor is. But the factors can share an angle, and a shared angle counts once, so list each factor's solutions and then merge the lists.\n\nFor $(\\sin\\theta - \\frac{1}{2})(\\cos\\theta - \\frac{\\sqrt{3}}{2}) = 0$ on $[0^{\\circ}, 360^{\\circ})$: the sine factor gives $30^{\\circ}, 150^{\\circ}$ and the cosine factor gives $30^{\\circ}, 330^{\\circ}$. Merged, that is $30^{\\circ}, 150^{\\circ}, 330^{\\circ}$, so $3$ solutions. Check: $2 + 2 - 1 = 3$, taking off the one shared angle.\n\n> **Watch out.** Adding the two counts counts a shared angle twice. Compare the lists before adding.",
+        "任一因式为零时积为零。但两个因式可能有相同的角，相同的角只算一次，所以分别列出解，再合并。\n\n对 $[0^{\\circ}, 360^{\\circ})$ 上的 $(\\sin\\theta - \\frac{1}{2})(\\cos\\theta - \\frac{\\sqrt{3}}{2}) = 0$：正弦因式给出 $30^{\\circ}, 150^{\\circ}$，余弦因式给出 $30^{\\circ}, 330^{\\circ}$。合并后是 $30^{\\circ}, 150^{\\circ}, 330^{\\circ}$，共 $3$ 个解。检验：$2 + 2 - 1 = 3$，减去一个相同的角。\n\n> **注意。** 直接把两个个数相加，会把相同的角算两次。相加之前先比较两张列表。",
       ],
       (rng) => {
         const s = rng.pick(sineValues);
         const c = rng.pick(cosineValues);
         const count = new Set([...s.angles, ...c.angles]).size;
+        const shared = s.angles.filter((a) => c.angles.includes(a));
         const fac = (name: string, v: string) =>
           v === "0" ? `\\${name}\\theta` : v.startsWith("-") ? `(\\${name}\\theta + ${v.slice(1)})` : `(\\${name}\\theta - ${v})`;
-        const all = [...new Set([...s.angles, ...c.angles])]
-          .sort((a, b) => a - b)
-          .map((a) => `${a}^{\\circ}`)
-          .join(", ");
+        const deg = (angles: readonly number[]) => angles.map((a) => `${a}^{\\circ}`).join(", ");
+        const all = deg([...new Set([...s.angles, ...c.angles])].sort((a, b) => a - b));
+        const sum = `${s.angles.length} + ${c.angles.length} - ${shared.length} = ${count}`;
         return whole(
           [
             `How many solutions does $${fac("sin", s.latex)}${fac("cos", c.latex)} = 0$ have on $[0^{\\circ}, 360^{\\circ})$?`,
@@ -1392,8 +1412,8 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
           count,
           [s.angles.length + c.angles.length === count ? count + 1 : s.angles.length + c.angles.length, count - 1, 2],
           [
-            `A product is zero when a factor is zero. The sine factor gives $${s.angles.map((a) => `${a}^{\\circ}`).join(", ")}$ and the cosine factor gives $${c.angles.map((a) => `${a}^{\\circ}`).join(", ")}$. Without repeats, the solutions are $${all}$.`,
-            `积为零时，必有一个因式为零。正弦因式给出 $${s.angles.map((a) => `${a}^{\\circ}`).join(", ")}$，余弦因式给出 $${c.angles.map((a) => `${a}^{\\circ}`).join(", ")}$。去掉重复后，解是 $${all}$。`,
+            `**Step 1: Solve the sine factor.** A product is zero when a factor is zero. $\\sin\\theta = ${s.latex}$ gives $${deg(s.angles)}$.\n\n**Step 2: Solve the cosine factor.** $\\cos\\theta = ${c.latex}$ gives $${deg(c.angles)}$.\n\n**Step 3: Merge the lists.** Without repeats, the solutions are $${all}$, which is $${count}$.\n\n**Check.** Count instead: $${s.angles.length}$ from sine and $${c.angles.length}$ from cosine, ${shared.length === 0 ? "with no angle in both" : `with $${deg(shared)}$ in both`}, so $${sum}$.`,
+            `**第一步：解正弦因式。**积为零时，必有一个因式为零。$\\sin\\theta = ${s.latex}$ 给出 $${deg(s.angles)}$。\n\n**第二步：解余弦因式。**$\\cos\\theta = ${c.latex}$ 给出 $${deg(c.angles)}$。\n\n**第三步：合并列表。**去掉重复后，解是 $${all}$，共 $${count}$ 个。\n\n**检验。**换一种数法：正弦给出 $${s.angles.length}$ 个，余弦给出 $${c.angles.length}$ 个，${shared.length === 0 ? "没有公共的角" : `公共的角是 $${deg(shared)}$`}，所以 $${sum}$。`,
           ],
         );
       },
@@ -1404,23 +1424,42 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       "tangent-and-cotangent-together",
       ["Tangent and cotangent together", "正切和余切同时出现"],
       [
-        "Replacing $\\cot\\theta$ with $\\frac{1}{\\tan\\theta}$ and multiplying through by $\\tan\\theta$ gives a quadratic in the tangent. Its roots are the possible values of the tangent.",
-        "把 $\\cot\\theta$ 换成 $\\frac{1}{\\tan\\theta}$，两边乘 $\\tan\\theta$，得到关于正切的二次方程。它的根就是正切可能的值。",
+        "Replacing $\\cot\\theta$ with $\\frac{1}{\\tan\\theta}$ and multiplying through by $\\tan\\theta$ gives a quadratic in the tangent. Its roots are the possible values of the tangent.\n\nFor $\\tan\\theta + 6\\cot\\theta = 5$: with $t = \\tan\\theta$, $t^{2} - 5t + 6 = 0$, so $(t - 2)(t - 3) = 0$ and $t = 2$ or $t = 3$. Check: $2 + \\frac{6}{2} = 5$ and $3 + \\frac{6}{3} = 5$.\n\n> **Watch out.** After multiplying by $t$, the coefficient of $\\cot\\theta$ becomes the constant term, and the right side moves over with a minus sign. The roots are the values, not the coefficients $5$ and $6$.",
+        "把 $\\cot\\theta$ 换成 $\\frac{1}{\\tan\\theta}$，两边乘 $\\tan\\theta$，得到关于正切的二次方程。它的根就是正切可能的值。\n\n对 $\\tan\\theta + 6\\cot\\theta = 5$：设 $t = \\tan\\theta$，得 $t^{2} - 5t + 6 = 0$，即 $(t - 2)(t - 3) = 0$，所以 $t = 2$ 或 $t = 3$。检验：$2 + \\frac{6}{2} = 5$，$3 + \\frac{6}{3} = 5$。\n\n> **注意。** 乘以 $t$ 之后，$\\cot\\theta$ 的系数变成常数项，右边移过来要变号。根才是正切的值，系数 $5$ 和 $6$ 不是。",
       ],
       (rng) => {
         const a = rng.int(1, 9);
         const b = a + rng.int(1, 9);
-        return chooseMath(
-          rng,
+        return reasoned(
+          chooseMath(
+            rng,
+            [
+              `What are the possible values of $\\tan\\theta$ if $\\tan\\theta + ${a * b}\\cot\\theta = ${a + b}$?`,
+              `若 $\\tan\\theta + ${a * b}\\cot\\theta = ${a + b}$，$\\tan\\theta$ 可能取哪些值？`,
+            ],
+            `${a} \\text{ and } ${b}`,
+            [`-${a} \\text{ and } -${b}`, `${a + b} \\text{ and } ${a * b}`, `${a} \\text{ and } -${b}`],
+            [
+              `**Step 1: Write in the tangent.** Let $t = \\tan\\theta$, which is not $0$ since $\\cot\\theta$ is defined. Then $\\cot\\theta = \\frac{1}{t}$ and\n\n$$t + \\frac{${a * b}}{t} = ${a + b}$$\n\n**Step 2: Multiply by $t$ and factor.**\n\n$$t^{2} - ${a + b}t + ${a * b} = 0$$\n\n$$(t - ${a})(t - ${b}) = 0$$\n\nso $t = ${a}$ or $t = ${b}$.\n\n**Check.** Put each back into the original equation: $${a} + \\frac{${a * b}}{${a}} = ${a} + ${b} = ${a + b}$ and $${b} + \\frac{${a * b}}{${b}} = ${b} + ${a} = ${a + b}$.`,
+              `**第一步：用正切表示。**设 $t = \\tan\\theta$，因为 $\\cot\\theta$ 有意义，$t \\ne 0$。于是 $\\cot\\theta = \\frac{1}{t}$，且\n\n$$t + \\frac{${a * b}}{t} = ${a + b}$$\n\n**第二步：乘以 $t$ 并分解。**\n\n$$t^{2} - ${a + b}t + ${a * b} = 0$$\n\n$$(t - ${a})(t - ${b}) = 0$$\n\n所以 $t = ${a}$ 或 $t = ${b}$。\n\n**检验。**分别代回原方程：$${a} + \\frac{${a * b}}{${a}} = ${a} + ${b} = ${a + b}$，$${b} + \\frac{${a * b}}{${b}} = ${b} + ${a} = ${a + b}$。`,
+            ],
+          ),
           [
-            `What are the possible values of $\\tan\\theta$ if $\\tan\\theta + ${a * b}\\cot\\theta = ${a + b}$?`,
-            `若 $\\tan\\theta + ${a * b}\\cot\\theta = ${a + b}$，$\\tan\\theta$ 可能取哪些值？`,
-          ],
-          `${a} \\text{ and } ${b}`,
-          [`-${a} \\text{ and } -${b}`, `${a + b} \\text{ and } ${a * b}`, `${a} \\text{ and } -${b}`],
-          [
-            `$t^{2} - ${a + b}t + ${a * b} = 0$ factors as $(t - ${a})(t - ${b}) = 0$.`,
-            `$t^{2} - ${a + b}t + ${a * b} = 0$ 分解为 $(t - ${a})(t - ${b}) = 0$。`,
+            [
+              `$-${a} \\text{ and } -${b}$`,
+              `These solve $t^{2} + ${a + b}t + ${a * b} = 0$, with the sign of the middle term flipped: $-${a} + \\frac{${a * b}}{-${a}} = -${a + b}$, not $${a + b}$.`,
+              `这是 $t^{2} + ${a + b}t + ${a * b} = 0$ 的根，中间项的符号弄反了：$-${a} + \\frac{${a * b}}{-${a}} = -${a + b}$，不是 $${a + b}$。`,
+            ],
+            [
+              `$${a + b} \\text{ and } ${a * b}$`,
+              `These are the coefficients of the equation, the sum and the product of the roots, not the roots: $${a + b} + \\frac{${a * b}}{${a + b}}$ is more than $${a + b}$.`,
+              `这是方程的系数，即两根之和与两根之积，不是根：$${a + b} + \\frac{${a * b}}{${a + b}}$ 大于 $${a + b}$。`,
+            ],
+            [
+              `$${a} \\text{ and } -${b}$`,
+              `The product of the roots is $${a * b} > 0$, so they have the same sign: $-${b} + \\frac{${a * b}}{-${b}} = -${a + b}$, not $${a + b}$.`,
+              `两根之积是 $${a * b} > 0$，所以两根同号：$-${b} + \\frac{${a * b}}{-${b}} = -${a + b}$，不是 $${a + b}$。`,
+            ],
           ],
         );
       },
