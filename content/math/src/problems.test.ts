@@ -2,7 +2,7 @@ import { createRng, t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 import { describe, expect, it } from "vitest";
 
-import { explainedChoice, figureChoice, numberProblem } from "./problems.ts";
+import { explainedChoice, figureChoice, numberProblem, withMistakes } from "./problems.ts";
 
 const canonical = (answer: string, solution: string, form?: "fraction") =>
   numberProblem({ prompt: t("Find it.", "求它。"), answer: Q.parse(answer), solution: t(solution, solution), ...(form && { form }) })
@@ -73,5 +73,24 @@ describe("numberProblem", () => {
 
   it("keeps a form the problem asks for", () => {
     expect(canonical("0.54", "$1 - 0.46 = 0.54$", "fraction")).toBe("\\frac{27}{50}");
+  });
+});
+
+describe("withMistakes", () => {
+  it("keeps a typed response of -1 and skips only options the problem does not list", () => {
+    const typed = withMistakes(numberProblem({ prompt: t("Find it.", "求它。"), answer: 1, solution: t("It is 1.", "它是 1。") }), [
+      { response: "-1", why: t("The sign is wrong.", "符号错了。") },
+    ]);
+    expect(typed.mistakes?.find((m) => m.response === "-1")?.feedback.en).toBe("The sign is wrong.");
+    const chosen = withMistakes(
+      explainedChoice(createRng(1), {
+        prompt: t("Which?", "哪个？"),
+        correct: t("Right", "对"),
+        wrong: [],
+        solution: t("Because.", "因为。"),
+      }),
+      [{ response: "Missing", why: t("Not listed.", "没有列出。") }],
+    );
+    expect(chosen.mistakes ?? []).toHaveLength(0);
   });
 });

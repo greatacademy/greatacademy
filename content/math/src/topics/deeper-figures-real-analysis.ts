@@ -650,8 +650,8 @@ const riemannRectangles = {
     "reading-a-riemann-sum-from-its-rectangles",
     ["Reading a Riemann sum from its rectangles", "由矩形读黎曼和"],
     [
-      "A Riemann sum picks one height for each piece of the interval. Rectangles touching the graph at their left corners make a left sum, and those touching it at their right corners make a right sum. The value is the total area of the rectangles, which is the sum of the heights times the common width.",
-      "黎曼和为区间的每一段选一个高度。在左上角碰到图的矩形构成左和，在右上角碰到图的构成右和。值是矩形的总面积，也就是各高度之和乘以相同的宽度。",
+      "A Riemann sum picks one height for each piece of the interval. Rectangles touching the graph at their left corners make a left sum, and those touching it at their right corners make a right sum. The value is the total area of the rectangles, which is the sum of the heights times the common width.\n\nSay the graph passes through heights $2, 4, 3, 5$ at $x = 0, 1, 2, 3$, and the three rectangles of width $1$ touch it at their left corners. That is a left sum, with value $1 \\cdot (2 + 4 + 3) = 9$.\n\nCheck: the right sum uses $4, 3, 5$ and is $12$. The two differ only in the end heights, $1 \\cdot (5 - 2) = 3$, and indeed $12 - 9 = 3$.\n\n> **Watch out.** $n$ rectangles use only $n$ of the $n + 1$ heights: the left sum leaves out the last one and the right sum the first. And multiply by the width when it is not $1$.",
+      "黎曼和为区间的每一段选一个高度。在左上角碰到图的矩形构成左和，在右上角碰到图的构成右和。值是矩形的总面积，也就是各高度之和乘以相同的宽度。\n\n设图在 $x = 0, 1, 2, 3$ 处的高度为 $2, 4, 3, 5$，三个宽为 $1$ 的矩形都在左上角碰到图。这是左和，值为 $1 \\cdot (2 + 4 + 3) = 9$。\n\n检验：右和用 $4, 3, 5$，值为 $12$。两者只在两端的高度上不同，$1 \\cdot (5 - 2) = 3$，而 $12 - 9$ 确实等于 $3$。\n\n> **注意。** $n$ 个矩形只用 $n + 1$ 个高度中的 $n$ 个：左和不用最后一个，右和不用第一个。宽度不是 $1$ 时还要乘以宽度。",
     ],
     (rng) => {
       const width = rng.pick([1, 2]);
@@ -685,24 +685,76 @@ const riemannRectangles = {
         `${left ? "左" : "右"}和，值为 $${v}$`,
       ];
       const [v, other] = leftSum ? [L, R] : [R, L];
-      return choose(
-        rng,
-        ["The rectangles approximate the area under the graph. Which sum do they show?", "这些矩形近似图下方的面积。它们表示哪种和？"],
-        option(leftSum, v),
+      const side = leftSum ? "left" : "right";
+      const sideZh = leftSum ? "左" : "右";
+      const otherSide = leftSum ? "right" : "left";
+      const otherSideZh = leftSum ? "右" : "左";
+      const first = h[0] as number;
+      const last = h[count] as number;
+      const used = leftSum ? h.slice(0, -1) : h.slice(1);
+      const unused = leftSum ? h.slice(1) : h.slice(0, -1);
+      const all = L + last * width;
+      const halved = width === 2 && v / 2 !== other ? v / 2 : null;
+      const fourth = halved ?? all;
+      return reasoned(
+        choose(
+          rng,
+          ["The rectangles approximate the area under the graph. Which sum do they show?", "这些矩形近似图下方的面积。它们表示哪种和？"],
+          option(leftSum, v),
+          [option(!leftSum, v), option(leftSum, other), option(!leftSum, other), option(leftSum, fourth)],
+          walk(
+            [
+              [
+                "Read the corners",
+                "看矩形的角",
+                `Each rectangle reaches the graph at its ${side} corner, so this is a ${side} sum, using the heights $${used.join(", ")}$.`,
+                `每个矩形在${sideZh}上角碰到图，所以这是${sideZh}和，所用的高度依次为 $${used.join(", ")}$。`,
+              ],
+              [
+                "Add the areas",
+                "把面积相加",
+                `$$${width} \\cdot (${used.join(" + ")}) = ${v}$$`,
+                `$$${width} \\cdot (${used.join(" + ")}) = ${v}$$`,
+              ],
+            ],
+            [
+              `The ${otherSide} sum uses $${unused.join(", ")}$ and is $${other}$. The two sums differ only in the end heights, so $R - L$ should be $${width} \\cdot (${last} - ${first}) = ${width * (last - first)}$, and indeed $${R} - ${L} = ${R - L}$.`,
+              `${otherSideZh}和用 $${unused.join(", ")}$，值为 $${other}$。两个和只在两端的高度上不同，所以 $R - L$ 应为 $${width} \\cdot (${last} - ${first}) = ${width * (last - first)}$，而 $${R} - ${L}$ 确实等于 $${R - L}$。`,
+            ],
+          ),
+          fig({ xMin: -1, xMax: 8, yMin: -1, yMax: 8 }, marks, [
+            `Rectangles of width ${width} and a path through the heights ${h.join(", ")}.`,
+            `宽度为 ${width} 的矩形和经过高度 ${h.join("，")} 的折线。`,
+          ]),
+        ),
         [
-          option(!leftSum, v),
-          option(leftSum, other === v ? v + width : other),
-          option(!leftSum, other === v ? v + 2 * width : other),
-          option(leftSum, v / width === v ? v + 1 : v / width),
+          [
+            option(!leftSum, v)[0],
+            `The value is right, but each rectangle meets the graph at its ${side} corner, which makes a ${side} sum.`,
+            `值是对的，但每个矩形在${sideZh}上角碰到图，这是${sideZh}和。`,
+          ],
+          [
+            option(leftSum, other)[0],
+            `$${other}$ is the value of the ${otherSide} sum, which uses the heights $${unused.join(", ")}$; the drawn rectangles use $${used.join(", ")}$.`,
+            `$${other}$ 是${otherSideZh}和的值，它用的高度是 $${unused.join(", ")}$；图中的矩形用的是 $${used.join(", ")}$。`,
+          ],
+          [
+            option(!leftSum, other)[0],
+            `That describes the ${otherSide} sum, which has different rectangles from the ones drawn: these touch the graph at their ${side} corners.`,
+            `那描述的是${otherSideZh}和，它的矩形与图中的不同：图中的矩形在${sideZh}上角碰到图。`,
+          ],
+          halved === null
+            ? [
+                option(leftSum, all)[0],
+                `This uses all $${count + 1}$ heights; $${count}$ rectangles use only $${count}$ of them, leaving out the ${leftSum ? "last" : "first"} one.`,
+                `这里用了全部 $${count + 1}$ 个高度；$${count}$ 个矩形只用其中 $${count}$ 个，${leftSum ? "最后" : "第一"}个不用。`,
+              ]
+            : [
+                option(leftSum, halved)[0],
+                "This adds the heights without multiplying by the width $2$ of the rectangles.",
+                "这里只把高度相加，没有乘以矩形的宽度 $2$。",
+              ],
         ],
-        [
-          `Each rectangle reaches the graph at its ${leftSum ? "left" : "right"} corner, so this is a ${leftSum ? "left" : "right"} sum. The heights are ${(leftSum ? h.slice(0, -1) : h.slice(1)).join(", ")}, and multiplying their sum by the width $${width}$ gives $${v}$.`,
-          `每个矩形在${leftSum ? "左" : "右"}上角碰到图，所以这是${leftSum ? "左" : "右"}和。高度依次为 ${(leftSum ? h.slice(0, -1) : h.slice(1)).join("，")}，它们的和乘以宽度 $${width}$ 得 $${v}$。`,
-        ],
-        fig({ xMin: -1, xMax: 8, yMin: -1, yMax: 8 }, marks, [
-          `Rectangles of width ${width} and a path through the heights ${h.join(", ")}.`,
-          `宽度为 ${width} 的矩形和经过高度 ${h.join("，")} 的折线。`,
-        ]),
       );
     },
   ),

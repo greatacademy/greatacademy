@@ -1478,25 +1478,55 @@ const unknownUpperLimit: KnowledgePointDef = {
   id: "an-unknown-limit-of-integration",
   title: t("An unknown limit of integration", "未知的积分上限"),
   explanation: t(
-    "The fundamental theorem works in reverse as well. If the value of an integral is known and a limit is not, evaluating the antiderivative at that limit gives an equation in the unknown. For a linear integrand, that equation is a quadratic, and a condition such as positivity selects the root.",
-    "微积分基本定理也可以反过来用。如果已知积分的值而不知道积分限，把原函数代入这个积分限，就得到关于未知数的方程。被积函数是一次式时，这是一个二次方程，再由正数之类的条件选出合适的根。",
+    "The fundamental theorem works in reverse as well. If the value of an integral is known and a limit is not, evaluating the antiderivative at that limit gives an equation in the unknown. For a linear integrand, that equation is a quadratic, and a condition such as positivity selects the root.\n\nFor $\\int_{0}^{k} (2x + 1) \\, dx = 6$, the antiderivative $x^{2} + x$ gives $k^{2} + k = 6$, so $(k - 2)(k + 3) = 0$. The positive root is $k = 2$.\n\nCheck: the region under $2x + 1$ on $[0, 2]$ is a trapezoid with parallel sides $1$ and $5$ and width $2$, with area $\\frac{1 + 5}{2} \\cdot 2 = 6$.\n\n> **Watch out.** Integrate first and then set the result equal to the value; setting the integrand itself equal to the value solves a different problem. Keep only the root the question allows.",
+    "微积分基本定理也可以反过来用。如果已知积分的值而不知道积分限，把原函数代入这个积分限，就得到关于未知数的方程。被积函数是一次式时，这是一个二次方程，再由正数之类的条件选出合适的根。\n\n对 $\\int_{0}^{k} (2x + 1) \\, dx = 6$，由原函数 $x^{2} + x$ 得 $k^{2} + k = 6$，即 $(k - 2)(k + 3) = 0$。正根是 $k = 2$。\n\n检验：$2x + 1$ 在 $[0, 2]$ 下方的区域是两条平行边为 $1$ 和 $5$、宽为 $2$ 的梯形，面积为 $\\frac{1 + 5}{2} \\cdot 2 = 6$。\n\n> **注意。** 要先积分，再令结果等于已知值；让被积函数本身等于已知值，解的是另一个问题。只保留题目允许的根。",
   ),
   generate(rng) {
     const c = rng.int(1, 3);
     const a = rng.int(1, 9);
     const k = rng.int(1, 9);
     const v = c * k * k + a * k;
+    const integrand = poly([2 * c, "x"], [a, ""]);
+    const other = Q.of(-(c * k + a), c);
+    const top = 2 * c * k + a;
     return numberProblem({
       prompt: t(
-        `Find the positive number $k$ for which $\\int_0^k (${poly([2 * c, "x"], [a, ""])})\\,dx = ${v}$.`,
-        `求正数 $k$，使 $\\int_0^k (${poly([2 * c, "x"], [a, ""])})\\,dx = ${v}$。`,
+        `Find the positive number $k$ for which $\\int_0^k (${integrand})\\,dx = ${v}$.`,
+        `求正数 $k$，使 $\\int_0^k (${integrand})\\,dx = ${v}$。`,
       ),
       answer: k,
       solveFor: "k",
-      wrong: [k + a, 2 * k, k + 1],
-      solution: t(
-        `The integral equals $${poly([c, "k^2"], [a, "k"])}$. Setting this equal to $${v}$ gives a quadratic whose roots have a negative product, so exactly one root is positive: $k = ${k}$.`,
-        `积分等于 $${poly([c, "k^2"], [a, "k"])}$。令它等于 $${v}$，得到两根之积为负的二次方程，所以恰有一个正根：$k = ${k}$。`,
+      mistakes: distinctWhys([
+        why(
+          other,
+          "This is the negative root of the quadratic; the question asks for a positive $k$.",
+          "这是二次方程的负根；题目要求 $k$ 为正数。",
+        ),
+        why(
+          Q.of(v - a, 2 * c),
+          `This sets the integrand $${integrand}$ equal to $${v}$; the integral, not the integrand, has the value $${v}$.`,
+          `这是让被积函数 $${integrand}$ 等于 $${v}$；等于 $${v}$ 的是积分，不是被积函数。`,
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Integrate",
+            "积分",
+            `An antiderivative is $${poly([c, "x^2"], [a, "x"])}$, which is $0$ at $x = 0$, so the condition is $${poly([c, "k^2"], [a, "k"])} = ${v}$.`,
+            `一个原函数是 $${poly([c, "x^2"], [a, "x"])}$，它在 $x = 0$ 处为 $0$，所以条件是 $${poly([c, "k^2"], [a, "k"])} = ${v}$。`,
+          ],
+          [
+            "Solve the quadratic",
+            "解二次方程",
+            `$$${poly([c, "k^2"], [a, "k"], [-v, ""])} = (k - ${k})(${poly([c, "k"], [c * k + a, ""])}) = 0$$\n\nThe roots are $k = ${k}$ and $k = ${other.toLatex()}$; the positive one is $k = ${k}$.`,
+            `$$${poly([c, "k^2"], [a, "k"], [-v, ""])} = (k - ${k})(${poly([c, "k"], [c * k + a, ""])}) = 0$$\n\n两根为 $k = ${k}$ 和 $k = ${other.toLatex()}$；正根是 $k = ${k}$。`,
+          ],
+        ],
+        [
+          `The region under $${integrand}$ on $[0, ${k}]$ is a trapezoid with parallel sides $${a}$ and $${top}$ and width $${k}$, with area $\\frac{${a} + ${top}}{2} \\cdot ${k} = ${v}$.`,
+          `$${integrand}$ 在 $[0, ${k}]$ 下方的区域是平行边为 $${a}$ 和 $${top}$、宽为 $${k}$ 的梯形，面积为 $\\frac{${a} + ${top}}{2} \\cdot ${k} = ${v}$。`,
+        ],
       ),
     });
   },
@@ -1604,8 +1634,8 @@ const rightMinusLeft: KnowledgePointDef = {
   id: "the-difference-between-right-and-left-sums",
   title: t("The difference between right and left sums", "右和与左和之差"),
   explanation: t(
-    "Right and left Riemann sums share every height except one at each end, so most terms cancel: $R_n - L_n = \\Delta x\\,(f(b) - f(a))$. For a monotonic function the true area lies between them, so this gives a bound on the error without any integration.",
-    "右黎曼和与左黎曼和除了两端各有一个高度不同，其余都相同，所以大多数项相消：$R_n - L_n = \\Delta x\\,(f(b) - f(a))$。对单调函数，真实面积在二者之间，所以不用积分就能得到误差的界。",
+    "Right and left Riemann sums share every height except one at each end, so most terms cancel: $R_n - L_n = \\Delta x\\,(f(b) - f(a))$. For a monotonic function the true area lies between them, so this gives a bound on the error without any integration.\n\nFor $f(x) = x^{2}$ on $[0, 2]$ with $4$ subintervals, $\\Delta x = \\frac{1}{2}$ and $f(2) - f(0) = 4$, so $R_{4} - L_{4} = \\frac{1}{2} \\cdot 4 = 2$.\n\nCheck: $L_{4} = \\frac{1}{2}(0 + 0.25 + 1 + 2.25) = 1.75$ and $R_{4} = \\frac{1}{2}(0.25 + 1 + 2.25 + 4) = 3.75$, which differ by $2$.\n\n> **Watch out.** Multiply the difference of the end heights by $\\Delta x$; it shrinks as $n$ grows, which is why both sums approach the same integral.",
+    "右黎曼和与左黎曼和除了两端各有一个高度不同，其余都相同，所以大多数项相消：$R_n - L_n = \\Delta x\\,(f(b) - f(a))$。对单调函数，真实面积在二者之间，所以不用积分就能得到误差的界。\n\n对 $[0, 2]$ 上的 $f(x) = x^{2}$ 取 $4$ 个子区间，$\\Delta x = \\frac{1}{2}$，$f(2) - f(0) = 4$，所以 $R_{4} - L_{4} = \\frac{1}{2} \\cdot 4 = 2$。\n\n检验：$L_{4} = \\frac{1}{2}(0 + 0.25 + 1 + 2.25) = 1.75$，$R_{4} = \\frac{1}{2}(0.25 + 1 + 2.25 + 4) = 3.75$，相差 $2$。\n\n> **注意。** 两端高度之差要乘以 $\\Delta x$；它随 $n$ 增大而变小，所以两个和趋于同一个积分。",
   ),
   generate(rng) {
     const a = rng.int(0, 4);
@@ -1613,17 +1643,52 @@ const rightMinusLeft: KnowledgePointDef = {
     const n = rng.pick([4, 5, 8, 10, 20, 50, 100]);
     const c = rng.int(1, 6);
     const f = (x: number) => x * x + c * x;
-    const answer = Q.of((b - a) * (f(b) - f(a)), n);
+    const gap = f(b) - f(a);
+    const width = Q.of(b - a, n);
+    const answer = Q.of((b - a) * gap, n);
+    const one = (b - a) * gap;
     return numberProblem({
       prompt: t(
         `For $f(x) = ${poly([1, "x^2"], [c, "x"])}$ on $[${a}, ${b}]$ with ${n} equal subintervals, find $R_{${n}} - L_{${n}}$, the right sum minus the left sum.`,
         `对 $[${a}, ${b}]$ 上的 $f(x) = ${poly([1, "x^2"], [c, "x"])}$，取 ${n} 个等宽子区间，求右和减左和 $R_{${n}} - L_{${n}}$。`,
       ),
       answer,
-      wrong: [Q.of(f(b) - f(a)), Q.of((b - a) * f(b), n), answer.div(Q.of(2))],
-      solution: t(
-        `Only the end heights differ, and $f(${b}) - f(${a}) = ${f(b) - f(a)}$. With $\\Delta x = ${Q.of(b - a, n).toLatex()}$, the difference is $${answer.toLatex()}$.`,
-        `只有两端的高度不同，$f(${b}) - f(${a}) = ${f(b) - f(a)}$。由 $\\Delta x = ${Q.of(b - a, n).toLatex()}$，差是 $${answer.toLatex()}$。`,
+      mistakes: distinctWhys([
+        why(
+          gap,
+          `This is $f(${b}) - f(${a})$ without the width $\\Delta x = ${width.toLatex()}$ of the rectangles.`,
+          `这是 $f(${b}) - f(${a})$，没有乘以矩形的宽度 $\\Delta x = ${width.toLatex()}$。`,
+        ),
+        why(
+          Q.of((b - a) * f(b), n),
+          `This is $f(${b})\\Delta x$ alone; the left sum's extra rectangle $f(${a})\\Delta x$ must be taken away.`,
+          `这只是 $f(${b})\\Delta x$；还要减去左和多出的矩形 $f(${a})\\Delta x$。`,
+        ),
+        why(
+          answer.div(Q.of(2)),
+          "This halves the difference, as if comparing a trapezoidal sum with a left sum; the right and left sums differ by the whole amount.",
+          "这里把差减半了，像是在比较梯形和与左和；右和与左和相差的是整个量。",
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Cancel the shared heights",
+            "消去相同的高",
+            `$R_{${n}}$ and $L_{${n}}$ share every height except $f(${b})$ in the right sum and $f(${a})$ in the left, so $R_{${n}} - L_{${n}} = \\Delta x\\,(f(${b}) - f(${a}))$.`,
+            `$R_{${n}}$ 与 $L_{${n}}$ 除了右和中的 $f(${b})$ 和左和中的 $f(${a})$ 外，所有的高都相同，所以 $R_{${n}} - L_{${n}} = \\Delta x\\,(f(${b}) - f(${a}))$。`,
+          ],
+          [
+            "Substitute",
+            "代入",
+            `$f(${b}) = ${f(b)}$, $f(${a}) = ${f(a)}$ and $\\Delta x = ${width.toLatex()}$:\n\n$$R_{${n}} - L_{${n}} = ${width.toLatex()} \\cdot (${f(b)} - ${f(a)}) = ${answer.toLatex()}$$`,
+            `$f(${b}) = ${f(b)}$，$f(${a}) = ${f(a)}$，$\\Delta x = ${width.toLatex()}$：\n\n$$R_{${n}} - L_{${n}} = ${width.toLatex()} \\cdot (${f(b)} - ${f(a)}) = ${answer.toLatex()}$$`,
+          ],
+        ],
+        [
+          `With a single subinterval, $R_{1} - L_{1} = ${b - a} \\cdot ${f(b)} - ${b - a} \\cdot ${f(a)} = ${one}$. With $${n}$ subintervals every rectangle is $${n}$ times narrower and the end heights are the same, so the difference is $\\frac{${one}}{${n}} = ${answer.toLatex()}$.`,
+          `只取一个子区间时，$R_{1} - L_{1} = ${b - a} \\cdot ${f(b)} - ${b - a} \\cdot ${f(a)} = ${one}$。取 $${n}$ 个子区间时，每个矩形窄为原来的 $\\frac{1}{${n}}$，两端的高不变，所以差为 $\\frac{${one}}{${n}} = ${answer.toLatex()}$。`,
+        ],
       ),
     });
   },
@@ -3449,8 +3514,8 @@ const overlappingIntervals: KnowledgePointDef = {
   figure: calculusDrawings3["properties-of-definite-integrals-involving-the-limits-of-integration#integrals-on-overlapping-intervals"],
   title: t("Integrals on overlapping intervals", "重叠区间上的积分"),
   explanation: t(
-    "Additivity lets integrals on adjacent intervals be added. When two given intervals overlap, adding them counts the shared part twice. So the integral over the whole span is the sum of the two integrals minus the integral over the overlap. A number line sketch with the four endpoints in order makes the bookkeeping clear.",
-    "积分的可加性允许把相邻区间上的积分相加。当两个已知区间有重叠时，直接相加会把公共部分算两次。所以整个范围上的积分等于两个积分之和减去重叠部分上的积分。在数轴上按顺序标出四个端点，就能把这笔账算清楚。",
+    "Additivity lets integrals on adjacent intervals be added. When two given intervals overlap, adding them counts the shared part twice. So the integral over the whole span is the sum of the two integrals minus the integral over the overlap. A number line sketch with the four endpoints in order makes the bookkeeping clear.\n\nFor example, if $\\int_{0}^{3} f = 7$, $\\int_{1}^{5} f = 4$ and $\\int_{1}^{3} f = 2$, then $\\int_{0}^{5} f = 7 + 4 - 2 = 9$.\n\nCheck: split $[0, 5]$ into three pieces that do not overlap: $\\int_{0}^{1} f = 7 - 2 = 5$, $\\int_{1}^{3} f = 2$ and $\\int_{3}^{5} f = 4 - 2 = 2$, and $5 + 2 + 2 = 9$.\n\n> **Watch out.** Subtract the overlap once, not twice: it belongs to the whole span, so one copy of it must remain.",
+    "积分的可加性允许把相邻区间上的积分相加。当两个已知区间有重叠时，直接相加会把公共部分算两次。所以整个范围上的积分等于两个积分之和减去重叠部分上的积分。在数轴上按顺序标出四个端点，就能把这笔账算清楚。\n\n例如，若 $\\int_{0}^{3} f = 7$，$\\int_{1}^{5} f = 4$，$\\int_{1}^{3} f = 2$，则 $\\int_{0}^{5} f = 7 + 4 - 2 = 9$。\n\n检验：把 $[0, 5]$ 分成互不重叠的三段：$\\int_{0}^{1} f = 7 - 2 = 5$，$\\int_{1}^{3} f = 2$，$\\int_{3}^{5} f = 4 - 2 = 2$，而 $5 + 2 + 2 = 9$。\n\n> **注意。** 重叠部分只减一次，不要减两次：它也属于整个范围，所以要留下一份。",
   ),
   generate(rng) {
     const a = rng.int(-6, 0);
@@ -3468,10 +3533,44 @@ const overlappingIntervals: KnowledgePointDef = {
       prompt: t(`Given $${given}$, find $${int(a, d)}$.`, `已知 $${givenZh}$，求 $${int(a, d)}$。`),
       answer,
       form: "integer",
-      wrong: [p + q, p + q + r, p - r, q - r, p + q - 2 * r],
-      solution: t(
-        `The intervals $[${a}, ${c}]$ and $[${b}, ${d}]$ together cover $[${a}, ${d}]$, and both contain $[${b}, ${c}]$. So the value is $${poly([p, ""], [q, ""], [-r, ""])} = ${answer}$.`,
-        `区间 $[${a}, ${c}]$ 和 $[${b}, ${d}]$ 合起来覆盖 $[${a}, ${d}]$，而且都包含 $[${b}, ${c}]$。所以值是 $${poly([p, ""], [q, ""], [-r, ""])} = ${answer}$。`,
+      mistakes: distinctWhys([
+        why(
+          p + q,
+          `This adds the two integrals, so the part on $[${b}, ${c}]$ is counted twice.`,
+          `这是把两个积分直接相加，$[${b}, ${c}]$ 上的部分被算了两次。`,
+        ),
+        why(
+          p + q + r,
+          `This adds the overlap a third time; the integral on $[${b}, ${c}]$ is subtracted, since the sum already counts it twice.`,
+          `这里又加了一次重叠部分；两个积分之和已经把 $[${b}, ${c}]$ 上的部分算了两次，应该减去它。`,
+        ),
+        why(p - r, `This is only $${int(a, b)}$, the part before the overlap.`, `这只是 $${int(a, b)}$，即重叠部分之前的一段。`),
+        why(q - r, `This is only $${int(c, d)}$, the part after the overlap.`, `这只是 $${int(c, d)}$，即重叠部分之后的一段。`),
+        why(
+          p + q - 2 * r,
+          `This removes the overlap twice, leaving out $[${b}, ${c}]$ altogether; it is part of $[${a}, ${d}]$, so one copy stays.`,
+          `这里把重叠部分减了两次，$[${b}, ${c}]$ 完全被漏掉了；它属于 $[${a}, ${d}]$，所以要留下一份。`,
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Find the overlap",
+            "找出重叠部分",
+            `On the number line, $${a} < ${b} < ${c} < ${d}$. The intervals $[${a}, ${c}]$ and $[${b}, ${d}]$ together cover $[${a}, ${d}]$, and both contain $[${b}, ${c}]$, so $${p} + ${q < 0 ? `(${q})` : q}$ counts that part twice.`,
+            `在数轴上 $${a} < ${b} < ${c} < ${d}$。区间 $[${a}, ${c}]$ 和 $[${b}, ${d}]$ 合起来覆盖 $[${a}, ${d}]$，而且都包含 $[${b}, ${c}]$，所以 $${p} + ${q < 0 ? `(${q})` : q}$ 把这一部分算了两次。`,
+          ],
+          [
+            "Subtract it once",
+            "减去一次",
+            `$$${int(a, d)} = ${poly([p, ""], [q, ""], [-r, ""])} = ${answer}$$`,
+            `$$${int(a, d)} = ${poly([p, ""], [q, ""], [-r, ""])} = ${answer}$$`,
+          ],
+        ],
+        [
+          `Split $[${a}, ${d}]$ into pieces that do not overlap: $${int(a, b)} = ${poly([p, ""], [-r, ""])} = ${p - r}$, $${int(b, c)} = ${r}$ and $${int(c, d)} = ${poly([q, ""], [-r, ""])} = ${q - r}$. Their sum is $${poly([p - r, ""], [r, ""], [q - r, ""])} = ${answer}$.`,
+          `把 $[${a}, ${d}]$ 分成互不重叠的三段：$${int(a, b)} = ${poly([p, ""], [-r, ""])} = ${p - r}$，$${int(b, c)} = ${r}$，$${int(c, d)} = ${poly([q, ""], [-r, ""])} = ${q - r}$。三者之和为 $${poly([p - r, ""], [r, ""], [q - r, ""])} = ${answer}$。`,
+        ],
       ),
     });
   },
@@ -3591,8 +3690,8 @@ const limitOfSumValue: KnowledgePointDef = {
   id: "the-value-of-a-limit-of-a-sum",
   title: t("The value of a limit of a sum", "和式极限的值"),
   explanation: t(
-    "A limit of right Riemann sums can be computed without any summation formula, by recognizing the integral it defines. The factor multiplying the bracket is the width of a subinterval, whose numerator gives the length of the interval. The constant in the bracket is its left endpoint, and the bracket itself is the variable of integration.",
-    "右黎曼和的极限不用求和公式也能算出，只要认出它定义的积分。括号外的因子是子区间的宽度，其分子给出区间的长度。括号里的常数是区间的左端点，整个括号就是积分变量。",
+    "A limit of right Riemann sums can be computed without any summation formula, by recognizing the integral it defines. The factor multiplying the bracket is the width of a subinterval, whose numerator gives the length of the interval. The constant in the bracket is its left endpoint, and the bracket itself is the variable of integration.\n\nFor $\\lim_{n \\to \\infty} \\sum_{i = 1}^{n} \\left(1 + \\frac{2i}{n}\\right)^{2} \\cdot \\frac{2}{n}$, the width is $\\frac{2}{n}$, so the length is $2$ and the interval is $[1, 3]$. The limit is $\\int_{1}^{3} x^{2} \\, dx = \\frac{27 - 1}{3} = \\frac{26}{3}$.\n\nCheck: $x^{2}$ increases on $[1, 3]$, so the area lies between $2 \\cdot 1 = 2$ and $2 \\cdot 9 = 18$, and $\\frac{26}{3} \\approx 8.67$ does.\n\n> **Watch out.** The interval starts at the constant in the bracket, not at $0$; and the factor $\\frac{b}{n}$ already supplies the length, so do not divide by it again.",
+    "右黎曼和的极限不用求和公式也能算出，只要认出它定义的积分。括号外的因子是子区间的宽度，其分子给出区间的长度。括号里的常数是区间的左端点，整个括号就是积分变量。\n\n对 $\\lim_{n \\to \\infty} \\sum_{i = 1}^{n} \\left(1 + \\frac{2i}{n}\\right)^{2} \\cdot \\frac{2}{n}$，宽度是 $\\frac{2}{n}$，所以长度是 $2$，区间是 $[1, 3]$。极限为 $\\int_{1}^{3} x^{2} \\, dx = \\frac{27 - 1}{3} = \\frac{26}{3}$。\n\n检验：$x^{2}$ 在 $[1, 3]$ 上递增，所以面积在 $2 \\cdot 1 = 2$ 与 $2 \\cdot 9 = 18$ 之间，而 $\\frac{26}{3} \\approx 8.67$ 确实在其间。\n\n> **注意。** 区间从括号里的常数开始，不是从 $0$ 开始；因子 $\\frac{b}{n}$ 已经给出了长度，不要再除以它。",
   ),
   generate(rng) {
     const a = rng.int(1, 5);
@@ -3606,10 +3705,53 @@ const limitOfSumValue: KnowledgePointDef = {
     return numberProblem({
       prompt: t(`Find $${sum}$.`, `求 $${sum}$。`),
       answer: value,
-      wrong: [Q.of(b ** (k + 1), k + 1), value.div(Q.of(b)), Q.of(top ** (k + 1) - a ** (k + 1)), Q.of(top ** k - a ** k, k)],
-      solution: t(
-        `The sum is a right Riemann sum for $x^{${k}}$ on an interval of length $${b}$ starting at $${a}$, so the limit is $${integral} = ${value.toLatex()}$.`,
-        `这个和是 $x^{${k}}$ 在从 $${a}$ 开始、长度为 $${b}$ 的区间上的右黎曼和，所以极限是 $${integral} = ${value.toLatex()}$。`,
+      mistakes: distinctWhys([
+        why(
+          Q.of(b ** (k + 1), k + 1),
+          `This integrates over $[0, ${b}]$; the constant $${a}$ in the bracket means the interval starts at $${a}$.`,
+          `这是在 $[0, ${b}]$ 上积分；括号里的常数 $${a}$ 说明区间从 $${a}$ 开始。`,
+        ),
+        why(
+          value.div(Q.of(b)),
+          `This divides the integral by the length $${b}$, which gives the average value; the factor $\\frac{${b}}{n}$ is the width $\\Delta x$ and belongs in the sum.`,
+          `这是把积分除以长度 $${b}$，得到的是平均值；因子 $\\frac{${b}}{n}$ 就是宽度 $\\Delta x$，本来就在和式中。`,
+        ),
+        why(
+          Q.of(top ** (k + 1) - a ** (k + 1)),
+          `This leaves out the division by $${k + 1}$ in the antiderivative $\\frac{x^{${k + 1}}}{${k + 1}}$.`,
+          `这里漏掉了原函数 $\\frac{x^{${k + 1}}}{${k + 1}}$ 中除以 $${k + 1}$ 的一步。`,
+        ),
+        why(
+          Q.of(top ** k - a ** k, k),
+          `This uses $\\frac{x^{${k}}}{${k}}$ as the antiderivative; raise the power by one, to $\\frac{x^{${k + 1}}}{${k + 1}}$.`,
+          `这里把 $\\frac{x^{${k}}}{${k}}$ 当成了原函数；指数要加一，应为 $\\frac{x^{${k + 1}}}{${k + 1}}$。`,
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Read the interval",
+            "读出区间",
+            `The factor $\\frac{${b}}{n}$ is $\\Delta x$, so the length is $${b}$. The bracket starts at $${a}$ when $i = 0$, so the interval is $[${a}, ${a} + ${b}] = [${a}, ${top}]$.`,
+            `因子 $\\frac{${b}}{n}$ 是 $\\Delta x$，所以区间长度是 $${b}$。$i = 0$ 时括号等于 $${a}$，所以区间是 $[${a}, ${a} + ${b}] = [${a}, ${top}]$。`,
+          ],
+          [
+            "Write the integral",
+            "写出积分",
+            `The bracket is $x$ and the function is $x^{${k}}$, so the limit is $${integral}$.`,
+            `括号就是 $x$，函数是 $x^{${k}}$，所以极限是 $${integral}$。`,
+          ],
+          [
+            "Evaluate",
+            "计算",
+            `$$${integral} = \\frac{${top}^{${k + 1}} - ${a}^{${k + 1}}}{${k + 1}} = \\frac{${top ** (k + 1)} - ${a ** (k + 1)}}{${k + 1}} = ${value.toLatex()}$$`,
+            `$$${integral} = \\frac{${top}^{${k + 1}} - ${a}^{${k + 1}}}{${k + 1}} = \\frac{${top ** (k + 1)} - ${a ** (k + 1)}}{${k + 1}} = ${value.toLatex()}$$`,
+          ],
+        ],
+        [
+          `$x^{${k}}$ increases on $[${a}, ${top}]$, so the area lies between $${b} \\cdot ${a ** k} = ${b * a ** k}$ and $${b} \\cdot ${top ** k} = ${b * top ** k}$; and $${value.toLatex()}${value.isInteger() ? "" : ` \\approx ${num(value.toNumber())}`}$ does.`,
+          `$x^{${k}}$ 在 $[${a}, ${top}]$ 上递增，所以面积在 $${b} \\cdot ${a ** k} = ${b * a ** k}$ 与 $${b} \\cdot ${top ** k} = ${b * top ** k}$ 之间；而 $${value.toLatex()}${value.isInteger() ? "" : ` \\approx ${num(value.toNumber())}`}$ 确实在其间。`,
+        ],
       ),
     });
   },

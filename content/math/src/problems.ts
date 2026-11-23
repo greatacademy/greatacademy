@@ -752,8 +752,13 @@ export function steps(...lines: readonly string[]): string {
 export function withMistakes(problem: Problem, mistakes: readonly { readonly response: string; readonly why: Text }[]): Problem {
   const { input } = problem.answer;
   const listed = mistakes.flatMap((m) => {
-    const response = input.kind === "choice" ? String(input.options.findIndex((o) => o.en === m.response)) : m.response;
-    return response === "-1" || response === problem.canonical ? [] : [{ response, feedback: m.why }];
+    if (input.kind === "choice") {
+      const index = input.options.findIndex((o) => o.en === m.response);
+      if (index < 0) return [];
+      const response = String(index);
+      return response === problem.canonical ? [] : [{ response, feedback: m.why }];
+    }
+    return m.response === problem.canonical ? [] : [{ response: m.response, feedback: m.why }];
   });
   return listed.length > 0 ? { ...problem, mistakes: [...(problem.mistakes ?? []), ...listed] } : problem;
 }

@@ -1411,31 +1411,72 @@ const rightFromLeft = point(
   "the-right-sum-from-the-left-sum",
   ["The right sum from the left sum", "由左和求右和"],
   [
-    "Left and right sums share all sample points except one at each end: the left uses $f(a)$ and the right uses $f(b)$. So $R_{n} = L_{n} + \\Delta x\\,(f(b) - f(a))$, without adding up everything again.",
-    "左和与右和除两端各一点外，取样点都相同：左和用 $f(a)$，右和用 $f(b)$。所以 $R_{n} = L_{n} + \\Delta x\\,(f(b) - f(a))$，不必再把所有项加一遍。",
+    "Left and right sums share all sample points except one at each end: the left uses $f(a)$ and the right uses $f(b)$. So $R_{n} = L_{n} + \\Delta x\\,(f(b) - f(a))$, without adding up everything again.\n\nFor $f(x) = x^{2} + 1$ on $[0, 2]$ with $4$ subintervals, $\\Delta x = \\frac{1}{2}$ and $L_{4} = \\frac{1}{2}(1 + 1.25 + 2 + 3.25) = 3.75$. With $f(0) = 1$ and $f(2) = 5$, $R_{4} = 3.75 + \\frac{1}{2}(5 - 1) = 5.75$.\n\nCheck: adding directly, $R_{4} = \\frac{1}{2}(1.25 + 2 + 3.25 + 5) = 5.75$.\n\n> **Watch out.** The change is $\\Delta x$ times $f(b) - f(a)$, not $f(b) - f(a)$ itself; and when $f(b) < f(a)$ the right sum is the smaller one.",
+    "左和与右和除两端各一点外，取样点都相同：左和用 $f(a)$，右和用 $f(b)$。所以 $R_{n} = L_{n} + \\Delta x\\,(f(b) - f(a))$，不必再把所有项加一遍。\n\n对 $[0, 2]$ 上的 $f(x) = x^{2} + 1$ 取 $4$ 个子区间，$\\Delta x = \\frac{1}{2}$，$L_{4} = \\frac{1}{2}(1 + 1.25 + 2 + 3.25) = 3.75$。由 $f(0) = 1$，$f(2) = 5$，得 $R_{4} = 3.75 + \\frac{1}{2}(5 - 1) = 5.75$。\n\n检验：直接相加，$R_{4} = \\frac{1}{2}(1.25 + 2 + 3.25 + 5) = 5.75$。\n\n> **注意。** 变化量是 $\\Delta x$ 乘以 $f(b) - f(a)$，而不是 $f(b) - f(a)$ 本身；当 $f(b) < f(a)$ 时，右和反而较小。",
   ],
   (rng) => {
     const w = gridWidth(rng);
     const L = rng.int(10, 90);
     const fa = rng.int(-9, 9);
-    const fb = rng.int(-9, 9);
+    const fb0 = rng.int(-9, 9);
+    const fb = fb0 === fa ? (fa < 9 ? fa + 1 : fa - 1) : fb0;
     const gap = Q.of(fb - fa);
     const answer = Q.of(L).add(w.mul(gap));
     const n = rng.int(4, 12);
     const a = rng.int(-4, 4);
     const b = Q.of(a).add(w.mul(Q.of(n)));
-    return ask(
-      [
+    const diff = answer.sub(Q.of(L));
+    return numberProblem({
+      prompt: t(
         `A left Riemann sum for $f$ on $[${a}, ${b.toLatex()}]$ with $${n}$ equal subintervals is $${L}$, and $f(${a}) = ${fa}$, $f\\left(${b.toLatex()}\\right) = ${fb}$. Find the right Riemann sum.`,
         `$f$ 在 $[${a}, ${b.toLatex()}]$ 上分成 $${n}$ 个等宽子区间的左黎曼和是 $${L}$，且 $f(${a}) = ${fa}$，$f\\left(${b.toLatex()}\\right) = ${fb}$。求右黎曼和。`,
-      ],
+      ),
       answer,
-      [Q.of(L).sub(w.mul(gap)), Q.of(L).add(gap), Q.of(L + fb), Q.of(L).add(w.mul(Q.of(fb + fa)))],
-      [
-        `Here $\\Delta x = ${w.toLatex()}$. The right sum drops $f(${a}) \\Delta x$ and gains $f\\left(${b.toLatex()}\\right) \\Delta x$, so it is $${L} + ${w.toLatex()} \\cdot (${paren(fb)} - ${paren(fa)}) = ${answer.toLatex()}$.`,
-        `这里 $\\Delta x = ${w.toLatex()}$。右和去掉 $f(${a}) \\Delta x$，加上 $f\\left(${b.toLatex()}\\right) \\Delta x$，所以等于 $${L} + ${w.toLatex()} \\cdot (${paren(fb)} - ${paren(fa)}) = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: distinctWhys([
+        why(
+          Q.of(L).sub(w.mul(gap)),
+          `This subtracts $\\Delta x\\,(f(b) - f(a))$; the right sum gains $f(b)\\Delta x$ and loses $f(a)\\Delta x$, so it is added.`,
+          `这里减去了 $\\Delta x\\,(f(b) - f(a))$；右和加上 $f(b)\\Delta x$、去掉 $f(a)\\Delta x$，所以应该加上它。`,
+        ),
+        why(
+          Q.of(L).add(gap),
+          `This adds $f(b) - f(a)$ without multiplying by the width $\\Delta x = ${w.toLatex()}$.`,
+          `这里加上了 $f(b) - f(a)$，却没有乘以宽度 $\\Delta x = ${w.toLatex()}$。`,
+        ),
+        why(
+          Q.of(L + fb),
+          `This adds $f(b)$ but neither removes $f(a)$ nor multiplies by $\\Delta x = ${w.toLatex()}$.`,
+          `这里加上了 $f(b)$，却既没有去掉 $f(a)$，也没有乘以 $\\Delta x = ${w.toLatex()}$。`,
+        ),
+        why(
+          Q.of(L).add(w.mul(Q.of(fb + fa))),
+          "This adds $f(a)\\Delta x$ as well as $f(b)\\Delta x$; the right sum does not use $f(a)$, so its term is taken away.",
+          "这里把 $f(a)\\Delta x$ 和 $f(b)\\Delta x$ 都加上了；右和不用 $f(a)$，所以它那一项应该去掉。",
+        ),
+      ]),
+      solution: t(
+        ...walkPair(
+          [
+            [
+              "Compare the two sums",
+              "比较两个和",
+              `Here $\\Delta x = ${w.toLatex()}$. The right sum uses the same heights as the left sum, except that it drops $f(${a})$ and gains $f\\left(${b.toLatex()}\\right)$.`,
+              `这里 $\\Delta x = ${w.toLatex()}$。右和所用的高与左和相同，只是去掉了 $f(${a})$，加上了 $f\\left(${b.toLatex()}\\right)$。`,
+            ],
+            [
+              "Adjust the left sum",
+              "调整左和",
+              `$$R = ${L} + ${w.toLatex()} \\cdot \\left(${paren(fb)} - ${paren(fa)}\\right) = ${answer.toLatex()}$$`,
+              `$$R = ${L} + ${w.toLatex()} \\cdot \\left(${paren(fb)} - ${paren(fa)}\\right) = ${answer.toLatex()}$$`,
+            ],
+          ],
+          [
+            `Work backwards. The right sum minus the left sum is $${answer.toLatex()} - ${L} = ${diff.toLatex()}$, and dividing by $\\Delta x$ gives $${diff.toLatex()} \\div ${w.toLatex()} = ${gap.toLatex()}$, which is $f(b) - f(a) = ${fb} - ${paren(fa)}$.`,
+            `反过来验算。右和减左和为 $${answer.toLatex()} - ${L} = ${diff.toLatex()}$，除以 $\\Delta x$ 得 $${diff.toLatex()} \\div ${w.toLatex()} = ${gap.toLatex()}$，正是 $f(b) - f(a) = ${fb} - ${paren(fa)}$。`,
+          ],
+        ),
+      ),
+    });
   },
 );
 
@@ -1444,8 +1485,8 @@ const midpointOfLine = {
     "midpoint-sums-of-linear-functions-are-exact",
     ["Midpoint sums of linear functions are exact", "一次函数的中点和是精确的"],
     [
-      "On each subinterval, the midpoint rectangle of a line has the same area as the true trapezoid, since the errors on the two halves cancel. So for a linear function, the midpoint sum equals the exact area for any number of subintervals, and no long addition is needed.",
-      "在每个子区间上，直线的中点矩形与真实的梯形面积相同，因为两半的误差相互抵消。所以对一次函数，无论分成多少个子区间，中点和都等于精确面积，不需要长长的加法。",
+      "On each subinterval, the midpoint rectangle of a line has the same area as the true trapezoid, since the errors on the two halves cancel. So for a linear function, the midpoint sum equals the exact area for any number of subintervals, and no long addition is needed.\n\nFor $f(x) = 2x + 1$ on $[0, 4]$ with $100$ subintervals, the midpoint sum is the area, which is the length times the height at the middle: $4 \\cdot f(2) = 20$.\n\nCheck: $\\int_{0}^{4} (2x + 1) \\, dx = \\Big[x^{2} + x\\Big]_{0}^{4} = 20$.\n\n> **Watch out.** This works only for a straight line. For a curved graph the midpoint sum is an approximation, too large or too small depending on the concavity.",
+      "在每个子区间上，直线的中点矩形与真实的梯形面积相同，因为两半的误差相互抵消。所以对一次函数，无论分成多少个子区间，中点和都等于精确面积，不需要长长的加法。\n\n对 $[0, 4]$ 上的 $f(x) = 2x + 1$ 取 $100$ 个子区间，中点和就是面积，即区间长度乘以中点处的高：$4 \\cdot f(2) = 20$。\n\n检验：$\\int_{0}^{4} (2x + 1) \\, dx = \\Big[x^{2} + x\\Big]_{0}^{4} = 20$。\n\n> **注意。** 这只对直线成立。对弯曲的图像，中点和只是近似值，偏大还是偏小取决于凹凸性。",
     ],
     (rng) => {
       const m = nz(rng, 6);
@@ -1462,18 +1503,56 @@ const midpointOfLine = {
           .div(Q.of(2)),
       );
       const f = linear(m, c);
-      return ask(
-        [
+      const mid = Q.of(a + b, 2);
+      const fMid = Q.of(m).mul(mid).add(Q.of(c));
+      const F = (x: number) => Q.of(m * x * x, 2).add(Q.of(c * x));
+      const big = (q: Q) => (q.sign() < 0 ? `\\left(${q.toLatex()}\\right)` : q.toLatex());
+      return numberProblem({
+        prompt: t(
           `Find the midpoint Riemann sum of $f(x) = ${f}$ on $[${a}, ${b}]$ with $${n}$ subintervals of equal width.`,
           `求 $f(x) = ${f}$ 在 $[${a}, ${b}]$ 上分成 $${n}$ 个等宽子区间的中点黎曼和。`,
-        ],
-        exact,
-        [left, Q.of(m * a + c).mul(Q.of(b - a)), Q.of(m * b + c).mul(Q.of(b - a))],
-        [
-          `$f$ is linear, so the midpoint sum equals $\\int_{${a}}^{${b}} (${f}) \\, dx$ for every $n$. Equivalently, the $x$-values average $${Q.of(a + b, 2).toLatex()}$, so the sum is $${b - a} \\cdot f\\left(${Q.of(a + b, 2).toLatex()}\\right) = ${exact.toLatex()}$.`,
-          `$f$ 是一次函数，所以对每个 $n$，中点和都等于 $\\int_{${a}}^{${b}} (${f}) \\, dx$。也可以这样看：各 $x$ 值的平均是 $${Q.of(a + b, 2).toLatex()}$，所以这个和是 $${b - a} \\cdot f\\left(${Q.of(a + b, 2).toLatex()}\\right) = ${exact.toLatex()}$。`,
-        ],
-      );
+        ),
+        answer: exact,
+        mistakes: distinctWhys([
+          why(
+            left,
+            `This is the left Riemann sum with the same subintervals. On a line with slope $${m}$ the left ends give heights that are all too ${m > 0 ? "low" : "high"}; the midpoints balance out exactly.`,
+            `这是相同子区间上的左黎曼和。在斜率为 $${m}$ 的直线上，左端点给出的高都${m > 0 ? "偏低" : "偏高"}；中点则恰好平衡。`,
+          ),
+          why(
+            Q.of(m * a + c).mul(Q.of(b - a)),
+            `This uses the height $f(${a}) = ${m * a + c}$ at the left end across the whole interval.`,
+            `这是把左端的高 $f(${a}) = ${m * a + c}$ 用于整个区间。`,
+          ),
+          why(
+            Q.of(m * b + c).mul(Q.of(b - a)),
+            `This uses the height $f(${b}) = ${m * b + c}$ at the right end across the whole interval.`,
+            `这是把右端的高 $f(${b}) = ${m * b + c}$ 用于整个区间。`,
+          ),
+        ]),
+        solution: t(
+          ...walkPair(
+            [
+              [
+                "Use the shape",
+                "利用图像的形状",
+                `$f$ is linear, so its midpoint sum equals the exact area under it for every number of subintervals, $${n}$ included.`,
+                `$f$ 是一次函数，所以无论分成多少个子区间（包括 $${n}$ 个），中点和都等于它下方的精确面积。`,
+              ],
+              [
+                "Find the area",
+                "求面积",
+                `The area under a line is the length times the height at the middle, $x = ${mid.toLatex()}$:\n\n$$${b - a} \\cdot f\\left(${mid.toLatex()}\\right) = ${b - a} \\cdot ${big(fMid)} = ${exact.toLatex()}$$`,
+                `直线下方的面积等于区间长度乘以中点 $x = ${mid.toLatex()}$ 处的高：\n\n$$${b - a} \\cdot f\\left(${mid.toLatex()}\\right) = ${b - a} \\cdot ${big(fMid)} = ${exact.toLatex()}$$`,
+              ],
+            ],
+            [
+              `Integrate with an antiderivative instead: $F(x) = ${poly([Q.of(m, 2), "x^{2}"], [c, "x"])}$, and $F(${b}) - F(${a}) = ${F(b).toLatex()} - ${big(F(a))} = ${exact.toLatex()}$.`,
+              `改用原函数积分：$F(x) = ${poly([Q.of(m, 2), "x^{2}"], [c, "x"])}$，$F(${b}) - F(${a}) = ${F(b).toLatex()} - ${big(F(a))} = ${exact.toLatex()}$。`,
+            ],
+          ),
+        ),
+      });
     },
   ),
   figure: calculusDrawings3["approximating-areas-with-the-midpoint-riemann-sum#midpoint-sums-of-linear-functions-are-exact"],
@@ -1484,29 +1563,65 @@ const trapezoidFromLeft = {
     "the-trapezoidal-rule-from-the-left-sum",
     ["The trapezoidal rule from the left sum", "由左和求梯形法则的值"],
     [
-      "The trapezoidal approximation is the average of the left and right sums, $T_{n} = \\frac{L_{n} + R_{n}}{2}$. Since $R_{n}$ differs from $L_{n}$ only at the ends, $T_{n} = L_{n} + \\frac{\\Delta x}{2}(f(b) - f(a))$.",
-      "梯形近似是左和与右和的平均：$T_{n} = \\frac{L_{n} + R_{n}}{2}$。因为 $R_{n}$ 与 $L_{n}$ 只在两端不同，所以 $T_{n} = L_{n} + \\frac{\\Delta x}{2}(f(b) - f(a))$。",
+      "The trapezoidal approximation is the average of the left and right sums, $T_{n} = \\frac{L_{n} + R_{n}}{2}$. Since $R_{n}$ differs from $L_{n}$ only at the ends, $T_{n} = L_{n} + \\frac{\\Delta x}{2}(f(b) - f(a))$.\n\nFor $f(x) = x^{2} + 1$ on $[0, 2]$ with $\\Delta x = \\frac{1}{2}$: $L_{4} = 3.75$, $f(0) = 1$ and $f(2) = 5$, so $T_{4} = 3.75 + \\frac{1}{4}(5 - 1) = 4.75$.\n\nCheck: $R_{4} = 5.75$, and $\\frac{3.75 + 5.75}{2} = 4.75$.\n\n> **Watch out.** The factor is $\\frac{\\Delta x}{2}$, half the width: the full width $\\Delta x$ would give the right sum instead.",
+      "梯形近似是左和与右和的平均：$T_{n} = \\frac{L_{n} + R_{n}}{2}$。因为 $R_{n}$ 与 $L_{n}$ 只在两端不同，所以 $T_{n} = L_{n} + \\frac{\\Delta x}{2}(f(b) - f(a))$。\n\n对 $[0, 2]$ 上的 $f(x) = x^{2} + 1$ 取 $\\Delta x = \\frac{1}{2}$：$L_{4} = 3.75$，$f(0) = 1$，$f(2) = 5$，所以 $T_{4} = 3.75 + \\frac{1}{4}(5 - 1) = 4.75$。\n\n检验：$R_{4} = 5.75$，而 $\\frac{3.75 + 5.75}{2} = 4.75$。\n\n> **注意。** 因子是半个宽度 $\\frac{\\Delta x}{2}$：用整个宽度 $\\Delta x$ 得到的是右和。",
     ],
     (rng) => {
       const w = gridWidth(rng);
       const L = rng.int(10, 90);
       const fa = rng.int(-9, 9);
-      const fb = rng.int(-9, 9);
+      const fb0 = rng.int(-9, 9);
+      const fb = fb0 === fa ? (fa < 9 ? fa + 1 : fa - 1) : fb0;
       const gap = Q.of(fb - fa);
       const half = w.div(Q.of(2));
       const answer = Q.of(L).add(half.mul(gap));
-      return ask(
-        [
+      const R = Q.of(L).add(w.mul(gap));
+      return numberProblem({
+        prompt: t(
           `For a function $f$ and a partition with width $\\Delta x = ${w.toLatex()}$ on $[a, b]$, the left sum is $${L}$, $f(a) = ${fa}$ and $f(b) = ${fb}$. Find the trapezoidal approximation.`,
           `对函数 $f$ 和 $[a, b]$ 上宽度 $\\Delta x = ${w.toLatex()}$ 的分割，左和是 $${L}$，$f(a) = ${fa}$，$f(b) = ${fb}$。求梯形近似值。`,
-        ],
+        ),
         answer,
-        [Q.of(L).add(w.mul(gap)), Q.of(L).add(gap.div(Q.of(2))), Q.of(L).sub(half.mul(gap))],
-        [
-          `$T = L + \\frac{\\Delta x}{2}(f(b) - f(a)) = ${L} + ${half.toLatex()} \\cdot (${paren(fb)} - ${paren(fa)}) = ${answer.toLatex()}$.`,
-          `$T = L + \\frac{\\Delta x}{2}(f(b) - f(a)) = ${L} + ${half.toLatex()} \\cdot (${paren(fb)} - ${paren(fa)}) = ${answer.toLatex()}$。`,
-        ],
-      );
+        mistakes: distinctWhys([
+          why(
+            R,
+            "This is the right sum $L + \\Delta x\\,(f(b) - f(a))$; the trapezoidal rule is the average of the left and right sums, halfway between them.",
+            "这是右和 $L + \\Delta x\\,(f(b) - f(a))$；梯形法则是左和与右和的平均值，在两者正中间。",
+          ),
+          why(
+            Q.of(L).add(gap.div(Q.of(2))),
+            `This uses the factor $\\frac{1}{2}$ instead of $\\frac{\\Delta x}{2} = ${half.toLatex()}$.`,
+            `这里用了因子 $\\frac{1}{2}$，而不是 $\\frac{\\Delta x}{2} = ${half.toLatex()}$。`,
+          ),
+          why(
+            Q.of(L).sub(half.mul(gap)),
+            "This subtracts $\\frac{\\Delta x}{2}(f(b) - f(a))$; going from the left sum toward the right sum adds it.",
+            "这里减去了 $\\frac{\\Delta x}{2}(f(b) - f(a))$；从左和向右和靠拢应该加上它。",
+          ),
+        ]),
+        solution: t(
+          ...walkPair(
+            [
+              [
+                "Average the two sums",
+                "取两个和的平均",
+                "$T = \\frac{L + R}{2}$, and $R = L + \\Delta x\\,(f(b) - f(a))$, so $T = L + \\frac{\\Delta x}{2}(f(b) - f(a))$.",
+                "$T = \\frac{L + R}{2}$，而 $R = L + \\Delta x\\,(f(b) - f(a))$，所以 $T = L + \\frac{\\Delta x}{2}(f(b) - f(a))$。",
+              ],
+              [
+                "Substitute",
+                "代入",
+                `$$T = ${L} + ${half.toLatex()} \\cdot \\left(${paren(fb)} - ${paren(fa)}\\right) = ${answer.toLatex()}$$`,
+                `$$T = ${L} + ${half.toLatex()} \\cdot \\left(${paren(fb)} - ${paren(fa)}\\right) = ${answer.toLatex()}$$`,
+              ],
+            ],
+            [
+              `Find the right sum first: $R = ${L} + ${w.toLatex()} \\cdot \\left(${paren(fb)} - ${paren(fa)}\\right) = ${R.toLatex()}$. The average is $\\frac{${L} + ${paren(R)}}{2} = ${answer.toLatex()}$.`,
+              `先求右和：$R = ${L} + ${w.toLatex()} \\cdot \\left(${paren(fb)} - ${paren(fa)}\\right) = ${R.toLatex()}$。平均值为 $\\frac{${L} + ${paren(R)}}{2} = ${answer.toLatex()}$。`,
+            ],
+          ),
+        ),
+      });
     },
   ),
   figure: calculusDrawings3["approximating-areas-with-the-trapezoidal-rule#the-trapezoidal-rule-from-the-left-sum"],
@@ -1516,8 +1631,8 @@ const intervalOffSum = point(
   "reading-the-interval-off-a-sum",
   ["Reading the interval off a sum", "从和式读出区间"],
   [
-    "In a right Riemann sum $\\sum_{i=1}^{n} f(a + i\\Delta x)\\Delta x$, the term with $i = 0$ would be at $a$, and the last term is at $b = a + n\\Delta x$. Reading the constant and the coefficient of $i$ gives the interval and the integrand.",
-    "在右黎曼和 $\\sum_{i=1}^{n} f(a + i\\Delta x)\\Delta x$ 中，$i = 0$ 对应 $a$，最后一项对应 $b = a + n\\Delta x$。读出常数项和 $i$ 的系数，就得到区间和被积函数。",
+    "In a right Riemann sum $\\sum_{i=1}^{n} f(a + i\\Delta x)\\Delta x$, the term with $i = 0$ would be at $a$, and the last term is at $b = a + n\\Delta x$. Reading the constant and the coefficient of $i$ gives the interval and the integrand.\n\nFor $\\sum_{i=1}^{8} \\left(2 + \\frac{1}{4}i\\right)^{2} \\cdot \\frac{1}{4}$: $a = 2$ and $\\Delta x = \\frac{1}{4}$, so the length is $8 \\cdot \\frac{1}{4} = 2$ and $b = 4$. The sum is a right sum for $x^{2}$ on $[2, 4]$.\n\nCheck: the last term, $i = 8$, samples at $2 + \\frac{8}{4} = 4$, the right end.\n\n> **Watch out.** $b$ is $a + n\\Delta x$: neither the length $n\\Delta x$ nor $a + n$.",
+    "在右黎曼和 $\\sum_{i=1}^{n} f(a + i\\Delta x)\\Delta x$ 中，$i = 0$ 对应 $a$，最后一项对应 $b = a + n\\Delta x$。读出常数项和 $i$ 的系数，就得到区间和被积函数。\n\n对 $\\sum_{i=1}^{8} \\left(2 + \\frac{1}{4}i\\right)^{2} \\cdot \\frac{1}{4}$：$a = 2$，$\\Delta x = \\frac{1}{4}$，所以区间长度是 $8 \\cdot \\frac{1}{4} = 2$，$b = 4$。这是 $x^{2}$ 在 $[2, 4]$ 上的右和。\n\n检验：最后一项 $i = 8$ 的取样点是 $2 + \\frac{8}{4} = 4$，正是右端点。\n\n> **注意。** $b$ 等于 $a + n\\Delta x$：既不是长度 $n\\Delta x$，也不是 $a + n$。",
   ],
   (rng) => {
     const a = rng.int(1, 6);
@@ -1527,18 +1642,54 @@ const intervalOffSum = point(
     const arg = poly([a, ""], [d, "i"]);
     const body = rng.pick([`\\left(${arg}\\right)^{2}`, `\\sqrt{${arg}}`, `\\frac{1}{${arg}}`, `\\ln\\left(${arg}\\right)`]);
     const b = a + w;
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `The sum $\\sum_{i=1}^{${n}} ${body} \\cdot ${d.toLatex()}$ is a right Riemann sum for a function on $[${a}, b]$. Find $b$.`,
         `和式 $\\sum_{i=1}^{${n}} ${body} \\cdot ${d.toLatex()}$ 是某函数在 $[${a}, b]$ 上的右黎曼和。求 $b$。`,
-      ],
-      b,
-      [w, a + n, Q.of(a).add(d), n],
-      [
-        `The width is $\\Delta x = ${d.toLatex()}$ and there are $${n}$ subintervals, so the length is $${n} \\cdot ${d.toLatex()} = ${w}$ and $b = ${a} + ${w} = ${b}$.`,
-        `宽度 $\\Delta x = ${d.toLatex()}$，共 $${n}$ 个子区间，所以区间长度是 $${n} \\cdot ${d.toLatex()} = ${w}$，$b = ${a} + ${w} = ${b}$。`,
-      ],
-    );
+      ),
+      answer: b,
+      mistakes: distinctWhys([
+        why(
+          w,
+          `This is the length $n\\Delta x = ${w}$; $b$ is $${a}$ plus the length.`,
+          `这是区间长度 $n\\Delta x = ${w}$；$b$ 等于 $${a}$ 加上长度。`,
+        ),
+        why(
+          a + n,
+          `This adds the number of terms, $${n}$, instead of the length $${n} \\cdot ${d.toLatex()} = ${w}$.`,
+          `这里加上的是项数 $${n}$，而不是长度 $${n} \\cdot ${d.toLatex()} = ${w}$。`,
+        ),
+        why(
+          Q.of(a).add(d),
+          "This is the sample point of the first term, $i = 1$; $b$ is the sample point of the last term.",
+          "这是第一项 $i = 1$ 的取样点；$b$ 是最后一项的取样点。",
+        ),
+        why(n, "This is the number of subintervals, not an endpoint.", "这是子区间的个数，不是端点。"),
+      ]),
+      solution: t(
+        ...walkPair(
+          [
+            [
+              "Read the width",
+              "读出宽度",
+              `The factor after the function is $\\Delta x = ${d.toLatex()}$, and the constant in the argument is $a = ${a}$.`,
+              `函数后面的因子是 $\\Delta x = ${d.toLatex()}$，自变量中的常数是 $a = ${a}$。`,
+            ],
+            [
+              "Find the length",
+              "求区间长度",
+              `There are $${n}$ subintervals, so the length is $${n} \\cdot ${d.toLatex()} = ${w}$.`,
+              `共有 $${n}$ 个子区间，所以区间长度是 $${n} \\cdot ${d.toLatex()} = ${w}$。`,
+            ],
+            ["Find b", "求 b", `$b = ${a} + ${w} = ${b}$.`, `$b = ${a} + ${w} = ${b}$。`],
+          ],
+          [
+            `The last term, $i = ${n}$, samples at $${a} + ${d.toLatex()} \\cdot ${n} = ${b}$, and a right sum's last sample point is $b$.`,
+            `最后一项 $i = ${n}$ 的取样点是 $${a} + ${d.toLatex()} \\cdot ${n} = ${b}$，而右和最后一个取样点就是 $b$。`,
+          ],
+        ),
+      ),
+    });
   },
 );
 
@@ -1546,8 +1697,8 @@ const samplePoint = point(
   "the-sample-point-of-one-term",
   ["The sample point of one term", "某一项的取样点"],
   [
-    "The term with index $i$ of a midpoint sum samples the middle of the $i$th subinterval, which runs from $a + (i - 1)\\Delta x$ to $a + i\\Delta x$. So its sample point is $a + \\left(i - \\frac{1}{2}\\right)\\Delta x$, not $a + i\\Delta x$.",
-    "中点和第 $i$ 项的取样点是第 $i$ 个子区间的中点，这个子区间从 $a + (i - 1)\\Delta x$ 到 $a + i\\Delta x$。所以取样点是 $a + \\left(i - \\frac{1}{2}\\right)\\Delta x$，而不是 $a + i\\Delta x$。",
+    "The term with index $i$ of a midpoint sum samples the middle of the $i$th subinterval, which runs from $a + (i - 1)\\Delta x$ to $a + i\\Delta x$. So its sample point is $a + \\left(i - \\frac{1}{2}\\right)\\Delta x$, not $a + i\\Delta x$.\n\nOn $[0, 3]$ with $6$ subintervals, $\\Delta x = \\frac{1}{2}$, and the term with $i = 4$ samples at $0 + 3.5 \\cdot \\frac{1}{2} = 1.75$.\n\nCheck: subinterval $4$ runs from $1.5$ to $2$, and its middle is $\\frac{1.5 + 2}{2} = 1.75$.\n\n> **Watch out.** Subtract half a width, $\\frac{1}{2}\\Delta x$, from the right end $a + i\\Delta x$; halving the index instead gives a point in the wrong subinterval.",
+    "中点和第 $i$ 项的取样点是第 $i$ 个子区间的中点，这个子区间从 $a + (i - 1)\\Delta x$ 到 $a + i\\Delta x$。所以取样点是 $a + \\left(i - \\frac{1}{2}\\right)\\Delta x$，而不是 $a + i\\Delta x$。\n\n在 $[0, 3]$ 上取 $6$ 个子区间，$\\Delta x = \\frac{1}{2}$，$i = 4$ 这一项的取样点是 $0 + 3.5 \\cdot \\frac{1}{2} = 1.75$。\n\n检验：第 $4$ 个子区间从 $1.5$ 到 $2$，中点是 $\\frac{1.5 + 2}{2} = 1.75$。\n\n> **注意。** 从右端点 $a + i\\Delta x$ 减去半个宽度 $\\frac{1}{2}\\Delta x$；若把下标减半，得到的点会落在别的子区间里。",
   ],
   (rng) => {
     const a = rng.int(-5, 5);
@@ -1557,18 +1708,56 @@ const samplePoint = point(
     const d = Q.of(len, n);
     const i = rng.int(2, n);
     const answer = Q.of(a).add(d.mul(Q.of(2 * i - 1, 2)));
-    return ask(
-      [
+    const lo = Q.of(a).add(d.mul(Q.of(i - 1)));
+    const hi = Q.of(a).add(d.mul(Q.of(i)));
+    return numberProblem({
+      prompt: t(
         `A midpoint Riemann sum for $f$ on $[${a}, ${b}]$ has $${n}$ subintervals of equal width. At which $x$ is $f$ evaluated in the term with $i = ${i}$?`,
         `$f$ 在 $[${a}, ${b}]$ 上的中点黎曼和有 $${n}$ 个等宽子区间。$i = ${i}$ 这一项在哪个 $x$ 处计算 $f$？`,
-      ],
+      ),
       answer,
-      [Q.of(a).add(d.mul(Q.of(i))), Q.of(a).add(d.mul(Q.of(i - 1))), Q.of(a).add(d.mul(Q.of(i, 2)))],
-      [
-        `$\\Delta x = ${d.toLatex()}$, and subinterval $${i}$ has midpoint $${a} + \\left(${i} - \\frac{1}{2}\\right) \\cdot ${d.toLatex()} = ${answer.toLatex()}$.`,
-        `$\\Delta x = ${d.toLatex()}$，第 $${i}$ 个子区间的中点是 $${a} + \\left(${i} - \\frac{1}{2}\\right) \\cdot ${d.toLatex()} = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: distinctWhys([
+        why(hi, `This is $a + i\\Delta x$, the right end of subinterval $${i}$.`, `这是 $a + i\\Delta x$，即第 $${i}$ 个子区间的右端点。`),
+        why(
+          lo,
+          `This is $a + (i - 1)\\Delta x$, the left end of subinterval $${i}$.`,
+          `这是 $a + (i - 1)\\Delta x$，即第 $${i}$ 个子区间的左端点。`,
+        ),
+        why(
+          Q.of(a).add(d.mul(Q.of(i, 2))),
+          "This halves $i\\Delta x$; the midpoint is half a width before the right end, $a + i\\Delta x - \\frac{1}{2}\\Delta x$.",
+          "这里把 $i\\Delta x$ 减半了；中点在右端点之前半个宽度处，即 $a + i\\Delta x - \\frac{1}{2}\\Delta x$。",
+        ),
+      ]),
+      solution: t(
+        ...walkPair(
+          [
+            [
+              "Find the width",
+              "求宽度",
+              `$\\Delta x = \\frac{${b} - ${paren(a)}}{${n}} = ${d.toLatex()}$.`,
+              `$\\Delta x = \\frac{${b} - ${paren(a)}}{${n}} = ${d.toLatex()}$。`,
+            ],
+            [
+              `Find subinterval ${i}`,
+              `找第 ${i} 个子区间`,
+              `It runs from $a + ${i - 1 === 1 ? "" : i - 1}\\Delta x = ${lo.toLatex()}$ to $a + ${i}\\Delta x = ${hi.toLatex()}$.`,
+              `它从 $a + ${i - 1 === 1 ? "" : i - 1}\\Delta x = ${lo.toLatex()}$ 到 $a + ${i}\\Delta x = ${hi.toLatex()}$。`,
+            ],
+            [
+              "Take its midpoint",
+              "取它的中点",
+              `$$${a} + \\left(${i} - \\frac{1}{2}\\right) \\cdot ${d.toLatex()} = ${answer.toLatex()}$$`,
+              `$$${a} + \\left(${i} - \\frac{1}{2}\\right) \\cdot ${d.toLatex()} = ${answer.toLatex()}$$`,
+            ],
+          ],
+          [
+            `Average the two ends: $\\frac{1}{2}\\left(${lo.toLatex()} + ${paren(hi)}\\right) = ${answer.toLatex()}$.`,
+            `取两端的平均：$\\frac{1}{2}\\left(${lo.toLatex()} + ${paren(hi)}\\right) = ${answer.toLatex()}$。`,
+          ],
+        ),
+      ),
+    });
   },
 );
 
@@ -1587,8 +1776,8 @@ const orderingEstimates = {
     "ordering-the-midpoint-and-trapezoidal-estimates",
     ["Ordering the midpoint and trapezoidal estimates", "比较中点估计与梯形估计"],
     [
-      "Concavity orders the two estimates around the exact area. On a concave-up graph, chords lie above the curve and tangents below, so $M_{n} < \\int f < T_{n}$. On a concave-down graph the order reverses. Monotonicity plays no part here.",
-      "凹凸性决定了两个估计值与精确面积的大小顺序。在上凹图像上，弦在曲线上方，切线在曲线下方，所以 $M_{n} < \\int f < T_{n}$。在下凹图像上顺序相反。这里单调性不起作用。",
+      "Concavity orders the two estimates around the exact area. On a concave-up graph, chords lie above the curve and tangents below, so $M_{n} < \\int f < T_{n}$. On a concave-down graph the order reverses. Monotonicity plays no part here.\n\nFor $e^{x}$ on $[0, 1]$ with one subinterval, $M_{1} = e^{0.5} \\approx 1.6487$ and $T_{1} = \\frac{1 + e}{2} \\approx 1.8591$, so $M_{1} < \\int_{0}^{1} e^{x} \\, dx < T_{1}$.\n\nCheck: the exact value is $e - 1 \\approx 1.7183$, between the two.\n\n> **Watch out.** The two estimates always lie on opposite sides of the integral, so it is never above or below both; and only concavity decides which is which.",
+      "凹凸性决定了两个估计值与精确面积的大小顺序。在上凹图像上，弦在曲线上方，切线在曲线下方，所以 $M_{n} < \\int f < T_{n}$。在下凹图像上顺序相反。这里单调性不起作用。\n\n对 $[0, 1]$ 上的 $e^{x}$ 取一个子区间，$M_{1} = e^{0.5} \\approx 1.6487$，$T_{1} = \\frac{1 + e}{2} \\approx 1.8591$，所以 $M_{1} < \\int_{0}^{1} e^{x} \\, dx < T_{1}$。\n\n检验：精确值 $e - 1 \\approx 1.7183$，在两者之间。\n\n> **注意。** 两个估计值总在积分的两侧，积分不会同时大于或小于两者；哪个大哪个小只由凹凸性决定。",
     ],
     (rng) => {
       const s = rng.pick(shapes);
@@ -1598,17 +1787,70 @@ const orderingEstimates = {
       const I = `\\int_{${p}}^{${q}} f`;
       const a = `M_{${n}} < ${I} < T_{${n}}`;
       const b = `T_{${n}} < ${I} < M_{${n}}`;
-      return choose(
-        rng,
+      const above = `${I} < M_{${n}} < T_{${n}}`;
+      const below = `M_{${n}} < T_{${n}} < ${I}`;
+      const m1 = (q - p) * s.at((p + q) / 2);
+      const t1 = ((q - p) * (s.at(p) + s.at(q))) / 2;
+      const near = (v: number) => (Math.abs(v - Math.round(v)) < 1e-9 ? `= ${Math.round(v)}` : `\\approx ${round3(v)}`);
+      const curve = s.up ? "concave up" : "concave down";
+      const curveZh = s.up ? "上凹" : "下凹";
+      const tangents = (side: string) =>
+        `the tangent lines at the midpoints, whose areas the midpoint rectangles share, lie ${side} the curve`;
+      const tangentsZh = (side: string) => `中点处的切线在曲线${side}，而中点矩形的面积等于切线下方的面积`;
+      const lowSide = s.up ? tangents("below") : `the chords of the trapezoids lie below the curve`;
+      const lowSideZh = s.up ? tangentsZh("下方") : "梯形的弦在曲线下方";
+      const highSide = s.up ? `the chords of the trapezoids lie above the curve` : tangents("above");
+      const highSideZh = s.up ? "梯形的弦在曲线上方" : tangentsZh("上方");
+      const low = s.up ? `M_{${n}}` : `T_{${n}}`;
+      const high = s.up ? `T_{${n}}` : `M_{${n}}`;
+      const belowBoth = `This makes the integral smaller than both estimates. But on a ${curve} graph ${lowSide}, so the integral is larger than $${low}$.`;
+      const belowBothZh = `这使积分比两个估计值都小。但在${curveZh}的图像上，${lowSideZh}，所以积分大于 $${low}$。`;
+      const aboveBoth = `This makes the integral larger than both estimates. But on a ${curve} graph ${highSide}, so the integral is smaller than $${high}$.`;
+      const aboveBothZh = `这使积分比两个估计值都大。但在${curveZh}的图像上，${highSideZh}，所以积分小于 $${high}$。`;
+      return reasoned(
+        choose(
+          rng,
+          [
+            `Let $f(x) = ${s.f}$ on $[${p}, ${q}]$, with midpoint and trapezoidal approximations $M_{${n}}$ and $T_{${n}}$. Which is true?`,
+            `设 $[${p}, ${q}]$ 上的 $f(x) = ${s.f}$，中点近似和梯形近似分别是 $M_{${n}}$ 和 $T_{${n}}$。哪项正确？`,
+          ],
+          same2(s.up ? a : b),
+          [same2(s.up ? b : a), same2(above), same2(below)],
+          walkPair(
+            [
+              [
+                "Find the concavity",
+                "判断凹凸性",
+                `$f''$ is ${s.up ? "positive" : "negative"} on $[${p}, ${q}]$, so $f$ is concave ${s.up ? "up" : "down"}.`,
+                `$f''$ 在 $[${p}, ${q}]$ 上${s.up ? "为正" : "为负"}，所以 $f$ ${s.up ? "上凹" : "下凹"}。`,
+              ],
+              [
+                "Place the trapezoids",
+                "确定梯形的位置",
+                `Each chord lies ${s.up ? "above" : "below"} the graph, so $T_{${n}}$ is ${s.up ? "larger" : "smaller"} than the integral.`,
+                `每条弦都在图像${s.up ? "上方" : "下方"}，所以 $T_{${n}}$ ${s.up ? "大于" : "小于"}积分。`,
+              ],
+              [
+                "Place the midpoint rectangles",
+                "确定中点矩形的位置",
+                `Each midpoint rectangle has the same area as the region under the tangent line at its midpoint, which lies ${s.up ? "below" : "above"} the graph. So $M_{${n}}$ is ${s.up ? "smaller" : "larger"}, and $${s.up ? a : b}$.`,
+                `每个中点矩形的面积等于中点处切线下方的面积，而切线在图像${s.up ? "下方" : "上方"}。所以 $M_{${n}}$ ${s.up ? "较小" : "较大"}，$${s.up ? a : b}$。`,
+              ],
+            ],
+            [
+              `With a single subinterval, $M_{1} = ${q - p} \\cdot f\\left(${(p + q) / 2}\\right) ${near(m1)}$ and $T_{1} = ${q - p} \\cdot \\frac{f(${p}) + f(${q})}{2} ${near(t1)}$, so already $M_{1} ${s.up ? "<" : ">"} T_{1}$, the same order.`,
+              `只取一个子区间时，$M_{1} = ${q - p} \\cdot f\\left(${(p + q) / 2}\\right) ${near(m1)}$，$T_{1} = ${q - p} \\cdot \\frac{f(${p}) + f(${q})}{2} ${near(t1)}$，已经有 $M_{1} ${s.up ? "<" : ">"} T_{1}$，顺序相同。`,
+            ],
+          ),
+        ),
         [
-          `Let $f(x) = ${s.f}$ on $[${p}, ${q}]$, with midpoint and trapezoidal approximations $M_{${n}}$ and $T_{${n}}$. Which is true?`,
-          `设 $[${p}, ${q}]$ 上的 $f(x) = ${s.f}$，中点近似和梯形近似分别是 $M_{${n}}$ 和 $T_{${n}}$。哪项正确？`,
-        ],
-        same2(s.up ? a : b),
-        [same2(s.up ? b : a), same2(`${I} < M_{${n}} < T_{${n}}`), same2(`M_{${n}} < T_{${n}} < ${I}`)],
-        [
-          `$f''$ is ${s.up ? "positive" : "negative"} here, so $f$ is concave ${s.up ? "up" : "down"}. The trapezoids lie ${s.up ? "above" : "below"} the graph and the midpoint rectangles match its tangent lines, which lie ${s.up ? "below" : "above"}. So $${s.up ? a : b}$.`,
-          `这里 $f''$ ${s.up ? "为正" : "为负"}，所以 $f$ ${s.up ? "上凹" : "下凹"}。梯形在图像${s.up ? "上方" : "下方"}，中点矩形相当于切线，在图像${s.up ? "下方" : "上方"}。所以 $${s.up ? a : b}$。`,
+          [
+            `$${s.up ? b : a}$`,
+            `That is the order for a concave-${s.up ? "down" : "up"} graph; this one is concave ${s.up ? "up" : "down"}.`,
+            `那是${s.up ? "下凹" : "上凹"}图像的顺序；这个图像${s.up ? "上凹" : "下凹"}。`,
+          ],
+          [`$${above}$`, belowBoth, belowBothZh],
+          [`$${below}$`, aboveBoth, aboveBothZh],
         ],
       );
     },
@@ -1793,23 +2035,69 @@ const wholeNumberIntegrals = point(
   "other-trigonometric-and-exponential-antiderivatives",
   ["Other trigonometric and exponential antiderivatives", "其他三角与指数原函数"],
   [
-    "The fundamental theorem works for any known antiderivative, including $\\tan x$ for $\\sec^{2}x$, $-\\cot x$ for $\\csc^{2}x$ and $\\sec x$ for $\\sec x\\tan x$. The minus signs in $-\\cot x$ and $-\\csc x$, and subtracting the value at the lower limit, are the usual sources of error.",
-    "微积分基本定理适用于任何已知的原函数，包括 $\\sec^{2}x$ 的原函数 $\\tan x$、$\\csc^{2}x$ 的原函数 $-\\cot x$ 和 $\\sec x\\tan x$ 的原函数 $\\sec x$。$-\\cot x$ 和 $-\\csc x$ 中的负号，以及减去下限处的值，是常见的出错之处。",
+    "The fundamental theorem works for any known antiderivative, including $\\tan x$ for $\\sec^{2}x$, $-\\cot x$ for $\\csc^{2}x$ and $\\sec x$ for $\\sec x\\tan x$. The minus signs in $-\\cot x$ and $-\\csc x$, and subtracting the value at the lower limit, are the usual sources of error.\n\nFor example, $\\int_{0}^{\\frac{\\pi}{4}} \\sec^{2}x \\, dx = \\tan\\frac{\\pi}{4} - \\tan 0 = 1$.\n\nCheck: the midpoint sum with $2$ subintervals is $\\frac{\\pi}{8}\\left(\\sec^{2}\\frac{\\pi}{16} + \\sec^{2}\\frac{3\\pi}{16}\\right) \\approx 0.976$, close to $1$.\n\n> **Watch out.** $\\int \\csc^{2}x \\, dx = -\\cot x + C$ and $\\int \\csc x\\cot x \\, dx = -\\csc x + C$ carry minus signs; and the value at the lower limit, such as $\\sec 0 = 1$ or $e^{0} = 1$, is not zero.",
+    "微积分基本定理适用于任何已知的原函数，包括 $\\sec^{2}x$ 的原函数 $\\tan x$、$\\csc^{2}x$ 的原函数 $-\\cot x$ 和 $\\sec x\\tan x$ 的原函数 $\\sec x$。$-\\cot x$ 和 $-\\csc x$ 中的负号，以及减去下限处的值，是常见的出错之处。\n\n例如 $\\int_{0}^{\\frac{\\pi}{4}} \\sec^{2}x \\, dx = \\tan\\frac{\\pi}{4} - \\tan 0 = 1$。\n\n检验：取 $2$ 个子区间，中点和为 $\\frac{\\pi}{8}\\left(\\sec^{2}\\frac{\\pi}{16} + \\sec^{2}\\frac{3\\pi}{16}\\right) \\approx 0.976$，与 $1$ 很接近。\n\n> **注意。** $\\int \\csc^{2}x \\, dx = -\\cot x + C$ 和 $\\int \\csc x\\cot x \\, dx = -\\csc x + C$ 都带负号；下限处的值，比如 $\\sec 0 = 1$ 或 $e^{0} = 1$，并不是零。",
   ],
   (rng) => {
     const u = rng.pick(unitIntegrals);
     const c = nz(rng, 12);
     const answer = c * u.value;
     const integrand = u.f === "\\frac{1}{x}" ? `\\frac{${c}}{x}` : poly([c, u.f]);
-    return ask(
-      [`Evaluate $\\int_{${u.lo}}^{${u.hi}} ${integrand} \\, dx$.`, `计算 $\\int_{${u.lo}}^{${u.hi}} ${integrand} \\, dx$。`],
+    const h = (u.to - u.from) / 4;
+    const m4 = c * h * [0.5, 1.5, 2.5, 3.5].reduce((s, j) => s + u.g(u.from + j * h), 0);
+    const endValue = (s: string) => s.slice(s.lastIndexOf("= ") + 2);
+    const hiV = endValue(u.atHi);
+    const loV = endValue(u.atLo).startsWith("-") ? `(${endValue(u.atLo)})` : endValue(u.atLo);
+    return numberProblem({
+      prompt: t(`Evaluate $\\int_{${u.lo}}^{${u.hi}} ${integrand} \\, dx$.`, `计算 $\\int_{${u.lo}}^{${u.hi}} ${integrand} \\, dx$。`),
       answer,
-      [-answer, c * u.bad, c],
-      [
-        `An antiderivative of $${u.f}$ is $${u.anti}$. Evaluating it from $${u.lo}$ to $${u.hi}$ gives $${u.value}$, so the integral is $${paren(c)} \\cdot ${u.value} = ${answer}$.`,
-        `$${u.f}$ 的一个原函数是 $${u.anti}$。从 $${u.lo}$ 到 $${u.hi}$ 取值得 $${u.value}$，所以积分是 $${paren(c)} \\cdot ${u.value} = ${answer}$。`,
-      ],
-    );
+      mistakes: distinctWhys([
+        ...u.slips.map(([v, en, zh]) =>
+          why(
+            c * v,
+            c === 1 ? en : `${en} That gives $${v}$, and multiplying by $${c}$ gives $${c * v}$.`,
+            c === 1 ? zh : `${zh}这样得 $${v}$，再乘以 $${c}$ 得 $${c * v}$。`,
+          ),
+        ),
+        why(
+          -answer,
+          c === 1
+            ? "This subtracts in the wrong order: the value at the upper limit comes first."
+            : `This subtracts in the wrong order, giving $${-u.value}$, and multiplying by $${c}$ gives $${-answer}$; the value at the upper limit comes first.`,
+          c === 1
+            ? "这里减的顺序反了：应该用上限处的值减去下限处的值。"
+            : `这里减的顺序反了，得 $${-u.value}$，再乘以 $${c}$ 得 $${-answer}$；应该用上限处的值减去下限处的值。`,
+        ),
+      ]),
+      solution: t(
+        ...walkPair(
+          [
+            [
+              "Find an antiderivative",
+              "求原函数",
+              `An antiderivative of $${u.f}$ is $${u.anti}$.`,
+              `$${u.f}$ 的一个原函数是 $${u.anti}$。`,
+            ],
+            [
+              "Evaluate at the limits",
+              "在上下限处求值",
+              `$${u.atHi}$ and $${u.atLo}$, so $\\int_{${u.lo}}^{${u.hi}} ${u.f} \\, dx = ${hiV} - ${loV} = ${u.value}$.`,
+              `$${u.atHi}$，$${u.atLo}$，所以 $\\int_{${u.lo}}^{${u.hi}} ${u.f} \\, dx = ${hiV} - ${loV} = ${u.value}$。`,
+            ],
+            [
+              "Multiply by the constant",
+              "乘以常数",
+              `$${paren(c)} \\cdot ${u.value} = ${answer}$.`,
+              `$${paren(c)} \\cdot ${u.value} = ${answer}$。`,
+            ],
+          ],
+          [
+            `The midpoint sum with $4$ subintervals is $\\approx ${round3(m4)}$, close to $${answer}$.`,
+            `取 $4$ 个子区间，中点和 $\\approx ${round3(m4)}$，与 $${answer}$ 很接近。`,
+          ],
+        ),
+      ),
+    });
   },
 );
 
@@ -1817,8 +2105,8 @@ const unknownFromCombination = point(
   "an-integral-from-a-known-combination",
   ["An integral from a known combination", "由已知组合求积分"],
   [
-    "The sum and constant multiple rules turn a statement about $\\int (pf + qg)$ into a linear equation in the two integrals. If one is known, solve for the other, dividing by its coefficient at the end.",
-    "和与常数倍法则把关于 $\\int (pf + qg)$ 的条件变成两个积分的一次方程。如果其中一个已知，就解出另一个，最后除以它的系数。",
+    "The sum and constant multiple rules turn a statement about $\\int (pf + qg)$ into a linear equation in the two integrals. If one is known, solve for the other, dividing by its coefficient at the end.\n\nFor example, if $\\int_{0}^{1} \\left[2f(x) + 3g(x)\\right] dx = 13$ and $\\int_{0}^{1} f(x) \\, dx = 2$, then $2 \\cdot 2 + 3G = 13$, so $3G = 9$ and $\\int_{0}^{1} g(x) \\, dx = 3$.\n\nCheck: $2 \\cdot 2 + 3 \\cdot 3 = 13$.\n\n> **Watch out.** Subtract $p$ times the known integral, not the integral itself, and divide by $q$ at the end.",
+    "和与常数倍法则把关于 $\\int (pf + qg)$ 的条件变成两个积分的一次方程。如果其中一个已知，就解出另一个，最后除以它的系数。\n\n例如，若 $\\int_{0}^{1} \\left[2f(x) + 3g(x)\\right] dx = 13$，$\\int_{0}^{1} f(x) \\, dx = 2$，则 $2 \\cdot 2 + 3G = 13$，所以 $3G = 9$，$\\int_{0}^{1} g(x) \\, dx = 3$。\n\n检验：$2 \\cdot 2 + 3 \\cdot 3 = 13$。\n\n> **注意。** 要减去已知积分的 $p$ 倍，而不是积分本身；最后除以 $q$。",
   ],
   (rng) => {
     const a = rng.int(-4, 2);
@@ -1829,18 +2117,48 @@ const unknownFromCombination = point(
     const G = rng.int(-9, 9);
     const S = p * F + q * G;
     const integrand = poly([p, "f(x)"], [q, "g(x)"]);
-    return ask(
-      [
+    return numberProblem({
+      prompt: t(
         `Given $\\int_{${a}}^{${b}} \\left[${integrand}\\right] dx = ${S}$ and $\\int_{${a}}^{${b}} f(x) \\, dx = ${F}$, find $\\int_{${a}}^{${b}} g(x) \\, dx$.`,
         `已知 $\\int_{${a}}^{${b}} \\left[${integrand}\\right] dx = ${S}$，$\\int_{${a}}^{${b}} f(x) \\, dx = ${F}$，求 $\\int_{${a}}^{${b}} g(x) \\, dx$。`,
-      ],
-      G,
-      [Q.of(S - F, q), Q.of(S + p * F, q), S - p * F],
-      [
-        `$${paren(p)} \\cdot ${paren(F)} + ${paren(q)} \\cdot G = ${S}$, so $${q}G = ${S - p * F}$ and $G = ${G}$.`,
-        `$${paren(p)} \\cdot ${paren(F)} + ${paren(q)} \\cdot G = ${S}$，所以 $${q}G = ${S - p * F}$，$G = ${G}$。`,
-      ],
-    );
+      ),
+      answer: G,
+      mistakes: distinctWhys([
+        why(
+          Q.of(S - F, q),
+          `This subtracts $${F}$ itself; the known part is $${paren(p)} \\cdot ${paren(F)} = ${p * F}$.`,
+          `这里减去的是 $${F}$ 本身；已知部分是 $${paren(p)} \\cdot ${paren(F)} = ${p * F}$。`,
+        ),
+        why(
+          Q.of(S + p * F, q),
+          `This adds $${p * F}$ to $${S}$; moving the known part to the other side subtracts it.`,
+          `这里把 $${p * F}$ 加到了 $${S}$ 上；把已知部分移到等号另一边应该减去它。`,
+        ),
+        why(S - p * F, `This is $${q}G$; divide by $${q}$ to find $G$.`, `这是 $${q}G$；还要除以 $${q}$ 才得到 $G$。`),
+      ]),
+      solution: t(
+        ...walkPair(
+          [
+            [
+              "Split the integral",
+              "拆开积分",
+              `With $G = \\int_{${a}}^{${b}} g(x) \\, dx$, the sum and constant multiple rules give $${paren(p)} \\cdot ${paren(F)} + ${paren(q)}G = ${S}$.`,
+              `设 $G = \\int_{${a}}^{${b}} g(x) \\, dx$，由和法则与常数倍法则得 $${paren(p)} \\cdot ${paren(F)} + ${paren(q)}G = ${S}$。`,
+            ],
+            [
+              "Solve for G",
+              "解出 G",
+              `$${q}G = ${S} - ${paren(p * F)} = ${S - p * F}$, so $G = ${G}$.`,
+              `$${q}G = ${S} - ${paren(p * F)} = ${S - p * F}$，所以 $G = ${G}$。`,
+            ],
+          ],
+          [
+            `Substitute back: $${paren(p)} \\cdot ${paren(F)} + ${paren(q)} \\cdot ${paren(G)} = ${p * F} + ${paren(q * G)} = ${S}$, the given value.`,
+            `代回原式：$${paren(p)} \\cdot ${paren(F)} + ${paren(q)} \\cdot ${paren(G)} = ${p * F} + ${paren(q * G)} = ${S}$，正是已知值。`,
+          ],
+        ),
+      ),
+    });
   },
 );
 
