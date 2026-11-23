@@ -33,6 +33,8 @@ import {
   steps,
   yesNo,
 } from "../problems.ts";
+import { stepLabel } from "../solution-kit.ts";
+import { type Reason, reasoned } from "../wrong-reasons.ts";
 
 // Precalculus 2.4–2.5: rational expressions, equations and functions.
 
@@ -165,14 +167,36 @@ const values = (xs: readonly (number | Q)[]) => xs.map((x) => num(x));
 /** listText writes numbers as inline math joined by commas. */
 const listText = (xs: readonly (number | Q)[], sep = ", ") => xs.map((x) => `$${num(x)}$`).join(sep);
 
-/** oneOf builds a choice problem from the right option and up to three distinct wrong ones, shuffled. */
-function oneOf(rng: Rng, prompt: Text, right: Text, wrong: readonly Text[], solution: Text): Problem {
+/** oneOf builds a choice problem from the right option and up to three distinct wrong ones, shuffled, with reasons for the wrong ones. */
+function oneOf(rng: Rng, prompt: Text, right: Text, wrong: readonly Text[], solution: Text, reasons: readonly Reason[] = []): Problem {
   const seen = new Set([right.en]);
   const rest = wrong.filter((w) => !seen.has(w.en) && seen.add(w.en)).slice(0, 3);
   const options = [right, ...rest];
   const order = rng.shuffle(options.map((_, i) => i));
-  return choiceProblem({ prompt, options: order.map((i) => options[i]!), correct: order.indexOf(0), solution });
+  const problem = choiceProblem({ prompt, options: order.map((i) => options[i]!), correct: order.indexOf(0), solution });
+  return reasons.length > 0 ? reasoned(problem, reasons) : problem;
 }
+
+/** Step is one labelled step of a solution: its title, what it says, and display lines. */
+type Step = readonly [title: readonly [en: string, zh: string], say: Text, lines?: readonly string[]];
+
+/** walked writes a solution as labelled steps followed by a check. */
+function walked(parts: readonly Step[], check: Text): Text {
+  const write = (locale: keyof Text) =>
+    parts
+      .map(
+        ([[en, zh], say, lines = []], i) =>
+          `${stepLabel(i + 1, en, zh)[locale]} ${say[locale]}${lines.length > 0 ? steps(...lines) : "\n\n"}`,
+      )
+      .join("") + (locale === "en" ? `**Check.** ${check.en}` : `**检验。** ${check["zh-CN"]}`);
+  return t(write("en"), write("zh-CN"));
+}
+
+/** why pairs a wrong option with what is wrong with it in English and Chinese. */
+const why = (option: Text, en: string, zh: string): Reason => [option.en, en, zh];
+
+/** lead1 writes the single term c·x^k: "3x^{2}", "-x", "5". */
+const lead1 = (c: number, k: number) => pl([...Array.from({ length: k }, () => 0), c]);
 
 // Sets of real numbers.
 
@@ -334,13 +358,29 @@ export const closurePropertiesOfPolynomials: TopicDef = {
   ],
   xp: 12,
   standards: ["CCSS.HSA.APR.A.1"],
+  intro: t(
+    `Take $p(x) = x^{2} + 1$ and $q(x) = x - 3$. Their sum $x^{2} + x - 2$ and their product $x^{3} - 3x^{2} + x - 3$ are polynomials again. Their quotient is not:
+
+$$\\frac{x^{2} + 1}{x - 3} = x + 3 + \\frac{10}{x - 3}$$
+
+Check: dividing by $x - 3$ leaves the remainder $p(3) = 3^{2} + 1 = 10$, which is not $0$, so a fraction is left over.
+
+In this lesson we see which operations on polynomials always give polynomials, find the degree of a sum or product, and compute sums, differences and products.`,
+    `取 $p(x) = x^{2} + 1$，$q(x) = x - 3$。它们的和 $x^{2} + x - 2$、积 $x^{3} - 3x^{2} + x - 3$ 仍是多项式。它们的商却不是：
+
+$$\\frac{x^{2} + 1}{x - 3} = x + 3 + \\frac{10}{x - 3}$$
+
+检验：除以 $x - 3$ 的余数是 $p(3) = 3^{2} + 1 = 10$，不为 $0$，所以剩下一个分式。
+
+这节课我们看哪些多项式运算的结果总是多项式，求和与积的次数，并计算和、差、积。`,
+  ),
   knowledgePoints: [
     {
       id: "which-operations-give-polynomials",
       title: t("Which operations give polynomials", "哪些运算得到多项式"),
       explanation: t(
-        "A set is **closed** under an operation when combining two of its members always gives a member of the set. Adding, subtracting or multiplying two polynomials always gives a polynomial: like terms combine, and multiplying powers of $x$ adds whole-number exponents. So polynomials are closed under addition, subtraction and multiplication.\n\nThey are **not** closed under division. Dividing by $x - s$ leaves the remainder $p(s)$:\n\n- $\\frac{x^{2} - 4}{x - 2} = x + 2$, a polynomial, because the remainder $2^{2} - 4$ is $0$;\n- $\\frac{x^{2} + 1}{x - 2} = x + 2 + \\frac{5}{x - 2}$, not a polynomial, because the remainder is $2^{2} + 1 = 5$.\n\nSo $p(x) \\div (x - s)$ is a polynomial exactly when $p(s) = 0$.",
-        "如果一个集合中任意两个成员经过某种运算后结果仍在这个集合中，就说这个集合对该运算**封闭**。两个多项式相加、相减或相乘，结果总是多项式：同类项可以合并，$x$ 的幂相乘时指数（整数）相加。所以多项式对加法、减法和乘法封闭。\n\n多项式对除法**不**封闭。除以 $x - s$ 时余数是 $p(s)$：\n\n- $\\frac{x^{2} - 4}{x - 2} = x + 2$ 是多项式，因为余数 $2^{2} - 4 = 0$；\n- $\\frac{x^{2} + 1}{x - 2} = x + 2 + \\frac{5}{x - 2}$ 不是多项式，因为余数是 $2^{2} + 1 = 5$。\n\n所以 $p(x) \\div (x - s)$ 是多项式，当且仅当 $p(s) = 0$。",
+        "A set is **closed** under an operation when combining two of its members always gives a member of the set. Adding, subtracting or multiplying two polynomials always gives a polynomial: like terms combine, and multiplying powers of $x$ adds whole-number exponents. So polynomials are closed under addition, subtraction and multiplication.\n\nThey are **not** closed under division. Dividing by $x - s$ leaves the remainder $p(s)$:\n\n- $\\frac{x^{2} - 4}{x - 2} = x + 2$, a polynomial, because the remainder $2^{2} - 4$ is $0$;\n- $\\frac{x^{2} + 1}{x - 2} = x + 2 + \\frac{5}{x - 2}$, not a polynomial, because the remainder is $2^{2} + 1 = 5$.\n\nSo $p(x) \\div (x - s)$ is a polynomial exactly when $p(s) = 0$.\n\nFor $p(x) = x^{2} - x - 6$ and $q(x) = x - 3$: $p(3) = 9 - 3 - 6 = 0$, so $p(x) \\div q(x) = x + 2$ is a polynomial. Check: $(x - 3)(x + 2) = x^{2} - x - 6$.\n\n> **Watch out.** For $x - s$ substitute $s$, not $-s$: the remainder of dividing by $x - 3$ is $p(3)$. Only division needs this test; a sum, difference or product of polynomials is always a polynomial.",
+        "如果一个集合中任意两个成员经过某种运算后结果仍在这个集合中，就说这个集合对该运算**封闭**。两个多项式相加、相减或相乘，结果总是多项式：同类项可以合并，$x$ 的幂相乘时指数（整数）相加。所以多项式对加法、减法和乘法封闭。\n\n多项式对除法**不**封闭。除以 $x - s$ 时余数是 $p(s)$：\n\n- $\\frac{x^{2} - 4}{x - 2} = x + 2$ 是多项式，因为余数 $2^{2} - 4 = 0$；\n- $\\frac{x^{2} + 1}{x - 2} = x + 2 + \\frac{5}{x - 2}$ 不是多项式，因为余数是 $2^{2} + 1 = 5$。\n\n所以 $p(x) \\div (x - s)$ 是多项式，当且仅当 $p(s) = 0$。\n\n对 $p(x) = x^{2} - x - 6$ 和 $q(x) = x - 3$：$p(3) = 9 - 3 - 6 = 0$，所以 $p(x) \\div q(x) = x + 2$ 是多项式。检验：$(x - 3)(x + 2) = x^{2} - x - 6$。\n\n> **注意。** 对 $x - s$ 要代入 $s$ 而不是 $-s$：除以 $x - 3$ 的余数是 $p(3)$。只有除法需要这样检验；多项式的和、差、积总是多项式。",
       ),
       keyPrerequisites: ["the-remainder-theorem"],
       generate(rng) {
@@ -361,31 +401,89 @@ export const closurePropertiesOfPolynomials: TopicDef = {
         if (op !== "\\div") {
           const r = op === "+" ? addP(p, q) : op === "-" ? subP(p, q) : mulP(p, q);
           const [en, zh] = op === "+" ? ["addition", "加法"] : op === "-" ? ["subtraction", "减法"] : ["multiplication", "乘法"];
-          solution = t(
-            `Yes. Polynomials are closed under ${en}: $p(x) ${op} q(x) = ${pl(r)}$.`,
-            `是。多项式对${zh}封闭：$p(x) ${op} q(x) = ${pl(r)}$。`,
+          solution = walked(
+            [
+              [
+                ["Name the operation", "看运算"],
+                t(
+                  `Polynomials are closed under ${en}, so $p(x) ${op} q(x)$ is a polynomial: yes.`,
+                  `多项式对${zh}封闭，所以 $p(x) ${op} q(x)$ 是多项式：是。`,
+                ),
+              ],
+              [["Compute it", "算出结果"], t("Work it out:", "算出来："), [`p(x) ${op} q(x) = ${pl(r)}`]],
+            ],
+            t(
+              `At $x = 1$: $${at(p, 1)} ${op} ${paren(at(q, 1))} = ${at(r, 1)}$, the value of $${pl(r)}$ at $x = 1$.`,
+              `取 $x = 1$：$${at(p, 1)} ${op} ${paren(at(q, 1))} = ${at(r, 1)}$，正是 $${pl(r)}$ 在 $x = 1$ 处的值。`,
+            ),
           );
         } else {
           const [quot, rem] = synth(p, s);
           solution = exact
-            ? t(
-                `Yes. The remainder of dividing by $${bare(s)}$ is $p(${s}) = 0$, so $p(x) = (${bare(s)})(${pl(quot)})$ and $p(x) \\div q(x) = ${pl(quot)}$.`,
-                `是。除以 $${bare(s)}$ 的余数是 $p(${s}) = 0$，所以 $p(x) = (${bare(s)})(${pl(quot)})$，$p(x) \\div q(x) = ${pl(quot)}$。`,
+            ? walked(
+                [
+                  [
+                    ["Find the remainder", "求余数"],
+                    t(`The remainder of dividing by $${bare(s)}$ is $p(${s}) = 0$.`, `除以 $${bare(s)}$ 的余数是 $p(${s}) = 0$。`),
+                  ],
+                  [
+                    ["Divide", "做除法"],
+                    t(`So $${bare(s)}$ is a factor, and the quotient is a polynomial: yes.`, `所以 $${bare(s)}$ 是因式，商是多项式：是。`),
+                    [`p(x) = (${bare(s)})(${pl(quot)}), \\quad p(x) \\div q(x) = ${pl(quot)}`],
+                  ],
+                ],
+                t(
+                  `The constant terms agree: $${paren(-s)} \\cdot ${paren(quot[0]!)} = ${p[0]}$, the constant term of $p(x)$.`,
+                  `常数项相符：$${paren(-s)} \\cdot ${paren(quot[0]!)} = ${p[0]}$，正是 $p(x)$ 的常数项。`,
+                ),
               )
-            : t(
-                `No. The remainder of dividing by $${bare(s)}$ is $p(${s}) = ${rem}$, which is not $0$:${steps(`\\frac{p(x)}{q(x)} = ${pl(quot)} ${then("", rem, bare(s)).trim()}`)}The fraction left over makes it not a polynomial.`,
-                `不是。除以 $${bare(s)}$ 的余数是 $p(${s}) = ${rem}$，不为 $0$：${steps(`\\frac{p(x)}{q(x)} = ${pl(quot)} ${then("", rem, bare(s)).trim()}`)}剩下的分式使它不是多项式。`,
+            : walked(
+                [
+                  [
+                    ["Find the remainder", "求余数"],
+                    t(
+                      `The remainder of dividing by $${bare(s)}$ is $p(${s}) = ${rem}$, which is not $0$.`,
+                      `除以 $${bare(s)}$ 的余数是 $p(${s}) = ${rem}$，不为 $0$。`,
+                    ),
+                  ],
+                  [
+                    ["Divide", "做除法"],
+                    t("A fraction is left over, so the quotient is not a polynomial: no.", "剩下一个分式，所以商不是多项式：不是。"),
+                    [`\\frac{p(x)}{q(x)} = ${pl(quot)} ${then("", rem, bare(s)).trim()}`],
+                  ],
+                ],
+                t(
+                  `Multiply back at $x = 0$: $${paren(-s)} \\cdot ${paren(quot[0]!)} + ${paren(rem)} = ${p[0]}$, the constant term of $p(x)$.`,
+                  `在 $x = 0$ 处乘回去：$${paren(-s)} \\cdot ${paren(quot[0]!)} + ${paren(rem)} = ${p[0]}$，正是 $p(x)$ 的常数项。`,
+                ),
               );
         }
-        return choiceProblem({ prompt, options: yesNo, correct: yes ? 0 : 1, solution });
+        const reasons: Reason[] = yes
+          ? [
+              why(
+                yesNo[1]!,
+                op === "\\div"
+                  ? `The remainder $p(${s})$ is $0$, so nothing is left over and the quotient is a polynomial.`
+                  : "A sum, difference or product of polynomials is always a polynomial.",
+                op === "\\div" ? `余数 $p(${s})$ 是 $0$，没有剩余，商是多项式。` : "多项式的和、差、积总是多项式。",
+              ),
+            ]
+          : [
+              why(
+                yesNo[0]!,
+                `The remainder $p(${s})$ is not $0$, so a fraction is left over; only an exact division gives a polynomial.`,
+                `余数 $p(${s})$ 不为 $0$，剩下一个分式；只有整除才得到多项式。`,
+              ),
+            ];
+        return reasoned(choiceProblem({ prompt, options: yesNo, correct: yes ? 0 : 1, solution }), reasons);
       },
     },
     {
       id: "degrees-of-sums-and-products",
       title: t("Degrees of sums and products", "和与积的次数"),
       explanation: t(
-        "When two polynomials are multiplied, their leading terms multiply, so the degrees **add**: a degree-$3$ polynomial times a degree-$2$ polynomial has degree $5$.\n\nWhen they are added or subtracted, the degree is **at most** the larger degree. It is smaller when the leading terms cancel:\n\n$$(3x^{3} + x - 1) + (-3x^{3} + 2x^{2} + 4) = 2x^{2} + x + 3,$$\n\nwhich has degree $2$, not $3$. Always check whether the leading terms cancel.",
-        "两个多项式相乘时，首项相乘，所以次数**相加**：三次多项式乘以二次多项式得到五次多项式。\n\n两个多项式相加或相减时，次数**不超过**较大的次数。如果首项抵消，次数会更小：\n\n$$(3x^{3} + x - 1) + (-3x^{3} + 2x^{2} + 4) = 2x^{2} + x + 3,$$\n\n它的次数是 $2$ 而不是 $3$。一定要检查首项是否抵消。",
+        "When two polynomials are multiplied, their leading terms multiply, so the degrees **add**: a degree-$3$ polynomial times a degree-$2$ polynomial has degree $5$.\n\nWhen they are added or subtracted, the degree is **at most** the larger degree. It is smaller when the leading terms cancel:\n\n$$(3x^{3} + x - 1) + (-3x^{3} + 2x^{2} + 4) = 2x^{2} + x + 3,$$\n\nwhich has degree $2$, not $3$. Always check whether the leading terms cancel.\n\nFor $p(x) = x^{2} + 4x$ and $q(x) = 2x^{3} - 1$, $p(x)q(x)$ has degree $2 + 3 = 5$, while $p(x) - (x^{2} - 1) = 4x + 1$ has degree $1$. Check: the leading terms of the product give $x^{2} \\cdot 2x^{3} = 2x^{5}$, and in the difference $x^{2} - x^{2} = 0$.\n\n> **Watch out.** Degrees add under multiplication; they do not multiply. A degree-$2$ times a degree-$3$ polynomial has degree $5$, not $6$.",
+        "两个多项式相乘时，首项相乘，所以次数**相加**：三次多项式乘以二次多项式得到五次多项式。\n\n两个多项式相加或相减时，次数**不超过**较大的次数。如果首项抵消，次数会更小：\n\n$$(3x^{3} + x - 1) + (-3x^{3} + 2x^{2} + 4) = 2x^{2} + x + 3,$$\n\n它的次数是 $2$ 而不是 $3$。一定要检查首项是否抵消。\n\n对 $p(x) = x^{2} + 4x$ 和 $q(x) = 2x^{3} - 1$，$p(x)q(x)$ 的次数是 $2 + 3 = 5$；而 $p(x) - (x^{2} - 1) = 4x + 1$ 的次数是 $1$。检验：积的首项是 $x^{2} \\cdot 2x^{3} = 2x^{5}$，差中 $x^{2} - x^{2} = 0$。\n\n> **注意。** 相乘时次数相加，而不是相乘。二次多项式乘三次多项式是五次，不是六次。",
       ),
       generate(rng) {
         for (;;) {
@@ -413,13 +511,44 @@ export const closurePropertiesOfPolynomials: TopicDef = {
             wrong: [m + n, Math.max(m, n), m * n],
             solution:
               kind === "product"
-                ? t(
-                    `The degrees add: $p$ has degree $${m}$ and $q$ has degree $${n}$, so $${expr}$ has degree $${m} + ${n} = ${d}$.`,
-                    `次数相加：$p$ 是 $${m}$ 次，$q$ 是 $${n}$ 次，所以 $${expr}$ 的次数是 $${m} + ${n} = ${d}$。`,
+                ? walked(
+                    [
+                      [
+                        ["Read the degrees", "读出次数"],
+                        t(`$p$ has degree $${m}$ and $q$ has degree $${n}$.`, `$p$ 是 $${m}$ 次，$q$ 是 $${n}$ 次。`),
+                      ],
+                      [
+                        ["Add the degrees", "次数相加"],
+                        t(
+                          `The leading terms multiply, so the degrees add: $${m} + ${n} = ${d}$.`,
+                          `首项相乘，所以次数相加：$${m} + ${n} = ${d}$。`,
+                        ),
+                      ],
+                    ],
+                    t(
+                      `The leading term of the product is $(${lead1(p[m]!, m)})(${lead1(q[n]!, n)}) = ${lead1(p[m]! * q[n]!, d)}$, which is not $0$.`,
+                      `积的首项是 $(${lead1(p[m]!, m)})(${lead1(q[n]!, n)}) = ${lead1(p[m]! * q[n]!, d)}$，不为 $0$。`,
+                    ),
                   )
-                : t(
-                    `Combine like terms:${steps(`${expr} = ${pl(r)}`)}${d < Math.max(m, n) ? "The leading terms cancel, so the degree" : "The degree"} is $${d}$.`,
-                    `合并同类项：${steps(`${expr} = ${pl(r)}`)}${d < Math.max(m, n) ? "首项抵消了，所以次数" : "次数"}是 $${d}$。`,
+                : walked(
+                    [
+                      [
+                        ["Combine like terms", "合并同类项"],
+                        t("Collect each power of $x$:", "把 $x$ 的各次幂分别合并："),
+                        [`${expr} = ${pl(r)}`],
+                      ],
+                      [
+                        ["Read the degree", "读出次数"],
+                        t(
+                          `${d < Math.max(m, n) ? "The leading terms cancel, so the degree" : "The highest power left"} is $${d}$.`,
+                          `${d < Math.max(m, n) ? "首项抵消了，所以次数" : "剩下的最高次幂"}是 $${d}$。`,
+                        ),
+                      ],
+                    ],
+                    t(
+                      `The highest term left is $${lead1(r[d]!, d)}$; its coefficient $${r[d]}$ is not $0$, and every higher power of $x$ has coefficient $0$.`,
+                      `剩下的最高次项是 $${lead1(r[d]!, d)}$，系数 $${r[d]}$ 不为 $0$，更高次幂的系数都是 $0$。`,
+                    ),
                   ),
           });
         }
@@ -429,8 +558,8 @@ export const closurePropertiesOfPolynomials: TopicDef = {
       id: "computing-sums-differences-and-products",
       title: t("Computing the result", "计算运算结果"),
       explanation: t(
-        "To subtract $q(x)$, subtract **every** term of it: the minus sign is distributed over the whole of $q(x)$.\n\n$$(2x^{2} - 3x + 1) - (x^{2} - 5x + 4) = 2x^{2} - 3x + 1 - x^{2} + 5x - 4 = x^{2} + 2x - 3$$\n\nTo multiply, multiply every term of one polynomial by every term of the other and collect like terms:\n\n$$(x - 2)(x^{2} + 3x - 1) = x^{3} + 3x^{2} - x - 2x^{2} - 6x + 2 = x^{3} + x^{2} - 7x + 2$$",
-        "减去 $q(x)$ 时要减去它的**每一**项：负号要分配到整个 $q(x)$ 上。\n\n$$(2x^{2} - 3x + 1) - (x^{2} - 5x + 4) = 2x^{2} - 3x + 1 - x^{2} + 5x - 4 = x^{2} + 2x - 3$$\n\n相乘时，用一个多项式的每一项乘另一个多项式的每一项，再合并同类项：\n\n$$(x - 2)(x^{2} + 3x - 1) = x^{3} + 3x^{2} - x - 2x^{2} - 6x + 2 = x^{3} + x^{2} - 7x + 2$$",
+        "To subtract $q(x)$, subtract **every** term of it: the minus sign is distributed over the whole of $q(x)$.\n\n$$(2x^{2} - 3x + 1) - (x^{2} - 5x + 4) = 2x^{2} - 3x + 1 - x^{2} + 5x - 4 = x^{2} + 2x - 3$$\n\nTo multiply, multiply every term of one polynomial by every term of the other and collect like terms:\n\n$$(x - 2)(x^{2} + 3x - 1) = x^{3} + 3x^{2} - x - 2x^{2} - 6x + 2 = x^{3} + x^{2} - 7x + 2$$\n\nFor instance:\n\n$$(x^{2} + 4) - (3x^{2} - x + 2) = x^{2} + 4 - 3x^{2} + x - 2 = -2x^{2} + x + 2$$\n\nCheck at $x = 1$: $5 - 4 = 1$ and $-2 + 1 + 2 = 1$.\n\n> **Watch out.** Changing the sign of only the first term of $q(x)$ is the usual slip; every term of $q(x)$ changes sign. In a product, every term meets every term: $(x - 2)(x^{2} + 3x - 1)$ has six products before collecting.",
+        "减去 $q(x)$ 时要减去它的**每一**项：负号要分配到整个 $q(x)$ 上。\n\n$$(2x^{2} - 3x + 1) - (x^{2} - 5x + 4) = 2x^{2} - 3x + 1 - x^{2} + 5x - 4 = x^{2} + 2x - 3$$\n\n相乘时，用一个多项式的每一项乘另一个多项式的每一项，再合并同类项：\n\n$$(x - 2)(x^{2} + 3x - 1) = x^{3} + 3x^{2} - x - 2x^{2} - 6x + 2 = x^{3} + x^{2} - 7x + 2$$\n\n例如：\n\n$$(x^{2} + 4) - (3x^{2} - x + 2) = x^{2} + 4 - 3x^{2} + x - 2 = -2x^{2} + x + 2$$\n\n在 $x = 1$ 处检验：$5 - 4 = 1$，$-2 + 1 + 2 = 1$。\n\n> **注意。** 只改变 $q(x)$ 第一项的符号是常见错误；$q(x)$ 的每一项都要变号。相乘时每一项都要与每一项相乘：$(x - 2)(x^{2} + 3x - 1)$ 合并前有六个乘积。",
       ),
       keyPrerequisites: ["multiplying-polynomials"],
       generate(rng) {
@@ -448,20 +577,29 @@ export const closurePropertiesOfPolynomials: TopicDef = {
             answer: pl(r),
             simplified: true,
             wrong: [pl(addP(p, q)), pl(addP(p, lead))],
-            solution: t(
-              `Distribute the minus sign over every term of $q(x)$, then combine like terms:${steps(`(${pl(p)}) - (${pl(q)}) = ${pl(r)}`)}`,
-              `把负号分配到 $q(x)$ 的每一项，再合并同类项：${steps(`(${pl(p)}) - (${pl(q)}) = ${pl(r)}`)}`,
+            solution: walked(
+              [
+                [
+                  ["Distribute the minus sign", "分配负号"],
+                  t("Every term of $q(x)$ changes sign:", "$q(x)$ 的每一项都变号："),
+                  [`-(${pl(q)}) = ${pl(scaleP(q, -1))}`],
+                ],
+                [
+                  ["Combine like terms", "合并同类项"],
+                  t("Add the two polynomials term by term:", "把两个多项式逐项相加："),
+                  [`(${pl(p)}) + (${pl(scaleP(q, -1))}) = ${pl(r)}`],
+                ],
+              ],
+              t(
+                `At $x = 1$: $p(1) - q(1) = ${at(p, 1)} - ${paren(at(q, 1))} = ${at(r, 1)}$, the value of $${pl(r)}$ at $x = 1$.`,
+                `取 $x = 1$：$p(1) - q(1) = ${at(p, 1)} - ${paren(at(q, 1))} = ${at(r, 1)}$，正是 $${pl(r)}$ 在 $x = 1$ 处的值。`,
+              ),
             ),
           });
         }
         const p = [rng.nonZero(-6, 6), rng.nonZero(-3, 3)];
         const q = [rng.nonZero(-9, 9), rng.int(-9, 9), rng.nonZero(-3, 3)];
         const r = mulP(p, q);
-        const mulSteps = steps(
-          `(${pl(p)})(${pl(q)}) = ${front(p[1]!)}x(${pl(q)}) ${sgn(p[0]!)} ${Math.abs(p[0]!)}(${pl(q)})`,
-          `= ${pl(mulP([0, p[1]!], q))} ${sgn(p[0]!)} (${pl(scaleP(q, Math.abs(p[0]!)))})`,
-          `= ${pl(r)}`,
-        );
         return expressionProblem({
           prompt: t(
             `Let $p(x) = ${pl(p)}$ and $q(x) = ${pl(q)}$. Write $p(x)q(x)$ as a polynomial in standard form.`,
@@ -470,9 +608,22 @@ export const closurePropertiesOfPolynomials: TopicDef = {
           answer: pl(r),
           simplified: true,
           wrong: [pl([p[0]! * q[0]!, p[1]! * q[1]!, 0]), pl(mulP([-p[0]!, p[1]!], q))],
-          solution: t(
-            `Multiply each term of $${pl(p)}$ by each term of $${pl(q)}$, then combine like terms:${mulSteps}`,
-            `用 $${pl(p)}$ 的每一项乘 $${pl(q)}$ 的每一项，再合并同类项：${mulSteps}`,
+          solution: walked(
+            [
+              [
+                ["Distribute", "分配"],
+                t(`Multiply each term of $${pl(p)}$ by all of $${pl(q)}$:`, `用 $${pl(p)}$ 的每一项去乘整个 $${pl(q)}$：`),
+                [
+                  `(${pl(p)})(${pl(q)}) = ${front(p[1]!)}x(${pl(q)}) ${sgn(p[0]!)} ${Math.abs(p[0]!)}(${pl(q)})`,
+                  `= ${pl(mulP([0, p[1]!], q))} ${sgn(p[0]!)} (${pl(scaleP(q, Math.abs(p[0]!)))})`,
+                ],
+              ],
+              [["Combine like terms", "合并同类项"], t("Collect each power of $x$:", "把 $x$ 的各次幂分别合并："), [`= ${pl(r)}`]],
+            ],
+            t(
+              `At $x = 1$: $p(1)q(1) = ${paren(at(p, 1))} \\cdot ${paren(at(q, 1))} = ${at(r, 1)}$, the value of $${pl(r)}$ at $x = 1$.`,
+              `取 $x = 1$：$p(1)q(1) = ${paren(at(p, 1))} \\cdot ${paren(at(q, 1))} = ${at(r, 1)}$，正是 $${pl(r)}$ 在 $x = 1$ 处的值。`,
+            ),
           ),
         });
       },
@@ -500,13 +651,33 @@ export const closurePropertiesOfRationalExpressions: TopicDef = {
   encompasses: [{ topic: "dividing-rational-expressions", weight: 0.3 }],
   xp: 14,
   standards: ["CCSS.HSA.APR.D.7"],
+  intro: t(
+    `Take $r(x) = \\frac{1}{x}$ and $s(x) = \\frac{2}{x + 1}$. Over the common denominator $x(x + 1)$ their sum is one fraction of polynomials again:
+
+$$\\frac{1}{x} + \\frac{2}{x + 1} = \\frac{(x + 1) + 2x}{x(x + 1)} = \\frac{3x + 1}{x(x + 1)}$$
+
+It is not defined at $x = 0$ and $x = -1$, where $r$ or $s$ is not defined.
+
+Check at $x = 1$: $1 + 1 = 2$, and $\\frac{4}{2} = 2$.
+
+In this lesson we tell rational expressions from polynomials and from other expressions, combine two rational expressions into one, and find where the result is not defined.`,
+    `取 $r(x) = \\frac{1}{x}$，$s(x) = \\frac{2}{x + 1}$。以 $x(x + 1)$ 为公分母，它们的和仍是一个多项式之商：
+
+$$\\frac{1}{x} + \\frac{2}{x + 1} = \\frac{(x + 1) + 2x}{x(x + 1)} = \\frac{3x + 1}{x(x + 1)}$$
+
+它在 $x = 0$ 和 $x = -1$ 处无意义，因为那里 $r$ 或 $s$ 无意义。
+
+在 $x = 1$ 处检验：$1 + 1 = 2$，而 $\\frac{4}{2} = 2$。
+
+这节课我们区分分式与多项式及其他式子，把两个分式的运算结果合并成一个分式，并求结果无意义的 $x$ 值。`,
+  ),
   knowledgePoints: [
     {
       id: "recognizing-rational-expressions",
       title: t("Recognizing rational expressions", "识别分式"),
       explanation: t(
-        "A **rational expression** is a quotient $\\frac{p(x)}{q(x)}$ of two polynomials, with $q$ not the zero polynomial. Every polynomial is one (take $q(x) = 1$).\n\n- $\\frac{x^{2}}{3} - 2x$ and $\\sqrt{2}x + 1$ are **polynomials**: dividing by a number or multiplying by an irrational number only changes the coefficients.\n- $\\frac{x + 1}{x - 3}$, $2x + \\frac{5}{x}$ and $4x^{-2} = \\frac{4}{x^{2}}$ are rational expressions but not polynomials: $x$ appears in a denominator.\n- $\\sqrt{x}$, $x^{\\frac{1}{2}}$, $|x|$ and $2^{x}$ are not rational expressions: the variable is under a root, inside absolute value bars, or in an exponent.",
-        "**分式**（有理式）是两个多项式的商 $\\frac{p(x)}{q(x)}$，其中 $q$ 不是零多项式。每个多项式都是分式（取 $q(x) = 1$）。\n\n- $\\frac{x^{2}}{3} - 2x$ 和 $\\sqrt{2}x + 1$ 是**多项式**：除以一个数或乘以一个无理数只改变系数。\n- $\\frac{x + 1}{x - 3}$、$2x + \\frac{5}{x}$ 和 $4x^{-2} = \\frac{4}{x^{2}}$ 是分式但不是多项式：$x$ 出现在分母中。\n- $\\sqrt{x}$、$x^{\\frac{1}{2}}$、$|x|$ 和 $2^{x}$ 都不是分式：变量在根号下、绝对值符号内或指数上。",
+        "A **rational expression** is a quotient $\\frac{p(x)}{q(x)}$ of two polynomials, with $q$ not the zero polynomial. Every polynomial is one (take $q(x) = 1$).\n\n- $\\frac{x^{2}}{3} - 2x$ and $\\sqrt{2}x + 1$ are **polynomials**: dividing by a number or multiplying by an irrational number only changes the coefficients.\n- $\\frac{x + 1}{x - 3}$, $2x + \\frac{5}{x}$ and $4x^{-2} = \\frac{4}{x^{2}}$ are rational expressions but not polynomials: $x$ appears in a denominator.\n- $\\sqrt{x}$, $x^{\\frac{1}{2}}$, $|x|$ and $2^{x}$ are not rational expressions: the variable is under a root, inside absolute value bars, or in an exponent.\n\nFor instance, $\\frac{3}{x} - x^{2} = \\frac{3 - x^{3}}{x}$ is a quotient of polynomials with $x$ in the denominator: a rational expression but not a polynomial. Check: it is not defined at $x = 0$, which never happens to a polynomial.\n\n> **Watch out.** Dividing by a number keeps a polynomial a polynomial: $\\frac{x^{2}}{5}$ is $\\frac{1}{5}x^{2}$. And $x^{-1}$ looks like a power of $x$ but is $\\frac{1}{x}$, so it is not a polynomial.",
+        "**分式**（有理式）是两个多项式的商 $\\frac{p(x)}{q(x)}$，其中 $q$ 不是零多项式。每个多项式都是分式（取 $q(x) = 1$）。\n\n- $\\frac{x^{2}}{3} - 2x$ 和 $\\sqrt{2}x + 1$ 是**多项式**：除以一个数或乘以一个无理数只改变系数。\n- $\\frac{x + 1}{x - 3}$、$2x + \\frac{5}{x}$ 和 $4x^{-2} = \\frac{4}{x^{2}}$ 是分式但不是多项式：$x$ 出现在分母中。\n- $\\sqrt{x}$、$x^{\\frac{1}{2}}$、$|x|$ 和 $2^{x}$ 都不是分式：变量在根号下、绝对值符号内或指数上。\n\n例如 $\\frac{3}{x} - x^{2} = \\frac{3 - x^{3}}{x}$ 是分母含 $x$ 的多项式之商：是分式，但不是多项式。检验：它在 $x = 0$ 处无意义，而多项式在任何地方都有意义。\n\n> **注意。** 除以一个数，多项式仍是多项式：$\\frac{x^{2}}{5}$ 就是 $\\frac{1}{5}x^{2}$。$x^{-1}$ 看起来是 $x$ 的幂，其实是 $\\frac{1}{x}$，所以不是多项式。",
       ),
       generate(rng) {
         const a = rng.int(2, 9);
@@ -526,7 +697,7 @@ export const closurePropertiesOfRationalExpressions: TopicDef = {
         const kind = rng.int(0, 2);
         const i = rng.int(0, 3);
         const expr = forms[kind]![i]!;
-        const why: Text[][] = [
+        const about: Text[][] = [
           [
             t(
               `It is $\\frac{1}{${c}}x^{3} ${b < 0 ? "-" : "+"} ${poly([Math.abs(b), "x"])}$: dividing by the number $${c}$ only makes a fractional coefficient, so it is a polynomial.`,
@@ -579,20 +750,85 @@ export const closurePropertiesOfRationalExpressions: TopicDef = {
             ),
           ],
         ];
-        return choiceProblem({
-          prompt: t(`Which best describes $${expr}$?`, `下列哪一项最准确地描述了 $${expr}$？`),
-          options: kindOptions,
-          correct: kind,
-          solution: why[kind]![i]!,
-        });
+        return reasoned(
+          choiceProblem({
+            prompt: t(`Which best describes $${expr}$?`, `下列哪一项最准确地描述了 $${expr}$？`),
+            options: kindOptions,
+            correct: kind,
+            solution: walked(
+              [
+                [["Look at where $x$ appears", "看 $x$ 出现在哪里"], about[kind]![i]!],
+                [
+                  ["Choose the description", "选出描述"],
+                  t(
+                    `So the best description is: ${kindOptions[kind]!.en.toLowerCase()}.`,
+                    `所以最准确的描述是：${kindOptions[kind]!["zh-CN"]}。`,
+                  ),
+                ],
+              ],
+              kind === 0
+                ? t(
+                    "It fits $\\frac{p(x)}{q(x)}$ with $q(x) = 1$, so it is also a rational expression; the narrowest true description is a polynomial.",
+                    "取 $q(x) = 1$，它符合 $\\frac{p(x)}{q(x)}$，所以它也是分式；最窄的正确描述是多项式。",
+                  )
+                : kind === 1
+                  ? t(
+                      "It fits $\\frac{p(x)}{q(x)}$ only with $q(x)$ of degree at least $1$, so it is a rational expression and not a polynomial.",
+                      "只有当 $q(x)$ 至少是一次时它才符合 $\\frac{p(x)}{q(x)}$，所以它是分式而不是多项式。",
+                    )
+                  : t(
+                      "No choice of polynomials $p$ and $q$ makes $\\frac{p(x)}{q(x)}$ equal to it for every $x$.",
+                      "无论怎样选多项式 $p$ 和 $q$，$\\frac{p(x)}{q(x)}$ 都不能对每个 $x$ 都等于它。",
+                    ),
+            ),
+          }),
+          kind === 0
+            ? [
+                why(
+                  kindOptions[1]!,
+                  "No $x$ is left in a denominator, so it is a polynomial, and a polynomial is the more precise description.",
+                  "分母中没有 $x$，所以它是多项式，多项式是更准确的描述。",
+                ),
+                why(
+                  kindOptions[2]!,
+                  "Every polynomial is a rational expression, over the denominator $1$.",
+                  "每个多项式都是分式，分母取 $1$。",
+                ),
+              ]
+            : kind === 1
+              ? [
+                  why(
+                    kindOptions[0]!,
+                    "The variable ends up in a denominator, which a polynomial never has.",
+                    "变量出现在分母中，而多项式的分母不含变量。",
+                  ),
+                  why(
+                    kindOptions[2]!,
+                    "It can be written as a quotient of two polynomials, so it is a rational expression.",
+                    "它能写成两个多项式之商，所以是分式。",
+                  ),
+                ]
+              : [
+                  why(
+                    kindOptions[0]!,
+                    "A polynomial has only whole-number powers of $x$; here $x$ is under a root, inside absolute value bars or in an exponent.",
+                    "多项式中 $x$ 只有整数次幂；这里 $x$ 在根号下、绝对值符号内或指数上。",
+                  ),
+                  why(
+                    kindOptions[1]!,
+                    "A rational expression is a quotient of polynomials, and no quotient of polynomials equals this expression.",
+                    "分式是多项式之商，没有哪个多项式之商等于这个式子。",
+                  ),
+                ],
+        );
       },
     },
     {
       id: "combining-into-one-rational-expression",
       title: t("Combining into one rational expression", "合并成一个分式"),
       explanation: t(
-        "The sum, difference, product and quotient (by a nonzero expression) of two rational expressions is again a rational expression: rational expressions are **closed** under all four operations. To show it, write the result as one fraction of polynomials in lowest terms.\n\nFor $r(x) = \\frac{2}{x - 1}$ and $s(x) = \\frac{3}{x + 2}$:\n\n$$r(x) + s(x) = \\frac{2(x + 2) + 3(x - 1)}{(x - 1)(x + 2)} = \\frac{5x + 1}{(x - 1)(x + 2)}$$\n\n$$r(x) \\div s(x) = \\frac{2}{x - 1} \\cdot \\frac{x + 2}{3} = \\frac{2x + 4}{3x - 3}$$",
-        "两个分式的和、差、积以及商（除以非零的式子）仍是分式：分式对四种运算都**封闭**。要说明这一点，就把结果写成一个最简的多项式之商。\n\n对 $r(x) = \\frac{2}{x - 1}$ 和 $s(x) = \\frac{3}{x + 2}$：\n\n$$r(x) + s(x) = \\frac{2(x + 2) + 3(x - 1)}{(x - 1)(x + 2)} = \\frac{5x + 1}{(x - 1)(x + 2)}$$\n\n$$r(x) \\div s(x) = \\frac{2}{x - 1} \\cdot \\frac{x + 2}{3} = \\frac{2x + 4}{3x - 3}$$",
+        "The sum, difference, product and quotient (by a nonzero expression) of two rational expressions is again a rational expression: rational expressions are **closed** under all four operations. To show it, write the result as one fraction of polynomials in lowest terms.\n\nFor $r(x) = \\frac{2}{x - 1}$ and $s(x) = \\frac{3}{x + 2}$:\n\n$$r(x) + s(x) = \\frac{2(x + 2) + 3(x - 1)}{(x - 1)(x + 2)} = \\frac{5x + 1}{(x - 1)(x + 2)}$$\n\n$$r(x) \\div s(x) = \\frac{2}{x - 1} \\cdot \\frac{x + 2}{3} = \\frac{2x + 4}{3x - 3}$$\n\nFor $r(x) = \\frac{1}{x - 2}$ and $s(x) = \\frac{4}{x + 1}$:\n\n$$r(x) - s(x) = \\frac{(x + 1) - 4(x - 2)}{(x - 2)(x + 1)} = \\frac{-3x + 9}{(x - 2)(x + 1)}$$\n\nCheck at $x = 0$: $-\\frac{1}{2} - 4 = -\\frac{9}{2}$, and $\\frac{9}{-2} = -\\frac{9}{2}$.\n\n> **Watch out.** In a difference the minus sign multiplies the whole of $4(x - 2)$, giving $-4x + 8$, not $-4x - 8$. In a quotient, flip the second fraction, not the first.",
+        "两个分式的和、差、积以及商（除以非零的式子）仍是分式：分式对四种运算都**封闭**。要说明这一点，就把结果写成一个最简的多项式之商。\n\n对 $r(x) = \\frac{2}{x - 1}$ 和 $s(x) = \\frac{3}{x + 2}$：\n\n$$r(x) + s(x) = \\frac{2(x + 2) + 3(x - 1)}{(x - 1)(x + 2)} = \\frac{5x + 1}{(x - 1)(x + 2)}$$\n\n$$r(x) \\div s(x) = \\frac{2}{x - 1} \\cdot \\frac{x + 2}{3} = \\frac{2x + 4}{3x - 3}$$\n\n对 $r(x) = \\frac{1}{x - 2}$ 和 $s(x) = \\frac{4}{x + 1}$：\n\n$$r(x) - s(x) = \\frac{(x + 1) - 4(x - 2)}{(x - 2)(x + 1)} = \\frac{-3x + 9}{(x - 2)(x + 1)}$$\n\n在 $x = 0$ 处检验：$-\\frac{1}{2} - 4 = -\\frac{9}{2}$，而 $\\frac{9}{-2} = -\\frac{9}{2}$。\n\n> **注意。** 做减法时负号要乘整个 $4(x - 2)$，得到 $-4x + 8$，而不是 $-4x - 8$。做除法时把第二个分式倒过来，而不是第一个。",
       ),
       keyPrerequisites: ["adding-rational-expressions-with-unlike-denominators", "dividing-rational-expressions"],
       generate(rng) {
@@ -605,6 +841,14 @@ export const closurePropertiesOfRationalExpressions: TopicDef = {
           `Let $r(x) = ${sfrac(a, bare(p))}$ and $s(x) = ${sfrac(b, bare(q))}$. Write $r(x) ${op} s(x)$ as a single rational expression in lowest terms.`,
           `设 $r(x) = ${sfrac(a, bare(p))}$，$s(x) = ${sfrac(b, bare(q))}$。把 $r(x) ${op} s(x)$ 写成一个最简分式。`,
         );
+        const x0 = [0, 1, 2, 3].find((v) => v !== p && v !== q)!;
+        const [rv, sv] = [Q.of(a, x0 - p), Q.of(b, x0 - q)];
+        const value = op === "+" ? rv.add(sv) : op === "-" ? rv.sub(sv) : op === "\\cdot" ? rv.mul(sv) : rv.div(sv);
+        const atX0 = (top: number, bottom: number) =>
+          t(
+            `At $x = ${x0}$ both give the same value:${steps(`r(${x0}) ${op} s(${x0}) = ${num(rv)} ${op} ${paren(sv)} = ${num(value)}`, `${frac(String(top), String(bottom))} = ${num(value)}`)}The first line is the original pair of fractions, the second the answer.`,
+            `取 $x = ${x0}$，两边的值相同：${steps(`r(${x0}) ${op} s(${x0}) = ${num(rv)} ${op} ${paren(sv)} = ${num(value)}`, `${frac(String(top), String(bottom))} = ${num(value)}`)}第一行是原来的两个分式，第二行是答案。`,
+          );
         if (op === "+" || op === "-") {
           const bb = op === "+" ? b : -b;
           const top = [-(a * q + bb * p), a + bb];
@@ -614,9 +858,22 @@ export const closurePropertiesOfRationalExpressions: TopicDef = {
             answer,
             lowest: true,
             wrong: [frac(String(a + bb), pl([-(p + q), 2])), frac(pl([-(a * p + bb * q), a + bb]), den), frac(String(a + bb), den)],
-            solution: t(
-              `Use the common denominator $${den}$:${steps(`${frac(`${coefFac(a, q)} ${sgn(bb)} ${coefFac(Math.abs(bb), p)}`, den)} = ${answer}`)}`,
-              `通分，公分母为 $${den}$：${steps(`${frac(`${coefFac(a, q)} ${sgn(bb)} ${coefFac(Math.abs(bb), p)}`, den)} = ${answer}`)}`,
+            solution: walked(
+              [
+                [
+                  ["Find a common denominator", "找公分母"],
+                  t(
+                    `The denominators $${bare(p)}$ and $${bare(q)}$ have no common factor, so use their product $${den}$.`,
+                    `分母 $${bare(p)}$ 和 $${bare(q)}$ 没有公因式，所以用它们的积 $${den}$。`,
+                  ),
+                ],
+                [
+                  ["Combine the numerators", "合并分子"],
+                  t("Rewrite each fraction over it and collect the numerator:", "把每个分式化成这个分母，再合并分子："),
+                  [`${frac(`${coefFac(a, q)} ${sgn(bb)} ${coefFac(Math.abs(bb), p)}`, den)} = ${answer}`],
+                ],
+              ],
+              atX0(at(top, x0), (x0 - p) * (x0 - q)),
             ),
           });
         }
@@ -627,9 +884,22 @@ export const closurePropertiesOfRationalExpressions: TopicDef = {
             answer,
             lowest: true,
             wrong: [sfrac(a * b, pl([p * q, 0, 1])), sfrac(a + b, den), sfrac(-a * b, den)],
-            solution: t(
-              `Multiply the numerators and the denominators:${steps(`${sfrac(a, bare(p))} \\cdot ${sfrac(b, bare(q))} = ${answer}`)}`,
-              `分子乘分子，分母乘分母：${steps(`${sfrac(a, bare(p))} \\cdot ${sfrac(b, bare(q))} = ${answer}`)}`,
+            solution: walked(
+              [
+                [
+                  ["Multiply the numerators", "分子相乘"],
+                  t(`$${a} \\cdot ${paren(b)} = ${a * b}$.`, `$${a} \\cdot ${paren(b)} = ${a * b}$。`),
+                ],
+                [
+                  ["Multiply the denominators", "分母相乘"],
+                  t(
+                    "No factor of the numerator cancels with the denominator, so this is in lowest terms:",
+                    "分子没有因式能与分母约去，所以这已是最简形式：",
+                  ),
+                  [`${sfrac(a, bare(p))} \\cdot ${b < 0 ? `\\left(${sfrac(b, bare(q))}\\right)` : sfrac(b, bare(q))} = ${answer}`],
+                ],
+              ],
+              atX0(a * b, (x0 - p) * (x0 - q)),
             ),
           });
         }
@@ -641,9 +911,22 @@ export const closurePropertiesOfRationalExpressions: TopicDef = {
           answer,
           lowest: true,
           wrong: [frac(linear(b1, -b1 * p), linear(a1, -a1 * q)), frac(`${a}${fac(q)}`, `${b}${fac(p)}`), sfrac(a * b, den)],
-          solution: t(
-            `Multiply by the reciprocal of $s(x)$ and cancel common number factors:${steps(`${sfrac(a, bare(p))} \\cdot ${frac(bare(q), String(b))} = ${answer}`)}`,
-            `乘以 $s(x)$ 的倒数，再约去公共的数因数：${steps(`${sfrac(a, bare(p))} \\cdot ${frac(bare(q), String(b))} = ${answer}`)}`,
+          solution: walked(
+            [
+              [
+                ["Flip the divisor", "把除式倒过来"],
+                t(
+                  `Dividing by $s(x)$ is multiplying by its reciprocal $${frac(bare(q), String(b))}$.`,
+                  `除以 $s(x)$ 就是乘以它的倒数 $${frac(bare(q), String(b))}$。`,
+                ),
+              ],
+              [
+                ["Multiply and cancel", "相乘并约分"],
+                t("Multiply, then cancel common number factors:", "相乘，再约去公共的数因数："),
+                [`${sfrac(a, bare(p))} \\cdot ${frac(bare(q), String(b))} = ${answer}`],
+              ],
+            ],
+            atX0(a1 * (x0 - q), b1 * (x0 - p)),
           ),
         });
       },
@@ -652,8 +935,8 @@ export const closurePropertiesOfRationalExpressions: TopicDef = {
       id: "where-the-result-is-undefined",
       title: t("Where the result is not defined", "结果无意义的值"),
       explanation: t(
-        "A combination of $r(x)$ and $s(x)$ is defined only where both $r$ and $s$ are. A quotient $r(x) \\div s(x)$ also needs $s(x) \\neq 0$, so the zeros of the numerator of $s$ are excluded too.\n\nFor $r(x) = \\frac{x + 4}{x - 1}$ and $s(x) = \\frac{x - 3}{x + 2}$:\n\n- $r(x) \\cdot s(x)$ is not defined at $x = 1$ and $x = -2$;\n- $r(x) \\div s(x)$ is not defined at $x = 1$, $x = -2$ and $x = 3$, where $s(x) = 0$.",
-        "$r(x)$ 与 $s(x)$ 的运算结果只在 $r$ 和 $s$ 都有意义的地方有意义。商 $r(x) \\div s(x)$ 还要求 $s(x) \\neq 0$，所以 $s$ 的分子的零点也要排除。\n\n对 $r(x) = \\frac{x + 4}{x - 1}$ 和 $s(x) = \\frac{x - 3}{x + 2}$：\n\n- $r(x) \\cdot s(x)$ 在 $x = 1$ 和 $x = -2$ 处无意义；\n- $r(x) \\div s(x)$ 在 $x = 1$、$x = -2$ 以及使 $s(x) = 0$ 的 $x = 3$ 处无意义。",
+        "A combination of $r(x)$ and $s(x)$ is defined only where both $r$ and $s$ are. A quotient $r(x) \\div s(x)$ also needs $s(x) \\neq 0$, so the zeros of the numerator of $s$ are excluded too.\n\nFor $r(x) = \\frac{x + 4}{x - 1}$ and $s(x) = \\frac{x - 3}{x + 2}$:\n\n- $r(x) \\cdot s(x)$ is not defined at $x = 1$ and $x = -2$;\n- $r(x) \\div s(x)$ is not defined at $x = 1$, $x = -2$ and $x = 3$, where $s(x) = 0$.\n\nFor $r(x) = \\frac{x}{x + 3}$ and $s(x) = \\frac{x + 1}{x - 5}$, the quotient $r(x) \\div s(x)$ is not defined at $x = -3$, $x = 5$ and $x = -1$. Check: $s(-1) = \\frac{0}{-6} = 0$, and dividing by $0$ is not defined.\n\n> **Watch out.** Only a quotient excludes the zeros of the numerator of $s$; a product $r(x) \\cdot s(x)$ is defined there. The zeros of the numerator of $r$ are never excluded.",
+        "$r(x)$ 与 $s(x)$ 的运算结果只在 $r$ 和 $s$ 都有意义的地方有意义。商 $r(x) \\div s(x)$ 还要求 $s(x) \\neq 0$，所以 $s$ 的分子的零点也要排除。\n\n对 $r(x) = \\frac{x + 4}{x - 1}$ 和 $s(x) = \\frac{x - 3}{x + 2}$：\n\n- $r(x) \\cdot s(x)$ 在 $x = 1$ 和 $x = -2$ 处无意义；\n- $r(x) \\div s(x)$ 在 $x = 1$、$x = -2$ 以及使 $s(x) = 0$ 的 $x = 3$ 处无意义。\n\n对 $r(x) = \\frac{x}{x + 3}$ 和 $s(x) = \\frac{x + 1}{x - 5}$，商 $r(x) \\div s(x)$ 在 $x = -3$、$x = 5$ 和 $x = -1$ 处无意义。检验：$s(-1) = \\frac{0}{-6} = 0$，而除以 $0$ 无意义。\n\n> **注意。** 只有商才要排除 $s$ 的分子的零点；乘积 $r(x) \\cdot s(x)$ 在那里有意义。$r$ 的分子的零点从来不用排除。",
       ),
       generate(rng) {
         const [a, b, c, d] = rng.sample(range(-7, 7), 4) as [number, number, number, number];
@@ -667,15 +950,41 @@ export const closurePropertiesOfRationalExpressions: TopicDef = {
           ),
           values: values(answer),
           wrong: divide ? [values([b, d]), values([b, c]), values([a, c])] : [values([b, d, c]), values([a, c])],
-          solution: divide
-            ? t(
-                `$r$ is not defined at $x = ${b}$ and $s$ at $x = ${d}$. Dividing by $s(x)$ also needs $s(x) \\neq 0$, which excludes $x = ${c}$. So the values are ${listText(answer)}.`,
-                `$r$ 在 $x = ${b}$ 处无意义，$s$ 在 $x = ${d}$ 处无意义。除以 $s(x)$ 还要求 $s(x) \\neq 0$，于是又排除 $x = ${c}$。所以这些值是 ${listText(answer, "、")}。`,
-              )
-            : t(
-                `$r$ is not defined at $x = ${b}$ and $s$ at $x = ${d}$; a product needs only both factors defined. So the values are ${listText(answer)}.`,
-                `$r$ 在 $x = ${b}$ 处无意义，$s$ 在 $x = ${d}$ 处无意义；乘积只要求两个因式都有意义。所以这些值是 ${listText(answer, "、")}。`,
-              ),
+          solution: walked(
+            [
+              [
+                ["Find where $r$ and $s$ are not defined", "找出 $r$、$s$ 无意义的地方"],
+                t(
+                  `$r$ is not defined at $x = ${b}$ and $s$ at $x = ${d}$, where their denominators are $0$.`,
+                  `$r$ 在 $x = ${b}$ 处无意义，$s$ 在 $x = ${d}$ 处无意义，那里它们的分母为 $0$。`,
+                ),
+              ],
+              divide
+                ? [
+                    ["Exclude the zeros of $s$", "排除 $s$ 的零点"],
+                    t(
+                      `Dividing by $s(x)$ also needs $s(x) \\neq 0$, which excludes $x = ${c}$. So the values are ${listText(answer)}.`,
+                      `除以 $s(x)$ 还要求 $s(x) \\neq 0$，于是又排除 $x = ${c}$。所以这些值是 ${listText(answer, "、")}。`,
+                    ),
+                  ]
+                : [
+                    ["Combine", "合起来"],
+                    t(
+                      `A product needs only both factors defined. So the values are ${listText(answer)}.`,
+                      `乘积只要求两个因式都有意义。所以这些值是 ${listText(answer, "、")}。`,
+                    ),
+                  ],
+            ],
+            divide
+              ? t(
+                  `$s(${c}) = ${frac("0", String(c - d))} = 0$, so $r(${c}) \\div s(${c})$ would divide by $0$.`,
+                  `$s(${c}) = ${frac("0", String(c - d))} = 0$，所以 $r(${c}) \\div s(${c})$ 要除以 $0$。`,
+                )
+              : t(
+                  `At $x = ${c}$, $s(${c}) = 0$ and $r(${c}) \\cdot 0 = 0$ is defined, so $x = ${c}$ is not excluded.`,
+                  `在 $x = ${c}$ 处，$s(${c}) = 0$，而 $r(${c}) \\cdot 0 = 0$ 有意义，所以 $x = ${c}$ 不用排除。`,
+                ),
+          ),
         });
       },
     },
@@ -712,13 +1021,33 @@ function linearCase(rng: Rng, extraneous: boolean): LinearCase {
 
 const linearCaseLatex = ({ p, q, A, B, C }: LinearCase) => `${then(sfrac(A, bare(p)), B, bare(q))} = ${sfrac(C, pl(fromRoots([p, q])))}`;
 
-/** linearCaseSteps clears the denominators of a linear case and solves. */
-function linearCaseSteps({ p, q, A, B, C, x0 }: LinearCase): string {
-  return steps(
+/** linearCaseLines are the display lines that clear the denominators of a linear case and solve. */
+function linearCaseLines({ p, q, A, B, C, x0 }: LinearCase): string[] {
+  return [
     `${coefFac(A, q)} ${sgn(B)} ${coefFac(Math.abs(B), p)} = ${C}`,
     `${linear(A + B, -A * q - B * p)} = ${C}`,
     ...(A + B === 1 ? [] : [`${linear(A + B, 0)} = ${C + A * q + B * p}`]),
     `x = ${x0}`,
+  ];
+}
+
+/** linearCaseSteps clears the denominators of a linear case and solves. */
+const linearCaseSteps = (c: LinearCase) => steps(...linearCaseLines(c));
+
+/** pairAt writes A/(x − p) + B/(x − q) at a number x as two signed numbers, with its value. */
+function pairAt(x: number, A: number, p: number, B: number, q: number): [string, Q] {
+  const u = Q.of(A, x - p);
+  const v = Q.of(B, x - q);
+  return [`${num(u)} ${v.sign() < 0 ? "-" : "+"} ${num(v.abs())}`, u.add(v)];
+}
+
+/** linearCheck substitutes the solution of a linear case into both sides. */
+function linearCheck({ p, q, A, B, C, x0 }: LinearCase): Text {
+  const [line, value] = pairAt(x0, A, p, B, q);
+  const lines = steps(`${line} = ${num(value)}`, `${frac(String(C), String((x0 - p) * (x0 - q)))} = ${num(value)}`);
+  return t(
+    `Substitute $x = ${x0}$ into the left side, then the right side:${lines}The two sides agree.`,
+    `把 $x = ${x0}$ 分别代入左边和右边：${lines}两边相等。`,
   );
 }
 
@@ -734,13 +1063,29 @@ export const rationalEquationsWithThreeTerms: TopicDef = {
   encompasses: [],
   xp: 14,
   standards: ["CCSS.HSA.REI.A.2"],
+  intro: t(
+    `To solve $\\frac{1}{x} + \\frac{1}{2x} = 3$, multiply every term by the least common denominator $2x$ (and keep $x \\neq 0$):
+
+$$2 + 1 = 6x \\quad\\Rightarrow\\quad x = \\frac{1}{2}$$
+
+Check: at $x = \\frac{1}{2}$ the left side is $2 + 1 = 3$.
+
+In this lesson we clear the fractions of a three-term equation with the least common denominator, use a factored quadratic denominator as that denominator, and reject extraneous solutions.`,
+    `解 $\\frac{1}{x} + \\frac{1}{2x} = 3$ 时，把每一项都乘以最简公分母 $2x$（并保留 $x \\neq 0$）：
+
+$$2 + 1 = 6x \\quad\\Rightarrow\\quad x = \\frac{1}{2}$$
+
+检验：$x = \\frac{1}{2}$ 时左边是 $2 + 1 = 3$。
+
+这节课我们用最简公分母消去三项方程中的分母，把分解后的二次分母用作公分母，并舍去增根。`,
+  ),
   knowledgePoints: [
     {
       id: "monomial-denominators",
       title: t("Monomial denominators", "分母是单项式"),
       explanation: t(
-        "With three terms, cross-multiplication no longer works. Instead multiply **every** term by the least common denominator (LCD), which clears all the fractions.\n\nFor $\\frac{5}{2x} + \\frac{1}{3x} = 4$, the LCD is $6x$ (and $x \\neq 0$):\n\n$$6x \\cdot \\frac{5}{2x} + 6x \\cdot \\frac{1}{3x} = 6x \\cdot 4$$\n\n$$15 + 2 = 24x \\quad\\Rightarrow\\quad x = \\frac{17}{24}$$\n\nDo not forget to multiply the term without a fraction too.",
-        "方程有三项时，交叉相乘不再适用。改为把**每一项**都乘以最简公分母，消去所有分母。\n\n对 $\\frac{5}{2x} + \\frac{1}{3x} = 4$，最简公分母是 $6x$（且 $x \\neq 0$）：\n\n$$6x \\cdot \\frac{5}{2x} + 6x \\cdot \\frac{1}{3x} = 6x \\cdot 4$$\n\n$$15 + 2 = 24x \\quad\\Rightarrow\\quad x = \\frac{17}{24}$$\n\n不要忘了不含分母的那一项也要乘。",
+        "With three terms, cross-multiplication no longer works. Instead multiply **every** term by the least common denominator (LCD), which clears all the fractions.\n\nFor $\\frac{5}{2x} + \\frac{1}{3x} = 4$, the LCD is $6x$ (and $x \\neq 0$):\n\n$$6x \\cdot \\frac{5}{2x} + 6x \\cdot \\frac{1}{3x} = 6x \\cdot 4$$\n\n$$15 + 2 = 24x \\quad\\Rightarrow\\quad x = \\frac{17}{24}$$\n\nDo not forget to multiply the term without a fraction too.\n\nFor $\\frac{3}{x} - \\frac{1}{4x} = 11$, the LCD is $4x$:\n\n$$12 - 1 = 44x \\quad\\Rightarrow\\quad x = \\frac{1}{4}$$\n\nCheck: at $x = \\frac{1}{4}$ the left side is $12 - 1 = 11$.\n\n> **Watch out.** The number on the right is a term too: multiplying by $4x$ turns $11$ into $44x$, not $11$.",
+        "方程有三项时，交叉相乘不再适用。改为把**每一项**都乘以最简公分母，消去所有分母。\n\n对 $\\frac{5}{2x} + \\frac{1}{3x} = 4$，最简公分母是 $6x$（且 $x \\neq 0$）：\n\n$$6x \\cdot \\frac{5}{2x} + 6x \\cdot \\frac{1}{3x} = 6x \\cdot 4$$\n\n$$15 + 2 = 24x \\quad\\Rightarrow\\quad x = \\frac{17}{24}$$\n\n不要忘了不含分母的那一项也要乘。\n\n对 $\\frac{3}{x} - \\frac{1}{4x} = 11$，最简公分母是 $4x$：\n\n$$12 - 1 = 44x \\quad\\Rightarrow\\quad x = \\frac{1}{4}$$\n\n检验：$x = \\frac{1}{4}$ 时左边是 $12 - 1 = 11$。\n\n> **注意。** 右边的数也是一项：乘以 $4x$ 后 $11$ 变成 $44x$，而不是 $11$。",
       ),
       generate(rng) {
         for (;;) {
@@ -755,14 +1100,33 @@ export const rationalEquationsWithThreeTerms: TopicDef = {
           if (top === 0) continue;
           const x = Q.of(top, c * L);
           const wrong = [Q.of(a + b, c * (m + n)), Q.of(c * L, top), Q.of(a * n + b * m, c)];
+          const u = Q.of(a, m).div(x);
+          const v = Q.of(b, n).div(x);
           return numberProblem({
             prompt: t(`Solve $${then(sfrac(a, mx(m)), b, mx(n))} = ${c}$.`, `解方程 $${then(sfrac(a, mx(m)), b, mx(n))} = ${c}$。`),
             answer: x,
             solveFor: "x",
             wrong,
-            solution: t(
-              `The LCD is $${mx(L)}$, and $x \\neq 0$. Multiply every term by $${mx(L)}$:${steps(`${a * (L / m)} ${sgn(b * (L / n))} ${Math.abs(b * (L / n))} = ${c * L}x`, `${top} = ${c * L}x`, `x = ${num(x)}`)}`,
-              `最简公分母是 $${mx(L)}$，且 $x \\neq 0$。每一项都乘以 $${mx(L)}$：${steps(`${a * (L / m)} ${sgn(b * (L / n))} ${Math.abs(b * (L / n))} = ${c * L}x`, `${top} = ${c * L}x`, `x = ${num(x)}`)}`,
+            solution: walked(
+              [
+                [
+                  ["Find the LCD", "找最简公分母"],
+                  t(
+                    `The LCD of $${mx(m)}$ and $${mx(n)}$ is $${mx(L)}$, and $x \\neq 0$.`,
+                    `$${mx(m)}$ 和 $${mx(n)}$ 的最简公分母是 $${mx(L)}$，且 $x \\neq 0$。`,
+                  ),
+                ],
+                [
+                  ["Clear the fractions", "去分母"],
+                  t(`Multiply every term by $${mx(L)}$:`, `每一项都乘以 $${mx(L)}$：`),
+                  [`${a * (L / m)} ${sgn(b * (L / n))} ${Math.abs(b * (L / n))} = ${c * L}x`, `${top} = ${c * L}x`],
+                ],
+                [["Solve", "求解"], t(`Divide by $${c * L}$:`, `两边除以 $${c * L}$：`), [`x = ${num(x)}`]],
+              ],
+              t(
+                `Put the solution into the two fractions:${steps(`${num(u)} ${v.sign() < 0 ? "-" : "+"} ${num(v.abs())} = ${c}`)}which is the right side.`,
+                `把解代入两个分式：${steps(`${num(u)} ${v.sign() < 0 ? "-" : "+"} ${num(v.abs())} = ${c}`)}正是右边。`,
+              ),
             ),
           });
         }
@@ -772,8 +1136,8 @@ export const rationalEquationsWithThreeTerms: TopicDef = {
       id: "a-product-as-the-common-denominator",
       title: t("A product as the common denominator", "以乘积为公分母"),
       explanation: t(
-        "When one denominator is a quadratic, factor it first: it is often the product of the other two denominators, and then it is the LCD.\n\n$$\\frac{2}{x - 1} + \\frac{3}{x + 2} = \\frac{9}{x^{2} + x - 2}, \\qquad x^{2} + x - 2 = (x - 1)(x + 2)$$\n\nSo $x \\neq 1$ and $x \\neq -2$. Multiply every term by $(x - 1)(x + 2)$:\n\n$$2(x + 2) + 3(x - 1) = 9 \\quad\\Rightarrow\\quad 5x + 1 = 9 \\quad\\Rightarrow\\quad x = \\frac{8}{5}$$",
-        "如果有一个分母是二次式，先把它因式分解：它常常就是另两个分母的乘积，也就是最简公分母。\n\n$$\\frac{2}{x - 1} + \\frac{3}{x + 2} = \\frac{9}{x^{2} + x - 2}, \\qquad x^{2} + x - 2 = (x - 1)(x + 2)$$\n\n所以 $x \\neq 1$ 且 $x \\neq -2$。每一项都乘以 $(x - 1)(x + 2)$：\n\n$$2(x + 2) + 3(x - 1) = 9 \\quad\\Rightarrow\\quad 5x + 1 = 9 \\quad\\Rightarrow\\quad x = \\frac{8}{5}$$",
+        "When one denominator is a quadratic, factor it first: it is often the product of the other two denominators, and then it is the LCD.\n\n$$\\frac{2}{x - 1} + \\frac{3}{x + 2} = \\frac{9}{x^{2} + x - 2}, \\qquad x^{2} + x - 2 = (x - 1)(x + 2)$$\n\nSo $x \\neq 1$ and $x \\neq -2$. Multiply every term by $(x - 1)(x + 2)$:\n\n$$2(x + 2) + 3(x - 1) = 9 \\quad\\Rightarrow\\quad 5x + 1 = 9 \\quad\\Rightarrow\\quad x = \\frac{8}{5}$$\n\nFor $\\frac{1}{x - 3} + \\frac{2}{x + 3} = \\frac{12}{x^{2} - 9}$, the denominator $x^{2} - 9 = (x - 3)(x + 3)$ is the LCD:\n\n$$(x + 3) + 2(x - 3) = 12 \\quad\\Rightarrow\\quad 3x - 3 = 12 \\quad\\Rightarrow\\quad x = 5$$\n\nCheck: at $x = 5$ the left side is $\\frac{1}{2} + \\frac{1}{4} = \\frac{3}{4}$ and the right side is $\\frac{12}{16} = \\frac{3}{4}$.\n\n> **Watch out.** Multiply the bracket out in full: $2(x - 3) = 2x - 6$, not $2x - 3$. And check the factoring first; if the quadratic is not the product of the other two denominators, the LCD is larger.",
+        "如果有一个分母是二次式，先把它因式分解：它常常就是另两个分母的乘积，也就是最简公分母。\n\n$$\\frac{2}{x - 1} + \\frac{3}{x + 2} = \\frac{9}{x^{2} + x - 2}, \\qquad x^{2} + x - 2 = (x - 1)(x + 2)$$\n\n所以 $x \\neq 1$ 且 $x \\neq -2$。每一项都乘以 $(x - 1)(x + 2)$：\n\n$$2(x + 2) + 3(x - 1) = 9 \\quad\\Rightarrow\\quad 5x + 1 = 9 \\quad\\Rightarrow\\quad x = \\frac{8}{5}$$\n\n对 $\\frac{1}{x - 3} + \\frac{2}{x + 3} = \\frac{12}{x^{2} - 9}$，分母 $x^{2} - 9 = (x - 3)(x + 3)$ 就是最简公分母：\n\n$$(x + 3) + 2(x - 3) = 12 \\quad\\Rightarrow\\quad 3x - 3 = 12 \\quad\\Rightarrow\\quad x = 5$$\n\n检验：$x = 5$ 时左边是 $\\frac{1}{2} + \\frac{1}{4} = \\frac{3}{4}$，右边是 $\\frac{12}{16} = \\frac{3}{4}$。\n\n> **注意。** 括号要完整展开：$2(x - 3) = 2x - 6$，而不是 $2x - 3$。还要先检查因式分解；如果二次式不是另两个分母的乘积，最简公分母会更大。",
       ),
       generate(rng) {
         const c = linearCase(rng, false);
@@ -782,9 +1146,24 @@ export const rationalEquationsWithThreeTerms: TopicDef = {
           prompt: t(`Solve $${linearCaseLatex(c)}$.`, `解方程 $${linearCaseLatex(c)}$。`),
           values: [String(x0)],
           wrong: [[num(Q.of(C + A * q - B * p, A + B))], [num(Q.of(C + A * p + B * q, A + B))], [String(x0), String(p)]],
-          solution: t(
-            `Factor: $${pl(fromRoots([p, q]))} = ${prodL(simple([p, q]))}$, so $x \\neq ${p}$ and $x \\neq ${q}$. Multiply every term by $${prodL(simple([p, q]))}$:${linearCaseSteps(c)}This is not an excluded value, so the solution is $x = ${x0}$.`,
-            `因式分解：$${pl(fromRoots([p, q]))} = ${prodL(simple([p, q]))}$，所以 $x \\neq ${p}$ 且 $x \\neq ${q}$。每一项都乘以 $${prodL(simple([p, q]))}$：${linearCaseSteps(c)}它不是被排除的值，所以解是 $x = ${x0}$。`,
+          solution: walked(
+            [
+              [
+                ["Factor the quadratic denominator", "分解二次分母"],
+                t(
+                  `$${pl(fromRoots([p, q]))} = ${prodL(simple([p, q]))}$, so $x \\neq ${p}$ and $x \\neq ${q}$.`,
+                  `$${pl(fromRoots([p, q]))} = ${prodL(simple([p, q]))}$，所以 $x \\neq ${p}$ 且 $x \\neq ${q}$。`,
+                ),
+              ],
+              [
+                ["Clear the fractions and solve", "去分母并求解"],
+                t(
+                  `Multiply every term by $${prodL(simple([p, q]))}$:${linearCaseSteps(c)}This is not an excluded value, so the solution is $x = ${x0}$.`,
+                  `每一项都乘以 $${prodL(simple([p, q]))}$：${linearCaseSteps(c)}它不是被排除的值，所以解是 $x = ${x0}$。`,
+                ),
+              ],
+            ],
+            linearCheck(c),
           ),
         });
       },
@@ -793,8 +1172,8 @@ export const rationalEquationsWithThreeTerms: TopicDef = {
       id: "rejecting-extraneous-solutions",
       title: t("Rejecting extraneous solutions", "舍去增根"),
       explanation: t(
-        "Multiplying by an expression that can be $0$ may create a solution of the new equation that is not a solution of the original one: an **extraneous solution**. Always compare the result with the excluded values.\n\n$$\\frac{1}{x - 3} + \\frac{2}{x + 1} = \\frac{4}{x^{2} - 2x - 3} \\qquad (x \\neq 3,\\ x \\neq -1)$$\n\n$$(x + 1) + 2(x - 3) = 4 \\quad\\Rightarrow\\quad 3x - 5 = 4 \\quad\\Rightarrow\\quad x = 3$$\n\nBut $x = 3$ is excluded, so the equation has **no solution**.",
-        "乘以可能为 $0$ 的式子，可能使新方程多出原方程没有的解，即**增根**。一定要把结果与被排除的值比较。\n\n$$\\frac{1}{x - 3} + \\frac{2}{x + 1} = \\frac{4}{x^{2} - 2x - 3} \\qquad (x \\neq 3,\\ x \\neq -1)$$\n\n$$(x + 1) + 2(x - 3) = 4 \\quad\\Rightarrow\\quad 3x - 5 = 4 \\quad\\Rightarrow\\quad x = 3$$\n\n但 $x = 3$ 是被排除的值，所以方程**无解**。",
+        "Multiplying by an expression that can be $0$ may create a solution of the new equation that is not a solution of the original one: an **extraneous solution**. Always compare the result with the excluded values.\n\n$$\\frac{1}{x - 3} + \\frac{2}{x + 1} = \\frac{4}{x^{2} - 2x - 3} \\qquad (x \\neq 3,\\ x \\neq -1)$$\n\n$$(x + 1) + 2(x - 3) = 4 \\quad\\Rightarrow\\quad 3x - 5 = 4 \\quad\\Rightarrow\\quad x = 3$$\n\nBut $x = 3$ is excluded, so the equation has **no solution**.\n\nFor $\\frac{2}{x - 1} + \\frac{1}{x + 2} = \\frac{6}{x^{2} + x - 2}$, with $x \\neq 1$ and $x \\neq -2$:\n\n$$2(x + 2) + (x - 1) = 6 \\quad\\Rightarrow\\quad 3x + 3 = 6 \\quad\\Rightarrow\\quad x = 1$$\n\nCheck: at $x = 1$ the term $\\frac{2}{x - 1}$ has denominator $0$, so $x = 1$ is extraneous and there is no solution.\n\n> **Watch out.** Write the excluded values down before you clear the fractions, and compare at the end. A value that is not excluded is a real solution; do not throw it away.",
+        "乘以可能为 $0$ 的式子，可能使新方程多出原方程没有的解，即**增根**。一定要把结果与被排除的值比较。\n\n$$\\frac{1}{x - 3} + \\frac{2}{x + 1} = \\frac{4}{x^{2} - 2x - 3} \\qquad (x \\neq 3,\\ x \\neq -1)$$\n\n$$(x + 1) + 2(x - 3) = 4 \\quad\\Rightarrow\\quad 3x - 5 = 4 \\quad\\Rightarrow\\quad x = 3$$\n\n但 $x = 3$ 是被排除的值，所以方程**无解**。\n\n对 $\\frac{2}{x - 1} + \\frac{1}{x + 2} = \\frac{6}{x^{2} + x - 2}$，其中 $x \\neq 1$ 且 $x \\neq -2$：\n\n$$2(x + 2) + (x - 1) = 6 \\quad\\Rightarrow\\quad 3x + 3 = 6 \\quad\\Rightarrow\\quad x = 1$$\n\n检验：$x = 1$ 时 $\\frac{2}{x - 1}$ 的分母为 $0$，所以 $x = 1$ 是增根，方程无解。\n\n> **注意。** 去分母之前先写下被排除的值，最后再比较。不是被排除的值就是真正的解，不要把它舍掉。",
       ),
       generate(rng) {
         const extraneous = rng.bool();
@@ -807,9 +1186,33 @@ export const rationalEquationsWithThreeTerms: TopicDef = {
           ),
           values: extraneous ? [] : [String(x0)],
           wrong: extraneous ? [[String(x0)]] : [[], [String(x0), String(p)]],
-          solution: t(
-            `The excluded values are $x = ${p}$ and $x = ${q}$. Multiply every term by $${prodL(simple([p, q]))}$:${linearCaseSteps(c)}${extraneous ? `But $x = ${x0}$ is excluded, so it is extraneous and the equation has no solution.` : `This is not excluded, so the solution is $x = ${x0}$.`}`,
-            `被排除的值是 $x = ${p}$ 和 $x = ${q}$。每一项都乘以 $${prodL(simple([p, q]))}$：${linearCaseSteps(c)}${extraneous ? `但 $x = ${x0}$ 是被排除的值，是增根，所以方程无解。` : `它不是被排除的值，所以解是 $x = ${x0}$。`}`,
+          solution: walked(
+            [
+              [
+                ["List the excluded values", "列出被排除的值"],
+                t(`The excluded values are $x = ${p}$ and $x = ${q}$.`, `被排除的值是 $x = ${p}$ 和 $x = ${q}$。`),
+              ],
+              [
+                ["Clear the fractions and solve", "去分母并求解"],
+                t(`Multiply every term by $${prodL(simple([p, q]))}$:`, `每一项都乘以 $${prodL(simple([p, q]))}$：`),
+                linearCaseLines(c),
+              ],
+              [
+                ["Compare with the excluded values", "与被排除的值比较"],
+                extraneous
+                  ? t(
+                      `But $x = ${x0}$ is excluded, so it is extraneous and the equation has no solution.`,
+                      `但 $x = ${x0}$ 是被排除的值，是增根，所以方程无解。`,
+                    )
+                  : t(`This is not excluded, so the solution is $x = ${x0}$.`, `它不是被排除的值，所以解是 $x = ${x0}$。`),
+              ],
+            ],
+            extraneous
+              ? t(
+                  `At $x = ${x0}$ the denominator $${bare(x0)}$ is $${x0} ${sgn(-x0)} ${Math.abs(x0)} = 0$, so the original equation is not defined there.`,
+                  `$x = ${x0}$ 时分母 $${bare(x0)}$ 等于 $${x0} ${sgn(-x0)} ${Math.abs(x0)} = 0$，原方程在那里无意义。`,
+                )
+              : linearCheck(c),
           ),
         });
       },
@@ -868,13 +1271,29 @@ export const advancedRationalEquations: TopicDef = {
   ],
   xp: 15,
   standards: ["CCSS.HSA.REI.A.2"],
+  intro: t(
+    `Multiplying $x + \\frac{6}{x} = 5$ by $x$ (with $x \\neq 0$) turns the lone $x$ into $x^{2}$, so the equation becomes quadratic:
+
+$$x^{2} + 6 = 5x \\quad\\Rightarrow\\quad x^{2} - 5x + 6 = 0 \\quad\\Rightarrow\\quad (x - 2)(x - 3) = 0$$
+
+Check: $2 + \\frac{6}{2} = 5$ and $3 + \\frac{6}{3} = 5$.
+
+In this lesson we solve rational equations that become quadratic after clearing denominators: two fractions equal to a number, a term without a denominator, and an equation with one extraneous root.`,
+    `把 $x + \\frac{6}{x} = 5$ 乘以 $x$（$x \\neq 0$），单独的 $x$ 变成 $x^{2}$，方程就成了二次方程：
+
+$$x^{2} + 6 = 5x \\quad\\Rightarrow\\quad x^{2} - 5x + 6 = 0 \\quad\\Rightarrow\\quad (x - 2)(x - 3) = 0$$
+
+检验：$2 + \\frac{6}{2} = 5$，$3 + \\frac{6}{3} = 5$。
+
+这节课我们解去分母后化为二次方程的分式方程：两个分式之和等于一个数、含不带分母的项，以及有一个增根的方程。`,
+  ),
   knowledgePoints: [
     {
       id: "two-fractions-equal-to-a-number",
       title: t("Two fractions equal to a number", "两个分式之和等于一个数"),
       explanation: t(
-        "Clearing the denominators of $\\frac{A}{x - p} + \\frac{B}{x - q} = C$ multiplies the constant $C$ by $(x - p)(x - q)$, which gives a quadratic equation. Collect everything on one side and factor.\n\n$$\\frac{3}{x - 1} - \\frac{2}{x + 1} = 1 \\qquad (x \\neq \\pm 1)$$\n\n$$3(x + 1) - 2(x - 1) = (x - 1)(x + 1)$$\n\n$$x + 5 = x^{2} - 1 \\quad\\Rightarrow\\quad x^{2} - x - 6 = 0 \\quad\\Rightarrow\\quad (x - 3)(x + 2) = 0$$\n\nSo $x = 3$ or $x = -2$. Neither is excluded, so both are solutions.",
-        "对 $\\frac{A}{x - p} + \\frac{B}{x - q} = C$ 去分母时，常数 $C$ 要乘以 $(x - p)(x - q)$，于是得到二次方程。把所有项移到一边再因式分解。\n\n$$\\frac{3}{x - 1} - \\frac{2}{x + 1} = 1 \\qquad (x \\neq \\pm 1)$$\n\n$$3(x + 1) - 2(x - 1) = (x - 1)(x + 1)$$\n\n$$x + 5 = x^{2} - 1 \\quad\\Rightarrow\\quad x^{2} - x - 6 = 0 \\quad\\Rightarrow\\quad (x - 3)(x + 2) = 0$$\n\n所以 $x = 3$ 或 $x = -2$。两者都不是被排除的值，所以都是解。",
+        "Clearing the denominators of $\\frac{A}{x - p} + \\frac{B}{x - q} = C$ multiplies the constant $C$ by $(x - p)(x - q)$, which gives a quadratic equation. Collect everything on one side and factor.\n\n$$\\frac{3}{x - 1} - \\frac{2}{x + 1} = 1 \\qquad (x \\neq \\pm 1)$$\n\n$$3(x + 1) - 2(x - 1) = (x - 1)(x + 1)$$\n\n$$x + 5 = x^{2} - 1 \\quad\\Rightarrow\\quad x^{2} - x - 6 = 0 \\quad\\Rightarrow\\quad (x - 3)(x + 2) = 0$$\n\nSo $x = 3$ or $x = -2$. Neither is excluded, so both are solutions.\n\nFor $\\frac{2}{x} + \\frac{1}{x - 2} = 1$, with $x \\neq 0$ and $x \\neq 2$:\n\n$$2(x - 2) + x = x(x - 2) \\quad\\Rightarrow\\quad x^{2} - 5x + 4 = 0 \\quad\\Rightarrow\\quad (x - 1)(x - 4) = 0$$\n\nCheck: at $x = 4$ the left side is $\\frac{1}{2} + \\frac{1}{2} = 1$; at $x = 1$ it is $2 - 1 = 1$.\n\n> **Watch out.** The number on the right is multiplied by the whole LCD: $1$ becomes $x(x - 2)$, not $1$. Then compare both roots with the excluded values.",
+        "对 $\\frac{A}{x - p} + \\frac{B}{x - q} = C$ 去分母时，常数 $C$ 要乘以 $(x - p)(x - q)$，于是得到二次方程。把所有项移到一边再因式分解。\n\n$$\\frac{3}{x - 1} - \\frac{2}{x + 1} = 1 \\qquad (x \\neq \\pm 1)$$\n\n$$3(x + 1) - 2(x - 1) = (x - 1)(x + 1)$$\n\n$$x + 5 = x^{2} - 1 \\quad\\Rightarrow\\quad x^{2} - x - 6 = 0 \\quad\\Rightarrow\\quad (x - 3)(x + 2) = 0$$\n\n所以 $x = 3$ 或 $x = -2$。两者都不是被排除的值，所以都是解。\n\n对 $\\frac{2}{x} + \\frac{1}{x - 2} = 1$，其中 $x \\neq 0$ 且 $x \\neq 2$：\n\n$$2(x - 2) + x = x(x - 2) \\quad\\Rightarrow\\quad x^{2} - 5x + 4 = 0 \\quad\\Rightarrow\\quad (x - 1)(x - 4) = 0$$\n\n检验：$x = 4$ 时左边是 $\\frac{1}{2} + \\frac{1}{2} = 1$；$x = 1$ 时是 $2 - 1 = 1$。\n\n> **注意。** 右边的数要乘以整个最简公分母：$1$ 变成 $x(x - 2)$，而不是 $1$。然后把两个根都与被排除的值比较。",
       ),
       generate(rng) {
         const c = quadCase(rng);
@@ -886,9 +1305,26 @@ export const advancedRationalEquations: TopicDef = {
           prompt: t(`Solve $${then(sfrac(A, bare(p)), B, bare(q))} = ${C}$.`, `解方程 $${then(sfrac(A, bare(p)), B, bare(q))} = ${C}$。`),
           values: values([r1, r2]),
           wrong: [values([-r1, -r2]), values([r1]), values([r1, r2, p])],
-          solution: t(
-            `Here $x \\neq ${p}$ and $x \\neq ${q}$. Multiply every term by $${prodL(simple([p, q]))}$, then collect the terms on one side:${steps(`${coefFac(A, q)} ${sgn(B)} ${coefFac(Math.abs(B), p)} = ${coefFac(C, p)}${fac(q)}`, `${pl(std)} = 0`, `${front(Math.abs(C))}${fac(r1)}${fac(r2)} = 0`)}Neither root is excluded, so $x = ${r1}$ or $x = ${r2}$.`,
-            `这里 $x \\neq ${p}$ 且 $x \\neq ${q}$。每一项都乘以 $${prodL(simple([p, q]))}$，再把各项移到一边：${steps(`${coefFac(A, q)} ${sgn(B)} ${coefFac(Math.abs(B), p)} = ${coefFac(C, p)}${fac(q)}`, `${pl(std)} = 0`, `${front(Math.abs(C))}${fac(r1)}${fac(r2)} = 0`)}两个根都不是被排除的值，所以 $x = ${r1}$ 或 $x = ${r2}$。`,
+          solution: walked(
+            [
+              [
+                ["Clear the denominators", "去分母"],
+                t(
+                  `Here $x \\neq ${p}$ and $x \\neq ${q}$. Multiply every term by $${prodL(simple([p, q]))}$, then collect the terms on one side:`,
+                  `这里 $x \\neq ${p}$ 且 $x \\neq ${q}$。每一项都乘以 $${prodL(simple([p, q]))}$，再把各项移到一边：`,
+                ),
+                [`${coefFac(A, q)} ${sgn(B)} ${coefFac(Math.abs(B), p)} = ${coefFac(C, p)}${fac(q)}`, `${pl(std)} = 0`],
+              ],
+              [
+                ["Factor", "因式分解"],
+                t(`Neither root is excluded, so $x = ${r1}$ or $x = ${r2}$.`, `两个根都不是被排除的值，所以 $x = ${r1}$ 或 $x = ${r2}$。`),
+                [`${front(Math.abs(C))}${fac(r1)}${fac(r2)} = 0`],
+              ],
+            ],
+            t(
+              `At $x = ${r1}$ the left side is${steps(`${pairAt(r1, A, p, B, q)[0]} = ${num(pairAt(r1, A, p, B, q)[1])}`)}which is the right side, $${C}$.`,
+              `$x = ${r1}$ 时左边是${steps(`${pairAt(r1, A, p, B, q)[0]} = ${num(pairAt(r1, A, p, B, q)[1])}`)}正是右边的 $${C}$。`,
+            ),
           ),
         });
       },
@@ -897,8 +1333,8 @@ export const advancedRationalEquations: TopicDef = {
       id: "a-term-without-a-denominator",
       title: t("A term without a denominator", "含不带分母的项"),
       explanation: t(
-        "In $x + \\frac{A}{x - p} = C$, multiplying by $x - p$ turns the term $x$ into $x(x - p)$, so the equation becomes quadratic.\n\n$$x + \\frac{4}{x - 3} = 8 \\qquad (x \\neq 3)$$\n\n$$x(x - 3) + 4 = 8(x - 3)$$\n\n$$x^{2} - 3x + 4 = 8x - 24 \\quad\\Rightarrow\\quad x^{2} - 11x + 28 = 0 \\quad\\Rightarrow\\quad (x - 4)(x - 7) = 0$$\n\nSo $x = 4$ or $x = 7$; neither is $3$.",
-        "在 $x + \\frac{A}{x - p} = C$ 中，乘以 $x - p$ 后，$x$ 这一项变成 $x(x - p)$，方程就成了二次方程。\n\n$$x + \\frac{4}{x - 3} = 8 \\qquad (x \\neq 3)$$\n\n$$x(x - 3) + 4 = 8(x - 3)$$\n\n$$x^{2} - 3x + 4 = 8x - 24 \\quad\\Rightarrow\\quad x^{2} - 11x + 28 = 0 \\quad\\Rightarrow\\quad (x - 4)(x - 7) = 0$$\n\n所以 $x = 4$ 或 $x = 7$；两者都不是 $3$。",
+        "In $x + \\frac{A}{x - p} = C$, multiplying by $x - p$ turns the term $x$ into $x(x - p)$, so the equation becomes quadratic.\n\n$$x + \\frac{4}{x - 3} = 8 \\qquad (x \\neq 3)$$\n\n$$x(x - 3) + 4 = 8(x - 3)$$\n\n$$x^{2} - 3x + 4 = 8x - 24 \\quad\\Rightarrow\\quad x^{2} - 11x + 28 = 0 \\quad\\Rightarrow\\quad (x - 4)(x - 7) = 0$$\n\nSo $x = 4$ or $x = 7$; neither is $3$.\n\nFor $x + \\frac{2}{x - 1} = 4$, with $x \\neq 1$:\n\n$$x(x - 1) + 2 = 4(x - 1) \\quad\\Rightarrow\\quad x^{2} - 5x + 6 = 0 \\quad\\Rightarrow\\quad (x - 2)(x - 3) = 0$$\n\nCheck: $2 + \\frac{2}{1} = 4$ and $3 + \\frac{2}{2} = 4$.\n\n> **Watch out.** The lone $x$ is a term too: it becomes $x(x - 1)$, not $x$. Forgetting it leaves a linear equation and loses a root.",
+        "在 $x + \\frac{A}{x - p} = C$ 中，乘以 $x - p$ 后，$x$ 这一项变成 $x(x - p)$，方程就成了二次方程。\n\n$$x + \\frac{4}{x - 3} = 8 \\qquad (x \\neq 3)$$\n\n$$x(x - 3) + 4 = 8(x - 3)$$\n\n$$x^{2} - 3x + 4 = 8x - 24 \\quad\\Rightarrow\\quad x^{2} - 11x + 28 = 0 \\quad\\Rightarrow\\quad (x - 4)(x - 7) = 0$$\n\n所以 $x = 4$ 或 $x = 7$；两者都不是 $3$。\n\n对 $x + \\frac{2}{x - 1} = 4$，其中 $x \\neq 1$：\n\n$$x(x - 1) + 2 = 4(x - 1) \\quad\\Rightarrow\\quad x^{2} - 5x + 6 = 0 \\quad\\Rightarrow\\quad (x - 2)(x - 3) = 0$$\n\n检验：$2 + \\frac{2}{1} = 4$，$3 + \\frac{2}{2} = 4$。\n\n> **注意。** 单独的 $x$ 也是一项：它变成 $x(x - 1)$，而不是 $x$。漏乘会得到一次方程，丢掉一个根。",
       ),
       generate(rng) {
         for (;;) {
@@ -908,13 +1344,34 @@ export const advancedRationalEquations: TopicDef = {
           const A = r1 * r2 - C * p;
           if (A === 0 || Math.abs(A) > 40) continue;
           const lhs = rng.bool(0.7) ? then("x", A, bare(p)) : `${sfrac(A, bare(p))} + x`;
+          const u = Q.of(A, r1 - p);
           return solutionsProblem({
             prompt: t(`Solve $${lhs} = ${C}$.`, `解方程 $${lhs} = ${C}$。`),
             values: values([r1, r2]),
             wrong: [values([-r1, -r2]), values([r1])],
-            solution: t(
-              `Here $x \\neq ${p}$. Multiply every term by $${bare(p)}$:${steps(`${p === 0 ? "x \\cdot x" : `x${fac(p)}`} ${plus(A).trim()} = ${coefFac(C, p)}`, `${pl([A + C * p, -(p + C), 1])} = 0`, `${fac(r1)}${fac(r2)} = 0`)}Neither root is $${p}$, so $x = ${r1}$ or $x = ${r2}$.`,
-              `这里 $x \\neq ${p}$。每一项都乘以 $${bare(p)}$：${steps(`${p === 0 ? "x \\cdot x" : `x${fac(p)}`} ${plus(A).trim()} = ${coefFac(C, p)}`, `${pl([A + C * p, -(p + C), 1])} = 0`, `${fac(r1)}${fac(r2)} = 0`)}两个根都不是 $${p}$，所以 $x = ${r1}$ 或 $x = ${r2}$。`,
+            solution: walked(
+              [
+                [
+                  ["Clear the denominator", "去分母"],
+                  t(
+                    `Here $x \\neq ${p}$. Multiply every term by $${bare(p)}$, then collect the terms on one side:`,
+                    `这里 $x \\neq ${p}$。每一项都乘以 $${bare(p)}$，再把各项移到一边：`,
+                  ),
+                  [
+                    `${p === 0 ? "x \\cdot x" : `x${fac(p)}`} ${plus(A).trim()} = ${C === 0 ? "0" : coefFac(C, p)}`,
+                    `${pl([A + C * p, -(p + C), 1])} = 0`,
+                  ],
+                ],
+                [
+                  ["Factor", "因式分解"],
+                  t(`Neither root is $${p}$, so $x = ${r1}$ or $x = ${r2}$.`, `两个根都不是 $${p}$，所以 $x = ${r1}$ 或 $x = ${r2}$。`),
+                  [`${fac(r1)}${fac(r2)} = 0`],
+                ],
+              ],
+              t(
+                `At $x = ${r1}$ the left side is${steps(`${r1} ${u.sign() < 0 ? "-" : "+"} ${num(u.abs())} = ${C}`)}which is the right side.`,
+                `$x = ${r1}$ 时左边是${steps(`${r1} ${u.sign() < 0 ? "-" : "+"} ${num(u.abs())} = ${C}`)}正是右边。`,
+              ),
             ),
           });
         }
@@ -924,8 +1381,8 @@ export const advancedRationalEquations: TopicDef = {
       id: "one-extraneous-root",
       title: t("One extraneous root", "一个增根"),
       explanation: t(
-        "The quadratic you get after clearing denominators may have a root that is an excluded value. Reject it and keep the other root.\n\n$$\\frac{x}{x - 2} + \\frac{1}{x + 1} = \\frac{6}{x^{2} - x - 2} \\qquad (x \\neq 2,\\ x \\neq -1)$$\n\n$$x(x + 1) + (x - 2) = 6 \\quad\\Rightarrow\\quad x^{2} + 2x - 8 = 0 \\quad\\Rightarrow\\quad (x - 2)(x + 4) = 0$$\n\nSince $x = 2$ is excluded, it is extraneous: the only solution is $x = -4$.",
-        "去分母后得到的二次方程，可能有一个根是被排除的值。把它舍去，保留另一个根。\n\n$$\\frac{x}{x - 2} + \\frac{1}{x + 1} = \\frac{6}{x^{2} - x - 2} \\qquad (x \\neq 2,\\ x \\neq -1)$$\n\n$$x(x + 1) + (x - 2) = 6 \\quad\\Rightarrow\\quad x^{2} + 2x - 8 = 0 \\quad\\Rightarrow\\quad (x - 2)(x + 4) = 0$$\n\n因为 $x = 2$ 被排除，它是增根：唯一的解是 $x = -4$。",
+        "The quadratic you get after clearing denominators may have a root that is an excluded value. Reject it and keep the other root.\n\n$$\\frac{x}{x - 2} + \\frac{1}{x + 1} = \\frac{6}{x^{2} - x - 2} \\qquad (x \\neq 2,\\ x \\neq -1)$$\n\n$$x(x + 1) + (x - 2) = 6 \\quad\\Rightarrow\\quad x^{2} + 2x - 8 = 0 \\quad\\Rightarrow\\quad (x - 2)(x + 4) = 0$$\n\nSince $x = 2$ is excluded, it is extraneous: the only solution is $x = -4$.\n\nFor $\\frac{x}{x - 3} - \\frac{2}{x + 1} = \\frac{12}{x^{2} - 2x - 3}$, with $x \\neq 3$ and $x \\neq -1$:\n\n$$x(x + 1) - 2(x - 3) = 12 \\quad\\Rightarrow\\quad x^{2} - x - 6 = 0 \\quad\\Rightarrow\\quad (x - 3)(x + 2) = 0$$\n\nSo $x = 3$ is extraneous and $x = -2$ is the solution. Check: at $x = -2$ the left side is $\\frac{2}{5} + 2 = \\frac{12}{5}$ and the right side is $\\frac{12}{5}$.\n\n> **Watch out.** Reject only the root that is an excluded value. The other root is a solution; answering both, or neither, is wrong.",
+        "去分母后得到的二次方程，可能有一个根是被排除的值。把它舍去，保留另一个根。\n\n$$\\frac{x}{x - 2} + \\frac{1}{x + 1} = \\frac{6}{x^{2} - x - 2} \\qquad (x \\neq 2,\\ x \\neq -1)$$\n\n$$x(x + 1) + (x - 2) = 6 \\quad\\Rightarrow\\quad x^{2} + 2x - 8 = 0 \\quad\\Rightarrow\\quad (x - 2)(x + 4) = 0$$\n\n因为 $x = 2$ 被排除，它是增根：唯一的解是 $x = -4$。\n\n对 $\\frac{x}{x - 3} - \\frac{2}{x + 1} = \\frac{12}{x^{2} - 2x - 3}$，其中 $x \\neq 3$ 且 $x \\neq -1$：\n\n$$x(x + 1) - 2(x - 3) = 12 \\quad\\Rightarrow\\quad x^{2} - x - 6 = 0 \\quad\\Rightarrow\\quad (x - 3)(x + 2) = 0$$\n\n所以 $x = 3$ 是增根，$x = -2$ 是解。检验：$x = -2$ 时左边是 $\\frac{2}{5} + 2 = \\frac{12}{5}$，右边也是 $\\frac{12}{5}$。\n\n> **注意。** 只舍去是被排除值的那个根。另一个根是解；两个都答或都不答都是错的。",
       ),
       generate(rng) {
         for (;;) {
@@ -943,9 +1400,36 @@ export const advancedRationalEquations: TopicDef = {
             ),
             values: [String(r)],
             wrong: [values([r, p]), values([p]), values([-r, -p])],
-            solution: t(
-              `Factor: $${pl(fromRoots([p, q]))} = ${prodL(simple([p, q]))}$, so $x \\neq ${p}$ and $x \\neq ${q}$. Multiply every term by it:${steps(`x${fac(q)} ${sgn(B)} ${coefFac(Math.abs(B), p)} = ${C}`, `${pl(fromRoots([p, r]))} = 0`, `${prodL(simple([p, r]))} = 0`)}The root $x = ${p}$ is excluded, so it is extraneous. The only solution is $x = ${r}$.`,
-              `因式分解：$${pl(fromRoots([p, q]))} = ${prodL(simple([p, q]))}$，所以 $x \\neq ${p}$ 且 $x \\neq ${q}$。每一项都乘以它：${steps(`x${fac(q)} ${sgn(B)} ${coefFac(Math.abs(B), p)} = ${C}`, `${pl(fromRoots([p, r]))} = 0`, `${prodL(simple([p, r]))} = 0`)}根 $x = ${p}$ 被排除，是增根。唯一的解是 $x = ${r}$。`,
+            solution: walked(
+              [
+                [
+                  ["Factor the quadratic denominator", "分解二次分母"],
+                  t(
+                    `$${pl(fromRoots([p, q]))} = ${prodL(simple([p, q]))}$, so $x \\neq ${p}$ and $x \\neq ${q}$.`,
+                    `$${pl(fromRoots([p, q]))} = ${prodL(simple([p, q]))}$，所以 $x \\neq ${p}$ 且 $x \\neq ${q}$。`,
+                  ),
+                ],
+                [
+                  ["Clear the denominators", "去分母"],
+                  t("Multiply every term by it and collect on one side:", "每一项都乘以它，再把各项移到一边："),
+                  [
+                    `x${fac(q)} ${sgn(B)} ${coefFac(Math.abs(B), p)} = ${C}`,
+                    `${pl(fromRoots([p, r]))} = 0`,
+                    `${prodL(simple([p, r]))} = 0`,
+                  ],
+                ],
+                [
+                  ["Reject the excluded root", "舍去被排除的根"],
+                  t(
+                    `The root $x = ${p}$ is excluded, so it is extraneous. The only solution is $x = ${r}$.`,
+                    `根 $x = ${p}$ 被排除，是增根。唯一的解是 $x = ${r}$。`,
+                  ),
+                ],
+              ],
+              t(
+                `Substitute $x = ${r}$ into the left side, then the right side:${steps(`${pairAt(r, r, p, B, q)[0]} = ${num(pairAt(r, r, p, B, q)[1])}`, `${frac(String(C), String((r - p) * (r - q)))} = ${num(Q.of(C, (r - p) * (r - q)))}`)}The two sides agree.`,
+                `把 $x = ${r}$ 分别代入左边和右边：${steps(`${pairAt(r, r, p, B, q)[0]} = ${num(pairAt(r, r, p, B, q)[1])}`, `${frac(String(C), String((r - p) * (r - q)))} = ${num(Q.of(C, (r - p) * (r - q)))}`)}两边相等。`,
+              ),
             ),
           });
         }
@@ -972,13 +1456,29 @@ export const furtherAdvancedRationalEquations: TopicDef = {
   ],
   xp: 16,
   standards: ["CCSS.HSA.REI.A.2", "CCSS.HSA.REI.B.4.B"],
+  intro: t(
+    `Clearing $\\frac{1}{x} + \\frac{1}{x + 1} = 1$ (with $x \\neq 0$ and $x \\neq -1$) gives a quadratic that does not factor:
+
+$$(x + 1) + x = x(x + 1) \\quad\\Rightarrow\\quad x^{2} - x - 1 = 0 \\quad\\Rightarrow\\quad x = \\frac{1 \\pm \\sqrt{5}}{2}$$
+
+Check: the two roots multiply to $\\frac{1 - 5}{4} = -1$, the constant term of $x^{2} - x - 1$, and neither is $0$ or $-1$.
+
+In this lesson we solve rational equations with the quadratic formula, factor a difference-of-squares denominator first, and cross-multiply two fractions to a quadratic.`,
+    `对 $\\frac{1}{x} + \\frac{1}{x + 1} = 1$（$x \\neq 0$ 且 $x \\neq -1$）去分母，得到一个不能因式分解的二次方程：
+
+$$(x + 1) + x = x(x + 1) \\quad\\Rightarrow\\quad x^{2} - x - 1 = 0 \\quad\\Rightarrow\\quad x = \\frac{1 \\pm \\sqrt{5}}{2}$$
+
+检验：两个根的积是 $\\frac{1 - 5}{4} = -1$，正是 $x^{2} - x - 1$ 的常数项，而且它们都不是 $0$ 或 $-1$。
+
+这节课我们用求根公式解分式方程，先分解平方差形式的分母，并把两个分式交叉相乘化为二次方程。`,
+  ),
   knowledgePoints: [
     {
       id: "irrational-solutions",
       title: t("Irrational solutions", "无理数解"),
       explanation: t(
-        "When the quadratic does not factor, use the quadratic formula $x = \\frac{-b \\pm \\sqrt{b^{2} - 4ac}}{2a}$ and simplify the root.\n\n$$\\frac{1}{x} + \\frac{1}{x - 2} = 1 \\qquad (x \\neq 0,\\ x \\neq 2)$$\n\n$$(x - 2) + x = x(x - 2) \\quad\\Rightarrow\\quad x^{2} - 4x + 2 = 0$$\n\n$$x = \\frac{4 \\pm \\sqrt{16 - 8}}{2} = \\frac{4 \\pm 2\\sqrt{2}}{2} = 2 \\pm \\sqrt{2}$$\n\nIrrational roots are never the excluded integers, so both are solutions.",
-        "二次式不能因式分解时，用求根公式 $x = \\frac{-b \\pm \\sqrt{b^{2} - 4ac}}{2a}$，并化简根式。\n\n$$\\frac{1}{x} + \\frac{1}{x - 2} = 1 \\qquad (x \\neq 0,\\ x \\neq 2)$$\n\n$$(x - 2) + x = x(x - 2) \\quad\\Rightarrow\\quad x^{2} - 4x + 2 = 0$$\n\n$$x = \\frac{4 \\pm \\sqrt{16 - 8}}{2} = \\frac{4 \\pm 2\\sqrt{2}}{2} = 2 \\pm \\sqrt{2}$$\n\n无理数根不可能是被排除的整数，所以两个都是解。",
+        "When the quadratic does not factor, use the quadratic formula $x = \\frac{-b \\pm \\sqrt{b^{2} - 4ac}}{2a}$ and simplify the root.\n\n$$\\frac{1}{x} + \\frac{1}{x - 2} = 1 \\qquad (x \\neq 0,\\ x \\neq 2)$$\n\n$$(x - 2) + x = x(x - 2) \\quad\\Rightarrow\\quad x^{2} - 4x + 2 = 0$$\n\n$$x = \\frac{4 \\pm \\sqrt{16 - 8}}{2} = \\frac{4 \\pm 2\\sqrt{2}}{2} = 2 \\pm \\sqrt{2}$$\n\nIrrational roots are never the excluded integers, so both are solutions.\n\nFor $\\frac{2}{x} + \\frac{1}{x + 1} = 1$, with $x \\neq 0$ and $x \\neq -1$:\n\n$$2(x + 1) + x = x(x + 1) \\quad\\Rightarrow\\quad x^{2} - 2x - 2 = 0$$\n\n$$x = \\frac{2 \\pm \\sqrt{12}}{2} = \\frac{2 \\pm 2\\sqrt{3}}{2} = 1 \\pm \\sqrt{3}$$\n\nCheck: $(1 + \\sqrt{3})(1 - \\sqrt{3}) = 1 - 3 = -2$, the constant term of $x^{2} - 2x - 2$.\n\n> **Watch out.** Divide every term of the numerator by the denominator: $\\frac{2 \\pm 2\\sqrt{3}}{2}$ is $1 \\pm \\sqrt{3}$, not $1 \\pm 2\\sqrt{3}$.",
+        "二次式不能因式分解时，用求根公式 $x = \\frac{-b \\pm \\sqrt{b^{2} - 4ac}}{2a}$，并化简根式。\n\n$$\\frac{1}{x} + \\frac{1}{x - 2} = 1 \\qquad (x \\neq 0,\\ x \\neq 2)$$\n\n$$(x - 2) + x = x(x - 2) \\quad\\Rightarrow\\quad x^{2} - 4x + 2 = 0$$\n\n$$x = \\frac{4 \\pm \\sqrt{16 - 8}}{2} = \\frac{4 \\pm 2\\sqrt{2}}{2} = 2 \\pm \\sqrt{2}$$\n\n无理数根不可能是被排除的整数，所以两个都是解。\n\n对 $\\frac{2}{x} + \\frac{1}{x + 1} = 1$，其中 $x \\neq 0$ 且 $x \\neq -1$：\n\n$$2(x + 1) + x = x(x + 1) \\quad\\Rightarrow\\quad x^{2} - 2x - 2 = 0$$\n\n$$x = \\frac{2 \\pm \\sqrt{12}}{2} = \\frac{2 \\pm 2\\sqrt{3}}{2} = 1 \\pm \\sqrt{3}$$\n\n检验：$(1 + \\sqrt{3})(1 - \\sqrt{3}) = 1 - 3 = -2$，正是 $x^{2} - 2x - 2$ 的常数项。\n\n> **注意。** 分子的每一项都要除以分母：$\\frac{2 \\pm 2\\sqrt{3}}{2}$ 是 $1 \\pm \\sqrt{3}$，而不是 $1 \\pm 2\\sqrt{3}$。",
       ),
       keyPrerequisites: ["the-quadratic-formula"],
       generate(rng) {
@@ -1003,9 +1503,29 @@ export const furtherAdvancedRationalEquations: TopicDef = {
             ),
             values: answer,
             wrong: [[root(-b, 2 * a, 1), root(-b, 2 * a, -1)], [root(b, a, 1), root(b, a, -1)], [answer[0]!]],
-            solution: t(
-              `Here $x \\neq ${p}$ and $x \\neq ${q}$. Multiply every term by $${prodL(simple([p, q]))}$ and collect the terms on one side:${steps(`${coefFac(A, q)} ${sgn(B)} ${coefFac(Math.abs(B), p)} = ${coefFac(C, p)}${fac(q)}`, `${pl([c, b, a])} = 0`)}This does not factor, so use the quadratic formula:${steps(`x = \\frac{${num(-b)} \\pm \\sqrt{${D}}}{${2 * a}} = ${answer[0]} \\text{ or } ${answer[1]}`)}`,
-              `这里 $x \\neq ${p}$ 且 $x \\neq ${q}$。每一项都乘以 $${prodL(simple([p, q]))}$，再把各项移到一边：${steps(`${coefFac(A, q)} ${sgn(B)} ${coefFac(Math.abs(B), p)} = ${coefFac(C, p)}${fac(q)}`, `${pl([c, b, a])} = 0`)}它不能因式分解，所以用求根公式：${steps(`x = \\frac{${num(-b)} \\pm \\sqrt{${D}}}{${2 * a}} = ${answer[0]} \\text{ 或 } ${answer[1]}`)}`,
+            solution: walked(
+              [
+                [
+                  ["Clear the denominators", "去分母"],
+                  t(
+                    `Here $x \\neq ${p}$ and $x \\neq ${q}$. Multiply every term by $${prodL(simple([p, q]))}$ and collect the terms on one side:`,
+                    `这里 $x \\neq ${p}$ 且 $x \\neq ${q}$。每一项都乘以 $${prodL(simple([p, q]))}$，再把各项移到一边：`,
+                  ),
+                  [`${coefFac(A, q)} ${sgn(B)} ${coefFac(Math.abs(B), p)} = ${coefFac(C, p)}${fac(q)}`, `${pl([c, b, a])} = 0`],
+                ],
+                [
+                  ["Use the quadratic formula", "用求根公式"],
+                  t(
+                    `The discriminant $${D}$ is not a perfect square, so this does not factor:`,
+                    `判别式 $${D}$ 不是完全平方数，所以它不能因式分解：`,
+                  ),
+                  [`x = \\frac{${num(-b)} \\pm \\sqrt{${D}}}{${2 * a}}`, `x_{1} = ${answer[0]}, \\quad x_{2} = ${answer[1]}`],
+                ],
+              ],
+              t(
+                `Both roots are irrational, so neither is the excluded $${p}$ or $${q}$. Their sum is minus the coefficient of $x$ over the coefficient of $x^{2}$:${steps(`\\left(${answer[0]}\\right) + \\left(${answer[1]}\\right) = ${num(Q.of(-b, a))}`)}as it should be for $${pl([c, b, a])} = 0$.`,
+                `两个根都是无理数，所以都不是被排除的 $${p}$ 或 $${q}$。它们的和等于 $x$ 的系数的相反数除以 $x^{2}$ 的系数：${steps(`\\left(${answer[0]}\\right) + \\left(${answer[1]}\\right) = ${num(Q.of(-b, a))}`)}与 $${pl([c, b, a])} = 0$ 相符。`,
+              ),
             ),
           });
         }
@@ -1015,8 +1535,8 @@ export const furtherAdvancedRationalEquations: TopicDef = {
       id: "factoring-a-difference-of-squares-denominator",
       title: t("Factoring the denominator first", "先分解分母"),
       explanation: t(
-        "A denominator such as $x^{2} - 9$ is the difference of squares $(x - 3)(x + 3)$. Factor it to find the LCD and the excluded values, then clear the denominators.\n\n$$\\frac{x}{x - 3} + \\frac{2}{x + 3} = \\frac{18}{x^{2} - 9} \\qquad (x \\neq \\pm 3)$$\n\n$$x(x + 3) + 2(x - 3) = 18 \\quad\\Rightarrow\\quad x^{2} + 5x - 24 = 0 \\quad\\Rightarrow\\quad (x - 3)(x + 8) = 0$$\n\n$x = 3$ is excluded, so the only solution is $x = -8$.",
-        "像 $x^{2} - 9$ 这样的分母是平方差 $(x - 3)(x + 3)$。先分解它，得到最简公分母和被排除的值，再去分母。\n\n$$\\frac{x}{x - 3} + \\frac{2}{x + 3} = \\frac{18}{x^{2} - 9} \\qquad (x \\neq \\pm 3)$$\n\n$$x(x + 3) + 2(x - 3) = 18 \\quad\\Rightarrow\\quad x^{2} + 5x - 24 = 0 \\quad\\Rightarrow\\quad (x - 3)(x + 8) = 0$$\n\n$x = 3$ 被排除，所以唯一的解是 $x = -8$。",
+        "A denominator such as $x^{2} - 9$ is the difference of squares $(x - 3)(x + 3)$. Factor it to find the LCD and the excluded values, then clear the denominators.\n\n$$\\frac{x}{x - 3} + \\frac{2}{x + 3} = \\frac{18}{x^{2} - 9} \\qquad (x \\neq \\pm 3)$$\n\n$$x(x + 3) + 2(x - 3) = 18 \\quad\\Rightarrow\\quad x^{2} + 5x - 24 = 0 \\quad\\Rightarrow\\quad (x - 3)(x + 8) = 0$$\n\n$x = 3$ is excluded, so the only solution is $x = -8$.\n\nFor $\\frac{x}{x - 2} + \\frac{1}{x + 2} = \\frac{8}{x^{2} - 4}$, with $x^{2} - 4 = (x - 2)(x + 2)$ and $x \\neq \\pm 2$:\n\n$$x(x + 2) + (x - 2) = 8 \\quad\\Rightarrow\\quad x^{2} + 3x - 10 = 0 \\quad\\Rightarrow\\quad (x - 2)(x + 5) = 0$$\n\nSo $x = 2$ is excluded and $x = -5$ is the solution. Check: at $x = -5$ the left side is $\\frac{5}{7} - \\frac{1}{3} = \\frac{8}{21}$, and the right side is $\\frac{8}{21}$.\n\n> **Watch out.** $x^{2} - 4$ is $(x - 2)(x + 2)$, not $(x - 2)^{2}$, so both $2$ and $-2$ are excluded.",
+        "像 $x^{2} - 9$ 这样的分母是平方差 $(x - 3)(x + 3)$。先分解它，得到最简公分母和被排除的值，再去分母。\n\n$$\\frac{x}{x - 3} + \\frac{2}{x + 3} = \\frac{18}{x^{2} - 9} \\qquad (x \\neq \\pm 3)$$\n\n$$x(x + 3) + 2(x - 3) = 18 \\quad\\Rightarrow\\quad x^{2} + 5x - 24 = 0 \\quad\\Rightarrow\\quad (x - 3)(x + 8) = 0$$\n\n$x = 3$ 被排除，所以唯一的解是 $x = -8$。\n\n对 $\\frac{x}{x - 2} + \\frac{1}{x + 2} = \\frac{8}{x^{2} - 4}$，有 $x^{2} - 4 = (x - 2)(x + 2)$，$x \\neq \\pm 2$：\n\n$$x(x + 2) + (x - 2) = 8 \\quad\\Rightarrow\\quad x^{2} + 3x - 10 = 0 \\quad\\Rightarrow\\quad (x - 2)(x + 5) = 0$$\n\n所以 $x = 2$ 被排除，$x = -5$ 是解。检验：$x = -5$ 时左边是 $\\frac{5}{7} - \\frac{1}{3} = \\frac{8}{21}$，右边也是 $\\frac{8}{21}$。\n\n> **注意。** $x^{2} - 4$ 是 $(x - 2)(x + 2)$，而不是 $(x - 2)^{2}$，所以 $2$ 和 $-2$ 都要排除。",
       ),
       keyPrerequisites: ["factoring-differences-of-squares"],
       generate(rng) {
@@ -1029,6 +1549,7 @@ export const furtherAdvancedRationalEquations: TopicDef = {
           if (B === 0 || C === 0) continue;
           check([-(B * p + C), p + B, 1], fromRoots([r1, r2]));
           const answer = [r1, r2].filter((r) => r !== p && r !== -p);
+          const out = [r1, r2].filter((r) => r === p || r === -p);
           return solutionsProblem({
             prompt: t(
               `Solve $${then(frac("x", bare(p)), B, bare(-p))} = ${sfrac(C, `x^{2} - ${p * p}`)}$. If there is no solution, answer "no solution".`,
@@ -1036,9 +1557,48 @@ export const furtherAdvancedRationalEquations: TopicDef = {
             ),
             values: values(answer),
             wrong: [values([r1, r2]), values([-r1, -r2]), ...(answer.length === 2 ? [values([r1])] : [])],
-            solution: t(
-              `Factor $x^{2} - ${p * p} = (x - ${p})(x + ${p})$, so $x \\neq \\pm ${p}$. Multiply every term by it:${steps(`x(x + ${p}) ${sgn(B)} ${coefFac(Math.abs(B), p)} = ${C}`, `${pl(fromRoots([r1, r2]))} = 0`, `${prodL(simple([r1, r2]))} = 0`)}${answer.length === 2 ? `Neither root is $\\pm ${p}$, so $x = ${r1}$ or $x = ${r2}$.` : answer.length === 1 ? `The root $x = ${r1}$ is excluded, so the only solution is $x = ${answer[0]}$.` : "Both roots are excluded, so there is no solution."}`,
-              `分解 $x^{2} - ${p * p} = (x - ${p})(x + ${p})$，所以 $x \\neq \\pm ${p}$。每一项都乘以它：${steps(`x(x + ${p}) ${sgn(B)} ${coefFac(Math.abs(B), p)} = ${C}`, `${pl(fromRoots([r1, r2]))} = 0`, `${prodL(simple([r1, r2]))} = 0`)}${answer.length === 2 ? `两个根都不是 $\\pm ${p}$，所以 $x = ${r1}$ 或 $x = ${r2}$。` : answer.length === 1 ? `根 $x = ${r1}$ 被排除，所以唯一的解是 $x = ${answer[0]}$。` : "两个根都被排除，所以方程无解。"}`,
+            solution: walked(
+              [
+                [
+                  ["Factor the denominator", "分解分母"],
+                  t(
+                    `$x^{2} - ${p * p} = (x - ${p})(x + ${p})$, so $x \\neq \\pm ${p}$.`,
+                    `$x^{2} - ${p * p} = (x - ${p})(x + ${p})$，所以 $x \\neq \\pm ${p}$。`,
+                  ),
+                ],
+                [
+                  ["Clear the denominators", "去分母"],
+                  t("Multiply every term by it and collect on one side:", "每一项都乘以它，再把各项移到一边："),
+                  [
+                    `x(x + ${p}) ${sgn(B)} ${coefFac(Math.abs(B), p)} = ${C}`,
+                    `${pl(fromRoots([r1, r2]))} = 0`,
+                    `${prodL(simple([r1, r2]))} = 0`,
+                  ],
+                ],
+                [
+                  ["Compare with the excluded values", "与被排除的值比较"],
+                  answer.length === 2
+                    ? t(
+                        `Neither root is $\\pm ${p}$, so $x = ${r1}$ or $x = ${r2}$.`,
+                        `两个根都不是 $\\pm ${p}$，所以 $x = ${r1}$ 或 $x = ${r2}$。`,
+                      )
+                    : answer.length === 1
+                      ? t(
+                          `The root $x = ${out[0]}$ is excluded, so the only solution is $x = ${answer[0]}$.`,
+                          `根 $x = ${out[0]}$ 被排除，所以唯一的解是 $x = ${answer[0]}$。`,
+                        )
+                      : t("Both roots are excluded, so there is no solution.", "两个根都被排除，所以方程无解。"),
+                ],
+              ],
+              answer.length > 0
+                ? t(
+                    `Substitute $x = ${answer[0]}$ into the left side, then the right side:${steps(`${pairAt(answer[0]!, answer[0]!, p, B, -p)[0]} = ${num(pairAt(answer[0]!, answer[0]!, p, B, -p)[1])}`, `${frac(String(C), String(answer[0]! ** 2 - p * p))} = ${num(Q.of(C, answer[0]! ** 2 - p * p))}`)}The two sides agree.`,
+                    `把 $x = ${answer[0]}$ 分别代入左边和右边：${steps(`${pairAt(answer[0]!, answer[0]!, p, B, -p)[0]} = ${num(pairAt(answer[0]!, answer[0]!, p, B, -p)[1])}`, `${frac(String(C), String(answer[0]! ** 2 - p * p))} = ${num(Q.of(C, answer[0]! ** 2 - p * p))}`)}两边相等。`,
+                  )
+                : t(
+                    `Both $${r1}$ and $${r2}$ make $x^{2} - ${p * p}$ equal to $0$, since $${p}^{2} = ${p * p}$, so neither can be substituted.`,
+                    `$${r1}$ 和 $${r2}$ 都使 $x^{2} - ${p * p}$ 等于 $0$（因为 $${p}^{2} = ${p * p}$），所以都不能代入。`,
+                  ),
             ),
           });
         }
@@ -1048,8 +1608,8 @@ export const furtherAdvancedRationalEquations: TopicDef = {
       id: "cross-multiplying-to-a-quadratic",
       title: t("Cross-multiplying to a quadratic", "交叉相乘得到二次方程"),
       explanation: t(
-        "When each side is one fraction with a linear numerator, cross-multiply. The products are quadratics, and when the $x^{2}$ terms do not cancel the result is a quadratic equation.\n\n$$\\frac{2x - 1}{x - 1} = \\frac{x + 7}{x + 1} \\qquad (x \\neq \\pm 1)$$\n\n$$(2x - 1)(x + 1) = (x + 7)(x - 1)$$\n\n$$2x^{2} + x - 1 = x^{2} + 6x - 7 \\quad\\Rightarrow\\quad x^{2} - 5x + 6 = 0 \\quad\\Rightarrow\\quad (x - 2)(x - 3) = 0$$\n\nNeither $2$ nor $3$ is excluded, so $x = 2$ or $x = 3$.",
-        "当方程两边都是一个分子为一次式的分式时，交叉相乘。乘积是二次式，若 $x^{2}$ 项没有抵消，就得到二次方程。\n\n$$\\frac{2x - 1}{x - 1} = \\frac{x + 7}{x + 1} \\qquad (x \\neq \\pm 1)$$\n\n$$(2x - 1)(x + 1) = (x + 7)(x - 1)$$\n\n$$2x^{2} + x - 1 = x^{2} + 6x - 7 \\quad\\Rightarrow\\quad x^{2} - 5x + 6 = 0 \\quad\\Rightarrow\\quad (x - 2)(x - 3) = 0$$\n\n$2$ 和 $3$ 都不是被排除的值，所以 $x = 2$ 或 $x = 3$。",
+        "When each side is one fraction with a linear numerator, cross-multiply. The products are quadratics, and when the $x^{2}$ terms do not cancel the result is a quadratic equation.\n\n$$\\frac{2x - 1}{x - 1} = \\frac{x + 7}{x + 1} \\qquad (x \\neq \\pm 1)$$\n\n$$(2x - 1)(x + 1) = (x + 7)(x - 1)$$\n\n$$2x^{2} + x - 1 = x^{2} + 6x - 7 \\quad\\Rightarrow\\quad x^{2} - 5x + 6 = 0 \\quad\\Rightarrow\\quad (x - 2)(x - 3) = 0$$\n\nNeither $2$ nor $3$ is excluded, so $x = 2$ or $x = 3$.\n\nFor $\\frac{x + 2}{x} = \\frac{2x - 5}{x - 2}$, with $x \\neq 0$ and $x \\neq 2$:\n\n$$(x + 2)(x - 2) = x(2x - 5) \\quad\\Rightarrow\\quad x^{2} - 4 = 2x^{2} - 5x \\quad\\Rightarrow\\quad x^{2} - 5x + 4 = 0$$\n\nSo $(x - 1)(x - 4) = 0$. Check: at $x = 1$ both sides are $3$; at $x = 4$ both are $\\frac{3}{2}$.\n\n> **Watch out.** Different $x^{2}$ coefficients do not cancel. Collect everything on one side and solve the quadratic; do not treat it as a linear equation.",
+        "当方程两边都是一个分子为一次式的分式时，交叉相乘。乘积是二次式，若 $x^{2}$ 项没有抵消，就得到二次方程。\n\n$$\\frac{2x - 1}{x - 1} = \\frac{x + 7}{x + 1} \\qquad (x \\neq \\pm 1)$$\n\n$$(2x - 1)(x + 1) = (x + 7)(x - 1)$$\n\n$$2x^{2} + x - 1 = x^{2} + 6x - 7 \\quad\\Rightarrow\\quad x^{2} - 5x + 6 = 0 \\quad\\Rightarrow\\quad (x - 2)(x - 3) = 0$$\n\n$2$ 和 $3$ 都不是被排除的值，所以 $x = 2$ 或 $x = 3$。\n\n对 $\\frac{x + 2}{x} = \\frac{2x - 5}{x - 2}$，其中 $x \\neq 0$ 且 $x \\neq 2$：\n\n$$(x + 2)(x - 2) = x(2x - 5) \\quad\\Rightarrow\\quad x^{2} - 4 = 2x^{2} - 5x \\quad\\Rightarrow\\quad x^{2} - 5x + 4 = 0$$\n\n所以 $(x - 1)(x - 4) = 0$。检验：$x = 1$ 时两边都是 $3$；$x = 4$ 时两边都是 $\\frac{3}{2}$。\n\n> **注意。** $x^{2}$ 的系数不同时不会抵消。把所有项移到一边，解二次方程；不要把它当成一次方程。",
       ),
       generate(rng) {
         for (;;) {
@@ -1070,6 +1630,7 @@ export const furtherAdvancedRationalEquations: TopicDef = {
           const diff = subP(left, right);
           check(diff, fromRoots([r1, r2], a - c));
           const std = a - c < 0 ? scaleP(diff, -1) : diff;
+          const [u, v] = [Q.of(a * r1 + b, r1 - p), Q.of(c * r1 + d, r1 - q)];
           return solutionsProblem({
             prompt: t(
               `Solve $${frac(linear(a, b), bare(p))} = ${frac(linear(c, d), bare(q))}$.`,
@@ -1077,9 +1638,29 @@ export const furtherAdvancedRationalEquations: TopicDef = {
             ),
             values: values([r1, r2]),
             wrong: [values([-r1, -r2]), values([r1])],
-            solution: t(
-              `Here $x \\neq ${p}$ and $x \\neq ${q}$. Cross-multiply and expand:${steps(`(${linear(a, b)})${fac(q)} = (${linear(c, d)})${fac(p)}`, `${pl(left)} = ${pl(right)}`, `${pl(std)} = 0`, `${front(Math.abs(a - c))}${fac(r1)}${fac(r2)} = 0`)}Neither root is excluded, so $x = ${r1}$ or $x = ${r2}$.`,
-              `这里 $x \\neq ${p}$ 且 $x \\neq ${q}$。交叉相乘并展开：${steps(`(${linear(a, b)})${fac(q)} = (${linear(c, d)})${fac(p)}`, `${pl(left)} = ${pl(right)}`, `${pl(std)} = 0`, `${front(Math.abs(a - c))}${fac(r1)}${fac(r2)} = 0`)}两个根都不是被排除的值，所以 $x = ${r1}$ 或 $x = ${r2}$。`,
+            solution: walked(
+              [
+                [
+                  ["Cross-multiply", "交叉相乘"],
+                  t(
+                    `Here $x \\neq ${p}$ and $x \\neq ${q}$. Cross-multiply and expand:`,
+                    `这里 $x \\neq ${p}$ 且 $x \\neq ${q}$。交叉相乘并展开：`,
+                  ),
+                  [`(${linear(a, b)})${fac(q)} = (${linear(c, d)})${fac(p)}`, `${pl(left)} = ${pl(right)}`],
+                ],
+                [
+                  ["Collect and factor", "移项并因式分解"],
+                  t(
+                    `Neither root is excluded, so $x = ${r1}$ or $x = ${r2}$.`,
+                    `两个根都不是被排除的值，所以 $x = ${r1}$ 或 $x = ${r2}$。`,
+                  ),
+                  [`${pl(std)} = 0`, `${front(Math.abs(a - c))}${fac(r1)}${fac(r2)} = 0`],
+                ],
+              ],
+              t(
+                `At $x = ${r1}$ the two sides are${steps(`${frac(String(a * r1 + b), String(r1 - p))} = ${num(u)}, \\quad ${frac(String(c * r1 + d), String(r1 - q))} = ${num(v)}`)}which agree.`,
+                `$x = ${r1}$ 时两边分别是${steps(`${frac(String(a * r1 + b), String(r1 - p))} = ${num(u)}, \\quad ${frac(String(c * r1 + d), String(r1 - q))} = ${num(v)}`)}两者相等。`,
+              ),
             ),
           });
         }
@@ -1108,13 +1689,25 @@ export const rootsOfRationalFunctions: TopicDef = {
   encompasses: [{ topic: "roots-of-a-function", weight: 0.3 }],
   xp: 12,
   standards: ["CCSS.HSF.IF.C.7.D"],
+  intro: t(
+    `The function $f(x) = \\frac{x^{2} - 4}{x^{2} + 1}$ is $0$ where its numerator is: $x^{2} - 4 = (x - 2)(x + 2)$ is $0$ at $x = 2$ and $x = -2$, and the denominator $x^{2} + 1$ is never $0$. So the roots are $2$ and $-2$. Its $y$-intercept is $f(0) = \\frac{-4}{1} = -4$.
+
+Check: $f(2) = \\frac{0}{5} = 0$.
+
+In this lesson we find the roots of a rational function from factored and from expanded forms, and find where its graph crosses the $y$-axis.`,
+    `函数 $f(x) = \\frac{x^{2} - 4}{x^{2} + 1}$ 在分子为 $0$ 的地方为 $0$：$x^{2} - 4 = (x - 2)(x + 2)$ 在 $x = 2$ 和 $x = -2$ 处为 $0$，而分母 $x^{2} + 1$ 永不为 $0$。所以零点是 $2$ 和 $-2$。它的 $y$ 轴截距是 $f(0) = \\frac{-4}{1} = -4$。
+
+检验：$f(2) = \\frac{0}{5} = 0$。
+
+这节课我们由因式分解形式和展开形式求分式函数的零点，并求它的图象与 $y$ 轴的交点。`,
+  ),
   knowledgePoints: [
     {
       id: "roots-of-factored-rational-functions",
       title: t("Roots from factored forms", "由因式分解形式求零点"),
       explanation: t(
-        "A **rational function** is $f(x) = \\frac{p(x)}{q(x)}$ with polynomials $p$ and $q$. A fraction is $0$ exactly when its numerator is $0$ and its denominator is not. So the roots of $f$ are the zeros of $p$ that are not zeros of $q$.\n\n$$f(x) = \\frac{(x - 2)(x + 5)}{(x - 2)(x + 1)}$$\n\nThe numerator is $0$ at $x = 2$ and $x = -5$. But $x = 2$ also makes the denominator $0$, so $f(2)$ is not defined. The only root is $x = -5$.",
-        "**分式函数**是 $f(x) = \\frac{p(x)}{q(x)}$，其中 $p$、$q$ 是多项式。分式为 $0$ 当且仅当分子为 $0$ 而分母不为 $0$。所以 $f$ 的零点是 $p$ 的零点中不是 $q$ 的零点的那些。\n\n$$f(x) = \\frac{(x - 2)(x + 5)}{(x - 2)(x + 1)}$$\n\n分子在 $x = 2$ 和 $x = -5$ 处为 $0$。但 $x = 2$ 也使分母为 $0$，$f(2)$ 无意义。唯一的零点是 $x = -5$。",
+        "A **rational function** is $f(x) = \\frac{p(x)}{q(x)}$ with polynomials $p$ and $q$. A fraction is $0$ exactly when its numerator is $0$ and its denominator is not. So the roots of $f$ are the zeros of $p$ that are not zeros of $q$.\n\n$$f(x) = \\frac{(x - 2)(x + 5)}{(x - 2)(x + 1)}$$\n\nThe numerator is $0$ at $x = 2$ and $x = -5$. But $x = 2$ also makes the denominator $0$, so $f(2)$ is not defined. The only root is $x = -5$.\n\nFor $f(x) = \\frac{(x + 3)(x - 4)}{(x - 4)(x + 1)}$, the numerator is $0$ at $x = -3$ and $x = 4$, but $x = 4$ makes the denominator $0$. The only root is $x = -3$. Check: $f(-3) = \\frac{0 \\cdot (-7)}{(-7)(-2)} = 0$.\n\n> **Watch out.** A zero of the denominator is never a root, even when the numerator is $0$ there too; and a zero of the denominator alone is where $f$ is not defined, not where it is $0$.",
+        "**分式函数**是 $f(x) = \\frac{p(x)}{q(x)}$，其中 $p$、$q$ 是多项式。分式为 $0$ 当且仅当分子为 $0$ 而分母不为 $0$。所以 $f$ 的零点是 $p$ 的零点中不是 $q$ 的零点的那些。\n\n$$f(x) = \\frac{(x - 2)(x + 5)}{(x - 2)(x + 1)}$$\n\n分子在 $x = 2$ 和 $x = -5$ 处为 $0$。但 $x = 2$ 也使分母为 $0$，$f(2)$ 无意义。唯一的零点是 $x = -5$。\n\n对 $f(x) = \\frac{(x + 3)(x - 4)}{(x - 4)(x + 1)}$，分子在 $x = -3$ 和 $x = 4$ 处为 $0$，但 $x = 4$ 使分母为 $0$。唯一的零点是 $x = -3$。检验：$f(-3) = \\frac{0 \\cdot (-7)}{(-7)(-2)} = 0$。\n\n> **注意。** 分母的零点永远不是零点，即使分子在那里也为 $0$；分母的零点是 $f$ 无意义的地方，而不是 $f$ 为 $0$ 的地方。",
       ),
       generate(rng) {
         const den = rng.sample(range(-7, 7), rng.pick([1, 2]));
@@ -1136,9 +1729,29 @@ export const rootsOfRationalFunctions: TopicDef = {
           ),
           values: values(answer),
           wrong: [values(nums), values(den), values(answer.map((r) => -r)), values([...nums, ...den])],
-          solution: t(
-            `The numerator is $0$ at ${listText(nums)}. ${share ? `But $x = ${nums[0]}$ also makes the denominator $0$, so it is not a root. ` : "None of these makes the denominator $0$. "}${answer.length ? `The root${answer.length > 1 ? "s are" : " is"} ${listText(answer)}.` : "So $f$ has no roots."}`,
-            `分子在 ${listText(nums, "、")} 处为 $0$。${share ? `但 $x = ${nums[0]}$ 也使分母为 $0$，所以它不是零点。` : "它们都不使分母为 $0$。"}${answer.length ? `零点是 ${listText(answer, "、")}。` : "所以 $f$ 没有零点。"}`,
+          solution: walked(
+            [
+              [
+                ["Find the zeros of the numerator", "求分子的零点"],
+                t(`The numerator is $0$ at ${listText(nums)}.`, `分子在 ${listText(nums, "、")} 处为 $0$。`),
+              ],
+              [
+                ["Remove the zeros of the denominator", "去掉分母的零点"],
+                t(
+                  `${share ? `But $x = ${nums[0]}$ also makes the denominator $0$, so it is not a root. ` : "None of these makes the denominator $0$. "}${answer.length ? `The root${answer.length > 1 ? "s are" : " is"} ${listText(answer)}.` : "So $f$ has no roots."}`,
+                  `${share ? `但 $x = ${nums[0]}$ 也使分母为 $0$，所以它不是零点。` : "它们都不使分母为 $0$。"}${answer.length ? `零点是 ${listText(answer, "、")}。` : "所以 $f$ 没有零点。"}`,
+                ),
+              ],
+            ],
+            answer.length
+              ? t(
+                  `At $x = ${answer[0]}$ the numerator is $0$ and the denominator is not:${steps(`${den.map((d) => `\\left(${answer[0]} - ${paren(d)}\\right)`).join("")} = ${den.reduce((s, d) => s * (answer[0]! - d), 1)} \\neq 0`)}so $f(${answer[0]}) = 0$.`,
+                  `$x = ${answer[0]}$ 时分子为 $0$，分母不为 $0$：${steps(`${den.map((d) => `\\left(${answer[0]} - ${paren(d)}\\right)`).join("")} = ${den.reduce((s, d) => s * (answer[0]! - d), 1)} \\neq 0`)}所以 $f(${answer[0]}) = 0$。`,
+                )
+              : t(
+                  `At $x = ${nums[0]}$ the factor $${bare(nums[0]!)}$ of the denominator is $0$, so $f(${nums[0]})$ is not defined and cannot be $0$.`,
+                  `$x = ${nums[0]}$ 时分母的因式 $${bare(nums[0]!)}$ 为 $0$，所以 $f(${nums[0]})$ 无意义，不可能为 $0$。`,
+                ),
           ),
         });
       },
@@ -1147,8 +1760,8 @@ export const rootsOfRationalFunctions: TopicDef = {
       id: "factoring-to-find-roots",
       title: t("Factoring to find the roots", "因式分解求零点"),
       explanation: t(
-        "When the numerator and denominator are expanded, factor both first.\n\n$$f(x) = \\frac{2x^{2} + 3x - 2}{x^{2} - 4} = \\frac{(2x - 1)(x + 2)}{(x - 2)(x + 2)}$$\n\nThe numerator is $0$ at $x = \\frac{1}{2}$ and $x = -2$, but the denominator is $0$ at $x = -2$ too. The only root is $x = \\frac{1}{2}$.",
-        "如果分子和分母都是展开式，先把它们因式分解。\n\n$$f(x) = \\frac{2x^{2} + 3x - 2}{x^{2} - 4} = \\frac{(2x - 1)(x + 2)}{(x - 2)(x + 2)}$$\n\n分子在 $x = \\frac{1}{2}$ 和 $x = -2$ 处为 $0$，但分母在 $x = -2$ 处也为 $0$。唯一的零点是 $x = \\frac{1}{2}$。",
+        "When the numerator and denominator are expanded, factor both first.\n\n$$f(x) = \\frac{2x^{2} + 3x - 2}{x^{2} - 4} = \\frac{(2x - 1)(x + 2)}{(x - 2)(x + 2)}$$\n\nThe numerator is $0$ at $x = \\frac{1}{2}$ and $x = -2$, but the denominator is $0$ at $x = -2$ too. The only root is $x = \\frac{1}{2}$.\n\nFor $f(x) = \\frac{x^{2} - x - 6}{x^{2} - 9} = \\frac{(x - 3)(x + 2)}{(x - 3)(x + 3)}$, the numerator is $0$ at $x = 3$ and $x = -2$, and $x = 3$ also makes the denominator $0$. The only root is $x = -2$. Check: $f(-2) = \\frac{4 + 2 - 6}{4 - 9} = \\frac{0}{-5} = 0$.\n\n> **Watch out.** A factor $kx - m$ is $0$ at $x = \\frac{m}{k}$, not at $x = m$: $3x - 2$ is $0$ at $x = \\frac{2}{3}$.",
+        "如果分子和分母都是展开式，先把它们因式分解。\n\n$$f(x) = \\frac{2x^{2} + 3x - 2}{x^{2} - 4} = \\frac{(2x - 1)(x + 2)}{(x - 2)(x + 2)}$$\n\n分子在 $x = \\frac{1}{2}$ 和 $x = -2$ 处为 $0$，但分母在 $x = -2$ 处也为 $0$。唯一的零点是 $x = \\frac{1}{2}$。\n\n对 $f(x) = \\frac{x^{2} - x - 6}{x^{2} - 9} = \\frac{(x - 3)(x + 2)}{(x - 3)(x + 3)}$，分子在 $x = 3$ 和 $x = -2$ 处为 $0$，而 $x = 3$ 也使分母为 $0$。唯一的零点是 $x = -2$。检验：$f(-2) = \\frac{4 + 2 - 6}{4 - 9} = \\frac{0}{-5} = 0$。\n\n> **注意。** 因式 $kx - m$ 在 $x = \\frac{m}{k}$ 处为 $0$，而不是在 $x = m$ 处：$3x - 2$ 在 $x = \\frac{2}{3}$ 处为 $0$。",
       ),
       keyPrerequisites: ["simplifying-rational-expressions-using-polynomial-factorization"],
       generate(rng) {
@@ -1171,13 +1784,37 @@ export const rootsOfRationalFunctions: TopicDef = {
           if (answer.length === 2 && !share && rng.bool(0.5)) continue;
           const nf = r === 0 ? `x${linLatex(l1)}` : `${linLatex(l1)}${linLatex(l2)}`;
           const df = prodL(simple([d1, d2]));
+          const lost = numRoots.filter((x) => !answer.includes(x));
+          const qAt = (x: Q) => x.sub(Q.of(d1)).mul(x.sub(Q.of(d2)));
+          const qLine = (x: Q) => `\\left(${num(x)} - ${paren(d1)}\\right)\\left(${num(x)} - ${paren(d2)}\\right) = ${num(qAt(x))} \\neq 0`;
           return solutionsProblem({
             prompt: t(`Find the roots of $f(x) = ${frac(pl(N), pl(D))}$.`, `求 $f(x) = ${frac(pl(N), pl(D))}$ 的零点。`),
             values: values(answer),
             wrong: [values(numRoots), values([d1, d2]), values(answer.map((x) => x.neg()))],
-            solution: t(
-              `Factor:${steps(`f(x) = ${frac(nf, df)}`)}The numerator is $0$ at ${listText(numRoots)}${answer.length < 2 ? `, but $x = ${r}$ also makes the denominator $0$` : ", and the denominator is not $0$ there"}. So the root${answer.length > 1 ? "s are" : " is"} ${listText(answer)}.`,
-              `因式分解：${steps(`f(x) = ${frac(nf, df)}`)}分子在 ${listText(numRoots, "、")} 处为 $0$${answer.length < 2 ? `，但 $x = ${r}$ 也使分母为 $0$` : "，而分母在这些地方不为 $0$"}。所以零点是 ${listText(answer, "、")}。`,
+            solution: walked(
+              [
+                [
+                  ["Factor", "因式分解"],
+                  t("Factor the numerator and the denominator:", "把分子和分母因式分解："),
+                  [`f(x) = ${frac(nf, df)}`],
+                ],
+                [
+                  ["Compare the zeros", "比较零点"],
+                  t(
+                    `The numerator is $0$ at ${listText(numRoots)}${lost.length ? `, but ${listText(lost)} also make${lost.length === 1 ? "s" : ""} the denominator $0$` : ", and the denominator is not $0$ there"}. ${answer.length ? `So the root${answer.length > 1 ? "s are" : " is"} ${listText(answer)}.` : "So $f$ has no roots."}`,
+                    `分子在 ${listText(numRoots, "、")} 处为 $0$${lost.length ? `，但 ${listText(lost, "、")} 也使分母为 $0$` : "，而分母在这些地方不为 $0$"}。${answer.length ? `所以零点是 ${listText(answer, "、")}。` : "所以 $f$ 没有零点。"}`,
+                  ),
+                ],
+              ],
+              answer.length
+                ? t(
+                    `The denominator is not $0$ at $x = ${num(answer[0]!)}$:${steps(`${qLine(answer[0]!)}`)}while a factor of the numerator is $0$ there, so $f$ is $0$ there.`,
+                    `分母在 $x = ${num(answer[0]!)}$ 处不为 $0$：${steps(`${qLine(answer[0]!)}`)}而分子的一个因式在那里为 $0$，所以 $f$ 在那里为 $0$。`,
+                  )
+                : t(
+                    "Each zero of the numerator makes a factor of the denominator $0$ as well, so $f$ is not defined at either of them.",
+                    "分子的每个零点也使分母的某个因式为 $0$，所以 $f$ 在这些地方都无意义。",
+                  ),
             ),
           });
         }
@@ -1188,8 +1825,8 @@ export const rootsOfRationalFunctions: TopicDef = {
       figure: precalculusDrawings["roots-of-rational-functions#intercepts-of-rational-functions"],
       title: t("The $y$-intercept", "$y$ 轴截距"),
       explanation: t(
-        "The $y$-intercept of $f(x) = \\frac{p(x)}{q(x)}$ is $(0, f(0))$, where $f(0) = \\frac{p(0)}{q(0)}$ is the constant term of the numerator over the constant term of the denominator. It exists only when $q(0) \\neq 0$.\n\n$$f(x) = \\frac{x^{2} - 3x + 6}{2x^{2} + x - 4}: \\quad f(0) = \\frac{6}{-4} = -\\frac{3}{2}$$\n\nso the graph crosses the $y$-axis at $\\left(0, -\\frac{3}{2}\\right)$.",
-        "$f(x) = \\frac{p(x)}{q(x)}$ 的 $y$ 轴截距是 $(0, f(0))$，其中 $f(0) = \\frac{p(0)}{q(0)}$ 是分子的常数项除以分母的常数项。只有当 $q(0) \\neq 0$ 时它才存在。\n\n$$f(x) = \\frac{x^{2} - 3x + 6}{2x^{2} + x - 4}: \\quad f(0) = \\frac{6}{-4} = -\\frac{3}{2}$$\n\n所以图象与 $y$ 轴交于 $\\left(0, -\\frac{3}{2}\\right)$。",
+        "The $y$-intercept of $f(x) = \\frac{p(x)}{q(x)}$ is $(0, f(0))$, where $f(0) = \\frac{p(0)}{q(0)}$ is the constant term of the numerator over the constant term of the denominator. It exists only when $q(0) \\neq 0$.\n\n$$f(x) = \\frac{x^{2} - 3x + 6}{2x^{2} + x - 4}: \\quad f(0) = \\frac{6}{-4} = -\\frac{3}{2}$$\n\nso the graph crosses the $y$-axis at $\\left(0, -\\frac{3}{2}\\right)$.\n\nFor $f(x) = \\frac{2x - 8}{x^{2} + 4}$: $f(0) = \\frac{-8}{4} = -2$, so the $y$-intercept is $(0, -2)$. Check: $-2 \\cdot 4 = -8$, the constant term of the numerator.\n\n> **Watch out.** The $y$-intercept uses the constant terms, $f(0)$. The ratio of the leading coefficients belongs to the horizontal asymptote, and the zeros of the numerator are the $x$-intercepts.",
+        "$f(x) = \\frac{p(x)}{q(x)}$ 的 $y$ 轴截距是 $(0, f(0))$，其中 $f(0) = \\frac{p(0)}{q(0)}$ 是分子的常数项除以分母的常数项。只有当 $q(0) \\neq 0$ 时它才存在。\n\n$$f(x) = \\frac{x^{2} - 3x + 6}{2x^{2} + x - 4}: \\quad f(0) = \\frac{6}{-4} = -\\frac{3}{2}$$\n\n所以图象与 $y$ 轴交于 $\\left(0, -\\frac{3}{2}\\right)$。\n\n对 $f(x) = \\frac{2x - 8}{x^{2} + 4}$：$f(0) = \\frac{-8}{4} = -2$，所以 $y$ 轴截距是 $(0, -2)$。检验：$-2 \\cdot 4 = -8$，正是分子的常数项。\n\n> **注意。** $y$ 轴截距用的是常数项，即 $f(0)$。首项系数之比属于水平渐近线，分子的零点是 $x$ 轴截距。",
       ),
       generate(rng) {
         for (;;) {
@@ -1209,9 +1846,25 @@ export const rootsOfRationalFunctions: TopicDef = {
               [y, 0],
               [0, Q.of(N[deg(N)]!, D[deg(D)]!)],
             ],
-            solution: t(
-              `On the $y$-axis $x = 0$, and every term with $x$ vanishes:${steps(`f(0) = ${frac(String(n0), String(d0))} = ${num(y)}`)}The point is $(0, ${num(y)})$.`,
-              `在 $y$ 轴上 $x = 0$，含 $x$ 的项都为 $0$：${steps(`f(0) = ${frac(String(n0), String(d0))} = ${num(y)}`)}交点是 $(0, ${num(y)})$。`,
+            solution: walked(
+              [
+                [
+                  ["Set $x = 0$", "令 $x = 0$"],
+                  t(
+                    `On the $y$-axis $x = 0$, and every term with $x$ vanishes, leaving the constant terms $${n0}$ and $${d0}$.`,
+                    `在 $y$ 轴上 $x = 0$，含 $x$ 的项都为 $0$，只剩常数项 $${n0}$ 和 $${d0}$。`,
+                  ),
+                ],
+                [
+                  ["Divide", "相除"],
+                  t(`The point is $(0, ${num(y)})$:`, `交点是 $(0, ${num(y)})$：`),
+                  [`f(0) = ${frac(String(n0), String(d0))} = ${num(y)}`],
+                ],
+              ],
+              t(
+                `Multiply back by the denominator's constant term:${steps(`${num(y)} \\cdot ${paren(d0)} = ${n0}`)}which is the numerator's constant term.`,
+                `乘回分母的常数项：${steps(`${num(y)} \\cdot ${paren(d0)} = ${n0}`)}正是分子的常数项。`,
+              ),
             ),
           });
         }
@@ -1245,14 +1898,26 @@ export const verticalAsymptotesOfRationalFunctions: TopicDef = {
   encompasses: [{ topic: "unbounded-behavior-of-functions-near-a-point", weight: 0.5 }],
   xp: 13,
   standards: ["CCSS.HSF.IF.C.7.D"],
+  intro: t(
+    `The function $f(x) = \\frac{3}{x^{2} - 4x} = \\frac{3}{x(x - 4)}$ has a denominator that is $0$ at $x = 0$ and $x = 4$, and a numerator that is never $0$. Near those values $f$ grows without bound, so the lines $x = 0$ and $x = 4$ are its vertical asymptotes.
+
+Check: $f(4.01) = \\frac{3}{4.01 \\cdot 0.01} \\approx 75$, and it gets larger as $x$ gets closer to $4$.
+
+In this lesson we find vertical asymptotes when the denominator has a leading coefficient or is a cubic, and count them when factors repeat, never vanish or cancel.`,
+    `函数 $f(x) = \\frac{3}{x^{2} - 4x} = \\frac{3}{x(x - 4)}$ 的分母在 $x = 0$ 和 $x = 4$ 处为 $0$，分子永不为 $0$。在这些值附近 $f$ 无界增大，所以直线 $x = 0$ 和 $x = 4$ 是它的竖直渐近线。
+
+检验：$f(4.01) = \\frac{3}{4.01 \\cdot 0.01} \\approx 75$，$x$ 越接近 $4$ 它越大。
+
+这节课我们求分母有首项系数或是三次式时的竖直渐近线，并在因式重复、永不为零或被约去时数出渐近线的条数。`,
+  ),
   knowledgePoints: [
     {
       id: "denominators-with-leading-coefficients",
       figure: precalculusDrawings["vertical-asymptotes-of-rational-functions#denominators-with-leading-coefficients"],
       title: t("Denominators with leading coefficients", "首项系数不为 1 的分母"),
       explanation: t(
-        "$f(x) = \\frac{p(x)}{q(x)}$ has a **vertical asymptote** $x = a$ when $q(a) = 0$ and the factor $x - a$ does not cancel with the numerator. Near such an $a$, $f$ grows without bound.\n\nFactor the denominator completely; a factor $kx - m$ gives $x = \\frac{m}{k}$:\n\n$$f(x) = \\frac{5}{6x^{2} + x - 2} = \\frac{5}{(2x - 1)(3x + 2)}$$\n\nThe vertical asymptotes are $x = \\frac{1}{2}$ and $x = -\\frac{2}{3}$.",
-        "若 $q(a) = 0$，且因式 $x - a$ 不能与分子约去，则 $f(x) = \\frac{p(x)}{q(x)}$ 有**竖直渐近线** $x = a$。在这样的 $a$ 附近，$f$ 无界增大。\n\n把分母完全分解；因式 $kx - m$ 给出 $x = \\frac{m}{k}$：\n\n$$f(x) = \\frac{5}{6x^{2} + x - 2} = \\frac{5}{(2x - 1)(3x + 2)}$$\n\n竖直渐近线是 $x = \\frac{1}{2}$ 和 $x = -\\frac{2}{3}$。",
+        "$f(x) = \\frac{p(x)}{q(x)}$ has a **vertical asymptote** $x = a$ when $q(a) = 0$ and the factor $x - a$ does not cancel with the numerator. Near such an $a$, $f$ grows without bound.\n\nFactor the denominator completely; a factor $kx - m$ gives $x = \\frac{m}{k}$:\n\n$$f(x) = \\frac{5}{6x^{2} + x - 2} = \\frac{5}{(2x - 1)(3x + 2)}$$\n\nThe vertical asymptotes are $x = \\frac{1}{2}$ and $x = -\\frac{2}{3}$.\n\nFor $f(x) = \\frac{x + 1}{4x^{2} - 9} = \\frac{x + 1}{(2x - 3)(2x + 3)}$, the vertical asymptotes are $x = \\frac{3}{2}$ and $x = -\\frac{3}{2}$. Check: $4\\left(\\frac{3}{2}\\right)^{2} - 9 = 9 - 9 = 0$, and the numerator is $\\frac{5}{2}$ there, not $0$.\n\n> **Watch out.** Solve each factor: $2x - 3 = 0$ gives $x = \\frac{3}{2}$, not $x = 3$ or $x = -\\frac{3}{2}$.",
+        "若 $q(a) = 0$，且因式 $x - a$ 不能与分子约去，则 $f(x) = \\frac{p(x)}{q(x)}$ 有**竖直渐近线** $x = a$。在这样的 $a$ 附近，$f$ 无界增大。\n\n把分母完全分解；因式 $kx - m$ 给出 $x = \\frac{m}{k}$：\n\n$$f(x) = \\frac{5}{6x^{2} + x - 2} = \\frac{5}{(2x - 1)(3x + 2)}$$\n\n竖直渐近线是 $x = \\frac{1}{2}$ 和 $x = -\\frac{2}{3}$。\n\n对 $f(x) = \\frac{x + 1}{4x^{2} - 9} = \\frac{x + 1}{(2x - 3)(2x + 3)}$，竖直渐近线是 $x = \\frac{3}{2}$ 和 $x = -\\frac{3}{2}$。检验：$4\\left(\\frac{3}{2}\\right)^{2} - 9 = 9 - 9 = 0$，而分子在那里是 $\\frac{5}{2}$，不为 $0$。\n\n> **注意。** 要分别解每个因式：$2x - 3 = 0$ 给出 $x = \\frac{3}{2}$，而不是 $x = 3$ 或 $x = -\\frac{3}{2}$。",
       ),
       keyPrerequisites: ["unbounded-behavior-of-functions-near-a-point"],
       generate(rng) {
@@ -1269,7 +1934,9 @@ export const verticalAsymptotesOfRationalFunctions: TopicDef = {
           const D = mulP([b, a], [d, c]);
           const s = rng.int(-6, 6);
           const top = rng.bool() ? String(rng.nonZero(-9, 9)) : bare(s);
+          if (top === bare(s) && (r1.eq(Q.of(s)) || r2.eq(Q.of(s)))) continue;
           const answer = [r1, r2];
+          const zero = (k: number, m: number, r: Q) => `${k === 1 ? "" : k}\\left(${num(r)}\\right) ${sgn(m)} ${Math.abs(m)} = 0`;
           return solutionsProblem({
             prompt: t(
               `Find the vertical asymptotes of $f(x) = ${frac(top, pl(D))}$. Write each as $x = a$.`,
@@ -1277,9 +1944,25 @@ export const verticalAsymptotesOfRationalFunctions: TopicDef = {
             ),
             values: values(answer),
             wrong: [values(answer.map((x) => x.neg())), values([Q.of(-a, b), Q.of(-c, d)]), values([s])],
-            solution: t(
-              `Factor the denominator:${steps(`${pl(D)} = (${linear(a, b)})(${linear(c, d)})`)}It is $0$ at $x = ${num(r1)}$ and $x = ${num(r2)}$, and the numerator is not $0$ at either. So the vertical asymptotes are $x = ${num(r1)}$ and $x = ${num(r2)}$.`,
-              `分解分母：${steps(`${pl(D)} = (${linear(a, b)})(${linear(c, d)})`)}它在 $x = ${num(r1)}$ 和 $x = ${num(r2)}$ 处为 $0$，而分子在这两处都不为 $0$。所以竖直渐近线是 $x = ${num(r1)}$ 和 $x = ${num(r2)}$。`,
+            solution: walked(
+              [
+                [
+                  ["Factor the denominator", "分解分母"],
+                  t("Factor it completely:", "把它完全分解："),
+                  [`${pl(D)} = (${linear(a, b)})(${linear(c, d)})`],
+                ],
+                [
+                  ["Solve each factor", "解每个因式"],
+                  t(
+                    `It is $0$ at $x = ${num(r1)}$ and $x = ${num(r2)}$, and the numerator is not $0$ at either. So the vertical asymptotes are $x = ${num(r1)}$ and $x = ${num(r2)}$.`,
+                    `它在 $x = ${num(r1)}$ 和 $x = ${num(r2)}$ 处为 $0$，而分子在这两处都不为 $0$。所以竖直渐近线是 $x = ${num(r1)}$ 和 $x = ${num(r2)}$。`,
+                  ),
+                ],
+              ],
+              t(
+                `Each value makes its factor $0$:${steps(zero(a, b, r1), zero(c, d, r2))}${top === bare(s) ? `and the numerator $${bare(s)}$ is $0$ only at $x = ${s}$, which is neither.` : `and the numerator $${top}$ is never $0$.`}`,
+                `每个值都使对应的因式为 $0$：${steps(zero(a, b, r1), zero(c, d, r2))}${top === bare(s) ? `而分子 $${bare(s)}$ 只在 $x = ${s}$ 处为 $0$，不是其中任何一个。` : `而分子 $${top}$ 永不为 $0$。`}`,
+              ),
             ),
           });
         }
@@ -1290,8 +1973,8 @@ export const verticalAsymptotesOfRationalFunctions: TopicDef = {
       figure: precalculusDrawings["vertical-asymptotes-of-rational-functions#cubic-denominators"],
       title: t("Cubic denominators", "三次分母"),
       explanation: t(
-        "A cubic denominator often factors by taking out a common factor first:\n\n$$f(x) = \\frac{x + 3}{x^{3} - 9x} = \\frac{x + 3}{x(x - 3)(x + 3)}$$\n\nThe denominator is $0$ at $x = 0$, $3$ and $-3$. The factor $x + 3$ cancels with the numerator, leaving a hole at $x = -3$. So the vertical asymptotes are $x = 0$ and $x = 3$.",
-        "三次分母常常可以先提取公因式再分解：\n\n$$f(x) = \\frac{x + 3}{x^{3} - 9x} = \\frac{x + 3}{x(x - 3)(x + 3)}$$\n\n分母在 $x = 0$、$3$、$-3$ 处为 $0$。因式 $x + 3$ 与分子约去，在 $x = -3$ 处只留下空洞。所以竖直渐近线是 $x = 0$ 和 $x = 3$。",
+        "A cubic denominator often factors by taking out a common factor first:\n\n$$f(x) = \\frac{x + 3}{x^{3} - 9x} = \\frac{x + 3}{x(x - 3)(x + 3)}$$\n\nThe denominator is $0$ at $x = 0$, $3$ and $-3$. The factor $x + 3$ cancels with the numerator, leaving a hole at $x = -3$. So the vertical asymptotes are $x = 0$ and $x = 3$.\n\nFor $f(x) = \\frac{x - 1}{x^{3} - 4x} = \\frac{x - 1}{x(x - 2)(x + 2)}$, no factor cancels, so the vertical asymptotes are $x = 0$, $x = 2$ and $x = -2$. Check: the numerator is $-1$, $1$ and $-3$ at these values, never $0$.\n\n> **Watch out.** The common factor $x$ is a factor too: it gives the asymptote $x = 0$, which is easy to miss.",
+        "三次分母常常可以先提取公因式再分解：\n\n$$f(x) = \\frac{x + 3}{x^{3} - 9x} = \\frac{x + 3}{x(x - 3)(x + 3)}$$\n\n分母在 $x = 0$、$3$、$-3$ 处为 $0$。因式 $x + 3$ 与分子约去，在 $x = -3$ 处只留下空洞。所以竖直渐近线是 $x = 0$ 和 $x = 3$。\n\n对 $f(x) = \\frac{x - 1}{x^{3} - 4x} = \\frac{x - 1}{x(x - 2)(x + 2)}$，没有因式能约去，所以竖直渐近线是 $x = 0$、$x = 2$ 和 $x = -2$。检验：分子在这些值处分别是 $-1$、$1$、$-3$，都不为 $0$。\n\n> **注意。** 公因式 $x$ 也是一个因式：它给出渐近线 $x = 0$，很容易漏掉。",
       ),
       generate(rng) {
         const lead = rng.pick([1, 1, 2, 3]);
@@ -1317,9 +2000,32 @@ export const verticalAsymptotesOfRationalFunctions: TopicDef = {
           ),
           values: values(answer),
           wrong: [values(roots), values([r1, r2]), values(answer.map((x) => -x))],
-          solution: t(
-            `Take out the common factor $${front(lead)}x$ and factor the rest:${steps(`${pl(D)} = ${front(lead)}x${fac(r1)}${fac(r2)}`)}The denominator is $0$ at ${listText(roots)}. ${shared ? `The factor $${bare(s)}$ cancels with the numerator, leaving a hole at $x = ${s}$. ` : "None of its factors cancels with the numerator. "}So the vertical asymptotes are ${listText(answer)}.`,
-            `提取公因式 $${front(lead)}x$，再分解剩下的部分：${steps(`${pl(D)} = ${front(lead)}x${fac(r1)}${fac(r2)}`)}分母在 ${listText(roots, "、")} 处为 $0$。${shared ? `因式 $${bare(s)}$ 与分子约去，在 $x = ${s}$ 处只留下空洞。` : "它的因式都不能与分子约去。"}所以竖直渐近线是 ${listText(answer, "、")}。`,
+          solution: walked(
+            [
+              [
+                ["Take out the common factor", "提取公因式"],
+                t(`Take out $${front(lead)}x$ and factor the rest:`, `提取 $${front(lead)}x$，再分解剩下的部分：`),
+                [`${pl(D)} = ${front(lead)}x${fac(r1)}${fac(r2)}`],
+              ],
+              [
+                ["Cancel common factors", "约去公因式"],
+                t(
+                  `The denominator is $0$ at ${listText(roots)}. ${shared ? `The factor $${bare(s)}$ cancels with the numerator, leaving a hole at $x = ${s}$. ` : "None of its factors cancels with the numerator. "}So the vertical asymptotes are ${listText(answer)}.`,
+                  `分母在 ${listText(roots, "、")} 处为 $0$。${shared ? `因式 $${bare(s)}$ 与分子约去，在 $x = ${s}$ 处只留下空洞。` : "它的因式都不能与分子约去。"}所以竖直渐近线是 ${listText(answer, "、")}。`,
+                ),
+              ],
+            ],
+            shared
+              ? t(
+                  "After cancelling, the numerator is $1$, which is never $0$, while each remaining factor of the denominator is $0$ at its asymptote.",
+                  "约分后分子是 $1$，永不为 $0$，而分母剩下的每个因式都在对应的渐近线处为 $0$。",
+                )
+              : top === bare(s)
+                ? t(
+                    `The numerator $${bare(s)}$ is not $0$ at any of them:${steps(...answer.map((x) => `${x} - ${paren(s)} = ${x - s}`))}so each of these values is a vertical asymptote.`,
+                    `分子 $${bare(s)}$ 在这些值处都不为 $0$：${steps(...answer.map((x) => `${x} - ${paren(s)} = ${x - s}`))}所以这些值都是竖直渐近线。`,
+                  )
+                : t(`The numerator $${top}$ is a nonzero constant, so it is never $0$.`, `分子 $${top}$ 是非零常数，永不为 $0$。`),
           ),
         });
       },
@@ -1329,8 +2035,8 @@ export const verticalAsymptotesOfRationalFunctions: TopicDef = {
       title: t("Counting vertical asymptotes", "数竖直渐近线的条数"),
       figure: remainingDrawings5["vertical-asymptotes-of-rational-functions#counting-vertical-asymptotes"],
       explanation: t(
-        "To count the vertical asymptotes, factor the denominator and compare each factor with the numerator:\n\n- a factor $x^{2} + k$ with $k > 0$ is never $0$, so it gives no asymptote;\n- a repeated factor such as $(x - 2)^{2}$ gives only one asymptote, $x = 2$;\n- a factor $x - a$ that cancels completely with the numerator gives a hole, not an asymptote; but if $(x - a)^{2}$ is in the denominator and only $x - a$ in the numerator, one factor is left and $x = a$ is still an asymptote.\n\n$$\\frac{x - 1}{(x - 1)^{2}(x^{2} + 4)} = \\frac{1}{(x - 1)(x^{2} + 4)}$$\n\nhas exactly one vertical asymptote, $x = 1$.",
-        "数竖直渐近线时，把分母因式分解，并把每个因式与分子比较：\n\n- $k > 0$ 时因式 $x^{2} + k$ 永不为 $0$，不产生渐近线；\n- 重复的因式如 $(x - 2)^{2}$ 只产生一条渐近线 $x = 2$；\n- 能与分子完全约去的因式 $x - a$ 产生空洞，而不是渐近线；但如果分母有 $(x - a)^{2}$ 而分子只有 $x - a$，约分后还剩一个因式，$x = a$ 仍是渐近线。\n\n$$\\frac{x - 1}{(x - 1)^{2}(x^{2} + 4)} = \\frac{1}{(x - 1)(x^{2} + 4)}$$\n\n恰有一条竖直渐近线 $x = 1$。",
+        "To count the vertical asymptotes, factor the denominator and compare each factor with the numerator:\n\n- a factor $x^{2} + k$ with $k > 0$ is never $0$, so it gives no asymptote;\n- a repeated factor such as $(x - 2)^{2}$ gives only one asymptote, $x = 2$;\n- a factor $x - a$ that cancels completely with the numerator gives a hole, not an asymptote; but if $(x - a)^{2}$ is in the denominator and only $x - a$ in the numerator, one factor is left and $x = a$ is still an asymptote.\n\n$$\\frac{x - 1}{(x - 1)^{2}(x^{2} + 4)} = \\frac{1}{(x - 1)(x^{2} + 4)}$$\n\nhas exactly one vertical asymptote, $x = 1$.\n\nFor $\\frac{x + 3}{(x + 3)(x - 2)^{2}(x^{2} + 1)}$, the factor $x + 3$ cancels (a hole), $x^{2} + 1$ is never $0$, and $(x - 2)^{2}$ gives one asymptote: exactly $1$ vertical asymptote. Check: after cancelling, the denominator $(x - 2)^{2}(x^{2} + 1)$ is $0$ only at $x = 2$.\n\n> **Watch out.** Count distinct values of $x$, not factors or the degree: $(x - 2)^{2}$ has degree $2$ but gives one asymptote.",
+        "数竖直渐近线时，把分母因式分解，并把每个因式与分子比较：\n\n- $k > 0$ 时因式 $x^{2} + k$ 永不为 $0$，不产生渐近线；\n- 重复的因式如 $(x - 2)^{2}$ 只产生一条渐近线 $x = 2$；\n- 能与分子完全约去的因式 $x - a$ 产生空洞，而不是渐近线；但如果分母有 $(x - a)^{2}$ 而分子只有 $x - a$，约分后还剩一个因式，$x = a$ 仍是渐近线。\n\n$$\\frac{x - 1}{(x - 1)^{2}(x^{2} + 4)} = \\frac{1}{(x - 1)(x^{2} + 4)}$$\n\n恰有一条竖直渐近线 $x = 1$。\n\n对 $\\frac{x + 3}{(x + 3)(x - 2)^{2}(x^{2} + 1)}$，因式 $x + 3$ 约去（空洞），$x^{2} + 1$ 永不为 $0$，$(x - 2)^{2}$ 给出一条渐近线：恰好 $1$ 条竖直渐近线。检验：约分后分母 $(x - 2)^{2}(x^{2} + 1)$ 只在 $x = 2$ 处为 $0$。\n\n> **注意。** 数的是 $x$ 的不同取值，而不是因式个数或次数：$(x - 2)^{2}$ 是二次的，但只给出一条渐近线。",
       ),
       generate(rng) {
         const shape = rng.int(0, 4);
@@ -1364,6 +2070,8 @@ export const verticalAsymptotesOfRationalFunctions: TopicDef = {
         const sNum = top === bare(s) ? s : undefined;
         const count = fs.filter(([r, m]) => m > (r === sNum ? 1 : 0)).length;
         const D = expandF(1, fs, irr);
+        const left = fs.filter(([r, m]) => m > (r === sNum ? 1 : 0)).map(([r]) => r);
+        const cut = sNum !== undefined && roots.includes(sNum);
         return numberProblem({
           prompt: t(
             `How many vertical asymptotes does the graph of $f(x) = ${frac(top, pl(D))}$ have?`,
@@ -1371,9 +2079,37 @@ export const verticalAsymptotesOfRationalFunctions: TopicDef = {
           ),
           answer: count,
           wrong: [roots.length, deg(D), count + 1],
-          solution: t(
-            `${fs.length ? `Factor the denominator: $${pl(D)} = ${fs.map(([r, m]) => facPow(r, m)).join("")}${irr ? `(x^{2} + ${irr})` : ""}$.${irr ? ` The factor $x^{2} + ${irr}$ is never $0$, because $x^{2} \\ge 0$.` : ""} The denominator is $0$ at ${listText([...new Set(roots)])}.` : `The denominator $x^{2} + ${irr}$ is never $0$, because $x^{2} \\ge 0$.`}${sNum !== undefined && roots.includes(sNum) ? ` The numerator $${bare(sNum)}$ cancels ${fs.find(([r]) => r === sNum)![1] > 1 ? "one of the two factors" : "the factor"} $${bare(sNum)}$${fs.find(([r]) => r === sNum)![1] > 1 ? `, so $x = ${sNum}$ is still an asymptote` : `, leaving a hole at $x = ${sNum}$`}.` : ""} So there ${count === 1 ? "is" : "are"} $${count}$ vertical asymptote${count === 1 ? "" : "s"}.`,
-            `${fs.length ? `分解分母：$${pl(D)} = ${fs.map(([r, m]) => facPow(r, m)).join("")}${irr ? `(x^{2} + ${irr})` : ""}$。${irr ? `因为 $x^{2} \\ge 0$，因式 $x^{2} + ${irr}$ 永不为 $0$。` : ""}分母在 ${listText([...new Set(roots)], "、")} 处为 $0$。` : `因为 $x^{2} \\ge 0$，分母 $x^{2} + ${irr}$ 永不为 $0$。`}${sNum !== undefined && roots.includes(sNum) ? `分子 $${bare(sNum)}$ 约去${fs.find(([r]) => r === sNum)![1] > 1 ? "两个因式中的一个" : "因式"} $${bare(sNum)}$${fs.find(([r]) => r === sNum)![1] > 1 ? `，所以 $x = ${sNum}$ 仍是渐近线` : `，在 $x = ${sNum}$ 处只留下空洞`}。` : ""}所以共有 $${count}$ 条竖直渐近线。`,
+          solution: walked(
+            [
+              [
+                ["Factor the denominator", "分解分母"],
+                t(
+                  `${fs.length ? `Factor it: $${pl(D)} = ${fs.map(([r, m]) => facPow(r, m)).join("")}${irr ? `(x^{2} + ${irr})` : ""}$.${irr ? ` The factor $x^{2} + ${irr}$ is never $0$, because $x^{2} \\ge 0$.` : ""} The denominator is $0$ at ${listText([...new Set(roots)])}.` : `The denominator $x^{2} + ${irr}$ is never $0$, because $x^{2} \\ge 0$.`}`,
+                  `${fs.length ? `分解：$${pl(D)} = ${fs.map(([r, m]) => facPow(r, m)).join("")}${irr ? `(x^{2} + ${irr})` : ""}$。${irr ? `因为 $x^{2} \\ge 0$，因式 $x^{2} + ${irr}$ 永不为 $0$。` : ""}分母在 ${listText([...new Set(roots)], "、")} 处为 $0$。` : `因为 $x^{2} \\ge 0$，分母 $x^{2} + ${irr}$ 永不为 $0$。`}`,
+                ),
+              ],
+              [
+                ["Compare with the numerator", "与分子比较"],
+                t(
+                  `${cut ? `The numerator $${bare(sNum)}$ cancels ${fs.find(([r]) => r === sNum)![1] > 1 ? "one of the two factors" : "the factor"} $${bare(sNum)}$${fs.find(([r]) => r === sNum)![1] > 1 ? `, so $x = ${sNum}$ is still an asymptote` : `, leaving a hole at $x = ${sNum}$`}. ` : "No factor of the denominator cancels with the numerator. "}So there ${count === 1 ? "is" : "are"} $${count}$ vertical asymptote${count === 1 ? "" : "s"}.`,
+                  `${cut ? `分子 $${bare(sNum)}$ 约去${fs.find(([r]) => r === sNum)![1] > 1 ? "两个因式中的一个" : "因式"} $${bare(sNum)}$${fs.find(([r]) => r === sNum)![1] > 1 ? `，所以 $x = ${sNum}$ 仍是渐近线` : `，在 $x = ${sNum}$ 处只留下空洞`}。` : "分母的因式都不能与分子约去。"}所以共有 $${count}$ 条竖直渐近线。`,
+                ),
+              ],
+            ],
+            count === 0
+              ? t(
+                  `After cancelling, the denominator is $x^{2} + ${irr}$, which is at least $${irr}$ for every $x$, so nothing is left that can be $0$.`,
+                  `约分后分母是 $x^{2} + ${irr}$，对每个 $x$ 都至少是 $${irr}$，所以没有能为 $0$ 的因式了。`,
+                )
+              : cut || sNum === undefined
+                ? t(
+                    `After cancelling, the numerator is $${cut ? "1" : top}$, which is never $0$, and a factor of the denominator is left at ${listText(left)}.`,
+                    `约分后分子是 $${cut ? "1" : top}$，永不为 $0$，而在 ${listText(left, "、")} 处分母还剩因式。`,
+                  )
+                : t(
+                    `The numerator $${bare(sNum)}$ is not $0$ at ${listText(left)}:${steps(...left.map((r) => `${r} - ${paren(sNum)} = ${r - sNum}`))}so each of these values is a vertical asymptote.`,
+                    `分子 $${bare(sNum)}$ 在 ${listText(left, "、")} 处不为 $0$：${steps(...left.map((r) => `${r} - ${paren(sNum)} = ${r - sNum}`))}所以这些值都是竖直渐近线。`,
+                  ),
           ),
         });
       },
@@ -1400,14 +2136,26 @@ export const locatingHolesInRationalFunctions: TopicDef = {
   ],
   xp: 13,
   standards: ["CCSS.HSF.IF.C.7.D"],
+  intro: t(
+    `The function $f(x) = \\frac{x^{2} - 1}{x - 1} = \\frac{(x - 1)(x + 1)}{x - 1}$ equals $x + 1$ for every $x \\neq 1$, and it is not defined at $x = 1$. Its graph is the line $y = x + 1$ with the point $(1, 2)$ missing: a hole.
+
+Check: $f(1.01) = 2.01$ and $f(0.99) = 1.99$, both close to $2$.
+
+In this lesson we find the coordinates of holes from factored and from expanded forms, and tell a hole from a vertical asymptote.`,
+    `函数 $f(x) = \\frac{x^{2} - 1}{x - 1} = \\frac{(x - 1)(x + 1)}{x - 1}$ 对每个 $x \\neq 1$ 都等于 $x + 1$，在 $x = 1$ 处无意义。它的图象是直线 $y = x + 1$ 去掉点 $(1, 2)$：一个空洞。
+
+检验：$f(1.01) = 2.01$，$f(0.99) = 1.99$，都接近 $2$。
+
+这节课我们由因式分解形式和展开形式求空洞的坐标，并区分空洞和竖直渐近线。`,
+  ),
   knowledgePoints: [
     {
       id: "holes-of-factored-functions",
       figure: precalculusDrawings["locating-holes-in-rational-functions#holes-of-factored-functions"],
       title: t("The coordinates of a hole", "空洞的坐标"),
       explanation: t(
-        "When a factor $x - h$ cancels completely, $f$ is not defined at $x = h$ but behaves like the simplified function there. Its graph is the graph of the simplified function with one point missing, a **hole**, drawn as an open circle.\n\nTo find the hole, cancel, then substitute $x = h$ into the simplified function:\n\n$$f(x) = \\frac{2(x - 3)(x + 1)}{(x - 3)(x - 5)} = \\frac{2(x + 1)}{x - 5} \\quad (x \\neq 3)$$\n\n$$\\frac{2(3 + 1)}{3 - 5} = -4$$\n\nso the hole is at $(3, -4)$.",
-        "当因式 $x - h$ 被完全约去时，$f$ 在 $x = h$ 处无意义，但在那附近与化简后的函数一样。它的图象就是化简后函数的图象去掉一个点，这个点叫**空洞**，画成空心圆圈。\n\n求空洞时，先约分，再把 $x = h$ 代入化简后的函数：\n\n$$f(x) = \\frac{2(x - 3)(x + 1)}{(x - 3)(x - 5)} = \\frac{2(x + 1)}{x - 5} \\quad (x \\neq 3)$$\n\n$$\\frac{2(3 + 1)}{3 - 5} = -4$$\n\n所以空洞在 $(3, -4)$。",
+        "When a factor $x - h$ cancels completely, $f$ is not defined at $x = h$ but behaves like the simplified function there. Its graph is the graph of the simplified function with one point missing, a **hole**, drawn as an open circle.\n\nTo find the hole, cancel, then substitute $x = h$ into the simplified function:\n\n$$f(x) = \\frac{2(x - 3)(x + 1)}{(x - 3)(x - 5)} = \\frac{2(x + 1)}{x - 5} \\quad (x \\neq 3)$$\n\n$$\\frac{2(3 + 1)}{3 - 5} = -4$$\n\nso the hole is at $(3, -4)$.\n\nFor $f(x) = \\frac{(x + 2)(x - 1)}{(x + 2)(x + 4)} = \\frac{x - 1}{x + 4}$ with $x \\neq -2$, the hole is at $x = -2$ with $y = \\frac{-3}{2}$, the point $\\left(-2, -\\frac{3}{2}\\right)$. Check: the remaining denominator $x + 4$ is $2$ at $x = -2$, not $0$, so the simplified function is defined there.\n\n> **Watch out.** Substitute into the simplified function: the original gives $\\frac{0}{0}$. The $y$-coordinate of a hole is usually not $0$.",
+        "当因式 $x - h$ 被完全约去时，$f$ 在 $x = h$ 处无意义，但在那附近与化简后的函数一样。它的图象就是化简后函数的图象去掉一个点，这个点叫**空洞**，画成空心圆圈。\n\n求空洞时，先约分，再把 $x = h$ 代入化简后的函数：\n\n$$f(x) = \\frac{2(x - 3)(x + 1)}{(x - 3)(x - 5)} = \\frac{2(x + 1)}{x - 5} \\quad (x \\neq 3)$$\n\n$$\\frac{2(3 + 1)}{3 - 5} = -4$$\n\n所以空洞在 $(3, -4)$。\n\n对 $f(x) = \\frac{(x + 2)(x - 1)}{(x + 2)(x + 4)} = \\frac{x - 1}{x + 4}$（$x \\neq -2$），空洞在 $x = -2$ 处，$y = \\frac{-3}{2}$，即点 $\\left(-2, -\\frac{3}{2}\\right)$。检验：剩下的分母 $x + 4$ 在 $x = -2$ 处是 $2$，不为 $0$，所以化简后的函数在那里有意义。\n\n> **注意。** 要代入化简后的函数：原函数会得到 $\\frac{0}{0}$。空洞的纵坐标一般不是 $0$。",
       ),
       generate(rng) {
         const [h, r, p] = rng.sample(range(-7, 7), 3) as [number, number, number];
@@ -1427,9 +2175,28 @@ export const locatingHolesInRationalFunctions: TopicDef = {
             [h, Q.of(a * (h - p), h - r)],
             [-h, y],
           ],
-          solution: t(
-            `The factor $${bare(h)}$ cancels:${steps(`f(x) = ${frac(prodL(simple([r]), a), bare(p))} \\quad (x \\neq ${h})`)}Substitute $x = ${h}$ into the simplified function:${steps(`${frac(`${a === 1 ? "" : a === -1 ? "-" : `${a}`}(${h} ${sgn(-r)} ${Math.abs(r)})`, `${h} ${sgn(-p)} ${Math.abs(p)}`)} = ${num(y)}`)}The hole is at $(${h}, ${num(y)})$.`,
-            `因式 $${bare(h)}$ 约去：${steps(`f(x) = ${frac(prodL(simple([r]), a), bare(p))} \\quad (x \\neq ${h})`)}把 $x = ${h}$ 代入化简后的函数：${steps(`${frac(`${a === 1 ? "" : a === -1 ? "-" : `${a}`}(${h} ${sgn(-r)} ${Math.abs(r)})`, `${h} ${sgn(-p)} ${Math.abs(p)}`)} = ${num(y)}`)}空洞在 $(${h}, ${num(y)})$。`,
+          solution: walked(
+            [
+              [
+                ["Cancel the common factor", "约去公因式"],
+                t(`The factor $${bare(h)}$ cancels:`, `因式 $${bare(h)}$ 约去：`),
+                [`f(x) = ${frac(prodL(simple([r]), a), bare(p))} \\quad (x \\neq ${h})`],
+              ],
+              [
+                ["Substitute", "代入"],
+                t(
+                  `Put $x = ${h}$ into the simplified function. The hole is at $(${h}, ${num(y)})$.`,
+                  `把 $x = ${h}$ 代入化简后的函数。空洞在 $(${h}, ${num(y)})$。`,
+                ),
+                [
+                  `${frac(`${a === 1 ? "" : a === -1 ? "-" : `${a}`}(${h} ${sgn(-r)} ${Math.abs(r)})`, `${h} ${sgn(-p)} ${Math.abs(p)}`)} = ${num(y)}`,
+                ],
+              ],
+            ],
+            t(
+              `The remaining denominator is not $0$ at $x = ${h}$:${steps(`${h} - ${paren(p)} = ${h - p} \\neq 0`)}so the simplified function is defined there, and the missing point is a hole, not an asymptote.`,
+              `剩下的分母在 $x = ${h}$ 处不为 $0$：${steps(`${h} - ${paren(p)} = ${h - p} \\neq 0`)}所以化简后的函数在那里有意义，缺的这个点是空洞而不是渐近线。`,
+            ),
           ),
         });
       },
@@ -1439,8 +2206,8 @@ export const locatingHolesInRationalFunctions: TopicDef = {
       figure: precalculusDrawings["locating-holes-in-rational-functions#holes-after-factoring"],
       title: t("Holes after factoring", "因式分解后求空洞"),
       explanation: t(
-        "When the numerator and denominator are expanded, factor both to find a common factor.\n\n$$f(x) = \\frac{x^{2} + x - 6}{2x^{2} - 3x - 2} = \\frac{(x - 2)(x + 3)}{(x - 2)(2x + 1)} = \\frac{x + 3}{2x + 1} \\quad (x \\neq 2)$$\n\nAt $x = 2$ the simplified function is $\\frac{5}{5} = 1$, so the hole is at $(2, 1)$. The remaining factor $2x + 1$ gives the vertical asymptote $x = -\\frac{1}{2}$.",
-        "如果分子和分母是展开式，把两者都因式分解，找出公因式。\n\n$$f(x) = \\frac{x^{2} + x - 6}{2x^{2} - 3x - 2} = \\frac{(x - 2)(x + 3)}{(x - 2)(2x + 1)} = \\frac{x + 3}{2x + 1} \\quad (x \\neq 2)$$\n\n在 $x = 2$ 处化简后的函数值是 $\\frac{5}{5} = 1$，所以空洞在 $(2, 1)$。剩下的因式 $2x + 1$ 给出竖直渐近线 $x = -\\frac{1}{2}$。",
+        "When the numerator and denominator are expanded, factor both to find a common factor.\n\n$$f(x) = \\frac{x^{2} + x - 6}{2x^{2} - 3x - 2} = \\frac{(x - 2)(x + 3)}{(x - 2)(2x + 1)} = \\frac{x + 3}{2x + 1} \\quad (x \\neq 2)$$\n\nAt $x = 2$ the simplified function is $\\frac{5}{5} = 1$, so the hole is at $(2, 1)$. The remaining factor $2x + 1$ gives the vertical asymptote $x = -\\frac{1}{2}$.\n\nFor $f(x) = \\frac{x^{2} - 2x - 3}{x^{2} - 9} = \\frac{(x - 3)(x + 1)}{(x - 3)(x + 3)} = \\frac{x + 1}{x + 3}$ with $x \\neq 3$, the simplified function is $\\frac{4}{6} = \\frac{2}{3}$ at $x = 3$, so the hole is at $\\left(3, \\frac{2}{3}\\right)$. Check: the remaining denominator is $3 + 3 = 6$, not $0$.\n\n> **Watch out.** Only the cancelled factor gives a hole. The other zero of the denominator, here $x = -3$, is a vertical asymptote.",
+        "如果分子和分母是展开式，把两者都因式分解，找出公因式。\n\n$$f(x) = \\frac{x^{2} + x - 6}{2x^{2} - 3x - 2} = \\frac{(x - 2)(x + 3)}{(x - 2)(2x + 1)} = \\frac{x + 3}{2x + 1} \\quad (x \\neq 2)$$\n\n在 $x = 2$ 处化简后的函数值是 $\\frac{5}{5} = 1$，所以空洞在 $(2, 1)$。剩下的因式 $2x + 1$ 给出竖直渐近线 $x = -\\frac{1}{2}$。\n\n对 $f(x) = \\frac{x^{2} - 2x - 3}{x^{2} - 9} = \\frac{(x - 3)(x + 1)}{(x - 3)(x + 3)} = \\frac{x + 1}{x + 3}$（$x \\neq 3$），化简后的函数在 $x = 3$ 处是 $\\frac{4}{6} = \\frac{2}{3}$，所以空洞在 $\\left(3, \\frac{2}{3}\\right)$。检验：剩下的分母是 $3 + 3 = 6$，不为 $0$。\n\n> **注意。** 只有被约去的因式才产生空洞。分母的另一个零点（这里是 $x = -3$）是竖直渐近线。",
       ),
       generate(rng) {
         for (;;) {
@@ -1465,9 +2232,28 @@ export const locatingHolesInRationalFunctions: TopicDef = {
               [h, Q.of(b * h - e, a * (h - r) || 1)],
               [-h, y],
             ],
-            solution: t(
-              `Factor and cancel the common factor $${bare(h)}$:${steps(`f(x) = ${frac(`${front(a)}${fac(h)}${fac(r)}`, `${fac(h)}(${simpleBottom})`)} = ${frac(simpleTop, simpleBottom)} \\quad (x \\neq ${h})`)}At $x = ${h}$ the simplified function is $${num(y)}$, so the hole is at $(${h}, ${num(y)})$.`,
-              `因式分解并约去公因式 $${bare(h)}$：${steps(`f(x) = ${frac(`${front(a)}${fac(h)}${fac(r)}`, `${fac(h)}(${simpleBottom})`)} = ${frac(simpleTop, simpleBottom)} \\quad (x \\neq ${h})`)}化简后的函数在 $x = ${h}$ 处的值是 $${num(y)}$，所以空洞在 $(${h}, ${num(y)})$。`,
+            solution: walked(
+              [
+                [
+                  ["Factor and cancel", "因式分解并约分"],
+                  t(`Factor both and cancel the common factor $${bare(h)}$:`, `把两者因式分解，约去公因式 $${bare(h)}$：`),
+                  [
+                    `f(x) = ${frac(`${front(a)}${fac(h)}${fac(r)}`, `${fac(h)}(${simpleBottom})`)} = ${frac(simpleTop, simpleBottom)} \\quad (x \\neq ${h})`,
+                  ],
+                ],
+                [
+                  ["Substitute", "代入"],
+                  t(
+                    `At $x = ${h}$ the simplified function is $${num(y)}$, so the hole is at $(${h}, ${num(y)})$:`,
+                    `化简后的函数在 $x = ${h}$ 处的值是 $${num(y)}$，所以空洞在 $(${h}, ${num(y)})$：`,
+                  ),
+                  [`${frac(`${front(a)}(${h} - ${paren(r)})`, `${b === 1 ? h : `${b} \\cdot ${paren(h)}`} - ${paren(e)}`)} = ${num(y)}`],
+                ],
+              ],
+              t(
+                `The remaining denominator is not $0$ at $x = ${h}$:${steps(`${b === 1 ? h : `${b} \\cdot ${paren(h)}`} - ${paren(e)} = ${b * h - e} \\neq 0`)}so the point is a hole, not an asymptote.`,
+                `剩下的分母在 $x = ${h}$ 处不为 $0$：${steps(`${b === 1 ? h : `${b} \\cdot ${paren(h)}`} - ${paren(e)} = ${b * h - e} \\neq 0`)}所以这个点是空洞，而不是渐近线。`,
+              ),
             ),
           });
         }
@@ -1478,8 +2264,8 @@ export const locatingHolesInRationalFunctions: TopicDef = {
       figure: precalculusDrawings["locating-holes-in-rational-functions#hole-or-asymptote"],
       title: t("Hole or vertical asymptote?", "空洞还是竖直渐近线？"),
       explanation: t(
-        "At a zero $x = a$ of the denominator, count how many times $x - a$ appears on the top and on the bottom:\n\n- at least as many times on top: it cancels completely, and there is a **hole**;\n- more times on the bottom: a factor is left in the denominator, and there is a **vertical asymptote**.\n\nIf $x = a$ is not a zero of the denominator, $f(a)$ is defined: neither.\n\n$$\\frac{(x - 1)^{2}}{(x - 1)(x + 4)}: \\text{ hole at } x = 1, \\qquad \\frac{x - 1}{(x - 1)^{2}(x + 4)}: \\text{ asymptote } x = 1$$",
-        "在分母的零点 $x = a$ 处，数一数 $x - a$ 在分子和分母中各出现几次：\n\n- 分子中出现的次数不少于分母：完全约去，是**空洞**；\n- 分母中出现得更多：约分后分母中还剩因式，是**竖直渐近线**。\n\n若 $x = a$ 不是分母的零点，则 $f(a)$ 有意义：两者都不是。\n\n$$\\frac{(x - 1)^{2}}{(x - 1)(x + 4)}: \\ x = 1 \\text{ 处是空洞}, \\qquad \\frac{x - 1}{(x - 1)^{2}(x + 4)}: \\ x = 1 \\text{ 是渐近线}$$",
+        "At a zero $x = a$ of the denominator, count how many times $x - a$ appears on the top and on the bottom:\n\n- at least as many times on top: it cancels completely, and there is a **hole**;\n- more times on the bottom: a factor is left in the denominator, and there is a **vertical asymptote**.\n\nIf $x = a$ is not a zero of the denominator, $f(a)$ is defined: neither.\n\n$$\\frac{(x - 1)^{2}}{(x - 1)(x + 4)}: \\text{ hole at } x = 1, \\qquad \\frac{x - 1}{(x - 1)^{2}(x + 4)}: \\text{ asymptote } x = 1$$\n\nFor $\\frac{(x + 2)^{2}(x - 1)}{(x + 2)^{2}(x - 5)}$ at $x = -2$: $x + 2$ appears twice on top and twice on the bottom, so it cancels completely and there is a hole. Check: after cancelling, $\\frac{x - 1}{x - 5}$ is $\\frac{-3}{-7} = \\frac{3}{7}$ at $x = -2$, a finite value.\n\n> **Watch out.** Count the copies of the factor, not only whether it appears. One copy on top and two on the bottom still leaves $x - a$ in the denominator: an asymptote.",
+        "在分母的零点 $x = a$ 处，数一数 $x - a$ 在分子和分母中各出现几次：\n\n- 分子中出现的次数不少于分母：完全约去，是**空洞**；\n- 分母中出现得更多：约分后分母中还剩因式，是**竖直渐近线**。\n\n若 $x = a$ 不是分母的零点，则 $f(a)$ 有意义：两者都不是。\n\n$$\\frac{(x - 1)^{2}}{(x - 1)(x + 4)}: \\ x = 1 \\text{ 处是空洞}, \\qquad \\frac{x - 1}{(x - 1)^{2}(x + 4)}: \\ x = 1 \\text{ 是渐近线}$$\n\n对 $\\frac{(x + 2)^{2}(x - 1)}{(x + 2)^{2}(x - 5)}$ 在 $x = -2$ 处：$x + 2$ 在分子和分母中都出现两次，完全约去，是空洞。检验：约分后 $\\frac{x - 1}{x - 5}$ 在 $x = -2$ 处是 $\\frac{-3}{-7} = \\frac{3}{7}$，是有限值。\n\n> **注意。** 要数因式出现的次数，而不只是看它是否出现。分子一个、分母两个，约分后分母中仍剩 $x - a$：是渐近线。",
       ),
       generate(rng) {
         const c = rng.int(-6, 6);
@@ -1494,24 +2280,92 @@ export const locatingHolesInRationalFunctions: TopicDef = {
         const bottom: Factor[] = [...(kD > 0 ? [[c, kD] as Factor] : []), [o2, 1]];
         const f = frac(prodL(top), prodL(bottom));
         const times = (n: number, zh = false) => (zh ? `${n} 次` : n === 1 ? "once" : "twice");
-        return choiceProblem({
-          prompt: t(
-            `Does the graph of $f(x) = ${f}$ have a hole, a vertical asymptote, or neither at $x = ${c}$?`,
-            `$f(x) = ${f}$ 的图象在 $x = ${c}$ 处是空洞、竖直渐近线，还是两者都不是？`,
-          ),
-          options: holeOptions,
-          correct: kind,
-          solution:
-            kind === 2
-              ? t(
-                  `The denominator is not $0$ at $x = ${c}$, so $f(${c})$ is defined: neither.`,
-                  `分母在 $x = ${c}$ 处不为 $0$，所以 $f(${c})$ 有意义：两者都不是。`,
-                )
-              : t(
-                  `The factor $${bare(c)}$ appears ${kN === 0 ? "zero times" : times(kN)} in the numerator and ${times(kD)} in the denominator. ${kind === 0 ? "It cancels completely, so there is a hole." : "A factor is left in the denominator, so there is a vertical asymptote."}`,
-                  `因式 $${bare(c)}$ 在分子中出现 ${kN} 次，在分母中出现 ${kD} 次。${kind === 0 ? "它被完全约去，所以是空洞。" : "约分后分母中还剩这个因式，所以是竖直渐近线。"}`,
+        return reasoned(
+          choiceProblem({
+            prompt: t(
+              `Does the graph of $f(x) = ${f}$ have a hole, a vertical asymptote, or neither at $x = ${c}$?`,
+              `$f(x) = ${f}$ 的图象在 $x = ${c}$ 处是空洞、竖直渐近线，还是两者都不是？`,
+            ),
+            options: holeOptions,
+            correct: kind,
+            solution:
+              kind === 2
+                ? walked(
+                    [
+                      [
+                        ["Look at the denominator", "看分母"],
+                        t(`The denominator is not $0$ at $x = ${c}$:`, `分母在 $x = ${c}$ 处不为 $0$：`),
+                        [`${c} - ${paren(o2)} = ${c - o2} \\neq 0`],
+                      ],
+                      [["Conclude", "下结论"], t(`So $f(${c})$ is defined: neither.`, `所以 $f(${c})$ 有意义：两者都不是。`)],
+                    ],
+                    t(
+                      `A hole or an asymptote needs the denominator to be $0$ at $x = ${c}$, and $${bare(c)}$ is not a factor of the denominator.`,
+                      `空洞或渐近线都要求分母在 $x = ${c}$ 处为 $0$，而 $${bare(c)}$ 不是分母的因式。`,
+                    ),
+                  )
+                : walked(
+                    [
+                      [
+                        ["Count the factor", "数因式"],
+                        t(
+                          `The factor $${bare(c)}$ appears ${kN === 0 ? "zero times" : times(kN)} in the numerator and ${times(kD)} in the denominator.`,
+                          `因式 $${bare(c)}$ 在分子中出现 ${kN} 次，在分母中出现 ${kD} 次。`,
+                        ),
+                      ],
+                      [
+                        ["Cancel", "约分"],
+                        kind === 0
+                          ? t("It cancels completely, so there is a hole.", "它被完全约去，所以是空洞。")
+                          : t(
+                              "A factor is left in the denominator, so there is a vertical asymptote.",
+                              "约分后分母中还剩这个因式，所以是竖直渐近线。",
+                            ),
+                      ],
+                    ],
+                    kind === 0
+                      ? t(
+                          `After cancelling, the denominator is $${bare(o2)}$, which is $${c - o2}$ at $x = ${c}$, not $0$: the simplified function has a value there, and only the point itself is missing.`,
+                          `约分后分母是 $${bare(o2)}$，在 $x = ${c}$ 处等于 $${c - o2}$，不为 $0$：化简后的函数在那里有值，只是缺了这一个点。`,
+                        )
+                      : t(
+                          `After cancelling, $${facPow(c, kD - kN)}$ is still in the denominator and is $0$ at $x = ${c}$, while the numerator is not, so $f$ grows without bound there.`,
+                          `约分后分母中仍有 $${facPow(c, kD - kN)}$，它在 $x = ${c}$ 处为 $0$，而分子不为 $0$，所以 $f$ 在那里无界增大。`,
+                        ),
+                  ),
+          }),
+          kind === 2
+            ? [
+                why(
+                  holeOptions[0]!,
+                  `A hole needs the denominator to be $0$ at $x = ${c}$, and it is not.`,
+                  `空洞要求分母在 $x = ${c}$ 处为 $0$，而它不为 $0$。`,
                 ),
-        });
+                why(
+                  holeOptions[1]!,
+                  `An asymptote needs the denominator to be $0$ at $x = ${c}$, and it is not.`,
+                  `渐近线要求分母在 $x = ${c}$ 处为 $0$，而它不为 $0$。`,
+                ),
+              ]
+            : [
+                kind === 0
+                  ? why(
+                      holeOptions[1]!,
+                      `Every copy of $${bare(c)}$ in the denominator cancels, so no factor is left to make it $0$.`,
+                      `分母中的 $${bare(c)}$ 全部约去，没有剩下能使它为 $0$ 的因式。`,
+                    )
+                  : why(
+                      holeOptions[0]!,
+                      `The denominator has more copies of $${bare(c)}$ than the numerator, so one is left after cancelling.`,
+                      `分母中 $${bare(c)}$ 的个数比分子多，约分后还剩一个。`,
+                    ),
+                why(
+                  holeOptions[2]!,
+                  `The denominator is $0$ at $x = ${c}$, so $f(${c})$ is not defined.`,
+                  `分母在 $x = ${c}$ 处为 $0$，所以 $f(${c})$ 无意义。`,
+                ),
+              ],
+        );
       },
     },
   ],

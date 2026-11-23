@@ -164,4 +164,12 @@ export const taughtTopics: readonly string[] = [
   "velocity-and-acceleration-for-plane-motion",
   "calculating-displacement-for-plane-motion",
   "approximating-values-using-the-binomial-theorem",
+  "closure-properties-of-polynomials",
+  "closure-properties-of-rational-expressions",
+  "rational-equations-with-three-terms",
+  "advanced-rational-equations",
+  "further-advanced-rational-equations",
+  "roots-of-rational-functions",
+  "vertical-asymptotes-of-rational-functions",
+  "locating-holes-in-rational-functions",
 ];
