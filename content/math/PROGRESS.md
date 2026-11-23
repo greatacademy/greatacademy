@@ -161,7 +161,7 @@ Stage 0 is done. Walking its lessons against Math Academy's on the same topics f
 | `precalculus-vectors-2d.ts` | 15 | done | |  |
 | `precalculus-complex-numbers.ts` | 15 | done | |  |
 | `precalculus-random-variables.ts` | 14 | done | |  |
-| `precalculus-de-moivre.ts` | 13 | in progress | |  |
+| `precalculus-de-moivre.ts` | 13 | done | |  |
 | `precalculus-statistics.ts` | 12 | in progress | |  |
 | other files | 18 | open | | `act-fundamentals-reasoning-algebra.ts` (3), `act-number-algebra.ts` (3), `act-exam-functions.ts` (3), `act-exam-algebra.ts` (1), `act-fundamentals-reasoning-geometry.ts` (1), `act-fundamentals-number.ts` (1), `act-geometry-data.ts` (1), `act-fundamentals-chance-conics.ts` (1), `complex-analysis-extra.ts` (1), `complex-analysis.ts` (1), `grade-7-statistics.ts` (1), `grade-6-statistics.ts` (1) |
 
