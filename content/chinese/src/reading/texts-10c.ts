@@ -21,7 +21,7 @@ export const ARGUMENT_10 = `
 ?1 文章的论证思路是怎样的？ | How does the argument proceed?
 ≈ 先引出俗语，指出不能只看字面；再解释“慢”的真义，用正反两例论证；最后得出结论 | 这话有道理，但不能只从字面上理解 | “慢”的真正意思 | 反过来，动作慢也不一定出细活
 - 先摆事例，最后才提出俗语 ~wrongorder
-- 全文只用了一个事例 ~misread
+- 全文只用了一个事例 ~misread @ 反过来，动作慢也不一定
 ?2 学生写作业的例子运用了什么论证方法？有什么作用？ | What method is the pupil's example, and why?
 ≈ 举反例，从反面说明动作慢不一定出细活，使论证更全面 | 反过来，动作慢也不一定出细活 | 他慢了，却没有出“细活”
 - 比喻论证，把学生比作木匠 ~nolikening
@@ -30,7 +30,7 @@ export const ARGUMENT_10 = `
 ≈ 对比：一个动作快却出细活，一个动作慢却出不了细活，突出关键在用心而不在快慢 | 他手上的动作其实很快 | 他慢了，却没有出“细活” | 而不在于时间的长短
 % 老木匠“动作其实很快”，却做出好活；学生“花了三个小时”，却“错得一塌糊涂”。快的出细活，慢的反而不出，这一比，就说明了快慢不是关键，用不用心才是。 | The carpenter is quick yet fine; the pupil takes three hours and fails. Quick turns out fine work, slow does not: speed is not the point, care is.
 - 两个例子说的是同一个意思，可以删去一个 ~role
-- 说明学生不如木匠聪明 ~misread
+- 说明学生不如木匠聪明 ~misread @ 反过来，动作慢也不一定
 ?2 如果有人据此说“做事越快越好”，这个推理有什么问题？ | What is wrong with concluding “the faster the better”?
 ≈ 把“动作慢不一定好”错误地推成“越快越好”，走到了另一个极端，文章说的是快慢不是关键 | 而不在于时间的长短 | 他手上的动作其实很快
 % 文章说的是出细活“不在于时间的长短”，快和慢都不是关键。从“慢不一定好”推出“快一定好”，是把一个否定当成了反面的肯定，推理不成立。 | The essay says length of time is not what matters, fast or slow. To go from “slow is not always good” to “fast is always good” turns a denial into its opposite claim, which does not follow.
@@ -46,15 +46,15 @@ export const ARGUMENT_10 = `
 ≈ 读书要有问题意识，带着问题去读才能真正读懂 | 原因之一，是许多人读书时脑子里没有问题 | 有了问题，就像带着地图找路
 % 文章从“真正读懂的人却不多”说起，指出原因是“没有问题”；接着比较有无问题的读书，再反驳“读完再想”，最后说明提问的目的是读懂。全文都在说明读书要带着问题。 | It begins with how few truly understand and blames the lack of questions; it compares reading with and without them, rebuts “think after”, and ends on asking in order to understand. All argue that reading needs questions.
 - 读书时应该带着地图找路 ~likening
-- 读书时要多说“我不同意” ~misread
+- 读书时要多说“我不同意” ~misread @ 一个只会说“我不同意”的读者
 ?1 第三段末尾连用三个问句，对论证有什么作用？ | What do the three questions closing the third paragraph do for the argument?
 ≈ 示范读的过程中该怎样提问，由句意到根据再到自己的判断，使“问题意识”有了具体的做法 | 这句话为什么这样说 | 作者的根据是什么 | 我同不同意
 % 三个问句由浅入深：先问“这句话为什么这样说”，再问“作者的根据是什么”，最后问“我同不同意”。它们紧接在“要在读的过程中不断地生出来”之后，把问题意识落到了读者可以照着做的问法上，论点也就不空了。 | The three go deeper by steps: why it is said, on what grounds, whether I agree. Coming right after the claim that questions must arise while reading, they make it a practice the reader can follow, so the claim is not empty.
 - 这是作者留给读者课后回答的三道练习题 ~role
-- 说明提问就是要挑出作者的错 ~misread
+- 说明提问就是要挑出作者的错 ~misread @ 问题意识不是故意挑刺
 ?1 最后一段在全文中有什么作用？ | What does the last paragraph do?
 ≈ 补充说明问题意识不是故意挑刺，防止误解，使论点更严密 | 当然，问题意识不是故意挑刺 | 提问的目的是为了读懂，而不是为了否定
-- 提出一个新的中心论点 ~misread
+- 提出一个新的中心论点 ~role
 - 总结全文，重复前面的话 ~role
 ?2 第二段运用了什么论证方法？ | What method does the second paragraph use?
 ≈ 比喻论证和对比论证：把没有问题的读书比作坐车看风景，把有问题的读书比作带着地图找路，两相对照 | 像坐在车上看风景 | 就像带着地图找路
@@ -80,7 +80,7 @@ export const ARGUMENT_10 = `
 ≈ 不能盲目跟从大多数，要用自己的头脑判断 | 不要被“大多数”绑架 | 而在于要用自己的头脑去想一想
 % 题目“不要被大多数绑架”已经提出观点；文中先指出大多数不一定对，再指出大多数可能是错觉，最后说明不是不听，而是“要用自己的头脑去想一想”。三层都在说同一个意思。 | The title states it; the body says the majority may be wrong, may be an illusion, and is to be heard but thought over. All three layers make one point.
 - 大多数人的意见都是错的 ~broad
-- 跟着大多数走最安全 ~opposite
+- 跟着大多数走最安全 ~opposite @ 人数的多少，不能决定一件事的对错
 ?1 第三段“更要警惕的是”提出了什么新的问题？ | What new danger does the third paragraph raise?
 ≈ 所谓的“大多数”有时只是错觉，几个人反复发声就可能被当作多数 | “大多数”有时只是一种错觉 | 其实也许只是几个人反复发帖
 - 网上的评论都是真的 ~opposite
@@ -150,7 +150,7 @@ export const ARGUMENT_10 = `
 ?1 文章开头列出两种不同的看法，有什么作用？ | What do the two opening views do?
 ≈ 摆出争论的问题，引出作者自己的观点 | 有人说，现代社会分工越来越细 | 也有人说，知识越来越相互联系 | 其实，“专”和“博”并不矛盾
 - 说明作者同意第一种看法 ~oneside
-- 说明两种看法都是错的，学问不重要 ~misread
+- 说明两种看法都是错的，学问不重要 ~misread @ 其实，“专”和“博”并不矛盾
 ?1 第三段举科学家的事例，要证明什么？ | What does the scientists' example prove?
 ≈ 专与博可以结合，而且结合起来才能有成就 | 他们在自己的领域里钻得很深，可他们也读诗、学音乐 | 广博的知识给了他们新的眼光
 - 科学家都喜欢音乐 ~trivial
@@ -201,7 +201,7 @@ export const ARGUMENT_10 = `
 ?2 文章的论证结构是怎样的？ | How is the argument built?
 ≈ 由一件事引出争论，先肯定对方的合理部分，再指出问题，最后提出折中合理的办法 | 这件事在网上引起了争论 | 这话有一半道理 | 可是 | 所以，比较合理的做法
 - 先提出结论，再一一举例 ~wrongorder
-- 只摆出了两种观点，没有自己的看法 ~misread
+- 只摆出了两种观点，没有自己的看法 ~misread @ 比较合理的做法不是一律禁止
 
 # 说“偶然”
 很多发明看起来来自偶然。有人在实验中不小心打翻了一瓶药水，结果发现了新的材料；有人看到苹果落地，想到了万有引力。于是有人说，发明靠的是运气。
@@ -216,7 +216,7 @@ export const ARGUMENT_10 = `
 ?1 本文的中心论点是什么？ | What is the thesis?
 ≈ 机会只留给有准备的人 | 不如说机会只留给有准备的人 | 在于有没有准备
 - 偶然在发明中没有任何作用 ~broad
-- 看见苹果落地就能想到万有引力 ~misread
+- 看见苹果落地就能想到万有引力 ~misread @ 看见苹果落地的人
 ?1 第三段的论证思路是怎样的？ | How does the third paragraph reason?
 ≈ 先提出问题“区别在哪里”，再回答是有没有准备，并用两位发明者的情况具体说明，最后用比喻作结 | 区别在哪里？在于有没有准备 | 偶然只是一根火柴
 - 只用了一个比喻，没有说明理由 ~misread
@@ -292,8 +292,8 @@ export const ARGUMENT_10 = `
 - 比喻论证，把节约比作衣服 ~nolikening
 ?2 本文主要采用了什么样的论证思路？ | What line of reasoning does the essay chiefly follow?
 ≈ 辨析概念：先指出混淆，再界定两个概念，用事例对比，最后得出结论 | 有人把节约和小气混为一谈 | 节约是不浪费 | 可见
-- 先讲故事，再总结道理，没有区分概念 ~misread
-- 只说节约的好处，没有说小气 ~misread
+- 先讲故事，再总结道理，没有区分概念 ~misread @ 其实，二者有根本的不同
+- 只说节约的好处，没有说小气 ~misread @ 其实，二者有根本的不同
 ?2 有人说“他连一分钱都不肯借，真节约”，这句话的问题在哪里？ | What is wrong with this remark?
 ≈ 把小气当成节约来夸，混淆了两个概念 | 我们提倡节约，不能把小气也当成节约来夸 | 甚至别人需要帮助时，也一毛不拔
 % 按文中的区分，别人需要帮助时“一毛不拔”，是小气的表现，而不是节约。说它是“节约”，正是文章开头批评的“混为一谈”，结尾也说不能“把小气也当成节约来夸”。 | By the essay's distinction, refusing help in need is stinginess, not thrift. Calling it thrift is the very confusion the opening names, and the close says not to praise stinginess as thrift.
@@ -317,7 +317,7 @@ export const ARGUMENT_10 = `
 ?1 文章开头写学生的问题，有什么作用？ | What does the pupils' question do?
 ≈ 摆出“用不上就没用”的普遍看法，作为全文要反驳的对象 | 学这个有什么用？ | 在不少人眼里，用不上的知识就是没用的
 - 说明学生学习很努力 ~misread
-- 说明作者也认为学这些没有用 ~misread
+- 说明作者也认为学这些没有用 ~misread @ 所以，判断一样东西有没有用
 ?2 第三段引用庄子的故事，运用了什么论证方法？有什么作用？ | What method is the Zhuangzi story, and why?
 ≈ 引用论证（举例），用古人的寓言说明“无用”之中也有大用，增强了说服力 | 庄子说过一个故事 | 可正因为没用，它没有被砍掉
 - 比喻论证，把大树比作学生 ~nolikening

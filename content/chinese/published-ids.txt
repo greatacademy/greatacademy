@@ -31,6 +31,7 @@ course chinese-level-8
 course chinese-level-9
 course chinese-pinyin
 topic book-andersen book-andersen-questions
+topic book-call-to-arms book-call-to-arms-questions
 topic book-chinese-myths book-chinese-myths-questions
 topic book-dawn-blossoms book-dawn-blossoms-questions
 topic book-dream-of-red-chamber book-dream-of-red-chamber-questions
@@ -2598,6 +2599,12 @@ topic reading-10-media reading-10-media-telling reading-10-media-trust
 topic reading-10-poetry reading-10-poetry-images reading-10-poetry-language
 topic reading-10-practical reading-10-practical-facts reading-10-practical-stance
 topic reading-10-prose reading-10-prose-form reading-10-prose-meaning
+topic reading-11-foreign reading-11-foreign-content reading-11-foreign-craft
+topic reading-11-histories reading-11-histories-people reading-11-histories-words
+topic reading-11-masters reading-11-masters-thought reading-11-masters-words
+topic reading-11-poems reading-11-poems-art reading-11-poems-feeling
+topic reading-11-revolutionary reading-11-revolutionary-craft reading-11-revolutionary-feeling
+topic reading-11-treatises reading-11-treatises-concepts reading-11-treatises-reasoning
 topic reading-2-fables reading-2-fables-happened reading-2-fables-teaches
 topic reading-2-fairy-tales reading-2-fairy-tales-imagined reading-2-fairy-tales-wants
 topic reading-2-science reading-2-science-facts reading-2-science-reasons
@@ -3167,6 +3174,8 @@ topic speaking-1-telling speaking-1-telling-missing speaking-1-telling-order
 topic speaking-10-debate speaking-10-debate-fallacy speaking-10-debate-summing
 topic speaking-10-interview speaking-10-interview-follow speaking-10-interview-relay
 topic speaking-10-speech speaking-10-speech-arguing speaking-10-speech-opening
+topic speaking-11-presenting-research speaking-11-presenting-research-answering speaking-11-presenting-research-reporting
+topic speaking-11-seminar speaking-11-seminar-building speaking-11-seminar-challenge
 topic speaking-2-asking speaking-2-asking-address speaking-2-asking-clear
 topic speaking-2-discussing speaking-2-discussing-answering speaking-2-discussing-suggesting
 topic speaking-2-messages speaking-2-messages-who-when speaking-2-messages-whole
@@ -3253,7 +3262,9 @@ topic writing-10-literary writing-10-literary-craft writing-10-literary-image
 topic writing-10-material writing-10-material-depth writing-10-material-view
 topic writing-10-report writing-10-report-conclusions writing-10-report-findings
 topic writing-10-rigorous writing-10-rigorous-concepts writing-10-rigorous-reasoning
+topic writing-11-academic writing-11-academic-conclusion writing-11-academic-question
 topic writing-11-dialectic writing-11-dialectic-position writing-11-dialectic-sides
+topic writing-11-literary-review writing-11-literary-review-insight writing-11-literary-review-judgment
 topic writing-11-proposal writing-11-proposal-actions writing-11-proposal-form
 topic writing-2-imagination writing-2-imagination-happens writing-2-imagination-like
 topic writing-2-picture writing-2-picture-order writing-2-picture-who

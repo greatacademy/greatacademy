@@ -181,6 +181,16 @@ export const REASONS = {
   misread: ["the text does not show this; read it again where it says: “{s}”", "文中表现的不是这个意思，再读读这一句：“{s}”"],
   // Grade 9: a debate.
   yield: ["this gives up your own side's stand instead of answering for it.", "放弃了己方的立场，没有为它作答。"],
+  // Grade 11: a seminar and a research presentation.
+  repeat: [
+    "this only says again what was said before, and adds nothing to the discussion.",
+    "只是把别人说过的话再说一遍，没有给讨论增加新的东西。",
+  ],
+  noturn: ["this leaves the others no turn to speak.", "没有给别的同学发言的机会。"],
+  overclaim: ["this claims more than the evidence found.", "说得超出了依据所能证明的范围。"],
+  jargon: ["this is full of terms these listeners do not know, and loses them.", "满是听众不熟悉的术语，听的人跟不上。"],
+  wrongcase: ["this example is not a case of what is being explained.", "举的例子不是这里要说明的情况。"],
+  nofinding: ["this ends without saying what was found.", "没有说出研究的发现就结束了。"],
   // The senior course: a likening, a side or a flaw taken wrongly, and words read only at their face.
   likening: [
     "this takes a likening of the text for what the writer argues; it is there only to picture the point.",
@@ -201,6 +211,10 @@ export const REASONS = {
   notflaw: ["this names another error than the one the reasoning makes: “{s}”", "说错了推理的毛病，这里犯的不是这种错误：“{s}”"],
   offpoint: ["this misses the point and fastens on something beside it.", "没有说到要害，抓住的是不相干的枝节。"],
   nopersonify: ["the sentence does not write of the thing as if it were a person: “{s}”", "句中没有把它当作人来写：“{s}”"],
+  otherschool: [
+    "this is the teaching of another school, not of this text, which says: “{s}”",
+    "这是别家学派的主张，不是本文的意思。本文说的是：“{s}”",
+  ],
   otheruse: [
     "this is what the word means in another sentence of the text, not in this one: “{s}”",
     "这是这个字在文中另一句里的意思，放在这一句里讲不通：“{s}”",
@@ -261,11 +275,14 @@ export function bodyFor(body: string, q: Asked): string {
     .join("\n");
 }
 
+/** lineOf is a sentence quoted without the comma that ends a line of verse in the middle of its sentence. */
+const lineOf = (sentence: string): string => sentence.replace(/[，、；：]+$/u, "");
+
 /** contextOf finds, in a piece, the sentence that holds the clue (or the clue itself, if it spans sentences) and the last sentence of its text. */
 function contextOf(piece: Piece, clue: string): Context {
   const all = sentencesOf(`${piece.title}\n${textOf(piece.body)}`);
   const body = sentencesOf(textOf(piece.body));
-  return { sentence: all.find((x) => x.includes(clue)) ?? clue, ending: body.at(-1) ?? piece.body };
+  return { sentence: lineOf(all.find((x) => x.includes(clue)) ?? clue), ending: lineOf(body.at(-1) ?? piece.body) };
 }
 
 /** KNOWN is the share of a topic's characters that must have been taught before it. */
@@ -328,7 +345,8 @@ export type Reason = keyof typeof REASONS;
 export interface Question {
   readonly ask: Text;
   readonly right: string;
-  readonly wrong: readonly (readonly [option: string, reason: Reason])[];
+  /** wrong are the wrong options with their reasons, and the words of the text that refute an option where they are not the clue. */
+  readonly wrong: readonly (readonly [option: string, reason: Reason, refuted?: string])[];
   /** clue is the words of the text that answer the question, as they stand in it, or the first words an inference starts from. */
   readonly clue: string;
   /** inferred tells a question whose answer the text does not state but lets the reader infer, as against one it states. */
@@ -350,7 +368,8 @@ export interface Piece {
 /**
  * parsePieces reads texts separated by lines `#` with a title. The lines after a title are the text until the first
  * question. A question is `?k ask in Chinese | ask in English`, k its knowledge point counted from 1, then
- * `= right | clue` and `- wrong ~reason` once for each wrong option. A question whose answer is inferred, not stated,
+ * `= right | clue` and `- wrong ~reason` once for each wrong option, or `- wrong ~reason @words`, where the reason
+ * quotes the sentence of those words of the text instead of the sentence of the clue. A question whose answer is inferred, not stated,
  * has `≈ right | clue | more evidence…` instead, with the places of the text it rests on, and
  * `% reasoning in Chinese | reasoning in English`, how they lead to the answer, which it may leave out when it rests on
  * two places or more.
@@ -371,7 +390,15 @@ export function parsePieces(data: string, points: number): readonly Piece[] {
         .join("\n");
       const questions: Question[][] = Array.from({ length: points }, () => []);
       let current:
-        | { k: number; ask: Text; right?: string; evidence?: string[]; inferred?: boolean; reasoning?: Text; wrong: [string, Reason][] }
+        | {
+            k: number;
+            ask: Text;
+            right?: string;
+            evidence?: string[];
+            inferred?: boolean;
+            reasoning?: Text;
+            wrong: [string, Reason, string?][];
+          }
         | undefined;
       const close = () => {
         if (!current) return;
@@ -381,7 +408,7 @@ export function parsePieces(data: string, points: number): readonly Piece[] {
         if (wrong.length < 2) throw new Error(`piece ${title}: ${ask["zh-CN"]} needs two wrong options`);
         if (new Set([right, ...wrong.map((w) => w[0])]).size !== wrong.length + 1)
           throw new Error(`piece ${title}: ${ask["zh-CN"]} repeats an option`);
-        for (const e of evidence)
+        for (const e of [...evidence, ...wrong.flatMap((w) => (w[2] === undefined ? [] : [w[2]]))])
           if (e === "" || !`${title}\n${body}`.includes(e)) throw new Error(`piece ${title}: the clue ${e} is not in the text`);
         const shown = `${title}\n${bodyFor(body, { ask, right, evidence })}`;
         for (const e of evidence)
@@ -420,9 +447,9 @@ export function parsePieces(data: string, points: number): readonly Piece[] {
           if (zh === "" || en === "") throw new Error(`piece ${title}: reasoning ${row}`);
           current.reasoning = t(en, zh);
         } else if (row.startsWith("-") && current) {
-          const m = /^-\s*(.+?)\s*~(\w+)$/u.exec(row);
+          const m = /^-\s*(.+?)\s*~(\w+)(?:\s+@\s*(.+))?$/u.exec(row);
           if (!m || !(m[2]! in REASONS)) throw new Error(`piece ${title}: wrong option ${row}`);
-          current.wrong.push([m[1]!, m[2] as Reason]);
+          current.wrong.push(m[3] === undefined ? [m[1]!, m[2] as Reason] : [m[1]!, m[2] as Reason, m[3].trim()]);
         } else throw new Error(`piece ${title}: cannot read ${row}`);
       }
       close();
@@ -446,6 +473,8 @@ export const SIGN: Kind = { text: ["the text", "上面的文字"] };
 export const VERSE: Kind = { text: ["the verse", "儿歌"] };
 /** POEM is a poem of the later grades, modern or classical. */
 export const POEM: Kind = { text: ["the poem", "诗"] };
+/** WORK is a work of several forms read together: poems, letters and stories in one topic. */
+export const WORK: Kind = { text: ["the text", "作品"] };
 /** TALK is what someone says, which the learner reads until it is recorded. */
 export const TALK: Kind = { text: ["what is said", "说的话"] };
 
@@ -462,12 +491,15 @@ function asked(pieces: readonly Piece[], k: number): readonly (readonly [Piece, 
   return out;
 }
 
+/** nested turns the quotation marks of a text into inner ones, for it to be quoted in turn. */
+const nested = (text: string): string => text.replaceAll("“", "‘").replaceAll("”", "’");
+
 /** reasonOf says why a wrong option is wrong, quoting the text where the reason does. */
 const reasonOf = (option: string, reason: Reason, context: Context): Text => {
   const [en, zh] = REASONS[reason];
   const fill = (text: string, locale: "en" | "zh-CN") =>
     text.replace("“{s}”", quoted(context.sentence, locale)).replace("“{e}”", quoted(context.ending, locale));
-  return t(`${option}: ${fill(en, "en")}`, `“${option}”：${fill(zh, "zh-CN")}`);
+  return t(`${option}: ${fill(en, "en")}`, `“${nested(option)}”：${fill(zh, "zh-CN")}`);
 };
 
 /** Steps are the three steps of a solution on a text, each in English and in Chinese, with the headings of the first two. */
@@ -577,9 +609,11 @@ export function pieceGenerator(
     const options = rng.shuffle([q.right, ...q.wrong.map((w) => w[0])]);
     const answer = options.indexOf(q.right);
     const context = contextOf(piece, q.clue);
-    const reasons = options.filter((o) => o !== q.right).map((o) => reasonOf(o, q.wrong.find((w) => w[0] === o)![1], context));
+    const reasonFor = ([o, r, refuted]: readonly [string, Reason, string?]) =>
+      reasonOf(o, r, refuted === undefined ? context : contextOf(piece, refuted));
+    const reasons = options.filter((o) => o !== q.right).map((o) => reasonFor(q.wrong.find((w) => w[0] === o)!));
     const list = (locale: "en" | "zh-CN") => reasons.map((r) => `- ${r[locale]}`).join("\n");
-    const steps = wording(q, piece);
+    const steps = wording({ ...q, right: nested(q.right) }, piece);
     const heads = steps.heads ?? HEADINGS;
     const solution = t(
       `${heads.find.en} ${steps.find.en}\n\n${heads.choose.en} ${steps.choose.en}\n\n**Check.** ${steps.check.en}\n\nThe other options:\n\n${list("en")}`,
@@ -591,7 +625,7 @@ export function pieceGenerator(
       solution,
       canonical: String(answer),
       wrong: options.map((_, i) => String(i)).filter((i) => i !== String(answer)),
-      mistakes: q.wrong.map(([o, r]) => ({ response: String(options.indexOf(o)), feedback: reasonOf(o, r, context) })),
+      mistakes: q.wrong.map((w) => ({ response: String(options.indexOf(w[0])), feedback: reasonFor(w) })),
     };
   };
 }
@@ -677,7 +711,7 @@ export function ruleGenerator(question: Text, items: readonly RuleItem[], rule: 
     const check = item.check ?? rule.check;
     const solution = t(
       `**${heads.find.en}** ${rule.step.en}\n\n**${heads.choose.en}** “${item.right}”\n\n**Check.** ${check.en}\n\nThe other options:\n\n${list("en")}`,
-      `**${heads.find["zh-CN"]}**${rule.step["zh-CN"]}\n\n**${heads.choose["zh-CN"]}**“${item.right}”\n\n**检验。** ${check["zh-CN"]}\n\n其他选项：\n\n${list("zh-CN")}`,
+      `**${heads.find["zh-CN"]}**${rule.step["zh-CN"]}\n\n**${heads.choose["zh-CN"]}**“${nested(item.right)}”\n\n**检验。** ${check["zh-CN"]}\n\n其他选项：\n\n${list("zh-CN")}`,
     );
     return {
       prompt: joinText([question, same(quote(item.scene))]),

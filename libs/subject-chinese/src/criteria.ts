@@ -1028,6 +1028,50 @@ export const WRITING_CRITERIA: readonly CriterionSpec[] = [
     question: "Does the proposal give concrete, feasible actions, set out clearly, and end with a call to act?",
     quoteWhenMet: true,
   },
+  // Grade 11: a short literary review.
+  {
+    id: "zh11-review-judgment",
+    version: "1",
+    question:
+      "Does the review state one clear judgment of the work, or of one feature of it, rather than retelling it or praising it in general words?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh11-review-evidence",
+    version: "1",
+    question:
+      "Does the review ground its judgment in the text itself, quoting or pointing to particular words, details or scenes, and saying how each supports the judgment?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh11-review-insight",
+    version: "1",
+    question:
+      "Does the review go beyond the obvious, saying how the work achieves its effect or what it means, and keep its claims within what the text shows?",
+    quoteWhenMet: true,
+  },
+  // Grade 11: a short research essay.
+  {
+    id: "zh11-academic-question",
+    version: "1",
+    question:
+      "Does the essay pose one focused question that can be answered from evidence, and say what is already known or assumed about it?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh11-academic-evidence",
+    version: "1",
+    question:
+      "Does the essay answer the question from evidence it names, such as texts, data, observations or cited sources, keeping what is found apart from what is inferred?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh11-academic-conclusion",
+    version: "1",
+    question:
+      "Does the essay reach a conclusion no wider than its evidence, in the form of an academic essay (a title, an abstract or opening that states the question, sections, a conclusion and the sources used), and note what it leaves open?",
+    quoteWhenMet: false,
+  },
   // The Gaokao essay.
   {
     id: "zhgk-essay-thesis",

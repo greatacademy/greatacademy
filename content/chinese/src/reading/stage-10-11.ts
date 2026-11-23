@@ -16,7 +16,10 @@ import { FICTION_10, POETRY_10 } from "./texts-10a.ts";
 import { PRACTICAL_10, PROSE_10 } from "./texts-10b.ts";
 import { ARGUMENT_10, MEDIA_10 } from "./texts-10c.ts";
 import { CLASSICAL_10 } from "./texts-10d.ts";
-import { PASSAGE, POEM, type ReadingSpec, readingTopicOf as topicOf } from "./topic-kit.ts";
+import { HISTORIES_11, MASTERS_11 } from "./texts-11a.ts";
+import { FOREIGN_11, REVOLUTIONARY_11 } from "./texts-11b.ts";
+import { POEMS_11, TREATISES_11 } from "./texts-11c.ts";
+import { PASSAGE, POEM, type ReadingSpec, readingTopicOf as topicOf, WORK } from "./topic-kit.ts";
 
 /** SPECS are the reading topics of the senior required course, in order. */
 const SPECS: readonly ReadingSpec[] = [
@@ -254,6 +257,210 @@ const SPECS: readonly ReadingSpec[] = [
         t(
           "Say what happens or what is claimed, then how the text makes its point: a story told and then commented on, a likening (one thing set beside another), a contrast, a chain of “则”, a rhetorical question, a quotation of a sage. Find the sentence that states the lesson and say it in general terms, not only for the story's own people.\n\nIn a fable where a man guards a stump because a hare once broke its neck on it, the lesson is not about hares or stumps: it is waiting for luck instead of working.\n\n> **Watch out.** Do not take a detail of the story for its lesson: a fable of crossing a river is not advice about rivers. And when a speaker persuades a king by a story, say how the story is turned on the king.",
           "先说文章写了什么事、提出了什么看法，再说它怎样说理：先叙事后议论，打比方（拿一件事和另一件事相比），对比，用一连串的“则”层层推进，反问，引用圣贤的话。找到点明道理的句子，用概括的话说出道理，不能只说故事里的人。\n\n一则寓言写一个人守着树桩，因为曾经有一只兔子撞死在上面：道理不在兔子和树桩，而是不努力、只等好运。\n\n> **注意。** 不要把故事的细节当成道理：一则过河的寓言，不是在教人怎样过河。说客用故事劝君主时，还要说出故事是怎样落到君主身上的。",
+        ),
+      ],
+    ],
+  },
+  {
+    grade: 11,
+    id: "reading-11-masters",
+    title: t("The Pre-Qin Masters", "先秦诸子研习"),
+    summary: t(
+      "Short pieces of Mencius, Zhuangzi, Xunzi, Han Feizi, Mozi, the Analects and Sunzi, none of them from the textbooks: words used in new ways, sentences glossed in context, and what each master teaches and how he argues for it.",
+      "读《孟子》《庄子》《荀子》《韩非子》《墨子》《论语》《孙子》的短章，都不是教材里的篇目：词类活用和句子的意思，各家的主张，以及他们怎样说理。",
+    ),
+    intro: t(
+      "The masters argued with each other, and each had his way of doing it. Mencius sets easy cases beside a hard one and drives on with rhetorical questions; Zhuangzi tells a fable and lets a paradox stand; Xunzi lays out pairs of clauses, good against bad; Han Feizi reasons from the great to the small; Mozi climbs a ladder of cases until the last one shocks.\n\nIn their sentences a word often does a new job: 贫 in “天不能贫” is “make poor”, 觞 in “觞之于庙” is “toast”. The first knowledge point asks words and sentences, the second what the master teaches and how he argues; for the second, name the school when it helps, but answer from the text.",
+      "诸子之间互相辩论，各有各的说理方法。孟子先摆几件人人都懂的事，再引出难懂的道理，常用反问加强语气；庄子讲寓言，留下一个耐人寻味的难题；荀子用一正一反成对的句子；韩非由大推小；墨子把事例一级一级往上推，推到最后一件叫人吃惊。\n\n他们的句子里，词常常换了用法：“天不能贫”的“贫”是使……贫穷，“觞之于庙”的“觞”是向它敬酒。第一个知识点问字词和句子，第二个问各家的主张和说理；回答第二个时，必要时可以说出是哪一家，但要从原文出发。",
+    ),
+    data: MASTERS_11,
+    kind: PASSAGE,
+    after: "reading-10-classical",
+    points: [
+      [
+        "words",
+        t("Words Used in New Ways and Sentences", "词类活用和句意"),
+        t(
+          "When a word stands where a verb should, ask what it does there. An adjective or a noun followed by an object may mean “make it so” (贫 “make poor”, 屈 “make yield”) or “deem it so” (奇 “think extraordinary”, 耻 “count shameful”); a noun may become a verb of doing (觞 “toast”, 郊 “lie outside”). To tell them apart, look at the object: is it changed, or only judged? Then gloss the sentence word by word and check it against a matching sentence nearby: the masters write in pairs, and one half often spells out what the other leaves short.\n\nIn “强本而节用，则天不能贫”, the pair later reads “则天不能使之富”: so 贫 is “make them poor”.\n\n> **Watch out.** “Make it so” and “deem it so” are easy to swap. 奇籍 does not make the boy extraordinary; it is his uncle who thinks him so.",
+          "一个词放在动词的位置上，要问它在这里做什么。形容词或名词后面带了宾语，可能是“使它怎样”（贫，使……贫穷；屈，使……屈服），也可能是“认为它怎样”（奇，认为……不寻常；耻，以……为耻）；名词也可能用作动词（觞，敬酒；郊，位于郊外）。分辨的办法是看宾语：它真的被改变了，还是只是被人这样看待？然后逐词翻译句子，再拿附近和它相对的句子来核对：诸子的文章多成对，一半省略的，另一半常常说了出来。\n\n“强本而节用，则天不能贫”，后文与它相对的是“则天不能使之富”：所以“贫”是使他们贫穷。\n\n> **注意。** 使动和意动容易弄混。“奇籍”不是让项籍变得奇特，而是项梁认为他不寻常。",
+        ),
+      ],
+      [
+        "thought",
+        t("The Masters' Thought and Argument", "诸子的思想和说理"),
+        t(
+          "First say what the master holds, in a sentence of your own: Mencius that humane government needs both a good heart and a working rule, Xunzi that heaven keeps its course and men make their own fortune, Zhuangzi that each thing must be left to its nature. Then say how he argues: a likening that carries the point (the bare mountain for a heart that has lost its goodness), easy cases leading to a hard one, a contrast of good and bad, a ladder of cases, a fable with a paradox, a rhetorical question.\n\nMozi moves from stealing peaches to stealing pigs to killing a man: the greater the harm, the greater the wrong; so war, the greatest harm, cannot be called right.\n\n> **Watch out.** Do not give one master another's teaching: inaction is Daoist, humane government Confucian, “against offensive war” Mohist. And a fable's people are not its lesson.",
+          "先用自己的话说出这一家主张什么：孟子说仁政既要有善心又要有可行的制度，荀子说自然有规律、人的吉凶在于自己，庄子说万物各有天性、应当顺应它。再说他怎样论证：用比喻把道理带出来（光秃秃的牛山比喻丧失了善心），先摆浅显的事再引出深的道理，正反对比，一层一层推进，讲寓言留下难题，用反问。\n\n墨子从偷桃李说到偷猪狗，再说到杀人：害人越多，越不义；所以害人最多的攻国战争，不能叫做义。\n\n> **注意。** 不要把别家的主张安到这一家身上：无为是道家的，仁政是儒家的，非攻是墨家的。寓言里的人和事也不是寓言的道理。",
+        ),
+      ],
+    ],
+  },
+  {
+    grade: 11,
+    id: "reading-11-histories",
+    title: t("Histories and Biographies", "史传文言阅读"),
+    summary: t(
+      "Short pieces of the Zuo Commentary, the Records of the Historian, the Book of Han, the Book of the Later Han and the Comprehensive Mirror, none of them from the textbooks: words and sentences in context, the people the histories draw, and how the historian tells and judges.",
+      "读《左传》《史记》《汉书》《后汉书》《资治通鉴》的片段，都不是教材里的篇目：字词和句子的意思，史书写出的人物，以及史家怎样叙事、怎样评价。",
+    ),
+    intro: t(
+      "A history tells what people did and said, and lets the deeds speak. Sima Qian draws Li Guang by one arrow sunk in a stone and by the water he would not drink before his men; he draws Han Xin by a long look and a crawl. He seldom says “he was patient” or “he was generous”: he shows it, and saves his own judgment for the appraisal that begins “太史公曰”.\n\nThe first knowledge point asks words and sentences, the second the people and the historian's art: what a deed shows of a man, why a scene or a speech is there, and how the ending or the appraisal judges.",
+      "史书写人做了什么、说了什么，让事情自己说话。司马迁写李广，写他一箭射进石头，写他在士兵喝够水以前不靠近水；写韩信，写他久久地盯着对方，然后从胯下爬过去。他很少直接说“这个人能忍”“这个人宽厚”，而是写出来，把自己的评价留到“太史公曰”里。\n\n第一个知识点问字词和句子，第二个问人物和史家的写法：一件事表现了人物什么，一个场面或一段话为什么写进去，结尾和评论怎样褒贬。",
+    ),
+    data: HISTORIES_11,
+    kind: PASSAGE,
+    after: "reading-11-masters",
+    points: [
+      [
+        "words",
+        t("Words and Sentences in Context", "实词、虚词和句意"),
+        t(
+          "For a word: test the modern sense first (走 “run”, 长大 “tall”, 没 “sink in”); then look for its partner in the text (往 against 反, 有火患 against 亡火患), or for what the scene needs at that point. Many old characters stand for others (反 for 返, 亡 for 无, 乡 for 向, 孰 for 熟). For a sentence: gloss word by word, keep its pattern (宁……邪 and 安能……乎 are rhetorical; 惟德是依 puts the object first), and read it against the reply or the event that follows.\n\nIn “乡使听客之言”, 乡 is 向 “formerly” and 使 is “if”: had you listened then.\n\n> **Watch out.** A character that stands for another must be read as that other: 亡 here is not “die” but “have none”. And the answer someone gives often shows what the question was.",
+          "解释字词：先试今天的意思（走是跑，长大是身材高大，没是陷入）；再找文中和它相对的词（“往”对“反”，“有火患”对“亡火患”），或看场面在这里需要什么意思。很多字是通假字（反通返，亡通无，乡通向，孰通熟）。翻译句子：逐词落实，保留句式（“宁……邪”“安能……乎”是反问，“惟德是依”是宾语前置），再拿后面的回答或事情来核对。\n\n“乡使听客之言”，“乡”通“向”，从前；“使”是假使：要是当初听了客人的话。\n\n> **注意。** 通假字要按它所通的字来讲：这里的“亡”不是死，而是没有。一个人怎样回答，常常能看出问的是什么。",
+        ),
+      ],
+      [
+        "people",
+        t("People and the Historian's Art", "人物和史家笔法"),
+        t(
+          "Say what a deed or a saying shows of the person, in a word or two (patient, generous, overbearing), and point to the words that show it. Then say how the historian draws it: a telling detail, a contrast with the crowd, a scene set up early and answered late, the person's own words at length, an ending told without comment that proves one speaker right, an appraisal that quotes a saying.\n\nThe whole market laughs at Han Xin for a coward; years later he calls his tormentor a brave man and explains why he bore it. The laughter sets off the patience it misjudged.\n\n> **Watch out.** What the crowd or an opponent says of a man is a view the text sets out, not the historian's own. And a bare ending is not an absence of judgment: often it is the judgment.",
+          "用一两个词说出一件事或一句话表现了人物什么（能忍、宽厚、自负），并指出是哪些话表现的。再说史家怎样写出来：典型的细节，用众人反衬，前面埋下的场面后面照应，大段记下人物自己的话，结尾只写结果、不加评论，却证明了某人的预见，评论里引用谚语或古书。\n\n全集市的人都笑韩信胆小；多年以后，他称那个侮辱他的少年是壮士，说出自己当年为什么忍。众人的嘲笑，反衬出被他们误解的隐忍。\n\n> **注意。** 众人或对手怎样看一个人，是文中摆出的一方看法，不是史家自己的评价。结尾只写结果，并不是没有褒贬：常常褒贬就在结果里。",
+        ),
+      ],
+    ],
+  },
+  {
+    grade: 11,
+    id: "reading-11-revolutionary",
+    title: t("Works of the Revolutionary Tradition", "革命传统作品研习"),
+    summary: t(
+      "Poems and a letter written by revolutionaries in prison or on the eve of death, from the end of the Qing to the 1930s, none of them from the textbooks: what each says and feels, and how its images, figures and forms carry it.",
+      "读清末到二十世纪三十年代革命者在狱中或就义前写下的诗和书信，都不是教材里的篇目：作品写了什么、表达了怎样的感情，又怎样借意象、修辞和形式表达出来。",
+    ),
+    intro: t(
+      "These texts were written where the writers could die for them, and often did. Their feeling is plain: scorn of the jailer, faith in the cause, love of a child or a country. What repays reading is how it is carried: a hole made for dogs that a man will not crawl through, fetters whose clank is heard as a ringing sound, a mother who calls herself “mother” in the last letter to her son.\n\nThe first knowledge point asks what a text says and feels, read from its words and the note on when it was written; the second asks how: an image, a contrast, a repetition, a figure, a form.",
+      "这些作品是作者在可能为之而死的地方写下的，很多人也真的牺牲了。它们的感情很鲜明：蔑视敌人，坚信理想，爱孩子、爱祖国。值得细读的是这些感情怎样表达出来：为狗开的洞，人绝不从那里爬出去；铁镣的声音，被听成了响亮有力的铿锵声；母亲在给儿子的最后一封信里，一直称自己为“母亲”。\n\n第一个知识点问作品写了什么、表达了什么感情，要从字句和注里交代的写作背景读出来；第二个问怎样表达：意象、对比、反复、修辞、形式。",
+    ),
+    data: REVOLUTIONARY_11,
+    kind: WORK,
+    after: "reading-10-poetry",
+    points: [
+      [
+        "feeling",
+        t("Content and Feeling", "内容和情感"),
+        t(
+          "Read the note first: who wrote it, where, and what was about to happen. Then read each image for what it stands for in that place: in a prison poem a door, a hole, a fire or a palace is seldom only itself. Say the feeling in exact words (scorn, calm, grief, faith in what comes after) and point to the line that carries it.\n\nIn “恨不抗日死，留作今日羞”, the general regrets not dying at the front against the invader: he is to die at the hands of his own side, and that is his shame.\n\n> **Watch out.** Do not read an image at its face: the hole for dogs is no real hole, and the devil's palace no palace. And do not add a feeling the words do not show: these poems are seldom afraid.",
+          "先读注：谁写的，在什么地方写的，接下来将发生什么。再看每个意象在这里代表什么：在狱中写的诗里，门、洞、火、宫殿很少只是它们自己。用准确的词说出感情（蔑视、从容、悲痛、对未来的信心），并指出是哪一句表达的。\n\n“恨不抗日死，留作今日羞”，这位将军遗憾的是没能死在抗日的前线：他将死在自己人手里，这才是他的羞愤。\n\n> **注意。** 不要只按字面理解意象：为狗开的洞不是真的洞，魔鬼的宫殿也不是真的宫殿。也不要加进字句里没有的感情：这些诗很少有害怕。",
+        ),
+      ],
+      [
+        "craft",
+        t("Images, Figures and Form", "意象、手法和形式"),
+        t(
+          "Name the device and say what it does here: a contrast (the locked door and the open hole), a repetition that drives on (each stanza opening “带镣长街行”), an exaggeration (a laugh that shakes the devil's palace), a word set against its usual use (铿锵 for the clank of fetters), a borrowed story (blood turned to jade), quotation marks that mock (“自由”), a form chosen to be sung or remembered.\n\nIn “镣声何铿锵，市人皆惊讶，我心自安详”, a sound meant to shame him is heard as ringing and proud: the shame is turned around.\n\n> **Watch out.** Naming the device is half the answer; say what it does in this poem. And quotation marks do not always quote: around 自由 and 自白 they say “so-called”.",
+          "说出手法，再说它在这里起什么作用：对比（紧锁的门和敞开的洞），反复推进（每一节都以“带镣长街行”开头），夸张（笑声让魔鬼的宫殿动摇），把一个词用在和平常相反的地方（用“铿锵”写铁镣的声音），借用典故（血化为碧玉），表示讽刺的引号（“自由”），为了便于传唱、记诵而选的形式。\n\n“镣声何铿锵，市人皆惊讶，我心自安详”，用来羞辱他的声音，被他听成了响亮、骄傲的声音：屈辱被翻转了过来。\n\n> **注意。** 说出手法名称只是答案的一半，还要说出它在这首诗里的作用。引号也不总是表示引用：给“自由”“自白”加的引号，意思是所谓的。",
+        ),
+      ],
+    ],
+  },
+  {
+    grade: 11,
+    id: "reading-11-foreign",
+    title: t("Foreign Writers", "外国作家作品研习"),
+    summary: t(
+      "Short stories, poems and aphorisms of Russian, American, English, Indian, Lebanese and French writers in this subject's own translation, none of them from the textbooks: what each tells or says, and how it is made, from the twist of an ending to the figure of a poem.",
+      "读俄国、美国、英国、印度、黎巴嫩和法国作家的小说、诗和短章，都是本课程自己的译文，都不是教材里的篇目：作品写了什么、说了什么，又是怎样写的，从小说出人意料的结尾，到诗里的比喻。",
+    ),
+    intro: t(
+      "A work read in translation keeps its story, its images and its turns of thought, even when its sounds are lost. So read for those: a man whose luggage seems to shrink as he hears a rank; a scar mentioned once, which turns out to be the whole story; hope as a small bird that never asks for a crumb.\n\nThe first knowledge point asks what a work tells or says: what happens, why, what a line means. The second asks how it is made: a contrast, a detail planted early, an ending that surprises and yet was prepared, a likening, a question that the work answers.",
+      "读翻译过来的作品，声音的美会丢掉一些，可故事、意象和思路都还在。所以要读这些：一个人听说对方的官阶，连他的行李都好像缩小了；一块只提过一次的疤，原来是整个故事的关键；希望是一只小鸟，从不向人要一粒面包屑。\n\n第一个知识点问作品写了什么、说了什么：发生了什么事，为什么，一句话是什么意思。第二个问作品是怎样写的：对比，前面埋下的细节，出人意料又早有铺垫的结尾，比喻，作品自己回答的问题。",
+    ),
+    data: FOREIGN_11,
+    kind: WORK,
+    after: "reading-10-fiction",
+    points: [
+      [
+        "content",
+        t("What the Work Tells and Says", "作品的内容和主旨"),
+        t(
+          "For a story: find when and why a person changes (the thin man the moment he hears “三等文官”), what moves him, and what the ending makes of it all. For a poem or an aphorism: say what the image stands for (a thing with feathers is hope), then say the thought in plain words of your own, true beyond the image.\n\nWhen a story's title is a question (how much land does a man need?), its ending is often the answer: six feet, the length of his grave.\n\n> **Watch out.** A figure is not a fact: hope is not a real bird, and the summer's “lease” is no rent. And the lesson of a story is not one of its events retold.",
+          "读小说：找出人物在什么时候、因为什么改变（瘦子一听到“三等文官”就变了），是什么推动了他，结尾又怎样收束全篇。读诗和短章：先说意象代表什么（长着羽毛的东西是希望），再用自己的话说出道理，这道理离开了这个意象也成立。\n\n小说的题目是一个问题（一个人需要多少土地？）时，结尾常常就是答案：六尺，正好是他坟墓的长度。\n\n> **注意。** 比喻不是事实：希望不是真的小鸟，夏天的“租期”也不用交房租。小说的主旨也不是把其中一件事重复一遍。",
+        ),
+      ],
+      [
+        "craft",
+        t("How the Work Is Made", "作品的写法"),
+        t(
+          "Say the device and its work here: a contrast of before and after (tears of meeting, then a bow and three fingers), an exaggeration that makes the sad absurd (a man dies of a sneeze), a detail planted early that the ending explains (a scar seen by a match's light), an ending that surprises and yet was prepared, a likening that makes an idea visible (a parent is a bow), a pattern repeated to set two things apart.\n\nIn O. Henry's story the policeman of the first scene is the friend: the match that lights Bob's face lights it for him. On a second reading the ending is already there.\n\n> **Watch out.** A surprise ending is not one that came from nowhere: show the earlier words that prepared it. And do not call every figure personification: likening hope to a bird is a metaphor.",
+          "说出手法，再说它在这里的作用：前后对比（重逢时的眼泪，后来的鞠躬和三个手指头），用夸张把可悲写成荒诞（一个人因为打喷嚏而死），前面埋下、结尾才揭开的细节（火柴光照出的一块疤），出人意料又早有铺垫的结尾，把道理写得看得见的比喻（父母是弓），重复的句式把两件事区分开。\n\n欧·亨利的小说里，开头的巡警就是那位朋友：照亮鲍勃脸的那根火柴，也让他认出了鲍勃。再读一遍，结尾早就藏在前面了。\n\n> **注意。** 出人意料的结尾不是凭空来的：要指出前面哪些话为它作了铺垫。也不要把所有修辞都叫做拟人：把希望比作小鸟，是比喻。",
+        ),
+      ],
+    ],
+  },
+  {
+    grade: 11,
+    id: "reading-11-treatises",
+    title: t("Scientific and Cultural Treatises", "科学与文化论著研习"),
+    summary: t(
+      "Short works written for this subject on how science reasons, hypotheses, causes, error and proof, and on things of Chinese culture, writing, timber building, the solar terms, gardens and a Ming book of crafts: their concepts and facts, and how they explain and argue.",
+      "读为本课程写的科学和文化短论：科学怎样推理，假说、因果、误差和证明；中国文化里的事物，汉字、木结构建筑、二十四节气、园林和一部明代的工艺书。读懂其中的概念和信息，看清它们怎样说明、怎样论证。",
+    ),
+    intro: t(
+      "A work on science or culture lives by its concepts: a hypothesis is not a guess, an error is not a mistake, evolution is not progress. Most of these texts set up one such concept, often by first stating the common view they correct, then explain it with an example, divide it into kinds, contrast it with its neighbour, and end on what it means beyond itself.\n\nThe first knowledge point asks concepts and facts: what a term means as the text defines it, and what the text says. The second asks how it reasons: why an example is there, what order the parts follow, what a quotation or a comparison adds, what the last sentence does.",
+      "科学和文化的论著，靠概念立起来：假说不是猜测，误差不是错误，进化不是进步。这些文章大多先立起一个概念，常常先摆出它要纠正的常见看法，再用例子解释，分类说明，和相近的概念对比，最后说出它更深一层的意义。\n\n第一个知识点问概念和信息：文中怎样界定一个术语，文章说了什么。第二个问怎样说理：为什么举这个例子，各部分按什么顺序安排，引用和比较起什么作用，最后一句做了什么。",
+    ),
+    data: TREATISES_11,
+    kind: PASSAGE,
+    after: "reading-10-practical",
+    points: [
+      [
+        "concepts",
+        t("Concepts and Information", "概念和信息"),
+        t(
+          "For a term: find the sentence that defines it, often marked by “所谓”, “叫做”, “的意思，是”, and keep every limit it sets (a hypothesis must yield something that can be observed). Tell the definition from the view the text corrects: a common opinion stated first is often the error. For a fact: find the sentence that states it, and keep its exact scope (“一般”, “大多”, “差不多”).\n\nIn “两件事一起变化，叫做‘相关’；一件事引起另一件事，叫做‘因果’”, each term is defined by 叫做, and the next sentence tells how they relate.\n\n> **Watch out.** An opinion the text sets out to refute is not its view, even when it comes first and sounds plain. And keep the hedges: “差不多是固定的” is not “固定的”.",
+          "解释术语：找到给它下定义的句子，常有“所谓”“叫做”“的意思，是”这样的标志，并保留定义里的每一个限制（假说必须能推出可以观察的结果）。要分清定义和文章要纠正的看法：开头先摆出来的常见看法，往往正是误解。筛选信息：找到说出它的句子，保留它的范围（“一般”“大多”“差不多”）。\n\n“两件事一起变化，叫做‘相关’；一件事引起另一件事，叫做‘因果’”，两个术语都用“叫做”下了定义，下一句接着说明二者的关系。\n\n> **注意。** 文章要驳倒的看法不是文章的观点，即使它放在开头、听起来很有道理。也要保留限制词：“差不多是固定的”不等于“固定的”。",
+        ),
+      ],
+      [
+        "reasoning",
+        t("How the Work Explains and Argues", "说明和论证的思路"),
+        t(
+          "Say what each part does, then how they follow: a puzzle or a common error first, then the explanation, then the limits or the larger meaning. For each device say its work here: an example makes the abstract concrete or proves a claim (the cave fish proves that evolution can simplify), a division into kinds sorts a matter (two kinds of error), a contrast sets off what is special (other ancient scripts died out), a quotation of an authority adds weight, a closing sentence sums up or lifts the point.\n\nA text that opens with “a hundred cases, all right: is it a theorem?” sets up the difference between examples and proof, which the rest explains.\n\n> **Watch out.** An example illustrates or proves the view; it is not the view. And do not take a part that admits a weakness for one that overturns what came before.",
+          "先说每一部分做了什么，再说它们怎样衔接：先提出一个疑问或常见的误解，再解释，最后说出局限或更深的意义。说出每种方法在这里的作用：举例子把抽象的道理说具体，或者证明观点（洞穴鱼证明进化可以变简单）；分类别把事物理清楚（误差分两种）；作比较突出特点（别的古文字都消亡了）；引用权威增加分量；结尾一句总结或深化。\n\n文章开头说“试了一百个都对，能不能算定理”，是设下举例和证明的区别，后文就来解释它。\n\n> **注意。** 例子是用来说明或证明观点的，它本身不是观点。承认不足的段落也不等于推翻了前文。",
+        ),
+      ],
+    ],
+  },
+  {
+    grade: 11,
+    id: "reading-11-poems",
+    title: t("Classical Poems and Ci", "古代诗词鉴赏"),
+    summary: t(
+      "Tang poems and Song ci of Du Fu, Wang Wei, Du Mu, Wang Anshi, Su Shi, Wang Changling, Wei Zhuang, Yan Jidao and Qin Guan, none of them from the textbooks or the recited texts: their images and feeling, and their art, from writing from the other's side to a reply to another poem.",
+      "读杜甫、王维、杜牧、王安石、苏轼、王昌龄、韦庄、晏几道、秦观的唐诗宋词，都不是教材和背诵篇目里的：诗词的意象和情感，以及它们的写法，从“从对面写起”到针对别人的诗翻案。",
+    ),
+    intro: t(
+      "A classical poem says much in few words, and much of it sideways. Du Fu, shut in Chang'an, writes of his wife looking at the moon in Fuzhou; Su Shi writes of a lone goose that will not settle on any cold branch; Wang Anshi answers a poem written two centuries before him and turns its hope around.\n\nRead the note first, for who wrote it, when and where: the feeling often rests on it. The first knowledge point asks the images, the scene and the feeling; the second asks the art: a contrast, a figure, a scene that carries a feeling, a turn from joy to grief, writing from the other's side, an allusion, a comment that ends a ci.",
+      "古代诗词用字少而含意多，很多意思是侧面说出来的。杜甫被困在长安，写的却是妻子在鄜州望月；苏轼写一只孤鸿，挑遍了寒枝也不肯栖息；王安石针对两百多年前的一首诗作诗，把它的希望翻了过来。\n\n先读注，知道作者是谁、在什么时候什么地方写的：感情常常就落在这上面。第一个知识点问意象、景物和情感，第二个问写法：对比，比喻，借景抒情，由喜转悲，从对面写起，用典，词末的议论。",
+    ),
+    data: POEMS_11,
+    kind: POEM,
+    after: "reading-10-poetry",
+    points: [
+      [
+        "feeling",
+        t("Images, Scene and Feeling", "意象、景物和情感"),
+        t(
+          "Read the note for the poet's place and time, then each line for what it shows and what that stands for. A lone goose, a wisp of cloud, a gull between heaven and earth are seldom only birds and clouds: they are the poet. Say the feeling exactly (longing, loneliness, grief for a country, an old man's undimmed will) and point to the words that carry it; where a poem turns, say from what to what.\n\nIn “飘飘何所似，天地一沙鸥”, the poet drifting on the river in old age likens himself to a gull: small, alone and homeless in a vast world.\n\n> **Watch out.** Do not take a figure at its face: the stars do not fall in “星垂平野阔”. And a poem may hold two feelings at once, sorrow with strength, as “落日心犹壮” does.",
+          "先读注，知道诗人在什么地方、什么时候；再读每一句写了什么，代表什么。孤鸿、片云、天地间的沙鸥，很少只是鸟和云：它们就是诗人自己。用准确的词说出感情（思念、孤独、忧国、老而不衰的壮志），并指出是哪些字句表达的；诗的感情有转折的，要说出从什么转到什么。\n\n“飘飘何所似，天地一沙鸥”，晚年飘泊在江上的诗人把自己比作沙鸥：在广大的天地间渺小、孤单、无家可归。\n\n> **注意。** 不要只按字面理解：“星垂平野阔”不是星星掉下来了。一首诗也可能同时有两种感情，像“落日心犹壮”，悲中有壮。",
+        ),
+      ],
+      [
+        "art",
+        t("The Art of the Poem", "诗词的写法"),
+        t(
+          "Name the art and say what it does here: a contrast (one stands alone while swallows fly in pairs), a scene that carries the feeling (a far cloud and a lonely moon for a homeless man), a turn from joy to grief that deepens the grief, writing from the other's side (the wife's longing to show the poet's), a symbol, an allusion (the old horse that knew the way), a rhetorical question, a closing comment that lifts a ci into a thought, a reply to another poem on the same theme.\n\nWang Changling's young wife “knew no sorrow” until she saw the willows: the poem rises before it falls, and the fall is the deeper for it.\n\n> **Watch out.** Naming the art is not enough: say what it does in this poem. And a poem of history, like the two on the Wu River, is an argument as well as a poem: say what each poet holds.",
+          "说出写法，再说它在这里的作用：对比（人独自站着，燕子成双飞），借景抒情（远方的片云、孤独的月亮写飘泊的人），由喜转悲使悲更深，从对面写起（写妻子的思念来表现诗人的思念），象征，用典（识途的老马），反问，词末用议论把情感升华为道理，针对同题的诗翻出新意。\n\n王昌龄笔下的少妇“不知愁”，直到看见杨柳：诗先扬后抑，抑得也就更深。\n\n> **注意。** 只说出写法的名称不够，还要说出它在这首诗里的作用。咏史诗，比如两首写乌江的诗，既是诗，也是议论：要说出每位诗人的看法。",
         ),
       ],
     ],

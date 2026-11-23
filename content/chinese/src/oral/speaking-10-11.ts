@@ -1,7 +1,9 @@
 // The speaking topics of the senior required course (docs/chinese-curriculum.md §18.9): a speech that opens on its
 // listeners and argues its view, a debate that names the other side's fault in logic and sums up the clash, and an
-// interview that follows up an answer and reports what was said faithfully. The scenes and the words said are written
-// for this subject. Until their recordings are made, what is said is shown as text to be read as if heard.
+// interview that follows up an answer and reports what was said faithfully; and, in the selective required course, a
+// seminar that builds on what was said and answers a challenge, and a research presentation that reports a finding
+// within its reach and answers questions on it. The scenes and the words said are written for this subject. Until
+// their recordings are made, what is said is shown as text to be read as if heard.
 
 import { t } from "@ga/content";
 
@@ -613,10 +615,404 @@ const SPECS_10: readonly Spec[] = [
   },
 ];
 
+/** BUILDING_11 are the scenes of speaking-11-seminar: a turn that takes up what was said and moves the discussion on. */
+const BUILDING_11 = checked(`
+研讨课上讨论《论语》“君子和而不同”。小林刚说：“‘和而不同’就是大家关系好，但想法可以不一样。”轮到你发言。
+= 我接着小林的话说：孔子还说“小人同而不和”，可见只会附和、没有自己的看法，反而算不上真正的“和”。
+- 我也觉得“和而不同”就是关系好，想法可以不一样，小林说得对。 ~repeat
+- 我想说说孔子的生平：他三岁丧父，后来周游列国十四年。 ~offtopic
+% 好的发言先接住小林的话，再用原文“小人同而不和”往前推进一步，说出新的意思。照着小林的话再说一遍，没有增加任何东西；讲孔子的生平，离开了正在讨论的这句话。 | A good turn takes up what Xiao Lin said and moves it on with the text's own “小人同而不和”. Saying his words again adds nothing; the life of Confucius strays from the line being discussed.
+
+小组研讨“鲁迅为什么要写看客”。小周说：“因为鲁迅讨厌这些人。”你觉得这个说法不够准确。
+= 小周注意到了鲁迅对看客的态度。不过《呐喊》自序里说，他弃医从文是想改变人的精神，所以与其说是讨厌，不如说是想唤醒他们。
+- 你这么说太幼稚了，一看就没有好好读书。 ~attack
+- 小周说鲁迅讨厌看客，那就是说鲁迅讨厌所有的中国人。 ~misgrasp
+% 好的发言先肯定对方看到的东西，再用《呐喊》自序作依据修正它。说对方“幼稚”“没有好好读书”，针对的是人，不是观点；把“讨厌看客”说成“讨厌所有的中国人”，曲解了小周的意思。 | A good turn grants what the other saw, then corrects it from the preface to Call to Arms. Calling him childish goes at the person; turning “he disliked the onlookers” into “he disliked all Chinese” twists what Xiao Zhou said.
+
+研讨“二十四节气在今天还有没有用”。已经有三位同学讲了节气和种地的关系，讨论停在了原地。
+= 前面大家都谈到了种地，我想换个角度：现在不少城市的学校按节气安排自然观察，节气也在帮城里人认识季节。
+- 我也认为节气对种地很重要，农民种地离不开它。 ~repeat
+- 我觉得这个话题没什么好讨论的，我们换一个吧。 ~dismiss
+% 讨论停在一处时，好的发言先点出前面说过什么，再换一个角度、带一个实例，把讨论往前推。又说一遍“对种地重要”，只是重复；说“没什么好讨论的”，是把大家的发言撇在一边。 | When a discussion stalls, a good turn names what has been said, then brings a new angle with an example. Saying again that the terms matter for farming only repeats; “nothing to discuss” brushes everyone's turns aside.
+
+研讨《史记》中“太史公曰”的作用。小陈说：“它就是作者发表议论的地方。”你想补充自己读到的一个例子。
+= 我补充一个例子：《孔子世家》的“太史公曰”写了司马迁到鲁国参观孔子旧居的经历，可见它不只是议论，也记下了作者自己的见闻。
+- 我补充一下：“太史公曰”就是作者发表议论的地方，里面有很多议论。 ~repeat
+- 我补充一下：《史记》一共一百三十篇，是一部纪传体通史。 ~irrelevant
+% 补充要拿出新的东西：举出《孔子世家》的例子，说明“太史公曰”还有记见闻的作用。换个说法重复小陈的话，什么也没有补充；《史记》有多少篇是真的，但和“太史公曰”的作用无关。 | Adding means bringing something new: the example from the house of Confucius shows the passage also records what the author saw. Rewording Xiao Chen adds nothing; the number of chapters is true but says nothing of what the passage does.
+
+研讨“网络流行语会不会破坏汉语”。小王激动地说：“流行语就是垃圾，应该全部禁止！”
+= 小王担心语言会变得粗糙，这一点我理解；不过“潜水”“灌水”这些词用的是比喻，这是汉语本来就有的办法，未必是破坏。
+- 你这样说太极端了，根本不讲道理，没法和你讨论。 ~harsh
+- 对，应该全部禁止，网上的东西都不好。 ~noreason
+% 对方说得激动时，好的发言先说出对方担心的是什么，再拿出具体的词作依据，平和地提出不同的看法。说对方“太极端”“不讲道理”，语气太冲；跟着说“全部禁止”，只表了态，没有说为什么。 | When the other speaks hotly, a good turn names his worry, then calmly offers another view resting on particular words. Calling him extreme and unreasonable is too sharp; agreeing to ban them all states a view with no reason.
+
+研讨《项链》的结尾。小赵说：“结尾的意外是作者故意捉弄读者。”你不同意，但还不清楚小赵为什么这样想。
+= 小赵，你说“捉弄读者”，是指结尾和前面没有联系吗？我觉得前面佛来思节夫人那么爽快地把项链借出去，其实已经埋下了伏笔。
+- 你说错了，结尾一点也不是在捉弄读者。 ~noreason
+- 小赵是觉得这篇小说写得不好，我也不太喜欢它。 ~misgrasp
+% 好的发言先问清对方的意思，再用文中的细节说明结尾早有伏笔。只说“你说错了”，没有理由；把“捉弄读者”说成“小说写得不好”，理解错了小赵的意思。 | A good turn first asks what the other means, then shows from a detail that the ending was prepared. “You are wrong” gives no reason; turning “teasing the reader” into “a bad story” gets Xiao Zhao wrong.
+
+研讨快结束了，老师请你归纳大家的发言。问题是“古诗中的柳为什么常和送别有关”，同学们分别谈了谐音、折柳的风俗和柳枝的样子。
+= 大家从三个方面作了解释：“柳”和“留”谐音，古人有折柳送别的风俗，柳枝柔长像依依不舍。还没讨论的是：古诗里的柳是不是都和离别有关？
+- 刚才大家都说得很好，发言很积极，这次讨论很成功。 ~needless
+- 刚才小李说柳枝像头发，很有意思，我觉得写得最好的是《诗经》。 ~trivial
+% 归纳要把各方的要点都说到，再指出还没有解决的问题。只夸“说得很好”，听的人不知道大家讲了什么；抓住一个比喻和自己的喜好，丢掉了三个要点。 | A summing-up names every point made and the question still open. Praise alone tells no one what was said; one likening and a personal preference drop the three points.
+
+研讨“成语中的数字是不是实指”，你是主持人。小孙已经连着讲了五分钟，别的同学还没有开口。
+= 小孙举的“三顾茅庐”很有说服力，我们先记下来。时间有限，也请其他同学说说自己找到的成语。
+- 小孙，你能不能别说了，大家都等烦了。 ~harsh
+- 不打断他，让小孙一直讲下去，反正他讲得也对。 ~noturn
+% 主持人要让每个人都有机会发言：先肯定小孙的要点，再把话头交给别人。叫他“别说了”，语气太冲；任由他一直讲，别的同学就没有机会开口了。 | A chair gives everyone a turn: grant Xiao Sun's point, then pass the word on. Telling him to stop is too sharp; letting him run on leaves the others no turn.
+
+研讨《二十年后》的结尾。小吴说：“警察吉米亲手抓了自己的朋友，所以他是个冷酷的人。”你觉得这个判断不够全面。
+= 吉米没有亲自出面，而是请另一个警察去抓，还留了一张纸条说明原因。这说明他守住了职责，也顾念旧情，不能只说冷酷。
+- 吉米确实很冷酷，连朋友都抓，真是太无情了。 ~repeat
+- 这篇小说的作者是欧·亨利，他的结尾总是出人意料。 ~offtopic
+% 好的发言用文中的细节补上小吴没有看到的一面：吉米请别人去抓，又留了纸条。跟着说“太无情了”，只是重复小吴的判断；谈作者的结尾风格，离开了吉米是个怎样的人这个问题。 | A good turn adds from the text the side Xiao Wu missed: Jimmy sends another man and leaves a note. Calling him heartless only repeats the judgment; the author's endings stray from what kind of man Jimmy is.
+
+研讨“手机阅读和纸质阅读”。小郑说：“我们班的调查发现，读纸质书的同学读得多，所以纸质书能让人读得更多。”
+= 小郑的数据很有用。不过这只说明两者同时出现，也可能是本来爱读书的人更喜欢纸质书；要证明纸质书的作用，还得另找证据。
+- 小郑说得对，纸质书就是比手机好，大家都应该读纸质书。 ~noreason
+- 小郑，你们班才几个人，这种调查有什么用？ ~dismiss
+% 好的发言肯定对方的数据，再指出从“同时出现”推不出“是原因”，并说明还缺什么证据。跟着说“纸质书就是好”，没有理由；说调查“有什么用”，是把对方的依据一笔抹掉，没有回应它。 | A good turn grants the data, then shows that going together is not causing, and says what evidence is missing. “Paper is simply better” gives no reason; “what use is it” waves the evidence away without answering it.
+`);
+
+/** CHALLENGE_11 are the scenes of speaking-11-seminar: asking for the grounds of a view, and answering a challenge to one's own. */
+const CHALLENGE_11 = checked(`
+你在研讨中说“唐诗里的月亮都表现思乡”。小许问：“李白《月下独酌》也写月亮，那首也是思乡吗？”
+= 你说得对，《月下独酌》写的是孤独，不是思乡。我的说法太绝对了，应该改成：写思乡的唐诗常常写到月亮。
+- 那首不算，我说的是大部分的诗，你别抬杠。 ~dismiss
+- 李白喝酒的时候一定也在想家，所以那首也是思乡。 ~added
+% 别人举出反例时，好的回应承认反例成立，把自己的说法收窄到依据能支持的范围。说“你别抬杠”，没有回应质疑；说李白喝酒时也在想家，是给诗加上了诗里没有的意思。 | When someone brings a counterexample, a good answer grants it and narrows the claim to what the evidence bears. “Stop quibbling” answers nothing; saying Li Bai was homesick adds what the poem never says.
+
+小冯在研讨中说：“很多诗都把柳和离别联系在一起。”你想知道他的依据。
+= 小冯，你能举出一两首具体的诗吗？是哪一句把柳和离别连在一起的？
+- 小冯，很多诗是不是真的都这样？ ~closed
+- 我不相信，你肯定是随口说的。 ~attack
+% 追问依据，要请对方说出具体的诗句，对方答了，大家就能核对。“是不是真的都这样”只能答“是”或“不是”，问不出依据；说他“随口说的”，针对的是人。 | To ask for grounds, ask for the lines themselves, which everyone can then check. “Is it really so” draws only a yes or no; “you just said it” goes at the person.
+
+你在研讨中说：“本班四十二人中，二十六人主要用手机阅读。”小韩问：“那能说用手机阅读的人读得少吗？”
+= 不能。调查只显示用手机阅读的人多，没有证明他们读得少；要回答这个问题，得比较两组人的阅读时间。
+- 能，用手机阅读肯定读得少，这是大家都知道的。 ~noreason
+- 这个问题和我的调查没有关系，下一个问题。 ~dismiss
+% 好的回应分清调查发现了什么、没有发现什么，并说出回答这个问题还需要什么。“大家都知道”不是理由；说“没有关系”，是回避了对方的问题，其实它正是从你的数据引出来的。 | A good answer keeps apart what the survey found and what it did not, and says what would be needed. “Everyone knows” is no reason; “nothing to do with it” dodges a question that comes straight from the figures.
+
+小许质疑你：“你说‘太史公曰’是为了评价人物，可《孔子世家》那一段主要写的是司马迁自己参观的经历。”
+= 这个质疑有道理。《孔子世家》那一段确实以写见闻为主，评价是借见闻表达的。我把“评价人物”改成它的作用之一。
+- 那一段也是在评价，你没有读懂。 ~dismiss
+- 司马迁写《史记》用了十几年，非常辛苦。 ~offtopic
+% 质疑说中了的地方，要坦然承认，并修正自己的说法。只说“你没有读懂”，没有回应对方举出的那一段；讲司马迁写书辛苦，离开了“太史公曰”的作用。 | Where a challenge hits, grant it and amend the claim. “You did not understand” leaves his example unanswered; how hard Sima Qian worked strays from what the passage does.
+
+小组讨论“汉字简化好不好”。小沈说：“简化字破坏了汉字的文化。”你想追问，让他说得更具体。
+= 你说的“破坏文化”，能举一个具体的字吗？比如哪个字简化以后，原来的意思就看不出来了？
+- 你是不是觉得简化字不好？ ~closed
+- 简化字是国家规定的，你这样说不对。 ~dismiss
+% 追问要让对方把笼统的说法落到具体的字上，讨论才能继续。“是不是觉得不好”只能答“是”或“不是”，问不出具体的内容；拿“国家规定”压人，没有回应他的看法。 | A follow-up brings a vague claim down to particular characters. “Do you think they are bad” draws only yes or no; “the state decided it” does not answer his view.
+
+你在研讨中说“节气用在南方不准”。小杜反驳：“节气本来就是按黄河流域的气候定的，不能说不准。”
+= 这一点我同意，节气是按黄河流域定的。那我换个说法：节气反映的是黄河流域的物候，用在南方，要按当地的情况调整。
+- 我说不准就是不准，这是我外公说的。 ~pushy
+- 黄河流域在北方，长江流域在南方。 ~irrelevant
+% 对方的反驳有道理时，好的回应接受它，并用更准确的说法表达自己原来的意思。“我说不准就是不准”，只是坚持自己；说出黄河、长江在哪里，是事实，却对回应反驳毫无帮助。 | When a rebuttal holds, a good answer accepts it and puts one's own point more exactly. “It is wrong because I say so” only insists; where the rivers lie is true but does nothing for the reply.
+
+研讨《飞鸟集》。小葛说：“这些短句没有押韵，所以不算诗。”你想提出不同意见。
+= 押韵是诗常见的特点，但不是唯一的标准。《飞鸟集》的短句有凝练的意象和跳跃的联想，这也是诗的特点。
+- 你连诗是什么都不懂，就别发言了。 ~attack
+- 我觉得《飞鸟集》很好看，我很喜欢。 ~noreason
+% 提出不同意见，要先承认对方说对的部分，再说出自己判断的标准和理由。叫对方“别发言了”，针对的是人；只说自己喜欢，没有说出它为什么算诗。 | To differ, grant what is right in the other view, then give your own standard and reason. Telling him to keep quiet goes at the person; liking the book is no reason it is poetry.
+
+研讨中有人问：“你说网络流行语多用谐音，到底有多少个？”你手上的材料是：四十个词里有十四个是谐音。
+= 在我收集的四十个词里，有十四个是谐音，是几种方式里最多的。不过这些只是我们班同学常用的词。
+- 绝大多数网络流行语都是谐音，几乎全都是。 ~overclaim
+- 有很多很多，我也记不清了，反正很多。 ~unclear
+% 回答“有多少”，要说出确切的数字和它的范围。四十个里有十四个，说不上“绝大多数”，更说不上“几乎全都是”；“很多很多”，听的人还是不知道到底有多少。 | Asked how many, give the exact figure and its scope. Fourteen of forty is not nearly all; “very many” still leaves the listener not knowing how many.
+
+研讨《胖子和瘦子》。小程说：“小说讽刺的是胖子。”小宁马上说：“不对，讽刺的是瘦子！”两个人争了起来。你想让讨论继续下去。
+= 两位各看到了一面：瘦子一听对方官大就变了样，胖子也被这副样子弄得很不自在。我们回到原文，看作者分别是怎样写两个人的。
+- 小宁说得对，小程你错了。 ~noreason
+- 你们别吵了，这个问题根本不重要。 ~dismiss
+% 两种意见相持不下时，好的发言说出双方各看到了什么，再把大家引回原文找依据。只判一方对，没有理由；说“根本不重要”，是把两个人的意见都撇在一边。 | When two views deadlock, a good turn names what each sees, then leads everyone back to the text. Ruling for one side gives no reason; “it does not matter” brushes both views aside.
+
+你在发言中说：“我们班的调查说明，学生作业太多。”老师问：“调查问的是什么？”你的问卷问的是“影响你课外阅读的主要原因”，四十二人中有二十人答“作业多”。
+= 问卷问的是影响课外阅读的原因，四十二人中有二十人答“作业多”。所以准确地说，是近一半同学觉得作业影响了课外阅读。
+- 调查说明作业太多，这是全班同学的共同感受。 ~overclaim
+- 调查是我设计的，一共五道题，花了一个星期。 ~off
+% 被问到依据时，好的回应如实说出调查问了什么、多少人这样答，再把结论改到依据所及的范围。二十人不是“全班”，问的也不是作业多不多；讲问卷有几道题、花了多久，没有回答老师的问题。 | Asked for the grounds, a good answer says what was asked and how many answered so, and narrows the claim to fit. Twenty is not the whole class, and the question was not whether there is too much homework; how the survey was made does not answer the teacher.
+`);
+
+/** REPORTING_11 are the scenes of speaking-11-presenting-research: stating the question, the method and the finding to listeners. */
+const REPORTING_11 = checked(`
+你要向全班报告“唐诗中的月亮与思乡”这项研究，只有三分钟。怎样开头？
+= 我研究的问题是：唐诗里的月亮为什么常和思乡连在一起。我读了五首诗，找到了三个原因，下面一个一个说。
+- 月亮是地球的卫星，离地球大约三十八万公里，本身不发光。 ~noopening
+- 我先讲讲我是怎么想到这个题目的：那天晚上，我在阳台上吃月饼…… ~rambling
+% 时间短，开头就要说出研究的问题、用了什么材料、有几个发现，让听众知道后面怎么听。一开口讲月亮的天文知识，没有先说清要讲什么；从吃月饼讲起，又散又长，三分钟就过去了。 | With little time, the opening states the question, the material and how many findings, so the listeners know how to follow. Astronomy says nothing of the subject; the story of the evening rambles away the three minutes.
+
+你在报告银杏树的观察结果，幻灯片上有五周的数据表。怎样说最清楚？
+= 简单地说：南边的甲树比北边的乙树早一周左右开始变黄，也早一周左右落完。每周的具体数字都在表上。
+- 第一周甲树百分之五，乙树几乎没有；第二周甲树百分之三十，乙树百分之五；第三周…… ~rambling
+- 我发现银杏树秋天会变黄，后来叶子就落下来了。 ~trivial
+% 听的人记不住一串数字，口头报告要先说出数字说明了什么，细节留给表格。把每周的数字逐一念出来，听众抓不住要点；“秋天会变黄”谁都知道，丢掉了两棵树相差一周这个发现。 | Listeners cannot hold a string of figures: say what the figures show, and leave the detail to the table. Reading out every week loses the point; that ginkgos turn yellow is known to all and drops the finding of the week's difference.
+
+你要向初一的学弟学妹报告“简化字中的同音代替”，先要解释什么是同音代替。
+= 同音代替，就是用一个读音相同、笔画少的字去代替另一个字。比如头发的“髮”，现在就写成出发的“发”。
+- 同音代替是指在文字规范化过程中，以音同或音近之字形兼并他字的字际关系调整方式。 ~jargon
+- 同音代替就是把字的笔画减少，比如把“國”写成“国”。 ~wrongcase
+% 给初一的同学解释，要用浅白的话说清意思，再举一个真正的例子。一长串术语，他们听不懂；“國”变成“国”是减少了笔画，却不是用另一个同音的字来代替，例子举错了。 | For younger pupils, say it in plain words and give a true case. A string of terms loses them; 國 to 国 cuts strokes but puts no other character of the same sound in its place, so the example is wrong.
+
+你报告调查结果，说到读纸质书的同学阅读时间更多。怎样说才不超出你的发现？
+= 读纸质书的同学阅读时间更多，但这只说明两者同时出现，不能说明读纸质书会让人读得更多。
+- 这说明读纸质书能让人爱上阅读，大家都应该改读纸质书。 ~overclaim
+- 读纸质书的同学阅读时间更多，看来用手机阅读会让人变笨。 ~added
+% 报告发现时，要说清它是什么，也说清它不是什么。“能让人爱上阅读”把同时出现说成了原因，超出了调查；“会让人变笨”，调查里根本没有涉及。 | Report what the finding is and what it is not. “Makes people love reading” turns going together into causing; “makes people stupid” is nowhere in the survey.
+
+报告快要结束，你要说结论。你的研究只调查了本班四十二名同学。
+= 总结一下：本班大多数同学每周课外阅读一到三小时。因为只调查了一个班，这个结论不能推广到全年级。
+- 总结一下：现在的高中生普遍读书太少，必须引起全社会的重视。 ~overclaim
+- 总结一下：我的报告就到这里，谢谢大家。 ~nofinding
+% 结论要重述最主要的发现，并说出它适用的范围。一个班的调查，说不上“高中生普遍”；只说“就到这里”，听众还没听到发现，报告就结束了。 | The conclusion restates the main finding and how far it reaches. One class says nothing of all senior pupils; “that is all” ends before the listeners hear what was found.
+
+你在报告“成语中的数字”，有一张幻灯片上列了三十个成语。
+= 三十个成语都在讲义上，这里只说三个典型的例子：“三顾茅庐”是实指，“千方百计”表示多，“七上八下”表示乱。
+- 下面我把这三十个成语一个一个读一遍，再逐一解释。 ~rambling
+- 大家自己看幻灯片吧，我就不多说了。 ~needless
+% 材料多时，口头报告挑几个有代表性的例子，各说明一种情况，其余的留给讲义。三十个逐一讲，听众抓不住要点；让大家自己看，又没有说出他们需要听的分类。 | With much material, a spoken report picks a few cases that each show one kind and leaves the rest to the handout. Going through all thirty loses the point; “read it yourselves” leaves out the kinds the listeners need.
+
+你在报告南北农谚的比较，要向听众说明材料是从哪里来的。
+= 我的材料有两个来源：一是一本农谚集，二是我对外公和奶奶的访问，他们分别是江苏南部和河北的农民。
+- 我的材料都是真实可靠的，请大家放心。 ~needless
+- 农谚是劳动人民智慧的结晶，有着悠久的历史。 ~offtopic
+% 说明材料来源，要具体说出是什么书、访问了谁，听众才能判断材料可不可靠。只说“真实可靠”，听众需要知道的来源反而没有说；夸农谚的历史，离开了材料从哪里来这个问题。 | Name the sources: which book, whom you asked, so listeners can judge them. “It is all reliable” leaves out the very sources they need; praise of the sayings' history strays from where the material came from.
+
+你在报告“鲁迅小说中的看客”，想引用《呐喊》自序中的经历来支持你的观点。
+= 鲁迅在《呐喊》自序里说，他在日本看到一段影片，一群中国人神情麻木地围观同胞被杀，这使他决定弃医从文。这和小说里的看客正好可以对照。
+- 鲁迅小时候一定被人围观过，所以他才这么恨看客。 ~added
+- 鲁迅原名周树人，是浙江绍兴人。 ~irrelevant
+% 引用材料支持观点，要说出材料的出处和内容，再说明它和观点的关系。说鲁迅“小时候一定被人围观过”，是自序里没有的说法；鲁迅的原名和籍贯是真的，但和看客没有关系。 | To support a view, give the source and what it says, then how it bears on the view. That he was stared at as a child appears nowhere in the preface; his birth name and home town are true but beside the point.
+
+你在报告“方言中的入声与古诗的押韵”，想让同学们听出入声是什么样的。
+= 请大家听我用普通话和粤语各读一遍“绝、灭、雪”：用粤语读，三个字都很短，一发出来就收住了，这就是入声。
+- 入声是古代四声之一，属于仄声，《广韵》中有入声韵三十四部。 ~jargon
+- 入声在普通话里已经没有了，所以不用管它。 ~off
+% 讲声音，最好让听众亲耳听到，再用一句话点明特点。说出四声、仄声、韵部，没学过音韵的同学还是听不出入声是什么样；“不用管它”，正好丢掉了这次报告要讲的东西。 | To explain a sound, let the listeners hear it, then name the feature in a sentence. Tones, oblique tones and rhyme groups still leave them unable to hear it; “never mind it” drops what the talk is about.
+
+你在报告唐诗中的月亮，正要讲第三个原因，却发现时间只剩一分钟了。
+= 时间不多了，第三个原因简单说一句：夜晚安静，人最容易想家。最后用一句话总结：月亮是两地共见的，圆月象征团圆，夜晚又最安静。
+- 时间不多了，第三个原因我就不讲了，谢谢大家。 ~nofinding
+- 第三个原因比较复杂，我得先从夜晚人的心理说起…… ~rambling
+% 时间不够时，把剩下的内容压成一句，并留出时间说结论。直接结束，第三个发现和结论都没有说出来；从头细讲，一分钟里讲不完，也就说不到结论了。 | When time runs short, press what is left into a sentence and keep time for the conclusion. Stopping leaves the third finding and the conclusion unsaid; starting at length cannot finish in a minute.
+`);
+
+/** ANSWERING_11 are the scenes of speaking-11-presenting-research: answering questions after a report, within what the research found. */
+const ANSWERING_11 = checked(`
+你报告完银杏树的观察，一位同学问：“你怎么知道变黄早是光照造成的？”
+= 我不能确定。光照是一种可能，但土壤、水分、树龄也都可能有影响；我只观察了两棵树，还不能排除这些因素。
+- 当然是光照，南边的阳光多，这是常识。 ~overclaim
+- 这个问题问得很好，谢谢你的提问。 ~off
+% 回答要守住研究的界限：观察只能说明有差别，说不出原因，就如实说“不能确定”，并说出还有哪些可能。说“当然是光照”，把推测说成了定论；只道谢，没有回答问题。 | Keep within what the research found: the observation shows a difference, not its cause, so say you cannot be sure and name the other possibilities. “Of course it is the light” turns a guess into a fact; thanks alone answer nothing.
+
+你报告了《论语》中“君子”的研究，一位同学问：“你说‘君子’多数指德行，你统计过有多少处吗？”
+= 没有统计全部的用例，我只分析了“君子”和“小人”对举的章句。“多数”是就这些章句说的，全书的情况还需要统计。
+- 统计过，大概九成都是指德行。 ~added
+- 统计不重要，读《论语》要靠体会。 ~dismiss
+% 被问到研究没有做的事，要如实说没有做，并说明自己的结论建立在什么材料上。说“统计过，大概九成”，是编出了研究里没有的数字；说“统计不重要”，回避了对方的问题。 | Asked about what the research did not do, say so, and what the conclusion does rest on. “About nine in ten” invents a figure the research never had; “counting does not matter” dodges the question.
+
+报告结束后，有人问：“你的调查只有一个班，有什么意义？”
+= 一个班确实不能代表全校，我在结语里也说了。它的意义是了解我们自己班的阅读情况，也可以为更大的调查做个准备。
+- 一个班也能代表全校，大家其实都差不多。 ~overclaim
+- 你这样问，是不尊重我花的工夫。 ~harsh
+% 对方指出局限时，好的回答承认局限，再说出研究在这个范围里的价值。说“一个班也能代表全校”，结论超出了调查；把提问当成不尊重，语气太冲，也没有回答。 | When a limit is pointed out, grant it and say what the work is worth within it. “One class stands for the school” goes past the survey; taking the question as disrespect is too sharp and answers nothing.
+
+报告后，一位同学提了问题，你没有听清楚他问的是什么。
+= 不好意思，我没有听清楚。你是问调查的方法，还是问调查的结果？
+- 嗯，你说得对，下一个问题。 ~off
+- 我的报告已经讲得很清楚了，你再看看幻灯片吧。 ~dismiss
+% 没听清就问清楚，最好给出两种可能，让对方容易回答。随口说“你说得对”，根本没有回答他的问题；让他“再看看幻灯片”，是把提问推开了。 | If you did not hear, ask, and offer two readings to make answering easy. “You are right” answers nothing; “look at the slides again” pushes the question away.
+
+你报告的是“方言中的入声与古诗的押韵”。一位同学问：“入声在普通话里已经消失了，为什么还要了解它？”
+= 因为古诗是按古音写的。知道“绝、灭、雪”是入声字，就能明白《江雪》为什么用它们押韵，也能听出诗的节奏。
+- 因为考试可能会考，所以要了解。 ~weak
+- 普通话是以北京语音为标准音的，北京话受过很多语言的影响。 ~offtopic
+% 回答“为什么要了解”，要用报告里的例子说明它对读古诗有什么用。“考试可能会考”，和入声对读诗的用处无关；讲普通话的标准音，离开了对方问的问题。 | To answer why it matters, show from the report's own example what it does for reading the poems. “It may be examined” has nothing to do with that use; the standard of Putonghua strays from the question.
+
+一位同学问：“你说网络流行语没有破坏汉语，那小学生学了‘酱紫’这样的写法怎么办？”
+= 这个担心有道理。我的研究只说明这些词的构成用的是汉语原有的办法，没有研究它们对学习的影响，那是另一个问题。
+- 小学生不会学这种词的，你想多了。 ~dismiss
+- 我的意思是网络流行语全都是好的，应该推广。 ~overclaim
+% 对方问到研究没有涉及的方面，好的回答承认问题有道理，并说清研究回答了什么、没有回答什么。说“你想多了”，把对方的担心推开了；说流行语“全都是好的，应该推广”，远远超出了研究的发现。 | Asked about what the research did not cover, grant the question and say what was and was not answered. “You worry too much” pushes the concern away; “all good, spread them” goes far past the finding.
+
+你只研究了《诗经》和唐诗里的柳。一位同学问：“那宋词里的柳也一样吗？”
+= 我只研究了《诗经》和唐诗，宋词没有系统地看过。我读过的柳永《雨霖铃》里也写到杨柳和离别，但要下结论还得多看一些。
+- 一样的，所有朝代的诗词都是这样。 ~overclaim
+- 宋词不在我的研究范围里，这个问题不用讨论。 ~dismiss
+% 问题超出研究范围时，要说明范围，可以说出自己知道的一点线索，但不下结论。“所有朝代都这样”，结论远超出材料；“不用讨论”，把一个好问题推开了。 | When a question goes past the scope, say so; offer a lead you know, but conclude nothing. “All ages are so” goes far past the material; “no need to discuss it” pushes a good question away.
+
+你报告南北农谚时说，南方霜降时很少见霜。一位同学说：“我在杭州见过霜降那天下霜。”
+= 谢谢你的补充。我的材料只来自我外公的家乡，各地的情况可能不同，“霜降很少见霜”应该限定在他那个地方。
+- 你看到的一定是特殊情况，不能算数。 ~dismiss
+- 杭州的冬天其实很冷，有时还会下雪。 ~offtopic
+% 别人提出和你不同的事实时，好的回答感谢补充，并把自己的说法限定在材料来源的范围里。说“不能算数”，没有理由就否定了对方的事实；讲杭州冬天会下雪，离开了霜降有没有霜这个问题。 | When someone brings a fact that differs, thank them and narrow the claim to where the material came from. “It does not count” dismisses the fact without reason; snow in winter strays from frost at Frost's Descent.
+
+报告后，老师说：“你的摘要只写了研究什么，没有写发现了什么。”
+= 谢谢老师。我的发现是：南边的银杏比北边的早一周左右变黄。我把这一句加进摘要里。
+- 发现在后面的正文里写了，摘要就不用再写了吧。 ~pushy
+- 我觉得摘要不重要，反正大家都不看。 ~weak
+% 接受合理的意见，说出要补的内容，并说明怎样改。坚持“正文里写了就不用写”，只坚持自己，没有听进意见；“大家都不看”不是理由，摘要本来就是为了让人一眼看到发现。 | Accept a fair point, say what to add and how. Insisting the body already has it only holds one's ground; “no one reads it” is no reason, for an abstract exists to show the finding at a glance.
+
+一位同学的问题很长，最后问：“所以你觉得‘太史公曰’到底是不是司马迁的真心话？”
+= 我只能根据文本说：这些话感情很强烈，比如写孔子说“心乡往之”，可以看出他的景仰；至于是不是“真心”，文本之外我没有证据。
+- 当然是真心话，司马迁是一个正直的人。 ~overclaim
+- 你的问题太长了，我没听懂，请下一位。 ~harsh
+% 回答要从文本出发：能从文本看出的就说，看不出的就说没有证据。“司马迁正直”不能证明这些话都是真心，结论超出了依据；嫌对方问题太长，语气太冲，也没有回答。 | Answer from the text: say what it shows, and that beyond it there is no evidence. Sima Qian's honesty does not prove every word sincere; complaining of the question's length is too sharp and answers nothing.
+`);
+
+/** SPECS_11 are the speaking topics of the senior selective required course, in order. */
+const SPECS_11: readonly Spec[] = [
+  {
+    grade: 11,
+    id: "speaking-11-seminar",
+    title: t("Speaking in a Seminar", "研讨发言"),
+    summary: t(
+      "Taking part in a seminar on a text or question: building on what others said with new grounds, asking for the evidence behind a view, and answering a challenge by granting what is right and narrowing one's claim.",
+      "参加对一篇作品或一个问题的研讨：接着别人的发言，用新的依据把讨论往前推；追问一个观点的依据；面对质疑，承认对方说对的地方，把自己的说法改得更准确。",
+    ),
+    intro: t(
+      "A seminar is thinking aloud together. Each turn takes up what was said, “我接着小林的话说”, and adds something: a line of the text, an example, a new angle. When a view is vague, ask for its grounds: which line, which figure. When your own view is challenged, the strongest answer often begins “你说得对”, and then says the claim again, narrower and truer.\n\nWhat a seminar is not: repeating the last speaker, going at the person, or winning. The first knowledge point builds on others, the second asks for and answers challenges.",
+      "研讨是大家一起出声地思考。每一次发言都接住前面的话，“我接着小林的话说”，再增加一点东西：原文的一句、一个例子、一个新的角度。观点说得笼统时，就追问依据：是哪一句，哪个数字。自己的观点受到质疑时，最有力的回答往往从“你说得对”开始，再把说法改得更集中、更准确。\n\n研讨不是重复上一位的话，不是针对人，也不是争输赢。第一个知识点学接着别人的话往前推，第二个学追问和回应质疑。",
+    ),
+    texts: [...ruleTexts(BUILDING_11), ...ruleTexts(CHALLENGE_11)],
+    after: ["speaking-10-debate"],
+    points: [
+      [
+        "building",
+        t("Building on What Was Said", "接着别人的话往前推"),
+        t(
+          "Begin from the last speaker: name what they said, then add what is new, a line of the text, an example, another angle, a correction resting on evidence. When the talk stalls, sum up where it stands and open a new side. Chairing, give everyone a turn.\n\nAfter “节气对种地很重要” has been said three times: “前面大家都谈到了种地，我想换个角度……”\n\n> **Watch out.** Agreeing in other words adds nothing; a true fact that does not bear on the question is still off the topic; and correcting someone by calling them careless goes at the person, not the view.",
+          "从上一位的发言说起：先说出他讲了什么，再增加新的东西：原文的一句、一个例子、另一个角度，或者有依据的修正。讨论停在原地时，归纳一下说到了哪里，再打开新的一面。做主持人时，要让每个人都有机会发言。\n\n比如“节气对种地很重要”已经说了三遍，就说：“前面大家都谈到了种地，我想换个角度……”\n\n> **注意。** 换个说法表示同意，什么也没有增加；说的事实再真，和问题无关，仍然是离题；纠正别人时说他粗心，针对的是人，不是观点。",
+        ),
+        ruleGenerator(
+          t("Which is the best thing to say in the seminar?", "研讨中这时怎样说最好？"),
+          BUILDING_11,
+          rule(
+            t(
+              "Note what was just said and where the discussion stands; choose the turn that takes it up and adds something new, on evidence.",
+              "看清刚才说了什么、讨论进行到了哪里；选出接住这句话、又用依据增加新东西的发言。",
+            ),
+            t(
+              "Ask what the discussion has after the turn that it did not have before: a line, an example, an angle or a correction.",
+              "想一想，这句话说完以后，讨论多了什么以前没有的东西：一句原文、一个例子、一个角度，还是一处修正。",
+            ),
+            {
+              find: t("Step 1: see where the discussion stands.", "第一步：看清讨论进行到了哪里。"),
+              choose: t("Step 2: choose the turn that moves it on.", "第二步：选出把讨论往前推的发言。"),
+            },
+          ),
+        ),
+      ],
+      [
+        "challenge",
+        t("Asking for Grounds and Answering a Challenge", "追问依据，回应质疑"),
+        t(
+          "When a view is vague or wide, ask for the grounds in a question that cannot be answered yes or no: which poem, which character, what figure. When your own view is challenged, weigh the challenge: if it holds, say so and narrow your claim; if it does not, answer it from the text or the data. When two views deadlock, say what each sees and lead back to the evidence.\n\nChallenged with a counterexample: “你说得对，那首写的是孤独。我的说法太绝对了，应该改成……”\n\n> **Watch out.** Holding a claim because it is yours, or because an elder or someone famous said it, answers nothing; and conceding is not losing: a claim made narrower and true is the gain of the seminar.",
+          "观点笼统或说得太宽时，用不能只答“是”或“不是”的问题追问依据：哪一首诗、哪一个字、什么数字。自己的观点受到质疑时，先掂量质疑：说中了，就承认，并收窄自己的说法；没有说中，就用文本或数据回答。两种意见相持不下时，说出双方各看到了什么，再回到依据。\n\n比如别人举出反例：“你说得对，那首写的是孤独。我的说法太绝对了，应该改成……”\n\n> **注意。** 因为是自己说的、或者是长辈和名人说的，就坚持不改，什么也没有回答；承认不是认输：把说法改得更集中、更准确，正是研讨的收获。",
+        ),
+        ruleGenerator(
+          t("Which is the best thing to say here?", "这时怎样说最好？"),
+          CHALLENGE_11,
+          rule(
+            t(
+              "Note the view in question and its grounds, and whether a challenge holds; choose the line that asks for the evidence, or answers the challenge on it.",
+              "看清争论的是哪个观点、它有什么依据，质疑有没有说中；选出追问依据、或者用依据回应质疑的一句。",
+            ),
+            t(
+              "Ask whether, after the line, the claim on the table rests more firmly on evidence than before: grounds asked for, a challenge granted or answered.",
+              "想一想，这句话说完以后，讨论中的观点是不是比原来更有依据了：追问了依据，承认或者回答了质疑。",
+            ),
+            {
+              find: t("Step 1: see the view and its grounds.", "第一步：看清观点和它的依据。"),
+              choose: t("Step 2: choose the line that tests it fairly.", "第二步：选出公平地检验它的一句。"),
+            },
+          ),
+        ),
+      ],
+    ],
+  },
+  {
+    grade: 11,
+    id: "speaking-11-presenting-research",
+    title: t("Presenting Research", "学术报告"),
+    summary: t(
+      "Presenting a small piece of research aloud: the question, the material and the finding said plainly for these listeners and within the time, and questions afterwards answered within what the research found.",
+      "口头报告一项小研究：用听众听得懂的话，在规定的时间里说清问题、材料和发现；报告后回答提问，不超出研究的发现。",
+    ),
+    intro: t(
+      "A research report is heard once. So it says at the start what was asked, what material was used and how many findings there are; it says what figures show rather than reading them out; and it ends on the finding and how far it reaches, “因为只调查了一个班，这个结论不能推广到全年级”.\n\nThe questions afterwards test the research. Answer what it found, say plainly what it did not, and do not invent a figure or a cause to fill the gap. The first knowledge point presents, the second answers.",
+      "学术报告，听众只听一遍。所以开头就要说清研究的问题、用了什么材料、有几个发现；说出数字表明了什么，而不是把数字一个个念出来；结尾回到发现和它适用的范围，比如“因为只调查了一个班，这个结论不能推广到全年级”。\n\n报告后的提问是对研究的检验。研究发现了的就回答，没有研究的就如实说，不要编一个数字或原因来填补空白。第一个知识点学报告，第二个学答问。",
+    ),
+    texts: [...ruleTexts(REPORTING_11), ...ruleTexts(ANSWERING_11)],
+    after: ["speaking-10-interview", "speaking-11-seminar"],
+    points: [
+      [
+        "reporting",
+        t("Question, Material and Finding, Said Plainly", "说清问题、材料和发现"),
+        t(
+          "Open on the question, the material and how many findings, so the listeners can follow. Say what the figures show and leave the detail to a table or handout; explain a term in plain words with a true example; pick a few typical cases rather than all. Close on the finding and its reach, and when time runs short, press the rest into a sentence and keep the conclusion.\n\nNot every week's percentages read aloud, but “南边的甲树比北边的乙树早一周左右开始变黄”.\n\n> **Watch out.** A finding said wider than the material, “高中生普遍……” from one class, is wrong however well it is delivered; and a report that ends on “谢谢大家” before the finding has not reported.",
+          "开头说清研究的问题、材料和有几个发现，让听众跟得上。说出数字表明了什么，细节留给表格或讲义；用浅白的话加一个真正的例子解释术语；只挑几个典型的例子，不必样样都讲。结尾回到发现和它适用的范围；时间不够时，把剩下的内容压成一句，留出时间说结论。\n\n不要把每一周的百分比都念出来，而说“南边的甲树比北边的乙树早一周左右开始变黄”。\n\n> **注意。** 发现说得比材料宽，比如凭一个班的调查说“高中生普遍……”，讲得再好也是错的；还没说出发现就“谢谢大家”的报告，等于没有报告。",
+        ),
+        ruleGenerator(
+          t("Which is the best thing to say in the report?", "报告中这时怎样说最好？"),
+          REPORTING_11,
+          rule(
+            t(
+              "Note who is listening, how much time there is, and what this part of the report must do; choose the line that says it plainly and no wider than the research.",
+              "看清听众是谁、时间有多少、报告的这一部分要做什么；选出说得浅白、又不超出研究的一句。",
+            ),
+            t(
+              "Imagine hearing the line once, with no slide: you know what was asked or found, and nothing in it goes beyond the material.",
+              "想象只听一遍、不看幻灯片：你知道了研究的问题或者发现，而且这句话没有一点超出材料。",
+            ),
+            {
+              find: t("Step 1: see what this part of the report must do.", "第一步：看这一部分报告要做什么。"),
+              choose: t("Step 2: choose the line that says it plainly.", "第二步：选出说得清楚的一句。"),
+            },
+          ),
+        ),
+      ],
+      [
+        "answering",
+        t("Answering Questions Within the Research", "在研究的范围里答问"),
+        t(
+          "Hear the question out, and if it was unclear, ask which of two things was meant. Answer from what the research found; where it did not look, say so, and offer a lead without a conclusion. Grant a fair objection or a new fact, and narrow the claim to fit. Take a point about the form, such as an abstract with no finding, and say how you will mend it.\n\nAsked whether light made the tree turn early: “我不能确定。光照是一种可能，但……我只观察了两棵树。”\n\n> **Watch out.** A figure or cause made up on the spot to sound sure is worse than “我没有研究这一点”; and a question pushed away, “你再看看幻灯片”, is a question left unanswered.",
+          "把问题听完，没听清就问清楚是两种意思中的哪一种。从研究的发现出发回答；研究没有涉及的，就如实说，可以说出一点线索，但不下结论。对方的反驳有道理、或者补充了新的事实，就承认，并把自己的说法收窄。对格式提出的意见，比如摘要没写发现，就接受，并说出怎样改。\n\n比如被问到是不是光照让树变黄早：“我不能确定。光照是一种可能，但……我只观察了两棵树。”\n\n> **注意。** 为了显得有把握，当场编一个数字或原因，比说“这一点我没有研究”更糟；把问题推开，比如“你再看看幻灯片”，等于没有回答。",
+        ),
+        ruleGenerator(
+          t("Which is the best answer to the question?", "怎样回答这个提问最好？"),
+          ANSWERING_11,
+          rule(
+            t(
+              "Note what is asked and what the research did and did not find; choose the answer that keeps to the findings and grants what it cannot say.",
+              "看清对方问的是什么，研究发现了什么、没有发现什么；选出守住研究的发现、又承认它说不了什么的回答。",
+            ),
+            t(
+              "Set the answer beside the research: every claim in it rests on what was found, and the question asked is the one answered.",
+              "把回答和研究对照着看：回答中的每一个说法都有研究的发现作依据，回答的也正是对方问的问题。",
+            ),
+            {
+              find: t("Step 1: see what is asked and what the research found.", "第一步：看清问的是什么、研究发现了什么。"),
+              choose: t("Step 2: choose the answer within the findings.", "第二步：选出不超出发现的回答。"),
+            },
+          ),
+        ),
+      ],
+    ],
+  },
+];
+
 /** stageTenElevenSpeaking are the speaking topics of the senior courses, in order, each after the reading and speaking before it. */
 export const stageTenElevenSpeaking: readonly GradeTopic[] = (() => {
   const built: GradeTopic[] = [];
-  for (const spec of SPECS_10)
+  for (const spec of [...SPECS_10, ...SPECS_11])
     built.push(
       topicOf(
         spec,
