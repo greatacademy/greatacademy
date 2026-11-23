@@ -1152,8 +1152,8 @@ const projectionFromDrawing: KnowledgePointDef = {
   figure: linearAlgebraDrawings2["projecting-vectors-onto-one-dimensional-subspaces#a-projection-from-a-drawing"],
   title: t("A projection from a drawing", "由图求投影"),
   explanation: t(
-    "The projection of $\\mathbf{v}$ onto $\\mathbf{u}$ is the shadow of $\\mathbf{v}$ on the line through $\\mathbf{u}$. It is the multiple $\\frac{\\mathbf{v} \\cdot \\mathbf{u}}{\\mathbf{u} \\cdot \\mathbf{u}}\\mathbf{u}$, chosen so that what remains of $\\mathbf{v}$ is perpendicular to $\\mathbf{u}$. The order matters: projecting $\\mathbf{u}$ onto $\\mathbf{v}$ gives a vector along $\\mathbf{v}$ instead.",
-    "$\\mathbf{v}$ 在 $\\mathbf{u}$ 上的投影是 $\\mathbf{v}$ 落在过 $\\mathbf{u}$ 的直线上的影子。它是倍数 $\\frac{\\mathbf{v} \\cdot \\mathbf{u}}{\\mathbf{u} \\cdot \\mathbf{u}}\\mathbf{u}$，这样选取后 $\\mathbf{v}$ 的剩余部分与 $\\mathbf{u}$ 垂直。顺序很重要：把 $\\mathbf{u}$ 投影到 $\\mathbf{v}$ 上得到的是沿 $\\mathbf{v}$ 的向量。",
+    "The projection of $\\mathbf{v}$ onto $\\mathbf{u}$ is the shadow of $\\mathbf{v}$ on the line through $\\mathbf{u}$. It is the multiple $\\frac{\\mathbf{v} \\cdot \\mathbf{u}}{\\mathbf{u} \\cdot \\mathbf{u}}\\mathbf{u}$, chosen so that what remains of $\\mathbf{v}$ is perpendicular to $\\mathbf{u}$. The order matters: projecting $\\mathbf{u}$ onto $\\mathbf{v}$ gives a vector along $\\mathbf{v}$ instead.\n\nFor $\\mathbf{u} = \\langle 2, 0 \\rangle$ and $\\mathbf{v} = \\langle 3, 2 \\rangle$: $\\mathbf{v} \\cdot \\mathbf{u} = 6$ and $\\mathbf{u} \\cdot \\mathbf{u} = 4$, so the projection is $\\frac{3}{2}\\langle 2, 0 \\rangle = \\langle 3, 0 \\rangle$. Check: $\\mathbf{u}$ lies on the $x$-axis, and the point of that axis straight below the tip $(3, 2)$ is $(3, 0)$.\n\n> **Watch out.** Divide by $\\mathbf{u} \\cdot \\mathbf{u}$, the squared length of the vector projected onto. Leaving out that division gives a vector along $\\mathbf{u}$ of the wrong length.",
+    "$\\mathbf{v}$ 在 $\\mathbf{u}$ 上的投影是 $\\mathbf{v}$ 落在过 $\\mathbf{u}$ 的直线上的影子。它是倍数 $\\frac{\\mathbf{v} \\cdot \\mathbf{u}}{\\mathbf{u} \\cdot \\mathbf{u}}\\mathbf{u}$，这样选取后 $\\mathbf{v}$ 的剩余部分与 $\\mathbf{u}$ 垂直。顺序很重要：把 $\\mathbf{u}$ 投影到 $\\mathbf{v}$ 上得到的是沿 $\\mathbf{v}$ 的向量。\n\n对 $\\mathbf{u} = \\langle 2, 0 \\rangle$ 和 $\\mathbf{v} = \\langle 3, 2 \\rangle$：$\\mathbf{v} \\cdot \\mathbf{u} = 6$，$\\mathbf{u} \\cdot \\mathbf{u} = 4$，所以投影是 $\\frac{3}{2}\\langle 2, 0 \\rangle = \\langle 3, 0 \\rangle$。检验：$\\mathbf{u}$ 在 $x$ 轴上，而终点 $(3, 2)$ 正下方的轴上的点是 $(3, 0)$。\n\n> **注意。** 要除以 $\\mathbf{u} \\cdot \\mathbf{u}$，即被投影到的向量长度的平方。漏掉这一步除法，得到的向量虽然沿 $\\mathbf{u}$，长度却不对。",
   ),
   generate(rng: Rng): Problem {
     const u: Point = rng.pick<Point>([
@@ -1175,23 +1175,49 @@ const projectionFromDrawing: KnowledgePointDef = {
     const uu = u[0] * u[0] + u[1] * u[1];
     const vv = v[0] * v[0] + v[1] * v[1];
     const right = angled(frac(dot * u[0], uu), frac(dot * u[1], uu));
+    const ontoV = angled(frac(dot * v[0], vv), frac(dot * v[1], vv));
+    const rest = angled(frac(v[0] * uu - dot * u[0], uu), frac(v[1] * uu - dot * u[1], uu));
+    const unscaled = angled(dot * u[0], dot * u[1]);
+    const factor = frac(dot, uu);
+    const times = factor === "1" ? "" : factor === "-1" ? "-" : factor;
+    /** p writes a number in parentheses when it is negative or a fraction, for use inside a product. */
+    const p = (n: number, d = 1) => {
+      const q = Q.of(n, d);
+      return q.isInteger() && q.toNumber() >= 0 ? q.toLatex() : `\\left(${q.toLatex()}\\right)`;
+    };
+    const restDot = `${p(v[0] * uu - dot * u[0], uu)} \\cdot ${p(u[0])} + ${p(v[1] * uu - dot * u[1], uu)} \\cdot ${p(u[1])} = 0`;
     return withFigure(
-      pickChoice(
-        rng,
-        t(
-          "The drawing shows the vectors $\\mathbf{u}$ and $\\mathbf{v}$. Find the projection of $\\mathbf{v}$ onto $\\mathbf{u}$.",
-          "图中是向量 $\\mathbf{u}$ 和 $\\mathbf{v}$。求 $\\mathbf{v}$ 在 $\\mathbf{u}$ 上的投影。",
+      reasoned(
+        pickChoice(
+          rng,
+          t(
+            "The drawing shows the vectors $\\mathbf{u}$ and $\\mathbf{v}$. Find the projection of $\\mathbf{v}$ onto $\\mathbf{u}$.",
+            "图中是向量 $\\mathbf{u}$ 和 $\\mathbf{v}$。求 $\\mathbf{v}$ 在 $\\mathbf{u}$ 上的投影。",
+          ),
+          math(right),
+          [math(ontoV), math(rest), math(unscaled)],
+          t(
+            `**Step 1: Read the vectors.** From the drawing, $\\mathbf{u} = ${angled(u[0], u[1])}$ and $\\mathbf{v} = ${angled(v[0], v[1])}$.\n\n**Step 2: Find the two dot products.**\n\n$$\\mathbf{v} \\cdot \\mathbf{u} = ${p(v[0])} \\cdot ${p(u[0])} + ${p(v[1])} \\cdot ${p(u[1])} = ${dot}$$\n\n$$\\mathbf{u} \\cdot \\mathbf{u} = ${uu}$$\n\n**Step 3: Scale u.** The factor is $${frac(dot, 1)} \\div ${uu} = ${factor}$, so the projection is\n\n$$${times}\\mathbf{u} = ${right}$$\n\n**Check.** What is left of $\\mathbf{v}$ must be perpendicular to $\\mathbf{u}$. Here $\\mathbf{v}$ minus the projection is $${rest}$, and\n\n$$${restDot}$$`,
+            `**第一步：读出向量。**由图，$\\mathbf{u} = ${angled(u[0], u[1])}$，$\\mathbf{v} = ${angled(v[0], v[1])}$。\n\n**第二步：求两个点积。**\n\n$$\\mathbf{v} \\cdot \\mathbf{u} = ${p(v[0])} \\cdot ${p(u[0])} + ${p(v[1])} \\cdot ${p(u[1])} = ${dot}$$\n\n$$\\mathbf{u} \\cdot \\mathbf{u} = ${uu}$$\n\n**第三步：把 u 乘以系数。**系数是 $${frac(dot, 1)} \\div ${uu} = ${factor}$，所以投影是\n\n$$${times}\\mathbf{u} = ${right}$$\n\n**检验。**$\\mathbf{v}$ 剩下的部分必须与 $\\mathbf{u}$ 垂直。这里 $\\mathbf{v}$ 减去投影是 $${rest}$，而\n\n$$${restDot}$$`,
+          ),
         ),
-        math(right),
         [
-          math(angled(frac(dot * v[0], vv), frac(dot * v[1], vv))),
-          math(angled(frac(v[0] * uu - dot * u[0], uu), frac(v[1] * uu - dot * u[1], uu))),
-          math(angled(dot * u[0], dot * u[1])),
+          [
+            `$${ontoV}$`,
+            "This is the projection of $\\mathbf{u}$ onto $\\mathbf{v}$: it lies along $\\mathbf{v}$, not along $\\mathbf{u}$.",
+            "这是 $\\mathbf{u}$ 在 $\\mathbf{v}$ 上的投影：它沿 $\\mathbf{v}$，而不是沿 $\\mathbf{u}$。",
+          ],
+          [
+            `$${rest}$`,
+            "This is what is left of $\\mathbf{v}$ after the projection, the part perpendicular to $\\mathbf{u}$.",
+            "这是 $\\mathbf{v}$ 去掉投影后剩下的部分，即与 $\\mathbf{u}$ 垂直的部分。",
+          ],
+          [
+            `$${unscaled}$`,
+            `This multiplies $\\mathbf{u}$ by $\\mathbf{v} \\cdot \\mathbf{u} = ${dot}$ without dividing by $\\mathbf{u} \\cdot \\mathbf{u} = ${uu}$.`,
+            `这里用 $\\mathbf{v} \\cdot \\mathbf{u} = ${dot}$ 乘 $\\mathbf{u}$，却没有除以 $\\mathbf{u} \\cdot \\mathbf{u} = ${uu}$。`,
+          ],
         ],
-        t(
-          `Read $\\mathbf{u} = ${angled(u[0], u[1])}$ and $\\mathbf{v} = ${angled(v[0], v[1])}$. Then $\\mathbf{v} \\cdot \\mathbf{u} = ${dot}$ and $\\mathbf{u} \\cdot \\mathbf{u} = ${uu}$, so the projection is $${frac(dot, uu) === "1" ? "" : frac(dot, uu) === "-1" ? "-" : frac(dot, uu)}\\mathbf{u} = ${right}$.`,
-          `读出 $\\mathbf{u} = ${angled(u[0], u[1])}$，$\\mathbf{v} = ${angled(v[0], v[1])}$。于是 $\\mathbf{v} \\cdot \\mathbf{u} = ${dot}$，$\\mathbf{u} \\cdot \\mathbf{u} = ${uu}$，所以投影是 $${frac(dot, uu) === "1" ? "" : frac(dot, uu) === "-1" ? "-" : frac(dot, uu)}\\mathbf{u} = ${right}$。`,
-        ),
       ),
       drawn(
         square(reach(u, v)),
@@ -1211,8 +1237,8 @@ const dotSignFromDrawing: KnowledgePointDef = {
   figure: linearAlgebraDrawings2["cauchy-schwarz-inequality-and-angle-between-two-vectors#the-sign-of-a-dot-product-from-a-drawing"],
   title: t("The sign of a dot product from a drawing", "由图判断点积的符号"),
   explanation: t(
-    "Since $\\mathbf{u} \\cdot \\mathbf{v} = \\|\\mathbf{u}\\| \\|\\mathbf{v}\\| \\cos \\theta$ and the norms are positive, the sign of the dot product is the sign of $\\cos \\theta$. An acute angle gives a positive dot product, an obtuse angle gives a negative one, and a right angle gives zero. A drawing therefore shows the sign without any arithmetic, though near a right angle the coordinates settle it.",
-    "因为 $\\mathbf{u} \\cdot \\mathbf{v} = \\|\\mathbf{u}\\| \\|\\mathbf{v}\\| \\cos \\theta$ 且范数为正，点积的符号就是 $\\cos \\theta$ 的符号。锐角对应正的点积，钝角对应负的点积，直角对应零。所以图形不经计算就能显示符号；接近直角时则要靠坐标来确定。",
+    "Since $\\mathbf{u} \\cdot \\mathbf{v} = \\|\\mathbf{u}\\| \\|\\mathbf{v}\\| \\cos \\theta$ and the norms are positive, the sign of the dot product is the sign of $\\cos \\theta$. An acute angle gives a positive dot product, an obtuse angle gives a negative one, and a right angle gives zero. A drawing therefore shows the sign without any arithmetic, though near a right angle the coordinates settle it.\n\nFor $\\mathbf{u} = \\langle 3, 1 \\rangle$ and $\\mathbf{v} = \\langle -1, 2 \\rangle$ the arrows look almost perpendicular, and the coordinates decide: $-3 + 2 = -1$, so the dot product is negative. Check: the cosine of the angle is $\\frac{-1}{\\sqrt{10}\\sqrt{5}}$, about $-0.14$, which is an angle of about $98.1^{\\circ}$, just past a right angle.\n\n> **Watch out.** The sign depends on the angle between the two arrows drawn from the same point, not on the quadrants they point into: $\\langle -2, -1 \\rangle$ and $\\langle -1, -3 \\rangle$ both point down and left, and their dot product is $5$, positive.",
+    "因为 $\\mathbf{u} \\cdot \\mathbf{v} = \\|\\mathbf{u}\\| \\|\\mathbf{v}\\| \\cos \\theta$ 且范数为正，点积的符号就是 $\\cos \\theta$ 的符号。锐角对应正的点积，钝角对应负的点积，直角对应零。所以图形不经计算就能显示符号；接近直角时则要靠坐标来确定。\n\n对 $\\mathbf{u} = \\langle 3, 1 \\rangle$ 和 $\\mathbf{v} = \\langle -1, 2 \\rangle$，两个箭头看上去几乎垂直，要由坐标决定：$-3 + 2 = -1$，所以点积为负。检验：夹角的余弦是 $\\frac{-1}{\\sqrt{10}\\sqrt{5}}$，约为 $-0.14$，夹角约 $98.1^{\\circ}$，刚好超过直角。\n\n> **注意。** 符号取决于从同一点画出的两个箭头之间的夹角，而不是它们指向哪个象限：$\\langle -2, -1 \\rangle$ 和 $\\langle -1, -3 \\rangle$ 都指向左下方，它们的点积是 $5$，为正。",
   ),
   generate(rng: Rng): Problem {
     const wanted = rng.int(-1, 1);
@@ -1228,19 +1254,53 @@ const dotSignFromDrawing: KnowledgePointDef = {
     const dot = u[0] * v[0] + u[1] * v[1];
     const [right, wrong] = signWords(dot);
     const angle = dot > 0 ? t("acute", "锐角") : dot < 0 ? t("obtuse", "钝角") : t("a right angle", "直角");
+    const cos = dot / Math.sqrt((u[0] * u[0] + u[1] * u[1]) * (v[0] * v[0] + v[1] * v[1]));
+    const degrees = ((Math.acos(cos) * 180) / Math.PI).toFixed(1);
+    const check =
+      dot === 0
+        ? t(
+            `**Check.** Turning $\\mathbf{u}$ a quarter turn swaps its components and changes one sign, which gives $${angled(v[0], v[1])}$, so the angle is exactly $90^{\\circ}$.`,
+            `**检验。**把 $\\mathbf{u}$ 转四分之一圈，就是交换两个分量并改变一个符号，得到 $${angled(v[0], v[1])}$，所以夹角恰好是 $90^{\\circ}$。`,
+          )
+        : t(
+            `**Check.** The cosine of the angle is $\\frac{${dot}}{\\sqrt{${u[0] * u[0] + u[1] * u[1]}}\\sqrt{${v[0] * v[0] + v[1] * v[1]}}}$, which gives an angle of about $${degrees}^{\\circ}$. That is ${angle.en}, as the drawing shows.`,
+            `**检验。**夹角的余弦是 $\\frac{${dot}}{\\sqrt{${u[0] * u[0] + u[1] * u[1]}}\\sqrt{${v[0] * v[0] + v[1] * v[1]}}}$，夹角约为 $${degrees}^{\\circ}$，是${angle["zh-CN"]}，与图一致。`,
+          );
+    /** because explains why a wrong sign would need a different angle. */
+    const because = (option: Text): [string, string, string] =>
+      option.en === "Positive"
+        ? [
+            option.en,
+            `A positive dot product needs an acute angle, but here the dot product is $${dot}$.`,
+            `点积为正需要锐角，但这里点积是 $${dot}$。`,
+          ]
+        : option.en === "Negative"
+          ? [
+              option.en,
+              `A negative dot product needs an obtuse angle, but here the dot product is $${dot}$.`,
+              `点积为负需要钝角，但这里点积是 $${dot}$。`,
+            ]
+          : [
+              option.en,
+              `Zero needs a right angle exactly, but here the dot product is $${dot}$.`,
+              `点积为零需要恰好是直角，但这里点积是 $${dot}$。`,
+            ];
     return withFigure(
-      pickChoice(
-        rng,
-        t(
-          "What is the sign of $\\mathbf{u} \\cdot \\mathbf{v}$ for the vectors drawn?",
-          "对图中的向量，$\\mathbf{u} \\cdot \\mathbf{v}$ 的符号是什么？",
+      reasoned(
+        pickChoice(
+          rng,
+          t(
+            "What is the sign of $\\mathbf{u} \\cdot \\mathbf{v}$ for the vectors drawn?",
+            "对图中的向量，$\\mathbf{u} \\cdot \\mathbf{v}$ 的符号是什么？",
+          ),
+          right,
+          wrong,
+          t(
+            `**Step 1: Read the vectors.** From the drawing, $\\mathbf{u} = ${angled(u[0], u[1])}$ and $\\mathbf{v} = ${angled(v[0], v[1])}$.\n\n**Step 2: Find the dot product.** Multiply matching components and add:\n\n$$(${u[0]})(${v[0]}) + (${u[1]})(${v[1]}) = ${dot}$$\n\nSo the dot product is ${right.en.toLowerCase()}, and the angle between the arrows is ${angle.en}.\n\n${check.en}`,
+            `**第一步：读出向量。**由图，$\\mathbf{u} = ${angled(u[0], u[1])}$，$\\mathbf{v} = ${angled(v[0], v[1])}$。\n\n**第二步：求点积。**对应分量相乘再相加：\n\n$$(${u[0]})(${v[0]}) + (${u[1]})(${v[1]}) = ${dot}$$\n\n所以点积为${right["zh-CN"]}，两箭头的夹角是${angle["zh-CN"]}。\n\n${check["zh-CN"]}`,
+          ),
         ),
-        right,
-        wrong,
-        t(
-          `The angle between the vectors is ${angle.en}, which decides the sign. The coordinates confirm it: $(${u[0]})(${v[0]}) + (${u[1]})(${v[1]}) = ${dot}$.`,
-          `两向量的夹角是${angle["zh-CN"]}，这决定了符号。坐标可以验证：$(${u[0]})(${v[0]}) + (${u[1]})(${v[1]}) = ${dot}$。`,
-        ),
+        wrong.map(because),
       ),
       drawn(
         square(reach(u, v)),

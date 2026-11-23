@@ -781,12 +781,16 @@ const endpointFromSection: KnowledgePointDef = {
   },
 };
 
+/** qParen writes a rational number, in parentheses when it is negative or a fraction, so it can be squared or multiplied. */
+const qParen = (q: Q) => (q.isInteger() && q.toNumber() >= 0 ? q.toLatex() : `\\left(${q.toLatex()}\\right)`);
+
+/** equidistantOnAxis finds the point on the z-axis at equal distances from two points. */
 const equidistantOnAxis: KnowledgePointDef = {
   id: "the-point-on-an-axis-equidistant-from-two-points",
   title: t("The point on an axis equidistant from two points", "坐标轴上到两点距离相等的点"),
   explanation: t(
-    "Asking for a point at equal distances from two others leads to an equation between two magnitudes. Square roots are unpleasant, so both sides are squared first, which is safe because distances are never negative. Although each squared distance is quadratic in the unknown, the square of the unknown appears once on each side and cancels, so the equation that remains is only linear. The midpoint of the segment is usually not the answer unless the points are placed symmetrically.",
-    "要求到另外两点距离相等的点，就得到两个模相等的方程。平方根不好处理，所以先把两边平方，这是安全的，因为距离不会是负数。虽然每个距离的平方都是关于未知数的二次式，但未知数的平方在两边各出现一次，相互抵消，所以剩下的方程只是一次的。除非两点的位置对称，线段的中点通常不是答案。",
+    "Asking for a point at equal distances from two others leads to an equation between two magnitudes. Square roots are unpleasant, so both sides are squared first, which is safe because distances are never negative. Although each squared distance is quadratic in the unknown, the square of the unknown appears once on each side and cancels, so the equation that remains is only linear. The midpoint of the segment is usually not the answer unless the points are placed symmetrically.\n\nFor $A(1, 2, 3)$ and $B(3, 0, 1)$ and $P(0, 0, z)$: $PA^{2} = 5 + (z - 3)^{2}$ and $PB^{2} = 9 + (z - 1)^{2}$. Expanding, $-6z + 14 = -2z + 10$, so $z = 1$. Check: at $P(0, 0, 1)$ both squared distances are $9$, since $1 + 4 + 4 = 9 + 0 + 0$.\n\n> **Watch out.** The middle of the two $z$-coordinates, here $2$, is not the answer: the $x$- and $y$-parts of the distances count too. Keep them in both squared distances.",
+    "要求到另外两点距离相等的点，就得到两个模相等的方程。平方根不好处理，所以先把两边平方，这是安全的，因为距离不会是负数。虽然每个距离的平方都是关于未知数的二次式，但未知数的平方在两边各出现一次，相互抵消，所以剩下的方程只是一次的。除非两点的位置对称，线段的中点通常不是答案。\n\n对 $A(1, 2, 3)$、$B(3, 0, 1)$ 和 $P(0, 0, z)$：$PA^{2} = 5 + (z - 3)^{2}$，$PB^{2} = 9 + (z - 1)^{2}$。展开得 $-6z + 14 = -2z + 10$，所以 $z = 1$。检验：在 $P(0, 0, 1)$ 处两个距离的平方都是 $9$，因为 $1 + 4 + 4 = 9 + 0 + 0$。\n\n> **注意。** 两个 $z$ 坐标的中间值（这里是 $2$）不是答案：距离中 $x$、$y$ 方向的部分也要算。两个距离的平方里都要保留它们。",
   ),
   generate(rng) {
     const [x1, y1] = [nonzero(rng, 4), nonzero(rng, 4)];
@@ -798,6 +802,16 @@ const equidistantOnAxis: KnowledgePointDef = {
     const s2 = x2 * x2 + y2 * y2 + z2 * z2;
     const n = s1 - s2;
     const answer = Q.of(n, 2 * (z1 - z2));
+    const r1 = x1 * x1 + y1 * y1;
+    const r2 = x2 * x2 + y2 * y2;
+    const square = (z: number) => (z === 0 ? "z^{2}" : `(${minus(z, "z")})^{2}`);
+    const d1 = answer.sub(Q.of(z1));
+    const d2 = answer.sub(Q.of(z2));
+    const value = Q.of(r1).add(d1.mul(d1));
+    const solved = (locale: "en" | "zh-CN") => {
+      const en = locale === "en";
+      return `${stepLabel(1, "Square both distances", "把两个距离平方")[locale]}${en ? " The $x$- and $y$-parts are fixed numbers:" : "$x$、$y$ 方向的部分是固定的数："}\n\n$$PA^{2} = ${r1} + ${square(z1)}$$\n\n$$PB^{2} = ${r2} + ${square(z2)}$$\n\n${stepLabel(2, "Expand and cancel", "展开并抵消")[locale]}${en ? " Setting them equal, the $z^{2}$ terms cancel:" : "令二者相等，$z^{2}$ 项抵消："}\n\n$$${poly([-2 * z1, "z"], [s1, ""])} = ${poly([-2 * z2, "z"], [s2, ""])}$$\n\n${stepLabel(3, "Solve", "求解")[locale]}${en ? " Collect the terms:" : "整理各项："}\n\n$$${poly([2 * (z2 - z1), "z"])} = ${s2 - s1}, \\quad z = ${answer.toLatex()}$$\n\n${en ? "**Check.** Put $z$ back into both squared distances:" : "**检验。**把 $z$ 代回两个距离的平方："}\n\n$$PA^{2} = ${r1} + ${qParen(d1)}^{2} = ${value.toLatex()}$$\n\n$$PB^{2} = ${r2} + ${qParen(d2)}^{2} = ${Q.of(r2).add(d2.mul(d2)).toLatex()}$$\n\n${en ? "They are equal, so $P$ is equidistant from $A$ and $B$." : "两者相等，所以 $P$ 到 $A$、$B$ 的距离相等。"}`;
+    };
     return numberProblem({
       prompt: t(
         `The point $P(0, 0, z)$ on the $z$-axis is equidistant from $A(${x1}, ${y1}, ${z1})$ and $B(${x2}, ${y2}, ${z2})$. Find $z$.`,
@@ -805,20 +819,18 @@ const equidistantOnAxis: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(z1 + z2, 2), answer.mul(Q.of(-1)), n, answer.mul(Q.of(2)), Q.of(s1 + s2, 2 * (z1 - z2))],
-      solution: t(
-        `Set the squared distances equal: $${x1 * x1 + y1 * y1} + (${minus(z1, "z")})^{2} = ${x2 * x2 + y2 * y2} + (${minus(z2, "z")})^{2}$. Expanding, the $z^{2}$ terms cancel, leaving $${poly([-2 * z1, "z"], [s1, ""])} = ${poly([-2 * z2, "z"], [s2, ""])}$. Solving this linear equation gives $z = ${answer.toLatex()}$.`,
-        `令距离的平方相等：$${x1 * x1 + y1 * y1} + (${minus(z1, "z")})^{2} = ${x2 * x2 + y2 * y2} + (${minus(z2, "z")})^{2}$。展开后 $z^{2}$ 项抵消，剩下 $${poly([-2 * z1, "z"], [s1, ""])} = ${poly([-2 * z2, "z"], [s2, ""])}$。解这个一次方程得 $z = ${answer.toLatex()}$。`,
-      ),
+      solution: t(solved("en"), solved("zh-CN")),
     });
   },
 };
 
+/** orthogonalCombination finds the multiple k that makes u + kv orthogonal to v. */
 const orthogonalCombination: KnowledgePointDef = {
   id: "the-multiple-that-makes-a-combination-orthogonal",
   title: t("The multiple that makes a combination orthogonal", "使组合向量正交的倍数"),
   explanation: t(
-    "The dot product distributes over addition and scalar multiples come out, so a dot product involving an unknown multiple is a linear expression in that multiple. To make a combination of two vectors orthogonal to one of them, take the dot product with that vector and set it equal to zero. One equation appears, and it involves only two numbers: the dot product of the two vectors and the dot product of the chosen vector with itself.",
-    "点积对加法满足分配律，数乘也可以提出来，所以含未知倍数的点积关于这个倍数是一次的。要使两个向量的组合与其中一个向量正交，就把组合与该向量作点积并令其为零。这样得到一个方程，其中只涉及两个数：两个向量的点积，以及所选向量与自身的点积。",
+    "The dot product distributes over addition and scalar multiples come out, so a dot product involving an unknown multiple is a linear expression in that multiple. To make a combination of two vectors orthogonal to one of them, take the dot product with that vector and set it equal to zero. One equation appears, and it involves only two numbers: the dot product of the two vectors and the dot product of the chosen vector with itself.\n\nFor $\\mathbf{u} = \\langle 3, 1 \\rangle$ and $\\mathbf{v} = \\langle 1, 2 \\rangle$: $\\mathbf{u} \\cdot \\mathbf{v} = 5$ and $\\mathbf{v} \\cdot \\mathbf{v} = 5$, so $5 + 5k = 0$ and $k = -1$. Check: $\\mathbf{u} - \\mathbf{v} = \\langle 2, -1 \\rangle$, and $2 \\cdot 1 + (-1) \\cdot 2 = 0$.\n\n> **Watch out.** The equation is $\\mathbf{u} \\cdot \\mathbf{v} + k\\,\\mathbf{v} \\cdot \\mathbf{v} = 0$, so divide by $\\mathbf{v} \\cdot \\mathbf{v}$, not by $\\mathbf{u} \\cdot \\mathbf{u}$, and keep the minus sign.",
+    "点积对加法满足分配律，数乘也可以提出来，所以含未知倍数的点积关于这个倍数是一次的。要使两个向量的组合与其中一个向量正交，就把组合与该向量作点积并令其为零。这样得到一个方程，其中只涉及两个数：两个向量的点积，以及所选向量与自身的点积。\n\n对 $\\mathbf{u} = \\langle 3, 1 \\rangle$ 和 $\\mathbf{v} = \\langle 1, 2 \\rangle$：$\\mathbf{u} \\cdot \\mathbf{v} = 5$，$\\mathbf{v} \\cdot \\mathbf{v} = 5$，所以 $5 + 5k = 0$，$k = -1$。检验：$\\mathbf{u} - \\mathbf{v} = \\langle 2, -1 \\rangle$，而 $2 \\cdot 1 + (-1) \\cdot 2 = 0$。\n\n> **注意。** 方程是 $\\mathbf{u} \\cdot \\mathbf{v} + k\\,\\mathbf{v} \\cdot \\mathbf{v} = 0$，所以要除以 $\\mathbf{v} \\cdot \\mathbf{v}$，而不是 $\\mathbf{u} \\cdot \\mathbf{u}$，并且不要丢掉负号。",
   ),
   generate(rng) {
     const [u1, u2, v1, v2] = [nonzero(rng, 6), nonzero(rng, 6), nonzero(rng, 5), nonzero(rng, 5)];
@@ -827,6 +839,16 @@ const orthogonalCombination: KnowledgePointDef = {
     const uv = a1 * v1 + a2 * v2;
     const vv = v1 * v1 + v2 * v2;
     const answer = Q.of(-uv, vv);
+    const c1 = Q.of(a1).add(answer.mul(Q.of(v1)));
+    const c2 = Q.of(a2).add(answer.mul(Q.of(v2)));
+    const sum = `${qParen(c1)} \\cdot ${inParens(v1)} + ${qParen(c2)} \\cdot ${inParens(v2)} = ${c1
+      .mul(Q.of(v1))
+      .add(c2.mul(Q.of(v2)))
+      .toLatex()}`;
+    const solved = (locale: "en" | "zh-CN") => {
+      const en = locale === "en";
+      return `${stepLabel(1, "Dot with v", "与 v 作点积")[locale]}${en ? " Orthogonal means a dot product of zero, and it distributes:" : "正交即点积为零，并且点积可以展开："}\n\n$$(\\mathbf{u} + k\\mathbf{v}) \\cdot \\mathbf{v} = \\mathbf{u} \\cdot \\mathbf{v} + k\\,\\mathbf{v} \\cdot \\mathbf{v} = 0$$\n\n${stepLabel(2, "Solve for k", "解出 k")[locale]}${en ? " Work out the two dot products:" : "求出两个点积："}\n\n$$\\mathbf{u} \\cdot \\mathbf{v} = ${uv}, \\quad \\mathbf{v} \\cdot \\mathbf{v} = ${vv}$$\n\n$$${poly([uv, ""], [vv, "k"])} = 0, \\quad k = ${answer.toLatex()}$$\n\n${en ? "**Check.** Build the combination and dot it with $\\mathbf{v}$ directly:" : "**检验。**直接写出组合向量，再与 $\\mathbf{v}$ 作点积："}\n\n$$\\mathbf{u} + k\\mathbf{v} = \\left\\langle ${c1.toLatex()}, ${c2.toLatex()} \\right\\rangle$$\n\n$$${sum}$$`;
+    };
     return numberProblem({
       prompt: t(
         `Let $\\mathbf{u} = ${vec(a1, a2)}$ and $\\mathbf{v} = ${vec(v1, v2)}$. Find the number $k$ for which $\\mathbf{u} + k\\mathbf{v}$ is orthogonal to $\\mathbf{v}$.`,
@@ -834,21 +856,19 @@ const orthogonalCombination: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(uv, vv), Q.of(-vv, uv), Q.of(-uv, a1 * a1 + a2 * a2), uv, Q.of(-uv, 2 * vv), Q.of(-2 * uv, vv)],
-      solution: t(
-        `Orthogonality means $(\\mathbf{u} + k\\mathbf{v}) \\cdot \\mathbf{v} = 0$, which distributes to $\\mathbf{u} \\cdot \\mathbf{v} + k\\,\\mathbf{v} \\cdot \\mathbf{v} = 0$. Here $\\mathbf{u} \\cdot \\mathbf{v} = ${uv}$ and $\\mathbf{v} \\cdot \\mathbf{v} = ${vv}$, so $k = ${answer.toLatex()}$.`,
-        `正交意味着 $(\\mathbf{u} + k\\mathbf{v}) \\cdot \\mathbf{v} = 0$，展开得 $\\mathbf{u} \\cdot \\mathbf{v} + k\\,\\mathbf{v} \\cdot \\mathbf{v} = 0$。这里 $\\mathbf{u} \\cdot \\mathbf{v} = ${uv}$，$\\mathbf{v} \\cdot \\mathbf{v} = ${vv}$，所以 $k = ${answer.toLatex()}$。`,
-      ),
+      solution: t(solved("en"), solved("zh-CN")),
     });
   },
 };
 
+/** distanceToLine finds the distance from a point to a line through the origin by splitting its position vector. */
 const distanceToLine: KnowledgePointDef = {
   id: "the-distance-from-a-point-to-a-line-through-the-origin",
   figure: precalculusDrawings2["calculating-a-vector-projection#the-distance-from-a-point-to-a-line-through-the-origin"],
   title: t("The distance from a point to a line through the origin", "点到过原点的直线的距离"),
   explanation: t(
-    "Projection gives a way to measure a distance without any equation of a line. The position vector of the point splits into a part along the direction of the line and a part orthogonal to it. The orthogonal part runs from the line straight to the point, so its length is the shortest distance. Since the two parts are perpendicular, the Pythagorean theorem finds that length from the magnitude of the vector and the scalar projection.",
-    "投影提供了一种不用直线方程就能量出距离的方法。点的位置向量可以分解为沿直线方向的部分和与直线正交的部分。正交的部分从直线垂直地通向这个点，所以它的长度就是最短距离。由于两部分互相垂直，可以用勾股定理，由向量的模和数量投影求出这个长度。",
+    "Projection gives a way to measure a distance without any equation of a line. The position vector of the point splits into a part along the direction of the line and a part orthogonal to it. The orthogonal part runs from the line straight to the point, so its length is the shortest distance. Since the two parts are perpendicular, the Pythagorean theorem finds that length from the magnitude of the vector and the scalar projection.\n\nFor $P(4, 2)$ and $\\mathbf{v} = \\langle 3, 4 \\rangle$: $\\|\\vec{OP}\\|^{2} = 20$ and the scalar projection is $\\frac{12 + 8}{5} = 4$, so the squared distance is $20 - 16 = 4$ and the distance is $2$. Check: the parallelogram on $\\vec{OP}$ and $\\mathbf{v}$ has area $|4 \\cdot 4 - 2 \\cdot 3| = 10$, and dividing by the base $\\|\\mathbf{v}\\| = 5$ gives the height $2$.\n\n> **Watch out.** Subtract the square of the scalar projection from the squared length, then take the square root. Subtracting the projection itself from $\\|\\vec{OP}\\|$ does not give the distance.",
+    "投影提供了一种不用直线方程就能量出距离的方法。点的位置向量可以分解为沿直线方向的部分和与直线正交的部分。正交的部分从直线垂直地通向这个点，所以它的长度就是最短距离。由于两部分互相垂直，可以用勾股定理，由向量的模和数量投影求出这个长度。\n\n对 $P(4, 2)$ 和 $\\mathbf{v} = \\langle 3, 4 \\rangle$：$\\|\\vec{OP}\\|^{2} = 20$，数量投影是 $\\frac{12 + 8}{5} = 4$，所以距离的平方是 $20 - 16 = 4$，距离是 $2$。检验：以 $\\vec{OP}$ 和 $\\mathbf{v}$ 为边的平行四边形面积是 $|4 \\cdot 4 - 2 \\cdot 3| = 10$，除以底边 $\\|\\mathbf{v}\\| = 5$，得高 $2$。\n\n> **注意。** 要从长度的平方中减去数量投影的平方，再开平方。直接用 $\\|\\vec{OP}\\|$ 减去投影，得不到距离。",
   ),
   generate(rng) {
     const [p0, q0, L] = legsAndHypotenuse(rng, 1) as [number, number, number];
@@ -859,6 +879,10 @@ const distanceToLine: KnowledgePointDef = {
     const cross = Math.abs(x * q - y * p);
     const dotValue = x * p + y * q;
     const answer = Q.of(cross, L);
+    const solved = (locale: "en" | "zh-CN") => {
+      const en = locale === "en";
+      return `${stepLabel(1, "Split the position vector", "分解位置向量")[locale]}${en ? " Find the squared length of $\\vec{OP}$ and its scalar projection onto $\\mathbf{v}$:" : "求 $\\vec{OP}$ 长度的平方和它在 $\\mathbf{v}$ 上的数量投影："}\n\n$$\\|\\vec{OP}\\|^{2} = ${inParens(x)}^{2} + ${inParens(y)}^{2} = ${x * x + y * y}$$\n\n$$\\text{comp}_{\\mathbf{v}}\\vec{OP} = \\frac{${inParens(x)} \\cdot ${inParens(p)} + ${inParens(y)} \\cdot ${inParens(q)}}{${L}} = ${frac(dotValue, L)}$$\n\n${stepLabel(2, "Use the Pythagorean theorem", "用勾股定理")[locale]}${en ? " The orthogonal part is the distance $d$:" : "正交的部分就是距离 $d$："}\n\n$$d^{2} = ${x * x + y * y} - ${qParen(Q.of(dotValue, L))}^{2} = ${frac(cross * cross, L * L)}$$\n\n$$d = ${answer.toLatex()}$$\n\n${en ? "**Check.** The distance is also the height of the parallelogram on $\\vec{OP}$ and $\\mathbf{v}$: its area divided by the base $\\|\\mathbf{v}\\|$." : "**检验。**距离也是以 $\\vec{OP}$ 和 $\\mathbf{v}$ 为边的平行四边形的高：面积除以底边 $\\|\\mathbf{v}\\|$。"}\n\n$$\\frac{|${inParens(x)} \\cdot ${inParens(q)} - ${inParens(y)} \\cdot ${inParens(p)}|}{${L}} = \\frac{${cross}}{${L}} = ${answer.toLatex()}$$`;
+    };
     return numberProblem({
       prompt: t(
         `Find the distance from the point $P(${x}, ${y})$ to the line through the origin with direction $\\mathbf{v} = ${vec(p, q)}$.`,
@@ -866,10 +890,7 @@ const distanceToLine: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(Math.abs(dotValue), L), cross, Q.of(cross, L * L), Q.of(x * x + y * y, L)],
-      solution: t(
-        `The distance is the length of the part of $\\vec{OP}$ orthogonal to $\\mathbf{v}$. Here $\\|\\vec{OP}\\|^{2} = ${x * x + y * y}$, and the scalar projection onto $\\mathbf{v}$ is $${frac(dotValue, L)}$. By the Pythagorean theorem, the square of the distance is $${x * x + y * y} - \\left(${frac(dotValue, L)}\\right)^{2} = ${frac(cross * cross, L * L)}$, so the distance is $${answer.toLatex()}$.`,
-        `距离就是 $\\vec{OP}$ 中与 $\\mathbf{v}$ 正交的部分的长度。这里 $\\|\\vec{OP}\\|^{2} = ${x * x + y * y}$，在 $\\mathbf{v}$ 上的数量投影是 $${frac(dotValue, L)}$。由勾股定理，距离的平方是 $${x * x + y * y} - \\left(${frac(dotValue, L)}\\right)^{2} = ${frac(cross * cross, L * L)}$，所以距离是 $${answer.toLatex()}$。`,
-      ),
+      solution: t(solved("en"), solved("zh-CN")),
     });
   },
 };

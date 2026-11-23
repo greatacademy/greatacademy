@@ -544,8 +544,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "the-magnitude-in-three-dimensions",
       ["The magnitude in three dimensions", "三维向量的模"],
       [
-        "The Pythagorean theorem applies twice in three dimensions, so the magnitude is the square root of the sum of all three squares. A zero component simply adds nothing.",
-        "三维中勾股定理用两次，所以模是三个平方之和的平方根。分量为零时就是不增加什么。",
+        "The Pythagorean theorem applies twice in three dimensions, so the magnitude is the square root of the sum of all three squares. A zero component simply adds nothing.\n\nFor $\\langle 2, -3, 6 \\rangle$: $4 + 9 + 36 = 49$, so the magnitude is $7$. Check: across the floor the diagonal has squared length $4 + 9 = 13$, and going up $6$ adds $36$, giving $13 + 36 = 49 = 7^2$.\n\n> **Watch out.** Square each component before adding: a negative component still adds a positive square. Adding the components themselves, $2 - 3 + 6 = 5$, does not give the length.",
+        "三维中勾股定理用两次，所以模是三个平方之和的平方根。分量为零时就是不增加什么。\n\n对 $\\langle 2, -3, 6 \\rangle$：$4 + 9 + 36 = 49$，所以模是 $7$。检验：底面对角线长度的平方是 $4 + 9 = 13$，再向上 $6$ 增加 $36$，得 $13 + 36 = 49 = 7^2$。\n\n> **注意。** 先把每个分量平方再相加：负的分量平方后仍是正数。直接把分量相加，$2 - 3 + 6 = 5$，得不到长度。",
       ],
       (rng) => {
         const [a, b, c, d] = rng.pick<[number, number, number, number]>([
@@ -562,13 +562,16 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
           [8, 9, 12, 17],
         ]);
         const order = rng.shuffle([a * (rng.bool() ? 1 : -1), b * (rng.bool() ? 1 : -1), c * (rng.bool() ? 1 : -1)]);
+        const [x, y, z] = order as [number, number, number];
+        const squares = `${paren(x)}^2 + ${paren(y)}^2 + ${paren(z)}^2`;
+        const sum = `${x * x} + ${y * y} + ${z * z}`;
         return whole(
           [`Find the magnitude of $${vec(...order)}$.`, `求 $${vec(...order)}$ 的模。`],
           d,
           [a + b + c, d * d, d + 1],
           [
-            `$\\sqrt{${a * a} + ${b * b} + ${c * c}} = \\sqrt{${d * d}} = ${d}$.`,
-            `$\\sqrt{${a * a} + ${b * b} + ${c * c}} = \\sqrt{${d * d}} = ${d}$。`,
+            `**Step 1: Square and add.** Square every component, signs and all:\n\n$$${squares} = ${sum} = ${d * d}$$\n\n**Step 2: Take the square root.** The magnitude is\n\n$$\\sqrt{${d * d}} = ${d}$$\n\n**Check.** Use the Pythagorean theorem twice. The first two components give a diagonal of squared length $${x * x + y * y}$, and the third adds $${z * z}$:\n\n$$${x * x + y * y} + ${z * z} = ${d * d} = ${d}^2$$`,
+            `**第一步：平方再相加。**每个分量连同符号平方：\n\n$$${squares} = ${sum} = ${d * d}$$\n\n**第二步：开平方。**模是\n\n$$\\sqrt{${d * d}} = ${d}$$\n\n**检验。**用两次勾股定理。前两个分量给出的对角线长度的平方是 $${x * x + y * y}$，第三个分量再加上 $${z * z}$：\n\n$$${x * x + y * y} + ${z * z} = ${d * d} = ${d}^2$$`,
           ],
         );
       },
@@ -579,8 +582,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "solving-for-a-scalar-and-a-component",
       ["Solving for a scalar and a component", "解标量和分量"],
       [
-        "Vectors are equal only when every component matches, so one vector equation gives three ordinary equations. Find the scalar from a complete component, and use it in the others.",
-        "每个分量都相同时向量才相等，所以一个向量方程给出三个普通方程。由完整的分量求出标量，再用到其他分量。",
+        "Vectors are equal only when every component matches, so one vector equation gives three ordinary equations. Find the scalar from a complete component, and use it in the others.\n\nFor $\\langle 6, -9, 12 \\rangle = k\\langle 2, -3, z \\rangle$: the first component gives $2k = 6$, so $k = 3$, and then $3z = 12$ gives $z = 4$. Check: the second component agrees, $3 \\cdot (-3) = -9$.\n\n> **Watch out.** The unknown $z$ sits inside the vector that is multiplied, so it is the third component on the left divided by $k$, not that component itself.",
+        "每个分量都相同时向量才相等，所以一个向量方程给出三个普通方程。由完整的分量求出标量，再用到其他分量。\n\n对 $\\langle 6, -9, 12 \\rangle = k\\langle 2, -3, z \\rangle$：第一个分量给出 $2k = 6$，所以 $k = 3$；再由 $3z = 12$ 得 $z = 4$。检验：第二个分量也相符，$3 \\cdot (-3) = -9$。\n\n> **注意。** 未知数 $z$ 在被乘的向量里，所以它等于左边第三个分量除以 $k$，而不是那个分量本身。",
       ],
       (rng) => {
         const k = rng.int(2, 7) * (rng.bool() ? 1 : -1);
@@ -595,8 +598,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
           z,
           [k * z, k, -z],
           [
-            `The first component gives $k = ${k}$, and then $${k}z = ${k * z}$ gives $z = ${z}$.`,
-            `第一个分量给出 $k = ${k}$，再由 $${k}z = ${k * z}$ 得 $z = ${z}$。`,
+            `**Step 1: Find the scalar.** The first components must match:\n\n$$${paren(a)}k = ${k * a}, \\quad k = ${k}$$\n\n**Step 2: Find the component.** The third components must match too:\n\n$$${k}z = ${k * z}, \\quad z = ${z}$$\n\n**Check.** The second components agree as well, $${k} \\cdot ${paren(b)} = ${k * b}$, so $k = ${k}$ and $z = ${z}$ fit all three.`,
+            `**第一步：求标量。**第一个分量必须相等：\n\n$$${paren(a)}k = ${k * a}, \\quad k = ${k}$$\n\n**第二步：求分量。**第三个分量也必须相等：\n\n$$${k}z = ${k * z}, \\quad z = ${z}$$\n\n**检验。**第二个分量也相符，$${k} \\cdot ${paren(b)} = ${k * b}$，所以 $k = ${k}$、$z = ${z}$ 满足全部三个方程。`,
           ],
         );
       },
@@ -607,8 +610,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "the-angle-from-the-dot-product",
       ["The angle from the dot product", "由点积求角"],
       [
-        "Dividing the dot product by the two magnitudes leaves the cosine of the angle between the vectors. A special value of cosine then names the angle exactly.",
-        "点积除以两个模，剩下两向量夹角的余弦。特殊的余弦值就准确地给出这个角。",
+        "Dividing the dot product by the two magnitudes leaves the cosine of the angle between the vectors. A special value of cosine then names the angle exactly.\n\nFor $\\|\\mathbf{u}\\| = 4$, $\\|\\mathbf{v}\\| = 6$ and $\\mathbf{u} \\cdot \\mathbf{v} = -12$: $\\cos\\theta = \\frac{-12}{24} = -\\frac{1}{2}$, so $\\theta = 120^{\\circ}$. Check: $4 \\cdot 6 \\cdot \\cos 120^{\\circ} = 24 \\cdot (-\\frac{1}{2}) = -12$.\n\n> **Watch out.** Divide by the product of the magnitudes, not their sum. A negative dot product means an obtuse angle, so the answer is more than $90^{\\circ}$.",
+        "点积除以两个模，剩下两向量夹角的余弦。特殊的余弦值就准确地给出这个角。\n\n对 $\\|\\mathbf{u}\\| = 4$、$\\|\\mathbf{v}\\| = 6$、$\\mathbf{u} \\cdot \\mathbf{v} = -12$：$\\cos\\theta = \\frac{-12}{24} = -\\frac{1}{2}$，所以 $\\theta = 120^{\\circ}$。检验：$4 \\cdot 6 \\cdot \\cos 120^{\\circ} = 24 \\cdot (-\\frac{1}{2}) = -12$。\n\n> **注意。** 要除以两个模的乘积，而不是它们的和。点积为负说明夹角是钝角，答案大于 $90^{\\circ}$。",
       ],
       (rng) => {
         const a = 2 * rng.int(1, 9);
@@ -620,16 +623,24 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
           [0, 2],
           [180, -2],
         ]);
+        const dot = (a * b * row[1]) / 2;
+        const cos = Q.of(row[1], 2).toLatex();
+        const cosWords: Pair =
+          row[1] === 0
+            ? ["The cosine is $0$, so the vectors are perpendicular:", "余弦为 $0$，所以两向量垂直："]
+            : row[1] > 0
+              ? ["A positive cosine means an angle of less than $90^{\\circ}$:", "余弦为正，夹角小于 $90^{\\circ}$："]
+              : ["A negative cosine means an angle of more than $90^{\\circ}$:", "余弦为负，夹角大于 $90^{\\circ}$："];
         return whole(
           [
-            `$\\|\\mathbf{u}\\| = ${a}$, $\\|\\mathbf{v}\\| = ${b}$ and $\\mathbf{u} \\cdot \\mathbf{v} = ${(a * b * row[1]) / 2}$. What is the angle between the vectors, in degrees?`,
-            `$\\|\\mathbf{u}\\| = ${a}$，$\\|\\mathbf{v}\\| = ${b}$，$\\mathbf{u} \\cdot \\mathbf{v} = ${(a * b * row[1]) / 2}$。两向量的夹角是多少度？`,
+            `$\\|\\mathbf{u}\\| = ${a}$, $\\|\\mathbf{v}\\| = ${b}$ and $\\mathbf{u} \\cdot \\mathbf{v} = ${dot}$. What is the angle between the vectors, in degrees?`,
+            `$\\|\\mathbf{u}\\| = ${a}$，$\\|\\mathbf{v}\\| = ${b}$，$\\mathbf{u} \\cdot \\mathbf{v} = ${dot}$。两向量的夹角是多少度？`,
           ],
           row[0],
           [(row[0] + 60) % 180, (row[0] + 30) % 180, 45],
           [
-            `$\\cos\\theta = ${(a * b * row[1]) / 2} \\div ${a * b} = ${Q.of(row[1], 2).toLatex()}$, so $\\theta = ${row[0]}^{\\circ}$.`,
-            `$\\cos\\theta = ${(a * b * row[1]) / 2} \\div ${a * b} = ${Q.of(row[1], 2).toLatex()}$，所以 $\\theta = ${row[0]}^{\\circ}$。`,
+            `**Step 1: Find the cosine.** Divide the dot product by the product of the magnitudes:\n\n$$\\cos\\theta = \\frac{${dot}}{${a} \\cdot ${b}} = ${cos}$$\n\n**Step 2: Name the angle.** ${cosWords[0]}\n\n$$\\theta = ${row[0]}^{\\circ}$$\n\n**Check.** Put the angle back into $\\|\\mathbf{u}\\|\\|\\mathbf{v}\\|\\cos\\theta$:\n\n$$${a} \\cdot ${b} \\cdot \\cos ${row[0]}^{\\circ} = ${a * b} \\cdot ${row[1] < 0 ? `(${cos})` : cos} = ${dot}$$`,
+            `**第一步：求余弦。**点积除以两个模的乘积：\n\n$$\\cos\\theta = \\frac{${dot}}{${a} \\cdot ${b}} = ${cos}$$\n\n**第二步：确定角。**${cosWords[1]}\n\n$$\\theta = ${row[0]}^{\\circ}$$\n\n**检验。**把这个角代回 $\\|\\mathbf{u}\\|\\|\\mathbf{v}\\|\\cos\\theta$：\n\n$$${a} \\cdot ${b} \\cdot \\cos ${row[0]}^{\\circ} = ${a * b} \\cdot ${row[1] < 0 ? `(${cos})` : cos} = ${dot}$$`,
           ],
         );
       },
@@ -640,8 +651,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "the-vector-projection",
       ["The vector projection", "向量投影"],
       [
-        "The scalar projection gives a signed length along a direction. Multiplying it by the unit vector of that direction gives the vector projection, written $\\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\mathbf{v} \\cdot \\mathbf{v}}\\mathbf{v}$.",
-        "标量投影给出沿某方向带符号的长度。乘这个方向的单位向量，得到向量投影，写作 $\\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\mathbf{v} \\cdot \\mathbf{v}}\\mathbf{v}$。",
+        "The scalar projection gives a signed length along a direction. Multiplying it by the unit vector of that direction gives the vector projection, written $\\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\mathbf{v} \\cdot \\mathbf{v}}\\mathbf{v}$.\n\nFor $\\mathbf{u} = \\langle 1, 3 \\rangle$ onto $\\mathbf{v} = \\langle 1, 1 \\rangle$: $\\mathbf{u} \\cdot \\mathbf{v} = 4$ and $\\mathbf{v} \\cdot \\mathbf{v} = 2$, so the projection is $2\\langle 1, 1 \\rangle = \\langle 2, 2 \\rangle$. Check: what is left, $\\langle -1, 1 \\rangle$, has dot product $-1 + 1 = 0$ with $\\mathbf{v}$.\n\n> **Watch out.** Divide by $\\mathbf{v} \\cdot \\mathbf{v}$, the squared length, not by $\\|\\mathbf{v}\\|$; and multiply that number into $\\mathbf{v}$, not into $\\mathbf{u}$.",
+        "标量投影给出沿某方向带符号的长度。乘这个方向的单位向量，得到向量投影，写作 $\\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\mathbf{v} \\cdot \\mathbf{v}}\\mathbf{v}$。\n\n对 $\\mathbf{u} = \\langle 1, 3 \\rangle$ 投影到 $\\mathbf{v} = \\langle 1, 1 \\rangle$：$\\mathbf{u} \\cdot \\mathbf{v} = 4$，$\\mathbf{v} \\cdot \\mathbf{v} = 2$，所以投影是 $2\\langle 1, 1 \\rangle = \\langle 2, 2 \\rangle$。检验：剩下的 $\\langle -1, 1 \\rangle$ 与 $\\mathbf{v}$ 的点积是 $-1 + 1 = 0$。\n\n> **注意。** 要除以 $\\mathbf{v} \\cdot \\mathbf{v}$，即长度的平方，而不是 $\\|\\mathbf{v}\\|$；并且把这个数乘到 $\\mathbf{v}$ 上，而不是 $\\mathbf{u}$ 上。",
       ],
       (rng) => {
         const [p, q] = rng.pick<[number, number]>([
@@ -660,17 +671,46 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
         const vv = p * p + q * q;
         const w = rng.int(1, 6);
         const u = [k * p - w * q, k * q + w * p] as const;
-        return chooseFilled(
-          rng,
+        const proj = vec(k * p, k * q);
+        const rest = vec(-w * q, w * p);
+        const third: [string, string, string] =
+          vv === 1
+            ? [
+                `$${rest}$`,
+                "This is the part of $\\mathbf{u}$ at right angles to $\\mathbf{v}$, what is left after the projection.",
+                "这是 $\\mathbf{u}$ 中与 $\\mathbf{v}$ 垂直的部分，即去掉投影后剩下的部分。",
+              ]
+            : [
+                `$${vec(k * vv * p, k * vv * q)}$`,
+                `This multiplies $\\mathbf{v}$ by $\\mathbf{u} \\cdot \\mathbf{v} = ${k * vv}$ without dividing by $\\mathbf{v} \\cdot \\mathbf{v} = ${vv}$.`,
+                `这里用 $\\mathbf{u} \\cdot \\mathbf{v} = ${k * vv}$ 乘 $\\mathbf{v}$，却没有除以 $\\mathbf{v} \\cdot \\mathbf{v} = ${vv}$。`,
+              ];
+        return reasoned(
+          chooseFilled(
+            rng,
+            [
+              `Find the vector projection of $\\mathbf{u} = ${vec(...u)}$ onto $\\mathbf{v} = ${vec(p, q)}$.`,
+              `求 $\\mathbf{u} = ${vec(...u)}$ 在 $\\mathbf{v} = ${vec(p, q)}$ 上的向量投影。`,
+            ],
+            proj,
+            [vec(...u), third[0].slice(1, -1), vec(-k * p, -k * q)],
+            [
+              `**Step 1: Find the two dot products.**\n\n$$\\mathbf{u} \\cdot \\mathbf{v} = ${paren(u[0])} \\cdot ${paren(p)} + ${paren(u[1])} \\cdot ${paren(q)} = ${k * vv}$$\n\n$$\\mathbf{v} \\cdot \\mathbf{v} = ${vv}$$\n\n**Step 2: Scale v.** The factor is $${frac(k * vv, vv)} = ${k}$, so\n\n$$${k}${vec(p, q)} = ${proj}$$\n\n**Check.** What is left must be at right angles to $\\mathbf{v}$. Here $\\mathbf{u}$ minus the projection is $${rest}$, and\n\n$$${rest} \\cdot ${vec(p, q)} = ${paren(-w * q)} \\cdot ${paren(p)} + ${paren(w * p)} \\cdot ${paren(q)} = 0$$`,
+              `**第一步：求两个点积。**\n\n$$\\mathbf{u} \\cdot \\mathbf{v} = ${paren(u[0])} \\cdot ${paren(p)} + ${paren(u[1])} \\cdot ${paren(q)} = ${k * vv}$$\n\n$$\\mathbf{v} \\cdot \\mathbf{v} = ${vv}$$\n\n**第二步：把 v 乘以系数。**系数是 $${frac(k * vv, vv)} = ${k}$，所以\n\n$$${k}${vec(p, q)} = ${proj}$$\n\n**检验。**剩下的部分必须与 $\\mathbf{v}$ 垂直。这里 $\\mathbf{u}$ 减去投影是 $${rest}$，而\n\n$$${rest} \\cdot ${vec(p, q)} = ${paren(-w * q)} \\cdot ${paren(p)} + ${paren(w * p)} \\cdot ${paren(q)} = 0$$`,
+            ],
+          ),
           [
-            `Find the vector projection of $\\mathbf{u} = ${vec(...u)}$ onto $\\mathbf{v} = ${vec(p, q)}$.`,
-            `求 $\\mathbf{u} = ${vec(...u)}$ 在 $\\mathbf{v} = ${vec(p, q)}$ 上的向量投影。`,
-          ],
-          vec(k * p, k * q),
-          [vec(...u), vec(k * vv * p, k * vv * q), vec(-k * p, -k * q)],
-          [
-            `$\\mathbf{u} \\cdot \\mathbf{v} = ${k * vv}$ and $\\mathbf{v} \\cdot \\mathbf{v} = ${vv}$, so multiply $\\mathbf{v}$ by ${k}.`,
-            `$\\mathbf{u} \\cdot \\mathbf{v} = ${k * vv}$，$\\mathbf{v} \\cdot \\mathbf{v} = ${vv}$，所以 $\\mathbf{v}$ 乘 ${k}。`,
+            [
+              `$${vec(...u)}$`,
+              "This is $\\mathbf{u}$ itself; the projection keeps only the part of $\\mathbf{u}$ along $\\mathbf{v}$.",
+              "这是 $\\mathbf{u}$ 本身；投影只保留 $\\mathbf{u}$ 沿 $\\mathbf{v}$ 方向的部分。",
+            ],
+            third,
+            [
+              `$${vec(-k * p, -k * q)}$`,
+              `The sign is reversed: $\\mathbf{u} \\cdot \\mathbf{v} = ${k * vv}$, so the factor is $${k}$.`,
+              `符号反了：$\\mathbf{u} \\cdot \\mathbf{v} = ${k * vv}$，所以系数是 $${k}$。`,
+            ],
           ],
         );
       },

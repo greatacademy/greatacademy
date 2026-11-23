@@ -180,4 +180,12 @@ export const taughtTopics: readonly string[] = [
   "identifying-a-rational-function-from-a-graph",
   "identifying-a-rational-function-from-a-graph-containing-holes",
   "identifying-the-graph-of-a-rational-function",
+  "three-dimensional-vectors-in-component-form",
+  "addition-and-scalar-multiplication-of-cartesian-vectors-in-3d",
+  "calculating-the-magnitude-of-cartesian-vectors-in-3d",
+  "calculating-the-dot-product-using-angle-and-magnitude",
+  "calculating-the-dot-product-using-components",
+  "the-angle-between-two-vectors",
+  "calculating-a-scalar-projection",
+  "calculating-a-vector-projection",
 ];
