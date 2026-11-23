@@ -156,8 +156,8 @@ Stage 0 is done. Walking its lessons against Math Academy's on the same topics f
 | `precalculus-linear-transformations.ts` | 17 | done | |  |
 | `precalculus-parametric-polar.ts` | 16 | done | |  |
 | `precalculus-vectors-3d.ts` | 15 | in progress | |  |
-| `precalculus-rational-functions.ts` | 16 | in progress | |  |
-| `precalculus-trigonometric-equations.ts` | 15 | open | |  |
+| `precalculus-rational-functions.ts` | 16 | done | |  |
+| `precalculus-trigonometric-equations.ts` | 15 | in progress | |  |
 | `precalculus-vectors-2d.ts` | 15 | done | |  |
 | `precalculus-complex-numbers.ts` | 15 | open | |  |
 | `precalculus-random-variables.ts` | 14 | open | |  |
