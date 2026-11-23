@@ -1,11 +1,15 @@
 // A third knowledge point for the school, exam and calculator topics that still had two.
 
 import type { KnowledgePointDef } from "@ga/content";
+import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 import { algebraDrawings } from "../explanation-drawings-algebra.ts";
 import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 import { geometryDrawings2 } from "../explanation-drawings-geometry-2.ts";
 import { trigDrawings } from "../explanation-drawings-trig.ts";
+import { explainedChoice } from "../problems.ts";
+import { walked } from "./calculus-i-differentiation.ts";
+import { slip, worked } from "./calculus-ii-parametric.ts";
 import { choose, type Pair, whole } from "./early-grades-more-kit.ts";
 import { chooseFilled, decimal, frac, integer, signed, skill } from "./third-kit.ts";
 
@@ -1281,204 +1285,461 @@ A printer that takes $12$ s per page needs $25 \\cdot 12 = 300$ s for $25$ pages
 /** deeperRemainingCalculusThirdPoints holds the third knowledge points of the calculator topics in the calculus shard. */
 export const deeperRemainingCalculusThirdPoints: Readonly<Record<string, readonly KnowledgePointDef[]>> = {
   "evaluating-expressions-using-a-graphing-calculator": [
-    skill(
-      "reading-e-notation",
-      ["Reading E notation", "读懂 E 记法"],
-      [
-        "Calculators show large numbers in a short form, where E followed by a number means multiplying by that power of 10. So the display 3.2E4 means 3.2 times 10000, which is 32000.",
-        "计算器用简短的形式显示大数，E 后面的数表示乘 10 的这个次幂。所以显示 3.2E4 表示 3.2 乘 10000，也就是 32000。",
-      ],
-      (rng) => {
-        const m = rng.int(11, 99);
+    {
+      id: "reading-e-notation",
+      title: t("Reading E notation", "读懂 E 记法"),
+      explanation: t(
+        "Calculators show large numbers in a short form, where E followed by a number means multiplying by that power of 10. So the display 3.2E4 means 3.2 times 10000, which is 32000.\n\nCheck: moving the decimal point of $3.2$ four places to the right gives $32000$ as well.\n\n> **Watch out.** The number after E counts the places the decimal point moves, not the zeros written after the digits: 3.2E4 is $32000$, not $320000$.",
+        "计算器用简短的形式显示大数，E 后面的数表示乘 10 的这个次幂。所以显示 3.2E4 表示 3.2 乘 10000，也就是 32000。\n\n检验：把 $3.2$ 的小数点向右移四位，同样得到 $32000$。\n\n> **注意。** E 后面的数是小数点移动的位数，不是在数字后面写几个零：3.2E4 是 $32000$，不是 $320000$。",
+      ),
+      generate: (rng) => {
+        const drawn = rng.int(11, 99);
+        const m = drawn % 10 === 0 ? drawn + 1 : drawn;
         const n = rng.int(2, 6);
         const value = m * 10 ** (n - 1);
-        return whole(
+        const shown = m / 10;
+        return worked(
+          t(
+            `A calculator displays $${shown}\\text{E}${n}$. What whole number is that?`,
+            `计算器显示 $${shown}\\text{E}${n}$。这是哪个整数？`,
+          ),
+          Q.of(value),
           [
-            `A calculator displays $${m / 10}\\text{E}${n}$. What whole number is that?`,
-            `计算器显示 $${m / 10}\\text{E}${n}$。这是哪个整数？`,
+            [
+              ["Read the E", "读出 E"],
+              t(`E${n} means times $10^{${n}}$:`, `E${n} 表示乘 $10^{${n}}$：`),
+              [`${shown}\\text{E}${n} = ${shown} \\times 10^{${n}}`],
+            ],
+            [["Multiply", "相乘"], t("", ""), [`${shown} \\times ${10 ** n} = ${value}`]],
           ],
-          value,
-          [m * 10 ** n, m * 10 ** (n - 2), m * 10 ** (n + 1)],
+          t(
+            `Move the decimal point of $${shown}$ ${n} places to the right, writing zeros where digits run out: that gives $${value}$ too.`,
+            `把 $${shown}$ 的小数点向右移 ${n} 位，数字不够时补零：同样得到 $${value}$。`,
+          ),
           [
-            `The E means times a power of ten: $${m / 10} \\times 10^{${n}} = ${value}$.`,
-            `E 表示乘 10 的幂：$${m / 10} \\times 10^{${n}} = ${value}$。`,
+            slip(
+              m * 10 ** n,
+              `This writes ${n} zeros after the digits ${m}; but the decimal point inside $${shown}$ already uses up one of the ${n} places.`,
+              `这在数字 ${m} 后面写了 ${n} 个零；但 $${shown}$ 里的小数点已经占用了 ${n} 位中的一位。`,
+            ),
+            slip(
+              m * 10 ** (n - 2),
+              `This moves the decimal point only ${n - 1} places; E${n} moves it ${n} places.`,
+              `这只把小数点移了 ${n - 1} 位；E${n} 要移 ${n} 位。`,
+            ),
+            slip(
+              Q.of(m * n, 10),
+              `This reads E${n} as multiplying by ${n}; it means multiplying by $10^{${n}}$.`,
+              `这把 E${n} 当成了乘 ${n}；它表示乘 $10^{${n}}$。`,
+            ),
           ],
         );
       },
-    ),
+    },
   ],
   "exploring-functions-using-technology": [
     {
-      ...skill(
-        "a-minimum-from-the-graph-of-the-derivative",
-        ["A minimum from the graph of the derivative", "由导函数图象找极小值"],
-        [
-          "On a graph of $f'$, a local minimum of $f$ is where $f'$ crosses the axis from negative to positive. So only crossings in that direction count, not every zero.",
-          "在 $f'$ 的图象上，$f$ 的局部极小值出现在 $f'$ 由负变正穿过坐标轴的地方。所以只有这个方向的穿越才算，并非每个零点都算。",
-        ],
-        (rng) => {
-          const p = rng.int(-9, 4);
-          const q = p + rng.int(1, 9);
-          const a = rng.int(1, 5) * (rng.bool() ? 1 : -1);
-          const answer = a > 0 ? q : p;
-          return integer(
-            [
-              `You graph $Y_1 = f'(x) = ${a === 1 ? "" : a === -1 ? "-" : a}${factorOf(p)}${factorOf(q)}$. At what $x$ does $f$ have a local minimum?`,
-              `你画出 $Y_1 = f'(x) = ${a === 1 ? "" : a === -1 ? "-" : a}${factorOf(p)}${factorOf(q)}$。$f$ 在哪个 $x$ 处有局部极小值？`,
-            ],
-            answer,
-            [a > 0 ? p : q, (p + q) % 2 === 0 ? (p + q) / 2 : answer + 1, a],
-            [`$f'$ goes from negative to positive at $x = ${answer}$.`, `$f'$ 在 $x = ${answer}$ 处由负变正。`],
-          );
-        },
+      id: "a-minimum-from-the-graph-of-the-derivative",
+      title: t("A minimum from the graph of the derivative", "由导函数图象找极小值"),
+      explanation: t(
+        "On a graph of $f'$, a local minimum of $f$ is where $f'$ crosses the axis from negative to positive. So only crossings in that direction count, not every zero.\n\nFor example, for $f'(x) = (x + 1)(x - 3)$, $f'(0) = -3 < 0$ and $f'(4) = 5 > 0$, so $f'$ crosses from negative to positive at $x = 3$: a local minimum. At $x = -1$ it crosses the other way: a local maximum.\n\nCheck: $f(x) = \\frac{x^3}{3} - x^2 - 3x$ has this derivative, and $f(2) = -\\frac{22}{3}$, $f(3) = -9$, $f(4) = -\\frac{20}{3}$: lowest at $x = 3$.\n\n> **Watch out.** A negative leading coefficient flips every sign: for $f'(x) = -(x + 1)(x - 3)$ the local minimum is at $x = -1$.",
+        "在 $f'$ 的图象上，$f$ 的局部极小值出现在 $f'$ 由负变正穿过坐标轴的地方。所以只有这个方向的穿越才算，并非每个零点都算。\n\n例如对 $f'(x) = (x + 1)(x - 3)$，$f'(0) = -3 < 0$，$f'(4) = 5 > 0$，所以 $f'$ 在 $x = 3$ 处由负变正：局部极小值。在 $x = -1$ 处方向相反：局部极大值。\n\n检验：$f(x) = \\frac{x^3}{3} - x^2 - 3x$ 的导数正是它，而 $f(2) = -\\frac{22}{3}$，$f(3) = -9$，$f(4) = -\\frac{20}{3}$：在 $x = 3$ 处最低。\n\n> **注意。** 首项系数为负时所有符号都反过来：对 $f'(x) = -(x + 1)(x - 3)$，局部极小值在 $x = -1$ 处。",
       ),
       figure: calculusDrawings5["exploring-functions-using-technology#a-minimum-from-the-graph-of-the-derivative"],
+      generate: (rng) => {
+        const p = rng.int(-9, 4);
+        const q = p + rng.int(1, 9);
+        const a = rng.int(1, 5) * (rng.bool() ? 1 : -1);
+        const answer = a > 0 ? q : p;
+        const other = a > 0 ? p : q;
+        const d = q - p;
+        const mid = Q.of(p + q, 2);
+        const fp = `${a === 1 ? "" : a === -1 ? "-" : a}${factorOf(p)}${factorOf(q)}`;
+        const inside = Q.of(-a * d * d, 4).toLatex();
+        return worked(
+          t(
+            `You graph $Y_1 = f'(x) = ${fp}$. At what $x$ does $f$ have a local minimum?`,
+            `你画出 $Y_1 = f'(x) = ${fp}$。$f$ 在哪个 $x$ 处有局部极小值？`,
+          ),
+          Q.of(answer),
+          [
+            [["Find the zeros", "找零点"], t(`$f'(x) = 0$ at $x = ${p}$ and $x = ${q}$.`, `$f'(x) = 0$ 的解是 $x = ${p}$ 和 $x = ${q}$。`)],
+            [
+              ["Read the signs", "看符号"],
+              a > 0
+                ? t(
+                    `The leading coefficient is positive, so $f'$ is positive outside $(${p}, ${q})$ and negative inside. It goes from negative to positive at $x = ${q}$: a local minimum.`,
+                    `首项系数为正，所以 $f'$ 在 $(${p}, ${q})$ 外为正、在其内为负。它在 $x = ${q}$ 处由负变正：局部极小值。`,
+                  )
+                : t(
+                    `The leading coefficient is negative, so $f'$ is negative outside $(${p}, ${q})$ and positive inside. It goes from negative to positive at $x = ${p}$: a local minimum.`,
+                    `首项系数为负，所以 $f'$ 在 $(${p}, ${q})$ 外为负、在其内为正。它在 $x = ${p}$ 处由负变正：局部极小值。`,
+                  ),
+            ],
+          ],
+          a > 0
+            ? t(
+                `Test a point on each side of $${q}$: $f'(${mid.toLatex()}) = ${inside} < 0$ and $f'(${q + 1}) = ${a * (d + 1)} > 0$.`,
+                `在 $${q}$ 两侧各取一点检验：$f'(${mid.toLatex()}) = ${inside} < 0$，$f'(${q + 1}) = ${a * (d + 1)} > 0$。`,
+              )
+            : t(
+                `Test a point on each side of $${p}$: $f'(${p - 1}) = ${a * (d + 1)} < 0$ and $f'(${mid.toLatex()}) = ${inside} > 0$.`,
+                `在 $${p}$ 两侧各取一点检验：$f'(${p - 1}) = ${a * (d + 1)} < 0$，$f'(${mid.toLatex()}) = ${inside} > 0$。`,
+              ),
+          [
+            slip(
+              other,
+              `At $x = ${other}$, $f'$ goes from positive to negative: that is a local maximum.`,
+              `在 $x = ${other}$ 处 $f'$ 由正变负：那是局部极大值。`,
+            ),
+            slip(
+              mid,
+              `That is halfway between the zeros, where $f'$ itself is at its extreme: an inflection point of $f$, not an extremum.`,
+              `这是两零点的中点，$f'$ 本身在那里取极值：那是 $f$ 的拐点，不是极值点。`,
+            ),
+          ],
+        );
+      },
     },
   ],
   "finding-definite-integrals-using-a-graphing-calculator": [
-    skill(
-      "checking-a-result-with-symmetry",
-      ["Checking a result with symmetry", "用对称性检验结果"],
-      [
-        "Symmetry predicts some integrals without any calculation. An odd function over a symmetric interval gives 0, and an even function gives twice the integral over the right half.",
-        "对称性可以不经计算就预测某些积分。奇函数在对称区间上积分为 0，偶函数的积分是右半部分积分的两倍。",
-      ],
-      (rng) => {
+    {
+      id: "checking-a-result-with-symmetry",
+      title: t("Checking a result with symmetry", "用对称性检验结果"),
+      explanation: t(
+        "Symmetry predicts some integrals without any calculation. An odd function over a symmetric interval gives 0, and an even function gives twice the integral over the right half. For example, $x^3$ is odd and $x^2$ is even, so $\\int_{-2}^{2} x^3\\,dx = 0$ and $\\int_{-2}^{2} x^2\\,dx = 2 \\cdot \\frac{8}{3} = \\frac{16}{3}$.\n\nCheck: by antiderivatives, $\\left[\\frac{x^4}{4}\\right]_{-2}^{2} = 4 - 4 = 0$ and $\\left[\\frac{x^3}{3}\\right]_{-2}^{2} = \\frac{8}{3} + \\frac{8}{3} = \\frac{16}{3}$.\n\n> **Watch out.** For an odd function the total is $0$, not twice the right half: the left half has the opposite sign.",
+        "对称性可以不经计算就预测某些积分。奇函数在对称区间上积分为 0，偶函数的积分是右半部分积分的两倍。例如 $x^3$ 是奇函数，$x^2$ 是偶函数，所以 $\\int_{-2}^{2} x^3\\,dx = 0$，$\\int_{-2}^{2} x^2\\,dx = 2 \\cdot \\frac{8}{3} = \\frac{16}{3}$。\n\n检验：用原函数计算，$\\left[\\frac{x^4}{4}\\right]_{-2}^{2} = 4 - 4 = 0$，$\\left[\\frac{x^3}{3}\\right]_{-2}^{2} = \\frac{8}{3} + \\frac{8}{3} = \\frac{16}{3}$。\n\n> **注意。** 奇函数的总积分是 $0$，不是右半部分的两倍：左半部分的符号相反。",
+      ),
+      generate: (rng) => {
         const a = rng.int(1, 9);
         const v = nz(rng, 40);
         const even = rng.bool();
         const name: Pair = even ? ["even", "偶"] : ["odd", "奇"];
-        return integer(
-          [
+        const left = even ? v : -v;
+        const answer = even ? 2 * v : 0;
+        return worked(
+          t(
             `$f$ is an ${name[0]} function, and a calculator gives $\\int_{0}^{${a}} f(x)\\,dx = ${v}$. What is $\\int_{-${a}}^{${a}} f(x)\\,dx$?`,
             `$f$ 是${name[1]}函数，计算器给出 $\\int_{0}^{${a}} f(x)\\,dx = ${v}$。$\\int_{-${a}}^{${a}} f(x)\\,dx$ 是多少？`,
-          ],
-          even ? 2 * v : 0,
-          even ? [0, v, -2 * v] : [2 * v, v, -v],
+          ),
+          Q.of(answer),
           [
-            even ? `The two halves are equal, so the total is ${2 * v}.` : "The two halves cancel, so the total is 0.",
-            even ? `两半相等，所以总和是 ${2 * v}。` : "两半互相抵消，所以总和是 0。",
+            [
+              ["Find the left half", "求左半部分"],
+              even
+                ? t(
+                    `The graph of an even function on $[-${a}, 0]$ is the mirror image of its graph on $[0, ${a}]$ in the $y$-axis, so the signed areas are equal:`,
+                    `偶函数在 $[-${a}, 0]$ 上的图象是它在 $[0, ${a}]$ 上的图象关于 $y$ 轴的镜像，所以有向面积相等：`,
+                  )
+                : t(
+                    `The graph of an odd function on $[-${a}, 0]$ is its graph on $[0, ${a}]$ turned half a turn about the origin, so the signed area changes sign:`,
+                    `奇函数在 $[-${a}, 0]$ 上的图象是它在 $[0, ${a}]$ 上的图象绕原点旋转半圈，所以有向面积变号：`,
+                  ),
+              [`\\int_{-${a}}^{0} f(x)\\,dx = ${left}`],
+            ],
+            [["Add the halves", "两半相加"], t("", ""), [`${left} + ${paren(v)} = ${answer}`]],
           ],
+          t(
+            `Substitute $x = -u$: $\\int_{-${a}}^{0} f(x)\\,dx = \\int_{0}^{${a}} f(-u)\\,du$, and $f(-u) = ${even ? "f(u)" : "-f(u)"}$, so the left half is $${left}$, as in Step 1, and the total is $${answer}$.`,
+            `令 $x = -u$：$\\int_{-${a}}^{0} f(x)\\,dx = \\int_{0}^{${a}} f(-u)\\,du$，而 $f(-u) = ${even ? "f(u)" : "-f(u)"}$，所以左半部分是 $${left}$，与第一步相同，总和为 $${answer}$。`,
+          ),
+          even
+            ? [
+                slip(
+                  0,
+                  `That is the result for an odd function; the halves of an even function are equal, not opposite.`,
+                  `这是奇函数的结果；偶函数的两半相等，而不是相反。`,
+                ),
+                slip(
+                  v,
+                  `That is only the right half, $\\int_0^{${a}}$; the left half adds the same amount.`,
+                  `这只是右半部分 $\\int_0^{${a}}$；左半部分还要加上同样多。`,
+                ),
+              ]
+            : [
+                slip(
+                  2 * v,
+                  `That is the result for an even function; the halves of an odd function are opposite, so they cancel.`,
+                  `这是偶函数的结果；奇函数的两半相反，会互相抵消。`,
+                ),
+                slip(
+                  v,
+                  `That is only the right half, $\\int_0^{${a}}$; the left half is $${-v}$.`,
+                  `这只是右半部分 $\\int_0^{${a}}$；左半部分是 $${-v}$。`,
+                ),
+                slip(
+                  -v,
+                  `That is only the left half, $\\int_{-${a}}^{0}$; adding the right half, $${v}$, gives $0$.`,
+                  `这只是左半部分 $\\int_{-${a}}^{0}$；再加上右半部分 $${v}$ 才得 $0$。`,
+                ),
+              ],
         );
       },
-    ),
+    },
   ],
   "finding-derivatives-using-a-graphing-calculator": [
-    skill(
-      "a-symmetric-difference-from-a-table",
-      ["A symmetric difference from a table", "由表格求对称差商"],
-      [
-        "A table of values is enough for a numerical derivative. Subtract the outputs on either side of the point, and divide by the full distance between the two inputs, which is $2h$.",
-        "有一张数值表就能求数值导数。把点两侧的输出相减，再除以两个输入之间的整段距离，也就是 $2h$。",
-      ],
-      (rng) => {
+    {
+      id: "a-symmetric-difference-from-a-table",
+      title: t("A symmetric difference from a table", "由表格求对称差商"),
+      explanation: t(
+        "A table of values is enough for a numerical derivative. Subtract the outputs on either side of the point, and divide by the full distance between the two inputs, which is $2h$. For example, with $f(1.5) = 2.0$ and $f(2.5) = 5.0$, the estimate of $f'(2)$ is $\\frac{5.0 - 2.0}{2.5 - 1.5} = 3$.\n\nCheck: the line with slope $3$ through $(1.5, 2.0)$ reaches $2.0 + 3 \\cdot 1 = 5.0$ at $x = 2.5$, the table value.\n\n> **Watch out.** The two inputs are $2h$ apart: with $h = 0.5$, divide by $1$, not by $0.5$.",
+        "有一张数值表就能求数值导数。把点两侧的输出相减，再除以两个输入之间的整段距离，也就是 $2h$。例如 $f(1.5) = 2.0$，$f(2.5) = 5.0$，则 $f'(2)$ 的估计值是 $\\frac{5.0 - 2.0}{2.5 - 1.5} = 3$。\n\n检验：过 $(1.5, 2.0)$、斜率为 $3$ 的直线在 $x = 2.5$ 处到达 $2.0 + 3 \\cdot 1 = 5.0$，正是表中的值。\n\n> **注意。** 两个输入相距 $2h$：$h = 0.5$ 时要除以 $1$，而不是 $0.5$。",
+      ),
+      generate: (rng) => {
         const a = rng.int(1, 9);
         const m = nz(rng, 40);
         const low = rng.int(-50, 50);
-        return integer(
+        const f1 = low / 10;
+        const f2 = (low + 10 * m) / 10;
+        return worked(
+          t(
+            `A table shows $f(${a - 0.5}) = ${f1}$ and $f(${a + 0.5}) = ${f2}$. Use a symmetric difference to estimate $f'(${a})$.`,
+            `表格显示 $f(${a - 0.5}) = ${f1}$，$f(${a + 0.5}) = ${f2}$。用对称差商估计 $f'(${a})$。`,
+          ),
+          Q.of(m),
           [
-            `A table shows $f(${a - 0.5}) = ${low / 10}$ and $f(${a + 0.5}) = ${(low + 10 * m) / 10}$. Use a symmetric difference to estimate $f'(${a})$.`,
-            `表格显示 $f(${a - 0.5}) = ${low / 10}$，$f(${a + 0.5}) = ${(low + 10 * m) / 10}$。用对称差商估计 $f'(${a})$。`,
+            [["Find the change in output", "求输出的变化"], t("", ""), [`f(${a + 0.5}) - f(${a - 0.5}) = ${f2} - ${paren(f1)} = ${m}`]],
+            [
+              ["Divide by the distance", "除以距离"],
+              t(`Here $h = 0.5$, so the inputs are $2h = 1$ apart:`, `这里 $h = 0.5$，所以两个输入相距 $2h = 1$：`),
+              [`\\frac{${m}}{2(0.5)} = ${m}`],
+            ],
           ],
-          m,
-          [2 * m, -m, m + 1],
-          [`The change in output is ${m} over a distance of 1, so the estimate is ${m}.`, `输出变化 ${m}，距离是 1，所以估计值是 ${m}。`],
+          t(
+            `The line with slope $${m}$ through $(${a - 0.5}, ${f1})$ reaches $${f1} + ${paren(m)} \\cdot 1 = ${f2}$ at $x = ${a + 0.5}$, the table value.`,
+            `过 $(${a - 0.5}, ${f1})$、斜率为 $${m}$ 的直线在 $x = ${a + 0.5}$ 处到达 $${f1} + ${paren(m)} \\cdot 1 = ${f2}$，正是表中的值。`,
+          ),
+          [
+            slip(
+              2 * m,
+              `This divides by $h = 0.5$ instead of $2h = 1$; the two inputs are $1$ apart.`,
+              `这除以了 $h = 0.5$ 而不是 $2h = 1$；两个输入相距 $1$。`,
+            ),
+            slip(
+              -m,
+              `This subtracts in the wrong order, $f(${a - 0.5}) - f(${a + 0.5})$; subtract the left output from the right one.`,
+              `这减反了，算成了 $f(${a - 0.5}) - f(${a + 0.5})$；应该用右边的输出减左边的。`,
+            ),
+            slip(
+              Q.of(low + 10 * m, 10),
+              `That is $f(${a + 0.5})$ itself, a height of the graph, not a slope.`,
+              `这是 $f(${a + 0.5})$ 本身，是图象的高度，不是斜率。`,
+            ),
+          ],
         );
       },
-    ),
+    },
   ],
   "finding-extrema-of-functions-using-a-graphing-calculator": [
-    skill(
-      "an-extreme-value-at-an-endpoint",
-      ["An extreme value at an endpoint", "端点处的最值"],
-      [
-        "On a closed interval the largest or smallest value may be at an endpoint, which a calculator's maximum command can miss. So compare the critical points with both endpoints before answering.",
-        "在闭区间上，最大值或最小值可能在端点处，而计算器的求极值命令可能漏掉。所以回答之前，要把临界点与两个端点比较。",
-      ],
-      (rng) => {
+    {
+      id: "an-extreme-value-at-an-endpoint",
+      title: t("An extreme value at an endpoint", "端点处的最值"),
+      explanation: t(
+        "On a closed interval the largest or smallest value may be at an endpoint, which a calculator's maximum command can miss. So compare the critical points with both endpoints before answering. For example, on $[0, 9]$ with critical values $f(2) = 6$ and $f(5) = -1$ and endpoint values $f(0) = 3$ and $f(9) = 13$, the absolute maximum is at the endpoint $x = 9$.\n\nCheck: $13$ is larger than each of $3$, $6$ and $-1$.\n\n> **Watch out.** The question may ask where the extreme value occurs: answer with the $x$, not the value $f(x)$.",
+        "在闭区间上，最大值或最小值可能在端点处，而计算器的求极值命令可能漏掉。所以回答之前，要把临界点与两个端点比较。例如在 $[0, 9]$ 上，临界点处 $f(2) = 6$，$f(5) = -1$，端点处 $f(0) = 3$，$f(9) = 13$，绝对最大值在端点 $x = 9$ 处。\n\n检验：$13$ 比 $3$、$6$、$-1$ 都大。\n\n> **注意。** 题目可能问最值出现在哪里：要答 $x$，而不是值 $f(x)$。",
+      ),
+      generate: (rng) => {
         const xs = [0, rng.int(1, 3), rng.int(4, 6), rng.int(7, 9)];
         const ys = rng.sample([-20, -15, -11, -8, -5, -2, 1, 3, 6, 9, 13, 17, 22, 27], 4);
         const wantMax = rng.bool();
         const best = wantMax ? Math.max(...ys) : Math.min(...ys);
+        const worst = wantMax ? Math.min(...ys) : Math.max(...ys);
         const at = xs[ys.indexOf(best)] as number;
-        return whole(
-          [
+        const word: Pair = wantMax ? ["largest", "最大"] : ["smallest", "最小"];
+        const endpoint = at === xs[0] || at === xs[3];
+        const sorted = [...ys].sort((p, q) => p - q);
+        return worked(
+          t(
             `On $[${xs[0]}, ${xs[3]}]$, the critical points of a continuous $f$ are $x = ${xs[1]}$ and $x = ${xs[2]}$. The values $x \\to f(x)$ are $${tableText(xs, ys)}$. At what $x$ is the absolute ${wantMax ? "maximum" : "minimum"}?`,
             `在 $[${xs[0]}, ${xs[3]}]$ 上，连续函数 $f$ 的临界点是 $x = ${xs[1]}$ 和 $x = ${xs[2]}$。$x \\to f(x)$ 的值是 $${tableText(xs, ys)}$。绝对${wantMax ? "最大" : "最小"}值在哪个 $x$ 处？`,
-          ],
-          at,
-          xs.filter((x) => x !== at),
+          ),
+          Q.of(at),
           [
-            `The ${wantMax ? "largest" : "smallest"} of the four values is ${best}, at $x = ${at}$.`,
-            `四个值中${wantMax ? "最大" : "最小"}的是 ${best}，在 $x = ${at}$ 处。`,
+            [
+              ["List the candidates", "列出候选值"],
+              t(
+                "The absolute extremes of a continuous function on a closed interval are among the critical points and the two endpoints:",
+                "闭区间上连续函数的绝对最值只能在临界点和两个端点中取得：",
+              ),
+              [xs.map((x, i) => `f(${x}) = ${ys[i]}`).join(", \\quad ")],
+            ],
+            [
+              [`Pick the ${word[0]}`, `取${word[1]}的`],
+              t(
+                `The ${word[0]} value is $${best}$, at $x = ${at}$${endpoint ? ", an endpoint" : ", a critical point"}.`,
+                `${word[1]}的值是 $${best}$，在 $x = ${at}$ 处${endpoint ? "，这是端点" : "，这是临界点"}。`,
+              ),
+            ],
+          ],
+          t(
+            `Put the four values in order: $${sorted.join(" < ")}$. The ${wantMax ? "last" : "first"} one, $${best}$, belongs to $x = ${at}$.`,
+            `把四个值排序：$${sorted.join(" < ")}$。${wantMax ? "最后" : "最前"}一个 $${best}$ 对应 $x = ${at}$。`,
+          ),
+          [
+            ...xs
+              .filter((x) => x !== at)
+              .map((x) => {
+                const y = ys[xs.indexOf(x)] as number;
+                return y === worst
+                  ? slip(
+                      x,
+                      `At $x = ${x}$, $f = ${y}$ is the absolute ${wantMax ? "minimum" : "maximum"}, the opposite extreme.`,
+                      `在 $x = ${x}$ 处 $f = ${y}$ 是绝对${wantMax ? "最小" : "最大"}值，正好相反。`,
+                    )
+                  : slip(
+                      x,
+                      `$f(${x}) = ${y}$ is not the ${word[0]} value; $f(${at}) = ${best}$ is ${wantMax ? "larger" : "smaller"}.`,
+                      `$f(${x}) = ${y}$ 不是${word[1]}值；$f(${at}) = ${best}$ 更${wantMax ? "大" : "小"}。`,
+                    );
+              }),
+            slip(
+              best,
+              `That is the ${word[0]} value itself; the question asks at what $x$ it occurs.`,
+              `这是${word[1]}值本身；题目问的是它在哪个 $x$ 处取得。`,
+            ),
           ],
         );
       },
-    ),
+    },
   ],
   "finding-intersections-of-functions-using-a-graphing-calculator": [
     {
-      ...skill(
-        "intersections-from-sign-changes",
-        ["Intersections from sign changes", "由符号变化找交点"],
-        [
-          "Two continuous graphs must cross wherever their difference changes sign. So a table of $f - g$ gives a lower bound on the number of intersections, by counting the sign changes.",
-          "两个连续函数的差变号的地方，图象一定相交。所以由 $f - g$ 的数值表数变号次数，可以得到交点个数的下界。",
-        ],
-        (rng) => {
-          const xs = [0, 1, 2, 3, 4, 5, 6];
-          const ys = xs.map(() => nz(rng, 9));
-          let changes = 0;
-          for (let i = 1; i < ys.length; i++) if ((ys[i] as number) * (ys[i - 1] as number) < 0) changes++;
-          return whole(
-            [
-              `$f$ and $g$ are continuous, and a table gives $x \\to f(x) - g(x)$ as $${tableText(xs, ys)}$. What is the least number of intersections on $[0, 6]$ that this table guarantees?`,
-              `$f$ 和 $g$ 连续，表格给出 $x \\to f(x) - g(x)$：$${tableText(xs, ys)}$。这张表保证 $[0, 6]$ 上至少有几个交点？`,
-            ],
-            changes,
-            [changes + 1, changes + 2, 7],
-            [
-              `The difference changes sign ${changes} times, and each change forces a crossing.`,
-              `差变号 ${changes} 次，每次变号都必有一个交点。`,
-            ],
-          );
-        },
+      id: "intersections-from-sign-changes",
+      title: t("Intersections from sign changes", "由符号变化找交点"),
+      explanation: t(
+        "Two continuous graphs must cross wherever their difference changes sign. So a table of $f - g$ gives a lower bound on the number of intersections, by counting the sign changes. For example, if $f(x) - g(x)$ is $-2, 3, 1, -4$ at $x = 0, 1, 2, 3$, it changes sign between $0$ and $1$ and between $2$ and $3$: at least two intersections.\n\nCheck: the signs $-, +, +, -$ form three runs of one sign, and three runs meet in two places.\n\n> **Watch out.** The table gives only a lower bound: between two rows of the same sign the graphs may still cross twice, and the table cannot show it.",
+        "两个连续函数的差变号的地方，图象一定相交。所以由 $f - g$ 的数值表数变号次数，可以得到交点个数的下界。例如 $f(x) - g(x)$ 在 $x = 0, 1, 2, 3$ 处为 $-2, 3, 1, -4$，它在 $0$ 与 $1$ 之间、$2$ 与 $3$ 之间变号：至少两个交点。\n\n检验：符号 $-, +, +, -$ 组成三段同号的部分，三段之间有两个交界。\n\n> **注意。** 表格只给出下界：在两个同号的行之间，图象仍可能相交两次，而表格看不出来。",
       ),
       figure: calculusDrawings5["finding-intersections-of-functions-using-a-graphing-calculator#intersections-from-sign-changes"],
+      generate: (rng) => {
+        const xs = [0, 1, 2, 3, 4, 5, 6];
+        const ys = xs.map(() => nz(rng, 9));
+        const between: string[] = [];
+        for (let i = 1; i < ys.length; i++) if ((ys[i] as number) * (ys[i - 1] as number) < 0) between.push(`(${i - 1}, ${i})`);
+        const changes = between.length;
+        const negatives = ys.filter((y) => y < 0).length;
+        return worked(
+          t(
+            `$f$ and $g$ are continuous, and a table gives $x \\to f(x) - g(x)$ as $${tableText(xs, ys)}$. What is the least number of intersections on $[0, 6]$ that this table guarantees?`,
+            `$f$ 和 $g$ 连续，表格给出 $x \\to f(x) - g(x)$：$${tableText(xs, ys)}$。这张表保证 $[0, 6]$ 上至少有几个交点？`,
+          ),
+          Q.of(changes),
+          [
+            [["Write the signs", "写出符号"], t("", ""), [ys.map((y) => (y < 0 ? "-" : "+")).join(",\\ ")]],
+            [
+              ["Count the changes", "数变号"],
+              changes === 0
+                ? t("The sign never changes, so the table guarantees no crossing.", "符号从不改变，所以这张表不能保证有交点。")
+                : t(
+                    `The sign changes on ${between.map((b) => `$${b}$`).join(", ")}: ${changes} time${changes === 1 ? "" : "s"}, and each change forces a crossing.`,
+                    `符号在 ${between.map((b) => `$${b}$`).join("、")} 上改变：共 ${changes} 次，每次变号都必有一个交点。`,
+                  ),
+            ],
+          ],
+          t(
+            `Group the rows into runs of one sign: there are ${changes + 1} run${changes === 0 ? "" : "s"}, and neighbouring runs meet in ${changes} place${changes === 1 ? "" : "s"}.`,
+            `把各行分成同号的段：共 ${changes + 1} 段，相邻的段之间有 ${changes} 个交界。`,
+          ),
+          [
+            slip(
+              changes + 1,
+              `This counts the runs of one sign; the crossings are where neighbouring runs meet, which is one fewer.`,
+              `这数的是同号的段数；交点在相邻段的交界处，比段数少一。`,
+            ),
+            slip(
+              negatives,
+              `This counts the negative entries; a crossing needs a change of sign between neighbouring rows.`,
+              `这数的是负值的个数；交点要求相邻两行之间符号改变。`,
+            ),
+            slip(
+              7,
+              `This counts every row; a crossing is guaranteed only where the sign changes.`,
+              `这数的是所有行；只有符号改变的地方才保证有交点。`,
+            ),
+          ],
+        );
+      },
     },
   ],
   "finding-roots-of-functions-using-a-graphing-calculator": [
-    skill(
-      "one-step-of-bisection",
-      ["One step of bisection", "二分法的一步"],
-      [
-        "If a continuous function has opposite signs at two ends, a root lies between them. Testing the midpoint keeps the half where the signs still differ, which cuts the interval in two at each step.",
-        "连续函数在两端异号时，两端之间有根。检验中点后，保留仍然异号的那一半，这样每一步都把区间减半。",
-      ],
-      (rng) => {
+    {
+      id: "one-step-of-bisection",
+      title: t("One step of bisection", "二分法的一步"),
+      explanation: t(
+        "If a continuous function has opposite signs at two ends, a root lies between them. Testing the midpoint keeps the half where the signs still differ, which cuts the interval in two at each step. For example, for $f(x) = x^2 - 2$ on $[1, 2]$, $f(1) = -1$ and $f(1.5) = 0.25$, so keep $(1, 1.5)$.\n\nCheck: the root $\\sqrt{2} \\approx 1.414$ indeed lies in $(1, 1.5)$.\n\n> **Watch out.** Keep the half whose ends have opposite signs. When $f$ at the midpoint is positive, the root is on the side where $f$ is negative.",
+        "连续函数在两端异号时，两端之间有根。检验中点后，保留仍然异号的那一半，这样每一步都把区间减半。例如对 $[1, 2]$ 上的 $f(x) = x^2 - 2$，$f(1) = -1$，$f(1.5) = 0.25$，所以保留 $(1, 1.5)$。\n\n检验：根 $\\sqrt{2} \\approx 1.414$ 确实在 $(1, 1.5)$ 内。\n\n> **注意。** 要保留两端异号的那一半。中点处 $f$ 为正时，根在 $f$ 为负的那一侧。",
+      ),
+      generate: (rng) => {
         const a = rng.int(-9, 9);
         const m = a + rng.int(1, 9);
         const b = 2 * m - a;
         const value = nz(rng, 9);
         const keepLeft = value > 0;
-        return chooseFilled(
-          rng,
-          [
+        const iv = (p: number, q: number) => t(`$(${p}, ${q})$`, `$(${p}, ${q})$`);
+        const [lo, hi] = keepLeft ? [a, m] : [m, b];
+        return explainedChoice(rng, {
+          prompt: t(
             `$f$ is continuous, with $f(${a}) < 0$, $f(${b}) > 0$ and $f(${m}) = ${value}$. In which interval must a root lie?`,
             `$f$ 连续，$f(${a}) < 0$，$f(${b}) > 0$，$f(${m}) = ${value}$。根一定在哪个区间内？`,
+          ),
+          correct: iv(lo, hi),
+          wrong: [
+            {
+              option: keepLeft ? iv(m, b) : iv(a, m),
+              why: keepLeft
+                ? t(
+                    `$f(${m})$ and $f(${b})$ are both positive, so this half need not contain a root.`,
+                    `$f(${m})$ 与 $f(${b})$ 都为正，所以这一半不一定有根。`,
+                  )
+                : t(
+                    `$f(${a})$ and $f(${m})$ are both negative, so this half need not contain a root.`,
+                    `$f(${a})$ 与 $f(${m})$ 都为负，所以这一半不一定有根。`,
+                  ),
+            },
+            {
+              option: iv(b, b + (b - m)),
+              why: t(
+                `This interval lies beyond $${b}$, outside $[${a}, ${b}]$; nothing is known about the signs of $f$ there.`,
+                `这个区间在 $${b}$ 之后，在 $[${a}, ${b}]$ 之外；那里 $f$ 的符号一无所知。`,
+              ),
+            },
+            {
+              option: iv(a - (m - a), a),
+              why: t(
+                `This interval lies before $${a}$, outside $[${a}, ${b}]$; nothing is known about the signs of $f$ there.`,
+                `这个区间在 $${a}$ 之前，在 $[${a}, ${b}]$ 之外；那里 $f$ 的符号一无所知。`,
+              ),
+            },
           ],
-          keepLeft ? `(${a}, ${m})` : `(${m}, ${b})`,
-          [keepLeft ? `(${m}, ${b})` : `(${a}, ${m})`, `(${b}, ${b + (b - m)})`, `(${a - (m - a)}, ${a})`],
-          [
-            keepLeft
-              ? `$f(${m})$ is positive and $f(${a})$ is negative, so the signs differ on $(${a}, ${m})$. By the intermediate value theorem a root lies there.`
-              : `$f(${m})$ is negative and $f(${b})$ is positive, so the signs differ on $(${m}, ${b})$. By the intermediate value theorem a root lies there.`,
-            keepLeft
-              ? `$f(${m})$ 为正，$f(${a})$ 为负，所以在 $(${a}, ${m})$ 上异号。由介值定理，那里有根。`
-              : `$f(${m})$ 为负，$f(${b})$ 为正，所以在 $(${m}, ${b})$ 上异号。由介值定理，那里有根。`,
-          ],
-        );
+          solution: walked(
+            [
+              [
+                ["Read the midpoint", "看中点"],
+                t(
+                  `$${m}$ is the midpoint of $[${a}, ${b}]$, and $f(${m}) = ${value}$ is ${keepLeft ? "positive" : "negative"}.`,
+                  `$${m}$ 是 $[${a}, ${b}]$ 的中点，$f(${m}) = ${value}$ 为${keepLeft ? "正" : "负"}。`,
+                ),
+              ],
+              [
+                ["Keep the half with a sign change", "保留变号的一半"],
+                keepLeft
+                  ? t(
+                      `$f(${a}) < 0 < f(${m})$, so by the intermediate value theorem a root lies in $(${a}, ${m})$.`,
+                      `$f(${a}) < 0 < f(${m})$，由介值定理，$(${a}, ${m})$ 内有根。`,
+                    )
+                  : t(
+                      `$f(${m}) < 0 < f(${b})$, so by the intermediate value theorem a root lies in $(${m}, ${b})$.`,
+                      `$f(${m}) < 0 < f(${b})$，由介值定理，$(${m}, ${b})$ 内有根。`,
+                    ),
+              ],
+            ],
+            t(
+              `The kept interval $(${lo}, ${hi})$ has length $${hi - lo}$, half of $${b - a}$, as one bisection step should give, and its ends still have opposite signs.`,
+              `保留的区间 $(${lo}, ${hi})$ 长 $${hi - lo}$，是 $${b - a}$ 的一半，正符合二分一步的结果，而且两端仍然异号。`,
+            ),
+          ),
+        });
       },
-    ),
+    },
   ],
 };
