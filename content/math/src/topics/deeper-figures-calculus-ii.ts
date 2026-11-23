@@ -10,6 +10,7 @@ import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 
 import { explainedChoice, numberProblem } from "../problems.ts";
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
+import { type Step, walked } from "./calculus-i-differentiation.ts";
 import { drawn, label } from "./figure-reading-more.ts";
 
 /** fig wraps marks in a figure with its description in both languages. */
@@ -737,8 +738,8 @@ const termFromPartialSums = point(
   "a-term-from-a-plot-of-partial-sums",
   ["A term from a plot of partial sums", "由部分和的图读项"],
   [
-    "A partial sum $S_n$ adds the first $n$ terms, so consecutive partial sums differ by exactly one term: $a_n = S_n - S_{n-1}$. On a plot of partial sums, a term is the signed vertical step from one dot to the next. A dot that falls below the previous one means a negative term.",
-    "部分和 $S_n$ 把前 $n$ 项相加，所以相邻部分和恰好相差一项：$a_n = S_n - S_{n-1}$。在部分和的图上，一项就是从一个点到下一个点的带符号竖直步长。点比前一个点低，说明这一项为负。",
+    "A partial sum $S_n$ adds the first $n$ terms, so consecutive partial sums differ by exactly one term: $a_n = S_n - S_{n-1}$. On a plot of partial sums, a term is the signed vertical step from one dot to the next. A dot that falls below the previous one means a negative term. For dots at $S_{3} = 5$ and $S_{4} = 2$, the term is $a_{4} = 2 - 5 = -3$.\n\nCheck: $S_{3} + a_{4} = 5 + (-3) = 2 = S_{4}$.\n\n> **Watch out.** Subtract the earlier dot from the later one; $S_{3} - S_{4} = 3$ has the wrong sign.",
+    "部分和 $S_n$ 把前 $n$ 项相加，所以相邻部分和恰好相差一项：$a_n = S_n - S_{n-1}$。在部分和的图上，一项就是从一个点到下一个点的带符号竖直步长。点比前一个点低，说明这一项为负。对 $S_{3} = 5$、$S_{4} = 2$ 的两个点，项是 $a_{4} = 2 - 5 = -3$。\n\n检验：$S_{3} + a_{4} = 5 + (-3) = 2 = S_{4}$。\n\n> **注意。** 要用后一个点减前一个点；$S_{3} - S_{4} = 3$ 的符号是错的。",
   ],
   (rng) => {
     const values: number[] = [rng.int(-2, 3)];
@@ -750,22 +751,46 @@ const termFromPartialSums = point(
     const n = rng.int(2, 7);
     const [now, before] = [values[n - 1] as number, values[n - 2] as number];
     const term = now - before;
-    return ask(
+    const par = (v: number) => (v < 0 ? `(${v})` : `${v}`);
+    const parts: Step[] = [
       [
-        `The dots show the partial sums $S_1, S_2, \\ldots, S_7$ of a series. What is the term $a_{${n}}$?`,
-        `图中的点是某级数的部分和 $S_1, S_2, \\ldots, S_7$。项 $a_{${n}}$ 是多少？`,
+        ["Read the two dots", "读出两个点"],
+        t(`The dots at $n = ${n - 1}$ and $n = ${n}$ give:`, `$n = ${n - 1}$ 和 $n = ${n}$ 处的点给出：`),
+        [`S_{${n - 1}} = ${before}, \\quad S_{${n}} = ${now}`],
       ],
-      term,
-      [now, before, -term, now + before],
       [
-        `The term is the step between consecutive partial sums: $a_{${n}} = S_{${n}} - S_{${n - 1}} = ${now} - ${before < 0 ? `(${before})` : before} = ${term}$.`,
-        `项是相邻部分和之间的步长：$a_{${n}} = S_{${n}} - S_{${n - 1}} = ${now} - ${before < 0 ? `(${before})` : before} = ${term}$。`,
+        ["Take the step", "求步长"],
+        t("The term is the later partial sum minus the earlier one:", "项等于后一个部分和减前一个部分和："),
+        [`a_{${n}} = S_{${n}} - S_{${n - 1}} = ${now} - ${par(before)} = ${term}`],
       ],
-      fig({ xMin: 0, xMax: 8, yMin: -4, yMax: 7, xName: "n", yName: "S" }, dots(values), [
+    ];
+    const wrong: readonly (readonly [number, string, string])[] = [
+      [now, `This is the partial sum $S_{${n}}$, the height of the dot, not the term`, `这是部分和 $S_{${n}}$，即点的高度，不是项`],
+      [before, `This is the partial sum $S_{${n - 1}}$, the dot before`, `这是前一个点的部分和 $S_{${n - 1}}$`],
+      [-term, `This subtracts the wrong way, $S_{${n - 1}} - S_{${n}}$`, `这里减反了，算成了 $S_{${n - 1}} - S_{${n}}$`],
+      [now + before, "This adds the two partial sums; the term is their difference", "这里把两个部分和相加了；项是它们的差"],
+    ];
+    return {
+      ...numberProblem({
+        prompt: t(
+          `The dots show the partial sums $S_1, S_2, \\ldots, S_7$ of a series. What is the term $a_{${n}}$?`,
+          `图中的点是某级数的部分和 $S_1, S_2, \\ldots, S_7$。项 $a_{${n}}$ 是多少？`,
+        ),
+        answer: term,
+        mistakes: wrong.filter((w, i) => wrong.findIndex((x) => x[0] === w[0]) === i).map(([value, en, zh]) => ({ value, why: t(en, zh) })),
+        solution: walked(
+          parts,
+          t(
+            `Add the term to the earlier partial sum: $S_{${n - 1}} + a_{${n}} = ${before} + ${par(term)} = ${now}$, which is $S_{${n}}$, the height of the next dot.`,
+            `把这一项加到前一个部分和上：$S_{${n - 1}} + a_{${n}} = ${before} + ${par(term)} = ${now}$，正是下一个点的高度 $S_{${n}}$。`,
+          ),
+        ),
+      }),
+      figure: fig({ xMin: 0, xMax: 8, yMin: -4, yMax: 7, xName: "n", yName: "S" }, dots(values), [
         `Partial sums at n = 1 to 7: ${values.join(", ")}.`,
         `n = 1 到 7 的部分和：${values.join("，")}。`,
       ]),
-    );
+    };
   },
 );
 
@@ -773,8 +798,8 @@ const seriesBehaviour = point(
   "convergence-from-a-plot-of-partial-sums",
   ["Convergence from a plot of partial sums", "由部分和的图判断收敛"],
   [
-    "A series converges exactly when its partial sums approach a single number. So a plot settling at a height means convergence to that height. Partial sums that keep climbing, or that keep bouncing between values without settling, mean divergence, even if the individual terms look small or the bouncing looks orderly.",
-    "级数收敛当且仅当它的部分和趋向一个确定的数。所以图稳定在某个高度，就说明收敛到这个高度。部分和不断上升，或者不断跳动而不稳定，都说明发散，即使各项看起来很小或跳动看起来很规则。",
+    "A series converges exactly when its partial sums approach a single number. So a plot settling at a height means convergence to that height. Partial sums that keep climbing, or that keep bouncing between values without settling, mean divergence, even if the individual terms look small or the bouncing looks orderly. For partial sums $S_{n} = 3 - 2 \\cdot 0.5^{n}$, the dots are $2, 2.5, 2.75, \\ldots$ and settle at $3$, so the series converges to $3$.\n\nCheck: the gap $3 - S_{n} = 2 \\cdot 0.5^{n}$ halves at every step, and $S_{10} \\approx 2.998$.\n\n> **Watch out.** The sum is the height the partial sums settle at, not the height the terms tend to; the terms here tend to $0$.",
+    "级数收敛当且仅当它的部分和趋向一个确定的数。所以图稳定在某个高度，就说明收敛到这个高度。部分和不断上升，或者不断跳动而不稳定，都说明发散，即使各项看起来很小或跳动看起来很规则。对部分和 $S_{n} = 3 - 2 \\cdot 0.5^{n}$，点依次为 $2, 2.5, 2.75, \\ldots$，稳定在 $3$，所以级数收敛到 $3$。\n\n检验：差 $3 - S_{n} = 2 \\cdot 0.5^{n}$ 每一步减半，且 $S_{10} \\approx 2.998$。\n\n> **注意。** 和是部分和稳定的高度，不是项趋向的值；这里的项趋于 $0$。",
   ],
   (rng) => {
     const L = rng.int(-2, 4);
@@ -792,6 +817,9 @@ const seriesBehaviour = point(
               : (n) => L + (n % 2 === 0 ? size / 2 : -size / 2);
     const values = Array.from({ length: 12 }, (_, i) => f(i + 1));
     const converge = kind === "monotone" || kind === "alternating";
+    const rounded = (v: number) => Math.round(v * 1000) / 1000;
+    const is = (v: number) => `${Math.abs(v - rounded(v)) < 1e-9 ? "=" : "\\approx"} ${rounded(v)}`;
+    const firstDot = rounded(values[0] as number);
     const right: Pair = converge
       ? [`It converges to $${L}$`, `收敛到 $${L}$`]
       : kind === "bounce"
@@ -799,33 +827,108 @@ const seriesBehaviour = point(
         : kind === "climb"
           ? ["It diverges to positive infinity", "发散到正无穷"]
           : ["It diverges to negative infinity", "发散到负无穷"];
-    const near = L + (L === 4 ? -1 : 1);
-    const wrong: Pair[] = [
-      [`It converges to $${L}$`, `收敛到 $${L}$`],
-      [`It converges to $${near}$`, `收敛到 $${near}$`],
-      ["It converges to $0$", "收敛到 $0$"],
-      ["It diverges to positive infinity", "发散到正无穷"],
-      ["It diverges, because its partial sums oscillate", "发散，因为部分和振荡"],
-      ["It diverges to negative infinity", "发散到负无穷"],
+    const bounded: Pair =
+      kind === "bounce"
+        ? ["The dots stay between two heights, so the partial sums are bounded", "点停留在两个高度之间，所以部分和有界"]
+        : [`The dots settle at $${L}$, so the partial sums are bounded`, `点稳定在 $${L}$，所以部分和有界`];
+    const reasons: readonly (readonly [Pair, Pair])[] = [
+      [
+        [`It converges to $${L}$`, `收敛到 $${L}$`],
+        kind === "bounce"
+          ? [`$${L}$ is midway between the two heights, but the dots never settle there`, `$${L}$ 在两个高度的正中间，但点从不稳定在那里`]
+          : [`The dots pass the dashed line at $${L}$ and keep going`, `点越过高度 $${L}$ 的虚线后继续前进`],
+      ],
+      [
+        [`It converges to $${firstDot}$`, `收敛到 $${firstDot}$`],
+        converge
+          ? ["This is the first dot $S_{1}$; the sum is where the dots settle", "这是第一个点 $S_{1}$；和是点稳定的高度"]
+          : ["This is the first dot $S_{1}$; the dots do not stay near it", "这是第一个点 $S_{1}$；点并不停留在它附近"],
+      ],
+      [
+        ["It converges to $0$", "收敛到 $0$"],
+        converge
+          ? [`The terms tend to $0$, but the partial sums tend to $${L}$`, `趋于 $0$ 的是项，部分和趋于 $${L}$`]
+          : ["The partial sums do not settle at $0$ or at any other height", "部分和不会稳定在 $0$，也不会稳定在别的高度"],
+      ],
+      [
+        ["It diverges to positive infinity", "发散到正无穷"],
+        kind === "fall" ? ["The dots fall, they do not climb", "点在下降，不是上升"] : bounded,
+      ],
+      [
+        ["It diverges, because its partial sums oscillate", "发散，因为部分和振荡"],
+        kind === "alternating"
+          ? [
+              `The dots do swing about $${L}$, but the swings shrink and they settle at $${L}$`,
+              `点确实在 $${L}$ 两侧摆动，但摆幅缩小，最终稳定在 $${L}$`,
+            ]
+          : kind === "monotone"
+            ? [`The dots rise steadily toward $${L}$ without swinging`, `点平稳地升向 $${L}$，没有摆动`]
+            : ["The dots move steadily one way; they do not swing back", "点平稳地朝一个方向移动，不会摆回来"],
+      ],
+      [
+        ["It diverges to negative infinity", "发散到负无穷"],
+        kind === "climb" ? ["The dots climb, they do not fall", "点在上升，不是下降"] : bounded,
+      ],
     ];
-    const seen: Pair = converge
-      ? [`The dots settle at height $${L}$, so the partial sums approach that number`, `点稳定在高度 $${L}$，所以部分和趋向这个数`]
+    const pattern: Step = converge
+      ? [
+          ["Measure the gap to the line", "量出与虚线的差距"],
+          t(
+            kind === "monotone"
+              ? `The dots rise toward the dashed line at $${L}$, and the gap shrinks by the same factor at each step:`
+              : `The dots swing about the dashed line at $${L}$, and the swings shrink by the same factor at each step:`,
+            kind === "monotone"
+              ? `点升向高度 $${L}$ 的虚线，差距每一步按相同的倍数缩小：`
+              : `点在高度 $${L}$ 的虚线两侧摆动，摆幅每一步按相同的倍数缩小：`,
+          ),
+          [`|S_{n} - ${L < 0 ? `(${L})` : L}| = ${size} \\cdot ${kind === "monotone" ? "0.6" : "0.65"}^{n} \\to 0`],
+        ]
       : kind === "bounce"
         ? [
-            "The dots keep jumping between two heights, so the partial sums approach no single number",
-            "点不断在两个高度之间跳动，所以部分和不趋向任何一个数",
+            ["Compare the dots", "比较各点"],
+            t("The odd dots and the even dots sit at two different heights:", "奇数点和偶数点位于两个不同的高度："),
+            [`S_{1} = S_{3} = \\cdots = ${rounded(L - size / 2)}, \\quad S_{2} = S_{4} = \\cdots = ${rounded(L + size / 2)}`],
           ]
-        : ["The dots keep moving away without settling, so the partial sums are unbounded", "点不断远离且不稳定，所以部分和无界"];
-    return choose(
-      rng,
+        : [
+            ["Compare the dots", "比较各点"],
+            t(
+              `Every dot is ${kind === "climb" ? "higher" : "lower"} than the one before, and they never level off:`,
+              `每个点都比前一个${kind === "climb" ? "高" : "低"}，而且从不趋平：`,
+            ),
+            [`S_{1} ${is(values[0] as number)}, \\quad S_{6} ${is(values[5] as number)}, \\quad S_{12} ${is(values[11] as number)}`],
+          ];
+    const parts: Step[] = [
       [
+        ["Read the dots", "读出各点"],
+        t("The first and last dots are:", "第一个和最后一个点是："),
+        [`S_{1} ${is(values[0] as number)}, \\quad S_{12} ${is(values[11] as number)}`],
+      ],
+      pattern,
+    ];
+    const step = (values[11] as number) - (values[10] as number);
+    const check: Pair = converge
+      ? [
+          `The last term is $a_{12} = S_{12} - S_{11} ${is(step)}$, already tiny, so the dots have almost stopped moving, at the line $${L}$.`,
+          `最后一项 $a_{12} = S_{12} - S_{11} ${is(step)}$，已经很小，所以点几乎不再移动，停在虚线 $${L}$ 处。`,
+        ]
+      : kind === "bounce"
+        ? [
+            `The terms $a_{n} = S_{n} - S_{n-1}$ are $\\pm ${size}$, which do not tend to $0$, so by the divergence test the series diverges.`,
+            `项 $a_{n} = S_{n} - S_{n-1}$ 等于 $\\pm ${size}$，不趋于 $0$，由发散判别法，级数发散。`,
+          ]
+        : [
+            `The steps shrink but the dots still pass any level: further on, $S_{100} = ${kind === "climb" ? `-2 + ${size} \\cdot 10 = ${-2 + 10 * size}` : `5 - ${size} \\cdot 10 = ${5 - 10 * size}`}$ on the same curve.`,
+            `步长虽然缩小，但点仍会越过任何高度：沿同一条曲线往后，$S_{100} = ${kind === "climb" ? `-2 + ${size} \\cdot 10 = ${-2 + 10 * size}` : `5 - ${size} \\cdot 10 = ${5 - 10 * size}`}$。`,
+          ];
+    return explainedChoice(rng, {
+      prompt: t(
         "The dots show the partial sums of a series. What does the plot show about the series?",
         "图中的点是某级数的部分和。关于这个级数，图说明了什么？",
-      ],
-      right,
-      wrong.filter((o) => o[0] !== right[0]),
-      [`${seen[0]}.`, `${seen[1]}。`],
-      fig(
+      ),
+      correct: t(...right),
+      wrong: reasons.filter(([o]) => o[0] !== right[0]).map(([o, why]) => ({ option: t(...o), why: t(...why) })),
+      solution: walked(parts, t(...check)),
+      figure: fig(
         { xMin: 0, xMax: 13, yMin: -6, yMax: 9, xName: "n", yName: "S" },
         [...dots(values), { kind: "segment", a: [0, L], b: [13, L], dashed: true }],
         [
@@ -833,7 +936,7 @@ const seriesBehaviour = point(
           `某级数在 n 从 1 到 12 时的部分和，高度依次为 ${values.map((v) => Math.round(v * 10) / 10).join("、")}，并有一条高度为 ${L} 的水平虚线。`,
         ],
       ),
-    );
+    });
   },
 );
 

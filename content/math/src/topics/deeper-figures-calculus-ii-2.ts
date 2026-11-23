@@ -9,8 +9,8 @@ import { Q } from "@ga/subject-math";
 import { calculusDrawings4 } from "../explanation-drawings-calculus-4.ts";
 import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 
-import { numberProblem } from "../problems.ts";
-import { ask, choose, type Pair, point, same } from "../university-kit.ts";
+import { explainedChoice, numberProblem } from "../problems.ts";
+import { ask, choose, type Pair, point } from "../university-kit.ts";
 import { type Step, walked } from "./calculus-i-differentiation.ts";
 import { bars, chart, curvePath, intTicks, type Scale, shadeUnder } from "./figure-charts.ts";
 import { drawn } from "./figure-reading-more.ts";
@@ -1310,8 +1310,8 @@ const sequenceLimit = point(
   "the-behaviour-of-a-drawn-sequence",
   ["The behaviour of a drawn sequence", "所画数列的行为"],
   [
-    "A sequence converges to $L$ when its terms eventually stay as close to $L$ as you like, from one side or from both. Terms that keep jumping between two values, or that grow past every bound, have no limit.",
-    "当数列的项最终可以任意接近 $L$（从一侧或两侧）时，数列收敛到 $L$。不断在两个值之间跳动或超过任何界限的项没有极限。",
+    "A sequence converges to $L$ when its terms eventually stay as close to $L$ as you like, from one side or from both. Terms that keep jumping between two values, or that grow past every bound, have no limit. For dots at $5, 4, 3.67, 3.5, \\ldots$, following $a_{n} = 3 + \\frac{2}{n}$, the gap to $3$ is $\\frac{2}{n}$, which shrinks to $0$, so $a_{n} \\to 3$.\n\nCheck: $a_{100} = 3.02$, already within $0.02$ of $3$.\n\n> **Watch out.** Dots that cross $L$ back and forth still converge if the gaps shrink; dots that jump between two fixed heights do not.",
+    "当数列的项最终可以任意接近 $L$（从一侧或两侧）时，数列收敛到 $L$。不断在两个值之间跳动或超过任何界限的项没有极限。对位于 $5, 4, 3.67, 3.5, \\ldots$ 的点，即 $a_{n} = 3 + \\frac{2}{n}$，它与 $3$ 的差距是 $\\frac{2}{n}$，缩小到 $0$，所以 $a_{n} \\to 3$。\n\n检验：$a_{100} = 3.02$，与 $3$ 相差已不到 $0.02$。\n\n> **注意。** 在 $L$ 两侧来回穿越的点，只要差距缩小仍然收敛；在两个固定高度之间跳动的点则不收敛。",
   ],
   (rng) => {
     const L = rng.int(-3, 6);
@@ -1323,30 +1323,121 @@ const sequenceLimit = point(
       if (kind === "jump") return L + (Math.abs(c) / 2) * (-1) ** n;
       return L + (c * n) / 4;
     };
+    const rounded = (v: number) => Math.round(v * 100) / 100;
+    const is = (v: number) => `${Math.abs(v - rounded(v)) < 1e-9 ? "=" : "\\approx"} ${rounded(v)}`;
     const values = Array.from({ length: 14 }, (_, i) => a(i + 1));
     const low = Math.min(...values, L) - 1;
     const high = Math.max(...values, L) + 1;
     const svg = plotOf(a, 14, low, high, intTicks(Math.ceil(low), Math.floor(high), Math.max(1, Math.ceil((high - low) / 8))));
-    const converges = (v: number): Pair => same(`a_n \\to ${v}`);
-    const none: Pair = ["It has no limit: the terms keep jumping", "没有极限：项不断跳动"];
-    const grows: Pair = ["It has no limit: the terms grow without bound", "没有极限：项无界增长"];
+    const converges = (v: number) => t(`$a_n \\to ${v}$`, `$a_n \\to ${v}$`);
+    const none = t("It has no limit: the terms keep jumping", "没有极限：项不断跳动");
+    const grows = t("It has no limit: the terms grow without bound", "没有极限：项无界增长");
+    const settles = kind === "above" || kind === "alternating";
+    const first = rounded(a(1));
     const correct = kind === "jump" ? none : kind === "growing" ? grows : converges(L);
-    const why: Pair =
+    const size = Math.abs(c);
+    const reasons: { option: ReturnType<typeof t>; why: ReturnType<typeof t> }[] = [
+      {
+        option: none,
+        why:
+          kind === "growing"
+            ? t("The terms never come back; they move the same way at every step", "项从不回头；它们每一步都朝同一方向移动")
+            : t(`The gaps to $${L}$ shrink, so the terms settle at $${L}$`, `与 $${L}$ 的差距在缩小，所以项稳定在 $${L}$`),
+      },
+      {
+        option: grows,
+        why:
+          kind === "jump"
+            ? t("The terms take only two values, so they stay bounded", "项只取两个值，所以有界")
+            : t(`The terms stay near $${L}$, so they are bounded`, `项都在 $${L}$ 附近，所以有界`),
+      },
+      {
+        option: converges(L),
+        why:
+          kind === "jump"
+            ? t(
+                `$${L}$ is midway between the two heights, but the terms never come close to it`,
+                `$${L}$ 在两个高度的正中间，但项从不接近它`,
+              )
+            : t(`The terms move steadily away from $${L}$ and never come back`, `项稳定地远离 $${L}$，再也不回来`),
+      },
+      {
+        option: converges(first),
+        why: settles
+          ? t("This is the first term $a_{1}$; the limit is where the terms end up", "这是第一项 $a_{1}$；极限是项最终到达的地方")
+          : t("This is the first term $a_{1}$; the terms do not stay near it", "这是第一项 $a_{1}$；项并不停留在它附近"),
+      },
+      {
+        option: converges(0),
+        why: settles
+          ? t(
+              `The gaps $a_{n} - ${L < 0 ? `(${L})` : L}$ tend to $0$; the terms themselves tend to $${L}$`,
+              `趋于 $0$ 的是差 $a_{n} - ${L < 0 ? `(${L})` : L}$；项本身趋于 $${L}$`,
+            )
+          : t("The terms do not settle at any height, $0$ included", "项不会稳定在任何高度，包括 $0$"),
+      },
+    ];
+    const pattern: Step =
       kind === "jump"
-        ? ["The terms keep jumping between two separate values, so they never settle.", "项不断在两个不同的值之间跳动，永远不会稳定。"]
+        ? [
+            ["Compare the terms", "比较各项"],
+            t(
+              `The odd terms are all $${rounded(a(1))}$ and the even terms are all $${rounded(a(2))}$, always $${size}$ apart:`,
+              `奇数项都是 $${rounded(a(1))}$，偶数项都是 $${rounded(a(2))}$，始终相差 $${size}$：`,
+            ),
+            [`a_{1} = a_{3} = a_{5} = ${rounded(a(1))}, \\quad a_{2} = a_{4} = a_{6} = ${rounded(a(2))}`],
+          ]
         : kind === "growing"
-          ? ["The terms move away by the same step each time, so they pass every bound.", "项每次都以相同步长远离，所以超过任何界限。"]
-          : [`The gaps between the terms and $${L}$ shrink toward zero.`, `项与 $${L}$ 的差距趋于零。`];
-    return choose(
-      rng,
+          ? [
+              ["Compare the terms", "比较各项"],
+              t(
+                "Each term is the same step from the one before, so the terms move off steadily:",
+                "每一项与前一项相差同样的步长，所以项稳定地远离：",
+              ),
+              [`a_{n+1} - a_{n} = ${Q.of(c, 4).toLatex()}`],
+            ]
+          : [
+              ["Compare with the level", "与水平线比较"],
+              t(
+                `The distance from each term to $${L}$ shrinks like $\\frac{${size}}{n}$${kind === "alternating" ? ", from alternate sides" : ""}:`,
+                `每一项到 $${L}$ 的距离像 $\\frac{${size}}{n}$ 一样缩小${kind === "alternating" ? "，且交替位于两侧" : ""}：`,
+              ),
+              [
+                `|a_{1} - ${L < 0 ? `(${L})` : L}| = ${size}, \\quad |a_{2} - ${L < 0 ? `(${L})` : L}| = ${rounded(size / 2)}, \\quad |a_{n} - ${L < 0 ? `(${L})` : L}| = \\frac{${size}}{n} \\to 0`,
+              ],
+            ];
+    const parts: Step[] = [
       [
+        ["Read the first terms", "读出前几项"],
+        t("From the dots:", "由图中的点："),
+        [`a_{1} ${is(a(1))}, \\quad a_{2} ${is(a(2))}, \\quad a_{3} ${is(a(3))}`],
+      ],
+      pattern,
+    ];
+    const check =
+      kind === "jump"
+        ? t(
+            `The last two dots, $a_{13} ${is(a(13))}$ and $a_{14} ${is(a(14))}$, are still $${size}$ apart, so the terms have not settled.`,
+            `最后两个点 $a_{13} ${is(a(13))}$ 与 $a_{14} ${is(a(14))}$ 仍相差 $${size}$，所以项没有稳定下来。`,
+          )
+        : kind === "growing"
+          ? t(
+              `The last dot, $a_{14} ${is(a(14))}$, is already $${rounded(Math.abs(a(14) - a(1)))}$ from $a_{1}$, and the gap grows by $${Q.of(size, 4).toLatex()}$ at every step, past any bound.`,
+              `最后一个点 $a_{14} ${is(a(14))}$ 与 $a_{1}$ 已相差 $${rounded(Math.abs(a(14) - a(1)))}$，而且每一步再增加 $${Q.of(size, 4).toLatex()}$，超过任何界限。`,
+            )
+          : t(
+              `The last dot, $a_{14} ${is(a(14))}$, is only $${rounded(size / 14)}$ from $${L}$, much closer than $a_{1}$.`,
+              `最后一个点 $a_{14} ${is(a(14))}$ 与 $${L}$ 只差 $${rounded(size / 14)}$，比 $a_{1}$ 近得多。`,
+            );
+    return explainedChoice(rng, {
+      prompt: t(
         "The dots show the first terms of a sequence $a_n$, which continues in the same pattern. What happens as $n$ grows?",
         "这些点是数列 $a_n$ 的前几项，数列按同样的规律继续。当 $n$ 增大时会怎样？",
-      ],
+      ),
       correct,
-      [none, grows, converges(L), converges(L + 2), converges(0), converges(L - 2)].filter((o) => o[0] !== correct[0]).slice(0, 4),
-      why,
-      figureOf(svg, [
+      wrong: reasons.filter((w) => w.option.en !== correct.en),
+      solution: walked(parts, check),
+      figure: figureOf(svg, [
         kind === "jump"
           ? "Dots that keep jumping between a high value and a low value."
           : kind === "growing"
@@ -1358,7 +1449,7 @@ const sequenceLimit = point(
             ? "沿直线不断远离的点。"
             : `${kind === "alternating" ? "从两侧" : ""}逼近高度 ${L} 的点。`,
       ]),
-    );
+    });
   },
 );
 
@@ -1366,8 +1457,8 @@ const sequenceKind = point(
   "monotonic-and-bounded-from-a-drawing",
   ["Monotonic and bounded, from a drawing", "由图判断单调与有界"],
   [
-    "A sequence is increasing when every term is at least the one before it, and decreasing when every term is at most the one before it. A monotonic sequence converges exactly when it is bounded.",
-    "每一项都不小于前一项的数列是递增的，每一项都不大于前一项的数列是递减的。单调数列收敛当且仅当它有界。",
+    "A sequence is increasing when every term is at least the one before it, and decreasing when every term is at most the one before it. A monotonic sequence converges exactly when it is bounded. For dots at $1, 2.5, 3, 3.25, \\ldots$, following $a_{n} = 4 - \\frac{3}{n}$, each dot is higher than the last and all stay below $4$, so the sequence is increasing and bounded and converges.\n\nCheck: $a_{n+1} - a_{n} = \\frac{3}{n(n + 1)} > 0$, and $a_{n} < 4$ for every $n$.\n\n> **Watch out.** Rising is not the same as growing without bound: dots that rise more and more slowly can stay below a fixed height.",
+    "每一项都不小于前一项的数列是递增的，每一项都不大于前一项的数列是递减的。单调数列收敛当且仅当它有界。对位于 $1, 2.5, 3, 3.25, \\ldots$ 的点，即 $a_{n} = 4 - \\frac{3}{n}$，每个点都比前一个高，且都低于 $4$，所以数列递增且有界，从而收敛。\n\n检验：$a_{n+1} - a_{n} = \\frac{3}{n(n + 1)} > 0$，且对每个 $n$ 都有 $a_{n} < 4$。\n\n> **注意。** 上升不等于无界增长：上升越来越慢的点可以一直低于某个固定高度。",
   ],
   (rng) => {
     const kind = rng.pick(["up-bounded", "down-bounded", "up-unbounded", "not"] as const);
@@ -1379,48 +1470,123 @@ const sequenceKind = point(
       if (kind === "up-unbounded") return (L * n) / 5 + c / 3;
       return L + (c / 2) * Math.sin((n * 3) / 2 + c);
     };
+    const rounded = (v: number) => Math.round(v * 100) / 100;
+    const is = (v: number) => `${Math.abs(v - rounded(v)) < 1e-9 ? "=" : "\\approx"} ${rounded(v)}`;
     const values = Array.from({ length: 14 }, (_, i) => a(i + 1));
     const low = Math.min(...values) - 1;
     const high = Math.max(...values) + 1;
     const svg = plotOf(a, 14, low, high, intTicks(Math.ceil(low), Math.floor(high), Math.max(1, Math.ceil((high - low) / 8))));
-    const names: Record<typeof kind, Pair> = {
+    type Kind = typeof kind;
+    const names: Record<Kind, Pair> = {
       "up-bounded": ["Increasing and bounded, so it converges", "递增且有界，所以收敛"],
       "down-bounded": ["Decreasing and bounded, so it converges", "递减且有界，所以收敛"],
       "up-unbounded": ["Increasing and unbounded, so it diverges", "递增且无界，所以发散"],
       not: ["Not monotonic, so this test says nothing", "不单调，所以这个判别法不适用"],
     };
-    const why: Record<typeof kind, Pair> = {
-      "up-bounded": [
-        "Each dot is higher than the last, and they stay below a fixed height.",
-        "每个点都比前一个高，并且都低于某个固定高度。",
+    const rises = kind === "up-bounded" || kind === "up-unbounded";
+    const whyNot: Record<Kind, Pair> = {
+      "up-bounded":
+        kind === "down-bounded"
+          ? ["The dots fall, so the sequence is not increasing", "点在下降，所以数列不是递增的"]
+          : kind === "up-unbounded"
+            ? ["Each dot rises by the same step, so no height bounds them", "每个点都上升相同的步长，所以没有高度能限制它们"]
+            : ["Some dots are lower than the one before, so it is not increasing", "有的点比前一个低，所以不是递增的"],
+      "down-bounded": rises
+        ? ["The dots rise, so the sequence is not decreasing", "点在上升，所以数列不是递减的"]
+        : ["Some dots are higher than the one before, so it is not decreasing", "有的点比前一个高，所以不是递减的"],
+      "up-unbounded":
+        kind === "up-bounded"
+          ? [
+              "The rises shrink and the dots flatten out below a fixed height, so they are bounded",
+              "上升幅度越来越小，点在某个固定高度下方趋平，所以有界",
+            ]
+          : kind === "down-bounded"
+            ? ["The dots fall, and they flatten out above a fixed height", "点在下降，并在某个固定高度上方趋平"]
+            : ["Some dots are lower than the one before, and all stay within a band", "有的点比前一个低，而且都在一条带内"],
+      not: [
+        `Every dot is ${rises ? "higher" : "lower"} than the one before, so the sequence is monotonic`,
+        `每个点都比前一个${rises ? "高" : "低"}，所以数列是单调的`,
       ],
-      "down-bounded": [
-        "Each dot is lower than the last, and they stay above a fixed height.",
-        "每个点都比前一个低，并且都高于某个固定高度。",
-      ],
-      "up-unbounded": [
-        "Each dot is higher than the last by the same step, so they pass every height.",
-        "每个点都比前一个高出相同步长，所以超过任何高度。",
-      ],
-      not: ["Some dots are higher than the one before and some are lower.", "有的点比前一个高，有的比前一个低。"],
     };
-    const alts: Record<typeof kind, Pair> = {
+    const diffs = values.slice(1).map((v, i) => v - (values[i] ?? 0));
+    const up = diffs.findIndex((d) => d > 0) + 1;
+    const down = diffs.findIndex((d) => d < 0) + 1;
+    const stepLine: Step =
+      kind === "not"
+        ? [
+            ["Compare each dot with the one before", "把每个点与前一个比较"],
+            t("Some steps go up and some go down:", "有的步向上，有的步向下："),
+            [
+              `a_{${up + 1}} - a_{${up}} ${is(a(up + 1) - a(up))} > 0, \\quad a_{${down + 1}} - a_{${down}} ${is(a(down + 1) - a(down))} < 0`,
+            ],
+          ]
+        : kind === "up-unbounded"
+          ? [
+              ["Compare each dot with the one before", "把每个点与前一个比较"],
+              t("Every step goes up by the same amount:", "每一步都上升相同的量："),
+              [`a_{n+1} - a_{n} = ${rounded(L / 5)} > 0`],
+            ]
+          : [
+              ["Compare each dot with the one before", "把每个点与前一个比较"],
+              t(`Every step goes ${rises ? "up" : "down"}, by less each time:`, `每一步都${rises ? "上升" : "下降"}，而且幅度越来越小：`),
+              [`a_{1} ${is(a(1))}, \\quad a_{2} ${is(a(2))}, \\quad a_{3} ${is(a(3))}, \\quad a_{4} ${is(a(4))}`],
+            ];
+    const boundLine: Step =
+      kind === "not"
+        ? [
+            ["Draw the conclusion", "得出结论"],
+            t(
+              "Neither every step up nor every step down, so it is not monotonic, and the monotone test cannot decide.",
+              "既非每步都上升，也非每步都下降，所以不单调，单调有界判别法无法判断。",
+            ),
+          ]
+        : kind === "up-unbounded"
+          ? [
+              ["Look for a bound", "寻找界"],
+              t("Equal steps up pass every height:", "相同的上升步长会超过任何高度："),
+              [`a_{n} = a_{1} + (n - 1) \\cdot ${rounded(L / 5)} \\to \\infty`],
+            ]
+          : [
+              ["Look for a bound", "寻找界"],
+              t(
+                `The dots flatten out ${rises ? "below" : "above"} the height $${L}$:`,
+                `这些点在高度 $${L}$ ${rises ? "下方" : "上方"}趋平：`,
+              ),
+              [`a_{n} ${rises ? "<" : ">"} ${L} \\text{ for every } n`],
+            ];
+    const check: Pair =
+      kind === "not"
+        ? [
+            `The dots cross the middle height $${L}$ again and again, above it at some steps and below it at others, which no monotonic sequence can do more than once.`,
+            `这些点反复穿过中间高度 $${L}$，时而在上方、时而在下方，而单调数列最多只能穿过一次。`,
+          ]
+        : kind === "up-unbounded"
+          ? [
+              `The last dot, $a_{14} ${is(a(14))}$, is already $${rounded(a(14) - a(1))}$ above $a_{1}$, and the next dots keep adding $${rounded(L / 5)}$.`,
+              `最后一个点 $a_{14} ${is(a(14))}$ 已比 $a_{1}$ 高出 $${rounded(a(14) - a(1))}$，之后的点还在不断增加 $${rounded(L / 5)}$。`,
+            ]
+          : [
+              `The last dot, $a_{14} ${is(a(14))}$, is within $${rounded(c / 14)}$ of $${L}$, so the terms close in on a limit, as a bounded monotonic sequence must.`,
+              `最后一个点 $a_{14} ${is(a(14))}$ 与 $${L}$ 相差不到 $${rounded(c / 14)}$，所以项在逼近一个极限，这正是单调有界数列应有的情形。`,
+            ];
+    const alts: Record<Kind, Pair> = {
       "up-bounded": ["Dots that rise more and more slowly and flatten out.", "上升越来越慢并趋平的点。"],
       "down-bounded": ["Dots that fall more and more slowly and flatten out.", "下降越来越慢并趋平的点。"],
       "up-unbounded": ["Dots that rise along a straight line.", "沿直线上升的点。"],
       not: ["Dots that go up and down in waves.", "呈波浪状上下起伏的点。"],
     };
-    return choose(
-      rng,
-      [
+    return explainedChoice(rng, {
+      prompt: t(
         "The dots show the first terms of a sequence, which continues in the same pattern. Which description fits?",
         "这些点是一个数列的前几项，数列按同样的规律继续。哪个描述符合？",
-      ],
-      names[kind],
-      (["up-bounded", "down-bounded", "up-unbounded", "not"] as const).filter((k) => k !== kind).map((k) => names[k]),
-      why[kind],
-      figureOf(svg, alts[kind]),
-    );
+      ),
+      correct: t(...names[kind]),
+      wrong: (["up-bounded", "down-bounded", "up-unbounded", "not"] as const)
+        .filter((k) => k !== kind)
+        .map((k) => ({ option: t(...names[k]), why: t(...whyNot[k]) })),
+      solution: walked([stepLine, boundLine], t(...check)),
+      figure: figureOf(svg, alts[kind]),
+    });
   },
 );
 
@@ -1435,8 +1601,8 @@ const geometricBars = point(
   "the-total-height-of-drawn-geometric-bars",
   ["The total height of drawn geometric bars", "所画等比条形的总高度"],
   [
-    "When each bar is the same fraction $r$ of the one before it, the heights form a geometric series. Read the first height $a$ and the ratio $r$ from the first two bars, and the sum of all the bars is $\\frac{a}{1 - r}$.",
-    "当每个条形都是前一个的相同比例 $r$ 时，高度构成等比级数。由前两个条形读出首项 $a$ 和公比 $r$，所有条形的和为 $\\frac{a}{1 - r}$。",
+    "When each bar is the same fraction $r$ of the one before it, the heights form a geometric series. Read the first height $a$ and the ratio $r$ from the first two bars, and the sum of all the bars is $\\frac{a}{1 - r}$. For bars of heights $12$ and $4$, $r = \\frac{1}{3}$ and the total is $\\frac{12}{2/3} = 18$.\n\nCheck: the bars after the first are all the bars shrunk by $\\frac{1}{3}$, so the total $S$ satisfies $S = 12 + \\frac{1}{3}S$, and $12 + 6 = 18$.\n\n> **Watch out.** Divide by $1 - r$, not by $r$: $\\frac{12}{1/3} = 36$ is too large.",
+    "当每个条形都是前一个的相同比例 $r$ 时，高度构成等比级数。由前两个条形读出首项 $a$ 和公比 $r$，所有条形的和为 $\\frac{a}{1 - r}$。对高度为 $12$ 和 $4$ 的条形，$r = \\frac{1}{3}$，总和为 $\\frac{12}{2/3} = 18$。\n\n检验：第一个之后的条形就是全部条形缩小为 $\\frac{1}{3}$，所以总和 $S$ 满足 $S = 12 + \\frac{1}{3}S$，而 $12 + 6 = 18$。\n\n> **注意。** 要除以 $1 - r$，不是除以 $r$：$\\frac{12}{1/3} = 36$ 太大了。",
   ],
   (rng) => {
     const [a, rn, rd] = rng.pick(geometricCases);
@@ -1454,22 +1620,50 @@ const geometricBars = point(
       ],
       (x, y) => bars([0, 1, 2, 3, 4, 5, 6, 7], values, x, y),
     );
-    return ask(
+    const parts: Step[] = [
       [
-        "Each bar is the same fraction of the bar before it, and the bars continue to the right without end. Find the sum of the heights of all the bars.",
-        "每个条形都是前一个的相同比例，条形向右无限延续。求所有条形的高度之和。",
+        ["Read the first bar and the ratio", "读出第一个条形和公比"],
+        t(`The first bar is $${a}$ and the second is $${second}$:`, `第一个条形是 $${a}$，第二个是 $${second}$：`),
+        [`a = ${a}, \\quad r = \\frac{${second}}{${a}} = ${r.toLatex()}`],
       ],
-      answer,
-      [a + second, Q.of(a * rd, rn), Q.of(second * rd, rd - rn), 2 * a, answer.mul(Q.of(2, 1))],
       [
-        `The first bar is $a = ${a}$, and the next is $${second}$, so $r = ${r.toLatex()}$. The sum is $\\frac{${a}}{1 - ${r.toLatex()}} = ${answer.toLatex()}$.`,
-        `第一个条形 $a = ${a}$，下一个为 $${second}$，所以 $r = ${r.toLatex()}$。和为 $\\frac{${a}}{1 - ${r.toLatex()}} = ${answer.toLatex()}$。`,
+        ["Sum the series", "求级数的和"],
+        t("The ratio is less than $1$, so the bars have a finite total:", "公比小于 $1$，所以条形的总和有限："),
+        [`S = \\frac{${a}}{1 - ${r.toLatex()}} = \\frac{${a}}{${Q.one.sub(r).toLatex()}} = ${answer.toLatex()}`],
       ],
-      figureOf(svg, [
+    ];
+    const wrong: readonly (readonly [Q, string, string])[] = [
+      [Q.of(a + second), "This adds only the two labelled bars; the bars go on without end", "这里只加了两个标出的条形；条形是无限延续的"],
+      [Q.of(a * rd, rn), "This divides by $r$; the formula divides by $1 - r$", "这里除以了 $r$；公式是除以 $1 - r$"],
+      [Q.of(second * rd, rd - rn), "This starts from the second bar and leaves out the first", "这里从第二个条形开始，漏掉了第一个"],
+      [Q.of(a * rd, rd + rn), "This divides by $1 + r$; the formula divides by $1 - r$", "这里除以了 $1 + r$；公式是除以 $1 - r$"],
+      [
+        Q.of(2 * a),
+        "This takes the ratio as $\\frac{1}{2}$ without reading it from the bars",
+        "这里没有从条形读公比，直接当作 $\\frac{1}{2}$",
+      ],
+    ];
+    return {
+      ...numberProblem({
+        prompt: t(
+          "Each bar is the same fraction of the bar before it, and the bars continue to the right without end. Find the sum of the heights of all the bars.",
+          "每个条形都是前一个的相同比例，条形向右无限延续。求所有条形的高度之和。",
+        ),
+        answer,
+        mistakes: wrong.filter((w, i) => wrong.findIndex((x) => x[0].eq(w[0])) === i).map(([value, en, zh]) => ({ value, why: t(en, zh) })),
+        solution: walked(
+          parts,
+          t(
+            `The bars after the first are all the bars shrunk by $${r.toLatex()}$, so the total satisfies $S = ${a} + ${r.toLatex()}S$. With $S = ${answer.toLatex()}$: $${a} + ${r.toLatex()} \\cdot ${answer.toLatex()} = ${a} + ${answer.mul(r).toLatex()} = ${answer.toLatex()}$.`,
+            `第一个之后的条形就是全部条形缩小为 $${r.toLatex()}$，所以总和满足 $S = ${a} + ${r.toLatex()}S$。代入 $S = ${answer.toLatex()}$：$${a} + ${r.toLatex()} \\cdot ${answer.toLatex()} = ${a} + ${answer.mul(r).toLatex()} = ${answer.toLatex()}$。`,
+          ),
+        ),
+      }),
+      figure: figureOf(svg, [
         `Bars of decreasing height, the first ${a} and the second ${second}.`,
         `高度递减的条形，第一个为 ${a}，第二个为 ${second}。`,
       ]),
-    );
+    };
   },
 );
 

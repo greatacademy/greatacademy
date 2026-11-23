@@ -401,8 +401,8 @@ const sequenceFromPlot: KnowledgePointDef = {
   id: "the-behavior-of-a-geometric-sequence-from-its-plot",
   title: t("A geometric sequence from its plot", "由散点图看几何数列"),
   explanation: t(
-    "Plotting the terms of a sequence shows its behavior at a glance. When the common ratio has size below one, the dots close in on zero, and a negative ratio makes them jump between the two sides as they do. When the size is above one they run away. A ratio of exactly one or minus one keeps the same size for ever.",
-    "画出数列的项，一眼就能看出它的走势。公比的绝对值小于 1 时，点逐渐靠近 0；公比为负时，它们同时在两侧来回跳动。绝对值大于 1 时，点会越跑越远。公比恰好为 1 或 -1 时，大小永远不变。",
+    "Plotting the terms of a sequence shows its behavior at a glance. When the common ratio has size below one, the dots close in on zero, and a negative ratio makes them jump between the two sides as they do. When the size is above one they run away. A ratio of exactly one or minus one keeps the same size for ever. For dots at $4, 2, 1, \\frac{1}{2}, \\ldots$, the ratio is $\\frac{2}{4} = \\frac{1}{2}$, so the dots close in on $0$ from above.\n\nCheck: $a_{8} = 4 \\cdot \\left(\\frac{1}{2}\\right)^{8} = \\frac{1}{64}$, already almost on the axis.\n\n> **Watch out.** Switching sides does not by itself mean divergence: with ratio $-\\frac{1}{2}$ the dots alternate and still close in on $0$.",
+    "画出数列的项，一眼就能看出它的走势。公比的绝对值小于 1 时，点逐渐靠近 0；公比为负时，它们同时在两侧来回跳动。绝对值大于 1 时，点会越跑越远。公比恰好为 1 或 -1 时，大小永远不变。对位于 $4, 2, 1, \\frac{1}{2}, \\ldots$ 的点，公比是 $\\frac{2}{4} = \\frac{1}{2}$，所以点从上方靠近 $0$。\n\n检验：$a_{8} = 4 \\cdot \\left(\\frac{1}{2}\\right)^{8} = \\frac{1}{64}$，已几乎落在轴上。\n\n> **注意。** 在两侧来回跳动本身并不意味着发散：公比为 $-\\frac{1}{2}$ 时，点交替变号，仍然靠近 $0$。",
   ),
   generate(rng) {
     const kinds = [
@@ -411,7 +411,7 @@ const sequenceFromPlot: KnowledgePointDef = {
       { r: -0.5, tex: "-\\frac{1}{2}", en: "It converges to 0, alternating in sign", zh: "收敛到 0，且符号交替" },
       { r: -0.75, tex: "-\\frac{3}{4}", en: "It converges to 0, alternating in sign", zh: "收敛到 0，且符号交替" },
       { r: 1.25, tex: "\\frac{5}{4}", en: "It diverges, growing in size on one side", zh: "发散，在同一侧越来越大" },
-      { r: -1.25, tex: "-\\frac{5}{4}", en: "It diverges, alternating in sign", zh: "发散，且符号交替" },
+      { r: -1.25, tex: "-\\frac{5}{4}", en: "It diverges, alternating in sign and growing in size", zh: "发散，符号交替且越来越大" },
       { r: -1, tex: "-1", en: "It diverges, jumping between two values", zh: "发散，在两个值之间跳动" },
     ];
     const kind = rng.pick(kinds);
@@ -419,18 +419,76 @@ const sequenceFromPlot: KnowledgePointDef = {
     const dots = Array.from({ length: 9 }, (_, n): Point => [n, a * kind.r ** n]);
     const top = Math.ceil(Math.max(...dots.map(([, y]) => Math.abs(y)))) + 1;
     const scale = top / 5;
+    const rounded = (v: number) => Math.round(v * 100) / 100;
+    const size = Math.abs(kind.r);
+    const negative = kind.r < 0;
+    const shrinks = size < 1;
     const options = [...new Set(kinds.map((k) => k.en))];
     const zhOf = (en: string) => kinds.find((k) => k.en === en)?.zh ?? en;
-    return pickChoice(
-      rng,
-      t(
+    const growing = size > 1;
+    const sizeWord: [string, string] = shrinks ? ["shrink", "缩小"] : growing ? ["grow", "增大"] : ["keep the same size", "大小不变"];
+    const why = (en: string): [string, string] => {
+      if (en.startsWith("It converges")) {
+        if (!shrinks)
+          return [
+            `The dots do not close in on $0$; they ${sizeWord[0]}, since $|r| ${growing ? ">" : "="} 1$`,
+            `点并不靠近 $0$；因为 $|r| ${growing ? ">" : "="} 1$，它们${sizeWord[1]}`,
+          ];
+        return en.includes("one side")
+          ? ["The dots switch sides at every step, so they alternate in sign", "点每一步都换到另一侧，所以符号交替"]
+          : ["All the dots are on the same side, so they do not alternate", "所有点都在同一侧，所以符号不交替"];
+      }
+      if (shrinks)
+        return [`The dots shrink toward $0$, since $|r| < 1$, so the sequence converges`, `因为 $|r| < 1$，点缩向 $0$，所以数列收敛`];
+      if (en.includes("one side"))
+        return negative
+          ? ["The dots switch sides at every step; they are not on one side", "点每一步都换到另一侧，并不在同一侧"]
+          : ["", ""];
+      if (en.includes("two values"))
+        return growing
+          ? ["The dots keep growing in size, so they take ever new values, not just two", "点的大小不断增大，取值越来越多，不只两个"]
+          : ["", ""];
+      return negative
+        ? ["The dots keep the same size; they switch sides but do not grow", "点的大小不变；它们在两侧跳动，但并不增大"]
+        : ["All the dots are on the same side, so they do not alternate", "所有点都在同一侧，所以符号不交替"];
+    };
+    const first = rounded(a * kind.r);
+    const last = rounded(a * kind.r ** 8);
+    const parts: Step[] = [
+      [
+        ["Read the ratio", "读出公比"],
+        t("Divide the second dot by the first:", "用第二个点除以第一个点："),
+        [`r = \\frac{a_{1}}{a_{0}} = \\frac{${first}}{${a}} = ${kind.tex}`],
+      ],
+      [
+        ["Judge the size and the sign", "判断大小和符号"],
+        t(
+          `The size is $|r| ${shrinks ? "<" : growing ? ">" : "="} 1$, so the dots ${sizeWord[0]}${negative ? ", and the negative sign makes them switch sides" : ", all on one side"}.`,
+          `大小 $|r| ${shrinks ? "<" : growing ? ">" : "="} 1$，所以点${sizeWord[1]}${negative ? "，负号使它们在两侧来回跳动" : "，都在同一侧"}。`,
+        ),
+      ],
+    ];
+    return explainedChoice(rng, {
+      prompt: t(
         "The dots show the terms $a_0, a_1, a_2, \\dots$ of a geometric sequence. Which describes it?",
         "这些点是几何数列的项 $a_0, a_1, a_2, \\dots$。哪个说法正确？",
       ),
-      t(kind.en, kind.zh),
-      rng.shuffle(options.filter((o) => o !== kind.en)).map((o) => t(o, zhOf(o))),
-      t(`The ratio between terms is $${kind.tex}$. ${kind.en}.`, `相邻项之比是 $${kind.tex}$。${kind.zh}。`),
-      drawn(
+      correct: t(kind.en, kind.zh),
+      wrong: options
+        .filter((o) => o !== kind.en)
+        .map((o) => {
+          const [en, zh] = why(o);
+          return { option: t(o, zhOf(o)), why: t(en, zh) };
+        })
+        .filter((w) => w.why.en !== ""),
+      solution: walked(
+        parts,
+        t(
+          `Compare the last dot with the first: $a_{8} = ${a} \\cdot \\left(${kind.tex}\\right)^{8} ${Math.abs(a * kind.r ** 8 - last) < 1e-9 ? "=" : "\\approx"} ${last}$, against $a_{0} = ${a}$. ${shrinks ? "It is much closer to $0$." : growing ? "It is larger in size." : "It has the same size."}`,
+          `比较最后一个点和第一个点：$a_{8} = ${a} \\cdot \\left(${kind.tex}\\right)^{8} ${Math.abs(a * kind.r ** 8 - last) < 1e-9 ? "=" : "\\approx"} ${last}$，而 $a_{0} = ${a}$。${shrinks ? "它离 $0$ 近得多。" : growing ? "它的绝对值更大。" : "它的大小相同。"}`,
+        ),
+      ),
+      figure: drawn(
         { xMin: -1, xMax: 9, yMin: -5, yMax: 5, labelEvery: 2 },
         dots.map(([x, y]): PlaneMark => ({ kind: "point", at: [x, y / scale], accent: true })),
         t(
@@ -438,7 +496,7 @@ const sequenceFromPlot: KnowledgePointDef = {
           `九个点，高度依次为 ${dots.map(([, y]) => Math.round(y * 100) / 100).join("、")}。纵轴未按比例。`,
         ),
       ),
-    );
+    });
   },
 };
 
@@ -538,8 +596,8 @@ const seriesSumFromPlot: KnowledgePointDef = {
   id: "the-sum-of-a-series-from-its-partial-sums",
   title: t("A sum from its partial sums", "由部分和看级数的和"),
   explanation: t(
-    "The sum of a series is by definition the limit of its partial sums. So plotting the partial sums shows whether the series converges: the dots settle toward a horizontal level, and that level is the sum. For a geometric series with first term $a$ and ratio $r$, that level is $\\frac{a}{1 - r}$, which you can compare with the plot.",
-    "级数的和按定义是部分和的极限。所以画出部分和，就能看出级数是否收敛：点逐渐靠近一个水平高度，这个高度就是和。对首项为 $a$、公比为 $r$ 的几何级数，这个高度是 $\\frac{a}{1 - r}$，可以和图对照。",
+    "The sum of a series is by definition the limit of its partial sums. So plotting the partial sums shows whether the series converges: the dots settle toward a horizontal level, and that level is the sum. For a geometric series with first term $a$ and ratio $r$, that level is $\\frac{a}{1 - r}$, which you can compare with the plot. For partial sums $3, 4.5, 5.25, \\ldots$ with ratio $\\frac{1}{2}$, the first term is $3$ and the level is $\\frac{3}{1/2} = 6$.\n\nCheck: $6 - S_{N} = 6 \\cdot \\left(\\frac{1}{2}\\right)^{N}$, so $S_{3} = 6 - 0.75 = 5.25$, the third dot.\n\n> **Watch out.** The first dot $S_{1}$ is only the first term; the sum is the level the dots approach.",
+    "级数的和按定义是部分和的极限。所以画出部分和，就能看出级数是否收敛：点逐渐靠近一个水平高度，这个高度就是和。对首项为 $a$、公比为 $r$ 的几何级数，这个高度是 $\\frac{a}{1 - r}$，可以和图对照。对公比为 $\\frac{1}{2}$、部分和为 $3, 4.5, 5.25, \\ldots$ 的级数，首项是 $3$，高度是 $\\frac{3}{1/2} = 6$。\n\n检验：$6 - S_{N} = 6 \\cdot \\left(\\frac{1}{2}\\right)^{N}$，所以 $S_{3} = 6 - 0.75 = 5.25$，正是第三个点。\n\n> **注意。** 第一个点 $S_{1}$ 只是首项；和是这些点靠近的高度。",
   ),
   generate(rng) {
     const [num, den] = rng.pick([
@@ -550,22 +608,56 @@ const seriesSumFromPlot: KnowledgePointDef = {
       [3, 4],
     ] as const);
     const ratio = num / den;
+    const r = Q.of(num, den);
     const sum = rng.int(2, 8);
     const first = Q.of(sum * (den - num), den);
     const dots = Array.from({ length: 9 }, (_, n): Point => [n + 1, sum * (1 - ratio ** (n + 1))]);
     const shown = first.toLatex();
-    return numeric(
-      t(
-        `The dots show the partial sums $S_1, S_2, \\dots$ of a geometric series with ratio $\\frac{${num}}{${den}}$. What is the sum of the series?`,
-        `这些点是公比为 $\\frac{${num}}{${den}}$ 的几何级数的部分和 $S_1, S_2, \\dots$。这个级数的和是多少？`,
-      ),
-      sum,
-      [first, sum + 1, sum - 1, sum * 2, Q.of(sum * (den - num), num)],
-      t(
-        `The first dot gives the first term $${shown}$, and $${shown} \\div \\left(1 - \\frac{${num}}{${den}}\\right) = ${sum}$. This is the level that the dots approach.`,
-        `第一个点给出首项 $${shown}$，而 $${shown} \\div \\left(1 - \\frac{${num}}{${den}}\\right) = ${sum}$。这正是这些点靠近的高度。`,
-      ),
-      drawn(
+    const second = first.mul(Q.one.add(r));
+    const parts: Step[] = [
+      [
+        ["Read the first term", "读出首项"],
+        t("The first dot is the first partial sum, which is the first term:", "第一个点是第一个部分和，也就是首项："),
+        [`a = S_{1} = ${shown}`],
+      ],
+      [
+        ["Apply the formula", "代入公式"],
+        t(`The ratio $\\frac{${num}}{${den}}$ is less than $1$, so the sum is:`, `公比 $\\frac{${num}}{${den}}$ 小于 $1$，所以和为：`),
+        [`\\frac{${shown}}{1 - \\frac{${num}}{${den}}} = ${sum}`],
+      ],
+    ];
+    const wrong: readonly (readonly [Q, string, string])[] = [
+      [first, "This is $S_{1}$, the first dot; the sum is the level the dots approach", "这是第一个点 $S_{1}$；和是这些点靠近的高度"],
+      [
+        first.mul(Q.one.add(r)),
+        "This is $S_{2}$, the second dot; the dots keep rising past it",
+        "这是第二个点 $S_{2}$；这些点还在继续上升",
+      ],
+      [
+        first.div(r),
+        `This divides by $\\frac{${num}}{${den}}$; the formula divides by $1 - r$`,
+        `这里除以了 $\\frac{${num}}{${den}}$；公式是除以 $1 - r$`,
+      ],
+      [first.div(Q.one.add(r)), "This divides by $1 + r$; the formula divides by $1 - r$", "这里除以了 $1 + r$；公式是除以 $1 - r$"],
+      [Q.of(sum).sub(first), "This leaves out the first term and sums from the second", "这里漏掉了首项，从第二项开始求和"],
+    ];
+    return {
+      ...numberProblem({
+        prompt: t(
+          `The dots show the partial sums $S_1, S_2, \\dots$ of a geometric series with ratio $\\frac{${num}}{${den}}$. What is the sum of the series?`,
+          `这些点是公比为 $\\frac{${num}}{${den}}$ 的几何级数的部分和 $S_1, S_2, \\dots$。这个级数的和是多少？`,
+        ),
+        answer: sum,
+        mistakes: wrong.filter((w, i) => wrong.findIndex((x) => x[0].eq(w[0])) === i).map(([value, en, zh]) => ({ value, why: t(en, zh) })),
+        solution: walked(
+          parts,
+          t(
+            `Work back from the sum to the dots: the partial sums are $S_{N} = ${sum}\\left(1 - \\left(\\frac{${num}}{${den}}\\right)^{N}\\right)$, so $S_{1} = ${sum} \\cdot ${Q.one.sub(r).toLatex()} = ${shown}$ and $S_{2} = ${sum} \\cdot ${Q.one.sub(r.pow(2)).toLatex()} = ${second.toLatex()}$, the first two dots.`,
+            `由和反推各点：部分和是 $S_{N} = ${sum}\\left(1 - \\left(\\frac{${num}}{${den}}\\right)^{N}\\right)$，所以 $S_{1} = ${sum} \\cdot ${Q.one.sub(r).toLatex()} = ${shown}$，$S_{2} = ${sum} \\cdot ${Q.one.sub(r.pow(2)).toLatex()} = ${second.toLatex()}$，正是前两个点。`,
+          ),
+        ),
+      }),
+      figure: drawn(
         { xMin: -1, xMax: 10, yMin: -1, yMax: sum + 2 },
         dots.map(([x, y]): PlaneMark => ({ kind: "point", at: [x, y], accent: true })),
         t(
@@ -573,7 +665,7 @@ const seriesSumFromPlot: KnowledgePointDef = {
           `九个上升的点，从高度 ${Math.round(first.toNumber() * 100) / 100} 开始，相邻点的间距越来越小。`,
         ),
       ),
-    );
+    };
   },
 };
 

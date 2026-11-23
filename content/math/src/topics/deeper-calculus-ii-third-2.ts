@@ -26,8 +26,8 @@ const sumFromPartialSums = point(
   "the-sum-from-a-formula-for-partial-sums",
   ["The sum from a formula for partial sums", "由部分和公式求和"],
   [
-    "The sum of a series is by definition the limit of its partial sums, not of its terms. So a formula for $S_{N}$ gives the sum by taking $N \\to \\infty$. The first partial sum $S_{1}$ is only the first term, and the terms themselves tend to $0$.",
-    "级数的和按定义是部分和的极限，而不是通项的极限。所以知道 $S_{N}$ 的公式，令 $N \\to \\infty$ 就得到和。第一个部分和 $S_{1}$ 只是第一项，而通项本身趋于 $0$。",
+    "The sum of a series is by definition the limit of its partial sums, not of its terms. So a formula for $S_{N}$ gives the sum by taking $N \\to \\infty$. The first partial sum $S_{1}$ is only the first term, and the terms themselves tend to $0$. For $S_{N} = \\frac{3N + 1}{N + 2}$, dividing by $N$ gives the sum $3$.\n\nCheck: $S_{N} - 3 = \\frac{-5}{N + 2}$, which tends to $0$.\n\n> **Watch out.** $S_{1} = \\frac{4}{3}$ is only the first term, and the terms tend to $0$; neither is the sum.",
+    "级数的和按定义是部分和的极限，而不是通项的极限。所以知道 $S_{N}$ 的公式，令 $N \\to \\infty$ 就得到和。第一个部分和 $S_{1}$ 只是第一项，而通项本身趋于 $0$。对 $S_{N} = \\frac{3N + 1}{N + 2}$，分子分母同除以 $N$ 得和为 $3$。\n\n检验：$S_{N} - 3 = \\frac{-5}{N + 2}$，它趋于 $0$。\n\n> **注意。** $S_{1} = \\frac{4}{3}$ 只是第一项，而通项趋于 $0$；两者都不是级数的和。",
   ],
   (rng) => {
     const p = nz(rng, 9);
@@ -37,18 +37,44 @@ const sumFromPartialSums = point(
     if (p * s === q * r) q = q === 9 ? 8 : q + 1;
     const answer = Q.of(p, r);
     const S = `\\frac{${poly([p, "N"], [q, ""])}}{${poly([r, "N"], [s, ""])}}`;
-    return ask(
+    const gap = q * r - p * s;
+    const below = r === 1 ? poly([r, "N"], [s, ""]) : `${r}(${poly([r, "N"], [s, ""])})`;
+    const parts: Step[] = [
       [
+        ["Use the definition", "用定义"],
+        t("The sum of a series is the limit of its partial sums:", "级数的和是部分和的极限："),
+        [`\\sum a_{n} = \\lim_{N \\to \\infty} ${S}`],
+      ],
+      [
+        ["Divide by N", "同除以 N"],
+        t("Divide the numerator and the denominator by $N$ and let $N$ grow:", "分子分母同除以 $N$，再令 $N$ 增大："),
+        [`\\lim_{N \\to \\infty} \\frac{${p} + \\frac{${q}}{N}}{${r} + \\frac{${s}}{N}} = ${answer.toLatex()}`],
+      ],
+    ];
+    const wrong: readonly (readonly [Q, string, string])[] = [
+      [Q.of(p + q, r + s), "This is $S_{1}$, the first term alone", "这是 $S_{1}$，只是第一项"],
+      [Q.of(0), "This is the limit of the terms; the sum is the limit of the partial sums", "这是通项的极限；和是部分和的极限"],
+      [
+        Q.of(q, s),
+        "This puts $N = 0$ into the formula; the sum needs $N \\to \\infty$",
+        "这里把 $N = 0$ 代入了公式；求和需要 $N \\to \\infty$",
+      ],
+    ];
+    return numberProblem({
+      prompt: t(
         `The partial sums of a series are $S_{N} = ${S}$. Find the sum of the series.`,
         `一个级数的部分和是 $S_{N} = ${S}$。求这个级数的和。`,
-      ],
+      ),
       answer,
-      [Q.of(p + q, r + s), 0, Q.of(q, s)],
-      [
-        `The sum is $\\lim_{N \\to \\infty} S_{N}$. Dividing the numerator and denominator by $N$ gives the ratio of the leading coefficients, $${answer.toLatex()}$.`,
-        `和是 $\\lim_{N \\to \\infty} S_{N}$。分子分母同除以 $N$，得首项系数之比 $${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes: wrong.filter((w, i) => wrong.findIndex((x) => x[0].eq(w[0])) === i).map(([value, en, zh]) => ({ value, why: t(en, zh) })),
+      solution: walked(
+        parts,
+        t(
+          `Subtract the answer from $S_{N}$: $S_{N} - ${answer.sign() < 0 ? `\\left(${answer.toLatex()}\\right)` : answer.toLatex()} = \\frac{${gap}}{${below}}$, which tends to $0$ as $N$ grows.`,
+          `用 $S_{N}$ 减去答案：$S_{N} - ${answer.sign() < 0 ? `\\left(${answer.toLatex()}\\right)` : answer.toLatex()} = \\frac{${gap}}{${below}}$，当 $N$ 增大时它趋于 $0$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -56,29 +82,67 @@ const noTermwiseProduct = point(
   "series-do-not-multiply-term-by-term",
   ["Series do not multiply term by term", "级数不能逐项相乘"],
   [
-    "Sums and constant multiples of convergent series behave as expected, but products do not. The series of products $a_{n}b_{n}$ need not sum to the product of the sums, and it need not even converge, as $a_{n} = b_{n} = \\frac{(-1)^{n}}{\\sqrt{n}}$ shows.",
-    "收敛级数的和与常数倍符合预期，但积并非如此。由 $a_{n}b_{n}$ 组成的级数，其和不一定等于两个和的积，甚至不一定收敛，$a_{n} = b_{n} = \\frac{(-1)^{n}}{\\sqrt{n}}$ 就是一个例子。",
+    "Sums and constant multiples of convergent series behave as expected, but products do not. The series of products $a_{n}b_{n}$ need not sum to the product of the sums, and it need not even converge, as $a_{n} = b_{n} = \\frac{(-1)^{n}}{\\sqrt{n}}$ shows: both series converge, but the products are $\\frac{1}{n}$.\n\nCheck: with $a_{n} = b_{n} = \\left(\\frac{1}{2}\\right)^{n}$ from $n = 1$, both sums are $1$, but $\\sum \\left(\\frac{1}{4}\\right)^{n} = \\frac{1}{3}$, not $1 \\cdot 1$.\n\n> **Watch out.** Adding works term by term, $\\sum (a_{n} + b_{n}) = A + B$; multiplying does not.",
+    "收敛级数的和与常数倍符合预期，但积并非如此。由 $a_{n}b_{n}$ 组成的级数，其和不一定等于两个和的积，甚至不一定收敛，$a_{n} = b_{n} = \\frac{(-1)^{n}}{\\sqrt{n}}$ 就是一个例子：两个级数都收敛，但积是 $\\frac{1}{n}$。\n\n检验：取 $a_{n} = b_{n} = \\left(\\frac{1}{2}\\right)^{n}$（从 $n = 1$ 开始），两个和都是 $1$，但 $\\sum \\left(\\frac{1}{4}\\right)^{n} = \\frac{1}{3}$，不是 $1 \\cdot 1$。\n\n> **注意。** 加法可以逐项进行，$\\sum (a_{n} + b_{n}) = A + B$；乘法不行。",
   ],
   (rng) => {
     const A = nz(rng, 9);
     const B = nz(rng, 9);
-    return choose(
-      rng,
+    const parts: Step[] = [
       [
+        ["Compare with a product of sums", "与和的积比较"],
+        t(
+          "A product of two sums has cross terms, which the series of products leaves out:",
+          "两个和的积含有交叉项，而逐项积组成的级数没有这些项：",
+        ),
+        ["(a_{1} + a_{2})(b_{1} + b_{2}) = a_{1}b_{1} + a_{2}b_{2} + a_{1}b_{2} + a_{2}b_{1}"],
+      ],
+      [
+        ["Find a pair whose products diverge", "找出逐项积发散的例子"],
+        t(
+          "With $a_{n} = b_{n} = \\frac{(-1)^{n}}{\\sqrt{n}}$ both series converge, by the alternating series test, but the products form the harmonic series:",
+          "取 $a_{n} = b_{n} = \\frac{(-1)^{n}}{\\sqrt{n}}$，由交错级数判别法两个级数都收敛，但逐项积构成调和级数：",
+        ),
+        ["a_{n}b_{n} = \\frac{1}{n}, \\quad \\sum \\frac{1}{n} \\text{ diverges}"],
+      ],
+    ];
+    return explainedChoice(rng, {
+      prompt: t(
         `$\\sum_{n=1}^{\\infty} a_{n} = ${A}$ and $\\sum_{n=1}^{\\infty} b_{n} = ${B}$. What can be said about $\\sum_{n=1}^{\\infty} a_{n}b_{n}$?`,
         `$\\sum_{n=1}^{\\infty} a_{n} = ${A}$，$\\sum_{n=1}^{\\infty} b_{n} = ${B}$。关于 $\\sum_{n=1}^{\\infty} a_{n}b_{n}$ 能得出什么结论？`,
+      ),
+      correct: t("Nothing definite: it need not converge at all", "没有确定的结论：它甚至不一定收敛"),
+      wrong: [
+        {
+          option: t(`It converges to $${A * B}$`, `它收敛到 $${A * B}$`),
+          why: t(
+            "Products of sums have cross terms: $a_{n} = b_{n} = \\left(\\frac{1}{2}\\right)^{n}$ have sums $1$ and $1$, but their products sum to $\\frac{1}{3}$",
+            "和的积有交叉项：$a_{n} = b_{n} = \\left(\\frac{1}{2}\\right)^{n}$ 的和都是 $1$，但逐项积之和是 $\\frac{1}{3}$",
+          ),
+        },
+        {
+          option: t(`It converges, but not necessarily to $${A * B}$`, `它收敛，但不一定收敛到 $${A * B}$`),
+          why: t(
+            "It need not converge: for $a_{n} = b_{n} = \\frac{(-1)^{n}}{\\sqrt{n}}$ the products are $\\frac{1}{n}$",
+            "它不一定收敛：对 $a_{n} = b_{n} = \\frac{(-1)^{n}}{\\sqrt{n}}$，逐项积是 $\\frac{1}{n}$",
+          ),
+        },
+        {
+          option: t("It must diverge", "它一定发散"),
+          why: t(
+            "It can converge: for $a_{n} = b_{n} = \\left(\\frac{1}{2}\\right)^{n}$ the products sum to $\\frac{1}{3}$",
+            "它可以收敛：对 $a_{n} = b_{n} = \\left(\\frac{1}{2}\\right)^{n}$，逐项积之和是 $\\frac{1}{3}$",
+          ),
+        },
       ],
-      ["Nothing definite: it need not converge at all", "没有确定的结论：它甚至不一定收敛"],
-      [
-        [`It converges to $${A * B}$`, `它收敛到 $${A * B}$`],
-        [`It converges, but not necessarily to $${A * B}$`, `它收敛，但不一定收敛到 $${A * B}$`],
-        ["It must diverge", "它一定发散"],
-      ],
-      [
-        `A sum is not a product of terms: $(a_{1} + a_{2})(b_{1} + b_{2})$ has cross terms. With $a_{n} = b_{n} = \\frac{(-1)^{n}}{\\sqrt{n}}$, both series converge, but the products are $\\frac{1}{n}$, whose series diverges. Other pairs do converge, so nothing is forced.`,
-        `和的积不等于逐项积：$(a_{1} + a_{2})(b_{1} + b_{2})$ 有交叉项。取 $a_{n} = b_{n} = \\frac{(-1)^{n}}{\\sqrt{n}}$，两个级数都收敛，但积是 $\\frac{1}{n}$，其级数发散。另一些例子又是收敛的，所以没有确定的结论。`,
-      ],
-    );
+      solution: walked(
+        parts,
+        t(
+          "A second pair shows the other side: $a_{n} = b_{n} = \\left(\\frac{1}{2}\\right)^{n}$ from $n = 1$ have sums $1$ and $1$, and their products $\\left(\\frac{1}{4}\\right)^{n}$ converge, to $\\frac{1}{3}$. So the products can converge or diverge, and even when they converge the sum need not be the product of the sums.",
+          "另一组例子说明另一面：$a_{n} = b_{n} = \\left(\\frac{1}{2}\\right)^{n}$（从 $n = 1$ 开始）的和都是 $1$，而逐项积 $\\left(\\frac{1}{4}\\right)^{n}$ 收敛于 $\\frac{1}{3}$。所以逐项积可能收敛也可能发散，即使收敛，和也不一定等于两个和的积。",
+        ),
+      ),
+    });
   },
 );
 
@@ -86,8 +150,8 @@ const sumFromAStartIndex = point(
   "geometric-series-that-start-at-a-later-index",
   ["Geometric series that start at a later index", "从较后下标开始的几何级数"],
   [
-    "The formula $\\frac{a}{1 - r}$ needs the actual first term of the series, which is the term at the lower limit. For $\\sum_{n=k}^{\\infty} cr^{n}$ that is $cr^{k}$, not $c$, so the sum is $\\frac{cr^{k}}{1 - r}$.",
-    "公式 $\\frac{a}{1 - r}$ 要用级数真正的第一项，也就是下限处的项。对 $\\sum_{n=k}^{\\infty} cr^{n}$，第一项是 $cr^{k}$，而不是 $c$，所以和是 $\\frac{cr^{k}}{1 - r}$。",
+    "The formula $\\frac{a}{1 - r}$ needs the actual first term of the series, which is the term at the lower limit. For $\\sum_{n=k}^{\\infty} cr^{n}$ that is $cr^{k}$, not $c$, so the sum is $\\frac{cr^{k}}{1 - r}$. For $\\sum_{n=2}^{\\infty} 3\\left(\\frac{1}{2}\\right)^{n}$, the first term is $\\frac{3}{4}$ and the sum is $\\frac{3/4}{1/2} = \\frac{3}{2}$.\n\nCheck: from $n = 0$ the sum would be $6$; taking away $3$ and $\\frac{3}{2}$ leaves $\\frac{3}{2}$.\n\n> **Watch out.** Using $c = 3$ as the first term gives $6$, the sum from $n = 0$.",
+    "公式 $\\frac{a}{1 - r}$ 要用级数真正的第一项，也就是下限处的项。对 $\\sum_{n=k}^{\\infty} cr^{n}$，第一项是 $cr^{k}$，而不是 $c$，所以和是 $\\frac{cr^{k}}{1 - r}$。对 $\\sum_{n=2}^{\\infty} 3\\left(\\frac{1}{2}\\right)^{n}$，第一项是 $\\frac{3}{4}$，和为 $\\frac{3/4}{1/2} = \\frac{3}{2}$。\n\n检验：若从 $n = 0$ 开始，和为 $6$；减去 $3$ 和 $\\frac{3}{2}$ 后得 $\\frac{3}{2}$。\n\n> **注意。** 把 $c = 3$ 当作第一项会得到 $6$，那是从 $n = 0$ 开始的和。",
   ],
   (rng) => {
     const r = ratio(rng);
@@ -97,21 +161,52 @@ const sumFromAStartIndex = point(
     const denom = Q.one.sub(r);
     const answer = first.div(denom);
     const term = poly([c, `\\left(${r.toLatex()}\\right)^{n}`]);
-    return ask(
-      [`Find $\\sum_{n=${k}}^{\\infty} ${term}$.`, `求 $\\sum_{n=${k}}^{\\infty} ${term}$。`],
-      answer,
+    const whole = Q.of(c).div(denom);
+    const skipped = [...Array(k).keys()].map((j) => Q.of(c).mul(r.pow(j)));
+    const par = (x: Q) => (x.sign() < 0 ? `\\left(${x.toLatex()}\\right)` : x.toLatex());
+    const parts: Step[] = [
       [
-        Q.of(c).div(denom),
+        ["Find the first term", "求第一项"],
+        t(`The first term is the one at the lower limit, $n = ${k}$:`, `第一项是下限 $n = ${k}$ 处的项：`),
+        [`${c} \\cdot \\left(${r.toLatex()}\\right)^{${k}} = ${first.toLatex()}`],
+      ],
+      [
+        ["Apply the formula", "代入公式"],
+        t(`The ratio is $${r.toLatex()}$, which is less than $1$ in size:`, `公比 $${r.toLatex()}$ 的绝对值小于 $1$：`),
+        [`\\frac{${first.toLatex()}}{1 - ${par(r)}} = ${answer.toLatex()}`],
+      ],
+    ];
+    const wrong: readonly (readonly [Q, string, string])[] = [
+      [
+        whole,
+        `This uses $${c}$ as the first term, which gives the sum from $n = 0$`,
+        `这里把 $${c}$ 当作第一项，得到的是从 $n = 0$ 开始的和`,
+      ],
+      [
         Q.of(c)
           .mul(r.pow(k - 1))
           .div(denom),
-        first.div(Q.one.add(r)),
+        `This starts one term early, at $n = ${k - 1}$`,
+        `这里早了一项，从 $n = ${k - 1}$ 开始`,
       ],
       [
-        `The first term is the one with $n = ${k}$, which is $${first.toLatex()}$, and the ratio is $${r.toLatex()}$. So the sum is $${first.toLatex()} \\div ${denom.toLatex()} = ${answer.toLatex()}$.`,
-        `第一项是 $n = ${k}$ 的项，即 $${first.toLatex()}$，公比是 $${r.toLatex()}$。所以和是 $${first.toLatex()} \\div ${denom.toLatex()} = ${answer.toLatex()}$。`,
+        first.div(Q.one.add(r)),
+        "This divides by $1 + r$; the formula is $\\frac{a}{1 - r}$",
+        "这里除以了 $1 + r$；公式是 $\\frac{a}{1 - r}$",
       ],
-    );
+    ];
+    return numberProblem({
+      prompt: t(`Find $\\sum_{n=${k}}^{\\infty} ${term}$.`, `求 $\\sum_{n=${k}}^{\\infty} ${term}$。`),
+      answer,
+      mistakes: wrong.filter((w, i) => wrong.findIndex((x) => x[0].eq(w[0])) === i).map(([value, en, zh]) => ({ value, why: t(en, zh) })),
+      solution: walked(
+        parts,
+        t(
+          `Taking away the skipped ${k === 1 ? "term" : "terms"} $${skipped.map((x) => x.toLatex()).join(", ")}$ from the sum from $n = 0$ leaves the answer: $${whole.toLatex()} - ${skipped.map(par).join(" - ")} = ${answer.toLatex()}$.`,
+          `从 $n = 0$ 开始的和减去被跳过的项 $${skipped.map((x) => x.toLatex()).join(", ")}$，正好得到答案：$${whole.toLatex()} - ${skipped.map(par).join(" - ")} = ${answer.toLatex()}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -119,22 +214,53 @@ const repeatingNines = point(
   "decimals-that-end-in-repeating-nines",
   ["Decimals that end in repeating nines", "以循环 9 结尾的小数"],
   [
-    "A repeating $9$ is not slightly less than the next decimal; it equals it. As a geometric series, $0.\\overline{9} = \\frac{9/10}{1 - 1/10} = 1$. So a decimal ending in repeating nines is a terminating decimal in disguise.",
-    "循环的 $9$ 并不是比下一个小数略小，而是恰好相等。作为几何级数，$0.\\overline{9} = \\frac{9/10}{1 - 1/10} = 1$。所以以循环 $9$ 结尾的小数其实是有限小数。",
+    "A repeating $9$ is not slightly less than the next decimal; it equals it. As a geometric series, $0.\\overline{9} = \\frac{9/10}{1 - 1/10} = 1$. So a decimal ending in repeating nines is a terminating decimal in disguise. For example, $2.3\\overline{9} = 2.3 + \\frac{9/100}{1 - 1/10} = 2.3 + 0.1 = 2.4 = \\frac{12}{5}$.\n\nCheck: if $x = 2.3\\overline{9}$, then $100x - 10x = 239.\\overline{9} - 23.\\overline{9} = 216$, so $x = \\frac{216}{90} = \\frac{12}{5}$.\n\n> **Watch out.** $2.3\\overline{9}$ is not a little less than $2.4$: no number fits between them, so they are equal.",
+    "循环的 $9$ 并不是比下一个小数略小，而是恰好相等。作为几何级数，$0.\\overline{9} = \\frac{9/10}{1 - 1/10} = 1$。所以以循环 $9$ 结尾的小数其实是有限小数。例如 $2.3\\overline{9} = 2.3 + \\frac{9/100}{1 - 1/10} = 2.3 + 0.1 = 2.4 = \\frac{12}{5}$。\n\n检验：设 $x = 2.3\\overline{9}$，则 $100x - 10x = 239.\\overline{9} - 23.\\overline{9} = 216$，所以 $x = \\frac{216}{90} = \\frac{12}{5}$。\n\n> **注意。** $2.3\\overline{9}$ 并不比 $2.4$ 小一点：两者之间放不下任何数，所以它们相等。",
   ],
   (rng) => {
     const a = rng.int(0, 9);
     const b = rng.int(0, 8);
     const answer = Q.of(10 * a + b + 1, 10);
-    return ask(
-      [`Write $${a}.${b}\\overline{9}$ as a fraction in lowest terms.`, `把 $${a}.${b}\\overline{9}$ 写成最简分数。`],
-      answer,
-      [Q.of(100 * a + 10 * b + 9, 100), Q.of(10 * a + b, 10), Q.of(10 * a + b + 9, 10)],
+    const whole = 100 * a + 10 * b + 9;
+    const tenth = 10 * a + b;
+    const parts: Step[] = [
       [
-        `The repeating part is $\\frac{9}{100} + \\frac{9}{1000} + \\cdots = \\frac{9/100}{9/10} = \\frac{1}{10}$. So the number is $${a}.${b} + \\frac{1}{10} = ${answer.toLatex()}$.`,
-        `循环部分是 $\\frac{9}{100} + \\frac{9}{1000} + \\cdots = \\frac{9/100}{9/10} = \\frac{1}{10}$。所以这个数是 $${a}.${b} + \\frac{1}{10} = ${answer.toLatex()}$。`,
+        ["Split off the nines", "分出循环的 9"],
+        t("Write the repeating part as a geometric series:", "把循环部分写成几何级数："),
+        [`${a}.${b}\\overline{9} = ${a}.${b} + \\frac{9}{100} + \\frac{9}{1000} + \\cdots`],
       ],
-    );
+      [
+        ["Sum the series", "求级数的和"],
+        t("Its first term is $\\frac{9}{100}$ and its ratio is $\\frac{1}{10}$:", "首项是 $\\frac{9}{100}$，公比是 $\\frac{1}{10}$："),
+        [`\\frac{9/100}{1 - 1/10} = \\frac{1}{10}`],
+      ],
+      [["Add", "相加"], t("", ""), [`${a}.${b} + \\frac{1}{10} = ${dec(answer)} = ${answer.toLatex()}`]],
+    ];
+    const wrong: readonly (readonly [Q, string, string])[] = [
+      [
+        Q.of(whole, 100),
+        `This keeps only one $9$, $${a}.${b}9$; the nines go on forever`,
+        `这里只保留了一个 $9$，即 $${a}.${b}9$；9 是无限循环的`,
+      ],
+      [Q.of(tenth, 10), "This drops the nines; together they add $\\frac{1}{10}$", "这里把 9 都丢掉了；它们合起来是 $\\frac{1}{10}$"],
+      [
+        Q.of(tenth + 9, 10),
+        "This adds $0.9$; the first $9$ is in the hundredths place, so the nines add $\\frac{1}{10}$",
+        "这里加了 $0.9$；第一个 $9$ 在百分位，所以这些 9 合起来是 $\\frac{1}{10}$",
+      ],
+    ];
+    return numberProblem({
+      prompt: t(`Write $${a}.${b}\\overline{9}$ as a fraction in lowest terms.`, `把 $${a}.${b}\\overline{9}$ 写成最简分数。`),
+      answer,
+      mistakes: wrong.map(([value, en, zh]) => ({ value, why: t(en, zh) })),
+      solution: walked(
+        parts,
+        t(
+          `Shift the digits instead: if $x = ${a}.${b}\\overline{9}$, then $100x - 10x = ${whole}.\\overline{9} - ${tenth}.\\overline{9} = ${whole - tenth}$, so $x = \\frac{${whole - tenth}}{90} = ${answer.toLatex()}$.`,
+          `改用移位相减：设 $x = ${a}.${b}\\overline{9}$，则 $100x - 10x = ${whole}.\\overline{9} - ${tenth}.\\overline{9} = ${whole - tenth}$，所以 $x = \\frac{${whole - tenth}}{90} = ${answer.toLatex()}$。`,
+        ),
+      ),
+    });
   },
 );
 

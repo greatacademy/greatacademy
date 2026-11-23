@@ -14,8 +14,9 @@ import { multivariableDrawings5 } from "../explanation-drawings-multivariable-5.
 import { multivariableDrawings6 } from "../explanation-drawings-multivariable-6.ts";
 import { multivariableDrawings8 } from "../explanation-drawings-multivariable-8.ts";
 
-import { numberProblem } from "../problems.ts";
+import { explainedChoice, numberProblem } from "../problems.ts";
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
+import { type Step, walked } from "./calculus-i-differentiation.ts";
 import { drawn } from "./figure-reading-more.ts";
 
 /** fig wraps marks in a figure with its description in both languages. */
@@ -97,8 +98,8 @@ const definingLine = point(
   "the-formula-of-a-drawn-oriented-segment",
   ["The formula of a drawn oriented segment", "所画有向线段的公式"],
   [
-    "A segment that starts at $A$ at $t = 0$ and ends at $B$ at $t = 1$ is $r(t) = A + t(B - A)$, the start plus a multiple of the displacement.",
-    "在 $t = 0$ 从 $A$ 出发、在 $t = 1$ 到达 $B$ 的线段是 $r(t) = A + t(B - A)$，即起点加上位移的倍数。",
+    "A segment that starts at $A$ at $t = 0$ and ends at $B$ at $t = 1$ is $r(t) = A + t(B - A)$, the start plus a multiple of the displacement. Read the tail of the arrow as $A$ and the tip as $B$. For an arrow from $(1, 2)$ to $(4, -1)$, the displacement is $(3, -3)$, so $r(t) = (1 + 3t,\\ 2 - 3t)$.\n\nCheck: $r(0) = (1, 2)$ is the tail and $r(1) = (4, -1)$ is the tip.\n\n> **Watch out.** Multiply $t$ by the displacement $B - A$, not by the tip $B$: $(1 + 4t,\\ 2 - t)$ reaches $(5, 1)$ at $t = 1$, not the tip.",
+    "在 $t = 0$ 从 $A$ 出发、在 $t = 1$ 到达 $B$ 的线段是 $r(t) = A + t(B - A)$，即起点加上位移的倍数。箭尾是 $A$，箭头是 $B$。对从 $(1, 2)$ 到 $(4, -1)$ 的箭头，位移是 $(3, -3)$，所以 $r(t) = (1 + 3t,\\ 2 - 3t)$。\n\n检验：$r(0) = (1, 2)$ 是箭尾，$r(1) = (4, -1)$ 是箭头。\n\n> **注意。** $t$ 乘的是位移 $B - A$，不是箭头 $B$：$(1 + 4t,\\ 2 - t)$ 在 $t = 1$ 时到达 $(5, 1)$，不是箭头。",
   ],
   (rng) => {
     const nonzero = [-4, -3, -2, -1, 1, 2, 3, 4];
@@ -106,33 +107,84 @@ const definingLine = point(
     const A: Point = [place(rng, dx, 5), place(rng, dy, 5)];
     const B: Point = [A[0] + dx, A[1] + dy];
     const form = (x0: number, kx: number, y0: number, ky: number) =>
-      same(
-        `r(t) = \\left(${terms([
-          [x0, ""],
-          [kx, "t"],
-        ])},\\ ${terms([
-          [y0, ""],
-          [ky, "t"],
-        ])}\\right)`,
-      );
-    return choose(
-      rng,
+      `$r(t) = \\left(${terms([
+        [x0, ""],
+        [kx, "t"],
+      ])},\\ ${terms([
+        [y0, ""],
+        [ky, "t"],
+      ])}\\right)$`;
+    const option = (x0: number, kx: number, y0: number, ky: number) => t(form(x0, kx, y0, ky), form(x0, kx, y0, ky));
+    const parts: Step[] = [
       [
+        ["Read the tail and the tip", "读出箭尾和箭头"],
+        t(`The arrow starts at $A = ${at(A)}$ and ends at $B = ${at(B)}$.`, `箭头从 $A = ${at(A)}$ 出发，到 $B = ${at(B)}$ 结束。`),
+      ],
+      [
+        ["Find the displacement", "求位移"],
+        t("Subtract the tail from the tip:", "用箭头减去箭尾："),
+        [`B - A = (${B[0]} - ${paren(A[0])},\\ ${B[1]} - ${paren(A[1])}) = (${dx}, ${dy})`],
+      ],
+      [
+        ["Write the formula", "写出公式"],
+        t("Add $t$ times the displacement to the start:", "起点加上 $t$ 乘位移："),
+        [
+          `r(t) = ${at(A)} + t(${dx}, ${dy}) = \\left(${terms([
+            [A[0], ""],
+            [dx, "t"],
+          ])},\\ ${terms([
+            [A[1], ""],
+            [dy, "t"],
+          ])}\\right)`,
+        ],
+      ],
+    ];
+    return explainedChoice(rng, {
+      prompt: t(
         "Which function traces the drawn arrow from its tail at $t = 0$ to its tip at $t = 1$?",
         "哪个函数描出所画的箭头，$t = 0$ 时在箭尾，$t = 1$ 时在箭头？",
+      ),
+      correct: option(A[0], dx, A[1], dy),
+      wrong: [
+        {
+          option: option(B[0], -dx, B[1], -dy),
+          why: t(`This runs backwards: at $t = 0$ it is at the tip $${at(B)}$`, `这条是反向的：$t = 0$ 时它在箭头 $${at(B)}$`),
+        },
+        {
+          option: option(A[0], B[0], A[1], B[1]),
+          why: t(
+            `This multiplies $t$ by the tip instead of the displacement, so at $t = 1$ it is at $${at([A[0] + B[0], A[1] + B[1]])}$`,
+            `这里 $t$ 乘的是箭头的坐标而不是位移，所以 $t = 1$ 时它在 $${at([A[0] + B[0], A[1] + B[1]])}$`,
+          ),
+        },
+        {
+          option: option(A[0], dy, A[1], dx),
+          why: t(
+            `This swaps the two parts of the displacement, so at $t = 1$ it is at $${at([A[0] + dy, A[1] + dx])}$`,
+            `这里把位移的两个分量对调了，所以 $t = 1$ 时它在 $${at([A[0] + dy, A[1] + dx])}$`,
+          ),
+        },
+        {
+          option: option(A[0], -dx, A[1], -dy),
+          why: t(
+            `This uses $A - B$, so it moves away from the tip and reaches $${at([A[0] - dx, A[1] - dy])}$ at $t = 1$`,
+            `这里用的是 $A - B$，所以它背离箭头移动，$t = 1$ 时到达 $${at([A[0] - dx, A[1] - dy])}$`,
+          ),
+        },
       ],
-      form(A[0], dx, A[1], dy),
-      [form(B[0], -dx, B[1], -dy), form(A[0], B[0], A[1], B[1]), form(A[0], dy, A[1], dx), form(A[0], -dx, A[1], -dy)],
-      [
-        `The arrow starts at $${at(A)}$ and its displacement is $(${dx}, ${dy})$, so $r(t) = ${at(A)} + t(${dx}, ${dy})$.`,
-        `箭头从 $${at(A)}$ 出发，位移为 $(${dx}, ${dy})$，所以 $r(t) = ${at(A)} + t(${dx}, ${dy})$。`,
-      ],
-      fig(
+      solution: walked(
+        parts,
+        t(
+          `Put in the two ends: $r(0) = ${at(A)}$, the tail, and $r(1) = (${A[0]} + ${paren(dx)},\\ ${A[1]} + ${paren(dy)}) = ${at(B)}$, the tip.`,
+          `代入两个端点：$r(0) = ${at(A)}$ 是箭尾，$r(1) = (${A[0]} + ${paren(dx)},\\ ${A[1]} + ${paren(dy)}) = ${at(B)}$ 是箭头。`,
+        ),
+      ),
+      figure: fig(
         6,
         [{ kind: "arrow", from: A, to: B, accent: true }],
         [`An arrow from ${at(A)} to ${at(B)}.`, `从 ${at(A)} 到 ${at(B)} 的箭头。`],
       ),
-    );
+    });
   },
 );
 

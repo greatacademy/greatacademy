@@ -8,6 +8,7 @@ import { discreteDrawings1 } from "../explanation-drawings-discrete-mathematics-
 import { discreteDrawings2 } from "../explanation-drawings-discrete-mathematics-2.ts";
 
 import { numberProblem } from "../problems.ts";
+import { walked } from "./calculus-i-differentiation.ts";
 
 /** inParens puts a negative number in parentheses, for use inside a sum or under a power. */
 const inParens = (n: number) => (n < 0 ? `(${n})` : `${n}`);
@@ -2857,8 +2858,8 @@ const firstPartialSumPastATarget: KnowledgePointDef = {
   id: "the-first-partial-sum-past-a-target",
   title: t("The first partial sum past a target", "首次超过目标的部分和"),
   explanation: t(
-    "For a series of positive terms the partial sums keep growing, so there is a first index at which they pass any given target. A closed form for the partial sum gives a good first estimate of that index, but the answer must then be confirmed by comparing the partial sums on either side, since rounding alone can miss by one.",
-    "对正项级数，部分和不断增大，所以对任何目标，都有首个超过它的下标。部分和的封闭形式能给出这个下标的良好估计，但还要比较两侧的部分和来确认，因为只靠四舍五入可能差一。",
+    "For a series of positive terms the partial sums keep growing, so there is a first index at which they pass any given target. A closed form for the partial sum gives a good first estimate of that index, but the answer must then be confirmed by comparing the partial sums on either side, since rounding alone can miss by one. For $\\sum (2n + 1)$, $S_{n} = n^{2} + 2n$; to pass $50$, $S_{6} = 48$ falls short and $S_{7} = 63$ passes, so the answer is $7$.\n\nCheck: adding the next term by hand, $S_{7} = S_{6} + a_{7} = 48 + 15 = 63$.\n\n> **Watch out.** Look at the partial sum just before as well: an index whose partial sum passes the target is the smallest only if the one before does not.",
+    "对正项级数，部分和不断增大，所以对任何目标，都有首个超过它的下标。部分和的封闭形式能给出这个下标的良好估计，但还要比较两侧的部分和来确认，因为只靠四舍五入可能差一。对 $\\sum (2n + 1)$，$S_{n} = n^{2} + 2n$；要超过 $50$，$S_{6} = 48$ 不够，$S_{7} = 63$ 超过了，所以答案是 $7$。\n\n检验：直接加上下一项，$S_{7} = S_{6} + a_{7} = 48 + 15 = 63$。\n\n> **注意。** 还要看前一个部分和：部分和超过目标的下标，只有当前一个没有超过时才是最小的。",
   ),
   generate(rng) {
     const geometric = rng.pick([true, false]);
@@ -2874,12 +2875,35 @@ const firstPartialSumPastATarget: KnowledgePointDef = {
       previous = sum;
       sum += term(n);
     }
+    let alone = 1;
+    while (term(alone) <= target) alone += 1;
+    const asFirst = Math.floor(target / term(1)) + 1;
     const series = geometric ? `${a} \\cdot ${b}^{n}` : `(${a}n + ${b})`;
     const closed = geometric
       ? b === 2
         ? `S_n = ${a}(2^{n + 1} - 2)`
         : `S_n = ${a} \\cdot \\frac{${b}^{n + 1} - ${b}}{${b - 1}}`
       : `S_n = ${a} \\cdot \\frac{n(n + 1)}{2} + ${b === 1 ? "" : b}n`;
+    const at = (m: number) =>
+      geometric
+        ? b === 2
+          ? `${a}(2^{${m + 1}} - 2)`
+          : `${a} \\cdot \\frac{${b}^{${m + 1}} - ${b}}{${b - 1}}`
+        : `${a} \\cdot \\frac{${m} \\cdot ${m + 1}}{2} + ${b === 1 ? "" : `${b} \\cdot `}${m}`;
+    const wrong: readonly (readonly [number, string, string])[] = [
+      [n - 1, `$S_{${n - 1}} = ${previous}$ does not exceed $${target}$`, `$S_{${n - 1}} = ${previous}$ 没有超过 $${target}$`],
+      [
+        n + 1,
+        `$S_{${n}} = ${sum}$ already exceeds $${target}$, so $${n + 1}$ is not the smallest`,
+        `$S_{${n}} = ${sum}$ 已经超过 $${target}$，所以 $${n + 1}$ 不是最小的`,
+      ],
+      [
+        alone,
+        "This is where a single term passes the target; the partial sum, which adds all the terms, passes it sooner",
+        "这是单独一项超过目标的位置；部分和把各项加起来，会更早超过",
+      ],
+      [asFirst, `This treats every term as the first, $${term(1)}$; the terms grow`, `这里把每一项都当作第一项 $${term(1)}$；但各项在增大`],
+    ];
     return numberProblem({
       prompt: t(
         `$S_n$ is the $n$th partial sum of the series $\\sum_{n=1}^{\\infty} ${series}$. Find the smallest $n$ with $S_n > ${target}$.`,
@@ -2887,10 +2911,32 @@ const firstPartialSumPastATarget: KnowledgePointDef = {
       ),
       answer: n,
       form: "integer",
-      wrong: [n + 1, n - 1, n + 2, n - 2, n + 3],
-      solution: t(
-        `Here $${closed}$. It gives $S_{${n - 1}} = ${previous}$, which does not exceed $${target}$, and $S_{${n}} = ${sum}$, which does. The partial sums only grow, so the smallest index is $${n}$.`,
-        `这里 $${closed}$。由此 $S_{${n - 1}} = ${previous}$，没有超过 $${target}$，而 $S_{${n}} = ${sum}$ 超过了。部分和只增不减，所以最小的下标是 $${n}$。`,
+      mistakes: wrong
+        .filter((w, i) => w[0] >= 1 && wrong.findIndex((x) => x[0] === w[0]) === i)
+        .map(([value, en, zh]) => ({ value, why: t(en, zh) })),
+      solution: walked(
+        [
+          [
+            ["Write the partial sum", "写出部分和"],
+            t(
+              `The terms ${geometric ? "form a geometric series" : "form an arithmetic series"}, so:`,
+              `各项构成${geometric ? "几何" : "等差"}数列，所以：`,
+            ),
+            [closed],
+          ],
+          [
+            ["Compare on both sides", "比较两侧"],
+            t(
+              `The partial sum just before falls short of $${target}$ and the next one passes it:`,
+              `前一个部分和不到 $${target}$，下一个超过了它：`,
+            ),
+            [`S_{${n - 1}} = ${at(n - 1)} = ${previous} \\le ${target}`, `S_{${n}} = ${at(n)} = ${sum} > ${target}`],
+          ],
+        ],
+        t(
+          `Add the next term by hand instead of using the formula: $a_{${n}} = ${geometric ? `${a} \\cdot ${b}^{${n}}` : `${a} \\cdot ${n} + ${b}`} = ${term(n)}$, and $S_{${n - 1}} + a_{${n}} = ${previous} + ${term(n)} = ${sum}$. The partial sums only grow, so the smallest index is $${n}$.`,
+          `不用公式，直接加上下一项：$a_{${n}} = ${geometric ? `${a} \\cdot ${b}^{${n}}` : `${a} \\cdot ${n} + ${b}`} = ${term(n)}$，$S_{${n - 1}} + a_{${n}} = ${previous} + ${term(n)} = ${sum}$。部分和只增不减，所以最小的下标是 $${n}$。`,
+        ),
       ),
     });
   },
@@ -2900,8 +2946,8 @@ const seriesWithDoubledIndex: KnowledgePointDef = {
   id: "geometric-series-with-a-multiple-of-the-index-in-the-exponent",
   title: t("Geometric series with a multiple of the index in the exponent", "指数含下标倍数的几何级数"),
   explanation: t(
-    "A series in sigma notation need not show its common ratio directly. When the exponent grows by two with each step of the index, the ratio between consecutive terms is the square of the base, not the base. Write out the first term from the starting index, compare it with the second, and only then apply the sum formula.",
-    "用求和符号写的级数不一定直接显示公比。当下标每增加一，指数增加二时，相邻两项之比是底数的平方，而不是底数。先写出起始下标对应的首项，与第二项比较，然后才使用求和公式。",
+    "A series in sigma notation need not show its common ratio directly. When the exponent grows by two with each step of the index, the ratio between consecutive terms is the square of the base, not the base. Write out the first term from the starting index, compare it with the second, and only then apply the sum formula. For $\\sum_{n=0}^{\\infty} 3\\left(\\frac{1}{2}\\right)^{2n}$, the terms are $3, \\frac{3}{4}, \\frac{3}{16}, \\ldots$, so the ratio is $\\frac{1}{4}$ and the sum is $\\frac{3}{3/4} = 4$.\n\nCheck: the sum $S$ satisfies $S = 3 + \\frac{1}{4}S$, and $3 + \\frac{1}{4} \\cdot 4 = 4$.\n\n> **Watch out.** Using the base $\\frac{1}{2}$ as the ratio gives $6$; the terms shrink by $\\frac{1}{4}$ at each step.",
+    "用求和符号写的级数不一定直接显示公比。当下标每增加一，指数增加二时，相邻两项之比是底数的平方，而不是底数。先写出起始下标对应的首项，与第二项比较，然后才使用求和公式。对 $\\sum_{n=0}^{\\infty} 3\\left(\\frac{1}{2}\\right)^{2n}$，各项是 $3, \\frac{3}{4}, \\frac{3}{16}, \\ldots$，所以公比是 $\\frac{1}{4}$，和为 $\\frac{3}{3/4} = 4$。\n\n检验：和 $S$ 满足 $S = 3 + \\frac{1}{4}S$，而 $3 + \\frac{1}{4} \\cdot 4 = 4$。\n\n> **注意。** 把底数 $\\frac{1}{2}$ 当作公比会得到 $6$；各项每一步缩小为 $\\frac{1}{4}$。",
   ),
   generate(rng) {
     const r = rng.pick([Q.of(1, 2), Q.of(1, 3), Q.of(2, 3), Q.of(1, 4), Q.of(3, 4), Q.of(2, 5), Q.of(3, 5)]);
@@ -2911,6 +2957,30 @@ const seriesWithDoubledIndex: KnowledgePointDef = {
     const first = Q.of(a).mul(r.pow(shift));
     const ratio = r.mul(r);
     const answer = first.div(Q.of(1).sub(ratio));
+    const second = first.mul(ratio);
+    const wrong: readonly (readonly [Q, string, string])[] = [
+      [
+        first.div(Q.of(1).sub(r)),
+        `This uses the base $${r.toLatex()}$ as the ratio; the exponent grows by two, so the ratio is its square`,
+        `这里把底数 $${r.toLatex()}$ 当作公比；指数每步增加二，公比是它的平方`,
+      ],
+      [
+        Q.of(a).div(Q.of(1).sub(ratio)),
+        `This uses $${a}$ as the first term; at $n = 0$ the exponent is $1$, so the first term is $${first.toLatex()}$`,
+        `这里把 $${a}$ 当作首项；$n = 0$ 时指数是 $1$，首项是 $${first.toLatex()}$`,
+      ],
+      [
+        Q.of(a).div(Q.of(1).sub(r)),
+        `This reads the series as $${a}\\left(${r.toLatex()}\\right)^{n}$, with the wrong first term and ratio`,
+        `这里把级数读成了 $${a}\\left(${r.toLatex()}\\right)^{n}$，首项和公比都错了`,
+      ],
+      [first.div(Q.of(1).add(ratio)), "This divides by $1 + r$; the formula divides by $1 - r$", "这里除以了 $1 + r$；公式是除以 $1 - r$"],
+      [
+        second.div(Q.of(1).sub(ratio)),
+        "This starts at $n = 1$ and leaves out the term at $n = 0$",
+        "这里从 $n = 1$ 开始，漏掉了 $n = 0$ 的项",
+      ],
+    ];
     return numberProblem({
       prompt: t(
         `Find $\\sum_{n=0}^{\\infty} ${a}\\left(${r.toLatex()}\\right)^{${exponent}}$.`,
@@ -2918,16 +2988,31 @@ const seriesWithDoubledIndex: KnowledgePointDef = {
       ),
       answer,
       form: "fraction",
-      wrong: [
-        first.div(Q.of(1).sub(r)),
-        Q.of(a).div(Q.of(1).sub(ratio)),
-        Q.of(a).div(Q.of(1).sub(r)),
-        first.div(Q.of(1).add(ratio)),
-        first.mul(ratio).div(Q.of(1).sub(ratio)),
-      ],
-      solution: t(
-        `The term at $n = 0$ is $${first.toLatex()}$. Raising $n$ by one adds two to the exponent, so the common ratio is $\\left(${r.toLatex()}\\right)^{2} = ${ratio.toLatex()}$, not $${r.toLatex()}$. The sum is $\\frac{${first.toLatex()}}{1 - ${ratio.toLatex()}} = ${answer.toLatex()}$.`,
-        `$n = 0$ 对应的项是 $${first.toLatex()}$。$n$ 每增加一，指数增加二，所以公比是 $\\left(${r.toLatex()}\\right)^{2} = ${ratio.toLatex()}$，而不是 $${r.toLatex()}$。和为 $\\frac{${first.toLatex()}}{1 - ${ratio.toLatex()}} = ${answer.toLatex()}$。`,
+      mistakes: wrong.filter((w, i) => wrong.findIndex((x) => x[0].eq(w[0])) === i).map(([value, en, zh]) => ({ value, why: t(en, zh) })),
+      solution: walked(
+        [
+          [
+            ["Write out the first two terms", "写出前两项"],
+            t(`Put in $n = 0$ and $n = 1$:`, `代入 $n = 0$ 和 $n = 1$：`),
+            [
+              `${a}\\left(${r.toLatex()}\\right)^{${shift}} = ${first.toLatex()}, \\quad ${a}\\left(${r.toLatex()}\\right)^{${shift + 2}} = ${second.toLatex()}`,
+            ],
+          ],
+          [
+            ["Find the ratio", "求公比"],
+            t("Divide the second term by the first:", "用第二项除以第一项："),
+            [`\\frac{${second.toLatex()}}{${first.toLatex()}} = \\left(${r.toLatex()}\\right)^{2} = ${ratio.toLatex()}`],
+          ],
+          [
+            ["Sum the series", "求级数的和"],
+            t("The ratio is less than $1$, so:", "公比小于 $1$，所以："),
+            [`\\frac{${first.toLatex()}}{1 - ${ratio.toLatex()}} = ${answer.toLatex()}`],
+          ],
+        ],
+        t(
+          `The terms after the first are the whole series times $${ratio.toLatex()}$, so the sum satisfies $S = ${first.toLatex()} + ${ratio.toLatex()}S$. With $S = ${answer.toLatex()}$: $${first.toLatex()} + ${ratio.toLatex()} \\cdot ${answer.toLatex()} = ${first.toLatex()} + ${answer.mul(ratio).toLatex()} = ${answer.toLatex()}$.`,
+          `第一项之后的各项是整个级数乘以 $${ratio.toLatex()}$，所以和满足 $S = ${first.toLatex()} + ${ratio.toLatex()}S$。代入 $S = ${answer.toLatex()}$：$${first.toLatex()} + ${ratio.toLatex()} \\cdot ${answer.toLatex()} = ${first.toLatex()} + ${answer.mul(ratio).toLatex()} = ${answer.toLatex()}$。`,
+        ),
       ),
     });
   },

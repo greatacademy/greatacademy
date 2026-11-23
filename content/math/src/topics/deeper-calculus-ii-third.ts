@@ -9,7 +9,7 @@ import { calculusDrawings4 } from "../explanation-drawings-calculus-4.ts";
 import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 
 import { functionProblem, numberProblem, say, steps } from "../problems.ts";
-import { ask, choose, type Pair, point } from "../university-kit.ts";
+import { choose, type Pair, point } from "../university-kit.ts";
 import { reasoned } from "../wrong-reasons.ts";
 import { functionWith, walked } from "./calculus-i-differentiation.ts";
 
@@ -1441,8 +1441,8 @@ const netDisplacementVector = point(
   "the-size-of-a-displacement-vector",
   ["The size of a displacement vector", "位移向量的大小"],
   [
-    "Integrating a velocity vector gives the displacement vector, component by component, and the distance between the start and end is its length. Do not confuse this with the speed at the final time, or add the absolute values of the components.",
-    "对速度向量逐分量积分得到位移向量，起点与终点之间的距离就是它的长度。不要把它与终点时刻的速率混淆，也不要把各分量的绝对值相加。",
+    "Integrating a velocity vector gives the displacement vector, component by component, and the distance between the start and end is its length. Do not confuse this with the speed at the final time, or add the absolute values of the components. For $\\mathbf{v}(t) = \\langle 6t, 8t \\rangle$ from $t = 0$ to $t = 3$, the displacement is $\\langle 27, 36 \\rangle$, and its length is $\\sqrt{27^{2} + 36^{2}} = 45$.\n\nCheck: the velocity always points along $\\langle 3, 4 \\rangle$, so the path is straight and the distance travelled, $\\int_{0}^{3} 10t \\, dt = 45$, is the same.\n\n> **Watch out.** The speed at $t = 3$ is $30$, and $27 + 36 = 63$; neither is the distance between the two positions.",
+    "对速度向量逐分量积分得到位移向量，起点与终点之间的距离就是它的长度。不要把它与终点时刻的速率混淆，也不要把各分量的绝对值相加。对 $\\mathbf{v}(t) = \\langle 6t, 8t \\rangle$，从 $t = 0$ 到 $t = 3$ 的位移是 $\\langle 27, 36 \\rangle$，长度为 $\\sqrt{27^{2} + 36^{2}} = 45$。\n\n检验：速度始终沿 $\\langle 3, 4 \\rangle$ 方向，路径是直线，所走的路程 $\\int_{0}^{3} 10t \\, dt = 45$ 与之相同。\n\n> **注意。** $t = 3$ 时的速率是 $30$，而 $27 + 36 = 63$；两者都不是两个位置之间的距离。",
   ],
   (rng) => {
     const [p0, q0, h] = rng.pick(triples);
@@ -1451,18 +1451,51 @@ const netDisplacementVector = point(
     const T = rng.int(1, 8);
     const answer = h * T * T;
     const v = `\\left\\langle ${2 * p}t, ${2 * q}t \\right\\rangle`;
-    return ask(
+    const dx = p * T * T;
+    const dy = q * T * T;
+    const wrong: readonly (readonly [number, string, string])[] = [
+      [2 * h * T, `This is the speed at $t = ${T}$, not the distance from the start`, `这是 $t = ${T}$ 时的速率，不是离起点的距离`],
       [
-        `A particle has velocity $\\mathbf{v}(t) = ${v}$. How far is it at $t = ${T}$ from its position at $t = 0$?`,
-        `质点的速度是 $\\mathbf{v}(t) = ${v}$。$t = ${T}$ 时它离 $t = 0$ 时的位置有多远？`,
+        (p0 + q0) * T * T,
+        "This adds the sizes of the components; the length is the root of the sum of their squares",
+        "这里把分量的大小直接相加了；长度是分量平方和的平方根",
       ],
-      answer,
-      [2 * h * T, (p0 + q0) * T * T, h * T],
       [
-        `The displacement is $\\int_{0}^{${T}} \\mathbf{v} \\, dt = \\left\\langle ${p * T * T}, ${q * T * T} \\right\\rangle$, and its length is $\\sqrt{${(p * T * T) ** 2} + ${(q * T * T) ** 2}} = ${answer}$.`,
-        `位移是 $\\int_{0}^{${T}} \\mathbf{v} \\, dt = \\left\\langle ${p * T * T}, ${q * T * T} \\right\\rangle$，它的长度是 $\\sqrt{${(p * T * T) ** 2} + ${(q * T * T) ** 2}} = ${answer}$。`,
+        2 * h * T * T,
+        `This multiplies the speed at $t = ${T}$ by the time; the speed is not constant, so integrate`,
+        `这里用 $t = ${T}$ 时的速率乘以时间；速率不是常数，要积分`,
+      ],
+    ];
+    const solution = walkPair(
+      [
+        [
+          ["Integrate the velocity", "对速度积分"],
+          [`Integrate each component from $0$ to $${T}$:`, `把每个分量从 $0$ 积分到 $${T}$：`],
+          [`\\int_{0}^{${T}} \\mathbf{v} \\, dt = \\left\\langle ${dx}, ${dy} \\right\\rangle`],
+        ],
+        [
+          ["Take the length", "求长度"],
+          ["Use the Pythagorean theorem:", "用勾股定理："],
+          [`\\sqrt{${dx}^{2} + ${dy < 0 ? `(${dy})` : dy}^{2}} = \\sqrt{${answer * answer}} = ${answer}`],
+        ],
+      ],
+      [
+        `The velocity always points along $\\langle ${p}, ${q} \\rangle$, so the path is a straight line and the distance travelled equals the distance from the start. The speed is $${2 * h}t$, and $\\int_{0}^{${T}} ${2 * h}t \\, dt = ${h} \\cdot ${T}^{2} = ${answer}$.`,
+        `速度始终沿 $\\langle ${p}, ${q} \\rangle$ 方向，路径是直线，所走路程等于离起点的距离。速率是 $${2 * h}t$，而 $\\int_{0}^{${T}} ${2 * h}t \\, dt = ${h} \\cdot ${T}^{2} = ${answer}$。`,
       ],
     );
+    return numberProblem({
+      prompt: t(
+        `A particle has velocity $\\mathbf{v}(t) = ${v}$. How far is it at $t = ${T}$ from its position at $t = 0$?`,
+        `质点的速度是 $\\mathbf{v}(t) = ${v}$。$t = ${T}$ 时它离 $t = 0$ 时的位置有多远？`,
+      ),
+      answer,
+      form: "integer",
+      mistakes: wrong
+        .filter((w, i) => wrong.findIndex((x) => String(x[0]) === String(w[0])) === i)
+        .map(([value, en, zh]) => ({ value, why: t(en, zh) })),
+      solution: t(solution[0], solution[1]),
+    });
   },
 );
 
@@ -1471,8 +1504,8 @@ const speedFromDot = {
     "speed-changes-from-the-dot-product",
     ["Speed changes from the dot product", "由点积判断速率变化"],
     [
-      "The rate of change of speed has the sign of $\\mathbf{v} \\cdot \\mathbf{a}$. A positive dot product means speeding up, a negative one means slowing down, and at zero the acceleration is perpendicular to the velocity, so it only turns the particle at that moment.",
-      "速率变化率的符号与 $\\mathbf{v} \\cdot \\mathbf{a}$ 相同。点积为正表示加速，为负表示减速；点积为零时，加速度与速度垂直，此刻只使质点转向。",
+      "The rate of change of speed has the sign of $\\mathbf{v} \\cdot \\mathbf{a}$. A positive dot product means speeding up, a negative one means slowing down, and at zero the acceleration is perpendicular to the velocity, so it only turns the particle at that moment. For $\\mathbf{r}(t) = \\langle t^{2}, 3t \\rangle$ at $t = 1$: $\\mathbf{v} = \\langle 2, 3 \\rangle$, $\\mathbf{a} = \\langle 2, 0 \\rangle$ and $\\mathbf{v} \\cdot \\mathbf{a} = 4 > 0$, so the particle is speeding up.\n\nCheck: $|\\mathbf{v}|^{2} = 4t^{2} + 9$ is increasing at $t = 1$.\n\n> **Watch out.** The size of $\\mathbf{a}$ alone says nothing about the speed: an acceleration perpendicular to $\\mathbf{v}$ only turns the particle.",
+      "速率变化率的符号与 $\\mathbf{v} \\cdot \\mathbf{a}$ 相同。点积为正表示加速，为负表示减速；点积为零时，加速度与速度垂直，此刻只使质点转向。对 $\\mathbf{r}(t) = \\langle t^{2}, 3t \\rangle$，在 $t = 1$ 时：$\\mathbf{v} = \\langle 2, 3 \\rangle$，$\\mathbf{a} = \\langle 2, 0 \\rangle$，$\\mathbf{v} \\cdot \\mathbf{a} = 4 > 0$，所以质点在加速。\n\n检验：$|\\mathbf{v}|^{2} = 4t^{2} + 9$ 在 $t = 1$ 处递增。\n\n> **注意。** 只看 $\\mathbf{a}$ 的大小说明不了速率的变化：与 $\\mathbf{v}$ 垂直的加速度只使质点转向。",
     ],
     (rng) => {
       const A = nz(rng, 4);
@@ -1491,17 +1524,74 @@ const speedFromDot = {
       const still: Pair = [`Its speed is momentarily not changing`, `它的速率此刻没有变化`];
       const allOf = [up, down, still];
       const correct = dot > 0 ? up : dot < 0 ? down : still;
-      return choose(
-        rng,
+      const h = Q.of(1, 10);
+      const sq = (s: Q) => {
+        const x = Q.of(2 * A)
+          .mul(s)
+          .add(Q.of(B));
+        const y = Q.of(2 * C)
+          .mul(s)
+          .add(Q.of(D));
+        return x.mul(x).add(y.mul(y));
+      };
+      const before = sq(Q.of(T).sub(h));
+      const after = sq(Q.of(T).add(h));
+      const par = (n: number) => (n < 0 ? `(${n})` : `${n}`);
+      const solution = walkPair(
         [
-          `A particle has position $\\mathbf{r}(t) = ${r}$. What is happening to its speed at $t = ${T}$?`,
-          `质点的位置是 $\\mathbf{r}(t) = ${r}$。在 $t = ${T}$ 时它的速率如何变化？`,
+          [
+            ["Find the velocity and the acceleration", "求速度和加速度"],
+            [`Differentiate once and twice, then put in $t = ${T}$:`, `求一阶和二阶导数，再代入 $t = ${T}$：`],
+            [
+              `\\mathbf{v}(${T}) = \\left\\langle ${vx}, ${vy} \\right\\rangle`,
+              `\\mathbf{a}(${T}) = \\left\\langle ${ax}, ${ay} \\right\\rangle`,
+            ],
+          ],
+          [
+            ["Take the dot product", "求点积"],
+            [
+              dot > 0
+                ? "It is positive, so the speed is increasing:"
+                : dot < 0
+                  ? "It is negative, so the speed is decreasing:"
+                  : "It is zero, so the acceleration is perpendicular to the velocity:",
+              dot > 0 ? "它是正的，所以速率在增大：" : dot < 0 ? "它是负的，所以速率在减小：" : "它是零，所以加速度与速度垂直：",
+            ],
+            [`\\mathbf{v} \\cdot \\mathbf{a} = ${vx} \\cdot ${par(ax)} + ${par(vy)} \\cdot ${par(ay)} = ${dot}`],
+          ],
         ],
-        correct,
-        allOf.filter((o) => o !== correct),
         [
-          `$\\mathbf{v}(${T}) = \\left\\langle ${vx}, ${vy} \\right\\rangle$ and $\\mathbf{a} = \\left\\langle ${ax}, ${ay} \\right\\rangle$, so $\\mathbf{v} \\cdot \\mathbf{a} = ${dot}$. ${dot > 0 ? "This is positive, so the speed is increasing." : dot < 0 ? "This is negative, so the speed is decreasing." : "This is zero, so the acceleration is perpendicular to the velocity and the speed is not changing at this moment."}`,
-          `$\\mathbf{v}(${T}) = \\left\\langle ${vx}, ${vy} \\right\\rangle$，$\\mathbf{a} = \\left\\langle ${ax}, ${ay} \\right\\rangle$，所以 $\\mathbf{v} \\cdot \\mathbf{a} = ${dot}$。${dot > 0 ? "它是正的，所以速率在增大。" : dot < 0 ? "它是负的，所以速率在减小。" : "它是零，所以加速度与速度垂直，此刻速率没有变化。"}`,
+          `Compare the squared speed just before and just after: $|\\mathbf{v}|^{2}$ is $${before.toLatex()}$ at $t = ${Q.of(T).sub(h).toLatex()}$ and $${after.toLatex()}$ at $t = ${Q.of(T).add(h).toLatex()}$, ${dot > 0 ? "larger after" : dot < 0 ? "smaller after" : "the same on both sides"}.`,
+          `比较前后片刻速率的平方：$t = ${Q.of(T).sub(h).toLatex()}$ 时 $|\\mathbf{v}|^{2} = ${before.toLatex()}$，$t = ${Q.of(T).add(h).toLatex()}$ 时为 $${after.toLatex()}$，${dot > 0 ? "之后更大" : dot < 0 ? "之后更小" : "两侧相同"}。`,
+        ],
+      );
+      return reasoned(
+        choose(
+          rng,
+          [
+            `A particle has position $\\mathbf{r}(t) = ${r}$. What is happening to its speed at $t = ${T}$?`,
+            `质点的位置是 $\\mathbf{r}(t) = ${r}$。在 $t = ${T}$ 时它的速率如何变化？`,
+          ],
+          correct,
+          allOf.filter((o) => o !== correct),
+          solution,
+        ),
+        [
+          [
+            up[0],
+            `Speeding up needs $\\mathbf{v} \\cdot \\mathbf{a} > 0$; here it is $${dot}$`,
+            `加速需要 $\\mathbf{v} \\cdot \\mathbf{a} > 0$；这里它是 $${dot}$`,
+          ],
+          [
+            down[0],
+            `Slowing down needs $\\mathbf{v} \\cdot \\mathbf{a} < 0$; here it is $${dot}$`,
+            `减速需要 $\\mathbf{v} \\cdot \\mathbf{a} < 0$；这里它是 $${dot}$`,
+          ],
+          [
+            still[0],
+            `The speed is momentarily steady only when $\\mathbf{v} \\cdot \\mathbf{a} = 0$; here it is $${dot}$`,
+            `只有 $\\mathbf{v} \\cdot \\mathbf{a} = 0$ 时速率才暂时不变；这里它是 $${dot}$`,
+          ],
         ],
       );
     },
@@ -2098,8 +2188,8 @@ const recursiveLimit = point(
   "limits-of-sequences-defined-by-a-recurrence",
   ["Limits of sequences defined by a recurrence", "由递推式定义的数列的极限"],
   [
-    "The recurrence $a_{n+1} = ra_{n} + b$ with $|r| < 1$ has the solution $a_{n} = L + r^{n}(a_{0} - L)$, where $L = \\frac{b}{1 - r}$. Since $r^{n} \\to 0$, the sequence converges to $L$, and the starting value does not affect the limit.",
-    "递推式 $a_{n+1} = ra_{n} + b$（$|r| < 1$）的解是 $a_{n} = L + r^{n}(a_{0} - L)$，其中 $L = \\frac{b}{1 - r}$。因为 $r^{n} \\to 0$，数列收敛到 $L$，而初值不影响极限。",
+    "The recurrence $a_{n+1} = ra_{n} + b$ with $|r| < 1$ has the solution $a_{n} = L + r^{n}(a_{0} - L)$, where $L = \\frac{b}{1 - r}$. Since $r^{n} \\to 0$, the sequence converges to $L$, and the starting value does not affect the limit. For $a_{n+1} = -\\frac{1}{2}a_{n} + 6$: $L = -\\frac{1}{2}L + 6$, so $L = 4$.\n\nCheck: $a_{n+1} - 4 = -\\frac{1}{2}(a_{n} - 4)$, so the distance from $4$ halves at every step.\n\n> **Watch out.** With a negative ratio the terms jump from one side of $L$ to the other, but they still close in on it.",
+    "递推式 $a_{n+1} = ra_{n} + b$（$|r| < 1$）的解是 $a_{n} = L + r^{n}(a_{0} - L)$，其中 $L = \\frac{b}{1 - r}$。因为 $r^{n} \\to 0$，数列收敛到 $L$，而初值不影响极限。对 $a_{n+1} = -\\frac{1}{2}a_{n} + 6$：$L = -\\frac{1}{2}L + 6$，所以 $L = 4$。\n\n检验：$a_{n+1} - 4 = -\\frac{1}{2}(a_{n} - 4)$，所以与 $4$ 的距离每一步都减半。\n\n> **注意。** 比为负时，各项在 $L$ 的两侧来回跳动，但仍然越来越接近 $L$。",
   ],
   (rng) => {
     const q = rng.int(2, 9);
@@ -2109,18 +2199,50 @@ const recursiveLimit = point(
     const a0 = rng.int(-9, 9);
     const L = Q.of(b).div(Q.one.sub(r));
     const step = poly([r, "a_{n}"], [b, ""]);
-    return ask(
+    const rest = Q.one.sub(r);
+    const parL = L.sign() < 0 ? `\\left(${L.toLatex()}\\right)` : L.toLatex();
+    const parR = r.sign() < 0 ? `\\left(${r.toLatex()}\\right)` : r.toLatex();
+    const wrong: readonly (readonly [number | Q, string, string])[] = [
+      [a0, "The limit does not depend on the starting value", "极限与初始值无关"],
+      [b, "This is the constant term alone; $L$ appears on both sides of the equation", "这只是常数项；$L$ 出现在方程两边"],
       [
-        `A sequence has $a_{0} = ${a0}$ and $a_{n+1} = ${step}$. Find $\\lim_{n \\to \\infty} a_{n}$.`,
-        `数列满足 $a_{0} = ${a0}$，$a_{n+1} = ${step}$。求 $\\lim_{n \\to \\infty} a_{n}$。`,
+        Q.of(b).div(Q.one.add(r)),
+        `This divides by $1 + r$; moving $${parR}L$ across gives $1 - r$`,
+        `这里除以了 $1 + r$；把 $${parR}L$ 移项后是 $1 - r$`,
       ],
-      L,
-      [a0, b, Q.of(b).div(Q.one.add(r))],
+    ];
+    const solution = walkPair(
       [
-        `The ratio has size less than $1$, so the sequence converges. Its limit $L$ satisfies $L = ${poly([r, "L"], [b, ""])}$, which gives $L = ${L.toLatex()}$, whatever the value of $a_{0}$.`,
-        `比的绝对值小于 $1$，所以数列收敛。极限 $L$ 满足 $L = ${poly([r, "L"], [b, ""])}$，解得 $L = ${L.toLatex()}$，与 $a_{0}$ 的值无关。`,
+        [
+          ["Replace both terms by L", "把两项都换成 L"],
+          [
+            `The ratio $${r.toLatex()}$ is less than $1$ in size, so the sequence converges, and its limit satisfies`,
+            `比 $${r.toLatex()}$ 的绝对值小于 $1$，所以数列收敛，极限满足`,
+          ],
+          [`L = ${poly([r, "L"], [b, ""])}`],
+        ],
+        [
+          ["Solve", "求解"],
+          ["Collect the terms in $L$:", "把含 $L$ 的项合并："],
+          [`${rest.toLatex()}L = ${b} \\implies L = ${L.toLatex()}`],
+        ],
+      ],
+      [
+        `Substitute back: $${parR} \\cdot ${parL} ${b < 0 ? "-" : "+"} ${Math.abs(b)} = ${L.toLatex()}$. And $a_{n+1} - ${parL} = ${parR}\\left(a_{n} - ${parL}\\right)$, so the distance from the limit is multiplied by $${r.abs().toLatex()}$ at every step, whatever $a_{0}$ is.`,
+        `代回检验：$${parR} \\cdot ${parL} ${b < 0 ? "-" : "+"} ${Math.abs(b)} = ${L.toLatex()}$。而 $a_{n+1} - ${parL} = ${parR}\\left(a_{n} - ${parL}\\right)$，所以无论 $a_{0}$ 是多少，与极限的距离每一步都乘以 $${r.abs().toLatex()}$。`,
       ],
     );
+    return numberProblem({
+      prompt: t(
+        `A sequence has $a_{0} = ${a0}$ and $a_{n+1} = ${step}$. Find $\\lim_{n \\to \\infty} a_{n}$.`,
+        `数列满足 $a_{0} = ${a0}$，$a_{n+1} = ${step}$。求 $\\lim_{n \\to \\infty} a_{n}$。`,
+      ),
+      answer: L,
+      mistakes: wrong
+        .filter((w, i) => wrong.findIndex((x) => String(x[0]) === String(w[0])) === i)
+        .map(([value, en, zh]) => ({ value, why: t(en, zh) })),
+      solution: t(solution[0], solution[1]),
+    });
   },
 );
 
@@ -2128,8 +2250,8 @@ const factorialAgainstPowers = point(
   "factorials-against-powers-of-n",
   ["Factorials against powers of n", "阶乘与 n 的幂比较"],
   [
-    "Factorials beat fixed exponentials, but $n^{n}$ beats factorials: $\\frac{n!}{n^{n}} \\le \\frac{1}{n}$, since each of the other factors is at most $1$. And $\\frac{(n + k)!}{n!}$ is a polynomial of degree $k$, so it can be compared directly with $n^{k}$.",
-    "阶乘超过固定底数的指数函数，但 $n^{n}$ 超过阶乘：$\\frac{n!}{n^{n}} \\le \\frac{1}{n}$，因为其余每个因子都不超过 $1$。而 $\\frac{(n + k)!}{n!}$ 是 $k$ 次多项式，可以直接与 $n^{k}$ 比较。",
+    "Factorials beat fixed exponentials, but $n^{n}$ beats factorials: $\\frac{n!}{n^{n}} \\le \\frac{1}{n}$, since each of the other factors is at most $1$. And $\\frac{(n + k)!}{n!}$ is a polynomial of degree $k$, so it can be compared directly with $n^{k}$. For example, $\\frac{n!}{n^{n}} = \\frac{1}{n} \\cdot \\frac{2}{n} \\cdots \\frac{n}{n} \\le \\frac{1}{n} \\to 0$, while $\\frac{(n + 2)!}{n! \\, n^{2}} = \\frac{(n + 1)(n + 2)}{n^{2}} \\to 1$.\n\nCheck: at $n = 10$, $\\frac{10!}{10^{10}} \\approx 0.00036$, already far below $\\frac{1}{10}$.\n\n> **Watch out.** $n!$ and $n^{n}$ have the same number of factors, but the factors of $n^{n}$ are all as large as the largest factor of $n!$.",
+    "阶乘超过固定底数的指数函数，但 $n^{n}$ 超过阶乘：$\\frac{n!}{n^{n}} \\le \\frac{1}{n}$，因为其余每个因子都不超过 $1$。而 $\\frac{(n + k)!}{n!}$ 是 $k$ 次多项式，可以直接与 $n^{k}$ 比较。例如 $\\frac{n!}{n^{n}} = \\frac{1}{n} \\cdot \\frac{2}{n} \\cdots \\frac{n}{n} \\le \\frac{1}{n} \\to 0$，而 $\\frac{(n + 2)!}{n! \\, n^{2}} = \\frac{(n + 1)(n + 2)}{n^{2}} \\to 1$。\n\n检验：$n = 10$ 时 $\\frac{10!}{10^{10}} \\approx 0.00036$，已远小于 $\\frac{1}{10}$。\n\n> **注意。** $n!$ 与 $n^{n}$ 的因子个数相同，但 $n^{n}$ 的每个因子都和 $n!$ 最大的因子一样大。",
   ],
   (rng) => {
     const c = rng.int(2, 9) * rng.pick([-1, 1]);
@@ -2145,24 +2267,160 @@ const factorialAgainstPowers = point(
     const inf = c > 0 ? "\\infty" : "-\\infty";
     const answer = kind === "shift" ? `${c}` : kind === "over-exp" ? inf : "0";
     const opts = ["0", `${c}`, inf, "1"].filter((o) => o !== answer).slice(0, 3);
-    const whyEn = {
-      "over-nn": `$\\frac{n!}{n^{n}} \\le \\frac{1}{n}$, so the sequence is squeezed to $0$.`,
-      "over-exp": `The factorial eventually gains factors larger than $${a}$, so the size of the quotient grows without bound.`,
-      shift: `$\\frac{(n + ${k})!}{n!}$ is a polynomial of degree $${k}$ with leading coefficient $1$, so its quotient by $n^{${k}}$ tends to $1$.`,
-      power: `The factorial grows faster than any fixed power of $n$, so the quotient tends to $0$.`,
-    }[kind];
-    const whyZh = {
-      "over-nn": `$\\frac{n!}{n^{n}} \\le \\frac{1}{n}$，所以由夹逼定理，数列趋于 $0$。`,
-      "over-exp": `阶乘最终会乘上大于 $${a}$ 的因子，所以商的大小无限增大。`,
-      shift: `$\\frac{(n + ${k})!}{n!}$ 是首项系数为 $1$ 的 $${k}$ 次多项式，所以它除以 $n^{${k}}$ 趋于 $1$。`,
-      power: `阶乘比 $n$ 的任何固定次幂增长得都快，所以商趋于 $0$。`,
-    }[kind];
-    return choose(
-      rng,
-      [`Find $\\lim_{n \\to \\infty} ${expr}$.`, `求 $\\lim_{n \\to \\infty} ${expr}$。`],
-      same2(answer),
-      opts.map(same2),
-      [`${whyEn} The limit is $${answer}$.`, `${whyZh}极限是 $${answer}$。`],
+    const fact = (n: number) => {
+      let f = 1;
+      for (let i = 2; i <= n; i++) f *= i;
+      return f;
+    };
+    const sci = (x: number) => {
+      const [m, e] = x.toExponential(1).split("e");
+      return `${m} \\times 10^{${Number(e)}}`;
+    };
+    const factors = [...Array(k).keys()].map((j) => `(n + ${j + 1})`).join("");
+    const parts: Record<typeof kind, readonly PairStep[]> = {
+      "over-nn": [
+        [
+          ["Write the quotient as a product", "把商写成乘积"],
+          ["Pair each factor of $n!$ with a factor $n$:", "把 $n!$ 的每个因子与一个 $n$ 配对："],
+          ["\\frac{n!}{n^{n}} = \\frac{1}{n} \\cdot \\frac{2}{n} \\cdots \\frac{n}{n}"],
+        ],
+        [
+          ["Bound it", "估计它的大小"],
+          [
+            "Every factor after the first is at most $1$, so the quotient is squeezed to $0$:",
+            "第一个之后的每个因子都不超过 $1$，所以商被夹逼到 $0$：",
+          ],
+          [`0 < \\frac{n!}{n^{n}} \\le \\frac{1}{n} \\to 0`, `${c} \\cdot \\frac{n!}{n^{n}} \\to 0`],
+        ],
+      ],
+      "over-exp": [
+        [
+          ["Compare consecutive terms", "比较相邻两项"],
+          ["The ratio of the next term to this one is", "后一项与这一项之比是"],
+          [`\\frac{(n + 1)!}{${a}^{n+1}} \\div \\frac{n!}{${a}^{n}} = \\frac{n + 1}{${a}}`],
+        ],
+        [
+          ["Let n grow", "令 n 增大"],
+          [
+            `Once $n + 1 > ${2 * a}$, every ratio is above $2$, so the terms at least double at each step and their size grows without bound, with the sign of $${c}$.`,
+            `当 $n + 1 > ${2 * a}$ 时，每个比都大于 $2$，各项每一步至少翻倍，大小无限增大，符号与 $${c}$ 相同。`,
+          ],
+          [`\\lim_{n \\to \\infty} ${expr} = ${inf}`],
+        ],
+      ],
+      shift: [
+        [
+          ["Cancel the factorials", "约去阶乘"],
+          [`Only the $${k}$ factors above $n$ are left:`, `只剩下大于 $n$ 的 $${k}$ 个因子：`],
+          [`\\frac{(n + ${k})!}{n!} = ${factors}`],
+        ],
+        [
+          ["Divide by the power", "除以幂"],
+          [`Divide each of the $${k}$ factors by one $n$:`, `用 $${k}$ 个 $n$ 分别去除每个因子：`],
+          [`${c} \\cdot ${[...Array(k).keys()].map((j) => `\\left(1 + \\frac{${j + 1}}{n}\\right)`).join("")} \\to ${c}`],
+        ],
+      ],
+      power: [
+        [
+          ["Compare consecutive terms", "比较相邻两项"],
+          ["The ratio of the next term to this one is", "后一项与这一项之比是"],
+          [`\\frac{(n + 1)^{${a}}}{(n + 1)!} \\div \\frac{n^{${a}}}{n!} = \\frac{1}{n + 1}\\left(1 + \\frac{1}{n}\\right)^{${a}}`],
+        ],
+        [
+          ["Let n grow", "令 n 增大"],
+          [
+            "This ratio tends to $0$, so it is eventually below $\\frac{1}{2}$ and the terms at least halve at every step:",
+            "这个比趋于 $0$，最终小于 $\\frac{1}{2}$，各项每一步至少减半：",
+          ],
+          [`\\lim_{n \\to \\infty} ${expr} = 0`],
+        ],
+      ],
+    };
+    const N = 1000;
+    let product = c;
+    for (let j = 1; j <= k; j++) product *= 1 + j / N;
+    const checks: Record<typeof kind, Pair> = {
+      "over-nn": [
+        `At $n = 10$ the term is $${c} \\cdot \\frac{10!}{10^{10}} \\approx ${sci((c * fact(10)) / 1e10)}$, already close to $0$.`,
+        `$n = 10$ 时这一项为 $${c} \\cdot \\frac{10!}{10^{10}} \\approx ${sci((c * fact(10)) / 1e10)}$，已经接近 $0$。`,
+      ],
+      "over-exp": [
+        `By another route: $n! \\ge \\left(\\frac{n}{e}\\right)^{n}$, so the size of the term is at least $${Math.abs(c)}\\left(\\frac{n}{${a}e}\\right)^{n}$, which grows without bound once $n > ${a}e \\approx ${(a * Math.E).toFixed(1)}$.`,
+        `换一条路：$n! \\ge \\left(\\frac{n}{e}\\right)^{n}$，所以这一项的大小至少是 $${Math.abs(c)}\\left(\\frac{n}{${a}e}\\right)^{n}$，当 $n > ${a}e \\approx ${(a * Math.E).toFixed(1)}$ 时它无限增大。`,
+      ],
+      shift: [
+        `At $n = ${N}$ the term is $${c} \\cdot ${[...Array(k).keys()].map((j) => `${(1 + (j + 1) / N).toFixed(3)}`).join(" \\cdot ")} \\approx ${product.toFixed(3)}$, close to $${c}$.`,
+        `$n = ${N}$ 时这一项为 $${c} \\cdot ${[...Array(k).keys()].map((j) => `${(1 + (j + 1) / N).toFixed(3)}`).join(" \\cdot ")} \\approx ${product.toFixed(3)}$，接近 $${c}$。`,
+      ],
+      power: [
+        `At $n = 40$ the term is $\\frac{${c} \\cdot 40^{${a}}}{40!} \\approx ${sci((c * 40 ** a) / fact(40))}$, already close to $0$.`,
+        `$n = 40$ 时这一项为 $\\frac{${c} \\cdot 40^{${a}}}{40!} \\approx ${sci((c * 40 ** a) / fact(40))}$，已经接近 $0$。`,
+      ],
+    };
+    const reasons: Record<typeof kind, readonly (readonly [string, string, string])[]> = {
+      "over-nn": [
+        [
+          `${c}`,
+          "The quotient has no factor that stays near $1$: it is at most $\\frac{1}{n}$",
+          "这个商不会停在常数附近：它不超过 $\\frac{1}{n}$",
+        ],
+        [
+          inf,
+          "Factorials beat exponentials with a fixed base, but the base of $n^{n}$ grows with $n$",
+          "阶乘超过底数固定的指数函数，但 $n^{n}$ 的底数随 $n$ 增大",
+        ],
+        [
+          "1",
+          "$n!$ and $n^{n}$ have the same number of factors, but those of $n^{n}$ are all $n$",
+          "$n!$ 与 $n^{n}$ 的因子个数相同，但 $n^{n}$ 的因子都是 $n$",
+        ],
+      ],
+      "over-exp": [
+        ["0", "That would hold for a power over $n!$; here $n!$ is in the numerator", "这对 $n!$ 在分母上的情形才成立；这里 $n!$ 在分子上"],
+        [
+          `${c}`,
+          `The quotient has no finite limit: $n!$ eventually gains factors larger than $${a}$`,
+          `这个商没有有限的极限：$n!$ 最终会乘上大于 $${a}$ 的因子`,
+        ],
+        ["1", `$n!$ and $${a}^{n}$ do not grow at the same rate`, `$n!$ 与 $${a}^{n}$ 增长得不一样快`],
+      ],
+      shift: [
+        [
+          "0",
+          `$\\frac{(n + ${k})!}{n!}$ is a polynomial of degree $${k}$, the same degree as $n^{${k}}$`,
+          `$\\frac{(n + ${k})!}{n!}$ 是 $${k}$ 次多项式，与 $n^{${k}}$ 次数相同`,
+        ],
+        [
+          inf,
+          `Only $${k}$ factors are left after cancelling, each about $n$, which matches $n^{${k}}$`,
+          `约去后只剩 $${k}$ 个因子，每个约为 $n$，正好与 $n^{${k}}$ 抵消`,
+        ],
+        ["1", `This leaves out the coefficient $${c}$`, `这里漏了系数 $${c}$`],
+      ],
+      power: [
+        [
+          `${c}`,
+          "The factorial in the denominator grows faster than any fixed power of $n$",
+          "分母中的阶乘比 $n$ 的任何固定次幂增长得都快",
+        ],
+        [inf, "The factorial is in the denominator, and it grows faster than the power on top", "阶乘在分母上，它比分子上的幂增长得快"],
+        [
+          "1",
+          "The quotient does not settle at $1$: each step multiplies it by a ratio that tends to $0$",
+          "这个商不会稳定在 $1$：每一步都乘以一个趋于 $0$ 的比",
+        ],
+      ],
+    };
+    const solution = walkPair(parts[kind], checks[kind]);
+    return reasoned(
+      choose(
+        rng,
+        [`Find $\\lim_{n \\to \\infty} ${expr}$.`, `求 $\\lim_{n \\to \\infty} ${expr}$。`],
+        same2(answer),
+        opts.map(same2),
+        solution,
+      ),
+      reasons[kind].map(([o, en, zh]) => [`$${o}$`, en, zh] as const),
     );
   },
 );
@@ -2171,8 +2429,8 @@ const mixedDominance = point(
   "dominant-terms-across-different-kinds-of-growth",
   ["Dominant terms across different kinds of growth", "不同增长类型中的主导项"],
   [
-    "The growth order is: logarithms, then powers of $n$, then exponentials, then factorials. In a quotient of mixed terms, only the dominant kind matters on each side, so the limit is the ratio of its coefficients and the other coefficients play no part.",
-    "增长的顺序是：对数、$n$ 的幂、指数、阶乘。在混合项的商中，每一边只有主导的那一类起作用，所以极限是它们系数的比，其他系数不起作用。",
+    "The growth order is: logarithms, then powers of $n$, then exponentials, then factorials. In a quotient of mixed terms, only the dominant kind matters on each side, so the limit is the ratio of its coefficients and the other coefficients play no part. For $\\frac{3 \\cdot 2^{n} + n^{5}}{4 \\cdot 2^{n} + 7n^{5}}$, divide through by $2^{n}$: $\\frac{n^{5}}{2^{n}} \\to 0$, so the limit is $\\frac{3}{4}$.\n\nCheck: at $n = 60$ the quotient is about $0.75$.\n\n> **Watch out.** The coefficient $7$ of the slower term plays no part, however large it is.",
+    "增长的顺序是：对数、$n$ 的幂、指数、阶乘。在混合项的商中，每一边只有主导的那一类起作用，所以极限是它们系数的比，其他系数不起作用。对 $\\frac{3 \\cdot 2^{n} + n^{5}}{4 \\cdot 2^{n} + 7n^{5}}$，分子分母同除以 $2^{n}$：$\\frac{n^{5}}{2^{n}} \\to 0$，所以极限是 $\\frac{3}{4}$。\n\n检验：$n = 60$ 时这个商约为 $0.75$。\n\n> **注意。** 较慢一项的系数 $7$ 不起作用，无论它多大。",
   ],
   (rng) => {
     const c = nz(rng, 9);
@@ -2187,15 +2445,64 @@ const mixedDominance = point(
     const top = poly(term(c, big), term(1, small));
     const bottom = poly(term(d, big), term(e, small));
     const answer = Q.of(c, d);
-    return ask(
-      [`Find $\\lim_{n \\to \\infty} \\frac{${top}}{${bottom}}$.`, `求 $\\lim_{n \\to \\infty} \\frac{${top}}{${bottom}}$。`],
-      answer,
-      [Q.of(1, e), Q.of(c, e), Q.of(c + 1, d + e === 0 ? 1 : d + e)],
+    const N = { factorial: 30, exponential: 60, power: 10000 }[kind];
+    let f = 1;
+    for (let i = 2; i <= N; i++) f *= i;
+    const bigN = { factorial: f, exponential: p ** N, power: N ** k }[kind];
+    const smallN = { factorial: p ** N, exponential: N ** k, power: Math.log(N) }[kind];
+    const value = (c * bigN + smallN) / (d * bigN + e * smallN);
+    const wrong: readonly (readonly [Q, string, string])[] = [
       [
-        `$${big}$ grows faster than $${small}$, so dividing through by $${big}$ leaves the ratio of their coefficients, $${answer.toLatex()}$.`,
-        `$${big}$ 比 $${small}$ 增长得快，所以分子分母同除以 $${big}$，得它们的系数之比 $${answer.toLatex()}$。`,
+        Q.of(1, e),
+        `This is the ratio of the coefficients of the slower terms $${small}$; the faster terms $${big}$ decide the limit`,
+        `这是较慢项 $${small}$ 的系数之比；决定极限的是较快项 $${big}$`,
+      ],
+      [
+        Q.of(c, e),
+        `This divides the fast term on top by the slow term below; divide both by $${big}$`,
+        `这里用分子的快项除以分母的慢项；分子分母都要除以 $${big}$`,
+      ],
+      ...(d + e === 0
+        ? []
+        : [
+            [
+              Q.of(c + 1, d + e),
+              "This adds up all the coefficients on each side; only the dominant terms count",
+              "这里把每一边的系数全部相加；只有主导项起作用",
+            ] as const,
+          ]),
+    ];
+    const solution = walkPair(
+      [
+        [
+          ["Find the dominant term", "找出主导项"],
+          [
+            `$${big}$ grows faster than $${small}$, so divide the numerator and the denominator by $${big}$:`,
+            `$${big}$ 比 $${small}$ 增长得快，所以分子分母同除以 $${big}$：`,
+          ],
+          [`\\frac{${top}}{${bottom}} = \\frac{${c} + \\frac{${small}}{${big}}}{${d} + ${e} \\cdot \\frac{${small}}{${big}}}`],
+        ],
+        [
+          ["Let n grow", "令 n 增大"],
+          [`$\\frac{${small}}{${big}} \\to 0$:`, `$\\frac{${small}}{${big}} \\to 0$：`],
+          [
+            `\\lim_{n \\to \\infty} \\frac{${top}}{${bottom}} = \\frac{${c}}{${d}}${Q.of(c, d).toLatex() === `\\frac{${c}}{${d}}` ? "" : ` = ${answer.toLatex()}`}`,
+          ],
+        ],
+      ],
+      [
+        `Put in a large $n$: at $n = ${N}$ the quotient is about $${Number(value.toFixed(4))}$, matching $${answer.isInteger() ? answer.toLatex() : `${answer.toLatex()} \\approx ${Number(answer.toNumber().toFixed(4))}`}$.`,
+        `代入一个较大的 $n$：$n = ${N}$ 时这个商约为 $${Number(value.toFixed(4))}$，与 $${answer.isInteger() ? answer.toLatex() : `${answer.toLatex()} \\approx ${Number(answer.toNumber().toFixed(4))}`}$ 一致。`,
       ],
     );
+    return numberProblem({
+      prompt: t(`Find $\\lim_{n \\to \\infty} \\frac{${top}}{${bottom}}$.`, `求 $\\lim_{n \\to \\infty} \\frac{${top}}{${bottom}}$。`),
+      answer,
+      mistakes: wrong
+        .filter((w, i) => wrong.findIndex((x) => String(x[0]) === String(w[0])) === i)
+        .map(([value, en, zh]) => ({ value, why: t(en, zh) })),
+      solution: t(solution[0], solution[1]),
+    });
   },
 );
 
@@ -2203,23 +2510,65 @@ const largestTerm = point(
   "the-largest-term-of-a-sequence",
   ["The largest term of a sequence", "数列的最大项"],
   [
-    "A sequence need not be monotonic from the start. If $f$ rises and then falls with a peak at an integer, the largest term of $a_{n} = f(n)$ is at that integer, and the sequence decreases after it. Differentiating $f$ locates the peak.",
-    "数列不一定从一开始就单调。如果 $f$ 先升后降，峰值在某个整数处，那么 $a_{n} = f(n)$ 的最大项就在这个整数处，此后数列递减。对 $f$ 求导就能找到峰值。",
+    "A sequence need not be monotonic from the start. If $f$ rises and then falls with a peak at an integer, the largest term of $a_{n} = f(n)$ is at that integer, and the sequence decreases after it. Differentiating $f$ locates the peak. For $a_{n} = n^{2}e^{-n/3}$, $f'(x) = xe^{-x/3}\\left(2 - \\frac{x}{3}\\right)$ changes from positive to negative at $x = 6$, so $a_{6}$ is the largest term.\n\nCheck: $\\frac{a_{6}}{a_{5}} = \\frac{36}{25}e^{-1/3} \\approx 1.03 > 1$ and $\\frac{a_{7}}{a_{6}} = \\frac{49}{36}e^{-1/3} \\approx 0.98 < 1$.\n\n> **Watch out.** The peak is where $\\frac{x}{3} = 2$, at $x = 6$, not at $x = 3$: the power $2$ moves it.",
+    "数列不一定从一开始就单调。如果 $f$ 先升后降，峰值在某个整数处，那么 $a_{n} = f(n)$ 的最大项就在这个整数处，此后数列递减。对 $f$ 求导就能找到峰值。对 $a_{n} = n^{2}e^{-n/3}$，$f'(x) = xe^{-x/3}\\left(2 - \\frac{x}{3}\\right)$ 在 $x = 6$ 处由正变负，所以 $a_{6}$ 是最大项。\n\n检验：$\\frac{a_{6}}{a_{5}} = \\frac{36}{25}e^{-1/3} \\approx 1.03 > 1$，$\\frac{a_{7}}{a_{6}} = \\frac{49}{36}e^{-1/3} \\approx 0.98 < 1$。\n\n> **注意。** 峰值在 $\\frac{x}{3} = 2$ 即 $x = 6$ 处，不在 $x = 3$：幂次 $2$ 使峰值移动。",
   ],
   (rng) => {
     const k = rng.int(2, 9);
     const p = rng.int(1, 5);
     const peak = p * k;
+    const xp = p === 1 ? "x" : `x^{${p}}`;
     const a = `${p === 1 ? "n" : `n^{${p}}`}e^{-n/${k}}`;
-    return ask(
-      [`For which $n$ is the term $a_{n} = ${a}$ largest?`, `当 $n$ 为何值时，$a_{n} = ${a}$ 这一项最大？`],
-      peak,
-      [peak + 1, k, p + k],
+    const f = (n: number) => n ** p * Math.exp(-n / k);
+    const up = f(peak) / f(peak - 1);
+    const down = f(peak + 1) / f(peak);
+    const wrong: readonly (readonly [number, string, string])[] = [
       [
-        `With $f(x) = ${p === 1 ? "x" : `x^{${p}}`}e^{-x/${k}}$, the derivative has the sign of $${p} - \\frac{x}{${k}}$. It changes from positive to negative at $x = ${peak}$, which is an integer, so the largest term is $a_{${peak}}$.`,
-        `设 $f(x) = ${p === 1 ? "x" : `x^{${p}}`}e^{-x/${k}}$，导数的符号与 $${p} - \\frac{x}{${k}}$ 相同。它在 $x = ${peak}$ 处由正变负，这是整数，所以最大项是 $a_{${peak}}$。`,
+        peak + 1,
+        `After $x = ${peak}$ the function is decreasing, so $a_{${peak + 1}} < a_{${peak}}$`,
+        `$x = ${peak}$ 之后函数递减，所以 $a_{${peak + 1}} < a_{${peak}}$`,
+      ],
+      [
+        k,
+        `This solves $\\frac{x}{${k}} = 1$; the derivative is zero where $\\frac{x}{${k}} = ${p}$`,
+        `这里解的是 $\\frac{x}{${k}} = 1$；导数在 $\\frac{x}{${k}} = ${p}$ 处为零`,
+      ],
+      [
+        p + k,
+        `This adds $${p}$ and $${k}$; the derivative is zero where $\\frac{x}{${k}} = ${p}$`,
+        `这里把 $${p}$ 与 $${k}$ 相加；导数在 $\\frac{x}{${k}} = ${p}$ 处为零`,
+      ],
+    ];
+    const solution = walkPair(
+      [
+        [
+          ["Differentiate", "求导"],
+          [`Let $f(x) = ${xp}e^{-x/${k}}$ and use the product rule:`, `设 $f(x) = ${xp}e^{-x/${k}}$，用乘积法则：`],
+          [`f'(x) = ${p === 1 ? "" : p === 2 ? "x" : `x^{${p - 1}}`}e^{-x/${k}}\\left(${p} - \\frac{x}{${k}}\\right)`],
+        ],
+        [
+          ["Find the peak", "找出峰值"],
+          [
+            `For $x > 0$ the sign of $f'$ is that of $${p} - \\frac{x}{${k}}$, positive before $x = ${peak}$ and negative after it. The peak is at an integer, so it is a term of the sequence:`,
+            `当 $x > 0$ 时 $f'$ 的符号与 $${p} - \\frac{x}{${k}}$ 相同，在 $x = ${peak}$ 之前为正，之后为负。峰值在整数处，所以它就是数列的一项：`,
+          ],
+          [`n = ${peak}`],
+        ],
+      ],
+      [
+        `Compare neighbouring terms: $\\frac{a_{${peak}}}{a_{${peak - 1}}} \\approx ${up.toFixed(4)} > 1$ and $\\frac{a_{${peak + 1}}}{a_{${peak}}} \\approx ${down.toFixed(4)} < 1$, so the terms rise up to $a_{${peak}}$ and fall after it.`,
+        `比较相邻两项：$\\frac{a_{${peak}}}{a_{${peak - 1}}} \\approx ${up.toFixed(4)} > 1$，$\\frac{a_{${peak + 1}}}{a_{${peak}}} \\approx ${down.toFixed(4)} < 1$，所以各项增大到 $a_{${peak}}$，之后减小。`,
       ],
     );
+    return numberProblem({
+      prompt: t(`For which $n$ is the term $a_{n} = ${a}$ largest?`, `当 $n$ 为何值时，$a_{n} = ${a}$ 这一项最大？`),
+      answer: peak,
+      form: "integer",
+      mistakes: wrong
+        .filter((w, i) => wrong.findIndex((x) => String(x[0]) === String(w[0])) === i)
+        .map(([value, en, zh]) => ({ value, why: t(en, zh) })),
+      solution: t(solution[0], solution[1]),
+    });
   },
 );
 
@@ -2227,8 +2576,8 @@ const ratioWithLinearFactor = point(
   "ratios-that-settle-only-after-a-while",
   ["Ratios that settle only after a while", "比值过一段时间才稳定"],
   [
-    "For $a_{n} = n\\left(\\frac{p}{q}\\right)^{n}$ the ratio is $\\frac{n + 1}{n} \\cdot \\frac{p}{q}$, which may start above $1$. Solving the strict inequality gives where the decrease begins. If the boundary is an integer, the ratio there equals $1$, so that $n$ does not count.",
-    "对 $a_{n} = n\\left(\\frac{p}{q}\\right)^{n}$，比值是 $\\frac{n + 1}{n} \\cdot \\frac{p}{q}$，开始时可能大于 $1$。解严格不等式就能知道从哪里开始递减。如果边界是整数，那里的比值等于 $1$，所以这个 $n$ 不算。",
+    "For $a_{n} = n\\left(\\frac{p}{q}\\right)^{n}$ the ratio is $\\frac{n + 1}{n} \\cdot \\frac{p}{q}$, which may start above $1$. Solving the strict inequality gives where the decrease begins. If the boundary is an integer, the ratio there equals $1$, so that $n$ does not count. For $a_{n} = n\\left(\\frac{2}{3}\\right)^{n}$: $\\frac{n + 1}{n} \\cdot \\frac{2}{3} < 1$ means $2n + 2 < 3n$, that is $n > 2$, so the terms decrease from $n = 3$ on.\n\nCheck: $a_{2} = a_{3} = \\frac{8}{9}$ and $a_{4} = \\frac{64}{81} < \\frac{8}{9}$.\n\n> **Watch out.** At the boundary $n = 2$ the ratio is exactly $1$: $a_{3} = a_{2}$, which is not a decrease.",
+    "对 $a_{n} = n\\left(\\frac{p}{q}\\right)^{n}$，比值是 $\\frac{n + 1}{n} \\cdot \\frac{p}{q}$，开始时可能大于 $1$。解严格不等式就能知道从哪里开始递减。如果边界是整数，那里的比值等于 $1$，所以这个 $n$ 不算。对 $a_{n} = n\\left(\\frac{2}{3}\\right)^{n}$：$\\frac{n + 1}{n} \\cdot \\frac{2}{3} < 1$ 即 $2n + 2 < 3n$，也就是 $n > 2$，所以从 $n = 3$ 起各项递减。\n\n检验：$a_{2} = a_{3} = \\frac{8}{9}$，$a_{4} = \\frac{64}{81} < \\frac{8}{9}$。\n\n> **注意。** 在边界 $n = 2$ 处比值恰好为 $1$：$a_{3} = a_{2}$，这不是递减。",
   ],
   (rng) => {
     const q = rng.int(3, 15);
@@ -2236,19 +2585,70 @@ const ratioWithLinearFactor = point(
     const bound = Q.of(p, q - p);
     const floor = Math.floor(p / (q - p));
     const N = floor + 1;
-    const r = Q.of(p, q).toLatex();
-    return ask(
+    const rq = Q.of(p, q);
+    const r = rq.toLatex();
+    const ratioAt = (n: number) => Q.of(n + 1, n).mul(rq);
+    const wrong: readonly (readonly [number, string, string])[] = [
+      ...(floor >= 1
+        ? [
+            [
+              floor,
+              `At $n = ${floor}$ the ratio is $${ratioAt(floor).toLatex()}$, not below $1$, so $a_{${floor + 1}} < a_{${floor}}$ fails`,
+              `$n = ${floor}$ 时比值为 $${ratioAt(floor).toLatex()}$，不小于 $1$，所以 $a_{${floor + 1}} < a_{${floor}}$ 不成立`,
+            ] as const,
+          ]
+        : []),
       [
+        N + 1,
+        `At $n = ${N}$ the ratio is already $${ratioAt(N).toLatex()} < 1$, so $N = ${N}$ works`,
+        `$n = ${N}$ 时比值已经是 $${ratioAt(N).toLatex()} < 1$，所以 $N = ${N}$ 就可以`,
+      ],
+      [
+        1,
+        `This leaves out the factor $\\frac{n + 1}{n}$; with it the ratio starts above $${r}$`,
+        `这里漏了因子 $\\frac{n + 1}{n}$；有了它，比值开始时大于 $${r}$`,
+      ],
+    ];
+    const solution = walkPair(
+      [
+        [
+          ["Write the ratio", "写出比值"],
+          ["Divide the next term by this one:", "用后一项除以这一项："],
+          [`\\frac{a_{n+1}}{a_{n}} = \\frac{n + 1}{n} \\cdot ${r}`],
+        ],
+        [
+          ["Solve the strict inequality", "解严格不等式"],
+          [`Multiply both sides by $${q}n$:`, `两边同乘 $${q}n$：`],
+          [`${p}(n + 1) < ${q}n \\iff n > ${bound.toLatex()}`],
+        ],
+        [
+          ["Take the smallest integer", "取最小的整数"],
+          [`The smallest integer above $${bound.toLatex()}$ is`, `大于 $${bound.toLatex()}$ 的最小整数是`],
+          [`N = ${N}`],
+        ],
+      ],
+      N >= 2
+        ? [
+            `Test the ratio on both sides of $N$: at $n = ${N - 1}$ it is $${ratioAt(N - 1).toLatex()} \\ge 1$, and at $n = ${N}$ it is $${ratioAt(N).toLatex()} < 1$; it keeps falling after that, since $\\frac{n + 1}{n}$ does.`,
+            `在 $N$ 两侧检验比值：$n = ${N - 1}$ 时为 $${ratioAt(N - 1).toLatex()} \\ge 1$，$n = ${N}$ 时为 $${ratioAt(N).toLatex()} < 1$；此后 $\\frac{n + 1}{n}$ 减小，比值也一直减小。`,
+          ]
+        : [
+            `At $n = 1$ the ratio is already $2 \\cdot ${r} = ${ratioAt(1).toLatex()} < 1$, and it only falls after that, since $\\frac{n + 1}{n}$ does.`,
+            `$n = 1$ 时比值已经是 $2 \\cdot ${r} = ${ratioAt(1).toLatex()} < 1$，此后 $\\frac{n + 1}{n}$ 减小，比值也只会减小。`,
+          ],
+    );
+    return numberProblem({
+      prompt: t(
         `Let $a_{n} = n\\left(${r}\\right)^{n}$. Find the smallest $N$ such that $a_{n+1} < a_{n}$ for every $n \\ge N$.`,
         `设 $a_{n} = n\\left(${r}\\right)^{n}$。求最小的 $N$，使得对每个 $n \\ge N$ 都有 $a_{n+1} < a_{n}$。`,
-      ],
-      N,
-      [floor === 0 ? 2 : floor, N + 1, q],
-      [
-        `$\\frac{a_{n+1}}{a_{n}} = \\frac{n + 1}{n} \\cdot ${r} < 1$ means $n > ${bound.toLatex()}$. The smallest such integer is $${N}$.`,
-        `$\\frac{a_{n+1}}{a_{n}} = \\frac{n + 1}{n} \\cdot ${r} < 1$ 即 $n > ${bound.toLatex()}$。满足它的最小整数是 $${N}$。`,
-      ],
-    );
+      ),
+      answer: N,
+      form: "integer",
+      mistakes: wrong
+        .filter((w, i) => wrong.findIndex((x) => String(x[0]) === String(w[0])) === i)
+        .map(([value, en, zh]) => ({ value, why: t(en, zh) })),
+      solution: t(solution[0], solution[1]),
+    });
   },
 );
 

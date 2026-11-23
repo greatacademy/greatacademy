@@ -808,27 +808,59 @@ const smallestSpeed: KnowledgePointDef = {
   id: "the-smallest-speed-in-the-plane",
   title: t("The smallest speed in the plane", "平面运动的最小速率"),
   explanation: t(
-    "Speed is the length of the velocity vector, and it contains a square root. Its smallest value occurs at the same time as the smallest value of its square, which is usually a polynomial. So minimize the squared speed by differentiating, and take the root only if the speed itself is needed.",
-    "速率是速度向量的长度，含有平方根。它与自身的平方在同一时刻取最小值，而平方通常是多项式。所以通过求导使速率的平方最小，只有需要速率本身时才开方。",
+    "Speed is the length of the velocity vector, and it contains a square root. Its smallest value occurs at the same time as the smallest value of its square, which is usually a polynomial. So minimize the squared speed by differentiating, and take the root only if the speed itself is needed. For $x = t^{2} - 2t$, $y = t^{2} - 6t$, the velocity is $\\langle 2t - 2, 2t - 6 \\rangle$ and the squared speed is $4(t - 1)^{2} + 4(t - 3)^{2}$. Its derivative $8(t - 1) + 8(t - 3)$ is zero at $t = 2$, where the squared speed is $4 + 4 = 8$.\n\nCheck: completing the square, $4(t - 1)^{2} + 4(t - 3)^{2} = 8(t - 2)^{2} + 8$, which is never below $8$.\n\n> **Watch out.** The smallest squared speed is $8$; the smallest speed is $\\sqrt{8}$. Answer the quantity asked for.",
+    "速率是速度向量的长度，含有平方根。它与自身的平方在同一时刻取最小值，而平方通常是多项式。所以通过求导使速率的平方最小，只有需要速率本身时才开方。对 $x = t^{2} - 2t$，$y = t^{2} - 6t$，速度是 $\\langle 2t - 2, 2t - 6 \\rangle$，速率的平方是 $4(t - 1)^{2} + 4(t - 3)^{2}$。它的导数 $8(t - 1) + 8(t - 3)$ 在 $t = 2$ 处为零，此时速率的平方是 $4 + 4 = 8$。\n\n检验：配方得 $4(t - 1)^{2} + 4(t - 3)^{2} = 8(t - 2)^{2} + 8$，它永远不小于 $8$。\n\n> **注意。** 速率平方的最小值是 $8$，速率的最小值是 $\\sqrt{8}$。要回答题目所问的量。",
   ),
   generate(rng) {
     const p = rng.int(1, 9);
     const q = different(rng, 1, 9, p);
     const answer = 2 * (p - q) ** 2;
     const middle = Q.of(p + q, 2);
-    return numberProblem({
-      prompt: t(
+    const half = Q.of(p - q, 2);
+    return deNumber(
+      [
         `A particle moves with $x(t) = ${poly([1, "t^2"], [-2 * p, "t"])}$ and $y(t) = ${poly([1, "t^2"], [-2 * q, "t"])}$. Find the smallest value of the square of its speed.`,
         `质点的运动满足 $x(t) = ${poly([1, "t^2"], [-2 * p, "t"])}$，$y(t) = ${poly([1, "t^2"], [-2 * q, "t"])}$。求其速率平方的最小值。`,
-      ),
+      ],
       answer,
-      form: "integer",
-      wrong: [(p - q) ** 2, 4 * (p - q) ** 2, Math.abs(p - q)],
-      solution: t(
-        `The squared speed is $4(t - ${p})^2 + 4(t - ${q})^2$, which is smallest at $t = ${middle.toLatex()}$, midway between $${p}$ and $${q}$. There each square is $\\frac{(${p} - ${q})^2}{4}$, so the value is $2(${p} - ${q})^2 = ${answer}$.`,
-        `速率的平方是 $4(t - ${p})^2 + 4(t - ${q})^2$，在 $${p}$ 与 $${q}$ 正中间的 $t = ${middle.toLatex()}$ 处最小。此时每个平方都是 $\\frac{(${p} - ${q})^2}{4}$，所以最小值是 $2(${p} - ${q})^2 = ${answer}$。`,
-      ),
-    });
+      [
+        deStepOf(
+          ["Write the squared speed", "写出速率的平方"],
+          "Differentiate each component and add the squares:",
+          "对每个分量求导，再把平方相加：",
+          `v^{2} = (2t - ${2 * p})^{2} + (2t - ${2 * q})^{2} = 4(t - ${p})^{2} + 4(t - ${q})^{2}`,
+        ),
+        deStepOf(
+          ["Find where it is smallest", "求最小值点"],
+          "Set the derivative to zero:",
+          "令导数为零：",
+          `8(t - ${p}) + 8(t - ${q}) = 0 \\implies t = ${middle.toLatex()}`,
+        ),
+        deStepOf(
+          ["Evaluate", "求值"],
+          `At $t = ${middle.toLatex()}$ each bracket is $\\pm ${half.abs().toLatex()}$:`,
+          `在 $t = ${middle.toLatex()}$ 处每个括号都是 $\\pm ${half.abs().toLatex()}$：`,
+          `v^{2} = 4 \\cdot ${half.mul(half).toLatex()} + 4 \\cdot ${half.mul(half).toLatex()} = ${answer}`,
+        ),
+      ],
+      [
+        `Complete the square instead: $4(t - ${p})^{2} + 4(t - ${q})^{2} = 8\\left(t - ${middle.toLatex()}\\right)^{2} + ${answer}$, which is never below $${answer}$ and equals it at $t = ${middle.toLatex()}$.`,
+        `改用配方：$4(t - ${p})^{2} + 4(t - ${q})^{2} = 8\\left(t - ${middle.toLatex()}\\right)^{2} + ${answer}$，它永远不小于 $${answer}$，并在 $t = ${middle.toLatex()}$ 时取到。`,
+      ],
+      [
+        [
+          (p - q) ** 2,
+          `This is only one of the two squares; the squared speed adds $4(t - ${p})^{2}$ and $4(t - ${q})^{2}$`,
+          `这只是两个平方中的一个；速率的平方是 $4(t - ${p})^{2}$ 与 $4(t - ${q})^{2}$ 之和`,
+        ],
+        [
+          4 * (p - q) ** 2,
+          `This is the squared speed at $t = ${p}$, where only $x$ stops; the smallest value is midway, at $t = ${middle.toLatex()}$`,
+          `这是 $t = ${p}$ 时速率的平方，那时只有 $x$ 方向停下；最小值在正中间的 $t = ${middle.toLatex()}$`,
+        ],
+        [middle, "This is the time of the smallest speed, not the squared speed there", "这是速率最小的时刻，而不是那时速率的平方"],
+      ],
+    );
   },
 };
 
@@ -836,26 +868,59 @@ const rangeOfAProjectile: KnowledgePointDef = {
   id: "the-range-of-a-projectile",
   title: t("The range of a projectile", "抛射体的射程"),
   explanation: t(
-    "Integrating the acceleration twice gives each component of the position. The two components share only the time. So find the landing time from the vertical component, by setting the height to zero, and substitute it into the horizontal component to get the range.",
-    "把加速度积分两次，得到位置的每个分量。两个分量只共用时间。所以先由竖直分量令高度为零求出落地时间，再代入水平分量，得到射程。",
+    "Integrating the acceleration twice gives each component of the position. The two components share only the time. So find the landing time from the vertical component, by setting the height to zero, and substitute it into the horizontal component to get the range. For a launch velocity $\\langle 20, 10 \\rangle$ m/s with $g = 10$: the height $10t - 5t^{2}$ is zero again at $t = 2$, and the horizontal position is then $20 \\cdot 2 = 40$ m.\n\nCheck: the vertical velocity $10 - 10t$ is zero at the top, $t = 1$; the flight up and down is twice that, $t = 2$.\n\n> **Watch out.** The height is also zero at $t = 0$, the launch; the landing is the other root.",
+    "把加速度积分两次，得到位置的每个分量。两个分量只共用时间。所以先由竖直分量令高度为零求出落地时间，再代入水平分量，得到射程。以速度 $\\langle 20, 10 \\rangle$ m/s 抛出、$g = 10$ 时：高度 $10t - 5t^{2}$ 在 $t = 2$ 时再次为零，这时水平位置是 $20 \\cdot 2 = 40$ 米。\n\n检验：竖直速度 $10 - 10t$ 在最高点 $t = 1$ 时为零；上升和下落共用时间是它的两倍，$t = 2$。\n\n> **注意。** 高度在 $t = 0$ 抛出时也为零；落地时刻是另一个根。",
   ),
   generate(rng) {
     const u = rng.int(1, 30);
     const w = rng.int(1, 30);
     const answer = Q.of(u * w, 5);
     const time = Q.of(w, 5);
-    return numberProblem({
-      prompt: t(
+    const top = Q.of(w, 10);
+    return deNumber(
+      [
         `A projectile leaves the ground with velocity $\\langle ${u}, ${w} \\rangle$ m/s and has acceleration $\\langle 0, -10 \\rangle$ m/s². How far from its starting point does it land, in metres?`,
         `抛射体以速度 $\\langle ${u}, ${w} \\rangle$ m/s 离开地面，加速度是 $\\langle 0, -10 \\rangle$ m/s²。它落在离起点多远处（米）？`,
-      ),
+      ],
       answer,
-      wrong: [Q.of(u * w, 10), time, Q.of(2 * u * w, 5)],
-      solution: t(
-        `The height is $${w}t - 5t^2$, which is zero again at $t = ${time.toLatex()}$. The horizontal position is $${u}t$, so the range is $${u} \\cdot ${time.toLatex()} = ${answer.toLatex()}$.`,
-        `高度是 $${w}t - 5t^2$，在 $t = ${time.toLatex()}$ 时再次为零。水平位置是 $${u}t$，所以射程是 $${u} \\cdot ${time.toLatex()} = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        deStepOf(
+          ["Integrate twice", "积分两次"],
+          "Starting from the ground with the given velocity, the position is",
+          "从地面以给定速度出发，位置是",
+          `\\mathbf{r}(t) = \\langle ${u}t, ${w}t - 5t^{2} \\rangle`,
+        ),
+        deStepOf(
+          ["Find the landing time", "求落地时刻"],
+          "The height is zero at the launch and again at landing:",
+          "高度在抛出时为零，落地时再次为零：",
+          `${w}t - 5t^{2} = t(${w} - 5t) = 0 \\implies t = ${time.toLatex()}`,
+        ),
+        deStepOf(
+          ["Find the range", "求射程"],
+          "Substitute into the horizontal position:",
+          "代入水平位置：",
+          `${u} \\cdot ${time.toLatex()} = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `By symmetry: the vertical velocity $${w} - 10t$ is zero at the top, $t = ${top.toLatex()}$, and the flight takes twice as long, $${time.toLatex()}$ s, which gives the same range $${u} \\cdot ${time.toLatex()} = ${answer.toLatex()}$.`,
+        `由对称性：竖直速度 $${w} - 10t$ 在最高点 $t = ${top.toLatex()}$ 时为零，整个飞行时间是它的两倍，即 $${time.toLatex()}$ 秒，得到同样的射程 $${u} \\cdot ${time.toLatex()} = ${answer.toLatex()}$。`,
+      ],
+      [
+        [
+          Q.of(u * w, 10),
+          `This uses the time to the top, $${top.toLatex()}$ s; the projectile lands twice as late`,
+          `这里用了到达最高点的时间 $${top.toLatex()}$ 秒；落地时间是它的两倍`,
+        ],
+        [time, "This is the landing time in seconds, not the distance", "这是落地时间（秒），不是距离"],
+        [
+          Q.of(w * w, 5),
+          `This multiplies the landing time by the vertical speed $${w}$; the range uses the horizontal speed $${u}$`,
+          `这里用落地时间乘以了竖直速度 $${w}$；射程要用水平速度 $${u}$`,
+        ],
+      ],
+    );
   },
 };
 
@@ -863,8 +928,8 @@ const limitOfLinearRecursion: KnowledgePointDef = {
   id: "the-limit-of-a-linear-recursive-sequence",
   title: t("The limit of a linear recursive sequence", "线性递推数列的极限"),
   explanation: t(
-    "If a recursive sequence converges to $L$, then both $a_n$ and $a_{n+1}$ tend to $L$, so $L$ must satisfy the recursion with both replaced by $L$. Solving this equation gives the limit. The starting value does not appear in the answer when the multiplier is smaller than $1$ in size.",
-    "如果递推数列收敛于 $L$，$a_n$ 和 $a_{n+1}$ 都趋于 $L$，所以把递推式中二者都换成 $L$ 后等式仍成立。解这个方程就得到极限。当乘数的绝对值小于 $1$ 时，答案与初始值无关。",
+    "If a recursive sequence converges to $L$, then both $a_n$ and $a_{n+1}$ tend to $L$, so $L$ must satisfy the recursion with both replaced by $L$. Solving this equation gives the limit. The starting value does not appear in the answer when the multiplier is smaller than $1$ in size. For $a_{n+1} = \\frac{1}{2}a_n + 3$: $L = \\frac{1}{2}L + 3$, so $L = 6$.\n\nCheck: $a_{n+1} - 6 = \\frac{1}{2}(a_n - 6)$, so the distance from $6$ halves at every step, whatever $a_1$ is.\n\n> **Watch out.** The equation only gives the limit if there is one: $a_{n+1} = 2a_n + 3$ also gives $L = -3$, but its distance from $-3$ doubles at every step.",
+    "如果递推数列收敛于 $L$，$a_n$ 和 $a_{n+1}$ 都趋于 $L$，所以把递推式中二者都换成 $L$ 后等式仍成立。解这个方程就得到极限。当乘数的绝对值小于 $1$ 时，答案与初始值无关。对 $a_{n+1} = \\frac{1}{2}a_n + 3$：$L = \\frac{1}{2}L + 3$，所以 $L = 6$。\n\n检验：$a_{n+1} - 6 = \\frac{1}{2}(a_n - 6)$，所以无论 $a_1$ 是多少，与 $6$ 的距离每一步都减半。\n\n> **注意。** 只有极限存在时方程才给出极限：$a_{n+1} = 2a_n + 3$ 也给出 $L = -3$，但它与 $-3$ 的距离每一步都加倍。",
   ),
   generate(rng) {
     const s = rng.int(2, 6);
@@ -873,18 +938,47 @@ const limitOfLinearRecursion: KnowledgePointDef = {
     const a1 = rng.int(0, 9);
     const answer = Q.of(q * s, s - r);
     const ratio = Q.of(r, s);
-    return numberProblem({
-      prompt: t(
-        `A sequence has $a_1 = ${a1}$ and $a_{n+1} = ${ratio.toLatex()}a_n ${q < 0 ? "-" : "+"} ${Math.abs(q)}$. Find its limit.`,
-        `数列满足 $a_1 = ${a1}$，$a_{n+1} = ${ratio.toLatex()}a_n ${q < 0 ? "-" : "+"} ${Math.abs(q)}$。求它的极限。`,
-      ),
+    const rest = Q.of(s - r, s);
+    const recursion = `${ratio.toLatex()}a_n ${q < 0 ? "-" : "+"} ${Math.abs(q)}`;
+    return deNumber(
+      [
+        `A sequence has $a_1 = ${a1}$ and $a_{n+1} = ${recursion}$. Find its limit.`,
+        `数列满足 $a_1 = ${a1}$，$a_{n+1} = ${recursion}$。求它的极限。`,
+      ],
       answer,
-      wrong: [Q.of(q), Q.of(q * s, r), Q.of(q * s, s + r)],
-      solution: t(
-        `The limit satisfies $L = ${ratio.toLatex()}L + ${inParens(q)}$, so $${Q.of(s - r, s).toLatex()}L = ${q}$ and $L = ${answer.toLatex()}$. The starting value makes no difference.`,
-        `极限满足 $L = ${ratio.toLatex()}L + ${inParens(q)}$，所以 $${Q.of(s - r, s).toLatex()}L = ${q}$，$L = ${answer.toLatex()}$。初始值不影响结果。`,
-      ),
-    });
+      [
+        deStepOf(
+          ["Replace both terms by L", "把两项都换成 L"],
+          "If the terms tend to $L$, so do the next terms:",
+          "如果各项趋于 $L$，后一项也趋于 $L$：",
+          `L = ${ratio.toLatex()}L ${q < 0 ? "-" : "+"} ${Math.abs(q)}`,
+        ),
+        deStepOf(
+          ["Solve", "求解"],
+          "Collect the terms in $L$:",
+          "把含 $L$ 的项合并：",
+          `${rest.toLatex()}L = ${q} \\implies L = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `Substitute back: $${ratio.toLatex()} \\cdot ${parQ(answer)} ${q < 0 ? "-" : "+"} ${Math.abs(q)} = ${answer.toLatex()}$. Also $a_{n+1} - ${parQ(answer)} = ${ratio.toLatex()}\\left(a_n - ${parQ(answer)}\\right)$, so the distance from the limit shrinks by the factor $${ratio.toLatex()}$ at every step, starting from $a_1 = ${a1}$ or anywhere else.`,
+        `代回检验：$${ratio.toLatex()} \\cdot ${parQ(answer)} ${q < 0 ? "-" : "+"} ${Math.abs(q)} = ${answer.toLatex()}$。而且 $a_{n+1} - ${parQ(answer)} = ${ratio.toLatex()}\\left(a_n - ${parQ(answer)}\\right)$，所以无论从 $a_1 = ${a1}$ 还是别处出发，与极限的距离每一步都乘以 $${ratio.toLatex()}$。`,
+      ],
+      [
+        [q, "This is the constant term alone; $L$ appears on both sides of the equation", "这只是常数项；$L$ 出现在方程两边"],
+        [
+          Q.of(q * s, r),
+          `This divides by the multiplier $${ratio.toLatex()}$; divide by $1 - ${ratio.toLatex()} = ${rest.toLatex()}$`,
+          `这里除以了乘数 $${ratio.toLatex()}$；应当除以 $1 - ${ratio.toLatex()} = ${rest.toLatex()}$`,
+        ],
+        [
+          Q.of(q * s, s + r),
+          `This divides by $1 + ${ratio.toLatex()}$; moving $${ratio.toLatex()}L$ across gives $1 - ${ratio.toLatex()}$`,
+          `这里除以了 $1 + ${ratio.toLatex()}$；把 $${ratio.toLatex()}L$ 移项后是 $1 - ${ratio.toLatex()}$`,
+        ],
+        [a1, "The limit does not depend on the starting value", "极限与初始值无关"],
+      ],
+    );
   },
 };
 
@@ -892,27 +986,54 @@ const limitOfNestedRoot: KnowledgePointDef = {
   id: "the-limit-of-a-monotonic-sequence-of-roots",
   title: t("The limit of a monotonic sequence of roots", "单调根式数列的极限"),
   explanation: t(
-    "A bounded monotonic sequence converges, and its limit can then be found from the recursion. Replacing every term by $L$ gives an equation, and squaring removes the root. Squaring may add a false solution, so keep the root that fits: the terms here are positive, and so is their limit.",
-    "有界单调数列收敛，于是可以由递推式求极限。把每一项都换成 $L$ 得到方程，平方后根号消失。平方可能引入增根，所以要留下合适的根：这里各项都是正的，极限也是正的。",
+    "A bounded monotonic sequence converges, and its limit can then be found from the recursion. Replacing every term by $L$ gives an equation, and squaring removes the root. Squaring may add a false solution, so keep the root that fits: the terms here are positive, and so is their limit. For $a_{n+1} = \\sqrt{6 + a_n}$: $L^{2} = 6 + L$, so $(L - 3)(L + 2) = 0$ and $L = 3$.\n\nCheck: $\\sqrt{6 + 3} = 3$, so $3$ is a fixed point of the recursion.\n\n> **Watch out.** $L = -2$ solves the squared equation, but $\\sqrt{6 - 2} = 2 \\ne -2$: a square root is never negative.",
+    "有界单调数列收敛，于是可以由递推式求极限。把每一项都换成 $L$ 得到方程，平方后根号消失。平方可能引入增根，所以要留下合适的根：这里各项都是正的，极限也是正的。对 $a_{n+1} = \\sqrt{6 + a_n}$：$L^{2} = 6 + L$，所以 $(L - 3)(L + 2) = 0$，$L = 3$。\n\n检验：$\\sqrt{6 + 3} = 3$，所以 $3$ 是递推式的不动点。\n\n> **注意。** $L = -2$ 满足平方后的方程，但 $\\sqrt{6 - 2} = 2 \\ne -2$：算术平方根不会是负数。",
   ),
   generate(rng) {
     const c = rng.int(1, 5);
     const m = c + rng.int(1, 6);
     const k = m * m - c * m;
     const other = c - m;
-    return numberProblem({
-      prompt: t(
+    return deNumber(
+      [
         `A sequence has $a_1 = 1$ and $a_{n+1} = \\sqrt{${poly([k, ""], [c, "a_n"])}}$. It is monotonic and bounded. Find its limit.`,
         `数列满足 $a_1 = 1$，$a_{n+1} = \\sqrt{${poly([k, ""], [c, "a_n"])}}$。它单调有界。求它的极限。`,
-      ),
-      answer: m,
-      form: "integer",
-      wrong: [other, k, m + 1],
-      solution: t(
-        `The limit satisfies $L^2 = ${poly([k, ""], [c, "L"])}$, whose roots are $${m}$ and $${other}$. All the terms are positive, so the limit is $${m}$.`,
-        `极限满足 $L^2 = ${poly([k, ""], [c, "L"])}$，两根是 $${m}$ 和 $${other}$。各项都是正的，所以极限是 $${m}$。`,
-      ),
-    });
+      ],
+      m,
+      [
+        deStepOf(
+          ["Replace every term by L", "把每一项换成 L"],
+          "The sequence converges, so its limit satisfies the recursion; square both sides:",
+          "数列收敛，所以极限满足递推式；两边平方：",
+          `L^{2} = ${poly([k, ""], [c, "L"])}`,
+        ),
+        deStepOf(["Solve", "求解"], "Factor the quadratic:", "因式分解：", `(L - ${m})(L ${other < 0 ? "+" : "-"} ${Math.abs(other)}) = 0`),
+        deStepOf(
+          ["Keep the root that fits", "留下合适的根"],
+          `Every term is a square root, so it is positive; the root $${other}$ is false.`,
+          `每一项都是算术平方根，所以都是正的；根 $${other}$ 是增根。`,
+          `L = ${m}`,
+        ),
+      ],
+      [
+        `Substitute back into the recursion: $\\sqrt{${k} + ${c} \\cdot ${m}} = \\sqrt{${m * m}} = ${m}$, so $${m}$ is a fixed point, while $\\sqrt{${k} + ${c} \\cdot ${parQ(Q.of(other))}} = \\sqrt{${k + c * other}} \\ne ${other}$.`,
+        `代回递推式：$\\sqrt{${k} + ${c} \\cdot ${m}} = \\sqrt{${m * m}} = ${m}$，所以 $${m}$ 是不动点；而 $\\sqrt{${k} + ${c} \\cdot ${parQ(Q.of(other))}} = \\sqrt{${k + c * other}} \\ne ${other}$。`,
+      ],
+      [
+        [
+          other,
+          "This root comes from squaring; the terms are square roots, so they and their limit are positive",
+          "这个根是平方带来的；各项都是算术平方根，它们和极限都是正的",
+        ],
+        [m * m, `This is $L^{2}$; take its root`, `这是 $L^{2}$；还要开方`],
+        [
+          k,
+          `This is the constant under the root; the limit satisfies $L^{2} = ${poly([k, ""], [c, "L"])}$`,
+          `这是根号下的常数；极限满足 $L^{2} = ${poly([k, ""], [c, "L"])}$`,
+        ],
+      ],
+      "integer",
+    );
   },
 };
 
@@ -920,22 +1041,52 @@ const telescopingFromLaterIndex: KnowledgePointDef = {
   id: "a-telescoping-series-from-a-later-index",
   title: t("A telescoping series from a later index", "从较后一项开始的裂项级数"),
   explanation: t(
-    "The sum of a telescoping series is what survives at the start. Since $\\frac{1}{n(n+1)} = \\frac{1}{n} - \\frac{1}{n+1}$, a series starting at $n = m$ leaves only the piece $\\frac{1}{m}$. The starting index therefore decides the sum, and the sum need not be the value for $n = 1$.",
-    "裂项级数的和就是开头留下的部分。由于 $\\frac{1}{n(n+1)} = \\frac{1}{n} - \\frac{1}{n+1}$，从 $n = m$ 开始的级数只留下 $\\frac{1}{m}$。所以起始下标决定了和，不一定等于从 $n = 1$ 开始的值。",
+    "The sum of a telescoping series is what survives at the start. Since $\\frac{1}{n(n+1)} = \\frac{1}{n} - \\frac{1}{n+1}$, a series starting at $n = m$ leaves only the piece $\\frac{1}{m}$. The starting index therefore decides the sum, and the sum need not be the value for $n = 1$. For example, $\\sum_{n=3}^{\\infty} \\frac{1}{n(n+1)} = \\left(\\frac{1}{3} - \\frac{1}{4}\\right) + \\left(\\frac{1}{4} - \\frac{1}{5}\\right) + \\cdots = \\frac{1}{3}$.\n\nCheck: from $n = 1$ the sum is $1$, and the skipped terms are $\\frac{1}{2} + \\frac{1}{6} = \\frac{2}{3}$; $1 - \\frac{2}{3} = \\frac{1}{3}$.\n\n> **Watch out.** The surviving piece is $\\frac{1}{m}$ for the starting index $m$, not $1$.",
+    "裂项级数的和就是开头留下的部分。由于 $\\frac{1}{n(n+1)} = \\frac{1}{n} - \\frac{1}{n+1}$，从 $n = m$ 开始的级数只留下 $\\frac{1}{m}$。所以起始下标决定了和，不一定等于从 $n = 1$ 开始的值。例如 $\\sum_{n=3}^{\\infty} \\frac{1}{n(n+1)} = \\left(\\frac{1}{3} - \\frac{1}{4}\\right) + \\left(\\frac{1}{4} - \\frac{1}{5}\\right) + \\cdots = \\frac{1}{3}$。\n\n检验：从 $n = 1$ 开始的和是 $1$，被跳过的项是 $\\frac{1}{2} + \\frac{1}{6} = \\frac{2}{3}$；$1 - \\frac{2}{3} = \\frac{1}{3}$。\n\n> **注意。** 留下的部分是起始下标 $m$ 对应的 $\\frac{1}{m}$，不是 $1$。",
   ),
   generate(rng) {
     const m = rng.int(2, 9);
     const c = rng.int(1, 9);
     const answer = Q.of(c, m);
-    return numberProblem({
-      prompt: t(`Find $\\sum_{n=${m}}^{\\infty} \\frac{${c}}{n(n+1)}$.`, `求 $\\sum_{n=${m}}^{\\infty} \\frac{${c}}{n(n+1)}$。`),
+    const lead = c === 1 ? "" : `${c}`;
+    const skipped = [...Array(m - 1).keys()].map((i) => Q.of(c, (i + 1) * (i + 2)));
+    return deNumber(
+      [`Find $\\sum_{n=${m}}^{\\infty} \\frac{${c}}{n(n+1)}$.`, `求 $\\sum_{n=${m}}^{\\infty} \\frac{${c}}{n(n+1)}$。`],
       answer,
-      wrong: [Q.of(c), Q.of(c, m + 1), Q.of(1, m)],
-      solution: t(
-        `Each term is $${c}\\left(\\frac{1}{n} - \\frac{1}{n+1}\\right)$. All pieces cancel except the first, $\\frac{${c}}{${m}}$, so the sum is $${answer.toLatex()}$.`,
-        `每一项是 $${c}\\left(\\frac{1}{n} - \\frac{1}{n+1}\\right)$。除第一部分 $\\frac{${c}}{${m}}$ 外全部抵消，所以和是 $${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        deStepOf(
+          ["Split the term", "拆开通项"],
+          "Use partial fractions:",
+          "用部分分式：",
+          `\\frac{${c}}{n(n+1)} = ${lead}\\left(\\frac{1}{n} - \\frac{1}{n+1}\\right)`,
+        ),
+        deStepOf(
+          ["Write the partial sum", "写出部分和"],
+          `From $n = ${m}$ to $n = N$, every piece cancels except the first and the last:`,
+          `从 $n = ${m}$ 到 $n = N$，除第一部分和最后一部分外全部抵消：`,
+          `S_N = ${lead}\\left(\\frac{1}{${m}} - \\frac{1}{N + 1}\\right)`,
+        ),
+        deStepOf(
+          ["Let N grow", "令 N 增大"],
+          "The last piece tends to $0$:",
+          "最后一部分趋于 $0$：",
+          `\\lim_{N \\to \\infty} S_N = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `From $n = 1$ the sum is $${c}$, and the skipped terms $${skipped.map((x) => x.toLatex()).join(" + ")}$ add up to $${Q.of(c).sub(answer).toLatex()}$, which leaves $${c} - ${Q.of(c).sub(answer).toLatex()} = ${answer.toLatex()}$.`,
+        `从 $n = 1$ 开始的和是 $${c}$，被跳过的项 $${skipped.map((x) => x.toLatex()).join(" + ")}$ 之和是 $${Q.of(c).sub(answer).toLatex()}$，剩下 $${c} -${Q.of(c).sub(answer).toLatex()} = ${answer.toLatex()}$。`,
+      ],
+      [
+        [c, "This is the sum from $n = 1$; the series starts later", "这是从 $n = 1$ 开始的和；这个级数开始得更晚"],
+        [
+          Q.of(c, m + 1),
+          `This takes $\\frac{1}{${m + 1}}$ as the surviving piece; the first piece, $\\frac{1}{${m}}$, survives`,
+          `这里把 $\\frac{1}{${m + 1}}$ 当成留下的部分；留下的是第一部分 $\\frac{1}{${m}}$`,
+        ],
+        [Q.of(1, m), `This leaves out the numerator $${c}$`, `这里漏了分子 $${c}$`],
+      ],
+    );
   },
 };
 
@@ -2787,25 +2938,59 @@ const conjugateLimit: KnowledgePointDef = {
   id: "the-limit-of-a-root-minus-n",
   title: t("The limit of a root minus $n$", "根式减 $n$ 的极限"),
   explanation: t(
-    "In $\\sqrt{n^2 + an + b} - n$, both terms grow without bound, and comparing their dominant terms alone suggests a limit of zero, which is wrong. Multiplying by the conjugate gives the quotient $\\frac{an + b}{\\sqrt{n^2 + an + b} + n}$. Its dominant terms are $an$ over $2n$, so the limit is $\\frac{a}{2}$, and $b$ plays no part.",
-    "在 $\\sqrt{n^2 + an + b} - n$ 中，两项都无限增大，只比较主导项会以为极限是零，这是错的。乘以共轭式得到商 $\\frac{an + b}{\\sqrt{n^2 + an + b} + n}$。它的主导项是 $an$ 比 $2n$，所以极限是 $\\frac{a}{2}$，$b$ 不起作用。",
+    "In $\\sqrt{n^2 + an + b} - n$, both terms grow without bound, and comparing their dominant terms alone suggests a limit of zero, which is wrong. Multiplying by the conjugate gives the quotient $\\frac{an + b}{\\sqrt{n^2 + an + b} + n}$. Its dominant terms are $an$ over $2n$, so the limit is $\\frac{a}{2}$, and $b$ plays no part. For example, $\\sqrt{n^{2} + 6n + 1} - n \\to \\frac{6}{2} = 3$.\n\nCheck: at $n = 1000$, $\\frac{6001}{\\sqrt{1006001} + 1000} \\approx 2.996$.\n\n> **Watch out.** The denominator $\\sqrt{n^{2} + an + b} + n$ is about $2n$, not $n$, so the limit is $\\frac{a}{2}$, not $a$.",
+    "在 $\\sqrt{n^2 + an + b} - n$ 中，两项都无限增大，只比较主导项会以为极限是零，这是错的。乘以共轭式得到商 $\\frac{an + b}{\\sqrt{n^2 + an + b} + n}$。它的主导项是 $an$ 比 $2n$，所以极限是 $\\frac{a}{2}$，$b$ 不起作用。例如 $\\sqrt{n^{2} + 6n + 1} - n \\to \\frac{6}{2} = 3$。\n\n检验：$n = 1000$ 时，$\\frac{6001}{\\sqrt{1006001} + 1000} \\approx 2.996$。\n\n> **注意。** 分母 $\\sqrt{n^{2} + an + b} + n$ 约为 $2n$，不是 $n$，所以极限是 $\\frac{a}{2}$，不是 $a$。",
   ),
   generate(rng) {
     const a = nonzero(rng, 12);
     const b = rng.int(1, 12);
     const answer = Q.of(a, 2);
-    return numberProblem({
-      prompt: t(
-        `Find $\\lim_{n \\to \\infty} \\left(\\sqrt{${poly([1, "n^2"], [a, "n"], [b, ""])}} - n\\right)$.`,
-        `求 $\\lim_{n \\to \\infty} \\left(\\sqrt{${poly([1, "n^2"], [a, "n"], [b, ""])}} - n\\right)$。`,
-      ),
+    const inside = poly([1, "n^2"], [a, "n"], [b, ""]);
+    const N = 1000;
+    const value = (a * N + b) / (Math.sqrt(N * N + a * N + b) + N);
+    const near = Number(value.toFixed(4));
+    return deNumber(
+      [
+        `Find $\\lim_{n \\to \\infty} \\left(\\sqrt{${inside}} - n\\right)$.`,
+        `求 $\\lim_{n \\to \\infty} \\left(\\sqrt{${inside}} - n\\right)$。`,
+      ],
       answer,
-      wrong: [Q.of(a), Q.of(0), Q.of(b, 2)],
-      solution: t(
-        `Multiplying by the conjugate gives $\\frac{${poly([a, "n"], [b, ""])}}{\\sqrt{${poly([1, "n^2"], [a, "n"], [b, ""])}} + n}$. The dominant terms give $${a % 2 === 0 ? `\\frac{${a}}{2} = ` : ""}${answer.toLatex()}$.`,
-        `乘以共轭式得 $\\frac{${poly([a, "n"], [b, ""])}}{\\sqrt{${poly([1, "n^2"], [a, "n"], [b, ""])}} + n}$。主导项给出 $${a % 2 === 0 ? `\\frac{${a}}{2} = ` : ""}${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        deStepOf(
+          ["Multiply by the conjugate", "乘以共轭式"],
+          `Multiply and divide by $\\sqrt{${inside}} + n$:`,
+          `分子分母同乘 $\\sqrt{${inside}} + n$：`,
+          `\\sqrt{${inside}} - n = \\frac{${poly([a, "n"], [b, ""])}}{\\sqrt{${inside}} + n}`,
+        ),
+        deStepOf(
+          ["Divide by n", "同除以 n"],
+          "Divide the numerator and the denominator by $n$ and let $n$ grow:",
+          "分子分母同除以 $n$，再令 $n$ 增大：",
+          `\\frac{${a} + \\frac{${b}}{n}}{\\sqrt{1 + \\frac{${a}}{n} + \\frac{${b}}{n^{2}}} + 1} \\to \\frac{${a}}{2}${a % 2 === 0 ? ` = ${answer.toLatex()}` : ""}`,
+        ),
+      ],
+      [
+        `At $n = ${N}$ the expression is $\\frac{${a * N + b}}{\\sqrt{${N * N + a * N + b}} + ${N}} \\approx ${near}$, close to $${answer.toLatex()}$.`,
+        `$n = ${N}$ 时表达式为 $\\frac{${a * N + b}}{\\sqrt{${N * N + a * N + b}} + ${N}} \\approx ${near}$，接近 $${answer.toLatex()}$。`,
+      ],
+      [
+        [
+          a,
+          "This takes the denominator as $n$; $\\sqrt{n^{2} + \\cdots} + n$ is about $2n$",
+          "这里把分母当成了 $n$；$\\sqrt{n^{2} + \\cdots} + n$ 约为 $2n$",
+        ],
+        [
+          0,
+          "Comparing $\\sqrt{n^{2}}$ with $n$ alone loses the terms that decide the limit; multiply by the conjugate",
+          "只比较 $\\sqrt{n^{2}}$ 与 $n$ 会丢掉决定极限的项；要乘以共轭式",
+        ],
+        [
+          Q.of(b, 2),
+          `This uses the constant $${b}$; after dividing by $n$ it tends to $0$, and the coefficient $${a}$ of $n$ decides the limit`,
+          `这里用了常数 $${b}$；除以 $n$ 后它趋于 $0$，决定极限的是 $n$ 的系数 $${a}$`,
+        ],
+      ],
+    );
   },
 };
 
@@ -2813,24 +2998,71 @@ const telescopingWithGap: KnowledgePointDef = {
   id: "a-telescoping-series-with-a-gap",
   title: t("A telescoping series with a gap", "有间隔的裂项级数"),
   explanation: t(
-    "Partial fractions write $\\frac{1}{n(n + a)}$ as $\\frac{1}{a}\\left(\\frac{1}{n} - \\frac{1}{n + a}\\right)$. In the partial sums, each negative term cancels a positive term $a$ places later. So the first $a$ positive terms survive, while the remaining terms tend to zero. The sum is therefore $\\frac{1}{a}$ times the sum of the reciprocals from 1 to $a$.",
-    "部分分式把 $\\frac{1}{n(n + a)}$ 写成 $\\frac{1}{a}\\left(\\frac{1}{n} - \\frac{1}{n + a}\\right)$。在部分和中，每个负项抵消 $a$ 个位置之后的一个正项。所以前 $a$ 个正项留下，其余的项趋于零。因此和是 $\\frac{1}{a}$ 乘以从 1 到 $a$ 的倒数之和。",
+    "Partial fractions write $\\frac{1}{n(n + a)}$ as $\\frac{1}{a}\\left(\\frac{1}{n} - \\frac{1}{n + a}\\right)$. In the partial sums, each negative term cancels a positive term $a$ places later. So the first $a$ positive terms survive, while the remaining terms tend to zero. The sum is therefore $\\frac{1}{a}$ times the sum of the reciprocals from 1 to $a$. For $\\sum_{n=1}^{\\infty} \\frac{1}{n(n+2)}$: $S_N = \\frac{1}{2}\\left(1 + \\frac{1}{2} - \\frac{1}{N+1} - \\frac{1}{N+2}\\right) \\to \\frac{3}{4}$.\n\nCheck: the formula gives $S_2 = \\frac{1}{2}\\left(\\frac{3}{2} - \\frac{1}{3} - \\frac{1}{4}\\right) = \\frac{11}{24}$, and directly $S_2 = \\frac{1}{3} + \\frac{1}{8} = \\frac{11}{24}$.\n\n> **Watch out.** With a gap of $2$, two pieces survive, $1$ and $\\frac{1}{2}$, and the factor $\\frac{1}{2}$ from the partial fractions stays in front.",
+    "部分分式把 $\\frac{1}{n(n + a)}$ 写成 $\\frac{1}{a}\\left(\\frac{1}{n} - \\frac{1}{n + a}\\right)$。在部分和中，每个负项抵消 $a$ 个位置之后的一个正项。所以前 $a$ 个正项留下，其余的项趋于零。因此和是 $\\frac{1}{a}$ 乘以从 1 到 $a$ 的倒数之和。对 $\\sum_{n=1}^{\\infty} \\frac{1}{n(n+2)}$：$S_N = \\frac{1}{2}\\left(1 + \\frac{1}{2} - \\frac{1}{N+1} - \\frac{1}{N+2}\\right) \\to \\frac{3}{4}$。\n\n检验：公式给出 $S_2 = \\frac{1}{2}\\left(\\frac{3}{2} - \\frac{1}{3} - \\frac{1}{4}\\right) = \\frac{11}{24}$，直接相加 $S_2 = \\frac{1}{3} + \\frac{1}{8} = \\frac{11}{24}$。\n\n> **注意。** 间隔为 $2$ 时留下两个部分 $1$ 和 $\\frac{1}{2}$，部分分式带来的因子 $\\frac{1}{2}$ 仍在前面。",
   ),
   generate(rng) {
     const a = rng.int(1, 4);
     const k = rng.int(1, 12);
     const reciprocals = [...Array(a).keys()].map((i) => Q.of(1, i + 1));
     const harmonic = reciprocals.reduce((sum, r) => sum.add(r), Q.of(0));
-    const answer = Q.of(k, a).mul(harmonic);
-    return numberProblem({
-      prompt: t(`Find $\\sum_{n=1}^\\infty \\frac{${k}}{n(n + ${a})}$.`, `求 $\\sum_{n=1}^\\infty \\frac{${k}}{n(n + ${a})}$。`),
+    const factor = Q.of(k, a);
+    const answer = factor.mul(harmonic);
+    const lead = factor.eq(Q.one) ? "" : factor.toLatex();
+    const tails = [...Array(a).keys()].map((i) => (i === 0 ? "\\frac{1}{N + 1}" : `\\frac{1}{N + ${i + 1}}`));
+    // The partial sum after two terms, once from the formula and once term by term.
+    const leftover = [...Array(a).keys()].map((i) => Q.of(1, 3 + i));
+    const fromFormula = factor.mul(harmonic.sub(leftover.reduce((s, x) => s.add(x), Q.of(0))));
+    const first = Q.of(k, 1 + a);
+    const second = Q.of(k, 2 * (2 + a));
+    return deNumber(
+      [`Find $\\sum_{n=1}^\\infty \\frac{${k}}{n(n + ${a})}$.`, `求 $\\sum_{n=1}^\\infty \\frac{${k}}{n(n + ${a})}$。`],
       answer,
-      wrong: [Q.of(k, a), Q.of(k), Q.of(k, a + 1), Q.of(2 * k)],
-      solution: t(
-        `Split the term: $\\frac{${k}}{n(n + ${a})} = ${Q.of(k, a).toLatex()}\\left(\\frac{1}{n} - \\frac{1}{n + ${a}}\\right)$. Each negative term cancels a positive term ${a} places later, so only the first ${a} positive terms stay:${steps(`${Q.of(k, a).toLatex()}\\left(${reciprocals.map((r) => r.toLatex()).join(" + ")}\\right) = ${answer.toLatex()}`)}`,
-        `把通项拆开：$\\frac{${k}}{n(n + ${a})} = ${Q.of(k, a).toLatex()}\\left(\\frac{1}{n} - \\frac{1}{n + ${a}}\\right)$。每个负项与 ${a} 个位置之后的正项抵消，只留下前 ${a} 个正项：${steps(`${Q.of(k, a).toLatex()}\\left(${reciprocals.map((r) => r.toLatex()).join(" + ")}\\right) = ${answer.toLatex()}`)}`,
-      ),
-    });
+      [
+        deStepOf(
+          ["Split the term", "拆开通项"],
+          "Use partial fractions:",
+          "用部分分式：",
+          `\\frac{${k}}{n(n + ${a})} = ${lead}\\left(\\frac{1}{n} - \\frac{1}{n + ${a}}\\right)`,
+        ),
+        deStepOf(
+          ["Write the partial sum", "写出部分和"],
+          `Each negative piece cancels the positive piece ${a} places later, so the first ${a} positive pieces and the last ${a} negative pieces are left:`,
+          `每个负的部分与 ${a} 个位置之后的正的部分抵消，所以留下前 ${a} 个正的部分和最后 ${a} 个负的部分：`,
+          `S_N = ${lead}\\left(${reciprocals.map((r) => r.toLatex()).join(" + ")} - ${tails.join(" - ")}\\right)`,
+        ),
+        deStepOf(
+          ["Let N grow", "令 N 增大"],
+          "The negative pieces tend to $0$:",
+          "负的部分趋于 $0$：",
+          a === 1
+            ? `\\lim_{N \\to \\infty} S_N = ${answer.toLatex()}`
+            : `\\lim_{N \\to \\infty} S_N = ${lead}\\left(${reciprocals.map((r) => r.toLatex()).join(" + ")}\\right) = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `Test the partial sum formula at $N = 2$: it gives $${fromFormula.toLatex()}$, and adding the first two terms directly gives $${first.toLatex()} + ${second.toLatex()} = ${first.add(second).toLatex()}$.`,
+        `在 $N = 2$ 处检验部分和公式：它给出 $${fromFormula.toLatex()}$，而直接把前两项相加得 $${first.toLatex()} + ${second.toLatex()} = ${first.add(second).toLatex()}$。`,
+      ],
+      [
+        [
+          factor,
+          `This keeps only the piece $1$; with a gap of $${a}$, the first $${a}$ pieces survive`,
+          `这里只留下了 $1$；间隔为 $${a}$ 时，前 $${a}$ 个部分都会留下`,
+        ],
+        [
+          harmonic.mul(Q.of(k)),
+          `This leaves out the factor $\\frac{1}{${a}}$ from the partial fractions`,
+          `这里漏了部分分式带来的因子 $\\frac{1}{${a}}$`,
+        ],
+        [
+          factor.mul(harmonic.add(Q.of(1, a + 1))),
+          `This keeps $\\frac{1}{${a + 1}}$ too; it is cancelled by the term $n = 1$`,
+          `这里把 $\\frac{1}{${a + 1}}$ 也留下了；它被 $n = 1$ 的项抵消`,
+        ],
+        [first, "This is only the first term of the series", "这只是级数的第一项"],
+      ],
+    );
   },
 };
 
@@ -2838,8 +3070,8 @@ const bouncingBall: KnowledgePointDef = {
   id: "the-total-distance-of-a-bouncing-ball",
   title: t("The total distance of a bouncing ball", "弹跳小球的总路程"),
   explanation: t(
-    "A ball that loses a fixed share of its height on every bounce travels a geometric total. The first drop happens only once, but each later height is covered twice, going up and coming down. So the total is the initial height plus twice a geometric series that starts from the first rebound, not from the initial drop.",
-    "每次弹跳都损失固定比例高度的小球，走过的总路程是一个几何级数。第一次下落只发生一次，但之后的每个高度都走两遍，上去一次，下来一次。所以总路程是初始高度加上两倍的几何级数，这个级数从第一次反弹开始，而不是从初始下落开始。",
+    "A ball that loses a fixed share of its height on every bounce travels a geometric total. The first drop happens only once, but each later height is covered twice, going up and coming down. So the total is the initial height plus twice a geometric series that starts from the first rebound, not from the initial drop. For a ball dropped from $10$ m that rebounds to half its height: the rebounds add up to $5 + 2.5 + \\cdots = 10$, so the total is $10 + 2 \\cdot 10 = 30$ m.\n\nCheck: every height, the first included, is fallen once, $\\frac{10}{1 - 1/2} = 20$, and every height except the first is risen once, $20 - 10 = 10$; $20 + 10 = 30$.\n\n> **Watch out.** Doubling the whole series, $2 \\cdot 20 = 40$, counts the first drop twice, though the ball never rises to it.",
+    "每次弹跳都损失固定比例高度的小球，走过的总路程是一个几何级数。第一次下落只发生一次，但之后的每个高度都走两遍，上去一次，下来一次。所以总路程是初始高度加上两倍的几何级数，这个级数从第一次反弹开始，而不是从初始下落开始。小球从 $10$ 米落下，每次弹回原高度的一半：各次弹起高度之和为 $5 + 2.5 + \\cdots = 10$，所以总路程是 $10 + 2 \\cdot 10 = 30$ 米。\n\n检验：每个高度（包括第一个）都下落一次，共 $\\frac{10}{1 - 1/2} = 20$；除第一个外每个高度都上升一次，共 $20 - 10 = 10$；$20 + 10 = 30$。\n\n> **注意。** 把整个级数加倍，$2 \\cdot 20 = 40$，就把第一次下落算了两次，而小球从未弹回那个高度。",
   ),
   generate(rng) {
     const [p, q] = rng.pick([
@@ -2854,19 +3086,46 @@ const bouncingBall: KnowledgePointDef = {
     const h = rng.int(1, 12) * (q - p);
     const answer = Q.of(h * (q + p), q - p);
     const rebound = Q.of(h * p, q - p);
+    const falls = Q.of(h * q, q - p);
     const ratio = Q.of(p, q);
-    return numberProblem({
-      prompt: t(
+    return deNumber(
+      [
         `A ball is dropped from a height of ${h} metres, and each bounce rises to $${ratio.toLatex()}$ of the previous height. Find the total vertical distance it travels, in metres.`,
         `小球从 ${h} 米高处落下，每次弹起的高度是前一次的 $${ratio.toLatex()}$。求它走过的总竖直路程（单位：米）。`,
-      ),
+      ],
       answer,
-      wrong: [Q.of(h * q, q - p), Q.of(2 * h * q, q - p), rebound],
-      solution: t(
-        `The rebound heights add up to $\\frac{${h} \\cdot ${ratio.toLatex()}}{1 - ${ratio.toLatex()}} = ${rebound.toLatex()}$. Each is travelled twice, so the total is $${h} + 2 \\cdot ${rebound.toLatex()} = ${answer.toLatex()}$.`,
-        `各次弹起的高度之和是 $\\frac{${h} \\cdot ${ratio.toLatex()}}{1 - ${ratio.toLatex()}} = ${rebound.toLatex()}$。每段都走两遍，所以总路程是 $${h} + 2 \\cdot ${rebound.toLatex()} = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        deStepOf(
+          ["Sum the rebound heights", "求弹起高度之和"],
+          `The rebounds form a geometric series with first term $${h} \\cdot ${ratio.toLatex()}$ and ratio $${ratio.toLatex()}$:`,
+          `各次弹起的高度构成首项为 $${h} \\cdot ${ratio.toLatex()}$、公比为 $${ratio.toLatex()}$ 的等比级数：`,
+          `\\frac{${h} \\cdot ${ratio.toLatex()}}{1 - ${ratio.toLatex()}} = ${rebound.toLatex()}`,
+        ),
+        deStepOf(
+          ["Add the distances", "把路程相加"],
+          "The first drop happens once; each rebound height is covered up and down:",
+          "第一次下落只有一次；每个弹起高度都上下各走一次：",
+          `${h} + 2 \\cdot ${rebound.toLatex()} = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `Count falls and rises separately: the ball falls from every height, $\\frac{${h}}{1 - ${ratio.toLatex()}} = ${falls.toLatex()}$, and rises to every height but the first, $${falls.toLatex()} - ${h} = ${rebound.toLatex()}$; together $${falls.toLatex()} + ${rebound.toLatex()} = ${answer.toLatex()}$.`,
+        `把下落和上升分开计算：小球从每个高度下落，共 $\\frac{${h}}{1 - ${ratio.toLatex()}} = ${falls.toLatex()}$；除第一个高度外每个高度都上升一次，共 $${falls.toLatex()} - ${h} = ${rebound.toLatex()}$；合计 $${falls.toLatex()} + ${rebound.toLatex()} = ${answer.toLatex()}$。`,
+      ],
+      [
+        [falls, "This counts only the falls; the ball also rises to every rebound height", "这里只算了下落；小球还要上升到每个弹起高度"],
+        [
+          Q.of(2 * h * q, q - p),
+          "This doubles the first drop too; the ball never rises to the starting height",
+          "这里把第一次下落也加倍了；小球从未弹回起始高度",
+        ],
+        [
+          rebound,
+          "This is the sum of the rebound heights, once each; add the first drop and count each rebound twice",
+          "这是各次弹起高度之和，每个只算一次；还要加上第一次下落，并把每次弹起算两遍",
+        ],
+      ],
+    );
   },
 };
 
@@ -2983,27 +3242,50 @@ const circularForce: KnowledgePointDef = {
   id: "the-size-of-the-force-in-circular-motion",
   title: t("The size of the force in circular motion", "圆周运动中力的大小"),
   explanation: t(
-    "A particle moving as $\\mathbf{r}(t) = \\langle A\\cos\\omega t, A\\sin\\omega t \\rangle$ has acceleration $-\\omega^2\\mathbf{r}$, which points toward the centre. By Newton's second law, the force has size $mA\\omega^2$ at every moment. The size is constant even though the direction changes, and doubling the angular speed multiplies the force by four.",
-    "按 $\\mathbf{r}(t) = \\langle A\\cos\\omega t, A\\sin\\omega t \\rangle$ 运动的质点，加速度是 $-\\omega^2\\mathbf{r}$，指向圆心。由牛顿第二定律，力的大小在每一时刻都是 $mA\\omega^2$。尽管方向变化，大小却不变；角速度加倍，力就变为四倍。",
+    "A particle moving as $\\mathbf{r}(t) = \\langle A\\cos\\omega t, A\\sin\\omega t \\rangle$ has acceleration $-\\omega^2\\mathbf{r}$, which points toward the centre. By Newton's second law, the force has size $mA\\omega^2$ at every moment. The size is constant even though the direction changes, and doubling the angular speed multiplies the force by four. For mass $2$ and $\\mathbf{r} = \\langle 3\\cos 2t, 3\\sin 2t \\rangle$: the acceleration has size $3 \\cdot 4 = 12$, so the force is $24$.\n\nCheck: the speed is $3 \\cdot 2 = 6$, and $\\frac{v^{2}}{A} = \\frac{36}{3} = 12$, the same acceleration.\n\n> **Watch out.** Differentiate twice: $\\omega$ comes out squared, so the force is $mA\\omega^{2}$, not $mA\\omega$.",
+    "按 $\\mathbf{r}(t) = \\langle A\\cos\\omega t, A\\sin\\omega t \\rangle$ 运动的质点，加速度是 $-\\omega^2\\mathbf{r}$，指向圆心。由牛顿第二定律，力的大小在每一时刻都是 $mA\\omega^2$。尽管方向变化，大小却不变；角速度加倍，力就变为四倍。质量为 $2$、$\\mathbf{r} = \\langle 3\\cos 2t, 3\\sin 2t \\rangle$ 时：加速度大小为 $3 \\cdot 4 = 12$，所以力为 $24$。\n\n检验：速率是 $3 \\cdot 2 = 6$，$\\frac{v^{2}}{A} = \\frac{36}{3} = 12$，加速度相同。\n\n> **注意。** 要求导两次：$\\omega$ 以平方出现，所以力是 $mA\\omega^{2}$，不是 $mA\\omega$。",
   ),
   generate(rng) {
     const m = rng.int(1, 9);
     const A = rng.int(1, 9);
     const w = rng.int(2, 5);
     const answer = m * A * w * w;
-    return numberProblem({
-      prompt: t(
+    const a = A * w * w;
+    return deNumber(
+      [
         `A particle of mass ${m} has position $\\mathbf{r}(t) = \\langle ${coefficientOf(A)}\\cos ${w}t, ${coefficientOf(A)}\\sin ${w}t \\rangle$. Find the magnitude of the force on it.`,
         `质量为 ${m} 的质点，位置是 $\\mathbf{r}(t) = \\langle ${coefficientOf(A)}\\cos ${w}t, ${coefficientOf(A)}\\sin ${w}t \\rangle$。求它受到的力的大小。`,
-      ),
+      ],
       answer,
-      form: "integer",
-      wrong: [m * A * w, A * w * w, m * w * w],
-      solution: t(
-        `The acceleration has magnitude $${A} \\cdot ${w}^2 = ${A * w * w}$. Multiplying by the mass ${m} gives $${answer}$.`,
-        `加速度的大小是 $${A} \\cdot ${w}^2 = ${A * w * w}$。乘以质量 ${m}，得 $${answer}$。`,
-      ),
-    });
+      [
+        deStepOf(
+          ["Differentiate twice", "求导两次"],
+          `Each differentiation brings out a factor $${w}$:`,
+          `每求一次导都带出因子 $${w}$：`,
+          `\\mathbf{a}(t) = \\langle ${-a}\\cos ${w}t, ${-a}\\sin ${w}t \\rangle = -${w * w}\\mathbf{r}(t)`,
+        ),
+        deStepOf(
+          ["Apply Newton's second law", "用牛顿第二定律"],
+          `The acceleration has size $${A} \\cdot ${w}^{2} = ${a}$; multiply by the mass:`,
+          `加速度的大小是 $${A} \\cdot ${w}^{2} = ${a}$；乘以质量：`,
+          `|\\mathbf{F}| = ${m} \\cdot ${a} = ${answer}`,
+        ),
+      ],
+      [
+        `Through the speed instead: $|\\mathbf{v}| = ${A} \\cdot ${w} = ${A * w}$, and the acceleration toward the centre is $\\frac{v^{2}}{A} = \\frac{${A * w * A * w}}{${A}} = ${a}$, so the force is $${m} \\cdot ${a} = ${answer}$.`,
+        `改用速率计算：$|\\mathbf{v}| = ${A} \\cdot ${w} = ${A * w}$，向心加速度为 $\\frac{v^{2}}{A} = \\frac{${A * w * A * w}}{${A}} = ${a}$，所以力为 $${m} \\cdot ${a} = ${answer}$。`,
+      ],
+      [
+        [
+          m * A * w,
+          `This multiplies by $${w}$ once; differentiating twice gives $${w}^{2}$`,
+          `这里只乘了一次 $${w}$；求导两次得到 $${w}^{2}$`,
+        ],
+        [a, `This is the size of the acceleration; multiply by the mass $${m}$`, `这是加速度的大小；还要乘以质量 $${m}$`],
+        [m * w * w, `This leaves out the radius $${A}$`, `这里漏了半径 $${A}$`],
+      ],
+      "integer",
+    );
   },
 };
 
@@ -3011,8 +3293,8 @@ const projectileSpeed: KnowledgePointDef = {
   id: "the-speed-of-a-projectile-at-a-given-time",
   title: t("The speed of a projectile at a given time", "抛体在给定时刻的速率"),
   explanation: t(
-    "Integrating a constant acceleration $\\langle 0, -g \\rangle$ leaves the horizontal velocity alone and reduces the vertical velocity at a steady rate. So at time $T$ the velocity is $\\langle v_x, v_y - gT \\rangle$. The speed is the magnitude of this vector, and neither the initial speed nor the height is needed to calculate it.",
-    "对常加速度 $\\langle 0, -g \\rangle$ 积分，水平速度不变，竖直速度匀速减小。所以在时刻 $T$，速度是 $\\langle v_x, v_y - gT \\rangle$。速率是这个向量的大小，计算时既不需要初速率，也不需要高度。",
+    "Integrating a constant acceleration $\\langle 0, -g \\rangle$ leaves the horizontal velocity alone and reduces the vertical velocity at a steady rate. So at time $T$ the velocity is $\\langle v_x, v_y - gT \\rangle$. The speed is the magnitude of this vector, and neither the initial speed nor the height is needed to calculate it. With $g = 10$ and initial velocity $\\langle 3, 24 \\rangle$, at $t = 2$ the velocity is $\\langle 3, 4 \\rangle$ and the speed is $5$.\n\nCheck: by energy, $v^{2} = 3^{2} + 24^{2} - 2 \\cdot 10 \\cdot 28 = 25$, since the projectile rises $24 \\cdot 2 - 5 \\cdot 4 = 28$.\n\n> **Watch out.** Only the vertical component changes; the speed is $\\sqrt{3^{2} + 4^{2}}$, not $3 + 4$.",
+    "对常加速度 $\\langle 0, -g \\rangle$ 积分，水平速度不变，竖直速度匀速减小。所以在时刻 $T$，速度是 $\\langle v_x, v_y - gT \\rangle$。速率是这个向量的大小，计算时既不需要初速率，也不需要高度。$g = 10$、初速度为 $\\langle 3, 24 \\rangle$ 时，在 $t = 2$ 速度是 $\\langle 3, 4 \\rangle$，速率是 $5$。\n\n检验：由能量关系，抛体上升了 $24 \\cdot 2 - 5 \\cdot 4 = 28$，所以 $v^{2} = 3^{2} + 24^{2} - 2 \\cdot 10 \\cdot 28 = 25$。\n\n> **注意。** 只有竖直分量变化；速率是 $\\sqrt{3^{2} + 4^{2}}$，不是 $3 + 4$。",
   ),
   generate(rng) {
     const { a, b, h } = pythagorean(rng);
@@ -3021,19 +3303,46 @@ const projectileSpeed: KnowledgePointDef = {
     const T = rng.int(1, 6);
     const vertical = sign * b;
     const start = vertical + g * T;
-    return numberProblem({
-      prompt: t(
+    const rise = Q.of(start * T).sub(Q.of(g * T * T, 2));
+    return deNumber(
+      [
         `A projectile has acceleration $\\langle 0, -${g} \\rangle$ and initial velocity $\\langle ${a}, ${start} \\rangle$. Find its speed at $t = ${T}$.`,
         `抛体的加速度是 $\\langle 0, -${g} \\rangle$，初速度是 $\\langle ${a}, ${start} \\rangle$。求它在 $t = ${T}$ 时的速率。`,
-      ),
-      answer: h,
-      form: "integer",
-      wrong: [a + b, g * T, a],
-      solution: t(
-        `The velocity at $t = ${T}$ is $\\langle ${a}, ${start} - ${g * T} \\rangle = \\langle ${a}, ${vertical} \\rangle$. Its magnitude is $\\sqrt{${a}^2 + ${inParens(vertical)}^2} = ${h}$.`,
-        `$t = ${T}$ 时的速度是 $\\langle ${a}, ${start} - ${g * T} \\rangle = \\langle ${a}, ${vertical} \\rangle$。它的大小是 $\\sqrt{${a}^2 + ${inParens(vertical)}^2} = ${h}$。`,
-      ),
-    });
+      ],
+      h,
+      [
+        deStepOf(
+          ["Integrate the acceleration", "对加速度积分"],
+          `The horizontal velocity stays the same, and the vertical velocity drops by $${g}$ each second:`,
+          `水平速度不变，竖直速度每秒减少 $${g}$：`,
+          `\\mathbf{v}(${T}) = \\langle ${a}, ${start} - ${g * T} \\rangle = \\langle ${a}, ${vertical} \\rangle`,
+        ),
+        deStepOf(
+          ["Take the magnitude", "求大小"],
+          "",
+          "",
+          `|\\mathbf{v}(${T})| = \\sqrt{${a}^{2} + ${inParens(vertical)}^{2}} = \\sqrt{${h * h}} = ${h}`,
+        ),
+      ],
+      [
+        `By energy: the height changes by $${start} \\cdot ${T} - \\frac{${g}}{2} \\cdot ${T}^{2} = ${rise.toLatex()}$, so $v^{2} = ${a}^{2} + ${inParens(start)}^{2} - 2 \\cdot ${g} \\cdot ${parQ(rise)} = ${h * h}$, and $v = ${h}$.`,
+        `由能量关系：高度变化 $${start} \\cdot ${T} - \\frac{${g}}{2} \\cdot ${T}^{2} = ${rise.toLatex()}$，所以 $v^{2} = ${a}^{2} + ${inParens(start)}^{2} - 2 \\cdot ${g} \\cdot ${parQ(rise)} = ${h * h}$，$v = ${h}$。`,
+      ],
+      [
+        [
+          a + b,
+          "This adds the components; the speed is the square root of the sum of their squares",
+          "这里把分量直接相加了；速率是分量平方和的平方根",
+        ],
+        [
+          g * T,
+          `This is the change in the vertical velocity, $${g} \\cdot ${T}$, not the speed`,
+          `这是竖直速度的变化量 $${g} \\cdot ${T}$，不是速率`,
+        ],
+        [a, "This is the horizontal component alone; the vertical component also counts", "这只是水平分量；竖直分量也要算进去"],
+      ],
+      "integer",
+    );
   },
 };
 
@@ -4606,29 +4915,55 @@ const whenTwoPointsMeet: KnowledgePointDef = {
   id: "when-two-moving-points-meet",
   title: t("When two moving points meet", "两个运动的点何时相遇"),
   explanation: t(
-    "Two vector-valued functions describe points at the same place only when every component agrees at the same value of $t$. Equal second components alone are not enough, since the points may then be separated horizontally. So solve the simplest component equation first, then test the candidates in the other component, and keep only a time that satisfies both.",
-    "两个向量值函数表示的点在同一位置，当且仅当在同一个 $t$ 处所有分量都相等。只有第二个分量相等还不够，因为这时两点可能在水平方向上分开。所以先解最简单的分量方程，再把解代入另一个分量检验，只保留同时满足两者的时刻。",
+    "Two vector-valued functions describe points at the same place only when every component agrees at the same value of $t$. Equal second components alone are not enough, since the points may then be separated horizontally. So solve the simplest component equation first, then test the candidates in the other component, and keep only a time that satisfies both. For $\\langle t + 1, t^{2} \\rangle$ and $\\langle 2t - 1, 3t - 2 \\rangle$: the first components agree when $t + 1 = 2t - 1$, at $t = 2$, and there both second components are $4$.\n\nCheck: at $t = 2$ both points are at $\\langle 3, 4 \\rangle$.\n\n> **Watch out.** The second components also agree at $t = 1$, but there the points are at $\\langle 2, 1 \\rangle$ and $\\langle 1, 1 \\rangle$.",
+    "两个向量值函数表示的点在同一位置，当且仅当在同一个 $t$ 处所有分量都相等。只有第二个分量相等还不够，因为这时两点可能在水平方向上分开。所以先解最简单的分量方程，再把解代入另一个分量检验，只保留同时满足两者的时刻。对 $\\langle t + 1, t^{2} \\rangle$ 和 $\\langle 2t - 1, 3t - 2 \\rangle$：第一分量在 $t + 1 = 2t - 1$ 即 $t = 2$ 时相等，此时两个第二分量都是 $4$。\n\n检验：$t = 2$ 时两点都在 $\\langle 3, 4 \\rangle$。\n\n> **注意。** 第二分量在 $t = 1$ 时也相等，但那时两点分别在 $\\langle 2, 1 \\rangle$ 和 $\\langle 1, 1 \\rangle$。",
   ),
   generate(rng) {
     const T = rng.int(1, 6);
     const alpha = nonzero(rng, 5);
     const beta = nonzero(rng, 5);
     const m = rng.pick([1, 2, 3, 4, 5, 6, 7, 8, 9].filter((v) => v !== 2 * T));
-    const r1 = `\\langle ${poly([1, "t"], [alpha, ""])}, ${poly([1, "t^2"], [beta, ""])} \\rangle`;
-    const r2 = `\\langle ${poly([2, "t"], [alpha - T, ""])}, ${poly([m, "t"], [beta + T * T - m * T, ""])} \\rangle`;
-    return numberProblem({
-      prompt: t(
-        `Two points move along $\\mathbf{r}_1(t) = ${r1}$ and $\\mathbf{r}_2(t) = ${r2}$. At which time $t > 0$ are they at the same place?`,
-        `两个点分别沿 $\\mathbf{r}_1(t) = ${r1}$ 和 $\\mathbf{r}_2(t) = ${r2}$ 运动。在哪个时刻 $t > 0$ 它们位于同一位置？`,
-      ),
-      answer: T,
-      form: "integer",
-      wrong: [m - T, m, T * T, T + 1, T + 3],
-      solution: t(
-        `The first components agree only when $${poly([1, "t"], [alpha, ""])} = ${poly([2, "t"], [alpha - T, ""])}$, that is at $t = ${T}$. There both second components equal $${T * T + beta}$, so the points meet. The second components also agree at $t = ${m - T}$, but the first components differ there.`,
-        `第一个分量只在 $${poly([1, "t"], [alpha, ""])} = ${poly([2, "t"], [alpha - T, ""])}$ 时相等，即 $t = ${T}$。此时两个第二分量都等于 $${T * T + beta}$，所以两点相遇。第二分量在 $t = ${m - T}$ 处也相等，但那里第一分量不同。`,
-      ),
-    });
+    const x1 = poly([1, "t"], [alpha, ""]);
+    const y1 = poly([1, "t^2"], [beta, ""]);
+    const x2 = poly([2, "t"], [alpha - T, ""]);
+    const y2 = poly([m, "t"], [beta + T * T - m * T, ""]);
+    const other = m - T;
+    return deNumber(
+      [
+        `Two points move along $\\mathbf{r}_1(t) = \\langle ${x1}, ${y1} \\rangle$ and $\\mathbf{r}_2(t) = \\langle ${x2}, ${y2} \\rangle$. At which time $t > 0$ are they at the same place?`,
+        `两个点分别沿 $\\mathbf{r}_1(t) = \\langle ${x1}, ${y1} \\rangle$ 和 $\\mathbf{r}_2(t) = \\langle ${x2}, ${y2} \\rangle$ 运动。在哪个时刻 $t > 0$ 它们位于同一位置？`,
+      ],
+      T,
+      [
+        deStepOf(
+          ["Match the first components", "令第一分量相等"],
+          "The first components are linear, so solve them first:",
+          "第一分量是一次的，先解它：",
+          `${x1} = ${x2} \\implies t = ${T}`,
+        ),
+        deStepOf(
+          ["Test the second components", "检验第二分量"],
+          `Substitute $t = ${T}$ into both second components:`,
+          `把 $t = ${T}$ 代入两个第二分量：`,
+          `${T * T} ${beta < 0 ? "-" : "+"} ${Math.abs(beta)} = ${T * T + beta}`,
+          `${m} \\cdot ${T} ${beta + T * T - m * T < 0 ? "-" : "+"} ${Math.abs(beta + T * T - m * T)} = ${T * T + beta}`,
+        ),
+      ],
+      [
+        `Solve the second components instead: $${y1} = ${y2}$ becomes $(t - ${T})(t ${other < 0 ? "+" : "-"} ${Math.abs(other)}) = 0$, with roots $${T}$ and $${other}$. Only $t = ${T}$ also makes the first components equal, since their difference is $${T} - t$.`,
+        `改解第二分量：$${y1} = ${y2}$ 化为 $(t - ${T})(t ${other < 0 ? "+" : "-"} ${Math.abs(other)}) = 0$，两根为 $${T}$ 和 $${other}$。第一分量之差是 $${T} - t$，所以只有 $t = ${T}$ 也使第一分量相等。`,
+      ],
+      [
+        [
+          other,
+          `Only the second components agree at $t = ${other}$; there the first components differ by $${T - other}$`,
+          `在 $t = ${other}$ 处只有第二分量相等；那里第一分量相差 $${T - other}$`,
+        ],
+        [m, `This is the sum of the two roots of the second-component equation, not a root`, `这是第二分量方程两根之和，不是方程的根`],
+        [-T, `This solves $${x1} = ${x2}$ with the wrong sign`, `这里解 $${x1} = ${x2}$ 时符号弄错了`],
+      ],
+      "integer",
+    );
   },
 };
 
@@ -4724,8 +5059,8 @@ const tailFromPartialSum: KnowledgePointDef = {
   id: "a-tail-sum-from-the-partial-sum-formula",
   title: t("A tail sum from the partial sum formula", "由部分和公式求尾部和"),
   explanation: t(
-    "A formula for the partial sums contains everything about a series. Its limit as $n$ grows is the sum of the whole series. The partial sum at a given index is the total of the terms up to that index. So the sum from a later index onward is the limit minus the partial sum that stops just before that index, with no individual terms needed.",
-    "部分和公式包含了级数的全部信息。它在 $n$ 增大时的极限就是整个级数的和。某一项处的部分和就是到那一项为止各项的总和。所以从后面某一项开始的和，等于极限减去恰好停在那一项之前的部分和，不需要逐项计算。",
+    "A formula for the partial sums contains everything about a series. Its limit as $n$ grows is the sum of the whole series. The partial sum at a given index is the total of the terms up to that index. So the sum from a later index onward is the limit minus the partial sum that stops just before that index, with no individual terms needed. For $S_n = \\frac{2n}{n + 1}$, the sum from $n = 3$ is $2 - S_2 = 2 - \\frac{4}{3} = \\frac{2}{3}$.\n\nCheck: the terms are $a_n = S_n - S_{n-1} = \\frac{2}{n(n+1)}$, and $\\sum_{n=3}^{\\infty} \\frac{2}{n(n+1)}$ telescopes to $\\frac{2}{3}$.\n\n> **Watch out.** Subtract $S_2$, which stops just before $n = 3$; subtracting $S_3$ also removes $a_3$.",
+    "部分和公式包含了级数的全部信息。它在 $n$ 增大时的极限就是整个级数的和。某一项处的部分和就是到那一项为止各项的总和。所以从后面某一项开始的和，等于极限减去恰好停在那一项之前的部分和，不需要逐项计算。对 $S_n = \\frac{2n}{n + 1}$，从 $n = 3$ 开始的和是 $2 - S_2 = 2 - \\frac{4}{3} = \\frac{2}{3}$。\n\n检验：各项为 $a_n = S_n - S_{n-1} = \\frac{2}{n(n+1)}$，而 $\\sum_{n=3}^{\\infty} \\frac{2}{n(n+1)}$ 裂项后等于 $\\frac{2}{3}$。\n\n> **注意。** 要减去恰好停在 $n = 3$ 之前的 $S_2$；减去 $S_3$ 会把 $a_3$ 也去掉。",
   ),
   generate(rng) {
     const p = nonzero(rng, 9);
@@ -4734,18 +5069,52 @@ const tailFromPartialSum: KnowledgePointDef = {
     const removed = Q.of(p * (m - 1), m - 1 + q);
     const answer = Q.of(p).sub(removed);
     const shown = removed.sign() < 0 ? `\\left(${removed.toLatex()}\\right)` : removed.toLatex();
-    return numberProblem({
-      prompt: t(
+    const before = q === 1 ? "n" : `(n + ${q - 1})`;
+    const bare = q === 1 ? "n" : `n + ${q - 1}`;
+    return deNumber(
+      [
         `The $n$th partial sum of $\\sum_{n=1}^{\\infty} a_n$ is $S_n = \\frac{${signedCoefficient(p)}n}{n + ${q}}$. Find $\\sum_{n=${m}}^{\\infty} a_n$.`,
         `$\\sum_{n=1}^{\\infty} a_n$ 的第 $n$ 个部分和是 $S_n = \\frac{${signedCoefficient(p)}n}{n + ${q}}$。求 $\\sum_{n=${m}}^{\\infty} a_n$。`,
-      ),
+      ],
       answer,
-      wrong: [Q.of(p), removed, Q.of(p * q, m + q), Q.of(p * m, m + q)],
-      solution: t(
-        `The whole series has sum $\\lim_{n \\to \\infty} S_n = ${p}$. The terms before $n = ${m}$ add up to $S_{${m - 1}} = ${removed.toLatex()}$. So the sum asked for is $${p} - ${shown} = ${answer.toLatex()}$.`,
-        `整个级数的和是 $\\lim_{n \\to \\infty} S_n = ${p}$。$n = ${m}$ 之前的各项之和是 $S_{${m - 1}} = ${removed.toLatex()}$。所以所求的和是 $${p} - ${shown} = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        deStepOf(
+          ["Sum the whole series", "求整个级数的和"],
+          "Let $n$ grow in the partial sums:",
+          "令部分和中的 $n$ 增大：",
+          `\\lim_{n \\to \\infty} \\frac{${signedCoefficient(p)}n}{n + ${q}} = ${p}`,
+        ),
+        deStepOf(
+          ["Remove the terms before the start", "去掉开头之前的项"],
+          `The terms before $n = ${m}$ add up to $S_{${m - 1}}$:`,
+          `$n = ${m}$ 之前的各项之和是 $S_{${m - 1}}$：`,
+          `S_{${m - 1}} = ${removed.toLatex()}`,
+          `${p} - ${shown} = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `From the terms instead: $a_n = S_n - S_{n-1} = \\frac{${p * q}}{${before}(n + ${q})}$, which telescopes, leaving only its first piece: $\\sum_{n=${m}}^{\\infty} ${signedCoefficient(p * q)}\\left(\\frac{1}{${bare}} - \\frac{1}{n + ${q}}\\right) = ${p * q} \\cdot \\frac{1}{${m + q - 1}} = ${answer.toLatex()}$.`,
+        `改从各项出发：$a_n = S_n - S_{n-1} = \\frac{${p * q}}{${before}(n + ${q})}$，可以裂项，只留下第一部分：$\\sum_{n=${m}}^{\\infty} ${signedCoefficient(p * q)}\\left(\\frac{1}{${bare}} - \\frac{1}{n + ${q}}\\right) = ${p * q} \\cdot \\frac{1}{${m + q - 1}} = ${answer.toLatex()}$。`,
+      ],
+      [
+        [p, "This is the sum of the whole series; the terms before the start must come off", "这是整个级数的和；还要去掉开头之前的项"],
+        [
+          removed,
+          `This is $S_{${m - 1}}$, the terms before $n = ${m}$; the question asks for the rest`,
+          `这是 $S_{${m - 1}}$，即 $n = ${m}$ 之前的项；题目问的是其余部分`,
+        ],
+        [
+          Q.of(p * q, m + q),
+          `This subtracts $S_{${m}}$, which also removes the term $a_{${m}}$`,
+          `这里减去了 $S_{${m}}$，把 $a_{${m}}$ 也去掉了`,
+        ],
+        [
+          Q.of(p * m, m + q),
+          `This is $S_{${m}}$, a partial sum, not the sum from $n = ${m}$ onward`,
+          `这是部分和 $S_{${m}}$，不是从 $n = ${m}$ 开始的和`,
+        ],
+      ],
+    );
   },
 };
 
@@ -4905,8 +5274,8 @@ const xFromSeriesSum: KnowledgePointDef = {
   id: "the-value-of-x-from-the-sum-of-a-series",
   title: t("The value of x from the sum of a series", "由级数的和求 x"),
   explanation: t(
-    "A geometric series with ratio containing $x$ has a sum that is a function of $x$, so a given sum is an equation for $x$. Write the closed form with attention to the starting index, which decides the numerator, and solve for the ratio. Then check that the ratio is below $1$ in size, since otherwise the series does not converge to that sum at all.",
-    "公比含 $x$ 的等比级数，它的和是 $x$ 的函数，所以已知和就是关于 $x$ 的方程。写出闭式时要注意起始下标，它决定分子，然后解出公比。还要检验公比的绝对值小于 $1$，否则级数根本不收敛到这个和。",
+    "A geometric series with ratio containing $x$ has a sum that is a function of $x$, so a given sum is an equation for $x$. Write the closed form with attention to the starting index, which decides the numerator, and solve for the ratio. Then check that the ratio is below $1$ in size, since otherwise the series does not converge to that sum at all. For $\\sum_{n=0}^{\\infty} \\left(\\frac{x}{4}\\right)^{n} = 3$: $\\frac{1}{1 - r} = 3$ gives $r = \\frac{2}{3}$, so $x = 4r = \\frac{8}{3}$.\n\nCheck: $\\frac{1}{1 - 2/3} = 3$, and $\\left|\\frac{2}{3}\\right| < 1$.\n\n> **Watch out.** From $n = 1$ the sum is $\\frac{r}{1 - r}$, not $\\frac{1}{1 - r}$, and the same sum then gives a different $x$.",
+    "公比含 $x$ 的等比级数，它的和是 $x$ 的函数，所以已知和就是关于 $x$ 的方程。写出闭式时要注意起始下标，它决定分子，然后解出公比。还要检验公比的绝对值小于 $1$，否则级数根本不收敛到这个和。对 $\\sum_{n=0}^{\\infty} \\left(\\frac{x}{4}\\right)^{n} = 3$：由 $\\frac{1}{1 - r} = 3$ 得 $r = \\frac{2}{3}$，所以 $x = 4r = \\frac{8}{3}$。\n\n检验：$\\frac{1}{1 - 2/3} = 3$，且 $\\left|\\frac{2}{3}\\right| < 1$。\n\n> **注意。** 从 $n = 1$ 开始时和是 $\\frac{r}{1 - r}$，不是 $\\frac{1}{1 - r}$，同样的和会给出不同的 $x$。",
   ),
   generate(rng) {
     const start = rng.int(0, 1);
@@ -4916,6 +5285,49 @@ const xFromSeriesSum: KnowledgePointDef = {
     const fromOne = Q.of(s, s + 1);
     const ratio = start === 0 ? fromZero : fromOne;
     const answer = ratio.mul(Q.of(k));
+    const closed = start === 0 ? "\\frac{1}{1 - r}" : "\\frac{r}{1 - r}";
+    const mistakes: readonly DeReason[] =
+      start === 0
+        ? [
+            [
+              fromOne.mul(Q.of(k)),
+              "This uses $\\frac{r}{1 - r}$, the sum from $n = 1$; this series starts at $n = 0$",
+              "这里用了从 $n = 1$ 开始的和 $\\frac{r}{1 - r}$；这个级数从 $n = 0$ 开始",
+            ],
+            [
+              Q.of(k * s),
+              `This sets the ratio itself equal to $${s}$; the sum is $${closed}$`,
+              `这里让公比本身等于 $${s}$；和应是 $${closed}$`,
+            ],
+            [
+              Q.of(k, s),
+              `This is $${k}(1 - r)$; $1 - r = \\frac{1}{${s}}$, so subtract it from $1$`,
+              `这是 $${k}(1 - r)$；$1 - r = \\frac{1}{${s}}$，还要用 $1$ 减去它`,
+            ],
+            [
+              Q.of(k * (s + 1), s),
+              `This takes $r = 1 + \\frac{1}{${s}}$; then $|r| > 1$ and the series diverges`,
+              `这里取了 $r = 1 + \\frac{1}{${s}}$；这时 $|r| > 1$，级数发散`,
+            ],
+          ]
+        : [
+            [
+              fromZero.mul(Q.of(k)),
+              "This uses $\\frac{1}{1 - r}$, the sum from $n = 0$; this series starts at $n = 1$",
+              "这里用了从 $n = 0$ 开始的和 $\\frac{1}{1 - r}$；这个级数从 $n = 1$ 开始",
+            ],
+            [
+              Q.of(k * s),
+              `This sets the ratio itself equal to $${s}$; the sum is $${closed}$`,
+              `这里让公比本身等于 $${s}$；和应是 $${closed}$`,
+            ],
+            [Q.of(k, s + 1), `This is $${k}(1 - r)$, not $${k}r$`, `这是 $${k}(1 - r)$，不是 $${k}r$`],
+            [
+              Q.of(k * (s + 1), s),
+              `This inverts the ratio, $r = \\frac{${s + 1}}{${s}}$; then $|r| > 1$ and the series diverges`,
+              `这里把公比倒过来了，$r = \\frac{${s + 1}}{${s}}$；这时 $|r| > 1$，级数发散`,
+            ],
+          ];
     return numberProblem({
       prompt: t(
         `Find the value of $x$ for which $\\sum_{n=${start}}^{\\infty} \\left(\\frac{x}{${k}}\\right)^n = ${s}$.`,
@@ -4923,13 +5335,27 @@ const xFromSeriesSum: KnowledgePointDef = {
       ),
       answer,
       solveFor: "x",
-      wrong:
-        start === 0
-          ? [fromOne.mul(Q.of(k)), Q.of(k * s), Q.of(k, s), Q.of(k * (s + 1), s)]
-          : [fromZero.mul(Q.of(k)), Q.of(k * s), Q.of(k, s + 1), Q.of(k * (s + 1), s)],
-      solution: t(
-        `With ratio $r = \\frac{x}{${k}}$, the sum is $${start === 0 ? "\\frac{1}{1 - r}" : "\\frac{r}{1 - r}"}$. Setting this equal to $${s}$ gives $r = ${ratio.toLatex()}$, which is below $1$ in size, so the series converges. Then $x = ${k}r = ${answer.toLatex()}$.`,
-        `设公比 $r = \\frac{x}{${k}}$，和是 $${start === 0 ? "\\frac{1}{1 - r}" : "\\frac{r}{1 - r}"}$。令它等于 $${s}$，得 $r = ${ratio.toLatex()}$，绝对值小于 $1$，所以级数收敛。于是 $x = ${k}r = ${answer.toLatex()}$。`,
+      mistakes: mistakes.map(([value, en, zh]) => ({ value, why: t(en, zh) })),
+      solution: walked(
+        [
+          deStepOf(
+            ["Write the sum in closed form", "写出和的闭式"],
+            `With ratio $r = \\frac{x}{${k}}$, the first term at $n = ${start}$ is $${start === 0 ? "1" : "r"}$:`,
+            `设公比 $r = \\frac{x}{${k}}$，$n = ${start}$ 时首项为 $${start === 0 ? "1" : "r"}$：`,
+            `${closed} = ${s}`,
+          ),
+          deStepOf(
+            ["Solve for the ratio", "解出公比"],
+            "The ratio is below $1$ in size, so the series converges:",
+            "公比的绝对值小于 $1$，级数收敛：",
+            start === 0 ? `1 - r = \\frac{1}{${s}} \\implies r = ${ratio.toLatex()}` : `r = ${s} - ${s}r \\implies r = ${ratio.toLatex()}`,
+          ),
+          deStepOf(["Find x", "求 x"], "", "", `x = ${k}r = ${answer.toLatex()}`),
+        ],
+        t(
+          `Substituting back gives the given sum: $x = ${answer.toLatex()}$ makes $r = ${ratio.toLatex()}$, and $${start === 0 ? `\\frac{1}{1 - ${ratio.toLatex()}}` : `\\frac{${ratio.toLatex()}}{1 - ${ratio.toLatex()}}`} = ${s}$.`,
+          `代回后正好得到已知的和：$x = ${answer.toLatex()}$ 使 $r = ${ratio.toLatex()}$，而 $${start === 0 ? `\\frac{1}{1 - ${ratio.toLatex()}}` : `\\frac{${ratio.toLatex()}}{1 - ${ratio.toLatex()}}`} = ${s}$。`,
+        ),
       ),
     });
   },
