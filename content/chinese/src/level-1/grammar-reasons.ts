@@ -454,9 +454,23 @@ function reorder(d: Difference, glossary: Glossary): Text {
   return t(`The words are in the wrong order. ${rule.en}`, `词语的顺序不对。${rule["zh-CN"]}`);
 }
 
-/** meaningOf is what the glossary says a word or a character means. */
+/** firstSense is the first sense of a character's entry, never the whole entry: “天亮的时候”, not “天亮的时候；戏曲中扮演女子的角色”. */
+const firstSense = (m: Text): Text => t(m.en.split(/;\s*/u)[0] ?? m.en, m["zh-CN"].split("；")[0] ?? m["zh-CN"]);
+
+/** meaningOf is what the glossary says a word means, or the first sense of a character: for a wrong option, which is read
+ * by its plain sense. A right answer is never explained by a character's entry: see named and noteOf. */
 function meaningOf(s: string, glossary: Glossary): Text | undefined {
-  return glossary.meanings.get(s) ?? glossary.characters.get(s)?.meaning;
+  const c = glossary.characters.get(s)?.meaning;
+  return glossary.meanings.get(s) ?? (c && firstSense(c));
+}
+
+/** wordWhat says what a word does or means by the list of grammar words or the taught words, never by a character's
+ * entry; undefined when neither knows it. */
+function wordWhat(word: string, glossary: Glossary): Text | undefined {
+  const u = usage.get(word);
+  if (u) return t(`${word} ${u.note.en}`, `${q(word)}${u.note["zh-CN"]}`);
+  const m = glossary.meanings.get(word);
+  return m && t(`${word} means “${m.en}”`, `${q(word)}的意思是“${m["zh-CN"]}”`);
 }
 
 /** what says what a word does or means, after the word itself; undefined when nothing is known. */
@@ -808,6 +822,209 @@ const IN_CONTEXT: readonly { readonly word: string; readonly cue: RegExp; readon
     cue: /正因为/,
     note: t(", after 正因为, says this is the very reason, and only so", "和“正因为”搭配，强调正是这个原因才这样"),
   },
+  { word: "三", cue: /两三/, note: t("joins 两 in 两三, “two or three”, a rough number", "和“两”连用成“两三”，表示大概的数目") },
+  { word: "三", cue: /三个国家/, note: t("gives the number of countries", "表示国家的数目") },
+  { word: "中", cue: /从[^，。]*中/, note: t(", with 从, says “from within”", "和“从”搭配成“从……中”，表示从某个范围里面") },
+  {
+    word: "乎",
+    cue: /不外乎/,
+    note: t("is part of the fixed word 不外乎, “nothing more than”", "是固定词语“不外乎”里的字，“不外乎”表示不超出某个范围"),
+  },
+  {
+    word: "亚",
+    cue: /不亚于/,
+    note: t("is part of the fixed word 不亚于, “no less than”", "是固定词语“不亚于”里的字，“不亚于”表示不比……差"),
+  },
+  { word: "似", cue: /似.非./, note: t("opens 似…非…, “seeming so, yet not quite”", "用在“似……非……”里，表示好像是又好像不是") },
+  {
+    word: "何",
+    cue: /何以/,
+    note: t("is part of 何以, a written word for “how could”", "是书面词语“何以”里的字，“何以”表示怎么能、凭什么"),
+  },
+  { word: "余", cue: /[十百千万年]余|余[年万]|有余/, note: t(", after a number, means “more than”", "用在数目后面，表示比这个数多一些") },
+  { word: "倒", cue: /说得倒/, note: t("says the other speaks too lightly: easy for you to say", "表示对方说得容易，含有不满") },
+  { word: "倒", cue: /倒/, note: t("marks what goes against what one expected", "表示和预想的相反") },
+  { word: "勿", cue: /请勿/, note: t("is part of 请勿, a written “please do not”", "是“请勿”里的字，“勿”表示不要") },
+  {
+    word: "化",
+    cue: /化/,
+    note: t(", after an adjective, means to make something so: 简单化, to make simple", "用在形容词后面，表示使变成这种样子"),
+  },
+  { word: "反", cue: /反作用|反科学/, note: t("means “against” or “the opposite of”", "表示相反、违反") },
+  {
+    word: "另",
+    cue: /另一方面/,
+    note: t("is part of 另一方面, “on the other hand”, which answers 一方面", "是“另一方面”里的字，和前面的“一方面”呼应"),
+  },
+  { word: "可", cue: /非[^，。]*不可/, note: t("closes 非…不可, “must”", "用在“非……不可”里，表示一定要") },
+  { word: "可", cue: /方可/, note: t("follows 方 in 方可, written for “only then may”", "和“方”连用成“方可”，表示才可以") },
+  {
+    word: "可",
+    cue: /可想而知/,
+    note: t("is part of the fixed phrase 可想而知, “one can well imagine”", "是固定说法“可想而知”里的字，表示能够想象得到"),
+  },
+  { word: "可", cue: /无可/, note: t("follows 无 in 无可…, “there is nothing to … ”", "用在“无可……”里，表示没有可以……的") },
+  { word: "可", cue: /别看|照理说/, note: t("means “but” and turns the sentence", "表示转折，意思是“可是”") },
+  { word: "可", cue: /可/, note: t("stresses what the speaker says", "加强语气，表示强调") },
+  { word: "后", cue: /先后/, note: t("is part of 先后, “one after another”", "是“先后”里的字，“先后”表示前后相继") },
+  { word: "因", cue: /因[^，。]*而/, note: t("opens 因…而, “because of … so”", "用在“因……而”里，表示原因") },
+  { word: "好", cue: /好几/, note: t("comes before 几 and means “quite a few”", "用在“几”前面，表示多") },
+  { word: "好", cue: /得好/, note: t(", in V得好, says the action can be done: 修得好, can be fixed", "用在“V得好”里，表示能够做好") },
+  { word: "好", cue: /好了/, note: t(", after a verb, says the action is done and done well", "用在动词后面，表示动作完成") },
+  { word: "如", cue: /诸如/, note: t("is part of 诸如, “such as”", "是“诸如”里的字，“诸如”用来举例，意思是像……这些") },
+  { word: "少", cue: /少了/, note: t("says the amount got smaller", "表示数量变小") },
+  { word: "彼", cue: /此.彼/, note: t("means “that”, set against 此, “this”", "表示“那、那个”，和“此”相对") },
+  { word: "性", cue: /性/, note: t(", after a word, makes a noun for a quality: 安全性, safety", "用在词语后面，构成名词，表示性质") },
+  { word: "感", cue: /感兴趣/, note: t("is part of 感兴趣, “be interested”", "是“感兴趣”里的字，“感”表示觉得、产生") },
+  { word: "愧", cue: /不愧/, note: t("is part of 不愧, “truly worthy of being”", "是“不愧”里的字，“不愧”表示当得起") },
+  {
+    word: "所",
+    cue: /所/,
+    note: t(", before a verb, with 的 makes “what is done”: 我所知道的, what I know", "用在动词前面，和“的”一起表示动作涉及的事物"),
+  },
+  { word: "方", cue: /方[能有]/, note: t("is written for 才, “only then”", "是书面语，意思是“才”") },
+  { word: "旦", cue: /一旦/, note: t("is part of the fixed word 一旦, “once, if ever”", "是“一旦”里的字，“一旦”表示如果有一天") },
+  { word: "时", cue: /时，/, note: t(", after a clause, means “when”", "用在句子后面，表示“……的时候”") },
+  { word: "未", cue: /未曾/, note: t("is part of 未曾, written for “never have”", "是“未曾”里的字，意思是没有") },
+  { word: "未", cue: /尚未/, note: t("follows 尚 in 尚未, “not yet”", "和“尚”连用成“尚未”，意思是还没有") },
+  { word: "经", cue: /未经/, note: t("follows 未 in 未经, “without”: 未经批准, without approval", "和“未”连用成“未经”，表示没有经过") },
+  {
+    word: "盘",
+    cue: /一盘盘/,
+    note: t("is the measure word for dishes, doubled to say one after another", "是菜的量词，重叠成“一盘盘”表示一盘接一盘"),
+  },
+  { word: "称", cue: /之称/, note: t("closes 有…之称, “be known as”", "用在“有……之称”里，表示被叫作") },
+  { word: "称", cue: /称为/, note: t("is part of 称为, “be called”", "是“称为”里的字，“称”表示叫") },
+  { word: "站", cue: /站着/, note: t("is the verb “stand”", "是动词，表示站立") },
+  { word: "第", cue: /第[一二三四五六七八九十]/, note: t("comes before a number to give its place in order", "用在数字前面，表示次序") },
+  { word: "者", cue: /者/, note: t(", after a word, means “a person who”: 求职者, a job seeker", "用在词语后面，表示……的人") },
+  { word: "自", cue: /自[^，。]*起/, note: t("opens 自…起, written for “from … on”", "用在“自……起”里，是书面语，表示从") },
+  { word: "莫", cue: /莫属/, note: t("is part of 非…莫属, “no one but”", "用在“非……莫属”里，表示除了这一个没有别的") },
+  { word: "请", cue: /请/, note: t("asks politely, “please”", "表示客气地请求") },
+  { word: "起", cue: /起.{0,3}来/, note: t("opens V起…来, saying something begins", "用在“V起……来”里，表示开始") },
+  { word: "起", cue: /[从自][^，。]*起/, note: t("closes 从…起, “from … on”", "用在“从……起”里，表示从某时开始") },
+  {
+    word: "起",
+    cue: /[谈说讲问提]起/,
+    note: t(", after 说, 谈 or 问, brings in what is talked about", "用在“说、谈、问”等后面，表示涉及某人某事"),
+  },
+  { word: "达", cue: /[高多]达/, note: t(", after 高 or 多, means “reaching”: 高达, as high as", "用在“高、多”后面，表示达到") },
+  { word: "隔", cue: /每隔/, note: t("follows 每 in 每隔, “every”, telling the time between", "和“每”连用成“每隔”，表示每过一段时间") },
+  { word: "项", cue: /项/, note: t("is the measure word for tasks, rules, studies and plans", "是任务、政策、研究等的量词") },
+  {
+    word: "边",
+    cue: /[东南西北]边/,
+    note: t(", after 北, 南, 东 or 西, names the side: 北边, the north side", "用在“东、南、西、北”后面，表示这一边"),
+  },
+  {
+    word: "睡",
+    cue: /睡在/,
+    note: t("is the plain verb “sleep”, which takes 在 and a place after it", "是动词“睡”，后面可以跟“在”和地方"),
+  },
+  { word: "三", cue: /三刻/, note: t("counts quarters: 三刻 is 45 minutes", "表示刻数，三刻是四十五分钟") },
+  { word: "三", cue: /先后/, note: t("is a number above one, as 先后 needs", "是大于一的数，“先后”要求不止一次") },
+  { word: "四", cue: /先后/, note: t("is a number above one, as 先后 needs", "是大于一的数，“先后”要求不止一次") },
+  { word: "五", cue: /先后/, note: t("is a number above one, as 先后 needs", "是大于一的数，“先后”要求不止一次") },
+  { word: "每", cue: /每个/, note: t("means “every” and goes with 都", "表示“每一个”，和“都”配合") },
+  {
+    word: "架",
+    cue: /吵了一架/,
+    note: t("is the measure word for a quarrel: 吵了一架, had a quarrel", "是“吵架”的量词，“吵了一架”表示吵了一次"),
+  },
+  {
+    word: "少",
+    cue: /比[^，。]*少/,
+    note: t(", in a 比 sentence, states the gap and takes no 很", "用在“比”字句里说差别，前面不能加“很”"),
+  },
+  { word: "少", cue: /越少/, note: t("is the plain adjective and takes no 很 after 越", "是形容词，前面有“越”，不能再加“很”") },
+  { word: "少", cue: /少[花吃熬]/, note: t(", before a verb, means “do less of it”", "用在动词前面，表示少做") },
+  { word: "好", cue: /很不好/, note: t("is the adjective “good”, said with 不: 不好, bad", "是形容词，和“不”连用表示不好") },
+  { word: "好", cue: /相当好/, note: t("stands alone after 相当, which takes no 极了", "单独用在“相当”后面，不再加“极了”") },
+  { word: "肯", cue: /肯/, note: t("means “be willing to” and comes right before the verb", "表示愿意，直接放在动词前面") },
+  { word: "改", cue: /了又/, note: t("is the verb said twice in V了又V", "是“V了又V”里重复的动词") },
+  { word: "算", cue: /了又/, note: t("is the verb said twice in V了又V", "是“V了又V”里重复的动词") },
+  { word: "遭", cue: /遭到/, note: t("is part of 遭到, “suffer”, used for bad things", "是“遭到”里的字，“遭到”用于不好的事") },
+  { word: "率", cue: /率/, note: t(", after a word, means “rate”: 成功率, success rate", "用在词语后面，表示比率") },
+  {
+    word: "样",
+    cue: /那样/,
+    note: t("is part of 那样, “like that”, which closes 正如…那样", "是“那样”里的字，和“正如”呼应成“正如……那样”"),
+  },
+  { word: "反", cue: /[挂穿放]反/, note: t(", after a verb, means “the wrong way round”", "用在动词后面，表示方向或位置颠倒") },
+  {
+    word: "超",
+    cue: /超[大高]/,
+    note: t("means “beyond the usual”, set before a word: 超大型, extra large", "用在词语前面，表示超过一般"),
+  },
+  { word: "勿", cue: /切勿/, note: t("is part of 切勿, written for “never do”", "是“切勿”里的字，“勿”表示不要") },
+  { word: "属", cue: /莫属/, note: t("is part of 非…莫属, “belongs to no one but”", "是“非……莫属”里的字，“属”表示属于") },
+  { word: "十", cue: /十个|百分之十/, note: t("is the number ten", "是数字十") },
+  { word: "五", cue: /块五/, note: t(", after 块, means five jiao: 三块五, 3.5 yuan", "用在“块”后面，表示五毛：三块五") },
+  { word: "三", cue: /第三|三天/, note: t("is the number three", "是数字三") },
+  { word: "六", cue: /六岁/, note: t("is the number six", "是数字六") },
+  { word: "他", cue: /他/, note: t("means “he” or “him”, a man or boy other than you and me", "指你我以外的一个男性") },
+  { word: "我", cue: /我/, note: t("means “I” or “me”, the one speaking", "指说话的人自己") },
+  { word: "你", cue: /你/, note: t("means “you”, the one spoken to", "指听话的人") },
+  { word: "它", cue: /它/, note: t("means “it”, for a thing, not a person", "指人以外的事物") },
+  { word: "常", cue: /不常/, note: t("means “often”; 不常 is “not often”", "表示时常，“不常”就是不经常") },
+  { word: "好", cue: /好记/, note: t(", before a verb, means “easy to”: 好记, easy to remember", "用在动词前面，表示容易") },
+  {
+    word: "好",
+    cue: /得很好|比[^，。]*好|不如[^，。]*好|越来越好|好极了|特别好/,
+    note: t("is the adjective “good” or “well”", "是形容词，表示好"),
+  },
+  { word: "少", cue: /得少/, note: t("means “little” or “few”", "表示数量小") },
+  { word: "刻", cue: /一刻/, note: t("is a quarter of an hour", "表示十五分钟") },
+  { word: "钟", cue: /点钟/, note: t("follows 点 in 点钟, “o'clock”", "和“点”连用成“点钟”，表示整点时间") },
+  { word: "睡", cue: /睡/, note: t("is the verb “sleep”", "是动词，表示睡觉") },
+  { word: "问", cue: /问一下/, note: t("is the verb “ask”", "是动词，表示请人回答") },
+  { word: "全", cue: /全/, note: t("means “all” or “wholly”, set before the verb", "用在动词前面，表示全部、都") },
+  { word: "愿", cue: /愿不愿/, note: t("is part of 愿意, “be willing”, asked as 愿不愿意", "是“愿意”里的字，问句说“愿不愿意”") },
+  { word: "拍", cue: /拍照/, note: t("means “take” a photo: 拍照片", "表示照相") },
+  { word: "每", cue: /每天/, note: t("means “every”: 每天, every day", "表示“每一”，“每天”就是天天") },
+  { word: "假", cue: /假的/, note: t("means “not real, false”", "表示不真的") },
+  { word: "该", cue: /该怎么/, note: t("means “should”", "表示应该") },
+  {
+    word: "该",
+    cue: /，该/,
+    note: t("points back, in formal writing, to what was just named: “this”, “the said”", "书面语，指上文说过的人或事物"),
+  },
+  { word: "夜", cue: /熬过?夜/, note: t("is part of 熬夜, “stay up late”", "是“熬夜”里的字，“熬夜”表示很晚不睡") },
+  { word: "赚", cue: /赚/, note: t("means “earn” money", "表示得到钱") },
+  {
+    word: "阵",
+    cue: /一阵/,
+    note: t("is the measure word for a short spell of wind, rain or sound", "是量词，用于短时间的风、雨、声音等"),
+  },
+  {
+    word: "场",
+    cue: /一场比一场/,
+    note: t("is the measure word for games: 一场比一场, each game better than the last", "是比赛的量词，“一场比一场”表示一次比一次"),
+  },
+  { word: "净", cue: /净/, note: t("means “only, nothing but”, often in a complaint", "表示全都是、只，常带不满") },
+  { word: "扭", cue: /扭了/, note: t("means “twist”: 扭了脚, hurt one's foot by twisting it", "表示转动受伤，比如“扭了脚”") },
+  { word: "学", cue: /学了|学会/, note: t("is the verb “learn” or “study”", "是动词，表示学习") },
+  { word: "干", cue: /太干/, note: t("means “dry”", "表示没有水分") },
+  { word: "临", cue: /临[^，。]*[前时]/, note: t("opens 临…前, “just before”", "用在“临……前”里，表示快要……的时候") },
+  { word: "超", cue: /超速/, note: t("means “go beyond”: 超速, over the speed limit", "表示超过，“超速”就是超过规定的速度") },
+  { word: "颇", cue: /颇/, note: t("is written for “quite” or “rather”", "是书面语，表示很、相当") },
+  { word: "受", cue: /受欢迎/, note: t("is part of 受欢迎, “be popular”", "是“受欢迎”里的字，“受”表示得到") },
+  { word: "帅", cue: /帅/, note: t("means “handsome”", "表示长得好看") },
+  { word: "乃", cue: /乃/, note: t("is written for 是, “is”", "是书面语，意思是“是”") },
+  { word: "需", cue: /需/, note: t("means “need”", "表示需要") },
+  {
+    word: "其",
+    cue: /其/,
+    note: t("is written for “its” or “his”, pointing back to what came before", "是书面语，指前面说过的人或事物，意思是“他的、它的”"),
+  },
+  {
+    word: "岂",
+    cue: /岂/,
+    note: t("is written for “how could”, asking only to stress the opposite", "是书面语，用在反问句里，意思是“难道、怎么”"),
+  },
+  { word: "示", cue: /以示/, note: t("follows 以 in 以示, “so as to show”", "和“以”连用成“以示”，表示用来表示") },
+  { word: "防", cue: /以防/, note: t("follows 以 in 以防, “so as to guard against”", "和“以”连用成“以防”，表示防止坏事发生") },
+  { word: "求", cue: /以求/, note: t("follows 以 in 以求, “so as to seek”", "和“以”连用成“以求”，表示为了得到") },
 ];
 
 /** inContext is the note on a word that holds in a sentence of a certain shape; undefined when its usage note holds. */
@@ -820,7 +1037,6 @@ function replaced(d: Difference, glossary: Glossary, whole = true): Text {
   const w = joined(d.wrong);
   const written = pairReasons.get(`${r}|${w}`);
   if (written) return written;
-  const rw = what(r, glossary);
   const need = (x: Text) => t(`This sentence needs ${x.en}.`, `这里要用${x["zh-CN"]}。`);
   const sentence = joined(d.whole);
   const named = (x: string): Text | undefined => {
@@ -828,7 +1044,7 @@ function replaced(d: Difference, glossary: Glossary, whole = true): Text {
     if (c) return t(`${x}, which${c.en.startsWith(",") ? "" : " "}${c.en}`, `${q(x)}，它${c["zh-CN"]}`);
     const u = usage.get(x);
     if (u) return t(`${x}, which ${u.note.en}`, `${q(x)}，它${u.note["zh-CN"]}`);
-    const m = meaningOf(x, glossary);
+    const m = glossary.meanings.get(x);
     return m && t(`${x}, “${m.en}”`, `${q(x)}（${m["zh-CN"]}）`);
   };
   const rn = named(r);
@@ -851,7 +1067,7 @@ function replaced(d: Difference, glossary: Glossary, whole = true): Text {
   }
   const broke = whole ? broken(r, w, glossary) : undefined;
   if (broke) return broke;
-  return rw && rn
+  return rn
     ? t(`It has ${w} where this sentence needs ${rn.en}.`, `用了${q(w)}，这里要用${rn["zh-CN"]}。`)
     : t(`It has ${w} where this sentence needs ${r}.`, `用了${q(w)}，这里应该用${q(r)}。`);
 }
@@ -1020,5 +1236,5 @@ export function noteOf(word: string, glossary: Glossary, sentence = ""): Text | 
   const c = inContext(word, sentence);
   if (c) return t(`${word}${c.en.startsWith(",") ? "" : " "}${c.en}`, `${q(word)}${c["zh-CN"]}`);
   const p = phraseNotes.get(word);
-  return what(word, glossary) ?? (p && t(`${word} ${p.en}`, `${q(word)}${p["zh-CN"]}`));
+  return wordWhat(word, glossary) ?? (p && t(`${word} ${p.en}`, `${q(word)}${p["zh-CN"]}`));
 }

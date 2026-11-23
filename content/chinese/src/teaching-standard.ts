@@ -2,14 +2,8 @@
 // explanation that walks one instance and ends with a callout, and solutions in steps that end with a check. The test
 // beside this file holds every listed topic to it.
 
-import { levelGrammarId } from "./level-1/grammar.ts";
-
-/** levelGrammar lists the ids of the first count grammar topics of a level. */
-const levelGrammar = (level: number, count: number): readonly string[] =>
-  Array.from({ length: count }, (_, k) => levelGrammarId(level, k + 1));
-
 /** taughtStrands lists the strands whose every topic is written to the teaching standard. */
-export const taughtStrands: readonly string[] = ["recitation", "classical", "pinyin"];
+export const taughtStrands: readonly string[] = ["recitation", "classical", "pinyin", "grammar"];
 
 /**
  * taughtTopics lists further topics written to the standard while their strand is still being rewritten; once the
@@ -167,39 +161,4 @@ export const taughtTopics: readonly string[] = [
   "writing-11-academic",
   "speaking-11-seminar",
   "speaking-11-presenting-research",
-  "punctuation-sentence-ends",
-  "punctuation-commas",
-  "punctuation-speech",
-  "punctuation-titles",
-  "punctuation-ellipses",
-  "punctuation-semicolons",
-  "punctuation-dashes",
-  "faulty-missing-parts",
-  "faulty-mismatches",
-  "faulty-word-order",
-  "faulty-repetition",
-  "faulty-contradictions",
-  "faulty-misused-connectives",
-  "faulty-mixed-structures",
-  "faulty-illogical",
-  "faulty-ambiguous",
-  "connectives-1",
-  "connectives-2",
-  "sentences-ba-and-bei",
-  "sentences-rhetorical-questions",
-  "sentences-reported-speech",
-  "rhetoric-1",
-  "rhetoric-2",
-  "rhetoric-3",
-  "rhetoric-4",
-  "gaokao-language",
-  ...levelGrammar(1, 48),
-  ...levelGrammar(2, 70),
-  ...levelGrammar(3, 81),
-  ...levelGrammar(4, 73),
-  ...levelGrammar(5, 62),
-  ...levelGrammar(6, 62),
-  ...levelGrammar(7, 49),
-  ...levelGrammar(8, 51),
-  ...levelGrammar(9, 51),
 ];
