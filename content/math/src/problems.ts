@@ -670,6 +670,9 @@ export interface ExplainedChoice {
   readonly solutionFigure?: Figure;
 }
 
+/** optionLabel drops the full stop that ends an option, so that the colon after it reads cleanly. */
+export const optionLabel = (option: string): string => option.replace(/[.。]$/, "");
+
 /**
  * explainedChoice builds a choice problem that goes through its options: a learner who picks a wrong one is told what is
  * wrong with it, and the solution then says the same of every wrong option.
@@ -686,7 +689,7 @@ export function explainedChoice(rng: Rng, p: ExplainedChoice): Problem {
   const shown = input.kind === "choice" ? input.options : [];
   const inOrder = shown.flatMap((o) => wrong.filter((w) => w.option === o));
   const lines = (locale: "en" | "zh-CN", heading: string) =>
-    `${p.solution[locale]}\n\n${heading}\n\n${inOrder.map((w) => `- ${w.option[locale]}${locale === "en" ? ": " : "："}${w.why[locale]}`).join("\n")}`;
+    `${p.solution[locale]}\n\n${heading}\n\n${inOrder.map((w) => `- ${optionLabel(w.option[locale])}${locale === "en" ? ": " : "："}${w.why[locale]}`).join("\n")}`;
   return withMistakes(
     {
       ...problem,

@@ -2,7 +2,7 @@
 
 import { type Problem, t } from "@ga/content";
 
-import { withMistakes } from "./problems.ts";
+import { optionLabel, withMistakes } from "./problems.ts";
 
 /** Reason names a wrong option by its English text, and says what is wrong with it in English and Chinese. */
 export type Reason = readonly [response: string, en: string, zh: string];
@@ -26,7 +26,7 @@ export function reasoned(problem: Problem, reasons: readonly Reason[]): Problem 
   const lines = (locale: "en" | "zh-CN", heading: string, why: (r: Reason) => string) => {
     const items = shown.flatMap((o) => {
       const r = by.get(o.en);
-      return r ? [`- ${o[locale]}${locale === "en" ? ": " : "："}${why(r)}`] : [];
+      return r ? [`- ${optionLabel(o[locale])}${locale === "en" ? ": " : "："}${why(r)}`] : [];
     });
     return items.length > 0 ? `${problem.solution[locale]}\n\n${heading}\n\n${items.join("\n")}` : problem.solution[locale];
   };
