@@ -54,4 +54,13 @@ export const taughtTopics: readonly string[] = [
   "removing-point-discontinuities",
   "removing-jump-discontinuities",
   "removing-discontinuities-from-rational-functions",
+  "the-average-rate-of-change-of-a-function-over-a-varying-interval",
+  "the-instantaneous-rate-of-change-of-a-function-at-a-point",
+  "defining-the-derivative-using-derivative-notation",
+  "continuity-and-differentiability-of-functions",
+  "the-power-rule-for-differentiation",
+  "the-sum-and-constant-multiple-rules-for-differentiation",
+  "calculating-the-slope-of-a-tangent-line-using-differentiation",
+  "calculating-the-equation-of-a-tangent-line-using-differentiation",
+  "calculating-the-equation-of-a-normal-line-using-differentiation",
 ];

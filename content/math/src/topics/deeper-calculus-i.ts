@@ -435,14 +435,16 @@ const tangentThroughOutsidePoint: KnowledgePointDef = {
   id: "tangent-lines-through-a-point-off-the-curve",
   title: t("Tangent lines through a point off the curve", "过曲线外一点的切线"),
   explanation: t(
-    "If the given point is not on the curve, the point of tangency is unknown. Call it $(a, a^2)$ on $y = x^2$. The tangent there is $y - a^2 = 2a(x - a)$, and requiring it to pass through the given point gives a quadratic in $a$. Each root gives one tangent line.",
-    "如果给定的点不在曲线上，切点就是未知的。设 $y = x^2$ 上的切点为 $(a, a^2)$，切线是 $y - a^2 = 2a(x - a)$。要求它过给定的点，就得到关于 $a$ 的二次方程，每个根对应一条切线。",
+    "If the given point is not on the curve, the point of tangency is unknown. Call it $(a, a^2)$ on $y = x^2$. The tangent there is $y - a^2 = 2a(x - a)$, and requiring it to pass through the given point gives a quadratic in $a$. Each root gives one tangent line.\n\nFor the point $(1, -3)$: $-3 - a^{2} = 2a(1 - a)$ gives $a^{2} - 2a - 3 = 0$, so $a = 3$ or $a = -1$, and the two tangent slopes are $6$ and $-2$.\n\nCheck: the tangent at $(3, 9)$ is $y = 6x - 9$, which gives $6 - 9 = -3$ at $x = 1$.\n\n> **Watch out.** The given point is not the point of tangency, so its $x$-value does not give a slope: $2 \\cdot 1 = 2$ is not one of the tangent slopes here.",
+    "如果给定的点不在曲线上，切点就是未知的。设 $y = x^2$ 上的切点为 $(a, a^2)$，切线是 $y - a^2 = 2a(x - a)$。要求它过给定的点，就得到关于 $a$ 的二次方程，每个根对应一条切线。\n\n对点 $(1, -3)$：$-3 - a^{2} = 2a(1 - a)$ 化为 $a^{2} - 2a - 3 = 0$，所以 $a = 3$ 或 $a = -1$，两条切线的斜率是 $6$ 和 $-2$。\n\n检验：$(3, 9)$ 处的切线是 $y = 6x - 9$，在 $x = 1$ 处给出 $6 - 9 = -3$。\n\n> **注意。** 给定的点不是切点，所以它的横坐标不能给出斜率：这里 $2 \\cdot 1 = 2$ 并不是切线的斜率。",
   ),
   generate(rng) {
     const p = rng.int(-6, 6);
     const s = rng.int(1, 6);
     const q = p * p - s * s;
     const answer = 2 * (p + s);
+    const r = p + s;
+    const eq = poly([1, "a^2"], [-2 * p, "a"], [q, ""]);
     return numberProblem({
       prompt: t(
         `Two tangent lines to $y = x^2$ pass through the point $(${p}, ${q})$. Find the larger of their slopes.`,
@@ -450,10 +452,40 @@ const tangentThroughOutsidePoint: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [2 * p, 2 * (p - s), p + s],
-      solution: t(
-        `A tangent at $(a, a^2)$ has slope $2a$. Passing through the point requires $${inParens(q)} - a^2 = 2a(${p} - a)$, that is, $${poly([1, "a^2"], [-2 * p, "a"], [q, ""])} = 0$. The roots are $a = ${p - s}$ and $a = ${p + s}$, so the larger slope is $${answer}$.`,
-        `$(a, a^2)$ 处的切线斜率是 $2a$。过这一点要求 $${inParens(q)} - a^2 = 2a(${p} - a)$，即 $${poly([1, "a^2"], [-2 * p, "a"], [q, ""])} = 0$。两根是 $a = ${p - s}$ 和 $a = ${p + s}$，所以较大的斜率是 $${answer}$。`,
+      mistakes: firstMistakes(answer, [
+        why(
+          2 * p,
+          `This is $2x$ at the given point, $x = ${p}$. That point is not on the curve, so it is not a point of tangency.`,
+          `这是在给定点 $x = ${p}$ 处的 $2x$。这个点不在曲线上，不是切点。`,
+        ),
+        why(2 * (p - s), `This is the smaller slope, from $a = ${p - s}$.`, `这是较小的斜率，来自 $a = ${p - s}$。`),
+        why(r, `This is the point of tangency $a = ${r}$. The slope there is $2a$.`, `这是切点的横坐标 $a = ${r}$。那里的斜率是 $2a$。`),
+      ]),
+      solution: walk(
+        [
+          [
+            "Set up the tangent",
+            "设出切线",
+            `The tangent at $(a, a^2)$ has slope $2a$. It passes through $(${p}, ${q})$ when\n\n$$${inParens(q)} - a^2 = 2a(${p} - a).$$`,
+            `$(a, a^2)$ 处的切线斜率是 $2a$。它过 $(${p}, ${q})$ 的条件是\n\n$$${inParens(q)} - a^2 = 2a(${p} - a).$$`,
+          ],
+          [
+            "Solve for the points of tangency",
+            "解出切点",
+            `This rearranges to $${eq} = 0$, with roots $a = ${p - s}$ and $a = ${r}$.`,
+            `整理得 $${eq} = 0$，两根是 $a = ${p - s}$ 和 $a = ${r}$。`,
+          ],
+          [
+            "Take the larger slope",
+            "取较大的斜率",
+            `The slopes are $2 \\cdot ${inParens(p - s)} = ${2 * (p - s)}$ and $2 \\cdot ${inParens(r)} = ${answer}$, so the larger is $${answer}$.`,
+            `斜率分别是 $2 \\cdot ${inParens(p - s)} = ${2 * (p - s)}$ 和 $2 \\cdot ${inParens(r)} = ${answer}$，较大的是 $${answer}$。`,
+          ],
+        ],
+        [
+          `The tangent at $(${r}, ${r * r})$ is $y = ${poly([answer, "x"], [-r * r, ""])}$. At $x = ${p}$ it gives $${answer} \\cdot ${inParens(p)} - ${r * r} = ${q}$, so it does pass through the point.`,
+          `$(${r}, ${r * r})$ 处的切线是 $y = ${poly([answer, "x"], [-r * r, ""])}$。在 $x = ${p}$ 处它给出 $${answer} \\cdot ${inParens(p)} - ${r * r} = ${q}$，确实经过这个点。`,
+        ],
       ),
     });
   },
@@ -464,24 +496,64 @@ const normalMeetsAgain: KnowledgePointDef = {
   figure: calculusDrawings2["calculating-the-equation-of-a-normal-line-using-differentiation#where-a-normal-line-meets-the-curve-again"],
   title: t("Where a normal line meets the curve again", "法线与曲线的另一交点"),
   explanation: t(
-    "A normal line to a parabola usually crosses the parabola a second time. For $y = cx^2$, the line through points with $x$-values $a$ and $b$ has slope $c(a + b)$. Setting this equal to the normal's slope gives the second point directly, without solving a quadratic.",
-    "抛物线的法线通常还会再次与它相交。对 $y = cx^2$，过横坐标为 $a$ 和 $b$ 的两点的直线斜率是 $c(a + b)$。令它等于法线的斜率，就能直接得到第二个交点，不必解二次方程。",
+    "A normal line to a parabola usually crosses the parabola a second time. For $y = cx^2$, the line through points with $x$-values $a$ and $b$ has slope $c(a + b)$. Setting this equal to the normal's slope gives the second point directly, without solving a quadratic.\n\nFor $y = x^{2}$ at $x = 1$ the tangent slope is $2$, so the normal slope is $-\\frac{1}{2}$. Then $1 + b = -\\frac{1}{2}$, and $b = -\\frac{3}{2}$.\n\nCheck: the normal $y = -\\frac{1}{2}x + \\frac{3}{2}$ gives $\\frac{3}{4} + \\frac{3}{2} = \\frac{9}{4}$ at $x = -\\frac{3}{2}$, and so does $x^{2}$.\n\n> **Watch out.** $-a$ is the other point at the same height, which a horizontal line reaches, not the normal. Divide the normal's slope by $c$ before subtracting $a$.",
+    "抛物线的法线通常还会再次与它相交。对 $y = cx^2$，过横坐标为 $a$ 和 $b$ 的两点的直线斜率是 $c(a + b)$。令它等于法线的斜率，就能直接得到第二个交点，不必解二次方程。\n\n对 $y = x^{2}$ 在 $x = 1$ 处，切线斜率是 $2$，所以法线斜率是 $-\\frac{1}{2}$。于是 $1 + b = -\\frac{1}{2}$，$b = -\\frac{3}{2}$。\n\n检验：法线 $y = -\\frac{1}{2}x + \\frac{3}{2}$ 在 $x = -\\frac{3}{2}$ 处给出 $\\frac{3}{4} + \\frac{3}{2} = \\frac{9}{4}$，$x^{2}$ 也是 $\\frac{9}{4}$。\n\n> **注意。** $-a$ 是同一高度上的另一点，是水平线而不是法线到达的点。要先把法线斜率除以 $c$，再减去 $a$。",
   ),
   generate(rng) {
     const a = nonzero(rng, 6);
     const c = rng.int(1, 4);
     const answer = Q.of(-a).sub(Q.of(1, 2 * c * c * a));
     const normal = Q.of(-1, 2 * c * a);
+    const height = Q.of(c).mul(answer).mul(answer);
+    const cx2 = poly([c, "x^2"]);
+    const nP = normal.sign() < 0 ? `\\left(${normal.toLatex()}\\right)` : normal.toLatex();
     return numberProblem({
       prompt: t(
-        `The normal line to $y = ${poly([c, "x^2"])}$ at the point where $x = ${a}$ meets the curve at a second point. Find the $x$-coordinate of that point.`,
-        `$y = ${poly([c, "x^2"])}$ 在 $x = ${a}$ 处的法线与曲线还有另一个交点。求该点的横坐标。`,
+        `The normal line to $y = ${cx2}$ at the point where $x = ${a}$ meets the curve at a second point. Find the $x$-coordinate of that point.`,
+        `$y = ${cx2}$ 在 $x = ${a}$ 处的法线与曲线还有另一个交点。求该点的横坐标。`,
       ),
       answer,
-      wrong: [Q.of(-a), normal, Q.of(a).add(Q.of(1, 2 * c * c * a))],
-      solution: t(
-        `The normal's slope is $${normal.toLatex()}$. The line through the two points has slope $${c}(${a} + b)$, so $${a} + b = ${normal.div(Q.of(c)).toLatex()}$ and $b = ${answer.toLatex()}$.`,
-        `法线的斜率是 $${normal.toLatex()}$。过两点的直线斜率是 $${c}(${a} + b)$，所以 $${a} + b = ${normal.div(Q.of(c)).toLatex()}$，$b = ${answer.toLatex()}$。`,
+      mistakes: firstMistakes(answer, [
+        why(
+          Q.of(-a),
+          `This is the point at the same height as $x = ${a}$, which a horizontal line reaches. The normal is not horizontal.`,
+          `这是与 $x = ${a}$ 同高的点，是水平线到达的点。法线不是水平的。`,
+        ),
+        why(normal, "This is the slope of the normal, not an $x$-coordinate.", "这是法线的斜率，不是横坐标。"),
+        why(
+          Q.of(a).add(Q.of(1, 2 * c * c * a)),
+          `This has the signs the wrong way round: $b = ${normal.div(Q.of(c)).toLatex()} - ${inParens(a)}$.`,
+          `这符号弄反了：$b = ${normal.div(Q.of(c)).toLatex()} - ${inParens(a)}$。`,
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Find the normal's slope",
+            "求法线的斜率",
+            `The tangent slope at $x = ${a}$ is $${2 * c} \\cdot ${inParens(a)} = ${2 * c * a}$, so the normal's slope is $${normal.toLatex()}$.`,
+            `$x = ${a}$ 处的切线斜率是 $${2 * c} \\cdot ${inParens(a)} = ${2 * c * a}$，所以法线的斜率是 $${normal.toLatex()}$。`,
+          ],
+          [
+            "Match the chord's slope",
+            "令弦的斜率相等",
+            `The line through the points at $x = ${a}$ and $x = b$ has slope $${c === 1 ? "" : c}(${a} + b)$, so\n\n$$${a} + b = ${normal.div(Q.of(c)).toLatex()}.$$`,
+            `过 $x = ${a}$ 和 $x = b$ 两点的直线斜率是 $${c === 1 ? "" : c}(${a} + b)$，所以\n\n$$${a} + b = ${normal.div(Q.of(c)).toLatex()}.$$`,
+          ],
+          ["Solve for $b$", "解出 $b$", `$b = ${answer.toLatex()}${approx(answer)}$.`, `$b = ${answer.toLatex()}${approx(answer)}$。`],
+        ],
+        [
+          `At $x = ${answer.toLatex()}$ the curve has height $${c === 1 ? "" : c}\\left(${answer.toLatex()}\\right)^{2} = ${height.toLatex()}$, and the normal $y = ${c * a * a} + ${nP}(x ${a < 0 ? "+" : "-"} ${Math.abs(a)})$ gives the same height there: $${Q.of(
+            c * a * a,
+          )
+            .add(normal.mul(answer.sub(Q.of(a))))
+            .toLatex()}$.`,
+          `在 $x = ${answer.toLatex()}$ 处，曲线的高度是 $${c === 1 ? "" : c}\\left(${answer.toLatex()}\\right)^{2} = ${height.toLatex()}$，法线 $y = ${c * a * a} + ${nP}(x ${a < 0 ? "+" : "-"} ${Math.abs(a)})$ 在该处给出相同的高度：$${Q.of(
+            c * a * a,
+          )
+            .add(normal.mul(answer.sub(Q.of(a))))
+            .toLatex()}$。`,
+        ],
       ),
     });
   },
@@ -1718,8 +1790,8 @@ const differentiableJoin: KnowledgePointDef = {
   id: "constants-that-make-a-join-differentiable",
   title: t("Constants that make a join differentiable", "使连接处可导的常数"),
   explanation: t(
-    "Two pieces join smoothly only if two things hold at the break point. The values must agree, because a differentiable function is continuous, and the one-sided slopes must agree, so that there is no corner. With a line as one piece, the slope condition fixes its slope, and the value condition then fixes its intercept.",
-    "两段要光滑连接，分段点处必须同时满足两件事。函数值必须相等，因为可导函数一定连续；单侧斜率也必须相等，这样才没有尖角。当其中一段是直线时，斜率条件确定它的斜率，然后函数值条件确定它的截距。",
+    "Two pieces join smoothly only if two things hold at the break point. The values must agree, because a differentiable function is continuous, and the one-sided slopes must agree, so that there is no corner. With a line as one piece, the slope condition fixes its slope, and the value condition then fixes its intercept.\n\nFor $x^{2}$ when $x \\le 1$ and $mx + n$ when $x > 1$: the slopes give $m = 2 \\cdot 1 = 2$, and the values give $2 + n = 1$, so $n = -1$.\n\nCheck: $y = 2x - 1$ is the tangent line to $x^{2}$ at $(1, 1)$, so the line carries on exactly where the parabola leaves off, with no corner.\n\n> **Watch out.** Fix $m$ from the slopes first, then $n$ from the values. Matching the values alone only makes $f$ continuous, and $n$ is not the value at the break point but the intercept of the line.",
+    "两段要光滑连接，分段点处必须同时满足两件事。函数值必须相等，因为可导函数一定连续；单侧斜率也必须相等，这样才没有尖角。当其中一段是直线时，斜率条件确定它的斜率，然后函数值条件确定它的截距。\n\n对 $x \\le 1$ 时的 $x^{2}$ 和 $x > 1$ 时的 $mx + n$：斜率条件给出 $m = 2 \\cdot 1 = 2$，函数值条件给出 $2 + n = 1$，所以 $n = -1$。\n\n检验：$y = 2x - 1$ 正是 $x^{2}$ 在 $(1, 1)$ 处的切线，所以直线恰好在抛物线结束的地方接上，没有尖角。\n\n> **注意。** 先由斜率确定 $m$，再由函数值确定 $n$。只让函数值相等只能保证连续；$n$ 也不是分段点处的函数值，而是直线的截距。",
   ),
   generate(rng) {
     const c = nonzero(rng, 4);
@@ -1730,6 +1802,7 @@ const differentiableJoin: KnowledgePointDef = {
     const value = a * c * c + p * c + q;
     const answer = value - m * c;
     const f = `\\begin{cases} ${poly([a, "x^2"], [p, "x"], [q, ""])} & x \\le ${c} \\\\ mx + n & x > ${c} \\end{cases}`;
+    const first = (x: number) => a * x * x + p * x + q;
     return numberProblem({
       prompt: t(
         `Let $f(x) = ${f}$. The constants $m$ and $n$ are chosen so that $f$ is differentiable at $x = ${c}$. Find $n$.`,
@@ -1737,10 +1810,40 @@ const differentiableJoin: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [value, m, value + m * c, q, answer + c, answer + 2 * c, answer - 2 * c],
-      solution: t(
-        `The slopes must agree, so $m$ equals the derivative of the first piece at $x = ${c}$, which is $${m}$. The values must agree, so $${m} \\cdot ${inParens(c)} + n = ${value}$, which gives $n = ${answer}$.`,
-        `斜率必须相等，所以 $m$ 等于第一段在 $x = ${c}$ 处的导数，即 $${m}$。函数值必须相等，所以 $${m} \\cdot ${inParens(c)} + n = ${value}$，得 $n = ${answer}$。`,
+      wrong: [answer + c, answer + 2 * c, answer - 2 * c],
+      mistakes: firstMistakes(answer, [
+        why(
+          value,
+          `This is the value $f(${c}) = ${value}$. $n$ is the intercept of the line: $n = ${value} - ${inParens(m)} \\cdot ${inParens(c)}$.`,
+          `这是函数值 $f(${c}) = ${value}$。$n$ 是直线的截距：$n = ${value} - ${inParens(m)} \\cdot ${inParens(c)}$。`,
+        ),
+        why(m, `This is $m$, the slope. The question asks for $n$.`, `这是斜率 $m$。题目问的是 $n$。`),
+        why(
+          value + m * c,
+          `This adds $${m} \\cdot ${inParens(c)}$ instead of subtracting it: $${m} \\cdot ${inParens(c)} + n = ${value}$.`,
+          `这加上了 $${m} \\cdot ${inParens(c)}$，应该减去：$${m} \\cdot ${inParens(c)} + n = ${value}$。`,
+        ),
+        why(q, "This is the constant of the first piece. The line needs its own intercept.", "这是第一段的常数项。直线有自己的截距。"),
+      ]),
+      solution: walk(
+        [
+          [
+            "Match the slopes",
+            "令斜率相等",
+            `The first piece has derivative $${poly([2 * a, "x"], [p, ""])}$, which is $${m}$ at $x = ${c}$, so $m = ${m}$.`,
+            `第一段的导数是 $${poly([2 * a, "x"], [p, ""])}$，在 $x = ${c}$ 处等于 $${m}$，所以 $m = ${m}$。`,
+          ],
+          [
+            "Match the values",
+            "令函数值相等",
+            `The first piece gives $${value}$ at $x = ${c}$, so\n\n$$${m} \\cdot ${inParens(c)} + n = ${value} \\quad\\Rightarrow\\quad n = ${answer}.$$`,
+            `第一段在 $x = ${c}$ 处的值是 $${value}$，所以\n\n$$${m} \\cdot ${inParens(c)} + n = ${value} \\quad\\Rightarrow\\quad n = ${answer}.$$`,
+          ],
+        ],
+        [
+          `With $h = 0.01$ the difference quotient at $x = ${c}$ uses the line and is exactly $${m}$; with $h = -0.01$ it uses the first piece and is $${num((first(c - 0.01) - value) / -0.01)}$. Both sides have slope close to $${m}$, so there is no corner.`,
+          `在 $x = ${c}$ 处，取 $h = 0.01$ 时差商用的是直线，恰好是 $${m}$；取 $h = -0.01$ 时用的是第一段，为 $${num((first(c - 0.01) - value) / -0.01)}$。两侧斜率都接近 $${m}$，所以没有尖角。`,
+        ],
       ),
     });
   },
@@ -1751,8 +1854,8 @@ const leastSlopeOnCubic: KnowledgePointDef = {
   figure: calculusDrawings2["calculating-the-slope-of-a-tangent-line-using-differentiation#the-extreme-slope-on-a-cubic"],
   title: t("The extreme slope on a cubic", "三次曲线上斜率的最值"),
   explanation: t(
-    "The slope of a cubic at each point is given by its derivative, which is a quadratic in $x$. So the slope itself has an extreme value, at the vertex of that parabola: a least slope when the cubic's leading coefficient is positive and a greatest slope when it is negative. No tangent line on the curve can go beyond it.",
-    "三次曲线在每一点的斜率由它的导数给出，而导数是 $x$ 的二次式。所以斜率本身有最值，出现在这条抛物线的顶点处：三次项系数为正时是最小斜率，为负时是最大斜率。曲线上任何切线的斜率都不会超过这个界限。",
+    "The slope of a cubic at each point is given by its derivative, which is a quadratic in $x$. So the slope itself has an extreme value, at the vertex of that parabola: a least slope when the cubic's leading coefficient is positive and a greatest slope when it is negative. No tangent line on the curve can go beyond it.\n\nFor $y = x^{3} - 6x^{2} + 5x$, the slope $y' = 3x^{2} - 12x + 5$ has its vertex at $x = 2$, so the least slope is $12 - 24 + 5 = -7$.\n\nCheck: at $x = 1.9$ and at $x = 2.1$ the slope is $-6.97$, a little more than $-7$.\n\n> **Watch out.** The extreme slope is the value of $y'$ at the vertex, not the $x$-value of the vertex, and not the slope $y'(0)$ at the origin.",
+    "三次曲线在每一点的斜率由它的导数给出，而导数是 $x$ 的二次式。所以斜率本身有最值，出现在这条抛物线的顶点处：三次项系数为正时是最小斜率，为负时是最大斜率。曲线上任何切线的斜率都不会超过这个界限。\n\n对 $y = x^{3} - 6x^{2} + 5x$，斜率 $y' = 3x^{2} - 12x + 5$ 的顶点在 $x = 2$，所以最小斜率是 $12 - 24 + 5 = -7$。\n\n检验：在 $x = 1.9$ 和 $x = 2.1$ 处斜率都是 $-6.97$，比 $-7$ 略大。\n\n> **注意。** 斜率的最值是 $y'$ 在顶点处的值，不是顶点的横坐标，也不是原点处的斜率 $y'(0)$。",
   ),
   generate(rng) {
     const a = nonzero(rng, 3);
@@ -1770,10 +1873,53 @@ const leastSlopeOnCubic: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [-k, c, c + 3 * a * k * k, c - 6 * a * k * k],
-      solution: t(
-        `The slope is $y' = ${slope}$, a parabola with its vertex at $x = ${-k}$. There the slope is $${answer}$.`,
-        `斜率是 $y' = ${slope}$，这条抛物线的顶点在 $x = ${-k}$。此处的斜率是 $${answer}$。`,
+      mistakes: firstMistakes(answer, [
+        why(
+          -k,
+          `This is where the extreme slope occurs, $x = ${-k}$, not the slope itself.`,
+          `这是斜率取最值的位置 $x = ${-k}$，不是斜率本身。`,
+        ),
+        why(
+          c,
+          "This is $y'(0)$, the slope at the origin, not at the vertex of $y'$.",
+          "这是原点处的斜率 $y'(0)$，不是 $y'$ 顶点处的斜率。",
+        ),
+        why(
+          c + 3 * a * k * k,
+          `This has the sign of the $x^{2}$ term wrong: at $x = ${-k}$, $${3 * a}x^{2} + ${inParens(6 * a * k)}x = ${3 * a * k * k} - ${inParens(6 * a * k * k)}$.`,
+          `这把二次项的符号弄错了：在 $x = ${-k}$ 处，$${3 * a}x^{2} + ${inParens(6 * a * k)}x = ${3 * a * k * k} - ${inParens(6 * a * k * k)}$。`,
+        ),
+        why(
+          c - 6 * a * k * k,
+          `This leaves out the $x^{2}$ term of $y'$, which is $${3 * a * k * k}$ at $x = ${-k}$.`,
+          `这漏掉了 $y'$ 的二次项，它在 $x = ${-k}$ 处等于 $${3 * a * k * k}$。`,
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Differentiate",
+            "求导",
+            `The slope of the curve at each $x$ is $y' = ${slope}$.`,
+            `曲线在每个 $x$ 处的斜率是 $y' = ${slope}$。`,
+          ],
+          [
+            "Find the vertex of the slope",
+            "求斜率的顶点",
+            `$y'$ is a parabola that opens ${least ? "upwards" : "downwards"}, with its vertex at $x = -\\frac{${6 * a * k}}{2 \\cdot ${inParens(3 * a)}} = ${-k}$.`,
+            `$y'$ 是开口向${least ? "上" : "下"}的抛物线，顶点在 $x = -\\frac{${6 * a * k}}{2 \\cdot ${inParens(3 * a)}} = ${-k}$。`,
+          ],
+          [
+            "Evaluate the slope there",
+            "求该处的斜率",
+            `$y'(${-k}) = ${3 * a * k * k} - ${inParens(6 * a * k * k)} + ${inParens(c)} = ${answer}$.`,
+            `$y'(${-k}) = ${3 * a * k * k} - ${inParens(6 * a * k * k)} + ${inParens(c)} = ${answer}$。`,
+          ],
+        ],
+        [
+          `On either side of the vertex, at $x = ${-k - 1}$ and $x = ${-k + 1}$, the slope is $${answer + 3 * a}$, ${least ? "more" : "less"} than $${answer}$, as an extreme value should be.`,
+          `在顶点两侧的 $x = ${-k - 1}$ 和 $x = ${-k + 1}$ 处，斜率都是 $${answer + 3 * a}$，比 $${answer}$ ${least ? "大" : "小"}，最值正应如此。`,
+        ],
       ),
     });
   },
@@ -2946,8 +3092,8 @@ const widthFromAverageRate: KnowledgePointDef = {
   id: "the-interval-width-from-an-average-rate",
   title: t("The interval width from an average rate", "由平均变化率求区间宽度"),
   explanation: t(
-    "For a quadratic, the difference quotient over $[a, a + h]$ simplifies to an expression that is linear in $h$. After the expansion, $h$ cancels from the denominator, and the terms left show how the average rate depends on the width. This can be used in reverse: given an average rate, solve the linear equation for $h$. As $h$ shrinks to zero, this expression turns into the derivative at $a$.",
-    "对二次函数，$[a, a + h]$ 上的差商化简后是关于 $h$ 的一次式。展开后分母中的 $h$ 被约去，剩下的项表明平均变化率如何依赖于宽度。这可以反过来用：已知平均变化率，解这个一次方程求 $h$。当 $h$ 缩小到零时，这个式子就变成 $a$ 处的导数。",
+    "For a quadratic, the difference quotient over $[a, a + h]$ simplifies to an expression that is linear in $h$. After the expansion, $h$ cancels from the denominator, and the terms left show how the average rate depends on the width. This can be used in reverse: given an average rate, solve the linear equation for $h$. As $h$ shrinks to zero, this expression turns into the derivative at $a$.\n\nFor $f(x) = x^{2}$ over $[1, 1 + h]$ the quotient is $2 + h$, so an average rate of $5$ means $h = 3$.\n\nCheck: over $[1, 4]$, $\\frac{16 - 1}{3} = 5$.\n\n> **Watch out.** $h$ is the width of the interval, not its right end: here the interval is $[1, 4]$, but $h = 3$.",
+    "对二次函数，$[a, a + h]$ 上的差商化简后是关于 $h$ 的一次式。展开后分母中的 $h$ 被约去，剩下的项表明平均变化率如何依赖于宽度。这可以反过来用：已知平均变化率，解这个一次方程求 $h$。当 $h$ 缩小到零时，这个式子就变成 $a$ 处的导数。\n\n对 $f(x) = x^{2}$ 在 $[1, 1 + h]$ 上，差商是 $2 + h$，所以平均变化率为 $5$ 意味着 $h = 3$。\n\n检验：在 $[1, 4]$ 上，$\\frac{16 - 1}{3} = 5$。\n\n> **注意。** $h$ 是区间的宽度，不是右端点：这里区间是 $[1, 4]$，而 $h = 3$。",
   ),
   generate(rng) {
     const p = rng.int(1, 5);
@@ -2957,6 +3103,8 @@ const widthFromAverageRate: KnowledgePointDef = {
     const rate = p * (2 * a + h) + q;
     const f = poly([p, "x^2"], [q, "x"]);
     const quotient = poly([p, "h"], [2 * a * p + q, ""]);
+    const fa = p * a * a + q * a;
+    const fb = p * (a + h) ** 2 + q * (a + h);
     return numberProblem({
       prompt: t(
         `The average rate of change of $f(x) = ${f}$ over $[${a}, ${a} + h]$, with $h > 0$, is $${rate}$. Find $h$.`,
@@ -2965,9 +3113,29 @@ const widthFromAverageRate: KnowledgePointDef = {
       answer: h,
       form: "integer",
       wrong: [2 * h, rate - q, h + 2 * a, h + 1, h + 2],
-      solution: t(
-        `Expanding the difference quotient and cancelling $h$ gives $${quotient}$. Setting this equal to $${rate}$ gives $h = ${h}$.`,
-        `展开差商并约去 $h$，得 $${quotient}$。令它等于 $${rate}$，得 $h = ${h}$。`,
+      mistakes: firstMistakes(h, [
+        why(a + h, `This is the right end $${a} + h$ of the interval, not its width $h$.`, `这是区间的右端点 $${a} + h$，不是宽度 $h$。`),
+        why(p * h, `This is $${p}h$. Divide by $${p}$ to find $h$.`, `这是 $${p}h$。还要除以 $${p}$ 才得到 $h$。`),
+      ]),
+      solution: walk(
+        [
+          [
+            "Simplify the difference quotient",
+            "化简差商",
+            `Expand $f(${a} + h)$, subtract $f(${a}) = ${fa}$ and cancel $h$:\n\n$$\\frac{f(${a} + h) - f(${a})}{h} = ${quotient}.$$`,
+            `展开 $f(${a} + h)$，减去 $f(${a}) = ${fa}$，再约去 $h$：\n\n$$\\frac{f(${a} + h) - f(${a})}{h} = ${quotient}.$$`,
+          ],
+          [
+            "Solve for $h$",
+            "解出 $h$",
+            `\n\n$$${quotient} = ${rate} \\quad\\Rightarrow\\quad ${poly([p, "h"])} = ${p * h} \\quad\\Rightarrow\\quad h = ${h}.$$`,
+            `\n\n$$${quotient} = ${rate} \\quad\\Rightarrow\\quad ${poly([p, "h"])} = ${p * h} \\quad\\Rightarrow\\quad h = ${h}.$$`,
+          ],
+        ],
+        [
+          `Over $[${a}, ${a + h}]$ directly: $\\frac{f(${a + h}) - f(${a})}{${h}} = \\frac{${fb} - ${inParens(fa)}}{${h}} = ${rate}$.`,
+          `直接在 $[${a}, ${a + h}]$ 上计算：$\\frac{f(${a + h}) - f(${a})}{${h}} = \\frac{${fb} - ${inParens(fa)}}{${h}} = ${rate}$。`,
+        ],
       ),
     });
   },
@@ -2977,8 +3145,8 @@ const exponentFromDerivative: KnowledgePointDef = {
   id: "the-exponent-from-a-derivative-value",
   title: t("The exponent from a derivative value", "由导数值求指数"),
   explanation: t(
-    "The power rule has the exponent in two places, as a coefficient and in the new exponent, so a value of the derivative is not simply solved for $n$ by algebra. For a positive base greater than 1, however, $nb^{n - 1}$ grows steadily as $n$ grows. So exactly one positive integer can match a given value, and it can be found by trying small values of $n$ in turn until the value is reached.",
-    "幂法则中指数出现在两处，既是系数又在新的指数中，所以不能简单地用代数解出 $n$。不过，当底数大于 1 时，$nb^{n - 1}$ 随 $n$ 增大而稳定增长。所以恰好有一个正整数能匹配给定的值，可以依次试较小的 $n$，直到达到这个值。",
+    "The power rule has the exponent in two places, as a coefficient and in the new exponent, so a value of the derivative is not simply solved for $n$ by algebra. For a positive base greater than 1, however, $nb^{n - 1}$ grows steadily as $n$ grows. So exactly one positive integer can match a given value, and it can be found by trying small values of $n$ in turn until the value is reached.\n\nFor $f(x) = x^{n}$ with $f'(2) = 80$: $n \\cdot 2^{n - 1}$ is $32$ at $n = 4$ and $80$ at $n = 5$, so $n = 5$.\n\nCheck: $\\frac{2.01^{5} - 2^{5}}{0.01} \\approx 80.8$, close to $80$.\n\n> **Watch out.** The power rule lowers the exponent: the derivative at $b$ is $nb^{n - 1}$, not $nb^{n}$. And the answer is $n$ itself, not the exponent $n - 1$ of the derivative.",
+    "幂法则中指数出现在两处，既是系数又在新的指数中，所以不能简单地用代数解出 $n$。不过，当底数大于 1 时，$nb^{n - 1}$ 随 $n$ 增大而稳定增长。所以恰好有一个正整数能匹配给定的值，可以依次试较小的 $n$，直到达到这个值。\n\n对 $f(x) = x^{n}$，$f'(2) = 80$：$n \\cdot 2^{n - 1}$ 在 $n = 4$ 时是 $32$，在 $n = 5$ 时是 $80$，所以 $n = 5$。\n\n检验：$\\frac{2.01^{5} - 2^{5}}{0.01} \\approx 80.8$，接近 $80$。\n\n> **注意。** 幂法则会把指数减一：在 $b$ 处的导数是 $nb^{n - 1}$，不是 $nb^{n}$。答案是 $n$ 本身，不是导数的指数 $n - 1$。",
   ),
   generate(rng) {
     const b = rng.int(2, 3);
@@ -2986,6 +3154,7 @@ const exponentFromDerivative: KnowledgePointDef = {
     const c = rng.int(1, 6);
     const value = c * n * b ** (n - 1);
     const scale = c === 1 ? "" : `${c}`;
+    const dq = (h: number) => (c * (b + h) ** n - c * b ** n) / h;
     return numberProblem({
       prompt: t(
         `$f(x) = ${scale}x^n$ for a positive integer $n$, and $f'(${b}) = ${value}$. Find $n$.`,
@@ -2993,10 +3162,35 @@ const exponentFromDerivative: KnowledgePointDef = {
       ),
       answer: n,
       form: "integer",
-      wrong: [n - 1, n + 1, n + 2, n - 2],
-      solution: t(
-        `The power rule gives $f'(${b}) = ${c} \\cdot n \\cdot ${b}^{n - 1}$, which grows with $n$. At $n = ${n}$ it is $${c} \\cdot ${n} \\cdot ${b}^{${n - 1}} = ${value}$, as required.`,
-        `幂法则给出 $f'(${b}) = ${c} \\cdot n \\cdot ${b}^{n - 1}$，它随 $n$ 增大而增大。当 $n = ${n}$ 时，它等于 $${c} \\cdot ${n} \\cdot ${b}^{${n - 1}} = ${value}$，符合要求。`,
+      mistakes: firstMistakes(n, [
+        why(n - 1, `This is the exponent $n - 1$ of the derivative, not $n$.`, `这是导数的指数 $n - 1$，不是 $n$。`),
+        ...[n + 1, n + 2, n - 2].map((k) =>
+          why(
+            k,
+            `At $n = ${k}$, $${c} \\cdot ${k} \\cdot ${b}^{${k - 1}} = ${c * k * b ** (k - 1)}$, not $${value}$.`,
+            `当 $n = ${k}$ 时，$${c} \\cdot ${k} \\cdot ${b}^{${k - 1}} = ${c * k * b ** (k - 1)}$，不是 $${value}$。`,
+          ),
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Apply the power rule",
+            "用幂法则",
+            `$f'(x) = ${c} \\cdot nx^{n - 1}$, so $f'(${b}) = ${c} \\cdot n \\cdot ${b}^{n - 1}$, which grows with $n$.`,
+            `$f'(x) = ${c} \\cdot nx^{n - 1}$，所以 $f'(${b}) = ${c} \\cdot n \\cdot ${b}^{n - 1}$，它随 $n$ 增大而增大。`,
+          ],
+          [
+            "Try values of $n$",
+            "试 $n$ 的值",
+            `At $n = ${n - 1}$ it is $${c} \\cdot ${n - 1} \\cdot ${b}^{${n - 2}} = ${c * (n - 1) * b ** (n - 2)}$, too small; at $n = ${n}$ it is $${c} \\cdot ${n} \\cdot ${b}^{${n - 1}} = ${value}$, as required. So $n = ${n}$.`,
+            `当 $n = ${n - 1}$ 时，它是 $${c} \\cdot ${n - 1} \\cdot ${b}^{${n - 2}} = ${c * (n - 1) * b ** (n - 2)}$，太小；当 $n = ${n}$ 时，它是 $${c} \\cdot ${n} \\cdot ${b}^{${n - 1}} = ${value}$，符合要求。所以 $n = ${n}$。`,
+          ],
+        ],
+        [
+          `Estimate $f'(${b})$ for $f(x) = ${scale}x^{${n}}$ with difference quotients: $h = 0.01$ gives $${num(dq(0.01))}$ and $h = -0.01$ gives $${num(dq(-0.01))}$. Their average, $${num((dq(0.01) + dq(-0.01)) / 2)}$, is close to $${value}$.`,
+          `用差商估计 $f(x) = ${scale}x^{${n}}$ 的 $f'(${b})$：$h = 0.01$ 时得 $${num(dq(0.01))}$，$h = -0.01$ 时得 $${num(dq(-0.01))}$。它们的平均值 $${num((dq(0.01) + dq(-0.01)) / 2)}$ 接近 $${value}$。`,
+        ],
       ),
     });
   },
