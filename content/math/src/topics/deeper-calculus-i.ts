@@ -1,14 +1,40 @@
 // Further knowledge points for topics of Calculus I, each a skill the topic's own
 // points leave out. See `deeperCalculusIPoints`.
 
-import type { KnowledgePointDef, Rng } from "@ga/content";
+import type { KnowledgePointDef, Rng, Text } from "@ga/content";
 import { t } from "@ga/content";
-import { poly, Q } from "@ga/subject-math";
+import { dec, poly, Q } from "@ga/subject-math";
 import { calculusDrawings1 } from "../explanation-drawings-calculus-1.ts";
 import { calculusDrawings2 } from "../explanation-drawings-calculus-2.ts";
 import { calculusDrawings3 } from "../explanation-drawings-calculus-3.ts";
 
 import { numberProblem } from "../problems.ts";
+import { stepLabel } from "../solution-kit.ts";
+import { piLatex, power, range, table } from "./calculus-common.ts";
+
+/** walk writes a solution as labelled steps, each a title and what it says in both languages, followed by a check that takes a second route. */
+function walk(parts: readonly (readonly [en: string, zh: string, sayEn: string, sayZh: string])[], check: readonly [string, string]): Text {
+  const write = (zh: boolean) =>
+    `${parts.map(([en, z, se, sz], i) => `${stepLabel(i + 1, en, z)[zh ? "zh-CN" : "en"]} ${zh ? sz : se}`).join("\n\n")}\n\n${zh ? `**检验。** ${check[1]}` : `**Check.** ${check[0]}`}`;
+  return t(write(false), write(true));
+}
+
+/** num writes a value rounded to three decimal places, without trailing zeros. */
+const num = (v: number) => dec(Q.of(Math.round(v * 1000) || 0, 1000));
+
+/** approx writes " ≈ 0.833" after a fraction that is not a whole number, and nothing after a whole number. */
+const approx = (q: Q) => (q.isInteger() ? "" : ` \\approx ${num(q.toNumber())}`);
+
+/** around gives a − 0.01, a − 0.001, a + 0.001 and a + 0.01, rounded to three decimal places. */
+const around = (a: number) => [-0.01, -0.001, 0.001, 0.01].map((d) => Math.round((a + d) * 1000) / 1000);
+
+/** valueTable tabulates functions at some x-values to three decimal places; each row is a name in LaTeX and a function. */
+function valueTable(xs: readonly number[], rows: readonly (readonly [string, (x: number) => number])[]): string {
+  return table(["$x$", ...xs.map((x) => `$${x}$`)], ...rows.map(([name, f]) => [`$${name}$`, ...xs.map((x) => `$${num(f(x))}$`)]));
+}
+
+/** binomial is the binomial coefficient n choose k. */
+const binomial = (n: number, k: number): number => (k === 0 ? 1 : (binomial(n, k - 1) * (n - k + 1)) / k);
 
 /** nonzero picks a nonzero integer from -r to r. */
 const nonzero = (rng: Rng, r: number) => rng.pick([...Array(2 * r + 1).keys()].map((i) => i - r).filter((i) => i !== 0));
@@ -22,8 +48,8 @@ const coefficientForPiecewiseLimit: KnowledgePointDef = {
   id: "a-coefficient-that-makes-a-piecewise-limit-exist",
   title: t("A coefficient that makes a piecewise limit exist", "使分段函数极限存在的系数"),
   explanation: t(
-    "A two-sided limit exists at a break point only if the one-sided limits agree. Each piece gives its one-sided limit by substitution, so setting the two equal produces an equation for the unknown coefficient. The value of the function at the break point plays no part.",
-    "只有两个单侧极限相等时，分段点处的双侧极限才存在。每一段代入后给出自己的单侧极限，令二者相等就得到未知系数的方程。函数在分段点的取值与此无关。",
+    "A two-sided limit exists at a break point only if the one-sided limits agree. Each piece gives its one-sided limit by substitution, so setting the two equal produces an equation for the unknown coefficient. The value of the function at the break point plays no part.\n\nFor $f(x) = ax + 1$ when $x < 2$ and $f(x) = x^{2} + 3$ when $x > 2$, the left limit is $2a + 1$ and the right limit is $7$. Setting $2a + 1 = 7$ gives $a = 3$.\n\nCheck: with $a = 3$, $f(1.99) = 6.97$ and $f(2.01) = 7.0401$, both close to $7$.\n\n> **Watch out.** Substitute the break point itself into each piece, and leave out any value given at the break point: it never enters the equation.",
+    "只有两个单侧极限相等时，分段点处的双侧极限才存在。每一段代入后给出自己的单侧极限，令二者相等就得到未知系数的方程。函数在分段点的取值与此无关。\n\n对于 $x < 2$ 时 $f(x) = ax + 1$、$x > 2$ 时 $f(x) = x^{2} + 3$，左极限是 $2a + 1$，右极限是 $7$。令 $2a + 1 = 7$，得 $a = 3$。\n\n检验：取 $a = 3$，$f(1.99) = 6.97$，$f(2.01) = 7.0401$，都接近 $7$。\n\n> **注意。** 每一段都要代入分段点本身；分段点处单独给出的函数值不进入方程。",
   ),
   generate(rng) {
     const c = rng.int(1, 5);
@@ -31,7 +57,12 @@ const coefficientForPiecewiseLimit: KnowledgePointDef = {
     const d = nonzero(rng, 9);
     const right = c * c + d;
     const answer = Q.of(right - b, c);
-    const f = `\\begin{cases} ${poly([1, "ax"], [b, ""])} & x < ${c} \\\\ ${poly([1, "x^2"], [d, ""])} & x > ${c} \\end{cases}`;
+    const leftPiece = poly([1, "ax"], [b, ""]);
+    const rightPiece = poly([1, "x^2"], [d, ""]);
+    const f = `\\begin{cases} ${leftPiece} & x < ${c} \\\\ ${rightPiece} & x > ${c} \\end{cases}`;
+    const leftLimit = poly([c, "a"], [b, ""]);
+    const a = answer.toNumber();
+    const table = valueTable(around(c), [["f(x)", (x) => (x < c ? a * x + b : x * x + d)]]);
     return numberProblem({
       prompt: t(
         `Let $f(x) = ${f}$. For which value of $a$ does $\\lim_{x \\to ${c}} f(x)$ exist?`,
@@ -39,9 +70,31 @@ const coefficientForPiecewiseLimit: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(right + b, c), Q.of(right - b), Q.of(right - b, 2 * c)],
-      solution: t(
-        `The left limit is $${c}a + ${inParens(b)}$ and the right limit is $${c * c} + ${inParens(d)} = ${right}$. Setting them equal and solving gives $a = ${answer.toLatex()}$.`,
-        `左极限是 $${c}a + ${inParens(b)}$，右极限是 $${c * c} + ${inParens(d)} = ${right}$。令二者相等并求解，得 $a = ${answer.toLatex()}$。`,
+      solution: walk(
+        [
+          [
+            "Find the left limit",
+            "求左极限",
+            `For $x < ${c}$, $f(x) = ${leftPiece}$. Substituting $x = ${c}$ gives the left limit $${leftLimit}$.`,
+            `当 $x < ${c}$ 时，$f(x) = ${leftPiece}$。代入 $x = ${c}$，得左极限 $${leftLimit}$。`,
+          ],
+          [
+            "Find the right limit",
+            "求右极限",
+            `For $x > ${c}$, $f(x) = ${rightPiece}$. Substituting gives the right limit $${c * c} + ${inParens(d)} = ${right}$.`,
+            `当 $x > ${c}$ 时，$f(x) = ${rightPiece}$。代入得右极限 $${c * c} + ${inParens(d)} = ${right}$。`,
+          ],
+          [
+            "Set them equal",
+            "令二者相等",
+            `The limit exists exactly when the two agree:\n\n$$${leftLimit} = ${right} \\quad\\Rightarrow\\quad a = ${answer.toLatex()}$$`,
+            `两者相等时极限才存在：\n\n$$${leftLimit} = ${right} \\quad\\Rightarrow\\quad a = ${answer.toLatex()}$$`,
+          ],
+        ],
+        [
+          `Take $a = ${answer.toLatex()}$ and evaluate $f$ on both sides of $x = ${c}$:\n\n${table}\n\nBoth sides close in on $${right}$, so with this $a$ the limit exists.`,
+          `取 $a = ${answer.toLatex()}$，计算 $f$ 在 $x = ${c}$ 两侧的值：\n\n${table}\n\n两侧都逼近 $${right}$，所以取这个 $a$ 时极限存在。`,
+        ],
       ),
     });
   },
@@ -917,8 +970,8 @@ const quotientLimitNewDenominator: KnowledgePointDef = {
   id: "a-known-quotient-limit-over-a-new-denominator",
   title: t("A known quotient limit over a new denominator", "已知商的极限，换一个分母"),
   explanation: t(
-    "The formula for $f$ is not needed when the limit of a related quotient is known. Factor the new denominator so that the known denominator appears, then write the new quotient as a product of the known quotient and a remaining fraction. The product rule for limits combines the two, because each factor has a limit.",
-    "已知相关商的极限时，不需要 $f$ 的表达式。把新分母因式分解，让已知的分母出现，再把新商写成已知商与剩余分式的乘积。由于每个因子都有极限，极限的乘积法则就能把两者合起来。",
+    "The formula for $f$ is not needed when the limit of a related quotient is known. Factor the new denominator so that the known denominator appears, then write the new quotient as a product of the known quotient and a remaining fraction. The product rule for limits combines the two, because each factor has a limit.\n\nIf $\\lim_{x \\to 2} \\frac{f(x)}{x - 2} = 6$, then\n\n$$\\frac{f(x)}{x^{2} - 4} = \\frac{f(x)}{x - 2} \\cdot \\frac{1}{x + 2} \\to 6 \\cdot \\frac{1}{4} = \\frac{3}{2}.$$\n\nCheck: $f(x) = 6(x - 2)$ fits, and then the new quotient is $\\frac{6}{x + 2}$, which is $1.5$ at $x = 2$.\n\n> **Watch out.** Keep $f(x)$ and the known denominator together. Apart, $x - 2$ tends to $0$ and $f(x)$ has no known limit, so the product rule cannot be used on them.",
+    "已知相关商的极限时，不需要 $f$ 的表达式。把新分母因式分解，让已知的分母出现，再把新商写成已知商与剩余分式的乘积。由于每个因子都有极限，极限的乘积法则就能把两者合起来。\n\n若 $\\lim_{x \\to 2} \\frac{f(x)}{x - 2} = 6$，则\n\n$$\\frac{f(x)}{x^{2} - 4} = \\frac{f(x)}{x - 2} \\cdot \\frac{1}{x + 2} \\to 6 \\cdot \\frac{1}{4} = \\frac{3}{2}.$$\n\n检验：$f(x) = 6(x - 2)$ 满足条件，此时新商是 $\\frac{6}{x + 2}$，在 $x = 2$ 处等于 $1.5$。\n\n> **注意。** 要让 $f(x)$ 和已知的分母留在一起。分开后 $x - 2$ 趋于 $0$，而 $f(x)$ 的极限未知，不能对它们用乘积法则。",
   ),
   generate(rng) {
     const c = nonzero(rng, 6);
@@ -929,6 +982,12 @@ const quotientLimitNewDenominator: KnowledgePointDef = {
     const at = isDifference ? 2 * c : c;
     const known = poly([1, "x"], [-c, ""]);
     const answer = Q.of(l, at);
+    const inverse = Q.of(1, at);
+    const factored = isDifference ? `(${known})(${factor})` : `x(${known})`;
+    const table = valueTable(
+      [c - 0.1, c - 0.01, c + 0.01, c + 0.1].map((x) => Math.round(x * 1000) / 1000),
+      [[`\\frac{${l}}{${factor}}`, (x) => l / (isDifference ? x + c : x)]],
+    );
     return numberProblem({
       prompt: t(
         `A function $f$ satisfies $\\lim_{x \\to ${c}} \\frac{f(x)}{${known}} = ${l}$. Find $\\lim_{x \\to ${c}} \\frac{f(x)}{${denominator}}$.`,
@@ -936,9 +995,31 @@ const quotientLimitNewDenominator: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(l), Q.of(l * at), Q.of(-l, at), Q.of(l + at), Q.of(2 * l), Q.of(3 * l)],
-      solution: t(
-        `The new quotient is $\\frac{f(x)}{${known}} \\cdot \\frac{1}{${factor}}$. The first factor tends to $${l}$ and the second to $${Q.of(1, at).toLatex()}$, so the limit is $${answer.toLatex()}$.`,
-        `新的商是 $\\frac{f(x)}{${known}} \\cdot \\frac{1}{${factor}}$。第一个因子趋于 $${l}$，第二个趋于 $${Q.of(1, at).toLatex()}$，所以极限是 $${answer.toLatex()}$。`,
+      solution: walk(
+        [
+          [
+            "Factor the new denominator",
+            "分解新分母",
+            `The known denominator is a factor of the new one:\n\n$$${denominator} = ${factored}$$`,
+            `已知的分母是新分母的一个因式：\n\n$$${denominator} = ${factored}$$`,
+          ],
+          [
+            "Split the quotient",
+            "拆开商",
+            `Write the new quotient as the known quotient times what is left:\n\n$$\\frac{f(x)}{${denominator}} = \\frac{f(x)}{${known}} \\cdot \\frac{1}{${factor}}$$`,
+            `把新商写成已知的商乘以剩下的部分：\n\n$$\\frac{f(x)}{${denominator}} = \\frac{f(x)}{${known}} \\cdot \\frac{1}{${factor}}$$`,
+          ],
+          [
+            "Combine the limits",
+            "合并极限",
+            `The first factor tends to $${l}$ and the second to $${inverse.toLatex()}$, so by the product rule the limit is\n\n$$${l} \\cdot ${at < 0 ? `\\left(${inverse.toLatex()}\\right)` : inverse.toLatex()} = ${answer.toLatex()}$$`,
+            `第一个因子趋于 $${l}$，第二个趋于 $${inverse.toLatex()}$，由乘积法则，极限是\n\n$$${l} \\cdot ${at < 0 ? `\\left(${inverse.toLatex()}\\right)` : inverse.toLatex()} = ${answer.toLatex()}$$`,
+          ],
+        ],
+        [
+          `One function that fits is $f(x) = ${l}(${known})$, since then $\\frac{f(x)}{${known}} = ${l}$ for $x \\ne ${c}$. With it the new quotient is $\\frac{${l}}{${factor}}$, and near $x = ${c}$:\n\n${table}\n\nThe values close in on $${answer.toLatex()}${approx(answer)}$.`,
+          `满足条件的一个函数是 $f(x) = ${l}(${known})$，因为当 $x \\ne ${c}$ 时 $\\frac{f(x)}{${known}} = ${l}$。这时新商是 $\\frac{${l}}{${factor}}$，在 $x = ${c}$ 附近：\n\n${table}\n\n函数值逼近 $${answer.toLatex()}${approx(answer)}$。`,
+        ],
       ),
     });
   },
@@ -948,8 +1029,8 @@ const ratioOfExponentials: KnowledgePointDef = {
   id: "a-ratio-of-exponentials-at-either-infinity",
   title: t("A ratio of exponentials at either infinity", "指数函数之比在两个方向的极限"),
   explanation: t(
-    "An exponential with base above one behaves very differently in the two directions. As $x \\to \\infty$ it dominates the constants, so dividing above and below by it leaves its coefficients. As $x \\to -\\infty$ it vanishes, so only the constants remain. The same quotient therefore usually has two different limits at the two ends.",
-    "底数大于一的指数函数在两个方向上表现截然不同。当 $x \\to \\infty$ 时它压倒常数，所以分子分母同除以它，就只剩它的系数。当 $x \\to -\\infty$ 时它趋于零，只剩常数。因此同一个商在两端通常有两个不同的极限。",
+    "An exponential with base above one behaves very differently in the two directions. As $x \\to \\infty$ it dominates the constants, so dividing above and below by it leaves its coefficients. As $x \\to -\\infty$ it vanishes, so only the constants remain. The same quotient therefore usually has two different limits at the two ends.\n\nFor $\\frac{3 \\cdot 2^{x} + 1}{2^{x} + 5}$ the limit is $3$ as $x \\to \\infty$ and $\\frac{1}{5}$ as $x \\to -\\infty$.\n\nCheck: at $x = 10$ the quotient is $\\frac{3073}{1029} \\approx 2.986$, and at $x = -10$ it is about $0.201$.\n\n> **Watch out.** At $-\\infty$ the exponential terms vanish; they do not dominate, so the coefficients in front of them are not the answer there.",
+    "底数大于一的指数函数在两个方向上表现截然不同。当 $x \\to \\infty$ 时它压倒常数，所以分子分母同除以它，就只剩它的系数。当 $x \\to -\\infty$ 时它趋于零，只剩常数。因此同一个商在两端通常有两个不同的极限。\n\n对于 $\\frac{3 \\cdot 2^{x} + 1}{2^{x} + 5}$，当 $x \\to \\infty$ 时极限是 $3$，当 $x \\to -\\infty$ 时极限是 $\\frac{1}{5}$。\n\n检验：$x = 10$ 时商是 $\\frac{3073}{1029} \\approx 2.986$，$x = -10$ 时约为 $0.201$。\n\n> **注意。** 在 $-\\infty$ 处指数项趋于零，它们不占主导，所以那里的答案不是它们前面的系数。",
   ),
   generate(rng) {
     const base = rng.pick(["2^{x}", "3^{x}", "4^{x}", "5^{x}", "e^{x}"]);
@@ -963,17 +1044,48 @@ const ratioOfExponentials: KnowledgePointDef = {
     const target = atPositive ? "\\infty" : "-\\infty";
     const term = (n: number) => (Math.abs(n) === 1 || base === "e^{x}" ? base : `\\cdot ${base}`);
     const f = `\\frac{${poly([a, term(a)], [p, ""])}}{${poly([c, term(c)], [q, ""])}}`;
+    const grow = (x: number) => (base === "e^{x}" ? Math.exp(x) : Number(base[0]) ** x);
+    const over = (k: number) => `${k < 0 ? "-" : "+"} \\frac{${Math.abs(k)}}{${base}}`;
+    const xs = [5, 10, 20].map((x) => (atPositive ? x : -x));
+    const table = valueTable(xs, [[f, (x) => (a * grow(x) + p) / (c * grow(x) + q)]]);
     return numberProblem({
       prompt: t(`Find $\\lim_{x \\to ${target}} ${f}$.`, `求 $\\lim_{x \\to ${target}} ${f}$。`),
       answer,
       wrong: [other, Q.of(a, q), Q.of(p, c), Q.of(a + p, c + q), answer.neg(), Q.of(a + p), answer.mul(Q.of(2))],
-      solution: t(
+      solution: walk(
         atPositive
-          ? `As $x \\to \\infty$, $${base}$ grows without bound, so dividing the top and the bottom by it leaves the ratio of its coefficients, $${answer.toLatex()}$.`
-          : `As $x \\to -\\infty$, $${base} \\to 0$, so only the constant terms remain and the limit is $${answer.toLatex()}$.`,
-        atPositive
-          ? `当 $x \\to \\infty$ 时，$${base}$ 无限增大，所以分子分母同除以它，只剩系数之比 $${answer.toLatex()}$。`
-          : `当 $x \\to -\\infty$ 时，$${base} \\to 0$，所以只剩常数项，极限是 $${answer.toLatex()}$。`,
+          ? [
+              [
+                "Find the dominant term",
+                "找出主导项",
+                `As $x \\to \\infty$, $${base}$ grows without bound, so it outweighs the constants $${p}$ and $${q}$.`,
+                `当 $x \\to \\infty$ 时，$${base}$ 无限增大，所以它压倒常数 $${p}$ 和 $${q}$。`,
+              ],
+              [
+                "Divide by it",
+                "同除以它",
+                `Dividing the top and the bottom by $${base}$ gives\n\n$$\\frac{${a} ${over(p)}}{${c} ${over(q)}}$$\n\nEach fraction with $${base}$ below tends to $0$, which leaves the ratio of the coefficients, $${answer.toLatex()}$.`,
+                `分子分母同除以 $${base}$，得\n\n$$\\frac{${a} ${over(p)}}{${c} ${over(q)}}$$\n\n分母含 $${base}$ 的分式都趋于 $0$，剩下系数之比 $${answer.toLatex()}$。`,
+              ],
+            ]
+          : [
+              [
+                "Find what vanishes",
+                "找出趋于零的项",
+                `As $x \\to -\\infty$, $${base} \\to 0$, so every term with $${base}$ tends to $0$.`,
+                `当 $x \\to -\\infty$ 时，$${base} \\to 0$，所以含 $${base}$ 的项都趋于 $0$。`,
+              ],
+              [
+                "Keep the constants",
+                "保留常数",
+                `Only the constant terms remain:\n\n$$\\lim_{x \\to -\\infty} ${f} = \\frac{${p}}{${q}} = ${answer.toLatex()}$$`,
+                `只剩常数项：\n\n$$\\lim_{x \\to -\\infty} ${f} = \\frac{${p}}{${q}} = ${answer.toLatex()}$$`,
+              ],
+            ],
+        [
+          `Evaluate the quotient farther and farther out:\n\n${table}\n\nThe values close in on $${answer.toLatex()}${approx(answer)}$, not on $${other.toLatex()}$, which is the limit at the other end.`,
+          `在越来越远处计算这个商：\n\n${table}\n\n函数值逼近 $${answer.toLatex()}${approx(answer)}$，而不是另一端的极限 $${other.toLatex()}$。`,
+        ],
       ),
     });
   },
@@ -983,8 +1095,8 @@ const differenceOfLogarithms: KnowledgePointDef = {
   id: "a-difference-of-logarithms-at-infinity",
   title: t("A difference of logarithms at infinity", "对数之差在无穷远处的极限"),
   explanation: t(
-    "Each logarithm alone grows without bound, so the difference looks like infinity minus infinity, which says nothing yet. Combining them into the logarithm of a quotient resolves it: the quotient has a finite limit, found from its leading coefficients, and the logarithm is continuous there, so the limit can be moved inside.",
-    "每个对数单独都无限增大，所以差看起来是无穷减无穷，这还说明不了什么。把它们合并成商的对数就能解决：这个商有有限的极限，由最高次项系数求出，而对数函数在那里连续，所以极限可以移到对数里面。",
+    "Each logarithm alone grows without bound, so the difference looks like infinity minus infinity, which says nothing yet. Combining them into the logarithm of a quotient resolves it: the quotient has a finite limit, found from its leading coefficients, and the logarithm is continuous there, so the limit can be moved inside.\n\nFor $\\log_{2}(8x + 1) - \\log_{2}(x + 3) = \\log_{2}\\frac{8x + 1}{x + 3}$, the quotient tends to $8$, so the limit is $\\log_{2} 8 = 3$.\n\nCheck: at $x = 1000$ the quotient is $\\frac{8001}{1003} \\approx 7.977$, and $\\log_{2} 7.977 \\approx 2.996$.\n\n> **Watch out.** Infinity minus infinity is not $0$. And the answer is the logarithm of the limiting quotient, not the quotient itself.",
+    "每个对数单独都无限增大，所以差看起来是无穷减无穷，这还说明不了什么。把它们合并成商的对数就能解决：这个商有有限的极限，由最高次项系数求出，而对数函数在那里连续，所以极限可以移到对数里面。\n\n对于 $\\log_{2}(8x + 1) - \\log_{2}(x + 3) = \\log_{2}\\frac{8x + 1}{x + 3}$，商趋于 $8$，所以极限是 $\\log_{2} 8 = 3$。\n\n检验：$x = 1000$ 时商是 $\\frac{8001}{1003} \\approx 7.977$，而 $\\log_{2} 7.977 \\approx 2.996$。\n\n> **注意。** 无穷减无穷不等于 $0$。答案是商的极限取对数，而不是商本身。",
   ),
   generate(rng) {
     const b = rng.pick([2, 3, 5, 10]);
@@ -995,18 +1107,49 @@ const differenceOfLogarithms: KnowledgePointDef = {
     const s = rng.pick([1, -1]);
     const large = c * b ** k;
     const log = b === 10 ? "\\log" : `\\log_{${b}}`;
-    const big = `${log}\\left(${poly([large, "x"], [p, ""])}\\right)`;
-    const small = `${log}\\left(${poly([c, "x"], [q, ""])}\\right)`;
+    const bigInner = poly([large, "x"], [p, ""]);
+    const smallInner = poly([c, "x"], [q, ""]);
+    const big = `${log}\\left(${bigInner}\\right)`;
+    const small = `${log}\\left(${smallInner}\\right)`;
     const f = s > 0 ? `${big} - ${small}` : `${small} - ${big}`;
     const answer = s * k;
+    const ratio = s > 0 ? `\\frac{${bigInner}}{${smallInner}}` : `\\frac{${smallInner}}{${bigInner}}`;
+    const coefficients = s > 0 ? `\\frac{${large}}{${c}}` : `\\frac{${c}}{${large}}`;
+    const value = s > 0 ? `${b ** k}` : `\\frac{1}{${b ** k}}`;
+    const at = (x: number) => (s * Math.log((large * x + p) / (c * x + q))) / Math.log(b);
+    const table = valueTable([100, 10000, 1000000], [[f, at]]);
     return numberProblem({
       prompt: t(`Find $\\lim_{x \\to \\infty} \\left(${f}\\right)$.`, `求 $\\lim_{x \\to \\infty} \\left(${f}\\right)$。`),
       answer,
       form: "integer",
       wrong: [s * b ** k, s * (k + 1), -s * k, 0],
-      solution: t(
-        `The difference of logarithms is the logarithm of a quotient whose limit is $${s > 0 ? b ** k : Q.of(1, b ** k).toLatex()}$, by its leading coefficients. So the limit is $${log} ${s > 0 ? b ** k : Q.of(1, b ** k).toLatex()} = ${answer}$.`,
-        `对数之差是一个商的对数，由最高次项系数知这个商的极限是 $${s > 0 ? b ** k : Q.of(1, b ** k).toLatex()}$。所以极限是 $${log} ${s > 0 ? b ** k : Q.of(1, b ** k).toLatex()} = ${answer}$。`,
+      solution: walk(
+        [
+          [
+            "Combine the logarithms",
+            "合并对数",
+            `A difference of logarithms is the logarithm of a quotient:\n\n$$${f} = ${log}${ratio}$$`,
+            `对数之差是商的对数：\n\n$$${f} = ${log}${ratio}$$`,
+          ],
+          [
+            "Find the limit of the quotient",
+            "求商的极限",
+            c === 1 && s > 0
+              ? `By the leading coefficients, the quotient tends to $${value}$.`
+              : `By the leading coefficients, the quotient tends to $${coefficients}$, which is $${value}$.`,
+            c === 1 && s > 0 ? `由最高次项系数，这个商趋于 $${value}$。` : `由最高次项系数，这个商趋于 $${coefficients}$，即 $${value}$。`,
+          ],
+          [
+            "Move the limit inside",
+            "把极限移进对数",
+            `The logarithm is continuous at $${value}$, so the limit is\n\n$$${log} ${value} = ${answer}$$`,
+            `对数函数在 $${value}$ 处连续，所以极限是\n\n$$${log} ${value} = ${answer}$$`,
+          ],
+        ],
+        [
+          `Evaluate the difference for larger and larger $x$:\n\n${table}\n\nEach logarithm alone keeps growing, yet their difference settles at $${answer}$.`,
+          `计算 $x$ 越来越大时的差：\n\n${table}\n\n每个对数单独都在不断增大，它们的差却稳定在 $${answer}$。`,
+        ],
       ),
     });
   },
@@ -1924,8 +2067,8 @@ const productLimitFromSumAndDifference: KnowledgePointDef = {
   id: "a-product-limit-from-a-sum-and-a-difference",
   title: t("A product limit from a sum and a difference", "由和与差的极限求积的极限"),
   explanation: t(
-    "The limit laws can run backwards. If the limits of $f + g$ and $f - g$ both exist, then so do the limits of $f$ and $g$, since $f = \\frac{1}{2}((f + g) + (f - g))$ and $g = \\frac{1}{2}((f + g) - (f - g))$. Once the two separate limits are known, the product rule gives the limit of $fg$. Multiplying the two given limits would be a mistake, since that gives the limit of $f^2 - g^2$.",
-    "极限法则也可以反过来用。如果 $f + g$ 和 $f - g$ 的极限都存在，那么 $f$ 和 $g$ 的极限也存在，因为 $f = \\frac{1}{2}((f + g) + (f - g))$，$g = \\frac{1}{2}((f + g) - (f - g))$。知道两个单独的极限后，积的法则给出 $fg$ 的极限。把两个已知极限相乘是错的，因为那得到的是 $f^2 - g^2$ 的极限。",
+    "The limit laws can run backwards. If the limits of $f + g$ and $f - g$ both exist, then so do the limits of $f$ and $g$, since $f = \\frac{1}{2}((f + g) + (f - g))$ and $g = \\frac{1}{2}((f + g) - (f - g))$. Once the two separate limits are known, the product rule gives the limit of $fg$.\n\nIf $f + g \\to 5$ and $f - g \\to 1$, adding gives $2f \\to 6$, so $f \\to 3$, and subtracting gives $2g \\to 4$, so $g \\to 2$. The product tends to $6$.\n\nCheck: $(f + g)^{2} - (f - g)^{2} = 4fg$, and $\\frac{25 - 1}{4} = 6$.\n\n> **Watch out.** Multiplying the two given limits is a mistake: $(f + g)(f - g) = f^{2} - g^{2}$, so it gives the limit of $f^{2} - g^{2}$, here $5$.",
+    "极限法则也可以反过来用。如果 $f + g$ 和 $f - g$ 的极限都存在，那么 $f$ 和 $g$ 的极限也存在，因为 $f = \\frac{1}{2}((f + g) + (f - g))$，$g = \\frac{1}{2}((f + g) - (f - g))$。知道两个单独的极限后，积的法则给出 $fg$ 的极限。\n\n若 $f + g \\to 5$，$f - g \\to 1$，相加得 $2f \\to 6$，所以 $f \\to 3$；相减得 $2g \\to 4$，所以 $g \\to 2$。积趋于 $6$。\n\n检验：$(f + g)^{2} - (f - g)^{2} = 4fg$，而 $\\frac{25 - 1}{4} = 6$。\n\n> **注意。** 把两个已知极限相乘是错的：$(f + g)(f - g) = f^{2} - g^{2}$，所以得到的是 $f^{2} - g^{2}$ 的极限，这里是 $5$。",
   ),
   generate(rng) {
     const f = nonzero(rng, 9);
@@ -1934,17 +2077,40 @@ const productLimitFromSumAndDifference: KnowledgePointDef = {
     const sum = f + g;
     const difference = f - g;
     const answer = f * g;
+    const lim = `\\lim_{x \\to ${c}}`;
     return numberProblem({
       prompt: t(
-        `$\\lim_{x \\to ${c}} (f(x) + g(x)) = ${sum}$ and $\\lim_{x \\to ${c}} (f(x) - g(x)) = ${difference}$. Find $\\lim_{x \\to ${c}} f(x)g(x)$.`,
-        `$\\lim_{x \\to ${c}} (f(x) + g(x)) = ${sum}$，$\\lim_{x \\to ${c}} (f(x) - g(x)) = ${difference}$。求 $\\lim_{x \\to ${c}} f(x)g(x)$。`,
+        `$${lim} (f(x) + g(x)) = ${sum}$ and $${lim} (f(x) - g(x)) = ${difference}$. Find $${lim} f(x)g(x)$.`,
+        `$${lim} (f(x) + g(x)) = ${sum}$，$${lim} (f(x) - g(x)) = ${difference}$。求 $${lim} f(x)g(x)$。`,
       ),
       answer,
       form: "integer",
       wrong: [sum * difference, sum + difference, 2 * answer, -answer],
-      solution: t(
-        `Adding and subtracting the two statements shows that $f$ has limit $${f}$ and $g$ has limit $${g}$. So the product has limit $${f} \\cdot ${inParens(g)} = ${answer}$.`,
-        `把两式相加和相减，可知 $f$ 的极限是 $${f}$，$g$ 的极限是 $${g}$。所以积的极限是 $${f} \\cdot ${inParens(g)} = ${answer}$。`,
+      solution: walk(
+        [
+          [
+            "Add the two statements",
+            "两式相加",
+            `Adding them, the limit of $2f(x)$ is $${sum} + ${inParens(difference)} = ${2 * f}$, so $f$ has limit $${f}$.`,
+            `两式相加，$2f(x)$ 的极限是 $${sum} + ${inParens(difference)} = ${2 * f}$，所以 $f$ 的极限是 $${f}$。`,
+          ],
+          [
+            "Subtract them",
+            "两式相减",
+            `Subtracting, the limit of $2g(x)$ is $${sum} - ${inParens(difference)} = ${2 * g}$, so $g$ has limit $${g}$.`,
+            `两式相减，$2g(x)$ 的极限是 $${sum} - ${inParens(difference)} = ${2 * g}$，所以 $g$ 的极限是 $${g}$。`,
+          ],
+          [
+            "Multiply",
+            "相乘",
+            `By the product rule the limit of $f(x)g(x)$ is $${f} \\cdot ${inParens(g)} = ${answer}$.`,
+            `由积的法则，$f(x)g(x)$ 的极限是 $${f} \\cdot ${inParens(g)} = ${answer}$。`,
+          ],
+        ],
+        [
+          `Since $(f + g)^{2} - (f - g)^{2} = 4fg$, the limit of $fg$ is also\n\n$$\\frac{${inParens(sum)}^{2} - ${inParens(difference)}^{2}}{4} = \\frac{${sum * sum} - ${difference * difference}}{4} = ${answer}$$\n\nBoth routes give $${answer}$.`,
+          `因为 $(f + g)^{2} - (f - g)^{2} = 4fg$，$fg$ 的极限也等于\n\n$$\\frac{${inParens(sum)}^{2} - ${inParens(difference)}^{2}}{4} = \\frac{${sum * sum} - ${difference * difference}}{4} = ${answer}$$\n\n两种方法都得到 $${answer}$。`,
+        ],
       ),
     });
   },
@@ -1954,25 +2120,44 @@ const limitFromItsRoot: KnowledgePointDef = {
   id: "a-limit-from-the-limit-of-its-root",
   title: t("A limit from the limit of its root", "由根式的极限求极限"),
   explanation: t(
-    "The root rule says that the limit of a root is the root of the limit, when the limit is positive. Read in reverse, it recovers an unknown limit: squaring both sides of a statement about $\\sqrt{f(x) + k}$ gives the limit of $f(x) + k$. The sum rule then removes the constant. These two steps undo the operations on $f$ in the opposite order, in the same way as solving an equation.",
-    "根式法则说，当极限为正时，根式的极限等于极限的根式。反过来读，可以求出未知的极限：把关于 $\\sqrt{f(x) + k}$ 的等式两边平方，得到 $f(x) + k$ 的极限。再用和的法则去掉常数。这两步按相反的顺序撤销对 $f$ 的运算，就像解方程一样。",
+    "The root rule says that the limit of a root is the root of the limit, when the limit is positive. Read in reverse, it recovers an unknown limit: squaring both sides of a statement about $\\sqrt{f(x) + k}$ gives the limit of $f(x) + k$. The sum rule then removes the constant. These two steps undo the operations on $f$ in the opposite order, in the same way as solving an equation.\n\nIf $\\lim_{x \\to 1} \\sqrt{f(x) + 3} = 4$, then $f(x) + 3 \\to 16$, so $f(x) \\to 13$.\n\nCheck: putting $13$ back gives $\\sqrt{13 + 3} = 4$.\n\n> **Watch out.** Undo the root first and the constant second. Subtracting first, as in $4 - 3 = 1$, undoes the operations in the wrong order.",
+    "根式法则说，当极限为正时，根式的极限等于极限的根式。反过来读，可以求出未知的极限：把关于 $\\sqrt{f(x) + k}$ 的等式两边平方，得到 $f(x) + k$ 的极限。再用和的法则去掉常数。这两步按相反的顺序撤销对 $f$ 的运算，就像解方程一样。\n\n若 $\\lim_{x \\to 1} \\sqrt{f(x) + 3} = 4$，则 $f(x) + 3 \\to 16$，所以 $f(x) \\to 13$。\n\n检验：代回 $13$，得 $\\sqrt{13 + 3} = 4$。\n\n> **注意。** 先撤销根号，再去掉常数。先相减，比如算 $4 - 3 = 1$，就把运算的顺序弄反了。",
   ),
   generate(rng) {
     const m = rng.int(2, 9);
     const k = nonzero(rng, 12);
     const c = rng.int(-5, 5);
     const answer = m * m - k;
+    const inside = poly([1, "f(x)"], [k, ""]);
+    const sample = poly([1, "x"], [answer - c, ""]);
+    const table = valueTable(around(c), [[`\\sqrt{${inside}}`, (x) => Math.sqrt(x + answer - c + k)]]);
     return numberProblem({
       prompt: t(
-        `$\\lim_{x \\to ${c}} \\sqrt{${poly([1, "f(x)"], [k, ""])}} = ${m}$. Find $\\lim_{x \\to ${c}} f(x)$.`,
-        `$\\lim_{x \\to ${c}} \\sqrt{${poly([1, "f(x)"], [k, ""])}} = ${m}$。求 $\\lim_{x \\to ${c}} f(x)$。`,
+        `$\\lim_{x \\to ${c}} \\sqrt{${inside}} = ${m}$. Find $\\lim_{x \\to ${c}} f(x)$.`,
+        `$\\lim_{x \\to ${c}} \\sqrt{${inside}} = ${m}$。求 $\\lim_{x \\to ${c}} f(x)$。`,
       ),
       answer,
       form: "integer",
       wrong: [m - k, m * m + k, m * m, 2 * m - k],
-      solution: t(
-        `Squaring gives $\\lim_{x \\to ${c}} (${poly([1, "f(x)"], [k, ""])}) = ${m * m}$. Removing the constant, the limit of $f(x)$ is $${m * m} - ${inParens(k)} = ${answer}$.`,
-        `平方得 $\\lim_{x \\to ${c}} (${poly([1, "f(x)"], [k, ""])}) = ${m * m}$。去掉常数，$f(x)$ 的极限是 $${m * m} - ${inParens(k)} = ${answer}$。`,
+      solution: walk(
+        [
+          [
+            "Square both sides",
+            "两边平方",
+            `The limit of the root is the root of the limit, so squaring undoes it:\n\n$$\\lim_{x \\to ${c}} \\left(${inside}\\right) = ${m}^{2} = ${m * m}$$`,
+            `根式的极限等于极限的根式，所以平方就把根号撤销了：\n\n$$\\lim_{x \\to ${c}} \\left(${inside}\\right) = ${m}^{2} = ${m * m}$$`,
+          ],
+          [
+            "Remove the constant",
+            "去掉常数",
+            `By the sum rule, the limit of $f(x)$ is $${m * m} - ${inParens(k)} = ${answer}$.`,
+            `由和的法则，$f(x)$ 的极限是 $${m * m} - ${inParens(k)} = ${answer}$。`,
+          ],
+        ],
+        [
+          `Put the answer back: $\\sqrt{${poly([answer, ""], [k, ""])}} = \\sqrt{${m * m}} = ${m}$. For a function with this limit, take $f(x) = ${sample}$; near $x = ${c}$:\n\n${table}\n\nThe values close in on $${m}$, as the statement requires.`,
+          `代回答案：$\\sqrt{${poly([answer, ""], [k, ""])}} = \\sqrt{${m * m}} = ${m}$。取一个有这个极限的函数 $f(x) = ${sample}$，在 $x = ${c}$ 附近：\n\n${table}\n\n函数值逼近 $${m}$，与已知条件一致。`,
+        ],
       ),
     });
   },
@@ -1982,8 +2167,8 @@ const expandedPowersAtInfinity: KnowledgePointDef = {
   id: "a-difference-of-expanded-powers-at-infinity",
   title: t("A difference of expanded powers at infinity", "展开后的幂之差在无穷远处的极限"),
   explanation: t(
-    "The leading term of a polynomial decides its limit at infinity, but only once the polynomial has been written out. In $(x + a)^n - x^n$ the terms $x^n$ cancel, and so the leading term is really the next one in the binomial expansion, $nax^{n - 1}$. Comparing the two highest powers before expanding would suggest that the numerator has degree $n$, which would make the limit look infinite. It is not.",
-    "多项式的首项决定它在无穷远处的极限，但前提是多项式已经写开。在 $(x + a)^n - x^n$ 中，$x^n$ 项抵消了，所以真正的首项是二项式展开的下一项 $nax^{n - 1}$。如果不展开就比较最高次幂，会以为分子是 $n$ 次的，从而误认为极限是无穷大。其实不是。",
+    "The leading term of a polynomial decides its limit at infinity, but only once the polynomial has been written out. In $(x + a)^n - x^n$ the terms $x^n$ cancel, and so the leading term is really the next one in the binomial expansion, $nax^{n - 1}$.\n\nFor $\\frac{(x + 2)^{2} - x^{2}}{3x}$ the numerator is $4x + 4$, so the quotient tends to $\\frac{4}{3}$.\n\nCheck: at $x = 100$ the quotient is $\\frac{404}{300} \\approx 1.347$.\n\n> **Watch out.** Comparing the highest powers before expanding suggests a numerator of degree $n$ and an infinite limit. The $x^{n}$ terms cancel, so the numerator has degree $n - 1$.",
+    "多项式的首项决定它在无穷远处的极限，但前提是多项式已经写开。在 $(x + a)^n - x^n$ 中，$x^n$ 项抵消了，所以真正的首项是二项式展开的下一项 $nax^{n - 1}$。\n\n对于 $\\frac{(x + 2)^{2} - x^{2}}{3x}$，分子是 $4x + 4$，所以商趋于 $\\frac{4}{3}$。\n\n检验：$x = 100$ 时商是 $\\frac{404}{300} \\approx 1.347$。\n\n> **注意。** 不展开就比较最高次幂，会以为分子是 $n$ 次的、极限是无穷大。$x^{n}$ 项抵消后，分子只有 $n - 1$ 次。",
   ),
   generate(rng) {
     const a = nonzero(rng, 9);
@@ -1992,16 +2177,34 @@ const expandedPowersAtInfinity: KnowledgePointDef = {
     const answer = Q.of(n * a, k);
     const denominator = poly([k, n === 2 ? "x" : `x^${n - 1}`]);
     const inner = poly([1, "x"], [a, ""]);
+    const terms = range(0, n).map((j) => [binomial(n, j) * a ** j, power(n - j)] as const);
+    const expanded = poly(...terms);
+    const rest = poly(...terms.slice(1));
+    const expression = `\\frac{(${inner})^{${n}} - x^{${n}}}{${denominator}}`;
+    const table = valueTable([10, 100, 1000], [[expression, (x) => ((x + a) ** n - x ** n) / (k * x ** (n - 1))]]);
     return numberProblem({
-      prompt: t(
-        `Find $\\lim_{x \\to \\infty} \\frac{(${inner})^{${n}} - x^{${n}}}{${denominator}}$.`,
-        `求 $\\lim_{x \\to \\infty} \\frac{(${inner})^{${n}} - x^{${n}}}{${denominator}}$。`,
-      ),
+      prompt: t(`Find $\\lim_{x \\to \\infty} ${expression}$.`, `求 $\\lim_{x \\to \\infty} ${expression}$。`),
       answer,
       wrong: [Q.of(a, k), Q.of(a ** n, k), Q.of(n * a), Q.of(n, k)],
-      solution: t(
-        `When expanded, the terms $x^{${n}}$ cancel and the numerator has the leading term $${poly([n * a, n === 2 ? "x" : `x^{${n - 1}}`])}$. Dividing by the denominator gives the limit $${answer.toLatex()}$.`,
-        `展开后 $x^{${n}}$ 项抵消，分子的首项是 $${poly([n * a, n === 2 ? "x" : `x^{${n - 1}}`])}$。除以分母，得极限 $${answer.toLatex()}$。`,
+      solution: walk(
+        [
+          [
+            "Expand the power",
+            "展开幂",
+            `By the binomial theorem\n\n$$(${inner})^{${n}} = ${expanded}$$\n\nThe terms $x^{${n}}$ cancel, so the numerator is\n\n$$${rest}$$`,
+            `由二项式定理\n\n$$(${inner})^{${n}} = ${expanded}$$\n\n$x^{${n}}$ 项抵消，所以分子是\n\n$$${rest}$$`,
+          ],
+          [
+            "Divide by the leading power",
+            "除以最高次幂",
+            `The numerator has the leading term $${poly([n * a, power(n - 1)])}$ and the denominator is $${denominator}$, of the same degree. The limit is the ratio of their coefficients, $${answer.toLatex()}$.`,
+            `分子的首项是 $${poly([n * a, power(n - 1)])}$，分母是同次的 $${denominator}$。极限是它们系数之比 $${answer.toLatex()}$。`,
+          ],
+        ],
+        [
+          `Evaluate the quotient for larger and larger $x$:\n\n${table}\n\nThe values close in on $${answer.toLatex()}${approx(answer)}$ and do not grow, so the limit is finite.`,
+          `计算 $x$ 越来越大时的商：\n\n${table}\n\n函数值逼近 $${answer.toLatex()}${approx(answer)}$，并不增大，所以极限是有限的。`,
+        ],
       ),
     });
   },
@@ -2011,8 +2214,8 @@ const radicalAtNegativeInfinity: KnowledgePointDef = {
   id: "a-radical-over-a-linear-term-at-negative-infinity",
   title: t("A radical over a linear term at negative infinity", "负无穷处根式与一次式之比"),
   explanation: t(
-    "For large $|x|$, the expression $\\sqrt{a^2x^2 + b}$ behaves like $\\sqrt{a^2x^2} = a|x|$, and the absolute value matters. As $x \\to -\\infty$, $x$ is negative and $|x| = -x$. Writing the root as $ax$ would give the wrong sign, a common slip because the root is always positive while $ax$ is negative there. The limit at negative infinity therefore has the opposite sign from the limit at positive infinity.",
-    "当 $|x|$ 很大时，$\\sqrt{a^2x^2 + b}$ 的表现像 $\\sqrt{a^2x^2} = a|x|$，绝对值很重要。当 $x \\to -\\infty$ 时，$x$ 为负，$|x| = -x$。把根式写成 $ax$ 会得到错误的符号，这是常见的失误，因为根式总是正的，而此时 $ax$ 是负的。所以负无穷处的极限与正无穷处的极限符号相反。",
+    "For large $|x|$, the expression $\\sqrt{a^2x^2 + b}$ behaves like $\\sqrt{a^2x^2} = a|x|$, and the absolute value matters. As $x \\to -\\infty$, $x$ is negative and $|x| = -x$. The limit at negative infinity therefore has the opposite sign from the limit at positive infinity.\n\nFor $\\frac{\\sqrt{4x^{2} + 1}}{x + 3}$ the root behaves like $-2x$ as $x \\to -\\infty$, so the limit is $-2$.\n\nCheck: at $x = -1000$ the quotient is $\\frac{2000.00025}{-997} \\approx -2.006$.\n\n> **Watch out.** $\\sqrt{x^{2}} = |x|$, not $x$. Writing the root as $ax$ gives the wrong sign, since the root is always positive while $ax$ is negative there.",
+    "当 $|x|$ 很大时，$\\sqrt{a^2x^2 + b}$ 的表现像 $\\sqrt{a^2x^2} = a|x|$，绝对值很重要。当 $x \\to -\\infty$ 时，$x$ 为负，$|x| = -x$。所以负无穷处的极限与正无穷处的极限符号相反。\n\n对于 $\\frac{\\sqrt{4x^{2} + 1}}{x + 3}$，当 $x \\to -\\infty$ 时根式的表现像 $-2x$，所以极限是 $-2$。\n\n检验：$x = -1000$ 时商是 $\\frac{2000.00025}{-997} \\approx -2.006$。\n\n> **注意。** $\\sqrt{x^{2}} = |x|$，而不是 $x$。把根式写成 $ax$ 会得到错误的符号，因为根式总是正的，而此时 $ax$ 是负的。",
   ),
   generate(rng) {
     const a = rng.int(2, 9);
@@ -2021,16 +2224,32 @@ const radicalAtNegativeInfinity: KnowledgePointDef = {
     const d = nonzero(rng, 9);
     const answer = Q.of(-a, c);
     const denominator = poly([c, "x"], [d, ""]);
+    const radicand = poly([a * a, "x^2"], [b, ""]);
+    const expression = `\\frac{\\sqrt{${radicand}}}{${denominator}}`;
+    const table = valueTable([-10, -100, -1000], [[expression, (x) => Math.sqrt(a * a * x * x + b) / (c * x + d)]]);
     return numberProblem({
-      prompt: t(
-        `Find $\\lim_{x \\to -\\infty} \\frac{\\sqrt{${poly([a * a, "x^2"], [b, ""])}}}{${denominator}}$.`,
-        `求 $\\lim_{x \\to -\\infty} \\frac{\\sqrt{${poly([a * a, "x^2"], [b, ""])}}}{${denominator}}$。`,
-      ),
+      prompt: t(`Find $\\lim_{x \\to -\\infty} ${expression}$.`, `求 $\\lim_{x \\to -\\infty} ${expression}$。`),
       answer,
       wrong: [Q.of(a, c), Q.of(a * a, c), Q.of(-a * a, c), Q.of(-a)],
-      solution: t(
-        `For large negative $x$, the root behaves like $${a}|x| = -${a}x$, and the denominator behaves like $${poly([c, "x"])}$. Their ratio tends to $${answer.toLatex()}$.`,
-        `当 $x$ 是绝对值很大的负数时，根式的表现像 $${a}|x| = -${a}x$，分母的表现像 $${poly([c, "x"])}$。它们的比趋于 $${answer.toLatex()}$。`,
+      solution: walk(
+        [
+          [
+            "Take out the absolute value",
+            "提出绝对值",
+            `For $x < 0$, $\\sqrt{x^{2}} = |x| = -x$, so\n\n$$\\sqrt{${radicand}} = -x\\sqrt{${a * a} + \\frac{${b}}{x^{2}}}$$`,
+            `当 $x < 0$ 时，$\\sqrt{x^{2}} = |x| = -x$，所以\n\n$$\\sqrt{${radicand}} = -x\\sqrt{${a * a} + \\frac{${b}}{x^{2}}}$$`,
+          ],
+          [
+            "Divide by $x$",
+            "同除以 $x$",
+            `Dividing the top and the bottom by $x$ gives\n\n$$\\frac{-\\sqrt{${a * a} + \\frac{${b}}{x^{2}}}}{${c} ${d < 0 ? "-" : "+"} \\frac{${Math.abs(d)}}{x}}$$\n\nThe fractions with $x$ below tend to $0$, so the limit is $\\frac{-${a}}{${c}}$, which is $${answer.toLatex()}$.`,
+            `分子分母同除以 $x$，得\n\n$$\\frac{-\\sqrt{${a * a} + \\frac{${b}}{x^{2}}}}{${c} ${d < 0 ? "-" : "+"} \\frac{${Math.abs(d)}}{x}}$$\n\n分母含 $x$ 的分式都趋于 $0$，所以极限是 $\\frac{-${a}}{${c}}$，即 $${answer.toLatex()}$。`,
+          ],
+        ],
+        [
+          `Evaluate the quotient for more and more negative $x$:\n\n${table}\n\nThe values close in on $${answer.toLatex()}${approx(answer)}$. Writing the root as $${a}x$ would give $${Q.of(a, c).toLatex()}$, with the wrong sign.`,
+          `计算 $x$ 越来越负时的商：\n\n${table}\n\n函数值逼近 $${answer.toLatex()}${approx(answer)}$。把根式写成 $${a}x$ 会得到 $${Q.of(a, c).toLatex()}$，符号错了。`,
+        ],
       ),
     });
   },
@@ -2040,8 +2259,8 @@ const inverseTrigOfRatio: KnowledgePointDef = {
   id: "an-inverse-trigonometric-function-of-a-ratio-at-infinity",
   title: t("An inverse trigonometric function of a ratio at infinity", "比值的反三角函数在无穷远处的极限"),
   explanation: t(
-    "Inverse trigonometric functions are continuous on their domains, so a limit can pass inside them: the limit of $\\arctan g(x)$ is the arctangent of the limit of $g(x)$. If $g$ is a ratio of two linear expressions, its limit at infinity is the ratio of the leading coefficients, whichever way $x$ goes. What remains is then a special value of the outer function, which is a simple multiple of $\\pi$.",
-    "反三角函数在定义域上连续，所以极限可以移到函数里面：$\\arctan g(x)$ 的极限是 $g(x)$ 极限的反正切。如果 $g$ 是两个一次式之比，无论 $x$ 趋向哪个方向，它在无穷远处的极限都是首项系数之比。剩下的就是外层函数的特殊值，它是 $\\pi$ 的简单倍数。",
+    "Inverse trigonometric functions are continuous on their domains, so a limit can pass inside them: the limit of $\\arctan g(x)$ is the arctangent of the limit of $g(x)$. If $g$ is a ratio of two linear expressions, its limit at infinity is the ratio of the leading coefficients, whichever way $x$ goes. What remains is then a special value of the outer function, which is a simple multiple of $\\pi$.\n\nFor $\\arctan\\left(\\frac{3x}{3x + 1}\\right)$ the ratio tends to $1$, so the limit is $\\arctan 1 = \\frac{\\pi}{4}$.\n\nCheck: at $x = 100$ the ratio is $\\frac{300}{301} \\approx 0.997$, and its arctangent is about $0.784$, close to $\\frac{\\pi}{4} \\approx 0.785$.\n\n> **Watch out.** Take the limit of the ratio first, then the special value. The ratio is not the answer, and neither is the angle in degrees.",
+    "反三角函数在定义域上连续，所以极限可以移到函数里面：$\\arctan g(x)$ 的极限是 $g(x)$ 极限的反正切。如果 $g$ 是两个一次式之比，无论 $x$ 趋向哪个方向，它在无穷远处的极限都是首项系数之比。剩下的就是外层函数的特殊值，它是 $\\pi$ 的简单倍数。\n\n对于 $\\arctan\\left(\\frac{3x}{3x + 1}\\right)$，比值趋于 $1$，所以极限是 $\\arctan 1 = \\frac{\\pi}{4}$。\n\n检验：$x = 100$ 时比值是 $\\frac{300}{301} \\approx 0.997$，它的反正切约为 $0.784$，接近 $\\frac{\\pi}{4} \\approx 0.785$。\n\n> **注意。** 先求比值的极限，再取特殊值。比值本身不是答案，用角度表示的度数也不是。",
   ),
   generate(rng) {
     const sign = rng.pick([1, -1]);
@@ -2055,6 +2274,14 @@ const inverseTrigOfRatio: KnowledgePointDef = {
     const ratio = Q.of(sign, usesArctan ? 1 : 2);
     const direction = rng.pick(["\\infty", "-\\infty"]);
     const inner = `\\frac{${poly([sign * b, "x"])}}{${poly([denominator, "x"], [c, ""])}}`;
+    const g = (x: number) => (sign * b * x) / (denominator * x + c);
+    const outer = usesArctan ? Math.atan : Math.asin;
+    const xs = [10, 100, 1000].map((x) => (direction === "\\infty" ? x : -x));
+    const table = valueTable(xs, [
+      ["g(x)", g],
+      [`\\frac{1}{\\pi}${name} g(x)`, (x) => outer(g(x)) / Math.PI],
+    ]);
+    const word = usesArctan ? t("arctangent", "反正切") : t("arcsine", "反正弦");
     return numberProblem({
       prompt: t(
         `$\\lim_{x \\to ${direction}} ${name}\\left(${inner}\\right) = k\\pi$. Find $k$.`,
@@ -2062,9 +2289,25 @@ const inverseTrigOfRatio: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(sign, 2), Q.of(-sign, parts), Q.of(sign, 3), Q.of(sign, 12)],
-      solution: t(
-        `The ratio tends to $${ratio.toLatex()}$, and ${name === "\\arctan" ? "arctangent" : "arcsine"} is continuous, so the limit is $${name}\\left(${ratio.toLatex()}\\right)$. This equals $${answer.toLatex()}\\pi$, so $k = ${answer.toLatex()}$.`,
-        `这个比趋于 $${ratio.toLatex()}$，而${name === "\\arctan" ? "反正切" : "反正弦"}函数连续，所以极限是 $${name}\\left(${ratio.toLatex()}\\right)$。写成 $k\\pi$ 的形式，$k = ${answer.toLatex()}$。`,
+      solution: walk(
+        [
+          [
+            "Find the limit of the ratio",
+            "求比值的极限",
+            `Write $g(x) = ${inner}$. Dividing the top and the bottom by $x$, $g(x)$ tends to the ratio of the leading coefficients, $${ratio.toLatex()}$.`,
+            `记 $g(x) = ${inner}$。分子分母同除以 $x$，$g(x)$ 趋于首项系数之比 $${ratio.toLatex()}$。`,
+          ],
+          [
+            "Use continuity",
+            "利用连续性",
+            `The ${word.en} is continuous at $${ratio.toLatex()}$, so\n\n$$\\lim_{x \\to ${direction}} ${name} g(x) = ${name}\\left(${ratio.toLatex()}\\right) = ${piLatex(sign, parts)}$$\n\nSo $k = ${answer.toLatex()}$.`,
+            `${word["zh-CN"]}函数在 $${ratio.toLatex()}$ 处连续，所以\n\n$$\\lim_{x \\to ${direction}} ${name} g(x) = ${name}\\left(${ratio.toLatex()}\\right) = ${piLatex(sign, parts)}$$\n\n所以 $k = ${answer.toLatex()}$。`,
+          ],
+        ],
+        [
+          `Evaluate $g$ and the ${word.en} of it, divided by $\\pi$, farther and farther out:\n\n${table}\n\nThe last row closes in on $${answer.toLatex()}${approx(answer)}$.`,
+          `在越来越远处计算 $g$ 以及它的${word["zh-CN"]}除以 $\\pi$：\n\n${table}\n\n最后一行逼近 $${answer.toLatex()}${approx(answer)}$。`,
+        ],
       ),
     });
   },

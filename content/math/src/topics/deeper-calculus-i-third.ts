@@ -4,12 +4,15 @@
 
 import type { KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
-import { linear, paren, poly, Q, union } from "@ga/subject-math";
+import { dec, linear, paren, poly, Q, union } from "@ga/subject-math";
 import { calculusDrawings1 } from "../explanation-drawings-calculus-1.ts";
 import { calculusDrawings2 } from "../explanation-drawings-calculus-2.ts";
 
-import { functionProblem, intervalProblem, solutionsProblem, verdictChoice } from "../problems.ts";
+import { explainedChoice, functionProblem, intervalProblem, solutionsProblem } from "../problems.ts";
+import { stepLabel } from "../solution-kit.ts";
 import { ask, choose, type Pair, point } from "../university-kit.ts";
+import { type Reason, reasoned } from "../wrong-reasons.ts";
+import { infL, table } from "./calculus-common.ts";
 
 /** nz picks a nonzero integer from -r to r. */
 const nz = (rng: Rng, r: number) => rng.pick([...Array(2 * r + 1).keys()].map((i) => i - r).filter((i) => i !== 0));
@@ -19,6 +22,31 @@ const minus = (a: number) => linear(1, -a);
 const tail = (m: number) => (m === 0 ? "" : m < 0 ? ` - ${-m}` : ` + ${m}`);
 /** same2 writes one formula as a pair for both languages. */
 const same2 = (latex: string): Pair => [`$${latex}$`, `$${latex}$`];
+
+/** walk writes a solution as labelled steps, each a title and what it says in both languages, followed by a check that takes a second route. */
+function walk(parts: readonly (readonly [en: string, zh: string, sayEn: string, sayZh: string])[], check: Pair): Pair {
+  const write = (zh: boolean) =>
+    `${parts.map(([en, z, se, sz], i) => `${stepLabel(i + 1, en, z)[zh ? "zh-CN" : "en"]} ${zh ? sz : se}`).join("\n\n")}\n\n${zh ? `**检验。** ${check[1]}` : `**Check.** ${check[0]}`}`;
+  return [write(false), write(true)];
+}
+
+/** num writes a value rounded to three decimal places, without trailing zeros. */
+const num = (v: number) => dec(Q.of(Math.round(v * 1000) || 0, 1000));
+
+/** approx writes " ≈ 0.833" after a fraction that is not a whole number, and nothing after a whole number. */
+const approx = (q: Q) => (q.isInteger() ? "" : ` \\approx ${num(q.toNumber())}`);
+
+/** around gives a − 0.01, a − 0.001, a + 0.001 and a + 0.01, rounded to three decimal places. */
+const around = (a: number) => [-0.01, -0.001, 0.001, 0.01].map((d) => Math.round((a + d) * 1000) / 1000);
+
+/** valueTable tabulates functions at some x-values to three decimal places; each row is a name in LaTeX and a function, and labels name the x-values when they are not written as decimals. */
+function valueTable(
+  xs: readonly number[],
+  rows: readonly (readonly [string, (x: number) => number])[],
+  labels: readonly string[] = xs.map(String),
+): string {
+  return table(["$x$", ...labels.map((x) => `$${x}$`)], ...rows.map(([name, f]) => [`$${name}$`, ...xs.map((x) => `$${num(f(x))}$`)]));
+}
 
 /** hyperbolicCount counts the solutions of base(x) = v for cosh, sinh and tanh with integer v. */
 const hyperbolicCount = (kind: "cosh" | "sinh" | "tanh", v: number) =>
@@ -138,8 +166,8 @@ const oneSidedAbsoluteValue = point(
   "one-sided-limits-of-an-absolute-value-quotient",
   ["One-sided limits of an absolute value quotient", "绝对值商的单侧极限"],
   [
-    "The quotient $\\frac{|x - a|}{x - a}$ is $1$ to the right of $a$ and $-1$ to the left, however close $x$ comes to $a$. So each one-sided limit is found by replacing the quotient with its constant value on that side.",
-    "商 $\\frac{|x - a|}{x - a}$ 在 $a$ 的右侧等于 $1$，在左侧等于 $-1$，无论 $x$ 多么接近 $a$。所以每个单侧极限都可以把这个商换成它在那一侧的常数值来求。",
+    "The quotient $\\frac{|x - a|}{x - a}$ is $1$ to the right of $a$ and $-1$ to the left, however close $x$ comes to $a$. So each one-sided limit is found by replacing the quotient with its constant value on that side.\n\nFor example, $\\lim_{x \\to 2^{+}} \\left(3 + 4\\frac{|x - 2|}{x - 2}\\right) = 3 + 4 = 7$, while from the left the limit is $3 - 4 = -1$.\n\nCheck: at $x = 2.1$ the quotient is $\\frac{0.1}{0.1} = 1$, and at $x = 1.9$ it is $\\frac{0.1}{-0.1} = -1$.\n\n> **Watch out.** The quotient has no value at $x = a$, and its two sides differ, so only one-sided limits exist. Use the sign of the side the limit comes from.",
+    "商 $\\frac{|x - a|}{x - a}$ 在 $a$ 的右侧等于 $1$，在左侧等于 $-1$，无论 $x$ 多么接近 $a$。所以每个单侧极限都可以把这个商换成它在那一侧的常数值来求。\n\n例如 $\\lim_{x \\to 2^{+}} \\left(3 + 4\\frac{|x - 2|}{x - 2}\\right) = 3 + 4 = 7$，而左极限是 $3 - 4 = -1$。\n\n检验：$x = 2.1$ 时这个商是 $\\frac{0.1}{0.1} = 1$，$x = 1.9$ 时是 $\\frac{0.1}{-0.1} = -1$。\n\n> **注意。** 这个商在 $x = a$ 处没有定义，两侧的值也不同，所以只有单侧极限。要用极限所来自那一侧的符号。",
   ],
   (rng) => {
     const a = rng.int(-6, 6);
@@ -148,17 +176,40 @@ const oneSidedAbsoluteValue = point(
     const right = rng.bool();
     const answer = c + (right ? b : -b);
     const q = `\\frac{|${minus(a)}|}{${minus(a)}}`;
+    const expression = poly([c, ""], [b, q]);
+    const xs = [0.1, 0.01, 0.001].map((d) => Math.round((a + (right ? d : -d)) * 1000) / 1000);
+    const table = valueTable(xs, [["f(x)", (x) => c + (b * Math.abs(x - a)) / (x - a)]]);
     return ask(
       [
-        `Find $\\lim_{x \\to ${a}^{${right ? "+" : "-"}}} \\left(${poly([c, ""], [b, q])}\\right)$.`,
-        `求 $\\lim_{x \\to ${a}^{${right ? "+" : "-"}}} \\left(${poly([c, ""], [b, q])}\\right)$。`,
+        `Find $\\lim_{x \\to ${a}^{${right ? "+" : "-"}}} \\left(${expression}\\right)$.`,
+        `求 $\\lim_{x \\to ${a}^{${right ? "+" : "-"}}} \\left(${expression}\\right)$。`,
       ],
       answer,
       [c + (right ? -b : b), b, c],
-      [
-        `${right ? `To the right of $${a}$, $${minus(a)} > 0$, so the quotient is $1$` : `To the left of $${a}$, $${minus(a)} < 0$, so the quotient is $-1$`}. The expression is the constant $${poly([c, ""], [right ? b : -b, ""])}$ there, which is $${answer}$.`,
-        `${right ? `在 $${a}$ 的右侧 $${minus(a)} > 0$，所以这个商是 $1$` : `在 $${a}$ 的左侧 $${minus(a)} < 0$，所以这个商是 $-1$`}。此时表达式就是常数 $${poly([c, ""], [right ? b : -b, ""])}$，等于 $${answer}$。`,
-      ],
+      walk(
+        [
+          [
+            "Find the sign on that side",
+            "确定那一侧的符号",
+            right
+              ? `To the right of $${a}$, $${minus(a)} > 0$, so $|${minus(a)}| = ${minus(a)}$ and the quotient is $1$.`
+              : `To the left of $${a}$, $${minus(a)} < 0$, so $|${minus(a)}| = -(${minus(a)})$ and the quotient is $-1$.`,
+            right
+              ? `在 $${a}$ 的右侧 $${minus(a)} > 0$，所以 $|${minus(a)}| = ${minus(a)}$，这个商是 $1$。`
+              : `在 $${a}$ 的左侧 $${minus(a)} < 0$，所以 $|${minus(a)}| = -(${minus(a)})$，这个商是 $-1$。`,
+          ],
+          [
+            "Replace the quotient",
+            "替换这个商",
+            `There the expression is the constant $${poly([c, ""], [right ? b : -b, ""])} = ${answer}$, so the limit is $${answer}$.`,
+            `此时表达式就是常数 $${poly([c, ""], [right ? b : -b, ""])} = ${answer}$，所以极限是 $${answer}$。`,
+          ],
+        ],
+        [
+          `Write $f(x)$ for the expression and evaluate it closer and closer to $x = ${a}$ from the ${right ? "right" : "left"}:\n\n${table}\n\nEvery value is exactly $${answer}$. From the other side the quotient would be $${right ? -1 : 1}$, and the values would be $${c + (right ? -b : b)}$ instead.`,
+          `从${right ? "右" : "左"}侧越来越接近 $x = ${a}$，计算表达式 $f(x)$ 的值：\n\n${table}\n\n每个值都恰好是 $${answer}$。从另一侧，这个商是 $${right ? -1 : 1}$，值会变成 $${c + (right ? -b : b)}$。`,
+        ],
+      ),
     );
   },
 );
@@ -167,8 +218,8 @@ const limitAcrossTwoFormulas = point(
   "a-limit-across-two-formulas-and-a-stray-value",
   ["A limit across two formulas and a stray value", "跨两个表达式且有孤立函数值的极限"],
   [
-    "Two different formulas on the two sides do not stop a limit from existing, and a separate value at the point does not matter either. Only the one-sided limits count: the limit exists exactly when they agree.",
-    "两侧用不同的表达式并不妨碍极限存在，该点处单独规定的函数值也没有影响。只有单侧极限才起作用：两者相等时极限存在，否则不存在。",
+    "Two different formulas on the two sides do not stop a limit from existing, and a separate value at the point does not matter either. Only the one-sided limits count: the limit exists exactly when they agree.\n\nFor $f(x) = 2x + 1$ when $x < 1$, $f(1) = 7$ and $f(x) = 4x - 1$ when $x > 1$, both one-sided limits are $3$, so the limit is $3$ although $f(1) = 7$.\n\nCheck: $f(0.99) = 2.98$ and $f(1.01) = 3.04$, both close to $3$.\n\n> **Watch out.** Neither the change of formula nor the stray value decides the question. Compare the two one-sided limits and nothing else.",
+    "两侧用不同的表达式并不妨碍极限存在，该点处单独规定的函数值也没有影响。只有单侧极限才起作用：两者相等时极限存在，否则不存在。\n\n对于 $x < 1$ 时 $f(x) = 2x + 1$、$f(1) = 7$、$x > 1$ 时 $f(x) = 4x - 1$，两个单侧极限都是 $3$，所以极限是 $3$，尽管 $f(1) = 7$。\n\n检验：$f(0.99) = 2.98$，$f(1.01) = 3.04$，都接近 $3$。\n\n> **注意。** 换表达式和孤立的函数值都不能决定极限是否存在。只比较两个单侧极限。",
   ],
   (rng) => {
     const a = rng.int(-4, 4);
@@ -181,18 +232,88 @@ const limitAcrossTwoFormulas = point(
     const s = R - r * a;
     const v = L + rng.pick([-3, -2, 2, 3]);
     const f = `\\begin{cases} ${linear(p, q)} & x < ${a} \\\\ ${v} & x = ${a} \\\\ ${linear(r, s)} & x > ${a} \\end{cases}`;
-    return verdictChoice(rng, {
+    const table = valueTable(around(a), [["f(x)", (x) => (x < a ? p * x + q : r * x + s)]]);
+    const gap = (zh: string) => (zh.startsWith("$") ? " " : "");
+    const yes = (en: string, zh: string) => t(`Yes, because ${en}`, `是，因为${gap(zh)}${zh}`);
+    const no = (en: string, zh: string) => t(`No, because ${en}`, `否，因为${gap(zh)}${zh}`);
+    const agree = yes(`the left and right limits are both $${L}$`, `左极限和右极限都是 $${L}$`);
+    const differ = no(`the left limit is $${L}$ and the right limit is $${R}$`, `左极限是 $${L}$，右极限是 $${R}$`);
+    const stray = no(`$f(${a}) = ${v}$ differs from the values $f$ approaches`, `$f(${a}) = ${v}$ 与 $f$ 趋近的值不同`);
+    return explainedChoice(rng, {
       prompt: t(`Let $f(x) = ${f}$. Does $\\lim_{x \\to ${a}} f(x)$ exist?`, `设 $f(x) = ${f}$。$\\lim_{x \\to ${a}} f(x)$ 存在吗？`),
-      holds,
-      yes: t(`the left and right limits are both $${L}$`, `左极限和右极限都是 $${L}$`),
-      no: holds
-        ? t(`$f(${a}) = ${v}$ differs from the values $f$ approaches`, `$f(${a}) = ${v}$ 与 $f$ 趋近的值不同`)
-        : t(`the left limit is $${L}$ and the right limit is $${R}$`, `左极限是 $${L}$，右极限是 $${R}$`),
-      yesWrong: t(`$f(${a})$ is defined and equals $${v}$`, `$f(${a})$ 有定义，等于 $${v}$`),
-      noWrong: t(`$f$ is given by different formulas on the two sides`, `$f$ 在两侧由不同的表达式给出`),
+      correct: holds ? agree : differ,
+      wrong: [
+        holds
+          ? {
+              option: stray,
+              why: t(
+                `The value $f(${a})$ plays no part in a limit. Only the one-sided limits count, and both are $${L}$.`,
+                `函数值 $f(${a})$ 与极限无关。只有单侧极限起作用，而两者都是 $${L}$。`,
+              ),
+            }
+          : {
+              option: agree,
+              why: t(
+                `Only the left limit is $${L}$; the right limit is $${R}$, so the two sides do not agree.`,
+                `只有左极限是 $${L}$；右极限是 $${R}$，两侧不一致。`,
+              ),
+            },
+        {
+          option: yes(`$f(${a})$ is defined and equals $${v}$`, `$f(${a})$ 有定义，等于 $${v}$`),
+          why: holds
+            ? t(
+                `The verdict is right, but a value at the point never decides a limit; the limit exists because both sides give $${L}$.`,
+                `结论对了，但该点的函数值从不决定极限；极限存在，是因为两侧都给出 $${L}$。`,
+              )
+            : t(
+                `A value at the point never decides a limit, and here the one-sided limits $${L}$ and $${R}$ differ.`,
+                `该点的函数值从不决定极限，而这里单侧极限 $${L}$ 和 $${R}$ 不相等。`,
+              ),
+        },
+        {
+          option: no(`$f$ is given by different formulas on the two sides`, `$f$ 在两侧由不同的表达式给出`),
+          why: holds
+            ? t(
+                `Different formulas do not stop a limit from existing; here both give $${L}$ at $x = ${a}$.`,
+                `不同的表达式并不妨碍极限存在；这里两者在 $x = ${a}$ 处都给出 $${L}$。`,
+              )
+            : t(
+                `The verdict is right, but different formulas alone do not settle it; what settles it is that the one-sided limits differ.`,
+                `结论对了，但仅凭表达式不同不能下结论；真正的原因是单侧极限不相等。`,
+              ),
+        },
+      ],
       solution: t(
-        `Substituting gives a left limit of $${L}$ and a right limit of $${R}$. ${holds ? `They agree, so the limit is $${L}$, whatever $f(${a}) = ${v}$ says.` : "They differ, so the limit does not exist."}`,
-        `代入得左极限 $${L}$，右极限 $${R}$。${holds ? `两者相等，所以极限是 $${L}$，与 $f(${a}) = ${v}$ 无关。` : "两者不相等，所以极限不存在。"}`,
+        ...walk(
+          [
+            [
+              "Find the left limit",
+              "求左极限",
+              `For $x < ${a}$, $f(x) = ${linear(p, q)}$. Substituting $x = ${a}$ gives the left limit $${L}$.`,
+              `当 $x < ${a}$ 时，$f(x) = ${linear(p, q)}$。代入 $x = ${a}$，得左极限 $${L}$。`,
+            ],
+            [
+              "Find the right limit",
+              "求右极限",
+              `For $x > ${a}$, $f(x) = ${linear(r, s)}$. Substituting $x = ${a}$ gives the right limit $${R}$.`,
+              `当 $x > ${a}$ 时，$f(x) = ${linear(r, s)}$。代入 $x = ${a}$，得右极限 $${R}$。`,
+            ],
+            [
+              "Compare",
+              "比较",
+              holds
+                ? `They agree, so the limit is $${L}$. The stray value $f(${a}) = ${v}$ plays no part.`
+                : `They differ, so the limit does not exist, whatever the value $f(${a})$ is.`,
+              holds
+                ? `两者相等，所以极限是 $${L}$。孤立的函数值 $f(${a}) = ${v}$ 不起作用。`
+                : `两者不相等，所以极限不存在，与 $f(${a})$ 的值无关。`,
+            ],
+          ],
+          [
+            `Evaluate $f$ on both sides of $x = ${a}$:\n\n${table}\n\n${holds ? `Both sides close in on $${L}$, not on $${v}$.` : `The left values close in on $${L}$ and the right values on $${R}$, so no single number is approached.`}`,
+            `计算 $f$ 在 $x = ${a}$ 两侧的值：\n\n${table}\n\n${holds ? `两侧都逼近 $${L}$，而不是 $${v}$。` : `左侧的值逼近 $${L}$，右侧的值逼近 $${R}$，没有一个数能从两侧同时趋近。`}`,
+          ],
+        ),
       ),
     });
   },
@@ -203,28 +324,65 @@ const crossingAnAsymptote = {
     "a-graph-may-cross-its-horizontal-asymptote",
     ["A graph may cross its horizontal asymptote", "图像可以穿过水平渐近线"],
     [
-      "A horizontal asymptote only describes what happens far out: the values must get close to the line and stay close. The graph may cross the line, even infinitely often, as long as the swings around it shrink to zero.",
-      "水平渐近线只描述远处的情况：函数值必须接近这条直线并保持接近。图像可以穿过这条直线，甚至穿过无穷多次，只要围绕它的摆动趋于零。",
+      "A horizontal asymptote only describes what happens far out: the values must get close to the line and stay close. The graph may cross the line, even infinitely often, as long as the swings around it shrink to zero.\n\nFor example, $f(x) = 2 + \\frac{\\sin x}{x}$ crosses $y = 2$ at $x = \\pi, 2\\pi, 3\\pi, \\ldots$, yet $f(x) \\to 2$ as $x \\to \\infty$, because the swings are at most $\\frac{1}{x}$.\n\nCheck: $f(10) \\approx 1.946$ and $f(100) \\approx 1.995$, closer and closer to $2$.\n\n> **Watch out.** An asymptote is not a line the graph never touches. What matters is only that the distance to the line shrinks to zero.",
+      "水平渐近线只描述远处的情况：函数值必须接近这条直线并保持接近。图像可以穿过这条直线，甚至穿过无穷多次，只要围绕它的摆动趋于零。\n\n例如 $f(x) = 2 + \\frac{\\sin x}{x}$ 在 $x = \\pi, 2\\pi, 3\\pi, \\ldots$ 处穿过 $y = 2$，但当 $x \\to \\infty$ 时 $f(x) \\to 2$，因为摆动不超过 $\\frac{1}{x}$。\n\n检验：$f(10) \\approx 1.946$，$f(100) \\approx 1.995$，越来越接近 $2$。\n\n> **注意。** 渐近线并不是图像永远碰不到的直线。重要的只是到这条直线的距离趋于零。",
     ],
     (rng) => {
       const L = rng.int(-9, 9);
       const c = nz(rng, 7);
       const f = poly([L, ""], [c, "\\frac{\\sin x}{x}"]);
-      return choose(
-        rng,
+      const term = poly([c, "\\frac{\\sin x}{x}"]);
+      const bound = `\\frac{${Math.abs(c)}}{x}`;
+      const crossing: Pair = [`It does not exist, because the graph keeps crossing $y = ${L}$`, `不存在，因为图像不断穿过 $y = ${L}$`];
+      const one: Pair = [`$${L + c}$, because $\\frac{\\sin x}{x}$ tends to $1$`, `$${L + c}$，因为 $\\frac{\\sin x}{x}$ 趋于 $1$`];
+      const sine: Pair = ["It does not exist, because $\\sin x$ has no limit", "不存在，因为 $\\sin x$ 没有极限"];
+      const table = valueTable([10, 100, 1000], [["f(x)", (x) => L + (c * Math.sin(x)) / x]]);
+      return reasoned(
+        choose(
+          rng,
+          [
+            `The graph of $f(x) = ${f}$ crosses the line $y = ${L}$ at every multiple of $\\pi$. What is $\\lim_{x \\to \\infty} f(x)$?`,
+            `$f(x) = ${f}$ 的图像在 $\\pi$ 的每个倍数处都穿过直线 $y = ${L}$。$\\lim_{x \\to \\infty} f(x)$ 是多少？`,
+          ],
+          [`$${L}$, because the swings around $y = ${L}$ shrink to zero`, `$${L}$，因为围绕 $y = ${L}$ 的摆动趋于零`],
+          [crossing, one, sine],
+          walk(
+            [
+              [
+                "Bound the swing",
+                "估计摆动",
+                `Since $|\\sin x| \\le 1$, for $x > 0$ the term $${term}$ has size at most $${bound}$.`,
+                `因为 $|\\sin x| \\le 1$，当 $x > 0$ 时，项 $${term}$ 的绝对值不超过 $${bound}$。`,
+              ],
+              [
+                "Let $x$ grow",
+                "让 $x$ 增大",
+                `As $x \\to \\infty$, $${bound} \\to 0$, so the term tends to $0$ and the limit is $${L}$. The graph crosses $y = ${L}$ again and again, yet $y = ${L}$ is a horizontal asymptote.`,
+                `当 $x \\to \\infty$ 时 $${bound} \\to 0$，所以这一项趋于 $0$，极限是 $${L}$。图像一次又一次穿过 $y = ${L}$，但 $y = ${L}$ 仍是水平渐近线。`,
+              ],
+            ],
+            [
+              `Evaluate $f$ farther and farther out:\n\n${table}\n\nThe values may fall on either side of $${L}$, but each lies within $${bound}$ of it, and that bound shrinks to $0$.`,
+              `在越来越远处计算 $f$ 的值：\n\n${table}\n\n这些值可能落在 $${L}$ 的任一侧，但都与它相差不超过 $${bound}$，而这个界趋于 $0$。`,
+            ],
+          ),
+        ),
         [
-          `The graph of $f(x) = ${f}$ crosses the line $y = ${L}$ at every multiple of $\\pi$. What is $\\lim_{x \\to \\infty} f(x)$?`,
-          `$f(x) = ${f}$ 的图像在 $\\pi$ 的每个倍数处都穿过直线 $y = ${L}$。$\\lim_{x \\to \\infty} f(x)$ 是多少？`,
-        ],
-        [`$${L}$, because the swings around $y = ${L}$ shrink to zero`, `$${L}$，因为围绕 $y = ${L}$ 的摆动趋于零`],
-        [
-          [`It does not exist, because the graph keeps crossing $y = ${L}$`, `不存在，因为图像不断穿过 $y = ${L}$`],
-          [`$${L + c}$, because $\\frac{\\sin x}{x}$ tends to $1$`, `$${L + c}$，因为 $\\frac{\\sin x}{x}$ 趋于 $1$`],
-          [`It does not exist, because $\\sin x$ has no limit`, `不存在，因为 $\\sin x$ 没有极限`],
-        ],
-        [
-          `Since $|\\sin x| \\le 1$, the term $${poly([c, "\\frac{\\sin x}{x}"])}$ has size at most $\\frac{${Math.abs(c)}}{|x|}$, which tends to $0$. So the limit is $${L}$, and $y = ${L}$ is a horizontal asymptote even though the graph crosses it.`,
-          `因为 $|\\sin x| \\le 1$，项 $${poly([c, "\\frac{\\sin x}{x}"])}$ 的绝对值不超过 $\\frac{${Math.abs(c)}}{|x|}$，它趋于 $0$。所以极限是 $${L}$，尽管图像穿过 $y = ${L}$，它仍是水平渐近线。`,
+          [
+            crossing[0],
+            `Crossing is allowed. The distance from $y = ${L}$ is at most $${bound}$, which shrinks to $0$, so the limit exists.`,
+            `穿过是允许的。到 $y = ${L}$ 的距离不超过 $${bound}$，它趋于 $0$，所以极限存在。`,
+          ],
+          [
+            one[0],
+            "$\\frac{\\sin x}{x}$ tends to $1$ as $x \\to 0$, not as $x \\to \\infty$; far out it tends to $0$.",
+            "$\\frac{\\sin x}{x}$ 是在 $x \\to 0$ 时趋于 $1$，而不是 $x \\to \\infty$ 时；在远处它趋于 $0$。",
+          ],
+          [
+            sine[0],
+            "$\\sin x$ alone has no limit, but here it is divided by $x$, which grows; a bounded factor over $x$ tends to $0$.",
+            "单独的 $\\sin x$ 没有极限，但这里它除以不断增大的 $x$；有界的量除以 $x$ 趋于 $0$。",
+          ],
         ],
       );
     },
@@ -237,8 +395,8 @@ const formulaFromInfiniteLimits = {
     "the-formula-from-the-behavior-at-an-asymptote",
     ["The formula from the behavior at an asymptote", "由渐近线处的行为确定表达式"],
     [
-      "Near $x = a$, an odd power of $x - a$ in the denominator changes sign across $a$, so the two sides go to opposite infinities; an even power keeps its sign, so both sides go the same way. The sign of the numerator then decides which way.",
-      "在 $x = a$ 附近，分母中 $x - a$ 的奇次幂在 $a$ 两侧变号，所以两侧趋于相反的无穷；偶次幂不变号，所以两侧趋于同一方向。分子的符号再决定具体方向。",
+      "Near $x = a$, an odd power of $x - a$ in the denominator changes sign across $a$, so the two sides go to opposite infinities; an even power keeps its sign, so both sides go the same way. The sign of the numerator then decides which way.\n\nFor example, $\\frac{1}{x - 2}$ goes to $-\\infty$ from the left and $\\infty$ from the right, while $\\frac{-3}{(x - 2)^{2}}$ goes to $-\\infty$ from both sides.\n\nCheck: $\\frac{1}{1.99 - 2} = -100$ and $\\frac{1}{2.01 - 2} = 100$; $\\frac{-3}{(0.01)^{2}} = -30000$ on both sides.\n\n> **Watch out.** Changing the sign of the numerator flips both sides at once. It cannot turn opposite infinities into the same one; only the power can.",
+      "在 $x = a$ 附近，分母中 $x - a$ 的奇次幂在 $a$ 两侧变号，所以两侧趋于相反的无穷；偶次幂不变号，所以两侧趋于同一方向。分子的符号再决定具体方向。\n\n例如 $\\frac{1}{x - 2}$ 从左侧趋于 $-\\infty$，从右侧趋于 $\\infty$；而 $\\frac{-3}{(x - 2)^{2}}$ 从两侧都趋于 $-\\infty$。\n\n检验：$\\frac{1}{1.99 - 2} = -100$，$\\frac{1}{2.01 - 2} = 100$；$\\frac{-3}{(0.01)^{2}} = -30000$，两侧相同。\n\n> **注意。** 改变分子的符号会同时翻转两侧，不能把相反的无穷变成同一个；只有幂次能做到。",
     ],
     (rng) => {
       const a = nz(rng, 6);
@@ -247,19 +405,63 @@ const formulaFromInfiniteLimits = {
       const sign = rng.pick([1, -1]);
       const form = (s: number, e: boolean) => `\\frac{${s * c}}{${e ? `(${minus(a)})^{2}` : minus(a)}}`;
       const left = even ? sign : -sign;
-      const inf = (s: number) => (s > 0 ? "\\infty" : "-\\infty");
-      return choose(
-        rng,
-        [
-          `Which function has $\\lim_{x \\to ${a}^{-}} f(x) = ${inf(left)}$ and $\\lim_{x \\to ${a}^{+}} f(x) = ${inf(sign)}$?`,
-          `哪个函数满足 $\\lim_{x \\to ${a}^{-}} f(x) = ${inf(left)}$ 且 $\\lim_{x \\to ${a}^{+}} f(x) = ${inf(sign)}$？`,
-        ],
-        same2(`f(x) = ${form(sign, even)}`),
-        [same2(`f(x) = ${form(-sign, even)}`), same2(`f(x) = ${form(sign, !even)}`), same2(`f(x) = ${form(-sign, !even)}`)],
-        [
-          `The two sides go ${even ? "the same way, so the power is even" : "opposite ways, so the power is odd"}. To the right of $${a}$ the denominator is positive, so the numerator has the sign of the right limit, and $f(x) = ${form(sign, even)}$.`,
-          `两侧趋于${even ? "同一方向，所以是偶次幂" : "相反方向，所以是奇次幂"}。在 $${a}$ 的右侧分母为正，所以分子的符号与右极限相同，$f(x) = ${form(sign, even)}$。`,
-        ],
+      const option = (s: number, e: boolean) => same2(`f(x) = ${form(s, e)}`);
+      const wrong = [
+        [-sign, even],
+        [sign, !even],
+        [-sign, !even],
+      ] as const;
+      const table = valueTable(
+        [a - 0.1, a - 0.01, a + 0.01, a + 0.1].map((x) => Math.round(x * 1000) / 1000),
+        [["f(x)", (x) => (sign * c) / (even ? (x - a) ** 2 : x - a)]],
+      );
+      const word = (s: number) => (s > 0 ? ["positive", "正"] : ["negative", "负"]);
+      return reasoned(
+        choose(
+          rng,
+          [
+            `Which function has $\\lim_{x \\to ${a}^{-}} f(x) = ${infL(left)}$ and $\\lim_{x \\to ${a}^{+}} f(x) = ${infL(sign)}$?`,
+            `哪个函数满足 $\\lim_{x \\to ${a}^{-}} f(x) = ${infL(left)}$ 且 $\\lim_{x \\to ${a}^{+}} f(x) = ${infL(sign)}$？`,
+          ],
+          option(sign, even),
+          wrong.map(([s, e]) => option(s, e)),
+          walk(
+            [
+              [
+                "Read the power",
+                "判断幂次",
+                even
+                  ? `Both sides go to the same infinity, so the power of $${minus(a)}$ is even.`
+                  : `The sides go to opposite infinities, so the power of $${minus(a)}$ is odd.`,
+                even ? `两侧趋于同一个无穷，所以 $${minus(a)}$ 的幂次是偶数。` : `两侧趋于相反的无穷，所以 $${minus(a)}$ 的幂次是奇数。`,
+              ],
+              [
+                "Read the sign",
+                "判断符号",
+                `To the right of $${a}$ the denominator is positive, so the numerator has the sign of the right limit $${infL(sign)}$. So $f(x) = ${form(sign, even)}$.`,
+                `在 $${a}$ 的右侧分母为正，所以分子与右极限 $${infL(sign)}$ 同号。所以 $f(x) = ${form(sign, even)}$。`,
+              ],
+            ],
+            [
+              `Evaluate $f(x) = ${form(sign, even)}$ on both sides of $x = ${a}$:\n\n${table}\n\nThe left values are large and ${word(left)[0]}, and the right values large and ${word(sign)[0]}, as required.`,
+              `计算 $f(x) = ${form(sign, even)}$ 在 $x = ${a}$ 两侧的值：\n\n${table}\n\n左侧的值很大且为${word(left)[1]}，右侧的值很大且为${word(sign)[1]}，符合要求。`,
+            ],
+          ),
+        ),
+        wrong.map(([s, e]): Reason => {
+          const l = e ? s : -s;
+          const miss =
+            l !== left && s !== sign
+              ? ["neither side matches", "两侧都不符合"]
+              : l !== left
+                ? ["the left side does not match", "左侧不符合"]
+                : ["the right side does not match", "右侧不符合"];
+          return [
+            option(s, e)[0],
+            `This function goes to $${infL(l)}$ from the left and $${infL(s)}$ from the right, so ${miss[0]}.`,
+            `这个函数从左侧趋于 $${infL(l)}$，从右侧趋于 $${infL(s)}$，所以${miss[1]}。`,
+          ];
+        }),
       );
     },
   ),
@@ -270,14 +472,16 @@ const coefficientFromPowerLimit = point(
   "the-coefficient-from-the-value-of-a-limit",
   ["The coefficient from the value of a limit", "由极限值求系数"],
   [
-    "A limit of a power function is found by substitution, so a known limit gives an equation for an unknown coefficient: if $\\lim_{x \\to a} cx^{n} = L$, then $ca^{n} = L$ and $c = \\frac{L}{a^{n}}$.",
-    "幂函数的极限可以代入求得，所以已知极限就得到未知系数的方程：若 $\\lim_{x \\to a} cx^{n} = L$，则 $ca^{n} = L$，$c = \\frac{L}{a^{n}}$。",
+    "A limit of a power function is found by substitution, so a known limit gives an equation for an unknown coefficient: if $\\lim_{x \\to a} cx^{n} = L$, then $ca^{n} = L$ and $c = \\frac{L}{a^{n}}$.\n\nFor example, if $\\lim_{x \\to 2} cx^{3} = 24$, then $8c = 24$ and $c = 3$.\n\nCheck: $3 \\cdot 2.01^{3} \\approx 24.36$ and $3 \\cdot 1.99^{3} \\approx 23.64$, both close to $24$.\n\n> **Watch out.** Divide by $a^{n}$, not by $a$ or by $n$, and keep the sign: a negative $a$ raised to an odd power is negative.",
+    "幂函数的极限可以代入求得，所以已知极限就得到未知系数的方程：若 $\\lim_{x \\to a} cx^{n} = L$，则 $ca^{n} = L$，$c = \\frac{L}{a^{n}}$。\n\n例如，若 $\\lim_{x \\to 2} cx^{3} = 24$，则 $8c = 24$，$c = 3$。\n\n检验：$3 \\cdot 2.01^{3} \\approx 24.36$，$3 \\cdot 1.99^{3} \\approx 23.64$，都接近 $24$。\n\n> **注意。** 要除以 $a^{n}$，而不是 $a$ 或 $n$，并注意符号：负数 $a$ 的奇次幂是负的。",
   ],
   (rng) => {
     const a = rng.pick([-3, -2, 2, 3]);
     const n = rng.int(2, 4);
     const c = Q.of(nz(rng, 9), rng.pick([1, 1, 2]));
     const L = c.mul(Q.of(a ** n));
+    const value = c.toNumber();
+    const table = valueTable(around(a), [[`${c.toLatex()} \\cdot x^{${n}}`, (x) => value * x ** n]]);
     return ask(
       [
         `The constant $c$ satisfies $\\lim_{x \\to ${a}} cx^{${n}} = ${L.toLatex()}$. Find $c$.`,
@@ -285,10 +489,26 @@ const coefficientFromPowerLimit = point(
       ],
       c,
       [L.mul(Q.of(a ** n)), L.div(Q.of(a)), L.div(Q.of(Math.abs(a) ** n))],
-      [
-        `Substituting gives $c \\cdot ${paren(a)}^{${n}} = ${a ** n}c$, so $c = \\frac{${L.toLatex()}}{${a ** n}} = ${c.toLatex()}$.`,
-        `代入得 $c \\cdot ${paren(a)}^{${n}} = ${a ** n}c$，所以 $c = \\frac{${L.toLatex()}}{${a ** n}} = ${c.toLatex()}$。`,
-      ],
+      walk(
+        [
+          [
+            "Substitute",
+            "代入",
+            `A power function is continuous, so the limit is its value at $x = ${a}$:\n\n$$c \\cdot ${paren(a)}^{${n}} = ${a ** n}c = ${L.toLatex()}$$`,
+            `幂函数连续，所以极限就是它在 $x = ${a}$ 处的值：\n\n$$c \\cdot ${paren(a)}^{${n}} = ${a ** n}c = ${L.toLatex()}$$`,
+          ],
+          [
+            "Divide",
+            "相除",
+            `Dividing both sides by $${a ** n}$:\n\n$$c = \\frac{${L.toLatex()}}{${a ** n}} = ${c.toLatex()}$$`,
+            `两边同除以 $${a ** n}$：\n\n$$c = \\frac{${L.toLatex()}}{${a ** n}} = ${c.toLatex()}$$`,
+          ],
+        ],
+        [
+          `Put $c = ${c.toLatex()}$ back and evaluate near $x = ${a}$:\n\n${table}\n\nThe values close in on $${L.toLatex()}${approx(L)}$, the given limit.`,
+          `代回 $c = ${c.toLatex()}$，在 $x = ${a}$ 附近计算：\n\n${table}\n\n函数值逼近已知的极限 $${L.toLatex()}${approx(L)}$。`,
+        ],
+      ),
     );
   },
 );
@@ -298,8 +518,8 @@ const twoSidedReciprocal = {
     "two-sided-limits-at-an-asymptote",
     ["Two-sided limits at an asymptote", "渐近线处的双侧极限"],
     [
-      "A two-sided infinite limit needs both sides to go the same way. With an even power of $x - a$ in the denominator they do; with an odd power the sides go to opposite infinities, and the two-sided limit does not exist even as an infinite limit.",
-      "双侧无穷极限要求两侧趋于同一方向。分母中 $x - a$ 是偶次幂时确实如此；是奇次幂时两侧趋于相反的无穷，即使作为无穷极限，双侧极限也不存在。",
+      "A two-sided infinite limit needs both sides to go the same way. With an even power of $x - a$ in the denominator they do; with an odd power the sides go to opposite infinities, and the two-sided limit does not exist even as an infinite limit.\n\nFor example, $\\lim_{x \\to 1} \\frac{1}{(x - 1)^{2}} = \\infty$, while $\\lim_{x \\to 1} \\frac{1}{x - 1}$ does not exist.\n\nCheck: $\\frac{1}{(x - 1)^{2}}$ is $10000$ at both $x = 0.99$ and $x = 1.01$, while $\\frac{1}{x - 1}$ is $-100$ and $100$ there.\n\n> **Watch out.** A constant added to the fraction changes nothing near the asymptote, and a large value on one side does not make a two-sided limit.",
+      "双侧无穷极限要求两侧趋于同一方向。分母中 $x - a$ 是偶次幂时确实如此；是奇次幂时两侧趋于相反的无穷，即使作为无穷极限，双侧极限也不存在。\n\n例如 $\\lim_{x \\to 1} \\frac{1}{(x - 1)^{2}} = \\infty$，而 $\\lim_{x \\to 1} \\frac{1}{x - 1}$ 不存在。\n\n检验：$\\frac{1}{(x - 1)^{2}}$ 在 $x = 0.99$ 和 $x = 1.01$ 处都是 $10000$，而 $\\frac{1}{x - 1}$ 在这两处分别是 $-100$ 和 $100$。\n\n> **注意。** 分式加上一个常数，在渐近线附近不改变什么；只有一侧取很大的值，不构成双侧极限。",
     ],
     (rng) => {
       const a = rng.int(-6, 6);
@@ -307,25 +527,88 @@ const twoSidedReciprocal = {
       const n = rng.int(1, 4);
       const b = rng.int(-4, 4);
       const base = a === 0 ? "x" : `(${minus(a)})`;
-      const f = poly([1, `\\frac{${c}}{${n === 1 ? minus(a) : `${base}^{${n}}`}}`], [b, ""]);
+      const den = n === 1 ? minus(a) : `${base}^{${n}}`;
+      const f = poly([1, `\\frac{${c}}{${den}}`], [b, ""]);
       const pos: Pair = ["$\\infty$", "$\\infty$"];
       const neg: Pair = ["$-\\infty$", "$-\\infty$"];
       const none: Pair = ["It does not exist, as the sides go to opposite infinities", "不存在，因为两侧趋于相反的无穷"];
       const finite: Pair = [`$${b}$`, `$${b}$`];
       const even = n % 2 === 0;
-      return choose(
-        rng,
-        [`Find $\\lim_{x \\to ${a}} \\left(${f}\\right)$.`, `求 $\\lim_{x \\to ${a}} \\left(${f}\\right)$。`],
-        even ? (c > 0 ? pos : neg) : none,
-        even ? [c > 0 ? neg : pos, none, finite] : [pos, neg, finite],
+      const table = valueTable(
+        [a - 0.1, a - 0.01, a + 0.01, a + 0.1].map((x) => Math.round(x * 1000) / 1000),
+        [["f(x)", (x) => c / (x - a) ** n + b]],
+      );
+      const word = (s: number) => (s > 0 ? ["positive", "正"] : ["negative", "负"]);
+      const up = c > 0 ? ["right", "右"] : ["left", "左"];
+      const down = c > 0 ? ["left", "左"] : ["right", "右"];
+      const reasons: Reason[] = [
         [
-          even
-            ? `The power $${n}$ is even, so the denominator is positive on both sides and the fraction has the sign of $${c}$ on both sides. The limit is $${c > 0 ? "\\infty" : "-\\infty"}$.`
-            : `The power $${n}$ is odd, so the denominator changes sign across $${a}$ and the fraction goes to opposite infinities. The limit does not exist.`,
-          even
-            ? `指数 $${n}$ 是偶数，所以分母在两侧都为正，分式在两侧都与 $${c}$ 同号。极限是 $${c > 0 ? "\\infty" : "-\\infty"}$。`
-            : `指数 $${n}$ 是奇数，所以分母在 $${a}$ 两侧变号，分式趋于相反的无穷。极限不存在。`,
+          finite[0],
+          `The constant $${b}$ is only added on; the fraction grows without bound near $x = ${a}$, so the limit is not finite.`,
+          `常数 $${b}$ 只是加在后面；分式在 $x = ${a}$ 附近无界增大，所以极限不是有限数。`,
         ],
+        ...(even
+          ? ([
+              [
+                (c > 0 ? neg : pos)[0],
+                `The denominator is positive on both sides, so the fraction has the sign of $${c}$ and goes to $${infL(c)}$, not $${infL(-c)}$.`,
+                `分母在两侧都为正，所以分式与 $${c}$ 同号，趋于 $${infL(c)}$，而不是 $${infL(-c)}$。`,
+              ],
+              [
+                none[0],
+                `With the even power $${n}$ both sides go the same way, to $${infL(c)}$, so the two-sided limit is $${infL(c)}$.`,
+                `幂次 $${n}$ 是偶数，两侧趋于同一方向 $${infL(c)}$，所以双侧极限是 $${infL(c)}$。`,
+              ],
+            ] as Reason[])
+          : ([
+              [
+                pos[0],
+                `Only the ${up[0]} side goes to $\\infty$; the other side goes to $-\\infty$.`,
+                `只有${up[1]}侧趋于 $\\infty$；另一侧趋于 $-\\infty$。`,
+              ],
+              [
+                neg[0],
+                `Only the ${down[0]} side goes to $-\\infty$; the other side goes to $\\infty$.`,
+                `只有${down[1]}侧趋于 $-\\infty$；另一侧趋于 $\\infty$。`,
+              ],
+            ] as Reason[])),
+      ];
+      return reasoned(
+        choose(
+          rng,
+          [`Find $\\lim_{x \\to ${a}} \\left(${f}\\right)$.`, `求 $\\lim_{x \\to ${a}} \\left(${f}\\right)$。`],
+          even ? (c > 0 ? pos : neg) : none,
+          even ? [c > 0 ? neg : pos, none, finite] : [pos, neg, finite],
+          walk(
+            [
+              [
+                "Find the sign of the denominator",
+                "确定分母的符号",
+                even
+                  ? `The power $${n}$ is even, so $${den}$ is positive on both sides of $${a}$ and tends to $0$.`
+                  : `The power $${n}$ is odd, so $${den}$ is negative to the left of $${a}$, positive to the right, and tends to $0$.`,
+                even
+                  ? `幂次 $${n}$ 是偶数，所以 $${den}$ 在 $${a}$ 两侧都为正，并趋于 $0$。`
+                  : `幂次 $${n}$ 是奇数，所以 $${den}$ 在 $${a}$ 左侧为负、右侧为正，并趋于 $0$。`,
+              ],
+              [
+                "Follow each side",
+                "分别看两侧",
+                even
+                  ? `The fraction has the sign of $${c}$ on both sides and grows without bound, so both sides go to $${infL(c)}$. Adding $${b}$ changes nothing, and the limit is $${infL(c)}$.`
+                  : `The fraction goes to $${infL(-c)}$ from the left and $${infL(c)}$ from the right. The sides disagree, so the limit does not exist.`,
+                even
+                  ? `分式在两侧都与 $${c}$ 同号且无界增大，所以两侧都趋于 $${infL(c)}$。加上 $${b}$ 不改变什么，极限是 $${infL(c)}$。`
+                  : `分式从左侧趋于 $${infL(-c)}$，从右侧趋于 $${infL(c)}$。两侧不一致，所以极限不存在。`,
+              ],
+            ],
+            [
+              `Evaluate the function on both sides of $x = ${a}$:\n\n${table}\n\n${even ? `Both sides are large and ${word(c)[0]}.` : `The left values are large and ${word(-c)[0]}, the right values large and ${word(c)[0]}.`}`,
+              `计算函数在 $x = ${a}$ 两侧的值：\n\n${table}\n\n${even ? `两侧的值都很大且为${word(c)[1]}。` : `左侧的值很大且为${word(-c)[1]}，右侧的值很大且为${word(c)[1]}。`}`,
+            ],
+          ),
+        ),
+        reasons,
       );
     },
   ),
@@ -336,8 +619,8 @@ const trigAtMultiplesOfPi = point(
   "trigonometric-limits-at-any-multiple-of-pi",
   ["Trigonometric limits at any multiple of pi", "在 $\\pi$ 的任意整数倍处的三角极限"],
   [
-    "Sine and cosine are continuous, so a limit is a value, and periodicity gives the value at any multiple of $\\pi$: $\\sin k\\pi = 0$ and $\\cos k\\pi = (-1)^{k}$. An odd multiple gives $-1$ and an even one gives $1$, also for negative $k$.",
-    "正弦和余弦连续，所以极限就是函数值，周期性给出 $\\pi$ 任意整数倍处的值：$\\sin k\\pi = 0$，$\\cos k\\pi = (-1)^{k}$。奇数倍得 $-1$，偶数倍得 $1$，$k$ 为负时也一样。",
+    "Sine and cosine are continuous, so a limit is a value, and periodicity gives the value at any multiple of $\\pi$: $\\sin k\\pi = 0$ and $\\cos k\\pi = (-1)^{k}$. An odd multiple gives $-1$ and an even one gives $1$, also for negative $k$.\n\nFor example, $\\lim_{x \\to 3\\pi} (2\\sin x + 5\\cos x) = 2 \\cdot 0 + 5 \\cdot (-1) = -5$.\n\nCheck: at $x = 3\\pi + 0.01$ the expression is about $-5.020$, and at $x = 3\\pi - 0.01$ about $-4.980$.\n\n> **Watch out.** $\\cos k\\pi$ depends only on whether $k$ is even or odd; it is never $k$ itself, and $\\cos(-3\\pi) = -1$ like $\\cos 3\\pi$.",
+    "正弦和余弦连续，所以极限就是函数值，周期性给出 $\\pi$ 任意整数倍处的值：$\\sin k\\pi = 0$，$\\cos k\\pi = (-1)^{k}$。奇数倍得 $-1$，偶数倍得 $1$，$k$ 为负时也一样。\n\n例如 $\\lim_{x \\to 3\\pi} (2\\sin x + 5\\cos x) = 2 \\cdot 0 + 5 \\cdot (-1) = -5$。\n\n检验：$x = 3\\pi + 0.01$ 时表达式约为 $-5.020$，$x = 3\\pi - 0.01$ 时约为 $-4.980$。\n\n> **注意。** $\\cos k\\pi$ 只取决于 $k$ 的奇偶，而不是 $k$ 本身；$\\cos(-3\\pi) = -1$，与 $\\cos 3\\pi$ 一样。",
   ],
   (rng) => {
     const k = rng.pick([-5, -4, -3, -2, 2, 3, 4, 5, 6, 7]);
@@ -347,14 +630,36 @@ const trigAtMultiplesOfPi = point(
     const f = poly([a, "\\sin x"], [b, "\\cos x"], [c, ""]);
     const cos = k % 2 === 0 ? 1 : -1;
     const answer = b * cos + c;
+    const shifts = [-0.1, -0.01, 0.01, 0.1];
+    const table = valueTable(
+      shifts.map((d) => k * Math.PI + d),
+      [["f(x)", (x) => a * Math.sin(x) + b * Math.cos(x) + c]],
+      shifts.map((d) => `${k}\\pi ${d < 0 ? "-" : "+"} ${Math.abs(d)}`),
+    );
     return ask(
       [`Find $\\lim_{x \\to ${k}\\pi} \\left(${f}\\right)$.`, `求 $\\lim_{x \\to ${k}\\pi} \\left(${f}\\right)$。`],
       answer,
       [-b * cos + c, a + c, a * cos + c, a + b + c],
-      [
-        `$\\sin(${k}\\pi) = 0$ and, since $${k}$ is ${cos > 0 ? "even" : "odd"}, $\\cos(${k}\\pi) = ${cos}$. Substituting gives $${paren(b)} \\cdot ${paren(cos)} + ${paren(c)} = ${answer}$.`,
-        `$\\sin(${k}\\pi) = 0$；$${k}$ 是${cos > 0 ? "偶数" : "奇数"}，所以 $\\cos(${k}\\pi) = ${cos}$。代入得 $${paren(b)} \\cdot ${paren(cos)} + ${paren(c)} = ${answer}$。`,
-      ],
+      walk(
+        [
+          [
+            "Find the values at the point",
+            "求该点处的值",
+            `$\\sin(${k}\\pi) = 0$ and, since $${k}$ is ${cos > 0 ? "even" : "odd"}, $\\cos(${k}\\pi) = ${cos}$.`,
+            `$\\sin(${k}\\pi) = 0$；$${k}$ 是${cos > 0 ? "偶数" : "奇数"}，所以 $\\cos(${k}\\pi) = ${cos}$。`,
+          ],
+          [
+            "Substitute",
+            "代入",
+            `Sine and cosine are continuous, so the limit is the value:\n\n$$${paren(a)} \\cdot 0 + ${paren(b)} \\cdot ${paren(cos)} + ${paren(c)} = ${answer}$$`,
+            `正弦和余弦连续，所以极限就是函数值：\n\n$$${paren(a)} \\cdot 0 + ${paren(b)} \\cdot ${paren(cos)} + ${paren(c)} = ${answer}$$`,
+          ],
+        ],
+        [
+          `Write $f(x)$ for the expression and evaluate it near $x = ${k}\\pi$:\n\n${table}\n\nThe values close in on $${answer}$ from both sides.`,
+          `记这个表达式为 $f(x)$，在 $x = ${k}\\pi$ 附近计算它的值：\n\n${table}\n\n函数值从两侧逼近 $${answer}$。`,
+        ],
+      ),
     );
   },
 );
@@ -364,8 +669,8 @@ const reciprocalTrigFarOut = {
     "reciprocal-trigonometric-limits-away-from-the-first-period",
     ["Reciprocal limits away from the first period", "第一个周期以外的倒数三角极限"],
     [
-      "Away from its asymptotes a reciprocal trigonometric function is continuous, so its limit is its value, which comes from the sine or cosine it is built on: $\\sec k\\pi = (-1)^{k}$, $\\csc\\left(\\frac{\\pi}{2} + k\\pi\\right) = (-1)^{k}$, and $\\cot\\left(\\frac{\\pi}{2} + k\\pi\\right) = 0$.",
-      "在渐近线以外，倒数三角函数连续，所以极限就是函数值，它由相应的正弦或余弦决定：$\\sec k\\pi = (-1)^{k}$，$\\csc\\left(\\frac{\\pi}{2} + k\\pi\\right) = (-1)^{k}$，$\\cot\\left(\\frac{\\pi}{2} + k\\pi\\right) = 0$。",
+      "Away from its asymptotes a reciprocal trigonometric function is continuous, so its limit is its value, which comes from the sine or cosine it is built on: $\\sec k\\pi = (-1)^{k}$, $\\csc\\left(\\frac{\\pi}{2} + k\\pi\\right) = (-1)^{k}$, and $\\cot\\left(\\frac{\\pi}{2} + k\\pi\\right) = 0$.\n\nFor example, $\\cos 3\\pi = -1$, so $\\lim_{x \\to 3\\pi} (2\\sec x + 1) = 2 \\cdot (-1) + 1 = -1$.\n\nCheck: at $x = 3\\pi + 0.01$, $\\sec x \\approx -1.00005$, and the expression is about $-1.000$.\n\n> **Watch out.** At $\\frac{\\pi}{2} + k\\pi$ the cotangent is $0$, since its numerator $\\cos x$ is $0$ there; the asymptotes of $\\cot x$ are where $\\sin x = 0$.",
+      "在渐近线以外，倒数三角函数连续，所以极限就是函数值，它由相应的正弦或余弦决定：$\\sec k\\pi = (-1)^{k}$，$\\csc\\left(\\frac{\\pi}{2} + k\\pi\\right) = (-1)^{k}$，$\\cot\\left(\\frac{\\pi}{2} + k\\pi\\right) = 0$。\n\n例如 $\\cos 3\\pi = -1$，所以 $\\lim_{x \\to 3\\pi} (2\\sec x + 1) = 2 \\cdot (-1) + 1 = -1$。\n\n检验：$x = 3\\pi + 0.01$ 时 $\\sec x \\approx -1.00005$，表达式约为 $-1.000$。\n\n> **注意。** 在 $\\frac{\\pi}{2} + k\\pi$ 处余切是 $0$，因为它的分子 $\\cos x$ 在那里是 $0$；$\\cot x$ 的渐近线在 $\\sin x = 0$ 的地方。",
     ],
     (rng) => {
       const k = rng.pick([1, 2, 3, 4, 5, -1, -2, -3]);
@@ -376,20 +681,51 @@ const reciprocalTrigFarOut = {
       const piText = k === 1 ? "\\pi" : k === -1 ? "-\\pi" : `${k}\\pi`;
       const half = Math.abs(2 * k + 1);
       const at = kind === "sec" ? piText : `${k < 0 ? "-" : ""}\\frac{${half}\\pi}{2}`;
+      const x0 = kind === "sec" ? k * Math.PI : ((2 * k + 1) * Math.PI) / 2;
       const value = kind === "cot" ? 0 : sign;
       const answer = a * value + c;
       const where = kind === "sec" ? `\\cos\\left(${at}\\right)` : `\\sin\\left(${at}\\right)`;
-      const also = kind === "cot" ? `\\cos\\left(${at}\\right) = 0$ and $` : "";
-      const alsoZh = kind === "cot" ? `\\cos\\left(${at}\\right) = 0$，$` : "";
+      const also = kind === "cot" ? ` and $\\cos\\left(${at}\\right) = 0$` : "";
+      const alsoZh = kind === "cot" ? `，$\\cos\\left(${at}\\right) = 0$` : "";
+      const top = kind === "cot" ? "0" : "1";
       const f = poly([a, `\\${kind} x`], [c, ""]);
+      const g = (x: number) => a * (kind === "sec" ? 1 / Math.cos(x) : kind === "csc" ? 1 / Math.sin(x) : Math.cos(x) / Math.sin(x)) + c;
+      const shifts = [-0.1, -0.01, 0.01, 0.1];
+      const table = valueTable(
+        shifts.map((d) => x0 + d),
+        [["f(x)", g]],
+        shifts.map((d) => `${at} ${d < 0 ? "-" : "+"} ${Math.abs(d)}`),
+      );
       return ask(
         [`Find $\\lim_{x \\to ${at}} \\left(${f}\\right)$.`, `求 $\\lim_{x \\to ${at}} \\left(${f}\\right)$。`],
         answer,
         [a + c, -a + c, c - a * value, a * sign * -1 + c, c],
-        [
-          `Here $${also}${where} = ${sign}$, so $\\${kind}\\left(${at}\\right) = ${value}$. The function is continuous there, and the limit is $${paren(a)} \\cdot ${paren(value)} + ${paren(c)} = ${answer}$.`,
-          `这里 $${alsoZh}${where} = ${sign}$，所以 $\\${kind}\\left(${at}\\right) = ${value}$。函数在该点连续，极限是 $${paren(a)} \\cdot ${paren(value)} + ${paren(c)} = ${answer}$。`,
-        ],
+        walk(
+          [
+            [
+              `Find the ${kind === "sec" ? "cosine" : "sine"}`,
+              kind === "sec" ? "求余弦" : "求正弦",
+              `At $x = ${at}$, $${where} = ${sign}$${also}.`,
+              `在 $x = ${at}$ 处，$${where} = ${sign}$${alsoZh}。`,
+            ],
+            [
+              "Find the reciprocal function",
+              "求倒数三角函数的值",
+              `So $\\${kind}\\left(${at}\\right) = \\frac{${top}}{${sign}} = ${value}$.`,
+              `所以 $\\${kind}\\left(${at}\\right) = \\frac{${top}}{${sign}} = ${value}$。`,
+            ],
+            [
+              "Substitute",
+              "代入",
+              `The function is continuous there, so the limit is\n\n$$${paren(a)} \\cdot ${paren(value)} + ${paren(c)} = ${answer}$$`,
+              `函数在该点连续，所以极限是\n\n$$${paren(a)} \\cdot ${paren(value)} + ${paren(c)} = ${answer}$$`,
+            ],
+          ],
+          [
+            `Write $f(x)$ for the expression and evaluate it near $x = ${at}$:\n\n${table}\n\nThe values close in on $${answer}$ from both sides.`,
+            `记这个表达式为 $f(x)$，在 $x = ${at}$ 附近计算它的值：\n\n${table}\n\n函数值从两侧逼近 $${answer}$。`,
+          ],
+        ),
       );
     },
   ),
