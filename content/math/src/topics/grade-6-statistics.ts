@@ -4,7 +4,8 @@ import { type Axis, dec, dotPlot, Q } from "@ga/subject-math";
 import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
 import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 
-import { choiceProblem, isTerminating, numberProblem, steps, yesNo } from "../problems.ts";
+import { choiceProblem, isTerminating, numberProblem, steps, why, yesNo } from "../problems.ts";
+import { chart, intTicks, tenthTicks } from "./figure-charts.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
 
 // 6th Grade Math: statistical questions, measures of center and spread, outliers, frequency tables,
@@ -418,6 +419,29 @@ const measurements: readonly Measurements[] = [
   },
 ];
 
+/** meanBars draws values as bars with a dashed line at their mean, the level every bar would reach if the total were shared out evenly. */
+function meanBars(values: readonly number[], level: number, yTicks: readonly (readonly [number, string])[], alt: Text): Figure {
+  const top = yTicks[yTicks.length - 1]?.[0] ?? Math.max(...values);
+  const r = (v: number) => Math.round(v * 10) / 10;
+  return {
+    svg: chart(
+      [0, values.length],
+      [0, top],
+      values.map((_, i) => [i + 0.5, String(i + 1)] as const),
+      yTicks,
+      (x, y) =>
+        values
+          .map(
+            (v, i) =>
+              `<rect class="accent" fill="currentColor" fill-opacity="0.35" x="${x(i + 0.2)}" y="${y(v)}" width="${r(x(i + 0.8) - x(i + 0.2))}" height="${r(y(0) - y(v))}"/>`,
+          )
+          .join("") +
+        `<line x1="${x(0)}" y1="${y(level)}" x2="${x(values.length)}" y2="${y(level)}" stroke-width="2" stroke-dasharray="6 4"/>`,
+    ),
+    alt,
+  };
+}
+
 export const theMeanOfADataSet: TopicDef = {
   ...topic(
     "the-mean-of-a-data-set",
@@ -433,8 +457,17 @@ export const theMeanOfADataSet: TopicDef = {
         id: "the-mean-of-measurements",
         title: t("The mean of measurements", "测量数据的平均数"),
         explanation: t(
-          "Rainfall of $1.2, 0.4, 2.0, 0.6$ inches on four days: the sum is $4.2$, so the mean is $4.2 \\div 4 = 1.05$ inches. Line up the decimal points when adding, and divide by the number of values, not by the number of nonzero ones or one less.",
-          "四天的降雨量是 $1.2, 0.4, 2.0, 0.6$ 英寸：和是 $4.2$，所以平均数是 $4.2 \\div 4 = 1.05$ 英寸。相加时小数点要对齐，并且要除以数据的个数。",
+          "Rain fell on four days: $1.2, 0.4, 2.0, 0.6$ inches. The **mean** is the level every bar would reach if the rain were shared out evenly.\n\nFirst add the values: $1.2 + 0.4 + 2.0 + 0.6 = 4.2$. Then divide by the number of days: $4.2 \\div 4 = 1.05$ inches.\n\nCheck: $4 \\times 1.05 = 4.2$, the sum again. Also, $1.05$ lies between the smallest value, $0.4$, and the largest, $2.0$.\n\n> **Watch out.** Divide by the number of values, $4$. Dividing by $3$ gives $1.4$, which is too big.",
+          "某地四天的降雨量是 $1.2, 0.4, 2.0, 0.6$ 英寸。**平均数**就是把雨量平均分配后，每根条形都能达到的高度。\n\n先把各数相加：$1.2 + 0.4 + 2.0 + 0.6 = 4.2$。再除以天数：$4.2 \\div 4 = 1.05$ 英寸。\n\n检验：$4 \\times 1.05 = 4.2$，又得到了总和。而且 $1.05$ 在最小值 $0.4$ 和最大值 $2.0$ 之间。\n\n> **注意。** 要除以数据的个数 $4$。除以 $3$ 得 $1.4$，太大了。",
+        ),
+        figure: meanBars(
+          [1.2, 0.4, 2.0, 0.6],
+          1.05,
+          tenthTicks(0, 20, 5),
+          t(
+            "Bar chart of the rainfall on days 1 to 4: 1.2, 0.4, 2.0 and 0.6 inches. A dashed line at 1.05 inches marks the mean.",
+            "第 1 到 4 天降雨量的条形图：1.2、0.4、2.0 和 0.6 英寸。1.05 英寸处的虚线表示平均数。",
+          ),
         ),
         generate(rng) {
           const ctx = rng.pick(measurements);
@@ -445,14 +478,38 @@ export const theMeanOfADataSet: TopicDef = {
             if (!clean(m)) continue;
             const total = Q.of(sum(xs), 10);
             const med = median(xs).div(Q.of(10));
+            const fewer = total.div(Q.of(n - 1));
+            const added = tenthsList(xs).replaceAll(", ", " + ");
+            const lo = dec(Q.of(Math.min(...xs), 10));
+            const hi = dec(Q.of(Math.max(...xs), 10));
             return numberProblem({
               prompt: t(`${ctx.en(n)} $${tenthsList(xs)}$. Find the mean.`, `${ctx.zh(n)} $${tenthsList(xs)}$。求平均数。`),
               answer: m,
               form: "decimal",
-              wrong: [total, ...[total.div(Q.of(n - 1)), med].filter(isTerminating)],
+              mistakes: [
+                why(total, `This is the sum. Divide it by the number of values, $${n}$.`, `这是总和。还要除以数据的个数 $${n}$。`),
+                ...(isTerminating(fewer)
+                  ? [
+                      why(
+                        fewer,
+                        `This divides by $${n - 1}$. There are $${n}$ values, so divide by $${n}$.`,
+                        `这除以了 $${n - 1}$。一共有 $${n}$ 个数据，要除以 $${n}$。`,
+                      ),
+                    ]
+                  : []),
+                ...(isTerminating(med) && !med.eq(total) && !(isTerminating(fewer) && med.eq(fewer))
+                  ? [
+                      why(
+                        med,
+                        "This is the median, the middle value. The mean shares the sum out evenly.",
+                        "这是中位数，即中间的数。平均数是把总和平均分。",
+                      ),
+                    ]
+                  : []),
+              ],
               solution: t(
-                `Add the ${n} values and divide by ${n}:${steps(`\\frac{${tenthsList(xs).replaceAll(", ", " + ")}}{${n}} = \\frac{${dec(total)}}{${n}} = ${dec(m)}`)}`,
-                `把 ${n} 个数相加，再除以 ${n}：${steps(`\\frac{${tenthsList(xs).replaceAll(", ", " + ")}}{${n}} = \\frac{${dec(total)}}{${n}} = ${dec(m)}`)}`,
+                `**Step 1: Add the values.**${steps(`${added} = ${dec(total)}`)}**Step 2: Divide by the number of values, ${n}.**${steps(`${dec(total)} \\div ${n} = ${dec(m)}`)}**Check.** Multiply back. The mean times ${n} gives the sum again:${steps(`${n} \\times ${dec(m)} = ${dec(total)}`)}Also, $${dec(m)}$ lies between the smallest value, $${lo}$, and the largest, $${hi}$.`,
+                `**第一步：把各数相加。**${steps(`${added} = ${dec(total)}`)}**第二步：除以数据的个数 ${n}。**${steps(`${dec(total)} \\div ${n} = ${dec(m)}`)}**检验。**反过来乘。平均数乘 ${n}，又得到总和：${steps(`${n} \\times ${dec(m)} = ${dec(total)}`)}而且 $${dec(m)}$ 在最小值 $${lo}$ 和最大值 $${hi}$ 之间。`,
               ),
             });
           }
@@ -462,41 +519,80 @@ export const theMeanOfADataSet: TopicDef = {
         id: "the-total-from-the-mean",
         title: t("The total from the mean", "由平均数求总和"),
         explanation: t(
-          "If the mean of $n$ values is $m$, the values add up to $n \\times m$: it is as if every value were equal to the mean. Leo ran a mean of $3.5$ km a day for $6$ days, so he ran $6 \\times 3.5 = 21$ km in all.",
-          "如果 $n$ 个数据的平均数是 $m$，它们的和就是 $n \\times m$：相当于每个数据都等于平均数。Leo 连续 $6$ 天平均每天跑 $3.5$ 千米，所以他一共跑了 $6 \\times 3.5 = 21$ 千米。",
+          "Leo ran on $6$ days. He ran a mean of $3.5$ km a day. If the runs were shared out evenly, every bar would reach $3.5$. So the total is $6 \\times 3.5 = 21$ km.\n\nCheck: his runs were $3, 4, 2.5, 5, 3, 3.5$ km. They add up to $21$ km too.\n\n> **Watch out.** The mean, $3.5$, is not the total. Multiply it by the number of days, $6$.",
+          "Leo 跑了 $6$ 天，平均每天跑 $3.5$ 千米。如果把每天跑的路程平均分配，每根条形都会达到 $3.5$。所以总路程是 $6 \\times 3.5 = 21$ 千米。\n\n检验：他每天跑的是 $3, 4, 2.5, 5, 3, 3.5$ 千米，加起来也是 $21$ 千米。\n\n> **注意。** 平均数 $3.5$ 不是总和。要乘天数 $6$。",
+        ),
+        figure: meanBars(
+          [3, 4, 2.5, 5, 3, 3.5],
+          3.5,
+          intTicks(0, 5),
+          t(
+            "Bar chart of Leo's runs on days 1 to 6: 3, 4, 2.5, 5, 3 and 3.5 km. A dashed line at 3.5 km marks the mean.",
+            "Leo 第 1 到 6 天跑步路程的条形图：3、4、2.5、5、3 和 3.5 千米。3.5 千米处的虚线表示平均数。",
+          ),
         ),
         generate(rng) {
           const story = rng.pick([
-            (n: number, m: string) =>
-              t(
-                `A basketball team scored a mean of $${m}$ points per game over $${n}$ games. How many points did the team score in all?`,
-                `一支篮球队 $${n}$ 场比赛平均每场得 $${m}$ 分。这支球队一共得了多少分？`,
-              ),
-            (n: number, m: string) =>
-              t(
-                `${names[n % names.length]} ran a mean of $${m}$ kilometers a day for $${n}$ days. How many kilometers is that in all?`,
-                `${names[n % names.length]} 连续 $${n}$ 天平均每天跑 $${m}$ 千米。一共跑了多少千米？`,
-              ),
-            (n: number, m: string) =>
-              t(
-                `Over $${n}$ weeks, a class collected a mean of $${m}$ kilograms of paper per week for recycling. How many kilograms did the class collect in all?`,
-                `一个班 $${n}$ 周里平均每周收集 $${m}$ 千克废纸用于回收。这个班一共收集了多少千克？`,
-              ),
+            {
+              lo: 300,
+              hi: 1100,
+              text: (n: number, m: string) =>
+                t(
+                  `A basketball team scored a mean of $${m}$ points per game over $${n}$ games. How many points did the team score in all?`,
+                  `一支篮球队 $${n}$ 场比赛平均每场得 $${m}$ 分。这支球队一共得了多少分？`,
+                ),
+            },
+            {
+              lo: 15,
+              hi: 120,
+              text: (n: number, m: string) =>
+                t(
+                  `${names[n % names.length]} ran a mean of $${m}$ kilometers a day for $${n}$ days. How many kilometers is that in all?`,
+                  `${names[n % names.length]} 连续 $${n}$ 天平均每天跑 $${m}$ 千米。一共跑了多少千米？`,
+                ),
+            },
+            {
+              lo: 15,
+              hi: 400,
+              text: (n: number, m: string) =>
+                t(
+                  `Over $${n}$ weeks, a class collected a mean of $${m}$ kilograms of paper per week for recycling. How many kilograms did the class collect in all?`,
+                  `一个班 $${n}$ 周里平均每周收集 $${m}$ 千克废纸用于回收。这个班一共收集了多少千克？`,
+                ),
+            },
           ]);
           const decimal = rng.bool(0.6);
           for (;;) {
             const n = rng.int(3, 9);
-            const m10 = rng.int(15, 400);
+            const m10 = rng.int(story.lo, story.hi);
             if ((m10 * n) % 10 !== 0 || (m10 % 10 !== 0) !== decimal) continue;
             const m = Q.of(m10, 10);
+            const total = m.mul(Q.of(n));
+            const split = m.div(Q.of(n));
             return numberProblem({
-              prompt: story(n, dec(m)),
-              answer: m.mul(Q.of(n)),
+              prompt: story.text(n, dec(m)),
+              answer: total,
               form: "decimal",
-              wrong: [m, m.add(Q.of(n)), ...[m.div(Q.of(n))].filter(clean)],
+              mistakes: [
+                why(
+                  m,
+                  `This is the mean, the amount for one. Multiply it by $${n}$ to get the total.`,
+                  `这是平均数，即一份的量。乘 $${n}$ 才是总和。`,
+                ),
+                why(m.add(Q.of(n)), `This adds $${n}$. The total is the mean times $${n}$.`, `这是加了 $${n}$。总和是平均数乘 $${n}$。`),
+                ...(clean(split)
+                  ? [
+                      why(
+                        split,
+                        `This divides by $${n}$. The mean is already the total divided by $${n}$, so multiply instead.`,
+                        `这是除以了 $${n}$。平均数已经是总和除以 $${n}$ 的结果，所以要乘。`,
+                      ),
+                    ]
+                  : []),
+              ],
               solution: t(
-                `The mean is the total divided by ${n}, so the total is the mean times ${n}:${steps(`${n} \\times ${dec(m)} = ${dec(m.mul(Q.of(n)))}`)}`,
-                `平均数等于总和除以 ${n}，所以总和等于平均数乘 ${n}：${steps(`${n} \\times ${dec(m)} = ${dec(m.mul(Q.of(n)))}`)}`,
+                `**Step 1: Turn the mean around.** The mean is the total divided by ${n}, so the total is the mean times ${n}.\n\n**Step 2: Multiply.**${steps(`${n} \\times ${dec(m)} = ${dec(total)}`)}**Check.** Share the total out again. Dividing by ${n} gives back the mean:${steps(`${dec(total)} \\div ${n} = ${dec(m)}`)}`,
+                `**第一步：把平均数的关系倒过来。**平均数等于总和除以 ${n}，所以总和等于平均数乘 ${n}。\n\n**第二步：相乘。**${steps(`${n} \\times ${dec(m)} = ${dec(total)}`)}**检验。**把总和重新平均分。除以 ${n}，又得到平均数：${steps(`${dec(total)} \\div ${n} = ${dec(m)}`)}`,
               ),
             });
           }
@@ -506,8 +602,17 @@ export const theMeanOfADataSet: TopicDef = {
         id: "adding-a-value",
         title: t("Adding a value", "加入一个数据"),
         explanation: t(
-          "The mean of $4$ quiz scores is $80$, and a fifth score of $90$ is added. The four scores add up to $4 \\times 80 = 320$, so the five add up to $320 + 90 = 410$, and the new mean is $410 \\div 5 = 82$. It is not $\\frac{80 + 90}{2} = 85$: that would count the new score as much as the four old ones together.",
-          "$4$ 次小测验成绩的平均数是 $80$，又加入第五个成绩 $90$。原来四个成绩之和是 $4 \\times 80 = 320$，五个成绩之和是 $320 + 90 = 410$，新的平均数是 $410 \\div 5 = 82$。不是 $\\frac{80 + 90}{2} = 85$：那样算等于把新成绩看得和原来四个成绩加起来一样重。",
+          "Mia's $4$ quiz scores have a mean of $80$. Then she scores $90$. What is the new mean?\n\nThe old scores add up to $4 \\times 80 = 320$. Add the new score: $320 + 90 = 410$. Now there are $5$ scores, so the new mean is $410 \\div 5 = 82$.\n\nCheck: the old scores, shared out at $80$ each, sit $82 - 80 = 2$ below the new mean. Together that is $4 \\times 2 = 8$ below. The new score is $90 - 82 = 8$ above. Above and below balance.\n\n> **Watch out.** Do not average $80$ and $90$ to get $85$. That counts one new score as much as all four old ones.",
+          "Mia $4$ 次小测验成绩的平均数是 $80$。后来她又考了 $90$ 分。新的平均数是多少？\n\n原来的成绩之和是 $4 \\times 80 = 320$。加上新成绩：$320 + 90 = 410$。现在有 $5$ 个成绩，所以新的平均数是 $410 \\div 5 = 82$。\n\n检验：原来的成绩平均分后每个是 $80$，比新平均数低 $82 - 80 = 2$，四个一共低 $4 \\times 2 = 8$。新成绩比新平均数高 $90 - 82 = 8$。高出的和低出的正好抵消。\n\n> **注意。** 不要把 $80$ 和 $90$ 平均得到 $85$。那样等于把一个新成绩看得和原来四个成绩加起来一样重。",
+        ),
+        figure: meanBars(
+          [75, 85, 70, 90, 90],
+          82,
+          intTicks(0, 100, 20),
+          t(
+            "Bar chart of Mia's five quiz scores: 75, 85, 70 and 90, then the new score 90. A dashed line at 82 marks the mean of all five.",
+            "Mia 五次小测验成绩的条形图：75、85、70 和 90，然后是新成绩 90。82 处的虚线表示五个成绩的平均数。",
+          ),
         ),
         generate(rng) {
           for (;;) {
@@ -519,6 +624,20 @@ export const theMeanOfADataSet: TopicDef = {
             const x = m2.mul(Q.of(n + 1)).sub(Q.of(n * m));
             if (!x.isInteger() || x.cmp(Q.of(40)) < 0 || x.cmp(Q.of(100)) > 0) continue;
             const xs = Number(x.n);
+            const total = n * m + xs;
+            const wrongCount = Q.of(total, n);
+            const up = d > 0;
+            const gap = up ? m2.sub(Q.of(m)) : Q.of(m).sub(m2);
+            const away = up ? x.sub(m2) : m2.sub(x);
+            const balance = up
+              ? t(
+                  `The old scores, shared out at $${m}$ each, sit $${dec(gap)}$ below the new mean, so together they are $${n} \\times ${dec(gap)} = ${dec(gap.mul(Q.of(n)))}$ below. The new score is $${xs} - ${dec(m2)} = ${dec(away)}$ above. Above and below balance.`,
+                  `原来的成绩平均分后每个是 $${m}$，比新平均数低 $${dec(gap)}$，一共低 $${n} \\times ${dec(gap)} = ${dec(gap.mul(Q.of(n)))}$。新成绩比新平均数高 $${xs} - ${dec(m2)} = ${dec(away)}$。高出的和低出的正好抵消。`,
+                )
+              : t(
+                  `The old scores, shared out at $${m}$ each, sit $${dec(gap)}$ above the new mean, so together they are $${n} \\times ${dec(gap)} = ${dec(gap.mul(Q.of(n)))}$ above. The new score is $${dec(m2)} - ${xs} = ${dec(away)}$ below. Above and below balance.`,
+                  `原来的成绩平均分后每个是 $${m}$，比新平均数高 $${dec(gap)}$，一共高 $${n} \\times ${dec(gap)} = ${dec(gap.mul(Q.of(n)))}$。新成绩比新平均数低 $${dec(m2)} - ${xs} = ${dec(away)}$。高出的和低出的正好抵消。`,
+                );
             return numberProblem({
               prompt: t(
                 `The mean of $${n}$ quiz scores is $${m}$. One more score, $${xs}$, is added. What is the mean of all $${n + 1}$ scores?`,
@@ -526,16 +645,36 @@ export const theMeanOfADataSet: TopicDef = {
               ),
               answer: m2,
               form: "decimal",
-              wrong: [Q.of(m + xs, 2), ...[Q.of(n * m + xs, n)].filter(clean), n * m + xs],
+              mistakes: [
+                why(
+                  Q.of(m + xs, 2),
+                  `This averages the old mean with the new score. That counts one score as much as all $${n}$ old ones.`,
+                  `这是把原平均数和新成绩再平均。那样等于把一个成绩看得和原来 $${n}$ 个成绩加起来一样重。`,
+                ),
+                ...(clean(wrongCount)
+                  ? [
+                      why(
+                        wrongCount,
+                        `This divides by $${n}$. With the new score there are $${n + 1}$ scores.`,
+                        `这除以了 $${n}$。加上新成绩一共有 $${n + 1}$ 个成绩。`,
+                      ),
+                    ]
+                  : []),
+                why(Q.of(total), `This is the new total. Divide it by $${n + 1}$.`, `这是新的总和。还要除以 $${n + 1}$。`),
+              ],
               solution: t(
-                `The ${n} scores add up to $${n} \\times ${m} = ${n * m}$, so all ${n + 1} add up to $${n * m} + ${xs} = ${n * m + xs}$:${steps(`\\frac{${n * m + xs}}{${n + 1}} = ${dec(m2)}`)}`,
-                `原来 ${n} 个成绩之和是 $${n} \\times ${m} = ${n * m}$，所以全部 ${n + 1} 个成绩之和是 $${n * m} + ${xs} = ${n * m + xs}$：${steps(`\\frac{${n * m + xs}}{${n + 1}} = ${dec(m2)}`)}`,
+                `**Step 1: Find the old total.**${steps(`${n} \\times ${m} = ${n * m}`)}**Step 2: Add the new score.**${steps(`${n * m} + ${xs} = ${total}`)}**Step 3: Divide by the new count, ${n + 1}.**${steps(`${total} \\div ${n + 1} = ${dec(m2)}`)}**Check.** ${balance.en}`,
+                `**第一步：求原来的总和。**${steps(`${n} \\times ${m} = ${n * m}`)}**第二步：加上新成绩。**${steps(`${n * m} + ${xs} = ${total}`)}**第三步：除以新的个数 ${n + 1}。**${steps(`${total} \\div ${n + 1} = ${dec(m2)}`)}**检验。**${balance["zh-CN"]}`,
               ),
             });
           }
         },
       },
     ],
+  ),
+  intro: t(
+    "Four friends picked apples. Maya picked $3$, Leo $5$, Ana $6$ and Sam $2$. They put all the apples in one basket and share them out evenly. There are $3 + 5 + 6 + 2 = 16$ apples, so each friend gets $16 \\div 4 = 4$. This even share is the **mean**.\n\nCheck: $4$ friends with $4$ apples each have $4 \\times 4 = 16$ apples, the same basket.\n\nIn this lesson we find the mean of measurements, find a total from the mean, and find the new mean when one more value is added.",
+    "四个朋友去摘苹果。Maya 摘了 $3$ 个，Leo 摘了 $5$ 个，Ana 摘了 $6$ 个，Sam 摘了 $2$ 个。他们把苹果都放进一个篮子，再平均分。一共有 $3 + 5 + 6 + 2 = 16$ 个苹果，所以每人分到 $16 \\div 4 = 4$ 个。这个平均分得的数就是**平均数**。\n\n检验：$4$ 个朋友每人 $4$ 个，一共 $4 \\times 4 = 16$ 个，正好是那一篮。\n\n本课我们求测量数据的平均数，由平均数求总和，并求加入一个数据后的新平均数。",
   ),
   encompasses: [{ topic: "mean-of-a-data-set", weight: 1 }],
 };
