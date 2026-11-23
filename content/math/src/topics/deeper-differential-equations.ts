@@ -9,6 +9,7 @@ import { differentialEquationsDrawings1 } from "../explanation-drawings-differen
 import { multivariableDrawings8 } from "../explanation-drawings-multivariable-8.ts";
 
 import { lowestTerms, numberProblem } from "../problems.ts";
+import { type Step, walked } from "./calculus-i-differentiation.ts";
 
 /** nonzero picks a nonzero integer from -r to r. */
 const nonzero = (rng: Rng, r: number) => rng.pick([...Array(2 * r + 1).keys()].map((i) => i - r).filter((i) => i !== 0));
@@ -86,29 +87,87 @@ const bifurcationValue: KnowledgePointDef = {
   },
 };
 
+/** Reason is a wrong value with its reason in English and Chinese. */
+type Reason = readonly [value: number | Q, en: string, zh: string];
+
+/** labelled is a labelled step of a worked solution with what it says and its displayed lines. */
+const labelled = (title: readonly [string, string], en: string, zh: string, ...lines: string[]): Step => [
+  [title[0], title[1]],
+  t(en, zh),
+  lines,
+];
+
+/** explainedNumber asks for a number, explains it in labelled steps with a check, and keeps the first reason for each wrong value. */
+function explainedNumber(
+  prompt: readonly [string, string],
+  answer: number | Q,
+  parts: readonly Step[],
+  check: readonly [string, string],
+  reasons: readonly Reason[],
+  form?: "integer",
+) {
+  const q = (v: number | Q) => (typeof v === "number" ? Q.of(v) : v);
+  const right = q(answer);
+  const kept = reasons.filter((r, i) => !q(r[0]).eq(right) && reasons.findIndex((s) => q(s[0]).eq(q(r[0]))) === i);
+  return numberProblem({
+    prompt: t(prompt[0], prompt[1]),
+    answer: right,
+    ...(form ? { form } : {}),
+    mistakes: kept.map(([value, en, zh]) => ({ value: q(value), why: t(en, zh) })),
+    solution: walked(parts, t(check[0], check[1])),
+  });
+}
+
 const largestHarvest: KnowledgePointDef = {
   id: "the-largest-sustainable-harvest",
   title: t("The largest sustainable harvest", "最大的可持续收获量"),
   explanation: t(
-    "With a constant harvest $h$, logistic growth becomes $P' = rP\\left(1 - \\frac{P}{K}\\right) - h$. A steady population needs an equilibrium, so $h$ must not exceed the largest natural growth rate. That peak is at $P = \\frac{K}{2}$, where the rate is $\\frac{rK}{4}$. A larger harvest drives the population to extinction.",
-    "有固定收获量 $h$ 时，逻辑斯蒂增长变成 $P' = rP\\left(1 - \\frac{P}{K}\\right) - h$。要维持稳定的种群，必须存在平衡解，所以 $h$ 不能超过自然增长率的最大值。这个峰值在 $P = \\frac{K}{2}$ 处，增长率是 $\\frac{rK}{4}$。收获更多，种群就会灭绝。",
+    "With a constant harvest $h$, logistic growth becomes $P' = rP\\left(1 - \\frac{P}{K}\\right) - h$. A steady population needs an equilibrium, so $h$ must not exceed the largest natural growth rate. That peak is at $P = \\frac{K}{2}$, where the rate is $\\frac{rK}{4}$. A larger harvest drives the population to extinction. For $P' = 0.4P\\left(1 - \\frac{P}{1000}\\right) - h$ the peak is at $P = 500$, with rate $0.4 \\cdot 500 \\cdot \\frac{1}{2} = 100$, so the largest harvest is $h = 100$.\n\nCheck: with $h = 100$ the right side is $-\\frac{1}{2500}(P - 500)^{2}$, which is zero only at $P = 500$; any larger $h$ makes it negative for every $P$.\n\n> **Watch out.** The rate at the peak is $\\frac{rK}{4}$, not $\\frac{rK}{2}$: the factor $1 - \\frac{P}{K}$ is $\\frac{1}{2}$ there.",
+    "有固定收获量 $h$ 时，逻辑斯蒂增长变成 $P' = rP\\left(1 - \\frac{P}{K}\\right) - h$。要维持稳定的种群，必须存在平衡解，所以 $h$ 不能超过自然增长率的最大值。这个峰值在 $P = \\frac{K}{2}$ 处，增长率是 $\\frac{rK}{4}$。收获更多，种群就会灭绝。对 $P' = 0.4P\\left(1 - \\frac{P}{1000}\\right) - h$，峰值在 $P = 500$ 处，增长率为 $0.4 \\cdot 500 \\cdot \\frac{1}{2} = 100$，所以最大收获量是 $h = 100$。\n\n检验：$h = 100$ 时右边是 $-\\frac{1}{2500}(P - 500)^{2}$，只在 $P = 500$ 处为零；$h$ 再大一点，右边对每个 $P$ 都为负。\n\n> **注意。** 峰值处的增长率是 $\\frac{rK}{4}$ 而不是 $\\frac{rK}{2}$：那里的因子 $1 - \\frac{P}{K}$ 等于 $\\frac{1}{2}$。",
   ),
   generate(rng) {
     const r = rng.int(1, 9);
     const K = 100 * rng.int(1, 20);
     const answer = Q.of(r * K, 40);
-    return numberProblem({
-      prompt: t(
+    const lead = Q.of(-r, 10 * K);
+    return explainedNumber(
+      [
         `A population satisfies $P' = ${decimal(r)}P\\left(1 - \\frac{P}{${K}}\\right) - h$, with a constant harvest $h$. What is the largest $h$ for which an equilibrium exists?`,
         `种群满足 $P' = ${decimal(r)}P\\left(1 - \\frac{P}{${K}}\\right) - h$，其中 $h$ 是固定的收获量。存在平衡解的最大 $h$ 是多少？`,
-      ),
+      ],
       answer,
-      wrong: [Q.of(r * K, 20), Q.of(r * K, 10), Q.of(K, 4)],
-      solution: t(
-        `Natural growth peaks at $P = ${K / 2}$, with rate $${decimal(r)} \\cdot ${K / 2} \\cdot \\frac{1}{2} = ${answer.toLatex()}$. An equilibrium exists only if $h$ is at most this.`,
-        `自然增长率在 $P = ${K / 2}$ 处达到峰值，增长率是 $${decimal(r)} \\cdot ${K / 2} \\cdot \\frac{1}{2} = ${answer.toLatex()}$。只有 $h$ 不超过它时才存在平衡解。`,
-      ),
-    });
+      [
+        labelled(
+          ["Find the peak of natural growth", "找自然增长的峰值"],
+          `An equilibrium needs $${decimal(r)}P\\left(1 - \\frac{P}{${K}}\\right) = h$ for some $P$. The natural growth is a parabola in $P$ with zeros $0$ and $${K}$, so it peaks halfway, at $P = ${K / 2}$.`,
+          `平衡解要求对某个 $P$ 有 $${decimal(r)}P\\left(1 - \\frac{P}{${K}}\\right) = h$。自然增长是 $P$ 的抛物线，零点为 $0$ 和 $${K}$，所以在正中间 $P = ${K / 2}$ 处达到峰值。`,
+        ),
+        labelled(
+          ["Evaluate the peak", "求峰值"],
+          "The largest harvest is the growth there:",
+          "最大收获量就是那里的增长率：",
+          `${decimal(r)} \\cdot ${K / 2}\\left(1 - \\frac{${K / 2}}{${K}}\\right) = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `With $h = ${answer.toLatex()}$ the right side is $${poly([lead, `\\left(P - ${K / 2}\\right)^{2}`])}$, which is zero only at $P = ${K / 2}$, so there is exactly one equilibrium; a larger $h$ makes the right side negative for every $P$.`,
+        `$h = ${answer.toLatex()}$ 时右边是 $${poly([lead, `\\left(P - ${K / 2}\\right)^{2}`])}$，只在 $P = ${K / 2}$ 处为零，所以恰有一个平衡解；$h$ 再大，右边对每个 $P$ 都为负。`,
+      ],
+      [
+        [
+          Q.of(r * K, 20),
+          "This leaves out the factor $1 - \\frac{P}{K} = \\frac{1}{2}$ at the peak",
+          "这里漏掉了峰值处的因子 $1 - \\frac{P}{K} = \\frac{1}{2}$",
+        ],
+        [
+          Q.of(r * K, 10),
+          "This is $rK$, as if growth stayed exponential up to $P = K$; logistic growth is zero there",
+          "这是 $rK$，好像增长一直是指数式的直到 $P = K$；逻辑斯蒂增长在那里为零",
+        ],
+        [Q.of(K, 4), `This leaves out the rate $${decimal(r)}$`, `这里漏掉了增长率 $${decimal(r)}$`],
+        [K / 2, `$${K / 2}$ is the population at the peak, not the growth rate there`, `$${K / 2}$ 是峰值处的种群数量，不是那里的增长率`],
+      ],
+    );
   },
 };
 
@@ -116,8 +175,8 @@ const initialFromTwoReadings: KnowledgePointDef = {
   id: "an-initial-value-from-two-readings",
   title: t("An initial value from two readings", "由两次读数求初始值"),
   explanation: t(
-    "Exponential change multiplies by the same factor over equal times. If two readings are one interval apart, their quotient is that factor. Dividing the first reading by the factor steps back one interval. When the readings are at times $T$ and $2T$, this gives $A(0) = \\frac{A(T)^2}{A(2T)}$.",
-    "指数变化在相等的时间内乘以相同的因子。如果两次读数相隔一段时间，它们的商就是这个因子。第一次读数除以这个因子，就回退了一段时间。读数在 $T$ 和 $2T$ 时，得 $A(0) = \\frac{A(T)^2}{A(2T)}$。",
+    "Exponential change multiplies by the same factor over equal times. If two readings are one interval apart, their quotient is that factor. Dividing the first reading by the factor steps back one interval. When the readings are at times $T$ and $2T$, this gives $A(0) = \\frac{A(T)^2}{A(2T)}$. For example, readings $12$ at $t = 5$ and $36$ at $t = 10$ have factor $3$, so $A(0) = 12 \\div 3 = 4$.\n\nCheck: $\\frac{12^{2}}{36} = 4$, and $4 \\to 12 \\to 36$ multiplies by $3$ each interval.\n\n> **Watch out.** Equal times give equal ratios, not equal differences: stepping back by $36 - 12 = 24$ would give $-12$.",
+    "指数变化在相等的时间内乘以相同的因子。如果两次读数相隔一段时间，它们的商就是这个因子。第一次读数除以这个因子，就回退了一段时间。读数在 $T$ 和 $2T$ 时，得 $A(0) = \\frac{A(T)^2}{A(2T)}$。例如在 $t = 5$ 时读数为 $12$，在 $t = 10$ 时为 $36$，因子是 $3$，所以 $A(0) = 12 \\div 3 = 4$。\n\n检验：$\\frac{12^{2}}{36} = 4$，而且 $4 \\to 12 \\to 36$ 每段都乘以 $3$。\n\n> **注意。** 相等的时间对应相等的比，而不是相等的差：按差 $36 - 12 = 24$ 回退会得到 $-12$。",
   ),
   generate(rng) {
     const A0 = 4 * rng.int(1, 9);
@@ -125,18 +184,45 @@ const initialFromTwoReadings: KnowledgePointDef = {
     const T = rng.int(1, 10);
     const u = Q.of(A0).mul(r);
     const v = u.mul(r);
-    return numberProblem({
-      prompt: t(
+    return explainedNumber(
+      [
         `A quantity satisfies $A' = kA$. It equals $${u.toLatex()}$ at $t = ${T}$ and $${v.toLatex()}$ at $t = ${2 * T}$. Find $A(0)$.`,
         `某个量满足 $A' = kA$。它在 $t = ${T}$ 时等于 $${u.toLatex()}$，在 $t = ${2 * T}$ 时等于 $${v.toLatex()}$。求 $A(0)$。`,
-      ),
-      answer: A0,
-      wrong: [u.add(u).sub(v), u, v],
-      solution: t(
-        `Each interval of length $${T}$ multiplies the amount by $${r.toLatex()}$. Going back one interval from the first reading gives $${u.toLatex()} \\div ${r.toLatex()} = ${A0}$.`,
-        `每段长为 $${T}$ 的时间使这个量乘以 $${r.toLatex()}$。从第一次读数回退一段，得 $${u.toLatex()} \\div ${r.toLatex()} = ${A0}$。`,
-      ),
-    });
+      ],
+      A0,
+      [
+        labelled(
+          ["Find the factor", "求因子"],
+          `The solutions of $A' = kA$ multiply by the same factor over each interval of length $${T}$:`,
+          `$A' = kA$ 的解在每段长为 $${T}$ 的时间内乘以相同的因子：`,
+          `\\frac{${v.toLatex()}}{${u.toLatex()}} = ${r.toLatex()}`,
+        ),
+        labelled(
+          ["Step back one interval", "回退一段"],
+          "Divide the first reading by the factor:",
+          "第一次读数除以这个因子：",
+          `A(0) = ${u.toLatex()} \\div ${r.toLatex()} = ${A0}`,
+        ),
+      ],
+      [
+        `By the formula, $\\frac{A(${T})^{2}}{A(${2 * T})} = \\frac{${u.mul(u).toLatex()}}{${v.toLatex()}} = ${A0}$. And $A(t) = ${A0} \\cdot ${r.sign() > 0 && r.toLatex().includes("frac") ? `\\left(${r.toLatex()}\\right)` : r.toLatex()}^{${T === 1 ? "t" : `t/${T}`}}$ solves $A' = kA$ with $k = ${T === 1 ? `\\ln ${r.toLatex()}` : `\\frac{\\ln ${r.toLatex()}}{${T}}`}$, giving $${u.toLatex()}$ at $t = ${T}$ and $${v.toLatex()}$ at $t = ${2 * T}$.`,
+        `按公式，$\\frac{A(${T})^{2}}{A(${2 * T})} = \\frac{${u.mul(u).toLatex()}}{${v.toLatex()}} = ${A0}$。而 $A(t) = ${A0} \\cdot ${r.sign() > 0 && r.toLatex().includes("frac") ? `\\left(${r.toLatex()}\\right)` : r.toLatex()}^{${T === 1 ? "t" : `t/${T}`}}$ 满足 $A' = kA$，其中 $k = ${T === 1 ? `\\ln ${r.toLatex()}` : `\\frac{\\ln ${r.toLatex()}}{${T}}`}$，它在 $t = ${T}$ 时为 $${u.toLatex()}$，在 $t = ${2 * T}$ 时为 $${v.toLatex()}$。`,
+      ],
+      [
+        [
+          u.add(u).sub(v),
+          "This steps back by the difference, as if the change were linear; exponential change has equal ratios",
+          "这是按差回退，好像变化是线性的；指数变化的是比相等",
+        ],
+        [u, `This is the reading at $t = ${T}$, one interval after the start`, `这是 $t = ${T}$ 时的读数，比起点晚一段`],
+        [
+          Q.of(A0).div(r),
+          "This steps back two intervals from the first reading, to before the start",
+          "这是从第一次读数回退了两段，退到了起点之前",
+        ],
+        [v, `This is the reading at $t = ${2 * T}$`, `这是 $t = ${2 * T}$ 时的读数`],
+      ],
+    );
   },
 };
 
@@ -144,8 +230,8 @@ const halfLifeFromReadings: KnowledgePointDef = {
   id: "a-half-life-from-two-amounts",
   title: t("A half-life from two amounts", "由两个量求半衰期"),
   explanation: t(
-    "If an amount falls by an exact power of two, count how many halvings that takes. The elapsed time divided by this count is the half-life. No logarithm is needed in this case, and the size of the starting amount does not matter, only the ratio of the two amounts.",
-    "如果一个量恰好减少到二的幂分之一，就数一数减半了多少次。经过的时间除以这个次数就是半衰期。这种情况不需要对数，初始量的大小也不重要，只有两个量的比值才有关系。",
+    "If an amount falls by an exact power of two, count how many halvings that takes. The elapsed time divided by this count is the half-life. No logarithm is needed in this case, and the size of the starting amount does not matter, only the ratio of the two amounts. For example, $96$ g falls to $3$ g in $20$ years: $\\frac{96}{3} = 32 = 2^{5}$, five halvings, so the half-life is $4$ years.\n\nCheck: $96 \\to 48 \\to 24 \\to 12 \\to 6 \\to 3$ is five steps of $4$ years, $20$ years in all.\n\n> **Watch out.** Divide by the number of halvings, $5$, not by the ratio $32$.",
+    "如果一个量恰好减少到二的幂分之一，就数一数减半了多少次。经过的时间除以这个次数就是半衰期。这种情况不需要对数，初始量的大小也不重要，只有两个量的比值才有关系。例如 $96$ g 在 $20$ 年内降到 $3$ g：$\\frac{96}{3} = 32 = 2^{5}$，减半五次，所以半衰期是 $4$ 年。\n\n检验：$96 \\to 48 \\to 24 \\to 12 \\to 6 \\to 3$ 共五步，每步 $4$ 年，合计 $20$ 年。\n\n> **注意。** 要除以减半的次数 $5$，而不是除以比值 $32$。",
   ),
   generate(rng) {
     const H = rng.int(2, 12);
@@ -153,19 +239,48 @@ const halfLifeFromReadings: KnowledgePointDef = {
     const end = rng.int(1, 9);
     const start = end * 2 ** n;
     const time = n * H;
-    return numberProblem({
-      prompt: t(
+    const chain = Array.from({ length: n + 1 }, (_, i) => `${start / 2 ** i}`).join(" \\to ");
+    return explainedNumber(
+      [
         `A sample decays exponentially from ${start} g to ${end} g in ${time} years. What is its half-life, in years?`,
         `某样品从 ${start} g 按指数衰减到 ${end} g，用了 ${time} 年。它的半衰期是多少年？`,
-      ),
-      answer: H,
-      form: "integer",
-      wrong: [Math.round(time / 2), time, n],
-      solution: t(
-        `The ratio is $\\frac{${start}}{${end}} = 2^{${n}}$, so the sample halved $${n}$ times. The half-life is $\\frac{${time}}{${n}} = ${H}$ years.`,
-        `比值是 $\\frac{${start}}{${end}} = 2^{${n}}$，所以样品减半了 $${n}$ 次。半衰期是 $\\frac{${time}}{${n}} = ${H}$ 年。`,
-      ),
-    });
+      ],
+      H,
+      [
+        labelled(["Count the halvings", "数减半的次数"], "", "", `\\frac{${start}}{${end}} = ${2 ** n} = 2^{${n}}`),
+        labelled(
+          ["Share out the time", "平分时间"],
+          `The $${n}$ halvings take equal times:`,
+          `$${n}$ 次减半所用的时间相等：`,
+          `\\frac{${time}}{${n}} = ${H}`,
+        ),
+      ],
+      [
+        `Halve step by step: $${chain}$ is $${n}$ steps of $${H}$ years, $${time}$ years in all.`,
+        `逐次减半：$${chain}$ 共 $${n}$ 步，每步 $${H}$ 年，合计 $${time}$ 年。`,
+      ],
+      (
+        [
+          [
+            time / 2,
+            `Half the time is not the half-life: the sample halved $${n}$ times, not twice`,
+            `一半的时间不是半衰期：样品减半了 $${n}$ 次，而不是两次`,
+          ],
+          [time, `This is the whole time, in which the sample halved $${n}$ times`, `这是全部时间，在这段时间里样品减半了 $${n}$ 次`],
+          [n, `$${n}$ is the number of halvings, not the time each one takes`, `$${n}$ 是减半的次数，不是每次所用的时间`],
+          ...(time % 2 ** n === 0
+            ? [
+                [
+                  time / 2 ** n,
+                  `This divides by the ratio $${2 ** n}$; divide by the number of halvings, $${n}$`,
+                  `这里除以了比值 $${2 ** n}$；应当除以减半的次数 $${n}$`,
+                ] as const,
+              ]
+            : []),
+        ] as Reason[]
+      ).filter((r) => Number.isInteger(r[0])),
+      "integer",
+    );
   },
 };
 
@@ -173,8 +288,8 @@ const logisticAfterGrowthFactor: KnowledgePointDef = {
   id: "a-logistic-value-from-the-exponential-factor",
   title: t("A logistic value from the exponential factor", "由指数因子求逻辑斯蒂值"),
   explanation: t(
-    "The logistic solution is $P(t) = \\frac{K}{1 + Ae^{-rt}}$, with $A = \\frac{K - P_0}{P_0}$. The time enters only through $e^{rt}$. So if this factor is known, the population can be found without knowing $r$ or $t$ separately. Early growth is close to exponential, but the denominator holds it below $K$.",
-    "逻辑斯蒂解是 $P(t) = \\frac{K}{1 + Ae^{-rt}}$，其中 $A = \\frac{K - P_0}{P_0}$。时间只通过 $e^{rt}$ 出现。所以只要知道这个因子，不必分别知道 $r$ 和 $t$ 就能求出种群数量。初期增长接近指数，但分母使它始终低于 $K$。",
+    "The logistic solution is $P(t) = \\frac{K}{1 + Ae^{-rt}}$, with $A = \\frac{K - P_0}{P_0}$. The time enters only through $e^{rt}$. So if this factor is known, the population can be found without knowing $r$ or $t$ separately. Early growth is close to exponential, but the denominator holds it below $K$. For $P_0 = 20$ and $K = 100$, $A = 4$, and when $e^{rt} = 4$ the population is $\\frac{100}{1 + \\frac{4}{4}} = 50$.\n\nCheck: the ratio $\\frac{P}{K - P}$ is multiplied by $e^{rt}$. It starts at $\\frac{20}{80} = \\frac{1}{4}$ and becomes $\\frac{50}{50} = 1$, four times as much.\n\n> **Watch out.** The factor appears as $e^{-rt} = \\frac{1}{4}$ in the denominator, not as $4$.",
+    "逻辑斯蒂解是 $P(t) = \\frac{K}{1 + Ae^{-rt}}$，其中 $A = \\frac{K - P_0}{P_0}$。时间只通过 $e^{rt}$ 出现。所以只要知道这个因子，不必分别知道 $r$ 和 $t$ 就能求出种群数量。初期增长接近指数，但分母使它始终低于 $K$。对 $P_0 = 20$、$K = 100$，$A = 4$；当 $e^{rt} = 4$ 时，种群数量为 $\\frac{100}{1 + \\frac{4}{4}} = 50$。\n\n检验：比值 $\\frac{P}{K - P}$ 会乘以 $e^{rt}$。它起初是 $\\frac{20}{80} = \\frac{1}{4}$，后来变成 $\\frac{50}{50} = 1$，正好是四倍。\n\n> **注意。** 这个因子在分母中以 $e^{-rt} = \\frac{1}{4}$ 出现，而不是 $4$。",
   ),
   generate(rng) {
     const P0 = 10 * rng.int(1, 9);
@@ -182,18 +297,54 @@ const logisticAfterGrowthFactor: KnowledgePointDef = {
     const K = P0 * (1 + A);
     const m = rng.int(2, 9);
     const answer = Q.of(K * m, m + A);
-    return numberProblem({
-      prompt: t(
+    const odds = answer.div(Q.of(K).sub(answer));
+    return explainedNumber(
+      [
         `A population follows the logistic equation with $P(0) = ${P0}$ and carrying capacity ${K}. Find $P$ at the time when $e^{rt} = ${m}$.`,
         `种群服从逻辑斯蒂方程，$P(0) = ${P0}$，环境容量是 ${K}。求 $e^{rt} = ${m}$ 时的 $P$。`,
-      ),
+      ],
       answer,
-      wrong: [Q.of(P0 * m), Q.of(K, m), Q.of(K, 1 + A * m)],
-      solution: t(
-        `Here $A = \\frac{${K} - ${P0}}{${P0}} = ${A}$. So $P = \\frac{${K}}{1 + \\frac{${A}}{${m}}} = ${answer.toLatex()}$.`,
-        `这里 $A = \\frac{${K} - ${P0}}{${P0}} = ${A}$。所以 $P = \\frac{${K}}{1 + \\frac{${A}}{${m}}} = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        labelled(
+          ["Find A", "求 A"],
+          "In $P = \\frac{K}{1 + Ae^{-rt}}$ the constant comes from the start:",
+          "在 $P = \\frac{K}{1 + Ae^{-rt}}$ 中，常数由初值决定：",
+          `A = \\frac{${K} - ${P0}}{${P0}} = ${A}`,
+        ),
+        labelled(
+          ["Put in the factor", "代入因子"],
+          `When $e^{rt} = ${m}$, $e^{-rt} = \\frac{1}{${m}}$:`,
+          `当 $e^{rt} = ${m}$ 时，$e^{-rt} = \\frac{1}{${m}}$：`,
+          `P = \\frac{${K}}{1 + \\frac{${A}}{${m}}} = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `The ratio $\\frac{P}{K - P}$ of a logistic solution is multiplied by $e^{rt}$. It starts at $\\frac{${P0}}{${K - P0}} = ${Q.of(P0, K - P0).toLatex()}$ and here is $\\frac{${answer.toLatex()}}{${Q.of(K).sub(answer).toLatex()}} = ${odds.toLatex()}$, exactly $${m}$ times as much.`,
+        `逻辑斯蒂解的比值 $\\frac{P}{K - P}$ 会乘以 $e^{rt}$。它起初是 $\\frac{${P0}}{${K - P0}} = ${Q.of(P0, K - P0).toLatex()}$，这里是 $\\frac{${answer.toLatex()}}{${Q.of(K).sub(answer).toLatex()}} = ${odds.toLatex()}$，正好是 $${m}$ 倍。`,
+      ],
+      [
+        [
+          Q.of(P0 * m),
+          "This is pure exponential growth; the logistic denominator holds the population below the capacity",
+          "这是纯指数增长；逻辑斯蒂解的分母使种群始终低于环境容量",
+        ],
+        [
+          Q.of(K, 1 + A * m),
+          `This uses $e^{-rt} = ${m}$; the time enters as $e^{-rt} = \\frac{1}{${m}}$`,
+          `这里用了 $e^{-rt} = ${m}$；时间应以 $e^{-rt} = \\frac{1}{${m}}$ 出现`,
+        ],
+        [
+          Q.of(K, m),
+          "This divides the capacity by the factor; the factor divides $A$ in the denominator",
+          "这是用因子去除环境容量；因子应当去除分母中的 $A$",
+        ],
+        [
+          K,
+          "The capacity is approached only as $t \\to \\infty$, not at a finite time",
+          "环境容量只在 $t \\to \\infty$ 时才趋近，有限时刻达不到",
+        ],
+      ],
+    );
   },
 };
 
@@ -1746,25 +1897,56 @@ const blowUpTime: KnowledgePointDef = {
   id: "the-time-a-separable-solution-blows-up",
   title: t("The time a separable solution blows up", "可分离方程的解爆破的时间"),
   explanation: t(
-    "A nonlinear equation can have a solution that stops existing, even though its right side is perfectly smooth. Separating $y' = ky^2$ gives $-\\frac{1}{y} = kt + C$, so $y$ is a constant divided by an expression that falls to zero at a finite time. As $t$ approaches that time, $y$ grows without bound, and the solution has no continuation past it. Nothing in the formula for the equation itself warns of this time; it depends on the initial value.",
-    "即使右边完全光滑，非线性方程的解也可能不再存在。分离 $y' = ky^2$ 得 $-\\frac{1}{y} = kt + C$，所以 $y$ 是一个常数除以在有限时刻降到零的式子。当 $t$ 趋近这个时刻，$y$ 无限增大，解无法延续到它之后。方程本身的公式并不提示这个时刻，它取决于初值。",
+    "A nonlinear equation can have a solution that stops existing, even though its right side is perfectly smooth. Separating $y' = ky^2$ gives $-\\frac{1}{y} = kt + C$, so $y$ is a constant divided by an expression that falls to zero at a finite time. As $t$ approaches that time, $y$ grows without bound, and the solution has no continuation past it. Nothing in the formula for the equation itself warns of this time; it depends on the initial value. For $y' = y^{2}$ with $y(0) = 2$: $\\frac{1}{y} = \\frac{1}{2} - t$, which reaches zero at $t = \\frac{1}{2}$.\n\nCheck: $y = \\frac{2}{1 - 2t}$ has $y' = \\frac{4}{(1 - 2t)^{2}} = y^{2}$ and $y(0) = 2$, and its denominator vanishes at $t = \\frac{1}{2}$.\n\n> **Watch out.** The larger the initial value, the sooner the solution blows up: the time is $\\frac{1}{k\\,y(0)}$, not $\\frac{1}{k}$.",
+    "即使右边完全光滑，非线性方程的解也可能不再存在。分离 $y' = ky^2$ 得 $-\\frac{1}{y} = kt + C$，所以 $y$ 是一个常数除以在有限时刻降到零的式子。当 $t$ 趋近这个时刻，$y$ 无限增大，解无法延续到它之后。方程本身的公式并不提示这个时刻，它取决于初值。对 $y' = y^{2}$，$y(0) = 2$：$\\frac{1}{y} = \\frac{1}{2} - t$，在 $t = \\frac{1}{2}$ 时变为零。\n\n检验：$y = \\frac{2}{1 - 2t}$ 满足 $y' = \\frac{4}{(1 - 2t)^{2}} = y^{2}$ 和 $y(0) = 2$，它的分母在 $t = \\frac{1}{2}$ 时为零。\n\n> **注意。** 初值越大，解爆破得越早：这个时刻是 $\\frac{1}{k\\,y(0)}$，而不是 $\\frac{1}{k}$。",
   ),
   generate(rng) {
     const k = rng.int(1, 6);
     const a = rng.int(1, 6);
     const answer = Q.of(1, k * a);
-    return numberProblem({
-      prompt: t(
-        `The solution of $y' = ${k === 1 ? "" : k}y^2$, $y(0) = ${a}$, grows without bound as $t$ approaches a time $T > 0$. Find $T$.`,
-        `$y' = ${k === 1 ? "" : k}y^2$，$y(0) = ${a}$ 的解在 $t$ 趋近某时刻 $T > 0$ 时无限增大。求 $T$。`,
-      ),
+    const kk = k === 1 ? "" : `${k}`;
+    const ka = k * a === 1 ? "" : `${k * a}`;
+    return explainedNumber(
+      [
+        `The solution of $y' = ${kk}y^2$, $y(0) = ${a}$, grows without bound as $t$ approaches a time $T > 0$. Find $T$.`,
+        `$y' = ${kk}y^2$，$y(0) = ${a}$ 的解在 $t$ 趋近某时刻 $T > 0$ 时无限增大。求 $T$。`,
+      ],
       answer,
-      wrong: [Q.of(k * a), Q.of(1, k), Q.of(1, a), Q.of(2, k * a), Q.of(1, k * a + 1), answer.neg()],
-      solution: t(
-        `Separating gives $\\frac{1}{y} = ${Q.of(1, a).toLatex()} - ${k === 1 ? "" : k}t$. The right side reaches zero at $t = ${answer.toLatex()}$.`,
-        `分离变量得 $\\frac{1}{y} = ${Q.of(1, a).toLatex()} - ${k === 1 ? "" : k}t$。右边在 $t = ${answer.toLatex()}$ 时变为零。`,
-      ),
-    });
+      [
+        labelled(
+          ["Separate and integrate", "分离变量并积分"],
+          `Divide by $y^{2}$ and integrate, then put in $y(0) = ${a}$:`,
+          `两边除以 $y^{2}$ 再积分，然后代入 $y(0) = ${a}$：`,
+          `-\\frac{1}{y} = ${kk}t + C, \\quad C = -${Q.of(1, a).toLatex()}`,
+          `\\frac{1}{y} = ${Q.of(1, a).toLatex()} - ${kk}t`,
+        ),
+        labelled(
+          ["Find where it fails", "找出解失效的时刻"],
+          "$y$ grows without bound where $\\frac{1}{y}$ reaches zero:",
+          "$\\frac{1}{y}$ 变为零时 $y$ 无限增大：",
+          `${Q.of(1, a).toLatex()} - ${kk}t = 0 \\quad\\Rightarrow\\quad T = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `Substitute back $y = \\frac{${a}}{1 - ${ka}t}$: $y' = \\frac{${k * a * a}}{(1 - ${ka}t)^{2}} = ${kk}y^{2}$, the equation, and $y(0) = ${a}$. Its denominator is zero at $t = ${answer.toLatex()}$.`,
+        `代回检验 $y = \\frac{${a}}{1 - ${ka}t}$：$y' = \\frac{${k * a * a}}{(1 - ${ka}t)^{2}} = ${kk}y^{2}$，正是原方程，且 $y(0) = ${a}$。它的分母在 $t = ${answer.toLatex()}$ 时为零。`,
+      ],
+      [
+        [Q.of(k * a), "This is upside down: $T = \\frac{1}{k\\,y(0)}$", "颠倒了：$T = \\frac{1}{k\\,y(0)}$"],
+        [
+          Q.of(1, k),
+          `This leaves out the initial value; starting at $${a}$ makes $\\frac{1}{y}$ start at $${Q.of(1, a).toLatex()}$`,
+          `这里漏掉了初值；从 $${a}$ 出发，$\\frac{1}{y}$ 的初值是 $${Q.of(1, a).toLatex()}$`,
+        ],
+        [
+          Q.of(1, a),
+          `This leaves out $k = ${k}$, the rate at which $\\frac{1}{y}$ falls`,
+          `这里漏掉了 $k = ${k}$，即 $\\frac{1}{y}$ 下降的速率`,
+        ],
+        [Q.of(2, k * a), "Integrating $y^{-2}$ gives $-y^{-1}$, with no factor of $2$", "$y^{-2}$ 的积分是 $-y^{-1}$，没有因子 $2$"],
+        [answer.neg(), "The solution grows forward in time, so the blow-up time is positive", "解随时间向前增长，所以爆破时刻是正的"],
+      ],
+    );
   },
 };
 
@@ -1908,8 +2090,8 @@ const semistableLimit: KnowledgePointDef = {
   id: "the-limit-near-a-semistable-equilibrium",
   title: t("The limit near a semistable equilibrium", "半稳定平衡点附近的极限"),
   explanation: t(
-    "At a double root of the right side of an autonomous equation, $y'$ does not change sign. So solutions on one side approach that equilibrium, while solutions on the other side move away from it. Such an equilibrium is called semistable. To find a limit, look at the sign of $y'$ at the starting value, then follow the solution in that direction until it reaches the first equilibrium, which it can never cross.",
-    "在自治方程右边的二重根处，$y'$ 不变号。所以一侧的解趋向这个平衡点，另一侧的解离开它。这样的平衡点称为半稳定的。要求极限，先看 $y'$ 在初值处的符号，然后沿这个方向跟随解，直到它到达第一个平衡点，它永远无法越过这个点。",
+    "At a double root of the right side of an autonomous equation, $y'$ does not change sign. So solutions on one side approach that equilibrium, while solutions on the other side move away from it. Such an equilibrium is called semistable. To find a limit, look at the sign of $y'$ at the starting value, then follow the solution in that direction until it reaches the first equilibrium, which it can never cross. For $y' = (y - 1)^{2}(4 - y)$ with $y(0) = 0$: $y' = 1 \\cdot 4 = 4 > 0$, so $y$ rises to the double root $1$ and stops there.\n\nCheck: the constant $y = 1$ makes both sides $0$, so it is a solution that the rising solution cannot cross, and between $0$ and $1$ the right side has no zero, so the solution keeps rising toward $1$.\n\n> **Watch out.** A semistable equilibrium attracts from one side only: from $y(0) = 2$ the slope is $1 \\cdot 2 > 0$, and the solution moves away from $1$, up to $4$.",
+    "在自治方程右边的二重根处，$y'$ 不变号。所以一侧的解趋向这个平衡点，另一侧的解离开它。这样的平衡点称为半稳定的。要求极限，先看 $y'$ 在初值处的符号，然后沿这个方向跟随解，直到它到达第一个平衡点，它永远无法越过这个点。对 $y' = (y - 1)^{2}(4 - y)$，$y(0) = 0$：$y' = 1 \\cdot 4 = 4 > 0$，所以 $y$ 上升到二重根 $1$ 并停在那里。\n\n检验：常数 $y = 1$ 使两边都为 $0$，所以它是解，上升的解无法越过它；在 $0$ 和 $1$ 之间右边没有零点，所以解一直上升趋于 $1$。\n\n> **注意。** 半稳定平衡点只从一侧吸引：从 $y(0) = 2$ 出发，斜率为 $1 \\cdot 2 > 0$，解离开 $1$，上升到 $4$。",
   ),
   generate(rng) {
     const a = rng.int(-6, 3);
@@ -1920,21 +2102,53 @@ const semistableLimit: KnowledgePointDef = {
     const other = place === "below" ? b : a;
     const first = poly([1, "y"], [-a, ""]);
     const second = poly([b, ""], [-1, "y"]);
-    const sign = place === "above" ? "negative" : "positive";
-    const signZh = place === "above" ? "负" : "正";
-    return numberProblem({
-      prompt: t(
+    const slope = (y0 - a) ** 2 * (b - y0);
+    const up = slope > 0;
+    const at = (y: number) => `(${y} - ${inParens(a)})^{2}(${b} - ${inParens(y)})`;
+    return explainedNumber(
+      [
         `Let $y' = (${first})^2(${second})$ with $y(0) = ${y0}$. Find $\\lim_{t \\to \\infty} y(t)$.`,
         `设 $y' = (${first})^2(${second})$，$y(0) = ${y0}$。求 $\\lim_{t \\to \\infty} y(t)$。`,
-      ),
+      ],
       answer,
-      form: "integer",
-      wrong: [other, y0, a + b, answer + 1],
-      solution: t(
-        `The equilibria are $${a}$ and $${b}$. At $y = ${y0}$, the derivative is ${sign}, so $y$ moves towards $${answer}$ and stops there.`,
-        `平衡点是 $${a}$ 和 $${b}$。在 $y = ${y0}$ 处导数为${signZh}，所以 $y$ 向 $${answer}$ 移动并停在那里。`,
-      ),
-    });
+      [
+        labelled(
+          ["Find the equilibria", "求平衡点"],
+          `The right side is zero at $y = ${a}$, a double root, and at $y = ${b}$.`,
+          `右边在 $y = ${a}$（二重根）和 $y = ${b}$ 处为零。`,
+        ),
+        labelled(["Read the sign at the start", "看初值处的符号"], "", "", `y' = ${at(y0)} = ${slope} ${up ? ">" : "<"} 0`),
+        labelled(
+          ["Follow the solution", "跟随解"],
+          `So $y$ ${up ? "rises" : "falls"} from $${y0}$ to the first equilibrium in that direction, $${answer}$, and stops there.`,
+          `所以 $y$ 从 $${y0}$ ${up ? "上升" : "下降"}到这个方向上的第一个平衡点 $${answer}$，并停在那里。`,
+        ),
+      ],
+      [
+        `Substitute the constant $y = ${answer}$: $y' = 0$ and the right side is $${at(answer)} = 0$, so it is a solution that the moving solution cannot cross. Between $${y0}$ and $${answer}$ the right side has no zero, so the solution keeps ${up ? "rising" : "falling"} toward $${answer}$.`,
+        `代入常数 $y = ${answer}$：$y' = 0$，右边 $${at(answer)} = 0$，所以它是解，运动的解无法越过它。在 $${y0}$ 和 $${answer}$ 之间右边没有零点，所以解一直${up ? "上升" : "下降"}趋于 $${answer}$。`,
+      ],
+      [
+        place === "between"
+          ? [
+              other,
+              `$y' > 0$ between the equilibria, so the solution moves up, away from $${a}$; it attracts only from below`,
+              `两个平衡点之间 $y' > 0$，所以解向上远离 $${a}$；它只从下方吸引`,
+            ]
+          : [
+              other,
+              `To reach $${other}$ the solution would have to cross the equilibrium $${answer}$, which it cannot`,
+              `要到达 $${other}$，解必须越过平衡点 $${answer}$，这是不可能的`,
+            ],
+        [
+          y0,
+          `The slope at the start is $${slope}$, not $0$, so the solution does not stay at $${y0}$`,
+          `起点处斜率为 $${slope}$，不是 $0$，所以解不会停在 $${y0}$`,
+        ],
+        [a + b, "This adds the two equilibria; the limit is one of them", "这是两个平衡点之和；极限是其中之一"],
+      ],
+      "integer",
+    );
   },
 };
 
@@ -1943,26 +2157,44 @@ const isoclineOfSlope: KnowledgePointDef = {
   figure: calculusDrawings5["analyzing-slope-fields-for-nonautonomous-differential-equations#the-isocline-of-a-given-slope"],
   title: t("The isocline of a given slope", "给定斜率的等斜线"),
   explanation: t(
-    "An isocline is the set of points where the slope field has one fixed value. Setting the right side of $y' = f(x, y)$ equal to a constant $m$ describes it, so no solving of the differential equation is needed. For a linear right side, each isocline is a straight line, and these lines are all parallel. Drawing a few of them, with short segments of the matching slope, is a fast way to sketch a field.",
-    "等斜线是斜率场取同一固定值的点集。令 $y' = f(x, y)$ 的右边等于常数 $m$ 就描述了它，所以不需要解微分方程。对线性的右边，每条等斜线都是直线，而且彼此平行。画出其中几条，并标上相应斜率的短线段，是快速勾画斜率场的方法。",
+    "An isocline is the set of points where the slope field has one fixed value. Setting the right side of $y' = f(x, y)$ equal to a constant $m$ describes it, so no solving of the differential equation is needed. For a linear right side, each isocline is a straight line, and these lines are all parallel. Drawing a few of them, with short segments of the matching slope, is a fast way to sketch a field. For $y' = x + 2y$ and slope $4$: $x + 2y = 4$, so $y = -\\frac{1}{2}x + 2$, with $y$-intercept $2$.\n\nCheck: at $(0, 2)$ the slope is $0 + 2 \\cdot 2 = 4$.\n\n> **Watch out.** The isocline's own slope, here $-\\frac{1}{2}$, is not the slope $4$ of the segments drawn on it.",
+    "等斜线是斜率场取同一固定值的点集。令 $y' = f(x, y)$ 的右边等于常数 $m$ 就描述了它，所以不需要解微分方程。对线性的右边，每条等斜线都是直线，而且彼此平行。画出其中几条，并标上相应斜率的短线段，是快速勾画斜率场的方法。对 $y' = x + 2y$ 和斜率 $4$：$x + 2y = 4$，所以 $y = -\\frac{1}{2}x + 2$，$y$ 轴截距为 $2$。\n\n检验：在 $(0, 2)$ 处斜率为 $0 + 2 \\cdot 2 = 4$。\n\n> **注意。** 等斜线本身的斜率（这里是 $-\\frac{1}{2}$）不是画在它上面的线段的斜率 $4$。",
   ),
   generate(rng) {
     const a = nonzero(rng, 6);
     const b = nonzero(rng, 6);
     const m = nonzero(rng, 9);
     const answer = Q.of(m, b);
-    return numberProblem({
-      prompt: t(
-        `For $y' = ${poly([a, "x"], [b, "y"])}$, the points where the slope field has slope $${m}$ form a line. Find its $y$-intercept.`,
-        `对 $y' = ${poly([a, "x"], [b, "y"])}$，斜率场中斜率为 $${m}$ 的点构成一条直线。求它的 $y$ 轴截距。`,
-      ),
+    const right = poly([a, "x"], [b, "y"]);
+    return explainedNumber(
+      [
+        `For $y' = ${right}$, the points where the slope field has slope $${m}$ form a line. Find its $y$-intercept.`,
+        `对 $y' = ${right}$，斜率场中斜率为 $${m}$ 的点构成一条直线。求它的 $y$ 轴截距。`,
+      ],
       answer,
-      wrong: [Q.of(m, a), Q.of(-m, b), Q.of(m), Q.of(m * b)],
-      solution: t(
-        `The line is $${poly([a, "x"], [b, "y"])} = ${m}$. Setting $x = 0$ gives $y = ${answer.toLatex()}$.`,
-        `这条直线是 $${poly([a, "x"], [b, "y"])} = ${m}$。令 $x = 0$，得 $y = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        labelled(["Set the slope", "令斜率为给定值"], "The isocline is where", "等斜线满足", `${right} = ${m}`),
+        labelled(["Solve for y", "解出 y"], "", "", `y = ${poly([Q.of(-a, b), "x"], [answer, ""])}`),
+      ],
+      [
+        `At $(0, ${answer.toLatex()})$ the slope is $${a} \\cdot 0 + ${inParens(b)} \\cdot ${answer.sign() < 0 ? `\\left(${answer.toLatex()}\\right)` : answer.toLatex()} = ${m}$, as required.`,
+        `在 $(0, ${answer.toLatex()})$ 处斜率为 $${a} \\cdot 0 + ${inParens(b)} \\cdot ${answer.sign() < 0 ? `\\left(${answer.toLatex()}\\right)` : answer.toLatex()} = ${m}$，符合要求。`,
+      ],
+      [
+        [
+          Q.of(m, a),
+          "This is the $x$-intercept, found by setting $y = 0$; the $y$-intercept sets $x = 0$",
+          "这是令 $y = 0$ 得到的 $x$ 轴截距；$y$ 轴截距要令 $x = 0$",
+        ],
+        [Q.of(-m, b), "A sign slipped when solving for $y$", "解出 $y$ 时符号出错了"],
+        [
+          Q.of(m),
+          `$${m}$ is the slope of the segments, not the intercept of the line they lie on`,
+          `$${m}$ 是线段的斜率，不是它们所在直线的截距`,
+        ],
+        [Q.of(m * b), `This multiplies by $${b}$; solve $${b}y = ${m}$ by dividing`, `这里乘了 $${b}$；解 $${b}y = ${m}$ 应当做除法`],
+      ],
+    );
   },
 };
 

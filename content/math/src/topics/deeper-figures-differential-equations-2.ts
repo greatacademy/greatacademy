@@ -2,14 +2,16 @@
 // solution curves of growth and circuit models, oscillators, solution pairs, straight-line solutions and the
 // trace-determinant plane. See `deeperFiguresDifferentialEquations2Points`.
 
-import type { KnowledgePointDef, Rng } from "@ga/content";
+import type { Figure, KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
 import type { PlaneMark, Point } from "@ga/subject-math";
 import { Q } from "@ga/subject-math";
 import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 import { differentialEquationsDrawings1 } from "../explanation-drawings-differential-equations-1.ts";
+import { explainedChoice, numberProblem } from "../problems.ts";
 
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
+import { type Step, walked } from "./calculus-i-differentiation.ts";
 import { chart, curvePath, intTicks, type Scale } from "./figure-charts.ts";
 import { drawn } from "./figure-reading-more.ts";
 
@@ -47,13 +49,59 @@ function rightSide(rng: Rng, count: number) {
   return { roots, f, figure };
 }
 
+/** Because is a wrong value or option with its reason in English and Chinese. */
+type Because<T> = readonly [wrong: T, en: string, zh: string];
+
+/** stepOf is a labelled step of a worked solution with what it says and its displayed lines. */
+const stepOf = (title: Pair, said: Pair, ...lines: string[]): Step => [title, t(...said), lines];
+
+/** figureNumber asks for a number read from a drawing, explained in labelled steps with a check, keeping the first reason for each wrong value. */
+function figureNumber(
+  prompt: Pair,
+  answer: number | Q,
+  parts: readonly Step[],
+  check: Pair,
+  reasons: readonly Because<number | Q>[],
+  figure: Figure,
+) {
+  const q = (v: number | Q) => (typeof v === "number" ? Q.of(v) : v);
+  const right = q(answer);
+  const kept = reasons.filter((r, i) => !q(r[0]).eq(right) && reasons.findIndex((s) => q(s[0]).eq(q(r[0]))) === i);
+  const problem = numberProblem({
+    prompt: t(...prompt),
+    answer: right,
+    mistakes: kept.map(([value, en, zh]) => ({ value: q(value), why: t(en, zh) })),
+    solution: walked(parts, t(...check)),
+  });
+  return { ...problem, figure };
+}
+
+/** figureChoice asks a choice about a drawing whose wrong options each have a reason, explained in labelled steps with a check. */
+function figureChoice(
+  rng: Rng,
+  prompt: Pair,
+  correct: Pair,
+  wrong: readonly Because<Pair>[],
+  parts: readonly Step[],
+  check: Pair,
+  figure: Figure,
+) {
+  return explainedChoice(rng, {
+    prompt: t(...prompt),
+    correct: t(...correct),
+    wrong: wrong.map(([option, en, zh]) => ({ option: t(...option), why: t(en, zh) })),
+    solution: walked(parts, t(...check)),
+    figure,
+  });
+}
+
 const longRunFromRightSide = {
   ...point(
     "the-long-run-from-a-graph-of-the-right-side",
     ["The long run from a graph of the right side", "由右端的图像判断长期行为"],
     [
-      "For $y' = f(y)$, the solution rises where the graph of $f$ is above zero and falls where it is below. It moves until it meets the next root in that direction, or runs off without bound if there is none.",
-      "对 $y' = f(y)$，在 $f$ 的图像位于零线上方时解上升，位于下方时解下降。解一直运动到该方向的下一个根；如果没有根，就无限远离。",
+      "For $y' = f(y)$, the solution rises where the graph of $f$ is above zero and falls where it is below. It moves until it meets the next root in that direction, or runs off without bound if there is none. For example, if $f$ has roots $-2$, $1$ and $4$ and is positive between $-2$ and $1$, the solution with $y(0) = 0$ rises to $1$.\n\nCheck: $f(1) = 0$, so the constant $y = 1$ is a solution, and the rising solution cannot cross it.\n\n> **Watch out.** A root on the far side of the start is never reached: from $y(0) = 0$ the solution moves away from $-2$.",
+      "对 $y' = f(y)$，在 $f$ 的图像位于零线上方时解上升，位于下方时解下降。解一直运动到该方向的下一个根；如果没有根，就无限远离。例如 $f$ 的根是 $-2$、$1$ 和 $4$，且在 $-2$ 与 $1$ 之间为正，那么满足 $y(0) = 0$ 的解上升到 $1$。\n\n检验：$f(1) = 0$，所以常数 $y = 1$ 是解，上升的解无法越过它。\n\n> **注意。** 起点另一侧的根永远到不了：从 $y(0) = 0$ 出发，解远离 $-2$。",
     ],
     (rng) => {
       const { roots, f, figure } = rightSide(rng, 3);
@@ -64,21 +112,71 @@ const longRunFromRightSide = {
       const above = roots.filter((r) => r > y0);
       const below = roots.filter((r) => r < y0);
       const target = rising ? (above[0] ?? null) : (below[below.length - 1] ?? null);
-      const name = (r: number | null): Pair =>
-        r === null ? (rising ? same("y \\to \\infty") : same("y \\to -\\infty")) : same(`y \\to ${r}`);
-      const others = roots.filter((r) => r !== target).map((r) => same(`y \\to ${r}`));
-      return choose(
+      const away = rising ? "\\infty" : "-\\infty";
+      const name = (r: number | null): Pair => (r === null ? same(`y \\to ${away}`) : same(`y \\to ${r}`));
+      const wrong: Because<Pair>[] = roots
+        .filter((r) => r !== target)
+        .map(
+          (r): Because<Pair> =>
+            (rising ? r < y0 : r > y0)
+              ? [
+                  same(`y \\to ${r}`),
+                  `The graph is ${rising ? "above" : "below"} zero at $y = ${y0}$, so $y$ ${rising ? "rises" : "falls"}, away from $${r}$`,
+                  `在 $y = ${y0}$ 处图像在零线${rising ? "上方" : "下方"}，所以 $y$ ${rising ? "上升" : "下降"}，远离 $${r}$`,
+                ]
+              : [
+                  same(`y \\to ${r}`),
+                  `To reach $${r}$ the solution would have to cross the root $${target}$, an equilibrium it cannot cross`,
+                  `要到达 $${r}$，解必须越过根 $${target}$，而平衡解是无法越过的`,
+                ],
+        );
+      wrong.push(
+        target === null
+          ? [same(`y \\to ${y0}`), `$f(${y0}) \\ne 0$, so the solution does not stay at its start`, `$f(${y0}) \\ne 0$，所以解不会停在起点`]
+          : [
+              same(`y \\to ${away}`),
+              `The root $${target}$ stops it: the solution cannot cross an equilibrium`,
+              `根 $${target}$ 挡住了它：解无法越过平衡解`,
+            ],
+      );
+      return figureChoice(
         rng,
         [
           `The graph shows $f(y)$ for the equation $y' = f(y)$. What happens to the solution with $y(0) = ${y0}$ as $t$ grows?`,
           `图中是方程 $y' = f(y)$ 的 $f(y)$。当 $t$ 增大时，满足 $y(0) = ${y0}$ 的解如何变化？`,
         ],
         name(target),
-        [...others, target === null ? same(`y \\to ${y0}`) : rising ? same("y \\to \\infty") : same("y \\to -\\infty")],
+        wrong,
         [
-          `At $y = ${y0}$ the graph is ${rising ? "above" : "below"} zero, so $y$ ${rising ? "rises" : "falls"}, and ${target === null ? "no root stops it" : `the first root it meets is $${target}$`}.`,
-          `在 $y = ${y0}$ 处图像在零线${rising ? "上方" : "下方"}，所以 $y$ ${rising ? "上升" : "下降"}，${target === null ? "没有根能阻止它" : `它遇到的第一个根是 $${target}$`}。`,
+          stepOf(
+            ["Read the sign at the start", "看起点处的符号"],
+            [
+              `At $y = ${y0}$ the graph is ${rising ? "above" : "below"} zero, so $y' ${rising ? ">" : "<"} 0$ and $y$ ${rising ? "rises" : "falls"}.`,
+              `在 $y = ${y0}$ 处图像在零线${rising ? "上方" : "下方"}，所以 $y' ${rising ? ">" : "<"} 0$，$y$ ${rising ? "上升" : "下降"}。`,
+            ],
+          ),
+          stepOf(
+            ["Find the first root in that direction", "找这个方向上的第一个根"],
+            target === null
+              ? [
+                  `The roots are $${roots.join(", ")}$, and none lies ${rising ? "above" : "below"} $${y0}$, so $y$ grows without bound.`,
+                  `根是 ${roots.map((r) => `$${r}$`).join("、")}，没有一个在 $${y0}$ ${rising ? "上方" : "下方"}，所以 $y$ 无限远离。`,
+                ]
+              : [
+                  `The roots are $${roots.join(", ")}$; the first one ${rising ? "above" : "below"} $${y0}$ is $${target}$, so $y \\to ${target}$.`,
+                  `根是 ${roots.map((r) => `$${r}$`).join("、")}；$${y0}$ ${rising ? "上方" : "下方"}的第一个根是 $${target}$，所以 $y \\to ${target}$。`,
+                ],
+          ),
         ],
+        target === null
+          ? [
+              `Beyond the last root the graph keeps its sign, so $y'$ stays ${rising ? "positive" : "negative"} along the whole way and nothing stops the solution.`,
+              `越过最后一个根后图像不再变号，所以一路上 $y'$ 始终${rising ? "为正" : "为负"}，没有什么能挡住这个解。`,
+            ]
+          : [
+              `$f(${target}) = 0$, so the constant $y = ${target}$ is a solution, which the moving solution cannot cross; between $${y0}$ and $${target}$ the graph has no root, so $y$ keeps ${rising ? "rising" : "falling"} toward it.`,
+              `$f(${target}) = 0$，所以常数 $y = ${target}$ 是解，运动的解无法越过它；在 $${y0}$ 与 $${target}$ 之间图像没有根，所以 $y$ 一直${rising ? "上升" : "下降"}趋于它。`,
+            ],
         figure,
       );
     },
@@ -91,25 +189,58 @@ const stableRoot = {
     "the-stable-equilibrium-from-a-graph-of-the-right-side",
     ["The stable equilibrium from a graph of the right side", "由右端的图像找稳定平衡"],
     [
-      "A root of $f$ is a stable equilibrium of $y' = f(y)$ when $f$ crosses from positive to negative there as $y$ increases, since solutions on both sides then move toward it.",
-      "当 $y$ 增大时 $f$ 在根处由正变负，这个根就是 $y' = f(y)$ 的稳定平衡，因为两侧的解都向它移动。",
+      "A root of $f$ is a stable equilibrium of $y' = f(y)$ when $f$ crosses from positive to negative there as $y$ increases, since solutions on both sides then move toward it. For example, if $f$ is positive between the roots $-1$ and $3$ and negative outside them, it crosses from positive to negative at $3$, so $y = 3$ is stable.\n\nCheck: from $y(0) = 2$ the slope is positive and from $y(0) = 4$ it is negative, so both solutions move toward $3$.\n\n> **Watch out.** Look at the direction of the crossing, not at which root is larger or where the graph is highest.",
+      "当 $y$ 增大时 $f$ 在根处由正变负，这个根就是 $y' = f(y)$ 的稳定平衡，因为两侧的解都向它移动。例如 $f$ 在根 $-1$ 与 $3$ 之间为正、在两侧之外为负，它在 $3$ 处由正变负，所以 $y = 3$ 是稳定的。\n\n检验：从 $y(0) = 2$ 出发斜率为正，从 $y(0) = 4$ 出发斜率为负，所以两个解都向 $3$ 移动。\n\n> **注意。** 要看穿过零线的方向，而不是看哪个根更大，也不是看图像哪里最高。",
     ],
     (rng) => {
       const { roots, f, figure } = rightSide(rng, 2);
       const [a, b] = roots as [number, number];
       const stable = f((a + b) / 2) < 0 ? a : b;
       const other = stable === a ? b : a;
-      return choose(
+      const middle = f((a + b) / 2) > 0;
+      return figureChoice(
         rng,
         [
           "The graph shows $f(y)$ for the equation $y' = f(y)$. Which equilibrium is stable?",
           "图中是方程 $y' = f(y)$ 的 $f(y)$。哪个平衡是稳定的？",
         ],
         same(`y = ${stable}`),
-        [same(`y = ${other}`), ["Both of them", "两个都是"], ["Neither of them", "两个都不是"]],
         [
-          `At $y = ${stable}$ the graph goes from above zero to below zero as $y$ increases, so nearby solutions move toward it. At $y = ${other}$ the signs are the other way round.`,
-          `在 $y = ${stable}$ 处，随 $y$ 增大图像由零线上方变到下方，所以附近的解向它移动。在 $y = ${other}$ 处符号相反。`,
+          [
+            same(`y = ${other}`),
+            `At $y = ${other}$ the graph goes from below zero to above zero as $y$ increases, so nearby solutions move away from it`,
+            `在 $y = ${other}$ 处，随 $y$ 增大图像由零线下方变到上方，所以附近的解远离它`,
+          ],
+          [
+            ["Both of them", "两个都是"],
+            `Only the crossing at $${stable}$ goes from positive to negative`,
+            `只有 $${stable}$ 处是由正变负`,
+          ],
+          [
+            ["Neither of them", "两个都不是"],
+            `At $${stable}$ the graph crosses from positive to negative, so solutions on both sides move toward it`,
+            `在 $${stable}$ 处图像由正变负，所以两侧的解都向它移动`,
+          ],
+        ],
+        [
+          stepOf(
+            ["Read the signs", "看符号"],
+            [
+              `Between $${a}$ and $${b}$ the graph is ${middle ? "above" : "below"} zero, and outside them it is ${middle ? "below" : "above"}.`,
+              `在 $${a}$ 与 $${b}$ 之间图像在零线${middle ? "上方" : "下方"}，在它们之外在${middle ? "下方" : "上方"}。`,
+            ],
+          ),
+          stepOf(
+            ["Find the crossing from positive to negative", "找由正变负的根"],
+            [
+              `As $y$ increases the graph crosses from positive to negative at $y = ${stable}$, so that equilibrium is stable; at $y = ${other}$ it crosses the other way.`,
+              `随 $y$ 增大，图像在 $y = ${stable}$ 处由正变负，所以这个平衡是稳定的；在 $y = ${other}$ 处方向相反。`,
+            ],
+          ),
+        ],
+        [
+          `Try a start on each side: from $y(0) = ${stable - 1}$ the graph is above zero, so $y$ rises toward $${stable}$, and from $y(0) = ${stable + 1}$ it is below zero, so $y$ falls toward $${stable}$.`,
+          `在两侧各取一个起点：从 $y(0) = ${stable - 1}$ 出发图像在零线上方，$y$ 上升趋于 $${stable}$；从 $y(0) = ${stable + 1}$ 出发图像在零线下方，$y$ 下降趋于 $${stable}$。`,
         ],
         figure,
       );
@@ -122,8 +253,8 @@ const growthPoints = point(
   "a-later-value-from-a-drawn-doubling-curve",
   ["A later value from a drawn doubling curve", "由所画的倍增曲线求后来的值"],
   [
-    "Solutions of $y' = ky$ with $k > 0$ double in equal times. Read the doubling time from two marked points, then count how many doublings fit into the time you want.",
-    "$k > 0$ 时 $y' = ky$ 的解每隔相等的时间翻倍。由两个标记点读出倍增时间，再数所求时间内翻了几倍。",
+    "Solutions of $y' = ky$ with $k > 0$ double in equal times. Read the doubling time from two marked points, then count how many doublings fit into the time you want. For example, a curve through $(0, 3)$ and $(2, 6)$ doubles every $2$, so by $t = 8$ it has doubled $4$ times: $y(8) = 3 \\cdot 2^{4} = 48$.\n\nCheck: $3 \\to 6 \\to 12 \\to 24 \\to 48$ at $t = 0, 2, 4, 6, 8$.\n\n> **Watch out.** The exponent is the number of doublings, $\\frac{8}{2} = 4$, not the time $8$.",
+    "$k > 0$ 时 $y' = ky$ 的解每隔相等的时间翻倍。由两个标记点读出倍增时间，再数所求时间内翻了几倍。例如曲线过 $(0, 3)$ 和 $(2, 6)$，每隔 $2$ 翻倍，到 $t = 8$ 时翻倍 $4$ 次：$y(8) = 3 \\cdot 2^{4} = 48$。\n\n检验：在 $t = 0, 2, 4, 6, 8$ 时依次为 $3 \\to 6 \\to 12 \\to 24 \\to 48$。\n\n> **注意。** 指数是翻倍的次数 $\\frac{8}{2} = 4$，而不是时间 $8$。",
   ],
   (rng) => {
     const A = rng.int(1, 5);
@@ -139,16 +270,53 @@ const growthPoints = point(
       intTicks(0, 4 * A, A),
       (x, y) => curvePath(f, 0, span, x, y) + mark(x, y, 0, A) + mark(x, y, T, 2 * A),
     );
-    return ask(
+    const chain = Array.from({ length: k + 1 }, (_, i) => `${A * 2 ** i}`).join(" \\to ");
+    const times = Array.from({ length: k + 1 }, (_, i) => `${i * T}`).join(", ");
+    return figureNumber(
       [
         `The curve solves $y' = ky$ and passes through the marked points. Find $y(${k * T})$.`,
         `这条曲线是 $y' = ky$ 的解，并过标记点。求 $y(${k * T})$。`,
       ],
       answer,
-      [2 * k * A, A * k * T, answer / 2, 2 * answer],
       [
-        `The curve goes from $${A}$ to $${2 * A}$ in time $${T}$, so it doubles every $${T}$. By $t = ${k * T}$ it has doubled $${k}$ times, which gives $${A} \\cdot 2^{${k}} = ${answer}$.`,
-        `曲线在时间 $${T}$ 内从 $${A}$ 变到 $${2 * A}$，所以每隔 $${T}$ 翻倍。到 $t = ${k * T}$ 时翻倍 $${k}$ 次，得 $${A} \\cdot 2^{${k}} = ${answer}$。`,
+        stepOf(
+          ["Read the doubling time", "读出倍增时间"],
+          [
+            `The curve goes from $${A}$ at $t = 0$ to $${2 * A}$ at $t = ${T}$, so it doubles every $${T}$.`,
+            `曲线从 $t = 0$ 时的 $${A}$ 变到 $t = ${T}$ 时的 $${2 * A}$，所以每隔 $${T}$ 翻倍。`,
+          ],
+        ),
+        stepOf(
+          ["Count the doublings", "数翻倍的次数"],
+          [
+            `By $t = ${k * T}$ it has doubled $\\frac{${k * T}}{${T}} = ${k}$ times:`,
+            `到 $t = ${k * T}$ 时翻倍了 $\\frac{${k * T}}{${T}} = ${k}$ 次：`,
+          ],
+          `y(${k * T}) = ${A} \\cdot 2^{${k}} = ${answer}`,
+        ),
+      ],
+      [`Double step by step: $${chain}$ at $t = ${times}$.`, `逐次翻倍：在 $t = ${times}$ 时依次为 $${chain}$。`],
+      [
+        [
+          2 * k * A,
+          `This multiplies by $2 \\cdot ${k}$; doubling $${k}$ times multiplies by $2^{${k}}$`,
+          `这里乘了 $2 \\cdot ${k}$；翻倍 $${k}$ 次应乘以 $2^{${k}}$`,
+        ],
+        [
+          A * k * T,
+          `This multiplies $${A}$ by the time $${k * T}$; the curve doubles every $${T}$ instead`,
+          `这里用 $${A}$ 乘以时间 $${k * T}$；曲线其实是每隔 $${T}$ 翻倍`,
+        ],
+        [
+          answer / 2,
+          `One doubling too few: starting from $${A}$ at $t = 0$, there are $${k}$ doublings by $t = ${k * T}$`,
+          `少翻了一倍：从 $t = 0$ 时的 $${A}$ 开始，到 $t = ${k * T}$ 共翻倍 $${k}$ 次`,
+        ],
+        [
+          2 * answer,
+          `One doubling too many: there are $${k}$ doublings by $t = ${k * T}$, not $${k + 1}$`,
+          `多翻了一倍：到 $t = ${k * T}$ 共翻倍 $${k}$ 次，而不是 $${k + 1}$ 次`,
+        ],
       ],
       figureOf(svg, [
         `An increasing exponential curve through (0, ${A}) and (${T}, ${2 * A}).`,
@@ -162,8 +330,8 @@ const decayTime = point(
   "the-time-to-reach-a-value-on-a-drawn-decay-curve",
   ["The time to reach a value on a drawn decay curve", "在所画衰减曲线上求达到某值的时间"],
   [
-    "Solutions of $y' = -ky$ halve in equal times. Read the half-life from two marked points, then count how many halvings lead to the value you want.",
-    "$y' = -ky$ 的解每隔相等的时间减半。由两个标记点读出半衰期，再数减半多少次到达所求的值。",
+    "Solutions of $y' = -ky$ halve in equal times. Read the half-life from two marked points, then count how many halvings lead to the value you want. For example, a curve through $(0, 64)$ and $(3, 32)$ has half-life $3$, and $64$ falls to $8$ in $3$ halvings, so it reaches $8$ at $t = 9$.\n\nCheck: $64 \\to 32 \\to 16 \\to 8$ at $t = 0, 3, 6, 9$.\n\n> **Watch out.** Multiply the half-life by the number of halvings, $3$, not by the ratio $8$.",
+    "$y' = -ky$ 的解每隔相等的时间减半。由两个标记点读出半衰期，再数减半多少次到达所求的值。例如曲线过 $(0, 64)$ 和 $(3, 32)$，半衰期为 $3$；$64$ 减半 $3$ 次降到 $8$，所以在 $t = 9$ 时到达 $8$。\n\n检验：在 $t = 0, 3, 6, 9$ 时依次为 $64 \\to 32 \\to 16 \\to 8$。\n\n> **注意。** 要用半衰期乘以减半的次数 $3$，而不是乘以比值 $8$。",
   ],
   (rng) => {
     const A = rng.pick([16, 32, 64, 48, 80]);
@@ -183,16 +351,49 @@ const decayTime = point(
       ],
       (x, y) => curvePath(f, 0, span, x, y) + mark(x, y, 0, A) + mark(x, y, h, A / 2),
     );
-    return ask(
+    const chain = Array.from({ length: k + 1 }, (_, i) => `${A / 2 ** i}`).join(" \\to ");
+    const times = Array.from({ length: k + 1 }, (_, i) => `${i * h}`).join(", ");
+    return figureNumber(
       [
         `The curve solves $y' = -ky$ and passes through the marked points. At what time does $y$ equal $${target}$?`,
         `这条曲线是 $y' = -ky$ 的解，并过标记点。$y$ 何时等于 $${target}$？`,
       ],
       answer,
-      [h, k, 2 * k * h, Q.of(A, target * h)],
       [
-        `The curve falls from $${A}$ to $${A / 2}$ in time $${h}$, so the half-life is $${h}$. Going from $${A}$ to $${target}$ takes $${k}$ halvings, which is time $${k} \\cdot ${h} = ${answer}$.`,
-        `曲线在时间 $${h}$ 内从 $${A}$ 降到 $${A / 2}$，所以半衰期为 $${h}$。从 $${A}$ 到 $${target}$ 需要减半 $${k}$ 次，时间为 $${k} \\cdot ${h} = ${answer}$。`,
+        stepOf(
+          ["Read the half-life", "读出半衰期"],
+          [
+            `The curve falls from $${A}$ at $t = 0$ to $${A / 2}$ at $t = ${h}$, so the half-life is $${h}$.`,
+            `曲线从 $t = 0$ 时的 $${A}$ 降到 $t = ${h}$ 时的 $${A / 2}$，所以半衰期为 $${h}$。`,
+          ],
+        ),
+        stepOf(
+          ["Count the halvings", "数减半的次数"],
+          [
+            `From $${A}$ to $${target}$ is a factor of $${2 ** k} = 2^{${k}}$, so $${k}$ halvings:`,
+            `从 $${A}$ 到 $${target}$ 缩小为 $\\frac{1}{${2 ** k}} = \\frac{1}{2^{${k}}}$，即减半 $${k}$ 次：`,
+          ],
+          `t = ${k} \\cdot ${h} = ${answer}`,
+        ),
+      ],
+      [`Halve step by step: $${chain}$ at $t = ${times}$.`, `逐次减半：在 $t = ${times}$ 时依次为 $${chain}$。`],
+      [
+        [
+          h,
+          `$${h}$ is the time for one halving; reaching $${target}$ takes $${k}$ halvings`,
+          `$${h}$ 是减半一次的时间；到达 $${target}$ 需要减半 $${k}$ 次`,
+        ],
+        [k, `$${k}$ is the number of halvings; multiply it by the half-life $${h}$`, `$${k}$ 是减半的次数；还要乘以半衰期 $${h}$`],
+        [
+          2 ** k * h,
+          `This multiplies the half-life by the ratio $${2 ** k}$; multiply by the number of halvings, $${k}$`,
+          `这里用半衰期乘以比值 $${2 ** k}$；应当乘以减半的次数 $${k}$`,
+        ],
+        [
+          (k + 1) * h,
+          `One halving too many: $${k}$ halvings take $${A}$ down to $${target}$`,
+          `多减半了一次：减半 $${k}$ 次就从 $${A}$ 降到 $${target}$`,
+        ],
       ],
       figureOf(svg, [
         `A decreasing exponential curve through (0, ${A}) and (${h}, ${A / 2}).`,
@@ -206,8 +407,8 @@ const logisticPeak = point(
   "the-fastest-growth-on-a-drawn-logistic-curve",
   ["The fastest growth on a drawn logistic curve", "所画逻辑斯蒂曲线上的最快增长"],
   [
-    "For $y' = ry\\left(1 - \\frac{y}{K}\\right)$, the curve levels off at the carrying capacity $K$. Growth is fastest at $y = \\frac{K}{2}$, where the rate is $\\frac{rK}{4}$.",
-    "对 $y' = ry\\left(1 - \\frac{y}{K}\\right)$，曲线趋于环境容量 $K$。在 $y = \\frac{K}{2}$ 处增长最快，此时速率为 $\\frac{rK}{4}$。",
+    "For $y' = ry\\left(1 - \\frac{y}{K}\\right)$, the curve levels off at the carrying capacity $K$. Growth is fastest at $y = \\frac{K}{2}$, where the rate is $\\frac{rK}{4}$. For example, for $y' = 2y\\left(1 - \\frac{y}{10}\\right)$ the curve levels off at $10$, and growth is fastest at $y = 5$, with rate $2 \\cdot 5 \\cdot \\frac{1}{2} = 5$.\n\nCheck: $2y\\left(1 - \\frac{y}{10}\\right) = 5 - \\frac{1}{5}(y - 5)^{2}$, which is at most $5$.\n\n> **Watch out.** Growth is fastest at half the capacity, not at the capacity, where it has stopped.",
+    "对 $y' = ry\\left(1 - \\frac{y}{K}\\right)$，曲线趋于环境容量 $K$。在 $y = \\frac{K}{2}$ 处增长最快，此时速率为 $\\frac{rK}{4}$。例如对 $y' = 2y\\left(1 - \\frac{y}{10}\\right)$，曲线趋于 $10$，在 $y = 5$ 处增长最快，速率为 $2 \\cdot 5 \\cdot \\frac{1}{2} = 5$。\n\n检验：$2y\\left(1 - \\frac{y}{10}\\right) = 5 - \\frac{1}{5}(y - 5)^{2}$，最大为 $5$。\n\n> **注意。** 增长最快是在环境容量的一半处，而不是在环境容量处，那里增长已经停止。",
   ],
   (rng) => {
     const K = rng.pick([4, 6, 8, 10, 12, 16, 20, 24]);
@@ -234,23 +435,94 @@ const logisticPeak = point(
       (x, y) => curvePath(f, 0, span, x, y) + guide(x, y, [0, K], [span, K]),
     );
     const rText = Q.of(rn, rd).toLatex();
-    return ask(
-      kind === "rate"
-        ? [
-            `The curve solves $y' = ${rText}\\,y\\left(1 - \\frac{y}{K}\\right)$, and the dashed line is its limit. Find the largest value of $y'$.`,
-            `这条曲线是 $y' = ${rText}\\,y\\left(1 - \\frac{y}{K}\\right)$ 的解，虚线是它的极限。求 $y'$ 的最大值。`,
-          ]
-        : [
-            `The curve solves $y' = ${rText}\\,y\\left(1 - \\frac{y}{K}\\right)$, and the dashed line is its limit. At what value of $y$ is the growth fastest?`,
-            `这条曲线是 $y' = ${rText}\\,y\\left(1 - \\frac{y}{K}\\right)$ 的解，虚线是它的极限。$y$ 为何值时增长最快？`,
+    const rCo = rn === rd ? "" : `${rText}`;
+    const figure = figureOf(svg, [`An S-shaped curve that levels off at the dashed line y = ${K}.`, `S 形曲线，趋于虚线 y = ${K}。`]);
+    const capacity = stepOf(
+      ["Read the capacity", "读出环境容量"],
+      [`The curve levels off at the dashed line, so $K = ${K}$.`, `曲线趋于虚线，所以 $K = ${K}$。`],
+    );
+    if (kind === "rate") {
+      return figureNumber(
+        [
+          `The curve solves $y' = ${rText}\\,y\\left(1 - \\frac{y}{K}\\right)$, and the dashed line is its limit. Find the largest value of $y'$.`,
+          `这条曲线是 $y' = ${rText}\\,y\\left(1 - \\frac{y}{K}\\right)$ 的解，虚线是它的极限。求 $y'$ 的最大值。`,
+        ],
+        rate,
+        [
+          capacity,
+          stepOf(
+            ["Evaluate at half the capacity", "在环境容量的一半处求值"],
+            [
+              `The growth rate is a parabola in $y$ with zeros $0$ and $${K}$, largest at $y = ${K / 2}$:`,
+              `增长率是 $y$ 的抛物线，零点为 $0$ 和 $${K}$，在 $y = ${K / 2}$ 处最大：`,
+            ],
+            `${rCo} \\cdot ${K / 2}\\left(1 - \\frac{${K / 2}}{${K}}\\right) = ${rate.toLatex()}`.replace(/^ \\cdot /, ""),
+          ),
+        ],
+        [
+          `Complete the square: $${rCo}y\\left(1 - \\frac{y}{${K}}\\right) = ${rate.toLatex()} - ${Q.of(rn, rd * K).toLatex()}\\left(y - ${K / 2}\\right)^{2}$, which is never more than $${rate.toLatex()}$ and equals it at $y = ${K / 2}$.`,
+          `配方：$${rCo}y\\left(1 - \\frac{y}{${K}}\\right) = ${rate.toLatex()} - ${Q.of(rn, rd * K).toLatex()}\\left(y - ${K / 2}\\right)^{2}$，它从不超过 $${rate.toLatex()}$，在 $y = ${K / 2}$ 处取到。`,
+        ],
+        [
+          [
+            Q.of(rn * K, rd * 2),
+            "This leaves out the factor $1 - \\frac{y}{K} = \\frac{1}{2}$ at the peak",
+            "这里漏掉了峰值处的因子 $1 - \\frac{y}{K} = \\frac{1}{2}$",
           ],
-      kind === "rate" ? rate : Q.of(K, 2),
-      kind === "rate" ? [Q.of(rn * K, rd * 2), Q.of(rn * K, rd), Q.of(K, 4), Q.of(rn * K, rd * 8)] : [K, Q.of(K, 4), Q.of(3 * K, 4), rate],
+          [
+            Q.of(rn * K, rd),
+            "This is $rK$, as if growth stayed exponential up to the capacity; it is zero there",
+            "这是 $rK$，好像增长一直是指数式的直到环境容量；其实那里增长为零",
+          ],
+          [Q.of(K, 4), `This leaves out the rate $r = ${rText}$`, `这里漏掉了速率 $r = ${rText}$`],
+          [
+            Q.of(K, 2),
+            `$${K / 2}$ is the value of $y$ where growth is fastest, not the largest $y'$`,
+            `$${K / 2}$ 是增长最快时 $y$ 的值，不是 $y'$ 的最大值`,
+          ],
+        ],
+        figure,
+      );
+    }
+    return figureNumber(
       [
-        `The curve levels off at $K = ${K}$. Growth is fastest at $y = ${K / 2}$${kind === "rate" ? `, where $y' = \\frac{rK}{4} = ${rate.toLatex()}$` : ""}.`,
-        `曲线趋于 $K = ${K}$。在 $y = ${K / 2}$ 处增长最快${kind === "rate" ? `，此时 $y' = \\frac{rK}{4} = ${rate.toLatex()}$` : ""}。`,
+        `The curve solves $y' = ${rText}\\,y\\left(1 - \\frac{y}{K}\\right)$, and the dashed line is its limit. At what value of $y$ is the growth fastest?`,
+        `这条曲线是 $y' = ${rText}\\,y\\left(1 - \\frac{y}{K}\\right)$ 的解，虚线是它的极限。$y$ 为何值时增长最快？`,
       ],
-      figureOf(svg, [`An S-shaped curve that levels off at the dashed line y = ${K}.`, `S 形曲线，趋于虚线 y = ${K}。`]),
+      Q.of(K, 2),
+      [
+        capacity,
+        stepOf(
+          ["Take half the capacity", "取环境容量的一半"],
+          [
+            `The growth rate is a parabola in $y$ with zeros $0$ and $${K}$, so it is largest halfway, at $y = ${K / 2}$.`,
+            `增长率是 $y$ 的抛物线，零点为 $0$ 和 $${K}$，所以在正中间 $y = ${K / 2}$ 处最大。`,
+          ],
+        ),
+      ],
+      [
+        `Differentiate the equation: $y'' = ${rCo}y'\\left(1 - \\frac{2y}{${K}}\\right)$, which is zero at $y = ${K / 2}$. That is the curve's point of inflection, where its slope stops increasing.`,
+        `对方程求导：$y'' = ${rCo}y'\\left(1 - \\frac{2y}{${K}}\\right)$，在 $y = ${K / 2}$ 处为零。这是曲线的拐点，斜率在那里停止增大。`,
+      ],
+      [
+        [K, "At the capacity growth has stopped: $y' = 0$ there", "在环境容量处增长已经停止：那里 $y' = 0$"],
+        [
+          Q.of(K, 4),
+          `At $y = ${Q.of(K, 4).toLatex()}$ growth is still speeding up: $y'' > 0$ there`,
+          `在 $y = ${Q.of(K, 4).toLatex()}$ 处增长仍在加快：那里 $y'' > 0$`,
+        ],
+        [
+          Q.of(3 * K, 4),
+          `At $y = ${Q.of(3 * K, 4).toLatex()}$ the curve is past its inflection, and growth is slowing`,
+          `在 $y = ${Q.of(3 * K, 4).toLatex()}$ 处曲线已过拐点，增长在变慢`,
+        ],
+        [
+          rate,
+          `$${rate.toLatex()}$ is the largest value of $y'$, not the value of $y$ where it happens`,
+          `$${rate.toLatex()}$ 是 $y'$ 的最大值，不是取到它时 $y$ 的值`,
+        ],
+      ],
+      figure,
     );
   },
 );

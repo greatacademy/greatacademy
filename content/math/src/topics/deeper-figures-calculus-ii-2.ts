@@ -2,7 +2,7 @@
 // velocity graphs, parametric and polar curves, sequences, series compared with areas, error bounds and Euler's method.
 // See `deeperFiguresCalculusIi2Points`.
 
-import type { KnowledgePointDef, Rng } from "@ga/content";
+import type { Figure, KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
 import type { PlaneMark, Point } from "@ga/subject-math";
 import { Q } from "@ga/subject-math";
@@ -11,6 +11,7 @@ import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 
 import { numberProblem } from "../problems.ts";
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
+import { type Step, walked } from "./calculus-i-differentiation.ts";
 import { bars, chart, curvePath, intTicks, type Scale, shadeUnder } from "./figure-charts.ts";
 import { drawn } from "./figure-reading-more.ts";
 
@@ -1307,12 +1308,30 @@ const lagrangeDrawn = {
   figure: calculusDrawings5["the-lagrange-error-bound#a-taylor-error-bound-from-a-drawn-derivative"],
 };
 
+/** EulerReason is a wrong value of an Euler's method question with its reason in English and Chinese. */
+type EulerReason = readonly [value: number, en: string, zh: string];
+
+/** eulerStep is a labelled step of a worked solution with what it says and its displayed lines. */
+const eulerStep = (title: Pair, said: Pair, ...lines: string[]): Step => [title, t(...said), lines];
+
+/** eulerNumber asks for a number read from a drawing, explained in labelled steps with a check, keeping the first reason for each wrong value. */
+function eulerNumber(prompt: Pair, answer: number, parts: readonly Step[], check: Pair, reasons: readonly EulerReason[], figure: Figure) {
+  const kept = reasons.filter((r, i) => r[0] !== answer && reasons.findIndex((s) => s[0] === r[0]) === i);
+  const problem = numberProblem({
+    prompt: t(...prompt),
+    answer: Q.of(answer),
+    mistakes: kept.map(([value, en, zh]) => ({ value: Q.of(value), why: t(en, zh) })),
+    solution: walked(parts, t(...check)),
+  });
+  return { ...problem, figure };
+}
+
 const eulerField = point(
   "two-euler-steps-on-a-drawn-direction-field",
   ["Two Euler steps on a drawn direction field", "在所画方向场上走两步欧拉法"],
   [
-    "Euler's method follows the direction field in straight steps: from $(x_k, y_k)$, the next point is $(x_k + h, y_k + h\\,f(x_k, y_k))$. The slope is read again at every new point.",
-    "欧拉法沿方向场走直线步：从 $(x_k, y_k)$ 出发，下一点是 $(x_k + h, y_k + h\\,f(x_k, y_k))$。每到新点都要重新求斜率。",
+    "Euler's method follows the direction field in straight steps: from $(x_k, y_k)$, the next point is $(x_k + h, y_k + h\\,f(x_k, y_k))$. The slope is read again at every new point. For $y' = x + y$ from $(0, 1)$ with $h = 1$: the slope $0 + 1 = 1$ leads to $(1, 2)$, where the slope is $1 + 2 = 3$, so the second step reaches $(2, 5)$.\n\nCheck: the two changes add up, $1 + 1 \\cdot 1 + 1 \\cdot 3 = 5$.\n\n> **Watch out.** Reusing the first slope for the second step gives $1 + 2 \\cdot 1 = 3$, not $5$: the slope must be read again at $(1, 2)$.",
+    "欧拉法沿方向场走直线步：从 $(x_k, y_k)$ 出发，下一点是 $(x_k + h, y_k + h\\,f(x_k, y_k))$。每到新点都要重新求斜率。对 $y' = x + y$，从 $(0, 1)$ 出发，$h = 1$：斜率 $0 + 1 = 1$ 到达 $(1, 2)$，那里的斜率是 $1 + 2 = 3$，所以第二步到达 $(2, 5)$。\n\n检验：两次变化相加，$1 + 1 \\cdot 1 + 1 \\cdot 3 = 5$。\n\n> **注意。** 第二步仍用第一个斜率，会得到 $1 + 2 \\cdot 1 = 3$ 而不是 $5$：必须在 $(1, 2)$ 处重新求斜率。",
   ],
   (rng) => {
     const [a, b] = rng.pick<[number, number]>([
@@ -1344,16 +1363,51 @@ const eulerField = point(
     const term = (c: number, name: string, first: boolean) =>
       c === 0 ? "" : `${c < 0 ? (first ? "-" : " - ") : first ? "" : " + "}${Math.abs(c) === 1 ? "" : Math.abs(c)}${name}`;
     const rhs = `${term(a, "x", true)}${term(b, "y", a === 0)}`;
-    return ask(
+    const wrap = (n: number) => (n < 0 ? `(${n})` : `${n}`);
+    const stale = f(x0, y1);
+    return eulerNumber(
       [
         `The drawing shows the direction field of $y' = ${rhs}$. Starting at the marked point $P$, take two Euler steps of size $h = ${h}$. Find the $y$-value you reach.`,
         `图中是 $y' = ${rhs}$ 的方向场。从标记点 $P$ 出发，用步长 $h = ${h}$ 走两步欧拉法。求到达的 $y$ 值。`,
       ],
       answer,
-      [y1, y0 + 2 * h * s0, y0 + h * s1, answer + h, answer - 1],
       [
-        `From $(${x0}, ${y0})$ the slope is $${s0}$, which leads to $(${x1}, ${y1})$. There the slope is $${s1}$, so the next value is $${y1} + ${h}(${s1}) = ${answer}$.`,
-        `从 $(${x0}, ${y0})$ 出发斜率为 $${s0}$，到达 $(${x1}, ${y1})$。那里的斜率为 $${s1}$，所以下一个值为 $${y1} + ${h}(${s1}) = ${answer}$。`,
+        eulerStep(
+          ["Take the first step", "走第一步"],
+          [
+            `At $P = (${x0}, ${y0})$ the slope is $${s0}$, and $x$ moves to $${x0} + ${h} = ${x1}$:`,
+            `在 $P = (${x0}, ${y0})$ 处斜率是 $${s0}$，$x$ 移到 $${x0} + ${h} = ${x1}$：`,
+          ],
+          `y_1 = ${y0} + ${h} \\cdot ${wrap(s0)} = ${y1}`,
+        ),
+        eulerStep(
+          ["Read the slope again and take the second step", "重新求斜率并走第二步"],
+          [`At $(${x1}, ${y1})$ the slope is $${s1}$:`, `在 $(${x1}, ${y1})$ 处斜率是 $${s1}$：`],
+          `y_2 = ${y1} + ${h} \\cdot ${wrap(s1)} = ${answer}`,
+        ),
+      ],
+      [
+        `Add the two changes to the start: $${y0} + ${h} \\cdot ${wrap(s0)} + ${h} \\cdot ${wrap(s1)} = ${answer}$, reached at $x = ${x0 + 2 * h}$.`,
+        `把两次变化加到起点上：$${y0} + ${h} \\cdot ${wrap(s0)} + ${h} \\cdot ${wrap(s1)} = ${answer}$，此时 $x = ${x0 + 2 * h}$。`,
+      ],
+      [
+        [y1, "This is the value after one step; take a second step from it", "这是走一步后的值；还要从这里再走一步"],
+        [
+          y0 + 2 * h * s0,
+          `This reuses the first slope $${s0}$ for both steps; at $(${x1}, ${y1})$ the slope is $${s1}$`,
+          `这里两步都用了第一个斜率 $${s0}$；在 $(${x1}, ${y1})$ 处斜率是 $${s1}$`,
+        ],
+        [
+          y0 + h * s1,
+          `This starts the second step from $${y0}$ instead of from $y_1 = ${y1}$`,
+          `这里第二步从 $${y0}$ 出发，而不是从 $y_1 = ${y1}$ 出发`,
+        ],
+        [y1 + s1, `This adds the slope $${s1}$ without multiplying it by $h = ${h}$`, `这里加上了斜率 $${s1}$，却没有乘以 $h = ${h}$`],
+        [
+          y1 + h * stale,
+          `This reads the second slope at $x = ${x0}$; after the first step $x$ is $${x1}$`,
+          `这里在 $x = ${x0}$ 处求第二个斜率；走完第一步后 $x$ 已是 $${x1}$`,
+        ],
       ],
       drawn(
         { xMin: -6, xMax: 6, yMin: -6, yMax: 6 },

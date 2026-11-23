@@ -21,6 +21,7 @@ import { probabilityDrawings1 } from "../explanation-drawings-probability-and-st
 import { explainedChoice, numberProblem } from "../problems.ts";
 import { stepLabel } from "../solution-kit.ts";
 import { reasoned } from "../wrong-reasons.ts";
+import { type Step, walked } from "./calculus-i-differentiation.ts";
 import { pickChoice as choiceFrom } from "./grade-4-fractions.ts";
 
 /** math writes the same formula as an option in both languages. */
@@ -1136,29 +1137,100 @@ const fieldChoices: readonly { tex: string; f: (x: number, y: number) => number;
   },
 ];
 
+/** FieldReason is a wrong value of a question about a drawn field or curve with its reason in English and Chinese. */
+type FieldReason = readonly [value: number | Q, en: string, zh: string];
+
+/** fieldStep is a labelled step of a worked solution with what it says and its displayed lines. */
+const fieldStep = (title: readonly [string, string], en: string, zh: string, ...lines: string[]): Step => [
+  [title[0], title[1]],
+  t(en, zh),
+  lines,
+];
+
+/** drawnNumber asks for a number read from a drawing, explained in labelled steps with a check, keeping the first reason for each wrong value. */
+function drawnNumber(
+  prompt: Text,
+  answer: number | Q,
+  parts: readonly Step[],
+  check: Text,
+  reasons: readonly FieldReason[],
+  figure: Figure,
+  form?: "integer",
+): Problem {
+  const q = (v: number | Q) => (typeof v === "number" ? Q.of(v) : v);
+  const right = q(answer);
+  const kept = reasons.filter((r, i) => !q(r[0]).eq(right) && reasons.findIndex((s) => q(s[0]).eq(q(r[0]))) === i);
+  const problem = numberProblem({
+    prompt,
+    answer: right,
+    ...(form ? { form } : {}),
+    mistakes: kept.map(([value, en, zh]) => ({ value: q(value), why: t(en, zh) })),
+    solution: walked(parts, check),
+  });
+  return { ...problem, figure };
+}
+
+/** leans says in English and Chinese whether a segment with slope m rises, falls or is flat. */
+const leans = (m: number): readonly [string, string] => (m > 0 ? ["rises", "向上"] : m < 0 ? ["falls", "向下"] : ["is flat", "水平"]);
+
+/** gridPoints lists the points of the drawn grid of a slope field, nearest the origin first. */
+const gridPoints: readonly Point[] = [-3, -2, -1, 0, 1, 2, 3]
+  .flatMap((x) => [-3, -2, -1, 0, 1, 2, 3].map((y): Point => [x, y]))
+  .sort((a, b) => Math.abs(a[0]) + Math.abs(a[1]) - Math.abs(b[0]) - Math.abs(b[1]));
+
 const matchingSlopeField: KnowledgePointDef = {
   id: "matching-a-slope-field-to-its-equation",
   figure: calculusDrawings5["analyzing-slope-fields-for-nonautonomous-differential-equations#matching-a-slope-field-to-its-equation"],
   title: t("Matching a slope field to its equation", "把斜率场与方程对应"),
   explanation: t(
-    "Look at a slope field in columns and rows. If the segments in each vertical column are parallel, the slope depends only on $x$. If those in each horizontal row are parallel, it depends only on $y$. Then find where the segments are flat, since those are the places where the right side is zero. These two checks usually settle which equation it is.",
-    "按列和行来看斜率场。如果每一竖列的线段都平行，斜率只取决于 $x$。如果每一横行的线段都平行，斜率只取决于 $y$。再找线段水平的地方，那里右端等于零。这两项检查通常就能确定是哪个方程。",
+    "Look at a slope field in columns and rows. If the segments in each vertical column are parallel, the slope depends only on $x$. If those in each horizontal row are parallel, it depends only on $y$. Then find where the segments are flat, since those are the places where the right side is zero, and read the sign on one side. For example, rows of parallel segments that are flat along $y = 1$ and rise above it fit $y' = y - 1$.\n\nCheck: at the point $(0, 2)$, $y' = 2 - 1 = 1 > 0$, so the segment there rises, as described.\n\n> **Watch out.** Parallel along rows means the slope depends on $y$: $y' = y - 1$ and $y' = x - 1$ are flat along different lines, one horizontal and one vertical.",
+    "按列和行来看斜率场。如果每一竖列的线段都平行，斜率只取决于 $x$。如果每一横行的线段都平行，斜率只取决于 $y$。再找线段水平的地方，那里右端等于零，并读出一侧的符号。例如每一横行的线段平行，沿 $y = 1$ 水平，在它上方向上，就符合 $y' = y - 1$。\n\n检验：在点 $(0, 2)$ 处，$y' = 2 - 1 = 1 > 0$，所以那里的线段向上，与描述一致。\n\n> **注意。** 沿横行平行说明斜率取决于 $y$：$y' = y - 1$ 和 $y' = x - 1$ 沿不同的直线水平，一条是水平线，一条是竖直线。",
   ),
   generate(rng) {
     const right = rng.pick(fieldChoices);
     const others = rng.shuffle(fieldChoices.filter((c) => c !== right)).slice(0, 3);
-    return pickChoice(
-      rng,
-      t("Which differential equation has this slope field?", "哪个微分方程有这样的斜率场？"),
-      math(right.tex),
-      others.map((c) => math(c.tex)),
-      t(`Here ${right.en}, which matches $${right.tex}$.`, `这里${right.zh}，与 $${right.tex}$ 相符。`),
-      drawn(
+    const wrong = others.map((c) => {
+      const at = gridPoints.find(([x, y]) => Math.sign(c.f(x, y)) !== Math.sign(right.f(x, y)));
+      const said = at ? leans(right.f(at[0], at[1])) : undefined;
+      const test =
+        at && said ? ` At $(${at[0]}, ${at[1]})$ it gives $y' = ${c.f(at[0], at[1])}$, but the segment drawn there ${said[0]}.` : "";
+      const testZh = at && said ? `在 $(${at[0]}, ${at[1]})$ 处它给出 $y' = ${c.f(at[0], at[1])}$，而图中那里的线段${said[1]}。` : "";
+      return {
+        option: math(c.tex),
+        why: t(`For $${c.tex}$ the ${c.en}.${test}`, `对 $${c.tex}$ 来说，${c.zh}。${testZh}`),
+      };
+    });
+    const [px, py] = gridPoints.find(([x, y]) => x > 0 && y > 0 && right.f(x, y) !== 0) ?? [1, 1];
+    const m = right.f(px, py);
+    const [rise, riseZh] = leans(m);
+    return explainedChoice(rng, {
+      prompt: t("Which differential equation has this slope field?", "哪个微分方程有这样的斜率场？"),
+      correct: math(right.tex),
+      wrong,
+      solution: walked(
+        [
+          fieldStep(
+            ["Read the rows, columns and flat segments", "读行、列和水平线段"],
+            `In the drawing the ${right.en}.`,
+            `图中${right.zh}。`,
+          ),
+          fieldStep(
+            ["Match the equation", "对应方程"],
+            `Of the choices only $${right.tex}$ has this pattern.`,
+            `在各选项中只有 $${right.tex}$ 有这样的图样。`,
+          ),
+        ],
+        t(
+          `Test one point: at $(${px}, ${py})$ the equation gives $y' = ${m}$, so the segment there ${rise}, and in the drawing it does.`,
+          `试一个点：在 $(${px}, ${py})$ 处方程给出 $y' = ${m}$，所以那里的线段${riseZh}，图中正是如此。`,
+        ),
+      ),
+      figure: drawn(
         square(4),
         slopeField(right.f),
         t(`A slope field in which ${right.en.replaceAll("$", "")}.`, `一个斜率场：${right.zh.replaceAll("$", "")}。`),
       ),
-    );
+    });
   },
 };
 
@@ -1166,8 +1238,8 @@ const eulerFromField: KnowledgePointDef = {
   id: "one-euler-step-from-a-drawing",
   title: t("One Euler step from a drawing", "由图走一步欧拉法"),
   explanation: t(
-    "Euler's method follows the slope at the current point for a short step. So the new height is the old height plus the step size times the slope. On a drawing, the slope at the start point can be read from the segment through it, and this makes clear what the method does: it walks along a tangent, and so it drifts away from a curving solution.",
-    "欧拉法沿当前点的斜率走一小步。所以新的高度是旧的高度加步长乘斜率。在图上，起点的斜率可以从过它的线段读出，这也说明了这个方法在做什么：它沿切线走，所以会逐渐偏离弯曲的解。",
+    "Euler's method follows the slope at the current point for a short step, so the new height is the old height plus the step size times the slope: $y_1 = y_0 + h\\,m$. On a drawing, the slope at the start point can be read from the segment through it, as its rise over one unit across. For example, a segment from $(1, 2)$ to $(2, 5)$ has slope $3$, and a step of $h = \\frac{1}{2}$ gives $y_1 = 2 + \\frac{1}{2} \\cdot 3 = \\frac{7}{2}$.\n\nCheck: the step ends on the segment, halfway along it, at height $\\frac{2 + 5}{2} = \\frac{7}{2}$.\n\n> **Watch out.** Multiply the slope by the step size: only a step of $1$ goes all the way to the end of the segment.",
+    "欧拉法沿当前点的斜率走一小步，所以新的高度是旧的高度加步长乘斜率：$y_1 = y_0 + h\\,m$。在图上，起点的斜率可以从过它的线段读出，即横向一个单位的上升量。例如从 $(1, 2)$ 到 $(2, 5)$ 的线段斜率是 $3$，步长 $h = \\frac{1}{2}$ 给出 $y_1 = 2 + \\frac{1}{2} \\cdot 3 = \\frac{7}{2}$。\n\n检验：这一步落在线段上它的中点处，高度为 $\\frac{2 + 5}{2} = \\frac{7}{2}$。\n\n> **注意。** 斜率要乘以步长：只有步长为 $1$ 时才走到线段的终点。",
   ),
   generate(rng) {
     const x0 = rng.int(-2, 1);
@@ -1176,26 +1248,66 @@ const eulerFromField: KnowledgePointDef = {
     const hs = rng.pick([1, 2]);
     const h = Q.of(1, hs);
     const answer = Q.of(y0).add(h.mul(Q.of(m)));
-    return numeric(
+    const y1 = y0 + m;
+    const wrap = (n: number) => (n < 0 ? `(${n})` : `${n}`);
+    return drawnNumber(
       t(
         `A solution of a differential equation passes through the marked point, and the dashed segment shows the slope there. With step size $${h.toLatex()}$, what value of $y$ does one step of Euler's method give?`,
         `一个微分方程的解经过标出的点，虚线段表示那里的斜率。步长为 $${h.toLatex()}$ 时，走一步欧拉法得到的 $y$ 值是多少？`,
       ),
       answer,
-      [Q.of(y0 + m), Q.of(y0).sub(h.mul(Q.of(m))), h.mul(Q.of(m)), Q.of(y0).add(h), Q.of(y0), answer.add(Q.of(1)), answer.sub(Q.of(1))],
-      t(
-        `The slope is ${m}, read as the rise over one unit across. So $y_1 = ${y0} + ${h.toLatex()} \\times ${m < 0 ? `(${m})` : m} = ${answer.toLatex()}$.`,
-        `斜率是 ${m}，即横向一个单位的上升量。所以 $y_1 = ${y0} + ${h.toLatex()} \\times ${m < 0 ? `(${m})` : m} = ${answer.toLatex()}$。`,
-      ),
+      [
+        fieldStep(
+          ["Read the slope", "读出斜率"],
+          `The dashed segment runs from $(${x0}, ${y0})$ to $(${x0 + 1}, ${y1})$, one unit across:`,
+          `虚线段从 $(${x0}, ${y0})$ 到 $(${x0 + 1}, ${y1})$，横向一个单位：`,
+          `m = \\frac{${y1} - ${wrap(y0)}}{1} = ${m}`,
+        ),
+        fieldStep(["Take one step", "走一步"], "", "", `y_1 = ${y0} + ${h.toLatex()} \\cdot ${wrap(m)} = ${answer.toLatex()}`),
+      ],
+      hs === 1
+        ? t(
+            `A step of $1$ goes all the way along the segment, to its end $(${x0 + 1}, ${y1})$, whose height is $${y1}$.`,
+            `步长为 $1$ 时一直走到线段的终点 $(${x0 + 1}, ${y1})$，它的高度是 $${y1}$。`,
+          )
+        : t(
+            `A step of $\\frac{1}{2}$ ends halfway along the segment, at the height midway between its ends: $\\frac{${y0} + ${wrap(y1)}}{2} = ${answer.toLatex()}$.`,
+            `步长为 $\\frac{1}{2}$ 时停在线段中点，高度是两端的平均：$\\frac{${y0} + ${wrap(y1)}}{2} = ${answer.toLatex()}$。`,
+          ),
+      [
+        [
+          y1,
+          `This takes a step of $1$, to the end of the segment; the step is $${h.toLatex()}$`,
+          `这里走了长度为 $1$ 的一步，到了线段终点；步长是 $${h.toLatex()}$`,
+        ],
+        [
+          Q.of(y0).sub(h.mul(Q.of(m))),
+          `The sign is reversed: Euler's method adds $h\\,m$ to $y_0$`,
+          `符号反了：欧拉法是在 $y_0$ 上加 $h\\,m$`,
+        ],
+        [h.mul(Q.of(m)), `This is the change in $y$; add it to the starting height $${y0}$`, `这是 $y$ 的变化量；还要加上起始高度 $${y0}$`],
+        [Q.of(y0).add(h), `This adds the step size; multiply it by the slope $${m}$ first`, `这里加的是步长；要先乘以斜率 $${m}$`],
+        [y0, "This is the starting height; the step moves along the segment", "这是起始高度；这一步要沿线段移动"],
+        [
+          Q.of(x0).add(h.mul(Q.of(m))),
+          `This adds $h\\,m$ to the $x$-coordinate $${x0}$; the step changes $y$, starting from $y_0 = ${y0}$`,
+          `这里把 $h\\,m$ 加到了横坐标 $${x0}$ 上；这一步改变的是 $y$，从 $y_0 = ${y0}$ 出发`,
+        ],
+        [
+          Q.of(y0 + m * hs),
+          `This divides the slope by $${h.toLatex()}$ instead of multiplying`,
+          `这里用斜率除以了 $${h.toLatex()}$，而不是相乘`,
+        ],
+      ],
       drawn(
         square(6),
         [
-          { kind: "segment", a: [x0, y0], b: [x0 + 1, y0 + m], dashed: true, accent: true },
+          { kind: "segment", a: [x0, y0], b: [x0 + 1, y1], dashed: true, accent: true },
           { kind: "point", at: [x0, y0], accent: true },
         ],
         t(
-          `The point (${x0}, ${y0}), with a dashed segment to (${x0 + 1}, ${y0 + m}).`,
-          `点 (${x0}, ${y0})，以及连到 (${x0 + 1}, ${y0 + m}) 的虚线段。`,
+          `The point (${x0}, ${y0}), with a dashed segment to (${x0 + 1}, ${y1}).`,
+          `点 (${x0}, ${y0})，以及连到 (${x0 + 1}, ${y1}) 的虚线段。`,
         ),
       ),
     );
@@ -1207,8 +1319,8 @@ const logisticFromGraph: KnowledgePointDef = {
   figure: calculusDrawings5["qualitative-analysis-of-the-logistic-growth-equation#reading-a-logistic-curve"],
   title: t("Reading a logistic curve", "读 logistic 曲线"),
   explanation: t(
-    "A logistic curve rises slowly, then quickly, then levels off at the carrying capacity. The growth rate is the product of the population and the room that is left, so it is largest at half of the capacity. This is the inflection point of the curve, where its bending changes direction, and it can be spotted on a graph as the steepest place.",
-    "logistic 曲线先慢慢上升，再快速上升，然后在环境容量处变平。增长率是种群数量和剩余空间的积，所以在容量的一半处最大。这是曲线的拐点，弯曲方向在这里改变，在图上就是最陡的地方。",
+    "A logistic curve rises slowly, then quickly, then levels off at the carrying capacity. The growth rate is the product of the population and the room that is left, so it is largest at half of the capacity. This is the inflection point of the curve, where its bending changes direction, and it can be spotted on a graph as the steepest place. For example, if a curve levels off at $8$ grid units and each unit stands for $5$ animals, the capacity is $40$ and growth is fastest at $20$.\n\nCheck: at its steepest place the curve is at height $4$ grid units, half of $8$, which is $4 \\cdot 5 = 20$ animals.\n\n> **Watch out.** The question asks for a population, a height: the time at which the curve is steepest is read on the other axis.",
+    "logistic 曲线先慢慢上升，再快速上升，然后在环境容量处变平。增长率是种群数量和剩余空间的积，所以在容量的一半处最大。这是曲线的拐点，弯曲方向在这里改变，在图上就是最陡的地方。例如曲线在 $8$ 格处变平，每格代表 $5$ 只动物，容量就是 $40$，增长最快时是 $20$。\n\n检验：在最陡处曲线高 $4$ 格，是 $8$ 的一半，也就是 $4 \\cdot 5 = 20$ 只动物。\n\n> **注意。** 问的是种群数量，是高度：曲线最陡的时刻要在另一条轴上读。",
   ),
   generate(rng) {
     const half = rng.pick([2, 3, 4]);
@@ -1217,7 +1329,13 @@ const logisticFromGraph: KnowledgePointDef = {
     const f = (x: number) => (2 * half) / (1 + Math.exp(-1.2 * (x - mid)));
     const asksFastest = rng.bool();
     const answer = asksFastest ? half * 5 : capacity;
-    return numeric(
+    const readCapacity = fieldStep(
+      ["Read the carrying capacity", "读出环境容量"],
+      `The curve levels off at the dashed line, $${2 * half}$ grid units up, and each unit stands for $5$ animals:`,
+      `曲线在虚线处变平，高 $${2 * half}$ 格，每格代表 $5$ 只动物：`,
+      `${2 * half} \\cdot 5 = ${capacity}`,
+    );
+    return drawnNumber(
       t(
         asksFastest
           ? "This logistic curve shows a population, with each grid unit up standing for 5 animals. At what population is the growth fastest?"
@@ -1227,15 +1345,66 @@ const logisticFromGraph: KnowledgePointDef = {
           : "这条 logistic 曲线表示种群数量，纵向每格代表 5 只动物。环境容量是多少？",
       ),
       answer,
-      asksFastest ? [capacity, 2 * half, half, mid] : [half * 5, 2 * half, capacity * 5, mid],
-      t(
-        asksFastest
-          ? `The curve levels off at ${2 * half} grid units, which is ${capacity} animals. Growth is fastest at half of this, ${half * 5}.`
-          : `The curve levels off at ${2 * half} grid units, and each stands for 5 animals, so the capacity is ${capacity}.`,
-        asksFastest
-          ? `曲线在 ${2 * half} 格处变平，也就是 ${capacity} 只动物。增长最快时是它的一半，${half * 5}。`
-          : `曲线在 ${2 * half} 格处变平，每格代表 5 只动物，所以容量是 ${capacity}。`,
-      ),
+      asksFastest
+        ? [
+            readCapacity,
+            fieldStep(
+              ["Take half of it", "取它的一半"],
+              "Logistic growth is fastest at half of the carrying capacity:",
+              "logistic 增长在环境容量的一半处最快：",
+              `\\frac{${capacity}}{2} = ${half * 5}`,
+            ),
+          ]
+        : [
+            fieldStep(
+              ["Find the level", "找出平稳的高度"],
+              "The population grows ever more slowly and settles at the dashed line, which marks the carrying capacity.",
+              "种群增长越来越慢，最终稳定在虚线处，这条线标出环境容量。",
+            ),
+            readCapacity,
+          ],
+      asksFastest
+        ? t(
+            `Read it from the curve instead: it is steepest at $x = ${mid}$, where its height is $${half}$ grid units, which is $${half} \\cdot 5 = ${half * 5}$ animals.`,
+            `直接从曲线上读：它在 $x = ${mid}$ 处最陡，那里高 $${half}$ 格，也就是 $${half} \\cdot 5 = ${half * 5}$ 只动物。`,
+          )
+        : t(
+            `The steepest place, at $x = ${mid}$, is at height $${half}$ grid units, which should be half of the capacity: $2 \\cdot ${half} \\cdot 5 = ${capacity}$.`,
+            `最陡处在 $x = ${mid}$，高 $${half}$ 格，它应当是容量的一半：$2 \\cdot ${half} \\cdot 5 = ${capacity}$。`,
+          ),
+      asksFastest
+        ? [
+            [capacity, "This is the carrying capacity; growth is fastest at half of it", "这是环境容量；增长在它的一半处最快"],
+            [half, `This counts grid units; each stands for $5$ animals, so multiply by $5$`, `这是格数；每格代表 $5$ 只动物，要乘以 $5$`],
+            [
+              2 * half,
+              "This is the carrying capacity in grid units; take half of it and multiply by $5$",
+              "这是以格数计的环境容量；要取一半再乘以 $5$",
+            ],
+            [
+              mid,
+              "This is the time at which growth is fastest, read on the horizontal axis; the question asks for the population",
+              "这是增长最快的时刻，在横轴上读；题目问的是种群数量",
+            ],
+          ]
+        : [
+            [
+              half * 5,
+              "This is half of the capacity, where growth is fastest; the curve levels off higher",
+              "这是容量的一半，是增长最快处；曲线在更高处变平",
+            ],
+            [
+              2 * half,
+              `This counts grid units; each stands for $5$ animals, so multiply by $5$`,
+              `这是格数；每格代表 $5$ 只动物，要乘以 $5$`,
+            ],
+            [mid, "This is the time at which the curve is steepest, read on the horizontal axis", "这是曲线最陡的时刻，在横轴上读"],
+            [
+              half,
+              "This is the height of the steepest place in grid units; the capacity is where the curve levels off, counted in animals",
+              "这是最陡处以格数计的高度；容量是曲线变平的高度，要按动物只数计",
+            ],
+          ],
       drawn(
         { xMin: -1, xMax: 11, yMin: -1, yMax: 11, labelEvery: 2 },
         [

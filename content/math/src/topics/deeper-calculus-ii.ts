@@ -8,6 +8,7 @@ import { calculusDrawings4 } from "../explanation-drawings-calculus-4.ts";
 import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 
 import { numberProblem, steps } from "../problems.ts";
+import { type Step, walked } from "./calculus-i-differentiation.ts";
 
 /** nonzero picks a nonzero integer from -r to r. */
 const nonzero = (rng: Rng, r: number) => rng.pick([...Array(2 * r + 1).keys()].map((i) => i - r).filter((i) => i !== 0));
@@ -975,12 +976,43 @@ const limitFromSineSeries: KnowledgePointDef = {
   },
 };
 
+/** DeReason is a wrong value of a differential-equation question with its reason in English and Chinese. */
+type DeReason = readonly [value: number | Q, en: string, zh: string];
+
+/** deStepOf is a labelled step of a worked solution with what it says and its displayed lines. */
+const deStepOf = (title: readonly [string, string], en: string, zh: string, ...lines: string[]): Step => [
+  [title[0], title[1]],
+  t(en, zh),
+  lines,
+];
+
+/** deNumber asks for a number, explains it in labelled steps with a check, and keeps the first reason for each wrong value. */
+function deNumber(
+  prompt: readonly [string, string],
+  answer: number | Q,
+  parts: readonly Step[],
+  check: readonly [string, string],
+  reasons: readonly DeReason[],
+  form?: "integer",
+) {
+  const q = (v: number | Q) => (typeof v === "number" ? Q.of(v) : v);
+  const right = q(answer);
+  const kept = reasons.filter((r, i) => !q(r[0]).eq(right) && reasons.findIndex((s) => q(s[0]).eq(q(r[0]))) === i);
+  return numberProblem({
+    prompt: t(prompt[0], prompt[1]),
+    answer: right,
+    ...(form ? { form } : {}),
+    mistakes: kept.map(([value, en, zh]) => ({ value: q(value), why: t(en, zh) })),
+    solution: walked(parts, t(check[0], check[1])),
+  });
+}
+
 const separableWithSquares: KnowledgePointDef = {
   id: "an-initial-value-problem-with-squares",
   title: t("An initial value problem with squares", "含平方的初值问题"),
   explanation: t(
-    "Separating $\\frac{dy}{dx} = \\pm\\frac{x}{y}$ gives $y\\,dy = \\pm x\\,dx$, and integrating gives squares: $y^2 = \\pm x^2 + C$. The initial value fixes $C$. The solution is then a root, and the initial value also shows which sign of the root to take.",
-    "分离 $\\frac{dy}{dx} = \\pm\\frac{x}{y}$ 得 $y\\,dy = \\pm x\\,dx$，积分后出现平方：$y^2 = \\pm x^2 + C$。初值确定 $C$。解是一个根式，初值同时说明根式取哪个符号。",
+    "Separating $\\frac{dy}{dx} = \\pm\\frac{x}{y}$ gives $y\\,dy = \\pm x\\,dx$, and integrating gives squares: $y^2 = \\pm x^2 + C$. The initial value fixes $C$. The solution is then a root, and the initial value also shows which sign of the root to take. For $\\frac{dy}{dx} = \\frac{x}{y}$ with $y(0) = 3$: $y^{2} = x^{2} + 9$, so $y(4) = \\sqrt{25} = 5$.\n\nCheck: $y = \\sqrt{x^{2} + 9}$ has $y' = \\frac{x}{\\sqrt{x^{2} + 9}} = \\frac{x}{y}$ and $y(0) = 3$.\n\n> **Watch out.** The squares add, not the values: $y(4)$ is $\\sqrt{9 + 16}$, not $3 + 4$.",
+    "分离 $\\frac{dy}{dx} = \\pm\\frac{x}{y}$ 得 $y\\,dy = \\pm x\\,dx$，积分后出现平方：$y^2 = \\pm x^2 + C$。初值确定 $C$。解是一个根式，初值同时说明根式取哪个符号。对 $\\frac{dy}{dx} = \\frac{x}{y}$，$y(0) = 3$：$y^{2} = x^{2} + 9$，所以 $y(4) = \\sqrt{25} = 5$。\n\n检验：$y = \\sqrt{x^{2} + 9}$ 满足 $y' = \\frac{x}{\\sqrt{x^{2} + 9}} = \\frac{x}{y}$，且 $y(0) = 3$。\n\n> **注意。** 相加的是平方而不是数值：$y(4)$ 是 $\\sqrt{9 + 16}$，而不是 $3 + 4$。",
   ),
   generate(rng) {
     const [p, q, r] = rng.pick([
@@ -1000,19 +1032,47 @@ const separableWithSquares: KnowledgePointDef = {
     const answer = grow ? r * s : q * s;
     const right = grow ? "\\frac{x}{y}" : "-\\frac{x}{y}";
     const sign = grow ? "+" : "-";
-    return numberProblem({
-      prompt: t(
+    const root = `\\sqrt{${start * start} ${sign} x^{2}}`;
+    return deNumber(
+      [
         `Solve $\\frac{dy}{dx} = ${right}$ with $y(0) = ${start}$, and find $y(${x})$.`,
         `解 $\\frac{dy}{dx} = ${right}$，$y(0) = ${start}$，并求 $y(${x})$。`,
-      ),
+      ],
       answer,
-      form: "integer",
-      wrong: [grow ? start + x : start - x, start, x],
-      solution: t(
-        `Separating and integrating gives $y^2 = ${start * start} ${sign} x^2$, using the initial value. At $x = ${x}$ this is $${answer * answer}$, and since $y(0)$ is positive, $y(${x}) = ${answer}$.`,
-        `分离变量并积分，再用初值，得 $y^2 = ${start * start} ${sign} x^2$。在 $x = ${x}$ 处它等于 $${answer * answer}$，由于 $y(0)$ 为正，$y(${x}) = ${answer}$。`,
-      ),
-    });
+      [
+        deStepOf(
+          ["Separate and integrate", "分离变量并积分"],
+          "Multiply by $y\\,dx$, integrate, and put in $y(0)$:",
+          "两边乘以 $y\\,dx$，积分，再代入 $y(0)$：",
+          `y\\,dy = ${grow ? "" : "-"}x\\,dx \\quad\\Rightarrow\\quad y^{2} = ${start * start} ${sign} x^{2}`,
+        ),
+        deStepOf(
+          ["Evaluate and choose the root", "求值并选根"],
+          `At $x = ${x}$, $y^{2} = ${start * start} ${sign} ${x * x} = ${answer * answer}$. Since $y(0) = ${start} > 0$, take the positive root:`,
+          `在 $x = ${x}$ 处，$y^{2} = ${start * start} ${sign} ${x * x} = ${answer * answer}$。由于 $y(0) = ${start} > 0$，取正根：`,
+          `y(${x}) = \\sqrt{${answer * answer}} = ${answer}`,
+        ),
+      ],
+      [
+        `Substitute back $y = ${root}$: $y' = \\frac{${grow ? "" : "-"}x}{${root}} = ${right}$, the equation, and $y(0) = \\sqrt{${start * start}} = ${start}$.`,
+        `代回检验 $y = ${root}$：$y' = \\frac{${grow ? "" : "-"}x}{${root}} = ${right}$，正是原方程，且 $y(0) = \\sqrt{${start * start}} = ${start}$。`,
+      ],
+      [
+        [
+          grow ? start + x : start - x,
+          `This ${grow ? "adds" : "subtracts"} the values; the solution ${grow ? "adds" : "subtracts"} the squares, $y^{2} = ${start * start} ${sign} x^{2}$`,
+          `这里${grow ? "加" : "减"}的是数值；解中${grow ? "相加" : "相减"}的是平方，$y^{2} = ${start * start} ${sign} x^{2}$`,
+        ],
+        [start, "This is the initial value; $y$ changes as $x$ moves away from $0$", "这是初值；$x$ 离开 $0$ 后 $y$ 会变化"],
+        [x, `$${x}$ is the value of $x$, not of $y$`, `$${x}$ 是 $x$ 的值，不是 $y$ 的值`],
+        [
+          -answer,
+          `The negative root has $y(0) = -${start}$, but here $y(0) = ${start}$`,
+          `负根满足 $y(0) = -${start}$，而这里 $y(0) = ${start}$`,
+        ],
+      ],
+      "integer",
+    );
   },
 };
 
@@ -1020,8 +1080,8 @@ const coolingWithAHalfTime: KnowledgePointDef = {
   id: "cooling-with-a-fixed-halving-time",
   title: t("Cooling with a fixed halving time", "温差减半时间固定的冷却"),
   explanation: t(
-    "Newton's law of cooling, $\\frac{dT}{dt} = -k(T - E)$, says the difference from the surroundings decays exponentially. It is the difference that halves in a fixed time, not the temperature. So halve the difference the right number of times, then add the temperature of the surroundings back.",
-    "牛顿冷却定律 $\\frac{dT}{dt} = -k(T - E)$ 说明，与环境的温差按指数衰减。在固定时间内减半的是温差，而不是温度。所以把温差减半相应的次数，再加回环境温度。",
+    "Newton's law of cooling, $\\frac{dT}{dt} = -k(T - E)$, says the difference from the surroundings decays exponentially. It is the difference that halves in a fixed time, not the temperature. So halve the difference the right number of times, then add the temperature of the surroundings back. For a drink at $80$ °C in a room at $20$ °C whose difference halves every $10$ minutes, the difference $60$ becomes $15$ after $20$ minutes, so the drink is at $35$ °C.\n\nCheck: $35 - 20 = 15 = \\frac{60}{4}$, two halvings of the difference.\n\n> **Watch out.** Halving the temperature itself, $80 \\to 40 \\to 20$, ignores the room: the drink can never fall below $20$ °C.",
+    "牛顿冷却定律 $\\frac{dT}{dt} = -k(T - E)$ 说明，与环境的温差按指数衰减。在固定时间内减半的是温差，而不是温度。所以把温差减半相应的次数，再加回环境温度。一杯 $80$ °C 的饮料放在 $20$ °C 的房间里，温差每 $10$ 分钟减半，$20$ 分钟后温差 $60$ 变成 $15$，所以饮料是 $35$ °C。\n\n检验：$35 - 20 = 15 = \\frac{60}{4}$，正是温差减半两次。\n\n> **注意。** 把温度本身减半，$80 \\to 40 \\to 20$，就忽略了室温：饮料永远不会低于 $20$ °C。",
   ),
   generate(rng) {
     const E = rng.int(15, 25);
@@ -1031,18 +1091,45 @@ const coolingWithAHalfTime: KnowledgePointDef = {
     const left = Q.of(d, 2 ** n);
     const answer = left.add(Q.of(E));
     const T0 = E + d;
-    return numberProblem({
-      prompt: t(
+    return deNumber(
+      [
         `A drink at ${T0} °C cools in a room at ${E} °C according to Newton's law of cooling. Its difference from room temperature halves every ${H} minutes. What is its temperature after ${n * H} minutes, in °C?`,
         `一杯 ${T0} °C 的饮料在 ${E} °C 的房间中按牛顿冷却定律降温。它与室温的温差每 ${H} 分钟减半。${n * H} 分钟后它的温度是多少 °C？`,
-      ),
+      ],
       answer,
-      wrong: [left, Q.of(T0, 2 ** n), Q.of(d, 2 * n).add(Q.of(E))],
-      solution: t(
-        `The difference starts at $${d}$ and halves $${n}$ times, leaving $${left.toLatex()}$. Adding the room temperature gives $${answer.toLatex()}$.`,
-        `温差从 $${d}$ 开始，减半 $${n}$ 次，剩下 $${left.toLatex()}$。加上室温得 $${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        deStepOf(
+          ["Halve the difference", "把温差减半"],
+          `The difference starts at $${T0} - ${E} = ${d}$, and $${n * H}$ minutes is $${n}$ halving time${n === 1 ? "" : "s"}:`,
+          `温差起初是 $${T0} - ${E} = ${d}$，$${n * H}$ 分钟是 $${n}$ 个减半时间：`,
+          `\\frac{${d}}{2^{${n}}} = ${left.toLatex()}`,
+        ),
+        deStepOf(
+          ["Add the room temperature back", "加回室温"],
+          "The temperature is the room temperature plus the difference that is left:",
+          "温度等于室温加上剩下的温差：",
+          `T = ${E} + ${left.toLatex()} = ${answer.toLatex()}`,
+        ),
+      ],
+      [
+        `Substitute back: $T = ${E} + ${d}\\left(\\frac{1}{2}\\right)^{t/${H}}$ has $T' = -\\frac{\\ln 2}{${H}}(T - ${E})$, Newton's law with $k = \\frac{\\ln 2}{${H}}$, and $T(0) = ${E} + ${d} = ${T0}$. At $t = ${n * H}$ it gives $${E} + \\frac{${d}}{${2 ** n}} = ${answer.toLatex()}$.`,
+        `代回检验：$T = ${E} + ${d}\\left(\\frac{1}{2}\\right)^{t/${H}}$ 满足 $T' = -\\frac{\\ln 2}{${H}}(T - ${E})$，即 $k = \\frac{\\ln 2}{${H}}$ 的牛顿冷却定律，且 $T(0) = ${E} + ${d} = ${T0}$。在 $t = ${n * H}$ 时它给出 $${E} + \\frac{${d}}{${2 ** n}} = ${answer.toLatex()}$。`,
+      ],
+      [
+        [left, `This is the difference from the room; add the room temperature $${E}$ back`, `这是与室温的温差；还要加回室温 $${E}$`],
+        [
+          Q.of(T0, 2 ** n),
+          "This halves the temperature itself; it is the difference from the room that halves",
+          "这里把温度本身减半了；减半的是与室温的温差",
+        ],
+        [
+          Q.of(d, 2 * n).add(Q.of(E)),
+          `This divides the difference by $2 \\cdot ${n}$; ${n} halvings divide it by $2^{${n}}$`,
+          `这里用 $2 \\cdot ${n}$ 去除温差；减半 ${n} 次应除以 $2^{${n}}$`,
+        ],
+        [E, "The drink only approaches room temperature as time goes on; it never reaches it", "饮料只是随时间趋于室温，永远达不到"],
+      ],
+    );
   },
 };
 
@@ -1050,8 +1137,8 @@ const stepSizeFromEuler: KnowledgePointDef = {
   id: "the-step-size-from-one-step-of-eulers-method",
   title: t("The step size from one step of Euler's method", "由欧拉法的一步求步长"),
   explanation: t(
-    "One step of Euler's method is $y_1 = y_0 + h\\,f(x_0, y_0)$. This relation can be read in any direction: if the two values and the slope are known, the change $y_1 - y_0$ divided by the slope gives the step size $h$.",
-    "欧拉法的一步是 $y_1 = y_0 + h\\,f(x_0, y_0)$。这个关系可以朝任何方向读：如果已知两个值和斜率，变化量 $y_1 - y_0$ 除以斜率就是步长 $h$。",
+    "One step of Euler's method is $y_1 = y_0 + h\\,f(x_0, y_0)$. This relation can be read in any direction: if the two values and the slope are known, the change $y_1 - y_0$ divided by the slope gives the step size $h$. For $y' = 2y$ from $y(0) = 3$ with estimate $4.2$: the slope is $6$ and the change is $1.2$, so $h = 1.2 \\div 6 = 0.2$.\n\nCheck: $3 + 0.2 \\cdot 6 = 4.2$.\n\n> **Watch out.** Divide the change $y_1 - y_0$, not the new value $y_1$.",
+    "欧拉法的一步是 $y_1 = y_0 + h\\,f(x_0, y_0)$。这个关系可以朝任何方向读：如果已知两个值和斜率，变化量 $y_1 - y_0$ 除以斜率就是步长 $h$。对 $y' = 2y$，从 $y(0) = 3$ 出发，估计值为 $4.2$：斜率是 $6$，变化量是 $1.2$，所以 $h = 1.2 \\div 6 = 0.2$。\n\n检验：$3 + 0.2 \\cdot 6 = 4.2$。\n\n> **注意。** 要除的是变化量 $y_1 - y_0$，而不是新值 $y_1$。",
   ),
   generate(rng) {
     const y0 = rng.int(1, 9);
@@ -1061,18 +1148,54 @@ const stepSizeFromEuler: KnowledgePointDef = {
     const h = Q.of(1, s);
     const y1 = Q.of(y0).add(h.mul(Q.of(k * y0)));
     const change = y1.sub(Q.of(y0));
-    return numberProblem({
-      prompt: t(
+    const slope = k * y0;
+    return deNumber(
+      [
         `One step of Euler's method for $y' = ${poly([k, "y"])}$ with $y(${x0}) = ${y0}$ gives the estimate $${y1.toLatex()}$. What is the step size?`,
         `对 $y' = ${poly([k, "y"])}$，$y(${x0}) = ${y0}$，欧拉法的一步给出估计值 $${y1.toLatex()}$。步长是多少？`,
-      ),
-      answer: h,
-      wrong: [change, Q.of(1, s * k), Q.of(k, s)],
-      solution: t(
-        `The slope at the start is $${k * y0}$, and the estimate rose by $${change.toLatex()}$. So $h = ${change.toLatex()} \\div ${k * y0} = ${h.toLatex()}$.`,
-        `起点的斜率是 $${k * y0}$，估计值上升了 $${change.toLatex()}$。所以 $h = ${change.toLatex()} \\div ${k * y0} = ${h.toLatex()}$。`,
-      ),
-    });
+      ],
+      h,
+      [
+        deStepOf(
+          ["Find the slope at the start", "求起点处的斜率"],
+          "Euler's method uses the slope at the starting point:",
+          "欧拉法用的是起点处的斜率：",
+          `f(${x0}, ${y0}) = ${k === 1 ? "" : `${k} \\cdot `}${y0} = ${slope}`,
+        ),
+        deStepOf(
+          ["Divide the change by the slope", "用变化量除以斜率"],
+          `The estimate rose by $${y1.toLatex()} - ${y0} = ${change.toLatex()}$:`,
+          `估计值上升了 $${y1.toLatex()} - ${y0} = ${change.toLatex()}$：`,
+          `h = ${change.toLatex()} \\div ${slope} = ${h.toLatex()}`,
+        ),
+      ],
+      [
+        `Take the step: $${y0} + ${h.toLatex()} \\cdot ${slope} = ${y1.toLatex()}$, the estimate given.`,
+        `走一步：$${y0} + ${h.toLatex()} \\cdot ${slope} = ${y1.toLatex()}$，正是给出的估计值。`,
+      ],
+      [
+        [
+          change,
+          `$${change.toLatex()}$ is the change in $y$; divide it by the slope $${slope}$`,
+          `$${change.toLatex()}$ 是 $y$ 的变化量；还要除以斜率 $${slope}$`,
+        ],
+        [
+          Q.of(k, s),
+          `This divides the change by $${y0}$ only; the slope is $${k} \\cdot ${y0} = ${slope}$`,
+          `这里只除以了 $${y0}$；斜率是 $${k} \\cdot ${y0} = ${slope}$`,
+        ],
+        [
+          y1.div(Q.of(slope)),
+          "This divides the estimate itself; divide the change $y_1 - y_0$",
+          "这里除的是估计值本身；应当除变化量 $y_1 - y_0$",
+        ],
+        [
+          Q.of(1, s * k),
+          `This divides by $${k}$ again after dividing by the slope $${slope}$`,
+          `这里除以斜率 $${slope}$ 之后又除了一次 $${k}$`,
+        ],
+      ],
+    );
   },
 };
 

@@ -1,14 +1,16 @@
 // Knowledge points of Differential Equations that ask the learner to read a drawing: slope fields, phase lines,
 // phase portraits and solution curves. See `deeperFiguresDifferentialEquationsPoints`.
 
-import type { KnowledgePointDef } from "@ga/content";
+import type { Figure, KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
 import type { PlaneMark, PlaneView, Point } from "@ga/subject-math";
 import { Q, svgDocument } from "@ga/subject-math";
 import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 import { differentialEquationsDrawings1 } from "../explanation-drawings-differential-equations-1.ts";
+import { explainedChoice, numberProblem } from "../problems.ts";
 
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
+import { type Step, walked } from "./calculus-i-differentiation.ts";
 import { drawn, label } from "./figure-reading-more.ts";
 
 /** square is the view from -r to r on both axes. */
@@ -230,28 +232,123 @@ const autonomousCases: readonly AutonomousCase[] = [
   }),
 ];
 
+/** Because is a wrong value or option with its reason in English and Chinese. */
+type Because<T> = readonly [wrong: T, en: string, zh: string];
+
+/** stepOf is a labelled step of a worked solution with what it says and its displayed lines. */
+const stepOf = (title: Pair, said: Pair, ...lines: string[]): Step => [title, t(...said), lines];
+
+/** figureNumber asks for a number read from a drawing, explained in labelled steps with a check, keeping the first reason for each wrong value. */
+function figureNumber(
+  prompt: Pair,
+  answer: number | Q,
+  parts: readonly Step[],
+  check: Pair,
+  reasons: readonly Because<number | Q>[],
+  figure: Figure,
+) {
+  const q = (v: number | Q) => (typeof v === "number" ? Q.of(v) : v);
+  const right = q(answer);
+  const kept = reasons.filter((r, i) => !q(r[0]).eq(right) && reasons.findIndex((s) => q(s[0]).eq(q(r[0]))) === i);
+  const problem = numberProblem({
+    prompt: t(...prompt),
+    answer: right,
+    mistakes: kept.map(([value, en, zh]) => ({ value: q(value), why: t(en, zh) })),
+    solution: walked(parts, t(...check)),
+  });
+  return { ...problem, figure };
+}
+
+/** figureChoice asks a choice about a drawing whose wrong options each have a reason, explained in labelled steps with a check. */
+function figureChoice(
+  rng: Rng,
+  prompt: Pair,
+  correct: Pair,
+  wrong: readonly Because<Pair>[],
+  parts: readonly Step[],
+  check: Pair,
+  figure: Figure,
+) {
+  return explainedChoice(rng, {
+    prompt: t(...prompt),
+    correct: t(...correct),
+    wrong: wrong.map(([option, en, zh]) => ({ option: t(...option), why: t(en, zh) })),
+    solution: walked(parts, t(...check)),
+    figure,
+  });
+}
+
+/** zerosOf lists the whole numbers from -4 to 4 where a right side is zero. */
+const zerosOf = (f: (v: number) => number) => [-4, -3, -2, -1, 0, 1, 2, 3, 4].filter((v) => f(v) === 0);
+
+/** linesAt names the lines v = c for each zero, joined in English and in Chinese. */
+const linesAt = (v: string, zeros: readonly number[]): Pair => [
+  zeros.map((z) => `$${v} = ${z}$`).join(" and "),
+  zeros.map((z) => `$${v} = ${z}$`).join(" 和 "),
+];
+
+/** testLine picks a whole number from -3 to 3 where a right side is not zero, nearest the first zero. */
+const testLine = (f: (v: number) => number, zeros: readonly number[]) => {
+  const z = zeros[0] ?? 0;
+  return [z + 1, z - 1, z + 2, z - 2, 3, -3].find((v) => v >= -3 && v <= 3 && f(v) !== 0) ?? 3;
+};
+
 const autonomousField = point(
   "the-equation-of-an-autonomous-slope-field",
   ["The equation of an autonomous slope field", "自治斜率场的方程"],
   [
-    "In the slope field of an autonomous equation, every segment in a horizontal row has the same slope, because the slope depends only on $y$. So look for the rows with flat segments, which are the equilibria, then read the sign of the slopes between them. These two facts usually leave only one candidate equation.",
-    "在自治方程的斜率场中，同一水平行上的线段斜率相同，因为斜率只取决于 $y$。所以先找线段水平的行，它们就是平衡点，再读它们之间斜率的符号。这两点通常只留下一个候选方程。",
+    "In the slope field of an autonomous equation, every segment in a horizontal row has the same slope, because the slope depends only on $y$. So look for the rows with flat segments, which are the equilibria, then read the sign of the slopes between them. These two facts usually leave only one candidate equation. For example, if the segments are flat along $y = -1$ and $y = 2$ and slope down between them, the equation is $y' = (y + 1)(y - 2)$ rather than $y' = -(y + 1)(y - 2)$.\n\nCheck: at height $y = 0$, $(0 + 1)(0 - 2) = -2 < 0$, so the segments in that row fall, as drawn.\n\n> **Watch out.** Two equations with the same flat rows differ only in sign: test one row between them before choosing.",
+    "在自治方程的斜率场中，同一水平行上的线段斜率相同，因为斜率只取决于 $y$。所以先找线段水平的行，它们就是平衡点，再读它们之间斜率的符号。这两点通常只留下一个候选方程。例如线段沿 $y = -1$ 和 $y = 2$ 水平，在它们之间向下倾斜，方程就是 $y' = (y + 1)(y - 2)$，而不是 $y' = -(y + 1)(y - 2)$。\n\n检验：在高度 $y = 0$ 处，$(0 + 1)(0 - 2) = -2 < 0$，所以这一行的线段向下，与图相符。\n\n> **注意。** 水平行相同的两个方程只差一个符号：选之前要在它们之间试一行。",
   ],
   (rng) => {
     const right = rng.pick(autonomousCases);
-    return choose(
+    const zeros = zerosOf(right.f);
+    const rows = linesAt("y", zeros);
+    const wrong = rng
+      .sample(
+        autonomousCases.filter((c) => c !== right),
+        3,
+      )
+      .map((c): Because<Pair> => {
+        const theirs = zerosOf(c.f);
+        return theirs.join() === zeros.join()
+          ? [
+              same(`y' = ${c.tex}`),
+              `This has the same flat rows, but for it the ${c.clue[0]}, while in the drawing the ${right.clue[0]}`,
+              `它的水平行相同，但对它来说${c.clue[1]}，而图中${right.clue[1]}`,
+            ]
+          : [
+              same(`y' = ${c.tex}`),
+              `For it the flat ${theirs.length === 1 ? "row is" : "rows are"} ${linesAt("y", theirs)[0]}, but in the drawing ${zeros.length === 1 ? "it is" : "they are"} ${rows[0]}`,
+              `它的水平行是 ${linesAt("y", theirs)[1]}，而图中是 ${rows[1]}`,
+            ];
+      });
+    const y1 = testLine(right.f, zeros);
+    const m = right.f(y1);
+    return figureChoice(
       rng,
       ["Which equation has the slope field drawn?", "哪个方程具有图中的斜率场？"],
       same(`y' = ${right.tex}`),
-      rng
-        .sample(
-          autonomousCases.filter((c) => c !== right),
-          3,
-        )
-        .map((c) => same(`y' = ${c.tex}`)),
+      wrong,
       [
-        `In the field, ${right.clue[0]}, and this holds along every row, which matches $y' = ${right.tex}$.`,
-        `场中${right.clue[1]}，每一行都如此，与 $y' = ${right.tex}$ 相符。`,
+        stepOf(
+          ["Find the flat rows", "找水平的行"],
+          [
+            `Each row of the drawing has one slope, so the equation is autonomous, and the segments are flat along ${rows[0]}.`,
+            `图中每一行只有一种斜率，所以方程是自治的；线段沿 ${rows[1]} 水平。`,
+          ],
+        ),
+        stepOf(
+          ["Read the signs", "读符号"],
+          [
+            `In the drawing the ${right.clue[0]}, which matches $y' = ${right.tex}$.`,
+            `图中${right.clue[1]}，与 $y' = ${right.tex}$ 相符。`,
+          ],
+        ),
+      ],
+      [
+        `Test one row: at height $y = ${y1}$ the equation gives $y' = ${m}$, so the segments in that row ${m > 0 ? "rise" : "fall"}, as they do in the drawing.`,
+        `试一行：在高度 $y = ${y1}$ 处方程给出 $y' = ${m}$，所以这一行的线段${m > 0 ? "向上" : "向下"}，与图中一致。`,
       ],
       fig(
         square(4),
@@ -282,24 +379,60 @@ const integrableField = {
     "the-equation-of-a-directly-integrable-field",
     ["The equation of a directly integrable field", "可直接积分的斜率场的方程"],
     [
-      "When $y' = f(x)$, the slope depends only on $x$, so every segment in a vertical column has the same slope, and solution curves are vertical translates of one another. Find the column where the segments are flat, which is where $f$ is zero, and then read whether $f$ changes sign there.",
-      "当 $y' = f(x)$ 时，斜率只取决于 $x$，所以同一竖直列上的线段斜率相同，解曲线彼此是竖直平移。先找线段水平的那一列，那里 $f$ 为零，再读 $f$ 在那里是否变号。",
+      "When $y' = f(x)$, the slope depends only on $x$, so every segment in a vertical column has the same slope, and solution curves are vertical translates of one another. Find the column where the segments are flat, which is where $f$ is zero, and then read whether $f$ changes sign there. For example, segments flat along $x = 1$ and rising on both sides fit $y' = (x - 1)^{2}$, while a change from falling to rising fits $y' = x - 1$.\n\nCheck: at $x = 0$ and at $x = 2$, $(x - 1)^{2} = 1 > 0$, so both columns rise, as described.\n\n> **Watch out.** A square keeps its sign on both sides of the zero; only the odd power changes sign there.",
+      "当 $y' = f(x)$ 时，斜率只取决于 $x$，所以同一竖直列上的线段斜率相同，解曲线彼此是竖直平移。先找线段水平的那一列，那里 $f$ 为零，再读 $f$ 在那里是否变号。例如线段沿 $x = 1$ 水平、两侧都向上，符合 $y' = (x - 1)^{2}$；由向下变为向上，则符合 $y' = x - 1$。\n\n检验：在 $x = 0$ 和 $x = 2$ 处，$(x - 1)^{2} = 1 > 0$，所以两列都向上，与描述一致。\n\n> **注意。** 平方在零点两侧符号不变；只有奇次幂在那里变号。",
     ],
     (rng) => {
       const right = rng.pick(integrableCases);
-      return choose(
+      const zeros = zerosOf(right.f);
+      const wrong = rng
+        .sample(
+          integrableCases.filter((c) => c !== right),
+          3,
+        )
+        .map((c): Because<Pair> => {
+          const theirs = zerosOf(c.f);
+          return theirs.join() === zeros.join()
+            ? [
+                same(`y' = ${c.tex}`),
+                `This is also ${c.clue[0]}, but the drawing is ${right.clue[0]}`,
+                `它也${c.clue[1]}，但图中线段${right.clue[1]}`,
+              ]
+            : [
+                same(`y' = ${c.tex}`),
+                `For it the flat column is ${linesAt("x", theirs)[0]}, but in the drawing it is ${linesAt("x", zeros)[0]}`,
+                `它的水平列是 ${linesAt("x", theirs)[1]}，而图中是 ${linesAt("x", zeros)[1]}`,
+              ];
+        });
+      const x1 = testLine(right.f, zeros);
+      const mirror = 2 * (zeros[0] ?? 0) - x1;
+      const x2 = mirror >= -3 && mirror <= 3 ? mirror : x1 + Math.sign(x1 - (zeros[0] ?? 0));
+      const m1 = right.f(x1);
+      const m2 = right.f(x2);
+      return figureChoice(
         rng,
         ["Which equation has the slope field drawn?", "哪个方程具有图中的斜率场？"],
         same(`y' = ${right.tex}`),
-        rng
-          .sample(
-            integrableCases.filter((c) => c !== right),
-            3,
-          )
-          .map((c) => same(`y' = ${c.tex}`)),
+        wrong,
         [
-          `The segments are ${right.clue[0]}, and each column has one slope, which matches $y' = ${right.tex}$.`,
-          `线段${right.clue[1]}，每列只有一种斜率，与 $y' = ${right.tex}$ 相符。`,
+          stepOf(
+            ["See what the slope depends on", "看斜率依赖什么"],
+            [
+              `Each column of the drawing has one slope, so the slope depends on $x$ only and the equation has the form $y' = f(x)$; the segments are flat along ${linesAt("x", zeros)[0]}.`,
+              `图中每一列只有一种斜率，所以斜率只依赖于 $x$，方程形如 $y' = f(x)$；线段沿 ${linesAt("x", zeros)[1]} 水平。`,
+            ],
+          ),
+          stepOf(
+            ["Read the signs on each side", "读两侧的符号"],
+            [
+              `The segments are ${right.clue[0]}, which matches $y' = ${right.tex}$.`,
+              `线段${right.clue[1]}，与 $y' = ${right.tex}$ 相符。`,
+            ],
+          ),
+        ],
+        [
+          `Test two columns: the equation gives $y' = ${m1}$ at $x = ${x1}$ and $y' = ${m2}$ at $x = ${x2}$, so those columns ${m1 > 0 === m2 > 0 ? `both ${m1 > 0 ? "rise" : "fall"}` : `${m1 > 0 ? "rise" : "fall"} and ${m2 > 0 ? "rise" : "fall"}`}, as in the drawing.`,
+          `试两列：方程在 $x = ${x1}$ 处给出 $y' = ${m1}$，在 $x = ${x2}$ 处给出 $y' = ${m2}$，所以这两列${m1 > 0 === m2 > 0 ? `都${m1 > 0 ? "向上" : "向下"}` : `分别${m1 > 0 ? "向上" : "向下"}和${m2 > 0 ? "向上" : "向下"}`}，与图中一致。`,
         ],
         fig(
           square(4),
@@ -319,8 +452,8 @@ const limitFromField = point(
   "where-a-solution-goes-in-a-slope-field",
   ["Where a solution goes in a slope field", "斜率场中的解趋向何处"],
   [
-    "To follow a solution through a slope field, start at the given point and move to the right along the segments. In an autonomous field the solution cannot cross a row of flat segments, so it either approaches one of these rows or leaves the picture. Slopes pointing toward a flat row mean that the row attracts the solution.",
-    "要在斜率场中跟踪一个解，就从给定点出发沿线段向右移动。在自治场中，解不能穿过线段水平的行，所以要么趋近这样的一行，要么离开图形。指向水平行的斜率说明这一行吸引解。",
+    "To follow a solution through a slope field, start at the given point and move to the right along the segments. In an autonomous field the solution cannot cross a row of flat segments, so it either approaches one of these rows or leaves the picture. Slopes pointing toward a flat row mean that the row attracts the solution. For example, if the rows $y = -1$ and $y = 2$ are flat and the segments slope up between them, a solution starting at height $0$ rises toward $y = 2$.\n\nCheck: the flat row $y = 2$ is itself a constant solution, so the rising solution cannot cross it and must level off below it.\n\n> **Watch out.** A flat row whose nearby segments lean away from it repels solutions: the solution above $y = -1$ moves away from it.",
+    "要在斜率场中跟踪一个解，就从给定点出发沿线段向右移动。在自治场中，解不能穿过线段水平的行，所以要么趋近这样的一行，要么离开图形。指向水平行的斜率说明这一行吸引解。例如 $y = -1$ 和 $y = 2$ 两行水平，它们之间的线段向上，从高度 $0$ 出发的解就上升趋于 $y = 2$。\n\n检验：水平行 $y = 2$ 本身就是常数解，所以上升的解无法越过它，只能在它下方趋于平稳。\n\n> **注意。** 如果水平行附近的线段背离它，这一行就排斥解：$y = -1$ 上方的解远离它。",
   ],
   (rng) => {
     const [a, b] = rng.pick<Point>([
@@ -343,17 +476,55 @@ const limitFromField = point(
       : above
         ? 3
         : rng.pick([(a + b) / 2, a + 0.5, b - 0.5]);
-    return ask(
+    const falls = y0 > target;
+    const flat = single ? linesAt("y", [c]) : linesAt("y", [a, b]);
+    const reasons: Because<number | Q>[] = [
+      [
+        Q.of(2 * y0, 2),
+        "The segments at $P$ are not flat, so the solution does not stay at its starting height",
+        "$P$ 处的线段不水平，所以解不会停在起始高度",
+      ],
+    ];
+    if (single) {
+      if (c !== 0) reasons.push([-c, `A sign slipped: the flat row is at height $${c}$`, `符号错了：水平行在高度 $${c}$ 处`]);
+      reasons.push([
+        falls ? c - 1 : c + 1,
+        `The solution cannot cross the flat row $y = ${c}$, so it cannot end ${falls ? "below" : "above"} it`,
+        `解无法越过水平行 $y = ${c}$，所以不会停在它${falls ? "下方" : "上方"}`,
+      ]);
+    } else {
+      reasons.push(
+        above
+          ? [a, `To reach $${a}$ the solution would have to cross the flat row $y = ${b}$`, `要到达 $${a}$，解必须越过水平行 $y = ${b}$`]
+          : [
+              a,
+              `The segments just above $y = ${a}$ lean away from it, so that row repels the solution`,
+              `$y = ${a}$ 上方的线段背离它，所以这一行排斥解`,
+            ],
+        [a + b, "This adds the heights of the flat rows; the limit is one of them", "这是两条水平行的高度之和；极限是其中之一"],
+      );
+    }
+    return figureNumber(
       [
         "The slope field is that of an autonomous equation. What is $\\lim_{x \\to \\infty} y(x)$ for the solution through $P$?",
         "这是某自治方程的斜率场。过 $P$ 的解的 $\\lim_{x \\to \\infty} y(x)$ 是多少？",
       ],
       target,
-      single ? [y0, c + 2, -c === c ? c - 2 : -c] : [a, y0 === Math.floor(y0) ? y0 : a - 1, b + 2],
       [
-        `The row at height $${target}$ has flat segments, and the segments near $P$ lean toward it, so the solution through $P$ approaches that row and never crosses it.`,
-        `高度 $${target}$ 的行线段水平，$P$ 附近的线段都倾向这一行，所以过 $P$ 的解趋近这一行且不穿过它。`,
+        stepOf(["Find the flat rows", "找水平的行"], [`The segments are flat along ${flat[0]}.`, `线段沿 ${flat[1]} 水平。`]),
+        stepOf(
+          ["Follow the segments from P", "从 P 沿线段走"],
+          [
+            `At $P$, at height $${y0}$, the segments ${falls ? "fall" : "rise"}, so the solution moves ${falls ? "down" : "up"} toward the flat row $y = ${target}$ and levels off there.`,
+            `在高度为 $${y0}$ 的 $P$ 处线段${falls ? "向下" : "向上"}，所以解${falls ? "下降" : "上升"}趋于水平行 $y = ${target}$，并在那里趋于平稳。`,
+          ],
+        ),
       ],
+      [
+        `The flat row $y = ${target}$ is a constant solution, which no other solution can cross, and between $P$ and that row every segment ${falls ? "falls" : "rises"}; so the solution keeps moving toward $y = ${target}$ and its limit is $${target}$.`,
+        `水平行 $y = ${target}$ 是常数解，其他解都无法越过它；在 $P$ 与这一行之间每条线段都${falls ? "向下" : "向上"}，所以解一直趋向 $y = ${target}$，极限是 $${target}$。`,
+      ],
+      reasons,
       fig(
         square(4),
         [...slopes((_x, y) => f(y)), { kind: "point", at: [-3.5, y0], label: "P", dir: "e" }],
@@ -641,8 +812,8 @@ const halfLifeFromGraph = {
     "half-life-from-a-decay-curve",
     ["Half-life from a decay curve", "由衰减曲线读半衰期"],
     [
-      "Exponential decay halves the amount in equal steps of time, and that step is the half-life. On a graph, pick any point, read its height and find where the height has dropped to half. The same step works from any starting height, which is why the curve never reaches zero within a finite time.",
-      "指数衰减在相等的时间步内使数量减半，这个步长就是半衰期。在图上任取一点，读出高度，再找高度降到一半的地方。从任何高度出发，步长都相同，所以曲线在有限时间内永远到不了零。",
+      "Exponential decay halves the amount in equal steps of time, and that step is the half-life. On a graph, pick any point, read its height and find where the height has dropped to half. The same step works from any starting height, which is why the curve never reaches zero within a finite time. For example, a curve that starts at $8$ and is at $4$ when $t = 3$ has half-life $3$, and at $t = 9$ it is at $\\frac{8}{2^{3}} = 1$.\n\nCheck: from height $4$ at $t = 3$ the curve reaches $2$ at $t = 6$, again a step of $3$.\n\n> **Watch out.** The half-life is a time, read on the horizontal axis, not the height $\\frac{8}{2} = 4$.",
+      "指数衰减在相等的时间步内使数量减半，这个步长就是半衰期。在图上任取一点，读出高度，再找高度降到一半的地方。从任何高度出发，步长都相同，所以曲线在有限时间内永远到不了零。例如曲线从 $8$ 开始，$t = 3$ 时为 $4$，半衰期就是 $3$；在 $t = 9$ 时它为 $\\frac{8}{2^{3}} = 1$。\n\n检验：从 $t = 3$ 时的高度 $4$ 出发，曲线在 $t = 6$ 时到达 $2$，步长仍是 $3$。\n\n> **注意。** 半衰期是时间，要在横轴上读，而不是高度 $\\frac{8}{2} = 4$。",
     ],
     (rng) => {
       const A = rng.pick([4, 6, 8]);
@@ -651,32 +822,92 @@ const halfLifeFromGraph = {
       const times = rng.int(2, 4);
       const f = (x: number) => A * 2 ** (-x / h);
       const after = Q.of(A, 2 ** times);
-      return ask(
-        asksHalfLife
-          ? [
-              "The curve shows an amount that decays exponentially with time. What is its half-life?",
-              "曲线表示随时间指数衰减的数量。它的半衰期是多少？",
-            ]
-          : [
-              `The curve shows an amount that decays exponentially with time. What is the amount at time $t = ${times * h}$?`,
-              `曲线表示随时间指数衰减的数量。在 $t = ${times * h}$ 时数量是多少？`,
+      const figure = fig(
+        { xMin: 0, xMax: 9, yMin: 0, yMax: 9, xName: "t" },
+        [{ kind: "curve", f, from: 0, to: 9, accent: true }],
+        [`A decay curve that starts at ${A} and halves every ${h} units of time.`, `从 ${A} 开始、每 ${h} 个时间单位减半的衰减曲线。`],
+      );
+      const readHalf = stepOf(
+        ["Read the half-life", "读出半衰期"],
+        [
+          `The curve starts at $${A}$ and reaches half of it, $${A / 2}$, at $t = ${h}$, so the half-life is $${h}$.`,
+          `曲线从 $${A}$ 开始，在 $t = ${h}$ 时降到它的一半 $${A / 2}$，所以半衰期是 $${h}$。`,
+        ],
+      );
+      if (asksHalfLife)
+        return figureNumber(
+          [
+            "The curve shows an amount that decays exponentially with time. What is its half-life?",
+            "曲线表示随时间指数衰减的数量。它的半衰期是多少？",
+          ],
+          h,
+          [
+            stepOf(["Read the start", "读出起始值"], [`At $t = 0$ the amount is $${A}$.`, `$t = 0$ 时数量是 $${A}$。`]),
+            stepOf(
+              ["Find where it has halved", "找减半的位置"],
+              [
+                `The height $${A / 2}$ is reached at $t = ${h}$, so the half-life is $${h}$.`,
+                `高度 $${A / 2}$ 在 $t = ${h}$ 时到达，所以半衰期是 $${h}$。`,
+              ],
+            ),
+          ],
+          [
+            `Start from another point: from height $${A / 2}$ at $t = ${h}$ the curve reaches $${Q.of(A, 4).toLatex()}$ at $t = ${2 * h}$, again a step of $${h}$.`,
+            `换一个起点：从 $t = ${h}$ 时的高度 $${A / 2}$ 出发，曲线在 $t = ${2 * h}$ 时到达 $${Q.of(A, 4).toLatex()}$，步长仍是 $${h}$。`,
+          ],
+          [
+            [A, `$${A}$ is the starting amount, a height; the half-life is a time`, `$${A}$ 是起始数量，是高度；半衰期是时间`],
+            [
+              2 * h,
+              `At $t = ${2 * h}$ the amount is down to a quarter, $${Q.of(A, 4).toLatex()}$: that is two half-lives`,
+              `在 $t = ${2 * h}$ 时数量已降到四分之一 $${Q.of(A, 4).toLatex()}$：那是两个半衰期`,
             ],
-        asksHalfLife ? h : after,
-        asksHalfLife ? [A, 2 * h, A / 2] : [Q.of(A, 2 * times), Q.of(A, 2 ** (times - 1)), Q.of(A, times)],
-        asksHalfLife
-          ? [
-              `The amount starts at $${A}$ and reaches $${A / 2}$ at time $${h}$, so the half-life is $${h}$.`,
-              `数量从 $${A}$ 开始，在时间 $${h}$ 降到 $${A / 2}$，所以半衰期是 $${h}$。`,
-            ]
-          : [
-              `The amount starts at $${A}$ and halves every $${h}$, as the graph shows. Time $${times * h}$ is $${times}$ halvings, which leaves $${after.toLatex()}$.`,
-              `数量从 $${A}$ 开始，由图可知每过 $${h}$ 减半。时间 $${times * h}$ 是减半 $${times}$ 次，剩下 $${after.toLatex()}$。`,
+            [
+              A / 2,
+              `$${A / 2}$ is the amount after one half-life, a height, not the time it takes`,
+              `$${A / 2}$ 是经过一个半衰期后的数量，是高度，不是所用的时间`,
             ],
-        fig(
-          { xMin: 0, xMax: 9, yMin: 0, yMax: 9, xName: "t" },
-          [{ kind: "curve", f, from: 0, to: 9, accent: true }],
-          [`A decay curve that starts at ${A} and halves every ${h} units of time.`, `从 ${A} 开始、每 ${h} 个时间单位减半的衰减曲线。`],
-        ),
+          ],
+          figure,
+        );
+      const chain = Array.from({ length: times + 1 }, (_, i) => Q.of(A, 2 ** i).toLatex()).join(" \\to ");
+      const at = Array.from({ length: times + 1 }, (_, i) => `${i * h}`).join(", ");
+      return figureNumber(
+        [
+          `The curve shows an amount that decays exponentially with time. What is the amount at time $t = ${times * h}$?`,
+          `曲线表示随时间指数衰减的数量。在 $t = ${times * h}$ 时数量是多少？`,
+        ],
+        after,
+        [
+          readHalf,
+          stepOf(
+            ["Count the halvings", "数减半的次数"],
+            [
+              `Time $${times * h}$ is $\\frac{${times * h}}{${h}} = ${times}$ half-lives:`,
+              `时间 $${times * h}$ 是 $\\frac{${times * h}}{${h}} = ${times}$ 个半衰期：`,
+            ],
+            `\\frac{${A}}{2^{${times}}} = ${after.toLatex()}`,
+          ),
+        ],
+        [`Halve step by step: $${chain}$ at $t = ${at}$.`, `逐次减半：在 $t = ${at}$ 时依次为 $${chain}$。`],
+        [
+          [
+            Q.of(A, 2 * times),
+            `This divides by $2 \\cdot ${times}$; ${times} halvings divide by $2^{${times}}$`,
+            `这里除以了 $2 \\cdot ${times}$；减半 ${times} 次应除以 $2^{${times}}$`,
+          ],
+          [
+            Q.of(A, 2 ** (times - 1)),
+            `One halving too few: time $${times * h}$ is $${times}$ half-lives`,
+            `少减半了一次：时间 $${times * h}$ 是 $${times}$ 个半衰期`,
+          ],
+          [
+            Q.of(A, times),
+            `This divides by the number of half-lives instead of halving $${times}$ times`,
+            `这里除以了半衰期的个数，而不是减半 $${times}$ 次`,
+          ],
+        ],
+        figure,
       );
     },
   ),
