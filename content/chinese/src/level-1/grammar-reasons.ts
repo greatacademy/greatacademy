@@ -32,17 +32,94 @@ const APART: ReadonlySet<string> = new Set(["才能"]);
 /** EXTRA are words the grammar sentences use that no level's word list teaches: 节约 is one word, not 节 and 约. */
 const EXTRA: ReadonlySet<string> = new Set(["节约"]);
 
+/** WHOLE are further words no level's word list teaches, which a solution quotes whole beside a gap: 窗户, not 户. The
+ * reasons do not split sentences by them, since their written pairs compare the parts (好在 against 好好在). */
+export const WHOLE: ReadonlySet<string> = new Set([
+  "医学院",
+  "窗户",
+  "看到",
+  "日文",
+  "看来",
+  "好好",
+  "学到",
+  "容易",
+  "买到",
+  "提醒",
+  "放手",
+  "改革开放",
+  "进门",
+  "提前",
+  "汤圆",
+  "处理",
+  "调查",
+  "全面",
+  "校服",
+  "甜食",
+  "主食",
+  "迟早",
+  "变得",
+  "相信",
+  "尽心尽力",
+  "后人",
+  "文化节",
+  "今晚",
+  "全城",
+  "事故",
+  "不料",
+  "别说",
+  "小看",
+  "破坏",
+  "巨大",
+  "山洞",
+  "汽车",
+  "文章",
+  "收音机",
+  "说法",
+  "活儿",
+  "赶上",
+  "赶到",
+  "买卖",
+  "百万",
+  "新意",
+  "年轻人",
+  "取决",
+  "影响",
+  "不愧",
+  "懂得",
+  "别提",
+  "小事",
+  "群众",
+  "百分之",
+  "可惜",
+  "收获",
+  "看出",
+  "交头接耳",
+  "鼓起",
+  "春暖花开",
+  "莫属",
+  "说起",
+  "走进",
+  "深远",
+  "家长",
+  "来看",
+  "长远",
+  "好不容易",
+]);
+
 /** isWord says whether a text is a taught word or a grammar word. */
 const isWord = (s: string, glossary: Glossary): boolean => !APART.has(s) && (glossary.meanings.has(s) || usage.has(s) || EXTRA.has(s));
 
-/** wordsOf splits a sentence into words, taking the longest taught word at each place. */
-export function wordsOf(sentence: string, glossary: Glossary): readonly string[] {
+/** NONE is no further words. */
+const NONE: ReadonlySet<string> = new Set();
+
+/** wordsOf splits a sentence into words, taking the longest taught word, or word of more, at each place. */
+export function wordsOf(sentence: string, glossary: Glossary, more: ReadonlySet<string> = NONE): readonly string[] {
   const chars = [...sentence];
   const out: string[] = [];
   let i = 0;
   while (i < chars.length) {
     let n = Math.min(LONGEST, chars.length - i);
-    while (n > 1 && !isWord(chars.slice(i, i + n).join(""), glossary)) n--;
+    while (n > 1 && !isWord(chars.slice(i, i + n).join(""), glossary) && !more.has(chars.slice(i, i + n).join(""))) n--;
     out.push(chars.slice(i, i + n).join(""));
     i += n;
   }
@@ -492,7 +569,209 @@ const IN_CONTEXT: readonly { readonly word: string; readonly cue: RegExp; readon
     cue: /不再/,
     note: t(", after 不, says “no longer”: 不再 means it does not happen any more", "用在“不”后面，“不再”表示以后不这样了"),
   },
+  {
+    word: "则",
+    cue: /^(?![^。]*(如果|若|只要|一旦|假如|要是))[^。]*，[^，。]{1,8}则/,
+    note: t("in the second of two parts sets it against the first: whereas", "用在后一部分，跟前一部分作对比"),
+  },
+  {
+    word: "上",
+    cue: /基础上/,
+    note: t(", after 基础, says “on”: 在…基础上, on the basis of", "用在“基础”后面，“在……基础上”表示以此为基础"),
+  },
+  {
+    word: "下",
+    cue: /说下就下/,
+    note: t("is here the verb of rain, “to fall”", "在这里是动词，指下雨"),
+  },
+  {
+    word: "下",
+    cue: /在[^，。]+下，/,
+    note: t("closes 在…下, “with” a help or “under” a condition", "用在“在……下”里，表示在某种帮助或条件之下"),
+  },
+  {
+    word: "来",
+    cue: /[十百千万]来[个位块年天次米]/,
+    note: t(", after a round number, says “about”: 十来个, about ten", "用在整数后面，表示大概的数：十来个"),
+  },
+  {
+    word: "来",
+    cue: /(.)来\1去/,
+    note: t("in verb + 来 + verb + 去 says the action is done again and again", "用在“动词＋来＋动词＋去”里，表示动作反复进行"),
+  },
+  {
+    word: "来",
+    cue: /说起[^，。]+来/,
+    note: t("closes 说起…来, “speaking of”", "用在“说起……来”里，表示提起某事"),
+  },
+  {
+    word: "去",
+    cue: /(.)来\1去/,
+    note: t("in verb + 来 + verb + 去 says the action is done again and again", "用在“动词＋来＋动词＋去”里，表示动作反复进行"),
+  },
+  {
+    word: "过",
+    cue: /[不得]过[他她你我]/,
+    note: t(
+      "after 得 or 不 says whether one can beat someone: 跑不过他, cannot outrun him",
+      "用在“得、不”后面，表示能不能胜过别人：跑不过他",
+    ),
+  },
+  {
+    word: "就",
+    cue: /而言/,
+    note: t("opens 就…而言, “as for”", "用在“就……而言”里，表示从某方面说"),
+  },
+  {
+    word: "就",
+    cue: /双方就|就[^，。]{1,10}(进行|展开|发表)/,
+    note: t("marks the matter something is about, “on”, in formal writing", "书面语，引出动作涉及的对象，意思是“关于”"),
+  },
+  {
+    word: "就",
+    cue: /动不动就/,
+    note: t("after 动不动 says it happens at the slightest thing", "用在“动不动”后面，表示很容易就发生"),
+  },
+  {
+    word: "就",
+    cue: /说(.)就\1/,
+    note: t("in 说…就…, says it is done at once, as soon as it is said", "用在“说……就……”里，表示说做就做，马上发生"),
+  },
+  {
+    word: "就",
+    cue: /就是/,
+    note: t("before 是 says it is exactly so", "用在“是”前面，强调正是这样"),
+  },
+  {
+    word: "就",
+    cue: /索性/,
+    note: t("after 索性 says one simply does it", "用在“索性”后面，表示干脆这样做"),
+  },
+  {
+    word: "就",
+    cue: /^(?!.*每隔).*一(?!会儿|下|直)[^，。]{1,6}就/,
+    note: t("in 一…就 says the second thing follows as soon as the first", "用在“一……就……”里，表示前一件事一发生，后一件事马上跟着发生"),
+  },
+  {
+    word: "就",
+    cue: /每当|每隔|一旦|既然|要不是|倘若|如果|只要|反之|这样一来/,
+    note: t("opens the result of what comes before: then", "引出前面所说情况的结果，意思是“那么就”"),
+  },
+  {
+    word: "才",
+    cue: /才(?!怪)[^，。]*呢/,
+    note: t("with 呢 at the end says strongly that it is not so", "和句末的“呢”一起，强调事实不是那样"),
+  },
+  {
+    word: "再",
+    cue: /再[^，。]{1,3}不过/,
+    note: t("in 再…不过了 says nothing could be more so", "用在“再……不过了”里，表示程度最高"),
+  },
+  {
+    word: "都",
+    cue: /连/,
+    note: t("after 连 says “even”", "用在“连”后面，表示“甚至”"),
+  },
+  {
+    word: "一",
+    cue: /一(?!会儿|下)[^，。]{1,4}就/,
+    note: t("in 一…就 says “once” or “as soon as”", "用在“一……就……”里，表示一发生就有结果"),
+  },
+  {
+    word: "成",
+    cue: /[一二两三四五六七八九]成/,
+    note: t(", after a number, counts tenths: 两成, twenty percent", "用在数词后面，表示十分之几：两成"),
+  },
+  {
+    word: "为",
+    cue: /为[^，。]+所/,
+    note: t("marks who does it, in 为…所", "用在“为……所”里，引出动作的发出者"),
+  },
+  {
+    word: "为",
+    cue: /称为|以[^，。]{1,8}为|不愧为/,
+    note: t("means “to be” or “as”, in formal writing", "书面语，意思是“是、作为”"),
+  },
+  {
+    word: "给",
+    cue: /被[^，。]*给/,
+    note: t("goes before the verb in a 被 sentence, in speech, and adds weight", "口语里用在“被”字句的动词前面，加强语气"),
+  },
+  {
+    word: "个",
+    cue: /个(够|痛快|明白|清楚)/,
+    note: t("before a result makes it lively: 看个够, see one's fill", "用在动词和结果之间，使语气生动：看个够"),
+  },
+  {
+    word: "非",
+    cue: /莫属/,
+    note: t("in 非…莫属 says no one but", "用在“非……莫属”里，表示除了这一个没有别的"),
+  },
+  {
+    word: "得",
+    cue: /舍得/,
+    note: t("is part of 舍得, “to be willing to part with”", "是“舍得”的一部分，表示愿意给出、不吝惜"),
+  },
+  {
+    word: "一直",
+    cue: /一直(往|向)/,
+    note: t("before 往 or 向 says “straight on”", "用在“往、向”前面，表示方向不变"),
+  },
+  {
+    word: "又",
+    cue: /既/,
+    note: t("after 既 adds a second quality: 既…又…, both … and …", "和“既”搭配，表示同时具有两个方面"),
+  },
+  {
+    word: "还是",
+    cue: /不管|无论/,
+    note: t("joins the choices after 不管 or 无论: whether … or …", "用在“不管、无论”后面，连接几种选择"),
+  },
+  {
+    word: "还是",
+    cue: /还是[^，。？]*吧|还是别/,
+    note: t("gives advice: had better", "用来提出建议，表示“最好”"),
+  },
+  {
+    word: "还是",
+    cue: /是[^，。]+还是/,
+    note: t("joins the choices that are asked about: or", "连接所问的几种选择，意思是“或者”"),
+  },
+  {
+    word: "还是",
+    cue: /不光|不仅/,
+    note: t("is 还, “also”, before 是, “is”", "是“还”（另外）加上“是”"),
+  },
+  {
+    word: "还是",
+    cue: /了又[^，。]+，[^，。]*还是/,
+    note: t("says “still”, after all that was done", "表示仍然这样，前面做了很多也没有改变"),
+  },
+  {
+    word: "结果",
+    cue: /的结果/,
+    note: t("is here a noun, “the result”", "在这里是名词，指最后的结局"),
+  },
+  {
+    word: "不要",
+    cue: /才怪/,
+    note: t("here means “not want”", "在这里表示不想要"),
+  },
+  {
+    word: "而",
+    cue: /为[^，。]*而/,
+    note: t("links the purpose to the action, in 为…而", "用在“为……而”里，连接目的和行动"),
+  },
+  {
+    word: "而",
+    cue: /因[^，。]*而/,
+    note: t("links the cause to the result, in 因…而", "用在“因……而”里，连接原因和结果"),
+  },
 ];
+
+/** inContext is the note on a word that holds in a sentence of a certain shape; undefined when its usage note holds. */
+const inContext = (word: string, sentence: string): Text | undefined =>
+  IN_CONTEXT.find((n) => n.word === word && n.cue.test(sentence))?.note;
 
 /** replaced says what one word put for another does, and why it fails here. */
 function replaced(d: Difference, glossary: Glossary, whole = true): Text {
@@ -504,8 +783,8 @@ function replaced(d: Difference, glossary: Glossary, whole = true): Text {
   const need = (x: Text) => t(`This sentence needs ${x.en}.`, `这里要用${x["zh-CN"]}。`);
   const sentence = joined(d.whole);
   const named = (x: string): Text | undefined => {
-    const c = IN_CONTEXT.find((n) => n.word === x && n.cue.test(sentence));
-    if (c) return t(`${x}, which ${c.note.en}`, `${q(x)}，它${c.note["zh-CN"]}`);
+    const c = inContext(x, sentence);
+    if (c) return t(`${x}, which${c.en.startsWith(",") ? "" : " "}${c.en}`, `${q(x)}，它${c["zh-CN"]}`);
     const u = usage.get(x);
     if (u) return t(`${x}, which ${u.note.en}`, `${q(x)}，它${u.note["zh-CN"]}`);
     const m = meaningOf(x, glossary);
@@ -694,7 +973,10 @@ export function pointOf(right: string, wrong: string, glossary: Glossary): Text 
   return t(`${r} or ${w}`, `用${q(r)}还是${q(w)}`);
 }
 
-/** noteOf is what a grammar word does, or what a taught word means, for a solution; undefined when neither is known. */
-export function noteOf(word: string, glossary: Glossary): Text | undefined {
+/** noteOf is what a grammar word does in a sentence, or what a taught word means, for a solution; undefined when neither
+ * is known. */
+export function noteOf(word: string, glossary: Glossary, sentence = ""): Text | undefined {
+  const c = inContext(word, sentence);
+  if (c) return t(`${word}${c.en.startsWith(",") ? "" : " "}${c.en}`, `${q(word)}${c["zh-CN"]}`);
   return what(word, glossary);
 }

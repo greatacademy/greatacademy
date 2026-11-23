@@ -8,7 +8,7 @@
 import { type Text, type TopicDef, t } from "@ga/content";
 
 import { type DrillItem, type DrillPoint, drillItem, drillTopic, lines } from "../grammar/drill.ts";
-import { differenceOf, type Glossary, kindOf, noteOf, pointOf, reasonOf } from "./grammar-reasons.ts";
+import { differenceOf, type Glossary, kindOf, noteOf, pointOf, reasonOf, WHOLE, wordsOf } from "./grammar-reasons.ts";
 
 /** GAP marks where the form goes in a sentence of a grammar point. */
 const GAP = "＿＿";
@@ -65,14 +65,24 @@ const sentenceOf = (shown: string, answer: string): string => (shown === "" ? an
 /** BREAK ends the words beside a gap that a solution quotes. */
 const BREAK = /[，。？！：“”、…]/u;
 
-/** NEAR is how many characters beside a gap a solution quotes. */
-const NEAR = 3;
+/** NEAR is how many characters beside a gap a solution quotes at least, in whole words. */
+const NEAR = 2;
 
-/** besideGap says where a gap is: after which characters and before which. */
-function besideGap(shown: string): Text {
+/** NUMERAL matches a word of numerals, which a solution quotes with the numerals beside it: 四十, not 十. */
+const NUMERAL = /^[零一二两三四五六七八九十百千万亿几]+$/u;
+
+/** besideGap says where a gap is: after which words and before which, never cutting a word. */
+function besideGap(shown: string, glossary: Glossary): Text {
   const [left = "", right = ""] = shown.split(GAP);
-  const l = [...(left.split(BREAK).at(-1) ?? "")].slice(-NEAR).join("");
-  const r = [...(right.split(BREAK)[0] ?? "")].slice(0, NEAR).join("");
+  const before = wordsOf(left.split(BREAK).at(-1) ?? "", glossary, WHOLE);
+  const after = wordsOf(right.split(BREAK)[0] ?? "", glossary, WHOLE);
+  const numeral = (w: string | undefined) => w !== undefined && NUMERAL.test(w);
+  let i = before.length;
+  while (i > 0 && ([...before.slice(i).join("")].length < NEAR || (numeral(before[i]) && numeral(before[i - 1])))) i--;
+  let j = 0;
+  while (j < after.length && ([...after.slice(0, j).join("")].length < NEAR || (numeral(after[j - 1]) && numeral(after[j])))) j++;
+  const l = before.slice(i).join("");
+  const r = after.slice(0, j).join("");
   if (l === "" && r === "") return t("The gap stands alone between the marks.", "空白处单独在标点之间。");
   if (l === "") return t(`The gap comes first, before ${r}.`, `空白处在前面，后面是“${r}”。`);
   if (r === "") return t(`The gap comes last, after ${l}.`, `空白处在最后，前面是“${l}”。`);
@@ -207,12 +217,12 @@ export function unitGrammarTopics(spec: GrammarSpec): readonly TopicDef[] {
         question: USE_QUESTION,
         items: use,
         why: (right, shown) => {
-          const note = noteOf(right, glossary);
           const whole = filled(shown, right);
+          const note = noteOf(right, glossary, whole);
           const step2 = note
             ? t(`**Step 2.** ${note.en}. So the gap takes ${right}: ${whole}`, `**第二步。** ${note["zh-CN"]}。所以填“${right}”：${whole}`)
             : t(`**Step 2.** The gap takes ${right}: ${whole}`, `**第二步。** 空白处填“${right}”：${whole}`);
-          const step1 = besideGap(shown);
+          const step1 = besideGap(shown, glossary);
           return joined(t(`**Step 1.** ${step1.en}`, `**第一步。** ${step1["zh-CN"]}`), step2, check);
         },
         whyNot,
