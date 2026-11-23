@@ -91,8 +91,8 @@ const partsFromValues: KnowledgePointDef = {
   id: "integration-by-parts-from-given-values",
   title: t("Integration by parts from given values", "由给定的值分部积分"),
   explanation: t(
-    "Integration by parts also applies to a function known only through some values. Taking $u = x$ and $dv = f'(x)\\,dx$ gives $\\int_a^b xf'(x)\\,dx = \\big[xf(x)\\big]_a^b - \\int_a^b f(x)\\,dx$. The boundary term needs only the values of $f$ at the ends.",
-    "只知道函数的某些值时，也可以分部积分。取 $u = x$，$dv = f'(x)\\,dx$，得 $\\int_a^b xf'(x)\\,dx = \\big[xf(x)\\big]_a^b - \\int_a^b f(x)\\,dx$。边界项只需要 $f$ 在两端的值。",
+    "Integration by parts also applies to a function known only through some values. Taking $u = x$ and $dv = f'(x)\\,dx$ gives $\\int_a^b xf'(x)\\,dx = \\big[xf(x)\\big]_a^b - \\int_a^b f(x)\\,dx$. The boundary term needs only the values of $f$ at the ends. For example, if $f(1) = 2$, $f(3) = 5$ and $\\int_1^3 f(x)\\,dx = 4$, then $\\int_1^3 xf'(x)\\,dx = (3 \\cdot 5 - 1 \\cdot 2) - 4 = 9$.\n\nCheck: with $f(x) = x$ on $[0, 1]$, $\\int_0^1 x \\cdot 1\\,dx = \\frac{1}{2}$, and the formula gives $(1 \\cdot 1 - 0) - \\frac{1}{2} = \\frac{1}{2}$.\n\n> **Watch out.** The boundary term is $bf(b) - af(a)$, with the factor $x$ kept, not $f(b) - f(a)$. And the given integral is subtracted.",
+    "只知道函数的某些值时，也可以分部积分。取 $u = x$，$dv = f'(x)\\,dx$，得 $\\int_a^b xf'(x)\\,dx = \\big[xf(x)\\big]_a^b - \\int_a^b f(x)\\,dx$。边界项只需要 $f$ 在两端的值。例如，若 $f(1) = 2$，$f(3) = 5$，$\\int_1^3 f(x)\\,dx = 4$，则 $\\int_1^3 xf'(x)\\,dx = (3 \\cdot 5 - 1 \\cdot 2) - 4 = 9$。\n\n检验：在 $[0, 1]$ 上取 $f(x) = x$，$\\int_0^1 x \\cdot 1\\,dx = \\frac{1}{2}$，而公式给出 $(1 \\cdot 1 - 0) - \\frac{1}{2} = \\frac{1}{2}$。\n\n> **注意。** 边界项是 $bf(b) - af(a)$，要保留因子 $x$，不是 $f(b) - f(a)$。而且已知的积分是减去的。",
   ),
   generate(rng) {
     const a = rng.int(0, 3);
@@ -109,10 +109,46 @@ const partsFromValues: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [boundary + I, boundary, fb - fa - I],
-      solution: t(
-        `By parts, the integral is $${b}(${fb}) - ${a}(${fa}) - ${inParens(I)} = ${boundary} - ${inParens(I)} = ${answer}$.`,
-        `由分部积分，积分等于 $${b}(${fb}) - ${a}(${fa}) - ${inParens(I)} = ${boundary} - ${inParens(I)} = ${answer}$。`,
+      mistakes: [
+        {
+          value: boundary + I,
+          why: t("The formula subtracts $\\int f(x)\\,dx$; here it was added.", "公式要减去 $\\int f(x)\\,dx$；这里把它加上了。"),
+        },
+        {
+          value: boundary,
+          why: t(
+            "This is only the boundary term; the given integral $\\int f(x)\\,dx$ still has to be subtracted.",
+            "这只是边界项；还要减去已知的积分 $\\int f(x)\\,dx$。",
+          ),
+        },
+        {
+          value: fb - fa - I,
+          why: t(
+            "The boundary term is $\\big[xf(x)\\big]$, which keeps the factor $x$: $bf(b) - af(a)$, not $f(b) - f(a)$.",
+            "边界项是 $\\big[xf(x)\\big]$，要保留因子 $x$：是 $bf(b) - af(a)$，不是 $f(b) - f(a)$。",
+          ),
+        },
+      ],
+      solution: walkThrough(
+        [
+          [
+            ["Integrate by parts", "分部积分"],
+            [
+              "Take $u = x$ and $dv = f'(x)\\,dx$, so $du = dx$ and $v = f(x)$:",
+              "取 $u = x$，$dv = f'(x)\\,dx$，则 $du = dx$，$v = f(x)$：",
+            ],
+            [`\\int_{${a}}^{${b}} xf'(x)\\,dx = \\big[xf(x)\\big]_{${a}}^{${b}} - \\int_{${a}}^{${b}} f(x)\\,dx`],
+          ],
+          [
+            ["Put in the values", "代入数值"],
+            ["Use the given values of $f$ and of its integral:", "代入 $f$ 的已知值和已知的积分："],
+            [`= ${b}(${fb}) - ${a}(${fa}) - ${inParens(I)}`, `= ${boundary} - ${inParens(I)} = ${answer}`],
+          ],
+        ],
+        [
+          `Read the formula backwards: the answer plus the given integral must be the boundary term. Indeed $${answer} + ${inParens(I)} = ${boundary}$, and $${b} \\cdot ${inParens(fb)} - ${a} \\cdot ${inParens(fa)} = ${boundary}$.`,
+          `把公式倒过来读：答案加上已知的积分应等于边界项。确实 $${answer} + ${inParens(I)} = ${boundary}$，而 $${b} \\cdot ${inParens(fb)} - ${a} \\cdot ${inParens(fa)} = ${boundary}$。`,
+        ],
       ),
     });
   },
@@ -727,8 +763,8 @@ const evenPowerOfSecant: KnowledgePointDef = {
   id: "even-powers-of-secant",
   title: t("Even powers of secant", "正割的偶次幂"),
   explanation: t(
-    "An even power of secant can give up one factor of $\\sec^2 x$ to serve as the differential of $\\tan x$. The rest is rewritten with $\\sec^2 x = 1 + \\tan^2 x$. So $\\int \\sec^4 x\\,dx$ becomes $\\int (1 + u^2)\\,du$ with $u = \\tan x$, and it is a polynomial integral.",
-    "正割的偶次幂可以拿出一个因子 $\\sec^2 x$ 作为 $\\tan x$ 的微分，其余部分用 $\\sec^2 x = 1 + \\tan^2 x$ 改写。于是令 $u = \\tan x$，$\\int \\sec^4 x\\,dx$ 变成 $\\int (1 + u^2)\\,du$，这是多项式积分。",
+    "An even power of secant can give up one factor of $\\sec^2 x$ to serve as the differential of $\\tan x$. The rest is rewritten with $\\sec^2 x = 1 + \\tan^2 x$. So $\\int \\sec^4 x\\,dx$ becomes $\\int (1 + u^2)\\,du$ with $u = \\tan x$, and it is a polynomial integral. For example, $\\int_0^{\\pi/4} \\sec^4 x\\,dx = \\int_0^1 (1 + u^2)\\,du = \\frac{4}{3}$.\n\nCheck: $\\frac{d}{dx}\\left(\\tan x + \\frac{\\tan^3 x}{3}\\right) = \\sec^2 x + \\tan^2 x\\sec^2 x = \\sec^4 x$, and this antiderivative is $\\frac{4}{3}$ at $\\frac{\\pi}{4}$ and $0$ at $0$.\n\n> **Watch out.** Change the limits with the substitution: $\\tan 0 = 0$ and $\\tan \\frac{\\pi}{4} = 1$. And the saved $\\sec^2 x\\,dx$ becomes $du$; it is not converted.",
+    "正割的偶次幂可以拿出一个因子 $\\sec^2 x$ 作为 $\\tan x$ 的微分，其余部分用 $\\sec^2 x = 1 + \\tan^2 x$ 改写。于是令 $u = \\tan x$，$\\int \\sec^4 x\\,dx$ 变成 $\\int (1 + u^2)\\,du$，这是多项式积分。例如，$\\int_0^{\\pi/4} \\sec^4 x\\,dx = \\int_0^1 (1 + u^2)\\,du = \\frac{4}{3}$。\n\n检验：$\\frac{d}{dx}\\left(\\tan x + \\frac{\\tan^3 x}{3}\\right) = \\sec^2 x + \\tan^2 x\\sec^2 x = \\sec^4 x$，这个原函数在 $\\frac{\\pi}{4}$ 处为 $\\frac{4}{3}$，在 $0$ 处为 $0$。\n\n> **注意。** 换元时要同时换积分限：$\\tan 0 = 0$，$\\tan \\frac{\\pi}{4} = 1$。留出的 $\\sec^2 x\\,dx$ 变成 $du$，不要再转换它。",
   ),
   generate(rng) {
     const a = rng.int(1, 9);
@@ -738,10 +774,52 @@ const evenPowerOfSecant: KnowledgePointDef = {
     return numberProblem({
       prompt: t(`Find $\\int_0^{\\pi/4} (${integrand})\\,dx$.`, `求 $\\int_0^{\\pi/4} (${integrand})\\,dx$。`),
       answer,
-      wrong: [Q.of(a + b), Q.of(a, 3).add(Q.of(b)), Q.of(4 * a + b)],
-      solution: t(
-        `With $u = \\tan x$, the limits become $0$ and $1$, and $\\int_0^1 (1 + u^2)\\,du = \\frac{4}{3}$. Also $\\int_0^{\\pi/4} \\sec^2 x\\,dx = 1$. So the integral is $${a} \\cdot \\frac{4}{3} + ${inParens(b)} = ${answer.toLatex()}$.`,
-        `令 $u = \\tan x$，积分限变成 $0$ 和 $1$，$\\int_0^1 (1 + u^2)\\,du = \\frac{4}{3}$。又 $\\int_0^{\\pi/4} \\sec^2 x\\,dx = 1$。所以积分等于 $${a} \\cdot \\frac{4}{3} + ${inParens(b)} = ${answer.toLatex()}$。`,
+      mistakes: [
+        {
+          value: Q.of(a + b),
+          why: t(
+            "This takes $\\int_0^{\\pi/4} \\sec^4 x\\,dx$ as $1$, like the integral of $\\sec^2 x$; the extra $\\tan^2 x$ part adds $\\frac{1}{3}$.",
+            "这是把 $\\int_0^{\\pi/4} \\sec^4 x\\,dx$ 当成 $1$，和 $\\sec^2 x$ 的积分一样；多出的 $\\tan^2 x$ 部分还要加上 $\\frac{1}{3}$。",
+          ),
+        },
+        {
+          value: Q.of(a, 3).add(Q.of(b)),
+          why: t(
+            "This keeps only the $\\frac{u^3}{3}$ part; $\\int_0^1 (1 + u^2)\\,du$ also has the $1$ from the constant term.",
+            "这里只保留了 $\\frac{u^3}{3}$ 部分；$\\int_0^1 (1 + u^2)\\,du$ 还有常数项积分出的 $1$。",
+          ),
+        },
+        {
+          value: Q.of(4 * a + b),
+          why: t(
+            "$4$ is the value of $\\sec^4 x$ at $\\frac{\\pi}{4}$, not its integral; integrate $1 + u^2$ from $0$ to $1$.",
+            "$4$ 是 $\\sec^4 x$ 在 $\\frac{\\pi}{4}$ 处的值，不是它的积分；要把 $1 + u^2$ 从 $0$ 积到 $1$。",
+          ),
+        },
+      ],
+      solution: walkThrough(
+        [
+          [
+            ["Save one factor of sec²x", "留出一个 sec²x"],
+            [
+              "Write $\\sec^4 x = (1 + \\tan^2 x)\\sec^2 x$ and let $u = \\tan x$, so $du = \\sec^2 x\\,dx$ and the limits become $0$ and $1$:",
+              "写成 $\\sec^4 x = (1 + \\tan^2 x)\\sec^2 x$，令 $u = \\tan x$，则 $du = \\sec^2 x\\,dx$，积分限变成 $0$ 和 $1$：",
+            ],
+            ["\\int_0^{\\pi/4} \\sec^4 x\\,dx = \\int_0^1 (1 + u^2)\\,du = 1 + \\frac{1}{3} = \\frac{4}{3}"],
+          ],
+          [
+            ["Add the other term", "加上另一项"],
+            [
+              "$\\int_0^{\\pi/4} \\sec^2 x\\,dx = \\tan \\frac{\\pi}{4} - \\tan 0 = 1$, so:",
+              "$\\int_0^{\\pi/4} \\sec^2 x\\,dx = \\tan \\frac{\\pi}{4} - \\tan 0 = 1$，所以：",
+            ],
+            [`\\int_0^{\\pi/4} (${integrand})\\,dx = ${a} \\cdot \\frac{4}{3} + ${inParens(b)} \\cdot 1 = ${answer.toLatex()}`],
+          ],
+        ],
+        [
+          `Use the antiderivative $F(x) = ${a === 1 ? "" : a}\\left(\\tan x + \\frac{\\tan^3 x}{3}\\right) ${b < 0 ? "-" : "+"} ${Math.abs(b) === 1 ? "" : Math.abs(b)}\\tan x$; differentiating $\\tan x + \\frac{\\tan^3 x}{3}$ gives $\\sec^2 x(1 + \\tan^2 x) = \\sec^4 x$. Then $F\\left(\\frac{\\pi}{4}\\right) - F(0) = ${a} \\cdot \\frac{4}{3} + ${inParens(b)} - 0 = ${answer.toLatex()}$.`,
+          `用原函数 $F(x) = ${a === 1 ? "" : a}\\left(\\tan x + \\frac{\\tan^3 x}{3}\\right) ${b < 0 ? "-" : "+"} ${Math.abs(b) === 1 ? "" : Math.abs(b)}\\tan x$；对 $\\tan x + \\frac{\\tan^3 x}{3}$ 求导得 $\\sec^2 x(1 + \\tan^2 x) = \\sec^4 x$。于是 $F\\left(\\frac{\\pi}{4}\\right) - F(0) = ${a} \\cdot \\frac{4}{3} + ${inParens(b)} - 0 = ${answer.toLatex()}$。`,
+        ],
       ),
     });
   },
@@ -751,8 +829,8 @@ const orthogonalSines: KnowledgePointDef = {
   id: "the-integral-of-a-squared-sum-of-sines",
   title: t("The integral of a squared sum of sines", "正弦之和平方的积分"),
   explanation: t(
-    "For different positive integers $m$ and $n$, the integral of $\\sin mx\\sin nx$ over a full period $[0, 2\\pi]$ is zero, by the product-to-sum identities. The square of a sum therefore keeps only its squared terms, and each $\\int_0^{2\\pi} \\sin^2 mx\\,dx$ equals $\\pi$. This is the idea behind Fourier series.",
-    "当 $m$、$n$ 是不同的正整数时，由积化和差公式，$\\sin mx\\sin nx$ 在一个完整周期 $[0, 2\\pi]$ 上的积分为零。所以和的平方只留下平方项，而每个 $\\int_0^{2\\pi} \\sin^2 mx\\,dx$ 都等于 $\\pi$。这正是傅里叶级数的思想。",
+    "For different positive integers $m$ and $n$, the integral of $\\sin mx\\sin nx$ over a full period $[0, 2\\pi]$ is zero, by the product-to-sum identities. The square of a sum therefore keeps only its squared terms, and each $\\int_0^{2\\pi} \\sin^2 mx\\,dx$ equals $\\pi$. This is the idea behind Fourier series. For example, $\\int_0^{2\\pi} (\\sin x + 2\\sin 3x)^2\\,dx = (1 + 4)\\pi = 5\\pi$.\n\nCheck: $\\sin^2 mx$ has average value $\\frac{1}{2}$ over a period, and $\\frac{1}{2} \\cdot 2\\pi = \\pi$.\n\n> **Watch out.** Do not square the sum of the coefficients: $(a + b)^2$ counts the cross term $2ab\\sin mx\\sin nx$, whose integral is $0$.",
+    "当 $m$、$n$ 是不同的正整数时，由积化和差公式，$\\sin mx\\sin nx$ 在一个完整周期 $[0, 2\\pi]$ 上的积分为零。所以和的平方只留下平方项，而每个 $\\int_0^{2\\pi} \\sin^2 mx\\,dx$ 都等于 $\\pi$。这正是傅里叶级数的思想。例如，$\\int_0^{2\\pi} (\\sin x + 2\\sin 3x)^2\\,dx = (1 + 4)\\pi = 5\\pi$。\n\n检验：$\\sin^2 mx$ 在一个周期上的平均值是 $\\frac{1}{2}$，而 $\\frac{1}{2} \\cdot 2\\pi = \\pi$。\n\n> **注意。** 不要把系数之和平方：$(a + b)^2$ 计入了交叉项 $2ab\\sin mx\\sin nx$，而它的积分是 $0$。",
   ),
   generate(rng) {
     const m = rng.int(1, 6);
@@ -761,15 +839,52 @@ const orthogonalSines: KnowledgePointDef = {
     const b = nonzero(rng, 6);
     const answer = a * a + b * b;
     const sine = (j: number) => `\\sin ${j === 1 ? "" : j}x`;
+    const square = (j: number) => `\\sin^2 ${j === 1 ? "" : j}x`;
     const integrand = poly([a, sine(m)], [b, sine(n)]);
+    const expanded = poly([a * a, square(m)], [2 * a * b, `${sine(m)}${sine(n)}`], [b * b, square(n)]);
     return numberProblem({
       prompt: t(`$\\int_0^{2\\pi} (${integrand})^2\\,dx = c\\pi$. Find $c$.`, `$\\int_0^{2\\pi} (${integrand})^2\\,dx = c\\pi$。求 $c$。`),
       answer,
       form: "integer",
-      wrong: [(a + b) ** 2, 2 * answer, a * a],
-      solution: t(
-        `The cross term integrates to zero because the frequencies differ. Each squared sine integrates to $\\pi$, so the integral is $(${a * a} + ${b * b})\\pi$ and $c = ${answer}$.`,
-        `由于频率不同，交叉项的积分为零。每个正弦的平方积分为 $\\pi$，所以积分等于 $(${a * a} + ${b * b})\\pi$，$c = ${answer}$。`,
+      mistakes: [
+        {
+          value: (a + b) ** 2,
+          why: t(
+            `The cross term $${poly([2 * a * b, `${sine(m)}${sine(n)}`])}$ integrates to $0$ over a full period, so it adds nothing.`,
+            `交叉项 $${poly([2 * a * b, `${sine(m)}${sine(n)}`])}$ 在一个完整周期上的积分为 $0$，不应计入。`,
+          ),
+        },
+        {
+          value: 2 * answer,
+          why: t(
+            "Each $\\int_0^{2\\pi} \\sin^2 jx\\,dx$ is $\\pi$, not $2\\pi$: the average of $\\sin^2$ is $\\frac{1}{2}$.",
+            "每个 $\\int_0^{2\\pi} \\sin^2 jx\\,dx$ 等于 $\\pi$，不是 $2\\pi$：$\\sin^2$ 的平均值是 $\\frac{1}{2}$。",
+          ),
+        },
+        {
+          value: a * a,
+          why: t(
+            `The term $${poly([b * b, square(n)])}$ also contributes $${piTimes(Q.of(b * b))}$; only the cross term vanishes.`,
+            `$${poly([b * b, square(n)])}$ 这一项也贡献 $${piTimes(Q.of(b * b))}$；只有交叉项为零。`,
+          ),
+        },
+      ],
+      solution: walkThrough(
+        [
+          [["Expand the square", "展开平方"], ["Square the sum:", "把和平方："], [`(${integrand})^2 = ${expanded}`]],
+          [
+            ["Integrate each term", "逐项积分"],
+            [
+              `Over $[0, 2\\pi]$ each $\\sin^2 jx$ integrates to $\\pi$, and the cross term integrates to $0$ because $${sine(m)}${sine(n)} = \\frac{1}{2}\\left(\\cos ${Math.abs(m - n) === 1 ? "" : Math.abs(m - n)}x - \\cos ${m + n}x\\right)$:`,
+              `在 $[0, 2\\pi]$ 上每个 $\\sin^2 jx$ 积分为 $\\pi$，交叉项积分为 $0$，因为 $${sine(m)}${sine(n)} = \\frac{1}{2}\\left(\\cos ${Math.abs(m - n) === 1 ? "" : Math.abs(m - n)}x - \\cos ${m + n}x\\right)$：`,
+            ],
+            [`\\int_0^{2\\pi} (${integrand})^2\\,dx = ${piTimes(Q.of(a * a))} + 0 + ${piTimes(Q.of(b * b))} = ${piTimes(Q.of(answer))}`],
+          ],
+        ],
+        [
+          `Use average values instead: over a period each $\\sin^2$ averages $\\frac{1}{2}$ and the cross term averages $0$, so the integrand averages $\\frac{${a * a} + ${b * b}}{2}$. Times the length $2\\pi$ this is $${answer}\\pi$, so $c = ${answer}$.`,
+          `改用平均值：在一个周期上每个 $\\sin^2$ 的平均值是 $\\frac{1}{2}$，交叉项的平均值是 $0$，所以被积函数的平均值是 $\\frac{${a * a} + ${b * b}}{2}$。乘以长度 $2\\pi$ 得 $${answer}\\pi$，所以 $c = ${answer}$。`,
+        ],
       ),
     });
   },
@@ -1134,26 +1249,135 @@ const doubleAngleTwice: KnowledgePointDef = {
   figure: calculusDrawings4["integration-using-the-double-angle-formulas#applying-a-double-angle-formula-twice"],
   title: t("Applying a double angle formula twice", "两次使用二倍角公式"),
   explanation: t(
-    "A fourth power of sine or cosine needs the double angle formula twice: square the half-angle form, then reduce the $\\cos^2 2x$ that appears. Over a whole period every oscillating cosine term vanishes, so only the constant term survives. A product $\\sin^2 x\\cos^2 x$ reduces the same way, by way of $\\frac{1}{4}\\sin^2 2x$.",
-    "正弦或余弦的四次幂需要两次使用二倍角公式：先把半角形式平方，再化简出现的 $\\cos^2 2x$。在一个完整周期上，每个振荡的余弦项都消失，只有常数项留下。乘积 $\\sin^2 x\\cos^2 x$ 也同样化简，先写成 $\\frac{1}{4}\\sin^2 2x$。",
+    "A fourth power of sine or cosine needs the double angle formula twice: square the half-angle form, then reduce the $\\cos^2 2x$ that appears. Over a whole period every oscillating cosine term vanishes, so only the constant term survives. A product $\\sin^2 x\\cos^2 x$ reduces the same way, by way of $\\frac{1}{4}\\sin^2 2x$. For example, $\\sin^4 x = \\frac{1}{4} - \\frac{1}{2}\\cos 2x + \\frac{1}{4}\\cos^2 2x = \\frac{3}{8} - \\frac{1}{2}\\cos 2x + \\frac{1}{8}\\cos 4x$, so $\\int_0^{2\\pi} \\sin^4 x\\,dx = \\frac{3}{8} \\cdot 2\\pi = \\frac{3\\pi}{4}$.\n\nCheck: at $x = 0$ the reduced form gives $\\frac{3}{8} - \\frac{1}{2} + \\frac{1}{8} = 0 = \\sin^4 0$.\n\n> **Watch out.** $\\cos^2 2x$ is not a cosine term that vanishes: it averages $\\frac{1}{2}$, so $\\frac{1}{4}\\cos^2 2x$ adds $\\frac{1}{8}$ to the constant.",
+    "正弦或余弦的四次幂需要两次使用二倍角公式：先把半角形式平方，再化简出现的 $\\cos^2 2x$。在一个完整周期上，每个振荡的余弦项都消失，只有常数项留下。乘积 $\\sin^2 x\\cos^2 x$ 也同样化简，先写成 $\\frac{1}{4}\\sin^2 2x$。例如，$\\sin^4 x = \\frac{1}{4} - \\frac{1}{2}\\cos 2x + \\frac{1}{4}\\cos^2 2x = \\frac{3}{8} - \\frac{1}{2}\\cos 2x + \\frac{1}{8}\\cos 4x$，所以 $\\int_0^{2\\pi} \\sin^4 x\\,dx = \\frac{3}{8} \\cdot 2\\pi = \\frac{3\\pi}{4}$。\n\n检验：在 $x = 0$ 处，化简后的式子给出 $\\frac{3}{8} - \\frac{1}{2} + \\frac{1}{8} = 0 = \\sin^4 0$。\n\n> **注意。** $\\cos^2 2x$ 不是会消失的余弦项：它的平均值是 $\\frac{1}{2}$，所以 $\\frac{1}{4}\\cos^2 2x$ 给常数项加上 $\\frac{1}{8}$。",
   ),
   generate(rng) {
     const k = rng.int(1, 40);
     const kind = rng.pick([
-      { latex: "\\sin^4 x", value: Q.of(3 * k, 4), constant: "\\frac{3}{8}" },
-      { latex: "\\cos^4 x", value: Q.of(3 * k, 4), constant: "\\frac{3}{8}" },
-      { latex: "\\sin^2 x\\cos^2 x", value: Q.of(k, 4), constant: "\\frac{1}{8}" },
-    ]);
+      {
+        latex: "\\sin^4 x",
+        value: Q.of(3 * k, 4),
+        constant: "\\frac{3}{8}",
+        first: "\\left(\\frac{1 - \\cos 2x}{2}\\right)^2 = \\frac{1}{4} - \\frac{1}{2}\\cos 2x + \\frac{1}{4}\\cos^2 2x",
+        again: ["Replace $\\cos^2 2x$ by $\\frac{1 + \\cos 4x}{2}$:", "把 $\\cos^2 2x$ 换成 $\\frac{1 + \\cos 4x}{2}$："],
+        reduced: "\\frac{3}{8} - \\frac{1}{2}\\cos 2x + \\frac{1}{8}\\cos 4x",
+        atZero: ["\\frac{3}{8} - \\frac{1}{2} + \\frac{1}{8} = 0", "0"],
+        fourth: true,
+      },
+      {
+        latex: "\\cos^4 x",
+        value: Q.of(3 * k, 4),
+        constant: "\\frac{3}{8}",
+        first: "\\left(\\frac{1 + \\cos 2x}{2}\\right)^2 = \\frac{1}{4} + \\frac{1}{2}\\cos 2x + \\frac{1}{4}\\cos^2 2x",
+        again: ["Replace $\\cos^2 2x$ by $\\frac{1 + \\cos 4x}{2}$:", "把 $\\cos^2 2x$ 换成 $\\frac{1 + \\cos 4x}{2}$："],
+        reduced: "\\frac{3}{8} + \\frac{1}{2}\\cos 2x + \\frac{1}{8}\\cos 4x",
+        atZero: ["\\frac{3}{8} + \\frac{1}{2} + \\frac{1}{8} = 1", "1"],
+        fourth: true,
+      },
+      {
+        latex: "\\sin^2 x\\cos^2 x",
+        value: Q.of(k, 4),
+        constant: "\\frac{1}{8}",
+        first: "\\left(\\frac{\\sin 2x}{2}\\right)^2 = \\frac{1}{4}\\sin^2 2x",
+        again: ["Replace $\\sin^2 2x$ by $\\frac{1 - \\cos 4x}{2}$:", "把 $\\sin^2 2x$ 换成 $\\frac{1 - \\cos 4x}{2}$："],
+        reduced: "\\frac{1}{8} - \\frac{1}{8}\\cos 4x",
+        atZero: ["\\frac{1}{8} - \\frac{1}{8} = 0", "0"],
+        fourth: false,
+      },
+    ] as const);
+    const reason = (en: string, zh: string) => t(en, zh);
+    const mistakes = kind.fourth
+      ? [
+          {
+            value: Q.of(k, 2),
+            why: reason(
+              "This uses only the constant $\\frac{1}{4}$ from the first step; $\\frac{1}{4}\\cos^2 2x$ does not average to $0$ and adds $\\frac{1}{8}$.",
+              "这里只用了第一步的常数 $\\frac{1}{4}$；$\\frac{1}{4}\\cos^2 2x$ 的平均值不是 $0$，还要加上 $\\frac{1}{8}$。",
+            ),
+          },
+          {
+            value: Q.of(3 * k, 8),
+            why: reason(
+              "The constant $\\frac{3}{8}$ must be multiplied by the length $2\\pi$ of the interval; the factor $2$ is missing.",
+              "常数 $\\frac{3}{8}$ 要乘以区间长度 $2\\pi$；漏掉了因子 $2$。",
+            ),
+          },
+          {
+            value: Q.of(k),
+            why: reason(
+              "This uses the average $\\frac{1}{2}$ of a square; a fourth power averages $\\frac{3}{8}$.",
+              "这是用了平方的平均值 $\\frac{1}{2}$；四次幂的平均值是 $\\frac{3}{8}$。",
+            ),
+          },
+          {
+            value: Q.of(k, 8),
+            why: reason(
+              "This keeps only the $\\frac{1}{8}$ that comes from $\\cos^2 2x$ and also forgets the length $2\\pi$.",
+              "这里只保留了来自 $\\cos^2 2x$ 的 $\\frac{1}{8}$，还漏乘了长度 $2\\pi$。",
+            ),
+          },
+        ]
+      : [
+          {
+            value: Q.of(k, 2),
+            why: reason(
+              "This uses the $\\frac{1}{4}$ of $\\frac{1}{4}\\sin^2 2x$ as the constant; $\\sin^2 2x$ averages $\\frac{1}{2}$, so the constant is $\\frac{1}{8}$.",
+              "这是把 $\\frac{1}{4}\\sin^2 2x$ 中的 $\\frac{1}{4}$ 当作常数项；$\\sin^2 2x$ 的平均值是 $\\frac{1}{2}$，所以常数项是 $\\frac{1}{8}$。",
+            ),
+          },
+          {
+            value: Q.of(3 * k, 8),
+            why: reason(
+              "$\\frac{3}{8}$ is the constant of a fourth power such as $\\sin^4 x$; for $\\sin^2 x\\cos^2 x$ it is $\\frac{1}{8}$.",
+              "$\\frac{3}{8}$ 是 $\\sin^4 x$ 这类四次幂的常数项；$\\sin^2 x\\cos^2 x$ 的常数项是 $\\frac{1}{8}$。",
+            ),
+          },
+          {
+            value: Q.of(k),
+            why: reason(
+              "This treats $\\sin^2 x\\cos^2 x$ as if it averaged $\\frac{1}{2}$, like $\\sin^2 x$; the product averages only $\\frac{1}{8}$.",
+              "这是把 $\\sin^2 x\\cos^2 x$ 当成平均值为 $\\frac{1}{2}$，像 $\\sin^2 x$ 一样；这个乘积的平均值只有 $\\frac{1}{8}$。",
+            ),
+          },
+          {
+            value: Q.of(k, 8),
+            why: reason(
+              "The constant $\\frac{1}{8}$ must be multiplied by the length $2\\pi$; the factor $2$ is missing.",
+              "常数 $\\frac{1}{8}$ 要乘以长度 $2\\pi$；漏掉了因子 $2$。",
+            ),
+          },
+        ];
     return numberProblem({
       prompt: t(
         `The integral $\\int_0^{2\\pi} ${coefficientOf(k)}${kind.latex}\\,dx$ equals $c\\pi$. Find $c$.`,
         `积分 $\\int_0^{2\\pi} ${coefficientOf(k)}${kind.latex}\\,dx$ 等于 $c\\pi$。求 $c$。`,
       ),
       answer: kind.value,
-      wrong: [Q.of(k, 2), Q.of(3 * k, 8), Q.of(k), Q.of(k, 8)],
-      solution: t(
-        `After reducing, the constant term of $${kind.latex}$ is $${kind.constant}$, and the cosine terms integrate to zero. So $c = ${k} \\cdot 2 \\cdot ${kind.constant} = ${kind.value.toLatex()}$.`,
-        `化简后，$${kind.latex}$ 的常数项是 $${kind.constant}$，余弦项积分为零。所以 $c = ${k} \\cdot 2 \\cdot ${kind.constant} = ${kind.value.toLatex()}$。`,
+      mistakes,
+      solution: walkThrough(
+        [
+          [
+            ["Use the formula once", "第一次用公式"],
+            ["Write the integrand with the double angle:", "用二倍角改写被积函数："],
+            [`${kind.latex} = ${kind.first}`],
+          ],
+          [["Use it again", "再用一次"], kind.again, [`${kind.latex} = ${kind.reduced}`]],
+          [
+            ["Integrate over the period", "在整个周期上积分"],
+            [
+              "Every cosine term integrates to $0$ over $[0, 2\\pi]$, so only the constant counts:",
+              "每个余弦项在 $[0, 2\\pi]$ 上积分为 $0$，所以只有常数项有贡献：",
+            ],
+            [
+              `\\int_0^{2\\pi} ${coefficientOf(k)}${kind.latex}\\,dx = ${k} \\cdot ${kind.constant} \\cdot 2\\pi = ${kind.value.toLatex()}\\pi`,
+            ],
+          ],
+        ],
+        [
+          `Test the reduced form at $x = 0$: it gives $${kind.atZero[0]}$, and $${kind.latex}$ at $0$ is also $${kind.atZero[1]}$. The constant $${kind.constant}$ is the average value, so $c = 2 \\cdot ${k} \\cdot ${kind.constant} = ${kind.value.toLatex()}$.`,
+          `在 $x = 0$ 处检验化简后的式子：得 $${kind.atZero[0]}$，而 $${kind.latex}$ 在 $0$ 处也是 $${kind.atZero[1]}$。常数 $${kind.constant}$ 就是平均值，所以 $c = 2 \\cdot ${k} \\cdot ${kind.constant} = ${kind.value.toLatex()}$。`,
+        ],
       ),
     });
   },
@@ -1163,8 +1387,8 @@ const cyclicImproper: KnowledgePointDef = {
   id: "a-cyclic-integral-over-an-infinite-interval",
   title: t("A cyclic integral over an infinite interval", "无穷区间上的循环积分"),
   explanation: t(
-    "Integrating by parts twice brings the original integral back, which gives an equation to solve. When the exponential decays, the boundary terms at infinity vanish and only those at zero remain. The result is $\\int_0^\\infty e^{-ax}\\sin bx\\,dx = \\frac{b}{a^2 + b^2}$, and the same with a numerator of $a$ when cosine replaces sine.",
-    "分部积分两次后原积分又出现，于是得到一个可解的方程。指数衰减时，无穷远处的边界项消失，只留下零处的边界项。结果是 $\\int_0^\\infty e^{-ax}\\sin bx\\,dx = \\frac{b}{a^2 + b^2}$；把正弦换成余弦，分子就变成 $a$。",
+    "Integrating by parts twice brings the original integral back, which gives an equation to solve. When the exponential decays, the boundary terms at infinity vanish and only those at zero remain. The result is $\\int_0^\\infty e^{-ax}\\sin bx\\,dx = \\frac{b}{a^2 + b^2}$, and the same with a numerator of $a$ when cosine replaces sine. For example, $\\int_0^\\infty e^{-x}\\sin 2x\\,dx = \\frac{2}{5}$.\n\nCheck: as $b \\to 0$, $\\int_0^\\infty e^{-ax}\\cos bx\\,dx$ tends to $\\int_0^\\infty e^{-ax}\\,dx = \\frac{1}{a}$, and the formula gives $\\frac{a}{a^2} = \\frac{1}{a}$.\n\n> **Watch out.** Only the boundary terms at $0$ survive: $\\sin 0 = 0$ kills one and $\\cos 0 = 1$ keeps the other. Mixing them up swaps the numerators $a$ and $b$.",
+    "分部积分两次后原积分又出现，于是得到一个可解的方程。指数衰减时，无穷远处的边界项消失，只留下零处的边界项。结果是 $\\int_0^\\infty e^{-ax}\\sin bx\\,dx = \\frac{b}{a^2 + b^2}$；把正弦换成余弦，分子就变成 $a$。例如，$\\int_0^\\infty e^{-x}\\sin 2x\\,dx = \\frac{2}{5}$。\n\n检验：当 $b \\to 0$ 时，$\\int_0^\\infty e^{-ax}\\cos bx\\,dx$ 趋于 $\\int_0^\\infty e^{-ax}\\,dx = \\frac{1}{a}$，而公式给出 $\\frac{a}{a^2} = \\frac{1}{a}$。\n\n> **注意。** 只有 $0$ 处的边界项留下：$\\sin 0 = 0$ 消去一个，$\\cos 0 = 1$ 保留另一个。弄混了就会把分子 $a$ 和 $b$ 对调。",
   ),
   generate(rng) {
     const a = rng.int(1, 9);
@@ -1174,16 +1398,75 @@ const cyclicImproper: KnowledgePointDef = {
     const answer = Q.of(sine ? b : a, sum);
     const other = Q.of(sine ? a : b, sum);
     const trig = sine ? `\\sin ${b}x` : `\\cos ${b}x`;
+    const e = `e^{-${coefficientOf(a)}x}`;
+    const ratio = Q.of(b * b, a * a).toLatex();
+    const rhs = sine ? Q.of(b, a * a).toLatex() : Q.of(1, a).toLatex();
+    const [Is, Ic] = [Q.of(b, sum), Q.of(a, sum)];
     return numberProblem({
-      prompt: t(
-        `Evaluate $\\int_0^\\infty e^{-${coefficientOf(a)}x}${trig}\\,dx$.`,
-        `计算 $\\int_0^\\infty e^{-${coefficientOf(a)}x}${trig}\\,dx$。`,
-      ),
+      prompt: t(`Evaluate $\\int_0^\\infty ${e}${trig}\\,dx$.`, `计算 $\\int_0^\\infty ${e}${trig}\\,dx$。`),
       answer,
-      wrong: [other, Q.of(1, sum), Q.of(sine ? b : a, a + b)],
-      solution: t(
-        `Two integrations by parts give $I = ${sine ? Q.of(b, a * a).toLatex() : Q.of(1, a).toLatex()} - ${Q.of(b * b, a * a).toLatex()}I$. Solving gives $I = \\frac{${sine ? b : a}}{${sum}} = ${answer.toLatex()}$.`,
-        `两次分部积分给出 $I = ${sine ? Q.of(b, a * a).toLatex() : Q.of(1, a).toLatex()} - ${Q.of(b * b, a * a).toLatex()}I$。解得 $I = \\frac{${sine ? b : a}}{${sum}} = ${answer.toLatex()}$。`,
+      mistakes: [
+        {
+          value: other,
+          why: sine
+            ? t(
+                `With $\\sin ${b}x$ the boundary term at $0$ vanishes, because $\\sin 0 = 0$, and the numerator is $b = ${b}$; $a$ belongs to the cosine integral.`,
+                `对 $\\sin ${b}x$，$0$ 处的边界项因 $\\sin 0 = 0$ 而消失，分子是 $b = ${b}$；分子 $a$ 属于余弦的积分。`,
+              )
+            : t(
+                `With $\\cos ${b}x$ the boundary term at $0$ is $\\frac{1}{a}$, because $\\cos 0 = 1$, and the numerator is $a = ${a}$; $b$ belongs to the sine integral.`,
+                `对 $\\cos ${b}x$，$0$ 处的边界项因 $\\cos 0 = 1$ 而等于 $\\frac{1}{a}$，分子是 $a = ${a}$；分子 $b$ 属于正弦的积分。`,
+              ),
+        },
+        {
+          value: Q.of(1, sum),
+          why: t(
+            `Solving for $I$ leaves the numerator $${sine ? b : a}$ over $a^2 + b^2 = ${sum}$, not $1$.`,
+            `解出 $I$ 后分子是 $${sine ? b : a}$，分母是 $a^2 + b^2 = ${sum}$，分子不是 $1$。`,
+          ),
+        },
+        {
+          value: Q.of(sine ? b : a, a + b),
+          why: t(
+            "The denominator is $a^2 + b^2$, not $a + b$: it comes from $1 + \\frac{b^2}{a^2}$.",
+            "分母是 $a^2 + b^2$，不是 $a + b$：它来自 $1 + \\frac{b^2}{a^2}$。",
+          ),
+        },
+      ],
+      solution: walkThrough(
+        [
+          [
+            ["First round", "第一次分部积分"],
+            sine
+              ? [
+                  `Take $u = \\sin ${b}x$ and $dv = ${e}\\,dx$. The boundary term vanishes at both ends, since $${e} \\to 0$ at infinity and $\\sin 0 = 0$:`,
+                  `取 $u = \\sin ${b}x$，$dv = ${e}\\,dx$。边界项在两端都为零，因为在无穷远处 $${e} \\to 0$，而 $\\sin 0 = 0$：`,
+                ]
+              : [
+                  `Take $u = \\cos ${b}x$ and $dv = ${e}\\,dx$. At infinity the boundary term vanishes; at $0$ it is $\\frac{1}{${a}}$, since $\\cos 0 = 1$:`,
+                  `取 $u = \\cos ${b}x$，$dv = ${e}\\,dx$。无穷远处的边界项为零；$0$ 处的边界项是 $\\frac{1}{${a}}$，因为 $\\cos 0 = 1$：`,
+                ],
+            [
+              sine
+                ? `I = ${Q.of(b, a).toLatex()}\\int_0^\\infty ${e}\\cos ${b}x\\,dx`
+                : `I = ${Q.of(1, a).toLatex()} - ${Q.of(b, a).toLatex()}\\int_0^\\infty ${e}\\sin ${b}x\\,dx`,
+            ],
+          ],
+          [
+            ["Second round", "第二次分部积分"],
+            ["Integrate by parts again in the same way; the original integral returns:", "用同样的方法再分部积分一次，原积分又出现了："],
+            [`I = ${rhs} - ${ratio}I`],
+          ],
+          [
+            ["Solve for I", "解出 I"],
+            [`Add $${ratio}I$ to both sides and divide:`, `两边加上 $${ratio}I$，再相除：`],
+            [`\\left(1 + ${ratio}\\right)I = ${rhs}`, `I = \\frac{${sine ? b : a}}{${sum}} = ${answer.toLatex()}`],
+          ],
+        ],
+        [
+          `One round of parts on the cosine integral gives $aI_{\\cos} + bI_{\\sin} = 1$. With $I_{\\sin} = ${Is.toLatex()}$ and $I_{\\cos} = ${Ic.toLatex()}$: $${a} \\cdot ${Ic.toLatex()} + ${b} \\cdot ${Is.toLatex()} = \\frac{${a * a} + ${b * b}}{${sum}} = 1$.`,
+          `对余弦的积分做一次分部积分，得 $aI_{\\cos} + bI_{\\sin} = 1$。代入 $I_{\\sin} = ${Is.toLatex()}$，$I_{\\cos} = ${Ic.toLatex()}$：$${a} \\cdot ${Ic.toLatex()} + ${b} \\cdot ${Is.toLatex()} = \\frac{${a * a} + ${b * b}}{${sum}} = 1$。`,
+        ],
       ),
     });
   },
@@ -1193,8 +1476,8 @@ const tabularValue: KnowledgePointDef = {
   id: "the-polynomial-factor-of-a-tabular-integral",
   title: t("The polynomial factor of a tabular integral", "表格法积分的多项式因子"),
   explanation: t(
-    "For $\\int x^ne^x\\,dx$, the tabular method keeps differentiating the power while the exponential stays unchanged, with alternating signs. So the result is $e^x$ times the polynomial $x^n - nx^{n-1} + n(n-1)x^{n-2} - \\dots$, the terms being successive derivatives of $x^n$. A question about one value of this polynomial tests the entire table.",
-    "对 $\\int x^ne^x\\,dx$，表格法不断对幂函数求导，指数函数保持不变，符号交替。所以结果是 $e^x$ 乘以多项式 $x^n - nx^{n-1} + n(n-1)x^{n-2} - \\dots$，各项是 $x^n$ 的逐阶导数。问这个多项式的一个值，就是在检验整张表。",
+    "For $\\int x^ne^x\\,dx$, the tabular method keeps differentiating the power while the exponential stays unchanged, with alternating signs. So the result is $e^x$ times the polynomial $x^n - nx^{n-1} + n(n-1)x^{n-2} - \\dots$, the terms being successive derivatives of $x^n$. A question about one value of this polynomial tests the entire table. For example, $\\int x^3e^x\\,dx = e^x(x^3 - 3x^2 + 6x - 6) + C$.\n\nCheck: $\\frac{d}{dx}\\left(e^xP(x)\\right) = e^x\\left(P(x) + P'(x)\\right)$, and here $P + P' = x^3$, since the other terms cancel in pairs.\n\n> **Watch out.** The signs alternate, and the table runs until the derivative is a constant: the last term is $\\pm n!$.",
+    "对 $\\int x^ne^x\\,dx$，表格法不断对幂函数求导，指数函数保持不变，符号交替。所以结果是 $e^x$ 乘以多项式 $x^n - nx^{n-1} + n(n-1)x^{n-2} - \\dots$，各项是 $x^n$ 的逐阶导数。问这个多项式的一个值，就是在检验整张表。例如，$\\int x^3e^x\\,dx = e^x(x^3 - 3x^2 + 6x - 6) + C$。\n\n检验：$\\frac{d}{dx}\\left(e^xP(x)\\right) = e^x\\left(P(x) + P'(x)\\right)$，这里 $P + P' = x^3$，其余各项两两相消。\n\n> **注意。** 符号交替，而且表格要做到导数为常数为止：最后一项是 $\\pm n!$。",
   ),
   generate(rng) {
     const n = rng.int(2, 4);
@@ -1202,9 +1485,22 @@ const tabularValue: KnowledgePointDef = {
     const coefficients = [...Array(n + 1).keys()].map((j) => factorial(n) / factorial(n - j));
     const signedValue = coefficients.reduce((sum, c, j) => sum + (j % 2 === 0 ? c : -c) * m ** (n - j), 0);
     const plainValue = coefficients.reduce((sum, c, j) => sum + c * m ** (n - j), 0);
+    const derivativeValue = coefficients.reduce(
+      (sum, c, j) => sum + (n - j === 0 ? 0 : (j % 2 === 0 ? c : -c) * (n - j) * m ** (n - j - 1)),
+      0,
+    );
     const last = (n % 2 === 0 ? 1 : -1) * factorial(n);
-    const terms = coefficients.map((c, j): [number, string] => [j % 2 === 0 ? c : -c, n - j === 0 ? "" : n - j === 1 ? "x" : `x^${n - j}`]);
+    const xPower = (e: number) => (e === 0 ? "" : e === 1 ? "x" : `x^${e}`);
+    const terms = coefficients.map((c, j): [number, string] => [j % 2 === 0 ? c : -c, xPower(n - j)]);
     const P = poly(...terms);
+    const rows = coefficients.map((c, j) => `$${poly([c, xPower(n - j)])}$`).join(", ");
+    const substituted = coefficients
+      .map((c, j) => {
+        const e = n - j;
+        const body = e === 0 ? `${c}` : `${c === 1 ? "" : `${c} \\cdot `}${inParens(m)}${e === 1 ? "" : `^{${e}}`}`;
+        return j === 0 ? body : `${j % 2 === 0 ? "+" : "-"} ${body}`;
+      })
+      .join(" ");
     return numberProblem({
       prompt: t(
         `Write $\\int x^{${n}}e^x\\,dx = e^xP(x) + C$, where $P$ is a polynomial. Find $P(${m})$.`,
@@ -1212,10 +1508,45 @@ const tabularValue: KnowledgePointDef = {
       ),
       answer: signedValue,
       form: "integer",
-      wrong: [plainValue, m ** n, signedValue - last],
-      solution: t(
-        `The table gives $P(x) = ${P}$. Substituting $x = ${m}$ gives $${signedValue}$.`,
-        `表格给出 $P(x) = ${P}$。代入 $x = ${m}$，得 $${signedValue}$。`,
+      mistakes: [
+        {
+          value: plainValue,
+          why: t(
+            "The signs must alternate, $+, -, +, \\dots$; here every term was added.",
+            "符号必须交替为 $+, -, +, \\dots$；这里每一项都加上了。",
+          ),
+        },
+        {
+          value: m ** n,
+          why: t(
+            `This keeps only the first term $x^{${n}}$; the other rows of the table add the lower terms.`,
+            `这里只保留了第一项 $x^{${n}}$；表格的其他各行还会给出较低次的项。`,
+          ),
+        },
+        {
+          value: signedValue - last,
+          why: t(
+            `The table stopped one row early: the constant term $${last}$, which is $${n % 2 === 0 ? "" : "-"}${n}!$, is missing.`,
+            `表格少做了一行：漏掉了常数项 $${last}$，即 $${n % 2 === 0 ? "" : "-"}${n}!$。`,
+          ),
+        },
+      ],
+      solution: walkThrough(
+        [
+          [
+            ["Build the table", "列表"],
+            [
+              `Differentiate $x^{${n}}$ down to a constant: ${rows}. Every integral of $e^x$ is $e^x$.`,
+              `把 $x^{${n}}$ 逐次求导到常数：${rows}。$e^x$ 的每次积分都是 $e^x$。`,
+            ],
+          ],
+          [["Add with alternating signs", "交替符号相加"], ["The diagonals give:", "对角线乘积相加得："], [`P(x) = ${P}`]],
+          [["Substitute", "代入"], [`Put in $x = ${m}$:`, `代入 $x = ${m}$：`], [`P(${m}) = ${substituted} = ${signedValue}`]],
+        ],
+        [
+          `Since $\\frac{d}{dx}(e^xP) = e^x(P + P')$, we need $P + P' = x^{${n}}$. At $x = ${m}$: $P'(${m}) = ${derivativeValue}$, and $${signedValue} + ${inParens(derivativeValue)} = ${m ** n}$, which is $${inParens(m)}^{${n}}$.`,
+          `由于 $\\frac{d}{dx}(e^xP) = e^x(P + P')$，应有 $P + P' = x^{${n}}$。在 $x = ${m}$ 处：$P'(${m}) = ${derivativeValue}$，而 $${signedValue} + ${inParens(derivativeValue)} = ${m ** n}$，正是 $${inParens(m)}^{${n}}$。`,
+        ],
       ),
     });
   },
@@ -2116,8 +2447,8 @@ const powerOfCoshAndSinh: KnowledgePointDef = {
   id: "powers-of-cosh-plus-or-minus-sinh",
   title: t("Powers of cosh plus or minus sinh", "cosh 加减 sinh 的幂"),
   explanation: t(
-    "Adding and subtracting the definitions of the hyperbolic functions gives two short identities: $\\cosh x + \\sinh x = e^x$ and $\\cosh x - \\sinh x = e^{-x}$. A power of either is therefore a single exponential, with no need to expand the bracket. A logarithm in the limit then cancels the exponential when the result is evaluated.",
-    "把双曲函数的定义相加、相减，得到两个简单的恒等式：$\\cosh x + \\sinh x = e^x$，$\\cosh x - \\sinh x = e^{-x}$。所以它们的幂都只是一个指数函数，不必展开括号。求值时，积分限中的对数会与指数相互抵消。",
+    "Adding and subtracting the definitions of the hyperbolic functions gives two short identities: $\\cosh x + \\sinh x = e^x$ and $\\cosh x - \\sinh x = e^{-x}$. A power of either is therefore a single exponential, with no need to expand the bracket. A logarithm in the limit then cancels the exponential when the result is evaluated. For example, $\\int_0^{\\ln 2} (\\cosh x + \\sinh x)^2\\,dx = \\int_0^{\\ln 2} e^{2x}\\,dx = \\frac{4 - 1}{2} = \\frac{3}{2}$.\n\nCheck: at $x = 0$, $\\cosh 0 + \\sinh 0 = 1 = e^0$ and $\\cosh 0 - \\sinh 0 = 1 = e^{-0}$, as the identities say.\n\n> **Watch out.** $e^{n\\ln a} = a^n$, and integrating $e^{nx}$ divides by $n$. With the minus sign the exponential is $e^{-nx}$, whose antiderivative is $-\\frac{e^{-nx}}{n}$.",
+    "把双曲函数的定义相加、相减，得到两个简单的恒等式：$\\cosh x + \\sinh x = e^x$，$\\cosh x - \\sinh x = e^{-x}$。所以它们的幂都只是一个指数函数，不必展开括号。求值时，积分限中的对数会与指数相互抵消。例如，$\\int_0^{\\ln 2} (\\cosh x + \\sinh x)^2\\,dx = \\int_0^{\\ln 2} e^{2x}\\,dx = \\frac{4 - 1}{2} = \\frac{3}{2}$。\n\n检验：在 $x = 0$ 处，$\\cosh 0 + \\sinh 0 = 1 = e^0$，$\\cosh 0 - \\sinh 0 = 1 = e^{-0}$，与恒等式一致。\n\n> **注意。** $e^{n\\ln a} = a^n$，积分 $e^{nx}$ 要除以 $n$。取减号时指数函数是 $e^{-nx}$，它的原函数是 $-\\frac{e^{-nx}}{n}$。",
   ),
   generate(rng) {
     const plus = rng.pick([true, false]);
@@ -2131,18 +2462,81 @@ const powerOfCoshAndSinh: KnowledgePointDef = {
     const answer = plus ? up : down;
     const exponent = `${plus ? "" : "-"}${coefficientOf(n)}x`;
     const work = plus ? `${fractionBefore(k, n)}(${power} - 1)` : `${fractionBefore(k, n)}\\left(1 - ${Q.of(1, power).toLatex()}\\right)`;
+    const ePower = `e^{${exponent}}`;
+    const evaluated = plus ? `\\left[e^{${exponent}}\\right]_0^{\\ln ${a}}` : `\\left[-e^{${exponent}}\\right]_0^{\\ln ${a}}`;
+    const why = (value: Q, en: string, zh: string) => ({ value, why: t(en, zh) });
+    const skipped = why(
+      plus ? Q.of(k * (power - 1)) : Q.of(k * (power - 1), power),
+      `Integrating $${ePower}$ divides by $${n}$; this skips the division.`,
+      `积分 $${ePower}$ 要除以 $${n}$；这里漏掉了除法。`,
+    );
+    const mistakes = plus
+      ? [
+          skipped,
+          why(Q.of(k * power, n), "The lower limit gives $e^0 = 1$, which must be subtracted.", "下限给出 $e^0 = 1$，要把它减去。"),
+          why(
+            down,
+            "This uses $e^{-x}$, which is $\\cosh x - \\sinh x$; with a plus sign the bracket is $e^{x}$.",
+            "这里用的是 $e^{-x}$，即 $\\cosh x - \\sinh x$；取加号时括号是 $e^{x}$。",
+          ),
+          why(Q.of(k * (power + 1), n), "At the lower limit $e^0 = 1$ is subtracted, not added.", "下限处的 $e^0 = 1$ 要减去，不是加上。"),
+        ]
+      : [
+          skipped,
+          why(
+            Q.of(k, n * power),
+            "This uses only the value at the upper limit, with its sign changed; the value at $x = 0$ also counts.",
+            "这里只用了上限处的值并改了符号；$x = 0$ 处的值也要计入。",
+          ),
+          why(
+            up,
+            "This uses $e^{x}$, which is $\\cosh x + \\sinh x$; with a minus sign the bracket is $e^{-x}$.",
+            "这里用的是 $e^{x}$，即 $\\cosh x + \\sinh x$；取减号时括号是 $e^{-x}$。",
+          ),
+          why(
+            Q.of(k * (power + 1), n * power),
+            `The values at the two limits are subtracted, $F(\\ln ${a}) - F(0)$, not added.`,
+            `两个积分限处的值要相减，即 $F(\\ln ${a}) - F(0)$，不是相加。`,
+          ),
+          why(
+            down.neg(),
+            `The antiderivative of $${ePower}$ is $-\\frac{${ePower}}{${n}}$; with its minus sign the result is positive.`,
+            `$${ePower}$ 的原函数是 $-\\frac{${ePower}}{${n}}$；算上这个负号，结果是正的。`,
+          ),
+        ];
     return numberProblem({
       prompt: t(
         `Evaluate $\\int_0^{\\ln ${a}} ${coefficientOf(k)}${bracket}\\,dx$.`,
         `计算 $\\int_0^{\\ln ${a}} ${coefficientOf(k)}${bracket}\\,dx$。`,
       ),
       answer,
-      wrong: plus
-        ? [Q.of(k * (power - 1)), Q.of(k * power, n), down, Q.of(k * (power + 1), n)]
-        : [Q.of(k * (power - 1), power), Q.of(k, n * power), up, Q.of(k * (power + 1), n * power), down.neg()],
-      solution: t(
-        `The bracket equals $e^{${plus ? "" : "-"}x}$, so the integrand is $${coefficientOf(k)}e^{${exponent}}$. Evaluating its antiderivative at $x = \\ln ${a}$ and $x = 0$ gives $${work} = ${answer.toLatex()}$.`,
-        `括号内等于 $e^{${plus ? "" : "-"}x}$，所以被积函数是 $${coefficientOf(k)}e^{${exponent}}$。原函数在 $x = \\ln ${a}$ 与 $x = 0$ 处求值，得 $${work} = ${answer.toLatex()}$。`,
+      mistakes,
+      solution: walkThrough(
+        [
+          [
+            ["Use the identity", "用恒等式"],
+            [
+              `$\\cosh x ${plus ? "+" : "-"} \\sinh x = e^{${plus ? "" : "-"}x}$, so the power is one exponential:`,
+              `$\\cosh x ${plus ? "+" : "-"} \\sinh x = e^{${plus ? "" : "-"}x}$，所以这个幂就是一个指数函数：`,
+            ],
+            [`${bracket} = ${ePower}`],
+          ],
+          [
+            ["Integrate", "积分"],
+            [
+              `Use $e^{${plus ? "" : "-"}${n}\\ln ${a}} = ${plus ? power : Q.of(1, power).toLatex()}$:`,
+              `利用 $e^{${plus ? "" : "-"}${n}\\ln ${a}} = ${plus ? power : Q.of(1, power).toLatex()}$：`,
+            ],
+            [
+              `\\int_0^{\\ln ${a}} ${coefficientOf(k)}${ePower}\\,dx = ${fractionBefore(k, n)}${evaluated}`,
+              `= ${work} = ${answer.toLatex()}`,
+            ],
+          ],
+        ],
+        [
+          `Check the identity at the upper limit with the definitions: $\\cosh(\\ln ${a}) = \\frac{${a} + ${Q.of(1, a).toLatex()}}{2}$ and $\\sinh(\\ln ${a}) = \\frac{${a} - ${Q.of(1, a).toLatex()}}{2}$, so their ${plus ? "sum" : "difference"} is $${plus ? a : Q.of(1, a).toLatex()}$, which is $e^{${plus ? "" : "-"}\\ln ${a}}$. The integrand is right, and its antiderivative gives $${answer.toLatex()}$.`,
+          `用定义在上限处检验恒等式：$\\cosh(\\ln ${a}) = \\frac{${a} + ${Q.of(1, a).toLatex()}}{2}$，$\\sinh(\\ln ${a}) = \\frac{${a} - ${Q.of(1, a).toLatex()}}{2}$，二者之${plus ? "和" : "差"}是 $${plus ? a : Q.of(1, a).toLatex()}$，正是 $e^{${plus ? "" : "-"}\\ln ${a}}$。被积函数无误，它的原函数给出 $${answer.toLatex()}$。`,
+        ],
       ),
     });
   },
@@ -2152,8 +2546,8 @@ const evenPowerOfSech: KnowledgePointDef = {
   id: "an-even-power-of-sech",
   title: t("An even power of sech", "sech 的偶次幂"),
   explanation: t(
-    "The derivative of $\\tanh x$ is $\\operatorname{sech}^2 x$, so one factor of $\\operatorname{sech}^2 x$ can be saved for the differential. The rest is converted by the identity $\\operatorname{sech}^2 x = 1 - \\tanh^2 x$. Note the minus sign, which differs from the identity for ordinary secant. With $u = \\tanh x$, the integrand is then a polynomial in $u$.",
-    "$\\tanh x$ 的导数是 $\\operatorname{sech}^2 x$，所以可以留出一个 $\\operatorname{sech}^2 x$ 作微分。其余部分用恒等式 $\\operatorname{sech}^2 x = 1 - \\tanh^2 x$ 转换。注意这里是减号，与普通正割的恒等式不同。令 $u = \\tanh x$，被积函数就成为 $u$ 的多项式。",
+    "The derivative of $\\tanh x$ is $\\operatorname{sech}^2 x$, so one factor of $\\operatorname{sech}^2 x$ can be saved for the differential. The rest is converted by the identity $\\operatorname{sech}^2 x = 1 - \\tanh^2 x$. With $u = \\tanh x$, the integrand is then a polynomial in $u$. For example, if $\\tanh b = \\frac{1}{2}$, then $\\int_0^b \\operatorname{sech}^4 x\\,dx = \\int_0^{1/2} (1 - u^2)\\,du = \\frac{1}{2} - \\frac{1}{24} = \\frac{11}{24}$.\n\nCheck: $\\operatorname{sech}^4 x \\le \\operatorname{sech}^2 x$, so the integral is at most $\\int_0^b \\operatorname{sech}^2 x\\,dx = \\tanh b = \\frac{1}{2}$; indeed $\\frac{11}{24} < \\frac{1}{2}$.\n\n> **Watch out.** The identity has a minus sign, $\\operatorname{sech}^2 x = 1 - \\tanh^2 x$, unlike $\\sec^2 x = 1 + \\tan^2 x$. And $u$ runs from $\\tanh 0 = 0$ to $\\tanh b$.",
+    "$\\tanh x$ 的导数是 $\\operatorname{sech}^2 x$，所以可以留出一个 $\\operatorname{sech}^2 x$ 作微分。其余部分用恒等式 $\\operatorname{sech}^2 x = 1 - \\tanh^2 x$ 转换。令 $u = \\tanh x$，被积函数就成为 $u$ 的多项式。例如，若 $\\tanh b = \\frac{1}{2}$，则 $\\int_0^b \\operatorname{sech}^4 x\\,dx = \\int_0^{1/2} (1 - u^2)\\,du = \\frac{1}{2} - \\frac{1}{24} = \\frac{11}{24}$。\n\n检验：$\\operatorname{sech}^4 x \\le \\operatorname{sech}^2 x$，所以积分至多是 $\\int_0^b \\operatorname{sech}^2 x\\,dx = \\tanh b = \\frac{1}{2}$；确实 $\\frac{11}{24} < \\frac{1}{2}$。\n\n> **注意。** 恒等式带减号：$\\operatorname{sech}^2 x = 1 - \\tanh^2 x$，与 $\\sec^2 x = 1 + \\tan^2 x$ 不同。而且 $u$ 从 $\\tanh 0 = 0$ 变到 $\\tanh b$。",
   ),
   generate(rng) {
     const [p, q] = rng.pick([
@@ -2171,16 +2565,69 @@ const evenPowerOfSech: KnowledgePointDef = {
     const times = Q.of(k);
     const cubeThird = T.pow(3).div(Q.of(3));
     const answer = T.sub(cubeThird).mul(times);
+    const K = coefficientOf(k);
     return numberProblem({
       prompt: t(
-        `$\\tanh b = ${T.toLatex()}$ with $b > 0$. Evaluate $\\int_0^b ${coefficientOf(k)}\\operatorname{sech}^4 x\\,dx$.`,
-        `$\\tanh b = ${T.toLatex()}$，$b > 0$。计算 $\\int_0^b ${coefficientOf(k)}\\operatorname{sech}^4 x\\,dx$。`,
+        `$\\tanh b = ${T.toLatex()}$ with $b > 0$. Evaluate $\\int_0^b ${K}\\operatorname{sech}^4 x\\,dx$.`,
+        `$\\tanh b = ${T.toLatex()}$，$b > 0$。计算 $\\int_0^b ${K}\\operatorname{sech}^4 x\\,dx$。`,
       ),
       answer,
-      wrong: [T.mul(times), T.add(cubeThird).mul(times), cubeThird.mul(times), T.sub(T.pow(3)).mul(times)],
-      solution: t(
-        `Write $\\operatorname{sech}^4 x = (1 - \\tanh^2 x)\\operatorname{sech}^2 x$ and let $u = \\tanh x$, so $u$ runs from $0$ to $${T.toLatex()}$. The integral is $${coefficientOf(k)}\\left[u - \\frac{u^3}{3}\\right]_0^{${T.toLatex()}} = ${answer.toLatex()}$.`,
-        `写成 $\\operatorname{sech}^4 x = (1 - \\tanh^2 x)\\operatorname{sech}^2 x$，令 $u = \\tanh x$，则 $u$ 从 $0$ 变到 $${T.toLatex()}$。积分等于 $${coefficientOf(k)}\\left[u - \\frac{u^3}{3}\\right]_0^{${T.toLatex()}} = ${answer.toLatex()}$。`,
+      mistakes: [
+        {
+          value: T.mul(times),
+          why: t(
+            "This integrates $\\operatorname{sech}^4 x$ as if it were $\\operatorname{sech}^2 x$; the factor $1 - \\tanh^2 x$ takes away $\\frac{u^3}{3}$.",
+            "这是把 $\\operatorname{sech}^4 x$ 当成 $\\operatorname{sech}^2 x$ 来积分；因子 $1 - \\tanh^2 x$ 还要减去 $\\frac{u^3}{3}$。",
+          ),
+        },
+        {
+          value: T.add(cubeThird).mul(times),
+          why: t(
+            "The identity is $\\operatorname{sech}^2 x = 1 - \\tanh^2 x$, with a minus sign; $1 + \\tan^2 x$ is the identity for ordinary secant.",
+            "恒等式是 $\\operatorname{sech}^2 x = 1 - \\tanh^2 x$，带减号；$1 + \\tan^2 x$ 是普通正割的恒等式。",
+          ),
+        },
+        {
+          value: cubeThird.mul(times),
+          why: t(
+            "This integrates only the $u^2$ part of $1 - u^2$; the $1$ gives the main term $u$, and the $u^2$ part is subtracted.",
+            "这里只积分了 $1 - u^2$ 中的 $u^2$ 部分；其中的 $1$ 给出主要的一项 $u$，$u^2$ 部分是减去的。",
+          ),
+        },
+        {
+          value: T.sub(T.pow(3)).mul(times),
+          why: t(
+            "$\\int u^2\\,du = \\frac{u^3}{3}$; the division by $3$ is missing.",
+            "$\\int u^2\\,du = \\frac{u^3}{3}$；漏掉了除以 $3$。",
+          ),
+        },
+      ],
+      solution: walkThrough(
+        [
+          [
+            ["Save one factor of sech²x", "留出一个 sech²x"],
+            [
+              "Convert the rest with $\\operatorname{sech}^2 x = 1 - \\tanh^2 x$:",
+              "其余部分用 $\\operatorname{sech}^2 x = 1 - \\tanh^2 x$ 转换：",
+            ],
+            ["\\operatorname{sech}^4 x = (1 - \\tanh^2 x)\\operatorname{sech}^2 x"],
+          ],
+          [
+            ["Substitute", "换元"],
+            [
+              `Let $u = \\tanh x$, so $du = \\operatorname{sech}^2 x\\,dx$ and $u$ runs from $0$ to $${T.toLatex()}$:`,
+              `令 $u = \\tanh x$，则 $du = \\operatorname{sech}^2 x\\,dx$，$u$ 从 $0$ 变到 $${T.toLatex()}$：`,
+            ],
+            [
+              `\\int_0^b ${K}\\operatorname{sech}^4 x\\,dx = ${K}\\int_0^{${T.toLatex()}} (1 - u^2)\\,du = ${K}\\left[u - \\frac{u^3}{3}\\right]_0^{${T.toLatex()}}`,
+              `= ${k === 1 ? "" : `${k}\\left(`}${T.toLatex()} - ${cubeThird.toLatex()}${k === 1 ? "" : "\\right)"} = ${answer.toLatex()}`,
+            ],
+          ],
+        ],
+        [
+          `Differentiate $F(x) = \\tanh x - \\frac{\\tanh^3 x}{3}$: $F'(x) = \\operatorname{sech}^2 x - \\tanh^2 x\\operatorname{sech}^2 x = \\operatorname{sech}^4 x$. Also the answer must lie below ${k === 1 ? "" : `$${k}$ times `}$\\tanh b = ${T.toLatex()}$, since $\\operatorname{sech}^4 x \\le \\operatorname{sech}^2 x$, and $${answer.toLatex()}$ does.`,
+          `对 $F(x) = \\tanh x - \\frac{\\tanh^3 x}{3}$ 求导：$F'(x) = \\operatorname{sech}^2 x - \\tanh^2 x\\operatorname{sech}^2 x = \\operatorname{sech}^4 x$。另外，由于 $\\operatorname{sech}^4 x \\le \\operatorname{sech}^2 x$，答案应小于${k === 1 ? "" : ` $${k}$ 乘以`} $\\tanh b = ${T.toLatex()}$，而 $${answer.toLatex()}$ 确实如此。`,
+        ],
       ),
     });
   },
@@ -2190,8 +2637,8 @@ const fourthPowerOfHyperbolic: KnowledgePointDef = {
   id: "a-fourth-power-of-sinh-or-cosh",
   title: t("A fourth power of sinh or cosh", "sinh 或 cosh 的四次幂"),
   explanation: t(
-    "One double angle formula turns a fourth power into the square of a sum, and that square contains $\\cosh^2 2x$, which needs the formula a second time. Only then is every term a constant or a single hyperbolic cosine, ready to integrate. The sign of the middle term depends on whether the starting function was $\\sinh$ or $\\cosh$.",
-    "用一次二倍角公式，四次幂变成一个和的平方，而这个平方中含有 $\\cosh^2 2x$，需要再用一次公式。这样每一项才都是常数或单个双曲余弦，可以积分。中间一项的符号取决于开始时是 $\\sinh$ 还是 $\\cosh$。",
+    "One double angle formula turns a fourth power into the square of a sum, and that square contains $\\cosh^2 2x$, which needs the formula a second time. Only then is every term a constant or a single hyperbolic cosine, ready to integrate. The sign of the middle term depends on whether the starting function was $\\sinh$ or $\\cosh$. For example, $\\cosh^4 x = \\left(\\frac{\\cosh 2x + 1}{2}\\right)^2 = \\frac{1}{4}\\cosh^2 2x + \\frac{1}{2}\\cosh 2x + \\frac{1}{4} = \\frac{3}{8} + \\frac{1}{2}\\cosh 2x + \\frac{1}{8}\\cosh 4x$.\n\nCheck: at $x = 0$ both sides equal $1$: $\\frac{3}{8} + \\frac{1}{2} + \\frac{1}{8} = 1$.\n\n> **Watch out.** $\\cosh^2 2x = \\frac{\\cosh 4x + 1}{2}$ adds $\\frac{1}{8}$ to the constant, and integrating $\\cosh 4x$ divides by $4$.",
+    "用一次二倍角公式，四次幂变成一个和的平方，而这个平方中含有 $\\cosh^2 2x$，需要再用一次公式。这样每一项才都是常数或单个双曲余弦，可以积分。中间一项的符号取决于开始时是 $\\sinh$ 还是 $\\cosh$。例如，$\\cosh^4 x = \\left(\\frac{\\cosh 2x + 1}{2}\\right)^2 = \\frac{1}{4}\\cosh^2 2x + \\frac{1}{2}\\cosh 2x + \\frac{1}{4} = \\frac{3}{8} + \\frac{1}{2}\\cosh 2x + \\frac{1}{8}\\cosh 4x$。\n\n检验：在 $x = 0$ 处两边都等于 $1$：$\\frac{3}{8} + \\frac{1}{2} + \\frac{1}{8} = 1$。\n\n> **注意。** $\\cosh^2 2x = \\frac{\\cosh 4x + 1}{2}$ 给常数项加上 $\\frac{1}{8}$，而积分 $\\cosh 4x$ 要除以 $4$。",
   ),
   generate(rng) {
     const cosh = rng.pick([true, false]);
@@ -2200,26 +2647,111 @@ const fourthPowerOfHyperbolic: KnowledgePointDef = {
     const sign = cosh ? 1 : -1;
     const fn = cosh ? "\\cosh" : "\\sinh";
     const answer = letter === "A" ? Q.of(3 * k, 8) : letter === "B" ? Q.of(sign * k, 4) : Q.of(k, 32);
-    const wrong =
+    const why = (value: Q, en: string, zh: string) => ({ value, why: t(en, zh) });
+    const mistakes =
       letter === "A"
-        ? [Q.of(k, 4), Q.of(3 * k, 4), Q.of(k, 8), Q.of(k, 2)]
+        ? [
+            why(
+              Q.of(k, 4),
+              "This stops after one use of the formula: the square has the constant $\\frac{1}{4}$, but $\\frac{1}{4}\\cosh^2 2x$ adds another $\\frac{1}{8}$.",
+              "这里只用了一次公式：平方给出常数 $\\frac{1}{4}$，但 $\\frac{1}{4}\\cosh^2 2x$ 还要再加 $\\frac{1}{8}$。",
+            ),
+            why(
+              Q.of(3 * k, 4),
+              "The constant $\\frac{3}{8}$ integrates to $\\frac{3}{8}x$; this is twice the value.",
+              "常数 $\\frac{3}{8}$ 积分得 $\\frac{3}{8}x$；这是它的两倍。",
+            ),
+            why(
+              Q.of(k, 8),
+              "$\\frac{1}{8}$ is only the part that comes from $\\frac{1}{4}\\cosh^2 2x$; the $\\frac{1}{4}$ of the first step must be added to it.",
+              "$\\frac{1}{8}$ 只是来自 $\\frac{1}{4}\\cosh^2 2x$ 的部分；还要加上第一步的 $\\frac{1}{4}$。",
+            ),
+            why(
+              Q.of(k, 2),
+              "Lowering $\\cosh^2 2x$ gives $\\frac{\\cosh 4x + 1}{2}$; without the division by $2$ the constant becomes $\\frac{1}{2}$.",
+              "降幂得 $\\cosh^2 2x = \\frac{\\cosh 4x + 1}{2}$；漏掉除以 $2$，常数就变成了 $\\frac{1}{2}$。",
+            ),
+          ]
         : letter === "B"
-          ? [Q.of(-sign * k, 4), Q.of(sign * k, 2), Q.of(sign * k, 8), Q.of(k, 32)]
-          : [Q.of(k, 8), Q.of(k, 16), Q.of(k, 4), Q.of(3 * k, 8)];
+          ? [
+              why(
+                Q.of(-sign * k, 4),
+                cosh
+                  ? "$\\cosh^2 x = \\frac{\\cosh 2x + 1}{2}$, so the cross term $\\frac{1}{2}\\cosh 2x$ is positive."
+                  : "$\\sinh^2 x = \\frac{\\cosh 2x - 1}{2}$, so the cross term $-\\frac{1}{2}\\cosh 2x$ is negative.",
+                cosh
+                  ? "$\\cosh^2 x = \\frac{\\cosh 2x + 1}{2}$，所以交叉项 $\\frac{1}{2}\\cosh 2x$ 为正。"
+                  : "$\\sinh^2 x = \\frac{\\cosh 2x - 1}{2}$，所以交叉项 $-\\frac{1}{2}\\cosh 2x$ 为负。",
+              ),
+              why(
+                Q.of(sign * k, 2),
+                "$\\frac{1}{2}\\cosh 2x$ integrates to $\\frac{1}{4}\\sinh 2x$: the division by $2$ from the chain rule is missing.",
+                "$\\frac{1}{2}\\cosh 2x$ 积分得 $\\frac{1}{4}\\sinh 2x$：漏掉了链式法则带来的除以 $2$。",
+              ),
+              why(
+                Q.of(sign * k, 8),
+                "The cross term of the square is $\\pm\\frac{1}{2}\\cosh 2x$, not $\\pm\\frac{1}{4}\\cosh 2x$: the factor $2$ in $2ab$ is missing.",
+                "平方的交叉项是 $\\pm\\frac{1}{2}\\cosh 2x$，不是 $\\pm\\frac{1}{4}\\cosh 2x$：漏掉了 $2ab$ 中的因子 $2$。",
+              ),
+              why(
+                Q.of(k, 32),
+                "$\\frac{1}{32}$ belongs to $D$, the coefficient of $\\sinh 4x$, not of $\\sinh 2x$.",
+                "$\\frac{1}{32}$ 属于 $D$，是 $\\sinh 4x$ 的系数，不是 $\\sinh 2x$ 的。",
+              ),
+            ]
+          : [
+              why(
+                Q.of(k, 8),
+                "$\\frac{1}{8}$ is the coefficient of $\\cosh 4x$; integrating it divides by $4$.",
+                "$\\frac{1}{8}$ 是 $\\cosh 4x$ 的系数；积分时还要除以 $4$。",
+              ),
+              why(Q.of(k, 16), "Integrating $\\cosh 4x$ divides by $4$, not by $2$.", "积分 $\\cosh 4x$ 要除以 $4$，不是除以 $2$。"),
+              why(
+                Q.of(k, 4),
+                "$\\frac{1}{4}$ is the size of $B$, the coefficient of $\\sinh 2x$, not of $\\sinh 4x$.",
+                "$\\frac{1}{4}$ 是 $B$ 的大小，即 $\\sinh 2x$ 的系数，不是 $\\sinh 4x$ 的。",
+              ),
+              why(Q.of(3 * k, 8), "$\\frac{3}{8}$ is $A$, the coefficient of $x$.", "$\\frac{3}{8}$ 是 $A$，即 $x$ 的系数。"),
+            ];
+    const squared = poly([Q.of(1, 4), "\\cosh^2 2x"], [Q.of(sign, 2), "\\cosh 2x"], [Q.of(1, 4), ""]);
     const lowered = poly([Q.of(3, 8), ""], [Q.of(sign, 2), "\\cosh 2x"], [Q.of(1, 8), "\\cosh 4x"]);
     const integrated = poly([Q.of(3, 8), "x"], [Q.of(sign, 4), "\\sinh 2x"], [Q.of(1, 32), "\\sinh 4x"]);
-    const scaled = k === 1 ? "So " : `Multiplying by $${k}$ gives `;
-    const scaledZh = k === 1 ? "所以 " : `乘以 $${k}$，得 `;
+    const scaled = poly([Q.of(3 * k, 8), "x"], [Q.of(sign * k, 4), "\\sinh 2x"], [Q.of(k, 32), "\\sinh 4x"]);
     return numberProblem({
       prompt: t(
         `$\\int ${signedCoefficient(k)}${fn}^4 x\\,dx = Ax + B\\sinh 2x + D\\sinh 4x + C$. Find $${letter}$.`,
         `$\\int ${signedCoefficient(k)}${fn}^4 x\\,dx = Ax + B\\sinh 2x + D\\sinh 4x + C$。求 $${letter}$。`,
       ),
       answer,
-      wrong,
-      solution: t(
-        `Applying the double angle formula twice gives $${fn}^4 x = ${lowered}$, whose antiderivative is $${integrated}$. ${scaled}$${letter} = ${answer.toLatex()}$.`,
-        `用两次二倍角公式，得 $${fn}^4 x = ${lowered}$，其原函数是 $${integrated}$。${scaledZh}$${letter} = ${answer.toLatex()}$。`,
+      mistakes,
+      solution: walkThrough(
+        [
+          [
+            ["Use the formula once", "第一次用公式"],
+            [
+              `Write $${fn}^2 x = \\frac{\\cosh 2x ${cosh ? "+" : "-"} 1}{2}$ and square:`,
+              `写成 $${fn}^2 x = \\frac{\\cosh 2x ${cosh ? "+" : "-"} 1}{2}$ 再平方：`,
+            ],
+            [`${fn}^4 x = \\left(\\frac{\\cosh 2x ${cosh ? "+" : "-"} 1}{2}\\right)^2 = ${squared}`],
+          ],
+          [
+            ["Use it again", "再用一次"],
+            ["Replace $\\cosh^2 2x$ by $\\frac{\\cosh 4x + 1}{2}$:", "把 $\\cosh^2 2x$ 换成 $\\frac{\\cosh 4x + 1}{2}$："],
+            [`${fn}^4 x = ${lowered}`],
+          ],
+          [
+            ["Integrate", "积分"],
+            [
+              `Integrate each term${k === 1 ? "" : ` and multiply by $${k}$`}, then read off $${letter}$:`,
+              `逐项积分${k === 1 ? "" : `，再乘以 $${k}$`}，然后读出 $${letter}$：`,
+            ],
+            [`\\int ${signedCoefficient(k)}${fn}^4 x\\,dx = ${scaled} + C`, `${letter} = ${answer.toLatex()}`],
+          ],
+        ],
+        [
+          `Differentiate $${integrated}$: it gives $${lowered}$, which at $x = 0$ is $\\frac{3}{8} ${cosh ? "+" : "-"} \\frac{1}{2} + \\frac{1}{8} = ${cosh ? 1 : 0}$, the value of $${fn}^4 0$.`,
+          `对 $${integrated}$ 求导，得 $${lowered}$，它在 $x = 0$ 处为 $\\frac{3}{8} ${cosh ? "+" : "-"} \\frac{1}{2} + \\frac{1}{8} = ${cosh ? 1 : 0}$，正是 $${fn}^4 0$ 的值。`,
+        ],
       ),
     });
   },
@@ -2229,24 +2761,75 @@ const convenientConstantInV: KnowledgePointDef = {
   id: "a-convenient-constant-in-v",
   title: t("A convenient constant in v", "选取 v 中方便的常数"),
   explanation: t(
-    "In integration by parts, $v$ can be any antiderivative of $dv$, so a constant may be added to it freely. For $\\int \\ln(ax + b)\\,dx$, the plain choice $v = x$ leaves a quotient that needs division. Choosing the constant so that $v$ is a multiple of $ax + b$ cancels the denominator of $du$, and the remaining integral is immediate.",
-    "分部积分时，$v$ 可以是 $dv$ 的任何一个原函数，所以可以随意加一个常数。对 $\\int \\ln(ax + b)\\,dx$，直接取 $v = x$ 会留下需要做除法的分式。选取常数使 $v$ 成为 $ax + b$ 的倍数，就能约去 $du$ 的分母，剩下的积分立刻可得。",
+    "In integration by parts, $v$ can be any antiderivative of $dv$, so a constant may be added to it freely. For $\\int \\ln(ax + b)\\,dx$, the plain choice $v = x$ leaves a quotient that needs division. Choosing the constant so that $v$ is a multiple of $ax + b$ cancels the denominator of $du$, and the remaining integral is immediate. For example, with $v = x + \\frac{3}{2} = \\frac{2x + 3}{2}$, $\\int \\ln(2x + 3)\\,dx = \\left(x + \\frac{3}{2}\\right)\\ln(2x + 3) - x + C$.\n\nCheck: differentiating gives $\\ln(2x + 3) + \\left(x + \\frac{3}{2}\\right)\\frac{2}{2x + 3} - 1 = \\ln(2x + 3) + 1 - 1$.\n\n> **Watch out.** The constant is $\\frac{b}{a}$, not $b$: $v$ must equal $\\frac{ax + b}{a}$, so that it also cancels the $a$ in $du$.",
+    "分部积分时，$v$ 可以是 $dv$ 的任何一个原函数，所以可以随意加一个常数。对 $\\int \\ln(ax + b)\\,dx$，直接取 $v = x$ 会留下需要做除法的分式。选取常数使 $v$ 成为 $ax + b$ 的倍数，就能约去 $du$ 的分母，剩下的积分立刻可得。例如，取 $v = x + \\frac{3}{2} = \\frac{2x + 3}{2}$，得 $\\int \\ln(2x + 3)\\,dx = \\left(x + \\frac{3}{2}\\right)\\ln(2x + 3) - x + C$。\n\n检验：求导得 $\\ln(2x + 3) + \\left(x + \\frac{3}{2}\\right)\\frac{2}{2x + 3} - 1 = \\ln(2x + 3) + 1 - 1$。\n\n> **注意。** 常数是 $\\frac{b}{a}$，不是 $b$：$v$ 必须等于 $\\frac{ax + b}{a}$，这样才能同时约去 $du$ 中的 $a$。",
   ),
   generate(rng) {
     const a = rng.int(2, 9);
     const b = rng.int(1, 9);
     const answer = Q.of(b, a);
     const inner = poly([a, "x"], [b, ""]);
+    const p = answer.toLatex();
     return numberProblem({
       prompt: t(
         `$\\int \\ln(${inner})\\,dx = (x + p)\\ln(${inner}) - x + C$. Find $p$.`,
         `$\\int \\ln(${inner})\\,dx = (x + p)\\ln(${inner}) - x + C$。求 $p$。`,
       ),
       answer,
-      wrong: [Q.of(b), Q.of(a, b), answer.neg(), Q.of(b, 2 * a)],
-      solution: t(
-        `Take $u = \\ln(${inner})$, so $du = \\frac{${a}}{${inner}}\\,dx$, and $v = x + p$. Then $v\\,du$ is simply $dx$ exactly when $x + p = \\frac{${inner}}{${a}}$, which leaves $-x$ as the second term and gives $p = ${answer.toLatex()}$.`,
-        `取 $u = \\ln(${inner})$，则 $du = \\frac{${a}}{${inner}}\\,dx$，再取 $v = x + p$。当 $x + p = \\frac{${inner}}{${a}}$ 时，$v\\,du$ 正好是 $dx$，于是第二项是 $-x$，得 $p = ${answer.toLatex()}$。`,
+      mistakes: [
+        {
+          value: Q.of(b),
+          why: t(
+            `With $p = ${b}$, $v\\,du$ is not $dx$; $v$ must be $\\frac{${inner}}{${a}}$, so $p = \\frac{b}{a}$.`,
+            `取 $p = ${b}$ 时 $v\\,du$ 不是 $dx$；$v$ 必须是 $\\frac{${inner}}{${a}}$，所以 $p = \\frac{b}{a}$。`,
+          ),
+        },
+        {
+          value: Q.of(a, b),
+          why: t(
+            "This inverts the fraction: $p$ is $\\frac{b}{a}$, the constant in $x + \\frac{b}{a} = \\frac{ax + b}{a}$.",
+            "分数颠倒了：$p$ 是 $\\frac{b}{a}$，即 $x + \\frac{b}{a} = \\frac{ax + b}{a}$ 中的常数。",
+          ),
+        },
+        {
+          value: answer.neg(),
+          why: t(
+            "The constant has the same sign as in $ax + b$: $x + \\frac{b}{a}$.",
+            "这个常数与 $ax + b$ 中的符号相同：$x + \\frac{b}{a}$。",
+          ),
+        },
+        {
+          value: Q.of(b, 2 * a),
+          why: t(
+            `There is no factor $\\frac{1}{2}$: $v = x + p$ must equal $\\frac{${inner}}{${a}}$ exactly.`,
+            `没有因子 $\\frac{1}{2}$：$v = x + p$ 必须恰好等于 $\\frac{${inner}}{${a}}$。`,
+          ),
+        },
+      ],
+      solution: walkThrough(
+        [
+          [
+            ["Choose u and v", "选择 u 与 v"],
+            [
+              `Take $u = \\ln(${inner})$, so $du = \\frac{${a}}{${inner}}\\,dx$, and $v = x + p$, an antiderivative of $dv = dx$ for every $p$.`,
+              `取 $u = \\ln(${inner})$，则 $du = \\frac{${a}}{${inner}}\\,dx$；取 $v = x + p$，对任何 $p$ 它都是 $dv = dx$ 的原函数。`,
+            ],
+          ],
+          [
+            ["Make v du simple", "让 v du 变简单"],
+            [`$v\\,du$ is just $dx$ when $v = \\frac{${inner}}{${a}}$:`, `当 $v = \\frac{${inner}}{${a}}$ 时，$v\\,du$ 就是 $dx$：`],
+            [`x + p = \\frac{${inner}}{${a}} = x + ${p}`],
+          ],
+          [
+            ["Write the integral", "写出积分"],
+            ["Then the remaining integral is $\\int dx$:", "于是剩下的积分是 $\\int dx$："],
+            [`\\int \\ln(${inner})\\,dx = \\left(x + ${p}\\right)\\ln(${inner}) - x + C`, `p = ${p}`],
+          ],
+        ],
+        [
+          `Differentiate the result: $\\ln(${inner}) + \\left(x + ${p}\\right)\\frac{${a}}{${inner}} - 1 = \\ln(${inner}) + 1 - 1 = \\ln(${inner})$, since $${a}\\left(x + ${p}\\right) = ${inner}$.`,
+          `对结果求导：$\\ln(${inner}) + \\left(x + ${p}\\right)\\frac{${a}}{${inner}} - 1 = \\ln(${inner}) + 1 - 1 = \\ln(${inner})$，因为 $${a}\\left(x + ${p}\\right) = ${inner}$。`,
+        ],
       ),
     });
   },
@@ -2256,8 +2839,8 @@ const reductionForPowerTimesExponential: KnowledgePointDef = {
   id: "a-reduction-formula-for-a-power-times-an-exponential",
   title: t("A reduction formula for a power times an exponential", "幂乘指数函数的递推公式"),
   explanation: t(
-    "Repeating integration by parts on a high power is long, but one step can be done in general. Let $I_n = \\int_0^1 x^ne^x\\,dx$. Parts with $u = x^n$ gives a relation between $I_n$ and $I_{n-1}$, which lowers the power by one each time. Starting from $I_0$, the value climbs step by step to any power needed.",
-    "对高次幂反复分部积分很长，但可以一般地做一步。设 $I_n = \\int_0^1 x^ne^x\\,dx$。取 $u = x^n$ 分部积分，得到 $I_n$ 与 $I_{n-1}$ 的关系，每次把幂降低一次。从 $I_0$ 出发，一步一步就能算到需要的幂。",
+    "Repeating integration by parts on a high power is long, but one step can be done in general. Let $I_n = \\int_0^1 x^ne^x\\,dx$. Parts with $u = x^n$ gives a relation between $I_n$ and $I_{n-1}$, which lowers the power by one each time. Starting from $I_0$, the value climbs step by step to any power needed. Here $I_n = e - nI_{n-1}$ and $I_0 = e - 1$, so $I_1 = e - I_0 = 1$ and $I_2 = e - 2I_1 = e - 2$.\n\nCheck: directly, $I_1 = \\int_0^1 xe^x\\,dx = \\big[(x - 1)e^x\\big]_0^1 = 0 - (-1) = 1$.\n\n> **Watch out.** The boundary term is $\\big[x^ne^x\\big]_0^1 = e$, and the factor $n$ multiplies $I_{n-1}$ with a minus sign: $I_n = e - nI_{n-1}$.",
+    "对高次幂反复分部积分很长，但可以一般地做一步。设 $I_n = \\int_0^1 x^ne^x\\,dx$。取 $u = x^n$ 分部积分，得到 $I_n$ 与 $I_{n-1}$ 的关系，每次把幂降低一次。从 $I_0$ 出发，一步一步就能算到需要的幂。这里 $I_n = e - nI_{n-1}$，$I_0 = e - 1$，所以 $I_1 = e - I_0 = 1$，$I_2 = e - 2I_1 = e - 2$。\n\n检验：直接计算，$I_1 = \\int_0^1 xe^x\\,dx = \\big[(x - 1)e^x\\big]_0^1 = 0 - (-1) = 1$。\n\n> **注意。** 边界项是 $\\big[x^ne^x\\big]_0^1 = e$，而因子 $n$ 乘在 $I_{n-1}$ 上，并带负号：$I_n = e - nI_{n-1}$。",
   ),
   generate(rng) {
     const n = rng.int(3, 6);
@@ -2277,8 +2860,31 @@ const reductionForPowerTimesExponential: KnowledgePointDef = {
     }
     const value = askA ? k * A : k * B;
     const letter = askA ? "A" : "B";
-    const last = k === 1 ? "" : `, and multiplying by $${k}$ gives $${letter} = ${value}$`;
-    const lastZh = k === 1 ? "" : `，乘以 $${k}$ 得 $${letter} = ${value}$`;
+    const approx = A * Math.E + B;
+    const four = (v: number) => (Math.round(v * 10000) / 10000).toString();
+    const why = (v: number, en: string, zh: string) => ({ value: v, why: t(en, zh) });
+    const sign = why(
+      -value,
+      "The sign is wrong: each step of $I_n = e - nI_{n-1}$ multiplies by $-n$, so follow every minus sign.",
+      "符号错了：$I_n = e - nI_{n-1}$ 的每一步都乘以 $-n$，每个负号都要跟上。",
+    );
+    const short = why(
+      k * (askA ? previousA : previousB),
+      `This is the coefficient for $I_{${n - 1}}$; one more step of the recursion is needed.`,
+      `这是 $I_{${n - 1}}$ 的系数；还要再递推一步。`,
+    );
+    const mistakes = askA
+      ? [sign, why(k * B, "This is $B$, the constant term; $A$ is the coefficient of $e$.", "这是常数项 $B$；$A$ 是 $e$ 的系数。"), short]
+      : [
+          sign,
+          why(k * A, "This is $A$, the coefficient of $e$; $B$ is the constant term.", "这是 $e$ 的系数 $A$；$B$ 是常数项。"),
+          short,
+          why(
+            (k * B) / n,
+            `The last step multiplies the constant by $-${n}$: $B_{${n}} = -${n}B_{${n - 1}}$; the factor $${n}$ is missing.`,
+            `最后一步要把常数乘以 $-${n}$：$B_{${n}} = -${n}B_{${n - 1}}$；漏掉了因子 $${n}$。`,
+          ),
+        ];
     return numberProblem({
       prompt: t(
         `$\\int_0^1 ${coefficientOf(k)}x^{${n}}e^x\\,dx = Ae + B$ for integers $A$ and $B$. Find $${letter}$.`,
@@ -2286,10 +2892,35 @@ const reductionForPowerTimesExponential: KnowledgePointDef = {
       ),
       answer: value,
       form: "integer",
-      wrong: askA ? [-k * A, k * B, k * previousA] : [-k * B, k * A, k * previousB, (k * B) / n],
-      solution: t(
-        `Parts with $u = x^n$ and $dv = e^x\\,dx$ gives $I_n = e - nI_{n-1}$, where $I_0 = e - 1$. So $${chain.join(", \\; ")}$${last}.`,
-        `取 $u = x^n$，$dv = e^x\\,dx$ 分部积分，得 $I_n = e - nI_{n-1}$，其中 $I_0 = e - 1$。所以 $${chain.join(", \\; ")}$${lastZh}。`,
+      mistakes,
+      solution: walkThrough(
+        [
+          [
+            ["Find the reduction formula", "求递推公式"],
+            [
+              "Take $u = x^n$ and $dv = e^x\\,dx$, so $du = nx^{n-1}\\,dx$ and $v = e^x$:",
+              "取 $u = x^n$，$dv = e^x\\,dx$，则 $du = nx^{n-1}\\,dx$，$v = e^x$：",
+            ],
+            ["I_n = \\big[x^ne^x\\big]_0^1 - n\\int_0^1 x^{n-1}e^x\\,dx = e - nI_{n-1}"],
+          ],
+          [
+            ["Climb from I₀", "从 I₀ 递推"],
+            ["Start from $I_0 = \\int_0^1 e^x\\,dx = e - 1$:", "从 $I_0 = \\int_0^1 e^x\\,dx = e - 1$ 出发："],
+            [chain.join(", \\; ")],
+          ],
+          [
+            ["Read off the coefficient", "读出系数"],
+            [
+              k === 1 ? `Read off $${letter}$:` : `Multiply by $${k}$ and read off $${letter}$:`,
+              k === 1 ? `读出 $${letter}$：` : `乘以 $${k}$ 后读出 $${letter}$：`,
+            ],
+            [`${letter} = ${value}`],
+          ],
+        ],
+        [
+          `Numerically, $I_{${n}} = ${poly([A, "e"], [B, ""])} \\approx ${four(approx)}$. Since $1 \\le e^x \\le e$ on $[0, 1]$, $I_{${n}}$ must lie between $\\frac{1}{${n + 1}} \\approx ${four(1 / (n + 1))}$ and $\\frac{e}{${n + 1}} \\approx ${four(Math.E / (n + 1))}$, and it does.`,
+          `数值上，$I_{${n}} = ${poly([A, "e"], [B, ""])} \\approx ${four(approx)}$。由于在 $[0, 1]$ 上 $1 \\le e^x \\le e$，$I_{${n}}$ 应介于 $\\frac{1}{${n + 1}} \\approx ${four(1 / (n + 1))}$ 与 $\\frac{e}{${n + 1}} \\approx ${four(Math.E / (n + 1))}$ 之间，确实如此。`,
+        ],
       ),
     });
   },

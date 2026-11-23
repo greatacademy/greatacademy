@@ -8,9 +8,10 @@ import { linear, paren, poly, Q } from "@ga/subject-math";
 import { calculusDrawings4 } from "../explanation-drawings-calculus-4.ts";
 import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 
-import { functionProblem, steps } from "../problems.ts";
+import { functionProblem, say, steps } from "../problems.ts";
 import { ask, choose, type Pair, point } from "../university-kit.ts";
 import { reasoned } from "../wrong-reasons.ts";
+import { functionWith, walked } from "./calculus-i-differentiation.ts";
 
 /** nz picks a nonzero integer from -r to r. */
 const nz = (rng: Rng, r: number) => rng.pick([...Array(2 * r + 1).keys()].map((i) => i - r).filter((i) => i !== 0));
@@ -325,8 +326,8 @@ const pythagoreanIntegrals = point(
   "integrals-that-need-a-pythagorean-identity",
   ["Integrals that need a Pythagorean identity", "需要毕达哥拉斯恒等式的积分"],
   [
-    "Squares of tangent and cotangent have no direct formula, but $\\tan^{2}x = \\sec^{2}x - 1$ and $\\cot^{2}x = \\csc^{2}x - 1$ reduce them to known integrals. The result contains an extra term in $x$, and treating $\\tan^{2}x$ as a power is wrong.",
-    "正切和余切的平方没有直接的公式，但 $\\tan^{2}x = \\sec^{2}x - 1$ 和 $\\cot^{2}x = \\csc^{2}x - 1$ 把它们化成已知积分。结果中多了一个含 $x$ 的项，把 $\\tan^{2}x$ 当作普通的幂是错误的。",
+    "Squares of tangent and cotangent have no direct formula, but $\\tan^{2}x = \\sec^{2}x - 1$ and $\\cot^{2}x = \\csc^{2}x - 1$ reduce them to known integrals. The result contains an extra term in $x$. For example, $\\int \\tan^{2}x \\, dx = \\int (\\sec^{2}x - 1) \\, dx = \\tan x - x + C$.\n\nCheck: $\\frac{d}{dx}(\\tan x - x) = \\sec^{2}x - 1 = \\tan^{2}x$.\n\n> **Watch out.** Treating $\\tan^{2}x$ as a power is wrong: $\\frac{\\tan^{3}x}{3}$ differentiates to $\\tan^{2}x\\sec^{2}x$. And the $-1$ of the identity integrates to $-x$, which must not be dropped.",
+    "正切和余切的平方没有直接的公式，但 $\\tan^{2}x = \\sec^{2}x - 1$ 和 $\\cot^{2}x = \\csc^{2}x - 1$ 把它们化成已知积分。结果中多了一个含 $x$ 的项。例如，$\\int \\tan^{2}x \\, dx = \\int (\\sec^{2}x - 1) \\, dx = \\tan x - x + C$。\n\n检验：$\\frac{d}{dx}(\\tan x - x) = \\sec^{2}x - 1 = \\tan^{2}x$。\n\n> **注意。** 把 $\\tan^{2}x$ 当作普通的幂是错误的：$\\frac{\\tan^{3}x}{3}$ 的导数是 $\\tan^{2}x\\sec^{2}x$。恒等式中的 $-1$ 积分得 $-x$，不能丢掉。",
   ],
   (rng) => {
     const c = nz(rng, 12);
@@ -344,11 +345,55 @@ const pythagoreanIntegrals = point(
       unit: poly([c, "x"], [1, "C"]),
       sec: poly([c, "\\tan x"], [1, "C"]),
     }[kind];
-    const wrong = {
-      tan: [poly([c, "\\tan x"], [c, "x"], [1, "C"]), poly([c, "\\tan x"], [1, "C"])],
-      cot: [poly([-c, "\\cot x"], [c, "x"], [1, "C"]), poly([c, "\\cot x"], [-c, "x"], [1, "C"])],
-      unit: [poly([c, "\\tan x"], [-c, "x"], [1, "C"]), poly([-c, "x"], [1, "C"])],
-      sec: [poly([c, "\\tan x"], [c, "x"], [1, "C"]), poly([c, "x"], [1, "C"])],
+    const mistakes = {
+      tan: [
+        say(
+          poly([c, "\\tan x"], [c, "x"], [1, "C"]),
+          "The identity is $\\tan^{2}x = \\sec^{2}x - 1$, so the term in $x$ is subtracted.",
+          "恒等式是 $\\tan^{2}x = \\sec^{2}x - 1$，所以含 $x$ 的项是减去的。",
+        ),
+        say(
+          poly([c, "\\tan x"], [1, "C"]),
+          "This integrates $\\sec^{2}x$ but drops the $-1$, which integrates to $-x$.",
+          "这里积分了 $\\sec^{2}x$，却丢掉了 $-1$，而它积分得 $-x$。",
+        ),
+      ],
+      cot: [
+        say(
+          poly([-c, "\\cot x"], [c, "x"], [1, "C"]),
+          "The identity is $\\cot^{2}x = \\csc^{2}x - 1$, so the term in $x$ is subtracted.",
+          "恒等式是 $\\cot^{2}x = \\csc^{2}x - 1$，所以含 $x$ 的项是减去的。",
+        ),
+        say(
+          poly([c, "\\cot x"], [-c, "x"], [1, "C"]),
+          "$\\int \\csc^{2}x \\, dx = -\\cot x + C$, with a minus sign, because $\\frac{d}{dx}\\cot x = -\\csc^{2}x$.",
+          "$\\int \\csc^{2}x \\, dx = -\\cot x + C$，带负号，因为 $\\frac{d}{dx}\\cot x = -\\csc^{2}x$。",
+        ),
+      ],
+      unit: [
+        say(
+          poly([c, "\\tan x"], [-c, "x"], [1, "C"]),
+          `This is the integral of $${poly([c, "\\tan^{2}x"])}$ alone; the $\\sec^{2}x$ in the bracket cancels it, since $\\sec^{2}x - \\tan^{2}x = 1$ and the integrand is the constant $${c}$.`,
+          `这只是 $${poly([c, "\\tan^{2}x"])}$ 的积分；括号中的 $\\sec^{2}x$ 把它抵消了，因为 $\\sec^{2}x - \\tan^{2}x = 1$，被积函数就是常数 $${c}$。`,
+        ),
+        say(
+          poly([-c, "x"], [1, "C"]),
+          "The bracket equals $+1$, not $-1$: $\\sec^{2}x - \\tan^{2}x = 1$.",
+          "括号等于 $+1$，不是 $-1$：$\\sec^{2}x - \\tan^{2}x = 1$。",
+        ),
+      ],
+      sec: [
+        say(
+          poly([c, "\\tan x"], [c, "x"], [1, "C"]),
+          "$1 + \\tan^{2}x$ is exactly $\\sec^{2}x$; adding a separate term in $x$ counts the $1$ twice.",
+          "$1 + \\tan^{2}x$ 恰好就是 $\\sec^{2}x$；另加一个含 $x$ 的项就把 $1$ 算了两次。",
+        ),
+        say(
+          poly([c, "x"], [1, "C"]),
+          "This integrates only the $1$; the bracket is $\\sec^{2}x$, whose integral is $\\tan x$.",
+          "这里只积分了 $1$；括号是 $\\sec^{2}x$，它的积分是 $\\tan x$。",
+        ),
+      ],
     }[kind];
     const identity = {
       tan: "\\tan^{2}x = \\sec^{2}x - 1",
@@ -356,16 +401,47 @@ const pythagoreanIntegrals = point(
       unit: "\\sec^{2}x - \\tan^{2}x = 1",
       sec: "1 + \\tan^{2}x = \\sec^{2}x",
     }[kind];
-    return functionProblem({
-      prompt: t(`Find $\\int ${integrand} \\, dx$.`, `求 $\\int ${integrand} \\, dx$。`),
-      answer,
-      antiderivative: true,
-      wrong,
-      solution: t(
-        `Use $${identity}$ to rewrite the integrand, then integrate to get $${answer}$.`,
-        `用 $${identity}$ 改写被积函数，再积分，得 $${answer}$。`,
-      ),
-    });
+    const rewritten = {
+      tan: group("\\sec^{2}x - 1"),
+      cot: group("\\csc^{2}x - 1"),
+      unit: poly([c, ""]),
+      sec: poly([c, "\\sec^{2}x"]),
+    }[kind];
+    const derivative = {
+      tan: [`${group("\\sec^{2}x - 1")}`, `${poly([c, "\\tan^{2}x"])}`],
+      cot: [`${group("\\csc^{2}x - 1")}`, `${poly([c, "\\cot^{2}x"])}`],
+      unit: [`${poly([c, ""])}`, `${integrand}`],
+      sec: [`${poly([c, "\\sec^{2}x"])}`, `${integrand}`],
+    }[kind];
+    return functionWith(
+      {
+        prompt: t(`Find $\\int ${integrand} \\, dx$.`, `求 $\\int ${integrand} \\, dx$。`),
+        answer,
+        antiderivative: true,
+        solution: walked(
+          [
+            [
+              ["Use the identity", "用恒等式"],
+              t(`Rewrite the integrand with $${identity}$:`, `用 $${identity}$ 改写被积函数：`),
+              [`${integrand} = ${rewritten}`],
+            ],
+            [
+              ["Integrate", "积分"],
+              t(
+                "Use $\\int \\sec^{2}x \\, dx = \\tan x$, $\\int \\csc^{2}x \\, dx = -\\cot x$ and $\\int 1 \\, dx = x$:",
+                "利用 $\\int \\sec^{2}x \\, dx = \\tan x$，$\\int \\csc^{2}x \\, dx = -\\cot x$，$\\int 1 \\, dx = x$：",
+              ),
+              [`\\int ${integrand} \\, dx = ${answer}`],
+            ],
+          ],
+          t(
+            `Differentiate the answer: the derivative is $${derivative[0]}$, which equals $${derivative[1]}$ by the identity.`,
+            `对答案求导：导数是 $${derivative[0]}$，由恒等式它等于 $${derivative[1]}$。`,
+          ),
+        ),
+      },
+      mistakes,
+    );
   },
 );
 
