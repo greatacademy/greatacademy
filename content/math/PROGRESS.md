@@ -154,11 +154,11 @@ Stage 0 is done. Walking its lessons against Math Academy's on the same topics f
 | `precalculus-conic-sections.ts` | 20 | done | |  |
 | `precalculus-series.ts` | 18 | in progress | |  |
 | `precalculus-linear-transformations.ts` | 17 | done | |  |
-| `precalculus-parametric-polar.ts` | 16 | in progress | |  |
+| `precalculus-parametric-polar.ts` | 16 | done | |  |
 | `precalculus-vectors-3d.ts` | 15 | open | |  |
 | `precalculus-rational-functions.ts` | 16 | open | |  |
 | `precalculus-trigonometric-equations.ts` | 15 | open | |  |
-| `precalculus-vectors-2d.ts` | 15 | open | |  |
+| `precalculus-vectors-2d.ts` | 15 | in progress | |  |
 | `precalculus-complex-numbers.ts` | 15 | open | |  |
 | `precalculus-random-variables.ts` | 14 | open | |  |
 | `precalculus-de-moivre.ts` | 13 | open | |  |
