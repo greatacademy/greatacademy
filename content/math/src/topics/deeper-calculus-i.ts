@@ -1251,8 +1251,8 @@ const sinhAndCoshTogether: KnowledgePointDef = {
   id: "an-equation-with-both-sinh-and-cosh",
   title: t("An equation with both sinh and cosh", "同时含 sinh 和 cosh 的方程"),
   explanation: t(
-    "When sinh and cosh appear together, no single inverse function undoes them. Writing both in terms of the exponential turns the equation into one in $u = e^{x}$. Multiplying by $u$ gives a quadratic, and since an exponential is always positive, only a positive root of that quadratic can correspond to a real $x$.",
-    "当 sinh 和 cosh 同时出现时，没有一个反函数能直接消去它们。把两者都写成指数形式，方程就变成关于 $u = e^{x}$ 的方程。两边乘以 $u$ 得到二次方程；由于指数函数恒为正，只有正根才对应实数 $x$。",
+    "When sinh and cosh appear together, no single inverse function undoes them. Writing both in terms of the exponential turns the equation into one in $u = e^{x}$. Multiplying by $u$ gives a quadratic, and since an exponential is always positive, only a positive root of that quadratic can correspond to a real $x$.\n\nFor example, $3\\sinh x - \\cosh x = 1$ becomes $\\frac{3\\left(u - \\frac{1}{u}\\right) - \\left(u + \\frac{1}{u}\\right)}{2} = u - \\frac{2}{u} = 1$, so $u^{2} - u - 2 = 0$ and $(u - 2)(u + 1) = 0$. Only $u = 2$ is positive, so $e^{x} = 2$.\n\nCheck: $\\sinh(\\ln 2) = \\frac{3}{4}$ and $\\cosh(\\ln 2) = \\frac{5}{4}$, and $3 \\cdot \\frac{3}{4} - \\frac{5}{4} = 1$.\n\n> **Watch out.** Reject the negative root: $e^{x} = -1$ has no solution. And collect the $u$ terms and the $\\frac{1}{u}$ terms separately, each with its own coefficient.",
+    "当 sinh 和 cosh 同时出现时，没有一个反函数能直接消去它们。把两者都写成指数形式，方程就变成关于 $u = e^{x}$ 的方程。两边乘以 $u$ 得到二次方程；由于指数函数恒为正，只有正根才对应实数 $x$。\n\n例如 $3\\sinh x - \\cosh x = 1$ 化为 $\\frac{3\\left(u - \\frac{1}{u}\\right) - \\left(u + \\frac{1}{u}\\right)}{2} = u - \\frac{2}{u} = 1$，所以 $u^{2} - u - 2 = 0$，即 $(u - 2)(u + 1) = 0$。只有 $u = 2$ 为正，所以 $e^{x} = 2$。\n\n检验：$\\sinh(\\ln 2) = \\frac{3}{4}$，$\\cosh(\\ln 2) = \\frac{5}{4}$，而 $3 \\cdot \\frac{3}{4} - \\frac{5}{4} = 1$。\n\n> **注意。** 要舍去负根：$e^{x} = -1$ 无解。$u$ 的项和 $\\frac{1}{u}$ 的项要分别合并，各有各的系数。",
   ),
   generate(rng) {
     const k = rng.int(2, 6);
@@ -1263,7 +1263,10 @@ const sinhAndCoshTogether: KnowledgePointDef = {
     const equation = `${poly([m + n, "\\sinh x"], [m - n, "\\cosh x"])} = ${c}`;
     const inU = `${poly([m, "u"])} - \\frac{${n}}{u} = ${c}`;
     const quadratic = poly([m, "u^2"], [-c, "u"], [-n, ""]);
-    const other = Q.of(-j, m).toLatex();
+    const other = Q.of(-j, m);
+    const sinh = Q.of(k * k - 1, 2 * k);
+    const cosh = Q.of(k * k + 1, 2 * k);
+    const total = sinh.mul(Q.of(m + n)).add(cosh.mul(Q.of(m - n)));
     return numberProblem({
       prompt: t(
         `The equation $${equation}$ has exactly one real solution $x$. Find $e^{x}$.`,
@@ -1271,10 +1274,44 @@ const sinhAndCoshTogether: KnowledgePointDef = {
       ),
       answer: k,
       form: "integer",
-      wrong: [m, j, k + 1, 2 * k, k + 2, 3 * k],
-      solution: t(
-        `With $u = e^{x}$, the definitions turn the equation into $${inU}$, that is $${quadratic} = 0$. Its roots are $${k}$ and $${other}$, and $e^{x}$ must be positive, so $e^{x} = ${k}$.`,
-        `令 $u = e^{x}$，由定义得方程 $${inU}$，即 $${quadratic} = 0$。它的根是 $${k}$ 和 $${other}$，而 $e^{x}$ 必须为正，所以 $e^{x} = ${k}$。`,
+      mistakes: firstMistakes(k, [
+        why(
+          Q.of(j, m),
+          `This drops the sign of the other root, $${other.toLatex()}$. That root is negative, and $e^{x}$ cannot be negative.`,
+          `这去掉了另一个根 $${other.toLatex()}$ 的负号。那个根是负的，而 $e^{x}$ 不可能为负。`,
+        ),
+        why(m, "This is the coefficient of $u$, not a root.", "这是 $u$ 的系数，不是根。"),
+        why(
+          n,
+          `This is the size of the constant term $-${n}$ of the quadratic, not a root.`,
+          `这是二次方程常数项 $-${n}$ 的绝对值，不是根。`,
+        ),
+        why(
+          Q.of(c, m),
+          `This is the sum of the two roots, $\\frac{${c}}{${m}}$, not a root.`,
+          `这是两根之和 $\\frac{${c}}{${m}}$，不是根。`,
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Write it with $u = e^{x}$",
+            "用 $u = e^{x}$ 表示",
+            `$\\sinh x = \\frac{u - \\frac{1}{u}}{2}$ and $\\cosh x = \\frac{u + \\frac{1}{u}}{2}$. Collecting the $u$ terms and the $\\frac{1}{u}$ terms turns the equation into $${inU}$.`,
+            `$\\sinh x = \\frac{u - \\frac{1}{u}}{2}$，$\\cosh x = \\frac{u + \\frac{1}{u}}{2}$。分别合并 $u$ 的项和 $\\frac{1}{u}$ 的项，方程化为 $${inU}$。`,
+          ],
+          [
+            "Multiply by $u$",
+            "两边乘以 $u$",
+            `$${quadratic} = 0$, that is $(u - ${k})(${poly([m, "u"], [j, ""])}) = 0$, with roots $${k}$ and $${other.toLatex()}$.`,
+            `$${quadratic} = 0$，即 $(u - ${k})(${poly([m, "u"], [j, ""])}) = 0$，根为 $${k}$ 和 $${other.toLatex()}$。`,
+          ],
+          ["Keep the positive root", "保留正根", `$e^{x}$ must be positive, so $e^{x} = ${k}$.`, `$e^{x}$ 必须为正，所以 $e^{x} = ${k}$。`],
+        ],
+        [
+          `With $x = \\ln ${k}$, $\\sinh x = ${sinh.toLatex()}$ and $\\cosh x = ${cosh.toLatex()}$, and $${m + n} \\cdot ${sinh.toLatex()} + ${inParens(m - n)} \\cdot ${cosh.toLatex()} = ${total.toLatex()}$.`,
+          `取 $x = \\ln ${k}$，$\\sinh x = ${sinh.toLatex()}$，$\\cosh x = ${cosh.toLatex()}$，而 $${m + n} \\cdot ${sinh.toLatex()} + ${inParens(m - n)} \\cdot ${cosh.toLatex()} = ${total.toLatex()}$。`,
+        ],
       ),
     });
   },
@@ -1284,8 +1321,8 @@ const hyperbolicOfInverse: KnowledgePointDef = {
   id: "a-hyperbolic-function-of-an-inverse-hyperbolic-value",
   title: t("A hyperbolic function of an inverse hyperbolic value", "反双曲函数值的双曲函数"),
   explanation: t(
-    "To evaluate a hyperbolic function of an inverse hyperbolic value, name the inner value $y$, so one of $\\sinh y$ and $\\cosh y$ is known at once. The identity $\\cosh^{2} y - \\sinh^{2} y = 1$ gives the other, and the sign follows from the facts that cosh is positive and the principal value of arcosh is not negative.",
-    "要计算反双曲函数值的双曲函数，把里面的值记作 $y$，这样 $\\sinh y$ 和 $\\cosh y$ 中就有一个立刻已知。恒等式 $\\cosh^{2} y - \\sinh^{2} y = 1$ 给出另一个，而符号由两个事实确定：cosh 恒为正，arcosh 的主值不为负。",
+    "To evaluate a hyperbolic function of an inverse hyperbolic value, name the inner value $y$, so one of $\\sinh y$ and $\\cosh y$ is known at once. The identity $\\cosh^{2} y - \\sinh^{2} y = 1$ gives the other, and the sign follows from the facts that cosh is positive and the principal value of arcosh is not negative.\n\nFor example, for $\\cosh\\left(\\operatorname{arsinh} \\frac{3}{4}\\right)$, let $y = \\operatorname{arsinh} \\frac{3}{4}$. Then $\\sinh y = \\frac{3}{4}$, so $\\cosh y = \\sqrt{1 + \\frac{9}{16}} = \\frac{5}{4}$.\n\nCheck: $\\operatorname{arsinh} \\frac{3}{4} = \\ln\\left(\\frac{3}{4} + \\frac{5}{4}\\right) = \\ln 2$, and $\\cosh(\\ln 2) = \\frac{2 + \\frac{1}{2}}{2} = \\frac{5}{4}$.\n\n> **Watch out.** $\\cosh y$ is positive even when $\\sinh y$ is negative, and $\\sinh\\left(\\operatorname{arcosh} c\\right)$ is not negative, because $\\operatorname{arcosh} c \\ge 0$.",
+    "要计算反双曲函数值的双曲函数，把里面的值记作 $y$，这样 $\\sinh y$ 和 $\\cosh y$ 中就有一个立刻已知。恒等式 $\\cosh^{2} y - \\sinh^{2} y = 1$ 给出另一个，而符号由两个事实确定：cosh 恒为正，arcosh 的主值不为负。\n\n例如求 $\\cosh\\left(\\operatorname{arsinh} \\frac{3}{4}\\right)$，令 $y = \\operatorname{arsinh} \\frac{3}{4}$，则 $\\sinh y = \\frac{3}{4}$，所以 $\\cosh y = \\sqrt{1 + \\frac{9}{16}} = \\frac{5}{4}$。\n\n检验：$\\operatorname{arsinh} \\frac{3}{4} = \\ln\\left(\\frac{3}{4} + \\frac{5}{4}\\right) = \\ln 2$，而 $\\cosh(\\ln 2) = \\frac{2 + \\frac{1}{2}}{2} = \\frac{5}{4}$。\n\n> **注意。** 即使 $\\sinh y$ 为负，$\\cosh y$ 也为正；$\\sinh\\left(\\operatorname{arcosh} c\\right)$ 不为负，因为 $\\operatorname{arcosh} c \\ge 0$。",
   ),
   generate(rng) {
     const [a, b, c] = rng.pick([
@@ -1310,16 +1347,80 @@ const hyperbolicOfInverse: KnowledgePointDef = {
     const outer = outerIsTanh ? "\\tanh" : fromSinh ? "\\cosh" : "\\sinh";
     const answer = outerIsTanh ? tanhY : fromSinh ? coshY : sinhY;
     const known = fromSinh ? `\\sinh y = ${sinhY.toLatex()}` : `\\cosh y = ${coshY.toLatex()}`;
-    const found = fromSinh ? `\\cosh y = ${coshY.toLatex()}` : `\\sinh y = ${sinhY.toLatex()}`;
-    const last = outerIsTanh ? `$\\tanh y = \\frac{\\sinh y}{\\cosh y} = ${answer.toLatex()}$` : `this is the value asked for`;
-    const lastZh = outerIsTanh ? `$\\tanh y = \\frac{\\sinh y}{\\cosh y} = ${answer.toLatex()}$` : `这就是所求的值`;
+    const found = fromSinh
+      ? `\\cosh y = \\sqrt{1 + ${Q.of(b * b, a * a).toLatex()}} = ${coshY.toLatex()}`
+      : `\\sinh y = \\sqrt{${Q.of(c * c, a * a).toLatex()} - 1} = ${sinhY.toLatex()}`;
+    const sign: readonly [string, string] = fromSinh
+      ? ["taking the positive root because $\\cosh y > 0$", "因为 $\\cosh y > 0$，取正根"]
+      : [
+          "taking the positive root because $y = \\operatorname{arcosh}$ of a number is not negative",
+          "因为 $\\operatorname{arcosh}$ 的值不为负，取正根",
+        ];
+    const e = Q.of(s * b + c, a);
+    const fromE = outerIsTanh
+      ? `\\tanh y = \\frac{e^{2y} - 1}{e^{2y} + 1} = \\frac{${e.mul(e).toLatex()} - 1}{${e.mul(e).toLatex()} + 1} = ${answer.toLatex()}`
+      : `${outer} y = \\frac{${e.toLatex()} ${fromSinh ? "+" : "-"} ${Q.one.div(e).toLatex()}}{2} = ${answer.toLatex()}`;
+    const named: readonly (readonly [Q, string])[] = [
+      [sinhY, "\\sinh"],
+      [coshY, "\\cosh"],
+      [tanhY, "\\tanh"],
+      [Q.of(a, c), "\\operatorname{sech}"],
+      [Q.of(a, s * b), "\\operatorname{csch}"],
+      [Q.of(c, s * b), "\\coth"],
+    ];
+    const signWhy = outerIsTanh
+      ? why(
+          answer.neg(),
+          "This has the wrong sign: $\\tanh y$ has the sign of $\\sinh y$, because $\\cosh y > 0$.",
+          "符号错了：因为 $\\cosh y > 0$，$\\tanh y$ 与 $\\sinh y$ 同号。",
+        )
+      : fromSinh
+        ? why(answer.neg(), "$\\cosh y$ is always positive.", "$\\cosh y$ 恒为正。")
+        : why(
+            answer.neg(),
+            "$y = \\operatorname{arcosh}$ of a number is not negative, so $\\sinh y$ is not negative.",
+            "$\\operatorname{arcosh}$ 的值不为负，所以 $\\sinh y$ 不为负。",
+          );
     return numberProblem({
       prompt: t(`Find $${outer}\\left(${inner}\\right)$.`, `求 $${outer}\\left(${inner}\\right)$。`),
       answer,
-      wrong: [Q.of(c, s * a), Q.of(s * b, a), Q.of(s * b, c), Q.of(s * a, c), Q.of(s * a, b)],
-      solution: t(
-        `Let $y = ${inner}$, so $${known}$. The identity $\\cosh^{2} y - \\sinh^{2} y = 1$ then gives $${found}$, taking the sign that applies, and ${last}.`,
-        `令 $y = ${inner}$，则 $${known}$。由恒等式 $\\cosh^{2} y - \\sinh^{2} y = 1$，并取相应的符号，得 $${found}$，而 ${lastZh}。`,
+      mistakes: firstMistakes(answer, [
+        signWhy,
+        ...named.map(([v, name]) =>
+          why(
+            v,
+            `This is $${name} y = ${v.toLatex()}$, but the question asks for $${outer} y$.`,
+            `这是 $${name} y = ${v.toLatex()}$，但题目要求的是 $${outer} y$。`,
+          ),
+        ),
+      ]),
+      solution: walk(
+        [
+          ["Name the inner value", "给里面的值命名", `Let $y = ${inner}$, so $${known}$.`, `令 $y = ${inner}$，则 $${known}$。`],
+          [
+            "Use the identity",
+            "使用恒等式",
+            `$\\cosh^{2} y - \\sinh^{2} y = 1$ gives $${found}$, ${sign[0]}.`,
+            `由 $\\cosh^{2} y - \\sinh^{2} y = 1$ 得 $${found}$，${sign[1]}。`,
+          ],
+          outerIsTanh
+            ? [
+                "Divide",
+                "相除",
+                `$\\tanh y = \\frac{\\sinh y}{\\cosh y} = ${answer.toLatex()}$.`,
+                `$\\tanh y = \\frac{\\sinh y}{\\cosh y} = ${answer.toLatex()}$。`,
+              ]
+            : [
+                "State the value",
+                "写出结果",
+                `So $${outer}\\left(${inner}\\right) = ${answer.toLatex()}$.`,
+                `所以 $${outer}\\left(${inner}\\right) = ${answer.toLatex()}$。`,
+              ],
+        ],
+        [
+          `By the logarithmic form, $e^{y} = \\sinh y + \\cosh y = ${e.toLatex()}$, so $e^{-y} = ${Q.one.div(e).toLatex()}$ and $${fromE}$.`,
+          `由对数形式，$e^{y} = \\sinh y + \\cosh y = ${e.toLatex()}$，所以 $e^{-y} = ${Q.one.div(e).toLatex()}$，而 $${fromE}$。`,
+        ],
       ),
     });
   },
@@ -2781,23 +2882,62 @@ const sechFromTanh: KnowledgePointDef = {
   id: "sech-from-the-value-of-tanh",
   title: t("Sech from the value of tanh", "由 tanh 的值求 sech"),
   explanation: t(
-    "Dividing the identity $\\cosh^2 x - \\sinh^2 x = 1$ by $\\cosh^2 x$ gives $1 - \\tanh^2 x = \\operatorname{sech}^2 x$. So the value of $\\tanh x$ fixes the size of $\\operatorname{sech} x$ without any need to find $x$. The sign needs no thought at all, because $\\cosh x$ is always positive and so $\\operatorname{sech} x$ is too. Even for a negative value of $\\tanh x$, the value of $\\operatorname{sech} x$ is positive.",
-    "把恒等式 $\\cosh^2 x - \\sinh^2 x = 1$ 除以 $\\cosh^2 x$，得 $1 - \\tanh^2 x = \\operatorname{sech}^2 x$。所以 $\\tanh x$ 的值确定了 $\\operatorname{sech} x$ 的大小，不必求出 $x$。符号也不用考虑，因为 $\\cosh x$ 总是正的，所以 $\\operatorname{sech} x$ 也是正的。即使 $\\tanh x$ 的值为负，$\\operatorname{sech} x$ 的值仍是正的。",
+    "Dividing the identity $\\cosh^2 x - \\sinh^2 x = 1$ by $\\cosh^2 x$ gives $1 - \\tanh^2 x = \\operatorname{sech}^2 x$. So the value of $\\tanh x$ fixes the size of $\\operatorname{sech} x$ without any need to find $x$. The sign needs no thought at all, because $\\cosh x$ is always positive and so $\\operatorname{sech} x$ is too.\n\nFor example, if $\\tanh x = -\\frac{3}{5}$, then $\\operatorname{sech}^{2} x = 1 - \\frac{9}{25} = \\frac{16}{25}$, so $\\operatorname{sech} x = \\frac{4}{5}$.\n\nCheck: then $\\cosh x = \\frac{5}{4}$ and $\\sinh x = \\tanh x \\cosh x = -\\frac{3}{4}$, and $\\frac{25}{16} - \\frac{9}{16} = 1$.\n\n> **Watch out.** The identity is $\\operatorname{sech}^{2} x = 1 - \\tanh^{2} x$, with a minus sign. Even for a negative value of $\\tanh x$, $\\operatorname{sech} x$ is positive.",
+    "把恒等式 $\\cosh^2 x - \\sinh^2 x = 1$ 除以 $\\cosh^2 x$，得 $1 - \\tanh^2 x = \\operatorname{sech}^2 x$。所以 $\\tanh x$ 的值确定了 $\\operatorname{sech} x$ 的大小，不必求出 $x$。符号也不用考虑，因为 $\\cosh x$ 总是正的，所以 $\\operatorname{sech} x$ 也是正的。\n\n例如，若 $\\tanh x = -\\frac{3}{5}$，则 $\\operatorname{sech}^{2} x = 1 - \\frac{9}{25} = \\frac{16}{25}$，所以 $\\operatorname{sech} x = \\frac{4}{5}$。\n\n检验：此时 $\\cosh x = \\frac{5}{4}$，$\\sinh x = \\tanh x \\cosh x = -\\frac{3}{4}$，而 $\\frac{25}{16} - \\frac{9}{16} = 1$。\n\n> **注意。** 恒等式是 $\\operatorname{sech}^{2} x = 1 - \\tanh^{2} x$，是减号。即使 $\\tanh x$ 的值为负，$\\operatorname{sech} x$ 也是正的。",
   ),
   generate(rng) {
     const [a, b, c] = rng.pick(rightTriangles);
-    const tanh = Q.of(rng.pick([1, -1]) * b, c);
+    const sign = rng.pick([1, -1]);
+    const tanh = Q.of(sign * b, c);
     const answer = Q.of(a, c);
+    const sinh = Q.of(sign * b, a);
     return numberProblem({
       prompt: t(
         `Given $\\tanh x = ${tanh.toLatex()}$, find $\\operatorname{sech} x$.`,
         `已知 $\\tanh x = ${tanh.toLatex()}$，求 $\\operatorname{sech} x$。`,
       ),
       answer,
-      wrong: [Q.of(-a, c), Q.of(c, a), Q.of(c, b), Q.of(a, b)],
-      solution: t(
-        `From $\\operatorname{sech}^2 x = 1 - \\tanh^2 x = 1 - \\frac{${b * b}}{${c * c}} = \\frac{${a * a}}{${c * c}}$, and since $\\operatorname{sech} x$ is always positive, it equals $${answer.toLatex()}$.`,
-        `由 $\\operatorname{sech}^2 x = 1 - \\tanh^2 x = 1 - \\frac{${b * b}}{${c * c}} = \\frac{${a * a}}{${c * c}}$，又因为 $\\operatorname{sech} x$ 总是正的，所以它等于 $${answer.toLatex()}$。`,
+      mistakes: firstMistakes(answer, [
+        why(
+          Q.of(-a, c),
+          "$\\operatorname{sech} x = \\frac{1}{\\cosh x}$ is always positive.",
+          "$\\operatorname{sech} x = \\frac{1}{\\cosh x}$ 恒为正。",
+        ),
+        why(
+          Q.of(c, a),
+          "This is $\\cosh x$, the reciprocal of $\\operatorname{sech} x$.",
+          "这是 $\\cosh x$，是 $\\operatorname{sech} x$ 的倒数。",
+        ),
+        why(
+          Q.of(c, b),
+          "This is the size of $\\coth x = \\frac{1}{\\tanh x}$, not $\\operatorname{sech} x$.",
+          "这是 $\\coth x = \\frac{1}{\\tanh x}$ 的绝对值，不是 $\\operatorname{sech} x$。",
+        ),
+        why(
+          Q.of(a, b),
+          "This is the size of $\\operatorname{csch} x = \\frac{\\operatorname{sech} x}{\\tanh x}$, not $\\operatorname{sech} x$.",
+          "这是 $\\operatorname{csch} x = \\frac{\\operatorname{sech} x}{\\tanh x}$ 的绝对值，不是 $\\operatorname{sech} x$。",
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Use the identity",
+            "使用恒等式",
+            `$\\operatorname{sech}^2 x = 1 - \\tanh^2 x = 1 - \\frac{${b * b}}{${c * c}} = \\frac{${a * a}}{${c * c}}$.`,
+            `$\\operatorname{sech}^2 x = 1 - \\tanh^2 x = 1 - \\frac{${b * b}}{${c * c}} = \\frac{${a * a}}{${c * c}}$。`,
+          ],
+          [
+            "Take the positive root",
+            "取正根",
+            `$\\operatorname{sech} x$ is always positive, so $\\operatorname{sech} x = ${answer.toLatex()}$.`,
+            `$\\operatorname{sech} x$ 恒为正，所以 $\\operatorname{sech} x = ${answer.toLatex()}$。`,
+          ],
+        ],
+        [
+          `Then $\\cosh x = ${Q.of(c, a).toLatex()}$ and $\\sinh x = \\tanh x \\cosh x = ${sinh.toLatex()}$, and $\\cosh^{2} x - \\sinh^{2} x = \\frac{${c * c}}{${a * a}} - \\frac{${b * b}}{${a * a}} = 1$.`,
+          `于是 $\\cosh x = ${Q.of(c, a).toLatex()}$，$\\sinh x = \\tanh x \\cosh x = ${sinh.toLatex()}$，而 $\\cosh^{2} x - \\sinh^{2} x = \\frac{${c * c}}{${a * a}} - \\frac{${b * b}}{${a * a}} = 1$。`,
+        ],
       ),
     });
   },

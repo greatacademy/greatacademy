@@ -82,4 +82,10 @@ export const taughtTopics: readonly string[] = [
   "calculating-derivatives-from-data-using-the-chain-rule",
   "calculating-derivatives-from-graphs-using-the-chain-rule",
   "selecting-procedures-for-calculating-derivatives",
+  "the-hyperbolic-functions",
+  "the-reciprocal-hyperbolic-functions",
+  "solving-equations-containing-hyperbolic-functions",
+  "graphs-of-the-hyperbolic-functions",
+  "graphs-of-the-reciprocal-hyperbolic-functions",
+  "the-inverse-hyperbolic-functions",
 ];

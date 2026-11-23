@@ -70,8 +70,8 @@ const levelLineOfHyperbolicGraph = {
     "how-many-times-a-level-line-meets-a-hyperbolic-graph",
     ["How many times a level line meets the graph", "水平直线与图像的交点个数"],
     [
-      "The shape of the graph decides how many solutions an equation has. $\\cosh$ has a minimum value of $1$, so a level above it is met twice; $\\sinh$ takes every value exactly once; $\\tanh$ stays strictly between $-1$ and $1$. Undo the stretch and shift first, then compare with the range.",
-      "图像的形状决定方程有几个解。$\\cosh$ 的最小值是 $1$，所以高于它的水平线与图像交于两点；$\\sinh$ 每个值恰好取一次；$\\tanh$ 严格介于 $-1$ 和 $1$ 之间。先还原伸缩和平移，再与值域比较。",
+      "The shape of the graph decides how many solutions an equation has. $\\cosh$ has a minimum value of $1$, so a level above it is met twice; $\\sinh$ takes every value exactly once; $\\tanh$ stays strictly between $-1$ and $1$. Undo the stretch and shift first, then compare with the range.\n\nFor example, $y = 2\\cosh(x - 1) + 3$ and the line $y = 9$ give $\\cosh(x - 1) = 3$. That is above $1$, so they meet twice.\n\nCheck: $x - 1 = \\pm\\operatorname{arcosh} 3 \\approx \\pm 1.763$, so $x \\approx -0.763$ and $x \\approx 2.763$.\n\n> **Watch out.** Undo the stretch and shift before comparing with the range. $\\cosh$ is even, so it takes each value above its minimum twice, but $\\sinh$ and $\\tanh$ take each value at most once.",
+      "图像的形状决定方程有几个解。$\\cosh$ 的最小值是 $1$，所以高于它的水平线与图像交于两点；$\\sinh$ 每个值恰好取一次；$\\tanh$ 严格介于 $-1$ 和 $1$ 之间。先还原伸缩和平移，再与值域比较。\n\n例如 $y = 2\\cosh(x - 1) + 3$ 与直线 $y = 9$ 给出 $\\cosh(x - 1) = 3$。它大于 $1$，所以有两个交点。\n\n检验：$x - 1 = \\pm\\operatorname{arcosh} 3 \\approx \\pm 1.763$，所以 $x \\approx -0.763$ 和 $x \\approx 2.763$。\n\n> **注意。** 先还原伸缩和平移，再与值域比较。$\\cosh$ 是偶函数，大于最小值的每个值取两次；而 $\\sinh$ 和 $\\tanh$ 每个值至多取一次。",
     ],
     (rng) => {
       const kind = rng.pick(["cosh", "cosh", "sinh", "tanh", "tanh"] as const);
@@ -82,7 +82,8 @@ const levelLineOfHyperbolicGraph = {
       const m = k + a * v;
       const answer = hyperbolicCount(kind, v);
       const y = poly([a, `\\${kind}(${minus(h)})`], [k, ""]);
-      const why: Pair =
+      const u = minus(h);
+      const range: Pair =
         kind === "cosh"
           ? [
               "$\\cosh$ takes values above $1$ twice, the value $1$ once and nothing below $1$",
@@ -94,18 +95,98 @@ const levelLineOfHyperbolicGraph = {
                 "$\\tanh$ takes each value strictly between $-1$ and $1$ exactly once and no other value",
                 "$\\tanh$ 严格介于 $-1$ 与 $1$ 之间的值各取一次，其他值取不到",
               ];
-      return ask(
+      const check: Pair =
+        kind === "cosh"
+          ? v > 1
+            ? [
+                `Solving directly, $${u} = \\pm\\operatorname{arcosh} ${v} \\approx \\pm ${num(Math.acosh(v))}$, so $x \\approx ${num(h - Math.acosh(v))}$ and $x \\approx ${num(h + Math.acosh(v))}$: two points.`,
+                `直接求解，$${u} = \\pm\\operatorname{arcosh} ${v} \\approx \\pm ${num(Math.acosh(v))}$，所以 $x \\approx ${num(h - Math.acosh(v))}$ 和 $x \\approx ${num(h + Math.acosh(v))}$：两个点。`,
+              ]
+            : v === 1
+              ? [
+                  `$\\cosh(${u}) = 1$ only when $${u} = 0$, that is at $x = ${h}$: one point.`,
+                  `只有 $${u} = 0$ 即 $x = ${h}$ 时 $\\cosh(${u}) = 1$：一个点。`,
+                ]
+              : [
+                  `$\\operatorname{arcosh} ${paren(v)}$ does not exist, because $${v} < 1$: there is no point.`,
+                  `因为 $${v} < 1$，$\\operatorname{arcosh} ${paren(v)}$ 不存在：没有交点。`,
+                ]
+          : kind === "sinh"
+            ? [
+                `Solving directly, $${u} = \\operatorname{arsinh} ${paren(v)} \\approx ${num(Math.asinh(v))}$, so $x \\approx ${num(h + Math.asinh(v))}$: one point.`,
+                `直接求解，$${u} = \\operatorname{arsinh} ${paren(v)} \\approx ${num(Math.asinh(v))}$，所以 $x \\approx ${num(h + Math.asinh(v))}$：一个点。`,
+              ]
+            : v === 0
+              ? [
+                  `$${u} = \\operatorname{artanh} 0 = 0$, so $x = ${h}$: one point.`,
+                  `$${u} = \\operatorname{artanh} 0 = 0$，所以 $x = ${h}$：一个点。`,
+                ]
+              : [
+                  `$\\operatorname{artanh} ${paren(v)}$ does not exist, because $|${v}| \\ge 1$: there is no point.`,
+                  `因为 $|${v}| \\ge 1$，$\\operatorname{artanh} ${paren(v)}$ 不存在：没有交点。`,
+                ];
+      const reason = (w: number): Pair => {
+        if (kind === "cosh") {
+          if (answer === 2)
+            return w === 1
+              ? [
+                  `$\\cosh$ is even, so the value $${v}$ is taken at two points, one on each side of $x = ${h}$.`,
+                  `$\\cosh$ 是偶函数，值 $${v}$ 在 $x = ${h}$ 两侧各取一次，共两个点。`,
+                ]
+              : [`$${v}$ is above the minimum $1$ of $\\cosh$, so it is reached.`, `$${v}$ 大于 $\\cosh$ 的最小值 $1$，所以能取到。`];
+          if (answer === 1)
+            return w === 2
+              ? [
+                  `$1$ is the minimum of $\\cosh$, reached only at the vertex $x = ${h}$.`,
+                  `$1$ 是 $\\cosh$ 的最小值，只在顶点 $x = ${h}$ 处取到。`,
+                ]
+              : [`$\\cosh$ does reach $1$, at its vertex $x = ${h}$.`, `$\\cosh$ 能取到 $1$，就在顶点 $x = ${h}$ 处。`];
+          return [`$\\cosh$ is never below $1$, and $${v} < 1$.`, `$\\cosh$ 从不小于 $1$，而 $${v} < 1$。`];
+        }
+        if (kind === "sinh")
+          return w === 0
+            ? [`$\\sinh$ takes every real value, $${v}$ included.`, `$\\sinh$ 取遍所有实数值，包括 $${v}$。`]
+            : ["$\\sinh$ is increasing, so it cannot take a value twice.", "$\\sinh$ 递增，不可能两次取同一个值。"];
+        if (answer === 1)
+          return w === 0
+            ? ["$0$ lies strictly between $-1$ and $1$, so $\\tanh$ takes it.", "$0$ 严格介于 $-1$ 与 $1$ 之间，所以 $\\tanh$ 能取到。"]
+            : ["$\\tanh$ is increasing, so it cannot take a value twice.", "$\\tanh$ 递增，不可能两次取同一个值。"];
+        return Math.abs(v) === 1
+          ? [
+              `$\\tanh$ only approaches $${v}$: the line $y = ${m}$ is an asymptote and is never reached.`,
+              `$\\tanh$ 只是趋近 $${v}$：直线 $y = ${m}$ 是渐近线，取不到。`,
+            ]
+          : [
+              `$\\tanh$ stays strictly between $-1$ and $1$, and $${v}$ is outside.`,
+              `$\\tanh$ 严格介于 $-1$ 与 $1$ 之间，而 $${v}$ 在这个范围之外。`,
+            ];
+      };
+      const [solutionEn, solutionZh] = walk(
         [
+          [
+            "Solve for the function",
+            "解出函数值",
+            `Undo the shift and the stretch: $\\${kind}(${u}) = \\frac{${m}${tail(-k)}}{${a}} = ${v}$.`,
+            `还原平移和伸缩：$\\${kind}(${u}) = \\frac{${m}${tail(-k)}}{${a}} = ${v}$。`,
+          ],
+          [
+            "Compare with the range",
+            "与值域比较",
+            `${range[0]}, so the number of common points is $${answer}$.`,
+            `${range[1]}，所以公共点的个数是 $${answer}$。`,
+          ],
+        ],
+        check,
+      );
+      return numberProblem({
+        prompt: t(
           `How many points do the graph of $y = ${y}$ and the line $y = ${m}$ have in common?`,
           `$y = ${y}$ 的图像与直线 $y = ${m}$ 有多少个公共点？`,
-        ],
+        ),
         answer,
-        [0, 1, 2],
-        [
-          `Solving for the function gives $\\${kind}(${minus(h)}) = ${v}$. ${why[0]}, so the number of common points is $${answer}$.`,
-          `解出函数值得 $\\${kind}(${minus(h)}) = ${v}$。${why[1]}，所以公共点的个数是 $${answer}$。`,
-        ],
-      );
+        mistakes: [0, 1, 2].filter((w) => w !== answer).map((w) => why(w, ...reason(w))),
+        solution: t(solutionEn, solutionZh),
+      });
     },
   ),
   figure: calculusDrawings1["graphs-of-the-hyperbolic-functions#how-many-times-a-level-line-meets-a-hyperbolic-graph"],
@@ -116,8 +197,8 @@ const levelLineOfReciprocalGraph = {
     "how-many-times-a-level-line-meets-a-reciprocal-hyperbolic-graph",
     ["How many times a level line meets a reciprocal graph", "水平直线与倒数双曲图像的交点个数"],
     [
-      "The ranges tell the number of solutions. $\\operatorname{sech}$ takes values in $(0, 1]$, with the value $1$ only at its peak; $\\operatorname{csch}$ takes every value except $0$, each once; $\\coth$ takes each value with absolute value above $1$ once, and nothing between $-1$ and $1$.",
-      "值域决定解的个数。$\\operatorname{sech}$ 的值域是 $(0, 1]$，$1$ 只在峰顶取到；$\\operatorname{csch}$ 取除 $0$ 以外的所有值，各取一次；$\\coth$ 绝对值大于 $1$ 的值各取一次，$-1$ 与 $1$ 之间的值取不到。",
+      "The ranges tell the number of solutions. $\\operatorname{sech}$ takes values in $(0, 1]$, with the value $1$ only at its peak; $\\operatorname{csch}$ takes every value except $0$, each once; $\\coth$ takes each value with absolute value above $1$ once, and nothing between $-1$ and $1$.\n\nFor example, $y = 3\\coth(x + 2) - 1$ and the line $y = 2$ give $\\coth(x + 2) = 1$, a value $\\coth$ never takes, so they do not meet.\n\nCheck: $\\coth u = 1$ would need $\\tanh u = \\frac{1}{1} = 1$, and $\\tanh$ only approaches $1$.\n\n> **Watch out.** A value at the edge of the range may be an asymptote rather than a value: $\\coth$ never equals $\\pm 1$ and $\\operatorname{csch}$ never equals $0$, while $\\operatorname{sech}$ does reach $1$, at its peak.",
+      "值域决定解的个数。$\\operatorname{sech}$ 的值域是 $(0, 1]$，$1$ 只在峰顶取到；$\\operatorname{csch}$ 取除 $0$ 以外的所有值，各取一次；$\\coth$ 绝对值大于 $1$ 的值各取一次，$-1$ 与 $1$ 之间的值取不到。\n\n例如 $y = 3\\coth(x + 2) - 1$ 与直线 $y = 2$ 给出 $\\coth(x + 2) = 1$，这是 $\\coth$ 取不到的值，所以没有交点。\n\n检验：$\\coth u = 1$ 需要 $\\tanh u = \\frac{1}{1} = 1$，而 $\\tanh$ 只是趋近 $1$。\n\n> **注意。** 值域边界上的值可能是渐近线而不是函数值：$\\coth$ 取不到 $\\pm 1$，$\\operatorname{csch}$ 取不到 $0$，而 $\\operatorname{sech}$ 在峰顶能取到 $1$。",
     ],
     (rng) => {
       const kind = rng.pick(["sech", "csch", "coth"] as const);
@@ -129,7 +210,8 @@ const levelLineOfReciprocalGraph = {
       const answer = reciprocalCount(kind, v);
       const fn = kind === "coth" ? "\\coth" : `\\operatorname{${kind}}`;
       const y = poly([a, `${fn}(${minus(h)})`], [k, ""]);
-      const why: Pair =
+      const u = minus(h);
+      const range: Pair =
         kind === "sech"
           ? [
               "$\\operatorname{sech}$ takes values only in $(0, 1]$, and it reaches $1$ only at its peak",
@@ -144,18 +226,103 @@ const levelLineOfReciprocalGraph = {
                 "$\\coth$ takes each value with $|y| > 1$ once and misses the band $-1 \\le y \\le 1$",
                 "$\\coth$ 满足 $|y| > 1$ 的值各取一次，取不到 $-1 \\le y \\le 1$ 这一带",
               ];
-      return ask(
+      const base = kind === "sech" ? "\\cosh" : kind === "csch" ? "\\sinh" : "\\tanh";
+      const check: Pair =
+        v === 0
+          ? [
+              `$${fn}(${u}) = 0$ would need $${base}(${u}) = \\frac{1}{0}$, which no number is: there is no point.`,
+              `$${fn}(${u}) = 0$ 需要 $${base}(${u}) = \\frac{1}{0}$，这样的数不存在：没有交点。`,
+            ]
+          : kind === "sech"
+            ? v === 1
+              ? [
+                  `$\\operatorname{sech}(${u}) = 1$ means $\\cosh(${u}) = 1$, which happens only at $x = ${h}$: one point.`,
+                  `$\\operatorname{sech}(${u}) = 1$ 即 $\\cosh(${u}) = 1$，只在 $x = ${h}$ 处成立：一个点。`,
+                ]
+              : [
+                  `$\\operatorname{sech}(${u}) = ${v}$ means $\\cosh(${u}) = \\frac{1}{${v}}$, which is below $1$, and $\\cosh$ never is: there is no point.`,
+                  `$\\operatorname{sech}(${u}) = ${v}$ 即 $\\cosh(${u}) = \\frac{1}{${v}}$，它小于 $1$，而 $\\cosh$ 取不到：没有交点。`,
+                ]
+            : kind === "csch"
+              ? [
+                  `$\\operatorname{csch}(${u}) = ${v}$ means $\\sinh(${u}) = \\frac{1}{${v}}$, so $${u} = \\operatorname{arsinh}\\frac{1}{${v}} \\approx ${num(Math.asinh(1 / v))}$: one point.`,
+                  `$\\operatorname{csch}(${u}) = ${v}$ 即 $\\sinh(${u}) = \\frac{1}{${v}}$，所以 $${u} = \\operatorname{arsinh}\\frac{1}{${v}} \\approx ${num(Math.asinh(1 / v))}$：一个点。`,
+                ]
+              : Math.abs(v) > 1
+                ? [
+                    `$\\coth(${u}) = ${v}$ means $\\tanh(${u}) = \\frac{1}{${v}}$, so $${u} = \\operatorname{artanh}\\frac{1}{${v}} \\approx ${num(Math.atanh(1 / v))}$: one point.`,
+                    `$\\coth(${u}) = ${v}$ 即 $\\tanh(${u}) = \\frac{1}{${v}}$，所以 $${u} = \\operatorname{artanh}\\frac{1}{${v}} \\approx ${num(Math.atanh(1 / v))}$：一个点。`,
+                  ]
+                : [
+                    `$\\coth(${u}) = ${v}$ would need $\\tanh(${u}) = ${v}$, which $\\tanh$ only approaches: there is no point.`,
+                    `$\\coth(${u}) = ${v}$ 需要 $\\tanh(${u}) = ${v}$，而 $\\tanh$ 只是趋近它：没有交点。`,
+                  ];
+      const reason = (w: number): Pair => {
+        if (kind === "sech") {
+          if (answer === 1)
+            return w === 2
+              ? [
+                  `$1$ is the peak of $\\operatorname{sech}$, reached only at $x = ${h}$.`,
+                  `$1$ 是 $\\operatorname{sech}$ 的峰值，只在 $x = ${h}$ 处取到。`,
+                ]
+              : ["$\\operatorname{sech}$ does reach $1$, at its peak.", "$\\operatorname{sech}$ 在峰顶能取到 $1$。"];
+          return v <= 0
+            ? [`$\\operatorname{sech}$ is always positive, and $${v}$ is not.`, `$\\operatorname{sech}$ 恒为正，而 $${v}$ 不是正数。`]
+            : [`$\\operatorname{sech}$ never exceeds $1$, and $${v} > 1$.`, `$\\operatorname{sech}$ 从不超过 $1$，而 $${v} > 1$。`];
+        }
+        if (kind === "csch") {
+          if (answer === 0)
+            return [
+              `$\\operatorname{csch}$ never equals $0$: the line $y = ${m}$ is its asymptote.`,
+              `$\\operatorname{csch}$ 取不到 $0$：直线 $y = ${m}$ 是它的渐近线。`,
+            ];
+          return w === 0
+            ? [`$\\operatorname{csch}$ takes every nonzero value, $${v}$ included.`, `$\\operatorname{csch}$ 取遍所有非零值，包括 $${v}$。`]
+            : [
+                "$\\operatorname{csch}$ is positive on one side of its vertical asymptote and negative on the other, and decreasing on each side, so it takes each value once.",
+                "$\\operatorname{csch}$ 在竖直渐近线一侧为正、另一侧为负，并且在每一侧都递减，所以每个值只取一次。",
+              ];
+        }
+        if (answer === 1)
+          return w === 0
+            ? [`$\\coth$ takes every value with $|y| > 1$, $${v}$ included.`, `$\\coth$ 取遍所有满足 $|y| > 1$ 的值，包括 $${v}$。`]
+            : [
+                "$\\coth$ takes values above $1$ only on one side of its vertical asymptote and values below $-1$ only on the other, once each.",
+                "$\\coth$ 大于 $1$ 的值只在竖直渐近线的一侧取到，小于 $-1$ 的值只在另一侧取到，各取一次。",
+              ];
+        return Math.abs(v) === 1
+          ? [
+              `$\\coth$ only approaches $${v}$: the line $y = ${m}$ is an asymptote and is never reached.`,
+              `$\\coth$ 只是趋近 $${v}$：直线 $y = ${m}$ 是渐近线，取不到。`,
+            ]
+          : ["$\\coth$ never takes values between $-1$ and $1$.", "$\\coth$ 取不到 $-1$ 与 $1$ 之间的值。"];
+      };
+      const [solutionEn, solutionZh] = walk(
         [
+          [
+            "Solve for the function",
+            "解出函数值",
+            `Undo the shift and the stretch: $${fn}(${u}) = \\frac{${m}${tail(-k)}}{${a}} = ${v}$.`,
+            `还原平移和伸缩：$${fn}(${u}) = \\frac{${m}${tail(-k)}}{${a}} = ${v}$。`,
+          ],
+          [
+            "Compare with the range",
+            "与值域比较",
+            `${range[0]}, so the number of common points is $${answer}$.`,
+            `${range[1]}，所以公共点的个数是 $${answer}$。`,
+          ],
+        ],
+        check,
+      );
+      return numberProblem({
+        prompt: t(
           `How many points do the graph of $y = ${y}$ and the line $y = ${m}$ have in common?`,
           `$y = ${y}$ 的图像与直线 $y = ${m}$ 有多少个公共点？`,
-        ],
+        ),
         answer,
-        [0, 1, 2],
-        [
-          `Solving for the function gives $${fn}(${minus(h)}) = ${v}$. ${why[0]}, so the number of common points is $${answer}$.`,
-          `解出函数值得 $${fn}(${minus(h)}) = ${v}$。${why[1]}，所以公共点的个数是 $${answer}$。`,
-        ],
-      );
+        mistakes: [0, 1, 2].filter((w) => w !== answer).map((w) => why(w, ...reason(w))),
+        solution: t(solutionEn, solutionZh),
+      });
     },
   ),
   figure:
