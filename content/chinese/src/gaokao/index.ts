@@ -190,27 +190,32 @@ const writeWhy = (right: string): Text => {
 };
 
 /** BRACKETED is a shown sentence with the character asked about in brackets after it. */
-const BRACKETED = /^(.*)（(.)）$/u;
+const BRACKETED = /^.*（.）$/u;
 
-/** classicalItems are the drill items on a character in brackets of the given grades, each explained by its sentence. */
+/** classicalItems are the drill items on a character in brackets of the given grades, each solved as its drill solves it. */
 function classicalItems(from: number, to: number): readonly Ask[] {
   const drills = [...classicalDrills, ...seniorClassicalDrills].filter((d) => d.grade >= from && d.grade <= to);
   return interleave(
     drills.map((d) =>
-      d.points
-        .flatMap((p) => p.items)
-        .flatMap((item: DrillItem): Ask[] => {
-          const m = BRACKETED.exec(item.shown);
-          if (!m) return [];
+      d.points.flatMap((p) =>
+        p.items.flatMap((item: DrillItem): Ask[] => {
+          if (!BRACKETED.test(item.shown)) return [];
+          const solution = p.why(item.right, item.shown);
+          const reasons = p.whyNot ? item.wrong.map((w) => p.whyNot!(w, item.right, item.shown)) : [];
+          const list = (l: "en" | "zh-CN") => reasons.map((r) => `- ${r[l]}`).join("\n");
           return [
             {
               shown: same(item.shown),
               right: same(item.right),
               wrong: item.wrong.map(same),
-              solution: t(`In ${m[1]}, ${m[2]} is: ${item.right}.`, `在“${m[1]}”中，“${m[2]}”是：${item.right}。`),
+              solution:
+                reasons.length > 0
+                  ? t(`${solution.en}\n\nThe other options:\n\n${list("en")}`, `${solution["zh-CN"]}\n\n其他选项：\n\n${list("zh-CN")}`)
+                  : solution,
             },
           ];
         }),
+      ),
     ),
   );
 }
@@ -367,6 +372,10 @@ export const gaokaoTopics: readonly TopicDef[] = [
       "The content and function words of classical Chinese from grade 5 to senior school mixed: the meaning or use of a character in a sentence, first of texts before senior school, then of senior ones.",
       "从五年级到高中的文言实词和虚词混在一起：一个字在句中的意思或用法，先是高中以前的篇目，再是高中的篇目。",
     ),
+    intro: t(
+      "The paper asks about classical words in its passage of classical prose, and the passage may be any text: what it tests is whether the work of the drills has become a habit. In this topic the drills of grades 5 to 11 come back mixed, content words and function words together, and nothing marks which drill a sentence is from.\n\nTake 冀复得兔 (复). Nothing says whether 复 is a content word or a function word; the sentence decides. 复 stands before the verb 得, so it says how the getting happens: again, 再. Put back, 希望再得到兔子 reads smoothly. Each item asks the same two questions: what the character does in its sentence, and whether the whole sentence, put back into modern Chinese, then says something sensible.",
+      "高考在文言文阅读里考文言字词，选文可以是任何一篇：考的是练习中的方法有没有变成习惯。这个主题把五到十一年级的练习混在一起出现，实词和虚词放在一起，也不标明句子来自哪个练习。\n\n比如“冀复得兔”（复）。题目不会告诉你“复”是实词还是虚词，要由句子来定。“复”在动词“得”前面，说的是怎样得到：再一次。代回去，“希望再得到兔子”，句子通顺。每道题都问同样两个问题：这个字在句中起什么作用；把整句译回现代汉语，意思讲不讲得通。",
+    ),
     prerequisites: [lastDrill],
     encompasses: [],
     xp: 12,
@@ -377,8 +386,8 @@ export const gaokaoTopics: readonly TopicDef[] = [
         "gaokao-classical-words-junior",
         t("Before Senior School", "高中以前的篇目"),
         t(
-          "Read the whole sentence and put it into modern Chinese; the meaning that makes the sentence say something sensible is the one.",
-          "读完整个句子，把它翻成现代汉语；能让句子讲得通的那个意思就是答案。",
+          "These are the sentences of the drills of grades 5 to 9, now mixed: a content word's meaning and a function word's usage come in any order, so first ask which the question wants, then work it as the drill did. Take 孔君平诣其父 (诣): it is a content word, and the sentence needs what a guest does at a house, so 诣 is 拜访; put back, 孔君平去拜访孩子的父亲 reads smoothly.\n\n> **Watch out.** The options mix meanings and usages, and one of them is usually the character's meaning in a word of today. Choose by putting each back into the whole sentence, not by which looks familiar.",
+          "这里是五到九年级练习过的句子，混在一起出现：实词的意思和虚词的用法顺序不定，所以先看题目问的是哪一种，再像练习时那样去做。比如“孔君平诣其父”（诣）：这是实词，句子需要的是客人登门做的事，所以“诣”是拜访；代回去，“孔君平去拜访孩子的父亲”，句子通顺。\n\n> **注意。** 选项里有意思也有用法，其中往往有一个是这个字在今天的词语里的意思。要把每个选项代回整句来选，不能看哪个眼熟。",
         ),
         examChoice(t("What is the character in brackets here?", "括号里的字在句中是什么意思或用法？"), junior),
       ),
@@ -386,8 +395,8 @@ export const gaokaoTopics: readonly TopicDef[] = [
         "gaokao-classical-words-senior",
         t("Senior Texts", "高中篇目"),
         t(
-          "A character often has several meanings and uses. Check each against its place in the sentence: what comes before and after it, and whether it acts as a noun, a verb or a function word.",
-          "一个字常有好几个意思和用法。拿每一个放回句子里检查：看它前后是什么，它在句中作名词、动词还是虚词。",
+          "A character of the senior texts often has several meanings and uses. Check each against its place in the sentence: what comes before and after it, and whether it acts as a noun, a verb or a function word. Take 因宾客至蔺相如门谢罪 (因): after 因 comes a person, 宾客, and then the action 至, so Lian Po goes through the guests, and 因 is 凭借、通过.\n\n> **Watch out.** A function word of the senior texts is seldom what it is in modern Chinese: 因 is not 因为 here, nor 所以 a word of result. Decide by where the word stands, never by the modern word it resembles.",
+          "高中篇目里的一个字常有好几个意思和用法。拿每一个放回句子里检查：看它前后是什么，它在句中作名词、动词还是虚词。比如“因宾客至蔺相如门谢罪”（因）：“因”后面是人“宾客”，再接动作“至”，廉颇是经由宾客引领去的，所以“因”是凭借、通过。\n\n> **注意。** 高中篇目里的虚词，很少是它在现代汉语里的意思：这里的“因”不是“因为”，“所以”也不表示结果。要看这个字在句中的位置来判断，不能看它像今天的哪个词。",
         ),
         examChoice(t("What is the character in brackets here?", "括号里的字在句中是什么意思或用法？"), senior),
       ),

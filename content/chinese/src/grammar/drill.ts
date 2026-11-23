@@ -3,7 +3,7 @@
 // item is asked with two of its wrong answers at a time, in three different pairs.
 
 import type { Text, TopicDef } from "@ga/content";
-import { type ChoiceItem, choiceGenerator, point, type Why } from "@ga/subject-chinese";
+import { type ChoiceItem, choiceGenerator, point, type Why, type WhyNot } from "@ga/subject-chinese";
 
 /** DrillItem is what an item shows (empty when the question says it all), its right answer and three wrong ones. */
 export interface DrillItem {
@@ -26,6 +26,8 @@ export interface DrillPoint {
   readonly question: Text;
   readonly items: readonly DrillItem[];
   readonly why: Why;
+  /** whyNot says why a wrong option is wrong: told to a learner who picks it, and listed after the solution. */
+  readonly whyNot?: WhyNot;
 }
 
 /** DrillSpec describes a drill topic. */
@@ -35,6 +37,8 @@ export interface DrillSpec {
   readonly summary: Text;
   readonly prerequisites: readonly string[];
   readonly points: readonly [DrillPoint, DrillPoint];
+  /** intro is the short tutorial read before the first knowledge point. */
+  readonly intro?: Text;
   /** strand is the topic's strand, grammar unless given. */
   readonly strand?: string;
 }
@@ -58,6 +62,7 @@ export function drillTopic(spec: DrillSpec): TopicDef {
     id: spec.id,
     title: spec.title,
     summary: spec.summary,
+    ...(spec.intro && { intro: spec.intro }),
     prerequisites: [...spec.prerequisites],
     encompasses: [],
     xp: spec.points[0].items.length,
@@ -66,7 +71,7 @@ export function drillTopic(spec: DrillSpec): TopicDef {
       const bank: readonly ChoiceItem[] = PAIRS.flatMap(([a, b]) =>
         p.items.map((item): ChoiceItem => [item.shown, item.right, [item.wrong[a], item.wrong[b]]]),
       );
-      return point(`${spec.id}-${p.suffix}`, p.title, p.explanation, choiceGenerator(p.question, bank, p.why));
+      return point(`${spec.id}-${p.suffix}`, p.title, p.explanation, choiceGenerator(p.question, bank, p.why, p.whyNot));
     }),
   };
 }
