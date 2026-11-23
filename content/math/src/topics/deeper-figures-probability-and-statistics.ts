@@ -466,8 +466,8 @@ const zFromCurve = point(
   "a-z-score-read-from-a-curve",
   ["A z-score read from a curve", "由曲线读 z 分数"],
   [
-    "A z-score counts how many standard deviations a value lies above or below the mean. On a normal curve, the mean is at the peak and the standard deviation is the distance from the peak to an inflection point. A value on the left of the peak has a negative z-score, however far along the axis it may be.",
-    "z 分数表示一个值比均值高或低多少个标准差。在正态曲线上，均值在峰处，标准差是峰到拐点的距离。峰左边的值 z 分数为负，不管它在轴上的什么位置。",
+    "A z-score counts how many standard deviations a value lies above or below the mean. On a normal curve, the mean is at the peak and the standard deviation is the distance from the peak to an inflection point. A value on the left of the peak has a negative z-score, however far along the axis it may be.\n\nIf the peak is at $50$ and the inflection point on the right is at $60$, then $\\sigma = 10$, and the value $35$ has $z = \\frac{35 - 50}{10} = -1.5$.\n\nCheck: $35$ lies left of the peak, so $z$ is negative, and $50 - 1.5 \\cdot 10 = 35$.\n\n> **Watch out.** Read $\\sigma$ as the distance from the peak to the inflection point, $10$, not the position of the inflection point, $60$, and subtract the mean before dividing: $\\frac{35}{10}$ is not the z-score.",
+    "z 分数表示一个值比均值高或低多少个标准差。在正态曲线上，均值在峰处，标准差是峰到拐点的距离。峰左边的值 z 分数为负，不管它在轴上的什么位置。\n\n若峰在 $50$，右边的拐点在 $60$，则 $\\sigma = 10$，数值 $35$ 的 $z = \\frac{35 - 50}{10} = -1.5$。\n\n检验：$35$ 在峰的左边，所以 $z$ 为负，而且 $50 - 1.5 \\cdot 10 = 35$。\n\n> **注意。** $\\sigma$ 是峰到拐点的距离 $10$，不是拐点的位置 $60$；相除之前要先减去均值：$\\frac{35}{10}$ 不是 z 分数。",
   ],
   (rng) => {
     const mu = rng.int(3, 9) * 10;
@@ -476,6 +476,8 @@ const zFromCurve = point(
     const value = mu + (steps * sigma) / 2;
     const f = normal(mu, sigma);
     const z = Q.of(steps, 2);
+    const d = value - mu;
+    const zText = z.isInteger() ? z.toLatex() : `${z.toLatex()} = ${String(steps / 2)}`;
     const svg = chart(
       [mu - 3.2 * sigma, mu + 3.2 * sigma],
       [0, 1.2 * f(mu)],
@@ -489,24 +491,47 @@ const zFromCurve = point(
         curvePath(f, mu - 3.2 * sigma, mu + 3.2 * sigma, x, y) +
         `<circle cx="${x(mu + sigma)}" cy="${y(f(mu + sigma))}" r="4" fill="currentColor"/><line stroke-dasharray="4 3" x1="${x(mu)}" y1="${y(f(mu))}" x2="${x(mu)}" y2="${y(0)}"/><circle class="accent" cx="${x(value)}" cy="${y(0)}" r="5" fill="currentColor"/>`,
     );
-    return ask(
+    const side = steps > 0 ? ["right", "右"] : ["left", "左"];
+    return withMistakes(
+      ask(
+        [
+          "The curve is a normal density, with a dot at the inflection point on the right and a dashed line at the mean. What is the z-score of the value marked on the axis?",
+          "曲线是正态密度，点标出右边的拐点，虚线标出均值。轴上所标值的 z 分数是多少？",
+        ],
+        z,
+        [z.neg(), Q.of(value, sigma), Q.of(steps, 1)],
+        [
+          `**Step 1: Read the mean and the standard deviation.** The mean is at the peak, $${mu}$, and the inflection point is at $${mu + sigma}$, so $\\sigma = ${mu + sigma} - ${mu} = ${sigma}$.\n\n**Step 2: Standardize the marked value.** The marked value is $${value}$:\n\n$$z = \\frac{${value} - ${mu}}{${sigma}} = \\frac{${d}}{${sigma}} = ${zText}$$\n\n**Check.** The value lies on the ${side[0]} of the peak, so $z$ is ${steps > 0 ? "positive" : "negative"}, and $${mu} ${steps > 0 ? "+" : "-"} ${Math.abs(steps / 2)} \\cdot ${sigma} = ${value}$.`,
+          `**第一步：读出均值和标准差。**均值在峰处，为 $${mu}$，拐点在 $${mu + sigma}$，所以 $\\sigma = ${mu + sigma} - ${mu} = ${sigma}$。\n\n**第二步：把所标的值标准化。**所标的值是 $${value}$：\n\n$$z = \\frac{${value} - ${mu}}{${sigma}} = \\frac{${d}}{${sigma}} = ${zText}$$\n\n**检验。**该值在峰的${side[1]}边，所以 $z$ 为${steps > 0 ? "正" : "负"}，而且 $${mu} ${steps > 0 ? "+" : "-"} ${Math.abs(steps / 2)} \\cdot ${sigma} = ${value}$。`,
+        ],
+        {
+          svg,
+          alt: t(
+            `A normal curve with mean ${mu}, inflection point at ${mu + sigma} and a marked value at ${value}.`,
+            `正态曲线，均值 ${mu}，拐点在 ${mu + sigma}，所标值在 ${value}。`,
+          ),
+        },
+      ),
       [
-        "The curve is a normal density, with a dot at the inflection point on the right and a dashed line at the mean. What is the z-score of the value marked on the axis?",
-        "曲线是正态密度，点标出右边的拐点，虚线标出均值。轴上所标值的 z 分数是多少？",
+        {
+          response: z.neg().toLatex(),
+          why: t(`This has the wrong sign: the value is on the ${side[0]} of the peak.`, `符号错了：该值在峰的${side[1]}边。`),
+        },
+        {
+          response: Q.of(value, sigma).toLatex(),
+          why: t(
+            `This divides the value itself by $\\sigma$; first subtract the mean $${mu}$.`,
+            `这直接用数值除以 $\\sigma$；要先减去均值 $${mu}$。`,
+          ),
+        },
+        {
+          response: Q.of(steps, 1).toLatex(),
+          why: t(
+            `This divides by $${sigma / 2}$, half the standard deviation; $\\sigma$ is the whole distance from the peak to the inflection point, $${sigma}$.`,
+            `这除以了 $${sigma / 2}$，即标准差的一半；$\\sigma$ 是峰到拐点的整段距离 $${sigma}$。`,
+          ),
+        },
       ],
-      z,
-      [z.neg(), Q.of(value, sigma), Q.of(steps, 1).eq(z) ? z.add(Q.of(1, 2)) : Q.of(steps, 1)],
-      [
-        `The mean is $${mu}$ and the inflection point is at $${mu + sigma}$, so $\\sigma = ${sigma}$. The marked value is $${value}$, and $(${value} - ${mu}) / ${sigma} = ${z.toLatex()}$.`,
-        `均值是 $${mu}$，拐点在 $${mu + sigma}$，所以 $\\sigma = ${sigma}$。所标的值是 $${value}$，$(${value} - ${mu}) / ${sigma} = ${z.toLatex()}$。`,
-      ],
-      {
-        svg,
-        alt: t(
-          `A normal curve with mean ${mu}, inflection point at ${mu + sigma} and a marked value at ${value}.`,
-          `正态曲线，均值 ${mu}，拐点在 ${mu + sigma}，所标值在 ${value}。`,
-        ),
-      },
     );
   },
 );
@@ -516,8 +541,8 @@ const lineEquation = {
     "the-equation-of-a-drawn-regression-line",
     ["The equation of a drawn regression line", "图中回归线的方程"],
     [
-      "A regression line summarizes a scatter plot. To read its equation, find the intercept where it meets the vertical axis and the slope from two clear points on the line itself. The individual data points do not lie on the line, so they should not be used to compute the slope, and the sign of the slope shows the trend.",
-      "回归线概括散点图。要读它的方程，就找它与纵轴的交点得到截距，再用直线上两个清楚的点求斜率。各数据点不在直线上，所以不应该用它们计算斜率，斜率的符号显示趋势。",
+      "A regression line summarizes a scatter plot. To read its equation, find the intercept where it meets the vertical axis and the slope from two clear points on the line itself. The individual data points do not lie on the line, so they should not be used to compute the slope, and the sign of the slope shows the trend.\n\nIf a fitted line passes through $(0, 3)$ and $(2, 4)$, its intercept is $3$ and its slope is $\\frac{4 - 3}{2 - 0} = \\frac{1}{2}$, so $\\hat{y} = \\frac{1}{2}x + 3$.\n\nCheck: at $x = 4$ the equation gives $\\frac{1}{2} \\cdot 4 + 3 = 5$, and the line passes through $(4, 5)$.\n\n> **Watch out.** The slope is rise over run, $\\frac{1}{2}$, not run over rise, $2$; a line that falls from left to right has a negative slope.",
+      "回归线概括散点图。要读它的方程，就找它与纵轴的交点得到截距，再用直线上两个清楚的点求斜率。各数据点不在直线上，所以不应该用它们计算斜率，斜率的符号显示趋势。\n\n若拟合直线过 $(0, 3)$ 和 $(2, 4)$，则截距为 $3$，斜率为 $\\frac{4 - 3}{2 - 0} = \\frac{1}{2}$，所以 $\\hat{y} = \\frac{1}{2}x + 3$。\n\n检验：$x = 4$ 时方程给出 $\\frac{1}{2} \\cdot 4 + 3 = 5$，直线也确实过 $(4, 5)$。\n\n> **注意。** 斜率是纵向变化比横向变化，即 $\\frac{1}{2}$，不是横向比纵向的 $2$；从左到右下降的直线斜率为负。",
     ],
     (rng) => {
       const b = rng.int(-2, 6);
@@ -543,29 +568,54 @@ const lineEquation = {
       const ys = xs.map(f);
       const top = Math.max(b, ...ys) + 2;
       const bottom = Math.min(b, ...ys) - 2;
-      return choose(
-        rng,
-        ["Which equation describes the line fitted through the scatter plot?", "哪个方程描述拟合散点图的直线？"],
-        same(eq(m, b)),
+      const rises = num > 0;
+      const trend: Pair = rises ? ["rises", "上升"] : ["falls", "下降"];
+      const flipped = Q.of(den, Math.abs(num)).mul(Q.of(Math.sign(num), 1));
+      const otherB = -b === b ? b - 2 : -b;
+      const paren = (n: number) => (n < 0 ? `(${n})` : `${n}`);
+      const crosses = (v: number): Pair => [
+        `This line meets the vertical axis at $${v}$, but the drawn line meets it at $${b}$.`,
+        `这条直线与纵轴交于 $${v}$，而图中的直线交于 $${b}$。`,
+      ];
+      const reasons: Reason[] = [
         [
-          same(eq(m.neg(), b)),
-          same(eq(m, b + 2)),
-          same(eq(Q.of(den, Math.abs(num)).mul(Q.of(Math.sign(num), 1)), b)),
-          same(eq(m, -b === b ? b - 2 : -b)),
-          same(eq(m.neg(), b + 2)),
+          same(eq(m.neg(), b))[0],
+          `This slope has the wrong sign: the line ${trend[0]} from left to right.`,
+          `这个斜率的符号错了：直线从左到右${trend[1]}。`,
         ],
+        [same(eq(m, b + 2))[0], ...crosses(b + 2)],
         [
-          `The line meets the vertical axis at $${b}$, and it changes by $${num}$ for every $${den}$ across. So its slope is $${m.toLatex()}$, which gives $${eq(m, b)}$.`,
-          `直线与纵轴交于 $${b}$，每向右 $${den}$ 变化 $${num}$。所以斜率是 $${m.toLatex()}$，得 $${eq(m, b)}$。`,
+          same(eq(flipped, b))[0],
+          `This slope is run over rise; the slope is rise over run, $${m.toLatex()}$.`,
+          `这个斜率是横向变化比纵向变化；斜率应是纵向比横向，即 $${m.toLatex()}$。`,
         ],
-        drawn(
-          { xMin: -1, xMax: 9, yMin: Math.floor(bottom), yMax: Math.ceil(top), xName: "x", yName: "y" },
-          marks,
-          t(
-            `Scattered points around a line through (0, ${b}) and (${den}, ${b + num}).`,
-            `散布在一条直线周围的点，直线过 (0, ${b}) 和 (${den}, ${b + num})。`,
+        [same(eq(m, otherB))[0], ...crosses(otherB)],
+        [
+          same(eq(m.neg(), b + 2))[0],
+          `Both parts are wrong: the line ${trend[0]}, so the slope is ${rises ? "positive" : "negative"}, and it meets the vertical axis at $${b}$.`,
+          `两部分都错了：直线${trend[1]}，所以斜率为${rises ? "正" : "负"}，而且它与纵轴交于 $${b}$。`,
+        ],
+      ];
+      return reasoned(
+        choose(
+          rng,
+          ["Which equation describes the line fitted through the scatter plot?", "哪个方程描述拟合散点图的直线？"],
+          same(eq(m, b)),
+          [same(eq(m.neg(), b)), same(eq(m, b + 2)), same(eq(flipped, b)), same(eq(m, otherB)), same(eq(m.neg(), b + 2))],
+          [
+            `**Step 1: Read the intercept.** The line meets the vertical axis at $(0, ${b})$, so the intercept is $${b}$.\n\n**Step 2: Find the slope from two points on the line.** The line also passes through $(${den}, ${b + num})$, so\n\n$$m = \\frac{${b + num} - ${paren(b)}}{${den} - 0} = ${m.toLatex()}$$\n\nThis gives $${eq(m, b)}$.\n\n**Check.** Another point on the line is $(${2 * den}, ${b + 2 * num})$, and the equation gives $${m.toLatex()} \\cdot ${2 * den} ${b === 0 ? "" : `${b < 0 ? "-" : "+"} ${Math.abs(b)} `}= ${b + 2 * num}$ there. The line ${trend[0]}, and the slope is ${rises ? "positive" : "negative"}.`,
+            `**第一步：读截距。**直线与纵轴交于 $(0, ${b})$，所以截距是 $${b}$。\n\n**第二步：用直线上的两点求斜率。**直线还过 $(${den}, ${b + num})$，所以\n\n$$m = \\frac{${b + num} - ${paren(b)}}{${den} - 0} = ${m.toLatex()}$$\n\n得 $${eq(m, b)}$。\n\n**检验。**直线上另一点是 $(${2 * den}, ${b + 2 * num})$，而方程在那里给出 $${m.toLatex()} \\cdot ${2 * den} ${b === 0 ? "" : `${b < 0 ? "-" : "+"} ${Math.abs(b)} `}= ${b + 2 * num}$。直线${trend[1]}，斜率为${rises ? "正" : "负"}。`,
+          ],
+          drawn(
+            { xMin: -1, xMax: 9, yMin: Math.floor(bottom), yMax: Math.ceil(top), xName: "x", yName: "y" },
+            marks,
+            t(
+              `Scattered points around a line through (0, ${b}) and (${den}, ${b + num}).`,
+              `散布在一条直线周围的点，直线过 (0, ${b}) 和 (${den}, ${b + num})。`,
+            ),
           ),
         ),
+        reasons,
       );
     },
   ),
@@ -577,14 +627,15 @@ const residualPattern = {
     "what-a-residual-plot-shows",
     ["What a residual plot shows", "残差图显示什么"],
     [
-      "A residual plot shows what the fitted line missed. Residuals scattered evenly around zero support the linear model. A curved band means that the relationship is not linear, and a band that fans out means that the spread changes with $x$. So the shape of the plot checks the model, even when the line itself looks reasonable.",
-      "残差图显示拟合直线遗漏的东西。残差均匀地散布在零附近，支持线性模型。弯曲的带状说明关系不是线性的，呈扇形散开说明分散程度随 $x$ 变化。所以即使直线本身看起来合理，图的形状也能检验模型。",
+      "A residual plot shows what the fitted line missed. Residuals scattered evenly around zero support the linear model. A curved band means that the relationship is not linear, and a band that fans out means that the spread changes with $x$. So the shape of the plot checks the model, even when the line itself looks reasonable.\n\nFor example, residuals $2, -1, -2, -1, 2$ at $x = 0, 1, 2, 3, 4$ are high at both ends and low in the middle, a curved band, so the relationship is not linear.\n\nCheck: these are the residuals of the points of $y = x^2$ from the line $\\hat{y} = 4x - 2$; at $x = 0$, $0 - (-2) = 2$, and at $x = 2$, $4 - 6 = -2$. The data do lie on a curve.\n\n> **Watch out.** A residual plot never shows the slope of the line, which has already been removed. Read only its shape: an even scatter, a curve or a fan.",
+      "残差图显示拟合直线遗漏的东西。残差均匀地散布在零附近，支持线性模型。弯曲的带状说明关系不是线性的，呈扇形散开说明分散程度随 $x$ 变化。所以即使直线本身看起来合理，图的形状也能检验模型。\n\n例如，$x = 0, 1, 2, 3, 4$ 处的残差 $2, -1, -2, -1, 2$ 两端高、中间低，构成弯曲的带状，所以关系不是线性的。\n\n检验：这些正是 $y = x^2$ 上的点相对直线 $\\hat{y} = 4x - 2$ 的残差；$x = 0$ 时 $0 - (-2) = 2$，$x = 2$ 时 $4 - 6 = -2$。这些数据确实在一条曲线上。\n\n> **注意。** 残差图从不显示直线的斜率，斜率已经被减掉了。只看它的形状：均匀散布、弯曲还是扇形。",
     ],
     (rng) => {
       const kind = rng.pick(["random", "curve", "fan"] as const);
       const flip = rng.sign();
       const noise = () => rng.int(-10, 10) / 10;
       const marks: PlaneMark[] = [{ kind: "segment", a: [0, 0], b: [10, 0], dashed: true }];
+      const pts: [number, number][] = [];
       for (let i = 0; i < 16; i++) {
         const x = 0.4 + (i * 9.2) / 15;
         const y =
@@ -593,7 +644,9 @@ const residualPattern = {
             : kind === "curve"
               ? flip * (0.17 * (x - 5) ** 2 - 1.6) + 0.5 * noise()
               : (x / 2.5) * rng.sign() * (0.5 + 0.5 * Math.abs(noise()));
-        marks.push({ kind: "point", at: [Math.round(x * 100) / 100, Math.round(y * 100) / 100], accent: true });
+        const at: [number, number] = [Math.round(x * 100) / 100, Math.round(y * 100) / 100];
+        pts.push(at);
+        marks.push({ kind: "point", at, accent: true });
       }
       const names: Record<string, Pair> = {
         random: ["The linear model looks suitable", "线性模型看起来合适"],
@@ -607,28 +660,80 @@ const residualPattern = {
           : kind === "curve"
             ? ["The residuals form a curved band instead of an even scatter", "残差构成弯曲的带状，而不是均匀的散布"]
             : ["The band of residuals gets wider as $x$ grows", "残差的带随 $x$ 增大而变宽"];
-      return choose(
-        rng,
+      const ys = pts.map(([, y]) => y);
+      const widest = (from: number, to: number) => Math.max(...ys.slice(from, to).map(Math.abs));
+      const tex = (v: number) => (v < 0 ? `-${-v}` : `${v}`);
+      const left = widest(0, 4);
+      const right = widest(12, 16);
+      const pos = ys.filter((y) => y > 0).length;
+      const neg = ys.filter((y) => y < 0).length;
+      const check: Pair =
+        kind === "curve"
+          ? [
+              `The first and last residuals are $${tex(ys[0]!)}$ and $${tex(ys[15]!)}$, while one in the middle is $${tex(ys[8]!)}$: the ends lie on one side of zero and the middle on the other, which an even scatter would not do.`,
+              `第一个和最后一个残差为 $${tex(ys[0]!)}$ 和 $${tex(ys[15]!)}$，而中间的一个为 $${tex(ys[8]!)}$：两端在零的一侧，中间在另一侧，均匀散布不会这样。`,
+            ]
+          : kind === "fan"
+            ? [
+                `The four residuals on the left stay within $${left}$ of zero, while those on the right reach $${right}$ away: the spread grows with $x$.`,
+                `左边的四个残差与零相差不超过 $${left}$，右边的则相差达到 $${right}$：分散程度随 $x$ 增大。`,
+              ]
+            : [
+                `Of the 16 residuals, ${pos} lie above zero and ${neg} below, mixed along the whole range of $x$, with no curve or widening.`,
+                `16 个残差中，${pos} 个在零的上方，${neg} 个在下方，在 $x$ 的整个范围内混在一起，既没有弯曲也没有变宽。`,
+              ];
+      const conclusion = names[kind] as Pair;
+      const reasons: Reason[] = [
         [
-          "The plot shows the residuals of a fitted line against $x$. What does it suggest?",
-          "图中是拟合直线的残差对 $x$ 的图。它说明了什么？",
+          names.random![0],
+          `The residuals are not an even scatter: ${kind === "curve" ? "they form a curved band" : "their band widens as $x$ grows"}, so the line misses something.`,
+          `残差不是均匀散布的：${kind === "curve" ? "它们构成弯曲的带状" : "它们的带随 $x$ 增大而变宽"}，所以直线遗漏了某些东西。`,
         ],
-        names[kind] as Pair,
-        Object.keys(names)
-          .filter((n) => n !== kind)
-          .map((n) => names[n] as Pair),
         [
-          `${why[0]}, so ${(names[kind] as Pair)[0].charAt(0).toLowerCase()}${(names[kind] as Pair)[0].slice(1)}.`,
-          `${why[1]}，所以${(names[kind] as Pair)[1]}。`,
+          names.curve![0],
+          kind === "random"
+            ? "A curved band would show this, but the residuals scatter evenly with no curve."
+            : "A curved band would show this, but the band of residuals is straight and only widens.",
+          kind === "random" ? "弯曲的带状才说明这一点，而残差均匀散布，没有弯曲。" : "弯曲的带状才说明这一点，而残差的带是直的，只是变宽。",
         ],
-        drawn(
-          { xMin: -1, xMax: 11, yMin: -5, yMax: 5, xName: "x" },
-          marks,
-          t(
-            `A plot of 16 residuals against x, with a dashed line at zero. ${{ random: "The points scatter on both sides of the line", curve: flip > 0 ? "The points are high at both ends and low in the middle" : "The points are low at both ends and high in the middle", fan: "The points lie close to the line on the left and far from it on the right" }[kind]}.`,
-            `16 个残差对 x 的图，零处有虚线。${{ random: "这些点散布在虚线两侧", curve: flip > 0 ? "这些点两端高、中间低" : "这些点两端低、中间高", fan: "这些点在左边靠近虚线，在右边远离虚线" }[kind]}。`,
+        [
+          names.fan![0],
+          kind === "random"
+            ? "A fan would show this, but the spread is about the same everywhere."
+            : "A fan would show this, but the band keeps about the same width as it curves.",
+          kind === "random" ? "扇形才说明这一点，而各处的分散程度差不多。" : "扇形才说明这一点，而这条带弯曲时宽度基本不变。",
+        ],
+        [
+          names.big![0],
+          "A residual plot does not show the slope of the line: the line has already been subtracted from the data.",
+          "残差图不显示直线的斜率：直线已经从数据中减掉了。",
+        ],
+      ];
+      return reasoned(
+        choose(
+          rng,
+          [
+            "The plot shows the residuals of a fitted line against $x$. What does it suggest?",
+            "图中是拟合直线的残差对 $x$ 的图。它说明了什么？",
+          ],
+          conclusion,
+          Object.keys(names)
+            .filter((n) => n !== kind)
+            .map((n) => names[n] as Pair),
+          [
+            `**Step 1: Describe the residuals.** ${why[0]}.\n\n**Step 2: Read what that means.** So ${conclusion[0].charAt(0).toLowerCase()}${conclusion[0].slice(1)}.\n\n**Check.** ${check[0]}`,
+            `**第一步：描述残差。**${why[1]}。\n\n**第二步：说明其含义。**所以${conclusion[1]}。\n\n**检验。**${check[1]}`,
+          ],
+          drawn(
+            { xMin: -1, xMax: 11, yMin: -5, yMax: 5, xName: "x" },
+            marks,
+            t(
+              `A plot of 16 residuals against x, with a dashed line at zero. ${{ random: "The points scatter on both sides of the line", curve: flip > 0 ? "The points are high at both ends and low in the middle" : "The points are low at both ends and high in the middle", fan: "The points lie close to the line on the left and far from it on the right" }[kind]}.`,
+              `16 个残差对 x 的图，零处有虚线。${{ random: "这些点散布在虚线两侧", curve: flip > 0 ? "这些点两端高、中间低" : "这些点两端低、中间高", fan: "这些点在左边靠近虚线，在右边远离虚线" }[kind]}。`,
+            ),
           ),
         ),
+        reasons,
       );
     },
   ),

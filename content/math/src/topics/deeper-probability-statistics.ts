@@ -6,7 +6,7 @@ import { joinText, t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
 import { probabilityDrawings1 } from "../explanation-drawings-probability-and-statistics-1.ts";
 
-import { numberProblem, steps } from "../problems.ts";
+import { numberProblem, steps, why } from "../problems.ts";
 import { stepLabel } from "../solution-kit.ts";
 
 /** nonzero picks a nonzero integer from -r to r. */
@@ -572,8 +572,8 @@ const slopeFromCorrelation: KnowledgePointDef = {
   id: "the-regression-slope-from-the-correlation",
   title: t("The regression slope from the correlation", "由相关系数求回归斜率"),
   explanation: t(
-    "The slope of the regression line of $y$ on $x$ is $b = r\\frac{s_y}{s_x}$. It has the sign of the correlation, and the ratio converts one standard deviation of $x$ into units of $y$. Regressing $x$ on $y$ uses the inverse ratio and gives a different line.",
-    "$y$ 对 $x$ 的回归直线斜率是 $b = r\\frac{s_y}{s_x}$。它与相关系数同号，比值把 $x$ 的一个标准差换算成 $y$ 的单位。$x$ 对 $y$ 的回归用的是相反的比值，得到另一条直线。",
+    "The slope of the regression line of $y$ on $x$ is $b = r\\frac{s_y}{s_x}$. It has the sign of the correlation, and the ratio converts one standard deviation of $x$ into units of $y$. Regressing $x$ on $y$ uses the inverse ratio and gives a different line.\n\nIf $r = 0.6$, $s_x = 4$ and $s_y = 10$, then $b = 0.6 \\cdot \\frac{10}{4} = 1.5$.\n\nCheck: a change of one standard deviation in $x$, $4$, predicts a change of $1.5 \\cdot 4 = 6$ in $y$, which is $r = 0.6$ of one standard deviation of $y$, $10$.\n\n> **Watch out.** The standard deviation of $y$ goes on top: $r\\frac{s_x}{s_y} = 0.24$ is the wrong ratio, and $r$ alone is the slope only when the two standard deviations are equal.",
+    "$y$ 对 $x$ 的回归直线斜率是 $b = r\\frac{s_y}{s_x}$。它与相关系数同号，比值把 $x$ 的一个标准差换算成 $y$ 的单位。$x$ 对 $y$ 的回归用的是相反的比值，得到另一条直线。\n\n若 $r = 0.6$，$s_x = 4$，$s_y = 10$，则 $b = 0.6 \\cdot \\frac{10}{4} = 1.5$。\n\n检验：$x$ 变化一个标准差 $4$，预测 $y$ 变化 $1.5 \\cdot 4 = 6$，正是 $y$ 的一个标准差 $10$ 的 $r = 0.6$ 倍。\n\n> **注意。** $y$ 的标准差在分子上：$r\\frac{s_x}{s_y} = 0.24$ 是错误的比值；只有两个标准差相等时，斜率才等于 $r$。",
   ),
   generate(rng) {
     const r = nonzero(rng, 9);
@@ -588,10 +588,26 @@ const slopeFromCorrelation: KnowledgePointDef = {
         `某数据集的相关系数 $r = ${rText}$，$x$ 的标准差是 $${sx}$，$y$ 的标准差是 $${sy}$。求 $y$ 对 $x$ 的回归直线的斜率。`,
       ),
       answer,
-      wrong: [Q.of(r * sx, 10 * sy), Q.of(r, 10), Q.of(sy, sx)],
+      mistakes: [
+        why(
+          Q.of(r * sx, 10 * sy),
+          "This uses the inverse ratio $\\frac{s_x}{s_y}$, which belongs to the regression of $x$ on $y$.",
+          "这用了相反的比值 $\\frac{s_x}{s_y}$，那是 $x$ 对 $y$ 的回归。",
+        ),
+        why(
+          Q.of(r, 10),
+          "This is the correlation alone; multiply it by $\\frac{s_y}{s_x}$.",
+          "这只是相关系数；还要乘以 $\\frac{s_y}{s_x}$。",
+        ),
+        why(
+          Q.of(sy, sx),
+          "This is the ratio $\\frac{s_y}{s_x}$ alone; multiply it by $r$.",
+          "这只是比值 $\\frac{s_y}{s_x}$；还要乘以 $r$。",
+        ),
+      ],
       solution: t(
-        `$b = r\\frac{s_y}{s_x} = ${rText} \\cdot \\frac{${sy}}{${sx}} = ${answer.toLatex()}$.`,
-        `$b = r\\frac{s_y}{s_x} = ${rText} \\cdot \\frac{${sy}}{${sx}} = ${answer.toLatex()}$。`,
+        `**Step 1: Form the ratio of the standard deviations, $y$ over $x$.** $\\frac{s_y}{s_x} = \\frac{${sy}}{${sx}}$.\n\n**Step 2: Multiply by the correlation.**${steps(`b = r\\frac{s_y}{s_x} = ${rText} \\cdot \\frac{${sy}}{${sx}} = ${answer.toLatex()}`)}**Check.** Solving back for the correlation:${steps(`b\\frac{s_x}{s_y} = ${answer.toLatex()} \\cdot \\frac{${sx}}{${sy}} = ${Q.of(r, 10).toLatex()} = ${rText}`)}The slope has the sign of $r$, as it should.`,
+        `**第一步：求标准差之比，$y$ 比 $x$。**$\\frac{s_y}{s_x} = \\frac{${sy}}{${sx}}$。\n\n**第二步：乘以相关系数。**${steps(`b = r\\frac{s_y}{s_x} = ${rText} \\cdot \\frac{${sy}}{${sx}} = ${answer.toLatex()}`)}**检验。**反过来求相关系数：${steps(`b\\frac{s_x}{s_y} = ${answer.toLatex()} \\cdot \\frac{${sx}}{${sy}} = ${Q.of(r, 10).toLatex()} = ${rText}`)}斜率与 $r$ 同号，符合要求。`,
       ),
     });
   },
@@ -601,8 +617,8 @@ const residualSumFromCorrelation: KnowledgePointDef = {
   id: "the-sum-of-squared-residuals-from-the-correlation",
   title: t("The sum of squared residuals from the correlation", "由相关系数求残差平方和"),
   explanation: t(
-    "The share of the total variation in $y$ that a regression line explains is $r^2$. The rest is left in the residuals, so $\\sum(y_i - \\hat{y}_i)^2 = (1 - r^2)\\sum(y_i - \\bar{y})^2$. The sign of $r$ makes no difference to the size of the residuals.",
-    "回归直线解释了 $y$ 总变异中 $r^2$ 的比例，其余部分留在残差中，所以 $\\sum(y_i - \\hat{y}_i)^2 = (1 - r^2)\\sum(y_i - \\bar{y})^2$。$r$ 的符号不影响残差的大小。",
+    "The share of the total variation in $y$ that a regression line explains is $r^2$. The rest is left in the residuals, so $\\sum(y_i - \\hat{y}_i)^2 = (1 - r^2)\\sum(y_i - \\bar{y})^2$. The sign of $r$ makes no difference to the size of the residuals.\n\nIf $r = -0.8$ and $\\sum(y_i - \\bar{y})^2 = 50$, then $r^2 = 0.64$ and the squared residuals add up to $0.36 \\cdot 50 = 18$.\n\nCheck: the explained part is $0.64 \\cdot 50 = 32$, and $32 + 18 = 50$.\n\n> **Watch out.** Square $r$ first: $1 - 0.8 = 0.2$ is not the unexplained share. And $r^2$ is the share explained, not the share left in the residuals.",
+    "回归直线解释了 $y$ 总变异中 $r^2$ 的比例，其余部分留在残差中，所以 $\\sum(y_i - \\hat{y}_i)^2 = (1 - r^2)\\sum(y_i - \\bar{y})^2$。$r$ 的符号不影响残差的大小。\n\n若 $r = -0.8$，$\\sum(y_i - \\bar{y})^2 = 50$，则 $r^2 = 0.64$，残差平方和为 $0.36 \\cdot 50 = 18$。\n\n检验：被解释的部分为 $0.64 \\cdot 50 = 32$，而 $32 + 18 = 50$。\n\n> **注意。** 要先把 $r$ 平方：$1 - 0.8 = 0.2$ 不是未被解释的比例。另外 $r^2$ 是被解释的比例，不是留在残差中的比例。",
   ),
   generate(rng) {
     const r = nonzero(rng, 9);
@@ -615,10 +631,26 @@ const residualSumFromCorrelation: KnowledgePointDef = {
         `某回归的相关系数 $r = ${rText}$，$\\sum(y_i - \\bar{y})^2 = ${total}$。求残差平方和。`,
       ),
       answer,
-      wrong: [Q.of(total * r * r, 100), Q.of(total * (10 - Math.abs(r)), 10), Q.of(total * Math.abs(r), 10)],
+      mistakes: [
+        why(
+          Q.of(total * r * r, 100),
+          "This is the explained part, $r^2$ of the total; the residuals hold the rest, $1 - r^2$.",
+          "这是被解释的部分，即总量的 $r^2$；残差中留下的是其余的 $1 - r^2$。",
+        ),
+        why(
+          Q.of(total * (10 - Math.abs(r)), 10),
+          "This uses $1 - |r|$; the explained share is $r^2$, so the rest is $1 - r^2$.",
+          "这用了 $1 - |r|$；被解释的比例是 $r^2$，所以其余是 $1 - r^2$。",
+        ),
+        why(
+          Q.of(total * Math.abs(r), 10),
+          "This multiplies the total by $|r|$; the residual share is $1 - r^2$.",
+          "这用总量乘以 $|r|$；残差所占的比例是 $1 - r^2$。",
+        ),
+      ],
       solution: t(
-        `Here $r^2 = ${Q.of(r * r, 100).toLatex()}$ of the variation is explained. The rest is $${Q.of(100 - r * r, 100).toLatex()} \\cdot ${total} = ${answer.toLatex()}$.`,
-        `这里 $r^2 = ${Q.of(r * r, 100).toLatex()}$ 的变异被解释了。其余部分是 $${Q.of(100 - r * r, 100).toLatex()} \\cdot ${total} = ${answer.toLatex()}$。`,
+        `**Step 1: Square the correlation.** $r^2 = ${Q.of(r * r, 100).toLatex()}$ of the variation is explained, so $1 - r^2 = ${Q.of(100 - r * r, 100).toLatex()}$ is left in the residuals.\n\n**Step 2: Take that share of the total.**${steps(`\\sum(y_i - \\hat{y}_i)^2 = ${Q.of(100 - r * r, 100).toLatex()} \\cdot ${total} = ${answer.toLatex()}`)}**Check.** The explained part is $${Q.of(r * r, 100).toLatex()} \\cdot ${total} = ${Q.of(total * r * r, 100).toLatex()}$, and the two parts add up to the total: $${Q.of(total * r * r, 100).toLatex()} + ${answer.toLatex()} = ${total}$.`,
+        `**第一步：把相关系数平方。**$r^2 = ${Q.of(r * r, 100).toLatex()}$ 的变异被解释了，所以 $1 - r^2 = ${Q.of(100 - r * r, 100).toLatex()}$ 留在残差中。\n\n**第二步：取总量的这一比例。**${steps(`\\sum(y_i - \\hat{y}_i)^2 = ${Q.of(100 - r * r, 100).toLatex()} \\cdot ${total} = ${answer.toLatex()}`)}**检验。**被解释的部分为 $${Q.of(r * r, 100).toLatex()} \\cdot ${total} = ${Q.of(total * r * r, 100).toLatex()}$，两部分相加等于总量：$${Q.of(total * r * r, 100).toLatex()} + ${answer.toLatex()} = ${total}$。`,
       ),
     });
   },
