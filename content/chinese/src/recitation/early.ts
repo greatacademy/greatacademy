@@ -1,6 +1,7 @@
-// The poems recited in grades 1 and 2, ten a grade: short classical poems children learn first, chosen from those the
-// compulsory standard recommends. The texts are classical; what each line means is written for this subject. The format
-// is that of parsePoems.
+// The poems recited in grades 1 and 2: short classical poems children learn first, chosen from those the compulsory
+// standard recommends, followed by those the national textbook of the grade teaches for recitation
+// (docs/chinese-curriculum.md §18.8). The texts are classical; what each line means is written for this subject. The
+// format is that of parsePoems.
 
 import { parsePoems } from "./poems.ts";
 
@@ -68,6 +69,24 @@ recite-xiao-chi | 小池 | The Little Pond | 杨万里 | Yang Wanli | 宋 | Song
 树阴照水爱晴柔。 | 树荫倒映在水面，喜爱晴天里柔和的风光 | 晴>睛 阴>阳
 小荷才露尖尖角， | 小荷叶刚刚露出尖尖的角 | 露>路 尖>尘
 早有蜻蜓立上头。 | 早就有一只蜻蜓立在它的上头 | 蜻>请 立>位
+
+recite-zeng-wang-lun | 赠汪伦 | For Wang Lun | 李白 | Li Bai | 唐 | Tang
+李白乘舟将欲行， | 我李白坐上小船，正要出发 | 乘>剩 欲>浴
+忽闻岸上踏歌声。 | 忽然听到岸上传来边走边打着节拍唱歌的声音 | 踏>蹈 闻>问
+桃花潭水深千尺， | 桃花潭的水即使有千尺那么深 | 潭>谭 深>探
+不及汪伦送我情。 | 也比不上汪伦送我的情谊深 | 及>级 汪>注
+
+recite-hua-yuan-kan-shan | 画（远看山有色） | A Painting | 王维 | Wang Wei | 唐 | Tang
+远看山有色， | 远远看去，山有鲜明的颜色 | 远>运 色>包
+近听水无声。 | 走近了听，画里的流水却没有声音 | 近>进 无>天
+春去花还在， | 春天过去了，花还开着 | 还>环 在>再
+人来鸟不惊。 | 人走近了，鸟也不受惊吓 | 惊>京 鸟>乌
+
+recite-hua-ji | 画鸡 | A Painted Rooster | 唐寅 | Tang Yin | 明 | Ming
+头上红冠不用裁， | 公鸡头上的红冠不用裁剪，天生就有 | 冠>寇 裁>栽
+满身雪白走将来。 | 披着一身雪白的羽毛走过来 | 雪>雷 将>奖
+平生不敢轻言语， | 它平时不敢随便啼叫 | 敢>取 轻>经
+一叫千门万户开。 | 它一叫，千家万户都打开了门 | 户>护 叫>叶
 `);
 
 /** gradeTwoPoems are the poems recited in grade 2. */
@@ -131,4 +150,31 @@ recite-deng-guan-que-lou | 登鹳雀楼 | Climbing Stork Tower | 王之涣 | Wan
 黄河入海流。 | 黄河向着大海奔流 | 入>人 流>留
 欲穷千里目， | 要想看到千里之外的风景 | 欲>浴 穷>穹
 更上一层楼。 | 就要再登上一层楼 | 层>屋 更>便
+
+recite-xiao-er-chui-diao | 小儿垂钓 | A Child Fishing | 胡令能 | Hu Lingneng | 唐 | Tang
+蓬头稚子学垂纶， | 一个头发乱蓬蓬的小孩在学钓鱼 | 蓬>篷 纶>轮
+侧坐莓苔草映身。 | 他侧着身子坐在青苔上，野草遮掩着他的身影 | 莓>霉 苔>台
+路人借问遥招手， | 有过路的人向他问路，他远远地摆摆手 | 借>惜 遥>摇
+怕得鱼惊不应人。 | 怕惊动了鱼，不敢回答别人 | 惊>京 怕>拍
+
+recite-chi-le-ge | 敕勒歌 | Song of the Chile | 北朝民歌 | Folk Song of the Northern Dynasties | 北朝 | Northern Dynasties
+敕勒川， | 辽阔的敕勒平原 | 敕>赦 勒>勤
+阴山下。 | 就在阴山脚下 | 阴>荫 下>夏
+天似穹庐， | 天空像一顶巨大的毡帐 | 似>以 穹>穷
+笼盖四野。 | 笼罩着四面的原野 | 笼>拢 野>墅
+天苍苍， | 天空蓝蓝的，无边无际 | 苍>仓 天>夭
+野茫茫， | 原野辽阔，望不到边 | 茫>芒 野>墅
+风吹草低见牛羊。 | 风吹过，草低下去，露出成群的牛羊 | 见>现 低>底
+
+recite-mei-hua-wang-an-shi | 梅花（墙角数枝梅） | Plum Blossom | 王安石 | Wang Anshi | 宋 | Song
+墙角数枝梅， | 墙角有几枝梅花 | 墙>强 枝>支
+凌寒独自开。 | 冒着严寒独自开放 | 凌>菱 寒>赛
+遥知不是雪， | 远远地就知道那不是雪 | 遥>摇 雪>雷
+为有暗香来。 | 因为有淡淡的香气飘过来 | 暗>黯 香>乡
+
+recite-zhou-ye-shu-suo-jian | 舟夜书所见 | Written on a Boat at Night | 查慎行 | Zha Shenxing | 清 | Qing
+月黑见渔灯， | 没有月亮的黑夜里，只看见渔船上的一盏灯 | 渔>鱼 见>现
+孤光一点萤。 | 孤零零的灯光像一点萤火 | 萤>荧 孤>狐
+微微风簇浪， | 微风吹来，水面泛起层层波浪 | 簇>族 浪>狼
+散作满河星。 | 灯光被波浪打散，化作满河的星星 | 散>撒 河>何
 `);

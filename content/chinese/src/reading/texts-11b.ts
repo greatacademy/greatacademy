@@ -101,10 +101,10 @@ export const REVOLUTIONARY_11 = `
 ?1 夏明翰说“砍头不要紧，只要主义真”，他看重的是什么？ | What matters to Xia Minghan?
 ≈ 信仰的真理比自己的生命更重要 | 砍头不要紧 | 只要主义真
 - 他不知道砍头有多可怕 ~misread
-- 他看重的是自己的名声 ~unsaid
+- 他看重的是自己的名声 ~unsaid @只要主义真
 ?1 “杀了夏明翰，还有后来人”表达了怎样的信念？ | What faith is in the last two lines?
 ≈ 革命事业后继有人，敌人杀不尽 | 杀了夏明翰 | 还有后来人
-- 他希望有人为他报仇 ~misread
+- 他希望有人为他报仇 ~misread @还有后来人
 - 他在说自己的子女还活着 ~face
 ?1 吉鸿昌说“恨不抗日死，留作今日羞”，他“恨”的是什么？ | What does Ji Hongchang regret?
 ≈ 没能死在抗日的战场上，却死在自己人的屠刀下 | 恨不抗日死 | 留作今日羞
@@ -402,7 +402,7 @@ export const FOREIGN_11 = `
 ?1 鲍勃在门口等的人是谁？ | Who is Bob waiting for?
 ≈ 二十年前的朋友吉米，也就是那个巡警 | 我在等一个朋友 | 巡警吉米
 - 那个高个子便衣 ~who
-- 芝加哥的警察 ~misread
+- 芝加哥的警察 ~misread @是巡警吉米让我交给你的
 ?1 吉米是怎样认出鲍勃的？ | How does Jimmy know Bob?
 ≈ 鲍勃划火柴点烟的时候，火光照出了他的脸 | 你划火柴点烟的时候，我认出了你的脸 | 火光照出一张苍白的脸
 - 鲍勃自己告诉了他名字 ~unsaid
@@ -596,7 +596,7 @@ export const FOREIGN_11 = `
 - 父母不应该爱孩子 ~opposite @你可以把爱给他们
 ?1 诗人认为父母能给孩子什么，不能给什么？ | What can parents give, and what not?
 ≈ 能给爱、给身体一个家，不能给他们自己的想法、给灵魂一个家 | 你可以把爱给他们，却不能把你的想法给他们 | 你可以给他们的身体一个家，却不能给他们的灵魂一个家
-- 能给想法，不能给爱 ~reversed
+- 能给想法，不能给爱 ~opposite @你可以把爱给他们
 - 什么都不能给 ~opposite
 ?1 “他们的灵魂住在明天”是什么意思？ | What does it mean that their souls live in tomorrow?
 ≈ 孩子属于未来，会有父母想象不到的生活 | 因为他们的灵魂住在明天 | 那是你连做梦也到不了的地方

@@ -1,5 +1,5 @@
-// The poems recited in senior secondary school, forty in all: classical poems, lyrics and songs chosen from those the
-// senior standard recommends, twenty of the required courses and twenty of the selective required courses. The texts
+// The poems recited in senior secondary school: the classical poems, lyrics and songs the senior standard recommends,
+// and a few more its courses teach (docs/chinese-curriculum.md §18.8). The texts
 // are classical; what each line means is written for this subject. The format is that of parsePoems.
 
 import { parsePoems } from "./poems.ts";
@@ -365,6 +365,59 @@ recite-qing-yu-an-yuan-xi | 青玉案·元夕 | Green Jade Table: The Lantern Fe
 蓦然回首， | 突然一回头 | 蓦>暮 首>手
 那人却在， | 那个人原来就在 | 却>确 那>哪
 灯火阑珊处。 | 灯火零落的地方 | 阑>栏 珊>删
+
+recite-pu-sa-man-xiao-shan | 菩萨蛮（小山重叠金明灭） | Strangers' Melody: Hills on the Screen | 温庭筠 | Wen Tingyun | 唐 | Tang
+小山重叠金明灭， | 屏风上重叠的小山在晨光中忽明忽暗 | 叠>迭 灭>火
+鬓云欲度香腮雪。 | 像云一样的鬓发快要掩过雪白的面颊 | 鬓>宾 腮>鳃
+懒起画蛾眉， | 懒洋洋地起来描画眉毛 | 懒>赖 蛾>娥
+弄妆梳洗迟。 | 慢吞吞地梳妆打扮 | 妆>装 梳>疏
+照花前后镜， | 用前后两面镜子照看头上的花 | 镜>境 照>昭
+花面交相映。 | 花和人面交相辉映 | 映>英 交>郊
+新帖绣罗襦， | 新做的丝绸短袄上贴着绣好的图案 | 襦>儒 绣>锈
+双双金鹧鸪。 | 是一对对金色的鹧鸪 | 鹧>蔗 鸪>姑
+
+recite-pu-sa-man-zao-kou | 菩萨蛮·书江西造口壁 | Strangers' Melody: Written on the Wall at Zaokou | 辛弃疾 | Xin Qiji | 宋 | Song
+郁孤台下清江水， | 郁孤台下的赣江水 | 郁>都 孤>狐
+中间多少行人泪。 | 其中有多少逃难的人的眼泪 | 泪>泊 间>问
+西北望长安， | 我向西北遥望故都 | 望>忘 安>按
+可怜无数山。 | 可惜被无数青山挡住了 | 怜>伶 数>树
+青山遮不住， | 青山却挡不住江水 | 遮>庶 住>往
+毕竟东流去。 | 江水毕竟向东流去 | 毕>华 竟>竞
+江晚正愁余， | 江上傍晚，我正满怀愁绪 | 愁>秋 余>徐
+山深闻鹧鸪。 | 深山里传来鹧鸪的叫声 | 鹧>蔗 闻>问
+
+recite-he-xin-lang-guo-mai | 贺新郎（国脉微如缕） | Congratulating the Bridegroom: The Nation's Pulse Thin as a Thread | 刘克庄 | Liu Kezhuang | 宋 | Song
+国脉微如缕。 | 国家的命脉微弱得像一根细线 | 脉>派 缕>楼
+问长缨、何时入手，缚将戎主？ | 请问什么时候才能拿到长绳，把敌人的首领捆来？ | 缨>婴 缚>傅
+未必人间无好汉， | 人间不一定没有好汉 | 必>心 汉>汗
+谁与宽些尺度？ | 可是谁肯放宽用人的尺度呢？ | 宽>窗 度>渡
+试看取、当年韩五。 | 你看当年的韩世忠 | 韩>朝 取>娶
+岂有谷城公付授， | 他哪里有黄石公传授兵书 | 岂>启 授>受
+也不干、曾遇骊山母。 | 也和遇到骊山老母这样的神仙没有关系 | 骊>丽 遇>偶
+谈笑起， | 谈笑之间起兵 | 谈>淡 起>赴
+两河路。 | 就收复了两河的失地 | 两>俩 河>何
+少时棋柝曾联句。 | 年少时我们曾在军中一起作诗联句 | 柝>析 联>连
+叹而今、登楼揽镜，事机频误。 | 可叹如今登楼远望，对镜自照，一次次错过了时机 | 揽>览 频>颇
+闻说北风吹面急， | 听说北方的风正吹得急 | 闻>问 急>及
+边上冲梯屡舞。 | 边境上敌人的攻城器械屡屡挥动 | 屡>缕 梯>第
+君莫道、投鞭虚语。 | 你不要以为敌人投鞭断流是一句空话 | 鞭>便 虚>虎
+自古一贤能制难， | 自古以来，一个贤能的人就能平定祸乱 | 贤>坚 制>致
+有金汤、便可无张许？ | 难道有了坚固的城池，就可以没有张巡、许远那样的守将吗？ | 汤>烫 许>浒
+快投笔， | 赶快放下笔去从军吧 | 投>没 笔>毕
+莫题柱。 | 不要只想着在桥柱上题字求取功名 | 题>提 柱>住
+
+recite-chao-tian-zi-yong-la-ba | 朝天子·咏喇叭 | Facing the Emperor: Ode to the Trumpet | 王磐 | Wang Pan | 明 | Ming
+喇叭， | 喇叭 | 喇>辣 叭>八
+唢呐， | 唢呐 | 唢>锁 呐>讷
+曲儿小腔儿大。 | 吹的曲子短小，声音却很大 | 腔>控 曲>由
+官船来往乱如麻， | 官船来来往往，乱得像一团麻 | 麻>磨 乱>舌
+全仗你抬声价。 | 全靠你来抬高官员的声势和身价 | 仗>丈 抬>台
+军听了军愁， | 兵士听了发愁 | 愁>秋 军>车
+民听了民怕， | 百姓听了害怕 | 怕>拍 民>氏
+哪里去辨甚么真共假？ | 哪里还去分辨什么真的假的？ | 辨>辩 甚>其
+眼见的吹翻了这家， | 眼看着吹得这家倾家荡产 | 翻>番 眼>跟
+吹伤了那家， | 吹得那家受了伤害 | 吹>炊 那>哪
+只吹的水尽鹅飞罢！ | 一直吹到水干了、鹅飞走了，什么都不剩为止！ | 鹅>鸦 尽>进
 `);
 
 /** seniorSelectivePoems are the poems recited in the selective required courses of senior secondary school, in order. */

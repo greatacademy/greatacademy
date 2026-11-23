@@ -8,7 +8,7 @@ import { type ChoiceItem, choiceGenerator, point, type TypedItem, typed, typedGe
 
 /** Line is a line of a poem: its characters, the mark after it, what it means and the characters it is miswritten with. */
 export interface Line {
-  /** text is the line without its closing marks and without quotation marks, as it is typed. */
+  /** text is the line without its closing marks and without quotation or title marks, as it is typed. */
   readonly text: string;
   /** mark is the punctuation after the line. */
   readonly mark: string;
@@ -61,7 +61,7 @@ export function parsePoems(data: string, kind: Kind = "poem"): readonly Poem[] {
         const [withMark, meaning, wrong] = parts as [string, string, string];
         const mark = kind === "poem" ? withMark.slice(-1) : (CLOSING.exec(withMark)?.[0] ?? "");
         if (![...mark].some((m) => MARKS.includes(m) || m === "：")) throw new Error(`poem data: no mark after ${withMark}`);
-        const text = withMark.slice(0, -mark.length).replace(/[“”‘’]/gu, "");
+        const text = withMark.slice(0, -mark.length).replace(/[“”‘’《》]/gu, "");
         const miswritten = wrong.split(" ").map((pair): [string, string] => {
           const [right, by] = pair.split(">");
           if (!right || !by || [...right].length !== 1 || [...by].length !== 1 || right === by || !text.includes(right))

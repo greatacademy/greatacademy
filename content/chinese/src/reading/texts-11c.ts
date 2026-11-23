@@ -42,7 +42,7 @@ export const TREATISES_11 = `
 ?1 文中“相关”和“因果”的区别是什么？ | How do correlation and cause differ, as the text says?
 ≈ 相关是两件事一起变化，因果是一件事引起另一件事；有因果一定相关，相关不一定有因果 | 两件事一起变化，叫做“相关” | 一件事引起另一件事，叫做“因果” | 相关的，却不一定有因果
 - 相关和因果是一回事 ~opposite @相关的，却不一定有因果
-- 有因果的不一定相关 ~reversed @有因果的，一定相关
+- 有因果的不一定相关 ~opposite @有因果的，一定相关
 ?1 冰淇淋和溺水为什么会一起变多？ | Why do ice cream and drownings rise together?
 = 因为它们有一个共同的原因：天气炎热 | 它们背后有一个共同的原因：天气炎热
 - 因为吃了冰淇淋的人容易溺水 ~opposite @显然不能
@@ -92,7 +92,7 @@ export const TREATISES_11 = `
 - 和前文没有关系 ~role
 ?2 文章总体上用了怎样的思路？ | What is the line of the text?
 ≈ 提出问题，分析原因，再说明不足和改进 | 这是为什么 | 一个重要的原因是 | 当然，汉字也有难学的一面
-- 先讲故事，再总结道理 ~misread
+- 先讲故事，再总结道理 ~misread @早已没有人使用，汉字却一直沿用到今天
 - 只是列举了很多汉字的例子 ~noexample
 
 # 墙倒屋不塌
@@ -237,7 +237,7 @@ export const TREATISES_11 = `
 ?2 文章开头写量书得到三个不同的数，有什么作用？ | Why open with the three readings?
 ≈ 用生活中常见的现象引出“任何测量都有误差”的观点 | 25.4厘米，25.3厘米，25.5厘米 | 任何测量都有误差
 - 说明那本书的长度在变化 ~misread
-- 说明尺子坏了 ~misread @都不一定
+- 说明尺子坏了 ~misread @任何测量都有误差
 ?2 第二段是怎样说明误差的？ | How does the second paragraph explain error?
 ≈ 分类说明，把误差分为系统误差和偶然误差，分别说明原因和减小的办法 | 误差有两种 | 一种是系统误差 | 另一种是偶然误差
 - 打比方，把误差比作错误 ~nolikening
@@ -255,7 +255,7 @@ export const TREATISES_11 = `
 ?1 文中所说的“借景”是什么？ | What is borrowed scenery?
 = 把园子外面的景物，有意识地收进园里人的视线 | 所谓借景，是把园子外面的景物，有意识地收进园里人的视线
 - 向别人借来景物放进园子里 ~face
-- 把园子里的景物搬到外面 ~reversed
+- 把园子里的景物搬到外面 ~misread @景物并没有被搬进园子
 ?1 造园家用哪些办法来借景？ | How is scenery borrowed?
 ≈ 在正对园外景物的地方开窗、留空地，或者把墙砌矮 | 就在园里正对着它的地方开一扇窗、留一片空地，或者把墙砌得矮一些
 % 文中举了园外有一座山的情况，说了三种做法：开一扇窗，留一片空地，把墙砌矮。这几种做法的共同点，都是不让东西挡住视线，好让远处的山“好像成了园子的一部分”。 | For a hill outside, the text gives three ways: a window, an open space, a lower wall. All clear the line of sight, so the far hill seems part of the garden.

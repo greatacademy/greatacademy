@@ -278,11 +278,59 @@ export function bodyFor(body: string, q: Asked): string {
 /** lineOf is a sentence quoted without the comma that ends a line of verse in the middle of its sentence. */
 const lineOf = (sentence: string): string => sentence.replace(/[，、；：]+$/u, "");
 
-/** contextOf finds, in a piece, the sentence that holds the clue (or the clue itself, if it spans sentences) and the last sentence of its text. */
+/** contextOf finds, in a piece, the sentence of its text that holds the clue, made whole as a quotation (or else its title, or the clue itself), and the last sentence of its text. */
 function contextOf(piece: Piece, clue: string): Context {
-  const all = sentencesOf(`${piece.title}\n${textOf(piece.body)}`);
   const body = sentencesOf(textOf(piece.body));
-  return { sentence: lineOf(all.find((x) => x.includes(clue)) ?? clue), ending: lineOf(body.at(-1) ?? piece.body) };
+  const inBody = body.findIndex((x) => x.includes(clue));
+  const sentence = inBody >= 0 ? wholeQuote(body, inBody, clue) : piece.title.includes(clue) ? piece.title : clue;
+  return { sentence: lineOf(sentence), ending: lineOf(body.at(-1) ?? piece.body) };
+}
+
+/** depth is how many quotations, inner ones included, are open at the end of a text, less those it closes unopened. */
+const depth = (text: string): number => text.split(/[“‘]/u).length - text.split(/[”’]/u).length;
+
+/** unopened is the place just after the last closing quotation mark of a text that closes a quotation it never opened, or 0. */
+function unopened(text: string): number {
+  let open = 0;
+  let after = 0;
+  [...text].forEach((c, i) => {
+    if (c === "“" || c === "‘") open++;
+    else if (c === "”" || c === "’") {
+      if (open > 0) open--;
+      else after = i + 1;
+    }
+  });
+  return after;
+}
+
+/**
+ * wholeQuote is the sentence at the given place that holds the clue, made whole as a quotation: a sentence that begins
+ * inside a speech is cut where the speech closes, keeping the side the clue lies on, and runs back to the speech's start
+ * when the clue spans both; a sentence that ends inside a speech is cut where the speech opens, keeping the side the clue lies on, and
+ * runs on to the speech's close when the clue spans both.
+ */
+function wholeQuote(sentences: readonly string[], at: number, clue: string): string {
+  let text = sentences[at] ?? "";
+  let start = at;
+  const cut = unopened(text);
+  if (cut > 0 && text.slice(cut).includes(clue)) text = text.slice(cut).trim();
+  else if (cut > 0 && text.slice(0, cut - 1).includes(clue) && unopened(text.slice(0, cut - 1)) === 0) text = text.slice(0, cut - 1);
+  else while (unopened(text) > 0 && start > 0) text = (sentences[--start] ?? "") + text;
+  const open = unclosed(text);
+  if (open > 0 && text.slice(open).includes(clue)) return text.slice(open).trim();
+  if (open > 0 && text.slice(0, open - 1).includes(clue)) return text.slice(0, open - 1).trim();
+  for (let i = at + 1; depth(text) > 0 && i < sentences.length; i++) text += sentences[i];
+  return text;
+}
+
+/** unclosed is the place just after the innermost opening quotation mark of a text that it leaves open, or 0. */
+function unclosed(text: string): number {
+  const opens: number[] = [];
+  [...text].forEach((c, i) => {
+    if (c === "“" || c === "‘") opens.push(i + 1);
+    else if ((c === "”" || c === "’") && opens.length > 0) opens.pop();
+  });
+  return opens.at(-1) ?? 0;
 }
 
 /** KNOWN is the share of a topic's characters that must have been taught before it. */
@@ -300,7 +348,7 @@ export function quoted(text: string, locale: "en" | "zh-CN"): string {
   const count = (mark: string): number => text.split(mark).length - 1;
   const whole = count("”") > count("“") && text.endsWith("”") ? text.slice(0, -1) : text;
   const inner = whole.replaceAll("“", "‘").replaceAll("”", "’");
-  return /[。！？.!?][”’」]?$/u.test(whole) ? `“${inner}”` : `“${inner}”${locale === "en" ? "." : "。"}`;
+  return /[。！？.!?…][”’」]?$/u.test(whole) ? `“${inner}”` : `“${inner}”${locale === "en" ? "." : "。"}`;
 }
 
 /** readableAfter is the first recognition batch of the grade or earlier after which KNOWN of the characters of the texts are taught. */
