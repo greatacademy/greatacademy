@@ -1598,31 +1598,68 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
         "reflecting-twice",
         ["Reflecting twice", "两次反射"],
         [
-          "Reflecting in the same line twice returns every point, so the matrix of a reflection squared is the identity. Reflecting in both axes in turn is the same as turning by a half turn.",
-          "在同一条直线上反射两次，每个点都回到原处，所以反射矩阵的平方是单位矩阵。依次在两条轴上反射，等于旋转半圈。",
+          "Reflecting in the same line twice returns every point, so the matrix of a reflection squared is the identity. Reflecting in both axes in turn is the same as turning by a half turn.\n\n> **Watch out.** Two reflections in the same line undo each other, but reflections in two different axes do not. Together they change the sign of both coordinates.",
+          "在同一条直线上反射两次，每个点都回到原处，所以反射矩阵的平方是单位矩阵。依次在两条轴上反射，等于旋转半圈。\n\n> **注意。** 在同一条直线上的两次反射互相抵消，但在两条不同的轴上反射不会抵消。合起来两个坐标都变号。",
         ],
         (rng) => {
           const x = nz(rng, 12);
           const y = nz(rng, 12);
           const both = rng.bool();
-          return chooseFilled(
-            rng,
+          const right = both ? `(${-x}, ${-y})` : `(${x}, ${y})`;
+          const near = [1, 2, 3].map((s) => [
+            `$${right.replace(/-?\d+/, (n) => String(Number(n) + s))}$`,
+            "The first coordinate is off.",
+            "第一个坐标不对。",
+          ]);
+          return reasoned(
+            chooseFilled(
+              rng,
+              [
+                both
+                  ? `The point $(${x}, ${y})$ is reflected in the $x$-axis and then in the $y$-axis. Where does it end?`
+                  : `The point $(${x}, ${y})$ is reflected in the line $y = x$ twice. Where does it end?`,
+                both
+                  ? `点 $(${x}, ${y})$ 先在 $x$ 轴上反射，再在 $y$ 轴上反射。它最后在哪里？`
+                  : `点 $(${x}, ${y})$ 在直线 $y = x$ 上反射两次。它最后在哪里？`,
+              ],
+              right,
+              both ? [`(${x}, ${y})`, `(${y}, ${x})`, `(${x}, ${-y})`] : [`(${y}, ${x})`, `(${-x}, ${-y})`, `(${-y}, ${-x})`],
+              both
+                ? [
+                    `**Step 1: Reflect in the $x$-axis.** This changes the sign of $y$, so $(${x}, ${y})$ goes to $(${x}, ${-y})$.\n\n**Step 2: Reflect in the $y$-axis.** This changes the sign of $x$, so $(${x}, ${-y})$ goes to $(${-x}, ${-y})$.\n\n**Check.** The matrix of the $y$-axis reflection has rows $(-1, 0)$ and $(0, 1)$, and that of the $x$-axis reflection has rows $(1, 0)$ and $(0, -1)$. Their product has rows $(-1, 0)$ and $(0, -1)$, which is $-I$, the half turn. $-I$ sends $(${x}, ${y})$ to $(${-x}, ${-y})$.`,
+                    `**第一步：在 $x$ 轴上反射。**这改变 $y$ 的符号，所以 $(${x}, ${y})$ 变到 $(${x}, ${-y})$。\n\n**第二步：在 $y$ 轴上反射。**这改变 $x$ 的符号，所以 $(${x}, ${-y})$ 变到 $(${-x}, ${-y})$。\n\n**检验。**$y$ 轴反射的矩阵行为 $(-1, 0)$ 和 $(0, 1)$，$x$ 轴反射的矩阵行为 $(1, 0)$ 和 $(0, -1)$。它们的乘积行为 $(-1, 0)$ 和 $(0, -1)$，就是 $-I$，即旋转半圈。$-I$ 把 $(${x}, ${y})$ 变到 $(${-x}, ${-y})$。`,
+                  ]
+                : [
+                    `**Step 1: Reflect once.** Reflecting in $y = x$ swaps the coordinates, so $(${x}, ${y})$ goes to $(${y}, ${x})$.\n\n**Step 2: Reflect again.** Swapping once more sends $(${y}, ${x})$ back to $(${x}, ${y})$.\n\n**Check.** Square the matrix with rows $(0, 1)$ and $(1, 0)$. Its first row becomes $(0 \\cdot 0 + 1 \\cdot 1, \\; 0 \\cdot 1 + 1 \\cdot 0) = (1, 0)$. Its second row becomes $(1 \\cdot 0 + 0 \\cdot 1, \\; 1 \\cdot 1 + 0 \\cdot 0) = (0, 1)$. That is $I$, which leaves $(${x}, ${y})$ in place.`,
+                    `**第一步：反射一次。**在 $y = x$ 上反射交换两个坐标，所以 $(${x}, ${y})$ 变到 $(${y}, ${x})$。\n\n**第二步：再反射一次。**再交换一次，$(${y}, ${x})$ 回到 $(${x}, ${y})$。\n\n**检验。**把行为 $(0, 1)$ 和 $(1, 0)$ 的矩阵平方。第一行变成 $(0 \\cdot 0 + 1 \\cdot 1, \\; 0 \\cdot 1 + 1 \\cdot 0) = (1, 0)$。第二行变成 $(1 \\cdot 0 + 0 \\cdot 1, \\; 1 \\cdot 1 + 0 \\cdot 0) = (0, 1)$。这就是 $I$，它让 $(${x}, ${y})$ 不动。`,
+                  ],
+            ),
             [
-              both
-                ? `The point $(${x}, ${y})$ is reflected in the $x$-axis and then in the $y$-axis. Where does it end?`
-                : `The point $(${x}, ${y})$ is reflected in the line $y = x$ twice. Where does it end?`,
-              both
-                ? `点 $(${x}, ${y})$ 先在 $x$ 轴上反射，再在 $y$ 轴上反射。它最后在哪里？`
-                : `点 $(${x}, ${y})$ 在直线 $y = x$ 上反射两次。它最后在哪里？`,
-            ],
-            both ? `(${-x}, ${-y})` : `(${x}, ${y})`,
-            both ? [`(${x}, ${y})`, `(${y}, ${x})`, `(${x}, ${-y})`] : [`(${y}, ${x})`, `(${-x}, ${-y})`, `(${-y}, ${-x})`],
-            [
-              both
-                ? "Each reflection changes the sign of one coordinate, which together form a half turn."
-                : "Two reflections in one line undo each other.",
-              both ? "每次反射改变一个坐标的符号，合起来是旋转半圈。" : "在同一条直线上的两次反射互相抵消。",
-            ],
+              ...(both
+                ? [
+                    [
+                      `$(${x}, ${y})$`,
+                      "This is the starting point. Reflections in two different axes do not undo each other.",
+                      "这是起点。在两条不同的轴上反射不会互相抵消。",
+                    ],
+                    [
+                      `$(${y}, ${x})$`,
+                      "Swapping the coordinates is the reflection in $y = x$, which is not used here.",
+                      "交换坐标是在 $y = x$ 上的反射，这里没有用到。",
+                    ],
+                    [`$(${x}, ${-y})$`, "This is only the first reflection, in the $x$-axis.", "这只是第一次反射，即在 $x$ 轴上的反射。"],
+                  ]
+                : [
+                    [`$(${y}, ${x})$`, "This is after only one reflection in $y = x$.", "这只是在 $y = x$ 上反射一次的结果。"],
+                    [
+                      `$(${-x}, ${-y})$`,
+                      "This is the half turn, not two reflections in one line.",
+                      "这是旋转半圈，不是在同一条直线上反射两次。",
+                    ],
+                    [`$(${-y}, ${-x})$`, "This is the reflection in $y = -x$.", "这是在 $y = -x$ 上的反射。"],
+                  ]),
+              ...near,
+            ] as [string, string, string][],
           );
         },
       ),
@@ -1634,8 +1671,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "shears-keep-area",
       ["Shears keep area", "切变保持面积"],
       [
-        "A shear has a determinant of 1, so it slides points without changing area. A stretch by factor $k$ along one axis has a determinant of $k$, and it multiplies areas by $k$.",
-        "切变的行列式是 1，所以只滑动点而不改变面积。沿一条轴拉伸 $k$ 倍的行列式是 $k$，面积也乘 $k$。",
+        "A shear has a determinant of 1, so it slides points without changing area. A stretch by factor $k$ along one axis has a determinant of $k$, and it multiplies areas by $k$.\n\n> **Watch out.** The factor of a shear is not its area factor. A shear changes the shape but keeps the area, because its determinant is $1$ whatever the factor.",
+        "切变的行列式是 1，所以只滑动点而不改变面积。沿一条轴拉伸 $k$ 倍的行列式是 $k$，面积也乘 $k$。\n\n> **注意。** 切变的系数不是面积因数。切变改变形状但保持面积，因为不论系数是多少，它的行列式都是 $1$。",
       ],
       (rng) => {
         const area = rng.int(2, 30);
@@ -1653,12 +1690,15 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
               ],
           shear ? area : k * area,
           shear ? [k * area, area + k, k * k * area] : [area, k * k * area, area + k],
-          [
-            shear
-              ? `The determinant of a shear is 1, so the area stays ${area}.`
-              : `The determinant is ${k}, so the area becomes ${k * area}.`,
-            shear ? `切变的行列式是 1，所以面积仍是 ${area}。` : `行列式是 ${k}，所以面积变成 ${k * area}。`,
-          ],
+          shear
+            ? [
+                `**Step 1: Find the determinant.** The horizontal shear with factor $${k}$ has rows $(1, ${k})$ and $(0, 1)$. Its determinant is $1 \\cdot 1 - ${k} \\cdot 0 = 1$.\n\n**Step 2: Scale the area.** Areas are multiplied by $1$, so the image has area $${area}$.\n\n**Check.** Take a rectangle of area $${area}$ with sides $\\langle ${area}, 0 \\rangle$ and $\\langle 0, 1 \\rangle$. The shear sends them to $\\langle ${area}, 0 \\rangle$ and $\\langle ${k}, 1 \\rangle$. The parallelogram on these sides has area $|${area} \\cdot 1 - 0 \\cdot ${k}| = ${area}$.`,
+                `**第一步：求行列式。**系数为 $${k}$ 的水平切变的矩阵行为 $(1, ${k})$ 和 $(0, 1)$。它的行列式是 $1 \\cdot 1 - ${k} \\cdot 0 = 1$。\n\n**第二步：放缩面积。**面积乘 $1$，所以像的面积是 $${area}$。\n\n**检验。**取面积为 $${area}$、两边为 $\\langle ${area}, 0 \\rangle$ 和 $\\langle 0, 1 \\rangle$ 的矩形。切变把它们变成 $\\langle ${area}, 0 \\rangle$ 和 $\\langle ${k}, 1 \\rangle$。以它们为边的平行四边形面积是 $|${area} \\cdot 1 - 0 \\cdot ${k}| = ${area}$。`,
+              ]
+            : [
+                `**Step 1: Find the determinant.** The stretch by $${k}$ along the $x$-axis has rows $(${k}, 0)$ and $(0, 1)$. Its determinant is $${k} \\cdot 1 - 0 \\cdot 0 = ${k}$.\n\n**Step 2: Scale the area.** Areas are multiplied by $${k}$, so the image has area $${k} \\times ${area} = ${k * area}$.\n\n**Check.** Take a rectangle of area $${area}$ with sides $\\langle ${area}, 0 \\rangle$ and $\\langle 0, 1 \\rangle$. The stretch sends them to $\\langle ${k * area}, 0 \\rangle$ and $\\langle 0, 1 \\rangle$. The rectangle on these sides has area $${k * area} \\cdot 1 = ${k * area}$.`,
+                `**第一步：求行列式。**沿 $x$ 轴拉伸 $${k}$ 倍的矩阵行为 $(${k}, 0)$ 和 $(0, 1)$。它的行列式是 $${k} \\cdot 1 - 0 \\cdot 0 = ${k}$。\n\n**第二步：放缩面积。**面积乘 $${k}$，所以像的面积是 $${k} \\times ${area} = ${k * area}$。\n\n**检验。**取面积为 $${area}$、两边为 $\\langle ${area}, 0 \\rangle$ 和 $\\langle 0, 1 \\rangle$ 的矩形。拉伸把它们变成 $\\langle ${k * area}, 0 \\rangle$ 和 $\\langle 0, 1 \\rangle$。以它们为边的矩形面积是 $${k * area} \\cdot 1 = ${k * area}$。`,
+              ],
         );
       },
     ),
@@ -1668,8 +1708,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "many-quarter-turns",
       ["Many quarter turns", "多次四分之一圈"],
       [
-        "Four quarter turns bring every point back, so only the remainder after dividing by 4 matters. This reduces a large number of rotations to at most three.",
-        "四个四分之一圈使每个点回到原处，所以只有除以 4 的余数有关。这把很多次旋转化成最多三次。",
+        "Four quarter turns bring every point back, so only the remainder after dividing by 4 matters. This reduces a large number of rotations to at most three.\n\n> **Watch out.** Use the remainder, not the quotient. A remainder of $0$ means the point is back where it started.",
+        "四个四分之一圈使每个点回到原处，所以只有除以 4 的余数有关。这把很多次旋转化成最多三次。\n\n> **注意。** 用余数，不是商。余数为 $0$ 表示点回到了起点。",
       ],
       (rng) => {
         const x = nz(rng, 12);
@@ -1677,6 +1717,16 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
         const n = rng.int(5, 60);
         const r = n % 4;
         const images: readonly string[] = [`(${x}, ${y})`, `(${-y}, ${x})`, `(${-x}, ${-y})`, `(${y}, ${-x})`];
+        const chain = images.slice(0, r + 1).join(" \\to ");
+        const total = 90 * n;
+        const turns = Math.floor(total / 360);
+        const steps: [string, string] =
+          r === 0
+            ? ["No quarter turn is left over, so the point stays where it started.", "没有剩下的四分之一圈，所以点停在起点。"]
+            : [
+                `Each quarter turn sends $(x, y)$ to $(-y, x)$. Turning $${r}$ ${r === 1 ? "time" : "times"} gives $${chain}$.`,
+                `每转四分之一圈把 $(x, y)$ 变到 $(-y, x)$。转 $${r}$ 次得 $${chain}$。`,
+              ];
         return reasoned(
           chooseFilled(
             rng,
@@ -1687,8 +1737,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
             images[r]!,
             images.filter((_, i) => i !== r),
             [
-              `$${n} = 4 \\times ${Math.floor(n / 4)} + ${r}$, so only $${r}$ quarter ${r === 1 ? "turn counts" : "turns count"}.`,
-              `$${n} = 4 \\times ${Math.floor(n / 4)} + ${r}$，所以只有 $${r}$ 个四分之一圈有效。`,
+              `**Step 1: Remove full turns.** $${n} = 4 \\times ${Math.floor(n / 4)} + ${r}$, and every four quarter turns bring the point back. So only $${r}$ quarter ${r === 1 ? "turn counts" : "turns count"}.\n\n**Step 2: Turn what is left.** ${steps[0]}\n\n**Check.** In degrees the total turn is $${n} \\times 90 = ${total}$. Removing $${turns}$ full turns of $360$ leaves $${total} - ${360 * turns} = ${total - 360 * turns}$ degrees, which is $${r}$ quarter ${r === 1 ? "turn" : "turns"}.`,
+              `**第一步：去掉整圈。**$${n} = 4 \\times ${Math.floor(n / 4)} + ${r}$，每四个四分之一圈点就回到原处。所以只有 $${r}$ 个四分之一圈有效。\n\n**第二步：转剩下的。**${steps[1]}\n\n**检验。**用度数算，一共转了 $${n} \\times 90 = ${total}$ 度。去掉 $${turns}$ 个 $360$ 度的整圈，剩下 $${total} - ${360 * turns} = ${total - 360 * turns}$ 度，正是 $${r}$ 个四分之一圈。`,
             ],
           ),
           [
@@ -1710,13 +1760,14 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "powers-of-a-rotation",
       ["Powers of a rotation", "旋转的幂"],
       [
-        "Applying a rotation matrix again turns by the same angle again, so the matrix to the power $n$ rotates by $n$ times the angle. Whole turns can then be removed, as they change nothing.",
-        "再次应用旋转矩阵，就再转同样的角，所以矩阵的 $n$ 次幂旋转 $n$ 倍的角。然后可以去掉整圈，因为它们不改变什么。",
+        "Applying a rotation matrix again turns by the same angle again, so the matrix to the power $n$ rotates by $n$ times the angle. Whole turns can then be removed, as they change nothing.\n\n> **Watch out.** Multiply the angle by $n$; do not add $n$ to it. Then subtract whole turns of $360^{\\circ}$.",
+        "再次应用旋转矩阵，就再转同样的角，所以矩阵的 $n$ 次幂旋转 $n$ 倍的角。然后可以去掉整圈，因为它们不改变什么。\n\n> **注意。** 把角乘 $n$，不是加 $n$。然后减去 $360^{\\circ}$ 的整圈。",
       ],
       (rng) => {
         const angle = rng.int(1, 11) * 15;
         const n = rng.int(3, 9);
         const total = (angle * n) % 360;
+        const turns = Math.floor((angle * n) / 360);
         return whole(
           [
             `$R$ rotates the plane counterclockwise by $${angle}^{\\circ}$. By what angle does $R^{${n}}$ rotate it, in degrees from 0 up to 360?`,
@@ -1725,8 +1776,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
           total,
           [angle, (total + 90) % 360, (angle + n) % 360],
           [
-            `$${n} \\times ${angle} = ${angle * n}$, which leaves $${total}$ after removing full turns.`,
-            `$${n} \\times ${angle} = ${angle * n}$，去掉整圈后是 $${total}$。`,
+            `**Step 1: Multiply the angle.** $R^{${n}}$ applies $R$ ${n} times, so it turns by $${n} \\times ${angle} = ${angle * n}$ degrees.\n\n**Step 2: Remove full turns.** $${angle * n} - 360 \\times ${turns} = ${total}$, which is from 0 up to 360.\n\n**Check.** Add the full turns back. $${total} + 360 \\times ${turns} = ${angle * n}$, and $${angle * n} \\div ${angle} = ${n}$ turns of $R$.`,
+            `**第一步：角乘次数。**$R^{${n}}$ 把 $R$ 做 ${n} 次，所以转 $${n} \\times ${angle} = ${angle * n}$ 度。\n\n**第二步：去掉整圈。**$${angle * n} - 360 \\times ${turns} = ${total}$，在 0 到 360 之间。\n\n**检验。**把整圈加回去。$${total} + 360 \\times ${turns} = ${angle * n}$，而 $${angle * n} \\div ${angle} = ${n}$，正是 $R$ 转的次数。`,
           ],
         );
       },
@@ -1737,23 +1788,26 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "the-determinant-of-a-composite",
       ["The determinant of a composite", "复合变换的行列式"],
       [
-        "Doing one transformation after another multiplies their area factors. So the determinant of the composite is the product of the determinants, whichever order they are done in.",
-        "依次做两个变换，面积因数相乘。所以复合变换的行列式是行列式的积，不管次序如何。",
+        "Doing one transformation after another multiplies their area factors. So the determinant of the composite is the product of the determinants, whichever order they are done in.\n\n> **Watch out.** The determinant of $A^{r}$ is $(\\det A)^{r}$, not $r \\det A$. Each copy of $A$ multiplies by $\\det A$ once more.",
+        "依次做两个变换，面积因数相乘。所以复合变换的行列式是行列式的积，不管次序如何。\n\n> **注意。** $A^{r}$ 的行列式是 $(\\det A)^{r}$，不是 $r \\det A$。每多一个 $A$ 就再乘一次 $\\det A$。",
       ],
       (rng) => {
         const p = nz(rng, 9);
         const q = nz(rng, 9);
         const r = rng.int(2, 3);
+        const value = p ** r * q;
+        const negatives = (p < 0 ? r : 0) + (q < 0 ? 1 : 0);
+        const even = negatives % 2 === 0;
         return integer(
           [
             `$\\det A = ${p}$ and $\\det B = ${q}$, both $2 \\times 2$. Find $\\det(A^{${r}}B)$.`,
             `$\\det A = ${p}$，$\\det B = ${q}$，都是 $2 \\times 2$ 矩阵。求 $\\det(A^{${r}}B)$。`,
           ],
-          p ** r * q,
+          value,
           [p * q, r * p * q, p ** r + q],
           [
-            `Determinants multiply, so $(${p})^{${r}} \\cdot (${q}) = ${p ** r * q}$.`,
-            `行列式可以相乘，所以 $(${p})^{${r}} \\cdot (${q}) = ${p ** r * q}$。`,
+            `**Step 1: The power.** Determinants multiply, so $\\det(A^{${r}}) = (\\det A)^{${r}} = (${p})^{${r}} = ${p ** r}$.\n\n**Step 2: The product.** $\\det(A^{${r}}B) = \\det(A^{${r}}) \\cdot \\det B = ${p ** r} \\cdot ${paren(q)} = ${value}$.\n\n**Check.** Work out the size and the sign apart. The sizes multiply to $${Math.abs(p)}^{${r}} \\cdot ${Math.abs(q)} = ${Math.abs(value)}$. There ${negatives === 1 ? "is" : "are"} $${negatives}$ negative ${negatives === 1 ? "factor" : "factors"}, an ${even ? "even" : "odd"} number, so the result is ${even ? "positive" : "negative"}.`,
+            `**第一步：幂。**行列式可以相乘，所以 $\\det(A^{${r}}) = (\\det A)^{${r}} = (${p})^{${r}} = ${p ** r}$。\n\n**第二步：积。**$\\det(A^{${r}}B) = \\det(A^{${r}}) \\cdot \\det B = ${p ** r} \\cdot ${paren(q)} = ${value}$。\n\n**检验。**把大小和符号分开算。大小相乘是 $${Math.abs(p)}^{${r}} \\cdot ${Math.abs(q)} = ${Math.abs(value)}$。负的因数有 $${negatives}$ 个，是${even ? "偶" : "奇"}数，所以结果为${even ? "正" : "负"}。`,
           ],
         );
       },
@@ -1764,14 +1818,15 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "when-no-inverse-exists",
       ["When no inverse exists", "何时没有逆"],
       [
-        "A transformation with determinant zero squashes the plane onto a line or a point. Many points then share one image, so it cannot be undone and there is no inverse.",
-        "行列式为零的变换把平面压到一条线或一个点上。于是很多点有同一个像，所以无法还原，没有逆变换。",
+        "A transformation with determinant zero squashes the plane onto a line or a point. Many points then share one image, so it cannot be undone and there is no inverse.\n\n> **Watch out.** No inverse means the determinant is $0$, not $1$. Set the determinant equal to zero and solve.",
+        "行列式为零的变换把平面压到一条线或一个点上。于是很多点有同一个像，所以无法还原，没有逆变换。\n\n> **注意。** 没有逆变换意味着行列式为 $0$，不是 $1$。令行列式等于零再解。",
       ],
       (rng) => {
         const k = rng.int(2, 9);
         const a = nz(rng, 9);
         const b = nz(rng, 9);
         const c = rng.int(2, 6);
+        const at = a === 1 ? "t" : a === -1 ? "-t" : `${a}t`;
         return integer(
           [
             `For what value of $t$ does the transformation with matrix $${mat([a, b], [c * a, "t"])}$ have no inverse?`,
@@ -1780,8 +1835,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
           c * b,
           [b, -c * b, c * b + k],
           [
-            `$\\det = ${a}t - ${paren(b)} \\cdot ${paren(c * a)} = 0$ gives $t = ${c * b}$, making the second row $${c}$ times the first.`,
-            `$\\det = ${a}t - ${paren(b)} \\cdot ${paren(c * a)} = 0$，得 $t = ${c * b}$，第二行是第一行的 $${c}$ 倍。`,
+            `**Step 1: Write the determinant.** $\\det = ${at} - ${paren(b)} \\cdot ${paren(c * a)} = ${at} - ${paren(a * b * c)}$.\n\n**Step 2: Set it to zero.** There is no inverse exactly when $\\det = 0$. That gives $${at} = ${a * b * c}$, so $t = ${a * b * c} \\div ${paren(a)} = ${c * b}$.\n\n**Check.** With $t = ${c * b}$ the second row is $(${c * a}, ${c * b})$, which is $${c}$ times the first row $(${a}, ${b})$. Then $\\det = ${paren(a)} \\cdot ${paren(c * b)} - ${paren(b)} \\cdot ${paren(c * a)} = 0$.`,
+            `**第一步：写出行列式。**$\\det = ${at} - ${paren(b)} \\cdot ${paren(c * a)} = ${at} - ${paren(a * b * c)}$。\n\n**第二步：令它为零。**恰好在 $\\det = 0$ 时没有逆变换。于是 $${at} = ${a * b * c}$，所以 $t = ${a * b * c} \\div ${paren(a)} = ${c * b}$。\n\n**检验。**$t = ${c * b}$ 时第二行是 $(${c * a}, ${c * b})$，是第一行 $(${a}, ${b})$ 的 $${c}$ 倍。这时 $\\det = ${paren(a)} \\cdot ${paren(c * b)} - ${paren(b)} \\cdot ${paren(c * a)} = 0$。`,
           ],
         );
       },

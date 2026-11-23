@@ -1153,8 +1153,8 @@ const entryFromAreaScale: KnowledgePointDef = {
   id: "a-matrix-entry-from-an-area-scale-factor",
   title: t("A matrix entry from an area scale factor", "由面积比例求矩阵的元素"),
   explanation: t(
-    "The area scale factor of a transformation is the absolute value of its determinant, so comparing an image with its original gives the determinant up to its sign. Knowing whether orientation is kept settles the sign: the determinant is positive when orientation is preserved and negative when it is reversed. The result is an equation that is linear in any single unknown entry, and an entry of the matrix can be recovered from these facts about a shape.",
-    "变换的面积比例是其行列式的绝对值，所以比较像与原图，就能得到行列式（符号除外）。知道方向是否保持，符号也就确定了：方向保持时行列式为正，方向反转时为负。结果是关于任一未知元素的一次方程，于是可以由图形的这些事实还原矩阵的一个元素。",
+    "The area scale factor of a transformation is the absolute value of its determinant, so comparing an image with its original gives the determinant up to its sign. Knowing whether orientation is kept settles the sign: the determinant is positive when orientation is preserved and negative when it is reversed. The result is an equation that is linear in any single unknown entry, and an entry of the matrix can be recovered from these facts about a shape.\n\n> **Watch out.** The ratio of the areas gives only the size of the determinant. Use the orientation to choose its sign before you solve for the entry.",
+    "变换的面积比例是其行列式的绝对值，所以比较像与原图，就能得到行列式（符号除外）。知道方向是否保持，符号也就确定了：方向保持时行列式为正，方向反转时为负。结果是关于任一未知元素的一次方程，于是可以由图形的这些事实还原矩阵的一个元素。\n\n> **注意。** 面积之比只给出行列式的大小。先由方向定出符号，再解那个元素。",
   ),
   generate(rng) {
     const [a, b] = [nonzero(rng, 4), nonzero(rng, 4)];
@@ -1163,6 +1163,7 @@ const entryFromAreaScale: KnowledgePointDef = {
     const factor = k * c - a * b;
     const area = rng.int(2, 9);
     const entries = `\\begin{pmatrix} k & ${a} \\\\ ${b} & ${c} \\end{pmatrix}`;
+    const equation = `${poly([c, "k"], [-a * b, ""])} = ${factor}`;
     return numberProblem({
       prompt: t(
         `The transformation with matrix $${entries}$ maps a region of area $${area}$ to a region of area $${area * factor}$ and preserves orientation. Find $k$.`,
@@ -1172,8 +1173,8 @@ const entryFromAreaScale: KnowledgePointDef = {
       form: "integer",
       wrong: [Q.of(a * b - factor, c), Q.of(factor, c), factor + a * b, -k, k + 1, k - 1],
       solution: t(
-        `The area scale factor is $${factor}$, and preserving orientation makes the determinant positive, so the determinant is $${factor}$. This gives $${poly([c, "k"], [-a * b, ""])} = ${factor}$, so $k = ${k}$.`,
-        `面积比例是 $${factor}$，保持方向说明行列式为正，所以行列式是 $${factor}$。于是 $${poly([c, "k"], [-a * b, ""])} = ${factor}$，所以 $k = ${k}$。`,
+        `${stepLabel(1, "Find the determinant", "求行列式").en} The area scale factor is $${area * factor} \\div ${area} = ${factor}$, so the determinant is $${factor}$ or $${-factor}$. Preserving orientation makes it positive, so it is $${factor}$.\n\n${stepLabel(2, "Solve for the entry", "解出元素").en} The determinant is $k \\cdot ${c} - ${inParens(a)} \\cdot ${inParens(b)}$. So $${equation}$. Then $${c}k = ${factor + a * b}$, and $k = ${factor + a * b} \\div ${c} = ${k}$.\n\n**Check.** With $k = ${k}$ the determinant is $${k} \\cdot ${c} - ${inParens(a)} \\cdot ${inParens(b)} = ${factor}$. It is positive, so orientation is kept, and $${area} \\cdot ${factor} = ${area * factor}$ is the area of the image.`,
+        `${stepLabel(1, "Find the determinant", "求行列式")["zh-CN"]}面积比例是 $${area * factor} \\div ${area} = ${factor}$，所以行列式是 $${factor}$ 或 $${-factor}$。保持方向说明它为正，所以是 $${factor}$。\n\n${stepLabel(2, "Solve for the entry", "解出元素")["zh-CN"]}行列式是 $k \\cdot ${c} - ${inParens(a)} \\cdot ${inParens(b)}$。所以 $${equation}$。于是 $${c}k = ${factor + a * b}$，$k = ${factor + a * b} \\div ${c} = ${k}$。\n\n**检验。**$k = ${k}$ 时行列式是 $${k} \\cdot ${c} - ${inParens(a)} \\cdot ${inParens(b)} = ${factor}$。它为正，方向保持，而 $${area} \\cdot ${factor} = ${area * factor}$ 正是像的面积。`,
       ),
     });
   },
@@ -1183,8 +1184,8 @@ const slopeOfImageLine: KnowledgePointDef = {
   id: "the-slope-of-the-image-line-of-a-singular-transformation",
   title: t("The slope of the image line of a singular transformation", "奇异变换的像所在直线的斜率"),
   explanation: t(
-    "A singular transformation squeezes the whole plane onto a line through the origin, and the matrix shows which line. Every image is a combination of the two columns, and in a singular matrix these columns are parallel, so each of them points along the image line. The slope can be read as the second entry over the first entry of a nonzero column. This line should not be confused with the line of vectors sent to the origin.",
-    "奇异变换把整个平面压缩到一条过原点的直线上，矩阵能显示是哪条直线。每个像都是两列的组合，而奇异矩阵的两列互相平行，所以每一列都沿着像所在的直线。斜率就是非零列的第二个元素除以第一个元素。不要把这条直线与被映射到原点的向量所在的直线混淆。",
+    "A singular transformation squeezes the whole plane onto a line through the origin, and the matrix shows which line. Every image is a combination of the two columns, and in a singular matrix these columns are parallel, so each of them points along the image line. The slope can be read as the second entry over the first entry of a nonzero column. This line should not be confused with the line of vectors sent to the origin.\n\n> **Watch out.** Read the slope from a column, second entry over first. A row, or the first entry over the second, gives a different line.",
+    "奇异变换把整个平面压缩到一条过原点的直线上，矩阵能显示是哪条直线。每个像都是两列的组合，而奇异矩阵的两列互相平行，所以每一列都沿着像所在的直线。斜率就是非零列的第二个元素除以第一个元素。不要把这条直线与被映射到原点的向量所在的直线混淆。\n\n> **注意。** 斜率要从一列读出，是第二个元素除以第一个。用行来读，或者第一个除以第二个，得到的是另一条直线。",
   ),
   generate(rng) {
     const [p, q] = [nonzero(rng, 5), nonzero(rng, 5)];
@@ -1200,6 +1201,7 @@ const slopeOfImageLine: KnowledgePointDef = {
           [p, q],
         ];
     const answer = steep ? Q.of(n) : Q.of(1, n);
+    const [r0, r1] = [rows[0]!, rows[1]!];
     return numberProblem({
       prompt: t(
         `The singular matrix $${mat(rows)}$ maps the plane onto a line through the origin. Find the slope of that line.`,
@@ -1208,8 +1210,8 @@ const slopeOfImageLine: KnowledgePointDef = {
       answer,
       wrong: [steep ? Q.of(1, n) : n, answer.mul(Q.of(-1)), Q.of(-p, q), Q.of(q, p), Q.of(rows[0]![1]!, rows[1]![1]!).mul(Q.of(-1))],
       solution: t(
-        `Every image is a combination of the columns, and these are parallel, so the first column gives the direction of the line. Its second entry over its first entry is $${answer.toLatex()}$.`,
-        `每个像都是两列的组合，而两列互相平行，所以第一列给出直线的方向。它的第二个元素除以第一个元素是 $${answer.toLatex()}$。`,
+        `${stepLabel(1, "Take a column", "取一列").en} Every image is a combination of the columns, and these are parallel, so the first column $(${r0[0]}, ${r1[0]})$ points along the image line.\n\n${stepLabel(2, "Find the slope", "求斜率").en} The slope is its second entry over its first entry, $${r1[0]} \\div ${inParens(r0[0]!)} = ${answer.toLatex()}$.\n\n**Check.** The second column $(${r0[1]}, ${r1[1]})$ must point along the same line. Its slope is $${r1[1]} \\div ${inParens(r0[1]!)} = ${Q.of(r1[1]!, r0[1]!).toLatex()}$, the same.`,
+        `${stepLabel(1, "Take a column", "取一列")["zh-CN"]}每个像都是两列的组合，而两列互相平行，所以第一列 $(${r0[0]}, ${r1[0]})$ 沿着像所在的直线。\n\n${stepLabel(2, "Find the slope", "求斜率")["zh-CN"]}斜率是它的第二个元素除以第一个元素，$${r1[0]} \\div ${inParens(r0[0]!)} = ${answer.toLatex()}$。\n\n**检验。**第二列 $(${r0[1]}, ${r1[1]})$ 也必须沿着这条直线。它的斜率是 $${r1[1]} \\div ${inParens(r0[1]!)} = ${Q.of(r1[1]!, r0[1]!).toLatex()}$，相同。`,
       ),
     });
   },

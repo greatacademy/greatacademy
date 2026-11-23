@@ -1119,12 +1119,15 @@ const areaFromDeterminant: KnowledgePointDef = {
   figure: linearAlgebraDrawings1["basic-properties-of-determinants#the-area-of-a-parallelogram-from-a-determinant"],
   title: t("The area of a parallelogram from a determinant", "用行列式求平行四边形的面积"),
   explanation: t(
-    "A linear map scales every area by the absolute value of its determinant. The unit square has area $1$, so the parallelogram spanned by the columns of $A$ has area $|\\det A|$. The sign of the determinant says whether the map keeps or flips orientation, and it does not change the area, which is why the absolute value appears.",
-    "线性映射把每个面积都乘以行列式的绝对值。单位正方形的面积是 $1$，所以由 $A$ 的各列张成的平行四边形面积是 $|\\det A|$。行列式的符号说明映射是否翻转定向，它不改变面积，这就是要取绝对值的原因。",
+    "A linear map scales every area by the absolute value of its determinant. The unit square has area $1$, so the parallelogram spanned by the columns of $A$ has area $|\\det A|$. The sign of the determinant says whether the map keeps or flips orientation, and it does not change the area, which is why the absolute value appears.\n\n> **Watch out.** Read the sides as columns: the image of $(1, 0)$ is the first column and the image of $(0, 1)$ the second. Then take $ad - bc$, with a minus sign, not $ad + bc$.",
+    "线性映射把每个面积都乘以行列式的绝对值。单位正方形的面积是 $1$，所以由 $A$ 的各列张成的平行四边形面积是 $|\\det A|$。行列式的符号说明映射是否翻转定向，它不改变面积，这就是要取绝对值的原因。\n\n> **注意。** 边要按列读：$(1, 0)$ 的像是第一列，$(0, 1)$ 的像是第二列。然后算 $ad - bc$，中间是减号，不是 $ad + bc$。",
   ),
   generate(rng: Rng): Problem {
     const [a, b, c, d] = invertibleEntries(rng);
     const det = a * d - b * c;
+    /** p writes a negative number in parentheses, for use inside a product. */
+    const p = (n: number) => (n < 0 ? `(${n})` : `${n}`);
+    const shoelace = `\\frac{1}{2}\\left|${p(a)} \\cdot ${p(c + d)} - ${p(a + b)} \\cdot ${p(c)} + ${p(a + b)} \\cdot ${p(d)} - ${p(b)} \\cdot ${p(c + d)}\\right| = \\frac{1}{2} \\cdot ${2 * Math.abs(det)} = ${Math.abs(det)}`;
     return withFigure(
       numberProblem({
         prompt: t(
@@ -1134,8 +1137,8 @@ const areaFromDeterminant: KnowledgePointDef = {
         answer: Math.abs(det),
         wrong: [a * d + b * c, Math.abs(a * b) + Math.abs(c * d), (Math.abs(a) + Math.abs(c)) * (Math.abs(b) + Math.abs(d))],
         solution: t(
-          `The columns are the sides, read from the drawing, so the matrix is $${matrix(a, b, c, d)}$. Its determinant is $(${a})(${d}) - (${b})(${c}) = ${det}$, and the area is the absolute value, $${Math.abs(det)}$.`,
-          `各列就是平行四边形的边，从图上读出，矩阵为 $${matrix(a, b, c, d)}$。其行列式是 $(${a})(${d}) - (${b})(${c}) = ${det}$，面积取绝对值，为 $${Math.abs(det)}$。`,
+          `**Step 1: Read the matrix.** The sides from the origin are the images of $(1, 0)$ and $(0, 1)$, read from the drawing as $(${a}, ${c})$ and $(${b}, ${d})$. They are the columns, so the matrix is $${matrix(a, b, c, d)}$.\n\n**Step 2: Take the determinant.** Its determinant is $${p(a)} \\cdot ${p(d)} - ${p(b)} \\cdot ${p(c)} = ${det}$. The area is the absolute value, $|${det}| = ${Math.abs(det)}$.\n\n**Check.** The corners are $(0, 0)$, $(${a}, ${c})$, $(${a + b}, ${c + d})$ and $(${b}, ${d})$. The shoelace formula gives the area as $${shoelace}$.`,
+          `**第一步：读出矩阵。**从原点出发的两条边是 $(1, 0)$ 和 $(0, 1)$ 的像，从图上读出为 $(${a}, ${c})$ 和 $(${b}, ${d})$。它们就是两列，所以矩阵为 $${matrix(a, b, c, d)}$。\n\n**第二步：求行列式。**其行列式是 $${p(a)} \\cdot ${p(d)} - ${p(b)} \\cdot ${p(c)} = ${det}$。面积取绝对值，$|${det}| = ${Math.abs(det)}$。\n\n**检验。**四个顶点是 $(0, 0)$，$(${a}, ${c})$，$(${a + b}, ${c + d})$，$(${b}, ${d})$。由鞋带公式，面积是 $${shoelace}$。`,
         ),
       }),
       imageOfUnitSquare(a, b, c, d),

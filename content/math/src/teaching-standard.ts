@@ -115,4 +115,12 @@ export const taughtTopics: readonly string[] = [
   "the-standard-matrix-of-a-linear-transformation",
   "linear-transformations-of-points-and-lines-in-the-plane",
   "linear-transformations-of-objects-in-the-plane",
+  "dilations-and-reflections-as-linear-transformations",
+  "shear-and-stretch-as-linear-transformations",
+  "right-angle-rotations-as-linear-transformations",
+  "rotations-as-linear-transformations",
+  "combining-linear-transformations-using-2x2-matrices",
+  "inverting-linear-transformations",
+  "area-scale-factors-of-linear-transformations",
+  "singular-linear-transformations-in-the-plane",
 ];
